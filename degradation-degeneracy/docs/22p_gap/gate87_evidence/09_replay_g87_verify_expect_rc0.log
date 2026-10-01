@@ -1,0 +1,28 @@
+sandbox: /tmp/mutation_replay_n9i3gm0i/degradation-degeneracy
+
+물었다        stage3-axis-planned-id-is-the-envelope-digest-g87 node 1 · -k s01_01
+물었다        stage3-axis-keys-are-closed-g87 node 7 · -k s01_02
+물었다        v3-plan-requires-both-v6-slots-g87 node 2 · -k s03_02
+물었다        v2-plan-refuses-v6-slots-g87   node 3 · -k s03_03
+물었다        envelope-leg-id-is-bound-to-the-entry-g87 node 1 · -k s03_04 and leg_id
+물었다        envelope-source-digest-is-bound-to-the-entry-g87 node 1 · -k s03_04 and source_digest
+물었다        envelope-generation-is-v6-g87  node 1 · -k s03_04 and generation
+물었다        stage3-axis-is-derived-not-copied-g87 node 5 · -k s03_05
+물었다        provider-runs-match-the-warm-consumers-g87 node 1 · -k s03_06
+물었다        context-paths-are-repo-relative-g87 node 7 · -k s03_07
+물었다        v2-plan-refuses-a-stage3-context-g87 node 1 · -k s02_02
+물었다        v3-plan-refuses-legacy-fallback-g87 node 1 · -k s02_01
+물었다        unknown-spec-version-is-not-authorized-g87 node 1 · -k s02_05
+물었다        entrypoint-compares-the-design-digest-g87 node 1 · -k s04_02
+물었다        entrypoint-does-not-trust-the-index-planned-id-g87 node 1 · -k s04_04
+물었다        entrypoint-requires-provider-run-dirs-g87 node 1 · -k s04_03
+물었다        cli-stage3-plan-conflicting-leg-is-refused-g87 node 1 · -k s05_01
+물었다        cli-stage3-plan-requires-explicit-flags-g87 node 3 · -k s05_02
+물었다        cli-stage3-plan-builds-the-context-g87 node 1 · -k s05_03
+물었다        shell-stage3-plan-is-only-for-mode-fit-g87 node 2 · -k s06_04
+물었다        shell-stage3-plan-conflicting-leg-is-refused-g87 node 1 · -k s06_03
+물었다        shell-passes-stage3-plan-to-python-g87 node 1 · -k s06_02
+
+scenario_total 22 · scenario_executable 22 · scenario_declared 0 · site_total 22 · site_executable 22 · site_declared 0 · ran 22
+실행한 변이 22건이 전부 기대 node 를 call 단계에서 물었다
+rc=0

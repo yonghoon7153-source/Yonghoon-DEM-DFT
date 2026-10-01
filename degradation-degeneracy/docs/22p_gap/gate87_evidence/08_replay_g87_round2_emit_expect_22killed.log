@@ -1,0 +1,267 @@
+sandbox: /tmp/mutation_replay__b49l0ma/degradation-degeneracy
+
+★ 안 물었다    stage3-axis-planned-id-is-the-envelope-digest-g87 node 2 · -k s01_01 or s04_01
+★ 안 물었다    stage3-axis-keys-are-closed-g87 node 7 · -k s01_02
+★ 안 물었다    v3-plan-requires-both-v6-slots-g87 node 2 · -k s03_02
+★ 안 물었다    v2-plan-refuses-v6-slots-g87   node 3 · -k s03_03
+★ 안 물었다    envelope-leg-id-is-bound-to-the-entry-g87 node 1 · -k s03_04 and leg_id
+★ 안 물었다    envelope-source-digest-is-bound-to-the-entry-g87 node 1 · -k s03_04 and source_digest
+★ 안 물었다    envelope-generation-is-v6-g87  node 1 · -k s03_04 and generation
+★ 안 물었다    stage3-axis-is-derived-not-copied-g87 node 5 · -k s03_05
+★ 안 물었다    provider-runs-match-the-warm-consumers-g87 node 1 · -k s03_06
+★ 안 물었다    context-paths-are-repo-relative-g87 node 7 · -k s03_07
+★ 안 물었다    v2-plan-refuses-a-stage3-context-g87 node 1 · -k s02_02
+★ 안 물었다    v3-plan-refuses-legacy-fallback-g87 node 1 · -k s02_01
+★ 안 물었다    unknown-spec-version-is-not-authorized-g87 node 1 · -k s02_05
+★ 안 물었다    entrypoint-compares-the-design-digest-g87 node 1 · -k s04_02
+★ 안 물었다    entrypoint-does-not-trust-the-index-planned-id-g87 node 1 · -k s04_04
+★ 안 물었다    entrypoint-requires-provider-run-dirs-g87 node 1 · -k s04_03
+★ 안 물었다    cli-stage3-plan-conflicting-leg-is-refused-g87 node 1 · -k s05_01
+★ 안 물었다    cli-stage3-plan-requires-explicit-flags-g87 node 3 · -k s05_02
+★ 안 물었다    cli-stage3-plan-builds-the-context-g87 node 1 · -k s05_03
+★ 안 물었다    shell-stage3-plan-is-only-for-mode-fit-g87 node 2 · -k s06_04
+★ 안 물었다    shell-stage3-plan-conflicting-leg-is-refused-g87 node 1 · -k s06_03
+★ 안 물었다    shell-passes-stage3-plan-to-python-g87 node 1 · -k s06_02
+
+=== 관측한 EXPECT (그대로 붙여 넣어라) ===
+{
+    "cli-stage3-plan-builds-the-context-g87": {
+        "fail": [
+            "tests/test_gate87_round2b.py::test_s05_03_stage3_plan_builds_the_context_once_and_hands_it_to_run_fit"
+        ],
+        "witness": {
+            "tests/test_gate87_round2b.py::test_s05_03_stage3_plan_builds_the_context_once_and_hands_it_to_run_fit": "AssertionError: CLI 가 stage3_context_from_plan 을 한 번 부르지 않았다"
+        }
+    },
+    "cli-stage3-plan-conflicting-leg-is-refused-g87": {
+        "fail": [
+            "tests/test_gate87_round2b.py::test_s05_01_stage3_plan_conflicting_with_leg_exits_before_reading_the_ledger"
+        ],
+        "witness": {
+            "tests/test_gate87_round2b.py::test_s05_01_stage3_plan_conflicting_with_leg_exits_before_reading_the_ledger": "Failed: DID NOT RAISE SystemExit"
+        }
+    },
+    "cli-stage3-plan-requires-explicit-flags-g87": {
+        "fail": [
+            "tests/test_gate87_round2b.py::test_s05_02_stage3_plan_requires_explicit_no_adaptive_and_no_warm_start[adaptive-only]",
+            "tests/test_gate87_round2b.py::test_s05_02_stage3_plan_requires_explicit_no_adaptive_and_no_warm_start[none]",
+            "tests/test_gate87_round2b.py::test_s05_02_stage3_plan_requires_explicit_no_adaptive_and_no_warm_start[warm-only]"
+        ],
+        "witness": {
+            "tests/test_gate87_round2b.py::test_s05_02_stage3_plan_requires_explicit_no_adaptive_and_no_warm_start[adaptive-only]": "Failed: DID NOT RAISE SystemExit",
+            "tests/test_gate87_round2b.py::test_s05_02_stage3_plan_requires_explicit_no_adaptive_and_no_warm_start[none]": "Failed: DID NOT RAISE SystemExit",
+            "tests/test_gate87_round2b.py::test_s05_02_stage3_plan_requires_explicit_no_adaptive_and_no_warm_start[warm-only]": "Failed: DID NOT RAISE SystemExit"
+        }
+    },
+    "context-paths-are-repo-relative-g87": {
+        "fail": [
+            "tests/test_gate87_round2b.py::test_s03_07_context_paths_must_be_repo_relative[abs-design]",
+            "tests/test_gate87_round2b.py::test_s03_07_context_paths_must_be_repo_relative[abs-provider]",
+            "tests/test_gate87_round2b.py::test_s03_07_context_paths_must_be_repo_relative[dotdot-design]",
+            "tests/test_gate87_round2b.py::test_s03_07_context_paths_must_be_repo_relative[dotdot-provider]",
+            "tests/test_gate87_round2b.py::test_s03_07_context_paths_must_be_repo_relative[empty-design]",
+            "tests/test_gate87_round2b.py::test_s03_07_context_paths_must_be_repo_relative[empty-provider]",
+            "tests/test_gate87_round2b.py::test_s03_07_context_paths_must_be_repo_relative[inner-dotdot]"
+        ],
+        "witness": {
+            "tests/test_gate87_round2b.py::test_s03_07_context_paths_must_be_repo_relative[abs-design]": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate87_round2b.py::test_s03_07_context_paths_must_be_repo_relative[abs-provider]": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate87_round2b.py::test_s03_07_context_paths_must_be_repo_relative[dotdot-design]": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate87_round2b.py::test_s03_07_context_paths_must_be_repo_relative[dotdot-provider]": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate87_round2b.py::test_s03_07_context_paths_must_be_repo_relative[empty-design]": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate87_round2b.py::test_s03_07_context_paths_must_be_repo_relative[empty-provider]": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate87_round2b.py::test_s03_07_context_paths_must_be_repo_relative[inner-dotdot]": "Failed: DID NOT RAISE PreserveError"
+        }
+    },
+    "entrypoint-compares-the-design-digest-g87": {
+        "fail": [
+            "tests/test_gate87_round2b.py::test_s04_02_a_design_file_whose_bytes_differ_from_the_plan_is_refused_before_run_fit"
+        ],
+        "witness": {
+            "tests/test_gate87_round2b.py::test_s04_02_a_design_file_whose_bytes_differ_from_the_plan_is_refused_before_run_fit": "Failed: DID NOT RAISE any of (PreserveError, ValueError)"
+        }
+    },
+    "entrypoint-does-not-trust-the-index-planned-id-g87": {
+        "fail": [
+            "tests/test_gate87_round2b.py::test_s04_04_the_entrypoint_does_not_trust_the_index_for_planned_id"
+        ],
+        "witness": {
+            "tests/test_gate87_round2b.py::test_s04_04_the_entrypoint_does_not_trust_the_index_for_planned_id": "Failed: DID NOT RAISE any of (PreserveError, ValueError)"
+        }
+    },
+    "entrypoint-requires-provider-run-dirs-g87": {
+        "fail": [
+            "tests/test_gate87_round2b.py::test_s04_03_a_missing_design_file_or_provider_dir_is_refused"
+        ],
+        "witness": {
+            "tests/test_gate87_round2b.py::test_s04_03_a_missing_design_file_or_provider_dir_is_refused": "Failed: DID NOT RAISE any of (PreserveError, ValueError, FileNotFoundError)"
+        }
+    },
+    "envelope-generation-is-v6-g87": {
+        "fail": [
+            "tests/test_gate87_round2b.py::test_s03_04_an_envelope_that_disagrees_with_the_entry_is_refused[generation]"
+        ],
+        "witness": {
+            "tests/test_gate87_round2b.py::test_s03_04_an_envelope_that_disagrees_with_the_entry_is_refused[generation]": "Failed: DID NOT RAISE PreserveError"
+        }
+    },
+    "envelope-leg-id-is-bound-to-the-entry-g87": {
+        "fail": [
+            "tests/test_gate87_round2b.py::test_s03_04_an_envelope_that_disagrees_with_the_entry_is_refused[leg_id]"
+        ],
+        "witness": {
+            "tests/test_gate87_round2b.py::test_s03_04_an_envelope_that_disagrees_with_the_entry_is_refused[leg_id]": "Failed: DID NOT RAISE PreserveError"
+        }
+    },
+    "envelope-source-digest-is-bound-to-the-entry-g87": {
+        "fail": [
+            "tests/test_gate87_round2b.py::test_s03_04_an_envelope_that_disagrees_with_the_entry_is_refused[source_digest]"
+        ],
+        "witness": {
+            "tests/test_gate87_round2b.py::test_s03_04_an_envelope_that_disagrees_with_the_entry_is_refused[source_digest]": "Failed: DID NOT RAISE PreserveError"
+        }
+    },
+    "provider-runs-match-the-warm-consumers-g87": {
+        "fail": [
+            "tests/test_gate87_round2b.py::test_s03_06_provider_runs_must_name_exactly_the_warm_consumers"
+        ],
+        "witness": {
+            "tests/test_gate87_round2b.py::test_s03_06_provider_runs_must_name_exactly_the_warm_consumers": "Failed: DID NOT RAISE PreserveError"
+        }
+    },
+    "shell-passes-stage3-plan-to-python-g87": {
+        "fail": [
+            "tests/test_gate87_round2b.py::test_s06_02_fit_dry_argv_carries_stage3_plan_and_leg_exactly_once"
+        ],
+        "witness": {
+            "tests/test_gate87_round2b.py::test_s06_02_fit_dry_argv_carries_stage3_plan_and_leg_exactly_once": "AssertionError: fit dry argv 에 --stage3-plan X 가 정확히 한 번 있어야 한다"
+        }
+    },
+    "shell-stage3-plan-conflicting-leg-is-refused-g87": {
+        "fail": [
+            "tests/test_gate87_round2b.py::test_s06_03_stage3_plan_conflicting_with_leg_is_refused_by_the_shell"
+        ],
+        "witness": {
+            "tests/test_gate87_round2b.py::test_s06_03_stage3_plan_conflicting_with_leg_is_refused_by_the_shell": "AssertionError: 셸이 --stage3-plan 과 --leg 의 충돌을 거부하지 않았다"
+        }
+    },
+    "shell-stage3-plan-is-only-for-mode-fit-g87": {
+        "fail": [
+            "tests/test_gate87_round2b.py::test_s06_04_stage3_plan_is_only_valid_for_mode_fit[all]",
+            "tests/test_gate87_round2b.py::test_s06_04_stage3_plan_is_only_valid_for_mode_fit[grid]"
+        ],
+        "witness": {
+            "tests/test_gate87_round2b.py::test_s06_04_stage3_plan_is_only_valid_for_mode_fit[all]": "AssertionError: --mode all 에서 --stage3-plan 이 거부되지 않았다",
+            "tests/test_gate87_round2b.py::test_s06_04_stage3_plan_is_only_valid_for_mode_fit[grid]": "AssertionError: --mode grid 에서 --stage3-plan 이 거부되지 않았다"
+        }
+    },
+    "stage3-axis-is-derived-not-copied-g87": {
+        "fail": [
+            "tests/test_gate87_round2b.py::test_s03_05_a_stage3_axis_that_is_not_derived_from_the_envelope_is_refused[arm]",
+            "tests/test_gate87_round2b.py::test_s03_05_a_stage3_axis_that_is_not_derived_from_the_envelope_is_refused[candidate_mode]",
+            "tests/test_gate87_round2b.py::test_s03_05_a_stage3_axis_that_is_not_derived_from_the_envelope_is_refused[planned_id]",
+            "tests/test_gate87_round2b.py::test_s03_05_a_stage3_axis_that_is_not_derived_from_the_envelope_is_refused[provider_edges_sha256]",
+            "tests/test_gate87_round2b.py::test_s03_05_a_stage3_axis_that_is_not_derived_from_the_envelope_is_refused[roster_sha256]"
+        ],
+        "witness": {
+            "tests/test_gate87_round2b.py::test_s03_05_a_stage3_axis_that_is_not_derived_from_the_envelope_is_refused[arm]": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate87_round2b.py::test_s03_05_a_stage3_axis_that_is_not_derived_from_the_envelope_is_refused[candidate_mode]": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate87_round2b.py::test_s03_05_a_stage3_axis_that_is_not_derived_from_the_envelope_is_refused[planned_id]": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate87_round2b.py::test_s03_05_a_stage3_axis_that_is_not_derived_from_the_envelope_is_refused[provider_edges_sha256]": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate87_round2b.py::test_s03_05_a_stage3_axis_that_is_not_derived_from_the_envelope_is_refused[roster_sha256]": "Failed: DID NOT RAISE PreserveError"
+        }
+    },
+    "stage3-axis-keys-are-closed-g87": {
+        "fail": [
+            "tests/test_gate87_round2b.py::test_s01_02_the_v3_builder_refuses_an_open_or_mistyped_stage3_axis[extra]",
+            "tests/test_gate87_round2b.py::test_s01_02_the_v3_builder_refuses_an_open_or_mistyped_stage3_axis[missing]"
+        ],
+        "witness": {
+            "tests/test_gate87_round2b.py::test_s01_02_the_v3_builder_refuses_an_open_or_mistyped_stage3_axis[extra]": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate87_round2b.py::test_s01_02_the_v3_builder_refuses_an_open_or_mistyped_stage3_axis[missing]": "KeyError: 'planned_id'"
+        }
+    },
+    "stage3-axis-planned-id-is-the-envelope-digest-g87": {
+        "fail": [
+            "tests/test_gate87_round2b.py::test_s01_01_the_v3_builder_seals_the_stage3_axis_derived_from_the_envelope",
+            "tests/test_gate87_round2b.py::test_s04_01_the_entrypoint_builds_the_context_from_the_ledger_and_run_fit_completes"
+        ],
+        "witness": {
+            "tests/test_gate87_round2b.py::test_s01_01_the_v3_builder_seals_the_stage3_axis_derived_from_the_envelope": "AssertionError: stage3.planned_id 가 envelope digest 가 아니다",
+            "tests/test_gate87_round2b.py::test_s04_01_the_entrypoint_builds_the_context_from_the_ledger_and_run_fit_completes": "tools.preserve.PreserveError: [plan] 'g87_v6_leg': 재구성한 계획의 planned_id 8b1e83a71513345c ≠ run_spec.stage3.planned_id aa1572711685ffd0 — 승인 spec 과 envelope 가 서로 다른 계획이다"
+        }
+    },
+    "unknown-spec-version-is-not-authorized-g87": {
+        "fail": [
+            "tests/test_gate87_round2b.py::test_s02_05_an_unknown_spec_version_without_v6_slots_is_refused_by_the_consumer"
+        ],
+        "witness": {
+            "tests/test_gate87_round2b.py::test_s02_05_an_unknown_spec_version_without_v6_slots_is_refused_by_the_consumer": "AssertionError: 거부 이유가 spec 버전 규칙이 아니다"
+        }
+    },
+    "v2-plan-refuses-a-stage3-context-g87": {
+        "fail": [
+            "tests/test_gate87_round2b.py::test_s02_02_a_v2_plan_with_a_stage3_context_is_refused_before_fit_one"
+        ],
+        "witness": {
+            "tests/test_gate87_round2b.py::test_s02_02_a_v2_plan_with_a_stage3_context_is_refused_before_fit_one": "AssertionError: 거부 이유가 v5 계획의 v6 문맥 금지 규칙이 아니다"
+        }
+    },
+    "v2-plan-refuses-v6-slots-g87": {
+        "fail": [
+            "tests/test_gate87_round2b.py::test_s03_03_a_v2_entry_carrying_a_v6_slot_is_refused[both]",
+            "tests/test_gate87_round2b.py::test_s03_03_a_v2_entry_carrying_a_v6_slot_is_refused[planned_envelope]",
+            "tests/test_gate87_round2b.py::test_s03_03_a_v2_entry_carrying_a_v6_slot_is_refused[stage3_context]"
+        ],
+        "witness": {
+            "tests/test_gate87_round2b.py::test_s03_03_a_v2_entry_carrying_a_v6_slot_is_refused[both]": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate87_round2b.py::test_s03_03_a_v2_entry_carrying_a_v6_slot_is_refused[planned_envelope]": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate87_round2b.py::test_s03_03_a_v2_entry_carrying_a_v6_slot_is_refused[stage3_context]": "Failed: DID NOT RAISE PreserveError"
+        }
+    },
+    "v3-plan-refuses-legacy-fallback-g87": {
+        "fail": [
+            "tests/test_gate87_round2b.py::test_s02_01_a_v3_plan_without_a_stage3_context_is_refused_before_fit_one"
+        ],
+        "witness": {
+            "tests/test_gate87_round2b.py::test_s02_01_a_v3_plan_without_a_stage3_context_is_refused_before_fit_one": "AssertionError: 거부 이유가 v6 계획의 legacy fallback 금지 규칙이 아니다"
+        }
+    },
+    "v3-plan-requires-both-v6-slots-g87": {
+        "fail": [
+            "tests/test_gate87_round2b.py::test_s03_02_a_v3_entry_missing_either_slot_is_refused[planned_envelope]",
+            "tests/test_gate87_round2b.py::test_s03_02_a_v3_entry_missing_either_slot_is_refused[stage3_context]"
+        ],
+        "witness": {
+            "tests/test_gate87_round2b.py::test_s03_02_a_v3_entry_missing_either_slot_is_refused[planned_envelope]": "KeyError: 'planned_envelope'",
+            "tests/test_gate87_round2b.py::test_s03_02_a_v3_entry_missing_either_slot_is_refused[stage3_context]": "KeyError: 'stage3_context'"
+        }
+    }
+}
+
+scenario_total 22 · scenario_executable 22 · scenario_declared 0 · site_total 22 · site_executable 22 · site_declared 0 · ran 22
+
+=== 문제 ===
+stage3-axis-planned-id-is-the-envelope-digest-g87: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+stage3-axis-keys-are-closed-g87: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+v3-plan-requires-both-v6-slots-g87: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+v2-plan-refuses-v6-slots-g87: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+envelope-leg-id-is-bound-to-the-entry-g87: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+envelope-source-digest-is-bound-to-the-entry-g87: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+envelope-generation-is-v6-g87: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+stage3-axis-is-derived-not-copied-g87: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+provider-runs-match-the-warm-consumers-g87: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+context-paths-are-repo-relative-g87: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+v2-plan-refuses-a-stage3-context-g87: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+v3-plan-refuses-legacy-fallback-g87: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+unknown-spec-version-is-not-authorized-g87: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+entrypoint-compares-the-design-digest-g87: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+entrypoint-does-not-trust-the-index-planned-id-g87: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+entrypoint-requires-provider-run-dirs-g87: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+cli-stage3-plan-conflicting-leg-is-refused-g87: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+cli-stage3-plan-requires-explicit-flags-g87: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+cli-stage3-plan-builds-the-context-g87: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+shell-stage3-plan-is-only-for-mode-fit-g87: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+shell-stage3-plan-conflicting-leg-is-refused-g87: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+shell-passes-stage3-plan-to-python-g87: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+rc=1

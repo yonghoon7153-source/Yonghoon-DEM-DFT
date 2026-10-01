@@ -8841,3 +8841,25 @@ pytest **2046 passed / 1 xfailed / rc 0** · smoke **rc 0 / 168 s** · 같은 so
 **하지 않음 (승인 밖 그대로):** 실행 GO · 새 연구 leg · 운영 원장에 v6 계획 항목 작성 · 세대표 등록 · p_ini · class 변경 · 투영 게시 · requirements 상한 (§13-7 보류 — 사용자 별도 결정).
 
 **절차:** RED (`tests/test_gate87_round2b.py`) → 최소 GREEN → 변이 `-g87` → 영수증 (validator identity 실측 뒤 결정) → 전체 회귀 · smoke · 등록부 전체 재생 → GATE87 요청문.
+
+## §127 87차 요청 — 단계 3 **라운드 2b 제한 구현** 결과 (R2-a 실물 v6 leg gate · R2-c 이름 체계 · G84-N2 · 2b 종결 판정 요청 · 실행 GO 아님) · 판정 대상 `b8d4b693`
+
+**승인 → 고정 → 구현 순서 (§126):** 고정 표 §13 커밋 `0b21490d` (코드 변경 전) → RED `tests/test_gate87_round2b.py` 63 node
+(52 failed / 11 passed — helper 부재 · argparse/셸 unknown-arg · 골든 s00/s07 는 처음부터 GREEN) → GREEN `b8d4b693`
+(RUN_SCOPE 3 파일 · `src/io.py` 불변 · source_digest `f1f4378f46610f08` → `864edfb73b9695a1`) → 시험 정정 `929b7cee` → 변이
+22 + EXPECT `ba0f48b1` → 영수증 history `794ba6db` · 재생성 `7fbaa45b` (paired 35 · grid 34 · identity 줄만 변경).
+
+| 항목 | 결과 |
+|---|---|
+| R2-a (1) spec 버전 분기 | `leg_run_spec_v3` (`leg_spec_version: 3` · 닫힌 `stage3` 9 키 · envelope 유도 하나) · v2 바이트/digest 골든 (`b8f90ad9…` · 운영 원장 `0838df84…`) |
+| R2-a (2) 계획 index v4 자리 | prospective 선택 키 `planned_envelope` · `stage3_context` · v3 ⇔ 둘 다 · envelope leg_id/source_digest/세대 결속 · `run_spec.stage3 == 유도값` · 경로 모양 · provider 키 집합 (`_check_v6_plan_slots`) |
+| R2-a (3) 진입점 | `src/fitting.py::stage3_context_from_plan` 한 곳 · CLI `--stage3-plan` (`--leg` 충돌 rc 2 · `--no-adaptive --no-warm-start` 명시 · 원장 읽기 전) · `run.sh --stage3-plan` (fit 전용 · 충돌 rc 1 · LEG export · argv) · `_stage3_preflight` · `_prepare_stage3` 우회 없음 (s04_06) |
+| R2-c | 세대 이름 `v6` 하나 · validator digest 미등록 (s07) |
+| G84-N2 | v3 계획 + 문맥 없음 거부 · v2 계획 + 문맥 거부 · 미지 버전 거부 (s02 · 비-smoke · `_fit_one` 도달 0) |
+| 변이 | 1 회차 3 생존 (시험 s03_04 자기비일관 위조 — 정정) → 2 회차 22/22 사망 → EXPECT 대조 22/22 rc 0 |
+| 전체 회귀 (`7fbaa45b` clean) | pytest **2109 passed / 1 xfailed / rc 0** (1:01:31) · smoke **rc 0** (3 min) |
+| 등록부 전체 재생 (`7fbaa45b`) | 1 회차 하네스 상한으로 254/374 에서 중단 (rc 124 · 생존 0 · 근거 아님) → 2 회차 분리 실행 **374/374 사망 · rc 0** (06:27:50Z → 09:14:23Z) |
+| 자체 신고 | 요청문 §6 a–g (변이 생존 원인 · planned-id 변이 -k 축소 · §13-4 c GREEN 정정 · 계약 인용 좌표 · 관련 모듈 회귀 15 failed 의 분류 · invalid-envelope 가정 오류 · index 의 버전 비검사 범위) |
+
+**요청:** `docs/22p_gap/GATE87_REQUEST.md` · 증거 `docs/22p_gap/gate87_evidence/` (README 전체 sha256). **아님:** 실행 GO · 새 연구 leg ·
+운영 원장 v6 계획 항목 · 세대표 등록 · p_ini · class 변경 · 투영 게시 · requirements 상한 (§13-7 보류 — 사용자 별도 결정).
