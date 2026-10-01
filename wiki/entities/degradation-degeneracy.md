@@ -2,7 +2,7 @@
 title: degradation-degeneracy
 description: "22p 세미나의 LLI/LAM 분해가 물리인지 fitting degeneracy 인지, 정답을 아는 PyBaMM 합성 곡선 격자로 판별한다"
 created: 2026-08-11
-updated: 2026-09-03
+updated: 2026-10-01
 type: entity
 tags: [project, satellite, battery, degradation, pybamm, gate-review]
 sources: [raw/repositories/degradation-degeneracy-audit.md, raw/papers/dubarry2012_synthesize-degradation-modes.md]
@@ -78,3 +78,4 @@ evidenceScope: multi-source-primary
   제외 수는 artifact·`docs/RESULTS*.md` 가 정본이다 (위키에 수치 복사 금지).
 - 이 페이지의 상태 서술은 **파이프라인 진행 상태**이지 연구 결론이 아니다.
   결론은 실행 뒤 실제로 철회·한정됐으므로, 인용은 반드시 정본에서 한다.
+- [[pybamm]] — 합성 truth 엔진의 버전 · 릴리스 영향 판정 (2026-10-01: requirements 상한 없음 — 재현성 위험 메모)

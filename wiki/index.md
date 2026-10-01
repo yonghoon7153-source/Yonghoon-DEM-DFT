@@ -1,13 +1,15 @@
 # 위키 색인
 
 > 내용 목록. 모든 위키 페이지를 종류별로 한 줄 요약과 함께 싣는다.
-> 마지막 갱신: 2026-09-29 | 전체 페이지: 53
+> 마지막 갱신: 2026-10-01 | 전체 페이지: 56
 
 ## Entities (satellite 프로젝트)
 
 - [[degradation-degeneracy]] — 22p LLI/LAM 분해가 물리인지 degeneracy 인지 판별하는 PyBaMM 합성 truth 프로젝트 (첫 satellite, 13차 게이트 리뷰 대기).
 - [[mode-observability]] — "관측을 늘리면 갈리는가": PVS·SEV Jacobian 식별 가능성 + ML 라벨 degeneracy 전파 (둘째 satellite, 2026-09-03 개설).
 - [[isc-balancing-dataset-est-d-24-12331]] — **외부 데이터셋 entity** (`pack-fault`): Lai 2025 의 6S2P 18650 모듈 ISC × 수동/능동 균등화 공개 데이터. **정답 라벨이 설계값**(ISC 저항)인 유일한 실팩 데이터 — 단 우리 축(LLI/LAM)의 라벨이 아니다. `[재현]` 열 12(+열 13 환류 0.714 Ah)의 적분이 논문 Fig. 3/4 를 0.01 Ah 안에서 재현 · 열 14 인덱스 0 = 셀 #1. ⚠ 공개 아카이브의 `165_passive.xlsx` 가 깨져 있어 **Table 6 수동(추정 SoH 의 유일한 수동 숫자)·Fig. 5(b)·8(b) 재현 불가.** 조사 정본은 `bms-balancing/docs/ISC_LEAKAGE_DATASET.md`.
+- [[pybamm]] — **의존성 entity** (`pybamm`): 합성 truth 엔진. 우리 경로(full DFN · composite 음극 · 기본 uniform submesh · LLI 자체 계산)와 릴리스별 영향 판정표 — 26.9.0.0 은 #5755(비균일 격자) 만 열린 물음, **requirements 상한 없음 = 새 설치가 26.9 를 끌어오는 재현성 위험** (고정은 RUN_SCOPE 변경이라 게이트로).
+- [[pyprobe]] — **외부 도구 entity**: 전극 OCP 로 셀 OCV·ICA·DVA 를 맞춰 전극 용량·리튬 재고를 추정 (Imperial). 경쟁 도구이자 우리 degeneracy 질문을 적용할 **판정 대상** 후보 · 미실행 · 단일 출처 (2026-10-01 브리핑).
 
 ## Concepts (개념)
 
@@ -60,6 +62,7 @@
 
 - [[gate-review-loop]] — 비싼 본 실행 전 외부 리뷰어와 도는 적대적 게이트 루프: 수정 → 검증 → push → 대상 커밋 명시 요청문 → GO 후에만 실행.
 - [[new-project-kickoff]] — 새 프로젝트 킥오프 프롬프트: 폴더 세팅 + satellite 등록 표준 절차 (repo-root 상대 경로 `wiki` 적응판).
+- [[daily-github-briefing-triage]] — 매일 오는 GitHub 연구 브리핑의 처리 기준: 네 축(의존성 위험 · 경쟁 도구 · 미세단락 도구 · 실험 아이디어)으로 분류 · 1차 출처 대조 · **브리핑만으로 RUN_SCOPE 를 건드리지 않는다** · 시험은 별도 가상환경에서만.
 - [[paper-ingest-mode]] — 논문 수치·정의를 verbatim atom 으로 분해하는 opt-in ingest 모드 (사용자 승인 필수).
 
 ## Questions (열린 질문)

@@ -2,7 +2,7 @@
 title: 팩 ISC/누설 검출에서 균등화 전류가 관측을 덮는가
 description: "In a liquid-cell pack, when detecting/quantifying an internal short or leakage, does the balancing current mask the observation — and if so, what separates leakage from self-discharge spread, capacity spread and the balancer itself"
 created: 2026-09-22
-updated: 2026-09-22
+updated: 2026-10-01
 type: research-question
 tags: [battery, research, pack-fault]
 sources: [raw/papers/lai2025_balanced-capacity-isc-detection-modules.md]
@@ -128,6 +128,9 @@ feedsInto: "bms-balancing/docs/NEW_MODEL_REQUIREMENTS.md — §3 후보 원인 �
   검출+정량/폭 없음 · 균등화 영향 · 누설=derived), **17 열은 논문 무언급으로 미해결.**
   P1~P6 채움표 1 행. 공개 데이터 2 파일로 Fig. 3/4 재현 확인. 재현 불가 원장(`165_passive`)
   → entity.
+- [2026-10-01] 탐색 음성 1 회 (단일 출처) — GitHub 연구 브리핑 첫 회가 "바로 신뢰할 만한 미세단락 전용 분류기를
+  찾지 못했다" 고 보고. 브리핑의 후보 [[pyprobe]] 는 열화 피팅 도구이지 ISC 판별 도구가 아니다 ("적합도가 좋다고
+  미세단락까지 입증되는 건 아니다"). 앞으로의 브리핑은 [[daily-github-briefing-triage]] ③ 축으로 이 카드에 들어온다.
 
 ## 이 카드가 주장하지 않는 것
 

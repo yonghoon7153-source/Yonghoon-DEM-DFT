@@ -2,7 +2,7 @@
 title: Fitting Degeneracy (LLI/LAM 분리가능성)
 description: "full-cell 곡선 하나로 LLI·LAM_PE·LAM_NE 를 가를 수 있는가 — flat valley(데이터 한계)와 multimodal(최적화 난이도)의 구분"
 created: 2026-08-11
-updated: 2026-09-22
+updated: 2026-10-01
 type: concept
 tags: [battery, degradation, research]
 sources: [raw/repositories/degradation-degeneracy-audit.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md]
@@ -354,3 +354,4 @@ high-fidelity, cell-level models of chemo-mechanical stress evolution. These mod
 [[mode-identifiability-unmeasured-lineage]] — 이 계보가 축퇴를 세 번 인쇄하고도
 (Dubarry 식 · Birkl 산문 · Marongiu 식) 한 번도 null 을 풀지 않았다는 것, 그리고
 위 "그리는 법" 의 기계가 옆 논문에 있는데 **두 논문이 서로를 인용하지 않는다**는 것.
+- [[pyprobe]] — 같은 electrode balancing 피팅을 구현한 외부 도구 (2026-10-01 브리핑 · 미실행) — 우리 합성 truth 로 이 도구의 식별성을 재 볼 수 있는 판정 대상 후보

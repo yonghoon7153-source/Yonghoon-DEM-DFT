@@ -2,7 +2,7 @@
 title: 22p 결과는 물리인가 fitting degeneracy 인가
 description: "Is the seminar 22p LLI/LAM decomposition (LAM_PE=LAM_NE=13%, LLI=17%) real physics or an artifact of non-identifiability"
 created: 2026-08-11
-updated: 2026-09-23
+updated: 2026-10-01
 type: research-question
 tags: [battery, degradation, research]
 sources: [raw/repositories/degradation-degeneracy-audit.md, raw/papers/schmitt2022_sic-ocp-shape-change-degradation-modes.md, raw/papers/2026-09-21-siwon-kim-si-gr-ica-lam-si-gitt-ocp.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/cui2024_electrode-utilization-formation-cycle-life.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/mohtat2019_electrode-soh-estimability-expansion.md, raw/papers/natterer2026_re-halfcell-anode-potential-aging.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md]
@@ -1048,6 +1048,11 @@ LAM_PE ≈ LAM_NE 는 물리가 아니라 **flat valley 방향에서 두 전극�
   2전극 차 측정의 전극 맞바꿈 대칭이 전달함수 수준에서 인쇄돼 있다(Evidence For). 그리고 반대쪽
   사실 하나: 식별성을 **잰** 원전도 모드 축(`Q_th` · `x⁰`)은 입력으로 뺐다 —
   [[mode-identifiability-unmeasured-lineage]] 의 "분해의 유일성을 잰 편 0" 과 충돌하지 않는다.
+- **[2026-10-01] GitHub 브리핑 첫 회 — 새 근거 0, 판정 대상 후보 1.** [[pyprobe]] (OCV·ICA·DVA 로 전극 용량 · 리튬 재고 추정)
+  가 이 카드가 묻는 피팅을 구현한 공개 도구로 들어왔다. Evidence For/Against 에는 넣지 않는다 — 미실행 · 단일 출처.
+  쓸 자리: 참값을 아는 우리 합성 truth 를 넣어 같은 축퇴를 보이는지 재는 **판정 대상** (먼저 확인할 것: 형상만
+  쓰는가, 절대 용량도 쓰는가 — [[np-lip-ocv-reparametrization]] 2 자유도). 같은 날 [[pybamm]] 26.9 영향 판정: 우리 경로에
+  닿는 수치 변경은 #5755 하나가 열린 물음 (x 격자 subdomain 접합부) · 재현성 위험은 requirements 상한 부재.
 
 ### 이 카드가 속한 논지 (2026-09-03)
 
