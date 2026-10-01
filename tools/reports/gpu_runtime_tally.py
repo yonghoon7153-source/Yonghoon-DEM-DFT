@@ -36,7 +36,7 @@ TRACKS = [
     ("① W_ad interface (DEM input)", r"^wad_"),
     ("② Nd cathode interface (CEI)", r"^(cei_|nd_|icohp|ndo_)"),
     ("③ glass small cell (Li transport)", r"^(lpscl_glass|lpscl_smallcell|glass_)"),
-    ("④ crystalline transport · framework · elastic", r"^(b2o3|elastic_|gap_nscf|committee_|modelc_|lpsocl_|lpscl16_)"),
+    ("④ crystalline transport · framework · elastic", r"^(b2o3|elastic_|gap_nscf|committee_|modelc_|lpsocl_|lpscl16_|highT_reseed)"),
     ("⑤ SDCP self-doping (molecular)", r"^sdcp_"),
 ]
 OTHER = "기타 (트랙 밖)"
@@ -183,8 +183,9 @@ def parse_json_job(p, name):
 JSON_NAMES = ("ensemble_results.json", "run_meta.json", "result.json", "plan.json", "relax_meta.json")
 
 
-def scan(roots, since, until, prune=PRUNE):
-    jobs = []
+def scan(roots, since, until, prune=PRUNE, own_uid=None):
+    """기간과 겹치는 잡을 찾는다. own_uid 를 주면 출력 파일 주인이 다른 잡(다른 기계에서 옮겨 온 산출물)은 따로 모아 돌려준다."""
+    jobs, foreign = [], []
     for root in roots:
         if not os.path.isdir(root):
             continue
@@ -217,8 +218,9 @@ def scan(roots, since, until, prune=PRUNE):
                 rel = os.path.relpath(p, root)
                 rec.update(path=p, rel=rel, root=root, top=rel.split(os.sep)[0], track=track_of(rel.split(os.sep)[0]))
                 rec["in_s"] = max(0.0, min(rec["end"], until) - max(rec["start"], since))
-                jobs.append(rec)
-    return jobs
+                rec["uid"] = stt.st_uid
+                (foreign if (own_uid is not None and stt.st_uid != own_uid) else jobs).append(rec)
+    return (jobs, foreign) if own_uid is not None else jobs
 
 
 def track_of(top):
@@ -270,8 +272,11 @@ def summarize(jobs, since, until):
            "cpu_core_h": sum(j["in_s"] * (j["nproc"] or 1) for j in cpu) / 3600,
            "cpu_nproc_unknown": sum(1 for j in cpu if not j["nproc"]),
            "approx_n": sum(1 for j in jobs if j["approx"])}
-    lj = max((j for j in jobs if j["wall_s"]), key=lambda j: j["wall_s"], default=None)
-    out["longest"] = None if lj is None else {"wall": lj["wall_s"], "rel": lj["rel"], "kind": lj["kind"], "gpu": lj["gpu"], "status": lj["status"], "approx": lj["approx"]}
+    pick = lambda j: {"wall": j["wall_s"], "rel": j["rel"], "kind": j["kind"], "gpu": j["gpu"], "status": j["status"], "approx": j["approx"]}
+    le = max((j for j in jobs if j["wall_s"] and not j["approx"]), key=lambda j: j["wall_s"], default=None)
+    la = max((j for j in jobs if j["wall_s"] and j["approx"]), key=lambda j: j["wall_s"], default=None)
+    out["longest"] = None if le is None else pick(le)            # 끝 줄(실행 시간)이 박힌 런만 — 추정은 헤드라인이 아니다
+    out["longest_approx"] = None if la is None or (le and la["wall_s"] <= le["wall_s"]) else pick(la)
     tracks = OrderedDict((n, []) for n, _ in TRACKS + [(OTHER, None)])
     for j in jobs:
         tracks[j["track"]].append(j)
@@ -279,7 +284,7 @@ def summarize(jobs, since, until):
     return out
 
 
-def report(jobs, since, until, keys=3, title="GABIA GPU SERVER (RTX A6000)"):
+def report(jobs, since, until, keys=3, title="GABIA GPU SERVER (RTX A6000)", foreign=None):
     s = summarize(jobs, since, until)
     bar = "=" * 62
     d0, d1 = dt.date.fromtimestamp(since), dt.date.fromtimestamp(until - 1)
@@ -293,7 +298,14 @@ def report(jobs, since, until, keys=3, title="GABIA GPU SERVER (RTX A6000)"):
     L += ["> Jobs in window",
           f"  jobs                    : {s['n_jobs']}  ({kinds})",
           f"  done / stopped / unconverged / running-or-cut : {st.get('done', 0)} / {st.get('stopped', 0)} / {st.get('unconverged', 0)} / {st.get('running/cut', 0)}",
-          f"  time read from files    : exact {s['n_jobs'] - s['approx_n']} · approx {s['approx_n']} (no end line yet — start→last write)", "",
+          f"  time read from files    : exact {s['n_jobs'] - s['approx_n']} · approx {s['approx_n']} (no end line yet — start→last write)", ""]
+    if foreign:
+        from collections import Counter
+        fc = Counter(j["track"] for j in foreign)
+        fh = sum(j["in_s"] for j in foreign) / 3600
+        L += [f"> Copied in from other machines (file owner uid ≠ this account) — excluded from every total below",
+              f"  {len(foreign)} jobs · {fh:,.1f} job-hours · uid {sorted(set(j['uid'] for j in foreign))} · " + " · ".join(f"{k.split()[0]} {v}" for k, v in fc.items()), ""]
+    L += [
           "> GPU (RTX A6000 · 1 card)",
           f"  GPU job-hours (in window) : {s['gpu_job_h']:,.1f} h  (jobs sharing the card are counted separately)",
           f"  GPU occupied (union)      : {s['gpu_union_h']:,.1f} h of {s['window_h']:,.0f} h ({100 * s['gpu_union_h'] / s['window_h']:.1f} %)", "",
@@ -301,7 +313,11 @@ def report(jobs, since, until, keys=3, title="GABIA GPU SERVER (RTX A6000)"):
           f"  core-hours (in window)    : {s['cpu_core_h']:,.1f} core·h" + (f"  (rank count unknown → 1 : {s['cpu_nproc_unknown']} jobs)" if s["cpu_nproc_unknown"] else ""), ""]
     lg = s["longest"]
     if lg:
-        L += [f"> longest single run      : {fmt_dhms(lg['wall'])}{' ≈' if lg['approx'] else ''}  {lg['rel']}  ({lg['kind']} · {'GPU' if lg['gpu'] else 'CPU'} · {lg['status']})", ""]
+        L.append(f"> longest single run      : {fmt_dhms(lg['wall'])}  {lg['rel']}  ({lg['kind']} · {'GPU' if lg['gpu'] else 'CPU'} · {lg['status']})")
+        la = s.get("longest_approx")
+        if la:
+            L.append(f"  (끝 줄 없는 런 중 최장 ≈ {fmt_dhms(la['wall'])}  {la['rel']} · {la['status']} — 시작~마지막 기록이라 헤드라인에서 뺐다)")
+        L.append("")
     L.append("> By track (run folders under the roots · key output files = newest first)")
     for name, js in s["tracks"].items():
         if not js:
@@ -310,11 +326,11 @@ def report(jobs, since, until, keys=3, title="GABIA GPU SERVER (RTX A6000)"):
         c = sum(j["in_s"] * (j["nproc"] or 1) for j in js if not j["gpu"]) / 3600
         from collections import Counter
         kc = Counter((j["kind"], "GPU" if j["gpu"] else "CPU") for j in js)
-        dc = Counter(j["kind"] for j in js if j["status"] == "done")
+        dc = Counter((j["kind"], "GPU" if j["gpu"] else "CPU") for j in js if j["status"] == "done")
         L.append(f"  {name}")
         L.append(f"    jobs {len(js)} · GPU {g:,.1f} h · CPU {c:,.1f} core·h · folders {len(set(j['top'] for j in js))}")
-        L.append("    " + " · ".join(f"{k}({dev}) {n} (done {dc.get(k, 0)})" for (k, dev), n in sorted(kc.items())))
-        for j in sorted(js, key=lambda j: -j["end"])[:keys]:
+        L.append("    " + " · ".join(f"{k}({dev}) {n} (done {dc.get((k, dev), 0)})" for (k, dev), n in sorted(kc.items())))
+        for j in sorted(js, key=lambda j: (j["end"] >= until, -j["end"]))[:keys]:     # 기간 안에 끝난 것 먼저
             try:
                 L.append("      " + ls_line(j["path"], j["root"]))
             except OSError:
@@ -421,6 +437,39 @@ def _selftest():
         txt = report(jobs, since, until)
         ck("보고서: 머리 · 트랙 ①–⑤ · 기타 · ls 줄", all(t in txt for t in ("Campaign total runtime", "① W_ad", "② Nd", "③ glass", "④ crystalline", "⑤ SDCP", OTHER, "-rw")), txt[:200])
         ck("⛔음성 빈 루트 → '출력이 없다' (0 으로 꾸미지 않는다)", "없다" in report(scan([os.path.join(T, "none")], since, until), since, until))
+    with tempfile.TemporaryDirectory() as T2:
+        R2 = os.path.join(T2, "runs")
+
+        def w2(rel, txt, mt):
+            p = os.path.join(R2, rel); os.makedirs(os.path.dirname(p), exist_ok=True)
+            open(p, "w").write(txt); os.utime(p, (mt, mt)); return p
+        ep = lambda s: time.mktime(dt.datetime.strptime(s, "%Y-%m-%d %H:%M:%S").timetuple())
+        w2("cei_x/cpu_done/nscf.out", "     Program PWSCF v.7.4.1 starts on 10Sep2026 at 10:00:00\n     Number of MPI processes:                 8\n"
+           "     PWSCF        :   1h 0m CPU   1h 0m WALL\n   JOB DONE.\n", ep("2026-09-10 11:00:00"))
+        w2("cei_x/gpu_cut/pw.out", "     Program PWSCF v.7.4.1 starts on 11Sep2026 at 10:00:00\n     GPU acceleration is ACTIVE.\n", ep("2026-09-15 10:00:00"))
+        w2("cei_x/gpu_late/pw.out", "     Program PWSCF v.7.4.1 starts on 30Sep2026 at 22:00:00\n     GPU acceleration is ACTIVE.\n"
+           "     PWSCF        :   4h 0m CPU   4h 0m WALL\n   This run was terminated on:   2:00:00   1Oct2026\n   JOB DONE.\n", ep("2026-10-01 02:00:00"))
+        fp = w2("lpscl_glass_main/seed2/T550/ensemble_results.json", json.dumps({"label": "kgy", "runtime_min": 600.0}), ep("2026-09-30 15:51:00"))
+        root_ok = os.geteuid() == 0
+        if root_ok:
+            os.chown(fp, 1003, 1003)
+        j2, fo2 = scan([R2], since, until, own_uid=os.geteuid())
+        by2 = {j["rel"]: j for j in j2}
+        if root_ok:
+            ck("주인 uid 1003 (kgy 에서 옮겨 온) 런은 합계에서 빠지고 따로 모인다", "lpscl_glass_main/seed2/T550/ensemble_results.json" not in by2
+               and [j["rel"] for j in fo2] == ["lpscl_glass_main/seed2/T550/ensemble_results.json"], (sorted(by2), [j["rel"] for j in fo2]))
+            ck("⛔음성 주인 필터를 끄면 (own_uid None) 그 런도 센다", "lpscl_glass_main/seed2/T550/ensemble_results.json" in {j["rel"] for j in scan([R2], since, until)})
+            ck("보고서에 '옮겨 온 산출물 — 제외' 줄", "Copied in from other machines" in report(j2, since, until, foreign=fo2))
+        else:
+            print("  (root 가 아니라 주인 필터 시험 셋은 건너뛴다 — gabia 는 root 로 돈다)")
+        rt = report(j2, since, until)
+        ck("done 은 (종류, 장치) 별로 센다 — CPU 1 (done 1) · GPU 2 (done 1)", "QE pw.x(CPU) 1 (done 1)" in rt and "QE pw.x(GPU) 2 (done 1)" in rt, rt[-600:])
+        s2 = summarize(j2, since, until)
+        ck("최장 런 = 끝 줄 있는 런 (4 h · 10월에 끝난 것도 실행시간은 박혀 있다) · 끝 줄 없는 4 일 ≈ 은 따로",
+           s2["longest"]["rel"] == "cei_x/gpu_late/pw.out" and s2["longest_approx"]["rel"] == "cei_x/gpu_cut/pw.out", (s2["longest"], s2["longest_approx"]))
+        blk = rt.split("② Nd cathode interface (CEI)", 1)[1]
+        ck("대표 파일은 기간 안에 끝난 것 먼저 (10월에 끝난 출력은 뒤로)", blk.find("gpu_cut/pw.out") < blk.find("gpu_late/pw.out") and blk.find("gpu_cut/pw.out") >= 0, blk[:500])
+        ck("highT_reseed 폴더는 ④", track_of("highT_reseed_221").startswith("④"))
     print(f"{'✅' if bad == 0 else '⛔'} gpu_runtime_tally selftest {ok}/{ok + bad} 통과")
     return 0 if bad == 0 else 1
 
@@ -434,14 +483,15 @@ def main():
     ap.add_argument("--keys", type=int, default=3, help="트랙마다 찍을 대표 출력 파일 수")
     ap.add_argument("--title", default="GABIA GPU SERVER (RTX A6000)")
     ap.add_argument("--json", help="잡 목록을 JSON 으로도 저장")
+    ap.add_argument("--all-owners", action="store_true", help="파일 주인이 달라도(다른 기계에서 옮겨 온 산출물) 센다 — 기본은 뺀다")
     a = ap.parse_args()
     if a.selftest:
         return _selftest()
     if not (a.since and a.until):
         ap.error("--since · --until 이 필요하다")
     since, until = _day(a.since), _day(a.until)
-    jobs = scan(a.roots, since, until)
-    print(report(jobs, since, until, a.keys, a.title))
+    jobs, foreign = scan(a.roots, since, until, own_uid=None if a.all_owners else os.geteuid())
+    print(report(jobs, since, until, a.keys, a.title, foreign))
     if a.json:
         json.dump([{k: v for k, v in j.items() if k != "root"} for j in jobs], open(a.json, "w", encoding="utf-8"), ensure_ascii=False, indent=1, default=float)
     return 0
