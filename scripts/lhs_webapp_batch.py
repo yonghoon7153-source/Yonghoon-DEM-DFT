@@ -23,6 +23,9 @@
   • type_map = 덱 판독 (`type_map_resolve`, 업로드 입구와 같은 게이트) = 수확 JSON 의 type_map
     (2-type mono 덱만: 수확기의 'AM' ↔ 웹앱의 반지름 이름 AM_P/AM_S 를 같다고 본다 — `fold_single_am` · 1저자 비준 09-30.
     웹앱에는 덱 판독 map 을 그대로 넘기고, 접은 사실은 status.json 의 `type_map_fold` 에 남는다)
+    (3-type 덱의 0 입자 상 — ps_sweep 세대 P:S = 10:0 · 0:10: 덱 판독은 덤프에 0 개인 type 을 뺀다.  덤프의 type 별 개수 =
+    수확 `phase_counts` 이고 남은 type 이 번호 · 이름까지 같을 때만 같은 침대로 본다 — `absent_types` · 1저자 10-01.
+    뺀 type 은 status.json 의 `type_map_absent` 에 남는다)
   • ★ J20-a ⓑ (1저자 비준 09-28 밤): atom · contact 파일이 **한 프레임**이고 contact 에 **같은 쌍이 두 행** 없어야 한다 —
     웹앱 파서는 파일 안 모든 프레임을 이어 붙이고 (`parse_liggghts`) CN · 접촉 수는 행마다 +1 이다 (DESC-06 · 합성 2 프레임에서
     CN 정확히 2 배).  점검 결과 (`contact_scan` · `atom_frames`) 는 status.json 에 남는다 (δ ≤ 0 행 수 포함 — 거부는 안 한다)
@@ -67,6 +70,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / 'scripts'))
 import lhs_harvest_batch as HB          # noqa: E402  (코호트 · 경로 치환 · 같은 step 메시 · sha — 새로 만들지 않는다)
 import lhs_descriptor_harvest as H      # noqa: E402  (J20-a ⓑ — 접촉 덤프 점검 · 프레임 수: 감사기 `lhs_contact_audit` 와 같은 함수)
+import type_map_resolve as TMR_DUMP     # noqa: E402  (덤프 type 별 개수 — 0 입자 상 관문이 덱 판독과 독립으로 센다)
 
 SCHEMA = 'lhs_webapp_batch/v1'
 DEF_HARVEST = ROOT / 'docs' / 'data' / 'lhs_descriptors_20260925'
@@ -173,26 +177,55 @@ def fold_single_am(got: dict, want: dict) -> bool:
     return {k: ('AM' if v in ('AM_P', 'AM_S') else v) for k, v in got.items()} == want
 
 
-def resolve_mode(case_dir: Path, names: dict, hj: dict, A, TMR) -> tuple:
-    """(mode, type_map, 접음 기록) — 업로드 입구와 같은 판독 · 수확 JSON 과 대조.
+def absent_types(got: dict, want: dict, dump_types: dict, phase_counts) -> list:
+    """3-type 덱의 0 입자 상 (ps_sweep 세대 P:S = 10:0 · 0:10 — 10-01 WSL 실측: 이 관문이 두 조성을 REFUSED).
 
-    웹앱에 넘기는 map 은 **덱 판독 그대로**다 (접은 이름을 넘기지 않는다 — 업로드 입구와 같은 입력).
+    덱 판독 (`type_map_resolve.resolve`) 은 덤프에 0 개인 type 을 map 에서 **뺀다** (빈 배열 방지 · 업로드 입구와 같은 규칙).
+    수확 JSON 은 덱의 3 type 을 다 적고 그 상의 `phase_counts` 를 0 으로 둔다.  ⇒ 수확 map 에서 0 개인 type 을 빼면
+    덱 판독과 **번호 · 이름까지** 같은가.  같으면 뺀 type 번호 (정렬된 문자열 목록), 아니면 [].
+    ⚠ 두 출처가 상마다 개수까지 같아야 한다 — 덤프 (`dump_types`, type → {'n'}) 의 type 별 개수 = 수확 `phase_counts` 의 상별 개수.
+       하나라도 어긋나거나 · `phase_counts` 가 없거나 · 덤프에 있는 type 이 빠졌거나 · SE 가 남지 않으면 [] (= 거부).
+    """
+    if len(want) != 3 or not isinstance(phase_counts, dict):
+        return []
+    n_dump = {str(t): int(d.get('n', 0)) for t, d in (dump_types or {}).items()}
+    if set(n_dump) - set(want):
+        return []                                           # 덤프에 수확 map 밖의 type 이 있다
+    for k, ph in want.items():
+        if phase_counts.get(ph) != n_dump.get(k, 0):
+            return []                                       # 두 출처의 개수가 다르다 (키 없음 포함)
+    gone = sorted(k for k in want if n_dump.get(k, 0) == 0)
+    rest = {k: v for k, v in want.items() if k not in gone}
+    if not gone or rest != got or 'SE' not in rest.values():
+        return []
+    return gone
+
+
+def resolve_mode(case_dir: Path, names: dict, hj: dict, A, TMR) -> tuple:
+    """(mode, type_map, 접음 기록, 뺀 type 기록) — 업로드 입구와 같은 판독 · 수확 JSON 과 대조.
+
+    웹앱에 넘기는 map 은 **덱 판독 그대로**다 (접은 이름 · 뺀 type 을 되살리지 않는다 — 업로드 입구와 같은 입력).
     """
     m, _notes, errs = TMR.resolve_from_files(str(case_dir / names['deck']), str(case_dir / names['atom']))
     if errs or not m:
         raise Refuse(f'type_map 덱 판독 실패: {errs or "빈 map"}')
     want = {str(k): v for k, v in (hj.get('type_map') or {}).items()}
     got = {str(k): v for k, v in m.items()}
-    fold = ''
+    fold = absent = ''
     if got != want:
-        if not fold_single_am(got, want):
-            raise Refuse(f'type_map 덱 판독 {TMR.format_map(m)} ≠ 수확 JSON {want}')
-        fold = (f'2-type: 덱 판독 {TMR.format_map(m)} ≡ 수확 JSON {want} — 단일 AM 상의 이름만 다르다 '
-                '(수확기 = AM · 웹앱 = 반지름 규칙 AM_P/AM_S)')
+        if fold_single_am(got, want):
+            fold = (f'2-type: 덱 판독 {TMR.format_map(m)} ≡ 수확 JSON {want} — 단일 AM 상의 이름만 다르다 '
+                    '(수확기 = AM · 웹앱 = 반지름 규칙 AM_P/AM_S)')
+        else:
+            #  덤프는 진짜 파일을 다시 센다 (덱 판독과 독립 — 시험의 가짜 덱 판독도 이 개수를 못 바꾼다)
+            gone = absent_types(got, want, TMR_DUMP.types_in_dump(str(case_dir / names['atom'])), hj.get('phase_counts'))
+            if not gone:
+                raise Refuse(f'type_map 덱 판독 {TMR.format_map(m)} ≠ 수확 JSON {want}')
+            absent = ','.join(f'{k}:{want[k]}' for k in gone)
     mode = A.detect_mode(str(case_dir))
     if (mode == 'bimodal') != (len(m) == 3):
         raise Refuse(f'mode {mode} 이 type 수 {len(m)} 와 맞지 않는다')
-    return mode, TMR.format_map(m), fold
+    return mode, TMR.format_map(m), fold, absent
 
 
 def write_outputs(out_dir: Path, status: dict, rows: dict) -> None:
@@ -265,11 +298,20 @@ def run_batch(args, deps=None) -> int:
                 raise Refuse('봉인 코호트에 없는 케이스')
             hj = json.loads((hdir / f'{case}.json').read_text(encoding='utf-8'))
             st = stage_case(case, row, hj, work / 'uploads', args.root_from, args.root_to)
-            mode, tm, fold = resolve_mode(st['case_dir'], st['names'], hj, A, TMR)
+            mode, tm, fold, absent = resolve_mode(st['case_dir'], st['names'], hj, A, TMR)
             if fold:
                 rec['type_map_fold'] = fold
+            if absent:
+                rec['type_map_absent'] = absent
+            if fold:
+                note = f'lhs_webapp_batch — {fold}'
+            elif absent:
+                note = (f'lhs_webapp_batch — 3-type 덱 · 덤프 0 개 type {absent} 은 덱 판독이 뺐다 (type_map_resolve · 업로드 입구와 같은 규칙) '
+                        '· 수확 phase_counts 와 상마다 개수 같음 · 남은 type = 수확 JSON')
+            else:
+                note = 'lhs_webapp_batch — 덱 판독 = 수확 JSON'
             meta = dict(name=case, created='', mode=mode, type_map=tm, type_map_resolved=tm,
-                        type_map_notes=[f'lhs_webapp_batch — {fold}' if fold else 'lhs_webapp_batch — 덱 판독 = 수확 JSON'],
+                        type_map_notes=[note],
                         ps_ratio='',
                         scale=1000, files=sorted(st['names'].values()), status='uploaded')
             (st['case_dir'] / 'meta.json').write_text(json.dumps(meta, ensure_ascii=False, indent=1),
@@ -561,6 +603,53 @@ def _selftest() -> int:
             r14f, k14f = _run14({1: 'AM_P', 2: 'AM_S', 3: 'SE'})
             chk('⑭f 3-type 은 그대로 — 같은 이름이면 done · 접음 기록 없음',
                 r14f.get('status') == 'done' and k14f == 1 and not r14f.get('type_map_fold'))
+            # ⑰ 3-type 덱의 0 입자 상 (ps_sweep 세대 P:S = 10:0 · 0:10 — 10-01 WSL 실측: 두 조성이 이 관문에서 REFUSED).
+            #   덱 판독 (`type_map_resolve.resolve`) 은 덤프에 0 개인 type 을 map 에서 **뺀다** (빈 배열 방지 · 업로드 입구와 같은 규칙)
+            #   — 수확 JSON 은 덱의 3 type 을 다 적고 그 상의 phase_counts 를 0 으로 둔다.  뺀 type 이 덤프에도 0 개 · phase_counts 도 0
+            #   이고 (상마다 두 출처의 개수가 같고) 남은 type 이 번호 · 이름까지 같을 때만 같은 침대로 본다.
+            ATOM3 = 'ITEM: TIMESTEP\n100\nITEM: ATOMS id type\n1 1\n2 2\n3 3\n'
+
+            def _bed17(types, counts, tm_deck):
+                (raw / 'atom_100.liggghts').write_text('ITEM: TIMESTEP\n100\nITEM: ATOMS id type\n'
+                                                       + ''.join(f'{i} {t}\n' for i, t in enumerate(types, 1)))
+                hj17 = _hj()
+                if counts is not None:
+                    hj17['phase_counts'] = counts
+                (hdir / 'lhs00_900.json').write_text(json.dumps(hj17), encoding='utf-8')
+                FakeA.mode = 'standard'                     # detect_mode = 덤프의 type 수 (2) — 덱 판독 map 2 개와 맞다
+                return _run14(tm_deck)
+            r17, k17 = _bed17([1, 3, 3], {'AM_P': 1, 'AM_S': 0, 'SE': 2}, {1: 'AM_P', 3: 'SE'})
+            chk('⑰ ★ 3-type 덱 · AM_S 0 개 (10:0): 수확 {1:AM_P,2:AM_S,3:SE} ↔ 덱 판독 1:AM_P,3:SE → done · '
+                '웹앱에는 덱 판독 map 그대로 · 뺀 type 기록 (type_map_absent) · 접음 기록 없음',
+                r17.get('status') == 'done' and k17 == 1 and calls[-1]['tm'] == '1:AM_P,3:SE'
+                and r17.get('type_map_absent') == '2:AM_S' and not r17.get('type_map_fold'))
+            r17b, k17b = _bed17([2, 3, 3], {'AM_P': 0, 'AM_S': 1, 'SE': 2}, {2: 'AM_S', 3: 'SE'})
+            chk('⑰b ★ 3-type 덱 · AM_P 0 개 (0:10): 덱 판독 2:AM_S,3:SE → done · 뺀 type 1:AM_P',
+                r17b.get('status') == 'done' and k17b == 1 and calls[-1]['tm'] == '2:AM_S,3:SE'
+                and r17b.get('type_map_absent') == '1:AM_P')
+            r17c, k17c = _bed17([1, 2, 3], {'AM_P': 1, 'AM_S': 1, 'SE': 1}, {1: 'AM_P', 3: 'SE'})
+            chk('⑰c ★ 음성: 덤프에 있는 type (2) 을 덱 판독이 뺐다 → 거부 · 실행 없음',
+                r17c.get('status') == 'REFUSED' and 'type_map' in r17c.get('why', '') and k17c == 0)
+            r17d, k17d = _bed17([1, 3, 3], {'AM_P': 1, 'AM_S': 5, 'SE': 2}, {1: 'AM_P', 3: 'SE'})
+            chk('⑰d ★ 음성: 수확 phase_counts 는 AM_S 5 인데 덤프에 type 2 가 없다 (두 출처 불일치) → 거부',
+                r17d.get('status') == 'REFUSED' and k17d == 0)
+            r17e, k17e = _bed17([1, 3, 3], {'AM_P': 1, 'AM_S': 0, 'SE': 2}, {1: 'AM_S', 3: 'SE'})
+            chk('⑰e ★ 음성: 남은 type 의 이름이 다르다 (덱 판독 1:AM_S ≠ 수확 1:AM_P) → 거부',
+                r17e.get('status') == 'REFUSED' and k17e == 0)
+            r17f, k17f = _bed17([1, 1, 1], {'AM_P': 3, 'AM_S': 0, 'SE': 0}, {1: 'AM_P'})
+            chk('⑰f ★ 음성: SE 가 빠지면 거부 (SE 0 개 침대는 이 규칙 밖)',
+                r17f.get('status') == 'REFUSED' and k17f == 0)
+            r17g, k17g = _bed17([1, 3, 3], None, {1: 'AM_P', 3: 'SE'})
+            chk('⑰g ★ 음성: 수확 JSON 에 phase_counts 가 없으면 (두 출처 교차 확인 불가) 거부',
+                r17g.get('status') == 'REFUSED' and k17g == 0)
+            r17h, k17h = _bed17([1, 3, 3], {'AM_P': 2, 'AM_S': 0, 'SE': 1}, {1: 'AM_P', 3: 'SE'})
+            chk('⑰h ★ 음성: 남은 상의 개수가 덤프와 다르다 (phase_counts AM_P 2 ≠ 덤프 type 1 의 1 개) → 거부',
+                r17h.get('status') == 'REFUSED' and k17h == 0)
+            #  되돌리기 — 뒤 시험 (⑮ ⑯) 은 3-type 원본으로
+            (raw / 'atom_100.liggghts').write_text(ATOM3)
+            (hdir / 'lhs00_900.json').write_text(json.dumps(_hj()), encoding='utf-8')
+            FakeTMR.m = {1: 'AM_P', 2: 'AM_S', 3: 'SE'}
+            FakeA.mode = 'bimodal'
             # ⑮–⑯ cap (physics) coverage v2 인계 (1저자 09-29 밤 — 새 판 병기 · `stop_after='coverage'` 로 ① + cap coverage 한 번에).
             #   `--stop-after coverage` 는 웹앱 파이프라인을 접촉 → 피복 단계까지 돌린다 (network · Stage E 없음).  산출 폴더에
             #   모드를 새기고, 다른 모드 (전체 · 접촉만) 와 어느 방향으로도 섞지 않는다.

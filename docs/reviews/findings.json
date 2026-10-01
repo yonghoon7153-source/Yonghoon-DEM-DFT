@@ -6683,6 +6683,16 @@
    "opened_in": "docs/reviews/lhs_handover_judgments_20260924.md",
    "title": "scripts/mixer_smoke_blind.py --selftest 가 게이트의 'fast 자기검사 전수' (등재 기반 병렬 드라이버) 안에서 한 번 rc=1 로 실패 (170/171) — 단독 실행 rc 0 · 게이트 재실행 전부 통과 = 병렬 실행에서만 나는 간헐 실패로 추정 · 실패한 검사 줄은 드라이버가 출력 꼬리만 보여 확인 못 함",
    "note": "러너의 fail-closed 게이트도 같은 검사를 돈다 — 간헐 실패가 사용자의 GPU 런을 막을 수 있다 (CLAUDE.md 규율 ⑤ 의 '규율 검사는 런 시작 전에 걸린다').  원인 미조사 (후보: 공유 임시 경로 · 시계 · 0600 봉인 파일 이름 충돌).  다음: 드라이버가 실패 시 전체 출력을 남기게 하고 병렬 반복 실행으로 재현."
+  },
+  {
+   "id": "LHS-28",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "1저자 WSL 실행 (10-01 18:25 · run_ps45_lhs_wsl.sh [6/9]) — ps45 0:10 · 10:0 두 침대가 웹앱 접촉 단계 관문에서 REFUSED (컨테이너 건조 시험이 같은 사유를 미리 예측)",
+   "opened_in": "scripts/lhs_webapp_batch.py",
+   "title": "웹앱 배치 관문 `resolve_mode` 가 3-type 덱의 0 입자 상 (ps_sweep 세대 P:S = 10:0 · 0:10) 을 거부한다 — 덱 판독 (type_map_resolve.resolve) 은 덤프에 0 개인 type 을 map 에서 빼는데 (업로드 입구와 같은 규칙 · 빈 배열 방지) 수확 JSON 은 덱의 3 type 을 다 적어 글자 그대로 비교가 어긋난다 → 두 조성의 웹앱 열 (CN · AM–SE · 퍼콜 · 이온 고립) 이 측정 안 됨",
+   "note": "관문 설계 결함 (계산 결함 아님) — 웹앱 업로드 입구는 처음부터 이 침대를 받는다 (type_map_resolve 머리 주석의 260922_092001_0853b1 사고가 바로 P:S=10:0).  처방 = `absent_types`: 덤프의 type 별 개수 = 수확 phase_counts 의 상별 개수 (두 출처 교차) 이고 0 개인 type 만 빼서 남은 type 이 번호 · 이름까지 같을 때만 받는다 · 웹앱에는 덱 판독 map 그대로 · status.json `type_map_absent` 기록.  음성 여섯 (덤프에 있는 type 을 뺌 · 개수 불일치 · 이름 다름 · SE 없음 · phase_counts 없음 · 남은 상 개수 다름) 은 계속 거부.  웹앱 화면 반영 (J20-l): 해당 화면 없음 — 업로드 입구 (type_map_resolve) 는 이미 같은 규칙이고 이번 변경은 배치 관문뿐."
   }
  ]
 }
