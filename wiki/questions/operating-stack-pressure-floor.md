@@ -6,7 +6,7 @@ updated: 2026-10-06
 type: research-question
 status: open
 tags: [assb, composite-cathode, sulfide-electrolyte, li2s, anode-free]
-sources: [raw/papers/park2026_low-pressure-operation-carbon-coated-current-collector-asslsb.md, raw/papers/zhangj2026_strain-coordination-long-cycling-assb.md, raw/papers/qu2025_volume-changes-li-s-solid-state-battery-components-cycling.md, raw/papers/zhang2026_anode-free-assb-nanocrystalline-amorphous-li2s-na-collector.md, raw/papers/jeong2026_reconciling-triple-phase-boundaries-tortuosity-assb.md, raw/papers/kimjt2023_mixed-discharge-products-li2s2-li2s-asslsb.md, raw/papers/hong2026_high-valence-cation-lattice-expansion-activating-li2s.md, raw/papers/gao2024_cu-i-codoping-activating-li2s-redox-kinetics-assb.md]
+sources: [raw/papers/feng2026_anode-free-asslsb-fe-stabilized-polysulfides.md, raw/papers/park2026_low-pressure-operation-carbon-coated-current-collector-asslsb.md, raw/papers/zhangj2026_strain-coordination-long-cycling-assb.md, raw/papers/qu2025_volume-changes-li-s-solid-state-battery-components-cycling.md, raw/papers/zhang2026_anode-free-assb-nanocrystalline-amorphous-li2s-na-collector.md, raw/papers/jeong2026_reconciling-triple-phase-boundaries-tortuosity-assb.md, raw/papers/kimjt2023_mixed-discharge-products-li2s2-li2s-asslsb.md, raw/papers/hong2026_high-valence-cation-lattice-expansion-activating-li2s.md, raw/papers/gao2024_cu-i-codoping-activating-li2s-redox-kinetics-assb.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -36,9 +36,13 @@ evidenceScope: multi-source-primary
 | **1 → 75 MPa 7단계** | `park2026_…`(Meng) | ✓ **같은 셀에서 3사이클씩 스캔** — 이 위키 최고 해상도 |
 | **7 MPa** | `qu2025_…` | ✓ 정압·정용적 fixture 자작, **변위·압력 실측** |
 | **15 / 30 / 100 MPa** | `zhangj2026_…` | ✓ **압력별 EIS 로 골랐다** (무압 **356 Ω**, 15 MPa 이상 포화) |
-| **50 MPa** | `jeong2026_…` · `gao2024_…` | ✗ 근거 없음 |
+| **50 MPa** | `jeong2026_…` · `gao2024_…` · **`feng2026_…`** | ✗ 근거 없음 (Feng 은 그림 주석에만). ★ **3편으로 최빈값** |
 | **150 MPa** | `kimjt2023_…` | ✗ 근거 없음 |
 | **200 MPa** | `hong2026_…` | ✗ 근거 없음. 이 위키 최고치 |
+
+★ **50 MPa 가 3편으로 최빈값이다** (Jeong · Gao · Feng). `[해석]` 셋 다 근거를 대지 않으므로
+**물리적 최적이 아니라 상용 다이셀의 관행 체결값**일 가능성이 높다 — "문헌이 50 MPa 를 쓴다" 는
+것은 **물리가 아니라 장비 관행**의 반영일 수 있다. 우리 fixture 가 다르면 따라갈 이유가 없다.
 
 → **0–200 MPa, 유효 좌표만 봐도 7–150 MPa 로 21배다.** "ASSB 표준 운전 압력" 같은 것은 문헌에
 없다. 그리고 **고압 논문의 성능은 접촉 문제가 지워진 상태의 수치**이므로 저압에 외삽되지 않는다.
@@ -51,6 +55,15 @@ evidenceScope: multi-source-primary
   이차적이다. 그렇다면 조성·성형압·입도가 지렛대다.
 - **P3 (활물질 부피변화 지배)** — 하한은 Li2S 의 수축/팽창이 만드는 간극에서 오므로 **SOC 의존**
   이고, 첫 충전에서 가장 나쁘다.
+- **★ P5 (압력–온도 교환) — 2026-10-06 신설.** 압력의 하한은 **온도와 독립이 아니다.** 압력을 못
+  낮추면 **온도를 올려서** 접촉을 보상하는 것이 문헌의 암묵적 관행이다. 근거는 `feng2026_…` 가
+  그것을 **의식적으로 말한 첫 사례**라는 것 — 저자가 `[인쇄]` **"practical stack pressure 를 유지한
+  채 양극/SE 계면 접촉을 개선하려고 60 °C 를 골랐다"** 고 적는다. ★ 그런데 같은 논문이 뒤에서
+  **상온이 60 °C 보다 장기적으로 낫다**(계면 열화 억제)고 **자인한다** → **그 교환은 공짜가 아니다.**
+  같은 패턴이 셋에서 보인다: Feng(50 MPa + 60 °C) · Park 2026(10 MPa + **상온**, 그래서 압력을
+  집전체로 보상) · Liu 2026(간판 5 mg cm⁻² 수치가 **60 °C**).
+  → **P5 가 참이면 "압력 하한" 이라는 단일 수가 존재하지 않는다.** 하한은 (압력, 온도) 평면의
+  **곡선**이고 우리 실험 설계가 바뀐다 (아래 0-a).
 - **P4 (압력은 SE 치밀화만 한다)** — 하한은 분리층 쪽 현상이고 양극과 무관하다.
 
 ## Evidence For / Against
@@ -145,6 +158,13 @@ T-peel 1.13 ± 0.12 / 3.80 ± 0.22 / **5.02 ± 0.14** gf mm⁻¹, 거칠기 Sq 8
 포화 압력을 직접 얻는다.** 이것이 [[reference-cell-500-600-mahg]] 에서 2순위로 올린 측정이다.
 각 압력에서 **올렸다 내리는 복귀 구간**을 넣어 가역성까지 본다 (Park 이 빠뜨린 것).
 
+**★ 0-a. 그 스윕을 (압력 × 온도) 2×2 로 넓힌다 (P5).** 압력 3점(5 / 10 / 30 MPa) × 온도 2점
+(상온 / 60 °C). **EIS 만 보는 단계라 한 셀로 압력을 올렸다 내릴 수 있고** 온도만 두 번 돌리면 된다.
+**이것 없이는 "우리 셀의 압력 하한" 이라는 수를 적을 수 없다** — 온도를 고정하지 않은 하한은
+다른 조건으로 옮겨가지 않는다.
+⚠ 그리고 **온도를 올려 접촉을 보상하는 쪽은 장기적으로 불리하다**는 것이 Feng 2026 자신의
+자인이다 → **보상하지 말고 압력으로 해결하는 쪽**을 우리 기본값으로 둔다.
+
 **1. P1 vs P2 를 가르는 실험 — 집전체만 바꾼다.** 우리 표준 셀에서 **양극 집전체만** bare Al ↔
 탄소 코팅 Al 로 바꿔 **75 MPa 와 10 MPa** 에서 돌린다. **n=3.**
 → 차이가 크면 **P1**, 없으면 **P2**. 이 위키 최초의 n>1 압력 데이터가 된다.
@@ -156,6 +176,10 @@ T-peel 1.13 ± 0.12 / 3.80 ± 0.22 / **5.02 ± 0.14** gf mm⁻¹, 거칠기 Sq 8
 를 적는다. 가능하면 첫 충전 전후 셀 높이를 재서 Qu 2025 의 14–20 µm 와 대조한다 (P3).
 
 ## Status Log
+- [2026-10-06] open — **당일 갱신**: Feng 2026 으로 **P5(압력–온도 교환)** 를 신설했다 — 압력 하한은
+  **단일 수가 아니라 (압력, 온도) 평면의 곡선**일 수 있다. 그래서 0번 스윕을 **2×2 로 넓혔다**.
+  그리고 **50 MPa 가 3편으로 최빈값**이 됐는데 셋 다 근거가 없어 `[해석]` **물리적 최적이 아니라
+  상용 다이셀 관행 체결값**으로 읽는다.
 - [2026-10-06] open — 카드 개설. [[reference-cell-500-600-mahg]] 의 H5 에서 분리했다.
   분리한 이유: H5("기계적 제한이 병목인가")는 가설이고, **"몇 MPa 로 돌릴 것인가"** 는 당장
   결정해야 하는 **운전 조건**이어서 질문의 성격이 다르다.

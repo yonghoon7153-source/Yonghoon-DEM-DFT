@@ -5,7 +5,7 @@ created: 2026-09-11
 updated: 2026-10-06
 type: entity
 tags: [project, satellite, anode-free, li2s, assb]
-sources: [raw/transcripts/2026-09-11-li2s-wiki-kickoff-session.md, raw/papers/kim2023_reinforced-electrical-networking-high-loading-li2s-cathode.md, raw/papers/zhang2026_anode-free-assb-nanocrystalline-amorphous-li2s-na-collector.md, raw/papers/zhangj2026_strain-coordination-long-cycling-assb.md, raw/papers/liu2026_li4sns4-molecular-mediator-low-barrier-li2s-chemistry.md, raw/papers/park2026_low-pressure-operation-carbon-coated-current-collector-asslsb.md, raw/papers/kimjt2023_mixed-discharge-products-li2s2-li2s-asslsb.md, raw/papers/hong2026_high-valence-cation-lattice-expansion-activating-li2s.md]
+sources: [raw/transcripts/2026-09-11-li2s-wiki-kickoff-session.md, raw/papers/kim2023_reinforced-electrical-networking-high-loading-li2s-cathode.md, raw/papers/zhang2026_anode-free-assb-nanocrystalline-amorphous-li2s-na-collector.md, raw/papers/zhangj2026_strain-coordination-long-cycling-assb.md, raw/papers/liu2026_li4sns4-molecular-mediator-low-barrier-li2s-chemistry.md, raw/papers/park2026_low-pressure-operation-carbon-coated-current-collector-asslsb.md, raw/papers/kimjt2023_mixed-discharge-products-li2s2-li2s-asslsb.md, raw/papers/hong2026_high-valence-cation-lattice-expansion-activating-li2s.md, raw/papers/feng2026_anode-free-asslsb-fe-stabilized-polysulfides.md, raw/papers/gao2024_cu-i-codoping-activating-li2s-redox-kinetics-assb.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -70,6 +70,7 @@ digest 가 16편이 된 지금 운전 압력의 문헌 좌표는 이렇다:
 | **Jeong 2026** · **Gao 2024** | **50 MPa** | 근거 없음 |
 | **Kim JT 2023** | **150 MPa** | 근거 없음 |
 | **Hong 2026** | **200 MPa** | 근거 없음 — 이 위키 최고치 |
+| **Feng 2026** | **50 MPa** | 그림 주석에만. ★ 그 대신 **압력–온도 교환을 명시**한다 (아래) |
 | **Park 2026** | **1 → 75 MPa 7단계 스캔** | ✓ **같은 셀에서 3사이클씩** — 이 위키 최고 해상도. 10 MPa 상온 350사이클 78 % |
 
 → **0–200 MPa 로 흩어진다** (유효 좌표만 봐도 7–150 MPa, **21배**). 그래서 이 위키는 어떤 문헌값도
@@ -88,6 +89,61 @@ Hong 200 MPa · Kim JT 150 MPa 의 수명을 우리 조건의 기대값으로 �
 
 → **우리가 가장 먼저 할 측정은 압력-EIS 스윕(0/1/3/5/10/15/30 MPa)** 이다. 셀 1개 반나절이면
 우리 운전 압력에 근거가 생긴다 ([[reference-cell-500-600-mahg]] 2026-10-06 에서 2순위로 올렸다).
+
+### ★★ 2026-10-06 — "anode-less" · "Li-metal-free" 는 anode-free 가 아니다
+
+`feng2026_…` 가 이 프로젝트의 **정의를 명문화해야 할 경계 사례**다. 제목이 **"Anode-less"** 이고
+초록이 Li-metal-free 를 내세우는데, 실제 공정은 이렇다 — `[인쇄]` KB : MCMB = **3 : 7 wt** 탄소
+복합음극(33.8 µm, 공극률 34.5 %)을 만들고 **셀을 조립한 뒤 "stoichiometric amount" 의 Li 박을
+눌러 붙여 80 °C 8 h 프리리튬화**한다.
+
+| | 뜻 |
+|---|---|
+| **anode-free** (우리 2단계 목표) | **Li 원천이 양극(Li2S)에만 있다.** 음극 쪽에 Li 을 넣는 공정이 없다 |
+| **"anode-less" / "Li-metal-free"** (이 논문) | **완성된 셀에 Li 금속 층이 없다.** Li 금속 공정은 **그대로 있다** |
+
+→ **제조 이점이 없다.** 그리고 **그 Li 양이 "stoichiometric" 이라고만 적혀 있어 실제 Li 재고 비를
+아무도 계산하지 못한다.** 이 위키는 이 셀을 **"프리리튬화 탄소 호스트 음극"** 으로 분류하고,
+우리 단계로는 **2.5단계**(1단계 Li–In 과 2단계 anode-free 사이)로 적는다.
+`[해석]` 문헌을 읽을 때 **"anode-free" 라는 단어를 믿지 말고 음극 공정에 Li 금속이 등장하는지**
+본다. 그것이 이 프로젝트의 성패를 가르는 유일한 질문이다.
+
+#### ★ N/P 를 적은 드문 논문 — 그런데 그 N/P 는 Li 재고 비가 아니다
+
+`[인쇄]` **N/P = 1.03**. 식이 `[재현]` 으로 정확히 복원된다:
+
+```
+음극 수용량 = 33.8 µm × 0.345(공극률) × 0.534 g cm⁻³(ρ_Li) × 3861 mAh g⁻¹ = 2.40 mAh cm⁻²
+N/P = 2.40 ÷ (1166 mAh g⁻¹(Li2S) × 2 mg cm⁻²) = 2.40 ÷ 2.332 = 1.029  ✓
+```
+
+★ **두 가지를 읽어야 한다.**
+1. **분모가 이론용량이다.** 실측 첫 충전(1.72 mAh cm⁻²)으로 바꾸면 `[재현]` **N/P = 1.40** 으로
+   Gao 2024 의 코인셀 1.64 와 같은 급이 된다. **"N/P 1.03" 은 보수적으로 보이지만 실제로는 아니다.**
+2. **프리리튬화 Li 이 분자에도 분모에도 없다.** 즉 이 N/P 는 **호스트의 공간 비**이고
+   **Li 재고 비가 아니다.** 게다가 분자는 **공극을 Li 로 100 % 채운다는 가정**이라 낙관적 상한이다.
+
+→ **그래도 그 식 자체는 우리에게 바로 쓸 수 있다**: `음극 호스트 두께 × 공극률 × 0.534 × 3861 ÷
+양극 면적용량`. 우리가 anode-free 로 갈 때 **집전체 위에 Li 이 들어갈 공간이 있는지**를 셀을
+만들기 전에 계산하는 식이다. **단 분모는 반드시 실측 면적용량으로 쓴다.**
+
+#### ICE 좌표 (2026-10-06 갱신)
+
+| ICE | 논문 | 읽는 법 |
+|---|---|---|
+| **110–113 %** | Yu 2024 (CuS) | 방전 > 충전 — **Cu 가역 → Li 재고 순손실** |
+| **>120 %** (축 상단 잘림) | **Feng 2026 의 pristine Li2S 대조셀** | `[도표]` CE 108·112·117 % 로 올라가다 1.5 C 구간에서 축을 넘는다. 저자는 "slightly exceeding 100 %" 로만 쓰고 **Li–In 재고 소모 가능성을 배제하지 않는다** |
+| **99 %** | **Feng 2026 (FLS 반쪽셀)** | 이 위키 최상위권. 이후 CE 98–102 % 로 깨끗하다 |
+| **≈92 %** `[재현]` | Feng 2026 풀셀 | ★ **논문이 풀셀 ICE 를 보고하지 않는다** — 그림 마커에서 역산한 값이다 |
+| 89 % | Liu 2026 (Li4SnS4) | Sn 불변 → **먹는 서명 없음** |
+| 85.2 % | Gao 2024 | |
+| 83 % | Cronk 2026 anode-free 파우치 | |
+| 72.7 % `[재현]` | Gao 2024 파우치 | |
+| **첫 방전 = 첫 충전의 1.5–1.6배** | Park 2026 | **압도적 최악** — Li–In 재고 + SE 환원에서 Li 가 왔다. anode-free 외삽 불가 |
+
+`[해석]` **CE 가 100 % 를 넘는 것은 좋은 신호가 아니다** — anode-free 에서는 **음극 Li 이 양극으로
+넘어오고 있다**는 뜻일 수 있다. 우리는 **첫 사이클 CE 와 이후 수십 사이클 CE 를 함께** 보고,
+**100 % 를 넘으면 그만큼을 Li 재고 손실로 가정**한다.
 
 #### Li 재고를 먹지 않는 첨가제 — Liu 2026 이 반례를 준다 (2026-10-06)
 

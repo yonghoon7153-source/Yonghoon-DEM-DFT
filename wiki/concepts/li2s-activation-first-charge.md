@@ -5,7 +5,7 @@ created: 2026-09-11
 updated: 2026-10-06
 type: concept
 tags: [activation, li2s, carbon, liquid-electrolyte, assb, sulfide-electrolyte]
-sources: [raw/papers/kim2023_reinforced-electrical-networking-high-loading-li2s-cathode.md, raw/transcripts/2026-09-11-li2s-wiki-kickoff-session.md, raw/papers/wan2021_lii-libr-catalyst-solid-state-li2s-s-reactions.md, raw/papers/zhang2026_anode-free-assb-nanocrystalline-amorphous-li2s-na-collector.md, raw/papers/cronk2026_highly-utilized-practical-li-s-positive-electrode-assb.md, raw/papers/lee2026_decoupled-sulfur-redox-pathways-initial-chemical-states-assb.md, raw/papers/liu2026_li4sns4-molecular-mediator-low-barrier-li2s-chemistry.md, raw/papers/zhangj2026_strain-coordination-long-cycling-assb.md, raw/papers/kwok2023_interfacial-redox-mediator-high-performance-asslsb.md, raw/papers/gao2024_cu-i-codoping-activating-li2s-redox-kinetics-assb.md, raw/papers/kimjt2023_mixed-discharge-products-li2s2-li2s-asslsb.md, raw/papers/hong2026_high-valence-cation-lattice-expansion-activating-li2s.md, raw/papers/park2026_low-pressure-operation-carbon-coated-current-collector-asslsb.md, raw/papers/wangx2026_dual-conductivity-optimization-high-rate-ultralong-life-asslsb.md, raw/papers/hao2025_nanosized-li2s-amorphous-matrix-asslsb.md]
+sources: [raw/papers/kim2023_reinforced-electrical-networking-high-loading-li2s-cathode.md, raw/transcripts/2026-09-11-li2s-wiki-kickoff-session.md, raw/papers/wan2021_lii-libr-catalyst-solid-state-li2s-s-reactions.md, raw/papers/zhang2026_anode-free-assb-nanocrystalline-amorphous-li2s-na-collector.md, raw/papers/cronk2026_highly-utilized-practical-li-s-positive-electrode-assb.md, raw/papers/lee2026_decoupled-sulfur-redox-pathways-initial-chemical-states-assb.md, raw/papers/liu2026_li4sns4-molecular-mediator-low-barrier-li2s-chemistry.md, raw/papers/zhangj2026_strain-coordination-long-cycling-assb.md, raw/papers/kwok2023_interfacial-redox-mediator-high-performance-asslsb.md, raw/papers/gao2024_cu-i-codoping-activating-li2s-redox-kinetics-assb.md, raw/papers/kimjt2023_mixed-discharge-products-li2s2-li2s-asslsb.md, raw/papers/hong2026_high-valence-cation-lattice-expansion-activating-li2s.md, raw/papers/park2026_low-pressure-operation-carbon-coated-current-collector-asslsb.md, raw/papers/wangx2026_dual-conductivity-optimization-high-rate-ultralong-life-asslsb.md, raw/papers/hao2025_nanosized-li2s-amorphous-matrix-asslsb.md, raw/papers/feng2026_anode-free-asslsb-fe-stabilized-polysulfides.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -43,7 +43,7 @@ Li2S 는 전자·이온 모두 절연에 가깝고 첫 충전(탈리튬화)에 �
    고립부 제거), 1 GPa compact geometry, 고압 성형으로 생긴 준안정 orthorhombic Li2S.
    → [[carbon-dimensionality-electron-network]].
 
-## ★ 활성화 전위 사다리 (2026-10-06 — 고체계 digest 13편)
+## ★ 활성화 전위 사다리 (2026-10-06 — 고체계 digest 14편)
 
 이 개념의 중심 질문이 2026-09-30 에 바뀌었다. **"얼마나 활성화되나" 가 아니라 "활성화를 끝내는
 전위가 SE 가 견디는 전위보다 높은가" 다** ([[reference-cell-500-600-mahg]] H1). 그 전위를 낮추려는
@@ -61,6 +61,7 @@ Li2S 는 전자·이온 모두 절연에 가깝고 첫 충전(탈리튬화)에 �
 | **Wan 2021** | ≈**2.80 V** `[도표]` | **평탄 plateau** (이론용량 거의 전부) | LiI–LiBr 할로겐화물 | **39.9 wt%** `[재현]` | ✗ 사후 분석 0건 |
 | **Zhang 2026** | 2.87 V | plateau | PI3 → in-situ LiI | **43.8 wt%** `[재현]` | ✗ |
 | **Lee 2026** | — (컷오프 **3.62 V** vs Li/Li⁺) | — | 없음 — 전위를 올려서 끝낸다 | 0 | ✗ (대가는 이론 초과 용량 101–107 %) |
+| **Feng 2026** | **≈1.8 V 개시 / ≈1.9 V 중심 vs Li–In** `[도표]` ★ **환산 금지** | **"완만한 경사 plateau"** — 1.85 → 2.00 V 에서 용량의 **70 %**(≈70 → 675). overshoot 없음. 대조 pristine 은 **1.88–1.90 V 짧은 plateau(0–70) 후 급격한 분극 상승** | 상용 Li2S + **FeCl3 몰비 0.1** 을 Ar 하 밀링(반응성 밀링) | **26.1 wt%**(분말) / 10.4 wt%(전극) `[재현]` | ✗ (활물질 없는 대조셀 — **일곱 편 연속**). 단 **Fe 자기 용량 상한을 `[재현]` 43.1 mAh g⁻¹(FLS)로 계산** |
 | **Hao 2025** | **1.75–1.80 V** `[도표]` ★ **기준전극 미정 — 숫자로 인용 금지** | **개시 변곡 + hump 없음**(1.80 → 1.95 V 완만). ★ **대조 pristine 은 plateau 자체에 도달하지 못한다** | 상용 Li2S + FeCl3 를 **함께 밀링**(반응성 밀링) → ≈4 nm Li2S + 비정질 LiFeS2 | **14.1 wt%**(양극 기준) `[재현]` — 좌표군 최저 축 | ✓✓ **Fe K-edge XAS 로 실제 배제**(4상태 전부 불변, 자기 용량 `[재현]` 4.6 %) |
 | **Wang (XinXu) 2026** | **≈2.40–2.45 V** `[도표]` (무릎 / 대조 Li2S ≈2.45–2.50) | **hump 없음 — 단조 상승 slope.** 완만구간 기울기가 대조의 1/3 (2.45→2.65 V vs 2.5→3.1 V) | 활물질을 **Li2Se0.2S0.8** 로 — 섞는 것이 아니라 **황 자리 치환** | **Se 28.6 wt%** `[재현]` — 대가가 **이론 천장 하락 −17.0 %** 로 나타난다 | ✓ `LPSCl` 대조셀을 **돌렸다**(이 위키 두 번째) — 단 수치 미인쇄 + 전압창이 활성화 컷오프를 못 덮는다 |
 | **Park 2026** | — (**활성화 hump 자체가 없다**) | OCV 2.25 → ≈2.5 V 뒤 2.5 → 2.9 V **단조 상승** | **수단 없음** — 첨가제·촉매·승온 전부 없다. 바꾼 것은 **집전체 표면**뿐 | 0 | ✗ |
@@ -89,6 +90,21 @@ Li2S 는 전자·이온 모두 절연에 가깝고 첫 충전(탈리튬화)에 �
    → **개시 전위를 낮추는 것과 활성화를 낮은 전위에서 끝내는 것은 다른 문제다.** H1 재정의판
    ("활성화 **완료** 전위 > SE 산화 전위")은 사다리 6편 중 **누구도 풀지 않았다.** 이 사다리의
    열은 앞으로 "개시" 와 "완료" 를 갈라 적어야 한다.
+
+### ⚠ `vs Li–In` 으로만 적힌 값은 이 사다리에 꽂지 않는다
+
+사다리의 기본 눈금은 **vs Li/Li⁺** 다. 그런데 Li–In 반쪽셀 논문이 많고, Li–In 의 전위는
+**In 중 Li 조성에 따라 움직인다.** 이 위키에는 **Li–In ↔ Li/Li⁺ 오프셋의 근거 raw 가 없다** —
+Wang 2023 이 `[인쇄]` 0.62 V 를 준 것이 유일한 출처이고 그 LSV 곡선은 SI 에 있어 미확보다.
+
+**규율**: `vs Li–In` 값은 **그대로 적고 "환산 금지" 를 붙인다.** 환산한 값을 쓸 때는 반드시
+`[재현]` 을 달고 **+0.62 V 가정**을 명시한다. 현재 사다리에서 환산값인 행은
+**Gao 2024 · Kim JT 2023 · Hong 2026** 이고, **Feng 2026 · Hao 2025 는 환산하지 않았다**
+(Hao 는 기준전극 자체가 미기재).
+
+`[해석]` 그래서 **사다리의 "낮은 묶음" 을 비교할 때 환산 행과 비환산 행을 섞으면 안 된다.**
+벽이 깨졌다는 결론(Gao 의 CuI)은 **같은 논문 안의 LiI 대조셀**에 기대고 있어 이 문제를 피한다 —
+**논문 간 비교보다 논문 내 대조가 언제나 단단하다.**
 
 ### ★★ 곡선에 네 번째 범주가 필요하다 — "plateau 자체가 없음(활성화 실패)"
 
@@ -181,8 +197,8 @@ stability of the Li4SnS4 mediator"* 라고 쓴다. **매개체의 정의는 자�
 | 분류 | 판정 기준 (무엇을 보면 아는가) | 지금까지의 배정 |
 |---|---|---|
 | **매개체 (mediator)** | 첨가제 **자신의 산화상태가 충방전과 함께 왕복**한다 (ex situ XPS·XANES 가 움직인다) + 전위 곡선에 **자기 평탄 plateau** 가 선다 | **Gao 2024 의 Cu** — Cu⁺ → "Cu²⁺" → Cu⁺ 가 **ex situ XPS 5지점에서 가역 왕복** (⚠ Cu²⁺ 진단신호인 shake-up 위성 940–945 eV 가 **그림 축 밖**이고 ex situ XRD 가 CuS 를 한 번도 못 봤다) · **Kwok 2023 의 LiVS2 (잠정)** — 설계상 V³⁺⇄V⁴⁺ 가 명백하고 **상온에서 Li2S + VS2 → LiVS2 가 실제로 일어나는 것을 XRD 로 보였는데(셀 밖)**, **ex situ 분광이 논문에 하나도 없다** |
-| **촉매 (catalyst)** | 산화상태가 **돌아오고**, 그 자리에서 **활물질의** 반응 속도가 올라간다 — 자신의 용량 기여는 0 에 가깝다 | **여전히 확정 0편.** 주장은 많다 |
-| **정적 계면층·도펀트** | 산화상태가 **아예 안 움직인다**. 효과는 접촉·전달 쪽 | **Liu 2026 Li4SnS4 (Sn 3d 불변)** · **Cronk 2026 Li3PS4+n** (밀링 생성) · **Gao 2024 의 I** (I 3d 5지점 사실상 불변, 반응식에서 LiI 로 보존 → **자기 용량 기여 0**) · **Hong 2026 의 Zr**(격자 치환분) — ⚠ 근거가 `[인쇄]` "Zr 3d XPS 에 no obvious phase evolution" 한 줄뿐이고 **지점 수·결합에너지 수치가 0** 이라 **Liu 2026(Sn 3d 9지점)보다 근거가 나쁘다** |
+| **촉매 (catalyst)** | 산화상태가 **돌아오고**, 그 자리에서 **활물질의** 반응 속도가 올라간다 — 자신의 용량 기여는 0 에 가깝다 | ★ **Feng 2026 의 Fe** (→ 저결정 FeSx) — 이 위키 **최초의 촉매 배정**이다. 2+ 근처에서 "slight" 하게 왕복하고 **복귀**하며 **자기 plateau 가 없고** 자기 용량 상한이 `[재현]` **43.1 mAh g⁻¹(FLS) = 첫 충전의 5 %** 다. 즉 **"자기 용량 5 % 를 가진 촉매"**. ⚠ 근거 그림이 **Fig. S9(미확보)** 이고, **방전 컷오프 0.9 V vs Li–In 이 FeS 전환반응(FeS + 2Li → Fe + Li2S)에 닿으면** 자기 용량이 `[재현]` **86.2 (= 10 %)** 로 뛰어 **매개체/공활물질로 재분류**해야 한다 — **Fig. S9 확보가 분기점** |
+| **정적 계면층·도펀트** | 산화상태가 **아예 안 움직인다**. 효과는 접촉·전달 쪽 | **Feng 2026 의 Cl**(→ LiCl 150–250 nm, 자기 용량 **0** — 저자 스스로 `[인쇄]` "future work will focus on **selectively removing the LiCl byproduct**" 라 쓴다) · **Liu 2026 Li4SnS4 (Sn 3d 불변)** · **Cronk 2026 Li3PS4+n** (밀링 생성) · **Gao 2024 의 I** (I 3d 5지점 사실상 불변, 반응식에서 LiI 로 보존 → **자기 용량 기여 0**) · **Hong 2026 의 Zr**(격자 치환분) — ⚠ 근거가 `[인쇄]` "Zr 3d XPS 에 no obvious phase evolution" 한 줄뿐이고 **지점 수·결합에너지 수치가 0** 이라 **Liu 2026(Sn 3d 9지점)보다 근거가 나쁘다** |
 
 #### ★★ 제4범주 — "산화환원 활성 격자 공음이온" (2026-10-06, Wang XinXu 2026)
 
@@ -227,6 +243,8 @@ Kwok 2023 을 판정하다 나온 명제다. 액체계 매개체는 **mM 농도�
 | Kwok 2023 | LiVS2 | 40 wt% `[재현]` | 147 `[재현]` | — | — |
 | **Gao 2024** | **CuI** | **42.3 wt%** `[재현]` | **102.9** `[재현]` (Cu 만; I 는 0) | **990.6** | **0.10** |
 | **Hong 2026** | **ZrS2** | **16.7 wt%** `[재현]` ★ | **34.5**(1 e⁻) / **138.0**(4 e⁻) `[재현]` | **340.1** | **0.10 / 0.41** |
+| **Feng 2026** | **FeCl3** | **26.1 wt%**(분말) / 10.4(전극) `[재현]` | **43.1**(1 e⁻) / **86.2**(FeS 전환 포함) `[재현]` | 371–503 | **0.086–0.116** / 0.17–0.23 |
+| **Hao 2025** | FeCl3 → LiFeS2 + LiCl | **23.5 wt%**(분말) / 14.1(전극) `[재현]` | **32.4** `[재현]` — ✓✓ **Fe K-edge XAS 로 실제 배제** | 687 | **0.047** |
 
 → **"관측된 개선이 첨가제 자기 용량일 뿐일 수 있다" 는 경보가 Gao 2024 에서 처음 해제된다**
 (개선폭이 항의 10배). ⚠ 단 그 절반의 이유는 **기준선이 낮다**는 것이다 — Gao 의 pristine Li2S
