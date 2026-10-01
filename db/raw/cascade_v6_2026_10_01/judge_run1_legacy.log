@@ -1,0 +1,18 @@
+카드 v6 · 부모 10 (ABCDEFGHIJ) · 600 K · 런 41 개 · out_root /home/kgy/work/runs/cascade_v6_40run_0921
+판정 대상 런 40 · 자격 통과 0
+
+부모         D̄_P1       D̄_P2  L_k = ln R
+  A          nan         nan        결측
+  B          nan         nan        결측
+  C          nan         nan        결측
+  D          nan         nan        결측
+  E          nan         nan        결측
+  F          nan         nan        결측
+  G          nan         nan        결측
+  H          nan         nan        결측
+  I          nan         nan        결측
+  J          nan         nan        결측
+
+1차: 유효 부모 0 — 구간 판정 없음 (n ≥ 2 · df ≤ 30 이어야 한다)
+
+→ /home/kgy/work/runs/cascade_v6_40run_0921/cascade_v6_judgement.json

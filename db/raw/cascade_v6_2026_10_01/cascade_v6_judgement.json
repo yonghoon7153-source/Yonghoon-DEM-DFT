@@ -1,0 +1,1770 @@
+{
+ "primary": {
+  "T_K": 600,
+  "delta_lnD": 0.405465,
+  "n_parents_declared": 10,
+  "n_valid": 0,
+  "⛔": "유효 부모 0 — 구간 판정 없음 (n ≥ 2 · df ≤ 30 이어야 한다)"
+ },
+ "parents": {
+  "A": {
+   "D_bar_P1": null,
+   "D_bar_P2": null,
+   "⛔": "결측 — 시드 하나라도 실패·자격 미달이면 그 부모는 빠진다 (대체 금지 · 카드 §3)"
+  },
+  "B": {
+   "D_bar_P1": null,
+   "D_bar_P2": null,
+   "⛔": "결측 — 시드 하나라도 실패·자격 미달이면 그 부모는 빠진다 (대체 금지 · 카드 §3)"
+  },
+  "C": {
+   "D_bar_P1": null,
+   "D_bar_P2": null,
+   "⛔": "결측 — 시드 하나라도 실패·자격 미달이면 그 부모는 빠진다 (대체 금지 · 카드 §3)"
+  },
+  "D": {
+   "D_bar_P1": null,
+   "D_bar_P2": null,
+   "⛔": "결측 — 시드 하나라도 실패·자격 미달이면 그 부모는 빠진다 (대체 금지 · 카드 §3)"
+  },
+  "E": {
+   "D_bar_P1": null,
+   "D_bar_P2": null,
+   "⛔": "결측 — 시드 하나라도 실패·자격 미달이면 그 부모는 빠진다 (대체 금지 · 카드 §3)"
+  },
+  "F": {
+   "D_bar_P1": null,
+   "D_bar_P2": null,
+   "⛔": "결측 — 시드 하나라도 실패·자격 미달이면 그 부모는 빠진다 (대체 금지 · 카드 §3)"
+  },
+  "G": {
+   "D_bar_P1": null,
+   "D_bar_P2": null,
+   "⛔": "결측 — 시드 하나라도 실패·자격 미달이면 그 부모는 빠진다 (대체 금지 · 카드 §3)"
+  },
+  "H": {
+   "D_bar_P1": null,
+   "D_bar_P2": null,
+   "⛔": "결측 — 시드 하나라도 실패·자격 미달이면 그 부모는 빠진다 (대체 금지 · 카드 §3)"
+  },
+  "I": {
+   "D_bar_P1": null,
+   "D_bar_P2": null,
+   "⛔": "결측 — 시드 하나라도 실패·자격 미달이면 그 부모는 빠진다 (대체 금지 · 카드 §3)"
+  },
+  "J": {
+   "D_bar_P1": null,
+   "D_bar_P2": null,
+   "⛔": "결측 — 시드 하나라도 실패·자격 미달이면 그 부모는 빠진다 (대체 금지 · 카드 §3)"
+  }
+ },
+ "card": "db/properties/cascade_estimand_card_v6_10parents_2026_09_19.json §4",
+ "msd_definition": "카드 v4 §2 (v5 '그대로' · v6 §3 승계): 분수좌표 unwrap → 실공간 → 비-Li 골격 COM(질량 가중) 제거 → 시간원점 평균 · 창 2–50 ps 자유절편 · D = 기울기/6 · 사건 = 같은 좌표에서 |Δr| > 2.5 Å 첫 발생 (t_ref 갱신)",
+ "⚠_판독_이력": "2026-10-01 첫 판독(commit a9e123ab5)은 msd.json 의 옛 곡선(단일 시간원점 · 실험실 좌표 · 골격 COM 미제거)을 읽었다 — 카드 정의와 다르다. 그 판독은 자격 0/40 · D 값 표시 없이 끝났다. 이 판독은 카드 정의로 고친 판이다. rows 의 D_legacy_sto_lab 은 그 옛 값이다 (감사용 · 집계에 안 쓴다).",
+ "tool": {
+  "commit": "f0a0e16adce768da173358742fad5d967141f4be",
+  "dirty": false
+ },
+ "⚠_부피_조건": "V = 4066.479695 Å³ · P̄ = **결측** (msd.json 에 없다)",
+ "⚠_인용정책": "1저자 2026-09-18 — 계 간 상대차로만. 절대 D 인용 금지 · UMA·표집·부피 조건부 (카드 1a)",
+ "eligibility": {
+  "n_runs": 40,
+  "n_eligible": 0,
+  "ignore_eligibility": false,
+  "n_uncheckable": 0,
+  "partial": false,
+  "reason_tally": {
+   "검사불가": 0,
+   "①_D_inc_plateau": 40,
+   "②_부창_기울기비": 40,
+   "③_사건수": 0,
+   "사건수_최소_중앙_최대": [
+    3992,
+    4332,
+    4724
+   ]
+  }
+ },
+ "rows": [
+  {
+   "structure": "P1_Al2O3_A",
+   "T_K": 600,
+   "seed": 1,
+   "tag": "P1_Al2O3_A__s1",
+   "D": 2.8880817605009254e-06,
+   "D_legacy_sto_lab": 2.3656912865975576e-06,
+   "eligible": false,
+   "events_per_run": 4226,
+   "t_end_ps": 100.0,
+   "reasons": [
+    "D_inc 가 창 따라 움직인다 (상대산포 147% > 10%, 추세 -147%)",
+    "부창 기울기 비 기준 밖 2-18: 2.492, 18-34: 0.767, 34-50: 0.376 (허용 (0.8, 1.2))"
+   ],
+   "detail": {
+    "run_verdict": "no_value",
+    "sub_window_ratios": [
+     2.4920110720379993,
+     0.7672226433982937,
+     0.37569374101852293
+    ],
+    "events_per_run": 4226,
+    "msd_magnitude_alarm": true,
+    "msd_magnitude_value": 1.7890648492292718
+   },
+   "card_curve": {
+    "n_origins_min": 1000,
+    "events": 4226,
+    "n_frames": 2000,
+    "n_Li": 90,
+    "n_framework": 114,
+    "max_step_frac": 0.25784223481539803,
+    "fit_window_ps": [
+     2.0,
+     50.0
+    ],
+    "save_fs": 100.0,
+    "D": 2.8880817605009254e-06,
+    "c_A2": 5.743809947458411,
+    "R2": 0.8561544252931412
+   }
+  },
+  {
+   "structure": "P1_Al2O3_A",
+   "T_K": 600,
+   "seed": 2,
+   "tag": "P1_Al2O3_A__s2",
+   "D": 3.334401269967568e-06,
+   "D_legacy_sto_lab": 3.8815626117945985e-06,
+   "eligible": false,
+   "events_per_run": 4143,
+   "t_end_ps": 100.0,
+   "reasons": [
+    "D_inc 가 창 따라 움직인다 (상대산포 137% > 10%, 추세 -137%)",
+    "부창 기울기 비 기준 밖 2-18: 2.141, 34-50: 0.476 (허용 (0.8, 1.2))"
+   ],
+   "detail": {
+    "run_verdict": "no_value",
+    "sub_window_ratios": [
+     2.141091036254392,
+     0.807242225693671,
+     0.476167120024162
+    ],
+    "events_per_run": 4143,
+    "msd_magnitude_alarm": true,
+    "msd_magnitude_value": 1.924215127076295
+   },
+   "card_curve": {
+    "n_origins_min": 1000,
+    "events": 4143,
+    "n_frames": 2000,
+    "n_Li": 90,
+    "n_framework": 114,
+    "max_step_frac": 0.24444188787874999,
+    "fit_window_ps": [
+     2.0,
+     50.0
+    ],
+    "save_fs": 100.0,
+    "D": 3.334401269967568e-06,
+    "c_A2": 5.413915657948212,
+    "R2": 0.9128936804530344
+   }
+  },
+  {
+   "structure": "P1_Al2O3_B",
+   "T_K": 600,
+   "seed": 1,
+   "tag": "P1_Al2O3_B__s1",
+   "D": 3.33404647248817e-06,
+   "D_legacy_sto_lab": 3.3507890312358376e-06,
+   "eligible": false,
+   "events_per_run": 4021,
+   "t_end_ps": 100.0,
+   "reasons": [
+    "D_inc 가 창 따라 움직인다 (상대산포 128% > 10%, 추세 -128%)",
+    "부창 기울기 비 기준 밖 2-18: 2.124, 34-50: 0.542 (허용 (0.8, 1.2))"
+   ],
+   "detail": {
+    "run_verdict": "no_value",
+    "sub_window_ratios": [
+     2.1242619860261316,
+     0.8372739939665187,
+     0.5420000581713944
+    ],
+    "events_per_run": 4021,
+    "msd_magnitude_alarm": true,
+    "msd_magnitude_value": 1.978270037646707
+   },
+   "card_curve": {
+    "n_origins_min": 1000,
+    "events": 4021,
+    "n_frames": 2000,
+    "n_Li": 90,
+    "n_framework": 114,
+    "max_step_frac": 0.24740730870419056,
+    "fit_window_ps": [
+     2.0,
+     50.0
+    ],
+    "save_fs": 100.0,
+    "D": 3.33404647248817e-06,
+    "c_A2": 5.364606241406455,
+    "R2": 0.9102194809231864
+   }
+  },
+  {
+   "structure": "P1_Al2O3_B",
+   "T_K": 600,
+   "seed": 2,
+   "tag": "P1_Al2O3_B__s2",
+   "D": 3.73092223288308e-06,
+   "D_legacy_sto_lab": 3.4901371229408965e-06,
+   "eligible": false,
+   "events_per_run": 4155,
+   "t_end_ps": 100.0,
+   "reasons": [
+    "D_inc 가 창 따라 움직인다 (상대산포 123% > 10%, 추세 -123%)",
+    "부창 기울기 비 기준 밖 2-18: 2.081, 18-34: 0.761, 34-50: 0.666 (허용 (0.8, 1.2))"
+   ],
+   "detail": {
+    "run_verdict": "no_value",
+    "sub_window_ratios": [
+     2.0806566042932255,
+     0.761083738126857,
+     0.6659877792939001
+    ],
+    "events_per_run": 4155,
+    "msd_magnitude_alarm": true,
+    "msd_magnitude_value": 2.174238104878725
+   },
+   "card_curve": {
+    "n_origins_min": 1000,
+    "events": 4155,
+    "n_frames": 2000,
+    "n_Li": 90,
+    "n_framework": 114,
+    "max_step_frac": 0.24965236243791877,
+    "fit_window_ps": [
+     2.0,
+     50.0
+    ],
+    "save_fs": 100.0,
+    "D": 3.73092223288308e-06,
+    "c_A2": 5.440278631734676,
+    "R2": 0.9302179588511541
+   }
+  },
+  {
+   "structure": "P1_Al2O3_C",
+   "T_K": 600,
+   "seed": 1,
+   "tag": "P1_Al2O3_C__s1",
+   "D": 3.334798650391572e-06,
+   "D_legacy_sto_lab": 3.29972079336004e-06,
+   "eligible": false,
+   "events_per_run": 4192,
+   "t_end_ps": 100.0,
+   "reasons": [
+    "D_inc 가 창 따라 움직인다 (상대산포 68% > 10%, 추세 -64%)",
+    "부창 기울기 비 기준 밖 2-18: 2.175, 34-50: 0.562 (허용 (0.8, 1.2))"
+   ],
+   "detail": {
+    "run_verdict": "no_value",
+    "sub_window_ratios": [
+     2.175298414431147,
+     0.8069985772087074,
+     0.5622141760045731
+    ],
+    "events_per_run": 4192,
+    "msd_magnitude_alarm": true,
+    "msd_magnitude_value": 2.3819563373685955
+   },
+   "card_curve": {
+    "n_origins_min": 1000,
+    "events": 4192,
+    "n_frames": 2000,
+    "n_Li": 90,
+    "n_framework": 114,
+    "max_step_frac": 0.24485949703455734,
+    "fit_window_ps": [
+     2.0,
+     50.0
+    ],
+    "save_fs": 100.0,
+    "D": 3.334798650391572e-06,
+    "c_A2": 5.545773437248936,
+    "R2": 0.9078136941697081
+   }
+  },
+  {
+   "structure": "P1_Al2O3_C",
+   "T_K": 600,
+   "seed": 2,
+   "tag": "P1_Al2O3_C__s2",
+   "D": 2.9236586296744252e-06,
+   "D_legacy_sto_lab": 3.0067894838548204e-06,
+   "eligible": false,
+   "events_per_run": 4127,
+   "t_end_ps": 100.0,
+   "reasons": [
+    "D_inc 가 창 따라 움직인다 (상대산포 193% > 10%, 추세 -193%)",
+    "부창 기울기 비 기준 밖 2-18: 2.577, 18-34: 0.728, 34-50: 0.295 (허용 (0.8, 1.2))"
+   ],
+   "detail": {
+    "run_verdict": "no_value",
+    "sub_window_ratios": [
+     2.576711021436907,
+     0.7283030029533248,
+     0.2945275327408922
+    ],
+    "events_per_run": 4127,
+    "msd_magnitude_alarm": true,
+    "msd_magnitude_value": 1.6607657410837067
+   },
+   "card_curve": {
+    "n_origins_min": 1000,
+    "events": 4127,
+    "n_frames": 2000,
+    "n_Li": 90,
+    "n_framework": 114,
+    "max_step_frac": 0.24803855481362036,
+    "fit_window_ps": [
+     2.0,
+     50.0
+    ],
+    "save_fs": 100.0,
+    "D": 2.9236586296744252e-06,
+    "c_A2": 5.958269162351286,
+    "R2": 0.8293731723322479
+   }
+  },
+  {
+   "structure": "P1_Al2O3_D",
+   "T_K": 600,
+   "seed": 1,
+   "tag": "P1_Al2O3_D__s1",
+   "D": 3.7513389446100804e-06,
+   "D_legacy_sto_lab": 4.3823954701091025e-06,
+   "eligible": false,
+   "events_per_run": 4329,
+   "t_end_ps": 100.0,
+   "reasons": [
+    "D_inc 가 창 따라 움직인다 (상대산포 113% > 10%, 추세 -113%)",
+    "부창 기울기 비 기준 밖 2-18: 1.968, 34-50: 0.565 (허용 (0.8, 1.2))"
+   ],
+   "detail": {
+    "run_verdict": "no_value",
+    "sub_window_ratios": [
+     1.9680540417131756,
+     0.8658331429307702,
+     0.5647040409178016
+    ],
+    "events_per_run": 4329,
+    "msd_magnitude_alarm": true,
+    "msd_magnitude_value": 2.2069304029658703
+   },
+   "card_curve": {
+    "n_origins_min": 1000,
+    "events": 4329,
+    "n_frames": 2000,
+    "n_Li": 90,
+    "n_framework": 114,
+    "max_step_frac": 0.26100820171946904,
+    "fit_window_ps": [
+     2.0,
+     50.0
+    ],
+    "save_fs": 100.0,
+    "D": 3.7513389446100804e-06,
+    "c_A2": 5.377839973538446,
+    "R2": 0.9324295451296803
+   }
+  },
+  {
+   "structure": "P1_Al2O3_D",
+   "T_K": 600,
+   "seed": 2,
+   "tag": "P1_Al2O3_D__s2",
+   "D": 3.7205367237504218e-06,
+   "D_legacy_sto_lab": 2.147072684608145e-06,
+   "eligible": false,
+   "events_per_run": 4248,
+   "t_end_ps": 100.0,
+   "reasons": [
+    "D_inc 가 창 따라 움직인다 (상대산포 73% > 10%, 추세 -73%)",
+    "부창 기울기 비 기준 밖 2-18: 2.016, 18-34: 0.794, 34-50: 0.715 (허용 (0.8, 1.2))"
+   ],
+   "detail": {
+    "run_verdict": "no_value",
+    "sub_window_ratios": [
+     2.015672200641807,
+     0.7942534351541378,
+     0.714755070146533
+    ],
+    "events_per_run": 4248,
+    "msd_magnitude_alarm": true,
+    "msd_magnitude_value": 2.522741081228482
+   },
+   "card_curve": {
+    "n_origins_min": 1000,
+    "events": 4248,
+    "n_frames": 2000,
+    "n_Li": 90,
+    "n_framework": 114,
+    "max_step_frac": 0.26180168795660086,
+    "fit_window_ps": [
+     2.0,
+     50.0
+    ],
+    "save_fs": 100.0,
+    "D": 3.7205367237504218e-06,
+    "c_A2": 5.474662277122494,
+    "R2": 0.9357663927705298
+   }
+  },
+  {
+   "structure": "P1_Al2O3_E",
+   "T_K": 600,
+   "seed": 1,
+   "tag": "P1_Al2O3_E__s1",
+   "D": 3.554946880572519e-06,
+   "D_legacy_sto_lab": 2.852930921501747e-06,
+   "eligible": false,
+   "events_per_run": 4129,
+   "t_end_ps": 100.0,
+   "reasons": [
+    "D_inc 가 창 따라 움직인다 (상대산포 112% > 10%, 추세 -112%)",
+    "부창 기울기 비 기준 밖 2-18: 2.079, 18-34: 0.796, 34-50: 0.566 (허용 (0.8, 1.2))"
+   ],
+   "detail": {
+    "run_verdict": "no_value",
+    "sub_window_ratios": [
+     2.0789658806963476,
+     0.796017370042087,
+     0.5657863134680571
+    ],
+    "events_per_run": 4129,
+    "msd_magnitude_alarm": true,
+    "msd_magnitude_value": 2.157702589274809
+   },
+   "card_curve": {
+    "n_origins_min": 1000,
+    "events": 4129,
+    "n_frames": 2000,
+    "n_Li": 90,
+    "n_framework": 114,
+    "max_step_frac": 0.21843532369743046,
+    "fit_window_ps": [
+     2.0,
+     50.0
+    ],
+    "save_fs": 100.0,
+    "D": 3.554946880572519e-06,
+    "c_A2": 5.449460687172628,
+    "R2": 0.9198285684392027
+   }
+  },
+  {
+   "structure": "P1_Al2O3_E",
+   "T_K": 600,
+   "seed": 2,
+   "tag": "P1_Al2O3_E__s2",
+   "D": 3.5868995312420884e-06,
+   "D_legacy_sto_lab": 2.6653826822213433e-06,
+   "eligible": false,
+   "events_per_run": 4080,
+   "t_end_ps": 100.0,
+   "reasons": [
+    "D_inc 가 창 따라 움직인다 (상대산포 100% > 10%, 추세 -100%)",
+    "부창 기울기 비 기준 밖 2-18: 1.956, 34-50: 0.547 (허용 (0.8, 1.2))"
+   ],
+   "detail": {
+    "run_verdict": "no_value",
+    "sub_window_ratios": [
+     1.9559621710196327,
+     0.8815222445376804,
+     0.5469697008389175
+    ],
+    "events_per_run": 4080,
+    "msd_magnitude_alarm": true,
+    "msd_magnitude_value": 2.1802933434339833
+   },
+   "card_curve": {
+    "n_origins_min": 1000,
+    "events": 4080,
+    "n_frames": 2000,
+    "n_Li": 90,
+    "n_framework": 114,
+    "max_step_frac": 0.27200164464677123,
+    "fit_window_ps": [
+     2.0,
+     50.0
+    ],
+    "save_fs": 100.0,
+    "D": 3.5868995312420884e-06,
+    "c_A2": 5.091570609473227,
+    "R2": 0.9351005547816171
+   }
+  },
+  {
+   "structure": "P1_Al2O3_F",
+   "T_K": 600,
+   "seed": 1,
+   "tag": "P1_Al2O3_F__s1",
+   "D": 3.860486282743783e-06,
+   "D_legacy_sto_lab": 3.258635833700261e-06,
+   "eligible": false,
+   "events_per_run": 4176,
+   "t_end_ps": 100.0,
+   "reasons": [
+    "D_inc 가 창 따라 움직인다 (상대산포 104% > 10%, 추세 -104%)",
+    "부창 기울기 비 기준 밖 2-18: 2.006, 34-50: 0.572 (허용 (0.8, 1.2))"
+   ],
+   "detail": {
+    "run_verdict": "no_value",
+    "sub_window_ratios": [
+     2.0060938180719377,
+     0.847205824367402,
+     0.5715920567864392
+    ],
+    "events_per_run": 4176,
+    "msd_magnitude_alarm": true,
+    "msd_magnitude_value": 2.3462441022128995
+   },
+   "card_curve": {
+    "n_origins_min": 1000,
+    "events": 4176,
+    "n_frames": 2000,
+    "n_Li": 90,
+    "n_framework": 114,
+    "max_step_frac": 0.24589758661402433,
+    "fit_window_ps": [
+     2.0,
+     50.0
+    ],
+    "save_fs": 100.0,
+    "D": 3.860486282743783e-06,
+    "c_A2": 5.56237528528987,
+    "R2": 0.9299014766986003
+   }
+  },
+  {
+   "structure": "P1_Al2O3_F",
+   "T_K": 600,
+   "seed": 2,
+   "tag": "P1_Al2O3_F__s2",
+   "D": 4.520489980899732e-06,
+   "D_legacy_sto_lab": 4.34609156871158e-06,
+   "eligible": false,
+   "events_per_run": 4297,
+   "t_end_ps": 100.0,
+   "reasons": [
+    "D_inc 가 창 따라 움직인다 (상대산포 55% > 10%, 추세 -55%)",
+    "부창 기울기 비 기준 밖 2-18: 1.840, 34-50: 0.710 (허용 (0.8, 1.2))"
+   ],
+   "detail": {
+    "run_verdict": "no_value",
+    "sub_window_ratios": [
+     1.839663406098039,
+     0.821383872265636,
+     0.7103907259428595
+    ],
+    "events_per_run": 4297,
+    "msd_magnitude_alarm": false,
+    "msd_magnitude_value": 3.033914143987619
+   },
+   "card_curve": {
+    "n_origins_min": 1000,
+    "events": 4297,
+    "n_frames": 2000,
+    "n_Li": 90,
+    "n_framework": 114,
+    "max_step_frac": 0.2628173779480224,
+    "fit_window_ps": [
+     2.0,
+     50.0
+    ],
+    "save_fs": 100.0,
+    "D": 4.520489980899732e-06,
+    "c_A2": 5.4094874947646225,
+    "R2": 0.9505310545150184
+   }
+  },
+  {
+   "structure": "P1_Al2O3_G",
+   "T_K": 600,
+   "seed": 1,
+   "tag": "P1_Al2O3_G__s1",
+   "D": 3.4731674887261125e-06,
+   "D_legacy_sto_lab": 3.5112548986893415e-06,
+   "eligible": false,
+   "events_per_run": 4022,
+   "t_end_ps": 100.0,
+   "reasons": [
+    "D_inc 가 창 따라 움직인다 (상대산포 102% > 10%, 추세 -102%)",
+    "부창 기울기 비 기준 밖 2-18: 2.211, 18-34: 0.784, 34-50: 0.535 (허용 (0.8, 1.2))"
+   ],
+   "detail": {
+    "run_verdict": "no_value",
+    "sub_window_ratios": [
+     2.210530419143005,
+     0.7836661006392529,
+     0.5346569894107975
+    ],
+    "events_per_run": 4022,
+    "msd_magnitude_alarm": true,
+    "msd_magnitude_value": 2.1898134561852043
+   },
+   "card_curve": {
+    "n_origins_min": 1000,
+    "events": 4022,
+    "n_frames": 2000,
+    "n_Li": 90,
+    "n_framework": 114,
+    "max_step_frac": 0.22872170522446789,
+    "fit_window_ps": [
+     2.0,
+     50.0
+    ],
+    "save_fs": 100.0,
+    "D": 3.4731674887261125e-06,
+    "c_A2": 5.49204438060581,
+    "R2": 0.900447396120232
+   }
+  },
+  {
+   "structure": "P1_Al2O3_G",
+   "T_K": 600,
+   "seed": 2,
+   "tag": "P1_Al2O3_G__s2",
+   "D": 3.0058257388205476e-06,
+   "D_legacy_sto_lab": 2.461969792036964e-06,
+   "eligible": false,
+   "events_per_run": 4128,
+   "t_end_ps": 100.0,
+   "reasons": [
+    "D_inc 가 창 따라 움직인다 (상대산포 142% > 10%, 추세 -142%)",
+    "부창 기울기 비 기준 밖 2-18: 2.384, 18-34: 0.710, 34-50: 0.505 (허용 (0.8, 1.2))"
+   ],
+   "detail": {
+    "run_verdict": "no_value",
+    "sub_window_ratios": [
+     2.3843305301153808,
+     0.7102141562708747,
+     0.5054681321914885
+    ],
+    "events_per_run": 4128,
+    "msd_magnitude_alarm": true,
+    "msd_magnitude_value": 1.8489251219090217
+   },
+   "card_curve": {
+    "n_origins_min": 1000,
+    "events": 4128,
+    "n_frames": 2000,
+    "n_Li": 90,
+    "n_framework": 114,
+    "max_step_frac": 0.24550153070921055,
+    "fit_window_ps": [
+     2.0,
+     50.0
+    ],
+    "save_fs": 100.0,
+    "D": 3.0058257388205476e-06,
+    "c_A2": 5.682953530111644,
+    "R2": 0.8791539708637481
+   }
+  },
+  {
+   "structure": "P1_Al2O3_H",
+   "T_K": 600,
+   "seed": 1,
+   "tag": "P1_Al2O3_H__s1",
+   "D": 3.782074180989198e-06,
+   "D_legacy_sto_lab": 4.001378419831253e-06,
+   "eligible": false,
+   "events_per_run": 4023,
+   "t_end_ps": 100.0,
+   "reasons": [
+    "D_inc 가 창 따라 움직인다 (상대산포 91% > 10%, 추세 -91%)",
+    "부창 기울기 비 기준 밖 2-18: 1.887, 34-50: 0.609 (허용 (0.8, 1.2))"
+   ],
+   "detail": {
+    "run_verdict": "no_value",
+    "sub_window_ratios": [
+     1.887444481957783,
+     0.8724727307706245,
+     0.6085386877084342
+    ],
+    "events_per_run": 4023,
+    "msd_magnitude_alarm": true,
+    "msd_magnitude_value": 2.3423703365818054
+   },
+   "card_curve": {
+    "n_origins_min": 1000,
+    "events": 4023,
+    "n_frames": 2000,
+    "n_Li": 90,
+    "n_framework": 114,
+    "max_step_frac": 0.2523528648482097,
+    "fit_window_ps": [
+     2.0,
+     50.0
+    ],
+    "save_fs": 100.0,
+    "D": 3.782074180989198e-06,
+    "c_A2": 5.20118709037735,
+    "R2": 0.942720774952962
+   }
+  },
+  {
+   "structure": "P1_Al2O3_H",
+   "T_K": 600,
+   "seed": 2,
+   "tag": "P1_Al2O3_H__s2",
+   "D": 3.2652776796015695e-06,
+   "D_legacy_sto_lab": 2.0816447956956034e-06,
+   "eligible": false,
+   "events_per_run": 4241,
+   "t_end_ps": 100.0,
+   "reasons": [
+    "D_inc 가 창 따라 움직인다 (상대산포 95% > 10%, 추세 -95%)",
+    "부창 기울기 비 기준 밖 2-18: 2.214, 18-34: 0.729, 34-50: 0.584 (허용 (0.8, 1.2))"
+   ],
+   "detail": {
+    "run_verdict": "no_value",
+    "sub_window_ratios": [
+     2.21435685982152,
+     0.7292117919064747,
+     0.5841536046024811
+    ],
+    "events_per_run": 4241,
+    "msd_magnitude_alarm": true,
+    "msd_magnitude_value": 2.1658201890957773
+   },
+   "card_curve": {
+    "n_origins_min": 1000,
+    "events": 4241,
+    "n_frames": 2000,
+    "n_Li": 90,
+    "n_framework": 114,
+    "max_step_frac": 0.24867113656424983,
+    "fit_window_ps": [
+     2.0,
+     50.0
+    ],
+    "save_fs": 100.0,
+    "D": 3.2652776796015695e-06,
+    "c_A2": 5.596468041611491,
+    "R2": 0.9026117146820262
+   }
+  },
+  {
+   "structure": "P1_Al2O3_I",
+   "T_K": 600,
+   "seed": 1,
+   "tag": "P1_Al2O3_I__s1",
+   "D": 3.347369106619512e-06,
+   "D_legacy_sto_lab": 2.433390568170738e-06,
+   "eligible": false,
+   "events_per_run": 4186,
+   "t_end_ps": 100.0,
+   "reasons": [
+    "D_inc 가 창 따라 움직인다 (상대산포 91% > 10%, 추세 -89%)",
+    "부창 기울기 비 기준 밖 2-18: 2.280, 18-34: 0.763, 34-50: 0.469 (허용 (0.8, 1.2))"
+   ],
+   "detail": {
+    "run_verdict": "no_value",
+    "sub_window_ratios": [
+     2.2801111881115728,
+     0.7628383065251604,
+     0.4693263464994706
+    ],
+    "events_per_run": 4186,
+    "msd_magnitude_alarm": true,
+    "msd_magnitude_value": 2.225090400550534
+   },
+   "card_curve": {
+    "n_origins_min": 1000,
+    "events": 4186,
+    "n_frames": 2000,
+    "n_Li": 90,
+    "n_framework": 114,
+    "max_step_frac": 0.2502960022633822,
+    "fit_window_ps": [
+     2.0,
+     50.0
+    ],
+    "save_fs": 100.0,
+    "D": 3.347369106619512e-06,
+    "c_A2": 5.66716556595492,
+    "R2": 0.8882984272001664
+   }
+  },
+  {
+   "structure": "P1_Al2O3_I",
+   "T_K": 600,
+   "seed": 2,
+   "tag": "P1_Al2O3_I__s2",
+   "D": 4.269361038209771e-06,
+   "D_legacy_sto_lab": 4.50696867619158e-06,
+   "eligible": false,
+   "events_per_run": 4332,
+   "t_end_ps": 100.0,
+   "reasons": [
+    "D_inc 가 창 따라 움직인다 (상대산포 90% > 10%, 추세 -90%)",
+    "부창 기울기 비 기준 밖 2-18: 1.921, 34-50: 0.611 (허용 (0.8, 1.2))"
+   ],
+   "detail": {
+    "run_verdict": "no_value",
+    "sub_window_ratios": [
+     1.9214140896179235,
+     0.8144449551964217,
+     0.6111760380801579
+    ],
+    "events_per_run": 4332,
+    "msd_magnitude_alarm": true,
+    "msd_magnitude_value": 2.5941372588354854
+   },
+   "card_curve": {
+    "n_origins_min": 1000,
+    "events": 4332,
+    "n_frames": 2000,
+    "n_Li": 90,
+    "n_framework": 114,
+    "max_step_frac": 0.23878924149336772,
+    "fit_window_ps": [
+     2.0,
+     50.0
+    ],
+    "save_fs": 100.0,
+    "D": 4.269361038209771e-06,
+    "c_A2": 5.524050160112547,
+    "R2": 0.9395586485217435
+   }
+  },
+  {
+   "structure": "P1_Al2O3_J",
+   "T_K": 600,
+   "seed": 1,
+   "tag": "P1_Al2O3_J__s1",
+   "D": 3.020262948657751e-06,
+   "D_legacy_sto_lab": 4.041145299577304e-06,
+   "eligible": false,
+   "events_per_run": 3992,
+   "t_end_ps": 100.0,
+   "reasons": [
+    "D_inc 가 창 따라 움직인다 (상대산포 137% > 10%, 추세 -137%)",
+    "부창 기울기 비 기준 밖 2-18: 2.201, 18-34: 0.789, 34-50: 0.431 (허용 (0.8, 1.2))"
+   ],
+   "detail": {
+    "run_verdict": "no_value",
+    "sub_window_ratios": [
+     2.2014110528303688,
+     0.7888229701755957,
+     0.4312042235477394
+    ],
+    "events_per_run": 3992,
+    "msd_magnitude_alarm": true,
+    "msd_magnitude_value": 1.7846942290343586
+   },
+   "card_curve": {
+    "n_origins_min": 1000,
+    "events": 3992,
+    "n_frames": 2000,
+    "n_Li": 90,
+    "n_framework": 114,
+    "max_step_frac": 0.253604241310039,
+    "fit_window_ps": [
+     2.0,
+     50.0
+    ],
+    "save_fs": 100.0,
+    "D": 3.020262948657751e-06,
+    "c_A2": 5.257447491234418,
+    "R2": 0.8910072349437148
+   }
+  },
+  {
+   "structure": "P1_Al2O3_J",
+   "T_K": 600,
+   "seed": 2,
+   "tag": "P1_Al2O3_J__s2",
+   "D": 4.254866940077639e-06,
+   "D_legacy_sto_lab": 3.355195198031858e-06,
+   "eligible": false,
+   "events_per_run": 4125,
+   "t_end_ps": 100.0,
+   "reasons": [
+    "D_inc 가 창 따라 움직인다 (상대산포 82% > 10%, 추세 -82%)",
+    "부창 기울기 비 기준 밖 2-18: 1.898, 18-34: 0.778, 34-50: 0.731 (허용 (0.8, 1.2))"
+   ],
+   "detail": {
+    "run_verdict": "no_value",
+    "sub_window_ratios": [
+     1.8980717100485216,
+     0.7782314643506859,
+     0.7313355599467702
+    ],
+    "events_per_run": 4125,
+    "msd_magnitude_alarm": true,
+    "msd_magnitude_value": 2.6494940991714184
+   },
+   "card_curve": {
+    "n_origins_min": 1000,
+    "events": 4125,
+    "n_frames": 2000,
+    "n_Li": 90,
+    "n_framework": 114,
+    "max_step_frac": 0.276071005245848,
+    "fit_window_ps": [
+     2.0,
+     50.0
+    ],
+    "save_fs": 100.0,
+    "D": 4.254866940077639e-06,
+    "c_A2": 5.219241179865225,
+    "R2": 0.9442526027641818
+   }
+  },
+  {
+   "structure": "P2_Al2S3_A",
+   "T_K": 600,
+   "seed": 1,
+   "tag": "P2_Al2S3_A__s1",
+   "D": 3.440498395091726e-06,
+   "D_legacy_sto_lab": 4.69999697344423e-06,
+   "eligible": false,
+   "events_per_run": 4518,
+   "t_end_ps": 100.0,
+   "reasons": [
+    "D_inc 가 창 따라 움직인다 (상대산포 132% > 10%, 추세 -132%)",
+    "부창 기울기 비 기준 밖 2-18: 2.243, 18-34: 0.798, 34-50: 0.505 (허용 (0.8, 1.2))"
+   ],
+   "detail": {
+    "run_verdict": "no_value",
+    "sub_window_ratios": [
+     2.2431821951166606,
+     0.7982630171933842,
+     0.5045166112608697
+    ],
+    "events_per_run": 4518,
+    "msd_magnitude_alarm": true,
+    "msd_magnitude_value": 2.096016378755647
+   },
+   "card_curve": {
+    "n_origins_min": 1000,
+    "events": 4518,
+    "n_frames": 2000,
+    "n_Li": 90,
+    "n_framework": 114,
+    "max_step_frac": 0.2240843609674632,
+    "fit_window_ps": [
+     2.0,
+     50.0
+    ],
+    "save_fs": 100.0,
+    "D": 3.440498395091726e-06,
+    "c_A2": 6.062351814928757,
+    "R2": 0.895463294861478
+   }
+  },
+  {
+   "structure": "P2_Al2S3_A",
+   "T_K": 600,
+   "seed": 2,
+   "tag": "P2_Al2S3_A__s2",
+   "D": 3.586392261723107e-06,
+   "D_legacy_sto_lab": 2.2207314890798718e-06,
+   "eligible": false,
+   "events_per_run": 4518,
+   "t_end_ps": 100.0,
+   "reasons": [
+    "D_inc 가 창 따라 움직인다 (상대산포 118% > 10%, 추세 -118%)",
+    "부창 기울기 비 기준 밖 2-18: 2.292, 18-34: 0.773, 34-50: 0.462 (허용 (0.8, 1.2))"
+   ],
+   "detail": {
+    "run_verdict": "no_value",
+    "sub_window_ratios": [
+     2.292163303819498,
+     0.7734016040318279,
+     0.46222049177270297
+    ],
+    "events_per_run": 4518,
+    "msd_magnitude_alarm": true,
+    "msd_magnitude_value": 2.2414515076588395
+   },
+   "card_curve": {
+    "n_origins_min": 1000,
+    "events": 4518,
+    "n_frames": 2000,
+    "n_Li": 90,
+    "n_framework": 114,
+    "max_step_frac": 0.2487757631176027,
+    "fit_window_ps": [
+     2.0,
+     50.0
+    ],
+    "save_fs": 100.0,
+    "D": 3.586392261723107e-06,
+    "c_A2": 6.215241841890879,
+    "R2": 0.8925772067605993
+   }
+  },
+  {
+   "structure": "P2_Al2S3_B",
+   "T_K": 600,
+   "seed": 1,
+   "tag": "P2_Al2S3_B__s1",
+   "D": 3.6902591066387528e-06,
+   "D_legacy_sto_lab": 3.86199430180532e-06,
+   "eligible": false,
+   "events_per_run": 4612,
+   "t_end_ps": 100.0,
+   "reasons": [
+    "D_inc 가 창 따라 움직인다 (상대산포 109% > 10%, 추세 -109%)",
+    "부창 기울기 비 기준 밖 2-18: 2.058, 34-50: 0.594 (허용 (0.8, 1.2))"
+   ],
+   "detail": {
+    "run_verdict": "no_value",
+    "sub_window_ratios": [
+     2.0580246243774867,
+     0.811060472150243,
+     0.593822425282737
+    ],
+    "events_per_run": 4612,
+    "msd_magnitude_alarm": true,
+    "msd_magnitude_value": 2.282340531477593
+   },
+   "card_curve": {
+    "n_origins_min": 1000,
+    "events": 4612,
+    "n_frames": 2000,
+    "n_Li": 90,
+    "n_framework": 114,
+    "max_step_frac": 0.2457128484407345,
+    "fit_window_ps": [
+     2.0,
+     50.0
+    ],
+    "save_fs": 100.0,
+    "D": 3.6902591066387528e-06,
+    "c_A2": 5.837762192694283,
+    "R2": 0.9299802543325786
+   }
+  },
+  {
+   "structure": "P2_Al2S3_B",
+   "T_K": 600,
+   "seed": 2,
+   "tag": "P2_Al2S3_B__s2",
+   "D": 2.7252939741663297e-06,
+   "D_legacy_sto_lab": 2.8343305294181444e-06,
+   "eligible": false,
+   "events_per_run": 4367,
+   "t_end_ps": 100.0,
+   "reasons": [
+    "D_inc 가 창 따라 움직인다 (상대산포 215% > 10%, 추세 -215%)",
+    "부창 기울기 비 기준 밖 2-18: 2.730, 18-34: 0.750, 34-50: 0.178 (허용 (0.8, 1.2))"
+   ],
+   "detail": {
+    "run_verdict": "no_value",
+    "sub_window_ratios": [
+     2.7302075850079466,
+     0.7501789055501015,
+     0.17816927686626635
+    ],
+    "events_per_run": 4367,
+    "msd_magnitude_alarm": true,
+    "msd_magnitude_value": 1.6155725973439938
+   },
+   "card_curve": {
+    "n_origins_min": 1000,
+    "events": 4367,
+    "n_frames": 2000,
+    "n_Li": 90,
+    "n_framework": 114,
+    "max_step_frac": 0.2549810964391738,
+    "fit_window_ps": [
+     2.0,
+     50.0
+    ],
+    "save_fs": 100.0,
+    "D": 2.7252939741663297e-06,
+    "c_A2": 6.373263069990933,
+    "R2": 0.8070752845655844
+   }
+  },
+  {
+   "structure": "P2_Al2S3_C",
+   "T_K": 600,
+   "seed": 1,
+   "tag": "P2_Al2S3_C__s1",
+   "D": 3.4654953779363155e-06,
+   "D_legacy_sto_lab": 2.6141234591981182e-06,
+   "eligible": false,
+   "events_per_run": 4510,
+   "t_end_ps": 100.0,
+   "reasons": [
+    "D_inc 가 창 따라 움직인다 (상대산포 125% > 10%, 추세 -125%)",
+    "부창 기울기 비 기준 밖 2-18: 2.136, 18-34: 0.772, 34-50: 0.652 (허용 (0.8, 1.2))"
+   ],
+   "detail": {
+    "run_verdict": "no_value",
+    "sub_window_ratios": [
+     2.135909097711293,
+     0.7716432652467747,
+     0.6518818837356102
+    ],
+    "events_per_run": 4510,
+    "msd_magnitude_alarm": true,
+    "msd_magnitude_value": 2.1222748081822216
+   },
+   "card_curve": {
+    "n_origins_min": 1000,
+    "events": 4510,
+    "n_frames": 2000,
+    "n_Li": 90,
+    "n_framework": 114,
+    "max_step_frac": 0.23104265878328478,
+    "fit_window_ps": [
+     2.0,
+     50.0
+    ],
+    "save_fs": 100.0,
+    "D": 3.4654953779363155e-06,
+    "c_A2": 5.792790072717729,
+    "R2": 0.9186626596800412
+   }
+  },
+  {
+   "structure": "P2_Al2S3_C",
+   "T_K": 600,
+   "seed": 2,
+   "tag": "P2_Al2S3_C__s2",
+   "D": 3.2758230045497914e-06,
+   "D_legacy_sto_lab": 4.4748400772899135e-06,
+   "eligible": false,
+   "events_per_run": 4526,
+   "t_end_ps": 100.0,
+   "reasons": [
+    "D_inc 가 창 따라 움직인다 (상대산포 125% > 10%, 추세 -125%)",
+    "부창 기울기 비 기준 밖 2-18: 2.252, 34-50: 0.461 (허용 (0.8, 1.2))"
+   ],
+   "detail": {
+    "run_verdict": "no_value",
+    "sub_window_ratios": [
+     2.2517261832271087,
+     0.8121527108154549,
+     0.4613451637732519
+    ],
+    "events_per_run": 4526,
+    "msd_magnitude_alarm": true,
+    "msd_magnitude_value": 2.0454144769673235
+   },
+   "card_curve": {
+    "n_origins_min": 1000,
+    "events": 4526,
+    "n_frames": 2000,
+    "n_Li": 90,
+    "n_framework": 114,
+    "max_step_frac": 0.25445083793212875,
+    "fit_window_ps": [
+     2.0,
+     50.0
+    ],
+    "save_fs": 100.0,
+    "D": 3.2758230045497914e-06,
+    "c_A2": 5.949274456593662,
+    "R2": 0.8848778600087072
+   }
+  },
+  {
+   "structure": "P2_Al2S3_D",
+   "T_K": 600,
+   "seed": 1,
+   "tag": "P2_Al2S3_D__s1",
+   "D": 2.802354264946834e-06,
+   "D_legacy_sto_lab": 2.76421898265948e-06,
+   "eligible": false,
+   "events_per_run": 4504,
+   "t_end_ps": 100.0,
+   "reasons": [
+    "D_inc 가 창 따라 움직인다 (상대산포 169% > 10%, 추세 -169%)",
+    "부창 기울기 비 기준 밖 2-18: 2.713, 18-34: 0.666, 34-50: 0.466 (허용 (0.8, 1.2))"
+   ],
+   "detail": {
+    "run_verdict": "no_value",
+    "sub_window_ratios": [
+     2.712704050957036,
+     0.6657617767208882,
+     0.46552426283085896
+    ],
+    "events_per_run": 4504,
+    "msd_magnitude_alarm": true,
+    "msd_magnitude_value": 1.8177735645399682
+   },
+   "card_curve": {
+    "n_origins_min": 1000,
+    "events": 4504,
+    "n_frames": 2000,
+    "n_Li": 90,
+    "n_framework": 114,
+    "max_step_frac": 0.2506279722536167,
+    "fit_window_ps": [
+     2.0,
+     50.0
+    ],
+    "save_fs": 100.0,
+    "D": 2.802354264946834e-06,
+    "c_A2": 6.42003023210587,
+    "R2": 0.8367140543602006
+   }
+  },
+  {
+   "structure": "P2_Al2S3_D",
+   "T_K": 600,
+   "seed": 2,
+   "tag": "P2_Al2S3_D__s2",
+   "D": 3.182015451727846e-06,
+   "D_legacy_sto_lab": 4.343188368747634e-06,
+   "eligible": false,
+   "events_per_run": 4492,
+   "t_end_ps": 100.0,
+   "reasons": [
+    "D_inc 가 창 따라 움직인다 (상대산포 136% > 10%, 추세 -136%)",
+    "부창 기울기 비 기준 밖 2-18: 2.418, 18-34: 0.763, 34-50: 0.357 (허용 (0.8, 1.2))"
+   ],
+   "detail": {
+    "run_verdict": "no_value",
+    "sub_window_ratios": [
+     2.4179759913097376,
+     0.7634730729964081,
+     0.35718202832917323
+    ],
+    "events_per_run": 4492,
+    "msd_magnitude_alarm": true,
+    "msd_magnitude_value": 2.0059394546446256
+   },
+   "card_curve": {
+    "n_origins_min": 1000,
+    "events": 4492,
+    "n_frames": 2000,
+    "n_Li": 90,
+    "n_framework": 114,
+    "max_step_frac": 0.24813113573315837,
+    "fit_window_ps": [
+     2.0,
+     50.0
+    ],
+    "save_fs": 100.0,
+    "D": 3.182015451727846e-06,
+    "c_A2": 6.299136666401532,
+    "R2": 0.8669131321676412
+   }
+  },
+  {
+   "structure": "P2_Al2S3_E",
+   "T_K": 600,
+   "seed": 1,
+   "tag": "P2_Al2S3_E__s1",
+   "D": 3.1571286313834438e-06,
+   "D_legacy_sto_lab": 4.352610899691329e-06,
+   "eligible": false,
+   "events_per_run": 4390,
+   "t_end_ps": 100.0,
+   "reasons": [
+    "D_inc 가 창 따라 움직인다 (상대산포 125% > 10%, 추세 -125%)",
+    "부창 기울기 비 기준 밖 2-18: 2.546, 18-34: 0.687, 34-50: 0.404 (허용 (0.8, 1.2))"
+   ],
+   "detail": {
+    "run_verdict": "no_value",
+    "sub_window_ratios": [
+     2.545621985216022,
+     0.6867456529755789,
+     0.4037272478709038
+    ],
+    "events_per_run": 4390,
+    "msd_magnitude_alarm": true,
+    "msd_magnitude_value": 2.083075308309014
+   },
+   "card_curve": {
+    "n_origins_min": 1000,
+    "events": 4390,
+    "n_frames": 2000,
+    "n_Li": 90,
+    "n_framework": 114,
+    "max_step_frac": 0.2189313040620804,
+    "fit_window_ps": [
+     2.0,
+     50.0
+    ],
+    "save_fs": 100.0,
+    "D": 3.1571286313834438e-06,
+    "c_A2": 6.367474159724362,
+    "R2": 0.8627422061151631
+   }
+  },
+  {
+   "structure": "P2_Al2S3_E",
+   "T_K": 600,
+   "seed": 2,
+   "tag": "P2_Al2S3_E__s2",
+   "D": 2.651967542364947e-06,
+   "D_legacy_sto_lab": 3.258446410511132e-06,
+   "eligible": false,
+   "events_per_run": 4490,
+   "t_end_ps": 100.0,
+   "reasons": [
+    "D_inc 가 창 따라 움직인다 (상대산포 196% > 10%, 추세 -196%)",
+    "부창 기울기 비 기준 밖 2-18: 2.625, 18-34: 0.782, 34-50: 0.231 (허용 (0.8, 1.2))"
+   ],
+   "detail": {
+    "run_verdict": "no_value",
+    "sub_window_ratios": [
+     2.624852584932454,
+     0.7819801344541731,
+     0.23136732440381938
+    ],
+    "events_per_run": 4490,
+    "msd_magnitude_alarm": true,
+    "msd_magnitude_value": 1.6177825513300743
+   },
+   "card_curve": {
+    "n_origins_min": 1000,
+    "events": 4490,
+    "n_frames": 2000,
+    "n_Li": 90,
+    "n_framework": 114,
+    "max_step_frac": 0.2243448776343252,
+    "fit_window_ps": [
+     2.0,
+     50.0
+    ],
+    "save_fs": 100.0,
+    "D": 2.651967542364947e-06,
+    "c_A2": 6.170666167742599,
+    "R2": 0.8347469143090502
+   }
+  },
+  {
+   "structure": "P2_Al2S3_F",
+   "T_K": 600,
+   "seed": 1,
+   "tag": "P2_Al2S3_F__s1",
+   "D": 2.8242702760853457e-06,
+   "D_legacy_sto_lab": 2.837287663993694e-06,
+   "eligible": false,
+   "events_per_run": 4580,
+   "t_end_ps": 100.0,
+   "reasons": [
+    "D_inc 가 창 따라 움직인다 (상대산포 173% > 10%, 추세 -173%)",
+    "부창 기울기 비 기준 밖 2-18: 2.553, 18-34: 0.700, 34-50: 0.464 (허용 (0.8, 1.2))"
+   ],
+   "detail": {
+    "run_verdict": "no_value",
+    "sub_window_ratios": [
+     2.553392232589934,
+     0.6998772371546542,
+     0.46412312810083267
+    ],
+    "events_per_run": 4580,
+    "msd_magnitude_alarm": true,
+    "msd_magnitude_value": 1.7537033150061379
+   },
+   "card_curve": {
+    "n_origins_min": 1000,
+    "events": 4580,
+    "n_frames": 2000,
+    "n_Li": 90,
+    "n_framework": 114,
+    "max_step_frac": 0.25320549721597474,
+    "fit_window_ps": [
+     2.0,
+     50.0
+    ],
+    "save_fs": 100.0,
+    "D": 2.8242702760853457e-06,
+    "c_A2": 6.216078790030644,
+    "R2": 0.8446505125986477
+   }
+  },
+  {
+   "structure": "P2_Al2S3_F",
+   "T_K": 600,
+   "seed": 2,
+   "tag": "P2_Al2S3_F__s2",
+   "D": 2.7446549886481123e-06,
+   "D_legacy_sto_lab": 3.3525571215145756e-06,
+   "eligible": false,
+   "events_per_run": 4584,
+   "t_end_ps": 100.0,
+   "reasons": [
+    "D_inc 가 창 따라 움직인다 (상대산포 132% > 10%, 추세 -131%)",
+    "부창 기울기 비 기준 밖 2-18: 2.622, 18-34: 0.754, 34-50: 0.319 (허용 (0.8, 1.2))"
+   ],
+   "detail": {
+    "run_verdict": "no_value",
+    "sub_window_ratios": [
+     2.6216286538085107,
+     0.7542897166141087,
+     0.31890878937169725
+    ],
+    "events_per_run": 4584,
+    "msd_magnitude_alarm": true,
+    "msd_magnitude_value": 1.8773462215773635
+   },
+   "card_curve": {
+    "n_origins_min": 1000,
+    "events": 4584,
+    "n_frames": 2000,
+    "n_Li": 90,
+    "n_framework": 114,
+    "max_step_frac": 0.26197944061701806,
+    "fit_window_ps": [
+     2.0,
+     50.0
+    ],
+    "save_fs": 100.0,
+    "D": 2.7446549886481123e-06,
+    "c_A2": 6.26839230789885,
+    "R2": 0.8337114351984394
+   }
+  },
+  {
+   "structure": "P2_Al2S3_G",
+   "T_K": 600,
+   "seed": 1,
+   "tag": "P2_Al2S3_G__s1",
+   "D": 2.711933391053455e-06,
+   "D_legacy_sto_lab": 2.4102508668835006e-06,
+   "eligible": false,
+   "events_per_run": 4584,
+   "t_end_ps": 100.0,
+   "reasons": [
+    "D_inc 가 창 따라 움직인다 (상대산포 195% > 10%, 추세 -195%)",
+    "부창 기울기 비 기준 밖 2-18: 2.597, 18-34: 0.724, 34-50: 0.395 (허용 (0.8, 1.2))"
+   ],
+   "detail": {
+    "run_verdict": "no_value",
+    "sub_window_ratios": [
+     2.597395124990212,
+     0.7244001180393455,
+     0.39546217155940855
+    ],
+    "events_per_run": 4584,
+    "msd_magnitude_alarm": true,
+    "msd_magnitude_value": 1.6602261910569247
+   },
+   "card_curve": {
+    "n_origins_min": 1000,
+    "events": 4584,
+    "n_frames": 2000,
+    "n_Li": 90,
+    "n_framework": 114,
+    "max_step_frac": 0.23076110502163405,
+    "fit_window_ps": [
+     2.0,
+     50.0
+    ],
+    "save_fs": 100.0,
+    "D": 2.711933391053455e-06,
+    "c_A2": 6.257312675093254,
+    "R2": 0.8291585459691543
+   }
+  },
+  {
+   "structure": "P2_Al2S3_G",
+   "T_K": 600,
+   "seed": 2,
+   "tag": "P2_Al2S3_G__s2",
+   "D": 3.078061963576195e-06,
+   "D_legacy_sto_lab": 4.175538421943238e-06,
+   "eligible": false,
+   "events_per_run": 4483,
+   "t_end_ps": 100.0,
+   "reasons": [
+    "D_inc 가 창 따라 움직인다 (상대산포 105% > 10%, 추세 -102%)",
+    "부창 기울기 비 기준 밖 2-18: 2.401, 18-34: 0.796, 34-50: 0.394 (허용 (0.8, 1.2))"
+   ],
+   "detail": {
+    "run_verdict": "no_value",
+    "sub_window_ratios": [
+     2.400823514129538,
+     0.7961250385276486,
+     0.3940131649226777
+    ],
+    "events_per_run": 4483,
+    "msd_magnitude_alarm": true,
+    "msd_magnitude_value": 2.1009351084568513
+   },
+   "card_curve": {
+    "n_origins_min": 1000,
+    "events": 4483,
+    "n_frames": 2000,
+    "n_Li": 90,
+    "n_framework": 114,
+    "max_step_frac": 0.24445168092334818,
+    "fit_window_ps": [
+     2.0,
+     50.0
+    ],
+    "save_fs": 100.0,
+    "D": 3.078061963576195e-06,
+    "c_A2": 6.1112959788033185,
+    "R2": 0.8672420205374971
+   }
+  },
+  {
+   "structure": "P2_Al2S3_H",
+   "T_K": 600,
+   "seed": 1,
+   "tag": "P2_Al2S3_H__s1",
+   "D": 2.9075365645390875e-06,
+   "D_legacy_sto_lab": 3.830994066252138e-06,
+   "eligible": false,
+   "events_per_run": 4456,
+   "t_end_ps": 100.0,
+   "reasons": [
+    "D_inc 가 창 따라 움직인다 (상대산포 173% > 10%, 추세 -173%)",
+    "부창 기울기 비 기준 밖 2-18: 2.530, 18-34: 0.686, 34-50: 0.421 (허용 (0.8, 1.2))"
+   ],
+   "detail": {
+    "run_verdict": "no_value",
+    "sub_window_ratios": [
+     2.5298439007177156,
+     0.6857833059970896,
+     0.42147934659724323
+    ],
+    "events_per_run": 4456,
+    "msd_magnitude_alarm": true,
+    "msd_magnitude_value": 1.7717920561174667
+   },
+   "card_curve": {
+    "n_origins_min": 1000,
+    "events": 4456,
+    "n_frames": 2000,
+    "n_Li": 90,
+    "n_framework": 114,
+    "max_step_frac": 0.23107399712271154,
+    "fit_window_ps": [
+     2.0,
+     50.0
+    ],
+    "save_fs": 100.0,
+    "D": 2.9075365645390875e-06,
+    "c_A2": 6.205498687360901,
+    "R2": 0.8558789159740959
+   }
+  },
+  {
+   "structure": "P2_Al2S3_H",
+   "T_K": 600,
+   "seed": 2,
+   "tag": "P2_Al2S3_H__s2",
+   "D": 3.3546876209527086e-06,
+   "D_legacy_sto_lab": 3.6204293692189006e-06,
+   "eligible": false,
+   "events_per_run": 4326,
+   "t_end_ps": 100.0,
+   "reasons": [
+    "D_inc 가 창 따라 움직인다 (상대산포 162% > 10%, 추세 -162%)",
+    "부창 기울기 비 기준 밖 2-18: 2.238, 18-34: 0.760, 34-50: 0.496 (허용 (0.8, 1.2))"
+   ],
+   "detail": {
+    "run_verdict": "no_value",
+    "sub_window_ratios": [
+     2.2384532423518144,
+     0.7602284352173275,
+     0.49569390292372645
+    ],
+    "events_per_run": 4326,
+    "msd_magnitude_alarm": true,
+    "msd_magnitude_value": 1.8860895225738048
+   },
+   "card_curve": {
+    "n_origins_min": 1000,
+    "events": 4326,
+    "n_frames": 2000,
+    "n_Li": 90,
+    "n_framework": 114,
+    "max_step_frac": 0.2380437776736739,
+    "fit_window_ps": [
+     2.0,
+     50.0
+    ],
+    "save_fs": 100.0,
+    "D": 3.3546876209527086e-06,
+    "c_A2": 5.7987751335096736,
+    "R2": 0.896860092666539
+   }
+  },
+  {
+   "structure": "P2_Al2S3_I",
+   "T_K": 600,
+   "seed": 1,
+   "tag": "P2_Al2S3_I__s1",
+   "D": 3.047266046700503e-06,
+   "D_legacy_sto_lab": 2.8279179941795688e-06,
+   "eligible": false,
+   "events_per_run": 4724,
+   "t_end_ps": 100.0,
+   "reasons": [
+    "D_inc 가 창 따라 움직인다 (상대산포 158% > 10%, 추세 -158%)",
+    "부창 기울기 비 기준 밖 2-18: 2.466, 18-34: 0.784, 34-50: 0.384 (허용 (0.8, 1.2))"
+   ],
+   "detail": {
+    "run_verdict": "no_value",
+    "sub_window_ratios": [
+     2.465585829348967,
+     0.7842767210851834,
+     0.3836297148896927
+    ],
+    "events_per_run": 4724,
+    "msd_magnitude_alarm": true,
+    "msd_magnitude_value": 1.9012175931699202
+   },
+   "card_curve": {
+    "n_origins_min": 1000,
+    "events": 4724,
+    "n_frames": 2000,
+    "n_Li": 90,
+    "n_framework": 114,
+    "max_step_frac": 0.24426246044559963,
+    "fit_window_ps": [
+     2.0,
+     50.0
+    ],
+    "save_fs": 100.0,
+    "D": 3.047266046700503e-06,
+    "c_A2": 6.431860882954165,
+    "R2": 0.8628507129074849
+   }
+  },
+  {
+   "structure": "P2_Al2S3_I",
+   "T_K": 600,
+   "seed": 2,
+   "tag": "P2_Al2S3_I__s2",
+   "D": 3.061917785585282e-06,
+   "D_legacy_sto_lab": 2.7743386810682923e-06,
+   "eligible": false,
+   "events_per_run": 4540,
+   "t_end_ps": 100.0,
+   "reasons": [
+    "D_inc 가 창 따라 움직인다 (상대산포 153% > 10%, 추세 -153%)",
+    "부창 기울기 비 기준 밖 2-18: 2.463, 18-34: 0.707, 34-50: 0.473 (허용 (0.8, 1.2))"
+   ],
+   "detail": {
+    "run_verdict": "no_value",
+    "sub_window_ratios": [
+     2.463319053484706,
+     0.707009559816395,
+     0.4734146800030154
+    ],
+    "events_per_run": 4540,
+    "msd_magnitude_alarm": true,
+    "msd_magnitude_value": 1.8959265556780203
+   },
+   "card_curve": {
+    "n_origins_min": 1000,
+    "events": 4540,
+    "n_frames": 2000,
+    "n_Li": 90,
+    "n_framework": 114,
+    "max_step_frac": 0.2407836014404512,
+    "fit_window_ps": [
+     2.0,
+     50.0
+    ],
+    "save_fs": 100.0,
+    "D": 3.061917785585282e-06,
+    "c_A2": 6.1656224027580375,
+    "R2": 0.8688535487378671
+   }
+  },
+  {
+   "structure": "P2_Al2S3_J",
+   "T_K": 600,
+   "seed": 1,
+   "tag": "P2_Al2S3_J__s1",
+   "D": 3.5926817422194205e-06,
+   "D_legacy_sto_lab": 3.2602753195660233e-06,
+   "eligible": false,
+   "events_per_run": 4558,
+   "t_end_ps": 100.0,
+   "reasons": [
+    "D_inc 가 창 따라 움직인다 (상대산포 136% > 10%, 추세 -136%)",
+    "부창 기울기 비 기준 밖 2-18: 2.268, 18-34: 0.791, 34-50: 0.390 (허용 (0.8, 1.2))"
+   ],
+   "detail": {
+    "run_verdict": "no_value",
+    "sub_window_ratios": [
+     2.267645877943591,
+     0.7913699251960851,
+     0.39021789705455917
+    ],
+    "events_per_run": 4558,
+    "msd_magnitude_alarm": true,
+    "msd_magnitude_value": 2.1426465404708424
+   },
+   "card_curve": {
+    "n_origins_min": 1000,
+    "events": 4558,
+    "n_frames": 2000,
+    "n_Li": 90,
+    "n_framework": 114,
+    "max_step_frac": 0.24175669014636347,
+    "fit_window_ps": [
+     2.0,
+     50.0
+    ],
+    "save_fs": 100.0,
+    "D": 3.5926817422194205e-06,
+    "c_A2": 6.26590429523986,
+    "R2": 0.8853999716562032
+   }
+  },
+  {
+   "structure": "P2_Al2S3_J",
+   "T_K": 600,
+   "seed": 2,
+   "tag": "P2_Al2S3_J__s2",
+   "D": 3.1757609093815457e-06,
+   "D_legacy_sto_lab": 3.681720359346521e-06,
+   "eligible": false,
+   "events_per_run": 4437,
+   "t_end_ps": 100.0,
+   "reasons": [
+    "D_inc 가 창 따라 움직인다 (상대산포 108% > 10%, 추세 -108%)",
+    "부창 기울기 비 기준 밖 2-18: 2.367, 18-34: 0.666, 34-50: 0.567 (허용 (0.8, 1.2))"
+   ],
+   "detail": {
+    "run_verdict": "no_value",
+    "sub_window_ratios": [
+     2.366828540934502,
+     0.6656535690979715,
+     0.5672316537821485
+    ],
+    "events_per_run": 4437,
+    "msd_magnitude_alarm": true,
+    "msd_magnitude_value": 2.116270132829877
+   },
+   "card_curve": {
+    "n_origins_min": 1000,
+    "events": 4437,
+    "n_frames": 2000,
+    "n_Li": 90,
+    "n_framework": 114,
+    "max_step_frac": 0.24042442932207114,
+    "fit_window_ps": [
+     2.0,
+     50.0
+    ],
+    "save_fs": 100.0,
+    "D": 3.1757609093815457e-06,
+    "c_A2": 5.945546138850023,
+    "R2": 0.8864543116691646
+   }
+  }
+ ]
+}

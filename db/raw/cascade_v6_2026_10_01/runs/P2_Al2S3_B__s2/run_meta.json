@@ -1,0 +1,25 @@
+{
+  "label": "eprime_P2_Al2S3_B",
+  "n_atoms": 204,
+  "supercell": [
+    1,
+    1,
+    1
+  ],
+  "v0_xyz": "/home/kgy/work/runs/cascade_v6_40run_0921/prep/P2_Al2S3_B.prepared.xyz",
+  "temperatures": [
+    600.0
+  ],
+  "prod_ps": 200.0,
+  "equilib_ps": 5.0,
+  "seed": 2,
+  "fit_window_ps": [
+    2.0,
+    50.0
+  ],
+  "save_traj": true,
+  "uma_model": "uma-s-1p1",
+  "uma_inference_mode_requested": "default",
+  "note": "MD 시작 직후 기록 — 감시용. 결과는 ensemble_results.json 을 볼 것",
+  "uma_inference_mode": "default"
+}
