@@ -301,7 +301,7 @@ def calc_coverage(atoms, contacts, type_map, scale, apply_shape_factor=False):
 # ─── SE-SE Coordination Number ─────────────────────────────────────────────
 
 def calc_se_se_cn(atoms, contacts, se_types, perc_set=None, scale=1000.0,
-                   h_spread_sim=0.0):
+                   h_spread_sim=0.0, box_x=None, box_y=None):
     """SE-SE coordination number + F2 area-weighted + F1 plastic-augmented variants.
 
     perc_set: optional set of percolating SE ids. When provided, additional
@@ -321,6 +321,10 @@ def calc_se_se_cn(atoms, contacts, se_types, perc_set=None, scale=1000.0,
       mean_aug, n_extra_aug   — F1 augmented (LIGGGHTS contacts + near-miss
                                  pairs within h_spread_sim). Only populated
                                  when h_spread_sim > 0.
+
+    box_x, box_y: x · y 주기 상자 길이 (sim).  주어지면 F1 근접쌍 탐색이 주기 영상을 본다 (칸을 감싸고 최소영상 거리 —
+    원장 LHS-22 · 10-01).  탄성 접촉 `cn` 은 LIGGGHTS 덤프라 경계 너머 접촉을 이미 포함하므로, 상자를 주지 않으면
+    `mean_aug` 는 두 규칙 (경계 포함 · 경계 제외) 이 섞인 값이 된다.  None = 옛 동작 (비주기 · 감사기 호출부 호환).
     """
     cn = defaultdict(int)
     cn_area = defaultdict(float)   # per-SE total contact area (sim m²)
@@ -372,20 +376,37 @@ def calc_se_se_cn(atoms, contacts, se_types, perc_set=None, scale=1000.0,
         if cell <= 0:
             return out
         from collections import defaultdict as _dd
+        # x · y 주기 (LHS-22): 칸 수 n = floor(L / cell) · 칸 크기 = L / n (≥ cell) → 칸 번호를 n 으로 감싸고 거리는 최소영상.
+        per = []
+        for L in (box_x, box_y):
+            if L is not None and float(L) > 0:
+                n_c = max(1, int(float(L) // cell))
+                per.append((float(L), n_c, float(L) / n_c))
+            else:
+                per.append(None)
+
+        def _ci(v, ax):
+            if per[ax] is None:
+                return int(v // cell)
+            L_, n_c, w = per[ax]
+            return int((v % L_) // w) % n_c
+
         grid = _dd(list)
         for aid in se_ids:
             a = atoms[aid]
-            grid[(int(a['x'] // cell), int(a['y'] // cell), int(a['z'] // cell))].append(aid)
+            grid[(_ci(a['x'], 0), _ci(a['y'], 1), int(a['z'] // cell))].append(aid)
         cn_aug = dict(cn)  # start from elastic CN counts
         n_extra = 0
         seen_pairs = set()
         for (cx, cy, cz), members in grid.items():
-            # Inspect 3x3x3 neighbourhood — covers all pairs within `cell`.
+            # Inspect 3x3x3 neighbourhood — covers all pairs within `cell` (주기 축은 칸 번호를 감싼다).
             cands = []
             for dx in (-1, 0, 1):
                 for dy in (-1, 0, 1):
                     for dz in (-1, 0, 1):
-                        cands.extend(grid.get((cx + dx, cy + dy, cz + dz), []))
+                        kx = (cx + dx) % per[0][1] if per[0] else cx + dx
+                        ky = (cy + dy) % per[1][1] if per[1] else cy + dy
+                        cands.extend(grid.get((kx, ky, cz + dz), []))
             for i, aid_i in enumerate(members):
                 ai = atoms[aid_i]
                 for aid_j in cands:
@@ -397,6 +418,10 @@ def calc_se_se_cn(atoms, contacts, se_types, perc_set=None, scale=1000.0,
                     seen_pairs.add(pair)
                     aj = atoms[aid_j]
                     dx = ai['x'] - aj['x']; dy = ai['y'] - aj['y']; dz = ai['z'] - aj['z']
+                    if per[0]:
+                        dx -= per[0][0] * round(dx / per[0][0])      # 최소영상
+                    if per[1]:
+                        dy -= per[1][0] * round(dy / per[1][0])
                     d = (dx * dx + dy * dy + dz * dz) ** 0.5
                     r_sum = ai['radius'] + aj['radius']
                     if d <= r_sum:
@@ -1203,7 +1228,7 @@ def run_full_analysis(atoms_raw, contacts_raw, type_map, scale, results_dir, box
     h_spread_sim = H_SPREAD_REAL_M * scale      # sim length: m × (sim/real) — for scale=1000 (μm→mm sim) gives 1e-5
     cn = calc_se_se_cn(atoms_raw, contacts_raw, se_types,
                        perc_set=perc.get('percolating_se'), scale=scale,
-                       h_spread_sim=h_spread_sim)
+                       h_spread_sim=h_spread_sim, box_x=box_x, box_y=box_y)   # F1 주기 영상 (LHS-22)
     print(f"  SE-SE CN: {cn['mean']:.2f} ± {cn['std']:.2f}  "
           f"(perc-only: {cn.get('mean_perc', 0):.2f}, "
           f"cn_eff_area: {cn.get('cn_eff_area', 0):.4f}, "

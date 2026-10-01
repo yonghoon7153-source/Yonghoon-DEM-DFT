@@ -1117,6 +1117,36 @@ def _selftest():
             rows3.get('Ionic Isolated AM(%)') in ('57.1', 57.1) and rows3.get('  ├ Isolated: SE not linked(%)') in ('28.6', 28.6)
             and rows3.get('  └ Isolated: no SE contact(%)') in ('28.6', 28.6),
             str({k: v for k, v in rows3.items() if 'Ionic' in k or 'Isolated' in k}))
+
+        # ⑲ F1 근접쌍 CN (se_se_cn_aug) — x · y 주기 경계 너머의 근접쌍 (원장 LHS-22 · 10-01 · 반례 먼저).
+        #   상자 0.05 (sim) · SE 반지름 0.0005 · 틈 h = 1e-5 (10 nm × 1000).  탄성 접촉 (덤프) 은 없다고 두고 근접쌍만 본다.
+        import dem_analysis_core as _DAC
+        L, r, h = 0.05, 0.0005, 1e-5
+
+        def _f1(pos, **kw):
+            at = {k + 1: dict(type=3, x=p[0], y=p[1], z=p[2], radius=r) for k, p in enumerate(pos)}
+            return _DAC.calc_se_se_cn(at, [], [3], h_spread_sim=h, **kw)
+
+        gap = 0.5 * h                                           # 틈 5 nm 상당 — 근접쌍이어야 한다
+        across_x = [(r, 0.02, 0.01), (L - r - gap, 0.02, 0.01)]  # 최소영상 거리 = 2r + gap
+        across_y = [(0.02, r, 0.01), (0.02, L - r - gap, 0.01)]
+        inner = [(0.02, 0.02, 0.01), (0.02 + 2 * r + gap, 0.02, 0.01)]
+        chk('⑲a ★ x 주기 경계 너머 근접쌍 (틈 < h) 을 센다 — 상자를 주면 n_extra_aug 1 (옛 코드 0 = LHS-22)',
+            _f1(across_x, box_x=L, box_y=L).get('n_extra_aug') == 1, str(_f1(across_x, box_x=L, box_y=L)))
+        chk('⑲b ★ y 주기 경계 너머도 같다 — n_extra_aug 1', _f1(across_y, box_x=L, box_y=L).get('n_extra_aug') == 1)
+        chk('⑲c 상자를 안 주면 옛 동작 그대로 (경계 너머 0 · 비주기 호출부 호환)', _f1(across_x).get('n_extra_aug') == 0)
+        chk('⑲d 내부 근접쌍은 상자 유무와 무관하게 1', _f1(inner).get('n_extra_aug') == 1 and _f1(inner, box_x=L, box_y=L).get('n_extra_aug') == 1)
+        over = [(r, 0.02, 0.01), (L - r + 0.2 * r, 0.02, 0.01)]   # 최소영상으로 겹친다 = 탄성 접촉 몫 → 근접쌍이 아니다
+        far = [(r, 0.02, 0.01), (L - r - 3 * h, 0.02, 0.01)]      # 틈 3h → 아니다
+        chk('⑲e 경계 너머로 겹친 쌍 · 틈이 h 보다 큰 쌍은 근접쌍이 아니다 (0 · 0)',
+            _f1(over, box_x=L, box_y=L).get('n_extra_aug') == 0 and _f1(far, box_x=L, box_y=L).get('n_extra_aug') == 0)
+        crowd = [(x0, 0.02, 0.01) for x0 in (r, L - r - gap)] + [(0.02, y0, 0.012) for y0 in (r, L - r - gap)]
+        res_c = _f1(crowd, box_x=L, box_y=L)
+        chk('⑲f 여러 쌍 — 쌍마다 한 번만 (x 1 + y 1 = 2) · mean_aug = 2·2/4 = 1.0',
+            res_c.get('n_extra_aug') == 2 and same(res_c.get('mean_aug'), 1.0), str(res_c))
+        src_core = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'dem_analysis_core.py'), encoding='utf-8').read()
+        call = src_core[src_core.find('cn = calc_se_se_cn(atoms_raw'):][:260]
+        chk('⑲g 생산 경로 (run_full_analysis) 가 상자 크기를 넘긴다 — box_x=box_x · box_y=box_y', 'box_x=box_x' in call and 'box_y=box_y' in call, call)
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
     print(f'\n{n_chk[0] - len(fails)}/{n_chk[0]}  ' + ('✓ 전부 통과' if not fails else f'✗ {len(fails)} 건 실패'))

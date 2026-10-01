@@ -2222,7 +2222,7 @@ const METRIC_TIPS = {
   'SE-SE CN (plastic-augmented) [F1]': {
     title: 'SE-SE CN — Plastic-augmented (F1 deformation-aware)',
     formula: 'CN_aug = CN_standard + (near-miss pairs within h_spread = 10 nm)',
-    desc: 'LIGGGHTS 는 δ > 0 인 *elastic* contact 만 잡음. F1 은 *gap < 10 nm* 의 near-miss pair 도 carbon: plastic flow 시 닿을 가능성 있다고 가정해 추가 카운트.',
+    desc: 'LIGGGHTS 는 δ > 0 인 *elastic* contact 만 잡음. F1 은 *gap < 10 nm* 의 near-miss pair 도 carbon: plastic flow 시 닿을 가능성 있다고 가정해 추가 카운트. 근접쌍 탐색은 x · y 주기 영상 포함 (최소영상 · 2026-10-01 · LHS-22) — 옛 분석은 경계 너머 근접쌍을 빠뜨려 약간 작게 나왔다 (재분석하면 값이 바뀐다).',
     meaning: 'CN +0.1-0.2 정도 증가. DEM 이 *놓친* plastic deformation 효과 정량화. 이 case 는 well-packed 라 변화 +2% 미만.'
   },
   '(F1 extra near-contact pairs)': {
