@@ -485,3 +485,46 @@ def test_cascade_lineage_fail_closed_on_missing_card(monkeypatch):
     assert len(L) == 1, "없는 카드가 목록에서 **사라졌다** (조용한 생략)"
     assert L[0]["ok"] is False and "못 읽었다" in L[0]["why"]
     assert "status" not in L[0], "원장에 없는데 status 를 지어냈다"
+
+
+# ── 89종 깔때기 G2 = 정정 창 (2026-10-01 · D-2026-10-01-cascade-funnel-esw-corrected-window) ──
+#   ⛔ 왜: 09-22 ESW 정정(ox − ocv)이 v3_pinned 만 고쳤고 깔때기는 옛 창(계통적으로 넓음)으로 판정돼 있었다.
+#     그리고 화면은 그 옛 깔때기 숫자(89–89–84–45–28–1 · endpoint 28 · 최종 WO3)를 **자기 사본**으로 들고 있었다.
+_F2 = ROOT / "db" / "properties" / "cascade_screening_funnel_v2.json"
+
+
+def test_funnel_v2_g2_uses_corrected_window_and_not_assessable_is_not_pass():
+    """G2 창 = ox − ocv. OCV 없는 행은 옛 창을 상한으로만 — 판정 불가는 통과가 아니다."""
+    f2 = json.loads(_F2.read_text(encoding="utf-8"))
+    rule = f2.get("esw_window_rule") or {}
+    assert rule.get("decision") == "D-2026-10-01-cascade-funnel-esw-corrected-window", "정정 창 규칙 블록이 없다"
+    pool = {r["dopant"]: r for r in f2["pool"]}
+    corrected = [r for r in pool.values() if r.get("window_rule") == "ox−ocv"]
+    assert corrected and all(r["window_V"] is not None and r["window_V_upper"] is None for r in corrected)
+    g2 = [g for g in f2["gates"] if g["id"] == "G2"][0]
+    assert "ocv" in g2["metric"], f"G2 metric 이 옛 정의다: {g2['metric']}"
+    miss = set(g2["in_representative_order"]["missing"])
+    # ⛔음성: OCV 없는 WO3 는 옛 창 0.423 V 로 '통과' 하면 안 된다 — 판정 불가여야 한다
+    assert "WO3" in miss and pool["WO3"]["window_V"] is None and pool["WO3"]["window_V_upper"] is not None
+    assert "G2" not in pool["WO3"]["gates_passed"], "판정 불가 종이 G2 통과로 기록됐다"
+    assert len(miss) == rule["counts"]["no_ocv_not_assessable"]
+
+
+def test_cascade_page_funnel_numbers_come_from_the_json_not_a_copy():
+    """화면 깔때기 숫자는 funnel JSON 에서만 — 모듈 사전에 사본이 있으면 정정 뒤 낡는다."""
+    f2 = json.loads(_F2.read_text(encoding="utf-8"))
+    assert D.CASCADE_V2_META["funnel_v2"] is None, "모듈 사전에 깔때기 숫자 사본이 되살아났다"
+    m = D.load_cascade()["v2"]["meta"]
+    wf = f2["waterfall"]["counts"]
+    assert m["funnel_v2"]["waterfall"] == wf
+    assert m["funnel_v2"]["endpoint"] == f2["literature_comparable_endpoint"]["survivors"]
+    assert "–".join(map(str, wf)) in m["status"]["funnel"][1], "축별 완성도 문장의 waterfall 이 JSON 과 다르다"
+    html = A.app.test_client().get("/cascade").get_data(as_text=True)
+    assert "–".join(map(str, wf)) in html, "화면에 JSON waterfall 이 안 실렸다"
+
+
+def test_cascade_funnel_meta_fails_closed_without_json():
+    """⛔음성: funnel JSON 이 없으면 숫자를 지어내지 않는다 — funnel_v2 None · 그 사실을 적는다."""
+    m = D._derive_funnel_v2_meta(D.CASCADE_V2_META, None, None)
+    assert m["funnel_v2"] is None and "못 읽었다" in m["status"]["funnel"][1]
+    assert D.CASCADE_V2_META["status"]["funnel"][1].startswith("(load_cascade"), "원본 사전을 건드렸다"

@@ -3,7 +3,7 @@
  "date": "2026-07-28",
  "description": "cascade v23 도펀트 89종을 문헌 표준(Xiao 2019 F1–F6 · Sendek 2017 전제조건→ML · Kahle 2020 pinball→FPMD)의 순차 게이트 깔때기로 재표현한 뷰. 게이트별 통과/탈락 명단·임계값 근거·문헌 대응, vacuous 게이트 플래그, 게이트 순서 민감도, 문헌 대비표를 포함.  [_v2 · 90종 회수분 — 미검증 진단물]",
  "status": "recovered_unvalidated_diagnostic",
- "honesty_header": "❗ 이 JSON의 게이트 통과 수는 **발견 성능 지표가 아니다**. 'N만 개에서 걸러냈다'는 서술은 우리 데이터로 지지되지 않는다. 정확한 서술: '큐레이션된 89종 도펀트 후보를 문헌(Xiao/Sendek/Kahle) 표준 게이트 순서로 재표현하면 어디서 몇 종이 떨어지는지를 보인 뷰'.  ⛔ 그리고 이 판(_v2)은 **미검증 진단물**이다 — 막는 것은 결측이 아니라 **게이트 정의**다: G3 는 record-complete 90 / method-comparable 0 (phase_set_id 미기록), G4 는 blocking 이 BVS 를 덮어쓰는 순환, G5 는 로스터 상대 median 이다. 순위·통과 수를 결과로 인용하면 안 된다.",
+ "honesty_header": "❗ 이 JSON의 게이트 통과 수는 **발견 성능 지표가 아니다**. 'N만 개에서 걸러냈다'는 서술은 우리 데이터로 지지되지 않는다. 정확한 서술: '큐레이션된 89종 도펀트 후보를 문헌(Xiao/Sendek/Kahle) 표준 게이트 순서로 재표현하면 어디서 몇 종이 떨어지는지를 보인 뷰'.  ⛔ 그리고 이 판(_v2)은 **미검증 진단물**이다 — 막는 것은 결측이 아니라 **게이트 정의**다: G3 는 phase-set comparable 270/270 이지만 효과 귀속 0/17 (phase_set_id 미기록), G4 는 blocking 이 BVS 를 덮어쓰는 순환, G5 는 로스터 상대 median 이다. 순위·통과 수를 결과로 인용하면 안 된다.",
  "pool_provenance": {
   "pool_size": 89,
   "what_it_is": "**큐레이션된 도펀트 후보군**. 화학적 사전지식(코팅 문헌·합성 전구체·발란스 다양성)으로 사람이 고른 목록이지, 어떤 DB를 전수로 훑어 남은 잔존군이 아니다.",
@@ -26,8 +26,21 @@
    },
    "verdict": "89은 발견 깔때기 체급이 아니라 **조성족 스캔** 체급이다(Ong 11 < 우리 89 < Fujimura 92 / Kahle 4,963). 이 계보로 위치를 잡으면 정직하면서도 문헌적으로 정당하다."
   },
-  "not_a_discovery_funnel": "❗ 이 JSON의 게이트 통과 수는 **발견 성능 지표가 아니다**. 'N만 개에서 걸러냈다'는 서술은 우리 데이터로 지지되지 않는다. 정확한 서술: '큐레이션된 89종 도펀트 후보를 문헌(Xiao/Sendek/Kahle) 표준 게이트 순서로 재표현하면 어디서 몇 종이 떨어지는지를 보인 뷰'.  ⛔ 그리고 이 판(_v2)은 **미검증 진단물**이다 — 막는 것은 결측이 아니라 **게이트 정의**다: G3 는 record-complete 90 / method-comparable 0 (phase_set_id 미기록), G4 는 blocking 이 BVS 를 덮어쓰는 순환, G5 는 로스터 상대 median 이다. 순위·통과 수를 결과로 인용하면 안 된다.",
+  "not_a_discovery_funnel": "❗ 이 JSON의 게이트 통과 수는 **발견 성능 지표가 아니다**. 'N만 개에서 걸러냈다'는 서술은 우리 데이터로 지지되지 않는다. 정확한 서술: '큐레이션된 89종 도펀트 후보를 문헌(Xiao/Sendek/Kahle) 표준 게이트 순서로 재표현하면 어디서 몇 종이 떨어지는지를 보인 뷰'.  ⛔ 그리고 이 판(_v2)은 **미검증 진단물**이다 — 막는 것은 결측이 아니라 **게이트 정의**다: G3 는 phase-set comparable 270/270 이지만 효과 귀속 0/17 (phase_set_id 미기록), G4 는 blocking 이 BVS 를 덮어쓰는 순환, G5 는 로스터 상대 median 이다. 순위·통과 수를 결과로 인용하면 안 된다.",
   "related_but_different_funnel": "kb/methodology/dopant_screening_funnel_2026_06_13.md 는 **한 도펀트 내부의 배치(config) 깔때기**(Nd₂O₃ 342 configs → cfg141)다. 여기 깔때기는 **도펀트 종(species) 수준** — 층이 다르니 두 숫자를 섞어 '수백 종을 걸렀다'로 합치지 말 것."
+ },
+ "esw_window_rule": {
+  "rule": "G2 창 = ox_V − ocv_V (아래 가장자리 = 교환 0 의 최저 V = OCV 자가분해 전압)",
+  "why": "옛 window_V = ox_V − red_V 의 red_V 는 마지막 환원 계단이었다 — 계통적으로 넓다 (HZ-esw-reduction-limit-label · commit 8a0e202d3 · 2026-09-22 정정 A)",
+  "no_ocv": "OCV 없는 행은 옛 창을 상한으로만 쓴다 — 상한 < 문턱이면 확정 탈락, 아니면 G2 판정 불가(missing · 통과 아님)",
+  "decision": "D-2026-10-01-cascade-funnel-esw-corrected-window",
+  "counts": {
+   "corrected_ox_minus_ocv": 68,
+   "no_ocv_fail_by_upper_bound": 5,
+   "no_ocv_not_assessable": 16,
+   "no_esw_data": 0
+  },
+  "legacy_field": "pool[].window_V_legacy — 게이트에 안 쓴다 (옛 숫자의 출처 보존)"
  },
  "host_anchors": {
   "host_ox_V": 2.14,
@@ -46,10 +59,10 @@
   "counts": [
    89,
    89,
-   84,
-   45,
-   28,
-   1
+   68,
+   41,
+   25,
+   0
   ],
   "labels": [
    "pool(curated 47)",
@@ -68,6 +81,8 @@
    "metric": "de = E(doped champion) − E(host), UMA 상대 (eV). ⚠ cascade_v23_ranked.csv 의 de 는 단일 챔피언 값이 아니라 **x∈{0.02, 0.05, 0.10} 챔피언 3점의 산술평균**이다(47/47 검증). 일부 도펀트는 plain·Cl-rich 조성족이 섞인 3점이며(B2O3 는 +Clrich 만 존재) → concentration_convention 블록 참조.",
    "threshold": "mean_x(de) < 0",
    "concentration_convention": "라벨 x002/x005/x010 3점 평균. ⛔ 이 라벨은 농도가 아니다 — 1×1×1·4 f.u. 셀의 정수 치환 때문에 셋 다 **실측 x = 0.25** 다. 농도 스윕도 반복실험도 아니므로 '2/5/10% 농도 의존성' 으로 읽으면 안 된다.",
+   "composition_family_caveat": null,
+   "attribution_audit": null,
    "threshold_basis": "0 은 임의 컷이 아니라 **host 자신**(Δe = doped − undoped baseline)이다 — 'host보다 안정한가'라는 이분 질문의 물리적 기준점. 273-cascade 전체가 같은 undoped 정형셀 기준으로 계산돼 랭킹이 성립한다(kb/projects/cascade_v23_review_2026_07_11.md §1).",
    "literature_analog": {
     "papers": [
@@ -102,10 +117,12 @@
    "id": "G2",
    "name": "electrochemical_window",
    "label": "전기화학 창 붕괴 회피",
-   "metric": "window_V = ox_V − red_V (grand-potential ESW, MP GGA/GGA+U hull)",
+   "metric": "window_V = ox_V − ocv_V (grand-potential ESW, MP GGA/GGA+U hull · 아래 가장자리 = 교환 0 의 최저 V · 2026-09-22 정정 A · 2026-10-01 퍼널 적용)",
    "threshold": "window_V ≥ 0.05 V",
    "concentration_convention": "champion composition 단일 (농도 평균 아님). 실측 x = 0.25 — 라벨 x002/x005/x010 은 농도값이 아니다.",
-   "threshold_basis": "0.05 V 는 oxidation_stability_cascade.csv 가 이미 명문화한 **collapse 규약**('window<0.05 V = collapse, avoid, late-TM Fe/Co/Ni/Mn')이며 build_cascade_themes.py 의 oxidative/reduction 테마 게이트와 동일 상수다. 이 빌더가 새로 만든 숫자가 아니라 기존 db 규약의 승계 — 규약이 'collapse = window<0.05' 이므로 경계값(정확히 0.05)은 **통과**시킨다(≥). 현재 데이터에는 경계값이 없어 판정은 동일(collapse 4종 최대 MnO 0.039, 비-collapse 최소 Cu2O 0.113).",
+   "composition_family_caveat": null,
+   "attribution_audit": null,
+   "threshold_basis": "0.05 V 는 oxidation_stability_cascade.csv 가 이미 명문화한 **collapse 규약**('window<0.05 V = collapse, avoid, late-TM Fe/Co/Ni/Mn')이며 build_cascade_themes.py 의 oxidative/reduction 테마 게이트와 동일 상수다. 이 빌더가 새로 만든 숫자가 아니라 기존 db 규약의 승계 — 규약이 'collapse = window<0.05' 이므로 경계값(정확히 0.05)은 **통과**시킨다(≥). ⚠ 2026-10-01 — 창은 정정 창(ox − ocv)이다. 옛 판의 'collapse 4종 · 비-collapse 최소 Cu2O 0.113' 은 옛 창(마지막 환원 계단 기준) 숫자라 더는 이 게이트의 근거가 아니다.",
    "literature_analog": {
     "papers": [
      "zhu2015_esw_grand_potential_origin (방법 원전)",
@@ -118,30 +135,96 @@
    "arbitrariness_flag": false,
    "in_representative_order": {
     "n_in": 89,
-    "n_pass": 84,
-    "n_fail": 5,
+    "n_pass": 68,
+    "n_fail": 21,
     "eliminated_here": [
+     "AlBr3",
+     "AlN",
+     "Ca3N2",
      "CoO",
+     "CrO3",
      "Fe2O3",
      "FeCl3",
+     "GaCl3",
+     "GaN",
+     "Li3N",
+     "Mg3N2",
      "MnO",
-     "NiO"
+     "MoO3",
+     "Nb2O5",
+     "NbCl5",
+     "NiO",
+     "Sb2S3",
+     "SiS2",
+     "Ta2O5",
+     "TaCl5",
+     "WO3"
     ],
-    "n_missing": 0,
-    "missing": []
+    "n_missing": 16,
+    "missing": [
+     "AlBr3",
+     "AlN",
+     "Ca3N2",
+     "CrO3",
+     "GaCl3",
+     "GaN",
+     "Li3N",
+     "Mg3N2",
+     "MoO3",
+     "Nb2O5",
+     "NbCl5",
+     "Sb2S3",
+     "SiS2",
+     "Ta2O5",
+     "TaCl5",
+     "WO3"
+    ]
    },
    "standalone": {
-    "n_pass": 84,
-    "n_fail": 5,
+    "n_pass": 68,
+    "n_fail": 21,
     "eliminated": [
+     "AlBr3",
+     "AlN",
+     "Ca3N2",
      "CoO",
+     "CrO3",
      "Fe2O3",
      "FeCl3",
+     "GaCl3",
+     "GaN",
+     "Li3N",
+     "Mg3N2",
      "MnO",
-     "NiO"
+     "MoO3",
+     "Nb2O5",
+     "NbCl5",
+     "NiO",
+     "Sb2S3",
+     "SiS2",
+     "Ta2O5",
+     "TaCl5",
+     "WO3"
     ],
-    "n_missing": 0,
-    "missing": []
+    "n_missing": 16,
+    "missing": [
+     "AlBr3",
+     "AlN",
+     "Ca3N2",
+     "CrO3",
+     "GaCl3",
+     "GaN",
+     "Li3N",
+     "Mg3N2",
+     "MoO3",
+     "Nb2O5",
+     "NbCl5",
+     "Sb2S3",
+     "SiS2",
+     "Ta2O5",
+     "TaCl5",
+     "WO3"
+    ]
    },
    "vacuous": false,
    "vacuous_kind": null,
@@ -154,6 +237,23 @@
    "metric": "ox_V (V vs Li, grand-potential onset)",
    "threshold": "ox_V ≥ 2.14 V (undoped host onset)",
    "concentration_convention": "champion composition 단일 (농도 평균 아님). 실측 x = 0.25 — 라벨 x002/x005/x010 은 농도값이 아니다.",
+   "composition_family_caveat": "⚠ 챔피언 슬롯은 combined_score 최대값이 가져가고, 후보 풀에는 같은 도펀트의 두 설계 변형이 있다(compound_set=plain · compound_set_chain=Cl-rich, S 하나가 Cl 로 치환). 그래서 이 게이트의 ox_V 중 일부는 plain 이 아닌 Cl-rich 조성 값이다. **B2O3 는 plain 챔피언 자체가 없어 3점 모두 +Clrich 다** — 그 2.317 V 는 도펀트 효과가 아니라 (도펀트 + 음이온 치환) 의 합이다. Al2O3·MoO3·WO3 는 plain 챔피언이 정확히 host(2.140) 이고 Cl-rich 형제만 넘는다. 행별 판정은 oxidation_stability_cascade_v3_pinned.json 의 composition_family / delta_ox_vs_host_V_confounded 를 보라.",
+   "attribution_audit": {
+    "g2_survivors": 68,
+    "algorithmic_g3": {
+     "pass": 41,
+     "fail": 27
+    },
+    "attribution_audit": {
+     "supported_pass": 40,
+     "fail": 27,
+     "unresolved": 1
+    },
+    "unresolved_species": [
+     "B2O3"
+    ],
+    "why": "unresolved 는 method-comparability 문제가 아니다 — 43행 모두 같은 실행의 phase set 안에서 host 와 비교된다. 문제는 **종 수준 효과 귀속**이다: 이 종의 챔피언 3슬롯이 전부 chain generator 산물이고 plain 챔피언이 없다. 역사 count(알고리즘 pass)는 archive 로 보존하고 현재 판정은 NA/not assessed 다."
+   },
    "threshold_basis": "2.14 V = undoped comp1/modelc 의 grand-potential 산화 onset (oxidation_stability_cascade.csv 헤더에 명시된 ref). 즉 '도펀트를 넣어서 host보다 나빠지지 않는가'라는 상대 기준 — 임의 전압이 아니다. 주의: 19종이 정확히 2.14 V에 pin 돼 있다(S²⁻-limited onset 축퇴) → 이 게이트는 '초과'가 아니라 '비열화' 판정이며 축퇴군 내 순위는 무의미.",
    "literature_analog": {
     "papers": [
@@ -166,41 +266,29 @@
    "engine": "MP hull 기반 절대 열역학.",
    "arbitrariness_flag": false,
    "in_representative_order": {
-    "n_in": 84,
-    "n_pass": 45,
-    "n_fail": 39,
+    "n_in": 68,
+    "n_pass": 41,
+    "n_fail": 27,
     "eliminated_here": [
-     "AlBr3",
-     "AlN",
      "BaCl2",
      "BaO",
-     "Ca3N2",
      "Cu2O",
-     "GaCl3",
-     "GaN",
      "Gd2O3",
      "HfCl4",
      "HfO2",
      "La2O3",
      "LaCl3",
      "LaF3",
-     "Li3N",
-     "Mg3N2",
      "Na2O",
      "Na2S",
      "NaI",
-     "Nb2O5",
-     "NbCl5",
      "Nd2O3",
      "NdCl3",
      "NdF3",
-     "Sb2S3",
      "Sm2O3",
      "SmCl3",
      "SrCl2",
      "SrO",
-     "Ta2O5",
-     "TaCl5",
      "TiCl4",
      "TiF4",
      "TiO2",
@@ -276,6 +364,8 @@
    "metric": "ionic_transport norm ∈[0,1] = min-max(bvs_li_proxy_score @ 라벨 x005) with blocking<0.6 게이트, 탈락자 0.05 평탄화. ⛔ **순환**: blocking 컷을 못 넘으면 BVS 값을 버리고 norm 을 0.05 로 강제한다 — 컷 0.3 보다 낮으므로 blocking 탈락 = G4 탈락이 결정론적으로 따라온다. '두 독립 신호가 일치했다'로 읽으면 안 된다. ⚠ 라벨 x002/x005/x010 은 셋 다 실측 x=0.25 다 — 'x=0.05' 가 아니다. ⚠ bvs_li_proxy_score 는 tools/doping/bvse_proxy.py 의 Adams-2003 파라미터(R₀ Li–S 1.94 · Li–Cl 1.91 · b_S 0.40) — 정본 softBV(2.105/2.249/0.37)와 다르므로 comp1 BVSE 결과와 같은 표에 올리지 말 것. blocking 은 도펀트 4 Å 내 Li 비율이라 도펀트 원자 수에 거의 비례한다 (host 원소만 든 종은 0.0 으로 자동 통과 — 판정 아님).",
    "threshold": "transport_norm > 0.3",
    "concentration_convention": "x=0.05 단일 (litransport *_x005 — 농도 평균 아님)",
+   "composition_family_caveat": null,
+   "attribution_audit": null,
    "threshold_basis": "두 겹이고, **선택압의 거의 전부가 첫 겹에서 나온다**. ① blocking<0.6 은 build_cascade_themes.py 가 이미 쓰는 db 규약(승계)이지만 host 앵커도 문헌 대응도 없는 **상속 상수**다 — G4 단독 탈락 36종 중 31종이 이 상수에 죽고, bvs 컷(0.3) 단독 기여는 5종(B2O3, GeO2, MgI2, Sb2S3, ZrCl4)뿐이다. ② 0.3 컷은 통과자 분포 **하위 꼬리의 공백 구간**(GeO2 0.2724 ↔ YCl3 0.3537, 폭 0.0813) 안에 놓았다. ⚠ 정확히 말하면 이건 분포 전체의 최대 공백이 아니다(최대는 0.1↔0.1998 = 0.0998, 그 다음이 0.3633↔0.4493 = 0.086, 이게 3번째). 즉 '하위 꼬리를 자르는 자연스러운 위치 중 하나'이지 유일해가 아니다. → threshold_sensitivity 의 G4_li_transport(bvs 컷) **와 G4_blocking(상속 상수) 스윕을 반드시 함께 볼 것** — 코어 생존자 수는 blocking 컷만 흔들어도 6↔21 로 움직인다.",
    "literature_analog": {
     "papers": [
@@ -288,9 +378,9 @@
    "engine": "BVSE·기하 정적 프록시 (MD 아님). 챔피언만 MLIP-MD 로 별도 검증.",
    "arbitrariness_flag": true,
    "in_representative_order": {
-    "n_in": 45,
-    "n_pass": 28,
-    "n_fail": 17,
+    "n_in": 41,
+    "n_pass": 25,
+    "n_fail": 16,
     "eliminated_here": [
      "Al2O3",
      "Al2S3",
@@ -298,7 +388,6 @@
      "B2O3",
      "CaBr2",
      "Cr2O3",
-     "CrO3",
      "Ga2O3",
      "GeO2",
      "In2O3",
@@ -372,6 +461,8 @@
    "metric": "E_young (GPa, UMA) ↓ AND G/B ↓. ⚠ cascade_v23_ranked.csv 의 E_GPa·pugh(=G/B) 는 단일 챔피언 값이 아니라 **x∈{0.02, 0.05, 0.10} 챔피언 3점의 산술평균**이다(47/47 검증, champions csv elastic_E_young_GPa · elastic_pugh_GoverB 유래). 일부 도펀트는 plain·Cl-rich 조성족이 섞인 3점(B2O3 는 +Clrich 만 존재) → concentration_convention 블록 참조.",
    "threshold": "mean_x(E_GPa) ≤ 48.2 (roster median) AND mean_x(G/B) ≤ 0.77 (roster median)",
    "concentration_convention": "라벨 x002/x005/x010 3점 평균. ⛔ 이 라벨은 농도가 아니다 — 1×1×1·4 f.u. 셀의 정수 치환 때문에 셋 다 **실측 x = 0.25** 다. 농도 스윕도 반복실험도 아니므로 '2/5/10% 농도 의존성' 으로 읽으면 안 된다.",
+   "composition_family_caveat": null,
+   "attribution_audit": null,
    "threshold_basis": "⚠ **G1–G4 와 달리 host 앵커가 없다.** UMA 탄성값은 절대 인용 금지 규율 대상이고, 같은 방법(UMA)으로 계산된 undoped host 의 E/(G/B) 항목이 cascade 산출물에 없다 (elastic.json 의 host 값은 DFT — 교차 인용 불가). 따라서 median split = **로스터 내부 상대 컷**이다(arbitrariness_flag). 게다가 컷이 걸리는 값 자체가 3농도 평균이라 **농도 산포가 게이트 폭과 맞먹는다** (E_young 농도 산포: NdF3 17.8 · WO3 17.0 · MgF2 16.8 GPa) → threshold_sensitivity.per_concentration_application 을 반드시 함께 볼 것. 문헌 절대 기준(Pugh B/G > 1.75)을 걸면 생존자 0 — literature_absolute_variants 참조.",
    "literature_analog": {
     "papers": [],
@@ -381,9 +472,9 @@
    "engine": "UMA 상대 탄성 (E_VRH·G/B). 절대값 인용 금지.",
    "arbitrariness_flag": true,
    "in_representative_order": {
-    "n_in": 28,
-    "n_pass": 1,
-    "n_fail": 27,
+    "n_in": 25,
+    "n_pass": 0,
+    "n_fail": 25,
     "eliminated_here": [
      "Ag2O",
      "AlCl3",
@@ -404,10 +495,8 @@
      "MgF2",
      "MgO",
      "MgS",
-     "MoO3",
      "ScCl3",
      "SiO2",
-     "SiS2",
      "SnO2",
      "SnS2",
      "YCl3",
@@ -496,7 +585,7 @@
  ],
  "literature_comparable_endpoint": {
   "gate": "G4",
-  "n": 28,
+  "n": 25,
   "survivors": [
    "Ag2O",
    "AlCl3",
@@ -517,22 +606,17 @@
    "MgF2",
    "MgO",
    "MgS",
-   "MoO3",
    "ScCl3",
    "SiO2",
-   "SiS2",
    "SnO2",
    "SnS2",
-   "WO3",
    "YCl3",
    "ZnO"
   ],
   "why": "G1–G4 만이 문헌(Xiao/Sendek/Kahle) 게이트에 대응한다. 문헌과 나란히 인용할 숫자는 **여기까지**(47 → 43 → 25 → 11)다. G5 는 우리가 추가한 축이라 문헌 대비에 넣으면 사과와 오렌지가 된다."
  },
- "final_survivors": [
-  "WO3"
- ],
- "final_survivors_warning": "G5 까지 걸면 1종(WO3)만 남지만 이는 **결론이 아니다**. G5 의 median 컷은 host 앵커가 없는 자의적 컷이고, percentile 을 0.25→1.00 으로 훑으면 최종 생존자가 0→11 로 전 구간을 움직인다(threshold_sensitivity.G5_mechanical). '우리 깔때기의 최종 승자'로 인용하지 말 것 — 인용할 숫자는 literature_comparable_endpoint(11종)이고, G5 는 그 11종을 기계 축으로 정렬한 부가 정보다.",
+ "final_survivors": [],
+ "final_survivors_warning": "G5 까지 걸면 0종()만 남지만 이는 **결론이 아니다**. G5 의 median 컷은 host 앵커가 없는 자의적 컷이고, percentile 을 0.25→1.00 으로 훑으면 최종 생존자가 0→11 로 전 구간을 움직인다(threshold_sensitivity.G5_mechanical). '우리 깔때기의 최종 승자'로 인용하지 말 것 — 인용할 숫자는 literature_comparable_endpoint(11종)이고, G5 는 그 11종을 기계 축으로 정렬한 부가 정보다.",
  "electronic_insulation_diagnostic": {
   "status": "DIAGNOSTIC_ONLY — 게이트 아님",
   "why_not_a_gate": "① 47종 전수의 우리 계산 gap 이 없다(canonical gap 은 fixed-occ nscf 로 host/챔피언 소수만). ② themes.json 의 gap_lit_eV 는 문헌 전형값 ±0.5 eV 큐레이션 — 게이트로 쓰면 큐레이션 값이 스크리닝 결과를 만든 것처럼 보인다.",
@@ -540,14 +624,6 @@
    {
     "dopant": "Ag2O",
     "gap_lit_eV": 1.3
-   },
-   {
-    "dopant": "WO3",
-    "gap_lit_eV": 2.7
-   },
-   {
-    "dopant": "MoO3",
-    "gap_lit_eV": 3.0
    },
    {
     "dopant": "ZnO",
@@ -638,10 +714,6 @@
     "gap_lit_eV": null
    },
    {
-    "dopant": "SiS2",
-    "gap_lit_eV": null
-   },
-   {
     "dopant": "SnS2",
     "gap_lit_eV": null
    },
@@ -651,8 +723,8 @@
    }
   ],
   "if_applied": {
-   "xiao_F1_gap_gt_0.5eV": 12,
-   "sendek_gap_ge_1eV": 12,
+   "xiao_F1_gap_gt_0.5eV": 10,
+   "sendek_gap_ge_1eV": 10,
    "verdict": "코어 생존자 전원이 두 문헌 문턱을 통과 → 이 축을 넣어도 **또 하나의 vacuous 게이트**가 될 뿐이다. 다만 절대 수준은 갈린다(불화물 10–14 eV vs Ag₂O 1.3 · WO₃ 2.7 eV) — '통과'와 '안심'은 다르며, 후기 TM/d⁰ 산화물 생존자는 전자 누설 관점에서 별도 검토 대상."
   }
  },
@@ -676,13 +748,10 @@
   "MgF2",
   "MgO",
   "MgS",
-  "MoO3",
   "ScCl3",
   "SiO2",
-  "SiS2",
   "SnO2",
   "SnS2",
-  "WO3",
   "YCl3",
   "ZnO"
  ],
@@ -695,59 +764,57 @@
     "marginal_kill_in_P0": 0,
     "unique_kill": 0,
     "unique_kill_list": [],
-    "survivors_if_gate_removed": 1,
+    "survivors_if_gate_removed": 0,
     "redundant_given_others": true
    },
    {
     "gate": "G2",
     "name": "electrochemical_window",
-    "standalone_kill": 5,
-    "marginal_kill_in_P0": 5,
-    "unique_kill": 0,
-    "unique_kill_list": [],
+    "standalone_kill": 21,
+    "marginal_kill_in_P0": 21,
+    "unique_kill": 1,
+    "unique_kill_list": [
+     "WO3"
+    ],
     "survivors_if_gate_removed": 1,
-    "redundant_given_others": true
+    "redundant_given_others": false
    },
    {
     "gate": "G3",
     "name": "oxidation_onset",
     "standalone_kill": 44,
-    "marginal_kill_in_P0": 39,
-    "unique_kill": 5,
+    "marginal_kill_in_P0": 27,
+    "unique_kill": 2,
     "unique_kill_list": [
-     "GaN",
      "LaF3",
-     "NbCl5",
-     "SrCl2",
-     "TaCl5"
+     "SrCl2"
     ],
-    "survivors_if_gate_removed": 6,
+    "survivors_if_gate_removed": 2,
     "redundant_given_others": false
    },
    {
     "gate": "G4",
     "name": "li_transport",
     "standalone_kill": 36,
-    "marginal_kill_in_P0": 17,
-    "unique_kill": 7,
+    "marginal_kill_in_P0": 16,
+    "unique_kill": 6,
     "unique_kill_list": [
      "Al2O3",
      "B2O3",
      "Cr2O3",
-     "CrO3",
      "In2O3",
      "MgBr2",
      "Sc2O3"
     ],
-    "survivors_if_gate_removed": 8,
+    "survivors_if_gate_removed": 6,
     "redundant_given_others": false
    },
    {
     "gate": "G5",
     "name": "mechanical",
     "standalone_kill": 65,
-    "marginal_kill_in_P0": 27,
-    "unique_kill": 27,
+    "marginal_kill_in_P0": 25,
+    "unique_kill": 25,
     "unique_kill_list": [
      "Ag2O",
      "AlCl3",
@@ -768,16 +835,14 @@
      "MgF2",
      "MgO",
      "MgS",
-     "MoO3",
      "ScCl3",
      "SiO2",
-     "SiS2",
      "SnO2",
      "SnS2",
      "YCl3",
      "ZnO"
     ],
-    "survivors_if_gate_removed": 28,
+    "survivors_if_gate_removed": 25,
     "redundant_given_others": false
    }
   ],
@@ -800,10 +865,10 @@
     "waterfall": [
      89,
      89,
-     84,
-     45,
-     28,
-     1
+     68,
+     41,
+     25,
+     0
     ],
     "steps": [
      {
@@ -820,9 +885,9 @@
      {
       "gate": "G2",
       "n_in": 89,
-      "n_pass": 84,
-      "n_fail": 5,
-      "n_missing": 0,
+      "n_pass": 68,
+      "n_fail": 21,
+      "n_missing": 16,
       "vacuous": false,
       "vacuous_kind": null,
       "vacuous_label": null,
@@ -832,9 +897,9 @@
      },
      {
       "gate": "G3",
-      "n_in": 84,
-      "n_pass": 45,
-      "n_fail": 39,
+      "n_in": 68,
+      "n_pass": 41,
+      "n_fail": 27,
       "n_missing": 0,
       "vacuous": false,
       "vacuous_kind": null,
@@ -846,9 +911,9 @@
      },
      {
       "gate": "G4",
-      "n_in": 45,
-      "n_pass": 28,
-      "n_fail": 17,
+      "n_in": 41,
+      "n_pass": 25,
+      "n_fail": 16,
       "n_missing": 1,
       "vacuous": false,
       "vacuous_kind": null,
@@ -861,9 +926,9 @@
      },
      {
       "gate": "G5",
-      "n_in": 28,
-      "n_pass": 1,
-      "n_fail": 27,
+      "n_in": 25,
+      "n_pass": 0,
+      "n_fail": 25,
       "n_missing": 0,
       "vacuous": false,
       "vacuous_kind": null,
@@ -876,9 +941,7 @@
       ]
      }
     ],
-    "final_survivors": [
-     "WO3"
-    ]
+    "final_survivors": []
    },
    {
     "key": "P1_sendek_preconditions_first",
@@ -894,9 +957,9 @@
      89,
      89,
      45,
-     45,
-     8,
-     1
+     41,
+     6,
+     0
     ],
     "steps": [
      {
@@ -926,12 +989,12 @@
      {
       "gate": "G2",
       "n_in": 45,
-      "n_pass": 45,
-      "n_fail": 0,
-      "n_missing": 0,
-      "vacuous": true,
-      "vacuous_kind": "subsumed_by_upstream",
-      "vacuous_label": "⊂ 상류 게이트에 포섭 — 이 게이트가 죽일 종을 앞 게이트가 먼저 잡아감",
+      "n_pass": 41,
+      "n_fail": 4,
+      "n_missing": 4,
+      "vacuous": false,
+      "vacuous_kind": null,
+      "vacuous_label": null,
       "upstream_gates": [
        "G1",
        "G3"
@@ -939,9 +1002,9 @@
      },
      {
       "gate": "G5",
-      "n_in": 45,
-      "n_pass": 8,
-      "n_fail": 37,
+      "n_in": 41,
+      "n_pass": 6,
+      "n_fail": 35,
       "n_missing": 0,
       "vacuous": false,
       "vacuous_kind": null,
@@ -954,9 +1017,9 @@
      },
      {
       "gate": "G4",
-      "n_in": 8,
-      "n_pass": 1,
-      "n_fail": 7,
+      "n_in": 6,
+      "n_pass": 0,
+      "n_fail": 6,
       "n_missing": 0,
       "vacuous": false,
       "vacuous_kind": null,
@@ -969,9 +1032,7 @@
       ]
      }
     ],
-    "final_survivors": [
-     "WO3"
-    ]
+    "final_survivors": []
    },
    {
     "key": "P2_kahle_transport_first",
@@ -987,9 +1048,9 @@
      89,
      53,
      53,
-     50,
-     28,
-     1
+     41,
+     25,
+     0
     ],
     "steps": [
      {
@@ -1019,9 +1080,9 @@
      {
       "gate": "G2",
       "n_in": 53,
-      "n_pass": 50,
-      "n_fail": 3,
-      "n_missing": 0,
+      "n_pass": 41,
+      "n_fail": 12,
+      "n_missing": 9,
       "vacuous": false,
       "vacuous_kind": null,
       "vacuous_label": null,
@@ -1032,9 +1093,9 @@
      },
      {
       "gate": "G3",
-      "n_in": 50,
-      "n_pass": 28,
-      "n_fail": 22,
+      "n_in": 41,
+      "n_pass": 25,
+      "n_fail": 16,
       "n_missing": 0,
       "vacuous": false,
       "vacuous_kind": null,
@@ -1047,9 +1108,9 @@
      },
      {
       "gate": "G5",
-      "n_in": 28,
-      "n_pass": 1,
-      "n_fail": 27,
+      "n_in": 25,
+      "n_pass": 0,
+      "n_fail": 25,
       "n_missing": 0,
       "vacuous": false,
       "vacuous_kind": null,
@@ -1062,9 +1123,7 @@
       ]
      }
     ],
-    "final_survivors": [
-     "WO3"
-    ]
+    "final_survivors": []
    },
    {
     "key": "P3_our_mechanics_first",
@@ -1081,8 +1140,8 @@
      24,
      8,
      1,
-     1,
-     1
+     0,
+     0
     ],
     "steps": [
      {
@@ -1126,12 +1185,12 @@
      {
       "gate": "G2",
       "n_in": 1,
-      "n_pass": 1,
-      "n_fail": 0,
-      "n_missing": 0,
-      "vacuous": true,
-      "vacuous_kind": "subsumed_by_upstream",
-      "vacuous_label": "⊂ 상류 게이트에 포섭 — 이 게이트가 죽일 종을 앞 게이트가 먼저 잡아감",
+      "n_pass": 0,
+      "n_fail": 1,
+      "n_missing": 1,
+      "vacuous": false,
+      "vacuous_kind": null,
+      "vacuous_label": null,
       "upstream_gates": [
        "G5",
        "G4",
@@ -1140,13 +1199,13 @@
      },
      {
       "gate": "G1",
-      "n_in": 1,
-      "n_pass": 1,
+      "n_in": 0,
+      "n_pass": 0,
       "n_fail": 0,
       "n_missing": 0,
       "vacuous": true,
-      "vacuous_kind": "pool_curated",
-      "vacuous_label": "💤 풀 큐레이션 — 전체 풀에 단독 적용해도 0종 탈락",
+      "vacuous_kind": "pool_exhausted",
+      "vacuous_label": "∅ 풀 소진 — 들어온 종이 0",
       "upstream_gates": [
        "G5",
        "G4",
@@ -1155,9 +1214,7 @@
       ]
      }
     ],
-    "final_survivors": [
-     "WO3"
-    ]
+    "final_survivors": []
    }
   ],
   "permutations": [
@@ -1174,10 +1231,10 @@
     "waterfall": [
      89,
      89,
-     84,
-     45,
-     28,
-     1
+     68,
+     41,
+     25,
+     0
     ],
     "steps": [
      {
@@ -1194,9 +1251,9 @@
      {
       "gate": "G2",
       "n_in": 89,
-      "n_pass": 84,
-      "n_fail": 5,
-      "n_missing": 0,
+      "n_pass": 68,
+      "n_fail": 21,
+      "n_missing": 16,
       "vacuous": false,
       "vacuous_kind": null,
       "vacuous_label": null,
@@ -1206,9 +1263,9 @@
      },
      {
       "gate": "G3",
-      "n_in": 84,
-      "n_pass": 45,
-      "n_fail": 39,
+      "n_in": 68,
+      "n_pass": 41,
+      "n_fail": 27,
       "n_missing": 0,
       "vacuous": false,
       "vacuous_kind": null,
@@ -1220,9 +1277,9 @@
      },
      {
       "gate": "G4",
-      "n_in": 45,
-      "n_pass": 28,
-      "n_fail": 17,
+      "n_in": 41,
+      "n_pass": 25,
+      "n_fail": 16,
       "n_missing": 1,
       "vacuous": false,
       "vacuous_kind": null,
@@ -1235,9 +1292,9 @@
      },
      {
       "gate": "G5",
-      "n_in": 28,
-      "n_pass": 1,
-      "n_fail": 27,
+      "n_in": 25,
+      "n_pass": 0,
+      "n_fail": 25,
       "n_missing": 0,
       "vacuous": false,
       "vacuous_kind": null,
@@ -1250,9 +1307,7 @@
       ]
      }
     ],
-    "final_survivors": [
-     "WO3"
-    ]
+    "final_survivors": []
    },
    {
     "key": "P1_sendek_preconditions_first",
@@ -1268,9 +1323,9 @@
      89,
      89,
      45,
-     45,
-     8,
-     1
+     41,
+     6,
+     0
     ],
     "steps": [
      {
@@ -1300,12 +1355,12 @@
      {
       "gate": "G2",
       "n_in": 45,
-      "n_pass": 45,
-      "n_fail": 0,
-      "n_missing": 0,
-      "vacuous": true,
-      "vacuous_kind": "subsumed_by_upstream",
-      "vacuous_label": "⊂ 상류 게이트에 포섭 — 이 게이트가 죽일 종을 앞 게이트가 먼저 잡아감",
+      "n_pass": 41,
+      "n_fail": 4,
+      "n_missing": 4,
+      "vacuous": false,
+      "vacuous_kind": null,
+      "vacuous_label": null,
       "upstream_gates": [
        "G1",
        "G3"
@@ -1313,9 +1368,9 @@
      },
      {
       "gate": "G5",
-      "n_in": 45,
-      "n_pass": 8,
-      "n_fail": 37,
+      "n_in": 41,
+      "n_pass": 6,
+      "n_fail": 35,
       "n_missing": 0,
       "vacuous": false,
       "vacuous_kind": null,
@@ -1328,9 +1383,9 @@
      },
      {
       "gate": "G4",
-      "n_in": 8,
-      "n_pass": 1,
-      "n_fail": 7,
+      "n_in": 6,
+      "n_pass": 0,
+      "n_fail": 6,
       "n_missing": 0,
       "vacuous": false,
       "vacuous_kind": null,
@@ -1343,9 +1398,7 @@
       ]
      }
     ],
-    "final_survivors": [
-     "WO3"
-    ]
+    "final_survivors": []
    },
    {
     "key": "P2_kahle_transport_first",
@@ -1361,9 +1414,9 @@
      89,
      53,
      53,
-     50,
-     28,
-     1
+     41,
+     25,
+     0
     ],
     "steps": [
      {
@@ -1393,9 +1446,9 @@
      {
       "gate": "G2",
       "n_in": 53,
-      "n_pass": 50,
-      "n_fail": 3,
-      "n_missing": 0,
+      "n_pass": 41,
+      "n_fail": 12,
+      "n_missing": 9,
       "vacuous": false,
       "vacuous_kind": null,
       "vacuous_label": null,
@@ -1406,9 +1459,9 @@
      },
      {
       "gate": "G3",
-      "n_in": 50,
-      "n_pass": 28,
-      "n_fail": 22,
+      "n_in": 41,
+      "n_pass": 25,
+      "n_fail": 16,
       "n_missing": 0,
       "vacuous": false,
       "vacuous_kind": null,
@@ -1421,9 +1474,9 @@
      },
      {
       "gate": "G5",
-      "n_in": 28,
-      "n_pass": 1,
-      "n_fail": 27,
+      "n_in": 25,
+      "n_pass": 0,
+      "n_fail": 25,
       "n_missing": 0,
       "vacuous": false,
       "vacuous_kind": null,
@@ -1436,9 +1489,7 @@
       ]
      }
     ],
-    "final_survivors": [
-     "WO3"
-    ]
+    "final_survivors": []
    },
    {
     "key": "P3_our_mechanics_first",
@@ -1455,8 +1506,8 @@
      24,
      8,
      1,
-     1,
-     1
+     0,
+     0
     ],
     "steps": [
      {
@@ -1500,12 +1551,12 @@
      {
       "gate": "G2",
       "n_in": 1,
-      "n_pass": 1,
-      "n_fail": 0,
-      "n_missing": 0,
-      "vacuous": true,
-      "vacuous_kind": "subsumed_by_upstream",
-      "vacuous_label": "⊂ 상류 게이트에 포섭 — 이 게이트가 죽일 종을 앞 게이트가 먼저 잡아감",
+      "n_pass": 0,
+      "n_fail": 1,
+      "n_missing": 1,
+      "vacuous": false,
+      "vacuous_kind": null,
+      "vacuous_label": null,
       "upstream_gates": [
        "G5",
        "G4",
@@ -1514,13 +1565,13 @@
      },
      {
       "gate": "G1",
-      "n_in": 1,
-      "n_pass": 1,
+      "n_in": 0,
+      "n_pass": 0,
       "n_fail": 0,
       "n_missing": 0,
       "vacuous": true,
-      "vacuous_kind": "pool_curated",
-      "vacuous_label": "💤 풀 큐레이션 — 전체 풀에 단독 적용해도 0종 탈락",
+      "vacuous_kind": "pool_exhausted",
+      "vacuous_label": "∅ 풀 소진 — 들어온 종이 0",
       "upstream_gates": [
        "G5",
        "G4",
@@ -1529,36 +1580,54 @@
       ]
      }
     ],
-    "final_survivors": [
-     "WO3"
-    ]
+    "final_survivors": []
    }
   ],
   "final_sets_identical": true,
-  "intersection": [
-   "WO3"
-  ],
-  "union": [
-   "WO3"
-  ],
+  "intersection": [],
+  "union": [],
   "symmetric_difference": [],
-  "n_distinct_waterfalls": 96,
+  "n_distinct_waterfalls": 110,
   "distinct_waterfalls": [
    [
     89,
     24,
     8,
     1,
+    0,
+    0
+   ],
+   [
+    89,
+    24,
+    8,
     1,
-    1
+    1,
+    0
+   ],
+   [
+    89,
+    24,
+    8,
+    2,
+    0,
+    0
+   ],
+   [
+    89,
+    24,
+    8,
+    2,
+    2,
+    0
    ],
    [
     89,
     24,
     8,
     6,
-    1,
-    1
+    0,
+    0
    ],
    [
     89,
@@ -1566,7 +1635,7 @@
     8,
     6,
     6,
-    1
+    0
    ],
    [
     89,
@@ -1574,7 +1643,15 @@
     8,
     8,
     1,
-    1
+    0
+   ],
+   [
+    89,
+    24,
+    8,
+    8,
+    2,
+    0
    ],
    [
     89,
@@ -1582,63 +1659,55 @@
     8,
     8,
     6,
-    1
+    0
    ],
    [
     89,
     24,
-    8,
-    8,
-    8,
-    1
+    13,
+    2,
+    0,
+    0
    ],
    [
     89,
     24,
-    22,
+    13,
+    2,
+    2,
+    0
+   ],
+   [
+    89,
+    24,
+    13,
     6,
-    1,
-    1
+    0,
+    0
    ],
    [
     89,
     24,
-    22,
+    13,
     6,
     6,
-    1
+    0
    ],
    [
     89,
     24,
-    22,
-    8,
-    1,
-    1
+    13,
+    13,
+    2,
+    0
    ],
    [
     89,
     24,
-    22,
-    8,
-    8,
-    1
-   ],
-   [
-    89,
-    24,
-    22,
-    22,
+    13,
+    13,
     6,
-    1
-   ],
-   [
-    89,
-    24,
-    22,
-    22,
-    8,
-    1
+    0
    ],
    [
     89,
@@ -1646,7 +1715,15 @@
     24,
     8,
     1,
-    1
+    0
+   ],
+   [
+    89,
+    24,
+    24,
+    8,
+    2,
+    0
    ],
    [
     89,
@@ -1654,487 +1731,583 @@
     24,
     8,
     6,
-    1
+    0
    ],
    [
     89,
     24,
     24,
-    8,
-    8,
-    1
+    13,
+    2,
+    0
    ],
    [
     89,
     24,
     24,
-    22,
+    13,
     6,
-    1
+    0
    ],
    [
+    89,
+    45,
+    8,
+    1,
+    0,
+    0
+   ],
+   [
+    89,
+    45,
+    8,
+    1,
+    1,
+    0
+   ],
+   [
+    89,
+    45,
+    8,
+    6,
+    0,
+    0
+   ],
+   [
+    89,
+    45,
+    8,
+    6,
+    6,
+    0
+   ],
+   [
+    89,
+    45,
+    8,
+    8,
+    1,
+    0
+   ],
+   [
+    89,
+    45,
+    8,
+    8,
+    6,
+    0
+   ],
+   [
+    89,
+    45,
+    28,
+    1,
+    0,
+    0
+   ],
+   [
+    89,
+    45,
+    28,
+    1,
+    1,
+    0
+   ],
+   [
+    89,
+    45,
+    28,
+    25,
+    0,
+    0
+   ],
+   [
+    89,
+    45,
+    28,
+    25,
+    25,
+    0
+   ],
+   [
+    89,
+    45,
+    28,
+    28,
+    1,
+    0
+   ],
+   [
+    89,
+    45,
+    28,
+    28,
+    25,
+    0
+   ],
+   [
+    89,
+    45,
+    41,
+    6,
+    0,
+    0
+   ],
+   [
+    89,
+    45,
+    41,
+    6,
+    6,
+    0
+   ],
+   [
+    89,
+    45,
+    41,
+    25,
+    0,
+    0
+   ],
+   [
+    89,
+    45,
+    41,
+    25,
+    25,
+    0
+   ],
+   [
+    89,
+    45,
+    41,
+    41,
+    6,
+    0
+   ],
+   [
+    89,
+    45,
+    41,
+    41,
+    25,
+    0
+   ],
+   [
+    89,
+    45,
+    45,
+    8,
+    1,
+    0
+   ],
+   [
+    89,
+    45,
+    45,
+    8,
+    6,
+    0
+   ],
+   [
+    89,
+    45,
+    45,
+    28,
+    1,
+    0
+   ],
+   [
+    89,
+    45,
+    45,
+    28,
+    25,
+    0
+   ],
+   [
+    89,
+    45,
+    45,
+    41,
+    6,
+    0
+   ],
+   [
+    89,
+    45,
+    45,
+    41,
+    25,
+    0
+   ],
+   [
+    89,
+    53,
+    8,
+    1,
+    0,
+    0
+   ],
+   [
+    89,
+    53,
+    8,
+    1,
+    1,
+    0
+   ],
+   [
+    89,
+    53,
+    8,
+    2,
+    0,
+    0
+   ],
+   [
+    89,
+    53,
+    8,
+    2,
+    2,
+    0
+   ],
+   [
+    89,
+    53,
+    8,
+    8,
+    1,
+    0
+   ],
+   [
+    89,
+    53,
+    8,
+    8,
+    2,
+    0
+   ],
+   [
+    89,
+    53,
+    28,
+    1,
+    0,
+    0
+   ],
+   [
+    89,
+    53,
+    28,
+    1,
+    1,
+    0
+   ],
+   [
+    89,
+    53,
+    28,
+    25,
+    0,
+    0
+   ],
+   [
+    89,
+    53,
+    28,
+    25,
+    25,
+    0
+   ],
+   [
+    89,
+    53,
+    28,
+    28,
+    1,
+    0
+   ],
+   [
+    89,
+    53,
+    28,
+    28,
+    25,
+    0
+   ],
+   [
+    89,
+    53,
+    41,
+    2,
+    0,
+    0
+   ],
+   [
+    89,
+    53,
+    41,
+    2,
+    2,
+    0
+   ],
+   [
+    89,
+    53,
+    41,
+    25,
+    0,
+    0
+   ],
+   [
+    89,
+    53,
+    41,
+    25,
+    25,
+    0
+   ],
+   [
+    89,
+    53,
+    41,
+    41,
+    2,
+    0
+   ],
+   [
+    89,
+    53,
+    41,
+    41,
+    25,
+    0
+   ],
+   [
+    89,
+    53,
+    53,
+    8,
+    1,
+    0
+   ],
+   [
+    89,
+    53,
+    53,
+    8,
+    2,
+    0
+   ],
+   [
+    89,
+    53,
+    53,
+    28,
+    1,
+    0
+   ],
+   [
+    89,
+    53,
+    53,
+    28,
+    25,
+    0
+   ],
+   [
+    89,
+    53,
+    53,
+    41,
+    2,
+    0
+   ],
+   [
+    89,
+    53,
+    53,
+    41,
+    25,
+    0
+   ],
+   [
+    89,
+    68,
+    13,
+    2,
+    0,
+    0
+   ],
+   [
+    89,
+    68,
+    13,
+    2,
+    2,
+    0
+   ],
+   [
+    89,
+    68,
+    13,
+    6,
+    0,
+    0
+   ],
+   [
+    89,
+    68,
+    13,
+    6,
+    6,
+    0
+   ],
+   [
+    89,
+    68,
+    13,
+    13,
+    2,
+    0
+   ],
+   [
+    89,
+    68,
+    13,
+    13,
+    6,
+    0
+   ],
+   [
+    89,
+    68,
+    41,
+    2,
+    0,
+    0
+   ],
+   [
+    89,
+    68,
+    41,
+    2,
+    2,
+    0
+   ],
+   [
+    89,
+    68,
+    41,
+    6,
+    0,
+    0
+   ],
+   [
+    89,
+    68,
+    41,
+    6,
+    6,
+    0
+   ],
+   [
+    89,
+    68,
+    41,
+    25,
+    0,
+    0
+   ],
+   [
+    89,
+    68,
+    41,
+    25,
+    25,
+    0
+   ],
+   [
+    89,
+    68,
+    41,
+    41,
+    2,
+    0
+   ],
+   [
+    89,
+    68,
+    41,
+    41,
+    6,
+    0
+   ],
+   [
+    89,
+    68,
+    41,
+    41,
+    25,
+    0
+   ],
+   [
+    89,
+    68,
+    68,
+    13,
+    2,
+    0
+   ],
+   [
+    89,
+    68,
+    68,
+    13,
+    6,
+    0
+   ],
+   [
+    89,
+    68,
+    68,
+    41,
+    2,
+    0
+   ],
+   [
+    89,
+    68,
+    68,
+    41,
+    6,
+    0
+   ],
+   [
+    89,
+    68,
+    68,
+    41,
+    25,
+    0
+   ],
+   [
+    89,
     89,
     24,
-    24,
-    22,
-    8,
-    1
-   ],
-   [
-    89,
-    45,
     8,
     1,
-    1,
-    1
-   ],
-   [
-    89,
-    45,
-    8,
-    8,
-    1,
-    1
-   ],
-   [
-    89,
-    45,
-    8,
-    8,
-    8,
-    1
-   ],
-   [
-    89,
-    45,
-    28,
-    1,
-    1,
-    1
-   ],
-   [
-    89,
-    45,
-    28,
-    28,
-    1,
-    1
-   ],
-   [
-    89,
-    45,
-    28,
-    28,
-    28,
-    1
-   ],
-   [
-    89,
-    45,
-    45,
-    8,
-    1,
-    1
-   ],
-   [
-    89,
-    45,
-    45,
-    8,
-    8,
-    1
-   ],
-   [
-    89,
-    45,
-    45,
-    28,
-    1,
-    1
-   ],
-   [
-    89,
-    45,
-    45,
-    28,
-    28,
-    1
-   ],
-   [
-    89,
-    45,
-    45,
-    45,
-    8,
-    1
-   ],
-   [
-    89,
-    45,
-    45,
-    45,
-    28,
-    1
-   ],
-   [
-    89,
-    53,
-    8,
-    1,
-    1,
-    1
-   ],
-   [
-    89,
-    53,
-    8,
-    6,
-    1,
-    1
-   ],
-   [
-    89,
-    53,
-    8,
-    6,
-    6,
-    1
-   ],
-   [
-    89,
-    53,
-    8,
-    8,
-    1,
-    1
-   ],
-   [
-    89,
-    53,
-    8,
-    8,
-    6,
-    1
-   ],
-   [
-    89,
-    53,
-    28,
-    1,
-    1,
-    1
-   ],
-   [
-    89,
-    53,
-    28,
-    28,
-    1,
-    1
-   ],
-   [
-    89,
-    53,
-    28,
-    28,
-    28,
-    1
-   ],
-   [
-    89,
-    53,
-    50,
-    6,
-    1,
-    1
-   ],
-   [
-    89,
-    53,
-    50,
-    6,
-    6,
-    1
-   ],
-   [
-    89,
-    53,
-    50,
-    28,
-    1,
-    1
-   ],
-   [
-    89,
-    53,
-    50,
-    28,
-    28,
-    1
-   ],
-   [
-    89,
-    53,
-    50,
-    50,
-    6,
-    1
-   ],
-   [
-    89,
-    53,
-    50,
-    50,
-    28,
-    1
-   ],
-   [
-    89,
-    53,
-    53,
-    8,
-    1,
-    1
-   ],
-   [
-    89,
-    53,
-    53,
-    8,
-    6,
-    1
-   ],
-   [
-    89,
-    53,
-    53,
-    28,
-    1,
-    1
-   ],
-   [
-    89,
-    53,
-    53,
-    28,
-    28,
-    1
-   ],
-   [
-    89,
-    53,
-    53,
-    50,
-    6,
-    1
-   ],
-   [
-    89,
-    53,
-    53,
-    50,
-    28,
-    1
-   ],
-   [
-    89,
-    84,
-    22,
-    6,
-    1,
-    1
-   ],
-   [
-    89,
-    84,
-    22,
-    6,
-    6,
-    1
-   ],
-   [
-    89,
-    84,
-    22,
-    8,
-    1,
-    1
-   ],
-   [
-    89,
-    84,
-    22,
-    8,
-    8,
-    1
-   ],
-   [
-    89,
-    84,
-    22,
-    22,
-    6,
-    1
-   ],
-   [
-    89,
-    84,
-    22,
-    22,
-    8,
-    1
-   ],
-   [
-    89,
-    84,
-    45,
-    8,
-    1,
-    1
-   ],
-   [
-    89,
-    84,
-    45,
-    8,
-    8,
-    1
-   ],
-   [
-    89,
-    84,
-    45,
-    28,
-    1,
-    1
-   ],
-   [
-    89,
-    84,
-    45,
-    28,
-    28,
-    1
-   ],
-   [
-    89,
-    84,
-    45,
-    45,
-    8,
-    1
-   ],
-   [
-    89,
-    84,
-    45,
-    45,
-    28,
-    1
-   ],
-   [
-    89,
-    84,
-    50,
-    6,
-    1,
-    1
-   ],
-   [
-    89,
-    84,
-    50,
-    6,
-    6,
-    1
-   ],
-   [
-    89,
-    84,
-    50,
-    28,
-    1,
-    1
-   ],
-   [
-    89,
-    84,
-    50,
-    28,
-    28,
-    1
-   ],
-   [
-    89,
-    84,
-    50,
-    50,
-    6,
-    1
-   ],
-   [
-    89,
-    84,
-    50,
-    50,
-    28,
-    1
-   ],
-   [
-    89,
-    84,
-    84,
-    22,
-    6,
-    1
-   ],
-   [
-    89,
-    84,
-    84,
-    22,
-    8,
-    1
-   ],
-   [
-    89,
-    84,
-    84,
-    45,
-    8,
-    1
-   ],
-   [
-    89,
-    84,
-    84,
-    45,
-    28,
-    1
-   ],
-   [
-    89,
-    84,
-    84,
-    50,
-    6,
-    1
-   ],
-   [
-    89,
-    84,
-    84,
-    50,
-    28,
-    1
+    0
    ],
    [
     89,
     89,
     24,
     8,
-    1,
-    1
+    2,
+    0
    ],
    [
     89,
@@ -2142,31 +2315,23 @@
     24,
     8,
     6,
-    1
+    0
    ],
    [
     89,
     89,
     24,
-    8,
-    8,
-    1
+    13,
+    2,
+    0
    ],
    [
     89,
     89,
     24,
-    22,
+    13,
     6,
-    1
-   ],
-   [
-    89,
-    89,
-    24,
-    22,
-    8,
-    1
+    0
    ],
    [
     89,
@@ -2174,15 +2339,15 @@
     45,
     8,
     1,
-    1
+    0
    ],
    [
     89,
     89,
     45,
     8,
-    8,
-    1
+    6,
+    0
    ],
    [
     89,
@@ -2190,31 +2355,31 @@
     45,
     28,
     1,
-    1
+    0
    ],
    [
     89,
     89,
     45,
     28,
-    28,
-    1
+    25,
+    0
    ],
    [
     89,
     89,
     45,
-    45,
-    8,
-    1
+    41,
+    6,
+    0
    ],
    [
     89,
     89,
     45,
-    45,
-    28,
-    1
+    41,
+    25,
+    0
    ],
    [
     89,
@@ -2222,15 +2387,15 @@
     53,
     8,
     1,
-    1
+    0
    ],
    [
     89,
     89,
     53,
     8,
-    6,
-    1
+    2,
+    0
    ],
    [
     89,
@@ -2238,83 +2403,75 @@
     53,
     28,
     1,
-    1
+    0
    ],
    [
     89,
     89,
     53,
     28,
-    28,
-    1
+    25,
+    0
    ],
    [
     89,
     89,
     53,
-    50,
-    6,
-    1
+    41,
+    2,
+    0
    ],
    [
     89,
     89,
     53,
-    50,
-    28,
-    1
+    41,
+    25,
+    0
    ],
    [
     89,
     89,
-    84,
-    22,
+    68,
+    13,
+    2,
+    0
+   ],
+   [
+    89,
+    89,
+    68,
+    13,
     6,
-    1
+    0
    ],
    [
     89,
     89,
-    84,
-    22,
-    8,
-    1
+    68,
+    41,
+    2,
+    0
    ],
    [
     89,
     89,
-    84,
-    45,
-    8,
-    1
-   ],
-   [
-    89,
-    89,
-    84,
-    45,
-    28,
-    1
-   ],
-   [
-    89,
-    89,
-    84,
-    50,
+    68,
+    41,
     6,
-    1
+    0
    ],
    [
     89,
     89,
-    84,
-    50,
-    28,
-    1
+    68,
+    41,
+    25,
+    0
    ]
   ],
-  "why": "게이트가 전부 **정적·per-dopant boolean 술어**라 최종 생존자는 집합 교집합이고 순서에 불변이다. 순서가 바꾸는 것은 (a) 중간 단계 숫자(깔때기 그림의 모양)와 (b) 어느 게이트에 탈락의 '공'이 돌아가는가(marginal kill)뿐. 이 불변성은 표본 확인이 아니라 **120 순열 전수 계산**으로 증명했다 — 최종 집합은 120/120 전부 동일하고 깔때기 모양(waterfall)만 96가지로 갈린다. ⚠ 단, '술어'라는 전제는 게이트마다 **농도 규약이 다르다**는 사실을 덮는다 — concentration_convention 블록을 함께 읽을 것.",
-  "sendek_analog_verdict": "Sendek 2017 은 '전제조건(안정·gap·ESW)이 전도도 모델보다 세게 거른다'고 결론했다(전제조건 12,831→317 vs LR 모델 단독 12,831→1,408). **우리 풀에서는 순위가 뒤집힌다**: standalone 제거 수 = G1 0 · G2 5 · G3 44 · G4 36 · G5 65. ⚠ 다만 정확히 말하면 **'수송축이 최강'이 아니라 '수송축 안의 blocking 상수가 최강'**이다 — G4 단독 탈락 36종 중 31종은 상속 상수 blocking<0.6 이 죽인 것이고, BVSE 컷(0.3) 자체의 단독 기여는 5종(B2O3, GeO2, MgI2, Sb2S3, ZrCl4)뿐이다. 즉 축(axis)의 선택압이 아니라 **상수(constant)의 선택압**이며, 그 상수는 host 앵커도 문헌 대응도 없다(threshold_sensitivity.G4_blocking 스윕: 0.50→0.55→0.60→0.65→0.70→0.80→1.00 에서 코어 생존자 22/26/28/30/33/35/42종). 그리고 안정성(G1)이 아무도 못 떨어뜨리는 것은 큐레이션 풀의 성질이다 — 47종은 애초에 '넣을 만한' 도펀트로 골라져 안정성·ESW 전제조건을 통과한 상태로 시작한다. 따라서 Sendek 명제의 반증이 아니라 **'전제조건이 이미 소진된 풀에서는 남은 구속이 가장 임의적인 상수로 옮겨간다'는 따름정리**로 읽어야 한다."
+  "why": "게이트가 전부 **정적·per-dopant boolean 술어**라 최종 생존자는 집합 교집합이고 순서에 불변이다. 순서가 바꾸는 것은 (a) 중간 단계 숫자(깔때기 그림의 모양)와 (b) 어느 게이트에 탈락의 '공'이 돌아가는가(marginal kill)뿐. 이 불변성은 표본 확인이 아니라 **120 순열 전수 계산**으로 증명했다 — 최종 집합은 120/120 전부 동일하고 깔때기 모양(waterfall)만 110가지로 갈린다. ⚠ 단, '술어'라는 전제는 게이트마다 **농도 규약이 다르다**는 사실을 덮는다 — concentration_convention 블록을 함께 읽을 것.",
+  "sendek_analog_verdict": "Sendek 2017 은 '전제조건(안정·gap·ESW)이 전도도 모델보다 세게 거른다'고 결론했다(전제조건 12,831→317 vs LR 모델 단독 12,831→1,408). **우리 풀에서는 순위가 뒤집힌다**: standalone 제거 수 = G1 0 · G2 21 · G3 44 · G4 36 · G5 65. ⚠ 다만 정확히 말하면 **'수송축이 최강'이 아니라 '수송축 안의 blocking 상수가 최강'**이다 — G4 단독 탈락 36종 중 31종은 상속 상수 blocking<0.6 이 죽인 것이고, BVSE 컷(0.3) 자체의 단독 기여는 5종(B2O3, GeO2, MgI2, Sb2S3, ZrCl4)뿐이다. 즉 축(axis)의 선택압이 아니라 **상수(constant)의 선택압**이며, 그 상수는 host 앵커도 문헌 대응도 없다(threshold_sensitivity.G4_blocking 스윕: 0.50→0.55→0.60→0.65→0.70→0.80→1.00 에서 코어 생존자 21/25/25/27/30/32/38종). 그리고 안정성(G1)이 아무도 못 떨어뜨리는 것은 큐레이션 풀의 성질이다 — 47종은 애초에 '넣을 만한' 도펀트로 골라져 안정성·ESW 전제조건을 통과한 상태로 시작한다. 따라서 Sendek 명제의 반증이 아니라 **'전제조건이 이미 소진된 풀에서는 남은 구속이 가장 임의적인 상수로 옮겨간다'는 따름정리**로 읽어야 한다."
  },
  "threshold_sensitivity": {
   "how_to_read": "G3·G4 스윕은 **n_core_G1_G4**(문헌 대응 코어)를 보라. G5 를 함께 걸면 median 컷이 결과를 지배해 다른 축의 민감도가 전부 가려진다 (n_full_with_G5 열이 그 붕괴를 보여준다).",
@@ -2323,11 +2480,10 @@
     {
      "offset_vs_host_V": -0.2,
      "ox_cut_V": 1.94,
-     "n_core_G1_G4": 42,
+     "n_core_G1_G4": 36,
      "core_survivors": [
       "Ag2O",
       "AlCl3",
-      "AlN",
       "BaCl2",
       "CaCl2",
       "CaF2",
@@ -2335,13 +2491,11 @@
       "CaS",
       "CrCl3",
       "Ga2S3",
-      "GaN",
       "GeS2",
       "HfCl4",
       "HfO2",
       "Li2O",
       "Li2S",
-      "Li3N",
       "LiBr",
       "LiCl",
       "LiF",
@@ -2350,13 +2504,11 @@
       "MgF2",
       "MgO",
       "MgS",
-      "MoO3",
       "Na2O",
       "Na2S",
       "NaI",
       "ScCl3",
       "SiO2",
-      "SiS2",
       "SmCl3",
       "SnO2",
       "SnS2",
@@ -2364,20 +2516,18 @@
       "SrO",
       "TiCl4",
       "TiO2",
-      "WO3",
       "YCl3",
       "ZnO"
      ],
-     "n_full_with_G5": 3
+     "n_full_with_G5": 1
     },
     {
      "offset_vs_host_V": -0.1,
      "ox_cut_V": 2.04,
-     "n_core_G1_G4": 37,
+     "n_core_G1_G4": 31,
      "core_survivors": [
       "Ag2O",
       "AlCl3",
-      "AlN",
       "BaCl2",
       "CaCl2",
       "CaF2",
@@ -2385,11 +2535,9 @@
       "CaS",
       "CrCl3",
       "Ga2S3",
-      "GaN",
       "GeS2",
       "Li2O",
       "Li2S",
-      "Li3N",
       "LiBr",
       "LiCl",
       "LiF",
@@ -2398,98 +2546,86 @@
       "MgF2",
       "MgO",
       "MgS",
-      "MoO3",
       "Na2O",
       "Na2S",
       "NaI",
       "ScCl3",
       "SiO2",
-      "SiS2",
       "SnO2",
       "SnS2",
       "SrCl2",
       "SrO",
-      "WO3",
-      "YCl3",
-      "ZnO"
-     ],
-     "n_full_with_G5": 3
-    },
-    {
-     "offset_vs_host_V": -0.05,
-     "ox_cut_V": 2.09,
-     "n_core_G1_G4": 32,
-     "core_survivors": [
-      "Ag2O",
-      "AlCl3",
-      "AlN",
-      "CaCl2",
-      "CaF2",
-      "CaO",
-      "CaS",
-      "CrCl3",
-      "Ga2S3",
-      "GaN",
-      "GeS2",
-      "Li2O",
-      "Li2S",
-      "Li3N",
-      "LiBr",
-      "LiCl",
-      "LiF",
-      "LiI",
-      "MgCl2",
-      "MgF2",
-      "MgO",
-      "MgS",
-      "MoO3",
-      "NaI",
-      "ScCl3",
-      "SiO2",
-      "SiS2",
-      "SnO2",
-      "SnS2",
-      "WO3",
-      "YCl3",
-      "ZnO"
-     ],
-     "n_full_with_G5": 2
-    },
-    {
-     "offset_vs_host_V": 0.0,
-     "ox_cut_V": 2.14,
-     "n_core_G1_G4": 28,
-     "core_survivors": [
-      "Ag2O",
-      "AlCl3",
-      "CaCl2",
-      "CaF2",
-      "CaO",
-      "CaS",
-      "CrCl3",
-      "Ga2S3",
-      "GeS2",
-      "Li2O",
-      "Li2S",
-      "LiBr",
-      "LiCl",
-      "LiF",
-      "LiI",
-      "MgCl2",
-      "MgF2",
-      "MgO",
-      "MgS",
-      "MoO3",
-      "ScCl3",
-      "SiO2",
-      "SiS2",
-      "SnO2",
-      "SnS2",
-      "WO3",
       "YCl3",
       "ZnO"
      ],
      "n_full_with_G5": 1
+    },
+    {
+     "offset_vs_host_V": -0.05,
+     "ox_cut_V": 2.09,
+     "n_core_G1_G4": 26,
+     "core_survivors": [
+      "Ag2O",
+      "AlCl3",
+      "CaCl2",
+      "CaF2",
+      "CaO",
+      "CaS",
+      "CrCl3",
+      "Ga2S3",
+      "GeS2",
+      "Li2O",
+      "Li2S",
+      "LiBr",
+      "LiCl",
+      "LiF",
+      "LiI",
+      "MgCl2",
+      "MgF2",
+      "MgO",
+      "MgS",
+      "NaI",
+      "ScCl3",
+      "SiO2",
+      "SnO2",
+      "SnS2",
+      "YCl3",
+      "ZnO"
+     ],
+     "n_full_with_G5": 0
+    },
+    {
+     "offset_vs_host_V": 0.0,
+     "ox_cut_V": 2.14,
+     "n_core_G1_G4": 25,
+     "core_survivors": [
+      "Ag2O",
+      "AlCl3",
+      "CaCl2",
+      "CaF2",
+      "CaO",
+      "CaS",
+      "CrCl3",
+      "Ga2S3",
+      "GeS2",
+      "Li2O",
+      "Li2S",
+      "LiBr",
+      "LiCl",
+      "LiF",
+      "LiI",
+      "MgCl2",
+      "MgF2",
+      "MgO",
+      "MgS",
+      "ScCl3",
+      "SiO2",
+      "SnO2",
+      "SnS2",
+      "YCl3",
+      "ZnO"
+     ],
+     "n_full_with_G5": 0
     },
     {
      "offset_vs_host_V": 0.05,
@@ -2516,7 +2652,7 @@
    "sweep": [
     {
      "cut": 0.05,
-     "n_core_G1_G4": 30,
+     "n_core_G1_G4": 27,
      "core_survivors": [
       "Ag2O",
       "AlCl3",
@@ -2539,21 +2675,18 @@
       "MgF2",
       "MgO",
       "MgS",
-      "MoO3",
       "ScCl3",
       "SiO2",
-      "SiS2",
       "SnO2",
       "SnS2",
-      "WO3",
       "YCl3",
       "ZnO"
      ],
-     "n_full_with_G5": 2
+     "n_full_with_G5": 1
     },
     {
      "cut": 0.1,
-     "n_core_G1_G4": 30,
+     "n_core_G1_G4": 27,
      "core_survivors": [
       "Ag2O",
       "AlCl3",
@@ -2576,162 +2709,17 @@
       "MgF2",
       "MgO",
       "MgS",
-      "MoO3",
       "ScCl3",
       "SiO2",
-      "SiS2",
       "SnO2",
       "SnS2",
-      "WO3",
       "YCl3",
       "ZnO"
      ],
-     "n_full_with_G5": 2
+     "n_full_with_G5": 1
     },
     {
      "cut": 0.2,
-     "n_core_G1_G4": 29,
-     "core_survivors": [
-      "Ag2O",
-      "AlCl3",
-      "CaCl2",
-      "CaF2",
-      "CaO",
-      "CaS",
-      "CrCl3",
-      "Ga2S3",
-      "GeO2",
-      "GeS2",
-      "Li2O",
-      "Li2S",
-      "LiBr",
-      "LiCl",
-      "LiF",
-      "LiI",
-      "MgCl2",
-      "MgF2",
-      "MgO",
-      "MgS",
-      "MoO3",
-      "ScCl3",
-      "SiO2",
-      "SiS2",
-      "SnO2",
-      "SnS2",
-      "WO3",
-      "YCl3",
-      "ZnO"
-     ],
-     "n_full_with_G5": 1
-    },
-    {
-     "cut": 0.25,
-     "n_core_G1_G4": 29,
-     "core_survivors": [
-      "Ag2O",
-      "AlCl3",
-      "CaCl2",
-      "CaF2",
-      "CaO",
-      "CaS",
-      "CrCl3",
-      "Ga2S3",
-      "GeO2",
-      "GeS2",
-      "Li2O",
-      "Li2S",
-      "LiBr",
-      "LiCl",
-      "LiF",
-      "LiI",
-      "MgCl2",
-      "MgF2",
-      "MgO",
-      "MgS",
-      "MoO3",
-      "ScCl3",
-      "SiO2",
-      "SiS2",
-      "SnO2",
-      "SnS2",
-      "WO3",
-      "YCl3",
-      "ZnO"
-     ],
-     "n_full_with_G5": 1
-    },
-    {
-     "cut": 0.3,
-     "n_core_G1_G4": 28,
-     "core_survivors": [
-      "Ag2O",
-      "AlCl3",
-      "CaCl2",
-      "CaF2",
-      "CaO",
-      "CaS",
-      "CrCl3",
-      "Ga2S3",
-      "GeS2",
-      "Li2O",
-      "Li2S",
-      "LiBr",
-      "LiCl",
-      "LiF",
-      "LiI",
-      "MgCl2",
-      "MgF2",
-      "MgO",
-      "MgS",
-      "MoO3",
-      "ScCl3",
-      "SiO2",
-      "SiS2",
-      "SnO2",
-      "SnS2",
-      "WO3",
-      "YCl3",
-      "ZnO"
-     ],
-     "n_full_with_G5": 1
-    },
-    {
-     "cut": 0.35,
-     "n_core_G1_G4": 28,
-     "core_survivors": [
-      "Ag2O",
-      "AlCl3",
-      "CaCl2",
-      "CaF2",
-      "CaO",
-      "CaS",
-      "CrCl3",
-      "Ga2S3",
-      "GeS2",
-      "Li2O",
-      "Li2S",
-      "LiBr",
-      "LiCl",
-      "LiF",
-      "LiI",
-      "MgCl2",
-      "MgF2",
-      "MgO",
-      "MgS",
-      "MoO3",
-      "ScCl3",
-      "SiO2",
-      "SiS2",
-      "SnO2",
-      "SnS2",
-      "WO3",
-      "YCl3",
-      "ZnO"
-     ],
-     "n_full_with_G5": 1
-    },
-    {
-     "cut": 0.4,
      "n_core_G1_G4": 26,
      "core_survivors": [
       "Ag2O",
@@ -2742,6 +2730,7 @@
       "CaS",
       "CrCl3",
       "Ga2S3",
+      "GeO2",
       "GeS2",
       "Li2O",
       "Li2S",
@@ -2755,16 +2744,48 @@
       "MgS",
       "ScCl3",
       "SiO2",
-      "SiS2",
       "SnO2",
       "SnS2",
-      "WO3",
+      "YCl3",
       "ZnO"
      ],
-     "n_full_with_G5": 1
+     "n_full_with_G5": 0
     },
     {
-     "cut": 0.5,
+     "cut": 0.25,
+     "n_core_G1_G4": 26,
+     "core_survivors": [
+      "Ag2O",
+      "AlCl3",
+      "CaCl2",
+      "CaF2",
+      "CaO",
+      "CaS",
+      "CrCl3",
+      "Ga2S3",
+      "GeO2",
+      "GeS2",
+      "Li2O",
+      "Li2S",
+      "LiBr",
+      "LiCl",
+      "LiF",
+      "LiI",
+      "MgCl2",
+      "MgF2",
+      "MgO",
+      "MgS",
+      "ScCl3",
+      "SiO2",
+      "SnO2",
+      "SnS2",
+      "YCl3",
+      "ZnO"
+     ],
+     "n_full_with_G5": 0
+    },
+    {
+     "cut": 0.3,
      "n_core_G1_G4": 25,
      "core_survivors": [
       "Ag2O",
@@ -2788,16 +2809,109 @@
       "MgS",
       "ScCl3",
       "SiO2",
-      "SiS2",
       "SnO2",
-      "WO3",
+      "SnS2",
+      "YCl3",
       "ZnO"
      ],
-     "n_full_with_G5": 1
+     "n_full_with_G5": 0
+    },
+    {
+     "cut": 0.35,
+     "n_core_G1_G4": 25,
+     "core_survivors": [
+      "Ag2O",
+      "AlCl3",
+      "CaCl2",
+      "CaF2",
+      "CaO",
+      "CaS",
+      "CrCl3",
+      "Ga2S3",
+      "GeS2",
+      "Li2O",
+      "Li2S",
+      "LiBr",
+      "LiCl",
+      "LiF",
+      "LiI",
+      "MgCl2",
+      "MgF2",
+      "MgO",
+      "MgS",
+      "ScCl3",
+      "SiO2",
+      "SnO2",
+      "SnS2",
+      "YCl3",
+      "ZnO"
+     ],
+     "n_full_with_G5": 0
+    },
+    {
+     "cut": 0.4,
+     "n_core_G1_G4": 24,
+     "core_survivors": [
+      "Ag2O",
+      "AlCl3",
+      "CaCl2",
+      "CaF2",
+      "CaO",
+      "CaS",
+      "CrCl3",
+      "Ga2S3",
+      "GeS2",
+      "Li2O",
+      "Li2S",
+      "LiBr",
+      "LiCl",
+      "LiF",
+      "LiI",
+      "MgCl2",
+      "MgF2",
+      "MgO",
+      "MgS",
+      "ScCl3",
+      "SiO2",
+      "SnO2",
+      "SnS2",
+      "ZnO"
+     ],
+     "n_full_with_G5": 0
+    },
+    {
+     "cut": 0.5,
+     "n_core_G1_G4": 23,
+     "core_survivors": [
+      "Ag2O",
+      "AlCl3",
+      "CaCl2",
+      "CaF2",
+      "CaO",
+      "CaS",
+      "CrCl3",
+      "Ga2S3",
+      "GeS2",
+      "Li2O",
+      "Li2S",
+      "LiBr",
+      "LiCl",
+      "LiF",
+      "LiI",
+      "MgCl2",
+      "MgF2",
+      "MgO",
+      "MgS",
+      "ScCl3",
+      "SiO2",
+      "SnO2",
+      "ZnO"
+     ],
+     "n_full_with_G5": 0
     },
     {
      "cut": 0.6,
-     "n_core_G1_G4": 20,
+     "n_core_G1_G4": 19,
      "core_survivors": [
       "AlCl3",
       "CaCl2",
@@ -2817,7 +2931,6 @@
       "MgO",
       "MgS",
       "ScCl3",
-      "SiS2",
       "SnO2"
      ],
      "n_full_with_G5": 0
@@ -2846,31 +2959,31 @@
    "sweep": [
     {
      "blocking_cut": 0.5,
-     "n_core_G1_G4": 22
+     "n_core_G1_G4": 21
     },
     {
      "blocking_cut": 0.55,
-     "n_core_G1_G4": 26
+     "n_core_G1_G4": 25
     },
     {
      "blocking_cut": 0.6,
-     "n_core_G1_G4": 28
+     "n_core_G1_G4": 25
     },
     {
      "blocking_cut": 0.65,
-     "n_core_G1_G4": 30
+     "n_core_G1_G4": 27
     },
     {
      "blocking_cut": 0.7,
-     "n_core_G1_G4": 33
+     "n_core_G1_G4": 30
     },
     {
      "blocking_cut": 0.8,
-     "n_core_G1_G4": 35
+     "n_core_G1_G4": 32
     },
     {
      "blocking_cut": 1.0,
-     "n_core_G1_G4": 42
+     "n_core_G1_G4": 38
     }
    ],
    "inherited_constant": 0.6,
@@ -2908,27 +3021,24 @@
      "percentile": 0.5,
      "E_cut_GPa": 48.2,
      "GoverB_cut": 0.77,
-     "n_final": 1,
-     "survivors": [
-      "WO3"
-     ]
+     "n_final": 0,
+     "survivors": []
     },
     {
      "percentile": 0.6,
      "E_cut_GPa": 49.6,
      "GoverB_cut": 0.79,
-     "n_final": 3,
+     "n_final": 2,
      "survivors": [
       "AlCl3",
-      "CrCl3",
-      "WO3"
+      "CrCl3"
      ]
     },
     {
      "percentile": 0.75,
      "E_cut_GPa": 52.2,
      "GoverB_cut": 0.82,
-     "n_final": 8,
+     "n_final": 7,
      "survivors": [
       "AlCl3",
       "CrCl3",
@@ -2936,7 +3046,6 @@
       "MgCl2",
       "ScCl3",
       "SnO2",
-      "WO3",
       "ZnO"
      ]
     },
@@ -2944,7 +3053,7 @@
      "percentile": 1.0,
      "E_cut_GPa": 62.1,
      "GoverB_cut": 1.02,
-     "n_final": 28,
+     "n_final": 25,
      "survivors": [
       "Ag2O",
       "AlCl3",
@@ -2965,13 +3074,10 @@
       "MgF2",
       "MgO",
       "MgS",
-      "MoO3",
       "ScCl3",
       "SiO2",
-      "SiS2",
       "SnO2",
       "SnS2",
-      "WO3",
       "YCl3",
       "ZnO"
      ]
@@ -3093,12 +3199,18 @@
    "group": "TM",
    "de": -0.474,
    "ox_V": 2.14,
-   "window_V": 0.417,
+   "window_V": 0.226,
+   "window_V_upper": null,
+   "window_V_legacy": 0.417,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.5674,
    "blocking": 0.4545454545454545,
    "E_GPa": 47.4,
    "GoverB": 0.86,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -3114,12 +3226,18 @@
    "group": "main-group",
    "de": -0.799,
    "ox_V": 2.14,
-   "window_V": 0.768,
+   "window_V": 0.423,
+   "window_V_upper": null,
+   "window_V_legacy": 0.768,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.05,
    "blocking": 0.7222222222222222,
    "E_GPa": 42.5,
    "GoverB": 0.77,
    "esw_note": "Cl-rich:ox->2.354",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -3135,12 +3253,18 @@
    "group": "main-group",
    "de": -0.59,
    "ox_V": 2.356,
-   "window_V": 0.984,
+   "window_V": 0.639,
+   "window_V_upper": null,
+   "window_V_legacy": 0.984,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.05,
    "blocking": 0.6111111111111112,
    "E_GPa": 49.4,
    "GoverB": 0.83,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -3156,18 +3280,24 @@
    "group": "main-group",
    "de": -0.4,
    "ox_V": 1.717,
-   "window_V": 0.345,
+   "window_V": null,
+   "window_V_upper": 0.345,
+   "window_V_legacy": 0.345,
+   "window_rule": "재유도 불가 (ocv 없음) — 옛 창은 상한으로만",
    "transport_norm": 0.05,
    "blocking": 0.8571428571428571,
    "E_GPa": 39.5,
    "GoverB": 0.71,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
-    "G2",
     "G5"
    ],
    "gates_failed": [
+    "G2",
     "G3",
     "G4"
    ]
@@ -3177,12 +3307,18 @@
    "group": "main-group",
    "de": -0.492,
    "ox_V": 2.14,
-   "window_V": 0.768,
+   "window_V": 0.423,
+   "window_V_upper": null,
+   "window_V_legacy": 0.768,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.6879,
    "blocking": 0.238095238095238,
    "E_GPa": 48.7,
    "GoverB": 0.79,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -3198,12 +3334,18 @@
    "group": "main-group",
    "de": -0.641,
    "ox_V": 2.14,
-   "window_V": 0.768,
+   "window_V": 0.423,
+   "window_V_upper": null,
+   "window_V_legacy": 0.768,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.05,
    "blocking": 0.8095238095238095,
    "E_GPa": 47.6,
    "GoverB": 0.84,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -3219,18 +3361,24 @@
    "group": "main-group",
    "de": -0.566,
    "ox_V": 2.091,
-   "window_V": 0.374,
+   "window_V": null,
+   "window_V_upper": 0.374,
+   "window_V_legacy": 0.374,
+   "window_rule": "재유도 불가 (ocv 없음) — 옛 창은 상한으로만",
    "transport_norm": 0.8082,
    "blocking": 0.4761904761904761,
    "E_GPa": 41.8,
    "GoverB": 0.84,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
-    "G2",
     "G4"
    ],
    "gates_failed": [
+    "G2",
     "G3",
     "G5"
    ]
@@ -3240,12 +3388,18 @@
    "group": "main-group",
    "de": -0.769,
    "ox_V": 2.317,
-   "window_V": 0.274,
+   "window_V": 0.226,
+   "window_V_upper": null,
+   "window_V_legacy": 0.274,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.1998,
    "blocking": 0.5882352941176471,
    "E_GPa": 41.2,
    "GoverB": 0.74,
    "esw_note": "plain champion 없음 — Cl-rich 값으로 대체",
+   "ox_composition_family": "Clrich",
+   "ox_family_confounded": true,
+   "plain_champion_exists": false,
    "gates_passed": [
     "G1",
     "G2",
@@ -3261,12 +3415,18 @@
    "group": "alk.earth",
    "de": -0.465,
    "ox_V": 2.071,
-   "window_V": 0.354,
+   "window_V": 0.133,
+   "window_V_upper": null,
+   "window_V_legacy": 0.354,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.7395,
    "blocking": 0.1363636363636363,
    "E_GPa": 47.8,
    "GoverB": 0.8,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -3282,12 +3442,18 @@
    "group": "alk.earth",
    "de": -0.564,
    "ox_V": 2.071,
-   "window_V": 0.354,
+   "window_V": 0.133,
+   "window_V_upper": null,
+   "window_V_legacy": 0.354,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.05,
    "blocking": 0.6363636363636364,
    "E_GPa": 48.2,
    "GoverB": 0.85,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2"
@@ -3303,18 +3469,24 @@
    "group": "alk.earth",
    "de": -0.701,
    "ox_V": 2.091,
-   "window_V": 0.374,
+   "window_V": null,
+   "window_V_upper": 0.374,
+   "window_V_legacy": 0.374,
+   "window_rule": "재유도 불가 (ocv 없음) — 옛 창은 상한으로만",
    "transport_norm": 0.05,
    "blocking": 0.7222222222222222,
    "E_GPa": 39.2,
    "GoverB": 0.75,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
-    "G2",
     "G5"
    ],
    "gates_failed": [
+    "G2",
     "G3",
     "G4"
    ]
@@ -3324,12 +3496,18 @@
    "group": "alk.earth",
    "de": -0.456,
    "ox_V": 2.14,
-   "window_V": 0.898,
+   "window_V": 0.423,
+   "window_V_upper": null,
+   "window_V_legacy": 0.898,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.05,
    "blocking": 0.6818181818181818,
    "E_GPa": 43.3,
    "GoverB": 0.84,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -3345,12 +3523,18 @@
    "group": "alk.earth",
    "de": -0.523,
    "ox_V": 2.14,
-   "window_V": 0.898,
+   "window_V": 0.423,
+   "window_V_upper": null,
+   "window_V_legacy": 0.898,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.7276,
    "blocking": 0.2727272727272727,
    "E_GPa": 56.9,
    "GoverB": 0.68,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -3366,12 +3550,18 @@
    "group": "alk.earth",
    "de": -0.586,
    "ox_V": 2.14,
-   "window_V": 0.898,
+   "window_V": 0.423,
+   "window_V_upper": null,
+   "window_V_legacy": 0.898,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.627,
    "blocking": 0.5454545454545454,
    "E_GPa": 46.5,
    "GoverB": 1.02,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -3387,12 +3577,18 @@
    "group": "alk.earth",
    "de": -0.565,
    "ox_V": 2.14,
-   "window_V": 0.898,
+   "window_V": 0.423,
+   "window_V_upper": null,
+   "window_V_legacy": 0.898,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.9893,
    "blocking": 0.5454545454545454,
    "E_GPa": 45.2,
    "GoverB": 0.83,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -3408,12 +3604,18 @@
    "group": "alk.earth",
    "de": -0.526,
    "ox_V": 2.14,
-   "window_V": 0.898,
+   "window_V": 0.423,
+   "window_V_upper": null,
+   "window_V_legacy": 0.898,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.8138,
    "blocking": 0.2727272727272727,
    "E_GPa": 62.1,
    "GoverB": 0.72,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -3429,12 +3631,18 @@
    "group": "TM",
    "de": -0.571,
    "ox_V": 1.873,
-   "window_V": 0.012,
+   "window_V": null,
+   "window_V_upper": 0.012,
+   "window_V_legacy": 0.012,
+   "window_rule": "재유도 불가 (ocv 없음) — 옛 창은 상한으로만",
    "transport_norm": 0.05,
    "blocking": 0.6363636363636364,
    "E_GPa": 47.9,
    "GoverB": 0.82,
    "esw_note": "collapse=window<0.05V",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1"
    ],
@@ -3450,12 +3658,18 @@
    "group": "TM",
    "de": -0.912,
    "ox_V": 2.356,
-   "window_V": 0.633,
+   "window_V": 0.627,
+   "window_V_upper": null,
+   "window_V_legacy": 0.633,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.05,
    "blocking": 0.8888888888888888,
    "E_GPa": 37.5,
    "GoverB": 0.69,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -3471,12 +3685,18 @@
    "group": "TM",
    "de": -0.558,
    "ox_V": 2.14,
-   "window_V": 1.087,
+   "window_V": 0.411,
+   "window_V_upper": null,
+   "window_V_legacy": 1.087,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.8449,
    "blocking": 0.3333333333333333,
    "E_GPa": 48.5,
    "GoverB": 0.77,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -3492,19 +3712,25 @@
    "group": "TM",
    "de": -0.761,
    "ox_V": 2.14,
-   "window_V": 0.411,
+   "window_V": null,
+   "window_V_upper": 0.411,
+   "window_V_legacy": 0.411,
+   "window_rule": "재유도 불가 (ocv 없음) — 옛 창은 상한으로만",
    "transport_norm": 0.05,
    "blocking": 0.8888888888888888,
    "E_GPa": 43.4,
    "GoverB": 0.75,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
-    "G2",
     "G3",
     "G5"
    ],
    "gates_failed": [
+    "G2",
     "G4"
    ]
   },
@@ -3513,12 +3739,18 @@
    "group": "TM",
    "de": -0.537,
    "ox_V": 1.864,
-   "window_V": 0.113,
+   "window_V": 0.107,
+   "window_V_upper": null,
+   "window_V_legacy": 0.113,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.05,
    "blocking": 0.6363636363636364,
    "E_GPa": 51.0,
    "GoverB": 0.89,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2"
@@ -3534,12 +3766,18 @@
    "group": "TM",
    "de": -0.801,
    "ox_V": 1.808,
-   "window_V": 0.004,
+   "window_V": null,
+   "window_V_upper": 0.004,
+   "window_V_legacy": 0.004,
+   "window_rule": "재유도 불가 (ocv 없음) — 옛 창은 상한으로만",
    "transport_norm": 0.05,
    "blocking": 0.9444444444444444,
    "E_GPa": 45.9,
    "GoverB": 0.78,
    "esw_note": "collapse=window<0.05V",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1"
    ],
@@ -3555,12 +3793,18 @@
    "group": "TM",
    "de": -0.518,
    "ox_V": 1.808,
-   "window_V": 0.004,
+   "window_V": null,
+   "window_V_upper": 0.004,
+   "window_V_legacy": 0.004,
+   "window_rule": "재유도 불가 (ocv 없음) — 옛 창은 상한으로만",
    "transport_norm": 0.8453,
    "blocking": 0.2857142857142857,
    "E_GPa": 47.9,
    "GoverB": 0.74,
    "esw_note": "collapse=window<0.05V",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G4",
@@ -3576,12 +3820,18 @@
    "group": "main-group",
    "de": -0.593,
    "ox_V": 2.356,
-   "window_V": 0.778,
+   "window_V": 0.639,
+   "window_V_upper": null,
+   "window_V_legacy": 0.778,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.05,
    "blocking": 0.6111111111111112,
    "E_GPa": 41.4,
    "GoverB": 0.92,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -3597,12 +3847,18 @@
    "group": "main-group",
    "de": -0.494,
    "ox_V": 2.356,
-   "window_V": 0.778,
+   "window_V": 0.639,
+   "window_V_upper": null,
+   "window_V_legacy": 0.778,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.7331,
    "blocking": 0.3333333333333333,
    "E_GPa": 53.6,
    "GoverB": 0.77,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -3618,18 +3874,24 @@
    "group": "main-group",
    "de": -0.413,
    "ox_V": 1.717,
-   "window_V": 0.139,
+   "window_V": null,
+   "window_V_upper": 0.139,
+   "window_V_legacy": 0.139,
+   "window_rule": "재유도 불가 (ocv 없음) — 옛 창은 상한으로만",
    "transport_norm": 0.64,
    "blocking": 0.2857142857142857,
    "E_GPa": 45.4,
    "GoverB": 0.79,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
-    "G2",
     "G4"
    ],
    "gates_failed": [
+    "G2",
     "G3",
     "G5"
    ]
@@ -3639,19 +3901,25 @@
    "group": "main-group",
    "de": -0.482,
    "ox_V": 2.091,
-   "window_V": 0.374,
+   "window_V": null,
+   "window_V_upper": 0.374,
+   "window_V_legacy": 0.374,
+   "window_rule": "재유도 불가 (ocv 없음) — 옛 창은 상한으로만",
    "transport_norm": 0.847,
    "blocking": 0.5238095238095238,
    "E_GPa": 42.0,
    "GoverB": 0.73,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
-    "G2",
     "G4",
     "G5"
    ],
    "gates_failed": [
+    "G2",
     "G3"
    ]
   },
@@ -3660,12 +3928,18 @@
    "group": "lanthanide",
    "de": -1.269,
    "ox_V": 2.118,
-   "window_V": 0.72,
+   "window_V": 0.401,
+   "window_V_upper": null,
+   "window_V_legacy": 0.72,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.05,
    "blocking": 0.6666666666666666,
    "E_GPa": 41.6,
    "GoverB": 0.77,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -3681,12 +3955,18 @@
    "group": "main-group",
    "de": -0.523,
    "ox_V": 2.14,
-   "window_V": 0.518,
+   "window_V": 0.423,
+   "window_V_upper": null,
+   "window_V_legacy": 0.518,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.2724,
    "blocking": 0.56,
    "E_GPa": 56.2,
    "GoverB": 0.75,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -3702,12 +3982,18 @@
    "group": "main-group",
    "de": -0.434,
    "ox_V": 2.14,
-   "window_V": 0.518,
+   "window_V": 0.423,
+   "window_V_upper": null,
+   "window_V_legacy": 0.518,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.7188,
    "blocking": 0.28,
    "E_GPa": 56.7,
    "GoverB": 0.76,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -3723,12 +4009,18 @@
    "group": "TM",
    "de": -0.667,
    "ox_V": 1.977,
-   "window_V": 0.462,
+   "window_V": 0.26,
+   "window_V_upper": null,
+   "window_V_legacy": 0.462,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.6728,
    "blocking": 0.3,
    "E_GPa": 50.5,
    "GoverB": 0.79,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -3744,12 +4036,18 @@
    "group": "TM",
    "de": -0.81,
    "ox_V": 1.996,
-   "window_V": 0.754,
+   "window_V": 0.279,
+   "window_V_upper": null,
+   "window_V_legacy": 0.754,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.4956,
    "blocking": 0.45,
    "E_GPa": 46.9,
    "GoverB": 0.81,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -3765,12 +4063,18 @@
    "group": "main-group",
    "de": -0.665,
    "ox_V": 2.356,
-   "window_V": 0.791,
+   "window_V": 0.639,
+   "window_V_upper": null,
+   "window_V_legacy": 0.791,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.05,
    "blocking": 0.8333333333333334,
    "E_GPa": 41.9,
    "GoverB": 0.72,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -3786,12 +4090,18 @@
    "group": "lanthanide",
    "de": -0.898,
    "ox_V": 1.893,
-   "window_V": 0.37,
+   "window_V": 0.176,
+   "window_V_upper": null,
+   "window_V_legacy": 0.37,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.5922,
    "blocking": 0.4444444444444444,
    "E_GPa": 50.1,
    "GoverB": 0.77,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -3807,12 +4117,18 @@
    "group": "lanthanide",
    "de": -0.566,
    "ox_V": 1.893,
-   "window_V": 0.418,
+   "window_V": 0.176,
+   "window_V_upper": null,
+   "window_V_legacy": 0.418,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.8214,
    "blocking": 0.238095238095238,
    "E_GPa": 53.7,
    "GoverB": 0.68,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -3828,12 +4144,18 @@
    "group": "lanthanide",
    "de": -0.727,
    "ox_V": 1.893,
-   "window_V": 0.418,
+   "window_V": 0.176,
+   "window_V_upper": null,
+   "window_V_legacy": 0.418,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.6346,
    "blocking": 0.5714285714285714,
    "E_GPa": 40.5,
    "GoverB": 0.64,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -3849,12 +4171,18 @@
    "group": "alkali",
    "de": -0.503,
    "ox_V": 2.14,
-   "window_V": 0.898,
+   "window_V": 0.423,
+   "window_V_upper": null,
+   "window_V_legacy": 0.898,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.6674,
    "blocking": 0.125,
    "E_GPa": 48.6,
    "GoverB": 0.89,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -3870,12 +4198,18 @@
    "group": "alkali",
    "de": -0.478,
    "ox_V": 2.14,
-   "window_V": 0.898,
+   "window_V": 0.423,
+   "window_V_upper": null,
+   "window_V_legacy": 0.898,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.685,
    "blocking": 0.0,
    "E_GPa": 58.2,
    "GoverB": 0.75,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -3891,18 +4225,24 @@
    "group": "alkali",
    "de": -0.476,
    "ox_V": 2.091,
-   "window_V": 0.374,
+   "window_V": null,
+   "window_V_upper": 0.374,
+   "window_V_legacy": 0.374,
+   "window_rule": "재유도 불가 (ocv 없음) — 옛 창은 상한으로만",
    "transport_norm": 0.5858,
    "blocking": 0.125,
    "E_GPa": 45.9,
    "GoverB": 0.81,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
-    "G2",
     "G4"
    ],
    "gates_failed": [
+    "G2",
     "G3",
     "G5"
    ]
@@ -3912,12 +4252,18 @@
    "group": "alkali",
    "de": -0.438,
    "ox_V": 2.14,
-   "window_V": 0.898,
+   "window_V": 0.423,
+   "window_V_upper": null,
+   "window_V_legacy": 0.898,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.8053,
    "blocking": 0.25,
    "E_GPa": 54.9,
    "GoverB": 0.77,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -3933,12 +4279,18 @@
    "group": "alkali",
    "de": -0.437,
    "ox_V": 2.14,
-   "window_V": 0.898,
+   "window_V": 0.423,
+   "window_V_upper": null,
+   "window_V_legacy": 0.898,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.7629,
    "blocking": 0.0,
    "E_GPa": 50.3,
    "GoverB": 0.84,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -3954,12 +4306,18 @@
    "group": "alkali",
    "de": -0.519,
    "ox_V": 2.14,
-   "window_V": 0.898,
+   "window_V": 0.423,
+   "window_V_upper": null,
+   "window_V_legacy": 0.898,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.7123,
    "blocking": 0.25,
    "E_GPa": 58.2,
    "GoverB": 0.73,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -3975,12 +4333,18 @@
    "group": "alkali",
    "de": -0.422,
    "ox_V": 2.14,
-   "window_V": 0.898,
+   "window_V": 0.423,
+   "window_V_upper": null,
+   "window_V_legacy": 0.898,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.7524,
    "blocking": 0.2083333333333333,
    "E_GPa": 52.2,
    "GoverB": 0.74,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -3996,18 +4360,24 @@
    "group": "alk.earth",
    "de": -0.59,
    "ox_V": 2.108,
-   "window_V": 0.391,
+   "window_V": null,
+   "window_V_upper": 0.391,
+   "window_V_legacy": 0.391,
+   "window_rule": "재유도 불가 (ocv 없음) — 옛 창은 상한으로만",
    "transport_norm": 0.05,
    "blocking": 0.6111111111111112,
    "E_GPa": 39.8,
    "GoverB": 0.71,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
-    "G2",
     "G5"
    ],
    "gates_failed": [
+    "G2",
     "G3",
     "G4"
    ]
@@ -4017,12 +4387,18 @@
    "group": "alk.earth",
    "de": -0.401,
    "ox_V": 2.14,
-   "window_V": 0.797,
+   "window_V": 0.423,
+   "window_V_upper": null,
+   "window_V_legacy": 0.797,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.05,
    "blocking": 0.6818181818181818,
    "E_GPa": 43.8,
    "GoverB": 0.72,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -4038,12 +4414,18 @@
    "group": "alk.earth",
    "de": -0.458,
    "ox_V": 2.14,
-   "window_V": 0.797,
+   "window_V": 0.423,
+   "window_V_upper": null,
+   "window_V_legacy": 0.797,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.7107,
    "blocking": 0.2727272727272727,
    "E_GPa": 45.2,
    "GoverB": 0.82,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -4059,12 +4441,18 @@
    "group": "alk.earth",
    "de": -0.546,
    "ox_V": 2.14,
-   "window_V": 0.797,
+   "window_V": 0.423,
+   "window_V_upper": null,
+   "window_V_legacy": 0.797,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.5711,
    "blocking": 0.5,
    "E_GPa": 42.9,
    "GoverB": 0.83,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -4080,12 +4468,18 @@
    "group": "alk.earth",
    "de": -0.372,
    "ox_V": 2.14,
-   "window_V": 0.797,
+   "window_V": 0.423,
+   "window_V_upper": null,
+   "window_V_legacy": 0.797,
+   "window_rule": "ox−ocv",
    "transport_norm": null,
    "blocking": 0.5909090909090909,
    "E_GPa": 48.7,
    "GoverB": 0.76,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -4101,12 +4495,18 @@
    "group": "alk.earth",
    "de": -0.543,
    "ox_V": 2.14,
-   "window_V": 0.735,
+   "window_V": 0.423,
+   "window_V_upper": null,
+   "window_V_legacy": 0.735,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.8782,
    "blocking": 0.4761904761904761,
    "E_GPa": 57.9,
    "GoverB": 0.84,
    "esw_note": "",
+   "ox_composition_family": "degenerate",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -4122,12 +4522,18 @@
    "group": "alk.earth",
    "de": -0.482,
    "ox_V": 2.14,
-   "window_V": 0.797,
+   "window_V": 0.423,
+   "window_V_upper": null,
+   "window_V_legacy": 0.797,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.8943,
    "blocking": 0.2727272727272727,
    "E_GPa": 57.1,
    "GoverB": 0.72,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -4143,12 +4549,18 @@
    "group": "TM",
    "de": -0.651,
    "ox_V": 1.794,
-   "window_V": 0.039,
+   "window_V": null,
+   "window_V_upper": 0.039,
+   "window_V_legacy": 0.039,
+   "window_rule": "재유도 불가 (ocv 없음) — 옛 창은 상한으로만",
    "transport_norm": 0.4493,
    "blocking": 0.5454545454545454,
    "E_GPa": 35.4,
    "GoverB": 0.66,
    "esw_note": "collapse=window<0.05V",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G4",
@@ -4164,19 +4576,25 @@
    "group": "TM",
    "de": -0.826,
    "ox_V": 2.14,
-   "window_V": 0.414,
+   "window_V": null,
+   "window_V_upper": 0.414,
+   "window_V_legacy": 0.414,
+   "window_rule": "재유도 불가 (ocv 없음) — 옛 창은 상한으로만",
    "transport_norm": 0.3633,
    "blocking": 0.5882352941176471,
    "E_GPa": 42.7,
    "GoverB": 0.84,
    "esw_note": "Cl-rich:ox->2.356",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
-    "G2",
     "G3",
     "G4"
    ],
    "gates_failed": [
+    "G2",
     "G5"
    ]
   },
@@ -4185,12 +4603,18 @@
    "group": "alkali",
    "de": -0.472,
    "ox_V": 2.06,
-   "window_V": 0.343,
+   "window_V": 0.339,
+   "window_V_upper": null,
+   "window_V_legacy": 0.343,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.5156,
    "blocking": 0.4545454545454545,
    "E_GPa": 49.6,
    "GoverB": 0.82,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -4206,12 +4630,18 @@
    "group": "alkali",
    "de": -0.435,
    "ox_V": 2.06,
-   "window_V": 0.343,
+   "window_V": 0.339,
+   "window_V_upper": null,
+   "window_V_legacy": 0.343,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.7907,
    "blocking": 0.3636363636363636,
    "E_GPa": 55.2,
    "GoverB": 0.82,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -4227,12 +4657,18 @@
    "group": "alkali",
    "de": -0.449,
    "ox_V": 2.092,
-   "window_V": 0.85,
+   "window_V": 0.375,
+   "window_V_upper": null,
+   "window_V_legacy": 0.85,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.5991,
    "blocking": 0.3043478260869565,
    "E_GPa": 56.6,
    "GoverB": 0.75,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -4248,18 +4684,24 @@
    "group": "TM",
    "de": -0.987,
    "ox_V": 2.061,
-   "window_V": 0.323,
+   "window_V": null,
+   "window_V_upper": 0.323,
+   "window_V_legacy": 0.323,
+   "window_rule": "재유도 불가 (ocv 없음) — 옛 창은 상한으로만",
    "transport_norm": 0.05,
    "blocking": 0.75,
    "E_GPa": 46.0,
    "GoverB": 0.67,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
-    "G2",
     "G5"
    ],
    "gates_failed": [
+    "G2",
     "G3",
     "G4"
    ]
@@ -4269,19 +4711,25 @@
    "group": "TM",
    "de": -0.456,
    "ox_V": 1.717,
-   "window_V": 0.107,
+   "window_V": null,
+   "window_V_upper": 0.107,
+   "window_V_legacy": 0.107,
+   "window_rule": "재유도 불가 (ocv 없음) — 옛 창은 상한으로만",
    "transport_norm": 0.5699,
    "blocking": 0.3333333333333333,
    "E_GPa": 45.0,
    "GoverB": 0.72,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
-    "G2",
     "G4",
     "G5"
    ],
    "gates_failed": [
+    "G2",
     "G3"
    ]
   },
@@ -4290,12 +4738,18 @@
    "group": "lanthanide",
    "de": -0.915,
    "ox_V": 1.92,
-   "window_V": 0.402,
+   "window_V": 0.203,
+   "window_V_upper": null,
+   "window_V_legacy": 0.402,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.05,
    "blocking": 0.8333333333333334,
    "E_GPa": 47.1,
    "GoverB": 0.75,
    "esw_note": "Cl-rich:ox->1.987",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -4311,12 +4765,18 @@
    "group": "lanthanide",
    "de": -0.589,
    "ox_V": 1.92,
-   "window_V": 0.402,
+   "window_V": 0.203,
+   "window_V_upper": null,
+   "window_V_legacy": 0.402,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.7307,
    "blocking": 0.238095238095238,
    "E_GPa": 52.1,
    "GoverB": 0.8,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -4332,12 +4792,18 @@
    "group": "lanthanide",
    "de": -0.703,
    "ox_V": 1.92,
-   "window_V": 0.402,
+   "window_V": 0.203,
+   "window_V_upper": null,
+   "window_V_legacy": 0.402,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.05,
    "blocking": 0.7142857142857143,
    "E_GPa": 43.9,
    "GoverB": 0.74,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -4353,12 +4819,18 @@
    "group": "TM",
    "de": -0.534,
    "ox_V": 1.838,
-   "window_V": 0.022,
+   "window_V": null,
+   "window_V_upper": 0.022,
+   "window_V_legacy": 0.022,
+   "window_rule": "재유도 불가 (ocv 없음) — 옛 창은 상한으로만",
    "transport_norm": 0.8809,
    "blocking": 0.5454545454545454,
    "E_GPa": 45.9,
    "GoverB": 0.85,
    "esw_note": "collapse=window<0.05V",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G4"
@@ -4374,12 +4846,18 @@
    "group": "main-group",
    "de": -0.721,
    "ox_V": 2.14,
-   "window_V": 0.363,
+   "window_V": 0.183,
+   "window_V_upper": null,
+   "window_V_legacy": 0.363,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.05,
    "blocking": 0.8333333333333334,
    "E_GPa": 51.5,
    "GoverB": 0.69,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -4395,17 +4873,23 @@
    "group": "main-group",
    "de": -0.36,
    "ox_V": 1.957,
-   "window_V": 0.18,
+   "window_V": null,
+   "window_V_upper": 0.18,
+   "window_V_legacy": 0.18,
+   "window_rule": "재유도 불가 (ocv 없음) — 옛 창은 상한으로만",
    "transport_norm": 0.2648,
    "blocking": 0.5,
    "E_GPa": 55.8,
    "GoverB": 0.79,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
-    "G1",
-    "G2"
+    "G1"
    ],
    "gates_failed": [
+    "G2",
     "G3",
     "G4",
     "G5"
@@ -4416,12 +4900,18 @@
    "group": "TM",
    "de": -0.945,
    "ox_V": 2.356,
-   "window_V": 0.97,
+   "window_V": 0.639,
+   "window_V_upper": null,
+   "window_V_legacy": 0.97,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.05,
    "blocking": 0.7777777777777778,
    "E_GPa": 44.6,
    "GoverB": 0.64,
    "esw_note": "Cl-rich:ox->2.339",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -4437,12 +4927,18 @@
    "group": "TM",
    "de": -0.553,
    "ox_V": 2.14,
-   "window_V": 0.834,
+   "window_V": 0.423,
+   "window_V_upper": null,
+   "window_V_legacy": 0.834,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.626,
    "blocking": 0.238095238095238,
    "E_GPa": 50.8,
    "GoverB": 0.78,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -4458,12 +4954,18 @@
    "group": "TM",
    "de": -0.725,
    "ox_V": 2.14,
-   "window_V": 0.834,
+   "window_V": 0.423,
+   "window_V_upper": null,
+   "window_V_legacy": 0.834,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.05,
    "blocking": 0.8571428571428571,
    "E_GPa": 46.5,
    "GoverB": 0.88,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -4479,12 +4981,18 @@
    "group": "main-group",
    "de": -0.59,
    "ox_V": 2.14,
-   "window_V": 0.726,
+   "window_V": 0.423,
+   "window_V_upper": null,
+   "window_V_legacy": 0.726,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.5604,
    "blocking": 0.48,
    "E_GPa": 53.5,
    "GoverB": 0.78,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -4500,19 +5008,25 @@
    "group": "main-group",
    "de": -0.497,
    "ox_V": 2.14,
-   "window_V": 0.423,
+   "window_V": null,
+   "window_V_upper": 0.423,
+   "window_V_legacy": 0.423,
+   "window_rule": "재유도 불가 (ocv 없음) — 옛 창은 상한으로만",
    "transport_norm": 1.0,
    "blocking": 0.24,
    "E_GPa": 57.2,
    "GoverB": 0.81,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
-    "G2",
     "G3",
     "G4"
    ],
    "gates_failed": [
+    "G2",
     "G5"
    ]
   },
@@ -4521,12 +5035,18 @@
    "group": "lanthanide",
    "de": -0.897,
    "ox_V": 1.989,
-   "window_V": 0.501,
+   "window_V": 0.272,
+   "window_V_upper": null,
+   "window_V_legacy": 0.501,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.05,
    "blocking": 0.8333333333333334,
    "E_GPa": 44.4,
    "GoverB": 0.68,
    "esw_note": "Cl-rich:ox->2.034",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -4542,12 +5062,18 @@
    "group": "lanthanide",
    "de": -0.585,
    "ox_V": 1.989,
-   "window_V": 0.501,
+   "window_V": 0.272,
+   "window_V_upper": null,
+   "window_V_legacy": 0.501,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.6731,
    "blocking": 0.0952380952380952,
    "E_GPa": 53.6,
    "GoverB": 0.79,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -4563,12 +5089,18 @@
    "group": "main-group",
    "de": -0.5,
    "ox_V": 2.14,
-   "window_V": 0.423,
+   "window_V": 0.42,
+   "window_V_upper": null,
+   "window_V_legacy": 0.423,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.8533,
    "blocking": 0.52,
    "E_GPa": 48.1,
    "GoverB": 0.8,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -4584,12 +5116,18 @@
    "group": "main-group",
    "de": -0.399,
    "ox_V": 2.14,
-   "window_V": 0.423,
+   "window_V": 0.42,
+   "window_V_upper": null,
+   "window_V_legacy": 0.423,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.498,
    "blocking": 0.28,
    "E_GPa": 57.5,
    "GoverB": 0.73,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -4605,12 +5143,18 @@
    "group": "alk.earth",
    "de": -0.465,
    "ox_V": 2.06,
-   "window_V": 0.343,
+   "window_V": 0.143,
+   "window_V_upper": null,
+   "window_V_legacy": 0.343,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.6779,
    "blocking": 0.2272727272727272,
    "E_GPa": 48.0,
    "GoverB": 0.74,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -4626,12 +5170,18 @@
    "group": "alk.earth",
    "de": -0.555,
    "ox_V": 2.06,
-   "window_V": 0.343,
+   "window_V": 0.143,
+   "window_V_upper": null,
+   "window_V_legacy": 0.343,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.5997,
    "blocking": 0.1818181818181818,
    "E_GPa": 49.2,
    "GoverB": 0.79,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -4647,17 +5197,23 @@
    "group": "TM",
    "de": -1.041,
    "ox_V": 2.027,
-   "window_V": 0.31,
+   "window_V": null,
+   "window_V_upper": 0.31,
+   "window_V_legacy": 0.31,
+   "window_rule": "재유도 불가 (ocv 없음) — 옛 창은 상한으로만",
    "transport_norm": 0.05,
    "blocking": 0.75,
    "E_GPa": 49.2,
    "GoverB": 0.63,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
-    "G1",
-    "G2"
+    "G1"
    ],
    "gates_failed": [
+    "G2",
     "G3",
     "G4",
     "G5"
@@ -4668,19 +5224,25 @@
    "group": "TM",
    "de": -0.489,
    "ox_V": 1.717,
-   "window_V": 0.127,
+   "window_V": null,
+   "window_V_upper": 0.127,
+   "window_V_legacy": 0.127,
+   "window_rule": "재유도 불가 (ocv 없음) — 옛 창은 상한으로만",
    "transport_norm": 0.7932,
    "blocking": 0.25,
    "E_GPa": 45.5,
    "GoverB": 0.66,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
-    "G2",
     "G4",
     "G5"
    ],
    "gates_failed": [
+    "G2",
     "G3"
    ]
   },
@@ -4689,12 +5251,18 @@
    "group": "TM",
    "de": -0.455,
    "ox_V": 2.024,
-   "window_V": 0.307,
+   "window_V": 0.082,
+   "window_V_upper": null,
+   "window_V_legacy": 0.307,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.4863,
    "blocking": 0.24,
    "E_GPa": 50.9,
    "GoverB": 0.69,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -4710,12 +5278,18 @@
    "group": "TM",
    "de": -0.705,
    "ox_V": 2.024,
-   "window_V": 0.307,
+   "window_V": 0.082,
+   "window_V_upper": null,
+   "window_V_legacy": 0.307,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.05,
    "blocking": 0.92,
    "E_GPa": 46.2,
    "GoverB": 0.96,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2"
@@ -4731,12 +5305,18 @@
    "group": "TM",
    "de": -0.632,
    "ox_V": 2.024,
-   "window_V": 0.307,
+   "window_V": 0.082,
+   "window_V_upper": null,
+   "window_V_legacy": 0.307,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.5286,
    "blocking": 0.56,
    "E_GPa": 52.1,
    "GoverB": 0.78,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -4752,12 +5332,18 @@
    "group": "TM",
    "de": -0.927,
    "ox_V": 2.042,
-   "window_V": 0.306,
+   "window_V": 0.251,
+   "window_V_upper": null,
+   "window_V_legacy": 0.306,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.05,
    "blocking": 0.75,
    "E_GPa": 52.5,
    "GoverB": 0.76,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2"
@@ -4773,32 +5359,45 @@
    "group": "TM",
    "de": -0.86,
    "ox_V": 2.14,
-   "window_V": 0.423,
+   "window_V": null,
+   "window_V_upper": 0.423,
+   "window_V_legacy": 0.423,
+   "window_rule": "재유도 불가 (ocv 없음) — 옛 창은 상한으로만",
    "transport_norm": 0.5573,
    "blocking": 0.5882352941176471,
    "E_GPa": 38.6,
    "GoverB": 0.76,
    "esw_note": "Cl-rich:ox->2.356",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
-    "G2",
     "G3",
     "G4",
     "G5"
    ],
-   "gates_failed": []
+   "gates_failed": [
+    "G2"
+   ]
   },
   {
    "dopant": "Y2O3",
    "group": "TM",
    "de": -0.938,
    "ox_V": 2.282,
-   "window_V": 0.891,
+   "window_V": 0.565,
+   "window_V_upper": null,
+   "window_V_legacy": 0.891,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.05,
    "blocking": 0.8333333333333334,
    "E_GPa": 53.1,
    "GoverB": 0.71,
    "esw_note": "",
+   "ox_composition_family": "degenerate",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -4814,12 +5413,18 @@
    "group": "TM",
    "de": -0.518,
    "ox_V": 2.14,
-   "window_V": 0.848,
+   "window_V": 0.423,
+   "window_V_upper": null,
+   "window_V_legacy": 0.848,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.3537,
    "blocking": 0.2692307692307692,
    "E_GPa": 55.6,
    "GoverB": 0.7,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -4835,12 +5440,18 @@
    "group": "TM",
    "de": -0.713,
    "ox_V": 2.14,
-   "window_V": 0.848,
+   "window_V": 0.423,
+   "window_V_upper": null,
+   "window_V_legacy": 0.848,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.05,
    "blocking": 0.6923076923076923,
    "E_GPa": 51.6,
    "GoverB": 0.84,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -4856,12 +5467,18 @@
    "group": "TM",
    "de": -0.48,
    "ox_V": 2.14,
-   "window_V": 0.575,
+   "window_V": 0.423,
+   "window_V_upper": null,
+   "window_V_legacy": 0.575,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.5221,
    "blocking": 0.4285714285714285,
    "E_GPa": 51.0,
    "GoverB": 0.76,
    "esw_note": "",
+   "ox_composition_family": "degenerate",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -4877,12 +5494,18 @@
    "group": "TM",
    "de": -0.497,
    "ox_V": 1.878,
-   "window_V": 0.165,
+   "window_V": 0.161,
+   "window_V_upper": null,
+   "window_V_legacy": 0.165,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.05,
    "blocking": 0.92,
    "E_GPa": 55.9,
    "GoverB": 0.73,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2"
@@ -4898,12 +5521,18 @@
    "group": "TM",
    "de": -0.584,
    "ox_V": 1.878,
-   "window_V": 0.165,
+   "window_V": 0.161,
+   "window_V_upper": null,
+   "window_V_legacy": 0.165,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.1,
    "blocking": 0.24,
    "E_GPa": 50.1,
    "GoverB": 0.79,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2"
@@ -4919,12 +5548,18 @@
    "group": "TM",
    "de": -0.758,
    "ox_V": 1.878,
-   "window_V": 0.165,
+   "window_V": 0.161,
+   "window_V_upper": null,
+   "window_V_legacy": 0.165,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.05,
    "blocking": 0.85,
    "E_GPa": 42.2,
    "GoverB": 0.73,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -4940,12 +5575,18 @@
    "group": "TM",
    "de": -0.719,
    "ox_V": 1.878,
-   "window_V": 0.165,
+   "window_V": 0.161,
+   "window_V_upper": null,
+   "window_V_legacy": 0.165,
+   "window_rule": "ox−ocv",
    "transport_norm": 0.9131,
    "blocking": 0.4,
    "E_GPa": 49.6,
    "GoverB": 0.78,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -5047,6 +5688,5 @@
   "ZrCl4",
   "ZrF4",
   "ZrO2"
- ],
- "⛔_window_V_2026_09_22": "이 파일의 `window_V`·`reduction_limit_V` 는 **계통적으로 넓다** — 환원 가장자리를 한 계단 아래로 잡는 옛 식에서 나왔다. **재유도하지 않았다**(이 파일은 정본이 아니거나 superseded 다: status = recovered_unvalidated_diagnostic). 정본은 `oxidation_stability_cascade_v3_pinned.json` 이고 거기만 재유도했다. 원장 `HZ-esw-reduction-limit-label`(BLOCKED)."
+ ]
 }

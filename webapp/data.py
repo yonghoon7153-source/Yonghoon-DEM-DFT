@@ -1781,9 +1781,9 @@ CASCADE_V2_META = {
         "ranked":    ("incomplete", "89 of 90 — 완결성은 사실상 해결(완전 88 · 부분 1 MgI₂). "
                                     "AlI₃ 만 champion(rank_combined==1) 에 gate 입력이 없다. "
                                     "⛔ 남은 blocker 는 결측이 아니라 **점수의 타당성**이다 — score_blockers 참조"),
-        "funnel":    ("partial",    "89종 waterfall 89–89–84–45–28–1 (47종판 47–47–43–25–11–1). "
-                                    "⛔ 게이트 정의 자체가 미해결: G4 순환(blocking 이 BVS 를 덮어씀) · "
-                                    "G5 median 컷이 로스터 의존 · G3 phase set 미기록"),
+        #: ⛔ 2026-10-01 — 숫자는 `_derive_funnel_v2_meta()` 가 funnel JSON 에서 채운다. 여기 사본
+        #:   (89–89–84–45–28–1)이 ESW 창 정정 뒤 낡은 채 화면에 남을 뻔했다 (화면 규율: 숫자는 원장에서만).
+        "funnel":    ("partial",    "(load_cascade 가 cascade_screening_funnel_v2.json 에서 채운다)"),
         "figures":   ("partial",    "docs/figures/cascade_v2/ — insights 1종만 재생성, 나머지 18종 대기"),
     },
     #: ESW 의 재현성 한계 — **v2 회귀가 아니라 v1·v2 공통**이다 (Codex 리뷰 지적 확인).
@@ -1808,20 +1808,11 @@ CASCADE_V2_META = {
         "Li2S": "blocking = 0.0 (구성 원소가 전부 host Li/P/S/Cl → dopant 원자 0개). 판정 아님",
         "LiCl": "blocking = 0.0 (동일 사유). 판정 아님",
     },
-    "funnel_v2": {
-        "waterfall": [89, 89, 84, 45, 28, 1],
-        "canonical": [47, 47, 43, 25, 11, 1],
-        "endpoint_n": 28,
-        "endpoint": ["Ag2O", "AlCl3", "CaCl2", "CaF2", "CaO", "CaS", "CrCl3", "Ga2S3",
-                     "GeS2", "Li2O", "Li2S", "LiBr", "LiCl", "LiF", "LiI", "MgCl2",
-                     "MgF2", "MgO", "MgS", "MoO3", "ScCl3", "SiO2", "SiS2", "SnO2",
-                     "SnS2", "WO3", "YCl3", "ZnO"],
-        "gate_power": {"G1": (0, 0), "G2": (5, 0), "G3": (44, 5), "G4": (36, 7)},
-        "note": ("G1 은 90종에서도 0종 탈락 — vacuous 판정 유지. G2 도 unique kill 0. "
-                 "G3·G4 만 고유 기여가 있다 (각 5 · 7종). "
-                 "⚠ G4 의 36종 탈락은 blocking kill 과 bvs kill 이 섞인 수다 — 순환 때문에 "
-                 "분리해서 인용해야 한다 (funnel JSON 의 G4 selection_pressure 블록)."),
-    },
+    #: ⛔ 2026-10-01 — 깔때기 숫자(waterfall · endpoint · gate_power · note)는 **여기 적지 않는다.**
+    #:   `load_cascade()` 가 `_derive_funnel_v2_meta()` 로 funnel JSON 에서 채운다. 옛 사본은
+    #:   ESW 창 정정(ox − ocv · D-2026-10-01-cascade-funnel-esw-corrected-window) 뒤 89–89–84–45–28–1 /
+    #:   endpoint 28 / 최종 WO3 로 낡은 채 남아 있었다 — 화면이 원장과 다른 숫자를 띄울 뻔했다.
+    "funnel_v2": None,
     #: AlI₃ 를 90번째로 넣을 수 있는 유일한 경로 — **비-champion 대체**. 쓰려면 명시해야 한다.
     "ali3_fallback": ("AlI₃ 는 rank_combined==1 (champion) 행에 탄성·EOS·BVS 가 없지만 "
                       "**rank_combined==2 행에는 전부 있다**(E 45.05·43.60·42.21 GPa, B0 20.98·17.04·18.03). "
@@ -2149,6 +2140,43 @@ def load_factorial() -> dict:
     return out
 
 
+def _derive_funnel_v2_meta(meta: dict, f2, f1) -> dict:
+    """`CASCADE_V2_META` 사본에 깔때기 숫자를 **funnel JSON 에서** 채운다 (화면이 사본을 들지 않는다).
+
+    ⛔ 못 하는 것: 숫자를 검증하지 않는다 — JSON 을 옮길 뿐이다. JSON 이 없으면 숫자를 **지어내지
+       않고** funnel_v2 를 None 으로 두고 status 에 그 사실을 적는다 (fail-closed).
+    """
+    import copy
+    m = copy.deepcopy(meta)
+    if not f2:
+        m["funnel_v2"] = None
+        m["status"]["funnel"] = ("partial", "⛔ cascade_screening_funnel_v2.json 을 못 읽었다 — 깔때기 숫자를 싣지 않는다")
+        return m
+    wf = (f2.get("waterfall") or {}).get("counts") or []
+    can = ((f1 or {}).get("waterfall") or {}).get("counts") or []
+    ep = (f2.get("literature_comparable_endpoint") or {}).get("survivors") or []
+    gp = {r["gate"]: (r.get("standalone_kill"), r.get("unique_kill"))
+          for r in (f2.get("gate_power") or {}).get("rows") or []}
+    cnt = (f2.get("esw_window_rule") or {}).get("counts") or {}
+    n_pool = (f2.get("pool_provenance") or {}).get("pool_size") or (wf[0] if wf else "—")
+    uniq = " · ".join(f"{g} {v[1]}" for g, v in gp.items() if v[1])
+    note = (f"G2 는 정정 창(ox − ocv)으로 판정한다 — OCV 가 없는 {cnt.get('no_ocv_not_assessable', '—')}종은 "
+            f"판정 불가(통과 아님), {cnt.get('no_ocv_fail_by_upper_bound', '—')}종은 옛 창(상한)으로 확정 탈락. "
+            + (f"고유 기여(unique kill): {uniq}. " if uniq else "")
+            + "⚠ G4 의 탈락은 blocking kill 과 bvs kill 이 섞인 수다 — 순환 때문에 분리해서 인용해야 한다 "
+              "(funnel JSON 의 G4 selection_pressure 블록).")
+    m["funnel_v2"] = {"waterfall": wf, "canonical": can, "endpoint": ep, "endpoint_n": len(ep),
+                      "gate_power": gp, "note": note,
+                      "source": "db/properties/cascade_screening_funnel_v2.json"}
+    m["status"]["funnel"] = (
+        m["status"]["funnel"][0],
+        f"{n_pool}종 waterfall {'–'.join(map(str, wf))} (47종판 {'–'.join(map(str, can))}) · "
+        f"G2 = 정정 창(ox − ocv) · 판정 불가 {cnt.get('no_ocv_not_assessable', '—')}종. "
+        "⛔ 게이트 정의 자체가 미해결: G4 순환(blocking 이 BVS 를 덮어씀) · "
+        "G5 median 컷이 로스터 의존 · G3 phase set 미기록")
+    return m
+
+
 def load_cascade() -> dict:
     out = {"meta": CASCADE_META, "truth": cascade_truth(), "g4": G4_DECOMP,
            "audit_axes": CASCADE_AUDIT_AXES}
@@ -2173,12 +2201,13 @@ def load_cascade() -> dict:
     out["stability"] = _load_json(DB / "properties" / "cascade_stability_axes_verdict.json")
     # 🔁 회수분 (완주한 전체 90종 · 270 champion). 정본 47종과 **나란히** 싣고,
     #    축별 완성도(status)를 그대로 노출한다 — 89종 파생을 최종판처럼 보이게 하지 않는다.
-    v2 = {"meta": CASCADE_V2_META, "present": False}
+    v2 = {"meta": CASCADE_V2_META, "present": False}   # ← 아래에서 funnel JSON 으로 숫자를 채운 사본으로 바꾼다
     for k, fn in CASCADE_FILES_V2.items():
         if (DB / "properties" / fn).exists():
             v2[k] = read_csv(f"properties/{fn}")
             v2["present"] = True
     v2["funnel"] = _load_json(DB / "properties" / "cascade_screening_funnel_v2.json")
+    v2["meta"] = _derive_funnel_v2_meta(CASCADE_V2_META, v2["funnel"], out.get("funnel"))
     v2["themes"] = _load_json(DB / "properties" / "cascade_v23_themes_v2.json")
     # 완결성 감사 — 화면은 "90종 funnel" 이 아니라 이 판정(전면/부분 결측)을 표시한다.
     v2["audit"] = _load_json(DB / "properties" / "cascade_pool_audit_v2.json")

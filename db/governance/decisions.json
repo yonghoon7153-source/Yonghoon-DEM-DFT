@@ -6564,6 +6564,63 @@
     "commit": "f0a0e16adce768da173358742fad5d967141f4be",
     "decision_digest": "sha256:35dea5f0a8c63a80d47494575cc2a5fddf05ee39077fc99f1c4a47bd832f95e2"
    }
+  },
+  {
+   "id": "D-2026-10-01-cascade-funnel-esw-corrected-window",
+   "schema_version": 2,
+   "kind": "policy",
+   "scope": null,
+   "slot": "cascade_funnel_g2_esw_window",
+   "applies_to": {
+    "systems": [
+     "lpscl_dopant_designs"
+    ],
+    "tasks": [
+     "esw_window",
+     "screening_funnel"
+    ],
+    "methods": [
+     "mp_grand_potential_esw"
+    ],
+    "use_cases": [
+     "diagnostic"
+    ]
+   },
+   "title": "89종 게이트 깔때기의 G2 창을 정정 규칙(ox − ocv)으로 판정한다 — OCV 없는 16종은 판정 불가 (트랙 ESW · 사용자 = 1저자 결정)",
+   "statement": "cascade 89종 깔때기(`cascade_screening_funnel_v2.json`)의 G2(창 ≥ 0.05 V)는 **정정 창 = ox_V − ocv_V** (아래 가장자리 = 교환 0 의 최저 V = OCV 자가분해 전압 · 2026-09-22 정정 A)로 판정한다. OCV 가 없는 행은 옛 창(ox − 마지막 환원 계단)을 **상한으로만** 쓴다 — 상한 < 0.05 V 면 확정 탈락, 아니면 **판정 불가**(missing · 통과 아님). 결과: waterfall 89→89→68→41→25→0 · G2 정정 68 · 판정 불가 16 · 상한 탈락 5 · G4 끝점 25 · 최종 0. 옛 창은 pool[].window_V_legacy 로 남기되 게이트에 안 쓴다. 47종 역사 스냅샷(`cascade_screening_funnel.json`)은 재생성하지 않는다.",
+   "rationale": "09-22 정정 A(HZ-esw-reduction-limit-label · commit 8a0e202d3)는 `oxidation_stability_cascade_v3_pinned.json` 만 재유도했고 깔때기는 옛 창(계통적으로 넓음)으로 판정돼 있었다 — 그 파일들에 머리 경고만 달려 감사 원장 해시가 깨졌다. OCV 가 있는 68종은 정정해도 G2 판정이 그대로였다(정정 창 최소 0.082 V · 좁아진 폭 0.003–0.676 · 중앙 0.242 V). 차이는 OCV 없는 21종 처리뿐이었고, 그중 5종은 옛 창(상한)부터 0.05 V 아래라 정정해도 탈락이 확정이다. 남은 16종(SiS₂ · WO₃ · MoO₃ 포함 · 옛 창 0.107–0.423 V)은 관측된 최대 좁힘(0.676 V)을 빼면 문턱을 보장할 수 없다. 사용자(ESW 1저자)가 '못 잰 것은 통과가 아니다' 쪽 — 판정 불가 — 를 골랐다. 대안 '옛 창 유지'(아는 편향 값으로 통과)는 기각, 'OCV 계산으로 메우기'(gabia MP 상도)는 재개 조건으로 남긴다. 깔때기는 진단물(recovered_unvalidated · diagnostic_only)이라 인용 영향은 없다.",
+   "decision_state": "active",
+   "results_seen": true,
+   "record": "db/properties/cascade_screening_funnel_v2.json",
+   "evidence": [
+    "db/properties/cascade_screening_funnel_v2.json",
+    "tools/cascade/build_screening_funnel.py",
+    "db/properties/cascade_audit_manifest.json",
+    "db/properties/citation_hazards.json#HZ-esw-reduction-limit-label"
+   ],
+   "reopen_criteria": [
+    "OCV 없는 21종의 ocv_self_decomposition_V 를 계산(MP 상도 · esw_cascade_batch)하면 그 행은 정정 창으로 다시 판정한다 — 판정 불가를 푸는 유일한 경로다.",
+    "산화 한 변(우리 2.256 vs 문헌 2.01 · 0.246 V) 원인이 확정되면 G2·G3 를 다시 본다 (HZ-esw-reduction-limit-label ⚠ 남은 것)."
+   ],
+   "enforcement": "① `build_screening_funnel.esw_gate_window()` · `g2_pass` · `g2_missing` 한 곳에서만 판정 (selftest 6 · 깨기 3) ② 옛 창(window_V_legacy)을 게이트 값으로 쓰지 않는다 ③ 화면 숫자는 `webapp/data.py::_derive_funnel_v2_meta` 가 funnel JSON 에서 채운다 — 사본 금지 ④ 감사 원장(`build_cascade_audit_manifest.py`)이 이 산출물의 출처·한계를 싣는다.",
+   "proposed_by": "claude-session-2026-10-01",
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-10-01",
+     "state": "active",
+     "by": "사용자 (ESW 1저자)",
+     "note": "AskUserQuestion — '판정 불가로 둔다 (Recommended)'. 대안: 옛 폭 유지 + 표시 · OCV 를 계산해 메운다. 트랙 = ESW (사용자 = 1저자 · 통지할 제3자 없음)."
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-10-01T11:48:24Z",
+    "commit": "4eece44863239d91cc97c8c8b17be7f7840a7731",
+    "decision_digest": "sha256:6ada371884775ceac578890c78532350ba7555594f6e8a1b18ef99ff1542288c"
+   }
   }
  ]
 }
