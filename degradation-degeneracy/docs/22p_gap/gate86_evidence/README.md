@@ -22,6 +22,18 @@ smoke rc 0 (184 s) · 등록부 전체 변이 재생 ran 352 → **352 물었다
 "모든 변이 지점이 정확히 한 번 나타난다" · source_digest `f1f4378f46610f08`. 행 집계는 줄머리 고정 (`^물었다` ·
 `^★ 안 물었다` · `^★ 실행오류`).
 
+## 보충 (발송 뒤 · 86차 리뷰어 요청) — 요청문 커밋 `27bfeed6` 최종 실행 원문 — `request_commit_27bfeed6/`
+
+| 파일 | 무엇 |
+|---|---|
+| `run_g86_send.sh` | 래퍼 — 전체 pytest (`-rfEx`) → strict smoke → source_digest · 시작/끝 HEAD · status |
+| `g86_send.log` | 래퍼 로그 — 시작 HEAD = 끝 HEAD = `27bfeed68ea516e5c5a50f2475c8cc2b4f80ff3b` · status 0 · 22:38:32Z → 23:40:38Z · pytest rc 0 (**2046 passed · 1 xfailed** · 3543.27 s) · smoke rc 0 (168 s) · source_digest `f1f4378f46610f08` |
+| `g86_send_pytest.txt` | pytest stdout 전문 (xfail node 이름 포함) |
+| `g86_send_smoke.txt` | strict smoke stdout 전문 |
+| `g86_send.interrupted.log` | **첫 시도의 래퍼 로그** (22:32:40Z 시작) — 컨테이너 재시작으로 프로세스가 죽어 시작 줄만 있다. 첫 시도의 부분 pytest 출력은 재실행이 **같은 파일 이름**에 써서 덮였다 (보존되지 않음) |
+
+이 다섯 파일은 요청문 커밋 **뒤** 커밋에 들어간다 (요청문 커밋 자체에는 없다 — 그 커밋에서 돈 실행의 결과이므로).
+
 ## 목록 (크기 · 전체 sha256)
 
 | 경로 | 바이트 | sha256 |
@@ -38,3 +50,8 @@ smoke rc 0 (184 s) · 등록부 전체 변이 재생 ran 352 → **352 물었다
 | `red_green/red_gate85.txt` | 7689 | `c27b1071b6f7aa9c0773eec5ac3892b52c60766f4bd0fde79040a361b9574778` |
 | `stray_exec_class/20f6faf98437b7145b916305da4df283d3348ef13318bd6ac72a8a6678fd20de.json` | 240 | `050a719e1b7baee3f0b1b2cd7fa6d2b7bf90a1f9edaf46bf82940b9e9d3ab0a0` |
 | `witness_fix/g86_witness_fix.log` | 545 | `19e065f658ac10acd01038898871329850c0a209d0284a51e7a5b55ef64b8cb5` |
+| `request_commit_27bfeed6/g86_send.interrupted.log` | 82 | `947563783c7b9fb4d794ab3415afa94479a747037823bdf7cdb64de39e2b7ad0` |
+| `request_commit_27bfeed6/g86_send.log` | 536 | `e7ba7231c0708ba32a65ed1431bbb51262c9b2069df2a72afae80ff34995ed5b` |
+| `request_commit_27bfeed6/g86_send_pytest.txt` | 3251 | `aeba22407a993dfd3f98dd88e12f7c5dd3eb5442445a3eb1bb2c6ec156c17e30` |
+| `request_commit_27bfeed6/g86_send_smoke.txt` | 5590 | `69103bd56877245c50e0e6bd20e1e85aa90ce47ee62dce69f983505ccab9d7c3` |
+| `request_commit_27bfeed6/run_g86_send.sh` | 995 | `82b7f3d8517cc5f859d20c72dd26d3109abf55e0a862e8d1ed1c4d7c237dfff3` |

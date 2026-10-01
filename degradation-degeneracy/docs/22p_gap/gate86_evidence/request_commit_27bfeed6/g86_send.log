@@ -1,0 +1,7 @@
+START_HEAD=27bfeed68ea516e5c5a50f2475c8cc2b4f80ff3b status=0 2026-09-30T22:38:32Z
+XFAIL tests/test_gate63_defensive.py::test_staging_an_input_outside_the_repo_is_still_unsupported - §0 ⑦ (62차 신고 · 63차 재확인): 저장소 밖 절대 경로 입력은 staging 이 자기 자신 위에 복사하려다 죽는다
+2046 passed, 1 xfailed in 3543.27s (0:59:03)
+pytest rc=0 2026-09-30T23:37:50Z status=0
+smoke rc=0 168s
+source_digest f1f4378f46610f08
+END_HEAD=27bfeed68ea516e5c5a50f2475c8cc2b4f80ff3b status=0 2026-09-30T23:40:38Z
