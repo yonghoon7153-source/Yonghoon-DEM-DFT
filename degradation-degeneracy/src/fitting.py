@@ -1241,7 +1241,7 @@ def _assert_fit_leg_is_planned(out_dir, leg: str | None) -> None:
 
 
 def _assert_fit_authorized(live_fit: dict, out_dir, leg: str | None = None,
-                           may_open: bool = False):
+                           may_open: bool = False, stage3: dict | None = None):
     """fit 쪽 계획 gate (48차 P0-8 · P0-5 · 49차 P0-5).
 
     grid 와 **같은 spec** 을 만든다: 자기 축은 살아 있는 입력에서
@@ -1270,7 +1270,32 @@ def _assert_fit_authorized(live_fit: dict, out_dir, leg: str | None = None,
     #   gate 가 거부한다 (fail-closed).
     fit_axis = dict(live_fit,
                     in_digest=(declared.get("fit") or {}).get("in_digest"))
-    spec = leg_run_spec(leg, declared.get("grid") or {}, fit_axis)
+    # ★ 87차 §13-2 d (G84-N2) — 승인 spec 의 **버전 분기**. v2 (v5) 계획은 stage3 문맥 없이만, v3 (v6) 계획은
+    #   stage3 문맥이 있어야만 claim 과 대조한다. 어느 쪽도 다른 쪽으로 조용히 떨어지지 않는다 (legacy fallback
+    #   거부) · 모르는 버전은 승인이 아니다. v2 builder 의 바이트는 그대로다.
+    from tools.preserve import PreserveError, leg_run_spec_v3, stage3_axis_from_envelope
+    ver = declared.get("leg_spec_version")
+    if ver == 2:
+        if stage3 is not None:
+            raise PreserveError(
+                "plan", f"{leg!r} 의 계획은 leg_spec_version 2 (v5) 인데 v6 stage3 문맥으로 시작하려 한다 — "
+                        "v5 계획은 v6 실행을 승인하지 않는다 (87차 §13-2 d)")
+        spec = leg_run_spec(leg, declared.get("grid") or {}, fit_axis)
+    elif ver == 3:
+        if stage3 is None:
+            raise PreserveError(
+                "plan", f"{leg!r} 의 계획은 leg_spec_version 3 (v6) 인데 stage3 문맥 없이 (legacy 경로로) "
+                        "시작하려 한다 — legacy fallback 은 거부다 (G84-N2 · 87차 §13-2 d)")
+        planned = stage3.get("planned") if isinstance(stage3, dict) else None
+        if not hasattr(planned, "envelope"):
+            raise PreserveError(
+                "plan", f"{leg!r} 의 stage3 문맥에 PlannedLegV4 가 없다 — 승인 축을 유도할 계획이 없다")
+        spec = leg_run_spec_v3(leg, declared.get("grid") or {}, fit_axis,
+                               stage3_axis_from_envelope(planned.envelope()))
+    else:
+        raise PreserveError(
+            "plan", f"{leg!r} 의 계획 run_spec.leg_spec_version 이 계약 (2 · 3) 밖이다: {ver!r} — 모르는 버전은 "
+                    "승인하지 않는다 (87차 §13-2 d)")
     # ★ 57차 P0-1 — grid 와 같은 규칙: worker 가 자기 credential 을 명시적으로
     #   읽어 넘긴다 (gate 는 스스로 읽지 않는다 — 48차 P0-3).
     from tools.preserve import attempt_path_for, read_token_file
@@ -1283,6 +1308,68 @@ def _assert_fit_authorized(live_fit: dict, out_dir, leg: str | None = None,
                                      may_open=may_open)
     return claim, fit_axis, issue_execution_class(out_dir, leg, "fit",
                                                  ledger=None)
+
+
+def stage3_context_from_plan(leg_id: str, *, ledger=None, repo_root=None) -> dict:
+    """★ 87차 §13-4 a (R2-a (3)) — 원장의 v6 계획 → `run_fit(stage3=…)` 문맥 `{planned, design, provider_runs}` 를
+    만드는 **production 진입점 한 곳**. CLI `--stage3-plan` 과 `run.sh --stage3-plan` 이 여기로 온다.
+
+    순서: 계획 index 항목 (없으면 거부 · §13-3 b 결속은 index 가 이미 했다) → `PlannedLegV4` 재구성 (생성자가
+    envelope 를 재검) → `planned_id() == run_spec.stage3.planned_id` (index 를 믿지 않는다) → 설계 파일을 **JSON** 으로
+    읽어 `pairing_design_sha256` · `parameter_order_sha256` 을 계획과 대조 → provider run 디렉터리마다 존재 ·
+    `manifest.yaml` 존재 (내용 대조 — map 재생성 · sha — 는 `_prepare_stage3` 의 몫) → 반환. 모든 거부는 `run_fit`
+    호출 **전**이다. 여기서 만든 문맥도 `_stage3_preflight` · `_prepare_stage3` 를 그대로 지난다 (우회 없음).
+    """
+    import json as _json
+    from pathlib import Path as _P
+    from tools import design_wire as DW
+    from tools.preserve import PlannedLegV4, PreserveError, planned_index, REPO_ROOT
+    root = _P(repo_root) if repo_root is not None else REPO_ROOT
+    e = planned_index(ledger).get(leg_id)
+    if e is None:
+        raise PreserveError("plan", f"계획 index 에 없는 다리다: {leg_id!r} — v6 문맥을 만들 계획이 없다")
+    spec = e["run_spec"]
+    if spec.get("leg_spec_version") != 3 or "planned_envelope" not in e or "stage3_context" not in e:
+        raise PreserveError(
+            "plan", f"{leg_id!r} 의 계획은 v6 (leg_spec_version 3 · planned_envelope · stage3_context) 가 아니다 — "
+                    "legacy 계획으로 v6 문맥을 만들지 않는다")
+    env = e["planned_envelope"]
+    fields = {k: v for k, v in env.items() if k != "schema"}
+    planned = PlannedLegV4(**fields)                      # 생성자가 check_envelope_v4 를 다시 돈다
+    want_pid = (spec.get("stage3") or {}).get("planned_id")
+    if planned.planned_id() != want_pid:
+        raise PreserveError(
+            "plan", f"{leg_id!r}: 재구성한 계획의 planned_id {planned.planned_id()[:16]} ≠ run_spec.stage3.planned_id "
+                    f"{str(want_pid)[:16]} — 승인 spec 과 envelope 가 서로 다른 계획이다")
+    ctx = e["stage3_context"]
+    dpath = root / ctx["design"]
+    if not dpath.is_file():
+        raise PreserveError("plan", f"{leg_id!r} 의 설계 파일이 없다: {ctx['design']!r} (뿌리 {root})")
+    try:
+        design = _json.loads(dpath.read_text(encoding="utf-8"))
+    except ValueError as exc:
+        raise PreserveError("plan", f"{leg_id!r} 의 설계 파일 {ctx['design']!r} 이 JSON 이 아니다: {exc}") from None
+    try:
+        dsha = DW.pairing_design_sha256(design)
+        posha = DW.parameter_order_sha256(design["parameter_order"])
+    except Exception as exc:                              # WireError · KeyError · TypeError — 설계 자체가 유효하지 않다
+        raise PreserveError("plan", f"{leg_id!r} 의 설계 파일 {ctx['design']!r} 이 유효한 pairing design 이 아니다: {exc}") from None
+    if dsha != env["pairing_design_sha256"]:
+        raise PreserveError(
+            "plan", f"{leg_id!r} 의 설계 파일 pairing_design_sha256 {dsha[:16]} ≠ 계획 {env['pairing_design_sha256'][:16]} "
+                    "— 계획 뒤 설계가 바뀌었거나 다른 설계다, 시작하지 않는다")
+    if posha != env["parameter_order_sha256"]:
+        raise PreserveError(
+            "plan", f"{leg_id!r} 의 설계 parameter_order_sha256 {posha[:16]} ≠ 계획 {env['parameter_order_sha256'][:16]}")
+    provider_runs = {}
+    for consumer, rel in sorted(ctx["provider_runs"].items()):
+        run_p = root / rel
+        if not run_p.is_dir() or not (run_p / "manifest.yaml").is_file():
+            raise PreserveError(
+                "plan", f"{leg_id!r}: {consumer!r} 의 provider run 디렉터리 {rel!r} 가 없거나 manifest.yaml 이 없다 "
+                        "— warm 필요 자리의 provider 누락은 오류다 (no-warm 전환 금지)")
+        provider_runs[consumer] = run_p
+    return {"planned": planned, "design": design, "provider_runs": provider_runs}
 
 
 def _stage3_preflight(stage3: dict, *, reference: str, base_config, stage_root, run_source_digest: str) -> dict:
@@ -1589,7 +1676,8 @@ def _run_fit_staged(_staged, in_dir, out_dir, obj_cfg, objectives, bounds,
                           bytes_root=_staged["root"])
     claim, _fit_axis, _exec_cap = _assert_fit_authorized(_live, out_dir,
                                                          leg=leg,
-                                                         may_open=may_open)
+                                                         may_open=may_open,
+                                                         stage3=stage3)
     # ★ 62차 자체 리뷰 (순서-TOCTOU F1) — capability 는 lock **앞에서** 발행된다.
     #   입력 승인·staging·lock 거부(살아 있는 보유자)에서 죽으면 P1-2 의
     #   `discard` 를 못 지나 capability 와 dir fd 가 남았다 (실측: live_caps
@@ -2287,6 +2375,11 @@ def main() -> None:
                          "증명 파일 경로. grid 가 남긴 그 파일을 주면 같은 "
                          "실행에 붙는다 (주지 않으면 grid 가 이미 잡은 다리를 "
                          "두 번째로 시작하려는 것이라 거부된다)")
+    ap.add_argument("--stage3-plan", dest="stage3_plan", default=None, metavar="LEG_ID",
+                    help="★ 87차 §13-4 b — 원장의 v6 계획 (leg_spec_version 3 · planned_envelope · "
+                         "stage3_context) 에서 stage3 문맥을 만들어 `run_fit(stage3=…)` 에 넘긴다 "
+                         "(`stage3_context_from_plan`). 이 다리 이름이 `--leg` 다 (함께 주면 같아야 한다). "
+                         "`--no-adaptive --no-warm-start` 를 명시해야 한다 (조용히 덮어쓰지 않는다)")
     ap.add_argument("--in", dest="in_dir", required=True, help="grid 결과 디렉터리")
     ap.add_argument("--out", default=None, help="기본: --in 과 동일")
     ap.add_argument("--objectives-config", default="configs/objectives.yaml")
@@ -2321,6 +2414,16 @@ def main() -> None:
                          "(F20 비교 실험용). 기본은 물려준다")
     ap.add_argument("--log-level", default="INFO")
     args = ap.parse_args()
+    # ★ 87차 §13-4 b — `--stage3-plan` 의 argv 규칙은 **원장을 읽기 전** 에 끝난다 (rc 2 · argparse 와 같은 층).
+    stage3 = None
+    if args.stage3_plan is not None:
+        if args.leg is not None and args.leg != args.stage3_plan:
+            ap.error(f"--stage3-plan {args.stage3_plan!r} 과 --leg {args.leg!r} 가 다르다 — v6 계획의 다리 이름이 "
+                     "곧 --leg 다 (함께 주면 같아야 한다)")
+        if args.adaptive or args.warm_start:
+            ap.error("--stage3-plan 은 --no-adaptive 와 --no-warm-start 를 **명시**해야 한다 (v6 arm 은 adaptive=False "
+                     "· legacy warm 물려주기 없음 — CLI 가 조용히 덮어쓰지 않는다)")
+        args.leg = args.stage3_plan
     halfcell_kw = parse_halfcell_kw(args.halfcell_arg)
     # ★ 왜곡 없는 ocpbias 는 `ocp` 와 배열이 같다 (test_ocpbias_with_zero_
     #   perturbation_equals_ocp). 즉 여기 오는 유일한 이유는 --halfcell-arg 를
@@ -2356,7 +2459,11 @@ def main() -> None:
         raise SystemExit(f"알 수 없는 bounds preset: {args.bounds} (가능: {list(presets)})")
     bounds = presets[args.bounds]
 
+    if args.stage3_plan is not None:
+        stage3 = stage3_context_from_plan(args.stage3_plan)       # ★ 87차 — production 진입점 한 곳 · run_fit 전 거부
+
     summary = run_fit(
+        stage3=stage3,
         leg=args.leg, may_open=args.may_open,
         in_dir=args.in_dir, out_dir=args.out or args.in_dir,
         obj_cfg=cfg, objectives=objectives, bounds=bounds,

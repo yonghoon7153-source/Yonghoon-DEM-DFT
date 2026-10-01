@@ -85,6 +85,9 @@ MODE
   --leg NAME             `LEG_PRESERVATION.yaml` 의 `planned:` 에서 찾을 다리
                          이름. 비우면 CANONICAL_RUN. grid·fit·all 은 이 gate 를
                          **반드시** 지난다 (건너뛰는 환경변수는 없다).
+  --stage3-plan LEG_ID   ★ 87차 — 원장의 v6 계획 (leg_spec_version 3) 으로 fit 을
+                         돈다 (--mode fit 만). 이 이름이 곧 --leg. `--no-adaptive
+                         --no-warm-start` 를 함께 적어야 한다 (Python 층이 요구).
 
 열화 모드 축   (형식: 0:0.2:0.02 | 0,0.05,0.1 | 0.1 | none)
   --lli VAL              LLI 축
@@ -166,6 +169,7 @@ while [[ $# -gt 0 ]]; do
   case "$1" in
     --mode)          MODE="$2"; shift 2 ;;
     --leg)           LEG="$2"; export LEG; shift 2 ;;   # ★ 48차 P0-5 — export
+    --stage3-plan)   STAGE3_PLAN="$2"; shift 2 ;;        # ★ 87차 §13-4 c — v6 계획 다리 (fit 만)
     --config)        CONFIG="$2"; shift 2 ;;
     --lli)           LLI="$2"; shift 2 ;;
     --lam-pe)        LAM_PE="$2"; shift 2 ;;
@@ -211,6 +215,21 @@ while [[ $# -gt 0 ]]; do
 done
 
 [[ -z "$MODE" ]] && { echo "--mode 필수" >&2; usage; exit 1; }
+
+# ★ 87차 §13-4 c — `--stage3-plan` 은 `--mode fit` 에서만 뜻이 있다 (`all` 은 v6 를 지원하지 않는다 · grid 는 v6
+#   축이 없다). `--leg` 와 함께 오면 같은 이름이어야 하고, 없으면 그 이름이 다리다 (plan_gate 가 같은 다리를 본다).
+#   `--no-adaptive --no-warm-start` 는 여기서 붙이지 않는다 — 사용자가 적고 Python 층 (`src.fitting`) 이 요구한다.
+if [[ -n "${STAGE3_PLAN:-}" ]]; then
+  if [[ "$MODE" != "fit" ]]; then
+    echo "지원 안 함: --stage3-plan 은 --mode fit 에서만 쓸 수 있다 (지금 --mode $MODE)" >&2
+    exit 1
+  fi
+  if [[ -n "${LEG:-}" && "$LEG" != "$STAGE3_PLAN" ]]; then
+    echo "--stage3-plan $STAGE3_PLAN 과 --leg $LEG 가 다르다 — v6 계획의 다리 이름이 곧 --leg 다" >&2
+    exit 1
+  fi
+  LEG="$STAGE3_PLAN"; export LEG
+fi
 
 # ---------------------------------------------------------------- venv
 if [[ -d ".venv" && -z "${VIRTUAL_ENV:-}" ]]; then
@@ -413,6 +432,8 @@ case "$MODE" in
     # ★ fit 의 인자 조립도 실행 없이 검사할 수 있어야 한다 (report·all 과 대칭).
     #   없어서 --halfcell-method 전파를 회귀로 고정할 방법이 없었다.
     FIT_ARGS+=(--may-open)           # ★ 57차 P0-1 (Python 계층 플래그 — 70차 G70-N1: dry 출력에도 보인다)
+    # ★ 87차 §13-4 c — v6 계획 다리. `--leg` 도 argv 로 함께 넘겨 dry 출력에서 보이게 한다 (환경변수 LEG 와 같은 값).
+    [[ -n "${STAGE3_PLAN:-}" ]] && FIT_ARGS+=(--stage3-plan "$STAGE3_PLAN" --leg "$STAGE3_PLAN")
     if [[ "${RUN_SH_DRY:-0}" == "1" ]]; then
       echo "${FIT_ARGS[*]}"
       exit 0

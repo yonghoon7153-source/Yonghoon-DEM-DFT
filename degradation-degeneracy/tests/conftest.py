@@ -222,6 +222,9 @@ _GATED_ENTRYPOINT_MODULES = frozenset({
     "test_gate84_round2a", "tests.test_gate84_round2a",
     # ★ 85차 — G85-N1 사후 closure 구성원 결속을 production `run_fit()` 산출 (leaf → parent) 으로 잰다.
     "test_gate85_closure_members", "tests.test_gate85_closure_members",
+    # ★ 87차 — 라운드 2b: production 진입점 `stage3_context_from_plan` 이 만든 문맥으로 `run_fit()` 완주 (s04) ·
+    #   비-smoke 승인 분기 (s02) 는 자기 격리 원장을 쓴다.
+    "test_gate87_round2b", "tests.test_gate87_round2b",
 })
 
 

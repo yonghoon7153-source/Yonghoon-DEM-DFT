@@ -3954,7 +3954,11 @@ PLANNED_KEYS_PROSPECTIVE = PLANNED_KEYS + ("run_spec",)
 #:   속하는가" 를 미리 말하면 finalize 가 그것을 실행 기록에 옮기고 roster 를 고른다.
 #:   옛 항목(74차 이전)은 이 키가 없고, 그때는 실행 기록의 `claim_scope` 가 답한다 — 둘 다
 #:   있으면 같아야 하고 둘 다 없으면 거부다 (`planned_index`). 옛 계획을 다시 쓰지 않는다.
-PLANNED_KEYS_PROSPECTIVE_OPTIONAL = ("claim_scope",)
+#: ★ 87차 §13-3 a — v6 (`run_spec.leg_spec_version: 3`) 계획이 싣는 두 자리. `planned_envelope` 는
+#:   `planned-leg/v4` envelope (계획의 봉인 preimage · `planned_id = digest(envelope)`), `stage3_context` 는
+#:   진입점이 읽는 `{design: <저장소 상대 설계 JSON>, provider_runs: {<consumer_objective>: <저장소 상대 run dir>}}`.
+#:   v3 ⇔ 둘 다 (`_check_v6_plan_slots`). 기존 v2 항목에는 키가 없고 읽기 그대로다.
+PLANNED_KEYS_PROSPECTIVE_OPTIONAL = ("claim_scope", "planned_envelope", "stage3_context")
 
 #: ★ 74차 G74-3 — 다리의 **주장 범위**. 실행 명부(`cohort.executed_legs`)와 투영 membership
 #:   (`cohort.legs`)을 분리하는 분류다.
@@ -6055,6 +6059,91 @@ def assert_promotable(paths, sink: str, dest=None, tol: float = 0.02) -> None:
             assert_derived_fresh(q, tol=tol)
 
 
+_V6_PLAN_SLOTS = ("planned_envelope", "stage3_context")
+
+
+def _repo_relative_key(raw, what: str, lid) -> str:
+    """★ 87차 §13-3 b — `stage3_context` 의 경로는 정규 · 저장소-상대 문자열이다 (cohort `dir` 과 같은 규칙)."""
+    import posixpath
+    if type(raw) is not str or not raw or posixpath.isabs(raw) or posixpath.normpath(raw) != raw \
+            or ".." in raw.split("/"):
+        raise PreserveError(
+            "plan", f"계획 항목 {lid!r} 의 stage3_context.{what} 가 정규 저장소-상대 경로가 아니다: {raw!r} "
+                    "— 절대 경로 · `..` · `.` · 중복 slash · 빈 문자열을 쓰지 않는다")
+    return raw
+
+
+def _check_v6_plan_slots(e: dict) -> None:
+    """★ 87차 §13-3 b — v6 계획의 두 자리 (`planned_envelope` · `stage3_context`) 와 spec 버전의 결속.
+
+    `run_spec.leg_spec_version == 3` ⇔ 두 자리 모두 존재. v2 (v5) 계획에 자리가 있어도 거부 (v5 계획으로 v6 실행을
+    승인하지 않는다) · 자리가 있는데 버전이 3 이 아니어도 거부. envelope 는 유효한 `planned-leg/v4` 이고 항목 · 코드
+    identity · 세대 (`v6`) 와 같아야 하며, `run_spec.stage3` 는 envelope 에서 **유도한 값**과 같아야 한다 (손으로 적은
+    축이 계획과 어긋나면 거부). `stage3_context` 는 설계 · provider 경로의 **모양**만 본다 — 존재 · 바이트는 진입점
+    (`src.fitting.stage3_context_from_plan`) 과 `_prepare_stage3` 의 몫이다 (§13-3 c · 세 자리에 같은 검사 금지).
+    """
+    lid = e.get("leg_id")
+    spec = e["run_spec"]
+    ver = spec.get("leg_spec_version")
+    has = [k for k in _V6_PLAN_SLOTS if k in e]
+    if ver != 3:
+        if has:
+            raise PreserveError(
+                "plan", f"계획 항목 {lid!r} 의 run_spec.leg_spec_version 은 {ver!r} 인데 v6 자리 {has} 를 싣고 있다 "
+                        "— v6 자리는 leg_spec_version 3 계획만 갖는다 (v5 계획으로 v6 실행을 승인하지 않는다 · "
+                        "87차 §13-3 b)")
+        return
+    missing = [k for k in _V6_PLAN_SLOTS if k not in e]
+    if missing:
+        raise PreserveError(
+            "plan", f"계획 항목 {lid!r} 은 leg_spec_version 3 (v6) 인데 {missing} 가 없다 — v6 계획은 "
+                    "`planned_envelope` 와 `stage3_context` 를 둘 다 적어야 한다 (87차 §13-3 b)")
+    env = e["planned_envelope"]
+    bad = check_planned_envelope(env)
+    if bad or env.get("schema") != "planned-leg/v4":
+        raise PreserveError(
+            "plan", f"계획 항목 {lid!r} 의 planned_envelope 가 유효한 planned-leg/v4 가 아니다: "
+                    + "; ".join(bad[:3] or [repr(env.get("schema") if isinstance(env, dict) else env)]))
+    if env["leg_id"] != lid:
+        raise PreserveError(
+            "plan", f"계획 항목 {lid!r} 의 planned_envelope.leg_id 가 다르다: {env['leg_id']!r}")
+    if env["source_digest"] != e["authorized_source_digest"]:
+        raise PreserveError(
+            "plan", f"계획 항목 {lid!r} 의 planned_envelope.source_digest {env['source_digest']!r} 가 "
+                    f"authorized_source_digest {e['authorized_source_digest']!r} 와 다르다 — 다른 코드로 세운 계획")
+    from tools.design_wire import STAGE3_PROTOCOL_GENERATION
+    if env["protocol_generation"] != STAGE3_PROTOCOL_GENERATION:
+        raise PreserveError(
+            "plan", f"계획 항목 {lid!r} 의 planned_envelope.protocol_generation {env['protocol_generation']!r} ≠ "
+                    f"{STAGE3_PROTOCOL_GENERATION!r} — 세대 이름은 하나다 (R2-c)")
+    want = stage3_axis_from_envelope(env)
+    got = spec.get("stage3")
+    if got != want:
+        keys = sorted(k for k in set(want) | set(got if isinstance(got, dict) else {})
+                      if (got or {}).get(k) != want.get(k)) if isinstance(got, dict) else ["<stage3 축 자체>"]
+        raise PreserveError(
+            "plan", f"계획 항목 {lid!r} 의 run_spec.stage3 가 planned_envelope 에서 유도한 값과 다르다: {keys} "
+                    "— stage3 축은 손으로 적는 것이 아니라 envelope 에서 유도한다 (87차 §13-2 c)")
+    ctx = e["stage3_context"]
+    if not isinstance(ctx, dict) or set(ctx) != {"design", "provider_runs"}:
+        raise PreserveError(
+            "plan", f"계획 항목 {lid!r} 의 stage3_context 가 {{design, provider_runs}} 로 닫혀 있지 않다: "
+                    f"{sorted(ctx) if isinstance(ctx, dict) else type(ctx).__name__}")
+    _repo_relative_key(ctx["design"], "design", lid)
+    pr = ctx["provider_runs"]
+    if not isinstance(pr, dict):
+        raise PreserveError("plan", f"계획 항목 {lid!r} 의 stage3_context.provider_runs 가 mapping 이 아니다")
+    for c, path in pr.items():
+        _repo_relative_key(path, f"provider_runs[{c}]", lid)
+    wm = env["stages"][0]["warm_provider_map"]
+    need = {c for c, p in wm.items() if p is not None}
+    if set(pr) != need:
+        raise PreserveError(
+            "plan", f"계획 항목 {lid!r} 의 stage3_context.provider_runs 키 {sorted(pr)} 가 계획의 warm consumer "
+                    f"{sorted(need)} 와 다르다 — 누락 {sorted(need - set(pr))} · 추가 {sorted(set(pr) - need)} "
+                    "(warm 필요 자리의 누락은 오류다 · provider 가 없는 자리에 provider 를 더하지 않는다)")
+
+
 def planned_index(ledger=None) -> dict:
     """`planned:` 를 **검증해서** leg_id → 항목으로 돌려준다 (순수 함수).
 
@@ -6200,6 +6289,7 @@ def planned_index(ledger=None) -> dict:
                 raise PreserveError(
                     "plan", f"계획 항목 {e['leg_id']!r} 의 `run_spec.leg_id` 가 "
                             f"다르다: {spec.get('leg_id')!r}")
+            _check_v6_plan_slots(e)                      # ★ 87차 §13-3 b
         # ★ 47차 P0-1 — **계획 roster 와 실행 roster 를 분리한다.** 46차는
         #   실행 roster 하나뿐이라, 계획된 leg 를 어디에 두든 gate·lint·
         #   publisher 중 하나가 반드시 깨졌다 (리뷰어의 4행 표). 계획 중인
@@ -6439,6 +6529,17 @@ def leg_run_spec(leg_id: str, grid: dict, fit: dict) -> dict:
     둘 중 하나다. 열려 있으면 축이 조용히 승인 밖으로 나간다.
     """
     check_id(leg_id)
+    _check_leg_axes(grid, fit)
+    spec = {"leg_spec_version": 2, "leg_id": leg_id,
+            "grid": {k: grid[k] for k in LEG_SPEC_GRID_KEYS},
+            "fit": {k: fit[k] for k in LEG_SPEC_FIT_KEYS}}
+    _assert_json_domain(spec, "leg_run_spec")
+    return spec
+
+
+def _check_leg_axes(grid: dict, fit: dict) -> None:
+    """grid · fit 축의 닫힘 검사 **본체 하나** — v2 `leg_run_spec` 과 v3 `leg_run_spec_v3` 가 같이 부른다 (87차 §13-2 b:
+    검사를 두 벌 두지 않는다 · v2 의 검사 내용과 순서는 그대로)."""
     for name, got, want in (("grid", grid, LEG_SPEC_GRID_KEYS),
                             ("fit", fit, LEG_SPEC_FIT_KEYS)):
         if not isinstance(got, dict) or set(got) != set(want):
@@ -6477,10 +6578,71 @@ def leg_run_spec(leg_id: str, grid: dict, fit: dict) -> dict:
             f"fit.row_selection.mode 가 계약 enum 이 아니다: "
             f"{fit['row_selection']['mode']!r} — {list(LEG_SPEC_SELECTION_MODES)} "
             "중 하나여야 한다")
-    spec = {"leg_spec_version": 2, "leg_id": leg_id,
+
+
+#: ★ 87차 §13-2 b — v6 승인 spec (`leg_spec_version: 3`) 의 닫힌 `stage3` 축. 값은 전부 계획 envelope
+#:   (`planned-leg/v4`) 에서 **유도**한다 (`stage3_axis_from_envelope`) — 사람이 손으로 적은 값은 유도값과
+#:   같아야 한다 (`planned_index` 가 대조). v2 spec 에는 이 키가 **없다** (`stage3: null` 도 없다 — G84-N2:
+#:   v5 canonical 바이트 · digest 불변).
+LEG_SPEC_STAGE3_KEYS = ("planned_id", "pairing_design_sha256", "parameter_order_sha256", "bank",
+                        "roster_sha256", "provider_edges_sha256", "arm", "stage", "candidate_mode")
+
+
+def stage3_axis_from_envelope(env: dict) -> dict:
+    """★ 87차 §13-2 c — `planned-leg/v4` envelope → v3 spec 의 `stage3` 축 (유도 하나 · 두 벌 금지)."""
+    if not isinstance(env, dict) or env.get("schema") != "planned-leg/v4":
+        raise PreserveError(
+            "plan", f"stage3 축은 planned-leg/v4 envelope 에서만 유도한다 — 받은 schema "
+                    f"{(env.get('schema') if isinstance(env, dict) else type(env).__name__)!r}")
+    bad = check_envelope_v4(env)
+    if bad:
+        raise PreserveError("plan", "유효하지 않은 planned-leg/v4 envelope 에서 stage3 축을 유도할 수 없다: "
+                                    + "; ".join(bad[:3]))
+    st = env["stages"][0]
+    return {"planned_id": digest(env),
+            "pairing_design_sha256": env["pairing_design_sha256"],
+            "parameter_order_sha256": env["parameter_order_sha256"],
+            "bank": {k: env["bank"][k] for k in sorted(_BANK_KEYS)},
+            "roster_sha256": env["roster"]["roster_sha256"],
+            "provider_edges_sha256": digest(env["provider_edges"]),
+            "arm": st["arm"], "stage": st["stage"], "candidate_mode": st["candidate_mode"]}
+
+
+def _check_stage3_axis(stage3) -> None:
+    if not isinstance(stage3, dict) or set(stage3) != set(LEG_SPEC_STAGE3_KEYS):
+        raise PreserveError(
+            "plan",
+            f"leg run spec 의 stage3 축이 계약과 다르다 — 있어야 {sorted(LEG_SPEC_STAGE3_KEYS)}, 받은 것 "
+            f"{sorted(stage3) if isinstance(stage3, dict) else type(stage3).__name__}")
+    bank = stage3["bank"]
+    if not isinstance(bank, dict) or set(bank) != _BANK_KEYS:
+        raise PreserveError(
+            "plan", f"leg run spec 의 stage3.bank 가 닫혀 있지 않다 — 있어야 {sorted(_BANK_KEYS)}, 받은 것 "
+                    f"{sorted(bank) if isinstance(bank, dict) else type(bank).__name__}")
+    for k in ("planned_id", "pairing_design_sha256", "parameter_order_sha256", "roster_sha256",
+              "provider_edges_sha256"):
+        if not _is_hex64(stage3[k]):
+            raise PreserveError("plan", f"leg run spec 의 stage3.{k} 가 hex64 가 아니다: {stage3[k]!r}")
+    for k in ("arm", "stage", "candidate_mode"):
+        if not _nonempty_str(stage3[k] if isinstance(stage3[k], str) else ""):
+            raise PreserveError("plan", f"leg run spec 의 stage3.{k} 가 비어 있지 않은 문자열이 아니다: {stage3[k]!r}")
+
+
+def leg_run_spec_v3(leg_id: str, grid: dict, fit: dict, stage3: dict) -> dict:
+    """★ 87차 §13-2 b — v6 다리의 승인 spec (`leg_spec_version: 3`).
+
+    grid · fit 축은 v2 와 **같은 닫힌 집합 · 같은 검사** (`_check_leg_axes` 하나) 이고, `stage3` 축이 **필수**로
+    더해진다. v2 builder 는 손대지 않는다 — v5 sealed spec 의 바이트 · digest 는 그대로다 (G84-N2). 소비자는
+    `leg_spec_version` 으로만 갈린다: v3 계획에 stage3 문맥이 없으면 거부 · v2 계획에 stage3 문맥이 있으면 거부.
+    """
+    check_id(leg_id)
+    _check_leg_axes(grid, fit)
+    _check_stage3_axis(stage3)
+    spec = {"leg_spec_version": 3, "leg_id": leg_id,
             "grid": {k: grid[k] for k in LEG_SPEC_GRID_KEYS},
-            "fit": {k: fit[k] for k in LEG_SPEC_FIT_KEYS}}
-    _assert_json_domain(spec, "leg_run_spec")
+            "fit": {k: fit[k] for k in LEG_SPEC_FIT_KEYS},
+            "stage3": {k: stage3[k] for k in LEG_SPEC_STAGE3_KEYS}}
+    _assert_json_domain(spec, "leg_run_spec_v3")
     return spec
 
 
