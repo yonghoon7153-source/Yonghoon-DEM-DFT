@@ -1,0 +1,24 @@
+// G5a.ogs — 이온 경로 — 벽 기준 굴곡도 vs SE 부피분율 (130 관통 · 64 · 비관통 표시)
+// 사용: G5a.csv 를 가져온 워크북을 활성으로 두고 Script Window 에 붙여 넣기 → Enter.
+// 결과: 새 그래프 + BML 서식 (바깥 틱 · 위/오른쪽 축선 · #404040 · 틱 라벨 Aptos 28 pt).  축 제목 글꼴 · 범례는 GUIDE.md 의 GUI 단계.
+string bk$ = %H;
+plotxy iy:=[%(bk$)]1!(1,2) plot:=201 ogl:=<new>;
+set %C -c color(79,189,255); set %C -k 2; set %C -z 9;
+plotxy iy:=[%(bk$)]1!(3,4) plot:=201 ogl:=1!;
+set %C -c color(244,162,97); set %C -k 3; set %C -z 9;
+plotxy iy:=[%(bk$)]1!(5,6) plot:=201 ogl:=1!;
+set %C -c color(241,64,64); set %C -k 9; set %C -z 10;
+
+// ── BML 축 서식 (글꼴 = Aptos · 사용자 지정) ──
+layer.unit = 3; layer.width = 10; layer.height = 8;
+layer.x.color = color(64,64,64); layer.x.thickness = 1; layer.x.ticks = 10;
+layer.x.ticklength = 6; layer.x.tickthickness = 1; layer.x.mticklength = 3; layer.x.mtickthickness = 1;
+layer.x.label.font = font(Aptos); layer.x.label.pt = 28; layer.x.label.color = color(64,64,64);
+layer.y.color = color(64,64,64); layer.y.thickness = 1; layer.y.ticks = 10;
+layer.y.ticklength = 6; layer.y.tickthickness = 1; layer.y.mticklength = 3; layer.y.mtickthickness = 1;
+layer.y.label.font = font(Aptos); layer.y.label.pt = 28; layer.y.label.color = color(64,64,64);
+layer.x2.showAxes = 3; layer.x2.color = color(64,64,64); layer.x2.thickness = 1; layer.x2.ticks = 0; layer.x2.showLabels = 0;
+layer.y2.showAxes = 3; layer.y2.color = color(64,64,64); layer.y2.thickness = 1; layer.y2.ticks = 0; layer.y2.showLabels = 0;
+page.margincontrol = 1;
+label -xb SE fraction of solid (vol %);
+label -yl Tortuosity, wall (geometric);

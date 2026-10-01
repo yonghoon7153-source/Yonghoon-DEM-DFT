@@ -1,0 +1,23 @@
+// G6.ogs — Phase A — σ_e vs VGCF 함량 (격자 셋 · 원점 8 평균 · 로그 Y)
+// 사용: G6.csv 를 가져온 워크북을 활성으로 두고 Script Window 에 붙여 넣기 → Enter.
+// 결과: 새 그래프 + BML 서식 (바깥 틱 · 위/오른쪽 축선 · #404040 · 틱 라벨 Aptos 28 pt).  축 제목 글꼴 · 범례는 GUIDE.md 의 GUI 단계.
+string bk$ = %H;
+plotxy iy:=[%(bk$)]1!(1,2:4) plot:=202 ogl:=<new>;
+range r1 = 1!1; set r1 -c color(241,64,64); set r1 -k 2;
+range r2 = 1!2; set r2 -c color(79,189,255); set r2 -k 1;
+range r3 = 1!3; set r3 -c color(82,183,136); set r3 -k 3;
+layer.y.type = 2;
+
+// ── BML 축 서식 (글꼴 = Aptos · 사용자 지정) ──
+layer.unit = 3; layer.width = 10; layer.height = 8;
+layer.x.color = color(64,64,64); layer.x.thickness = 1; layer.x.ticks = 10;
+layer.x.ticklength = 6; layer.x.tickthickness = 1; layer.x.mticklength = 3; layer.x.mtickthickness = 1;
+layer.x.label.font = font(Aptos); layer.x.label.pt = 28; layer.x.label.color = color(64,64,64);
+layer.y.color = color(64,64,64); layer.y.thickness = 1; layer.y.ticks = 10;
+layer.y.ticklength = 6; layer.y.tickthickness = 1; layer.y.mticklength = 3; layer.y.mtickthickness = 1;
+layer.y.label.font = font(Aptos); layer.y.label.pt = 28; layer.y.label.color = color(64,64,64);
+layer.x2.showAxes = 3; layer.x2.color = color(64,64,64); layer.x2.thickness = 1; layer.x2.ticks = 0; layer.x2.showLabels = 0;
+layer.y2.showAxes = 3; layer.y2.color = color(64,64,64); layer.y2.thickness = 1; layer.y2.ticks = 0; layer.y2.showLabels = 0;
+page.margincontrol = 1;
+label -xb VGCF content (wt %);
+label -yl \g(s)\-(e) (mS cm\+(-1));
