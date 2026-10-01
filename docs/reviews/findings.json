@@ -2016,15 +2016,28 @@
   {
    "id": "DESC-02",
    "severity": "P1",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "codex",
    "opened_in": "docs/reviews/codex_verdict_lhs_descriptors_20260913.md",
    "title": "τ 가 **관통을 보증하지 않고**, 결측이 **미퍼콜을 뜻하지도 않는다**",
    "note": "(Codex 판정문 라벨: **P1-DESC-02**)\n두 방향 모두 반례가 있다.\n① `dem_analysis_core.py:502-509` — 바닥판에 닿는 source 가 없으면 **위판에 닿는 성분마다 최저 z 를 새 source 로 승격**한다.  Codex 반례: `percolation_pct = 0` 인데 `tau_mean = tau_recommended = 1`, 유효 표본 3.  같은 graph 의 resistor network 는 σ 를 내지 못한다.\n② 같은 함수 `:517-522` — `src x reach_top` 전수 쌍을 shuffle 해 **앞 200 개만** 남긴다.  서로 다른 연결성분의 무경로 쌍이 그 예산을 먹으므로 **직선 관통 성분 200 개, 모든 유효 τ=1 인 graph 도 표본 0 → τ=None** 이 된다.\n★ 코드 경로는 이 리포에서 확인 (판정문 부록).\n처방: 원자료의 관통 판정과 `NO_VALID_SAMPLED_PAIR`/계산 실패를 **별도 상태로 보존**하고, 유한 τ 는 조건부 목표로만 학습한다.  0 이나 임의 큰 값으로 치환 금지.",
    "evidence_tests": [
-    "scripts/dem_analysis_core.py"
-   ]
+    "scripts/lhs_descriptor_harvest.py::selftest ⑰",
+    "scripts/lhs_design_dataset.py::selftest ㉓"
+   ],
+   "claimed_fixed_sha": "6870a85a5",
+   "verification_note": "[범위: LHS 인계 · 배포 경로] 716850ced · 5f3836afc · 6870a85a5: 배포 τ = 수확기 벽 τ (같은 성분 쌍 · 폴백 없음 · T1–T3 — 관통 ⟺ 값 · 비관통 = 빈칸).  웹앱 calc_tortuosity 잔여 = DESC-02W."
+  },
+  {
+   "id": "DESC-02W",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "claude (10-01 · DESC/HND 대조 조사 탐침)",
+   "opened_in": "docs/reviews/codex_verdict_lhs_descriptors_20260913.md",
+   "title": "웹앱 calc_tortuosity (dem_analysis_core.py:598–615) 가 DESC-02 반례 둘을 그대로 재현한다 — τ 가 관통을 보증하지 않고 결측이 미퍼콜을 뜻하지 않는다 (배포는 수확기 벽 τ 라 무관)",
+   "note": "반례 (200 기둥 등) 를 상주 시험으로 옮긴 뒤 고칠 것.  웹앱 화면 · 옛 코퍼스 경로에만 영향."
   },
   {
    "id": "DESC-03",
@@ -2043,29 +2056,43 @@
   {
    "id": "DESC-04",
    "severity": "P2",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "codex",
    "opened_in": "docs/reviews/codex_verdict_lhs_descriptors_20260913.md",
    "title": "`tortuosity_dijkstra_SE` 라는 **이름만으로 통계량·경계·절단이 정해지지 않는다**",
    "note": "(Codex 판정문 라벨: **P2-DESC-04**)\n같은 등록 이름 아래 **mean / median / recommended** 세 키가 있고 값이 갈린다.\n· `dem_analysis_core.py:545` — 경로 [1,1,10] -> mean **4**, recommended **1**.\n· `:533` — [1, 20.024984] 에서 `1 <= tau < 20` 절단이 긴 경로를 지워 mean **1** (무절단 평균 10.512492 와 다름).\n· `:404` — 경계가 own-radius x2 -> 벽높이 15/85 % -> **관측 SE z 범위 15/85 %** 로 내려간다.  실제 양판 접촉 0 인 구조도 마지막 fallback 에서 관통 100 %, tau = 1 을 낸다.\n⇒ 수확기가 임의로 recommended 를 고르면 기존 mean 과 **다른 target** 이 된다.  legacy 값과 교정값을 같은 컬럼에 섞지 않는다.  (설계 재추첨 요구가 아니다.)",
    "evidence_tests": [
-    "scripts/dem_analysis_core.py"
-   ]
+    "scripts/lhs_design_dataset.py::selftest ㉓"
+   ],
+   "claimed_fixed_sha": "6870a85a5",
+   "verification_note": "[범위: LHS 인계 · 배포 경로] 5f3836afc · 6870a85a5 · a5e181384 (HANDOVER_HELD_BACK): 배포 τ 는 평균 · 중앙값 별도 열 · 절단 수 0/194.  웹앱 3 키 · 무기록 절단 · LHS-17 폴백 = DESC-04W."
+  },
+  {
+   "id": "DESC-04W",
+   "severity": "P3",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "claude (10-01 · DESC/HND 대조 조사)",
+   "opened_in": "docs/reviews/codex_verdict_lhs_descriptors_20260913.md",
+   "title": "웹앱 τ 이름 (tortuosity_dijkstra_SE 등 3 키) 이 통계량 · 경계 · 절단을 정하지 않는다 — 자동 전환 · 무기록 절단 · LHS-17 띠 폴백이 웹앱에 남아 있다",
+   "note": "배포 열은 수확기 벽 τ (두 열 · 표본 · 절단 수 기록) 라 무관."
   },
   {
    "id": "DESC-05",
    "severity": "P2",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "codex",
    "opened_in": "docs/reviews/codex_verdict_lhs_descriptors_20260913.md",
    "title": "`0` · `N/A` · `invalid` 가 한 값으로 접힌다",
    "note": "(Codex 판정문 라벨: **P2-DESC-05**)\n· 존재하는 P 에 SE 접촉이 없음 -> coverage **0** (참).  없는 S -> 키 부재 = **N/A**.  둘은 다르다.\n· `dem_analysis_core.py:215` — AM-AM 면적합이 커져 free surface <= 0 이 되어도 coverage **0** 을 돌려준다 ⇒ **실제 무접촉과 분모 붕괴가 섞인다**.  cap 횟수 · free<=0 횟수를 함께 내야 한다.\n· `analyze_contacts.py:162` — mono 입력에 없는 type 을 고정 bimodal map 으로 남기면 `np.min(empty)` 에서 **rc=1**.  상 존재를 확인한 map 이 필요하다.\n· CSV-only/일반 AM 에서 P/S 를 직경으로 추정하는 UI fallback 을 정본으로 쓰지 말고 봉인 설계의 block · 실제 type/radius/count 를 대조한다.  ⚠ 130 설계의 현재 직경 범위가 `radius > 0.004` heuristic 을 실제로 넘나든다는 **결함 주장은 아니다**.",
    "evidence_tests": [
-    "scripts/dem_analysis_core.py",
-    "scripts/analyze_contacts.py"
-   ]
+    "scripts/lhs_descriptor_harvest.py::selftest ⑦",
+    "scripts/lhs_design_dataset.py::selftest"
+   ],
+   "claimed_fixed_sha": "06b24cdd0",
+   "verification_note": "[범위: LHS 수확 · 생성 · 웹앱 type_map] 716850ced · 514691646 · 06b24cdd0: 수확기 N_A_PHASE_ABSENT · 분모 ≤ 0 제외 + 셈 · 덱에서 type 매핑 · mono 설계 상 칸 (B).  웹앱 calc_coverage:288 분모 붕괴 → 0 은 SELF-49 류로 남김."
   },
   {
    "id": "DESC-06",
@@ -2075,7 +2102,7 @@
    "found_by": "codex",
    "opened_in": "docs/reviews/codex_verdict_lhs_descriptors_20260913.md",
    "title": "덤프를 읽었다고 **같은 최종 프레임**인 것은 아니다",
-   "note": "(Codex 판정문 라벨: **P2-DESC-06**)\n`parse_liggghts.py:243` 의 파일 선택은 atom/contact/mesh **각 종류의 최신 파일을 독립 선택**한다.  Codex: 합성 `atom_100 + contact_200 + mesh_100` 을 **rc=0** 으로 받았다.  다중 프레임 파일은 행을 이어 붙이고, atom loader 는 ID 사전으로 마지막 값을 쓰는 반면 contact 는 중복될 수 있다.\n`dem_analysis_core.py:110` — mesh 가 없으면 **최고 입자 중심으로 벽을 추정**한다.  실제 벽 .020 · 최고 중심 .019 이면 부피 분율에 **5.263 % 상대차**.\n⇒ 수확 계약은 **같은 최종 timestep · 상자/벽 실물 · type map · 완료 압력 · 원파일 해시**를 검사해야 한다.  기본값·추정값으로 조용히 메우지 않는다.  ⚠ 130 배치가 이런 입력을 가진다고 **단정하지 않는다**.  ⊕ 09-28 밤 (LHS J20-a · 접촉 위상 감사): **CN 에 직접 걸린다** — 합성 2 프레임 접촉 덤프를 웹앱 경로 (`parse_liggghts.parse_contact_file` → `dem_analysis_core.calc_se_se_cn`) 로 읽으면 SE-SE CN 이 정확히 2 배 (1.333 → 2.667) · 접촉 수 · 면적 · AM–SE CN 도 같은 부류.  LHS 배치 (`lhs_webapp_batch.stage_case`) 는 수확과 **같은 파일** (sha) 을 쓰지만 **파일 안 프레임 수**는 검사하지 않는다 (수확기 `read_contact_dump` 는 마지막 블록만) ⇒ ⬜ 130 접촉 덤프의 ENTRIES 블록 수 실측 · 관문 추가는 비준 대기.  ⊕ 09-28 밤 (J20-a ⓑ · 비준): LHS 배치 관문 — atom · contact 프레임 ≠ 1 · contact 중복 행 · 자기쌍이면 REFUSED (`lhs_webapp_batch` selftest ⑧–⑪, 옛 코드에서 실패 확인 뒤 수정) · 읽기 전용 감사 `scripts/lhs_contact_audit.py` 가 130 덤프를 센다 (WSL 대기).  ⚠ 웹앱 파서 (`parse_liggghts`) 자체는 그대로 — 일반 업로드 경로의 다중 프레임은 여전히 이어 붙인다 (열림).  ⊕ 09-29 WSL 실측 (감사 v1 · 봉인 코호트 130): 접촉 · 원자 프레임 **전부 1** · 중복 행 0 ⇒ 이 코호트에서는 CN 배가 경로가 실현되지 않는다 (관문 `stage_case` 는 그대로 — 다른 입력을 막는다).",
+   "note": "(Codex 판정문 라벨: **P2-DESC-06**)\n`parse_liggghts.py:243` 의 파일 선택은 atom/contact/mesh **각 종류의 최신 파일을 독립 선택**한다.  Codex: 합성 `atom_100 + contact_200 + mesh_100` 을 **rc=0** 으로 받았다.  다중 프레임 파일은 행을 이어 붙이고, atom loader 는 ID 사전으로 마지막 값을 쓰는 반면 contact 는 중복될 수 있다.\n`dem_analysis_core.py:110` — mesh 가 없으면 **최고 입자 중심으로 벽을 추정**한다.  실제 벽 .020 · 최고 중심 .019 이면 부피 분율에 **5.263 % 상대차**.\n⇒ 수확 계약은 **같은 최종 timestep · 상자/벽 실물 · type map · 완료 압력 · 원파일 해시**를 검사해야 한다.  기본값·추정값으로 조용히 메우지 않는다.  ⚠ 130 배치가 이런 입력을 가진다고 **단정하지 않는다**.  ⊕ 09-28 밤 (LHS J20-a · 접촉 위상 감사): **CN 에 직접 걸린다** — 합성 2 프레임 접촉 덤프를 웹앱 경로 (`parse_liggghts.parse_contact_file` → `dem_analysis_core.calc_se_se_cn`) 로 읽으면 SE-SE CN 이 정확히 2 배 (1.333 → 2.667) · 접촉 수 · 면적 · AM–SE CN 도 같은 부류.  LHS 배치 (`lhs_webapp_batch.stage_case`) 는 수확과 **같은 파일** (sha) 을 쓰지만 **파일 안 프레임 수**는 검사하지 않는다 (수확기 `read_contact_dump` 는 마지막 블록만) ⇒ ⬜ 130 접촉 덤프의 ENTRIES 블록 수 실측 · 관문 추가는 비준 대기.  ⊕ 09-28 밤 (J20-a ⓑ · 비준): LHS 배치 관문 — atom · contact 프레임 ≠ 1 · contact 중복 행 · 자기쌍이면 REFUSED (`lhs_webapp_batch` selftest ⑧–⑪, 옛 코드에서 실패 확인 뒤 수정) · 읽기 전용 감사 `scripts/lhs_contact_audit.py` 가 130 덤프를 센다 (WSL 대기).  ⚠ 웹앱 파서 (`parse_liggghts`) 자체는 그대로 — 일반 업로드 경로의 다중 프레임은 여전히 이어 붙인다 (열림).  ⊕ 09-29 WSL 실측 (감사 v1 · 봉인 코호트 130): 접촉 · 원자 프레임 **전부 1** · 중복 행 0 ⇒ 이 코호트에서는 CN 배가 경로가 실현되지 않는다 (관문 `stage_case` 는 그대로 — 다른 입력을 막는다).  ↪ 10-01 대조: 배포 경로는 같은 timestep · 같은 step 메시 · sha · 한 프레임 · 같은 프레임 porosity 관문.  남은 것 = 목표 압력 도달 검사 없음 (수확 · 배치 · 봉인 grep 0) · 웹앱 파서는 여전히 프레임을 섞는다.",
    "evidence_tests": [
     "scripts/parse_liggghts.py",
     "scripts/dem_analysis_core.py"
@@ -2084,15 +2111,17 @@
   {
    "id": "DESC-07",
    "severity": "P2",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "codex",
    "opened_in": "docs/reviews/codex_verdict_lhs_descriptors_20260913.md",
    "title": "일곱 열을 **일곱 독립 회귀**로 세면 안 된다 — 두 개는 정의 종속",
    "note": "(Codex 판정문 라벨: **P2-DESC-07**)\n① `eps_sphere(%) = 100(1 - phi_SE - phi_AM)` — AM+SE 만, 동일 프레임/상자일 때.  291 코퍼스 DEM 열에서 최대 절댓값 **2.22e-16** 으로 재현된다(부동소수 오차).\n② `C_total = (N_P C_P + N_S C_S)/(N_P + N_S)` — **실측 입자수까지 주어지면** 전체 피복률에 추가 정보가 없다.  ⚠ 행마다 가중치가 달라지므로 *세 coverage 열의 고정계수 행렬 rank 가 항상 2* 라는 뜻은 **아니다**.\n권고 기본 출력 = `phi_SE`·`phi_AM`, **존재상별** Hertz `C_P`·`C_S`, **검증된 관통** graph 의 Dijkstra tau.  전체 coverage 와 eps 는 파생/QC 로 보관.\n⚠ 예측 시점에 실현 `N_P`/`N_S` 를 모르는 모델이면 관측 N 을 몰래 넣어 total 을 예측했다고 하면 안 된다.  설계 추정 N 과 dump 실측 N 도 구분한다.\n\n## ★ 실측 검증 2026-09-19 (`c540de993`) — **두 항등식 다 성립한다** (열린 채 둔다)\n수확 130 에서 직접 쟀다: ① `|ε − 100(1−φ_SE−φ_AM)|` 최대 **2.842e-14** (부동소수) ·\n② `|C_total − (N_P C_P + N_S C_S)/(N_P+N_S)|` 최대 **정확히 0** (100건; mono 30 은 상이\n하나라 정의상 제외).  ⇒ 이 코퍼스에서 **두 열은 독립 정보가 아니다.**\n✅ 기계 강제 완료: `lhs_design_dataset.fill_descriptors` 가 병합마다 다시 재고 위반 시\n**거부**한다 (selftest ⑮b 가 두 방향 위반을 심어 거부를 확인).  유도열은 매니페스트\n`derived_not_independent_targets` 에 적힌다.\n⛔ **그래서 닫지 않는다**: 이 항목의 나머지 절반 — *\"예측 시점에 실현 `N_P`/`N_S` 를 모르는\n모델이 관측 N 을 몰래 넣어 `C_total` 을 예측했다고 하면 안 된다\"* · *\"설계 추정 N 과 dump\n실측 N 을 구분한다\"* — 은 **아무 코드도 강제하지 않는다**.  회귀 단계에서 걸린다.",
    "evidence_tests": [
-    "docs/data/design_performance_corpus.csv"
-   ]
+    "scripts/lhs_design_dataset.py::selftest"
+   ],
+   "claimed_fixed_sha": "c981d77f0",
+   "verification_note": "[범위: 생산자 측] 항등식 관문 (porosity 닫힘 · CN G1–G7 · P3 · v1.1 D1–D5) + 배포 README §3 항등식 목록 · c981d77f0 에서 \"전부 1e-9 검사\" 과장을 정정 (coverage_AM_total 가중평균은 관문 밖이라고 명시).  다운스트림 (ML 이 항등식 열을 독립 성능으로 세지 않는지) 은 생산자가 강제할 수 없다."
   },
   {
    "id": "DESC-08",
@@ -2102,7 +2131,7 @@
    "found_by": "codex",
    "opened_in": "docs/reviews/codex_verdict_lhs_descriptors_20260913.md",
    "title": "291 코퍼스와 **그대로 합치면 안 된다** — `d_am` 과 MPM/DEM 혼합이 현행에 잔존",
-   "note": "(Codex 판정문 라벨: **P2-DESC-08**)\nCodex 가 실제 `ml_design_structure.py:540` loader 를 호출해 재확인:\n· `d_am = 0` **40 개 전부 학습 입력에 수용**된다 (ps=0 36 · ps=1 2 · ps=.7 2) ⇒ *'ps=0 만 고치기'* 로 부족하다.\n· 추가 **18 행**은 `d_am = 12` 인데 기록된 존재상은 AM_S 반지름 2 um 뿐 (예: `ps=0, fm_n_AM_P` 빈칸, `fm_n_AM_S=1555, fm_r_AM_S=2`) = **존재상 메타자료와 특징의 불일치 확정**.  ⚠ 원 dump 실측 지름이라고 확대하지 않는다.\n· `predictor_engine.py:231` 의 입력 반경 max 경로는 **존재하지 않는 상의 입력 반경까지** 포함할 수 있다.\n· `use_porosity_pct` 를 넣은 closure 235 행: 최대 **10.816 %p**, 잔차 SD **2.975 %p** = eps SD 3.823 %p 의 **77.82 %** ⇒ MPM/DEM 상태 혼합이 저장 파일에 남아 있다 (기존 판정 재확인).\n⇒ **DEM-only 130 에는 MPM·첨가제 단계가 필요 없다**.  대신 '대표값 선택' 규칙을 복사하지 말 것: 첨가제 없음 = **확인된 0** · MPM 미실행 = **NOT_RUN/N-A** (0 % porosity 아님) · 없는 AM 하위상 = 직경/coverage **N-A**, 개수 **0** · 미퍼콜/표본실패/입력누락/추출예외는 **서로 다른 상태**.\n\n## ★ 범위 갱신 2026-09-19 (`c540de993`) — 130 표는 **분리돼 있고 기계가 본다**\n새 병합기는 291 코퍼스를 **읽지 않는다** (AST 정적 검사 + 변이 대조, selftest ⑮e).\n설계 130 ↔ 수확 130 **전단사**만 허용한다.\n⛔ **그래도 닫지 않는다** — 이 항목의 실제 결함은 `ml_design_structure.py:540` loader 가\n`d_am = 0` **40 행**을 학습 입력으로 받고 `use_porosity_pct` closure 잔차가 ε SD 의\n**77.82 %** 라는 것이고, 그 코드는 **손대지 않았다**.  130 표를 그쪽에 붙이는 순간 같은\n오염이 옮는다.",
+   "note": "(Codex 판정문 라벨: **P2-DESC-08**)\nCodex 가 실제 `ml_design_structure.py:540` loader 를 호출해 재확인:\n· `d_am = 0` **40 개 전부 학습 입력에 수용**된다 (ps=0 36 · ps=1 2 · ps=.7 2) ⇒ *'ps=0 만 고치기'* 로 부족하다.\n· 추가 **18 행**은 `d_am = 12` 인데 기록된 존재상은 AM_S 반지름 2 um 뿐 (예: `ps=0, fm_n_AM_P` 빈칸, `fm_n_AM_S=1555, fm_r_AM_S=2`) = **존재상 메타자료와 특징의 불일치 확정**.  ⚠ 원 dump 실측 지름이라고 확대하지 않는다.\n· `predictor_engine.py:231` 의 입력 반경 max 경로는 **존재하지 않는 상의 입력 반경까지** 포함할 수 있다.\n· `use_porosity_pct` 를 넣은 closure 235 행: 최대 **10.816 %p**, 잔차 SD **2.975 %p** = eps SD 3.823 %p 의 **77.82 %** ⇒ MPM/DEM 상태 혼합이 저장 파일에 남아 있다 (기존 판정 재확인).\n⇒ **DEM-only 130 에는 MPM·첨가제 단계가 필요 없다**.  대신 '대표값 선택' 규칙을 복사하지 말 것: 첨가제 없음 = **확인된 0** · MPM 미실행 = **NOT_RUN/N-A** (0 % porosity 아님) · 없는 AM 하위상 = 직경/coverage **N-A**, 개수 **0** · 미퍼콜/표본실패/입력누락/추출예외는 **서로 다른 상태**.\n\n## ★ 범위 갱신 2026-09-19 (`c540de993`) — 130 표는 **분리돼 있고 기계가 본다**\n새 병합기는 291 코퍼스를 **읽지 않는다** (AST 정적 검사 + 변이 대조, selftest ⑮e).\n설계 130 ↔ 수확 130 **전단사**만 허용한다.\n⛔ **그래도 닫지 않는다** — 이 항목의 실제 결함은 `ml_design_structure.py:540` loader 가\n`d_am = 0` **40 행**을 학습 입력으로 받고 `use_porosity_pct` closure 잔차가 ε SD 의\n**77.82 %** 라는 것이고, 그 코드는 **손대지 않았다**.  130 표를 그쪽에 붙이는 순간 같은\n오염이 옮는다.  ↪ 10-01: 배포 v1.1 README §3-8 에 \"다른 코퍼스와 섞지 말 것\" (c981d77f0).  291 로더 (ml_design_structure.load_corpus) 가 d_am 0 인 40 행을 받는 것은 그대로 → open.",
    "evidence_tests": [
     "scripts/ml_design_structure.py",
     "docs/data/design_performance_corpus.csv"
@@ -2111,15 +2140,17 @@
   {
    "id": "DESC-09",
    "severity": "P2",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "codex",
    "opened_in": "docs/reviews/codex_verdict_lhs_descriptors_20260913.md",
    "title": "미실행 8개는 **무작위 결측이 아니다** — 한 수준의 관측이 통째로 0",
    "note": "(Codex 판정문 라벨: **P2-DESC-09**)\n봉인 설계에 join 하면: 8 개 **전부 mono_AM_S** 이고, **mono_AM_S x d_SE = 2 um 다섯 점(105 · 108 · 109 · 110 · 111)이 전부 결측 목록**이다.  남은 mono_AM_S 에 그 수준이 **0 개**.  (로컬 30 전체 BELOW 는 11 개 = 누락 5 + 나머지 6 이므로 *'정확히 5 전부 미실행'* 은 mono_AM_S 에 한정할 때만 맞다.)\n⇒ 공변량/가중치만으로 **관측이 전혀 없는 구간**을 되살릴 수 없다.\n★ 그리고 44/130 은 `phi_se_est` 기반 **사전 추정 BELOW flag 33.846 %** 이지 *'44 %가 실측 sigma_ion = 0'* 이라는 자료가 **아니다** — 일곱 측정 열은 130 행 전부 빈칸이다.\n⚠ `finite_size_flag` 는 진단 라벨로 타당하지만 **설계 변수의 결정론적 함수**라 *'공변량으로 넣으면 유한크기 효과가 제거된다'* 는 보장이 아니다 ⇒ **고정 finite-box 규약 안의 예측**으로 해석한다.\n\n## ★ 절반 닫힘 2026-09-19 (`c540de993`) — **미실행이 0 이 됐다.  남은 절반은 그대로**\n코호트가 130 으로 차고 수확이 **130/130** 이라 설계 ↔ 측정 조인이 **전단사**다 (양쪽 결손 0).\n이 항목이 지목한 `mono_AM_S × d_SE = 2 µm` **다섯 점이 전부 측정됐다**:\n```\nlhs00_105  phi_se 0.130491 OK   tau —        NOT_PERCOLATING\nlhs00_108  phi_se 0.128980 OK   tau —        NOT_PERCOLATING\nlhs00_109  phi_se 0.408993 OK   tau 1.413579 OK        ← 이 수준에 유한 τ 가 생겼다\nlhs00_110  phi_se 0.259576 OK   tau —        NOT_PERCOLATING\nlhs00_111  phi_se 0.063770 OK   tau —        NOT_PERCOLATING\n```\n⇒ *\"한 수준의 관측이 통째로 0\"* 은 **더 이상 사실이 아니다**.  병합기가 그 재발을 막는다\n(전단사가 아니면 거부, selftest ⑮a 양방향).\n⛔ **그래도 닫지 않는다** — 이 항목의 두 번째 절반이 살아 있다: **`finite_size_flag` 는\n설계 변수의 결정론적 함수**라 공변량으로 넣어도 유한크기 효과가 제거된다는 보장이 없고,\n결과는 **고정 finite-box 규약 안의 예측**으로만 읽어야 한다.  회귀 단계에서 걸린다.\n⚠ 그리고 위 τ 열은 `LHS-08` 이 열려 있어 **잠정**이다.",
    "evidence_tests": [
-    "docs/data/lhs_design_20260818.csv"
-   ]
+    "scripts/lhs_design_dataset.py::selftest"
+   ],
+   "claimed_fixed_sha": "c981d77f0",
+   "verification_note": "c981d77f0: 130/130 수확 · 부분 인계 거부 + 배포 README §3-6 에 상수 열 (rve_um 50 · pressure_MPa 300 · e_se_gpa 1.35 · loading_mAh_cm2 2.0) = 고정 상자 · 조건 안의 예측 · 특징 아님 (프롬프트 규칙 1 정정)."
   },
   {
    "id": "SELF-21",
@@ -4718,29 +4749,32 @@
   {
    "id": "HND-01",
    "severity": "P1",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "codex (LHS 인계표 적대 리뷰 2026-09-24~25, 대상 425cee222)",
    "opened_in": "docs/reviews/codex_verdict_lhs_porosity_thickness_20260924.md",
    "title": "(나) pushback 을 \"단단한 바닥이었다면\" 의 보정으로 해석한 것 (판단 J17) 은 성립하지 않는다 — 산술 변환이지 접촉역학의 반사실이 아니다.  (가) 도 틀 안 점유율이 아니라 **명목 구 부피 / 틀 간격 부피** 의 장부값",
    "note": "A=LxLy·V=AH·S=ΣV·W=벽 밖 cap 합: (가) (V−S)/V · (나) (V+W−S)/(V+W) · (다) (V−S+W)/V.  (나) 의 공극 부피 = (다) 와 같고 (가) 보다 W 만큼 크다 — \"빈틈 보존\" 은 (다) 대비만 맞다.  반례: 구 하나가 틀 밖으로 통째로 나가도 (가) 는 불변 (73.82 %), (다) 는 100 %.  세 식 모두 구 부피 중복 합산이라 합집합 공극률이 아니다.  벽 재질 변경은 재배열 · 하중망 · 점착 · 압밀량까지 바꾸므로 W/A 를 hard-bottom 재압축의 하한으로 옮길 수 없다 (편향 방향 미상).  `primitive type SE` 는 접촉 물성 선택이지 두께 · 공극을 가진 분리막이 아니다 — 방어 가능한 표현은 \"SE 접촉물성을 쓴 평면 바닥 proxy\".\n★ 수용 (09-25, 판단 J18): J17 의 (나) ≈ hard-bottom 가설 **철회** · (가) 는 `*_spheresum_nominal_gap` 명목 규약값으로 이름 · (나) 는 `*_pushback_equiv` 산술 지표로만 · (다) clipped 는 ROI 보조 · 실험 공극률 인증은 셋 다 불가.",
    "evidence_tests": [
-    "scripts/lhs_descriptor_harvest.py",
-    "docs/reviews/lhs_handover_judgments_20260924.md"
-   ]
+    "scripts/lhs_descriptor_harvest.py::selftest ⑮"
+   ],
+   "claimed_fixed_sha": "af528e24d",
+   "verification_note": "af528e24d: 이름을 규약으로 고정 (*_spheresum_nominal_gap · *_pushback_equiv \"hard-bottom 예측 아님\" · *_clipped_spheresum_gap · boundary_model_id) · J18 이 J17 의 \"(나) ≈ 단단한 바닥\" 철회 · 배포는 (가)(나)(다) 를 싣지 않는다.  ⚠ 배포 두께 thickness_mass_conserving_um 은 Codex 미검토 — 최종 리뷰 질문. scratchpad 대조 조사 (10-01 · 읽기 전용 · HEAD d1ec42fba) — Codex 최종 리뷰 요청서 §2-A 에 옮김"
   },
   {
    "id": "HND-02",
    "severity": "P2",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "codex (LHS 인계표 적대 리뷰 2026-09-24~25, 대상 425cee222)",
    "opened_in": "docs/reviews/codex_verdict_lhs_porosity_thickness_20260924.md",
    "title": "`check_deck_floor` 가 발견한 모든 `primitive … zplane` 중 min(z) 를 고른다 — `unfix` 된 벽 · 재정의 전 벽 · 부분 group 벽이 전부 통과한다 (활성 벽 증명이 아니다)",
    "note": "반례 (실제 함수): `fix floor all … zplane 0` + `unfix floor` → z=0 반환 (활성 바닥 없음) · zplane 0 → unfix → zplane 2 → z=0 반환 (최종은 2) · `fix floor AM_only …` → z=0 (전 상 구속 증거 없음).  현재 130 덱에 이 변이가 있다고 확인된 것은 아니다.  처방: 범용 해석기 대신 지원 문법을 제한 — fix id 생명주기 (unfix · 재정의) · group=all 요구 · wall type ↔ 상 사상 · restart/include/조건 분기는 \"검증 불가\" 로 분리.  바닥 좌표 확인과 관통 입자의 물리 적격성은 서로 다른 검사.",
    "evidence_tests": [
-    "scripts/lhs_descriptor_harvest.py"
-   ]
+    "scripts/lhs_descriptor_harvest.py::selftest ⑮"
+   ],
+   "claimed_fixed_sha": "af528e24d",
+   "verification_note": "af528e24d: check_deck_floor 가 fix id 생명주기 (unfix · 재정의) · group = all · include/read_restart 등 검증 불가 거부 · Codex 세 변이 + include 상주 · 배포 원천 194 수확 전부 새 문법.  남은 한계: 정적 판독 (마지막 run 뒤 정의 · 움직이는 벽). scratchpad 대조 조사 (10-01 · 읽기 전용 · HEAD d1ec42fba) — Codex 최종 리뷰 요청서 §2-A 에 옮김"
   },
   {
    "id": "HND-03",
@@ -4750,7 +4784,7 @@
    "found_by": "codex (LHS 인계표 적대 리뷰 2026-09-24~25, 대상 425cee222)",
    "opened_in": "docs/reviews/codex_verdict_lhs_porosity_thickness_20260924.md",
    "title": "겹침/반지름 1.98 자리 9 건 = **양면 평면 아래쪽의 점착–중력 평형** (hooke/hysteresis 포화 이력 가지) 후보 — 좌표를 소수 여섯째 자리까지 재현.  중심이 평면을 넘은 입자를 \"정상 압입\" 으로 기록만 하는 것은 불충분",
-   "note": "기하 깊이 d = r − z 와 접촉 겹침 δn = r − |z| 를 분리 — z = −0.98r 이면 d/r 1.98 이지만 접촉 겹침은 0.02r (필드명 `overlap_over_r` 은 오도).  포화 가지 Fn = k2(δn − 2φf r) 에서 평면 아래 정지: δn/r = 2φf − mg/(k2 r) ⇒ d/r = 2 − 2φf + mg/(k2 r).  q = 3 (`coefficientMaxElasticStiffness` AM–SE 칸) · φf = 0.01 (`coefficientPlasticityDepth` AM–SE 칸) 은 생산 덱 `docs/data/phase_a_6mah/in.real_4.liggghts` m6 · m8 에 실재 — ★ 09-25 재계산 (LIGGGHTS hooke kn 식, Y* 1,468,923.8): r 1 µm → z −0.980075994 (JSON −0.980076) · r 0.5 µm → −0.490018998 (JSON −0.490019).  LHS 덱의 m6 · m8 이 같은지는 **사용자 grep 대기**.  관통이 언제 (삽입 · 98.1 중력 · 시간간격) 일어났는지는 모른다 — 최종 좌표로 역확정하지 않는다.  처방: 상태 분리 (중심 통과 · 완전 이탈 · 정상 겹침) · 43 케이스의 물리 타깃 `HOLD_BOUNDARY` · \"부피가 작으니 무영향\" 을 해제 근거로 쓰지 않는다 (τ 밴드 · 접촉망은 극값에 걸린다).\n★ LHS 덱 확인 (사용자 grep 09-25, lhs00_037 bimodal · lhs00_110 mono): m6 `coefficientMaxElasticStiffness` · m8 `coefficientPlasticityDepth` · m7 `coefficientAdhesionStiffness` 이 생산 덱과 **동일** — AM–SE 칸 q 3.0 · φf 0.01 · kc 2.0e5.  ⇒ 재현 조건 충족: 9 건 = 바닥 평면 아래쪽 점착–중력 평형 (**재현됨, 조건부** — 실행 바이너리 · 관통 시점 · 접촉 이력은 미확인).",
+   "note": "기하 깊이 d = r − z 와 접촉 겹침 δn = r − |z| 를 분리 — z = −0.98r 이면 d/r 1.98 이지만 접촉 겹침은 0.02r (필드명 `overlap_over_r` 은 오도).  포화 가지 Fn = k2(δn − 2φf r) 에서 평면 아래 정지: δn/r = 2φf − mg/(k2 r) ⇒ d/r = 2 − 2φf + mg/(k2 r).  q = 3 (`coefficientMaxElasticStiffness` AM–SE 칸) · φf = 0.01 (`coefficientPlasticityDepth` AM–SE 칸) 은 생산 덱 `docs/data/phase_a_6mah/in.real_4.liggghts` m6 · m8 에 실재 — ★ 09-25 재계산 (LIGGGHTS hooke kn 식, Y* 1,468,923.8): r 1 µm → z −0.980075994 (JSON −0.980076) · r 0.5 µm → −0.490018998 (JSON −0.490019).  LHS 덱의 m6 · m8 이 같은지는 **사용자 grep 대기**.  관통이 언제 (삽입 · 98.1 중력 · 시간간격) 일어났는지는 모른다 — 최종 좌표로 역확정하지 않는다.  처방: 상태 분리 (중심 통과 · 완전 이탈 · 정상 겹침) · 43 케이스의 물리 타깃 `HOLD_BOUNDARY` · \"부피가 작으니 무영향\" 을 해제 근거로 쓰지 않는다 (τ 밴드 · 접촉망은 극값에 걸린다).\n★ LHS 덱 확인 (사용자 grep 09-25, lhs00_037 bimodal · lhs00_110 mono): m6 `coefficientMaxElasticStiffness` · m8 `coefficientPlasticityDepth` · m7 `coefficientAdhesionStiffness` 이 생산 덱과 **동일** — AM–SE 칸 q 3.0 · φf 0.01 · kc 2.0e5.  ⇒ 재현 조건 충족: 9 건 = 바닥 평면 아래쪽 점착–중력 평형 (**재현됨, 조건부** — 실행 바이너리 · 관통 시점 · 접촉 이력은 미확인).  ↪ 10-01 대조: 경계 상태 · HOLD 는 인계표에 있었으나 배포 v1 에서 빠졌다 (130 HOLD 59 · 64 HOLD 62) → 배포 v1.1 (c981d77f0) 에 boundary_state · physical_target_status · hold_reason_codes 를 싣고 README §3-7 에 뜻을 적었다.  1.98r 기전 자체는 조건부 확인 그대로 → open 유지.",
    "evidence_tests": [
     "docs/data/lhs_descriptors_20260924/README.md",
     "scripts/lhs_descriptor_harvest.py"
@@ -4759,43 +4793,63 @@
   {
    "id": "HND-04",
    "severity": "P1",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "codex (LHS 인계표 적대 리뷰 2026-09-24~25, 대상 425cee222)",
    "opened_in": "docs/reviews/codex_verdict_lhs_porosity_thickness_20260924.md",
    "title": "인계 생성기 `build_handover` 가 벽 진단 · 덱 확인 · 적격성을 **버리고** 음수 porosity · φ_SE + φ_AM > 1 을 `OK` 로 내보낸다 — \"기록 전용이라 학습 안전\" 은 현재 경로에서 거짓",
    "note": "수확기가 φ · porosity 상태를 무조건 OK 로 두고 (`lhs_descriptor_harvest.harvest`), `HANDOVER_EXTRA` 에 wall_record · deck_floor · 이탈 수 · 적격성이 없으며, 기본 수확 디렉터리가 20260919 다 (`lhs_design_dataset.py:1238`).  반례 (실제 함수, lhs00_005): phi_se 0.5136 · phi_am 0.4996 · porosity −1.322 % · 상태 전부 OK · 벽 열 없음 ⇒ φ 합 1.0132 가 타깃으로 나간다.  처방: `calculation_status` 와 `physical_target_status` 분리 · `hold_reason_codes` · `phi_sum_gt_one` · 벽 QC · 규약 ID · 4 종 sha 를 CSV 로 · 최신 수확 명시 선택 · 음수/이탈 케이스로 end-to-end 회귀.  130 행 원값 보존 (0 접기 · 행 삭제 금지) · 양수 112 행만으로 성능 보고 금지 · 음수 제외해 온 생산 코퍼스와 통합 금지.",
    "evidence_tests": [
-    "scripts/lhs_design_dataset.py",
-    "scripts/lhs_descriptor_harvest.py"
-   ]
+    "scripts/lhs_descriptor_harvest.py::selftest ⑮",
+    "scripts/lhs_design_dataset.py::selftest"
+   ],
+   "claimed_fixed_sha": "af528e24d",
+   "verification_note": "[범위: 인계표 생성기] af528e24d: 생성기가 벽 진단 · 덱 확인 · 적격성 (calculation_status · physical_target_status · hold_reason_codes) 을 싣는다 · 음수 porosity · φ 합 > 1 은 HOLD.  배포 묶음에서 다시 빠진 것은 REL-01 로 따로."
   },
   {
    "id": "HND-05",
    "severity": "P2",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "codex (LHS 인계표 적대 리뷰 2026-09-24~25, 대상 425cee222)",
    "opened_in": "docs/reviews/codex_verdict_lhs_porosity_thickness_20260924.md",
    "title": "웹앱 `calc_porosity_dual` 의 ε_union 은 쌍 렌즈만 뺀다 — 삼중 이상 교집합 · 완전 포함 · 벽 clipping 없음 ⇒ 합집합의 자명한 하한보다 작은 값도 낸다",
    "note": "반례 (실제 함수): 반지름 1 구 3 개 · 쌍 거리 0.2 → V_union 1.8787 < 구 하나 4.1888.  동심 3 구 (d ≤ 0 쌍 건너뜀) → 12.566 (참값 4.189).  130 에 이 극단이 실재한다는 주장은 아니다 — \"union\" 이라는 이름으로 물리 라벨을 교체하면 안 된다는 계약 반례.  참 union 은 별도 계산 (해석/복셀 수렴 확인) + AM–SE 중첩의 상별 배분 정의 필요.  `SELF-49` 의 항목 5 와 같은 뿌리.",
    "evidence_tests": [
-    "scripts/dem_analysis_core.py"
-   ]
+    "webapp/test_closed_param_exact_union.py"
+   ],
+   "claimed_fixed_sha": "90c6c9670",
+   "verification_note": "[범위: 인계 · 배포 porosity] 42e3ca460 (정확 union 130 + 64 · 전부 양수) · 90c6c9670 (분석 단계 정확 union) — 배포 porosity = porosity_union_exact_pct.  웹앱 calc_porosity_dual 의 쌍 렌즈 ε_union (porosity_union 이름) 은 그대로 — SELF-72 · SELF-49 소관."
   },
   {
    "id": "HND-06",
    "severity": "P2",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "codex (LHS 인계표 적대 리뷰 2026-09-24~25, 대상 425cee222)",
    "opened_in": "docs/reviews/codex_verdict_lhs_porosity_thickness_20260924.md",
    "title": "`plate_z_from_stl` 이 꼭짓점 z 평균을 평판 검사 없이 높이로 받는다 — z = 0 과 2 의 삼각형을 섞어 넣어도 1 을 돌려준다",
    "note": "실제 130 STL 이 그렇다는 주장은 아니다 (heckel 메시 실측: 6 꼭짓점 z 동일).  처방: `plate_planarity_span` · 법선 방향 · 유한값 · scale · timestep/출처 기록 · H_gap / H_envelope / H_pushback 분리 · 외피로의 조용한 fallback 금지.  `SELF-49` 항목 3 과 이웃.",
    "evidence_tests": [
-    "scripts/lhs_descriptor_harvest.py",
-    "scripts/parse_liggghts.py"
-   ]
+    "scripts/lhs_descriptor_harvest.py::selftest ⑮"
+   ],
+   "claimed_fixed_sha": "af528e24d",
+   "verification_note": "[범위: LHS 수확기 · 배포 경로] af528e24d: 수확기 plate_z_from_stl 평판 검사 (폭 > 1e-7 sim 거부) · 194 수확 plate_z_source = mesh_stl.  웹앱 parse_liggghts.parse_mesh_stl 은 그대로 (SELF-49 소관)."
+  },
+  {
+   "id": "REL-01",
+   "severity": "P2",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "found_by": "claude (10-01 · DESC/HND 대조 조사 — 내가 다시 셈)",
+   "opened_in": "docs/reviews/lhs_handover_judgments_20260924.md",
+   "title": "배포 v1 (8b84ba476) 이 정본 인계표의 적격성 · 경계 표지 (physical_target_status · hold_reason_codes · boundary_state) 를 버렸다 — HOLD 130 중 59 · 64 중 62 가 표지 없이 나갔고 README 에 언급 없음 · 배포를 만든 도구가 리포에 없었다",
+   "note": "HND-04 가 생성기에서 고친 것이 배포 묶음 단계에서 재발.  v1 값 자체는 인계표와 같다 (배포 ⊆ 인계표 · 차이 0).",
+   "claimed_fixed_sha": "c981d77f0",
+   "evidence_tests": [
+    "scripts/lhs_release_build.py::selftest"
+   ],
+   "verification_note": "c981d77f0: 배포 v1.1 이 세 표지를 싣고 README §3-7 에 뜻 · 빈도 · 쓰는 법 (HOLD 를 지우지 말고 뺀 결과와 넣은 결과 둘 다) · scripts/lhs_release_build.py (배포 = 인계표 열 부분집합 · 만들 때 대조 · v1 바이트 재현 · 시험 8/8)."
   },
   {
    "id": "MIX-01",
@@ -6040,7 +6094,7 @@
     "scripts/analyze_contacts.py::selftest ⑲a–g"
    ],
    "claimed_fixed_sha": "724823000",
-   "verification_note": "724823000: `calc_se_se_cn(..., box_x, box_y)` — 상자 크기가 주어지면 x · y 칸을 주기로 감싸고 (칸 수 = floor(L/cell) · 칸 폭 = L/칸 수) 거리는 최소영상 · z 는 비주기 · None = 옛 동작.  `run_full_analysis` 가 퍼콜레이션과 같은 box_x · box_y 를 넘긴다.  시험 먼저 — analyze_contacts --selftest ⑲a–g (x 경계 건너 · y 경계 건너 · 상자 없음 = 옛 동작 · 내부 쌍 · 겹침/먼 쌍 · 붐빔 2 · 호출부 전달 소스) 가 옛 코드에서 TypeError → 수정 뒤 25/25 · 웹앱 F1 툴팁에 '근접쌍 탐색은 x · y 주기 영상 포함 (LHS-22)' 한정어 (J20-l).  값 = WSL d1ec42fba 접촉 단계 130 · 64 재실행 (10-01 진행 중 · 반입 대기) — 옛 값 대비 크기는 그때 잰다.  인계 · 배포 열 아님 (J20-i)."
+   "verification_note": "724823000: `calc_se_se_cn(..., box_x, box_y)` — 상자 크기가 주어지면 x · y 칸을 주기로 감싸고 (칸 수 = floor(L/cell) · 칸 폭 = L/칸 수) 거리는 최소영상 · z 는 비주기 · None = 옛 동작.  `run_full_analysis` 가 퍼콜레이션과 같은 box_x · box_y 를 넘긴다.  시험 먼저 — analyze_contacts --selftest ⑲a–g (x 경계 건너 · y 경계 건너 · 상자 없음 = 옛 동작 · 내부 쌍 · 겹침/먼 쌍 · 붐빔 2 · 호출부 전달 소스) 가 옛 코드에서 TypeError → 수정 뒤 25/25 · 웹앱 F1 툴팁에 '근접쌍 탐색은 x · y 주기 영상 포함 (LHS-22)' 한정어 (J20-l).  값 = WSL d1ec42fba 접촉 단계 130 · 64 재실행 (10-01 진행 중 · 반입 대기) — 옛 값 대비 크기는 그때 잰다.  인계 · 배포 열 아님 (J20-i).  값 (c981d77f0 반입 · 5번 1e09f661d 대비): se_se_cn_aug 130 중 125 · 64 중 64 가 바뀜 — 중앙 +0.041 % (최대 +0.144 %) · 64 +0.023 % (최대 +0.039 %) · 줄어든 침대 0 (경계 건너 쌍만 더해진다) · _n_extra 중앙 +16 (130) · +33 (64).  배포 열 아님."
   },
   {
    "id": "LHS-23",
@@ -6506,7 +6560,7 @@
   {
    "id": "SELF-75",
    "severity": "P3",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "claude (10-01 · 자기 정정 — 1저자에게 같은 날 정정)",
    "opened_in": "docs/reviews/lhs_handover_judgments_20260924.md",
@@ -6514,7 +6568,9 @@
    "note": "코드 · docstring 은 처음부터 맞았다 (rc 0 = 전부 CLEAN · rc 3 = FLAG 있음 · rc 2 = 입력 오류 · NO_MESH · 감사 0 건) — 틀린 것은 내 설명뿐이다.  숫자의 뜻을 코드에서 확인하지 않고 그럴듯한 쪽으로 읽었다 (SELF-74 와 같은 부류: 원자료 · 코드 확인 전 설명).  정정 = 같은 날 1저자에게 · 퍼콜 감사 반입 README 에 rc 의 뜻을 코드 줄과 함께 적는다 → 그 커밋 SHA 로 claimed_fixed.",
    "evidence_tests": [
     "scripts/lhs_perc_audit.py::selftest ⑭"
-   ]
+   ],
+   "claimed_fixed_sha": "c981d77f0",
+   "verification_note": "c981d77f0: 퍼콜 감사 반입 README (docs/data/lhs_perc_audit_20261001/README.md) 머리에 rc 뜻을 코드 줄 (docstring :29 · :598–605 · selftest ⑭) 과 함께 적고 \"rc 3 ≠ 비관통 침대\" 를 명시 — 코드는 처음부터 맞았다."
   },
   {
    "id": "SELF-76",
