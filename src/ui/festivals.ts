@@ -10,11 +10,15 @@ const SOURCE_LABEL = { notes: '내 마인드맵', supplement: '보충', claude: 
 
 const month = (mmdd: string) => Number(mmdd.slice(0, 2));
 const day = (mmdd: string) => Number(mmdd.slice(3));
-/** 「8/2 ~ 8/7」 the way I write dates on my map; ≈ when the dates move a little every year. */
+/**
+ * 「8/2 ~ 8/7」 the way I write dates on my map; ≈ when the dates move a little every year. The only place it may break
+ * is after the 「~」 (no-break spaces elsewhere), so a date too long for its cell goes on two lines instead of running
+ * into the festival's name.
+ */
 function when(f: Festival): string {
   const a = `${month(f.start)}/${day(f.start)}`;
   const b = f.end ? `${month(f.end)}/${day(f.end)}` : '';
-  return `${f.approx ? '≈ ' : ''}${a}${b && b !== a ? ` ~ ${b}` : ''}`;
+  return `${f.approx ? '≈\u00a0' : ''}${a}${b && b !== a ? `\u00a0~ ${b}` : ''}`;
 }
 
 export function renderFestivals(cb: { onPick(f: Festival): void }): HTMLElement {
