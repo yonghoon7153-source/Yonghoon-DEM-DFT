@@ -238,7 +238,9 @@ fi
 
 # ═══ ⑥ 당월 기록 활동 ═════════════════════════════════════════════════════
 if sec 6 "⑥ records — git · decision ledger · reviews · literature ($SINCE ~ $UNTIL)"; then
-echo "  commits            : $(git log --since="$SINCE 00:00" --until="$UNTIL 00:00" --oneline 2>/dev/null | wc -l)"
+SHALLOW=$(git rev-parse --is-shallow-repository 2>/dev/null)
+if [ "$SHALLOW" = true ]; then echo "  commits            : (얕은 clone 이라 셀 수 없다 — 전체 clone 에서 다시 돌릴 것)"
+else echo "  commits            : $(git log --since="$SINCE 00:00" --until="$UNTIL 00:00" --oneline 2>/dev/null | wc -l)"; fi
 $PY - <<'PY'
 import json, os
 from collections import Counter
@@ -250,7 +252,8 @@ if os.path.exists(p):
     print(f"  decisions (Sep)    : {len(sep)}  (" + " · ".join(f"{k} {v}" for k, v in sorted(c.items())) + ")")
 PY
 echo "  review letters     : prompts $(ls kb/reviews | grep -c '_prompt_.*2026_09') · replies $(ls kb/reviews | grep -c '_reply_.*2026_09')"
-echo "  literature digests : $(git log --since="$SINCE 00:00" --until="$UNTIL 00:00" --diff-filter=A --name-only --format= -- 'litdb/papers/*.md' 2>/dev/null | sort -u | grep -c .)"
+[ "$SHALLOW" = true ] && echo "  literature digests : (얕은 clone — 셀 수 없다)" || \
+  echo "  literature digests : $(git log --since="$SINCE 00:00" --until="$UNTIL 00:00" --diff-filter=A --name-only --format= -- 'litdb/papers/*.md' 2>/dev/null | sort -u | grep -c .)"
 $PY tools/db/validate_canonical.py 2>/dev/null | tail -2 | sed 's/^/  /'
 fi
 
