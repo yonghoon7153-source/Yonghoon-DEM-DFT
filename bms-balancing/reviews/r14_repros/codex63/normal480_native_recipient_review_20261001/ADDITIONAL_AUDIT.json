@@ -1,0 +1,93 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "check": "packaging correction is exactly removal of absent duplicate baseline lookup",
+      "pass": true
+    },
+    {
+      "check": "first packaging error and rc1 retained",
+      "pass": true
+    },
+    {
+      "check": "B020 references already part of baseline_files",
+      "pass": true
+    },
+    {
+      "check": "raw exact header electrolyte_guard.csv",
+      "pass": true
+    },
+    {
+      "check": "raw exact header preflight_global.csv",
+      "pass": true
+    },
+    {
+      "check": "raw exact header preflight_boundary1.csv",
+      "pass": true
+    },
+    {
+      "check": "raw exact header preflight_boundary4.csv",
+      "pass": true
+    },
+    {
+      "check": "raw exact header axes_profile_N.csv",
+      "pass": true
+    },
+    {
+      "check": "raw exact header axes_profile_P.csv",
+      "pass": true
+    },
+    {
+      "check": "unchanged sampled particle equation equations_pce1_per1_Constraint.csv",
+      "pass": true
+    },
+    {
+      "check": "unchanged sampled particle equation equations_pce1_per1_Expression.csv",
+      "pass": true
+    },
+    {
+      "check": "unchanged sampled particle equation equations_pce1_per1_Weak.csv",
+      "pass": true
+    },
+    {
+      "check": "unchanged sampled particle equation equations_pce2_per1_Constraint.csv",
+      "pass": true
+    },
+    {
+      "check": "unchanged sampled particle equation equations_pce2_per1_Expression.csv",
+      "pass": true
+    },
+    {
+      "check": "unchanged sampled particle equation equations_pce2_per1_Weak.csv",
+      "pass": true
+    },
+    {
+      "check": "summary binds exact diagnostic bytes",
+      "pass": true
+    },
+    {
+      "check": "summary quotes actual numeric result",
+      "pass": true
+    },
+    {
+      "check": "approval explicitly excludes960 and includes general limits",
+      "pass": true
+    },
+    {
+      "check": "no claimed actual core/effective policy verification",
+      "pass": true
+    },
+    {
+      "check": "MPH identity record only, no MPH in received package",
+      "pass": true
+    }
+  ],
+  "scope": "Static/data checks only; no received code executed. MPH bytes not locally available.",
+  "output_MPH_sender_identity": {
+    "bytes": 7315279360,
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal480_offline_preparation_20261001/future_run_001/result_Model.mph",
+    "sha256": "2ada6b402917e31d1dc4c5265bf483d92e6a8e5ef50de57463acbc81f91311ab"
+  },
+  "packaging_correction": "One erroneous duplicate lookup removed; six B020 CSVs remain included under baseline/.",
+  "separate_packaging_budget": "323.703s packaging snapshot is outside completed native parent. No separate packaging budget acceptance inferred."
+}

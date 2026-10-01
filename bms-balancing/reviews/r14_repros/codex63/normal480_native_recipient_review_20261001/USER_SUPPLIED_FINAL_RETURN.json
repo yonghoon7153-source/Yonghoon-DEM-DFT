@@ -1,0 +1,11 @@
+{
+  "reviewer_provenance": "Values transcribed from current user message. Not a directly observed remote tool call or independent OS audit.",
+  "source": "Final supplement packaging tool response, subsequent transcription; no new native execution.",
+  "completion": {
+    "chunk_id": "31c2a0",
+    "wall_time_seconds": 1.2638915,
+    "exit_code": 0,
+    "original_token_count": 81,
+    "output": "{\"status\":\"SUPPLEMENT_VERIFIED\",\"supplement\":{\"file\":\"NORMAL480_NATIVE_DELIVERY_SUPPLEMENT_20261001.zip\",\"bytes\":56697,\"sha256\":\"dea37ce9bcbbcc85169d5d69ac0690777bf4accdec7555e8eca4ff854a7750d3\"},\"elapsed_seconds\":0.2029999999795109,\"scope\":\"After supplement readback, before tool return\",\"recipient\":null}\r\n"
+  }
+}

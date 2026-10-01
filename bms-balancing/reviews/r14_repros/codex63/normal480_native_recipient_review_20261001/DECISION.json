@@ -1,0 +1,60 @@
+{
+  "schema": 1,
+  "date": "2026-10-01",
+  "decision": "ACCEPTED_NORMAL480_LIMITED_DIAGNOSTIC",
+  "run_id": "normal480_candidate_001",
+  "code_manifest_sha256": "7a5cc2f1717ae7a80cd7e423861965ad51c5f639272eab7f3a3c7680499ae22c",
+  "blocking_findings": [],
+  "numeric_recovery": "PASS",
+  "sampled_comparison": "PASS",
+  "preservation": "ACCEPTED_WITHIN_SUPPLIED_EVIDENCE",
+  "process_cleanup": "ACCEPTED_HISTORICAL_OWNED_JOB_EVIDENCE",
+  "policy_preservation": "ACCEPTED_RECORDED_FILE_AND_SECURITY_VALUES",
+  "effective_policy": "UNVERIFIED",
+  "actual_cores": "UNVERIFIED",
+  "overall": "INCOMPLETE",
+  "normal_gate": "INCOMPLETE",
+  "long_horizon_convergence": "INCOMPLETE",
+  "new_native_execution_approved": false,
+  "automatic_960_extension": false,
+  "data": {
+    "stored_times": 5740,
+    "requested_times": 4937,
+    "profile_rows": 2766680,
+    "normal240_max_voltage_delta_V": "6E-15",
+    "normal240_max_surface_delta": "1.99E-14",
+    "B020_max_voltage_delta_V": "4.6E-15",
+    "B020_max_surface_delta": "2.7E-15",
+    "Li_relative_drift": "3.3931521893319485367048848364398532433492213006249E-15",
+    "voltage_identity_V": "6.545E-16",
+    "final_voltage_V": "3.1461077189331967",
+    "final_electrolyte_min_mol_m3": "1078.7950417127677"
+  },
+  "native_post_write_budget": {
+    "seconds": 6829.014709,
+    "limit": 11400,
+    "scope": "User-console post-write transcription bound to supplied final boundary; not direct reviewer OS observation"
+  },
+  "package_error": {
+    "type": "KeyError b020_baseline_files",
+    "original_rc": 1,
+    "preserved": true,
+    "final_source_diff": "Remove one duplicate baseline lookup; B020 six tables retained.",
+    "numerical_failure": false
+  },
+  "next": "Analyze existing 0–480s saved results; do not prepare or run960 automatically.",
+  "exclusions": [
+    "COMSOL/JVM/received code execution",
+    "new solve or input gate",
+    "changes to source/state/receipts",
+    "full model/temporal/spatial convergence or experimental validation",
+    "direct local hash of absent MPH",
+    "new policy or remote process observation"
+  ],
+  "review_checks": {
+    "NUMERIC_AUDIT.json": 58,
+    "RECORDS_AUDIT.json": 25908,
+    "SUPPLEMENTAL_AUDIT.json": 45,
+    "ADDITIONAL_AUDIT.json": 20
+  }
+}
