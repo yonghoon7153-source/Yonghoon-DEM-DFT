@@ -28,8 +28,9 @@ Checks (SCHEMA.md conventions):
      (2026-10-03: the check flagged Kim 2025's 25:50:25 as our drift).
  19. no two raw files share the same body sha256 (2026-09-30: a parallel paper-agent
      run sealed one digest with another paper's body; each file's own hash matched)
- 20. a digest's frontmatter `doi` must also appear in its body (same failure, caught
-     from a single file)
+ 20. a digest's frontmatter `doi` must appear in the FIRST 30 LINES of its body —
+     the bibliography region (2026-10-04: one digest declared Lee 2026's bibliography
+     while its DOI sat at body line 666 as a reference citation, so 'anywhere' passed)
 
 The kit's study-path coverage check was dropped on 2026-08-20: it only ran when
 `guides/llm-wiki-study-path.md` existed, and this is a project wiki, not a
@@ -188,11 +189,21 @@ for h, names in sorted(raw_bodies.items()):
 #     본문이 다른 논문인 사고(위 19번)를 **한 파일만 봐도** 잡는 검사다. 2026-09-30 실측:
 #     이 위키의 digest 7편 모두 서지 절에 자기 DOI 를 적는다 — 관례를 검사로 굳힌다.
 #     `doi` 키가 없는 raw(전사·기사 등)는 면제.
+DOI_HEAD_LINES = 30
 for name, (fm, body) in sorted(raw_fm.items()):
     doi = (fm.get('doi') or '').strip().rstrip('.')
-    if doi and doi not in body:
-        errors.append(f'{name}: frontmatter 의 doi `{doi}` 가 본문에 없다 — '
-                      f'frontmatter 와 본문이 다른 논문일 수 있다 (2026-09-30 사고 참조)')
+    if not doi:
+        continue
+    #     2026-10-04: "본문 어디든" 으로는 부족했다. `qu2025_…` 가 **서지를 Lee 2026 으로** 적고도
+    #     통과했다 — 자기 DOI 가 본문 666행에 **참고문헌 인용으로 우연히** 들어 있었기 때문이다.
+    #     실측: 건강한 digest 11편은 전부 자기 DOI 를 **본문 5–7행**(`# 수집 목적`)에 적고 2–3회
+    #     반복한다. 그래서 **머리 30행 안**을 요구한다 — digest 의 신원은 맨 앞에서 선언돼야 한다.
+    head = '\n'.join(body.lstrip('\n').splitlines()[:DOI_HEAD_LINES])
+    if doi not in head:
+        where = '본문에 아예 없다' if doi not in body else f'본문 뒤쪽에만 있다(참고문헌 인용일 수 있다)'
+        errors.append(f'{name}: frontmatter 의 doi `{doi}` 가 **본문 머리 {DOI_HEAD_LINES}행에 없다** '
+                      f'— {where}. digest 가 자기 서지를 다른 논문으로 적었을 수 있다 '
+                      f'(2026-09-30·10-04 사고 참조)')
 
 # 15. branch names are not wiki content — the rule lives in the root CLAUDE.md.
 #     Hardcoding it here drifts silently: on 2026-08-20 five wiki files (and
