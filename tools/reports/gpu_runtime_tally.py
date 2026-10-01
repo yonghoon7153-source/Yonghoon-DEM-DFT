@@ -38,6 +38,8 @@ TRACKS = [
     ("③ glass small cell (Li transport)", r"^(lpscl_glass|lpscl_smallcell|glass_)"),
     ("④ crystalline transport · framework · elastic", r"^(b2o3|elastic_|gap_nscf|committee_|modelc_|lpsocl_|lpscl16_|highT_reseed)"),
     ("⑤ SDCP self-doping (molecular)", r"^sdcp_"),
+    ("SEI · nitride protective-layer control (Aug carry-over)", r"^sei_"),
+    ("LPSCl@Li2S interphase (closed 09-15)", r"^(g1_li2s|li2s_layer)"),
 ]
 OTHER = "기타 (트랙 밖)"
 PRUNE = re.compile(r"(\.save$|^tmp|^_tmp|^__pycache__$|^\.git$|^wfc)")
@@ -97,7 +99,9 @@ def parse_qe(p, head, text):
         start = end - wall
     nproc = re.search(r"Number of MPI processes:\s+(\d+)", head)
     status = ("stopped" if re.search(r"Program stopped by user request|Maximum CPU time exceeded", text)
-              else "done" if "JOB DONE." in text else "running/cut")
+              else "done" if "JOB DONE." in text
+              else "probe" if (not walls and "Estimated max dynamical RAM" in text and "iteration #" not in text)
+              else "running/cut")            # probe = 메모리 추정 줄만 읽고 일부러 끝낸 출력 (SCF 반복 0)
     return {"kind": "QE " + ("neb.x" if prog == "NEB" else "pw.x"), "gpu": "GPU acceleration is ACTIVE" in head,
             "start": start, "end": end, "wall_s": wall, "approx": approx, "nproc": int(nproc.group(1)) if nproc else None, "status": status}
 
@@ -297,7 +301,7 @@ def report(jobs, since, until, keys=3, title="GABIA GPU SERVER (RTX A6000)", for
     st = s["status"]
     L += ["> Jobs in window",
           f"  jobs                    : {s['n_jobs']}  ({kinds})",
-          f"  done / stopped / unconverged / running-or-cut : {st.get('done', 0)} / {st.get('stopped', 0)} / {st.get('unconverged', 0)} / {st.get('running/cut', 0)}",
+          f"  done / stopped (EXIT) / unconverged / memory probe / running-or-cut : {st.get('done', 0)} / {st.get('stopped', 0)} / {st.get('unconverged', 0)} / {st.get('probe', 0)} / {st.get('running/cut', 0)}",
           f"  time read from files    : exact {s['n_jobs'] - s['approx_n']} · approx {s['approx_n']} (no end line yet — start→last write)", ""]
     if foreign:
         from collections import Counter
@@ -327,9 +331,11 @@ def report(jobs, since, until, keys=3, title="GABIA GPU SERVER (RTX A6000)", for
         from collections import Counter
         kc = Counter((j["kind"], "GPU" if j["gpu"] else "CPU") for j in js)
         dc = Counter((j["kind"], "GPU" if j["gpu"] else "CPU") for j in js if j["status"] == "done")
+        pc = Counter((j["kind"], "GPU" if j["gpu"] else "CPU") for j in js if j["status"] == "probe")
         L.append(f"  {name}")
         L.append(f"    jobs {len(js)} · GPU {g:,.1f} h · CPU {c:,.1f} core·h · folders {len(set(j['top'] for j in js))}")
-        L.append("    " + " · ".join(f"{k}({dev}) {n} (done {dc.get((k, dev), 0)})" for (k, dev), n in sorted(kc.items())))
+        L.append("    " + " · ".join(f"{k}({dev}) {n} (done {dc.get((k, dev), 0)}" + (f" · probe {pc[(k, dev)]}" if pc.get((k, dev)) else "") + ")"
+                                  for (k, dev), n in sorted(kc.items())))
         for j in sorted(js, key=lambda j: (j["end"] >= until, -j["end"]))[:keys]:     # 기간 안에 끝난 것 먼저
             try:
                 L.append("      " + ls_line(j["path"], j["root"]))
@@ -470,6 +476,14 @@ def _selftest():
         blk = rt.split("② Nd cathode interface (CEI)", 1)[1]
         ck("대표 파일은 기간 안에 끝난 것 먼저 (10월에 끝난 출력은 뒤로)", blk.find("gpu_cut/pw.out") < blk.find("gpu_late/pw.out") and blk.find("gpu_cut/pw.out") >= 0, blk[:500])
         ck("highT_reseed 폴더는 ④", track_of("highT_reseed_221").startswith("④"))
+        w2("wad_probe/V5_far/probe.out", "     Program PWSCF v.7.4.1 starts on 25Sep2026 at 20:00:00\n     Number of MPI processes:                 4\n"
+           "     Estimated max dynamical RAM per process >      27.25 GB\n     Estimated total dynamical RAM >     108.99 GB\n", ep("2026-09-25 20:00:30"))
+        w2("wad_probe/V5_cut/pw.out", "     Program PWSCF v.7.4.1 starts on 25Sep2026 at 20:00:00\n     Estimated max dynamical RAM per process >      27.25 GB\n"
+           "     iteration #  1     ecut=    70.00 Ry     beta= 0.20\n", ep("2026-09-25 21:00:00"))
+        j3 = {j["rel"]: j for j in scan([R2], since, until)}
+        ck("메모리 프로브 (추정 줄만 · SCF 반복 0 · 끝 줄 없음) = probe", j3.get("wad_probe/V5_far/probe.out", {}).get("status") == "probe", j3.get("wad_probe/V5_far/probe.out"))
+        ck("⛔음성 SCF 반복이 있으면 probe 가 아니라 running/cut", j3.get("wad_probe/V5_cut/pw.out", {}).get("status") == "running/cut", j3.get("wad_probe/V5_cut/pw.out"))
+        ck("sei_* · li2s_layer 는 이름 붙은 묶음 (기타 아님)", track_of("sei_control").startswith("SEI") and track_of("g1_li2s_layer1").startswith("LPSCl@Li2S") and track_of("misc") == OTHER)
     print(f"{'✅' if bad == 0 else '⛔'} gpu_runtime_tally selftest {ok}/{ok + bad} 통과")
     return 0 if bad == 0 else 1
 
