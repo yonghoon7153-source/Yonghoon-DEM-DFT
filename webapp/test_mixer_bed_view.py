@@ -111,6 +111,86 @@ def gif_color_check(html, tmp):
                 f'SE 픽셀 예 {tuple(int(v) for v in se[-1, 0])}')
 
 
+#  ⑰e 투명 배경 GIF (1저자 10-02 *"투명배경 gif 버전도"*) — 같은 인코더를 clear=true 로 돌린다.
+#  배경 (알파 0) = 프레임마다 투명 색 하나 (index 0) · 처분 방식 2 (배경으로 되돌림) — 1 이면 앞 프레임 그림이 투명 자리에 남는다 (잔상).
+GIF_HARNESS_CLEAR = r"""
+const fs = require('fs'), W = 48, H = 32;
+function frame(left) {
+  const f = new Uint8ClampedArray(W * H * 4);                         // 알파 0 = 투명 배경
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    const on = left ? x < 16 : x >= 32, p = 4 * (y * W + x);
+    if (on) { f[p] = 0xc9; f[p + 1] = 0xb8; f[p + 2] = 0x8a; f[p + 3] = 255; }   // SE 베이지 덩어리 (프레임마다 자리가 바뀐다)
+  }
+  return f;
+}
+const f0 = frame(true), f1 = frame(false), g = gifBegin(f0, W, H, true);
+gifAdd(g, f0, 10, true); gifAdd(g, f1, 10, true);
+const parts = gifEnd(g), out = Buffer.alloc(parts.reduce((a, c) => a + c.length, 0));
+let o = 0; for (const c of parts) { Buffer.from(c.buffer, c.byteOffset, c.length).copy(out, o); o += c.length; }
+fs.writeFileSync(process.argv[2], out);
+"""
+
+
+def gif_clear_check(html, tmp):
+    """→ (None = node 없음) 또는 (ok, 설명).  투명 GIF 두 프레임: 배경은 알파 0 · 덩어리는 불투명 베이지 · 둘째 프레임에 첫 덩어리 잔상 없음."""
+    import subprocess
+    node = shutil.which('node')
+    if node is None:
+        return None
+    src = gif_encoder_src(html)
+    if src is None:
+        return False, '인코더 (lzwBlocks … gifEnd) 를 페이지에서 못 찾았다'
+    js, gif = os.path.join(tmp, 'gif_clear.js'), os.path.join(tmp, 'gif_clear.gif')
+    with open(js, 'w', encoding='utf-8') as fh:
+        fh.write(src + '\n' + GIF_HARNESS_CLEAR)
+    r = subprocess.run([node, js, gif], capture_output=True, text=True, timeout=60)
+    if r.returncode != 0 or not os.path.isfile(gif):
+        return False, f'node 실패 rc {r.returncode}: {r.stderr[-300:]}'
+    from PIL import Image
+    im = Image.open(gif)
+    n = getattr(im, 'n_frames', 1)
+    im.seek(0)
+    a0 = np.asarray(im.convert('RGBA'), dtype=int)
+    tr0 = im.info.get('transparency')
+    im.seek(1)
+    a1 = np.asarray(im.convert('RGBA'), dtype=int)
+    want = np.array([0xc9, 0xb8, 0x8a])
+    obj0 = a0[:, :16]; obj1 = a1[:, 32:]
+    ok_obj = (obj0[..., 3] == 255).all() and (obj1[..., 3] == 255).all() and np.abs(obj0[..., :3] - want).max() <= 8 \
+        and np.abs(obj1[..., :3] - want).max() <= 8
+    bg0 = int(a0[:, 16:][..., 3].max()); bg1 = int(a1[:, :32][..., 3].max())     # 둘째 프레임의 왼쪽 = 첫 덩어리 자리 (잔상이면 알파 > 0)
+    ok = n == 2 and tr0 is not None and ok_obj and bg0 == 0 and bg1 == 0
+    return ok, f'프레임 {n} · 투명 색 {tr0} · 덩어리 불투명 · 베이지 {bool(ok_obj)} · 배경 알파 최대 {bg0} / 둘째 프레임 첫 자리 {bg1} (둘 다 0)'
+
+
+#  ⑰f GIF 캡션 — 런 (샘플) 이름 없이 (1저자 10-02 *"무슨 샘플인지 이름은 빼서"*) · PNG 캡션은 그대로 (런 이름 포함)
+CAPTION_HARNESS = r"""
+const S = { data: { meta: { run: 'LC_s32452843', step: 317331, time_s: 0.224, rev: null, phase: 'fill', view: '3d', types_present: {}, selection: null } }, hidden: {} };
+const nf = new Intl.NumberFormat('ko-KR'); function mm(v) { return (v * 1e3).toFixed(2) + ' mm'; }
+process.stdout.write(JSON.stringify({ png: captionText(), gif: captionText(false) }));
+"""
+
+
+def caption_check(html, tmp):
+    import subprocess, json as _json
+    node = shutil.which('node')
+    if node is None:
+        return None
+    a = html.find('  function captionText(')
+    b = html.find('\n  }\n', a) if a >= 0 else -1
+    if a < 0 or b < 0:
+        return False, 'captionText 를 페이지에서 못 찾았다'
+    js = os.path.join(tmp, 'caption.js')
+    with open(js, 'w', encoding='utf-8') as fh:
+        fh.write(html[a:b + 4] + '\n' + CAPTION_HARNESS)
+    r = subprocess.run([node, js], capture_output=True, text=True, timeout=60)
+    if r.returncode != 0:
+        return False, f'node 실패 rc {r.returncode}: {r.stderr[-300:]}'
+    o = _json.loads(r.stdout)
+    ok = 'LC_s32452843' in o['png'] and 'LC_s32452843' not in o['gif'] and o['gif'].startswith('step ')
+    return ok, f"PNG 캡션 '{o['png'][:40]}…' · GIF 캡션 '{o['gif'][:40]}…'"
+
+
 def frame_txt(step, rows=ROWS, n_hdr=None, step_hdr=None):
     L = ['ITEM: TIMESTEP', str(step if step_hdr is None else step_hdr), 'ITEM: NUMBER OF ATOMS',
          str(len(rows) if n_hdr is None else n_hdr), 'ITEM: BOX BOUNDS mm mm mm', '-0.02 0.02', '-0.02 0.02',
@@ -422,6 +502,30 @@ def main():
     else:
         chk(f'⑰d GIF: 첫 프레임에 없던 상 색 (층상 런의 SE) 도 뒤 프레임에서 그 색으로 나온다 — 팔레트를 첫 프레임에서만 뽑지 않는다 '
             f'(1저자 09-30 밤 "gif 하면 흑백") · {gc[1]}', gc[0])
+    # ── ⑰e–g 투명 배경 GIF · GIF 캡션에 런 이름 없음 (1저자 10-02) ──
+    gt = gif_clear_check(html, pdir)
+    if gt is None:
+        print('  —     ⑰e 투명 GIF 시험 건너뜀 (node 없음 · CI 에서 돈다)')
+    else:
+        chk(f'⑰e 투명 배경 GIF: 배경 = 투명 색 · 덩어리 불투명 그대로 · 앞 프레임 잔상 없음 (처분 2) · {gt[1]}', gt[0])
+    cc = caption_check(html, pdir)
+    if cc is None:
+        print('  —     ⑰f GIF 캡션 시험 건너뜀 (node 없음 · CI 에서 돈다)')
+    else:
+        chk(f'⑰f GIF 캡션에는 런 (샘플) 이름이 없고 PNG 캡션에는 그대로 있다 · {cc[1]}', cc[0])
+    chk('⑰h ☑ 드럼 면 채우기 (#bedDrumFill · 기본 켜짐) — 3D 드럼을 실물처럼 (원통 벽 · 뒤 뚜껑 · 앞 테) 그리고 끄면 옛 선 그림 · '
+        '토글은 메시를 다시 만들고 (선 · 면 메시 모두 GPU 에서 푼다) 카메라는 그대로',
+        'id="bedDrumFill" checked' in html and 'function drumSolid(' in html and 'function drumLines(' in html
+        and "($('bedDrumFill') || {}).checked ? drumSolid(THREE, j.drum) : drumLines(THREE, j.drum)" in html
+        and 'else if (o.isMesh) { o.geometry.dispose(); o.material.dispose(); }' in html
+        and "$('bedDrumFill').addEventListener('change'" in html
+        and 'THREE.BackSide' in html[html.find('function drumSolid('):html.find('function render3d(')]
+        and 'THREE.FrontSide' in html[html.find('function drumSolid('):html.find('function render3d(')]
+        and 'back.rotation.y = Math.PI / 2' in html and 'front.rotation.y = -Math.PI / 2' in html)
+    #   ⑰h 의 BackSide · 안쪽 향한 뚜껑 둘 = 어느 시점에서도 가까운 쪽 벽 · 뚜껑은 그리지 않는다 (잘라 본 그림) — 양면 벽이면 돌렸을 때 입자가 가려졌다 (10-02 시각 확인)
+    chk('⑰g ☑ 투명 배경 GIF (#bedGifClear) 가 있고 GIF 내보내기가 그 값을 프레임 · 인코더에 넘긴다',
+        'id="bedGifClear"' in html and "$('bedGifClear')" in html and 'captureFrame(G, clear)' in html
+        and 'gifBegin(rgba, w, h, clear)' in html and 'gifAdd(gif, rgba, delay, clear)' in html)
     shutil.rmtree(tmp, ignore_errors=True)
     shutil.rmtree(pdir, ignore_errors=True)
     print(f'\ntest_mixer_bed_view: {_ok}/{_ok + len(_fail)} PASS' + (f'   FAILED: {_fail}' if _fail else ''))

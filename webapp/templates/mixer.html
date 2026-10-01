@@ -135,19 +135,21 @@
           <select id="bedPngScale" class="input" title="화면 대비 배율"><option value="2">PNG ×2</option><option value="3">PNG ×3</option>
             <option value="4" selected>PNG ×4</option></select>
           <button class="btn btn-secondary btn-sm" id="bedPng" type="button">⬇ 고화질 PNG (이 프레임)</button>
-          <label title="켜면 이 PNG 한 장의 배경이 투명 (슬라이드에 붙이기용) — 그림 · 캡션 두 줄 (어두운 글자) 은 그대로.  화면 · GIF 는 배경 그대로 · 기본 꺼짐"><input type="checkbox" id="bedPngClear"> 투명 배경 PNG</label>
+          <label title="켜면 이 PNG 한 장의 배경이 투명 (슬라이드에 붙이기용) — 그림 · 캡션 두 줄 (어두운 글자) 은 그대로.  화면 그림은 배경 그대로 · 기본 꺼짐"><input type="checkbox" id="bedPngClear"> 투명 배경 PNG</label>
         </div>
         <div class="bed-row bed-tools">
           <select id="bedGifRange" class="input"><option value="all">GIF 처음→끝</option><option value="cur">지금→끝</option></select>
           <select id="bedGifStride" class="input" title="몇 프레임마다 한 장"><option value="1">모든 프레임</option><option value="2">2 마다</option>
             <option value="5" selected>5 마다</option><option value="10">10 마다</option></select>
           <button class="btn btn-secondary btn-sm" id="bedGif" type="button">⬇ GIF</button>
+          <label title="켜면 GIF 배경이 투명 (슬라이드에 붙이기용) — 프레임마다 투명 색 하나 · 앞 프레임은 지우고 다음 프레임을 그린다 · GIF 는 반투명이 없어 가장자리는 알파 절반에서 자른다 · 기본 꺼짐"><input type="checkbox" id="bedGifClear"> 투명 배경 GIF</label>
         </div>
         <div class="mx-note" id="bedExportMsg"></div>
         <div class="bed-views">
           <label><input type="radio" name="bedView" value="3d" checked> 3D</label>
           <label><input type="radio" name="bedView" value="slab"> 얇은 단면</label>
           <label><input type="radio" name="bedView" value="proj"> 전체 투영</label>
+          <label title="3D 드럼을 실물처럼 — 원통 벽 (안 · 밖) · 뒤 뚜껑은 채우고 앞은 열린 창 + 테 (처음 시점 쪽).  끄면 옛 선 그림.  그림 · 내보내기만 바뀐다 (데이터 · 판정 무관)"><input type="checkbox" id="bedDrumFill" checked> 드럼 면 채우기</label>
         </div>
         <div id="bedSlabBox">
           <label class="blk">드럼 축 위치 x₀ <input type="range" id="bedX0" min="0" max="1000" value="500"></label>
@@ -419,10 +421,11 @@ function mxTab(t){
 
   // ── 내보내기 (고화질 PNG · GIF) — 그림 아래에 출처 · 보기 전용 표지를 붙인다 ──
   //    PNG 만 ☑ "투명 배경 PNG" (#bedPngClear · 기본 꺼짐 = 옛 출력 그대로) — 켜면 그림 · 캡션 띠 배경 알파 0 · 글자는 어두운 색 그대로.
-  //    GIF 는 배경 그대로 (이 인코더는 알파를 쓰지 않는다) · 화면 그림도 그대로.
-  function captionText() {
+  //    GIF 는 ☑ "투명 배경 GIF" (#bedGifClear · 기본 꺼짐) — 켜면 프레임마다 투명 색 하나 (index 0 · 알파 < 128) · 처분 2 (잔상 없음) · 화면 그림은 그대로.
+  //    GIF 캡션에는 런 (샘플) 이름을 넣지 않는다 (1저자 10-02 — 발표용) · PNG 캡션 · 파일 이름에는 그대로.
+  function captionText(withRun) {               // withRun === false = 런 (샘플) 이름 없이 (GIF)
     var j = S.data.meta, v = { '3d': '3D', slab: '얇은 단면', proj: '전체 투영' }[j.view] || j.view;
-    var t = j.run + ' · step ' + nf.format(j.step);
+    var t = (withRun === false ? '' : j.run + ' · ') + 'step ' + nf.format(j.step);
     if (j.time_s != null) t += ' · t ' + j.time_s.toFixed(3) + ' s';
     t += j.rev != null ? ' · ' + j.rev.toFixed(2) + ' 바퀴' : (j.phase === 'fill' ? ' · 정착 구간' : '');
     t += ' · ' + v + (j.selection ? ' (x₀ ' + mm(j.selection.x0) + ' · t ' + mm(j.selection.t) + ')' : '');
@@ -495,40 +498,45 @@ function mxTab(t){
   //  프레임을 받는 즉시 압축한다 (원본 RGBA 를 쌓지 않는다 — 옛 판은 전부 쌓았다가 한 번에 압축해 150 장 상한이 필요했다 · 1저자 09-30 밤)
   //  팔레트 = **프레임마다** 그 프레임의 5 비트 히스토그램 상위 256 색 (지역 색표 · 프레임당 768 B).  옛 판은 첫 프레임 팔레트를 전 프레임에 썼다 —
   //  층상 런은 첫 프레임 (정착 ①) 에 SE 가 없어 팔레트가 회색 (AM_P · AM_S) 뿐이었고, 뒤 프레임의 SE 베이지가 회색으로 칠해졌다 (1저자 09-30 밤 "gif 하면 흑백")
-  function gifPalette(f) {
+  function gifPalette(f, clear) {                // clear = 투명 배경: index 0 은 투명 자리 · 색은 알파 ≥ 128 칸에서만 뽑아 1 부터 255 색
     var cnt = new Uint32Array(32768), sr = new Float64Array(32768), sg = new Float64Array(32768), sb = new Float64Array(32768);
-    for (var p = 0; p < f.length; p += 4) { var b = ((f[p] >> 3) << 10) | ((f[p + 1] >> 3) << 5) | (f[p + 2] >> 3); cnt[b]++; sr[b] += f[p]; sg[b] += f[p + 1]; sb[b] += f[p + 2]; }
+    for (var p = 0; p < f.length; p += 4) { if (clear && f[p + 3] < 128) continue; var b = ((f[p] >> 3) << 10) | ((f[p + 1] >> 3) << 5) | (f[p + 2] >> 3); cnt[b]++; sr[b] += f[p]; sg[b] += f[p + 1]; sb[b] += f[p + 2]; }
     var bins = []; for (var b1 = 0; b1 < 32768; b1++) if (cnt[b1]) bins.push(b1);
     bins.sort(function (a, c) { return cnt[c] - cnt[a]; });
-    var np = Math.min(256, bins.length), pal = new Uint8Array(768), lut = new Uint8Array(32768);
-    for (var i = 0; i < np; i++) { var bb = bins[i]; pal[3 * i] = Math.round(sr[bb] / cnt[bb]); pal[3 * i + 1] = Math.round(sg[bb] / cnt[bb]); pal[3 * i + 2] = Math.round(sb[bb] / cnt[bb]); lut[bb] = i; }
+    var o0 = clear ? 1 : 0, np = Math.min(256 - o0, bins.length), pal = new Uint8Array(768), lut = new Uint8Array(32768);
+    if (clear) { pal[0] = 255; pal[1] = 255; pal[2] = 255; }                    // 투명 자리 (색은 쓰이지 않는다)
+    for (var i = 0; i < np; i++) { var bb = bins[i], q0 = 3 * (i + o0); pal[q0] = Math.round(sr[bb] / cnt[bb]); pal[q0 + 1] = Math.round(sg[bb] / cnt[bb]); pal[q0 + 2] = Math.round(sb[bb] / cnt[bb]); lut[bb] = i + o0; }
     for (var k = np; k < bins.length; k++) {          // 상위 256 밖의 칸 (이 프레임에 있는 칸만) = 그 칸 평균색에 가장 가까운 팔레트 색
       var b2 = bins[k], r = sr[b2] / cnt[b2], g = sg[b2] / cnt[b2], bl = sb[b2] / cnt[b2], best = 0, bd = 1e9;
-      for (var j = 0; j < np; j++) { var dr = r - pal[3 * j], dg = g - pal[3 * j + 1], db = bl - pal[3 * j + 2], dd = dr * dr + dg * dg + db * db; if (dd < bd) { bd = dd; best = j; } }
+      for (var j = o0; j < np + o0; j++) { var dr = r - pal[3 * j], dg = g - pal[3 * j + 1], db = bl - pal[3 * j + 2], dd = dr * dr + dg * dg + db * db; if (dd < bd) { bd = dd; best = j; } }
       lut[b2] = best;
     }
     return { pal: pal, lut: lut };
   }
-  function gifBegin(f0, w, h) {                      // 전역 색표 = 첫 프레임 팔레트 (배경색용 · 각 프레임은 지역 색표를 쓴다)
+  function gifBegin(f0, w, h, clear) {               // 전역 색표 = 첫 프레임 팔레트 (배경색용 · 각 프레임은 지역 색표를 쓴다)
     var ns = 'NETSCAPE2.0'.split('').map(function (ch) { return ch.charCodeAt(0); });
-    return { w: w, h: h, n: 0, chunks: [new Uint8Array([0x47, 0x49, 0x46, 0x38, 0x39, 0x61, w & 255, w >> 8, h & 255, h >> 8, 0xF7, 0, 0]), gifPalette(f0).pal,
+    return { w: w, h: h, n: 0, chunks: [new Uint8Array([0x47, 0x49, 0x46, 0x38, 0x39, 0x61, w & 255, w >> 8, h & 255, h >> 8, 0xF7, 0, 0]), gifPalette(f0, clear).pal,
                                         new Uint8Array([0x21, 0xFF, 0x0B].concat(ns, [0x03, 0x01, 0, 0, 0]))] };
   }
-  function gifAdd(g, f, delay) {
-    var P = gifPalette(f), ix = new Uint8Array(g.w * g.h), lut = P.lut;
-    for (var p = 0, q = 0; p < f.length; p += 4, q++) ix[q] = lut[((f[p] >> 3) << 10) | ((f[p + 1] >> 3) << 5) | (f[p + 2] >> 3)];
-    g.chunks.push(new Uint8Array([0x21, 0xF9, 0x04, 0x04, delay & 255, delay >> 8, 0, 0]),
+  function gifAdd(g, f, delay, clear) {             // clear = 알파 < 128 → index 0 (투명) · GCE 처분 2 (배경으로 되돌림 = 잔상 없음) + 투명 표지
+    var P = gifPalette(f, clear), ix = new Uint8Array(g.w * g.h), lut = P.lut;
+    for (var p = 0, q = 0; p < f.length; p += 4, q++) ix[q] = clear && f[p + 3] < 128 ? 0 : lut[((f[p] >> 3) << 10) | ((f[p + 1] >> 3) << 5) | (f[p + 2] >> 3)];
+    g.chunks.push(new Uint8Array([0x21, 0xF9, 0x04, clear ? 0x09 : 0x04, delay & 255, delay >> 8, 0, 0]),
                   new Uint8Array([0x2C, 0, 0, 0, 0, g.w & 255, g.w >> 8, g.h & 255, g.h >> 8, 0x87]), P.pal, lzwBlocks(ix, 8));   // 0x87 = 지역 색표 256
     g.n++;
   }
   function gifEnd(g) { g.chunks.push(new Uint8Array([0x3B])); return g.chunks; }
-  function captureFrame(G) {
-    var src;
-    if (view() === '3d') { var T = S.three; T.renderer.render(T.scene, T.cam); src = T.renderer.domElement; }
-    else { src = document.createElement('canvas'); paint2d(src, G * 2); }
+  function captureFrame(G, clear) {               // clear = 배경 투명 (☑ 투명 배경 GIF) · 캡션 = 런 이름 없이
+    var src, T = S.three, keep = null;
+    if (view() === '3d') {
+      if (clear) { keep = { c: new T.THREE.Color(), a: T.renderer.getClearAlpha(), bg: T.scene.background }; T.renderer.getClearColor(keep.c); T.renderer.setClearAlpha(0); T.scene.background = null; }
+      T.renderer.render(T.scene, T.cam); src = T.renderer.domElement;
+    }
+    else { src = document.createElement('canvas'); paint2d(src, G * 2, clear); }
     var hh = Math.round(src.height * G / src.width), c = document.createElement('canvas'); c.width = G; c.height = hh + 22;
-    var x = c.getContext('2d'); x.fillStyle = '#fbfbf8'; x.fillRect(0, 0, c.width, c.height); x.drawImage(src, 0, 0, G, hh);
-    x.fillStyle = '#222'; x.font = '12px sans-serif'; x.fillText(captionText(), 6, c.height - 7);
+    var x = c.getContext('2d'); if (!clear) { x.fillStyle = '#fbfbf8'; x.fillRect(0, 0, c.width, c.height); } x.drawImage(src, 0, 0, G, hh);
+    if (keep) { T.renderer.setClearColor(keep.c, keep.a); T.scene.background = keep.bg; T.renderer.render(T.scene, T.cam); }
+    x.fillStyle = '#222'; x.font = '12px sans-serif'; x.fillText(captionText(false), 6, c.height - 7);
     return c;
   }
   function exportGif() {
@@ -541,6 +549,7 @@ function mxTab(t){
     if (idx.length > 1000) { exmsg('프레임이 ' + idx.length + ' 장 — 1000 장 이하가 되게 간격을 늘려 주세요', 'err'); return; }
     if (view() === '3d' && !S.three) { exmsg('3D 가 아직 없다', 'err'); return; }
     var G = 640, gif = null, w = 0, h = 0, k = 0, keep = +$('bedFrame').value, delay = Math.max(2, Math.round(+$('bedSpeed').value / 10));
+    var clear = !!($('bedGifClear') || {}).checked;      // ☑ 투명 배경 GIF
     S.gif = { cancel: false }; $('bedGif').textContent = '■ GIF 멈춤';
     function done(note, kind) { S.gif = null; $('bedGif').textContent = '⬇ GIF'; exmsg(note, kind); }
     function next() {
@@ -548,19 +557,19 @@ function mxTab(t){
       if (k >= idx.length) return finish();
       $('bedFrame').value = idx[k]; exmsg('GIF 프레임 ' + (k + 1) + ' / ' + idx.length + ' 읽는 중…');
       loadFrame().then(function () {
-        var c = captureFrame(G);
+        var c = captureFrame(G, clear);
         if (k === 0) { w = c.width; h = c.height; }
         if (c.width !== w || c.height !== h) { var c2 = document.createElement('canvas'); c2.width = w; c2.height = h; c2.getContext('2d').drawImage(c, 0, 0, w, h); c = c2; }
         var rgba = c.getContext('2d').getImageData(0, 0, w, h).data;
-        if (!gif) gif = gifBegin(rgba, w, h);
-        gifAdd(gif, rgba, delay); k++; next();
+        if (!gif) gif = gifBegin(rgba, w, h, clear);
+        gifAdd(gif, rgba, delay, clear); k++; next();
       }, function () { done('GIF 중단 — 프레임을 못 읽음', 'err'); });
     }
     function finish() {
       if (!gif) return done('GIF 프레임이 없다', 'err');
       var blob = new Blob(gifEnd(gif), { type: 'image/gif' });
-      download(blob, 'mixer_' + R.run + '_' + view() + '_f' + (idx[0] + 1) + '-' + (idx[idx.length - 1] + 1) + '_every' + stride + '.gif');
-      done('GIF ' + gif.n + ' 프레임 · ' + w + ' × ' + h + ' px · ' + (blob.size / 1e6).toFixed(1) + ' MB');
+      download(blob, 'mixer_' + R.run + '_' + view() + '_f' + (idx[0] + 1) + '-' + (idx[idx.length - 1] + 1) + '_every' + stride + (clear ? '_transparent' : '') + '.gif');
+      done('GIF ' + gif.n + ' 프레임 · ' + w + ' × ' + h + ' px · ' + (blob.size / 1e6).toFixed(1) + ' MB' + (clear ? ' · 투명 배경' : ''));
     }
     next();
   }
@@ -650,6 +659,7 @@ function mxTab(t){
     T.group.traverse(function (o) {
       if (o.isInstancedMesh) { o.material.dispose(); o.dispose(); }
       else if (o.isLine) { o.geometry.dispose(); o.material.dispose(); }
+      else if (o.isMesh) { o.geometry.dispose(); o.material.dispose(); }        // 드럼 면 (원통 벽 · 뚜껑 · 테)
     });
     T.group = null; T.meshes = {};
   }
@@ -668,6 +678,24 @@ function mxTab(t){
     lm.dispose();
     return g;
   }
+  //  드럼 면 채우기 (1저자 10-02 "wire 말고 색 채워서 실물처럼") — 잘라 본 그림 (cutaway): 원통 벽은 **안쪽 면만** (BackSide) ·
+  //  뚜껑 둘은 **안쪽을 향한 앞면만** (FrontSide) 그린다 ⇒ 어느 시점에서 보든 카메라 쪽 벽 반쪽과 가까운 뚜껑은 저절로 안 그려지고
+  //  (뒷면 버림) 먼 쪽 벽 · 먼 뚜껑만 남아 입자가 가려지지 않는다.  양 끝 테 (두 링) 로 드럼 윤곽을 잡는다.  그림만 바뀐다 (데이터 · 판정 무관).
+  function drumSolid(THREE, drum) {
+    var g = new THREE.Group(), R = drum.R, xa = drum.x_min, xb = drum.x_max;
+    var mat = function (side) { return new THREE.MeshPhongMaterial({ color: 0xc3c8ce, specular: 0x555555, shininess: 45, side: side }); };
+    var wall = new THREE.Mesh(new THREE.CylinderGeometry(R, R, xb - xa, 128, 1, true), mat(THREE.BackSide));
+    wall.rotation.z = Math.PI / 2; wall.position.set((xa + xb) / 2, 0, 0); g.add(wall);          // 원통 축 (y) → 드럼 축 (x) · 안쪽 면만
+    var back = new THREE.Mesh(new THREE.CircleGeometry(R, 128), mat(THREE.FrontSide));
+    back.rotation.y = Math.PI / 2; back.position.set(xa, 0, 0); g.add(back);                     // x_min 뚜껑 · 법선 +x (안쪽)
+    var front = new THREE.Mesh(new THREE.CircleGeometry(R, 128), mat(THREE.FrontSide));
+    front.rotation.y = -Math.PI / 2; front.position.set(xb, 0, 0); g.add(front);                 // x_max 뚜껑 · 법선 −x (안쪽)
+    [xa, xb].forEach(function (xx) {                                                              // 양 끝 테
+      var rim = new THREE.Mesh(new THREE.TorusGeometry(R, 0.012 * R, 12, 160), new THREE.MeshPhongMaterial({ color: 0x8d949c, specular: 0x777777, shininess: 60 }));
+      rim.rotation.y = Math.PI / 2; rim.position.set(xx, 0, 0); g.add(rim);
+    });
+    return g;
+  }
   function render3d() {
     return ensure3().then(function (T) {
       if (!T || !S.data) return;
@@ -676,7 +704,7 @@ function mxTab(t){
       //    GPU 버퍼 (10 만 × 64 B) 가 프레임마다 쌓였다 → 자동 재생 중 WebGL 컨텍스트가 끊겨 3D 가 빈 화면이 됐다 (1저자 09-30 밤)
       if (T.key !== key || !T.group) {
         clear3(T); T.group = new THREE.Group(); T.meshes = {}; T.scene.add(T.group);
-        if (j.drum) T.group.add(drumLines(THREE, j.drum));
+        if (j.drum) T.group.add(($('bedDrumFill') || {}).checked ? drumSolid(THREE, j.drum) : drumLines(THREE, j.drum));
         if (T.key !== key) { fit3(T, j); T.key = key; }
       }
       if (!T.geo) T.geo = new THREE.IcosahedronGeometry(1, d.n > 150000 ? 0 : 1);
@@ -720,6 +748,7 @@ function mxTab(t){
     $('bedX0').addEventListener('input', function () { slabLab(); schedule(160); });
     $('bedT').addEventListener('input', function () { slabLab(); schedule(160); });
     $('bed3dSlab').addEventListener('change', function () { schedule(0); });
+    $('bedDrumFill').addEventListener('change', function () { if (S.three) clear3(S.three); schedule(0); });   // 그룹만 다시 (T.key 그대로 = 카메라 그대로)
     $('bedPlay').addEventListener('click', togglePlay);
     $('bedPng').addEventListener('click', exportPng);
     $('bedGif').addEventListener('click', exportGif);
