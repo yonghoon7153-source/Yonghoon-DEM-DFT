@@ -417,7 +417,7 @@ def test_cascade_verdict_gap_is_shown_not_swallowed():
         assert "원장 기록이 없다" in html, "구멍이 화면에 안 나간다 — 조용히 삼켰다"
     finally:
         D.CASCADE_VERDICT_GAPS = keep
-    # 지금 실제 상태: 구멍 0 — 세 판정이 **전부 원장에서** 온다
+    # 지금 실제 상태: 구멍 0 — 네 판정이 **전부 원장에서** 온다 (10-01 D_rel 파일럿 마감 추가)
     assert all(v.get("ok") for v in D.cascade_verdicts()), \
         "구멍이 다시 생겼다면 CASCADE_VERDICT_GAPS 에 적어라 (조용히 두지 않는다)"
 

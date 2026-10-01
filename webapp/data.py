@@ -2211,6 +2211,8 @@ CASCADE_VERDICT_SOURCES = [
     ("4축 내부 검증", "cascade_axis_global_audit_2026_09_12.json"),
     ("v23 dV 축 앵커", "cascade_reanchor_comp1k444_2026_09_12.json"),
     ("v23 지위", "cascade_v23_demoted_2026_09_19.json"),
+    #: 2026-10-01 — D_rel 파일럿(v4→v6) 마감 · v6 방법상 무효 (사용자 = cascade 1저자 결정)
+    ("D_rel 파일럿 마감", "cascade_d_rel_closed_2026_10_01.json"),
 ]
 #: ⛔ 원장에 **없는** 판정. 화면이 지어내지 않고 **구멍으로 표시한다**.
 #  ✅ 2026-09-19 — 마지막 구멍("v23 강등")이 채워졌다 (cascade_v23_demoted_2026_09_19.json,
