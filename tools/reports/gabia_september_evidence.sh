@@ -20,6 +20,7 @@
 # =============================================================================
 set -u
 cd "$(dirname "$0")/../.." || exit 1
+export TZ=${TZ:-Asia/Seoul}            # 기간 경계·git 날짜를 KST 로 (gabia 현지 시각과 같다)
 ONLY=${1:-0}
 PY=${PY:-python3}
 export SINCE=${SINCE:-2026-09-01}
@@ -238,7 +239,13 @@ fi
 
 # ═══ ⑥ 당월 기록 활동 ═════════════════════════════════════════════════════
 if sec 6 "⑥ records — git · decision ledger · reviews · literature ($SINCE ~ $UNTIL)"; then
-SHALLOW=$(git rev-parse --is-shallow-repository 2>/dev/null)
+# 얕은 clone 이어도 경계 커밋이 전부 기간 앞이면 기간 안 기록은 빠짐없다 — 그때만 센다
+SHALLOW=false
+if [ "$(git rev-parse --is-shallow-repository 2>/dev/null)" = true ]; then
+  for c in $(cat "$(git rev-parse --git-common-dir)/shallow" 2>/dev/null); do
+    [[ "$(git log -1 --format=%cs "$c" 2>/dev/null)" < "$SINCE" ]] || SHALLOW=true
+  done
+fi
 if [ "$SHALLOW" = true ]; then echo "  commits            : (얕은 clone 이라 셀 수 없다 — 전체 clone 에서 다시 돌릴 것)"
 else echo "  commits            : $(git log --since="$SINCE 00:00" --until="$UNTIL 00:00" --oneline 2>/dev/null | wc -l)"; fi
 $PY - <<'PY'
