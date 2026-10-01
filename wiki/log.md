@@ -151,3 +151,14 @@
 - 표의 **빈칸이 곧 우리 기록 체크리스트**다: 장비·용기 부피·볼 재질/지름/개수·총 투입량·**BPR**·rpm·순 밀링 시간과 on/off 주기·분위기·단계별 조성·(S8 계면) 멜트 함침·성형 압력.
 - **중복 업로드 2편을 digest 만들기 전에 차단했다**: `01b016c2…`(= kim2025, DOI 10.1002/aenm.202500867) · `f18c115a…`(= zhang2026, DOI 10.1002/aenm.71471). 업로드 PDF 의 DOI 를 기존 digest 의 `doi:` 키와 대조하는 방식으로 잡았다 — 파일 바이트는 달라도 같은 논문이었다.
 - 검증(실행 출력): lint 0 errors · smoke 0 failures(219건) · `/doc/comparisons/composite-cathode-mixing-routes` 200 (표 렌더 확인).
+
+## [2026-10-06] ingest | Liu 2026 (Li4SnS4 소결 코팅) · Zhang Jiaxu 2026 (strain coordination) + index 복구
+- **digest 2편 착지** (논문 에이전트). `raw/papers/liu2026_li4sns4-molecular-mediator-low-barrier-li2s-chemistry.md` (본문 39,736자, 그림 5장) · `raw/papers/zhangj2026_strain-coordination-long-cycling-assb.md` (본문 46,973자, 그림 7장). raw 14편.
+- 검증(내가 독립 실행, lint 와 같은 해시 규약 `body.lstrip('\n')`): 14편 전부 **봉인 일치 · doi 가 본문 머리 30행 안 · 그림 ≥4장 · 모델 식별자 0 · 본문 해시 전부 고유**. zhangj2026 의 타 논문 고유어(LVDT 3 · CuS 1 · Na 집전체 1)는 **§11 비교표의 의도된 교차인용**임을 문맥으로 확인했다.
+- ★ **Liu 2026 의 "mediator" 는 같은 논문의 Fig. 4d 가 반증한다** — Sn 3d XPS 가 충방전 9지점 전부에서 불변이다. 매개체의 정의가 자기 산화환원이므로 이것은 **정적 계면층(interphase)**의 서명이다. 이 위키는 **"Li4SnS4 계면층(소결 코팅)"** 이라 적고 계열을 Wan/Zhang(요오드)이 아니라 **Cronk(계면상)** 에 둔다. 반론 보존: Sn 이 4+ 여도 배위된 S²⁻ 는 산화될 수 있고, Fig. 4c 의 S 2p 피팅에 SnS4⁴⁻ 성분이 없다 — 그 창이 논문에 없다.
+- ★ Liu 의 **2.41 V 를 그대로 인용하면 안 된다**: plateau 가 아니라 **개시 변곡**이고 두 셀 모두 **4.0 V 컷오프까지 단조 상승**하며, 저자가 그 전위에서 SE 산화분해를 자인한다. → **H1 재정의판("활성화 완료 전위 > SE 산화 전위")은 아직 아무도 풀지 못했다**는 가장 직접적인 고체계 근거다.
+- ★ **Li4SnS4 함량(반응식의 x)이 논문 어디에도 없다.** Rietveld(Rp 5.83 %)를 하고도 상 분율을 인쇄하지 않았다. `[재현]` 10–20 wt% · 4 e⁻ 만으로 **관측 개선폭 ≈100 mAh g⁻¹(Li2S)를 거의 다 설명**할 수 있다 — Wan(109.4)·Zhang(152)에 이어 **같은 급의 미분리 항이 세 편 연속**이다.
+- **ball milling 전수 대조표를 14편으로 늘렸다** (사용자 상시 요청). 새 행 둘: liu2026 = **밀링이 아니라 고상 소결 코팅**(조건 전량 미기재, "Sintering for 6 h" 가 Fig. 2a 안의 글자뿐) · zhangj2026 = planetary 300 rpm 2 h one-step(BPR 미기재). **조건을 한 글자도 안 적는 논문이 4 → 5편**이 됐고, 그래서 표의 소견 3을 "미기재가 다수 관행에 가깝다" 로 고쳤다.
+- ★ 표에 **다섯 번째 경로**를 소견 8로 세웠다 — **고상 소결 코팅은 SE 를 밀링에 넣지 않으므로 H2b(밀링을 겪은 LPSCl 이 아직 superionic 인가)를 원리적으로 우회한다.** 목적은 Cronk 와 같고 수단만 열이다. **단 소결 온도·분위기가 논문에 없어 지금은 시도 불가** — SI 확보 시 최우선.
+- **`index.md` 의 "Raw 논문" 절이 digest 13편 중 3편만 적고 있었다 (드리프트).** 배치 ingest 가 연달아 들어오는 동안 이 절만 뒤처졌다. 발행 연도 순으로 **14편 전부를 복구**했고, ⚠ **zhang2026(산둥대 Qi Zhang, anode-free)과 zhangj2026(Jiaxu Zhang, strain)은 다른 논문**임을 색인에 명시했다.
+- 검증(실행 출력): `python3 wiki/tools/lint.py` **0 errors** · `.venv/bin/python webapp/smoke.py` **0 failures (229건 · 페이지 33 · 그림 136 · 정적 11)**. ※ smoke 는 flask 가 필요해 시스템 python3 가 아니라 `.venv/bin/python` 으로 돌린다.
