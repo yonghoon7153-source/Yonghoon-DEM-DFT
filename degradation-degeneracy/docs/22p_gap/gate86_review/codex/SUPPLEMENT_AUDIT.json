@@ -1,0 +1,243 @@
+{
+  "pass": true,
+  "checks": [
+    {
+      "check": "Git blob g86_send.interrupted.log.json",
+      "pass": true
+    },
+    {
+      "check": "Fixed ref g86_send.interrupted.log.json",
+      "pass": true
+    },
+    {
+      "check": "Git blob g86_send.log.json",
+      "pass": true
+    },
+    {
+      "check": "Fixed ref g86_send.log.json",
+      "pass": true
+    },
+    {
+      "check": "Git blob g86_send_pytest.txt.json",
+      "pass": true
+    },
+    {
+      "check": "Fixed ref g86_send_pytest.txt.json",
+      "pass": true
+    },
+    {
+      "check": "Git blob g86_send_smoke.txt.json",
+      "pass": true
+    },
+    {
+      "check": "Fixed ref g86_send_smoke.txt.json",
+      "pass": true
+    },
+    {
+      "check": "Git blob README.md.json",
+      "pass": true
+    },
+    {
+      "check": "Fixed ref README.md.json",
+      "pass": true
+    },
+    {
+      "check": "Git blob run_g86_send.sh.json",
+      "pass": true
+    },
+    {
+      "check": "Fixed ref run_g86_send.sh.json",
+      "pass": true
+    },
+    {
+      "check": "17 payload rows",
+      "pass": true
+    },
+    {
+      "check": "Prior identity retained final_0be169b1/g86_final.log",
+      "pass": true
+    },
+    {
+      "check": "Prior identity retained final_0be169b1/g86_pytest_full.txt",
+      "pass": true
+    },
+    {
+      "check": "Prior identity retained final_0be169b1/g86_replay_all.txt",
+      "pass": true
+    },
+    {
+      "check": "Prior identity retained final_0be169b1/g86_smoke.txt",
+      "pass": true
+    },
+    {
+      "check": "Prior identity retained final_0be169b1/run_g86_final.sh",
+      "pass": true
+    },
+    {
+      "check": "Prior identity retained mutations/g85_emit.txt",
+      "pass": true
+    },
+    {
+      "check": "Prior identity retained mutations/g85_replay.txt",
+      "pass": true
+    },
+    {
+      "check": "Prior identity retained receipts/g85_receipts.txt",
+      "pass": true
+    },
+    {
+      "check": "Prior identity retained red_green/green_gate85.txt",
+      "pass": true
+    },
+    {
+      "check": "Prior identity retained red_green/red_gate85.txt",
+      "pass": true
+    },
+    {
+      "check": "Prior identity retained stray_exec_class/20f6faf98437b7145b916305da4df283d3348ef13318bd6ac72a8a6678fd20de.json",
+      "pass": true
+    },
+    {
+      "check": "Prior identity retained witness_fix/g86_witness_fix.log",
+      "pass": true
+    },
+    {
+      "check": "Size g86_send.interrupted.log",
+      "pass": true
+    },
+    {
+      "check": "Full SHA g86_send.interrupted.log",
+      "pass": true
+    },
+    {
+      "check": "Size g86_send.log",
+      "pass": true
+    },
+    {
+      "check": "Full SHA g86_send.log",
+      "pass": true
+    },
+    {
+      "check": "Size g86_send_pytest.txt",
+      "pass": true
+    },
+    {
+      "check": "Full SHA g86_send_pytest.txt",
+      "pass": true
+    },
+    {
+      "check": "Size g86_send_smoke.txt",
+      "pass": true
+    },
+    {
+      "check": "Full SHA g86_send_smoke.txt",
+      "pass": true
+    },
+    {
+      "check": "Size run_g86_send.sh",
+      "pass": true
+    },
+    {
+      "check": "Full SHA run_g86_send.sh",
+      "pass": true
+    },
+    {
+      "check": "Single forward evidence commit",
+      "pass": true
+    },
+    {
+      "check": "Only evidence tree changed",
+      "pass": true
+    },
+    {
+      "check": "Same clean head before/after",
+      "pass": true
+    },
+    {
+      "check": "Outer rc retained",
+      "pass": true
+    },
+    {
+      "check": "Current digest observed",
+      "pass": true
+    },
+    {
+      "check": "Full test result",
+      "pass": true
+    },
+    {
+      "check": "No failed summary",
+      "pass": true
+    },
+    {
+      "check": "Expected xfail name",
+      "pass": true
+    },
+    {
+      "check": "Smoke completion text",
+      "pass": true
+    },
+    {
+      "check": "First interrupted attempt start only",
+      "pass": true
+    }
+  ],
+  "files": {
+    "g86_send.interrupted.log": {
+      "bytes": 82,
+      "sha256": "947563783c7b9fb4d794ab3415afa94479a747037823bdf7cdb64de39e2b7ad0",
+      "git_blob_sha1": "5449b0710613acba50c9c55fc982cd2b54734074",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/92c50f9035db79143f7f5aca65072b3adffdee26/degradation-degeneracy/docs/22p_gap/gate86_evidence/request_commit_27bfeed6/g86_send.interrupted.log"
+    },
+    "g86_send.log": {
+      "bytes": 536,
+      "sha256": "e7ba7231c0708ba32a65ed1431bbb51262c9b2069df2a72afae80ff34995ed5b",
+      "git_blob_sha1": "2e843a38f91eea5d1af86e36d55585dd3ff00072",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/92c50f9035db79143f7f5aca65072b3adffdee26/degradation-degeneracy/docs/22p_gap/gate86_evidence/request_commit_27bfeed6/g86_send.log"
+    },
+    "g86_send_pytest.txt": {
+      "bytes": 3251,
+      "sha256": "aeba22407a993dfd3f98dd88e12f7c5dd3eb5442445a3eb1bb2c6ec156c17e30",
+      "git_blob_sha1": "5d21b3d39dc40977ed87518c31609d98385158ef",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/92c50f9035db79143f7f5aca65072b3adffdee26/degradation-degeneracy/docs/22p_gap/gate86_evidence/request_commit_27bfeed6/g86_send_pytest.txt"
+    },
+    "g86_send_smoke.txt": {
+      "bytes": 5590,
+      "sha256": "69103bd56877245c50e0e6bd20e1e85aa90ce47ee62dce69f983505ccab9d7c3",
+      "git_blob_sha1": "2a23aef4dff1365f164f7814eac4849b72733d29",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/92c50f9035db79143f7f5aca65072b3adffdee26/degradation-degeneracy/docs/22p_gap/gate86_evidence/request_commit_27bfeed6/g86_send_smoke.txt"
+    },
+    "README.md": {
+      "bytes": 6062,
+      "sha256": "9e3e890114ad6da3bf38aca9e576e6311c335ad9f0ff8a60eb6b1e5078a9f2df",
+      "git_blob_sha1": "2e21cecb571395a839f117c3f8a73c0849b3063f",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/92c50f9035db79143f7f5aca65072b3adffdee26/degradation-degeneracy/docs/22p_gap/gate86_evidence/README.md"
+    },
+    "run_g86_send.sh": {
+      "bytes": 995,
+      "sha256": "82b7f3d8517cc5f859d20c72dd26d3109abf55e0a862e8d1ed1c4d7c237dfff3",
+      "git_blob_sha1": "c3f10a53cce2f12c844f2053dd4cbaf6bfd6a058",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/92c50f9035db79143f7f5aca65072b3adffdee26/degradation-degeneracy/docs/22p_gap/gate86_evidence/request_commit_27bfeed6/run_g86_send.sh"
+    }
+  },
+  "source_commit": "92c50f9035db79143f7f5aca65072b3adffdee26",
+  "execution_head": "27bfeed68ea516e5c5a50f2475c8cc2b4f80ff3b",
+  "received_scripts_executed": 0,
+  "last_full_suite": "SOURCE_RAW_LOG_VERIFIED_NOT_REEXECUTED",
+  "pytest": {
+    "passed": 2046,
+    "xfailed": 1,
+    "failed": 0,
+    "seconds": 3543.27,
+    "rc": 0
+  },
+  "smoke": {
+    "rc": 0,
+    "seconds": 168
+  },
+  "limits": [
+    "First interrupted pytest partial output was overwritten per README. Only its start marker survives.",
+    "Runtime source logs are sender evidence, not independent remote OS observation.",
+    "352 full mutation replay remains at 0be169b1; no claim of full replay at 27bfeed6."
+  ]
+}

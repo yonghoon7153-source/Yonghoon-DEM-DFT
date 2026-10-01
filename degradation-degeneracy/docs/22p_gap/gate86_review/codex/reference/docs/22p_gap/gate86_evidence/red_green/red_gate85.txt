@@ -1,0 +1,123 @@
+
+[conftest] 시험 authority: /tmp/dd-test-authority-4l1klg6x/docs/22p_gap/LEG_PRESERVATION.yaml (운영 원장의 바이트 복사본 — 70차 E6)
+
+[conftest] 이 checkout 을 처음 보았다 — 얼린 cohort 17개의 좌표를 시험 authority 에 봉인했다: ['g10_2026_09_01', 'g11_2026_09_02', 'g12_2026_09_03', 'g13_2026_09_07', 'g14_2026_09_08', 'g15_2026_09_08', 'g16_2026_09_09', 'g17_2026_09_14', 'g1_2026_08_20', 'g2_2026_08_25', 'g3_2026_08_28', 'g4_2026_08_28', 'g5_2026_08_29', 'g6_2026_09_01', 'g7_2026_09_01', 'g8_2026_09_01', 'g9_2026_09_01']
+..FFFFF                                                                  [100%]
+=================================== FAILURES ===================================
+_ test_g85_m01_dropping_the_parent_and_forging_both_digests_is_refused_by_the_member_check _
+
+tmp_path = PosixPath('/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/results/_smoke/_unit/test_g85_m01_dropping_the_parent_and_for_b65ce037')
+
+    def test_g85_m01_dropping_the_parent_and_forging_both_digests_is_refused_by_the_member_check(tmp_path):
+        out = _leaf_run(tmp_path)
+        _forge_members(out, [LEAF], _closure_of([LEAF]))
+>       _only_this_check_fails(out, PARENT)
+
+tests/test_gate85_closure_members.py:125: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+out = PosixPath('/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/results/_smoke/_unit/test_g85_m01_dropping_the_parent_and_for_b65ce037/o')
+needles = ('configs/base.yaml',)
+
+    def _only_this_check_fails(out: Path, *needles: str) -> None:
+        v = IO.validate_provenance(out)
+        got = str(v["checks"].get(CHECK, "검사 없음"))
+>       assert CHECK in v["fail"], f"자기일관 위조가 {CHECK} 를 통과했다: {got}"
+E       AssertionError: 자기일관 위조가 base_config_결속 를 통과했다: 통과
+E       assert 'base_config_결속' in []
+
+tests/test_gate85_closure_members.py:89: AssertionError
+_ test_g85_m02_dropping_the_leaf_and_forging_both_digests_is_refused_by_the_member_check _
+
+tmp_path = PosixPath('/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/results/_smoke/_unit/test_g85_m02_dropping_the_leaf_and_forgi_26d720ac')
+
+    def test_g85_m02_dropping_the_leaf_and_forging_both_digests_is_refused_by_the_member_check(tmp_path):
+        out = _leaf_run(tmp_path)
+        _forge_members(out, [PARENT], _closure_of([PARENT]))
+>       _only_this_check_fails(out, LEAF)
+
+tests/test_gate85_closure_members.py:131: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+out = PosixPath('/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/results/_smoke/_unit/test_g85_m02_dropping_the_leaf_and_forgi_26d720ac/o')
+needles = ('configs/grid_coarse.yaml',)
+
+    def _only_this_check_fails(out: Path, *needles: str) -> None:
+        v = IO.validate_provenance(out)
+        got = str(v["checks"].get(CHECK, "검사 없음"))
+>       assert CHECK in v["fail"], f"자기일관 위조가 {CHECK} 를 통과했다: {got}"
+E       AssertionError: 자기일관 위조가 base_config_결속 를 통과했다: 통과
+E       assert 'base_config_결속' in []
+
+tests/test_gate85_closure_members.py:89: AssertionError
+_ test_g85_m03_an_extra_sealed_member_with_forged_digests_is_refused_by_the_member_check _
+
+tmp_path = PosixPath('/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/results/_smoke/_unit/test_g85_m03_an_extra_sealed_member_with_b839125e')
+
+    def test_g85_m03_an_extra_sealed_member_with_forged_digests_is_refused_by_the_member_check(tmp_path):
+        out = _leaf_run(tmp_path)
+        man = yaml.safe_load((out / "manifest.yaml").read_text(encoding="utf-8"))
+        extra = next(k for k in man["run_spec"]["sealed_inputs"] if k.endswith("/curves_manifest.yaml"))
+        keys = [PARENT, LEAF, extra]
+        sealed = man["run_spec"]["sealed_inputs"]
+        snap = out / "_inputs" / f"{sealed[extra][:12]}_{Path(extra).name}"
+        parts = {k: hashlib.sha256((ROOT / k).read_bytes()).hexdigest() for k in (PARENT, LEAF)}
+        parts[extra] = hashlib.sha256(snap.read_bytes()).hexdigest()
+        _forge_members(out, keys, F.closure_sha256_from_parts(parts))
+>       _only_this_check_fails(out, Path(extra).name)
+
+tests/test_gate85_closure_members.py:144: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+out = PosixPath('/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/results/_smoke/_unit/test_g85_m03_an_extra_sealed_member_with_b839125e/o')
+needles = ('curves_manifest.yaml',)
+
+    def _only_this_check_fails(out: Path, *needles: str) -> None:
+        v = IO.validate_provenance(out)
+        got = str(v["checks"].get(CHECK, "검사 없음"))
+>       assert CHECK in v["fail"], f"자기일관 위조가 {CHECK} 를 통과했다: {got}"
+E       AssertionError: 자기일관 위조가 base_config_결속 를 통과했다: 통과
+E       assert 'base_config_결속' in []
+
+tests/test_gate85_closure_members.py:89: AssertionError
+__ test_g85_m04_a_duplicated_member_key_is_refused_even_with_the_true_digests __
+
+tmp_path = PosixPath('/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/results/_smoke/_unit/test_g85_m04_a_duplicated_member_key_is__d9e89ff7')
+
+    def test_g85_m04_a_duplicated_member_key_is_refused_even_with_the_true_digests(tmp_path):
+        """중복 키 — dict 로 합치면 진짜 closure 와 같은 값이 나와 통과했다. 목록은 **유일**해야 한다."""
+        out = _leaf_run(tmp_path)
+        _forge_members(out, [PARENT, LEAF, LEAF], None)
+>       _only_this_check_fails(out, "중복")
+
+tests/test_gate85_closure_members.py:151: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+out = PosixPath('/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/results/_smoke/_unit/test_g85_m04_a_duplicated_member_key_is__d9e89ff7/o')
+needles = ('중복',)
+
+    def _only_this_check_fails(out: Path, *needles: str) -> None:
+        v = IO.validate_provenance(out)
+        got = str(v["checks"].get(CHECK, "검사 없음"))
+>       assert CHECK in v["fail"], f"자기일관 위조가 {CHECK} 를 통과했다: {got}"
+E       AssertionError: 자기일관 위조가 base_config_결속 를 통과했다: 통과
+E       assert 'base_config_결속' in []
+
+tests/test_gate85_closure_members.py:89: AssertionError
+_ test_g85_m05_member_derivation_refuses_cycles_unsealed_or_missing_parents_escapes_and_bad_extends _
+
+tmp_path = PosixPath('/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/results/_smoke/_unit/test_g85_m05_member_derivation_refuses_c_1eb56e36')
+
+    def test_g85_m05_member_derivation_refuses_cycles_unsealed_or_missing_parents_escapes_and_bad_extends(tmp_path):
+>       derive = IO.base_config_closure_members
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'src.io' has no attribute 'base_config_closure_members'
+
+tests/test_gate85_closure_members.py:173: AttributeError
+=========================== short test summary info ============================
+FAILED tests/test_gate85_closure_members.py::test_g85_m01_dropping_the_parent_and_forging_both_digests_is_refused_by_the_member_check
+FAILED tests/test_gate85_closure_members.py::test_g85_m02_dropping_the_leaf_and_forging_both_digests_is_refused_by_the_member_check
+FAILED tests/test_gate85_closure_members.py::test_g85_m03_an_extra_sealed_member_with_forged_digests_is_refused_by_the_member_check
+FAILED tests/test_gate85_closure_members.py::test_g85_m04_a_duplicated_member_key_is_refused_even_with_the_true_digests
+FAILED tests/test_gate85_closure_members.py::test_g85_m05_member_derivation_refuses_cycles_unsealed_or_missing_parents_escapes_and_bad_extends
+5 failed, 2 passed in 25.36s

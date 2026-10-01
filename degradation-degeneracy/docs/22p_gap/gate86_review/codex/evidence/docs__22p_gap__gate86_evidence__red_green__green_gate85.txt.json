@@ -1,0 +1,7 @@
+{
+  "content": "\n[conftest] 시험 authority: /tmp/dd-test-authority-i68wxujw/docs/22p_gap/LEG_PRESERVATION.yaml (운영 원장의 바이트 복사본 — 70차 E6)\n\n[conftest] 이 checkout 을 처음 보았다 — 얼린 cohort 17개의 좌표를 시험 authority 에 봉인했다: ['g10_2026_09_01', 'g11_2026_09_02', 'g12_2026_09_03', 'g13_2026_09_07', 'g14_2026_09_08', 'g15_2026_09_08', 'g16_2026_09_09', 'g17_2026_09_14', 'g1_2026_08_20', 'g2_2026_08_25', 'g3_2026_08_28', 'g4_2026_08_28', 'g5_2026_08_29', 'g6_2026_09_01', 'g7_2026_09_01', 'g8_2026_09_01', 'g9_2026_09_01']\n.......................                                                  [100%]\n23 passed in 44.24s\n",
+  "encoding": "utf-8",
+  "sha": "fc18fc968faf32515312930872acf13285041a6f",
+  "display_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/27bfeed68ea516e5c5a50f2475c8cc2b4f80ff3b/degradation-degeneracy/docs/22p_gap/gate86_evidence/red_green/green_gate85.txt",
+  "display_title": "green_gate85.txt"
+}

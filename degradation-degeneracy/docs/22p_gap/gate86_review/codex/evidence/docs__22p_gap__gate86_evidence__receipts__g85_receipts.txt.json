@@ -1,0 +1,7 @@
+{
+  "content": "START c2f376484fb1b0eb016161625f0f76eb6e9e8045 status=0 2026-09-30T19:06:16Z\n✅ paired_fixed5_v4: docs/22p_gap/receipts/paired_fixed5_v4.validate.yaml · 검사 35건 · 산출 2건 · core_sha adf0ce1fff69f7b3\n✅ grid_fit_v5: docs/22p_gap/receipts/grid_fit_v5.validate.yaml · 검사 34건 · 산출 2건 · core_sha 01bd53eb85b6c1cf\nrc=0 2026-09-30T19:07:37Z\n",
+  "encoding": "utf-8",
+  "sha": "60761db1ead498dc2c017f272cc2004b0fb11edf",
+  "display_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/27bfeed68ea516e5c5a50f2475c8cc2b4f80ff3b/degradation-degeneracy/docs/22p_gap/gate86_evidence/receipts/g85_receipts.txt",
+  "display_title": "g85_receipts.txt"
+}

@@ -1,0 +1,52 @@
+{
+  "facts": {
+    "derive_from_root": true,
+    "cycle": true,
+    "outside_repo": true,
+    "depth": true,
+    "unsealed_parent": true,
+    "missing_snapshot": true,
+    "yaml_and_utf8": true,
+    "mapping": true,
+    "nonstring_extends": true,
+    "normalized_relative_join": true,
+    "unique": true,
+    "missing": true,
+    "extra": true,
+    "derived_hash_material": true,
+    "actual_snapshot_sha": true,
+    "dual_compare": true,
+    "no_live_loader_call": true
+  },
+  "changed_existing_functions": [
+    "_stage3_checks"
+  ],
+  "tests": [
+    "test_g85_m00_a_real_leaf_to_parent_run_binds_both_members",
+    "test_g85_m06_a_relocated_run_directory_still_binds_its_members",
+    "test_g85_m01_dropping_the_parent_and_forging_both_digests_is_refused_by_the_member_check",
+    "test_g85_m02_dropping_the_leaf_and_forging_both_digests_is_refused_by_the_member_check",
+    "test_g85_m03_an_extra_sealed_member_with_forged_digests_is_refused_by_the_member_check",
+    "test_g85_m04_a_duplicated_member_key_is_refused_even_with_the_true_digests",
+    "test_g85_m05_member_derivation_refuses_cycles_unsealed_or_missing_parents_escapes_and_bad_extends"
+  ],
+  "no_source_import_or_execution": true,
+  "helper_dynamic_boundary_cases": [
+    "cycle",
+    "unsealed parent",
+    "missing snapshot",
+    "outside path",
+    "nonstring extends",
+    "missing root"
+  ],
+  "static_only_boundary_cases": [
+    "depth 32",
+    "malformed YAML",
+    "nonmapping YAML",
+    "UTF8 decode failure"
+  ],
+  "notes": [
+    "Full validator snapshot-hash and input-crossbinding checks remain unchanged. Helper alone is not a complete seal verifier.",
+    "No basename fallback is provided; this is a deliberately narrower accepted path set, not universal load_config equivalence."
+  ]
+}

@@ -1,0 +1,924 @@
+{
+  "pass": true,
+  "checks": [
+    {
+      "check": "Git blob docs__08_REVIEW_RESPONSE.md.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned reference docs/08_REVIEW_RESPONSE.md",
+      "pass": true
+    },
+    {
+      "check": "Git blob docs__22p_gap__gate85_review__codex__DECISION.json.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned reference docs/22p_gap/gate85_review/codex/DECISION.json",
+      "pass": true
+    },
+    {
+      "check": "Git blob docs__22p_gap__gate85_review__codex__PACKAGE_MANIFEST.json.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned reference docs/22p_gap/gate85_review/codex/PACKAGE_MANIFEST.json",
+      "pass": true
+    },
+    {
+      "check": "Git blob docs__22p_gap__gate86_evidence__final_0be169b1__g86_final.log.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned reference docs/22p_gap/gate86_evidence/final_0be169b1/g86_final.log",
+      "pass": true
+    },
+    {
+      "check": "Git blob docs__22p_gap__gate86_evidence__final_0be169b1__g86_pytest_full.txt.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned reference docs/22p_gap/gate86_evidence/final_0be169b1/g86_pytest_full.txt",
+      "pass": true
+    },
+    {
+      "check": "Git blob docs__22p_gap__gate86_evidence__final_0be169b1__g86_replay_all.txt.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned reference docs/22p_gap/gate86_evidence/final_0be169b1/g86_replay_all.txt",
+      "pass": true
+    },
+    {
+      "check": "Git blob docs__22p_gap__gate86_evidence__final_0be169b1__g86_smoke.txt.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned reference docs/22p_gap/gate86_evidence/final_0be169b1/g86_smoke.txt",
+      "pass": true
+    },
+    {
+      "check": "Git blob docs__22p_gap__gate86_evidence__final_0be169b1__run_g86_final.sh.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned reference docs/22p_gap/gate86_evidence/final_0be169b1/run_g86_final.sh",
+      "pass": true
+    },
+    {
+      "check": "Git blob docs__22p_gap__gate86_evidence__mutations__g85_emit.txt.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned reference docs/22p_gap/gate86_evidence/mutations/g85_emit.txt",
+      "pass": true
+    },
+    {
+      "check": "Git blob docs__22p_gap__gate86_evidence__mutations__g85_replay.txt.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned reference docs/22p_gap/gate86_evidence/mutations/g85_replay.txt",
+      "pass": true
+    },
+    {
+      "check": "Git blob docs__22p_gap__gate86_evidence__README.md.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned reference docs/22p_gap/gate86_evidence/README.md",
+      "pass": true
+    },
+    {
+      "check": "Git blob docs__22p_gap__gate86_evidence__receipts__g85_receipts.txt.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned reference docs/22p_gap/gate86_evidence/receipts/g85_receipts.txt",
+      "pass": true
+    },
+    {
+      "check": "Git blob docs__22p_gap__gate86_evidence__red_green__green_gate85.txt.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned reference docs/22p_gap/gate86_evidence/red_green/green_gate85.txt",
+      "pass": true
+    },
+    {
+      "check": "Git blob docs__22p_gap__gate86_evidence__red_green__red_gate85.txt.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned reference docs/22p_gap/gate86_evidence/red_green/red_gate85.txt",
+      "pass": true
+    },
+    {
+      "check": "Git blob docs__22p_gap__gate86_evidence__stray_exec_class__20f6faf98437b7145b916305da4df283d3348ef13318bd6ac72a8a6678fd20de.json.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned reference docs/22p_gap/gate86_evidence/stray_exec_class/20f6faf98437b7145b916305da4df283d3348ef13318bd6ac72a8a6678fd20de.json",
+      "pass": true
+    },
+    {
+      "check": "Git blob docs__22p_gap__gate86_evidence__witness_fix__g86_witness_fix.log.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned reference docs/22p_gap/gate86_evidence/witness_fix/g86_witness_fix.log",
+      "pass": true
+    },
+    {
+      "check": "Git blob docs__22p_gap__GATE86_REQUEST.md.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned reference docs/22p_gap/GATE86_REQUEST.md",
+      "pass": true
+    },
+    {
+      "check": "Git blob docs__22p_gap__LEG_PRESERVATION.yaml.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned reference docs/22p_gap/LEG_PRESERVATION.yaml",
+      "pass": true
+    },
+    {
+      "check": "Git blob docs__22p_gap__mutation_replay.py.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned reference docs/22p_gap/mutation_replay.py",
+      "pass": true
+    },
+    {
+      "check": "Git blob docs__22p_gap__receipts__grid_fit_v5.validate.yaml.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned reference docs/22p_gap/receipts/grid_fit_v5.validate.yaml",
+      "pass": true
+    },
+    {
+      "check": "Git blob docs__22p_gap__receipts__history__grid_fit_v5.validate.ba51cd20caa10b7b.yaml.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned reference docs/22p_gap/receipts/history/grid_fit_v5.validate.ba51cd20caa10b7b.yaml",
+      "pass": true
+    },
+    {
+      "check": "Git blob docs__22p_gap__receipts__history__paired_fixed5_v4.validate.ba51cd20caa10b7b.yaml.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned reference docs/22p_gap/receipts/history/paired_fixed5_v4.validate.ba51cd20caa10b7b.yaml",
+      "pass": true
+    },
+    {
+      "check": "Git blob docs__22p_gap__receipts__paired_fixed5_v4.validate.yaml.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned reference docs/22p_gap/receipts/paired_fixed5_v4.validate.yaml",
+      "pass": true
+    },
+    {
+      "check": "Git blob docs__22p_gap__STAGE3_IMPL_ROUND1_SPEC.md.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned reference docs/22p_gap/STAGE3_IMPL_ROUND1_SPEC.md",
+      "pass": true
+    },
+    {
+      "check": "Git blob src__io.py.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned reference src/io.py",
+      "pass": true
+    },
+    {
+      "check": "Git blob tests__test_gate84_round2a.py.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned reference tests/test_gate84_round2a.py",
+      "pass": true
+    },
+    {
+      "check": "Git blob tests__test_gate85_closure_members.py.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned reference tests/test_gate85_closure_members.py",
+      "pass": true
+    },
+    {
+      "check": "Complete flat directory src",
+      "pass": true
+    },
+    {
+      "check": "Git tree reconstruction src",
+      "pass": true
+    },
+    {
+      "check": "Complete flat directory tools",
+      "pass": true
+    },
+    {
+      "check": "Git tree reconstruction tools",
+      "pass": true
+    },
+    {
+      "check": "Complete flat directory configs",
+      "pass": true
+    },
+    {
+      "check": "Git tree reconstruction configs",
+      "pass": true
+    },
+    {
+      "check": "Complete flat directory scripts",
+      "pass": true
+    },
+    {
+      "check": "Git tree reconstruction scripts",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob configs/base.yaml",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob configs/grid_22p.yaml",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob configs/grid_22p_dense.yaml",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob configs/grid_22p_fine.yaml",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob configs/grid_22p_seed.yaml",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob configs/grid_coarse.yaml",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob configs/grid_fine.yaml",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob configs/objectives.yaml",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob configs/objectives_optimized.yaml",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob configs/sweep1d.yaml",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob requirements-gpu.txt",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob requirements.txt",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob run.sh",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob scripts/archive_results.sh",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob scripts/bg.sh",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob scripts/check_run.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob scripts/diagnose_objective.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob scripts/recompute_lli.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob scripts/setup_env.sh",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob scripts/smoke_e2e.sh",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob scripts/verify_env.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob scripts/watch_fit.sh",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob scripts/watch_grid.sh",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob src/__init__.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob src/baseline.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob src/config.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob src/curves.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob src/fitting.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob src/grid.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob src/halfcell.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob src/hessian.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob src/inventory.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob src/io.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob src/model.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob src/modes.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob src/objective.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob src/protocol.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob src/runner.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob src/scoring.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob src/sweep.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob src/weight_sweep.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob tools/analyze_22p_gap.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob tools/archive_bundle.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob tools/check_derived_fresh.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob tools/check_sweep_consistency.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob tools/compare_cases.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob tools/compare_objectives.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob tools/design_golden.yaml",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob tools/design_wire.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob tools/diagnose_pini_transition.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob tools/gen_design_golden.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob tools/index_yaml.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob tools/interactive_ab.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob tools/make_results.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob tools/plot_grid_summary.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob tools/plot_map.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob tools/plot_sweep1d.py",
+      "pass": true
+    },
+    {
+      "check": "Current scope blob tools/preserve.py",
+      "pass": true
+    },
+    {
+      "check": "Exact scope 58 files",
+      "pass": true
+    },
+    {
+      "check": "Only production io changed",
+      "pass": true
+    },
+    {
+      "check": "Independent source_digest",
+      "pass": true
+    },
+    {
+      "check": "Untruncated compare TARGET_COMPARE",
+      "pass": true
+    },
+    {
+      "check": "Forward ancestry TARGET_COMPARE",
+      "pass": true
+    },
+    {
+      "check": "Scope diff zero TARGET_COMPARE",
+      "pass": true
+    },
+    {
+      "check": "Untruncated compare GREEN_TO_TARGET",
+      "pass": true
+    },
+    {
+      "check": "Forward ancestry GREEN_TO_TARGET",
+      "pass": true
+    },
+    {
+      "check": "Scope diff zero GREEN_TO_TARGET",
+      "pass": true
+    },
+    {
+      "check": "Untruncated compare AUTH_TO_HEAD",
+      "pass": true
+    },
+    {
+      "check": "Forward ancestry AUTH_TO_HEAD",
+      "pass": true
+    },
+    {
+      "check": "Untruncated compare RED_TO_GREEN",
+      "pass": true
+    },
+    {
+      "check": "Forward ancestry RED_TO_GREEN",
+      "pass": true
+    },
+    {
+      "check": "Exact GREEN delta",
+      "pass": true
+    },
+    {
+      "check": "No tracked class/claim/cohort delta",
+      "pass": true
+    },
+    {
+      "check": "Only existing _stage3_checks AST changed",
+      "pass": true
+    },
+    {
+      "check": "One added function",
+      "pass": true
+    },
+    {
+      "check": "No function removed",
+      "pass": true
+    },
+    {
+      "check": "Static predicate derive_from_root",
+      "pass": true
+    },
+    {
+      "check": "Static predicate cycle",
+      "pass": true
+    },
+    {
+      "check": "Static predicate outside_repo",
+      "pass": true
+    },
+    {
+      "check": "Static predicate depth",
+      "pass": true
+    },
+    {
+      "check": "Static predicate unsealed_parent",
+      "pass": true
+    },
+    {
+      "check": "Static predicate missing_snapshot",
+      "pass": true
+    },
+    {
+      "check": "Static predicate yaml_and_utf8",
+      "pass": true
+    },
+    {
+      "check": "Static predicate mapping",
+      "pass": true
+    },
+    {
+      "check": "Static predicate nonstring_extends",
+      "pass": true
+    },
+    {
+      "check": "Static predicate normalized_relative_join",
+      "pass": true
+    },
+    {
+      "check": "Static predicate unique",
+      "pass": true
+    },
+    {
+      "check": "Static predicate missing",
+      "pass": true
+    },
+    {
+      "check": "Static predicate extra",
+      "pass": true
+    },
+    {
+      "check": "Static predicate derived_hash_material",
+      "pass": true
+    },
+    {
+      "check": "Static predicate actual_snapshot_sha",
+      "pass": true
+    },
+    {
+      "check": "Static predicate dual_compare",
+      "pass": true
+    },
+    {
+      "check": "Static predicate no_live_loader_call",
+      "pass": true
+    },
+    {
+      "check": "Seven named test functions",
+      "pass": true
+    },
+    {
+      "check": "Test coupling IO.validate_provenance(out)",
+      "pass": true
+    },
+    {
+      "check": "Test coupling assert G81._fails(v) == [CHECK]",
+      "pass": true
+    },
+    {
+      "check": "Test coupling _resign(out)",
+      "pass": true
+    },
+    {
+      "check": "Test coupling fits[\"run_sig\"] = sig",
+      "pass": true
+    },
+    {
+      "check": "Test coupling G82._reseal_fits(out)",
+      "pass": true
+    },
+    {
+      "check": "Test coupling env_mutate=lambda e: e[\"inputs\"].update(base_config_digest=digest)",
+      "pass": true
+    },
+    {
+      "check": "Mutation preimage closure-members-are-derived-not-trusted-g85",
+      "pass": true
+    },
+    {
+      "check": "Mutation preimage closure-missing-members-are-refused-g85",
+      "pass": true
+    },
+    {
+      "check": "Mutation preimage closure-extra-members-are-refused-g85",
+      "pass": true
+    },
+    {
+      "check": "Mutation preimage closure-member-keys-are-unique-g85",
+      "pass": true
+    },
+    {
+      "check": "Mutation preimage closure-derivation-refuses-cycles-g85",
+      "pass": true
+    },
+    {
+      "check": "Mutation preimage closure-derivation-refuses-unsealed-parents-g85",
+      "pass": true
+    },
+    {
+      "check": "Mutation preimage closure-derivation-refuses-escaping-paths-g85",
+      "pass": true
+    },
+    {
+      "check": "Seven mutation registrations",
+      "pass": true
+    },
+    {
+      "check": "Twelve source-log rows",
+      "pass": true
+    },
+    {
+      "check": "Evidence size final_0be169b1/g86_final.log",
+      "pass": true
+    },
+    {
+      "check": "Evidence full SHA final_0be169b1/g86_final.log",
+      "pass": true
+    },
+    {
+      "check": "Evidence size final_0be169b1/g86_pytest_full.txt",
+      "pass": true
+    },
+    {
+      "check": "Evidence full SHA final_0be169b1/g86_pytest_full.txt",
+      "pass": true
+    },
+    {
+      "check": "Evidence size final_0be169b1/g86_replay_all.txt",
+      "pass": true
+    },
+    {
+      "check": "Evidence full SHA final_0be169b1/g86_replay_all.txt",
+      "pass": true
+    },
+    {
+      "check": "Evidence size final_0be169b1/g86_smoke.txt",
+      "pass": true
+    },
+    {
+      "check": "Evidence full SHA final_0be169b1/g86_smoke.txt",
+      "pass": true
+    },
+    {
+      "check": "Evidence size final_0be169b1/run_g86_final.sh",
+      "pass": true
+    },
+    {
+      "check": "Evidence full SHA final_0be169b1/run_g86_final.sh",
+      "pass": true
+    },
+    {
+      "check": "Evidence size mutations/g85_emit.txt",
+      "pass": true
+    },
+    {
+      "check": "Evidence full SHA mutations/g85_emit.txt",
+      "pass": true
+    },
+    {
+      "check": "Evidence size mutations/g85_replay.txt",
+      "pass": true
+    },
+    {
+      "check": "Evidence full SHA mutations/g85_replay.txt",
+      "pass": true
+    },
+    {
+      "check": "Evidence size receipts/g85_receipts.txt",
+      "pass": true
+    },
+    {
+      "check": "Evidence full SHA receipts/g85_receipts.txt",
+      "pass": true
+    },
+    {
+      "check": "Evidence size red_green/green_gate85.txt",
+      "pass": true
+    },
+    {
+      "check": "Evidence full SHA red_green/green_gate85.txt",
+      "pass": true
+    },
+    {
+      "check": "Evidence size red_green/red_gate85.txt",
+      "pass": true
+    },
+    {
+      "check": "Evidence full SHA red_green/red_gate85.txt",
+      "pass": true
+    },
+    {
+      "check": "Evidence size stray_exec_class/20f6faf98437b7145b916305da4df283d3348ef13318bd6ac72a8a6678fd20de.json",
+      "pass": true
+    },
+    {
+      "check": "Evidence full SHA stray_exec_class/20f6faf98437b7145b916305da4df283d3348ef13318bd6ac72a8a6678fd20de.json",
+      "pass": true
+    },
+    {
+      "check": "Evidence size witness_fix/g86_witness_fix.log",
+      "pass": true
+    },
+    {
+      "check": "Evidence full SHA witness_fix/g86_witness_fix.log",
+      "pass": true
+    },
+    {
+      "check": "Full replay 352/0/0",
+      "pass": true
+    },
+    {
+      "check": "RED all-validator [] four cases",
+      "pass": true
+    },
+    {
+      "check": "RED summary",
+      "pass": true
+    },
+    {
+      "check": "GREEN summary",
+      "pass": true
+    },
+    {
+      "check": "Initial final one failure",
+      "pass": true
+    },
+    {
+      "check": "Wrapper distinct return codes",
+      "pass": true
+    },
+    {
+      "check": "Clean target witness fix",
+      "pass": true
+    },
+    {
+      "check": "Stray explicitly canonical sealed",
+      "pass": true
+    },
+    {
+      "check": "Exact history paired_fixed5_v4",
+      "pass": true
+    },
+    {
+      "check": "Receipt core only validator changes paired_fixed5_v4",
+      "pass": true
+    },
+    {
+      "check": "Unique scalar paired_fixed5_v4/validator_source_digest",
+      "pass": true
+    },
+    {
+      "check": "Current validator paired_fixed5_v4",
+      "pass": true
+    },
+    {
+      "check": "Unique scalar paired_fixed5_v4/src_io_sha256",
+      "pass": true
+    },
+    {
+      "check": "IO SHA matches paired_fixed5_v4",
+      "pass": true
+    },
+    {
+      "check": "Unique scalar paired_fixed5_v4/n_checks",
+      "pass": true
+    },
+    {
+      "check": "Receipt check count paired_fixed5_v4",
+      "pass": true
+    },
+    {
+      "check": "Unique scalar paired_fixed5_v4/core_sha256",
+      "pass": true
+    },
+    {
+      "check": "Ledger core anchor paired_fixed5_v4",
+      "pass": true
+    },
+    {
+      "check": "Dirty stamp preserved paired_fixed5_v4",
+      "pass": true
+    },
+    {
+      "check": "Exact history grid_fit_v5",
+      "pass": true
+    },
+    {
+      "check": "Receipt core only validator changes grid_fit_v5",
+      "pass": true
+    },
+    {
+      "check": "Unique scalar grid_fit_v5/validator_source_digest",
+      "pass": true
+    },
+    {
+      "check": "Current validator grid_fit_v5",
+      "pass": true
+    },
+    {
+      "check": "Unique scalar grid_fit_v5/src_io_sha256",
+      "pass": true
+    },
+    {
+      "check": "IO SHA matches grid_fit_v5",
+      "pass": true
+    },
+    {
+      "check": "Unique scalar grid_fit_v5/n_checks",
+      "pass": true
+    },
+    {
+      "check": "Receipt check count grid_fit_v5",
+      "pass": true
+    },
+    {
+      "check": "Unique scalar grid_fit_v5/core_sha256",
+      "pass": true
+    },
+    {
+      "check": "Ledger core anchor grid_fit_v5",
+      "pass": true
+    },
+    {
+      "check": "Dirty stamp preserved grid_fit_v5",
+      "pass": true
+    },
+    {
+      "check": "Embedded Gate85 exact DECISION.json",
+      "pass": true
+    },
+    {
+      "check": "Embedded Gate85 exact PACKAGE_MANIFEST.json",
+      "pass": true
+    },
+    {
+      "check": "Prior local review preserved",
+      "pass": true
+    }
+  ],
+  "source_digest": "f1f4378f46610f08",
+  "received_program_executions": 0,
+  "project_tests": 0,
+  "mutations": 0,
+  "restore": 0,
+  "COMSOL": 0,
+  "scope": "Reviewer-owned bytes/AST/log data checks, not recipient functional execution."
+}

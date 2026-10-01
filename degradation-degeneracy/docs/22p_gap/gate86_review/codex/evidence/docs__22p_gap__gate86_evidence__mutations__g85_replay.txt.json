@@ -1,0 +1,7 @@
+{
+  "content": "sandbox: /tmp/mutation_replay_r4h41r96/degradation-degeneracy\n\n물었다        closure-members-are-derived-not-trusted-g85 node 3 · -k g85_m01 or g85_m02 or g85_m03\n물었다        closure-missing-members-are-refused-g85 node 2 · -k g85_m01 or g85_m02\n물었다        closure-extra-members-are-refused-g85 node 1 · -k g85_m03\n물었다        closure-member-keys-are-unique-g85 node 1 · -k g85_m04\n물었다        closure-derivation-refuses-cycles-g85 node 1 · -k g85_m05\n물었다        closure-derivation-refuses-unsealed-parents-g85 node 1 · -k g85_m05\n물었다        closure-derivation-refuses-escaping-paths-g85 node 1 · -k g85_m05\n\nscenario_total 7 · scenario_executable 7 · scenario_declared 0 · site_total 7 · site_executable 7 · site_declared 0 · ran 7\n실행한 변이 7건이 전부 기대 node 를 call 단계에서 물었다\n",
+  "encoding": "utf-8",
+  "sha": "8cf679c4e98bc450aacd040ee8e0c0d255aaeba4",
+  "display_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/27bfeed68ea516e5c5a50f2475c8cc2b4f80ff3b/degradation-degeneracy/docs/22p_gap/gate86_evidence/mutations/g85_replay.txt",
+  "display_title": "g85_replay.txt"
+}

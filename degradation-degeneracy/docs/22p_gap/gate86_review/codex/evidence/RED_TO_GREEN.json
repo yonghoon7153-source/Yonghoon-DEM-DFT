@@ -1,0 +1,38 @@
+{
+  "repository_full_name": "yonghoon7153-source/Yonghoon-DEM-DFT",
+  "base": "9255377a",
+  "head": "19bf1c15",
+  "status": "ahead",
+  "ahead_by": 1,
+  "behind_by": 0,
+  "total_commits": 1,
+  "too_large": null,
+  "base_commit": {
+    "sha": "9255377aef887f7218d7287c5551a9113d4f34e5",
+    "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/commits/9255377aef887f7218d7287c5551a9113d4f34e5",
+    "html_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/commit/9255377aef887f7218d7287c5551a9113d4f34e5"
+  },
+  "merge_base_commit": {
+    "sha": "9255377aef887f7218d7287c5551a9113d4f34e5",
+    "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/commits/9255377aef887f7218d7287c5551a9113d4f34e5",
+    "html_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/commit/9255377aef887f7218d7287c5551a9113d4f34e5"
+  },
+  "files": [
+    {
+      "filename": "degradation-degeneracy/src/io.py",
+      "status": "modified",
+      "additions": 77,
+      "deletions": 2,
+      "changes": 79,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/tests/test_gate84_round2a.py",
+      "status": "modified",
+      "additions": 7,
+      "deletions": 3,
+      "changes": 10,
+      "previous_filename": null
+    }
+  ]
+}

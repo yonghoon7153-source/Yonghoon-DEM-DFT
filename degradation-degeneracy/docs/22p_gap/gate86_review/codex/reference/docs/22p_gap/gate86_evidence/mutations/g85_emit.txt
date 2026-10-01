@@ -1,0 +1,86 @@
+sandbox: /tmp/mutation_replay_nq4i3_vl/degradation-degeneracy
+
+★ 안 물었다    closure-members-are-derived-not-trusted-g85 node 3 · -k g85_m01 or g85_m02 or g85_m03
+★ 안 물었다    closure-missing-members-are-refused-g85 node 2 · -k g85_m01 or g85_m02
+★ 안 물었다    closure-extra-members-are-refused-g85 node 1 · -k g85_m03
+★ 안 물었다    closure-member-keys-are-unique-g85 node 1 · -k g85_m04
+★ 안 물었다    closure-derivation-refuses-cycles-g85 node 1 · -k g85_m05
+★ 안 물었다    closure-derivation-refuses-unsealed-parents-g85 node 1 · -k g85_m05
+★ 안 물었다    closure-derivation-refuses-escaping-paths-g85 node 1 · -k g85_m05
+
+=== 관측한 EXPECT (그대로 붙여 넣어라) ===
+{
+    "closure-derivation-refuses-cycles-g85": {
+        "fail": [
+            "tests/test_gate85_closure_members.py::test_g85_m05_member_derivation_refuses_cycles_unsealed_or_missing_parents_escapes_and_bad_extends"
+        ],
+        "witness": {
+            "tests/test_gate85_closure_members.py::test_g85_m05_member_derivation_refuses_cycles_unsealed_or_missing_parents_escapes_and_bad_extends": "AssertionError: 순환: 이유가 다르다 — ['extends 깊이가 32 를 넘는다']"
+        }
+    },
+    "closure-derivation-refuses-escaping-paths-g85": {
+        "fail": [
+            "tests/test_gate85_closure_members.py::test_g85_m05_member_derivation_refuses_cycles_unsealed_or_missing_parents_escapes_and_bad_extends"
+        ],
+        "witness": {
+            "tests/test_gate85_closure_members.py::test_g85_m05_member_derivation_refuses_cycles_unsealed_or_missing_parents_escapes_and_bad_extends": "AssertionError: 밖: 이유가 다르다 — ['../outside.yaml: 봉인 목록 (run_spec.sealed_inputs) 에 없다']"
+        }
+    },
+    "closure-derivation-refuses-unsealed-parents-g85": {
+        "fail": [
+            "tests/test_gate85_closure_members.py::test_g85_m05_member_derivation_refuses_cycles_unsealed_or_missing_parents_escapes_and_bad_extends"
+        ],
+        "witness": {
+            "tests/test_gate85_closure_members.py::test_g85_m05_member_derivation_refuses_cycles_unsealed_or_missing_parents_escapes_and_bad_extends": "AssertionError: 봉인 목록: 이유가 다르다 — ['configs/p.yaml: 봉인 스냅샷이 없다']"
+        }
+    },
+    "closure-extra-members-are-refused-g85": {
+        "fail": [
+            "tests/test_gate85_closure_members.py::test_g85_m03_an_extra_sealed_member_with_forged_digests_is_refused_by_the_member_check"
+        ],
+        "witness": {
+            "tests/test_gate85_closure_members.py::test_g85_m03_an_extra_sealed_member_with_forged_digests_is_refused_by_the_member_check": "AssertionError: 이유에 'curves_manifest.yaml' 가 없다: 실패 — 스냅샷에서 다시 만든 closure e6afe50dadf9b967 ≠ run_spec.stage3.base_config_closure_sha256 9b9f8df1ad8d1815; 스냅샷에서 다시 만든 closure e6afe50dadf9b967 ≠ 계획 inpu"
+        }
+    },
+    "closure-member-keys-are-unique-g85": {
+        "fail": [
+            "tests/test_gate85_closure_members.py::test_g85_m04_a_duplicated_member_key_is_refused_even_with_the_true_digests"
+        ],
+        "witness": {
+            "tests/test_gate85_closure_members.py::test_g85_m04_a_duplicated_member_key_is_refused_even_with_the_true_digests": "AssertionError: 자기일관 위조가 base_config_결속 를 통과했다: 통과"
+        }
+    },
+    "closure-members-are-derived-not-trusted-g85": {
+        "fail": [
+            "tests/test_gate85_closure_members.py::test_g85_m01_dropping_the_parent_and_forging_both_digests_is_refused_by_the_member_check",
+            "tests/test_gate85_closure_members.py::test_g85_m02_dropping_the_leaf_and_forging_both_digests_is_refused_by_the_member_check",
+            "tests/test_gate85_closure_members.py::test_g85_m03_an_extra_sealed_member_with_forged_digests_is_refused_by_the_member_check"
+        ],
+        "witness": {
+            "tests/test_gate85_closure_members.py::test_g85_m01_dropping_the_parent_and_forging_both_digests_is_refused_by_the_member_check": "AssertionError: 자기일관 위조가 base_config_결속 를 통과했다: 통과",
+            "tests/test_gate85_closure_members.py::test_g85_m02_dropping_the_leaf_and_forging_both_digests_is_refused_by_the_member_check": "AssertionError: 자기일관 위조가 base_config_결속 를 통과했다: 통과",
+            "tests/test_gate85_closure_members.py::test_g85_m03_an_extra_sealed_member_with_forged_digests_is_refused_by_the_member_check": "AssertionError: 자기일관 위조가 base_config_결속 를 통과했다: 통과"
+        }
+    },
+    "closure-missing-members-are-refused-g85": {
+        "fail": [
+            "tests/test_gate85_closure_members.py::test_g85_m01_dropping_the_parent_and_forging_both_digests_is_refused_by_the_member_check",
+            "tests/test_gate85_closure_members.py::test_g85_m02_dropping_the_leaf_and_forging_both_digests_is_refused_by_the_member_check"
+        ],
+        "witness": {
+            "tests/test_gate85_closure_members.py::test_g85_m01_dropping_the_parent_and_forging_both_digests_is_refused_by_the_member_check": "AssertionError: 이유에 'configs/base.yaml' 가 없다: 실패 — 스냅샷에서 다시 만든 closure e6afe50dadf9b967 ≠ run_spec.stage3.base_config_closure_sha256 e3843fa126f7bcbd; 스냅샷에서 다시 만든 closure e6afe50dadf9b967 ≠ 계획 inputs.",
+            "tests/test_gate85_closure_members.py::test_g85_m02_dropping_the_leaf_and_forging_both_digests_is_refused_by_the_member_check": "AssertionError: 이유에 'configs/grid_coarse.yaml' 가 없다: 실패 — 스냅샷에서 다시 만든 closure e6afe50dadf9b967 ≠ run_spec.stage3.base_config_closure_sha256 2885945318d396a5; 스냅샷에서 다시 만든 closure e6afe50dadf9b967 ≠ 계획 "
+        }
+    }
+}
+
+scenario_total 7 · scenario_executable 7 · scenario_declared 0 · site_total 7 · site_executable 7 · site_declared 0 · ran 7
+
+=== 문제 ===
+closure-members-are-derived-not-trusted-g85: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+closure-missing-members-are-refused-g85: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+closure-extra-members-are-refused-g85: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+closure-member-keys-are-unique-g85: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+closure-derivation-refuses-cycles-g85: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+closure-derivation-refuses-unsealed-parents-g85: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+closure-derivation-refuses-escaping-paths-g85: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)

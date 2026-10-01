@@ -1,0 +1,53 @@
+{
+  "gate": 85,
+  "date_kst": "2026-10-01",
+  "decision": "PARTIAL_ACCEPTANCE_ROUND2A_NOT_CLOSED",
+  "request_head": "b49c24fabe94be7a5986bdc54de2d4278c4ebf65",
+  "code_target": "f89b1401fb1ab21371bd7755289e64281681b5be",
+  "source_digest": "ba51cd20caa10b7b",
+  "findings": [
+    {
+      "id": "G85-N1",
+      "priority": "P1",
+      "scope": "G84-N1/R2-b postrun validator",
+      "issue": "Submitted closure key list is not independently bound to the root config dependency graph.",
+      "evidence": "src/io.py:1955-1974; static source inspection and reviewer local-predicate SHA/set countermodel; full production validator not executed."
+    }
+  ],
+  "nonblocking_comments": [
+    {
+      "id": "G85-C1",
+      "issue": "Historical test evidence gaps have qualified impact; whole replay 344/345 plus corrected g61 single replay must remain separately attributed."
+    },
+    {
+      "id": "G85-C2",
+      "issue": "n4_02 synthetic NaN case is not the actual finite-success-then-nonfinite return shape; its PASS applies only to recount."
+    }
+  ],
+  "accepted": [
+    "G84-N1 full hex64 and start-time binding only",
+    "G84-N3",
+    "G84-N4",
+    "R2-e",
+    "R2-f",
+    "Current two historical-leg receipt identity/text comparison"
+  ],
+  "round2a_closed": false,
+  "round1_closure": "UNCHANGED",
+  "gate76_closure": "UNCHANGED",
+  "grid_fit_v5": "DIAGNOSTIC_ONLY",
+  "receipt_scope": "Exact file/history identity and core text invariant except validator fields; no restore or canonical core regeneration.",
+  "test_counts_origin": "SENDER_REPORTED_NOT_REEXECUTED",
+  "execution_go": false,
+  "implementation_authorized": false,
+  "round2b_authorized": false,
+  "new_research_leg_authorized": false,
+  "p_ini_implementation_authorized": false,
+  "received_code_executed": false,
+  "project_tests_run": 0,
+  "mutation_replays": 0,
+  "receipt_regeneration_or_restore_runs": 0,
+  "COMSOL_calls": 0,
+  "external_messages_sent": 0,
+  "next": "Obtain separate user approval for limited G85-N1 closure-member binding correction and focused regressions; include C1/C2 record corrections. Do not start round2b."
+}

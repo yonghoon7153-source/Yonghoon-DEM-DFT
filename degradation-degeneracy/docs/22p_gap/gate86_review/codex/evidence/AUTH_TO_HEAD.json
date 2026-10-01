@@ -1,0 +1,238 @@
+{
+  "repository_full_name": "yonghoon7153-source/Yonghoon-DEM-DFT",
+  "base": "b9bc46c1",
+  "head": "27bfeed68ea516e5c5a50f2475c8cc2b4f80ff3b",
+  "status": "ahead",
+  "ahead_by": 7,
+  "behind_by": 0,
+  "total_commits": 7,
+  "too_large": null,
+  "base_commit": {
+    "sha": "b9bc46c11c81eb4f049cbbac1bfc34ccc3034b8b",
+    "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/commits/b9bc46c11c81eb4f049cbbac1bfc34ccc3034b8b",
+    "html_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/commit/b9bc46c11c81eb4f049cbbac1bfc34ccc3034b8b"
+  },
+  "merge_base_commit": {
+    "sha": "b9bc46c11c81eb4f049cbbac1bfc34ccc3034b8b",
+    "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/commits/b9bc46c11c81eb4f049cbbac1bfc34ccc3034b8b",
+    "html_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/commit/b9bc46c11c81eb4f049cbbac1bfc34ccc3034b8b"
+  },
+  "files": [
+    {
+      "filename": "degradation-degeneracy/.gitattributes",
+      "status": "modified",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/08_REVIEW_RESPONSE.md",
+      "status": "modified",
+      "additions": 28,
+      "deletions": 0,
+      "changes": 28,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/GATE86_REQUEST.md",
+      "status": "added",
+      "additions": 103,
+      "deletions": 0,
+      "changes": 103,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/LEG_PRESERVATION.yaml",
+      "status": "modified",
+      "additions": 4,
+      "deletions": 4,
+      "changes": 8,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate86_evidence/README.md",
+      "status": "added",
+      "additions": 40,
+      "deletions": 0,
+      "changes": 40,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate86_evidence/final_0be169b1/g86_final.log",
+      "status": "added",
+      "additions": 10,
+      "deletions": 0,
+      "changes": 10,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate86_evidence/final_0be169b1/g86_pytest_full.txt",
+      "status": "added",
+      "additions": 69,
+      "deletions": 0,
+      "changes": 69,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate86_evidence/final_0be169b1/g86_replay_all.txt",
+      "status": "added",
+      "additions": 368,
+      "deletions": 0,
+      "changes": 368,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate86_evidence/final_0be169b1/g86_smoke.txt",
+      "status": "added",
+      "additions": 100,
+      "deletions": 0,
+      "changes": 100,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate86_evidence/final_0be169b1/run_g86_final.sh",
+      "status": "added",
+      "additions": 14,
+      "deletions": 0,
+      "changes": 14,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate86_evidence/mutations/g85_emit.txt",
+      "status": "added",
+      "additions": 86,
+      "deletions": 0,
+      "changes": 86,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate86_evidence/mutations/g85_replay.txt",
+      "status": "added",
+      "additions": 12,
+      "deletions": 0,
+      "changes": 12,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate86_evidence/receipts/g85_receipts.txt",
+      "status": "added",
+      "additions": 4,
+      "deletions": 0,
+      "changes": 4,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate86_evidence/red_green/green_gate85.txt",
+      "status": "added",
+      "additions": 6,
+      "deletions": 0,
+      "changes": 6,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate86_evidence/red_green/red_gate85.txt",
+      "status": "added",
+      "additions": 123,
+      "deletions": 0,
+      "changes": 123,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate86_evidence/stray_exec_class/20f6faf98437b7145b916305da4df283d3348ef13318bd6ac72a8a6678fd20de.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate86_evidence/witness_fix/g86_witness_fix.log",
+      "status": "added",
+      "additions": 8,
+      "deletions": 0,
+      "changes": 8,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/mutation_replay.py",
+      "status": "modified",
+      "additions": 101,
+      "deletions": 0,
+      "changes": 101,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/receipts/grid_fit_v5.validate.yaml",
+      "status": "modified",
+      "additions": 5,
+      "deletions": 5,
+      "changes": 10,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/receipts/history/grid_fit_v5.validate.ba51cd20caa10b7b.yaml",
+      "status": "added",
+      "additions": 100,
+      "deletions": 0,
+      "changes": 100,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/receipts/history/paired_fixed5_v4.validate.ba51cd20caa10b7b.yaml",
+      "status": "added",
+      "additions": 102,
+      "deletions": 0,
+      "changes": 102,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/receipts/paired_fixed5_v4.validate.yaml",
+      "status": "modified",
+      "additions": 5,
+      "deletions": 5,
+      "changes": 10,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/GATE70_WORKING_STATE.md",
+      "status": "modified",
+      "additions": 5,
+      "deletions": 1,
+      "changes": 6,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/src/io.py",
+      "status": "modified",
+      "additions": 77,
+      "deletions": 2,
+      "changes": 79,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/tests/conftest.py",
+      "status": "modified",
+      "additions": 2,
+      "deletions": 0,
+      "changes": 2,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/tests/test_gate84_round2a.py",
+      "status": "modified",
+      "additions": 7,
+      "deletions": 3,
+      "changes": 10,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/tests/test_gate85_closure_members.py",
+      "status": "added",
+      "additions": 194,
+      "deletions": 0,
+      "changes": 194,
+      "previous_filename": null
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "schema": "gate-review/v1",
+  "date": "2026-10-01",
+  "gate": 86,
+  "verdict": "ACCEPTED_ROUND2A_CLOSED_NO_EXECUTION_GO",
+  "request_head": "27bfeed68ea516e5c5a50f2475c8cc2b4f80ff3b",
+  "code_target": "b4876b0b2098c9e87630fc715b44ab65336b73a2",
+  "source_digest": "f1f4378f46610f08",
+  "blocking_findings": [],
+  "closed": [
+    "G85-N1",
+    "ROUND_2A"
+  ],
+  "questions": {
+    "Q1": "ACCEPT",
+    "Q2": "ROUND2A_CLOSED",
+    "Q3": "C_D_E_ACCEPTED_WITH_SCOPE; STRAY_RECORD_IMPACT_WORDING_NARROWED",
+    "Q4": "RECEIPT_BYTES_TEXT_ANCHORS_ACCEPTED; NO_CANONICAL_CORE_REGENERATION"
+  },
+  "nonblocking_notes": [
+    {
+      "id": "G86-C1",
+      "kind": "scope_correction",
+      "summary": "Untracked canonical record was a real transient authority write; lack of Git commit is not proof of no effect. No evidence in reviewed scope overturns prior outcomes; remote temporal noninterference is unverified."
+    },
+    {
+      "id": "G86-C2",
+      "kind": "evidence_provenance",
+      "status": "RESOLVED_BY_SUPPLEMENT",
+      "summary": "Supplement commit 92c50f9035db79143f7f5aca65072b3adffdee26 supplies exact final source logs: clean 27bfeed6, pytest 2046 passed / 1 xfailed / rc0, smoke rc0. Reviewer did not rerun. First interrupted partial pytest output was overwritten; its start marker survives."
+    }
+  ],
+  "reviewer_data_checks": 273,
+  "reviewer_initial_checks": 228,
+  "reviewer_supplement_checks": 45,
+  "source_log_payloads_verified": 17,
+  "supplement_commit": "92c50f9035db79143f7f5aca65072b3adffdee26",
+  "functional_execution_by_reviewer": {
+    "received_code": 0,
+    "pytest": 0,
+    "mutation": 0,
+    "restore": 0,
+    "COMSOL": 0
+  },
+  "authorized_actions": {
+    "round2b_implementation": false,
+    "p_ini_implementation": false,
+    "new_research_leg": false,
+    "execution_GO": false,
+    "class_change": false,
+    "projection_publication": false
+  },
+  "remaining_existing_limits": [
+    "grid_fit_v5_DIAGNOSTIC_ONLY",
+    "Round2b_requires_separate_user_approval"
+  ],
+  "receipt_scope": "Exact history bytes, core text and ledger declared anchors. Canonical YAML core hash not regenerated.",
+  "overall_claim": "Independent static and source-log review; not independent execution."
+}

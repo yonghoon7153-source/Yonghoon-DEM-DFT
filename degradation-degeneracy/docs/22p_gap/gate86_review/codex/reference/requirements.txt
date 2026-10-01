@@ -1,0 +1,27 @@
+# ── 핵심 ──
+# 검증 완료 조합 (2026-08-05, docs/ENV_REPORT.md):
+#   pybamm 26.7.1.0 / numpy 2.4.6 / scipy 1.17.1 / pandas 3.0.5 / Python 3.11
+#   IDAKLU OK, composite DFN OK, 1 solve ≈ 2 s
+pybamm[all]>=24.5        # [all] 이 IDAKLU solver 포함. 이거 없으면 2~5배 느림
+numpy>=1.24
+scipy>=1.11
+pandas>=2.0
+matplotlib>=3.7
+PyYAML>=6.0
+
+# ── 병렬 / 저장 ──
+joblib>=1.3
+pyarrow>=14.0            # parquet
+tqdm>=4.65
+openpyxl>=3.1            # 원본 xlsx export 호환용
+
+# ── 테스트 ──
+pytest>=7.4
+# ★ 48차 P1 — 변이 재현(`docs/22p_gap/mutation_replay.py`)이 **node 단위 결과**를
+#   읽어 "선언한 시험이 선언한 이유로 빨개졌는가" 를 판정한다. 이 플러그인이
+#   없으면 그 판정 자체가 불가능하다 (runner 는 fail-closed 로 멈춘다). 증거
+#   생성 도구의 의존성이 환경마다 다르면 증거를 재현할 수 없다.
+pytest-json-report>=1.5
+
+# ── GPU (Phase 7, 선택) ──
+# requirements-gpu.txt 참조

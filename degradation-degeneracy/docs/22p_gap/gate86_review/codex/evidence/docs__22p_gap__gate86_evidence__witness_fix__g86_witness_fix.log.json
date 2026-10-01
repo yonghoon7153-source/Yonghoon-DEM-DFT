@@ -1,0 +1,7 @@
+{
+  "content": "START_HEAD=b4876b0b2098c9e87630fc715b44ab65336b73a2 status=0 2026-09-30T22:30:30Z\n17 passed in 4.06s\nsandbox: /tmp/mutation_replay_dmejr4ad/degradation-degeneracy\n물었다        closure-derivation-refuses-escaping-paths-g85 node 1 · -k g85_m05\nscenario_total 1 · scenario_executable 1 · scenario_declared 0 · site_total 1 · site_executable 1 · site_declared 0 · ran 1\n실행한 변이 1건이 전부 기대 node 를 call 단계에서 물었다\nreplay rc=0\nEND_HEAD=b4876b0b2098c9e87630fc715b44ab65336b73a2 status=0 2026-09-30T22:30:51Z\n",
+  "encoding": "utf-8",
+  "sha": "69d5924140b857dc4b27576ba7928e605b16703a",
+  "display_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/27bfeed68ea516e5c5a50f2475c8cc2b4f80ff3b/degradation-degeneracy/docs/22p_gap/gate86_evidence/witness_fix/g86_witness_fix.log",
+  "display_title": "g86_witness_fix.log"
+}

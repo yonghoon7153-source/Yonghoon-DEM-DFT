@@ -1,0 +1,40 @@
+{
+  "registrations": [
+    {
+      "name": "closure-members-are-derived-not-trusted-g85",
+      "line": 2087,
+      "preimage_count": 1
+    },
+    {
+      "name": "closure-missing-members-are-refused-g85",
+      "line": 2091,
+      "preimage_count": 1
+    },
+    {
+      "name": "closure-extra-members-are-refused-g85",
+      "line": 2095,
+      "preimage_count": 1
+    },
+    {
+      "name": "closure-member-keys-are-unique-g85",
+      "line": 2099,
+      "preimage_count": 1
+    },
+    {
+      "name": "closure-derivation-refuses-cycles-g85",
+      "line": 2103,
+      "preimage_count": 1
+    },
+    {
+      "name": "closure-derivation-refuses-unsealed-parents-g85",
+      "line": 2107,
+      "preimage_count": 1
+    },
+    {
+      "name": "closure-derivation-refuses-escaping-paths-g85",
+      "line": 2111,
+      "preimage_count": 1
+    }
+  ],
+  "replayed_by_reviewer": false
+}

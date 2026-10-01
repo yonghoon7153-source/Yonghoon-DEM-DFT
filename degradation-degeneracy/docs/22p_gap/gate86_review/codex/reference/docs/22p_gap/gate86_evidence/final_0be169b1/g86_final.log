@@ -1,0 +1,10 @@
+START_HEAD=0be169b18ed40f64c6aae4ca7e364e45ba46fa32 status=0 2026-09-30T19:15:18Z
+FAILED tests/test_gate67_defensive.py::test_g67_14_every_registered_witness_is_a_fixed_reason
+XFAIL tests/test_gate63_defensive.py::test_staging_an_input_outside_the_repo_is_still_unsupported - §0 ⑦ (62차 신고 · 63차 재확인): 저장소 밖 절대 경로 입력은 staging 이 자기 자신 위에 복사하려다 죽는다
+1 failed, 2045 passed, 1 xfailed in 3333.85s (0:55:33)
+pytest rc=1 2026-09-30T20:10:54Z status=0
+smoke rc=0 184s 2026-09-30T20:13:59Z status=0
+replay rc=0 2026-09-30T22:29:12Z
+모든 변이 지점이 정확히 한 번 나타난다
+source_digest f1f4378f46610f08
+END_HEAD=0be169b18ed40f64c6aae4ca7e364e45ba46fa32 status=0 2026-09-30T22:30:13Z

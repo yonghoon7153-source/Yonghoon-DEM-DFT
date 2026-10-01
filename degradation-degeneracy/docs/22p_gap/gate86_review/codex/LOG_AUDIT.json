@@ -1,0 +1,87 @@
+{
+  "files": [
+    {
+      "path": "final_0be169b1/g86_final.log",
+      "bytes": 758,
+      "sha256": "683107b738d171b9e3e8c9382a748c07c544491271ad849be7b233d1fd7d93a1"
+    },
+    {
+      "path": "final_0be169b1/g86_pytest_full.txt",
+      "bytes": 6011,
+      "sha256": "00c6bd33a1b644f5e8d86e3259a1ec336295f41fe5b48430c42496c3a2f7925f"
+    },
+    {
+      "path": "final_0be169b1/g86_replay_all.txt",
+      "bytes": 48135,
+      "sha256": "31bc6babaca2ab69ebfdbd32617a297102c3772a67cbcfaa958b7c0885541fd9"
+    },
+    {
+      "path": "final_0be169b1/g86_smoke.txt",
+      "bytes": 5590,
+      "sha256": "6b1c78b8fb1bcb8f9fedd7c1ba00ec2339d50c7ed2753428c7d3a20440cadd66"
+    },
+    {
+      "path": "final_0be169b1/run_g86_final.sh",
+      "bytes": 1316,
+      "sha256": "345e35d27357fa5f741e0a630bb3920c2cddd121d1b6ec64202ab17cf0992024"
+    },
+    {
+      "path": "mutations/g85_emit.txt",
+      "bytes": 7042,
+      "sha256": "786929101dd30a446106684a281a3fe547688c0fda230ba9dc8631162ab13a1b"
+    },
+    {
+      "path": "mutations/g85_replay.txt",
+      "bytes": 858,
+      "sha256": "875a39cea41ed6ca7679200efbd5a7398c65a4d51333a192f9d779c42abeb20a"
+    },
+    {
+      "path": "receipts/g85_receipts.txt",
+      "bytes": 363,
+      "sha256": "343d34ecb0bd802000a7b4c828507226290bb62d211e61c656f59ca7b5dde135"
+    },
+    {
+      "path": "red_green/green_gate85.txt",
+      "bytes": 665,
+      "sha256": "86af4111790525eb9d18023582cf01e84b2d013ae0c73db7f47c6ee0f1dc4097"
+    },
+    {
+      "path": "red_green/red_gate85.txt",
+      "bytes": 7689,
+      "sha256": "c27b1071b6f7aa9c0773eec5ac3892b52c60766f4bd0fde79040a361b9574778"
+    },
+    {
+      "path": "stray_exec_class/20f6faf98437b7145b916305da4df283d3348ef13318bd6ac72a8a6678fd20de.json",
+      "bytes": 240,
+      "sha256": "050a719e1b7baee3f0b1b2cd7fa6d2b7bf90a1f9edaf46bf82940b9e9d3ab0a0"
+    },
+    {
+      "path": "witness_fix/g86_witness_fix.log",
+      "bytes": 545,
+      "sha256": "19e065f658ac10acd01038898871329850c0a209d0284a51e7a5b55ef64b8cb5"
+    }
+  ],
+  "readme_sha256": "e8b4e1f028f22200d781ab036dfed11abbda82f6ee8dd14a374281d2c6c4478e",
+  "full_replay": {
+    "hit": 352,
+    "survived": 0,
+    "error": 0
+  },
+  "original_full_run_commit": "0be169b18ed40f64c6aae4ca7e364e45ba46fa32",
+  "original_full_pytest": {
+    "failed": 1,
+    "passed": 2045,
+    "xfailed": 1
+  },
+  "target_witness_fix_observed_in_logs": true,
+  "final_request_2046_suite": "USER_MESSAGE_REPORTED; raw source logs not in fixed HEAD evidence",
+  "first_RED": "Overwritten per evidence README, not independently recovered",
+  "stray_record": {
+    "content_id": "20f6faf98437b7145b916305da4df283d3348ef13318bd6ac72a8a6678fd20de",
+    "evidence": "산출 완료 시점 등록 · leg=L phase=grid class=canonical",
+    "execution_class": "canonical",
+    "recorded_at": "2026-09-30T18:51:19Z",
+    "sealed": true
+  },
+  "remote_runtime_observed": false
+}

@@ -1,0 +1,103 @@
+--- Gate85/src/io.py
++++ 27bfeed68ea516e5c5a50f2475c8cc2b4f80ff3b/src/io.py
+@@ -1798,6 +1798,65 @@
+     if extra:
+         bad.append(f"후보 map 에 fits 행이 없는 (조건, objective) 가 있다: {extra[:2]}")
+     return bad, budget_bad
++
++
++_CLOSURE_MAX_DEPTH = 32
++
++
++def base_config_closure_members(root_key, sealed: dict, snap_dir) -> tuple[list, list]:
++    """★ 85차 G85-N1 — base-config closure 의 구성원을 **봉인 스냅샷에서 독립 유도**한다.
++
++    검사 대상의 키 목록을 정답으로 쓰지 않는다. 출발점은 run_spec 의 root 논리 키이고, 각 구성원의 봉인
++    스냅샷 바이트를 YAML 로 읽어 `extends` 를 `load_config` 와 같은 규칙 (`Path(key).parent / extends`) 으로
++    따라간다. 봉인 목록이나 스냅샷에 없는 부모는 실패다 — 현재 디스크의 다른 config 로 채우지 않는다.
++    반환: (정렬된 구성원 논리 키, 문제 목록). 문제가 있으면 구성원은 참고용일 뿐이다.
++    """
++    import posixpath
++    snap_dir = Path(snap_dir)
++    if not isinstance(root_key, str) or not root_key:
++        return [], [f"root: run_spec.base_config 가 없다 ({root_key!r})"]
++    order: list = []
++    problems: list = []
++    key = root_key
++    while key is not None:
++        norm = posixpath.normpath(key)
++        role = "root " if not order else ""
++        if posixpath.isabs(norm) or norm == ".." or norm.startswith("../"):
++            problems.append(f"{role}{key}: extends 가 저장소 밖을 가리킨다")
++            break
++        if norm in order:
++            problems.append(f"{norm}: extends 순환 ({' → '.join(order + [norm])})")
++            break
++        if len(order) >= _CLOSURE_MAX_DEPTH:
++            problems.append(f"extends 깊이가 {_CLOSURE_MAX_DEPTH} 를 넘는다")
++            break
++        order.append(norm)
++        dig = (sealed or {}).get(norm)
++        if not dig:
++            problems.append(f"{role}{norm}: 봉인 목록 (run_spec.sealed_inputs) 에 없다")
++            break
++        snap = snap_dir / f"{str(dig)[:12]}_{Path(norm).name}"
++        if not snap.is_file():
++            problems.append(f"{role}{norm}: 봉인 스냅샷이 없다")
++            break
++        try:
++            doc = yaml.safe_load(snap.read_text(encoding="utf-8"))
++        except (yaml.YAMLError, UnicodeDecodeError) as e:
++            problems.append(f"{norm}: 스냅샷 YAML 을 읽을 수 없다 ({type(e).__name__})")
++            break
++        doc = {} if doc is None else doc
++        if not isinstance(doc, dict):
++            problems.append(f"{norm}: 스냅샷 YAML 이 mapping 이 아니다")
++            break
++        ext = doc.get("extends")
++        if ext is None:
++            key = None
++        elif not isinstance(ext, str) or not ext:
++            problems.append(f"{norm}: extends 가 문자열이 아니다 ({ext!r})")
++            break
++        else:
++            key = posixpath.join(posixpath.dirname(norm), ext)
++    return sorted(order), problems
+ 
+ 
+ def _stage3_checks(run_dir, spec0: dict) -> dict:
+@@ -1948,7 +2007,8 @@
+     out["관측_roster_재구성"] = (not ro_bad, "; ".join(ro_bad[:3]))
+     # ★ 84차 G84-N1 — base-config closure 를 **봉인 스냅샷 바이트**에서 다시 만든다. run_spec 의 hex64 · 계획의
+     #   `inputs.base_config_digest` 는 둘 다 기록이라 함께 바꾸면 서로 맞는다 — 스냅샷 재계산만이 잡는다. 재료 키는
+-    #   run_spec.stage3.base_config_closure_keys · 각 키의 봉인 digest 는 run_spec.sealed_inputs · 바이트는
++    #   run_spec.base_config 에서 유도한 extends 구성원 (85차 — 기록된 키 목록은 그 집합과 대조만 한다) · 각 키의
++    #   봉인 digest 는 run_spec.sealed_inputs · 바이트는
+     #   `_inputs/<digest12>_<name>` (F72 스냅샷). 정의는 `src.fitting.closure_sha256_from_parts` 하나.
+     from src.fitting import closure_sha256_from_parts
+     bc_bad: list = []
+@@ -1957,8 +2017,23 @@
+     if not isinstance(keys, list) or not keys or not all(isinstance(k, str) and k for k in keys):
+         bc_bad.append("run_spec.stage3.base_config_closure_keys 가 비어 있거나 목록이 아니다")
+     else:
++        # ★ 85차 G85-N1 — 키 목록은 **정답이 아니다.** 목록과 두 digest 를 함께 바꾸면 위의 재계산이 그대로 맞는다
++        #   (부모를 빼고 leaf-only digest 를 양쪽에 적는 위조). 구성원은 run_spec.base_config 의 봉인 스냅샷에서
++        #   extends 로 독립 유도하고, 목록은 그 집합과 **정확 · 유일**해야 한다. closure 는 유도 집합으로 만든다.
++        dup = sorted({k for k in keys if keys.count(k) > 1})
++        if dup:
++            bc_bad.append(f"closure 키가 중복됐다: {dup}")
++        members, m_bad = base_config_closure_members(spec0.get("base_config"), sealed, run_dir / "_inputs")
++        bc_bad.extend(m_bad)
++        if not m_bad:
++            missing = sorted(set(members) - set(keys))
++            extra = sorted(set(keys) - set(members))
++            if missing:
++                bc_bad.append(f"closure 키에 실제 extends 구성원이 빠졌다: {missing}")
++            if extra:
++                bc_bad.append(f"closure 키에 extends 구성원이 아닌 키가 있다: {extra}")
+         parts: dict = {}
+-        for k in keys:
++        for k in (members if not bc_bad else []):
+             dig = sealed.get(k)
+             snap = run_dir / "_inputs" / f"{str(dig)[:12]}_{Path(k).name}" if dig else None
+             if snap is None or not snap.is_file():

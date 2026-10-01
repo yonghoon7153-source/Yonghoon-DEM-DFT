@@ -1,0 +1,7 @@
+{
+  "content": "START_HEAD=27bfeed68ea516e5c5a50f2475c8cc2b4f80ff3b status=0 2026-09-30T22:38:32Z\nXFAIL tests/test_gate63_defensive.py::test_staging_an_input_outside_the_repo_is_still_unsupported - §0 ⑦ (62차 신고 · 63차 재확인): 저장소 밖 절대 경로 입력은 staging 이 자기 자신 위에 복사하려다 죽는다\n2046 passed, 1 xfailed in 3543.27s (0:59:03)\npytest rc=0 2026-09-30T23:37:50Z status=0\nsmoke rc=0 168s\nsource_digest f1f4378f46610f08\nEND_HEAD=27bfeed68ea516e5c5a50f2475c8cc2b4f80ff3b status=0 2026-09-30T23:40:38Z\n",
+  "encoding": "utf-8",
+  "sha": "2e843a38f91eea5d1af86e36d55585dd3ff00072",
+  "display_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/92c50f9035db79143f7f5aca65072b3adffdee26/degradation-degeneracy/docs/22p_gap/gate86_evidence/request_commit_27bfeed6/g86_send.log",
+  "display_title": "g86_send.log"
+}

@@ -1,0 +1,40 @@
+# 86차 제출자 증거 — 원문 로그 (G85-N1 한정 보완)
+
+스크래치패드 원문을 **바이트 그대로** 옮겼다 (`-text !eol`). `.gitignore` 의 `*.log` 규칙 때문에 `.log` 파일은
+`git add -f` 로 넣었다 (85차 보충 검토의 교훈 — 아래 목록 전부가 커밋에 있다). 셸 래퍼 안의 절대 경로는 제출자
+세션의 스크래치패드다. 편집한 파일은 이 README 하나다.
+
+| 폴더 | 무엇 | 실행 상태 |
+|---|---|---|
+| `red_green/red_gate85.txt` | RED `pytest tests/test_gate85_closure_members.py -rfE` 출력 — 5 failed / 2 passed | 커밋 전 작업 트리 (시험 파일만 추가 · RUN_SCOPE = `b9bc46c1`) · 이 파일은 **두 번째 RED 실행**이다. 첫 실행 (위조가 run_signature 를 안 맞춰 `['run_signature_재계산']` 로 떨어짐 — 요청문 §3) 은 같은 파일 이름으로 `tee` 되어 덮였다. 첫 실행의 실패 줄은 요청문 §3 에 옮겨 적었다 |
+| `red_green/green_gate85.txt` | GREEN gate85 + gate84 23 passed | 커밋 전 작업 트리 (`src/io.py` 수정 · `9255377a` 위) |
+| `mutations/g85_emit.txt` | `--emit-expect -k g85` — 7/7 기대 node 빨강 · EXPECT 미선언 표시 (rc 1) | 작업 트리 (변이 등록 · EXPECT 전) |
+| `mutations/g85_replay.txt` | `-k g85` — 7/7 물었다 (rc 0) | 작업 트리 (EXPECT 추가 · `3dc20c2d` 커밋 직전) |
+| `receipts/g85_receipts.txt` | `make_receipt.py paired_fixed5_v4 grid_fit_v5` — 35 · 34 검사 · rc 0 | clean `c2f37648` (status 0) |
+| `final_0be169b1/` | 한 러너 순차: 전체 pytest (`-rfEx`) → strict smoke → 등록부 전체 변이 재생 → preimage 검사 → source_digest | clean `0be169b1` · 시작 HEAD = 끝 HEAD · 시작 / 각 단계 / 끝 status 0 |
+| `witness_fix/g86_witness_fix.log` | 증인 정정 뒤 gate67 모듈 17 passed · 해당 변이 단독 재생 rc 0 | clean `b4876b0b` · 시작 HEAD = 끝 HEAD · status 0 |
+| `stray_exec_class/20f6faf9….json` | 탐침이 운영 등록부 최상위에 남긴 등록 기록의 바이트 사본 (요청문 §6-b) — 원본은 지웠다 | 18:51:19Z 작성 · untracked 였다 |
+
+**`final_0be169b1/` 요약** (원문에서): pytest **1 failed** (`test_g67_14_every_registered_witness_is_a_fixed_reason` —
+g85 증인 하나의 열린 따옴표 꼬리 · 요청문 §6-g) · 2045 passed · 1 xfailed (`XFAIL tests/test_gate63_defensive.py::
+test_staging_an_input_outside_the_repo_is_still_unsupported` — 이번에는 `-rx` 로 이름이 로그에 있다) · 55:33 ·
+smoke rc 0 (184 s) · 등록부 전체 변이 재생 ran 352 → **352 물었다** · 안 물었다 0 · 실행오류 0 · 신고 11 ·
+"모든 변이 지점이 정확히 한 번 나타난다" · source_digest `f1f4378f46610f08`. 행 집계는 줄머리 고정 (`^물었다` ·
+`^★ 안 물었다` · `^★ 실행오류`).
+
+## 목록 (크기 · 전체 sha256)
+
+| 경로 | 바이트 | sha256 |
+|---|---|---|
+| `final_0be169b1/g86_final.log` | 758 | `683107b738d171b9e3e8c9382a748c07c544491271ad849be7b233d1fd7d93a1` |
+| `final_0be169b1/g86_pytest_full.txt` | 6011 | `00c6bd33a1b644f5e8d86e3259a1ec336295f41fe5b48430c42496c3a2f7925f` |
+| `final_0be169b1/g86_replay_all.txt` | 48135 | `31bc6babaca2ab69ebfdbd32617a297102c3772a67cbcfaa958b7c0885541fd9` |
+| `final_0be169b1/g86_smoke.txt` | 5590 | `6b1c78b8fb1bcb8f9fedd7c1ba00ec2339d50c7ed2753428c7d3a20440cadd66` |
+| `final_0be169b1/run_g86_final.sh` | 1316 | `345e35d27357fa5f741e0a630bb3920c2cddd121d1b6ec64202ab17cf0992024` |
+| `mutations/g85_emit.txt` | 7042 | `786929101dd30a446106684a281a3fe547688c0fda230ba9dc8631162ab13a1b` |
+| `mutations/g85_replay.txt` | 858 | `875a39cea41ed6ca7679200efbd5a7398c65a4d51333a192f9d779c42abeb20a` |
+| `receipts/g85_receipts.txt` | 363 | `343d34ecb0bd802000a7b4c828507226290bb62d211e61c656f59ca7b5dde135` |
+| `red_green/green_gate85.txt` | 665 | `86af4111790525eb9d18023582cf01e84b2d013ae0c73db7f47c6ee0f1dc4097` |
+| `red_green/red_gate85.txt` | 7689 | `c27b1071b6f7aa9c0773eec5ac3892b52c60766f4bd0fde79040a361b9574778` |
+| `stray_exec_class/20f6faf98437b7145b916305da4df283d3348ef13318bd6ac72a8a6678fd20de.json` | 240 | `050a719e1b7baee3f0b1b2cd7fa6d2b7bf90a1f9edaf46bf82940b9e9d3ab0a0` |
+| `witness_fix/g86_witness_fix.log` | 545 | `19e065f658ac10acd01038898871329850c0a209d0284a51e7a5b55ef64b8cb5` |

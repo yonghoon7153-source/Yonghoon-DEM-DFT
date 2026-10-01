@@ -1,0 +1,34 @@
+--- history/paired_fixed5_v4
++++ current/paired_fixed5_v4
+@@ -1,7 +1,7 @@
+ schema_version: 2
+ _주의: 이 파일은 손으로 쓰지 않는다. `python3 docs/22p_gap/make_receipt.py <leg>` 가 만들고 `--check` 가 **core 바이트 동일**
+   재생성을 확인한다.
+-core_sha256: 4d6cdc7b285f0538c33baa2d7ae9a131ebd782cfa6351f53e13438e19939fa64
++core_sha256: adf0ce1fff69f7b36d955234b3eb16be3235e165b7a1512255bc377d32ed0fdc
+ core:
+   leg_id: paired_fixed5_v4
+   bundle:
+@@ -62,8 +62,8 @@
+       필수_입력_존재: 통과
+       행별_서명: 통과
+   identity:
+-    validator_source_digest: ba51cd20caa10b7b
+-    src_io_sha256: 30556f689f28de5c
++    validator_source_digest: f1f4378f46610f08
++    src_io_sha256: e8f9561b6492d5a5
+     src_scoring_sha256: 69e69cb046f4b4ae
+     archive_bundle_sha256: 5f7fc3c89dfe5dba
+     make_receipt_sha256: 9c8cf71af310de03
+@@ -94,9 +94,9 @@
+   outputs_agree: true
+ stamp:
+   _주의: 기록용. core 재생성 대조에서 제외된다.
+-  validator_commit: b740db1616e17118ec764648204cf90474b0ffcd
++  validator_commit: c2f376484fb1b0eb016161625f0f76eb6e9e8045
+   validator_tree_dirty: false
+-  generated_at_utc: '2026-09-30T12:15:04Z'
++  generated_at_utc: '2026-09-30T19:06:57Z'
+   runtime:
+     python: 3.11.15
+     platform: Linux-6.18.44-fc-v50-x86_64-with-glibc2.39

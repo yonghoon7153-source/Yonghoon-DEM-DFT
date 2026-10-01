@@ -1,0 +1,15 @@
+# 본 실행 격자 — step 0.02
+# 조건 수: 11 × 11 × 11 × noise 3 = 3,993
+#   (lam_type을 both로 하면 ×4 = 15,972)
+extends: base.yaml
+
+grid:
+  lli:    {start: 0.0, stop: 0.20, step: 0.02}    # 11개
+  lam_pe: {start: 0.0, stop: 0.20, step: 0.02, type: de}
+  lam_ne: {start: 0.0, stop: 0.20, step: 0.02, type: de}
+  noise:  [0.0, 0.001, 0.005]                     # V, gaussian
+  noise_seed: 42
+
+run:
+  chunk_size: 200
+  save_full_timeseries: false
