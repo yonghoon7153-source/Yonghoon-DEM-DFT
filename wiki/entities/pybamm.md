@@ -5,7 +5,7 @@ created: 2026-10-01
 updated: 2026-10-01
 type: entity
 tags: [pybamm, tooling, degradation]
-sources: [raw/articles/2026-10-01-github-research-briefing.md]
+sources: [raw/articles/2026-10-01-github-research-briefing.md, raw/repositories/2026-10-01-pybamm-26.8-vs-26.9-synthetic-truth.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -49,20 +49,35 @@ PyBaMM 의 수치가 바뀌면 "참값" 자체가 움직인다 — 이 페이지
 |---|---|---|
 | #5745 `BasicDFNHalfCell` · `BasicDFNComposite` 전해질 flux 의 migration 항 | 아니오 (추정 높음) | 우리는 `Basic*` 가 아니라 full `DFN` 을 쓴다 |
 | #5765 positive half-cell 의 전해질 리튬 · 총 리튬 손실 · 전해질 포함 LLI | 아니오 | half-cell 모델도, PyBaMM LLI 변수도 안 쓴다 |
-| #5755 `FiniteVolume` node-to-edge shift 가 실제 node 간격 사용 | **열린 물음** | PR: "uniform mesh 에서는 bit-for-bit 불변". 입자 격자는 기본 uniform → 불변. 단 **x 격자는 음극 · 분리막 · 양극 subdomain 을 이어 붙이고 두께가 달라 간격이 다르다** — 이 접합부가 "non-uniform" 으로 취급되는지는 요약에 없다 |
+| #5755 `FiniteVolume` node-to-edge shift 가 실제 node 간격 사용 | **예 — 실측으로 닫힘 (아래)** | 입자 격자는 uniform 이지만 **x 격자는 subdomain 접합부에서 비균일** (4.26 / 0.60 / 3.78 µm) 이고 그 접합부가 보정을 받는다. 우리 합성 truth 가 0.8–2.7 mV 움직인다 |
 | #5694 phase 별 particle mechanics · #5770 phase 합산 열원 · OCP 문자열 | 아니오 (추정) | mechanics · 열 모델 옵션을 켜지 않는다 |
 | Breaking: `pybammsolvers>=0.10.0` (#5783) · CasADi 3.7.2 → 3.8.1 (#5761) | **간접적으로 예** | 상한이 없어 **새 환경 설치가 26.9 를 끌어온다** → solver 경로가 바뀐다 |
 
+### 26.9 실측 (2026-10-01 · `raw/repositories/2026-10-01-pybamm-26.8-vs-26.9-synthetic-truth.md`)
+
+버리는 venv 에 26.9.0.0 을 깔고 `git archive` 사본에서 **같은 함수** (`src.grid._solve_condition`) 로 두 조건을 26.8 과 나란히 돌렸다 (운영 환경 · 산출물 불변 · 조건당 ≈2.4 s).
+
+| 격자 | 조건 | full-cell ΔV 최대 (위치) | ΔV 중위 | Δq |
+|---|---|---:|---:|---:|
+| 기본 (접합부 비균일) | pristine | **0.78 mV** (방전 끝) | 1.3e-5 V | +0.002 % |
+| 기본 | lli 0.10 · lam 0.13 · 0.13 | **2.71 mV** (방전 끝) | 5.2e-5 V | +0.012 % |
+| x 간격 균일 강제 (1.2 µm) | pristine | 0.36 mV (방전 끝 한 점) | 4.6e-6 V | −0.001 % |
+| x 간격 균일 강제 | lli 0.10 · lam 0.13 · 0.13 | **6.0e-8 V** | 8.8e-10 V | 3e-7 % |
+
+- 차이는 **방전 끝 (x_norm → 1)** 에 몰려 있고 음극 전위가 끌고 간다 (v_ne ΔV 2.64 mV ↔ v_pe 0.07 mV). 방전 끝은 우리 피팅이 가장 민감한 자리다 (컷오프 등식 — [[birkl-ocv-degradation-diagnostic]]).
+- x 간격을 균일하게 하면 열화 조건의 차이가 다섯 자릿수 내려간다 → 기본 격자의 차이는 거의 전부 **#5755**, solver 스택 (pybammsolvers 0.10 · CasADi 3.8.1) 의 몫은 1e-7 V 대.
+- PR 의 "uniform mesh 는 bit-for-bit 불변" 은 **우리 기본 격자에 해당하지 않는다** — subdomain 안은 균일, 접합부는 비균일.
+- 2.7 mV 는 우리 허용치 감각 (ΔV ≤ 1 mV 급) 으로 **무시할 수 없다**. 두 조건만 봤고, 격자 수렴 (어느 쪽이 더 참값에 가까운가) 은 묻지 않았다 — 26.9 는 수치적으로 더 보존적인 쪽이지만 그것이 우리 truth 의 "정답" 을 바꾸는지는 별도 물음.
+
 ### 위험과 할 일
 
-- **재현성 위험 (실재):** 새 환경에서 `pip install -r requirements.txt` 를 하면 26.9 + CasADi 3.8.1 이 깔린다. 기존
-  합성 truth 와 같은 숫자가 나오는지는 보장되지 않는다. manifest 가 버전을 기록하므로 **사후에 드러나기는 하지만
-  막지는 않는다.**
+- **재현성 위험 (실재 · 실측됨):** 새 환경에서 `pip install -r requirements.txt` 를 하면 26.9 + CasADi 3.8.1 이 깔리고,
+  합성 truth 가 **최대 2.7 mV** 다른 숫자로 나온다 (위 표). manifest 가 버전을 기록하므로 사후에 드러나기는 하지만
+  막지는 않는다.
 - **고치려면 게이트를 거친다:** 상한 고정 (예: `pybamm[all]>=24.5,<26.9` 또는 `==26.8.0.0`) 은 `requirements*.txt`
   변경 = **RUN_SCOPE 변경**이다 (CLAUDE.md 하드룰 3) → source_digest 가 바뀌고 기존 영수증 재생성이 따른다.
   브리핑만으로 바꾸지 않는다. 다음 코드 라운드의 사용자 승인 범위에 넣을 후보로 둔다.
-- **#5755 열린 물음을 닫는 가장 싼 방법:** 버리는 별도 가상환경에 26.9 를 깔고 합성 조건 하나를 26.8 과 나란히
-  돌려 전압 · 농도 차를 본다 (운영 환경 · 저장소 산출물은 건드리지 않는다). 미착수 — 사용자 승인 필요.
+- ~~#5755 열린 물음을 닫는 가장 싼 방법~~ → 2026-10-01 실측으로 닫았다 (위). 남는 것은 **상한 고정의 게이트 승인** 하나.
 
 ## 이 위키와의 관계
 

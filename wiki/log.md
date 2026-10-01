@@ -3070,3 +3070,9 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - 새 페이지 3: [[pybamm]] (영향 판정표 — #5745 · #5765 · #5694 · #5770 은 우리 경로 밖, #5755 는 x 격자 접합부 열린 물음, breaking 은 requirements 상한 부재로 간접 위험) · [[pyprobe]] (판정 대상 후보 · 미실행) · [[daily-github-briefing-triage]] (처리 기준 · RUN_SCOPE 불가침)
 - 갱신: [[degradation-degeneracy]] · [[fitting-degeneracy]] 역링크 · [[22p-physics-or-degeneracy]] · [[isc-detection-vs-balancing-masking]] Status Log
 - 하지 않은 것: 26.9 설치 · PyProBE 실행 · requirements 변경 (전부 별도 승인)
+
+## [2026-10-01] ingest | 브리핑 후속 실험 2 (사용자 승인) — PyBaMM 26.8↔26.9 실측 · PyProBE 판정 대상 실험
+- raw: `raw/repositories/2026-10-01-pybamm-26.8-vs-26.9-synthetic-truth.md` (드라이버 · 비교 출력 원문 임베드) · `raw/repositories/2026-10-01-pyprobe-dma-on-synthetic-truth.md` (+ `.results.json` 160 KB)
+- 격리: 버리는 venv 2 (pybamm 26.9.0.0 · PyProBE 2.6.0) · `git archive 9ca6df54` 사본 · 운영 환경 · 등록부 · 산출물 불변 · 저장소 읽기만 (grid_curves_v4 parquet)
+- 갱신: [[pybamm]] (#5755 열린 물음 → 실측 2.7 mV 로 닫힘 · 상한 고정 승인 후보) · [[pyprobe]] (confidence low → medium · 실측 표) · [[22p-physics-or-degeneracy]] Evidence For + Status Log · [[fitting-degeneracy]] · [[daily-github-briefing-triage]] (결과 기록 규약 · heredoc 금지) · index 2 줄
+- 하지 않은 것: requirements 변경 (RUN_SCOPE) · PyProBE 형상만 시험 · 격자 수렴 물음

@@ -40,7 +40,10 @@ evidenceScope: user-original
 4. **1차 대조:** 의존성 축은 릴리스 노트 · PR 원문으로 확인한다. 브리핑 문장만 옮기지 않는다. 확인 못 한 것은
    "열린 물음" 으로 적는다.
 5. **등록:** 새 페이지는 `index.md` · 모든 브리핑은 `log.md` 에 `## [YYYY-MM-DD] ingest | GitHub 연구 브리핑` 한 항목.
-6. `python3 wiki/tools/lint.py` 0 errors.
+6. **승인된 검증 실험의 기록:** 스크립트 · 실행 로그 · 출력 원문을 `wiki/raw/repositories/YYYY-MM-DD-<slug>.md` 에 그대로
+   임베드하고 (큰 결과 JSON 은 같은 이름 `.results.json` 으로 옆에 — lint 는 raw `*.md` 만 본다), **해석은 entity 와 질문 카드에만**.
+   첫 두 건: `raw/repositories/2026-10-01-pybamm-26.8-vs-26.9-synthetic-truth.md` · `raw/repositories/2026-10-01-pyprobe-dma-on-synthetic-truth.md`.
+7. `python3 wiki/tools/lint.py` 0 errors.
 
 ## 하지 않는 것 (하드룰)
 
@@ -50,6 +53,7 @@ evidenceScope: user-original
   §6-b 교훈 — production 진입점 탐침이 운영 등록부에 기록을 남겼다).
 - 제안 실험은 **후보**로만 적는다. 착수는 사용자 승인 뒤.
 - 브리핑 숫자 · 주장을 위키 정본처럼 인용하지 않는다 (CLAUDE.md 하드룰 4 — 정본은 artifact + `RESULTS*.md`).
+- raw 본문을 **unquoted shell heredoc 으로 쓰지 않는다** — 본문의 백틱이 명령으로 실행된다 (2026-09-30 README · 2026-10-01 raw 기록, 두 번 실측 · 저장소 피해 0). `Write` 도구로 쓴다.
 
 ## 관련
 - [[pybamm]]

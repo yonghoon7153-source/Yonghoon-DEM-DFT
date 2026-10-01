@@ -195,6 +195,12 @@ LAM_PE ≈ LAM_NE 는 물리가 아니라 **flat valley 방향에서 두 전극�
   (b) 22p 의 `LAM_PE ≈ LAM_NE` 와 같은 대칭이라는 것은 `[해석]` 이다(같은 것은 "차 측정 → 전극 배정의
   대칭" 이라는 형식). 개념 페이지 [[spm-grouped-parameter-identifiability]].
 
+- **[2026-10-01] 외부 공개 도구 (PyProBE 2.6.0) 로 우리 합성 truth 를 피팅 — 같은 모양** ([[pyprobe]] · `raw/repositories/2026-10-01-pyprobe-dma-on-synthetic-truth.md`,
+  `[재현]` 우리 실측 · 용량 참값 제공 조건): 기본 시작점 · 전 범위면 LLI 0.10 → 0.101 · LAM_NE 0.10 → 0.102 로 복원되지만,
+  SOC 범위를 5–10 % 자르면 **RMSE 는 내려가면서 답이 1–2 %p 움직이고** (혼합 LAM_pe 0.101 → 0.083), 초기값을 바꾸면
+  RMSE 2–4 배의 먼 골 (LAM_pe −0.5 · LAM_ne −2.6) 에 떨어진다. dVdQ target 은 완벽한 합성 곡선에서도 불안정 (RMSE 18–283 mV).
+  → flat valley (범위 의존 · 컷오프 끝의 정보) 와 multimodal (초기값 의존) 이 **둘 다** 보이고, 전자는 RMSE 로 걸러지지 않는다.
+
 ## Evidence Against
 - (방향성 관측, 인용 금지 등급) half-cell 기준(Case 1)과 dQ/dV 항 추가가 복원
   오차를 줄이는 방향 — 조건에 따라 분리가 가능할 수 있음.
@@ -1053,6 +1059,10 @@ LAM_PE ≈ LAM_NE 는 물리가 아니라 **flat valley 방향에서 두 전극�
   쓸 자리: 참값을 아는 우리 합성 truth 를 넣어 같은 축퇴를 보이는지 재는 **판정 대상** (먼저 확인할 것: 형상만
   쓰는가, 절대 용량도 쓰는가 — [[np-lip-ocv-reparametrization]] 2 자유도). 같은 날 [[pybamm]] 26.9 영향 판정: 우리 경로에
   닿는 수치 변경은 #5755 하나가 열린 물음 (x 격자 subdomain 접합부) · 재현성 위험은 requirements 상한 부재.
+- **[2026-10-01] 브리핑 후속 실험 2 (사용자 승인).** ① [[pybamm]] 26.9 실측 — #5755 가 우리 기본 x 격자 접합부에 닿아
+  합성 truth 가 **최대 2.7 mV** (방전 끝) 움직인다 · 균일 격자 강제 시 6e-8 V → 상한 고정은 게이트 승인 후보. 참값
+  자체의 "정답" 이 바뀌는지는 별도 물음. ② [[pyprobe]] 판정 대상 실험 — Evidence For 에 새 항목 (위). 미착수로 남는 것:
+  **형상만** (용량 비제공) 으로 같은 시험 — [[np-lip-ocv-reparametrization]] 2 자유도의 직접 검증.
 
 ### 이 카드가 속한 논지 (2026-09-03)
 

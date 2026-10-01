@@ -354,4 +354,4 @@ high-fidelity, cell-level models of chemo-mechanical stress evolution. These mod
 [[mode-identifiability-unmeasured-lineage]] — 이 계보가 축퇴를 세 번 인쇄하고도
 (Dubarry 식 · Birkl 산문 · Marongiu 식) 한 번도 null 을 풀지 않았다는 것, 그리고
 위 "그리는 법" 의 기계가 옆 논문에 있는데 **두 논문이 서로를 인용하지 않는다**는 것.
-- [[pyprobe]] — 같은 electrode balancing 피팅을 구현한 외부 도구 (2026-10-01 브리핑 · 미실행) — 우리 합성 truth 로 이 도구의 식별성을 재 볼 수 있는 판정 대상 후보
+- [[pyprobe]] — 같은 electrode balancing 피팅을 구현한 외부 도구. **2026-10-01 실측**: 우리 합성 truth 에서 범위 자르기 → RMSE 하강 + 답 1–2 %p 이동 (flat valley) · 초기값 → RMSE 2–4 배 먼 골 (multimodal) · dVdQ target 불안정 — 두 구분이 한 도구에서 함께 보인다
