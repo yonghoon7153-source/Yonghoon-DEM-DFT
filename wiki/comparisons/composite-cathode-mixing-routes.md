@@ -1,11 +1,11 @@
 ---
 title: 복합양극 혼합 경로 비교 — one-step · two-step · 탄화 · 용액
-description: "복합양극 혼합 경로 비교 — one-step·two-step·탄화·용액 네 경로의 제어 변수와 위험, 그리고 digest 15편의 ball milling 조건 전수 대조표(장비·rpm·시간·BPR·볼·분위기)"
+description: "복합양극 혼합 경로 비교 — one-step·two-step·탄화·용액 네 경로의 제어 변수와 위험, 그리고 digest 17편의 ball milling 조건 전수 대조표(장비·rpm·시간·BPR·볼·분위기)"
 created: 2026-09-11
 updated: 2026-10-06
 type: comparison
 tags: [mixing-process, composite-cathode, li2s, sulfide-electrolyte]
-sources: [raw/transcripts/2026-09-11-li2s-wiki-kickoff-session.md, raw/papers/kim2023_reinforced-electrical-networking-high-loading-li2s-cathode.md, raw/papers/cronk2026_highly-utilized-practical-li-s-positive-electrode-assb.md, raw/papers/kim2025_high-areal-capacity-sulfur-cathode-dual-phase-electrolyte-assb.md, raw/papers/jeong2026_reconciling-triple-phase-boundaries-tortuosity-assb.md, raw/papers/qu2025_volume-changes-li-s-solid-state-battery-components-cycling.md, raw/papers/lee2026_decoupled-sulfur-redox-pathways-initial-chemical-states-assb.md, raw/papers/huang2026_high-entropy-sulfides-kinetic-accelerators-assb.md, raw/papers/zhang2026_anode-free-assb-nanocrystalline-amorphous-li2s-na-collector.md, raw/papers/wang2023_high-capacity-assb-li-s-low-density-solid-electrolyte.md, raw/papers/wang2026_molecular-coordination-triple-synergy-cathode-assb.md, raw/papers/yu2024_nanocrystallite-cus-n-doped-carbon-host-all-solid-state-li2s.md, raw/papers/wan2021_lii-libr-catalyst-solid-state-li2s-s-reactions.md, raw/papers/liu2026_li4sns4-molecular-mediator-low-barrier-li2s-chemistry.md, raw/papers/zhangj2026_strain-coordination-long-cycling-assb.md, raw/papers/wangd2025_overcoming-conversion-limitation-tpb-mixed-conductors.md]
+sources: [raw/transcripts/2026-09-11-li2s-wiki-kickoff-session.md, raw/papers/kim2023_reinforced-electrical-networking-high-loading-li2s-cathode.md, raw/papers/cronk2026_highly-utilized-practical-li-s-positive-electrode-assb.md, raw/papers/kim2025_high-areal-capacity-sulfur-cathode-dual-phase-electrolyte-assb.md, raw/papers/jeong2026_reconciling-triple-phase-boundaries-tortuosity-assb.md, raw/papers/qu2025_volume-changes-li-s-solid-state-battery-components-cycling.md, raw/papers/lee2026_decoupled-sulfur-redox-pathways-initial-chemical-states-assb.md, raw/papers/huang2026_high-entropy-sulfides-kinetic-accelerators-assb.md, raw/papers/zhang2026_anode-free-assb-nanocrystalline-amorphous-li2s-na-collector.md, raw/papers/wang2023_high-capacity-assb-li-s-low-density-solid-electrolyte.md, raw/papers/wang2026_molecular-coordination-triple-synergy-cathode-assb.md, raw/papers/yu2024_nanocrystallite-cus-n-doped-carbon-host-all-solid-state-li2s.md, raw/papers/wan2021_lii-libr-catalyst-solid-state-li2s-s-reactions.md, raw/papers/liu2026_li4sns4-molecular-mediator-low-barrier-li2s-chemistry.md, raw/papers/zhangj2026_strain-coordination-long-cycling-assb.md, raw/papers/wangd2025_overcoming-conversion-limitation-tpb-mixed-conductors.md, raw/papers/kwok2023_interfacial-redox-mediator-high-performance-asslsb.md, raw/papers/gao2024_cu-i-codoping-activating-li2s-redox-kinetics-assb.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -35,7 +35,7 @@ evidenceScope: multi-source-primary
 
 장비별 성격은 [[mixing-equipment-ball-mill-thinky]].
 
-## ★ ball milling 조건 전수 대조 (digest 15편, 2026-10-05 / 2026-10-06 갱신)
+## ★ ball milling 조건 전수 대조 (digest 17편, 2026-10-05 / 2026-10-06 갱신)
 
 사용자 요청으로 봉인된 digest 전부의 **복합양극 제작 ball milling 조건만** 뽑았다.
 수치의 정본은 각 digest 의 `compare:` 블록 → 원문이다. 이 표는 사본이다.
@@ -60,18 +60,26 @@ evidenceScope: multi-source-primary
 | **zhangj2026** (Nat. Commun., strain) | **one-step** (활물질 FeS2) | planetary ball mill | **300** | **2 h** | 미기재 | ZrO2 볼 · ZrO2 jar (지름·부피 미기재) | 미기재 — 밀링만 글로브박스 밖으로 읽히고 밀봉 여부 불명 |
 | **wangd2025** (Nat. Mater., MIEC) | two-step ① | **유발 수동(mortar)** + 멜트 함침 160 °C 6 h | — | 10 min | — | — | 밀폐 플라스크 |
 | 〃 ② | two-step ② | FRITSCH P7, 45 mL ZrO2 jar | **350** | **6 / 10 / 20 h 스캔 — 20 h 까지 단조 개선** | 미기재 | ZrO2 jar (볼 재질·지름·개수 미기재) | **Ar** |
+| **gao2024** (Small, CuI) ① 도핑 | **공밀링** (소결 아님) | **Changsha Tianchuang XQM-2** planetary | **510** | **20 h** | **20 : 1 (w/w)** | **ZrO2 ⌀4 mm** (개수·용기 미기재) | **Ar** |
+| 〃 ② 복합양극 | **one-step 삼상** (50:40:10 w/ VGCF) | planetary (모델 미기재) | **510** | **10 h** | 미기재 | 미기재 | **Ar** |
+| **kwok2023** (EES, Nazar) | **밀링이 아니다 — `[인쇄]` "physical blending"** (저에너지 혼합) | **ESI 미확보** | **본문에 아예 없음** | 〃 | 〃 | 〃 | 〃 |
 
 ### 이 표에서 읽히는 것 `[해석]`
 
-1. **★ BPR 을 적은 논문이 15편 중 3편뿐이다** (cronk 1:30 · jeong 50:1 · zhang ≈30:1).
+1. **★ BPR 을 적은 논문이 17편 중 **4편**뿐이다** (cronk 1:30 · jeong 50:1 · zhang ≈30:1 · **gao 20:1**).
    BPR 은 밀링 에너지를 정하는 1차 변수인데 대부분이 안 적는다 → **논문 간 "밀링 강도" 비교가
    원리적으로 불가능하다.** 우리는 반드시 적는다 ([[mixing-equipment-ball-mill-thinky]] 양식).
 2. **볼 재질·지름을 적은 논문은 2편**(jeong 3 mm ZrO2 50 g · kim2025 ⌀5 mm 1 ball/mL).
-   **분위기는 6편**(Ar 5 · 불활성 1). **rpm·시간은 10편**이 적는다.
-3. **5편은 ball milling 조건을 한 글자도 안 적는다** — kim2023(액체계) · wan2021 · wang2026 ·
-   yu2024 · liu2026. 그중 **wang2026 은 Experimental 절 자체가 없고**, yu2024·liu2026 은 Methods 가
-   SI 에만 있다. **혼합 조건 미기재가 이 분야의 예외가 아니라 다수 관행에 가깝다** — 3편을 넘어
-   5편이면, 우리가 "문헌 조건을 따라 한다" 는 말을 할 수 있는 대상이 애초에 좁다.
+   **분위기는 8편**(Ar 7 · 불활성 1). **rpm·시간은 11편**이 적는다. **볼 재질·지름은 3편**(jeong · kim2025 · **gao ⌀4 mm**).
+3. **6편은 ball milling 조건을 한 글자도 안 적는다** — kim2023(액체계) · wan2021 · wang2026 ·
+   yu2024 · liu2026 · **kwok2023**. 그중 **wang2026 은 Experimental 절 자체가 없고**, yu2024·liu2026 은 Methods 가
+   SI 에만 있다. **혼합 조건 미기재가 이 분야의 예외가 아니라 다수 관행에 가깝다** — 17편 중 6편이면,
+   우리가 "문헌 조건을 따라 한다" 는 말을 할 수 있는 대상이 애초에 좁다.
+   ★ **그중 kwok2023 이 가장 심하다**: 이 위키에서 **가장 긴 상온 수명(1 mA cm⁻² 1,000 사이클, 77 %)**
+   을 낸 논문인데 **혼합 방식이 `[인쇄]` "physical blending" 두 단어이고 성형압·운전 구속압·셀 형식이
+   본문에 아예 없다** (Methods 전량 ESI). `[해석]` 그래도 하나는 읽힌다 — **core–shell 껍질이 깨지면
+   안 되므로 고에너지 밀링일 수 없다.** 즉 "physical blending" 은 저에너지 혼합이고, 이것은
+   [[one-step-vs-two-step-mixing]] H4(밀링 에너지 상한)의 간접 근거다.
 4. **"세고 짧게" vs "약하고 길게" 가 갈린다.** 같은 Fritsch P7 안에서도
    **qu2025 300 rpm 4 h (one-step)** · lee2026 250 rpm 6.5 h · huang2026 350 rpm 4 h ·
    **wang2023 350 rpm 10 h** · **kim2025 600 rpm 6 h** 가 제각각이고, cronk2026 은 **Retsch
@@ -108,7 +116,7 @@ evidenceScope: multi-source-primary
    볼밀이 아니라 **Hummer 음향 혼합기(HAM100) + 반복 섬유화 롤프레스**로 만든 자립 필름이다.
    같은 논문 안에서 **0.05 C · 55 °C 펠릿 868.4 vs 파우치 615.8** `[재현]` **29 % 낮다** — 다만
    로딩도 다르므로 혼합 경로 단독에 귀속할 수 없다. kim2025 도 유발 손혼합 단계를 쓰지만
-   **밀링 ↔ 비밀링 혼합의 직접 대조는 15편 중 0편**이다. `[해석]` 스케일업하면 밀링을 못 쓰는데,
+   **밀링 ↔ 비밀링 혼합의 직접 대조는 17편 중 0편**이다. `[해석]` 스케일업하면 밀링을 못 쓰는데,
    **그때 성능이 어떻게 변하는지 아무도 측정하지 않았다.**
 
 ### 우리가 기록해야 할 항목 (이 표의 빈칸이 곧 체크리스트다)

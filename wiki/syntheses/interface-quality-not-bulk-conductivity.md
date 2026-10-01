@@ -5,7 +5,7 @@ created: 2026-10-01
 updated: 2026-10-02
 type: synthesis
 tags: [assb, composite-cathode, li2s, sulfide-electrolyte, carbon, activation]
-sources: [raw/papers/yu2024_nanocrystallite-cus-n-doped-carbon-host-all-solid-state-li2s.md, raw/papers/huang2026_high-entropy-sulfides-kinetic-accelerators-assb.md, raw/papers/wang2023_high-capacity-assb-li-s-low-density-solid-electrolyte.md, raw/papers/cronk2026_highly-utilized-practical-li-s-positive-electrode-assb.md, raw/papers/wang2026_molecular-coordination-triple-synergy-cathode-assb.md, raw/papers/wangd2025_overcoming-conversion-limitation-tpb-mixed-conductors.md, raw/papers/jeong2026_reconciling-triple-phase-boundaries-tortuosity-assb.md, raw/papers/liu2026_li4sns4-molecular-mediator-low-barrier-li2s-chemistry.md]
+sources: [raw/papers/yu2024_nanocrystallite-cus-n-doped-carbon-host-all-solid-state-li2s.md, raw/papers/huang2026_high-entropy-sulfides-kinetic-accelerators-assb.md, raw/papers/wang2023_high-capacity-assb-li-s-low-density-solid-electrolyte.md, raw/papers/cronk2026_highly-utilized-practical-li-s-positive-electrode-assb.md, raw/papers/wang2026_molecular-coordination-triple-synergy-cathode-assb.md, raw/papers/wangd2025_overcoming-conversion-limitation-tpb-mixed-conductors.md, raw/papers/jeong2026_reconciling-triple-phase-boundaries-tortuosity-assb.md, raw/papers/liu2026_li4sns4-molecular-mediator-low-barrier-li2s-chemistry.md, raw/papers/kwok2023_interfacial-redox-mediator-high-performance-asslsb.md, raw/papers/gao2024_cu-i-codoping-activating-li2s-redox-kinetics-assb.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -117,10 +117,20 @@ TiS2, 비정질)** 로 바꾸면서 **σ_Li⁺ 를 60 °C 에서 네 시료 모�
   위 ①의 네 논문은 모두 **복합체 퍼콜레이션 전도도가 이미 10⁻²–10⁻¹ S cm⁻¹ 인 영역**(= 탄소가
   만든 고원 위)에서 그것을 흔들었고, 거기서는 방향이 무관했다. **두 양을 갈라야 한다.**
 
-| | 무엇 | 이 위키의 판정 |
-|---|---|---|
-| **σ_e (복합체)** | 탄소가 만든 퍼콜레이션 경로의 전도도. 10⁻²–10⁻¹ S cm⁻¹ | **고원 위에서는 방향조차 무관** (논증 ①, 네 편) |
-| **σ_e (SE 상 자신)** | 양극 안 SE 입자 **내부**의 전자 전도도. 10⁻⁸–10⁻³ S cm⁻¹ | **10⁻⁸ → 10⁻⁴ 에서 결정적, 10⁻³ 이상에서 유해** (이 논문) |
+| | 무엇 | 범위 | 이 위키의 판정 |
+|---|---|---|---|
+| **σ_e (복합체)** | 탄소가 만든 퍼콜레이션 경로의 전도도 | 10⁻²–10⁻¹ S cm⁻¹ | **고원 위에서는 방향조차 무관** (논증 ①, 네 편) |
+| **σ_e (SE 상 자신)** | 양극 안 SE 입자 **내부**의 전자 전도도 | 10⁻⁸–10⁻³ S cm⁻¹ | **10⁻⁸ → 10⁻⁴ 에서 결정적, 10⁻³ 이상에서 유해** (Wang Daiwei 2025) |
+| **★ σ_e (활물질 입자 자신)** | Li2S 입자 **내부**의 전자 전도도 | **10⁻¹⁴ → 10⁻⁹~10⁻⁶** | **세 번째 칸 (2026-10-06, Gao 2024).** 위 둘보다 **6–8 자릿수 낮다** — 첨가제 도핑으로 5~8 자릿수 올려 첫 방전 174.6 → 1165.2 mAh g⁻¹(Li2S) |
+
+★ **세 번째 칸이 왜 따로 필요한가.** Gao 2024 가 적은 **9.44×10⁻¹⁴ S cm⁻¹** 는 **복합체 값일 수
+없다** — VGCF 10 wt% 가 든 복합체라면 10⁻² 급이 나온다. 즉 그것은 **활물질 분말 자신**의 값이고,
+도핑 후에도 10⁻⁹~10⁻⁶ 로 **논증 ①의 고원보다 6–8 자릿수 아래**다. 그러므로 이 숫자는 ①을
+반박하지 않고 **축을 하나 늘린다**: 전자는 세 곳에서 따로 막힐 수 있다 — **탄소망 사이** ·
+**SE 입자 안** · **활물질 입자 안**. 우리 Li2S 는 세 번째다.
+⚠ Gao 는 측정 셀 구성을 적지 않았고(G6) **σ_Li⁺ 를 한 번도 재지 않았다**(전부 CV 유래 D_Li) —
+그래서 이 칸은 **방향만** 쓰고 절대값은 인용하지 않는다. 세 칸을 우리 셀에서 실제로 가르는
+방법은 [[dc-polarization-conductivity-separation]] 에 적었다.
 
 ★★ **그리고 이 논문이 이 논지의 가장 무거운 반론(반론 8)을 상당 부분 닫는다.** "계면의 질" 을
 DFT 흡착에너지가 아니라 **저울로 재는 법**을 준다 — 방전된 양극을 **시클로헥산에 담가 미반응
@@ -217,8 +227,10 @@ DFT 흡착에너지가 아니라 **저울로 재는 법**을 준다 — 방전�
 - **우리 셀의 σ_e⁻·σ_Li⁺ 가 측정되지 않았다.** DC 분극(Huang digest §10.4 · Yu 2024;
   원 출처 Kwok 2023 *EES* 16, 610 — Yu 논문의 공저자다)으로 **셀 조립 없이** 잴 수 있다.
   AB 10/20/30 wt% 로 반복하면 반론 3 이 바로 갈린다. **이것이 이 논지의 첫 시험이다.**
-  **프로토콜은 Wang Daiwei 2025 것을 쓴다** — 그 논문만 **시료의 정체를 명시한다**
-  (`Cu|시료|Cu` 전자, `Li|LPSCl|시료|LPSCl|Li` 이온). Yu·Huang 은 안 적었다(반론 1).
+  **프로토콜은 [[dc-polarization-conductivity-separation]] 에 확정해 두었다** — 원전(Kwok 2023)의
+  레시피에 Wang Daiwei 2025 의 "시료 정체 명시" 를 더하고, **인가 전압을 20–50 mV 로 고정**한다.
+  ★ 그 페이지를 만들면서 찾은 것: **인가 전압이 계보를 타고 20 mV → 1 V 로 50배 커졌다**
+  (Kwok → Huang). 1 V 는 황화물 SE 안정창을 넘겨 **분해 전류를 전자 전류로 읽는다.**
   그리고 **수명까지 같이 본다** — σ_e 에 상한이 있다는 것이 관측됐으므로(반론 4) 첫 충전만
   보면 최적점을 넘긴 것을 못 본다.
 - **★ "계면의 질" 이 아직 조작적으로 정의되지 않았다 — 이것이 최우선 Gap 이다** (반론 8).

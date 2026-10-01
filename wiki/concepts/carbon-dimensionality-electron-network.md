@@ -2,10 +2,10 @@
 title: 도전재 차원 분리 — 2D 접촉 vs 1D 네트워크
 description: "절연체 Li2S 양극에서 탄소의 두 역할(접촉면적 vs 장거리 전자 경로)을 차원이 다른 탄소로 나눠 맡기는 설계 — Kim 2023 의 Gr/CNT 근거와 우리 AB 단일 탄소에의 함의"
 created: 2026-09-11
-updated: 2026-10-01
+updated: 2026-10-06
 type: concept
 tags: [carbon, composite-cathode, li2s, activation, liquid-electrolyte]
-sources: [raw/papers/kim2023_reinforced-electrical-networking-high-loading-li2s-cathode.md, raw/transcripts/2026-09-11-li2s-wiki-kickoff-session.md]
+sources: [raw/papers/kim2023_reinforced-electrical-networking-high-loading-li2s-cathode.md, raw/transcripts/2026-09-11-li2s-wiki-kickoff-session.md, raw/papers/kwok2023_interfacial-redox-mediator-high-performance-asslsb.md, raw/papers/gao2024_cu-i-codoping-activating-li2s-redox-kinetics-assb.md, raw/papers/yu2024_nanocrystallite-cus-n-doped-carbon-host-all-solid-state-li2s.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -56,6 +56,34 @@ evidenceScope: single-source
 → 논지와 반론은 [[interface-quality-not-bulk-conductivity]] 에 있다.
 이 개념의 "접촉 vs 네트워크" 분업 자체는 유효하지만, **고체계에서 그 분업의 상대가 탄소가
 아니라 SE·첨가제·계면상일 수 있다**는 단서를 달고 읽어야 한다.
+
+## ★ 2026-10-06 — 탄소를 **아예 넣지 않는** 선택지가 있다 (Kwok 2023)
+
+이 개념이 암묵적으로 전제하던 것은 "복합양극에 탄소가 들어간다, 문제는 몇 차원·몇 wt% 냐" 였다.
+**Kwok 2023 (*EES* 16, 610, Nazar) 의 양극에는 탄소가 0 wt% 다** — Li2S : LiVS2 : LPSCl =
+`[인쇄]` **30 : 20 : 50 wt%** 이고 Fig. 1B 범례에도 탄소 입자가 없다. 그 셀이 상온 1 mA cm⁻² 에서
+**1,000 사이클**을 돈다.
+
+전자를 나르는 것은 **활물질을 감싼 <30 nm LiVS2 껍질**(혼합전도체)이다. 즉 **"탄소가 전자망을
+만든다" 가 유일한 설계가 아니다** — 활물질 표면 자체를 전도성으로 만들면 탄소가 하던 일을
+가져간다. 그리고 그 껍질은 전자만이 아니라 Li⁺ 도 나른다: `[인쇄]` SE 를 하나도 안 섞은 LVS
+분말이 이미 σ_Li⁺ = **1.3×10⁻⁵ S cm⁻¹** 다 (Li2S 자체는 10⁻⁹ 급).
+
+`[해석]` 우리 AB 20 wt% 에 대한 함의는 "AB 를 빼라" 가 아니라 **"AB 20 wt% 가 무슨 일을 하는지를
+먼저 측정하라"** 다. 탄소 없이도 되는 셀이 있다면, 우리 AB 가 **전자망으로서 필요한 양**과
+**부피를 먹는 양** 중 어느 쪽에 더 가까운지가 열린 질문이 된다
+([[dc-polarization-conductivity-separation]] 의 `AB 10/20/30 wt%` 스윕).
+대조 좌표: **Gao 2024 는 VGCF(1D) 10 wt% 단일**로 2.4 mA cm⁻² 를 돌린다.
+
+### ⚠ raw digest 정정 — `yu2024_…` 의 G16 전제가 틀렸다
+
+`raw/papers/yu2024_…md` 의 공백표 **G16** 은 Fig. 4a 참조 패턴에 "CNT" 가 끼어 있는 것을 보고
+*"같은 그룹 Kwok 2023 *EES* 16, 610 의 양극이 CNT 를 쓴다"* 를 근거로 **Yu 의 양극에도 CNT 가
+들어갔을 가능성**을 제기했다. **그 전제가 사실이 아니다 — Kwok 2023 의 양극에는 탄소가 전혀
+없다** (조성 30:20:50, Fig. 1B 범례).
+raw 는 불변(하드룰 3)이므로 **정정은 여기 2층에 남긴다.** G16 의 **관측**(참조 패턴에 CNT 가
+있는데 본문이 한 번도 언급하지 않는다)은 **그대로 유효**하고, **추론의 근거만 무효**다.
+Yu 의 양극에 탄소 도전재가 따로 들어갔는지는 **여전히 SI 없이는 확정 불가**다.
 
 ## 한계·불확실성
 

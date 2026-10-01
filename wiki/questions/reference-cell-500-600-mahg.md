@@ -5,7 +5,7 @@ created: 2026-09-11
 updated: 2026-10-06
 type: research-question
 tags: [li2s, assb, activation, composite-cathode, units]
-sources: [raw/transcripts/2026-09-11-li2s-wiki-kickoff-session.md, raw/papers/kim2023_reinforced-electrical-networking-high-loading-li2s-cathode.md, raw/papers/huang2026_high-entropy-sulfides-kinetic-accelerators-assb.md, raw/papers/zhang2026_anode-free-assb-nanocrystalline-amorphous-li2s-na-collector.md, raw/papers/cronk2026_highly-utilized-practical-li-s-positive-electrode-assb.md, raw/papers/yu2024_nanocrystallite-cus-n-doped-carbon-host-all-solid-state-li2s.md, raw/papers/lee2026_decoupled-sulfur-redox-pathways-initial-chemical-states-assb.md, raw/papers/wang2023_high-capacity-assb-li-s-low-density-solid-electrolyte.md, raw/papers/wang2026_molecular-coordination-triple-synergy-cathode-assb.md, raw/papers/qu2025_volume-changes-li-s-solid-state-battery-components-cycling.md, raw/papers/kim2025_high-areal-capacity-sulfur-cathode-dual-phase-electrolyte-assb.md, raw/papers/wan2021_lii-libr-catalyst-solid-state-li2s-s-reactions.md, raw/papers/liu2026_li4sns4-molecular-mediator-low-barrier-li2s-chemistry.md, raw/papers/zhangj2026_strain-coordination-long-cycling-assb.md]
+sources: [raw/transcripts/2026-09-11-li2s-wiki-kickoff-session.md, raw/papers/kim2023_reinforced-electrical-networking-high-loading-li2s-cathode.md, raw/papers/huang2026_high-entropy-sulfides-kinetic-accelerators-assb.md, raw/papers/zhang2026_anode-free-assb-nanocrystalline-amorphous-li2s-na-collector.md, raw/papers/cronk2026_highly-utilized-practical-li-s-positive-electrode-assb.md, raw/papers/yu2024_nanocrystallite-cus-n-doped-carbon-host-all-solid-state-li2s.md, raw/papers/lee2026_decoupled-sulfur-redox-pathways-initial-chemical-states-assb.md, raw/papers/wang2023_high-capacity-assb-li-s-low-density-solid-electrolyte.md, raw/papers/wang2026_molecular-coordination-triple-synergy-cathode-assb.md, raw/papers/qu2025_volume-changes-li-s-solid-state-battery-components-cycling.md, raw/papers/kim2025_high-areal-capacity-sulfur-cathode-dual-phase-electrolyte-assb.md, raw/papers/wan2021_lii-libr-catalyst-solid-state-li2s-s-reactions.md, raw/papers/liu2026_li4sns4-molecular-mediator-low-barrier-li2s-chemistry.md, raw/papers/zhangj2026_strain-coordination-long-cycling-assb.md, raw/papers/kwok2023_interfacial-redox-mediator-high-performance-asslsb.md, raw/papers/gao2024_cu-i-codoping-activating-li2s-redox-kinetics-assb.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -257,6 +257,55 @@ Lee 2026 digest 가 이 충돌을 날카롭게 정리한다 — **병목은 "활
   성형 압력" 의 교락 위에 서 있고** 논문은 결과 어디에서도 그것을 언급하지 않는다(Methods 한
   문장에만 있다). → **우리 대조실험 설계의 체크리스트**: 변수 하나를 바꿀 때 **성형압·운전압·
   로딩·온도가 같은지** 먼저 적어 둔다.
+
+### 2026-10-06 (2) — Kwok 2023 (DC 분극 원전) · Gao 2024 (CuI 공밀링) 추가
+
+- **★★ H1 — 활성화 제한이 재료 설계로 제거 가능하다는 가장 강한 For 둘.**
+  **Kwok 2023**: 같은 Li2S 질량의 `Li2S + Vulcan` 대조군은 이용률 `[인쇄]` **~30 %** 이고 첫 충전이
+  0.1 mAh cm⁻² 만에 급등하는데, **LiVS2 껍질 하나로 77 %**(Li2S 기준) 가 된다. **탄소를 아예 넣지
+  않았다.** **Gao 2024**: pristine Li2S 가 `[인쇄]` **174.61 mAh g⁻¹(Li2S)** 인데 CuI 공밀링으로
+  **1165.23** 이 된다(6.7배).
+  ⚠ 둘 다 **원인이 분리되지 않았다** — Kwok 은 껍질·입도(~60 nm)·도전상 종류·조성이 **동시에**
+  다르고, Gao 의 x=0 대조군은 **같은 20 h 밀링을 겪었다는 보장이 없다**(BET 2.3 vs 16.3–19.1 m² g⁻¹).
+  **둘 다 셀 하나(첨가제만 뺀 동일 공정)면 닫히는데 안 했다.**
+- **★ H1 수정 방향 — 첫 충전으로 활성화가 끝나지 않는다 (Gao 2024).** 2 C 에서 **271 사이클에 걸쳐
+  588.52 → 643.52 mAh g⁻¹(Li2S) 로 상승**한다. Kim 2023 액체계의 "첫 충전에서 활성화한 만큼만
+  이후 용량이 된다" 와 **방향이 반대인 고체계 관측**이다.
+  → H1 을 "첫 충전 한 번" 이 아니라 **"활성화가 완료되는 사이클 수" 로도 물어야 한다.**
+  우리 셀에서는 **초기 10–20 사이클의 용량 추세 부호**를 보면 된다 (비용 0).
+- **★★ H1 — 사다리의 벽이 깨졌다 (Gao 2024).** 요오드 경로가 2.8 V 아래로 못 내려간다는 관측은
+  **LiI 로 넣었을 때만** 참이었다. **CuI 로 넣으면 `[재현]` 2.34–2.37 V 의 평탄 plateau**,
+  컷오프도 `[재현]` 3.02 V vs Li/Li⁺ (Lee 3.62 · Liu 4.0 보다 낮다).
+  → **H1 재정의판("활성화 완료 전위 > SE 산화 전위")에 가장 가까이 간 논문**이다. 사다리 전체는
+  [[li2s-activation-first-charge]] 에 표로 있다.
+- **★★ H2b — 가장 직접적인 For (Kwok 2023).** **SE 를 하나도 안 섞은 LVS 분말이 이미
+  `[인쇄]` σ_Li⁺ = 1.3×10⁻⁵ S cm⁻¹** 다 (Li2S 자체는 10⁻⁹ 급). 복합양극으로는 σ_Li⁺ 가 대조군의
+  **21배**, σ_e⁻ 는 **46배**.
+  → **활물질 표면에 Li⁺ 경로를 깔면 SE 부피분율을 늘리지 않고도 이온망이 생긴다.** 우리 셀에서
+  SE 50 wt% 를 줄일 수 있는지의 첫 근거다. ⚠ 단 Kwok 은 **성형압을 적지 않았고 측정 두께가
+  500–600 µm** 라 절대값이 아니라 비(ratio)로만 쓴다.
+- **H2b — 약한 Against (Gao 2024).** 복합양극을 **510 rpm 10 h** 밀고도 LPSCl 결정상이 살아남고
+  (Fig. S3, SI 미확보) **2.4 mA cm⁻²** 로 6,200 사이클 돈다. 다만 **σ_Li⁺ 를 한 번도 재지 않아**
+  결정적이지 않다.
+- **H3 — For 이지만 교란이 심하다 (Gao 2024).** BET **2.3 → 16.3–19.1 m² g⁻¹**(7.7배)과
+  174.61 → 1165.23 이 **같은 시료 변경에 묶여 있다.** 입도 효과와 도핑 효과를 가르려면
+  **CuI 없이 같은 20 h 밀링만 한 셀**이 필요하다 — 이것이 우리가 Gao 를 인용할 때 반드시 붙일 조건이다.
+- **H4 — 분모에 첨가제가 안 보인다 (Gao 2024).** 모든 수치의 분모가 **Li2S 뿐**이어서
+  **42.3 wt% 의 CuI 가 보이지 않는다**. `[재현]` 활물질 분말 기준 **673.0**, 복합양극 기준 **336.5**
+  mAh g⁻¹ 이다. → [[capacity-normalization-li2s-vs-sulfur]] 에 "첨가제 포함 분모" 사례로 추가할 것.
+- **H4 — 드문 반례 (Kwok 2023).** digest 17편 중 **이론 초과 용량이 한 줄도 없는 몇 편 중 하나**다.
+  저자가 분모(LVS 750 mAh g⁻¹)를 명시하고 **LiVS2 자기 몫까지 빼서 이용률을 83 %/77 % 두 개로**
+  적는다. ⚠ 단 그 이론용량 750 이 `[재현]` 787.8 로 재현되지 않는다(5.0 % 차이) — 간판 이용률이
+  전부 이 분모 위에 있다.
+- **★ H4 — SE 리독스 몫에 두 번째 외부 눈금 (Gao 2024).** `[재현]` ICE 85.22 % 역산으로
+  **≈98–181 mAh g⁻¹(Li2S) = 28–52 mAh g⁻¹(composite)** 가 돌아오지 않는다. Wang Daiwei 2025 의
+  `[재현]` 4–6 % 와 **같은 급**이다. → **0번 실험(`LPSCl + AB` 대조셀)의 기댓값이 두 편에서 수렴한다.**
+- **H5 — 참고 (Gao 2024).** **운전 구속압 50 MPa 를 인쇄한다** (성형 490 MPa). 문헌 좌표가
+  7(Qu) / 15(Zhang J) / **50(Jeong · Gao)** MPa 로, **50 MPa 쪽에 두 편이 모였다.**
+- **★ 우리 다음 측정의 프로토콜이 확정됐다** — [[dc-polarization-conductivity-separation]].
+  Kwok 2023 이 그 방법의 **원전**이고, 이 위키 digest 5편이 같은 레시피를 다르게 썼다.
+  그중 하나가 위험하다: **인가 전압이 계보를 타고 20 mV → 1 V 로 50배 커졌다**(Kwok → Huang).
+  1 V 는 황화물 SE 안정창을 넘겨 **분해 전류를 전자 전류로 읽는다.** 우리는 **20–50 mV** 를 쓴다.
 
 ## Evidence Against
 
