@@ -170,6 +170,9 @@ run 'webapp: percolation_labels'     python3 webapp/test_percolation_labels.py
 run 'webapp: ionic_isolation_labels' python3 webapp/test_ionic_isolation_labels.py
 #  ★ 2026-09-30 — /mixer 침대 보기 (보기 전용) — 경로 탈출 · 맹검 잠금 (정책 fail-closed) · 덤프 관문 · 단면 경계 · 쓰기 없음 (반례 41)
 run 'webapp: mixer_bed_view'      python3 webapp/test_mixer_bed_view.py
+#  ★ 2026-10-01 — 투명 배경 PNG (슬라이드용) — /mixer 침대 보기 ☐ "투명 배경 PNG" (기본 꺼짐 = 옛 출력 그대로) ·
+#    케이스 3D 뷰어 Screenshot ☑ (모드별 옛 기본값 · 전류밀도 장 모드 투명 = opt-in).  내보내기 함수를 잘라 node 로 그대로 돌린다
+run 'webapp: png_transparent_export' python3 webapp/test_png_transparent_export.py
 #  ★ 2026-09-22 — 믹서 런처·생성기 회귀 (LIGGGHTS 없이 가짜 실행파일로).  같은 날 사고 둘을 재현해 막는다:
 #    배너 없는 완주 런을 "죽음" 으로 읽고 재발사(E0_s49979687) · 실행 중 덱 제자리 덮어쓰기(E0_s32452843).
 run 'mixer launcher (완주 판정 · 덮어쓰기 가드)' bash dem_scripts/mixer_20260921/test_launcher.sh

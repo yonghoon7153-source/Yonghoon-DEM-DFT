@@ -135,6 +135,7 @@
           <select id="bedPngScale" class="input" title="화면 대비 배율"><option value="2">PNG ×2</option><option value="3">PNG ×3</option>
             <option value="4" selected>PNG ×4</option></select>
           <button class="btn btn-secondary btn-sm" id="bedPng" type="button">⬇ 고화질 PNG (이 프레임)</button>
+          <label title="켜면 이 PNG 한 장의 배경이 투명 (슬라이드에 붙이기용) — 그림 · 캡션 두 줄 (어두운 글자) 은 그대로.  화면 · GIF 는 배경 그대로 · 기본 꺼짐"><input type="checkbox" id="bedPngClear"> 투명 배경 PNG</label>
         </div>
         <div class="bed-row bed-tools">
           <select id="bedGifRange" class="input"><option value="all">GIF 처음→끝</option><option value="cur">지금→끝</option></select>
@@ -375,10 +376,11 @@ function mxTab(t){
     }).sort(function (p, q) { return q[1] - p[1]; }).map(function (p) { return p[0]; });
   }
 
-  function paint2d(cv, px) {                     // 대상 캔버스에 px × px 로 그린다 (화면 · 고화질 PNG · GIF 가 같은 코드)
+  function paint2d(cv, px, clear) {              // 대상 캔버스에 px × px 로 그린다 (화면 · 고화질 PNG · GIF 가 같은 코드) · clear = 배경 투명 (PNG 내보내기만)
     var d = S.data, j = d.meta, k = Math.max(1, px / 800);
     cv.width = px; cv.height = px;
-    var ctx = cv.getContext('2d'); ctx.fillStyle = '#fbfbf8'; ctx.fillRect(0, 0, px, px);
+    var ctx = cv.getContext('2d');
+    if (clear) ctx.clearRect(0, 0, px, px); else { ctx.fillStyle = '#fbfbf8'; ctx.fillRect(0, 0, px, px); }
     var yc = 0, zc = 0, half;
     if (j.drum) half = 1.08 * j.drum.R;
     else {
@@ -416,6 +418,8 @@ function mxTab(t){
   }
 
   // ── 내보내기 (고화질 PNG · GIF) — 그림 아래에 출처 · 보기 전용 표지를 붙인다 ──
+  //    PNG 만 ☑ "투명 배경 PNG" (#bedPngClear · 기본 꺼짐 = 옛 출력 그대로) — 켜면 그림 · 캡션 띠 배경 알파 0 · 글자는 어두운 색 그대로.
+  //    GIF 는 배경 그대로 (이 인코더는 알파를 쓰지 않는다) · 화면 그림도 그대로.
   function captionText() {
     var j = S.data.meta, v = { '3d': '3D', slab: '얇은 단면', proj: '전체 투영' }[j.view] || j.view;
     var t = j.run + ' · step ' + nf.format(j.step);
@@ -425,9 +429,9 @@ function mxTab(t){
     var off = Object.keys(j.types_present).filter(function (q) { return S.hidden[j.types_present[q].name]; });
     return t + (off.length ? ' · 끈 상: ' + off.map(function (q) { return j.types_present[q].name; }).join(', ') : '');
   }
-  function withCaption(src, k) {
+  function withCaption(src, k, clear) {          // clear = 배경 투명 (캡션 글자는 어두운 색 그대로 — 밝은 슬라이드에서 읽힌다)
     var hh = Math.round(40 * k), c = document.createElement('canvas'); c.width = src.width; c.height = src.height + hh;
-    var x = c.getContext('2d'); x.fillStyle = '#ffffff'; x.fillRect(0, 0, c.width, c.height); x.drawImage(src, 0, 0);
+    var x = c.getContext('2d'); if (!clear) { x.fillStyle = '#ffffff'; x.fillRect(0, 0, c.width, c.height); } x.drawImage(src, 0, 0);
     x.fillStyle = '#222'; x.font = Math.round(14 * k) + 'px sans-serif'; x.fillText(captionText(), 10 * k, src.height + 17 * k);
     x.fillStyle = '#8a5a00'; x.font = Math.round(12 * k) + 'px sans-serif';
     x.fillText('보기 전용 — 판정은 3D 칸 M 으로만 · 원 = 실제 반경 · 덤프 그대로 (새 계산 없음)', 10 * k, src.height + 34 * k);
@@ -439,24 +443,30 @@ function mxTab(t){
     document.body.appendChild(a); a.click();
     setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 2000);
   }
-  function grab3d(scale) {                       // WebGL 캔버스를 배율로 다시 그려 바로 복사 (drawing buffer 가 지워지기 전에)
+  function grab3d(scale, clear) {                // WebGL 캔버스를 배율로 다시 그려 바로 복사 (drawing buffer 가 지워지기 전에) · clear = 배경 투명
     var T = S.three, pr = T.renderer.getPixelRatio(), sz = new T.THREE.Vector2(); T.renderer.getSize(sz);
     scale = Math.min(scale, 4096 / Math.max(sz.x, sz.y, 1));
+    var keep = null;                             // 투명: 이 한 장만 지우기 알파 0 · scene.background 없음 (렌더러는 alpha:true) — 찍은 뒤 되돌린다
+    if (clear) {
+      keep = { c: new T.THREE.Color(), a: T.renderer.getClearAlpha(), bg: T.scene.background };
+      T.renderer.getClearColor(keep.c); T.renderer.setClearAlpha(0); T.scene.background = null;
+    }
     T.renderer.setPixelRatio(scale); T.renderer.render(T.scene, T.cam);
     var src = T.renderer.domElement, c = document.createElement('canvas'); c.width = src.width; c.height = src.height;
-    var x = c.getContext('2d'); x.fillStyle = '#fbfbf8'; x.fillRect(0, 0, c.width, c.height); x.drawImage(src, 0, 0);
+    var x = c.getContext('2d'); if (!clear) { x.fillStyle = '#fbfbf8'; x.fillRect(0, 0, c.width, c.height); } x.drawImage(src, 0, 0);
+    if (keep) { T.renderer.setClearColor(keep.c, keep.a); T.scene.background = keep.bg; }
     T.renderer.setPixelRatio(pr); T.renderer.render(T.scene, T.cam);
     return c;
   }
   function exportPng() {
     if (!S.data) return;
-    var k = +$('bedPngScale').value, src;
-    if (view() === '3d') { if (!S.three) { exmsg('3D 가 아직 없다', 'err'); return; } src = grab3d(k * (window.devicePixelRatio || 1)); }
-    else { src = document.createElement('canvas'); paint2d(src, 1000 * k); }
-    var out = withCaption(src, src.width / 900), j = S.data.meta;
+    var k = +$('bedPngScale').value, clear = !!($('bedPngClear') || {}).checked, src;   // clear = ☑ 투명 배경 PNG
+    if (view() === '3d') { if (!S.three) { exmsg('3D 가 아직 없다', 'err'); return; } src = grab3d(k * (window.devicePixelRatio || 1), clear); }
+    else { src = document.createElement('canvas'); paint2d(src, 1000 * k, clear); }
+    var out = withCaption(src, src.width / 900, clear), j = S.data.meta;
     out.toBlob(function (b) {
-      download(b, 'mixer_' + j.run + '_step' + j.step + '_' + j.view + '.png');
-      exmsg('PNG ' + out.width + ' × ' + out.height + ' px · ' + (b.size / 1e6).toFixed(1) + ' MB');
+      download(b, 'mixer_' + j.run + '_step' + j.step + '_' + j.view + (clear ? '_transparent' : '') + '.png');
+      exmsg('PNG ' + out.width + ' × ' + out.height + ' px · ' + (b.size / 1e6).toFixed(1) + ' MB' + (clear ? ' · 투명 배경' : ''));
     }, 'image/png');
   }
 

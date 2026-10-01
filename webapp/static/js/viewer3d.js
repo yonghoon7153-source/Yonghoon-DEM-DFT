@@ -1018,6 +1018,7 @@ function buildControls(container, isMPM) {
     <button data-action="amCloseup">AM Close-up</button>
     <button data-action="resetView">Reset</button>
     <button data-action="screenshot">Screenshot</button>
+    <label style="font-size:12px" title="Screenshot PNG 배경 — 켜짐 = 투명 (슬라이드 · 논문 위에 겹치기) · 꺼짐 = 뷰어 배경색.  모드를 바꾸면 그 모드의 기본값으로 돌아간다: 구조 모드 = 켜짐 · 전류밀도 장 (je_field · ji_field · je) = 꺼짐 (투명이면 진한 파랑 장이 흰 종이에서 깨진다)"><input type="checkbox" id="shot-transparent" checked> 투명 배경 PNG</label>
     <button data-action="colorbar" title="현재 모드의 컬러바를 논문용 6× PNG로 다운로드 (⚖ 팝업과 동일 문법)">컬러바 ⬇</button>` : `
     <label><input type="checkbox" data-layer="AM_P" checked> AM_P</label>
     <label><input type="checkbox" data-layer="AM_S" checked> AM_S</label>
@@ -1064,7 +1065,8 @@ function buildControls(container, isMPM) {
     <button data-action="pathOnly">Path Only View</button>
     <button data-action="amCloseup">AM Close-up</button>
     <button data-action="resetView">Reset</button>
-    <button data-action="screenshot">Screenshot</button>`;
+    <button data-action="screenshot">Screenshot</button>
+    <label style="font-size:12px" title="Screenshot PNG 배경 — 켜짐 = 투명 (슬라이드 · 논문 위에 겹치기) · 꺼짐 = 뷰어 배경색"><input type="checkbox" id="shot-transparent" checked> 투명 배경 PNG</label>`;
   container.appendChild(div);
   // Zoom slider (bottom-right)
   const zoomDiv = document.createElement('div');
@@ -1503,6 +1505,44 @@ function captureHighRes(renderer, scene, camera, scale = 4) {
   renderer.setSize(origSize.x, origSize.y, false);
   renderer.render(scene, camera);
   return dataUrl;
+}
+
+/* ── Screenshot 배경 — 조작판 ☑ "투명 배경 PNG" (#shot-transparent) ──── *
+ * 기본값 = 옛 동작 그대로 (7a6a43c93): 구조 모드는 투명 (PPT · 논문 위에 겹치기), 전류밀도 장 모드
+ * (je_field · ji_field · je) 는 뷰어 배경색 — 투명 PNG 는 진한 파랑 (차가운) 장을 흰 종이에서 깨뜨린다
+ * (je_delta 는 coolwarm · 흰 중앙이라 투명 그대로).  체크박스는 모드를 바꿀 때마다 그 모드의 기본값으로
+ * 돌아가고 (보이는 상태 = 찍힐 배경), 저자가 바꾸면 그대로 따른다 — 장 모드도 투명 (opt-in) · 구조 모드도 불투명. */
+const SHOT_OPAQUE_MODES = ['je_field', 'ji_field', 'je'];
+function shotTransparentDefault(mode) {
+  return !SHOT_OPAQUE_MODES.includes(mode || '');
+}
+
+/* Screenshot 한 장 — 장식 (bbox · grid · 축 글자) 을 숨기고 배경을 정해 scale× 로 찍은 뒤 전부 되돌린다.
+ * transparent = 지우기 알파 0 · scene.background 없음  /  아니면 뷰어 배경색 (COL.BG) 불투명. */
+function captureScreenshotPNG(renderer, scene, camera, transparent, scale = 6) {
+  const hiddenDecorations = [];
+  scene.traverse((obj) => {
+    if (obj.userData && obj.userData.isDecoration && obj.visible) {
+      obj.visible = false;
+      hiddenDecorations.push(obj);
+    }
+  });
+  const prevBg = scene.background;
+  const prevClear = new THREE.Color();
+  renderer.getClearColor(prevClear);
+  const prevAlpha = renderer.getClearAlpha();
+  if (transparent) { scene.background = null; renderer.setClearColor(0x000000, 0); }
+  else { scene.background = new THREE.Color(COL.BG); renderer.setClearColor(COL.BG, 1); }
+  try {
+    // 6× supersampled capture (paper-grade PNG — ~6000px on a 1000px canvas)
+    return captureHighRes(renderer, scene, camera, scale);
+  } finally {
+    // Restore background + decorations
+    scene.background = prevBg;
+    renderer.setClearColor(prevClear, prevAlpha);
+    hiddenDecorations.forEach(obj => { obj.visible = true; });
+    renderer.render(scene, camera);
+  }
 }
 
 /* ── save-with-dialog helper ───────────────────────────────── *
@@ -7064,6 +7104,12 @@ function wireControls(ctrlDiv, renderer, camera, controls, scene, state) {
     });
   }
 
+  /* Screenshot 배경 ☑ (#shot-transparent) — 모드를 바꾸면 그 모드의 기본값으로 (보이는 상태 = 찍힐 배경) */
+  const shotCb = ctrlDiv.querySelector('#shot-transparent');
+  const syncShotBg = () => { if (shotCb) shotCb.checked = shotTransparentDefault(modeSel ? modeSel.value : ''); };
+  syncShotBg();
+  if (modeSel) modeSel.addEventListener('change', syncShotBg);
+
   /* 단면 뷰 — clipping plane along µm-Y (scene Z): 논문 (b)/(e)식 단면/줌 구도를 어느 모드에서든 */
   const clipOn = ctrlDiv.querySelector('#clip-on'), clipPos = ctrlDiv.querySelector('#clip-pos');
   if (clipOn && clipPos) {
@@ -7176,32 +7222,11 @@ function wireControls(ctrlDiv, renderer, camera, controls, scene, state) {
         if (_sp) exportColorbarPNG(_sp, 'colorbar_' + (_vm || 'view') + '.png');
         else alert('이 모드는 컬러바 스케일이 없어요 — 전류밀도/반응/econn/Δ 모드에서 사용하세요.');
       } else if (action === 'screenshot') {
-        // Hide decoration objects (bbox, grid, axis labels) for clean screenshot
-        const hiddenDecorations = [];
-        scene.traverse((obj) => {
-          if (obj.userData && obj.userData.isDecoration && obj.visible) {
-            obj.visible = false;
-            hiddenDecorations.push(obj);
-          }
-        });
-        // Current-density FIELD / je modes read as "hot paths on a DARK field" — a transparent PNG
-        // drops the deep-blue cold field on white paper, breaking the figure.  Keep the dark canvas
-        // background for those; keep transparent for structural modes (clean slide overlay).
+        // 배경 = 조작판 ☑ "투명 배경 PNG" (#shot-transparent) — 처음 · 모드 전환 때 값은 모드별 옛 동작
+        // (shotTransparentDefault: 구조 모드 투명 · 전류밀도 장 모드 뷰어 배경색).  장식 숨김 · 6× · 복구는 captureScreenshotPNG.
         const _mode = (ctrlDiv.querySelector('#view-mode') || {}).value || '';
-        const darkField = ['je_field', 'ji_field', 'je'].includes(_mode);   // je_delta = coolwarm/흰중앙 → 투명배경 유지
-        const prevBg = scene.background;
-        const prevClear = new THREE.Color();
-        renderer.getClearColor(prevClear);
-        const prevAlpha = renderer.getClearAlpha();
-        if (darkField) { scene.background = new THREE.Color(COL.BG); renderer.setClearColor(COL.BG, 1); }
-        else { scene.background = null; renderer.setClearColor(0x000000, 0); }
-        // 6× supersampled capture (paper-grade PNG — ~6000px on a 1000px canvas)
-        const dataUrl = captureHighRes(renderer, scene, camera, 6);
-        // Restore background + decorations
-        scene.background = prevBg;
-        renderer.setClearColor(prevClear, prevAlpha);
-        hiddenDecorations.forEach(obj => { obj.visible = true; });
-        renderer.render(scene, camera);
+        const _cb = ctrlDiv.querySelector('#shot-transparent');
+        const dataUrl = captureScreenshotPNG(renderer, scene, camera, _cb ? _cb.checked : shotTransparentDefault(_mode));
         // Prompt user with Save As dialog (always asks destination)
         saveWithDialog(dataUrl, 'electrode_3d.png', btn, 'Screenshot');
       } else if (action === 'pathOnly') {
