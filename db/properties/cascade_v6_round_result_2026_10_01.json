@@ -14,7 +14,8 @@
   "러너_로그": "~/work/runs/cascade_v6_40run_0921.log (마지막 런 rc 0 · 10.48 GPU-h · ■ 라운드 끝)",
   "판독_JSON": "cascade_v6_judgement.json (f0a0e16ad · 카드 정의 곡선) · cascade_v6_judgement.run1_legacy_a9e123ab.json (첫 판독 · 옛 곡선 · 보존)",
   "판독_로그": "~/logs/cascade_v6_judge2.log · ~/logs/cascade_v6_judge.run1_legacy.log",
-  "repo_원자료": "db/raw/cascade_v6_2026_10_01/ (kgy 에서 푸시 — 판독 JSON 2 · 로그 · run_meta · aimd_results · manifest sha256). 궤적은 kgy 에 남는다."
+  "repo_원자료": "db/raw/cascade_v6_2026_10_01/ — 푸시됨 commit 65942718d (kgy · 2026-10-01). 판독 JSON 2 · 로그 2 · 러너 로그 · run_meta 41 · aimd_results 41 · manifest (궤적 41 · msd.json 41 sha256 — 궤적 원본은 kgy 에 남는다).",
+  "원자료_대조": "repo 에서 재확인 (D 값 안 봄): manifest 파일 sha256 5/5 일치 · 런 41 · 궤적 sha 41 · n_frames 전부 2000 · 판독 JSON sha256 0bf1f2f9cce38d31… (n_runs 40 · n_eligible 0 · 검사 불가 0 · 도구 f0a0e16ad clean) · 옛 곡선 판독 JSON 96ecb09fa1c342fd… (0/40)"
  },
  "도구": "tools/doping/judge_eprime.py --card v6 (commit f0a0e16ad · selftest 47/47 · 깨기 5 종) — 자격 = msd_diffusive_check.aggregation_eligible (D_inc plateau ∧ 부창 기울기비 ∧ 사건 ≥ 50)",
  "0_착지_갈래": {
