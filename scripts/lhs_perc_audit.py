@@ -83,7 +83,7 @@ TSV_COLS = (
     'se_perc_pct', 'se_top_reach_pct', 'se_n_components', 'se_n_isolated', 'se_n_large', 'se_largest_pct',
     'se_edges_dump', 'se_edges_geom', 'se_geom_only', 'se_dump_only',
     'se_perc_webapp_dump', 'se_perc_webapp_geom', 'se_perc_wall_geom', 'se_perc_wall_dump', 'se_wall_n_bot', 'se_wall_n_top',
-    'se_wall_band_equal', 'se_xcheck',
+    'se_wall_band_equal', 'se_band_tie_n', 'se_band_nontie_n', 'se_xcheck',
     'se_cn_perc', 'se_cn_n_perc', 'se_cn_eff_area_perc', 'se_cn_perc_keys',
     # AM (전자) — 웹앱 build_network 규칙
     'am_level', 'am_n_bot_L0', 'am_n_top_L0', 'am_n_bot', 'am_n_top', 'am_overlap',
@@ -341,8 +341,16 @@ def audit_case(atom_path, contact_path, n_types, mesh_path, deck_path=None, lega
                    se_perc_wall_geom=bool(st_wall_geom['n_span_components'] > 0), se_perc_wall_dump=bool(st_wall_dump['n_span_components'] > 0),
                    se_wall_n_bot=int(wall_bot.sum()), se_wall_n_top=int(wall_top.sum()))
         rec['se_wall_band_equal'] = bool(np.array_equal(wall_bot, b['bot']) and np.array_equal(wall_top, b['top'])) if b['level'] == 'L0' else None
-        if b['level'] == 'L0' and rec['r_se_classes'] == 1 and not rec['se_wall_band_equal']:
-            replica_bad.append('SE 단분산 · L0 인데 웹앱 밴드 ≠ 수확기 벽 밴드 (같아야 한다)')
+        #  띠 경계 동률 (10-01 · lhsx FLAG 5): 단분산이면 두 띠 식은 수학적으로 같다 (z ≥ 판 − 2r ⇔ z + r ≥ 판 − r).  덤프 z 는 6 유효숫자라
+        #  경계에 십진으로 정확히 걸친 입자는 float64 반올림으로 두 식이 갈린다 → 경계에서 상대 1e-6 안의 불일치는 '동률' 로 따로 센다.
+        rec['se_band_tie_n'] = rec['se_band_nontie_n'] = None
+        if b['level'] == 'L0':
+            _diff = (wall_bot != b['bot']) | (wall_top != b['top'])
+            _z, _tol = z_all[se_idx], 1e-6 * max(abs(float(plate_z)), 1e-12)
+            _near = (np.abs(_z - (plate_z - _replica_factor * r_se)) <= _tol) | (np.abs(_z - _replica_factor * r_se) <= _tol)
+            rec['se_band_tie_n'], rec['se_band_nontie_n'] = int((_diff & _near).sum()), int((_diff & ~_near).sum())
+        if b['level'] == 'L0' and rec['r_se_classes'] == 1 and rec['se_band_nontie_n']:
+            replica_bad.append(f"SE 단분산 · L0 인데 웹앱 밴드 ≠ 수확기 벽 밴드 (같아야 한다) — 경계 동률이 아닌 입자 {rec['se_band_nontie_n']}")
         rec['se_xcheck'] = _xcheck(rec['se_perc_webapp_dump'], rec['se_perc_webapp_geom'], rec['se_perc_wall_geom'], rec['se_perc_wall_dump'])
         # 정본 대조
         perc = DAC.calc_percolation(atoms_d, contacts_l, se_types, plate_z, box_x=lx, box_y=ly)
@@ -875,6 +883,22 @@ def selftest():
         js5 = json.loads((od5 / 'perc_audit.json').read_text(encoding='utf-8'))
         chk('㉓ 예상 밖 예외 (TypeError) → INPUT_ERROR 행 + 산출물 기록 · rc 2 (실행 중단 아님 — 의심 #3)',
             rc5 == 2 and js5['rows'][0]['status'] == 'INPUT_ERROR' and 'TypeError' in js5['rows'][0]['why'])
+
+        # ㉔ 띠 경계 동률 (10-01 · lhsx FLAG 5 의 원인) — 단분산 SE 에서 덤프 6 유효숫자 z 가 경계 (판 − 2r) 와 십진으로 정확히 같으면
+        #    웹앱식 z ≥ 판 − 2r 와 수확기식 z + r ≥ 판 − r 이 float64 반올림으로 갈린다 (lhsx_010 수치 그대로: 판 0.0371068 · r 0.0006065 · z 0.0358938).
+        #    수학적으로 같은 두 식의 동률은 반올림 동률로 따로 세고 FLAG 로 올리지 않는다.  경계에서 먼 입자가 갈리면 여전히 FLAG.
+        pz, rr, zt = 0.0371068, 0.0006065, 0.0358938
+        se_t = [(k + 1, 0.002 + 0.003 * k, 0.002, rr, rr, 3) for k in range(3)] + \
+               [(k + 4, 0.002 + 0.003 * k, 0.010, pz - rr, rr, 3) for k in range(3)] + [(7, 0.012, 0.012, zt, rr, 3)]
+        tie_in = (zt >= pz - rr * 2.0) != ((zt + rr) >= pz - rr)
+        rt = _run(td, se_t, [], plate=pz, tag='tie')
+        chk('㉔a ★ 경계 동률 입자 1 개 — 두 식이 실제로 갈리는 입력 (전제) · 동률로 센다 (se_band_tie_n 1 · nontie 0) · 띠 불일치 FLAG 사유 없음',
+            tie_in and rt.get('se_band_tie_n') == 1 and rt.get('se_band_nontie_n') == 0
+            and '웹앱 밴드 ≠ 수확기 벽 밴드' not in (rt.get('replica_why') or ''))
+        print(f"      (㉔a 진단: tie_in={tie_in} · tie={rt.get('se_band_tie_n')} · nontie={rt.get('se_band_nontie_n')} · why={rt.get('replica_why')})")
+        same_t = [(k + 1, 0.002 + 0.003 * k, 0.002, rr, rr, 3) for k in range(3)] + [(k + 4, 0.002 + 0.003 * k, 0.010, pz - rr, rr, 3) for k in range(3)]
+        rs = _run(td, same_t, [], plate=pz, tag='notie')
+        chk('㉔b 동률 없는 단분산 침대 — tie 0 · nontie 0 (띠 같음)', rs.get('se_band_tie_n') == 0 and rs.get('se_band_nontie_n') == 0 and rs.get('se_wall_band_equal') is True)
 
     print()
     if fails:
