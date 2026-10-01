@@ -1,0 +1,135 @@
+{
+  "slug": "jeong2026_reconciling-triple-phase-boundaries-tortuosity-assb",
+  "dpi": 300,
+  "maxpx": 3000,
+  "generated": "2026-10-01",
+  "sources": [
+    "088387cf-reconciling_triple-phase_boundaries_and_tortuosity_in_high-energy_ASSLSBs.pdf"
+  ],
+  "figures": [
+    {
+      "key": "f1",
+      "kind": "figure",
+      "label": "1",
+      "page": 4,
+      "file": "fig_1.png",
+      "caption": "Figure 1. Carbon-host particle size governs ionic/electronic transport and electrochemical performance of composite electrodes (A) Schematic illustration of ionic and electronic pathways within composite electrodes using small and large carbon hosts. Smaller carbon hosts provide more continuous electron pathways, whereas larger carbon hosts enhance ionic transport due to lowered tortuosity. (B and C) Simulated current distribution for ionic (B) and electronic (C) transport in composite electrodes comprising small and large carbon hosts. (D) SEM images of the four porous carbon hosts used in this study: BP-2000 (Mic-S), Ketjenblack EC-600JD (Mes-S), YP-80F (Mic-L), and CMK-3 (Mes-L), showing the distinct nanoscale and micron-scale particle-size regimes. (E) Effective ionic and electronic conductivities of composite electrodes, indicating higher electronic conductivity with smaller carbon ",
+      "rotated_deg": 0,
+      "bbox": [
+        47.1,
+        70.1,
+        551.2,
+        534.8
+      ],
+      "w": 2101,
+      "h": 1937,
+      "dpi": 300,
+      "src": "088387cf-reconciling_triple-phase_boundaries_and_tortuosity_in_high-energy_ASSLSBs.pdf",
+      "blank": 0.685
+    },
+    {
+      "key": "f2",
+      "kind": "figure",
+      "label": "2",
+      "page": 6,
+      "file": "fig_2.png",
+      "caption": "Figure 2. Impact of pore size on TPB and electrochemical performance (A) Schematic illustration depicting sulfur distribution and TPB density within microporous and mesoporous carbon hosts. Micropores enable finer, more uniform sulfur distribution, resulting in enhanced S/C/SSE TPB density. Mesoporous hosts feature larger, less dispersed sulfur particles, which may reduce TPB density. (B) Calculated TPB density for microporous and mesoporous structures with identical particle sizes. Microporous host exhibits higher TPB density than mes­ oporous one. (C) High-angle annular dark-field STEM (HAADF-STEM) images of four commercial carbon hosts. (D and E) Rate capability results analyzed by (D) particle size and (E) pore size. Although specific capacity does not exhibit a clear dependence on particle size, capacity decay at elevated rates remains strongly particle size dependent. In contrast, ",
+      "rotated_deg": 0,
+      "bbox": [
+        47.1,
+        70.1,
+        551.2,
+        487.9
+      ],
+      "w": 2101,
+      "h": 1741,
+      "dpi": 300,
+      "src": "088387cf-reconciling_triple-phase_boundaries_and_tortuosity_in_high-energy_ASSLSBs.pdf",
+      "blank": 0.669
+    },
+    {
+      "key": "f3",
+      "kind": "figure",
+      "label": "3",
+      "page": 7,
+      "file": "fig_3.png",
+      "caption": "Figure 3. Impact of carbon hosts on electrode architectures during electrode fabrication (A) SEM images of S/C/SSE composites following water washing to remove the SSE, showing the morphology of the remaining S/C structure. (B) Representative HAADF-STEM/EDS elemental mappings of the washed S/C/SSE composites, showing sulfur redistribution over agglomerated secondary structures in Mic-S, Mes-S, and Mes-L, whereas Mic-L preserves its morphology and shows relatively uniform sulfur distribution without agglomeration. (C) Particle-size distributions (D50) of pristine carbon, washed S/C/SSE, and washed C/SSE powders. Small carbon hosts experience significant agglomeration during ball milling, while mesoporous carbons exhibit even greater size growth due to the presence of sulfur. (D) XRD patterns of washed S/C/SSE composites. Sulfur crystalline peaks are visible in all samples except Mic-L. (E",
+      "rotated_deg": 0,
+      "bbox": [
+        53.8,
+        43.1,
+        557.8,
+        403.8
+      ],
+      "w": 2102,
+      "h": 1504,
+      "dpi": 300,
+      "src": "088387cf-reconciling_triple-phase_boundaries_and_tortuosity_in_high-energy_ASSLSBs.pdf",
+      "blank": 0.59
+    },
+    {
+      "key": "f4",
+      "kind": "figure",
+      "label": "4",
+      "page": 8,
+      "file": "fig_4.png",
+      "caption": "Figure 4. Impact of carbon host on electrode structural stability and long-term cycling (A) Cycling performance and Coulombic efficiency (CE) of ASSLSBs with Mic-S and Mic-L composite cathodes at 0.5C and room temperature (22◦C) for 1,500 cycles. (B) Capacity-normalized pressure change difference (Δ(ΔP)Q) as a function of cycle number. (C) EIS measurements of fresh and cycled electrodes at 0.5C. (D) High areal mass loading electrode test at 60◦C, reaching up to 6 mg cm−-2 of2 of sulfur for Mic-L. All electrodes were cycled at 0.05C for the initial two cycles, followed by cycling at different current densities (refer to Figure S18).",
+      "rotated_deg": 0,
+      "bbox": [
+        47.1,
+        70.1,
+        551.2,
+        582.6
+      ],
+      "w": 2101,
+      "h": 2136,
+      "dpi": 300,
+      "src": "088387cf-reconciling_triple-phase_boundaries_and_tortuosity_in_high-energy_ASSLSBs.pdf",
+      "blank": 0.893
+    },
+    {
+      "key": "f5",
+      "kind": "figure",
+      "label": "5",
+      "page": 9,
+      "file": "fig_5.png",
+      "caption": "Figure 5. Electrochemical performance of ASSLSB with Mic-L cathodes under practical conditions (A) Cycling performance at 0.2C with a sulfur loading of 4 mg cm−2 at 60◦C. (B) Corresponding voltage profiles at various cycles. (C) Projected cell-level energy density, derived from the demonstrated experimental results. (D) Comparison of areal and electrode capacity versus cycling stability between Mic-L cathode and previously reported results. Red and blue symbols denote data collected at 60◦C and below 30◦C, respectively. References used for comparison are detailed in Table S2.",
+      "rotated_deg": 0,
+      "bbox": [
+        53.8,
+        43.1,
+        557.9,
+        337.7
+      ],
+      "w": 2102,
+      "h": 1228,
+      "dpi": 300,
+      "src": "088387cf-reconciling_triple-phase_boundaries_and_tortuosity_in_high-energy_ASSLSBs.pdf",
+      "blank": 0.889
+    },
+    {
+      "key": "sch1",
+      "kind": "scheme",
+      "label": "Scheme 1",
+      "file": "fig_sch1.png",
+      "caption": "Scheme 1. Integrated design principle for processing-robust solid sulfur cathodes",
+      "w": 1857,
+      "h": 1145,
+      "src": "main",
+      "page": 10,
+      "note": "캡션 앵커 자동탐지에서 제외됨(그래픽 없음으로 오판) — bbox 수동 지정 재크롭"
+    },
+    {
+      "key": "ga",
+      "kind": "graphical-abstract",
+      "label": "Graphical abstract",
+      "file": "fig_ga.png",
+      "caption": "Graphical abstract (p.1)",
+      "w": 1646,
+      "h": 1651,
+      "src": "main",
+      "page": 1,
+      "note": "캡션 앵커 자동탐지에서 제외됨(그래픽 없음으로 오판) — bbox 수동 지정 재크롭"
+    }
+  ]
+}
