@@ -6687,12 +6687,27 @@
   {
    "id": "LHS-28",
    "severity": "P2",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "1저자 WSL 실행 (10-01 18:25 · run_ps45_lhs_wsl.sh [6/9]) — ps45 0:10 · 10:0 두 침대가 웹앱 접촉 단계 관문에서 REFUSED (컨테이너 건조 시험이 같은 사유를 미리 예측)",
    "opened_in": "scripts/lhs_webapp_batch.py",
    "title": "웹앱 배치 관문 `resolve_mode` 가 3-type 덱의 0 입자 상 (ps_sweep 세대 P:S = 10:0 · 0:10) 을 거부한다 — 덱 판독 (type_map_resolve.resolve) 은 덤프에 0 개인 type 을 map 에서 빼는데 (업로드 입구와 같은 규칙 · 빈 배열 방지) 수확 JSON 은 덱의 3 type 을 다 적어 글자 그대로 비교가 어긋난다 → 두 조성의 웹앱 열 (CN · AM–SE · 퍼콜 · 이온 고립) 이 측정 안 됨",
-   "note": "관문 설계 결함 (계산 결함 아님) — 웹앱 업로드 입구는 처음부터 이 침대를 받는다 (type_map_resolve 머리 주석의 260922_092001_0853b1 사고가 바로 P:S=10:0).  처방 = `absent_types`: 덤프의 type 별 개수 = 수확 phase_counts 의 상별 개수 (두 출처 교차) 이고 0 개인 type 만 빼서 남은 type 이 번호 · 이름까지 같을 때만 받는다 · 웹앱에는 덱 판독 map 그대로 · status.json `type_map_absent` 기록.  음성 여섯 (덤프에 있는 type 을 뺌 · 개수 불일치 · 이름 다름 · SE 없음 · phase_counts 없음 · 남은 상 개수 다름) 은 계속 거부.  웹앱 화면 반영 (J20-l): 해당 화면 없음 — 업로드 입구 (type_map_resolve) 는 이미 같은 규칙이고 이번 변경은 배치 관문뿐."
+   "note": "관문 설계 결함 (계산 결함 아님) — 웹앱 업로드 입구는 처음부터 이 침대를 받는다 (type_map_resolve 머리 주석의 260922_092001_0853b1 사고가 바로 P:S=10:0).  처방 = `absent_types`: 덤프의 type 별 개수 = 수확 phase_counts 의 상별 개수 (두 출처 교차) 이고 0 개인 type 만 빼서 남은 type 이 번호 · 이름까지 같을 때만 받는다 · 웹앱에는 덱 판독 map 그대로 · status.json `type_map_absent` 기록.  음성 여섯 (덤프에 있는 type 을 뺌 · 개수 불일치 · 이름 다름 · SE 없음 · phase_counts 없음 · 남은 상 개수 다름) 은 계속 거부.  웹앱 화면 반영 (J20-l): 해당 화면 없음 — 업로드 입구 (type_map_resolve) 는 이미 같은 규칙이고 이번 변경은 배치 관문뿐.",
+   "claimed_fixed_sha": "538b31622",
+   "evidence_tests": [
+    "scripts/lhs_webapp_batch.py::selftest ⑰ ⑰b (양성 — 옛 코드 실패 확인) · ⑰c–⑰h (음성 6)"
+   ],
+   "verification_note": "538b31622: 관문 absent_types · selftest 36/36 (옛 코드 34/36) · 컨테이너 e2e 합성 10:0 (real_14 의 AM_S → type 1) done — SE 값이 같은 SE 배치의 7:3 행과 동일 · 없는 상 열 빈칸.  1저자 WSL 재실행 10-01 (새 워크트리 @538b31622 · ps_0_10_r45 156.6 s · ps_10_0_r45 171.1 s done · tar sha 12f85937…) → ps45 후처리 병합 (원래 d1ec42fba 3 행 + 재실행 2 행 · d1ec42fba↔538b31622 .py 변경 = 관문 파일 + 접촉 단계 밖 3 파일) 판정 PASS — 5 행 전부 생성기 · 배포 관문 통과."
+  },
+  {
+   "id": "SELF-77",
+   "severity": "P3",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "1저자 (10-01 밤 — \"sc가 많을때 porosity 차이 나는 이유가 실제로 모델의 한계인거야 아님 너가 지어낸거야\") · 그 뒤 요청서 작성 중 자기 발견 셋",
+   "opened_in": "docs/reviews/codex_ps45_porosity_vs_exp_request_20261001.md",
+   "title": "ps45 DEM ↔ 실험 공극률 비교에서 SC 많은 조성의 차이를 근거 없이 'SE 소성 유동이 없는 DEM 의 한계' 로 단정했다 (검증 0 · 반대 방향 근거 = MPM d_h 분석의 SC 쪽 응력 1.87×) — 그 뒤 정정표 · 대체 덱 문장 · COMSOL 권고에도 과장 셋: '1 %p 안' 은 10:0 실험 두 값 중 하나에만 맞고 7:3 은 실험값 없음 · '7:3 혼합 이득' 은 침대 1 개 0.41 %p · '같은 정의 = 구 부피 합' 은 실험 두께 상태 (압력 해제) · 진밀도 미확인",
+   "note": "실험 값이 미가공 (같은 PC only 20.7 vs 16.5 %) 인데 원인을 골라 단정했다 — SELF-74 · 75 와 같은 부류 (원자료 · 근거 확인 전 설명).  정정 = 1저자에게 같은 날 (원인 미확정 · 후보 넷 · 확인 순서) · 덱 문장은 '원인 확인 중' 으로.  배위수 쪽 과장 ('SC 많을수록 AM–AM 접촉 증가' — 10:0 · 0:10 이 들어오자 U 자 3.64 · 2.67 · 3.11 · 3.48 · 3.91) 도 여기에 적는다 (Codex 요청은 1저자 지시로 공극률만).  닫는 조건 = Codex 판정 (요청서 Q1–Q7) 반영 뒤."
   }
  ]
 }
