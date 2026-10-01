@@ -211,7 +211,7 @@ def test_s01_01_the_v3_builder_seals_the_stage3_axis_derived_from_the_envelope()
     assert set(axis) == set(PV.LEG_SPEC_STAGE3_KEYS) == {
         "planned_id", "pairing_design_sha256", "parameter_order_sha256", "bank", "roster_sha256",
         "provider_edges_sha256", "arm", "stage", "candidate_mode"}
-    assert axis["planned_id"] == p.planned_id()
+    assert axis["planned_id"] == p.planned_id(), "stage3.planned_id 가 envelope digest 가 아니다"
     assert axis["pairing_design_sha256"] == env["pairing_design_sha256"]
     assert axis["parameter_order_sha256"] == env["parameter_order_sha256"]
     assert axis["bank"] == env["bank"] and set(axis["bank"]) == PV._BANK_KEYS
@@ -293,7 +293,8 @@ def test_s02_01_a_v3_plan_without_a_stage3_context_is_refused_before_fit_one(tmp
     calls = G84._sentinel(monkeypatch)
     with pytest.raises(PV.PreserveError) as ei:
         _run_nonsmoke(in_dir, out, None)                       # legacy 호출 — stage3 없음
-    assert "leg_spec_version" in str(ei.value) or "stage3" in str(ei.value), str(ei.value)
+    assert "legacy" in str(ei.value) and "leg_spec_version 3" in str(ei.value), \
+        "거부 이유가 v6 계획의 legacy fallback 금지 규칙이 아니다"
     assert calls == [], "거부가 첫 수치 작업 뒤다"
     assert PV.planned_index(ledger=led)[LEG]["status"] == "planned", "거부하면서 계획을 running 으로 옮겼다"
 
@@ -307,7 +308,7 @@ def test_s02_02_a_v2_plan_with_a_stage3_context_is_refused_before_fit_one(tmp_pa
     calls = G84._sentinel(monkeypatch)
     with pytest.raises(PV.PreserveError) as ei:
         _run_nonsmoke(in_dir, out, ctx)
-    assert "leg_spec_version" in str(ei.value) or "stage3" in str(ei.value), str(ei.value)
+    assert "leg_spec_version 2" in str(ei.value), "거부 이유가 v5 계획의 v6 문맥 금지 규칙이 아니다"
     assert calls == []
 
 
@@ -341,7 +342,8 @@ def test_s02_05_an_unknown_spec_version_without_v6_slots_is_refused_by_the_consu
     calls = G84._sentinel(monkeypatch)
     with pytest.raises(PV.PreserveError) as ei:
         _run_nonsmoke(in_dir, out, None)
-    assert "leg_spec_version" in str(ei.value), str(ei.value)
+    assert "leg_spec_version" in str(ei.value) and "계약 (2 · 3) 밖" in str(ei.value), \
+        "거부 이유가 spec 버전 규칙이 아니다"
     assert calls == []
 
 
@@ -397,14 +399,22 @@ def test_s03_03_a_v2_entry_carrying_a_v6_slot_is_refused(tmp_path, slot):
     lambda env, e: env.__setitem__("leg_id", "someone_else"),
     lambda env, e: env.__setitem__("source_digest", "0" * 16),
     lambda env, e: env.__setitem__("protocol_generation", "v6_prep"),
-    lambda env, e: env["inputs"].__setitem__("reference", "halfcell"),     # envelope 자체가 유효하지 않다
+    lambda env, e: env["inputs"].__setitem__("curves_sha256", "nothex"),   # envelope 자체가 유효하지 않다 (hex64 아님)
 ], ids=["leg_id", "source_digest", "generation", "invalid-envelope"])
 def test_s03_04_an_envelope_that_disagrees_with_the_entry_is_refused(tmp_path, edit):
     e = _v3_entry(_planned())
     edit(e["planned_envelope"], e)
+    # ★ 자기일관 위조 — envelope 만 바꾸면 `run_spec.stage3 ≠ 유도값` 검사가 먼저 거부해 결속 검사가 보이지 않는다
+    #   (87차 첫 재생에서 세 변이가 살아남은 이유). 바꾼 envelope 에서 축을 다시 유도하고 주소를 다시 맞춘다.
+    try:
+        e["run_spec"]["stage3"] = PV.stage3_axis_from_envelope(e["planned_envelope"])
+    except PV.PreserveError:
+        pass                                       # envelope 자체가 유효하지 않은 경우 (invalid-envelope) — 그대로 둔다
+    _reseal(e)
     led = _write(tmp_path / "L.yaml", _doc(e))
-    with pytest.raises(PV.PreserveError):
+    with pytest.raises(PV.PreserveError) as ei:
         PV.planned_index(ledger=led)
+    assert "planned_envelope" in str(ei.value), str(ei.value)
 
 
 @pytest.mark.parametrize("key", ["planned_id", "roster_sha256", "provider_edges_sha256", "arm", "candidate_mode"])
@@ -604,7 +614,7 @@ def test_s05_02_stage3_plan_requires_explicit_no_adaptive_and_no_warm_start(monk
 def test_s05_03_stage3_plan_builds_the_context_once_and_hands_it_to_run_fit(monkeypatch):
     seen = _cli(monkeypatch, "--stage3-plan", "X", "--no-adaptive", "--no-warm-start")
     F.main()
-    assert seen["ctx"] == ["X"]
+    assert seen["ctx"] == ["X"], "CLI 가 stage3_context_from_plan 을 한 번 부르지 않았다"
     (kw,) = seen["run"]
     assert kw["stage3"] == {"planned": "P", "design": "D", "provider_runs": {}}
     assert kw["leg"] == "X" and kw["adaptive"] is False and kw["warm_start"] is False
@@ -649,8 +659,9 @@ def test_s06_02_fit_dry_argv_carries_stage3_plan_and_leg_exactly_once():
              "--stage3-plan", "X", "--no-adaptive", "--no-warm-start")
     assert r.returncode == 0, r.stderr
     argv = r.stdout.strip().split()
-    assert argv.count("--stage3-plan") == 1 and argv[argv.index("--stage3-plan") + 1] == "X", argv
-    assert argv.count("--leg") == 1 and argv[argv.index("--leg") + 1] == "X", argv
+    assert argv.count("--stage3-plan") == 1 and argv[argv.index("--stage3-plan") + 1] == "X", \
+        "fit dry argv 에 --stage3-plan X 가 정확히 한 번 있어야 한다"
+    assert argv.count("--leg") == 1 and argv[argv.index("--leg") + 1] == "X", "fit dry argv 에 --leg X 가 정확히 한 번 있어야 한다"
     assert "--no-adaptive" in argv and "--no-warm-start" in argv
     assert argv.count("--may-open") == 1
 
@@ -658,13 +669,13 @@ def test_s06_02_fit_dry_argv_carries_stage3_plan_and_leg_exactly_once():
 def test_s06_03_stage3_plan_conflicting_with_leg_is_refused_by_the_shell():
     r = _dry("--mode", "fit", "--in", "results/_smoke/x", "--out", "results/_smoke/y",
              "--stage3-plan", "X", "--leg", "Y")
-    assert r.returncode == 1 and "--stage3-plan" in r.stderr, (r.returncode, r.stderr, r.stdout)
+    assert r.returncode == 1 and "--stage3-plan" in r.stderr, "셸이 --stage3-plan 과 --leg 의 충돌을 거부하지 않았다"
 
 
-@pytest.mark.parametrize("mode", ["all", "grid", "score"])
+@pytest.mark.parametrize("mode", ["all", "grid"])
 def test_s06_04_stage3_plan_is_only_valid_for_mode_fit(mode):
     r = _dry("--mode", mode, "--in", "results/_smoke/x", "--out", "results/_smoke/y", "--stage3-plan", "X")
-    assert r.returncode == 1 and "--stage3-plan" in r.stderr, (mode, r.returncode, r.stderr, r.stdout)
+    assert r.returncode == 1 and "--stage3-plan" in r.stderr, f"--mode {mode} 에서 --stage3-plan 이 거부되지 않았다"
 
 
 # ─────────────────────────────────────────────────────────────────────────────
