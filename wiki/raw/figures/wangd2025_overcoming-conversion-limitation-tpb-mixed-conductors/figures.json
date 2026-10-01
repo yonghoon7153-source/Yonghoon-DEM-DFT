@@ -1,0 +1,111 @@
+{
+ "slug": "wangd2025_overcoming-conversion-limitation-tpb-mixed-conductors",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-01",
+ "sources": [
+  "15fde524-3._overcoming_limitation_at_TPBs_using_MIEC_for_ASSLSBs.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 | Illustration of the sulfur cathode using MIEC. a, The configuration of a conventional Li–S ASSB, in which the ion-conducting electron-insulating SE is employed in both the sulfur cathode and the separator. Upon lithiation, the sulfur isolated from the three-phase boundaries and disconnected with carbon cannot gain electrons and becomes electrochemically inactive. b, The configuration of the dual-phased Li–S ASSB, in which the MIEC is used",
+   "rotated_deg": 0,
+   "bbox": [
+    34.6,
+    65.9,
+    302.0,
+    306.5
+   ],
+   "w": 1116,
+   "h": 1004,
+   "dpi": 300,
+   "src": "15fde524-3._overcoming_limitation_at_TPBs_using_MIEC_for_ASSLSBs.pdf",
+   "blank": 0.542
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 | The origin of the low sulfur utilization. a, The changes of the initial discharge specific capacity and the specific energy (based on the cathode weight) as the sulfur content is increased at 0.1C and 60 °C. The areal sulfur loading is around 4 mgS cm–2. Data are presented as mean ± standard deviation (s.d.). Four cells were tested for each cathode. b, SEM and EDS mapping images of the top surface of sulfur cathodes with 30 wt% and 50 wt% sulfur. Scale bars, 20 μm. c,d, Raman spectral mapping images (20 μm × 20 μm) of the lithiated sulfur electrode (50 wt% sulfur) surface, showing the distribution of sulfur (210–230 cm–1) to carbon (D band, 1,300–1,400 cm–1) intensity ratio (c) and LPS (PS4 3–,",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    65.9,
+    364.4,
+    456.5
+   ],
+   "w": 1379,
+   "h": 1629,
+   "dpi": 300,
+   "src": "15fde524-3._overcoming_limitation_at_TPBs_using_MIEC_for_ASSLSBs.pdf",
+   "blank": 0.662
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 | Materials characterization. a, An SEM image of MIEC20 powder. b, A TEM image and SAED pattern of a MIEC20 particle. The scale bar for the SAED pattern is 5 nm−1. c, STEM and EDS mapping images of an MIEC20 particle. Scale bars, 500 nm. d, XRD patterns of LPS and MIECs. e, Solid-state 31P MAS NMR of",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    65.9,
+    407.1,
+    445.7
+   ],
+   "w": 1557,
+   "h": 1583,
+   "dpi": 300,
+   "src": "15fde524-3._overcoming_limitation_at_TPBs_using_MIEC_for_ASSLSBs.pdf",
+   "blank": 0.764
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 | Electrochemical evaluation of Li–S ASSBs at 60 °C. a,b, Galvanostatic discharge–charge curves of sulfur cathodes using LPS or MIEC at the first cycle (a) and corresponding differential capacity (dQ/dV) curves (b). c, The rate capability of different sulfur cathodes. The dashed lines separate the cycles with different current rates. d, The cycling performance of the S-C-MIEC20 cathode at 2C (CCCV mode, cutoff current rate of 0.1C at 2.5 V). e, The GITT and OCV curves of the cells with S-C-LPS and S-C-MIEC20 (current pulses of 0.05C for 60 min, resting time of 4 h). f, The quantified active sulfur ratio and estimated conversion",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    66.2,
+    412.4,
+    460.5
+   ],
+   "w": 1579,
+   "h": 1644,
+   "dpi": 300,
+   "src": "15fde524-3._overcoming_limitation_at_TPBs_using_MIEC_for_ASSLSBs.pdf",
+   "blank": 0.818
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 | Post-characterization of S-C-MIEC20 cathodes. a, Ti 2p XPS spectra of S-C-MIEC20 electrodes during the initial cycle. b,c, Ti K-edge XAS spectra of S-C-MIEC20 electrodes during the first charge–discharge process (b) and corresponding phase-corrected FT-EXAFS spectra (c). d, STEM and",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    201.3,
+    353.3,
+    525.2
+   ],
+   "w": 1332,
+   "h": 1351,
+   "dpi": 300,
+   "src": "15fde524-3._overcoming_limitation_at_TPBs_using_MIEC_for_ASSLSBs.pdf",
+   "blank": 0.507
+  }
+ ]
+}

@@ -1,0 +1,153 @@
+{
+ "slug": "zhangj2026_strain-coordination-long-cycling-assb",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-01",
+ "sources": [
+  "13e1c1a6-2._strain_coordination_strategy_enabling_long_cycling_ASSLSBs.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 | Design Principles of Sum-Zero Strain in All-Solid-State Lithium-Sulfur Batteries. a Schematic illustration of an all-solid-state battery (N/P = 1) employing a FeS2 positive electrode and a Li negative electrode under low external pressure. Due to the signiﬁcant mismatch in volume changes between the electrodes during cycling, poor solid-solid interfacial contact develops, leading to increased",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    395.7,
+    516.7,
+    686.1
+   ],
+   "w": 2013,
+   "h": 1211,
+   "dpi": 300,
+   "src": "13e1c1a6-2._strain_coordination_strategy_enabling_long_cycling_ASSLSBs.pdf",
+   "blank": 0.651
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 | Stress analysis of electrode during cycling. a Schematic of a solid-state battery with working electrode and zero-strain LTO electrode. Lithiation/delithia- tion induced stress response of b LTO | |FeS2, c LTO | |Li2Si, d LTO | |Li, and e Li2Si | |",
+   "rotated_deg": 0,
+   "bbox": [
+    30,
+    68.3,
+    566,
+    332.1
+   ],
+   "w": 2234,
+   "h": 1100,
+   "dpi": 300,
+   "src": "13e1c1a6-2._strain_coordination_strategy_enabling_long_cycling_ASSLSBs.pdf",
+   "blank": 0.853,
+   "note": "캡션 앵커가 오른쪽 열(패널 c·f / f·g)을 놓쳐 bbox 를 페이지 전폭(x 30–566 pt)으로 넓혀 재크롭했다."
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 | Strain analysis of electrode during cycling. a–c In-situ optical microscopy images showing electrode thickness variations at a the charged state, b the dis- charged state, and C the subsequently charged state. d Ex-situ XCT image of the pristine Li2Si | |FeS2 batteries. e Ex-situ XCT image of the discharged Li2Si | |FeS2",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    71.4,
+    508.4,
+    328.9
+   ],
+   "w": 1979,
+   "h": 1074,
+   "dpi": 300,
+   "src": "13e1c1a6-2._strain_coordination_strategy_enabling_long_cycling_ASSLSBs.pdf",
+   "blank": 0.441
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 | Dynamic analysis of electrodes at low-pressure. a Galvanostatic charge/ discharge curve of the ﬁrst 1.5 cycles. Distribution of relaxation times (DRT) plot derived from the in-situ EIS of Li | |FeS2 b and Li2Si | |FeS2 c. The y-axis corresponds",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    66.9,
+    483.0,
+    510.4
+   ],
+   "w": 1873,
+   "h": 1849,
+   "dpi": 300,
+   "src": "13e1c1a6-2._strain_coordination_strategy_enabling_long_cycling_ASSLSBs.pdf",
+   "blank": 0.686
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 | Electrochemical performance of ASSLSBs at low-pressure. a Cycle per- formance of Li | |FeS2 and Li2Si | |FeS2 cell at 25 °C. b Discharge–charge proﬁles of Li | |FeS2 and Li2Si | |FeS2 cell at the 3rd cycle. c Rate performance of Li | |FeS2 and Li2Si | |FeS2 cell. d Cycle performance of Li2Si | |FeS2 cell at 55 °C. e Discharge–charge proﬁles of Li2Si | |FeS2 cells at different cycles. f Speciﬁc energy",
+   "rotated_deg": 0,
+   "bbox": [
+    30,
+    68.5,
+    566,
+    533.6
+   ],
+   "w": 2234,
+   "h": 1939,
+   "dpi": 300,
+   "src": "13e1c1a6-2._strain_coordination_strategy_enabling_long_cycling_ASSLSBs.pdf",
+   "blank": 0.918,
+   "note": "캡션 앵커가 오른쪽 열(패널 c·f / f·g)을 놓쳐 bbox 를 페이지 전폭(x 30–566 pt)으로 넓혀 재크롭했다."
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 8,
+   "file": "fig_6.png",
+   "caption": "Fig. 6 | Electrochemical performance of ASSLSBs at 100 MPa. a The long-term cycle stability of Li2Si | |FeS2 cell at 1 C and 4 C. b The high-rate performance of Li2Si | | FeS2 cell. c The high-loading performance of Li2Si | |FeS2 cell. Comparison of the long- term cycle performance24,31,39 and high-rate performance24,28,40–48 d, intrinsic",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    135.6,
+    385.8,
+    544.3
+   ],
+   "w": 1468,
+   "h": 1704,
+   "dpi": 300,
+   "src": "13e1c1a6-2._strain_coordination_strategy_enabling_long_cycling_ASSLSBs.pdf",
+   "blank": 0.87
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 9,
+   "file": "fig_7.png",
+   "caption": "Fig. 7 | Reaction mechanism analysis of Li2Si | |FeS2 ASSLSBs. a AC-STEM images for initial FeS2 composite positive electrode. b The enlarged image from a. c AC- STEM images for discharged FeS2 composite positive electrode. d The enlarged",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    62.6,
+    546.6,
+    322.8
+   ],
+   "w": 2138,
+   "h": 1086,
+   "dpi": 300,
+   "src": "13e1c1a6-2._strain_coordination_strategy_enabling_long_cycling_ASSLSBs.pdf",
+   "blank": 0.583
+  }
+ ]
+}

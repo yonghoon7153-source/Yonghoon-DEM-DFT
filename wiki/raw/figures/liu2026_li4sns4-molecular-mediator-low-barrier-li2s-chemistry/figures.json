@@ -1,0 +1,111 @@
+{
+ "slug": "liu2026_li4sns4-molecular-mediator-low-barrier-li2s-chemistry",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-01",
+ "sources": [
+  "3d10dc0c-2._Li4SnS4_mediator_for_low-barrier_Li2S_chemistry.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "FIGURE 1 Electronic structure analysis of Li2S. (a) Schematic diagram of bonding model and orbital energy level between lattice sulfur and Li+ in Li2S. (b) Schematic diagram of Li2S decomposition. (c) Schematic illustration of how the coordination competition between tetrahedral cations and Li overlaps with S 3p orbitals; inset: changes in the bonding and antibonding states of M─S and S─Li. (d) The binding energy between graphene, Li4SnS4, and sulfur-based molecules (S8, Li2S2, and Li2S). (e) The adsorption model of Li4SnS4 with sulfur-based molecules (S8, Li2S2, and Li2S) and the corresponding differential charge density distributions (yellow regions indicate charge-rich areas, while blue regions indicate charge-depleted areas).",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.6,
+    564.2,
+    518.3
+   ],
+   "w": 2153,
+   "h": 2012,
+   "dpi": 300,
+   "src": "3d10dc0c-2._Li4SnS4_mediator_for_low-barrier_Li2S_chemistry.pdf",
+   "blank": 0.838
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "FIGURE 2 Structural characterization. (a) Schematic diagram of the growth design for Li4SnS4 molecules. (b) XRD patterns of Li2S and Li2S@Li4SnS4. (c) Rietveld refinement results of the XRD patterns and (d) TEM image for Li2S and Li2S@Li4SnS4. (e) Raman and (f) 7Li NMR spectra of Li2S, Li2S@SnS2 and Li2S@Li4SnS4.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.3,
+    564.2,
+    492.3
+   ],
+   "w": 2153,
+   "h": 1905,
+   "dpi": 300,
+   "src": "3d10dc0c-2._Li4SnS4_mediator_for_low-barrier_Li2S_chemistry.pdf",
+   "blank": 0.752
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "FIGURE 3 Reaction kinetics analysis of the cathode. (a) Ionic conductivity of Li2S and Li2S@Li4SnS4 cathode; Insert: schematic diagram of the electronic blocking structure. Contour plots of CV patterns for (b) Li2S and (c) Li2S@Li4SnS4 cathode with different scan rates. (d) Variation of the oxidation peak current in CV as a function of scan rate. (e) Tafel slope of Li2S and Li2S@Li4SnS4 cathode. (f) The relative activation energy of Li2S and Li2S@Li4SnS4 cathodes. The DRT curves are plotted and calculated from in situ EIS results, and the corresponding 2D intensity mapping of (g) Li2S and (h) Li2S@Li4SnS4 cathodes during the initial charge process. (i) Corresponding charge transfer impedance of the Li2S and Li2S@Li4SnS4 cathode. cm−1 reappears (Figure 4b). Consequently, although sulfur gains electrons overall, part of the electron density at the interfacial sulfur sites is polarized towa",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.0,
+    564.2,
+    466.3
+   ],
+   "w": 2153,
+   "h": 1798,
+   "dpi": 300,
+   "src": "3d10dc0c-2._Li4SnS4_mediator_for_low-barrier_Li2S_chemistry.pdf",
+   "blank": 0.717
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "FIGURE 4 Reversibility analysis of reaction products. (a) Charge-discharge profiles of Li2S@Li4SnS4 cathode. (b) Raman, (c) S 2p, and (d) Sn 3d XPS spectra of the Li2S@Li4SnS4 cathode with different states of charge and discharge. (e) Schematic illustration of the enhanced reaction kinetics of Li2S@Li4SnS4 cathode.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.7,
+    564.2,
+    470.3
+   ],
+   "w": 2153,
+   "h": 1812,
+   "dpi": 300,
+   "src": "3d10dc0c-2._Li4SnS4_mediator_for_low-barrier_Li2S_chemistry.pdf",
+   "blank": 0.71
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "file": "fig_5.png",
+   "caption": "FIGURE 5 Electrochemical performance of ASSLSBs. Initial charge profiles of (a) Li2S and Li2S@Li4SnS4 cathode. (b) Comparison of the initial activation potential of the Li2S@Li4SnS4 cathode with that of the all-solid-state Li2S cathode reported in recent literature. (c) Rate performance of the Li2S@Li4SnS4 cathode with a Li2S loading of 1.2 mg cm−2. (d) Long-term cycling performance of Li2S and Li2S@Li4SnS4 cathodes with a Li2S loading of 3 mg cm−2. (e) Long-term cycling performance of Li2S and Li2S@Li4SnS4 cathode with a Li2S loading of 5 mg cm−2 at 60◦C. (f) Long-term cycling performance comparison between this work and previously reported ASSLSBs. (g) Long-term cycling performance of all-solid-state pouch cell; inset: optical photograph of the pouch cell assembly process and powering an LED light.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.3,
+    564.2,
+    456.3
+   ],
+   "w": 2153,
+   "h": 1755,
+   "dpi": 300,
+   "src": "3d10dc0c-2._Li4SnS4_mediator_for_low-barrier_Li2S_chemistry.pdf",
+   "blank": 0.837
+  }
+ ]
+}

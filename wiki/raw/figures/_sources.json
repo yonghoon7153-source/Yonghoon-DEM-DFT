@@ -43,6 +43,13 @@
    "0eafdb13-decoupled_sulfur_redox_pathways.pdf"
   ]
  },
+ "liu2026_li4sns4-molecular-mediator-low-barrier-li2s-chemistry": {
+  "figures": 5,
+  "generated": "2026-10-01",
+  "pdfs": [
+   "3d10dc0c-2._Li4SnS4_mediator_for_low-barrier_Li2S_chemistry.pdf"
+  ]
+ },
  "qu2025_volume-changes-li-s-solid-state-battery-components-cycling": {
   "figures": 8,
   "generated": "2026-09-30",
@@ -71,6 +78,13 @@
    "024d57f9-Molecular_coordination_engineering_enables_triple-synergy_cathode_design_for_all-solid-state_Li-S_batteries.pdf"
   ]
  },
+ "wangd2025_overcoming-conversion-limitation-tpb-mixed-conductors": {
+  "figures": 5,
+  "generated": "2026-10-01",
+  "pdfs": [
+   "15fde524-3._overcoming_limitation_at_TPBs_using_MIEC_for_ASSLSBs.pdf"
+  ]
+ },
  "yu2024_nanocrystallite-cus-n-doped-carbon-host-all-solid-state-li2s": {
   "figures": 7,
   "generated": "2026-09-30",
@@ -84,6 +98,13 @@
   "pdfs": [
    "6dbf5541-3._AFASSLSBs_with_Li2S_cathode_and_Na_current_collectors.pdf",
    "6a25f2fa-3.___.docx"
+  ]
+ },
+ "zhangj2026_strain-coordination-long-cycling-assb": {
+  "figures": 7,
+  "generated": "2026-10-01",
+  "pdfs": [
+   "13e1c1a6-2._strain_coordination_strategy_enabling_long_cycling_ASSLSBs.pdf"
   ]
  }
 }
