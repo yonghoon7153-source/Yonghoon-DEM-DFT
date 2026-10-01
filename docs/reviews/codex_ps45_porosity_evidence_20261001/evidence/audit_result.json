@@ -1,0 +1,690 @@
+{
+  "scope": "Aggregate arithmetic only; raw dumps/experiment records/MPM outputs unavailable",
+  "checks_passed": 94,
+  "checks_total": 94,
+  "checks": [
+    {
+      "name": "sha256:./codex_ps45_porosity_vs_exp_request_20261001.md",
+      "actual": "8544a028a39d67a7218ebea1faa6efc55d5e23938e200ae2e82f09838069c69f",
+      "expected": "8544a028a39d67a7218ebea1faa6efc55d5e23938e200ae2e82f09838069c69f",
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "sha256:./post_fix/ps45_handover.csv",
+      "actual": "c101e8aebc920a1222ad377a93fb6046d31392bc3863c7d687bd7ba36e60200f",
+      "expected": "c101e8aebc920a1222ad377a93fb6046d31392bc3863c7d687bd7ba36e60200f",
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "sha256:./post_fix/ps45_release_5rows.csv",
+      "actual": "c5a494eb63564315fac0cd01dd0e221309d54e140f230a8fde2beab216bd4eca",
+      "expected": "c5a494eb63564315fac0cd01dd0e221309d54e140f230a8fde2beab216bd4eca",
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "sha256:./post_fix/ps45_release_5rows_columns.tsv",
+      "actual": "145591755dbe7d55a97b0252a5e01ceaca4f2ab07bc8ce327b9f1f06b3c605f7",
+      "expected": "145591755dbe7d55a97b0252a5e01ceaca4f2ab07bc8ce327b9f1f06b3c605f7",
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "sha256:./post_fix/ps45_row_flags.csv",
+      "actual": "82218d9b2b047c753972afa0c5ab4e063a91b5c0f13f0bf9efff8eb1ee4179eb",
+      "expected": "82218d9b2b047c753972afa0c5ab4e063a91b5c0f13f0bf9efff8eb1ee4179eb",
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "sha256:./post_fix/ps45_summary.json",
+      "actual": "d3f80a5c250be2f6eeefb4a8415d9354ecf7c52fcbc859e359e11c9cbe0a49b3",
+      "expected": "d3f80a5c250be2f6eeefb4a8415d9354ecf7c52fcbc859e359e11c9cbe0a49b3",
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "sha256:./post_ps45.py",
+      "actual": "a61f3267d9199c4a5a6466d833756ae1d75d0f8780e6ad13fd93a6dda9fbaf03",
+      "expected": "a61f3267d9199c4a5a6466d833756ae1d75d0f8780e6ad13fd93a6dda9fbaf03",
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "sha256:./ps45_lhs_20261001_1825.tar.gz",
+      "actual": "1ff8878f7eba9e9f12e284795b6669a8b5ce3f374466dab4e12521a18b5c0d23",
+      "expected": "1ff8878f7eba9e9f12e284795b6669a8b5ce3f374466dab4e12521a18b5c0d23",
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "sha256:./ps45_webapp_fix_538b31622.tar.gz",
+      "actual": "12f8593732a955aa237217afc6bd7953bb825264ea6c681a0fa69d09e21d92e3",
+      "expected": "12f8593732a955aa237217afc6bd7953bb825264ea6c681a0fa69d09e21d92e3",
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_10_0_r45:thickness_um",
+      "actual": 112.59700000000002,
+      "expected": 112.59700000000002,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_10_0_r45:lx_um",
+      "actual": 50.0,
+      "expected": 50.0,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_10_0_r45:eps_sphere_web",
+      "actual": 15.824650562927356,
+      "expected": 15.824650562927388,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_10_0_r45:phi_se_sphere",
+      "actual": 0.29528595620648623,
+      "expected": 0.2952859562064863,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_10_0_r45:phi_am_sphere",
+      "actual": 0.5464675381642402,
+      "expected": 0.54646753816424,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_10_0_r45:harvest_epsilon",
+      "actual": 15.824650562927356,
+      "expected": 15.824650562927378,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_10_0_r45:counts_SE",
+      "actual": 158749,
+      "expected": 158749,
+      "tolerance": 0,
+      "passed": true
+    },
+    {
+      "name": "ps_10_0_r45:counts_AM",
+      "actual": 403,
+      "expected": 403,
+      "tolerance": 0,
+      "passed": true
+    },
+    {
+      "name": "ps_10_0_r45:counts_all",
+      "actual": 159152,
+      "expected": 159152,
+      "tolerance": 0,
+      "passed": true
+    },
+    {
+      "name": "ps_10_0_r45:handover_porosity_spheresum_nominal_gap_pct",
+      "actual": 15.824650562927356,
+      "expected": 15.824650562927378,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_10_0_r45:handover_thickness_wall_gap_um",
+      "actual": 112.59700000000002,
+      "expected": 112.59700000000002,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_10_0_r45:MC_integer_count",
+      "actual": 675962.0,
+      "expected": 675962,
+      "tolerance": 1e-07,
+      "passed": true
+    },
+    {
+      "name": "ps_10_0_r45:MC_sigma",
+      "actual": 0.018737176342084605,
+      "expected": 0.018737176342084605,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_10_0_r45:MC_closure",
+      "actual": 100.0,
+      "expected": 100,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_10_0_r45:handover_union",
+      "actual": 16.89905,
+      "expected": 16.89905,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_10_0_r45:release_union",
+      "actual": 16.89905,
+      "expected": 16.89905,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_10_0_r45:clipped_epsilon",
+      "actual": 15.852186811226801,
+      "expected": 15.852186811226831,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_7_3_r45:thickness_um",
+      "actual": 111.05199999999999,
+      "expected": 111.05199999999999,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_7_3_r45:lx_um",
+      "actual": 50.0,
+      "expected": 50.0,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_7_3_r45:eps_sphere_web",
+      "actual": 14.953625378318304,
+      "expected": 14.953625378318346,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_7_3_r45:phi_se_sphere",
+      "actual": 0.29941672446335604,
+      "expected": 0.299416724463356,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_7_3_r45:phi_am_sphere",
+      "actual": 0.5510470217534609,
+      "expected": 0.5510470217534608,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_7_3_r45:harvest_epsilon",
+      "actual": 14.953625378318304,
+      "expected": 14.953625378318314,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_7_3_r45:counts_SE",
+      "actual": 158761,
+      "expected": 158761,
+      "tolerance": 0,
+      "passed": true
+    },
+    {
+      "name": "ps_7_3_r45:counts_AM",
+      "actual": 1656,
+      "expected": 1656,
+      "tolerance": 0,
+      "passed": true
+    },
+    {
+      "name": "ps_7_3_r45:counts_all",
+      "actual": 160417,
+      "expected": 160417,
+      "tolerance": 0,
+      "passed": true
+    },
+    {
+      "name": "ps_7_3_r45:handover_porosity_spheresum_nominal_gap_pct",
+      "actual": 14.953625378318304,
+      "expected": 14.953625378318314,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_7_3_r45:handover_thickness_wall_gap_um",
+      "actual": 111.05199999999999,
+      "expected": 111.05199999999999,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_7_3_r45:MC_integer_count",
+      "actual": 659765.9999999999,
+      "expected": 659766,
+      "tolerance": 1e-07,
+      "passed": true
+    },
+    {
+      "name": "ps_7_3_r45:MC_sigma",
+      "actual": 0.018556387146866037,
+      "expected": 0.018556387146866037,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_7_3_r45:MC_closure",
+      "actual": 100.0,
+      "expected": 100,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_7_3_r45:handover_union",
+      "actual": 16.494149999999998,
+      "expected": 16.494149999999998,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_7_3_r45:release_union",
+      "actual": 16.494149999999998,
+      "expected": 16.494149999999998,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_7_3_r45:clipped_epsilon",
+      "actual": 14.987318933106888,
+      "expected": 14.98731893310693,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_5_5_r45:thickness_um",
+      "actual": 112.43599999999999,
+      "expected": 112.43599999999999,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_5_5_r45:lx_um",
+      "actual": 50.0,
+      "expected": 50.0,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_5_5_r45:eps_sphere_web",
+      "actual": 16.202588071204705,
+      "expected": 16.202588071204715,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_5_5_r45:phi_se_sphere",
+      "actual": 0.29574045041317554,
+      "expected": 0.29574045041317554,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_5_5_r45:phi_am_sphere",
+      "actual": 0.5422336688747774,
+      "expected": 0.5422336688747774,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_5_5_r45:harvest_epsilon",
+      "actual": 16.202588071204705,
+      "expected": 16.202588071204715,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_5_5_r45:counts_SE",
+      "actual": 158766,
+      "expected": 158766,
+      "tolerance": 0,
+      "passed": true
+    },
+    {
+      "name": "ps_5_5_r45:counts_AM",
+      "actual": 2491,
+      "expected": 2491,
+      "tolerance": 0,
+      "passed": true
+    },
+    {
+      "name": "ps_5_5_r45:counts_all",
+      "actual": 161257,
+      "expected": 161257,
+      "tolerance": 0,
+      "passed": true
+    },
+    {
+      "name": "ps_5_5_r45:handover_porosity_spheresum_nominal_gap_pct",
+      "actual": 16.202588071204705,
+      "expected": 16.202588071204715,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_5_5_r45:handover_thickness_wall_gap_um",
+      "actual": 112.43599999999999,
+      "expected": 112.43599999999999,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_5_5_r45:MC_integer_count",
+      "actual": 706783.0,
+      "expected": 706783,
+      "tolerance": 1e-07,
+      "passed": true
+    },
+    {
+      "name": "ps_5_5_r45:MC_sigma",
+      "actual": 0.019070550721723895,
+      "expected": 0.019070550721723895,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_5_5_r45:MC_closure",
+      "actual": 100.0,
+      "expected": 100,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_5_5_r45:handover_union",
+      "actual": 17.669575000000002,
+      "expected": 17.669575000000002,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_5_5_r45:release_union",
+      "actual": 17.669575000000002,
+      "expected": 17.669575000000002,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_5_5_r45:clipped_epsilon",
+      "actual": 16.234082771562512,
+      "expected": 16.23408277156253,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_3_7_r45:thickness_um",
+      "actual": 114.361,
+      "expected": 114.361,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_3_7_r45:lx_um",
+      "actual": 50.0,
+      "expected": 50.0,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_3_7_r45:eps_sphere_web",
+      "actual": 17.157471884877083,
+      "expected": 17.157471884877108,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_3_7_r45:phi_se_sphere",
+      "actual": 0.29075685735631107,
+      "expected": 0.29075685735631107,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_3_7_r45:phi_am_sphere",
+      "actual": 0.5376684237949181,
+      "expected": 0.5376684237949181,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_3_7_r45:harvest_epsilon",
+      "actual": 17.157471884877083,
+      "expected": 17.157471884877083,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_3_7_r45:counts_SE",
+      "actual": 158763,
+      "expected": 158763,
+      "tolerance": 0,
+      "passed": true
+    },
+    {
+      "name": "ps_3_7_r45:counts_AM",
+      "actual": 3330,
+      "expected": 3330,
+      "tolerance": 0,
+      "passed": true
+    },
+    {
+      "name": "ps_3_7_r45:counts_all",
+      "actual": 162093,
+      "expected": 162093,
+      "tolerance": 0,
+      "passed": true
+    },
+    {
+      "name": "ps_3_7_r45:handover_porosity_spheresum_nominal_gap_pct",
+      "actual": 17.157471884877083,
+      "expected": 17.157471884877083,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_3_7_r45:handover_thickness_wall_gap_um",
+      "actual": 114.361,
+      "expected": 114.361,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_3_7_r45:MC_integer_count",
+      "actual": 746657.0,
+      "expected": 746657,
+      "tolerance": 1e-07,
+      "passed": true
+    },
+    {
+      "name": "ps_3_7_r45:MC_sigma",
+      "actual": 0.019482088425778272,
+      "expected": 0.019482088425778272,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_3_7_r45:MC_closure",
+      "actual": 100.0,
+      "expected": 100,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_3_7_r45:handover_union",
+      "actual": 18.666425,
+      "expected": 18.666425,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_3_7_r45:release_union",
+      "actual": 18.666425,
+      "expected": 18.666425,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_3_7_r45:clipped_epsilon",
+      "actual": 17.188245122933377,
+      "expected": 17.1882451229334,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_0_10_r45:thickness_um",
+      "actual": 117.208,
+      "expected": 117.208,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_0_10_r45:lx_um",
+      "actual": 50.0,
+      "expected": 50.0,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_0_10_r45:eps_sphere_web",
+      "actual": 19.161867008918975,
+      "expected": 19.161867008918996,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_0_10_r45:phi_se_sphere",
+      "actual": 0.2836889687188108,
+      "expected": 0.2836889687188108,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_0_10_r45:phi_am_sphere",
+      "actual": 0.5246923611919995,
+      "expected": 0.5246923611919996,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_0_10_r45:harvest_epsilon",
+      "actual": 19.161867008918975,
+      "expected": 19.161867008918975,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_0_10_r45:counts_SE",
+      "actual": 158760,
+      "expected": 158760,
+      "tolerance": 0,
+      "passed": true
+    },
+    {
+      "name": "ps_0_10_r45:counts_AM",
+      "actual": 4588,
+      "expected": 4588,
+      "tolerance": 0,
+      "passed": true
+    },
+    {
+      "name": "ps_0_10_r45:counts_all",
+      "actual": 163348,
+      "expected": 163348,
+      "tolerance": 0,
+      "passed": true
+    },
+    {
+      "name": "ps_0_10_r45:handover_porosity_spheresum_nominal_gap_pct",
+      "actual": 19.161867008918975,
+      "expected": 19.161867008918975,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_0_10_r45:handover_thickness_wall_gap_um",
+      "actual": 117.208,
+      "expected": 117.208,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_0_10_r45:MC_integer_count",
+      "actual": 823570.0,
+      "expected": 823570,
+      "tolerance": 1e-07,
+      "passed": true
+    },
+    {
+      "name": "ps_0_10_r45:MC_sigma",
+      "actual": 0.020217614748267783,
+      "expected": 0.020217614748267783,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_0_10_r45:MC_closure",
+      "actual": 100.0,
+      "expected": 100,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_0_10_r45:handover_union",
+      "actual": 20.58925,
+      "expected": 20.58925,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_0_10_r45:release_union",
+      "actual": 20.58925,
+      "expected": 20.58925,
+      "tolerance": 1e-10,
+      "passed": true
+    },
+    {
+      "name": "ps_0_10_r45:clipped_epsilon",
+      "actual": 19.19222130284777,
+      "expected": 19.19222130284779,
+      "tolerance": 1e-10,
+      "passed": true
+    }
+  ],
+  "CI_planning": [
+    {
+      "assumed_SD_pp": 0.5,
+      "target_halfwidth_pp": 0.5,
+      "n": 7,
+      "halfwidth_pp": 0.46242287415902045
+    },
+    {
+      "assumed_SD_pp": 1.0,
+      "target_halfwidth_pp": 0.5,
+      "n": 18,
+      "halfwidth_pp": 0.4972883007129521
+    },
+    {
+      "assumed_SD_pp": 2.0,
+      "target_halfwidth_pp": 0.5,
+      "n": 64,
+      "halfwidth_pp": 0.49958513563018525
+    }
+  ],
+  "minimum_contrasts": {
+    "PC_minus_7_3_sphere_pp": 0.8710251846090529,
+    "PC_minus_7_3_union_pp": 0.40490000000000137
+  },
+  "remote_decks_byte_equal_harvest_inputs": false
+}

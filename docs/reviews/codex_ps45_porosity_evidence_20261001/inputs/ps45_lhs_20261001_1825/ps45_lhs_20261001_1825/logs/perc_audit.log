@@ -1,0 +1,7 @@
+  [1/5] ps_0_10_r45: OK CLEAN SE L0 98.93424036281179 · AM L0 0.9976024411508283 · 5.96 s 
+  [2/5] ps_10_0_r45: OK CLEAN SE L0 99.27936553931048 · AM L0 0.9826302729528535 · 5.97 s 
+  [3/5] ps_3_7_r45: OK CLEAN SE L0 99.31155243980021 · AM L0 0.9840840840840841 · 5.77 s 
+  [4/5] ps_5_5_r45: OK CLEAN SE L0 99.49548391973092 · AM L0 0.9446005620232838 · 5.92 s 
+  [5/5] ps_7_3_r45: OK CLEAN SE L0 99.53955946359623 · AM L0 0.8683574879227052 · 5.79 s 
+→ /home/yonghoon71/ps45_lhs_20261001_1825/perc_audit/perc_audit.tsv · perc_audit.json
+  요약: {"n": 5, "status": {"OK": 5}, "verdict": {"CLEAN": 5}, "se_level": {"L0": 5, "L1": 0, "L2": 0, "NA": 0}, "se_overlap_cases": 0, "se_xcheck": {"agree": 5}, "se_geom_only_max": 15, "se_dump_only_max": 41, "am_level": {"L0": 5, "L1": 0, "L2": 0, "NA": 0}, "am_overlap_cases": 0, "am_xcheck": {"agree": 5}, "am_geom_only_max": 0, "am_dump_only_max": 2, "se_perc_true": 5, "am_perc_true": 5, "harv_perc_true": 5, "harv_overlap_cases": 0, "replica_ok_all": true, "se_polydisperse_cases": 0, "box_not_lhs_rve_cases": 0, "legacy": {"compared": 0, "agree": 0, "disagree": 0}, "floor_z_deck": ["0.0"], "t_total_s": 29.4}

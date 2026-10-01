@@ -1,0 +1,8 @@
+[1/5] ps_0_10_r45 OK  sphere  19.16  union(쌍)  20.60  union(정확)  20.59  (4s)
+[2/5] ps_10_0_r45 OK  sphere  15.82  union(쌍)  16.90  union(정확)  16.90  (7s)
+[3/5] ps_3_7_r45 OK  sphere  17.16  union(쌍)  18.63  union(정확)  18.67  (11s)
+[4/5] ps_5_5_r45 OK  sphere  16.20  union(쌍)  17.66  union(정확)  17.67  (14s)
+[5/5] ps_7_3_r45 OK  sphere  14.95  union(쌍)  16.45  union(정확)  16.49  (18s)
+→ /home/yonghoon71/ps45_lhs_20261001_1825/union/ps45_union.tsv  OK 5 / 5
+중앙: sphere 16.20 % · union 쌍 17.66 % · 쌍 clipped 17.69 % · union 정확 17.67 % · 겹침/상자 1.45 %
+검산: delta 열 ↔ 좌표 최대 1.99e-03 · sphere 웹앱↔dual 최대 0.0e+00 %p · 정확 union 음수 0 · 쌍 clipped < 정확 (상한 위반) 0

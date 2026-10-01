@@ -1,0 +1,5 @@
+[Storage] NOT configured - SUPABASE_URL=False SUPABASE_KEY=False
+[Security] WARNING: auth OFF - local/private only. For public deploy set WEBAPP_REQUIRE_AUTH=1 + WEBAPP_AUTH_TOKEN.
+[1/2] ps_0_10_r45 done 156.6 s · 남은 1 건 ≈ 0.0 h
+[2/2] ps_10_0_r45 done 171.1 s · 남은 0 건 ≈ 0.0 h
+상태: {'done': 2}

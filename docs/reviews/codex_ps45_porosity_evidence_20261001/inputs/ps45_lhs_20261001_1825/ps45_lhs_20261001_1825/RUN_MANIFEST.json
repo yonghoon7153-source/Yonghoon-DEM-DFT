@@ -1,0 +1,85 @@
+{
+ "schema": "ps45_lhs_run/v1",
+ "started": "2026-10-01T18:25:50",
+ "finished": "2026-10-01T18:45:34",
+ "d": "20261001_1825",
+ "one": null,
+ "beds_table": "builtin",
+ "deck_from": "upload",
+ "deck_used": "ps_10_0_r45=upload (input_ps_10_0_r45.liggghts);ps_7_3_r45=upload (input_ps_7_3_r45.liggghts);ps_5_5_r45=upload (input_ps_5_5_r45.liggghts);ps_3_7_r45=upload (input_ps_3_7_r45.liggghts);ps_0_10_r45=upload (input_ps_0_10_r45.liggghts)",
+ "dump_root": "/home/yonghoon71/r45_union_20260929",
+ "uploads": "/home/yonghoon71/Yonghoon-DEM-DFT/webapp/uploads",
+ "worktrees": {
+  "harvest": {
+   "sha": "1e09f661d83edd674a1686b22552f609b61a34b6",
+   "path": "/home/yonghoon71/ps45_wt_1e09f661d",
+   "role": "seal_area_cohort · lhs_harvest_batch (v1.1 수확 원천과 같은 커밋)"
+  },
+  "webapp": {
+   "sha": "d1ec42fbad2a5995059577c77031d8573a3ce3cd",
+   "path": "/home/yonghoon71/ps45_wt_d1ec42fba",
+   "role": "lhs_webapp_batch --stop-after contact · lhs_union_webapp · lhs_perc_audit"
+  }
+ },
+ "stages": {
+  "seal": 0,
+  "harvest": 0,
+  "webapp_contact": 1,
+  "union": 0,
+  "perc_audit": 0
+ },
+ "elapsed_s": {
+  "total": 1184,
+  "seal": 1,
+  "harvest": 601,
+  "webapp_contact": 523,
+  "union": 18,
+  "perc_audit": 31
+ },
+ "python": "3.12.3",
+ "versions": {
+  "numpy": "2.5.2",
+  "scipy": "1.18.1",
+  "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39"
+ },
+ "dirty_before": {
+  "harvest": [],
+  "webapp": []
+ },
+ "dirty_after": {
+  "harvest": [],
+  "webapp": []
+ },
+ "files_sha256": {
+  "cohort/ps45_cohort.tsv": "2c351f544452792a18a3450749d9197cce7d12e1dc63d09aa6121c677a468694",
+  "cohort/ps45_design_block.csv": "55500008f5bd0526253dbe147e28425218e91a66c7dc3ff984a6e41f12c37076",
+  "harvest/_batch_summary.json": "0c34c34e00d1dca6710fa71a87786dee15444cf5b63f7b57fdf44cf9838a256e",
+  "harvest/ps_0_10_r45.json": "5d9c9fd16623688086cdbe26d1f08d37bde6ab3fd2da4caab6c4da85f236a8a3",
+  "harvest/ps_10_0_r45.json": "deece49d34efba2bee137b66f79adfded50da49c37274be498da5c728c406f10",
+  "harvest/ps_3_7_r45.json": "9fef2dd3256d0927c18a614250331f3bb6f6c48a50285ba2de59dc9fcee55299",
+  "harvest/ps_5_5_r45.json": "7a14aaf2524cf45fdb3989f8007d4fe557c5b2c0cb08766a1cd3377a69df1b80",
+  "harvest/ps_7_3_r45.json": "719871a7fe4e53da1ff5df55bbf701f42e8f7201826aaac7e9d220c678dca465",
+  "webapp_contact/metrics_flat.csv": "5f5c73028f13f1baf63c4f7ea26cbcc3e15df012c6e5e9940929b50f2cf96704",
+  "webapp_contact/status.json": "df4e0fb9e4cbf92301afbc103bbd1bf0ee5d4c98e540ba9811fc5ab924d50580",
+  "union/ps45_union.tsv": "d7d8cfec22979cfc8b232f73dcc73d2b7f1b7f0b9d38777bbd149a498b002f85",
+  "perc_audit/perc_audit.json": "f638937187201332d420182166c5f30c0f24228263a1da58bdd87809e60a13a9",
+  "perc_audit/perc_audit.tsv": "bcb91bb65cdb0f2b836659b9c4070c599c88cdcf1218a3152a45f20f960b4ca9",
+  "provenance/diff_harvest_1e09f661d_d1ec42fba.txt": "c901652d289bb78f2cc21b45ebeaf711521695e9fba7f8c5e4d21cb0ece71548",
+  "provenance/git_harvest.txt": "8f67446a67fc9debee13732d18d090fe00b7e19d504e30cfeba3d3f3f4bd9307",
+  "provenance/git_webapp.txt": "8b473851e73a410b0b399b028479435741e71bc33daaed00c449d074020fdae2",
+  "provenance/inputs.tsv": "86b35593dfe9411acba68123f078a4394ba943b9c0d07811bea0716c25bc8ead",
+  "provenance/selftest_analyze_contacts_d1ec42fba.log": "19d94c3898f0cf4d0a9bcd99ce3b566486c63511a849fd24fbde5840f6bca06b",
+  "provenance/selftest_lhs_descriptor_harvest_d1ec42fba.log": "c18369a6f146ea5b706e0fe4b360ed0c393fdc9784b8b3697a764ab59f42a167",
+  "provenance/selftest_lhs_harvest_batch_1e09f661d.log": "a8f2eed90aeaacda466c6d49100af02aa9e6e9556843dffb9a24ad48e7f8998e",
+  "provenance/selftest_lhs_perc_audit_d1ec42fba.log": "f29ed571938d4a1319ace4580a5a86fe5b327886ff210e00d348751db435b62e",
+  "provenance/selftest_lhs_union_webapp_d1ec42fba.log": "49400464d22fb5e175c66b817e955d52bc5b8a5239873f1d47e567090788b613",
+  "provenance/selftest_lhs_webapp_batch_d1ec42fba.log": "7f26ae2a836503ad0276e36e8bc289694fdadc30135b5c969aa76c938cca1377",
+  "provenance/selftest_seal_area_cohort_1e09f661d.log": "3a179ee1a88217822c764dbee65484f2ddcb843d69d77cfff2e5cd5760769e17",
+  "provenance/selftest_type_map_resolve_d1ec42fba.log": "3c231cc2e5f63d191aa3bc669da05f3132f3d3a24702f60d5fc6589c4a94a6e9",
+  "logs/harvest.log": "4b5c84be83f800aa97c4884ce15e59c0880409c4109f80eee0b3ca08a8e8baa4",
+  "logs/perc_audit.log": "3e0f9f5d60ee1f6f0972a1d62dacc61f5d3b4e9703c53a76b4c0eef5c8950c91",
+  "logs/seal.log": "4151e9cc578f441781abfa527843adb8088e3a7e5f79fda28e3e67759ae1fe07",
+  "logs/union.log": "f45e8b375c9eb1bc352b9663218a39781d395a4e2bc6c389d135028d2aa616ba",
+  "logs/webapp_contact.log": "971d27d66c07164aa413ad43ca6723451a945d18bf2697a19462efac6dcd06e6"
+ }
+}

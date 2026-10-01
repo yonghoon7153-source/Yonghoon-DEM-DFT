@@ -1,0 +1,32 @@
+type_map_resolve selftest
+  ok    ① ★ 실사고 재현 — ps_10_0 덱+덤프 → 1:AM_P,3:SE   1:AM_P,3:SE
+  ok    ①b 빈 type 2 는 오류가 아니라 note 다 (설계상 비는 팔)
+  ok    ② 옛 덱 r_AM 3.0e-3 → 1:AM_S,2:SE  (반지름 ≤ 0.004 규칙 보존)   1:AM_S,2:SE
+  ok    ②b 옛 덱 r_AM 6.0e-3 → 1:AM_P,2:SE   1:AM_P,2:SE
+  ok    ③ 세 타입 다 있으면 1:AM_P,2:AM_S,3:SE   1:AM_P,2:AM_S,3:SE
+  ok    ④ ★★ 음성 대조: 사고 당시 map(1:AM_P,2:SE)을 그 덤프에 대면 거부한다
+  ok    ④b 거부 메시지가 **몫**을 말한다 (99.75 %)   ['⛔ 덤프의 type 3 이 type_map 에 없다 — 158,749개 (99.75 %), 반지름 5.0000e-04~5.0000e-04.  이대로 돌면 그 원자들이 상(phase) 없이 `?` 로 계산된다.']
+  ok    ④c 빈 type 2 는 note 로만 (같은 호출에서 치명이 아니다)
+  ok    ⑤ ★ 올바른 map 은 통과 — 검사가 무조건 거부하는 것이 아니다
+  ok    ⑥ 덱 반지름과 덤프 반지름이 다르면 거부   ['⛔ type 1: 덱 반지름 4.5000e-03 과 덤프 6.0000e-03 가 다르다 (25.0 %) — 덱과 덤프가 같은 런이 아닐 수 있다']
+  ok    ⑦ ★ 모르는 변수 ${r_MYSTERY} 는 추측하지 않고 거부   ['⛔ type 1: 모르는 변수 ${r_MYSTERY} — 상을 추측하지 않는다']
+  ok    ⑧ LIGGGHTS 덤프를 읽는다 (type 1:1개 · 3:2개)   {1: {'n': 1, 'r_min': 0.0045, 'r_max': 0.0045}, 3: {'n': 2, 'r_min': 0.0005, 'r_max': 0.0005}}
+  ok    ⑧b atoms.csv 도 같은 답을 낸다 (파이프라인 두 지점에서 같은 판정)   {1: {'n': 1, 'r_min': 0.0045, 'r_max': 0.0045}, 3: {'n': 2, 'r_min': 0.0005, 'r_max': 0.0005}}
+  ok    ⑨ parse_map ∘ format_map 왕복
+  ok    ⑩b types_from_pairs 가 파일 리더와 같은 답
+  ok    ⑩ ★ app.py 가 이 모듈을 실제로 쓴다 (import · 호출 · 문턱 단일화)
+  ok    ⑩c 거부: 메타 키 이름만 남은 app.py
+  ok    ⑩c 거부: app.py 자체가 없음 (fail-closed)
+  ok    ⑩c 거부: import 만 있고 호출이 없음
+  ok    ⑩c 거부: 문턱 0.004 를 리터럴로 다시 박음
+  ok    ⑩c 거부: 2상 fallback `1:AM,2:SE` 를 리터럴로 박음
+  ok    ⑩c 통과: 올바른 배선 (양성 대조)
+  ok    ⑪ meta 에 있으면 그대로 쓴다   1:AM_P,2:AM_S,3:SE
+  ⚠ meta 에 type_map 이 없다 — 레거시 2상 `1:AM,2:SE` 로 되돌린다 (test-where).  3상 덱이면 type 3 이 상 없이 남는다.
+  ok    ⑪b 없으면 레거시 2상으로 **되돌리되 값은 그대로**   1:AM,2:SE
+  ok    ⑪c ★ 되돌림이 **조용하지 않다** (로그에 남고 호출부를 말한다)   ['⚠ meta 에 type_map 이 없다 — 레거시 2상 `1:AM,2:SE` 로 되돌린다 (test-where).  3상 덱이면 type 3 이 상 없이 남는다.']
+  ⚠ meta 에 type_map 이 없다 — 레거시 2상 `1:AM,2:SE` 로 되돌린다 (test).  3상 덱이면 type 3 이 상 없이 남는다.
+  ok    ⑪d 빈 문자열도 "없음" 으로 본다 (빈 -t 가 조용히 흘러가지 않는다)   1:AM,2:SE
+  ok    ⑪e app.py 에 리터럴이 남아 있지 않다 (실물 대조)
+
+✅ selftest 27/27

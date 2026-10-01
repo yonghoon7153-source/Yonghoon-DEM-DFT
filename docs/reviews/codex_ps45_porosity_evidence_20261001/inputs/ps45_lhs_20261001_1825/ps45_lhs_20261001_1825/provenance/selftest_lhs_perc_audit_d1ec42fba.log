@@ -1,0 +1,56 @@
+⛔ 감사된 케이스가 0 이다 (전부 SKIPPED) — CLEAN 을 주장하지 않는다
+⛔ legacy CSV 읽기 실패 — /tmp/tmpjvkuo3gn/legacy3.csv: ionic_percolates 값을 모른다 'maybe' (case c1) — true/false/1/0 만 받는다
+⛔ legacy CSV 읽기 실패 — /tmp/tmpjvkuo3gn/legacy4.csv: legacy CSV 에 case_id 열이 없다 (있는 열: ['case', 'ionic_percolates'])
+  ✓ ① 기준 침대 → CLEAN · SE L0 (3/3) · AM L0 (3/3) · 겹침 0 · 재현 = 정본
+  ✓ ①b SE 관통 11/15 · top_reach 13/15 (위 밴드 외톨이 2 포함) · 성분 5 (외톨이 4 포함) · ≥10 성분 1 · 최대 성분 11/15
+  ✓ ①c AM active = percolating = 5/10 (바닥 밴드의 외톨이 AM_P 2 는 active 에 안 든다 — G_active 규약) · 성분 6
+  ✓ ①d 교차 대조 SE · AM 모두 agree · 수확기 AM perc 1 · 단분산 SE 라 웹앱 L0 밴드 = 수확기 벽 밴드
+  ✓ ①e se_se_cn_*_perc 키 있음 · n_perc = 관통 SE 11 · 덱 바닥 0 (SE 벽 type 3) · 상자 20 ≠ 웹앱 기본 0.05 는 note 만
+  ✓ ①f 정본 run_decomposition(electronic) active/percolating = 재현 (0.5/0.5)
+  ✓ ①g 정본 tortuosity_se wall_n_span_components > 0 = 재현 se_perc_wall_geom (True)
+  ✓ ② ★ SE 바닥 L0 밴드 2 < 3 → 폴백 L1 · FLAG (산출물에 기록되지 않는 정의 변경) · 재현 = 정본
+  ✓ ③ ★ 플래튼이 침대 위 멀리 → SE·AM 모두 L2 · FLAG
+  ✓ ④ ★ bottom∩top 겹침 3 → FLAG · 정본 percolation_pct = 100 인데 간선 0 (겹침 인공물 재현) · AM 0 → am_level NA
+  ✓ ⑤ n_large_components: 사슬 10 → 1 · 9 → 0 (문턱 10 · 정본 대조 통과)
+  ✓ ⑥ ★ AM 교차 대조 = prod_differ:band (웹앱 관통 0 · 수확기 관통 1 · 접촉 원천을 바꿔도 안 뒤집힘) · 웹앱은 L0 (AM_P 3/3) · CLEAN
+  ✓ ⑦ ★ AM 교차 대조 = prod_differ:contact (덤프 관통 0 · 기하 관통 1 · geom_only 1) · 정본 percolating 0 · 웹앱 값이 접촉 원천에 기댄다 note
+  ✓ ⑧ ★ SE 덤프 사슬 끊김 → 정본 percolation 0 · se_se_cn_*_perc 키 없음 · SE 교차 대조 = contact
+  ✓ ⑨ ★ 덱 바닥 z = 0.5 → FLAG (웹앱은 0 을 가정) · 덱 없음 → FLAG (fail-closed)
+  ✓ ⑩ SE 반지름 2 계급 → note 만 (CLEAN 유지) · 재현 = 정본
+  ✓ ⑪ ★ 접촉 프레임 2 → FLAG · 원자에 없는 id 의 행 → FLAG (orphan 1)
+  ✓ ⑫ ★ 변이 (재현 boundary_factor 3.0) → replica_ok False · FLAG
+  [1/4] c1: OK CLEAN SE L0 73.33333333333333 · AM L0 0.5 · 0.0 s  ‖ 덤프 상자 20×20 ≠ LHS RVE 0.05 (웹앱은 덱에서 상자를 읽는다 — 대조용 · ② 값에는 무영향 · τ 묶음)
+  [2/4] c2: OK FLAG SE L1 78.57142857142857 · AM L0 0.5 · 0.0 s SE 경계 폴백 L1 발동 (L0 밴드 아래 2 · 위 4 · 문턱 3) — 산출물에 기록되지 않는다 ‖ 덤프 상자 20×20 ≠ LHS RVE 0.05 (웹앱은 덱에서 상자를 읽는다 — 대조용 · ② 값에는 무영향 · τ 묶음) · legacy 09-15 ionic_percolates False ≠ 웹앱 SE 관통 True
+  [3/4] perc: SKIPPED (DECK_MISSING)
+  [4/4] c3: INPUT_ERROR  SE   · AM   ·  s atom sha256 ≠ 코호트 봉인 (/tmp/tmpjvkuo3gn/lhs/c1/post_c1/atom_100.liggghts)
+→ /tmp/tmpjvkuo3gn/out/perc_audit.tsv · perc_audit.json
+  요약: {"n": 4, "status": {"OK": 2, "SKIPPED": 1, "INPUT_ERROR": 1}, "verdict": {"CLEAN": 1, "FLAG": 1}, "se_level": {"L0": 1, "L1": 1, "L2": 0, "NA": 0}, "se_overlap_cases": 0, "se_xcheck": {"agree": 2}, "se_geom_only_max": 0, "se_dump_only_max": 0, "am_level": {"L0": 2, "L1": 0, "L2": 0, "NA": 0}, "am_overlap_cases": 0, "am_xcheck": {"agree": 2}, "am_geom_only_max": 0, "am_dump_only_max": 0, "se_perc_true": 2, "am_perc_true": 2, "harv_perc_true": 2, "harv_overlap_cases": 0, "replica_ok_all": true, "se_polydisperse_cases": 0, "box_not_lhs_rve_cases": 2, "legacy": {"compared": 2, "agree": 1, "disagree": 1}, "floor_z_deck": ["0.0"], "t_total_s": 0.0}
+  ✓ ⑭ CLI: c1 CLEAN · c2 FLAG (L1) · perc SKIPPED · c3 sha 불일치 INPUT_ERROR · rc 3 (FLAG 가 입력 오류보다 앞선다)
+  ✓ ⑭b legacy 대조: c1 True = 웹앱 관통 True (agree) · c2 False ≠ 웹앱 관통 True (disagree → note) · 요약 compared 2
+  ✓ ⑭c TSV 열 = TSV_COLS · 요약에 level 분포 · 재현 전부 정본과 일치
+  ✓ ⑭e ★ 요약 상자 계수는 낡은 키 (box_is_webapp_default) 가 아니라 행 값 box_is_lhs_rve 를 센다 — 합성 상자 20 ≠ 0.05 → OK 2 건 전부 (옛 요약은 항상 0 = false-green 부류 · SELF-65)
+  [1/1] c1: NO_MESH 메시 없음 (mesh_*.stl 없음)
+→ /tmp/tmpjvkuo3gn/out2/perc_audit.tsv · perc_audit.json
+  요약: {"n": 1, "status": {"NO_MESH": 1}, "verdict": {}, "se_level": {"L0": 0, "L1": 0, "L2": 0, "NA": 0}, "se_overlap_cases": 0, "se_xcheck": {}, "se_geom_only_max": null, "se_dump_only_max": null, "am_level": {"L0": 0, "L1": 0, "L2": 0, "NA": 0}, "am_overlap_cases": 0, "am_xcheck": {}, "am_geom_only_max": null, "am_dump_only_max": null, "se_perc_true": 0, "am_perc_true": 0, "harv_perc_true": 0, "harv_overlap_cases": 0, "replica_ok_all": null, "se_polydisperse_cases": 0, "box_not_lhs_rve_cases": 0, "legacy": {"compared": 0, "agree": 0, "disagree": 0}, "floor_z_deck": [], "t_total_s": 0}
+  ✓ ⑭d 같은 step 메시 없음 → NO_MESH (CLEAN 아님) · rc 2
+  ✓ ⑮ 2-type (AM · SE) 침대 → CLEAN · AM 10 · 재현 = 정본
+  ✓ ⑯ ★ 자기리뷰 #1: 중복 행 → FLAG (dup 1) · 자기쌍 → FLAG (self 1) — 옛 판은 CLEAN 이었다
+  ✓ ⑰ ★ 자기리뷰 #2: 원자 행 절단 → 선언 25 ≠ 읽은 24 → FLAG (n_am 9 · 웹앱 파서도 같은 행을 버린다) · 접촉 선언 수 ≠ 행 → FLAG
+  ✓ ⑱ ★ 자기리뷰 #3: 정본 NC.active_fractions 를 바꾸면 재현 불일치 FLAG (감사가 정본 함수를 실제로 부른다)
+  ✓ ⑲ ★ 자기리뷰 #4: 정본 둘이 같아도 대각 칸이 다르면 agree 가 아니다 — prod_agree:both (덤프 유령 행 + 밴드 의존) · 웹앱 값이 덤프에만 있는 접촉에 기댄다 note
+  ✓ ⑲b _xcheck 진리표: 네 칸 같아야 agree · 정본 다름 + 밴드만 → prod_differ:band · 접촉만 → prod_differ:contact · 둘 다 → prod_differ:both
+  [1/1] perc: SKIPPED (DECK_MISSING)
+→ /tmp/tmpjvkuo3gn/out3/perc_audit.tsv · perc_audit.json
+  요약: {"n": 1, "status": {"SKIPPED": 1}, "verdict": {}, "se_level": {"L0": 0, "L1": 0, "L2": 0, "NA": 0}, "se_overlap_cases": 0, "se_xcheck": {}, "se_geom_only_max": null, "se_dump_only_max": null, "am_level": {"L0": 0, "L1": 0, "L2": 0, "NA": 0}, "am_overlap_cases": 0, "am_xcheck": {}, "am_geom_only_max": null, "am_dump_only_max": null, "se_perc_true": 0, "am_perc_true": 0, "harv_perc_true": 0, "harv_overlap_cases": 0, "replica_ok_all": null, "se_polydisperse_cases": 0, "box_not_lhs_rve_cases": 0, "legacy": {"compared": 0, "agree": 0, "disagree": 0}, "floor_z_deck": [], "t_total_s": 0}
+  ✓ ⑳ ★ 자기리뷰 #5: 감사된 케이스 0 (전부 SKIPPED) → rc 2 (rc 0 "전부 CLEAN" 이 아니다)
+  ✓ ㉑ ★ 자기리뷰 #7: legacy TRUE/0 을 받는다 · 모르는 문자열 → rc 2 · case_id 열 없음 → rc 2 (조용한 미대조 없음)
+  ✓ ㉒ 메시 sha256 을 행에 남긴다 (코호트가 메시를 봉인하지 않는다 — 의심 #2)
+  [1/1] c2: INPUT_ERROR  SE   · AM   ·  s TypeError: synthetic
+→ /tmp/tmpjvkuo3gn/out5/perc_audit.tsv · perc_audit.json
+  요약: {"n": 1, "status": {"INPUT_ERROR": 1}, "verdict": {}, "se_level": {"L0": 0, "L1": 0, "L2": 0, "NA": 0}, "se_overlap_cases": 0, "se_xcheck": {}, "se_geom_only_max": null, "se_dump_only_max": null, "am_level": {"L0": 0, "L1": 0, "L2": 0, "NA": 0}, "am_overlap_cases": 0, "am_xcheck": {}, "am_geom_only_max": null, "am_dump_only_max": null, "se_perc_true": 0, "am_perc_true": 0, "harv_perc_true": 0, "harv_overlap_cases": 0, "replica_ok_all": null, "se_polydisperse_cases": 0, "box_not_lhs_rve_cases": 0, "legacy": {"compared": 0, "agree": 0, "disagree": 0}, "floor_z_deck": [], "t_total_s": 0}
+  ✓ ㉓ 예상 밖 예외 (TypeError) → INPUT_ERROR 행 + 산출물 기록 · rc 2 (실행 중단 아님 — 의심 #3)
+  ✓ ㉔a ★ 경계 동률 입자 1 개 — 두 식이 실제로 갈리는 입력 (전제) · 동률로 센다 (se_band_tie_n 1 · nontie 0) · 띠 불일치 FLAG 사유 없음
+      (㉔a 진단: tie_in=True · tie=1 · nontie=0 · why=)
+  ✓ ㉔b 동률 없는 단분산 침대 — tie 0 · nontie 0 (띠 같음)
+
+✓ 전부 통과 — 검사기가 반례 (폴백 L1/L2 · 겹침 인공물 · ≥10 문턱 · 밴드/접촉 귀속 · 덱 바닥 · 프레임 · 고아 행 · 변이) 를 잡고 재현이 웹앱 정본 · 수확기 정본에 묶여 있다.  ⚠ 실제 130 덤프의 상태는 WSL 실행 결과가 말한다

@@ -1,0 +1,103 @@
+{
+ "schema": "lhs_webapp_batch/v1",
+ "cases": {
+  "ps_0_10_r45": {
+   "case": "ps_0_10_r45",
+   "when": "2026-10-01T19:24:46",
+   "type_map_absent": "1:AM_P",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "standard",
+   "type_map": "2:AM_S,3:SE",
+   "sha": {
+    "atom": "6e95545700707bf4b11b97730bdfe9a43ae7d5a66f9281fac8fe47224d37bc1c",
+    "contact": "7dc155747fcb1471257a99162872d578e8413f581902f012d9d4e9a17d8390cb",
+    "mesh": "9ab7e8a091853fb7454520af75d615116afe20c52e0dceb895c017f7b78ccae7",
+    "deck": "e2d469de7fc8baa31a824cafa90f3b2206d50549f4ba8dc5bf559959db68f9d7"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 553453,
+    "n_unique_pairs": 553453,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 3.4132e-10,
+    "n_periodic_flag": 28310,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 156.6
+  },
+  "ps_10_0_r45": {
+   "case": "ps_10_0_r45",
+   "when": "2026-10-01T19:27:22",
+   "type_map_absent": "2:AM_S",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "standard",
+   "type_map": "1:AM_P,3:SE",
+   "sha": {
+    "atom": "0f8141a0c93e44de6150c1df5563c372402b03321ddc799152328e121ada5468",
+    "contact": "88e9c8c06ef16e4b6ad9fa11ccbcdc658952259db33363d2383ee0e916b0974b",
+    "mesh": "869454432d1670f6335057f6248248309eb90361259a002c8233721d45de1a89",
+    "deck": "46b964303657b7e25afb9741c4cd20d0cf99b3ce2168ca340e8540f4176a181e"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 535427,
+    "n_unique_pairs": 535427,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 2.345e-09,
+    "n_periodic_flag": 76199,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 171.1
+  }
+ },
+ "stop_after": "contact",
+ "harvest_dir": "/home/yonghoon71/ps45_lhs_20261001_1825/harvest",
+ "cohort": "/home/yonghoon71/ps45_lhs_20261001_1825/cohort/ps45_cohort.tsv",
+ "runs": [
+  {
+   "started": "2026-10-01T19:24:46",
+   "git_sha": "538b31622790f5933340e8798ebf3ddb1f609cec",
+   "dirty": false
+  }
+ ]
+}

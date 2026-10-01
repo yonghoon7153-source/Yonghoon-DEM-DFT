@@ -1,0 +1,158 @@
+{
+ "schema": "lhs_webapp_batch/v1",
+ "cases": {
+  "ps_0_10_r45": {
+   "case": "ps_0_10_r45",
+   "when": "2026-10-01T18:36:02",
+   "status": "REFUSED",
+   "why": "type_map 덱 판독 2:AM_S,3:SE ≠ 수확 JSON {'1': 'AM_P', '2': 'AM_S', '3': 'SE'}",
+   "elapsed_s": 1.3
+  },
+  "ps_10_0_r45": {
+   "case": "ps_10_0_r45",
+   "when": "2026-10-01T18:36:04",
+   "status": "REFUSED",
+   "why": "type_map 덱 판독 1:AM_P,3:SE ≠ 수확 JSON {'1': 'AM_P', '2': 'AM_S', '3': 'SE'}",
+   "elapsed_s": 1.4
+  },
+  "ps_3_7_r45": {
+   "case": "ps_3_7_r45",
+   "when": "2026-10-01T18:36:05",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Bimodal Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "bimodal",
+   "type_map": "1:AM_P,2:AM_S,3:SE",
+   "sha": {
+    "atom": "6e042a823bc7a97ebc0263c761c8d4efad7f1ae081c0628322c6bdb5687e8db2",
+    "contact": "4085ace0e222fe11e449dd7d3f275ea27b2f9d4e2ec79dcbffb17d17f230a666",
+    "mesh": "3e6fdfc782307323142b5a8132aa9a8c95bb0e86db5ea6c4c332f50b3236fbd1",
+    "deck": "88d967f87911290152698c54f5485b489a884bd92b427bddd7067d01ffe8cd35"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 558388,
+    "n_unique_pairs": 558388,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 8.21403e-10,
+    "n_periodic_flag": 27735,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 166.6
+  },
+  "ps_5_5_r45": {
+   "case": "ps_5_5_r45",
+   "when": "2026-10-01T18:38:51",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Bimodal Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "bimodal",
+   "type_map": "1:AM_P,2:AM_S,3:SE",
+   "sha": {
+    "atom": "30221f3be42b6db3502502d7c16159b4868ed2d3d206497d4266fe3c740b4162",
+    "contact": "19cca92fd14fcee283277c7f49d9dae822332efd6d5bea0ef0b70902d1e20211",
+    "mesh": "673146522d602408930ea2fc4f9becbf8e833874f0f5858e7bc138426213fa2b",
+    "deck": "537e39c47de70af408c66bc4e5a69feae499811952c1a0e4e6a42612f2368ceb"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 558496,
+    "n_unique_pairs": 558496,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 2.15604e-09,
+    "n_periodic_flag": 44924,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 171.9
+  },
+  "ps_7_3_r45": {
+   "case": "ps_7_3_r45",
+   "when": "2026-10-01T18:41:43",
+   "stop_after": "contact",
+   "status": "done",
+   "failed_stages": [],
+   "stages": [
+    {
+     "step": "Parse",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Bimodal Contact Analysis",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "mode": "bimodal",
+   "type_map": "1:AM_P,2:AM_S,3:SE",
+   "sha": {
+    "atom": "cb19ca10045b295afa04f494793f423ba95dbbb38727008dc01fc9656c21bd99",
+    "contact": "492452601197bfedde28f5eee9e2684bcb62581769cc700d21479b7426c22b6f",
+    "mesh": "c25296a6d4d6b185be3c1c0ff98543dbfdb710c281403111c7fae2b9bde2b820",
+    "deck": "71d0ec2d4995a710c8b96eba38ca99a52e51e4c4876ab4ccbb58ef3794e8eb62"
+   },
+   "mesh_pick": "exact",
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 562646,
+    "n_unique_pairs": 562646,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 9.34867e-10,
+    "n_periodic_flag": 59548,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "atom_frames": 1,
+   "elapsed_s": 181.3
+  }
+ },
+ "stop_after": "contact",
+ "harvest_dir": "/home/yonghoon71/ps45_lhs_20261001_1825/harvest",
+ "cohort": "/home/yonghoon71/ps45_lhs_20261001_1825/cohort/ps45_cohort.tsv",
+ "runs": [
+  {
+   "started": "2026-10-01T18:36:02",
+   "git_sha": "d1ec42fbad2a5995059577c77031d8573a3ce3cd",
+   "dirty": false
+  }
+ ]
+}

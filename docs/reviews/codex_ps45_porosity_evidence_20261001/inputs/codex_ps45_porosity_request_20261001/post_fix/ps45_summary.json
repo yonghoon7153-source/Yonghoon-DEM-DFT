@@ -1,0 +1,1511 @@
+{
+ "schema": "ps45_lhs_post/v1",
+ "when": "2026-10-01T10:32:49",
+ "tar": "ps45_lhs_20261001_1825.tar.gz",
+ "tar_sha256": "1ff8878f7eba9e9f12e284795b6669a8b5ce3f374466dab4e12521a18b5c0d23",
+ "sha256_expected": "1ff8878f7eba9e9f12e284795b6669a8b5ce3f374466dab4e12521a18b5c0d23",
+ "code": {
+  "generator_release": "c981d77f005dc0c2eea495e4be1e5d61ea481bca",
+  "harvest": "1e09f661d83edd674a1686b22552f609b61a34b6",
+  "webapp_union_audit": "d1ec42fbad2a5995059577c77031d8573a3ce3cd",
+  "webapp_fix_0_10_10_0": "538b31622790f5933340e8798ebf3ddb1f609cec"
+ },
+ "pinned_files": [
+  {
+   "path": "scripts/lhs_design_dataset.py",
+   "blob_pin": "e08146fa3d66c31d2c9c5ee19350921da9de3bbb",
+   "blob_head": "e08146fa3d66c31d2c9c5ee19350921da9de3bbb",
+   "head_equal": true
+  },
+  {
+   "path": "scripts/lhs_release_build.py",
+   "blob_pin": "200037315901978b46af5a2d2e79d632275c3d28",
+   "blob_head": "200037315901978b46af5a2d2e79d632275c3d28",
+   "head_equal": true
+  },
+  {
+   "path": "docs/data/case_master_column_census_20260919.tsv",
+   "blob_pin": "18b5790f5c76f7bf91df5340251042dc019bc485",
+   "blob_head": "18b5790f5c76f7bf91df5340251042dc019bc485",
+   "head_equal": true
+  },
+  {
+   "path": "docs/data/lhs_release_20261001_v11/lhs_release_20261001_v11_columns.tsv",
+   "blob_pin": "cbfcde9febd2a59acdc99e6f7909ab96e16b2cf1",
+   "blob_head": "cbfcde9febd2a59acdc99e6f7909ab96e16b2cf1",
+   "head_equal": true
+  },
+  {
+   "path": "docs/data/lhs_release_20261001_v11/lhsx_release_20261001_v11_columns.tsv",
+   "blob_pin": "c14f348928fbc78a1359dc08308fa13794fe7c92",
+   "blob_head": "c14f348928fbc78a1359dc08308fa13794fe7c92",
+   "head_equal": true
+  }
+ ],
+ "design": "ps45_design.csv",
+ "design_sha256": "8b1a101fe80b9d00204c62c23d6b32c51102356f4525f6ef4d32fb17d114a1fc",
+ "expect": "ps45_expect.json",
+ "input_checks": [],
+ "inputs": {
+  "manifest": {
+   "schema": "ps45_lhs_run/v1",
+   "started": "2026-10-01T18:25:50",
+   "finished": "2026-10-01T18:45:34",
+   "one": null,
+   "deck_from": "upload",
+   "dump_root": "/home/yonghoon71/r45_union_20260929",
+   "worktrees": {
+    "harvest": {
+     "sha": "1e09f661d83edd674a1686b22552f609b61a34b6",
+     "path": "/home/yonghoon71/ps45_wt_1e09f661d",
+     "role": "seal_area_cohort · lhs_harvest_batch (v1.1 수확 원천과 같은 커밋)"
+    },
+    "webapp": {
+     "sha": "d1ec42fbad2a5995059577c77031d8573a3ce3cd",
+     "path": "/home/yonghoon71/ps45_wt_d1ec42fba",
+     "role": "lhs_webapp_batch --stop-after contact · lhs_union_webapp · lhs_perc_audit"
+    }
+   },
+   "stages": {
+    "seal": 0,
+    "harvest": 0,
+    "webapp_contact": 1,
+    "union": 0,
+    "perc_audit": 0
+   },
+   "python": "3.12.3",
+   "versions": {
+    "numpy": "2.5.2",
+    "scipy": "1.18.1",
+    "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39"
+   },
+   "dirty_after": {
+    "harvest": [],
+    "webapp": []
+   }
+  },
+  "cohort_header": [
+   "# S3 코호트 봉인 — raw 가용성 전수 목록 (계약 §5-v3 ③ · 쌍 step 규칙 §5-v4 D-2: 0 ≤ step_atom − step_contact ≤ 0).  생성 2026-10-01 · 도구 커밋 1e09f661d",
+   "# root = /home/yonghoon71/ps45_lhs_20261001_1825/beds"
+  ],
+  "harvest_batch": {
+   "n_target": 5,
+   "n_ok": 5,
+   "sha_verified": true
+  },
+  "webapp_runs": [
+   {
+    "started": "2026-10-01T18:36:02",
+    "git_sha": "d1ec42fbad2a5995059577c77031d8573a3ce3cd",
+    "dirty": false
+   }
+  ],
+  "webapp_status": {
+   "ps_10_0_r45": {
+    "status": "done",
+    "why": null,
+    "elapsed_s": 171.1
+   },
+   "ps_7_3_r45": {
+    "status": "done",
+    "why": null,
+    "elapsed_s": 181.3
+   },
+   "ps_5_5_r45": {
+    "status": "done",
+    "why": null,
+    "elapsed_s": 171.9
+   },
+   "ps_3_7_r45": {
+    "status": "done",
+    "why": null,
+    "elapsed_s": 166.6
+   },
+   "ps_0_10_r45": {
+    "status": "done",
+    "why": null,
+    "elapsed_s": 156.6
+   }
+  },
+  "webapp_metrics_cols": {
+   "n": 254,
+   "not_in_v11_header": []
+  },
+  "union_status": {
+   "ps_10_0_r45": "OK",
+   "ps_7_3_r45": "OK",
+   "ps_5_5_r45": "OK",
+   "ps_3_7_r45": "OK",
+   "ps_0_10_r45": "OK"
+  },
+  "perc_audit": {
+   "ps_0_10_r45": {
+    "status": "OK",
+    "verdict": "CLEAN",
+    "why": ""
+   },
+   "ps_10_0_r45": {
+    "status": "OK",
+    "verdict": "CLEAN",
+    "why": ""
+   },
+   "ps_3_7_r45": {
+    "status": "OK",
+    "verdict": "CLEAN",
+    "why": ""
+   },
+   "ps_5_5_r45": {
+    "status": "OK",
+    "verdict": "CLEAN",
+    "why": ""
+   },
+   "ps_7_3_r45": {
+    "status": "OK",
+    "verdict": "CLEAN",
+    "why": ""
+   }
+  },
+  "webapp_fix": {
+   "fix_commit": "538b31622790f5933340e8798ebf3ddb1f609cec",
+   "fix_runs": [
+    {
+     "started": "2026-10-01T19:24:46",
+     "git_sha": "538b31622790f5933340e8798ebf3ddb1f609cec",
+     "dirty": false
+    }
+   ],
+   "refused_in_original": [
+    "ps_0_10_r45",
+    "ps_10_0_r45"
+   ],
+   "fix_cases": {
+    "ps_0_10_r45": {
+     "status": "done",
+     "why": null,
+     "type_map": "2:AM_S,3:SE",
+     "type_map_absent": "1:AM_P",
+     "elapsed_s": 156.6
+    },
+    "ps_10_0_r45": {
+     "status": "done",
+     "why": null,
+     "type_map": "1:AM_P,3:SE",
+     "type_map_absent": "2:AM_S",
+     "elapsed_s": 171.1
+    }
+   },
+   "code_diff_py": [
+    "scripts/lhs_design_dataset.py",
+    "scripts/lhs_release_build.py",
+    "scripts/lhs_webapp_batch.py",
+    "webapp/test_png_transparent_export.py"
+   ],
+   "tar_sha256": "12f8593732a955aa237217afc6bd7953bb825264ea6c681a0fa69d09e21d92e3"
+  }
+ },
+ "qualifiers": {
+  "공통": "DEM 모델 값 (강체 구 · 연화 탄성 E_SE 1.35 GPa) — 고정 finite-box DEM 규약의 수치적 구조량 · 실험값이 아니다 · 입자 모양 변형 (소성) 없음 · 조성마다 침대 1 개 (시드 산포 미측정)",
+  "codex_scope": "Codex 최종 판정 (docs/reviews/codex_lhs_release_final_verdict_20261001.md · 반입 중) 의 GO = **고정 v1.1 산출물 (194 행)** 의 DEM 계산값 전달에 한정 · \"미래 생성본 자동 승인 아님\" · 물리 타깃 인증 HOLD 유지 ⇒ ps45 5 행은 같은 코드 · 같은 관문으로 만든 **새 생성본**이라 그 GO 밖이다 — \"v1.1 과 같은 코드 · 관문으로 계산\" 은 쓸 수 있고 \"Codex 검증 값\" 은 쓸 수 없다",
+  "design": "am_pct = AM 질량 % (AM+SE 고체 중) · ps_frac = AM 중 AM_P 질량 몫 (AM 밀도 같아 부피 몫과 같음 · 개수 몫 아님)",
+  "porosity_union_exact_pct": "정확 union (입자 겹침을 뺀 형상의 빈 부피 · MC 4×10⁶ 점 ± 1σ ≈ 0.02 %p — \"exact\" 는 합집합 정의라는 뜻이지 MC 오차 0 이 아니다 · 마지막 자릿수를 정밀도로 인용하지 말 것 · LHSREL-06) — 소성 압밀에서 밀려난 재료를 고체로 안 세는 상한 규약 · 웹앱 기본 ε_sphere (구 부피 합) 와 다른 양 · 두 값을 섞지 말 것",
+  "thickness": "thickness_wall_gap_um = 같은 프레임의 플래튼 − 바닥 (측정) · thickness_mass_conserving_um = union 과 같은 장부의 유도값 — \"실제 두께\" 는 벽 간격",
+  "phi": "phi_*_mass_conserving = (1 − ε_union) × 부피 몫 — φ_SE + φ_AM + ε_union = 1 · 독립 측정 아님 (레시피 · 두께로 정해짐)",
+  "coverage": "coverage_*_hertz_pct = 기하 교차 원판 면적 (LIGGGHTS c_cpl[22]) 기반 피복률 — 이름의 hertz 는 물려받은 이름 · 소성 (physics) 보정 피복률 아님 · 벽 · 플래튼에 닿은 면은 분모에 남는다",
+  "cn": "CN = 상의 전 입자 평균 (접촉 0 · 벽 접촉 입자 포함) — 벽 효과가 섞인다 · ps45 두께 (≈ 111–117 µm) 는 130 (설계 29–52 µm) 의 2–4 배라 벽에 닿은 입자 비율이 다르다 — wall_touch_frac_* 를 함께 볼 것",
+  "percolation_pct": "위 · 아래 2r 띠를 잇는 SE 덩어리에 든 SE 비율 — 그래프 관통이지 전류 계산이 아니다 · 0.0 = 잇는 덩어리 없음",
+  "tortuosity": "τ 는 벽 인접 띠에서 고른 같은 성분의 SE 중심 쌍에 대해 기하 최단경로 길이를 **그 쌍의 z 방향 중심 간격**으로 나눈 값 (두께로 나누지 않는다 · v1.1 README §4 의 \"길/두께\" 는 틀린 문구 — LHSREL-05) · 최대 200 쌍 평균 · 중앙값 · **수송 τ 가 아니다** (협착 · 병목 안 봄) · COMSOL/EIS 입력 τ (τ_Laplace,eff) 는 이 표에 없다 · 비관통이면 빈칸",
+  "am_ionic_isolated_pct": "이온 경로 고립 = 등록된 상단 2r 경계 띠와 SE 접촉 그래프로 연결되지 않은 AM 비율 (= 100 − ionic_active_pct) — 실제 분리막 접촉 · 계면저항 · 이온 전류는 계산하지 않는다 (LHSREL-05 권고 문안) · **그래프 지표**",
+  "am_vulnerable_pct": "고립 **위험** = SE 접촉 0–1 개인 AM 비율 (접촉 개수) — 경로 기준 고립과 다른 양",
+  "se_largest_comp": "가장 큰 SE 덩어리 (SE 수 기준) 의 SE 비율 · 그 덩어리 두께 방향 폭 / 벽 간격 (표면 기준이라 관통 침대는 1 을 조금 넘는다)",
+  "eligibility": "physical_target_status HOLD 는 지우지 않는다 — 사유 = hold_reason_codes (BOUNDARY_CENTER_OUT · NEGATIVE_POROSITY) · boundary_state.  OK 는 등록한 두 HOLD 원인이 없다는 뜻에 한정 (물리 검증 완료 아님) · HOLD 포함/제외 비교를 타당성 증거로 쓰지 않는다 (Codex 최종 판정 §4)",
+  "sigma": "전도도 (σ_ion · σ_e · κ) 는 LHS 배포 범위 밖 — 이 표 · 이 요약에 없다.  덱에 σ 를 이 표의 값으로 적지 말 것",
+  "cohort": "6 mAh/cm² · 두께 ≈ 111–117 µm · 입자 ≈ 16 만 · 바닥 벽 재질 = AM (type 1 · 생산 real_4 덱) — LHS 130 (2 mAh · 바닥 SE · J17) · 64 와 분포 · 프로토콜이 다르다.  같은 표에 섞어 경향을 내지 말 것 (데이터셋 표지를 둔다)"
+ },
+ "generator_rc": 0,
+ "release_rc": 0,
+ "columns": {
+  "header_equal": true,
+  "n_cols": 89,
+  "n_cols_v11": 89,
+  "missing": [],
+  "extra": [],
+  "columns_tsv_rows_differ": [],
+  "columns_tsv_bytes_equal": true
+ },
+ "rows": [
+  {
+   "case_id": "ps_10_0_r45",
+   "ps_label": "10:0",
+   "ps_frac": 1.0,
+   "physical_mode": "단일 AM_P (3-type 덱 · AM_S 질량분율 0)",
+   "webapp_case_id": "260922_222828_6e4ff6",
+   "atom_step": 3640000,
+   "values": {
+    "n_AM_P_measured": 403,
+    "n_AM_S_measured": 0,
+    "n_SE_measured": 158749,
+    "porosity_union_exact_pct": 16.89905,
+    "thickness_wall_gap_um": 112.59700000000002,
+    "thickness_mass_conserving_um": 114.0527493436124,
+    "phi_se_mass_conserving": 0.2915169779100448,
+    "phi_am_mass_conserving": 0.5394925220899551,
+    "se_of_solid_vol": 0.35079861049728656,
+    "se_rich": false,
+    "se_se_cn": 5.5739059773604875,
+    "se_se_cn_std": 1.8999208567352253,
+    "am_se_cn_mean": 228.95285359801488,
+    "AM_P_se_cn_mean": 228.95285359801488,
+    "AM_S_se_cn_mean": null,
+    "am_se_cn_surface_weighted": 228.9528535980138,
+    "am_am_cn": 3.6377171215880892,
+    "coverage_AM_P_hertz_pct": 20.103391304804884,
+    "coverage_AM_S_hertz_pct": null,
+    "coverage_AM_total_hertz_pct": 20.103391304804884,
+    "percolation_pct": 99.27936553931048,
+    "top_reachable_pct": 99.30015307183038,
+    "n_components": 1035,
+    "tortuosity_SE_wall": 1.2385835076860687,
+    "tortuosity_SE_wall_median": 1.2408518068766794,
+    "am_ionic_isolated_pct": 0.0,
+    "ionic_dead_pct": 0.0,
+    "ionic_no_se_pct": 0.0,
+    "AM_P_ionic_active_pct": 100.0,
+    "AM_S_ionic_active_pct": null,
+    "am_vulnerable_pct": 0.0,
+    "AM_P_vulnerable_pct": 0.0,
+    "AM_S_vulnerable_pct": null,
+    "se_largest_comp_frac": 0.9927747576362685,
+    "se_largest_comp_wall_span_frac": 1.0071938284323736
+   },
+   "values_aux": {
+    "porosity_union_exact_se_pct": 0.018737176342084605,
+    "porosity_sphere_pct_RECORD_ONLY": 15.824650562927378,
+    "tortuosity_SE_wall_status": "OK",
+    "wa_status": "done",
+    "union_pair_upper_bound_ok": true,
+    "boundary_model_id": "floor=primitive_zplane_type1|platen=mesh_stl"
+   },
+   "eligibility": {
+    "physical_target_status": "HOLD",
+    "hold_reason_codes": "BOUNDARY_CENTER_OUT",
+    "boundary_state": "FULLY_OUT"
+   },
+   "gates": {
+    "webapp_done": {
+     "ok": true,
+     "value": "done",
+     "why": null
+    },
+    "perc_audit_clean": {
+     "ok": true,
+     "value": "CLEAN",
+     "why": ""
+    },
+    "harvest_status": {
+     "ok": true,
+     "value": "OK"
+    },
+    "tau_wall_status": {
+     "ok": true,
+     "value": "OK"
+    },
+    "stage_rc": {
+     "ok": true,
+     "value": {
+      "seal": 0,
+      "harvest": 0,
+      "webapp_contact": 1,
+      "union": 0,
+      "perc_audit": 0
+     }
+    },
+    "xtra_ionic_bounds (LHSREL-01)": {
+     "ok": true,
+     "value": "OK"
+    },
+    "xtra_eligibility (LHSREL-02)": {
+     "ok": true,
+     "value": {
+      "status": "HOLD",
+      "codes": [
+       "BOUNDARY_CENTER_OUT"
+      ],
+      "boundary": "FULLY_OUT"
+     }
+    },
+    "xtra_se_fraction_ledger (LHSREL-04)": {
+     "ok": true,
+     "value": {
+      "se_of_solid_vol": 0.35079861049728656,
+      "from_harvest_volumes": 0.35079861049728644,
+      "phi_se_expected": 0.2915169779100448,
+      "phi_se": 0.2915169779100448
+     }
+    }
+   },
+   "xchecks": {
+    "n_AM_P": {
+     "ok": true,
+     "got": 403,
+     "want": 403,
+     "tol": 0,
+     "hard": true
+    },
+    "n_AM_S": {
+     "ok": true,
+     "got": 0,
+     "want": 0,
+     "tol": 0,
+     "hard": true
+    },
+    "n_SE": {
+     "ok": true,
+     "got": 158749,
+     "want": 158749,
+     "tol": 0,
+     "hard": true
+    },
+    "atom_step": {
+     "ok": true,
+     "got": 3640000,
+     "want": 3640000,
+     "tol": 0,
+     "hard": true
+    },
+    "sphere_porosity_vs_kit_pct": {
+     "ok": true,
+     "got": 15.824650562927378,
+     "want": 15.82465056260396,
+     "tol": 1e-06,
+     "hard": true
+    },
+    "thickness_wall_gap_vs_kit_um": {
+     "ok": true,
+     "got": 112.59700000000002,
+     "want": 112.59700000000002,
+     "tol": 1e-06,
+     "hard": true
+    },
+    "union_exact_vs_r45_pct": {
+     "ok": true,
+     "got": 16.89905,
+     "want": 16.899,
+     "tol": 5e-05,
+     "hard": true
+    },
+    "union_exact_se_vs_r45_pct": {
+     "ok": true,
+     "got": 0.018737176342084605,
+     "want": 0.0187,
+     "tol": 5e-05,
+     "hard": true
+    },
+    "thickness_vs_r45_um": {
+     "ok": true,
+     "got": 112.59700000000002,
+     "want": 112.597,
+     "tol": 0.0005,
+     "hard": true
+    },
+    "coverage_AM_P_vs_kit_pct (정보)": {
+     "ok": true,
+     "got": 20.103391304804884,
+     "want": 20.103391304804884,
+     "tol": 1e-09,
+     "hard": false
+    },
+    "coverage_AM_S_vs_kit_pct (정보)": {
+     "ok": null,
+     "got": null,
+     "want": null,
+     "tol": 1e-09,
+     "hard": false,
+     "note": "기대값 없음 — 검사 안 함"
+    },
+    "deck_sha256_vs_repo_deck": {
+     "ok": false,
+     "got": "46b964303657b7e25afb9741c4cd20d0cf99b3ce2168ca340e8540f4176a181e",
+     "want": "4777e5f2c842cba07d6ef69478f04e4ef6e630f1ec8ad73e4c990804466721a8",
+     "hard": false,
+     "note": "다르면 업로드 덱을 썼다 (DECK_FROM=upload) — 편차로 적는다"
+    }
+   },
+   "row_ok": true,
+   "row_fail": []
+  },
+  {
+   "case_id": "ps_7_3_r45",
+   "ps_label": "7:3",
+   "ps_frac": 0.7,
+   "physical_mode": "bimodal (AM_P + AM_S)",
+   "webapp_case_id": "260925_000559_082983",
+   "atom_step": 3220000,
+   "values": {
+    "n_AM_P_measured": 280,
+    "n_AM_S_measured": 1376,
+    "n_SE_measured": 158761,
+    "porosity_union_exact_pct": 16.494149999999998,
+    "thickness_wall_gap_um": 111.05199999999999,
+    "thickness_mass_conserving_um": 113.10069886704936,
+    "phi_se_mass_conserving": 0.2939931089567464,
+    "phi_am_mass_conserving": 0.5410653910432532,
+    "se_of_solid_vol": 0.35206289015290126,
+    "se_rich": false,
+    "se_se_cn": 5.380187829504727,
+    "se_se_cn_std": 1.9022000371457657,
+    "am_se_cn_mean": 80.52898550724638,
+    "AM_P_se_cn_mean": 227.39285714285714,
+    "AM_S_se_cn_mean": 50.64389534883721,
+    "am_se_cn_surface_weighted": 140.3312600680141,
+    "am_am_cn": 2.6666666666666665,
+    "coverage_AM_P_hertz_pct": 22.26712625189221,
+    "coverage_AM_S_hertz_pct": 21.573560753524735,
+    "coverage_AM_total_hertz_pct": 21.69083028223421,
+    "percolation_pct": 99.53955946359623,
+    "top_reachable_pct": 99.56097530249872,
+    "n_components": 675,
+    "tortuosity_SE_wall": 1.2434008535726817,
+    "tortuosity_SE_wall_median": 1.244632056619734,
+    "am_ionic_isolated_pct": 0.0,
+    "ionic_dead_pct": 0.0,
+    "ionic_no_se_pct": 0.0,
+    "AM_P_ionic_active_pct": 100.0,
+    "AM_S_ionic_active_pct": 100.0,
+    "am_vulnerable_pct": 0.0,
+    "AM_P_vulnerable_pct": 0.0,
+    "AM_S_vulnerable_pct": 0.0,
+    "se_largest_comp_frac": 0.9953892958598144,
+    "se_largest_comp_wall_span_frac": 1.0076566212224904
+   },
+   "values_aux": {
+    "porosity_union_exact_se_pct": 0.018556387146866037,
+    "porosity_sphere_pct_RECORD_ONLY": 14.953625378318314,
+    "tortuosity_SE_wall_status": "OK",
+    "wa_status": "done",
+    "union_pair_upper_bound_ok": true,
+    "boundary_model_id": "floor=primitive_zplane_type1|platen=mesh_stl"
+   },
+   "eligibility": {
+    "physical_target_status": "HOLD",
+    "hold_reason_codes": "BOUNDARY_CENTER_OUT",
+    "boundary_state": "FULLY_OUT"
+   },
+   "gates": {
+    "webapp_done": {
+     "ok": true,
+     "value": "done",
+     "why": null
+    },
+    "perc_audit_clean": {
+     "ok": true,
+     "value": "CLEAN",
+     "why": ""
+    },
+    "harvest_status": {
+     "ok": true,
+     "value": "OK"
+    },
+    "tau_wall_status": {
+     "ok": true,
+     "value": "OK"
+    },
+    "stage_rc": {
+     "ok": true,
+     "value": {
+      "seal": 0,
+      "harvest": 0,
+      "webapp_contact": 1,
+      "union": 0,
+      "perc_audit": 0
+     }
+    },
+    "xtra_ionic_bounds (LHSREL-01)": {
+     "ok": true,
+     "value": "OK"
+    },
+    "xtra_eligibility (LHSREL-02)": {
+     "ok": true,
+     "value": {
+      "status": "HOLD",
+      "codes": [
+       "BOUNDARY_CENTER_OUT"
+      ],
+      "boundary": "FULLY_OUT"
+     }
+    },
+    "xtra_se_fraction_ledger (LHSREL-04)": {
+     "ok": true,
+     "value": {
+      "se_of_solid_vol": 0.35206289015290126,
+      "from_harvest_volumes": 0.3520628901529012,
+      "phi_se_expected": 0.2939931089567465,
+      "phi_se": 0.2939931089567464
+     }
+    }
+   },
+   "xchecks": {
+    "n_AM_P": {
+     "ok": true,
+     "got": 280,
+     "want": 280,
+     "tol": 0,
+     "hard": true
+    },
+    "n_AM_S": {
+     "ok": true,
+     "got": 1376,
+     "want": 1376,
+     "tol": 0,
+     "hard": true
+    },
+    "n_SE": {
+     "ok": true,
+     "got": 158761,
+     "want": 158761,
+     "tol": 0,
+     "hard": true
+    },
+    "atom_step": {
+     "ok": true,
+     "got": 3220000,
+     "want": 3220000,
+     "tol": 0,
+     "hard": true
+    },
+    "sphere_porosity_vs_kit_pct": {
+     "ok": true,
+     "got": 14.953625378318314,
+     "want": 14.953625377990754,
+     "tol": 1e-06,
+     "hard": true
+    },
+    "thickness_wall_gap_vs_kit_um": {
+     "ok": true,
+     "got": 111.05199999999999,
+     "want": 111.05199999999999,
+     "tol": 1e-06,
+     "hard": true
+    },
+    "union_exact_vs_r45_pct": {
+     "ok": true,
+     "got": 16.494149999999998,
+     "want": 16.4941,
+     "tol": 5e-05,
+     "hard": true
+    },
+    "union_exact_se_vs_r45_pct": {
+     "ok": true,
+     "got": 0.018556387146866037,
+     "want": 0.0186,
+     "tol": 5e-05,
+     "hard": true
+    },
+    "thickness_vs_r45_um": {
+     "ok": true,
+     "got": 111.05199999999999,
+     "want": 111.052,
+     "tol": 0.0005,
+     "hard": true
+    },
+    "coverage_AM_P_vs_kit_pct (정보)": {
+     "ok": true,
+     "got": 22.26712625189221,
+     "want": 22.26712625189221,
+     "tol": 1e-09,
+     "hard": false
+    },
+    "coverage_AM_S_vs_kit_pct (정보)": {
+     "ok": true,
+     "got": 21.573560753524735,
+     "want": 21.573560753524735,
+     "tol": 1e-09,
+     "hard": false
+    },
+    "deck_sha256_vs_repo_deck": {
+     "ok": false,
+     "got": "71d0ec2d4995a710c8b96eba38ca99a52e51e4c4876ab4ccbb58ef3794e8eb62",
+     "want": "69f4359c0f436ebe4728c9fe0f360326ab5a515d6dc25d75ff7d45ba7cb9dc15",
+     "hard": false,
+     "note": "다르면 업로드 덱을 썼다 (DECK_FROM=upload) — 편차로 적는다"
+    }
+   },
+   "row_ok": true,
+   "row_fail": []
+  },
+  {
+   "case_id": "ps_5_5_r45",
+   "ps_label": "5:5",
+   "ps_frac": 0.5,
+   "physical_mode": "bimodal (AM_P + AM_S)",
+   "webapp_case_id": "260925_000513_123978",
+   "atom_step": 2930000,
+   "values": {
+    "n_AM_P_measured": 198,
+    "n_AM_S_measured": 2293,
+    "n_SE_measured": 158766,
+    "porosity_union_exact_pct": 17.669575000000002,
+    "thickness_wall_gap_um": 112.43599999999999,
+    "thickness_mass_conserving_um": 114.43941662667267,
+    "phi_se_mass_conserving": 0.29056311420330777,
+    "phi_am_mass_conserving": 0.5327411357966924,
+    "se_of_solid_vol": 0.35292313164095507,
+    "se_rich": false,
+    "se_se_cn": 5.058123275764332,
+    "se_se_cn_std": 1.8705772463108075,
+    "am_se_cn_mean": 61.45684464070654,
+    "AM_P_se_cn_mean": 220.31313131313132,
+    "AM_S_se_cn_mean": 47.73964238988225,
+    "am_se_cn_surface_weighted": 100.23240905814728,
+    "am_am_cn": 3.113608992372541,
+    "coverage_AM_P_hertz_pct": 20.949643001201615,
+    "coverage_AM_S_hertz_pct": 19.803027813075474,
+    "coverage_AM_total_hertz_pct": 19.894167840072253,
+    "percolation_pct": 99.49548391973092,
+    "top_reachable_pct": 99.53012609752719,
+    "n_components": 731,
+    "tortuosity_SE_wall": 1.2547478916330936,
+    "tortuosity_SE_wall_median": 1.256144039930176,
+    "am_ionic_isolated_pct": 0.0,
+    "ionic_dead_pct": 0.0,
+    "ionic_no_se_pct": 0.0,
+    "AM_P_ionic_active_pct": 100.0,
+    "AM_S_ionic_active_pct": 100.0,
+    "am_vulnerable_pct": 0.0,
+    "AM_P_vulnerable_pct": 0.0,
+    "AM_S_vulnerable_pct": 0.0,
+    "se_largest_comp_frac": 0.994942242041747,
+    "se_largest_comp_wall_span_frac": 1.0076201198904267
+   },
+   "values_aux": {
+    "porosity_union_exact_se_pct": 0.019070550721723895,
+    "porosity_sphere_pct_RECORD_ONLY": 16.202588071204715,
+    "tortuosity_SE_wall_status": "OK",
+    "wa_status": "done",
+    "union_pair_upper_bound_ok": true,
+    "boundary_model_id": "floor=primitive_zplane_type1|platen=mesh_stl"
+   },
+   "eligibility": {
+    "physical_target_status": "HOLD",
+    "hold_reason_codes": "BOUNDARY_CENTER_OUT",
+    "boundary_state": "FULLY_OUT"
+   },
+   "gates": {
+    "webapp_done": {
+     "ok": true,
+     "value": "done",
+     "why": null
+    },
+    "perc_audit_clean": {
+     "ok": true,
+     "value": "CLEAN",
+     "why": ""
+    },
+    "harvest_status": {
+     "ok": true,
+     "value": "OK"
+    },
+    "tau_wall_status": {
+     "ok": true,
+     "value": "OK"
+    },
+    "stage_rc": {
+     "ok": true,
+     "value": {
+      "seal": 0,
+      "harvest": 0,
+      "webapp_contact": 1,
+      "union": 0,
+      "perc_audit": 0
+     }
+    },
+    "xtra_ionic_bounds (LHSREL-01)": {
+     "ok": true,
+     "value": "OK"
+    },
+    "xtra_eligibility (LHSREL-02)": {
+     "ok": true,
+     "value": {
+      "status": "HOLD",
+      "codes": [
+       "BOUNDARY_CENTER_OUT"
+      ],
+      "boundary": "FULLY_OUT"
+     }
+    },
+    "xtra_se_fraction_ledger (LHSREL-04)": {
+     "ok": true,
+     "value": {
+      "se_of_solid_vol": 0.35292313164095507,
+      "from_harvest_volumes": 0.35292313164095496,
+      "phi_se_expected": 0.29056311420330777,
+      "phi_se": 0.29056311420330777
+     }
+    }
+   },
+   "xchecks": {
+    "n_AM_P": {
+     "ok": true,
+     "got": 198,
+     "want": 198,
+     "tol": 0,
+     "hard": true
+    },
+    "n_AM_S": {
+     "ok": true,
+     "got": 2293,
+     "want": 2293,
+     "tol": 0,
+     "hard": true
+    },
+    "n_SE": {
+     "ok": true,
+     "got": 158766,
+     "want": 158766,
+     "tol": 0,
+     "hard": true
+    },
+    "atom_step": {
+     "ok": true,
+     "got": 2930000,
+     "want": 2930000,
+     "tol": 0,
+     "hard": true
+    },
+    "sphere_porosity_vs_kit_pct": {
+     "ok": true,
+     "got": 16.202588071204715,
+     "want": 16.202588070883685,
+     "tol": 1e-06,
+     "hard": true
+    },
+    "thickness_wall_gap_vs_kit_um": {
+     "ok": true,
+     "got": 112.43599999999999,
+     "want": 112.43599999999999,
+     "tol": 1e-06,
+     "hard": true
+    },
+    "union_exact_vs_r45_pct": {
+     "ok": true,
+     "got": 17.669575000000002,
+     "want": 17.6696,
+     "tol": 5e-05,
+     "hard": true
+    },
+    "union_exact_se_vs_r45_pct": {
+     "ok": true,
+     "got": 0.019070550721723895,
+     "want": 0.0191,
+     "tol": 5e-05,
+     "hard": true
+    },
+    "thickness_vs_r45_um": {
+     "ok": true,
+     "got": 112.43599999999999,
+     "want": 112.436,
+     "tol": 0.0005,
+     "hard": true
+    },
+    "coverage_AM_P_vs_kit_pct (정보)": {
+     "ok": true,
+     "got": 20.949643001201615,
+     "want": 20.949643001201615,
+     "tol": 1e-09,
+     "hard": false
+    },
+    "coverage_AM_S_vs_kit_pct (정보)": {
+     "ok": true,
+     "got": 19.803027813075474,
+     "want": 19.803027813075474,
+     "tol": 1e-09,
+     "hard": false
+    },
+    "deck_sha256_vs_repo_deck": {
+     "ok": false,
+     "got": "537e39c47de70af408c66bc4e5a69feae499811952c1a0e4e6a42612f2368ceb",
+     "want": "c558541ee01219ba4a0d41b912e7297eda50e7ca04b5049f23f844d883d72b36",
+     "hard": false,
+     "note": "다르면 업로드 덱을 썼다 (DECK_FROM=upload) — 편차로 적는다"
+    }
+   },
+   "row_ok": true,
+   "row_fail": []
+  },
+  {
+   "case_id": "ps_3_7_r45",
+   "ps_label": "3:7",
+   "ps_frac": 0.3,
+   "physical_mode": "bimodal (AM_P + AM_S)",
+   "webapp_case_id": "260925_000448_bd85f9",
+   "atom_step": 3210000,
+   "values": {
+    "n_AM_P_measured": 121,
+    "n_AM_S_measured": 3209,
+    "n_SE_measured": 158763,
+    "porosity_union_exact_pct": 18.666425,
+    "thickness_wall_gap_um": 114.361,
+    "thickness_mass_conserving_um": 116.4826992760809,
+    "phi_se_mass_conserving": 0.28546080379983996,
+    "phi_am_mass_conserving": 0.52787494620016,
+    "se_of_solid_vol": 0.35097535525745677,
+    "se_rich": false,
+    "se_se_cn": 4.800564363233247,
+    "se_se_cn_std": 1.8749178590928783,
+    "am_se_cn_mean": 51.506906906906906,
+    "AM_P_se_cn_mean": 211.80165289256198,
+    "AM_S_se_cn_mean": 45.462760984730444,
+    "am_se_cn_surface_weighted": 72.12540681985067,
+    "am_am_cn": 3.47987987987988,
+    "coverage_AM_P_hertz_pct": 19.790962608847252,
+    "coverage_AM_S_hertz_pct": 18.751044111198823,
+    "coverage_AM_total_hertz_pct": 18.788830939491753,
+    "percolation_pct": 99.31155243980021,
+    "top_reachable_pct": 99.33359787859892,
+    "n_components": 982,
+    "tortuosity_SE_wall": 1.2614412750584914,
+    "tortuosity_SE_wall_median": 1.26304281193095,
+    "am_ionic_isolated_pct": 0.0,
+    "ionic_dead_pct": 0.0,
+    "ionic_no_se_pct": 0.0,
+    "AM_P_ionic_active_pct": 100.0,
+    "AM_S_ionic_active_pct": 100.0,
+    "am_vulnerable_pct": 0.0,
+    "AM_P_vulnerable_pct": 0.0,
+    "AM_S_vulnerable_pct": 0.0,
+    "se_largest_comp_frac": 0.9931155243980021,
+    "se_largest_comp_wall_span_frac": 1.0075613810652233
+   },
+   "values_aux": {
+    "porosity_union_exact_se_pct": 0.019482088425778272,
+    "porosity_sphere_pct_RECORD_ONLY": 17.157471884877083,
+    "tortuosity_SE_wall_status": "OK",
+    "wa_status": "done",
+    "union_pair_upper_bound_ok": true,
+    "boundary_model_id": "floor=primitive_zplane_type1|platen=mesh_stl"
+   },
+   "eligibility": {
+    "physical_target_status": "HOLD",
+    "hold_reason_codes": "BOUNDARY_CENTER_OUT",
+    "boundary_state": "FULLY_OUT"
+   },
+   "gates": {
+    "webapp_done": {
+     "ok": true,
+     "value": "done",
+     "why": null
+    },
+    "perc_audit_clean": {
+     "ok": true,
+     "value": "CLEAN",
+     "why": ""
+    },
+    "harvest_status": {
+     "ok": true,
+     "value": "OK"
+    },
+    "tau_wall_status": {
+     "ok": true,
+     "value": "OK"
+    },
+    "stage_rc": {
+     "ok": true,
+     "value": {
+      "seal": 0,
+      "harvest": 0,
+      "webapp_contact": 1,
+      "union": 0,
+      "perc_audit": 0
+     }
+    },
+    "xtra_ionic_bounds (LHSREL-01)": {
+     "ok": true,
+     "value": "OK"
+    },
+    "xtra_eligibility (LHSREL-02)": {
+     "ok": true,
+     "value": {
+      "status": "HOLD",
+      "codes": [
+       "BOUNDARY_CENTER_OUT"
+      ],
+      "boundary": "FULLY_OUT"
+     }
+    },
+    "xtra_se_fraction_ledger (LHSREL-04)": {
+     "ok": true,
+     "value": {
+      "se_of_solid_vol": 0.35097535525745677,
+      "from_harvest_volumes": 0.35097535525745666,
+      "phi_se_expected": 0.28546080379984007,
+      "phi_se": 0.28546080379983996
+     }
+    }
+   },
+   "xchecks": {
+    "n_AM_P": {
+     "ok": true,
+     "got": 121,
+     "want": 121,
+     "tol": 0,
+     "hard": true
+    },
+    "n_AM_S": {
+     "ok": true,
+     "got": 3209,
+     "want": 3209,
+     "tol": 0,
+     "hard": true
+    },
+    "n_SE": {
+     "ok": true,
+     "got": 158763,
+     "want": 158763,
+     "tol": 0,
+     "hard": true
+    },
+    "atom_step": {
+     "ok": true,
+     "got": 3210000,
+     "want": 3210000,
+     "tol": 0,
+     "hard": true
+    },
+    "sphere_porosity_vs_kit_pct": {
+     "ok": true,
+     "got": 17.157471884877083,
+     "want": 17.157471884568267,
+     "tol": 1e-06,
+     "hard": true
+    },
+    "thickness_wall_gap_vs_kit_um": {
+     "ok": true,
+     "got": 114.361,
+     "want": 114.361,
+     "tol": 1e-06,
+     "hard": true
+    },
+    "union_exact_vs_r45_pct": {
+     "ok": true,
+     "got": 18.666425,
+     "want": 18.6664,
+     "tol": 5e-05,
+     "hard": true
+    },
+    "union_exact_se_vs_r45_pct": {
+     "ok": true,
+     "got": 0.019482088425778272,
+     "want": 0.0195,
+     "tol": 5e-05,
+     "hard": true
+    },
+    "thickness_vs_r45_um": {
+     "ok": true,
+     "got": 114.361,
+     "want": 114.361,
+     "tol": 0.0005,
+     "hard": true
+    },
+    "coverage_AM_P_vs_kit_pct (정보)": {
+     "ok": true,
+     "got": 19.790962608847252,
+     "want": 19.790962608847252,
+     "tol": 1e-09,
+     "hard": false
+    },
+    "coverage_AM_S_vs_kit_pct (정보)": {
+     "ok": true,
+     "got": 18.751044111198823,
+     "want": 18.751044111198823,
+     "tol": 1e-09,
+     "hard": false
+    },
+    "deck_sha256_vs_repo_deck": {
+     "ok": false,
+     "got": "88d967f87911290152698c54f5485b489a884bd92b427bddd7067d01ffe8cd35",
+     "want": "104fd6e48f59bbea5add3ee1855f5d066c90c6a96862662db68e83211050d0c6",
+     "hard": false,
+     "note": "다르면 업로드 덱을 썼다 (DECK_FROM=upload) — 편차로 적는다"
+    }
+   },
+   "row_ok": true,
+   "row_fail": []
+  },
+  {
+   "case_id": "ps_0_10_r45",
+   "ps_label": "0:10",
+   "ps_frac": 0.0,
+   "physical_mode": "단일 AM_S (3-type 덱 · AM_P 질량분율 0)",
+   "webapp_case_id": "260925_000001_0bee25",
+   "atom_step": 3210000,
+   "values": {
+    "n_AM_P_measured": 0,
+    "n_AM_S_measured": 4588,
+    "n_SE_measured": 158760,
+    "porosity_union_exact_pct": 20.58925,
+    "thickness_wall_gap_um": 117.208,
+    "thickness_mass_conserving_um": 119.31477654623114,
+    "phi_se_mass_conserving": 0.2786797881041221,
+    "phi_am_mass_conserving": 0.515427711895878,
+    "se_of_solid_vol": 0.3509345877027004,
+    "se_rich": false,
+    "se_se_cn": 4.408226253464349,
+    "se_se_cn_std": 1.8514375403156855,
+    "am_se_cn_mean": 42.405841325196164,
+    "AM_P_se_cn_mean": null,
+    "AM_S_se_cn_mean": 42.405841325196164,
+    "am_se_cn_surface_weighted": 42.405841325193215,
+    "am_am_cn": 3.910200523103749,
+    "coverage_AM_P_hertz_pct": null,
+    "coverage_AM_S_hertz_pct": 16.800292412868977,
+    "coverage_AM_total_hertz_pct": 16.800292412868977,
+    "percolation_pct": 98.93424036281179,
+    "top_reachable_pct": 98.9525069286974,
+    "n_components": 1433,
+    "tortuosity_SE_wall": 1.2885763824631524,
+    "tortuosity_SE_wall_median": 1.2864934937902954,
+    "am_ionic_isolated_pct": 0.0,
+    "ionic_dead_pct": 0.0,
+    "ionic_no_se_pct": 0.0,
+    "AM_P_ionic_active_pct": null,
+    "AM_S_ionic_active_pct": 100.0,
+    "am_vulnerable_pct": 0.0,
+    "AM_P_vulnerable_pct": null,
+    "AM_S_vulnerable_pct": 0.0,
+    "se_largest_comp_frac": 0.9893298059964727,
+    "se_largest_comp_wall_span_frac": 1.012178390553546
+   },
+   "values_aux": {
+    "porosity_union_exact_se_pct": 0.020217614748267783,
+    "porosity_sphere_pct_RECORD_ONLY": 19.161867008918975,
+    "tortuosity_SE_wall_status": "OK",
+    "wa_status": "done",
+    "union_pair_upper_bound_ok": true,
+    "boundary_model_id": "floor=primitive_zplane_type1|platen=mesh_stl"
+   },
+   "eligibility": {
+    "physical_target_status": "HOLD",
+    "hold_reason_codes": "BOUNDARY_CENTER_OUT",
+    "boundary_state": "FULLY_OUT"
+   },
+   "gates": {
+    "webapp_done": {
+     "ok": true,
+     "value": "done",
+     "why": null
+    },
+    "perc_audit_clean": {
+     "ok": true,
+     "value": "CLEAN",
+     "why": ""
+    },
+    "harvest_status": {
+     "ok": true,
+     "value": "OK"
+    },
+    "tau_wall_status": {
+     "ok": true,
+     "value": "OK"
+    },
+    "stage_rc": {
+     "ok": true,
+     "value": {
+      "seal": 0,
+      "harvest": 0,
+      "webapp_contact": 1,
+      "union": 0,
+      "perc_audit": 0
+     }
+    },
+    "xtra_ionic_bounds (LHSREL-01)": {
+     "ok": true,
+     "value": "OK"
+    },
+    "xtra_eligibility (LHSREL-02)": {
+     "ok": true,
+     "value": {
+      "status": "HOLD",
+      "codes": [
+       "BOUNDARY_CENTER_OUT"
+      ],
+      "boundary": "FULLY_OUT"
+     }
+    },
+    "xtra_se_fraction_ledger (LHSREL-04)": {
+     "ok": true,
+     "value": {
+      "se_of_solid_vol": 0.3509345877027004,
+      "from_harvest_volumes": 0.3509345877027003,
+      "phi_se_expected": 0.27867978810412214,
+      "phi_se": 0.2786797881041221
+     }
+    }
+   },
+   "xchecks": {
+    "n_AM_P": {
+     "ok": true,
+     "got": 0,
+     "want": 0,
+     "tol": 0,
+     "hard": true
+    },
+    "n_AM_S": {
+     "ok": true,
+     "got": 4588,
+     "want": 4588,
+     "tol": 0,
+     "hard": true
+    },
+    "n_SE": {
+     "ok": true,
+     "got": 158760,
+     "want": 158760,
+     "tol": 0,
+     "hard": true
+    },
+    "atom_step": {
+     "ok": true,
+     "got": 3210000,
+     "want": 3210000,
+     "tol": 0,
+     "hard": true
+    },
+    "sphere_porosity_vs_kit_pct": {
+     "ok": true,
+     "got": 19.161867008918975,
+     "want": 19.161867008619804,
+     "tol": 1e-06,
+     "hard": true
+    },
+    "thickness_wall_gap_vs_kit_um": {
+     "ok": true,
+     "got": 117.208,
+     "want": 117.208,
+     "tol": 1e-06,
+     "hard": true
+    },
+    "union_exact_vs_r45_pct": {
+     "ok": true,
+     "got": 20.58925,
+     "want": 20.5892,
+     "tol": 5e-05,
+     "hard": true
+    },
+    "union_exact_se_vs_r45_pct": {
+     "ok": true,
+     "got": 0.020217614748267783,
+     "want": 0.0202,
+     "tol": 5e-05,
+     "hard": true
+    },
+    "thickness_vs_r45_um": {
+     "ok": true,
+     "got": 117.208,
+     "want": 117.208,
+     "tol": 0.0005,
+     "hard": true
+    },
+    "coverage_AM_P_vs_kit_pct (정보)": {
+     "ok": null,
+     "got": null,
+     "want": null,
+     "tol": 1e-09,
+     "hard": false,
+     "note": "기대값 없음 — 검사 안 함"
+    },
+    "coverage_AM_S_vs_kit_pct (정보)": {
+     "ok": true,
+     "got": 16.800292412868977,
+     "want": 16.800292412868977,
+     "tol": 1e-09,
+     "hard": false
+    },
+    "deck_sha256_vs_repo_deck": {
+     "ok": false,
+     "got": "e2d469de7fc8baa31a824cafa90f3b2206d50549f4ba8dc5bf559959db68f9d7",
+     "want": "27a41924d6e3dad58f3e7becb68643c5361fd22fc431b269aaf51447526ed0a6",
+     "hard": false,
+     "note": "다르면 업로드 덱을 썼다 (DECK_FROM=upload) — 편차로 적는다"
+    }
+   },
+   "row_ok": true,
+   "row_fail": []
+  }
+ ],
+ "row_count": {
+  "design": 5,
+  "release": 5,
+  "missing": [],
+  "unique_keys": true,
+  "same_set_and_order": true
+ },
+ "by_ps": {
+  "10:0": {
+   "case_id": "ps_10_0_r45",
+   "physical_mode": "단일 AM_P (3-type 덱 · AM_S 질량분율 0)",
+   "row_ok": true,
+   "webapp_columns": "측정됨",
+   "n_AM_P_measured": 403,
+   "n_AM_S_measured": 0,
+   "n_SE_measured": 158749,
+   "porosity_union_exact_pct": 16.89905,
+   "thickness_wall_gap_um": 112.59700000000002,
+   "thickness_mass_conserving_um": 114.0527493436124,
+   "phi_se_mass_conserving": 0.2915169779100448,
+   "phi_am_mass_conserving": 0.5394925220899551,
+   "se_of_solid_vol": 0.35079861049728656,
+   "se_rich": false,
+   "se_se_cn": 5.5739059773604875,
+   "se_se_cn_std": 1.8999208567352253,
+   "am_se_cn_mean": 228.95285359801488,
+   "AM_P_se_cn_mean": 228.95285359801488,
+   "AM_S_se_cn_mean": null,
+   "am_se_cn_surface_weighted": 228.9528535980138,
+   "am_am_cn": 3.6377171215880892,
+   "coverage_AM_P_hertz_pct": 20.103391304804884,
+   "coverage_AM_S_hertz_pct": null,
+   "coverage_AM_total_hertz_pct": 20.103391304804884,
+   "percolation_pct": 99.27936553931048,
+   "top_reachable_pct": 99.30015307183038,
+   "n_components": 1035,
+   "tortuosity_SE_wall": 1.2385835076860687,
+   "tortuosity_SE_wall_median": 1.2408518068766794,
+   "am_ionic_isolated_pct": 0.0,
+   "ionic_dead_pct": 0.0,
+   "ionic_no_se_pct": 0.0,
+   "AM_P_ionic_active_pct": 100.0,
+   "AM_S_ionic_active_pct": null,
+   "am_vulnerable_pct": 0.0,
+   "AM_P_vulnerable_pct": 0.0,
+   "AM_S_vulnerable_pct": null,
+   "se_largest_comp_frac": 0.9927747576362685,
+   "se_largest_comp_wall_span_frac": 1.0071938284323736,
+   "porosity_union_exact_se_pct": 0.018737176342084605,
+   "tortuosity_SE_wall_status": "OK",
+   "physical_target_status": "HOLD",
+   "hold_reason_codes": "BOUNDARY_CENTER_OUT",
+   "boundary_state": "FULLY_OUT"
+  },
+  "7:3": {
+   "case_id": "ps_7_3_r45",
+   "physical_mode": "bimodal (AM_P + AM_S)",
+   "row_ok": true,
+   "webapp_columns": "측정됨",
+   "n_AM_P_measured": 280,
+   "n_AM_S_measured": 1376,
+   "n_SE_measured": 158761,
+   "porosity_union_exact_pct": 16.494149999999998,
+   "thickness_wall_gap_um": 111.05199999999999,
+   "thickness_mass_conserving_um": 113.10069886704936,
+   "phi_se_mass_conserving": 0.2939931089567464,
+   "phi_am_mass_conserving": 0.5410653910432532,
+   "se_of_solid_vol": 0.35206289015290126,
+   "se_rich": false,
+   "se_se_cn": 5.380187829504727,
+   "se_se_cn_std": 1.9022000371457657,
+   "am_se_cn_mean": 80.52898550724638,
+   "AM_P_se_cn_mean": 227.39285714285714,
+   "AM_S_se_cn_mean": 50.64389534883721,
+   "am_se_cn_surface_weighted": 140.3312600680141,
+   "am_am_cn": 2.6666666666666665,
+   "coverage_AM_P_hertz_pct": 22.26712625189221,
+   "coverage_AM_S_hertz_pct": 21.573560753524735,
+   "coverage_AM_total_hertz_pct": 21.69083028223421,
+   "percolation_pct": 99.53955946359623,
+   "top_reachable_pct": 99.56097530249872,
+   "n_components": 675,
+   "tortuosity_SE_wall": 1.2434008535726817,
+   "tortuosity_SE_wall_median": 1.244632056619734,
+   "am_ionic_isolated_pct": 0.0,
+   "ionic_dead_pct": 0.0,
+   "ionic_no_se_pct": 0.0,
+   "AM_P_ionic_active_pct": 100.0,
+   "AM_S_ionic_active_pct": 100.0,
+   "am_vulnerable_pct": 0.0,
+   "AM_P_vulnerable_pct": 0.0,
+   "AM_S_vulnerable_pct": 0.0,
+   "se_largest_comp_frac": 0.9953892958598144,
+   "se_largest_comp_wall_span_frac": 1.0076566212224904,
+   "porosity_union_exact_se_pct": 0.018556387146866037,
+   "tortuosity_SE_wall_status": "OK",
+   "physical_target_status": "HOLD",
+   "hold_reason_codes": "BOUNDARY_CENTER_OUT",
+   "boundary_state": "FULLY_OUT"
+  },
+  "5:5": {
+   "case_id": "ps_5_5_r45",
+   "physical_mode": "bimodal (AM_P + AM_S)",
+   "row_ok": true,
+   "webapp_columns": "측정됨",
+   "n_AM_P_measured": 198,
+   "n_AM_S_measured": 2293,
+   "n_SE_measured": 158766,
+   "porosity_union_exact_pct": 17.669575000000002,
+   "thickness_wall_gap_um": 112.43599999999999,
+   "thickness_mass_conserving_um": 114.43941662667267,
+   "phi_se_mass_conserving": 0.29056311420330777,
+   "phi_am_mass_conserving": 0.5327411357966924,
+   "se_of_solid_vol": 0.35292313164095507,
+   "se_rich": false,
+   "se_se_cn": 5.058123275764332,
+   "se_se_cn_std": 1.8705772463108075,
+   "am_se_cn_mean": 61.45684464070654,
+   "AM_P_se_cn_mean": 220.31313131313132,
+   "AM_S_se_cn_mean": 47.73964238988225,
+   "am_se_cn_surface_weighted": 100.23240905814728,
+   "am_am_cn": 3.113608992372541,
+   "coverage_AM_P_hertz_pct": 20.949643001201615,
+   "coverage_AM_S_hertz_pct": 19.803027813075474,
+   "coverage_AM_total_hertz_pct": 19.894167840072253,
+   "percolation_pct": 99.49548391973092,
+   "top_reachable_pct": 99.53012609752719,
+   "n_components": 731,
+   "tortuosity_SE_wall": 1.2547478916330936,
+   "tortuosity_SE_wall_median": 1.256144039930176,
+   "am_ionic_isolated_pct": 0.0,
+   "ionic_dead_pct": 0.0,
+   "ionic_no_se_pct": 0.0,
+   "AM_P_ionic_active_pct": 100.0,
+   "AM_S_ionic_active_pct": 100.0,
+   "am_vulnerable_pct": 0.0,
+   "AM_P_vulnerable_pct": 0.0,
+   "AM_S_vulnerable_pct": 0.0,
+   "se_largest_comp_frac": 0.994942242041747,
+   "se_largest_comp_wall_span_frac": 1.0076201198904267,
+   "porosity_union_exact_se_pct": 0.019070550721723895,
+   "tortuosity_SE_wall_status": "OK",
+   "physical_target_status": "HOLD",
+   "hold_reason_codes": "BOUNDARY_CENTER_OUT",
+   "boundary_state": "FULLY_OUT"
+  },
+  "3:7": {
+   "case_id": "ps_3_7_r45",
+   "physical_mode": "bimodal (AM_P + AM_S)",
+   "row_ok": true,
+   "webapp_columns": "측정됨",
+   "n_AM_P_measured": 121,
+   "n_AM_S_measured": 3209,
+   "n_SE_measured": 158763,
+   "porosity_union_exact_pct": 18.666425,
+   "thickness_wall_gap_um": 114.361,
+   "thickness_mass_conserving_um": 116.4826992760809,
+   "phi_se_mass_conserving": 0.28546080379983996,
+   "phi_am_mass_conserving": 0.52787494620016,
+   "se_of_solid_vol": 0.35097535525745677,
+   "se_rich": false,
+   "se_se_cn": 4.800564363233247,
+   "se_se_cn_std": 1.8749178590928783,
+   "am_se_cn_mean": 51.506906906906906,
+   "AM_P_se_cn_mean": 211.80165289256198,
+   "AM_S_se_cn_mean": 45.462760984730444,
+   "am_se_cn_surface_weighted": 72.12540681985067,
+   "am_am_cn": 3.47987987987988,
+   "coverage_AM_P_hertz_pct": 19.790962608847252,
+   "coverage_AM_S_hertz_pct": 18.751044111198823,
+   "coverage_AM_total_hertz_pct": 18.788830939491753,
+   "percolation_pct": 99.31155243980021,
+   "top_reachable_pct": 99.33359787859892,
+   "n_components": 982,
+   "tortuosity_SE_wall": 1.2614412750584914,
+   "tortuosity_SE_wall_median": 1.26304281193095,
+   "am_ionic_isolated_pct": 0.0,
+   "ionic_dead_pct": 0.0,
+   "ionic_no_se_pct": 0.0,
+   "AM_P_ionic_active_pct": 100.0,
+   "AM_S_ionic_active_pct": 100.0,
+   "am_vulnerable_pct": 0.0,
+   "AM_P_vulnerable_pct": 0.0,
+   "AM_S_vulnerable_pct": 0.0,
+   "se_largest_comp_frac": 0.9931155243980021,
+   "se_largest_comp_wall_span_frac": 1.0075613810652233,
+   "porosity_union_exact_se_pct": 0.019482088425778272,
+   "tortuosity_SE_wall_status": "OK",
+   "physical_target_status": "HOLD",
+   "hold_reason_codes": "BOUNDARY_CENTER_OUT",
+   "boundary_state": "FULLY_OUT"
+  },
+  "0:10": {
+   "case_id": "ps_0_10_r45",
+   "physical_mode": "단일 AM_S (3-type 덱 · AM_P 질량분율 0)",
+   "row_ok": true,
+   "webapp_columns": "측정됨",
+   "n_AM_P_measured": 0,
+   "n_AM_S_measured": 4588,
+   "n_SE_measured": 158760,
+   "porosity_union_exact_pct": 20.58925,
+   "thickness_wall_gap_um": 117.208,
+   "thickness_mass_conserving_um": 119.31477654623114,
+   "phi_se_mass_conserving": 0.2786797881041221,
+   "phi_am_mass_conserving": 0.515427711895878,
+   "se_of_solid_vol": 0.3509345877027004,
+   "se_rich": false,
+   "se_se_cn": 4.408226253464349,
+   "se_se_cn_std": 1.8514375403156855,
+   "am_se_cn_mean": 42.405841325196164,
+   "AM_P_se_cn_mean": null,
+   "AM_S_se_cn_mean": 42.405841325196164,
+   "am_se_cn_surface_weighted": 42.405841325193215,
+   "am_am_cn": 3.910200523103749,
+   "coverage_AM_P_hertz_pct": null,
+   "coverage_AM_S_hertz_pct": 16.800292412868977,
+   "coverage_AM_total_hertz_pct": 16.800292412868977,
+   "percolation_pct": 98.93424036281179,
+   "top_reachable_pct": 98.9525069286974,
+   "n_components": 1433,
+   "tortuosity_SE_wall": 1.2885763824631524,
+   "tortuosity_SE_wall_median": 1.2864934937902954,
+   "am_ionic_isolated_pct": 0.0,
+   "ionic_dead_pct": 0.0,
+   "ionic_no_se_pct": 0.0,
+   "AM_P_ionic_active_pct": null,
+   "AM_S_ionic_active_pct": 100.0,
+   "am_vulnerable_pct": 0.0,
+   "AM_P_vulnerable_pct": null,
+   "AM_S_vulnerable_pct": 0.0,
+   "se_largest_comp_frac": 0.9893298059964727,
+   "se_largest_comp_wall_span_frac": 1.012178390553546,
+   "porosity_union_exact_se_pct": 0.020217614748267783,
+   "tortuosity_SE_wall_status": "OK",
+   "physical_target_status": "HOLD",
+   "hold_reason_codes": "BOUNDARY_CENTER_OUT",
+   "boundary_state": "FULLY_OUT"
+  }
+ },
+ "deviations_static": [
+  "설계행 출처 — 130 은 lhs_design_20260818.csv (build() 산출) · ps45 는 덱에서 읽은 값 (make_ps45_design.py · 칸마다 출처 ps45_design_sources.tsv).  열 사전의 설계 열 문구는 생성기 고정 문구 (\"LHS 설계 열 …\") 그대로다 — 뜻은 같고 출처 문구만 다르다",
+  "block — 0:10 · 10:0 은 질량분율 0 인 상을 선언한 3-type 덱이라 생성기 계약상 \"bimodal\" (J20-k (B): 수확 n_types 3 은 mono_* 를 받지 않는다).  LHS mono (mono_AM_P · mono_AM_S) 는 2-type 덱이다.  물리 모드는 요약의 physical_mode · 없는 상의 크기 칸은 130 mono 규약대로 빈칸",
+  "웹앱 접촉 단계 — 0:10 · 10:0 은 v1.1 코드 (d1ec42fba) 관문에서 REFUSED (덱 판독이 입자 0 개 상을 빼서 2 상 · 수확 JSON 3 상) → LHS-28 관문 수정 커밋으로 그 두 침대만 재실행해 합쳤다.  계산 코드 (run_pipeline 과 그 아래) 는 d1ec42fba 와 같다 — 두 커밋 사이 .py 변경 = 관문 파일 + 접촉 단계 밖 파일뿐 (summary inputs.webapp_fix.code_diff_py) · 나머지 세 침대는 d1ec42fba 원래 행 그대로",
+  "union — 130 의 union TSV 는 09-27 WSL 파일판 (sha256 앞 7f013f635a496147) · ps45 는 d1ec42fba 리포판 (같은 식 · 같은 난수열 · seed = crc32(case) — 09-29 r45 union (a7350572f) 값과 대조)",
+  "수확기 selftest — d1ec42fba 판으로 돌렸다 (1e09f661d 의 ⑰ 고정값 비교가 WSL numpy 에서 1 ULP — LHS-24 · 두 커밋의 차이는 selftest 뿐)",
+  "코호트 — 130 은 area_s2_cohort.tsv · 64 는 _cohort.tsv (그때 봉인) · ps45 는 같은 도구 (seal_area_cohort @ 1e09f661d) 로 이번에 봉인",
+  "덤프 — 웹앱 업로드 덤프 (09-22 · 09-25) · ibb post 폴더의 마지막 덤프인지는 미확인 (ps45 사전등록 §2 ⚠) — d_h 킷 · 09-29 union 과 같은 프레임",
+  "침대 (설계 아님 · 프로토콜) — 6 mAh/cm² (130 = 2) · 입자 ≈ 16 만 (130 상한 10 만) · 바닥 벽 재질 type 1 = AM (130 = SE · J17) · maxattempt 10000 · processors * * 1 (삽입만) · 조성마다 시드 1 개",
+  "Codex 최종 판정의 GO 는 고정 v1.1 산출물 (194 행) 에 한정 (\"미래 생성본 자동 승인 아님\") — ps45 5 행은 같은 코드 · 관문 · 열의 새 생성본이라 GO 밖"
+ ],
+ "deviations_run": [
+  "ps_10_0_r45: 덱 = upload (input_ps_10_0_r45.liggghts) — 리포 덱 (dem_scripts/ps_sweep_6mah_20260914) 과 바이트가 다를 수 있다",
+  "ps_7_3_r45: 덱 = upload (input_ps_7_3_r45.liggghts) — 리포 덱 (dem_scripts/ps_sweep_6mah_20260914) 과 바이트가 다를 수 있다",
+  "ps_5_5_r45: 덱 = upload (input_ps_5_5_r45.liggghts) — 리포 덱 (dem_scripts/ps_sweep_6mah_20260914) 과 바이트가 다를 수 있다",
+  "ps_3_7_r45: 덱 = upload (input_ps_3_7_r45.liggghts) — 리포 덱 (dem_scripts/ps_sweep_6mah_20260914) 과 바이트가 다를 수 있다",
+  "ps_0_10_r45: 덱 = upload (input_ps_0_10_r45.liggghts) — 리포 덱 (dem_scripts/ps_sweep_6mah_20260914) 과 바이트가 다를 수 있다",
+  "ps_0_10_r45: 웹앱 접촉 단계 = 538b31622 재실행 (LHS-28 관문 수정 · type_map_absent 1:AM_P · d1ec42fba 와 다른 .py = ['scripts/lhs_design_dataset.py', 'scripts/lhs_release_build.py', 'scripts/lhs_webapp_batch.py', 'webapp/test_png_transparent_export.py'])",
+  "ps_10_0_r45: 웹앱 접촉 단계 = 538b31622 재실행 (LHS-28 관문 수정 · type_map_absent 2:AM_S · d1ec42fba 와 다른 .py = ['scripts/lhs_design_dataset.py', 'scripts/lhs_release_build.py', 'scripts/lhs_webapp_batch.py', 'webapp/test_png_transparent_export.py'])"
+ ],
+ "verdict": "PASS",
+ "elapsed_s": 0.5,
+ "log": [
+  {
+   "step": "generator",
+   "cmd": "/usr/local/bin/python3 /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/ps45_lhs/recv/post_fix/_pin_c981d77f0/scripts/lhs_design_dataset.py --export-handover /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/ps45_lhs/recv/post_fix/ps45_handover.csv --design /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/ps45_lhs/ps45_design.csv --harvest /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/ps45_lhs/recv/post_fix/input/ps45_lhs_20261001_1825/harvest --union /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/ps45_lhs/recv/post_fix/input/ps45_lhs_20261001_1825/union/ps45_union.tsv --webapp /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/ps45_lhs/recv/post_fix/webapp_contact_merged --webapp-groups contact,percolation",
+   "rc": 0,
+   "stdout": "→ /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/ps45_lhs/recv/post_fix/ps45_handover.csv   5행 × 184열   (열 사전 ps45_handover_columns.tsv)\n   J20 벽 τ: {'OK': 5}\n   J20 웹앱 ✅ 43 열 · 행 상태 {'done': 5} · 같은 프레임 |Δporosity| 최대 3.276e-10 %p · 이름 충돌 (수확 열 정본) []\n   J20-g 같이 확인한 웹앱 열만 (6 패턴) — 뺀 census ✅ 열 0 · J20-k (B) mono 웹앱 상별 칸: 설계 상 칸 채움 0 셀 · 이름 옮김 0 건 · 없는 상 빈칸 0 셀 · J20-h 접촉 0 쌍 = 0 채움 0 · J20-i se_se_cn = 2·area_SE_SE_n/N_SE 확인 5 행 · J20-j AM–AM 접촉 수 = 쌍 합 · am_am_cn = 2·n/N_AM 확인 5 행 · 7c AM–SE CN · 고립 관문 G1–G7 확인 5 행 · ② 퍼콜레이션 관문 P1–P3 확인 5 행\n   벽 τ 관문 T1–T2 확인 5 행 · T3 (↔ 퍼콜레이션) 5 행\n   v1.1 ①② 이온 활성 · 경로 기준 고립 관문 D1–D5 확인 5 행\n   v1.1 ③ 가장 큰 SE 덩어리 관문 C1–C3 확인 5 행\n   J20-k (B) mono 0 행 — 수확기 상별 칸 (coverage · n_AM_*_measured · cov_*_n_valid · 벽 접촉) 설계 상 칸 채움 0 셀 (설계에 없는 상은 빈칸)\n   빈칸 사유: {'N_A_PHASE_ABSENT': 2}\n   ⛔ 보류 열 `tortuosity_dijkstra_SE` — LHS-08 열림 — 130 중 14 만 값이 있고 `NOT_PERCOLATING` 이 규약 실패와 물리 미관통을 **한 값으로 접는다**.  재수확 뒤 공급.  ↪ J20 (09-28): 벽 규약 τ 를 **새 열** `tortuosity_SE_wall` 로 공급 — 이 옛 규약 열은 계속 보류.\n   J19 union 병기: /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/ps45_lhs/recv/post_fix/input/ps45_lhs_20261001_1825/union/ps45_union.tsv · 설계 밖 union 행 [] (인계표에 안 넣음) · SE-rich (≥ 0.5) 0 행 · 구 부피 합 열은 그대로\n",
+   "stderr": ""
+  },
+  {
+   "step": "release_build",
+   "cmd": "/usr/local/bin/python3 /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/ps45_lhs/recv/post_fix/_pin_c981d77f0/scripts/lhs_release_build.py --handover /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/ps45_lhs/recv/post_fix/ps45_handover.csv --columns-from /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/ps45_lhs/recv/post_fix/_pin_c981d77f0/docs/data/lhs_release_20261001_v11/lhs_release_20261001_v11_columns.tsv --out /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/ps45_lhs/recv/post_fix/ps45_release_5rows",
+   "rc": 0,
+   "stdout": "✓ /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/ps45_lhs/recv/post_fix/ps45_release_5rows.csv  5 행 × 89 열 · 대조 통과\n",
+   "stderr": ""
+  }
+ ]
+}

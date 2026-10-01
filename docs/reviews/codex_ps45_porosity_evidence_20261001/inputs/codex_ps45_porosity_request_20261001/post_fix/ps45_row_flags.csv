@@ -1,0 +1,6 @@
+case_id,ps_label,physical_mode,row_ok,row_fail,wa_status,webapp_columns,perc_audit,physical_target_status,hold_reason_codes
+ps_10_0_r45,10:0,단일 AM_P (3-type 덱 · AM_S 질량분율 0),True,,done,측정됨,CLEAN,HOLD,BOUNDARY_CENTER_OUT
+ps_7_3_r45,7:3,bimodal (AM_P + AM_S),True,,done,측정됨,CLEAN,HOLD,BOUNDARY_CENTER_OUT
+ps_5_5_r45,5:5,bimodal (AM_P + AM_S),True,,done,측정됨,CLEAN,HOLD,BOUNDARY_CENTER_OUT
+ps_3_7_r45,3:7,bimodal (AM_P + AM_S),True,,done,측정됨,CLEAN,HOLD,BOUNDARY_CENTER_OUT
+ps_0_10_r45,0:10,단일 AM_S (3-type 덱 · AM_P 질량분율 0),True,,done,측정됨,CLEAN,HOLD,BOUNDARY_CENTER_OUT

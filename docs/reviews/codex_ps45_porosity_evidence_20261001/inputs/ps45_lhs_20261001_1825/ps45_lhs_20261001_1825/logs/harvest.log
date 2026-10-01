@@ -1,0 +1,8 @@
+수확 대상 5 건 · sha 대조 함
+  [  1/5] ✓ ps_0_10_r45    OK
+  [  2/5] ✓ ps_10_0_r45    OK
+  [  3/5] ✓ ps_3_7_r45     OK
+  [  4/5] ✓ ps_5_5_r45     OK
+  [  5/5] ✓ ps_7_3_r45     OK
+
+  성공 5 / 5  → 요약 /home/yonghoon71/ps45_lhs_20261001_1825/harvest/_batch_summary.json

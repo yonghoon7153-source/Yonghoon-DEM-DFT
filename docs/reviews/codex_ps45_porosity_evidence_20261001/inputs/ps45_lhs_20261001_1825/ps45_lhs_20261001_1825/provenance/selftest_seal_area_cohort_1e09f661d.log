@@ -1,0 +1,32 @@
+코호트 봉인
+  ✓ ① 전수: 폴더 5개 전부 행이 있다 (성공한 것만 고르지 않는다)   ['lhs00_900', 'lhs00_901', 'lhs00_902', 'lhs00_903', 'lhs00_904']
+  ✓ ② RAW_OK 케이스는 세 파일 sha256 이 64자
+  ✓ ③ 설계족을 덱 헤더에서 읽는다
+  ✓ ④ 결손은 거부가 아니라 상태다   {'lhs00_902': 'RAW_MISSING_CONTACT', 'lhs00_903': 'DECK_MISSING', 'lhs00_904': 'RAW_MISSING_ATOM'}
+  ✓ ★⑩ contact 결손이어도 **있는 atom** 의 경로·지문은 적는다 (D-8)   atom=/tmp/tmpik4npr7z/lhs00_902/post_lhs00_902/atom_100.liggghts · sha=64자 · contact=(빈칸)
+  ✓ ⑩b 결손 행의 step 은 atom 쪽만 채워진다 (gap 은 없다)   atom='100' contact='' gap=''
+  ✓ ⑩c atom 도 없는 행은 그대로 빈칸 (없는 것을 지어내지 않는다)
+  ✓ ⑤ 판별력: 원자료 1바이트 변화 → sha256 변화
+  ✓ ⑥ TSV 헤더에 설계족 분포와 "솔버를 부르지 않았다" 가 있다
+  ✓ ⑦a 설계 CSV 가 덱 헤더를 이긴다 (source=design_csv)
+  ✓ ⑦b 덱 없는 케이스도 CSV 로 채워진다
+  ✓ ⑦c 덱 헤더 ↔ CSV 충돌은 거부가 아니라 기록 (FAMILY_CONFLICT, CSV 채택)
+  ✓ ⑦d CSV 에 없는 케이스는 덱 헤더 (source=deck_header)
+  ✓ ⑨ 같은 step 쌍은 통과
+  ✓ ★⑨b 5,000 어긋난 쌍**만** 있으면 거부 (옛 판은 RAW_OK 였다)   REFUSED_INPUT_PAIR_STEP
+  ✓ ⑨c ★ −150,000 은 거부된다 (lhs00_029 가 통과했던 자리)   REFUSED_INPUT_PAIR_STEP
+  ✓ ⑨d +10,000 도 거부된다 (한쪽만 넓지 않다)   REFUSED_INPUT_PAIR_STEP
+  ✓ ⑨e ★ 파일명이 본문과 다르면 잡는다 (파일명을 믿지 않는다)   STEP_NAME_MISMATCH+REFUSED_INPUT_PAIR_STEP
+  ✓ ★★⑨g 실제 코퍼스 모양 — atom 이 더 최신이어도 **공통 step 쌍**을 고른다   RAW_OK gap=0
+  ✓ ★★⑨g 고른 파일이 **더 최신 atom 이 아니다** (2845000 을 버리고 2840000 을 쓴다)   /tmp/tmpb25xq5ui/lhs00_915/post_lhs00_915/atom_2840000.liggghts
+  ✓ ★⑨h 경위 포인터가 자동 헤더에 실린다 (없으면 재봉인이 기록을 지운다)   ['# S3 코호트 봉인 — raw 가용성 전수 목록 (계약 §5-v3 ③ · 쌍 step 규칙 §5-v4 D-2: 0 ≤ step_atom − step_contact ≤ 0).  생성 2026-10-01 · 도구 커밋 1e09f661d', '# root = /tmp/tmpb25xq5ui', '# ⛔ 솔버를 부르지 않았다 — 포함/제외는 파일 실재로만.  이 목록 전부를 S3 가 돌리고 실패는 REFUSED 로 보존한다.', '# 설계족 분포: bimodal 6', '# ⚠ 설계족이 mono 뿐이면 AREA-11(AM_P–AM_S · AM_P 반경 이종쌍) 효과는 이 코호트로 검증할 수 없다.', '# ★ 경위·교훈·ibb 경로·함정: docs/data/area_s2_cohort_provenance.md  ← 재봉인해도 그 파일은 안 바뀐다']
+  ✓ ★⑨h 가리키는 경위 파일이 실재한다   docs/data/area_s2_cohort_provenance.md
+  ✓ ⑨f step 열이 TSV 에 실린다
+  ✓ ⑧ refill: 해시 열 바이트 불변 · 설계족 3/5 채움 · 헤더 분포 갱신   3/5 same_hash=True
+  ✓ ★⑪ 등록 ID 에 폴더가 없으면 행이 **사라지지 않는다** (CASE_DIR_MISSING)   ['lhs00_900', 'lhs00_901', 'lhs00_902', 'lhs00_903', 'lhs00_904', 'lhs00_999']
+  ✓ ⑪b 등록 밖 폴더도 여전히 행이 있다 (전수의 뜻 — 등록부로 좁히지 않는다)   ['lhs00_900', 'lhs00_901', 'lhs00_902', 'lhs00_903', 'lhs00_904', 'lhs00_999']
+  ✓ ⑪c CASE_DIR_MISSING 행은 지문 칸이 전부 비어 있다 (없는 것을 지어내지 않는다)
+  ✓ ★⑫ refill 은 중복 case ID 를 거부한다 (봉인을 다시 쓰기 전에)
+  ✓ ★⑫b refill 은 깨진 지문을 거부한다 (빈칸은 정상 — 결손이니까)
+  ✓ ⑫c 정상 TSV 는 그대로 통과 (검사가 refill 을 죽이지 않는다)
+코호트 봉인 SELFTEST PASS
