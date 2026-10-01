@@ -2,10 +2,10 @@
 title: One-step 일괄 ball milling 과 two-step(Li2S–C 선제작) 중 어느 쪽이 Li2S 이용률을 높이는가
 description: "세 성분을 한 번에 가는가, Li2S–C 계면을 먼저 만들고 SE 를 나중에 붙이는가 — 같은 장비·같은 총 에너지에서 순서만 바꿨을 때 무엇이 달라지는가"
 created: 2026-09-11
-updated: 2026-10-03
+updated: 2026-10-04
 type: research-question
 tags: [mixing-process, composite-cathode, li2s, sulfide-electrolyte]
-sources: [raw/transcripts/2026-09-11-li2s-wiki-kickoff-session.md, raw/papers/kim2023_reinforced-electrical-networking-high-loading-li2s-cathode.md, raw/papers/cronk2026_highly-utilized-practical-li-s-positive-electrode-assb.md, raw/papers/lee2026_decoupled-sulfur-redox-pathways-initial-chemical-states-assb.md, raw/papers/zhang2026_anode-free-assb-nanocrystalline-amorphous-li2s-na-collector.md, raw/papers/huang2026_high-entropy-sulfides-kinetic-accelerators-assb.md, raw/papers/kim2025_high-areal-capacity-sulfur-cathode-dual-phase-electrolyte-assb.md]
+sources: [raw/transcripts/2026-09-11-li2s-wiki-kickoff-session.md, raw/papers/kim2023_reinforced-electrical-networking-high-loading-li2s-cathode.md, raw/papers/cronk2026_highly-utilized-practical-li-s-positive-electrode-assb.md, raw/papers/lee2026_decoupled-sulfur-redox-pathways-initial-chemical-states-assb.md, raw/papers/zhang2026_anode-free-assb-nanocrystalline-amorphous-li2s-na-collector.md, raw/papers/huang2026_high-entropy-sulfides-kinetic-accelerators-assb.md, raw/papers/qu2025_volume-changes-li-s-solid-state-battery-components-cycling.md, raw/papers/kim2025_high-areal-capacity-sulfur-cathode-dual-phase-electrolyte-assb.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -21,10 +21,6 @@ feedsInto: "[[li2s-assb-reference-cell]] 의 혼합 공정 선택 · [[composite
 > 만든 뒤 LPSCl 을 mild mixing/BM 으로 더하는 것 중 어느 쪽이 pristine Li2S 의 이용률
 > (첫 충전 활성화량·이후 비용량)을 높이는가? 그 차이는 **SE 보호** 때문인가 **Li2S–C 계면**
 > 때문인가?
-
-> ⚠ **2026-10-04**: `raw/papers/qu2025_…` digest 가 **자기 서지를 Lee 2026 으로 잘못 적어**
-> 제거·재작성 중이다 (분석 본체 §3–§18 은 Qu 2025 내용이 맞았고, 아래 Qu 근거는 그 절들에서 왔다).
-> 재작성이 끝나면 `sources:` 에 다시 넣는다.
 
 ## 왜 중요한가
 
