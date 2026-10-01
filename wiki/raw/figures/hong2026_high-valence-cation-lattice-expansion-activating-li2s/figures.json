@@ -1,0 +1,111 @@
+{
+ "slug": "hong2026_high-valence-cation-lattice-expansion-activating-li2s",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-01",
+ "sources": [
+  "ae3f264a-2._AM_high_valence_cation_induced_lattice_expansion_for_activating_Li2S_in_ASSLSBs.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "FIGURE 1 Structural and electronic modulation of Li2S through Zr4+ substitution. (a) COMSOL simulations of the electronic/ionic conductivity influences within the active phase on the electrochemical reaction overpotential in all-solid-state lithium sulfide cathodes. (b) Schematic illustration showing the lattice and band structure evolution from pristine Li2S (left) to Zr4+ modified Li2S (right). In pristine Li2S, the wide bandgap and limited Li+ mobility result in poor electronic and ionic conductivities. Upon Zr4+ substitution for Li+, lattice expansion and the formation of abundant Li vacancies provide widened diffusion channels for Li+ transport. Simultaneously, Zr─S orbital hybridization introduces metal-induced gap states that narrow the bandgap and enhance electronic conduction. (c) Ionic radii of tetravalent metal cations across the fourth and fifth periods.",
+   "rotated_deg": 0,
+   "bbox": [
+    39.2,
+    26.3,
+    555.8,
+    298.3
+   ],
+   "w": 2153,
+   "h": 1134,
+   "dpi": 300,
+   "src": "ae3f264a-2._AM_high_valence_cation_induced_lattice_expansion_for_activating_Li2S_in_ASSLSBs.pdf",
+   "blank": 0.747
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "FIGURE 2 Mixed ionic and electronic conductivity activation for Li2S. (a) Correlation between Li2S-M (M = Mo, Sn, Zr) ionic radii and their ionic conductivities. (b) Rietveld refinement of the XRD pattern for ZLS-0.2. (c) HRTEM result of ZLS-0.2. (d,e) EPR and longitudinal relaxation time plots of ZLS-n (n = 0, 0.1, 0.2). (f) Density of states calculation result of Zr-doping Li2S. (g) Electronic conductivities of ZLS-n (n = 0, 0.1, 0.2). (h) UV–vis spectra of ZLS-n (n = 0, 0.1, 0.2) and their corresponding bandgaps. (i) Raman spectra of ZrS2, ZLS-0 and ZLS-0.2.",
+   "rotated_deg": 0,
+   "bbox": [
+    39.2,
+    26.2,
+    555.8,
+    457.3
+   ],
+   "w": 2153,
+   "h": 1797,
+   "dpi": 300,
+   "src": "ae3f264a-2._AM_high_valence_cation_induced_lattice_expansion_for_activating_Li2S_in_ASSLSBs.pdf",
+   "blank": 0.847
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "FIGURE 3 Simulation results of solid-state conversion behavior for mixed ion-electron conductive Li2S. (a–h) Electron (a,e) and ion (c,g) transport pathways in the solid-state cathodes obtained from COMSOL simulations, along with the corresponding current density distributions for electron (b,f) and ion (d,h). (i) Electron transport tortuosities and corresponding conductivities within the ZLS-n (n = 0, 0.1 and 0.2) cathodes. (j) Ion transport tortuosities and corresponding conductivities within the ZLS-n (n = 0, 0.1 and 0.2) cathodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    39.2,
+    26.1,
+    555.8,
+    370.3
+   ],
+   "w": 2153,
+   "h": 1435,
+   "dpi": 300,
+   "src": "ae3f264a-2._AM_high_valence_cation_induced_lattice_expansion_for_activating_Li2S_in_ASSLSBs.pdf",
+   "blank": 0.693
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "FIGURE 4 Experimental verification of solid-state conversion behavior for mixed ion-electron conductive Li2S. (a) DRT analyses of ZLS-0 and ZLS-0.2 cathodes during charging process. (b,c) In situ XRD analyses of ZLS-0 and ZLS-0.2 cathodes during cycling. (d,e) XPS analyses of ZLS-0 and ZLS-0.2 cathodes during cycling.",
+   "rotated_deg": 0,
+   "bbox": [
+    39.2,
+    26.1,
+    555.8,
+    380.3
+   ],
+   "w": 2153,
+   "h": 1477,
+   "dpi": 300,
+   "src": "ae3f264a-2._AM_high_valence_cation_induced_lattice_expansion_for_activating_Li2S_in_ASSLSBs.pdf",
+   "blank": 0.811
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "file": "fig_5.png",
+   "caption": "FIGURE 5 Electrochemical performance of ASSLSBs with mixed ion-electron conductive Li2S. (a) Cycling performance ASSLSBs at current density of 0.5 mA cm−2 with Li2S loading of 1 mg cm−2. (b) EPR analysis of ZLS-0 and ZLS-0.2 cathodes before and after 100 cycles. (c–f) DRT and XPS analyses of ZLS-0 and ZLS-0.2 cathodes across various cycle numbers. (g) Cycling performance of ASSLSBs with 65 wt.% Li2S cathodes. (h) Performance comparison between this work and previously reported ASSLSBs [3, 9, 11, 13–15, 28, 29].",
+   "rotated_deg": 0,
+   "bbox": [
+    39.2,
+    26.7,
+    555.8,
+    421.1
+   ],
+   "w": 2153,
+   "h": 1644,
+   "dpi": 300,
+   "src": "ae3f264a-2._AM_high_valence_cation_induced_lattice_expansion_for_activating_Li2S_in_ASSLSBs.pdf",
+   "blank": 0.882
+  }
+ ]
+}

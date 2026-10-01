@@ -5,7 +5,7 @@ created: 2026-09-11
 updated: 2026-10-06
 type: research-question
 tags: [li2s, assb, activation, composite-cathode, units]
-sources: [raw/transcripts/2026-09-11-li2s-wiki-kickoff-session.md, raw/papers/kim2023_reinforced-electrical-networking-high-loading-li2s-cathode.md, raw/papers/huang2026_high-entropy-sulfides-kinetic-accelerators-assb.md, raw/papers/zhang2026_anode-free-assb-nanocrystalline-amorphous-li2s-na-collector.md, raw/papers/cronk2026_highly-utilized-practical-li-s-positive-electrode-assb.md, raw/papers/yu2024_nanocrystallite-cus-n-doped-carbon-host-all-solid-state-li2s.md, raw/papers/lee2026_decoupled-sulfur-redox-pathways-initial-chemical-states-assb.md, raw/papers/wang2023_high-capacity-assb-li-s-low-density-solid-electrolyte.md, raw/papers/wang2026_molecular-coordination-triple-synergy-cathode-assb.md, raw/papers/qu2025_volume-changes-li-s-solid-state-battery-components-cycling.md, raw/papers/kim2025_high-areal-capacity-sulfur-cathode-dual-phase-electrolyte-assb.md, raw/papers/wan2021_lii-libr-catalyst-solid-state-li2s-s-reactions.md, raw/papers/liu2026_li4sns4-molecular-mediator-low-barrier-li2s-chemistry.md, raw/papers/zhangj2026_strain-coordination-long-cycling-assb.md, raw/papers/kwok2023_interfacial-redox-mediator-high-performance-asslsb.md, raw/papers/gao2024_cu-i-codoping-activating-li2s-redox-kinetics-assb.md]
+sources: [raw/transcripts/2026-09-11-li2s-wiki-kickoff-session.md, raw/papers/kim2023_reinforced-electrical-networking-high-loading-li2s-cathode.md, raw/papers/huang2026_high-entropy-sulfides-kinetic-accelerators-assb.md, raw/papers/zhang2026_anode-free-assb-nanocrystalline-amorphous-li2s-na-collector.md, raw/papers/cronk2026_highly-utilized-practical-li-s-positive-electrode-assb.md, raw/papers/yu2024_nanocrystallite-cus-n-doped-carbon-host-all-solid-state-li2s.md, raw/papers/lee2026_decoupled-sulfur-redox-pathways-initial-chemical-states-assb.md, raw/papers/wang2023_high-capacity-assb-li-s-low-density-solid-electrolyte.md, raw/papers/wang2026_molecular-coordination-triple-synergy-cathode-assb.md, raw/papers/qu2025_volume-changes-li-s-solid-state-battery-components-cycling.md, raw/papers/kim2025_high-areal-capacity-sulfur-cathode-dual-phase-electrolyte-assb.md, raw/papers/wan2021_lii-libr-catalyst-solid-state-li2s-s-reactions.md, raw/papers/liu2026_li4sns4-molecular-mediator-low-barrier-li2s-chemistry.md, raw/papers/zhangj2026_strain-coordination-long-cycling-assb.md, raw/papers/kwok2023_interfacial-redox-mediator-high-performance-asslsb.md, raw/papers/gao2024_cu-i-codoping-activating-li2s-redox-kinetics-assb.md, raw/papers/park2026_low-pressure-operation-carbon-coated-current-collector-asslsb.md, raw/papers/kimjt2023_mixed-discharge-products-li2s2-li2s-asslsb.md, raw/papers/hong2026_high-valence-cation-lattice-expansion-activating-li2s.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -48,9 +48,24 @@ feedsInto: "[[li2s-assb-reference-cell]] 의 실험 설계 · [[anode-free-li2s-
 - **H4 (단위 착시)**: 목표 500–600 이 `(S)` 기준인데 우리는 `(Li2S)` 기준으로 재고 있거나 그
   반대 → [[capacity-normalization-li2s-vs-sulfur]]. **2026-09-30 확장**: 분모가 넷이고,
   **SE 자체가 용량을 낸다**는 항이 추가됐다.
-- **H5 (기계적 제한) — 2026-09-30 신설.** 첫 충전에서 Li2S 가 크게 **수축**하면서 균열이 생겨
-  전자·이온 접촉을 잃는다. 즉 "활성화가 안 된" 것이 아니라 "활성화하면서 스스로 접촉을 끊는" 것.
-  그리고 셀의 **구속 방식**(스프링=정압 vs 볼트=정용적)이 그 손실을 좌우한다.
+- **H5 (기계적 제한) — 2026-09-30 신설, 2026-10-06 에 둘로 쪼갰다.** 첫 충전에서 Li2S 가 크게
+  **수축**하면서 접촉을 잃는다. 즉 "활성화가 안 된" 것이 아니라 "활성화하면서 스스로 접촉을 끊는" 것.
+  쪼갠 이유: **Park 2026 이 손실 지점을 복합양극 내부가 아니라 양극/집전체 계면으로 지목했고**,
+  두 자리는 **처방이 완전히 다르다** (조성·입도·성형압 vs 집전체 박 교체 — 후자는 하루면 된다).
+  - **H5a (양극 내부 접촉)**: 복합양극 안에서 활물질–SE–탄소 삼상 접촉이 끊긴다.
+  - **H5b (양극/집전체 계면)**: 복합양극은 멀쩡한데 **집전체에서 떨어진다.**
+    근거: Park 2026 이 **집전체 표면만** 바꿔 10 MPa 상온에서 **350사이클 78 % vs 10사이클 붕괴**.
+    그리고 `[인쇄]` 100사이클 전후 Rohm 증가가 bare **+45.8 %** vs CB **+4.8 %** 인데
+    **pristine 에서는 셋이 사실상 같다(3.7 %)** — 조립 직후가 아니라 **사이클을 돈 뒤에만** 갈린다.
+  - 구속 방식(스프링=정압 vs 볼트=정용적)과 **운전 압력 하한**은 이제 별도 카드다 →
+    [[operating-stack-pressure-floor]].
+- **★ H6 (전자수 제한) — 2026-10-06 신설.** 첫 충전이 **Li2S → Li2S2 의 1 전자**에서 멈춘다
+  (2 Li2S → Li2S2 + 2 Li⁺ + 2 e⁻). `[재현]` 그 천장은 **583.3 mAh g⁻¹(Li2S) = 835.9 (S)** 다.
+  **우리 목표 500–600 이 그 천장을 정확히 걸친다** — 500 = 85.7 %, 583 = 100.0 %, 600 = 102.9 %.
+  → 지금까지 "절반쯤 활성화" 로 읽어 온 수가 **"1 전자 분량을 거의 다 쓴 상태"** 로도 읽힌다.
+  근거는 `kimjt2023_…`(S K-edge XANES 2471.3 eV 어깨 + ToF-SIMS Li3S2⁺/Li3S⁺) 와
+  `lee2026_…`(혼합 중 생긴 단쇄 S2–4). 환산표는 [[capacity-normalization-li2s-vs-sulfur]].
+  ⚠ **이 가설은 약하게 출발한다** — 아래 Evidence Against 참조.
 
 ## Evidence For
 
@@ -307,6 +322,68 @@ Lee 2026 digest 가 이 충돌을 날카롭게 정리한다 — **병목은 "활
   그중 하나가 위험하다: **인가 전압이 계보를 타고 20 mV → 1 V 로 50배 커졌다**(Kwok → Huang).
   1 V 는 황화물 SE 안정창을 넘겨 **분해 전류를 전자 전류로 읽는다.** 우리는 **20–50 mV** 를 쓴다.
 
+### 2026-10-06 (3) — Park 2026 · Kim JT 2023 · Hong 2026 추가
+
+- **★★ H5b — 이 위키에서 가장 깨끗한 기계적 근거 (Park 2026).** 활물질·SE·탄소·조성(**우리와 같은
+  30:50:20**)·대극(Li–In)·성형압·온도를 **전부 고정하고 집전체 표면만** 바꿨다. 10 MPa·상온·C/3 에서
+  **carbon black 코팅 Al 350사이클 78 % vs bare Al 10사이클 붕괴**(graphite 는 **206사이클에서 단락** —
+  `[도표]` Fig. 7b 에 "Short" 가 찍혀 있는데 **본문에 한 글자도 없다**).
+  → "용량 손실의 지배항이 기계적 접촉" 을 **변수 하나로** 보인 거의 유일한 논문이고, **손실 지점이
+  양극 내부가 아니라 집전체 계면**이라는 것이 새 정보다. 압력 축 전체는 [[operating-stack-pressure-floor]].
+  ⚠ 원인은 분리되지 않았다 — 세 집전체가 거칠기·탄소 종류·바인더·제조사를 **동시에** 바꾸고
+  **같은 거칠기의 비탄소 조면 Al 대조군이 없다.** 즉 **"탄소가 필요하다" 가 아니라 "거친 상용
+  코팅박이 낫다" 까지만 증명됐다.**
+- **★ H2a — "탄소를 더 넣기 전에 집전체를 먼저 보라" (Park 2026).** bare 셀의 Rohm 이 100사이클에
+  65.5 → 95.5 Ω 로 오른다. **탄소 함량을 하나도 바꾸지 않았는데 전자 경로가 끊긴다.**
+- **★ H4 — 환산표 자체를 고쳤다 (Kim JT 2023).** 두 가지다.
+  1. **우리 표의 "1675 (S)" 가 표 자신의 산술과 어긋나 있었다** — 1675 는 M(S)=32.00 기반인데
+     환산 인자 0.6978 은 32.06 기반이라 **1675 × 0.6978 = 1168.6 ≠ 1166**. **1672 / 1166 / ×0.69783**
+     으로 통일했다 ([[capacity-normalization-li2s-vs-sulfur]]).
+  2. **천장이 둘이 됐다** — 1전자 **583.3** / 2전자 **1166.6** mAh g⁻¹(Li2S). 이용률을 적을 때
+     **`2e⁻ 기준 X % (1e⁻ 기준 Y %)`** 로 병기하는 규율을 추가했다. → **H6 신설.**
+- **★★ H6 를 세우면서 함께 기록한 반례 — 1전자 천장은 하드 리밋이 아니다.** 바로 그 Kim JT 2023 의
+  간판 셀이 `[인쇄]` **933 → 1496.9 mAh g⁻¹(S)** 로 836 을 **112 → 179 % 초과한다.**
+  1496.9/1671.7 = **89.5 %** 는 **2 전자 전환의 거의 완전 이용률**로 훨씬 단순하게 설명된다.
+  → **그 논문의 간판 셀은 제목과 반대로 Li2S 를 거의 완전히 만들고 되돌린다.**
+  그리고 Li2S2 의 **몰분율을 정량한 문장이 논문 어디에도 없다**(XPS 는 `[인쇄]` "not found",
+  ToF-SIMS 는 교정 없는 상대 이온강도, XANES 는 TEY 표면). **ToF-SIMS 비율 9.6±0.9 vs 10.2±1.5 는
+  `[재현]` 1σ 가 완전히 겹쳐 차이가 없다.**
+  → **H6 는 "가능성을 열어 둔다" 수준이고, 현재 증거의 무게는 H1 쪽이 더 무겁다.**
+- **★★ H4 — Li2S2 가설은 이론 초과를 설명하지 못하고 두 배로 키운다.** 천장을 1672 → 836 으로
+  낮추면 `[재현]` Cronk 129 → **258 %** · Lee 101–107 → **202–214 %** · Yu 124 → **248 %** ·
+  Zhang 114 → **228 %** · Wang 2026 111 → **222 %** · Kim 2025 Φc 137.6 → **275 %** ·
+  Park 2026 105.6 → **211 %**. → **SE 리독스 귀속이 유지되고 강화된다.**
+  (Park 2026 이 **이론 초과 7번째**다: C/20 에서 1231 mAh g⁻¹(Li2S) = **105.6 %**, LPSCl 50 wt%,
+  하한 컷오프 **1.0 V**, 방전 dQ/dV 최대 피크가 ≈1.2 V. 논문 스스로 `[인쇄]` "LPSCl likely undergoes
+  partial reduction to LPS" 라 적고 Raman 425 → 418 cm⁻¹ 을 보이면서 **빼지 않는다** — 같은 그룹
+  Cronk 2026 은 LPSCl-only 대조셀로 분리했는데 여기서는 없다.)
+- **★★★ 측정 규율이 하나 생겼다 — 황 분광을 찍기 전에 SE 유래 황 분율을 계산한다.** Kim JT 2023 의
+  XANES 는 `[재현]` **신호의 42.1 %가 LGPS 유래 황**인데 차감하지 않았다 → 그 어깨가 Li2S2 인지
+  **SE 환원분해물**인지 가를 수 없다. ★ **우리 셀은 더 나쁘다**: `[재현]` Li2S 30 : LPSCl 50 : AB 20 에서
+  **총 황의 58.8 %가 LPSCl 에서 온다.** → **우리가 S 2p XPS·S K-edge XANES 를 찍으면 신호의 과반이
+  활물질이 아니다.** 찍기 전에 이 분율을 적고 **`LPSCl + AB` 대조 시료를 같은 조건에서 함께 찍는다** —
+  0번 실험이 전기화학뿐 아니라 **분광에서도** 필요한 이유다.
+- **★★ H1 — `disputed` pristine 값의 산포가 "Li2S 가 나쁜 정도" 가 아닐 수 있다 (Hong 2026).**
+  **같은 논문·같은 분말·같은 연구실**에서 pristine Li2S 첫 방전이 **134.8**(65:25:10, 0.1 mA cm⁻²)
+  와 **669.7**(40:40:20, 0.5 mA cm⁻²) 로 **5배** 갈린다. ★ **더 저율인 쪽이 5배 나쁘다** →
+  전류가 아니라 **탄소·SE 함량이 지배한다.**
+  → **산포(134.8 / 174.6 / 270 / ≈430 / 669.7 / 723 / 1095.9 — 이제 8배)가 "Li2S 가 얼마나 나쁜가"
+  가 아니라 "전극을 어떻게 짰는가" 일 가능성**에 대한 첫 **내부 대조** 증거다.
+  `[해석]` 우리에게는 좋은 소식이다 — 기준선이 재료 상수가 아니라 **우리가 설계할 수 있는 양**이라는 뜻이다.
+- **★★ H2a — 입자 칸의 개선이 복합체에서 거의 사라진다 (Hong 2026).** 이 위키 최초로 **같은 논문에서
+  σ 를 두 칸에서 동시에** 쟀다: **활물질 입자 자신** σ_e < 10⁻¹² → 8.50×10⁻⁹ (**> ×8500**),
+  σ_i 7.92×10⁻⁹ → 6.46×10⁻⁷ (**×81.6**) — 그런데 **복합체 퍼콜레이션** σ_e 6.1×10⁻³ → 8.3×10⁻³
+  (**×1.36**), σ_i 2.75×10⁻⁵ → 2.35×10⁻⁴ (**×8.6**).
+  → **전자 쪽 개선은 KB 40 wt% 가 만든 퍼콜레이션 고원에 묻혀 거의 사라진다.** 즉 **"입자를 전도성으로
+  만들면 복합체도 그만큼 좋아진다" 가 성립하지 않는다.** 남는 것은 **이온 쪽**(×8.6, 토르투오시티
+  10.35 → 3.57)이다. 세 칸의 정의는 [[interface-quality-not-bulk-conductivity]].
+- **H5 참고 — 운전 압력 좌표가 0–200 MPa 로 벌어졌다** (Kim JT **150** · Hong **200** 추가).
+  고압 논문의 성능은 **접촉 문제가 지워진 상태의 수치**이므로 저압에 외삽되지 않는다.
+  Kim JT 의 1500사이클은 `[해석]` **150 MPa 로도 설명될 수 있고 압력을 변수로 흔든 실험이 없다.**
+- **H3 — 교란이 심하다 (Hong 2026).** 가장 값싸게 배제할 수 있었던 대조군이 없다:
+  **"ZLS-0 도 같은 6 h 밀링을 겪었는가" 가 본문에 한 줄도 없다.** 만약 ZLS-0 이 상용 원분말
+  그대로면 이 논문 전체가 "밀링한 분말 vs 안 한 분말" 비교가 된다.
+
 ## Evidence Against
 
 - **[2026-09-30] H2 에 대한 부분 반증 (Zhang 2026).** 탄소가 **MWCNT 10 wt% 뿐**인데 971
@@ -393,3 +470,15 @@ Lee 2026 digest 가 이 충돌을 날카롭게 정리한다 — **병목은 "활
   모든 비교가 흔들린다.
   **pristine Li2S 첫 방전은 `disputed` 유지** — Liu 의 ≈430 이 네 번째 수로 들어와 270–1096
   분산이 그대로다. 아직 없는 것도 그대로다: **LPSCl 산화 개시 전위의 실측 근거.**
+- [2026-10-06] active — digest 20편. **H5 를 H5a(양극 내부)/H5b(집전체 계면)로 쪼갰고**, 운전
+  압력 하한은 성격이 다른 질문이어서 **별도 카드로 분리**했다 → [[operating-stack-pressure-floor]].
+  **H6(전자수 제한) 신설** — 1전자 천장 `[재현]` 583.3 mAh g⁻¹(Li2S) 가 우리 목표 500–600 을 정확히
+  걸친다. 단 **그 가설을 가져온 논문 자신의 셀이 그 천장을 179 % 초과**하므로 H6 는 약하게 출발한다.
+  **환산표를 고쳤다**: "1675 (S)" 가 표 자신의 산술과 0.2 % 어긋나 있었다 → **1672 / 1166 / ×0.69783**.
+  **측정 규율 하나 추가**: 황 분광 전에 **SE 유래 황 분율**을 계산한다 — 우리 셀은 **총 황의 58.8 %가
+  LPSCl 에서 온다.** 0번 실험이 분광에서도 필요하다는 뜻이다.
+  **`disputed` pristine 산포가 8배로 넓어졌지만 성격이 바뀌었다** — Hong 2026 이 같은 논문·같은
+  분말에서 **134.8 vs 669.7(5배)** 을 보였고 **더 저율인 쪽이 더 나쁘다** → 산포는 "Li2S 가 나쁜
+  정도" 가 아니라 **"전극 설계"** 일 가능성이 크다. 기준선이 우리가 설계할 수 있는 양이라는 뜻이다.
+  실험 순서: 0번 대조셀(전기화학 + **분광**) → **압력-EIS 스윕** → DC 분극(세 칸) → H1 컷오프 스윕
+  → H5b 집전체 교체(n=3).

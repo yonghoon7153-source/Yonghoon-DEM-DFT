@@ -5,7 +5,7 @@ created: 2026-10-01
 updated: 2026-10-02
 type: synthesis
 tags: [assb, composite-cathode, li2s, sulfide-electrolyte, carbon, activation]
-sources: [raw/papers/yu2024_nanocrystallite-cus-n-doped-carbon-host-all-solid-state-li2s.md, raw/papers/huang2026_high-entropy-sulfides-kinetic-accelerators-assb.md, raw/papers/wang2023_high-capacity-assb-li-s-low-density-solid-electrolyte.md, raw/papers/cronk2026_highly-utilized-practical-li-s-positive-electrode-assb.md, raw/papers/wang2026_molecular-coordination-triple-synergy-cathode-assb.md, raw/papers/wangd2025_overcoming-conversion-limitation-tpb-mixed-conductors.md, raw/papers/jeong2026_reconciling-triple-phase-boundaries-tortuosity-assb.md, raw/papers/liu2026_li4sns4-molecular-mediator-low-barrier-li2s-chemistry.md, raw/papers/kwok2023_interfacial-redox-mediator-high-performance-asslsb.md, raw/papers/gao2024_cu-i-codoping-activating-li2s-redox-kinetics-assb.md]
+sources: [raw/papers/yu2024_nanocrystallite-cus-n-doped-carbon-host-all-solid-state-li2s.md, raw/papers/huang2026_high-entropy-sulfides-kinetic-accelerators-assb.md, raw/papers/wang2023_high-capacity-assb-li-s-low-density-solid-electrolyte.md, raw/papers/cronk2026_highly-utilized-practical-li-s-positive-electrode-assb.md, raw/papers/wang2026_molecular-coordination-triple-synergy-cathode-assb.md, raw/papers/wangd2025_overcoming-conversion-limitation-tpb-mixed-conductors.md, raw/papers/jeong2026_reconciling-triple-phase-boundaries-tortuosity-assb.md, raw/papers/liu2026_li4sns4-molecular-mediator-low-barrier-li2s-chemistry.md, raw/papers/kwok2023_interfacial-redox-mediator-high-performance-asslsb.md, raw/papers/gao2024_cu-i-codoping-activating-li2s-redox-kinetics-assb.md, raw/papers/hong2026_high-valence-cation-lattice-expansion-activating-li2s.md, raw/papers/park2026_low-pressure-operation-carbon-coated-current-collector-asslsb.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -131,6 +131,33 @@ TiS2, 비정질)** 로 바꾸면서 **σ_Li⁺ 를 60 °C 에서 네 시료 모�
 ⚠ Gao 는 측정 셀 구성을 적지 않았고(G6) **σ_Li⁺ 를 한 번도 재지 않았다**(전부 CV 유래 D_Li) —
 그래서 이 칸은 **방향만** 쓰고 절대값은 인용하지 않는다. 세 칸을 우리 셀에서 실제로 가르는
 방법은 [[dc-polarization-conductivity-separation]] 에 적었다.
+
+### ★★ 2026-10-06 — 세 칸이 실재한다는 증거: 같은 논문이 두 칸을 동시에 쟀다 (Hong 2026)
+
+세 칸으로 쪼갠 것이 작도(作圖)가 아니라 측정으로 받쳐진다. Hong 2026 은 **같은 재료 변경**
+(Li2S + ZrS2 공밀링)에 대해 **활물질 입자 칸과 복합체 칸을 둘 다** 쟀다:
+
+| 칸 | 측정 셀 | σ_e | σ_Li⁺ |
+|---|---|---|---|
+| **활물질 입자 자신** | 시료 분말 **단독 펠릿** (SE·대극 없음) | < 10⁻¹² → 8.50×10⁻⁹ (**> ×8500**) | 7.92×10⁻⁹ → 6.46×10⁻⁷ (**×81.6**) |
+| **복합체 퍼콜레이션** | ZLS : KB : LPSC = 40:40:20 복합체 | 6.1×10⁻³ → 8.3×10⁻³ (**×1.36**) | 2.75×10⁻⁵ → 2.35×10⁻⁴ (**×8.6**) |
+
+★★ `[해석]` **입자 칸의 개선이 복합체 칸에서 거의 사라진다 — 전자 쪽은 ×8500 이 ×1.36 이 된다.**
+이유는 이 논지가 말해 온 바로 그것이다: **KB 40 wt% 가 이미 퍼콜레이션 고원을 만들어 놓았으므로
+입자를 전도성으로 만들어도 복합체의 전자 전도도는 거의 움직이지 않는다.**
+→ **"활물질을 전도성으로 만들면 복합체도 그만큼 좋아진다" 는 성립하지 않는다.** 그리고 그 논문
+본문이 개선을 "전자 전도도 향상" 으로 설명하는 것은 **자기 복합체 데이터와 맞지 않는다** —
+같이 움직인 것은 **이온 쪽**(×8.6, 토르투오시티 10.35 → 3.57)이다.
+
+★ **이 논문은 이 위키 최초의 올바른 음성대조도 하나 준다** — `[인쇄]` *"simple physical mixtures
+of Li2S and ZrS2 similarly exhibit undetectable conductivity"*. 즉 **섞는 것만으로는 안 되고
+공밀링이 무언가를 바꿨다**는 것이 음성대조로 받쳐진다. ⚠ 단 그 음성대조는 **σ 축에만 있고
+전기화학 축으로 확장되지 않았다**(활물질 없는 대조셀은 여전히 없다 — **여섯 편 연속**).
+
+⚠ 그리고 이 논문의 σ 값에는 두 공백이 있다 — **DC 분극의 인가 전압이 미기재**라 우리 표준
+20–50 mV 와 대조할 수 없고, **차단전극 재질·두께·실제 면적이 없어** σ = L/(RA) 를 재현할 수 없다.
+pristine 검출한계가 **< 10⁻¹²** 라 "×8500" 은 **배수가 아니라 하한**이다 (Gao 2024 의
+9.44×10⁻¹⁴ 에 대면 **10배 둔한 장비**).
 
 ★★ **그리고 이 논문이 이 논지의 가장 무거운 반론(반론 8)을 상당 부분 닫는다.** "계면의 질" 을
 DFT 흡착에너지가 아니라 **저울로 재는 법**을 준다 — 방전된 양극을 **시클로헥산에 담가 미반응

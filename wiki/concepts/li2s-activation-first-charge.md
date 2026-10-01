@@ -5,7 +5,7 @@ created: 2026-09-11
 updated: 2026-10-06
 type: concept
 tags: [activation, li2s, carbon, liquid-electrolyte, assb, sulfide-electrolyte]
-sources: [raw/papers/kim2023_reinforced-electrical-networking-high-loading-li2s-cathode.md, raw/transcripts/2026-09-11-li2s-wiki-kickoff-session.md, raw/papers/wan2021_lii-libr-catalyst-solid-state-li2s-s-reactions.md, raw/papers/zhang2026_anode-free-assb-nanocrystalline-amorphous-li2s-na-collector.md, raw/papers/cronk2026_highly-utilized-practical-li-s-positive-electrode-assb.md, raw/papers/lee2026_decoupled-sulfur-redox-pathways-initial-chemical-states-assb.md, raw/papers/liu2026_li4sns4-molecular-mediator-low-barrier-li2s-chemistry.md, raw/papers/zhangj2026_strain-coordination-long-cycling-assb.md, raw/papers/kwok2023_interfacial-redox-mediator-high-performance-asslsb.md, raw/papers/gao2024_cu-i-codoping-activating-li2s-redox-kinetics-assb.md]
+sources: [raw/papers/kim2023_reinforced-electrical-networking-high-loading-li2s-cathode.md, raw/transcripts/2026-09-11-li2s-wiki-kickoff-session.md, raw/papers/wan2021_lii-libr-catalyst-solid-state-li2s-s-reactions.md, raw/papers/zhang2026_anode-free-assb-nanocrystalline-amorphous-li2s-na-collector.md, raw/papers/cronk2026_highly-utilized-practical-li-s-positive-electrode-assb.md, raw/papers/lee2026_decoupled-sulfur-redox-pathways-initial-chemical-states-assb.md, raw/papers/liu2026_li4sns4-molecular-mediator-low-barrier-li2s-chemistry.md, raw/papers/zhangj2026_strain-coordination-long-cycling-assb.md, raw/papers/kwok2023_interfacial-redox-mediator-high-performance-asslsb.md, raw/papers/gao2024_cu-i-codoping-activating-li2s-redox-kinetics-assb.md, raw/papers/kimjt2023_mixed-discharge-products-li2s2-li2s-asslsb.md, raw/papers/hong2026_high-valence-cation-lattice-expansion-activating-li2s.md, raw/papers/park2026_low-pressure-operation-carbon-coated-current-collector-asslsb.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -43,7 +43,7 @@ Li2S 는 전자·이온 모두 절연에 가깝고 첫 충전(탈리튬화)에 �
    고립부 제거), 1 GPa compact geometry, 고압 성형으로 생긴 준안정 orthorhombic Li2S.
    → [[carbon-dimensionality-electron-network]].
 
-## ★ 활성화 전위 사다리 (2026-10-06 — 고체계 digest 8편)
+## ★ 활성화 전위 사다리 (2026-10-06 — 고체계 digest 11편)
 
 이 개념의 중심 질문이 2026-09-30 에 바뀌었다. **"얼마나 활성화되나" 가 아니라 "활성화를 끝내는
 전위가 SE 가 견디는 전위보다 높은가" 다** ([[reference-cell-500-600-mahg]] H1). 그 전위를 낮추려는
@@ -52,6 +52,8 @@ Li2S 는 전자·이온 모두 절연에 가깝고 첫 충전(탈리튬화)에 �
 
 | 논문 | 활성화 전위 | **곡선의 종류** | 수단 | **무게 대가** | 사후 기여 분해 |
 |---|---|---|---|---|---|
+| **Hong 2026** | **`[재현]` ≈2.1–2.2 V** (= `[도표]` ≈1.5–1.6 V **vs Li–In**, ±0.1) | **plateau 아님 — 개시 변곡**(≈1 h 머물다 단조 S자 상승) | Li2S + **ZrS2** 를 550 rpm 6 h 공밀링 → Zr⁴⁺ 격자 치환 주장 | **`[재현]` 16.7 wt%** ★ 지금까지 최소 | ✗ (활물질 없는 대조셀 없음 — **여섯 편 연속**) |
+| **Kim JT 2023** | **`[재현]` ≈2.37–2.57 V** (= `[도표]` 1.75–1.95 V **vs Li–In**) | **평탄 plateau** | ⚠ **S8 출발의 재산화**다 — Li2S 셀이 없다. LiI 6 wt% 포함 | (LiI 6 wt%, 기준 미기재) | ✗ |
 | **Gao 2024** | **`[재현]` 2.34–2.37 V** (= `[도표]` 1.72–1.75 V **vs Li–In**) | **평탄 plateau** (SOC 10–60 %) | Li2S + **CuI** 를 510 rpm 20 h 공밀링 | **`[재현]` 42.3 wt%** (활물질 분말) | △ Cu 단독·I 단독 몰수맞춤 대조셀 ✓, 활물질 없는 셀 ✗ |
 | **Kwok 2023** | **≈2.3 V** `[도표]` (기울기, 자기 plateau 아님) | 기울기 — 저자 자신이 `[인쇄]` "co-oxidation" 이라 적는다 | **용액 반응**으로 Li2S 에 **<30 nm LiVS2 껍질** (밀링 아님) | **`[재현]` 40 wt%** (= LVS 중 LiVS2 40 wt%) | △ **산술 분리는 했다**(이용률을 83 %/77 % 두 개로 적는다). 실험 분리 ✗ |
 | **Cronk 2026** | **2.4 V** `[인쇄]` | plateau | 밀링이 만든 thiophosphate 계면상, `[인쇄]` **"촉매 없이"** | **0** | ✓ dQ/dV 4영역 + XANES LCF |
@@ -59,6 +61,7 @@ Li2S 는 전자·이온 모두 절연에 가깝고 첫 충전(탈리튬화)에 �
 | **Wan 2021** | ≈**2.80 V** `[도표]` | **평탄 plateau** (이론용량 거의 전부) | LiI–LiBr 할로겐화물 | **39.9 wt%** `[재현]` | ✗ 사후 분석 0건 |
 | **Zhang 2026** | 2.87 V | plateau | PI3 → in-situ LiI | **43.8 wt%** `[재현]` | ✗ |
 | **Lee 2026** | — (컷오프 **3.62 V** vs Li/Li⁺) | — | 없음 — 전위를 올려서 끝낸다 | 0 | ✗ (대가는 이론 초과 용량 101–107 %) |
+| **Park 2026** | — (**활성화 hump 자체가 없다**) | OCV 2.25 → ≈2.5 V 뒤 2.5 → 2.9 V **단조 상승** | **수단 없음** — 첨가제·촉매·승온 전부 없다. 바꾼 것은 **집전체 표면**뿐 | 0 | ✗ |
 | **Zhang (Jiaxu) 2026** | **≈2.6–2.9 V** `[도표]` (충전 말기) | plateau 아님 — 다단 | **해당 없음** — Li2S 가 FeS2 방전으로 **in-situ 생성**되고 **Fe⁰ 가 공존**한다 | — | ✗ |
 
 `[해석]` 네 가지가 읽힌다.
@@ -84,6 +87,35 @@ Li2S 는 전자·이온 모두 절연에 가깝고 첫 충전(탈리튬화)에 �
    → **개시 전위를 낮추는 것과 활성화를 낮은 전위에서 끝내는 것은 다른 문제다.** H1 재정의판
    ("활성화 **완료** 전위 > SE 산화 전위")은 사다리 6편 중 **누구도 풀지 않았다.** 이 사다리의
    열은 앞으로 "개시" 와 "완료" 를 갈라 적어야 한다.
+
+### ⚠ 이 사다리에 넣기 전에 — "과전압" 은 두 가지 다른 양이다 (2026-10-06)
+
+논문이 "overpotential" 이라 적은 수를 그대로 사다리에 넣으면 안 된다. **두 뜻이 섞여 있다.**
+
+| | 무엇 | 사다리에 쓸 수 있나 |
+|---|---|---|
+| **활성화 전위** | 첫 충전에서 **반응이 시작되는 전위** (평형 OCV 대비 올려야 하는 값) | **그렇다 — 이 표가 재는 것** |
+| **ΔV (충·방전 전압 간격)** | 같은 SOC 에서 충전 전압 − 방전 전압. **왕복 손실**이고 활성화 장벽이 아니다 | **아니다** |
+
+★ **Hong 2026 이 그 함정의 사례다.** 그 논문이 `[인쇄]` 한 "overpotential **645 mV**(Zr) / 656(Sn) /
+663(Mo) / **728 mV**(ZLS-0)" 는 **ΔV** 다 — `[도표]` 충전 중간 ≈2.0–2.1 V · 방전 중간 ≈1.3 V 로
+읽으면 ΔV ≈0.70–0.75 V 가 되어 그 숫자와 맞는다. **그것을 "활성화 전위 645 mV" 로 읽으면
+사다리가 오염된다.** 사다리에는 `[도표]` 개시부 ≈1.5–1.6 V vs Li–In 만 넣었다.
+
+### ★ 활성화가 첫 충전 한 번에 끝나지 않는 사례가 둘이다 (2026-10-06)
+
+이 개념의 출발점은 Kim 2023(액체계) 의 **"첫 충전에서 활성화한 만큼만 이후 용량이 된다"** 였다.
+고체계에서 그것과 **방향이 반대인 관측**이 둘 나왔다:
+
+| 논문 | 무엇 |
+|---|---|
+| **Gao 2024** | 2 C 에서 **271 사이클에 걸쳐 588.52 → 643.52 mAh g⁻¹(Li2S) 로 상승** |
+| **Hong 2026** | 두 셀 모두 올라간다 — ZLS-0.2 `[도표]` 630 → 1010(**≈400 사이클**), ZLS-0 275 → 695(**≈900 사이클**) |
+
+`[해석]` → **H1 을 "첫 충전 한 번" 이 아니라 "활성화가 완료되는 사이클 수" 로도 물어야 한다.**
+우리 셀에서 이것을 보는 비용은 **0** 이다 — **초기 10–20 사이클 용량 추세의 부호**만 보면 된다.
+⚠ 단 "용량이 오른다" 의 다른 후보가 있다: **SE 분해물이 전기화학적으로 활성이 된다**
+(Zhang Jiaxu 2026 이 그렇게 귀속했고 **대조셀을 안 돌렸다**). 부호만으로는 둘을 못 가른다.
 
 ### 첨가제가 없으면 plateau 자체가 없다 (Wan 2021 Fig. 2a)
 
@@ -125,7 +157,7 @@ stability of the Li4SnS4 mediator"* 라고 쓴다. **매개체의 정의는 자�
 |---|---|---|
 | **매개체 (mediator)** | 첨가제 **자신의 산화상태가 충방전과 함께 왕복**한다 (ex situ XPS·XANES 가 움직인다) + 전위 곡선에 **자기 평탄 plateau** 가 선다 | **Gao 2024 의 Cu** — Cu⁺ → "Cu²⁺" → Cu⁺ 가 **ex situ XPS 5지점에서 가역 왕복** (⚠ Cu²⁺ 진단신호인 shake-up 위성 940–945 eV 가 **그림 축 밖**이고 ex situ XRD 가 CuS 를 한 번도 못 봤다) · **Kwok 2023 의 LiVS2 (잠정)** — 설계상 V³⁺⇄V⁴⁺ 가 명백하고 **상온에서 Li2S + VS2 → LiVS2 가 실제로 일어나는 것을 XRD 로 보였는데(셀 밖)**, **ex situ 분광이 논문에 하나도 없다** |
 | **촉매 (catalyst)** | 산화상태가 **돌아오고**, 그 자리에서 **활물질의** 반응 속도가 올라간다 — 자신의 용량 기여는 0 에 가깝다 | **여전히 확정 0편.** 주장은 많다 |
-| **정적 계면층·도펀트** | 산화상태가 **아예 안 움직인다**. 효과는 접촉·전달 쪽 | **Liu 2026 Li4SnS4 (Sn 3d 불변)** · **Cronk 2026 Li3PS4+n** (밀링 생성) · **Gao 2024 의 I** (I 3d 5지점 사실상 불변, 반응식에서 LiI 로 보존 → **자기 용량 기여 0**) |
+| **정적 계면층·도펀트** | 산화상태가 **아예 안 움직인다**. 효과는 접촉·전달 쪽 | **Liu 2026 Li4SnS4 (Sn 3d 불변)** · **Cronk 2026 Li3PS4+n** (밀링 생성) · **Gao 2024 의 I** (I 3d 5지점 사실상 불변, 반응식에서 LiI 로 보존 → **자기 용량 기여 0**) · **Hong 2026 의 Zr**(격자 치환분) — ⚠ 근거가 `[인쇄]` "Zr 3d XPS 에 no obvious phase evolution" 한 줄뿐이고 **지점 수·결합에너지 수치가 0** 이라 **Liu 2026(Sn 3d 9지점)보다 근거가 나쁘다** |
 
 `[해석]` 그래서 **Liu 2026 의 계열은 Wan/Zhang(요오드)이 아니라 Cronk(계면상)다.** 이 위키는
 그 물질을 **"Li4SnS4 계면층(소결 코팅)"** 이라 적고 "매개체" 라 부르지 않는다.
@@ -152,11 +184,30 @@ Kwok 2023 을 판정하다 나온 명제다. 액체계 매개체는 **mM 농도�
 | Liu 2026 | Li4SnS4 | **미기재** | 43–98 `[재현]` | ≈100 | **0.4–1.0** |
 | Kwok 2023 | LiVS2 | 40 wt% `[재현]` | 147 `[재현]` | — | — |
 | **Gao 2024** | **CuI** | **42.3 wt%** `[재현]` | **102.9** `[재현]` (Cu 만; I 는 0) | **990.6** | **0.10** |
+| **Hong 2026** | **ZrS2** | **16.7 wt%** `[재현]` ★ | **34.5**(1 e⁻) / **138.0**(4 e⁻) `[재현]` | **340.1** | **0.10 / 0.41** |
 
 → **"관측된 개선이 첨가제 자기 용량일 뿐일 수 있다" 는 경보가 Gao 2024 에서 처음 해제된다**
 (개선폭이 항의 10배). ⚠ 단 그 절반의 이유는 **기준선이 낮다**는 것이다 — Gao 의 pristine Li2S
 첫 방전이 **174.6 mAh g⁻¹(Li2S)** 로 우리 목표 500–600 의 **1/3 이하**다.
 `[재현]` 자기 용량을 뺀 보정 이용률은 **91.1 %** 이고 저자가 말하는 99.8 % 가 아니다.
+
+#### ⚠ Hong 2026 은 이 명제의 반례 후보지만 깨끗한 반례가 아니다
+
+무게 대가 **16.7 wt%** 는 네 편의 40–44 wt% 를 **2/5 로 깬다.** "격자에 치환하면 질량이 덜 든다" 는
+방향이다. **그런데 세 가지가 걸린다.**
+
+1. **격자에 간 것은 투입량의 1/10 이다.** Rietveld 점유율 **0.0144 (= 1.44 %)** 인데 투입은 16.67 wt%
+   다. **나머지 ≈15 wt% 가 어느 상에 있는지 논문이 말하지 않는다**(저자는 n=0.2 에서 "2차상을 만들지
+   않는다" 고 주장한다). 즉 **무게 대가가 작은 것이 아니라, 작게 보이는 부분만 측정된 것**일 수 있다.
+2. **자기 용량 항이 다른 네 편과 같은 띠다.** `[재현]` 4 e⁻ 완전전환(ZrS2 + 4Li → Zr + 2Li2S)이면
+   **138.0 mAh g⁻¹(Li2S)** 로 Wan 109.4 · Zhang 152 · Kwok 147 · Gao 102.9 와 같은 급이고,
+   개선폭 340.1 에 대한 비가 **0.41 — 경보 구간**이다. 0.7 V vs Li–In 은 TMD 전환이 일어나는 전위라
+   4 e⁻ 가정이 비현실적이지 않다.
+   ★ **게다가 전환되면 Li2S 를 더 만든다** — 요오드계에 없던 **"분모 밖에서 활물질이 생기는" 경로**다.
+3. **진짜 반례가 되려면 미반응 ZrS2 를 세척·분리한 분말로 셀을 돌려야 한다.** 그 실험이 없다.
+
+→ 명제는 **아직 깨지지 않았다.** 다만 **"격자 치환은 질량을 덜 쓸 수 있다" 는 가능성**이 처음
+제기됐고, 그것을 확정하는 실험이 무엇인지도 분명해졌다.
 
 ★ **그리고 Kwok 2023 만이 이 몫을 스스로 뺐다** — 이용률을 **83 %(LVS 기준)와 77 %(Li2S 기준)**
 두 개로 적는다. `[재현]` ESI 없이 복원되고 맞는다. **다섯 편 중 분모를 정직하게 둘로 적은 유일한

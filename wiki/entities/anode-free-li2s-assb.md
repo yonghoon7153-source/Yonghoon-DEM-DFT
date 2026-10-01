@@ -5,7 +5,7 @@ created: 2026-09-11
 updated: 2026-10-06
 type: entity
 tags: [project, satellite, anode-free, li2s, assb]
-sources: [raw/transcripts/2026-09-11-li2s-wiki-kickoff-session.md, raw/papers/kim2023_reinforced-electrical-networking-high-loading-li2s-cathode.md, raw/papers/zhang2026_anode-free-assb-nanocrystalline-amorphous-li2s-na-collector.md, raw/papers/zhangj2026_strain-coordination-long-cycling-assb.md, raw/papers/liu2026_li4sns4-molecular-mediator-low-barrier-li2s-chemistry.md]
+sources: [raw/transcripts/2026-09-11-li2s-wiki-kickoff-session.md, raw/papers/kim2023_reinforced-electrical-networking-high-loading-li2s-cathode.md, raw/papers/zhang2026_anode-free-assb-nanocrystalline-amorphous-li2s-na-collector.md, raw/papers/zhangj2026_strain-coordination-long-cycling-assb.md, raw/papers/liu2026_li4sns4-molecular-mediator-low-barrier-li2s-chemistry.md, raw/papers/park2026_low-pressure-operation-carbon-coated-current-collector-asslsb.md, raw/papers/kimjt2023_mixed-discharge-products-li2s2-li2s-asslsb.md, raw/papers/hong2026_high-valence-cation-lattice-expansion-activating-li2s.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -67,10 +67,16 @@ digest 가 16편이 된 지금 운전 압력의 문헌 좌표는 이렇다:
 | **Qu 2025** | **7 MPa** | 정압/정용적 fixture 를 자작해 **변위·압력을 실측** ✓ |
 | **Zhang 2026** (이 절) | **0 / 1 / 4 MPa** 비교 | in-situ 실측 ✓, **0 MPa 는 60사이클에 붕괴** |
 | **Zhang (Jiaxu) 2026** | **15 / 30 / 100 MPa** | **압력별 EIS 로 골랐다** ✓ — `[인쇄]` **무압 356 Ω**, 1·3·5·10 MPa 에서 감소, **15–100 MPa 거의 불변(포화)** |
-| **Jeong 2026** | **50 MPa** | 근거 없음 |
+| **Jeong 2026** · **Gao 2024** | **50 MPa** | 근거 없음 |
+| **Kim JT 2023** | **150 MPa** | 근거 없음 |
+| **Hong 2026** | **200 MPa** | 근거 없음 — 이 위키 최고치 |
+| **Park 2026** | **1 → 75 MPa 7단계 스캔** | ✓ **같은 셀에서 3사이클씩** — 이 위키 최고 해상도. 10 MPa 상온 350사이클 78 % |
 
-→ **7배 흩어진다.** 그래서 이 위키는 어떤 문헌값도 "표준" 으로 가져오지 않고 **우리 fixture 의
-압력을 재서 적는다.**
+→ **0–200 MPa 로 흩어진다** (유효 좌표만 봐도 7–150 MPa, **21배**). 그래서 이 위키는 어떤 문헌값도
+"표준" 으로 가져오지 않고 **우리 fixture 의 압력을 재서 적는다.** 압력 축은 2026-10-06 에 별도
+카드로 분리했다 → [[operating-stack-pressure-floor]].
+★ **그리고 고압 논문의 성능은 접촉 문제가 지워진 상태의 수치**이므로 저압에 외삽되지 않는다 —
+Hong 200 MPa · Kim JT 150 MPa 의 수명을 우리 조건의 기대값으로 쓰면 안 된다.
 
 ★ 두 가지를 더 기억한다.
 1. **무압이 불가하다는 독립 근거가 둘이 됐다** — Zhang 2026 의 "0 MPa 60사이클 붕괴" 와
