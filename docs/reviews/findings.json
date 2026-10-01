@@ -6762,7 +6762,7 @@
   {
    "id": "WEB-01",
    "severity": "P2",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "1저자 WSL (10-02 00:40 · 케이스 261002_004049_699e1b — atom 파일 하나 (0:10 투입 스냅샷 atom_1) 를 올렸더니 3D 가 안 뜸 · *\"예전에는 파일 하나만 넣어도 3d는 나오게 했었는데\"*) · 컨테이너 재현",
    "opened_in": "webapp/templates/single.html",
@@ -6770,6 +6770,21 @@
    "note": "3D 데이터 (/3d-data) 자체는 200 이었다 — 페이지만 죽었다.  처방 = `metrics.porosity is defined` 조건 (값이 없으면 null · 0 으로 채우지 않는다) · 공극률이 있는 케이스의 _DEM_POR 은 그대로 (sphere-sum 우선 · 없으면 porosity).  atom + 판 메시 STL 을 같이 올리면 판 삼각형이 3D 에 같이 그려진다 (기존 경로 — 막혀 있던 것은 페이지뿐 · 시험 ⑥ 으로 고정).  별건 (고치지 않음 · 1저자 보류): 덱 없이 타입 2·3 만 있는 덤프를 올리면 업로드의 반지름 되돌림 규칙이 `1:AM_S,2:SE` 를 가정해 상 이름이 틀린다 (AM_S → SE · SE → T3) — 우회 = 업로드 type_map 칸에 `2:AM_S,3:SE`.",
    "evidence_tests": [
     "webapp/test_atoms_only_viewer.py ② ③ ③b ⑥b (옛 템플릿에서 실패 확인 · 10/14 → 14/14)"
+   ],
+   "claimed_fixed_sha": "a2f94668e",
+   "verification_note": "a2f94668e: single.html _DEM_POR 의 porosity 도 `is defined` 조건 · webapp/test_atoms_only_viewer.py 옛 템플릿 10/14 → 14/14 · 게이트 ✓ (10-02) · 1저자 WSL 확인 대기 (pull · 재시작 뒤 atom 만 올린 케이스의 결과 페이지)"
+  },
+  {
+   "id": "WEB-02",
+   "severity": "P3",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "1저자 WSL (10-02 · 0:10 투입 스냅샷 atom_1 렌더 — *\"입자간의 구분이 없잖아\"*)",
+   "opened_in": "webapp/static/js/viewer3d.js",
+   "title": "atom 파일만 올린 케이스의 3D 가 상 구분 없이 전부 연회색 (atoms-only = '공정 보기' 고정) — 같은 슬라이드의 Relaxation (접촉 파일이 있는 케이스) 과 색이 안 맞는다 · 맵에 없는 타입 이름 (T3 등) 의 입자는 아예 그려지지 않았다 (groups[p.type] 가 없으면 조용히 버림)",
+   "note": "처방 = 이름이 전부 AM_P · AM_S · SE 면 (덱 판독 · 사용자 type_map) atoms-only 도 전체 모드와 같은 상별 색 · 조명 / 하나라도 모르는 이름이 있으면 옛 회색 (덱 없이 반지름 되돌림 규칙 → 이름이 틀렸을 수 있다) · 모르는 이름의 입자는 회색 OTHER 묶음으로 그린다 (버리지 않는다).  MPM 페이로드 입자 이름은 AM_P · AM_S 뿐이라 영향 없음.  계산 코드 무변경 (J20-l: 이 변경이 웹앱 화면 자체).",
+   "evidence_tests": [
+    "webapp/test_atoms_only_viewer.py ⑦ ⑦b ⑦c (옛 뷰어에서 실패 확인 · 14/17 → 17/17)"
    ]
   }
  ]

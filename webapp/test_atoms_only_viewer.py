@@ -14,6 +14,7 @@ atoms-only 모드 (`run_pipeline` 이 atom_*.liggghts 만 보고 3D 용 atoms.cs
   ④ /3d-data 가 200 · 입자 수 = 덤프 원자 수 · atoms_only 표지
   ⑥ atom + 판 메시 STL 을 같이 올리면 /3d-data 에 판 삼각형이 실리고 3D 뷰어가 그린다
   ⑤ 공극률이 있는 케이스는 `_DEM_POR` 이 그대로다 — sphere-sum 우선, 없으면 porosity (영역 표시 동작 불변)
+  ⑦ 3D 뷰어 — atom 만 올린 케이스도 상 이름이 전부 알려졌으면 상별 색 · 모르는 이름은 회색으로 그린다 (버리지 않는다)
 
   python3 webapp/test_atoms_only_viewer.py
 """
@@ -162,6 +163,21 @@ def main():
         got = dem_por(r.get_data(as_text=True))
         chk(f'⑤{"abc"[k]} {sorted(fmx)} → _DEM_POR {want} (받은 값 {r.status_code} · {got!r})',
             r.status_code == 200 and got == want)
+
+    # ── ⑦ 3D 뷰어 색 — atom 만 올린 케이스도 상 이름이 전부 알려졌으면 상별 색 (1저자 10-02 *"입자간의 구분이 없잖아"*) ──
+    #    옛 판: atoms-only = "공정 보기" 로 전부 연회색 (COL.ATOMS_ONLY) · 맵에 없는 타입 이름 (T3 등) 은 **아예 안 그림**.
+    #    새 판: 이름이 전부 AM_P · AM_S · SE 면 전체 모드와 같은 상별 색 · 조명 / 하나라도 모르는 이름이 있으면 옛 회색
+    #    (덱 없이 반지름 되돌림 규칙 → 이름이 틀렸을 수 있다) · 모르는 이름의 입자도 회색으로 그린다 (버리지 않는다).
+    vsrc_nc = re.sub(r'//[^\n]*', '', vsrc)
+    chk('⑦ 맵에 없는 타입 이름의 입자를 버리지 않는다 (OTHER 묶음으로)',
+        re.search(r'\(groups\[p\.type\]\s*\|\|\s*groups\.OTHER\)\.push\(p\)', vsrc_nc) is not None)
+    chk('⑦b atoms-only 회색은 모르는 이름이 있을 때만 (phaseKnown = OTHER 비었음)',
+        re.search(r'const phaseKnown\s*=\s*groups\.OTHER\.length\s*===\s*0', vsrc_nc) is not None
+        and re.search(r'const grayView\s*=\s*atomsOnly\s*&&\s*!phaseKnown', vsrc_nc) is not None
+        and re.search(r'if\s*\(\s*grayView\s*\)\s*\{\s*\n\s*state\.meshes\.AM_P\s*=\s*createInstancedSpheres\(groups\.AM_P,\s*16,\s*COL\.ATOMS_ONLY',
+                      vsrc_nc) is not None)
+    chk('⑦c 모르는 이름의 입자는 회색으로 그린다 (createInstancedSpheres(groups.OTHER … COL.ATOMS_ONLY))',
+        re.search(r'createInstancedSpheres\(groups\.OTHER,\s*\d+,\s*COL\.ATOMS_ONLY', vsrc_nc) is not None)
 
     print(f'\n{_ok}/{_ok + len(_fail)} PASS')
     return 0 if not _fail else 1

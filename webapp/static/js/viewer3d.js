@@ -1378,19 +1378,23 @@ function buildScene(scene, camera, controls, data, state) {
   addAxisLabels(scene, box);
 
   /* group particles by type */
-  const groups = { AM_P: [], AM_S: [], SE: [] };
+  const groups = { AM_P: [], AM_S: [], SE: [], OTHER: [] };
   const idIndex = {};
   data.particles.forEach((p, i) => {
-    if (groups[p.type]) groups[p.type].push(p);
+    (groups[p.type] || groups.OTHER).push(p);   // ★ 10-02 — 맵에 없는 이름 (T3 등) 도 버리지 않는다 (옛 판: 조용히 안 그렸다 · WEB-01)
     idIndex[p.id] = p;
   });
   state.idIndex = idIndex;
 
   /* instanced meshes.
-   * Atoms-only mode = process view (no type distinction) → all light grey.
+   * Atoms-only mode = process view (no type distinction) → all light grey — ★ 10-02 (1저자 *"입자간의 구분이 없잖아"*):
+   *   이제 **이름이 하나라도 모르는 것일 때만** (덱 없이 반지름 되돌림 규칙 → 이름이 틀렸을 수 있다) 회색이다.
+   *   이름이 전부 AM_P · AM_S · SE 면 (덱 판독 · 사용자 type_map) 전체 모드와 같은 상별 색 · 조명.
    * Full mode = per-type colouring (AM_P dark, AM_S mid-grey, SE yellow). */
   const atomsOnly = !!data.atoms_only;
-  if (atomsOnly) {
+  const phaseKnown = groups.OTHER.length === 0;
+  const grayView = atomsOnly && !phaseKnown;
+  if (grayView) {
     state.meshes.AM_P = createInstancedSpheres(groups.AM_P, 16, COL.ATOMS_ONLY, 1.0, false);
     state.meshes.AM_S = createInstancedSpheres(groups.AM_S, 16, COL.ATOMS_ONLY, 1.0, false);
     state.meshes.SE   = createInstancedSpheres(groups.SE,   16, COL.ATOMS_ONLY, 1.0, false);
@@ -1406,6 +1410,7 @@ function buildScene(scene, camera, controls, data, state) {
     state.meshes.AM_S = createInstancedSpheres(groups.AM_S, 16, COL.AM_S, 1.0, false);
     state.meshes.SE   = createInstancedSpheres(groups.SE,   12, COL.SE, OPA.SE, true);
   }
+  if (groups.OTHER.length) state.meshes.OTHER = createInstancedSpheres(groups.OTHER, 12, COL.ATOMS_ONLY, 1.0, false);
   state.atomsOnly = atomsOnly;
   state.seParticles = groups.SE;
   state.amParticles = [...groups.AM_P, ...groups.AM_S];
