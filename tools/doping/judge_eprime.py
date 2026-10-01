@@ -362,6 +362,79 @@ def _git_state():
         return {"commit": None, "dirty": None, "why": f"{type(e).__name__}"}
 
 
+#: ── 카드 v7 탐침 (2026-10-01 · 초안 `cascade_estimand_card_v7_probe_2026_10_01.json`) ──────────────
+#  무도핑 H0 만 돌려 **조건(온도)을 고른다** — 처방(P1/P2) 비교는 탐침에서 보지 않는다.
+#  T* = 사다리에서 **가장 낮은** 온도 중, 지정 시드 **전부**가 v6 와 같은 자격(aggregation_eligible ·
+#  카드 정의 곡선)을 통과하고 골격 경보(alarm)가 없는 온도. 사다리·시드·문턱은 카드가 정했다.
+V7_LADDER_K = (800, 1000)
+V7_SEEDS = (1, 2)
+V7_PROBE_STRUCT = "H0_host"
+
+
+def probe_run(r):
+    """탐침 한 런 (scan() 기록) → 자격 · 모양 · 골격 경보. ⛔ **D 값은 돌려주지 않는다** — 탐침은 조건 선택용이다."""
+    from msd_diffusive_check import aggregation_eligible, framework_alarm
+    run_dir = Path(r["path"]).parent
+    cc = card_curve_from_run(run_dir, r.get("t"), r.get("fit_window_ps"))
+    out = {"tag": r.get("tag"), "run_dir": str(run_dir)}
+    if "error" in cc:
+        return {**out, "eligible": False, "error": cc["error"]}
+    ok, why, det = aggregation_eligible(cc["t"], cc["y"], cc["events"])
+    try:
+        fa = (framework_alarm(str(Path(r["path"])), save_fs=cc["save_fs"]) or {}).get("state", "unavailable")
+    except Exception as e:                      # 경보를 못 재면 '경보 없음' 이 아니다
+        fa = f"unavailable ({type(e).__name__})"
+    #: 골격 경보는 **잰 결과가 ok·framework_static 일 때만** 통과 — 못 쟀으면(unavailable) 통과가 아니다
+    return {**out, "eligible": bool(ok) and fa in ("ok", "framework_static"), "aggregation_eligible": bool(ok),
+            "framework_alarm": fa, "run_verdict": det.get("run_verdict"),
+            "sub_window_ratios": det.get("sub_window_ratios"), "events": cc["events"],
+            "n_frames": cc["n_frames"], "reasons": list(why)}
+
+
+def select_probe_temperature(results, ladder=V7_LADDER_K, seeds=V7_SEEDS):
+    """{(T, seed): probe 결과} → (T* 또는 None, 사유, 다음에 돌릴 (T, seed) 또는 None).
+
+    · 어떤 온도에서 돌린 시드가 **하나라도 불통과**면 그 온도는 탈락 → 다음 사다리.
+    · 돌린 시드가 전부 통과인데 **안 돌린 시드가 남았으면** 멈추고 그 시드를 다음으로 지정한다
+      (한 시드 통과로 T* 를 정하지 않는다 · 더 높은 온도로 건너뛰지 않는다).
+    """
+    for T in ladder:
+        done = {sd: results[(T, sd)] for sd in seeds if (T, sd) in results}
+        if any(not d.get("eligible") for d in done.values()):
+            continue
+        left = [sd for sd in seeds if sd not in done]
+        if left:
+            return None, f"{T} K: 시드 {left} 를 아직 안 돌렸다 — 한 시드로 T* 를 정하지 않는다", (T, left[0])
+        return T, f"{T} K: 시드 {list(seeds)} 전부 자격 통과 · 골격 경보 없음 → T* = {T} K", None
+    return None, f"사다리 {list(ladder)} K 전부 불통과 — v7 본 라운드를 열지 않는다", None
+
+
+def main_probe(a) -> int:
+    try:
+        sys.stdout.reconfigure(line_buffering=True)
+    except Exception:
+        pass
+    runs = {k: v for k, v in scan(a.probe).items() if k[0] == V7_PROBE_STRUCT}
+    print(f"v7 탐침 · {V7_PROBE_STRUCT} · 사다리 {list(V7_LADDER_K)} K · 시드 {list(V7_SEEDS)} · 런 {len(runs)} 개 · {a.probe}")
+    res = {}
+    for (st, T, sd), r in sorted(runs.items()):
+        pr = probe_run(r); res[(T, sd)] = pr
+        print(f"  {T} K seed {sd}: 자격 {'통과' if pr['eligible'] else '미달'} · 골격 {pr.get('framework_alarm', '—')} · "
+              f"부창비 {[round(x, 2) for x in (pr.get('sub_window_ratios') or [])]} · 사건 {pr.get('events', '—')}"
+              + (f" · ⛔ {pr['error']}" if "error" in pr else ""))
+    T_star, why, nxt = select_probe_temperature(res)
+    print(f"→ {why}" + (f" · 다음: {nxt[0]} K seed {nxt[1]}" if nxt else ""))
+    q = Path(a.out_json or Path(a.probe) / "cascade_v7_probe.json")
+    q.write_text(json.dumps({"card": "db/properties/cascade_estimand_card_v7_probe_2026_10_01.json",
+                             "ladder_K": list(V7_LADDER_K), "seeds": list(V7_SEEDS), "T_star_K": T_star,
+                             "why": why, "next": nxt, "tool": _git_state(),
+                             "⛔": "D 값은 싣지 않는다 — 탐침은 조건 선택용이다",
+                             "runs": [{"T_K": T, "seed": sd, **pr} for (T, sd), pr in sorted(res.items())]},
+                            ensure_ascii=False, indent=1), encoding="utf-8")
+    print(f"→ {q}")
+    return 0
+
+
 def judge_runs(runs, ignore_eligibility=False):
     """런마다 자격 판정. → {key: {...}}  ⛔ events_per_run=None 은 **통과가 아니다**."""
     from msd_diffusive_check import aggregation_eligible
@@ -467,9 +540,13 @@ def main() -> int:
     ap.add_argument("--selftest", action="store_true")
     ap.add_argument("--card", choices=["v5.2", "v6"], default="v5.2", help="v6 = 부모 10 · 600 K · t(n−1) 일반형 (카드 v6 §4)")
     ap.add_argument("--allow_partial", action="store_true", help="⛔ v6: 40 런이 다 없어도 집계 (중간 집계 — 인용·판정 금지 표시)")
+    ap.add_argument("--probe", metavar="OUT_ROOT", default=None,
+                    help="카드 v7 탐침 판정 — H0 런의 자격·모양·골격 경보와 T* 선택 (D 값 안 찍음)")
     a = ap.parse_args()
     if a.selftest:
         return _selftest()
+    if a.probe:
+        return main_probe(a)
     if a.card == "v6":
         return main_v6(a)
 
@@ -801,6 +878,51 @@ def _selftest() -> int:
                 f"⛔음성: 시드 하나가 검사 불가면 그 (p,k) 결측 · 집계표 검사불가 {tl_['검사불가']}")
             chk(g["detail"].get("run_verdict") in (_NV, "hold", "citable") and g["events_per_run"] == cc["events"],
                 "자격 판정이 카드 곡선·골격 기준 사건 수로 돈다")
+    #: ── 카드 v7 탐침 선택 규칙 (2026-10-01) ──
+    P, F = {"eligible": True}, {"eligible": False}
+    chk(select_probe_temperature({(800, 1): P, (800, 2): P})[0] == 800, "800 K 두 시드 통과 → T* = 800")
+    chk(select_probe_temperature({(800, 1): F, (1000, 1): P, (1000, 2): P})[0] == 1000,
+        "800 K 시드1 불통과(시드2 안 돌림) → 1000 K 두 시드 통과 → T* = 1000")
+    t, _, nx = select_probe_temperature({(800, 1): P})
+    chk(t is None and nx == (800, 2), "⛔음성: 한 시드만 통과 → T* 안 정함 · 다음 = 800 K seed 2")
+    t, _, nx = select_probe_temperature({(800, 1): P, (800, 2): F})
+    chk(t is None and nx == (1000, 1), "⛔음성: 800 K 두 시드 중 하나 불통과 → 800 탈락 · 다음 = 1000 K seed 1")
+    t, why, nx = select_probe_temperature({(800, 1): F, (1000, 1): F})
+    chk(t is None and nx is None and "열지 않는다" in why, "⛔음성: 사다리 전부 불통과 → v7 을 열지 않는다")
+    t, _, nx = select_probe_temperature({(1000, 1): P, (1000, 2): P})
+    chk(t is None and nx == (800, 1), "⛔음성: 800 K 를 안 돌렸으면 1000 K 결과가 있어도 건너뛰지 않는다")
+    if have_ase:
+        with _tf.TemporaryDirectory() as tdp:
+            rd = Path(tdp) / "md" / "H0_host__T800__s1" / "eprime_H0_host_d0.00_c0" / "T800"; rd.mkdir(parents=True)
+            awrite(str(rd / "traj.xyz"), [Atoms(symbols=sym, positions=cart[i], cell=cell, pbc=True) for i in range(nT)])
+            (rd / "aimd_results.json").write_text(json.dumps({"save_fs": sf, "n_frames": nT}))
+            (rd / "msd.json").write_text(json.dumps({"T_K": 800, "D_Li_cm2_s": 1.23e-5, "fit_window_ps": [2.0, 50.0],
+                                                     "times_ps": [i * sf / 1000.0 for i in range(nT)], "msd_Li_A2": [0.0] * nT}))
+            rr = scan(tdp)
+            chk(list(rr) == [("H0_host", 800, 1)], f"탐침 런을 (H0_host, 800, 1) 로 읽는다 ({list(rr)})")
+            pr = probe_run(rr[("H0_host", 800, 1)])
+            flat = json.dumps(pr)
+            chk("error" not in pr and "D" not in pr and "1.23e-05" not in flat and "D_legacy_sto_lab" not in pr,
+                "⛔음성: 탐침 출력에 D 값이 없다 (msd.json 의 D 도 안 옮긴다)")
+            chk(isinstance(pr.get("eligible"), bool) and pr.get("framework_alarm") is not None,
+                f"탐침 런 = 자격 판정 + 골격 경보 상태 ({pr.get('framework_alarm')})")
+            import msd_diffusive_check as _mdc
+            _oa, _of = _mdc.aggregation_eligible, _mdc.framework_alarm
+            r0 = rr[("H0_host", 800, 1)]
+            try:      # 자격은 통과로 고정하고 골격 경보 경로만 따로 본다
+                _mdc.aggregation_eligible = lambda t, y, ev: (True, [], {"run_verdict": "citable", "sub_window_ratios": [1, 1, 1]})
+                _mdc.framework_alarm = lambda *a_, **k_: {"state": "ok"}
+                chk(probe_run(r0)["eligible"] is True, "자격 통과 + 골격 ok → 탐침 통과")
+                _mdc.framework_alarm = lambda *a_, **k_: {"state": "alarm"}
+                chk(probe_run(r0)["eligible"] is False, "⛔음성: 골격 경보(alarm) → 자격 통과여도 탐침 불통과")
+                def _boom(*a_, **k_):
+                    raise RuntimeError("x")
+                _mdc.framework_alarm = _boom
+                pz = probe_run(r0)
+                chk(pz["eligible"] is False and str(pz["framework_alarm"]).startswith("unavailable"),
+                    "⛔음성: 골격 경보를 못 재면 통과가 아니다 (unavailable)")
+            finally:
+                _mdc.aggregation_eligible, _mdc.framework_alarm = _oa, _of
     print("selftest PASS" if ok else "selftest FAIL")
     return 0 if ok else 1
 

@@ -6685,6 +6685,69 @@
     "commit": "12aaf523dc8df1e2055784bb0764b730db0431a3",
     "decision_digest": "sha256:b0ad5dea02a93651d6a95bc2adaa786eaffd5f1d47dfbf81d574ce9ae9685945"
    }
+  },
+  {
+   "id": "D-2026-10-01-cascade-v7-probe-card",
+   "schema_version": 2,
+   "kind": "estimand",
+   "scope": "cascade.d_rel_v7",
+   "slot": "cascade_d_rel_v7",
+   "applies_to": {
+    "systems": [
+     "lpscl*"
+    ],
+    "tasks": [
+     "transport_pilot"
+    ],
+    "methods": [
+     "uma-s-1p1-omat__langevin-nvt"
+    ],
+    "use_cases": [
+     "diagnostic"
+    ]
+   },
+   "title": "cascade D_rel v7 (초안) — 무도핑 H0 탐침이 v6 자격을 먼저 통과하는 가장 낮은 온도 T* (800 → 1000 K) 에서만 본 라운드",
+   "statement": "v6(600 K · 방법상 무효)의 재개가 아니라 마감 §5 의 **새 카드**다. 바꾸는 것은 온도 하나(600 K → T*). 탐침: 무도핑 H0 만 · 800 K seed 1 → seed 2 → (불통과면) 1000 K seed 1 → seed 2 · 통과 = v6 와 같은 자격(aggregation_eligible · 카드 정의 곡선) ∧ 골격 경보 ok/framework_static · 두 시드 다 통과한 가장 낮은 온도 = T* · 둘 다 불통과면 열지 않는다. 그 외(셀 · 공통부피 · 처방 · 부모 10 · 시드 2 · 프로토콜 · 집계 · δ)는 v6 그대로. 탐침 출력에 D 값을 싣지 않는다.",
+   "rationale": "v6 는 600 K · 200 ps 에서 Li MSD 가 2–100 ps 내내 휘어(H0 포함) 보고량이 정의되지 않았다. 같은 600 K 에서 런을 늘려도 판정 창의 휨은 그대로라, 직선 구간에 닿는 조건을 바꿔야 한다. 온도는 준비 구조를 그대로 쓰는 가장 싼 손잡이다(무질서 호스트는 준비부터 · 늦은 창은 4 배). P1/P2 비교는 탐침에서 보지 않으므로 손잡이 선택이 그 비교에 끌려가지 않는다.",
+   "decision_state": "proposed",
+   "record_kind": "estimand_card",
+   "results_seen": false,
+   "card": "db/properties/cascade_estimand_card_v7_probe_2026_10_01.json",
+   "record": "db/raw/cascade_v7_probe/",
+   "depends_on": [
+    "D-2026-10-01-cascade-d-rel-closed",
+    "D-2026-09-20-cascade-v6-10parents"
+   ],
+   "amends": [],
+   "evidence": [
+    "db/properties/cascade_d_rel_closed_2026_10_01.json §5",
+    "db/properties/cascade_v6_round_result_2026_10_01.json §3",
+    "tools/doping/judge_eprime.py::select_probe_temperature"
+   ],
+   "reopen_criteria": [
+    "탐침 불통과(800 · 1000 K 둘 다) ⇒ v7 을 열지 않는다 — 사다리 확장 · 문턱 완화로 가지 않는다 (새 카드)",
+    "T* 확정 ⇒ 본 라운드 상한(탐침 실측 단가 × 40)을 첫 런 전에 사용자가 비준",
+    "⛔ 이 카드 안에서 사다리 · 시드 수 · 자격 문턱 · 창 · δ 변경 금지"
+   ],
+   "cost_cap": {
+    "machine": "kgy (li2s v2 와 GPU 공유 가능)",
+    "total_gpu_h": 30,
+    "⛔": "탐침 상한이다. 넘으면 멈추고 보고한다. 본 라운드 상한은 탐침 뒤 따로 비준.",
+    "견적": "v6 실측 ≈ 5.89 h/런 × 최대 4 런 ≈ 24 GPU-h"
+   },
+   "proposed_by": "claude-session-2026-10-01",
+   "status": "proposed",
+   "status_history": [
+    {
+     "at": "2026-10-01",
+     "state": "proposed",
+     "by": "agent",
+     "note": "사용자 AskUserQuestion '탐침 카드부터 쓴다'. ⏳ 외부 리뷰 · 사용자 비준 · 탐침 실행 승인. 트랙 cascade = 사용자 1저자."
+    }
+   ],
+   "ratification": {
+    "state": "proposed"
+   }
   }
  ]
 }
