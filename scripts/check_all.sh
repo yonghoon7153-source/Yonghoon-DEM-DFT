@@ -163,6 +163,7 @@ run 'webapp: closed_param_labels' python3 webapp/test_closed_param_labels.py
 run 'webapp: closed_param_values' python3 webapp/test_closed_param_values.py
 run 'webapp: closed_param_groupview' python3 webapp/test_closed_param_groupview.py
 run 'webapp: cf_full_labels'      python3 webapp/test_cf_full_labels.py
+run 'webapp: tortuosity_all'      python3 webapp/test_tortuosity_all.py
 run 'webapp: closed_param_exact_union' python3 webapp/test_closed_param_exact_union.py
 run 'webapp: coverage_handover_scope' python3 webapp/test_coverage_handover_scope.py
 run 'webapp: am_isolation_labels'    python3 webapp/test_am_isolation_labels.py

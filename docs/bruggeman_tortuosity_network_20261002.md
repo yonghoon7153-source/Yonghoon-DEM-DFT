@@ -26,7 +26,8 @@
 
 | 이름 | 식 | 뜻 | 웹앱 표기 |
 |---|---|---|---|
-| τ_Dijkstra | 최단 경로 ÷ 높이 차 (쌍마다 길 하나) | 기하학적 우회만 | τ_Dijkstra — geodesic-only |
+| τ_Dijkstra | 최단 경로 ÷ 높이 차 (쌍마다 길 하나 · 무작위 짝 최대 200 쌍) | 기하학적 우회만 | τ_Dijkstra — geodesic-only |
+| τ_Dijkstra,all (10-02 추가) | 바닥 띠 관통 SE **전부** → 경로가 가장 짧은 위쪽 띠 SE 까지 ÷ 두 입자 z 차 (다중 출발 Dijkstra 한 번 · `calc_tortuosity_all`) | 기하학적 우회만 · 표본 없음 · 옆 우회 없음 (τ_Dijkstra 와 같거나 작다) | τ_Dijkstra,all — every bottom SE |
 | **τ_Laplace,bulk** | √(φ_SE · σ_grain / σ_bulk_net) | 접촉 저항을 0 으로 둔 네트워크 (CONTACT_FREE) 로 역산 — **모든 병렬 경로 · 입계 (접촉) 제외** | τ_Laplace,bulk — without constriction |
 | τ_Laplace,eff | √(φ_SE · σ_grain / σ_full) | 접촉 (Holm 협착) 까지 넣은 네트워크로 역산 — **COMSOL · EIS 입력** | τ_Laplace,eff ⭐ |
 

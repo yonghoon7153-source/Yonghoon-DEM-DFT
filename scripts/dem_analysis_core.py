@@ -651,6 +651,91 @@ def calc_tortuosity(atoms, perc_result, n_samples=200, box_xy=0.05, box_x=None, 
     }
 
 
+def calc_tortuosity_all(atoms, perc_result, box_xy=0.05, box_x=None, box_y=None, detail=False):
+    """기하 τ 전체판 (1저자 10-02) — 바닥 띠의 관통 SE **전부**에서 위쪽 띠 SE 까지 각자의 최단 경로 (길이만).
+
+    τ_i = L_i / Δz_i
+      L_i  = SE–SE 접촉 그래프 위 최단 경로 길이 (간선 = `calc_percolation` 의 'distance' = 중심 거리 · x,y 주기 최소상)
+      Δz_i = 그 경로가 닿은 위쪽 띠 SE 의 z − 출발 SE 의 z
+    · 다중 출발 Dijkstra 한 번 — 위쪽 띠 관통 SE 전부를 출발점으로 두면 (그래프가 무방향) 각 바닥 SE 에서
+      **경로가 가장 짧은 위쪽 SE** 까지의 거리와 그 SE 가 한꺼번에 나온다.  동률이면 번호가 작은 위쪽 SE.
+    · `calc_tortuosity` (표본판 · 웹앱 τ_Dij) 와 다른 점: 무작위 짝 최대 200 쌍이 아니라 바닥 관통 SE 전부 · 짝은 경로가 가장
+      짧은 위쪽 SE (옆으로 먼 짝을 골라 생기는 우회가 없다) · 1 ≤ τ < 20 문턱으로 거르지 않는다 (Δz ≤ 0 인 출발점만 빼고 센다).
+    · 같은 점: 그래프 · 바닥/위 띠 · 관통 정의 (`calc_percolation`) · τ = 경로 길이 ÷ 두 입자 z 차 · recommended 규칙
+      (std/mean > 0.5 이면 median).
+    · 수송 τ 가 아니다 — 전류가 여러 길로 나뉘는 것 · 접촉 저항은 안 들어간다 (그것은 망 단계의 τ_Laplace).
+    detail=True 면 'per_source' = {바닥 SE: {length, target, dz, tau}} 도 돌려준다 (시험 · 진단용).
+    """
+    import heapq
+    if box_x is None:
+        box_x = box_xy
+    if box_y is None:
+        box_y = box_xy
+    out = {'mean': None, 'median': None, 'std': None, 'n': 0, 'n_sources': 0, 'n_dz_nonpos': 0,
+           'use_median': False, 'recommended': None, 'method': 'all_bottom_sources_multi_dijkstra'}
+    if detail:
+        out['per_source'] = {}
+    G = perc_result.get('graph')
+    bottom = perc_result.get('bottom_se') or set()
+    top = perc_result.get('top_se') or set()
+    percolating = perc_result.get('percolating_se')
+    if G is None or G.number_of_nodes() == 0:
+        return out
+    if percolating is None:
+        percolating = set()
+        for comp in nx.connected_components(G):
+            if (comp & bottom) and (comp & top):
+                percolating |= comp
+    sources = sorted(bottom & percolating)
+    targets = sorted(top & percolating)
+    out['n_sources'] = len(sources)
+    if not sources or not targets:
+        return out
+
+    dist, origin = {}, {}
+    heap = [(0.0, t, t) for t in targets]
+    heapq.heapify(heap)
+    while heap:
+        d, u, o = heapq.heappop(heap)
+        if u in dist:
+            continue
+        dist[u] = d
+        origin[u] = o
+        for v, ed in G[u].items():
+            if v in dist:
+                continue
+            w = ed.get('distance')
+            if w is None:
+                w = _periodic_dist(atoms[u], atoms[v], box_x, box_y)
+            heapq.heappush(heap, (d + w, v, o))
+
+    taus = []
+    for s in sources:
+        if s not in dist:                     # 관통 성분이면 닿는다 — 방어
+            continue
+        t = origin[s]
+        dz = atoms[t]['z'] - atoms[s]['z']
+        if dz <= 0:
+            out['n_dz_nonpos'] += 1
+            if detail:
+                out['per_source'][s] = {'length': dist[s], 'target': t, 'dz': dz, 'tau': None}
+            continue
+        tau_val = dist[s] / dz
+        taus.append(tau_val)
+        if detail:
+            out['per_source'][s] = {'length': dist[s], 'target': t, 'dz': dz, 'tau': tau_val}
+
+    if not taus:
+        return out
+    t_mean = float(np.mean(taus))
+    t_median = float(np.median(taus))
+    t_std = float(np.std(taus)) if len(taus) > 1 else 0.0
+    use_median = t_std / t_mean > 0.5 if t_mean > 0 else False
+    out.update({'mean': t_mean, 'median': t_median, 'std': t_std, 'n': len(taus),
+                'use_median': use_median, 'recommended': t_median if use_median else t_mean})
+    return out
+
+
 # ─── Ionic Active AM ──────────────────────────────────────────────────────
 
 def calc_ionic_active_am(atoms, contacts, perc_result, se_types, am_types, type_map):
@@ -1245,6 +1330,11 @@ def run_full_analysis(atoms_raw, contacts_raw, type_map, scale, results_dir, box
     tau = calc_tortuosity(atoms_raw, perc, box_x=box_x, box_y=box_y)
     tau_str = f"{tau['mean']:.2f} ± {tau['std']:.2f}" if tau['mean'] else "N/A"
     print(f"  Tortuosity: {tau_str} ({tau['n_samples']} samples)")
+    #  기하 τ 전체판 (1저자 10-02) — 바닥 관통 SE 전부 → 위쪽 띠 최단 경로 (표본 200 쌍 아님)
+    tau_all = calc_tortuosity_all(atoms_raw, perc, box_x=box_x, box_y=box_y)
+    print(f"  Tortuosity (all bottom SE → top, shortest): "
+          + (f"{tau_all['mean']:.3f} ± {tau_all['std']:.3f} (n={tau_all['n']}/{tau_all['n_sources']})"
+             if tau_all['mean'] is not None else "N/A"))
 
     # 7. Ionic Active AM
     ionic = calc_ionic_active_am(atoms_raw, contacts_raw, perc, se_types, am_types, type_map)
@@ -1316,6 +1406,7 @@ def run_full_analysis(atoms_raw, contacts_raw, type_map, scale, results_dir, box
         'am_am_cn': am_am_cn,
         'percolation': perc,
         'tortuosity': tau,
+        'tortuosity_all': tau_all,
         'ionic_active': ionic,
         'stress': stress,
         'force_dist': force_dist,

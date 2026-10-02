@@ -1824,9 +1824,15 @@ const METRIC_TIPS = {
   },
   'τ_Dij (Dijkstra, 기하만)': {
     title: 'τ_Dij — Dijkstra geodesic tortuosity',
-    formula: 'τ_Dij = (최단경로 길이) / (직선 거리)',
-    desc: 'SE-SE 접촉 그래프에서 bottom→top 최단경로 (Dijkstra algorithm). 기하만 반영, GB 저항 제외.',
-    meaning: 'Cheap geometric surrogate. 내부 screening / scaling law feature 로 사용. EIS 측정값과 직접 비교 불가.'
+    formula: 'τ_Dij = (최단경로 길이) / (두 입자 z 차)',
+    desc: 'SE-SE 접촉 그래프에서 bottom→top 최단경로 (Dijkstra algorithm). 기하만 반영, GB 저항 제외.\n표본: 바닥 띠 관통 SE 와 위쪽 띠 SE 를 무작위로 짝지은 최대 200 쌍 (seed 42) · 쌍마다 최단경로 하나 · 1 ≤ τ < 20 만 평균 (`calc_tortuosity`). 위쪽 짝이 옆으로 멀면 옆 우회 길이까지 들어간다.',
+    meaning: 'Cheap geometric surrogate. 내부 screening / scaling law feature 로 사용. EIS 측정값과 직접 비교 불가. 표본 없는 전체판은 바로 아래 τ_Dij,all.'
+  },
+  'τ_Dij,all (Dijkstra 전체, 기하만)': {
+    title: 'τ_Dij,all — 바닥 관통 SE 전부의 최단경로 (기하)',
+    formula: 'τ_i = L_i / Δz_i  (평균 = 행 값)\nL_i = 바닥 SE i 에서 경로가 가장 짧은 위쪽 띠 SE 까지의 최단경로 길이 (SE-SE 접촉 그래프 · 중심 거리 · x,y 주기 최소상)\nΔz_i = 그 위쪽 SE 의 z − i 의 z',
+    desc: '표본 없이 바닥 띠의 관통 SE 전부를 쓴다 — 위쪽 띠 SE 전부를 출발점으로 둔 Dijkstra 한 번 (`calc_tortuosity_all`). τ_Dij (무작위 짝 최대 200 쌍) 와 달리 짝은 경로가 가장 짧은 위쪽 SE 라 옆 우회가 없고, 1 ≤ τ < 20 문턱으로 거르지 않는다 (Δz ≤ 0 인 출발점만 빼고 센다). 띠 · 관통 정의는 τ_Dij 와 같다.',
+    meaning: '길이만 보는 기하 τ — 전류가 여러 길로 나뉘는 효과와 접촉 저항은 없다 (그것은 τ_Laplace). 같은 침대에서 τ_Dij 와 같거나 작다 (옆 우회가 빠진다). 경로를 하나씩 세는 "모든 경로" 가 아니라 입자마다 가장 짧은 길 하나다.'
   },
   'τ_Lap_geom (Laplace, GB 제외)': {
     title: 'τ_Lap_geom — Laplace bulk-only tortuosity',
@@ -2633,6 +2639,7 @@ const PAPER_TO_ORIG = {
   'σ_contact-free / σ_full — constriction overestimation': 'Contact-free / Full',
   'σ_Bruggeman / σ_ionic — EMT vs Network solver': 'σ_brug / σ_ionic',
   'τ_Dijkstra — geodesic-only (geometric)': 'τ_Dij (Dijkstra, 기하만)',
+  'τ_Dijkstra,all — every bottom SE, shortest path to top (geometric)': 'τ_Dij,all (Dijkstra 전체, 기하만)',
   'τ_Laplace,bulk — Laplacian without constriction':
       'τ_Lap_geom (Laplace, GB 제외)',
   'τ_Laplace,eff ⭐ — Laplacian + constriction (COMSOL / EIS input)':

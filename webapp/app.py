@@ -1942,6 +1942,7 @@ def normalize_network_summary_layout(tables, metrics):
         'σ_brug / σ_ionic',
         # τ 비교
         'τ_Dij (Dijkstra, 기하만)',
+        'τ_Dij,all (Dijkstra 전체, 기하만)',
         'τ_Lap_geom (Laplace, GB 제외)',
         'τ_Lap_eff ⭐ (Laplace, GB 포함 — COMSOL/EIS)',
         'τ_Lap_eff / τ_Dij',
@@ -2132,6 +2133,8 @@ _PAPER_LABEL_MAP = {
     # Tortuosity comparison
     'τ_Dij (Dijkstra, 기하만)':
         'τ_Dijkstra — geodesic-only (geometric)',
+    'τ_Dij,all (Dijkstra 전체, 기하만)':
+        'τ_Dijkstra,all — every bottom SE, shortest path to top (geometric)',
     'τ_Lap_geom (Laplace, GB 제외)':
         'τ_Laplace,bulk — Laplacian without constriction',
     'τ_Lap_eff ⭐ (Laplace, GB 포함 — COMSOL/EIS)':
@@ -2612,6 +2615,9 @@ def transform_network_summary_4col(tables, metrics, meta):
                 net_rows.append(['── τ 비교 (Dijkstra vs Laplace, COMSOL input = τ_Lap_eff) ──', '', '', ''])
                 if tau_dij:
                     net_rows.append(_same_row('τ_Dij (Dijkstra, 기하만)', round(tau_dij, 2)))
+                if metrics.get('tortuosity_all_mean'):     # 기하 τ 전체판 (10-02) — 바닥 관통 SE 전부 · 표본 아님
+                    net_rows.append(_same_row('τ_Dij,all (Dijkstra 전체, 기하만)',
+                                              round(metrics['tortuosity_all_mean'], 2)))
                 if tau_lap_geom:
                     net_rows.append(_same_row('τ_Lap_geom (Laplace, GB 제외)', round(tau_lap_geom, 2)))
                 net_rows.append(_dual_row('τ_Lap_eff ⭐ (Laplace, GB 포함 — COMSOL/EIS)',
@@ -2743,6 +2749,9 @@ def transform_network_summary_4col(tables, metrics, meta):
             new_rows.append([tau_section_label, '', '', ''])
             if tau_dij:
                 new_rows.append(_same_row('τ_Dij (Dijkstra, 기하만)', round(tau_dij, 2)))
+            if metrics.get('tortuosity_all_mean'):         # 기하 τ 전체판 (10-02)
+                new_rows.append(_same_row('τ_Dij,all (Dijkstra 전체, 기하만)',
+                                          round(metrics['tortuosity_all_mean'], 2)))
             if tau_lap_geom:
                 new_rows.append(_same_row('τ_Lap_geom (Laplace, GB 제외)', round(tau_lap_geom, 2)))
             new_rows.append(_dual_row('τ_Lap_eff ⭐ (Laplace, GB 포함 — COMSOL/EIS)',

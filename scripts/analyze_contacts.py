@@ -198,6 +198,7 @@ def save_results(results, atoms_raw, contacts_raw, df_atom, df_contact,
     perc = results['percolation']
     cn = results['se_se_cn']
     tau = results['tortuosity']
+    tau_all = results.get('tortuosity_all') or {}       # 기하 τ 전체판 (10-02) — 옛 results 에는 없다
     ionic = results['ionic_active']
     eff_cond = results.get('effective_conductivity')
     rows = [
@@ -414,6 +415,13 @@ def save_results(results, atoms_raw, contacts_raw, df_atom, df_contact,
         'tortuosity_std': tau['std'],
         'tortuosity_use_median': tau.get('use_median', False),
         'tortuosity_recommended': tau.get('recommended', tau['mean']),
+        #  기하 τ 전체판 (1저자 10-02) — 바닥 띠 관통 SE 전부 → 위쪽 띠 SE 최단 경로 (`calc_tortuosity_all` · 표본 200 쌍 아님 · 길이만)
+        'tortuosity_all_mean': tau_all.get('mean'),
+        'tortuosity_all_median': tau_all.get('median'),
+        'tortuosity_all_std': tau_all.get('std'),
+        'tortuosity_all_n': tau_all.get('n'),
+        'tortuosity_all_n_sources': tau_all.get('n_sources'),
+        'tortuosity_all_recommended': tau_all.get('recommended'),
         'ionic_active_pct': ionic['active_pct'],
         #  v1.1 ② (1저자 비준 10-01 · LHS 인계) — 경로 기준 고립 (= 100 − 활성) 의 분해.  calc_ionic_active_am 이 계산만 하고 버리던 값:
         #   단절 = SE 는 닿았지만 그 SE 가 위 띠 (분리막 쪽) 로 안 이어짐 · 무접촉 = SE 접촉 0.  활성 + 단절 + 무접촉 = 100 (전체 · 상별).
