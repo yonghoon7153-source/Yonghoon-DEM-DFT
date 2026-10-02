@@ -591,7 +591,7 @@ mothership 특칙). **셋이 안 모이면 태그를 만들지 말고 닻 한 �
 
 | # | 논문 | 받은 것 (접두사 · 해시) | 대조 · 상태 |
 |---|---|---|---|
-| 51 | Danilov · Niessen · Notten 2011 *J. Electrochem. Soc.* 158, A215 (본문 doi 10.1149/1.3521414) | 본문 ee00bca9 · e00bb9869bd275eb (9 쪽 · Distiller 6.0.1 + IOP iText 내려받기 2026-10-02) | ✅ SI 없음 (보충 언급 0) · ⏳ 처리 대기 |
+| 51 | Danilov · Niessen · Notten 2011 *J. Electrochem. Soc.* 158, A215 (본문 doi 10.1149/1.3521414) | 본문 ee00bca9 · e00bb9869bd275eb (9 쪽 · Distiller 6.0.1 + IOP iText 내려받기 2026-10-02) | ✅ SI 없음 (보충 언급 0) · ✅ **91호 흡수** (서브 커밋 `a60d2f241`) — 해시 일치 · SI 없음 일치 · 표 I · II 는 수동 크롭 · 판정: 계보 첫 매개변수 표는 값이 아니라 구조 · 관행을 물려줬다 (26호 표와 이름 같은 아홉 중 같은 값 0) · 인쇄된 `k_r` 로는 저자 자신의 그림 8a · 11 · 12 가 재현되지 않고 ×100 이면 재현 (에이전트 재풀이 · 유일성 미주장) · 51.2C 에서 모형 용량이 측정의 73–78 % · 원장 지목 칸 정정 12 · 26 → 26 |
 | 52 | Firouz · Goutam · Soult · Mohammadi · Van Mierlo · Van den Bossche 2020 *J. Energy Storage* 28, 101184 (doi 10.1016/j.est.2019.101184) | 본문 430260f1 · 9cf5d53f1aea0281 (12 쪽) | ✅ SI 없음 (보충 언급 0) · ⏳ 처리 대기 |
 | 53 | Bielefeld 2023 *Batteries & Supercaps* 6, e202300180 (doi 10.1002/batt.202300180) | 본문 27f7fd17 · 11fdd3cce9bcbff7 (12 쪽 · PDFlib + iText 2026-10-02) | ✅ SI 없음 — "Data sharing is not applicable to this article as no new data were created or analyzed" · ⏳ 처리 대기 |
 | 54 | Schmidt · Sinzig · Wall 2024 *J. Electrochem. Soc.* 171, 100502 (doi 10.1149/1945-7111/ad76dc) | 본문 fde9d5bd · a58e96d8a6e69ee0 (16 쪽 · IOP iText 2026-10-02) | ✅ SI 없음 — 부록 A · B(표 B·I–B·III)는 본문 안 · 시뮬레이션 결과 자료는 Zenodo `10.5281/zenodo.13802728`(받지 않음 — digest 에 불필요) · ⏳ 처리 대기 |
