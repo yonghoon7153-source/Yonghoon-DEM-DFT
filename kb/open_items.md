@@ -14,6 +14,13 @@
 > 이었는데 같은 날 실측은 **프로세스 0개**였다 — 워처·기억이 아니라 `ps`·receipt·git log 로
 > 받친다(`kb/projects/restart_runbook_2026_09_07.md`). 세션을 닫을 때 이 절을 갱신한다.
 
+### ⏭-NOW-z5. 2026-10-02 밤 — **friendly 토큰 소진 → 서브 대시보드로 대피 (인계 카드) · P1b kgy 발사 블록 전달**
+
+- 📦 **대피 인계 카드** `kb/projects/handoff_2026_10_02_evacuation.md` — §0 = 서브 대시보드 세션에 붙일 프롬프트 (브랜치 · 점검 기대값 · 상태 · 충돌 안 나게 · 돌아가기 · 운영 규칙) · §3 원격 · §4 바로 쓸 kgy 블록 (G1 기계 대조 · 총 견적 · 실패 시 · 원자료 회수).
+- ⛔ **충돌 0 의 조건**: 이 카드를 담은 커밋이 friendly 의 마지막 커밋이다 — 대피하는 동안 friendly 에 아무도 쓰지 않는다 (원격 push 도 대피 브랜치로). 복귀 = `git merge --ff-only`.
+- ⚠ **friendly 에 쓰는 세션이 하나 더 있다** — `session_01H191Ni4xzj9H5ftstAm7Ft` (litdb tortuosity 묶음 · 10-02 16:38·18:22 UTC 커밋 둘 · 이 카드는 그 위에 얹음). 그 세션이 계속 쓰면 복귀는 `merge --no-ff` (litdb/ DEM 쪽 파일만 고쳐서 겹칠 파일은 적음 · 대피 세션은 그 파일을 안 건드린다).
+- 원격 마지막 실측 10-02 22:05 KST (kgy 점검 · DRY_RUN rc 0). P1b 발사 블록·watch 는 줬고 **발사 출력은 못 봤다** — 다음 세션은 사용자 출력으로만 갱신.
+
 ### ⏭-NOW-z4. 2026-10-01 — **cascade D_rel 파일럿 마감 (v6 방법상 무효 · 자격 0/40) · 판독기 곡선 정의 정정**
 
 - 🔒 **cascade D_rel 파일럿 닫음 (트랙 cascade · 사용자 = 1저자 · AskUserQuestion '방법상 무효' · '마감 + 재개 조건')** — 마감 기록 `db/properties/cascade_d_rel_closed_2026_10_01.json` · 라운드 결과 `db/properties/cascade_v6_round_result_2026_10_01.json` · 결정 `D-2026-10-01-cascade-d-rel-closed` (active). v6 41/41 런 끝 (242.10 / 320 GPU-h) → 자격 **0/40** (① D_inc plateau 40 · ② 부창 기울기비 40 · ③ 사건 수 0 · 검사 불가 0) → 유효 부모 0 → 구간 판정 없음. MSD 가 2–100 ps 내내 아래로 휨 (추세 음 40/40 · 부창비 중앙 2.25 · 0.78 · 0.49) · 무도핑 H0 1 런도 같은 방향. 화면 `/cascade` 판정 밴드에 실림 (test_v3_cascade_sdcp 33/33 · 깨기 확인). ⛔ 재개 사유가 아닌 것: v6 런 연장 · 다른 창 재판독 · 문턱 완화 · 자격 무시 가정계산.
