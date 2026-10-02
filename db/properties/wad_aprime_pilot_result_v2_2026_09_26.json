@@ -185,5 +185,12 @@
   "헤드라인": "2체 그대로 (결정)",
   "기록": "db/raw/wad_aprime_s4_v2s2_2026_09_26/d3_atm_column_2026_09_27.json",
   "DEM": "다음 회신에 별도 열 (미전달)"
+ },
+ "⚠_2026_10_02_registry_대칭_중복": {
+  "발견": "V2 의 registry 넷은 대칭으로 **둘**이다 — bridge (½,0) ≡ top_fcc (0,0) (병진 동치: 2×2 그래핀이 Ag 원시 (½,0) 이동에 불변) · top_hcp (⅓,⅔) ≡ hollow_fcc (⅔,⅓) (거울 동치).",
+  "근거": "ASE SymmetryEquivalenceCheck (angle 1° · ltol·stol 0.05) · 병진만 보는 검사로도 bridge ≡ top_fcc · 값과 맞는다: W(bridge) = W(top_fcc) = 0.4354874168780525 (16 자리) · W(top_hcp) − W(hollow_fcc) = −2.7e-6 J/m² (collect_aprime_s4_2026_09_26.json).",
+  "영향": "값(0.435 J/m²)은 그대로다. 'registry 4 · 폭 0.0004' 는 **'비등가 registry 2 · 폭 0.0004'** 로 읽는다 (표본 수가 반이다). 09-23 계획의 'registry ≥ 4 (대칭 비등가)' 를 V2 는 채우지 못했다 — S3 카드는 봉인이라 고치지 않는다.",
+  "후속": "P1b (WAD-AgC · db/properties/wad_agc_graphite_prereg_2026_10_02.json) 는 흑연 3층에서 쌍별 비등가 넷을 결과 전에 고르고 생성기가 확인한다 · DEM 에 보낸 회신 5 의 'registry 4 곳 모두 같은 값' 은 다음 회신에 한 줄로 바로잡을지 사용자 판단.",
+  "기록": "2026-10-02 · agent · tools/wad/agc_graphite.py registry_equivalences (selftest 가 V2 의 두 등가 쌍을 잡는다)"
  }
 }
