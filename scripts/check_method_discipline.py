@@ -794,6 +794,8 @@ K_REQUIRED_SELFTESTS = (
     ('scripts/sr01_stamp_compare.py', '--selftest'),
     ('scripts/mpm_webapp_payload.py', '--selftest-temperature'),
     ('scripts/step3_sigma.py', '--selftest'),
+    #  ★ 2026-10-02 (①, CL-81) — 계면 저항 r_int 의 반례·해석해 묶음.  두 레인에 배선한 뒤 더했다.
+    ('scripts/step3_sigma.py', '--selftest-rint'),
     #  ★ LHS 확장 분석기 둘 (2026-08-29, Codex R11 B1) — 분석기가 **결과 전에** 커밋돼야
     #    사전등록의 `perc_i` 규약이 실재한다.  여기 넣는 것은 그 둘이 나중에 조용히
     #    배선에서 빠지는 것을 막는다 (규칙 K 의 원래 사고와 같은 부류).

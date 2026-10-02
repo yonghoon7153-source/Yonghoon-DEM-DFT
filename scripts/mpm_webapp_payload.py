@@ -1131,6 +1131,16 @@ def main():
     ap.add_argument('--step3-vox', type=float, default=0.4,
                     help='STEP3 voxel size (µm).  0.4 default: AM-carbon bridges (band 0.15µm) land in '
                          'same/adjacent voxels; smaller = finer necks but ∝1/vox³ dof.')
+    #  ★ 2026-10-02 (①, CL-81) — 상 경계 계면 저항.  기본 없음 = 옛 조립과 **비트 동일**
+    #    (CONTACT_FREE 가지).  표는 `step3_sigma.parse_rint_table` 이 해석한다.
+    ap.add_argument('--step3-rint-e', nargs='*', default=None, metavar='A|B=OHM_CM2',
+                    help='① 전자 솔브의 상 경계 계면 저항 (면적비저항, Ω·cm²) — 예 AM_S|VGCF=1e-3 '
+                         'AM_P|VGCF=1e-3.  같은 상 쌍 (AM_S|AM_S) 은 입자 번호가 다른 면에만 걸린다.  '
+                         '기본 없음 = 옛 조립과 비트 동일 (CONTACT_FREE 가지, CL-81).  '
+                         '⚠ 켜면 입력 σ 를 내부값으로 바꿔야 이중계상이 없다 (④, 1저자 결정).')
+    ap.add_argument('--step3-rint-i', nargs='*', default=None, metavar='A|B=OHM_CM2',
+                    help='① 이온 솔브의 상 경계 계면 저항 (Ω·cm²) — 예 SDCP|SE=2.5e-2.  '
+                         '규약은 --step3-rint-e 와 같다 (SE|SE 입계는 ③ 의 SE 번호 격자 뒤에만 뜻이 있다).')
     ap.add_argument('--cam', choices=('nmc811', 'nca'), default='nmc811',
                     help='★A8 CAM 재료 프리셋 — σ_e(AM) 기본값 결정 (docs/nca_material_preset.md 검증표). '
                          'nmc811: S/P = 10/5 mS/cm (A1 corpus-fit).  nca: S=P = 10 mS/cm 단일값 — '
@@ -1330,6 +1340,15 @@ def main():
     #  ★★ PTFE 스탬프 규약 해석 (CDXR2-6).  **어떤 작업보다 먼저** — 예약값을 고르면
     #    GPU 를 잡기 전에 죽어야 한다.
     a._ptfe_stamp, a._ptfe_stamp_legacy = resolve_ptfe_stamp(a.ptfe_stamp, a.sigma_ptfe)
+    #  ① 계면 저항 표 (2026-10-02) — 어떤 작업보다 먼저 파싱해 잘못된 표는 GPU 를 잡기 전에 죽는다.
+    #    기본 None = 솔버가 옛 조립과 비트 동일.  실제로 걸린 면 수는 솔브 뒤 `a._iface` 에 쌓인다
+    #    (매니페스트 `interface_faces` = 실물 증거).
+    a._rint_e = a._rint_i = None
+    a._iface = {}
+    if a.step3_rint_e or a.step3_rint_i:
+        from step3_sigma import parse_rint_table as _prt
+        a._rint_e = _prt(a.step3_rint_e)
+        a._rint_i = _prt(a.step3_rint_i)
     a._protocol_expect = (a.expect_protocol or '').strip()
     a._physics_expect = {}
     for _kv in (a.expect_physics or '').split(','):
@@ -1959,7 +1978,9 @@ def main():
             #       찍혔고, 매니페스트 조립에서 다시 터졌다).  ⇒ `_ztop` 직후에 못 박는다.
             _zt3, _zb3 = _ztop + float(_osh[2]), 0.0 + float(_osh[2])
             _res3 = _s3.solve_sigma_z(sid3, _sig3, a.step3_vox, return_field=True,
-                                      z_top_um=_zt3, z_bot_um=_zb3, periodic_xy=a.periodic)
+                                      z_top_um=_zt3, z_bot_um=_zb3, periodic_xy=a.periodic,
+                                      rint=a._rint_e, pid=(pid3 if a._rint_e else None))   # ① 계면 (기본 None)
+            a._iface['electronic'] = _res3.get('interface')
             if _res3.get('reason'):
                 print(f"  ⚠ STEP3 σ_e not solvable: {_res3['reason']}")
                 _s3mark('electronic', 'not_solvable', _res3['reason'])
@@ -2004,8 +2025,7 @@ def main():
                                        for i in range(len(_jhs['pts']))]
                         print(f"  STEP3 Joule hot-spot: {len(joule_field):,} pts · 집중 hot_frac_50 "
                               f"{_jhs['hot_frac_50']:.3f} (작을수록 집중) · conc {_jhs['conc_ratio']:.1f}× — 어디서 발열 몰리나")
-                _share = _s3.phase_current_share(_res3, sid3, _sig3)
-                _sname = _s3.SID_NAME
+                _share = _s3.phase_current_share(_res3, sid3, _sig3)   # ① 계면 몫은 share_label 이 이름 짓는다
                 #  ★ 2026-08-20 (전수 감사 코드 하위 γ) — **미수렴을 `complete` 로 적지 않는다.**
                 #    판정기(`sdcp_gain_verdict`)는 `cg_info`/`unconverged` 를 직접 보므로
                 #    prereg 는 안전했지만, manifest 의 component status 만 읽는 소비자는
@@ -2030,7 +2050,8 @@ def main():
                          #    fail-open 이었다 (resid 는 로그에만 있었다).
                          'cg_info': int(_res3.get('cg_info', 0) or 0),
                          'unconverged': bool(_res3.get('unconverged', False)),
-                         'dissipation_share': {_sname[k]: round(v, 4) for k, v in _share.items()},
+                         'dissipation_share': {_s3.share_label(k): round(v, 4)   # ① 계면 몫 = 'interface'
+                                               for k, v in _share.items()},
                          'sigma_table_S_cm': {'AM_S': a.sigma_am_s, 'AM_P': a.sigma_am_p,
                                               'VGCF': a.sigma_vgcf, 'SuperP': a.sigma_superp,
                                               'SDCP': a.sigma_sdcp, 'SWCNT': a.sigma_swcnt,
@@ -2229,9 +2250,11 @@ def main():
                 else:
                     _mw, _mb = _bot_mask(0.30), _bot_mask(0.10)
                     _res3w = _s3.solve_sigma_z(sid3, _sig3, a.step3_vox, return_field=False,
-                                               z_top_um=_zt3, z_bot_um=_zb3, bot_allowed=_mw, periodic_xy=a.periodic)
+                                               z_top_um=_zt3, z_bot_um=_zb3, bot_allowed=_mw, periodic_xy=a.periodic,
+                                               rint=a._rint_e, pid=(pid3 if a._rint_e else None))   # ① 주 솔브와 같은 규약
                     _res3b = _s3.solve_sigma_z(sid3, _sig3, a.step3_vox, return_field=True,
-                                               z_top_um=_zt3, z_bot_um=_zb3, bot_allowed=_mb, periodic_xy=a.periodic)
+                                               z_top_um=_zt3, z_bot_um=_zb3, bot_allowed=_mb, periodic_xy=a.periodic,
+                                               rint=a._rint_e, pid=(pid3 if a._rint_e else None))
                     jb_am = None
                     if 'phi' in _res3b:
                         jb_am = np.nan_to_num(_s3.per_particle_current(_res3b, sid3, pid3, _sig3, len(r)),
@@ -2333,7 +2356,9 @@ def main():
                     _res3i = {'n_dof': 0}
                 else:
                     _res3i = _s3.solve_sigma_z(sid3, _sig3i, a.step3_vox, return_field=True,
-                                               z_top_um=_zt3, z_bot_um=_zb3, periodic_xy=a.periodic)
+                                               z_top_um=_zt3, z_bot_um=_zb3, periodic_xy=a.periodic,
+                                               rint=a._rint_i, pid=(pid3 if a._rint_i else None))   # ① 계면 (기본 None)
+                    a._iface['ionic'] = _res3i.get('interface')
                 #  ★★★ 2026-08-30 (코드리뷰) — **`reason` 가드**.  전자 분기(:1660)에는 있고
                 #    이온 분기에는 **없었다**.  `solve_sigma_z` 의 조기반환 중 `no_plate_contact`
                 #    는 `n_dof = cond.sum()` = **양수**를 그대로 돌려주면서 `sigma_eff = 0.0`,
@@ -2409,7 +2434,7 @@ def main():
                     #    로는 **이온 쪽 집중계수를 고칠 수 없다** (도체셀 수 N 을 모른다) —
                     #    `repair_focus_top.py` 가 그 경우 fail-closed 로 거부한다.
                     step3['ion_n_dof'] = int(_res3i['n_dof'])
-                    step3['ion_dissipation_share'] = {_s3.SID_NAME.get(k, str(k)): round(v, 4)
+                    step3['ion_dissipation_share'] = {_s3.share_label(k): round(v, 4)   # ① 계면 몫 = 'interface'
                                                       for k, v in _sharei.items()}
                     step3['sigma_ion_table_S_cm'] = {'SE': a.sigma_ion_se, 'SDCP': a.sigma_ion_sdcp}
                     # T1-a provenance: which temperature convention produced this σ_ion?
@@ -2842,6 +2867,16 @@ def main():
             'ptfe_block_scope': str(getattr(a, 'step3_ptfe_block_scope', 'se') or 'se'),
             #  ⚠ **실물 증거** — 도장(scope)과 실제 차단 셀을 가른다 (R13 C-5 와 같은 부류).
             'ptfe_block_cells': dict(getattr(_s3, 'LAST_PTFE_BLOCK', {}) or {}),
+            #  ★ 2026-10-02 (①, CL-81) — 상 경계 계면 저항 규약.  None = 항 없음 (옛 세대와 같은
+            #    물리 = CONTACT_FREE 가지).  기록은 **쓴 것**: 표 (Ω·cm²) + 실제로 걸린 면 수
+            #    (`interface_faces`, 실물 증거 — 표가 같아도 침대마다 다르다).
+            #  ⚠ `PROTOCOL_FIELDS` 에는 넣지 않는다 (`--step3-ptfe-block-scope` 와 같은 청구서:
+            #    생산 기본에서 비트 동일이라 p2 봉인 코호트의 규약 id 를 보존 · 생산 규약으로
+            #    채택하는 날 p3).  섞임은 판정기 `FIELD_CONTRACT` 의 generation 축이 막는다.
+            'interface_model': (_s3.INTERFACE_MODEL_VERSION if (a._rint_e or a._rint_i) else None),
+            'interface_rint_e_ohm_cm2': _s3.rint_table_record(a._rint_e),
+            'interface_rint_i_ohm_cm2': _s3.rint_table_record(a._rint_i),
+            'interface_faces': ({k: v for k, v in a._iface.items() if v is not None} or None),
             #  ★★ 2026-08-25 (A1 2차) — 침대 기하(z 늘림)와 SE 점구름 **출처**.
             #    둘 다 `_s3.rasterize` 로 들어가는데 규약에 없었다 (digest 는 파일
             #    내용만 덮는다).  `se_source` 는 합성일 때만 모양(frac@n_vox)을 싣는다.

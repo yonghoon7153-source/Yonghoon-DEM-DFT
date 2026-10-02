@@ -148,6 +148,153 @@ SID_NAME = {1: 'AM_S', 2: 'AM_P', 3: 'VGCF', 4: 'SuperP', 5: 'SDCP', 6: 'SE', 7:
 #   2-10nm sub-voxel이라 1-voxel(≈0.4µm) 스탬프가 이온접촉을 끊으면 차단을 40-200× 과대표현
 #   (trade-off 상한의 이중계상).  --swcnt-ion-block = 상한 시나리오 opt-in(σ_i=0 → BV면 소멸).
 
+# ── ① 상 경계 계면 저항 (2026-10-02) ──────────────────────────────────────────────────
+#  ★ CL-81: 이 솔버는 면을 조화평균으로만 이어 **계면 저항 항이 정확히 0** 이었다
+#    (= 접촉망의 `CONTACT_FREE` 가지, `docs/voxel_contact_free_gap.md`).  여기서 **다른 sid 사이**
+#    (또는 같은 sid 인데 입자 번호 `pid` 가 다른) 면에 면적비저항 r [Ω·cm²] 를 **직렬**로 넣는다:
+#        g = vox² / (vox/(2σa) + vox/(2σb) + r′),   r′ = r · 1e4  [µm·cm/S]   (σ S/cm · vox µm)
+#    r 를 주지 않으면 (기본) 어떤 면도 안 건드려 **비트 동일**이다 (`_selftest_rint` ⓓ).
+#  ⚠ 입력 σ 규약과 묶인다 — 펠릿값 σ (SE 3.0 · CL-91 / VGCF 100 분말 · CL-47) 은 접촉을 이미
+#    lumping 하므로, 항을 켜면 내부값으로 바꿔야 이중계상이 없다 (④ · 1저자 결정).  여기서는
+#    **기구만** 둔다 (생산 기본 OFF).
+#  ⚠ 플레이트 결합(집전체 접촉) · STEP4 반응 솔브 · 열 솔브는 이 항을 **안 받는다** (범위 밖).
+#  ⚠ 조립과 진단(소산 분담 · |J| 점군 · 입자별 J_z)은 **같은 배율 함수**를 쓴다 — 진단이 조화평균을
+#    다시 계산하면 계면 면의 전류가 과대로 나온다 (`_selftest_rint` ⓘ2 가 그 반례).
+INTERFACE_MODEL_VERSION = 'r1-phase-boundary-series'
+RINT_OHM_CM2_TO_UM_CM_PER_S = 1.0e4          # 1 Ω·cm² = 1 cm²/S = 1e4 µm·cm/S
+SID_INTERFACE = -1                           # 소산 분담의 계면 몫 키 (상이 아니다)
+_NAME_SID = {v: k for k, v in SID_NAME.items()}
+
+
+def share_label(k):
+    """소산 분담 dict 의 키 → 이름 (계면 몫은 `interface`)."""
+    return 'interface' if k == SID_INTERFACE else SID_NAME[k]
+
+
+def parse_rint_table(specs):
+    """CLI 문자열 목록 `['AM_S|VGCF=1e-3', …]` → `{(sid_lo, sid_hi): r [Ω·cm²]}`.  빈 입력 → None.
+    거부: 모르는 이름 · 음수/비유한 · `=` 가 하나가 아님 · 쌍이 둘이 아님 · 같은 쌍 중복."""
+    if not specs:
+        return None
+    out = {}
+    for s in specs:
+        s = str(s).strip()
+        if s.count('=') != 1:
+            raise ValueError(f'--step3-rint: `A|B=VAL` 꼴이어야 한다: {s!r}')
+        names, val = s.split('=')
+        parts = [p.strip() for p in names.split('|')]
+        if len(parts) != 2:
+            raise ValueError(f'--step3-rint: 상 쌍은 `A|B` 둘이어야 한다: {s!r}')
+        try:
+            sids = tuple(_NAME_SID[p] for p in parts)
+        except KeyError as e:
+            raise ValueError(f'--step3-rint: 모르는 상 이름 {e} (허용: {sorted(_NAME_SID)})') from None
+        try:
+            r = float(val)
+        except ValueError:
+            raise ValueError(f'--step3-rint: 값이 수가 아니다: {s!r}') from None
+        if not (np.isfinite(r) and r >= 0.0):
+            raise ValueError(f'--step3-rint: r 는 유한한 0 이상이어야 한다 (Ω·cm²): {s!r}')
+        key = (min(sids), max(sids))
+        if key in out:
+            raise ValueError(f'--step3-rint: 같은 쌍이 두 번 {SID_NAME[key[0]]}|{SID_NAME[key[1]]}')
+        out[key] = r
+    return dict(sorted(out.items()))
+
+
+def _check_rint_table(rint):
+    """솔버 입구 검사 — `{(int, int): float ≥ 0}` 만 받는다 (CLI 문자열은 `parse_rint_table` 로 먼저)."""
+    if rint is None:
+        return None
+    if not isinstance(rint, dict):
+        raise TypeError('rint 는 {(sid_a, sid_b): r[Ω·cm²]} dict 여야 한다 — CLI 문자열 목록은 '
+                        'parse_rint_table 로 먼저 바꿀 것')
+    out = {}
+    for k, v in rint.items():
+        if not (isinstance(k, tuple) and len(k) == 2):
+            raise ValueError(f'rint 키는 (sid, sid) 튜플이어야 한다: {k!r}')
+        a, b = int(k[0]), int(k[1])
+        r = float(v)
+        if not (np.isfinite(r) and r >= 0.0):
+            raise ValueError(f'rint 값은 유한한 0 이상 (Ω·cm²): {k!r} → {v!r}')
+        key = (min(a, b), max(a, b))
+        if key in out and out[key] != r:
+            raise ValueError(f'rint 같은 쌍에 다른 값: {key}')
+        out[key] = r
+    return dict(sorted(out.items()))
+
+
+def rint_table_record(rint):
+    """솔버 표 → 매니페스트 기록 `{'AM_S|VGCF': r}` (키 정렬 · JSON 형).  None → None."""
+    if rint is None:
+        return None
+    return {f'{SID_NAME.get(a, str(a))}|{SID_NAME.get(b, str(b))}': float(v)
+            for (a, b), v in _check_rint_table(rint).items()}
+
+
+def rint_table_from_record(rec):
+    """매니페스트 기록 → 솔버 표 (왕복).  빈 기록 → None."""
+    if not rec:
+        return None
+    return parse_rint_table([f'{k}={v}' for k, v in rec.items()])
+
+
+def face_rint(sid_a, sid_b, rint, pid_a=None, pid_b=None):
+    """면마다 r [Ω·cm²] (0 = 계면 아님).  다른 sid 면 = 표의 그 쌍 · 같은 sid 면 = 표에 (s, s) 가
+    있고 **pid 가 둘 다 ≥ 0 이고 서로 다를 때만** (입자 경계).  pid 가 없으면 같은 상 면은 무영향."""
+    sa = np.asarray(sid_a).astype(np.int64); sb = np.asarray(sid_b).astype(np.int64)
+    lo = np.minimum(sa, sb); hi = np.maximum(sa, sb)
+    r = np.zeros(sa.shape, np.float64)
+    for (a, b), v in rint.items():
+        if v <= 0.0:
+            continue
+        sel = (lo == a) & (hi == b)
+        if a == b:
+            if pid_a is None or pid_b is None:
+                continue
+            pa = np.asarray(pid_a); pb = np.asarray(pid_b)
+            sel &= (pa >= 0) & (pb >= 0) & (pa != pb)
+        r[sel] = v
+    return r
+
+
+def interface_face_factor(sa, sb, r_face, vox):
+    """면 전도도 배율 R_half/(R_half + r′), R_half = vox/(2σa) + vox/(2σb) — r_face ≤ 0 인 면은
+    **정확히 1.0**.  sa·sb [S/cm] (둘 다 > 0 인 면에서만 뜻이 있다) · vox [µm] · r_face [Ω·cm²].
+    배율이 g 의 단위 규약(×vox 유무)과 무관하므로 조립과 진단이 같은 식을 쓴다."""
+    sa = np.asarray(sa, np.float64); sb = np.asarray(sb, np.float64)
+    r = np.asarray(r_face, np.float64)
+    shape = np.broadcast(sa, sb, r).shape
+    f = np.ones(shape, np.float64)
+    sa_b = np.broadcast_to(sa, shape); sb_b = np.broadcast_to(sb, shape); r_b = np.broadcast_to(r, shape)
+    m = (r_b > 0.0) & (sa_b > 0.0) & (sb_b > 0.0)
+    if m.any():
+        r_half = vox / (2.0 * sa_b[m]) + vox / (2.0 * sb_b[m])
+        f[m] = r_half / (r_half + r_b[m] * RINT_OHM_CM2_TO_UM_CM_PER_S)
+    return f
+
+
+def interface_face_g(g0, sa, sb, r_face, vox):
+    """조립·진단이 공유하는 한 줄 — r 가 있는 면만 g₀·배율, 나머지는 g₀ **그대로** (비트 동일)."""
+    g0 = np.asarray(g0, np.float64)
+    r = np.asarray(r_face, np.float64)
+    m = r > 0.0
+    if not m.any():
+        return g0
+    g = g0.copy()
+    g[m] = g0[m] * interface_face_factor(np.asarray(sa, np.float64)[m],
+                                         np.asarray(sb, np.float64)[m], r[m], vox)
+    return g
+
+
+def rint_ctx_from(res, sid):
+    """진단용 맥락 `(sid, 표, pid, vox)` — 솔브가 계면 항을 실제로 썼을 때만, 아니면 None."""
+    _r = res.get('_rint')
+    if not _r:
+        return None
+    return (sid, _r[0], _r[1], float(res['vox_um']))
+
+
 # Set True (mpm_webapp_payload --step3-gpu) to run the Kirchhoff CG on GPU (CuPy cuSPARSE) — a
 # multi-M-dof fine-vox solve drops from ~1 h (CPU) to minutes.  Auto-falls back to scipy CPU if
 # CuPy/CUDA is unavailable, so it is always safe to leave on.
@@ -687,7 +834,7 @@ PLATE_RULE_VERSION = 'p2-occupied-surface-first'
 
 def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, plate_band_um=None,
                   z_bot_um=None, plate_band_bot_um=None, bot_allowed=None, periodic_xy=False,
-                  area_um2=None):
+                  area_um2=None, rint=None, pid=None):
     """Effective through-plane (z) σ of the voxel σ-id grid.  Finite volume, harmonic-mean face
     conductance g = (2σaσb/(σa+σb))·vox (cubic voxels: face area vox² / distance vox), collector
     plate φ=1 at the bed bottom, φ=0 plate at the bed top, lateral Neumann.
@@ -704,6 +851,15 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
     [, phi, cond])."""
     nx, ny, nz = sid.shape
     sig = sigma_field(sigma_of_sid, sid)                     # 표 또는 복셀별 σ (S/cm)
+    #  ① 계면 저항 (2026-10-02): `rint` = {(sid_a, sid_b): r[Ω·cm²]} · `pid` = 입자 번호 격자
+    #    (같은 sid 안의 입자 경계용 · None 이면 같은 상 면은 무영향).  둘 다 None = 옛 조립 비트 동일.
+    _rint = _check_rint_table(rint)
+    if pid is not None:
+        pid = np.asarray(pid)
+        if pid.shape != tuple(sid.shape):
+            raise ValueError(f'solve_sigma_z: pid 모양 {pid.shape} ≠ sid {tuple(sid.shape)} — '
+                             f'다른 격자의 번호를 쓰게 된다')
+    _faces = {}                                              # 계면 면 수 (상 쌍별 · 실물 증거)
     cond = sig > 0
     if not cond.any():
         return {'sigma_eff': 0.0, 'n_dof': 0, 'n_floating_dropped': 0, 'cg_info': 0, 'resid': 0.0,
@@ -833,6 +989,19 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
         if not m.any():
             return
         g = (2.0 * sa[m] * sb[m] / (sa[m] + sb[m])) * vox   # σ[S/cm]·vox[µm] — unit cancels in σ_eff
+        if _rint:                                          # ① 계면 저항 — 표의 쌍 면만 (나머지 비트 동일)
+            _r = face_rint(sid[sl_a][m], sid[sl_b][m], _rint,
+                           None if pid is None else pid[sl_a][m],
+                           None if pid is None else pid[sl_b][m])
+            _mi = _r > 0.0
+            if _mi.any():
+                g = interface_face_g(g, sa[m], sb[m], _r, vox)
+                _sl = sid[sl_a][m][_mi].astype(np.int64); _sh = sid[sl_b][m][_mi].astype(np.int64)
+                _code = np.minimum(_sl, _sh) * 1000 + np.maximum(_sl, _sh)
+                for _c, _n in zip(*np.unique(_code, return_counts=True)):
+                    _k = f'{SID_NAME.get(int(_c) // 1000, str(int(_c) // 1000))}|' \
+                         f'{SID_NAME.get(int(_c) % 1000, str(int(_c) % 1000))}'
+                    _faces[_k] = _faces.get(_k, 0) + int(_n)
         a2, b2 = A[m], B[m]
         rows.append(a2); cols.append(b2); vals.append(-g)
         rows.append(b2); cols.append(a2); vals.append(-g)
@@ -903,6 +1072,14 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
            #    각 항목 = (셀좌표 (i,j,k), g[S/cm·µm²/µm], φ_plate).
            'plate_edges': {'bot': (_cb, _gb, 1.0), 'top': (_ct, _gt, 0.0)},
            'vox_um': float(vox),
+           #  ① 계면 저항 원장 (2026-10-02) — **쓴 것**을 적는다: 표 · pid 사용 · 실제로 걸린 면 수.
+           #    r 를 안 줬으면 None (옛 결과와 구분).  `_rint` 는 진단이 같은 배율을 재현하는 맥락.
+           'interface': (None if _rint is None else {
+               'model': INTERFACE_MODEL_VERSION, 'unit': 'ohm_cm2',
+               'table': rint_table_record(_rint), 'pid_used': pid is not None,
+               'n_faces_rint': int(sum(_faces.values())),
+               'faces_by_pair': dict(sorted(_faces.items()))}),
+           '_rint': ((_rint, pid) if _rint else None),
            'unconverged': unconv}
     if return_field:
         P = np.zeros(sid.shape, np.float64); P[cond] = phi
@@ -921,6 +1098,13 @@ def per_particle_current(res, sid, pid, sigma_of_sid, n_am):
     sa, sb = sig[:, :, :-1], sig[:, :, 1:]
     both = cond[:, :, :-1] & cond[:, :, 1:]
     g = np.where(both, 2.0 * sa * sb / np.maximum(sa + sb, 1e-30), 0.0)
+    _ctx = rint_ctx_from(res, sid)
+    if _ctx is not None:                                   # ① 계면 면 = 조립과 같은 배율 (전류 연속)
+        _sid, _tb, _pid, _vx = _ctx
+        _r = np.where(both, face_rint(_sid[:, :, :-1], _sid[:, :, 1:], _tb,
+                                      None if _pid is None else _pid[:, :, :-1],
+                                      None if _pid is None else _pid[:, :, 1:]), 0.0)
+        g = interface_face_g(g, sa, sb, _r, _vx)
     dphi = P[:, :, :-1] - P[:, :, 1:]
     f = g * dphi                                           # face current ∝ σ·Δφ (per face area vox²)
     jz[:, :, :-1] += np.abs(f) * 0.5
@@ -1002,14 +1186,33 @@ def phase_current_share(res, sid, sigma_of_sid, periodic_xy=None):
                              f'(없었다면 solve 가 no_plate_contact 였다)')
     _use_plate = True
     _u = float(_vox)
+    _ctx = rint_ctx_from(res, sid)                         # ① 계면 항을 쓴 해인가 (None = 옛 경로 그대로)
+    diss_int = 0.0                                         # 계면 몫 (상이 아니라 따로 센다)
     for sl_a, sl_b in pairs:
         both = cond[sl_a] & cond[sl_b]
         sa, sb = sig[sl_a], sig[sl_b]
         g = np.where(both, 2.0 * sa * sb / np.maximum(sa + sb, 1e-30), 0.0) * _u
-        d = g * (P[sl_a] - P[sl_b]) ** 2                   # per-face dissipation; split ∝ each side's
-        wa = np.where(both, sb / np.maximum(sa + sb, 1e-30), 0.0)   # RESISTANCE (review F4 — the old
-        diss[sl_a] += wa * d; diss[sl_b] += (1.0 - wa) * d          # half-half gave carbon 50% at a
-        #   1e4-contrast face where it truly dissipates ~0.01%)
+        if _ctx is None:
+            d = g * (P[sl_a] - P[sl_b]) ** 2               # per-face dissipation; split ∝ each side's
+            wa = np.where(both, sb / np.maximum(sa + sb, 1e-30), 0.0)   # RESISTANCE (review F4 — the old
+            diss[sl_a] += wa * d; diss[sl_b] += (1.0 - wa) * d          # half-half gave carbon 50% at a
+            #   1e4-contrast face where it truly dissipates ~0.01%)
+            continue
+        #  ① 계면 (2026-10-02) — 면 저항 R_a + R_b + r′ 에 비례해 **세 몫**으로.  r′ 몫은 어느 상도
+        #    아니므로 `SID_INTERFACE` 버킷에 쌓는다.  r = 0 인 면에서는 위 두 몫과 정확히 같은 식
+        #    (sb/(sa+sb) = R_a/(R_a+R_b)).
+        _sid, _tb, _pid, _vx = _ctx
+        _r = np.where(both, face_rint(_sid[sl_a], _sid[sl_b], _tb,
+                                      None if _pid is None else _pid[sl_a],
+                                      None if _pid is None else _pid[sl_b]), 0.0)
+        g = interface_face_g(g, sa, sb, _r, _vx)
+        d = g * (P[sl_a] - P[sl_b]) ** 2
+        _ra = np.where(both, _u / (2.0 * np.maximum(sa, 1e-30)), 0.0)
+        _rb = np.where(both, _u / (2.0 * np.maximum(sb, 1e-30)), 0.0)
+        _ri = _r * RINT_OHM_CM2_TO_UM_CM_PER_S
+        _rt = np.maximum(_ra + _rb + _ri, 1e-30)
+        diss[sl_a] += (_ra / _rt) * d; diss[sl_b] += (_rb / _rt) * d
+        diss_int += float(((_ri / _rt) * d).sum())
     #  ★★★ **플레이트 소산을 더한다.**  옛 판은 내부(+seam) 면만 더해 자기 docstring 의
     #    항등식 `w_a = ∂ln σ_eff/∂ln σ_a` 를 **만족하지 않았다** — 솔버의 플레이트 커플링
     #    `g = σ·vox²/dist` 도 σ 에 비례하는데 합에서 빠져 있었기 때문이다.
@@ -1024,10 +1227,12 @@ def phase_current_share(res, sid, sigma_of_sid, periodic_xy=None):
                 continue
             _i, _j, _k = _c
             np.add.at(diss, (_i, _j, _k), np.asarray(_g) * (P[_i, _j, _k] - _phi_p) ** 2)
-    tot = diss.sum()
+    tot = diss.sum() + diss_int
     out = {}
     for s in np.unique(sid[sid > 0]):
         out[int(s)] = float(diss[sid == s].sum() / max(tot, 1e-30))
+    if _ctx is not None:                                   # ① 계면 몫 — r 없는 해에는 키 자체가 없다
+        out[SID_INTERFACE] = float(diss_int / max(tot, 1e-30))
     return out
 
 
@@ -1233,14 +1438,16 @@ def carbon_se_contact_area(sid, vox, periodic_xy=False):
     return float(faces) * vox * vox
 
 
-def _voxel_jmag(P, cond, sig, periodic_xy=False):
+def _voxel_jmag(P, cond, sig, periodic_xy=False, rint_ctx=None):
     """Cell-centred |J| proxy (∝ σ·Δφ, run-relative) — per_particle_current 와 동일 규약.
     각 축의 양면 전류 |g·Δφ|(g=조화평균 컨덕턴스)를 셀에 반씩 배분 → |J|=√(ΣJ축²).
     field_point_cloud·joule_hotspot 공유(단일 소스, 중복 제거).
 
     ⚠ 2026-08-12 (Codex #7): 주기 런에서 seam 면의 전류가 빠지면 **경계 셀의 |J| 가 과소**로
     나오고, 그것이 joule_hotspot 의 hot-spot 선정을 경계에서 체계적으로 놓치게 만든다.
-    `periodic_xy` 면 x/y wrap 면을 포함한다.  z 는 감지 않는다."""
+    `periodic_xy` 면 x/y wrap 면을 포함한다.  z 는 감지 않는다.
+    ① `rint_ctx` (= `rint_ctx_from(res, sid)`) 가 있으면 계면 면에 조립과 같은 배율을 건다 —
+    없으면 옛 경로 그대로."""
     jmag = np.zeros(sig.shape, np.float64)
     for axis in (0, 1, 2):
         sa_sl = [slice(None)] * 3; sb_sl = [slice(None)] * 3
@@ -1252,6 +1459,12 @@ def _voxel_jmag(P, cond, sig, periodic_xy=False):
             both = cond[a] & cond[b]
             sa, sb = sig[a], sig[b]
             g = np.where(both, 2.0 * sa * sb / np.maximum(sa + sb, 1e-30), 0.0)
+            if rint_ctx is not None:                        # ① 계면 면 = 조립과 같은 배율 (전류 연속)
+                _sid, _tb, _pid, _vx = rint_ctx
+                _r = np.where(both, face_rint(_sid[a], _sid[b], _tb,
+                                              None if _pid is None else _pid[a],
+                                              None if _pid is None else _pid[b]), 0.0)
+                g = interface_face_g(g, sa, sb, _r, _vx)
             f = np.abs(g * (P[a] - P[b]))                   # face current ∝ σ·Δφ (per face area)
             _comp[a] += f * 0.5
             _comp[b] += f * 0.5
@@ -1276,7 +1489,8 @@ def joule_hotspot(res, sid, sigma_of_sid, vox, sel_sids, box_lo=(0.0, 0.0, 0.0),
         return None
     P, cond = res['phi'], res['cond']
     sig = sigma_field(sigma_of_sid, sid)
-    jmag = _voxel_jmag(P, cond, sig, periodic_xy=bool(res.get('periodic_xy')))
+    jmag = _voxel_jmag(P, cond, sig, periodic_xy=bool(res.get('periodic_xy')),
+                       rint_ctx=rint_ctx_from(res, sid))   # ① 계면 배율 = 조립과 동일
     q = np.where(cond, jmag * jmag / np.maximum(sig, 1e-30), 0.0)     # 발열밀도 (run-relative, W/cm³ 스케일 전)
     sel = np.isin(sid, np.asarray(list(sel_sids), np.int64)) & cond & (q > 0)
     ii, jj, kk = np.where(sel)
@@ -1345,7 +1559,8 @@ def field_point_cloud(res, sid, sigma_of_sid, vox, sel_sids, box_lo=(0.0, 0.0, 0
         return None, None, None
     P, cond = res['phi'], res['cond']
     sig = sigma_field(sigma_of_sid, sid)
-    jmag = _voxel_jmag(P, cond, sig, periodic_xy=bool(res.get('periodic_xy')))
+    jmag = _voxel_jmag(P, cond, sig, periodic_xy=bool(res.get('periodic_xy')),
+                       rint_ctx=rint_ctx_from(res, sid))   # ① 계면 배율 = 조립과 동일
     sel = np.isin(sid, np.asarray(list(sel_sids), np.int64)) & cond
     ii, jj, kk = np.where(sel)
     if not len(ii):
@@ -3312,9 +3527,166 @@ def _selftest_temp():
     return 0 if ok else 1
 
 
+def _selftest_rint():
+    """① 상 경계 계면 저항 (2026-10-02, CL-81 `CONTACT_FREE` 결손의 첫 단계) — **반례 먼저**.
+
+    옛 조립은 모든 면을 조화평균 `g = 2σaσb/(σa+σb)·vox` 로 이어 **계면 저항 항이 정확히 0**
+    이었다 (`docs/voxel_contact_free_gap.md`).  여기서 닫는 것:
+      ⓐ 표 파서 (이름 쌍 → sid 쌍 · 거부 목록 · 매니페스트 기록 왕복)
+      ⓑ 면 전도도 공식 `g = g₀·R_half/(R_half + r′)`, r′ = r[Ω·cm²]·1e4 [µm·cm/S]
+      ⓒ 두 블록 직렬 해석해 σ_eff = L/(L_a/σ_a + L_b/σ_b + r′)
+      ⓓ r 를 주지 않거나 0 이거나 격자에 없는 쌍이면 **비트 동일** (σ_eff · φ)
+      ⓔ 같은 상인데 입자 번호(pid)가 다른 면 (②·③ 이 쓸 경로) · pid 없으면 무영향
+      ⓕ 전류와 나란한 계면(병렬 기둥) 은 σ_eff 를 안 바꾼다 · ⓖ 주기 wrap 면도 계면
+      ⓗ 소산 분담이 계면 몫을 **따로** 센다 (합 = 1 · r 없으면 옛 결과 그대로)
+      ⓘ 전류 진단 (|J| 점군 · 입자별 J_z) 이 조립과 **같은** 면 전도도를 쓴다 — 계면 면에서
+         전류 연속이 지켜진다 (옛 조화평균 재계산은 계면 면 전류를 과대로 낸다)
+    """
+    ok = True
+
+    def chk(name, cond, extra=''):
+        nonlocal ok
+        ok &= bool(cond)
+        print(f"  {'OK  ' if cond else 'FAIL'} {name}{(' — ' + extra) if extra else ''}")
+
+    # ── ⓐ 파서 · 기록 ──────────────────────────────────────────────────────────
+    t = parse_rint_table(['AM_S|VGCF=1e-3', 'SDCP|SE=2.5e-2'])
+    chk('ⓐ1 parse: 이름 쌍 → 정렬된 sid 쌍 · float', t == {(1, 3): 1e-3, (5, 6): 2.5e-2}, repr(t))
+    chk('ⓐ2 parse: 순서 바뀐 쌍은 같은 키', parse_rint_table(['VGCF|AM_S=1e-3']) == {(1, 3): 1e-3})
+    chk('ⓐ3 parse: 같은 상 쌍 허용 (pid 로 가른다)', parse_rint_table(['AM_S|AM_S=1e-4']) == {(1, 1): 1e-4})
+    chk('ⓐ4 parse: 빈 입력 → None', parse_rint_table(None) is None and parse_rint_table([]) is None)
+    for bad in (['AM_X|VGCF=1'], ['pore|VGCF=1'], ['AM_S|VGCF=-1'], ['AM_S|VGCF=nan'], ['AM_S|VGCF'],
+                ['AM_S|VGCF=1', 'VGCF|AM_S=2'], ['AM_S|VGCF=1e-3=2'], ['AM_S=1']):
+        try:
+            parse_rint_table(bad)
+            _rej = False
+        except ValueError:
+            _rej = True
+        chk(f'ⓐ5 parse 거부 {bad}', _rej)
+    rec = rint_table_record(t)
+    chk('ⓐ6 record: {"AM_S|VGCF": …} 정렬 · JSON 형', list(rec) == ['AM_S|VGCF', 'SDCP|SE']
+        and rec['AM_S|VGCF'] == 1e-3 and rec['SDCP|SE'] == 2.5e-2, repr(rec))
+    chk('ⓐ7 record 왕복', rint_table_from_record(rec) == t)
+    chk('ⓐ8 단위 상수 1 Ω·cm² = 1e4 µm·cm/S', RINT_OHM_CM2_TO_UM_CM_PER_S == 1.0e4)
+
+    # ── ⓑ 면 전도도 공식 ───────────────────────────────────────────────────────
+    sa, sb = np.array([1.0]), np.array([4.0])
+    g0 = (2.0 * sa * sb / (sa + sb)) * 0.5                                  # 0.8  (vox 0.5)
+    f = interface_face_factor(sa, sb, np.array([1e-4]), 0.5)
+    chk('ⓑ1 factor = R_half/(R_half+r′) = 0.3125/1.3125', abs(f[0] - 0.3125 / 1.3125) < 1e-12, f'{f[0]:.6f}')
+    chk('ⓑ2 g = vox²/(R_half + r′) = 0.25/1.3125', abs(g0[0] * f[0] - 0.25 / 1.3125) < 1e-12)
+    chk('ⓑ3 r=0 면은 factor 정확히 1.0',
+        interface_face_factor(sa, sb, np.array([0.0]), 0.5)[0].hex() == (1.0).hex())
+    gi = interface_face_g(g0, sa, sb, np.array([0.0]), 0.5)
+    chk('ⓑ4 r=0 → g 비트 동일', gi[0].hex() == g0[0].hex())
+
+    # ── ⓒ 두 블록 직렬 해석해 ──────────────────────────────────────────────────
+    sig = np.array([0.0, 1.0, 0.0, 4.0])                   # sid 1 σ=1 · sid 3 σ=4 (S/cm)
+    sid = np.ones((6, 6, 10), np.int8); sid[:, :, 5:] = 3
+    kw = dict(z_bot_um=0.0, z_top_um=5.0)
+    r0 = solve_sigma_z(sid, sig, 0.5, return_field=True, **kw)
+    r1 = solve_sigma_z(sid, sig, 0.5, return_field=True, rint={(1, 3): 1e-4}, **kw)
+    exp = 5.0 / (2.5 + 0.625 + 1.0)                        # r′ = 1e-4·1e4 = 1 µm·cm/S
+    chk(f'ⓒ1 직렬 σ_eff = L/(L_a/σ_a + L_b/σ_b + r′) = {exp:.6f}',
+        abs(r1['sigma_eff'] - exp) < 2e-4 * exp, f"{r1['sigma_eff']:.6f}")
+    chk('ⓒ2 r 없음 → 옛 조화평균 1.6', abs(r0['sigma_eff'] - 1.6) < 1e-3)
+    chk('ⓒ3 계면 원장: 36 면 · AM_S|VGCF · 모델 표지',
+        r1['interface']['n_faces_rint'] == 36 and r1['interface']['faces_by_pair'] == {'AM_S|VGCF': 36}
+        and r1['interface']['model'] == INTERFACE_MODEL_VERSION and r1['interface']['unit'] == 'ohm_cm2'
+        and r1['interface']['table'] == {'AM_S|VGCF': 1e-4}, repr(r1.get('interface')))
+    chk('ⓒ4 r 없음 → interface None', r0.get('interface') is None)
+    chk('ⓒ5 계면 항은 σ 를 **내린다** (상한 가지에서 내려온다)', r1['sigma_eff'] < r0['sigma_eff'])
+
+    # ── ⓓ 비트 동일 ────────────────────────────────────────────────────────────
+    for lbl, tb in (('{}', {}), ('r=0', {(1, 3): 0.0}), ('격자에 없는 쌍', {(1, 2): 1e-3}),
+                    ('같은 상 쌍 · pid 없음', {(1, 1): 1e-3})):
+        rr = solve_sigma_z(sid, sig, 0.5, return_field=True, rint=tb, **kw)
+        chk(f'ⓓ {lbl}: σ_eff 비트 동일 · φ 동일 · 계면 면 0',
+            rr['sigma_eff'].hex() == r0['sigma_eff'].hex() and np.array_equal(rr['phi'], r0['phi'])
+            and (rr.get('interface') or {}).get('n_faces_rint', 0) == 0)
+
+    # ── ⓔ 같은 상 · 다른 입자 번호 (pid) ───────────────────────────────────────
+    sid1 = np.ones((6, 6, 10), np.int8); sig1 = np.array([0.0, 1.0])
+    pid = np.zeros(sid1.shape, np.int32); pid[:, :, 5:] = 1
+    rb = solve_sigma_z(sid1, sig1, 0.5, return_field=True, **kw)
+    rp = solve_sigma_z(sid1, sig1, 0.5, return_field=True, rint={(1, 1): 1e-4}, pid=pid, **kw)
+    chk('ⓔ1 pid 경계 직렬: 5/(5 + 1) = 0.8333', abs(rp['sigma_eff'] - 5.0 / 6.0) < 2e-4, f"{rp['sigma_eff']:.6f}")
+    chk('ⓔ2 원장: AM_S|AM_S 36 면 · pid_used', rp['interface']['faces_by_pair'] == {'AM_S|AM_S': 36}
+        and rp['interface']['pid_used'] is True and r1['interface']['pid_used'] is False)
+    rp0 = solve_sigma_z(sid1, sig1, 0.5, return_field=True, rint={(1, 1): 1e-4},
+                        pid=np.zeros(sid1.shape, np.int32), **kw)
+    chk('ⓔ3 pid 전부 같음 → 비트 동일', rp0['sigma_eff'].hex() == rb['sigma_eff'].hex()
+        and np.array_equal(rp0['phi'], rb['phi']))
+    rpn = solve_sigma_z(sid1, sig1, 0.5, return_field=True, rint={(1, 1): 1e-4},
+                        pid=np.full(sid1.shape, -1, np.int32), **kw)
+    chk('ⓔ4 pid −1 (입자 아님) 는 경계가 아니다 → 비트 동일', rpn['sigma_eff'].hex() == rb['sigma_eff'].hex())
+    chk('ⓔ5 pid 모양 불일치는 거부', _raises(lambda: solve_sigma_z(sid1, sig1, 0.5, rint={(1, 1): 1e-4},
+                                                                pid=np.zeros((2, 2, 2), np.int32), **kw)))
+    chk('ⓔ6 표가 dict 가 아니면 거부 (문자열 목록은 parse_rint_table 로)',
+        _raises(lambda: solve_sigma_z(sid1, sig1, 0.5, rint=['AM_S|AM_S=1e-4'], **kw)))
+
+    # ── ⓕ 병렬 기둥 사이 계면 (전류와 나란함) · ⓖ 주기 wrap ───────────────────
+    sidp = np.ones((6, 6, 10), np.int8); sidp[3:, :, :] = 3
+    rpar0 = solve_sigma_z(sidp, sig, 0.5, **kw)
+    rpar1 = solve_sigma_z(sidp, sig, 0.5, rint={(1, 3): 1e-2}, **kw)
+    chk('ⓕ1 병렬 기둥 사이 계면 → σ_eff 불변 (산술평균 2.5)',
+        abs(rpar1['sigma_eff'] - rpar0['sigma_eff']) < 1e-6 and abs(rpar0['sigma_eff'] - 2.5) < 1e-3,
+        f"{rpar0['sigma_eff']:.6f} → {rpar1['sigma_eff']:.6f}")
+    chk('ⓕ2 계면 면 수 = 한 평면 6×10 = 60', rpar1['interface']['n_faces_rint'] == 60)
+    rper = solve_sigma_z(sidp, sig, 0.5, rint={(1, 3): 1e-2}, periodic_xy=True, **kw)
+    chk('ⓖ 주기 x wrap 면 (5↔0) 도 계면 → 120', rper['interface']['n_faces_rint'] == 120)
+
+    # ── ⓗ 소산 분담 ────────────────────────────────────────────────────────────
+    sh = phase_current_share(r1, sid, sig)
+    tot = 2.5 + 0.625 + 1.0
+    chk('ⓗ1 분담: AM_S 2.5/4.125 · VGCF 0.625/4.125 · 계면 1/4.125',
+        abs(sh[1] - 2.5 / tot) < 2e-3 and abs(sh[3] - 0.625 / tot) < 2e-3
+        and abs(sh[SID_INTERFACE] - 1.0 / tot) < 2e-3,
+        ' · '.join(f'{k}:{v:.4f}' for k, v in sh.items()))
+    chk('ⓗ2 합 = 1', abs(sum(sh.values()) - 1.0) < 1e-9)
+    sh0 = phase_current_share(r0, sid, sig)
+    chk('ⓗ3 r 없음 → 계면 키 없음 · 옛 분담 (AM_S 0.8 · VGCF 0.2)',
+        SID_INTERFACE not in sh0 and abs(sh0[1] - 0.8) < 2e-3 and abs(sh0[3] - 0.2) < 2e-3)
+    chk('ⓗ4 share_label', share_label(SID_INTERFACE) == 'interface' and share_label(3) == 'VGCF')
+
+    # ── ⓘ 전류 진단의 일관성 (계면 면 전류 연속) ──────────────────────────────
+    #  진단의 g 는 조립과 달리 ×vox 가 없다 (`_voxel_jmag` docstring) → 면 전류 = σ_eff·vox/L [S/cm]
+    i_col = r1['sigma_eff'] * 0.5 / 5.0
+    sigf = sigma_field(sig, sid)
+    jm_new = _voxel_jmag(r1['phi'], r1['cond'], sigf, rint_ctx=rint_ctx_from(r1, sid))
+    jm_old = _voxel_jmag(r1['phi'], r1['cond'], sigf)      # 옛 재계산 (계면 모름)
+    chk('ⓘ1 |J| 내부 셀 전부 = 기둥 전류 (계면 면 포함, 1e-6)',
+        np.allclose(jm_new[:, :, 1:9], i_col, rtol=1e-6, atol=0.0),
+        f'min {jm_new[:, :, 1:9].min():.6g} max {jm_new[:, :, 1:9].max():.6g} vs {i_col:.6g}')
+    chk('ⓘ2 옛 재계산은 계면 양옆 셀에서 **과대** (수정이 필요했던 이유)',
+        not np.allclose(jm_old[:, :, 1:9], i_col, rtol=1e-6, atol=0.0)
+        and jm_old[:, :, 4:6].max() > i_col * 1.1)
+    je = per_particle_current(r1, sid, np.zeros(sid.shape, np.int32), sig, 1)[0]
+    chk('ⓘ3 입자별 J_z (한 입자) = 0.9·기둥 전류 (양 끝 셀은 면 하나)', abs(je - 0.9 * i_col) < 1e-6 * i_col,
+        f'{je:.6g} vs {0.9 * i_col:.6g}')
+    _, _, st = field_point_cloud(r1, sid, sig, 0.5, (1, 3))
+    chk('ⓘ4 field_point_cloud 전수 평균 = 0.9·기둥 전류', abs(st['mean'] - 0.9 * i_col) < 1e-6 * i_col)
+    jh = joule_hotspot(r1, sid, sig, 0.5, (1, 3))
+    chk('ⓘ5 joule_hotspot 도 같은 |J| (내부 셀 q = J²/σ 두 값뿐)', jh is not None and jh['n'] == 360)
+    chk('ⓘ6 r 없는 res 의 rint_ctx 는 None (옛 경로 그대로)', rint_ctx_from(r0, sid) is None)
+    print('STEP3 RINT SELFTEST', 'PASS' if ok else 'FAIL')
+    return 0 if ok else 1
+
+
+def _raises(fn):
+    try:
+        fn()
+    except (ValueError, TypeError):
+        return True
+    return False
+
+
 if __name__ == '__main__':
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--selftest', action='store_true', help='run the analytic laminate/percolation checks')
+    ap.add_argument('--selftest-rint', action='store_true',
+                    help='① 상 경계 계면 저항 r_int 검증 (파서 · 직렬 해석해 · 비트 동일 · pid 경계 · '
+                         '소산 분담 · 전류 진단 일관성)')
     ap.add_argument('--selftest-rxn', action='store_true',
                     help='STEP4 sandwich analytic (series-R total current + uniform per-particle i + KCL)')
     ap.add_argument('--selftest-pore', action='store_true',
@@ -3347,6 +3719,8 @@ if __name__ == '__main__':
         sys.exit(0)
     if a.selftest:
         sys.exit(_selftest())
+    if a.selftest_rint:
+        sys.exit(_selftest_rint())
     if a.selftest_rxn:
         sys.exit(_selftest_rxn())
     if a.selftest_pore:

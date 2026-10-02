@@ -66,6 +66,9 @@ run 'porosity_filter_axes    --selftest' python3 scripts/porosity_filter_axes_ch
 run 'sr01_stamp_compare     --selftest' python3 scripts/sr01_stamp_compare.py --selftest
 run 'mpm_webapp_payload     --selftest-temperature' python3 scripts/mpm_webapp_payload.py --selftest-temperature
 run 'step3_sigma            --selftest' python3 scripts/step3_sigma.py --selftest
+#  ★ 2026-10-02 (①, CL-81) — 상 경계 계면 저항 r_int: 파서 · 직렬 해석해 · r 없음 비트 동일 ·
+#    pid 경계 · 소산 분담 계면 몫 · 전류 진단 일관성.  규칙 K 목록 + CI yml 에도 같이 건다.
+run 'step3_sigma            --selftest-rint' python3 scripts/step3_sigma.py --selftest-rint
 #  ★ SELF-45 (2026-09-22) — 필드 통계가 **그림 예산에 불변**인지는 step3_sigma 의 selftest 가
 #    보고, 옛 payload 를 고치는 후처리기는 자기 selftest 가 본다 (복원의 정확성 + 거부).
 run 'repair_focus_top       --selftest' python3 scripts/repair_focus_top.py --selftest

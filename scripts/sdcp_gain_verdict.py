@@ -134,6 +134,13 @@ FIELD_CONTRACT = {
     'se_nu':                dict(scope='physics', across_dir=True, generation=True),
     'se_sigma_y_GPa':       dict(scope='physics', across_dir=True, generation=True),
     'mpm_seed':             dict(scope='physics', across_dir=True, generation=True),
+    #  ★ 2026-10-02 (①, CL-81) — 상 경계 계면 저항 규약 셋.  generation 축: **섞이면 HOLD · 전부
+    #    없으면 통과** (옛 payload 는 이 키가 없고 그것이 "항 없음" 세대다).  표 값은 dict —
+    #    `_canon` 이 JSON 으로 접어 비교한다.  규약 해시(`PROTOCOL_FIELDS`)에는 넣지 않는다
+    #    (p2 봉인 코호트 보존 · 채택 시 p3 = `run_contract.CLI_ACCOUNTING` 의 청구서).
+    'interface_model':          dict(scope='physics', across_dir=True, generation=True),
+    'interface_rint_e_ohm_cm2': dict(scope='physics', across_dir=True, generation=True),
+    'interface_rint_i_ohm_cm2': dict(scope='physics', across_dir=True, generation=True),
     # ── 침대 정체성 — 침대 **안**에서만 고정 (FA-06: SBE 에 SDCP 가 없는 것은 정상) ──
     'additive_E_GPa':       dict(scope='bed', across_dir=True, generation=True),
     'input_digest':         dict(scope='bed', across_dir=True, generation=True),
@@ -200,6 +207,9 @@ MANIFEST_RESULT_KEYS = {
     'exec_env': '실행 환경 기록 (Q4a) — code_sha 가 못 덮는 축.  판정을 막지 않는다',
     'component_plan': '무엇을 돌렸나 — LEAN 팔과 전량 팔이 섞이면 `_XDIR_FIELDS` 밖의 '
                       '증거 계약이 잡는다 (여기서 고정하면 정상 LEAN 대조가 막힌다)',
+    #  ★ 2026-10-02 (①) — 계면 면 수 (상 쌍별 **실물 증거**).  표(`interface_rint_*`)가 같아도
+    #    침대마다 다른 것이 정상 — 규약은 표가 고정하고, 이것은 그 표가 실제로 걸린 면을 센 것이다.
+    'interface_faces': '① 계면 저항이 실제로 걸린 면 수 (채널 · 상 쌍별) — 표는 FIELD_CONTRACT 가 본다',
 }
 
 #: 다른 축의 **그림자**.  값 = 그것을 설명하는 raw 축 이름.
@@ -299,7 +309,9 @@ _GEN_FIELDS_LEGACY = ('sigma_ion_se_S_cm', 'sigma_ion_sdcp_S_cm',
                #    같은 디렉터리라는 것은 같은 입력·같은 코드의 증거가 아니다 (Codex CDX-IJ-02).
                #    ⚠ 세대 필드로 둔다 = **섞이면 HOLD**, 전부 없으면(옛 런) 통과.
                #      존재 자체를 요구하려면 `--require-digest` (도핑 트랙이 쓴다).
-               'input_digest', 'code_sha')
+               'input_digest', 'code_sha',
+               #  ★ 2026-10-02 (①, CL-81) — 계면 저항 규약 셋 (레지스트리와 같은 집합 유지 = ㊷c).
+               'interface_model', 'interface_rint_e_ohm_cm2', 'interface_rint_i_ohm_cm2')
 
 #  ⚠ `mpm_seed` 는 **팔마다 달라야 하는 축이 될 수도 있다** (코팅처럼 시딩 자체가 확률적인
 #  경우 = seed 앙상블).  현행 origin 앙상블은 같은 압밀 산물을 재사용하므로 seed 가 고정이고,
@@ -1025,6 +1037,10 @@ def _selftest():
                 #   이유로 새 게이트가 selftest 에서 **검증된 적 없는 코드**가 된다.
                 additive_E_GPa={'VGCF': 10.0, 'PTFE': 0.3, 'SDCP': 23.6},
                 sigma_ion_se_S_cm=0.003, sigma_ion_sdcp_S_cm=0.001,
+                #  ★ 2026-10-02 (①) — 계면 규약 세 축도 싣는다 (안 실으면 ㊷a ⓒ 가 검증 못 한다).
+                interface_model='r1-phase-boundary-series',
+                interface_rint_e_ohm_cm2={'AM_S|VGCF': 1e-3},
+                interface_rint_i_ohm_cm2={'SDCP|SE': 2.5e-2},
                 sigma_am_s_S_cm=0.010, sigma_am_p_S_cm=0.005, cam='nmc811',
                 temp_c=25.0, ea_ion_ev=0.29, mpm_seed=3,
                 se_E_GPa=1.53, se_nu=0.49, se_sigma_y_GPa=0.30,

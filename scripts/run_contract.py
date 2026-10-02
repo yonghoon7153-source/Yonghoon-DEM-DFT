@@ -102,6 +102,13 @@ CLI_ACCOUNTING = {
     #    ⓑ 매니페스트가 `ptfe_block_cells` 로 **상별 실제 차단 셀 수**를 싣는다 (도장≠실물).
     #  ⛔ **이 축을 생산 규약으로 채택하려면 그때 p3 로 올린다** — 그것이 이 항목의 청구서다.
     '--step3-ptfe-block-scope': ('record', ('ptfe_block_scope',)),
+    #  ★ 2026-10-02 (①, CL-81) — 상 경계 계면 저항 (전자 · 이온).  **물리 축**인데 `record` 로 둔다 —
+    #    위 `--step3-ptfe-block-scope` 와 같은 이유·같은 청구서: 생산 기본(없음)에서 옛 조립과
+    #    비트 동일이라 p2 봉인 코호트의 규약 id 를 바꾸지 않는다.  섞임은 판정기
+    #    `FIELD_CONTRACT` (generation 축) 와 `RECEIPT_AXES_NODIGEST` 가 막는다.
+    #  ⛔ **생산 규약으로 채택하는 날 p3 로 올린다** (④ 입력 σ 규약 · ⑤ 검증 뒤 · 1저자 결정).
+    '--step3-rint-e': ('record', ('interface_rint_e_ohm_cm2',)),
+    '--step3-rint-i': ('record', ('interface_rint_i_ohm_cm2',)),
     #  ★ `ptfe_zero_dof` = (스탬프 ON) ∧ (σ_PTFE == 0) — 두 옵션이 함께 정한다.
     '--ptfe-stamp': ('protocol', ('ptfe_stamp', 'ptfe_zero_dof')),
     '--sigma-ptfe': ('protocol', ('sigma_ptfe_S_cm', 'ptfe_zero_dof')),
@@ -266,7 +273,10 @@ RECEIPT_META = ('code_sha', 'origins', 'arms', 'expect_backend')
 #  ⚠ 안전 조건 확인함 — payload 가 이미 두 키를 매니페스트에 적으므로
 #    (`mpm_webapp_payload.py`: `sigma_am_s_S_cm` · `sigma_sdcp_S_cm`) 기존 팔이
 #    `RCPT|missing` 으로 무너지지 않는다.  그래도 **러너가 선언한 팔만** 검사한다.
-RECEIPT_AXES_NODIGEST = ('field_requested', 'sigma_am_s_S_cm', 'sigma_sdcp_S_cm')
+#  ★ 2026-10-02 (①, CL-81) — 계면 저항 표 둘.  해시 밖 (OUTDIR 보존) · 러너가 선언하면 대조
+#    (`_canon_num` 은 dict 를 그대로 비교한다).  선언 안 한 옛 러너는 건너뛴다.
+RECEIPT_AXES_NODIGEST = ('field_requested', 'sigma_am_s_S_cm', 'sigma_sdcp_S_cm',
+                         'interface_rint_e_ohm_cm2', 'interface_rint_i_ohm_cm2')
 
 
 def expected_origins_for(vox):
@@ -485,6 +495,7 @@ STRICT_TYPES = {
     'plate_rule': str, 'physics_protocol_id': str,
     'ptfe_cells_observed': int,
     'sigma_superp_S_cm': float, 'sigma_swcnt_S_cm': float, 'swcnt_ion_block': bool,
+    'interface_model': str,                      # ① 계면 규약 표지 (None = 항 없음)
 }
 
 

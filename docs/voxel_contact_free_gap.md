@@ -238,3 +238,29 @@ PTFE·SDCP 는 이온 절연이라 (`ionic_sigma_table`: 탄소 3,4 = 0 · PTFE 
 - ⬜ 이 배수가 **조성·압밀의 함수**인지 (코퍼스 6배 산포의 구조) — `R_brug_over_full` 을
   φ_SE·CN·압력에 회귀하면 바로 나온다.  런 불요.
 - ⬜ CL-26 의 formation-factor 서술을 이 문서의 기전으로 재서술 (숫자는 그대로).
+
+---
+
+## 8. ① 계면 저항 항 — 기구 구현 (2026-10-02 · 1저자 비준 *"1번 관련해서 우선 코드"*)
+
+§3 의 **"본질적 계면 저항은 항 자체가 없어 h→0 극한에서도 0"** 을 닫는 첫 단계.  6 단계 계획
+(① 상 경계 → ② VGCF 번호 격자 → ③ SE 번호 격자 → ④ 입력 σ 내부값 규약 → ⑤ 검증 = 위 §5 ④ 대조 →
+⑥ 웹앱 표지) 중 ① 이고, Codex 리뷰는 ①~⑥ 뒤 한 번 (지금 Codex 부재).
+
+| 항목 | 내용 |
+|---|---|
+| 자리 | `step3_sigma.solve_sigma_z(rint=, pid=)` — 면 조립 `couple()` 의 한 줄 |
+| 식 | `g = vox² / (vox/(2σa) + vox/(2σb) + r′)`, `r′ = r[Ω·cm²]·1e4` [µm·cm/S] (σ S/cm · vox µm) — 구현은 배율 `R_half/(R_half + r′)` 을 조화평균 g₀ 에 곱한다 |
+| 어느 면 | **다른 sid** 면 = 표의 그 쌍 · **같은 sid** 면 = 표에 (s, s) 가 있고 `pid` 가 둘 다 ≥ 0 이며 서로 다를 때 (입자 경계 — ②·③ 이 번호 격자를 채우면 그대로 쓴다) |
+| 기본 | `rint=None` → 어떤 면도 안 건드린다 = **비트 동일** (σ_eff · φ · 진단 전부; selftest ⓓ·ⓔ3·ⓔ4) |
+| 진단 | 소산 분담 · `|J|` 점군 · 입자별 J_z 가 **같은 배율 함수**를 쓴다 — 조화평균을 다시 계산하면 계면 면 전류가 과대 (selftest ⓘ2 반례).  소산 분담은 계면 몫을 `interface` 버킷으로 **따로** 센다 (합 = 1) |
+| 기록 | `res['interface']` = 모델 · 단위 · 표 · pid 사용 · **실제로 걸린 면 수 (상 쌍별)** → 매니페스트 `interface_model` · `interface_rint_e_ohm_cm2` · `interface_rint_i_ohm_cm2` (판정기 `FIELD_CONTRACT` generation 축 — 섞이면 HOLD · 전부 없으면 통과) · `interface_faces` (결과 키) |
+| 회계 | CLI `--step3-rint-e` · `--step3-rint-i` = `record` (`--step3-ptfe-block-scope` 와 같은 청구서: p2 봉인 코호트 보존 · **생산 규약으로 채택하는 날 p3**) · `RECEIPT_AXES_NODIGEST` |
+| 범위 밖 | 플레이트 결합(집전체 접촉) · STEP4 반응 솔브 · 열 솔브 (Kapitza) · τ_geo 솔브 — 전부 **옛 경로 그대로** |
+| 시험 | `python3 scripts/step3_sigma.py --selftest-rint` (게이트 · CI 두 레인) — 파서 거부 8 · 직렬 해석해 `L/(L_a/σ_a + L_b/σ_b + r′)` · 비트 동일 4 · pid 경계 직렬 · 병렬 기둥 무영향 · 주기 wrap 면 · 소산 분담 세 몫 · 전류 연속 |
+
+⚠ **값을 인용할 수 있는 단계가 아니다.**  r 를 켜는 순간 입력 σ 규약이 바뀐다 — 펠릿값 (SE 3.0 ·
+CL-91 / VGCF 100 분말 · CL-47) 은 접촉을 이미 lumping 하므로 **④ 에서 내부값으로 바꾸고 두 규약을
+나란히** 보고한 뒤, ⑤ (a) 첨가제 없는 같은 침대에서 복셀+계면 ↔ DEM 접촉망 FULL (b) vox 사다리
+(c) 그 뒤에야 실험 대조 (맞추기 없음) 로 닫는다.  r 값 자체의 출처 (litdb 카드) 도 ④ 의 일이다.
+웹앱 화면은 ⑥ (아직 없음 — J20-l 보고).

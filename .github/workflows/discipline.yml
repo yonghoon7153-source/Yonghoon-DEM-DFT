@@ -90,6 +90,9 @@ jobs:
       - name: STEP3 솔버 규약 (selftest)
         run: python scripts/step3_sigma.py --selftest
 
+      - name: STEP3 ① 상 경계 계면 저항 r_int (selftest)
+        run: python scripts/step3_sigma.py --selftest-rint
+
       - name: 집중계수 복원기 (SELF-45 — 옛 payload 의 focus_top) (selftest)
         run: python scripts/repair_focus_top.py --selftest
 
