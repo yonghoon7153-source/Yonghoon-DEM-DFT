@@ -5,7 +5,7 @@ created: 2026-09-23
 updated: 2026-10-02
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/danilov2011_thin-film-assb-model-weak-electrolyte-parameter-fit.md, raw/papers/kim2023_argyrodite-coated-ncm-normal-pressure-assb.md, raw/papers/wang2024_fast-kinetics-hierarchical-catholyte-anode-design-ssb.md, raw/papers/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm.md, raw/papers/schlautmann2023_lpscl-particle-size-distribution-composite-transport.md, raw/papers/shi2020_particle-size-ratio-cathode-utilization-assb.md, raw/papers/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing.md, raw/papers/naik2022_kinetics-vs-transport-ssb-cathode-mesoscale-regime-map.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode-si.md, raw/papers/asheri2023_data-driven-multiscale-ssb-delamination-surrogate.md, raw/papers/neumann2021_garnet-3d-structure-grain-boundary-transport.md, raw/papers/ren2023_oxide-ssb-composite-cathode-architecture-perspective.md, raw/papers/barai2018_measurement-timescale-internal-resistance-methods.md, raw/papers/li2024_assb-composite-cathode-model-contact-area-edl.md, raw/papers/thelen2024_probabilistic-ml-battery-health-review.md, raw/papers/roman2021_ml-pipeline-soh-estimation-uncertainty.md, raw/papers/liang2026_pulse-excitation-active-bms-comment.md, raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md]
+sources: [raw/papers/firouz2020_hammerstein-wiener-multisine-bla-nonlinearity-assb.md, raw/papers/danilov2011_thin-film-assb-model-weak-electrolyte-parameter-fit.md, raw/papers/kim2023_argyrodite-coated-ncm-normal-pressure-assb.md, raw/papers/wang2024_fast-kinetics-hierarchical-catholyte-anode-design-ssb.md, raw/papers/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm.md, raw/papers/schlautmann2023_lpscl-particle-size-distribution-composite-transport.md, raw/papers/shi2020_particle-size-ratio-cathode-utilization-assb.md, raw/papers/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing.md, raw/papers/naik2022_kinetics-vs-transport-ssb-cathode-mesoscale-regime-map.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode-si.md, raw/papers/asheri2023_data-driven-multiscale-ssb-delamination-surrogate.md, raw/papers/neumann2021_garnet-3d-structure-grain-boundary-transport.md, raw/papers/ren2023_oxide-ssb-composite-cathode-architecture-perspective.md, raw/papers/barai2018_measurement-timescale-internal-resistance-methods.md, raw/papers/li2024_assb-composite-cathode-model-contact-area-edl.md, raw/papers/thelen2024_probabilistic-ml-battery-health-review.md, raw/papers/roman2021_ml-pipeline-soh-estimation-uncertainty.md, raw/papers/liang2026_pulse-excitation-active-bms-comment.md, raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -31,6 +31,7 @@ evidenceScope: multi-source-primary
 | ↳ 셋째 줄의 **입력 설계판** (34호, 새 줄 · ⚠ 처방만) | **입력 `u`**(펄스 진폭 · 폭 · 순서)를, 파라미터는 고정 | `det FIM(u)`(D-optimality) · PE 조건 | **절반** — **실제적** 비식별(FIM 정칙, 조건수 큼)만 줄인다. **구조적** 비식별(모든 `u` 에서 FIM 특이 — 곱 축퇴)에서는 D-optimality = 0. 그리고 FIM 은 국소라 설계 뒤 **전역 폭**을 다시 재야 한다 — 근최적 폭 측정이 사후 검증 |
 | **예측 보정** (35호, 새 줄 · 표 밖) | 모델 출력 분포를 **보정 전용 셀**에 맞춰 재보정(isotonic) | 스칼라 예측의 적중률(`C_score` @90 %) · 날카로움 | **아니다** — 대상이 **예측**이지 파라미터가 아니다. 축퇴 방향에서 예측이 변하지 않으면 그 폭은 보정된 구간에 **안 보인다**. 모드 분해가 없는 목표(SOH 스칼라) 위에서만 정의된다 |
 | **불확실성 분류** (36호, 새 줄 · 표 밖) | 총 예측 불확실성을 aleatory(비가역) ↔ epistemic(가역: model-form · parameter)으로 **분류**, 구간을 CI ⊂ PI ⊂ TI 로 정의 | 어휘와 정의 — 계산 대상은 예측 분포 · ML 가중치 사후 | **아니다** — 그리고 **자리를 막는다**: epistemic = "reducible" · CI 는 참값으로 붕괴로 정의되므로, 데이터량 불변인 **구조적 비식별**이 들어갈 칸이 없다 |
+| **비선형 시스템 식별** (92호, 새 줄 · 표 밖) | **입력의 위상 실현 · 주기**(무작위 위상 다중정현 · M × P) — 진폭 · 상태는 한 점 | 비모수 FRF(BLA) + 선별 잡음 · 확률적 비선형 왜곡 분산 → 전달함수 + 정적 비선형 블록(H · W · H-W) | **아니다** — "identification" = 구조를 고르고 맞추기. BLA 의 "분산" 은 FRF 의 잡음 · 왜곡 분산(매개변수 분산 0). 그리고 블록 지향 구조 자체에 **블록 사이 이득 · 오프셋 교환**(입력으로 못 사는 구조적 비식별)이 있어 정규화 없이는 블록별 모양이 정해지지 않는다 |
 
 `[해석]` 26호(Iwakiri 2024, `raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md`)의 제목 "sensitivity analysis" 는 **첫 줄**이다.
 그 편의 Table 1(ASSB 모델 10 편 비교)에서 "Sensitivity Analysis" 열의 값이 **Several / Temperature / Current / Diffusion / Conductivity** — **무엇을 스윕했나의 목록**이다.
@@ -309,6 +310,17 @@ evidenceScope: multi-source-primary
 - **후보 처방(결정 대기 — 새 판단 거리)**: "추정 논문의 매개변수 표가 계보의 '문헌값' 으로 쓰이면, 인쇄 값으로 저자 그림 하나를 다시 풀어 폐합을 본다" — 처방 2 · 3(스윕 그림 겹치기 · 적합 ÷ 문헌 비)의 **스윕 없는 편 판**. 격상은 결정하지 않는다.
 
 
+## ★★★ 92호 — 표 밖의 일곱 번째 도구: **비선형 시스템 식별(BLA · 블록 지향) ≠ 식별성**, 그리고 블록 모양은 정규화 · 구조가 정한다
+
+`raw/papers/firouz2020_hammerstein-wiener-multisine-bla-nonlinearity-assb.md` (Firouz · Goutam · Cazorla Soult · Mohammadi · Van Mierlo · Van den Bossche 2020 *J. Energy Storage* 28, 101184 — 26호 [17] · 원장 구조적 공백 1번 후보 · 4차 묶음 파일 52).
+
+- **위 표의 어느 줄인가**: 새 줄("비선형 시스템 식별") — 26호 Table 1 이 "Parameter Estimation Yes" 로 묶은 경험식 편. 무작위 위상 다중정현(33 선 · 4 mHz–1 Hz · M 4 × P 6)으로 BLA 를 내고 셀 2 에 H · W · H-W 를 맞췄다. 식별성 어휘(`identifiab*` · `confiden*` · `Fisher` · `D-optim*`) **0**(NFKC 전후) · `variance` 6 은 전부 BLA.
+- **"분산" 의 정체**: 식 9–11 은 FRF 의 잡음 ↔ 확률적 비선형 왜곡 분산이다(매개변수 분산 0). `[재현]` 인쇄 식대로면 식 9 · 10 이 한 주기 FRF 의 분산이라 식 11 의 ×M 이 실현당 왜곡을 ×3.13(+5 dB) 키운다(Monte Carlo · 저자 코드 미대조).
+- **구조적 비식별(셋째 줄의 블록 판)**: 선형 블록을 BLA 로 고정해도 `(k·f_h, f_w(·/k))` · `(f_h + c, f_w(· − G(1)c))` 가 같은 출력 — `[재현]` 수치 차 0 · 3×10⁻¹³. 정규화가 인쇄되지 않아 그림 13 의 "선형선 이탈" 과 f_w 꺾인점("−0.4", 선형 출력 좌표)은 정규화 의존이고, 같은 자료에서 입력 블록 곡률이 H 단독(확장) ↔ H-W(포화)로 뒤집힌다 — 26호 그림 겹치기(처방 2)의 **구조 판**: 같은 데이터가 두 블록 사이 몫을 정하지 않는다.
+- **입력 설계판(34호 줄)과의 관계**: 입력 설계는 실재하나 목적은 분리(Schoukens 계보)이고 정보 기준 0 · 진폭 한 수준 · 선형 격자(0.04 Hz 아래 2 / 33 `[도표·화소]`) — 34호 줄의 "구조적 비식별에는 D-optimality = 0" 이 이 블록 교환에서 구체로 선다.
+- **(주) 기준으로 본 결론** — "the Hammerstein function indicates the current saturation because of the charge-transfer limit and the Wiener function explains the severe voltage drops due to the mass-transfer limit": ① 순위 · 문턱 0 ② 시간 기준 0 ③ 60 ℃ · 50 % SoC · 진폭 하나 ④ — ⑤ 식 35 c_s → c_s,max(값 0) · 근거 모양이 정규화 · 구조 의존.
+- **후보 처방(결정 대기 — 새 판단 거리)**: 처방 22(아래) — 격상은 결정하지 않는다.
+
 ## 우리 쪽 연결
 
 - `degradation-degeneracy/` 는 **"곡선이 맞는다 ≠ 파라미터가 맞다"** 를 합성 truth 로 채점하는 프로젝트다. 26호의 "RMSD 0.11 → 0.06 V + 문헌과 5 % 이내" 는 그 실패 모드를
@@ -340,6 +352,7 @@ evidenceScope: multi-source-primary
 19. (83호) **모형 편이 두 손잡이의 OAT 결과를 "설계 지침" 으로 합쳤으면 ① 각 스윕의 다른 손잡이 고정값 ② 조합 run 유무 ③ "둔감" 한 손잡이가 전기화학에 닿는 경로가 식에 몇 개인지(가정으로 뺀 기구 포함) ④ 문턱의 무차원 조건(전류 · 두께) ⑤ 결론이 쓴 기준(수명 ↔ 총 균열 등)이 자기 다른 기준과 순위가 같은지를 적는다.** 83호: ① 미인쇄 ② 0 ③ 하나(ϕ_mech — CAM\|SE 박리는 가정으로 제외) ④ 전류 미인쇄 ⑤ 다르다(파괴 사이클 fine > coarse ↔ 총 균열 coarse < fine).
 20. (85호) **온도 기울기(Ea)로 곱(R = ρl/A · `j₀·A_eff`)의 한쪽을 배정한 편이면 ① 인쇄 Ea 를 인쇄 표로 재적합(log 밑 · 형식 · 점 수 · 신뢰 낮은 점) ② "Ea ↑ ⇒ ρ ↑" 에 필요한 앞인자 동일 가정의 인쇄 여부 ③ R·C 곱(τ = ρε · 면적 무관)이 같은 방향을 주는지 ④ A 의 독립 관측 유무 ⑤ 배정 차이의 크기 ↔ 적합 폭을 적는다.** 85호: ① 7/8 ln 10 누락 · 1/8 점 뒤바뀜 ② 0 ③ τ ×2.2 같은 방향 ④ 0 ⑤ 7 meV ↔ ≤27 meV.
 21. (86호) **GITT 로 "피복률 · 접촉 면적 · 활성 면적" 을 뽑은 편이면 ① `D` 의 값 · 출처(액체셀 · 문헌 · 같은 지면) ② 펄스 SOC · ΔEs · ΔEt 판독(IR 계단 제외 여부) ③ 기준 면적(BET · 기하)을 찾고 ④ 같은 지면의 첫 충전 상한(코팅 · 공정 쌍의 첫 충전이 같으면 정적 면적 차 ≈0)과 교차한다 — ①–③ 중 하나라도 없으면 그 값은 분극 비의 이름표로 옮긴다(65 · 29 · 86호).**
+22. (92호) **"system identification · BLA · 블록 지향" 을 보면 ① 식별된 값 · 불확실도가 인쇄됐는지 ② "분산" 이 무엇의 분산인지(FRF 잡음 · 왜곡 ↔ 매개변수) ③ 블록 사이 정규화(이득 · 오프셋)를 적었는지 — 없으면 블록별 모양 · 출력 좌표 꺾인점은 정규화 의존 ④ 구조를 바꿔도 블록 모양이 유지되는지 ⑤ 진폭 수준 수 · 학습 ↔ 검증 신호 구분 · 적합도 백분율의 정의를 적는다.** 92호: ① 0 ② 잡음 · 왜곡(인쇄 식대로면 ×3.13) ③ 0 ④ 뒤집힘(H 단독 확장 ↔ H-W 포화) ⑤ 진폭 하나 · 비선형 검증 신호 미인쇄 · 정의 0.
 
 ## 이 페이지가 주장하지 않는 것
 
@@ -358,6 +371,7 @@ evidenceScope: multi-source-primary
 - **83호의 설계 지침(E ≈2 GPa · σ 5×10⁻⁴ · coarse)이 틀렸다고 하지 않는다** — 조합 run · 고정값 · 전류가 없고, 결론 하나는 자기 다른 기준과 순위가 반대라는 것까지다. ϕ_mech 규모와 옴 문턱 전류는 인쇄 밀도 · 단면 분율(화소) · 가정 부피 변화 위의 `[재현]` 이다.
 - **85호의 "작은 입자가 ρ 를 올린다" 가 틀렸다고 하지 않는다** — τ 비(×2.2)는 같은 방향이다; 틀린 것은 Ea 산술과 그 위의 정량("37 meV")이고, A 의 독립 관측이 없다는 것까지다.
 - **86호의 "코팅이 접촉을 늘린다" 가 틀렸다고 하지 않는다** — 첫 충전 등가는 정적 고립 차의 상한(CV 몫 · 기생 · 산포 위)이고, 코팅 셀의 분극이 작다는 관측은 단단하다; 걸린 것은 `D` 없는 피복률의 재현 불가와 자기 데이터 미교차다.
+- **92호의 블록 지향 모형이 틀렸다고 하지 않는다** — H-W 는 낙하 구간을 따라간다(그림 12c · 정의 미인쇄 86.5 %); 주장은 "블록 모양의 물리 배정이 정규화 · 구조 의존이고, BLA 분산은 식별성이 아니다" 까지다. 블록 교환은 일반 대수 성질이고 ×3.13 은 인쇄 식 그대로의 기대값이다(저자 코드 미대조).
 
 ## 관련
 

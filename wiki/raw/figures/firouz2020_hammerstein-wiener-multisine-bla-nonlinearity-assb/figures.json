@@ -1,0 +1,284 @@
+{
+ "slug": "firouz2020_hammerstein-wiener-multisine-bla-nonlinearity-assb",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-02",
+ "sources": [
+  "430260f1-52._Block-oriented_system_identification_for_nonlinear_modeling_of_all-solid-state_Li-ion_battery_technology.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Developed all-solid-state coin cells with different ionic conductivity at cathode. The general form of the multisine excitation signal is expressed in Eq. (1) [46]. 3.1. Best linear approximation In the first step, an LTI system (linear time invariant) is extracted from noises and nonlinear distortions. In fact, the periodic character- istic of multisine enables us to approximate linear response through the statistical methods by performing several input current load realiza- tions in several periods. Considering the discretized inputs and outputs measured data in the time domain, we can note [46]: n N N A j f t 2 (2 ) + u t e ( ) / = n n n = n N = + A cos f t (2 ) (1) n n n = 1 where fn is the nth excited frequency, N is the number of excited fre- quencies, t is time, An and θn are the amplitude and phase of each ex- cited frequency, respectively. The amplitude of all sines is i",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    51.0,
+    563.7,
+    214.4
+   ],
+   "w": 2218,
+   "h": 682,
+   "dpi": 300,
+   "src": "430260f1-52._Block-oriented_system_identification_for_nonlinear_modeling_of_all-solid-state_Li-ion_battery_technology.pdf",
+   "blank": 0.811,
+   "note": "봤다. 두 코인셀 모식 — 셀 1 'σ = 10⁻⁴ S/cm' 양극(초록 · 'Li2S-P2S5 glass') ↔ 셀 2 'σ = 10⁻⁵ S/cm'(빨강 · 'γ-Li3PS4') · 분리막 'SE: LiI-Li2S-P2S5 σ = 10⁻³ S/cm' · 치수 화살 '25um · 500um(생략 꺾쇠) · 25um' — 이 편에서 두께가 인쇄된 유일한 자리(본문은 'similar') · 음극층 SE 이름표 0 · 캔 · 스프링 · 압력 표시 0. 크롭 온전. 캡션 필드: 900 자에서 잘림 + 본문 섞임(식 · 절 본문 글자) — 정본 캡션은 digest 그림 절."
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. (a) Measured multisine current at 50% SoC and 60 °C, (b) Fourier transformation of measured multisine current, (c) SoC variation during multisine current. M P = = j M P G G ( ) 1 *( 1) N k [ , ] [ ] 2 r 2 r p = p (9) r 1 1 p The variation of FRF taken over all the different realizations in measured data gives the total variance of BLA j( ) Total k 2 according to Eq. (10). Total variance includes the nonlinear response of the battery as well. M P = = j M P G G ( ) 1 * 1 Total k [ , ] 2 r p p 2 = (10) r 1 1 p",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    51.0,
+    563.7,
+    381.6
+   ],
+   "w": 2218,
+   "h": 1379,
+   "dpi": 300,
+   "src": "430260f1-52._Block-oriented_system_identification_for_nonlinear_modeling_of_all-solid-state_Li-ion_battery_technology.pdf",
+   "blank": 0.89,
+   "note": "봤다 + 화소 판독(내장 래스터 1300×1341 · 판독용 · 커밋 안 함). (a) 0–250 s 한 주기(f₀ 4 mHz) · 첨두 ±2.74 mA · RMS 포락선 0.72–1.09 mA · (b) 축 'Power Spectral Density (dB/Hz)' — 여기 선 ≈ −71 · 잡음 ≈ −160(본문은 'dB amplitude' · 그림 6a 는 'Current Amplitude (dB)' — digest D4) · (c) SoC 49.98 → 48.86(≈99 s) → 50.40(≈224 s) → 50.01 % — 설계 '≤1 %' 와 어긋남(digest D3). 캡션 '…at 50% SoC and 60 °C' = 온도가 인쇄된 두 자리 중 하나. 크롭 온전. 캡션 필드: 520 자 · 식 9–10 글자 섞임."
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. The proposed nonlinear model configuration for battery cells.",
+   "rotated_deg": 0,
+   "bbox": [
+    34.1,
+    402.7,
+    292.1,
+    505.3
+   ],
+   "w": 1076,
+   "h": 428,
+   "dpi": 300,
+   "src": "430260f1-52._Block-oriented_system_identification_for_nonlinear_modeling_of_all-solid-state_Li-ion_battery_technology.pdf",
+   "blank": 0.873,
+   "note": "봤다. I(k) → g(x) → (b₀+…+bₙz⁻ⁿ)/(1+a₁z⁻¹+…+aₙz⁻ⁿ) → f(x) → ⊕ ← OCV(SOC) — 분모가 있는 유리함수(본문 '3rd order discrete FIR' 과 어긋남 — digest D1) · 블록 이름 g/f ↔ 본문 f_h/f_w. 크롭 · 캡션 필드 온전."
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. series block-oriented nonlinear models in form of (a) Hammerstein, (b) Wiener and (c) Hammerstein-Wiener systems. on the block-oriented approach. In this method, smaller parts such as linear and nonlinear block(s) are building the whole system. This ap- proach provides a wide range of linear/nonlinear block combinations, which gives us a remarkable degree of freedom to model complicated systems such as chemical devices. Furthermore, in the case of lithium- ion batteries, structured models are quite appropriate for physics-based models as each main or side reaction can be modeled independently [48]. However, using structures with high complexity makes the parameter identification process very difficult. In this section, we in- vestigate three series structures: Hammerstein, Wiener, and Hammer- stein-Wiener as shown in Fig. 4. = v k G j u k ( ) ^ ( , ) ( ) l BLA k (16) By replacing",
+   "rotated_deg": 0,
+   "bbox": [
+    31.3,
+    51.0,
+    563.7,
+    239.7
+   ],
+   "w": 2219,
+   "h": 787,
+   "dpi": 300,
+   "src": "430260f1-52._Block-oriented_system_identification_for_nonlinear_modeling_of_all-solid-state_Li-ion_battery_technology.pdf",
+   "blank": 0.924,
+   "note": "봤다. (a) Hammerstein · (b) Wiener · (c) Hammerstein-Wiener 블록도 — 잡음 ε(k) 가 출력에 더해짐(그림 5 · 식 15 와 다름 — digest D18) · 두 비선형 블록 매개변수 기호 η(본문 α · β · ζ · γ). 크롭 온전. 캡션 필드: 900 자에서 잘림 + 본문 섞임(식 · 절 본문 글자) — 정본 캡션은 digest 그림 절."
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Hammerstein-Wiener is divided from middle to simply the identification problem. linear sub-systems in order to use simpler identification methods. Eq. (27) has been rearranged in the form of Eq. (29) that can be used in the identification algorithm as below: The output of the Hammerstein and Wiener functions Fig. 5) are calculated in Eqs. (22) and ((23): = F a b bU k aY k ( , , , ) ( ) ( ) i i j j (29) = h k f u k ( ) ( ( ), ) h (22) 1 have been re- presented in the form of a piecewise linear model as introduced in Eq. (28). Now, U(k) and Y(k) in Eq. (29) are written as (30) and (31): Furthermore, the nonlinear functions fh and fw = w k f v k ( ) ( ( ), ) w l (23) Given that the whole system has been split from the middle, the Wiener nonlinear function in the output (Eq. (23)) is inversed as below: U k ( ) 1 (24) f u k ( [ ], ) = v k f w k ( ) ( ( ), ) l w h j f u k ( [ 1], ) Sig",
+   "rotated_deg": 0,
+   "bbox": [
+    31.3,
+    51.0,
+    563.7,
+    147.8
+   ],
+   "w": 2219,
+   "h": 404,
+   "dpi": 300,
+   "src": "430260f1-52._Block-oriented_system_identification_for_nonlinear_modeling_of_all-solid-state_Li-ion_battery_technology.pdf",
+   "blank": 0.934,
+   "note": "봤다. H-W 중간 분할 — u → f_h → B(z⁻¹) → ⊕ε → S_f(k) → 1/A(z⁻¹) → v_l → f_w → w(분모 칸의 'I' 는 1) · f_w 역함수 전제(단조) 인쇄 0. 크롭 온전. 캡션 필드: 900 자에서 잘림 + 본문 섞임(식 · 절 본문 글자) — 정본 캡션은 digest 그림 절."
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Fourier transform of (a) input multisine current, (b) measured response voltage in the case of cell1 and (c) measured response voltage in the case of cell2. (6 periods). Accumulation of 33 individual sine waves with identical amplitude but randomly selected phases have been implemented in each multisine realization. The frequency of each sine is selected from odd indexes and is in the range of 4mHz up to 1 Hz. The measurement sampling frequency is 10 Hz and it is already 10 times larger than the highest multisine frequency, which is 1 Hz. The maximum current al- titude has been limited to 2.8 mA (5C). These current signals are quite zero mean and balanced according to Fig. 2a. Fig. 6a shows the input current of coin cells for one of the multisine realizations and Fig. 6b and Fig. 6c indicates the measured voltage corresponding to that input for cell 1 and cell 2 at 50% SoC, respe",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    51.0,
+    563.7,
+    251.7
+   ],
+   "w": 2218,
+   "h": 837,
+   "dpi": 300,
+   "src": "430260f1-52._Block-oriented_system_identification_for_nonlinear_modeling_of_all-solid-state_Li-ion_battery_technology.pdf",
+   "blank": 0.864,
+   "note": "봤다 + 화소 판독(1500×800). (a) 여기 −72 dB · 잡음 중앙 −160 … −162 dB · (b) 셀 1 여기 ≈ −42 … −46 · 비여기 대역 안 중앙 −89 / −101 / −107 dB(≤0.05 · 0.05–0.5 · 0.5–1 Hz) · 대역 밖 ≈ −112 dB 평탄 · (c) 셀 2 여기 ≈ −19 / −22 … −25.5 · 비여기 대역 안 중앙 ≈ −43 … −46 · 대역 밖 −57.9 → −82.6 dB(1–2 → 4–5 Hz — 셀 1 바닥보다 +54 … +29 dB). 크롭 온전. 캡션 필드: 900 자에서 잘림 + 본문 섞임(식 · 절 본문 글자) — 정본 캡션은 digest 그림 절."
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 7,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Bode plot (amplitude) of BLA and nonlinear distortion for call1 and cell2. response) transfer function in the z domain has been considered for the linear system. The Bode plot of impedances for both cells is compared with the identified model shown in Fig. 8a. As can be seen, the am- plitude of the linear model has a good agreement with the calculated impedances. Furthermore, the error of the impedance's phase (Fig. 8b) in cell 1 is around 0 and in cell 2, is a few degrees. In order to visualize the difference between impedances of two cells (both real and ima- ginary parts), their Nyquist plots, calculated based on the BLA method from the same multisine data, have been compared in Fig. 8c. As in- dicated in this figure, blue dots and black circles represent cell 1 and 2′s impedance in the form of Nyquist plot, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    300.6,
+    273.2,
+    563.7,
+    414.2
+   ],
+   "w": 1097,
+   "h": 588,
+   "dpi": 300,
+   "src": "430260f1-52._Block-oriented_system_identification_for_nonlinear_modeling_of_all-solid-state_Li-ion_battery_technology.pdf",
+   "blank": 0.828,
+   "note": "봤다 + 화소 판독(1025×551 · 주파수 보정 잔차 ±0.0004 Hz · ±0.2 dB). 선 33 = 0 근처 겹친 둘 + 0.0434–1.0018 Hz 간격 0.032 Hz 31 개 → 격자 k = 1 · 3 · 11 + 8j(f₀ 4 mHz · 선형 격자) · BLA 비 21.6–21.8 → 20.5 dB(×12.4 → ×10.5) · NL 비 최저 두 선 ≈31–35 dB(×35–56) · 0.07 Hz 위 41–72 dB(digest D12) · 본문 주어 'cell 1' 은 셀 2(digest D2). 캡션 오기 'call1'. 크롭 온전. 캡션 필드: 844 자 · §4.1 본문 섞임."
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 8,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Comparison of calculated BLA of cell1 and cell2 and identified linear model by (a) impedance amplitude, (b) impedance phase and (c) Nyquist plot.",
+   "rotated_deg": 0,
+   "bbox": [
+    40.9,
+    51.0,
+    554.3,
+    296.2
+   ],
+   "w": 2140,
+   "h": 1023,
+   "dpi": 300,
+   "src": "430260f1-52._Block-oriented_system_identification_for_nonlinear_modeling_of_all-solid-state_Li-ion_battery_technology.pdf",
+   "blank": 0.915,
+   "note": "봤다 + 화소 판독(1500×986). (a) 셀 1 32.2 → 26.1 dB · 셀 2 ≈53 → 46.6 dB · 0 근처 두 표지가 ≈0.005 · ≈0.011 Hz 로 갈림(k = 1 · 3 확인) · (b) 위상 '오차' 만(셀 2 ±1.5° · 최대 ≈ −3.5°) · (c) Nyquist 셀 1 (20–21, ≈3) … (32.4, 23.5) Ω · 셀 2 (209.5, 11.8) … (405.6, 209.8) Ω — Bode 와 ±0.3 dB 폐합. 대역 끝(1 Hz)이 이미 계면 호 아래. 크롭 · 캡션 필드 온전."
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 8,
+   "file": "fig_9.png",
+   "caption": "Fig. 9. Comparison of linear model validation with measured data in the case (a) cell1 and (b) cell2. the linear model are compared to the measured data in Fig. 9a for cell 1 and Fig. 9b for cell 2. The BLA analysis of cell 1 showed nonlinearities to be quite weak; according to Fig. 9a, a linear model is sufficient as the maximum voltage error is around 3 mV. Moreover, in cell 2, as was shown in Fig. 7, the nonlinearities are very strong and the linear model cannot estimate the output voltage accurately, because of which, in some areas of the voltage curve, the model error reaches to 0.8 V (Fig. 9b). fault prediction, which is vital for safety assessments. 4.2. Nonlinear modeling Series Hammerstein-wiener structured models have been chosen to model the nonlinear characteristic of the cell 2 and all three described combinations will be identified and implemented in the following sec- tion",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    317.1,
+    563.7,
+    568.8
+   ],
+   "w": 2218,
+   "h": 1049,
+   "dpi": 300,
+   "src": "430260f1-52._Block-oriented_system_identification_for_nonlinear_modeling_of_all-solid-state_Li-ion_battery_technology.pdf",
+   "blank": 0.841,
+   "note": "봤다 + 화소 판독(1500×1013). (a) 셀 1 ≈3.75–3.86 V · 선형 모형 중심 ≈3.80 V · 오차 +2.6 → −1.6 mV 느린 표류 · (b) 셀 2 측정 최저 ≈2.26 V(65–100 s 다발) · 선형 모형 ≈3.04–4.19 V · 중심 ≈3.58–3.61 V(셀 1 과 ≈0.2 V 차) · 오차 최대 −0.8 V(≈82–85 s). 범례 상자는 판독에서 뺐다. 크롭 온전. 캡션 필드: 900 자에서 잘림 + 본문 섞임(식 · 절 본문 글자) — 정본 캡션은 digest 그림 절."
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 9,
+   "file": "fig_10.png",
+   "caption": "Fig. 10. a) input distortion and identified Hammerstein function (red line) and (b) comparison of measured voltage with linear model and Hammerstein system output. (For interpretation of the references to color in this figure legend, the reader is referred to the web version of this article.) 4.2.1. Hammerstein model One of the most basic nonlinear models is the Hammerstein system. In this structure, a nonlinear function comes between the input and linear models. The nonlinear function is identified based on a third- order polynomial function as described in Eqs. (13) and (14). Fig. 10a shows measured distortion (blue dots) together with the estimated Hammerstein function (red line). The output of the Hammerstein system in Fig. 10b is compared with the measured cell voltage and output of the linear model. As can be seen, the Hammerstein model accuracy is 74.5%, which provides 6% less RMS",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    51.0,
+    563.7,
+    221.2
+   ],
+   "w": 2218,
+   "h": 710,
+   "dpi": 300,
+   "src": "430260f1-52._Block-oriented_system_identification_for_nonlinear_modeling_of_all-solid-state_Li-ion_battery_technology.pdf",
+   "blank": 0.864,
+   "note": "봤다. (a) 3차 다항 H 함수 (−2.75, −4.15) … (2.75, 2.25) mA — 방전 쪽 확장(그림 12a · 13b 의 H-W 포화와 반대 곡률 — digest D8) · (b) 범례 'Linear (68.5%)' · 'Hammerstein (74.5%)' — 선형 정확도 68.5 % 는 범례에만 인쇄. 측정선 = 그림 9b 궤적. 크롭 온전. 캡션 필드: 900 자에서 잘림 + 본문 섞임(식 · 절 본문 글자) — 정본 캡션은 digest 그림 절."
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 9,
+   "file": "fig_11.png",
+   "caption": "Fig. 11. (a) input distortion and identified Wiener function (red line) and (b) comparison of measured voltage with linear model and Wiener system output. (For interpretation of the references to color in this figure legend, the reader is referred to the web version of this article.) 9",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    552.2,
+    563.6,
+    721.7
+   ],
+   "w": 2218,
+   "h": 707,
+   "dpi": 300,
+   "src": "430260f1-52._Block-oriented_system_identification_for_nonlinear_modeling_of_all-solid-state_Li-ion_battery_technology.pdf",
+   "blank": 0.872,
+   "note": "봤다. (a) 6차 다항 W 함수 (−0.63, −1.1) … (0.63, 0.55) V · 범례 오기 'Ploynomial Fun' · (b) 'Linear (68.5%)' · 'Wiener (81%)'. 크롭 온전. 캡션 필드: 286 자 · 쪽 바닥글 '9' 섞임."
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 10,
+   "file": "fig_12.png",
+   "caption": "Fig. 12. (a) identified Hammerstein function, (b) identified Wiener function and (c) comparison of measured voltage with linear model and Hammerstein-Wiener system output. be investigated more in the following sections. However, the patterns of the Wiener curve are almost the same with a slight difference in output range as shown in Fig. 12b. has been reduced and the apparent effect, impedance increment in excited sines, has been seen in the Nyquist diagram in Fig. 8c. On the other hand, there is another hidden effect, which is extracted from the Hammerstein-Wiener curves according to Fig. 13. During charge, li- thium ions migrate from the cathode to the anode and intercalate in graphite particles. Due to high ionic conductivity (10 3 S/cm) in the anode and separator layer, no nonlinearity has been detected in the charge zone as shown in Fig. 13 (b and d). Remark 1. During discharge, lit",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    51.0,
+    563.7,
+    240.3
+   ],
+   "w": 2218,
+   "h": 790,
+   "dpi": 300,
+   "src": "430260f1-52._Block-oriented_system_identification_for_nonlinear_modeling_of_all-solid-state_Li-ion_battery_technology.pdf",
+   "blank": 0.895,
+   "note": "봤다 + 화소 판독(1300×753). (a) 구간 선형 H 함수 x −3.29 … +3.27 mA — 자료 첨두 ±2.74 mA 밖까지(digest D11) · 그림 13b 와 같은 함수 · (b) x 눈금 이름 '−0.43 · 0 · 0.43 · −0.43 · 0'(그림 오류 — digest D10) · 그림 13d 와 같은 모양 · (c) 'Linear (68.5%)' · 'Hammerstein-Wiener (86.5%)'. 크롭 온전. 캡션 필드: 900 자에서 잘림 + 본문 섞임(식 · 절 본문 글자) — 정본 캡션은 digest 그림 절."
+  },
+  {
+   "key": "f13",
+   "kind": "figure",
+   "label": "13",
+   "page": 11,
+   "file": "fig_13.png",
+   "caption": "Fig. 13. classifying of Hammerstein and Wiener systems regarding charging zone, discharging zone and their deviation from the linear line (dashed red line): (a,c) cell1 and (b,d) cell2. 5.2. Future work = j F k c c c t c t . . ( (0, )) ( (0, )) c e s max s s 0 , o o r (35) where kc is the reaction rate. Eq. (35) suggests that when surface con- centration increases and reaches maximum cs, max, the j0 will be reduced and, consequently, the current density at the interface of electrode materials will be limited. This limitation somehow has been seen in the Hammerstein function in Fig. 13.b in the discharge zone. These phe- nomena can explain why the output of the Hammerstein function has been saturated when the input current increases in certain amounts. In future publications, more complex nonlinear structures such as parallel and feedback systems will be used for the modeling in order to ",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    51.0,
+    563.7,
+    275.3
+   ],
+   "w": 2218,
+   "h": 935,
+   "dpi": 300,
+   "src": "430260f1-52._Block-oriented_system_identification_for_nonlinear_modeling_of_all-solid-state_Li-ion_battery_technology.pdf",
+   "blank": 0.927,
+   "note": "봤다 + 화소 판독(1300×898). (a) 셀 1 H 직선 기울기 0.93 · (c) 셀 1 W 직선 · y 축 눈금 '0' 하나뿐(척도 없음) · (b) 셀 2 H 방전 기울기 1.44 → 0.73–0.95 → 0.35–0.46 · 꺾인점 ≈ −1.8 · −0.7 · 0 · +0.45 mA · 파선 기울기 1.12 · (d) 셀 2 W 방전 기울기 0.81 → 1.06 → 1.68 → 2.78 → ≈5.3(< −0.475 V) · 파선 기울기 0.92 · 절편 +0.04 V — 파선은 Y = X 가 아님(digest D9). ⚠ 크롭 문제: 아래 가장자리에 캡션 첫 줄 윗부분이 잘린 채 걸림(캡션 겹침 잘림 — 그림 내용은 온전 · 자동 파일은 그대로 둠). 캡션 필드: 900 자에서 잘림 + 본문 섞임(식 · 절 본문 글자) — 정본 캡션은 digest 그림 절."
+  }
+ ]
+}
