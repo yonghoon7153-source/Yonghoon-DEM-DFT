@@ -6786,6 +6786,39 @@
    "evidence_tests": [
     "webapp/test_atoms_only_viewer.py ⑦ ⑦b ⑦c (옛 뷰어에서 실패 확인 · 14/17 → 17/17)"
    ]
+  },
+  {
+   "id": "SELF-78",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "claude (10-02 · kgy 10-01 로그 진단 — 1저자 실행)",
+   "opened_in": "docs/reviews/fam_platen_prereg_20260812.md",
+   "title": "FAM §12-5 봉인 argv 의 `f = 0` 팔 (real_14 ② · corner ⑥) 이 봉인 코드의 런 전 관문에 걸린다 (`mpm3d_compaction.py:2951` — `--stop-freeze-probe` + scaffold + `--am-load-frac 0` + `--floor-porosity 0` + `--am-jam` 없음 = 거부) — 봉인 전에 팔마다 argv 를 관문까지 실행해 보지 않았고, 원 R1 레시피 (§2) 가 이 관문을 `--allow-unconverged-servo` (진단 전용) 로 통과시켰다는 사실을 '세 팔 한 글자 같은 argv' 규칙이 지웠다",
+   "note": "결과: real_14 ② = 9 초 만에 거부 (EXECUTION_FAILED · 물리 결과 아님) · corner ⑥ 은 메모리 부족이 먼저 났지만 메모리가 됐어도 같은 관문에 걸린다.  같은 argv 재시도는 같은 거부라 하지 않는다 (§12-5-9).  여파: 순서 판정 R3v2-a · §9 R2.5-v2 채점 (12-5-3 이 `f = 0` 팔에 맡겼다) 이 이 봉인으로는 도달 불가.  재발 방지 (제안): 봉인 전에 각 팔 argv 를 CPU 작은 격자 (예: `--arch cpu --n-grid 32 --frames 1`) 로 관문 통과까지 실행해 보는 건식 검사를 봉인 절차에 넣는다.  닫는 조건 = `f = 0` 을 다시 세우는 후속 등록 (1저자 결정) 이 그 건식 검사 기록을 갖출 때.",
+   "evidence_tests": []
+  },
+  {
+   "id": "SELF-79",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "claude (10-02 · kgy 10-01 로그 진단 — 1저자 실행)",
+   "opened_in": "docs/reviews/fam_platen_prereg_20260812.md",
+   "title": "FAM §12-5 봉인 프레임 예산이 서보 정착을 보장하지 못했다 — f 팔 `--frames 400` (④ f_(a): 400 프레임 끝에 wallP 0.0911 GPa · 설정점 `target·(1−f)` 0.0989 의 −7.9 % · 띠 ±2 % 밖 · 결과 미생성) · R2 `--frames 5441` (= 코드가 찍은 전 하강 프레임 수 · 정착 여유 0 · ① 12 h 뒤 미수렴).  R1 이 frame 780 에 목표에 닿고 50 프레임 유지했다는 것이 §11-2 에 이미 있었는데 400 을 봉인했다",
+   "note": "예산을 하강 거리로만 셌고 서보 정착 (설정점 근처 0.12·vmax 걸음 · 소성 이완) 을 세지 않았다 (12-5-6 의 '스캐폴드 30 µm 층' 근거가 그것이다).  결과: ① · ④ = EXECUTION_FAILED (등록 재시도 사유 아님 · 같은 argv 는 같은 결과 — 루프는 수렴할 때만 일찍 끝난다).  real_14 네 칸 판정 (12-2) 도달 불가 — ⑤ 가 수렴해도 I_b 는 값으로만.  ⚠ `f = 0` 이 400 으로 수렴할 수 없었다는 것은 R1 (다른 코드 `898c6a34` · `--sub` 미기록) 에서 온 추정이다.  재발 방지 (제안): 예산 = 예측 하강 프레임 + 기존 실측 (R1 등) 에서 잰 정착 여유를 근거와 함께 봉인문에 적는다.  이 등록 안에서는 고치지 않는다 (§12-2 '구제 금지') — 고친 예산은 별도 후속 등록 (1저자 결정).",
+   "evidence_tests": []
+  },
+  {
+   "id": "SELF-80",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "claude (10-02 · 자기 발견 — 진단 정리 중)",
+   "opened_in": "docs/reviews/fam_platen_prereg_20260812.md",
+   "title": "FAM ⑤ f_(b) 정지 런의 부분 결과를 열었다 — 1저자는 10-01 정지 때 \"부분 결과는 열지 않는다\" 고 정했는데 10-02 진단에서 내가 드린 `tail -4` 명령이 `attempt5_fb_stopped/fam_r3v2_fb.log` 끝 네 줄 (frame 240–255 · 두께 29.51–29.49 µm · porosity 14.70–14.64 % · wallP 0.0549–0.0575 GPa) 을 화면에 냈다",
+   "note": "정지 이유 · 멈춘 위치를 보려는 명령이었지만 로그의 프레임 줄이 두께 · 공극률을 담는다는 것을 알면서 거르지 않았다.  판정선 · 창 (12-5-4 [29.3716, 31.1884] µm) 은 결과 0 건에 봉인돼 있어 움직이지 않는다 — 열람이 판정 규칙을 바꾸지는 못하지만 ⑤ 재실행 결과 문장에 이 열람을 병기한다 (§12-5-9).  ④ f_(a) 의 끝 두 줄 (28.94 · 28.93 µm) 도 10-02 watch 화면에서 봤다 (실패 분류에 쓴 로그 · 진행 중 열람을 막는 규칙은 이 등록에 없다).  재발 방지: 정지 · 실패 런의 로그는 상태 줄만 거르는 명령 (예: `grep -E 'rc=|Error|Traceback|servo_status|\\[stop\\]'`) 으로 보고, 프레임 줄은 1저자 결정 뒤에만 연다.  닫는 조건 = ⑤ 결과 보고에 병기한 커밋.",
+   "evidence_tests": []
   }
  ]
 }
