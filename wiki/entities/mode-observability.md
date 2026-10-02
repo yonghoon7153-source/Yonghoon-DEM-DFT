@@ -5,7 +5,7 @@ created: 2026-09-03
 updated: 2026-10-02
 type: entity
 tags: [project, satellite, battery, degradation, research]
-sources: [raw/papers/2026-09-02-siwon-kim-degradation-mode-ml-seminar.md, raw/papers/sun2025_dl-eis-degradation-mode-diagnostics.md]
+sources: [raw/papers/2026-09-02-siwon-kim-degradation-mode-ml-seminar.md, raw/papers/sun2025_dl-eis-degradation-mode-diagnostics.md, raw/papers/oney2025_dead-slow-overworked-graphite-operando-microxrd.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -47,3 +47,8 @@ evidenceScope: single-source
   라벨 식별성 0 · 주의 결과는 LLI ↔ LAM_PE 의 부호 반전(r = −0.962) · 두 LAM 같은 대역. 값싼 실험 3 건(digest §17.4 —
   라벨 맞춤 식별성 · 라벨 상속 · 상관을 깬 EIS 시험)을 제안만 했다; README Phases 표 반영은 위키 밖(satellite 문서)
   일이다. 개념 쪽 정리는 [[piml-physics-injection-points]] (⑤ + ⑥).
+- (2026-10-02) **Phase 1m 의 실셀 입력** — Oney 2025 (`raw/papers/oney2025_dead-slow-overworked-graphite-operando-microxrd.md`
+  §(c), 2026-10-02 논문 세미나 2번째 논문): 노화 흑연의 operando µXRD 가 멈춘(비활성) 흑연의 **상 조성**을 재
+  `n₁` 계수의 실셀 점유율 z_eff ≈0.17–0.25(`[재현·가정]`)를 준다 — `docs/PHASE1M_NOTES.md` "다음" 둘째 항(중간 점유율에서
+  열화하는 실셀)의 전제에 대한 숫자이지 시험은 아니다. 같은 편의 율속 의존 비활성(+10 %p)은 [[thermo-kinetic-loss-partition]]
+  함정 6. README Phases 표 반영은 위키 밖 일이다. 정리는 [[birkl-ocv-degradation-diagnostic]] 2026-10-02 절.

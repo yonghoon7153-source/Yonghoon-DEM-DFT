@@ -4,7 +4,7 @@ created: 2026-09-03
 updated: 2026-10-02
 type: concept
 tags: [battery, degradation, research]
-sources: [raw/papers/tao2025_nondestructive-degradation-decoupling.md, raw/papers/zhang2026_si-anode-interphase-calendar-ageing.md]
+sources: [raw/papers/tao2025_nondestructive-degradation-decoupling.md, raw/papers/zhang2026_si-anode-interphase-calendar-ageing.md, raw/papers/oney2025_dead-slow-overworked-graphite-operando-microxrd.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -98,6 +98,23 @@ LLI–LAM_PE 방향에 새 정보를 주는지는 **합성 truth 에서 값싸�
    자리이고, 새 모델 요구서(`bms-balancing/docs/NEW_MODEL_REQUIREMENTS.md` §3)의 C6(저항 / 창 절단 교란)의
    출판된 실례다. 정전위 유지 쪽의 섞임은
    [[potentiostatic-hold-current-attribution]].
+6. **(2026-10-02 · LAM 칸 안의 η — 율속 의존 겉보기 LAM)** Oney et al. 2025 *Adv. Energy Mater.*
+   15, e02032 (`raw/papers/oney2025_dead-slow-overworked-graphite-operando-microxrd.md` · 액체 흑연 ‖
+   LFP–NCA, 점검 용량 유지 70 % 셀의 노화 흑연)은 operando µXRD 로 **시간에 안 변하는 흑연 상**을
+   "비활성" 으로 떼어 내, 같은 전극의 비활성 분율이 C/5 → C/2 → (C/2 충전 · C 방전) 에서
+   `[인쇄]` **37 → 44 → 47 %(셀 1) · 47 → 54 → 57 %(셀 2)** 로 는다고 적는다 — 늘어난 몫은 전부
+   리튬화 상이고 순수 흑연 비활성은 율속에 무관하다. 반쪽전지에서도 리튬화 용량이 C/5 → C/20 에서
+   ×1.11 (`[재현]`). 저자는 율속을 낮추면 돌아오는 몫을 "slow", 남는 몫을 "dead" 라 부른다.
+   ⇒ 위 표의 "LAM_PE / LAM_NE 는 ΔE 안" 은 **dead 몫에만** 맞고, **겉보기 LAM_NE 에는 η 가 만든 몫
+   (slow)이 들어 있으며 그 크기는 점검 전류의 함수**다. 함정 5 의 **공간 분해 실측판**이다. 처방도
+   같다 — 같은 양을 **두 전류(또는 전류 + 유지/휴지)** 에서 재 dead 와 slow 를 가른다. 그런데 그 편은
+   율속을 한 방향(C/5 → 빠름)으로만 바꿔 **순서 효과와 섞였고**(되돌아오는 저율 사이클 0), 보충 영상
+   판독(`[도표·화소]`)은 C 방전 끝에 늦게 빠지는 Li 가 **집전체 쪽**에서 ≈0.2 h 의 2.5 V 유지 동안
+   회수됨을 보인다(노화 Δx −0.050 ↔ 신품 −0.027). `[해석]` 우리 합성 truth 의 LAM_NE 는 부피분율
+   감소라 율속 무관이고 격자는 0.05C 한 점이다(`degradation-degeneracy/docs/RESULTS.md`
+   "이 결론이 말하지 않는 것") — 실셀 라벨의 이 축은 격자 밖이다([[22p-physics-or-degeneracy]]
+   Status Log 2026-10-02). 같은 날 세미나 3번째 논문(Sun 2025 — 1–2 C 충전 곡선 맞춤 LAM_NE 를 EIS
+   로 학습)의 라벨도 이 뜻의 **겉보기** 값일 수 있다(가설 — 그 digest 와 이 편 digest 의 §비교).
 
 ## 관련
 - [[fitting-degeneracy]] — 이 분해가 **닿지 않는** 축. ΔE 한 칸 안의 문제다.
@@ -107,3 +124,5 @@ LLI–LAM_PE 방향에 새 정보를 주는지는 **합성 truth 에서 값싸�
   LLI/LAM 좌표계 쪽 계보. 이 개념과 미지수 정의가 다르다.
 - [[interpretable-ml-battery-prognosis-taxonomy]] — physics-inspired feature
   분류에서 Tao 2025 가 앉는 자리 (손실항이 아니라 feature·구조·사후해석).
+- [[22p-physics-or-degeneracy]] — 함정 6 의 귀결: 실셀 LAM_NE 라벨은 점검 전류의 함수인데
+  우리 격자의 LAM_NE 는 율속 무관 (Status Log 2026-10-02).

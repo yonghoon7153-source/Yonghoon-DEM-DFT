@@ -5,7 +5,7 @@ created: 2026-09-03
 updated: 2026-10-02
 type: synthesis
 tags: [battery, degradation, identifiability, research]
-sources: [raw/papers/schmitt2022_sic-ocp-shape-change-degradation-modes.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/dubarry2012_synthesize-degradation-modes.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/cui2024_electrode-utilization-formation-cycle-life.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/tao2025_nondestructive-degradation-decoupling.md, raw/papers/wang2025_interpretable-ml-battery-prognosis.md, raw/papers/zhang2020_eis-gpr-capacity-rul.md, raw/papers/su2024_drt-soh-health-features.md, raw/papers/kim2023_graphite-heterogeneity-lifetime.md, raw/papers/2026-09-02-siwon-kim-degradation-mode-ml-seminar.md, raw/papers/mohtat2019_electrode-soh-estimability-expansion.md, raw/papers/wang2025_aging-induced-rate-independent-li-plating.md, raw/papers/sun2025_dl-eis-degradation-mode-diagnostics.md]
+sources: [raw/papers/schmitt2022_sic-ocp-shape-change-degradation-modes.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/dubarry2012_synthesize-degradation-modes.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/cui2024_electrode-utilization-formation-cycle-life.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/tao2025_nondestructive-degradation-decoupling.md, raw/papers/wang2025_interpretable-ml-battery-prognosis.md, raw/papers/zhang2020_eis-gpr-capacity-rul.md, raw/papers/su2024_drt-soh-health-features.md, raw/papers/kim2023_graphite-heterogeneity-lifetime.md, raw/papers/2026-09-02-siwon-kim-degradation-mode-ml-seminar.md, raw/papers/mohtat2019_electrode-soh-estimability-expansion.md, raw/papers/wang2025_aging-induced-rate-independent-li-plating.md, raw/papers/sun2025_dl-eis-degradation-mode-diagnostics.md, raw/papers/oney2025_dead-slow-overworked-graphite-operando-microxrd.md]
 confidence: high
 explored: false
 verificationStatus: unverified
@@ -18,9 +18,9 @@ targetVenue: 다음 연구세미나 발표 도입부 + degradation-degeneracy �
 
 ## Thesis
 
-흡수한 18편(2026-09-11 Wang (Xiong) 2025 · Cui 2026, 2026-10-02 Sun (Xiong) 2025 추가)은 LLI/LAM 분해(또는 그 등가물)를 **보고**하지만 그 분해가 **유일한지**를
+흡수한 19편(2026-09-11 Wang (Xiong) 2025 · Cui 2026, 2026-10-02 Sun (Xiong) 2025 · Oney 2025 추가)은 LLI/LAM 분해(또는 그 등가물)를 **보고**하지만 그 분해가 **유일한지**를
 **모드 좌표에서, 축퇴의 방향까지, 추정기로** 잰 논문은 하나도 없고, 그러면서
-**그것을 잴 도구는 이미 이 18편 안에 흩어져 있다** — 빠진 것은 도구가 아니라
+**그것을 잴 도구는 이미 이 19편 안에 흩어져 있다** — 빠진 것은 도구가 아니라
 **그 도구를 자기 결과에 겨누는 한 걸음**이다.
 
 > **⚠ 2026-09-04 — 이 Thesis 는 좁혀졌다.** 원래 문장은 "그 분해가 유일한지를 잰
@@ -66,6 +66,7 @@ targetVenue: 다음 연구세미나 발표 도입부 + degradation-degeneracy �
 | **Cui 2026 — LFP 직접 진단** (2026-09-11 추가) | **2** (분석 0 — 문헌 소개 1, "practical identifiability" 1) | **0** | **비유일성을 인쇄한다** (`uniqu*` 1: "To obtain unique parameter results … recombined") 하고 7 → 4 로 줄인 뒤 **사전믿음 등식**(파괴 확률 균일)으로 li/de 를 다시 가른다. 이 계보에서 **처음으로 LLI·LAM_NE 둘 다에 재료 라벨**(코인셀·XRD, 각 4 셀) — 그러나 IC 법의 정답 축은 OCV 적합값이고 오차 막대 0 |
 | **Lee 2020** (2026-09-04 추가) | **16** | **0** | **침묵하지 않되 `estimab*` 0 · `global` 0.** 제약 CRB 를 **창(DW) 축으로** 돌리고, 이 계보에서 **처음으로 비대각을 그림으로** 보인다 (Fig. 7 오차 타원). 그러나 수치 ρ 0회, **모드 좌표로 전파 0회** |
 | **Sun (Xiong) 2025 — EIS 모드 DNN** (2026-10-02 추가) | **0** | **0** | **적합값에 "ground truth" 라는 이름을 붙여 침묵을 지운다** — 반쪽전지 창 5-매개(창 4 + 상수 `R`) PSO 맞춤 출력을 DNN 학습 라벨이자 평가 정답으로 쓰고 `uniqu*` · `uncertain*` · `error bar` · `multi-start` 전부 0 (합자 97 개 · 줄끝 하이픈 정규화 후). 비유일성 문제가 어휘에서 아예 생기지 않는 구성. 라벨 궤적은 세 모드 함께 30–39 % 까지, 그림 9b 에 라벨 간극(6.09 → 14.40 %) — basin 전환 징후 (§10) |
+| **Oney 2025 — 노화 흑연 operando µXRD** (2026-10-02 추가) | **0** | **0** | **같은 전극의 LAM_NE 를 방법 넷으로 재고 두 배 넘게 갈리는데 한 마디로 닫는다** — 완전지 DVA ≈19 % · 반쪽전지 DVA ≈55 %(둘 다 `[재현]`) · operando 34–57 % · 논의 "39% ± 8%" 를 "consistent, albeit different in value" 로. 분해 값의 **방법 · 전류 의존을 보고하고 정량하지 않는** 형. `uniqu*` 0 · `LLI` 0(LCL 6) · 모형 0. 그러면서 이 계보에서 처음으로 **li/de 상 조성을 OCV 밖(회절)에서** 잰다 (§11) |
 
 `[2026-09-04]` **Mohtat 행이 이 표의 성격을 바꾼다.** `identifiab*` 23회는 Lin 의
 26회에 맞먹고, `Fisher` 3 · `Cramer/Cramér` 5 · `observab*` 11 · `sensitivit*` 13 이
@@ -291,6 +292,28 @@ Sun, Xiong, Wang, Li, Sun 2025 (*J. Energy Chem.* 107, 894 — `raw/papers/sun20
    ([[halfcell-window-parametrization-lineage]] 일곱 번째 축).
 
 어휘: `identifiab*` 0 · `degenera*` 0 · `uniqu*` 0 · `uncertain*` 0 · `error bar` 0 · `confidence` 0 (합자 · 하이픈 정규화 후).
+
+### 11. **★ 분해 라벨을 구조로 직접 재면 — 같은 전극, 방법 · 전류마다 다른 숫자 (2026-10-02, Oney 2025)**
+
+Oney et al. 2025 (*Adv. Energy Mater.* 15, e02032 — `raw/papers/oney2025_dead-slow-overworked-graphite-operando-microxrd.md`,
+2026-10-02 논문 세미나 2번째 논문)는 이 계보의 전기화학 분해(완전지 · 반쪽전지 DVA)와 **구조 측정(operando µXRD 로 시간에
+안 변하는 흑연 상 = "비활성")** 을 같은 노화 흑연(액체 흑연 ‖ LFP–NCA, 점검 용량 유지 70 %)에 나란히 건다.
+
+`[해석]` 이 형태가 논지에 주는 것은 셋이다.
+
+1. **분해 값이 방법마다 두 배 넘게 갈려도 침묵한다.** 완전지 DVA ≈19 % · 반쪽전지 DVA ≈55 % · operando 34–57 % · 논의
+   39 ± 8 % — 저자는 "consistent, albeit different in value" 로 닫는다. 유일성 질문은 아니지만, **같은 라벨의 정의가 하나가
+   아니라는** 더 앞단의 침묵이다.
+2. **라벨이 전류의 함수다.** 같은 전극의 비활성 분율이 C/5 → C/2–C 에서 +10 %p(셀 둘) — 이 계보의 "LAM_NE" 는 점검
+   전류를 붙이지 않으면 정의가 닫히지 않는다([[thermo-kinetic-loss-partition]] 함정 6). 유일성을 잴 때도 **어느 전류의
+   LAM_NE 인가**를 먼저 고정해야 한다 — 우리 격자(0.05C 한 점 · 율속 무관 LAM)가 그 고정의 한 극단이다.
+3. **li/de 축퇴를 OCV 밖에서 처음 가른다.** 표 1 의 상 조성(Gr ↔ stage 1 · 2/2L · 3)이 Birkl 이 "cannot be uniquely
+   identified" 라 한 li/de 몫을 직접 준다(z_eff ≈0.2 `[재현·가정]` — [[birkl-ocv-degradation-diagnostic]] 2026-10-02 절).
+   §9(Cui 2026)의 "축퇴는 재료 측정이 대신 풀었다" 와 같은 방향이고, 이번엔 저자가 그것을 Li 량으로 환산하지 않아
+   **풀린 것을 쓰지 않은** 형태다.
+
+어휘: `identifiab*` 0 · `degenera*` 0 · `uniqu*` 0 · `uncertain*` 3(일반 뜻) · `error bar` 1(코인 산포) · `LLI` 0(`LCL` 6) ·
+`model*` 5(인용 · 선형 회귀) (NFKC 로 합자 222 를 풀고 줄끝 하이픈을 이은 뒤).
 
 ## Counter-arguments
 
@@ -700,3 +723,5 @@ electrodes**", 그리고 식 (26) `σ_y·α = σ_x·β`. **다만 그 의존성�
 - [[piml-physics-injection-points]] — 우리 파이프라인이 쓰는 두 자리(학습 데이터·
   라벨)가 표준 4분류에 없다는 것. 이 논지의 방법론 쪽 짝.
   (2026-10-02) §10 의 원전 Sun (Xiong) 2025 가 ⑤ + ⑥ 을 한 편에 가진 실셀 EIS 사례로 그 페이지에 붙었다. 계보 17 → 18편.
+- [[thermo-kinetic-loss-partition]] — (2026-10-02) §11 의 원전 Oney 2025 가 함정 6(율속 의존 겉보기 LAM — LAM 칸 안의 η)으로
+  그 페이지에 붙었다. 계보 18 → 19편.

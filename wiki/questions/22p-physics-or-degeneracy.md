@@ -5,7 +5,7 @@ created: 2026-08-11
 updated: 2026-10-02
 type: research-question
 tags: [battery, degradation, research]
-sources: [raw/repositories/degradation-degeneracy-audit.md, raw/papers/schmitt2022_sic-ocp-shape-change-degradation-modes.md, raw/papers/2026-09-21-siwon-kim-si-gr-ica-lam-si-gitt-ocp.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/cui2024_electrode-utilization-formation-cycle-life.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/mohtat2019_electrode-soh-estimability-expansion.md, raw/papers/natterer2026_re-halfcell-anode-potential-aging.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/sun2025_dl-eis-degradation-mode-diagnostics.md]
+sources: [raw/repositories/degradation-degeneracy-audit.md, raw/papers/schmitt2022_sic-ocp-shape-change-degradation-modes.md, raw/papers/2026-09-21-siwon-kim-si-gr-ica-lam-si-gitt-ocp.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/cui2024_electrode-utilization-formation-cycle-life.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/mohtat2019_electrode-soh-estimability-expansion.md, raw/papers/natterer2026_re-halfcell-anode-potential-aging.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/sun2025_dl-eis-degradation-mode-diagnostics.md, raw/papers/oney2025_dead-slow-overworked-graphite-operando-microxrd.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -1088,6 +1088,16 @@ LAM_PE ≈ LAM_NE 는 물리가 아니라 **flat valley 방향에서 두 전극�
   1 C · 2 C 곡선에 이 편의 5-매개 맞춤을 다중 시작으로 걸어 라벨 오차의 방향(`(1,1,1)` 공통 모드 · `R ↔ p0 ↔ LLI`)을 잰다
   (digest §17.4 실험 1, 미실행). 이 편은 [[mode-identifiability-unmeasured-lineage]] 표의 18 번째 행이다 — 형태: "적합값에
   'ground truth' 라는 이름을 붙여 침묵을 지운다".
+- **[2026-10-02] Oney 2025 흡수 (2026-10-02 논문 세미나 2번째 논문 · 사용자 공급) — Evidence For/Against 변화 없음, 외적
+  타당도 경계 하나 추가.** `active` 유지. 액체 흑연 ‖ LFP–NCA(점검 용량 유지 70 %) 노화 흑연의 operando µXRD: 같은 전극의
+  비활성 흑연(겉보기 LAM_NE)이 C/5 → C/2–C 에서 **+10 %p**(셀 둘), 반쪽전지 리튬화 용량이 C/5 → C/20 에서 ×1.11 —
+  **LAM_NE 는 점검 전류의 함수**이고, 같은 편 안에서도 방법마다 ≈19 %(완전지 DVA) · ≈55 %(반쪽전지 DVA) · 34–57 %
+  (operando)로 갈린다(`raw/papers/oney2025_dead-slow-overworked-graphite-operando-microxrd.md` §(b) · §(d) — 앞 둘은 `[재현]`).
+  우리 격자는 0.05C 한 점이고 합성 truth 의 LAM_NE 는 율속 무관이므로(`degradation-degeneracy/docs/RESULTS.md`
+  "이 결론이 말하지 않는 것"), **실셀 22p 라벨이 어느 전류의 겉보기 값인지**가 이 카드의 질문(물리 ↔ 축퇴) 앞에 하나 더
+  붙는다 — 판정은 바꾸지 않는다(22p 셀과 화학 · 전류가 다르고, 그 편은 OCV 맞춤을 하지 않는다). 같은 편 표 1 의 li/de 상
+  조성은 `n₁` 계수(제거 때 점유율)의 실셀 값 z_eff ≈0.2(`[재현·가정]`)를 준다 → [[birkl-ocv-degradation-diagnostic]] 새 절 ·
+  [[thermo-kinetic-loss-partition]] 함정 6 · [[mode-identifiability-unmeasured-lineage]] 표 19 번째 행.
 
 ### 이 카드가 속한 논지 (2026-09-03)
 

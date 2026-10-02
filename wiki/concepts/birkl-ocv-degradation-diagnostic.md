@@ -2,10 +2,10 @@
 title: Birkl OCV 열화 진단 알고리즘 (2017)
 description: "3-parameter OCV fitting for LLI/LAM_PE/LAM_NE: cut-off constraints, the li/de degeneracy the authors themselves state, its lineage from Dubarry 2012, and how it differs from our window model"
 created: 2026-09-03
-updated: 2026-09-03
+updated: 2026-10-02
 type: concept
 tags: [battery, degradation, research]
-sources: [raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/dubarry2012_synthesize-degradation-modes.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md]
+sources: [raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/dubarry2012_synthesize-degradation-modes.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/oney2025_dead-slow-overworked-graphite-operando-microxrd.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -187,6 +187,34 @@ n₂ = ( +1 , −1 , +1 ,  0 ,  0 )     ← "The same holds true for … LAM_PE"
 "LLI 가 몇 % 였다" 를 절대량으로 읽는 인용도 `n₁`·`n₂` 위에서 임의로 이동
 가능한 값을 인용하는 것이 된다.
 
+## ★ li/de 몫을 **OCV 밖 관측으로** 잰 실셀 값 (2026-10-02 추가 — Oney 2025)
+
+위 `n₁` 의 계수 `N`(로딩비)은 `mode-observability/` Phase 1m 이 합성 격자에서
+**"재료가 제거되는 프레임의 음극 점유율"** 로 바로잡았다(정본
+`mode-observability/docs/PHASE1M_NOTES.md` 판정 2 · 요약은
+[[halfcell-window-parametrization-lineage]] 의 Phase 1m 배너 — 우리 완방 프레임에서는
+그 점유율이 거의 0 이라 `lam_ne_type` 이 사실상 무효 노브). OCV 로는 li/de 를 못
+가르지만(이 페이지의 축퇴 진술 그대로), **회절은 멈춘 입자의 상(stage)을 직접 본다.**
+Oney et al. 2025 *Adv. Energy Mater.* 15, e02032
+(`raw/papers/oney2025_dead-slow-overworked-graphite-operando-microxrd.md` §(c) — 액체
+흑연 ‖ LFP–NCA, 점검 용량 유지 70 % 셀에서 뗀 노화 흑연)의 operando µXRD 표 1 이 그 값이다.
+
+- `[인쇄]` 시간에 안 변하는("비활성") 흑연 = 셀 1 34 % · 셀 2 45 %(전체 사이클) — 그중
+  **Gr(LAM_NE,de 쪽) 16.6 · 15.7 %** ↔ **리튬화 상 stage 1 · 2/2L · 3(LAM_NE,li 쪽)
+  17.5 · 28.9 %**.
+- `[재현·가정]` 질량 li : de ≈1.0(셀 1) · 1.8(셀 2) · 갇힌 Li Σf·x ≈0.06–0.08 · 0.09–0.11
+  (흑연 전체 x 단위; 2/2L = LiC₁₈–LiC₁₂, stage 3 = LiC₃₀, Gr = 0) → **비활성 질량당 점유율
+  z_eff ≈0.17–0.25** — 완방 프레임 점유율보다 두 자릿수 크고, Dubarry `LR` 이 암묵 가정한
+  완전 리튬화(1)의 ≈1/4–1/6.
+- `[해석]` 실셀의 멈춘 흑연은 `n₁` 위의 **한 점이 아니라 li · de 의 혼합**이고, Birkl 의
+  total-LLI 에 들어가는 갇힘 항은 `z_eff·LAM_NE`(그 digest 의 `[재현·가정]` 으로 용량 손실의
+  ≈17–39 %)로 잡힌다. 이 페이지의 "li/de 는 OCV 로 유일 식별 불가" 는 **그대로다** — 그것을
+  가르는 것은 OCV 가 아니라 다른 관측(상 조성)이다. 1m 의 "다음" 둘째 항(중간 점유율에서
+  열화하는 실셀에서 계수가 점유율을 따라가는가)의 **전제를 실셀 숫자로** 준다 — 시험은 아니다.
+- 범위 한정: 그 편의 '비활성' 은 율속 의존 몫(slow)이 섞인 **정의**(시간 최소 필터)이고
+  'Gr' 칸에 stage 4 가 들어 있어 z_eff 는 하한 쪽이며, 셀 둘 · ROI 하나씩이다. 율속 의존은
+  [[thermo-kinetic-loss-partition]] 함정 6.
+
 ## 한계 (raw digest §13 요약)
 
 - 합성 검증은 **inverse crime**: 생성 모델 = 적합 모델, 노이즈 0, 3점뿐.
@@ -207,3 +235,4 @@ n₂ = ( +1 , −1 , +1 ,  0 ,  0 )     ← "The same holds true for … LAM_PE"
 - [[22p-physics-or-degeneracy]] — 우리 분해가 물리인지 축퇴인지의 질문 카드
 - [[pvs-sev-lli-lampe-separability]] — 관측을 늘리면 갈리는가 (이 논문은 관측 하나만 쓴다)
 - [[mode-observability]] — 위 "가져올 수 있는 실험 두 개" 의 실행 주체 후보
+- [[thermo-kinetic-loss-partition]] — 함정 6: 같은 전극의 비활성(겉보기 LAM_NE)이 점검 전류에 따라 달라진다 (Oney 2025)
