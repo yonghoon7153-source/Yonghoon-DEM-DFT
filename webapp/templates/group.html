@@ -1427,6 +1427,7 @@ const COL_TIPS = {
   'Percolation': '수식: (하단↔상단 연결 SE 수 / 전체 SE) × 100\n\n전극 하단에서 상단까지 이온이 관통할 수 있는 SE 비율.\n100%면 모든 SE가 관통 경로에 참여.\n95% 이상이면 포화 → 다른 지표가 더 중요.',
   'Top Reachable': '수식: (상단 SE에 연결된 SE 수 / 전체 SE) × 100\n\n상단(SE pellet)에서 이온이 도달 가능한 SE 비율.\nPercolation보다 넓은 개념 (하단 연결 불필요).\nAM과 접촉하면 활성 역할 가능.',
   'Tortuosity': '수식: τ = L_path / L_direct\nL_path = shortest path 실제 거리\nL_direct = 출발-도착 z방향 직선 거리\n\nτ=1이면 완전 직선, 클수록 구불구불.\n유효 전도도: σ_eff ∝ 1/τ² → τ 영향이 제곱으로 큼.',
+  'Tortuosity all-SE': '수식: τ_i = L_i / Δz_i 의 평균 (바닥 띠 관통 SE 전부)\nL_i = 바닥 SE i 에서 경로가 가장 짧은 위쪽 띠 SE 까지의 최단경로 길이\nΔz_i = 그 위쪽 SE 의 z − i 의 z\n\n옆 Tortuosity (τ_Dij) 는 무작위로 짝지은 최대 200 쌍 표본 — 이것은 표본 없이 전부 · 옆 우회 없음 → 같거나 작다.\n길이만 보는 기하 τ (전류 분배 · 접촉 저항 없음).',
   'τ std': '수식: std = √(Σ(τ_i − τ_mean)² / N)\n\n여러 경로의 tortuosity가 얼마나 퍼져있는지.\n작으면 균일한 경로, 크면 좋은/나쁜 경로 혼재\n→ 전류 불균일 → 열화 가속.',
   'Ionic Active': '수식: (top-reachable SE와 접촉한 AM / 전체 AM) × 100\n\n이온 공급 받을 수 있는 AM 비율.\n100% = 모든 AM이 전기화학 반응 가능.\n낮으면 일부 AM이 "dead" → 용량 손실.',
   'Coverage P': '수식: cov_i = min(100, 100·ΣA(AM_i–SE) / (4πr² − ΣA(AM–AM)_i)) — AM_P 입자마다 · 입자 평균\n(자유 표면 ≤ 0 인 입자는 0 으로 셈)\n\nHertz 계열 값: A = c_cpl[22] 기하 교차 원판 (legacy · AREA-08).  Physics 계열 · v2 후보는 이 열에 없다.\n대입경 AM의 SE 피복률.  높을수록 AM 표면 전체에서 고르게 반응 가능.',

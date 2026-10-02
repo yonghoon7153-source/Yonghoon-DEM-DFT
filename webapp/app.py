@@ -3906,6 +3906,7 @@ def _generate_ai_analysis(all_metrics, case_names, title, notes):
         ('Percolation(%)', 'percolation_pct'),
         ('Top Reachable(%)', 'top_reachable_pct'),
         ('Tortuosity', 'tortuosity_mean'),
+        ('Tortuosity all-SE (geometric)', 'tortuosity_all_mean'),   # 기하 τ 전체판 (10-02) — 표본 200 쌍 아님
         ('Ionic Active AM(%)', 'ionic_active_pct'),
         ('Coverage AM_P Hertz-family(%)', 'coverage_AM_P_mean'),
         ('Coverage AM_S Hertz-family(%)', 'coverage_AM_S_mean'),
@@ -6702,6 +6703,7 @@ GROUP_DISPLAY_KEYS = [
     ('Coverage S', '(%)', 'coverage_AM_S_mean', 'SE 네트워크'),
     ('Percolation', '(%)', 'percolation_pct', 'SE 네트워크'),
     ('Tortuosity', '', 'tortuosity_mean', 'SE 네트워크'),
+    ('Tortuosity all-SE', '', 'tortuosity_all_mean', 'SE 네트워크'),   # 기하 τ 전체판 (10-02 · calc_tortuosity_all)
     ('Hop Area', '(μm²)', 'path_hop_area_mean', 'SE 네트워크'),
     ('Bottleneck', '(μm²)', 'path_hop_area_min_mean', 'SE 네트워크'),
     # ── AM 네트워크 (σ_e Stage 15 form inputs) ──
@@ -6739,7 +6741,7 @@ GROUP_DISPLAY_KEYS = [
 #   조용히 '높을수록 좋음' 으로 강조됐다 · 표에 없는 이름 (τ std · GB Density · SE Cluster) 은 뺐다.
 GROUP_LOWER_BETTER = {
     'Porosity', 'Porosity (union)', 'Porosity (union exact)', 'Overlap fraction', '두께', '두께 (질량 보존)',
-    'SE-SE CN std', 'AM-AM CN std', 'Tortuosity', 'AM Vulnerable',
+    'SE-SE CN std', 'AM-AM CN std', 'Tortuosity', 'Tortuosity all-SE', 'AM Vulnerable',
     'Ionic Isolated (path)', 'Isolated: SE not linked', 'Isolated: no SE',
     'R_brug', 'Constriction', 'CP mean', 'CP max', 'Stress CV',
 }
@@ -7298,6 +7300,7 @@ def group_report():
         ('Percolation(%)', 'percolation_pct'),
         ('Top Reachable(%)', 'top_reachable_pct'),
         ('Tortuosity', 'tortuosity_mean'),
+        ('Tortuosity all-SE (geometric)', 'tortuosity_all_mean'),
         ('Ionic Active(%)', 'ionic_active_pct'),
     ]
     for i, name in enumerate(case_names):

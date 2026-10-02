@@ -241,5 +241,70 @@ k2 = html.find(f"'{LBL_DIJ}': {{")
 tip2 = html[k2:k2 + 900] if k2 >= 0 else ''
 chk('C7 τ_Dij 툴팁 = 무작위 짝 최대 200 쌍 (표본) 이라고 적는다', '200' in tip2 and '무작위' in tip2, tip2[:200])
 
+print('[D] 기존 케이스 채우기 — scripts/tau_all_backfill.py (파이프라인 재실행 없이 · 같은 입력 · 표본판 재계산 일치 때만 기록)')
+import subprocess  # noqa: E402
+
+BF = os.path.join(SCRIPTS, 'tau_all_backfill.py')
+chk('D0 도구가 있다', os.path.exists(BF))
+tmp = tempfile.mkdtemp(prefix='tau_all_bf_')
+try:
+    bA = tcv.make_bed(os.path.join(tmp, 'A'))
+    prA, mA = tcv.run_bed(bA)
+    out = bA['out']
+    for fn in ('atoms.csv', 'contacts.csv'):                        # 웹앱은 분석 입력을 results 폴더에 복사해 둔다
+        shutil.copy2(os.path.join(bA['dir'], fn), os.path.join(out, fn))
+    fm = os.path.join(out, 'full_metrics.json')
+    orig_all = {k: v for k, v in mA.items() if k.startswith('tortuosity_all_')}
+    old = {k: v for k, v in mA.items() if not k.startswith('tortuosity_all_')}   # 옛 케이스 흉내 — 새 키 없음
+    with open(fm, 'w', encoding='utf-8') as f:
+        json.dump(old, f)
+
+    def bf(*extra):
+        return subprocess.run([sys.executable, BF, '--results', out, '--type-map', bA['tmap'], '--scale', '1000',
+                               '--tsv', os.path.join(tmp, 'tau.tsv')] + list(extra), capture_output=True, text=True, timeout=600)
+    p1 = bf()
+    tsv = open(os.path.join(tmp, 'tau.tsv'), encoding='utf-8').read() if os.path.exists(os.path.join(tmp, 'tau.tsv')) else ''
+    chk('D1 읽기만 — rc 0 · 표에 τ_all = 1 · 표본판 재계산 = 저장값 (match) · 파일은 그대로',
+        p1.returncode == 0 and 'match' in tsv and '\t1.0' in tsv
+        and json.load(open(fm, encoding='utf-8')) == old, (p1.stderr or p1.stdout)[-400:] + ' | ' + tsv[:300])
+    p2 = bf('--write')
+    new = json.load(open(fm, encoding='utf-8'))
+    got_all = {k: v for k, v in new.items() if k.startswith('tortuosity_all_') and k != 'tortuosity_all_provenance'}
+    chk('D2 --write — 새 키 = 파이프라인 값과 같다 · 다른 키는 그대로 · 출처 기록 · 원본 사본',
+        p2.returncode == 0 and got_all == orig_all
+        and {k: v for k, v in new.items() if not k.startswith('tortuosity_all_')} == old
+        and (new.get('tortuosity_all_provenance') or {}).get('sampled_recheck') == 'match'
+        and os.path.exists(fm + '.pre_tau_all'), f'{got_all} vs {orig_all} · {(p2.stderr or p2.stdout)[-300:]}')
+    bad = dict(old, tortuosity_mean=1.5)                             # 저장값이 재계산과 다르다 = 입력이 다르다
+    with open(fm, 'w', encoding='utf-8') as f:
+        json.dump(bad, f)
+    p3 = bf('--write')
+    chk('D3 표본판 재계산이 저장값과 다르면 --write 거부 (rc ≠ 0 · 파일 그대로)',
+        p3.returncode != 0 and json.load(open(fm, encoding='utf-8')) == bad, (p3.stderr or p3.stdout)[-300:])
+    # D4 — 웹앱 폴더 + 케이스 이름으로 찾기 (uploads/<id>/meta.json 의 name · type_map · scale → results/<id>)
+    root = os.path.join(tmp, 'webapp')
+    os.makedirs(os.path.join(root, 'uploads', 'cid1'))
+    shutil.copytree(out, os.path.join(root, 'results', 'cid1'))
+    with open(os.path.join(root, 'results', 'cid1', 'full_metrics.json'), 'w', encoding='utf-8') as f:
+        json.dump(old, f)
+    with open(os.path.join(root, 'uploads', 'cid1', 'meta.json'), 'w', encoding='utf-8') as f:
+        json.dump({'name': 'input_bedA', 'mode': 'bimodal', 'type_map': bA['tmap'], 'scale': 1000}, f)
+    p4 = subprocess.run([sys.executable, BF, '--webapp-root', root, '--name', 'input_bedA',
+                         '--tsv', os.path.join(tmp, 'tau4.tsv')], capture_output=True, text=True, timeout=600)
+    t4 = open(os.path.join(tmp, 'tau4.tsv'), encoding='utf-8').read() if os.path.exists(os.path.join(tmp, 'tau4.tsv')) else ''
+    chk('D4 --webapp-root · --name 으로 케이스를 찾는다 (meta.json 의 type_map · scale)',
+        p4.returncode == 0 and 'input_bedA' in t4 and 'match' in t4, (p4.stderr or p4.stdout)[-300:])
+finally:
+    shutil.rmtree(tmp, ignore_errors=True)
+
+print('[E] 웹앱 그룹 표 · 보고서 · 파라미터 목록에 τ_Dij,all')
+lines = src.splitlines()
+hits = [i for i, ln in enumerate(lines)
+        if ln.strip() in ("('Tortuosity', 'tortuosity_mean'),", "('Tortuosity', '', 'tortuosity_mean', 'SE 네트워크'),")]
+chk('E0 τ_Dij 목록 셋 (그룹 표 · 파라미터 목록 · 보고서 표) 을 찾았다', len(hits) == 3, repr(hits))
+for i in hits:
+    chk(f'E {i + 1} 행 다음 줄 = tortuosity_all_mean', i + 1 < len(lines) and 'tortuosity_all_mean' in lines[i + 1],
+        lines[i + 1][:120] if i + 1 < len(lines) else '')
+
 print(f'\n{_ok} PASS · {len(_fail)} FAIL')
 sys.exit(1 if _fail else 0)
