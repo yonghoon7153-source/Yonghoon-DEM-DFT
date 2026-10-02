@@ -3395,7 +3395,9 @@ def plot_transport_absolute(data_list, names, outdir):
 
 
 def plot_r_brug_comparison(data_list, names, outdir):
-    """R_brug for ionic vs electronic vs thermal — how much does Bruggeman overestimate?"""
+    """CF/FULL for ionic vs electronic vs thermal — 접촉 (협착) 저항이 전도도를 몇 배 낮추나.
+    ⚠ 키 이름 `R_brug_over_full` 과 달리 Bruggeman 이 아니다 = CONTACT_FREE / FULL (L2-07 · 2026-10-02 라벨 정정).
+    진짜 Bruggeman ÷ network 은 `R_bruggeman_over_full` · 케이스 화면 'σ_brug / σ_ionic' 행."""
     # Ionic R_brug
     r_ionic = []
     for d in data_list:
@@ -3460,18 +3462,18 @@ def plot_r_brug_comparison(data_list, names, outdir):
     w = 0.25
 
     if has_ionic:
-        ax.bar(x - w, r_ionic, w, color='#2ecc71', alpha=0.8, label="Ionic R_brug")
+        ax.bar(x - w, r_ionic, w, color='#2ecc71', alpha=0.8, label="Ionic CF/FULL")
     if has_el:
-        ax.bar(x, r_el, w, color='#e74c3c', alpha=0.8, label="Electronic R_brug")
+        ax.bar(x, r_el, w, color='#e74c3c', alpha=0.8, label="Electronic CF/FULL")
     if has_th:
-        ax.bar(x + w, r_th, w, color='#ff922b', alpha=0.8, label="Thermal R_brug")
+        ax.bar(x + w, r_th, w, color='#ff922b', alpha=0.8, label="Thermal CF/FULL")
 
     ax.axhline(1.0, color='gray', linestyle='--', linewidth=1, alpha=0.5)
-    ax.text(len(names)-0.5, 1.05, "Bruggeman = exact", fontsize=7, color='gray', ha='right')
+    ax.text(len(names)-0.5, 1.05, "1 = no contact resistance", fontsize=7, color='gray', ha='right')
 
-    _apply_style(ax, "R_brug (σ_brug / σ_network)", names)
+    _apply_style(ax, "CF/FULL (σ_contact-free / σ_full)", names)
     ax.legend(fontsize=8, loc='upper left')
-    ax.set_title("Bruggeman Overestimation by Transport Mode\nR_brug > 1 = Bruggeman overestimates",
+    ax.set_title("Contact-resistance factor by transport mode\nCF/FULL > 1 = contact resistance lowers σ (not Bruggeman · L2-07)",
                  fontsize=10, fontweight='bold')
 
     _write_csv(outdir, 'r_brug_comparison.csv',
@@ -4214,8 +4216,8 @@ PLOT_REGISTRY["transport_absolute"] = {
 PLOT_REGISTRY["r_brug_comparison"] = {
     "func": plot_r_brug_comparison,
     "file": "r_brug_comparison.png",
-    "title": "R_brug by Transport Mode",
-    "description": "각 transport mode별 Bruggeman 과대추정 배수.\nR_brug = σ_brug / σ_network.\nIonic R_brug=3~10× (constriction 지배).\nElectronic/Thermal은 R_brug 다를 수 있음.\nR_brug가 클수록 접촉 저항 기여가 큼.",
+    "title": "CF/FULL (접촉 배수) by Transport Mode",
+    "description": "각 transport mode 별 접촉 배수 CF/FULL = 접촉 (협착) 저항을 뺀 네트워크 σ ÷ 전체 네트워크 σ.\n⚠ 키 이름 R_brug 과 달리 Bruggeman 이 아니다 (L2-07).  진짜 Bruggeman ÷ network 은 케이스마다 다르다 — 케이스 화면 'σ_brug / σ_ionic' 행.\nCF/FULL 이 클수록 접촉 저항 기여가 큼 · 같은 접촉 모델 안의 비 (실험 대비 오차 아님).",
     "origin_tip": "Grouped Bar: Green(ionic), Red(electronic), Orange(thermal).",
 }
 PLOT_REGISTRY["stress_z_layer"] = {

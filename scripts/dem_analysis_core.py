@@ -1025,9 +1025,11 @@ def calc_fracture_stages(atoms, contacts, type_map, scale=1000.0):
 # ─── Effective Ionic Conductivity ─────────────────────────────────────────
 
 def calc_effective_conductivity(atoms, perc_result, porosity, tortuosity_result, type_map, plate_z, box_xy=0.05, box_x=None, box_y=None):
-    """Estimate σ_brug/σ_grain (Bruggeman approximation, ignoring contact resistance).
-    σ_brug/σ_grain = φ_SE × f_perc / τ²
-    Note: overestimates by 3-10× vs network solver (no constriction resistance)."""
+    """Estimate σ_brug/σ_grain (Bruggeman 꼴, 접촉 (협착) 저항 없음).
+    σ_brug/σ_grain = φ_SE × f_perc / τ²   (τ = 기하학적 Dijkstra τ · `calc_tortuosity` 의 recommended)
+    ⚠ network solver 와의 비는 **케이스마다 다르다** — 웹앱 'σ_brug / σ_ionic' 행 (1 보다 작을 수도 있다: Codex 4 구 반례 0.28).
+      옛 문구 "network solver 대비 3–10 배 과대" 는 철회 — 그 숫자는 이름이 잘못 붙은 `R_brug_over_full` = CF/FULL
+      (접촉 저항을 뺀 네트워크 ÷ 전체 네트워크 · L2-07) 에서 온 것이다 (2026-10-02 · 1저자 비준)."""
     se_types = [k for k, v in type_map.items() if v == 'SE']
     se_ids = [aid for aid, a in atoms.items() if a['type'] in se_types]
 
