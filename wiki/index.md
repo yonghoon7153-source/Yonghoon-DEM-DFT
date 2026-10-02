@@ -2,7 +2,7 @@
 
 > 내용 목록. 모든 위키 페이지를 종류별로 한 줄 요약과 함께 싣는다. 논문 digest(`raw/papers/`)는
 > 컴파일 페이지가 아니므로 여기 세지 않고 아래 "Raw 논문" 절에 참고로만 적는다.
-> 마지막 갱신: 2026-10-02 | 전체 페이지: 20 | Total pages: 20
+> 마지막 갱신: 2026-10-02 | 전체 페이지: 22 | Total pages: 22
 
 ## Entities (satellite 프로젝트)
 
@@ -33,6 +33,8 @@
 ## Questions (열린 질문)
 
 - [[reference-cell-500-600-mahg]] — (status: active) 병목은 활성화 / 퍼콜레이션 / 입자 / 단위 착시 중 무엇인가.
+- [[se-redox-capacity-share]] — (status: open) **우리 용량 중 황화물 SE 가 내는 몫은 얼마인가.** digest 24편 중 **8편이 이론 초과**, **넷이 SE 리독스를 정면 인정**, **측정한 논문은 둘뿐이고 둘 다 불완전**하다. 외부 눈금이 **4–6 % ~ 1.5 mAh cm⁻²** 로 흩어져 분모를 문헌에서 빌릴 수 없다.
+- [[additive-classification-and-mass-penalty]] — (status: open) **첨가제는 매개체·촉매·정적층 중 무엇이고 무게 대가는 피할 수 있는가.** 9편의 대가가 **16.7–43.8 wt%**, 자기 용량 항이 **32–152 mAh g⁻¹(Li2S)** 로 수렴한다. ★ 분류 단위는 "첨가제" 가 아니라 **"원소·사이트"** 다 (`CuI` 에서 Cu 는 매개체, I 는 정적 도펀트). **활물질 없는 대조셀은 9편 중 0편.**
 - [[operating-stack-pressure-floor]] — (status: open) 운전 압력 하한은 얼마이고, 그것을 정하는 것은 **양극 내부인가 집전체 계면인가**. 문헌 좌표 **0–200 MPa**, 저압은 공짜가 아니며 포화 압력은 전극계마다 5–15 MPa 로 움직인다.
 - [[one-step-vs-two-step-mixing]] — (status: open) 혼합 순서가 Li2S 이용률을 바꾸는가, 바꾼다면 SE 보호 때문인가 계면 때문인가.
 
