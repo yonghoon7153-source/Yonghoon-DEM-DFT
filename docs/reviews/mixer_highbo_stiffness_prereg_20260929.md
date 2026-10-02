@@ -52,6 +52,11 @@
 저자가 (2) 를 고르면 §4 · §5 에 r · t 허용 폭을 결과 전에 적고 팔 표 (§2) 를 36 런으로 바꾼다.  ⚠ 어느 길이든 **b_E 는 soft↔ref 허용 폭이지 r · t 오차의 면책금이 아니다**.
 
 ### 개정 이력 (v1 `ea7cfef96` → v2)
+**v2.8 (10-02 · 1저자 *"ㄱㄱ"* · DEV 탐색 단계 `dev-bo` 추가 — §11 · 확인 블록의 팔 · 수준 · seed · 판정선 · b_E · τ · 1 % 불변)** — DEV seed 1 의 2 바퀴 M 열람
+  (10-02 08:35:52 KST · `docs/data/mixer_highbo_devrot_prelim_20261002/`) 뒤: 개발 팔 `LHx10_ref_r2_s32452843` (AM–AM Bo_code 384 = LH ×10) · `LHx30_ref_r2_s32452843` (1152 = ×30) ·
+  런처 단계 `dev-bo` (dev-rot 과 같은 관문) · 발사 정책 **v3** (`mixer_highbo_launch_policy/3` = v2 단계 + dev-bo · id `STIFF-DEV-BO-2026-10-02` — v2 의 뜻은 넓히지 않는다) ·
+  등록 코호트 `dev-bo` · 덱 증거 `docs/data/mixer_highbo_dev_decks_20261002_bo/`.  ⚠ 이 수준은 **DEV M 을 본 뒤** 정했다 — 그 결과로 확인 수준을 고르면 사후 선택 (§11 한정어).
+  정책 note 의 옛 5.8 → 7.37 정정을 이 개정에서 했다 (v2.7 ① 끝 문장의 *"확인 발사 정책 개정 때"* 를 앞당김 — DEV 블록이 끝나 정책 sha 를 바꿔도 된다).
 **v2.7 (09-30 밤 · Codex 10 차 · 1저자 *"HBR10-01·03 → … · hbr10-02 는 권고대로 (가)"* · 확인 자료 미열람 · 값 · 팔 · seed · 판정선 불변)** — `docs/reviews/codex_review_mixer_highbo_round10_20260930.md`:
   ① **HBR10-01 — b · c 는 보고 전용이지만 측정은 유효해야 한다**: 측정 유효 (b: 두 x 유한 · c: x 유한 · 두 S_R² 유한 ≥ 0 · 사용 칸 ≥ 2) 와 문턱 통과를 나눈다 ·
   측정 불능 · 필드 누락 · 타입 변조 = **technical 실패 (TECH · 관문이 막는다)** · 유한한 문턱 실패는 그대로 보고 (진행 허용) · 기준 S_R² = 0 은 NaN 과 다르다 —
@@ -366,3 +371,60 @@ n = 2 별도 추론은 하지 않는다 (원하면 결과 전 다른 설계로 �
   (HBR5-04) · `launch_policy.json` first-seed-block/rest 개정 · 실제 시작 직전 관문 · HBR6-01 · 03 음성대조 — 전부 반례 먼저.
 - NP 실측 (개발 항목 · 비용 포함) → §8-3 · ETA.
 - ~~Codex 8 차 요청서 (이 v2 + 위 코드 + 개발 블록 결과)~~ → 8 차 · 9 차 완료 (§0-c · §0-d) · 다음 = **코드 · 증거 라운드** (DEV7 선행조건 + 실행 덱 되읽기 표 B · E + 음성대조).
+- ⬜ §11 dev-bo (v2.8 · 10-02) — ibb: 같은 OUT 에 셀 둘 → `--e0-diag` **새 기록 파일** (도구 sha 가 바뀌어 옛 기록은 관문이 거부) → `launch_highbo.sh dev-bo` → 2 바퀴 M (기술 수치 · 판정 아님).
+
+## 11. 개발 탐색 `dev-bo` — AM–AM Bo_code ×10 · ×30 (2026-10-02 · v2.8 · 1저자 *"ㄱㄱ"* · DEV 전용 · 확인 블록 불변)
+
+### 11-1. 왜 — DEV seed 1 의 2 바퀴 M 열람 (기록)
+- **열람**: 2026-10-02 08:35:52 KST · ibb · 리포 HEAD `5177ec9caa79c43a22b5c5ef197f39b0c6b203a1` · 묶음 tgz sha256 `018e4d46bdfec7f2e60b7aa67840b6a70ede84dfd4aa7166b2d3f9b00ecd8852`
+  (세션에 올라온 tgz 와 일치) · 원자료 · 명령 = `docs/data/mixer_highbo_devrot_prelim_20261002/` (판독기 = HEAD 의 `measure_mixing_index.py` · 덱 = v26 커밋 DEV 덱 · E0 = `E0_ref_s32452843`).
+- 등록 2 바퀴 값 (`planned.M_final` · bin 1 · 100/100 프레임):
+
+| 칸 (판독 규약 n_min 20 · x · r 0.013138) | LC_ref_r2 | LH_ref_r2 | d = LC − LH (반올림 전 값의 차) |
+|---|---|---|---|
+| 16×16×4 | 0.908 | 0.897 | +0.010 |
+| 12×12×3 | 1.024 | 1.031 | −0.006 |
+| 8×8×2 | 0.881 | 0.874 | +0.008 |
+
+- 첫 바퀴 (bin 0) M 0.42 / 0.44 · 0.49 / 0.48 · 0.43 / 0.43 · 두 런 다 첫 바퀴 안에 M 0.8 을 넘는다 (첫 프레임 기준 0.72–0.82 바퀴) · 등록 bin 부피 누락 QC 6/6 통과 ·
+  `flat` False (2 바퀴 계획에서 예상).  ⇒ **AM–AM Bo_code 38.4 의 이 개발 쌍에서는 LC–LH 차이가 보이지 않는다** (n = 1 seed · 판정 아님 · 기술 수치).
+
+### 11-2. 무엇을 더 돌리나
+- 개발 팔 둘 — `LHx10_ref_r2_s32452843` (AM–AM Bo_code **384** = LH 38.4 × 10) · `LHx30_ref_r2_s32452843` (**1152** = × 30).  생성 규약 = 팔 `LH` 그대로
+  (`bond 1 · layered · abs_base 0.21244 · abs_mult = AM 쌍 셋`) ⇒ AM–벽 CED 도 같은 벽 규칙 (대각 ÷ 1.842) 으로 함께 오른다 = **공동 개입 B** (AM–AM 만의 개입 아님).
+  나머지는 `LH_ref_r2_s32452843` 과 같다: `--n-total 100000 --cgf 151.4 --seed 32452843 --revolutions 2 --stiffen-se 20 --hold-bo-pairwise` · ibb NP 20 · 같은 OUT.
+- 덱 증거 `docs/data/mixer_highbo_dev_decks_20261002_bo/`: `LH_ref_r2` · `LC_ref_r2` 대비 다른 것은 AM–AM 셋 · AM–벽 둘의 CED 뿐 (`--allow B` 5/5 PASS · `--allow A` 2/2 FAIL =
+  B 가 가장 좁은 통과 허용목록) · E · ν · dt · run · 기하 · seed · 삽입 토큰 동일 · 되읽기 표 B 5/5.
+- 비교 상대 = 이미 돈 `LC_ref_r2_s32452843` (dev-rot) · 무작위 기준 S_R² = `E0_ref_s32452843` (둘 다 같은 OUT).  `LH_ref_r2` 는 같은 사다리의 낮은 점으로 함께 적는다.
+
+### 11-3. 왜 이 두 수준 (결과가 아니라 등록 전 근거)
+- 코드 Bo ↔ 문헌 pull-off Bo: `Bo_po = Bo_code / 6.75` (모체 `docs/reviews/mixer_layered_prereg_20260921.md` §0 R-4 · Codex HB-02 규약).  LH 38.4 ≈ Bo_po 5.7 — 정본 litdb
+  `hare2026_dem_pept_dry_mixing_nmc622_eirich` 카드 §4.3 의 JKR pull-off / 중량 산술 (hare2026 ≈ 5.7 · frankenberg2024 ≈ 3.3) 과 같은 자릿수 (그 카드: 옮길 수 있는 것은
+  Bond 수 O(1–10) 의 대역 감각뿐 · R-4: JKR 규약 2 배 모호).  ×10 · ×30 = Bo_po ≈ 57 · 171 = 그 대역 **밖** 의 탐색.
+- ⚠ **거친 추정 (작성 세션 유도 · 충돌 속도 분포 미측정)**: sjkr + Hertz 우물 깊이 W = (1/5)π k_c R* δ_eq² · 충돌 운동에너지 ≲ W(1−e²)/e² 이면 붙는다 (e = 0.3 · 덱 값) —
+  붙는 충돌 속도 상한 AM_P–AM_P ≈ **22 (LH) · 149 (×10) · 372 (×30) mm/s** · AM_S–AM_S ≈ 11 · 76 · 189 mm/s ↔ 드럼 벽 속도 ωR ≈ 103 mm/s · √(g d_AM_P) ≈ 116 mm/s.
+  ⇒ AM_P 의 상한이 LH 에서는 그 두 속도 척도 (≈ 100 mm/s) 의 약 1/5 이고 ×10 · ×30 에서는 그와 비슷하거나 크다 — 그래서 고른 두 수준이다 (**효과의 예측이 아니다**).
+- **정적 평형 겹침 δ/r** (CGF 151.4 · 점착 지배 · 고립 접촉 근사 · 생성기 셀프테스트 BO⑤ 가 고정): AM_P **0.046 · 0.214 · 0.445 %** · AM_S **0.027 · 0.125 · 0.259 %** (LH · ×10 · ×30) —
+  모두 1 % 천장 아래.  ⚠ 충돌 최대 겹침의 상한이 아니다 (동적 · 저장 프레임 최대는 미측정 · `check_contact_validity.py` 로 따로 잴 수 있다 — 이 등록의 관문 아님).
+- `--stiffen-se` 는 SE 만 경화 ⇒ AM–AM · AM–벽 CED = soft 값 그대로 = 명목 Bo_code 정확히 (BO⑥) · dt 는 경화 SE 가 정해 (2.62e-07 s) 비용 = `LH_ref_r2` 와 같다
+  (2 바퀴 6,102,533 step · NP 20 · BO③).
+
+### 11-4. 지위 · 한정어
+- **DEV 탐색 전용** — 확인 블록 (§2 의 18 런) 이 아니고 확인 seed 와 섞지 않는다 (등록 코호트 가드: dev-bo 팔은 dev-bo 코호트에만 · DEV seed · ref 만).
+- 이 두 수준은 **DEV M 을 본 뒤** 정했다 ⇒ 이 결과로 확인 블록의 점착 수준을 고르면 그것은 DEV 자료에 대한 **사후 선택**이다 — 확인 발사 전에 새 등록 (또는 개정) 으로 적고
+  그 사실을 결과 문장에 병기한다.  그 전에는 확인 블록의 팔 · 수준 · seed · 판정선 · b_E · τ · 1 % 그대로.
+- 확인 블록의 미결 결정 — §4 a′ (회전 중 접촉) 결과 · §3 수준 확정 · ε_s (§5) · 등록 모호점 6 · 후행 6 긴 런 수행 여부 — 은 이 DEV M 열람 **전에 봉인되지 않았다** (사실 기록).
+- *"실제 코팅 효과"* 문장 금지 그대로 · 개입 = AM–AM + AM–벽 **공동 개입 B** (§9 · HBR8-02).
+- **읽는 양**: 같은 판독기 (`measure_mixing_index.py`) 의 같은 세 칸 (16×16×4 · 12×12×3 · 8×8×2 · n_min 20 · x · r 0.013138) · `d = M(LC_ref_r2) − M(LHx·_ref_r2)` (등록 2 바퀴 bin 1 ·
+  `planned.M_final`) · n = 1 seed · **통과/실패선 없음** (기술 수치 · ± 는 bin 안 프레임 SD 이지 seed 불확실성이 아니다).
+
+### 11-5. 실행 경로
+- 런처 새 단계 `dev-bo <E0 진단 PASS 기록>` = `dev-rot` 과 **같은 관문**: 정책 (v3 · 단계 인자 = 등록 코호트 `dev-bo` 정확히 · requires dev-e0 · 3 일) → 덱 코호트
+  (`mixer_deck_diff.py --cohort dev-bo` — 이름에서 재생성한 덱과 바이트 동일 · deck_meta · B 쌍 LHx10 → LHx30) → preflight (폴더 계약 · fresh · 디스크 · **E0 진단 PASS 기록** ·
+  블록 NP = 기록 NP) → 봉인 (`requires` = 그 기록의 절대경로 · sha256) → sbatch → job 시작 직전 `start_check.py` 재대조.
+- 발사 정책 **v3** (`mixer_highbo_launch_policy/3` = v2 단계 + dev-bo · id `STIFF-DEV-BO-2026-10-02` · `dem_scripts/mixer_20260921/launch_policy.json` 을 갈아 끼움 — 옛 id ·
+  sha 는 dev-e0 · dev-rot 봉인에 남는다) — **v2 스키마의 뜻은 넓히지 않았다** (v2 정책에 dev-bo 를 적으면 관문 · 런처가 모양 아님으로 거부).
+- ⚠ `mixer_deck_diff.py` (코호트 · 셀 이름 문법) 가 바뀌었으므로 E0 진단 기록의 도구 sha 대조에서 옛 기록 (`dev_e0_diag.json` · `dev_e0_diag_v27_recheck2.json`) 은 거부된다
+  → 같은 OUT 에서 `mixer_smoke_blind.py --e0-diag` 를 **새 기록 파일**로 다시 (LIGGGHTS 재실행 없음 · E0 다섯의 덱 · 로그 · 봉인 · job_start 는 그대로여야 PASS).
+- 같은 묶음의 안전 수정: `run_all.sh` · `resume_all.sh` 의 강성 축 셀 정규식이 E0 · LC · LH 만 알아, 새 팔 이름 `LHx10_*` · `LHx30_*` 셀을 로컬로 띄우고 ·
+  이어 붙였다 (옛 스크립트로 재현 — `test_launcher.sh` DB⑦) → 팔 목록 = `mixer_deck_diff.STIFF_ARMS` (DB⑧ 이 한 벌인지 대조).

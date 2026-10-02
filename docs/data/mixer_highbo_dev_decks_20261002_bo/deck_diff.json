@@ -1,0 +1,705 @@
+{
+ "tool": "scripts/mixer_deck_diff.py",
+ "tool_sha256": "5a5db2759f3dfb3e4369930e74ea90f876bfd1345e56338931de0709852efe78",
+ "note": "A (AM–AM 셋만) 는 AM–벽 둘이 허용목록 밖이라 FAIL 이어야 한다 = B 가 통과하는 가장 좁은 허용목록 · B 의 --expect-deck = 같은 생성 명령을 임시 폴더에 다시 돌린 덱 (CED 목표) · CED 밖 명령 (E · ν · dt · run · 기하 · 시드 · 삽입) 은 토큰까지 같다",
+ "verdict": "PASS",
+ "comparisons": [
+  {
+   "allow": "A",
+   "ref": "docs/data/mixer_highbo_dev_decks_20260930_v26/decks/LH_ref_r2_s32452843/in.mixer",
+   "new": "docs/data/mixer_highbo_dev_decks_20261002_bo/decks/LHx10_ref_r2_s32452843/in.mixer",
+   "expected_rc": 1,
+   "rc": 1,
+   "verdict": "FAIL",
+   "changed": [
+    [
+     "AM_P",
+     "AM_P"
+    ],
+    [
+     "AM_P",
+     "AM_S"
+    ],
+    [
+     "AM_P",
+     "WALL"
+    ],
+    [
+     "AM_S",
+     "AM_S"
+    ],
+    [
+     "AM_S",
+     "WALL"
+    ]
+   ],
+   "outside": [
+    [
+     "AM_P",
+     "WALL"
+    ],
+    [
+     "AM_S",
+     "WALL"
+    ]
+   ],
+   "missing": [],
+   "wrong_direction": [],
+   "non_ced_diffs": [],
+   "target_mismatch": [],
+   "ced": [
+    {
+     "pair": "AM_P–AM_P",
+     "ref": 3563480.0,
+     "new": 7677280.0,
+     "ratio": 2.1544333067675416
+    },
+    {
+     "pair": "AM_P–AM_S",
+     "ref": 2719440.0,
+     "new": 5858860.0,
+     "ratio": 2.154436207454476
+    },
+    {
+     "pair": "AM_P–SE",
+     "ref": 68738.8,
+     "new": 68738.8,
+     "ratio": 1.0
+    },
+    {
+     "pair": "AM_P–WALL",
+     "ref": 1934550.0,
+     "new": 4167870.0,
+     "ratio": 2.1544390168256182
+    },
+    {
+     "pair": "AM_S–AM_S",
+     "ref": 2719440.0,
+     "new": 5858860.0,
+     "ratio": 2.154436207454476
+    },
+    {
+     "pair": "AM_S–SE",
+     "ref": 68738.8,
+     "new": 68738.8,
+     "ratio": 1.0
+    },
+    {
+     "pair": "AM_S–WALL",
+     "ref": 1476340.0,
+     "new": 3180680.0,
+     "ratio": 2.1544359700340032
+    },
+    {
+     "pair": "SE–SE",
+     "ref": 77056.9,
+     "new": 77056.9,
+     "ratio": 1.0
+    },
+    {
+     "pair": "SE–WALL",
+     "ref": 38616.2,
+     "new": 38616.2,
+     "ratio": 1.0
+    },
+    {
+     "pair": "WALL–WALL",
+     "ref": 0.0,
+     "new": 0.0,
+     "ratio": 1.0
+    }
+   ]
+  },
+  {
+   "allow": "A",
+   "ref": "docs/data/mixer_highbo_dev_decks_20260930_v26/decks/LH_ref_r2_s32452843/in.mixer",
+   "new": "docs/data/mixer_highbo_dev_decks_20261002_bo/decks/LHx30_ref_r2_s32452843/in.mixer",
+   "expected_rc": 1,
+   "rc": 1,
+   "verdict": "FAIL",
+   "changed": [
+    [
+     "AM_P",
+     "AM_P"
+    ],
+    [
+     "AM_P",
+     "AM_S"
+    ],
+    [
+     "AM_P",
+     "WALL"
+    ],
+    [
+     "AM_S",
+     "AM_S"
+    ],
+    [
+     "AM_S",
+     "WALL"
+    ]
+   ],
+   "outside": [
+    [
+     "AM_P",
+     "WALL"
+    ],
+    [
+     "AM_S",
+     "WALL"
+    ]
+   ],
+   "missing": [],
+   "wrong_direction": [],
+   "non_ced_diffs": [],
+   "target_mismatch": [],
+   "ced": [
+    {
+     "pair": "AM_P–AM_P",
+     "ref": 3563480.0,
+     "new": 11072500.0,
+     "ratio": 3.1072154186357155
+    },
+    {
+     "pair": "AM_P–AM_S",
+     "ref": 2719440.0,
+     "new": 8449930.0,
+     "ratio": 3.1072316359250434
+    },
+    {
+     "pair": "AM_P–SE",
+     "ref": 68738.8,
+     "new": 68738.8,
+     "ratio": 1.0
+    },
+    {
+     "pair": "AM_P–WALL",
+     "ref": 1934550.0,
+     "new": 6011100.0,
+     "ratio": 3.1072342405210516
+    },
+    {
+     "pair": "AM_S–AM_S",
+     "ref": 2719440.0,
+     "new": 8449930.0,
+     "ratio": 3.1072316359250434
+    },
+    {
+     "pair": "AM_S–SE",
+     "ref": 68738.8,
+     "new": 68738.8,
+     "ratio": 1.0
+    },
+    {
+     "pair": "AM_S–WALL",
+     "ref": 1476340.0,
+     "new": 4587330.0,
+     "ratio": 3.1072313965617675
+    },
+    {
+     "pair": "SE–SE",
+     "ref": 77056.9,
+     "new": 77056.9,
+     "ratio": 1.0
+    },
+    {
+     "pair": "SE–WALL",
+     "ref": 38616.2,
+     "new": 38616.2,
+     "ratio": 1.0
+    },
+    {
+     "pair": "WALL–WALL",
+     "ref": 0.0,
+     "new": 0.0,
+     "ratio": 1.0
+    }
+   ]
+  },
+  {
+   "allow": "B",
+   "ref": "docs/data/mixer_highbo_dev_decks_20260930_v26/decks/LH_ref_r2_s32452843/in.mixer",
+   "new": "docs/data/mixer_highbo_dev_decks_20261002_bo/decks/LHx10_ref_r2_s32452843/in.mixer",
+   "expected_rc": 0,
+   "rc": 0,
+   "verdict": "PASS",
+   "changed": [
+    [
+     "AM_P",
+     "AM_P"
+    ],
+    [
+     "AM_P",
+     "AM_S"
+    ],
+    [
+     "AM_P",
+     "WALL"
+    ],
+    [
+     "AM_S",
+     "AM_S"
+    ],
+    [
+     "AM_S",
+     "WALL"
+    ]
+   ],
+   "outside": [],
+   "missing": [],
+   "wrong_direction": [],
+   "non_ced_diffs": [],
+   "target_mismatch": [],
+   "ced": [
+    {
+     "pair": "AM_P–AM_P",
+     "ref": 3563480.0,
+     "new": 7677280.0,
+     "ratio": 2.1544333067675416
+    },
+    {
+     "pair": "AM_P–AM_S",
+     "ref": 2719440.0,
+     "new": 5858860.0,
+     "ratio": 2.154436207454476
+    },
+    {
+     "pair": "AM_P–SE",
+     "ref": 68738.8,
+     "new": 68738.8,
+     "ratio": 1.0
+    },
+    {
+     "pair": "AM_P–WALL",
+     "ref": 1934550.0,
+     "new": 4167870.0,
+     "ratio": 2.1544390168256182
+    },
+    {
+     "pair": "AM_S–AM_S",
+     "ref": 2719440.0,
+     "new": 5858860.0,
+     "ratio": 2.154436207454476
+    },
+    {
+     "pair": "AM_S–SE",
+     "ref": 68738.8,
+     "new": 68738.8,
+     "ratio": 1.0
+    },
+    {
+     "pair": "AM_S–WALL",
+     "ref": 1476340.0,
+     "new": 3180680.0,
+     "ratio": 2.1544359700340032
+    },
+    {
+     "pair": "SE–SE",
+     "ref": 77056.9,
+     "new": 77056.9,
+     "ratio": 1.0
+    },
+    {
+     "pair": "SE–WALL",
+     "ref": 38616.2,
+     "new": 38616.2,
+     "ratio": 1.0
+    },
+    {
+     "pair": "WALL–WALL",
+     "ref": 0.0,
+     "new": 0.0,
+     "ratio": 1.0
+    }
+   ]
+  },
+  {
+   "allow": "B",
+   "ref": "docs/data/mixer_highbo_dev_decks_20260930_v26/decks/LH_ref_r2_s32452843/in.mixer",
+   "new": "docs/data/mixer_highbo_dev_decks_20261002_bo/decks/LHx30_ref_r2_s32452843/in.mixer",
+   "expected_rc": 0,
+   "rc": 0,
+   "verdict": "PASS",
+   "changed": [
+    [
+     "AM_P",
+     "AM_P"
+    ],
+    [
+     "AM_P",
+     "AM_S"
+    ],
+    [
+     "AM_P",
+     "WALL"
+    ],
+    [
+     "AM_S",
+     "AM_S"
+    ],
+    [
+     "AM_S",
+     "WALL"
+    ]
+   ],
+   "outside": [],
+   "missing": [],
+   "wrong_direction": [],
+   "non_ced_diffs": [],
+   "target_mismatch": [],
+   "ced": [
+    {
+     "pair": "AM_P–AM_P",
+     "ref": 3563480.0,
+     "new": 11072500.0,
+     "ratio": 3.1072154186357155
+    },
+    {
+     "pair": "AM_P–AM_S",
+     "ref": 2719440.0,
+     "new": 8449930.0,
+     "ratio": 3.1072316359250434
+    },
+    {
+     "pair": "AM_P–SE",
+     "ref": 68738.8,
+     "new": 68738.8,
+     "ratio": 1.0
+    },
+    {
+     "pair": "AM_P–WALL",
+     "ref": 1934550.0,
+     "new": 6011100.0,
+     "ratio": 3.1072342405210516
+    },
+    {
+     "pair": "AM_S–AM_S",
+     "ref": 2719440.0,
+     "new": 8449930.0,
+     "ratio": 3.1072316359250434
+    },
+    {
+     "pair": "AM_S–SE",
+     "ref": 68738.8,
+     "new": 68738.8,
+     "ratio": 1.0
+    },
+    {
+     "pair": "AM_S–WALL",
+     "ref": 1476340.0,
+     "new": 4587330.0,
+     "ratio": 3.1072313965617675
+    },
+    {
+     "pair": "SE–SE",
+     "ref": 77056.9,
+     "new": 77056.9,
+     "ratio": 1.0
+    },
+    {
+     "pair": "SE–WALL",
+     "ref": 38616.2,
+     "new": 38616.2,
+     "ratio": 1.0
+    },
+    {
+     "pair": "WALL–WALL",
+     "ref": 0.0,
+     "new": 0.0,
+     "ratio": 1.0
+    }
+   ]
+  },
+  {
+   "allow": "B",
+   "ref": "docs/data/mixer_highbo_dev_decks_20260930_v26/decks/LC_ref_r2_s32452843/in.mixer",
+   "new": "docs/data/mixer_highbo_dev_decks_20261002_bo/decks/LHx10_ref_r2_s32452843/in.mixer",
+   "expected_rc": 0,
+   "rc": 0,
+   "verdict": "PASS",
+   "changed": [
+    [
+     "AM_P",
+     "AM_P"
+    ],
+    [
+     "AM_P",
+     "AM_S"
+    ],
+    [
+     "AM_P",
+     "WALL"
+    ],
+    [
+     "AM_S",
+     "AM_S"
+    ],
+    [
+     "AM_S",
+     "WALL"
+    ]
+   ],
+   "outside": [],
+   "missing": [],
+   "wrong_direction": [],
+   "non_ced_diffs": [],
+   "target_mismatch": [],
+   "ced": [
+    {
+     "pair": "AM_P–AM_P",
+     "ref": 108795.0,
+     "new": 7677280.0,
+     "ratio": 70.56647823888966
+    },
+    {
+     "pair": "AM_P–AM_S",
+     "ref": 108795.0,
+     "new": 5858860.0,
+     "ratio": 53.8522910060205
+    },
+    {
+     "pair": "AM_P–SE",
+     "ref": 68738.8,
+     "new": 68738.8,
+     "ratio": 1.0
+    },
+    {
+     "pair": "AM_P–WALL",
+     "ref": 59063.2,
+     "new": 4167870.0,
+     "ratio": 70.5662747700768
+    },
+    {
+     "pair": "AM_S–AM_S",
+     "ref": 142562.0,
+     "new": 5858860.0,
+     "ratio": 41.09692624963174
+    },
+    {
+     "pair": "AM_S–SE",
+     "ref": 68738.8,
+     "new": 68738.8,
+     "ratio": 1.0
+    },
+    {
+     "pair": "AM_S–WALL",
+     "ref": 77394.6,
+     "new": 3180680.0,
+     "ratio": 41.096924074806246
+    },
+    {
+     "pair": "SE–SE",
+     "ref": 77056.9,
+     "new": 77056.9,
+     "ratio": 1.0
+    },
+    {
+     "pair": "SE–WALL",
+     "ref": 38616.2,
+     "new": 38616.2,
+     "ratio": 1.0
+    },
+    {
+     "pair": "WALL–WALL",
+     "ref": 0.0,
+     "new": 0.0,
+     "ratio": 1.0
+    }
+   ]
+  },
+  {
+   "allow": "B",
+   "ref": "docs/data/mixer_highbo_dev_decks_20260930_v26/decks/LC_ref_r2_s32452843/in.mixer",
+   "new": "docs/data/mixer_highbo_dev_decks_20261002_bo/decks/LHx30_ref_r2_s32452843/in.mixer",
+   "expected_rc": 0,
+   "rc": 0,
+   "verdict": "PASS",
+   "changed": [
+    [
+     "AM_P",
+     "AM_P"
+    ],
+    [
+     "AM_P",
+     "AM_S"
+    ],
+    [
+     "AM_P",
+     "WALL"
+    ],
+    [
+     "AM_S",
+     "AM_S"
+    ],
+    [
+     "AM_S",
+     "WALL"
+    ]
+   ],
+   "outside": [],
+   "missing": [],
+   "wrong_direction": [],
+   "non_ced_diffs": [],
+   "target_mismatch": [],
+   "ced": [
+    {
+     "pair": "AM_P–AM_P",
+     "ref": 108795.0,
+     "new": 11072500.0,
+     "ratio": 101.77397858357462
+    },
+    {
+     "pair": "AM_P–AM_S",
+     "ref": 108795.0,
+     "new": 8449930.0,
+     "ratio": 77.66836711245921
+    },
+    {
+     "pair": "AM_P–SE",
+     "ref": 68738.8,
+     "new": 68738.8,
+     "ratio": 1.0
+    },
+    {
+     "pair": "AM_P–WALL",
+     "ref": 59063.2,
+     "new": 6011100.0,
+     "ratio": 101.77403188448984
+    },
+    {
+     "pair": "AM_S–AM_S",
+     "ref": 142562.0,
+     "new": 8449930.0,
+     "ratio": 59.2719658815112
+    },
+    {
+     "pair": "AM_S–SE",
+     "ref": 68738.8,
+     "new": 68738.8,
+     "ratio": 1.0
+    },
+    {
+     "pair": "AM_S–WALL",
+     "ref": 77394.6,
+     "new": 4587330.0,
+     "ratio": 59.27196471071625
+    },
+    {
+     "pair": "SE–SE",
+     "ref": 77056.9,
+     "new": 77056.9,
+     "ratio": 1.0
+    },
+    {
+     "pair": "SE–WALL",
+     "ref": 38616.2,
+     "new": 38616.2,
+     "ratio": 1.0
+    },
+    {
+     "pair": "WALL–WALL",
+     "ref": 0.0,
+     "new": 0.0,
+     "ratio": 1.0
+    }
+   ]
+  },
+  {
+   "allow": "B",
+   "ref": "docs/data/mixer_highbo_dev_decks_20261002_bo/decks/LHx10_ref_r2_s32452843/in.mixer",
+   "new": "docs/data/mixer_highbo_dev_decks_20261002_bo/decks/LHx30_ref_r2_s32452843/in.mixer",
+   "expected_rc": 0,
+   "rc": 0,
+   "verdict": "PASS",
+   "changed": [
+    [
+     "AM_P",
+     "AM_P"
+    ],
+    [
+     "AM_P",
+     "AM_S"
+    ],
+    [
+     "AM_P",
+     "WALL"
+    ],
+    [
+     "AM_S",
+     "AM_S"
+    ],
+    [
+     "AM_S",
+     "WALL"
+    ]
+   ],
+   "outside": [],
+   "missing": [],
+   "wrong_direction": [],
+   "non_ced_diffs": [],
+   "target_mismatch": [],
+   "ced": [
+    {
+     "pair": "AM_P–AM_P",
+     "ref": 7677280.0,
+     "new": 11072500.0,
+     "ratio": 1.4422425650751307
+    },
+    {
+     "pair": "AM_P–AM_S",
+     "ref": 5858860.0,
+     "new": 8449930.0,
+     "ratio": 1.4422481506641223
+    },
+    {
+     "pair": "AM_P–SE",
+     "ref": 68738.8,
+     "new": 68738.8,
+     "ratio": 1.0
+    },
+    {
+     "pair": "AM_P–WALL",
+     "ref": 4167870.0,
+     "new": 6011100.0,
+     "ratio": 1.4422474789280855
+    },
+    {
+     "pair": "AM_S–AM_S",
+     "ref": 5858860.0,
+     "new": 8449930.0,
+     "ratio": 1.4422481506641223
+    },
+    {
+     "pair": "AM_S–SE",
+     "ref": 68738.8,
+     "new": 68738.8,
+     "ratio": 1.0
+    },
+    {
+     "pair": "AM_S–WALL",
+     "ref": 3180680.0,
+     "new": 4587330.0,
+     "ratio": 1.4422481984984343
+    },
+    {
+     "pair": "SE–SE",
+     "ref": 77056.9,
+     "new": 77056.9,
+     "ratio": 1.0
+    },
+    {
+     "pair": "SE–WALL",
+     "ref": 38616.2,
+     "new": 38616.2,
+     "ratio": 1.0
+    },
+    {
+     "pair": "WALL–WALL",
+     "ref": 0.0,
+     "new": 0.0,
+     "ratio": 1.0
+    }
+   ]
+  }
+ ]
+}

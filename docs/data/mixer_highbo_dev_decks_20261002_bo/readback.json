@@ -1,0 +1,1662 @@
+{
+ "tool": "scripts/mixer_deck_readback.py",
+ "tool_version": "mixer_deck_readback/1 (2026-09-30)",
+ "tool_sha256": "7c00876ad5dfd225af025b2b648c398381570a70b9f49aa916ad0f2b6a6867ba",
+ "argv": [
+  "--table",
+  "B",
+  "docs/data/mixer_highbo_dev_decks_20260930_v26/decks/LC_ref_r2_s32452843/in.mixer",
+  "docs/data/mixer_highbo_dev_decks_20261002_bo/decks/LHx10_ref_r2_s32452843/in.mixer",
+  "--table",
+  "B",
+  "docs/data/mixer_highbo_dev_decks_20260930_v26/decks/LC_ref_r2_s32452843/in.mixer",
+  "docs/data/mixer_highbo_dev_decks_20261002_bo/decks/LHx30_ref_r2_s32452843/in.mixer",
+  "--table",
+  "B",
+  "docs/data/mixer_highbo_dev_decks_20260930_v26/decks/LH_ref_r2_s32452843/in.mixer",
+  "docs/data/mixer_highbo_dev_decks_20261002_bo/decks/LHx10_ref_r2_s32452843/in.mixer",
+  "--table",
+  "B",
+  "docs/data/mixer_highbo_dev_decks_20260930_v26/decks/LH_ref_r2_s32452843/in.mixer",
+  "docs/data/mixer_highbo_dev_decks_20261002_bo/decks/LHx30_ref_r2_s32452843/in.mixer",
+  "--table",
+  "B",
+  "docs/data/mixer_highbo_dev_decks_20261002_bo/decks/LHx10_ref_r2_s32452843/in.mixer",
+  "docs/data/mixer_highbo_dev_decks_20261002_bo/decks/LHx30_ref_r2_s32452843/in.mixer",
+  "--json",
+  "docs/data/mixer_highbo_dev_decks_20261002_bo/readback.json",
+  "--md",
+  "docs/data/mixer_highbo_dev_decks_20261002_bo/readback.md"
+ ],
+ "tolerances": {
+  "ced_value_rel": 5e-06,
+  "ced_mult_rel": 1e-05,
+  "f0_ratio": 3.0000000000000004e-05,
+  "radius_ratio_rel": 1e-05,
+  "rayleigh_rel": 0.000505,
+  "codex_estar_rel": 1e-09,
+  "dt_print_rel": 0.0005,
+  "exact_rel": 1e-12
+ },
+ "tolerances_why": {
+  "ced_value_rel": "CED 는 %g (6 유효숫자) 로 찍힌다 — 한 값의 반올림 상한 0.5×10^(1−6)",
+  "ced_mult_rel": "두 CED 의 배수 = 두 반올림",
+  "f0_ratio": "F₀ ∝ CED³ ⇒ 비의 상한 = 3 × 두 반올림.  E · ν 는 덱 값 = 시뮬레이션 값 (생성기가 인쇄 밖 배수를 거부) 이라 넣지 않는다",
+  "radius_ratio_rel": "템플릿 반지름 :.6g 두 값",
+  "rayleigh_rel": "덱 dt 는 .4g · 다시 낸 규칙 dt 는 반지름 :.6g 에서 — 둘의 인쇄 반올림 (dt 가 규칙과 2 배 넘게 어긋나는 것을 잡는 검사다)",
+  "codex_estar_rel": "Codex 7 차 §5 표는 9–10 자리로 적혀 있다",
+  "dt_print_rel": "timestep 은 .4g — 생성기가 반올림 전 dt 로 step 을 세므로 두 덱의 물리 시간이 이만큼 어긋날 수 있다",
+  "exact_rel": "DT 표 (dt 정확히 1/k · step 정확히 k 배) · 부동소수 비교 여유"
+ },
+ "registered": {
+  "types": {
+   "1": "AM_P",
+   "2": "AM_S",
+   "3": "SE",
+   "4": "WALL"
+  },
+  "template_seeds": {
+   "10487": "AM_P",
+   "11887": "AM_S",
+   "13901": "SE"
+  },
+  "density": {
+   "AM": 4800.0,
+   "SE": 2000.0
+  },
+  "d_um": {
+   "AM_P": 9.0,
+   "AM_S": 4.0,
+   "SE": 1.0
+  },
+  "E_fixed": {
+   "AM_P": 1037000000.0,
+   "AM_S": 1037000000.0,
+   "WALL": 1480000000.0
+  },
+  "E_SE_levels": {
+   "1e+07": "soft (×1)",
+   "2e+08": "ref (×20 · v2.6)",
+   "4e+08": "ref2 (×40 · v2.6)",
+   "1.4e+08": "v2.5 ref (×14 · DEV7 실측 뒤 개정)",
+   "2.8e+08": "v2.5 ref2 (×28)"
+  },
+  "nu": {
+   "AM_P": 0.25,
+   "AM_S": 0.25,
+   "SE": 0.3,
+   "WALL": 0.3
+  },
+  "B_pairs": [
+   "AM_P–AM_P",
+   "AM_P–AM_S",
+   "AM_P–WALL",
+   "AM_S–AM_S",
+   "AM_S–WALL"
+  ],
+  "dt_k": 2,
+  "dump_rule": "dump 간격 = max(1000, 회전 step // 200)",
+  "restart_rule": "restart 간격 = max(50000, min(200000, (회전 step 또는 2·정착 step) // 20))",
+  "rayleigh_rule": "dt = min_t 0.2·π·r_t·√(ρ_t/G_t)/(0.1631ν_t + 0.8766) · G = E/(2(1+ν)) (생성기 plan() 의 식 사본)",
+  "codex_section5": {
+   "14": {
+    "AM_P–AM_P": [
+     1.0,
+     1.0
+    ],
+    "AM_P–AM_S": [
+     1.0,
+     1.0
+    ],
+    "AM_S–AM_S": [
+     1.0,
+     1.0
+    ],
+    "AM_P–WALL": [
+     1.0,
+     1.0
+    ],
+    "AM_S–WALL": [
+     1.0,
+     1.0
+    ],
+    "AM_P–SE": [
+     12.412672571,
+     5.360971926
+    ],
+    "AM_S–SE": [
+     12.412672571,
+     5.360971926
+    ],
+    "SE–SE": [
+     14.0,
+     5.808785734
+    ],
+    "SE–WALL": [
+     12.87654321,
+     5.493715853
+    ]
+   },
+   "28": {
+    "AM_P–AM_P": [
+     1.0,
+     1.0
+    ],
+    "AM_P–AM_S": [
+     1.0,
+     1.0
+    ],
+    "AM_S–AM_S": [
+     1.0,
+     1.0
+    ],
+    "AM_P–WALL": [
+     1.0,
+     1.0
+    ],
+    "AM_S–WALL": [
+     1.0,
+     1.0
+    ],
+    "AM_P–SE": [
+     22.123962626,
+     7.880890212
+    ],
+    "AM_S–SE": [
+     22.123962626,
+     7.880890212
+    ],
+    "SE–SE": [
+     28.0,
+     9.220872584
+    ],
+    "SE–WALL": [
+     23.704545455,
+     8.251908834
+    ]
+   },
+   "20": {
+    "AM_P–AM_P": [
+     1.0,
+     1.0
+    ],
+    "AM_P–AM_S": [
+     1.0,
+     1.0
+    ],
+    "AM_S–AM_S": [
+     1.0,
+     1.0
+    ],
+    "AM_P–WALL": [
+     1.0,
+     1.0
+    ],
+    "AM_S–WALL": [
+     1.0,
+     1.0
+    ],
+    "AM_P–SE": [
+     16.85060601,
+     6.572698075
+    ],
+    "AM_S–SE": [
+     16.85060601,
+     6.572698075
+    ],
+    "SE–SE": [
+     20.0,
+     7.368062997
+    ],
+    "SE–WALL": [
+     17.738095238,
+     6.801499256
+    ]
+   },
+   "40": {
+    "AM_P–AM_P": [
+     1.0,
+     1.0
+    ],
+    "AM_P–AM_S": [
+     1.0,
+     1.0
+    ],
+    "AM_S–AM_S": [
+     1.0,
+     1.0
+    ],
+    "AM_P–WALL": [
+     1.0,
+     1.0
+    ],
+    "AM_S–WALL": [
+     1.0,
+     1.0
+    ],
+    "AM_P–SE": [
+     28.909279805,
+     9.419434887
+    ],
+    "AM_S–SE": [
+     28.909279805,
+     9.419434887
+    ],
+    "SE–SE": [
+     40.0,
+     11.696070953
+    ],
+    "SE–WALL": [
+     31.70212766,
+     10.016721683
+    ]
+   }
+  }
+ },
+ "decks": {
+  "docs/data/mixer_highbo_dev_decks_20260930_v26/decks/LC_ref_r2_s32452843/in.mixer": {
+   "label": "LC_ref_r2_s32452843",
+   "path": "docs/data/mixer_highbo_dev_decks_20260930_v26/decks/LC_ref_r2_s32452843/in.mixer",
+   "sha256": "5405067f8360651b34cfdcdbb07e355132f6f9cdaa6053e70f62e2560c6924a2",
+   "bytes": 11284,
+   "gen_cmd": "python3 scripts/make_mixer_deck.py --out docs/data/mixer_highbo_dev_decks_20260930_v26/decks/LC_ref_r2_s32452843 --n-total 100000 --cgf 151.4 --arm LC --seed 32452843 --revolutions 2 --stiffen-se 20 --hold-bo-pairwise",
+   "problems": [],
+   "type_problems": [],
+   "types": {
+    "1": "AM_P",
+    "2": "AM_S",
+    "3": "SE",
+    "4": "WALL"
+   },
+   "E": [
+    1037000000.0,
+    1037000000.0,
+    200000000.0,
+    1480000000.0
+   ],
+   "nu": [
+    0.25,
+    0.25,
+    0.3,
+    0.3
+   ],
+   "dt_txt": "2.62e-07",
+   "runs": [
+    1,
+    518714,
+    518714,
+    6102533
+   ],
+   "dump_every": 30512,
+   "restart_every": 200000,
+   "period_s": 0.799562,
+   "templates": {
+    "1": {
+     "style": "particletemplate/sphere",
+     "seed": 10487,
+     "density": 4800.0,
+     "radius": 0.0006813
+    },
+    "2": {
+     "style": "particletemplate/sphere",
+     "seed": 11887,
+     "density": 4800.0,
+     "radius": 0.0003028
+    },
+    "3": {
+     "style": "particletemplate/sphere",
+     "seed": 13901,
+     "density": 2000.0,
+     "radius": 7.57e-05
+    }
+   },
+   "ced": {
+    "1-1": "108795",
+    "1-2": "108795",
+    "1-3": "68738.8",
+    "1-4": "59063.2",
+    "2-2": "142562",
+    "2-3": "68738.8",
+    "2-4": "77394.6",
+    "3-3": "77056.9",
+    "3-4": "38616.2",
+    "4-4": "0"
+   },
+   "comment_lines": 72,
+   "t0_planned": 1037408,
+   "t0_planned_s": 0.271800896,
+   "steps_per_rev": 3051763.358778626,
+   "settle_s": 0.271806136,
+   "rotation_s": 1.5988636459999999
+  },
+  "docs/data/mixer_highbo_dev_decks_20261002_bo/decks/LHx10_ref_r2_s32452843/in.mixer": {
+   "label": "LHx10_ref_r2_s32452843",
+   "path": "docs/data/mixer_highbo_dev_decks_20261002_bo/decks/LHx10_ref_r2_s32452843/in.mixer",
+   "sha256": "a2792897f32c38588c463c6f0d4427a5897b0980b55786ff264f946f34624531",
+   "bytes": 11347,
+   "gen_cmd": "python3 scripts/make_mixer_deck.py --out docs/data/mixer_highbo_dev_decks_20261002_bo/decks/LHx10_ref_r2_s32452843 --n-total 100000 --cgf 151.4 --arm LHx10 --seed 32452843 --revolutions 2 --stiffen-se 20 --hold-bo-pairwise",
+   "problems": [],
+   "type_problems": [],
+   "types": {
+    "1": "AM_P",
+    "2": "AM_S",
+    "3": "SE",
+    "4": "WALL"
+   },
+   "E": [
+    1037000000.0,
+    1037000000.0,
+    200000000.0,
+    1480000000.0
+   ],
+   "nu": [
+    0.25,
+    0.25,
+    0.3,
+    0.3
+   ],
+   "dt_txt": "2.62e-07",
+   "runs": [
+    1,
+    518714,
+    518714,
+    6102533
+   ],
+   "dump_every": 30512,
+   "restart_every": 200000,
+   "period_s": 0.799562,
+   "templates": {
+    "1": {
+     "style": "particletemplate/sphere",
+     "seed": 10487,
+     "density": 4800.0,
+     "radius": 0.0006813
+    },
+    "2": {
+     "style": "particletemplate/sphere",
+     "seed": 11887,
+     "density": 4800.0,
+     "radius": 0.0003028
+    },
+    "3": {
+     "style": "particletemplate/sphere",
+     "seed": 13901,
+     "density": 2000.0,
+     "radius": 7.57e-05
+    }
+   },
+   "ced": {
+    "1-1": "7.67728e+06",
+    "1-2": "5.85886e+06",
+    "1-3": "68738.8",
+    "1-4": "4.16787e+06",
+    "2-2": "5.85886e+06",
+    "2-3": "68738.8",
+    "2-4": "3.18068e+06",
+    "3-3": "77056.9",
+    "3-4": "38616.2",
+    "4-4": "0"
+   },
+   "comment_lines": 72,
+   "t0_planned": 1037408,
+   "t0_planned_s": 0.271800896,
+   "steps_per_rev": 3051763.358778626,
+   "settle_s": 0.271806136,
+   "rotation_s": 1.5988636459999999
+  },
+  "docs/data/mixer_highbo_dev_decks_20261002_bo/decks/LHx30_ref_r2_s32452843/in.mixer": {
+   "label": "LHx30_ref_r2_s32452843",
+   "path": "docs/data/mixer_highbo_dev_decks_20261002_bo/decks/LHx30_ref_r2_s32452843/in.mixer",
+   "sha256": "d00eb369f35145ddbf887da46761a562b922d4e1c2111e6bfa9a981110eb578b",
+   "bytes": 11346,
+   "gen_cmd": "python3 scripts/make_mixer_deck.py --out docs/data/mixer_highbo_dev_decks_20261002_bo/decks/LHx30_ref_r2_s32452843 --n-total 100000 --cgf 151.4 --arm LHx30 --seed 32452843 --revolutions 2 --stiffen-se 20 --hold-bo-pairwise",
+   "problems": [],
+   "type_problems": [],
+   "types": {
+    "1": "AM_P",
+    "2": "AM_S",
+    "3": "SE",
+    "4": "WALL"
+   },
+   "E": [
+    1037000000.0,
+    1037000000.0,
+    200000000.0,
+    1480000000.0
+   ],
+   "nu": [
+    0.25,
+    0.25,
+    0.3,
+    0.3
+   ],
+   "dt_txt": "2.62e-07",
+   "runs": [
+    1,
+    518714,
+    518714,
+    6102533
+   ],
+   "dump_every": 30512,
+   "restart_every": 200000,
+   "period_s": 0.799562,
+   "templates": {
+    "1": {
+     "style": "particletemplate/sphere",
+     "seed": 10487,
+     "density": 4800.0,
+     "radius": 0.0006813
+    },
+    "2": {
+     "style": "particletemplate/sphere",
+     "seed": 11887,
+     "density": 4800.0,
+     "radius": 0.0003028
+    },
+    "3": {
+     "style": "particletemplate/sphere",
+     "seed": 13901,
+     "density": 2000.0,
+     "radius": 7.57e-05
+    }
+   },
+   "ced": {
+    "1-1": "1.10725e+07",
+    "1-2": "8.44993e+06",
+    "1-3": "68738.8",
+    "1-4": "6.0111e+06",
+    "2-2": "8.44993e+06",
+    "2-3": "68738.8",
+    "2-4": "4.58733e+06",
+    "3-3": "77056.9",
+    "3-4": "38616.2",
+    "4-4": "0"
+   },
+   "comment_lines": 72,
+   "t0_planned": 1037408,
+   "t0_planned_s": 0.271800896,
+   "steps_per_rev": 3051763.358778626,
+   "settle_s": 0.271806136,
+   "rotation_s": 1.5988636459999999
+  },
+  "docs/data/mixer_highbo_dev_decks_20260930_v26/decks/LH_ref_r2_s32452843/in.mixer": {
+   "label": "LH_ref_r2_s32452843",
+   "path": "docs/data/mixer_highbo_dev_decks_20260930_v26/decks/LH_ref_r2_s32452843/in.mixer",
+   "sha256": "3125d2443004300f274cc8b16fa218a7d509c4b9352c125cdfaec726807605fd",
+   "bytes": 11312,
+   "gen_cmd": "python3 scripts/make_mixer_deck.py --out docs/data/mixer_highbo_dev_decks_20260930_v26/decks/LH_ref_r2_s32452843 --n-total 100000 --cgf 151.4 --arm LH --seed 32452843 --revolutions 2 --stiffen-se 20 --hold-bo-pairwise",
+   "problems": [],
+   "type_problems": [],
+   "types": {
+    "1": "AM_P",
+    "2": "AM_S",
+    "3": "SE",
+    "4": "WALL"
+   },
+   "E": [
+    1037000000.0,
+    1037000000.0,
+    200000000.0,
+    1480000000.0
+   ],
+   "nu": [
+    0.25,
+    0.25,
+    0.3,
+    0.3
+   ],
+   "dt_txt": "2.62e-07",
+   "runs": [
+    1,
+    518714,
+    518714,
+    6102533
+   ],
+   "dump_every": 30512,
+   "restart_every": 200000,
+   "period_s": 0.799562,
+   "templates": {
+    "1": {
+     "style": "particletemplate/sphere",
+     "seed": 10487,
+     "density": 4800.0,
+     "radius": 0.0006813
+    },
+    "2": {
+     "style": "particletemplate/sphere",
+     "seed": 11887,
+     "density": 4800.0,
+     "radius": 0.0003028
+    },
+    "3": {
+     "style": "particletemplate/sphere",
+     "seed": 13901,
+     "density": 2000.0,
+     "radius": 7.57e-05
+    }
+   },
+   "ced": {
+    "1-1": "3.56348e+06",
+    "1-2": "2.71944e+06",
+    "1-3": "68738.8",
+    "1-4": "1.93455e+06",
+    "2-2": "2.71944e+06",
+    "2-3": "68738.8",
+    "2-4": "1.47634e+06",
+    "3-3": "77056.9",
+    "3-4": "38616.2",
+    "4-4": "0"
+   },
+   "comment_lines": 72,
+   "t0_planned": 1037408,
+   "t0_planned_s": 0.271800896,
+   "steps_per_rev": 3051763.358778626,
+   "settle_s": 0.271806136,
+   "rotation_s": 1.5988636459999999
+  }
+ },
+ "tables": [
+  {
+   "kind": "B",
+   "old": "LC_ref_r2_s32452843",
+   "new": "LHx10_ref_r2_s32452843",
+   "old_sha256": "5405067f8360651b34cfdcdbb07e355132f6f9cdaa6053e70f62e2560c6924a2",
+   "new_sha256": "a2792897f32c38588c463c6f0d4427a5897b0980b55786ff264f946f34624531",
+   "rows": [
+    {
+     "pair": "AM_P–AM_P",
+     "types": "1-1",
+     "LC": 108795.0,
+     "LH": 7677280.0,
+     "diff": 7568485.0,
+     "ratio": 70.56647823888966,
+     "expect_change": true,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "AM_P–AM_S",
+     "types": "1-2",
+     "LC": 108795.0,
+     "LH": 5858860.0,
+     "diff": 5750065.0,
+     "ratio": 53.8522910060205,
+     "expect_change": true,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "AM_S–AM_S",
+     "types": "2-2",
+     "LC": 142562.0,
+     "LH": 5858860.0,
+     "diff": 5716298.0,
+     "ratio": 41.09692624963174,
+     "expect_change": true,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "AM_P–SE",
+     "types": "1-3",
+     "LC": 68738.8,
+     "LH": 68738.8,
+     "diff": 0.0,
+     "ratio": 1.0,
+     "expect_change": false,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "AM_S–SE",
+     "types": "2-3",
+     "LC": 68738.8,
+     "LH": 68738.8,
+     "diff": 0.0,
+     "ratio": 1.0,
+     "expect_change": false,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "SE–SE",
+     "types": "3-3",
+     "LC": 77056.9,
+     "LH": 77056.9,
+     "diff": 0.0,
+     "ratio": 1.0,
+     "expect_change": false,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "AM_P–WALL",
+     "types": "1-4",
+     "LC": 59063.2,
+     "LH": 4167870.0,
+     "diff": 4108806.8,
+     "ratio": 70.5662747700768,
+     "expect_change": true,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "AM_S–WALL",
+     "types": "2-4",
+     "LC": 77394.6,
+     "LH": 3180680.0,
+     "diff": 3103285.4,
+     "ratio": 41.096924074806246,
+     "expect_change": true,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "SE–WALL",
+     "types": "3-4",
+     "LC": 38616.2,
+     "LH": 38616.2,
+     "diff": 0.0,
+     "ratio": 1.0,
+     "expect_change": false,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "WALL–WALL",
+     "types": "4-4",
+     "LC": 0.0,
+     "LH": 0.0,
+     "diff": 0.0,
+     "ratio": null,
+     "expect_change": false,
+     "ok": true,
+     "reason": ""
+    }
+   ],
+   "checks": [
+    {
+     "check": "덱 파싱 — LC_ref_r2_s32452843 (필수 명령 · run 구조 [1, F, F, N] · 행렬 크기)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "덱 파싱 — LHx10_ref_r2_s32452843 (필수 명령 · run 구조 [1, F, F, N] · 행렬 크기)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "타입 사전 = 등록 1 AM_P · 2 AM_S · 3 SE · 4 WALL (밀도 · 반지름 비 · 템플릿 시드 · 메시 타입) — LC_ref_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "타입 사전 = 등록 1 AM_P · 2 AM_S · 3 SE · 4 WALL (밀도 · 반지름 비 · 템플릿 시드 · 메시 타입) — LHx10_ref_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "두 덱의 템플릿 (시드 · 밀도 · 반지름) · 타입 사전 동일",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "CED 행렬 대칭 (인쇄 토큰까지) · 벽–벽 = 0 — LC_ref_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "CED 전부 유한 · 비음수 — LC_ref_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "ν = 등록 (AM 0.25 · SE 0.30 · 벽 0.30) — LC_ref_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "AM · 벽 영률 = 등록 (1.037e9 · 1.037e9 · 1.48e9) · SE 영률 = 등록 수준 (1e7 · 1.4e8 · 2.8e8) — LC_ref_r2_s32452843",
+     "ok": true,
+     "detail": "SE 2e+08 · AM_P 1.037e+09 · AM_S 1.037e+09 · 벽 1.48e+09"
+    },
+    {
+     "check": "CED 행렬 대칭 (인쇄 토큰까지) · 벽–벽 = 0 — LHx10_ref_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "CED 전부 유한 · 비음수 — LHx10_ref_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "ν = 등록 (AM 0.25 · SE 0.30 · 벽 0.30) — LHx10_ref_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "AM · 벽 영률 = 등록 (1.037e9 · 1.037e9 · 1.48e9) · SE 영률 = 등록 수준 (1e7 · 1.4e8 · 2.8e8) — LHx10_ref_r2_s32452843",
+     "ok": true,
+     "detail": "SE 2e+08 · AM_P 1.037e+09 · AM_S 1.037e+09 · 벽 1.48e+09"
+    },
+    {
+     "check": "dt = Rayleigh 규칙의 정확히 1/k (k 정수 ≥ 1 · k = 1 이면 규칙 그대로) — LC_ref_r2_s32452843",
+     "ok": true,
+     "detail": "덱 2.62e-07 × 1 vs 규칙 2.62043e-07 s (SE)"
+    },
+    {
+     "check": "dt = Rayleigh 규칙의 정확히 1/k (k 정수 ≥ 1 · k = 1 이면 규칙 그대로) — LHx10_ref_r2_s32452843",
+     "ok": true,
+     "detail": "덱 2.62e-07 × 1 vs 규칙 2.62043e-07 s (SE)"
+    },
+    {
+     "check": "허용 밖 명령은 토큰까지 같다 (허용: CED 값)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "같은 강성 — E · ν 정확히 같다",
+     "ok": true,
+     "detail": ""
+    }
+   ],
+   "meta": {
+    "comment_only_old": 6,
+    "comment_only_new": 6,
+    "examples_new": [
+     "AM_P–AM_P   0.00034065 5.53067e+08 5.53067e+08 7.67728e+06 7.67728e+06   0.0239522   0.0239522 1.000",
+     "AM_P–AM_S  0.000209631 5.53067e+08 5.53067e+08 5.85886e+06 5.85886e+06   0.0040314   0.0040314 1.000",
+     "AM_P–WALL    0.0006813 6.58365e+08 6.58365e+08 4.16787e+06 4.16787e+06    0.010818    0.010818 1.000"
+    ],
+    "note": "주석 (팔 설명 · 강성 머리 블록 · 출처) — 허용 메타 (판정 밖)"
+   },
+   "k": 1,
+   "level": null,
+   "verdict": "PASS",
+   "failures": []
+  },
+  {
+   "kind": "B",
+   "old": "LC_ref_r2_s32452843",
+   "new": "LHx30_ref_r2_s32452843",
+   "old_sha256": "5405067f8360651b34cfdcdbb07e355132f6f9cdaa6053e70f62e2560c6924a2",
+   "new_sha256": "d00eb369f35145ddbf887da46761a562b922d4e1c2111e6bfa9a981110eb578b",
+   "rows": [
+    {
+     "pair": "AM_P–AM_P",
+     "types": "1-1",
+     "LC": 108795.0,
+     "LH": 11072500.0,
+     "diff": 10963705.0,
+     "ratio": 101.77397858357462,
+     "expect_change": true,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "AM_P–AM_S",
+     "types": "1-2",
+     "LC": 108795.0,
+     "LH": 8449930.0,
+     "diff": 8341135.0,
+     "ratio": 77.66836711245921,
+     "expect_change": true,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "AM_S–AM_S",
+     "types": "2-2",
+     "LC": 142562.0,
+     "LH": 8449930.0,
+     "diff": 8307368.0,
+     "ratio": 59.2719658815112,
+     "expect_change": true,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "AM_P–SE",
+     "types": "1-3",
+     "LC": 68738.8,
+     "LH": 68738.8,
+     "diff": 0.0,
+     "ratio": 1.0,
+     "expect_change": false,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "AM_S–SE",
+     "types": "2-3",
+     "LC": 68738.8,
+     "LH": 68738.8,
+     "diff": 0.0,
+     "ratio": 1.0,
+     "expect_change": false,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "SE–SE",
+     "types": "3-3",
+     "LC": 77056.9,
+     "LH": 77056.9,
+     "diff": 0.0,
+     "ratio": 1.0,
+     "expect_change": false,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "AM_P–WALL",
+     "types": "1-4",
+     "LC": 59063.2,
+     "LH": 6011100.0,
+     "diff": 5952036.8,
+     "ratio": 101.77403188448984,
+     "expect_change": true,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "AM_S–WALL",
+     "types": "2-4",
+     "LC": 77394.6,
+     "LH": 4587330.0,
+     "diff": 4509935.4,
+     "ratio": 59.27196471071625,
+     "expect_change": true,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "SE–WALL",
+     "types": "3-4",
+     "LC": 38616.2,
+     "LH": 38616.2,
+     "diff": 0.0,
+     "ratio": 1.0,
+     "expect_change": false,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "WALL–WALL",
+     "types": "4-4",
+     "LC": 0.0,
+     "LH": 0.0,
+     "diff": 0.0,
+     "ratio": null,
+     "expect_change": false,
+     "ok": true,
+     "reason": ""
+    }
+   ],
+   "checks": [
+    {
+     "check": "덱 파싱 — LC_ref_r2_s32452843 (필수 명령 · run 구조 [1, F, F, N] · 행렬 크기)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "덱 파싱 — LHx30_ref_r2_s32452843 (필수 명령 · run 구조 [1, F, F, N] · 행렬 크기)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "타입 사전 = 등록 1 AM_P · 2 AM_S · 3 SE · 4 WALL (밀도 · 반지름 비 · 템플릿 시드 · 메시 타입) — LC_ref_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "타입 사전 = 등록 1 AM_P · 2 AM_S · 3 SE · 4 WALL (밀도 · 반지름 비 · 템플릿 시드 · 메시 타입) — LHx30_ref_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "두 덱의 템플릿 (시드 · 밀도 · 반지름) · 타입 사전 동일",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "CED 행렬 대칭 (인쇄 토큰까지) · 벽–벽 = 0 — LC_ref_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "CED 전부 유한 · 비음수 — LC_ref_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "ν = 등록 (AM 0.25 · SE 0.30 · 벽 0.30) — LC_ref_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "AM · 벽 영률 = 등록 (1.037e9 · 1.037e9 · 1.48e9) · SE 영률 = 등록 수준 (1e7 · 1.4e8 · 2.8e8) — LC_ref_r2_s32452843",
+     "ok": true,
+     "detail": "SE 2e+08 · AM_P 1.037e+09 · AM_S 1.037e+09 · 벽 1.48e+09"
+    },
+    {
+     "check": "CED 행렬 대칭 (인쇄 토큰까지) · 벽–벽 = 0 — LHx30_ref_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "CED 전부 유한 · 비음수 — LHx30_ref_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "ν = 등록 (AM 0.25 · SE 0.30 · 벽 0.30) — LHx30_ref_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "AM · 벽 영률 = 등록 (1.037e9 · 1.037e9 · 1.48e9) · SE 영률 = 등록 수준 (1e7 · 1.4e8 · 2.8e8) — LHx30_ref_r2_s32452843",
+     "ok": true,
+     "detail": "SE 2e+08 · AM_P 1.037e+09 · AM_S 1.037e+09 · 벽 1.48e+09"
+    },
+    {
+     "check": "dt = Rayleigh 규칙의 정확히 1/k (k 정수 ≥ 1 · k = 1 이면 규칙 그대로) — LC_ref_r2_s32452843",
+     "ok": true,
+     "detail": "덱 2.62e-07 × 1 vs 규칙 2.62043e-07 s (SE)"
+    },
+    {
+     "check": "dt = Rayleigh 규칙의 정확히 1/k (k 정수 ≥ 1 · k = 1 이면 규칙 그대로) — LHx30_ref_r2_s32452843",
+     "ok": true,
+     "detail": "덱 2.62e-07 × 1 vs 규칙 2.62043e-07 s (SE)"
+    },
+    {
+     "check": "허용 밖 명령은 토큰까지 같다 (허용: CED 값)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "같은 강성 — E · ν 정확히 같다",
+     "ok": true,
+     "detail": ""
+    }
+   ],
+   "meta": {
+    "comment_only_old": 6,
+    "comment_only_new": 6,
+    "examples_new": [
+     "AM_P–AM_P   0.00034065 5.53067e+08 5.53067e+08 1.10725e+07 1.10725e+07   0.0718566   0.0718566 1.000",
+     "AM_P–AM_S  0.000209631 5.53067e+08 5.53067e+08 8.44993e+06 8.44993e+06   0.0120942   0.0120942 1.000",
+     "AM_P–WALL    0.0006813 6.58365e+08 6.58365e+08  6.0111e+06  6.0111e+06    0.032454    0.032454 1.000"
+    ],
+    "note": "주석 (팔 설명 · 강성 머리 블록 · 출처) — 허용 메타 (판정 밖)"
+   },
+   "k": 1,
+   "level": null,
+   "verdict": "PASS",
+   "failures": []
+  },
+  {
+   "kind": "B",
+   "old": "LH_ref_r2_s32452843",
+   "new": "LHx10_ref_r2_s32452843",
+   "old_sha256": "3125d2443004300f274cc8b16fa218a7d509c4b9352c125cdfaec726807605fd",
+   "new_sha256": "a2792897f32c38588c463c6f0d4427a5897b0980b55786ff264f946f34624531",
+   "rows": [
+    {
+     "pair": "AM_P–AM_P",
+     "types": "1-1",
+     "LC": 3563480.0,
+     "LH": 7677280.0,
+     "diff": 4113800.0,
+     "ratio": 2.1544333067675416,
+     "expect_change": true,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "AM_P–AM_S",
+     "types": "1-2",
+     "LC": 2719440.0,
+     "LH": 5858860.0,
+     "diff": 3139420.0,
+     "ratio": 2.154436207454476,
+     "expect_change": true,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "AM_S–AM_S",
+     "types": "2-2",
+     "LC": 2719440.0,
+     "LH": 5858860.0,
+     "diff": 3139420.0,
+     "ratio": 2.154436207454476,
+     "expect_change": true,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "AM_P–SE",
+     "types": "1-3",
+     "LC": 68738.8,
+     "LH": 68738.8,
+     "diff": 0.0,
+     "ratio": 1.0,
+     "expect_change": false,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "AM_S–SE",
+     "types": "2-3",
+     "LC": 68738.8,
+     "LH": 68738.8,
+     "diff": 0.0,
+     "ratio": 1.0,
+     "expect_change": false,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "SE–SE",
+     "types": "3-3",
+     "LC": 77056.9,
+     "LH": 77056.9,
+     "diff": 0.0,
+     "ratio": 1.0,
+     "expect_change": false,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "AM_P–WALL",
+     "types": "1-4",
+     "LC": 1934550.0,
+     "LH": 4167870.0,
+     "diff": 2233320.0,
+     "ratio": 2.1544390168256182,
+     "expect_change": true,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "AM_S–WALL",
+     "types": "2-4",
+     "LC": 1476340.0,
+     "LH": 3180680.0,
+     "diff": 1704340.0,
+     "ratio": 2.1544359700340032,
+     "expect_change": true,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "SE–WALL",
+     "types": "3-4",
+     "LC": 38616.2,
+     "LH": 38616.2,
+     "diff": 0.0,
+     "ratio": 1.0,
+     "expect_change": false,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "WALL–WALL",
+     "types": "4-4",
+     "LC": 0.0,
+     "LH": 0.0,
+     "diff": 0.0,
+     "ratio": null,
+     "expect_change": false,
+     "ok": true,
+     "reason": ""
+    }
+   ],
+   "checks": [
+    {
+     "check": "덱 파싱 — LH_ref_r2_s32452843 (필수 명령 · run 구조 [1, F, F, N] · 행렬 크기)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "덱 파싱 — LHx10_ref_r2_s32452843 (필수 명령 · run 구조 [1, F, F, N] · 행렬 크기)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "타입 사전 = 등록 1 AM_P · 2 AM_S · 3 SE · 4 WALL (밀도 · 반지름 비 · 템플릿 시드 · 메시 타입) — LH_ref_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "타입 사전 = 등록 1 AM_P · 2 AM_S · 3 SE · 4 WALL (밀도 · 반지름 비 · 템플릿 시드 · 메시 타입) — LHx10_ref_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "두 덱의 템플릿 (시드 · 밀도 · 반지름) · 타입 사전 동일",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "CED 행렬 대칭 (인쇄 토큰까지) · 벽–벽 = 0 — LH_ref_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "CED 전부 유한 · 비음수 — LH_ref_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "ν = 등록 (AM 0.25 · SE 0.30 · 벽 0.30) — LH_ref_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "AM · 벽 영률 = 등록 (1.037e9 · 1.037e9 · 1.48e9) · SE 영률 = 등록 수준 (1e7 · 1.4e8 · 2.8e8) — LH_ref_r2_s32452843",
+     "ok": true,
+     "detail": "SE 2e+08 · AM_P 1.037e+09 · AM_S 1.037e+09 · 벽 1.48e+09"
+    },
+    {
+     "check": "CED 행렬 대칭 (인쇄 토큰까지) · 벽–벽 = 0 — LHx10_ref_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "CED 전부 유한 · 비음수 — LHx10_ref_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "ν = 등록 (AM 0.25 · SE 0.30 · 벽 0.30) — LHx10_ref_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "AM · 벽 영률 = 등록 (1.037e9 · 1.037e9 · 1.48e9) · SE 영률 = 등록 수준 (1e7 · 1.4e8 · 2.8e8) — LHx10_ref_r2_s32452843",
+     "ok": true,
+     "detail": "SE 2e+08 · AM_P 1.037e+09 · AM_S 1.037e+09 · 벽 1.48e+09"
+    },
+    {
+     "check": "dt = Rayleigh 규칙의 정확히 1/k (k 정수 ≥ 1 · k = 1 이면 규칙 그대로) — LH_ref_r2_s32452843",
+     "ok": true,
+     "detail": "덱 2.62e-07 × 1 vs 규칙 2.62043e-07 s (SE)"
+    },
+    {
+     "check": "dt = Rayleigh 규칙의 정확히 1/k (k 정수 ≥ 1 · k = 1 이면 규칙 그대로) — LHx10_ref_r2_s32452843",
+     "ok": true,
+     "detail": "덱 2.62e-07 × 1 vs 규칙 2.62043e-07 s (SE)"
+    },
+    {
+     "check": "허용 밖 명령은 토큰까지 같다 (허용: CED 값)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "같은 강성 — E · ν 정확히 같다",
+     "ok": true,
+     "detail": ""
+    }
+   ],
+   "meta": {
+    "comment_only_old": 6,
+    "comment_only_new": 6,
+    "examples_new": [
+     "AM_P–AM_P   0.00034065 5.53067e+08 5.53067e+08 7.67728e+06 7.67728e+06   0.0239522   0.0239522 1.000",
+     "AM_P–AM_S  0.000209631 5.53067e+08 5.53067e+08 5.85886e+06 5.85886e+06   0.0040314   0.0040314 1.000",
+     "AM_P–WALL    0.0006813 6.58365e+08 6.58365e+08 4.16787e+06 4.16787e+06    0.010818    0.010818 1.000"
+    ],
+    "note": "주석 (팔 설명 · 강성 머리 블록 · 출처) — 허용 메타 (판정 밖)"
+   },
+   "k": 1,
+   "level": null,
+   "verdict": "PASS",
+   "failures": []
+  },
+  {
+   "kind": "B",
+   "old": "LH_ref_r2_s32452843",
+   "new": "LHx30_ref_r2_s32452843",
+   "old_sha256": "3125d2443004300f274cc8b16fa218a7d509c4b9352c125cdfaec726807605fd",
+   "new_sha256": "d00eb369f35145ddbf887da46761a562b922d4e1c2111e6bfa9a981110eb578b",
+   "rows": [
+    {
+     "pair": "AM_P–AM_P",
+     "types": "1-1",
+     "LC": 3563480.0,
+     "LH": 11072500.0,
+     "diff": 7509020.0,
+     "ratio": 3.1072154186357155,
+     "expect_change": true,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "AM_P–AM_S",
+     "types": "1-2",
+     "LC": 2719440.0,
+     "LH": 8449930.0,
+     "diff": 5730490.0,
+     "ratio": 3.1072316359250434,
+     "expect_change": true,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "AM_S–AM_S",
+     "types": "2-2",
+     "LC": 2719440.0,
+     "LH": 8449930.0,
+     "diff": 5730490.0,
+     "ratio": 3.1072316359250434,
+     "expect_change": true,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "AM_P–SE",
+     "types": "1-3",
+     "LC": 68738.8,
+     "LH": 68738.8,
+     "diff": 0.0,
+     "ratio": 1.0,
+     "expect_change": false,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "AM_S–SE",
+     "types": "2-3",
+     "LC": 68738.8,
+     "LH": 68738.8,
+     "diff": 0.0,
+     "ratio": 1.0,
+     "expect_change": false,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "SE–SE",
+     "types": "3-3",
+     "LC": 77056.9,
+     "LH": 77056.9,
+     "diff": 0.0,
+     "ratio": 1.0,
+     "expect_change": false,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "AM_P–WALL",
+     "types": "1-4",
+     "LC": 1934550.0,
+     "LH": 6011100.0,
+     "diff": 4076550.0,
+     "ratio": 3.1072342405210516,
+     "expect_change": true,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "AM_S–WALL",
+     "types": "2-4",
+     "LC": 1476340.0,
+     "LH": 4587330.0,
+     "diff": 3110990.0,
+     "ratio": 3.1072313965617675,
+     "expect_change": true,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "SE–WALL",
+     "types": "3-4",
+     "LC": 38616.2,
+     "LH": 38616.2,
+     "diff": 0.0,
+     "ratio": 1.0,
+     "expect_change": false,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "WALL–WALL",
+     "types": "4-4",
+     "LC": 0.0,
+     "LH": 0.0,
+     "diff": 0.0,
+     "ratio": null,
+     "expect_change": false,
+     "ok": true,
+     "reason": ""
+    }
+   ],
+   "checks": [
+    {
+     "check": "덱 파싱 — LH_ref_r2_s32452843 (필수 명령 · run 구조 [1, F, F, N] · 행렬 크기)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "덱 파싱 — LHx30_ref_r2_s32452843 (필수 명령 · run 구조 [1, F, F, N] · 행렬 크기)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "타입 사전 = 등록 1 AM_P · 2 AM_S · 3 SE · 4 WALL (밀도 · 반지름 비 · 템플릿 시드 · 메시 타입) — LH_ref_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "타입 사전 = 등록 1 AM_P · 2 AM_S · 3 SE · 4 WALL (밀도 · 반지름 비 · 템플릿 시드 · 메시 타입) — LHx30_ref_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "두 덱의 템플릿 (시드 · 밀도 · 반지름) · 타입 사전 동일",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "CED 행렬 대칭 (인쇄 토큰까지) · 벽–벽 = 0 — LH_ref_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "CED 전부 유한 · 비음수 — LH_ref_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "ν = 등록 (AM 0.25 · SE 0.30 · 벽 0.30) — LH_ref_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "AM · 벽 영률 = 등록 (1.037e9 · 1.037e9 · 1.48e9) · SE 영률 = 등록 수준 (1e7 · 1.4e8 · 2.8e8) — LH_ref_r2_s32452843",
+     "ok": true,
+     "detail": "SE 2e+08 · AM_P 1.037e+09 · AM_S 1.037e+09 · 벽 1.48e+09"
+    },
+    {
+     "check": "CED 행렬 대칭 (인쇄 토큰까지) · 벽–벽 = 0 — LHx30_ref_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "CED 전부 유한 · 비음수 — LHx30_ref_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "ν = 등록 (AM 0.25 · SE 0.30 · 벽 0.30) — LHx30_ref_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "AM · 벽 영률 = 등록 (1.037e9 · 1.037e9 · 1.48e9) · SE 영률 = 등록 수준 (1e7 · 1.4e8 · 2.8e8) — LHx30_ref_r2_s32452843",
+     "ok": true,
+     "detail": "SE 2e+08 · AM_P 1.037e+09 · AM_S 1.037e+09 · 벽 1.48e+09"
+    },
+    {
+     "check": "dt = Rayleigh 규칙의 정확히 1/k (k 정수 ≥ 1 · k = 1 이면 규칙 그대로) — LH_ref_r2_s32452843",
+     "ok": true,
+     "detail": "덱 2.62e-07 × 1 vs 규칙 2.62043e-07 s (SE)"
+    },
+    {
+     "check": "dt = Rayleigh 규칙의 정확히 1/k (k 정수 ≥ 1 · k = 1 이면 규칙 그대로) — LHx30_ref_r2_s32452843",
+     "ok": true,
+     "detail": "덱 2.62e-07 × 1 vs 규칙 2.62043e-07 s (SE)"
+    },
+    {
+     "check": "허용 밖 명령은 토큰까지 같다 (허용: CED 값)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "같은 강성 — E · ν 정확히 같다",
+     "ok": true,
+     "detail": ""
+    }
+   ],
+   "meta": {
+    "comment_only_old": 6,
+    "comment_only_new": 6,
+    "examples_new": [
+     "AM_P–AM_P   0.00034065 5.53067e+08 5.53067e+08 1.10725e+07 1.10725e+07   0.0718566   0.0718566 1.000",
+     "AM_P–AM_S  0.000209631 5.53067e+08 5.53067e+08 8.44993e+06 8.44993e+06   0.0120942   0.0120942 1.000",
+     "AM_P–WALL    0.0006813 6.58365e+08 6.58365e+08  6.0111e+06  6.0111e+06    0.032454    0.032454 1.000"
+    ],
+    "note": "주석 (팔 설명 · 강성 머리 블록 · 출처) — 허용 메타 (판정 밖)"
+   },
+   "k": 1,
+   "level": null,
+   "verdict": "PASS",
+   "failures": []
+  },
+  {
+   "kind": "B",
+   "old": "LHx10_ref_r2_s32452843",
+   "new": "LHx30_ref_r2_s32452843",
+   "old_sha256": "a2792897f32c38588c463c6f0d4427a5897b0980b55786ff264f946f34624531",
+   "new_sha256": "d00eb369f35145ddbf887da46761a562b922d4e1c2111e6bfa9a981110eb578b",
+   "rows": [
+    {
+     "pair": "AM_P–AM_P",
+     "types": "1-1",
+     "LC": 7677280.0,
+     "LH": 11072500.0,
+     "diff": 3395220.0,
+     "ratio": 1.4422425650751307,
+     "expect_change": true,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "AM_P–AM_S",
+     "types": "1-2",
+     "LC": 5858860.0,
+     "LH": 8449930.0,
+     "diff": 2591070.0,
+     "ratio": 1.4422481506641223,
+     "expect_change": true,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "AM_S–AM_S",
+     "types": "2-2",
+     "LC": 5858860.0,
+     "LH": 8449930.0,
+     "diff": 2591070.0,
+     "ratio": 1.4422481506641223,
+     "expect_change": true,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "AM_P–SE",
+     "types": "1-3",
+     "LC": 68738.8,
+     "LH": 68738.8,
+     "diff": 0.0,
+     "ratio": 1.0,
+     "expect_change": false,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "AM_S–SE",
+     "types": "2-3",
+     "LC": 68738.8,
+     "LH": 68738.8,
+     "diff": 0.0,
+     "ratio": 1.0,
+     "expect_change": false,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "SE–SE",
+     "types": "3-3",
+     "LC": 77056.9,
+     "LH": 77056.9,
+     "diff": 0.0,
+     "ratio": 1.0,
+     "expect_change": false,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "AM_P–WALL",
+     "types": "1-4",
+     "LC": 4167870.0,
+     "LH": 6011100.0,
+     "diff": 1843230.0,
+     "ratio": 1.4422474789280855,
+     "expect_change": true,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "AM_S–WALL",
+     "types": "2-4",
+     "LC": 3180680.0,
+     "LH": 4587330.0,
+     "diff": 1406650.0,
+     "ratio": 1.4422481984984343,
+     "expect_change": true,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "SE–WALL",
+     "types": "3-4",
+     "LC": 38616.2,
+     "LH": 38616.2,
+     "diff": 0.0,
+     "ratio": 1.0,
+     "expect_change": false,
+     "ok": true,
+     "reason": ""
+    },
+    {
+     "pair": "WALL–WALL",
+     "types": "4-4",
+     "LC": 0.0,
+     "LH": 0.0,
+     "diff": 0.0,
+     "ratio": null,
+     "expect_change": false,
+     "ok": true,
+     "reason": ""
+    }
+   ],
+   "checks": [
+    {
+     "check": "덱 파싱 — LHx10_ref_r2_s32452843 (필수 명령 · run 구조 [1, F, F, N] · 행렬 크기)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "덱 파싱 — LHx30_ref_r2_s32452843 (필수 명령 · run 구조 [1, F, F, N] · 행렬 크기)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "타입 사전 = 등록 1 AM_P · 2 AM_S · 3 SE · 4 WALL (밀도 · 반지름 비 · 템플릿 시드 · 메시 타입) — LHx10_ref_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "타입 사전 = 등록 1 AM_P · 2 AM_S · 3 SE · 4 WALL (밀도 · 반지름 비 · 템플릿 시드 · 메시 타입) — LHx30_ref_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "두 덱의 템플릿 (시드 · 밀도 · 반지름) · 타입 사전 동일",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "CED 행렬 대칭 (인쇄 토큰까지) · 벽–벽 = 0 — LHx10_ref_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "CED 전부 유한 · 비음수 — LHx10_ref_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "ν = 등록 (AM 0.25 · SE 0.30 · 벽 0.30) — LHx10_ref_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "AM · 벽 영률 = 등록 (1.037e9 · 1.037e9 · 1.48e9) · SE 영률 = 등록 수준 (1e7 · 1.4e8 · 2.8e8) — LHx10_ref_r2_s32452843",
+     "ok": true,
+     "detail": "SE 2e+08 · AM_P 1.037e+09 · AM_S 1.037e+09 · 벽 1.48e+09"
+    },
+    {
+     "check": "CED 행렬 대칭 (인쇄 토큰까지) · 벽–벽 = 0 — LHx30_ref_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "CED 전부 유한 · 비음수 — LHx30_ref_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "ν = 등록 (AM 0.25 · SE 0.30 · 벽 0.30) — LHx30_ref_r2_s32452843",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "AM · 벽 영률 = 등록 (1.037e9 · 1.037e9 · 1.48e9) · SE 영률 = 등록 수준 (1e7 · 1.4e8 · 2.8e8) — LHx30_ref_r2_s32452843",
+     "ok": true,
+     "detail": "SE 2e+08 · AM_P 1.037e+09 · AM_S 1.037e+09 · 벽 1.48e+09"
+    },
+    {
+     "check": "dt = Rayleigh 규칙의 정확히 1/k (k 정수 ≥ 1 · k = 1 이면 규칙 그대로) — LHx10_ref_r2_s32452843",
+     "ok": true,
+     "detail": "덱 2.62e-07 × 1 vs 규칙 2.62043e-07 s (SE)"
+    },
+    {
+     "check": "dt = Rayleigh 규칙의 정확히 1/k (k 정수 ≥ 1 · k = 1 이면 규칙 그대로) — LHx30_ref_r2_s32452843",
+     "ok": true,
+     "detail": "덱 2.62e-07 × 1 vs 규칙 2.62043e-07 s (SE)"
+    },
+    {
+     "check": "허용 밖 명령은 토큰까지 같다 (허용: CED 값)",
+     "ok": true,
+     "detail": ""
+    },
+    {
+     "check": "같은 강성 — E · ν 정확히 같다",
+     "ok": true,
+     "detail": ""
+    }
+   ],
+   "meta": {
+    "comment_only_old": 6,
+    "comment_only_new": 6,
+    "examples_new": [
+     "AM_P–AM_P   0.00034065 5.53067e+08 5.53067e+08 1.10725e+07 1.10725e+07   0.0718566   0.0718566 1.000",
+     "AM_P–AM_S  0.000209631 5.53067e+08 5.53067e+08 8.44993e+06 8.44993e+06   0.0120942   0.0120942 1.000",
+     "AM_P–WALL    0.0006813 6.58365e+08 6.58365e+08  6.0111e+06  6.0111e+06    0.032454    0.032454 1.000"
+    ],
+    "note": "주석 (팔 설명 · 강성 머리 블록 · 출처) — 허용 메타 (판정 밖)"
+   },
+   "k": 1,
+   "level": null,
+   "verdict": "PASS",
+   "failures": []
+  }
+ ],
+ "verdict": "PASS",
+ "failures": []
+}

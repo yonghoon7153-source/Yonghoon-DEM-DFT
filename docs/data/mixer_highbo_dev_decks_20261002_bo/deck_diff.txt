@@ -1,0 +1,121 @@
+
+### python3 scripts/mixer_deck_diff.py docs/data/mixer_highbo_dev_decks_20260930_v26/decks/LH_ref_r2_s32452843/in.mixer docs/data/mixer_highbo_dev_decks_20261002_bo/decks/LHx10_ref_r2_s32452843/in.mixer --allow A   (기대 rc 1)
+── docs/data/mixer_highbo_dev_decks_20260930_v26/decks/LH_ref_r2_s32452843/in.mixer  →  docs/data/mixer_highbo_dev_decks_20261002_bo/decks/LHx10_ref_r2_s32452843/in.mixer  (허용목록 A) → FAIL
+   ≠ AM_P–AM_P       3.56348e+06 →    7.67728e+06   ×2.154
+   ≠ AM_P–AM_S       2.71944e+06 →    5.85886e+06   ×2.154
+     AM_P–SE             68738.8 →        68738.8   ×1
+   ≠ AM_P–WALL       1.93455e+06 →    4.16787e+06   ×2.154
+   ≠ AM_S–AM_S       2.71944e+06 →    5.85886e+06   ×2.154
+     AM_S–SE             68738.8 →        68738.8   ×1
+   ≠ AM_S–WALL       1.47634e+06 →    3.18068e+06   ×2.154
+     SE–SE               77056.9 →        77056.9   ×1
+     SE–WALL             38616.2 →        38616.2   ×1
+     WALL–WALL                 0 →              0   ×1
+   ⛔ 허용목록 밖 CED 변화: [('AM_P', 'WALL'), ('AM_S', 'WALL')]
+→ <재생성 임시 폴더>/dd_0.json
+
+0/1 PASS  ⛔ 짝짓기 근거 없음 — 발사 금지
+(rc 1)
+
+### python3 scripts/mixer_deck_diff.py docs/data/mixer_highbo_dev_decks_20260930_v26/decks/LH_ref_r2_s32452843/in.mixer docs/data/mixer_highbo_dev_decks_20261002_bo/decks/LHx30_ref_r2_s32452843/in.mixer --allow A   (기대 rc 1)
+── docs/data/mixer_highbo_dev_decks_20260930_v26/decks/LH_ref_r2_s32452843/in.mixer  →  docs/data/mixer_highbo_dev_decks_20261002_bo/decks/LHx30_ref_r2_s32452843/in.mixer  (허용목록 A) → FAIL
+   ≠ AM_P–AM_P       3.56348e+06 →    1.10725e+07   ×3.107
+   ≠ AM_P–AM_S       2.71944e+06 →    8.44993e+06   ×3.107
+     AM_P–SE             68738.8 →        68738.8   ×1
+   ≠ AM_P–WALL       1.93455e+06 →     6.0111e+06   ×3.107
+   ≠ AM_S–AM_S       2.71944e+06 →    8.44993e+06   ×3.107
+     AM_S–SE             68738.8 →        68738.8   ×1
+   ≠ AM_S–WALL       1.47634e+06 →    4.58733e+06   ×3.107
+     SE–SE               77056.9 →        77056.9   ×1
+     SE–WALL             38616.2 →        38616.2   ×1
+     WALL–WALL                 0 →              0   ×1
+   ⛔ 허용목록 밖 CED 변화: [('AM_P', 'WALL'), ('AM_S', 'WALL')]
+→ <재생성 임시 폴더>/dd_1.json
+
+0/1 PASS  ⛔ 짝짓기 근거 없음 — 발사 금지
+(rc 1)
+
+### python3 scripts/mixer_deck_diff.py docs/data/mixer_highbo_dev_decks_20260930_v26/decks/LH_ref_r2_s32452843/in.mixer docs/data/mixer_highbo_dev_decks_20261002_bo/decks/LHx10_ref_r2_s32452843/in.mixer --allow B --expect-deck <재생성 decks/LHx10_ref_r2_s32452843>   (기대 rc 0)
+── docs/data/mixer_highbo_dev_decks_20260930_v26/decks/LH_ref_r2_s32452843/in.mixer  →  docs/data/mixer_highbo_dev_decks_20261002_bo/decks/LHx10_ref_r2_s32452843/in.mixer  (허용목록 B) → PASS
+   ≠ AM_P–AM_P       3.56348e+06 →    7.67728e+06   ×2.154
+   ≠ AM_P–AM_S       2.71944e+06 →    5.85886e+06   ×2.154
+     AM_P–SE             68738.8 →        68738.8   ×1
+   ≠ AM_P–WALL       1.93455e+06 →    4.16787e+06   ×2.154
+   ≠ AM_S–AM_S       2.71944e+06 →    5.85886e+06   ×2.154
+     AM_S–SE             68738.8 →        68738.8   ×1
+   ≠ AM_S–WALL       1.47634e+06 →    3.18068e+06   ×2.154
+     SE–SE               77056.9 →        77056.9   ×1
+     SE–WALL             38616.2 →        38616.2   ×1
+     WALL–WALL                 0 →              0   ×1
+→ <재생성 임시 폴더>/dd_2.json
+
+1/1 PASS
+(rc 0)
+
+### python3 scripts/mixer_deck_diff.py docs/data/mixer_highbo_dev_decks_20260930_v26/decks/LH_ref_r2_s32452843/in.mixer docs/data/mixer_highbo_dev_decks_20261002_bo/decks/LHx30_ref_r2_s32452843/in.mixer --allow B --expect-deck <재생성 decks/LHx30_ref_r2_s32452843>   (기대 rc 0)
+── docs/data/mixer_highbo_dev_decks_20260930_v26/decks/LH_ref_r2_s32452843/in.mixer  →  docs/data/mixer_highbo_dev_decks_20261002_bo/decks/LHx30_ref_r2_s32452843/in.mixer  (허용목록 B) → PASS
+   ≠ AM_P–AM_P       3.56348e+06 →    1.10725e+07   ×3.107
+   ≠ AM_P–AM_S       2.71944e+06 →    8.44993e+06   ×3.107
+     AM_P–SE             68738.8 →        68738.8   ×1
+   ≠ AM_P–WALL       1.93455e+06 →     6.0111e+06   ×3.107
+   ≠ AM_S–AM_S       2.71944e+06 →    8.44993e+06   ×3.107
+     AM_S–SE             68738.8 →        68738.8   ×1
+   ≠ AM_S–WALL       1.47634e+06 →    4.58733e+06   ×3.107
+     SE–SE               77056.9 →        77056.9   ×1
+     SE–WALL             38616.2 →        38616.2   ×1
+     WALL–WALL                 0 →              0   ×1
+→ <재생성 임시 폴더>/dd_3.json
+
+1/1 PASS
+(rc 0)
+
+### python3 scripts/mixer_deck_diff.py docs/data/mixer_highbo_dev_decks_20260930_v26/decks/LC_ref_r2_s32452843/in.mixer docs/data/mixer_highbo_dev_decks_20261002_bo/decks/LHx10_ref_r2_s32452843/in.mixer --allow B --expect-deck <재생성 decks/LHx10_ref_r2_s32452843>   (기대 rc 0)
+── docs/data/mixer_highbo_dev_decks_20260930_v26/decks/LC_ref_r2_s32452843/in.mixer  →  docs/data/mixer_highbo_dev_decks_20261002_bo/decks/LHx10_ref_r2_s32452843/in.mixer  (허용목록 B) → PASS
+   ≠ AM_P–AM_P            108795 →    7.67728e+06   ×70.57
+   ≠ AM_P–AM_S            108795 →    5.85886e+06   ×53.85
+     AM_P–SE             68738.8 →        68738.8   ×1
+   ≠ AM_P–WALL           59063.2 →    4.16787e+06   ×70.57
+   ≠ AM_S–AM_S            142562 →    5.85886e+06   ×41.1
+     AM_S–SE             68738.8 →        68738.8   ×1
+   ≠ AM_S–WALL           77394.6 →    3.18068e+06   ×41.1
+     SE–SE               77056.9 →        77056.9   ×1
+     SE–WALL             38616.2 →        38616.2   ×1
+     WALL–WALL                 0 →              0   ×1
+→ <재생성 임시 폴더>/dd_4.json
+
+1/1 PASS
+(rc 0)
+
+### python3 scripts/mixer_deck_diff.py docs/data/mixer_highbo_dev_decks_20260930_v26/decks/LC_ref_r2_s32452843/in.mixer docs/data/mixer_highbo_dev_decks_20261002_bo/decks/LHx30_ref_r2_s32452843/in.mixer --allow B --expect-deck <재생성 decks/LHx30_ref_r2_s32452843>   (기대 rc 0)
+── docs/data/mixer_highbo_dev_decks_20260930_v26/decks/LC_ref_r2_s32452843/in.mixer  →  docs/data/mixer_highbo_dev_decks_20261002_bo/decks/LHx30_ref_r2_s32452843/in.mixer  (허용목록 B) → PASS
+   ≠ AM_P–AM_P            108795 →    1.10725e+07   ×101.8
+   ≠ AM_P–AM_S            108795 →    8.44993e+06   ×77.67
+     AM_P–SE             68738.8 →        68738.8   ×1
+   ≠ AM_P–WALL           59063.2 →     6.0111e+06   ×101.8
+   ≠ AM_S–AM_S            142562 →    8.44993e+06   ×59.27
+     AM_S–SE             68738.8 →        68738.8   ×1
+   ≠ AM_S–WALL           77394.6 →    4.58733e+06   ×59.27
+     SE–SE               77056.9 →        77056.9   ×1
+     SE–WALL             38616.2 →        38616.2   ×1
+     WALL–WALL                 0 →              0   ×1
+→ <재생성 임시 폴더>/dd_5.json
+
+1/1 PASS
+(rc 0)
+
+### python3 scripts/mixer_deck_diff.py docs/data/mixer_highbo_dev_decks_20261002_bo/decks/LHx10_ref_r2_s32452843/in.mixer docs/data/mixer_highbo_dev_decks_20261002_bo/decks/LHx30_ref_r2_s32452843/in.mixer --allow B --expect-deck <재생성 decks/LHx30_ref_r2_s32452843>   (기대 rc 0)
+── docs/data/mixer_highbo_dev_decks_20261002_bo/decks/LHx10_ref_r2_s32452843/in.mixer  →  docs/data/mixer_highbo_dev_decks_20261002_bo/decks/LHx30_ref_r2_s32452843/in.mixer  (허용목록 B) → PASS
+   ≠ AM_P–AM_P       7.67728e+06 →    1.10725e+07   ×1.442
+   ≠ AM_P–AM_S       5.85886e+06 →    8.44993e+06   ×1.442
+     AM_P–SE             68738.8 →        68738.8   ×1
+   ≠ AM_P–WALL       4.16787e+06 →     6.0111e+06   ×1.442
+   ≠ AM_S–AM_S       5.85886e+06 →    8.44993e+06   ×1.442
+     AM_S–SE             68738.8 →        68738.8   ×1
+   ≠ AM_S–WALL       3.18068e+06 →    4.58733e+06   ×1.442
+     SE–SE               77056.9 →        77056.9   ×1
+     SE–WALL             38616.2 →        38616.2   ×1
+     WALL–WALL                 0 →              0   ×1
+→ <재생성 임시 폴더>/dd_6.json
+
+1/1 PASS
+(rc 0)

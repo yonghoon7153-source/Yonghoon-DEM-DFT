@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """mixer_stage_gate.py — 믹서 고-Bo **강성 축** 캠페인의 발사 단계 관문 (2026-09-30 · 코드 선행조건 2 단계 piece 1 · 5).
 
-`dem_scripts/mixer_20260921/launch_highbo.sh` 의 새 단계 **dev-e0 · dev-rot · confirm-first · confirm-rest** 가 부른다.  결정 (정책 · 등록
+`dem_scripts/mixer_20260921/launch_highbo.sh` 의 새 단계 **dev-e0 · dev-rot · dev-bo · confirm-first · confirm-rest** 가 부른다.  결정 (정책 · 등록
 코호트 · 폴더 계약 · 디스크 · 선행 기록 · 증서 · 승인) 은 여기서, 발사 (러너 · 봉인 · sbatch · scontrol) 는 런처 bash 가 한다.
 옛 단계 (first · rest · all — 고-Bo LH 확장) 는 이 모듈을 쓰지 않는다 (의미 그대로).
 
@@ -17,12 +17,14 @@
          다른 seed/E · E0 누락 · release 재시도 · 대기 중 파일 변경) 셀프테스트."
   §6    "soft 진단 범위 = 7.37 % (v2.6 · 옛 5.8) … soft 범위 null 이면 확인 soft 발사 거부" · 세 상태 (기술 / 원 1 % / 권위) 분리 · arm × E × 검사 허용/거부표.
   Codex 9 차 §6-2 "DEV 목록 밖 arm/seed/단계 요청 거부; DEV 증서가 확인/rest 발사 권한으로 쓰이지 않음".
+  ★ §11 (v2.8 · 2026-10-02 · 1저자 "ㄱㄱ") 개발 탐색 dev-bo — LHx10_ref_r2 · LHx30_ref_r2 (LH 의 AM–AM Bo_code ×10 · ×30 · 공동 개입 B) ·
+    dev-rot 과 같은 관문 (등록 코호트 정확히 · E0 진단 PASS 기록 · 봉인 requires) · **정책 v3 전용** (v2 의 뜻을 넓히지 않는다).
 
 부명령 (런처가 부른다 · rc 0 = 통과):
-  policy     <정책> <단계>                                  정책 v2 · 단계 인자 = 등록 코호트 (정확히) → JSON
+  policy     <정책> <단계>                                  정책 v2 · v3 · 단계 인자 = 등록 코호트 (정확히) → JSON
   prepare    <단계> <OUT> --policy P                        dev-e0: NP 프로브 폴더 셋을 기준 셀 (E0_ref_s32452843) 에서 만든다 (없을 때만)
   preflight  <단계> <OUT> --policy P --np N --cohort-json J --out-json X [--e0-record R]
-                                                            폴더 계약 · fresh · 덱 코호트 JSON · 디스크 추정 · (dev-rot) E0 PASS 기록 → 발사 계획 TSV
+                                                            폴더 계약 · fresh · 덱 코호트 JSON · 디스크 추정 · (dev-rot · dev-bo) E0 PASS 기록 → 발사 계획 TSV
   seal-extra <OUT> <런> --preflight X                       봉인 (launch_record.json) 에 더할 필드 JSON
   manifest   <OUT> --preflight X                            (confirm-first) 18 칸 manifest · 처음부터 held 조회 → <OUT>/confirm_manifest.json
   rest-gate  <OUT> <증서 폴더> --policy P --cohort-json J    (confirm-rest) manifest · 코호트 · held 상태 · 증서 6 → 승인 12 → 풀 job id
@@ -55,9 +57,15 @@ import mixer_deck_diff as dd          # noqa: E402  이름 · 등록 코호트 �
 LAUNCH_DIR = os.path.join(ROOT, 'dem_scripts', 'mixer_20260921')
 STL_REF_DIR = os.path.join(ROOT, 'dem_scripts', 'mixer_20260919')
 POLICY_V1, POLICY_V2 = 'mixer_highbo_launch_policy/1', 'mixer_highbo_launch_policy/2'
+POLICY_V3 = 'mixer_highbo_launch_policy/3'                # ★ 10-02 (사전등록 §11 v2.8) = v2 단계 + dev-bo.  v2 의 뜻은 넓히지 않는다 (v2 에 dev-bo 를 적으면 모양 아님)
 LEGACY_STAGES = ('first', 'rest', 'all')
-NEW_STAGES = ('dev-e0', 'dev-rot', 'confirm-first', 'confirm-rest')
-STAGE_COHORT = {'dev-e0': 'dev-e0', 'dev-rot': 'dev-rot', 'confirm-first': 'confirm', 'confirm-rest': 'confirm'}
+V2_STAGES = ('dev-e0', 'dev-rot', 'confirm-first', 'confirm-rest')
+NEW_STAGES = V2_STAGES + ('dev-bo',)
+#: 정책 판 → 그 판이 아는 단계 (allowed_stages 는 이 부분집합 · 새 단계는 그 판에서만 인자를 읽는다)
+POLICY_STAGES = {POLICY_V1: LEGACY_STAGES, POLICY_V2: LEGACY_STAGES + V2_STAGES, POLICY_V3: LEGACY_STAGES + NEW_STAGES}
+STAGE_COHORT = {'dev-e0': 'dev-e0', 'dev-rot': 'dev-rot', 'dev-bo': 'dev-bo', 'confirm-first': 'confirm', 'confirm-rest': 'confirm'}
+#: E0 진단 PASS 기록 (mixer_smoke_blind.py --e0-diag) 이 있어야 여는 회전 단계 — dev-rot (§8-2 ②) · dev-bo (§11 · dev-rot 과 같은 관문)
+E0_RECORD_STAGES = ('dev-rot', 'dev-bo')
 #: §6 v2.4 "soft 진단 범위 = 5.8 %" — check_contact_validity.SOFT_RANGE_PCT 와 같아야 한다 (셀프테스트가 대조 · 이 파일은 numpy 없이 돈다)
 SOFT_RANGE_PCT = 7.37   # ★ v2.6 (09-30 밤 · 1저자 비준) = 1 % × 20^(2/3) · check_contact_validity.SOFT_RANGE_PCT 와 같아야 한다
 REG_N_EXPECTED = dd.GEN_ARGS['n_total']                  # gen_all.sh N_TOTAL · README §6 "n_expected (gen.log 의 N = 100,000)"
@@ -132,7 +140,8 @@ def _classify(n):
     except ValueError:
         return f'{n} (셀 이름 아님)'
     kind = 'holdout seed' if c_['seed'] in dd.HOLDOUT_SEEDS else ('DEV seed' if c_['seed'] in dd.DEV_SEEDS else '등록 밖 seed')
-    extra = ' · 확인 셀' if n in dd.COHORTS['confirm'] else (' · DEV 셀' if n in dd.COHORTS['dev-e0'] + dd.COHORTS['dev-rot'] else '')
+    dev = dd.COHORTS['dev-e0'] + dd.COHORTS['dev-rot'] + dd.COHORTS['dev-bo']
+    extra = ' · 확인 셀' if n in dd.COHORTS['confirm'] else (' · DEV 셀' if n in dev else '')
     return f'{n} ({kind}{extra})'
 
 
@@ -153,18 +162,20 @@ def _time_ok(t, what):
 
 
 def load_policy(path):
-    """정책 파일 → dict.  v1 (옛 · first/rest/all 만) 과 v2 (+ 새 단계) 를 받는다.  모양이 아니면 GateError (발사 0)."""
+    """정책 파일 → dict.  v1 (옛 · first/rest/all 만) · v2 (+ dev-e0 · dev-rot · confirm-first · confirm-rest) · v3 (10-02 · + dev-bo) 를 받는다.
+    판마다 아는 단계만 allowed_stages 에 올 수 있다 (POLICY_STAGES — v2 에 dev-bo 를 적으면 거부: 봉인된 v2 의 뜻을 넓히지 않는다).
+    모양이 아니면 GateError (발사 0)."""
     d = _load_json(path, '발사 정책 파일')
     if not isinstance(d, dict):
         raise GateError(f'발사 정책 파일이 JSON 객체가 아니다 ({path})')
     sc, pid, st = d.get('schema'), d.get('policy_id'), d.get('allowed_stages')
-    if sc not in (POLICY_V1, POLICY_V2):
-        raise GateError(f'발사 정책 스키마 {sc!r} — {POLICY_V1} · {POLICY_V2} 만')
+    if sc not in POLICY_STAGES:
+        raise GateError(f'발사 정책 스키마 {sc!r} — {" · ".join(POLICY_STAGES)} 만')
     if not (isinstance(pid, str) and pid.strip()):
         raise GateError('발사 정책 policy_id 가 없다')
-    known = LEGACY_STAGES if sc == POLICY_V1 else LEGACY_STAGES + NEW_STAGES
+    known = POLICY_STAGES[sc]
     if not (isinstance(st, list) and st and all(isinstance(x, str) and x in known for x in st) and len(set(st)) == len(st)):
-        raise GateError(f'발사 정책 allowed_stages {st!r} — {list(known)} 의 부분집합 (중복 없이)')
+        raise GateError(f'발사 정책 allowed_stages {st!r} — {list(known)} 의 부분집합 (중복 없이 · 스키마 {sc})')
     return d
 
 
@@ -173,8 +184,10 @@ def stage_params(pol, stage):
     soft 범위 (confirm-first) 는 등록값 (v2.6 7.37) 만 — null · 다른 값이면 거부 (§6 "soft 범위 null 이면 확인 soft 발사 거부")."""
     if stage not in NEW_STAGES:
         raise GateError(f'새 단계가 아니다: {stage!r} — {list(NEW_STAGES)}')
-    if pol.get('schema') != POLICY_V2:
-        raise GateError(f'단계 {stage} 는 정책 v2 ({POLICY_V2}) 에서만 — 이 정책은 {pol.get("schema")!r}')
+    if stage not in POLICY_STAGES.get(pol.get('schema'), ()):
+        ok_ = [s_ for s_ in (POLICY_V2, POLICY_V3) if stage in POLICY_STAGES[s_]]
+        raise GateError(f'단계 {stage} 는 정책 {" · ".join("v" + s_.rsplit("/", 1)[1] for s_ in ok_)} ({" · ".join(ok_)}) 에서만 — '
+                        f'이 정책은 {pol.get("schema")!r}' + (' (dev-bo 는 v3 전용 — 봉인된 v2 의 뜻을 넓히지 않는다)' if stage == 'dev-bo' else ''))
     if stage not in pol.get('allowed_stages', []):
         raise GateError(f'발사 정책 {pol.get("policy_id")} 은 stage \'{stage}\' 를 허용하지 않는다 (허용: {pol.get("allowed_stages")}) — '
                         '정책을 바꾸려면 파일을 고쳐 커밋하고 사전등록에 적는다 (봉인에 id · sha256 이 남는다)')
@@ -198,6 +211,12 @@ def stage_params(pol, stage):
         if sp.get('requires') != 'dev-e0':
             raise GateError('stages.dev-rot.requires ≠ "dev-e0" — 회전 2 런은 E0 진단 PASS 기록 뒤에만 (§8-2 ②)')
         out.update(runs=list(dd.DEV_ROT), requires='dev-e0', time=_time_ok(sp.get('time'), 'stages.dev-rot.time'))
+    elif stage == 'dev-bo':
+        #  ★ 10-02 (사전등록 §11 v2.8) — dev-rot 과 같은 모양: 등록 코호트 (DEV_BO) 정확히 · E0 진단 PASS 기록 뒤에만 · 정책 시간
+        _same_list(sp.get('runs'), dd.DEV_BO, 'stages.dev-bo.runs')
+        if sp.get('requires') != 'dev-e0':
+            raise GateError('stages.dev-bo.requires ≠ "dev-e0" — 개발 탐색 회전 2 런도 E0 진단 PASS 기록 뒤에만 (§11 · dev-rot 과 같은 관문)')
+        out.update(runs=list(dd.DEV_BO), requires='dev-e0', time=_time_ok(sp.get('time'), 'stages.dev-bo.time'))
     elif stage == 'confirm-first':
         _same_list(sp.get('first'), dd.CONFIRM_FIRST, 'stages.confirm-first.first')
         _same_list(sp.get('held'), dd.CONFIRM_REST, 'stages.confirm-first.held')
@@ -222,8 +241,8 @@ def plan_rows(sp, np_main):
         for n, k in zip(dd.DEV_PROBES, dd.NP_PROBE['nps']):
             rows.append(dict(name=n, np=int(k), time=dd.NP_PROBE['time'], hold=0, kind='probe'))
         rows += [dict(name=n, np=int(np_main), time=sp['time'], hold=0, kind='dev') for n in dd.DEV_E0]
-    elif st == 'dev-rot':
-        rows = [dict(name=n, np=int(np_main), time=sp['time'], hold=0, kind='dev') for n in dd.DEV_ROT]
+    elif st in ('dev-rot', 'dev-bo'):
+        rows = [dict(name=n, np=int(np_main), time=sp['time'], hold=0, kind='dev') for n in sp['runs']]
     elif st == 'confirm-first':
         rows = ([dict(name=n, np=int(np_main), time=sp['time'], hold=0, kind='first') for n in dd.CONFIRM_FIRST]
                 + [dict(name=n, np=int(np_main), time=sp['time'], hold=1, kind='held') for n in dd.CONFIRM_REST])
@@ -787,9 +806,9 @@ def cmd_preflight(a):
         pr.append(f'디스크: 필요 {tot / 1e9:.2f} GB × {DISK_MARGIN} = {need / 1e9:.2f} GB > 가용 '
                   f'{"미상" if avail is None else f"{avail / 1e9:.2f} GB"} — 발사 0 (프레임 {disk["frames"]})')
     e0rec = None
-    if a.stage == 'dev-rot':
+    if a.stage in E0_RECORD_STAGES:
         if not a.e0_record:
-            pr.append('dev-rot 은 E0 진단 PASS 기록 경로가 필요하다 (launch_highbo.sh dev-rot <기록>)')
+            pr.append(f'{a.stage} 은 E0 진단 PASS 기록 경로가 필요하다 (launch_highbo.sh {a.stage} <기록>)')
         else:
             pr += verify_e0_record(a.out, a.e0_record, a.np)
             e0rec = dict(path=os.path.realpath(a.e0_record), sha256=sha_or_none(a.e0_record))
@@ -827,7 +846,7 @@ def cmd_seal_extra(a):
               disk_estimate=row['disk'])
     if row['kind'] == 'probe':
         ex['probe'] = dict(np=row['np'], time=row['time'], purpose='NP 프로브 — 처리량만 · 확인 자료 · E0 진단 전용 금지 (§8-2 ②)')
-    if pre['stage'] == 'dev-rot':
+    if pre['stage'] in E0_RECORD_STAGES:
         ex['requires'] = [dict(kind='dev_e0_diag', path=pre['e0_record']['path'], sha256=pre['e0_record']['sha256'])]
     if row['hold']:
         ex['approval'] = dict(file=APPROVAL_FILE, schema=APPROVAL_SCHEMA, gate='launch_highbo.sh confirm-rest')
@@ -1120,17 +1139,23 @@ def selftest():
             p['stages'][st_.replace('_', '-')][key] = v
         return p
 
-    #  S① 정책 — 리포 정책 = v2 · 새 policy_id · dev 두 단계 허용 · 확인 두 단계는 정의만 (허용 아님) · 옛 first · rest 그대로
+    #  S① 정책 — 리포 정책 = v3 (10-02 · dev-bo 추가 · 사전등록 §11 v2.8) · 새 policy_id (옛 id 재사용 없음) · dev 세 단계 허용 ·
+    #     확인 두 단계는 정의만 (허용 아님) · 옛 first · rest 그대로 · 단계 시간 = 등록 (dev-e0 2 일 · dev-rot · dev-bo 3 일 · confirm-first 5 일)
     def _s1():
         p = load_policy(repo_pol)
-        return (p['schema'] == POLICY_V2 and p['policy_id'] != 'Q8-2026-09-29-first-smoke-rest'
-                and set(p['allowed_stages']) == {'first', 'rest', 'dev-e0', 'dev-rot'}
+        old_ids = ('Q8-2026-09-29-first-smoke-rest', 'STIFF-DEV7-2026-09-30-dev-e0-rot', 'STIFF-DEV7-2026-09-30-v26-dev-e0-rot')
+        st = p['stages']
+        return (p['schema'] == POLICY_V3 and p['policy_id'] not in old_ids
+                and set(p['allowed_stages']) == {'first', 'rest', 'dev-e0', 'dev-rot', 'dev-bo'}
                 and stage_params(p, 'dev-e0')['runs'] == list(dd.DEV_E0) and stage_params(p, 'dev-rot')['requires'] == 'dev-e0'
+                and stage_params(p, 'dev-bo')['runs'] == list(dd.DEV_BO) and stage_params(p, 'dev-bo')['requires'] == 'dev-e0'
+                and (st['dev-e0']['time'], st['dev-rot']['time'], st['dev-bo']['time'], st['confirm-first']['time'])
+                == ('2-00:00:00', '3-00:00:00', '3-00:00:00', '5-00:00:00')
                 and refuses(lambda: stage_params(p, 'confirm-first'), '허용하지 않는다')
                 and refuses(lambda: stage_params(p, 'confirm-rest'), '허용하지 않는다')
                 and stage_params(pol_v2(), 'confirm-first')['soft_range_pct'] == 7.37)
-    chk('S① 리포 정책 = v2 · 새 policy_id (옛 Q8 first/rest id 재사용 안 함 §8-2 ④) · dev-e0 · dev-rot 허용 · confirm-first/rest 는 정의만 (Codex GO 전 거부) · '
-        '옛 first · rest 는 허용 그대로', okx(_s1))
+    chk('S① 리포 정책 = v3 (dev-bo 추가) · 새 policy_id (옛 Q8 · DEV7 id 재사용 안 함 §8-2 ④) · dev-e0 · dev-rot · dev-bo 허용 · '
+        'confirm-first/rest 는 정의만 (Codex GO 전 거부) · 옛 first · rest 는 허용 그대로 · 단계 시간 = 등록', okx(_s1))
 
     #  S② DEV 단계는 확인 셀 · holdout seed 를 못 받는다 / 확인 단계는 DEV 덱을 못 받는다 / soft 범위 null · 다른 값 거부
     def _s2():
@@ -1176,13 +1201,16 @@ def selftest():
             for body, need in (('{"schema": "x"}', '스키마'), ('[]', '객체'),
                                (json.dumps(dict(schema=POLICY_V1, policy_id='x', allowed_stages=['dev-e0'])), 'allowed_stages'),
                                (json.dumps(dict(schema=POLICY_V2, policy_id='', allowed_stages=['first'])), 'policy_id'),
-                               (json.dumps(dict(schema=POLICY_V2, policy_id='x', allowed_stages=['first', 'first'])), 'allowed_stages')):
+                               (json.dumps(dict(schema=POLICY_V2, policy_id='x', allowed_stages=['first', 'first'])), 'allowed_stages'),
+                               #  ★ 10-02 — v2 스키마의 뜻을 넓히지 않는다: v2 정책이 dev-bo 를 허용 목록에 적으면 모양 아님 (dev-bo = v3 전용)
+                               (json.dumps(dict(schema=POLICY_V2, policy_id='x', allowed_stages=['dev-rot', 'dev-bo'])), 'allowed_stages')):
                 pth = os.path.join(td, 'p.json')
                 open(pth, 'w').write(body)
                 ok_.append(refuses(lambda: load_policy(pth), need))
             ok_.append(refuses(lambda: load_policy(os.path.join(td, 'none.json')), '없다'))
             return all(ok_)
-    chk('S③ 정책 파일 모양 — 스키마 · 비객체 · v1 에 새 단계 · 빈 policy_id · 중복 단계 · 파일 없음 → 거부 (fail-closed)', okx(_s3))
+    chk('S③ 정책 파일 모양 — 스키마 · 비객체 · v1 에 새 단계 · 빈 policy_id · 중복 단계 · v2 에 dev-bo (v3 전용) · 파일 없음 → 거부 (fail-closed)',
+        okx(_s3))
 
     #  S④ 발사 계획
     def _s4():
@@ -1509,6 +1537,92 @@ def selftest():
                 and REG_N_EXPECTED == 100000 and REG_R_CONTAINER == READER_REG['r_container'])
     chk('S⑩ 등록값 한 벌 — soft 범위 5.8 (검사기 = 관문) · 판독 규약 (관문 = 맹검 래퍼 = 옛 rest 관문 REG) · 봉인 · 승인 스키마 (관문 = 시작 대조기) · '
         'n_expected · r_container', okx(_s10))
+
+    #  S⑪ dev-bo (2026-10-02 · 사전등록 §11 v2.8) — dev-rot 과 같은 모양: **정책 v3 전용** (v2 의 뜻을 넓히지 않는다) · 등록 코호트 정확히 (DEV_BO) ·
+    #     requires dev-e0 · SLURM 시간 · 발사 계획 = 두 런 (환경 NP · 정책 시간 · hold 0 · dev).
+    #     ★ 반례를 먼저 옮겼다 — 옛 판: dev-bo 는 '새 단계가 아니다' · dd.DEV_BO 없음 ⇒ S① · S⑪ · S⑫ FAIL.
+    def _s11():
+        p = load_policy(repo_pol)
+        bad = {}
+
+        def mut(label, fn, need):
+            c_ = copy.deepcopy(p)
+            fn(c_)
+            bad[label] = refuses(lambda: stage_params(c_, 'dev-bo'), need)
+        sb_ = lambda k, v: (lambda c_: c_['stages']['dev-bo'].__setitem__(k, v))                 # noqa: E731
+        mut('dev_rot_cell', sb_('runs', list(dd.DEV_BO) + ['LC_ref_r2_s32452843']), 'DEV 셀')
+        mut('holdout', sb_('runs', [dd.DEV_BO[0], 'LHx30_ref_r2_s15485863']), 'holdout seed')
+        mut('confirm_cell', sb_('runs', list(dd.DEV_BO) + ['LC_ref_r8_s15485863']), '확인 셀')
+        mut('unknown_arm', sb_('runs', list(dd.DEV_BO) + ['LHx20_ref_r2_s32452843']), '셀 이름 아님')
+        mut('order', sb_('runs', list(reversed(dd.DEV_BO))), '순서')
+        mut('missing', sb_('runs', [dd.DEV_BO[0]]), '빠짐')
+        mut('requires', sb_('requires', None), 'requires')
+        mut('time', sb_('time', '3 days'), 'SLURM 시간')
+        mut('not_allowed', lambda c_: c_.__setitem__('allowed_stages', [s for s in c_['allowed_stages'] if s != 'dev-bo']), '허용하지 않는다')
+        mut('v2_schema', lambda c_: c_.__setitem__('schema', POLICY_V2), 'v3')
+        mut('no_block', lambda c_: c_['stages'].pop('dev-bo'), 'stages.dev-bo')
+        rows = plan_rows(stage_params(p, 'dev-bo'), 20)
+        rows_ok = [(r['name'], r['np'], r['time'], r['hold'], r['kind']) for r in rows] == [(n, 20, '3-00:00:00', 0, 'dev') for n in dd.DEV_BO]
+        #  런처 policy_allows 의 판별 표 (KNOWN) = 이 모듈의 POLICY_STAGES — 한 벌 (한쪽만 v3 를 알면 런처 · 관문의 판정이 갈린다)
+        import ast
+        mk = re.search(r'^KNOWN = (\{.*?\})\n', open(os.path.join(LAUNCH_DIR, 'launch_highbo.sh'), encoding='utf-8').read(), re.M | re.S)
+        known = ast.literal_eval(mk.group(1)) if mk else {}
+        table_ok = {k: set(v) for k, v in known.items()} == {k: set(v) for k, v in POLICY_STAGES.items()}
+        if not all(bad.values()) or not rows_ok or not table_ok:
+            print('        ' + ' · '.join(f'{k}:{"✓" if v else "✗"}' for k, v in bad.items()) + f' · rows {rows_ok} · 런처 표 {table_ok}')
+        return (all(bad.values()) and len(bad) == 11 and rows_ok and table_ok and STAGE_COHORT['dev-bo'] == 'dev-bo'
+                and stage_params(p, 'dev-bo')['cohort'] == 'dev-bo' and 'dev-bo' not in POLICY_STAGES[POLICY_V2])
+    chk('S⑪ ★ dev-bo 정책 인자 (사전등록 §11) — 등록 코호트 LHx10_ref_r2 · LHx30_ref_r2 정확히 · requires dev-e0 · 3 일 → 발사 계획 두 런 (NP · hold 0) / '
+        '거부 11: dev-rot 셀 · holdout seed · 확인 셀 · 모르는 팔 · 순서 · 빠짐 · requires 없음 · 시간 형식 · 미허용 · v2 스키마 (v3 전용) · 블록 없음 / '
+        '런처 KNOWN 표 = POLICY_STAGES (v1 · v2 · v3 · v2 에 dev-bo 없음)', okx(_s11))
+
+    #  S⑫ dev-bo preflight · 봉인 필드 — E0 진단 PASS 기록 관문 = dev-rot 과 같다 (기록 없음 · FAIL 기록 = 거부 · PASS 기록 = 통과 ·
+    #     봉인 requires = 그 기록의 절대경로 · sha256 → job 시작 직전 start_check 가 다시 대조)
+    def _s12():
+        global df_avail
+        real_df = df_avail
+        df_avail = lambda path: 10 ** 15                                     # noqa: E731  디스크 판정은 S⑤ 몫 — 여기서는 관문 순서만
+        try:
+            with tempfile.TemporaryDirectory() as td:
+                _dev_out(td)
+                for n in dd.DEV_BO:
+                    _fx_cell(td, n)
+                rp = os.path.join(td, 'dev_e0_diag.json')
+                rc_r, _rec = _fx_e0_record(td, rp)
+                cj = os.path.join(td, 'cohort_bo.json')
+                with open(cj, 'w', encoding='utf-8') as f_:
+                    json.dump(dd.check_cohort(td, 'dev-bo'), f_)
+                pre = os.path.join(td, 'pre_bo.json')
+                base = ['preflight', 'dev-bo', td, '--policy', repo_pol, '--np', '20', '--cohort-json', cj, '--out-json', pre]
+
+                def run(argv):
+                    out_ = io.StringIO()
+                    with contextlib.redirect_stdout(out_), contextlib.redirect_stderr(io.StringIO()):
+                        rc_ = main(argv)
+                    return rc_, out_.getvalue()
+                rc0, _ = run(base)                                             # 기록 없음 → 거부
+                j0 = json.load(open(pre, encoding='utf-8'))
+                rc1, _ = run(base + ['--e0-record', rp])                       # PASS 기록 → 통과
+                j1 = json.load(open(pre, encoding='utf-8'))
+                rc2, ex_txt = run(['seal-extra', td, dd.DEV_BO[0], '--preflight', pre])
+                ex = json.loads(ex_txt)
+                rpb = os.path.join(td, 'dev_e0_diag_bad.json')
+                _fx_e0_record(td, rpb, x_pct={'E0_ref_s49979687': 1.2})       # a 실패 기록
+                rc3, _ = run(base + ['--e0-record', rpb])
+                res = dict(record=rc_r == 0, no_rec=rc0 == 1 and any('E0 진단 PASS 기록' in x for x in j0['problems']),
+                           pass_=rc1 == 0 and j1['verdict'] == 'PASS' and [r['name'] for r in j1['rows']] == list(dd.DEV_BO)
+                           and j1['e0_record']['sha256'] == sha_file(rp) and j1['params']['requires'] == 'dev-e0',
+                           seal=rc2 == 0 and ex.get('requires') == [dict(kind='dev_e0_diag', path=os.path.realpath(rp), sha256=sha_file(rp))]
+                           and ex['stage_gate']['stage'] == 'dev-bo' and ex['cell']['arm'] == 'LHx10' and ex['cell']['level'] == 'ref'
+                           and ex['gate_deckdiff']['argv'][-2:] == ['--cohort', 'dev-bo'],
+                           fail_rec=rc3 == 1)
+                if not all(res.values()):
+                    print('        ' + ' · '.join(f'{k}:{"✓" if v else "✗"}' for k, v in res.items()) + f' · {j0.get("problems", [])[:2]}')
+                return all(res.values())
+        finally:
+            df_avail = real_df
+    chk('S⑫ ★ dev-bo preflight = dev-rot 과 같은 관문 — E0 진단 기록 없음 → 거부 · a 실패 (FAIL) 기록 → 거부 · PASS 기록 (진짜 생산자) → 통과 (두 런) · '
+        '봉인 필드 requires = 그 기록 (절대경로 · sha256) · stage dev-bo · 셀 LHx10 ref · 덱 관문 --cohort dev-bo', okx(_s12))
     print()
     if fails:
         print(f'mixer_stage_gate selftest: {n_ok[0]}/{n_ok[0] + len(fails)} — ✗ {len(fails)} 건 실패')

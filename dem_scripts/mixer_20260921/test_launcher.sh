@@ -863,5 +863,97 @@ mkres LC_ref_r2_s32452843 $((CK + THERMO)) 0
 rsm=$(OUT="$R" DRY=1 ONLY=LC_ref_r2_s32452843 bash "$HERE/resume_all.sh" 2>&1)
 chk 'DV⑨ resume_all.sh 는 강성 축 셀을 잇지 않는다 (fresh 전용 · §8-1 — 실패는 §8-4 새 폴더 재실행) · in.resume 없음' \
     "! [ -f '$R/LC_ref_r2_s32452843/in.resume' ] && grep -q '재개 없음' <<<\"\$rsm\""
+
+echo "── 개발 탐색 dev-bo (2026-10-02 · 강성 축 사전등록 §11 v2.8 — LHx10_ref_r2 · LHx30_ref_r2 · dev-rot 과 같은 관문) — DB ──"
+#  ★ 반례를 먼저 옮겼다 — 옛 런처: dev-bo = usage rc 2 · 리포 정책 v2 (dev-bo 없음) · run_all.sh / resume_all.sh 의 강성 축 셀 정규식이
+#    E0 · LC · LH 만 알아 LHx10_* · LHx30_* 를 **로컬로 띄우고 · 잇는다** (LH_* 가드에도 안 걸린다).
+DB="$T/db"; fx 'for n in list(dd.DEV_E0) + list(dd.DEV_BO): sg._fx_cell(A[0], n)' "$DB"
+stg "$DB" "$T/sdb" dev-e0; rc_db0=$?
+for n in E0_ref_s32452843 E0_ref_s49979687 E0_ref_s67867967 E0_ref2_s32452843 E0_ref_dthalf_s32452843; do runr2 "$DB/$n" SLURM_NTASKS=20; done
+fx 'for n in dd.DEV_E0: sg._fx_e0_done(A[0], n)
+rc, rec = sg._fx_e0_record(A[0], os.path.join(A[0], "dev_e0_diag.json"))
+print("E0DIAG", rc, rec["verdict"])' "$DB" > "$T/e0diag_db.out" 2>&1
+stg "$DB" "$T/sdb" dev-bo; rc_db1=$?
+stg "$DB" "$T/sdb" dev-bo "$DB/none.json"; rc_db2=$?; db2="$SO"
+chk 'DB① dev-bo: (dev-e0 8 제출 · E0 진단 PASS 뒤) 기록 인자 없음 → usage · 없는 기록 → preflight 거부 — sbatch 합계 8 그대로' \
+    "[ $rc_db0 -eq 0 ] && grep -q 'E0DIAG 0 PASS' '$T/e0diag_db.out' && [ $rc_db1 -eq 2 ] && [ $rc_db2 -ne 0 ] && grep -q 'E0 진단 기록' <<<\"\$db2\" && [ \$(nsb2 '$T/sdb') -eq 8 ]"
+PV2="$T/policy_v2_old.json"; PV2W="$T/policy_v2_widened.json"          # 옛 정책 v2 (dev-bo 없음) · v2 스키마에 dev-bo 를 끼운 정책
+python3 - "$HERE/launch_policy.json" "$PV2" "$PV2W" <<'PY'
+import json, sys
+p = json.load(open(sys.argv[1], encoding='utf-8'))
+old = dict(p, schema='mixer_highbo_launch_policy/2', policy_id='TEST-v2-without-dev-bo',
+           allowed_stages=[s for s in p['allowed_stages'] if s != 'dev-bo'], stages={k: v for k, v in p['stages'].items() if k != 'dev-bo'})
+json.dump(old, open(sys.argv[2], 'w', encoding='utf-8'), ensure_ascii=False)
+json.dump(dict(p, schema='mixer_highbo_launch_policy/2', policy_id='TEST-v2-widened'), open(sys.argv[3], 'w', encoding='utf-8'), ensure_ascii=False)
+PY
+stg "$DB" "$T/sdb" dev-bo "$DB/dev_e0_diag.json" -- POLICY_FILE="$PV2"; rc_db3=$?; db3="$SO"
+stg "$DB" "$T/sdb" dev-bo "$DB/dev_e0_diag.json" -- POLICY_FILE="$PV2W"; rc_db4=$?; db4="$SO"
+chk 'DB② ★ 옛 정책 v2 (dev-bo 없음) → dev-bo 거부 · v2 스키마에 dev-bo 를 끼운 정책 → 모양 아님 (v2 의 뜻을 넓히지 않는다 · dev-bo = v3 전용) — 둘 다 sbatch 0' \
+    "[ $rc_db3 -ne 0 ] && grep -q \"stage 'dev-bo'\" <<<\"\$db3\" && [ $rc_db4 -ne 0 ] && grep -q '모양이 아니다' <<<\"\$db4\" && [ \$(nsb2 '$T/sdb') -eq 8 ]"
+stg "$DB" "$T/sdb" dev-bo "$DB/dev_e0_diag.json" -- NP=10; rc_db5=$?; db5="$SO"
+chk 'DB③ E0 진단 PASS 여도 NP 가 다르면 (10 ≠ 기록 20) dev-bo 거부 — 블록 NP 통일 · sbatch 합계 8' \
+    "[ $rc_db5 -ne 0 ] && grep -q 'NP' <<<\"\$db5\" && [ \$(nsb2 '$T/sdb') -eq 8 ]"
+DB2="$T/db2"; fx 'for n in dd.DEV_BO: sg._fx_cell(A[0], n)
+open(os.path.join(A[0], "LHx10_ref_r2_s32452843", "in.mixer"), "w").write(dd.cell_expected_deck("LH_ref_r2_s32452843"))' "$DB2"
+stg "$DB2" "$T/sdb2" dev-bo "$DB/dev_e0_diag.json"; rc_db6=$?; db6="$SO"
+chk 'DB④ ★ LHx10 폴더에 LH_ref_r2 덱 (Bo 38.4 — 다른 수준) → 덱 코호트 관문 거부 · sbatch 0 · 봉인 0' \
+    "[ $rc_db6 -ne 0 ] && grep -q '덱 코호트 관문 실패' <<<\"\$db6\" && [ \$(nsb2 '$T/sdb2') -eq 0 ] && ! ls '$DB2'/*/launch_record.json >/dev/null 2>&1"
+stg "$DB" "$T/sdb" dev-bo "$DB/dev_e0_diag.json"; rc_db7=$?
+sdb=$(python3 - "$DB" "$ROOT" "$T/sdb" "$HERE/launch_policy.json" <<'PY' 2>&1
+import hashlib, json, os, sys
+out, root, sd, pol = sys.argv[1:]
+sys.path.insert(0, os.path.join(root, 'scripts'))
+import mixer_deck_diff as dd
+sha = lambda p: hashlib.sha256(open(p, 'rb').read()).hexdigest()
+rec = os.path.join(out, 'dev_e0_diag.json')
+calls = [l.rstrip('\n').split('\t') for l in open(os.path.join(sd, 'calls'), encoding='utf-8')]
+bad = [] if ([os.path.basename(c[1]) for c in calls[8:]] == list(dd.DEV_BO) and not any('--hold' in c[2] for c in calls)) else ['calls']
+for n in dd.DEV_BO:
+    r = json.load(open(os.path.join(out, n, 'launch_record.json'), encoding='utf-8'))
+    rq, g, cl, pl, sl = r.get('requires') or [{}], r.get('gate_deckdiff') or {}, r.get('cell') or {}, r.get('policy') or {}, r.get('slurm') or {}
+    rn = open(os.path.join(out, n, 'run_lh.sbatch'), encoding='utf-8').read().split('\n')
+    ok = {'stage': r.get('stage') == 'dev-bo',
+          'requires': len(rq) == 1 and rq[0].get('kind') == 'dev_e0_diag' and rq[0].get('path') == os.path.realpath(rec) and rq[0].get('sha256') == sha(rec),
+          'cell': cl.get('name') == n and cl.get('arm') == n.split('_')[0] and cl.get('level') == 'ref' and cl.get('revolutions') == 2,
+          'gate': g.get('argv') == ['--runs', os.path.realpath(out), '--cohort', 'dev-bo']
+                  and g.get('expect_deck_sha256') == hashlib.sha256(dd.cell_expected_deck(n).encode()).hexdigest(),
+          'policy': pl.get('sha256') == sha(pol) and 'dev-bo' in (pl.get('allowed_stages') or []) and pl.get('policy_id') == json.load(open(pol))['policy_id'],
+          'slurm': sl.get('np') == 20 and sl.get('time') == '3-00:00:00' and '#SBATCH -n 20' in rn and '#SBATCH --time=3-00:00:00' in rn,
+          'no_legacy': 'cohort' not in r and 'deviation' not in r and 'probe' not in r}
+    bad += [f'{n}:{k}' for k, v in ok.items() if not v]
+print('OK' if not bad else 'NG ' + ' '.join(bad))
+PY
+)
+chk 'DB⑤ ★ dev-bo (기록 PASS · 같은 NP) → 두 런만 제출 (합계 10 · LHx10 → LHx30 순 · --hold 없음) · 봉인 stage dev-bo · requires = E0 진단 기록 (절대경로 · sha256) · '\
+'셀 = 이름 · 덱 관문 --cohort dev-bo · 기대 덱 sha256 · 리포 정책 (v3 · sha256 · id) · -n 20 · 3 일' \
+    "[ $rc_db7 -eq 0 ] && [ \$(nsb2 '$T/sdb') -eq 10 ] && [ \"\$sdb\" = OK ]"
+runr2 "$DB/LHx10_ref_r2_s32452843" SLURM_NTASKS=20; rc_db8=$?
+echo ' ' >> "$DB/dev_e0_diag.json"                                                             # 봉인 뒤 기록이 바뀐다
+runr2 "$DB/LHx30_ref_r2_s32452843" SLURM_NTASKS=20; rc_db9=$?
+chk 'DB⑥ ★ 시작 직전 관문 — 기록 그대로면 LHx10 시작 (LIGGGHTS 가짜) · 봉인 뒤 기록이 바뀌면 LHx30 시작 대조가 막는다 (exit 3 · LIGGGHTS 0 · 거부 영수증)' \
+    "[ $rc_db8 -eq 0 ] && grep -q 'fake mpi build' '$DB/LHx10_ref_r2_s32452843/log.lmp' && [ $rc_db9 -eq 3 ] && ! [ -e '$DB/LHx30_ref_r2_s32452843/log.lmp' ] && ls '$DB/LHx30_ref_r2_s32452843'/job_start.refused.*.json >/dev/null 2>&1"
+DB3="$T/db3"                                    # 이름만으로 꾸민다 (가드는 폴더 이름만 본다 — 코호트 등록과 무관하게 옛 정규식의 구멍을 재현)
+for n in LHx10_ref_r2_s32452843 LHx30_ref_r2_s32452843; do mkdir -p "$DB3/$n"; cp "$R/proto.in" "$DB3/$n/in.mixer"; done
+rb=$(OUT="$DB3" LMP="$FAKE" MAXJ=4 bash "$HERE/run_all.sh" 2>&1)
+mkres LHx10_ref_r2_s32452843 $((CK + THERMO)) 0
+rsb=$(OUT="$R" DRY=1 ONLY=LHx10_ref_r2_s32452843 bash "$HERE/resume_all.sh" 2>&1)
+chk 'DB⑦ ★ run_all.sh 는 dev-bo 셀 (LHx10 · LHx30) 을 로컬로 띄우지 않는다 · resume_all.sh 는 잇지 않는다 (옛 판: 정규식이 E0 · LC · LH 만 알아 둘 다 했다)' \
+    "! ls '$DB3'/*/pid >/dev/null 2>&1 && [ \$(grep -c '강성 축 셀 건너뜀' <<<\"\$rb\") -eq 2 ] && ! [ -f '$R/LHx10_ref_r2_s32452843/in.resume' ] && grep -q '건너뜀: LHx10_ref_r2_s32452843' <<<\"\$rsb\""
+rxa=$(python3 - "$HERE" "$ROOT" <<'PY' 2>&1
+import os, re, sys
+here, root = sys.argv[1:]
+sys.path.insert(0, os.path.join(root, 'scripts'))
+import mixer_deck_diff as dd
+bad = []
+for f in ('run_all.sh', 'resume_all.sh'):
+    m = re.search(r'\^\(npprobe\[1-9\]\[0-9\]\*_\)\?\(([A-Za-z0-9|]+)\)_\(soft\|ref\|ref2\)', open(os.path.join(here, f), encoding='utf-8').read())
+    arms = set(m.group(1).split('|')) if m else None
+    if arms != set(dd.STIFF_ARMS):
+        bad.append(f'{f}:{sorted(arms) if arms else None}')
+print('OK' if not bad else 'NG ' + ' '.join(bad))
+PY
+)
+chk 'DB⑧ 단일 출처 — run_all.sh · resume_all.sh 의 강성 축 셀 정규식 팔 목록 = mixer_deck_diff.STIFF_ARMS (E0 · LC · LH · LHx10 · LHx30 · 한쪽만 바뀌면 여기서 걸린다)' \
+    "[ \"\$rxa\" = OK ]"
 echo "test_launcher: $pass PASS / $fail FAIL"
 [ "$fail" -eq 0 ]

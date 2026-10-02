@@ -65,6 +65,9 @@
 #                       (같은 덱 · 처리량만 · 확인 자료 전용 금지)" (§8-2 ②) — 프로브 폴더 npprobe<NP>_E0_ref_s32452843 는 기준 셀에서 만든다
 #     dev-rot <기록>    "② 통과 시에만 LC_ref · LH_ref 회전 2 런 · E0 진단 실패 시 회전 보류" — 기록 = mixer_smoke_blind.py --e0-diag 의
 #                       봉인된 E0 진단 PASS 기록 (verify_e0_record) · 봉인 requires 에 그 sha256 → job 시작 직전 start_check 가 다시 대조
+#     dev-bo <기록>     (2026-10-02 · 사전등록 §11 v2.8 · 1저자 "ㄱㄱ") 개발 탐색 LHx10_ref_r2 · LHx30_ref_r2 (LH 의 AM–AM Bo_code ×10 · ×30 ·
+#                       공동 개입 B · 같은 seed · ×20 · 2 바퀴) — dev-rot 과 **같은 관문** (등록 코호트 dev-bo · E0 진단 PASS 기록 · 봉인 requires ·
+#                       시작 직전 대조) · 정책 **v3** 전용 (v2 의 뜻을 넓히지 않는다) · 확인 블록 아님
 #     confirm-first     "확인 18 런을 한 번에 제출 — 첫 holdout 시드 블록 (6 런) 은 즉시 · 나머지 두 시드 블록 (12 런) 은 sbatch --hold
 #                       (처음부터 held …)" (§8-2 ④ · first-seed-block(6)) → <OUT>/confirm_manifest.json (18 칸 · job ID · 해시 · held 조회)
 #     confirm-rest <증서 폴더>  "… 관문 → 통과면 관문이 scontrol release 를 낸다 … 실제 시작 직전 (러너 시작 스크립트) 에 봉인 · 유효 승인
@@ -108,6 +111,7 @@ usage() {
   강성 축 (SLURM 판 전용 · 사전등록 mixer_highbo_stiffness_prereg_20260929 §8-2):
     BACKEND=slurm bash dem_scripts/mixer_20260921/launch_highbo.sh dev-e0                        # E0 5 + NP 프로브 3
     BACKEND=slurm bash dem_scripts/mixer_20260921/launch_highbo.sh dev-rot <E0 진단 PASS 기록>    # LC_ref · LH_ref 2 바퀴
+    BACKEND=slurm bash dem_scripts/mixer_20260921/launch_highbo.sh dev-bo <E0 진단 PASS 기록>     # LHx10_ref · LHx30_ref 2 바퀴 (§11 개발 탐색 · 정책 v3)
     BACKEND=slurm bash dem_scripts/mixer_20260921/launch_highbo.sh confirm-first                 # 18 제출 (6 즉시 · 12 held)
     BACKEND=slurm bash dem_scripts/mixer_20260921/launch_highbo.sh confirm-rest <증서 폴더>       # 관문 → 승인 12 → scontrol release
   증서 = python3 scripts/measure_mixing_index.py <OUT>/$FIRST --ref <OUT>/E0_s32452843 … --json <smoke.json>
@@ -168,14 +172,16 @@ try:
 except (OSError, ValueError) as e:
     sys.exit(f'⛔ 발사 정책 파일을 읽을 수 없다 ({p}: {type(e).__name__}: {e}) — 발사 0')
 #  v1 = 옛 (first · rest · all) · v2 (2026-09-30 · 강성 축) = + dev-e0 · dev-rot · confirm-first · confirm-rest (단계 인자는 mixer_stage_gate.py policy 가 따로 본다)
+#  v3 (2026-10-02 · 사전등록 §11 v2.8) = v2 + dev-bo — ⚠ v2 의 뜻은 넓히지 않는다 (v2 정책에 dev-bo 가 있으면 모양 아님 · mixer_stage_gate.POLICY_STAGES 와 같은 표)
 KNOWN = {'mixer_highbo_launch_policy/1': ('first', 'rest', 'all'),
-         'mixer_highbo_launch_policy/2': ('first', 'rest', 'all', 'dev-e0', 'dev-rot', 'confirm-first', 'confirm-rest')}
+         'mixer_highbo_launch_policy/2': ('first', 'rest', 'all', 'dev-e0', 'dev-rot', 'confirm-first', 'confirm-rest'),
+         'mixer_highbo_launch_policy/3': ('first', 'rest', 'all', 'dev-e0', 'dev-rot', 'confirm-first', 'confirm-rest', 'dev-bo')}
 sc = d.get('schema') if isinstance(d, dict) else None
 ok = (isinstance(d, dict) and sc in KNOWN and isinstance(d.get('policy_id'), str)
       and d['policy_id'].strip() and isinstance(d.get('allowed_stages'), list) and d['allowed_stages']
       and all(isinstance(x, str) and x in KNOWN[sc] for x in d['allowed_stages']))
 if not ok:
-    sys.exit(f'⛔ 발사 정책 파일 모양이 아니다 ({p}: schema (v1 · v2) · policy_id · allowed_stages ⊂ 그 판의 단계) — 발사 0')
+    sys.exit(f'⛔ 발사 정책 파일 모양이 아니다 ({p}: schema (v1 · v2 · v3) · policy_id · allowed_stages ⊂ 그 판의 단계) — 발사 0')
 if st not in d['allowed_stages']:
     sys.exit(f"⛔ 발사 정책 {d['policy_id']} 은 stage '{st}' 를 허용하지 않는다 (허용: {d['allowed_stages']}) — 정책을 바꾸려면 "
              f"{p} 를 고쳐 커밋하고 사전등록 §0 에 적는다 (봉인에 id · sha256 이 남는다).  발사 0")
@@ -603,14 +609,14 @@ new_stage_env() {  # new_stage_env <단계> — 새 단계 공통 전제 (SLURM 
   mkdir -p "$OUT/.stage_gate" || return 1
 }
 
-cmd_stage() {  # cmd_stage <dev-e0|dev-rot|confirm-first> [E0 진단 PASS 기록 (dev-rot)] — 강성 축 새 단계 발사 (SLURM 판 전용)
+cmd_stage() {  # cmd_stage <dev-e0|dev-rot|dev-bo|confirm-first> [E0 진단 PASS 기록 (dev-rot · dev-bo)] — 강성 축 새 단계 발사 (SLURM 판 전용)
   local stage="$1" rec="" cohort ts cj pre plan nm np tm hold kind k=0 fail=0
   shift
   case "$stage" in
-    dev-rot) [ $# -eq 1 ] && [ -n "$1" ] || { usage; return 2; }; rec="$1";;
-    *)       [ $# -eq 0 ] || { usage; return 2; };;
+    dev-rot|dev-bo) [ $# -eq 1 ] && [ -n "$1" ] || { usage; return 2; }; rec="$1";;
+    *)              [ $# -eq 0 ] || { usage; return 2; };;
   esac
-  case "$stage" in dev-e0) cohort=dev-e0;; dev-rot) cohort=dev-rot;; *) cohort=confirm;; esac
+  case "$stage" in dev-e0) cohort=dev-e0;; dev-rot) cohort=dev-rot;; dev-bo) cohort=dev-bo;; *) cohort=confirm;; esac
   echo "[$stage] OUT=$OUT · LMP=$LMP · BACKEND=$BACKEND -n ${NP:-?} — 강성 축 (사전등록 mixer_highbo_stiffness_prereg_20260929 §8-2)"
   new_stage_env "$stage" || return $?
   python3 "$STAGEGATE" prepare "$stage" "$OUT" --policy "$POLICY_FILE" || { echo "⛔ 준비 (NP 프로브 폴더) 실패 — 발사 0"; return 1; }
@@ -642,6 +648,7 @@ cmd_stage() {  # cmd_stage <dev-e0|dev-rot|confirm-first> [E0 진단 PASS 기록
   echo "$stage 끝 — 제출 $k 개 (봉인 stage $stage · preflight $pre)"
   case "$stage" in
     dev-e0) echo "다음: E0 다섯 완주 뒤  python3 scripts/mixer_smoke_blind.py --e0-diag $OUT --record $OUT/dev_e0_diag.json  →  PASS 면  launch_highbo.sh dev-rot $OUT/dev_e0_diag.json";;
+    dev-bo) echo "다음: 두 런 완주 뒤 (2 바퀴)  python3 scripts/measure_mixing_index.py $OUT/LC_ref_r2_s32452843 $OUT/LHx10_ref_r2_s32452843 $OUT/LHx30_ref_r2_s32452843 --ref $OUT/E0_ref_s32452843 --r-container 0.013138 --axis x --cells <16|12|8> --x-cells <4|3|2> --n-min 20 --json …  (사전등록 §11 · 판정 아님 · 기술 수치)";;
     confirm-first) echo "다음: 첫 seed 6 런 bin 0 · E0 완주 뒤  mixer_smoke_blind.py … --contract --cert <폴더>/<런>.json  →  launch_highbo.sh confirm-rest <폴더>";;
   esac
 }
@@ -669,7 +676,7 @@ case "${1:-}" in
   first) shift; cmd_first "$@"; exit $?;;
   all)   shift; cmd_all "$@"; exit $?;;
   rest)  shift; cmd_rest "$@"; exit $?;;
-  dev-e0|dev-rot|confirm-first) cmd_stage "$@"; exit $?;;
+  dev-e0|dev-rot|dev-bo|confirm-first) cmd_stage "$@"; exit $?;;
   confirm-rest) shift; cmd_confirm_rest "$@"; exit $?;;
   *)     usage; exit 2;;
 esac

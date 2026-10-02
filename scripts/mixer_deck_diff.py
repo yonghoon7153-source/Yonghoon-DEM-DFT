@@ -29,10 +29,10 @@
      EB = E 와 B 를 **동시에**: LC (한 강성) → LH (다른 강성) 에서 B 다섯 쌍은 증가 · 나머지 쌍은 E 규칙.  B 는 그대로 같은 강성
           LC → LH 전용 (E 필드가 다르면 FAIL).  --expect-deck 를 주면 E · EB 는 새 덱이 재생성 덱과 **전 명령 토큰 동일**이어야 한다
           (필드 규칙의 물리 시간 허용 1e-3 보다 작은 step 변조까지 잡는다 — 셀프테스트 ㉜).
-  ⑤ (2026-09-30 · 강성 축 코드 선행조건 2 단계 piece 2) 강성 축 셀 이름 `<E0|LC|LH>_<soft|ref|ref2>[_dthalf][_r<N>]_s<seed>`
-     (DEV 증거 README §6) — parse_cell · cell_expected_deck (이름 → 생성 인자 → 바이트 동일 덱 · ㉟).
+  ⑤ (2026-09-30 · 강성 축 코드 선행조건 2 단계 piece 2) 강성 축 셀 이름 `<E0|LC|LH|LHx10|LHx30>_<soft|ref|ref2>[_dthalf][_r<N>]_s<seed>`
+     (DEV 증거 README §6 · LHx10 · LHx30 = 10-02 개발 탐색 dev-bo 팔 · §11) — parse_cell · cell_expected_deck (이름 → 생성 인자 → 바이트 동일 덱 · ㉟ · ㊸).
      --runs 는 --ref-arm · --arm 에 **꼬리표** (예 LC_soft_r2 → LC_ref_r2) 를 받아 E · EB · B 를 적용하고 폴더마다 덱 전체를 재생성 덱과
-     바이트 대조한다 (옛 생성기 팔 이름 LC · LH 는 그대로 A · B 전용).  --cohort dev-e0 · dev-rot · confirm = 등록 코호트 (COHORTS ·
+     바이트 대조한다 (옛 생성기 팔 이름 LC · LH 는 그대로 A · B 전용).  --cohort dev-e0 · dev-rot · dev-bo · confirm = 등록 코호트 (COHORTS ·
      cohort_pairs — 런처 launch_highbo.sh 의 새 단계가 읽는 단일 출처) 의 셀마다 재생성 바이트 동일 · deck_meta.json · 등록 쌍.
   ⚠ 이 도구는 덱만 본다 — 실행 바이너리 · 재개 이력 · 판독 규약은 사전등록의 발사 기록이 맡는다.
 
@@ -42,7 +42,7 @@ usage
   python3 scripts/mixer_deck_diff.py <LC_soft/in.mixer> <LC_ref/in.mixer> --allow E [--expect-deck <재생성 LC_ref 덱>]
   python3 scripts/mixer_deck_diff.py <LC_soft/in.mixer> <LH_ref/in.mixer> --allow EB
   python3 scripts/mixer_deck_diff.py --runs <runs> --ref-arm LC_soft_r8 --arm LC_ref_r8 --allow E --expect-seeds 15485863,86028121,104395301
-  python3 scripts/mixer_deck_diff.py --runs <runs> --cohort dev-e0 [--json out.json]           # dev-e0 · dev-rot · confirm
+  python3 scripts/mixer_deck_diff.py --runs <runs> --cohort dev-e0 [--json out.json]           # dev-e0 · dev-rot · dev-bo · confirm
   python3 scripts/mixer_deck_diff.py --selftest
 """
 import argparse
@@ -427,13 +427,19 @@ def expected_deck(arm, seed, n_total=GEN_ARGS['n_total'], cgf=GEN_ARGS['cgf'], r
 
 # ══ 강성 축 셀 이름 · 등록 코호트 (2026-09-30 · 코드 선행조건 2 단계 piece 1 · 2) ══════════════════════════════════════════
 #  이름 규약 (docs/data/mixer_highbo_dev_decks_20260930/README.md §6) — `<팔>_<수준>[_dthalf][_r<바퀴>]_s<seed>`
-#    팔 E0 · LC · LH / 수준 soft (×1) · ref (×14) · ref2 (×28) / `_dthalf` = --dt-factor 0.5 / `_r<N>` = --revolutions N
+#    팔 E0 · LC · LH (+ 10-02 dev-bo 팔 LHx10 · LHx30 = 생성기 팔 이름 그대로) / 수준 soft (×1) · ref (×20 · v2.6) · ref2 (×40) / `_dthalf` = --dt-factor 0.5 /
+#    `_r<N>` = --revolutions N
 #    (LC · LH 는 필수 · E0 는 금지 = 회전 0) / seed = 십진 (앞자리 0 없음).  이름 → 생성 인자는 build.sh 의 gen_cmd 와 같다:
 #    경화 (ref · ref2) 면 --stiffen-se F --hold-bo-pairwise · soft 는 강성 옵션 없음 (§3 "생성기 옵션 --stiffen-se 14 --hold-bo-pairwise").
 #  NP 프로브 폴더 = `npprobe<NP>_<셀 이름>` — 같은 덱 (사전등록 §8-2 ②: "NP 프로브 = E0_ref 첫 시드를 NP 5/10/20 으로 1 h 씩 (같은 덱 ·
 #    처리량만 · 확인 자료 전용 금지)").  parse_cell 은 프로브를 **거부**한다 (자료 셀이 아니다) — parse_run 만 받는다.
 STIFF_LEVELS = {'soft': 1.0, 'ref': 20.0, 'ref2': 40.0}           # 사전등록 §3 v2.6 (09-30 밤 · 1저자 비준) — E_ref = SE ×20 · E_ref2 = SE ×40 (옛 v2.5: ×14 · ×28 = DEV7 ×14 실측 뒤 개정)
-_TAG_PAT = r'(E0|LC|LH)_(soft|ref|ref2)(_dthalf)?(?:_r([1-9][0-9]*))?'
+#: ★ 셀 이름의 팔 (생성기 ARMS 의 이름 그대로) — 2026-10-02 개발 탐색 dev-bo 팔 둘을 더했다 (사전등록 §11 v2.8 · LH 의 AM–AM Bo_code ×10 · ×30).
+#:   ⚠ 한 벌이어야 한다: dem_scripts/mixer_20260921/run_all.sh · resume_all.sh 의 강성 축 셀 정규식이 같은 목록을 쓴다 (test_launcher.sh DB⑧ 가 대조) —
+#:   옛 판은 그 정규식이 E0 · LC · LH 만 알아 LHx10_* · LHx30_* 를 로컬로 띄우고 잇는 구멍이 있었다 (DB⑦ 재현).
+DEV_BO_ARMS = ('LHx10', 'LHx30')
+STIFF_ARMS = ('E0', 'LC', 'LH') + DEV_BO_ARMS
+_TAG_PAT = r'(' + '|'.join(sorted(STIFF_ARMS, key=len, reverse=True)) + r')_(soft|ref|ref2)(_dthalf)?(?:_r([1-9][0-9]*))?'
 _TAG_RE = re.compile(_TAG_PAT)
 _CELL_RE = re.compile(_TAG_PAT + r'_s([1-9][0-9]*)')
 _PROBE_RE = re.compile(r'npprobe([1-9][0-9]*)_(.+)')
@@ -445,7 +451,7 @@ def parse_tag(tag):
     """셀 꼬리표 (seed 앞까지) → dict(tag, arm, level, stiffen_se, hold_bo_pairwise, dt_factor, revolutions).  문법 밖이면 ValueError."""
     m_ = _TAG_RE.fullmatch(tag) if isinstance(tag, str) else None
     if not m_:
-        raise ValueError(f'강성 축 셀 꼬리표가 아니다: {tag!r} — `<E0|LC|LH>_<soft|ref|ref2>[_dthalf][_r<N>]`')
+        raise ValueError(f'강성 축 셀 꼬리표가 아니다: {tag!r} — `<{"|".join(STIFF_ARMS)}>_<soft|ref|ref2>[_dthalf][_r<N>]`')
     arm, level, dth, rev = m_.groups()
     if arm == 'E0' and rev is not None:
         raise ValueError(f'{tag}: E0 는 회전 0 이다 — `_r<N>` 을 붙이지 않는다')
@@ -460,7 +466,7 @@ def parse_cell(name):
     """셀 폴더 이름 → parse_tag + name · seed.  NP 프로브 · 옛 생성기 팔 이름 (LC_s…) · 문법 밖은 ValueError."""
     m_ = _CELL_RE.fullmatch(name) if isinstance(name, str) else None
     if not m_:
-        raise ValueError(f'강성 축 셀 이름이 아니다: {name!r} — `<E0|LC|LH>_<soft|ref|ref2>[_dthalf][_r<N>]_s<seed>`')
+        raise ValueError(f'강성 축 셀 이름이 아니다: {name!r} — `<{"|".join(STIFF_ARMS)}>_<soft|ref|ref2>[_dthalf][_r<N>]_s<seed>`')
     tag = name[:name.rindex('_s')]
     return dict(parse_tag(tag), name=name, seed=int(m_.group(5)))
 
@@ -486,6 +492,9 @@ def cell_expected_deck(name):
 #:   §2 확인 블록 · §8-2 ④: "첫 holdout 시드 블록 (6 런: LC/LH × soft/ref + E0 둘) 은 즉시 · 나머지 두 시드 블록 (12 런) 은 sbatch --hold"
 DEV_E0 = ('E0_ref_s32452843', 'E0_ref_s49979687', 'E0_ref_s67867967', 'E0_ref2_s32452843', 'E0_ref_dthalf_s32452843')
 DEV_ROT = ('LC_ref_r2_s32452843', 'LH_ref_r2_s32452843')
+#: ★ 개발 탐색 dev-bo (2026-10-02 · 사전등록 §11 v2.8 · 1저자 "ㄱㄱ") — DEV seed 1 의 2 바퀴 M 열람 뒤 정한 두 개발 팔 (같은 seed · ×20 · 2 바퀴 ·
+#:   같은 OUT).  비교 상대 = 이미 돈 DEV_ROT 의 LC_ref_r2 · S_R² 기준 = E0_ref_s32452843.  확인 블록 · 확인 seed 와 섞지 않는다 (cohort_guard).
+DEV_BO = tuple(f'{a_}_ref_r2_s32452843' for a_ in DEV_BO_ARMS)
 NP_PROBE = dict(base='E0_ref_s32452843', nps=(5, 10, 20), time='01:00:00')
 DEV_PROBES = tuple(f'npprobe{n_}_{NP_PROBE["base"]}' for n_ in NP_PROBE['nps'])
 CONFIRM_TAGS = ('LC_soft_r8', 'LH_soft_r8', 'LC_ref_r8', 'LH_ref_r8', 'E0_soft', 'E0_ref')
@@ -498,15 +507,19 @@ def confirm_block(seed):
 
 CONFIRM_FIRST = confirm_block(HOLDOUT_SEEDS[0])
 CONFIRM_REST = confirm_block(HOLDOUT_SEEDS[1]) + confirm_block(HOLDOUT_SEEDS[2])
-COHORTS = {'dev-e0': DEV_E0 + DEV_PROBES, 'dev-rot': DEV_ROT, 'confirm': CONFIRM_FIRST + CONFIRM_REST}
+COHORTS = {'dev-e0': DEV_E0 + DEV_PROBES, 'dev-rot': DEV_ROT, 'dev-bo': DEV_BO, 'confirm': CONFIRM_FIRST + CONFIRM_REST}
 
 
 def cohort_pairs(cohort):
-    """코호트 안의 등록 덱 계약 쌍 (허용목록, 기준, 새) — §3: 같은 E 의 LC↔LH = B · E 사이 (같은 팔) = E · soft LC → ref LH = EB (동시)."""
+    """코호트 안의 등록 덱 계약 쌍 (허용목록, 기준, 새) — §3: 같은 E 의 LC↔LH = B · E 사이 (같은 팔) = E · soft LC → ref LH = EB (동시).
+    dev-bo (10-02 · §11): 코호트 안 쌍 = LHx10 → LHx30 (B — AM–AM 셋 · AM–벽 둘만 증가 · 나머지 정확히 같다).  LC_ref_r2 · LH_ref_r2 대비 B 는
+    커밋 증거 (docs/data/mixer_highbo_dev_decks_20261002_bo/ deck_diff) — 그 둘은 dev-rot 코호트의 이미 돈 덱이라 여기서 다시 읽지 않는다."""
     if cohort == 'dev-e0':
         return [('E', 'E0_ref_s32452843', 'E0_ref2_s32452843'), ('E', 'E0_ref_s32452843', 'E0_ref_dthalf_s32452843')]
     if cohort == 'dev-rot':
         return [('B', 'LC_ref_r2_s32452843', 'LH_ref_r2_s32452843')]
+    if cohort == 'dev-bo':
+        return [('B', DEV_BO[0], DEV_BO[1])]
     if cohort == 'confirm':
         out = []
         for s_ in HOLDOUT_SEEDS:
@@ -520,9 +533,20 @@ def cohort_pairs(cohort):
 
 def cohort_guard():
     """등록 코호트의 자기 검사 — DEV 는 DEV seed 만 (holdout 금지 · soft 없음 · 확인 꼬리표 없음) · 확인은 holdout 만 · 정확히 3 × 6 ·
-    ref2/dthalf 없음 · 회전 8 바퀴.  하나라도 어긋나면 ValueError (런처가 발사 전에 부른다)."""
+    ref2/dthalf 없음 · 회전 8 바퀴.  하나라도 어긋나면 ValueError (런처가 발사 전에 부른다).
+    ★ 10-02 (dev-bo · §11): dev-bo 팔 (LHx10 · LHx30) 은 **dev-bo 코호트에만** · dev-bo 코호트는 그 팔만 (개발 탐색이 다른 단계 · 확인으로 새지 않게)."""
     why = []
-    dev = COHORTS['dev-e0'] + COHORTS['dev-rot']
+    dev = COHORTS['dev-e0'] + COHORTS['dev-rot'] + COHORTS['dev-bo']
+    for k_, names_ in COHORTS.items():
+        for n_ in names_:
+            try:
+                arm_ = parse_run(n_)['arm']
+            except ValueError:
+                continue                                        # 이름 문법 위반은 아래 코호트별 검사가 짚는다
+            if arm_ in DEV_BO_ARMS and k_ != 'dev-bo':
+                why.append(f'{k_} 코호트에 dev-bo 팔 셀 {n_} (dev-bo 팔은 dev-bo 코호트에만 — §11 개발 탐색 · 확인 팔 아님)')
+            if k_ == 'dev-bo' and arm_ not in DEV_BO_ARMS:
+                why.append(f'dev-bo 코호트에 dev-bo 팔이 아닌 셀 {n_} (dev-bo = {list(DEV_BO_ARMS)} 만)')
     for n_ in dev:
         c_ = parse_run(n_)
         if c_['seed'] in HOLDOUT_SEEDS:
@@ -1311,6 +1335,108 @@ def _selftest():
     chk('㊷ --cohort 에 모르는 이름 · --cohort 와 --ref-arm/--allow 혼용 → rc 2',
         _ok(lambda: _cli(['--runs', EVD, '--cohort', 'nope'])[0] == 2
             and _cli(['--runs', EVD, '--cohort', 'dev-e0', '--allow', 'E'])[0] == 2))
+
+    # ══ ㊸~㊼ 2026-10-02 — 개발 탐색 dev-bo (강성 축 사전등록 docs/reviews/mixer_highbo_stiffness_prereg_20260929.md §11 · v2.8)
+    #    팔 LHx10 · LHx30 (LH 의 AM–AM Bo_code ×10 · ×30 · 공동 개입 B) · 코호트 dev-bo.
+    #    ★ 반례를 먼저 옮겼다 — 옛 판: 셀 이름 문법이 E0 · LC · LH 만 받아 LHx10_ref_r2_s… 를 거부 · COHORTS 에 dev-bo 없음 ⇒ ㊸~㊼ 전부 FAIL.
+    BO_EVD = os.path.normpath(os.path.join(_HERE, '..', 'docs', 'data', 'mixer_highbo_dev_decks_20261002_bo'))
+    BO_CELLS = ('LHx10_ref_r2_s32452843', 'LHx30_ref_r2_s32452843')
+
+    def _t43():
+        return all(G['cell_expected_deck'](n_) == open(os.path.join(BO_EVD, 'decks', n_, 'in.mixer'), encoding='utf-8').read()
+                   for n_ in BO_CELLS)
+    chk('㊸ ★ cell_expected_deck(LHx10_ref_r2 · LHx30_ref_r2 · seed 32452843) = 커밋된 dev-bo 증거 덱 (바이트 동일 — build.sh 의 gen_cmd 와 같은 규칙)',
+        _ok(_t43))
+
+    def _t44():
+        pc = G['parse_cell']
+        good = {'LHx10_ref_r2_s32452843': ('LHx10', 'ref', 20.0, True, 1.0, 2, 32452843),
+                'LHx30_ref_r2_s32452843': ('LHx30', 'ref', 20.0, True, 1.0, 2, 32452843),
+                'LH_ref_r2_s32452843': ('LH', 'ref', 20.0, True, 1.0, 2, 32452843),
+                'LC_ref_r2_s32452843': ('LC', 'ref', 20.0, True, 1.0, 2, 32452843),
+                'E0_ref_s32452843': ('E0', 'ref', 20.0, True, 1.0, 0, 32452843)}
+        bad = ('LHx10_ref_s32452843', 'LHx20_ref_r2_s32452843', 'LHX10_ref_r2_s32452843', 'LHx_ref_r2_s32452843',
+               'LHx10ref_r2_s32452843', 'LH_x10_ref_r2_s32452843', 'LHx10_ref_r2_s032452843', 'LHx3_ref_r2_s32452843')
+
+        def rej(x_):
+            try:
+                pc(x_)
+            except ValueError:
+                return True
+            return False
+        return (all((lambda c_: (c_['arm'], c_['level'], c_['stiffen_se'], c_['hold_bo_pairwise'], c_['dt_factor'], c_['revolutions'],
+                                 c_['seed']) == v_)(pc(k_)) for k_, v_ in good.items())
+                and all(rej(x_) for x_ in bad) and tuple(G['STIFF_ARMS']) == ('E0', 'LC', 'LH', 'LHx10', 'LHx30')
+                and tuple(G['DEV_BO_ARMS']) == ('LHx10', 'LHx30'))
+    chk('㊹ 셀 이름 문법 확장 — 팔 LHx10 · LHx30 (회전 팔 · _r 필수) 을 받고 옛 팔 (E0 · LC · LH) 파싱은 그대로 · 모르는 배수 (LHx20 · LHx3) · '
+        '대문자 X · 구분자 어긋남 · seed 앞자리 0 거부 · 팔 목록 STIFF_ARMS = E0 · LC · LH · LHx10 · LHx30 (run_all · resume_all 정규식과 한 벌)',
+        _ok(_t44))
+
+    def _t45():
+        with _tf.TemporaryDirectory() as td_:
+            o_ = os.path.join(td_, 'bo')
+            for n_ in BO_CELLS:
+                shutil.copytree(os.path.join(BO_EVD, 'decks', n_), os.path.join(o_, n_))
+            r_ok = G['check_cohort'](o_, 'dev-bo')
+            c_ok = _cli(['--runs', o_, '--cohort', 'dev-bo'])
+            bad = {}
+            pa, pb = (os.path.join(o_, n_, 'in.mixer') for n_ in BO_CELLS)
+            ka, kb = open(pa, encoding='utf-8').read(), open(pb, encoding='utf-8').read()
+            open(pa, 'w', encoding='utf-8').write(kb)                                   # (a) LHx30 덱을 LHx10 폴더에
+            bad['swap'] = G['check_cohort'](o_, 'dev-bo')['verdict']
+            open(pa, 'w', encoding='utf-8').write(open(os.path.join(EVD, 'decks', 'LH_ref_r2_s32452843', 'in.mixer'), encoding='utf-8').read())
+            bad['lh_deck'] = G['check_cohort'](o_, 'dev-bo')['verdict']                # (b) LH_ref_r2 덱 (Bo 38.4) 을 LHx10 폴더에
+            open(pa, 'w', encoding='utf-8').write(ka)
+            mp_ = os.path.join(o_, BO_CELLS[1], 'deck_meta.json')                       # (c) 경화 셀인데 deck_meta 없음
+            km = open(mp_, encoding='utf-8').read()
+            os.remove(mp_)
+            bad['meta'] = G['check_cohort'](o_, 'dev-bo')['verdict']
+            open(mp_, 'w', encoding='utf-8').write(km)
+            shutil.rmtree(os.path.join(o_, BO_CELLS[1]))                                # (d) 셀 폴더 없음
+            bad['missing'] = G['check_cohort'](o_, 'dev-bo')['verdict']
+            c_bad = _cli(['--runs', o_, '--cohort', 'dev-bo'])
+            ok_ = (r_ok['verdict'] == 'PASS' and sorted(r_ok['dirs']) == sorted(BO_CELLS) and
+                   [(p_['allow'], p_['ref'], p_['new'], p_['verdict']) for p_ in r_ok['pairs']] == [('B',) + BO_CELLS + ('PASS',)]
+                   and c_ok[0] == 0 and all(v_ == 'FAIL' for v_ in bad.values()) and c_bad[0] == 1)
+            if not ok_:
+                print(f'        {r_ok["verdict"]} · {bad} · rc {c_ok[0]} / {c_bad[0]}')
+            return ok_
+    chk('㊺ ★ --cohort dev-bo (커밋 증거 덱 사본) → PASS (2 폴더 · B 쌍 하나 = LHx10 → LHx30 · 재생성 바이트 동일 · deck_meta) · 반례 → FAIL: '
+        '덱 바꿔치기 · LH_ref_r2 덱 · deck_meta 없음 · 셀 폴더 없음 (CLI rc 1)', _ok(_t45))
+
+    def _t46():
+        gd = G['cohort_guard']
+        gd()                                                     # 등록 코호트는 통과해야 한다
+        cases = [('dev-bo', BO_CELLS + ('LC_ref_r2_s32452843',), 'dev-bo'),             # dev-rot 셀을 dev-bo 에
+                 ('dev-bo', (BO_CELLS[0], 'LHx30_ref_r2_s15485863'), 'holdout'),         # holdout seed
+                 ('dev-bo', (BO_CELLS[0], 'LHx30_soft_r2_s32452843'), 'soft'),           # soft 수준
+                 ('dev-rot', G['DEV_ROT'] + (BO_CELLS[0],), 'dev-bo'),                   # dev-bo 팔을 dev-rot 에
+                 ('confirm', G['COHORTS']['confirm'][:-1] + ('LHx10_ref_r8_s15485863',), '확인')]
+        hit = []
+        for k_, v_, need in cases:
+            saved = G['COHORTS'][k_]
+            try:
+                G['COHORTS'][k_] = v_
+                try:
+                    gd()
+                    hit.append(False)
+                except ValueError as e_:
+                    hit.append(need in str(e_))
+                    if need not in str(e_):
+                        print(f'        ({k_}: {str(e_)[:120]})')
+            finally:
+                G['COHORTS'][k_] = saved
+        gd()
+        return all(hit) and len(hit) == len(cases)
+    chk('㊻ 코호트 가드 확장 — dev-bo 팔 (LHx10 · LHx30) 은 dev-bo 코호트에만 · dev-bo 코호트는 그 팔 · DEV seed · ref 만: dev-bo 에 LC_ref_r2 · '
+        'holdout seed · soft · dev-rot 에 LHx10 · 확인에 LHx10_ref_r8 → 거부 (ValueError · 문구가 원인을 짚는다)', _ok(_t46))
+    chk('㊼ 등록 코호트 = confirm · dev-bo · dev-e0 · dev-rot — 옛 셋은 그대로 (DEV_E0 + 프로브 · DEV_ROT · 확인 18 · 쌍) · dev-bo = LHx10_ref_r2 · '
+        'LHx30_ref_r2 (seed 32452843) 정확히 · 쌍 = B (LHx10 → LHx30)',
+        _ok(lambda: sorted(G['COHORTS']) == ['confirm', 'dev-bo', 'dev-e0', 'dev-rot']
+            and G['COHORTS']['dev-e0'] == G['DEV_E0'] + G['DEV_PROBES'] and G['COHORTS']['dev-rot'] == ('LC_ref_r2_s32452843', 'LH_ref_r2_s32452843')
+            and len(G['COHORTS']['confirm']) == 18 and G['COHORTS']['dev-bo'] == BO_CELLS == tuple(G['DEV_BO'])
+            and G['cohort_pairs']('dev-rot') == [('B', 'LC_ref_r2_s32452843', 'LH_ref_r2_s32452843')]
+            and G['cohort_pairs']('dev-bo') == [('B',) + BO_CELLS]))
     print(f'\nmixer_deck_diff selftest: {ok}/{ok + len(fail)} PASS' + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0
 
@@ -1327,7 +1453,7 @@ def main():
     ap.add_argument('--ref-arm', default='LC', help='기준 팔 — 생성기 팔 이름 (LC) 또는 강성 축 꼬리표 (LC_soft_r8)')
     ap.add_argument('--arm', default='LH', help='새 팔 — 생성기 팔 이름 (LH) 또는 강성 축 꼬리표 (LH_ref_r8)')
     ap.add_argument('--cohort', choices=sorted(COHORTS), default=None,
-                    help='(--runs 와 함께) 등록 코호트 dev-e0 · dev-rot · confirm 의 덱 계약 — 셀마다 재생성 바이트 동일 · deck_meta · '
+                    help='(--runs 와 함께) 등록 코호트 dev-e0 · dev-rot · dev-bo · confirm 의 덱 계약 — 셀마다 재생성 바이트 동일 · deck_meta · '
                          '등록 쌍 (B · E · EB).  런처 launch_highbo.sh 의 새 단계 관문')
     ap.add_argument('--expect-seeds', default=None,
                     help='(--runs) 있어야 할 시드 목록 "a,b,c" — 기본 = 생성기 CAMPAIGN_SEEDS.  하나라도 빠지면 FAIL (n/N 을 기계가 센다) · '

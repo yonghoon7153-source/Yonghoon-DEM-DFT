@@ -300,6 +300,15 @@ ARMS = {
     #    (AM_P–AM_P · AM_P–AM_S · AM_S–AM_S · AM_P–벽 · AM_S–벽 — 셀프테스트 ㊼b · `mixer_deck_diff.py` 가 실행 덱으로 강제).
     'LH': dict(desc='고-Bo 확장 · AM–AM Bo_code 38.4 (벽 CED 동반 = 공동 개입 B) — 내부 탐색값, 문헌 재현 아님',
                bond=1.0, layered=True, abs_base=BO_BASE, abs_mult=_am_pairs(38.4)),
+    #  ★ 개발 탐색 dev-bo (2026-10-02 · 강성 축 사전등록 `docs/reviews/mixer_highbo_stiffness_prereg_20260929.md` §11 v2.8 · 1저자 "ㄱㄱ") —
+    #    **LH 와 같은 규약** (abs_base 0.212 + AM 쌍 abs_mult) 에 AM–AM Bo_code 만 ×10 (384) · ×30 (1152).  ⇒ AM–벽 CED 도 같은 벽 규칙
+    #    (대각 ÷ WALL_CED_DIV) 으로 함께 오른다 = 공동 개입 B (AM–AM 만의 개입 아님 · 셀프테스트 BO②).  DEV seed 1 의 2 바퀴 M (LC_ref_r2 ↔
+    #    LH_ref_r2 · 10-02 열람) 을 **본 뒤** 정한 개발 탐색 수준 — 확인 팔 아님 · 캠페인 목록 (CAMPAIGN · CAMPAIGN_HIGHBO · REFERENCE) 에 넣지 않는다 (BO④).
+    #    정적 평형 겹침 δ/r (CGF 151.4): AM_P 0.214 · 0.445 % · AM_S 0.125 · 0.259 % — 천장 1 % 안 · 충돌 최대 겹침의 상한 아님 (BO⑤).
+    'LHx10': dict(desc='개발 탐색 dev-bo · AM–AM Bo_code 384 (LH ×10 · 벽 CED 동반 = 공동 개입 B) — 10-02 개발 M 열람 뒤 정함 · 확인 팔 아님',
+                  bond=1.0, layered=True, abs_base=BO_BASE, abs_mult=_am_pairs(384.0)),
+    'LHx30': dict(desc='개발 탐색 dev-bo · AM–AM Bo_code 1152 (LH ×30 · 벽 CED 동반 = 공동 개입 B) — 10-02 개발 M 열람 뒤 정함 · 확인 팔 아님',
+                  bond=1.0, layered=True, abs_base=BO_BASE, abs_mult=_am_pairs(1152.0)),
 }
 #: 캠페인 런 목록 — (팔, 시드).  시드는 **소수** (덱이 합성수를 거부한다).
 CAMPAIGN_SEEDS = (32452843, 49979687, 67867967)
@@ -1757,6 +1766,81 @@ def _selftest():
                 and len(hit) >= 1 and plan(100000, cgf=151.4, stiffen_se=14.0)['dt_by'] == 'SE')
     chk('ST⑭ ★ 주석 = 실측 — "dt 를 SE 가 정한다" 옛 주석 둘이 없고, 고친 주석의 숫자 (soft 캠페인 AM_S 0.7055 µs < SE 1.1719 µs · '
         'A안 전 (전 상 1e7 · SE 가 정함) 대비 step ×1.661) 를 독립 산술로 다시 낸 값과 인쇄 자릿수까지 같다 · ×14 는 SE 가 정한다', _ok(_st14))
+
+    #  ══ BO — 개발 탐색 dev-bo (2026-10-02 · 강성 축 사전등록 docs/reviews/mixer_highbo_stiffness_prereg_20260929.md §11 · v2.8) ══════════
+    #  ★ 반례를 먼저 옮겼다 — 옛 생성기에는 LHx10 · LHx30 팔이 없다 (KeyError → BO① ~ BO⑥ 전부 FAIL).
+    #    LH 와 **같은 규약** (abs_base 0.212 + AM 쌍 abs_mult) 에 AM–AM Bo_code 만 ×10 · ×30 — 공동 개입 B (AM–AM + AM–벽) 그대로 · 확인 팔 아님.
+    _BOX = {'LHx10': 10.0, 'LHx30': 30.0}
+
+    def _bo_t(arm, dd_, t):
+        i_ = TYPES.index(t)
+        nu_, mat_ = PHASE_MECH[t]
+        return bond_for_ced(ced_matrix(arm, dd_)[i_][i_], dd_[t] / 2.0, nu_, DENS[mat_], E=E_PHASE[t])
+
+    def _bo1():
+        lh = ARMS['LH']['abs_mult'][('AM_P', 'AM_P')]
+        return (lh == 38.4
+                and all(ARMS[a_]['abs_mult'] == _am_pairs(lh * k_) and ARMS[a_]['abs_base'] == BO_BASE and ARMS[a_]['bond'] == 1.0
+                        for a_, k_ in _BOX.items())
+                and all(abs(_bo_t(a_, plan(8000, cgf=c_)['d'], t_) / (lh * k_) - 1.0) < 1e-12
+                        for a_, k_ in _BOX.items() for c_ in (100.0, 151.4, 200.0) for t_ in ('AM_P', 'AM_S')))
+    chk('BO① ★ LHx10 · LHx30 = LH 의 AM–AM Bo_code 38.4 × 10 · × 30 = 384 · 1152 (abs_base · bond 같은 규약) — AM_P–AM_P · AM_S–AM_S Bo 가 '
+        'CGF 100 · 151.4 · 200 에서 안 밀린다 (상대 1e-12)', _ok(_bo1))
+
+    def _bo2():
+        dd_ = _pc['d']
+        MC, MH, M10, M30 = (ced_matrix(a_, dd_) for a_ in ('LC', 'LH', 'LHx10', 'LHx30'))
+        allowB = {('AM_P', 'AM_P'), ('AM_P', 'AM_S'), ('AM_S', 'AM_S'), ('AM_P', WALL), ('AM_S', WALL)}
+
+        def chg(A, B):
+            return {tuple(sorted((_NM[i], _NM[j]))) for i in range(len(_NM)) for j in range(len(_NM)) if A[i][j] != B[i][j]}
+
+        def up(A, B):
+            return all(B[_IX[a]][_IX[b]] > A[_IX[a]][_IX[b]] for a, b in allowB)
+        return chg(MH, M10) == chg(M10, M30) == chg(MC, M10) == chg(MC, M30) == allowB and up(MH, M10) and up(M10, M30) and up(MC, M10)
+    chk('BO② ★ 공동 개입 B 그대로 — LH → LHx10 → LHx30 (그리고 LC → LHx10 · LHx30) 에서 달라지는 CED = 허용 다섯 (AM–AM 셋 · AM–벽 둘) 이고 '
+        '다섯 다 증가 · SE 낀 쌍은 정확히 같다 (캠페인 CGF 151.4)', _ok(_bo2))
+
+    def _bo3():
+        p20 = plan(100000, cgf=151.4, stiffen_se=20.0)
+        lh = deck(p20, _rpmc, 2, seed=32452843, arm='LH', hold_bo_pairwise=True).split('\n')
+        mc0 = next(i for i, l in enumerate(lh) if l.startswith('fix mC '))
+        ced_rows = set(range(mc0, mc0 + len(_NM) + 1))
+        good = True
+        for a_ in _BOX:
+            x = deck(p20, _rpmc, 2, seed=32452843, arm=a_, hold_bo_pairwise=True).split('\n')
+            diff = [i for i, (u, v) in enumerate(zip(lh, x)) if u != v]
+            good &= (len(x) == len(lh) and bool(diff) and any(i in ced_rows for i in diff)
+                     and all(i in ced_rows or (lh[i].lstrip().startswith('#') and x[i].lstrip().startswith('#')) for i in diff))
+        return good
+    chk('BO③ ★ 경화 덱 (×20 · hold · 2 바퀴 · seed 32452843) — LHx10 · LHx30 덱 = LH 덱과 줄 수 같고 주석 밖 차이는 CED 행렬 줄뿐 '
+        '(timestep · run · 삽입 · 기구 · 시드 그대로 · dt 는 SE 가 정한다 ⇒ 비용 = LH_ref_r2)', _ok(_bo3))
+    chk('BO④ dev-bo 팔은 캠페인 · 고-Bo · 기준 목록 밖 (개발 탐색 전용 — 확인 팔 아님) · 층상 · 설명에 "dev-bo" · "확인 팔 아님" 표지',
+        _ok(lambda: all(all(x_ != a_ for x_, _ in CAMPAIGN + CAMPAIGN_HIGHBO) and all(x_ != a_ for x_, _, _ in REFERENCE)
+                        and ARMS[a_].get('layered') is True and 'dev-bo' in ARMS[a_]['desc'] and '확인 팔 아님' in ARMS[a_]['desc']
+                        for a_ in _BOX)))
+
+    def _bo5():
+        dd_ = _pc['d']
+        want = {'LH': (0.046, 0.027), 'LHx10': (0.214, 0.125), 'LHx30': (0.445, 0.259)}
+        got = {a_: tuple(round(overlap_for_ced(ced_matrix(a_, dd_)[TYPES.index(t_)][TYPES.index(t_)], dd_[t_] / 2.0, PHASE_MECH[t_][0],
+                                               E=E_PHASE[t_]) * 100, 3) for t_ in ('AM_P', 'AM_S')) for a_ in want}
+        if got != want:
+            print(f'        정적 겹침 % {got}')
+        return got == want and max(max(v) for v in got.values()) < OVL_CEILING * 100
+    chk('BO⑤ ★ 등록 문서 수치 = 실측 (사전등록 §11) — 정적 평형 겹침 δ/r (CGF 151.4 · 점착 지배 · 고립 접촉 근사): AM_P 0.046 · 0.214 · 0.445 % · '
+        'AM_S 0.027 · 0.125 · 0.259 % (LH · ×10 · ×30) · 천장 1 % 안 — 충돌 최대 겹침의 상한이 아니다', _ok(_bo5))
+
+    def _bo6():
+        good = True
+        for a_ in _BOX:
+            rr, Ms, Mn = _pair_ratios(a_, 20.0)
+            good &= (all(abs(v - 1.0) <= 1e-12 for v in rr.values())
+                     and all(Mn[_IX[x_]][_IX[y_]] == Ms[_IX[x_]][_IX[y_]]
+                             for x_, y_ in (('AM_P', 'AM_P'), ('AM_P', 'AM_S'), ('AM_S', 'AM_S'), ('AM_P', WALL), ('AM_S', WALL))))
+        return good
+    chk('BO⑥ SE ×20 경화 (--hold-bo-pairwise) 에서도 9 비영 항 F₀ 비 = 1 (상대 1e-12) · AM–AM · AM–벽 CED 는 soft 값 그대로 (E* 불변) '
+        '⇒ 덱의 AM–AM 점착 = 명목 Bo_code 정확히', _ok(_bo6))
     print(f'\nmake_mixer_deck selftest: {ok}/{ok+len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0
