@@ -1,0 +1,453 @@
+{
+ "slug": "truong2025_calendar-vs-cycle-aging-protocols-drt-assb",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-02",
+ "sources": [
+  "9831e7f5-1._Probing_solid-state_battery_aging_evaluating_calendar_vs._cycle_aging_protocols_via_time-resolved_electrochemical_impedance_spectroscopy.pdf",
+  "b25e2610-1._Sup2_Probing_solid-state_battery_aging_evaluating_calendar_vs._cycle_aging_protocols_via_time-resolved_electrochemical_impedance_spectroscopy.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 Example of cell potential proﬁles during accelerated aging protocols. Formation and reference performance test (RPT) steps are ﬁxed in all experiments with a variation of upper cut-oﬀpotential in aging periods (grey ﬁeld). Cross mark ( ) symbols represent points where EIS measurement was recorded. An EIS measurement was implemented every hour during potentiostatic hold and end of discharge of every two cycles during 1C cycling. For formation and RPT steps, EIS was measured at the end of discharge for every cycle.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    44.6,
+    558.8,
+    324.2
+   ],
+   "w": 2177,
+   "h": 1166,
+   "dpi": 300,
+   "src": "9831e7f5-1._Probing_solid-state_battery_aging_evaluating_calendar_vs._cycle_aging_protocols_via_time-resolved_electrochemical_impedance_spectroscopy.pdf",
+   "blank": 0.81,
+   "note": "봤다. 추출: 원 파일명 그대로(SI_TAG 본문 False · Sup2 True 확인) — 본문 fig_1…fig_7 · ESI fig_S1…fig_S14 · 표 0 · 누락 0 을 눈으로 확인. 위 Calendar aging: Formation 0.1C(셋) → 회색 'Potentiostatic hold 48 h'(≈43 → ≈104 h — CC 충전 · 48 h 유지 · CC 방전을 함께 칸에) → RPT 0.1C · 확대 52–54 h 3.9 V 수평선 위 EIS × 매 시간. 아래 Cycle aging: 회색 '1C cycling 48 h'(≈40.5 → ≈91 h) · 확대 52–53.8 h 2.0 ↔ 3.9 V 톱니(충전 시작 ≈3.4 V · 상단 3.9 → ≈3.2 V 도약) · EIS × 는 방전 끝 두 번에 한 번. 그림 자료 = 그림 2 의 3.9 V 두 셀(`[데이터]` 시각 · 전위 동일 — 캡션 컷오프 표기 0). 시간 축에 30 분 휴지 · EIS 없음(digest D8). 크롭 온전 · 캡션 필드: 'Cross mark ( ) symbols' 의 십자는 PDF 안 45×45 인라인 이미지라 텍스트 층 빈칸."
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 Potential versus time proﬁle of accelerated (a) calendar aging and (b) cycle aging cells at diﬀerent cut-oﬀs. Data from all investigated cut- oﬀs can be found in Fig. S1.†",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    44.6,
+    558.8,
+    393.6
+   ],
+   "w": 2177,
+   "h": 1455,
+   "dpi": 300,
+   "src": "9831e7f5-1._Probing_solid-state_battery_aging_evaluating_calendar_vs._cycle_aging_protocols_via_time-resolved_electrochemical_impedance_spectroscopy.pdf",
+   "blank": 0.856,
+   "note": "봤다. (a) calendar 4.1 · 3.9 · 3.7 V · 유지 48 h(`[데이터]` 각 48.00 h) · 4.1 V 유지 뒤 방전 첫머리 ≈2.86 → ≈3.01 V 굽음('kink') · 사후 RPT 짧아짐. (b) cycle 1C 띠 ≈40.4–91.2 h · 사후 RPT 는 형성과 비슷. ⚠ (a) 4.1 V 판 RPT 세 사이클 = 자료상 3.9 V 셀 RPT 의 시간 이동 복사(9,794 표본 · Δt 0.8732 h — digest D1) · 3.7 V calendar ≈114 h 홈 = 자료 0.48 h 공백(D18). 크롭 온전 · 캡션 필드 'cut- oﬀs'(줄 끝 하이픈 잔재)."
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 Data measured in the last formation cycles (before aging) and last RPT cycles (aging). (a and b) Potential versus capacity proﬁles, (c and d) corresponding diﬀerential capacity plots, and (e and f) comparison of voltage gap and capacity loss of accelerated calendar and cycle aging cells, respectively. Data from all investigated cut-oﬀs can be found in Fig. S2.†",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    44.6,
+    558.8,
+    548.4
+   ],
+   "w": 2177,
+   "h": 2100,
+   "dpi": 300,
+   "src": "9831e7f5-1._Probing_solid-state_battery_aging_evaluating_calendar_vs._cycle_aging_protocols_via_time-resolved_electrochemical_impedance_spectroscopy.pdf",
+   "blank": 0.952,
+   "note": "봤다. (a) calendar V–Q: before 충전 끝 ≈131 · 3.7 V ≈114 · 3.9 V ≈88 · 4.1 V ≈74 mAh g⁻¹(`[데이터]` 130.75 · 113.63 · 87.99 · 73.80) · 방전이 0 근처/음수에서 끝(CE > 100 %). (b) cycle ≈130 · 128 · 117 · 118. (c) calendar dQ/dV 충전 봉우리 ≈377 → 305 → 215 → 184 · 방전 ≈−298 → −266 → −194 → −142(간격 ↑). (d) cycle 소폭 · 3.08 V 첫머리 인공물(4.1 V 767 `[데이터]`). (e) ΔV 0.16 · 0.21 · 0.28 · 0.33 · 0.40 · 0.41 V · Q_loss ≈13 · 23 · 33 · 35 · 44 %. (f) ΔV 0.16 · 0.19 · 0.22 · 0.23 · 0.17 · 0.22 · Q_loss ≈1.4 · 5.6 · 9.8 · 6.5 · 9.3 %. ⚠ 'Pristine' 한 점(cycle before 곡선 `[재현]` 0.177 V — D6) · 'Before aging' 곡선은 두 판에 서로 다른 곡선 하나씩. 크롭 · 캡션 필드 온전."
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 (a) Typical Nyquist plot with DRT ﬁt and (b) respective DRT analysis of the impedance data. The dashed lines in the DRT mark the high- and low-frequency boundaries of the measured range in EIS.",
+   "rotated_deg": 0,
+   "bbox": [
+    297.3,
+    398.3,
+    558.8,
+    696.7
+   ],
+   "w": 1091,
+   "h": 1244,
+   "dpi": 300,
+   "src": "9831e7f5-1._Probing_solid-state_battery_aging_evaluating_calendar_vs._cycle_aging_protocols_via_time-resolved_electrochemical_impedance_spectroscopy.pdf",
+   "blank": 0.94,
+   "note": "봤다. (a) Nyquist Re 0–800 Ω · 자료 ≈25 → ≈720 Ω · 원호 꼭대기 ≈125 Ω · 'Fit' 빨강. (b) DRT γ(Ω): P_SE ≈2×10⁻⁸ s(≈17 Ω) · 점선 ≈2.3×10⁻⁸ · ≈3.2 s(측정 창 경계 — `[재현]` 2.27×10⁻⁸ · 3.18 s) · P_C1 ≈10⁻² s(≈92) · P_C2 어깨 ≈4×10⁻² · P_A ≈0.4 s(≈63) · P_D ≈10 s(≈118 — 창 밖). `[데이터]` 그림 6 'before aging' 과 같은 파일 내용 · 국소 극대 1.38×10⁻⁸ · 7.9×10⁻⁷(이름 없음 4.4 Ω) · 9.1×10⁻³ · 0.74 · 10.5 s — P_C2 는 극대 아님(D13) · τ > 3.18 s 몫 26 %. 어느 셀인지 캡션 0. 크롭 온전(오른쪽 단만) · 캡션 필드 온전."
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 DRT evolution and corresponding 2D DRT surfaces (a) during potentiostatic hold and (b) at end of discharge of cycles in high C-rate regime. In 2D DRT, the maximum value displayed on each color bar represents approximately the highest DRT intensity and the dashed lines indicate the relative position of PC peak. Data from all investigated cut-oﬀs with Nyquist and Bode plots can be found in Fig. S6–S9.†",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    44.6,
+    558.8,
+    497.6
+   ],
+   "w": 2177,
+   "h": 1889,
+   "dpi": 300,
+   "src": "9831e7f5-1._Probing_solid-state_battery_aging_evaluating_calendar_vs._cycle_aging_protocols_via_time-resolved_electrochemical_impedance_spectroscopy.pdf",
+   "blank": 0.748,
+   "note": "봤다. (a) calendar 3.7 V γ 0–700 Ω · 색 막대 543 · 흰 점선 ≈10⁻³ → 검은 점선 ≈5×10⁻³ s 'P_C shift' · P_D 도 성장 / 3.9 V γ kΩ(≈28) · 지배 봉우리 ≈0.1–0.2 s · 삽도 P_SE(단위 표기 0) / 4.1 V γ kΩ(≈350) · 날카로운 봉우리 ≈0.3–0.5 s. (b) cycle 3.7 V(1–78) P_C1 34 → 19 Ω ↓ · P_A ≈0.05 → 0.3 s · 6 → 65 Ω ↑ / 3.9 V(1–76) · 4.1 V(1–74) P_C1 최대(73 · 135) 감소 · P_A 초기 성장 뒤 평탄. `[데이터]` 색 막대 최댓값 여섯 일치(542.8 Ω · 27.88 · 347.1 kΩ · 64.5 · 73.7 · 134.6 Ω) · 3.9 · 4.1 V 48 h 지배 봉우리 τ 0.19 · 0.54 s = P_A 창 안(D14) · `[재현]` C_eff 1.6–2.5 µF 평탄. 크롭 온전 · 캡션 필드 온전."
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Fig. 6 Data measured at the last formation cycles (before aging) and last RPT cycles (aging). (a and b) Nyquist plots and (c and d) DRT of calendar and cycle aging cells, respectively. Data from all investigated cut-oﬀs can be found in Fig. S10.†",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    44.6,
+    558.8,
+    367.7
+   ],
+   "w": 2177,
+   "h": 1348,
+   "dpi": 300,
+   "src": "9831e7f5-1._Probing_solid-state_battery_aging_evaluating_calendar_vs._cycle_aging_protocols_via_time-resolved_electrochemical_impedance_spectroscopy.pdf",
+   "blank": 0.904,
+   "note": "봤다. (a) calendar Nyquist(kΩ) 곡선 넷이 세로로 쌓임(≈0 · 0.18 · 0.35 · 0.52 kΩ — 캡션 표기 0, D9) · 끝 Re ≈0.72 · 0.85 · 1.15 · 1.52 kΩ. (b) cycle ≈0.72 · 0.78 · 0.99 · 0.95 kΩ. (c) calendar DRT P_C 93 → 137 · 175 · 313 Ω · 4.1 V P_A 어깨 ≈110 · P_D ≈120–130. (d) cycle P_C 93 → 100 · 121 · 125 · P_A 63 → 100 · 155 · 140 · P_D 118 → 143 · 169 · 145 Ω. ⚠ 'Before aging' 은 네 판 모두 같은 스펙트럼 하나(`[데이터]` = 그림 4 · Re(50 mHz) 719.5 Ω — D3). 크롭 · 캡션 필드 온전."
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 8,
+   "file": "fig_7.png",
+   "caption": "Fig. 7 (a) Galvanostatic charge–discharge curves and (b) corresponding diﬀerential capacity plots during accelerated cycle aging (1C cycling) periods. Data from accelerated calendar aging periods and all investigated cut-oﬀs can be found in Fig. S12–S14.†",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    44.6,
+    558.8,
+    368.1
+   ],
+   "w": 2177,
+   "h": 1349,
+   "dpi": 300,
+   "src": "9831e7f5-1._Probing_solid-state_battery_aging_evaluating_calendar_vs._cycle_aging_protocols_via_time-resolved_electrochemical_impedance_spectroscopy.pdf",
+   "blank": 0.917,
+   "note": "봤다. (a) 1C 충 · 방전 — 3.7 V(1–78) 방전 ≈47 → ≈63 · 3.9 V(1–76) ≈47 → ≈68 · 4.1 V(1–74) 첫 충전 ≈87 · 방전 ≈62 → ≈72 mAh g⁻¹(`[데이터]` 46.99 → 62.77 · 47.30 → 67.71 · 61.86 → 71.71) · 충전 시작 ≈3.3–3.45 V. (b) dQ/dV 충전 첫머리 날카로움(시작 인공물) · 방전 봉우리 ≈−100–130 · 사이클 따라 커짐. 사이클 번호: 그림 2 자료는 80 · 80 · 74 사이클(D7). 크롭 · 캡션 필드 온전."
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 4,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Voltage versus time profile of accelerated (a) calendar aging and (b) cycle aging cells at different cut-offs.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.6,
+    171.9,
+    542.2,
+    544.1
+   ],
+   "w": 2049,
+   "h": 1552,
+   "dpi": 300,
+   "src": "b25e2610-1._Sup2_Probing_solid-state_battery_aging_evaluating_calendar_vs._cycle_aging_protocols_via_time-resolved_electrochemical_impedance_spectroscopy.pdf",
+   "blank": 0.887,
+   "note": "봤다. 다섯 컷오프 × 두 프로토콜 전위–시간 — 4.0 V calendar 도 유지 뒤 굽음(≈2.95 V) · 3.8 · 4.0 V 의 유일한 시계열(자료 ZIP 에 없음). ⚠ 자동 크롭 과대: 위쪽에 ESI 본문 한 줄 'the main text.' 포함(그림 손실 0). 캡션 필드 온전."
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 5,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Data measured in the last formation cycles (before aging) and last RPT cycles (aging). (a–b) Voltage versus capacity profiles and (c–d) corresponding differential capacity plots of accelerated calendar and cycle aging cells, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    59.4,
+    50.7,
+    538.6,
+    403.6
+   ],
+   "w": 1998,
+   "h": 1471,
+   "dpi": 300,
+   "src": "b25e2610-1._Sup2_Probing_solid-state_battery_aging_evaluating_calendar_vs._cycle_aging_protocols_via_time-resolved_electrochemical_impedance_spectroscopy.pdf",
+   "blank": 0.931,
+   "note": "봤다. 다섯 컷오프 마지막 형성 ↔ RPT — calendar 충전 끝 ≈131(before) · 113 · 101 · 88.5 · 85 · 74 · cycle ≈130 · 128 · 122 · 117.5 · 120 · 117.5 mAh g⁻¹ `[도표]` · dQ/dV 점선 ≈3.16(충) · 3.10 V(방) · 축 이름 'V vs. In/LiIn'(본문 In/InLi — D11) · 색 배정이 본문 그림 3 과 다름. 크롭 · 캡션 필드 온전."
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 5,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Data recorded during formation step: (a) Representative potential versus capacity profiles and (b) Nyquist plots of the cell before formation and at the end of each discharge cycle.",
+   "rotated_deg": 0,
+   "bbox": [
+    52.2,
+    435.8,
+    545.9,
+    678.4
+   ],
+   "w": 2058,
+   "h": 1012,
+   "dpi": 300,
+   "src": "b25e2610-1._Sup2_Probing_solid-state_battery_aging_evaluating_calendar_vs._cycle_aging_protocols_via_time-resolved_electrochemical_impedance_spectroscopy.pdf",
+   "blank": 0.937,
+   "note": "봤다. (a) 형성: 첫 충전 ≈197 · 첫 방전 ≈138 mAh g⁻¹(첫 CE ≈70 %) · 둘째 ≈136/134 · 셋째 ≈131/131 `[도표]`. (b) 형성 전 Nyquist −Im ≈6 kΩ(차단형) → 형성 뒤 ≈0.7 kΩ 원호(삽도 0–700 Ω). ⚠ 자동 크롭 과대: 위쪽에 그림 S2 캡션 끝 줄 'accelerated calendar and cycle aging cells, respectively.' 포함(그림 손실 0). 캡션 필드 온전."
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 6,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Nyquist plots of the cells used for aging experiments after formation step.",
+   "rotated_deg": 0,
+   "bbox": [
+    90.9,
+    50.7,
+    507.2,
+    173.6
+   ],
+   "w": 1736,
+   "h": 513,
+   "dpi": 300,
+   "src": "b25e2610-1._Sup2_Probing_solid-state_battery_aging_evaluating_calendar_vs._cycle_aging_protocols_via_time-resolved_electrochemical_impedance_spectroscopy.pdf",
+   "blank": 0.872,
+   "note": "봤다. 형성 뒤 신품 Nyquist — (a) calendar · (b) cycle 각 다섯 · 세로 쌓기(≈110 Ω — 캡션 표기 0, D9). 화소 판독(눈금 208 · 405.5 · 603.5 px = 0 · 500 · 1000 Ω · 표지 지름 20 px · 오른쪽 끝 표지 중심) 저주파 끝 Re: calendar 3.7 ≈709 · 3.8 ≈694 · 3.9 ≈828 · 4.0 ≈823 · 4.1 ≈793 · cycle 3.7 ≈816 · 3.8 ≈913 · 3.9 ≈1019 · 4.0 ≈847 · 4.1 ≈958 Ω(±≈10 — `[도표·화소]`) — 셀 간 산포 694–1019 Ω · 그림 6 공통 기준(719.5)과 대조(digest D3). 크롭 · 캡션 필드 온전."
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 6,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. Voltage versus capacity profiles of RPT cycles for (a) calendar aging and (b) cycle aging cells.",
+   "rotated_deg": 0,
+   "bbox": [
+    53.1,
+    238.1,
+    543.3,
+    508.3
+   ],
+   "w": 2043,
+   "h": 1127,
+   "dpi": 300,
+   "src": "b25e2610-1._Sup2_Probing_solid-state_battery_aging_evaluating_calendar_vs._cycle_aging_protocols_via_time-resolved_electrochemical_impedance_spectroscopy.pdf",
+   "blank": 0.914,
+   "note": "봤다. RPT 세 사이클 — calendar 1 → 3 번째 용량 상승(3.9 V ≈78 → 84 → 88 · 4.1 V ≈66 → 71 → 74 `[도표]`) · cycle 1 번째 점선이 ≈−28 mAh g⁻¹ 에서 시작(1C 끝 미반환 Li 를 0.1C 로 더 방전한 몫 `[해석]` — `[데이터]` RPT1 방전 − 충전 +29.3 · +27.6 · +31.8). 크롭 · 캡션 필드 온전."
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 7,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. DRT evolution and corresponding 2D DRT surfaces (a) during potentiostatic hold and (b) at end of discharge of cycles in high C-rate regime. In 2D DRT, the maximum value displayed on each color bar represents approximately the highest DRT intensity.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.7,
+    50.7,
+    544.6,
+    430.1
+   ],
+   "w": 2059,
+   "h": 1582,
+   "dpi": 300,
+   "src": "b25e2610-1._Sup2_Probing_solid-state_battery_aging_evaluating_calendar_vs._cycle_aging_protocols_via_time-resolved_electrochemical_impedance_spectroscopy.pdf",
+   "blank": 0.691,
+   "note": "봤다. 다섯 컷오프 시간분해 DRT · 2D — calendar 색 막대 543 Ω · 3 kΩ · 28 · 88 · 347 kΩ · cycle 65 · 56 · 74 · 83 · 135 Ω · 사이클 78 · 76 · 76 · 68 · 74 · 3.8 V calendar 는 P_C · P_D 함께 성장. 크롭 · 캡션 필드 온전."
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 7,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. Nyquist plots of (a) calendar aging and (b) cycle aging periods. Data are stacked at arbitrary constant offsets.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.7,
+    512.6,
+    544.6,
+    725.4
+   ],
+   "w": 2059,
+   "h": 888,
+   "dpi": 300,
+   "src": "b25e2610-1._Sup2_Probing_solid-state_battery_aging_evaluating_calendar_vs._cycle_aging_protocols_via_time-resolved_electrochemical_impedance_spectroscopy.pdf",
+   "blank": 0.899,
+   "note": "봤다. Nyquist 시간분해(쌓기 — 캡션 표기 있음) · calendar 4.1 V 48 h 끝 Re ≈225 kΩ · cycle 원호 ≈300–430 Ω(1C 방전 끝 — RPT 방전 끝 0.7–1.0 kΩ 보다 작다 · 다른 상태). 크롭 · 캡션 필드 온전."
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 8,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. Bode magnitude plots of (a) calendar aging and (b) cycle aging periods.",
+   "rotated_deg": 0,
+   "bbox": [
+    94.3,
+    50.7,
+    503.8,
+    572.9
+   ],
+   "w": 1708,
+   "h": 2177,
+   "dpi": 300,
+   "src": "b25e2610-1._Sup2_Probing_solid-state_battery_aging_evaluating_calendar_vs._cycle_aging_protocols_via_time-resolved_electrochemical_impedance_spectroscopy.pdf",
+   "blank": 0.908,
+   "note": "봤다. Bode |Z| — calendar 50 mHz 끝(48 h) ≈2.45 · 9.7 · 68 · 118 · 230 kΩ(3.7 → 4.1 V) · cycle ≈220–430 Ω. 크롭 · 캡션 필드 온전."
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 9,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. Bode phase plots during (a) calendar aging and (b) cycle aging periods.",
+   "rotated_deg": 0,
+   "bbox": [
+    94.3,
+    50.7,
+    503.8,
+    572.9
+   ],
+   "w": 1708,
+   "h": 2176,
+   "dpi": 300,
+   "src": "b25e2610-1._Sup2_Probing_solid-state_battery_aging_evaluating_calendar_vs._cycle_aging_protocols_via_time-resolved_electrochemical_impedance_spectroscopy.pdf",
+   "blank": 0.908,
+   "note": "봤다. Bode 위상 — calendar 최대 −θ ≈40 → 76° · cycle ≈15–30°. ⚠ 4.0 V cycle 색 막대 70 ↔ S6 · S8 · S13 의 68(D7). 크롭 · 캡션 필드 온전."
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 10,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. Data measured at the last formation cycles (before aging) and last RPT cycles (aging). (a-b) Nyquist plots and (c-d) DRT of calendar and cycle aging cells, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    56.2,
+    50.7,
+    541.9,
+    388.6
+   ],
+   "w": 2024,
+   "h": 1409,
+   "dpi": 300,
+   "src": "b25e2610-1._Sup2_Probing_solid-state_battery_aging_evaluating_calendar_vs._cycle_aging_protocols_via_time-resolved_electrochemical_impedance_spectroscopy.pdf",
+   "blank": 0.922,
+   "note": "봤다. 다섯 컷오프의 그림 6 판 — calendar DRT P_C 4.0 V ≈333 > 4.1 V ≈313 · 3.8 V ≈189 > 3.9 V ≈175 Ω `[도표]`(비단조 — 본문 'increases gradually' 는 세 컷오프에서만, D19) · Nyquist 끝 Re 3.8 ≈1.15 · 3.9 ≈1.13 · 4.0 ≈1.62 · 4.1 ≈1.53 kΩ · cycle 4.0 V 가 before 에 가장 가깝다. 크롭 · 캡션 필드 온전."
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 10,
+   "file": "fig_S11.png",
+   "caption": "Figure S11. (a) Capacity and (b) corresponding current versus time curves in potentiostatic hold periods.",
+   "rotated_deg": 0,
+   "bbox": [
+    63.6,
+    463.0,
+    534.7,
+    649.0
+   ],
+   "w": 1964,
+   "h": 776,
+   "dpi": 300,
+   "src": "b25e2610-1._Sup2_Probing_solid-state_battery_aging_evaluating_calendar_vs._cycle_aging_protocols_via_time-resolved_electrochemical_impedance_spectroscopy.pdf",
+   "blank": 0.952,
+   "note": "봤다. (a) Q_hold 48 h ≈28.5–29.5 mAh g⁻¹ — 컷오프와 거의 무관 · (b) I_hold ≈20 → ≈0.12–0.15 mA g⁻¹(4.1 V 최고) `[도표]`. 크롭 · 캡션 필드 온전."
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 11,
+   "file": "fig_S12.png",
+   "caption": "Figure S12. Galvanostatic charge-discharge curves of accelerated calendar aging cycles.",
+   "rotated_deg": 0,
+   "bbox": [
+    78.9,
+    50.7,
+    519.2,
+    341.1
+   ],
+   "w": 1836,
+   "h": 1211,
+   "dpi": 300,
+   "src": "b25e2610-1._Sup2_Probing_solid-state_battery_aging_evaluating_calendar_vs._cycle_aging_protocols_via_time-resolved_electrochemical_impedance_spectroscopy.pdf",
+   "blank": 0.938,
+   "note": "봤다. 유지 사이클 — 충전 끝 ≈129 · 135 · 136 · 142 · 139 → 유지 끝 ≈158 · 164 · 166 · 171 · 169 · 방전 ≈144 · 147 · 135 · 141 · 131 mAh g⁻¹ `[도표]` · 4.0 · 4.1 V 방전 첫머리 굽음. ⚠ 3.7 · 4.1 V 는 그림 2 자료의 유지 뒤 방전(138.5 · 144.5 @20 mA g⁻¹)과 다르다(D17) · 3.9 V ≈135 ✅. 크롭 · 캡션 필드 온전."
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 11,
+   "file": "fig_S13.png",
+   "caption": "Figure S13. (a) Galvanostatic charge-discharge curves and (b) corresponding dQ/dV plots of cycle aging periods.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.7,
+    379.9,
+    544.6,
+    650.7
+   ],
+   "w": 2059,
+   "h": 1130,
+   "dpi": 300,
+   "src": "b25e2610-1._Sup2_Probing_solid-state_battery_aging_evaluating_calendar_vs._cycle_aging_protocols_via_time-resolved_electrochemical_impedance_spectroscopy.pdf",
+   "blank": 0.883,
+   "note": "봤다. 다섯 컷오프 1C 곡선 · dQ/dV — 4.0 V 첫 충전 ≈100 · 방전 ≈68 → ≈80 · 4.1 V 첫 충전 ≈87 mAh g⁻¹ · 사이클 78 · 76 · 76 · 68 · 74. 크롭 · 캡션 필드 온전."
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 12,
+   "file": "fig_S14.png",
+   "caption": "Figure S14. (a) Illustration of a typical cell voltage profile during calendar aging; (b) data calculated /0/) capacity contribution of accelerated calendar aging cycle at different cut-off potentials, with 𝑄.\" /0/) and total irreversible (𝑄1.. from Figure S12: total reversible (𝑄.\" /0/ = 𝑄456.7\" + 𝑄50&2 −𝑄.\" /0/ = 𝑄213456.7\" 𝑎𝑛𝑑 𝑄1.. /0/. References",
+   "rotated_deg": 0,
+   "bbox": [
+    50.6,
+    50.7,
+    541.4,
+    208.2
+   ],
+   "w": 2045,
+   "h": 657,
+   "dpi": 300,
+   "src": "b25e2610-1._Sup2_Probing_solid-state_battery_aging_evaluating_calendar_vs._cycle_aging_protocols_via_time-resolved_electrochemical_impedance_spectroscopy.pdf",
+   "blank": 0.869,
+   "note": "봤다. (a) 유지 사이클 모식(Q_charge · Q_hold · Q_discharge) · (b) 그림 안 인쇄 Q_re/Q_irr = 91/9 · 90/10 · 81/19 · 82/18 · 78/22 %(3.7–4.1 V) — `[재현]` S12 판독 91.1 · 89.6 · 81.3 · 82.5 · 77.5 % ✅. 크롭 온전. ⚠ 캡션 필드 깨짐: 수식 글리프(𝑄 · 위 · 아래 첨자)가 뒤섞여 문장 순서가 깨지고 끝에 ESI 참고문헌 머리 'References' 가 붙음 — 원 캡션은 'Figure S14. (a) Illustration of a typical cell voltage profile during calendar aging; (b) data calculated from Figure S12: total reversible (Q_re^tot) and total irreversible (Q_irr^tot) capacity contribution of accelerated calendar aging cycle at different cut-off potentials, with Q_re^tot = Q_discharge and Q_irr^tot = Q_charge + Q_hold − Q_re^tot.'(그림 확인)"
+  }
+ ]
+}

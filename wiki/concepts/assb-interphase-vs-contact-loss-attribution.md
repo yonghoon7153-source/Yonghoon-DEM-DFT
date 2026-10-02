@@ -2,10 +2,10 @@
 title: "ASSB 양극의 계면층(CEI) 대 접촉 손실 — 두 비-LAM 기구를 무엇으로 가르고, 문헌은 어떻게 배정해 왔나"
 description: "In sulfide ASSB composite cathodes two non-LAM mechanisms, oxidative interphase growth and chemo-mechanical contact loss, raise the cathode interface resistance and cut capacity at the same time (first charge); their source paper shows each one's existence with a dedicated channel (XPS, SEM) and assigns shares by time window, while its own SI resistance and capacitance traces let the resistance increase be classified as chemical, not area-type"
 created: 2026-09-23
-updated: 2026-09-29
+updated: 2026-10-02
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/minnmann2022_designing-cathodes-cam-ssb-perspective.md, raw/papers/kim2023_argyrodite-coated-ncm-normal-pressure-assb.md, raw/papers/oruemendizabal2023_multiconfiguration-geis-drt-nmc622-lpscl-li-interfaces.md, raw/papers/koerver2017_redox-active-interphase-cutoff-voltage-ncm811-lps.md, raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/ren2023_oxide-ssb-composite-cathode-architecture-perspective.md]
+sources: [raw/papers/truong2025_calendar-vs-cycle-aging-protocols-drt-assb.md, raw/papers/minnmann2022_designing-cathodes-cam-ssb-perspective.md, raw/papers/kim2023_argyrodite-coated-ncm-normal-pressure-assb.md, raw/papers/oruemendizabal2023_multiconfiguration-geis-drt-nmc622-lpscl-li-interfaces.md, raw/papers/koerver2017_redox-active-interphase-cutoff-voltage-ncm811-lps.md, raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/ren2023_oxide-ssb-composite-cathode-architecture-perspective.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -76,6 +76,7 @@ evidenceScope: multi-source-primary
 | **64호 Koerver 2017 *JMCA*** (23호와 같은 셀 설계 · 상한 컷오프 넷 × 25 사이클 · "redox-active interphase" 원전) | 산화 계면층 하나로 SOC 의존 저항 · 감쇠 · 둘째 방전 평탄을 설명; 분해의 **주 위치는 집전체 쪽**(`[인쇄]` "predominantly in close proximity to the current collector") · CAM 쪽 "minor but steady"; 첫 사이클은 23호의 "combination" 을 "explain" 으로 받는다; 접촉 손실 · 면적 낱말 0(자기 인용 둘뿐) | ✅ `R`·`C` **사이클 축**(Fig. 4 + S7 — 원전은 `C` 해석 0) — 우리가 갈라 **노화분 저항형**(4.6 · 5.0 V) · **가역 SOC 분 4.6 V 면적형 쪽 · 5.0 V 저항형** · 4.0 V "양극 호" 는 `C` ×250–700 로 호 정체 불명. ⚠ n = 2 "representative" · 환산식 미인쇄 · 위치 미분리 |
 | **84호 Orue Mendizabal 2023 *ACS Appl. Energy Mater.*** (25호 ref 23 · NMC622 \| LPSCl \| Li 금속 · 네 구성 · 2전극 GEIS → 등가회로 + DRT · 다른 연구실(CIC energiGUNE + AIT)) | 완전지 R3 증가를 `[인쇄]` "interaction products … and morphological changes" — 계면층 · 형태 변화를 **한 호에 병치**(가르지 않음) · 노화는 대칭 셀 빼기로 "exclusively" 양극 · 첫 사이클 CE 64 % 는 인용 [22,23](23호 포함)으로 CEI | ✅ `R`·`C` 세 상태 × 대칭 ↔ 완전지(그림 4b × 표 S2) — ⚠ 상태 이름표가 그림 사이에서 교차해 우리 1단계 판독이 **화학형(τ ×1.94) ↔ 면적형(τ ×0.85)** 으로 뒤집힌다 · SEM 한 시야(틈 · 균열) · Q · n · 셀 수 미인쇄 |
 | **86호 Kim J.T. 2023 *J. Mater. Chem. A*** (25호 ref 17 · NCM523 \| Li₆PS₅Cl(LP2 ≈30 nm 액상 코팅 ↔ bare) \| Li₀.₅In 분말 · 2032 코인 무외압 · 셋째 연구실(KIST + 한양대)) | 코팅 쌍에 **두 기구를 한 이름("concrete contact") 아래 병치** — XPS 깊이(100 사이클): bare 산화종(Li₂Sₙ · P₂Sₓ · POₓ) ≫ 코팅 → `[인쇄]` "the solid electrolyte coating layer can provide better electrochemical stability at the interface" · SEM 공극(bare 신품부터 · 시야 하나) · Rc 이름표 "interfacial contact" 인데 "includes ionic transport" 자인 · R_bulk ×2.7–4.5 미논의 | ⚠ `R` 만(CPE 0) · 코팅 쌍 n = 1(S13 둘째 셀 산포 3–5 %) · **첫 충전 등가**(`[재현]` 202.1 ↔ 201.9 mAh g⁻¹) → 정적 접촉 차 ≈0 — 코팅 효과의 첫 사이클 몫은 화학 · 분극 쪽(전제 없이 자기 데이터 · CV 몫 · 기생 위) · 사이클 축 R 세 점(충전 상태) · GITT 피복률은 `D` 고정 |
+| **90호 Truong 2025 *J. Mater. Chem. A*** (2026-10-02 사용자 공급 · NCM83 : Li₆PS₅Cl 7 : 3 \| Li₆PS₅Cl \| In/InLi · 48 h 정전위 유지 ↔ ≈48 h 1C · 시간분해 DRT(hybrid-drt) · Univ. Münster · FZ Jülich(교신 Zeier — 23 · 64호(JLU Giessen)의 공저자) · 예치 원자료) | calendar 성장을 `[인쇄]` "irreversible loss of cyclable lithium into building up resistive cathode–electrolyte interphase layer" 로 읽고 같은 문단에 "cracking or contact loss due to volume expansion from overcharging" 을 **병치** · 서두는 "the increased cathode–electrolyte interfacial resistance may also be contributed by the contact loss between them"[27](= 23호) · 이름은 한 봉우리(P_C) | ⚠ 저자 `C` 0 — 예치 DRT 로 **우리 `[재현]` C_eff**: calendar 지배 봉우리 τ ×5.7–35 · R ×4.2–27.6 동안 **C 1.6–2.5 µF 평탄 → 저항형(계면층 쪽 · 전제 위)** · cycle P_C1 R ↓ · C ↑(면적 증가형 서명 또는 상태 표류) · 사후 분석 0 · 셀 하나씩 · 유지 중 스펙트럼은 고 SOC 상태 효과 포함 |
 
 ⇒ `[해석]` **원전이 "expected · suspect · suggests" 로 쓴 접촉 손실이 인용을 거치며 평서문이 되고, 원전 자신의 SI 는 EIS 창 안에서
 그 면적 변화를 보지 못한다.** 계면층 쪽은 XPS 라는 화학 증거가 있고 SI 궤적도 그쪽이다.
@@ -83,6 +84,7 @@ evidenceScope: multi-source-primary
 → **2026-09-29 (84호)**: 다른 연구실 · Li 금속 완전지에서 같은 병치가 반복된다 — 한 R3 에 계면층 · 형태 변화를 함께 두고, 노화는 대칭 셀 빼기로 양극에 돌린다. `R`·`C` 입력이 대칭 ↔ 완전지 짝으로 있는데도 상태 이름표가 그림 사이에서 교차해, 같은 두 표가 "계면층" ↔ "접촉 면적" 을 번갈아 가리킨다(전제 위).
 → **2026-09-29 (86호)**: 셋째 연구실(KIST) · 코인셀 코팅 쌍에서 같은 병치가 반복된다 — "concrete contact" 한 이름 아래 XPS(계면층)와 SEM(공극)을 함께 두고, 정량은 Rc 와 GITT 피복률(둘 다 분극 채널)이다. 같은 지면의 첫 충전 등가가 정적 접촉 차를 ≈0 으로 묶어, 코팅이 막은 것은 첫 사이클 안의 화학 · 분극 몫이라는 쪽으로 읽힌다(전제 없이 · CV 몫 · 산포 위).
 → **2026-09-29 (87호 · 종설)**: 같은 연구실(23 · 64호 계열 — JLU Giessen · KIT BELLA)의 설계 종설이 **두 기구를 문장마다 같은 저항 이름으로** 부른다 — 그림 3b 캡션 접촉 손실 → "increased interface resistances" · §2.3 산화 계면층 → "increased interfacial resistance, thereby impeding charge transfer"[12,49,61] · 그림 3c 점접촉 → "limit electrode kinetics" — 그리고 크기 손잡이 하나가 면적 × 계면층 성장을 함께 움직인다고 인쇄한다([37,49]). 23호 원전(Koerver 2017 *Chem. Mater.*)은 인용 0(참고문헌 전수 grep) · 계면층 쪽은 [12] = 64호 · 계면 반응[6,9,11,12]로만 · 가르는 입력 · 제안 0 — 1차 자료 0 이라 계보 표에 행을 두지 않는다.
+→ **2026-10-02 (90호)**: 같은 계열(Zeier — 23 · 64호 공저자)의 정전위 유지 노화에서 같은 병치가 반복된다 — 한 봉우리(P_C) 아래 계면층 · 균열 · 접촉 손실을 함께 두고 가르지 않는다. 저자 `C` 는 0 이지만 예치된 시간분해 DRT 에서 우리가 C_eff 를 내면 유지 48 h 동안 지배 봉우리의 `C` 가 평탄해(1.6–2.5 µF) **노화분은 저항형** — 23 · 64호(사이클 축 노화분)와 같은 방향이다(전제 위 · 고 SOC 상태 효과 미분리 · 위치 귀속은 τ 문헌 가정).
 
 ## 무엇을 재면 가를 수 있나 (처방)
 
@@ -95,8 +97,10 @@ evidenceScope: multi-source-primary
    첫 사이클 비가역 `[도표]` −14 % — **첫 사이클 손실의 대부분은 코팅으로 막히는 경로가 아니다**(23호 예산과 같은 방향). ⚠ n = 1 씩 · 코팅 행의 σ 가 표끼리 안 맞는다(24호 D17).
    ★ **2026-09-29 셋째 표본 = 86호**(NCM523 · Li₆PS₅Cl_LP2 ≈30 nm 액상 코팅 ↔ bare · 2032 코인 · 0.1C · 30 °C): 첫 사이클 비가역 `[인쇄]` ICE 61.6 → 74.1 %(`[재현]` 첫 충전 등가 202 ↔ 202 mAh g⁻¹ — 손실 38.4 → 25.9 %p · **코팅이 첫 사이클 손실의 ≈1/3 을 막는다**) · 100 사이클 68.9 → 93.7 %(사이클 손실의 대부분) · XPS 깊이에서 산화종 억제 — 24호(LLSTO · −14 %)와 다른 방향이나 코팅 재료 · 두께 · 셀 · 창이 다르다 · n = 1 씩(S13 둘째 셀 3–5 %).
 6. ★ **호 정체 검사** (2026-09-28, 64호) — 같은 이름의 호("양극 호")를 셀 · 컷오프 · 온도 사이에서 비교하기 전에 `C` 자릿수와 τ 대역을 본다. 64호 4.0 V 셀의 "양극 호" `C` 0.1–0.85 mF 는 다른 셀의 ×250–700 · 음극 호 자릿수다 — 비교에서 뺀다.
+   ★ **2026-10-02 시간 축 판 = 90호** — 한 셀의 봉우리가 시간에 따라 다른 이름의 τ 창으로 넘어갈 때 C_eff 연속성을 본다: 90호 calendar 봉우리는 P_A 창(τ 0.19 · 0.54 s)에 들어가도 `C` 1.6–2.5 µF 평탄(같은 요소 — 이름 유지 지지) · 같은 τ 대역 cycle P_A 는 ≈1.5–3.3 mF(다른 요소) — 우리 `[재현]`(저자 `C` 0).
 7. ★ **위치** (2026-09-28, 64호) — 계면층이 CAM \| SE 에 있는지 집전체 \| 복합체 면에 있는지를 **집전체 쪽 면 · 분리막 쪽 면 · 단면**의 깊이 XPS 쌍으로 가른다. 64호는 집전체 쪽 면만 쟀다. 집전체 쪽 층은 곱 밖의 직렬 항이다(정의 표 셋째 행).
 8. ★ **휴지 시간 · SOC 고정** (2026-09-28, 64호) — EIS 직후 ↔ 24 h 휴지 뒤 양극 호가 `[도표]` ×1.3–1.9 다르고, 충 ↔ 방이 ×0.2–2.5 다르다. `R(N)` 을 노화 축으로 쓰려면 둘을 고정하고 값 옆에 적는다.
+   ★ **2026-10-02 (90호)** — 시간분해 EIS 를 calendar 는 유지 전위(고 SOC) · cycle 은 1C 방전 끝(30 분 휴지 · 사이클마다 표류)에서 재고, RPT 비교는 한 셀 스펙트럼을 여섯 셀 공통 기준선으로 쓴다 — 자기 셀 기준이면 cycle 저주파 Re 는 −40 · −30 · −4 Ω(`[도표·화소]` S4 · `[데이터]`). 상태 · 기준 셀을 값 옆에 적어야 하는 표본.
 9. ★ **상태 이름표 대조** (2026-09-29, 84호) — `R`(그림)과 `C`(표)를 상태 이름표로 짝지어 1단계를 걸기 전에, 막대 값을 다른 그림(사이클 궤적 · 대칭 셀 궤적)의 같은 상태와 대조한다. 84호는 그림 4b '1st discharge' 가 그림 4c · 2c 의 10 사이클과 성분별 ±3 Ω·cm² 로 같고, 그 대조 여부에 따라 노화 판독이 계면층(화학형) ↔ 접촉 면적(면적형)으로 뒤집힌다.
 
 ## 이 페이지가 주장하지 않는 것
@@ -111,11 +115,13 @@ evidenceScope: multi-source-primary
   → **2026-09-28 (64호)**: 실험 **일곱 편** · `R`·`C` 입력 **네 편(18 · 23 · 63 · 64호)** — 64호는 사이클 축이지만 컷오프당 셀 2 "representative" 이고 환산식이 없다.
   → **2026-09-29 (84호)**: 실험 **여덟 편** · `R`·`C` 입력 **다섯 편(18 · 23 · 63 · 64 · 84호)** — 84호는 대칭 ↔ 완전지 짝까지 주지만 상태 이름표 교차로 판정 보류(셀 수 미인쇄).
   → **2026-09-29 (86호)**: 실험 **아홉 편** · `R`·`C` 입력 **다섯 편 그대로**(86호는 `R` 만 · CPE 0) — 86호는 코팅 쌍(n = 1 · 산포 3–5 %)과 첫 충전 등가를 준다.
+  → **2026-10-02 (90호)**: 실험 **열 편** · `R`·`C` 입력 **다섯 편 그대로**(90호는 저자 `C` 0 — 예치 DRT 로 우리가 C_eff 를 낸 첫 편) — 90호는 컷오프 다섯 × 노화 둘 · 셀 하나씩 · 사후 분석 0 이다.
 - **63호 셀에서 접촉 손실이 없었다고 주장하지 않는다** (2026-09-28) — 앞 절반의 면적형 감소는 오히려 면적 쪽 서명이다; 주장은 "뒤 절반의 ×2 는 면적형이 아니다(전제 위)" 까지다.
 - **64호의 가역 면적형(4.6 V)을 접촉 호흡의 측정으로 주장하지 않는다** (2026-09-28) — τ 비 1.10–1.24 는 전제 · CPE 환산 · 로그 축 판독 위다. 그리고 **집전체 쪽 층이 셀 저항에 기여하지 않는다고 하지 않는다** — Li⁺ 차단 계면이라는 물리에서 그 경로를 묻는 것까지다.
 - **84호 셀의 노화를 계면층으로도 접촉 손실로도 배정하지 않는다** (2026-09-29) — 1단계 판독이 상태 이름표 해석에 따라 뒤집히고(τ ×1.94 ↔ ×0.85), Q · n 미인쇄 · 창 밖 과정 · 셀 하나씩이다. 저자도 두 기구를 한 R3 에 병치했다.
 - **86호 셀의 코팅 효과를 계면층 억제로도 접촉 면적 증가로도 배정하지 않는다** (2026-09-29) — 첫 충전 등가는 정적 고립 차의 상한(CV 몫 · 기생 전하 · 산포)이고, Rc · GITT 피복률은 분극 채널이며 `C` · 대칭 셀 · 온도가 없다. 저자도 두 기구를 "concrete contact" 한 이름 아래 병치했다.
 - **87호(종설)의 저항 어휘를 두 기구 중 어느 쪽의 근거로도 쓰지 않는다** (2026-09-29) — 1차 자료 0 이고, "한 이름 아래 병치" 가 설계 어휘에서도 반복된다는 표본까지다. 실험 편 수(아홉) · `R`·`C` 입력 편 수(다섯)는 그대로다.
+- **90호 calendar 셀의 노화를 계면층으로 확정하지 않는다** (2026-10-02) — C_eff 평탄은 우리 판독(골–골 적분 · 창 경계 ±≈30 % · 전제 `C ∝ 면적` · 기하 면적)이고, 유지 중 스펙트럼은 고 SOC 상태 효과를 포함하며, 면적 대조 · 온도 · 3전극 · 사후 분석이 없다. 저자도 계면층 · 균열 · 접촉 손실을 한 P_C 에 병치했다.
 
 ## 관련
 

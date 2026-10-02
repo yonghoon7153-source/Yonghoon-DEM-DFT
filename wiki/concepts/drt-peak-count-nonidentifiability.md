@@ -2,10 +2,10 @@
 title: DRT 봉우리 개수는 데이터가 정하지 않는다 — 상태·조작·장비·정규화의 함수
 description: "The number of resolvable DRT peaks (and hence the order of any equivalent circuit fitted downstream) is not determined by the impedance data alone: it moves with cycle number, with interventions, with the measurement wiring, and with the unreported regularization strength"
 created: 2026-09-22
-updated: 2026-09-29
+updated: 2026-10-02
 type: concept
 tags: [assb, battery, degradation, research, eis]
-sources: [raw/papers/oruemendizabal2023_multiconfiguration-geis-drt-nmc622-lpscl-li-interfaces.md, raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/su2024_drt-soh-health-features.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md]
+sources: [raw/papers/truong2025_calendar-vs-cycle-aging-protocols-drt-assb.md, raw/papers/oruemendizabal2023_multiconfiguration-geis-drt-nmc622-lpscl-li-interfaces.md, raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/su2024_drt-soh-health-features.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -294,6 +294,24 @@ NMC622 \| Li₆PS₅Cl \| Li 금속 · 네 구성(Li\|Li · Li\|In · NMC\|Li ·
 ⇒ ★★ `[해석]` 다섯 번째 경보의 층 표에 한 줄을 더하면: **6 · 84호 Orue Mendizabal — 측정 창 밖(저주파) 봉우리와 그림 사이 τ 띠가 이름표를 흔든다.** 체크리스트에 "봉우리 τ 가 τ_max = 1/(2π f_min) 안인가" 를 칸으로 올릴지는 **결정하지 않았다**(84호 digest 새 판단 거리 2).
 ⚠ 이 편의 **가장 단단한 배정**은 DRT 모양이 아니라 **전류 방향 연산자**다 — Li\|SE R2 가 한 스텝 안에서 자라고 역전류에서 초깃값 쪽으로 돌아간다(`[도표·화소]` 그림 2c). 개수 · 모양이 흔들려도 이름을 붙이는 다른 채널이 있다는 것이 이 경보의 반대쪽 단서다.
 
+## ★★★ 일곱 번째 경보 — **λ 를 고르지 않는 역변환 위에서도 이름표는 τ 창이 정한다 · 지배 봉우리가 다른 이름의 창으로 넘어가도 연속성이 이름을 유지한다 · 같은 τ 대역에 정전용량이 세 자릿수 다른 두 요소가 산다** (2026-10-02, `assb` 90호)
+
+`raw/papers/truong2025_calendar-vs-cycle-aging-protocols-drt-assb.md`
+(Truong, Whang, Huang J., Sandoval, Zeier, *J. Mater. Chem. A* **13** (2025) 17261, CC BY 4.0;
+In/InLi \| Li₆PS₅Cl \| NCM83 : Li₆PS₅Cl 반쪽 · 48 h 정전위 유지(매 시간 EIS · 유지 전위) ↔ ≈48 h 1C 사이클(두 사이클마다 EIS · 방전 끝 30 분 휴지 뒤) · 7 MHz–50 mHz · 10 mV rms · hybrid-drt · **예치 원자료**(시간분해 DRT 261 + 형성 · RPT)).
+
+11호(DRTtools · λ 미인쇄) · 84호(DRTtools · 창 밖 봉우리 이름)와 달리 이 편은 **λ 를 사람이 고르지 않는다** — `[인쇄]` ESI "we apply the self-tuning DRT inversion algorithm implemented in the python package hybrid-drt by Huang et al. This uses a hierarchical Bayesian model to obtain the maximum a posteriori estimates of the DRT without manual parameter tuning" · K–K 통과 인쇄 · τ 기저를 측정 창 밖으로 1 자릿수씩 확장. 사전 · 초모수 · 불확실성 출력은 미인쇄(λ 는 "수동 0" 이지 "없음" 이 아니다). 그러나 **이름표 층은 그대로다.**
+
+- **이름 = 문헌 τ 창.** `[인쇄]` P_SE ∼10⁻⁸ · P_C1 10⁻³–10⁻² · P_C2 10⁻²–10⁻¹ · P_A 10⁻¹–1 · P_D ∼10 s — 근거는 문헌[31,33,34]이고 대칭셀 · 3전극 · 구성 교체 · 온도 · 정전용량 대조는 0. [33] = 11호인데 11호 양극 봉우리 P3 ≈500 Hz 는 `[재현]` τ ≈3.2×10⁻⁴ s — 이 편 P_C1 창의 3–30 배 짧은 쪽이다(다른 셀 · 상태 · 압력 — [33] 은 이 편 τ 대역의 값 근거가 못 된다 `[해석]`).
+- **창을 넘는 이동은 연속성이 덮는다.** `[데이터]` 3.9 · 4.1 V 유지 48 h 의 지배 봉우리 τ 0.19 · 0.54 s 는 **P_A 창(10⁻¹–1 s) 안**인데(1 h 에는 5.4 · 17 ms) 2D DRT 의 연속 이동으로 "P_C" 이름을 유지한다.
+- ★ **정전용량 검사가 처음 값을 낸다** — 저자 `C` 인쇄 0, 우리 `[재현]` C_eff = τ_peak ÷ 골–골 ∫γ d ln τ: calendar 지배 봉우리 **1.6–2.5 µF 로 평탄**(τ ×5.7–35 · R ×4.2–27.6) → 같은 요소의 R 성장 — 연속성 이름 유지가 **지지된다**. 같은 τ 대역의 cycle P_A 는 **≈1.5–3.3 mF**(기하 면적당 이중층 ≈10 µF cm⁻² 의 ×190–520) — **같은 창에 세 자릿수 다른 두 요소**가 산다. τ 창만으로는 둘을 가를 수 없고 C 가 가른다.
+- **창 밖 몫.** `[데이터]` τ 격자 284 점(2.1×10⁻¹¹–3.4×10³ s) · 전형 DRT(그림 4)의 측정 하한(τ_max 3.18 s) 밖 몫 257 / 970 Ω(**26 %**) — P_D(τ ≈10.5 s)가 창 밖인데 "solid-state lithium diffusion process within the cathode electrode" 이름을 얻는다(저자 스스로 `[인쇄]` "the relaxation of PSE and PD occurs largely out of the measured frequency range") — 84호(창 밖 R3\* · R4\*)에 이은 둘째 표본.
+- **개수.** `[인쇄]` "The DRT in this work generally indicates five main peaks" ↔ `[데이터]` 전형 DRT 의 국소 극대 다섯 중 하나는 이름 없는 작은 봉우리(7.9×10⁻⁷ s · 4.4 Ω)이고 **P_C2 는 극대가 아니라 어깨**다 — 이름표 다섯과 극대 다섯이 같은 집합이 아니다.
+- **상태 · 기준선.** 시간분해 EIS 는 calendar = 유지 전위(고 SOC — 1 h 스펙트럼부터 R_tot 0.81 · 3.5 · 9.3 kΩ) · cycle = 1C 방전 끝(사이클마다 표류) · RPT = 0.1C 방전 끝이고, 그림 6 "before aging" 은 한 셀 스펙트럼을 여섯 셀 공통 기준으로 쓴다(신품 저주파 Re 산포 694–1019 Ω `[도표·화소]` S4) — 자기 셀 기준이면 cycle 셀 저주파 Re 는 −40 · −30 · −4 Ω.
+
+⇒ ★★ `[해석]` 다섯 번째 경보의 층 표에 한 줄을 더하면: **7 · 90호 Truong — 역변환 설정(λ)을 자동화해도 이름표 층(τ 창 · 연속성)은 그대로이고, 같은 τ 창에 C 가 세 자릿수 다른 요소가 공존한다.** 체크리스트에 "τ 창을 넘는 봉우리의 C_eff 연속성" 을 칸으로 올릴지는 **결정하지 않았다**([[assb-lampe-contact-product-degeneracy]] 일흔세 번째 적용의 후보 줄과 같은 내용).
+⚠ 이 편의 강점도 적는다 — K–K 검사 인쇄 · λ 수동 조율 0 · **원자료 예치**(그래서 우리가 C_eff 를 낼 수 있었다). 11 · 84호에는 없던 것이다. 다만 예치 자료 자체에 그림 사이 불폐합 · 복사 구간이 있어(90호 D1 · D15) 시간분해 DRT 파일도 재현 입력으로 쓰기 전에 교차 검사가 필요하다.
+
 ## 이 위키에서의 적용
 
 ### 1. 진단 — "개수를 쟀는가" 를 묻는 체크리스트
@@ -426,6 +444,7 @@ SI Fig. S2(LPSCl, λ = 8.5×10⁻⁴)는 **날카로운 봉우리 4 개**(≈10�
   우리가 확인한 것은 **파탄 자체와 그 크기**(완전지에 없는 봉우리 2 개, 부분 > 전체)까지다.
 - 수치는 전부 **사본**이다. 그림에서 읽은 것은 `[도표]` 이고 판독 오차가 붙는다.
 - ★ **84호의 창 밖 봉우리(R3\* · R4\*)가 인공물이라고 하지 않는다** (2026-09-29) — 측정 창 밖이고 이름 · 주파수 표기가 표 S3 와 그림에서 어긋난다는 것까지다. 공간전하층 · 확산 과정이 없다는 뜻이 아니다. γ 정규화 판독(그림 2e ↔ 5c)은 우리 `[재현]` · 가정 위다.
+- ★ **90호의 cycle P_A 가 음극 계면이 아니라고 하지 않는다** (2026-10-02) — 이름표가 τ 창 가정 위이고 C(≈mF)가 이중층 "전하 이동" 상한을 넘는다는 것까지다(합금 화학 용량 등 다른 해석은 이 편 자료로 가를 수 없다). 그리고 **C_eff 를 저자 값으로 인용하지 않는다** — 예치 DRT 위 우리 판독(골–골 적분 · 창 경계 ±≈30 % · 기하 면적)이다. hybrid-drt 의 자동 λ 가 개수 · 높이의 폭을 준다고도 하지 않는다 — 사전 · 불확실성 출력이 미인쇄다.
 
 ## 관련
 - [[assb-contact-loss-vs-lampe]] — 닻. Q4 의 다섯 번째 변신이 기록돼 있다
