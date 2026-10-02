@@ -1,0 +1,117 @@
+{
+ "slug": "bielefeld2023_useful-models-ssb-simplicity-perspective",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-02",
+ "sources": [
+  "27f7fd17-53._How_to_Develop_Useful_Models_for_Solid_State_Batteries_A_Plea_for_Simplicity_and_Interdisciplinary_Cooperation.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Agenda on how to develop useful models, originally proposed by Berro;[2] here step 1. is generalized and step 4. is modified. The agenda is applied on the question whether conductive carbon is required in ASSBs with the simulation study[16] in italic. The arrows sketch the interaction of experiments and simulations.",
+   "rotated_deg": 0,
+   "bbox": [
+    298.7,
+    344.1,
+    548.8,
+    697.4
+   ],
+   "w": 1043,
+   "h": 1473,
+   "dpi": 300,
+   "src": "27f7fd17-53._How_to_Develop_Useful_Models_for_Solid_State_Batteries_A_Plea_for_Simplicity_and_Interdisciplinary_Cooperation.pdf",
+   "blank": 0.404,
+   "note": "봤다. 그림 1 = 안건 9 단계 래스터(1936×2844) · 라벨 · 내용 온전 · 과대 0 · 캡션 필드 깨끗. 그림 안 글자(텍스트 층에 없음): 2단계 'Determine the most appropriate modeling approach'(본문 'useful model approach' — digest D1) · 4단계 '[Measure reliable model input parameters.]' 예 'Reconstruct electrodes properties from SEM-images'(1호 digest 전사와 어긋남 — D8) · 5단계 'sensitivity analysis' · 7단계 예 '(not done)'(그림에만 — D7) · 8단계 예측 'Conductive carbon is not required above a CAM fraction of 68 vol% (at 20% void space and a uniform CAM particle size of 5µm).'(조건 괄호는 그림에만 — D6) · 회색 상자 1 · 2 · 4 · 6 · 8 · 9 양쪽 화살 · 흰 상자 3 · 5 · 7 모형 쪽만."
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 6,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Schematic representation of ion pathways in a liquid electrolyte cell.",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    41.8,
+    595.3,
+    256.2
+   ],
+   "w": 2481,
+   "h": 894,
+   "dpi": 300,
+   "src": "27f7fd17-53._How_to_Develop_Useful_Models_for_Solid_State_Batteries_A_Plea_for_Simplicity_and_Interdisciplinary_Cooperation.pdf",
+   "blank": 0.827,
+   "note": "봤다. ⚠ 크롭 과대 — bbox 가 쪽 전폭(0–595 pt)이라 오른쪽 단의 식 (3) · (4) · 본문 · 위쪽 가로줄 · 세로 내려받기 워터마크가 같이 들어왔다(그림 내용 온전 · 자동 파일 그대로 둠). 그림 = 액체 전해질 셀 이온 경로 모식(Opposite Electrode Side · Separator · Electrode · Current Collector Side · l_eff · l) · 수치 0. 같이 찍힌 식 (3) = D̃e·D̃Li+/(D̃e + D̃Li+) — 본문 'geometric mean' 과 꼴이 다름(digest D2) · 식 (4) 계수 D_s(D3)."
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 9,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Cutout of the ASSB simulation landscape focusing on composite cathodes with schematic representations of selected models. Credit: Elisa Monte/ JLU Giessen.",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    41.8,
+    595.3,
+    391.8
+   ],
+   "w": 2481,
+   "h": 1459,
+   "dpi": 300,
+   "src": "27f7fd17-53._How_to_Develop_Useful_Models_for_Solid_State_Batteries_A_Plea_for_Simplicity_and_Interdisciplinary_Cooperation.pdf",
+   "blank": 0.507,
+   "note": "봤다 + 표지 화소 판독(표지 중심의 어두운 화소 무게중심 · 시작 점 x 218.7 → 화살 끝 1786.4 표시 px · 축 비율 ±0.01 · 판독용 · 커밋 안 함). ⚠ 약간 과대 — 위쪽 가로줄 · 오른쪽 세로 워터마크 포함(내용 온전). 표지 19 · 자기 세 편 □ 0.21(2019 [16]) → 0.40(2020 [73]) → 0.62(2022 [82]) · 보편 끝 Braun △ 0.07 · 고복잡 끝 Becker-Steinberger ● 0.88 · 세로 연도 19/19 참고문헌과 일치 · [70] 이름표 'simulation of Li-transport in symm. cells' ↔ 표 1 충방전 칸(digest D12)."
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 8,
+   "file": "tab_1.png",
+   "caption": "Table 1. Overview of ASSB model approaches with focus on the cathode composite; input is marked as “(i)”, output as “(o)”. goal modeling approach input/output (excerpt; for detailed info see references) refs. power and energy density assessment 1D homogenized transmission line impedance model (i) effective microstructure properties (i) charge transport properties (i) charge transfer properties (i) cell and electrode dimensions (o) Ragone plot [80] electrode design: percolation conduction network model: SE: ion conductor; CAM/carbon: electron conductor (i) microstructure properties (o) utilization levels (o) active surface area",
+   "rotated_deg": 0,
+   "bbox": [
+    41.8,
+    14.0,
+    589.2,
+    830.7
+   ],
+   "w": 2008,
+   "h": 2995,
+   "dpi": 264,
+   "src": "27f7fd17-53._How_to_Develop_Useful_Models_for_Solid_State_Batteries_A_Plea_for_Simplicity_and_Interdisciplinary_Cooperation.pdf",
+   "blank": 0.886,
+   "note": "봤다. ⚠ 크롭 과대 — p. 8 쪽 전체(머리말 왼쪽 'atteries' 잘림 · 표 아래 두 단 본문 · 꼬리말 · 워터마크 포함 · 264 dpi) — 표 자체는 온전하고 텍스트 층과 셀 단위로 일치(표는 digest §(b) 1 에 텍스트로 전사). 캡션 필드: 표 캡션 뒤에 표 셀 글자가 붙음(정본 캡션은 digest)."
+  },
+  {
+   "key": "f3m",
+   "kind": "figure",
+   "label": "3",
+   "page": 7,
+   "file": "fig_3_manual_p7.png",
+   "caption": "Figure 3. Schematic representation of an ASSB with a zoom on the voids at the CAM/SE-interface.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.8,
+    572.0,
+    290.4,
+    721.5
+   ],
+   "w": 1015,
+   "h": 624,
+   "dpi": 300,
+   "src": "27f7fd17-53._How_to_Develop_Useful_Models_for_Solid_State_Batteries_A_Plea_for_Simplicity_and_Interdisciplinary_Cooperation.pdf",
+   "blank": null,
+   "manual": true,
+   "note": "수동 — 본문 PDF p. 7 렌더 300 dpi bbox (46.8, 572.0, 290.4, 721.5) — 내장 래스터 1947×1171 자리(51.8, 577.9)–(285.4, 718.5) · 캡션 제외. 자동 추출 누락: 캡션 'Figure 3. …' 이 오른쪽 단 본문 블록('Laue et al.[77] and Sangrós-Giménez …', bbox 46.8–548.5 × 601.8–744.0)과 한 텍스트 블록으로 묶여 캡션으로 인식되지 않음. 봤다: Anode | Separator | Composite Cathode · 'Solid Electrolyte (SE), e.g. Li6PS5Cl' · 'Cathode Active Material (CAM), e.g. NCM811, polycrystalline' · 확대 상자 'Pore' · 'CAM Secondary Particle' · 'CAM Primary Particle' · 전기차 아이콘 — 수치 0('≈15 %' 는 본문 인용뿐)."
+  }
+ ]
+}

@@ -2,10 +2,10 @@
 title: "ASSB 복합양극의 굴곡도 인자 — 측정되는 것은 σ_eff 하나이고 ε·τ² 분할은 가정이 정한다"
 description: "In ASSB composite cathodes the tortuosity factor tau^2 = eps x sigma_bulk / sigma_eff is not measured but obtained by dividing a measured effective conductivity by an assumed phase fraction; the only operando-plus-EIS paper in the lineage shows the same measured conductivities giving opposite tau^2 trends under two eps conventions, reads the mismatch between its EIS and model-fitted values as tortuosity evolution, and by its own definition places point-contact loss inside tau^2"
 created: 2026-09-23
-updated: 2026-09-29
+updated: 2026-10-02
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/minnmann2022_designing-cathodes-cam-ssb-perspective.md, raw/papers/wang2024_fast-kinetics-hierarchical-catholyte-anode-design-ssb.md, raw/papers/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm.md, raw/papers/schlautmann2023_lpscl-particle-size-distribution-composite-transport.md, raw/papers/shi2020_particle-size-ratio-cathode-utilization-assb.md, raw/papers/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing.md, raw/papers/naik2022_kinetics-vs-transport-ssb-cathode-mesoscale-regime-map.md, raw/papers/minnmann2021_charge-transport-bottlenecks-tlm-ncm622-lpscl.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode-si.md, raw/papers/bielefeld2020_effective-ionic-conductivity-binder-composite-cathode.md, raw/papers/hlushkou2018_void-space-ion-transport-composite-cathode.md, raw/papers/neumann2021_garnet-3d-structure-grain-boundary-transport.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md]
+sources: [raw/papers/bielefeld2023_useful-models-ssb-simplicity-perspective.md, raw/papers/minnmann2022_designing-cathodes-cam-ssb-perspective.md, raw/papers/wang2024_fast-kinetics-hierarchical-catholyte-anode-design-ssb.md, raw/papers/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm.md, raw/papers/schlautmann2023_lpscl-particle-size-distribution-composite-transport.md, raw/papers/shi2020_particle-size-ratio-cathode-utilization-assb.md, raw/papers/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing.md, raw/papers/naik2022_kinetics-vs-transport-ssb-cathode-mesoscale-regime-map.md, raw/papers/minnmann2021_charge-transport-bottlenecks-tlm-ncm622-lpscl.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode-si.md, raw/papers/bielefeld2020_effective-ionic-conductivity-binder-composite-cathode.md, raw/papers/hlushkou2018_void-space-ion-transport-composite-cathode.md, raw/papers/neumann2021_garnet-3d-structure-grain-boundary-transport.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -239,6 +239,14 @@ OCV 적합은 셋 중 첫째만 용량 축 스케일로 보고, 둘째·셋째�
 - ⇒ 처방에 붙는 것(`[해석]`): 종설 · 서론의 "increased tortuosity" 는 (1) apparent(수송 측정 — `σ_eff` 역산 · 입계 포함) ↔ geometric(상 분포 — 경로 길이) 어느 쪽인지 (2) 인용 원전이 그 양을 인쇄했는지를 먼저 본다 — 87호는 두 이름을 스스로 가르고도 배정 문장에는 이름을 달지 않았다.
 
 
+## ★ 열다섯 번째 표본 — 정의만 · 값은 남의 것: 같은 저자(57호)의 τ ↔ κ 정의, 그리고 "굴곡도 진화를 수정 Newman 에" 는 위 "왜 중요한가" 표의 둘째 · 셋째 줄을 유효 매개변수로 옮기자는 제안이다 (2026-10-02, `assb` 93호)
+
+`raw/papers/bielefeld2023_useful-models-ssb-simplicity-perspective.md` (Bielefeld 2023 *Batteries & Supercaps* 6, e202300180 — 57호 저자의 Perspective · 4차 묶음 파일 53 · 1차 측정 0).
+
+- **정의** `[인쇄]`(쪽 렌더): 식 (1) τ = l_eff/l · 식 (2) D_eff = (ε/τ²)·D_bulk · 3D 에서는 "the tortuosity factor κ" 로 D_eff = (ε/κ)·D_bulk — κ ≙ τ²(24 · 57 · 73호 규약과 같은 자리 · 위 27호 이름 충돌 절) · "Both, τ and κ as well as their common assessment by the Bruggeman relation(s)[47] are controversially discussed.[48–51] Commercial LIB cathodes possess tortuosity factors around 4.[52]"
+- **값은 전부 남의 것**: Minnmann "electronic tortuosity factor goes down to 4.3 … compared to 120" = 73호 τ²_el 4.34 · 121.5(Φ 전체 부피 기준 ✓ — 위 여덟 번째 표본) · `[재현·가정]` Bruggeman(κ = ε^−0.5 — 지수 인쇄 0)과의 비: LIB ε 0.30 → ×2.2 · 73호 전자 Φ 0.61 → ×3.4 · Φ 0.25 → ×60.
+- **결론의 제안** "study the evolution of the porosity, tortuosity and specific surface area upon cycling in order to implement these in a modified Newman model" → 위 표의 **둘째 줄(경로 좁아짐 → τ↑)** 과 **셋째 줄(면적 → A_s↓)** — **첫째 줄(통째 고립 · `θ`)은 없다**. 그리고 이 페이지 요지("`ε` 를 재지 않으면 `τ²` 와 `ε` 는 곱으로만 식별된다")가 "진화" 에도 걸린다 — ε(N) · τ(N) 를 따로 쓰려면 ε(N) 측정이 필요하다(위키 안 표본 하나: 4호 FIB-SEM void 2.87 → 9.50 vol% · 0 → 50 사이클).
+
 ## 이 페이지가 주장하지 않는 것
 
 - **"굴곡도가 진화하지 않았다" 고 하지 않는다** — `σ_eff` 로 보면 70 % 는 변화 없음, 80 % 는 ≈3 배이고, 그 3 배의 배정이 안 갈린다는 것까지다.
@@ -254,6 +262,7 @@ OCV 적합은 셋 중 첫째만 용량 축 스케일로 보고, 둘째·셋째�
 - ★ **2026-09-29 (83호)**: **25호의 기하 τ(1.21 ↔ 1.84)가 틀렸다고 하지 않는다** — 25호가 가리킨 원전(83호) 지면에 경로 계산이 없다는 것까지이고, 25호 SI 문장은 다시 보지 못했다.
 - ★ **2026-09-29 (85호)**: **85호 R1 차(+31 Ω)를 굴곡도로 배정하지 않는다** — 분리막 · 음극 동일성이 가정이고 면적이 없다; "저 굴곡도" 주장이 틀렸다고도 하지 않는다 — 양이 인쇄되지 않았다는 것까지다.
 - ★ **2026-09-29 (87호)**: **"apparent ↔ geometric" 문장을 입계 몫의 크기로 쓰지 않는다** — 값 · 인용 0 인 서술이고, [13,14,48] 원전이 어느 굴곡도를 뜻했는지는 원전 미열람이다.
+- 93호의 "굴곡도 진화" 제안을 이 페이지 처방의 지지로 쓰지 않는다 — 제안 문장이고 자료 · 형태 0 이다. Bruggeman 비는 지수 1.5 가정의 `[재현·가정]` 이다.
 
 ## 관련
 

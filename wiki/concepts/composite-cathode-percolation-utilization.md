@@ -2,10 +2,10 @@
 title: 복합양극 퍼콜레이션 이용률 (utilization level)
 description: "Bielefeld 2019 utilization level θ = V_c/V_ν as the geometric surrogate for ASSB composite-cathode contact loss, its units, closed forms, and its own irreducible width"
 created: 2026-09-16
-updated: 2026-09-29
+updated: 2026-10-02
 type: concept
 tags: [assb, battery, degradation, dem-mpm, research]
-sources: [raw/papers/minnmann2022_designing-cathodes-cam-ssb-perspective.md, raw/papers/kim2023_argyrodite-coated-ncm-normal-pressure-assb.md, raw/papers/wang2024_fast-kinetics-hierarchical-catholyte-anode-design-ssb.md, raw/papers/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm.md, raw/papers/schlautmann2023_lpscl-particle-size-distribution-composite-transport.md, raw/papers/shi2020_particle-size-ratio-cathode-utilization-assb.md, raw/papers/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing.md, raw/papers/naik2022_kinetics-vs-transport-ssb-cathode-mesoscale-regime-map.md, raw/papers/minnmann2021_charge-transport-bottlenecks-tlm-ncm622-lpscl.md, raw/papers/chen2013_sofc-miec-composite-electrode-percolation-theory.md, raw/papers/nam2018_dry-vs-slurry-mixed-electrodes-binder-gitt-coverage.md, raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/bielefeld2020_effective-ionic-conductivity-binder-composite-cathode.md, raw/papers/bielefeld2022_voids-kinetics-morphology-composite-cathode-fem.md, raw/papers/hlushkou2018_void-space-ion-transport-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/rahman2024_sbms-rul-solid-state-batteries.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
+sources: [raw/papers/bielefeld2023_useful-models-ssb-simplicity-perspective.md, raw/papers/minnmann2022_designing-cathodes-cam-ssb-perspective.md, raw/papers/kim2023_argyrodite-coated-ncm-normal-pressure-assb.md, raw/papers/wang2024_fast-kinetics-hierarchical-catholyte-anode-design-ssb.md, raw/papers/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm.md, raw/papers/schlautmann2023_lpscl-particle-size-distribution-composite-transport.md, raw/papers/shi2020_particle-size-ratio-cathode-utilization-assb.md, raw/papers/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing.md, raw/papers/naik2022_kinetics-vs-transport-ssb-cathode-mesoscale-regime-map.md, raw/papers/minnmann2021_charge-transport-bottlenecks-tlm-ncm622-lpscl.md, raw/papers/chen2013_sofc-miec-composite-electrode-percolation-theory.md, raw/papers/nam2018_dry-vs-slurry-mixed-electrodes-binder-gitt-coverage.md, raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/bielefeld2020_effective-ionic-conductivity-binder-composite-cathode.md, raw/papers/bielefeld2022_voids-kinetics-morphology-composite-cathode-fem.md, raw/papers/hlushkou2018_void-space-ion-transport-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/rahman2024_sbms-rul-solid-state-batteries.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -603,6 +603,16 @@ state-of-charge estimation, and overall battery health monitoring [5, 6]**" 다.
 
 
 
+## ★★ 1호 저자 자신의 회고 — "68 vol%" 는 1호 69/31(고상 · 공극 20 % · 균일 5 µm)의 다른 반올림이고, 검증으로 든 73호 조성은 전체 부피 기준이며 문턱 위는 한 점이다 (2026-10-02 추가, `assb` 93호)
+
+`raw/papers/bielefeld2023_useful-models-ssb-simplicity-perspective.md` (Bielefeld 2023 *Batteries & Supercaps* 6, e202300180 — 1 · 57 · 56호 저자의 단독 Perspective · 4차 묶음 파일 53). 1차 측정 · 새 계산 0 — 이 절의 값은 전부 1 · 73호 digest 전사 위의 `[재현]` 이다.
+
+- `[인쇄]` 본문 "the work predicts: 'Conductive carbon is not required above a CAM fraction of 68 vol%.'[16]" ↔ 그림 1 같은 문장 + "**(at 20% void space and a uniform CAM particle size of 5µm)**" — 조건은 그림에만 있다.
+- `[재현]` 55 / (1 − 0.20) = **68.75** → 1호 인쇄 "below 69 vol% AM and 31 vol% SE (69/31 vol%)"(1호 digest 전사)와 **같은 점**(이 편 내림 · 1호 반올림) — 이 페이지 "인터페이스 사양" 의 위첨자(V 전체 ↔ S 고상) 구분이 회고 인용에서 다시 떨어진 자리. 문장 자체는 1호 digest 전사에 없다(1호 PDF 미대조).
+- 검증: 이 편 "Minnmann et al.[19] who tested cathode compositions between 25 to 61 vol% NCM622" — 73호 Φ 는 공극 14 % 가정 포함 **전체 기준** → `[재현]` 고상 28.6 · 37.4 · 48.4 · 61.5 · 71.0 % · **문턱 위 1/5**. 73호 그림 4(digest 전사) VGCF 효과 33 vol% **+14 … +19 %** ↔ 61 vol% **−2 … −53 %** — 문턱 양쪽 한 점씩 → 방향 ✅ · 위치 미시험. τ²_el 4.73(고상 61.5 %) → 전자망은 예측 문턱 아래에서 이미 섰다(위 73호 절 "무릎 25–33 vol%" 와 같은 방향).
+- 이 편은 22 · 56 · 73호의 반례(식 (8) 과대 · `p_c` 반례 · 무릎)를 언급하지 않고 "This is not the exact same conclusion, but considerably close" 로 닫으며, 전도망 모형을 "broadly applicable" 이라 쓴다 — 적용 조건(무탄소 · 균일 입도 · SE 3 µm · 겹침 없음 · 40 % 문턱)은 붙지 않는다.
+- 4단계 예 "Reconstruct electrodes properties from SEM-images"([16]) ↔ 1호 digest 전사: GeoDict 무작위 합성(측정 0) — 이 편 p. 7 은 [16] 을 SEM 재구성 목록과 완전 합성 목록에 동시에 넣는다.
+
 ## 이 페이지가 주장하지 않는 것
 
 - `θ_AM` 이 접촉 손실의 **올바른** 모형이라고 주장하지 않는다. 원문의 `θ` 는 접촉 저항을
@@ -629,6 +639,7 @@ state-of-charge estimation, and overall battery health monitoring [5, 6]**" 다.
 - ★ **2026-09-29 (85호)**: **85호의 0.3 C 용량 무관성을 `θ₀` 의 측정으로 쓰지 않는다** — 상한(≤10 %)까지이고 셀 하나씩 · 음극이 다른 비교(2a Si–G ↔ 2h Si–Cl)다; 25호 ref 16 귀속은 "주장의 선행 ✅ · 측정 0" 까지다.
 - ★ **2026-09-29 (86호)**: **86호 코팅 쌍의 `θ₀` 차가 0 이라고 단정하지 않는다** — 첫 충전 등가는 CV 몫(종료 조건 미인쇄) · 기생 전하(bare CE 결손) · 셀 산포(3–5 %) 위의 상한이다; "피복률" 을 틀린 값이라고도 하지 않는다 — `D` 가 없어 재현 불가하다는 것까지다.
 - ★ **2026-09-29 (87호)**: **"≈50 vol%" 가 73호(42 %)와 모순이라고 하지 않는다** — 기준(공극 포함 ↔ 고상)에 따라 같은 크기라는 산술(42/0.86 = 48.8)까지이고, 이 종설이 어느 기준을 뜻했는지는 인쇄되지 않았다. 1호 "3–5 µm" 가 틀렸다고도 하지 않는다 — 모형 값이 "experimental" 이름표로 옮겨졌다는 것까지다.
+- 93호의 회고를 1호 판정의 새 근거로 쓰지 않는다 — 회고 문장의 조건 · 기준을 복원한 것까지이고, "68 vol%" 문장의 1호 원문 존재는 1호 digest 전사 기준이다. VGCF 두 점은 73호 digest 의 `[도표]` 전사다.
 
 ## 관련
 - [[assb-apparent-capacity-decomposition]] — 이 곱에 **셋째 항 `η(i)`** 를 더한다. 반례와 분리 시험.
