@@ -2,10 +2,10 @@
 title: "층상 NCM 격자 ↔ x(Li) 교정 — 구조 SOC 눈금의 축 규약 · 단조 채널 · 교정 간 이송"
 description: "The lattice-parameter to Li-content calibration used to read x from diffraction is itself a charge-counted axis measured in a liquid reference cell — it assumes every particle is active, no parasitic charge and a first-cycle loss convention; c peaks near x≈0.45 for six NCM compositions so only a and V are monotone, Rietveld esd understates scatter 14–37x, and two same-group NCM622 calibrations differ by a near-constant ≈0.07 in x"
 created: 2026-09-28
-updated: 2026-09-29
+updated: 2026-10-02
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/okasinski2020_edxrd-profiling-coin-cell-uneven-compression-lateral-gradients.md, raw/papers/li2020_synchrotron-operando-depth-profiling-soc-gradients-thick-nmc811.md, raw/papers/buchberger2015_graphite-nmc111-aging-xrd-ca-li-loss-pgaa-impedance.md, raw/papers/park2021_fictitious-phase-separation-electro-autocatalysis-layered-oxides.md, raw/papers/ishidzu2016_ncm-ni-fraction-lattice-volume-change-cycle-fade.md, raw/papers/kondrakov2017_ncm111-ncm811-lattice-strain-particle-shrinkage-cracking.md, raw/papers/kondrakov2017_ncm811-charge-transfer-lattice-collapse-xrd-xas-dft.md, raw/papers/debiasi2017_ncm-ni-content-operando-xrd-lattice-volume-energy-density.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md]
+sources: [raw/papers/koerver2018_chemo-mechanical-expansion-molar-volume-ocv-pressure-stress.md, raw/papers/okasinski2020_edxrd-profiling-coin-cell-uneven-compression-lateral-gradients.md, raw/papers/li2020_synchrotron-operando-depth-profiling-soc-gradients-thick-nmc811.md, raw/papers/buchberger2015_graphite-nmc111-aging-xrd-ca-li-loss-pgaa-impedance.md, raw/papers/park2021_fictitious-phase-separation-electro-autocatalysis-layered-oxides.md, raw/papers/ishidzu2016_ncm-ni-fraction-lattice-volume-change-cycle-fade.md, raw/papers/kondrakov2017_ncm111-ncm811-lattice-strain-particle-shrinkage-cracking.md, raw/papers/kondrakov2017_ncm811-charge-transfer-lattice-collapse-xrd-xas-dft.md, raw/papers/debiasi2017_ncm-ni-content-operando-xrd-lattice-volume-energy-density.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -182,6 +182,14 @@ evidenceScope: multi-source-primary
 2. ★★ **인쇄 계수 α 는 오기 쪽이다(`[재현]` — 확정 아님).** 인쇄 α 2.5 × 10⁻³ 이면 x̌ 1 → 0.2 전 범위 Δa **0.19 %**(2.8846 → 2.8790 Å)이고 66호 NCM523 a(δ) 16 점과 rms **0.047 Å** — α 2.5 × 10⁻² 면 Δa 1.95 % · rms **0.0040 Å**(최대 0.008). 66호 표 S1 의 NCM523 `a` 변화와 맞는 쪽은 10⁻² 다(80호 D7 · 로트 · 연구실 · 회절 방식이 달라 확정하지 않는다).
 3. ★ **인쇄 식 둘의 오기** — (101) d 식 "d = (4c⁻²/3 + a⁻²)^−1/2" 는 a · c 가 뒤바뀌었다(`[재현]` a 2.87 · c 14.22 Å: 올바른 (4a⁻²/3 + c⁻²)^−1/2 = 2.448 Å — 그림 2 ≈2.41–2.45 ✓ ↔ 인쇄 식 2.795 Å · D8) · "which holds for x̌ < 0.2 (at lower Li contents, the lattice irreversibly collapses)" — 괄호 문장과 부등호가 반대다(D7). 교정 수식을 옮겨 쓸 때 인쇄 식이 재현되는지 먼저 검사한다(66호 인쇄 오기 셋에 이은 표본).
 4. ★ **읽힌 값의 축 뒤집힘** — 그림 8a 의 양극 "lithium contents" 0.28–0.32 는 같은 셀 그림 7(y = 0) · ESI S5(y = −7 mm)의 0.65–0.75 와 합 ≈1 — 1 − x̌ 로 그려진 것으로 보인다(D12). 구조 SOC 값을 인용할 때 축이 x 인지 1 − x(δ · 탈리튬 분율)인지 그림마다 확인한다.
+
+## 97호 절 (2026-10-02) — 하류 사용: 66 · 69호 원자료의 재수록 · 계열마다 첫 점 0 · 4.3 V "−6 %"
+
+> 97호 = Koerver · Zhang · de Biasi · Schweidler · Kondrakov · Kolling · Brezesinski · Hartmann · Zeier · Janek 2018 *Energy Environ. Sci.* 11, 2142(4차 묶음 파일 57) — 교정 원전이 아니라 **교정된 격자 곡선의 하류 사용** 표본. 그림 2 캡션 `[인쇄]` "All data for NCM materials, LCO and graphite were obtained from crystallographic data [LCO in this work, others see ref. 35–37]"([35] = 69호 · [37] = 66호 · [36] = Schweidler 2018 흑연).
+
+1. ★★ **첫 점 정규화 — 원형 → 첫 점 구간이 빠진다.** `[도표·화소]` 그림 2(a) 는 계열마다 첫 측정점에서 0(NCM · NCA x ≈0.89–0.93 · LCO 0.985) — 66호 D8(원형 → 첫 점 NCM811 +0.43 %)이 이 하류 곡선에서 사라진다. x 축 규약(통과 전하 · δ₀)은 재수록 원전의 것을 그대로 물려받고 재표시 0 이다.
+2. ★★ **계산 입력의 전압 ↔ 부피 짝이 원전과 어긋난다.** ESI "NCM-811 … roughly 6 % when charging to 4.3 V"[SI 2 = 66호] ↔ 66호 digest 전사 4.3 V 격자 −4.9 %(−6 % 는 ≈4.42 V) · 69호 4.3 V + 1 h −5.0…−5.1 % — 하류가 교정된 곡선의 끝값을 옮길 때 ×1.2(97호 D17).
+3. ★ **부분 몰부피 유도의 몰 기준.** 그림 2(b) V̄m 이 같은 지면 부피 % × 식 단위 몰부피의 ≈×3(층상) — 단위 세포(Z = 3) 기준 의심(97호 D15 · 산출법 미인쇄 · 지면은 "per formula unit"). 교정된 `V(x)` 를 dV/dx 로 옮길 때(압력 채널 양극 몫의 `dV/dx` 인자) 식 단위 ↔ 단위 세포를 확인한다.
 
 ## 이 위키에서의 적용
 

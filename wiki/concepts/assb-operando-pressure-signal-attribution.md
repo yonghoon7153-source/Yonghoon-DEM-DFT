@@ -2,10 +2,10 @@
 title: 운전 중 압력 · 두께 신호의 귀속 — 음극 지배, 강성 곱, 기저선 규약
 description: "What an in-operando stack-pressure (or dilatometric height) signal measures in an ASSB: a stiffness-weighted sum of electrode swelling plus a drifting baseline. The prototype (Zhang W. et al. 2017, JMCA 5, 9929) shows the In-anode share is about 90–95 %, the amplitude-to-capacity ratio rises over cycling, and the printed ΔP is baseline-corrected while the ~62 MPa operating pressure appears only on an ESI axis"
 created: 2026-09-28
-updated: 2026-09-29
+updated: 2026-10-02
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/xu2024_pressure-effects-countermeasures-ssb-review.md, raw/papers/okasinski2020_edxrd-profiling-coin-cell-uneven-compression-lateral-gradients.md, raw/papers/ishidzu2016_ncm-ni-fraction-lattice-volume-change-cycle-fade.md, raw/papers/kondrakov2017_ncm111-ncm811-lattice-strain-particle-shrinkage-cracking.md, raw/papers/kondrakov2017_ncm811-charge-transfer-lattice-collapse-xrd-xas-dft.md, raw/papers/debiasi2017_ncm-ni-content-operando-xrd-lattice-volume-energy-density.md, raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md]
+sources: [raw/papers/koerver2018_chemo-mechanical-expansion-molar-volume-ocv-pressure-stress.md, raw/papers/xu2024_pressure-effects-countermeasures-ssb-review.md, raw/papers/okasinski2020_edxrd-profiling-coin-cell-uneven-compression-lateral-gradients.md, raw/papers/ishidzu2016_ncm-ni-fraction-lattice-volume-change-cycle-fade.md, raw/papers/kondrakov2017_ncm111-ncm811-lattice-strain-particle-shrinkage-cracking.md, raw/papers/kondrakov2017_ncm811-charge-transfer-lattice-collapse-xrd-xas-dft.md, raw/papers/debiasi2017_ncm-ni-content-operando-xrd-lattice-volume-energy-density.md, raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -78,6 +78,7 @@ the LiCoO2 cathode **and the In-Li anode**.[81]" 로 설명한다(인용 번호�
 |---|---|---|---|---|---|
 | **62호** Zhang W. 2017(원형) | In ‖ LGPS ‖ LCO(LNTO) · 대조 LTO ‖ LGPS ‖ LCO | hot-press 유압 + 바닥 게이지 · `[도표]` 기저 ≈61.8 MPa / LTO 는 air-tight casing · 25 °C 캐비닛 | +1.25(보정, 인쇄) · +1.07(원시) → 보정 1.152 · 원시 +1.10(11 사이클) / LTO ≈0.067 평탄 | 방전 말 골을 잇는 선 — 제거 | "1.25 MPa" · "20 times smaller" · "60%" · 요구치 0 |
 | **60호** Zhang Z. 2025 S14 | Li₂₁Si₅/Si–Li₂₁Si₅ ‖ Li₆PS₅Cl ‖ Li₃InCl₆ ‖ LCO | 정변위 · 예압 0.8 MPa · 45 °C · 공기 < 10 % RH · 사양 0 | +1.51 → ≈1.2 · 1.15 · 1.1 · 1.05(`[도표]`) · 방전 말 복귀 | 그림은 예압 위 증가분 | "+1.51 MPa" · "0.8 MPa" |
+| **97호** Koerver 2018(1차 — 그림 4a 는 62호 LTO 자료 재사용) | 상대극 교체: LTO ‖ LCO(= 62호 자료) · LTO ‖ NCM-811 · LTO ‖ NCA(S6) · Li ‖ NCM-811 · C₆ ‖ NCM-811 · InLi ‖ NCM-811(S6) · LTO ‖ 혼합(NCM-811 : LCO 55 : 45) | 63호 케이스 개조 · 나사 10 Nm(인쇄 "60 ± 8 MPa") + **로드셀 KMT 55** · 그림 S5 원시 **≈61–65.5 MPa**(휴지 16 h −3.6 · 사이클 92 h ≈−4 · 빈 케이스 −3.9 MPa / 69 h — PEEK) | `[도표]`(축 10⁵ Pa) LCO +0.057 · NCM −0.045 · NCA −0.053 · Li +1.48 · 흑연 +0.65 · InLi +1.08 · 혼합 끝점 ≈0 | "manually drawn baseline" + "individual drift" 보정(규칙 · 값 미인쇄) · Savitzky–Golay | 본문 "σ11(LCO/LTO) = +0.6 MPa"(축과 ×10 — 97호 D2) · "ten- to twenty-fold"(그림 ×26–33 · ×11–14 — D7) · 원시는 InLi 셀 하나 |
 | 33호 재수록 [59] | 흑연 ± LGPS | 정변위 | ≈0.7–0.8 | — | (재수록 그림) |
 | 33호 재수록 [88] Ji 2022 | μ-LiₓSi ‖ SSE ‖ LTO | 정변위 · 기저 ≈45 MPa(그림에만) | ≈1.0 → 0.5(5 사이클) | — | "≈0.7 MPa" |
 | 33호 재수록 [90] Han 2021 | Sb:LPSC | 기저 ≈20 MPa(그림에만) | 첫 충전 ≈+2.3 → 20.5–21.8 진동 | — | "2.25 MPa" |
@@ -89,9 +90,11 @@ the LiCoO2 cathode **and the In-Li anode**.[81]" 로 설명한다(인용 번호�
 | 81호 재수록 [45] Lee 2021 | Li ‖ LPSC ‖ Li · Li ‖ LSPS ‖ Li(개방 회로) | 초기 30 MPa(캡션) | 무전류 20 h → ≈27.6(LPSC) · ≈24.8(LSPS)(`[도표]` ±0.05) | — | 본문 "from 5.2 to 2.3 MPa"(하강 폭의 오전사 — 81호 D2) |
 | 81호 인쇄 [91] Han 2021(= 33호 [90]) | 합금 음극(Sb · Sn · Si) · 아지로다이트 · NMC111(81호 본문) | — | "2.25 MPa for Sb anode, 1.28 MPa for Sn, and 1.49 MPa for Si" | — | 33호 재수록 그림(Sb:LPSC ‖ Li)과 같은 원전의 다른 셀일 수 있다(미열람) |
 
-⚠ 33호 · 81호 재수록 값은 각 digest 의 그림 판독이고 원전 미열람이다. 81호가 62호 두 패널(In ≈1.2 · LTO ≈0.065 MPa)을 따로 싣는 것은 새 행으로 세지 않는다(62호 행과 같은 자료). 62호 LTO 자료 제공자(R. K.)와 [58] Koerver 2018 이 같은 측정 계열인지는 **미확인**이다.
+⚠ 33호 · 81호 재수록 값은 각 digest 의 그림 판독이고 원전 미열람이다. 81호가 62호 두 패널(In ≈1.2 · LTO ≈0.065 MPa)을 따로 싣는 것은 새 행으로 세지 않는다(62호 행과 같은 자료). 62호 LTO 자료 제공자(R. K.)와 [58] Koerver 2018 이 같은 측정 계열인지는 **미확인**이다 — **2026-10-02 (97호) 확인: 같은 자료다**(97호 그림 4a 캡션 "LTO/SE|SE|LCO/SE (data from ref. 11)" — 62호 자료를 다시 실었고 첫 사이클 하나가 더 있다 · 진폭 ≈0.057–0.065 MPa) · 33호 재수록 [58] 의 ≈0.05–0.07 MPa 는 이 자료와 97호 NCM 셀(≈0.045)의 재수록이다.
 
 ⚠ **2026-09-28 (63호) 정정 둘.** (i) 62호 LTO 셀의 "air-tight cell casing designed by our group27" 은 63호 SI Fig. S3 케이스다 — **나사 10 N·m 토크 · Al 프레임 · 하중계 없음**. 62호 Fig. 4 의 In ↔ LTO 비교는 hot-press 셀 ↔ 나사 케이스 셀의 비교였을 수 있고(62호가 LTO 셀 압력을 어떻게 쟀는지는 여전히 0), 함정 1 의 음극 몫 ≈90–95 %(`[재현]`, 같은 `k_eff` 가정)는 **조건부**다. (ii) 62호 ESI S3("stable electrochemical performance")의 셀은 63호 Fig. 9 셀 C 이고 63호 방법상 **Li 박 1:60 장기 셀**이다 — 62호 압력 셀과 다른 셀 · 다른 Li 재고.
+
+⚠ **2026-10-02 (97호) — 함정 1 · 2 · 4 · 5 의 같은 지면 정량.** (함정 1) 상대극 교체로 양극 몫만: LTO 상대 LCO +0.057 · NCM −0.045 · NCA −0.053 MPa ↔ 같은 NCM-811 양극에 Li +1.48 · InLi +1.08 · 흑연 +0.65 MPa — 상대극 몫 ×11–33(`[도표]` · 본문 "ten- to twenty-fold" 는 배수 · 순서가 그림과 다름). (함정 2) `[재현·가정]` 겉보기 강성 Δσ11/Δh **0.085–0.40 MPa µm⁻¹** — 같은 장치 · 같은 체결에서 셀마다 ≈×5 · 셀 탄성 `K_eff/h` ≈44(SI 21.8 GPa ÷ 500 µm)의 1/110–1/510 — 저자도 "part of the volume change goes into pore filling, part into strain" · "the stress response is unique to the chosen solid electrolyte(s) and electrode combination(s)". (함정 4) 기저 표류(휴지 16 h −3.6 · 사이클 92 h ≈−4 · 빈 케이스 −3.9 MPa / 69 h — "due to the plastic insulators")가 양극 신호의 ≈70–90 배 — 양극 Δσ11 은 수동 기저선 · 개별 표류 보정의 산물이고 규칙은 미인쇄. (함정 5) 기저(절대)는 그림 S5 축에만(≈61–65.5) · 본문은 "10 Nm … 60 ± 8 MPa"(토크 교정)와 "approximately 70 MPa"(명목). ⇒ 압력 진폭을 활성 분율 대리로 쓰는 처방(함정 3)의 세 선결 조건(`k_eff` · 기저선 · 상대극 몫)이 한 편 안에서 모두 수치로 보인다 — 그리고 SI 계산("completely constrained" 가정)과 측정이 ×166–1466 어긋난다(97호 D6).
 
 ## 이 위키에서의 적용
 
@@ -101,6 +104,7 @@ the LiCoO2 cathode **and the In-Li anode**.[81]" 로 설명한다(인용 번호�
 - **[[assb-pressure-reapplication-separation-test]] D1** — "사이클 해상 압력 계측" 에 붙일 후보(결정은 사용자 몫): 원시 압력(기저 제거 전) · 기저선 규약 · 무전류 유지로 잰 표류를 같이 신고한다.
 - **[[assb-stack-pressure-operating-window]] §압력 진동** — 상대극 ΔP ≈ 요구치 크기라는 관찰의 원형 표본이 62호다(In 셀 ≈1.0–1.3 MPa · 양극 몫 ≈0.07). 단 기저 ≈62 MPa 위의 값이다.
 - **합성 truth([[assb-synthetic-truth-contact-loss-requirements]])** — 운전 압력을 넣을 때 기저(절대) · 구속 형식 · 기저선 규약 셋을 같이 적는다(60호 · 61호 새 제약에 62호가 둘을 더한다).
+- **[[assb-maxwell-ocv-derivative-channels]] 와의 경계 (2026-10-02, 97호)** — 같은 편이 압력을 두 방식으로 쓴다: OCV–압력(무전류 · hot-press · ≈49–235 MPa 램프 — 열역학 도함수)과 운전 응력(사이클 · 나사 틀 + 로드셀 · 기저 ≈61–65.5 MPa — 기계 신호). 운전 응력 진동(≤1.5 MPa)이 OCV 에 주는 몫은 `[재현]` ≤0.2 mV(0.023–0.122 mV MPa⁻¹) — 응력 신호를 OCV 잔차로 옮겨 읽지 않는다.
 
 ## 이 페이지가 주장하지 않는 것
 
@@ -109,9 +113,10 @@ the LiCoO2 cathode **and the In-Li anode**.[81]" 로 설명한다(인용 번호�
 - **"지그 순응이 ΔP 를 정한다" 를 측정으로 주장하지 않는다** — 62호 인쇄 탄성률 · ESI ⅓ 규칙 · 셀 두께 상한 위의 `[재현]` 이다. 강성 실측은 어느 편에도 없다.
 - **62호의 기저 표류가 압밀이 아니라고 하지 않는다** — 후보를 가를 대조가 없다는 것까지다.
 - **33호 재수록 값 · 9호 힘 시계열을 MPa 눈금에서 62호와 나란히 비교하지 않는다** — 재수록 판독 · 단위 Kg · 기저 미인쇄가 섞여 있다. 표는 **무엇이 인쇄됐는가**의 대조다.
-- **`evidenceScope: multi-source-mixed` · `confidence: low`** — 1차 측정은 62호 · 60호 둘이고 나머지는 재수록 · Perspective 다.
+- **`evidenceScope: multi-source-mixed` · `confidence: low`** — 1차 측정은 62호 · 60호 둘이고 나머지는 재수록 · Perspective 다(2026-10-02 — 97호가 셋째 1차 측정: 상대극 교체 · 로드셀 원시 하나).
 - **80호 코인셀의 면 분포 수치(δ · 간극)를 운전 압력 신호의 보정 인자로 쓰지 않는다** (2026-09-29) — 액체 코인셀의 판 휨이고 80호에는 운전 중 압력 신호가 없다; 주석은 신호 식의 성질(면 적분)을 적은 것이다.
 - **81호의 재수록 압력 신호(Liang · Ham · Lee · Han)를 이 페이지의 1차 표본으로 세지 않는다** (2026-09-29) — 종설 재수록 그림의 판독이고 원전 미열람이며, 그중 둘(Ham · Lee)은 81호 본문 서술이 자기 그림과 어긋난다. 표 행은 무엇이 재수록됐는가의 목록이다.
+- **97호 겉보기 강성(0.085–0.40 MPa µm⁻¹)을 측정 강성으로 쓰지 않는다** (2026-10-02) — 그림 2a 부피 % · SI 밀도 · ∅6 / ∅10 mm 면적 · 이론 몰질량 가정 위의 `[재현·가정]` 이고, 셀 간 ≈×5 · 셀 탄성 대비 1/110–1/510 은 자릿수 표본이다. 그리고 **97호 본문의 "+0.6 MPa" 를 양극 신호 크기로 옮기지 않는다** — 그림 축 · 표 S4 는 0.06 MPa 다.
 
 ## 관련
 - [[assb-contact-loss-vs-lampe]] — 닻. Q2 칸의 압력 센서 항목이 이 페이지의 함정 다섯에 걸린다.

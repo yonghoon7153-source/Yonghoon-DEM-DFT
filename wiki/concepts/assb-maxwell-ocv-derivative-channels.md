@@ -2,15 +2,15 @@
 title: Maxwell 관측 채널 — OCV 의 온도·압력 편미분을 관측 축으로 (엔트로피메트리 · volumetry)
 description: "Oh et al. 2025 (Angew.) — ASSB 셀에서 −F(∂E/∂T)_P = ΔS(x), F(∂E/∂P)_T = ΔV 를 정지 상태에서 재는 비파괴 진단; OCV 적합의 경쟁이 아니라 같은 상태함수 E(x,T,P) 의 관측 추가이며, 우리 쌍(LAM_PE ↔ 접촉 손실)에 대한 새 감도 행의 부호와 그 한계"
 created: 2026-09-22
-updated: 2026-09-22
+updated: 2026-10-02
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/mohtat2019_electrode-soh-estimability-expansion.md]
+sources: [raw/papers/koerver2018_chemo-mechanical-expansion-molar-volume-ocv-pressure-stress.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/mohtat2019_electrode-soh-estimability-expansion.md]
 confidence: low
 explored: false
 verificationStatus: unverified
 claimType: mixed
-evidenceScope: single-source
+evidenceScope: multi-source-primary
 ---
 
 # Maxwell 관측 채널 — OCV 의 온도·압력 편미분을 관측 축으로 (엔트로피메트리 · volumetry)
@@ -18,8 +18,8 @@ evidenceScope: single-source
 > `assb` 축 **아홉째 개념**. 앞의 여덟이 *현상*(접촉 손실이 있다)·*역문제*(그 양이 유일하게
 > 정해지는가)·*모델 차수*(봉우리 개수가 상태변수다)를 다뤘다면, 이 페이지는 **관측 자체를
 > 늘리는 조작**을 다룬다 — 그리고 그것이 우리 쌍(`LAM_PE` ↔ 접촉 손실)에 대해 **어느 방향으로
-> 눈을 뜨고 어느 방향으로 눈이 머는가**를 적는다. 근거는 **1 편**(Oh 2025, 실험) —
-> `single-source`.
+> 눈을 뜨고 어느 방향으로 눈이 머는가**를 적는다. 근거는 **2 편**(Oh 2025 · 97호 Koerver 2018 — 둘 다 실험) —
+> `multi-source-primary`(2026-10-02 97호로 넓힘 — 처음 쓸 때는 Oh 2025 한 편 · `single-source`).
 
 ## 정의
 
@@ -87,6 +87,22 @@ may not directly affect the early-cycle performance". `[해석]` [[assb-apparent
 만으로 5 MPa 에 0.67 mV 가 나오는데 실측이 2.2 mV — 격자·금속 몰부피로 설명되는 크기가
 아니다.
 
+### 4. ★★★ 계보의 **첫** ∂E/∂p 실측 — 97호 Koerver 2018 (2026-10-02 추가)
+
+`raw/papers/koerver2018_chemo-mechanical-expansion-molar-volume-ocv-pressure-stress.md` — Oh 2025 보다 **7 년 앞선** ASSB 압력 의존 OCV 실측(서로 인용 0). `[인쇄]` 식 (3) "(∂Eoc/∂p)_T = −ΔrVm/nF"(Guggenheim 인용) · 두 셀(InLi \| LGPS \| LTO · InLi \| LGPS \| LCO) · 25 °C · hot-press(Busche 2016 장치) · 다섯 압력 오름 램프(그림 S1 축 ≈49–235 MPa · 인쇄 "55–94–143–192 MPa") · 충전 단계마다 OCV 안정 뒤.
+
+| 셀 | 기울기 `[인쇄]` | 유도량 | 결정학 · 몰부피 예측 | 비 |
+|---|---|---|---|---|
+| In ‖ LTO(LTO 무변형 가정) | **0.122 mV MPa⁻¹** | V̄′(Li, In/InLi) **11.81** cm³ mol⁻¹ | 7.89(15.71 → 23.60) → 0.082 mV MPa⁻¹ | **×1.5** |
+| LCO ‖ In(x 0.65–0.94) | **0.023–0.102 mV MPa⁻¹**(SOC 의존) | V̄m(Li, LCO): 7.89 기준 −1.95 … +5.70 / 11.81 기준 +1.97 … +9.62 | 격자 곡선(그림 2b — 배수 의심) | — |
+| (14호 Oh 2025 — Li ‖ NCM811 · 위 §3) | 0.44 · 0.23 mV MPa⁻¹(5 · 10 MPa 구간) | — | Li 몰부피 0.134 mV MPa⁻¹ | ×3.3 · ×1.7 |
+
+`[해석]` 두 편이 같은 방향을 보인다: **실측 ∂E/∂p 가 결정학 · 몰부피 예측보다 크다** — §3 의 "ΔV 는 재료 상수가 아니라 압력 구간 · SOC 의 함수인 유효 컴플라이언스" 의 둘째 근거. 97호 저자의 해석도 측정 비이상(단축 하중 · 입자 배향 · LGPS 산화에 의한 Li 흡수 · 비등적 소성 · SE 공극)이다.
+
+⚠ 층위: 2전극 · **셀 하나씩** · 오름 램프만(이력 · 내림 0) · 회귀 Δm 만 · 상대극 무변형 **가정** 위의 전극 귀속 · LCO 부호 반전은 결정학 기준(7.89)을 고를 때만(자기 측정 11.81 이면 전부 양수 — 97호 D16) · 초록 "1 mV/100 MPa" 는 자기 측정의 1/2.3–1/12(97호 D1) — **이 초록 값이 94호에 '측정' 으로 옮겨졌다**(94호 "50 → 70 MPa 에서 OCV 영향 clearly below 1 mV" ↔ 97호 측정으로 In/InLi 2.4 mV · LCO 0.45–2.0 mV / 20 MPa).
+
+`[재현]` **우리 OCV 맞춤에 압력 항의 크기**(97호 기울기 선형 외삽): 상대극(In/InLi) 몫 0.122 mV MPa⁻¹ 은 SOC 무관 → 60–65 MPa 운전이면 상압 대비 **+7.3–7.9 mV 상수**(기준 전위 상수에 흡수) · 양극(LCO) 몫은 SOC 의존 → 60 MPa 에서 x 0.65 ↔ 0.80 **≈4.7 mV 형상 왜곡** · 운전 응력 진동(≤1.5 MPa)은 ≤0.2 mV. ⇒ volumetry 를 잔차 행으로 넣는 폭 측정(아래 '적용' ①)에서 `E(P, x)` 면은 **상수 몫 + SOC 의존 몫** 둘로 모델링해야 한다. 우리 잔차 · 폭 수치는 `degradation-degeneracy/docs/RESULTS*.md` 가 정본 — 여기 옮기지 않는다.
+
 ## 경고 — 원문이 준 한계에서 나온다 (자세히는 raw digest D1–D15 · G1–G14)
 
 1. **역문제가 없어서 유일성 물음이 사라진다 — 그러나 귀속의 유일성은 안 쟀다.** ΔS 변화가
@@ -134,6 +150,7 @@ may not directly affect the early-cycle performance". `[해석]` [[assb-apparent
 - **"void 는 용량에 안 보인다" 를 일반화하지 않는다.** 50 사이클 · 2 점 · 조건당 셀 1 · 0.5C
   의 것이다. 4호는 같은 자릿수의 void 에서 98 % 손실을 봤다(다른 화학·압력·율).
 - **Q4 가 측정됐다고 하지 않는다** — `assb` **0/14 편** 그대로.
+- **97호 기울기를 재료 상수로 옮기지 않는다** (2026-10-02) — 셀 하나씩 · 오름 램프 · 무변형 상대극 가정 · 25 °C 의 값이고 결정학 예측보다 ×1.5 크다(비가역 · 하중 성분 미분리). 압력 항 mV 는 선형 외삽 `[재현]` 이다.
 
 ## 관련
 - [[assb-contact-loss-vs-lampe]] — 닻 질문. 이 페이지가 그 "관측 추가" 후보를 준다.
@@ -146,3 +163,5 @@ may not directly affect the early-cycle performance". `[해석]` [[assb-apparent
 - [[near-optimal-set-width-measurement]] — 새 행을 넣었을 때 폭이 얼마나 주는지 잴 기계.
 - [[drt-peak-count-nonidentifiability]] — 이 편이 밀어내는 EIS 계보; 모델 차수 없는 관측의 대가.
 - [[thermo-kinetic-loss-partition]] — 액체셀 축의 같은 형식(외부 변수 T·P·i 를 관측 축으로).
+- [[assb-operando-pressure-signal-attribution]] — 같은 97호의 운전 응력 쪽(압력을 관측 신호로 쓸 때의 귀속 — 강성 곱 · 기저선 · 상대극 몫).
+- [[assb-li-in-reference-potential-window]] — In/InLi 상대극 영점의 압력 계수(97호 — 서른다섯 번째 형태).

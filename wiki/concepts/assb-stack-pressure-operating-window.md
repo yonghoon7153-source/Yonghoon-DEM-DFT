@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-10-02
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/schmidt2024_nitsche-contact-delamination-resolved-ssb-cathode.md, raw/papers/truong2025_calendar-vs-cycle-aging-protocols-drt-assb.md, raw/papers/zhang2024_all-electrochem-active-si-li21si5-anode-assb.md, raw/papers/li2025_si-anode-fracture-size-threshold-stack-pressure-assb.md, raw/papers/minnmann2022_designing-cathodes-cam-ssb-perspective.md, raw/papers/kim2023_argyrodite-coated-ncm-normal-pressure-assb.md, raw/papers/wang2024_fast-kinetics-hierarchical-catholyte-anode-design-ssb.md, raw/papers/xu2024_pressure-effects-countermeasures-ssb-review.md, raw/papers/okasinski2020_edxrd-profiling-coin-cell-uneven-compression-lateral-gradients.md, raw/papers/minnmann2021_charge-transport-bottlenecks-tlm-ncm622-lpscl.md, raw/papers/nam2018_dry-vs-slurry-mixed-electrodes-binder-gitt-coverage.md, raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md, raw/papers/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/oh2025_mgsigr-overcharge-low-np-ratio-low-pressure-assb.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/li2026_safety-aware-bms-active-intelligence.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
+sources: [raw/papers/koerver2018_chemo-mechanical-expansion-molar-volume-ocv-pressure-stress.md, raw/papers/schmidt2024_nitsche-contact-delamination-resolved-ssb-cathode.md, raw/papers/truong2025_calendar-vs-cycle-aging-protocols-drt-assb.md, raw/papers/zhang2024_all-electrochem-active-si-li21si5-anode-assb.md, raw/papers/li2025_si-anode-fracture-size-threshold-stack-pressure-assb.md, raw/papers/minnmann2022_designing-cathodes-cam-ssb-perspective.md, raw/papers/kim2023_argyrodite-coated-ncm-normal-pressure-assb.md, raw/papers/wang2024_fast-kinetics-hierarchical-catholyte-anode-design-ssb.md, raw/papers/xu2024_pressure-effects-countermeasures-ssb-review.md, raw/papers/okasinski2020_edxrd-profiling-coin-cell-uneven-compression-lateral-gradients.md, raw/papers/minnmann2021_charge-transport-bottlenecks-tlm-ncm622-lpscl.md, raw/papers/nam2018_dry-vs-slurry-mixed-electrodes-binder-gitt-coverage.md, raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md, raw/papers/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/oh2025_mgsigr-overcharge-low-np-ratio-low-pressure-assb.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/li2026_safety-aware-bms-active-intelligence.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -760,7 +760,7 @@ Source Data xlsx(시트명 'Figure 5' · 머리 셀 "Figure. 1b" — **Fig. 5 �
   **값은 원자료로만 옮긴다.**
 - `[해석]` 33호 D4("most labs 50–600 MPa", 출처 0)와 대조: 59호 원자료의 고체 13 값 중앙은 **45 MPa**, `[도표]` Fig. 5b 의 Li 전체 상자는 ≈1–34 MPa(위 수염 ≈75) —
   59호의 집계도 "대부분 50 MPa 이상" 을 받치지 않는다. 다만 원자료에 시뮬 편 · 비-Li 금속 편이 섞여 있고 Fig. 5 는 원자료가 없다.
-- 운전 압력 표본(이 페이지)에 붙는 것: Koerver 2018 *EES* 가 **143 MPa**(59호 원자료) ↔ **70 MPa**(33호 Table 1) — 같은 원전의 두 인쇄값, 원전 미열람.
+- 운전 압력 표본(이 페이지)에 붙는 것: Koerver 2018 *EES* 가 **143 MPa**(59호 원자료) ↔ **70 MPa**(33호 Table 1) — 같은 원전의 두 인쇄값, 원전 미열람. → **2026-10-02 (97호) 해소**: 143 MPa 는 원전 실험 절의 OCV–압력 램프 셋째 계단("0.5t–1.2t–1.7t–2.2t–2.8t (55 MPa–94 MPa–143 MPa–192 MPa)") · 70 은 실험 절의 운전 명목 — 운전 압력 표본으로는 70(명목) · 60 ± 8(토크 교정) · 61–65.5(계측)만(아래 97호 절).
 
 ### 3. ★★ CSP — 창 전체를 CE 한 곡선으로, 수치 0
 
@@ -1204,6 +1204,40 @@ Lee [45] **개방 회로 이완 30 → 27.6(LPSC) · 24.8 MPa(LSPS) / 20 h**(`[�
 
 실측 · 단락 위 벽(Li 크리프 · 덴드라이트 — 음극 박리 미해상) · 요구치 · 사이클 중 압력 계측 · 압력 → `θ(N)` · 재가압 되돌림. 창의 값은 움직이지 않았다 — 움직인 것은 **모형 쪽 압력 표기**(예압 ↔ 이력 · 구속 강성 · 경계 ↔ 계면)다.
 
+## ★★ 2026-10-02 (`assb` 97호 Koerver · Zhang · de Biasi · Schweidler · Kondrakov · Kolling · Brezesinski · Hartmann · Zeier · Janek 2018 *Energy Environ. Sci.* 11, 2142, **실험 · 압력 의존 OCV(hot-press · ≈49–235 MPa) + 운전 축 응력(63호 케이스 개조 · 10 Nm · 로드셀 KMT 55) · 원장 최다 지목 13 편**) — **창의 값은 움직이지 않는다: 요구치 · 압력 → 성능 스윕은 0 이다. 움직인 것은 운전 압력 표기 셋 — ① 같은 연구망 "10 N·m" 의 첫 계측 짝 ② 33 · 59호가 이 편에 매단 값(445 / 70 · 143)의 정체 ③ 94호가 이 편 초록에서 옮긴 OCV 압력 결합 "1 mV/100 MPa" 의 자릿수**
+
+`raw/papers/koerver2018_chemo-mechanical-expansion-molar-volume-ocv-pressure-stress.md` (4차 묶음 파일 57).
+
+### 1. 요구치 — 인쇄 0
+
+- 압력 → 용량 · 저항 · 단락 스윕 0 · 요구치 · 문턱 0 · `[인쇄]` "By increasing the energy density … and inevitably lowering the external force, volume effects of electrode materials will be even more pronounced"(서술) — 계보에 값을 더하지 않는다.
+
+### 2. ★★ 운전 압력 — 한 지면의 다섯 층 (§3-b (캐)(해))
+
+| 값 | 층위 | 자리 |
+|---|---|---|
+| 35 kN ≈445 MPa | 조립 압착 명목(`[재현]` ∅10 mm 445.6) | 실험 절 |
+| "approximately 70 MPa" | 운전 명목(근거 0 · 23 · 64호와 같은 문장) | 실험 절 |
+| "10 Nm torque, corresponding to a force of 60 ± 8 MPa" | 토크 교정 명목 | 응력 측정 절 |
+| ≈61–65.5 MPa(그림 S5 · `[도표]`) | **로드셀 계측**(기저 · 표류 포함 — 휴지 16 h −3.6 · 사이클 92 h ≈−4 · 빈 케이스 −3.9 MPa / 69 h · PEEK) | ESI |
+| ≈49 / 55 … 235 MPa(인쇄 "55–94–143–192") | OCV–압력 시험 게이지(hot-press — 62호 장치 [115]) | 실험 절 · 그림 S1 |
+
+- ⇒ **63호 절의 "같은 구속(알루미늄 틀 + 10 N·m)에 세 편이 다른 값" 에 넷째 값이자 첫 계측**: 이 편 60 ± 8(교정) · 61–65.5(계측 — 63호 `[재현]` 띠 42–106 안) ↔ 23 · 64호 "≈70" · 90호 "~50" · 63호 0. 조건: 이 편 셀 틀은 바깥틀을 늘린 개조판이고 셀 구성이 다르다(같은 장치라고 단정하지 않는다).
+- ⇒ **59호 원자료 "143 MPa" = 이 지면 OCV–압력 램프의 셋째 계단**(위 59호 절의 "같은 원전의 두 인쇄값" 해소 — 운전 압력이 아니다) · **33호 Table 1 "445 / 70" = 실험 절 인쇄(명목)** ✅.
+
+### 3. ★★ OCV 의 압력 결합 — 94호가 옮긴 "1 mV/100 MPa" 의 자릿수
+
+- `[인쇄]` 초록 "in the order of 1 mV/100 MPa" ↔ 같은 지면 측정 0.122(In/InLi) · 0.023–0.102(LCO) mV MPa⁻¹ = **2.3–12.2 mV/100 MPa** · 본문 §4 "1 MPa → around 0.1 mV"(10 mV/100 MPa).
+- ⇒ 94호 절 §4 의 "무시한 압력 결합: OCV(1 mV/100 MPa [26] …) — 20 MPa 로 셈 · ±50 MPa 급을 넣어도 OCV ≤1.8 mV" 는 이 편 측정 기울기로 **In/InLi 2.4 mV(20 MPa) · 6.1 mV(50 MPa)** · LCO 0.45–2.0 · 1.1–5.1 mV — 무시 논거의 자릿수가 ×2.3–12 커진다(무시 여부는 94호 모형 축에서 판정하지 않는다).
+
+### 4. ★ 운전 중 압력 진동 — 상대극 지배의 고압판
+
+- `[도표]`(축 10⁵ Pa): 양극(LTO 상대) 0.045–0.06 MPa ↔ 같은 NCM-811 에 Li +1.48 · InLi +1.08 · 흑연 +0.65 MPa — §압력 진동(33호)의 "주범은 상대극" 과 같은 방향 · 기저 ≈61–65.5 MPa 대비 진동 ≈1–2.4 %(저압 ≤5 MPa 운전이면 같은 자릿수 — `[해석]`).
+
+### 5. 이 편이 이 페이지에 **안 준 것**
+
+요구치 · 압력 → 성능 스윕 · `θ(P)` · `R(P)` · 단락 위 벽 · 재가압 되돌림 · 구속 형식 이름. 창의 값은 움직이지 않았다 — 움직인 것은 **운전 압력 값의 층위 사슬**(명목 ↔ 교정 ↔ 계측 · 다른 시험의 압력)과 **OCV 압력 결합의 자릿수**다.
+
 ## 경고 (전부 원문이 준 한계에서 나온다)
 
 1. **점당 셀 1 개, 오차 막대 0.** 압력–수명 6 점 전부 N=1 이다.
@@ -1259,6 +1293,7 @@ Lee [45] **개방 회로 이완 30 → 27.6(LPSC) · 24.8 MPa(LSPS) / 20 h**(`[�
 - **89호의 셀을 50 MPa 표본으로 옮기지 않는다** (2026-09-29) — 이 편 지면에 운전 압력이 없고 50 MPa 는 60호 표 S2 의 사후 부여다. 그리고 **이 편의 370 MPa(이중층 SE 성형)를 Si 요구 압력으로 인용하지 않는다** — 성형값이고 인용 · 요구 문장이 없다.
 - **90호의 "~50 MPa" 를 운전 압력 창의 표본이나 63호 토크(10 N·m)의 환산 근거로 옮기지 않는다** (2026-10-02) — 환산 근거 · 계측이 인쇄되지 않은 토크 명목이고 ESI 에만 있다; 63 · 23호와 같은 구속에 다른 값이 붙었다는 것까지다. 82호의 50 MPa 를 같은 토크 명목으로 단정하지도 않는다.
 - **94호의 50 / 60 / 70 MPa 를 운전 압력 창의 실측 표본으로 옮기지 않는다** (2026-10-02) — 모형 예압(t = 0 · 스프링 강성 가정)이고, 압력 효과는 단순 기하 세 점 · 0.1 C · 첫 충전의 율 조건부 결손이며, 반 사이클 압력 표류(+13 / +53 / −58 MPa)는 우리 `[재현·가정]` 이다.
+- **97호의 "60 ± 8 MPa" · 계측 61–65.5 MPa 를 63 · 90호 셀의 운전 압력으로 옮기지 않는다** (2026-10-02) — 같은 연구망 · 같은 10 Nm 이지만 바깥틀을 늘린 개조판(로드셀 장착)이고 셀 구성이 다르다. 그리고 **OCV–압력 램프의 압력(≈49–235 · "143")을 운전 압력 창의 표본으로 세지 않는다** — 무전류 열역학 측정의 설정값이다.
 
 ## 관련
 - [[assb-pressure-reapplication-separation-test]] — `P↑` 분리 연산자. **이 페이지가 그 상한을 준다.**
