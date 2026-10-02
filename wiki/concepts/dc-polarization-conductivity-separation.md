@@ -130,6 +130,10 @@ evidenceScope: multi-source-primary
 - [[interface-quality-not-bulk-conductivity]] — 논증 ①(σ_e 방향 무관)과 논증 ⑥(SE 상의 σ_e 는
   무관하지 않다)을 가르는 유일한 측정이다.
 - [[composite-cathode-mixing-routes]] — 밀링 이력을 스윕 변수로 넣는 근거.
+- [[what-milling-does-to-the-electrolyte]] — ★ **셀 없이 분말·펠릿만으로 답하는 쪽.**
+  그 카드 1단계가 `LPSCl 단독` · `LPSCl + AB` 를 0/1/4 h 밀고 **이 페이지의 양식으로** σ 를
+  재는 것이다. 그 카드의 표 2 는 **분모를 안 적은 "전도도가 올랐다/내렸다" 가 해석을 반대로
+  뒤집는** 사례 셋을 모았다 — 이 페이지의 세 칸 규율이 왜 필요한지의 직접 증거다.
 
 **참고로 활물질 단독(SE 0 wt%)도 잰다.** Kwok 의 core–shell 분말은 SE 를 섞지 않아도
 `[인쇄]` σ_Li⁺ = **1.3×10⁻⁵ S cm⁻¹** 였다 (Li2S 자체는 10⁻⁹ 급). **활물질 표면에 Li⁺ 경로를

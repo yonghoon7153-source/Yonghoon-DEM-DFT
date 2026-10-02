@@ -367,3 +367,33 @@
 - 확인한 것: 홈 카운트 타일은 **전부 레지스트리에서 센다**(논문 digest 24 · 열린 질문 5 · 개념 6 · 프로젝트 2 · 전체 49) · 패널에 **5장 전부** 실린다 · `/roadmap`·`/questions` 도 **5장 전부** · `/papers` 24편 · `index.html` 에 남은 손 숫자는 **조성·목표뿐**이고 그것은 lint 18(canonical-copy)이 지킨다.
 - ⚠ **사용자 쪽 원인도 있다**: webapp 은 **로컬 디스크를 읽는다.** WSL 클론에서 `git pull` 을 하지 않으면 새 파일이 없다 — 코드가 아무리 자동이어도 파일이 없으면 못 보여준다. 안내했다.
 - 검증(실행 출력): `python3 wiki/tools/lint.py` **0 errors / warnings 0** · `.venv/bin/python webapp/smoke.py` **0 failures (312건 — 신설 게이트 6건 포함)**.
+
+## [2026-10-02] create | 열린 질문 카드 — 밀링이 SE 에 무엇을 하는가 (기전 축 분리)
+- 신설: [[what-milling-does-to-the-electrolyte]] (status: open, confidence: medium, multi-source-primary).
+  [[one-step-vs-two-step-mixing]] 의 H2b 가 한 줄로 떠안고 있던 **기전 질문을 분리**했다 —
+  그쪽은 *순서*(언제 넣는가), 이쪽은 *밀링이 SE 상 자신에게 무엇을 하는가*. 가설 M0–M5
+  (M1 미세화 / M2 열화 / M3 계면상 합성 / M4 접촉·시간 / **M5 열**).
+- 근거: digest 24편에서 **SE·복합분말 자신을 잰 측정만 22행**으로 모았다(셀 성능은 제외).
+  SE 를 따로 밀어서 끝까지 숫자로 보인 논문은 **Cronk 2026 한 편**이고, Kim 2025 는 σ 수치가
+  SI(미확보), Lee J 2025 는 "decreased" 만 적고 숫자가 하나도 없다.
+- ★ 핵심 관측(표 2): **같은 밀링에서 벌크 SE σ 는 내려가고 복합체 유효 수송은 올라가며, 세 논문이
+  각자 자기 논문 안에서 두 양을 반대 방향으로 쟀다** (Cronk 30배↓ / 3.3배↑ · Kim σ↓·E 1/4.7 /
+  0.07→0.42 mS cm⁻¹ · Lee J σ↓·10 h 붕괴 / D 196배↑). → 질문은 "죽이나 살리나" 가 아니라
+  **"교환비가 얼마인가"**. [[interface-quality-not-bulk-conductivity]] 의 논지가 **이온 쪽에서 재현**된다.
+- `[해석]` 세 생성물(Li3PS4+n · 3Li⁺–PS4+n³⁻ · 나노 LiCl)이 **한 반응의 양쪽 절반**일 수 있다 —
+  Cl 이 LiCl 로 빠지면 남는 골격이 S 과잉이 된다. 지지 근거는 Cronk 의 EDS 가 표면 50 nm 에서
+  Cl 을 본 것. ⚠ 두 쪽을 한 시료에서 동시에 보고한 논문은 없다 (Cronk SI 의 XPS Cl 2p 가 공짜로 닫는다).
+- 판정 현황: **M1 반증 쪽**(800 rpm 이 D50 최소인데 성능 꺾임) · **M2 참이나 비지배적**(벌크 σ 30배
+  버리고 이긴다; Gao 는 총 30 h 에도 결정상 생존, Wang D 는 20 h 까지 단조) · **M3 교란 미분리**(M0) ·
+  **M4 는 "환원" 에만 참, "분리" 에는 거짓**(Lee J 손혼합 Cl/P = 1.00, Park 은 손혼합인데 425→418 cm⁻¹) ·
+  **M5 가 가장 센 단일 근거**(기계력 0 인 145 °C 3 h 로 Cl/P 1.38, 황 없이도 LiCl, 속도·시간 양쪽에 문턱).
+- ⚠ **혼합 중 온도를 잰 논문이 24편 중 0편**이다 — 기전으로 열을 지목한 논문 자신도 재지 않았다.
+  → [[reference-cell-experiment-plan]] 에 **0-d 단계 신설**: 활물질 없이 `LPSCl 단독`·`LPSCl + AB` 를
+  0/1/4 h 밀어 XRD·D50·σ·XPS Cl 2p/P 2p, 그리고 **밀링 직후 IR 측온 + 휴지 주기만 다른 대조**.
+  **셀 0개**이고 1단계보다 앞선다 (분말에서 좁히지 않으면 셀 수가 곱으로 늘어난다).
+- 인바운드 링크: [[one-step-vs-two-step-mixing]](축 분리 안내 + Status Log) ·
+  [[composite-cathode-mixing-routes]](결론 절 — 이 표의 밀링 좌표를 읽는 법) ·
+  [[dc-polarization-conductivity-separation]](적용 목록 — 분모 세 칸의 직접 증거) ·
+  [[reference-cell-500-600-mahg]](H2b 재서술 + 후속 절) · [[reference-cell-experiment-plan]](0-d·관련) ·
+  `wiki/index.md`(Questions 절, 전체 페이지 22 → 23).
+- 검증: `python3 wiki/tools/lint.py` → **0 errors / 0 warnings** (pages 23).
