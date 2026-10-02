@@ -57,6 +57,29 @@ def main() -> int:
         r = get(p["url"])
         check(f"page {p['url']}", r.status_code == 200, f"status {r.status_code}")
 
+    # 1-b. 홈이 **열린 질문 카드 전부**를 싣는가 (2026-10-02 신설).
+    #      홈 라우트가 `questions[:4]` 로 잘려 있어서 카드가 5장이 된 순간 하나가
+    #      조용히 사라졌다. 갯수가 아니라 **슬러그 전수**를 본다 — 카드가 늘어도 따라온다.
+    #      ⚠ 페이지 전체를 보면 안 된다: 홈은 `index.md` 본문을 함께 렌더링하고 그 안에
+    #      모든 질문 슬러그가 wikilink 로 들어 있어서, 패널이 잘려도 검사가 통과한다
+    #      (2026-10-02 에 실제로 그렇게 헛돌았다 — 읽기 전용 게이트와 같은 함정).
+    #      그래서 **"지금 열려 있는 질문" 패널 구간만** 잘라서 본다.
+    home_full = get("/").get_data(as_text=True)
+    _h = home_full.find("지금 열려 있는 질문")
+    home = home_full[_h:home_full.find("</section>", _h)] if _h >= 0 else ""
+    check("home has open-question panel", _h >= 0 and len(home) > 0,
+          "홈에 '지금 열려 있는 질문' 패널이 없다")
+    n_open = 0
+    for slug, p in sorted(pages.items()):
+        if p["kind"] != "question":
+            continue
+        if str(p["meta"].get("status", "open")).strip().lower() not in ("open", "active"):
+            continue
+        n_open += 1
+        check(f"home lists open question {slug}", slug in home,
+              "열린 질문 카드가 홈에 없다 — index.html/app.py home() 의 잘림을 확인")
+    check("open questions found", n_open > 0, "열린 질문 카드가 하나도 없다")
+
     # 2. 고정 화면 · API
     for url in ("/", "/roadmap", "/papers", "/compare", "/questions", "/concepts",
                 "/entities", "/chat", "/notes", "/search?q=Li2S", "/favicon.svg",

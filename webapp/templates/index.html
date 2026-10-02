@@ -14,7 +14,11 @@
   <a class="hero-pipe" href="/roadmap">
     <span class="hp-tag">처음이면 여기부터 · 1/2</span>
     <b>무엇을 연구하나 — pristine Li2S 로 500–600 mAh g⁻¹ 을 재현하고, 음극을 없앤다</b>
-    <span class="hp-d">복합양극 30:50:20 · 혼합 경로 네 가지 · 열린 질문 두 장 · 다음 실험 — 한 장에.</span>
+    <span class="hp-d">복합양극 30:50:20 · 혼합 경로 비교 · 열린 질문 {{ counts.get('question', 0) }}장 · 다음 실험 — 한 장에.</span>
+    {# 2026-10-02: 여기에 "혼합 경로 네 가지 · 열린 질문 두 장" 이 손으로 적혀 있었다.
+       질문은 다섯 장, 경로는 여섯 갈래가 됐는데 문구가 따라오지 않아 홈이 낡아 보였다.
+       질문 수는 레지스트리에서 세고, 경로 수는 숫자를 쓰지 않는다 — 숫자를 손으로
+       적으면 또 드리프트한다 (경로 갯수는 comparisons/ 페이지가 정본이다). #}
     <span class="hp-go" aria-hidden="true">→</span>
   </a>
   <a class="hero-pipe hero-trust" href="/compare">

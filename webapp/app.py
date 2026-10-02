@@ -115,11 +115,21 @@ def home():
     counts: dict[str, int] = {}
     for p in pages.values():
         counts[p["kind"]] = counts.get(p["kind"], 0) + 1
-    questions = sorted([p for p in pages.values() if p["kind"] == "question"],
-                       key=lambda x: x["updated"], reverse=True)
+    # 홈의 "지금 열려 있는 질문" 패널은 **열린 카드를 전부** 보여준다.
+    # 2026-10-02: 여기가 `[:4]` 로 잘려 있어서 카드가 5장이 된 순간 하나가 홈에서
+    # 사라졌다 (사용자가 "홈페이지에 반영이 안 된다" 고 알려 준 증상의 절반).
+    # 갯수를 손으로 세는 상수는 쓰지 않는다 — 닫힌 카드(status 가 open/active 가
+    # 아닌 것)는 자연히 빠지므로 이 필터가 스스로 유지된다.
+    # smoke.py 의 "home lists open question" 검사가 이 동작을 고정한다.
+    OPEN = {"open", "active"}
+    questions = sorted(
+        [p for p in pages.values()
+         if p["kind"] == "question"
+         and str(p["meta"].get("status", "open")).strip().lower() in OPEN],
+        key=lambda x: x["updated"], reverse=True)
     return render_template("index.html", active="home", index_html=idx_html,
                            log=C.recent_log(8), counts=counts, total=len(pages),
-                           questions=questions[:4])
+                           questions=questions)
 
 
 @app.route("/roadmap")
