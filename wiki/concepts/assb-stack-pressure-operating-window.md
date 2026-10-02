@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-10-02
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/truong2025_calendar-vs-cycle-aging-protocols-drt-assb.md, raw/papers/zhang2024_all-electrochem-active-si-li21si5-anode-assb.md, raw/papers/li2025_si-anode-fracture-size-threshold-stack-pressure-assb.md, raw/papers/minnmann2022_designing-cathodes-cam-ssb-perspective.md, raw/papers/kim2023_argyrodite-coated-ncm-normal-pressure-assb.md, raw/papers/wang2024_fast-kinetics-hierarchical-catholyte-anode-design-ssb.md, raw/papers/xu2024_pressure-effects-countermeasures-ssb-review.md, raw/papers/okasinski2020_edxrd-profiling-coin-cell-uneven-compression-lateral-gradients.md, raw/papers/minnmann2021_charge-transport-bottlenecks-tlm-ncm622-lpscl.md, raw/papers/nam2018_dry-vs-slurry-mixed-electrodes-binder-gitt-coverage.md, raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md, raw/papers/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/oh2025_mgsigr-overcharge-low-np-ratio-low-pressure-assb.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/li2026_safety-aware-bms-active-intelligence.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
+sources: [raw/papers/schmidt2024_nitsche-contact-delamination-resolved-ssb-cathode.md, raw/papers/truong2025_calendar-vs-cycle-aging-protocols-drt-assb.md, raw/papers/zhang2024_all-electrochem-active-si-li21si5-anode-assb.md, raw/papers/li2025_si-anode-fracture-size-threshold-stack-pressure-assb.md, raw/papers/minnmann2022_designing-cathodes-cam-ssb-perspective.md, raw/papers/kim2023_argyrodite-coated-ncm-normal-pressure-assb.md, raw/papers/wang2024_fast-kinetics-hierarchical-catholyte-anode-design-ssb.md, raw/papers/xu2024_pressure-effects-countermeasures-ssb-review.md, raw/papers/okasinski2020_edxrd-profiling-coin-cell-uneven-compression-lateral-gradients.md, raw/papers/minnmann2021_charge-transport-bottlenecks-tlm-ncm622-lpscl.md, raw/papers/nam2018_dry-vs-slurry-mixed-electrodes-binder-gitt-coverage.md, raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md, raw/papers/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/oh2025_mgsigr-overcharge-low-np-ratio-low-pressure-assb.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/li2026_safety-aware-bms-active-intelligence.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -1170,6 +1170,40 @@ Lee [45] **개방 회로 이완 30 → 27.6(LPSC) · 24.8 MPa(LSPS) / 20 h**(`[�
 
 요구치 · 스윕 · 계측 · 사이클 중 압력 · 구속 형식 · 압력 → 용량 · `θ(P)` · `R(P)`. 창의 값은 움직이지 않았다 — 움직인 것은 같은 연구망 운전 압력 계보(63호 절 "토크 · 힘 · 기저 중 하나만 인쇄")가 **"토크 + 환산 결과(근거 0)"** 로 한 줄 더 채워졌다는 것이다.
 
+## ★★ 2026-10-02 (`assb` 94호 Schmidt · Sinzig · Wall 2024 *J. Electrochem. Soc.* 171, 100502, **모형 · 3D 해상 전기-화학-역학 · Li 금속 \| β-Li₃PS₄ \| NMC622 · Nitsche 접촉(무접착 · 무마찰) · 예압 50 / 60 / 70 MPa(단순 기하) · 70 MPa(79 입자) · Robin 스프링 k 10¹³ Pa m⁻¹ "assumed" · 첫 반 사이클 · 실험 0**) — **창의 값은 움직이지 않는다: 아래 벽(접촉) 쪽 모형 표본 — 압력 ↑ 이 박리를 늦추고 줄이는 방향은 세 점 단조이나, "스택 압력" 은 t = 0 예압이고 같은 스프링으로는 반 사이클에 예압과 같은 자릿수로 움직이며(미보고), 경계 70 MPa 아래에서도 계면의 80–93 % 가 인장이다**
+
+`raw/papers/schmidt2024_nitsche-contact-delamination-resolved-ssb-cathode.md` (27호 후속 ★★★ · 4차 묶음 파일 54).
+
+### 1. 요구치 — 인쇄 0
+
+- 요구치 · 문턱 · 실용 압력 언급 0 · 압력 범위 50–70 MPa(실험실 범위 — 59 · 81호 요구치 ≤10 MPa 쪽 0) · 향후 과제 "cell concepts can be analyzed and optimized w.r.t. the required external mechanical pressure during operation" 한 문장.
+
+### 2. ★★ 압력 축 — 예압 · 스프링 · 표류
+
+- `[인쇄]` 식 (36) Robin 경계 `(F·S)·N = k(u·N − u_k)N` · 표 B·VI 목표 변위 5.041 / 6.049 / 7.057 µm(단순) · 7.102 · 7.133 µm(복잡) · 식 B·6 코사인 램프 250 s/Ĉ. `[재현]` k·u_k = 50.41 … 71.33 MPa · 남는 0.041–0.133 µm = 셀 압축 → 유효 구속 탄성률 30.5–38.4 GPa(표 B·I 직렬 Reuss–Voigt 안 ✅).
+- ⇒ **구속 형식 = 유한 강성 스프링**(셀 강성의 ≈1/120 — 정하중에 가까움 · 강성 값 "assumed") — 정하중 / 정변위 이분법 밖의 셋째 형식(원장 (하)①).
+- `[재현·가정]`(양극 쪽 경계 고정 · 측면 대칭 · Li 성장 두께 방향 — 인쇄 0) 같은 k 로 반 사이클 압력 표류 **+13 MPa**(단순 0.1 C 충전) · **+53 MPa**(복잡 방전 조립 0.5 C 충전) · **−58 MPa**(복잡 충전 조립 0.5 C 방전) — 반력 이력은 지면에 없다 ⇒ **(캐)** 의 모형판: "70 MPa" = 예압(명목) · 이력(출력) 미보고.
+
+### 3. ★★ 압력 → 박리 · 용량 (단순 기하 세 점 · `[도표·벡터]`)
+
+| 예압 | 박리 시작 SoC | 끝 박리 몫 | 4.2 V 도달 SoC(0.1 C) |
+|---|---|---|---|
+| 50 MPa | 13.2 % | 97.1 % | 87.18 % |
+| 60 MPa | 14.9 % | 90.5 % | 91.26 % |
+| 70 MPa | 16.4 % | 87.8 % | 94.81 % |
+| (mesh tying 70 — 박리 0 · 인장 몫) | (15.7 %) | (92.9 %) | 99.30 % |
+
+`[해석]` 방향(압력 ↑ → 박리 ↓ · 전달 전하 ↑)은 세 점 단조 · "would converge to … mesh tying … for increasing mechanical stack pressure" 는 외삽 · 결손의 정체는 `η(i)` 경로(입자 안 남은 Li — 94호 digest §(c))라 **율 조건부 창 값**이다. 복잡 미세구조의 압력 축 0 · 70 MPa 위 · 50 MPa 아래 0 · 격자 수렴 0.
+
+### 4. ★★ 경계 압력 ↔ 계면 응력 — 사상이 계산된 표본
+
+- `[도표·벡터]` 경계 예압 70 MPa(압축) 아래 CAM\|SE 계면 인장 몫 **92.9 %**(단순 · mesh tying 끝) · **79.8 %**(복잡 · mesh tying 끝) · 박리는 축 하중 때문에 측면부터 — **(태)** 의 사상이 해상 모형에서 실제로 계산된 표본(88호 단일 구 · 83호 상자 구속은 미인쇄).
+- 무시한 압력 결합: OCV(1 mV/100 MPa [26] · 3.6 mV/100 MPa [27]) · i₀(1.4 % [27]) — 근거는 예압 범위 20 MPa 로 셈(`[재현·가정]` 표류 ±50 MPa 급을 넣어도 OCV ≤1.8 mV — 결론 유지).
+
+### 5. 이 편이 이 페이지에 **안 준 것**
+
+실측 · 단락 위 벽(Li 크리프 · 덴드라이트 — 음극 박리 미해상) · 요구치 · 사이클 중 압력 계측 · 압력 → `θ(N)` · 재가압 되돌림. 창의 값은 움직이지 않았다 — 움직인 것은 **모형 쪽 압력 표기**(예압 ↔ 이력 · 구속 강성 · 경계 ↔ 계면)다.
+
 ## 경고 (전부 원문이 준 한계에서 나온다)
 
 1. **점당 셀 1 개, 오차 막대 0.** 압력–수명 6 점 전부 N=1 이다.
@@ -1224,6 +1258,7 @@ Lee [45] **개방 회로 이완 30 → 27.6(LPSC) · 24.8 MPa(LSPS) / 20 h**(`[�
 - **88호의 "stack pressure 460 MPa" 를 운전 압력 창의 표본으로 옮기지 않는다** (2026-09-29) — 조립 마지막 압착의 명목값(힘 ÷ 면적)이고 펀치 간 거리를 고정한 뒤 계측 0 이다. 그리고 **그림 5 의 `p ≈ 0.35(D−D₀)^0.4` 를 셀 스택 압력의 요구치나 문턱으로 옮기지 않는다** — 입자 경계 균일 압력의 모형 값이고 셀 압력과의 사상은 인쇄되지 않았다; 5 MPa 대입 0.150 µm 도 우리 `[재현]` 산술이지 이 편의 주장이 아니다.
 - **89호의 셀을 50 MPa 표본으로 옮기지 않는다** (2026-09-29) — 이 편 지면에 운전 압력이 없고 50 MPa 는 60호 표 S2 의 사후 부여다. 그리고 **이 편의 370 MPa(이중층 SE 성형)를 Si 요구 압력으로 인용하지 않는다** — 성형값이고 인용 · 요구 문장이 없다.
 - **90호의 "~50 MPa" 를 운전 압력 창의 표본이나 63호 토크(10 N·m)의 환산 근거로 옮기지 않는다** (2026-10-02) — 환산 근거 · 계측이 인쇄되지 않은 토크 명목이고 ESI 에만 있다; 63 · 23호와 같은 구속에 다른 값이 붙었다는 것까지다. 82호의 50 MPa 를 같은 토크 명목으로 단정하지도 않는다.
+- **94호의 50 / 60 / 70 MPa 를 운전 압력 창의 실측 표본으로 옮기지 않는다** (2026-10-02) — 모형 예압(t = 0 · 스프링 강성 가정)이고, 압력 효과는 단순 기하 세 점 · 0.1 C · 첫 충전의 율 조건부 결손이며, 반 사이클 압력 표류(+13 / +53 / −58 MPa)는 우리 `[재현·가정]` 이다.
 
 ## 관련
 - [[assb-pressure-reapplication-separation-test]] — `P↑` 분리 연산자. **이 페이지가 그 상한을 준다.**

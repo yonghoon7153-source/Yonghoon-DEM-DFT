@@ -2,10 +2,10 @@
 title: 압력 재인가 분리 시험 — ASSB 겉보기 용량 손실의 가역/비가역 가르기
 description: "Pressure re-application as the second separation operator in ASSB: rate erases the kinetic term η(i), stack pressure (partially) restores the geometric term θ_AM, and what is left is true LAM_PE (Shi 2020 measured instance)"
 created: 2026-09-16
-updated: 2026-09-29
+updated: 2026-10-02
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/zhang2024_all-electrochem-active-si-li21si5-anode-assb.md, raw/papers/li2025_si-anode-fracture-size-threshold-stack-pressure-assb.md, raw/papers/kim2023_argyrodite-coated-ncm-normal-pressure-assb.md, raw/papers/xu2024_pressure-effects-countermeasures-ssb-review.md, raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md, raw/papers/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md]
+sources: [raw/papers/schmidt2024_nitsche-contact-delamination-resolved-ssb-cathode.md, raw/papers/zhang2024_all-electrochem-active-si-li21si5-anode-assb.md, raw/papers/li2025_si-anode-fracture-size-threshold-stack-pressure-assb.md, raw/papers/kim2023_argyrodite-coated-ncm-normal-pressure-assb.md, raw/papers/xu2024_pressure-effects-countermeasures-ssb-review.md, raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md, raw/papers/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -411,6 +411,15 @@ Li₂₁Si₅/Si–Li₂₁Si₅ 이중층 음극 ‖ Li₆PS₅Cl ‖ Li₃InCl
 - 설계 조건 D1–D5 대조: **D1**(사이클 해상 압력 계측) 0 · **D2** 0 · **D3** 0 · **D4**(제조 ↔ 운전 · 구속 형식) — 제조(400 · 370 · 350 MPa)만 인쇄 · 운전 값 · 구속 형식 0(60호 표 S2 가 사후 50 MPa) · **D5** 0(EIS 1 사이클 뒤 한 점) → 만족 **0/5**.
 - ★ **설명 없는 계단 회복**: 그림 6g(55 ℃ · 21.1 mg cm⁻² · 1 C) 사이클 ≈555–600 에서 88.8 → 100.2 mAh g⁻¹(`[도표·화소]`) 뒤 ≈610 까지 복귀 · 그림 6d(143.7 mg cm⁻² · 0.1 C) 사이클 ≈22 · ≈38 에 계단 상승 — 본문은 "The capacity curve was much fluctuated when the mass loading was higher." 한 문장. `[해석]` 휴지 · 온도 · 재조임 가운데 무엇인지 사건 기록이 없어, 이 연산자의 가압 분기(되돌림 회복분)와 같은 모양이라도 값으로 쓰지 않는다 — (하) ② D6("압력을 건 시각 · 회복 시간 곡선")의 사건 기록이 없는 셀의 표본이고, 인쇄된 "80.1 % after 599 cycles" 가 그 꼬리에 있다.
 
+## ★★ 94호(Schmidt · Sinzig · Wall 2024 *JES*)가 붙인 것 — **이 연산자의 모형 쪽 기준판: 접촉 법칙에 기억이 없는 3D 해상 모형에서 압력은 `θ_AM` 이 아니라 표면 피복 `φ` 를 되돌리고, 그 효과는 `η(i)` 경로로 용량에 보인다 — "율 먼저, 재가압 나중" 처방이 왜 필요한지의 forward 표본** (2026-10-02)
+
+`raw/papers/schmidt2024_nitsche-contact-delamination-resolved-ssb-cathode.md` (27호 후속 ★★★ · 4차 묶음 파일 54 · 모형 편 · 실험 0).
+
+- **법칙**: `[인쇄]` 식 (17) "g_n ⩾ 0, p_n ⩽ 0, g_n p_n = 0"(무접착 · 무마찰 · 인장 강도 0) · 식 (27) "p_n < 0 일 때만 BV" — 이력 · 손상 변수 0 ⇒ **구성상 완전 가역**: 틈이 닫히고 압축이 서면 같은 i₀ 로 돌아온다. 실측 쪽의 기억(39호 50 → 0 MPa 공극 불변 · 5호 이력 · 14호 +0.4 mV · 23호 50 사이클 방전 상태 틈 지속 — digest 전사)을 못 내는 **기억 없는 끝**이다.
+- **압력 축**: 예압 50 / 60 / 70 MPa(단순 기하 · 0.1 C 첫 충전) → 4.2 V 도달 87.18 / 91.26 / 94.81 % · 박리 시작 SoC 13.2 / 14.9 / 16.4 % · 끝 박리 몫 97.1 / 90.5 / 87.8 % `[도표·벡터]` — 꼴은 `ΔQ_mech` (+7.6 %p)지만 **셀 사이 예압 비교**(같은 셀의 되돌림 아님)이고, 되돌린 것은 `φ`(부분 표면)다.
+- ★ **회복분의 정체 = `η(i)`**: `[재현·가정]` 남은 면 BV ≈6 mV ↔ 전압 차 24–46 mV · 입자 안 농도 분극 67 mV · (평균 − 표면 χ)/0.596 = 4.78 % ↔ mesh tying 대비 결손 4.5 %p — 압력으로 "돌아온" 용량은 컷오프 순간 입자 안에 남던 Li 다. ⇒ `[해석]` 위 §"율 연산자와의 짝" 처방(① 저율로 `η` 를 먼저 죽이고 ② 마지막에 재가압)을 지키지 않으면, `φ → η` 경로의 회복이 **`θ_AM` 회복으로 읽힌다** — 이 순서의 첫 forward 표본.
+- 설계 조건 대조: **D1**(압력 계측) — 모형에서도 반력 이력 인쇄 0 · `[재현·가정]` 같은 스프링 강성(k 10¹³ Pa m⁻¹ "assumed")으로 반 사이클 +13 / +53 / −58 MPa · **D4**(구속 형식) — 정하중 / 정변위가 아닌 **유한 강성 스프링**(셋째 형식 · 원장 (하)) · **D5**(무엇을 움직였나) — OCV · i₀ 응력 의존을 무시(0.2–0.72 mV · 1.4 %)했으므로 압력은 **구성상 접촉만** 움직이는 손잡이 — 합성 truth R4 의 모형판이되 움직이는 것은 `θ` 가 아니라 `φ`(R7).
+- 이 편은 같은 셀의 되돌림(재가압 · 감압)을 계산하지 않았다 — 방전 상태 조립 셀의 다음 방전(재팽창 → 재접촉)도 0(94호 G14).
 
 ## 이 페이지가 주장하지 않는 것
 
@@ -430,6 +439,7 @@ Li₂₁Si₅/Si–Li₂₁Si₅ 이중층 음극 ‖ Li₆PS₅Cl ‖ Li₃InCl
 - **86호 코인셀에서 접촉 손실이 압력으로 되돌아온다고도 안 온다고도 하지 않는다** (2026-09-29, 86호) — 되돌림 · 계측 · 구속 형식이 0 인 무외압 표본이고, 성형 3 점은 제조 축이다.
 - **88호의 200 ↔ 460 MPa 용량 차를 이 연산자의 값(가압 분기 회복분)으로 쓰지 않는다** (2026-09-29, 88호) — 같은 셀의 되돌림이 아니라 셀 사이 비교(각 셀 하나 · 200 MPa 세트 제조 절 미인쇄)이고, 해체 뒤 틈은 저자 스스로 셀 안 상태가 아니라고 인쇄했다.
 - **89호의 계단 회복을 이 연산자의 가압 분기 값으로 쓰지 않는다** (2026-09-29, 89호) — 운전 압력 · 구속 · 사건 기록이 지면에 없고, 회복의 원인(휴지 · 온도 · 재조임)을 가를 수 없다.
+- **94호의 예압 비교(+7.6 %p)를 이 연산자의 실측 값이나 `θ_AM` 회복으로 쓰지 않는다** (2026-10-02, 94호) — 모형(기억 없는 접촉 법칙) · 셀 사이 예압 비교이고, 회복분은 `[재현·가정]` 으로 `η(i)` 경로(입자 안 남은 Li)다; 이 연산자의 "율 먼저" 순서가 왜 필요한지의 forward 표본까지다.
 
 ## 관련
 - [[assb-stack-pressure-operating-window]] — **이 연산자의 사용 조건**: 압력의 2 측 구속과 상한(5호 Doux 2020).
