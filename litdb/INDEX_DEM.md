@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 153편 · 생성 2026-09-29
+> digest 157편 · 생성 2026-10-02
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -20,11 +20,12 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `pycompact2025_dem_mpfem_workflow` | PyCompact — LIGGGHTS DEM → MPFEM(OpenRadioss) 분말압축 오픈소스 워크플로 ★★ 우리 DEM→MPM scaffold 인계의 독립 선례 (인계 시점은 정반대) — Mohammadhosseinzadeh (SoftwareX 2026) | DEM+MPFEM (workflow/software) | 2026-08-25 | — |
 | `stomakhin2013_mpm_snow_elastoplastic` | 눈(snow) 시뮬레이션을 위한 Material Point Method — Stomakhin (ACM TOG 2013, SIGGRAPH) | MPM | 2026-06-26 | 🖼 12 |
 
-## 접촉역학 · 소성 (DEM 이론) (32편)
+## 접촉역학 · 소성 (DEM 이론) (33편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
 | `alabdali2023_cgmd_wet_manufacturing_ssb_cathode` | ASSB 양극 습식 제조 사슬 전체(슬러리→건조→압연)를 CGMD(LAMMPS, LJ + Granular-Hertz) 로 — 유변학(점도·밀도)으로 force field 를 보정하고 GeoDict 로 δ_e·τ_g 산출 — Franco 그룹 ASSB 제조모델 1호(구형 AM) — Alabdali / Zanotto / Du | CGMD/DEM (LAMMPS, Lennard-Jones + Granular-Hertzian; 슬러리 NPT | 2026-08-19 | 🖼 11 |
+| `arzt1982_particle_coordination_densification_spheres` | 구형 분말 치밀화에서 배위수 증가의 영향 — 무작위 조밀 충전 RDF + Voronoi 셀 해석 모델 (The influence of an increasing particle coordination on the densification of spherical powders) — Arzt (Acta Metall. 1982) | theory (analytic powder-densification geometry: random-dense | 2026-10-02 | 🖼 6 |
 | `bouvard2000_hard_soft_powder_densification` | 경/연 분말 혼합물의 가압 압밀 거동 — Bouvard (Powder Technology 2000) | exp+theory(review) | 2026-06-23 | — |
 | `coetzee2017_dem_calibration_review` | DEM 파라미터 보정(calibration) 방법론 리뷰 — 두 학파(직접측정 vs 벌크 역보정)·해의 비유일성·접촉강성(contact stiffness) 감소 — Coetzee (Powder Technology 2017) | DEM (review — 보정 방법론) | 2026-08-25 | — |
 | `dmt1975_adhesion_contact_deformation` | Effect of Contact Deformations on the Adhesion of Particles (DMT 이론) — Derjaguin, Muller, Toporov (J. Colloid Interface Sci. 1975) | continuum (점착 접촉역학 이론) | 2026-06-26 | 🖼 2 |
@@ -57,7 +58,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `zunker2024_mdr_contact_model_partI` | 층(2.75) 발견 — 점착 탄소성 입자의 역학적으로 유도된 접촉모델, Part I: 차원축소법(MDR) — Zunker & Kamrin (J. Mech. Phys. Solids 2024) | contact-mechanics theory (MDR) + FEM(Abaqus) 검증 | 2026-08-25 | — |
 | `zunker2025_dem_large_deformation_compaction` | 실험검증된 대변형 압밀 DEM (Experimentally validated DEM for large deformation powder compaction: mechanically-derived contact model and screening of non-physical contacts) — Zunker, Dunatun | DEM (LAMMPS, MDR 접촉모델 다체 확장) + MPFEM(Abaqus) 검증 + 제약 tableti | 2026-08-25 | — |
 
-## 복합양극 미세구조 · percolation (27편)
+## 복합양극 미세구조 · percolation (30편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -74,9 +75,11 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `kim2024_carbon_volumetric_occupation_se_domain` | 필독 / 우리-랩 — Accelerated Degradation of ASSBs Induced through Volumetric Occupation of the Carbon Additive in the SE Domain — Kim, Park, Kang, …, Lee, Sun, Cho (Adv. Funct. Mater. 2 | exp | 2026-06-26 | 🖼 5 |
 | `kim2026_a3d_air_electrode_microstructure_transport` | Kim 2026 (Journal of Power Sources 686, 240471) — 디지털트윈 미세구조(GeoDict) → 유효물성 → 1D 전기화학(COMSOL)으로 A3D 공기극 수송 설계 | FEM·digital-twin | 2026-07-28 | — |
 | `kissel2026_mechanofusion_derived_cathode_composite_microstructures_scalable` | Mechanofusion-derived cathode composite microstructures with scalable mixed conducting matrix coatings for solid state batteries — Maximilian Kissel (Nature Communications 2026) | ⏳ 문서 대기 (exp\|DFT\|AIMD\|MLIP\|DEM\|MPM\|FEM\|mixed) | 2026-09-03 | — |
+| `landesfeind2016_tortuosity_eis_electrodes_separators` | 전극·분리막 tortuosity 를 임피던스(EIS)로 측정 — 차단 전해질 대칭셀 + 전송선 모델(TLM-Q) · MacMullin 수 · Bruggeman 검증 — Landesfeind (J. Electrochem. Soc. 2016) | exp (EIS impedance — 분리막 HFR · 전극 차단 대칭셀 TLM-Q; liquid-LIB t | 2026-10-02 | 🖼 21 |
 | `matthews2024_ptfe_nanofibril_network` | 무용매(dry-process) NMC 전극의 PTFE 나노-피브릴 binder 망 — 계층 microstructure 와 형성기전을 고해상 SEM 으로 풀다 — Matthews (Front. Energy Res. 2024) | exp (SEM/EDX + 전기화학 + EIS; 시뮬레이션 0) | 2026-09-04 | 🖼 9 |
-| `minnmann2021_jes_charge_transport_bottlenecks` | Minnmann 2021 JES — 복합 양극 전하수송 병목 정량화 (EIS-TLM) ★ 우리 porosity/σ_ion/τ_ion 앵커의 진짜 출처 | DEM | 2026-07-28 | 🖼 6 |
+| `minnmann2021_jes_charge_transport_bottlenecks` | Minnmann 2021 JES — 복합 양극 전하수송 병목 정량화 (EIS-TLM) ★ 우리 porosity/σ_ion/τ_ion 앵커의 진짜 출처 | DEM | 2026-07-28 | 🖼 16 |
 | `minnmann2024_microstructure_porosity_visualization` | 복합 양극 미세구조·porosity → SSB 성능을 FIB-SEM 토모그래피로 시각화 — Minnmann (J. Electrochem. Soc. 2024, Editors' Choice) | exp | 2026-06-26 | 🖼 8 |
+| `nguyen2020_electrode_tortuosity_factor` | 전극 tortuosity factor τ_e — 관통형(flow-through) tortuosity factor τ 는 다공 전극 수송을 잘못 재고, 대칭셀 임피던스(eSCM)로 정한 τ_e 를 P2D 에 넣으라 — Nguyen (npj Comput. Mater. 2020) | computational (TauFactor voxel FD/SOR · eRDM vs eSCM impedan | 2026-10-03 | 🖼 8 |
 | `nisar2024_dem_effective_electrical_conductivity_sps` | 부분소결 다공성 재료의 유효 전기전도도를 위한 DEM 저항망 모델 (sinter-neck conductance) — Nisar (Comp. Part. Mech. 2024) | DEM+RNM | 2026-06-26 | 🖼 10 |
 | `reisacher2023_percolation_sulfide_carbon_matrix` | #27 (★ 우리 EXACT SE) — Percolation Behavior of a Sulfide Electrolyte–Carbon Additive Matrix for Composite Cathodes in All-Solid-State Batteries — Reisacher, Kaya, Knoblauch (Batteri | exp | 2026-06-26 | 🖼 8 |
 | `sangros2020_dem_electrical_conductive_paths_assb` | ASSB(폴리머 SSB) 복합 양극의 전자 전도경로를 DEM으로 — A* 경로탐색 + 실린더-저항 등가회로 + percolation, LFP+CB+PEO — Sangrós Giménez (Chem. Eng. Technol. 2020) | DEM (LIGGGHTS) + A* 경로탐색 + 등가회로 σ + skeleton τ | 2026-06-26 | 🖼 12 |
@@ -85,6 +88,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `song2025_porous_argyrodite_modulus_fracture_toughness` | 다공(porosity 13 %) Li₆PS₅Cl 펠릿의 벌크 영률 4.7 ± 1.1 GPa · 파괴인성 K_Ic 0.17 ± 0.03 MPa·m^½ — mm 스케일 외팔보 굽힘 + 컴팩트 인장(CT) + 시편별 Abaqus FE · 나노압입값(28 GPa · 0.69)의 ¼–⅙ — Song · Shi · Pakhare · | exp (cantilever beam-bending modulus + compact-tension fract | 2026-09-23 | 🖼 3 |
 | `tailored_cathode_microstructure_low_pressure_assb` | Tailored Cathode Composite Microstructure Enables Long Cycle Life at Low Pressure for ASSBs — Zhou et al. (ACS Energy Lett. 2025) |  | 2026-06-26 | 🖼 5 |
 | `taufactor_tortuosity_factor_tomography_tool` | TauFactor — voxel 미세구조에서 정상상태 확산(Laplace)을 풀어 tortuosity FACTOR τ 를 직접 계산하는 오픈소스 MATLAB 툴 — Cooper (SoftwareX 2016) | tool (voxel Laplace-solve, post-processing) | 2026-06-26 | 🖼 8 |
+| `tjaden2018_tortuosity_review_calculation_approaches` | Tortuosity in electrochemical devices: a review of calculation approaches — τ·κ(=τ²)·N_M·Bruggeman 정의와 기하/flux/실험/상관식 계산법 분류 (우리 τ 명명 정본) — Tjaden (Int. Mater. Rev. 2018) | review (tortuosity 정의·계산법 — geometric vs flux-based · porosi | 2026-10-02 | 🖼 15 |
 | `vijay2025_hybrid_cgmd_dl_slurry_microstructure` | CGMD 슬러리 궤적의 앞 절반을 보고 평형 미세구조를 예측하는 딥러닝 surrogate(Slurry-NN)를 ARTISTIC CGMD/DEM 제조 사슬에 끼워 넣다 — NMC-111 / LFP / ASSB(NMC-622+argyrodite) 3계 — Vijay / Galvez-Aranda / Zanotto / Le-Di | CGMD(LAMMPS, LJ + granular-Hertz) + DEM 압연 + 지도학습 DL 시간-surr | 2026-09-11 | 🖼 12 |
 | `yoo2026_porosity_gradient_dry_electrode` | Yoo 2026 (Energy Storage Materials, ENSM 105331) — Porosity-구배 건식 흑연 전극 + 변형성 Primer Layer | MPM | 2026-07-28 | 🖼 7 |
 | `zhang2026_dryprocess_electrode_architecture_cell_level` | 건식(dry-process) 후막 NMC811 전극 — VGCF–PTFE 전단 커플링이 CBD 도전망 percolation 연결성을 17.1 → 61.2 % 로 올려 99 wt% 활물질 · >5 mAh cm⁻² · 4.70 V 를 연다 — CGMD(LAMMPS) + PFIB-SEM 3D + COMSOL 전자전류 + Tau | exp 주도 + CGMD (LAMMPS, Martini-3 유래 LJ 12-6; VGCF+PTFE 2성분 전 | 2026-08-19 | 🖼 42 |

@@ -4421,6 +4421,26 @@ Faraday FutureCat; 2026-09-26 추가; 원장 **SELF-51** 뿌리 감사 — [Sedl
 > 상세: digest §3.4 · §8 ③ · §12 D6.
 
 
+## J. tortuosity 정의 묶음 — **같은 양 · 다른 이름** (2026-10-03 신설, 7 편)
+
+> 문헌마다 같은 양을 τ 로도 τ² 로도 부른다. 이 절은 **양**으로 묶고 이름은 원문 그대로 병기한다.
+> 우리 쪽 정의: 웹앱 τ_Lap,eff = √(φ_SE·σ₀/σ_full) (`webapp/app.py:2610` · σ_full = 전체 단면 정규화 `scripts/network_conductivity.py:857`).
+
+| 양 (우리 기호) | 정의 | 문헌 이름 (원문) | 카드 |
+|---|---|---|---|
+| f | σ_eff/σ₀ | ε/τ² "diffusibility" (Tjaden) · f_e = ε/τ_F (COMSOL 5.6 Eq 6-6) · 1/N_M | `tjaden2018_…` · `landesfeind2016_…` |
+| T (키 `tau2` 권고) | φ·σ₀/σ_eff = φ/f | κ = τ² "tortuosity factor" (Tjaden · Bielefeld 2020 · Minnmann 2021 보고값) · τ (Landesfeind Eq 5 N_M = τ/ε · TauFactor `TauFactor.m:3495` · Nguyen Eq 1 · Park 2020 SI Fig S9 · COMSOL τ_F) | 7 편 전부 |
+| τ_flux = √T | √(φσ₀/σ_eff) | τ (Tjaden 식 3) · τ_i (Minnmann) | `tjaden2018_…` · `minnmann2021_…` |
+| τ_geo | 최단 경로 / 두께 | τ = Δl/Δx (Tjaden 식 1) · τ_path (Landesfeind Eq 3) · τ_i = l_i/l₀ (Minnmann Eq 3) | 우리 τ_Dij · τ_Dij,all · 벽 τ |
+| τ_e (우리에 없음) | R_ion·A·κ₀·ε/L (대칭셀 EIS-TLM · 이중층 경계) | electrode tortuosity factor (Nguyen Eq 2) · Landesfeind Eq 13 의 τ | `nguyen2020_…` · `landesfeind2016_…` |
+
+- ⛔ **COMSOL Tortuosity 칸 = T** (√T 아님). 웹앱 · 내보내기의 "COMSOL/EIS input = τ_Lap,eff" 표기는 √T 라 그대로 넣으면 σ_eff 가 √T 배 과대 (stoic-knuth 쪽 판단 메모 · 정정 비준 대기).
+- 같은 시료에서 τ_flux / τ_geo = 1.24–1.59 (Tjaden 표 4·5) — 기하 τ 로 수송을 대신하지 않는다.
+- 전고체 복합양극 T: Minnmann τ_ion² 2.40–130 (φ_NCM 25–61 %, SI Table S2) · Park 2020 측정 σ_eff 역산 4.3 / 11 / 21 (추세 전용) — Bruggeman 의 2.8–65×.
+- σ₀ 기준이 문헌마다 다르다: Minnmann = 순수 SE 펠릿 1.6 mS/cm @25 °C (순수 τ² ≡ 1) · Park = 조성 의존식 (Table S1) · 우리 = σ_grain 3.0 (펠릿, CL-91). **T 를 비교하기 전에 σ₀ 를 맞춘다.**
+- 원문 오식: Minnmann 2021 Eq 4 인쇄본 역수 누락 (보고값은 φσ₀/σ_eff) · Landesfeind Table II Separion 행 내적 불일치 · Tjaden 표 4 Shearing 행 방법 표기.
+- LHS-25 (접촉 면적 합의 표면 한도): Arzt 1982 는 impingement 이후 규칙을 주지 않는다 — 후보 A (입자별 표면 예산) · B (라게르 면 상한) 는 `arzt1982_…` §LHS-25.
+
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->
 

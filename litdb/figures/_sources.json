@@ -54,6 +54,13 @@
    "02976f90-99._Sup_A_multifidelity_active_learning_framework_for_accelerated_alloy_design.pdf"
   ]
  },
+ "arzt1982_particle_coordination_densification_spheres": {
+  "figures": 6,
+  "generated": "2026-10-02",
+  "pdfs": [
+   "4. The influence of an increasing particle coordination on the densification of spherical powders.pdf"
+  ]
+ },
  "asylbekov2023_cb_fragmentation_pbe_dem_dry_mixing": {
   "figures": 12,
   "generated": "2026-09-19",
@@ -508,8 +515,8 @@
   "figures": 22,
   "generated": "2026-09-29",
   "pdfs": [
-   "/root/.claude/uploads/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/44960ac0-2._Effects_of_LLZO_Microstructure_Porosity_LLZOLi-Metal_Interfacial_Polarization_Resistance_and_Applied_Areal_Current_Density_on_Li-Metal_Dendrite_Formation_in_LLZO_Bilayer_Symmetric_Cells.pdf",
-   "/root/.claude/uploads/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/f0791619-2._Sup_Effects_of_LLZO_Microstructure_Porosity_LLZOLi-Metal_Interfacial_Polarization_Resistance_and_Applied_Areal_Current_Density_on_Li-Metal_Dendrite_Formation_in_LLZO_Bilayer_Symmetric_Cells.pdf"
+   "44960ac0-2._Effects_of_LLZO_Microstructure_Porosity_LLZOLi-Metal_Interfacial_Polarization_Resistance_and_Applied_Areal_Current_Density_on_Li-Metal_Dendrite_Formation_in_LLZO_Bilayer_Symmetric_Cells.pdf",
+   "f0791619-2._Sup_Effects_of_LLZO_Microstructure_Porosity_LLZOLi-Metal_Interfacial_Polarization_Resistance_and_Applied_Areal_Current_Density_on_Li-Metal_Dendrite_Formation_in_LLZO_Bilayer_Symmetric_Cells.pdf"
   ]
  },
  "han2025_icep_binder_ultrahigh_loading_ncm811": {
@@ -996,6 +1003,13 @@
    "0b989fa5-62._Sup_Machinelearningaccelerated_mechanistic_exploration_of_interface_modification_in_lithium_metal_anode.pdf"
   ]
  },
+ "landesfeind2016_tortuosity_eis_electrodes_separators": {
+  "figures": 21,
+  "generated": "2026-10-02",
+  "pdfs": [
+   "5. Tortuosity determination of battery electrodes and separators by impedance spectroscopy.pdf"
+  ]
+ },
  "lawrence2008_single_vgcnf_elastic_modulus_morphology": {
   "figures": 8,
   "generated": "2026-09-26",
@@ -1384,10 +1398,11 @@
   ]
  },
  "minnmann2021_jes_charge_transport_bottlenecks": {
-  "figures": 6,
-  "generated": "2026-08-05",
+  "figures": 16,
+  "generated": "2026-10-02",
   "pdfs": [
-   "건식전극 논문/04. Minnmann_2021_J._Electrochem._Soc._168_040537.pdf"
+   "1. Editors' choice#U2014quantifying the impact of charge transport bottlenecks in composite cathodes of all-solid-state batteries.pdf",
+   "1. Sup) Editors' choice#U2014quantifying the impact of charge transport bottlenecks in composite cathodes of all-solid-state batteries.pdf"
   ]
  },
  "minnmann2022_designing_cathodes_solidstate": {
@@ -1463,6 +1478,13 @@
   "generated": "2026-08-05",
   "pdfs": [
    "DEM 논문/15. Investigating electrode calendering and its impact on electrochemical performance by means of a new discrete element method model Towards a digital twin of Li-Ion battery manufacturing.pdf"
+  ]
+ },
+ "nguyen2020_electrode_tortuosity_factor": {
+  "figures": 8,
+  "generated": "2026-10-02",
+  "pdfs": [
+   "6. The electrode tortuosity factor why the conventional tortuosity factor is not well suited for quantifying transport in porous Li-ion battery electrodes and what to use instead.pdf"
   ]
  },
  "nisar2024_dem_effective_electrical_conductivity_sps": {
@@ -1956,6 +1978,13 @@
   "generated": "2026-08-05",
   "pdfs": [
    "DEM 논문/05. A theoretical model for the stick bounce behaviour of adhesive, elastic-plastic spheres.pdf"
+  ]
+ },
+ "tjaden2018_tortuosity_review_calculation_approaches": {
+  "figures": 15,
+  "generated": "2026-10-02",
+  "pdfs": [
+   "2. Tortuosity in electrochemical devices a review of calculation approaches.pdf"
   ]
  },
  "tompa2026_finetuning_mlip_foundation_strategies": {

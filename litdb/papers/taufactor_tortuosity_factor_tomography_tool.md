@@ -5,6 +5,8 @@
 
 > slug `taufactor_tortuosity_factor_tomography_tool` · DOI `10.1016/j.softx.2016.09.002` · type `tool (voxel Laplace-solve, post-processing)` · PDF `Cooper_2016_SoftwareX_TauFactor_TortuosityFromTomography.pdf` · digested `2026-06-26` · status ✅
 >
+> ⟦10-03 코드 대조 · TauFactor 1.424.0⟧ — 아래 τ 정의 `D_eff = D·ε/τ → τ = ε·D/D_eff` 는 MATLAB 소스와 **같다** (`TauFactor.m:3495–3496`). 코드가 확정한 규약 (ε = 비관통 포함 전체 상 분율 · D_eff = 상자 전체 단면 정규화 · 보고 τ = 위·아래 면 평균) 과 1.424.0 에 추가된 eSCM · 전극 tortuosity 모드는 **맨 아래 절**.
+>
 > ★ Paper #46 — **TOOL, not a physics competitor.** 분할된(segmented) voxel/단층촬영(tomography) 미세구조 위에서 **정상상태 확산방정식 ∇²C=0 을 직접 풀어** tortuosity **factor τ** (+ 부피분율 ε · 표면적 SA · triple-phase-boundary 밀도 TPB)를 산출하는 배터리/연료전지 미세구조 분석의 **사실상 표준 외부 툴**. ★ **핵심 매핑**: TauFactor 의 τ 정의 `D_eff = D·ε/τ` 는 **수학적으로 우리 τ_Laplace 와 같은 form** (= Minnmann 2021 JES Eq 4 = Bielefeld 2020 flux-PDE) 이지만, **연속체 voxel 상에서 풀므로 점접촉(SE-SE) Holm 구속저항이 없다** → 따라서 그것은 우리 **τ_Laplace,bulk** (기하/상한 tortuosity) 에 대응하며, 우리 **τ_Laplace,eff** (Holm constriction 포함) 에는 대응하지 **않는다**. 우리 τ_Laplace,bulk 의 **frame[4] 외부 교차검증 표준툴**이자, Huang2025 LBM-ETC 의 가벼운 voxel-transport cross-check 후보.
 
 ---
@@ -221,3 +223,87 @@ TauFactor 는 단층촬영으로 얻어 **분할된 voxel 3D(또는 2D) 미세�
 (c) τ 가 **같은 그룹의 EIS 실측(τ_TLM = 1.3808 @ ε = 31.5 %)의 2.4–2.7배**.
 ⇒ **TauFactor 는 정확했고, 입력 voxel 이 미해상이었다.**  이 툴 카드가 "τ 는 입력 미세구조가 정한다"고
 적어 둔 문장의 **실증 사례**이므로 두 카드를 함께 읽을 것.
+
+---
+
+## ⟦10-03 코드 대조 · TauFactor 1.424.0⟧ — τ 정의를 MATLAB 소스에서 확인
+
+> **대상**: `taufactor-1.424.0.mltbx` (855,221 B · sha256 `ff4e6601475a6e49206b7ae8c6aa4cf877c4c5e0517f704d2e53793f50503c6a`) — 패키지 메타 `coreProperties.xml` = title TauFactor · creator Samuel Cooper · **version 1.424.0** (패키징 시각 2026-09-23 = File Exchange 빌드 시각이지 코드 작성일이 아님). 메인 세션 scratchpad 에 zip 으로 풀어 읽음 (worktree 밖).
+> **읽은 파일**: `fsroot/taufactor-1.424.0.mlappinstall/TauFactor/TauFactor.m` (5,401 줄; GUIDE 머리주석 `% Last Modified by GUIDE v2.5 11-Apr-2020 16:22:17` — L58) · `TauFactor/CoreMex/<커널>/<커널>.m` (Mex3DTauIso · Ani · Var · Iso_Imp — `TFmexing/` 사본과 diff 0) · `TauFactor.fig` (scipy `loadmat` 으로 UI 문자열). 이하 `L<n>` = `TauFactor.m` 줄.
+> ⚠ 이 카드 본문은 **2016 SoftwareX v1.10** 기준이다. 1.424.0 은 그 뒤 판 — 모드 4–8 (확산 임피던스 · 대칭셀 임피던스 · 전극 tortuosity · metrics · 2점 상관) 이 들어 있다. MATLAB 은 실행하지 않았다 (정적 읽기).
+
+### 판정
+✅ **기존 카드의 τ 정의 `D_eff = D·ε/τ → τ = ε·D/D_eff` 는 코드와 같다** (L3495–3496). 카드에 없던 규약 셋을 코드가 확정한다:
+1. **ε = 선택 상의 전체 voxel 분율** — 관통 필터를 걸기 **전**의 `hand.Net` 으로 센다 (L2234; L2236 에서 `hand.Net=1` 로 지움). 고립 덩어리·dead-end voxel 도 ε 에 들어간다. 반면 flux 는 **두 면을 잇는 성분**에서만 푼다 (L2077–2115 · L2178 · L2271). ⇒ dead-end/고립 부피는 **flux 0 · ε +** — Nguyen 2020 Fig 2 의 "같은 N_M 에서 τ 가 바뀌는" 효과가 코드에 그대로 박혀 있다 (`nguyen2020_electrode_tortuosity_factor` §3-2).
+2. **D_eff 는 상자 전체 단면 (b·c voxel) 으로 정규화** (L3490–3491 의 `(a/(b*c))`) — 기공 단면이 아니다. 우리 `network_conductivity.py:857` (`sigma_ratio = G_eff * T_um / A_um2`, A = box_x·box_y) 와 같은 규약.
+3. **보고 τ = 위 면·아래 면 추정의 평균** (L3840). 수렴 = 상대변화 < 0.5 % 를 **연속 5 회** + 두 면 차 < 4 % (L3474–3475 · L3516–3521).
+
+### 코드 인용 (모드 1 "Tortuosity Factor (D:D) w/ Mirror", 등방 voxel, VaryD 끔)
+| 무엇 | 파일:줄 | 코드 원문 | 뜻 |
+|---|---|---|---|
+| ε | `TauFactor.m:2234` | `hand.VolFrac=sum(hand.Net(:))/numel(hand.Net);` | 상 전체 voxel 분율 (필터 전) |
+| 풀이 영역 ① | `TauFactor.m:2079–2081 · 2104 · 2109` | `Mask(end,:,:)=hand.Net(end,:,:);` … `DM=bwdistgeodesic(logical(Net_temp),logical(Mask),'cityblock');` … `hand.Net_Perc=isfinite(DM);` | 아래 면에서 측지 연결된 voxel |
+| 풀이 영역 ② | `TauFactor.m:2111–2115 · 2178 · 2271` | `Mask(1,:,:)=hand.Net_Perc(1,:,:);` … `hand.Net_Perc=isfinite(DM);` … `hand.Map=logical(padarray(hand.Net_Perc, [1,1,1],0));` | 그중 위 면에서도 연결된 것 = **두 면을 잇는 성분** (거기 붙은 dead-end 가지는 포함, 고립·한쪽만 닿는 덩어리는 제외) |
+| 경계값 | `TauFactor.m:2755–2756` | `hand.TopStim=0;` / `hand.BotStim=1;` | Dirichlet C = 0 (위) · C = 1 (아래) |
+| 반 voxel 경계 | `TauFactor.m:2320–2321 · 2803–2804` | `hand.NN_a([2 end-1],:,:)=double(hand.Map([2 end-1],:,:)).*(hand.NN_a([2 end-1],:,:)+(2*hand.c_X));` / `hand.T1(end+2)=2*hand.BotStim;` | 경계 voxel 에 가중 2 의 이웃 (반 voxel 거리) + ghost 값 2·C — 본문 §4-B Eq 7 `e=(d+f+2·C_max)/4` 와 같은 꼴 |
+| 이완 | `TauFactor.m:2734 · 2743 · 2746` | `hand.w=(2-(pi)/(a*1.5));` / `hand.omw=double(1-hand.w);` / `hand.NN_aV.w1=double(hand.w./double(hand.NN_a(hand.Cheq1.P)));` | w = 2 − π/(1.5a), a = 수송 방향 voxel 수 |
+| 갱신 커널 | `CoreMex/Mex3DTauIso/Mex3DTauIso.m:7–14` | `T1(1:end-2)=omw*T1(1:end-2)+NN_aVw1.*(T2(Cheq1P_Xm)+T2(Cheq1P_Xp)+…+T2(Cheq1P_Zp));` 다음 줄에서 `T2(1:end-2)=omw*T2(1:end-2)+NN_aVw2.*(T1(Cheq2P_Xm)+…);` | 6-이웃 · red/black 체커보드. T2 갱신이 **방금 갱신한 T1** 을 쓴다 ⇒ 수치적으로 red-black SOR |
+| D_eff | `TauFactor.m:3487–3491` | `sumT_top=sum(hand.T1(hand.T1Top))+sum(hand.T2(hand.T2Top));` … `hand.DeffTop(checkNo)=abs(hand.Area_top*hand.TopStim-sumT_top)*2*hand.D*(a/(b*c));` | 면 flux (반 voxel 거리라 ×2) × L/A — A = 상자 전체 단면 |
+| **τ** | `TauFactor.m:3495–3496` | `hand.TauFacTop(checkNo)=hand.D*hand.VolFrac./hand.DeffTop(checkNo);` / `hand.TauFacBot(checkNo)=hand.D*hand.VolFrac./hand.DeffBot(checkNo);` | **τ = D·ε/D_eff** (이진 모드 D = 1, L2263) |
+| 보고값 | `TauFactor.m:3840` | `hand.Results.Tau=mean([hand.TauFacBot(round(hand.iter/hand.check_f)),hand.TauFacTop(round(hand.iter/hand.check_f))]);` | 두 면 평균 |
+| 수렴 | `TauFactor.m:3474–3475 · 3516–3521` | `hand.conDwell=5;` `hand.conTol=0.005;` … `deltaTB<0.04 &&` … `hand.whileFlag=hand.whileFlag-1;` | 0.5 % · 5 회 연속 · 두 면 차 4 % |
+| 비관통 | `TauFactor.m:1844–1851` | `hand.Results.SimTime='Does not percolate in this phase+direction';` … `hand.Results.Tau=inf;` … `hand.Results.Tau=nan;` | 두 면을 잇는 성분이 없으면 τ = ∞ (상 자체가 없으면 NaN) |
+| VaryD (다상 확산도) | `TauFactor.m:1404 · 1452 · 1560 · 2265 · 3505` | `else % Variable D` (L1404–1593 분기) 안의 `hand.D=mean(hand.Dmap(:));` / `hand.Qcv=hand.D*(hand.L_Y*b*hand.L_Z*c)/(hand.L_X*a);` / `hand.TauFacTop(checkNo)=hand.Qcv/abs(F_top);` | ε·D 자리에 **부피평균 ⟨D⟩** — 이진 맵이면 ⟨D⟩ = ε·D 로 위 식과 같아진다 |
+
+### 모드 목록 (`TauFactor.fig` 의 `Check_TauMode` 문자열 원문)
+| 값 | 원문 라벨 | 메모 |
+|---|---|---|
+| 1 | `1. Tortuosity Factor (D:D) w/ Mirror` | L1181 주석 `case 1 % Conventional Tau`. 측면 거울 (no-flux) — **이 카드의 τ** |
+| 2 | `2. Tortuosity Factor (D:D) w/ Periodic` | 측면 주기 — 우리 DEM 접촉망 (측면 최소영상, `network_conductivity.py:288–294`) 의 짝 |
+| 3 | `3. Tortuosity Factor (P:P) w/ Periodic ` | 수송 방향까지 주기 |
+| 4 | `4. Diffusion Impedance Spectrum w/ Mirror` | Cooper 2017 (Electrochim. Acta 251) 확산 임피던스 |
+| 5 | `5. Symmetric Cell Impedance Spectrum w/ Mirror` | **Nguyen 2020 eSCM** |
+| 6 | `6. Electrode Tortuosity w/Mirror` | **τ_e 직접 모드** |
+| 7 · 8 | `7. Metrics` · `8. Two Point Correlation` | — |
+
+### mode 5 (eSCM) · mode 6 (τ_e) — Nguyen 2020 이 이 툴에 넣은 것
+| 무엇 | 파일:줄 | 코드 원문 | 뜻 |
+|---|---|---|---|
+| eSCM 입력 | `TauFactor.m:1956–1957` | `hand.C_dl=str2double(get(hand.edit_capacitance,'string'));` / `hand.kappa=str2double(get(hand.edit_conductivity,'string'));` | `.fig` 기본값 **1 (S/m) · 1 (F/m²)** — Nguyen Table 1 (0.046 S/m · 0.01 F/m²) 과 다르다 → 직접 넣어야 한다 |
+| 주파수 | `TauFactor.m:1981 · 1991` | `hand.y=9:-0.1:5; % freq range` / `hand.freqSet=complex(10.^hand.y);` | **10⁹ → 10⁵ Hz** 고정 — Nguyen Table 1 (10⁷–10⁻¹ Hz, 가정값) 과 다름 [원인 미확인 — 판·단위 설정 차 가능] |
+| 벽 축전 결합 | `TauFactor.m:3002–3006` | `hand.NN_aV.sp1 = complex((complex(double(hand.NN_tot(hand.Cheq1.P))-double(hand.NN_a(hand.Cheq1.P)))*1i*2*pi*hand.freq*hand.C_dl*hand.delta_x^2)/(hand.kappa*hand.delta_x)) ;` | 벽 면 수 (NN_tot − NN_a) × jωc_dl·Δx² ÷ κΔx = Nguyen Fig 8b 의 `−κ∇Φ̃₂·n + jωc_dl(Φ̃₁ − Φ̃₂) = 0` 이산형 |
+| 집전체 면 | `TauFactor.m:2597` | `… +(hand.c_X));   % adding the double layer between the liquid phase and current collector at both ends` | 집전체에 닿은 면도 축전 면 |
+| 이완 | `TauFactor.m:2994` | `hand.w = complex(0.85);   % fix omega` | 복소 문제는 저이완 고정 |
+| 임피던스 | `TauFactor.m:3589–3595` | `hand.cur = -(hand.kappa*hand.delta_x).*(…)/(b*c*hand.delta_x^2);  % A/m²` / `hand.Impedance(hand.freqNo,checkNo)= (hand.BotStim-hand.TopStim)./(hand.cur); % Ohm.m²` | 분리막 통과 이온 전류밀도 기준 Z |
+| **mode 5 의 τ** | `TauFactor.m:1961` | `hand.Results.Tau=nan;` | ★ mode 5 는 **스펙트럼만** 낸다. Nguyen Eq 4 TLM 적합 (`fminsearch`) 코드는 툴에 **없다** (`fminsearch`·`coth` grep 0 건) → 논문의 τ_e 는 외부 적합 |
+| mode 6 셋업 | `TauFactor.m:1861–1866` | `hand.freq=complex(1e-6/a); %needs justification` / `hand.TopStim=complex(0);` / `hand.BotStim=complex(1);` | 저주파 한 점 — 작성자 주석이 유도 미완을 스스로 표시 |
+| mode 6 영역 | `TauFactor.m:2077–2081 · 2111` | `if sum(get(hand.Check_TauMode,'Value')==[1 4 6])` … `if hand.impCheck==0 && get(hand.Check_TauMode,'Value')~=6` | 아래 면 연결 성분만 (두 번째 관통 필터 건너뜀) = 관통 + dead-end, 고립만 제외 |
+| **mode 6 τ_e** | `TauFactor.m:3681–3685` | `VF=mean(hand.Map(2:end-1,2:end-1,2:end-1),[1 2 3]);` / `VolCorrect=VF*b*c/(2*a);` / `hand.DeffTop(checkNo)=(hand.Area_bot-(sum(hand.T1(hand.T1Bot))+sum(hand.T2(hand.T2Bot))));` / `hand.TauFacTop(checkNo)=3*VolCorrect/hand.DeffTop(checkNo);` | 계수 **3** 은 Nguyen Eq 5 (`Re Z → R_ion/3`) 자리로 보인다 [코드 해석 — 유도 문서 없음]. ε 자리에 **VF = 접근 가능 분율** (전체 아님 — mode 1 과 장부가 다르다) |
+| mode 6 커널 | `CoreMex/Mex3DTauEIso/codegen/mex/Mex3DTauEIso/Mex3DTauEIso_mex.mexw64` · `TauFactor.m:3256–3258` | (`.m` 소스 없음 — Windows 바이너리만) | 비-Windows 는 `Iterate_mat` 의 일반 경로 (L3021–3041) 로 돈다. 두 경로의 동치 [미확인] |
+| dead-end 분류 | `TauFactor.m:4168 · 4172–4175` | `if get(hand.Check_TauMode,'Value')==5` … `con_dend = q*100/max(max(max(q)));` … `con_dend(con_dend>0.5) = 0 ;` | 최대 flux 의 **0.5 %** 미만 = dead-end — Nguyen 본문 문턱 **2 %** (p4 · Fig 5 캡션) 와 다르다. 이 블록은 `InitiatePlot3` 안 mode 5 조건인데 mode 5 후처리 경로 (L3849–3860: `impCheck` 가 1 이면 `InitiatePlot3imp`) 에서 실제로 불리는지 [미확인] |
+
+### 우리 τ 와의 대응 (코드 대조로 갱신)
+| 우리 양 | 같은 짝 | 근거 | 남는 차이 |
+|---|---|---|---|
+| DEM 접촉망 T = τ_Lap,eff² (`webapp/app.py:2610`) · τ_Lap,geom² (`:2613`) | **mode 2** (D:D, 측면 Periodic) 의 τ 형식 | 둘 다 두 면을 잇는 성분만 풀이 (`network_conductivity.py:552–557` ↔ L2104–2115) · 전체 단면 정규화 (`:857` ↔ L3490) · ε = 비관통 포함 전체 (`:1120–1123` ↔ L2234) | ε 장부: 우리 = **구 부피 합** (겹침 이중계상) / TauFactor = **voxel 합집합 개수**. 물리: 우리 FULL 은 Holm 협착 포함 (§(2) 그대로) |
+| MPM STEP3 복셀 σ (`scripts/step3_sigma.py:835–840`, docstring "plate φ=1 at the bed bottom, φ=0 plate at the bed top, lateral Neumann") | **mode 1** (D:D, 측면 Mirror) | 같은 관통 Dirichlet + 측면 no-flux | 이산화 세부 (면 조화평균 등) 는 이 절에서 대조 안 함 |
+| (없음) | mode 5 · 6 (eSCM · τ_e) | — | ★ 우리 리포에는 τ_e 경로가 없다 → `nguyen2020_electrode_tortuosity_factor` §정의 대조표 · §8 ② |
+
+⇒ frame[4] 교차검증 (§적용가능성-A) 을 실제로 돌릴 때: DEM 침대 → **mode 2**, STEP3 → **mode 1** 로 측면 BC 를 맞추고, 비교는 **contact-free** 쪽 (τ_Lap,geom) 과 한다 (FULL 은 협착 때문에 원래 더 크다 — §(2)).
+
+### 기존 서술의 정밀화 (지우지 않고 덧붙임)
+| 기존 서술 (위치) | 코드 대조 | 판정 |
+|---|---|---|
+| §1·§3 "τ ≡ ε·D/D_eff (Eq 1)" | L3495–3496 | ✅ 같음 |
+| §3 "∇²C=0; C=0 top; ∇C·n=0; C=1 bottom" | L2755–2756 · 비전도상은 `hand.Map` 밖이라 이웃 합에서 빠짐 (L2295–2299) | ✅ |
+| §4-B "Over-Relaxation (Jacobi + 선형 외삽)" | `Mex3DTauIso.m:7–14` — T2 갱신이 새 T1 사용 | ⚠ 정밀화: **red-black SOR**, w = 2 − π/(1.5a) (L2734) |
+| §4-B ghost-node "이웃수 +1, 인가농도 ×2" | L2320–2321 (경계 가중 +2·c_X) · L2803–2804 (ghost 2·C) | ✅ 같은 식 (가중 2 = 반 voxel 거리) |
+| §4-B 수렴 "top·base 양면 hybrid" | L3474–3475 · L3516–3521 | ✅ + 수치 (0.5 % · 5 회 · 4 %) |
+| §3 "항상 τ ≥ 1" | 모드 1–3 (관통형) 에만 성립 | ⚠ 범위 한정 — mode 6 τ_e 는 < 1 가능 (Nguyen 2020 Fig 3: τ_e ≈ 0.81) |
+| §10 "percolation 안 되면 inf" | L1844–1851 | ✅ (상이 아예 없으면 NaN) |
+| §(1) "TauFactor τ ≡ Minnmann τ² ≡ 우리 τ_Laplace²" | L3495 의 τ 는 factor (제곱 규약) | ✅ — Nguyen 2020 Eq 1 τ 와도 같은 양 |
+| 역링크 절 Duquesnoy 호출 `TauFactor('InLine', 1, 0, 0, im, PhaDir, [1 1 1])` | 1.424.0 은 `'InLine'` 뒤에 `1` 을 끼우고 (L71–73 `varargin=[varargin(1),1,varargin(2:end)];`) `InLine(~,SolverMode, RVAmode, Net_Or, PhaDir, VoxDims)` (L125) 를 부른다 ⇒ 이 판의 사용자 형식은 `TauFactor('InLine', SolverMode, RVAmode, Net_Or, PhaDir, VoxDims)` | ⚠ Duquesnoy 호출 (이름 뒤 6 인자) 과 이 판 시그니처 (5 인자) 의 개수가 다르다 — 그 스크립트가 쓴 판이 다를 가능성 [미확인 — MATLAB 실행 안 함] |
+
+### Nguyen 2020 이 이 툴 τ 에 붙인 한정어 (요약 — 정본은 그 카드)
+- TauFactor 의 conventional τ (모드 1–3) 는 **관통 정상상태 flux** 정의라 dead-end 기공을 부피로만 세고, 비관통이면 ∞, 방향을 못 본다. Nguyen 은 P2D 매개변수에 이 τ 대신 대칭셀 임피던스로 정한 **τ_e** 를 쓰라고 권한다 (p5 · p8). 잘 퍼콜된 구 충전에서는 두 값이 +0.8 / +3.9 % 차, 구배·dead-end 구조에서는 −46 % ~ +61 % (Nguyen Fig 5 · Fig 6).
+- ⇒ 이 카드 §9 의 인용문 ("TauFactor … τ_Laplace,bulk 와 대응") 은 **정의 수준에서 그대로 유효**하다. 다만 그 τ 를 COMSOL/P2D 에 넣을 값으로 소개할 때는 "conventional (관통형) τ — P2D 권고값 τ_e 아님" 을 덧붙인다.

@@ -2,9 +2,10 @@
  "slug": "minnmann2021_jes_charge_transport_bottlenecks",
  "dpi": 300,
  "maxpx": 3000,
- "generated": "2026-08-05",
+ "generated": "2026-10-02",
  "sources": [
-  "건식전극 논문/04. Minnmann_2021_J._Electrochem._Soc._168_040537.pdf"
+  "1. Editors' choice#U2014quantifying the impact of charge transport bottlenecks in composite cathodes of all-solid-state batteries.pdf",
+  "1. Sup) Editors' choice#U2014quantifying the impact of charge transport bottlenecks in composite cathodes of all-solid-state batteries.pdf"
  ],
  "figures": [
   {
@@ -14,6 +15,7 @@
    "page": 4,
    "file": "fig_1.png",
    "caption": "Figure 1. Schematic illustration of the measurement setup with electron-blocking (top) and ion-blocking (bottom) electrodes as well as representative impedance spectra. The corresponding transmission line model used for ﬁtting the impedance spectra measured in these different cases is displayed in a simpliﬁed way. The exact equivalent circuit elements used to model the impedance contributions of electronic (blue), ionic (orange), and interfacial (grey) processes are depicted at the bottom of the ﬁgure. The two resistor elements rel, 1 and rel, 2 in the electronic transport process are attributed to electronic bulk transport and interfacial charge transfer, respectively. condition “open-open”).26,32 It describes how the cell impedance ZCC(ω) depends on the impedance zel of the electron conducting phase, the impedance zion of the ion conducting phase and the impedance zint of the interface",
+   "rotated_deg": 0,
    "bbox": [
     30.0,
     60.9,
@@ -23,7 +25,7 @@
    "w": 2202,
    "h": 1782,
    "dpi": 300,
-   "src": "04. Minnmann_2021_J._Electrochem._Soc._168_040537.pdf",
+   "src": "1. Editors' choice#U2014quantifying the impact of charge transport bottlenecks in composite cathodes of all-solid-state batteries.pdf",
    "blank": 0.872
   },
   {
@@ -33,6 +35,7 @@
    "page": 5,
    "file": "fig_2.png",
    "caption": "Figure 2. (a) Effective partial ionic (orange) and electronic (blue) con- ductivity of composite cathodes with different volume fractions of CAM obtained from impedance spectroscopy. Electronic conductivities were obtained using ion-blocking electrodes, and ionic conductivities were obtained using electron-blocking electrodes. Volume fractions were calcu- lated with an average porosity of 14 vol.-%. (b) Calculated tortuosity factors of the composites. The ionic bulk conductivity of the solid electrolyte is 1.6 mS cm−1 and the electronic bulk conductivity of the CAM is 10 mS cm−1. Dashed lines are guides to the eye only.",
+   "rotated_deg": 0,
    "bbox": [
     298.0,
     60.9,
@@ -42,7 +45,7 @@
    "w": 1081,
    "h": 1314,
    "dpi": 300,
-   "src": "04. Minnmann_2021_J._Electrochem._Soc._168_040537.pdf",
+   "src": "1. Editors' choice#U2014quantifying the impact of charge transport bottlenecks in composite cathodes of all-solid-state batteries.pdf",
    "blank": 0.898
   },
   {
@@ -52,6 +55,7 @@
    "page": 6,
    "file": "fig_3.png",
    "caption": "Figure 3. Inﬂuence of different CAM fractions on the speciﬁc charge of ASSB cathode composites and CAM during the discharge step. The obtained speciﬁc charge is normalized to the mass of the cathode composite (top) and the mass of the CAM (bottom). Dashed lines are guides to the eye only. The dashed vertical line illustrates the boundary of a pure NCM cathode with 14 % porosity. The speciﬁc charge increases with increasing CAM fraction for low and medium fractions—independent of the C-rate. The ionic charge transport becomes a major limiting factor in composite cathodes with high CAM fractions.",
+   "rotated_deg": 0,
    "bbox": [
     30.0,
     60.9,
@@ -61,7 +65,7 @@
    "w": 1081,
    "h": 1370,
    "dpi": 300,
-   "src": "04. Minnmann_2021_J._Electrochem._Soc._168_040537.pdf",
+   "src": "1. Editors' choice#U2014quantifying the impact of charge transport bottlenecks in composite cathodes of all-solid-state batteries.pdf",
    "blank": 0.897
   },
   {
@@ -71,6 +75,7 @@
    "page": 8,
    "file": "fig_4.png",
    "caption": "Figure 4. Inﬂuence of conductive additives (VGCF) on the speciﬁc charge of composite cathodes with different CAM fractions. The speciﬁc charge is given per mass of the CAM (a) and per mass of the composite cathode (b). Lines are guides to the eye only. In the case of high CAM fractions (blue circles), electronic percolation is sufﬁcient and the addition of VGCF has no signiﬁcant beneﬁt for the speciﬁc charge. At low CAM fractions (orange squares), the addition of VGCF increases the speciﬁc charge at all C-rates. The speciﬁc charge increase does only slightly depend on the C-rate, which indicates that the increase in speciﬁc charge mainly originates from the gain of electronically contacted, otherwise isolated, CAM.",
+   "rotated_deg": 0,
    "bbox": [
     30.0,
     60.9,
@@ -80,7 +85,7 @@
    "w": 2201,
    "h": 980,
    "dpi": 300,
-   "src": "04. Minnmann_2021_J._Electrochem._Soc._168_040537.pdf",
+   "src": "1. Editors' choice#U2014quantifying the impact of charge transport bottlenecks in composite cathodes of all-solid-state batteries.pdf",
    "blank": 0.898
   },
   {
@@ -90,6 +95,7 @@
    "page": 8,
    "file": "fig_5.png",
    "caption": "Figure 5. Impact of the composite cathode CAM fraction and current density on the speciﬁc charge of ASSBs. The reduction of the speciﬁc charge with increasing current density is more pronounced in ASSBs with composite cathode CAM fractions > 53 vol.-%. At current densities < 0.5 mA cm−2 only the cell with the lowest CAM fraction exhibits lower composite-speciﬁc-charge compared to the other composites. This indicates that ionic transport within the composite cathode is not limiting the speciﬁc charge at lower current densities. spectra of the pristine (coarse) and the ball milled (ﬁne) LPSCl shows a reduction of the ionic conductivity from 1.6 to 1.2 mS cm−1 cathode. The results of conductivity measurements as well as C-rate tests are summarized in Fig. 6. We observed that the microstructural modiﬁcation, i.e. the grinding of the solid electrolyte, increases σion, eff and decreases σel, e",
+   "rotated_deg": 0,
    "bbox": [
     30.0,
     354.0,
@@ -99,7 +105,7 @@
    "w": 2202,
    "h": 947,
    "dpi": 300,
-   "src": "04. Minnmann_2021_J._Electrochem._Soc._168_040537.pdf",
+   "src": "1. Editors' choice#U2014quantifying the impact of charge transport bottlenecks in composite cathodes of all-solid-state batteries.pdf",
    "blank": 0.909
   },
   {
@@ -109,6 +115,7 @@
    "page": 9,
    "file": "fig_6.png",
    "caption": "Figure 6. Inﬂuence of a reduced solid electrolyte particle size on the ionic and electronic charge transport in a composite cathode with a CAM fraction of 61 vol.-% (left) and the respective C-rate capability of ASSB cells with composite cathode containing the different solid electrolytes (right). Decreasing the solid electrolyte particle size leads to a more homogeneous distribution of the materials, less clustering of CAM particles, and improved contact between the solid electrolyte and the CAM. Although the effective electronic partial conductivity is decreased, a higher C-rate capability is observed, because of lower ionic transport IR drops. feasible by improved processing of the cathodes, tortuosity will probably stay higher than in LIBs, posing a challenge for the optimization of composite cathodes for ASSBs. For instance, for that composite cathode, which showed the best C-rate p",
+   "rotated_deg": 0,
    "bbox": [
     30.0,
     60.9,
@@ -118,8 +125,218 @@
    "w": 2202,
    "h": 865,
    "dpi": 300,
-   "src": "04. Minnmann_2021_J._Electrochem._Soc._168_040537.pdf",
+   "src": "1. Editors' choice#U2014quantifying the impact of charge transport bottlenecks in composite cathodes of all-solid-state batteries.pdf",
    "blank": 0.788
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 3,
+   "file": "fig_S1.png",
+   "caption": "Figure S1: Impedance spectra, measurement setup and equivalent circuit used to determine the contribution of the SE separators and SE|In/(InLi)x interfacial contribution to the impedance of the cells with electron blocking contact materials. The ionic resistivity of the solid electrolyte layer RSE and the impedance response of the R-CPE unit are schematically illustrated as a guide to the eye. Low and high frequency data points are not used for the analysis and thus depicted in a lighter shade. Impedance spectroscopy was carried out and the resulting data were fitted to an equivalent circuit consisting of a single resistor RSE representing the SE layer in series to a parallel arrangement of a single resistor RSE|In/InLi and a CPE. The impedance contribution of both In/(InLi)x|SE interfaces should be identical. Therefore, the impedance response of both interfaces can be fitted with a sing",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    405.2,
+    533.2,
+    561.8
+   ],
+   "w": 1952,
+   "h": 654,
+   "dpi": 300,
+   "src": "1. Sup) Editors' choice#U2014quantifying the impact of charge transport bottlenecks in composite cathodes of all-solid-state batteries.pdf",
+   "blank": 0.727
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 6,
+   "file": "fig_S2.png",
+   "caption": "Figure S2: Charge-Discharge curves of full cells with CAM fractions of a) 33 vol.-%, b) 42 vol.-%, c) 47 vol.%, d) 58 vol.-% and e) 61 vol.-%. The measured cell voltage Umeas is plotted against the CAM-specific charge qmat. Displayed are the cycling curves at the four tested C-rates C/10 (0.1 C), C/4 (0.25 C), C/2 (0.5 C) and 1C. While at low CAM fractions the electronic limitation results in lower CAM specific charges at low C-rates, the ionic imitation, displayed by the cell average potential at higher C-rates, is less pronounced than in cells with high CAM fraction. 5. Charge-discharge capacities – Comparison with and w/o VGCF",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    64.8,
+    532.8,
+    448.1
+   ],
+   "w": 1950,
+   "h": 1598,
+   "dpi": 300,
+   "src": "1. Sup) Editors' choice#U2014quantifying the impact of charge transport bottlenecks in composite cathodes of all-solid-state batteries.pdf",
+   "blank": 0.061
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 7,
+   "file": "fig_S3.png",
+   "caption": "Figure S3: Direct comparison of the performance of cells with a high CAM fraction (61 vol.-%) and different cathode compositions. An increase of the CAM-specific charge especially at higher C-rates can be observed for the cells containing a fine SE. Carbon additives (VGCF), however, have a detrimental influence, demonstrating, that the performance limitation at high CAM-fractions is not caused by electronic charge-transport.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    174.5,
+    532.7,
+    432.6
+   ],
+   "w": 1950,
+   "h": 1076,
+   "dpi": 300,
+   "src": "1. Sup) Editors' choice#U2014quantifying the impact of charge transport bottlenecks in composite cathodes of all-solid-state batteries.pdf",
+   "blank": 0.517
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 8,
+   "file": "fig_S4.png",
+   "caption": "Figure S4: X-ray diffractograms of the SE before (pristine) and after (wet milled) the wet milling process aimed to reduce the particle size. Samples were measured under inert gas atmosphere, by applying a silicon zero-background holder and sealing the samples with a piece of Kapton® foil. Reference pattern for the Li6PS5Cl, Li2S and LiCl are displayed below the pattern. The y-axis offset between the wet milled and the pristine sample has been generated manually, to avoid overlapping of the pattern and allow better comparison.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    65.1,
+    532.6,
+    371.2
+   ],
+   "w": 1950,
+   "h": 1276,
+   "dpi": 300,
+   "src": "1. Sup) Editors' choice#U2014quantifying the impact of charge transport bottlenecks in composite cathodes of all-solid-state batteries.pdf",
+   "blank": 0.396
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 8,
+   "file": "fig_S5.png",
+   "caption": "Figure S5: Cumulative particle size analysis of the pristine (blue) and wet milled (orange) sample of the solid electrolyte. A clear reduction in the average particle size is observed. We like to note that particularly the fraction of particles > 10 µm is strongly reduced.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    456.2,
+    532.8,
+    690.2
+   ],
+   "w": 1950,
+   "h": 976,
+   "dpi": 300,
+   "src": "1. Sup) Editors' choice#U2014quantifying the impact of charge transport bottlenecks in composite cathodes of all-solid-state batteries.pdf",
+   "blank": 0.945
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 9,
+   "file": "fig_S6.png",
+   "caption": "Figure S6: Impedance spectra of pure SE samples prior to (pristine) and after wet milling and subsequent drying. Samples were tested with stainless steel electrodes at an applied pressure of ca. 40 MPa. A slight reduction in the ionic conductivity can be observed after the wet-milling process, indicating either a slight amorphization, or a decomposition during the wet- milling process.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    106.5,
+    532.8,
+    439.0
+   ],
+   "w": 1950,
+   "h": 1387,
+   "dpi": 300,
+   "src": "1. Sup) Editors' choice#U2014quantifying the impact of charge transport bottlenecks in composite cathodes of all-solid-state batteries.pdf",
+   "blank": 0.931
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 4,
+   "file": "tab_S1.png",
+   "caption": "Table S1: Overview of the used compositions of the composite cathodes. A total of 100 mg was prepared for each composite cathode. Listed are the masses m, the experimentally determined and theoretically calculated volumes Vmeas and Vtheo, the calculated porosity ΦPorosity and the calculated volume fraction of NCM and solid electrolyte ΦNCM and ΦSE with an assumed average porosity of 14%. mNCM / mSE / Vtheo / mm3 Vmeas / mm3 ΦPorosity / Average ΦPorosity / %* ΦNCM ΦSE / % 50 50 37.2 40.3 7.6 14 25 61 60 40 33.9 39.0 13 14 33 53 70 30 30.7 36.9 17 14 42 44 80 20 27.4 32.9 17 14 53 33 86 14 25.5 29.8 15 14 61 25 *average value of the five measured ΦPorosity values mg mg % / %",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    67.2,
+    531.8,
+    713.1
+   ],
+   "w": 1942,
+   "h": 2692,
+   "dpi": 300,
+   "src": "1. Sup) Editors' choice#U2014quantifying the impact of charge transport bottlenecks in composite cathodes of all-solid-state batteries.pdf",
+   "blank": 0.918
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 5,
+   "file": "tab_S2.png",
+   "caption": "Table S2: Volume fractions of SE an CAM and determined effective conductivities σeff and tortuosity factors τ2 of the electronic and ionic transport pathway. Tortuosity factors have been set to unity for the pure components for a simplification of the analysis. ΦSE / τel2 σion, eff / τion2 ΦNCM / σel, eff / S cm-1 S cm-1 % % 0 100 (nominal) - - 1.60 ∙ 10-3 1.00 25 61 2.06 ∙ 10-5 120 4.08 ∙ 10-4 2.40 33 53 2.36 ∙ 10-4 13.7 2.66 ∙ 10-4 3.23 42 44 5.56 ∙ 10-4 7.44 1.66 ∙ 10-4 4.27 53 33 1.11 ∙ 10-3 4.77 3.45 ∙ 10-5 15.3 61 25 1.43 ∙ 10-3 4.29 3.06 ∙ 10-6 130 61 25 (fine SE) 6.97 ∙ 10-4 8.79 1.17 ∙ 10-5 33.8 100 (nominal) 0 1.00 ∙ 10-2 1 - - 4. Cycling Data",
+   "rotated_deg": 0,
+   "bbox": [
+    56.0,
+    86.3,
+    539.5,
+    314.6
+   ],
+   "w": 2015,
+   "h": 952,
+   "dpi": 300,
+   "src": "1. Sup) Editors' choice#U2014quantifying the impact of charge transport bottlenecks in composite cathodes of all-solid-state batteries.pdf",
+   "blank": 0.916
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 6,
+   "file": "tab_S4.png",
+   "caption": "Table S4: Overview of specific charges Q for the steps with and without (w/o) conductive additives at different C-rates for ASSB cells with 25 vol.-% (top) and 61 vol.-% (bottom) CAM. Listed are charge (chg) and discharge (dis) steps. Additionally, the differences ΔQ are listed. C-rate / h-1 Qchg w/o Qchg with ΔQchg Qdis w/o Qdis with ΔQdis / / mAh g-1 mAh g-1 VGCF VGCF VGCF VGCF / mAh g-1 / mAh g-1 / mAh g-1 / mAh g-1 25 vol.-% CAM 0.1 137 159 22 135 157 22 0.25 118 140 22 118 140 22 0.5 104 119 15 103 119 16 1 83.4 93.4 10 83.0 93.0 10 61 vol.-% CAM 0.1 132 132 0 132 130 -2.0",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    447.3,
+    531.7,
+    784.0
+   ],
+   "w": 1942,
+   "h": 1404,
+   "dpi": 300,
+   "src": "1. Sup) Editors' choice#U2014quantifying the impact of charge transport bottlenecks in composite cathodes of all-solid-state batteries.pdf",
+   "blank": 0.804
+  },
+  {
+   "key": "tS5",
+   "kind": "table",
+   "label": "S5",
+   "page": 9,
+   "file": "tab_S5.png",
+   "caption": "Table S5: 50 % and 90 % median particle size values of solid electrolyte samples before (pristine) and after (wet-milled) the wet-milling process. While the D50 value only displays a slight change, the drastic decrease in the D90 value demonstrates the effective reduction of SE particles with particle sizes > 10 µm. Value Pristine Wet-Milled D50 / µm 3.45 2.45 D90 / µm 20.05 8.57",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    66.2,
+    531.7,
+    186.0
+   ],
+   "w": 1942,
+   "h": 500,
+   "dpi": 300,
+   "src": "1. Sup) Editors' choice#U2014quantifying the impact of charge transport bottlenecks in composite cathodes of all-solid-state batteries.pdf",
+   "blank": 0.714
+  }
+ ],
+ "missing_labels": [
+  {
+   "key": "tS3",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p5 거의 백지(1.000)"
+   ],
+   "near_miss": []
   }
  ]
 }
