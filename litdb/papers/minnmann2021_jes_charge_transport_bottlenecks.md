@@ -730,7 +730,7 @@ SI Table S1 (SI p.4).
 우리 쪽은 stoic-knuth 브랜치 코드를 이 카드 작성 중 직접 읽어 확인했다: 웹앱 `webapp/app.py:2610` 부근 (τ_Lap,eff ·
 τ_Lap,geom) · `scripts/network_conductivity.py:850–857` (σ_eff = G·T/A, A = box_x·box_y) · `:1156–1157` (σ_full_mScm ·
 σ_bulk_net_mScm = 비 × σ_bulk) · `:1226` (이온 σ_bulk = `se_material.sigma_grain_S_cm`) · `scripts/dem_analysis_core.py`
-`calc_tortuosity` (τ_Dij = 경로 길이 / z 거리).  COMSOL 식 (5.6 사용자 안내서 식 6-6, 375쪽: `f_e = ε_p/τ_F`, Bruggeman
+`calc_tortuosity` (τ_Dij = 경로 길이 / z 거리).  COMSOL 식 (5.6 사용자 안내서 식 6-6, 376쪽 ⟦10-03 리뷰: COMSOL 쪽 +1⟧: `f_e = ε_p/τ_F`, Bruggeman
 `τ_F = ε_p^(−1/2)`) 은 **메인 제공 — 이 카드에서 COMSOL 원문은 대조하지 않았다**.
 
 | 원문 기호 | 정의식 (식 번호 · 쪽) | 이름 (원문 낱말) | σ_eff 정규화 기준 | 우리 어느 τ 와 같은 양인가 | 환산식 |
