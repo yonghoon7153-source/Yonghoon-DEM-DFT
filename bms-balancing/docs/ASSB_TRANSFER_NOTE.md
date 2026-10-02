@@ -579,6 +579,56 @@ mothership 특칙). **셋이 안 모이면 태그를 만들지 말고 닻 한 �
 
 **원장 "Li Q. 2025 Source Data Fig. 5" 확인** — Nature 기사 페이지의 "Source Data Fig. 5" 는 파일 하나(`41560_2025_1820_MOESM1_ESM.xlsx`)이고 59호 때 받은 파일과 **같은 바이트** (sha256 `1559e0f10ab083c1…`). 내용은 적층 압력 29 값(Fig. 1b)과 출처 표뿐, 쿨롱 효율 값 0 — Fig. 5 의 CE 통계는 공개 자료로 얻을 수 없다 (남은 길은 교신저자 요청).
 
+### 6-3-j. 2026-10-02 도착 — **`assb` 90호 (원장 밖 사용자 공급) + 4차 묶음 파일 51–64 (원장 §1 요청 14 편 · 같은 날 전부 도착)**
+
+> 도착 기록이다 (형식은 §6-3-i 와 같다 — 접두사 = 세션 업로드 파일 이름 앞 8 자, 해시 = sha256 앞 16 자). 같은 날 사용자가 논문 세미나에서 받은 **액체셀 논문 셋**(파일 번호 1 · 2 · 3 — Si 음극 달력 노화 · 흑연 미세회절 · EIS 딥러닝 모드 추정)은 `assb` 가 아니므로 이 절에 넣지 않는다 (§6-3-f 선례) — 도착 기록과 우리 것에 대한 적용은 `docs/SEMINAR_2026-10-02_APPLICATION.md`. ⚠ 사용자 파일 번호 "1" 이 이 편과 세미나 1 번째 논문에 함께 쓰였다 — 이 절의 "1" 은 이 편이다.
+
+| # | 논문 | 받은 것 (접두사 · 해시) | 대조 · 상태 |
+|---|---|---|---|
+| 1 (10-02) | Truong · Whang · Huang · Sandoval · Zeier 2025 *J. Mater. Chem. A* 13, 17261 — "Probing solid-state battery aging: evaluating calendar vs. cycle aging protocols via time-resolved electrochemical impedance spectroscopy" (원장 지목 0 · 사용자 "assb 관련 — assb로 분류") | 본문 9831e7f5 · 585bba0d4fcddc60 / Sup1 zip 93c00d9c · 0f792d1164ec71c4 (안에 `data.zip` 하나 — 1,273 항목, 그림별 txt) / Sup2 SI b25e2610 · d0b39576974b0586 | ✅ ESI (그림 S1–S14 · 표 0 — 본문이 S1–S14 를 전부 부름) · ✅ 데이터 ZIP (안쪽 `data.zip` sha256 `ba108aba62c47131…` · 1,273 항목 = 폴더 47 + 파일 1,226 · **본문 그림 1–7 자료만** · 컷오프 3.7 · 3.9 · 4.1 V 만 — 3.8 · 4.0 V 는 그림 3e · f 표 두 줄뿐 · SI 그림 자료 · 전류 열 없음 · 커밋 안 함) · ✅ **90호 흡수** (서브 커밋 `9ab5986b5`) — 해시 셋 일치 · ⚠ 예치 원자료 무결성 둘 — 그림 2 의 4.1 V calendar 파일 끝 RPT 구간이 3.9 V 파일 끝 구간과 **전압값까지 동일**(약 9,800 표본 — 호출자가 원자료로 재확인) · Q_loss 기준선이 지면 정의(셋째 형성)로는 재현 안 되고 첫 형성 기준이면 0.1 %p 안 · 저장소 DOI `10.17879/14908422666` 미열람 |
+
+**4차 묶음 도착 (사용자 파일 번호 51~ · 3차 묶음 50 다음을 이음 · 받은 순서대로 `assb` 91호~)** — 아래 "요청 14 편" 표의 편이 도착한 기록. 대조 = 본문 전문에서 `supplement*` · `appendix` · `data availability` · `supporting information` · `video` · `movie` · `zenodo` · `github` 를 센 결과.
+
+| # | 논문 | 받은 것 (접두사 · 해시) | 대조 · 상태 |
+|---|---|---|---|
+| 51 | Danilov · Niessen · Notten 2011 *J. Electrochem. Soc.* 158, A215 (본문 doi 10.1149/1.3521414) | 본문 ee00bca9 · e00bb9869bd275eb (9 쪽 · Distiller 6.0.1 + IOP iText 내려받기 2026-10-02) | ✅ SI 없음 (보충 언급 0) · ⏳ 처리 대기 |
+| 52 | Firouz · Goutam · Soult · Mohammadi · Van Mierlo · Van den Bossche 2020 *J. Energy Storage* 28, 101184 (doi 10.1016/j.est.2019.101184) | 본문 430260f1 · 9cf5d53f1aea0281 (12 쪽) | ✅ SI 없음 (보충 언급 0) · ⏳ 처리 대기 |
+| 53 | Bielefeld 2023 *Batteries & Supercaps* 6, e202300180 (doi 10.1002/batt.202300180) | 본문 27f7fd17 · 11fdd3cce9bcbff7 (12 쪽 · PDFlib + iText 2026-10-02) | ✅ SI 없음 — "Data sharing is not applicable to this article as no new data were created or analyzed" · ⏳ 처리 대기 |
+| 54 | Schmidt · Sinzig · Wall 2024 *J. Electrochem. Soc.* 171, 100502 (doi 10.1149/1945-7111/ad76dc) | 본문 fde9d5bd · a58e96d8a6e69ee0 (16 쪽 · IOP iText 2026-10-02) | ✅ SI 없음 — 부록 A · B(표 B·I–B·III)는 본문 안 · 시뮬레이션 결과 자료는 Zenodo `10.5281/zenodo.13802728`(받지 않음 — digest 에 불필요) · ⏳ 처리 대기 |
+| 55 | Khalik · Donkers · Sturm · Bergveld 2021 *J. Power Sources* 499, 229901 (doi 10.1016/j.jpowsour.2021.229901) | 본문 6a611bdd · 24ba9143297b6f81 (11 쪽 · Distiller 8.1.0) | ✅ SI 없음 (보충 언급 0) · ⚠ 액체셀 도구 (ASSB 아님 — 28호 Bizeray 선례로 `assb` 번호는 받되 "ASSB 아님(도구 칸)") · ⏳ 처리 대기 |
+| 56 | Lu · Trimboli · Fan · Wang · Plett 2022 *J. Electrochem. Soc.* 169, 080504 (doi 10.1149/1945-7111/ac824a) | 본문 1fe29eab · ffab9252951dc35a (29 쪽 · IOP iText 2026-10-02) | ✅ SI 없음 — 부록은 본문 안 · ⚠ 액체셀 도구 (55 와 같음) · ⏳ 처리 대기 |
+| 57 | Koerver · Zhang · de Biasi · Schweidler · Kondrakov · Kolling · Brezesinski · Hartmann · Zeier · Janek 2018 *Energy Environ. Sci.* 11, 2142 (doi 10.1039/C8EE00907D) | 본문 054faeb2 · 0d6fe3efc53f4d51 (17 쪽 · Aspose 22.3.0) / ESI 83518ef0 · 2bf312f561f5e87b (10 쪽 · Word "Supporting Information.docx" 의 Aspose 9.3.0 변환 · 2018-03-28 작성) | ✅ ESI 1 — 본문이 부르는 Fig. S1 · S2 · S3 · S5 · S7 · S8 이 ESI 그림 S1–S8 · 표 S1–S4 안에 다 있다 · ⏳ 처리 대기 |
+| 58 | Raijmakers · Danilov · Eichel · Notten 2020 *Electrochim. Acta* 330, 135147 (doi 10.1016/j.electacta.2019.135147) | 본문 e5b2203a · e21931c869c01649 (19 쪽 · Distiller 8.1.0) | ✅ SI 없음 — 부록 A 는 본문 안 · ⏳ 처리 대기 |
+| 59 | Kim Y. · Lin · Abbasalinejad · Kim S.U. · Chung 2019 *Electrochim. Acta* 317, 663–672 (doi 10.1016/j.electacta.2019.06.023) | 본문 11632c88 · a11bdbcbc01e8fb4 (10 쪽) | ✅ SI 없음 (보충 언급 0) · ⏳ 처리 대기 |
+| 60 | Deng · Hu · Lin · Xu · Li · Guo 2021 *IEEE Trans. Transp. Electrif.* 7(2), 464 (doi 10.1109/TTE.2020.3026962) | 본문 eaa8e755 · c811ace7de53d07a (10 쪽) | ✅ SI 없음 (보충 언급 0) · ⏳ 처리 대기 |
+| 61 | Danilov · Notten 2008 *Electrochim. Acta* 53, 5569 (doi 10.1016/j.electacta.2008.02.086) | 본문 e83153cd · f427e8738b49cb41 (10 쪽 · Distiller 7.0) | ✅ SI 없음 (보충 언급 0) · ⏳ 처리 대기 |
+| 62 | Xie · Imanishi · Matsumura · Hirano · Takeda · Yamamoto 2008 *Solid State Ionics* 179, 362 (doi 10.1016/j.ssi.2008.02.051) | 본문 9e19e109 · 28db7113f2e3a2fe (9 쪽 · Distiller 7.0.5) | ✅ SI 없음 (보충 언급 0) · ⏳ 처리 대기 |
+| 63 | Shao Y. · Shao X. · Sang · Liu 2022 *J. Electrochem. Soc.* 169, 080529 (doi 10.1149/1945-7111/ac8b3a) | 본문 b8c9f6b7 · 813444c09aa2b471 (13 쪽 · IOP iText 2026-10-02) | ✅ SI 없음 (보충 언급 0) · ⏳ 처리 대기 |
+| 64 | Ansah · Hyun · Shin · Lee · Lim · Cho 2021 *Electron. Mater. Lett.* 17, 532–542 (doi 10.1007/s13391-021-00305-9) | 본문 463fa050 · 2822f7ea77ed8c95 (11 쪽 · Distiller 10.1.8) | ✅ SI 없음 — "The raw/processed data required to produce these findings cannot be shared at this time" · ⏳ 처리 대기 |
+
+**요청 14 편 전부 도착 (파일 51–64) · 빠진 것 0** — 보충자료가 있는 편은 57 (ESI) 하나이고 받았다. 54 의 Zenodo 결과 자료는 선택(받지 않음). 처리 순서는 번호순 51 → `assb` 91호 … 64 → 104호. **`assb` 편은 한 번에 하나씩** 돌린다 — 카드 채움표의 누적 값 · "n 번째 성질" 서수가 앞 호에 기대기 때문이다 (액체셀 세미나 편은 다른 작업 트리에서 나란히).
+
+**원장 §1 행 14 편 — 사용자가 받아 오기로 함 (2026-10-02, "이것도 논문 받아둬서 논문에이전트 진행하게 이름 제대로 줘봐")**. 정식 제목은 이 환경에서 서지 DB(Crossref · OpenAlex)가 조직 정책으로 막혀 **웹 검색 결과 · 우리 digest 의 참고문헌 옮김**으로 권 · 쪽을 대조해 확정했다 (검색 출처는 세션 보고에 있다). 받는 순서대로 `assb` 91호부터 번호를 붙인다(§6-4 "먹인 순서 그대로").
+
+| 등급 | 저자 · 연도 | 정식 제목 | 서지 | 원장 지목 |
+|---|---|---|---|---|
+| ★★★ | Danilov · Niessen · Notten 2011 | Modeling All-Solid-State Li-Ion Batteries | *J. Electrochem. Soc.* 158(3), A215–A222 | 12 · 26 |
+| ★★★ | Firouz · Goutam · Soult · Mohammadi · Van Mierlo · Van den Bossche 2020 | Block-oriented system identification for nonlinear modeling of all-solid-state Li-ion battery technology | *J. Energy Storage* 28, 101184 | 26 |
+| ★★★ | Bielefeld 2023 | How to Develop Useful Models for Solid-State Batteries – A Plea for Simplicity and Interdisciplinary Cooperation | *Batteries & Supercaps* 6(9), e202300180 · doi 10.1002/batt.202300180 | 26 · 27 |
+| ★★★ | Schmidt · Sinzig · Wall 2024 | An Electro-Chemo-Mechanic Model Resolving Delamination between Components in Complex Microstructures of Solid-State Batteries | *J. Electrochem. Soc.* 171, 100502 | 27 |
+| ★★★ | Khalik · Donkers · Sturm · Bergveld 2021 | Parameter estimation of the Doyle–Fuller–Newman model for Lithium-ion batteries by parameter normalization, grouping, and sensitivity analysis | *J. Power Sources* 499, 229901 · doi 10.1016/j.jpowsour.2021.229901 | 27 (액체셀 도구) |
+| ★★★ | Lu · Trimboli · Fan · Wang · Plett 2022 | Nondestructive EIS Testing to Estimate a Subset of Physics-Based-Model Parameter Values for Lithium-Ion Cells | *J. Electrochem. Soc.* 169(8), 080504 | 27 (액체셀 도구) |
+| ★★★ | Koerver · Zhang · de Biasi · Schweidler · Kondrakov · Kolling · Brezesinski · Hartmann · Zeier · Janek 2018 | Chemo-mechanical expansion of lithium electrode materials – on the route to mechanically optimized all-solid-state batteries | *Energy Environ. Sci.* 11, 2142–2158 · doi 10.1039/C8EE00907D | 27 · 33 |
+| ★★ | Raijmakers · Danilov · Eichel · Notten 2020 | An advanced all-solid-state Li-ion battery model | *Electrochim. Acta* 330, 135147 | 26 · 37 |
+| ★★ | Kim · Lin · Abbasalinejad · Kim · Chung 2019 | On state estimation of all solid-state batteries | *Electrochim. Acta* 317, 663–672 | 12 · 37 |
+| ★★ | Deng · Hu · Lin · Xu · Li · Guo 2021 | A Reduced-Order Electrochemical Model for All-Solid-State Batteries | *IEEE Trans. Transp. Electrif.* 7(2), 464 | 26 · 37 |
+| ★ | Danilov · Notten 2008 | Mathematical modelling of ionic transport in the electrolyte of Li-ion batteries | *Electrochim. Acta* 53(17), 5569 · doi 10.1016/j.electacta.2008.02.086 | 26 |
+| ★ | Xie · Imanishi · Matsumura · Hirano · Takeda · Yamamoto 2008 | Orientation dependence of Li-ion diffusion kinetics in LiCoO2 thin films prepared by RF magnetron sputtering | *Solid State Ionics* 179, 362 | 26 |
+| ★ | Shao · Shao · Sang · Liu 2022 | A Fully Coupled Mechano-Electrochemical Model for All-Solid-State Thin-Film Li-Ion Batteries with Non-Porous Electrodes: Effects of Chemo-Mechanical Expansions on Battery Performance and Optimization Strategies for Stress Evolution | *J. Electrochem. Soc.* 169, 080529 · doi 10.1149/1945-7111/ac8b3a | 26 |
+| ★ | Ansah · Hyun · Shin · Lee · Lim · Cho 2021 | A Comprehensive Parametric Study for Solid-state Lithium-ion Battery Through Finite Element Simulation | *Electron. Mater. Lett.* 17, 532–542 · doi 10.1007/s13391-021-00305-9 | 26 |
+
+⚠ 확인 한계: 요청할 때(제목 확인 단계)는 쪽 끝 번호 · DOI 를 검색 결과에 보인 것만 적었다. **도착한 PDF 의 첫 쪽 · 메타데이터로 열네 편의 DOI 를 모두 확인했다** — 위 도착 표의 doi 칸이 정본이다. Ansah 2021 은 원장 §1 행의 저자 넷(Ansah · Shin · Lee · Cho)과 달리 **여섯**이다 — 원장 행 끝에 정정을 덧붙였다. 받은 PDF 가 정본이고, 흡수 때 digest 가 다시 대조한다.
+
 ### 6-3-c. ⚠ 30 번의 보충 데이터 ZIP — **30 번 에이전트에게 반드시 넘길 것**
 
 > ⚠ (2026-09-28 주석) 이 절의 "30 번" 은 **옛 큐 30** (31호 ICI · Chien 2023) 이다 — 3차 묶음 **파일 30** (68호 Chen 2013 *Energies*) 과 무관.
