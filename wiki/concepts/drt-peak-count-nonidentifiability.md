@@ -5,7 +5,7 @@ created: 2026-09-22
 updated: 2026-10-02
 type: concept
 tags: [assb, battery, degradation, research, eis]
-sources: [raw/papers/truong2025_calendar-vs-cycle-aging-protocols-drt-assb.md, raw/papers/oruemendizabal2023_multiconfiguration-geis-drt-nmc622-lpscl-li-interfaces.md, raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/su2024_drt-soh-health-features.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md]
+sources: [raw/papers/lu2022_nondestructive-eis-lumped-dfne-parameter-estimation.md, raw/papers/truong2025_calendar-vs-cycle-aging-protocols-drt-assb.md, raw/papers/oruemendizabal2023_multiconfiguration-geis-drt-nmc622-lpscl-li-interfaces.md, raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/su2024_drt-soh-health-features.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -312,6 +312,22 @@ In/InLi \| Li₆PS₅Cl \| NCM83 : Li₆PS₅Cl 반쪽 · 48 h 정전위 유지(
 ⇒ ★★ `[해석]` 다섯 번째 경보의 층 표에 한 줄을 더하면: **7 · 90호 Truong — 역변환 설정(λ)을 자동화해도 이름표 층(τ 창 · 연속성)은 그대로이고, 같은 τ 창에 C 가 세 자릿수 다른 요소가 공존한다.** 체크리스트에 "τ 창을 넘는 봉우리의 C_eff 연속성" 을 칸으로 올릴지는 **결정하지 않았다**([[assb-lampe-contact-product-degeneracy]] 일흔세 번째 적용의 후보 줄과 같은 내용).
 ⚠ 이 편의 강점도 적는다 — K–K 검사 인쇄 · λ 수동 조율 0 · **원자료 예치**(그래서 우리가 C_eff 를 낼 수 있었다). 11 · 84호에는 없던 것이다. 다만 예치 자료 자체에 그림 사이 불폐합 · 복사 구간이 있어(90호 D1 · D15) 시간분해 DRT 파일도 재현 입력으로 쓰기 전에 교차 검사가 필요하다.
 
+## ★★★ 여덟 번째 경보 — **봉우리 → 전극 배정이 τ 순서 '가정' 이고, 그 가정으로 정한 초기값의 전극별 C 크기 순서를 최종 적합이 뒤집는다 · 저자 자신의 그림에서 CPE 하나가 극대 셋, 과정 다섯이 극대 열다섯** (2026-10-02, `assb` 96호)
+
+`raw/papers/lu2022_nondestructive-eis-lumped-dfne-parameter-estimation.md`
+(Lu, Trimboli, Fan, Wang, Plett, *J. Electrochem. Soc.* **169** (2022) 080504, © ECS/IOP; ⚠ 액체셀 도구 — ASSB 아님;
+Panasonic 25 Ah 각형 흑연//NMC 하나 · 25 °C · 19 SOC · 100 kHz–0.1 mHz 정전류 EIS(C/50) + 같은 모형 가상 셀 하나 · DRT = Wan 등[68, 74] 공개 도구의 수정판 · 배선 인덕턴스는 GDRT(Danzer 2019)로 제거).
+
+이 편에서 DRT 는 **최종 추정이 아니라 초기값 도구**다 — Nyquist 혹 하나를 계면 봉우리 둘(음극 · 양극 Z̄se)로 떼어 C̄dl · R̄ct 초기값을 내고, 최종 값은 닫힌 꼴 TF 모형 회귀가 낸다. 그런데 **이름표 층은 여기서도 가정이다.**
+
+- **배정 = τ 순서 가정.** `[인쇄]` "In practice, we are unable to distinguish the ordering of time constants from the two electrodes. Presently, we simply assume that the smaller time constant (at higher frequency) is associated to the negative electrode" — 같은 그림 계보의 51호(이 편 그림 2 "inspired by the work reported by Illig et al.")는 대칭셀(LFP\|LFP · Li\|Li) 대조라는 **측정**으로 봉우리를 붙였는데, 이 편은 그 연산자를 빌리지 않았다.
+- ★ **초기 ↔ 최종 순서 뒤집힘.** 실셀 DRT 초기 C̄dl 음극 ≈4.0 · 양극 77.7 F(그림 15(e) 평균선 `[도표·화소]`) → 최종(표 VI) 10 · 5.38 F — 크기 순서가 바뀌었다(×2.5 · ×0.069). 최종이 옳고 초기 배정이 틀렸을 수도, 그 반대일 수도 있다 — 가를 측정(대칭셀 · 3전극)이 지면에 없다. 다만 **가정 배정으로 정한 초기값의 순서를 최종 적합이 유지하지 않았다**는 것은 인쇄 표 대 그림 판독의 비교로 보인다(본문 언급 0).
+- **CPE 하나 → 극대 셋 · 과정 다섯 → 극대 15**(본문 언급 0). `[도표·화소]` 그림 5(b): CPE 하나(n_DL 0.9)의 DRT 에 γ(τ) 극대 셋 · 그림 6(a): 참 모형 가상 셀(계면 둘 · 전해질 · 고체 확산 둘 — 과정 다섯)의 DRT 극대 **15**(계면 둘 + τ 0.15 s–9.4×10³ s 열셋). 저자 문장 "a single Nyquist bump can arise from the combination of two (or more) time constants" 의 반대 방향 — **한 과정이 여러 봉우리를 낸다** — 이 같은 지면 그림에 있다(층 2 · 셋째 경보와 같은 축).
+- **창 밖.** 그림 6(a) 극대 2.6×10³ · 9.4×10³ s · 그림 15(d) 실셀 ≈10⁴ s — 표 III 격자(최저 0.1 mHz)면 τ_max = 1/(2π f_min) ≈1.6×10³ s 밖(DRT τ 격자 미인쇄 — 조건부) · 이름은 "electrolyte and solid-diffusion" 묶음(여섯 · 일곱 번째 경보에 이은 셋째 표본 — 다만 이 편은 그 봉우리에 전극 이름을 주지 않는다).
+- **λ.** `[인쇄]` "where λ is a user-selected regularization parameter" — 값 · 선택 규칙 0 · 51호(λ 미인쇄 · 51호 G2)와 같은 공백.
+
+⇒ ★★ `[해석]` 다섯 번째 경보의 층 표에 한 줄을 더하면: **8 · 96호 Lu — 배정을 '측정' 아닌 '가정' 으로 두고 DRT 를 초기값에만 쓰면, 최종 적합이 그 배정을 뒤집어도 지면에 드러나지 않는다(초기 ↔ 최종 비교를 독자가 해야 보인다).** 체크리스트에 "배정 연산자 · 최종 적합의 배정 유지" 를 칸으로 올릴지는 **결정하지 않았다**(새 판단 거리 — 글자는 호출자).
+
 ## 이 위키에서의 적용
 
 ### 1. 진단 — "개수를 쟀는가" 를 묻는 체크리스트
@@ -397,6 +413,18 @@ SI Fig. S2(LPSCl, λ = 8.5×10⁻⁴)는 **날카로운 봉우리 4 개**(≈10�
 
 `[해석]` 개수 대신 **배정 연산자 넷**(구성 차 · 전류 방향 · SOC · 문헌 `C` 대역)이 봉우리에 이름을 붙인다 — 온도(`Ea`)는 0. ⚠ 18호 단서("C2 를 통과하는 것과 그 결과를 옳게 쓰는 것은 다른 일")가 여기도 선다: 진폭 20–50 mV 는 RT/F 와 같은 자릿수이고 `[재현]` AC 전류가 DC(0.08 mA cm⁻²)의 ×0.9–5 다 — Lin-KK 는 인과 · 정상성 검사이지 비선형 검사가 아니다.
 
+★★ **2026-10-02 추가 — 96호(Lu 2022 *J. Electrochem. Soc.* — ⚠ 액체 도구)는 C2 만 명명 수준에서 통과하고, DRT 를 최종 추정이 아니라 초기값 · 인덕턴스 보정 도구로 쓴다.**
+
+| # | 96호 |
+|---|---|
+| C1 | ❌ λ 값 · 선택 규칙 0 — `[인쇄]` "λ is a user-selected regularization parameter" · DRT = Wan 등[68, 74] 공개 도구의 "modified version"(수정 내용 미인쇄 — "Our modification allows automatic processing") · GDRT 틀 = Danzer 2019 |
+| C2 | ✅ 명명 — Gamry Echem Analyst 로 K–K 검증 · 잔차 값 · 그림 0 · 진폭 C/50 은 "minimal overall K–K residuals" 로 고름 |
+| C3 | ❌ 0 |
+| C4 | ❌ — 계면 봉우리 둘을 분리 연산으로 떼고 전극 이름은 τ 순서 **가정**(위 여덟 번째 경보) |
+| C5 | ❌ 셀 하나 · SOC 별 한 번(SOC 당 ≈하루) |
+
+`[해석]` 개수 규칙도 배정 측정도 없이 **DRT 가 최종 TF 회귀의 초기값만 정한다** — 그래서 DRT 쪽 비식별(개수 · 배정)이 최종 값에 들어가는 경로는 초기값 · 경계다(부록 "the boundaries for k̄0,j are set to be one order of magnitude around their initial values"). `[재현]` 가상 셀에서 그 경계 때문에 k̄0,6/7 참값이 하한의 1/1,287 · 1/411 — **DRT 초기화가 도달 가능 집합을 정했다**.
+
 ### 2. 우리 폭 측정기가 붙는 자리 — 구체적으로 하나
 
 [[near-optimal-set-width-measurement]] 의 기계는 **"답이 하나로 정해지는가"** 를
@@ -445,6 +473,7 @@ SI Fig. S2(LPSCl, λ = 8.5×10⁻⁴)는 **날카로운 봉우리 4 개**(≈10�
 - 수치는 전부 **사본**이다. 그림에서 읽은 것은 `[도표]` 이고 판독 오차가 붙는다.
 - ★ **84호의 창 밖 봉우리(R3\* · R4\*)가 인공물이라고 하지 않는다** (2026-09-29) — 측정 창 밖이고 이름 · 주파수 표기가 표 S3 와 그림에서 어긋난다는 것까지다. 공간전하층 · 확산 과정이 없다는 뜻이 아니다. γ 정규화 판독(그림 2e ↔ 5c)은 우리 `[재현]` · 가정 위다.
 - ★ **90호의 cycle P_A 가 음극 계면이 아니라고 하지 않는다** (2026-10-02) — 이름표가 τ 창 가정 위이고 C(≈mF)가 이중층 "전하 이동" 상한을 넘는다는 것까지다(합금 화학 용량 등 다른 해석은 이 편 자료로 가를 수 없다). 그리고 **C_eff 를 저자 값으로 인용하지 않는다** — 예치 DRT 위 우리 판독(골–골 적분 · 창 경계 ±≈30 % · 기하 면적)이다. hybrid-drt 의 자동 λ 가 개수 · 높이의 폭을 준다고도 하지 않는다 — 사전 · 불확실성 출력이 미인쇄다.
+- ★ **96호의 두 전극 C̄dl 순서 뒤집힘이 배정 오류라고 하지 않는다** (2026-10-02) — DRT 초기값(그림 15(e) 평균선)과 최종값(표 VI)의 비교이고 어느 쪽이 맞는지 가를 측정이 지면에 없다. 그림 5(b) · 6(a) 극대 수는 우리 화소 판독(`[도표·화소]`)이고 저자 DRT 설정(λ · τ 격자)이 미인쇄라 다른 설정에서 같은 수가 나온다고 하지 않는다. 그리고 이 편은 액체셀이다 — ASSB DRT 의 배정 규칙으로 옮기지 않는다.
 
 ## 관련
 - [[assb-contact-loss-vs-lampe]] — 닻. Q4 의 다섯 번째 변신이 기록돼 있다
