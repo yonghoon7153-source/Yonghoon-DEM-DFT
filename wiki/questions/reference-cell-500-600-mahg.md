@@ -5,7 +5,7 @@ created: 2026-09-11
 updated: 2026-10-06
 type: research-question
 tags: [li2s, assb, activation, composite-cathode, units]
-sources: [raw/transcripts/2026-09-11-li2s-wiki-kickoff-session.md, raw/papers/kim2023_reinforced-electrical-networking-high-loading-li2s-cathode.md, raw/papers/huang2026_high-entropy-sulfides-kinetic-accelerators-assb.md, raw/papers/zhang2026_anode-free-assb-nanocrystalline-amorphous-li2s-na-collector.md, raw/papers/cronk2026_highly-utilized-practical-li-s-positive-electrode-assb.md, raw/papers/yu2024_nanocrystallite-cus-n-doped-carbon-host-all-solid-state-li2s.md, raw/papers/lee2026_decoupled-sulfur-redox-pathways-initial-chemical-states-assb.md, raw/papers/wang2023_high-capacity-assb-li-s-low-density-solid-electrolyte.md, raw/papers/wang2026_molecular-coordination-triple-synergy-cathode-assb.md, raw/papers/qu2025_volume-changes-li-s-solid-state-battery-components-cycling.md, raw/papers/kim2025_high-areal-capacity-sulfur-cathode-dual-phase-electrolyte-assb.md, raw/papers/wan2021_lii-libr-catalyst-solid-state-li2s-s-reactions.md, raw/papers/liu2026_li4sns4-molecular-mediator-low-barrier-li2s-chemistry.md, raw/papers/zhangj2026_strain-coordination-long-cycling-assb.md, raw/papers/kwok2023_interfacial-redox-mediator-high-performance-asslsb.md, raw/papers/gao2024_cu-i-codoping-activating-li2s-redox-kinetics-assb.md, raw/papers/park2026_low-pressure-operation-carbon-coated-current-collector-asslsb.md, raw/papers/kimjt2023_mixed-discharge-products-li2s2-li2s-asslsb.md, raw/papers/hong2026_high-valence-cation-lattice-expansion-activating-li2s.md, raw/papers/wangx2026_dual-conductivity-optimization-high-rate-ultralong-life-asslsb.md, raw/papers/hao2025_nanosized-li2s-amorphous-matrix-asslsb.md, raw/papers/feng2026_anode-free-asslsb-fe-stabilized-polysulfides.md]
+sources: [raw/transcripts/2026-09-11-li2s-wiki-kickoff-session.md, raw/papers/kim2023_reinforced-electrical-networking-high-loading-li2s-cathode.md, raw/papers/huang2026_high-entropy-sulfides-kinetic-accelerators-assb.md, raw/papers/zhang2026_anode-free-assb-nanocrystalline-amorphous-li2s-na-collector.md, raw/papers/cronk2026_highly-utilized-practical-li-s-positive-electrode-assb.md, raw/papers/yu2024_nanocrystallite-cus-n-doped-carbon-host-all-solid-state-li2s.md, raw/papers/lee2026_decoupled-sulfur-redox-pathways-initial-chemical-states-assb.md, raw/papers/wang2023_high-capacity-assb-li-s-low-density-solid-electrolyte.md, raw/papers/wang2026_molecular-coordination-triple-synergy-cathode-assb.md, raw/papers/qu2025_volume-changes-li-s-solid-state-battery-components-cycling.md, raw/papers/kim2025_high-areal-capacity-sulfur-cathode-dual-phase-electrolyte-assb.md, raw/papers/wan2021_lii-libr-catalyst-solid-state-li2s-s-reactions.md, raw/papers/liu2026_li4sns4-molecular-mediator-low-barrier-li2s-chemistry.md, raw/papers/zhangj2026_strain-coordination-long-cycling-assb.md, raw/papers/kwok2023_interfacial-redox-mediator-high-performance-asslsb.md, raw/papers/gao2024_cu-i-codoping-activating-li2s-redox-kinetics-assb.md, raw/papers/park2026_low-pressure-operation-carbon-coated-current-collector-asslsb.md, raw/papers/kimjt2023_mixed-discharge-products-li2s2-li2s-asslsb.md, raw/papers/hong2026_high-valence-cation-lattice-expansion-activating-li2s.md, raw/papers/wangx2026_dual-conductivity-optimization-high-rate-ultralong-life-asslsb.md, raw/papers/hao2025_nanosized-li2s-amorphous-matrix-asslsb.md, raw/papers/feng2026_anode-free-asslsb-fe-stabilized-polysulfides.md, raw/papers/leej2025_halide-segregation-assb-lithium-chalcogen.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -40,6 +40,14 @@ feedsInto: "[[li2s-assb-reference-cell]] 의 실험 설계 · [[anode-free-li2s-
     우리는 이미 SE 48–52 vol%). **그 배제는 성급했다.** Kim 2025 가 **같은 조성·같은 부피분율**에서
     **혼합 이력만으로 복합양극 σ_Li⁺ 를 6배** 바꿨다 (0.07 → 0.42 mS cm⁻¹).
     → 올바른 질문은 **"SE 가 모자란가" 가 아니라 "밀링을 겪은 SE 가 아직 superionic 인가"** 다.
+    **★ 2026-10-02 에 그 질문을 다시 쪼갰다 (Lee J 2025).** 부호가 뒤집힌 것이 아니라 **항이 둘**이다:
+    **복합양극의 유효 Li⁺ 수송 = (a) SE 상 벌크 전도도 + (b) 밀링이 만든 계면상**, 그리고
+    **둘은 혼합 강도에 대해 반대 부호다.** 같은 논문의 한 문장이 For 와 Against 를 같이 준다 —
+    `[인쇄]` *"Whereas the ionic conductivity of **bulk LPSCl SSEs decreased** along with the time of
+    UHS mixing, the **Li⁺ diffusion coefficient of the UHS-mixed composite cathodes increased
+    substantially**."* → **우리 질문은 "우리 조건이 그 합의 어느 쪽에 있는가" 다.**
+    그 논문은 1 / 5 / 10 h 세 점으로 **합이 최대가 되는 중간점이 존재**함을 보였다(10 h 에서는
+    LPSCl 결정구조가 붕괴한다).
     **우리 one-step 셀의 LPSCl 은 전량이 밀링을 겪었다.** 부피는 충분한데 그 부피가 이온을 못
     나를 수 있다 — 이쪽이 살아 있는 가설이다.
   - 남는 것은 **삼상 계면의 "질"**(활물질–황화물 계면 친화)이지 전자·이온의 "양" 이 아니다.
@@ -509,6 +517,38 @@ Lee 2026 digest 가 이 충돌을 날카롭게 정리한다 — **병목은 "활
   **복합체 칸은 안 쟀다** — Hao 2025 에 이어 **세 번째**다. 그리고 ⚠ **"갈지 않은 물리 혼합"
   음성대조가 없다**(Hong 2026 은 σ 축에서 그것을 했다) → 전도도 8자리 상승이 **반응 산물 때문인지
   FeCl3 가 그냥 섞여서인지 분리되지 않는다.**
+
+### 2026-10-02 — Lee (Jieun) 2025 *Science* 추가 (큐 밖, 사용자 신규 업로드)
+
+- **★★★ H2b 의 부호가 뒤집히지 않는다 — 질문이 둘로 쪼개진다.** 위 가설 절에 재서술을 넣었다.
+  요점: 밀링이 **SE 자신의 이온전도도를 떨어뜨린다는 것을 저자가 명시하고**(10 h 에서는 결정구조가
+  붕괴), **그럼에도 복합양극의 유효 Li⁺ 수송은 올라간다.** 즉 H2b 가 걱정한 일은 **실제로 일어나고
+  측정됐지만**, 그것이 전부가 아니다. Kim 2025 의 σ 6배 · Young's modulus 21.98 → 4.63 GPa 와
+  **모순되지 않는다.**
+  ⚠ 그 논문의 "**196배**" 는 **부호만 인용한다** — (i) 보고된 양이 σ 가 아니라 **D**(캐리어 농도가
+  바뀌면 비례하지 않는다. LiCl 생성으로 Li 재고가 바뀌었다면 더더욱) (ii) **분모가 400 rpm 시료**
+  인데 저자 자신의 설명으로 **Cl 분리가 없어 성능이 나쁜 전극**이다 — `hao2025` 의 ≈10 mAh g⁻¹
+  대조군을 깎은 그 자리와 같다 (iii) **절대값·단위·측정 조건이 전부 없다.**
+- **★★ H4 — 이론 초과를 분리하는 새 방법이 생겼다.** 그 논문은 활물질을 **S8 / SeS2 / Se / Te 넷**으로
+  바꿔 돌렸고 **이론용량이 420 ~ 1124 mAh g⁻¹ 로 2.7배 다르다.** 초과분을 **면적용량으로 환산**하면
+  `[재현]` S **+1.16** · SeS2 **+0.81** · Se **+1.04** · **Te +1.47 mAh cm⁻²** — **≈0.8–1.5 로 모인다.**
+  → **초과 용량이 활물질에 비례하지 않고 모든 셀에 공통인 것(SE, 어쩌면 탄소)에서 온다**는 뜻이고,
+  저자도 `[인쇄]` "capacity contribution of the LPSCl SSE" 로 **스스로 인정한다.**
+  ★ **우리에게 쓸 수 있는 설계**: 활물질만 바꿔 **같은 SE·탄소·로딩**으로 두 셀을 돌리면,
+  **초과분이 면적용량으로 같게 나오는지**가 SE 몫의 직접 측정이 된다 (0번 대조셀의 교차검증).
+  ⚠ 단 그 논문은 **조성비를 적지 않았다** — SE 로딩 동일 가정 위의 계산이다.
+  그리고 그 크기가 우리 외부 눈금(`[재현]` Wang Daiwei **4–6 %** · Gao **28–52 mAh g⁻¹(composite)**)
+  보다 **훨씬 크다** — "SE 기여는 수 % 수준" 이라는 감각을 흔든다. **Te 셀은 용량의 `[재현]` ≈44 %가
+  활물질 밖에서 온다.**
+- **H1·H3·H5·H6 에는 근거를 주지 않는다** — **Li2S 출발 셀이 없다**(S8/Se/SeS2/Te). H6 관련해서는
+  S K-edge XANES 가 **Li2S 기준과 겹친다**(2473 → 2474 eV)고 적지만, `kimjt2023` 는 **2471.3 eV
+  어깨**로 판정했고 이쪽은 **주피크 위치**만 말하므로 **H6 의 직접 반증으로 쓸 수 없다.**
+- **H5 참고 — 운전 압력 좌표에 3점 추가**: `[인쇄]` **70 MPa**(표준) · **36** · **18 MPa**(저압 평가,
+  "high capacity retention" 이라고만 하고 **수치는 SI 미확보**). **성형압은 본문에 없다.**
+- ★ **이 논문이 요구하는 우리 측 확인은 셀을 쓰지 않는다**: **우리 one-step 복합분말을 그대로 XRD 에
+  걸어 LiCl(200) / LPSCl 피크비를 본다.** 우리 LPSCl 은 전량이 밀링을 겪으므로 **이미 생기고 있을
+  가능성**이 있고, 그렇다면 우리 "밀링이 SE 를 망가뜨린다" 서사의 일부는 **"이미 일어난 계면 설계"**
+  다. [[reference-cell-experiment-plan]] 에 **0-c** 로 넣었다.
 
 ## Evidence Against
 

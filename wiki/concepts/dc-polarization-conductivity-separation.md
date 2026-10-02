@@ -5,7 +5,7 @@ created: 2026-10-01
 updated: 2026-10-06
 type: concept
 tags: [assb, sulfide-electrolyte, composite-cathode, units]
-sources: [raw/papers/kwok2023_interfacial-redox-mediator-high-performance-asslsb.md, raw/papers/wangd2025_overcoming-conversion-limitation-tpb-mixed-conductors.md, raw/papers/huang2026_high-entropy-sulfides-kinetic-accelerators-assb.md, raw/papers/yu2024_nanocrystallite-cus-n-doped-carbon-host-all-solid-state-li2s.md, raw/papers/jeong2026_reconciling-triple-phase-boundaries-tortuosity-assb.md, raw/papers/hong2026_high-valence-cation-lattice-expansion-activating-li2s.md, raw/papers/wangx2026_dual-conductivity-optimization-high-rate-ultralong-life-asslsb.md, raw/papers/hao2025_nanosized-li2s-amorphous-matrix-asslsb.md, raw/papers/feng2026_anode-free-asslsb-fe-stabilized-polysulfides.md]
+sources: [raw/papers/kwok2023_interfacial-redox-mediator-high-performance-asslsb.md, raw/papers/wangd2025_overcoming-conversion-limitation-tpb-mixed-conductors.md, raw/papers/huang2026_high-entropy-sulfides-kinetic-accelerators-assb.md, raw/papers/yu2024_nanocrystallite-cus-n-doped-carbon-host-all-solid-state-li2s.md, raw/papers/jeong2026_reconciling-triple-phase-boundaries-tortuosity-assb.md, raw/papers/hong2026_high-valence-cation-lattice-expansion-activating-li2s.md, raw/papers/wangx2026_dual-conductivity-optimization-high-rate-ultralong-life-asslsb.md, raw/papers/hao2025_nanosized-li2s-amorphous-matrix-asslsb.md, raw/papers/feng2026_anode-free-asslsb-fe-stabilized-polysulfides.md, raw/papers/leej2025_halide-segregation-assb-lithium-chalcogen.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -60,7 +60,7 @@ evidenceScope: multi-source-primary
 `[재현]` 네 값을 σ = d/(A·R) 로 직접 검산하면 Table 1 의 인쇄값이 그대로 나온다
 (0.12 Ω·500 µm → 5.31×10⁻¹ vs 인쇄 5.1×10⁻¹ 등). **레시피가 완결됐다는 증거다.**
 
-## ★★ 같은 레시피를 아홉 편이 다르게 썼다 — 그래서 절대값을 비교할 수 없다
+## ★★ 같은 레시피를 열 편이 다르게 썼다 — 그래서 절대값을 비교할 수 없다
 
 | 논문 | 전자용 셀 시료 정체 | 이온용 셀 시료 정체 | 인가 전압 | 성형압 |
 |---|---|---|---|---|
@@ -70,6 +70,7 @@ evidenceScope: multi-source-primary
 | **Yu 2024** | **미기재** | **미기재** | `[도표]` ±100/±50/±25 mV | 미기재 |
 | **Huang 2026** | **미기재** (셀 구성 출처로 Kwok 인용) | **미기재** | ⚠ **본문에 없음** — `[재현]` 역산 **전자 ≈1 V** | 미기재 |
 | **Hong 2026** | 시료 분말 **단독 펠릿** — 명시 | Li–In ¦ LPSC ¦ 시료 ¦ LPSC ¦ Li–In — 명시 | ⚠ **미기재** (dwell 120 min/step 은 적었다) | **625 MPa** |
+| **Lee (Jieun) 2025** | ★ **DC 분극을 쓰지 않았다** — σ 가 아니라 **D** 를 보고 | 〃 | ⚠ **없음** | **없음** |
 | **Feng 2026** | 분말 자신(활물질 칸) — 세부 **SI 미확보** | 〃 | ⚠ **SI 미확보** | **SI 미확보** |
 | **Hao 2025** | `[해석]` 분말 **단독 펠릿**(본문은 "cathode" 라 쓰지만 AB 10 wt% 전극이 2.5×10⁻¹¹ 일 수 없다) | `Li/In ¦ LPSCl ¦ 시료 ¦ LPSCl ¦ Li/In` | ⚠ **미기재** — "Based on Ohm's law" 뿐, Methods 전량 SI 미확보 | **미기재** |
 | **Wang (XinXu) 2026** | ⚠ **Fig. S6 로 밀렸다 — 셀 구성조차 모른다** | `Steel ¦ Li ¦ SE ¦ 시료 ¦ SE ¦ Li ¦ Steel` — 그림으로 명시 | ⚠ **미기재.** 유지 **3600 s = 1 h** 는 원전과 일치, 단일 I–t 곡선(다점 아님) | **미기재** |
@@ -86,7 +87,7 @@ evidenceScope: multi-source-primary
    σ_e⁻ 가 실제보다 크게 나온다. **레시피를 이식할 때 이 한 줄이 가장 위험하다.**
 4. **성형압이 두 셀에서 다르면 두 수치를 나눌 수 없다** (Jeong 700 vs 200 MPa). 압력이 바뀌면
    접촉과 기공률이 바뀌고, 그것이 두 캐리어에 같은 비율로 작용한다는 보장이 없다.
-5. ★★ **인가 전압을 적은 논문이 아홉 편 중 넷뿐이다** (Kwok ±20/±40 · Jeong ±50 · Yu ±100/±50/±25 ·
+5. ★★ **인가 전압을 적은 논문이 열 편 중 넷뿐이다** (Kwok ±20/±40 · Jeong ±50 · Yu ±100/±50/±25 ·
    Huang 은 역산 ≈1 V). **Hong 2026 · Wang XinXu 2026 · Hao 2025 · Feng 2026 은 아예 없고**, Wang XinXu 는 **σ_e 측정
    셀 구성조차 SI 로 밀렸다** — 제목의 절반(dual-**conductivity**)을 뒷받침하는 측정이 본문에서
    가장 안 보이는 자리에 있다.
@@ -133,6 +134,22 @@ evidenceScope: multi-source-primary
 **참고로 활물질 단독(SE 0 wt%)도 잰다.** Kwok 의 core–shell 분말은 SE 를 섞지 않아도
 `[인쇄]` σ_Li⁺ = **1.3×10⁻⁵ S cm⁻¹** 였다 (Li2S 자체는 10⁻⁹ 급). **활물질 표면에 Li⁺ 경로를
 깔면 SE 부피분율을 늘리지 않고도 이온망이 생긴다**는 가장 직접적인 숫자다.
+
+## ★★ 음성 사례 — σ 대신 D 를, 절대값 없이 배수로만 (2026-10-02, Lee J 2025)
+
+`leej2025_…`(*Science* 388, 724)는 **DC 분극을 쓰지 않는다.** 그런데 이 페이지에 적어 두는 것이
+유용하다 — **σ 를 보고할 때 하지 말아야 할 것 세 가지**가 한 논문에 모여 있다.
+
+| 문제 | 그 논문이 한 것 | 왜 문제인가 |
+|---|---|---|
+| **① 양이 바뀌었다** | σ 가 아니라 **Li⁺ 확산계수 D** 를 보고 | Nernst–Einstein 으로 묶이지만 **캐리어 농도가 변하면 비례하지 않는다.** 그 논문은 LiCl 을 새로 만들어 **Li 재고를 바꿨을 수 있다** → D 상승 ≠ σ 상승 |
+| **② 절대값·단위·분모가 없다** | `[인쇄]` "**400 rpm 대비 196배**" 뿐 | 세 칸(복합체 / SE 상 / 활물질 입자) 중 어디인지 **판정할 근거가 없다**. 다른 논문과 나란히 둘 수 없다 |
+| **③ 분모가 망가진 대조군일 수 있다** | 분모가 **400 rpm 시료** | 저자 자신의 설명으로 **Cl 분리가 없어 성능이 나쁜 전극**이다. `hao2025` 의 ≈10 mAh g⁻¹ 대조군을 깎은 자리와 같다 — **망가진 대조군을 분모로 쓰면 196배는 쉽게 나온다** |
+
+→ **이 위키는 그 196배를 "부호(상승)" 만 근거로 쓰고 배수는 쓰지 않는다.**
+`[해석]` 그리고 이것이 **우리 프로토콜에 규율 하나를 더한다**: **σ 를 보고할 때 (a) σ 인지 D 인지
+명시 (b) 절대값과 단위를 적는다 (c) 배수를 쓸 때는 분모 시료가 무엇인지, 그 시료가 정상인지 적는다.**
+배수만 적힌 전도도는 **다른 논문과 비교할 수 없다.**
 
 ## 한계·불확실성
 

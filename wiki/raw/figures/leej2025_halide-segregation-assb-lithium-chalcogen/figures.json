@@ -25,7 +25,8 @@
    "h": 1439,
    "dpi": 300,
    "src": "757a00b0-3._halide_segregation_to_boost_all_solid_state_lithium_chalcogen_batteries.pdf",
-   "blank": 0.68
+   "blank": 0.68,
+   "note": ""
   },
   {
    "key": "f2",
@@ -45,7 +46,8 @@
    "h": 1303,
    "dpi": 300,
    "src": "757a00b0-3._halide_segregation_to_boost_all_solid_state_lithium_chalcogen_batteries.pdf",
-   "blank": 0.413
+   "blank": 0.413,
+   "note": ""
   },
   {
    "key": "f3",
@@ -65,7 +67,8 @@
    "h": 1115,
    "dpi": 300,
    "src": "757a00b0-3._halide_segregation_to_boost_all_solid_state_lithium_chalcogen_batteries.pdf",
-   "blank": 0.886
+   "blank": 0.886,
+   "note": ""
   },
   {
    "key": "f4",
@@ -76,16 +79,17 @@
    "caption": "Fig. 4. Postmortem analysis of UHS-­mixed composite chalcogen cathodes. (A) S K-­edge XANES spectra of the 5-­hour UHS-­mixed composite S/LPSCl/C cathode at different discharge and charge states. (B) Normalized two-­dimensional contour plot of in situ Se K-­edge XANES spectra of the 5-­hour UHS-­mixed composite Se/LPSCl/C cathode along with the discharge-­charge profiles and (C) the corresponding derivative curve. (D) HAADF-­STEM image, (E) SAED pattern, (F) HRTEM image, and (G) intensity integration profile from (E) of the 5-­hour UHS-­mixed composite Se/LPSCl/C cathode after the first discharge. (H) HAADF-­STEM image and the elemental mappings of the 5-­hour UHS-­mixed composite Se/LPSCl/C cathode after 100 cycles. (I) Cl-­to-­P atomic ratios, with data from the three different regions in (H) marked by boxes. Science 15 MAY 2025 728",
    "rotated_deg": 0,
    "bbox": [
-    31.0,
-    502.6,
-    563.0,
-    639.5
+    34.0,
+    282.0,
+    408.0,
+    652.0
    ],
-   "w": 2217,
-   "h": 571,
+   "w": 1559,
+   "h": 1542,
    "dpi": 300,
    "src": "757a00b0-3._halide_segregation_to_boost_all_solid_state_lithium_chalcogen_batteries.pdf",
-   "blank": 0.582
+   "blank": 0.582,
+   "note": "⚠ 재크롭. Science 2단 조판 때문에 캡션 앵커 자동 크롭이 패널 A–C(S K-edge XANES, in situ Se K-edge XANES 컨투어와 미분곡선)를 통째로 잘라먹고 하단 D–I 만 2217×571 로 나왔다. 페이지 5 전폭(PDF 좌표 34,282–408,652)을 300 dpi 로 다시 렌더해 A–I 전부를 담았다. 2026-10-02."
   }
  ]
 }

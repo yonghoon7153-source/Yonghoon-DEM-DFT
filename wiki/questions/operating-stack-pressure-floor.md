@@ -6,7 +6,7 @@ updated: 2026-10-06
 type: research-question
 status: open
 tags: [assb, composite-cathode, sulfide-electrolyte, li2s, anode-free]
-sources: [raw/papers/feng2026_anode-free-asslsb-fe-stabilized-polysulfides.md, raw/papers/park2026_low-pressure-operation-carbon-coated-current-collector-asslsb.md, raw/papers/zhangj2026_strain-coordination-long-cycling-assb.md, raw/papers/qu2025_volume-changes-li-s-solid-state-battery-components-cycling.md, raw/papers/zhang2026_anode-free-assb-nanocrystalline-amorphous-li2s-na-collector.md, raw/papers/jeong2026_reconciling-triple-phase-boundaries-tortuosity-assb.md, raw/papers/kimjt2023_mixed-discharge-products-li2s2-li2s-asslsb.md, raw/papers/hong2026_high-valence-cation-lattice-expansion-activating-li2s.md, raw/papers/gao2024_cu-i-codoping-activating-li2s-redox-kinetics-assb.md]
+sources: [raw/papers/feng2026_anode-free-asslsb-fe-stabilized-polysulfides.md, raw/papers/park2026_low-pressure-operation-carbon-coated-current-collector-asslsb.md, raw/papers/zhangj2026_strain-coordination-long-cycling-assb.md, raw/papers/qu2025_volume-changes-li-s-solid-state-battery-components-cycling.md, raw/papers/zhang2026_anode-free-assb-nanocrystalline-amorphous-li2s-na-collector.md, raw/papers/jeong2026_reconciling-triple-phase-boundaries-tortuosity-assb.md, raw/papers/kimjt2023_mixed-discharge-products-li2s2-li2s-asslsb.md, raw/papers/hong2026_high-valence-cation-lattice-expansion-activating-li2s.md, raw/papers/gao2024_cu-i-codoping-activating-li2s-redox-kinetics-assb.md, raw/papers/leej2025_halide-segregation-assb-lithium-chalcogen.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -36,6 +36,7 @@ evidenceScope: multi-source-primary
 | **1 → 75 MPa 7단계** | `park2026_…`(Meng) | ✓ **같은 셀에서 3사이클씩 스캔** — 이 위키 최고 해상도 |
 | **7 MPa** | `qu2025_…` | ✓ 정압·정용적 fixture 자작, **변위·압력 실측** |
 | **15 / 30 / 100 MPa** | `zhangj2026_…` | ✓ **압력별 EIS 로 골랐다** (무압 **356 Ω**, 15 MPa 이상 포화) |
+| **18 / 36 / 70 MPa** | `leej2025_…`(*Science*) | △ **70 MPa 가 표준**이고 36·18 MPa 도 평가했다고 `[인쇄]` 적지만 **수치는 SI 미확보**("high capacity retention" 뿐). **성형압은 본문에 없다** |
 | **50 MPa** | `jeong2026_…` · `gao2024_…` · **`feng2026_…`** | ✗ 근거 없음 (Feng 은 그림 주석에만). ★ **3편으로 최빈값** |
 | **150 MPa** | `kimjt2023_…` | ✗ 근거 없음 |
 | **200 MPa** | `hong2026_…` | ✗ 근거 없음. 이 위키 최고치 |

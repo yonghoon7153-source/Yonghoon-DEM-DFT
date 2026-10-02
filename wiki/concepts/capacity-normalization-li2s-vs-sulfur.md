@@ -5,7 +5,7 @@ created: 2026-09-11
 updated: 2026-10-06
 type: concept
 tags: [units, li2s, composite-cathode]
-sources: [raw/papers/kim2023_reinforced-electrical-networking-high-loading-li2s-cathode.md, raw/transcripts/2026-09-11-li2s-wiki-kickoff-session.md, raw/papers/kimjt2023_mixed-discharge-products-li2s2-li2s-asslsb.md, raw/papers/park2026_low-pressure-operation-carbon-coated-current-collector-asslsb.md, raw/papers/wangx2026_dual-conductivity-optimization-high-rate-ultralong-life-asslsb.md]
+sources: [raw/papers/kim2023_reinforced-electrical-networking-high-loading-li2s-cathode.md, raw/transcripts/2026-09-11-li2s-wiki-kickoff-session.md, raw/papers/kimjt2023_mixed-discharge-products-li2s2-li2s-asslsb.md, raw/papers/park2026_low-pressure-operation-carbon-coated-current-collector-asslsb.md, raw/papers/wangx2026_dual-conductivity-optimization-high-rate-ultralong-life-asslsb.md, raw/papers/leej2025_halide-segregation-assb-lithium-chalcogen.md]
 confidence: high
 explored: false
 verificationStatus: unverified
@@ -93,6 +93,33 @@ Kim 2025 Φc 137.6 → **275 %** · Park 2026 105.6 → **211 %**.
 **규율**: digest 의 `compare:` 블록에 `_mAh_gS` / `_mAh_gLi2S` 를 채울 때, **활물질이 Li2S 가
 아니면 환산하지 말고 "환산 불가 — 분모가 ○○ 전체" 라고 적는다.** 그 논문의 수치를 우리
 500–600 mAh g⁻¹(Li2S) 와 **같은 표에 나란히 두면 안 된다.**
+
+### ★★ 2026-10-02 — 이론 초과를 분리하는 설계: 활물질을 바꾸고 **면적용량**으로 본다
+
+`leej2025_…` 가 쓴 방법이고, 우리가 그대로 복제할 수 있다. 그 논문은 **같은 SE·탄소·로딩**으로
+활물질만 **S8 / SeS2 / Se / Te** 넷으로 바꿔 돌렸다 — **이론용량이 420 ~ 1124 mAh g⁻¹ 로 2.7배
+다르다.** 초과분을 `mAh g⁻¹` 이 아니라 **`mAh cm⁻²` 로 환산**하면:
+
+| 활물질 | 2e⁻(Te·Se 는 2e⁻, SeS2 는 6e⁻) 이론 면적용량 (4 mg cm⁻²) | 관측 최고 `[도표]` | **초과분** |
+|---|---|---|---|
+| S / LPSCl | 6.688 | ≈7.85 | **+1.16** |
+| SeS2 | 4.495 | ≈5.3 | **+0.81** |
+| Se | 2.715 | ≈3.75 | **+1.04** |
+| **Te** | **1.680** | ≈3.15 | **+1.47** |
+
+★★ **이론용량이 2.7배 다른데 초과분은 ≈0.8–1.5 mAh cm⁻² 로 모인다.** → **초과 용량이 활물질에
+비례하지 않고 모든 셀에 공통인 것(SE, 어쩌면 탄소)에서 온다.** 저자도 `[인쇄]` "capacity
+contribution of the LPSCl SSE" 로 스스로 인정한다. **Te 셀은 용량의 `[재현]` ≈44 %가 활물질
+밖에서 온다.**
+
+`[해석]` **우리가 쓸 수 있는 형태**: 0번 대조셀(`LPSCl + AB`)이 SE 몫을 **직접** 재는 방법이라면,
+이것은 **교차검증**이다 — **같은 SE·탄소·로딩에서 활물질만 바꿔 두 셀을 돌리고, 초과분이 면적용량
+으로 같게 나오는지** 본다. 같으면 그 값이 SE 몫이고, 다르면 활물질과 SE 의 상호작용이 있다는 뜻이다.
+
+⚠ 두 가지 단서. **(a)** 그 논문은 **조성비를 적지 않았다** — SE 로딩 동일 가정 위의 계산이다.
+**(b)** 이 크기는 우리 기존 외부 눈금(`[재현]` Wang Daiwei 2025 **4–6 %** · Gao 2024 **28–52
+mAh g⁻¹(composite)**)보다 **훨씬 크다.** 즉 **"SE 기여는 수 % 수준" 이라는 감각이 안전하지 않다** —
+우리 0번 실험의 기댓값 범위를 넓게 잡아야 한다.
 
 ### ★★ 측정 규율 — 황 분광을 찍기 전에 "SE 유래 황" 을 먼저 계산한다
 

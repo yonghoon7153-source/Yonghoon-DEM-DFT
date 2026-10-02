@@ -5,7 +5,7 @@ created: 2026-10-02
 updated: 2026-10-02
 type: guide
 tags: [li2s, assb, composite-cathode, sulfide-electrolyte, units, mixing-process]
-sources: [raw/transcripts/2026-09-11-li2s-wiki-kickoff-session.md, raw/papers/cronk2026_highly-utilized-practical-li-s-positive-electrode-assb.md, raw/papers/kwok2023_interfacial-redox-mediator-high-performance-asslsb.md, raw/papers/wangd2025_overcoming-conversion-limitation-tpb-mixed-conductors.md, raw/papers/park2026_low-pressure-operation-carbon-coated-current-collector-asslsb.md, raw/papers/zhangj2026_strain-coordination-long-cycling-assb.md, raw/papers/feng2026_anode-free-asslsb-fe-stabilized-polysulfides.md, raw/papers/hong2026_high-valence-cation-lattice-expansion-activating-li2s.md, raw/papers/kimjt2023_mixed-discharge-products-li2s2-li2s-asslsb.md, raw/papers/hao2025_nanosized-li2s-amorphous-matrix-asslsb.md, raw/papers/gao2024_cu-i-codoping-activating-li2s-redox-kinetics-assb.md, raw/papers/kim2025_high-areal-capacity-sulfur-cathode-dual-phase-electrolyte-assb.md, raw/papers/qu2025_volume-changes-li-s-solid-state-battery-components-cycling.md]
+sources: [raw/transcripts/2026-09-11-li2s-wiki-kickoff-session.md, raw/papers/cronk2026_highly-utilized-practical-li-s-positive-electrode-assb.md, raw/papers/kwok2023_interfacial-redox-mediator-high-performance-asslsb.md, raw/papers/wangd2025_overcoming-conversion-limitation-tpb-mixed-conductors.md, raw/papers/park2026_low-pressure-operation-carbon-coated-current-collector-asslsb.md, raw/papers/zhangj2026_strain-coordination-long-cycling-assb.md, raw/papers/feng2026_anode-free-asslsb-fe-stabilized-polysulfides.md, raw/papers/hong2026_high-valence-cation-lattice-expansion-activating-li2s.md, raw/papers/kimjt2023_mixed-discharge-products-li2s2-li2s-asslsb.md, raw/papers/hao2025_nanosized-li2s-amorphous-matrix-asslsb.md, raw/papers/gao2024_cu-i-codoping-activating-li2s-redox-kinetics-assb.md, raw/papers/kim2025_high-areal-capacity-sulfur-cathode-dual-phase-electrolyte-assb.md, raw/papers/qu2025_volume-changes-li-s-solid-state-battery-components-cycling.md, raw/papers/leej2025_halide-segregation-assb-lithium-chalcogen.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -58,6 +58,21 @@ evidenceScope: multi-source-primary
 | **왜** | 이 함정에 **세 편이 빠졌다** — Kim JT 2023(SE 황 42 %, 차감 없음 → Li2S2 어깨 귀속이 무너졌다) · Hao 2025(40.1 %) · Feng 2026(58.0 %, **우리와 거의 같다**) |
 | **어떻게** | 0(a) 의 `LPSCl + AB` 시료를 **같은 조건·같은 날**에 함께 찍어 배경으로 쓴다 |
 | 가르는 것 | 모든 분광 귀속의 전제 |
+
+### ★ 0-c. 우리 복합분말을 그대로 XRD 에 건다 — 셀을 쓰지 않는다 (2026-10-02 추가)
+
+| | 내용 |
+|---|---|
+| **무엇** | **우리 one-step 복합분말**(셀로 만들기 전)을 XRD 에 걸어 **LiCl(200) / LPSCl 피크비**를 본다. 가능하면 **혼합 시간 3점**(½ / 표준 / 2배)과 **손혼합 대조 1점** |
+| **왜** | `leej2025_…`(*Science* 388, 724)가 **2000 rpm 5 h UHS 혼합 중 LPSCl 에서 할로겐이 분리되어 LiCl 층이 생긴다**고 보였다. **우리 LPSCl 은 전량이 밀링을 겪는다** → **이미 생기고 있을 가능성**이 있다 |
+| **판정** | 나오면 우리 **"밀링이 SE 를 망가뜨린다"(H2b) 서사의 일부가 "이미 일어난 계면 설계"** 가 된다. 안 나오면 우리 밀링이 **그 문턱 아래**라는 뜻이다 — 그 논문의 **400 rpm·1 h 대조에서는 분리가 전혀 없었다** |
+| 비용 | **셀 0개, 하루.** 분말만 있으면 된다 |
+| 가르는 것 | **H2b 의 두 항**(SE 벌크 전도도 하락 vs 계면상 생성) 중 우리 쪽에서 어느 것이 일어났는가 |
+
+★ **같이 할 것**: **Raman 의 PS₄³⁻ 위치**(425 vs 418 cm⁻¹)를 혼합 시간별로 본다 — `park2026` 이
+**밀링 없이 접촉만으로도** 425 → 418 cm⁻¹ 를 보였으므로, 두 논문이 같은 축에서 만나는지 알 수 있다.
+⚠ 다만 **두 현상은 기전이 다를 수 있다** — `park2026` 은 **Li2S(환원제)** 계이고 `leej2025` 는
+**S8/Se/Te(산화제)** 계다.
 
 ### 1. 압력-EIS 스윕 — 셀 1개, (압력 × 온도) 2×2
 
@@ -177,9 +192,9 @@ N/P 가 1.03 으로 보이지만 실측으로는 1.40 이다.
 |---|---|
 | **H1** 활성화 제한 (완료 전위 > SE 산화 전위) | **3** (+ 0 으로 SE 몫 차감, 5 로 사이클 추세) |
 | **H2a** 전자 퍼콜레이션 | **2** (AB 10/20/30 × 두 칸) |
-| **H2b** 밀링을 겪은 SE 가 아직 superionic 인가 | **2** (밀링 이력 축) |
+| **H2b** 밀링이 SE 를 깎았는가, 계면상을 만들었는가 (2026-10-02 에 둘로 쪼갰다) | **0-c** (XRD·Raman, 셀 0개) + **2** (밀링 이력 축) |
 | **H3** 입자 제한 | **2 의 밀링 축** + 입도·XRD 기록 |
-| **H4** 단위 착시 · SE 리독스 | **0 · 0-b** |
+| **H4** 단위 착시 · SE 리독스 | **0 · 0-b** (+ 활물질만 바꿔 초과분을 면적용량으로 보는 교차검증 — [[capacity-normalization-li2s-vs-sulfur]]) |
 | **H5a / H5b** 양극 내부 vs 집전체 계면 | **4** (+ 5 의 셀 높이) |
 | **H6** 전자수 제한 (1전자 천장) | **3** + 충전 종료 전극 **S 2p XPS**(0-b 의 배경 차감 필수) |
 | 운전 압력 하한 | **1** |

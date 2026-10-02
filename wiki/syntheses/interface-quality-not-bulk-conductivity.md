@@ -5,7 +5,7 @@ created: 2026-10-01
 updated: 2026-10-02
 type: synthesis
 tags: [assb, composite-cathode, li2s, sulfide-electrolyte, carbon, activation]
-sources: [raw/papers/yu2024_nanocrystallite-cus-n-doped-carbon-host-all-solid-state-li2s.md, raw/papers/huang2026_high-entropy-sulfides-kinetic-accelerators-assb.md, raw/papers/wang2023_high-capacity-assb-li-s-low-density-solid-electrolyte.md, raw/papers/cronk2026_highly-utilized-practical-li-s-positive-electrode-assb.md, raw/papers/wang2026_molecular-coordination-triple-synergy-cathode-assb.md, raw/papers/wangd2025_overcoming-conversion-limitation-tpb-mixed-conductors.md, raw/papers/jeong2026_reconciling-triple-phase-boundaries-tortuosity-assb.md, raw/papers/liu2026_li4sns4-molecular-mediator-low-barrier-li2s-chemistry.md, raw/papers/kwok2023_interfacial-redox-mediator-high-performance-asslsb.md, raw/papers/gao2024_cu-i-codoping-activating-li2s-redox-kinetics-assb.md, raw/papers/hong2026_high-valence-cation-lattice-expansion-activating-li2s.md, raw/papers/park2026_low-pressure-operation-carbon-coated-current-collector-asslsb.md, raw/papers/wangx2026_dual-conductivity-optimization-high-rate-ultralong-life-asslsb.md]
+sources: [raw/papers/yu2024_nanocrystallite-cus-n-doped-carbon-host-all-solid-state-li2s.md, raw/papers/huang2026_high-entropy-sulfides-kinetic-accelerators-assb.md, raw/papers/wang2023_high-capacity-assb-li-s-low-density-solid-electrolyte.md, raw/papers/cronk2026_highly-utilized-practical-li-s-positive-electrode-assb.md, raw/papers/wang2026_molecular-coordination-triple-synergy-cathode-assb.md, raw/papers/wangd2025_overcoming-conversion-limitation-tpb-mixed-conductors.md, raw/papers/jeong2026_reconciling-triple-phase-boundaries-tortuosity-assb.md, raw/papers/liu2026_li4sns4-molecular-mediator-low-barrier-li2s-chemistry.md, raw/papers/kwok2023_interfacial-redox-mediator-high-performance-asslsb.md, raw/papers/gao2024_cu-i-codoping-activating-li2s-redox-kinetics-assb.md, raw/papers/hong2026_high-valence-cation-lattice-expansion-activating-li2s.md, raw/papers/park2026_low-pressure-operation-carbon-coated-current-collector-asslsb.md, raw/papers/wangx2026_dual-conductivity-optimization-high-rate-ultralong-life-asslsb.md, raw/papers/leej2025_halide-segregation-assb-lithium-chalcogen.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -92,6 +92,33 @@ Wang 2026 (molecular coordination, S8 / LGPS)이 이용률을 `[인쇄]` 48.5 �
 그래서 세 논문(Yu · Huang · Wang 2026)이 **공통으로 같은 방향으로 움직인 양은 다시 활물질–황화물
 계면 친화뿐**이다. 이것이 ①을 강화한다 — **그러나 셋 다 그 근거가 `DFT 흡착·결합에너지` 뿐이다.**
 실측으로 계면의 질을 잰 논문은 **하나도 없다.** 아래 반론 8 과 Gap 을 보라.
+
+### ⑦ ★★ 벌크 전도도를 고정하고 계면만 바꾼 비교 — 7배 (2026-10-02, Lee J 2025)
+
+`leej2025_…`(*Science* 388, 724)가 이 논지의 **제목을 그대로 시험한다.** SE 를 **할로겐이 있는 것과
+없는 것**으로 바꿔 돌렸고, `[인쇄]` **fig. S42 에서 모든 SE 의 벌크 이온전도도가 비슷하다**고 적는다.
+그런데 성능은 `[도표]` **≈1.1 vs ≈7.8 mAh cm⁻² — 7배** 갈린다.
+
+| | 할로겐 있는 SE (LPSCl · LPSBr · LPSClI …) | 할로겐 없는 SE (LGPS · SS7) |
+|---|---|---|
+| 벌크 σ_Li⁺ | `[인쇄]` **비슷하다** | 〃 |
+| UHS 혼합 후 계면 | **Li halide 층이 생긴다**(Cl:P 1.0 → 3.55) | 생기지 않는다 |
+| 면적용량 `[도표]` | **≈7.8 mAh cm⁻²** | **≈1.1** |
+
+→ **"벌크 전도도가 같은데 계면이 다르면 7배 갈린다" 는 이 논지의 가장 직접적인 문장이다.**
+그리고 그 계면이 **DFT 흡착에너지가 아니라 실측된 상**(cryo-TEM 으로 입방 Fm-3m LiCl 을 격자간격
+2.95 / 2.53 Å 과 FFT 71° 로 동정, EELS 로 Li-Cl vs Li-P-S 분리)이라는 점에서 **반론 8** 을 한 번 더 좁힌다.
+
+⚠ **그래도 교란이 남는다 — 이 비교를 단독 근거로 쓰면 안 된다.** 할로겐 없는 대조로 고른 것이
+**LGPS** 와 **SS7**(정의가 논문에 없다)이다. **LGPS 의 Ge⁴⁺ 불안정성은 별개로 알려져 있고**, 저자는
+fig. S42 로 **전도도 교란만 지우고 전기화학 안정창 교란은 지우지 않았다.** → **"할로겐이 있어서
+좋다" 와 "LGPS 가 원래 나쁘다" 가 분리되지 않는다.** 더 좋은 대조는 **같은 아지로다이트 골격의
+할로겐 없는 조성**(Li7PS6)이었다.
+
+★★ 그리고 이 논문은 **반론 3·4(σ_e 고원과 상한)와 다른 축**이다 — 여기서 움직인 것은 **σ_Li⁺ 쪽
+계면**이고, 그 논문은 **σ_e 를 아예 재지 않는다.** 즉 논증 ①을 건드리지 않고 **②·③ 쪽을 보강한다.**
+⚠ 그 논문의 σ 보고에는 큰 공백이 있다: **σ 가 아니라 D 를, 절대값 없이 "400 rpm 대비 196배" 로만,
+측정 조건 없이** 적는다 — 상세는 [[dc-polarization-conductivity-separation]] 의 음성 사례.
 
 ### ⑥ ★ 가장 직접적인 시험 — σ_Li⁺ 를 고정하고 σ_e 만 움직였다 (2026-10-06, Wang Daiwei 2025)
 

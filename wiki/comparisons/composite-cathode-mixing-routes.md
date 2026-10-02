@@ -1,11 +1,11 @@
 ---
 title: 복합양극 혼합 경로 비교 — one-step · two-step · 탄화 · 용액
-description: "복합양극 혼합 경로 비교 — one-step·two-step·탄화·용액·고상 소결 코팅·반응성 밀링 여섯 경로의 제어 변수와 위험, 그리고 digest 23편의 ball milling 조건 전수 대조표(장비·rpm·시간·BPR·볼·분위기)"
+description: "복합양극 혼합 경로 비교 — one-step·two-step·탄화·용액·고상 소결 코팅·반응성 밀링(첨가제형/SE 분해형) 경로의 제어 변수와 위험, 그리고 digest 24편의 ball milling 조건 전수 대조표(장비·rpm·시간·BPR·볼·분위기)"
 created: 2026-09-11
 updated: 2026-10-06
 type: comparison
 tags: [mixing-process, composite-cathode, li2s, sulfide-electrolyte]
-sources: [raw/transcripts/2026-09-11-li2s-wiki-kickoff-session.md, raw/papers/kim2023_reinforced-electrical-networking-high-loading-li2s-cathode.md, raw/papers/cronk2026_highly-utilized-practical-li-s-positive-electrode-assb.md, raw/papers/kim2025_high-areal-capacity-sulfur-cathode-dual-phase-electrolyte-assb.md, raw/papers/jeong2026_reconciling-triple-phase-boundaries-tortuosity-assb.md, raw/papers/qu2025_volume-changes-li-s-solid-state-battery-components-cycling.md, raw/papers/lee2026_decoupled-sulfur-redox-pathways-initial-chemical-states-assb.md, raw/papers/huang2026_high-entropy-sulfides-kinetic-accelerators-assb.md, raw/papers/zhang2026_anode-free-assb-nanocrystalline-amorphous-li2s-na-collector.md, raw/papers/wang2023_high-capacity-assb-li-s-low-density-solid-electrolyte.md, raw/papers/wang2026_molecular-coordination-triple-synergy-cathode-assb.md, raw/papers/yu2024_nanocrystallite-cus-n-doped-carbon-host-all-solid-state-li2s.md, raw/papers/wan2021_lii-libr-catalyst-solid-state-li2s-s-reactions.md, raw/papers/liu2026_li4sns4-molecular-mediator-low-barrier-li2s-chemistry.md, raw/papers/zhangj2026_strain-coordination-long-cycling-assb.md, raw/papers/wangd2025_overcoming-conversion-limitation-tpb-mixed-conductors.md, raw/papers/kwok2023_interfacial-redox-mediator-high-performance-asslsb.md, raw/papers/gao2024_cu-i-codoping-activating-li2s-redox-kinetics-assb.md, raw/papers/park2026_low-pressure-operation-carbon-coated-current-collector-asslsb.md, raw/papers/kimjt2023_mixed-discharge-products-li2s2-li2s-asslsb.md, raw/papers/hong2026_high-valence-cation-lattice-expansion-activating-li2s.md, raw/papers/wangx2026_dual-conductivity-optimization-high-rate-ultralong-life-asslsb.md, raw/papers/hao2025_nanosized-li2s-amorphous-matrix-asslsb.md, raw/papers/feng2026_anode-free-asslsb-fe-stabilized-polysulfides.md]
+sources: [raw/transcripts/2026-09-11-li2s-wiki-kickoff-session.md, raw/papers/kim2023_reinforced-electrical-networking-high-loading-li2s-cathode.md, raw/papers/cronk2026_highly-utilized-practical-li-s-positive-electrode-assb.md, raw/papers/kim2025_high-areal-capacity-sulfur-cathode-dual-phase-electrolyte-assb.md, raw/papers/jeong2026_reconciling-triple-phase-boundaries-tortuosity-assb.md, raw/papers/qu2025_volume-changes-li-s-solid-state-battery-components-cycling.md, raw/papers/lee2026_decoupled-sulfur-redox-pathways-initial-chemical-states-assb.md, raw/papers/huang2026_high-entropy-sulfides-kinetic-accelerators-assb.md, raw/papers/zhang2026_anode-free-assb-nanocrystalline-amorphous-li2s-na-collector.md, raw/papers/wang2023_high-capacity-assb-li-s-low-density-solid-electrolyte.md, raw/papers/wang2026_molecular-coordination-triple-synergy-cathode-assb.md, raw/papers/yu2024_nanocrystallite-cus-n-doped-carbon-host-all-solid-state-li2s.md, raw/papers/wan2021_lii-libr-catalyst-solid-state-li2s-s-reactions.md, raw/papers/liu2026_li4sns4-molecular-mediator-low-barrier-li2s-chemistry.md, raw/papers/zhangj2026_strain-coordination-long-cycling-assb.md, raw/papers/wangd2025_overcoming-conversion-limitation-tpb-mixed-conductors.md, raw/papers/kwok2023_interfacial-redox-mediator-high-performance-asslsb.md, raw/papers/gao2024_cu-i-codoping-activating-li2s-redox-kinetics-assb.md, raw/papers/park2026_low-pressure-operation-carbon-coated-current-collector-asslsb.md, raw/papers/kimjt2023_mixed-discharge-products-li2s2-li2s-asslsb.md, raw/papers/hong2026_high-valence-cation-lattice-expansion-activating-li2s.md, raw/papers/wangx2026_dual-conductivity-optimization-high-rate-ultralong-life-asslsb.md, raw/papers/hao2025_nanosized-li2s-amorphous-matrix-asslsb.md, raw/papers/feng2026_anode-free-asslsb-fe-stabilized-polysulfides.md, raw/papers/leej2025_halide-segregation-assb-lithium-chalcogen.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -35,7 +35,7 @@ evidenceScope: multi-source-primary
 
 장비별 성격은 [[mixing-equipment-ball-mill-thinky]].
 
-## ★ ball milling 조건 전수 대조 (digest 23편, 2026-10-05 / 2026-10-06 갱신)
+## ★ ball milling 조건 전수 대조 (digest 24편, 2026-10-05 / 2026-10-06 갱신)
 
 사용자 요청으로 봉인된 digest 전부의 **복합양극 제작 ball milling 조건만** 뽑았다.
 수치의 정본은 각 digest 의 `compare:` 블록 → 원문이다. 이 표는 사본이다.
@@ -73,16 +73,23 @@ evidenceScope: multi-source-primary
 | 〃 ② 복합양극 | **6:3:1 wt%**(Li2S:LPSCl:AB) — ★ **방식 자체가 미기재**(볼밀인지 손혼합인지 모른다) | 〃 | 〃 | 〃 | 〃 | 〃 |
 | **feng2026** (ACS EL, FeCl3) ① | ★ **반응성 밀링** — Li2S + FeCl3 **몰비 0.1** | **전량 SI 미확보** — 본문의 합성 서술은 `[인쇄]` "A mixture of Li2S and 5 or 10 mol % FeCl3 was ball-milled under Ar protection (details in the SI)" **한 문장**이 전부 | 〃 | 〃 | 〃 | **Ar** `[인쇄]` |
 | 〃 ② 복합양극 | **40:40:20 wt%**(FLS:LPS:VGCF) — ★ 방법이 **"mixing" 이라는 단어 하나**뿐 | 〃 | 〃 | 〃 | 〃 | **SI 미확보** |
+| **leej2025** (*Science*, 할로겐 분리) | **one-step 삼상** (S8/Se/SeS2/Te + LPSCl + 탄소) | ★ **미기재 — 본문에 `ball`·`mill` 이라는 단어가 한 번도 없다.** "ultrahigh-speed (UHS) mixing" 만 47회 | **2000** (대조 **400**) ★ 이 위키 최고속 | **5 h** (스캔 **1 / 5 / 10 h**) | 미기재 | 미기재 | **미기재** — Ar·글로브박스·밀폐 한 글자도 없다 |
 
 ### 이 표에서 읽히는 것 `[해석]`
 
-1. **★ BPR 을 적은 논문이 23편 중 **4편**뿐이다** (cronk 1:30 · jeong 50:1 · zhang ≈30:1 · **gao 20:1**).
+1. **★ BPR 을 적은 논문이 24편 중 **4편**뿐이다** (cronk 1:30 · jeong 50:1 · zhang ≈30:1 · **gao 20:1**).
    BPR 은 밀링 에너지를 정하는 1차 변수인데 대부분이 안 적는다 → **논문 간 "밀링 강도" 비교가
    원리적으로 불가능하다.** 우리는 반드시 적는다 ([[mixing-equipment-ball-mill-thinky]] 양식).
 2. **볼 재질·지름을 적은 논문은 2편**(jeong 3 mm ZrO2 50 g · kim2025 ⌀5 mm 1 ball/mL).
    **분위기는 8편**(Ar 7 · 불활성 1). **rpm·시간은 11편**이 적는다. **볼 재질·지름은 3편**(jeong · kim2025 · **gao ⌀4 mm**).
-3. **9편은 ball milling 조건을 한 글자도 안 적는다** — kim2023(액체계) · wan2021 · wang2026 ·
-   yu2024 · liu2026 · **kwok2023** · **wangx2026** · **hao2025** · **feng2026**.
+3. **10편은 ball milling 조건을 한 글자도 안 적는다** — kim2023(액체계) · wan2021 · wang2026 ·
+   yu2024 · liu2026 · **kwok2023** · **wangx2026** · **hao2025** · **feng2026** · **leej2025**.
+   ★★★ **그 열 번째가 가장 아프다 — `leej2025` 는 자기 초록에서 `[인쇄]` "mixing 은 가장 많이 쓰지만
+   가장 이해되지 않은 공정" 이라고 선언한 논문인데, 그 공정을 숫자 두 개(2000 rpm · 5 h)로 기술한다.**
+   본문에 **`ball`·`mill` 이라는 단어 자체가 없고** 장비 종류조차 알 수 없다 — **2000 rpm 은 유성
+   볼밀·고속전단믹서·비드밀에서 전혀 다른 에너지밀도**다. `[해석]` Methods 가 통째로 SI 인 것은
+   *Science* 형식이고 SI 미확보가 1차 원인이므로 단정하지 않는다. 다만 **"UHS" 를 47회 쓰면서
+   그 rpm 이 무엇의 rpm 인지 한 번도 말하지 않는다** → 본문만으로 재현 불가.
    ★★ **그중 셋은 "미기재" 가 아니라 "SI 미확보" 다** — hao2025 · feng2026 · wangx2026 은 본문에
    Experimental 절이 통째로 없다. `[해석]` **진단이 다르면 처방도 다르다**: "미기재" 는 저자가 안
    적은 것이라 영원히 알 수 없고, **"SI 미확보" 는 우리가 PDF 한 건을 구하면 닫힌다.** 이쪽이
@@ -148,7 +155,7 @@ evidenceScope: multi-source-primary
    볼밀이 아니라 **Hummer 음향 혼합기(HAM100) + 반복 섬유화 롤프레스**로 만든 자립 필름이다.
    같은 논문 안에서 **0.05 C · 55 °C 펠릿 868.4 vs 파우치 615.8** `[재현]` **29 % 낮다** — 다만
    로딩도 다르므로 혼합 경로 단독에 귀속할 수 없다. kim2025 도 유발 손혼합 단계를 쓰지만
-   **밀링 ↔ 비밀링 혼합의 직접 대조는 23편 중 0편**이다. `[해석]` 스케일업하면 밀링을 못 쓰는데,
+   **밀링 ↔ 비밀링 혼합의 직접 대조는 24편 중 1편**(아래 소견 11 — `leej2025` 가 처음 했다)이다. `[해석]` 스케일업하면 밀링을 못 쓰는데,
    **그때 성능이 어떻게 변하는지 아무도 측정하지 않았다.**
 
 10. ★★ **여섯째 경로 — "반응성 밀링(in-situ 치환)" (2026-10-06, Hao 2025).**
@@ -175,6 +182,45 @@ evidenceScope: multi-source-primary
    UCSD/Brookhaven)이 같은 해에 나왔다는 것은 **경로가 재현된다는 뜻**이다.
    ⚠ 다만 둘 다 **"갈지 않은 물리 혼합" 음성대조**가 없다(Hong 2026 은 σ 축에서 그것을 했다) →
    전도도 상승이 **반응 산물 때문인지 그냥 섞여서인지** 아직 분리되지 않았다.
+
+11. ★★★ **혼합 축의 완전 대조군 집합이 처음 나왔다 (2026-10-02, Lee J 2025).** 이 표의 23편은
+   모두 "자기 레시피 하나" 만 보고했다. `leej2025` 는 **속도 · 시간 · 기계력 유무 · 열 단독 · 활물질
+   유무**를 모두 갈라 돌렸고, 그것이 이 논문의 진짜 기여다.
+
+   | 대조 | 조건 | 표면 Cl:P `[도표]` | 결과 |
+   |---|---|---|---|
+   | pristine LPSCl | — | 0.96–1.00 | 분리 없음 |
+   | **손혼합 (무밀링, 상온)** | — | **1.00** | ★ **분리 없음** |
+   | **손혼합 + 열만** | **145 °C 3 h** | **1.38** | ★★ **기계력 없이 열만으로 부분 분리** |
+   | 저속 | **400 rpm** | `[인쇄]` "no Cl segregation" | 없음 |
+   | 단시간 | 2000 rpm **1 h** | `[인쇄]` "no Cl segregation" | 없음 |
+   | **표준** | **2000 rpm 5 h** | **3.55 · 2.45** (벌크 0.92) | `[인쇄]` "two to three times" |
+   | 과혼합 | 2000 rpm **10 h** | 분리는 유지 | ★ `[인쇄]` **"notable crystal structure collapse of LPSCl"** |
+   | **활물질 없는 대조** | LPSCl + 탄소만 가열 | — | ★★ `[인쇄]` LiCl 분리는 **"not driven by the reaction with sulfur"** |
+
+   `[해석]` 우리에게 세 가지를 준다.
+   **(a) 임계 에너지가 있다** — 400 rpm 과 1 h 에서는 **아무 일도 일어나지 않는다.** 즉 "밀링은 늘
+   SE 를 바꾼다" 가 아니라 **문턱을 넘어야 바뀐다.**
+   **(b) 열만으로도 일어난다** — 손혼합 + 145 °C 3 h 에서 Cl:P 가 1.00 → 1.38 이다. **기계력이
+   필수가 아니다.** 그래서 밀링 중 국부 발열이 기전 후보인데 ⚠ **그 논문은 혼합 중 온도를 재지 않았다.**
+   **(c) 과혼합에 대가가 있다** — 10 h 에서 **LPSCl 결정구조가 붕괴**하고 성능이 무너진다.
+   → **최적점이 존재한다**(1 / 5 / 10 h 세 점으로 보였다).
+
+12. ★★ **경로 ⑥ "반응성 밀링" 을 두 갈래로 나눈다.**
+   - **⑥-a 첨가제 치환형** — `hao2025`(Li2S + FeCl3 → LiFeS2 + 3 LiCl) · `feng2026`(Li2S + FeCl3).
+     **밖에서 넣은 전구체**가 활물질과 반응한다.
+   - **⑥-b SE 분해·재증착형** — `leej2025`. **첨가제가 없고 SE 자신의 할로겐이 분리**되어 활물질
+     표면에 Li halide 층으로 쌓인다.
+
+   ★ **그래서 "우리 one-step 셀에서도 이미 일어나고 있을 가능성" 이 생긴다** — 우리 LPSCl 은 전량이
+   밀링을 겪는다. ⚠ 다만 **"반응성 밀링이 기본값이다" 로 단정하지 않는다**: 근거가 이 한 편이고,
+   같은 논문의 400 rpm·1 h 대조가 **문턱 아래에서는 아무 일도 없다**는 것을 함께 보인다.
+   ⚠ 그리고 **`park2026` 의 "접촉만으로도 SE 가 환원된다"(Raman 425 → 418 cm⁻¹)와는 다른 현상**이다 —
+   그쪽은 **Li2S(환원제)** 계이고 이쪽은 **S8/Se/Te(산화제)** 계다. **기전이 다르므로 같은 줄에 두지 않는다.**
+
+   → **가장 값싼 확인은 셀을 안 쓴다**: **우리 one-step 복합분말을 그대로 XRD 에 걸어 LiCl(200) /
+   LPSCl 피크비를 본다.** 하루면 되고, 나오면 우리 "밀링이 SE 를 망가뜨린다" 서사의 일부는
+   **"이미 일어난 계면 설계"** 가 된다 ([[reference-cell-experiment-plan]] 0-c).
 
 ### 우리가 기록해야 할 항목 (이 표의 빈칸이 곧 체크리스트다)
 

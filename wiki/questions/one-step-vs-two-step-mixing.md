@@ -5,7 +5,7 @@ created: 2026-09-11
 updated: 2026-10-04
 type: research-question
 tags: [mixing-process, composite-cathode, li2s, sulfide-electrolyte]
-sources: [raw/transcripts/2026-09-11-li2s-wiki-kickoff-session.md, raw/papers/kim2023_reinforced-electrical-networking-high-loading-li2s-cathode.md, raw/papers/cronk2026_highly-utilized-practical-li-s-positive-electrode-assb.md, raw/papers/lee2026_decoupled-sulfur-redox-pathways-initial-chemical-states-assb.md, raw/papers/zhang2026_anode-free-assb-nanocrystalline-amorphous-li2s-na-collector.md, raw/papers/huang2026_high-entropy-sulfides-kinetic-accelerators-assb.md, raw/papers/qu2025_volume-changes-li-s-solid-state-battery-components-cycling.md, raw/papers/kim2025_high-areal-capacity-sulfur-cathode-dual-phase-electrolyte-assb.md]
+sources: [raw/transcripts/2026-09-11-li2s-wiki-kickoff-session.md, raw/papers/kim2023_reinforced-electrical-networking-high-loading-li2s-cathode.md, raw/papers/cronk2026_highly-utilized-practical-li-s-positive-electrode-assb.md, raw/papers/lee2026_decoupled-sulfur-redox-pathways-initial-chemical-states-assb.md, raw/papers/zhang2026_anode-free-assb-nanocrystalline-amorphous-li2s-na-collector.md, raw/papers/huang2026_high-entropy-sulfides-kinetic-accelerators-assb.md, raw/papers/qu2025_volume-changes-li-s-solid-state-battery-components-cycling.md, raw/papers/kim2025_high-areal-capacity-sulfur-cathode-dual-phase-electrolyte-assb.md, raw/papers/leej2025_halide-segregation-assb-lithium-chalcogen.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -143,6 +143,34 @@ M&M19(10 %)도 **똑같이 실패한다.** 즉 **두 논문은 "SE 를 밀링에
 2. **"mild mixing" 의 정체가 유발(agate mortar) 손혼합 15 분이다** — Thinky 도 저속 BM 도 아니다.
    우리가 말하는 two-step(SE 를 **mild BM** 으로 붙임)은 **아직도 시험되지 않았다.**
 → 즉 이 카드의 "다음 실험" 은 유효하고, **로딩을 변수로 넣어야 한다**는 조건이 추가됐다.
+
+### ★★ 2026-10-02 — Lee (Jieun) 2025 *Science* 가 H2 의 **부호를 바꾼다**
+
+H2 는 지금까지 **"고에너지 밀링이 LPSCl 을 손상시키므로 two-step 이 유리하다"** 였다. `leej2025_…`
+는 같은 손상을 **설계 수단**으로 쓴다 — **2000 rpm 5 h one-step UHS 혼합 중 LPSCl 에서 할로겐이
+분리되어 활물질 표면에 LiCl 층을 만들고**, 그것이 유효 Li⁺ 수송을 올린다고 주장한다
+(4 mg cm⁻²·70 MPa·25 °C 에서 **6.28 mAh cm⁻²**, 100사이클 98.9 %).
+
+- **H3(one-step 우세) — 강한 지지, 그리고 새 기전.** `[해석]` **one-step 이기 때문에** SE 와 활물질이
+  같은 용기에서 갈려 그 계면층이 생긴다. two-step 은 SE 를 나중에 손혼합으로 넣으므로 **그 반응이
+  일어날 기회 자체가 없다.**
+- **★ H2 의 서술이 뒤집힌다.** "two-step 은 SE 를 고에너지에서 **보호한다**" 는 **장점** 서술이,
+  이 논문 기준으로는 **"계면 LiCl 을 포기한다"** 는 **비용** 서술이 된다. **같은 사실의 두 이름**이다.
+  → 이 카드는 이제 **"SE 를 보호할 것인가, SE 를 재료로 쓸 것인가"** 라는 선택으로 읽어야 한다.
+- **H4(밀링 에너지 상한) — 강한 지지, 그리고 상한과 하한이 둘 다 보였다.** `[인쇄]` **400 rpm 과
+  1 h 에서는 분리가 일어나지 않고**(문턱 = 하한), **10 h 에서는 LPSCl 결정구조가 붕괴**해 성능이
+  무너진다(상한). → **최적점이 존재한다는 것을 한 논문 안의 세 점(1/5/10 h)으로 보인 두 번째 사례**
+  다 (첫째는 Kim 2025 의 rpm 스캔 200/400/600/800).
+  ★ 축이 다르다는 점이 중요하다 — **Kim 2025 는 세기, Lee J 2025 는 시간**이고 둘 다 **중간이 최적**이다.
+- ★★ **밀링 ↔ 비밀링 직접 대조가 이 위키에 처음 들어왔다.** 그 논문은 **손혼합(상온)** 에서 Cl:P 가
+  **1.00 그대로**이고, **손혼합 + 145 °C 3 h** 에서 **1.38** 로 **기계력 없이 열만으로** 부분 분리된다.
+  → `[해석]` **기전 후보는 밀링의 "기계력" 이 아니라 "국부 발열" 이다.** ⚠ 그런데 그 논문은
+  **혼합 중 온도를 재지 않았다** — 가장 값싸게 메울 수 있었던 공백이다.
+- **H1(계면 이유) — 주체가 또 바뀐다.** Kim 2025 에서 "계면" 이 탄소–활물질에서 SE–활물질로
+  옮겨갔고, 여기서는 **SE 에서 떨어져 나온 LiCl–활물질**이 된다.
+- ⚠ **이 논문은 밀링 조건을 거의 적지 않았다** — 본문에 **`ball`·`mill` 이라는 단어가 없고**
+  장비·BPR·볼·용기·분위기·조성비 전부 미기재다(Methods 전량 SI, 미확보). **H4 의 좌표로는
+  "2000 rpm · 5 h" 두 점만** 넣을 수 있다 ([[composite-cathode-mixing-routes]] 소견 3).
 
 ## Evidence Against
 
