@@ -191,6 +191,47 @@ def caption_check(html, tmp):
     return ok, f"PNG 캡션 '{o['png'][:40]}…' · GIF 캡션 '{o['gif'][:40]}…'"
 
 
+#  ⑰i 3D PNG 잘림 (1저자 10-02 *"png 딸때 잘려서 나온다"*) — 기본 시점에서 드럼이 화면 높이의 93–99 % 라 시점을 기울이면 테가 틀 밖으로
+#     나가고 PNG 는 그 틀을 그대로 찍었다 (헤드리스 재현: 위 · 아래 가장자리 닿음).  ⇒ 내보낼 때 드럼 윤곽 (두 테) 을 화면 px 로 투영해
+#     틀에 걸리면 그만큼 틀을 넓힌다 (시점 · 배율은 화면 그대로) · 크게 당긴 시점 (1.6 배 넘게 넓혀야 함) · 카메라 뒤 점은 화면 그대로.
+#     exportPad (순수 함수) 를 페이지에서 그대로 잘라 node 로 돌린다.
+PAD_HARNESS = r"""
+const W = 1000, H = 720;
+process.stdout.write(JSON.stringify({
+  inside: exportPad([[200, 100], [800, 620]], W, H),
+  cut: exportPad([[100, 5], [900, 760]], W, H),
+  zoom: exportPad([[-1500, -900], [2500, 1700]], W, H),
+  behind: exportPad(null, W, H),
+}));
+"""
+
+
+def pad_check(html, tmp):
+    """→ (None = node 없음) 또는 (ok, 설명).  여백 m = 3 % · max(W, H) = 30 px."""
+    import subprocess, json as _json
+    node = shutil.which('node')
+    if node is None:
+        return None
+    a = html.find('  function exportPad(')
+    b = html.find('\n  }\n', a) if a >= 0 else -1
+    if a < 0 or b < 0:
+        return False, 'exportPad 를 페이지에서 못 찾았다'
+    js = os.path.join(tmp, 'pad.js')
+    with open(js, 'w', encoding='utf-8') as fh:
+        fh.write(html[a:b + 4] + '\n' + PAD_HARNESS)
+    r = subprocess.run([node, js], capture_output=True, text=True, timeout=60)
+    if r.returncode != 0:
+        return False, f'node 실패 rc {r.returncode}: {r.stderr[-300:]}'
+    o = _json.loads(r.stdout)
+    zero = lambda d: all(d.get(k) == 0 for k in 'lrtb')
+    ok = (o['inside']['fit'] is False and zero(o['inside'])
+          and o['cut']['fit'] is True and (o['cut']['l'], o['cut']['r'], o['cut']['t'], o['cut']['b']) == (0, 0, 25, 70)
+          and o['zoom']['fit'] is False and o['zoom']['why'] == 'zoom' and zero(o['zoom'])
+          and o['behind']['fit'] is False and o['behind']['why'] == 'behind' and zero(o['behind']))
+    return ok, (f"틀 안 = 그대로 {zero(o['inside'])} · 위 5 px · 아래 40 px 넘침 → 여백 위 {o['cut'].get('t')} 아래 {o['cut'].get('b')} (기대 25 · 70) · "
+                f"크게 당김 = {o['zoom'].get('why')} · 카메라 뒤 = {o['behind'].get('why')}")
+
+
 def frame_txt(step, rows=ROWS, n_hdr=None, step_hdr=None):
     L = ['ITEM: TIMESTEP', str(step if step_hdr is None else step_hdr), 'ITEM: NUMBER OF ATOMS',
          str(len(rows) if n_hdr is None else n_hdr), 'ITEM: BOX BOUNDS mm mm mm', '-0.02 0.02', '-0.02 0.02',
@@ -526,6 +567,20 @@ def main():
     chk('⑰g ☑ 투명 배경 GIF (#bedGifClear) 가 있고 GIF 내보내기가 그 값을 프레임 · 인코더에 넘긴다',
         'id="bedGifClear"' in html and "$('bedGifClear')" in html and 'captureFrame(G, clear)' in html
         and 'gifBegin(rgba, w, h, clear)' in html and 'gifAdd(gif, rgba, delay, clear)' in html)
+    # ── ⑰i 3D PNG · GIF 잘림 (1저자 10-02) — 드럼이 틀에 걸리면 내보낼 때 틀을 넓힌다 · drawing buffer 는 키우지 않고 타일로 그린다 ──
+    pc = pad_check(html, pdir)
+    if pc is None:
+        print('  —     ⑰i 여백 계산 시험 건너뜀 (node 없음 · CI 에서 돈다)')
+    else:
+        chk(f'⑰i 내보내기 여백 (exportPad): 드럼 윤곽이 틀 가장자리 3 % 안 · 밖이면 그만큼 틀을 넓히고 · 틀 안 · 크게 당긴 시점 · 카메라 뒤 점은 화면 그대로 · {pc[1]}', pc[0])
+    sl = lambda a, b: html[html.find(a):html.find(b)] if html.find(a) >= 0 and html.find(b) > html.find(a) else ''
+    rt, g3 = sl('function render3Tiles(', 'function grab3d('), sl('function grab3d(', 'function exportPng(')
+    chk('⑰i-b 3D 내보내기: PNG 는 drumPad3 (드럼 두 테 투영 → exportPad) 로 틀을 정하고 render3Tiles 로 그린다 — 카메라 setViewOffset 타일 · '
+        '끝나면 clearViewOffset · 화면 캔버스 (drawing buffer) 를 키우지 않는다 (setPixelRatio 없음) · GIF 는 여백을 한 번만 정해 모든 프레임에 같은 틀',
+        'function drumPad3(' in html and 'setViewOffset(' in rt and 'cam.clearViewOffset()' in rt
+        and 'drumPad3(' in g3 and 'render3Tiles(' in g3 and 'setPixelRatio' not in g3 and 'setPixelRatio' not in rt
+        and 'render3Tiles(' in sl('function captureFrame(', 'function exportGif(')
+        and 'drumPad3(' in sl('function exportGif(', '// ── 자동 재생'))
     shutil.rmtree(tmp, ignore_errors=True)
     shutil.rmtree(pdir, ignore_errors=True)
     print(f'\ntest_mixer_bed_view: {_ok}/{_ok + len(_fail)} PASS' + (f'   FAILED: {_fail}' if _fail else ''))

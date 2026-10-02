@@ -134,7 +134,7 @@
         <div class="bed-row bed-tools">
           <select id="bedPngScale" class="input" title="화면 대비 배율"><option value="2">PNG ×2</option><option value="3">PNG ×3</option>
             <option value="4" selected>PNG ×4</option></select>
-          <button class="btn btn-secondary btn-sm" id="bedPng" type="button">⬇ 고화질 PNG (이 프레임)</button>
+          <button class="btn btn-secondary btn-sm" id="bedPng" type="button" title="3D 는 드럼이 화면 틀에 걸리면 내보낼 때 틀을 넓혀 드럼 전체를 담는다 (시점 · 배율은 화면 그대로 · GIF 도 같음)">⬇ 고화질 PNG (이 프레임)</button>
           <label title="켜면 이 PNG 한 장의 배경이 투명 (슬라이드에 붙이기용) — 그림 · 캡션 두 줄 (어두운 글자) 은 그대로.  화면 그림은 배경 그대로 · 기본 꺼짐"><input type="checkbox" id="bedPngClear"> 투명 배경 PNG</label>
         </div>
         <div class="bed-row bed-tools">
@@ -149,7 +149,7 @@
           <label><input type="radio" name="bedView" value="3d" checked> 3D</label>
           <label><input type="radio" name="bedView" value="slab"> 얇은 단면</label>
           <label><input type="radio" name="bedView" value="proj"> 전체 투영</label>
-          <label title="3D 드럼을 실물처럼 — 원통 벽 (안 · 밖) · 뒤 뚜껑은 채우고 앞은 열린 창 + 테 (처음 시점 쪽).  끄면 옛 선 그림.  그림 · 내보내기만 바뀐다 (데이터 · 판정 무관)"><input type="checkbox" id="bedDrumFill" checked> 드럼 면 채우기</label>
+          <label title="3D 드럼을 실물처럼 — 잘라 본 그림: 원통 벽 · 두 뚜껑은 안쪽 면만 그려 어느 시점에서도 가까운 쪽 벽 · 뚜껑은 안 보이고 입자를 가리지 않는다 · 양 끝 테.  끄면 옛 선 그림.  그림 · 내보내기만 바뀐다 (데이터 · 판정 무관)"><input type="checkbox" id="bedDrumFill" checked> 드럼 면 채우기</label>
         </div>
         <div id="bedSlabBox">
           <label class="blk">드럼 축 위치 x₀ <input type="range" id="bedX0" min="0" max="1000" value="500"></label>
@@ -446,19 +446,69 @@ function mxTab(t){
     document.body.appendChild(a); a.click();
     setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 2000);
   }
-  function grab3d(scale, clear) {                // WebGL 캔버스를 배율로 다시 그려 바로 복사 (drawing buffer 가 지워지기 전에) · clear = 배경 투명
-    var T = S.three, pr = T.renderer.getPixelRatio(), sz = new T.THREE.Vector2(); T.renderer.getSize(sz);
-    scale = Math.min(scale, 4096 / Math.max(sz.x, sz.y, 1));
-    var keep = null;                             // 투명: 이 한 장만 지우기 알파 0 · scene.background 없음 (렌더러는 alpha:true) — 찍은 뒤 되돌린다
-    if (clear) {
-      keep = { c: new T.THREE.Color(), a: T.renderer.getClearAlpha(), bg: T.scene.background };
-      T.renderer.getClearColor(keep.c); T.renderer.setClearAlpha(0); T.scene.background = null;
+  //  3D 내보내기 틀 (1저자 10-02 "png 딸때 잘려서 나온다") — 기본 시점에서 드럼이 화면 높이의 93–99 % 라 시점을 기울이면 테가 틀 밖으로 나가고
+  //  옛 판은 그 틀을 그대로 찍었다.  내보낼 때 드럼 두 테 (튜브 두께 포함) 를 화면 px 로 투영해 틀 가장자리 3 % 안 · 밖에 걸리면 그만큼 틀을 넓힌다
+  //  (시점 · 배율 = 화면 그대로 · 화면 그림은 안 바뀐다).  크게 당긴 시점 (1.6 배 넘게 넓혀야 함) · 카메라 뒤 점 (드럼 안에서 보는 시점) 은 화면 그대로.
+  function exportPad(pts, W, H) {               // pts = 화면 px [x, y] 목록 (null = 카메라 뒤 점 있음) → 넓힐 여백 {l, r, t, b} (화면 px) · fit · why
+    var z = { l: 0, r: 0, t: 0, b: 0, fit: false, why: 'inside' };
+    if (!pts || !pts.length) { z.why = 'behind'; return z; }
+    var m = Math.round(0.03 * Math.max(W, H)), x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
+    pts.forEach(function (p) { x0 = Math.min(x0, p[0]); x1 = Math.max(x1, p[0]); y0 = Math.min(y0, p[1]); y1 = Math.max(y1, p[1]); });
+    var o = { l: Math.max(0, Math.ceil(m - x0)), r: Math.max(0, Math.ceil(x1 - (W - m))), t: Math.max(0, Math.ceil(m - y0)), b: Math.max(0, Math.ceil(y1 - (H - m))) };
+    if (!(o.l || o.r || o.t || o.b)) return z;
+    if (W + o.l + o.r > 1.6 * W || H + o.t + o.b > 1.6 * H) { z.why = 'zoom'; return z; }
+    o.fit = true; o.why = 'expand'; return o;
+  }
+  function drumPad3(T, j, W, H) {               // 드럼 두 테 (없으면 입자 범위 상자 꼭짓점) → 화면 px → exportPad
+    var THREE = T.THREE, cam = T.cam, P = [], pts = [];
+    cam.updateMatrixWorld(); cam.updateProjectionMatrix();
+    if (j.drum) {
+      var R = j.drum.R * 1.012;                  // 테 = TorusGeometry(R, 0.012 R) 의 바깥 둘레 · 원통 벽의 투영은 두 테 투영의 볼록 껍질 안
+      [j.drum.x_min, j.drum.x_max].forEach(function (xx) {
+        for (var k = 0; k < 96; k++) { var th = 2 * Math.PI * k / 96; P.push(new THREE.Vector3(xx, R * Math.cos(th), R * Math.sin(th))); }
+      });
+    } else {
+      var b = j.bounds, rm = j.r_max || 0;
+      [0, 1].forEach(function (a) { [0, 1].forEach(function (c) { [0, 1].forEach(function (e) {
+        P.push(new THREE.Vector3(b.x[a] + (a ? rm : -rm), b.y[c] + (c ? rm : -rm), b.z[e] + (e ? rm : -rm)));
+      }); }); });
     }
-    T.renderer.setPixelRatio(scale); T.renderer.render(T.scene, T.cam);
-    var src = T.renderer.domElement, c = document.createElement('canvas'); c.width = src.width; c.height = src.height;
-    var x = c.getContext('2d'); if (!clear) { x.fillStyle = '#fbfbf8'; x.fillRect(0, 0, c.width, c.height); } x.drawImage(src, 0, 0);
-    if (keep) { T.renderer.setClearColor(keep.c, keep.a); T.scene.background = keep.bg; }
-    T.renderer.setPixelRatio(pr); T.renderer.render(T.scene, T.cam);
+    for (var i = 0; i < P.length; i++) {
+      if (P[i].clone().applyMatrix4(cam.matrixWorldInverse).z > -cam.near) return exportPad(null, W, H);
+      var q = P[i].clone().project(cam); pts.push([(q.x + 1) / 2 * W, (1 - q.y) / 2 * H]);
+    }
+    return exportPad(pts, W, H);
+  }
+  //  화면 틀 + 여백 (pad · 화면 px) 을 scale 배로 그린다 — 화면 캔버스 (drawing buffer) 는 그대로 두고 카메라 setViewOffset 으로 타일마다 그려 붙인다.
+  //  (옛 판은 setPixelRatio(scale) 로 drawing buffer 를 키웠다 — 큰 버퍼는 그래픽 드라이버가 몰래 줄일 수 있다.)  타일은 같은 투영의 조각이라 이음매가 없다.
+  function render3Tiles(scale, clear, pad) {
+    var T = S.three, ren = T.renderer, cam = T.cam, sz = new T.THREE.Vector2(); ren.getSize(sz);
+    var W = sz.x, H = sz.y, ox = Math.round(pad.l * scale), oy = Math.round(pad.t * scale);
+    var OW = ox + Math.round(W * scale) + Math.round(pad.r * scale), OH = oy + Math.round(H * scale) + Math.round(pad.b * scale);
+    var bw = ren.domElement.width, bh = ren.domElement.height, keep = null;
+    if (clear) {                                 // 투명: 이 그림만 지우기 알파 0 · scene.background 없음 (렌더러는 alpha:true) — 찍은 뒤 되돌린다
+      keep = { c: new T.THREE.Color(), a: ren.getClearAlpha(), bg: T.scene.background };
+      ren.getClearColor(keep.c); ren.setClearAlpha(0); T.scene.background = null;
+    }
+    var c = document.createElement('canvas'); c.width = OW; c.height = OH;
+    var x = c.getContext('2d'); if (!clear) { x.fillStyle = '#fbfbf8'; x.fillRect(0, 0, OW, OH); }
+    for (var ty = 0; ty < OH; ty += bh) {
+      for (var tx = 0; tx < OW; tx += bw) {      // 그린 직후 복사 (drawing buffer 가 지워지기 전에)
+        cam.setViewOffset(W * scale, H * scale, tx - ox, ty - oy, bw, bh); ren.render(T.scene, cam);
+        var cw = Math.min(bw, OW - tx), ch = Math.min(bh, OH - ty);
+        x.drawImage(ren.domElement, 0, 0, cw, ch, tx, ty, cw, ch);
+      }
+    }
+    cam.clearViewOffset();
+    if (keep) { ren.setClearColor(keep.c, keep.a); T.scene.background = keep.bg; }
+    ren.render(T.scene, cam);
+    return c;
+  }
+  function grab3d(scale, clear) {                // 고화질 PNG — 드럼이 틀에 걸리면 틀을 넓혀 (drumPad3) 타일로 그린다 · 긴 변 4096 px 이하 (옛 판과 같은 상한)
+    var T = S.three, sz = new T.THREE.Vector2(); T.renderer.getSize(sz);
+    var pad = drumPad3(T, S.data.meta, sz.x, sz.y);
+    scale = Math.min(scale, 4096 / Math.max(sz.x + pad.l + pad.r, sz.y + pad.t + pad.b, 1));
+    var c = render3Tiles(scale, clear, pad); c.pad = pad;
     return c;
   }
   function exportPng() {
@@ -467,9 +517,10 @@ function mxTab(t){
     if (view() === '3d') { if (!S.three) { exmsg('3D 가 아직 없다', 'err'); return; } src = grab3d(k * (window.devicePixelRatio || 1), clear); }
     else { src = document.createElement('canvas'); paint2d(src, 1000 * k, clear); }
     var out = withCaption(src, src.width / 900, clear), j = S.data.meta;
+    var note = src.pad ? (src.pad.fit ? ' · 드럼이 화면 틀에 걸려 틀을 넓혀 담음' : src.pad.why === 'zoom' ? ' · 크게 당긴 시점 — 화면 틀 그대로' : '') : '';
     out.toBlob(function (b) {
       download(b, 'mixer_' + j.run + '_step' + j.step + '_' + j.view + (clear ? '_transparent' : '') + '.png');
-      exmsg('PNG ' + out.width + ' × ' + out.height + ' px · ' + (b.size / 1e6).toFixed(1) + ' MB' + (clear ? ' · 투명 배경' : ''));
+      exmsg('PNG ' + out.width + ' × ' + out.height + ' px · ' + (b.size / 1e6).toFixed(1) + ' MB' + (clear ? ' · 투명 배경' : '') + note);
     }, 'image/png');
   }
 
@@ -527,15 +578,14 @@ function mxTab(t){
   }
   function gifEnd(g) { g.chunks.push(new Uint8Array([0x3B])); return g.chunks; }
   function captureFrame(G, clear) {               // clear = 배경 투명 (☑ 투명 배경 GIF) · 캡션 = 런 이름 없이
-    var src, T = S.three, keep = null;
-    if (view() === '3d') {
-      if (clear) { keep = { c: new T.THREE.Color(), a: T.renderer.getClearAlpha(), bg: T.scene.background }; T.renderer.getClearColor(keep.c); T.renderer.setClearAlpha(0); T.scene.background = null; }
-      T.renderer.render(T.scene, T.cam); src = T.renderer.domElement;
+    var src, T = S.three;
+    if (view() === '3d') {                        // 틀 = GIF 시작 때 한 번 정한 여백 (S.gif.pad · 모든 프레임 같은 크기) · 화면 해상도 한 타일로
+      var p3 = (S.gif && S.gif.pad) || { l: 0, r: 0, t: 0, b: 0 }, sz = new T.THREE.Vector2(); T.renderer.getSize(sz);
+      src = render3Tiles(T.renderer.getPixelRatio() * Math.min(1, sz.x / (sz.x + p3.l + p3.r), sz.y / (sz.y + p3.t + p3.b)), clear, p3);
     }
     else { src = document.createElement('canvas'); paint2d(src, G * 2, clear); }
     var hh = Math.round(src.height * G / src.width), c = document.createElement('canvas'); c.width = G; c.height = hh + 22;
     var x = c.getContext('2d'); if (!clear) { x.fillStyle = '#fbfbf8'; x.fillRect(0, 0, c.width, c.height); } x.drawImage(src, 0, 0, G, hh);
-    if (keep) { T.renderer.setClearColor(keep.c, keep.a); T.scene.background = keep.bg; T.renderer.render(T.scene, T.cam); }
     x.fillStyle = '#222'; x.font = '12px sans-serif'; x.fillText(captionText(false), 6, c.height - 7);
     return c;
   }
@@ -550,7 +600,9 @@ function mxTab(t){
     if (view() === '3d' && !S.three) { exmsg('3D 가 아직 없다', 'err'); return; }
     var G = 640, gif = null, w = 0, h = 0, k = 0, keep = +$('bedFrame').value, delay = Math.max(2, Math.round(+$('bedSpeed').value / 10));
     var clear = !!($('bedGifClear') || {}).checked;      // ☑ 투명 배경 GIF
-    S.gif = { cancel: false }; $('bedGif').textContent = '■ GIF 멈춤';
+    var pad3 = null;                                      // 3D: 드럼이 틀에 걸리면 넓힐 여백 — 시작 때 한 번 (카메라 · 드럼은 GIF 동안 그대로)
+    if (view() === '3d') { var sz3 = new S.three.THREE.Vector2(); S.three.renderer.getSize(sz3); pad3 = drumPad3(S.three, S.data.meta, sz3.x, sz3.y); }
+    S.gif = { cancel: false, pad: pad3 }; $('bedGif').textContent = '■ GIF 멈춤';
     function done(note, kind) { S.gif = null; $('bedGif').textContent = '⬇ GIF'; exmsg(note, kind); }
     function next() {
       if (S.gif.cancel) { $('bedFrame').value = keep; loadFrame().catch(function () {}); return done('GIF 취소'); }

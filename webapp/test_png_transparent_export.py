@@ -84,10 +84,11 @@ class Ctx {
     for (const p of this.cv.probes()) if (hit(p, x, y, w, h)) p.a = over(a, p.a);
   }
   clearRect(x, y, w, h) { this.cv.ops.push(['clearRect', null, x, y, w, h]); for (const p of this.cv.probes()) if (hit(p, x, y, w, h)) p.a = 0; }
-  drawImage(src, dx, dy, dw, dh) {
-    const w = dw === undefined ? src.width : dw, h = dh === undefined ? src.height : dh;
+  drawImage(src, ...a) {                          // (src, dx, dy[, dw, dh]) 또는 타일 복사 (src, sx, sy, sw, sh, dx, dy, dw, dh)
+    const [sx, sy, dx, dy, w, h] = a.length === 8 ? [a[0], a[1], a[4], a[5], a[6], a[7]]
+      : [0, 0, a[0], a[1], a[2] === undefined ? src.width : a[2], a[3] === undefined ? src.height : a[3]];
     this.cv.ops.push(['drawImage', null, dx, dy, w, h]);
-    for (const p of this.cv.probes()) if (hit(p, dx, dy, w, h)) p.a = over(src.alphaAt(p.x - dx, p.y - dy) * this.globalAlpha, p.a);
+    for (const p of this.cv.probes()) if (hit(p, dx, dy, w, h)) p.a = over(src.alphaAt(sx + p.x - dx, sy + p.y - dy) * this.globalAlpha, p.a);
   }
   fillText(t) { this.cv.ops.push(['fillText', this.fillStyle, String(t)]); }
   fill() { this.cv.ops.push(['fill', this.fillStyle]); }
@@ -108,7 +109,13 @@ class Canvas {
 const document = { createElement: () => new Canvas() };
 const window = { devicePixelRatio: 1 };
 const THREE = { Vector2: class { constructor() { this.x = 0; this.y = 0; } },
-                Color: class { constructor(v) { this.v = v === undefined ? 0 : v; } } };
+                Color: class { constructor(v) { this.v = v === undefined ? 0 : v; } },
+                //  투영 껍데기 — 카메라 앞 (z < 0) · NDC = (y, z) / 0.02 (드럼 R 0.0131 → 틀 안 · 여백 없음 = 옛 출력 크기 그대로)
+                Vector3: class { constructor(x, y, z) { this.x = x; this.y = y; this.z = z; }
+                  clone() { return new THREE.Vector3(this.x, this.y, this.z); } applyMatrix4() { this.z = -1; return this; }
+                  project() { const y = this.y, z = this.z; this.x = y / 0.02; this.y = z / 0.02; return this; } } };
+function mkCam() { return { near: 1e-4, matrixWorldInverse: {}, vo: false, updateMatrixWorld() {}, updateProjectionMatrix() {},
+                            setViewOffset() { this.vo = true; }, clearViewOffset() { this.vo = false; } }; }
 //  WebGL 캔버스 껍데기 — render 가 배경 (scene.background 가 있으면 불투명 · 없으면 지우기 알파) 으로 통째로 칠한다
 function mkGL(clearAlpha) {
   const cv = new Canvas(); cv.width = 800; cv.height = 576;
@@ -119,7 +126,7 @@ function mkGL(clearAlpha) {
     getClearColor(c) { c.v = this.cc; return c; }, getClearAlpha() { return this.ca; },
     setClearColor(c, a = 1) { this.cc = (c && typeof c === 'object') ? c.v : c; this.ca = a; },
     setClearAlpha(a) { this.ca = a; },
-    render(scene) { const a = scene.background ? 1 : this.ca; cv.tl.a = a; cv.bl.a = a; this.renders.push({ ca: this.ca, bg: !!scene.background, pr: this.pr }); } };
+    render(scene, cam) { const a = scene.background ? 1 : this.ca; cv.tl.a = a; cv.bl.a = a; this.renders.push({ ca: this.ca, bg: !!scene.background, pr: this.pr, vo: !!(cam && cam.vo) }); } };
 }
 const nf = new Intl.NumberFormat('ko-KR');
 const EL = { bedPngScale: { value: '2' }, bedPngClear: { checked: false }, bedExportMsg: { textContent: '', className: '' } };
@@ -146,7 +153,8 @@ const OUT = {};
 for (const v of ['proj', 'slab', '3d']) for (const clear of [false, true]) for (const glA of (v === '3d' ? [0, 1] : [0])) {
   VIEW = v; setData(v); EL.bedPngClear.checked = clear; DL.length = 0; LAST_OUT = null; EL.bedExportMsg.textContent = '';
   const gl = mkGL(glA);
-  S.three = v === '3d' ? { THREE: THREE, renderer: gl, scene: { background: null }, cam: {} } : null;
+  const cam = mkCam();
+  S.three = v === '3d' ? { THREE: THREE, renderer: gl, scene: { background: null }, cam: cam } : null;
   let err = null;
   try { exportPng(); } catch (e) { err = String(e && e.stack || e); }
   const o = LAST_OUT;
@@ -155,7 +163,7 @@ for (const v of ['proj', 'slab', '3d']) for (const clear of [false, true]) for (
     tl: o ? o.tl.a : null, bl: o ? o.bl.a : null,
     outFills: o ? o.ops.filter(q => q[0] === 'fillRect' && q[6]).map(q => q[1]) : null,
     texts: o ? o.ops.filter(q => q[0] === 'fillText').map(q => [q[1], q[2]]) : null,
-    gl: v === '3d' ? { ca: gl.ca, cc: gl.cc, pr: gl.pr, renders: gl.renders } : null };
+    gl: v === '3d' ? { ca: gl.ca, cc: gl.cc, pr: gl.pr, renders: gl.renders, vo: cam.vo } : null };
 }
 //  화면 (draw2d → paint2d 인자 둘) · GIF 프레임 (captureFrame) 은 체크박스와 무관하게 배경 그대로여야 한다
 VIEW = 'proj'; setData('proj'); EL.bedPngClear.checked = true; S.three = null;
@@ -181,7 +189,8 @@ def section_mixer(html):
     if not shutil.which('node'):
         chk('M2 node 필요 (내보내기 함수를 실제로 돌린다)', False, 'node 미설치')
         return
-    src, miss = fns(html, ('typeOrder', 'mm', 'paint2d', 'captionText', 'withCaption', 'grab3d', 'exportPng', 'captureFrame'))
+    src, miss = fns(html, ('typeOrder', 'mm', 'paint2d', 'captionText', 'withCaption', 'exportPad', 'drumPad3', 'render3Tiles', 'grab3d',
+                                'exportPng', 'captureFrame'))
     if not chk('M2 페이지에서 내보내기 함수를 잘라 냈다', not miss, f'없음 {miss}'):
         return
     res = run_node(CANVAS_SHIM + '\n' + src + '\n' + MIXER_RUN)
@@ -206,12 +215,13 @@ def section_mixer(html):
         chk(f'M4d [{v}] ☑ 투명 = 파일 이름에 _transparent (기본 이름과 구분)',
             t['file'] == f'mixer_LC_s67867967_step1001_{v}_transparent.png', str(t['file']))
     g = res['3d|true|1']
-    snap = [r for r in (g['gl'] or {}).get('renders', []) if r['pr'] != 1]
-    chk('M5 [3d] ☑ 투명 = 렌더러가 불투명 지우기 (알파 1) 로 바뀌어 있어도 그 한 장은 알파 0 으로 지운다',
+    snap = [r for r in (g['gl'] or {}).get('renders', []) if r.get('vo')]      # 내보내기 렌더 = 카메라 view offset 타일 (10-02 · 드럼 잘림 수정)
+    chk('M5 [3d] ☑ 투명 = 렌더러가 불투명 지우기 (알파 1) 로 바뀌어 있어도 내보내기 타일은 알파 0 으로 지운다',
         g['err'] is None and g['tl'] == 0 and g['bl'] == 0 and bool(snap) and all(r['ca'] == 0 and not r['bg'] for r in snap),
         f"tl {g['tl']} · snap {snap} · {g['err']}")
-    chk('M5b [3d] 찍은 뒤 렌더러 지우기 색 · 알파 · 픽셀 비율 복구 (화면 그대로)',
-        g['gl'] is not None and g['gl']['ca'] == 1 and g['gl']['cc'] == 0 and g['gl']['pr'] == 1, repr(g['gl'])[:200])
+    chk('M5b [3d] 찍은 뒤 렌더러 지우기 색 · 알파 · 픽셀 비율 · 카메라 view offset 복구 (화면 그대로)',
+        g['gl'] is not None and g['gl']['ca'] == 1 and g['gl']['cc'] == 0 and g['gl']['pr'] == 1 and g['gl']['vo'] is False
+        and bool(g['gl']['renders']) and not g['gl']['renders'][-1]['vo'], repr(g['gl'])[:200])
     g0 = res['3d|false|1']
     chk('M5c [3d] 기본 (꺼짐) 은 렌더러 지우기 알파를 건드리지 않는다 (옛 판과 같은 렌더)',
         g0['gl'] is not None and all(r['ca'] == 1 for r in g0['gl']['renders']) and g0['gl']['ca'] == 1, repr(g0['gl'])[:200])
