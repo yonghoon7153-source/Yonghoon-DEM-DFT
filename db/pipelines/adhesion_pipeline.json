@@ -1,7 +1,7 @@
 {
  "schema": "adhesion_pipeline/1",
  "title": "점착 파이프라인 — DFT → DEM (→ COMSOL)",
- "updated": "2026-10-01",
+ "updated": "2026-10-02",
  "purpose": "Ag–C 인터레이어·SE 계면의 점착일(W)을 DFT 에서 재서 DEM(JKR 접촉)으로 넘기는 흐름을 **한 곳에 누적**한다. 새 사실은 `log` 에 한 줄씩 덧붙이고, 상태가 바뀌면 해당 항목만 고친다.",
  "⛔_이_원장이_하지_않는_것": [
   "판정 전 물리값(W·γ)은 싣지 않는다 — 결과는 판정이 끝난 뒤 기록 파일에 따로 남기고 여기서는 경로만 건다 (인용 방지).",
@@ -122,7 +122,7 @@
    "cell": "미정",
    "machine": "—",
    "state": "todo",
-   "state_text": "입력 전",
+   "state_text": "입력 전 — 착수 여부는 외주 V5 반송 뒤에 정한다 (사용자 10-02)",
    "records": [
     "kb/projects/wad_lpscl_agc_vgcf_plan_2026_09_23.md"
    ]
@@ -1490,6 +1490,11 @@
    "date": "2026-10-01",
    "stage": "dft",
    "text": "원장 정정 — V4 본 잡 run 항목이 09-27 14:02 실측(1/9 done)에서 멈춰 있었다 → 원자료 jobs_run.tsv 로 9/9 done · rc 0 · wall · 피크 VRAM 을 채웠다 (9월 증빙 스크립트가 '1/9' 를 찍어 드러났다)."
+  },
+  {
+   "date": "2026-10-02",
+   "stage": "dft",
+   "text": "**외주 V5 반송까지 대기** (사용자 '외주한거 오면 관련해서 더 진행하자') — 그동안 새 점착 계산은 없다. P1b (Ag(111)|흑연) · E(d) 곡선 착수 여부도 그때 정한다. 반송 순서: 업체 파일럿 2 잡 → `build_v5_vasp_package.py --check` → 파일럿 OK 면 `--seal_pp` (등록부 커밋·sha) → 사용자가 업체에 확인 연락 → 나머지 16 잡 → `--collect` → G5 (LPSCl|Ag 작은 모델 UMA ↔ DFT) → 새 결과 기록 → DEM 회신. 회신 9 발송은 V5 와 무관 (사용자 판단)."
   }
  ],
  "related_decisions": [
