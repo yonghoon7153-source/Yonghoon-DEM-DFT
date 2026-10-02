@@ -5,7 +5,7 @@ created: 2026-09-23
 updated: 2026-10-02
 type: concept
 tags: [battery, degradation, research]
-sources: [raw/papers/danilov2011_thin-film-assb-model-weak-electrolyte-parameter-fit.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode-si.md, raw/papers/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd-si.md, raw/papers/miss2022_exchange-current-density-tlm-thickness-lco-nmc-assb.md, raw/papers/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd.md, raw/papers/li2024_assb-composite-cathode-model-contact-area-edl.md, raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md]
+sources: [raw/papers/khalik2021_dfn-grouping-sensitivity-parameter-estimation.md, raw/papers/danilov2011_thin-film-assb-model-weak-electrolyte-parameter-fit.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode-si.md, raw/papers/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd-si.md, raw/papers/miss2022_exchange-current-density-tlm-thickness-lco-nmc-assb.md, raw/papers/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd.md, raw/papers/li2024_assb-composite-cathode-model-contact-area-edl.md, raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -74,6 +74,32 @@ evidenceScope: multi-source-primary
 | 50호 | 면적 규약 `a_v·τd → a_v·d` | `[재현]` `(j₀, Q_DL, dU/dc) → (j₀/s, Q_DL/s, s·dU/dc)` 정확한 재척도 — 저주파 화학 용량 `F·ε·d/\|dU/dc\|` 는 이 표 `β = dU/dQ` 입력 자리(원전처럼 OCV 기울기로 고정하면 s 가 선다). 50호는 `dU/dc` 를 가변으로 두어(시작 대비 ×1.31 · ×1.07) 닻을 반쯤 풀었다. 용량성 극한 밖(반무한)이면 위 38호 행과 같은 `√D` 곱으로 약해진다 |
 | 91호 Danilov 2011 (ASSB 박막 원형 모형 · 26호 계보 첫 표) | 전해질 넷 `k_r` · `δ` · `D_Li⁺` · `D_n⁻` | `[재현·가정]` 우리 국소 CRB(재풀이 모형 · σ_V 1 mV · 여섯 율) — \|ρ\| ≥ 0.98 · 가장 약한 방향(`δ` ↑ · `D_Li⁺` · `D_n⁻` · `k_r` ↓) · 조건수 9.5×10⁵. SPM 은 전해질을 버리므로 이 표에 대응 묶음이 없다(한계 셋째 줄) — 박막 모형에서 26호 §5-2 ④ "전도도형 한 조합" 의 수치판 |
 | 91호 | `a_max` = 측정 용량 ÷ (F·Δx·M·A) | 이 표 `Q_th` 자리(용량 스케일)를 **측정 용량으로 고정**했다(각주 c · `[재현]` 23.32 kmol m⁻³) — 원전(Bizeray)과 같은 "용량 스케일은 입력" 선택이고, 그래서 26호 `D·a_max` 한 조합(위 26호 행 · `θ₂`)이 이 편에서는 깨져 `D_Li` 가 국소적으로 선다(CRB ×1.005). 대가: 활성 분율 · 접촉 몫이 이 입력 하나에 섞인다 |
+| 95호 Khalik 2021 (⚠ 액체 DFN · 정규화 · 묶음 35 → 24) | `D̂_s = D_s/R_s²` · `k̂₀ = k₀c_e,o^α_a/(R_sF)` · `3Q = ĉ^max(s_100% − s_0%)` | 이 표 `τ_d` · `τ_k` · `Q_th` 묶음의 **DFN 판** — `[인쇄]` "by decreasing the diffusion coefficient D_s and increasing the particle size R_s accordingly, the diffusion dynamics in the solid phase remain unchanged … one of these parameters is redundant". `k̂₀` 는 반응 면적 `3ε_s/R_s` · `A` · `δ` 가 정규화에서 약분된 꼴인데, 그 약분은 `α_c = 1 − α_a`(표 1(b) 식 12a · b 에만 · 본문 0)가 있어야 정확하다(`[재현·대수]`). 용량 스케일은 Q(측정) + 창 폭으로 갈라 들어간다(식 14) — 원전과 달리 **창(정렬 · 이용 범위)이 식별 집합 안**에 있다 |
+| 95호 | 창 넷 `s_n,0%` · `s_n,100%` · `s_p,0%` · `s_p,100%`(경우 1 — 셀 EMF 만 앎) | `[인쇄]` "the same EMF-SOC relation can be reached with any choice between 0 and 1" — 한 전극 곡선을 빌리고 다른 쪽을 `U_EMF + U_n` 으로 **정의**하면 평형 채널이 창에 무정보다. 이 표 예외 1(`β = 0`)의 **구성판** — 관측 이득이 아니라 정의가 0 을 만든다. 남은 인쇄 경로는 (12b) 교환 전류의 SOC 모양 하나 · 0 % 끝 둘은 감도 순위 15–21 위(10^−3.6 … 10^−4.4 `[도표·벡터]`) · Cell 1 다중 시작에서 셋이 범위 끝 · 합성 모형 오차 1.2 mV 에서 `s_p,100%` 가 범위 하한 |
+| 95호 | `D̂_e` · `κ̂` · `p̂_n` · `p̂_p` · `p̂_sep` | `[재현·대수]` (9a) `D̂_e p̂` · (11a) `κ̂ p̂` 로만 쓰여 `(D̂_e/λ, κ̂/λ, λp̂)` 가 정확한 척도 대칭 — 이 표 식 50(두 전극 동역학 → `R_ct` 하나)과 같은 "곱으로만 들어가는 조합" 이 묶은 뒤에도 하나 남았다(식별 가능한 조합 ≤23) · 사전 상자(`κ̂` ×2.86)가 자를 뿐 없애지 않는다 |
+
+## ★ DFN 판 (2026-10-02, 95호 Khalik 2021 — ⚠ 액체 · 도구)
+
+`raw/papers/khalik2021_dfn-grouping-sensitivity-parameter-estimation.md` (Khalik · Donkers · Sturm · Bergveld 2021 *J. Power Sources* 499, 229901 — 27호 [27] · 4차 묶음 파일 55).
+원전(28호 SPM)과 같은 계보의 **DFN 묶음**이다 — 원 35(표 2 "a" 표시 34 + `A`) → 24(Q + 창 4 + 19) `[인쇄]` · `[재현]`.
+출력은 24 묶음의 함수다(구성 증명). 24 의 식별성은 증명되지 않았다(위 적용 표 95호 셋째 행의 척도 대칭 · `α_c = 1 − α_a` 가정).
+
+### 카드 물음을 DFN 묶음에 올리면 (`[해석·대수]` — 원문 명제 아님 · 이 편은 열화 · 접촉 0)
+
+| 기구 | 정규화 DFN 묶음에서 | 위 SPM 표와 |
+|---|---|---|
+| 표면 접촉 손실 `A_eff` | `k̂₀ × A_eff` · `R̂_f ÷ A_eff`(막 저항은 국소 플럭스에 걸림) — **`k̂₀R̂_f` 불변** | SPM 은 `τ_k` 하나 · DFN 은 두 묶음에 같이 — 원리상 "곱 일정으로 같이 움직임" 이 둘째 서명 |
+| 순수 `k₀` 손실 · 막 성장 | `k̂₀` 하나 · `R̂_f` 하나 | — |
+| 입자 통째 비연결 `u`(= `ε_s` 형 LAM) | 창 폭(전극 용량 `3Q/Δs`) · `R̂_f`(÷u) · `σ̂`(×u) | SPM 은 `Q_th` 와 항등 · DFN 은 `R̂_f` · `σ̂` 가 붙는다 |
+| `c^max` 형 LAM(입자는 남고 자리만 줄어듦) | 창 폭 하나 | `ε_s` 형과 `R̂_f` · `σ̂` 두 서명만큼 다르다 |
+| **양극**(이 편 `R̂_f,p` 범위 [0, 0]) | `A_eff` 는 `k̂₀,p` 하나 · `u` 는 창 폭 + `σ̂_p`(감도 Cell 1 17 위 · 10^−3.79 `[도표·벡터]`) | **`u` ≈ `LAM_PE`** — SPM 판 항등이 범위 선택 덕에 거의 그대로(음극은 `R̂_f,n` 이 자유라 근사 축퇴) |
+
+⇒ 묶음은 곱을 **선언**한다: 곱을 한 매개변수로 바꾸면 그 묶음은 식별 대상이 되지만 곱의 두 인자(`D ↔ R²` · `k₀ ↔ A_eff`)는 입력 쪽으로 넘어간다 — 카드 물음(`A_eff` · `u` ↔ `LAM_PE`)은 그 넘어간 쪽에 있다([[assb-lampe-contact-product-degeneracy]] 일흔여덟 번째 적용).
+
+### 원전(28호)과 반대쪽 끝 — 식별 집합에 모드 좌표가 있다
+
+28호는 용량 스케일 · 정렬을 입력으로 뺐다(위 "왜 중요한가"). 95호는 창 네 끝점을 식별 집합 안에 넣었고, 그 좌표가 약한 쪽이었다 — 경우 1(셀 EMF 만) 평형 채널 무정보(인쇄) · 0 % 끝 둘은 감도 순위 12 개 밖 · Cell 1 범위 끝 셋 · 합성 모형 오차에서 `s_p,100%` 0.418 → 0.22(범위 하한) `[도표·벡터]`.
+경우 2(분해 OCP 고정 + 창 맞춤)는 우리 α·β 와 같은 연산이다 — [[halfcell-ocp-shape-invariance]] · [[halfcell-window-parametrization-lineage]] 여덟 번째 축.
 
 ## 한계 (이 페이지가 주장하지 않는 것)
 
@@ -81,6 +107,7 @@ evidenceScope: multi-source-primary
 - 원전의 실제적 식별성은 **등고선 그림**이다 — FIM · CI · 프로파일 수치 0. 정량 도구는 [[constrained-crb-identifiability]] · [[near-optimal-set-width-measurement]] 쪽에 있다.
 - **ASSB 에 SPM 이 맞는다고 하지 않는다** — SPM 은 전해질 수송을 무시한다. ASSB 복합양극은 고체전해질 이온 수송이 지배 인자일 수 있다(27호).
 - 입자 비연결 ≡ LAM 은 **묶음 대수**다. 비연결 입자가 느리게라도 방전되는 부분 연결은 이 표 밖이다.
+- **DFN 판(95호)의 `u` ≈ `LAM_PE` 는 범위 선택(`R̂_f,p` [0, 0]) 위의 묶음 대수다** — 이 편은 열화 · 접촉을 다루지 않고, 남은 척도 대칭 · `α_c` 가정은 인쇄 식 위의 `[재현·대수]` 이다(저자 툴박스 이산화 미확인).
 
 ## 관련
 

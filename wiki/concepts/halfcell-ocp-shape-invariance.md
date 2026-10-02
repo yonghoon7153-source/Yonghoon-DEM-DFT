@@ -2,10 +2,10 @@
 title: 반쪽전지 OCP 형상 불변 가정과 그 파괴 (blend 전극)
 description: "The α·β affine-rescaling premise behind every electrode-balancing diagnostic, where it breaks for Si/graphite blends, and the directional bias it leaves in LLI/LAM"
 created: 2026-09-10
-updated: 2026-09-22
+updated: 2026-10-02
 type: concept
 tags: [battery, degradation, research]
-sources: [raw/papers/schmitt2022_sic-ocp-shape-change-degradation-modes.md, raw/papers/2026-09-21-siwon-kim-si-gr-ica-lam-si-gitt-ocp.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/dubarry2012_synthesize-degradation-modes.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/transcripts/2026-09-14-bms-handoff-width-and-wiki-candidates.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md]
+sources: [raw/papers/khalik2021_dfn-grouping-sensitivity-parameter-estimation.md, raw/papers/schmitt2022_sic-ocp-shape-change-degradation-modes.md, raw/papers/2026-09-21-siwon-kim-si-gr-ica-lam-si-gitt-ocp.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/dubarry2012_synthesize-degradation-modes.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/transcripts/2026-09-14-bms-handoff-width-and-wiki-candidates.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -223,6 +223,35 @@ OCP = pristine 곡선의 `α·β` 변환)가 맞으면 **`E(x)` 와 `∂E/∂T(x
 K⁻¹ 로 **부호가 바뀐다**(sum rule 위반 후보 = 재료 변화·창 변화·음극 항 중 하나). 논문은
 이 뺄셈을 안 한다. ⚠ 14호의 ΔS 는 **OCV 축**이라 SOC 축 변환이 먼저이고, 실셀 1 종·3 셀·
 전·후 2 점이다.
+
+## ★ 형상을 빌리면 오차가 다른 전극으로 간다 — 그리고 분해 쌍도 셀 EMF 를 ±10 mV 로만 맞춘다 (2026-10-02, `assb` 95호 Khalik 2021 · ⚠ 액체 DFN 도구)
+
+`raw/papers/khalik2021_dfn-grouping-sensitivity-parameter-estimation.md` §(c) (Khalik · Donkers · Sturm · Bergveld 2021
+*J. Power Sources* 499, 229901 · 4차 묶음 파일 55). 이 편은 형상 불변을 **검사하지 않는다** — 열화 0 · 신품 셀 둘.
+대신 이 페이지 전제의 **신품 · 평형 쪽 잔차**를 두 구성으로 보인다(`[재현·벡터]` 그림 2 벡터 판독 — 저자는 이 수를 적지 않는다):
+
+| 구성 | 무엇을 고정하나 | 잔차가 어디로 가나 |
+|---|---|---|
+| 경우 2 (분해 전극 OCP 쌍 + 창 맞춤 — 우리 α·β 와 같은 연산) | 두 곡선의 형상 | 쌍 `U_p − U_n` ↔ 셀 EMF **−9.5 … +13.5 mV**(SOC 0.03–1 · 0.1–1 rms 5.8 mV) — 창 정렬 뒤에도 남는 형상 불변 가정의 잔차 |
+| 경우 1 (문헌 흑연 `U_n` 을 빌리고 `U_p = U_EMF + U_n` 으로 정의) | 음극 형상(빌림) · EMF 정확 일치 | 빌린 `U_n` 의 형상 오차가 **양극 곡선으로 1:1** — (계산 − 측정) `U_p` = (가정 − 측정) `U_n` ±0.01 V · SOC 0.1–1 에서 **+6 … +54 mV**(평균 +26) · 그리고 창 넷은 OCV 채널에서 정의상 무정보(`[인쇄]` "the same EMF-SOC relation can be reached with any choice between 0 and 1") |
+
+`[해석]` 이 페이지에 붙는 것 셋.
+1. **경우 2 의 ±10 mV 는 "형상 불변" 이 신품 · 같은 셀 계열에서도 mV 단위로 안 맞는다는 값 하나다** — 분해 반쪽전지 곡선
+   (액체 · Ni-rich ‖ Si-흑연 — 참고문헌 [24] 제목 기준 · 본문은 화학 미인쇄)을 창으로 놓아도 셀 EMF 를 ±10 mV 로만
+   재현한다. 이 편이 "식별성을 가장 크게 해친다" 고 보인 합성 EMF 오차(진폭 3 mV · RMS 2.1 mV)보다 크다. 우리 합성 truth 는
+   형상 불변이 정의상 참이므로(위 "적용" 1) 이 크기가 **형상 오차 주입 시험의 크기 참고값** 후보다(한 셀 · 측정법 미인쇄 ·
+   이 페이지 본문 셀과 같은 셀인지 모름).
+2. **경우 1 은 처방 ①(무시 — 두 형상 모두 고정)의 반대쪽 극단이다** — 형상 하나를 빌리고 다른 형상을 완전히 자유로 두면 EMF 는 정확히
+   맞지만 오차가 **전극 사이 배분**으로 숨는다. Si-흑연 음극 자리에 흑연 곡선을 빌린 셈이라(`[해석]` — 이 편은 Si 언급 0)
+   이 페이지의 `γ_Si` 몫 모양이 경우 1 에서는 **양극 곡선으로 넘어가고**, 형상 고정(경우 2 · 우리)에서는 창으로 흡수된다
+   — `γ_Si ↓` ↔ `α_an ↓` 같은 서명의 다른 판.
+3. **형상에 준 자유도만큼 창의 OCV 정보가 줄어든다** — 형상 고정(경우 2): OCV 가 창의 두 조합을 정한다
+   ([[np-lip-ocv-reparametrization]]) · `γ_Si` 자유(처방 ③): 한 매개변수만큼 연다(`γ_Si ↔ α_an` 위험 — 저자 미검사) ·
+   한쪽 형상 완전 자유(경우 1): 0 — [[halfcell-window-parametrization-lineage]] 여덟 번째 축.
+
+⚠ 그림 2 의 EMF 가 같은 편 그림 3 의 Cell 2 EMF 와 SOC 0.2–1 에서 21–59 mV 다르다(측정법 미인쇄) — 위 잔차의 기준선 자체가
+하나가 아니다. 그리고 이 편의 경우 1 권고("the modeled EMF coincides exactly with the measured EMF (by definition)")는
+출력 기준이다 — 창 · 전극 배분의 정확성을 말하지 않는다.
 
 ## 관련
 - [[fitting-degeneracy]] — 같은 증상(적합도 불변, 파라미터 이동)의 다른 원인

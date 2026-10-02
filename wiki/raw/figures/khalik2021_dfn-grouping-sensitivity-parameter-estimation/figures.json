@@ -1,0 +1,395 @@
+{
+ "slug": "khalik2021_dfn-grouping-sensitivity-parameter-estimation",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-02",
+ "sources": [
+  "6a611bdd-55._Parameter_estimation_of_the_Doyle_Fuller_Newman_model_for_Lithium-ion_batteries_by_parameter_normalization_grouping_and_sensitivity_analysis.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. DFN modeling approach for a Li-ion cell, where the depicted cell is being charged.",
+   "rotated_deg": 0,
+   "bbox": [
+    300.6,
+    49.7,
+    563.7,
+    175.2
+   ],
+   "w": 1097,
+   "h": 523,
+   "dpi": 300,
+   "src": "6a611bdd-55._Parameter_estimation_of_the_Doyle_Fuller_Newman_model_for_Lithium-ion_batteries_by_parameter_normalization_grouping_and_sensitivity_analysis.pdf",
+   "blank": 0.425,
+   "note": "봤다. DFN 모식(내장 래스터 860×366 · p. 2) — 음극 · 분리막 · 양극 세 영역 · 입자 반경 R_s · δ_n · δ_p · x = 0 … L · 충전 중 Li⁺ 이동 화살표. 라벨 · 내용 온전 · 과대 0 · 캡션 필드 깨끗."
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Illustration of the correction of the calculated equilibrium potentials. Here, the measured equilibrium potentials are taken from [24], and the assumed negative electrode equilibrium potential curve is taken from [23].",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.8,
+    294.7,
+    174.7
+   ],
+   "w": 1097,
+   "h": 522,
+   "dpi": 300,
+   "src": "6a611bdd-55._Parameter_estimation_of_the_Doyle_Fuller_Newman_model_for_Lithium-ion_batteries_by_parameter_normalization_grouping_and_sensitivity_analysis.pdf",
+   "blank": 0.935,
+   "note": "봤다(벡터 경로 판독 — 곡선 여섯). x = 셀 SOC 0–1 · 왼축 U_n 0–1.5 V · 오른축 U_p 3.4–4.4 V · 범례 Measured U_n([24]) · Assumed U_n([23]) · Corrected U_n · Measured U_p · Calculated U_p · Corrected U_p. `[도표·벡터]` Calculated U_p 최솟값 SOC 0.0994 · 3.622 V(본문 '≈10 % 에서 오름') · 0–10 % 직선 기울기 0.545 V/SOC(규칙 '10–40 % 평균 기울기' 0.564) · Calculated − Measured U_p ≈ Assumed − Measured U_n(±0.01 V) — SOC 0.1–1 에서 +6 … +54 mV(평균 +26) · (U_p − U_n) Calculated ≡ Corrected 전 구간 · [24] 전극 쌍 − 이 그림의 EMF = −9.5 … +13.5 mV(SOC 0.03–1). 라벨 · 내용 온전 · 캡션 필드 깨끗."
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Experimental data from Cell 1 and Cell 2 used for model parameterization.",
+   "rotated_deg": 0,
+   "bbox": [
+    33.4,
+    49.8,
+    293.2,
+    403.8
+   ],
+   "w": 1083,
+   "h": 1476,
+   "dpi": 300,
+   "src": "6a611bdd-55._Parameter_estimation_of_the_Doyle_Fuller_Newman_model_for_Lithium-ion_batteries_by_parameter_normalization_grouping_and_sensitivity_analysis.pdf",
+   "blank": 0.861,
+   "note": "봤다(벡터 경로 판독). EMF(Cell 1 검정 · Cell 2 빨강 · SoC 0–1) + Cell 1 data 1(추정 · 0–56.7 분) · data 2(검증 · 0–150 분) · data 3(검증 · 0–158.3 분) · Cell 2 data(추정/검증 · 0–28.3 분 = 1,700 s) 전류 · 전압. `[재현·벡터]` 순 방전 7.81 · 7.75 · 7.38 · 0.507 Ah · 첨두 −24.6 / −13.2 / −21.0 / −5.8 A · 시작 전압 4.112 · 4.133 · 4.138 · 4.190 V. ⚠ Cell 2 EMF(이 그림)는 그림 2 의 EMF(U_p − U_n)보다 SOC 0.2–1 에서 21–59 mV · ≤0.1 에서 113–313 mV 낮다(본문 '그림 3 의 EMF 로 계산' 과 불일치 — digest D)."
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Normalized magnitude of sensitivity for Cell 1 and Cell 2, where the parameters are ranked by decreasing magnitude of sensitivity.",
+   "rotated_deg": 0,
+   "bbox": [
+    60.8,
+    49.8,
+    558.4,
+    181.3
+   ],
+   "w": 2074,
+   "h": 549,
+   "dpi": 300,
+   "src": "6a611bdd-55._Parameter_estimation_of_the_Doyle_Fuller_Newman_model_for_Lithium-ion_batteries_by_parameter_normalization_grouping_and_sensitivity_analysis.pdf",
+   "blank": 0.937,
+   "note": "봤다. ⚠ 왼쪽 잘림 — 벡터 그림은 x 41.8 pt 부터인데 자동 bbox 가 60.8 pt 에서 시작해 y 축 이름 'Normalized magnitude [-]' 과 로그 눈금 10⁰ · 10⁻² · 10⁻⁴ · 10⁻⁶ 의 '10' 이 잘림 → 수동 fig_4_manual_p7.png(자동 파일 그대로 둠). 순위 22 개(Cell 1 · Cell 2) — 값은 수동 판 note."
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. RMSE between the measured data and simulated data for (a) a varying number of estimated parameters used in the estimation procedure and (b) a varying data length used in the estimation procedure, where for Cell 1, the percentage data used from Data 1 has been varied.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    528.6,
+    563.7,
+    719.3
+   ],
+   "w": 2218,
+   "h": 795,
+   "dpi": 300,
+   "src": "6a611bdd-55._Parameter_estimation_of_the_Doyle_Fuller_Newman_model_for_Lithium-ion_batteries_by_parameter_normalization_grouping_and_sensitivity_analysis.pdf",
+   "blank": 0.936,
+   "note": "봤다(벡터 경로 판독). (a) RMSE vs 추정 매개변수 수 1–22: Cell 1 Data 1 15.69 → 3.50(12) → 3.54(22) mV · Data 2 10.15 → 3.68 → 3.59 · Data 3 17.94 → 4.22 → 3.88 · Cell 2 추정 25.49 → 4.24 → 3.57 · 검증 26.19 → 4.44 → 3.78(14 개 4.16 ↔ 15 개 4.60). (b) RMSE vs 추정 자료 %(10–100): Cell 1 Data 1 5.71 · 5.25 · 4.22 · 4.76 · 5.16 · 3.68 · 3.50 · 3.50 · 3.42 · 3.18 · Data 2 3.58 · 3.99 · 3.52 · 3.58 · 3.84 · 3.38 · 3.39 · 3.42 · 3.42 · 3.84 · Data 3 4.20 · 4.01 · 3.83 · 3.84 · 3.90 · 3.77 · 3.95 · 4.03 · 4.06 · 4.84 · Cell 2 14.2(10) · 15.8 · 24.4(30) · 23.3 · 19.6 · 15.7(55) · 10.1 · 5.0(65) · 4.05(70) … 3.89(100). 라벨 온전 · 캡션 필드 깨끗(275 자)."
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 8,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Error between the measured voltage 𝑉meas and the simulated voltage 𝑉sim for both cells and their available data. For Cell 2, the error from using a DFN model with the parameters from [24] is also shown. The parameters used for simulation for Cell 1 have been obtained from using 60% of Data 1 for simulation with 14 estimated parameters and the parameters used for simulation for Cell 2 have been obtained from using 30% and 65% of the data for simulation with 14 estimated parameters.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.8,
+    294.7,
+    223.6
+   ],
+   "w": 1097,
+   "h": 725,
+   "dpi": 300,
+   "src": "6a611bdd-55._Parameter_estimation_of_the_Doyle_Fuller_Newman_model_for_Lithium-ion_batteries_by_parameter_normalization_grouping_and_sensitivity_analysis.pdf",
+   "blank": 0.873,
+   "note": "봤다(벡터 경로 판독). 위: Cell 1 V_meas − V_sim vs SoC(Data 1 0.214–0.955 · Data 2 0.241–0.973 · Data 3 0.266–0.976) — RMS 3.69 · 3.42 · 3.71 mV(그림 5b 60 % 점 3.68 · 3.38 · 3.77 과 같음 → 그림 5b 도 14 개 추정) · Data 1 의 SoC 0.21–0.24 에 ±21 mV. 아래: Cell 2 vs 시간 0–1,700 s — 30 % 추정 RMS 24.4 mV(0–510 s 2.3 · 1,105–1,700 s 38.9 · 최대 +68.9) · 65 % 5.0 mV(그림 5b 와 같음) · 'Parameters from Sturm et al (2019)' RMS 40.4 · 평균 −37.4 · 최대 +0.2 mV(전 구간 음). ⚠ 캡션 '60% of Data 1 for simulation' ↔ 본문 90 % 추정(D) · 'for simulation' 은 추정의 오기로 읽힘. 캡션 필드 깨끗(493 자)."
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 8,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Boxplots showing the variability and accuracy of the parameter estimation routine for Cell 1 and the synthetic cell. The parameter identifiers relate to the ranking shown in Fig. 4.",
+   "rotated_deg": 0,
+   "bbox": [
+    300.6,
+    49.8,
+    563.7,
+    375.9
+   ],
+   "w": 1097,
+   "h": 1360,
+   "dpi": 300,
+   "src": "6a611bdd-55._Parameter_estimation_of_the_Doyle_Fuller_Newman_model_for_Lithium-ion_batteries_by_parameter_normalization_grouping_and_sensitivity_analysis.pdf",
+   "blank": 0.873,
+   "note": "봤다(벡터 경로 판독 — 상자 132 · 중앙값 선 · 참값 표지 88). 패널 여섯: Cell 1 · Cell 1 increased range(β −0.3 … 1.3) · Synthetic cell · Nonlinearity in D_s,pos · Error in the EMF · Both modifications(⚠ 본문 · 표 4 에 따로 없음 — D). `[도표·벡터]` Cell 1 중앙값이 범위 끝(±0.02 안) 10/22(R̂f,n · s100,n · D̂s,n · ε̂e,n · s100,p · k̂0,p · t₊ · s0,n · R̂cc · ε̂e,sep) · 합성 참값이 IQR 밖 14/22(첫 10 중 6) · 수정 셋 16–17/22 · s100,p 중앙값 β 0.73(합성) → 0.03 · 0.00 · 0.00(EMF · 비선형 · 둘 다) ↔ 참값 0.90(s 0.22 하한 ↔ 0.418). 라벨 온전 · 캡션 필드 깨끗."
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 9,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Upper and lower bounds of the resulting estimated states obtained using the estimated parameter sets.",
+   "rotated_deg": 0,
+   "bbox": [
+    58.9,
+    49.9,
+    557.6,
+    274.1
+   ],
+   "w": 2079,
+   "h": 934,
+   "dpi": 300,
+   "src": "6a611bdd-55._Parameter_estimation_of_the_Doyle_Fuller_Newman_model_for_Lithium-ion_batteries_by_parameter_normalization_grouping_and_sensitivity_analysis.pdf",
+   "blank": 0.865,
+   "note": "봤다. ⚠ 왼쪽 잘림 — 맨 왼 패널 y 축 이름 's_n(0) [−]' 과 눈금 앞자리가 잘림(벡터 그림 x 41.0 pt ↔ 자동 bbox 58.9 pt) → 수동 fig_8_manual_p9.png(자동 파일 그대로 둠). 값은 수동 판 note."
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 3,
+   "file": "tab_1.png",
+   "caption": "Table 1 Model equations of the original and reparameterized DFN model.",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    31.3,
+    563.3,
+    750.1
+   ],
+   "w": 2213,
+   "h": 2996,
+   "dpi": 300,
+   "src": "6a611bdd-55._Parameter_estimation_of_the_Doyle_Fuller_Newman_model_for_Lithium-ion_batteries_by_parameter_normalization_grouping_and_sensitivity_analysis.pdf",
+   "blank": 0.911,
+   "note": "봤다. ⚠ 쪽 전체 크롭(p. 3 · bbox [32.6, 31.3, 563.3, 750.1]) — 표 1 · 표 2 · 2.1 절 끝 · 2.2 절 · 식 (16) · (17) 을 다 담음 · tab_2.png 와 바이트 동일(md5 ad1c19ee…) → 수동 tab_1_manual_p3.png · tab_2_manual_p3.png(자동 파일 그대로 둠)."
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 3,
+   "file": "tab_2.png",
+   "caption": "Table 2 List of symbols used in the original DFN model equations. Symbol Description Unit Latin 𝐴 Active electrode area [m2] 𝑐𝑒 Electrolyte-phase Li-ion concentration [mol∕m3] 𝑐𝑒,0 Initial electrolyte concentrationa [mol∕m3] 𝑐𝑠 Solid-phase Li-ion concentration [mol∕m3] 𝑐𝑠,𝑒 Particle surface concentration [mol∕m3] 𝑐max 𝑠,𝑛, 𝑐max 𝑠,𝑝 Maximum solid-phase concentrationa [mol∕m3] 𝐷𝑒 Li-ion diffusion coefficient in electrolytea [m2] 𝐷𝑠,𝑛, 𝐷𝑠,𝑝 Solid-phase Li-ion diffusion coefficienta [m∕s] 𝐹 Faraday’s constant [C∕mol] 𝑖0 Exchange current density [A∕m2] 𝑖app Applied current [A] 𝑗𝑛 Pore wall flux of Li-ions [mol∕m2∕s] 𝑘0,𝑛, 𝑘0,𝑝 Kinetic constanta b",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    31.3,
+    563.3,
+    750.1
+   ],
+   "w": 2213,
+   "h": 2996,
+   "dpi": 300,
+   "src": "6a611bdd-55._Parameter_estimation_of_the_Doyle_Fuller_Newman_model_for_Lithium-ion_batteries_by_parameter_normalization_grouping_and_sensitivity_analysis.pdf",
+   "blank": 0.911,
+   "note": "봤다. ⚠ tab_1.png 와 바이트 동일한 쪽 전체 크롭 · 캡션 필드에 표 2 본문(기호 · 단위 목록)이 섞임(649 자) → 수동 tab_2_manual_p3.png."
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 4,
+   "file": "tab_3.png",
+   "caption": "Table 3 Parameters of the reparameterized DFN model. Parameter Grouping Range Unit 𝑄 𝑄 N/A [C] 𝑠𝑛,0% 𝑠𝑛,0% [0.002, 0.04] [–] 𝑠𝑝,0% 𝑠𝑝,0% [0.86, 0.97] [–] 𝑠𝑛,100% 𝑠𝑛,100% [0.75, 0.89] [–] 𝑠𝑝,100% 𝑠𝑝,100% [0.22, 0.44] [–]̂ 𝐷𝑠,𝑛 𝐷𝑠,𝑛∕𝑅2",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    31.3,
+    563.3,
+    747.9
+   ],
+   "w": 2213,
+   "h": 2987,
+   "dpi": 300,
+   "src": "6a611bdd-55._Parameter_estimation_of_the_Doyle_Fuller_Newman_model_for_Lithium-ion_batteries_by_parameter_normalization_grouping_and_sensitivity_analysis.pdf",
+   "blank": 0.872,
+   "note": "봤다. ⚠ 쪽 전체 크롭(p. 4) — 표 3 + 2.2 절 끝 · 3 · 3.1 절 본문 · 캡션 필드에 표 본문 섞임(233 자) → 수동 tab_3_manual_p4.png."
+  },
+  {
+   "key": "t4",
+   "kind": "table",
+   "label": "4",
+   "page": 9,
+   "file": "tab_4.png",
+   "caption": "Table 4 Median of the output RMS error (RMSE) and the median deviation from the true parameters of the obtained estimated parameters from the various synthetic models. The notation 𝛽est,𝑁indicates that first 𝑁parameters have been used for the calculation of the RMSE.",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    31.3,
+    563.3,
+    747.2
+   ],
+   "w": 2213,
+   "h": 2984,
+   "dpi": 300,
+   "src": "6a611bdd-55._Parameter_estimation_of_the_Doyle_Fuller_Newman_model_for_Lithium-ion_batteries_by_parameter_normalization_grouping_and_sensitivity_analysis.pdf",
+   "blank": 0.866,
+   "note": "봤다. ⚠ 쪽 전체 크롭(p. 9) — 그림 8 · 4.4 절 본문 · 표 4 · 4.5 절 머리 → 수동 tab_4_manual_p9.png."
+  },
+  {
+   "key": "f4m",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4_manual_p7.png",
+   "caption": "Fig. 4. Normalized magnitude of sensitivity for Cell 1 and Cell 2, where the parameters are ranked by decreasing magnitude of sensitivity.",
+   "rotated_deg": 0,
+   "bbox": [
+    38.0,
+    50.0,
+    560.0,
+    182.0
+   ],
+   "w": 2176,
+   "h": 551,
+   "dpi": 300,
+   "src": "6a611bdd-55._Parameter_estimation_of_the_Doyle_Fuller_Newman_model_for_Lithium-ion_batteries_by_parameter_normalization_grouping_and_sensitivity_analysis.pdf",
+   "blank": null,
+   "manual": true,
+   "note": "수동 — 본문 PDF p. 7 렌더 300 dpi — 그림 4 전폭(y 축 이름 'Normalized magnitude [-]' · 로그 눈금 10⁰ … 10⁻⁶ 온전) · 캡션 제외. 봤다(벡터 판독 — 줄기 끝 = 값). log₁₀ 정규화 크기 Cell 1: p̂n 0 · p̂p −0.86 · R̂f,n −0.97 · D̂e −1.50 · D̂s,p −1.60 · s100,n −1.69 · ε̂e,p −2.06 · D̂s,n −2.37 · k̂0,n −2.43 · ε̂e,n −2.53 · κ̂ −2.70 · s100,p −2.98 · k̂0,p −3.37 · t₊ −3.44 · s0,n −3.64 · s0,p −3.77 · σ̂p −3.79 · R̂cc −4.00 · α −4.08 · p̂sep −4.17 · ε̂e,sep −4.29 · σ̂n −6.20 / Cell 2: p̂n 0 · p̂p −0.81 · D̂e −1.03 · D̂s,p −1.06 · ε̂e,p −1.61 · s100,n −1.65 · R̂f,n −1.91 · ε̂e,n −2.18 · D̂s,n −2.40 · κ̂ −2.58 · s100,p −2.86 · k̂0,n −3.00 · t₊ −3.22 · k̂0,p −3.31 · σ̂p −3.48 · p̂sep −3.67 · ε̂e,sep −3.87 · R̂cc −3.99 · s0,p −4.04 · α −4.11 · s0,n −4.40 · σ̂n −6.46. `[재현]` 피벗 QR 의 |r₁₁|/|r_kk| 는 앞 k 열 조건수의 하한 — 12 개 ≥10^2.98 · 10^3.00 · 22 개 ≥10^6.20 · 10^6.46."
+  },
+  {
+   "key": "f8m",
+   "kind": "figure",
+   "label": "8",
+   "page": 9,
+   "file": "fig_8_manual_p9.png",
+   "caption": "Fig. 8. Upper and lower bounds of the resulting estimated states obtained using the estimated parameter sets.",
+   "rotated_deg": 0,
+   "bbox": [
+    37.0,
+    50.0,
+    558.0,
+    276.0
+   ],
+   "w": 2171,
+   "h": 942,
+   "dpi": 300,
+   "src": "6a611bdd-55._Parameter_estimation_of_the_Doyle_Fuller_Newman_model_for_Lithium-ion_batteries_by_parameter_normalization_grouping_and_sensitivity_analysis.pdf",
+   "blank": null,
+   "manual": true,
+   "note": "수동 — 본문 PDF p. 9 렌더 300 dpi — 그림 8 전폭(맨 왼 패널 's_n(0) [−]' 눈금 온전) · 캡션 제외. 봤다(벡터 판독). 위 줄 Synthetic cell · 아래 줄 Synthetic cell with both modifications · 패널 s_n(0) · s_p(L) · φs(0) − φe(0) · c_e/c_e,0 · 시간 축 0–76.7 분(⚠ 맨 왼 패널만 'Time [s]' · Data 1 은 56.7 분 — D). `[도표·벡터]` 아래 줄 s_p(L) 띠 t = 0 [≤0.249(축 잘림), 0.335] ↔ 참값 0.440 · 끝 [0.721, 0.798] ↔ 0.806 · c_e/c_e,0(x = L) 띠 최저 ≤0.54(축 잘림) ↔ 참값 최저 0.84 · 위 줄은 참값이 띠 안."
+  },
+  {
+   "key": "t1m",
+   "kind": "table",
+   "label": "1",
+   "page": 3,
+   "file": "tab_1_manual_p3.png",
+   "caption": "Table 1. Model equations of the original and reparameterized DFN model.",
+   "rotated_deg": 0,
+   "bbox": [
+    33.0,
+    52.0,
+    562.0,
+    308.0
+   ],
+   "w": 2205,
+   "h": 1068,
+   "dpi": 300,
+   "src": "6a611bdd-55._Parameter_estimation_of_the_Doyle_Fuller_Newman_model_for_Lithium-ion_batteries_by_parameter_normalization_grouping_and_sensitivity_analysis.pdf",
+   "blank": null,
+   "manual": true,
+   "note": "수동 — 본문 PDF p. 3 렌더 300 dpi — 표 1(원 식 1–7 ↔ 재매개화 식 8–14) 단독. 봤다. 식 (12a) · (12b) 가 α_c 자리에 1 − α_a 를 씀(본문 언급 0 — D) · (9a) 는 D̂e p̂ · (11a) 는 κ̂ p̂ 곱으로만 씀(`[재현·대수]` 정확한 척도 대칭 — digest §(a))."
+  },
+  {
+   "key": "t2m",
+   "kind": "table",
+   "label": "2",
+   "page": 3,
+   "file": "tab_2_manual_p3.png",
+   "caption": "Table 2. List of symbols used in the original DFN model equations.",
+   "rotated_deg": 0,
+   "bbox": [
+    33.0,
+    316.0,
+    292.0,
+    719.0
+   ],
+   "w": 1080,
+   "h": 1680,
+   "dpi": 300,
+   "src": "6a611bdd-55._Parameter_estimation_of_the_Doyle_Fuller_Newman_model_for_Lithium-ion_batteries_by_parameter_normalization_grouping_and_sensitivity_analysis.pdf",
+   "blank": null,
+   "manual": true,
+   "note": "수동 — 본문 PDF p. 3 렌더 300 dpi — 표 2(기호 목록) 단독. 봤다. 'a' 표시 34 개(A · Q 미표시) ↔ 본문 '35'(A 를 셈 — `[재현]`) · D_e 단위 '[m²]' · D_s '[m/s]'(둘 다 m²/s 여야 — D) · 각주 b k0 단위 [C/s·(m/mol)^(1+3α_c)]."
+  },
+  {
+   "key": "t3m",
+   "kind": "table",
+   "label": "3",
+   "page": 4,
+   "file": "tab_3_manual_p4.png",
+   "caption": "Table 3. Parameters of the reparameterized DFN model.",
+   "rotated_deg": 0,
+   "bbox": [
+    33.0,
+    52.0,
+    292.0,
+    318.0
+   ],
+   "w": 1080,
+   "h": 1109,
+   "dpi": 300,
+   "src": "6a611bdd-55._Parameter_estimation_of_the_Doyle_Fuller_Newman_model_for_Lithium-ion_batteries_by_parameter_normalization_grouping_and_sensitivity_analysis.pdf",
+   "blank": null,
+   "manual": true,
+   "note": "수동 — 본문 PDF p. 4 렌더 300 dpi — 표 3(24 매개변수 · 묶음 · 범위 · 단위) 단독. 봤다. 범위 비 > 10 → 로그 14 · 선형 8 · [0, 0] 1(R̂f,p) + Q 측정 `[재현]` · p̂ 단위 '[–]' ↔ ε^p/δ(m⁻¹ — D) · 'Q' 배 범위 표지 a."
+  },
+  {
+   "key": "t4m",
+   "kind": "table",
+   "label": "4",
+   "page": 9,
+   "file": "tab_4_manual_p9.png",
+   "caption": "Table 4. Median of the output RMS error (RMSE) and the median deviation from the true parameters of the obtained estimated parameters from the various synthetic models.",
+   "rotated_deg": 0,
+   "bbox": [
+    33.0,
+    644.0,
+    292.0,
+    742.0
+   ],
+   "w": 1080,
+   "h": 409,
+   "dpi": 300,
+   "src": "6a611bdd-55._Parameter_estimation_of_the_Doyle_Fuller_Newman_model_for_Lithium-ion_batteries_by_parameter_normalization_grouping_and_sensitivity_analysis.pdf",
+   "blank": null,
+   "manual": true,
+   "note": "수동 — 본문 PDF p. 9 렌더 300 dpi — 표 4 단독. 봤다. 중앙값 RMSE V_est − V_true 0.13 · 1.19 · 1.17 · 36.2(단위 인쇄 0 — 본문 '1.2 mV') · β 22 개 0.30 · 0.43 · 0.44 · 0.43 · 첫 9 개 0.14 · 0.22 · 0.34 · 0.38. `[재현]` 무작위 β(균등) ↔ 그림 7 참값 기대 RMS 0.427 · 첫 9 개 0.36 — 표 'Random parameters' 0.43 · 0.38 과 맞음."
+  }
+ ]
+}

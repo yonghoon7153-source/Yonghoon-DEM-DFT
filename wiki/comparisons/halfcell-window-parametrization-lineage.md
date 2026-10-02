@@ -5,7 +5,7 @@ created: 2026-09-03
 updated: 2026-10-02
 type: comparison
 tags: [battery, degradation, research]
-sources: [raw/papers/schmitt2022_sic-ocp-shape-change-degradation-modes.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/dubarry2012_synthesize-degradation-modes.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/mohtat2019_electrode-soh-estimability-expansion.md, raw/papers/lee2020_estimation-error-bound-limited-data-window.md, raw/papers/wang2025_aging-induced-rate-independent-li-plating.md, raw/papers/cui2026_direct-diagnosis-lfp-degradation-modes.md, raw/transcripts/2026-09-14-bms-handoff-width-and-wiki-candidates.md, raw/papers/sun2025_dl-eis-degradation-mode-diagnostics.md]
+sources: [raw/papers/khalik2021_dfn-grouping-sensitivity-parameter-estimation.md, raw/papers/schmitt2022_sic-ocp-shape-change-degradation-modes.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/dubarry2012_synthesize-degradation-modes.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/mohtat2019_electrode-soh-estimability-expansion.md, raw/papers/lee2020_estimation-error-bound-limited-data-window.md, raw/papers/wang2025_aging-induced-rate-independent-li-plating.md, raw/papers/cui2026_direct-diagnosis-lfp-degradation-modes.md, raw/transcripts/2026-09-14-bms-handoff-width-and-wiki-candidates.md, raw/papers/sun2025_dl-eis-degradation-mode-diagnostics.md]
 confidence: high
 explored: false
 verificationStatus: unverified
@@ -46,6 +46,7 @@ their estimation" 의 구체적 목록이다.
 | **Cui 2026 (2026-09-11 추가)** | `X1 = C_APE, X2 = C_ANE, X3 = LAM_liNE − LAM_dePE + LLI, X4`(방전 종료 음극 리튬화도) | **4** | **0** — 단 **재조합**: 7 물리량 → 4 (`[인쇄]` "To obtain unique parameter results, the variables in Eq. (1) need to be recombined") | **줄였다가 다시 늘린다** — 사전믿음 등식(입자 파괴 확률 균일 → 격리분 리튬화도 = 순환 구간 중점, 식 9)으로 4 → 7 (li/de 분할) | full-cell C/25 **방전** 의사-OCV (LFP/graphite 20 Ah) + 재료 라벨(코인셀·XRD) |
 | **Sun (Xiong) 2025 (2026-10-02 추가)** | `p0, n0, Q_PE, Q_NE` **+ 상수 `R`** | **5** | **0** | 창 4 는 여분 없음 — 다섯째는 창이 아니라 **동역학 한 칸**(전 SOC · 전 노화에서 `IR` 일정). PSO(설정 미인쇄), 검증은 맞춤 RMSE 7.52 · 6.55 mV 뿐. 출력이 그대로 DNN 의 "ground truth" | **1–2 C 사이클 CC 충전 곡선**(pOCV 아님), 창 = 충전 시작 전압 → 4.2 V 컷오프 |
 | [[fused-lasso-feature-design-framework]] SI S11 | `β_c, β_a, Q_rem, V_shift` | **4** | 0 | 여분 없음 | C/20 RPT 곡선 |
+| **Khalik 2021 (2026-10-02 추가 · ⚠ 액체 DFN)** | `s_n,0%, s_n,100%, s_p,0%, s_p,100%` (+ Q 측정 · 전극 용량 = `3Q/Δs`) | **4** | **0** | 경우 1(셀 EMF 만): 음극 곡선(흑연)을 빌리고 양극을 `U_EMF + U_n` 으로 **정의** → 창 넷이 OCV 채널에서 **정의상 사라진다**(`[인쇄]` "the same EMF-SOC relation can be reached with any choice between 0 and 1") — 교환 전류의 SOC 모양(식 12b)으로만 추정 · 경우 2(분해 OCP): 측정 쌍을 셀 EMF 에 맞추는 창(방법 미인쇄 "minimized in some way") = 우리와 같은 연산 | 동적 전류 · 전압(DFN 적합) + 셀 EMF(측정법 미인쇄) |
 | **우리 (`degradation-degeneracy`)** | `α_PE, β_PE, α_NE, β_NE` | **4** | **0** | 여분 없음 (전단사) | full-cell 전압 곡선 (+옵션 dQ/dV) |
 
 ## ★ 여분을 죽이는 방법이 세 가지뿐이다
@@ -195,6 +196,32 @@ C/20 · C/30)을 쓴다.
 
 **가장 값싼 판정**: 봉인된 반쪽전지 OCP 로 식 (1)–(2) 를 1 C · 2 C 에서 계산해 5×5 `JᵀJ` 의 최소 특이벡터에 `R` 성분이
 얼마나 실리는지 본다 (digest §17.4 실험 1, 미실행).
+
+## ★ 여덟 번째 축 — **형상 가정이 OCV 채널의 창 정보량을 정한다** (2026-10-02, Khalik 2021 · ⚠ 액체 DFN 도구)
+
+Khalik, Donkers, Sturm, Bergveld 2021 (`raw/papers/khalik2021_dfn-grouping-sensitivity-parameter-estimation.md` §(c)) 은
+창 좌표 넷을 DFN 매개변수 추정의 식별 집합 안에 두고, 평형 모형을 두 가지로 짓는다 `[인쇄]`:
+
+| | 경우 1 (분해 불가 — 셀 EMF 만) | 경우 2 (분해 가능) |
+|---|---|---|
+| 음극 곡선 | 문헌에서 빌림(흑연) | 분해 전극 측정 |
+| 양극 곡선 | **정의** `U_p = U_EMF + U_n` | 분해 전극 측정 |
+| 창 넷의 OCV 정보 | **0** — 어느 창이든 EMF 정확 일치 | 측정 쌍 ↔ 셀 EMF 잔차를 줄이는 창(방법 미인쇄) |
+| 대가 (`[재현·벡터]` 그림 2) | 빌린 곡선의 형상 오차가 다른 전극 곡선으로 1:1 — `U_p` 에 +6 … +54 mV | 쌍 ↔ 셀 EMF 잔차 −9.5 … +13.5 mV |
+
+`[해석]` 이 표의 다른 행은 전부 두 곡선의 **형상을 고정**하고 창으로 맞춘다 — 경우 2 가 그것이고 우리 α·β 도 그것이다.
+경우 1 은 **한쪽 형상을 완전히 자유로 둔 극단**이다. [[np-lip-ocv-reparametrization]] 의 2 자유도 정리(형상 고정 → SOC
+정규화 OCV 모양이 두 비를 정한다)와 짝지으면, 형상을 고정하면 OCV 가 창의 두 조합을 정하고 한쪽 형상을 풀면 0 조합을
+정한다. 다섯 번째 축(Schmitt `γ_Si`)은 그 사이 — 형상을 한 매개변수만큼 연다. ⇒ **형상에 준 자유도만큼 OCV 채널의
+창 정보가 줄어든다**는 방향이 같은 구조다(`γ_Si ↓` ↔ `α_an ↓` 같은 서명 — [[halfcell-ocp-shape-invariance]]).
+
+창을 OCV 에서 못 얻은 대가가 이 편 그림에 있다(`[도표·벡터]`): 0 % 끝 둘(`s0,n` · `s0,p`)은 감도 순위 15–21 위라
+추정에서 빠져 범위 가운데(β 0.5)에 고정되고, 100 % 끝 둘은 6 · 11–12 위로 추정된다 · 실셀 Cell 1(경우 1)의 22 개 다중
+시작에서 창 넷 중 셋의 중앙값이 사전 범위 끝 · 합성 시험(같은 모형 · 무잡음)에 1.2 mV 모형 오차를 넣으면 `s_p,100%`
+중앙값이 참 0.418 → 범위 하한 0.22. 이 표의 관측 열로 옮기면 — **창이 OCV 가 아니라 동적 전류 · 전압의 동역학 경로로만
+보이는 첫 행**이다.
+
+⚠ 셀 둘 · 회차 하나 · EMF 측정법 미인쇄 · 경우 2 의 창 맞춤 방법 미인쇄([23, 24, 26] 에 미룸) · 열화 0(신품). 우리 쪽 수치는 옮기지 않는다.
 
 ## ★ Marongiu 식 (2)–(5) 의 null 을 닫힌 형태로 풀었다
 
@@ -378,3 +405,4 @@ dV/dQ 항에 **7~15 % 계통 오차**다. 서브의 포팅도 모델을 고치�
 - [[rate-independent-li-plating-signature]] — 여섯째 축의 원전 서명과 모드 회계
 - [[ic-peak-area-direct-mode-readout-lfp]] — 사전믿음 등식과 LFP 의 `(X1, X3)` 축퇴
 - [[piml-physics-injection-points]] — 일곱째 축의 원전(Sun (Xiong) 2025)에서 이 맞춤의 출력이 ML 정답(⑥)이 된다
+- [[halfcell-ocp-shape-invariance]] — 여덟째 축(Khalik 2021 경우 1 ↔ 2)이 기대는 형상 가정과 그 잔차
