@@ -2,7 +2,7 @@
 
 > 내용 목록. 모든 위키 페이지를 종류별로 한 줄 요약과 함께 싣는다. 논문 digest(`raw/papers/`)는
 > 컴파일 페이지가 아니므로 여기 세지 않고 아래 "Raw 논문" 절에 참고로만 적는다.
-> 마지막 갱신: 2026-10-06 | 전체 페이지: 18 | Total pages: 18
+> 마지막 갱신: 2026-10-02 | 전체 페이지: 19 | Total pages: 19
 
 ## Entities (satellite 프로젝트)
 
@@ -27,6 +27,7 @@
 - [[new-project-kickoff]] — 새 실험 프로젝트를 satellite 로 등록하는 킥오프 프롬프트 (repo-root 상대 경로판).
 - [[paper-ingest-mode]] — 논문 수치·정의를 verbatim atom 으로 분해하는 opt-in 모드 (기본은 /paper 전문 digest).
 - [[seminar-prep-from-digest]] — digest 하나를 논문 세미나 발표로 옮기는 표준 절차 (/seminar).
+- [[reference-cell-experiment-plan]] — **실행 계획 한 장.** digest 23편이 정한 순서(0 분모 확정 → 1 압력·온도 2×2 → 2 DC 분극 세 칸 → 3 컷오프 상·하한 → 4 집전체 n=3)와 각 단계의 판정 기준 · 기록 체크리스트 · 숫자 표기 규율 7개.
 - [[wsl-li2s-setup]] — WSL(Ubuntu) 에서 `li2s` 한 단어로 대시보드를 열기까지, PDF 넣기, /chat 키.
 
 ## Questions (열린 질문)

@@ -143,6 +143,7 @@ evidenceScope: multi-source-primary
 - 우리가 이 프로토콜을 **아직 한 번도 돌리지 않았다** — 이 페이지는 처방이고 측정 기록이 아니다.
 
 ## 관련
+- [[reference-cell-experiment-plan]] — 이 프로토콜이 전체 순서에서 어디에 놓이는가 (2단계)
 - [[reference-cell-500-600-mahg]]
 - [[interface-quality-not-bulk-conductivity]]
 - [[composite-cathode-mixing-routes]]

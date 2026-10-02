@@ -189,6 +189,7 @@ T-peel 1.13 ± 0.12 / 3.80 ± 0.22 / **5.02 ± 0.14** gf mm⁻¹, 거칠기 Sq 8
   아직 아무도 성공하지 못했다.** 다음 행동은 **압력-EIS 스윕(복귀 구간 포함)** 이다.
 
 ## 관련
+- [[reference-cell-experiment-plan]] — 아래 설계가 전체 순서에서 어디에 놓이는가 (1단계)
 - [[reference-cell-500-600-mahg]]
 - [[anode-free-li2s-assb]]
 - [[dc-polarization-conductivity-separation]]
