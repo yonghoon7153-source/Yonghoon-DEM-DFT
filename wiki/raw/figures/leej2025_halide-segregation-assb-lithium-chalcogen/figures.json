@@ -1,0 +1,91 @@
+{
+ "slug": "leej2025_halide-segregation-assb-lithium-chalcogen",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-02",
+ "sources": [
+  "757a00b0-3._halide_segregation_to_boost_all_solid_state_lithium_chalcogen_batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Structure analysis of various composite S/LPSCl/C cathodes. (A) HAADF image with elemental mappings and (B) EDS line scan analysis of pristine LPSCl. (C) HAADF image with elemental mappings and (D) EDS line scan analysis of composite S/LPSCl/C cathode prepared with an ultrahigh mixing speed of 2000 rpm for 5 hours. The scale bars in (B) and (D) are the same as in (A) and (C), respectively. (E) Quantification of Cl-­to-­P atomic ratios for pristine Li6PS5Cl, composite S/LPSCl/C cathode with mixing at 2000 rpm for 5 hours, hand-­mixed S/LPSCl/C cathode, and hand-­mixed S/LPSCl/C cathode after heating at 145°C for 3 hours. (F) S-­L2,3 and Cl-­L2,3 edges EELS spectra of selected regions (fig. S11) in the composite S/LPSCl/C cathode with mixing at 2000 rpm for 5 hours. a.u., arbitrary units. (G) In situ SXRD patterns of the hand-­mixed S/LPSCl/C cathode during heating from 40° to 400°",
+   "rotated_deg": 0,
+   "bbox": [
+    31.0,
+    303.1,
+    563.0,
+    648.1
+   ],
+   "w": 2217,
+   "h": 1439,
+   "dpi": 300,
+   "src": "757a00b0-3._halide_segregation_to_boost_all_solid_state_lithium_chalcogen_batteries.pdf",
+   "blank": 0.68
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Cryo-­TEM validation of universal halide segregation. (A) HAADF image and the elemental mapping of composite Se/LPSCl/C cathode prepared with mixing at 2000 rpm for 5 hours. (B) HAADF image and the elemental mappings of composite Se/LPSBr/C cathode prepared with mixing at 2000 rpm for 5 hours. (C) Comparison of Cl-­to-­P and Br-­to-­P atomic ratios in the UHS-­mixed composite Se cathodes, with data obtained from three different regions in each particle, as marked by the boxes in (A) and (B). (D) HAADF-­STEM image (left), an enlarged view of the region marked as iv (top right), and EELS mapping of the same region (bottom right). (E) Li-­K, P-­L2,3, S-­L2,3, and Cl-­L2,3 edges EELS spectra of selected regions (fig. S29) in the composite Se/LPSCl/C cathode with mixing at 2000 rpm for 5 hours. (F) HRTEM image showing Se covered by a layer of nanosized LiCl and carbon. (G) Acquired an",
+   "rotated_deg": 0,
+   "bbox": [
+    31.0,
+    327.8,
+    564.1,
+    640.2
+   ],
+   "w": 2222,
+   "h": 1303,
+   "dpi": 300,
+   "src": "757a00b0-3._halide_segregation_to_boost_all_solid_state_lithium_chalcogen_batteries.pdf",
+   "blank": 0.413
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Electrochemical performance of all-­solid-­state Li-­chalcogen batteries. (A) Cycling performance of the UHS-­mixed composite S/LPSCl/C cathodes with different times. (B) The corresponding discharge-­charge curves of the 5-­hour UHS-­mixed composite S/LPSCl/C cathode. Long-­term cycling performance of the 5-­hour UHS-­mixed composite S/LPSCl/C cathode with an areal S loading of (C) 2 mg cm−2 and (D) 4 mg cm−2 at room temperature. (E) Cycle performance of 5-­hour UHS-­mixed composite chalcogen cathodes at 0.27 (Se), 0.54 (SeS2), and 0.56 (Te) mA cm−2 at room temperature. (F) Cycle performance of various 5-­hour UHS-­mixed composite S cathodes incorporating halogen-­containing and halogen-­free SSEs at room temperature. Science 15 MAY 2025 727",
+   "rotated_deg": 0,
+   "bbox": [
+    31.0,
+    400.0,
+    563.0,
+    667.4
+   ],
+   "w": 2217,
+   "h": 1115,
+   "dpi": 300,
+   "src": "757a00b0-3._halide_segregation_to_boost_all_solid_state_lithium_chalcogen_batteries.pdf",
+   "blank": 0.886
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Postmortem analysis of UHS-­mixed composite chalcogen cathodes. (A) S K-­edge XANES spectra of the 5-­hour UHS-­mixed composite S/LPSCl/C cathode at different discharge and charge states. (B) Normalized two-­dimensional contour plot of in situ Se K-­edge XANES spectra of the 5-­hour UHS-­mixed composite Se/LPSCl/C cathode along with the discharge-­charge profiles and (C) the corresponding derivative curve. (D) HAADF-­STEM image, (E) SAED pattern, (F) HRTEM image, and (G) intensity integration profile from (E) of the 5-­hour UHS-­mixed composite Se/LPSCl/C cathode after the first discharge. (H) HAADF-­STEM image and the elemental mappings of the 5-­hour UHS-­mixed composite Se/LPSCl/C cathode after 100 cycles. (I) Cl-­to-­P atomic ratios, with data from the three different regions in (H) marked by boxes. Science 15 MAY 2025 728",
+   "rotated_deg": 0,
+   "bbox": [
+    31.0,
+    502.6,
+    563.0,
+    639.5
+   ],
+   "w": 2217,
+   "h": 571,
+   "dpi": 300,
+   "src": "757a00b0-3._halide_segregation_to_boost_all_solid_state_lithium_chalcogen_batteries.pdf",
+   "blank": 0.582
+  }
+ ]
+}
