@@ -860,3 +860,33 @@ R2 (2 런, 256/384) → f_AM 측정 (GPU 불요) → R3-v2 (2 런) → corner (3
     ⓔ 로그 끝 `coverage AM_P/AM_S by SE 27.6/28.8 %` = 복셀 인접 측정 (CLAUDE.md *"NEVER report"*) — 기록만.
   - corner 세 칸 = 이 봉인에서 **닫힘** (12-3 네 칸 · 순서 도달 불가).  후속 등록 (격자 · 메모리 상한 · 프레임 예산 · `f = 0` 관문) = 1저자.
   - 열람 이력 추가: 10-02 21:34 watch (FAM 파이썬 0 · GPU 800 MiB) · 21:4x `tail -30 fam_r3v2_fb.log` · JSON 필드 · `batch_r.log` (완주 런 — 열람 허용).
+
+### 12-6. 후속 등록 — real_14 `f = 0` · f_(a) 재실행 (2026-10-02 · kgy · **선행 결과에 근거한 후속 시험** · 1저자 비준 10-02 밤: 예산 규칙 (값은 아래) · f_(b) 재실행 생략 · corner 제외 · *"kgy 것 먼저 끝내고"*)
+
+- **지위**: §12-5 봉인의 재시도가 **아니다** (§12-4 재시도 사유 = 메모리 부족 · 노드 장애뿐 · 여기서는 argv 를 바꾼다).  §12-5-9 의 ⑤ 결과 (29.491 µm · I_b 참) · ④ 끝 두 줄 (28.94 · 28.93 µm · wallP 가 설정점 아래) · ⑤ JSON `am_load_split` 을 본 **뒤**의 등록 ⇒ §12-2 *"구제 금지"* 규칙대로 **"선행 결과에 근거한 후속 시험"** (§12-3 FAMV2-07 과 같은 분류).
+  ⇒ **창 [29.3716, 31.1884] µm · `I_x = |t_x/30.28 − 1| ≤ 0.03` · 네 칸 표 (12-2) · 순서 예측 `t(0) < t(f_(a)) < t(f_(b))` · 동률 폭 (12-5-5) · 기계 kgy · 코드 `7f44d6534` / mpm3d md5 c31f0512 · 스캐폴드 두 CSV · 격자 384 · 공통 argv 나머지** 는 한 글자도 바꾸지 않는다.
+- ⚠ **예측 가능성 고지 (결과 전에 적는다)**: ④ 는 frame 395 에 이미 28.93 µm (창 하한 29.37 아래 · −4.5 %) 였고 wallP 0.0911 < 설정점 0.0989 라 서보가 **더 누르는 중**이었다 ⇒ f_(a) 재실행의 I_a 는 **거짓일 가능성이 높다는 것을 이미 안다**.  따라서 이 등록이 내는 네 칸 결과 (예상: I_a 거짓 · I_b 참 = *"primary b 적중, a 불일치"*) 와 순서 판정은 **맹검 예측의 확인이 아니다** — 결과 문장에 *"선행 결과에 근거한 후속 시험 · 열람 이력 12-5-9"* 를 반드시 병기하고, 원고 · 발표에서 *"사전등록 예측 적중"* 으로 쓰지 않는다.  `f = 0` 팔은 현 코드에서 **처음** 도는 것이라 열람 이력이 없다 (R1 25.84 µm 는 argv 미보존 역사값 · 12-5-2).
+- **바꾸는 것 둘** — 둘 다 *"런이 끝까지 돌 수 있는가"* 의 조건이지 판정 조건이 아니다:
+  1. **`--frames 400` → `--frames 3000`** (두 팔 공통).  `args.frames` 는 루프 길이 (`for frame in range(args.frames)` · `mpm3d_compaction.py:3093`) · 경고 출력 둘 (:1714 · :2945) · 기록 (`frames_budget` :3720) 에만 쓰인다 ⇒ **동역학을 바꾸지 않고**, 루프는 수렴할 때만 일찍 끝나므로 (3502–3505) 예산이 크면 **수렴 런에서는 비용이 0** 이고 미수렴 런에서만 시간이 든다.
+     ⚠ 1차 비준의 근거 *"R1 780 프레임 + 50 유지"* 는 **약하다** — R1 의 완전한 argv (`--sub` 포함) 가 리포에 없어 (12-5-2) 그 프레임 수가 이 argv 의 프레임과 같은 단위라는 보장이 없다.
+     ⇒ 예산 = **3000** (1저자 10-02 밤 *"ㅇㅇ"* = 권고 수용 · 1차 비준 1200 에서 바뀜 · 근거 약함을 알린 뒤 · 결과 0 건) — 최악 ≈ 5.8 h/팔 (kgy ⑤ 실측 ≈ 7 s/프레임) · 수렴하면 그 전에 끝난다.  **결과 전에** 고정 · 3000 안에 미수렴이면 `EXECUTION_FAILED` 로 적고 끝낸다 (3 차 등록 없음).
+  2. `f = 0` 팔에만 **`--allow-unconverged-servo`** = R1 레시피 (§2) 와 같다.  이 플래그는 코드에서 두 곳에만 쓰인다 — (a) 런 전 관문 (:2952 · scaffold + `--am-load-frac ≤ 0` + floor 0 이면 거부 = `SELF-78`) 통과 (b) 서보 미수렴일 때 중단 대신 내보내기 (:3586).  수렴 런의 궤적은 바꾸지 않는다.
+     ⇒ **적격 규칙 (두 팔 공통)**: 로그에 `✓ converged: σzz equilibrated at target` 가 있고 **그리고** JSON `porosity_at_target_pct` 가 None 이 아닐 때만 적격.  플래그 때문에 내보내진 **미수렴 JSON 은 `EXECUTION_FAILED`** (내보냄 ≠ 결과 · 12-4 표 그대로).
+- **f_(b) 는 재실행하지 않는다**: 루프는 수렴 때만 일찍 끝나고 예산은 동역학을 안 바꾸므로 ⑤ 는 어떤 예산 (≥ 266) 에서도 frame 266 에서 같은 상태로 멈춘다.  ⑤ 의 **29.491 µm 를 그대로 I_b** 로 쓴다 (GPU 재실행의 비트 동일성은 주장하지 않는다).  네 칸 판정은 §12-5 의 I_b 와 이 등록의 I_a 를 합쳐 내고, 두 팔 argv 차이 (`--frames` 뿐 · 수렴 런에 무영향) 를 결과 문장에 병기한다.
+- **§9 R2.5-v2** 는 `f = 0` 팔이 채점한다 (12-5-3 그대로).  ⚠ 열람 고지 추가: 10-02 21:4x 에 ⑤ f_(b) JSON 의 `am_load_split` (f_am_cut 0.9984 · f_am_volume_sum 0.499 · se_floor_traction 9.2e-5 GPa · absorb_top10pct 0.855) 을 봤다 — 채점 팔이 아니지만 같은 스캐폴드이므로 v2 결과 문장에 병기한다 (09-23 CPU 스모크 고지와 같은 방식).
+- **corner 세 팔은 이 등록 밖** (§12-7 · gabia · 딴 시뮬 끝난 뒤).
+- **argv** (= §12-5-5 의 scaffold f 팔 줄 · `$COMMON` 에서 `--frames 400` 만 바꾼다 · `--periodic` 없음):
+  ```bash
+  COMMON6="--arch cuda --gpu-mem 28 --protocol servo --floor-porosity 0 --compact-to 0 --stop-freeze-probe --platen-mach 0.01 --e-se 1.53 --nu-se 0.49 --sigma-y 0.30 --target-gpa 0.30 --readout wallP --frames 3000 --sub 40 --seed 3"
+  python3 -u scripts/mpm3d_compaction.py --am-scaffold docs/data/real14_am_scaffold.csv --se-dump docs/data/real14_se_scaffold.csv \
+    --n-grid 384 $COMMON6 --am-load-frac 0 --allow-unconverged-servo --save-metrics <OUT>/fam_r4_f0.json > <OUT>/fam_r4_f0.log 2>&1
+  python3 -u scripts/mpm3d_compaction.py --am-scaffold docs/data/real14_am_scaffold.csv --se-dump docs/data/real14_se_scaffold.csv \
+    --n-grid 384 $COMMON6 --am-load-frac 0.6703 --save-metrics <OUT>/fam_r4_fa.json > <OUT>/fam_r4_fa.log 2>&1
+  ```
+  순서 = `f = 0` → f_(a) (GPU 하나 · 한 번에 한 팔) · 자리 = kgy `~/fam_seal_7f44d6534/` (같은 봉인 사본 · `SEAL_COMMIT` + md5 확인 줄은 `run_retry.sh` 와 같게).
+- **봉인 전 절차 (`SELF-78` 교훈 = 건식 실행)**: 러너 `run_r4.sh` = 위 두 줄 글자 그대로.  발사 전, 같은 두 줄 끝에 `--frames 1` 을 덧붙여 (argparse 는 마지막 값을 쓴다) 두 팔이 **런 전 관문을 지나 1 프레임을 도는지** 본다 — 출력은 `dryrun/` · rc 와 `[stop]`/`Traceback` 줄만 보고 프레임 줄은 열지 않는다 · 런 시도로 세지 않는다.  그 뒤 12-6-1 을 채우고 발사 (= 1저자).
+- **열람 규칙**: 진행 중 watch 는 마지막 프레임 줄을 보여 준다 (12-5-9 와 같이 금지하지 않는다) · 정지 · 실패 런은 상태 줄만 (`SELF-80`).
+- **결과 뒤 적는 것**: 12-4 분류 먼저 → I_0 · I_a (값) → 네 칸 (I_a × §12-5 의 I_b) · 순서 `t(0) < t(a) < t(b)` (동률 폭 12-5-5) · §9 v2 (f = 0 팔) · ε_sphere 보고 전용 (R3v2-d) — 전부 위 *"예측 가능성 고지"* 병기.
+
+#### 12-6-1. 봉인 (발사 전 · 결과 0 건)
+- 예산 3000 ✅ · 러너 `run_r4.sh` md5 ⬜ · `SEAL_COMMIT` 7f44d6534 · mpm3d md5 c31f0512 확인 ⬜ · 건식 실행 `--frames 1` rc: f=0 ⬜ · f_(a) ⬜ · 발사 시각 ⬜.
