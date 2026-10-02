@@ -301,8 +301,8 @@ git push -u origin claude/14-gate-code-review-9qkx05
 
 | 항목 | 값 |
 |---|---|
-| 분기점 | 이 절을 쓴 커밋 (인수인계 카드가 든 커밋 — SHA 는 붙여넣기 프롬프트와 서브의 등록 커밋이 적는다) |
-| 서브 이름 | (서브가 등록 커밋에서 적는다 — 하네스가 본진 이름을 그대로 주면 "본진에서 직접" 으로 적는다) |
+| 분기점 | 이 절을 쓴 커밋 (인수인계 카드가 든 커밋) — **`e2f5697192b2008d0a11b7334c2d3f3546a85809`** (서브 등록 때 실측: `origin/claude/14-gate-code-review-9qkx05` = 붙여넣기 프롬프트의 SHA, 일치) |
+| 서브 이름 | **`claude/dashboard-standby-e2f56971`** — 경우 B (사용자 선택 2026-10-02: 하네스 지정 `claude/bms-alpha-beta-verify` 와 작업 폴더의 `claude/gate80-standby-9a26dd5f` 는 둘 다 "복귀 뒤 새 커밋 금지" 로 기록된 이름이라 선례 패턴 `<사유>-standby-<분기점 SHA8>` 로 새 이름). 본진 head 에서 `checkout -B` · 고유 커밋 0 · 원격에 없던 이름 · `push -u` |
 | 본진 | **동결.** 원래 본진 세션은 이 커밋을 끝으로 커밋하지 않는다 |
 | 쓰기 방식 | 덧붙이기만 — 원장 새 절 · 상태 문서 새 절 + 취소선 · 요청문 · 리뷰 패키지 · 증거는 새 파일 · `wiki/log.md` 끝 추가 |
 | 금지 | rebase · squash · push 뒤 amend · force-push (게이트 요청문이 SHA 를 인용한다: 87차 요청 `672ab83b2` · 판정 대상 `b8d4b6933`) |
