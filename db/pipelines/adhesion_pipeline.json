@@ -121,8 +121,8 @@
    "role": "DEM P1 — 인터레이어 안쪽 계면",
    "cell": "Ag(111) (√3×√3)R30° 4층 (12 Ag) + 흑연 2×2 ABA 3층 (24 C) · V2 와 같은 옆 셀 (+1.078 %) · 두께 점검 4층",
    "machine": "kgy RTX3090 (li2s v2 UMA 와 GPU 공유 · START 12000 · KILL 23000 MiB)",
-   "state": "wait",
-   "state_text": "카드·입력 준비 (10-02 · 결과 전 커밋) — registry 넷(쌍별 비등가) · 기계 대조(V2 입력 그대로) · 결정 proposed → 사용자 비준 뒤 kgy 실행",
+   "state": "run",
+   "state_text": "카드 비준 (10-02 · 사용자) · kgy 발사 — 1단계 기계 대조 2 → 이완 5 → 2단계 SCF 31 · 속도는 첫 두 잡·첫 이완 실측으로 (7 일 넘으면 다시 물음)",
    "records": [
     "db/properties/wad_agc_graphite_prereg_2026_10_02.json",
     "db/inputs/wad_agc_graphite_2026_10_02/stage1/qe/jobs.json",
@@ -1503,6 +1503,11 @@
    "date": "2026-10-02",
    "stage": "dft",
    "text": "**P1b (Ag(111)|흑연) 카드·입력 준비 — kgy** (사용자 'P1b 이건 지금 할 수 있는건가? 우리꺼로?' → 'kgy 가능할듯') — V2 와 같은 옆 셀·QE·제약으로 그래핀 1장 → 흑연 3층(ABA) · registry 넷 (top_fcc · top_hcp · hollow_fcc · s01) · 두께 점검 4층 · 기계 대조 = V2_top_fcc 2단계 입력 그대로 (V100 W 와 |ΔW| ≤ 0.002) · G3 · G4 (k 9×9×1) · β 0.1 대체 판은 결과 전에 같이 만듦. 도구 `tools/wad/agc_graphite.py` (selftest 47 · 일부러 깨기 12 전부 빨강) · 결정 `D-2026-10-02-wad-agc-graphite` proposed. ⚠ 준비 중 발견: **V2 의 registry 넷은 대칭으로 둘**이었다 (bridge ≡ top_fcc · top_hcp ≡ hollow_fcc — W 16 자리 같음 · 3e-6 차) — V2 값은 그대로, 표본 수 해석만 바뀜 (V2 결과 기록에 덧붙임)."
+  },
+  {
+   "date": "2026-10-02",
+   "stage": "dft",
+   "text": "**P1b 카드 비준 → kgy 발사** (사용자 '비준 · 지금 발사') — kgy 점검: PP Ag·C 해시 기준과 같음 · pw.x qe-7.4.1-gpu (sha 256293a3 · V100 912d8c8f 와 다른 빌드 → 기계 대조가 뜻이 있다) · kgy 에서 selftest 47/0 · DRY_RUN rc 0 · RAM 58 GB · 디스크 304 GB. ⚠ GPU 에 출처 모를 잡 96 % (0.8 GB · kgy 는 프로세스 정보가 막혀 안 보인다) — 같이 돈다. 결정 D-2026-10-02-wad-agc-graphite active (digest sha256:083b3578ab3e6464…)."
   }
  ],
  "related_decisions": [

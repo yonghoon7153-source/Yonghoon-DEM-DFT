@@ -6775,7 +6775,7 @@
    "title": "WAD-AgC — Ag(111)|흑연(0001) 3층 W_sep 를 V2 와 같은 옆 셀·QE·제약으로 (DEM P1b · kgy · 기계 대조 포함 · 사전등록 · 결과 전)",
    "statement": "무음극 셀 인터레이어 안쪽 계면(Ag 입자 | 탄소)을 Ag(111) | 흑연 기저면으로 이상화해 V2(Ag(111)|그래핀 단층)와 **같은 옆 셀**((√3×√3)R30° · 흑연 2×2 · +1.078 %) · **같은 QE 설정**(52/520 · PBE+D3(BJ) 2체 · mv 0.01 · 쌍극자 개정 2 · k 6×6×1) · **같은 제약**(Ag 아래 2층 고정 · C 는 z 만)으로 탄소만 흑연 3층(ABA)으로 바꿔 W_sep = [E(far) − E(bound)]/A 를 잰다 (끝점 직접·영상 ≥ 10 Å). 모델 = registry 넷 (top_fcc · top_hcp · hollow_fcc · s01 = (0, ⅙) — 쌍별 대칭 비등가) × 흑연 3층 + 탄소 두께 점검 4층(top_fcc) + 기계 대조(V2_top_fcc 2단계 입력 그대로 · V100 W 와 |ΔW| ≤ 0.002). 게이트: G0 이완 유효성 · G1 기계 대조 (FAIL → 헤드라인 보류) · G3 끝점 (c+2 · ≤ 0.01) · G4 수치 (e70 · k 9×9×1 · smearing ½ · ≤ 0.01) · G5 두께 (≤ 0.02). SCF 미수렴 잡만 결과 전에 만든 β 0.1 판으로 한 번. 실행 = kgy RTX3090 (li2s v2 UMA 와 GPU 공유 · START 12000 · KILL 23000 MiB · 우리 잡만 멈춤). 이 결정은 DEM 이 쓸 Ag–C 값을 정하지 않는다 — 결과 뒤 1저자 결정.",
    "rationale": "사용자 2026-10-02 'Ag(111)|흑연 (P1b) 이건 지금 할 수 있는건가? 우리꺼로?' → 'kgy 가능할듯 ㅇㅇ'. 09-23 계획이 Ag|흑연을 MLIP 없이 DFT+D3 로 직접 가라고 했고 registry ≥ 4 (대칭 비등가)를 요구했다. V2 의 'registry 4' 는 대칭으로 둘이었다 (bridge ≡ top_fcc 병진 · top_hcp ≡ hollow_fcc 거울 — V2 W 16 자리 같음 · 3e-6 차) — 흑연 ABA 에서는 2층이 거울을 깨 셋이 갈리므로 V2 이름 셋 + 1/6 격자 첫 비등가 이동(s01)으로 넷을 채운다. V2 라벨 '그래핀 단층은 흑연 두께 수렴 대체물이 아니다' 를 같은 조건의 두께 차로 지운다. kgy 3090 의 FP64 약점은 기계 대조 두 잡(V100 179 · 140 s)과 첫 이완 실측으로 재고 총 견적 > 7 일이면 다시 묻는다.",
-   "decision_state": "proposed",
+   "decision_state": "active",
    "results_seen": false,
    "results_seen_note": "Ag(111)|흑연(다층)은 계산한 적 없다. V2 (그래핀 단층) · WAD-CC (흑연 C|C) 값은 봤다 — 손잡이는 거기서 나왔다.",
    "card": "db/properties/wad_agc_graphite_prereg_2026_10_02.json",
@@ -6796,17 +6796,30 @@
    ],
    "enforcement": "① 카드·판정 코드·입력을 실행 **전에** 커밋·푸시한다. ② 문턱은 tools/wad/agc_graphite.py 상수이고 selftest ⑥ 이 카드 code_binding 과 대조한다 — run_kgy.sh 는 kgy 에서 selftest 가 통과해야 시작한다. ③ 러너 공존 게이트가 이 결정이 원장에서 active 인지 확인하고서야 시작한다 (EXCEPTION_ID). ④ 2단계 입력은 kgy 에서 만들고 repo 에서 같은 코드로 다시 만들어 pw.in sha 대조 (--verify_stage2). ⑤ 판정·결과 기록은 --collect 출력만 쓴다 (ATM 은 repo 에서 --atm).",
    "proposed_by": "claude-session-2026-10-02",
-   "status": "proposed",
+   "status": "active",
    "status_history": [
     {
      "at": "2026-10-02",
      "state": "proposed",
      "by": "agent",
      "note": "사용자 'kgy 가능할듯 ㅇㅇ' — 준비·kgy 실행 의사. 게이트 문안은 에이전트 초안. 사용자가 카드를 보고 비준하면 active (트랙 = W_ad DFT · 1저자 = 사용자 · DEM 에는 결과 뒤 회신)."
+    },
+    {
+     "at": "2026-10-02",
+     "state": "active",
+     "by": "사용자 (W_ad DFT · 1저자)",
+     "note": "AskUserQuestion '비준 · 지금 발사 (Recommended)' — kgy 점검·DRY_RUN 통과 뒤 (selftest 47/0 · PP 해시 Ag·C 기준과 같음 · pw.x qe-7.4.1-gpu sha 256293a3 · GPU 에 출처 모를 잡 96 % · 0.8 GB — 메모리 여유 · 속도는 기계 대조 두 잡과 첫 이완 실측으로 판단). 트랙 = W_ad DFT (사용자 = 1저자 · DEM 에는 결과 뒤 회신). 게이트·모델·문턱 불변."
     }
    ],
    "ratification": {
-    "state": "proposed"
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-10-02T13:08:17Z",
+    "commit": "9517a23abd6ad1482aa2a58cc8dede57cdbe1c84",
+    "decision_digest": "sha256:083b3578ab3e6464d8484705fb6e860642e725a0c18ae27d2025d780140aab17",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "비준_근거": "사용자 2026-10-02 — AskUserQuestion '비준 · 지금 발사 (Recommended)' (P1b 카드 · kgy 실행)."
    }
   }
  ]
