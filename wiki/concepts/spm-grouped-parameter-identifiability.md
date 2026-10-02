@@ -2,10 +2,10 @@
 title: "SPM 파라미터 묶음과 식별 집합 — 용량 스케일은 입력이고, LAM 과 입자 비연결은 같은 묶음에 든다"
 description: "Bizeray et al. 2019 reduce the single particle model to six parameter groups and, after linearisation, to three identifiable ones (two diffusion time constants and a lumped charge-transfer resistance); electrode capacity and initial stoichiometry - the degradation-mode axes - are assumed known through measured OCV slopes, so in this model class whole-particle disconnection enters exactly like active material loss and partial contact loss disappears into a lumped resistance"
 created: 2026-09-23
-updated: 2026-09-28
+updated: 2026-10-02
 type: concept
 tags: [battery, degradation, research]
-sources: [raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode-si.md, raw/papers/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd-si.md, raw/papers/miss2022_exchange-current-density-tlm-thickness-lco-nmc-assb.md, raw/papers/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd.md, raw/papers/li2024_assb-composite-cathode-model-contact-area-edl.md, raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md]
+sources: [raw/papers/danilov2011_thin-film-assb-model-weak-electrolyte-parameter-fit.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode-si.md, raw/papers/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd-si.md, raw/papers/miss2022_exchange-current-density-tlm-thickness-lco-nmc-assb.md, raw/papers/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd.md, raw/papers/li2024_assb-composite-cathode-model-contact-area-edl.md, raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -72,6 +72,8 @@ evidenceScope: multi-source-primary
 | 38호 SI 보강 (2026-09-28) | S3 기준 곡선 · S8 다중 시작 · S2 | 용량 스케일 행의 게이지 눈금(액체 PC-NCM · 충전 가지 · 2 h 휴지)은 **4.19 V 에서 끝** — high-V 초기 사이클은 외삽이고, S3 재료로 Fig. 6 은 N ≥ 20 만 재현된다. 기준 곡선의 3.77 V 기울기(≈0.53 V)가 `C_diff/m` 520 을 준다(`[재현]`). `τ_d` 묶음 행의 폭: SC low-V N40 `L_diff,50` 1.70–3.84 µm(25 적합, PC 0). S2 — **SC 셀도** 0.6 mHz 에서 용량성 극한 밖 ⇒ 위 행의 독립 교차 검사는 SC 에서도 없다 |
 | 50호 Miß 2022 (ASSB 실험, LCO · NMC83 \| LPSI \| In, TLM 두께 4 점) | TLM 두 극한 | `[해석]` 계면은 `Z_loc/(a_v d)` 로만 보인다 ⇒ 얇은 쪽 `j₀·a_v`(= `k·A_eff` 자리, 이 표 `τ_k` 묶음) · 두꺼운 극한 `j₀·a_v/τ`(수송 τ 와 한 묶음). NMC 는 두께가 전이를 가로질러 두 묶음이 갈리고, LCO 는 네 두께 전부 두꺼운 극한이라 한 묶음만 — 두께 스윕이 이 표의 "여기(excitation)" 역할을 할 때와 못 할 때 |
 | 50호 | 면적 규약 `a_v·τd → a_v·d` | `[재현]` `(j₀, Q_DL, dU/dc) → (j₀/s, Q_DL/s, s·dU/dc)` 정확한 재척도 — 저주파 화학 용량 `F·ε·d/\|dU/dc\|` 는 이 표 `β = dU/dQ` 입력 자리(원전처럼 OCV 기울기로 고정하면 s 가 선다). 50호는 `dU/dc` 를 가변으로 두어(시작 대비 ×1.31 · ×1.07) 닻을 반쯤 풀었다. 용량성 극한 밖(반무한)이면 위 38호 행과 같은 `√D` 곱으로 약해진다 |
+| 91호 Danilov 2011 (ASSB 박막 원형 모형 · 26호 계보 첫 표) | 전해질 넷 `k_r` · `δ` · `D_Li⁺` · `D_n⁻` | `[재현·가정]` 우리 국소 CRB(재풀이 모형 · σ_V 1 mV · 여섯 율) — \|ρ\| ≥ 0.98 · 가장 약한 방향(`δ` ↑ · `D_Li⁺` · `D_n⁻` · `k_r` ↓) · 조건수 9.5×10⁵. SPM 은 전해질을 버리므로 이 표에 대응 묶음이 없다(한계 셋째 줄) — 박막 모형에서 26호 §5-2 ④ "전도도형 한 조합" 의 수치판 |
+| 91호 | `a_max` = 측정 용량 ÷ (F·Δx·M·A) | 이 표 `Q_th` 자리(용량 스케일)를 **측정 용량으로 고정**했다(각주 c · `[재현]` 23.32 kmol m⁻³) — 원전(Bizeray)과 같은 "용량 스케일은 입력" 선택이고, 그래서 26호 `D·a_max` 한 조합(위 26호 행 · `θ₂`)이 이 편에서는 깨져 `D_Li` 가 국소적으로 선다(CRB ×1.005). 대가: 활성 분율 · 접촉 몫이 이 입력 하나에 섞인다 |
 
 ## 한계 (이 페이지가 주장하지 않는 것)
 

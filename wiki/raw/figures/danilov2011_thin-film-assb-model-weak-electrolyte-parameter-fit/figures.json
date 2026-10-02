@@ -1,0 +1,307 @@
+{
+ "slug": "danilov2011_thin-film-assb-model-weak-electrolyte-parameter-fit",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-02",
+ "sources": [
+  "ee00bca9-51._Modeling_all-solid-state_Li-ion_batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. An example of an SEM image of an as-produced solid-state Li-ion battery \u0001a\u0002 and general representation of a planar all-solid-state Li-ion battery \u0001b\u0002.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.1,
+    94.0,
+    324.5,
+    381.6
+   ],
+   "w": 1082,
+   "h": 1199,
+   "dpi": 300,
+   "src": "ee00bca9-51._Modeling_all-solid-state_Li-ion_batteries.pdf",
+   "blank": 0.556,
+   "note": "봤다 + 화소 판독(SEM 띠 폭 · 판독용). (a) SEM 단면 — 'Li' · 'Li₃PO₄' · 'LiCoO₂' 띠 · 축척 막대 0 · `[도표·화소]` 띠 폭 LiCoO₂ ≈225 px ↔ Li₃PO₄ ≈233 px(비 ≈0.97) — 인쇄 320 : 1500 nm(0.21)와 ×4.6 어긋남 → 캡션 'An example of an SEM image' 대로 다른 셀로 읽힘(digest D) · (b) 1D 모식 Li | Li₃PO₄ electrolyte | LiCoO₂ · y 축 0 · L · L+M · 'Li⁺ → Discharge' · 'Li⁺ ← Charge'. 크롭 온전. 캡션 필드: 괄호 자리에 제어 문자 U+0001 · U+0002(원 PDF 글꼴 Universal-GreekwithMathP 의 괄호 — 전 그림 공통 · 캡션 손대지 않음)."
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 6,
+   "file": "fig_2.png",
+   "caption": "Figure 2. \u0001Color online\u0002 Experimentally measured voltage proﬁles during CCCV charging \u0001CC = C-rate; Vmax = 4.2 V\u0002, relaxation and discharging at various C-rates \u00013.2, 6.4, 12.8, 25.6, and 51.2 C-rate\u0002.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.1,
+    88.1,
+    338.7,
+    285.8
+   ],
+   "w": 1141,
+   "h": 825,
+   "dpi": 300,
+   "src": "ee00bca9-51._Modeling_all-solid-state_Li-ion_batteries.pdf",
+   "blank": 0.962,
+   "note": "봤다 + PDF 그림이 벡터(쪽 4–9 래스터 0)라 경로 좌표를 눈금 숫자 중심으로 보정해 읽었다(`[도표·벡터]` · 판독용 · 커밋 안 함). 표지 3,177 개 · 시간 ±0.13 분 · 전압 ±0.002 V. 충전 1 곡선(−41.96 분 3.62 V → −5.43 분 4.195 V · CC ≈36.5 분) · 4.198 → 4.196 V 평탄 −5.4 → +0.10 분(≈5.5 분 — 본문 · 캡션의 '30 min relaxation' 은 안 보인다 · digest D) · 방전 다섯(3.2–51.2C) — 첫 방전 점 +0.27 분 · 3.0 V 앞 마지막 점 18.76 · 9.47 · 4.83 · 2.46 · 1.32 분. 1.6C 방전은 축 밖(≈37.6 분). 캡션 'CC = C-rate' 숫자 빠짐은 인쇄 그대로(본문 '1.6 C-rate'). 크롭 온전."
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "Figure 3. \u0001Color online\u0002 Equilibrium voltage \u0001green\u0002 obtained from extrapo- lation and experimentally measured discharge curves \u00011.6, 3.2, 6.4, 12.8, 25.6, and 51.2 C-rate\u0002.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.1,
+    559.3,
+    324.5,
+    763.6
+   ],
+   "w": 1082,
+   "h": 852,
+   "dpi": 300,
+   "src": "ee00bca9-51._Modeling_all-solid-state_Li-ion_batteries.pdf",
+   "blank": 0.942,
+   "note": "봤다 + PDF 그림이 벡터(쪽 4–9 래스터 0)라 경로 좌표를 눈금 숫자 중심으로 보정해 읽었다(`[도표·벡터]` · 판독용 · 커밋 안 함). Q ±0.008 µAh cm⁻² · V ±0.001 V. 선 일곱 — 녹색 = 외삽 평형(Q 0 에서 4.197 V · 3.0 V 에서 10.10 µAh cm⁻²) · 측정 여섯(빨강 · 남색 · 노랑 · 자홍 · 하늘 점선 · 검정 점선 — 범례 0 · 캡션 순서 1.6 … 51.2C 로 읽음) — 3.0 V 끝 10.04 · 9.95 · 9.86 · 9.76 · 9.57 · 9.17 µAh cm⁻². 크롭 온전."
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Figure 4. \u0001Color online\u0002 The blue symbols are measured voltages at various values of Qout; The red line is the regression interpolation; The red dots represent the extrapolated equilibrium voltage. The curves were obtained at Qout = 0, 2, 4, 8, 9.25, and 9.50 \u0001Ah cm−2.",
+   "rotated_deg": 0,
+   "bbox": [
+    332.5,
+    92.7,
+    591.9,
+    293.6
+   ],
+   "w": 1082,
+   "h": 838,
+   "dpi": 300,
+   "src": "ee00bca9-51._Modeling_all-solid-state_Li-ion_batteries.pdf",
+   "blank": 0.953,
+   "note": "봤다 + PDF 그림이 벡터(쪽 4–9 래스터 0)라 경로 좌표를 눈금 숫자 중심으로 보정해 읽었다(`[도표·벡터]` · 판독용 · 커밋 안 함). 측정 점 24(남색) = 전류 15.9 · 32.1 · 64.0 · 128.0 µA cm⁻²(= 1.6 · 3.2 · 6.4 · 12.8C) × Q_out 6 줄 · 붉은 회귀선 6 · I = 0 붉은 점 4.1967 · 4.0648 · 3.9767 · 3.9062 · 3.9003 · 3.8957 V — 25.6 · 51.2C 는 회귀에 없다(축 0–130). `[재현]` 선형(Q ≤ 8) · 2차(9.25 · 9.5)로 붉은 점 ±2 mV. 크롭 온전."
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Figure 5. \u0001Color online\u0002 The blue symbols are measured Qout values as a function of discharge current; The red line is the regression interpolation; The red symbols represent the extrapolated Qout values. The curves are ob- tained at V = 3.0, 3.2, 3.4, 3.6, and 3.8 V.",
+   "rotated_deg": 0,
+   "bbox": [
+    332.5,
+    551.0,
+    610.2,
+    752.3
+   ],
+   "w": 1158,
+   "h": 839,
+   "dpi": 300,
+   "src": "ee00bca9-51._Modeling_all-solid-state_Li-ion_batteries.pdf",
+   "blank": 0.958,
+   "note": "봤다 + PDF 그림이 벡터(쪽 4–9 래스터 0)라 경로 좌표를 눈금 숫자 중심으로 보정해 읽었다(`[도표·벡터]` · 판독용 · 커밋 안 함). 측정 점 20 = 같은 네 전류 × 전압 5 줄(3.0–3.8 V) · 2차 회귀 · I = 0 붉은 점 10.1138 · 10.0932 · 10.0684 · 10.0354 · 9.9612 µAh cm⁻² — `[재현]` 2차로 ±0.0015(선형이면 ≈−0.06). 크롭 온전."
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Figure 6. \u0001Color online\u0002 Experimental overpotentials as a function of Qout at various C-rates \u0001from 1.6 to 51.2 C-rate\u0002.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.1,
+    84.4,
+    334.5,
+    298.7
+   ],
+   "w": 1123,
+   "h": 894,
+   "dpi": 300,
+   "src": "ee00bca9-51._Modeling_all-solid-state_Li-ion_batteries.pdf",
+   "blank": 0.949,
+   "note": "봤다 + PDF 그림이 벡터(쪽 4–9 래스터 0)라 경로 좌표를 눈금 숫자 중심으로 보정해 읽었다(`[도표·벡터]` · 판독용 · 커밋 안 함). η = 측정 방전 전압 − 외삽 평형 전압(그림 3 녹색), 여섯 곡선 — 평탄(Q 2–6 중앙값) −5.9 · −13.4 · −26.3 · −51.1 · −97.2 · −182.6 mV → η/I 367 · 419 · 412 · 399 · 380 · 357 Ω cm²(율 32 배에 ±8 %). Q ≈0.8 의 골 = 평형 곡선 어깨(4.15 V 부근). 크롭 온전."
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 7,
+   "file": "fig_7.png",
+   "caption": "Figure 7. \u0001Color online\u0002 Overall performance of the model during dis- charges with various C-rates. The blue symbols are measurements and, the red lines are the model predictions.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.1,
+    323.6,
+    338.6,
+    521.3
+   ],
+   "w": 1140,
+   "h": 825,
+   "dpi": 300,
+   "src": "ee00bca9-51._Modeling_all-solid-state_Li-ion_batteries.pdf",
+   "blank": 0.946,
+   "note": "봤다 + PDF 그림이 벡터(쪽 4–9 래스터 0)라 경로 좌표를 눈금 숫자 중심으로 보정해 읽었다(`[도표·벡터]` · 판독용 · 커밋 안 함). 가로 ×8 확대 렌더로 대조(판독용 · 지움). 측정 점 = 그림 2 와 같은 3,177 점(|Δt| ≤0.012 분 · |ΔV| ≤0.2 mV) · 모형 붉은 선 5(충전 + 방전 · CV 평탄 4.193–4.211 V) — 방전 시작 0.222 분 · 3.0 V 도달 18.71 · 9.25 · 4.52 · 2.24 · 1.01 분 ↔ 측정 18.76 · 9.47 · 4.83 · 2.46 · 1.32 분 — 51.2C 모형 지속 0.79 ↔ 측정 1.05 분(용량 73 %) · 표지 지름 2.6 pt ≈0.8 분이라 원 배율에서 안 보인다(digest D · §(a) 7). 1.6C 방전 없음. 크롭 온전."
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 8,
+   "file": "fig_8.png",
+   "caption": "Figure 8. \u0001Color online\u0002 Development of the overpotentials as a function of time during low-current \u0001a\u0002 and high-current \u000151.2 C\u0002 discharging \u0001b\u0002. The red lines represent simulated Butler–Volmer overvoltage \u0001\u0005LiCoO2 ct \u0002, the pink lines represent mass-transfer overpotential in the electrolyte \u0001\u0005Li+ mt \u0002, and the green lines represent diffusion overpotential in the solid-state electrode \u0001\u0005LiCoO2",
+   "rotated_deg": 0,
+   "bbox": [
+    65.1,
+    84.4,
+    334.4,
+    465.4
+   ],
+   "w": 1123,
+   "h": 1589,
+   "dpi": 300,
+   "src": "ee00bca9-51._Modeling_all-solid-state_Li-ion_batteries.pdf",
+   "blank": 0.966,
+   "note": "봤다 + PDF 그림이 벡터(쪽 4–9 래스터 0)라 경로 좌표를 눈금 숫자 중심으로 보정해 읽었다(`[도표·벡터]` · 판독용 · 커밋 안 함). 판마다 눈금 보정. (a) 3.2C · η [mV] — 녹색 η_d · 빨강 η_ct · 자홍 η_mt · 검정 합 · 끝 18.39–18.65 분 · (b) 51.2C · η [V] — 끝 0.840–0.858 분(≈50 s — 그림 11 의 1.08 분과 다른 길이 · digest D) · η_mt 몫 시간 평균 45 %(b) · 46 %(a) `[재현·벡터]`. 캡션 '(a) low-current' — 율은 본문에만(3.2C). 두 판 한 장 · 크롭 온전."
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 8,
+   "file": "fig_9.png",
+   "caption": "Figure 9. \u0001Color online\u0002 Development of the Li-concentration proﬁle inside the positive electrode during 51.2 C discharge.",
+   "rotated_deg": 0,
+   "bbox": [
+    332.5,
+    94.5,
+    592.0,
+    266.1
+   ],
+   "w": 1082,
+   "h": 716,
+   "dpi": 300,
+   "src": "ee00bca9-51._Modeling_all-solid-state_Li-ion_batteries.pdf",
+   "blank": 0.744,
+   "note": "봤다(3D 면 — 벡터 다각형 · 수치 판독 안 함). a_LiCoO₂ [kmol m⁻³] 12–25(오른쪽 x 0.5–1.0) × 전극 0–300 nm × 시간 −0.5–2 분 · 계면 쪽 ≈1 분에 x → ≈1 봉우리 · 이완 뒤 x 0.9 대 평탄(`[도표]` 3D · 폭 넓음). 크롭 온전."
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 8,
+   "file": "fig_10.png",
+   "caption": "Figure 10. \u0001Color online\u0002 Development of the Li-concentration proﬁle inside the electrolyte layer during 51.2 C discharge.",
+   "rotated_deg": 0,
+   "bbox": [
+    332.5,
+    582.4,
+    591.9,
+    770.7
+   ],
+   "w": 1082,
+   "h": 786,
+   "dpi": 300,
+   "src": "ee00bca9-51._Modeling_all-solid-state_Li-ion_batteries.pdf",
+   "blank": 0.836,
+   "note": "봤다(3D 면 — 판독 안 함 · 같은 양의 2D 판은 그림 12). a_Li⁺ 6–16 kmol m⁻³ × 전해질 0–1.5 µm × 시간 0–3 분 · 평형 ≈10.8(본문 '11 kmol m⁻³') · 한쪽 증가 · 반대쪽 감소 · ≈1 분 뒤 이완. 크롭 온전."
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 9,
+   "file": "fig_11.png",
+   "caption": "Figure 11. \u0001Color online\u0002 Development of the overpotentials across the elec- trolyte layer during 51.2 C discharge: diffusion \u0001red line\u0002, migration \u0001blue line\u0002, and summation of those two, total \u0001pink line\u0002.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.1,
+    92.1,
+    324.5,
+    290.8
+   ],
+   "w": 1082,
+   "h": 829,
+   "dpi": 300,
+   "src": "ee00bca9-51._Modeling_all-solid-state_Li-ion_batteries.pdf",
+   "blank": 0.965,
+   "note": "봤다 + PDF 그림이 벡터(쪽 4–9 래스터 0)라 경로 좌표를 눈금 숫자 중심으로 보정해 읽었다(`[도표·벡터]` · 판독용 · 커밋 안 함). 51.2C 전해질 η — Diffusion(빨강) · Migration(남색) · Total(자홍) · 전류 0 → 1.081 분 · 끝 −43.3 · −65.5 · −108.7 mV(본문 '110 mV' ✅) · 켠 직후 이동 성분 ≈−35 mV(본문 '40 mV') · 그림 8b η_mt 와 0.84 분까지 ≤0.5 mV 같은 곡선 — 그림 8b · 12 는 ≈50 s 에 끝(digest D). 크롭 온전."
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 9,
+   "file": "fig_12.png",
+   "caption": "Figure 12. \u0001Color online\u0002 Concentration proﬁles in the complete battery stack before discharging \u000151.2 C-rate\u0002 has been commenced \u0001blue\u0002, in the middle of the discharge process \u0001red\u0002, and just before the discharge current will be terminated \u0001pink\u0002. The electrolyte is at the left, the LiCoO2 electrode is indicated by the shaded area.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.1,
+    457.8,
+    324.5,
+    723.1
+   ],
+   "w": 1082,
+   "h": 1106,
+   "dpi": 300,
+   "src": "ee00bca9-51._Modeling_all-solid-state_Li-ion_batteries.pdf",
+   "blank": 0.888,
+   "note": "봤다 + PDF 그림이 벡터(쪽 4–9 래스터 0)라 경로 좌표를 눈금 숫자 중심으로 보정해 읽었다(`[도표·벡터]` · 판독용 · 커밋 안 함). y 0–1.5 µm 전해질(a_Li⁺) + 1.5–1.82 µm 전극(a_LiCoO₂ · 회색) — 파랑(방전 전) 10.85 · 11.71 · 빨강(20 s) 15.79 → 5.70 · 전극 18.09 → 13.40 · 자홍(50 s) 17.27 → 3.77 · 전극 23.16 → 18.34 kmol m⁻³ — `[재현]` 전극 평균 증가가 I·t/(F·A·M)(512 µA cm⁻²)와 −0.5 … −0.7 %. 캡션 'in the middle of the discharge' ↔ 본문 '20 s after'. 크롭 온전."
+  },
+  {
+   "key": "t1m",
+   "kind": "table",
+   "label": "I",
+   "page": 5,
+   "file": "tab_1_manual_p5.png",
+   "caption": "Table I. List of symbols.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    98.0,
+    592.0,
+    532.0
+   ],
+   "w": 2192,
+   "h": 1809,
+   "dpi": 300,
+   "src": "ee00bca9-51._Modeling_all-solid-state_Li-ion_batteries.pdf",
+   "blank": null,
+   "manual": true,
+   "note": "수동 — 본문 PDF p. 5(A218) 렌더 300 dpi bbox (66, 98, 592, 532) — 자동 추출이 표 I 을 잡지 않음(표 캡션 미인식). 봤다: 기호 39 줄 — k₋₁ 'm⁴ mol⁻⁴ s⁻¹'(식 3b · k₁ˢ 단위와 차원 불일치 → m⁴ mol⁻¹ s⁻¹ 이어야 함 · digest D) · r 'mol s⁻¹'(식 16a 에서는 mol m⁻³ s⁻¹ · digest D) · a_Li 'mol m⁻³' ↔ 본문 '활동도 1'."
+  },
+  {
+   "key": "t2m",
+   "kind": "table",
+   "label": "II",
+   "page": 7,
+   "file": "tab_2_manual_p7.png",
+   "caption": "Table II. Model parameters.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    574.0,
+    592.0,
+    797.0
+   ],
+   "w": 2192,
+   "h": 930,
+   "dpi": 300,
+   "src": "ee00bca9-51._Modeling_all-solid-state_Li-ion_batteries.pdf",
+   "blank": null,
+   "manual": true,
+   "note": "수동 — 본문 PDF p. 7(A220) 렌더 300 dpi bbox (66, 574, 592, 797) — 자동 추출 누락(표 캡션 미인식). 봤다: 12 행 · 각주 a 설계(L · M · A) · b NDP(a₀) · c 설계값 + 최대 용량에서 추정(a_max) · 나머지 일곱 'model optimization'(k_r 0.90×10⁻⁸ · δ 0.18 · D_Li⁺ 0.90×10⁻¹⁵ · D_n⁻ 5.10×10⁻¹⁵ · D_Li 1.76×10⁻¹⁵ · α 0.6 · k₁ˢ 5.1×10⁻⁶) · 열 머리 'Estimated value' 가 설계값에도 붙음 · 오차 · 단위 관례 0. `[재현]` k_r 은 그림 8a · 11 · 12 를 ×100 값으로만 재현(digest §(a) 5)."
+  }
+ ]
+}
