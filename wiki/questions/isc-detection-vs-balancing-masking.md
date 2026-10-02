@@ -2,15 +2,15 @@
 title: 팩 ISC/누설 검출에서 균등화 전류가 관측을 덮는가
 description: "In a liquid-cell pack, when detecting/quantifying an internal short or leakage, does the balancing current mask the observation — and if so, what separates leakage from self-discharge spread, capacity spread and the balancer itself"
 created: 2026-09-22
-updated: 2026-10-01
+updated: 2026-10-02
 type: research-question
 tags: [battery, research, pack-fault]
-sources: [raw/papers/lai2025_balanced-capacity-isc-detection-modules.md]
+sources: [raw/papers/lai2025_balanced-capacity-isc-detection-modules.md, raw/papers/zhang2026_si-anode-interphase-calendar-ageing.md]
 confidence: low
 explored: false
 verificationStatus: unverified
 claimType: empirical
-evidenceScope: single-source
+evidenceScope: multi-source-primary
 status: open
 feedsInto: "bms-balancing/docs/NEW_MODEL_REQUIREMENTS.md — §3 후보 원인 칸 · §4 구분 시험 · §5 라벨 출처 칸의 팩-결함 판"
 ---
@@ -102,6 +102,20 @@ feedsInto: "bms-balancing/docs/NEW_MODEL_REQUIREMENTS.md — §3 후보 원인 �
   - `[도표]` Fig. 5(b): 충전 구간이 있는 프로파일에서 **누설 셀이 최소 방전 셀이 아니다** —
     "누설 셀 = 균등화가 가장 적게 건드린 셀" 이라는 직관이 **부하 방향에 따라 깨진다.**
     본문 무언급.
+- **2026-10-02, Zhang 2026 *Nat. Energy* 11, 558 (`raw/papers/zhang2026_si-anode-interphase-calendar-ageing.md`
+  — 액체 Si 셀의 열화 기구 논문, `pack-fault` 아님 · 2026-10-02 논문 세미나 1번째) — H2 쪽 근거(균등화와는 무관)**:
+  H2 의 null 방향 경쟁 원인인 **정상 자기방전**이 Si 함유 셀에서 얼마나 크고 얼마나 흔들리는지를 실측으로 준다.
+  - 정상 Li ‖ Si 반쪽전지 0.06 V 유지 전류(저자 해석: SEI 균열 · 용해 뒤의 보수 전류) 180 h `[데이터]`
+    **0.088–0.250 mA/Ah**(≈C/11,300–C/4,000) — SEI 화학만으로 ×2.8 · 나노 표면적 ×1.65–2.5 · 전해액 양 ×1.27(셀 하나씩).
+    단일 문턱은 셀 화학 · 공정 차를 누설로 읽는다(`bms-balancing/docs/MSC_SEMINAR_2026-09-23_APPLICATION.md` §0 F1 의 실측 표본).
+  - 시간 모양 `[재현]`: 늦은 꼬리 `I ∝ t⁻ⁿ`, n = 0.14–0.73 · 흑연은 60 h 뒤 사실상 평탄 — 같은 문서 §3 P3 의
+    "부반응 = 감쇠 ↔ 단락 = 일정" 이 180 h 창에서는 거의 안 갈린다 · 처음 수십 h 는 가역 이완이 지배(180 h 누적의 59–82 %).
+  - 풀셀(µ-Si/n-Si ‖ NMC811 · 4.1 V · 1 달 개회로 · 코인셀 · 온도 미인쇄) `[재현]`: 보관 손실 중 **다음 사이클에 돌아오는
+    몫 3.0–10.2 pp**(≈4×10⁻⁵–1.4×10⁻⁴ C 등가) · 같은 조건 3 셀 간 Qd/Qc 산포 **≤10.7 pp** — "회복 가능한 보관 손실" 은
+    내부 단락의 서명이기도 하다(정상 셀 기준선 · 이 편은 회복분의 기구를 귀속하지 않는다).
+  - ⚠ 조건: 반쪽전지 · 한 전위 · 한 연구실 화학계 · 온도 미인쇄. 반쪽전지 저전위 유지에서는 단락이 **반대 부호**로 들어간다
+    (`[해석]` — [[potentiostatic-hold-current-attribution]]). **팩 · 균등화 자료가 아니다** — 이 카드의 물음(균등화가 덮는가)에는
+    직접 답하지 않고, H2 가 말하는 경쟁 원인의 크기만 준다. 채움표(P1~P6)에 행을 두지 않는다(결함 검출 논문이 아님).
 
 ## Evidence Against (덮지 않는다 — 균등화가 곧 관측이다)
 
@@ -131,6 +145,10 @@ feedsInto: "bms-balancing/docs/NEW_MODEL_REQUIREMENTS.md — §3 후보 원인 �
 - [2026-10-01] 탐색 음성 1 회 (단일 출처) — GitHub 연구 브리핑 첫 회가 "바로 신뢰할 만한 미세단락 전용 분류기를
   찾지 못했다" 고 보고. 브리핑의 후보 [[pyprobe]] 는 열화 피팅 도구이지 ISC 판별 도구가 아니다 ("적합도가 좋다고
   미세단락까지 입증되는 건 아니다"). 앞으로의 브리핑은 [[daily-github-briefing-triage]] ③ 축으로 이 카드에 들어온다.
+- [2026-10-02] Evidence 추가 — **H2 쪽 · 셀 화학 근거**(Zhang 2026 *Nat. Energy* · 2026-10-02 논문 세미나 1번째 · 액체 Si):
+  정상 SEI 유지 전류의 크기 · 시간 모양 · 잡음과 풀셀 보관의 회복분 · 셀 간 산포. 경계: digest 에 `pack-fault` 태그를
+  붙이지 않았다(열화 기구 페이지 — SCHEMA 경계 ②) · 채움표 행 없음 · 카드 status 그대로(open). 새 개념
+  [[potentiostatic-hold-current-attribution]] — 유지 전류 = 가역 이완 + 부반응 + 단락, 단락의 부호는 셀 구성에 따라 다르다.
 
 ## 이 카드가 주장하지 않는 것
 
@@ -143,5 +161,6 @@ feedsInto: "bms-balancing/docs/NEW_MODEL_REQUIREMENTS.md — §3 후보 원인 �
 - [[fitting-degeneracy]] — 모양이 같은 이웃 (물리량은 다름)
 - [[isc-balancing-dataset-est-d-24-12331]] — 이 섹션의 유일한 measured 급 라벨 데이터
 - [[near-optimal-set-width-measurement]] — P6 을 잴 기계
+- [[potentiostatic-hold-current-attribution]] — CV(float) 전류 한 숫자에 섞이는 셋(가역 이완 · 부반응 · 단락)과 정상 셀의 실측 크기
 - `bms-balancing/docs/ISC_LEAKAGE_DATASET.md` · `bms-balancing/docs/NEW_MODEL_REQUIREMENTS.md`
   §3·§4·§5 (repo-root 상대 경로, 내용 복사 금지)

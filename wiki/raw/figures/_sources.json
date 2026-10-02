@@ -691,7 +691,7 @@
   ]
  },
  "sun2025_dl-eis-degradation-mode-diagnostics": {
-  "figures": 21,
+  "figures": 26,
   "generated": "2026-10-02",
   "pdfs": [
    "475d1950-3._A_deep_learning_approach_for_enhanced_degradation_diagnostics_of_NMC_lithium-ion_batteries_via_impedance_spectra.pdf",
@@ -847,6 +847,14 @@
   "pdfs": [
    "22. Silicon-based all-solid-state batteries operating free from external pressure.pdf",
    "9ee4a25b-22._Sup1_Silicon-based_all-solid-state_batteries_operating_free_from_external_pressure.pdf"
+  ]
+ },
+ "zhang2026_si-anode-interphase-calendar-ageing": {
+  "figures": 50,
+  "generated": "2026-10-02",
+  "pdfs": [
+   "1. Mechanistic understanding of interphase-driven ageing in silicon anodes.pdf",
+   "1. Sup1) Mechanistic understanding of interphase-driven ageing in silicon anodes.pdf"
   ]
  },
  "zheng2026_assb-grid-realistic-appraisal": {

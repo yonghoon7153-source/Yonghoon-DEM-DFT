@@ -1,15 +1,15 @@
 ---
 title: 열역학·동역학 손실 분해 (ΔE / η) — 전류를 관측 축으로 쓰는 분해
 created: 2026-09-03
-updated: 2026-09-03
+updated: 2026-10-02
 type: concept
 tags: [battery, degradation, research]
-sources: [raw/papers/tao2025_nondestructive-degradation-decoupling.md]
+sources: [raw/papers/tao2025_nondestructive-degradation-decoupling.md, raw/papers/zhang2026_si-anode-interphase-calendar-ageing.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
 claimType: mixed
-evidenceScope: single-source
+evidenceScope: multi-source-primary
 ---
 
 # 열역학·동역학 손실 분해 (ΔE / η)
@@ -87,6 +87,17 @@ LLI–LAM_PE 방향에 새 정보를 주는지는 **합성 truth 에서 값싸�
 4. **중요도가 음수인 feature 를 절댓값으로 집계한다.** Tao 2025 Fig. 4h 에서
    RL 계열 SAGE 가 여러 단에서 음수인데 (손실을 키운다는 뜻), 배분식은 절댓값을
    쓴다.
+5. **(2026-10-02 · 다른 편의 같은 함정 — 함정 1 의 반쪽전지판)** Zhang 2026 *Nat. Energy* 11, 558
+   (`raw/papers/zhang2026_si-anode-interphase-calendar-ageing.md` · 액체 Si 반쪽전지)은 **C/15 한 전류의 CC
+   리튬화 용량(0.06 V 컷오프) 손실**을 "active materials loss" — 즉 ΔE 칸의 LAM_Si — 로 **정의**하고, η 몫은
+   `[인쇄]` "largely minimized at this low rate" 한 문장으로 닫는다(정량 0). 그런데 같은 편 SI 가 유지 뒤
+   평균 리튬화 전압 하강 **3.4 · 7.9 · 12.9 mV** 를 인쇄한다 — `[재현·가정]` 컷오프 근처에도 균일하게 내려갔다면
+   끝 기울기 ≈0.2 V per SOC(그림 판독)에서 컷오프 용량이 ≈1.7–6.5 % 줄어, 인쇄된 active loss 0.87–3.40 % 와
+   **같은 자릿수**다. 정규화 곡선이 끝점을 겹쳐 그려 이 몫은 그림으로 보이지 않는다. ⇒ **"저율 한 전류" 는
+   ΔE 대표가 아니라 ΔE + η 의 합**이다 — 이 개념의 처방(두 전류에서 같은 양을 재 η 를 가른다)이 그대로 필요한
+   자리이고, 새 모델 요구서(`bms-balancing/docs/NEW_MODEL_REQUIREMENTS.md` §3)의 C6(저항 / 창 절단 교란)의
+   출판된 실례다. 정전위 유지 쪽의 섞임은
+   [[potentiostatic-hold-current-attribution]].
 
 ## 관련
 - [[fitting-degeneracy]] — 이 분해가 **닿지 않는** 축. ΔE 한 칸 안의 문제다.
