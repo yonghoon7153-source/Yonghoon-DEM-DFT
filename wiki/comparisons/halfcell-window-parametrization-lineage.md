@@ -2,10 +2,10 @@
 title: 반쪽전지 창 매개화 계보 비교 (자유도와 제약)
 description: "같은 4개 창 좌표를 무엇으로 매개화하고 여분을 어떻게 죽이는가 — Dubarry 2012 부터 우리 파이프라인까지"
 created: 2026-09-03
-updated: 2026-09-14
+updated: 2026-10-02
 type: comparison
 tags: [battery, degradation, research]
-sources: [raw/papers/schmitt2022_sic-ocp-shape-change-degradation-modes.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/dubarry2012_synthesize-degradation-modes.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/mohtat2019_electrode-soh-estimability-expansion.md, raw/papers/lee2020_estimation-error-bound-limited-data-window.md, raw/papers/wang2025_aging-induced-rate-independent-li-plating.md, raw/papers/cui2026_direct-diagnosis-lfp-degradation-modes.md, raw/transcripts/2026-09-14-bms-handoff-width-and-wiki-candidates.md]
+sources: [raw/papers/schmitt2022_sic-ocp-shape-change-degradation-modes.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/dubarry2012_synthesize-degradation-modes.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/mohtat2019_electrode-soh-estimability-expansion.md, raw/papers/lee2020_estimation-error-bound-limited-data-window.md, raw/papers/wang2025_aging-induced-rate-independent-li-plating.md, raw/papers/cui2026_direct-diagnosis-lfp-degradation-modes.md, raw/transcripts/2026-09-14-bms-handoff-width-and-wiki-candidates.md, raw/papers/sun2025_dl-eis-degradation-mode-diagnostics.md]
 confidence: high
 explored: false
 verificationStatus: unverified
@@ -44,6 +44,7 @@ their estimation" 의 구체적 목록이다.
 | **Schmitt 2022 (2026-09-10 추가)** | `α_cat, β_cat, α_an, β_an` **+ `γ_Si`** | **5** | **0** (단 `β<0` 부호 제약) | **여분을 죽이지 않고 늘린다** — 다섯째는 창이 아니라 **반쪽전지 곡선의 모양**을 매개화 | full-cell C/30 충전 곡선의 **DV** |
 | **Wang (Xiong) 2025 (2026-09-11 추가)** | `K_NE, K_PE, S_NE, S_PE` **+ 음극 구간별 `K_NE1..K_NE5`** | **8** | **0** | **여분을 늘린다 (+4)** — 음극 곡선을 DV 극값 4개로 5 구간으로 잘라 구간마다 가로 스케일 (구간 ⑤ = 0 V 이하 도금 구간). GA 적합, 검증은 RMSE < 10 mV 뿐 | full-cell 0.05 C 의사-OCV 충전 곡선 (LFP/graphite) |
 | **Cui 2026 (2026-09-11 추가)** | `X1 = C_APE, X2 = C_ANE, X3 = LAM_liNE − LAM_dePE + LLI, X4`(방전 종료 음극 리튬화도) | **4** | **0** — 단 **재조합**: 7 물리량 → 4 (`[인쇄]` "To obtain unique parameter results, the variables in Eq. (1) need to be recombined") | **줄였다가 다시 늘린다** — 사전믿음 등식(입자 파괴 확률 균일 → 격리분 리튬화도 = 순환 구간 중점, 식 9)으로 4 → 7 (li/de 분할) | full-cell C/25 **방전** 의사-OCV (LFP/graphite 20 Ah) + 재료 라벨(코인셀·XRD) |
+| **Sun (Xiong) 2025 (2026-10-02 추가)** | `p0, n0, Q_PE, Q_NE` **+ 상수 `R`** | **5** | **0** | 창 4 는 여분 없음 — 다섯째는 창이 아니라 **동역학 한 칸**(전 SOC · 전 노화에서 `IR` 일정). PSO(설정 미인쇄), 검증은 맞춤 RMSE 7.52 · 6.55 mV 뿐. 출력이 그대로 DNN 의 "ground truth" | **1–2 C 사이클 CC 충전 곡선**(pOCV 아님), 창 = 충전 시작 전압 → 4.2 V 컷오프 |
 | [[fused-lasso-feature-design-framework]] SI S11 | `β_c, β_a, Q_rem, V_shift` | **4** | 0 | 여분 없음 | C/20 RPT 곡선 |
 | **우리 (`degradation-degeneracy`)** | `α_PE, β_PE, α_NE, β_NE` | **4** | **0** | 여분 없음 (전단사) | full-cell 전압 곡선 (+옵션 dQ/dV) |
 
@@ -175,6 +176,25 @@ LAM_NE **총량**으로만 보정되므로 이 분할을 검증하지 못한다.
 양극 창 하단이 관측 창 밖이고, 그래서 `(X1, X3)` 곧 **LAM_PE ↔ LLI 가 `X1 − X3 = Q_EOC`
 로만 구속**된다. Cui 에서는 재료 측정(코인셀·XRD)이 LAM_PE ≈ 0 을 확인해 줬기 때문에
 해가 없었다 — [[ic-peak-area-direct-mode-readout-lfp]].
+
+## ★ 일곱 번째 축 — **관측을 운용 전류 곡선으로 바꾸고 동역학을 상수 `R` 하나로 흡수한다** (2026-10-02, Sun (Xiong) 2025)
+
+Sun, Xiong, Wang, Li, Sun 2025 (`raw/papers/sun2025_dl-eis-degradation-mode-diagnostics.md` §4) 의 라벨 맞춤은 창 좌표는
+우리와 같은 넷(`p0, n0, Q_PE, Q_NE`)이고, 식 (2) `Ũ = E_PE(p) − E_NE(n) + IR` 로 **상수 저항 하나**를 더해 **1–2 C 사이클
+CC 충전 곡선**에 직접 맞춘다 (반쪽전지 OCP 는 신품 1/20 C 코인셀 한 번). 이 표의 다른 행은 전부 준평형 곡선(pOCV ·
+C/20 · C/30)을 쓴다.
+
+`[해석]` 바뀌는 것은 둘이다 (둘 다 미측정 — 원문은 유일성 · 오차막대를 재지 않는다):
+
+1. **관측 창이 노화와 함께 움직인다** — 창의 시작은 직전 방전이 끝난 전압에서의 충전 시작점(`[도표]` 신품 1 C ≈3.29 V ·
+   노화 1 C ≈3.62 V · 2 C ≈3.75–3.79 V), 끝은 `IR` 을 품은 4.2 V 컷오프다. 네 번째 축(관측 창의 위치, Lee 2020)이
+   **설계가 아니라 노화의 함수**가 된다.
+2. **`R` 이 창 좌표와 같은 서명을 남길 수 있다** — `IR` 은 곡선 전체의 수직 이동이고, 양극 OCP 기울기가 창 안에서 완만하면
+   `p0` 의 수평 이동과 거의 같은 잔차를 만든다 → **`R ↔ p0 ↔ LLI` 별칭.** 그리고 `(1,1,1)` 공통 모드를 닫는 유일한 정보인
+   CC 창의 Ah 길이([[np-lip-ocv-reparametrization]] 2 자유도)도 `IR` 만큼 짧아진다 → 공통 모드 ↔ `R` 결합.
+
+**가장 값싼 판정**: 봉인된 반쪽전지 OCP 로 식 (1)–(2) 를 1 C · 2 C 에서 계산해 5×5 `JᵀJ` 의 최소 특이벡터에 `R` 성분이
+얼마나 실리는지 본다 (digest §17.4 실험 1, 미실행).
 
 ## ★ Marongiu 식 (2)–(5) 의 null 을 닫힌 형태로 풀었다
 
@@ -357,3 +377,4 @@ dV/dQ 항에 **7~15 % 계통 오차**다. 서브의 포팅도 모델을 고치�
 - [[22p-physics-or-degeneracy]]
 - [[rate-independent-li-plating-signature]] — 여섯째 축의 원전 서명과 모드 회계
 - [[ic-peak-area-direct-mode-readout-lfp]] — 사전믿음 등식과 LFP 의 `(X1, X3)` 축퇴
+- [[piml-physics-injection-points]] — 일곱째 축의 원전(Sun (Xiong) 2025)에서 이 맞춤의 출력이 ML 정답(⑥)이 된다

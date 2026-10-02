@@ -1,0 +1,563 @@
+{
+ "slug": "sun2025_dl-eis-degradation-mode-diagnostics",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-02",
+ "sources": [
+  "475d1950-3._A_deep_learning_approach_for_enhanced_degradation_diagnostics_of_NMC_lithium-ion_batteries_via_impedance_spectra.pdf",
+  "69045ee7-3._Sup_A_deep_learning_approach_for_enhanced_degradation_diagnostics_of_NMC_lithium-ion_batteries_via_impedance_spectra.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Overview of the developed degradation dataset. The impedance spectra of fresh batteries at different temperatures (a) and different SOC levels (c). The charging (b) and discharge (d) curves under different temperatures and operating conditions. (e) The impedance spectra at 25 °C during battery degradation. (f) LLI variation during battery degradation under different temperatures and operating conditions. 896",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    393.5,
+    563.6,
+    729.5
+   ],
+   "w": 2218,
+   "h": 1401,
+   "dpi": 300,
+   "src": "475d1950-3._A_deep_learning_approach_for_enhanced_degradation_diagnostics_of_NMC_lithium-ion_batteries_via_impedance_spectra.pdf",
+   "blank": 0.957,
+   "note": "봤다 + 확대(1b · 1d · 1f) + 벡터 판독(1a · 1f). (a) 신품 25/35 °C 원 스펙트럼(유도성 포함), 실축 교차 16.46/15.82 mΩ · (b) 범례 25℃@2C · 35℃@2C · 25℃@1C (셋째 군 = 35 °C@2C) — 4.2 V 도달 ≈1.60/1.68/1.91 Ah · (c) SOC 100/0 % · (d) 방전 ≈1.77/1.85/1.91 Ah · (e) 25 °C 노화(율 미표기) · (f) LLI(적합값) 25 °C@2C 82 점 2.78→61.6 % · 35 °C@2C 66 점 0.37→33.9 % · 1 C 점선 →34.1 %(계단 하강 2 회). ⚠ 1f 25 °C@2C 61.6 % ↔ 그림 8a 표적 최대 30.9 % (digest §13-2). 자르기 정상."
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Framework of the proposed method. 897",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    570.6,
+    563.6,
+    746.6
+   ],
+   "w": 2218,
+   "h": 734,
+   "dpi": 300,
+   "src": "475d1950-3._A_deep_learning_approach_for_enhanced_degradation_diagnostics_of_NMC_lithium-ion_batteries_via_impedance_spectra.pdf",
+   "blank": 0.842,
+   "note": "봤다(래스터 1010×545). 입력 Z′(f_i)·Z″(f_i) → Conv → GRU h_1…h_N(주파수 순) → attention → dense; Integration I pre-trained · II fine-tuning. 자르기 정상."
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Half-cell model. (a) Schematic diagram of potential matching between the positive and negative electrodes. (b) Comparison of reconstructed charging curves with the measured one under different aging states.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    61.4,
+    563.6,
+    209.4
+   ],
+   "w": 2218,
+   "h": 617,
+   "dpi": 300,
+   "src": "475d1950-3._A_deep_learning_approach_for_enhanced_degradation_diagnostics_of_NMC_lithium-ion_batteries_via_impedance_spectra.pdf",
+   "blank": 0.959,
+   "note": "봤다 + 확대(4b). (a) 전위 맞춤 모식도 · (b) 재구성 vs 'Ground truth'(= 측정 전압) — 신품 3.29 V → ≈1.86 Ah, 노화 3.62 V → ≈1.10 Ah. ⚠ 'Ground truth' 가 이 그림에서는 측정 곡선(그림 8–9 에서는 적합 라벨). 자르기 정상."
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Strategy for generating simulation data. (a) Comparison between the simulated and measured impedance spectrum. (b) Design space of the degradation modes. (c) Impedance spectra generated under different combinations of degradation modes.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    250.4,
+    563.6,
+    488.3
+   ],
+   "w": 2218,
+   "h": 992,
+   "dpi": 300,
+   "src": "475d1950-3._A_deep_learning_approach_for_enhanced_degradation_diagnostics_of_NMC_lithium-ion_batteries_via_impedance_spectra.pdf",
+   "blank": 0.969,
+   "note": "봤다 + 확대(5c) + 벡터 판독. (a) 측정 · 시뮬 각 43 점, 복소 거리 RMS 0.755 mΩ(인쇄 0.76) · (b) 10×10×10 완전 요인 설계 · (c) 1,000 개 중 64 개, 아크 −Im 폭 ≤0.10 mΩ · 꼬리 0.1 Hz −Im 폭 8.32 mΩ. ⚠ 본문 'significant changes' 는 꼬리에만 해당. 자르기 정상."
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Developed deep learning framework and mechanistic model integration strategy. (a) Architecture of the DNN. (b) Baseline model using only experimental data for training. (c) Incremental learning incorporating simulation data from the mechanistic model.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    61.5,
+    563.6,
+    338.4
+   ],
+   "w": 2218,
+   "h": 1155,
+   "dpi": 300,
+   "src": "475d1950-3._A_deep_learning_approach_for_enhanced_degradation_diagnostics_of_NMC_lithium-ion_batteries_via_impedance_spectra.pdf",
+   "blank": 0.894,
+   "note": "봤다(블록도). (a) Conv→GRU→Attention→Dense, 텐서 모양 표기 없음 · (b) 기준선 exp→DNN · (c) sim 사전학습 → exp 재학습(이차 DNN). 자르기 정상."
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 9,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Estimation results for the degree of degradation modes under the 1 C charge–discharge condition at 25 °C. The estimated trajectories of LLI (a) and LAMPE (b) for batteries in the test dataset. The distribution of LLI (c) and LAMPE (d) estimation errors for the baseline model versus the integration strategy. 902",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    508.1,
+    563.6,
+    738.1
+   ],
+   "w": 2218,
+   "h": 959,
+   "dpi": 300,
+   "src": "475d1950-3._A_deep_learning_approach_for_enhanced_degradation_diagnostics_of_NMC_lithium-ion_batteries_via_impedance_spectra.pdf",
+   "blank": 0.93,
+   "note": "봤다 + 벡터 판독. (a)(b) 시험 셀 6(Cell #1–#6) 추정 궤적 — (b) 표식 7 사이클 간격, 수명 끝 155–190 사이클 · (c)(d) |오차| 히스토그램. ⚠ Baseline 막대 폭 ≈1 %, Integration ≈0.5 % — 높이 직접 비교 불가 (digest §8.5). 자르기 정상."
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 10,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Estimation results for the degree of degradation modes under the 2 C charge–discharge condition at 25 °C. The estimated results of LLI (a), LAMPE (b), and LAMNE (c) for the baseline model versus the integration strategy. (d) The distribution of estimation errors for the baseline model versus the integration strategy. 903",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    502.1,
+    563.6,
+    738.1
+   ],
+   "w": 2218,
+   "h": 984,
+   "dpi": 300,
+   "src": "475d1950-3._A_deep_learning_approach_for_enhanced_degradation_diagnostics_of_NMC_lithium-ion_batteries_via_impedance_spectra.pdf",
+   "blank": 0.935,
+   "note": "봤다 + 벡터 판독. 2 C·25 °C 산점(가로 = 적합 라벨) LLI 163 · LAM_PE 152 · LAM_NE 116 점 — RMSE · MAX 가 표 2 재현(8c Integration 만 3.73 vs 3.82). 8b 표적 0 에서 예측 7.77 = 표 2 MAX. 자르기 정상."
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 11,
+   "file": "fig_9.png",
+   "caption": "Fig. 9. Estimation results for the degree of degradation modes under the 2 C charge–discharge condition at 35 °C. The estimated results of LLI (a), LAMPE (b) and LAMNE (c) for the baseline model versus the integration strategy. (d) The distribution of estimation errors for the baseline model versus the integration strategy.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    61.4,
+    563.6,
+    294.4
+   ],
+   "w": 2218,
+   "h": 972,
+   "dpi": 300,
+   "src": "475d1950-3._A_deep_learning_approach_for_enhanced_degradation_diagnostics_of_NMC_lithium-ion_batteries_via_impedance_spectra.pdf",
+   "blank": 0.934,
+   "note": "봤다 + 벡터 판독. 2 C·35 °C 산점 LLI 289 · LAM_PE 238 · LAM_NE 212 점 — 표 2 재현. ⚠ 9b LAM_PE 표적 간극 6.09 → 14.40 % (라벨 불연속, digest §4.4). 자르기 정상."
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 11,
+   "file": "fig_10.png",
+   "caption": "Fig. 10. Comparison of various machine learning methods. (a) The 1 C charge–discharge condition at 25 °C. (b) The 2 C charge–discharge condition at 25 °C. (c) The 1 C charge–discharge condition at 35 °C.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    332.4,
+    563.6,
+    476.4
+   ],
+   "w": 2218,
+   "h": 600,
+   "dpi": 300,
+   "src": "475d1950-3._A_deep_learning_approach_for_enhanced_degradation_diagnostics_of_NMC_lithium-ion_batteries_via_impedance_spectra.pdf",
+   "blank": 0.96,
+   "note": "봤다. 범례 'ANN'(본문 · 표 2 는 'FCNN'). 표식 좌표 = 표 2. ⚠ 캡션 (c) '1 C … at 35 °C' 인데 수치는 표 2 의 35 °C@2 C 블록. Baseline 표식 없음. 자르기 정상."
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 12,
+   "file": "fig_11.png",
+   "caption": "Fig. 11. Attention weights generated by the DNN model for estimating the degree of various degradation modes across the test battery under the 1 C charge–discharge condition at 25 °C. Impedance spectra at early, middle, and late stages of aging utilized for LLI (a) and LAMPE (b) estimation. Attention weights across different frequencies for LLI (c) and LAMPE (d) estimation.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    274.6,
+    563.7,
+    494.5
+   ],
+   "w": 2218,
+   "h": 917,
+   "dpi": 300,
+   "src": "475d1950-3._A_deep_learning_approach_for_enhanced_degradation_diagnostics_of_NMC_lithium-ion_batteries_via_impedance_spectra.pdf",
+   "blank": 0.919,
+   "note": "봤다 + 벡터 판독(11c · d). 가중치 곡선 합 1.000(43 점), LLI 신품 ≈1/43 균일; LLI ↔ LAM_PE 노화 변화 상관 −0.962, 부호 마디 공유(0.32–0.40 · 8–12.6 · 251–316 Hz 구간). 색막대 4 개는 래스터. 자르기 정상."
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 13,
+   "file": "fig_12.png",
+   "caption": "Fig. 12. Impedance spectra at early, middle, and late stages of aging utilized for estimating the degree of various degradation modes across the test battery under the 2 C charge–discharge condition. (a) LLI at 25 °C. (b) LAMPE at 25 °C. (c) LAMNE at 25 °C. (d) LLI at 35 °C. (e) LAMPE at 35 °C. (f) LAMNE at 35 °C.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    61.9,
+    563.6,
+    305.8
+   ],
+   "w": 2218,
+   "h": 1018,
+   "dpi": 300,
+   "src": "475d1950-3._A_deep_learning_approach_for_enhanced_degradation_diagnostics_of_NMC_lithium-ion_batteries_via_impedance_spectra.pdf",
+   "blank": 0.946,
+   "note": "봤다 + 표식 수(패널당 129–134 = 스펙트럼 3 × 43). 색막대에 숫자 없음. b ≈ c · e ≈ f (두 LAM 같은 자리); LLI 최고 가중치 25 °C 고주파 끝 ↔ 35 °C 저주파 끝. 자르기 정상."
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Fig. S1. K-K validation results of the measured impedance spectra under different temperatures and operating conditions. K-K fitting (a) and relative residual (c) under the 1 C charge-discharge condition at 25 ℃. K-K fitting (b) and relative residual (e) under the 2 C charge-discharge condition at 25 ℃. K-K fitting (c) and relative residual (f) under the 2 C charge-discharge condition at 35 ℃.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    71.0,
+    593.9,
+    338.1
+   ],
+   "w": 2125,
+   "h": 1113,
+   "dpi": 300,
+   "src": "69045ee7-3._Sup_A_deep_learning_approach_for_enhanced_degradation_diagnostics_of_NMC_lithium-ion_batteries_via_impedance_spectra.pdf",
+   "blank": 0.933,
+   "note": "봤다(래스터). K-K 맞춤 (a)–(c) · 잔차 (d)–(f); (e) 2 C/25 °C 허부 ≈ −0.95 %. ⚠ 캡션 패널 문자 오류((c) 두 번 · (d) 없음). 신품 스펙트럼만. 자르기 정상."
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Fig. S2. Structure of the ECM.",
+   "rotated_deg": 0,
+   "bbox": [
+    204.0,
+    68.7,
+    391.2,
+    137.3
+   ],
+   "w": 780,
+   "h": 287,
+   "dpi": 300,
+   "src": "69045ee7-3._Sup_A_deep_learning_approach_for_enhanced_degradation_diagnostics_of_NMC_lithium-ion_batteries_via_impedance_spectra.pdf",
+   "blank": 0.903,
+   "note": "봤다. ECM R_s – (R_SEI ∥ CPE_SEI) – ((R_ct + W) ∥ CPE_ct). 자르기 정상."
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 3,
+   "file": "fig_S3.png",
+   "caption": "Fig. S3. Identified parameters of the ECM under varying temperatures and operating conditions. (a) 2C charge-discharge condition at 25 ℃. (b) 2C charge-discharge condition at 35 ℃.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    177.4,
+    561.9,
+    387.8
+   ],
+   "w": 1992,
+   "h": 877,
+   "dpi": 300,
+   "src": "69045ee7-3._Sup_A_deep_learning_approach_for_enhanced_degradation_diagnostics_of_NMC_lithium-ion_batteries_via_impedance_spectra.pdf",
+   "blank": 0.962,
+   "note": "봤다. 2 C 두 군 · 셀 하나 · 사이클 0–80 (9 점). ⚠ (b) 35 °C R_s ≈8.8 mΩ ↔ 같은 조건 Nyquist 실축 교차 ≈15.8 mΩ (digest §11). 자르기 정상."
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 4,
+   "file": "fig_S4.png",
+   "caption": "Fig. S4. Bode plots for the simulated and measured impedance spectra.",
+   "rotated_deg": 0,
+   "bbox": [
+    136.5,
+    559.8,
+    455.5,
+    732.1
+   ],
+   "w": 1330,
+   "h": 719,
+   "dpi": 300,
+   "src": "69045ee7-3._Sup_A_deep_learning_approach_for_enhanced_degradation_diagnostics_of_NMC_lithium-ion_batteries_via_impedance_spectra.pdf",
+   "blank": 0.932,
+   "note": "봤다. Bode 시뮬 vs 측정 — 위상 극소 ≈100 Hz(시뮬) vs ≈250 Hz(측정). 자르기 정상."
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 5,
+   "file": "fig_S5.png",
+   "caption": "Fig. S5. Identified parameters of the ECM for the simulated and measured impedance spectra.",
+   "rotated_deg": 0,
+   "bbox": [
+    94.2,
+    76.1,
+    508.9,
+    225.1
+   ],
+   "w": 1729,
+   "h": 621,
+   "dpi": 300,
+   "src": "69045ee7-3._Sup_A_deep_learning_approach_for_enhanced_degradation_diagnostics_of_NMC_lithium-ion_batteries_via_impedance_spectra.pdf",
+   "blank": 0.795,
+   "note": "봤다. ⚠ 범례 없음 — 시뮬 · 측정 막대 구별 불가. R_s 10.0/9.6 · R_SEI 9.5/9.6 · R_ct 7.9/7.5 mΩ. 자르기 정상."
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 5,
+   "file": "fig_S6.png",
+   "caption": "Fig. S6. Structure and principle of the GRU.",
+   "rotated_deg": 0,
+   "bbox": [
+    141.5,
+    307.2,
+    453.8,
+    523.2
+   ],
+   "w": 1302,
+   "h": 902,
+   "dpi": 300,
+   "src": "69045ee7-3._Sup_A_deep_learning_approach_for_enhanced_degradation_diagnostics_of_NMC_lithium-ion_batteries_via_impedance_spectra.pdf",
+   "blank": 0.548,
+   "note": "봤다. GRU 셀 도식 — ⚠ 갱신 게이트 배치가 본문 식 (9) 와 반대, ⊙ 를 'Matrix multiplication' 으로 표기. 공백 비율 0.55 는 도식 회색 배경 때문(자르기 정상)."
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 10,
+   "file": "tab_1.png",
+   "caption": "Table 1 Performance evaluation metrics of the proposed method.",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    42.7,
+    562.7,
+    775.3
+   ],
+   "w": 2165,
+   "h": 2992,
+   "dpi": 294,
+   "src": "475d1950-3._A_deep_learning_approach_for_enhanced_degradation_diagnostics_of_NMC_lithium-ion_batteries_via_impedance_spectra.pdf",
+   "blank": 0.886,
+   "note": "⚠ 과대 영역 — 본문 10 쪽 전체(본문 텍스트 + 그림 8 포함). 열어서 확인만 했다. 표는 t1m(수동 크롭)을 볼 것."
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 12,
+   "file": "tab_2.png",
+   "caption": "Table 2 Statistics of estimation errors across various machine learning methods. Condition/Methods Modes Error (%) Developed model Baseline FCNN SVM GPR RMSE 2.87 4.64 4.27 5.07 7.30 MAX 7.51 14.36 12.98 14.49 21.21 RMSE 2.09 5.64 3.76 5.50 7.04 MAX 5.42 16.09 6.75 11.69 19.41 RMSE 1.98 3.90 6.35 3.23 4.07 MAX 5.11 10.52 14.55 9.26 11.87 RMSE 2.73 5.24 6.94 3.88 4.29 MAX 7.77 14.00 20.26 11.64 12.69 RMSE 3.82 5.75 5.86 7.09 6.78 MAX 7.97 15.15 13.28 26.12 15.17 RMSE 1.76 3.58 4.64 3.22 2.78 MAX 4.55 10.59 10.54 10.85 9.79 RMSE 2.12 3.83 7.13 6.25 5.83 MAX 6.26 10.97 19.57 17.67 16.78 RMSE 3.01 6.25 9.98 5.02 6.57 MAX 7.53 16.95 14.69 22.86 18.25",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    42.7,
+    562.7,
+    760.4
+   ],
+   "w": 2210,
+   "h": 2991,
+   "dpi": 300,
+   "src": "475d1950-3._A_deep_learning_approach_for_enhanced_degradation_diagnostics_of_NMC_lithium-ion_batteries_via_impedance_spectra.pdf",
+   "blank": 0.902,
+   "note": "⚠ 과대 영역 — 본문 12 쪽 전체(그림 11 포함). 열어서 확인만 했다. 표는 t2m."
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 1,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Details of the developed dataset",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    76.4,
+    510.5,
+    672.2
+   ],
+   "w": 1773,
+   "h": 2484,
+   "dpi": 300,
+   "src": "69045ee7-3._Sup_A_deep_learning_approach_for_enhanced_degradation_diagnostics_of_NMC_lithium-ion_batteries_via_impedance_spectra.pdf",
+   "blank": 0.945,
+   "note": "⚠ 과대 영역 — SI 1 쪽 위쪽 대부분(Note 2 본문 · K-K 잔차 식 포함). 열어서 확인만 했다. 표는 tS1m."
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 3,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Comparison between the proposed method and the ECM model-based diagnostic approach LLI LAMPE LAMNE Qualitative Related to Rct and ECM-based Related to RSEI Related to Rct and Y0 Diagnosis Y0 The Quantitative    proposed Diagnosis method",
+   "rotated_deg": 0,
+   "bbox": [
+    92.2,
+    148.2,
+    505.8,
+    748.2
+   ],
+   "w": 1724,
+   "h": 2501,
+   "dpi": 300,
+   "src": "69045ee7-3._Sup_A_deep_learning_approach_for_enhanced_degradation_diagnostics_of_NMC_lithium-ion_batteries_via_impedance_spectra.pdf",
+   "blank": 0.948,
+   "note": "⚠ 과대 영역 — 그림 S2 캡션 · 그림 S3 · Note 4 머리까지 포함(fig_S3 과 겹침). 열어서 확인만 했다. 표는 tS2m."
+  },
+  {
+   "key": "f3m",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3_manual_p5.png",
+   "caption": "Fig. 3. Procedure for quantitatively obtaining the degree of degradation modes.",
+   "rotated_deg": 0,
+   "bbox": [
+    128,
+    60,
+    462,
+    287
+   ],
+   "w": 1392,
+   "h": 946,
+   "dpi": 300,
+   "src": "475d1950-3._A_deep_learning_approach_for_enhanced_degradation_diagnostics_of_NMC_lithium-ion_batteries_via_impedance_spectra.pdf",
+   "blank": null,
+   "manual": true,
+   "note": "수동 크롭(본문 5 쪽 · 300 dpi · 캡션 포함) — 자동 추출이 f3 을 '영역 없음' 으로 제외(벡터 도식 + 텍스트, 누락). 봤다: OCP 획득 4 단계(해체 → 전극 회수 → Li 대극 코인셀 → OCP 시험) · 충전곡선 맞춤(식 (2) 재구성 → PSO → 식 (3) 최소화로 p0·n0·Q_PE·Q_NE·R → 신품 대비 → LLI·LAM_PE·LAM_NE). 'R□by' 글리프 누락 1."
+  },
+  {
+   "key": "t1m",
+   "kind": "table",
+   "label": "1",
+   "page": 10,
+   "file": "tab_1_manual_p10.png",
+   "caption": "Table 1 Performance evaluation metrics of the proposed method.",
+   "rotated_deg": 0,
+   "bbox": [
+    37,
+    64,
+    558,
+    146
+   ],
+   "w": 2171,
+   "h": 343,
+   "dpi": 300,
+   "src": "475d1950-3._A_deep_learning_approach_for_enhanced_degradation_diagnostics_of_NMC_lithium-ion_batteries_via_impedance_spectra.pdf",
+   "blank": null,
+   "manual": true,
+   "note": "수동 크롭(본문 10 쪽 위 · 300 dpi · 캡션 포함) — 자동 t1 이 쪽 전체(과대). 봤다: 열 머리 '25 °C@1 C · 25 °C@2 C · 35 °C@2 C'(렌더에만 있고 텍스트 층에는 없다) × LLI · LAM_PE(· LAM_NE) × RMSE · MAE · R². 값은 텍스트 층과 같다."
+  },
+  {
+   "key": "t2m",
+   "kind": "table",
+   "label": "2",
+   "page": 12,
+   "file": "tab_2_manual_p12.png",
+   "caption": "Table 2 Statistics of estimation errors across various machine learning methods.",
+   "rotated_deg": 0,
+   "bbox": [
+    37,
+    64,
+    558,
+    262
+   ],
+   "w": 2171,
+   "h": 826,
+   "dpi": 300,
+   "src": "475d1950-3._A_deep_learning_approach_for_enhanced_degradation_diagnostics_of_NMC_lithium-ion_batteries_via_impedance_spectra.pdf",
+   "blank": null,
+   "manual": true,
+   "note": "수동 크롭(본문 12 쪽 위 · 300 dpi · 캡션 포함) — 자동 t2 가 쪽 전체(과대). 봤다: 조건 열 '25 °C@1 C · 25 °C@2 C · 35 °C@2 C'(렌더에만) × 모드 × RMSE/MAX × Developed · Baseline · FCNN · SVM · GPR. 값은 텍스트 층과 같다."
+  },
+  {
+   "key": "tS1m",
+   "kind": "table",
+   "label": "S1",
+   "page": 1,
+   "file": "tab_S1_manual_p1.png",
+   "caption": "Table S1. Details of the developed dataset",
+   "rotated_deg": 0,
+   "bbox": [
+    90,
+    136,
+    510,
+    405
+   ],
+   "w": 1750,
+   "h": 1122,
+   "dpi": 300,
+   "src": "69045ee7-3._Sup_A_deep_learning_approach_for_enhanced_degradation_diagnostics_of_NMC_lithium-ion_batteries_via_impedance_spectra.pdf",
+   "blank": null,
+   "manual": true,
+   "note": "수동 크롭(SI 1 쪽 · 300 dpi · 캡션 · 각주 포함) — 자동 tS1 과대. 봤다: 'Group 1: 25 ℃ @ 1 C' 1.905–1.991 · 'Group 2: 25 ℃ @ 2 C' 1.694–1.771 · ⚠ 'Group 2: 35 ℃ @ 1 C' 1.778–1.827 (군 번호 중복 · 본문 · 표 1–2 는 35 °C@2 C) + 각주 '충전 과정 전류 적분'."
+  },
+  {
+   "key": "tS2m",
+   "kind": "table",
+   "label": "S2",
+   "page": 3,
+   "file": "tab_S2_manual_p3.png",
+   "caption": "Table S2. Comparison between the proposed method and the ECM model-based diagnostic approach",
+   "rotated_deg": 0,
+   "bbox": [
+    92,
+    448,
+    506,
+    640
+   ],
+   "w": 1726,
+   "h": 801,
+   "dpi": 300,
+   "src": "69045ee7-3._Sup_A_deep_learning_approach_for_enhanced_degradation_diagnostics_of_NMC_lithium-ion_batteries_via_impedance_spectra.pdf",
+   "blank": null,
+   "manual": true,
+   "note": "수동 크롭(SI 3 쪽 · 300 dpi · 캡션 포함) — 자동 tS2 가 그림 S3 를 품은 과대 영역. 봤다: ECM 정성 진단 — LLI 'Related to R_SEI' · LAM_PE · LAM_NE 둘 다 'Related to R_ct and Y0'; 제안 방법 정량 ✓ ✓ ✓ (텍스트 층에서는 U+F050 글리프)."
+  }
+ ]
+}

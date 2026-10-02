@@ -2,10 +2,10 @@
 title: interpretable ML 4분류 — 그리고 그 분류가 묻지 않는 것
 description: "Wang et al. 2025 리뷰의 white box / PIML / physics-inspired feature engineering / post-hoc 4분류, PVS·SEV 가 앉는 자리, 그리고 이 분류 체계에 identifiability·uncertainty 어휘가 통째로 없다는 전수 확인"
 created: 2026-09-03
-updated: 2026-09-03
+updated: 2026-10-02
 type: concept
 tags: [battery, degradation, research]
-sources: [raw/papers/wang2025_interpretable-ml-battery-prognosis.md, raw/papers/su2024_drt-soh-health-features.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md]
+sources: [raw/papers/wang2025_interpretable-ml-battery-prognosis.md, raw/papers/su2024_drt-soh-health-features.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/sun2025_dl-eis-degradation-mode-diagnostics.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -163,6 +163,23 @@ cycle life, **MAPE 9.2%**". 원전(raw:
 사례다 (첫 번째는 §4.2 의 Kim 2023 — [[dv-peak-heterogeneity-descriptor]],
 그때는 리뷰가 아니라 **우리 판독의 추론**이 틀렸다. 세 번째가 위 정정 2).
 
+## ★ 주의(attention) 해석의 실례 — 두 모드의 "민감 주파수" 가 한 패턴의 부호 반전 (2026-10-02)
+
+위 표 4 행(Post-hoc)의 "방법마다 결과가 다름 · 인과 이해 제한" 이 실셀 EIS 에서 구체적인 형태로 나왔다. Sun, Xiong, Wang,
+Li, Sun 2025 (*J. Energy Chem.* 107, 894 — `raw/papers/sun2025_dl-eis-degradation-mode-diagnostics.md` §9) 는 CNN–GRU 뒤의
+softmax 주의로 "LLI ↔ 319.60–1598.01 Hz + 0.32–9.91 Hz (SEI · 확산)", "LAM_PE ↔ 0.1–0.32 Hz + 12.40–251.1 Hz (확산 · 전하이동)"
+을 읽는다(`[인쇄]`). 주의는 구조 안에 있지만(③ 에 가깝다) 쓰임은 학습 뒤 해석(④)이다.
+
+`[재현·벡터]` 그 네 범위는 43 점 주파수 축을 **빈틈없이 나누는 상보 분할**(6 + 16 + 14 + 8 점)이고, 노화에 따른 두 모드의
+가중치 변화는 **r = −0.962** 의 거울상이며 부호가 바뀌는 마디 세 곳이 같다. 2 C 그림에서는 LAM_PE 와 LAM_NE 의 주의 지도가
+사실상 같다(`[도표]`).
+
+`[해석]` softmax 는 합이 1 이라 한 곳이 오르면 다른 곳이 내린다 — **출력마다 따로 읽은 주의 지도가 서로 거울상이면, 그것은
+두 출력이 서로 다른 신호를 쓴다는 증거가 아니라 같은 변화를 반대 부호로 읽는다는 신호다.** 이 분류의 사후해석 칸에 쓸 수
+있는 값싼 점검 하나: **출력별 주의(또는 saliency) 변화의 상관을 먼저 잰다** — 강한 음의 상관이면 "모드별 민감 대역" 서술을
+보류한다. 이 리뷰가 identifiability 를 묻지 않는 것(위 "이 분류가 묻지 않는 것" 절)과 같은 사각지대의 해석 쪽
+얼굴이다.
+
 ## 관련
 - [[pvs-sev-degradation-mode-features]] — 두 feature 가 이 분류의 어디에 앉는가
 - [[pvs-sev-lli-lampe-separability]] — 이 분류가 묻지 않는 질문을 대신 묻는 카드
@@ -171,3 +188,4 @@ cycle life, **MAPE 9.2%**". 원전(raw:
 - [[dv-peak-heterogeneity-descriptor]] — §4.2 의 대표 사례, 원전 대조 1회차
 - [[fused-lasso-feature-design-framework]] — 참조 [113] 의 원전, 원전 대조 3회차
 - [[zhang2020-eis-aging-dataset]] — §4.4 의 [127] 이 쓴 데이터의 진짜 출처
+- [[piml-physics-injection-points]] — 같은 편(Sun (Xiong) 2025)의 ⑤ + ⑥ 구조

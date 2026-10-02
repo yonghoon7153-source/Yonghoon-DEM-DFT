@@ -2,10 +2,10 @@
 title: PVS·SEV 는 LLI 와 LAM_PE 를 가르는가
 description: "Do the two physics-inspired features add an independent direction separating LLI from LAM_PE, or do they share one contrast"
 created: 2026-09-03
-updated: 2026-09-22
+updated: 2026-10-02
 type: research-question
 tags: [battery, degradation, research]
-sources: [raw/papers/2026-09-02-siwon-kim-degradation-mode-ml-seminar.md, raw/papers/2026-09-21-siwon-kim-si-gr-ica-lam-si-gitt-ocp.md, raw/transcripts/2026-09-03-voice-memo-007-degradation-mode-ml.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/wang2025_interpretable-ml-battery-prognosis.md, raw/papers/kim2023_graphite-heterogeneity-lifetime.md, raw/papers/su2024_drt-soh-health-features.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/zhang2020_eis-gpr-capacity-rul.md, raw/papers/tao2025_nondestructive-degradation-decoupling.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/mohtat2019_electrode-soh-estimability-expansion.md, raw/papers/natterer2026_re-halfcell-anode-potential-aging.md]
+sources: [raw/papers/2026-09-02-siwon-kim-degradation-mode-ml-seminar.md, raw/papers/2026-09-21-siwon-kim-si-gr-ica-lam-si-gitt-ocp.md, raw/transcripts/2026-09-03-voice-memo-007-degradation-mode-ml.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/wang2025_interpretable-ml-battery-prognosis.md, raw/papers/kim2023_graphite-heterogeneity-lifetime.md, raw/papers/su2024_drt-soh-health-features.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/zhang2020_eis-gpr-capacity-rul.md, raw/papers/tao2025_nondestructive-degradation-decoupling.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/mohtat2019_electrode-soh-estimability-expansion.md, raw/papers/natterer2026_re-halfcell-anode-potential-aging.md, raw/papers/sun2025_dl-eis-degradation-mode-diagnostics.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -212,6 +212,22 @@ H2 가 참일 수 있음에 주의한다 — 부호가 같다고 벡터가 평�
   오차가 아니다. (c) 화학이 graphite/LFP 하나이고 노이즈는 `σ_V=10 mV,
   σ_t=5 μm` 한 점 고정이다. 근거:
   `raw/papers/mohtat2019_electrode-soh-estimability-expansion.md`.
+
+- **[2026-10-02] 다른 관측(EIS)에서도 LLI 와 LAM_PE 는 "한 대비의 부호 반전" 으로만 나온다 — 그리고 두 LAM 은
+  같은 대역** (Sun, Xiong, Wang, Li, Sun 2025 *J. Energy Chem.* 107, 894 — 2026-10-02 논문 세미나 3번째 논문,
+  `raw/papers/sun2025_dl-eis-degradation-mode-diagnostics.md` §9). 43 주파수 EIS → CNN–GRU–attention DNN 이 적합 라벨
+  (LLI · LAM_PE · LAM_NE)을 회귀하고, 저자는 주의 가중치로 "LLI ↔ 319.60–1598.01 Hz + 0.32–9.91 Hz", "LAM_PE ↔
+  0.1–0.32 Hz + 12.40–251.1 Hz" 를 읽는다 (`[인쇄]`). `[재현·벡터]` 그 네 범위는 43 점 축을 **빈틈없이 나누는 상보
+  분할**(6 + 16 + 14 + 8 점, 0.32 Hz 하나만 공유)이고, 노화에 따른 두 모드의 가중치 변화는 **r = −0.962** 의
+  거울상이며 부호가 바뀌는 마디 세 곳이 같은 격자 구간에 있다. 2 C 패널(그림 12)에서는 LAM_PE 와 LAM_NE 의 주의
+  지도가 사실상 같고(`[도표]`), SI 표 S2 도 둘 다 "Related to R_ct and Y0" 다.
+  `[해석]` **H1 의 형식 — 두 모드를 따로 재는 것처럼 보이지만 실은 대비 하나 — 가 동역학(kinetic) 관측에서 다시
+  나온다.** 이 카드의 논지(아래 "이 카드가 속한 논지")가 SEV 를 "동역학 축이라 Lin 정리 사정권 밖" 으로 따로 둔
+  바로 그 자리의 첫 실셀 사례이고, 그 사례가 독립 채널을 보이지 않는다.
+  **범위 한정 4개**: (a) 주의 가중치는 감도(Jacobian)가 아니다 — 거울상이 "정보가 없다" 를 증명하지는 않는다;
+  (b) 정답 축이 **적합 라벨**(반쪽전지 창 5-매개 PSO 맞춤, 식별성 0)이다; (c) 관측이 PVS · SEV 가 아니라 EIS 다;
+  (d) 라벨이 세 모드 함께 자라는 궤적이라, 상관을 깬 시험이 없는 한 학습된 대비가 상관의 산물인지 구별되지 않는다
+  (digest §9.6 판정: LLI ↔ LAM "판단 불가" · LAM_PE ↔ LAM_NE "불성립").
 
 ## Evidence Against (H2 지지 / H1 반대)
 - **[2026-09-03 (10)] ★ 잃어버리는 방향은 LLI↔LAM_PE 가 아니다 — 구조적으로는
@@ -996,6 +1012,12 @@ H2 가 참일 수 있음에 주의한다 — 부호가 같다고 벡터가 평�
   - **SEV 는 이 덱에 한 번도 나오지 않는다.** 두 후보 중 PVS 쪽만 움직였다.
   - **어휘**: 8쪽 전체에 `uncertainty`·`identifiab*`·`unique`·`error bar` **0** —
     이 계보의 발표 두 편 모두 0 이다.
+
+- **[2026-10-02] Sun (Xiong) 2025 흡수 (2026-10-02 논문 세미나 3번째 논문 · 사용자 공급; EIS + 시뮬 사전학습 + 적합
+  라벨 DNN) — Evidence For(H1) 1건.** `open` 유지. EIS 라는 **동역학 관측**에서 LLI · LAM_PE 주의 패턴이 한 노화
+  변화의 부호 반전(r = −0.962)이고 두 LAM 이 같은 대역이다. 이 카드에 남는 할 일: SEV(동역학 축)를 판정할 때
+  **두 모드 감도의 상관부터 재고**, 모드가 반대로 움직이는 합성 조합으로 시험하는 단계(digest §17.4 실험 3)를
+  "이 질문에 답하는 방법" 에 넣는다 (미실행).
 
 ### 이 카드가 속한 논지 (2026-09-03)
 

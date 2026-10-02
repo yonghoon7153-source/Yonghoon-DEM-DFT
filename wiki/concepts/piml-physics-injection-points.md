@@ -2,10 +2,10 @@
 title: 물리가 ML 파이프라인에 들어가는 여섯 자리
 description: "Where exactly physics enters a PIML pipeline — loss, input feature, architecture, post-hoc, and the two slots the standard taxonomy omits: training data and the label itself"
 created: 2026-09-03
-updated: 2026-09-03
+updated: 2026-10-02
 type: concept
 tags: [battery, degradation, research]
-sources: [raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/wang2025_interpretable-ml-battery-prognosis.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/tao2025_nondestructive-degradation-decoupling.md]
+sources: [raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/wang2025_interpretable-ml-battery-prognosis.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/tao2025_nondestructive-degradation-decoupling.md, raw/papers/sun2025_dl-eis-degradation-mode-diagnostics.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -84,6 +84,35 @@ experimental full-cell curves". `[인쇄, 부록 A1]` 그 적합은 **사람이 
 ([[np-lip-ocv-reparametrization]] 참조). **다섯 편이 같은 형태로 오차막대
 없는 적합값에서 물리 결론을 뽑는다.**
 
+## ★ ⑤ + ⑥ 이 한 편에 — 실셀 EIS 사례 (2026-10-02, Sun (Xiong) 2025)
+
+Sun, Xiong, Wang, Li, Sun 2025 (*J. Energy Chem.* 107, 894 — `raw/papers/sun2025_dl-eis-degradation-mode-diagnostics.md`)
+은 43 주파수 EIS → LLI · LAM_PE · LAM_NE DNN 을 만들면서 두 자리를 동시에 쓴다.
+
+| 자리 | 이 편의 형태 | 라벨 |
+|---|---|---|
+| ⑤ 학습 데이터 | COMSOL 6.1 P2D 임피던스 1,000 개 — 세 모드를 각각 0–90 % 10 단계로 쓴 **완전 요인 격자**(모드 간 상관 0) | **설계값** (부피분율 · 화학량론의 정확한 값) |
+| ⑥ 라벨 그 자체 | 실험 셀 24 개(3 조건 × 8)의 **반쪽전지 창 5-매개 PSO 맞춤값** (`p0, n0, Q_PE, Q_NE` + 상수 `R`, 1–2 C 충전 곡선) | **적합값** — 원문이 "ground truth" 라 부른다 |
+
+`[재현]` **⑤ 의 크기는 외삽 regime 에서 커진다**: 실험 자료만으로 학습한 기준선 대비 RMSE **33.6–62.9 %** · 최대오차
+**42.9–66.3 %** 감소(표 2, 8 칸). Navidi 2024 의 ⑤(10–23 %)보다 크다. `[해석]` 이유는 설계다 — 기준선은 셀 2 개의 수명
+앞 50 % 로만 배워 수명 후반에서 포화하고(그림 8–9), ⑤ 가 **표적 범위**를 채운다. 단 이 크기는 ⑥ 위에서 잰 것이다(정답 =
+적합 라벨).
+
+`[해석]` 이 사례가 이 페이지에 더하는 것 셋:
+
+1. **⑤ 의 라벨과 ⑥ 의 라벨은 정의가 다른 두 양이다** — 시뮬 LAM = `1 − ε/ε₀`(부피분율), 실험 LAM = `1 − Q/Q_f`(맞춤 용량);
+   둘을 같은 척도로 맞춘 점검이 없다. 그리고 원문은 "실험 자료로만 다시 학습" 이 가장 좋았다고 적는다 → **최종 모형의
+   정답 축은 ⑥ 하나**이고, ⑤ 의 참값은 최종 평가에 남지 않는다.
+2. **③ 구조와 ⑤ 자료가 섞여 보고된다** — 같은 구조(CNN–GRU–attention)의 기준선은 8 칸 중 6 칸에서 단순 방법(FCNN · SVM ·
+   GPR) 가운데 하나 이상에 RMSE 로 진다(`[재현]` 표 2). "개발 모형의 우위" 는 구조가 아니라 ⑤ 의 몫으로 보이고, 비교 방법에 ⑤ 를 준 절제는 없다.
+3. **⑥ 의 징후가 원문 그림에 있다** — 35 °C LAM_PE 표적이 6.09 → 14.40 % 로 건너뛰는데 DNN 예측은 그 간극을 연속으로
+   잇는다(`[도표·벡터]`). 라벨 불연속을 모형이 "고쳐" 버리면 그만큼이 오차로 집계된다 — **⑥ 의 결함이 성능 숫자에 섞이는
+   경로**다.
+
+우리 쪽 쓸모: `mode-observability` Phase 3 의 **실셀 견본**. 우리는 ⑤ 쪽에 참값이 있으므로 "⑤ 사전학습만" 과 "⑥ 재학습
+뒤" 를 **참값 대비**로 채점할 수 있다 — 이 편이 원리적으로 못 하는 비교다 (digest §17.4 실험 2).
+
 ## 이 위키에서의 적용
 
 - **[[interpretable-ml-battery-prognosis-taxonomy]]** 의 4분류에 칸 두 개를
@@ -108,6 +137,8 @@ experimental full-cell curves". `[인쇄, 부록 A1]` 그 적합은 **사람이 
 
 ## 관련
 - [[interpretable-ml-battery-prognosis-taxonomy]]
+- [[mode-identifiability-unmeasured-lineage]] — §10: 적합값이 학습 라벨이 될 때 (Sun (Xiong) 2025)
+- [[halfcell-window-parametrization-lineage]] — ⑥ 라벨을 만든 맞춤의 자리(일곱 번째 축)
 - [[fitting-degeneracy]]
 - [[fused-lasso-feature-design-framework]]
 - [[pvs-sev-degradation-mode-features]]

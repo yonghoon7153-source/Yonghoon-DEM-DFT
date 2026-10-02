@@ -2,10 +2,10 @@
 title: 22p 결과는 물리인가 fitting degeneracy 인가
 description: "Is the seminar 22p LLI/LAM decomposition (LAM_PE=LAM_NE=13%, LLI=17%) real physics or an artifact of non-identifiability"
 created: 2026-08-11
-updated: 2026-10-01
+updated: 2026-10-02
 type: research-question
 tags: [battery, degradation, research]
-sources: [raw/repositories/degradation-degeneracy-audit.md, raw/papers/schmitt2022_sic-ocp-shape-change-degradation-modes.md, raw/papers/2026-09-21-siwon-kim-si-gr-ica-lam-si-gitt-ocp.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/cui2024_electrode-utilization-formation-cycle-life.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/mohtat2019_electrode-soh-estimability-expansion.md, raw/papers/natterer2026_re-halfcell-anode-potential-aging.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md]
+sources: [raw/repositories/degradation-degeneracy-audit.md, raw/papers/schmitt2022_sic-ocp-shape-change-degradation-modes.md, raw/papers/2026-09-21-siwon-kim-si-gr-ica-lam-si-gitt-ocp.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/cui2024_electrode-utilization-formation-cycle-life.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/mohtat2019_electrode-soh-estimability-expansion.md, raw/papers/natterer2026_re-halfcell-anode-potential-aging.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/sun2025_dl-eis-degradation-mode-diagnostics.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -204,6 +204,19 @@ LAM_PE ≈ LAM_NE 는 물리가 아니라 **flat valley 방향에서 두 전극�
   으로, LLI 0.10 단독이 LLI −0.025 · LAM_pe −0.137 · LAM_ne −0.161 로 나온다 — 모드가 `1 − (1 − mode)/SOH` 로 되감긴다
   (`raw/repositories/2026-10-01-pyprobe-shape-only-on-synthetic-truth.md`). [[np-lip-ocv-reparametrization]] 의 2 자유도가 수치로 확인됐고, 그 셋째 자유도를 닫는 것은 **절대 용량
   한 숫자**다. 위 "복원" 은 용량을 알려 준 덕이고, 범위 · 초기값 의존 (1–2 %p) 은 그 위에 더해지는 별개의 축이다.
+
+- **[2026-10-02] 같은 창 대수의 적합값이 ML 학습 라벨이 되면 — 세 모드가 함께 자라는 라벨 궤적과 라벨 불연속**
+  (Sun, Xiong, Wang, Li, Sun 2025 *J. Energy Chem.* 107, 894 — 2026-10-02 논문 세미나 3번째 논문,
+  `raw/papers/sun2025_dl-eis-degradation-mode-diagnostics.md` §4.4). 라벨 = 신품 1/20 C 코인셀 OCP 를 고정하고
+  **1–2 C 사이클 CC 충전 곡선**에 `p0, n0, Q_PE, Q_NE` + 상수 `R` 을 PSO 로 맞춘 값(식 1–4, 맞춤 RMSE 7.52 · 6.55 mV)
+  — 유일성 · 오차막대 · 다중 시작 0 (`[재현]` 어휘 전수, 합자 · 하이픈 정규화 후). `[도표·벡터]` 2 C 두 군의 시험
+  표적 최대가 세 모드 모두 30–39 % (25 °C: LLI 30.9 · LAM_PE 28.9 · LAM_NE 32.5; 35 °C: 33.5 · 38.9 · 32.7) — 22p 의
+  "세 값이 비슷하다" 와 같은 모양이 적합값으로 대량 생산되어 **'ground truth' 로 DNN 에 들어간다.** 그리고 35 °C
+  LAM_PE 표적이 6.09 → 14.40 % 로 **건너뛰는** 간극(238 표본 중 그 사이 0 개)을 DNN 예측은 연속으로 잇는다 —
+  맞춤의 basin 전환 징후. `[해석]` 이 카드의 가설에 **형식 유비 + multimodal 징후 한 건**을 더한다.
+  **범위 한정 3개**: (a) 관측이 pOCV 가 아니라 운용 전류 곡선 + 상수 `R` 이라 우리 격자 결론과 같은 층이 아니다
+  (오히려 `R ↔ p0 ↔ LLI` 별칭이라는 **추가** 축퇴가 예언된다 — 미검증); (b) 참값이 없으므로 대칭이 물리인지는 이
+  편으로 판정되지 않는다; (c) 라벨 간극은 그림 9b 하나의 관측이다.
 
 ## Evidence Against
 - (방향성 관측, 인용 금지 등급) half-cell 기준(Case 1)과 dQ/dV 항 추가가 복원
@@ -1068,6 +1081,13 @@ LAM_PE ≈ LAM_NE 는 물리가 아니라 **flat valley 방향에서 두 전극�
   자체의 "정답" 이 바뀌는지는 별도 물음. ② [[pyprobe]] 판정 대상 실험 — Evidence For 에 새 항목 (위). 미착수로 남는 것:
   **형상만** (용량 비제공) 으로 같은 시험 — [[np-lip-ocv-reparametrization]] 2 자유도의 직접 검증.
 - **[2026-10-01 추가] PyProBE 형상만 시험 완료** — Evidence For 에 추가. 미착수로 남는 것 없음 (이 도구 축에서).
+
+- **[2026-10-02] Sun (Xiong) 2025 흡수 (2026-10-02 논문 세미나 3번째 논문 · 사용자 공급) — Evidence For 1건, 그리고
+  값싼 판정 실험 하나가 우리 쪽으로 넘어왔다.** `active` 유지. 이 편의 라벨 맞춤은 우리 창 대수 + 상수 `R` 이고 관측이
+  1–2 C CC 충전 곡선이다 → 우리 RESULTS 가 "pOCV 급 상한" 이라 적은 바깥(운용 율)을 재는 실험이 생겼다: 합성 truth 의
+  1 C · 2 C 곡선에 이 편의 5-매개 맞춤을 다중 시작으로 걸어 라벨 오차의 방향(`(1,1,1)` 공통 모드 · `R ↔ p0 ↔ LLI`)을 잰다
+  (digest §17.4 실험 1, 미실행). 이 편은 [[mode-identifiability-unmeasured-lineage]] 표의 18 번째 행이다 — 형태: "적합값에
+  'ground truth' 라는 이름을 붙여 침묵을 지운다".
 
 ### 이 카드가 속한 논지 (2026-09-03)
 

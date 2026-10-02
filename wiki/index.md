@@ -1,12 +1,12 @@
 # 위키 색인
 
 > 내용 목록. 모든 위키 페이지를 종류별로 한 줄 요약과 함께 싣는다.
-> 마지막 갱신: 2026-10-01 | 전체 페이지: 56
+> 마지막 갱신: 2026-10-02 | 전체 페이지: 56
 
 ## Entities (satellite 프로젝트)
 
 - [[degradation-degeneracy]] — 22p LLI/LAM 분해가 물리인지 degeneracy 인지 판별하는 PyBaMM 합성 truth 프로젝트 (첫 satellite, 13차 게이트 리뷰 대기).
-- [[mode-observability]] — "관측을 늘리면 갈리는가": PVS·SEV Jacobian 식별 가능성 + ML 라벨 degeneracy 전파 (둘째 satellite, 2026-09-03 개설).
+- [[mode-observability]] — "관측을 늘리면 갈리는가": PVS·SEV Jacobian 식별 가능성 + ML 라벨 degeneracy 전파 (둘째 satellite, 2026-09-03 개설). **2026-10-02**: Phase 3 의 실셀 견본으로 Sun (Xiong) 2025 등록 — 적합 라벨 + P2D 임피던스 사전학습 EIS → 모드 DNN, 값싼 실험 3 건 제안(미실행).
 - [[isc-balancing-dataset-est-d-24-12331]] — **외부 데이터셋 entity** (`pack-fault`): Lai 2025 의 6S2P 18650 모듈 ISC × 수동/능동 균등화 공개 데이터. **정답 라벨이 설계값**(ISC 저항)인 유일한 실팩 데이터 — 단 우리 축(LLI/LAM)의 라벨이 아니다. `[재현]` 열 12(+열 13 환류 0.714 Ah)의 적분이 논문 Fig. 3/4 를 0.01 Ah 안에서 재현 · 열 14 인덱스 0 = 셀 #1. ⚠ 공개 아카이브의 `165_passive.xlsx` 가 깨져 있어 **Table 6 수동(추정 SoH 의 유일한 수동 숫자)·Fig. 5(b)·8(b) 재현 불가.** 조사 정본은 `bms-balancing/docs/ISC_LEAKAGE_DATASET.md`.
 - [[pybamm]] — **의존성 entity** (`pybamm`): 합성 truth 엔진. 우리 경로(full DFN · composite 음극 · 기본 uniform submesh · LLI 자체 계산)와 릴리스별 영향 판정표 — 26.9.0.0 **실측 (10-01)**: #5755 가 기본 x 격자 접합부에 닿아 합성 truth 최대 **2.7 mV** (방전 끝) · 균일 격자면 6e-8 V · 나머지 변경은 경로 밖 → **requirements 상한 고정은 게이트 승인 후보** (RUN_SCOPE).
 - [[pyprobe]] — **외부 도구 entity**: 전극 OCP 로 셀 OCV·ICA·DVA 를 맞춰 전극 용량·리튬 재고를 추정 (Imperial). **실측 (10-01, 우리 합성 truth · 용량 참값 제공)**: 기본 시작점 · 전 범위면 LLI/LAM ±1–2 %p 복원 (LAM_PE 만 −27 % 상대) · 범위 자르기 → RMSE 하강 + 답 1–2 %p 이동 · 초기값 → RMSE 2–4 배 먼 골 · dVdQ target 불안정 · DE bounds 하드코딩. 형상만의 시험은 미착수.
@@ -21,13 +21,13 @@
 - [[pvs-sev-degradation-mode-features]] — ICA 할선 기울기(PVS)와 스케일링 EOC 전압강하(SEV): 정의·물리 귀속·모드별 부호 구조, 그리고 두 부호 패턴이 같다는 관측.
 - [[birkl-ocv-degradation-diagnostic]] — 우리가 판정 대상으로 삼는 OCV fitting 절차의 원전(2017): 자유 파라미터 3개 + 컷오프 등식 소거, 그리고 저자들이 스스로 진술한 li/de 축퇴.
 - [[dubarry-mechanistic-mode-synthesis]] — 정방향 모드 합성(2012): α·β 창 좌표계 `(LR, OFS)` 와 li/de 4분류의 진짜 출처, 그리고 식 (8') 안에 이미 들어 있던 축퇴.
-- [[interpretable-ml-battery-prognosis-taxonomy]] — interpretable ML 4분류(white box·PIML·physics-inspired feature·post-hoc), PVS·SEV 가 앉는 자리, 그리고 그 분류에 identifiability·uncertainty 어휘가 0회라는 전수 확인.
+- [[interpretable-ml-battery-prognosis-taxonomy]] — interpretable ML 4분류(white box·PIML·physics-inspired feature·post-hoc), PVS·SEV 가 앉는 자리, 그리고 그 분류에 identifiability·uncertainty 어휘가 0회라는 전수 확인. **2026-10-02 갱신(Sun (Xiong) 2025)**: 주의(attention) 해석의 실례 — 두 모드의 "민감 주파수" 가 43 점 축의 상보 분할이고 노화 변화가 r = −0.962 거울상 → 출력별 주의 변화의 상관을 먼저 재는 점검.
 - [[zhang2020-eis-aging-dataset]] — Phase 2 가 쓰는 EIS 데이터의 정체 (2026-09-03 원전 대조로 verified): Eunicell LR2032 코인셀 12개 · 1C CC-CV / 2C CC · `state I~IX` 아홉 정의와 그중 넷이 DC 전류 중이라는 사실 · 모드 라벨 부재 확정 · ARD 가 고른 "두 주파수" 의 비식별성.
 - [[fused-lasso-feature-design-framework]] — Rhyu 2025 의 자동 feature 설계 7단계: 물리는 후보를 지우고 사후 설명만 하며 feature 형태는 선형대수가 만든다, 그리고 이 계보에서 가장 엄격한 검증 설계(agnostic 기준선 + 프로토콜 group CV).
 - [[thermo-kinetic-loss-partition]] — 전류를 축으로 쓰는 ΔE/η 분해 (Tao 2025): LLI·LAM_PE·LAM_NE 가 **전부 ΔE 한 칸 안**에 들어간다는 경계 확정, 그리고 "관측을 늘리면 갈리는가" 의 네 번째 후보(다전류 관측).
 - [[np-lip-ocv-reparametrization]] — Lin & Khoo 2024 의 `(N/P, Li/P)` 최소 매개화와 **2 자유도 정리**: SOC 정규화 full-cell OCV 형상은 `(1−LLI):(1−LAM_NE):(1−LAM_PE)` 의 **비(比)** 에만 의존한다 → `LLI = LAM_PE = LAM_NE = x` 는 곡선을 전혀 바꾸지 않는 **닫힌 형태 null 방향**. 전극 DV fraction `λ±` 과 네 regime 도 여기.
 - [[nullspace-coefficient-interpretation]] — Schaeffer 2024 의 nullspace 관점: `X(β+w)=Xβ` 이므로 **데이터는 계수를 부분공간 하나만큼 결정하지 못하고 그 안의 점은 정칙화가 고른다**. RR·PCR·PLS 는 그 성분을 0 으로 두고 lasso 계열은 아니다. "계수가 작다 ⇒ 중요하지 않다" 의 그림판 반증, 그리고 **우리 축퇴 방향을 그리는 기계**(식 19 `γ`-완화 사영 + 직교 성분 대조) — 파일·함수 이름까지.
-- [[piml-physics-injection-points]] — 물리가 ML 파이프라인에 들어가는 **여섯** 자리: 표준 4분류(손실항·입력 feature·구조·사후해석)에 **학습 데이터**와 **라벨 그 자체**를 더한다. Navidi 2024 의 ablation 이 준 첫 실측 순위 **① 손실항 ≫ ⑤ 학습 데이터**, 그리고 여섯째 자리(정답이 물리 모형의 적합값)가 **방법 비교로는 원리적으로 검출되지 않는다**는 사각지대.
+- [[piml-physics-injection-points]] — 물리가 ML 파이프라인에 들어가는 **여섯** 자리: 표준 4분류(손실항·입력 feature·구조·사후해석)에 **학습 데이터**와 **라벨 그 자체**를 더한다. Navidi 2024 의 ablation 이 준 첫 실측 순위 **① 손실항 ≫ ⑤ 학습 데이터**, 그리고 여섯째 자리(정답이 물리 모형의 적합값)가 **방법 비교로는 원리적으로 검출되지 않는다**는 사각지대. **2026-10-02 갱신(Sun (Xiong) 2025 — 2026-10-02 논문 세미나 3번째)**: ⑤ + ⑥ 이 한 편에 — ⑤ 의 크기가 외삽 regime 에서 RMSE 33.6–62.9 % 감소(정답은 ⑥ 적합 라벨), ⑤ 설계 라벨 ↔ ⑥ 적합 라벨의 정의 불일치, 구조 ③ 와 자료 ⑤ 의 혼동, 라벨 간극 6.09 → 14.40 % 를 DNN 이 잇는 경로.
 - [[constrained-crb-identifiability]] — 등식 제약이 걸린 상태의 Fisher/CRB (Stoica–Ng nullspace 사영, Mohtat 2019 식 28–34): 판정이 **이분법(𝒪ᵀ𝓘_f𝒪 특이 여부) + 정도(sqrt diag Σ)** 두 층이라는 것, 이 계보가 `Σ` 를 구해 놓고 **대각선만 보고하는 공통 습관**, 그리고 **제약 추가(모르는 방향을 줄임) ≠ 관측 추가(정보를 늘림)** 의 구분과 관측 추가가 이득이 되는 기계적 조건(새 감도 열 ≠ 0).
 - [[data-window-identifiability]] — 관측 창 `DW = [Q_s, Q_e]`(DOD 구간)이 식별 가능성을 정하는 **세 번째 조작**(제약 추가·관측 추가와 구분: 감도행렬의 **행을 갈아 끼운다**). Lee 2020 의 창 전수 삼각지도와 처방 `DOD = [0.35, 0.73]`, 같은 폭 40 %라도 위치가 **어느 전극이 보이는지**를 고른다는 실측, 그리고 "넓을수록 좋다" 가 깨지는 자리(`y₁₀₀`: shallow 14.2 % < medium 25.1 %).
 - [[halfcell-ocp-shape-invariance]] — 모든 electrode balancing 진단이 깔고 있는 **아핀 재조정 전제**(열화 전극 OCP = pristine 곡선의 α·β 변환)와 그 파괴: Si/graphite blend 에서 `γ_Si` 가 9.52 → 5.55 % 로 움직이면 **곡선 모양 자체가 바뀌고**, `γ_Si ↓` 는 `α_an ↓` 와 full-cell 에 **같은 서명**을 남긴다. 강제 시 편향은 방향이 정해져 있다 (LAM_an +2.4 pp 과대 · LAM_cat −3 pp · LLI −1.1 pp) — 그런데 OCV RMSE 는 9.9 → 8.2 mV 로 거의 안 변한다.
@@ -56,7 +56,7 @@
 
 ## Comparisons (비교)
 
-- [[halfcell-window-parametrization-lineage]] — 같은 4개 창 좌표를 무엇으로 매개화하고 여분을 어떻게 죽이는가: Dubarry 2·Marongiu 5(제약 0)·Birkl 3(등식 2)·Lin 2·Navidi/우리 4(제약 0). 여분 처리는 **등식 / 0-고정 / 애초에 안 만들기** 셋뿐이며, Marongiu 식 (2)–(5) 의 null 2차원을 닫힌 형태로 풀어 **Birkl 의 3-파라미터 좌표가 그 몫공간임**을 확인.
+- [[halfcell-window-parametrization-lineage]] — 같은 4개 창 좌표를 무엇으로 매개화하고 여분을 어떻게 죽이는가: Dubarry 2·Marongiu 5(제약 0)·Birkl 3(등식 2)·Lin 2·Navidi/우리 4(제약 0). 여분 처리는 **등식 / 0-고정 / 애초에 안 만들기** 셋뿐이며, Marongiu 식 (2)–(5) 의 null 2차원을 닫힌 형태로 풀어 **Birkl 의 3-파라미터 좌표가 그 몫공간임**을 확인. **2026-10-02**: 일곱 번째 축 — 관측을 운용 전류(1–2 C) CC 충전 곡선으로 바꾸고 동역학을 상수 `R` 하나로 흡수(Sun (Xiong) 2025, 5 매개) → 창이 노화의 함수가 되고 `R ↔ p0 ↔ LLI` 별칭이 예언된다(미검증).
 
 ## Guides (절차)
 
@@ -75,7 +75,7 @@
 
 ## Syntheses (종합)
 
-- [[mode-identifiability-unmeasured-lineage]] — 흡수한 17편(2026-09-11 현재)은 LLI/LAM 분해를 **보고**하지만 그 분해가 **유일한지**를 잰 편이 하나도 없고, **그것을 잴 도구는 이미 그 15편 안에 흩어져 있다**: 축퇴가 세 번 인쇄됐으나(Dubarry 식 · Birkl 산문 · Marongiu 식 (2)–(5)) 아무도 null 을 풀지 않았고, Lin 은 `C_θ` 를 쥐고 대각선만 그렸으며, 그리는 기계는 Schaeffer 에 있는데 **두 논문이 서로를 인용하지 않는다**(어휘 분단: `identifiab*` 26/0 vs `nullspace` 0/69). 우리 Phase 1c·1d 가 겨눈 결과와 "재지 않은 대가" 의 야생 실측(Marongiu: 초기값만 바꿔 오차 6.38 → 14.46 %; **Schmitt 2022: 음극 half-cell 곡선만 바꿔 LAM_an 15.5 → 13.1 % 인데 OCV RMSE 는 9.9 → 8.2 mV**)까지.
+- [[mode-identifiability-unmeasured-lineage]] — 흡수한 17편(2026-09-11 현재)은 LLI/LAM 분해를 **보고**하지만 그 분해가 **유일한지**를 잰 편이 하나도 없고, **그것을 잴 도구는 이미 그 15편 안에 흩어져 있다**: 축퇴가 세 번 인쇄됐으나(Dubarry 식 · Birkl 산문 · Marongiu 식 (2)–(5)) 아무도 null 을 풀지 않았고, Lin 은 `C_θ` 를 쥐고 대각선만 그렸으며, 그리는 기계는 Schaeffer 에 있는데 **두 논문이 서로를 인용하지 않는다**(어휘 분단: `identifiab*` 26/0 vs `nullspace` 0/69). 우리 Phase 1c·1d 가 겨눈 결과와 "재지 않은 대가" 의 야생 실측(Marongiu: 초기값만 바꿔 오차 6.38 → 14.46 %; **Schmitt 2022: 음극 half-cell 곡선만 바꿔 LAM_an 15.5 → 13.1 % 인데 OCV RMSE 는 9.9 → 8.2 mV**)까지. **2026-10-02**: 계보 18편 — §10 "적합값이 학습 라벨이 될 때 축퇴는 정확도 표 아래로 들어간다" (Sun (Xiong) 2025).
 
 ## Queries (질의 기록)
 
