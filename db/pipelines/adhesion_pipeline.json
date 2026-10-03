@@ -1,7 +1,7 @@
 {
  "schema": "adhesion_pipeline/1",
  "title": "점착 파이프라인 — DFT → DEM (→ COMSOL)",
- "updated": "2026-10-02",
+ "updated": "2026-10-03",
  "purpose": "Ag–C 인터레이어·SE 계면의 점착일(W)을 DFT 에서 재서 DEM(JKR 접촉)으로 넘기는 흐름을 **한 곳에 누적**한다. 새 사실은 `log` 에 한 줄씩 덧붙이고, 상태가 바뀌면 해당 항목만 고친다.",
  "⛔_이_원장이_하지_않는_것": [
   "판정 전 물리값(W·γ)은 싣지 않는다 — 결과는 판정이 끝난 뒤 기록 파일에 따로 남기고 여기서는 경로만 건다 (인용 방지).",
@@ -122,7 +122,7 @@
    "cell": "Ag(111) (√3×√3)R30° 4층 (12 Ag) + 흑연 2×2 ABA 3층 (24 C) · V2 와 같은 옆 셀 (+1.078 %) · 두께 점검 4층",
    "machine": "kgy RTX3090 (li2s v2 UMA 와 GPU 공유 · START 12000 · KILL 23000 MiB)",
    "state": "run",
-   "state_text": "카드 비준 (10-02 · 사용자) · kgy 발사 — 1단계 기계 대조 2 → 이완 5 → 2단계 SCF 31 · 속도는 첫 두 잡·첫 이완 실측으로 (7 일 넘으면 다시 물음)",
+   "state_text": "카드 비준 (10-02 · 사용자) · kgy 발사 — 1단계 기계 대조 2 → 이완 5 → 2단계 SCF 31 · 속도는 첫 두 잡·첫 이완 실측으로 (7 일 넘으면 다시 물음) · ⏩ 10-03 기계 대조 G1 **PASS** (CTRL 두 잡 W 0.4354875 vs V100 0.435487 · |ΔW| 1.0e-7 J/m² ≤ 0.002 · kgy 가 V100 보다 bound 3.94× · far 3.72× 느림) · 첫 이완 AGC_N3_top_fcc 진행 (04:22 351 분 · BFGS 16) — 총 견적은 첫 이완 뒤",
    "records": [
     "db/properties/wad_agc_graphite_prereg_2026_10_02.json",
     "db/inputs/wad_agc_graphite_2026_10_02/stage1/qe/jobs.json",
@@ -1508,6 +1508,11 @@
    "date": "2026-10-02",
    "stage": "dft",
    "text": "**P1b 카드 비준 → kgy 발사** (사용자 '비준 · 지금 발사') — kgy 점검: PP Ag·C 해시 기준과 같음 · pw.x qe-7.4.1-gpu (sha 256293a3 · V100 912d8c8f 와 다른 빌드 → 기계 대조가 뜻이 있다) · kgy 에서 selftest 47/0 · DRY_RUN rc 0 · RAM 58 GB · 디스크 304 GB. ⚠ GPU 에 출처 모를 잡 96 % (0.8 GB · kgy 는 프로세스 정보가 막혀 안 보인다) — 같이 돈다. 결정 D-2026-10-02-wad-agc-graphite active (digest sha256:083b3578ab3e6464…)."
+  },
+  {
+   "date": "2026-10-03",
+   "stage": "dft",
+   "text": "**P1b 기계 대조 G1 PASS** (kgy · 대피 세션 claude/evac-2026-10-02 · 사용자 붙여넣기 10-03) — CTRL 두 잡 (V2_top_fcc 2단계 입력 그대로 · bound 706 s · far 521 s · rc 0 · 피크 3.4 · 3.1 GB) 의 W 0.4354875 J/m² vs V100 0.435487 → |ΔW| **1.0e-7** (문턱 0.002) · ΔF bound −0.00027 · far −0.00014 meV (정보) ⇒ kgy pw.x (sha 256293a3) 와 V100 (912d8c8f) 이 같은 입력에서 같은 W — P1b 를 V2 · WAD-CC 와 같은 표에 놓는 조건 충족. 속도 V100 대비 bound 3.94× · far 3.72× 느림 (3090 FP64). 1단계 첫 이완 AGC_N3_top_fcc 진행 (10-03 04:22 · 351 분 · BFGS 16 · SCF 255 · 스텝당 ≈ 22 분) — 총 견적은 첫 이완이 끝난 뒤 (카드 §8 · 7 일 넘으면 V100 이전 질문)."
   }
  ],
  "related_decisions": [
