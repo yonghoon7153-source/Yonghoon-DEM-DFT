@@ -1,0 +1,347 @@
+{
+ "slug": "shao2022_thin-film-assb-mechano-electrochemical-stress-partial-molar-volume",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-03",
+ "sources": [
+  "b8c9f6b7-63._A_Fully_Coupled_Mechano-Electrochemical_Model_for_All-Solid-State_Thin-Film_Li-Ion_Batteries_with_Non-Porous_Electrodes_Effects_of_Chemo-Mechanical_Expansions_on_Battery_Performance_and_Optimi.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Schematic diagram of an ASSLB.",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    522.8,
+    219.0,
+    744.9
+   ],
+   "w": 788,
+   "h": 926,
+   "dpi": 300,
+   "src": "b8c9f6b7-63._A_Fully_Coupled_Mechano-Electrochemical_Model_for_All-Solid-State_Thin-Film_Li-Ion_Batteries_with_Non-Porous_Electrodes_Effects_of_Chemo-Mechanical_Expansions_on_Battery_Performance_and_Optimi.pdf",
+   "blank": 0.753,
+   "note": "봤다(p. 3 · 벡터). ⚠ 잘림: 자동 크롭이 왼쪽 단(x 30–219 pt)만 잡아 스페이서 · 'u(x₁) = 0' 경계만 보인다 — 그림은 쪽 전폭 → 수동 fig_1_manual_p3.png. 자동 파일은 지우지 않음. 캡션 필드 깨끗."
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Figure 2. The change of volume element with specie α.",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    61.1,
+    285.5,
+    173.8
+   ],
+   "w": 1065,
+   "h": 470,
+   "dpi": 300,
+   "src": "b8c9f6b7-63._A_Fully_Coupled_Mechano-Electrochemical_Model_for_All-Solid-State_Thin-Film_Li-Ion_Batteries_with_Non-Porous_Electrodes_Effects_of_Chemo-Mechanical_Expansions_on_Battery_Performance_and_Optimi.pdf",
+   "blank": 0.884,
+   "note": "봤다(p. 5 · 벡터). 부피 요소 dl → dl(1+ε)(등방 고유 변형 · 종 α 삽입) — 식 (31)–(32) 도식. 라벨 · 내용 온전 · 캡션 깨끗."
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "Figure 3. The relationship between σxx with partial molar volume ratio and Poisson’s ratio. The “zero stress” surface means that when m, μc and μa are evaluated on the surface, σxx is equal to 0.",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    60.9,
+    289.1,
+    231.1
+   ],
+   "w": 1080,
+   "h": 710,
+   "dpi": 300,
+   "src": "b8c9f6b7-63._A_Fully_Coupled_Mechano-Electrochemical_Model_for_All-Solid-State_Thin-Film_Li-Ion_Batteries_with_Non-Porous_Electrodes_Effects_of_Chemo-Mechanical_Expansions_on_Battery_Performance_and_Optimi.pdf",
+   "blank": 0.816,
+   "note": "봤다(p. 6 · 래스터 555×424 JPEG — 이 PDF 의 유일한 그림 래스터). zero-stress 면 m^zs(μc, μa) · 축 μc · μa 0.1–0.5 · m 0–2.5 · 점선 m^zs = 1(μc = μa) · 위 'm > m^zs, σxx > 0' · 아래 'm < m^zs, σxx < 0'. [재현] 식 (59) 모서리 0.407(μc 0.5 · μa 0.1) · 2.455(μc 0.1 · μa 0.5) ↔ 그림 끝 ≈0.4 · ≈2.45 [도표] 일치. 캡션 깨끗."
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Results of validation for the cell potential Vcell vs SOC in comparison with experiment results from Zhang et al.45",
+   "rotated_deg": 0,
+   "bbox": [
+    298.0,
+    61.0,
+    557.1,
+    252.3
+   ],
+   "w": 1081,
+   "h": 798,
+   "dpi": 300,
+   "src": "b8c9f6b7-63._A_Fully_Coupled_Mechano-Electrochemical_Model_for_All-Solid-State_Thin-Film_Li-Ion_Batteries_with_Non-Porous_Electrodes_Effects_of_Chemo-Mechanical_Expansions_on_Battery_Performance_and_Optimi.pdf",
+   "blank": 0.966,
+   "note": "봤다(p. 7 · 벡터 — 곡선 경로를 PDF 에서 꺼내 축 눈금으로 판독). 모의(검정) 3.716 V(SOC 0) → 4.150 V(SOC 0.993) · 실험 [45](빨강 · Zhang Z. … Han W.-Q. 2021 ESM — 63호 아님) 3.621 → 4.142 V · 최대 |ΔV| 0.096 V @SOC 0 = 2.66 %(본문 '최대 1.71 %' ↔ SOC 0.90 국소 1.72 % — D3) · 모의가 Parameters 절 4.03 V 차단(SOC 0.936)을 넘어 계속(D4) · 교차 SOC 0.463 · 0.991. 캡션 깨끗."
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "file": "fig_5.png",
+   "caption": "Figure 5. (a) The diffusion-induced thickness change and (b) the relative change of the thickness for the cathode, SE, anode and cell, where ∆¯l = Δl/l × 100%.",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    61.0,
+    558.0,
+    257.1
+   ],
+   "w": 2200,
+   "h": 818,
+   "dpi": 300,
+   "src": "b8c9f6b7-63._A_Fully_Coupled_Mechano-Electrochemical_Model_for_All-Solid-State_Thin-Film_Li-Ion_Batteries_with_Non-Porous_Electrodes_Effects_of_Chemo-Mechanical_Expansions_on_Battery_Performance_and_Optimi.pdf",
+   "blank": 0.967,
+   "note": "봤다(p. 8 · 벡터 판독). (a) Δl^dis(nm — 축 'dis' ↔ 본문 'dif' — D13) 음극 +14.46 · 양극 −7.15 · 셀 +7.31 nm @t 540 s · SE 0 · (b) Δl̄ 음극 +7.23 % · 양극 −2.98 % · SE −0.36 %(탄성) · 셀 0 — 본문 인쇄 7.22 · 2.98 · 0.36 % 와 같음 · [재현] 0-D 닫힌 꼴(T 298 · i₀ mol L⁻¹)과 ±0.01 %p. 충전 540 s + 방전 → 1065 s(끝 잔여 음극 +0.41 nm). 캡션 깨끗."
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 8,
+   "file": "fig_6.png",
+   "caption": "Figure 6. (a) The diffusion-induced thickness change and (b) the relative change of thickness for cathode, SE, anode and cell when σxx = 0. Continuous lines refer to Ωc = 4.647 cm3 mol−1, Ωa = 4.17 cm3 mol−1 (constant), dashed lines refer to Ωc = 2.3 cm3 mol−1 (constant), Ωa = 2.064 cm3 mol−1. Results and Discussion is studied. In this study, the sensitivity analysis is carried out using the method proposed by Jiang et al.46 Model veriﬁcation.—Before further research, validation of the proposed model is ﬁrst conducted. Simulation results are compared with the experiment results presented by Zhang et al.45 The comparison cell potential for charging process is revealed in Fig. 4. The black line represents the calculated outcomes while the red line denotes the data from Zhang. From the ﬁgure we can see that the present calculation results are almost consistent with the experiment results fr",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    289.0,
+    558.8,
+    487.8
+   ],
+   "w": 2205,
+   "h": 829,
+   "dpi": 300,
+   "src": "b8c9f6b7-63._A_Fully_Coupled_Mechano-Electrochemical_Model_for_All-Solid-State_Thin-Film_Li-Ion_Batteries_with_Non-Porous_Electrodes_Effects_of_Chemo-Mechanical_Expansions_on_Battery_Performance_and_Optimi.pdf",
+   "blank": 0.968,
+   "note": "봤다(p. 8 · 벡터 판독). σxx = 0 두 경우 — I(실선 · Ωc 4.647) 음극 +8.91 nm(+4.45 %) · 양극 −8.90 nm(−3.71 %) @t 333 s · II(점선 · Ωa 2.064) +7.21 nm(+3.65 %) · −7.20 nm(−3.04 %) @t ≈540–548 s · SE · 셀 0. ⚠ 캡션 필드 900 자에서 잘림 — 캡션 뒤 본문(p. 8 왼쪽 단 'Results and Discussion …' · 오른쪽 단)이 섞임. 캡션 원문은 PDF 정본."
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 9,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Stress in the thickness direction (σxx) for (a) different Ωc, and (b) different Ωa vs SOC.",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    80.3,
+    517.6,
+    323.2
+   ],
+   "w": 2032,
+   "h": 1013,
+   "dpi": 300,
+   "src": "b8c9f6b7-63._A_Fully_Coupled_Mechano-Electrochemical_Model_for_All-Solid-State_Thin-Film_Li-Ion_Batteries_with_Non-Porous_Electrodes_Effects_of_Chemo-Mechanical_Expansions_on_Battery_Performance_and_Optimi.pdf",
+   "blank": 0.967,
+   "note": "봤다(p. 9 · 벡터). σxx vs SOC — (a) Ωc 0.834 · 2.3 · 4.647 · 5 → 끝 −1.02 · −0.60 · 0 · +0.05 MPa @SOC ≈0.98 · 0.94 · 0.57 · 0.52 · (b) Ωa 1.15 · 2.064 · 4.17 · 5.75 → +0.26 · 0 · −0.60 · −1.04 MPa. ⚠ (b) 점선 끝 SOC 는 점선 주기(±0.01)만큼 불확실(원 판독 1.15 0.945 < 2.064 0.947) — 그림 9(b) 실선 · 10(b) 점선 끝(1.15 0.952–0.954 · 2.064 0.947–0.949)으로 확인: 단조. 캡션 깨끗."
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 9,
+   "file": "fig_8.png",
+   "caption": "Figure 8. (a) The Partial molar volume of the cathode (Ωc) vs the state of lithiation of cathode material5 and (b) the stress evolution under the linear and nonlinear volumetric expansion vs SOC.",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    345.0,
+    558.0,
+    533.7
+   ],
+   "w": 2201,
+   "h": 787,
+   "dpi": 300,
+   "src": "b8c9f6b7-63._A_Fully_Coupled_Mechano-Electrochemical_Model_for_All-Solid-State_Thin-Film_Li-Ion_Batteries_with_Non-Porous_Electrodes_Effects_of_Chemo-Mechanical_Expansions_on_Battery_Performance_and_Optimi.pdf",
+   "blank": 0.973,
+   "note": "봤다(p. 9 · 벡터). (a) Ωc vs 'x(Li) in NCM' 0.228–1.0 · 'The data in ref. [5]'(= 97호 Koerver 2018) — 8.6(x 0.23) → 최소 1.08(x ≈0.5) → 2.04(0.75) → 3.65(x 1.0) · [도표·화소] 97호 그림 2(b) NCM-111 곡선과 저 x(0.25–0.30)는 ±0.1 · x 0.45–0.93 에서 +0.5–1.06 cm³ mol⁻¹ 높음 · x 0.94–1.0 은 [5] 곡선 없음(D11) · 운전 창(x 0.488–0.98) 평균 1.84 ↔ 표 I 2.3(D12). (b) 비선형(검정) σxx +0.05 → −0.629 MPa @SOC 0.92 ↔ 선형(빨강) 0 · Ωa 2.064 — 본문 'fluctuates around 0 MPa' · 'little difference' 와 어긋남(D6). 캡션 깨끗."
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 10,
+   "file": "fig_9.png",
+   "caption": "Figure 9. The hydrostatic stress (σh) at electrode/SE interface for (a) different Ωc, and (b) different Ωa vs SOC.",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    61.5,
+    517.9,
+    286.2
+   ],
+   "w": 2033,
+   "h": 937,
+   "dpi": 300,
+   "src": "b8c9f6b7-63._A_Fully_Coupled_Mechano-Electrochemical_Model_for_All-Solid-State_Thin-Film_Li-Ion_Batteries_with_Non-Porous_Electrodes_Effects_of_Chemo-Mechanical_Expansions_on_Battery_Performance_and_Optimi.pdf",
+   "blank": 0.962,
+   "note": "봤다(p. 10 · 벡터). σ^h @s1(양극 · 실선) · s2(음극 · 점선) — (a) Ωc 0.834 · 2.3 · 4.647 · 5 → s1 1204 · 3164 · 3915 · 3825 MPa · s2 공통 선 끝 ≈−374 … −390(선 폭 보정) · (b) Ωa 1.15 · 2.064 · 4.17 · 5.75 → s2 ≈−105 · −187 · −373 · −503 MPa · s1 3.10–3.22 GPa — [재현] 면내 구속(ε_yy = ε_zz = 0) 닫힌 꼴과 ±1 %. GPa 급 값의 재료 강도 논의는 본문 0. 캡션 깨끗."
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 12,
+   "file": "fig_11.png",
+   "caption": "Figure 11. Battery structure diagram.",
+   "rotated_deg": 0,
+   "bbox": [
+    30.9,
+    61.2,
+    286.4,
+    184.7
+   ],
+   "w": 1066,
+   "h": 515,
+   "dpi": 300,
+   "src": "b8c9f6b7-63._A_Fully_Coupled_Mechano-Electrochemical_Model_for_All-Solid-State_Thin-Film_Li-Ion_Batteries_with_Non-Porous_Electrodes_Effects_of_Chemo-Mechanical_Expansions_on_Battery_Performance_and_Optimi.pdf",
+   "blank": 0.424,
+   "note": "봤다(p. 12 · 벡터). 전지 구조 도식 — 탭(Tab) 둘 · 셸(Shell) · 스페이서(Spacer — 셸 안 · 셀 스택 위) · 셀 스택. 라벨 · 내용 온전 · 캡션 깨끗."
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 12,
+   "file": "fig_12.png",
+   "caption": "Figure 12. Stress development with different thicknesses and Young’s modulus of spacer. little inﬂuence on Vove, indicating that Ωc and Ωa have little inﬂuence on the thermodynamic loss of the cell. Combining Figs. 7 and 10, for the μc and μa listed in Table I, under the condition of σxx = 0, optimizing Ωa increases the battery capacity by 1.72%, while adjusting Ωc can reduce the battery capacity by about 39.13%. Because the former reduces Vstr, the anode can store more lithium before the Vcell reaches the charging cut-off voltage, while the latter leads to the increase of Vstr and the early termination of charging. Effects of spacer.—Adding extra spacers is another effective way to reduce inner stresses. Spacers, as shown in Fig. 11, such as polyurethane, are placed outside of the cell stack, which always does not participate in electron transport. Therefore, there is no additional resi",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    211.0,
+    290.0,
+    405.4
+   ],
+   "w": 1085,
+   "h": 811,
+   "dpi": 300,
+   "src": "b8c9f6b7-63._A_Fully_Coupled_Mechano-Electrochemical_Model_for_All-Solid-State_Thin-Film_Li-Ion_Batteries_with_Non-Porous_Electrodes_Effects_of_Chemo-Mechanical_Expansions_on_Battery_Performance_and_Optimi.pdf",
+   "blank": 0.953,
+   "note": "봤다(p. 12 · 벡터). σxx vs l_sp 0–150 nm(10 nm 마다 표지) · E_sp 1 · 5 · 50 · 500 MPa → 150 nm 에서 −0.091 · −0.283 · −0.542 · −0.598 MPa · 0 nm −0.60 — [재현] 직렬 강성 1/K = Σ 1/K_α(식 55–56)와 ±0.003 MPa(선 폭). 표 I l_sp 0–200 nm ↔ 축 0–150 nm. ⚠ 캡션 필드 900 자에서 잘림 — 본문(p. 12 왼쪽 단 'little influence on Vove …')이 섞임. 캡션 원문은 PDF 정본."
+  },
+  {
+   "key": "f13",
+   "kind": "figure",
+   "label": "13",
+   "page": 12,
+   "file": "fig_13.png",
+   "caption": "Figure 13. Energy density loss with different thicknesses of spacer.",
+   "rotated_deg": 0,
+   "bbox": [
+    298.0,
+    63.1,
+    542.9,
+    244.9
+   ],
+   "w": 1022,
+   "h": 759,
+   "dpi": 300,
+   "src": "b8c9f6b7-63._A_Fully_Coupled_Mechano-Electrochemical_Model_for_All-Solid-State_Thin-Film_Li-Ion_Batteries_with_Non-Porous_Electrodes_Effects_of_Chemo-Mechanical_Expansions_on_Battery_Performance_and_Optimi.pdf",
+   "blank": 0.961,
+   "note": "봤다(p. 12 · 벡터). 체적 에너지 밀도 손실(검정 · 왼쪽 축) 150 nm 에서 6.147 % = 150/2440 ✅(본문 6.15 %) · 중량 손실(빨강 · 오른쪽 축) 0.102 % ↔ [재현] 표 I ρ(2.28 · 1 · 2.2 · 0.035 g cm⁻³)로 0.176 % — 어긋남(D9). 오른쪽 축 제목 끝이 크롭 경계에서 일부 잘림(내용 판독에는 지장 없음). 캡션 깨끗."
+  },
+  {
+   "bbox": [
+    30,
+    491,
+    560,
+    757
+   ],
+   "blank": null,
+   "caption": "Figure 1. Schematic diagram of an ASSLB.",
+   "dpi": 300,
+   "file": "fig_1_manual_p3.png",
+   "h": 1110,
+   "key": "f1m",
+   "kind": "figure",
+   "label": "1",
+   "manual": true,
+   "note": "수동 — p. 3 렌더 300 dpi — 쪽 전폭(캡션 포함 · 자동 fig_1 은 왼쪽 단만). 봤다(벡터 — 라벨도 윤곽선이라 텍스트 층 0). Spacer | Cathode | SE | Anode · s1 · s2 점선 계면 · 충전 전류 i → · 원점 0 = 양극 | 스페이서 경계 · 왼쪽 'u(x₁) = 0'(본문 식 52 는 u(−l_sp) = 0 — 기호 x₁ 정의 0 · D13) · 오른쪽 u(l_c + l_se + l_a) = 0 · 두께 축척 아님(표 I SE 2000 nm ↔ 전극 200–240 nm 인데 그림 폭 비슷).",
+   "page": 3,
+   "rotated_deg": 0,
+   "w": 2209
+  },
+  {
+   "bbox": [
+    30,
+    58,
+    556,
+    715
+   ],
+   "blank": null,
+   "caption": "Figure 10. (a), (b) Cell potential, Vcell, (c), (d) the contribution of concentration, Vcon, (e), (f) the contribution of stress, Vstr, and (g), (h) the contribution of overpotential, Vove, to cell potential evolution of the ASSLB for different Ωc and Ωa vs SOC.",
+   "dpi": 300,
+   "file": "fig_10_manual_p11.png",
+   "h": 2739,
+   "key": "f10m",
+   "kind": "figure",
+   "label": "10",
+   "manual": true,
+   "note": "수동 — p. 11 렌더 300 dpi(여덟 패널 + 오른쪽 캡션). 자동 제외('그래픽 없음(img0/draw0)') — 캡션이 그림 오른쪽 단(x 371–552 pt)에 있어 크로퍼가 캡션 위 빈 영역을 봄. 봤다(벡터 — 여덟 패널 곡선을 PDF 경로로 판독). (a)(b) V_cell 충방전 · 시작 3.716 V · 4.03 V 차단 · 방전 끝 ≈3.549 V(차단 미인쇄 — G3) · 끝 SOC Ωc 0.834/2.3/4.647/5 = 0.9824/0.9365/0.5738/0.5203 · Ωa 1.15/2.064/4.17/5.75 ≈0.954/0.949/0.938/0.92 · (c)(d) V_con −197 mV(SOC 0) → +71.7 mV(SOC 0.936) · [재현] RT/F 0.02556–0.02568 V(T ≈297–298 K ↔ 표 I 333 K — D1) · (e)(f) V_str 끝 27 · 91 · 198 · 207 / 78 · 80 · 91 · 104 mV([재현] 닫힌 꼴 ±1 mV) · (g)(h) V_ove 113 mV(SOC 0) · ≈42 mV 평탄 · Ω 무관 — [재현] i₀ 의 c_Li⁺ 를 mol L⁻¹ 로 넣어야 rms 0.1–0.2 mV(인쇄 SI 이면 1.4–4.7 mV — D2).",
+   "page": 11,
+   "rotated_deg": 0,
+   "w": 2192
+  },
+  {
+   "bbox": [
+    40,
+    535,
+    556,
+    748
+   ],
+   "blank": null,
+   "caption": "Table I. Material parameters, geometrical features, and initial conditions.41–43",
+   "dpi": 300,
+   "file": "tab_1_manual_p7.png",
+   "h": 888,
+   "key": "t1m",
+   "kind": "table",
+   "label": "I",
+   "manual": true,
+   "note": "수동 — p. 7 렌더 300 dpi — 표 I 단독(자동 미인식 — 로마 숫자 'Table I.' 캡션). 봤다. 양극(NCM111) · SE(LiTFSI) · 음극(Graphite) · 스페이서(polyurethane) × l · c^m · c^min · D^r · k · ρ · E · μ · Ω · β · γ · c⁰ · T · V⁰ — 텍스트 층과 같음 ✅. 출처는 캡션 위첨자 41–43 묶음뿐(값별 출처 0 — G4). ⚠ ρ_c 2.28 ↔ c^m 47408 이 뜻하는 4.57 g cm⁻³(D9) · T 333 K ↔ 그림이 닫히는 298 K · 본문 'T is the room temperature'(D1).",
+   "page": 7,
+   "rotated_deg": 0,
+   "w": 2151
+  },
+  {
+   "bbox": [
+    40,
+    666,
+    556,
+    748
+   ],
+   "blank": null,
+   "caption": "Table II. Parameter sensitivity of symmetry factor and mechanical symmetry factor.",
+   "dpi": 300,
+   "file": "tab_2_manual_p8.png",
+   "h": 342,
+   "key": "t2m",
+   "kind": "table",
+   "label": "II",
+   "manual": true,
+   "note": "수동 — p. 8 렌더 300 dpi — 표 II 단독(자동 미인식). 봤다. β^s1 2.77×10⁻² Sensitive · β^s2 1.43×10⁻¹ Very sensitive · γ^s1 6.91×10⁻³ · γ^s2 1.99×10⁻¹¹ Not sensitive — 분류 문턱 미인쇄. [재현·가정](x_n 여덟 = 0.30–0.70 · 0.5 제외) β 둘 재현(2.76×10⁻² · 1.45×10⁻¹) · γ 둘 안 됨(우리 2.0×10⁻² · 1.5×10⁻² — D10).",
+   "page": 8,
+   "rotated_deg": 0,
+   "w": 2151
+  }
+ ]
+}

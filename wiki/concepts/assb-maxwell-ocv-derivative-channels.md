@@ -2,10 +2,10 @@
 title: Maxwell 관측 채널 — OCV 의 온도·압력 편미분을 관측 축으로 (엔트로피메트리 · volumetry)
 description: "Oh et al. 2025 (Angew.) — ASSB 셀에서 −F(∂E/∂T)_P = ΔS(x), F(∂E/∂P)_T = ΔV 를 정지 상태에서 재는 비파괴 진단; OCV 적합의 경쟁이 아니라 같은 상태함수 E(x,T,P) 의 관측 추가이며, 우리 쌍(LAM_PE ↔ 접촉 손실)에 대한 새 감도 행의 부호와 그 한계"
 created: 2026-09-22
-updated: 2026-10-02
+updated: 2026-10-03
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/koerver2018_chemo-mechanical-expansion-molar-volume-ocv-pressure-stress.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/mohtat2019_electrode-soh-estimability-expansion.md]
+sources: [raw/papers/shao2022_thin-film-assb-mechano-electrochemical-stress-partial-molar-volume.md, raw/papers/koerver2018_chemo-mechanical-expansion-molar-volume-ocv-pressure-stress.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/mohtat2019_electrode-soh-estimability-expansion.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -18,7 +18,7 @@ evidenceScope: multi-source-primary
 > `assb` 축 **아홉째 개념**. 앞의 여덟이 *현상*(접촉 손실이 있다)·*역문제*(그 양이 유일하게
 > 정해지는가)·*모델 차수*(봉우리 개수가 상태변수다)를 다뤘다면, 이 페이지는 **관측 자체를
 > 늘리는 조작**을 다룬다 — 그리고 그것이 우리 쌍(`LAM_PE` ↔ 접촉 손실)에 대해 **어느 방향으로
-> 눈을 뜨고 어느 방향으로 눈이 머는가**를 적는다. 근거는 **2 편**(Oh 2025 · 97호 Koerver 2018 — 둘 다 실험) —
+> 눈을 뜨고 어느 방향으로 눈이 머는가**를 적는다. 근거는 **2 편**(Oh 2025 · 97호 Koerver 2018 — 둘 다 실험) + 모형판 1 편(103호 Shao 2022 *JES* — 식에 넣은 Ω·σ/F · 2026-10-03 §5) —
 > `multi-source-primary`(2026-10-02 97호로 넓힘 — 처음 쓸 때는 Oh 2025 한 편 · `single-source`).
 
 ## 정의
@@ -103,6 +103,14 @@ may not directly affect the early-cycle performance". `[해석]` [[assb-apparent
 
 `[재현]` **우리 OCV 맞춤에 압력 항의 크기**(97호 기울기 선형 외삽): 상대극(In/InLi) 몫 0.122 mV MPa⁻¹ 은 SOC 무관 → 60–65 MPa 운전이면 상압 대비 **+7.3–7.9 mV 상수**(기준 전위 상수에 흡수) · 양극(LCO) 몫은 SOC 의존 → 60 MPa 에서 x 0.65 ↔ 0.80 **≈4.7 mV 형상 왜곡** · 운전 응력 진동(≤1.5 MPa)은 ≤0.2 mV. ⇒ volumetry 를 잔차 행으로 넣는 폭 측정(아래 '적용' ①)에서 `E(P, x)` 면은 **상수 몫 + SOC 의존 몫** 둘로 모델링해야 한다. 우리 잔차 · 폭 수치는 `degradation-degeneracy/docs/RESULTS*.md` 가 정본 — 여기 옮기지 않는다.
 
+### 5. ★★ 모형 쪽 — 103호 Shao 2022 *JES*: 같은 Ω·σ/F 결합을 식에 넣은 박막 모형 (2026-10-03 추가)
+
+`raw/papers/shao2022_thin-film-assb-mechano-electrochemical-stress-partial-molar-volume.md` — 실험 0 · 무공극 박막(NCM111 \| 고분자형 이원 SE \| 흑연) · `[인쇄]` 식 (26)–(27) 평형 전위에 (Ω_α σ_α^h − Ω_Li⁺ σ_SE^h)/F 항 — Maxwell 채널(F(∂E/∂P) = ΔV)의 모형판. 전극 계수 `[재현]` **Ω_c/F 2.38 · Ω_a/F 4.32 mV/100 MPa**(표 I Ω — 97호 측정 2.3–12.2 mV/100 MPa 와 같은 자릿수 · 균일 정수압이면 셀 (Ω_a − Ω_c)/F 1.94 mV/100 MPa).
+
+- **계수가 아니라 응력의 크기가 결과를 정한다**: `[재현]` 이 모형의 V_str(충전 끝 91 mV)은 외부 압력이 아니라 **면내 구속(ε_yy = ε_zz = 0)의 반력** — 양극 σ_h +3.16 GPa(인장) · 음극 −0.37 GPa — 에서 온다; 두께 방향 σxx(0.6 MPa — 셀 압력 축)의 몫은 −0.008 / +0.016 mV. 위 §4 의 '우리 OCV 맞춤에 압력 항' 크기(60 MPa 에 상수 7–8 mV + 형상 ≈5 mV)와 비교하면, 모형 V_str 은 GPa 급 내부 응력 가정 위에서만 ×10 크다.
+- **관측 꼴**: V_str = 0.1858 V × Δx(SOC 에 정확히 선형) — OCP 정규 용액 항과 같은 열이라 V–SOC 하나로는 응력 결합 진폭이 정해지지 않는다(`[재현]` 다른 셀 곡선에 진폭 ×2.17 로 rms 35.6 → 11.7 mV). ⇒ 위 '적용' ① 의 `E(P, x)` 면 모델링에 넣을 때도 **∂E/∂P 를 따로 재야** 결합 진폭이 정해진다는 같은 결론의 모형 쪽 근거.
+- 입력 Ωc 는 97호 그림 2(b) 계열(×3 의심) → 격자 대비 ×≈7 — 계수 자체도 층위 표기가 필요하다(§3-b (퍄)).
+
 ## 경고 — 원문이 준 한계에서 나온다 (자세히는 raw digest D1–D15 · G1–G14)
 
 1. **역문제가 없어서 유일성 물음이 사라진다 — 그러나 귀속의 유일성은 안 쟀다.** ΔS 변화가
@@ -151,6 +159,7 @@ may not directly affect the early-cycle performance". `[해석]` [[assb-apparent
   의 것이다. 4호는 같은 자릿수의 void 에서 98 % 손실을 봤다(다른 화학·압력·율).
 - **Q4 가 측정됐다고 하지 않는다** — `assb` **0/14 편** 그대로.
 - **97호 기울기를 재료 상수로 옮기지 않는다** (2026-10-02) — 셀 하나씩 · 오름 램프 · 무변형 상대극 가정 · 25 °C 의 값이고 결정학 예측보다 ×1.5 크다(비가역 · 하중 성분 미분리). 압력 항 mV 는 선형 외삽 `[재현]` 이다.
+- **103호 모형의 V_str(91 mV)을 압력 채널의 크기로 옮기지 않는다** (2026-10-03) — 면내 강체 구속이 만든 GPa 내부 응력 위의 모형 출력이고 외부 압력 · 측정이 아니다; 전극 계수(2.38 · 4.32 mV/100 MPa)는 표 I Ω(양극 ×≈7 기준 의심) 위의 산술이다.
 
 ## 관련
 - [[assb-contact-loss-vs-lampe]] — 닻 질문. 이 페이지가 그 "관측 추가" 후보를 준다.

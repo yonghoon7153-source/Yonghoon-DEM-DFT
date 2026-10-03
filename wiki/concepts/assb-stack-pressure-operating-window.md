@@ -2,10 +2,10 @@
 title: ASSB 스택 압력의 작동 창 — 아래는 접촉 손실, 위는 단락
 description: "Stack pressure in ASSBs is a two-sided constraint: too low gives interfacial contact loss, too high drives Li creep into electrolyte pores and shorts the cell. Doux 2020 gives the first measured pressure sweeps (P→impedance, P→time-to-short, P→overpotential) and a hard upper bound"
 created: 2026-09-16
-updated: 2026-10-02
+updated: 2026-10-03
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/koerver2018_chemo-mechanical-expansion-molar-volume-ocv-pressure-stress.md, raw/papers/schmidt2024_nitsche-contact-delamination-resolved-ssb-cathode.md, raw/papers/truong2025_calendar-vs-cycle-aging-protocols-drt-assb.md, raw/papers/zhang2024_all-electrochem-active-si-li21si5-anode-assb.md, raw/papers/li2025_si-anode-fracture-size-threshold-stack-pressure-assb.md, raw/papers/minnmann2022_designing-cathodes-cam-ssb-perspective.md, raw/papers/kim2023_argyrodite-coated-ncm-normal-pressure-assb.md, raw/papers/wang2024_fast-kinetics-hierarchical-catholyte-anode-design-ssb.md, raw/papers/xu2024_pressure-effects-countermeasures-ssb-review.md, raw/papers/okasinski2020_edxrd-profiling-coin-cell-uneven-compression-lateral-gradients.md, raw/papers/minnmann2021_charge-transport-bottlenecks-tlm-ncm622-lpscl.md, raw/papers/nam2018_dry-vs-slurry-mixed-electrodes-binder-gitt-coverage.md, raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md, raw/papers/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/oh2025_mgsigr-overcharge-low-np-ratio-low-pressure-assb.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/li2026_safety-aware-bms-active-intelligence.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
+sources: [raw/papers/shao2022_thin-film-assb-mechano-electrochemical-stress-partial-molar-volume.md, raw/papers/koerver2018_chemo-mechanical-expansion-molar-volume-ocv-pressure-stress.md, raw/papers/schmidt2024_nitsche-contact-delamination-resolved-ssb-cathode.md, raw/papers/truong2025_calendar-vs-cycle-aging-protocols-drt-assb.md, raw/papers/zhang2024_all-electrochem-active-si-li21si5-anode-assb.md, raw/papers/li2025_si-anode-fracture-size-threshold-stack-pressure-assb.md, raw/papers/minnmann2022_designing-cathodes-cam-ssb-perspective.md, raw/papers/kim2023_argyrodite-coated-ncm-normal-pressure-assb.md, raw/papers/wang2024_fast-kinetics-hierarchical-catholyte-anode-design-ssb.md, raw/papers/xu2024_pressure-effects-countermeasures-ssb-review.md, raw/papers/okasinski2020_edxrd-profiling-coin-cell-uneven-compression-lateral-gradients.md, raw/papers/minnmann2021_charge-transport-bottlenecks-tlm-ncm622-lpscl.md, raw/papers/nam2018_dry-vs-slurry-mixed-electrodes-binder-gitt-coverage.md, raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md, raw/papers/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/oh2025_mgsigr-overcharge-low-np-ratio-low-pressure-assb.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/li2026_safety-aware-bms-active-intelligence.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -1238,6 +1238,28 @@ Lee [45] **개방 회로 이완 30 → 27.6(LPSC) · 24.8 MPa(LSPS) / 20 h**(`[�
 
 요구치 · 압력 → 성능 스윕 · `θ(P)` · `R(P)` · 단락 위 벽 · 재가압 되돌림 · 구속 형식 이름. 창의 값은 움직이지 않았다 — 움직인 것은 **운전 압력 값의 층위 사슬**(명목 ↔ 교정 ↔ 계측 · 다른 시험의 압력)과 **OCV 압력 결합의 자릿수**다.
 
+## ★★ 2026-10-03 (`assb` 103호 Shao · Shao · Sang · Liu 2022 *J. Electrochem. Soc.* 169, 080529, **모형 · 1D 무공극 박막 NCM111 \| 고분자형 이원 SE 'LiTFSI' 2 µm \| 흑연 · 양끝 변위 0(정변위 셸) + 면내 변형 0 · 예압 0 · 폴리우레탄 스페이서 스윕 · COMSOL 5.5 · 실험 0**) — **창의 값은 움직이지 않는다: '0.6 MPa' 는 외부 스택 압력이 아니라 정변위 구속 셀의 두께 방향 반력(출력)이고, 그 크기는 SE 강성 하나(직렬 컴플라이언스 99.87 %)가 정한다 — 같은 불균형을 무기 SE 로 옮기면 −60 … −127 MPa(우리 재현)**
+
+`raw/papers/shao2022_thin-film-assb-mechano-electrochemical-stress-partial-molar-volume.md` (26호 [14] · 4차 묶음 파일 63).
+
+### 1. 요구치 — 인쇄 0
+
+- 요구치 · 문턱 · 실험 압력 창 대조 0 · 서론 인용: Doux [9] "stack pressure did not significantly influence the cyclability … can be cycled at a relatively low stack pressure" · "the bulky external pressure systems for battery cycling reduce the specific energy" · 결론 "Obtaining the appropriate compressive stress by adjusting the material parameters to replace the bulky cell holder may be another effective way to improve interface contact"(무기 SE).
+
+### 2. ★★ 압력 축 — 입력 0 · 출력 σxx · 구속 형식 (§3-b (댜)(캐)(하)①)
+
+- `[인쇄]` 식 (52) u(−l_sp) = u(l_c + l_se + l_a) = 0 · 식 (37) 면내 0(셸) · 초기 응력 0 · σxx = −K(Δl_c + Δl_a)(식 54–56) — **정변위 + 면내 강체 · 예압 0** · 출력 σxx 는 SOC 에 선형(끝 −0.60 MPa · 그림 7).
+- `[재현]` 직렬 강성: K_SE 8.25 × 10¹³ ≪ K_a 6.73 × 10¹⁶ ≪ K_c 9.95 × 10¹⁷ Pa m⁻¹ → σxx ≈ −K_SE × 7.30 nm · `[재현·가정]` 97호 표 1 무기 SE(같은 2 µm): 유리 14–23 GPa −60 … −91 · Li₆PS₅X 22–30 GPa −101 … −127 · LiPON 77 GPa −195 MPa — 실험실 운전 압력(이 페이지 계보 50–70 MPa)과 같은 자릿수까지 오른다(구속이 강체일 때).
+- '0.6 MPa = 6 kg cm⁻²'(`[재현]` 6.12 kgf ✅) · 스페이서(E_sp 1 MPa · 100 nm → −79.33 % · `[재현]` 79.36 %)는 구속 컴플라이언스를 더하는 직렬 스프링 — 정변위 ↔ 정하중 사이의 셋째 형식(94호 Robin 스프링과 같은 자리 · 여기선 셀 강성의 1/4 수준).
+
+### 3. ★★ 셀 압력 축 ↔ 전위 축 — 사상이 계산된 모형 (§3-b (태))
+
+- 이 편은 두께 방향 σxx(셀 압력 축)와 면내 · 정수압 σ_h(전위 축)를 같은 1D 구속 대수로 둘 다 계산한다 — 둘의 비 ×≈5000(0.6 MPa ↔ 3.16 GPa) · 전압 · 용량은 σ_h 만 본다(σxx 의 전압 몫 0.01 mV) · 스페이서는 σxx 만 줄이고 σ_h 는 그대로(`[재현]` SOC_cut 0.9372 불변).
+
+### 4. 이 편이 이 페이지에 **안 준 것**
+
+실측 · 외부 압력 스윕 · 압력 → 접촉 · 저항 · 용량 · 단락 · 사이클 중 압력 이력의 측정 · 요구치. 창의 값은 움직이지 않았다 — 움직인 것은 **모형 압력 값의 정체 표기**(출력 반력 · SE 강성 지배 · 면내 응력과의 분리)다.
+
 ## 경고 (전부 원문이 준 한계에서 나온다)
 
 1. **점당 셀 1 개, 오차 막대 0.** 압력–수명 6 점 전부 N=1 이다.
@@ -1294,6 +1316,7 @@ Lee [45] **개방 회로 이완 30 → 27.6(LPSC) · 24.8 MPa(LSPS) / 20 h**(`[�
 - **90호의 "~50 MPa" 를 운전 압력 창의 표본이나 63호 토크(10 N·m)의 환산 근거로 옮기지 않는다** (2026-10-02) — 환산 근거 · 계측이 인쇄되지 않은 토크 명목이고 ESI 에만 있다; 63 · 23호와 같은 구속에 다른 값이 붙었다는 것까지다. 82호의 50 MPa 를 같은 토크 명목으로 단정하지도 않는다.
 - **94호의 50 / 60 / 70 MPa 를 운전 압력 창의 실측 표본으로 옮기지 않는다** (2026-10-02) — 모형 예압(t = 0 · 스프링 강성 가정)이고, 압력 효과는 단순 기하 세 점 · 0.1 C · 첫 충전의 율 조건부 결손이며, 반 사이클 압력 표류(+13 / +53 / −58 MPa)는 우리 `[재현·가정]` 이다.
 - **97호의 "60 ± 8 MPa" · 계측 61–65.5 MPa 를 63 · 90호 셀의 운전 압력으로 옮기지 않는다** (2026-10-02) — 같은 연구망 · 같은 10 Nm 이지만 바깥틀을 늘린 개조판(로드셀 장착)이고 셀 구성이 다르다. 그리고 **OCV–압력 램프의 압력(≈49–235 · "143")을 운전 압력 창의 표본으로 세지 않는다** — 무전류 열역학 측정의 설정값이다.
+- **103호의 "0.6 MPa" 를 운전 압력 · 요구치 · 창의 표본으로 옮기지 않는다** (2026-10-03) — 정변위 셸 구속의 반력(모형 출력)이고 외부 압력 입력 0 · 크기는 고분자형 SE 강성 하나가 정한다; 무기 SE 반사실(−60 … −127 MPa)은 인쇄 식 위 `[재현·가정]` 이다.
 
 ## 관련
 - [[assb-pressure-reapplication-separation-test]] — `P↑` 분리 연산자. **이 페이지가 그 상한을 준다.**
