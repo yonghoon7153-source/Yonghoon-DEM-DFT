@@ -50,6 +50,35 @@ function jetColor(t) {
   const b = Math.max(0, Math.min(1, 1.5 - Math.abs(4 * t - 1)));
   return (Math.round(r * 255) << 16) | (Math.round(g * 255) << 8) | Math.round(b * 255);
 }
+/* ★ 2026-10-03 (Codex r_int 1단계 RINT-03 · 1저자 비준 G1) — 입자별 전류 je · jb 의 **정의 표지**.
+ * per_particle_current 는 입자 번호(pid)가 같은 셀의 |J_z| 평균이다.  옛 정의는 AM 자리를 덮은 탄소·첨가제
+ * 셀(스탬프가 pid 를 남긴다)의 전류까지 AM 몫에 넣었다 (계면 항과 무관 — r 를 꺼도).  v2 = 최종 상이 AM
+ * (sid 1·2) 인 셀만.  payload step3.je_definition 이 없으면 옛 정의로 만든 것이다 — 같은 이름 je 가 정의
+ * 둘을 가지므로 화면이 말한다.  ⚠ 상수는 step3_sigma.PER_PARTICLE_CURRENT_DEF 와 같은 글자 (시험이 강제). */
+const JE_DEF_V2 = 'am-final-sid-v2';
+function jeEscH(v) {   // payload 문자열을 innerHTML 에 넣기 전 이스케이프 (정규식엔 따옴표 글자 대신 \u 코드)
+  return String(v).replace(/[&<>\u0022\u0027]/g,
+    (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '\u0022': '&quot;', '\u0027': '&#39;' })[c]);
+}
+function jeDefNote(s3, plain) {
+  if (!s3 || !Object.keys(s3).length) return '';           // STEP3 자체가 없으면 je 도 없다 — 표지 없음
+  const d = s3.je_definition;
+  let t;
+  if (d === JE_DEF_V2) t = 'je 정의 = AM 셀만 평균 (최종 상 sid 1·2 · ' + JE_DEF_V2 + ' · RINT-03)';
+  else if (d === undefined || d === null) t = '⚠ je 옛 정의 — AM 자리를 덮은 탄소·첨가제 셀 전류가 AM 몫에 섞였을 수 있음 (RINT-03) · payload 재생성 권장';
+  else t = '⚠ 알 수 없는 je 정의 "' + String(d) + '" — 해석 보류 (RINT-03)';
+  if (plain) return t;
+  return '<div style="margin-top:3px;color:#9ca3af;font-size:10.5px">' + jeEscH(t) + '</div>';
+}
+function jeDefMismatch(sA, sB) {
+  // 비교 모드 — A/B 의 je 정의가 다르면 같은 색 문법이라도 다른 양이다 (옛 ↔ v2 포함).
+  const has = (s) => !!s && Object.keys(s).length > 0;     // 한쪽에 STEP3 가 없으면 비교할 je 가 없다
+  if (!has(sA) || !has(sB)) return '';
+  const a = sA.je_definition || null, b = sB.je_definition || null;
+  if (a === b) return '';
+  return '<div style="margin-top:2px;color:#f59e0b;font-size:10.5px">⚠ A/B 의 je 정의가 다름 ('
+    + jeEscH(a || '옛 정의') + ' ↔ ' + jeEscH(b || '옛 정의') + ') — 패턴 비교 불가 · 옛 쪽 payload 재생성 (RINT-03)</div>';
+}
 function rygColor(t) {
   // t ∈ [0,1] → red→yellow→green (for coverage low→high)
   if (t < 0.5) {
@@ -3699,7 +3728,8 @@ function applyViewMode(state, mode) {
        <div style="display:flex;justify-content:space-between;font-size:10px;color:#9ca3af"><span>×${Math.pow(2, -R).toFixed(2)} 냉각</span><span>변화 없음</span><span>×${Math.pow(2, R).toFixed(1)} 가열</span></div>
        <div style="margin-top:3px;font-size:11.5px">냉각(&lt;×0.8) <b>${nCool}</b>개 · 가열(&gt;×1.2) <b>${nHot}</b>개</div>`
       + (cg ? `<div style="margin-top:2px;color:#9ca3af;font-size:10.5px">바닥 접점 wetted ${cg.n_bottom_contacts.wetted} → bare ${cg.n_bottom_contacts.bare} · R_geom ${Number(cg.R_geom_ohm_cm2).toExponential(2)} Ω·cm²</div>` : '')
-      + `<div style="margin-top:2px;color:#9ca3af;font-size:10.5px">색 갈림은 집전체 근처에만 — 접점 상실의 국소 재분배 (그 외는 흰색이 정상)</div>`);
+      + `<div style="margin-top:2px;color:#9ca3af;font-size:10.5px">색 갈림은 집전체 근처에만 — 접점 상실의 국소 재분배 (그 외는 흰색이 정상)</div>`
+      + jeDefNote(s3));                                      // je · jb 둘 다 같은 per_particle_current (RINT-03)
     return;
   }
   if (mode === 'je') {
@@ -3772,7 +3802,8 @@ function applyViewMode(state, mode) {
           집전체 슬래브는 모식(두께 과장) · σ_e_eff는 상대비교용(σ표/vox 동일 세팅끼리)</details>` : '')
       + `<div style="margin:5px 0 2px 0;height:10px;border-radius:3px;background:linear-gradient(90deg,${stops.join(',')})"></div>
        <div style="display:flex;justify-content:space-between;font-size:10px;color:#9ca3af"><span>0</span><span>|J_z| (0–p99.8)</span><span>high</span></div>`
-      + (s3 && s3.dissipation_share ? `<div style="margin-top:3px;color:#9ca3af;font-size:11px">손실(발열) 분담: `
+      + jeDefNote(s3)
+      + (s3 && s3.dissipation_share ?`<div style="margin-top:3px;color:#9ca3af;font-size:11px">손실(발열) 분담: `
           + Object.entries(s3.dissipation_share).map(([k, v]) => `${k} ${(100 * v).toFixed(0)}%`).join(' · ') + `</div>` : ''));
     return;
   }
@@ -5347,7 +5378,8 @@ function showMPMAnalysisSummary(state) {
   ctx.textAlign = 'left'; ctx.fillStyle = '#374151'; ctx.font = 'bold 12px sans-serif';
   ctx.fillText('약어 (abbreviations) — STEP3 = 전도상 복셀 Kirchhoff σ 저항망 솔브', pad + 12, glossY + 20);
   const gloss = [
-    ['|J_z| , je', '전자 전류밀도(z방향) · STEP3 AM 입자별 상대값(자기 p99.8 정규화, 같은 payload 내 비교) · je=wetted/primer 집전체 기준'],
+    ['|J_z| , je', '전자 전류밀도(z방향) · STEP3 AM 입자별 상대값(자기 p99.8 정규화, 같은 payload 내 비교) · je=wetted/primer 집전체 기준'
+      + (jeDefNote(s3, true) ? ' · ' + jeDefNote(s3, true) : '')],   // RINT-03 정의 표지 (평문 — 캔버스)
     ['jb', 'bare 집전체(crown 접점만) 기준 |J_z| · je와의 차 = 바닥 접점 상실 시 전류 재분배'],
     ['σ_e_eff / σ_ion_eff', '유효 전자 / 이온 전도도 (S/cm) · 전극 through-plane'],
     ['R_geom', '모델 기하 계면저항 (Ω·cm²) = L·(1/σ_bare − 1/σ_wetted) · 측정 R_int − R_geom = 화학/열화 몫'],
@@ -6968,8 +7000,9 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
                    ...(subT ? { sub: subT } : {}) };
     } else if (mode === 'je') {
       buildJe(SA, A, 'je'); buildJe(SB, B, 'je');
+      const jeMm = jeDefMismatch(sA, sB);                    // A/B 정의가 다르면 다른 양 (RINT-03)
       const cap = (s3x) => 'AM 입자별 |J_z| (wetted) · σ_e ' + fmtQ(s3x.sigma_e_eff_S_cm)
-        + ' S/cm · 자기 p99.8+감마 — 패턴 비교용';
+        + ' S/cm · 자기 p99.8+감마 — 패턴 비교용' + jeDefNote(s3x) + jeMm;
       $('cmp-leg-a').innerHTML = cap(sA);
       $('cmp-leg-b').innerHTML = cap(sB);
       cbarSpec = { map: 'jet', gamma: 1.6, title: '|J_z| per-AM relative (wetted collector, p99.8)',
@@ -6988,10 +7021,12 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
                    left: '0 (\ubc18\uc751 \uc18c\uc678)', right: 'hot' };
     } else if (mode === 'je_delta') {
       buildDelta(SA, A); buildDelta(SB, B);
+      const jeMm = jeDefMismatch(sA, sB);                    // je · jb 둘 다 같은 정의 (RINT-03)
       const cap = (s3x) => {
         const cg2 = s3x.collector_geometric || {};
         return 'Δ 재분배 log₂(jb/je) — 파랑=냉각·빨강=가열·흰=불변'
-          + (cg2.n_bottom_contacts ? ` · 접점 ${cg2.n_bottom_contacts.wetted}→${cg2.n_bottom_contacts.bare}` : '');
+          + (cg2.n_bottom_contacts ? ` · 접점 ${cg2.n_bottom_contacts.wetted}→${cg2.n_bottom_contacts.bare}` : '')
+          + jeDefNote(s3x) + jeMm;
       };
       $('cmp-leg-a').innerHTML = cap(sA);
       $('cmp-leg-b').innerHTML = cap(sB);

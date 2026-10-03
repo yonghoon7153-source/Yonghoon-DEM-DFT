@@ -2052,6 +2052,9 @@ def main():
                          'unconverged': bool(_res3.get('unconverged', False)),
                          'dissipation_share': {_s3.share_label(k): round(v, 4)   # ① 계면 몫 = 'interface'
                                                for k, v in _share.items()},
+                         #  ★ 2026-10-03 (RINT-03) — 입자별 je · jb 의 정의.  옛 payload 는 이 키가 없다
+                         #    (= 탄소·첨가제 셀이 AM 몫에 섞인 옛 정의).  뷰어가 표지로 읽는다 · 솔버 상수 그대로.
+                         'je_definition': _s3.PER_PARTICLE_CURRENT_DEF,
                          'sigma_table_S_cm': {'AM_S': a.sigma_am_s, 'AM_P': a.sigma_am_p,
                                               'VGCF': a.sigma_vgcf, 'SuperP': a.sigma_superp,
                                               'SDCP': a.sigma_sdcp, 'SWCNT': a.sigma_swcnt,

@@ -56,6 +56,7 @@ Analytic self-tests (python3 scripts/step3_sigma.py --selftest):
   disconnected slab → σ ≈ 0.  These pin the assembly/BC signs.
 """
 import argparse
+import hashlib
 import sys
 
 import os as _os
@@ -154,9 +155,11 @@ SID_NAME = {1: 'AM_S', 2: 'AM_P', 3: 'VGCF', 4: 'SuperP', 5: 'SDCP', 6: 'SE', 7:
 #    (또는 같은 sid 인데 입자 번호 `pid` 가 다른) 면에 면적비저항 r [Ω·cm²] 를 **직렬**로 넣는다:
 #        g = vox² / (vox/(2σa) + vox/(2σb) + r′),   r′ = r · 1e4  [µm·cm/S]   (σ S/cm · vox µm)
 #    r 를 주지 않으면 (기본) 어떤 면도 안 건드려 **비트 동일**이다 (`_selftest_rint` ⓓ).
-#  ⚠ 입력 σ 규약과 묶인다 — 펠릿값 σ (SE 3.0 · CL-91 / VGCF 100 분말 · CL-47) 은 접촉을 이미
-#    lumping 하므로, 항을 켜면 내부값으로 바꿔야 이중계상이 없다 (④ · 1저자 결정).  여기서는
-#    **기구만** 둔다 (생산 기본 OFF).
+#  ⚠ 입력 σ 규약과 묶인다 — SE 3.0 은 펠릿값 (CL-91) 이라 입계 저항을 일부 이미 품고, VGCF 100 은 도입 때
+#    (`087d1a07c`) 출처 없이 넣은 국소 섬유 closure 값이다 (분말 83 과 같은 자릿수일 뿐 분말값이 아니다 —
+#    CL-47 `correction_20261003` · RINT-10).  ⇒ 항을 켜면 이중계상 **위험**이 있으나 그 크기 · 분해는 미식별
+#    (같은 σ_eff 를 σ_내부 · r 의 여러 조합이 재현).  ④ 의 내부값 규약 · 보정/holdout 분리 전에는 **기구만**
+#    둔다 (생산 기본 OFF · 값 인용 금지).
 #  ⚠ 플레이트 결합(집전체 접촉) · STEP4 반응 솔브 · 열 솔브는 이 항을 **안 받는다** (범위 밖).
 #  ⚠ 조립과 진단(소산 분담 · |J| 점군 · 입자별 J_z)은 **같은 배율 함수**를 쓴다 — 진단이 조화평균을
 #    다시 계산하면 계면 면의 전류가 과대로 나온다 (`_selftest_rint` ⓘ2 가 그 반례).
@@ -164,6 +167,27 @@ INTERFACE_MODEL_VERSION = 'r1-phase-boundary-series'
 RINT_OHM_CM2_TO_UM_CM_PER_S = 1.0e4          # 1 Ω·cm² = 1 cm²/S = 1e4 µm·cm/S
 SID_INTERFACE = -1                           # 소산 분담의 계면 몫 키 (상이 아니다)
 _NAME_SID = {v: k for k, v in SID_NAME.items()}
+#: ★ RINT-01 (Codex 1단계 판정 10-03 · 1저자 비준) — **같은 상 계면은 pid 가 입자 번호인 상에서만.**
+#   `rasterize` 는 AM 구를 찍을 때만 pid 를 쓰고, 첨가제 스탬프는 sid 만 바꾸고 pid (= 밑에 깔린 AM 번호) 를
+#   남긴다 → VGCF|VGCF · SE|SE 를 pid 로 가르면 한 가닥 · 한 덩어리 안에 **가짜 계면**이 생긴다 (합성 반례:
+#   VGCF|VGCF r=1e-4 에서 σ_e 11.1111 → 0.131752 · 가짜 면 2).  ② (VGCF 가닥 번호) · ③ (SE 입자 번호) 는 최종
+#   sid 로 가린 **별도 이름공간 iid** 가 생긴 뒤에만 연다.  파서 · 솔버 입구 · 면 규칙 셋이 모두 강제한다.
+PID_OWNER_SIDS = frozenset({1, 2})
+#: ★ RINT-03 — 입자별 AM 전류 (`per_particle_current`) 의 정의 판.  'am-final-sid-v2' = **최종 sid 가 AM 인 셀**만
+#   센다.  옛 판 (pid ≥ 0 만 봄) 은 AM pid 를 물려받은 탄소 셀 전류를 AM 평균에 넣었다 (합성 반례 121–127× ·
+#   입자 순위 역전).  ⇒ r 를 끈 산출에서도 je · jb 가 **의도적으로** 바뀐다 (비트 동일 계약의 선언된 예외 ·
+#   σ · φ · 소산 분담 · 반응 · patch 는 그대로).  payload 가 이 판 이름을 같이 싣는다.
+PER_PARTICLE_CURRENT_DEF = 'am-final-sid-v2'
+
+
+def _grid_fp(a):
+    """진단 맥락 지문 (RINT-19) — dtype · 모양 · 바이트.  None → None.  복사하지 않는다 (C 연속이면)."""
+    if a is None:
+        return None
+    x = np.ascontiguousarray(np.asarray(a))
+    h = hashlib.blake2b(digest_size=16)
+    h.update(x.dtype.str.encode()); h.update(repr(x.shape).encode()); h.update(x.data)
+    return h.hexdigest()
 
 
 def share_label(k):
@@ -196,6 +220,9 @@ def parse_rint_table(specs):
         if not (np.isfinite(r) and r >= 0.0):
             raise ValueError(f'--step3-rint: r 는 유한한 0 이상이어야 한다 (Ω·cm²): {s!r}')
         key = (min(sids), max(sids))
+        if key[0] == key[1] and key[0] not in PID_OWNER_SIDS:
+            raise ValueError(f'--step3-rint: 같은 상 계면 {SID_NAME[key[0]]}|{SID_NAME[key[0]]} 는 지원하지 않는다 — '
+                             f'pid 는 AM 입자 번호뿐이다 (RINT-01 · 허용 = AM_S|AM_S · AM_P|AM_P): {s!r}')
         if key in out:
             raise ValueError(f'--step3-rint: 같은 쌍이 두 번 {SID_NAME[key[0]]}|{SID_NAME[key[1]]}')
         out[key] = r
@@ -213,7 +240,18 @@ def _check_rint_table(rint):
     for k, v in rint.items():
         if not (isinstance(k, tuple) and len(k) == 2):
             raise ValueError(f'rint 키는 (sid, sid) 튜플이어야 한다: {k!r}')
+        #  ★ RINT-12 — 조용한 형 변환 금지: (1.7, 3) → (1, 3) · True → 1 · 모르는 sid 허용 뒤 왕복 실패
+        for _s in k:
+            if isinstance(_s, (bool, np.bool_)) or not isinstance(_s, (int, np.integer)):
+                raise TypeError(f'rint 키의 sid 는 정수여야 한다 (float · bool 금지): {k!r}')
         a, b = int(k[0]), int(k[1])
+        if a not in SID_NAME or b not in SID_NAME:
+            raise ValueError(f'rint 키에 모르는 sid: {k!r} (허용 {sorted(SID_NAME)})')
+        if a == b and a not in PID_OWNER_SIDS:
+            raise ValueError(f'rint 같은 상 계면 {SID_NAME[a]}|{SID_NAME[a]} 는 지원하지 않는다 — pid 는 AM '
+                             f'입자 번호뿐이다 (RINT-01 · 허용 sid {sorted(PID_OWNER_SIDS)})')
+        if isinstance(v, (bool, np.bool_)) or not isinstance(v, (int, float, np.integer, np.floating)):
+            raise TypeError(f'rint 값은 실수여야 한다 (bool · 문자열 금지): {k!r} → {v!r}')
         r = float(v)
         if not (np.isfinite(r) and r >= 0.0):
             raise ValueError(f'rint 값은 유한한 0 이상 (Ω·cm²): {k!r} → {v!r}')
@@ -246,6 +284,8 @@ def face_rint(sid_a, sid_b, rint, pid_a=None, pid_b=None):
     lo = np.minimum(sa, sb); hi = np.maximum(sa, sb)
     r = np.zeros(sa.shape, np.float64)
     for (a, b), v in rint.items():
+        if a == b and a not in PID_OWNER_SIDS:                   # RINT-01 — 입구 검사를 우회한 표도 막는다
+            raise ValueError(f'face_rint: 같은 상 계면 sid {a} 는 지원하지 않는다 (pid = AM 입자 번호뿐)')
         if v <= 0.0:
             continue
         sel = (lo == a) & (hi == b)
@@ -287,12 +327,24 @@ def interface_face_g(g0, sa, sb, r_face, vox):
     return g
 
 
-def rint_ctx_from(res, sid):
-    """진단용 맥락 `(sid, 표, pid, vox)` — 솔브가 계면 항을 실제로 썼을 때만, 아니면 None."""
+def rint_ctx_from(res, sid, sigma_of_sid=None):
+    """진단용 맥락 `(sid, 표, pid, vox)` — 솔브가 계면 항을 **실제로 건** 해 (면 > 0) 에서만, 아니면 None.
+
+    ★ RINT-19 (Codex 10-03) — 맥락은 솔브가 본 격자의 **지문**과 대조한다.  옛 판은 호출자의 sid 를 그대로
+    믿고 res 가 쥔 pid 참조를 썼다 → 같은 모양의 다른 sid 를 넘기면 계면 몫 0.95238 → 0 · |J|max 101× ·
+    솔브 뒤 pid 배열을 바꾸면 저장된 면 수는 그대로인데 진단 계면 몫이 0 이 됐다.  ⇒ sid · pid · (주면) σ 의
+    지문이 솔브 때와 다르면 **거부** (fail-closed · 진단 소비처 넷은 σ 를 넘긴다)."""
     _r = res.get('_rint')
     if not _r:
         return None
-    return (sid, _r[0], _r[1], float(res['vox_um']))
+    tb, pid, fp_sid, fp_pid, fp_sig = _r
+    if _grid_fp(sid) != fp_sid:
+        raise ValueError('rint 맥락: 진단에 넘긴 sid 가 솔브한 sid 와 다르다 (RINT-19)')
+    if pid is not None and _grid_fp(pid) != fp_pid:
+        raise ValueError('rint 맥락: 솔브 뒤 pid 배열이 바뀌었다 (RINT-19)')
+    if sigma_of_sid is not None and _grid_fp(np.asarray(sigma_of_sid, np.float64)) != fp_sig:
+        raise ValueError('rint 맥락: 진단에 넘긴 σ 가 솔브한 σ 와 다르다 (RINT-19)')
+    return (sid, tb, pid, float(res['vox_um']))
 
 
 # Set True (mpm_webapp_payload --step3-gpu) to run the Kirchhoff CG on GPU (CuPy cuSPARSE) — a
@@ -1079,7 +1131,10 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
                'table': rint_table_record(_rint), 'pid_used': pid is not None,
                'n_faces_rint': int(sum(_faces.values())),
                'faces_by_pair': dict(sorted(_faces.items()))}),
-           '_rint': ((_rint, pid) if _rint else None),
+           #  ★ RINT-11 · 19 — 맥락은 **면이 실제로 걸린** 해에만 (면 0 이면 진단도 옛 경로 비트 동일) +
+           #    솔브가 본 sid · pid · σ 의 지문 (진단이 다른 격자 · 바뀐 pid 로 계면 몫을 내지 않게).
+           '_rint': ((_rint, pid, _grid_fp(sid), _grid_fp(pid), _grid_fp(np.asarray(sigma_of_sid, np.float64)))
+                     if (_rint and sum(_faces.values()) > 0) else None),
            'unconverged': unconv}
     if return_field:
         P = np.zeros(sid.shape, np.float64); P[cond] = phi
@@ -1089,7 +1144,12 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
 
 def per_particle_current(res, sid, pid, sigma_of_sid, n_am):
     """Mean |J_z| PROXY per AM particle (z-face current g·Δφ ∝ J_z·vox² — run-relative, the
-    viewer percentile-normalizes; NOT vox-invariant across runs) — the slide-20 axis."""
+    viewer percentile-normalizes; NOT vox-invariant across runs) — the slide-20 axis.
+
+    ★ RINT-03 (Codex 10-03 · 정의 판 `PER_PARTICLE_CURRENT_DEF`) — AM 소유권 = **최종 sid ∈ {1, 2} ∧ 유효 pid
+    (0 ≤ pid < n_am)**.  옛 판은 pid ≥ 0 만 봐서, 첨가제 스탬프가 sid 만 바꾸고 남긴 AM 번호를 가진 **탄소 셀**의
+    전류를 AM 평균에 넣었다 (r 무관 · 합성 반례 121–127× · 순위 역전 · 08-16 심층 리뷰 §7 은 셀 수로 "무해" 라
+    적었으나 전류 가중으로는 아니다).  반응 · AM 표면 patch 는 이미 AM sid 로 먼저 가려 무관."""
     if 'phi' not in res:                                   # early-returned solve (see res['reason'])
         return np.zeros(n_am, np.float64)
     P, cond = res['phi'], res['cond']
@@ -1098,7 +1158,7 @@ def per_particle_current(res, sid, pid, sigma_of_sid, n_am):
     sa, sb = sig[:, :, :-1], sig[:, :, 1:]
     both = cond[:, :, :-1] & cond[:, :, 1:]
     g = np.where(both, 2.0 * sa * sb / np.maximum(sa + sb, 1e-30), 0.0)
-    _ctx = rint_ctx_from(res, sid)
+    _ctx = rint_ctx_from(res, sid, sigma_of_sid)
     if _ctx is not None:                                   # ① 계면 면 = 조립과 같은 배율 (전류 연속)
         _sid, _tb, _pid, _vx = _ctx
         _r = np.where(both, face_rint(_sid[:, :, :-1], _sid[:, :, 1:], _tb,
@@ -1110,7 +1170,7 @@ def per_particle_current(res, sid, pid, sigma_of_sid, n_am):
     jz[:, :, :-1] += np.abs(f) * 0.5
     jz[:, :, 1:] += np.abs(f) * 0.5
     je = np.zeros(n_am, np.float64); nv = np.zeros(n_am, np.int64)
-    m = pid >= 0
+    m = (pid >= 0) & (pid < n_am) & ((sid == 1) | (sid == 2))   # RINT-03 — 최종 sid 가 AM 인 셀 · 유효 번호만
     np.add.at(je, pid[m], jz[m]); np.add.at(nv, pid[m], 1)
     return np.where(nv > 0, je / np.maximum(nv, 1), 0.0)
 
@@ -1186,7 +1246,7 @@ def phase_current_share(res, sid, sigma_of_sid, periodic_xy=None):
                              f'(없었다면 solve 가 no_plate_contact 였다)')
     _use_plate = True
     _u = float(_vox)
-    _ctx = rint_ctx_from(res, sid)                         # ① 계면 항을 쓴 해인가 (None = 옛 경로 그대로)
+    _ctx = rint_ctx_from(res, sid, sigma_of_sid)           # ① 계면 항을 쓴 해인가 (None = 옛 경로 그대로)
     diss_int = 0.0                                         # 계면 몫 (상이 아니라 따로 센다)
     for sl_a, sl_b in pairs:
         both = cond[sl_a] & cond[sl_b]
@@ -1490,7 +1550,7 @@ def joule_hotspot(res, sid, sigma_of_sid, vox, sel_sids, box_lo=(0.0, 0.0, 0.0),
     P, cond = res['phi'], res['cond']
     sig = sigma_field(sigma_of_sid, sid)
     jmag = _voxel_jmag(P, cond, sig, periodic_xy=bool(res.get('periodic_xy')),
-                       rint_ctx=rint_ctx_from(res, sid))   # ① 계면 배율 = 조립과 동일
+                       rint_ctx=rint_ctx_from(res, sid, sigma_of_sid))   # ① 계면 배율 = 조립과 동일 · RINT-19 지문
     q = np.where(cond, jmag * jmag / np.maximum(sig, 1e-30), 0.0)     # 발열밀도 (run-relative, W/cm³ 스케일 전)
     sel = np.isin(sid, np.asarray(list(sel_sids), np.int64)) & cond & (q > 0)
     ii, jj, kk = np.where(sel)
@@ -1560,7 +1620,7 @@ def field_point_cloud(res, sid, sigma_of_sid, vox, sel_sids, box_lo=(0.0, 0.0, 0
     P, cond = res['phi'], res['cond']
     sig = sigma_field(sigma_of_sid, sid)
     jmag = _voxel_jmag(P, cond, sig, periodic_xy=bool(res.get('periodic_xy')),
-                       rint_ctx=rint_ctx_from(res, sid))   # ① 계면 배율 = 조립과 동일
+                       rint_ctx=rint_ctx_from(res, sid, sigma_of_sid))   # ① 계면 배율 = 조립과 동일 · RINT-19 지문
     sel = np.isin(sid, np.asarray(list(sel_sids), np.int64)) & cond
     ii, jj, kk = np.where(sel)
     if not len(ii):
@@ -3669,6 +3729,73 @@ def _selftest_rint():
     jh = joule_hotspot(r1, sid, sig, 0.5, (1, 3))
     chk('ⓘ5 joule_hotspot 도 같은 |J| (내부 셀 q = J²/σ 두 값뿐)', jh is not None and jh['n'] == 360)
     chk('ⓘ6 r 없는 res 의 rint_ctx 는 None (옛 경로 그대로)', rint_ctx_from(r0, sid) is None)
+
+    # ── ⓙ G1 (Codex 1단계 판정 10-03 · 1저자 비준) — 반례를 먼저 옮긴 것 ──────────────
+    #  ⓙ1 RINT-01: 같은 상 계면은 **pid 가 입자 번호인 상 (AM)** 에서만.  첨가제 스탬프는 sid 만
+    #     바꾸고 pid (= 밑의 AM 번호) 를 남기므로, VGCF|VGCF 등을 pid 로 가르면 한 가닥 안에 가짜 면.
+    for bad in (['VGCF|VGCF=1e-4'], ['SE|SE=1e-2'], ['SDCP|SDCP=1'], ['SuperP|SuperP=1'],
+                ['SWCNT|SWCNT=1'], ['PTFE|PTFE=1'], ['SE_blk|SE_blk=1']):
+        chk(f'ⓙ1 parse 거부 (같은 상 · AM 아님) {bad}', _raises(lambda b=bad: parse_rint_table(b)))
+    chk('ⓙ1 parse 허용 AM_S|AM_S · AM_P|AM_P',
+        parse_rint_table(['AM_S|AM_S=1e-4', 'AM_P|AM_P=2e-4']) == {(1, 1): 1e-4, (2, 2): 2e-4})
+    #  ⓙ2 RINT-12: 솔버 API 입구 — 같은 상 비-AM · 조용한 형 변환 · 모르는 sid · bool · 문자열
+    for lbl, tb in (('VGCF|VGCF', {(3, 3): 1e-4}), ('SE|SE', {(6, 6): 1e-2}),
+                    ('float sid (1.7,3)', {(1.7, 3): 1e-3}), ('bool sid', {(True, 3): 1e-3}),
+                    ('bool 값', {(1, 3): True}), ('모르는 sid 0 (pore)', {(0, 3): 1e-3}),
+                    ('모르는 sid 42', {(1, 42): 1e-3}), ('문자열 값', {(1, 3): '1e-3'})):
+        chk(f'ⓙ2 API 거부 {lbl}', _raises(lambda t=tb: _check_rint_table(t)))
+    chk('ⓙ2 API 허용: numpy 정수 키 · numpy 실수 값',
+        _check_rint_table({(np.int64(3), np.int8(1)): np.float32(1e-3)}) == {(1, 3): float(np.float32(1e-3))})
+    #  ⓙ3 면 규칙 자체도 거부 (입구 검사를 우회한 표)
+    chk('ⓙ3 face_rint 가 같은 상 비-AM 표를 거부',
+        _raises(lambda: face_rint(np.array([3]), np.array([3]), {(3, 3): 1e-4}, np.array([0]), np.array([1]))))
+    #  ⓙ4 RINT-01 원 반례 (한 가닥 VGCF 에 AM pid 0/1/2) → 솔브 입구에서 거부 · AM 두 입자 막은 그대로
+    sidv = np.full((4, 4, 10), 3, np.int8); sigv = np.array([0.0, 1.0, 0.0, 100.0])
+    pidv = np.zeros(sidv.shape, np.int32); pidv[:, :, 4:7] = 1; pidv[:, :, 7:] = 2
+    chk('ⓙ4 VGCF|VGCF + AM pid 침대 → 솔브 거부 (옛: 가짜 면 · σ 붕괴)',
+        _raises(lambda: solve_sigma_z(sidv, sigv, 0.5, rint={(3, 3): 1e-4}, pid=pidv, **kw)))
+    rp2 = solve_sigma_z(sid1, sig1, 0.5, return_field=True, rint={(1, 1): 1e-4}, pid=pid, **kw)
+    chk('ⓙ4 서로 다른 두 AM 입자 사이 막은 남는다 (5/6)', abs(rp2['sigma_eff'] - 5.0 / 6.0) < 2e-4)
+    #  ⓙ5 RINT-03: 입자별 AM 전류 = **최종 sid 가 AM 인 셀**만.  탄소 셀이 AM pid 를 물려받아도 안 센다
+    sidj = np.ones((6, 6, 10), np.int8); sidj[0:2, :, :] = 3           # x 0–1 = VGCF (σ 100) · 나머지 AM_S (σ 1)
+    sigj = np.array([0.0, 1.0, 0.0, 100.0])
+    pidj = np.zeros(sidj.shape, np.int32)                             # 전 셀이 입자 0 의 번호를 가진 상황
+    rj = solve_sigma_z(sidj, sigj, 0.5, return_field=True, **kw)
+    sgj = sigma_field(sigj, sidj); Pj, cj = rj['phi'], rj['cond']
+    bj = cj[:, :, :-1] & cj[:, :, 1:]
+    gj = np.where(bj, 2.0 * sgj[:, :, :-1] * sgj[:, :, 1:] / np.maximum(sgj[:, :, :-1] + sgj[:, :, 1:], 1e-30), 0.0)
+    fj = gj * (Pj[:, :, :-1] - Pj[:, :, 1:])
+    jzj = np.zeros(sidj.shape); jzj[:, :, :-1] += np.abs(fj) * 0.5; jzj[:, :, 1:] += np.abs(fj) * 0.5
+    exp_am, exp_all = float(jzj[sidj == 1].mean()), float(jzj.mean())
+    je_j = per_particle_current(rj, sidj, pidj, sigj, 1)[0]
+    chk('ⓙ5 je = AM 셀만의 |J_z| 평균', abs(je_j - exp_am) <= 1e-12 * max(exp_am, 1e-30),
+        f'{je_j:.6g} vs AM {exp_am:.6g} · 전 셀 {exp_all:.6g}')
+    chk('ⓙ5 (판별력) 탄소 셀을 넣은 옛 집계는 크게 다르다 (> 5×)', exp_all > 5.0 * exp_am)
+    pidx = pidj.copy(); pidx[3, 3, 3] = 7                             # n_am=1 밖 번호 — 옛 코드는 IndexError
+    try:
+        je_x = per_particle_current(rj, sidj, pidx, sigj, 1)[0]
+        chk('ⓙ5 유효 pid 마스크 (n_am 밖 번호는 셈에서 빠진다)', np.isfinite(je_x))
+    except IndexError:
+        chk('ⓙ5 유효 pid 마스크 (n_am 밖 번호는 셈에서 빠진다)', False, 'IndexError')
+    #  ⓙ6 RINT-11: r 표는 있는데 걸린 면이 0 이면 진단도 옛 경로 그대로 (분담 키 · 값 비트 동일)
+    sh_off = phase_current_share(r0, sid, sig)
+    for lbl, tb in (('r=0', {(1, 3): 0.0}), ('격자에 없는 쌍', {(1, 2): 1e-3})):
+        rr = solve_sigma_z(sid, sig, 0.5, return_field=True, rint=tb, **kw)
+        shz = phase_current_share(rr, sid, sig)
+        chk(f'ⓙ6 {lbl}: 면 0 → 진단 맥락 없음 · 분담 키 · 값 비트 동일 · 원장은 남음',
+            rint_ctx_from(rr, sid) is None and set(shz) == set(sh_off)
+            and all(float(shz[k]).hex() == float(sh_off[k]).hex() for k in sh_off)
+            and rr.get('interface') is not None and rr['interface']['n_faces_rint'] == 0)
+    #  ⓙ7 RINT-19: 진단 맥락 무결성 — 다른 sid · 다른 σ · 솔브 뒤 바뀐 pid 로는 진단하지 않는다
+    chk('ⓙ7 다른 sid (같은 모양) 로 맥락 요청 → 거부',
+        _raises(lambda: rint_ctx_from(r1, np.where(sid == 3, 1, 3).astype(sid.dtype))))
+    chk('ⓙ7 다른 σ 표로 분담 → 거부', _raises(lambda: phase_current_share(r1, sid, np.array([0.0, 1.0, 0.0, 8.0]))))
+    pidm = np.zeros(sid1.shape, np.int32); pidm[:, :, 5:] = 1
+    rpm = solve_sigma_z(sid1, sig1, 0.5, return_field=True, rint={(1, 1): 1e-4}, pid=pidm, **kw)
+    chk('ⓙ7 솔브 직후 진단 = 계면 몫 > 0', phase_current_share(rpm, sid1, sig1).get(SID_INTERFACE, 0.0) > 0.0)
+    pidm[...] = 0                                                     # 호출자가 솔브 뒤 배열을 바꾼다
+    chk('ⓙ7 솔브 뒤 pid 가 바뀌면 → 거부 (옛: 저장 면은 그대로인데 계면 몫 0)',
+        _raises(lambda: phase_current_share(rpm, sid1, sig1)))
     print('STEP3 RINT SELFTEST', 'PASS' if ok else 'FAIL')
     return 0 if ok else 1
 
