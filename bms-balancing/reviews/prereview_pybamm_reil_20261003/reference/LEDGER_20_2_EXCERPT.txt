@@ -1,0 +1,22 @@
+Source: https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/00ed85b4402169bae788b7269ffe69d76a0c40aa/degradation-degeneracy/docs/08_REVIEW_RESPONSE.md
+Git blob: 7e8e8dbc1d6b47b1173390c0c75dda229ca65364
+
+903: ### 20.2 grid invariant (fitting 전, 리뷰 조건 4)
+904: 
+905: ```
+906: validator ok = True | fail = []
+907: grid_sig_version = 5 | signed noise = [0.0, 0.001, 0.005]
+908: effective_solver = IDAKLUSolver · pybamm 26.7.1.0 · pybammsolvers 0.9.0 · casadi 3.7.2
+909: observed conditions = 3069 (3069 기대)
+910: observed family     = 1023 (1023 기대), noise 집합 불일치 0
+911: max Δq_mah = 0 mAh (≤1e-6)   max Δv = 0 V (≤1e-10)
+912: n_failed_total = 924 (924 기대)
+913: fully-failed family = 308 (308 기대), noise 불일치 0
+914: === INVARIANT PASS ===
+915: ```
+916: 
+917: family 내 편차가 허용오차가 아니라 **정확히 0** 이다 — 14차 발견 1 이 요구한
+918: "noise 는 solve 이후에만 얹힌다"가 3,069조건 전수에서 성립했다.
+919: 
+920: ### 20.3 실행 중 사고 1건 — 검증 장치가 처음으로 실제 사고를 잡았다
+921: 

@@ -1,0 +1,18 @@
+{
+  "json_files_parsed": [
+    "DECISION.json",
+    "external/NOTEBOOK_SOURCE_EXCERPTS.json",
+    "external/py5755.json",
+    "external/py5813.json",
+    "SOURCE_INDEX.json"
+  ],
+  "pybamm_Q1_Q6_complete": true,
+  "reil_Q1_Q8_complete": true,
+  "reil_R1_R6_complete": true,
+  "util_original_line_endings_reconstructed": {
+    "bytes": 33754,
+    "sha256": "3c19e45ef8a64ce67cda1f623551e758d4c0f67086bbae02b978428d78de1c76",
+    "git_blob_sha1": "33a2f3768f5a046ba6e028c19760ad68f28dde84"
+  },
+  "scope": "Reviewer document and source-identity checks only; no supplied code execution or research tests"
+}

@@ -1,0 +1,46 @@
+{
+  "date": "2026-10-03",
+  "review_ref": "00ed85b4402169bae788b7269ffe69d76a0c40aa",
+  "kind": "PREDECISION_READONLY_REVIEW_OUTSIDE_GATE_NUMBERING",
+  "pybamm": {
+    "status": "PINNING_RECOMMENDED_WITH_SEPARATE_PROFILES",
+    "current_validator_profile": "C recommended for separate decision",
+    "historical_reproduction_profile": "B, subject to historical environment evidence",
+    "new_producer_guard": "D bound to approved immutable profile",
+    "two_condition_1microvolt_choice_rule": "NOT_ACCEPTED_AS_GENERAL_EQUIVALENCE"
+  },
+  "reil": {
+    "status": "PROTOCOL_REVISION_REQUIRED_BEFORE_CONFIRMATORY_EXECUTION",
+    "items": [
+      "R1 joint and marginal truth membership",
+      "R2 local optimizer uncertainty and unresolved status",
+      "R3 objectives, units, thresholds",
+      "R4 nominal truth and reproduction prerequisites",
+      "R5 missing inequality and extrapolation/domain",
+      "R6 model and observation normalization"
+    ],
+    "critical_static_observation": "Original G<=0 implies LII<m_P; nominal (m_P=0.64,LII=1) cannot satisfy it, even with coordinate tolerances +/-0.05."
+  },
+  "actions": {
+    "source_import_or_execution": 0,
+    "environment_installs": 0,
+    "provided_test_suites": 0,
+    "reil_fits": 0,
+    "pybamm_solves": 0,
+    "COMSOL_calls": 0,
+    "production_edits": 0,
+    "external_messages": 0
+  },
+  "approved": {
+    "implementation": false,
+    "execution": false,
+    "requirements_change": false,
+    "G87_N1_scope_expansion": false
+  },
+  "limits": [
+    "No independent remeasurement of submitted numerical comparisons",
+    "No xlsx analysis or publisher full-text review",
+    "Text snapshots may normalize line endings",
+    "Proposals do not establish environment equivalence or global optimization guarantees"
+  ]
+}

@@ -1,0 +1,92 @@
+{
+  "review_ref": "00ed85b4402169bae788b7269ffe69d76a0c40aa",
+  "repository": "yonghoon7153-source/Yonghoon-DEM-DFT",
+  "branch_label": "claude/dashboard-standby-e2f56971",
+  "scope": "Read-only prereview; no supplied code import/run, installs, test suites, COMSOL or production edits",
+  "files": [
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/PYBAMM_PIN_PREREVIEW_20261003.md",
+      "local": "reference/degradation-degeneracy/docs/22p_gap/PYBAMM_PIN_PREREVIEW_20261003.md",
+      "source_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/00ed85b4402169bae788b7269ffe69d76a0c40aa/degradation-degeneracy/docs/22p_gap/PYBAMM_PIN_PREREVIEW_20261003.md",
+      "source_git_blob_sha1": "c4cbc836753786139b7da6becc51dcca6c429a4c",
+      "scope": "UTF-8 text snapshot, line endings may be normalized; no source execution"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL.md",
+      "local": "reference/bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL.md",
+      "source_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/00ed85b4402169bae788b7269ffe69d76a0c40aa/bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL.md",
+      "source_git_blob_sha1": "dd6e7c5081d66d3e8f08a586f7a655602b587121",
+      "scope": "UTF-8 text snapshot, line endings may be normalized; no source execution"
+    },
+    {
+      "path": "degradation-degeneracy/requirements.txt",
+      "local": "reference/degradation-degeneracy/requirements.txt",
+      "source_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/00ed85b4402169bae788b7269ffe69d76a0c40aa/degradation-degeneracy/requirements.txt",
+      "source_git_blob_sha1": "221a5470c5fc0632fb1e10c57c33337b9c30579f",
+      "scope": "UTF-8 text snapshot, line endings may be normalized; no source execution"
+    },
+    {
+      "path": "wiki/raw/repositories/2026-10-01-pybamm-26.8-vs-26.9-synthetic-truth.md",
+      "local": "reference/wiki/raw/repositories/2026-10-01-pybamm-26.8-vs-26.9-synthetic-truth.md",
+      "source_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/00ed85b4402169bae788b7269ffe69d76a0c40aa/wiki/raw/repositories/2026-10-01-pybamm-26.8-vs-26.9-synthetic-truth.md",
+      "source_git_blob_sha1": "92194d553e813fec74019bc497a841727a629c9b",
+      "scope": "UTF-8 text snapshot, line endings may be normalized; no source execution"
+    },
+    {
+      "path": "wiki/raw/repositories/2026-10-03-pybamm-pr5813-graded-electrode-and-synthetic-truth.md",
+      "local": "reference/wiki/raw/repositories/2026-10-03-pybamm-pr5813-graded-electrode-and-synthetic-truth.md",
+      "source_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/00ed85b4402169bae788b7269ffe69d76a0c40aa/wiki/raw/repositories/2026-10-03-pybamm-pr5813-graded-electrode-and-synthetic-truth.md",
+      "source_git_blob_sha1": "fb68db810b84392af920201efd0f528c3f6b576d",
+      "scope": "UTF-8 text snapshot, line endings may be normalized; no source execution"
+    },
+    {
+      "path": "wiki/raw/repositories/2026-10-03-reil-uconn-moo-known-truth-table.md",
+      "local": "reference/wiki/raw/repositories/2026-10-03-reil-uconn-moo-known-truth-table.md",
+      "source_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/00ed85b4402169bae788b7269ffe69d76a0c40aa/wiki/raw/repositories/2026-10-03-reil-uconn-moo-known-truth-table.md",
+      "source_git_blob_sha1": "9d6a170eb32aea5d892e6c3b02816f9d08f3d4bb",
+      "scope": "UTF-8 text snapshot, line endings may be normalized; no source execution"
+    },
+    {
+      "path": "degradation-degeneracy/src/io.py",
+      "local": "reference/degradation-degeneracy/src/io.py.txt",
+      "source_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/00ed85b4402169bae788b7269ffe69d76a0c40aa/degradation-degeneracy/src/io.py",
+      "source_git_blob_sha1": "9284a4370bc6afb52722fb60e78657016ea44111",
+      "scope": "UTF-8 text snapshot, line endings may be normalized; no source execution"
+    },
+    {
+      "path": "degradation-degeneracy/src/grid.py",
+      "local": "reference/degradation-degeneracy/src/grid.py.txt",
+      "source_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/00ed85b4402169bae788b7269ffe69d76a0c40aa/degradation-degeneracy/src/grid.py",
+      "source_git_blob_sha1": "5702c0d061d980d44018fc2b746c04fc6423f827",
+      "scope": "UTF-8 text snapshot, line endings may be normalized; no source execution"
+    },
+    {
+      "path": "degradation-degeneracy/src/runner.py",
+      "local": "reference/degradation-degeneracy/src/runner.py.txt",
+      "source_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/00ed85b4402169bae788b7269ffe69d76a0c40aa/degradation-degeneracy/src/runner.py",
+      "source_git_blob_sha1": "aa0351e32595de255d1dc9924f9eac8a504ba27d",
+      "scope": "UTF-8 text snapshot, line endings may be normalized; no source execution"
+    },
+    {
+      "path": "reilutil",
+      "local": "external/util_LFP.py.txt",
+      "source_url": "https://github.com/REIL-UConn/Multi-Objective-Optimization-for-Lithium-Ion-Battery-Degradation-Diagnostics/blob/1188c371e5836df4a7e5f5acf336a34ffd4027e6/util_LFP.py",
+      "source_git_blob_sha1": "33a2f3768f5a046ba6e028c19760ad68f28dde84",
+      "scope": "UTF-8 text snapshot; source not executed"
+    },
+    {
+      "path": "reilreadme",
+      "local": "external/REIL_README.md",
+      "source_url": "https://github.com/REIL-UConn/Multi-Objective-Optimization-for-Lithium-Ion-Battery-Degradation-Diagnostics/blob/1188c371e5836df4a7e5f5acf336a34ffd4027e6/README.md",
+      "source_git_blob_sha1": "2fe5b26a15b169e5c61b2366ab66cdc369434762",
+      "scope": "UTF-8 text snapshot; source not executed"
+    },
+    {
+      "path": "reil/LICENSE",
+      "local": "external/REIL_LICENSE.txt",
+      "source_url": "https://github.com/REIL-UConn/Multi-Objective-Optimization-for-Lithium-Ion-Battery-Degradation-Diagnostics/blob/1188c371e5836df4a7e5f5acf336a34ffd4027e6/LICENSE",
+      "source_git_blob_sha1": "7fa62b1330faa2cedca6f66628112d6552a670b2",
+      "scope": "UTF-8 text snapshot; source not executed"
+    }
+  ]
+}

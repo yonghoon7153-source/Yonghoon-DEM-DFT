@@ -1,0 +1,122 @@
+{
+  "scope": "Local reviewer delivery, not producer receipt or scientific test result",
+  "ref": "00ed85b4402169bae788b7269ffe69d76a0c40aa",
+  "payload_count": 23,
+  "files": [
+    {
+      "path": "CLAUDE_REPLY_KO.md",
+      "bytes": 4397,
+      "sha256": "34a47ba33e8f6600ed266e3c16db07856d215d69f0753630f37cb1618340fda4"
+    },
+    {
+      "path": "DECISION.json",
+      "bytes": 1785,
+      "sha256": "2b140f2dfe3b7d18cef4884c9078ec9ebfc5824f85ed5c8e13a08390a574c4ec"
+    },
+    {
+      "path": "external/NOTEBOOK_SOURCE_EXCERPTS.json",
+      "bytes": 7543,
+      "sha256": "95cca5f35aaaf72757812068251d72064b464cff6ef3f523c756f33d27d243a9"
+    },
+    {
+      "path": "external/py5755.json",
+      "bytes": 10566,
+      "sha256": "b7d411ee592f23d5690329253311d2f11320ef4f455340c8fb0f122570b6302c"
+    },
+    {
+      "path": "external/py5813.json",
+      "bytes": 10620,
+      "sha256": "de5a5265957fe83f8204e91c81726e311dc6f01e41d82db80b3ad1d3cbc56cd6"
+    },
+    {
+      "path": "external/REIL_LICENSE.txt",
+      "bytes": 1067,
+      "sha256": "0c95990daf792fe897f5ca90262d9d682c1b3e9c705a257ecf591e031c1f4786"
+    },
+    {
+      "path": "external/REIL_README.md",
+      "bytes": 4188,
+      "sha256": "1eaf4a09133c529cb60ca8d3caa3b488384eb0dc1356732d5c7cd2cd35c2cb72"
+    },
+    {
+      "path": "external/util_LFP.py.txt",
+      "bytes": 32909,
+      "sha256": "bdf78273d50f40ce3154d01a3ef8d36f0f5ea5ec1b04539584809d7b19b46f9c"
+    },
+    {
+      "path": "PYBAMM_REVIEW_KO.md",
+      "bytes": 9823,
+      "sha256": "7cc6522a5a0895f9e0c5cf50ede0b58e1e6b17650015a66cd1eb1ebdcd6009f4"
+    },
+    {
+      "path": "README_KO.md",
+      "bytes": 1981,
+      "sha256": "123b9f0f2a29a599fff6eea63b9f0faceef1d6df06258632b165dcc15735d2b0"
+    },
+    {
+      "path": "reference/bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL.md",
+      "bytes": 12122,
+      "sha256": "706f3dbd06de42ae1c0d96794d696ee9ffaf2e98082011af67b449d1b1dfef7e"
+    },
+    {
+      "path": "reference/degradation-degeneracy/docs/22p_gap/PYBAMM_PIN_PREREVIEW_20261003.md",
+      "bytes": 6130,
+      "sha256": "7a065e7cfb08648a2bad883dc797ddc251198ae0aae2faeb59eb3ff0a4109e75"
+    },
+    {
+      "path": "reference/degradation-degeneracy/requirements.txt",
+      "bytes": 1031,
+      "sha256": "51496f89996c6de208281743bbba85cb0a822653d293a8752392d6a0528c1458"
+    },
+    {
+      "path": "reference/degradation-degeneracy/src/grid.py.txt",
+      "bytes": 50583,
+      "sha256": "0b70f3f109ee79654c40535ea22c1f87f57feccde77ed45afaadcea6b9ef6f01"
+    },
+    {
+      "path": "reference/degradation-degeneracy/src/io.py.txt",
+      "bytes": 141436,
+      "sha256": "e8f9561b6492d5a54595f557e38762156fab9a014d857c6d3aee668f85e16a38"
+    },
+    {
+      "path": "reference/degradation-degeneracy/src/runner.py.txt",
+      "bytes": 4421,
+      "sha256": "d7938749a23624bd3ff18056fe3538a18f16996f12bb3e3d6835984386cb6a82"
+    },
+    {
+      "path": "reference/LEDGER_20_2_EXCERPT.txt",
+      "bytes": 1113,
+      "sha256": "8dab6a0bcae8681404cbeb15c5ee3987295b0e5313d46f6d85a12d16bc7631cb"
+    },
+    {
+      "path": "reference/wiki/raw/repositories/2026-10-01-pybamm-26.8-vs-26.9-synthetic-truth.md",
+      "bytes": 10086,
+      "sha256": "19ce329d60020a2353a3b2515c4c56a0c777c883425c4c183cf71c8299401fdc"
+    },
+    {
+      "path": "reference/wiki/raw/repositories/2026-10-03-pybamm-pr5813-graded-electrode-and-synthetic-truth.md",
+      "bytes": 11486,
+      "sha256": "96b7f5fcb736158b8f8d807e9dd4577b708e50e962d89201c2937e6f72928087"
+    },
+    {
+      "path": "reference/wiki/raw/repositories/2026-10-03-reil-uconn-moo-known-truth-table.md",
+      "bytes": 11559,
+      "sha256": "7efaab224a1b507ba54a765bf9ddddac4892a3ae1623a14af5e5a5b6b4f3b0e7"
+    },
+    {
+      "path": "REIL_PROTOCOL_REVIEW_KO.md",
+      "bytes": 17710,
+      "sha256": "df09255841e94d5d120cde7ced5a9143ce7e732ff5074895da2977382708737a"
+    },
+    {
+      "path": "REVIEW_CHECKS.json",
+      "bytes": 604,
+      "sha256": "de141adad4ccd24bbeb01ec32a841e908a550a51dc2861ef7549c8a70a574efa"
+    },
+    {
+      "path": "SOURCE_INDEX.json",
+      "bytes": 6140,
+      "sha256": "c8d6dbb2be580e44d870d9611e54e4ca3c55358d3925a61a866b95d66ed2e8d5"
+    }
+  ]
+}
