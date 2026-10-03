@@ -51,7 +51,7 @@ fast-forward 복귀했다). **소유 경로는 가르지 않고 시간만 가른
 
 | 항목 | 근거 |
 |---|---|
-| `requirements.txt` pybamm 상한 (`<26.9` 등) | `wiki/entities/pybamm.md` — 26.9 #5755 가 합성 truth 를 ≤2.7 mV 움직임 (실측). RUN_SCOPE 변경 = 영수증 재생성 → 게이트 라운드 승인 범위 |
+| `requirements.txt` pybamm ~~상한 (`<26.9` 등)~~ 고정 (목적별 프로필) | `wiki/entities/pybamm.md` — ~~26.9 #5755 가 합성 truth 를 ≤2.7 mV 움직임 (실측)~~ 26.8 ↔ 26.9 환경 차이로 합성 truth ≤2.7 mV (실측 · #5755 단독 인과 미확정 — 2026-10-03 정정). RUN_SCOPE 변경 = 영수증 재생성 → 게이트 라운드 승인 범위. **Codex 사전 검토 회신 (2026-10-03):** C 검증 · B 정본 재생성 · D 생산 guard 분리 고정 권고 · G87-N1 종결 뒤 별도 라운드 (`degradation-degeneracy/docs/22p_gap/PYBAMM_PIN_PREREVIEW_REPLY_20261003.md`) |
 | ASSB `bms-balancing/docs/ASSB_WANTED_PAPERS.md` §3-b 미결 판단 거리 · 후속 논문 요청 후보 | 2026-09-30 복귀 기록 (`BRANCHES.md`) 이후 그대로 |
 | COMSOL 0–480 s 분석 위치 | 사용자: "걱정 안 해도" — 이 작업 흐름 밖. `bms-balancing/docs/COMSOL_REBUILD_SPEC.md` §38–§39 가 마지막 |
 | webapp `/bms` · `/microshort` 스냅샷 갱신 | 2026-09-30 복귀 기록 그대로 |

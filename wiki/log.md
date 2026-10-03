@@ -3424,3 +3424,14 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - wiki 밖(호출자 몫): 원장 §1 — 이 편 행 L304(✅ 104호 흡수 · 지목 칸 "26 \| 1" 그대로 · **2026-10-02 '저자 정정'(여섯) 되돌림 — 지면 · XMP 저자 넷 · 여섯은 [5] *CMS* 196 의 저자**) · 재지목 넷(Tian & Qi L173 → 8 · Kazemi L229 → 3 · Fabre L232 → 5 · Kato 2018 L460 → 7) · 새 행 둘(★ Kim J., Eom, Noh, Shin D. 2012 *EML* 8, 209 [21] · ★ Ansah, Hyun, Shin, Lee, Lim, Cho 2021 *CMS* 196, 110559 [5]) · 지목 누락 0 · §3-b 표시 · §4 갱신 기록 · `ASSB_TRANSFER_NOTE.md` §6-3-j 파일 64 행 · 같은 절 저자 표기 셋(도착 표 · 요청 표 · ⚠ 확인 한계 문단의 '여섯' — 넷으로).
 - 후속(서지 기준, 미열람): **Tian H.-K. & Qi Y. 2017 *JES* 164, E3512**([28] — ★★ 재지목 → 8 · 접촉 손실 모형의 실험 일치 주장) · **Kato Y. … Kanno R. 2018 *JPCL* 9, 607**([35] — ★★ 재지목 → 7 · 두께 결론의 실험 근거) · **Kazemi N. … Notten P.H.L. 2019 *SSI* 334, 111**([26] — ★★ 재지목 → 3 · 농도 의존 D 확장) · Fabre 2012 *JES* 159, A104([14] · ★ → 5 · 식 (10) 원 출처) · Kim J., Eom M., Noh S., Shin D. 2012 *EML* 8, 209([21] · ★ 새 · 표 1 출처 표기) · Ansah, Hyun, Shin, Lee, Lim, Cho 2021 *CMS* 196, 110559([5] · ★ 새 · 같은 연구실 모형 구현 · 실험 자료 출처) · ☆ 나머지(Bates 2015 · Becker-Steinberger 2010 — 98호 ☆ · Park 2010 — 63호 ☆ 그대로).
 - `python3 wiki/tools/lint.py` → **0 errors, 0 warnings** (pages 57, raw files 142).
+
+## [2026-10-03] update | Codex 사전 검토 회신 — PyBaMM 환경 고정 (권고) · REIL 외부 검증 프로토콜 (정정 필요)
+- 묶음: `bms-balancing/reviews/prereview_pybamm_reil_20261003/` (ZIP 134,489 B · sha256 c0f32a8d… · manifest 23/23 · 기준 커밋 `00ed85b44`) · 게이트 차수 밖 · 실행 0
+- PyBaMM: `PINNING_RECOMMENDED_WITH_SEPARATE_PROFILES` — C 검증 · B 정본 재생성 · D 생산 guard · G87-N1 종결 뒤 별도 라운드.
+  우리 사실 정정 둘 (`degradation-degeneracy/docs/22p_gap/PYBAMM_PIN_PREREVIEW_REPLY_20261003.md` §2): 균일 강제 "6e-8 V" 는 열화 조건만 (pristine 0.36 mV) · 2.7 mV 는 환경 차이 (#5755
+  단독 인과 미확정) → [[pybamm]] 다섯 곳 · [[22p-physics-or-degeneracy]] 10-01 줄 · index 한 줄 · 카드 §1-2 를 취소선 + 정정
+  (덮어쓰기 없음 · `STAGE3_IMPL_ROUND1_SPEC.md:320` 의 같은 괄호는 고정 표라 그대로 — 정정본은 회신 기록)
+- REIL: `PROTOCOL_REVISION_REQUIRED_BEFORE_CONFIRMATORY_EXECUTION` — 원 부등식이 명목 LAM_PE-1 을 맞춤 전부터 배제 (검토자) ·
+  경계 셋 · 상자의 max_q 조건 (우리) → v2 `bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2.md` · [[isu-uconn-lfp-gr-emulated-degradation]] 사전 검토 절 · 방법 절에
+  부등식 줄 · [[22p-physics-or-degeneracy]] Status Log
+- 하지 않은 것: 설치 · 실행 · xlsx 개봉 · 맞춤 · requirements · RUN_SCOPE · 진행 중 GATE88 에 섞기
