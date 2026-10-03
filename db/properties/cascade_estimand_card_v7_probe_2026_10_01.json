@@ -94,6 +94,12 @@
    "state": "proposed",
    "by": "agent",
    "note": "사용자 AskUserQuestion '탐침 카드부터 쓴다' (D_rel 재개 · GPU 0 · 실행은 따로 승인). 트랙 cascade = 사용자 1저자."
+  },
+  {
+   "at": "2026-10-03",
+   "state": "proposed",
+   "by": "agent (기록)",
+   "note": "회신 CP 수령 (NO-GO 초안 그대로 · 방향 조건부 GO) → 개정 CP `cascade_estimand_card_v7_probe_amendment_cp_2026_10_03.json` (proposed · 사용자 결정 4 반영). 이 카드의 원문(200 ps · H0 만 탐침 · 4 런 30 GPU-h)은 리뷰 받은 판이라 그대로 둔다 — 개정과 충돌하면 개정이 이긴다 (비준 뒤)."
   }
  ],
  "by": "claude-session-2026-10-01 (초안)"

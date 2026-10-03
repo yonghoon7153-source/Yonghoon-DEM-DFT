@@ -115,7 +115,7 @@ evidenceScope: multi-source-primary
 | CM | 2026-09-30 | `codex_CM_prompt_cei_nd_handoff_2026_09_30.md` | `codex_CM_reply_cei_nd_handoff_2026_09_30.md` | 발송됨 (사용자 · 2026-09-30 · 인계 zip 첨부) · ✅ 회신 수령 2026-09-30 (`codex_CM_reply_cei_nd_handoff_2026_09_30.md` · NO-GO · P0 7 · P1 6) → ✅ 이행 완료 (a0e2c9efb · 비준 d181c35a9 · ab62caedc) · 송부판 v3 (같은 비공개 링크) · 인계 zip v2 (sha256 186ed897…d6ce · 이메일 가린 파생본) → 사용자가 실험 쪽 1저자에게 송부 | 같은 라벨 · 주제 토큰 일치 ['cei', 'handoff', 'nd']; 판정 인용 18회 |
 | CN | 2026-09-30 | `li2s1a_CN_prompt_li2s_main_readout_2026_09_30.md` | `li2s1a_CN_reply_li2s_main_readout_2026_09_30.md` | 발송됨 (사용자 · 2026-09-30 · 초안 그대로) · ✅ 회신 CN 수령 2026-09-30 (`li2s1a_CN_reply_…` — 갈래1 확정 · 문구 좁힘 · 1/15 · Ea 질문 소멸 · Q-CL-3·4 확정) → 마감 기록 `lpscl_smallcell_glass_md_closed_2026_09_30.json` · §6-3 도구 결함은 발송 뒤 고침 (sha16 c1f8f9b467149c91) | 같은 라벨 · 주제 토큰 일치 ['li2s', 'main', 'readout']; 판정 인용 1회 |
 | CO | 2026-09-30 | `li2s1a_CO_prompt_li2s_glass_v2_card_2026_09_30.md` | — | 초안 (2026-09-30) — 사용자 검토 · 발송 대기 | — |
-| CP | 2026-10-01 | `codex_CP_prompt_cascade_v7_probe_card_2026_10_01.md` | — | 발송 완료 2026-10-03 (사용자 지시 · 본문 그대로) · 회신 대기 (cascade D_rel v7 탐침 카드 · 결정 D-2026-10-01-cascade-v7-probe-card proposed) | — |
+| CP | 2026-10-01 | `codex_CP_prompt_cascade_v7_probe_card_2026_10_01.md` | `codex_CP_reply_cascade_v7_probe_card_2026_10_03.md` | 발송 완료 2026-10-03 (사용자 지시 · 본문 그대로) · ✅ 회신 수령 2026-10-03 (**NO-GO 초안 그대로** · 온도 탐침 방향 조건부 GO · P0 3 = 판독기 온도 메타 결속 · 10 % 자격 기준의 통계적 역할 비준 · H0 통과 → 40 런 자동 착수 끊기 · P1 = framework_alarm 보조 지표 한정 · Q-CP-1·4 문구) → 이행·v7 개정 대기 (결정 D-2026-10-01-cascade-v7-probe-card proposed 그대로) | — |
 
 ## 🔴 모순 (status 는 대기인데 증거는 회신 수령)
 

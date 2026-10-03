@@ -1,0 +1,293 @@
+{
+ "slug": "sun2026_ml_sulfur_additive_lnmo_graphite_bdtt",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-03",
+ "sources": [
+  "Sun 2026 - ML screening sulfur-based additives LNMO graphite pouch (JPCL 6c02511).pdf",
+  "Sun 2026 - Sup) ML screening sulfur-based additives LNMO graphite pouch (JPCL 6c02511) SI.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. (a) SVR and (b) GPR for a visual comparison of the true and predicted values of all samples in the training and test sets; and (c) SHAP analysis based on GBR, showing the SHAP value of each feature for every sample in the training set (representing its contribution to the model output). tional additives, fluorinated electrolytes, high-concentration electrolytes (HCEs), localized high-concentration electrolytes (LHCEs) and localized relatively high-concentration electro- lytes (LRHCEs).21−27 Compared to other methods, electrolyte additives provide distinct advantages by enabling precise modulation of the electrical double layer (EDL) and solvation sheath without significantly altering the bulk composition, thereby optimizing interfacial properties at a low cost. As a result, additive engineering has become one popular strategy in practical applications. generating a sulfur-rich ",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    349.8
+   ],
+   "w": 2151,
+   "h": 1232,
+   "dpi": 300,
+   "src": "Sun 2026 - ML screening sulfur-based additives LNMO graphite pouch (JPCL 6c02511).pdf",
+   "blank": 0.916
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Long-term cycling performance of LNMO||AG pouch cells at (a) 20 °C and (b) 45 °C; interfacial impedance of DMC/FEC/TTE + LiODFB and DMC/FEC/TTE + LiODFB/BDTT in (c) AG||Li and (d) LNMO||Li half-cells, after three initial formation cycles at 0.1 C. eV, respectively. In general, a lower LUMO energy facilitates reduction at higher potentials, enabling preferential partic- ipation in the formation of the SEI. A comparison among the three candidates reveals that, although BDTD and BDTT possess similar LUMO energies, BDTT features a lower HOMO level, indicating superior oxidative stability at the cathode. In contrast, while TDT also exhibits a relatively low HOMO energy, its significantly higher LUMO level (−0.28 eV) is unfavorable for preferential reduction at the anode. Therefore, by jointly considering oxidative stability and reductive activity\u0002namely, satisfying the dual criteria",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    442.7
+   ],
+   "w": 2151,
+   "h": 1619,
+   "dpi": 300,
+   "src": "Sun 2026 - ML screening sulfur-based additives LNMO graphite pouch (JPCL 6c02511).pdf",
+   "blank": 0.878
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. 7Li (a) and 19F (b) NMR spectra of DMC/FEC/TTE + LiODFB and DMC/FEC/TTE + LiODFB/BDTT systems; radial distribution functions (RDFs) of Li+ with (c) LiODFB and BDTT, (d) DMC, FEC, and TTE; RDFs of PF6 −with (e) LiODFB and BDTT, and (f) DMC, FEC, and TTE. LiODFB formulation was adopted as the baseline. Specifically, 1 mol dm−3 LiPF6 was dissolved in a mixture of DMC, FEC, and TTE (1:2:3 by volume), with 1 wt % LiODFB added as an additive. This system was chosen as the control primarily because such localized high-concentration electrolytes have been validated in high-voltage systems and exhibit favorable interfacial stability. In particular, LiODFB preferentially decomposes on the cathode side to form a stable CEI, effectively suppressing parasitic reactions. On this basis, the introduction of BDTT is expected to facilitate the formation of a robust SEI on the anode, working syne",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    577.9
+   ],
+   "w": 2151,
+   "h": 2182,
+   "dpi": 300,
+   "src": "Sun 2026 - ML screening sulfur-based additives LNMO graphite pouch (JPCL 6c02511).pdf",
+   "blank": 0.908
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Adsorption energy of a BDTT molecule on (a) LNMO and (b) graphite surfaces. using MD simulations to determine whether BDTT could indirectly influence SEI formation by modulating anion behavior. As shown in Figure 3(e) and 3(f), neither LiODFB nor BDTT exhibits significant coordination with PF6",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    489.5,
+    371.2
+   ],
+   "w": 1851,
+   "h": 1321,
+   "dpi": 300,
+   "src": "Sun 2026 - ML screening sulfur-based additives LNMO graphite pouch (JPCL 6c02511).pdf",
+   "blank": 0.911
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "file": "fig_5.png",
+   "caption": "Figure 5. DRT spectra of (a) DMC/FEC/TTE + LiODFB and (b) DMC/FEC/TTE + LiODFB/BDTT systems; (c) depth profiling of SEI components by TOF-SIMS. is modest, it demonstrates a spontaneous adsorption tendency. This implies that free BDTT molecules in the electrolyte have a finite probability of accumulating on the graphite anode surface and entering the IHP. During the initial charging (film formation period) of the battery, BDTT\u0002preadsorbed on the graphite surface and possessing a low LUMO energy\u0002can undergo preferential reduction ahead of solvent molecules, thereby actively participating in the initial SEI formation process. This ultimately results in the formation of a sulfur- containing SEI at the anode interface, in excellent agreement with the XPS characterization results described earlier. functionality of “cathode-stable and anode-reactive” and exerts precise interfacial regulation w",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    406.0
+   ],
+   "w": 2151,
+   "h": 1466,
+   "dpi": 300,
+   "src": "Sun 2026 - ML screening sulfur-based additives LNMO graphite pouch (JPCL 6c02511).pdf",
+   "blank": 0.597
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 4,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. The color of each point indicates the magnitude of the corresponding feature value for that sample. (a), (b) and (c) shows the predicted HOMO energies for BDTD, BDTT and TDT, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    86.2,
+    418.4,
+    511.5,
+    551.9
+   ],
+   "w": 1774,
+   "h": 557,
+   "dpi": 300,
+   "src": "Sun 2026 - Sup) ML screening sulfur-based additives LNMO graphite pouch (JPCL 6c02511) SI.pdf",
+   "blank": 0.949
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 5,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. DFT-calculated LUMO and HOMO energies are shown for (a) BDTD, (b) BDTT, and (c) TDT, and the color gradients on the molecular surfaces in (a)–(b) visually represent the local",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    66.9,
+    512.3,
+    200.9
+   ],
+   "w": 1785,
+   "h": 560,
+   "dpi": 300,
+   "src": "Sun 2026 - Sup) ML screening sulfur-based additives LNMO graphite pouch (JPCL 6c02511) SI.pdf",
+   "blank": 0.779
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 5,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. LSV measurements of DMC/FEC/TTE+LiODFB and DMC/FEC/TTE+ LiODFB/ BDTT systems.",
+   "rotated_deg": 0,
+   "bbox": [
+    94.5,
+    243.7,
+    503.4,
+    447.1
+   ],
+   "w": 1705,
+   "h": 849,
+   "dpi": 300,
+   "src": "Sun 2026 - Sup) ML screening sulfur-based additives LNMO graphite pouch (JPCL 6c02511) SI.pdf",
+   "blank": 0.933
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 5,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. XPS characterization of the S element on the (a) AG and (b) LNMO surfaces of DMC/FEC/TTE+LiODFB/BDTT pouch cells after formation.",
+   "rotated_deg": 0,
+   "bbox": [
+    99.6,
+    469.9,
+    498.3,
+    676.7
+   ],
+   "w": 1662,
+   "h": 863,
+   "dpi": 300,
+   "src": "Sun 2026 - Sup) ML screening sulfur-based additives LNMO graphite pouch (JPCL 6c02511) SI.pdf",
+   "blank": 0.932
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 6,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. Interfacial impedance of DMC/FEC/TTE+LiODFB and DMC/FEC/TTE+LiODFB/BDTT in (a,b) AG||Li and (c,d) LNMO||Li half-cells. (a,c) are acquired before the cell operation, (b,d) are acquired after the first charge.",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    67.8,
+    512.9,
+    403.6
+   ],
+   "w": 1784,
+   "h": 1400,
+   "dpi": 300,
+   "src": "Sun 2026 - Sup) ML screening sulfur-based additives LNMO graphite pouch (JPCL 6c02511) SI.pdf",
+   "blank": 0.912
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 7,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. SEM and EDS analyses of (a-c) DMC/FEC/TTE+LiODFB and (d-f) DMC/FEC/TTE+LiODFB/BDTT.",
+   "rotated_deg": 0,
+   "bbox": [
+    123.5,
+    95.7,
+    474.4,
+    266.3
+   ],
+   "w": 1463,
+   "h": 712,
+   "dpi": 300,
+   "src": "Sun 2026 - Sup) ML screening sulfur-based additives LNMO graphite pouch (JPCL 6c02511) SI.pdf",
+   "blank": 0.237
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 7,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. TEM images of the AG electrode surface in (a) DMC/FEC/TTE + LiODFB and (b) DMC/FEC/TTE + LiODFB/BDTT electrolytes.",
+   "rotated_deg": 0,
+   "bbox": [
+    87.7,
+    290.5,
+    507.6,
+    539.2
+   ],
+   "w": 1750,
+   "h": 1037,
+   "dpi": 300,
+   "src": "Sun 2026 - Sup) ML screening sulfur-based additives LNMO graphite pouch (JPCL 6c02511) SI.pdf",
+   "blank": 0.393
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 8,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. TEM images of the LNMO electrode surface in (a) DMC/FEC/TTE + LiODFB and (b) DMC/FEC/TTE + LiODFB/BDTT electrolytes.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.3,
+    69.1,
+    513.6,
+    277.7
+   ],
+   "w": 1790,
+   "h": 869,
+   "dpi": 300,
+   "src": "Sun 2026 - Sup) ML screening sulfur-based additives LNMO graphite pouch (JPCL 6c02511) SI.pdf",
+   "blank": 0.254
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 3,
+   "file": "tab_1.png",
+   "caption": "Table 1. R, MAE, MAPE, and RMSE values of the GBR model",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    55.7,
+    560.5,
+    108.3
+   ],
+   "w": 2143,
+   "h": 220,
+   "dpi": 300,
+   "src": "Sun 2026 - ML screening sulfur-based additives LNMO graphite pouch (JPCL 6c02511).pdf",
+   "blank": 0.469
+  }
+ ],
+ "missing_labels": []
+}

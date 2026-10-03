@@ -5,6 +5,8 @@
     python3 tools/doping/judge_eprime.py --out_root ... --ignore_eligibility   # ⛔ 인용금지
     python3 tools/doping/judge_eprime.py --selftest
     python3 tools/doping/judge_eprime.py --card v6 --out_root ~/work/runs/cascade_v6_40run_0921   # 카드 v6 (부모 10 · 600 K · t(n−1))
+    python3 tools/doping/judge_eprime.py --probe <PROBE_ROOT>                     # 카드 v7 + 개정 CP 탐침 (T* 선택 · D 안 찍음)
+    python3 tools/doping/judge_eprime.py --card v7 --probe_json <PROBE_ROOT>/cascade_v7_probe.json --out_root <MAIN_ROOT>
 
 무엇을 하나
   ① 런마다 `msd_diffusive_check.aggregation_eligible(t, y, events_per_run)` 로 **자격** 판정
@@ -45,6 +47,12 @@ v6 (카드 cascade_estimand_card_v6_10parents_2026_09_19 §4 — v5.2 df 1 식�
   · v6 경로는 궤적이 잘렸거나(프레임 수가 aimd_results.json·msd.json 과 다름) save_fs·창이 카드와 다르면 그 런을
     **계산하지 않는다** (검사 불가 = 자격 없음 → 결측 규칙). 메우거나 msd.json 값으로 대체하지 않는다.
   · 골격 COM 은 **전역 1 개**다 — 국소 골격 재배열은 못 지운다 (그건 골격 경보의 몫).
+  · (v7 탐침 · 회신 CP P0-1 2026-10-03) 온도·생산길이·시간간격 결속(`protocol_binding_errors`)은 **기록끼리의 일치**다 —
+    궤적이 실제로 그 온도로 돌았는지(md.log 의 T[K])는 안 본다. 그 문턱은 카드가 정해야 한다.
+  · v6 경로(`judge_runs_card`)에는 그 결속을 **안 건다** — 봉인된 v6 마감·판정을 그대로 두기 위해서다 (회신 CP).
+    v7 본 라운드가 v6 경로를 그대로 쓰면 이 구멍도 따라간다 → 연결 여부는 v7 개정에서 정한다.
+  · 골격 경보(`framework_alarm`)는 **거부권뿐**이다 — 통과(ok·framework_static)가 골격 보존 인증이 아니다 (회신 CP P1:
+    첫↔마지막 프레임만 비교해서 중간에 갔다 돌아온 이동을 못 보고, n < 8 인 종(예: Al₂·O₃)은 판정에서 빠진다).
 """
 from __future__ import annotations
 
@@ -300,12 +308,23 @@ def card_curve_from_run(run_dir, times_ps, fit_window_ps, reader=None):
     return card_curve_arrays(spos, cell0, sym0, frames[0].get_masses(), save_fs)
 
 
-def judge_runs_card(runs, ignore_eligibility=False, say=print):
-    """v6 — 런마다 **카드 정의 곡선**으로 자격 판정. msd.json 의 옛 D 는 `D_legacy_sto_lab` 으로만 남긴다."""
-    from msd_diffusive_check import aggregation_eligible
+def judge_runs_card(runs, ignore_eligibility=False, say=print, binding=None, alarm=False):
+    """v6 — 런마다 **카드 정의 곡선**으로 자격 판정. msd.json 의 옛 D 는 `D_legacy_sto_lab` 으로만 남긴다.
+
+    v7 본 라운드 (개정 CP · 2026-10-03 사용자 결정 '결속 + 경보 거부권'):
+      binding = {"ladder": (T*,), "protocol": V7_PROTOCOL} 이면 곡선 **전에** 온도·길이·간격 결속을 건다.
+      alarm = True 이면 자격 통과 런에 골격 경보 **거부권**을 건다 — 경보 통과는 골격 보존 인증이 아니다 (회신 CP P1).
+    ⛔ v6 판독은 둘 다 끈 채(기본값)로 부른다 — 봉인된 v6 마감·판정을 그대로 재현한다 (회신 CP).
+    """
+    from msd_diffusive_check import aggregation_eligible, framework_alarm
     out, n = {}, len(runs)
     for i, (k, r) in enumerate(sorted(runs.items()), 1):
-        cc = card_curve_from_run(Path(r["path"]).parent, r.get("t"), r.get("fit_window_ps"))
+        be = protocol_binding_errors(r, **binding) if binding else []
+        if be:
+            cc = {"error": "프로토콜 결속 실패 — " + " · ".join(be)}
+        else:
+            cc = card_curve_from_run(Path(r["path"]).parent, r.get("t"), r.get("fit_window_ps"))
+        fa = None
         if "error" in cc:
             ok, why, det = False, [f"⛔ 검사 불가 — {cc['error']}"], {"error": cc["error"]}
             D, t, y, ev = None, [], [], None
@@ -315,8 +334,16 @@ def judge_runs_card(runs, ignore_eligibility=False, say=print):
             if cc["D"] is None:
                 ok = False
                 why.append(cc["why_no_D"])
+            if alarm and ok:
+                try:
+                    fa = (framework_alarm(str(Path(r["path"])), save_fs=cc["save_fs"]) or {}).get("state", "unavailable")
+                except Exception as e:          # 못 재면 '경보 없음' 이 아니다
+                    fa = f"unavailable ({type(e).__name__})"
+                if fa not in ("ok", "framework_static"):
+                    ok = False
+                    why.append(f"⛔ 골격 경보 {fa} — 거부권 (경보 통과는 인증이 아니다 · 회신 CP P1)")
             D, t, y, ev = cc["D"], cc["t"], cc["y"], cc["events"]
-        out[k] = {**r, "D": D, "t": t, "y": y, "events_per_run": ev, "D_legacy_sto_lab": r["D"],
+        out[k] = {**r, "D": D, "t": t, "y": y, "events_per_run": ev, "D_legacy_sto_lab": r["D"], "framework_alarm": fa,
                   "card_curve": {kk: v for kk, v in cc.items() if kk not in ("t", "y")},
                   "eligible": bool(ok), "reasons": why, "detail": det, "used": bool(ok or ignore_eligibility),
                   "t_end_ps": (t[-1] if t else None)}
@@ -369,14 +396,110 @@ def _git_state():
 V7_LADDER_K = (800, 1000)
 V7_SEEDS = (1, 2)
 V7_PROBE_STRUCT = "H0_host"
+#: 카드 v7 프로토콜 — 런의 사이드카(aimd_results.json)가 이 값과 같아야 한다 (`protocol_binding_errors`).
+#: 회신 CP P0-1 (2026-10-03): 종전 탐침은 사이드카의 save_fs·프레임 수만 읽고 **T_K 를 안 봤다**
+#: (msd.json 800 K · aimd_results 600 K 인 합성 런이 eligible=True).
+#: 개정 CP (2026-10-03 · 사용자 결정 '생산 400 ps 로 늘림' · 회신 CP P0-2): 생산 200 → **400 ps**. 같은 10 % 기준·같은 창에서
+#: 합성 브라운 null 탈락이 22 % → ≈1 % (`cascade_estimand_card_v7_probe_amendment_cp_2026_10_03.json` §2 · 실제 상관된 Li 의
+#: 보정값은 아니다). dt 2 fs · save 100 fs 는 v6 그대로. 여기서 바꾸면 새 카드다.
+V7_PROTOCOL = {"prod_ps": 400.0, "dt_fs": 2.0, "save_fs": 100.0}
+#: 개정 CP (회신 CP P0-3 · 사용자 결정 '다음 사다리 온도로' · '제외 · 탐침 전용 시드'): H0 통과만으로 본 라운드를 열지 않는다.
+#: **같은 온도에서** 대표 부모 1 개의 P1·P2 × 탐침 전용 속도 시드 2 = 4 런의 자격을 D 봉인으로 먼저 본다.
+#: 부모 = C — random.Random(20261003).choice(C–J) · v5 에서 값이 나온 A·B 제외 · 결과 전 추첨 (개정 §3).
+#: 탐침 시드 3·4 의 런은 최종 집계에서 **제외**한다 — 본 라운드는 시드 1·2 를 새로 돈다 (선택 효과를 집계에 안 들인다).
+V7_PAIR_PARENT = "C"
+V7_PAIR_SEEDS = (3, 4)
+V7_MAIN_SEEDS = (1, 2)
+#: 한 사다리 온도에서 볼 런 — H0 두 시드 → 대표 쌍 네 런. **전부** 자격 통과여야 그 온도가 T* 다.
+V7_PROBE_PLAN = (("H0_host", 1), ("H0_host", 2),
+                 (f"P1_Al2O3_{V7_PAIR_PARENT}", 3), (f"P2_Al2S3_{V7_PAIR_PARENT}", 3),
+                 (f"P1_Al2O3_{V7_PAIR_PARENT}", 4), (f"P2_Al2S3_{V7_PAIR_PARENT}", 4))
+_TAG_T = re.compile(r"__T(\d+)__s\d+$")
 
 
-def probe_run(r):
-    """탐침 한 런 (scan() 기록) → 자격 · 모양 · 골격 경보. ⛔ **D 값은 돌려주지 않는다** — 탐침은 조건 선택용이다."""
+def _same(a, b, rel=1e-6):
+    try:
+        return abs(float(a) - float(b)) <= rel * max(1.0, abs(float(b)))
+    except (TypeError, ValueError):
+        return False
+
+
+def protocol_binding_errors(r, ladder=V7_LADDER_K, protocol=V7_PROTOCOL, require_tag_T=True):
+    """회신 CP P0-1 (2026-10-03) — 런 하나의 **온도·생산길이·시간간격**을 일곱 곳에서 결속한다.
+    → 오류 문장 목록 (빈 목록 = 결속됨).
+
+      ① msd.json T_K  ② aimd_results.json T_K  ③ 런 폴더 이름 `T<NNN>`  ④ 태그 `__T<NNN>__` (탐침 태그는 필수)
+      ⑤ 요청 온도 = 사다리 안의 값  ⑥ 사이드카 prod_ps · dt_fs · save_fs = 카드 값
+      ⑦ msd.json 시간축 끝 ≈ prod_ps (저장 간격 하나 안)
+    ⛔ 키가 없거나 못 읽으면 '확인 못 함' 이지 통과가 아니다 → 오류로 돌린다.
+    ⛔ 못 하는 것: 궤적이 **실제로** 그 온도로 돌았는지(md.log T[K])는 안 본다 — 기록끼리의 일치만 본다.
+    """
+    msd_path = Path(r["path"])
+    run_dir = msd_path.parent
+    try:
+        md = json.loads(msd_path.read_text())
+        T = float(md["T_K"])
+    except (OSError, ValueError, KeyError, TypeError) as e:
+        return [f"msd.json 의 T_K 를 못 읽는다 ({type(e).__name__}) — 온도를 결속할 수 없다"]
+    try:
+        side = json.loads((run_dir / "aimd_results.json").read_text())
+        if not isinstance(side, dict):
+            raise ValueError("not a dict")
+    except (OSError, ValueError) as e:
+        return [f"aimd_results.json 을 못 읽는다 ({type(e).__name__}) — 온도·길이를 결속할 수 없다"]
+    errs = []
+    if side.get("T_K") is None:
+        errs.append("aimd_results.json 에 T_K 가 없다 — 사이드카 온도를 확인 못 함")
+    elif not _same(side["T_K"], T):
+        errs.append(f"T_K 불일치 — msd.json {T:g} K · aimd_results {side['T_K']} K")
+    if run_dir.name != f"T{T:g}":
+        errs.append(f"런 폴더 이름 '{run_dir.name}' ≠ T{T:g} — 다른 온도의 폴더")
+    m = _TAG_T.search(str(r.get("tag") or ""))
+    if m is None:
+        if require_tag_T:
+            errs.append(f"태그 '{r.get('tag')}' 에 __T<NNN>__ 가 없다 — 요청 온도를 확인 못 함")
+    elif not _same(m.group(1), T):
+        errs.append(f"태그 온도 {m.group(1)} K ≠ msd.json {T:g} K")
+    if ladder is not None and not any(_same(T, x) for x in ladder):
+        errs.append(f"온도 {T:g} K 가 요청 사다리 {list(ladder)} K 밖이다")
+    for k in ("prod_ps", "dt_fs", "save_fs"):
+        v = side.get(k)
+        if v is None:
+            errs.append(f"aimd_results.json 에 {k} 가 없다 — 카드 값과 대조 못 함")
+        elif not _same(v, protocol[k]):
+            errs.append(f"{k} {v} ≠ 카드 {protocol[k]:g}")
+    ts = md.get("times_ps")
+    if not ts:
+        errs.append("msd.json 시간축이 없다 — 생산 길이를 확인 못 함")
+    else:
+        try:
+            t_end = float(ts[-1])
+            if abs(t_end - float(protocol["prod_ps"])) > float(protocol["save_fs"]) / 1000.0 + 1e-9:
+                errs.append(f"msd.json 시간축 끝 {t_end:g} ps ≠ 생산 {float(protocol['prod_ps']):g} ps "
+                            "(저장 간격 하나 안이어야 한다 — 잘렸거나 다른 길이)")
+        except (TypeError, ValueError):
+            errs.append("msd.json 시간축을 못 읽는다")
+    return errs
+
+
+#: 골격 경보의 역할 — 출력에 같이 싣는다 (회신 CP P1 · 2026-10-03).
+FRAMEWORK_ALARM_ROLE = ("보조 지표 (거부권만) — 통과(ok·framework_static)는 골격 보존 인증이 아니다 · "
+                        "첫↔마지막 프레임 비교라 중간 이동을 못 보고 n < 8 인 종은 판정에서 빠진다 (회신 CP P1)")
+
+
+def probe_run(r, ladder=V7_LADDER_K, protocol=V7_PROTOCOL):
+    """탐침 한 런 (scan() 기록) → 자격 · 모양 · 골격 경보. ⛔ **D 값은 돌려주지 않는다** — 탐침은 조건 선택용이다.
+
+    회신 CP P0-1 (2026-10-03): 궤적을 읽기 **전에** 온도·생산길이·시간간격을 결속한다
+    (`protocol_binding_errors`). 하나라도 어긋나면 자격 없음 — 곡선을 계산하지 않는다.
+    """
     from msd_diffusive_check import aggregation_eligible, framework_alarm
     run_dir = Path(r["path"]).parent
-    cc = card_curve_from_run(run_dir, r.get("t"), r.get("fit_window_ps"))
     out = {"tag": r.get("tag"), "run_dir": str(run_dir)}
+    be = protocol_binding_errors(r, ladder=ladder, protocol=protocol)
+    if be:
+        return {**out, "eligible": False, "error": "프로토콜 결속 실패 — " + " · ".join(be), "binding_errors": be}
+    cc = card_curve_from_run(run_dir, r.get("t"), r.get("fit_window_ps"))
     if "error" in cc:
         return {**out, "eligible": False, "error": cc["error"]}
     ok, why, det = aggregation_eligible(cc["t"], cc["y"], cc["events"])
@@ -386,26 +509,31 @@ def probe_run(r):
         fa = f"unavailable ({type(e).__name__})"
     #: 골격 경보는 **잰 결과가 ok·framework_static 일 때만** 통과 — 못 쟀으면(unavailable) 통과가 아니다
     return {**out, "eligible": bool(ok) and fa in ("ok", "framework_static"), "aggregation_eligible": bool(ok),
-            "framework_alarm": fa, "run_verdict": det.get("run_verdict"),
+            "framework_alarm": fa, "framework_alarm_role": FRAMEWORK_ALARM_ROLE, "run_verdict": det.get("run_verdict"),
             "sub_window_ratios": det.get("sub_window_ratios"), "events": cc["events"],
             "n_frames": cc["n_frames"], "reasons": list(why)}
 
 
-def select_probe_temperature(results, ladder=V7_LADDER_K, seeds=V7_SEEDS):
-    """{(T, seed): probe 결과} → (T* 또는 None, 사유, 다음에 돌릴 (T, seed) 또는 None).
+def select_probe_temperature(results, ladder=V7_LADDER_K, plan=V7_PROBE_PLAN):
+    """{(T, 구조, 시드): probe 결과} → (T* 또는 None, 사유, 다음에 돌릴 (T, 구조, 시드) 또는 None).
 
-    · 어떤 온도에서 돌린 시드가 **하나라도 불통과**면 그 온도는 탈락 → 다음 사다리.
-    · 돌린 시드가 전부 통과인데 **안 돌린 시드가 남았으면** 멈추고 그 시드를 다음으로 지정한다
-      (한 시드 통과로 T* 를 정하지 않는다 · 더 높은 온도로 건너뛰지 않는다).
+    개정 CP (2026-10-03 · 사용자 결정): 한 사다리 온도에서 `plan` (H0 두 시드 → 대표 쌍 네 런) 이 **전부** 자격 통과여야 T* 다.
+    · 그 온도에서 돌린 계획 런이 **하나라도 불통과**면 그 온도는 탈락 → 다음 사다리 (부모를 바꾸지 않는다)
+    · 돌린 런이 전부 통과인데 **안 돌린 계획 런이 남았으면** 멈추고 plan 순서의 첫 빈칸을 다음으로 지정한다
+      (일부 통과로 T* 를 정하지 않는다 · 더 높은 온도로 건너뛰지 않는다)
+    · 계획 밖의 런(다른 부모 · 다른 시드)은 세지 않는다 — 대체 금지
+    · 사다리 전부 탈락 → v7 을 열지 않는다
     """
     for T in ladder:
-        done = {sd: results[(T, sd)] for sd in seeds if (T, sd) in results}
+        done = {(st, sd): results[(T, st, sd)] for st, sd in plan if (T, st, sd) in results}
         if any(not d.get("eligible") for d in done.values()):
             continue
-        left = [sd for sd in seeds if sd not in done]
+        left = [(st, sd) for st, sd in plan if (st, sd) not in done]
         if left:
-            return None, f"{T} K: 시드 {left} 를 아직 안 돌렸다 — 한 시드로 T* 를 정하지 않는다", (T, left[0])
-        return T, f"{T} K: 시드 {list(seeds)} 전부 자격 통과 · 골격 경보 없음 → T* = {T} K", None
+            st, sd = left[0]
+            return None, f"{T} K: 계획 {len(plan)} 런 중 {len(done)} 런 통과 · 남은 {len(left)} — 전부 통과해야 T* 다", (T, st, sd)
+        return T, (f"{T} K: H0 두 시드 · 대표 쌍(부모 {V7_PAIR_PARENT} · 시드 {list(V7_PAIR_SEEDS)}) 네 런 전부 자격 통과 · "
+                   f"골격 경보 없음 → T* = {T} K"), None
     return None, f"사다리 {list(ladder)} K 전부 불통과 — v7 본 라운드를 열지 않는다", None
 
 
@@ -414,22 +542,33 @@ def main_probe(a) -> int:
         sys.stdout.reconfigure(line_buffering=True)
     except Exception:
         pass
-    runs = {k: v for k, v in scan(a.probe).items() if k[0] == V7_PROBE_STRUCT}
-    print(f"v7 탐침 · {V7_PROBE_STRUCT} · 사다리 {list(V7_LADDER_K)} K · 시드 {list(V7_SEEDS)} · 런 {len(runs)} 개 · {a.probe}")
+    plan = set(V7_PROBE_PLAN)
+    allr = scan(a.probe)
+    runs = {k: v for k, v in allr.items() if (k[0], k[2]) in plan}
+    off = sorted(k for k in allr if (k[0], k[2]) not in plan)
+    print(f"v7 탐침 (개정 CP) · 사다리 {list(V7_LADDER_K)} K · 계획 {len(V7_PROBE_PLAN)} 런/온도 (H0 시드 {list(V7_SEEDS)} → "
+          f"부모 {V7_PAIR_PARENT} 쌍 시드 {list(V7_PAIR_SEEDS)}) · 프로토콜 {V7_PROTOCOL} · 런 {len(runs)} 개 · {a.probe}")
+    if off:
+        print(f"  ⚠ 계획 밖 런 {len(off)} 개 — 판정에 안 쓴다 (대체 금지): {off[:6]}")
     res = {}
     for (st, T, sd), r in sorted(runs.items()):
-        pr = probe_run(r); res[(T, sd)] = pr
-        print(f"  {T} K seed {sd}: 자격 {'통과' if pr['eligible'] else '미달'} · 골격 {pr.get('framework_alarm', '—')} · "
+        pr = probe_run(r); res[(T, st, sd)] = pr
+        print(f"  {T} K {st} seed {sd}: 자격 {'통과' if pr['eligible'] else '미달'} · 골격 {pr.get('framework_alarm', '—')} · "
               f"부창비 {[round(x, 2) for x in (pr.get('sub_window_ratios') or [])]} · 사건 {pr.get('events', '—')}"
               + (f" · ⛔ {pr['error']}" if "error" in pr else ""))
     T_star, why, nxt = select_probe_temperature(res)
-    print(f"→ {why}" + (f" · 다음: {nxt[0]} K seed {nxt[1]}" if nxt else ""))
+    print(f"→ {why}" + (f" · 다음: {nxt[0]} K {nxt[1]} seed {nxt[2]}" if nxt else ""))
     q = Path(a.out_json or Path(a.probe) / "cascade_v7_probe.json")
     q.write_text(json.dumps({"card": "db/properties/cascade_estimand_card_v7_probe_2026_10_01.json",
-                             "ladder_K": list(V7_LADDER_K), "seeds": list(V7_SEEDS), "T_star_K": T_star,
+                             "amendment": "db/properties/cascade_estimand_card_v7_probe_amendment_cp_2026_10_03.json",
+                             "ladder_K": list(V7_LADDER_K), "seeds": list(V7_SEEDS), "protocol": V7_PROTOCOL,
+                             "pair_parent": V7_PAIR_PARENT, "pair_seeds": list(V7_PAIR_SEEDS),
+                             "plan": [list(x) for x in V7_PROBE_PLAN], "off_plan_runs": [list(x) for x in off],
+                             "binding": "온도(msd·aimd·폴더·태그·사다리)·prod_ps·dt_fs·save_fs·시간축 끝 결속 (회신 CP P0-1)",
+                             "T_star_K": T_star,
                              "why": why, "next": nxt, "tool": _git_state(),
                              "⛔": "D 값은 싣지 않는다 — 탐침은 조건 선택용이다",
-                             "runs": [{"T_K": T, "seed": sd, **pr} for (T, sd), pr in sorted(res.items())]},
+                             "runs": [{"T_K": T, "structure": st, "seed": sd, **pr} for (T, st, sd), pr in sorted(res.items())]},
                             ensure_ascii=False, indent=1), encoding="utf-8")
     print(f"→ {q}")
     return 0
@@ -538,7 +677,9 @@ def main() -> int:
                     help="⛔ 자격 게이트를 무시하고 집계한다. **인용 금지** — "
                          "'배선을 고쳐 다시 돌리면 결론이 바뀌나' 만 보는 가정 계산이다")
     ap.add_argument("--selftest", action="store_true")
-    ap.add_argument("--card", choices=["v5.2", "v6"], default="v5.2", help="v6 = 부모 10 · 600 K · t(n−1) 일반형 (카드 v6 §4)")
+    ap.add_argument("--card", choices=["v5.2", "v6", "v7"], default="v5.2",
+                    help="v6 = 부모 10 · 600 K · t(n−1) 일반형 (카드 v6 §4) · v7 = T* (탐침 산출물) · 결속 + 골격 경보 거부권")
+    ap.add_argument("--probe_json", default=None, help="v7: 탐침 산출물 cascade_v7_probe.json — T* 는 여기서만 온다")
     ap.add_argument("--allow_partial", action="store_true", help="⛔ v6: 40 런이 다 없어도 집계 (중간 집계 — 인용·판정 금지 표시)")
     ap.add_argument("--probe", metavar="OUT_ROOT", default=None,
                     help="카드 v7 탐침 판정 — H0 런의 자격·모양·골격 경보와 T* 선택 (D 값 안 찍음)")
@@ -549,6 +690,8 @@ def main() -> int:
         return main_probe(a)
     if a.card == "v6":
         return main_v6(a)
+    if a.card == "v7":
+        return main_v7(a)
 
     runs = scan(a.out_root)
     print(f"런 {len(runs)} 개 · out_root {a.out_root}")
@@ -592,6 +735,94 @@ def main() -> int:
     print(f"\n→ {q}")
     if a.ignore_eligibility:
         print("⛔ 이 산출물은 **인용 금지**다 (자격 게이트를 무시했다)")
+    return 0
+
+
+def v7_main_runs(runs_all, T):
+    """본 라운드 판정 대상 = T* 의 **시드 1·2** 런만. 탐침 전용 시드(3·4) 런은 집계에서 뺀다 (개정 CP · 사용자 결정 '제외').
+    → (대상 {키: 기록}, 제외한 탐침 시드 런 키 목록)."""
+    runs = {k: v for k, v in runs_all.items() if _same(k[1], T) and k[2] in V7_MAIN_SEEDS}
+    probe_only = sorted(k for k in runs_all if k[2] in V7_PAIR_SEEDS)
+    return runs, probe_only
+
+
+def v7_probe_t_star(probe_json):
+    """탐침 산출물(cascade_v7_probe.json) → (T*, 사유). T* 는 **여기서만** 온다 — 자유 인자로 받지 않는다.
+    프로토콜·대표 부모가 이 판독기와 다르면 거부 (다른 카드의 탐침)."""
+    try:
+        pj = json.loads(Path(probe_json).read_text(encoding="utf-8"))
+    except (OSError, ValueError, TypeError) as e:
+        return None, f"탐침 산출물을 못 읽는다 ({type(e).__name__})"
+    T = pj.get("T_star_K")
+    if T is None or not any(_same(T, x) for x in V7_LADDER_K):
+        return None, f"탐침이 T* 를 정하지 않았다 ({pj.get('why')})"
+    if pj.get("protocol") != V7_PROTOCOL or pj.get("pair_parent") != V7_PAIR_PARENT:
+        return None, (f"탐침 산출물의 프로토콜·대표 부모({pj.get('protocol')} · {pj.get('pair_parent')})가 "
+                      f"이 판독기({V7_PROTOCOL} · {V7_PAIR_PARENT})와 다르다 — 다른 카드의 탐침")
+    return int(round(float(T))), pj.get("why")
+
+
+#: 회신 CP Q-CP-4 권장 문구 (그대로) + P0-3 한계 — v7 판정 산출물에 같이 싣는다.
+V7_CLAIM_SCOPE = ("사전 지정된 탐침 규칙으로 선택한 T* K에서, UMA·공통 고정셀·준비 및 자격 조건 아래의 P1/P2 확산 비를 평가했다. "
+                  "등가영역 내 판정은 이 조건에 한정하며, 600 K·작동 온도·실제 재료의 동등성을 뜻하지 않는다. "
+                  "결론은 전체 배열이 아니라 **자격 통과 집합에 조건부**다 (회신 CP P0-3). "
+                  "T* 는 '확산이 시작되는 최저 온도' 가 아니라 지정 사다리·시드에서 운영 기준을 통과한 온도다.")
+
+
+def main_v7(a) -> int:
+    """카드 v7 + 개정 CP — 본 라운드 판정 (부모 10 × 처방 2 × 시드 1·2 = 40 런 · T* · 결속 + 경보 거부권 · v6 §4 집계)."""
+    try:
+        sys.stdout.reconfigure(line_buffering=True)
+    except Exception:
+        pass
+    if not a.probe_json:
+        print("⛔ --probe_json (탐침 산출물 cascade_v7_probe.json) 이 없다 — T* 를 자유 인자로 받지 않는다")
+        return 2
+    T, why = v7_probe_t_star(a.probe_json)
+    if T is None:
+        print(f"⛔ {why} — 본 라운드를 판정하지 않는다")
+        return 4
+    pairs = load_v6_pairs()
+    runs, probe_only = v7_main_runs(scan(a.out_root), T)
+    print(f"카드 v7 + 개정 CP · T* = {T} K (탐침: {why}) · 부모 {len(pairs)} · 시드 {list(V7_MAIN_SEEDS)} · 런 {len(runs)} 개 · "
+          f"프로토콜 {V7_PROTOCOL} · out_root {a.out_root}")
+    if probe_only:
+        print(f"  탐침 전용 시드 런 {len(probe_only)} 개 — 집계에서 제외 (개정 CP · 선택 효과)")
+    miss = missing_runs(runs, pairs, T=T, seeds=V7_MAIN_SEEDS)
+    if miss:
+        print(f"⛔ 있어야 할 런 {len(miss)} 개의 msd.json 이 없다 — 카드 §4: 40 런을 다 채우기 전에 집계하지 않는다")
+        for m in miss[:12]:
+            print(f"    없음: {m[0]}__T{m[1]}__s{m[2]}")
+        if not a.allow_partial:
+            return 3
+        print("  ⛔ --allow_partial — 아래는 **중간 집계**다. 인용·판정에 쓰지 않는다")
+    want = {(st, T, sd) for k in pairs for st in pairs[k] for sd in V7_MAIN_SEEDS}
+    jj = judge_runs_card({k: v for k, v in runs.items() if k in want}, ignore_eligibility=a.ignore_eligibility,
+                         binding={"ladder": (T,), "protocol": V7_PROTOCOL}, alarm=True)
+    ok = sum(1 for r in jj.values() if r["eligible"])
+    tally = reason_tally(jj)
+    print(f"판정 대상 런 {len(jj)} · 자격 통과 {ok}" + ("  ⛔ **자격 무시 모드**" if a.ignore_eligibility else ""))
+    res = aggregate_n(jj, pairs, T=T)
+    res["card"] = ("db/properties/cascade_estimand_card_v7_probe_2026_10_01.json + "
+                   "db/properties/cascade_estimand_card_v7_probe_amendment_cp_2026_10_03.json (집계 = v6 §4)")
+    res["T_star_K"], res["protocol"], res["probe_json"] = T, V7_PROTOCOL, str(a.probe_json)
+    res["claim_scope"] = V7_CLAIM_SCOPE
+    res["excluded_probe_seed_runs"] = [list(k) for k in probe_only]
+    res["tool"] = _git_state()
+    res["⚠_인용정책"] = "1저자 2026-09-18 — 계 간 상대차로만. 절대 D 인용 금지 · UMA·표집·부피·T* 조건부"
+    res["eligibility"] = {"n_runs": len(jj), "n_eligible": ok, "ignore_eligibility": bool(a.ignore_eligibility),
+                          "partial": bool(miss), "reason_tally": tally,
+                          "binding": "온도(msd·aimd·폴더·태그·T*)·prod·dt·save·시간축 끝", "framework_alarm": "거부권만"}
+    res["rows"] = [{"structure": k[0], "T_K": k[1], "seed": k[2], "tag": r["tag"], "D": r["D"], "eligible": r["eligible"],
+                    "framework_alarm": r.get("framework_alarm"), "events_per_run": r["events_per_run"],
+                    "reasons": r["reasons"]} for k, r in sorted(jj.items())]
+    p = res["primary"]
+    print(f"1차: {p.get('verdict', p.get('⛔'))}")
+    q = a.out_json or os.path.join(a.out_root, "cascade_v7_judgement.json")
+    Path(q).write_text(json.dumps(res, ensure_ascii=False, indent=1), encoding="utf-8")
+    print(f"→ {q}")
+    if a.ignore_eligibility or miss:
+        print("⛔ 이 산출물은 **인용 금지**다 (자격 무시 또는 중간 집계)")
     return 0
 
 
@@ -878,29 +1109,76 @@ def _selftest() -> int:
                 f"⛔음성: 시드 하나가 검사 불가면 그 (p,k) 결측 · 집계표 검사불가 {tl_['검사불가']}")
             chk(g["detail"].get("run_verdict") in (_NV, "hold", "citable") and g["events_per_run"] == cc["events"],
                 "자격 판정이 카드 곡선·골격 기준 사건 수로 돈다")
-    #: ── 카드 v7 탐침 선택 규칙 (2026-10-01) ──
+    #: ── 카드 v7 탐침 선택 규칙 (2026-10-01) · 개정 CP (2026-10-03): 온도마다 H0 두 시드 + 대표 쌍 네 런 · 사다리 결속 ──
     P, F = {"eligible": True}, {"eligible": False}
-    chk(select_probe_temperature({(800, 1): P, (800, 2): P})[0] == 800, "800 K 두 시드 통과 → T* = 800")
-    chk(select_probe_temperature({(800, 1): F, (1000, 1): P, (1000, 2): P})[0] == 1000,
-        "800 K 시드1 불통과(시드2 안 돌림) → 1000 K 두 시드 통과 → T* = 1000")
-    t, _, nx = select_probe_temperature({(800, 1): P})
-    chk(t is None and nx == (800, 2), "⛔음성: 한 시드만 통과 → T* 안 정함 · 다음 = 800 K seed 2")
-    t, _, nx = select_probe_temperature({(800, 1): P, (800, 2): F})
-    chk(t is None and nx == (1000, 1), "⛔음성: 800 K 두 시드 중 하나 불통과 → 800 탈락 · 다음 = 1000 K seed 1")
-    t, why, nx = select_probe_temperature({(800, 1): F, (1000, 1): F})
+    PC1, PC2 = f"P1_Al2O3_{V7_PAIR_PARENT}", f"P2_Al2S3_{V7_PAIR_PARENT}"
+
+    def allp(T, bad=None):
+        return {(T, st, sd): (F if (st, sd) == bad else P) for st, sd in V7_PROBE_PLAN}
+    chk(select_probe_temperature(allp(800))[0] == 800, "800 K 계획 6 런 전부 통과 → T* = 800")
+    t, _, nx = select_probe_temperature({(800, "H0_host", 1): P, (800, "H0_host", 2): P})
+    chk(t is None and nx == (800, PC1, 3), "⛔음성(개정 CP): H0 두 시드 통과만으로 T* 를 정하지 않는다 → 다음 = 대표 쌍")
+    t, _, nx = select_probe_temperature({(800, "H0_host", 1): P})
+    chk(t is None and nx == (800, "H0_host", 2), "⛔음성: H0 한 시드만 통과 → 다음 = 800 K H0 seed 2")
+    t, _, nx = select_probe_temperature(allp(800, bad=(PC2, 4)))
+    chk(t is None and nx == (1000, "H0_host", 1), "⛔음성: 대표 쌍 한 런 불통과 → 800 탈락 · 다음 = 1000 K H0 seed 1 (부모 그대로)")
+    chk(select_probe_temperature({**allp(800, bad=("H0_host", 1)), **allp(1000)})[0] == 1000,
+        "800 K 불통과 → 1000 K 계획 6 런 전부 통과 → T* = 1000")
+    t, why, nx = select_probe_temperature({**allp(800, bad=(PC1, 3)), **allp(1000, bad=("H0_host", 2))})
     chk(t is None and nx is None and "열지 않는다" in why, "⛔음성: 사다리 전부 불통과 → v7 을 열지 않는다")
-    t, _, nx = select_probe_temperature({(1000, 1): P, (1000, 2): P})
-    chk(t is None and nx == (800, 1), "⛔음성: 800 K 를 안 돌렸으면 1000 K 결과가 있어도 건너뛰지 않는다")
+    t, _, nx = select_probe_temperature(allp(1000))
+    chk(t is None and nx == (800, "H0_host", 1), "⛔음성: 800 K 를 안 돌렸으면 1000 K 결과가 있어도 건너뛰지 않는다")
+    sub = {k: v for k, v in allp(800).items() if not (k[1] == PC1 and k[2] == 3)}
+    sub[(800, "P1_Al2O3_D", 3)] = P
+    t, _, nx = select_probe_temperature(sub)
+    chk(t is None and nx == (800, PC1, 3), "⛔음성: 다른 부모(D)의 런은 계획 런을 대신하지 못한다 (부모 교체 금지)")
+    sub2 = {k: v for k, v in allp(800).items() if k[2] != 4}
+    sub2.update({(800, PC1, 1): P, (800, PC2, 1): P})
+    t, _, nx = select_probe_temperature(sub2)
+    chk(t is None and nx == (800, PC1, 4), "⛔음성: 본 라운드 시드(1)의 런은 탐침 시드(4)를 대신하지 못한다")
+    import random as _rnd
+    chk(_rnd.Random(20261003).choice(list("CDEFGHIJ")) == V7_PAIR_PARENT,
+        f"대표 부모 = 개정 §3 의 결정론적 추첨 재현 (random.Random(20261003).choice(C–J) = {V7_PAIR_PARENT})")
+    chk(V7_PROTOCOL["prod_ps"] == 400.0 and set(V7_PAIR_SEEDS).isdisjoint(V7_MAIN_SEEDS),
+        "개정 CP 상수 — 생산 400 ps · 탐침 시드와 본 라운드 시드가 겹치지 않는다")
+    ra = {("P1_Al2O3_A", 800, 1): {}, ("P1_Al2O3_A", 800, 2): {}, ("P1_Al2O3_C", 800, 3): {}, ("P1_Al2O3_A", 1000, 1): {}}
+    rv, po = v7_main_runs(ra, 800)
+    chk(set(rv) == {("P1_Al2O3_A", 800, 1), ("P1_Al2O3_A", 800, 2)} and po == [("P1_Al2O3_C", 800, 3)],
+        "⛔음성: 본 라운드 대상 = T* 의 시드 1·2 뿐 · 탐침 시드 3 은 제외 목록 · 다른 온도 런도 안 든다")
+    with _tf.TemporaryDirectory() as tdj:
+        pjf = Path(tdj) / "cascade_v7_probe.json"
+
+        def wpj(**kw):
+            b_ = {"T_star_K": 800, "why": "x", "protocol": V7_PROTOCOL, "pair_parent": V7_PAIR_PARENT}
+            b_.update(kw)
+            pjf.write_text(json.dumps(b_))
+        wpj()
+        chk(v7_probe_t_star(pjf)[0] == 800, "본 라운드 T* 는 탐침 산출물에서 읽는다 (800)")
+        wpj(T_star_K=None)
+        chk(v7_probe_t_star(pjf)[0] is None, "⛔음성: 탐침이 T* 를 못 정했으면 본 라운드 판정 거부")
+        wpj(T_star_K=600)
+        chk(v7_probe_t_star(pjf)[0] is None, "⛔음성: 사다리 밖 T* (600 K) → 거부")
+        wpj(protocol={**V7_PROTOCOL, "prod_ps": 200.0})
+        chk(v7_probe_t_star(pjf)[0] is None, "⛔음성: 200 ps 프로토콜로 돈 탐침 → 거부 (개정 전 카드)")
+        wpj(pair_parent="D")
+        chk(v7_probe_t_star(pjf)[0] is None, "⛔음성: 대표 부모가 다른 탐침 → 거부")
+        chk(v7_probe_t_star(Path(tdj) / "none.json")[0] is None, "⛔음성: 탐침 산출물이 없으면 거부")
+    import types as _ty
+    chk(main_v7(_ty.SimpleNamespace(probe_json=None)) == 2,
+        "⛔음성: --probe_json 없이 v7 본 라운드 판정 → 거부 (T* 를 자유 인자로 안 받는다)")
     if have_ase:
         with _tf.TemporaryDirectory() as tdp:
             rd = Path(tdp) / "md" / "H0_host__T800__s1" / "eprime_H0_host_d0.00_c0" / "T800"; rd.mkdir(parents=True)
             awrite(str(rd / "traj.xyz"), [Atoms(symbols=sym, positions=cart[i], cell=cell, pbc=True) for i in range(nT)])
-            (rd / "aimd_results.json").write_text(json.dumps({"save_fs": sf, "n_frames": nT}))
+            #: 시험 궤적은 200 fs × 500 = 100 ps 라 카드 프로토콜(200 ps · 100 fs) 대신 **같은 모양의 시험 프로토콜**로 결속한다
+            proto_t = {"prod_ps": (nT - 1) * sf / 1000.0, "dt_fs": 2.0, "save_fs": sf}
+            sc_ok = {"T_K": 800, "save_fs": sf, "n_frames": nT, "prod_ps": proto_t["prod_ps"], "dt_fs": 2.0}
+            (rd / "aimd_results.json").write_text(json.dumps(sc_ok))
             (rd / "msd.json").write_text(json.dumps({"T_K": 800, "D_Li_cm2_s": 1.23e-5, "fit_window_ps": [2.0, 50.0],
                                                      "times_ps": [i * sf / 1000.0 for i in range(nT)], "msd_Li_A2": [0.0] * nT}))
             rr = scan(tdp)
             chk(list(rr) == [("H0_host", 800, 1)], f"탐침 런을 (H0_host, 800, 1) 로 읽는다 ({list(rr)})")
-            pr = probe_run(rr[("H0_host", 800, 1)])
+            pr = probe_run(rr[("H0_host", 800, 1)], protocol=proto_t)
             flat = json.dumps(pr)
             chk("error" not in pr and "D" not in pr and "1.23e-05" not in flat and "D_legacy_sto_lab" not in pr,
                 "⛔음성: 탐침 출력에 D 값이 없다 (msd.json 의 D 도 안 옮긴다)")
@@ -912,17 +1190,75 @@ def _selftest() -> int:
             try:      # 자격은 통과로 고정하고 골격 경보 경로만 따로 본다
                 _mdc.aggregation_eligible = lambda t, y, ev: (True, [], {"run_verdict": "citable", "sub_window_ratios": [1, 1, 1]})
                 _mdc.framework_alarm = lambda *a_, **k_: {"state": "ok"}
-                chk(probe_run(r0)["eligible"] is True, "자격 통과 + 골격 ok → 탐침 통과")
+                p_ok = probe_run(r0, protocol=proto_t)
+                chk(p_ok["eligible"] is True, "자격 통과 + 골격 ok → 탐침 통과")
+                chk("인증이 아니다" in p_ok.get("framework_alarm_role", ""),
+                    "골격 경보 역할이 출력에 같이 실린다 — 통과는 골격 보존 인증이 아니다 (회신 CP P1)")
                 _mdc.framework_alarm = lambda *a_, **k_: {"state": "alarm"}
-                chk(probe_run(r0)["eligible"] is False, "⛔음성: 골격 경보(alarm) → 자격 통과여도 탐침 불통과")
+                chk(probe_run(r0, protocol=proto_t)["eligible"] is False, "⛔음성: 골격 경보(alarm) → 자격 통과여도 탐침 불통과")
                 def _boom(*a_, **k_):
                     raise RuntimeError("x")
                 _mdc.framework_alarm = _boom
-                pz = probe_run(r0)
+                pz = probe_run(r0, protocol=proto_t)
                 chk(pz["eligible"] is False and str(pz["framework_alarm"]).startswith("unavailable"),
                     "⛔음성: 골격 경보를 못 재면 통과가 아니다 (unavailable)")
+                #: ── 회신 CP P0-1 (2026-10-03) — 자격·경보를 **통과로 고정한 채** 기록 하나만 깨서 막히는지 본다 ──
+                _mdc.framework_alarm = lambda *a_, **k_: {"state": "ok"}
+                (rd / "aimd_results.json").write_text(json.dumps({**sc_ok, "T_K": 600}))
+                pc = probe_run(r0, protocol=proto_t)
+                chk(pc["eligible"] is False and "T_K 불일치" in pc.get("error", "") and pc.get("binding_errors"),
+                    "⛔음성(회신 CP 반례 재현): msd.json 800 K · aimd_results 600 K → 자격 통과여도 탐침 불통과")
+                (rd / "aimd_results.json").write_text(json.dumps(sc_ok))
+                chk(probe_run(r0, protocol=proto_t)["eligible"] is True, "되돌리면 다시 통과 (깬 것만 막혔다)")
+                chk(probe_run(r0)["eligible"] is False and "prod_ps" in probe_run(r0).get("error", ""),
+                    "⛔음성: 카드 프로토콜(400 ps · 100 fs)로 보면 100 ps 시험 런은 결속 실패")
+                #: ── 개정 CP — v7 본 라운드 경로: judge_runs_card(binding, alarm) · v6 기본값은 그대로 ──
+                bnd = {"ladder": (800,), "protocol": proto_t}
+                kk = ("H0_host", 800, 1)
+                _mdc.framework_alarm = lambda *a_, **k_: {"state": "ok"}
+                j_ok = judge_runs_card({kk: dict(r0)}, say=lambda s_: None, binding=bnd, alarm=True)[kk]
+                chk(j_ok["eligible"] is True and j_ok["framework_alarm"] == "ok",
+                    "[양성] 본 라운드 경로 — 결속 맞고 자격·경보 통과 → 자격 통과")
+                _mdc.framework_alarm = lambda *a_, **k_: {"state": "alarm"}
+                j_al = judge_runs_card({kk: dict(r0)}, say=lambda s_: None, binding=bnd, alarm=True)[kk]
+                chk(j_al["eligible"] is False and any("골격 경보" in w for w in j_al["reasons"]),
+                    "⛔음성: 본 라운드에서 골격 경보 → 자격 없음 (거부권)")
+                j_v6 = judge_runs_card({kk: dict(r0)}, say=lambda s_: None)[kk]
+                chk(j_v6["eligible"] is True and j_v6["framework_alarm"] is None,
+                    "v6 경로(기본값)는 결속·경보를 안 건다 — 봉인된 v6 판정 그대로")
+                (rd / "aimd_results.json").write_text(json.dumps({**sc_ok, "T_K": 600}))
+                j_b = judge_runs_card({kk: dict(r0)}, say=lambda s_: None, binding=bnd, alarm=True)[kk]
+                chk(j_b["eligible"] is False and "결속" in j_b["reasons"][0],
+                    "⛔음성(회신 CP 반례 · 본 라운드 경로): 사이드카 600 K → 자격 없음")
+                (rd / "aimd_results.json").write_text(json.dumps(sc_ok))
             finally:
                 _mdc.aggregation_eligible, _mdc.framework_alarm = _oa, _of
+
+            def mkrun(folder, tag, T_msd=800, n=nT, msd_T=True, **side_kw):
+                d_ = Path(tdp) / "bind" / tag / folder
+                d_.mkdir(parents=True, exist_ok=True)
+                sc = {k_: v_ for k_, v_ in {**sc_ok, **side_kw}.items() if v_ is not None}
+                (d_ / "aimd_results.json").write_text(json.dumps(sc))
+                mj = {"fit_window_ps": [2.0, 50.0], "times_ps": [i * sf / 1000.0 for i in range(n)]}
+                if msd_T:
+                    mj["T_K"] = T_msd
+                (d_ / "msd.json").write_text(json.dumps(mj))
+                return {"path": str(d_ / "msd.json"), "tag": tag, "t": mj["times_ps"], "fit_window_ps": [2.0, 50.0]}
+
+            def be(rec, **kw):
+                return " | ".join(protocol_binding_errors(rec, protocol=proto_t, **kw))
+            TG = "H0_host__T800__s1"
+            chk(be(mkrun("T800", TG)) == "", "[양성] 기록 일곱 곳이 다 맞으면 결속 오류 0")
+            chk("T_K 가 없다" in be(mkrun("T800", TG, T_K=None)), "⛔음성: 사이드카에 T_K 가 없으면 확인 못 함 = 오류")
+            chk("T_K 를 못 읽는다" in be(mkrun("T800", TG, msd_T=False)), "⛔음성: msd.json 에 T_K 가 없으면 오류")
+            chk("prod_ps" in be(mkrun("T800", TG, prod_ps=50.0)), "⛔음성: 사이드카 생산 길이 ≠ 카드 → 오류")
+            chk("dt_fs" in be(mkrun("T800", TG, dt_fs=1.0)), "⛔음성: 사이드카 dt ≠ 카드 → 오류")
+            chk("save_fs" in be(mkrun("T800", TG, save_fs=100.0)), "⛔음성: 사이드카 저장 간격 ≠ 카드 → 오류")
+            chk("폴더" in be(mkrun("T600", TG)), "⛔음성: 폴더 이름 T600 · msd.json 800 K → 오류 (다른 온도의 폴더)")
+            chk("태그 온도" in be(mkrun("T800", "H0_host__T1000__s1")), "⛔음성: 태그 __T1000__ · msd.json 800 K → 오류")
+            chk("__T<NNN>__ 가 없다" in be(mkrun("T800", "H0_host__s1")), "⛔음성: 탐침 태그에 온도가 없으면 요청 온도를 확인 못 함")
+            chk("사다리" in be(mkrun("T800", TG), ladder=(1000,)), "⛔음성: 요청 사다리 밖의 온도 → 오류")
+            chk("시간축 끝" in be(mkrun("T800", TG, n=251)), "⛔음성: msd.json 시간축이 생산 길이보다 짧다 → 오류 (잘린 런)")
     print("selftest PASS" if ok else "selftest FAIL")
     return 0 if ok else 1
 

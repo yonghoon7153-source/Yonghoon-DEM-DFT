@@ -1,0 +1,392 @@
+{
+ "slug": "nosrati2026_anion_engineering_sulfide_se_review",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-03",
+ "sources": [
+  "Nosrati 2026 - Anion engineering of sulfide solid electrolytes (Small e76005).pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 4,
+   "file": "fig_1.png",
+   "caption": "FIGURE 1 An overview of anion engineering in SSSEs: Main families of SSSEs; Reproduced with permission [ 59 ]. Copyright 2017, American Chemical Society. Anionic engineering strategies; Reproduced with permission [ 60 ]. Copyright 2025, American Chemical Society. Structural and electronic consequences; Reproduced with permission [ 61 ]. Copyright 2025, licensed under CC BY-NC-ND 4.0, Springer Nature. Property enhancements; Reproduced with permission [ 62 ]. Copyright 2018, American Chemical Society. Battery-level outcomes and current challenges.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.2,
+    568.1,
+    257.3
+   ],
+   "w": 2170,
+   "h": 926,
+   "dpi": 300,
+   "src": "Nosrati 2026 - Anion engineering of sulfide solid electrolytes (Small e76005).pdf",
+   "blank": 0.522,
+   "viewed": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "FIGURE 2 Crystal structure of SSSE families: sulfide-glass ceramics, argyrodite, thio-LISICON-type, and LGPS. (a) Edge-sharing PS4 tetrahedra forming P2 S6 2 − units in Li2 P2 S6 with monoclinic C2/m space group. (b) Eclipsed configuration of the P2 S6 2 − polyhedral units with aligned Li+ chains. (c) Lithium-ion density maps in the (100) plane of Li2 P2 S6 , showing connected Li sites without extended diffusion pathways. Reproduced with permission [ 59 ]. Copyright 2017, American Chemical Society. (d) Atomic positions of Li6 PS5 Cl in the F4 ̅3m space group. (e) Lithium-ion density map at 500 K. (f) Lithium-ion jump frequencies between diffusion sites. Reproduced with permission [ 86 ]. Copyright 2018, licensed under CC BY-NC-ND, American Chemical Society; (g) Crystal structure of a thio-LISICON-type Li-based sulfide solid electrolyte based on Li4 GeS4 . The framework comprises intercon",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.7,
+    568.2,
+    465.3
+   ],
+   "w": 2170,
+   "h": 1791,
+   "dpi": 300,
+   "src": "Nosrati 2026 - Anion engineering of sulfide solid electrolytes (Small e76005).pdf",
+   "blank": 0.678,
+   "viewed": true
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 9,
+   "file": "fig_3.png",
+   "caption": "FIGURE 3 Structure, advantages, disadvantages, unique anion sublattice feature, the most relevant anion engineering strategy, and limitation of different SSSE families along with a comparison of their electrochemical and mechanical properties.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    34.9,
+    568.0,
+    363.3
+   ],
+   "w": 2169,
+   "h": 1369,
+   "dpi": 300,
+   "src": "Nosrati 2026 - Anion engineering of sulfide solid electrolytes (Small e76005).pdf",
+   "blank": 0.478,
+   "viewed": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 10,
+   "file": "fig_4.png",
+   "caption": "FIGURE 4 Ion transport mechanisms in LPSX (X = Cl, Br, I). (a–c) short-range intra-cage hops between adjacent 48 h sites and longer inter-cage jumps through 16e interstitials between cages. Reproduced with permission [ 130 ]. Copyright 2019, licensed under CC BY-NC-ND, American Chemical Society. (d-e) Illustration of ion migration, highlighting key diffusion pathways and energy landscapes for Li6 PS5 Cl, Li6 PS5 Br, and Li6 PS5 I, with red arrows showing site doublets and blue and black arrows showing inter-cage jumps and hops. (f) Ion migration energy as a function of migration path for LPSX. Reproduced with permission [ 131 ]. Copyright 2024, American Chemical Society.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.2,
+    568.1,
+    405.3
+   ],
+   "w": 2170,
+   "h": 1543,
+   "dpi": 300,
+   "src": "Nosrati 2026 - Anion engineering of sulfide solid electrolytes (Small e76005).pdf",
+   "blank": 0.754,
+   "viewed": true
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 13,
+   "file": "fig_5.png",
+   "caption": "FIGURE 5 Role of (a) ordered and (b) disordered anion arrangements in creating lithium migration landscape in SSSEs. Reproduced with permission [ 61 ]. Copyright 2025, licensed under CC BY-NC-ND 4.0, Springer Nature. (c) Schematic illustrating how lattice softening influences ion migration. As the framework becomes softer, due to reduced bond strength, the vibrational modes associated with ion hopping broaden. (d) Lower lattice stiffness leads to lower both the activation energy and the conductivity pre-factor ( σ0 ). Reproduced with permission [ 137 ]. Copyright 2017, American Chemical Society. (e) Activation energies for various classes of Li+ and Na+ solid electrolytes. The data illustrate the significant variability in transport properties achievable within each material family through compositional and structural engineering. Reproduced with permission [ 146 ]. Copyright 2020, Insti",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    34.9,
+    568.1,
+    540.3
+   ],
+   "w": 2170,
+   "h": 2107,
+   "dpi": 300,
+   "src": "Nosrati 2026 - Anion engineering of sulfide solid electrolytes (Small e76005).pdf",
+   "blank": 0.825,
+   "viewed": true
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 16,
+   "file": "fig_6.png",
+   "caption": "FIGURE 6 (a) Cross-sectional SEM/EDS mapping of the Li/Li5.5 PS4.5 Cl1.5 (Cl15) interface after cycling. (b) depth-resolved and (c) semi-quantitative XPS analysis of cycled Cl15. Reproduced with permission [ 164 ]. Copyright 2025, Elsevier.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.4,
+    568.0,
+    371.3
+   ],
+   "w": 2169,
+   "h": 1400,
+   "dpi": 300,
+   "src": "Nosrati 2026 - Anion engineering of sulfide solid electrolytes (Small e76005).pdf",
+   "blank": 0.737,
+   "viewed": true
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 17,
+   "file": "fig_7.png",
+   "caption": "FIGURE 7 Anion engineering in anode/electrolyte stability: (a) Evolution of Li 1s, S 2p, P 2p and (b) complementary EIS showing the evolution of Li-LPSCl SEI composition under different plating current densities [ 161 ]. Copyright 2022, licensed under Creative Commons CC BY, Springer Nature. Cross-sectional SEM images of Li/SSE interfaces in symmetric cells for (c) low- and (d) moderate-chlorinity samples [ 50 ]. Copyright 2022, licensed under Creative Commons CC BY, Springer Nature.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.2,
+    568.1,
+    495.3
+   ],
+   "w": 2170,
+   "h": 1918,
+   "dpi": 300,
+   "src": "Nosrati 2026 - Anion engineering of sulfide solid electrolytes (Small e76005).pdf",
+   "blank": 0.724,
+   "viewed": true
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 19,
+   "file": "fig_8.png",
+   "caption": "FIGURE 8 (a) Evidence of interfacial chemical degradation: Raman and XPS spectra demonstrating the spontaneous formation of polysulfides (S ─S bonds) and P2 Sx species at the interface between chemically delithiated NMC532 and Li6 PS5 Cl. (b) Driving force for cathode interface degradation: Reactivity trend of transition metals in NMC532, with Ni4 + /3 + identified as the primary driver of the redox reaction with the sulfide electrolyte. Reproduced with permission [ 171 ]. Copyright 2024, Royal Society of Chemistry. Anion engineering for cathode interface stabilization in all-solid-state Li-S batteries via p-band center modulation. Electron density difference at the S8 /LPSC interface (c) and S8 /LPSC-SbO interface (d). Lithium atoms coordinated with the PS4 3 − tetrahedron in LPSC readily interact with S8 , leading to interfacial decomposition, whereas the SbS4 3 − tetrahedron in LPSC- ",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.1,
+    568.2,
+    384.3
+   ],
+   "w": 2170,
+   "h": 1456,
+   "dpi": 300,
+   "src": "Nosrati 2026 - Anion engineering of sulfide solid electrolytes (Small e76005).pdf",
+   "blank": 0.491,
+   "viewed": true
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 21,
+   "file": "fig_9.png",
+   "caption": "FIGURE 9 Anion engineering for simultaneous optimization of ionic conductivity, mechanical properties, and Li-metal compatibility in I-rich argyrodite sulfides. (a) Schematic of precursors and synthesis of low-energy mechanical alloying LMA-Cl1.4-x Ix . (b) Composition-dependent ionic conductivity and elastic modulus for LMA-Cl1.4-x Ix (x = 0–1.4) solid electrolytes. Substitution of Cl− with larger I− systematically decreases elastic modulus while optimizing σ at x = 0.8 ( σ = 2.44 mS cm− 1 , E = 12.37 GPa). (c) CCD evaluation of symmetric Li cells. The optimized composition (Cl0.8 I0.6 ) achieves the highest CCD of 1.6 mA cm− 2 , attributed to its balanced electrochemical and mechanical properties. Reproduced with permission [ 184 ]. Copyright 2026, Royal Society of Chemistry. (d) Young’s moduli and mean atomic volumes of Li2 S-P2 S5 glasses. Increasing Li2 S content leads to stiffer ma",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.0,
+    568.2,
+    399.3
+   ],
+   "w": 2170,
+   "h": 1519,
+   "dpi": 300,
+   "src": "Nosrati 2026 - Anion engineering of sulfide solid electrolytes (Small e76005).pdf",
+   "blank": 0.81,
+   "viewed": true
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 24,
+   "file": "fig_10.png",
+   "caption": "FIGURE 10 (a) Formation energies of point defects in LGPS. The P_Ge antisite is a dominant defect with a low formation energy, revealing the material’s inherent P-rich/Ge-poor off-stoichiometry driven by the anionic and mixed-cation sublattice. (b) Statistical range of defect formation energies in disordered LGPS. The spread highlights the ensemble nature of defect chemistry. The low and consistent formation energy of the P_Ge defect provides a target for performance optimization through P-rich synthesis. Reproduced with permission [ 198 ]. Copyright 2020, Royal Society of Chemistry. (c) The effect of anion doping on the ionic conductivity of Li2 S. Doping with Cl− increases conductivity by generating lithium vacancies, while doping with F− or OH− decreases conductivity by promoting lithium interstitials. (d) Mobilities of lithium vacancies and interstitials in Li2 S, determined through ",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.0,
+    568.1,
+    340.3
+   ],
+   "w": 2170,
+   "h": 1272,
+   "dpi": 300,
+   "src": "Nosrati 2026 - Anion engineering of sulfide solid electrolytes (Small e76005).pdf",
+   "blank": 0.851,
+   "viewed": true
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 26,
+   "file": "fig_11.png",
+   "caption": "FIGURE 11 Symmetric cell cycling of Li/SE/Li with different Li-argyrodite electrolytes. Reproduced with permission [ 206 ]. Copyright 2022, Elsevier. (a) LPSCl1.5 shows exceptional long-term stability, while (b) LPSCl0.5 and (c) LPSCl1.0 exhibit increasing overpotentials due to interfacial decomposition, demonstrating the superior stability of the chlorine-rich composition against lithium metal. Full-cell performance of chlorine-rich Li- argyrodite electrolytes with high-voltage cathodes. (d) Stable cycling of a Li/LPSCl1.5/LNMO cell. (e) Excellent rate capability of a Li/LPSCl1.5/LCO cell.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.3,
+    568.0,
+    683.3
+   ],
+   "w": 2169,
+   "h": 2700,
+   "dpi": 300,
+   "src": "Nosrati 2026 - Anion engineering of sulfide solid electrolytes (Small e76005).pdf",
+   "blank": 0.836,
+   "viewed": true
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 28,
+   "file": "fig_12.png",
+   "caption": "FIGURE 12 (a) Electrochemical performance of NCM811/SSE/Li-In all-solid-state batteries and (b) Li/SSE/Li symmetric cells and voltage profiles of LPS, LPS-0.05SiO2 LPS-0.05GeO2 , and LPS-0.05SnO2 [ 52 ]. Copyright 2024, licensed under Creative Commons CC BY 4.0, OAE Publishing Inc. Initial charge-discharge profiles, rate capability at various C-rates, and cycling stability and Coulombic efficiency at 0.1C, shows the enhanced capacity, rate performance, and cycle life of cells employing co-doped electrolytes. Results of symmetric cells demonstrate the superior dendrite suppression ability of the co-doped electrolytes, with LPS-0.05SiO2 achieving the highest CCD. Electrochemical performance of Ge/Cl dual-doped LGPS [ 207 ]. Copyright 2024, licensed under Creative Commons CC BY 4.0, John Wiley and Sons. (c) Impedance spectra and (C) the corresponding Arrhenius plot, showing an optimal condu",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.0,
+    568.2,
+    428.3
+   ],
+   "w": 2170,
+   "h": 1640,
+   "dpi": 300,
+   "src": "Nosrati 2026 - Anion engineering of sulfide solid electrolytes (Small e76005).pdf",
+   "blank": 0.819,
+   "viewed": true
+  },
+  {
+   "key": "f13",
+   "kind": "figure",
+   "label": "13",
+   "page": 29,
+   "file": "fig_13.png",
+   "caption": "FIGURE 13 (a) Comparison of the synthesis temperature required for various sulfide electrolytes to achieve high conductivity, highlighting the low processing cost of the Li3.12 P0.94 Bi0.06 S3.91 O0.09 . (b) Quantification of toxic H2 S gas generated upon exposure to humid air, showing the drastically suppressed reaction for the synthesized electrolyte compared to pristine Li3 PS4 . (c) Optical images demonstrate the stark contrast in chemical stability, where pristine Li3 PS4 reacts violently in tap water, while the triple-doped electrolyte remains largely intact. (d) Critical current density (CCD) tests of Li symmetric cells, showing the doped electrolyte withstands 1.2 mA cm− 2 before short-circuiting, significantly higher than the pristine electrolyte. Long-term cycling stability of symmetric cells at 0.1 mA cm− 2 , where the doped cell cycles stably for over 2000 h, far exceeding th",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.0,
+    568.2,
+    449.3
+   ],
+   "w": 2170,
+   "h": 1727,
+   "dpi": 300,
+   "src": "Nosrati 2026 - Anion engineering of sulfide solid electrolytes (Small e76005).pdf",
+   "blank": 0.72,
+   "viewed": true
+  },
+  {
+   "key": "f14",
+   "kind": "figure",
+   "label": "14",
+   "page": 31,
+   "file": "fig_14.png",
+   "caption": "FIGURE 14 (a) Correlation between Ge-substitution-induced S2 − /I− anion site disorder and the activation energy for lithium-ion migration in Li6 + x P1-x Gex S5 I. The onset of disorder coincides with a sharp drop in activation energy. (b) Ionic conductivity as a function of Ge content (xR ) in Li6 + x P1-x Gex S5 I. Conductivity increases by over three orders of magnitude, reaching a maximum of 5.4 mS cm− 1 , driven by the lowered activation energy. (c) Cycling performance of an ASSB using Li6.6 P0.4 Ge0.6 S5 I electrolyte in a thick-electrode configuration and (d) cross-sectional EDX mapping, demonstrating stable long-term cycling. Reproduced with permission [ 210 ]. Copyright 2018, American Chemical Society. (e) Schematic comparing particle size and homogeneity from different synthesis methods and XRD peak shifts proving the solvent-mediated method achieves a higher Si- substitution ",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.0,
+    568.1,
+    363.3
+   ],
+   "w": 2170,
+   "h": 1369,
+   "dpi": 300,
+   "src": "Nosrati 2026 - Anion engineering of sulfide solid electrolytes (Small e76005).pdf",
+   "blank": 0.692,
+   "viewed": true
+  },
+  {
+   "key": "f15",
+   "kind": "figure",
+   "label": "15",
+   "page": 39,
+   "file": "fig_15.png",
+   "caption": "FIGURE 15 Roadmap shows the key advances, current challenges, and future perspectives in SSSEs. Reproduced with permission [ 36 ]. Copyright 2016, Springer Nature. Reproduced with permission [ 70 ]. Copyright 2008, John Wiley and Sons. Reproduced with permission [ 73 ]. Copyright 2011, Springer Nature. Reproduced with permission [ 76 ]. Copyright 2014, Royal Society of Chemistry. Reproduced with permission [ 237 ]. Copyright 2025, licensed under Creative Commons CC BY, Springer Nature.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.6,
+    568.1,
+    364.3
+   ],
+   "w": 2170,
+   "h": 1370,
+   "dpi": 300,
+   "src": "Nosrati 2026 - Anion engineering of sulfide solid electrolytes (Small e76005).pdf",
+   "blank": 0.383,
+   "viewed": true
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 33,
+   "file": "tab_1.png",
+   "caption": "TABLE 1 A comparative overview of several studies on anion-engineered lithium-based sulfide solid electrolytes, showing key material compositions, synthesis methods, ionic transport properties, and",
+   "rotated_deg": 90,
+   "bbox": [
+    6.0,
+    6.0,
+    606.3,
+    793.4
+   ],
+   "w": 2286,
+   "h": 2998,
+   "dpi": 274,
+   "src": "Nosrati 2026 - Anion engineering of sulfide solid electrolytes (Small e76005).pdf",
+   "blank": 0.964
+  },
+  {
+   "key": "t1b",
+   "kind": "table",
+   "label": "1",
+   "page": 34,
+   "file": "tab_1b.png",
+   "caption": "TABLE 1 (Continued, p.34) — rows 6–10: Li10SnP2S12 + Li3InCl6 [231] · Li9.54Si1.74(P0.903Sb0.097)1.44S11.7Cl0.3 [232] · Li9.54Si1.74P1.44S11.7Cl0.3 [36] · Li3.85Sn0.85Sb0.15S4 [233] · Li7P2S8I + SnCl2 [234]",
+   "rotated_deg": 90,
+   "bbox": [
+    6.0,
+    6.0,
+    606.3,
+    793.4
+   ],
+   "w": 2286,
+   "h": 2998,
+   "dpi": 274,
+   "src": "Nosrati 2026 - Anion engineering of sulfide solid electrolytes (Small e76005).pdf",
+   "blank": 0.961,
+   "manual_crop": "2026-10-03 수동 렌더 (논문 에이전트) — Table 1 은 pp.33–35 세 쪽에 걸친 표인데 extract_figures.py 가 같은 번호는 큰 쪽만 남기는 규칙으로 p.34·p.35 를 '중복(작은 쪽)' 으로 버렸다. clip = t1 과 같은 전면 bbox [6.0, 6.0, 606.3, 793.4] pt · 274 dpi · 90° 세움(PIL rotate(-90), 도구 _upright 와 같음) · 도구 _shrink 와 같은 재압축. 목적 = 웹 화면에 표 세 쪽을 다 띄우는 것. ⚠ 표 값의 정본은 PDF 텍스트(digest 의 Table 1 전사)다 — 이미지를 판독 근거로 쓰지 않는다.",
+   "continuation_of": "t1"
+  },
+  {
+   "key": "t1c",
+   "kind": "table",
+   "label": "1",
+   "page": 35,
+   "file": "tab_1c.png",
+   "caption": "TABLE 1 (Continued, p.35) — rows 11–13: 70Li2S-30P2S5 two-step milling/annealing [235] · 70Li2S-30P2S5 hot-pressing 280 °C [76] · Li7P2.9Mn0.1S10.7I0.3 [236]",
+   "rotated_deg": 90,
+   "bbox": [
+    6.0,
+    6.0,
+    606.3,
+    793.4
+   ],
+   "w": 2286,
+   "h": 2998,
+   "dpi": 274,
+   "src": "Nosrati 2026 - Anion engineering of sulfide solid electrolytes (Small e76005).pdf",
+   "blank": 0.975,
+   "manual_crop": "2026-10-03 수동 렌더 (논문 에이전트) — Table 1 은 pp.33–35 세 쪽에 걸친 표인데 extract_figures.py 가 같은 번호는 큰 쪽만 남기는 규칙으로 p.34·p.35 를 '중복(작은 쪽)' 으로 버렸다. clip = t1 과 같은 전면 bbox [6.0, 6.0, 606.3, 793.4] pt · 274 dpi · 90° 세움(PIL rotate(-90), 도구 _upright 와 같음) · 도구 _shrink 와 같은 재압축. 목적 = 웹 화면에 표 세 쪽을 다 띄우는 것. ⚠ 표 값의 정본은 PDF 텍스트(digest 의 Table 1 전사)다 — 이미지를 판독 근거로 쓰지 않는다.",
+   "continuation_of": "t1",
+   "viewed": true
+  }
+ ],
+ "missing_labels": []
+}

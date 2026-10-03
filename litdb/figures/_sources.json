@@ -1517,6 +1517,13 @@
    "109. Sup) Nolan2021_Computation_Guided_Coating_Garnet_SE_High_Energy_Cathodes.docx"
   ]
  },
+ "nosrati2026_anion_engineering_sulfide_se_review": {
+  "figures": 16,
+  "generated": "2026-10-03",
+  "pdfs": [
+   "Nosrati 2026 - Anion engineering of sulfide solid electrolytes (Small e76005).pdf"
+  ]
+ },
  "oginni2026_computational_design_review": {
   "figures": 12,
   "generated": "2026-09-26",
@@ -1931,6 +1938,14 @@
    "bb4a7605-09._Discrete_Element_Method_Modeling_of_an_Extrusion_Process_with_Recirculation_for_Dry_Manufacturing_of_Lithium-Ion_Battery_Electrodes.pdf"
   ]
  },
+ "sun2026_ml_sulfur_additive_lnmo_graphite_bdtt": {
+  "figures": 14,
+  "generated": "2026-10-03",
+  "pdfs": [
+   "Sun 2026 - ML screening sulfur-based additives LNMO graphite pouch (JPCL 6c02511).pdf",
+   "Sun 2026 - Sup) ML screening sulfur-based additives LNMO graphite pouch (JPCL 6c02511) SI.pdf"
+  ]
+ },
  "sundar2025_oxide_coating_screening_lpscl": {
   "figures": 10,
   "generated": "2026-08-05",
@@ -2182,6 +2197,13 @@
   "pdfs": [
    "f4f7edc6-98._Batch_active_learning_for_accelerating_the_development_of_interatomic_potentials.pdf",
    "0b34a0f3-98._Sup_Batch_active_learning_for_accelerating_the_development_of_interatomic_potentials.pdf"
+  ]
+ },
+ "wu2026_asslsb_li2s_reaction_mechanisms_engineering_review": {
+  "figures": 20,
+  "generated": "2026-10-03",
+  "pdfs": [
+   "Wu 2026 - Toward practical all-solid-state lithium-sulfur batteries (Chem Soc Rev d6cs00312e).pdf"
   ]
  },
  "wu2026_dilute_electrolyte_zn_calendar_aging": {
