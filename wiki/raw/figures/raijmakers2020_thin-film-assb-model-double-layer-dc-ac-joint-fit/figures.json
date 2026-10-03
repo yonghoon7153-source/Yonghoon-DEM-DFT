@@ -1,0 +1,372 @@
+{
+ "slug": "raijmakers2020_thin-film-assb-model-double-layer-dc-ac-joint-fit",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-02",
+ "sources": [
+  "e5b2203a-58._An_advanced_all-solid-state_Li-ion_battery_model.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Schematic representation of an all-solid-state Li-ion battery under discharge conditions. The positive electrode side is indicated with a p-sign and the negative electrode side with an n-sign.",
+   "rotated_deg": 0,
+   "bbox": [
+    295.8,
+    60.7,
+    558.9,
+    261.6
+   ],
+   "w": 1097,
+   "h": 837,
+   "dpi": 300,
+   "src": "e5b2203a-58._An_advanced_all-solid-state_Li-ion_battery_model.pdf",
+   "blank": 0.727,
+   "note": "봤다(벡터 · p. 2). 셀 도식 — Position −N · 0 · L · L+M · L+M+K · y · Name Li | LiPON | LCO | Pt · (n) · (p) · Process e⁻ ←(Li) · Li⁺ →(LiPON) · Li⊕ →(LCO) · e⁻ ←(LCO · Pt) · 두 계면 점선 겹줄 + 노란 굽은 화살(전하이동 j^n_ct · j^p_ct) · 축전기 c^n_dl · c^p_dl 이 각 계면을 가로지르고 c_geo 가 Li 쪽 ↔ Pt 집전체를 가로지른다(유전체 = LiPON + LCO) · 외부 U_bat. 직렬 ρ_s · 면적 표시 0. 라벨 · 내용 온전 · 잘림 0 · 캡션 필드 = 원문."
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 8,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Measured (symbols) and simulated (lines) voltage discharge curves as a func- tion of extracted charge at various C-rates. The extrapolated EMF voltage curve is also shown.",
+   "rotated_deg": 0,
+   "bbox": [
+    295.8,
+    251.1,
+    558.8,
+    430.7
+   ],
+   "w": 1097,
+   "h": 749,
+   "dpi": 300,
+   "src": "e5b2203a-58._An_advanced_all-solid-state_Li-ion_battery_model.pdf",
+   "blank": 0.909,
+   "note": "봤다(벡터 · p. 8). 일곱 율(0.1 · 0.2 · 0.5 · 1 · 2 · 4 · 6C) 측정 표지 + 모의 선 + EMF(검정). `[도표·벡터]`(경로 좌표 · 축 상자 · 눈금 글자 보정 — 판독 폭 ±0.001 mAh cm⁻² · ±3 mV) EMF 3.0 V 도달 0.3489–0.3493 mAh cm⁻² · 모의 3.0 V 도달 0.3231 · 0.3068 · 0.2759 · 0.2468 · 0.2156 · 0.1805 · 0.1555(0.1 → 6C) · 끝 용량 모의/측정 0.996 · 1.005 · 0.998 · 0.989 · 0.972 · 0.972(0.2C 제외 — 표지가 선 경로에 합쳐짐) · 첫 표지 측정 − 모의 −1.7 … −63.6 mV · 4C · 6C 첫 1–2 분 −45 … −103 mV. 라벨 · 내용 온전 · 잘림 0. 캡션 필드 'func- tion' 은 줄 끝 분철."
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 9,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Measured (symbols) and simulated (lines) voltage discharge and relaxation curves at various C-rates: 0.2C (a), 0.5C (b), 1.0C (c), 2.0C (d), 4.0C (e), and 6.0C (f). Note that the voltage discharge curves are shown as a function of extracted charge and the relaxation periods after current interruption as a function of time.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    60.7,
+    568.6,
+    537.8
+   ],
+   "w": 2218,
+   "h": 1988,
+   "dpi": 300,
+   "src": "e5b2203a-58._An_advanced_all-solid-state_Li-ion_battery_model.pdf",
+   "blank": 0.956,
+   "note": "봤다(래스터 1777×1938 · p. 9). 여섯 판 0.2 · 0.5 · 1 · 2 · 4 · 6C(0.1C 판 없음) · 각 판 왼쪽 방전(Extracted charge) · 오른쪽 이완(Time 0–1 h — 본문 'relaxation period of 2 h' 의 앞 절반) · 측정 파랑 원 · 모의 빨강 선. `[도표·화소]`(y 80.5 px / 0.2 V · 빨강 선에 잘린 원 조각을 합쳐 중심 — 판독 폭 ±3 mV) 0.2C 이완 측정 − 모의 ≈+22(0.07 h) → ≈+12(0.13–0.19 h) → ≈+9(0.24–0.30 h) → +2.5–6 mV(0.35–1 h) — 한 방향. 라벨 · 내용 온전 · 잘림 0 · 캡션 필드 = 원문."
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 10,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Optimized diffusion coefﬁcients of Li4 (solid line) and e\u0001 (dotted line) as a function of lithium stoichiometry in the positive electrode material.",
+   "rotated_deg": 0,
+   "bbox": [
+    26.8,
+    523.4,
+    289.9,
+    723.4
+   ],
+   "w": 1097,
+   "h": 835,
+   "dpi": 300,
+   "src": "e5b2203a-58._An_advanced_all-solid-state_Li-ion_battery_model.pdf",
+   "blank": 0.968,
+   "note": "봤다(벡터 · p. 10). 'Optimized diffusion coefficients' — D_Li⊕(파랑 실선) · D_e⁻(빨강 점선) vs x in LixCoO2 0.5–1.0 · 로그 축 10⁻¹⁶–10⁻¹² m² s⁻¹. `[도표·벡터]` D_Li⊕ ≈7.9×10⁻¹⁴(x 0.5–0.6) → ≈3.0×10⁻¹⁵(x 1.0) · 비 D_e⁻/D_Li⊕ ≈4.1–4.3(표 3 비 4.18) · 꺾임 x ≈0.75 · ≈0.92. β(x) 의 함수형 · 매개변수는 지면 어디에도 없다 — 이 그림이 유일한 출처. 캡션 필드 'Li4' = Li⊕ · '\\x01' = −(텍스트 층 대체 문자)."
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 11,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Mobile Liþ concentration (cLiþ ) in the LiPON electrolyte (a, d) and electric ﬁeld (b, e) as a function of time and position across the electrolyte. Development of the individual electrolyte overpotentials as a function of time (c, f). The time axis represents the complete constant current discharge and successive current interruption period for a 1C (aec) and 4C discharge rate (def).",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    60.7,
+    568.6,
+    549.9
+   ],
+   "w": 2218,
+   "h": 2039,
+   "dpi": 300,
+   "src": "e5b2203a-58._An_advanced_all-solid-state_Li-ion_battery_model.pdf",
+   "blank": 0.846,
+   "note": "봤다(래스터 1777×1992 · p. 11). (a)(d) LiPON 이동 Li⁺ 농도 3D(위치 0–4 µm · 1C 0–100 분 · 4C 0–20 분) — y = 0 끝 ↑(≈42 · ≈50 kmol m⁻³) · y = L 끝 ↓(≈36 · ≈27) · 벌크 ≈39 · (b)(e) 전기장 3D(1C 0–40 · 4C 0–200 kV m⁻¹) · (c)(f) Total(파랑) · Nernstian(초록 점선) · Galvanic(빨강 파선). `[도표·화소]` 1C −73.4 · −3.3 · −69.8 mV · 4C −295.1 · −13.7 · −280.7 mV · 평탄 끝 ≈71.6 · ≈13.1 분 — 표 3 그대로의 재풀이(−73.84 · −3.82 · −70.02 / −296.73 · −15.92 · −280.81)와 맞는다. 캡션 필드 'Liþ' = Li⁺ · '(aec)' = (a–c) · '(def)' = (d–f)."
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 12,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Li4 concentration in the positive electrode as a function of time and position (a, e); Li4 concentration at the LCO/electrolyte interface and in the electrode bulk as a function of time (b, f); electric ﬁeld in the positive electrode as a function of time and position (c, g); overpotentials at the positive electrode as a function of time (d, h). The time axis represents a full discharge and successive relaxation period at 1C (aed) and 4C-rate (eeh).",
+   "rotated_deg": 0,
+   "bbox": [
+    26.8,
+    60.7,
+    558.8,
+    711.7
+   ],
+   "w": 2218,
+   "h": 2713,
+   "dpi": 300,
+   "src": "e5b2203a-58._An_advanced_all-solid-state_Li-ion_battery_model.pdf",
+   "blank": 0.895,
+   "note": "봤다(래스터 1777×2667 · p. 12). (a)(e) LCO Li⊕ 농도 3D(위치 ≈3.6–11.7 µm) · (b)(f) 표면 · 벌크 x(t) · (c)(g) 전기장 · (d)(h) 확산(빨강) · 전하이동(청록) · 물질전달(올리브) 과전압. 1C 벌크 0.51 → ≈0.87 · 표면 정점 ≈1.0 @≈71 분 · 4C 벌크 ≈0.776 · 표면 ≈0.995 @≈13 분 · 1C 확산 과전압 끝 ≈−0.59 V. 라벨 · 내용 온전. 캡션 필드 'Li4' = Li⊕ · '(aed)' = (a–d) · '(eeh)' = (e–h)."
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 13,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. EMF voltage curve as a function of x in LixCoO2 including voltages in the bulk (crosses) and at the surface (circles) at the end of discharging at 1 (red) and 4C (green). The diffusion overpotentials (hp d) at the end of discharging are also indicated. (For interpretation of the references to color in this ﬁgure legend, the reader is referred to the Web version of this article.)",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    60.7,
+    299.6,
+    271.1
+   ],
+   "w": 1097,
+   "h": 877,
+   "dpi": 300,
+   "src": "e5b2203a-58._An_advanced_all-solid-state_Li-ion_battery_model.pdf",
+   "blank": 0.954,
+   "note": "봤다(벡터 · p. 13). EMF vs x 0.51–1.0 + 방전 끝 벌크(✕) · 표면(○) — 1C 빨강 · 4C 초록 + η_d^p 화살. `[도표·벡터]` 벌크 1C (0.867, 3.899) · 표면 1C (0.998, 3.310) · 벌크 4C (0.775, 3.916) · 표면 4C (0.994, 3.629) · EMF 3.900 V @x 0.863 · 끝 기울기 −73 V/단위 x(0.994–0.998). 라벨 · 내용 온전. 캡션 필드 '(hp d)' = (η^p_d)."
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 14,
+   "file": "fig_9.png",
+   "caption": "Fig. 9. Discharge EMF curve, including the various simulated overpotential contributions (a, d); all overpotentials during discharge (b, e); all overpotentials during relaxation after discharge (c, f). Fig. 9aec represent the 1C-rate discharge and Fig. 9def the 4C-rate discharge. The insets in (c) and (f) show an enlargement of the start of the relaxation period.",
+   "rotated_deg": 0,
+   "bbox": [
+    26.8,
+    60.7,
+    558.9,
+    601.7
+   ],
+   "w": 2218,
+   "h": 2255,
+   "dpi": 300,
+   "src": "e5b2203a-58._An_advanced_all-solid-state_Li-ion_battery_model.pdf",
+   "blank": 0.896,
+   "note": "봤다(래스터 1954×2205 · p. 14). (a)(d) EMF 아래 누적 색 띠 · (b)(e) 성분별 과전압 · (c)(f) 이완(삽도 1 · 0.5 분). `[도표·화소]`(판 b · e 축 상자 +0.1 ↔ −1.0 V = 590.5 px · 1 화소 1.863 mV) 4C 방전 중간(Q ≈0.08) 자홍 η_ct^n −23.9 · 청록 η_ct^p −61.1 · 초록 η_mt^LiPON −294.9 · 파랑 η_s −15.5(ρ_s·j −15.25) · 빨강 η_d^p −40.6 · 노랑 η_mt^p −4.3 · 검정 η_bat −440.2 mV(성분 합 −440.3) · 1C 는 노랑 · 자홍 · 청록 선(각 ≈5 px)이 겹쳐 자홍 −8 … −10 mV 로만 읽힌다 · ★ 4C 이완 삽도에서 자홍이 차단 순간 ≈−24 → ≈+5 mV(0 위 · 판독 폭 ±1.3 mV)로 부호가 바뀐 뒤 ≈0.15 분에 0. 라벨 · 내용 온전. 캡션 필드 '9aec' = 9a–c · '9def' = 9d–f."
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 15,
+   "file": "fig_10.png",
+   "caption": "Fig. 10. Simulated diffusion coefﬁcients and ionic concentration proﬁles for three different cases: DLi4 < De\u0001 (a, b); DLi4 ¼ De\u0001 (c, d) and; DLi4 > De\u0001 (e, f). The insets in a, c, and e show the EMF voltage (black line), the measured voltage curve at 1C (symbols), and simulated voltage (blue line) curve at 1C. (For interpretation of the references to color in this ﬁgure legend, the reader is referred to the Web version of this article.)",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    60.7,
+    568.6,
+    335.2
+   ],
+   "w": 2218,
+   "h": 1144,
+   "dpi": 300,
+   "src": "e5b2203a-58._An_advanced_all-solid-state_Li-ion_battery_model.pdf",
+   "blank": 0.751,
+   "note": "봤다(래스터 2131×1094 · p. 15). 세 경우 D_Li⊕ < D_e⁻(a, b — 적합값) · D_Li⊕ = D_e⁻(c, d) · D_Li⊕ > D_e⁻(e, f) · 위 줄 D(x) + 삽도(EMF · 1C 측정 · 1C 모의) · 아래 줄 LiPON + LCO 농도 단면(방전 시작 · 중간 · 끝). 확대 판독: (a) 삽도 모의가 측정과 ≈0.248 에서 함께 3.0 V · (c) 삽도 모의 3.0 V 도달 ≈0.27 mAh cm⁻² · ★ (e) 삽도 모의 선이 ≈0.22 에서 꺾여 ≈0.246 mAh cm⁻² · ≈3.74 V 에서 끝남 — 3.0 V 컷오프에 닿지 않는다(측정 표지는 0.248 에서 3.0 V 까지). 캡션 필드 'Li4' · '\\x01' · '¼' = '='."
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 16,
+   "file": "fig_11.png",
+   "caption": "Fig. 11. (a) Measured (line with squares) and simulated (line with circles) battery impedance; (b) all individual simulated impedance contributions, including the total battery impedance (black); (c) enlargement of the smallest impedance contributions shown in (b).",
+   "rotated_deg": 0,
+   "bbox": [
+    26.8,
+    60.7,
+    289.9,
+    597.3
+   ],
+   "w": 1097,
+   "h": 2236,
+   "dpi": 300,
+   "src": "e5b2203a-58._An_advanced_all-solid-state_Li-ion_battery_model.pdf",
+   "blank": 0.932,
+   "note": "봤다(래스터 1033×2186 · p. 16). (a) 측정(파랑 네모) · 모의(검정 원) · 800 kHz · 10 mHz 화살 (b) 모의 성분 Z_s · Z_d^p · Z_ct^n · Z_bat · Z_mt^LiPON · Z_ct^p · Z_mt^p (c) 작은 성분 확대(두 축 같은 척도). `[도표·화소]`(표지 중심 — c 9.086 px / Ω cm² · b 1.562 · a 1.593) Z_s 18.25 · Z_ct^n 호 축 교차 ≈44.0 → 유도성 고리 최저 ≈(38.3, −3.4) → 끝(10 mHz) Z_re ≈35.6 · Z_ct^p 호 ≈67.3 · (b) Z_mt^LiPON 호 끝 ≈327 · Z_bat 극소 ≈457 · (a) 측정 꼭대기 ≈157 @Z_re ≈239 ↔ 모의 ≈171 @≈192. ⚠ 본문 p. 15 'Impedance measurements (blue) and simulations (red)' ↔ 그림의 모의는 검정(같은 쪽 다음 문단은 'simulated (black line)'). 캡션 필드 = 원문."
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 2,
+   "file": "tab_1.png",
+   "caption": "Table 1 List of abbreviations. Abbreviation Meaning AC Alternating current ASSB All-solid-state battery CCCV Constant current, constant voltage DC Direct current EMF Electromotive force LCO Lithium cobalt oxide LiPON Lithium phosphorus oxynitride MEMS Microelectromechanical systems NDP Neutron depth proﬁling n The negative electrode ODE Ordinary differential equation p The positive electrode PDE Partial differential equation",
+   "rotated_deg": 0,
+   "bbox": [
+    27.8,
+    42.9,
+    557.8,
+    749.5
+   ],
+   "w": 2210,
+   "h": 2945,
+   "dpi": 300,
+   "src": "e5b2203a-58._An_advanced_all-solid-state_Li-ion_battery_model.pdf",
+   "blank": 0.845,
+   "note": "봤다 — ⚠ 과대 영역: p. 2 쪽 전체(본문 두 단 + 그림 1 + 표 1)가 잡혔다 → 표 1 단독은 수동 tab_1_manual_p2.png. 캡션 필드에 표 1 글자 전부가 섞였다(원문 캡션은 'Table 1 List of abbreviations.' 뿐). 자동 파일은 지우지 않음."
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 3,
+   "file": "tab_2.png",
+   "caption": "Table 2 List of symbols. Symbol Description Dimension Di Diffusion coefﬁcient of species i m2s\u00011 i Diffusion scaling constants of species i m2s\u00011 D0 Ji Flux of species i mol m\u00012s\u00011 Ubat Battery voltage V U* bat Battery voltage without Ohmic losses V Ueq Voltage under equilibrium conditions V Uið ,Þ Equilibrium voltage function of electrode i V Uprim Primary voltage V Zbat Battery impedance U m2 ct Charge-transfer impedance electrode i U m2 Zi d Diffusion impedance positive electrode U m2 Zp mt Mass-transfer impedance electrolyte U m2 ZLiPON mt Mass-transfer impedance positive electrode U m2 Zp Zs Total Ohmic series impedance U m2 c0 Maximum concentration of lithium host sites in electrolyte mol m\u00013 dl Double layer capacity per unit area of electrode i F m\u00012 ci cgeo Geometric capacitance per unit area F m\u00012 ci Concentration of species i mol m\u00013 ci Average bulk concentration of species i m",
+   "rotated_deg": 0,
+   "bbox": [
+    37.5,
+    42.9,
+    561.6,
+    728.4
+   ],
+   "w": 2184,
+   "h": 2857,
+   "dpi": 300,
+   "src": "e5b2203a-58._An_advanced_all-solid-state_Li-ion_battery_model.pdf",
+   "blank": 0.946,
+   "note": "봤다 — ⚠ 과대 영역: p. 3 쪽 전체(쪽 머리 포함 · 표 2 가 쪽 대부분) → 표 2 단독은 수동 tab_2_manual_p3.png. 캡션 필드에 표 2 글자가 섞이고 900 자에서 잘렸다 · 텍스트 층 대체 문자('\\x01' = − · 'U m2' = Ω m²). 자동 파일은 지우지 않음."
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 8,
+   "file": "tab_3.png",
+   "caption": "Table 3 Model parameter values.",
+   "rotated_deg": 0,
+   "bbox": [
+    27.8,
+    42.9,
+    557.9,
+    751.1
+   ],
+   "w": 2210,
+   "h": 2952,
+   "dpi": 300,
+   "src": "e5b2203a-58._An_advanced_all-solid-state_Li-ion_battery_model.pdf",
+   "blank": 0.925,
+   "note": "봤다 — ⚠ 과대 영역: p. 8 쪽 전체(본문 · 식 (27)–(30.4) · 그림 3 · 표 3) → 표 3 단독은 수동 tab_3_manual_p8.png. 캡션 필드 'Table 3 Model parameter values.' 는 원문과 같다. 이 쪽 렌더로 식 (28.3) · (29.4) · (30.3) · (30.4) 부호를 읽었다. 자동 파일은 지우지 않음."
+  },
+  {
+   "key": "f2m",
+   "kind": "figure",
+   "label": "2",
+   "page": 6,
+   "file": "fig_2_manual_p6.png",
+   "caption": "Fig. 2. LiPON matrix with triply- and doubly-coordinated nitrogen (a). Movements of charged particles towards the interstitial space and by means of particle hopping, representing the main ionic conductivity mechanisms in LiPON (b).",
+   "rotated_deg": 0,
+   "bbox": [
+    74,
+    62,
+    512,
+    616
+   ],
+   "w": 1826,
+   "h": 2309,
+   "dpi": 300,
+   "src": "e5b2203a-58._An_advanced_all-solid-state_Li-ion_battery_model.pdf",
+   "blank": null,
+   "manual": true,
+   "note": "수동 — p. 6 렌더 300 dpi — 자동에서 빠진 그림 2(글자 · 선으로 된 벡터 도식 — 크로퍼가 영역을 못 잡음) 보충. 봤다. (a) 인산 사슬 · 교차 질소(N, 초록 — 3 배위 · 2 배위) · Li_o(빨강) (b) 'Li⁺ goes to interstitial'(빨강 점선) + 'Vacancy'(V 보라 원) · 'Li⁺ hopping to vacancy'(빨강 곡선) ↔ n⁻(하늘색 곡선) 반대 방향 · 범례 Active species · 'Chairs of Phosphates'(인쇄 그대로 — Chains 의 오기로 읽힘) · Cross-linking nitrogen · Vacancy · Uncompensated negative charge. 축 · 수치 0. 캡션은 크롭 바로 아래(p. 6) — 크롭 밖 · 캡션 필드는 원문 그대로 옮김."
+  },
+  {
+   "key": "t1m",
+   "kind": "table",
+   "label": "1",
+   "page": 2,
+   "file": "tab_1_manual_p2.png",
+   "caption": "Table 1 List of abbreviations.",
+   "rotated_deg": 0,
+   "bbox": [
+    300,
+    589,
+    556,
+    746
+   ],
+   "w": 1067,
+   "h": 655,
+   "dpi": 300,
+   "src": "e5b2203a-58._An_advanced_all-solid-state_Li-ion_battery_model.pdf",
+   "blank": null,
+   "manual": true,
+   "note": "수동 — p. 2 렌더 300 dpi — 표 1 단독(자동 tab_1 이 쪽 전체). 봤다. 약어 13: AC · ASSB · CCCV · DC · EMF · LCO · LiPON · MEMS · NDP · n · ODE · p · PDE."
+  },
+  {
+   "key": "t2m",
+   "kind": "table",
+   "label": "2",
+   "page": 3,
+   "file": "tab_2_manual_p3.png",
+   "caption": "Table 2 List of symbols.",
+   "rotated_deg": 0,
+   "bbox": [
+    38,
+    62,
+    566,
+    732
+   ],
+   "w": 2201,
+   "h": 2792,
+   "dpi": 300,
+   "src": "e5b2203a-58._An_advanced_all-solid-state_Li-ion_battery_model.pdf",
+   "blank": null,
+   "manual": true,
+   "note": "수동 — p. 3 렌더 300 dpi — 표 2 단독(자동 tab_2 가 쪽 머리 포함 전체). 봤다. ★ c^i_dl 'Double layer capacity per unit area of electrode i' F m⁻² · c_geo 'Geometric capacitance per unit area' F m⁻² · q^i_dl 'Charge per unit area in the double layer of electrode i' Ah m⁻² · A 'Geometrical surface area' m² · ρ_i 'Geometrical-area resistance of material i' Ω m² · D⁰_i 'Diffusion scaling constants' · β 'Common time- and space-dependent factor for the diffusion coefficients' · δ 'Fraction of Li in LiPON that resides in the mobile state' · K · N(Pt · Li 두께 — 값 0) · 임피던스 Ω m²(그림 11 은 Ω cm²) · 아래첨자 목록 'Li⁰'(본문 · 그림 2 는 Li_o)."
+  },
+  {
+   "key": "t3m",
+   "kind": "table",
+   "label": "3",
+   "page": 8,
+   "file": "tab_3_manual_p8.png",
+   "caption": "Table 3 Model parameter values.",
+   "rotated_deg": 0,
+   "bbox": [
+    300,
+    476,
+    556,
+    750
+   ],
+   "w": 1067,
+   "h": 1142,
+   "dpi": 300,
+   "src": "e5b2203a-58._An_advanced_all-solid-state_Li-ion_battery_model.pdf",
+   "blank": null,
+   "manual": true,
+   "note": "수동 — p. 8 렌더 300 dpi — 표 3 단독(자동 tab_3 이 쪽 전체). 봤다(지수 부호를 이 렌더로 확인 — 텍스트 층은 빼기를 빈칸 · U+0001 로 잃는다). 21 행 · 각주 a 'Identified by direct measurements.'(T 293 K · A 3.36 cm²) · b 'Measured with Scanning Electron Microscope.'(L 3.62 · M 8.08 µm) · c 'Predefined (non-optimized) parameters.'(α^p · α^n 0.5 · c^s_Li = c̄_Li 7.64·10⁴) · d 'Calculated from the EMF voltage curve.'(c^max 3.22·10⁴) · 무각주 13(k_r 8.00·10⁻⁷ · k₁ˢ 1.53·10⁻¹¹ · k₂ˢ 1.09·10⁻⁹ · D⁰_Li⊕ 1.21·10⁻¹³ · D⁰_e⁻ 5.06·10⁻¹³ · D_Li⁺ 1.73·10⁻¹⁶ · D_n⁻ 5.69·10⁻¹⁶ · c₀ 61141 · δ 0.64 · ρ_s 18.3 Ω cm² · c^p_dl 5.30·10⁻⁷ · c^n_dl 1.74·10⁻⁸ · c_geo 3.24·10⁻⁹ F cm⁻² — 본문 'The optimized model parameters are listed in Table 3')."
+  }
+ ]
+}

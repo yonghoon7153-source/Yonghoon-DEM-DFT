@@ -2,10 +2,10 @@
 title: "SPM 파라미터 묶음과 식별 집합 — 용량 스케일은 입력이고, LAM 과 입자 비연결은 같은 묶음에 든다"
 description: "Bizeray et al. 2019 reduce the single particle model to six parameter groups and, after linearisation, to three identifiable ones (two diffusion time constants and a lumped charge-transfer resistance); electrode capacity and initial stoichiometry - the degradation-mode axes - are assumed known through measured OCV slopes, so in this model class whole-particle disconnection enters exactly like active material loss and partial contact loss disappears into a lumped resistance"
 created: 2026-09-23
-updated: 2026-10-02
+updated: 2026-10-03
 type: concept
 tags: [battery, degradation, research]
-sources: [raw/papers/lu2022_nondestructive-eis-lumped-dfne-parameter-estimation.md, raw/papers/khalik2021_dfn-grouping-sensitivity-parameter-estimation.md, raw/papers/danilov2011_thin-film-assb-model-weak-electrolyte-parameter-fit.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode-si.md, raw/papers/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd-si.md, raw/papers/miss2022_exchange-current-density-tlm-thickness-lco-nmc-assb.md, raw/papers/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd.md, raw/papers/li2024_assb-composite-cathode-model-contact-area-edl.md, raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md]
+sources: [raw/papers/raijmakers2020_thin-film-assb-model-double-layer-dc-ac-joint-fit.md, raw/papers/lu2022_nondestructive-eis-lumped-dfne-parameter-estimation.md, raw/papers/khalik2021_dfn-grouping-sensitivity-parameter-estimation.md, raw/papers/danilov2011_thin-film-assb-model-weak-electrolyte-parameter-fit.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode-si.md, raw/papers/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd-si.md, raw/papers/miss2022_exchange-current-density-tlm-thickness-lco-nmc-assb.md, raw/papers/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd.md, raw/papers/li2024_assb-composite-cathode-model-contact-area-edl.md, raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -80,6 +80,10 @@ evidenceScope: multi-source-primary
 | 96호 Lu 2022 (⚠ 액체 EIS · DFNe 의 집약 모형(LPM) · 닫힌 꼴 소신호 TF) | `n̄e^r/ψ̄` · `κ̄D/ψ̄`(ψ̄ · n̄e^r · κ̄D 는 비로만) | `[인쇄]` "parameters ψ̄, n̄e^r, and κ̄D never appear alone; they always occur as ratios" — `[재현·대수]` 부록 계수(μ₁ ∝ 1/ψ̄ · μ₂ · τ₂ · Λ₃^s 는 비만)에서 (n̄e, ψ̄, κ̄D) → λ(·) 가 상쇄 · 이 표 식 50(곱으로만 들어가는 조합)과 같은 부류의 Plett 계보판(위 95호 셋째 행 `κ̂ p̂` 척도 대칭과 같은 꼴) — 저자는 비선형 시험(PSS 방전[7])으로 ψ̄ 를 따로 잡는다("nonlinearly identifiable but not linearly identifiable" — 증명은 인용 Ref. 2) |
 | 96호 | `R_c` ↔ `1/κ̄^s`(옴 직렬 합) | `[인쇄]` "the impact of R_c and 1/κ̄^s on the full-cell impedance are identical; i.e., they cannot be separated in any linear way" — 곱이 아니라 **합** 축퇴 · `[해석]` R̄f^n 도 같은 직렬 골짜기(같은 모형 합성 전체 집합에서 R_c +0.64 ↔ R̄f^n −≈0.6 mΩ `[도표·화소]` · 판독 폭 ±0.3) · 예외 1(`β = 0`)과 달리 관측 이득이 아니라 회로 위치가 0 을 만든다 |
 | 96호 | 입력 `Q` · `θ0^r` · `θ100^r`(OCV · 방전 시험[4 · 5]) · 출력 `C̄dl^r` · `k̄0,j^r` | 원전(28호)과 **같은 쪽 끝** — 용량 스케일 · 창은 입력이고 소신호 EIS 는 그 위에서 동역학 · 이중층을 읽는다. 다만 LPM 의 `C̄dl^r`(a_sALC_dl — 식 [1]) · `k̄0,j^r`(전극 전체 교환율 — R̄ct = RT/(F²Σṅ̄0,j))가 **둘 다 활성 계면 면적에 비례** — `[해석·대수]` 면적 손실은 둘을 같은 비율로(`k̄0/C̄dl` 불변) · 순수 k₀ 손실은 `k̄0` 하나 — 아래 DFN 판 표의 `k̂₀ × A_eff` · `R̂_f ÷ A_eff` 와 같은 "둘째 서명" 이 소신호 채널에 있다(단 전극 배정 = τ 순서 가정 · C̄dl = CPE 계수 n_dl 0.90–0.92 · 노화 0) |
+| 98호 Raijmakers 2020 (ASSB 박막 · 91호 계보 2020 판 · DC + AC 한 벌 적합) | ρ_Pt ↔ ρ_Li(직렬 옴 합) | `[인쇄]` "Since ρPt and ρLi cannot be separately identified, they are replaced by ρs = ρPt + ρLi" — 96호 R_c ↔ 1/κ̄^s 와 같은 **합** 축퇴를 저자가 스스로 묶은 계보 첫 문장 · 회로 위치가 0 을 만든다(예외 1 과 다른 기구) |
+| 98호 | D⁰_Li⊕ · D⁰_e⁻(공통 β(x) — 비 상수) | `[재현·대수]` 모형이 보는 것은 D⁰_p = 2D_Li⊕D_e⁻/(D_Li⊕+D_e⁻)(벌크)와 경계 분배 t_e = D_e⁻/(D_Li⊕+D_e⁻)(식 30.3 · 30.4) 두 조합 · t_e 를 보는 관측(η^p_mt · 농도 단면)은 작은 몫(4C ≈−4 mV `[도표·화소]`) — 26호 `D_e⁻` 10 자릿수 표류(위 26호 행 '0 열')가 이 편 값(5.06×10⁻¹³ · t_e 0.807)에서 t_e → 1 극한으로 간 자리 |
+| 98호 | 숨은 면적 인자 × (k₁ˢ · k₂ˢ) · × (c^p_dl · c^n_dl) | 전류 · 축전기 모두 **기하 면적당** — `[해석·대수]` 면적 인자 f_A 가 k(→ i₀)와 c_dl 에 같은 배수로 곱해져 R_ct·C_dl 면적 불변 · 소신호 EIS 에서 '면적 채널' 이 둘째 서명이 되려면 c_dl 이 실제 계면에 비례한다는 truth 전제가 필요(96호 셋째 행 · DFN 판 `k̂₀ × A_eff` 와 같은 꼴 · 이 편은 면적 하나 · 열화 0) |
+| 98호 | c_max = EMF 용량 ÷ (F·A·M·Δx 0.5) | 이 표 `Q_th` 자리(용량 스케일)를 **같은 율 묶음 외삽 EMF 의 용량으로 고정**(각주 d · `[재현]` 3.222×10⁴) — 91호 a_max 와 같은 "용량 스케일은 입력" 선택 · 26호가 이것을 적합 변수로 바꿔 ×1.05(위 26호 `D·a_max` 행) |
 
 ## ★ DFN 판 (2026-10-02, 95호 Khalik 2021 — ⚠ 액체 · 도구)
 
@@ -112,6 +116,7 @@ evidenceScope: multi-source-primary
 - 입자 비연결 ≡ LAM 은 **묶음 대수**다. 비연결 입자가 느리게라도 방전되는 부분 연결은 이 표 밖이다.
 - **DFN 판(95호)의 `u` ≈ `LAM_PE` 는 범위 선택(`R̂_f,p` [0, 0]) 위의 묶음 대수다** — 이 편은 열화 · 접촉을 다루지 않고, 남은 척도 대칭 · `α_c` 가정은 인쇄 식 위의 `[재현·대수]` 이다(저자 툴박스 이산화 미확인).
 - **96호의 `C̄dl` · `k̄0` 면적 서명도 모형 정의(식 [1] · 그림 1) 위의 대수다** — 그 편은 노화 · 접촉을 다루지 않았고, 전극 배정이 τ 순서 가정이며 C̄dl 이 CPE 계수라 면적 비례가 n_dl 과 섞인다. 비 구조의 척도 불변은 부록 계수 위의 `[재현·대수]` 다.
+- **98호의 행들은 인쇄 식 위의 대수다** — 그 편은 식별성 계산을 하지 않았고(ρ 문장 하나), 면적 인자는 모형에 없는 변수(우리 `[해석·대수]`)이며, 경계 분배의 관측 감도는 판독 몫(η^p_mt ≈−4 mV `[도표·화소]`) 수준의 근거다.
 
 ## 관련
 
