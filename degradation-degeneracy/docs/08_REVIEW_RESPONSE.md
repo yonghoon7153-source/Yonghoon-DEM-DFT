@@ -8937,3 +8937,25 @@ class/투영 게시 · requirements 상한 (§13-7 보류 그대로 — 사전 �
 
 **절차:** RED (`tests/test_gate88_fit_only_lifecycle.py` — 격리 원장 · 비-smoke 출력 · 실제 입력 묶음 digest) → 최소 GREEN → 변이
 `-g88` → 영수증 history 보존 + 1 회 재생성 → 전체 회귀 · smoke · 등록부 전체 변이 재생 → GATE88 요청문.
+
+## §130 88차 요청 — **G87-N1 한정 보완** 결과 (v6 fit-only claim 의 phase 계약 · 라운드 2b 종결 재요청 · 실행 GO 아님) · 판정 대상 `e462a3d19`
+
+**승인 → 고정 → 구현 순서 (§129):** 고정 표 §14 커밋 `00ed85b44` (코드 변경 전) → RED `tests/test_gate88_fit_only_lifecycle.py` 16 node
+(9 failed / 7 passed — f01_01 의 traceback 이 G87-N1 실행 재현: `commit_run_outputs` 뒤 `_record_phase(claim, "fit")` 거부) → 증인 고정
+`5cdf22bea` → GREEN `e462a3d19` (RUN_SCOPE 2 파일 `tools/preserve.py` · `src/fitting.py` · source_digest `864edfb73b9695a1` →
+`7dd546baaee9e823`) → history `8adb3bb41` → 변이 16 + EXPECT `12a2c27be` → 영수증 `38522285f` (paired 35 · grid 34 · identity 줄만)
+→ 발송 전 자체 점검 고정 `07aefea11` (node 8 · 변이 5 — GREEN 의 fail-closed 분기 넷 + v2 receipt 불변 · 생산 코드 불변).
+
+| 항목 | 결과 |
+|---|---|
+| G87-N1 | v3 계획 + 밖 입력 hex64 → claim 이 `phases_required: ["fit"]` 를 봉인 (spec 에서 유도) · fit receipt 가 staged 묶음 (`input_package_digest` + `inputs`) 을 결속 · `consumed = {"external_input": …}` · finalize 가 계획 `fit.in_digest` 와 재대조 + 집합 재유도 → 비-smoke 실물 lifecycle 로 `executed` (f01_01) · 재개 (f04_01) |
+| v2 불변 | 순서 · consumed · finalize 규칙 · claim 키 · fit receipt 바이트 (f00_01–06) · 순서 검사는 기존 변이 `phase-order-is-enforced-g59` 앵커 그대로 |
+| 음성 | v3 + null → index 거부 · 다른 묶음 · 곡선 단독 sha · 결속 누락 · 자기모순 · inputs 닫힘 (키 · hex64) · `phases_required` 값 위조 · consumed / receipt 변조 · 다른 attempt · v2 claim 키 끼우기 |
+| 변이 `-g88` | 21 (16 + 자체 점검 5) · 단독 대조 **21/21 · rc 0** |
+| 전체 회귀 (`07aefea11` clean) | pytest **2133 passed / 1 xfailed / rc 0** (54:14) · smoke **rc 0** (2:30) |
+| 등록부 전체 재생 (`07aefea11`) | **395/395 call 단계에서 물었다 · rc 0** (scenario 406 · site 444 · 2:30:49) |
+| 자체 신고 | 요청문 §6 a–l (증인 고정 · 자체 점검 고정 · §14-2 e 등가 표현 · spy 서명 · 탐침 오염 · 변이 회차 3 baseline 충돌 · 계약 인용 좌표 · §14-2 a 커밋 전 정정 · 한 바이트 음성의 위치 · finalize 등가 방어 · docs-lint 시간 상한 · 재생 도중의 작업 트리) |
+
+**요청:** `docs/22p_gap/GATE88_REQUEST.md` · 증거 `docs/22p_gap/gate88_evidence/` (README 전체 sha256). **아님:** 실행 GO · 새 연구 leg ·
+운영 원장 v6 계획 항목 · 세대표 등록 · p_ini · class 변경 · 투영 게시 · requirements (pybamm 고정 — 게이트 차수 밖 사전 검토 회신 접수
+`docs/22p_gap/PYBAMM_PIN_PREREVIEW_REPLY_20261003.md` · G87-N1 종결 뒤 별도 라운드 · 사용자 결정).
