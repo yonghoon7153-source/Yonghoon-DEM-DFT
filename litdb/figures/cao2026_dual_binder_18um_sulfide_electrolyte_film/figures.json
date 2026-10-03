@@ -289,6 +289,28 @@
    "blank": 0.948
   },
   {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 10,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. Raman spectra of pristine LPSCl, LPSCl-PTFE precursor film, and USF.",
+   "rotated_deg": 0,
+   "manual_crop": "tool reported fS10 as a number gap ('p10 그래픽 없음(img0/draw3)') — S10 is a vector-only plot (no raster) ABOVE its caption on SI p.10, below the S9 caption; clip = union of vector drawings (209.8,554.6,392.3,704.5) and axis/legend text spans (194.9..399.2, 554.6..730.7) + 2 pt (2026-10-03, litdb-curator)",
+   "bbox": [
+    192.9,
+    552.6,
+    401.2,
+    732.7
+   ],
+   "w": 869,
+   "h": 751,
+   "dpi": 300,
+   "src": "Cao 2026 - Sup) Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533) SI.pdf",
+   "blank": 0.926,
+   "viewed": true
+  },
+  {
    "key": "fS11",
    "kind": "figure",
    "label": "S11",
@@ -636,7 +658,8 @@
    "skipped": [
     "p10 그래픽 없음(img0/draw3)"
    ],
-   "near_miss": []
+   "near_miss": [],
+   "resolved": "manual_crop fig_S10.png (2026-10-03, litdb-curator) - see figures[fS10].manual_crop"
   }
  ]
 }
