@@ -1,0 +1,21 @@
+{
+  "commit": "087d1a07c91b956a7f6ac47207eb6daa86d14e21",
+  "created_at": "2026-07-09T05:47:16Z",
+  "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/commit/087d1a07c91b956a7f6ac47207eb6daa86d14e21",
+  "code_introduction": [
+    {
+      "path": "scripts/mpm_webapp_payload.py",
+      "added_lines": [
+        "+    ap.add_argument('--sigma-vgcf', type=float, default=100.0, help='σ_e VGCF (S/cm) — lit order ⚠hook')"
+      ]
+    },
+    {
+      "path": "scripts/step3_sigma.py",
+      "added_lines": [
+        "+      VGCF 100 · SuperP 10      ⚠ literature order-of-magnitude hooks (graphitic fibre / CB compact)",
+        "+SIGMA_DEFAULT = {'AM_S': 0.010, 'AM_P': 0.005, 'VGCF': 100.0, 'SuperP': 10.0, 'SDCP': 0.010}"
+      ]
+    }
+  ],
+  "limitation": "Establishes original default and its declared hook status, not a measurement of its physical contact contribution or a full audit of subsequent literature history."
+}

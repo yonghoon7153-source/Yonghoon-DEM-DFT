@@ -1,5 +1,11 @@
 # Codex 검토 요청 — ① 계면 저항 `r_int` (STEP3 복셀 솔버): 구현 · 자기리뷰 결함 검증 · P2-1 접촉 면적 규약 · ② 설계 전 (2026-10-03)
 
+> ⛔ **Codex 판정 (10-03) = G1 HOLD · G2 HOLD** — 판정문 `docs/reviews/codex_review_rint_stage1_20261003.md` · 증거 `docs/reviews/codex_rint_stage1_review_evidence_20261003/` ·
+> 원장 `RINT-01`~`20` · 우리 재현 결정값 차이 0.  이 요청서에서 판정으로 **철회**되는 서술 (본문은 발송본 그대로 둔다):
+> ① §4 표 (b) 행 *"면 수 · 방향 · 위치 오류를 한꺼번에 (접촉 단위 총량을 맞추므로)"* — 위치는 안 닫힌다 (`RINT-06`: 같은 Σg_film 에서 σON/σOFF 0.6241 vs 0.6474) ·
+> ② §5 · §6 의 *"σ_VGCF 100 = 분말값 (접촉 lumping) → 단섬유값으로 바꾸면 이중계상이 없다"* — 100 은 도입 때 hook 이고 이중계상 크기 · 분해는 미식별 (`RINT-10`).
+> 제안 처방 중 P2-3 (규칙 J rint-ON 팔 · "model≠None 이면 대조") 은 wetted/bare 변이를 놓친다 (`RINT-02`).
+
 > **성격** — 코드 리뷰 + 설계 결정 리뷰.  ① 은 10-02 에 기본 OFF 기구로 들어갔고, 같은 날 밤 적대 자기리뷰가 ② 진입 전 수정 목록을 냈다
 > (`docs/reviews/rint_selfreview_summary_20261002.md`).  원래 계획은 *"Codex 리뷰는 ①~⑥ 뒤 한 번 (지금 Codex 부재)"* 이었다
 > (`docs/voxel_contact_free_gap.md` §8).  1저자 결정 (10-03, *"권고대로"*): **P2-1 결정과 ② 설계 전에 Codex 한 번**.  발송 = 1저자.

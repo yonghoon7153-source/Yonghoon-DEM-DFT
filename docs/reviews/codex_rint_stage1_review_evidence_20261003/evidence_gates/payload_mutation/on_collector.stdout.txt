@@ -1,0 +1,18 @@
+loaded 729 SE pts from C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\rint_stage1_review_20261003\evidence_gates\payload_mutation\se.npy
+  void (pore) cloud: 5,480 of 5,480 internal-pore voxels (below global top z=51/54; headspace+empty cols dropped; raw void 190,888)
+  ⚠⚠ 메쉬 생략 — scikit-image 없음 (No module named 'skimage').  σ/수송 결과는 **영향 없다**; 브라우저 표면만 빠진다.  매니페스트에 mesh_unavailable 로 기록된다.
+  SE surface: 0 triangles (n_vox=64, step=3)
+  SE morphology points: 729 (#4b 2D 단면 morphology)
+  econn: 100.0% AM connected to the collector (0 isolated; 0 carbon clusters)
+  입력 digest 43598b86f72bbb63 (2 파일) — CDXIJ-10 ③
+  STEP3: voxelizing conductive+SE grid (풀해상도 — 이후 전자/이온 CG 솔브, 침묵 수 분 정상)…
+    STEP3 solve: 14,364 dof, plate contacts 108/108 — CG running (CPU, 수 분 소요 가능)…
+  STEP3 σ_e_eff = [봉인 — --show-results 로 열림] S/cm  (vox 1.0µm, 14,364 dof, resid 9.6e-09, 0s)
+  STEP3 collector scenarios(cycled): bulk [봉인 — --show-results 로 열림] → [봉인] S/cm  (R_bulk [봉인 — --show-results 로 열림] Ωcm² [봉인])
+  STEP3 collector PRISTINE(시간-일관, panel-e≈): [봉인] S/cm  (위 cycled 세트=aged-접촉 민감도)
+    STEP3 solve: 14,364 dof, plate contacts 36/108 — CG running (CPU, 수 분 소요 가능)…
+    STEP3 solve: 14,364 dof, plate contacts 36/108 — CG running (CPU, 수 분 소요 가능)…
+  STEP3 collector geometry (MODEL output): wetted [봉인 — --show-results 로 열림] (36 contacts) vs bare [봉인 — --show-results 로 열림] S/cm (36) → R_geom [봉인] Ωcm² (측정 R_int와의 갭 = 화학/열화 몫)
+  STEP3: --no-ion — 이온 솔브 건너뜀 (σ_e 전용).  σ_ion·τ_full·Track-B 는 이 payload 에 **없다**
+  STEP3: --no-pore — pore-τ·PNM 건너뜀 (σ_e 전용)
+saved C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\rint_stage1_review_20261003\evidence_gates\payload_mutation\on_collector.json  (0.4 MB)  porosity 86.3% · SE/solid 0.0% · thickness 41.5µm · coverage(@0.13/0.26µm) AM_P plastic 0/0% · 63 AM · 0 SE tris (n_vox=64)  [voxel-preview por/SE/cov 86/0/0% vary with n_vox — not reported]

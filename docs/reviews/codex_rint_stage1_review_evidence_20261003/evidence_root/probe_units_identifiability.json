@@ -1,0 +1,189 @@
+{
+  "source_verification": [
+    {
+      "path": "scripts/step3_sigma.py",
+      "git_blob_sha1": "da2e2864192b1ba115bdac84dc84e70d7d75890e",
+      "sha256": "e98a713382e060a80b4f005bc8fc6d0e7042eb28e4559f0d6ccd4aa9b6f3bd28",
+      "matches_pinned": true
+    },
+    {
+      "path": "scripts/mpm_webapp_payload.py",
+      "git_blob_sha1": "8a8ae88972a382dd93dc19e8cf87eed1d8d5424e",
+      "sha256": "3fc01291846655002a2e6e98309e06778dcf3810959499c1982837b4b1071d33",
+      "matches_pinned": true
+    },
+    {
+      "path": "scripts/check_method_discipline.py",
+      "git_blob_sha1": "c10d36b5c3549a3f30a0bcb94913a8279968c0db",
+      "sha256": "f8df5c5cc0a51be36f467a8c6f24557e1cea8d50e56d53c5f280326d4f57c74a",
+      "matches_pinned": true
+    },
+    {
+      "path": "docs/reviews/rint_selfreview_summary_20261002.md",
+      "git_blob_sha1": "65734d5d482ba0ed5ae4d0e6d18d4fdc6de8f4e8",
+      "sha256": "82d25061e88ab465651a7f6d0f24b234f951179304bbc317f0348effa736bb92",
+      "matches_pinned": true
+    },
+    {
+      "path": "docs/reviews/contact_resistance_pipeline_draft_20261002.md",
+      "git_blob_sha1": "7126f5980318e0f359cb62366adceb594062b9f4",
+      "sha256": "9a10447c8f065dc8be178a8c76307ac6d11b54af802971fa4505fbc760b45ffd",
+      "matches_pinned": true
+    },
+    {
+      "path": "docs/reviews/codex_rint_stage1_request_20261003.md",
+      "git_blob_sha1": "beb48f611310bdf55e4d0160e63fb2095283fa48",
+      "sha256": "4ddfd77b86b9436317a8637c4f8f0ffb1f6180ef794e1d5f068ae661d286d9a0",
+      "matches_pinned": true
+    },
+    {
+      "path": "docs/voxel_contact_free_gap.md",
+      "git_blob_sha1": "6cfd031b114d3c4341e51125c46c2bb31b801b0d",
+      "sha256": "ae4647291198424ce86f11f3f5dc2227ce3d82707e6a728f662d4935fe34a99a",
+      "matches_pinned": true
+    },
+    {
+      "path": "docs/reviews/codex_rint_stage1_request_20261003/probe_p1_pid_inherit.py",
+      "git_blob_sha1": "cdf1a5b0fe82e205e0c92ea81a99b5ff698fed4a",
+      "sha256": "71e7f8535cd0c059792e32dc83bd3e36da2d71ade63bafa413ee198b1236e9b1",
+      "matches_pinned": true
+    },
+    {
+      "path": "docs/reviews/codex_rint_stage1_request_20261003/probe_p21_face_area.py",
+      "git_blob_sha1": "f2a47d44309482856f7e625b0c008c26242b3724",
+      "sha256": "ee43e315ad68d86f95be7cc15cd4327a655ee1c261a521d38163968cde7e0269",
+      "matches_pinned": true
+    },
+    {
+      "path": "docs/reviews/codex_rint_stage1_request_20261003/probe_p22_cli.py",
+      "git_blob_sha1": "c9018327fd6e94666eee9df2b17442f0651f9f7b",
+      "sha256": "7a7cf2d23216468a15ff74cedeb3bd7619a39f1f25c79ff08e0a7d510e7a13b4",
+      "matches_pinned": true
+    },
+    {
+      "path": "docs/reviews/codex_rint_stage1_request_20261003/probe_outputs.txt",
+      "git_blob_sha1": "31d2eae39f43dbbda16b92f9b6b88d2509e3fa28",
+      "sha256": "c8a71f29a2fe96dfe07f94149651445d72c9e3988c666039d8644bebfe6a5c21",
+      "matches_pinned": true
+    },
+    {
+      "path": "scripts/se_material.py",
+      "git_blob_sha1": "6052f8d26f918d29ded383ff8bcb17e4ccc1a648",
+      "sha256": "b79da2232c4a6748ad0b157dd1d6520b8da72e9cb21b9667b2e2ba84194a25f0",
+      "matches_pinned": true
+    },
+    {
+      "path": "scripts/run_contract.py",
+      "git_blob_sha1": "d335a9e6d609716620a998cfe88b5af1405d018d",
+      "sha256": "846835a9f8afe6a5cd316a00bce67716fd0108daa43463313f1a543e82b924b6",
+      "matches_pinned": true
+    },
+    {
+      "path": "scripts/fibre_segment_raster.py",
+      "git_blob_sha1": "c117c51152e85b55d23cd1425c4d8e5e25542928",
+      "sha256": "e2e94d3b955bfdb87446be03a2134d57546714d20ab3e460fd2c4edfd0eab0f0",
+      "matches_pinned": true
+    },
+    {
+      "path": "scripts/viz_mpm_continuum.py",
+      "git_blob_sha1": "9847106afb693e3c280988716382b60e1deb27ad",
+      "sha256": "0e117ea05ad8856206a1c137fb4e205d6b6c6ad848235589fce108d75e4510c5",
+      "matches_pinned": true
+    },
+    {
+      "path": "scripts/step4_dyn.py",
+      "git_blob_sha1": "db069b3d99e6683d421f10f904e03c6b02634ca6",
+      "sha256": "828a6d0c1aef7b40834fc162db5a234694aa49b933accbbe961f931ac60f7031",
+      "matches_pinned": true
+    },
+    {
+      "path": "scripts/sdcp_gain_verdict.py",
+      "git_blob_sha1": "59fe1e4d3acb6b42319ef3b18c9bb963cceb7278",
+      "sha256": "125343a6df88efce446ab08d0059d7f4bd16cc77c4a43b4f25174dfbb8c76927",
+      "matches_pinned": true
+    },
+    {
+      "path": "scripts/sdcp_gain_vox015_8arm.sh",
+      "git_blob_sha1": "9dbd1d4583a0e03337a0a7353532035fbf72118e",
+      "sha256": "7debc8b7a7d681561b43119d016f8f72dc0e51d866146c30a8dcaab3008920cb",
+      "matches_pinned": true
+    },
+    {
+      "path": "webapp/static/js/viewer3d.js",
+      "git_blob_sha1": "93fd582a3b713c1abb70fc207a1cba954c003d95",
+      "sha256": "2398962d23ee3151a86f24d68819e17df07f2c4bb8839de599f9478734a31c80",
+      "matches_pinned": true
+    },
+    {
+      "path": "scripts/network_conductivity.py",
+      "git_blob_sha1": "2e0c4a47721cd8593b039fe1e189419bbb2eea64",
+      "sha256": "73071748a2645339cda513ad34daf63ec83aca0ae83a37a656648da28b31c0a0",
+      "matches_pinned": true
+    },
+    {
+      "path": "scripts/sr01_stamp_compare.py",
+      "git_blob_sha1": "f4dad220d5614abf4413dbf106c5f6af36d16b67",
+      "sha256": "486b7e40a074e73b024b6b2e763516d5f3ea3ea9eda1fe91d7adb896db3cf13d",
+      "matches_pinned": true
+    },
+    {
+      "path": "docs/reviews/tau_conventions_judgment_v2_20261003.md",
+      "git_blob_sha1": "670c4e5539d93cc14340292881f4625bfb11e42c",
+      "sha256": "98037925ba3ec369b3382f1d6974e8a0a9b35ff0b437b30095c290a2b856b867",
+      "matches_pinned": true
+    },
+    {
+      "path": "AGENTS.md",
+      "git_blob_sha1": "2829b46196a08ffae439ddbdc20dc093cde511c4",
+      "sha256": "38b8708ba8a50c8a08819c7c4138763bce02b6dc6c5b8112f4c8aa386fb17ec3",
+      "matches_pinned": true
+    }
+  ],
+  "junction_units": [
+    {
+      "Rj_ohm": 100,
+      "n_faces": 1,
+      "vox_um": 1,
+      "draft_literal_r_ohm_cm2": 100,
+      "converted_r_ohm_cm2": 1e-06,
+      "correct_G_S": 0.009999990000010001,
+      "literal_G_S": 9.999999999999901e-11,
+      "resistance_inflation": 99999900.000101,
+      "expected_G_with_bulk_half_cells_S": 0.00999999000001
+    },
+    {
+      "Rj_ohm": 1000,
+      "n_faces": 4,
+      "vox_um": 0.15,
+      "draft_literal_r_ohm_cm2": 90.0,
+      "converted_r_ohm_cm2": 9.000000000000001e-07,
+      "correct_G_S": 0.0009999998333333612,
+      "literal_G_S": 9.999999999999985e-12,
+      "resistance_inflation": 99999983.33333626,
+      "expected_G_with_bulk_half_cells_S": 0.000999999833333361
+    }
+  ],
+  "identifiability": {
+    "note": "Synthetic 1D identifiability example; not fitted material values.",
+    "L_um": 100.0,
+    "A_um2": 100.0,
+    "interfaces": 10,
+    "rows": [
+      {
+        "grain_sigma_S_cm": 0.003,
+        "per_boundary_r_ohm_cm2": 0.0,
+        "recovered_effective_sigma_S_cm": 0.003
+      },
+      {
+        "grain_sigma_S_cm": 0.006,
+        "per_boundary_r_ohm_cm2": 0.16666666666666669,
+        "recovered_effective_sigma_S_cm": 0.0029999999999999996
+      },
+      {
+        "grain_sigma_S_cm": 0.03,
+        "per_boundary_r_ohm_cm2": 0.3,
+        "recovered_effective_sigma_S_cm": 0.003
+      }
+    ]
+  }
+}

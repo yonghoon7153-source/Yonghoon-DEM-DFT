@@ -1,0 +1,14 @@
+      · J 스모크 [plain  (--fibre 없음 = 첨가제 없는 킷)] 실행 중 … (상한 900s — 느린 기계에서는 수 분 걸린다)
+        완료 1s
+  ✓ plain  (--fibre 없음 = 첨가제 없는 킷) — electronic=complete, collector_geom=complete, ionic=disabled, thermal=complete, pore=disabled, pnm=disabled
+      · J 스모크 [fibre  (--phase/--fibre 있음 = 첨가제 킷)] 실행 중 … (상한 900s — 느린 기계에서는 수 분 걸린다)
+        완료 1s
+  ✓ fibre  (--phase/--fibre 있음 = 첨가제 킷) — electronic=complete, collector_geom=complete, ionic=disabled, thermal=complete, pore=disabled, pnm=disabled
+      · J 스모크 [lean2  (러너 LEAN=2 = σ_e 전용 생산 경로)] 실행 중 … (상한 900s — 느린 기계에서는 수 분 걸린다)
+        완료 1s
+  ✓ lean2  (러너 LEAN=2 = σ_e 전용 생산 경로) — electronic=complete, collector_geom=disabled, ionic=disabled, thermal=disabled, pore=disabled, pnm=disabled
+  ✓ producer → check_arm — 실제 산출물을 그대로 받아들인다
+  ✓ producer 봉인 — 기본은 값을 가리고 `--show-results` 로 열린다
+  ✓ exit3  (required electronic 미완 — 도체 σ=0) — exit 3 · out 없음 · .failed 있음
+  ✓ exit4  (물리 규약 불일치) — exit 4 · out 없음 · .failed 있음
+([], [])

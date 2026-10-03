@@ -1,0 +1,121 @@
+{
+  "off": {
+    "exit": 0,
+    "seconds": 0.9169733000453562,
+    "command": [
+      "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "-u",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint_stage1_review_20261003\\source\\scripts\\mpm_webapp_payload.py",
+      "--scaffold",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint_stage1_review_20261003\\evidence_gates\\payload_mutation\\am.csv",
+      "--se",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint_stage1_review_20261003\\evidence_gates\\payload_mutation\\se.npy",
+      "--n-vox",
+      "64",
+      "--step3-vox",
+      "1.0",
+      "--no-ion",
+      "--no-pore",
+      "--no-thermal",
+      "--no-trackb",
+      "--no-field",
+      "--no-collector",
+      "--no-step4",
+      "--out",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint_stage1_review_20261003\\evidence_gates\\payload_mutation\\off.json"
+    ],
+    "sigma_e": 0.001049433228717753,
+    "interface_model": null,
+    "table": null,
+    "faces": null,
+    "J_smoke_assert_errors": [],
+    "J_smoke_assert_warnings": []
+  },
+  "on": {
+    "exit": 0,
+    "seconds": 0.9129286999814212,
+    "command": [
+      "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "-u",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint_stage1_review_20261003\\source\\scripts\\mpm_webapp_payload.py",
+      "--scaffold",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint_stage1_review_20261003\\evidence_gates\\payload_mutation\\am.csv",
+      "--se",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint_stage1_review_20261003\\evidence_gates\\payload_mutation\\se.npy",
+      "--n-vox",
+      "64",
+      "--step3-vox",
+      "1.0",
+      "--no-ion",
+      "--no-pore",
+      "--no-thermal",
+      "--no-trackb",
+      "--no-field",
+      "--no-collector",
+      "--no-step4",
+      "--step3-rint-e",
+      "AM_S|AM_S=0.001",
+      "--out",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint_stage1_review_20261003\\evidence_gates\\payload_mutation\\on.json"
+    ],
+    "sigma_e": 0.0010352120036449418,
+    "interface_model": "r1-phase-boundary-series",
+    "table": {
+      "AM_S|AM_S": 0.001
+    },
+    "faces": {
+      "electronic": {
+        "model": "r1-phase-boundary-series",
+        "unit": "ohm_cm2",
+        "table": {
+          "AM_S|AM_S": 0.001
+        },
+        "pid_used": true,
+        "n_faces_rint": 3816,
+        "faces_by_pair": {
+          "AM_S|AM_S": 3816
+        }
+      }
+    },
+    "J_smoke_assert_errors": [],
+    "J_smoke_assert_warnings": []
+  },
+  "mutant_on": {
+    "exit": 0,
+    "seconds": 0.9997743999119848,
+    "command": [
+      "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "-u",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint_stage1_review_20261003\\evidence_gates\\probe_payload_mutation.py",
+      "--mutant-child",
+      "--scaffold",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint_stage1_review_20261003\\evidence_gates\\payload_mutation\\am.csv",
+      "--se",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint_stage1_review_20261003\\evidence_gates\\payload_mutation\\se.npy",
+      "--n-vox",
+      "64",
+      "--step3-vox",
+      "1.0",
+      "--no-ion",
+      "--no-pore",
+      "--no-thermal",
+      "--no-trackb",
+      "--no-field",
+      "--no-collector",
+      "--no-step4",
+      "--step3-rint-e",
+      "AM_S|AM_S=0.001",
+      "--out",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint_stage1_review_20261003\\evidence_gates\\payload_mutation\\mutant_on.json"
+    ],
+    "sigma_e": 0.001049433228717753,
+    "interface_model": "r1-phase-boundary-series",
+    "table": {
+      "AM_S|AM_S": 0.001
+    },
+    "faces": null,
+    "J_smoke_assert_errors": [],
+    "J_smoke_assert_warnings": []
+  },
+  "source_sha256": "3fc01291846655002a2e6e98309e06778dcf3810959499c1982837b4b1071d33"
+}

@@ -1,0 +1,272 @@
+{
+  "on_collector": {
+    "exit": 0,
+    "seconds": 1.0719818999059498,
+    "command": [
+      "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "-u",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint_stage1_review_20261003\\source\\scripts\\mpm_webapp_payload.py",
+      "--scaffold",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint_stage1_review_20261003\\evidence_gates\\payload_mutation\\am.csv",
+      "--se",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint_stage1_review_20261003\\evidence_gates\\payload_mutation\\se.npy",
+      "--n-vox",
+      "64",
+      "--step3-vox",
+      "1.0",
+      "--no-ion",
+      "--no-pore",
+      "--no-thermal",
+      "--no-trackb",
+      "--no-field",
+      "--no-step4",
+      "--step3-rint-e",
+      "AM_S|AM_S=0.001",
+      "--out",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint_stage1_review_20261003\\evidence_gates\\payload_mutation\\on_collector.json"
+    ],
+    "sigma_e": 0.0010352120036449418,
+    "interface_model": "r1-phase-boundary-series",
+    "table": {
+      "AM_S|AM_S": 0.001
+    },
+    "faces": {
+      "electronic": {
+        "model": "r1-phase-boundary-series",
+        "unit": "ohm_cm2",
+        "table": {
+          "AM_S|AM_S": 0.001
+        },
+        "pid_used": true,
+        "n_faces_rint": 3816,
+        "faces_by_pair": {
+          "AM_S|AM_S": 3816
+        }
+      }
+    },
+    "collector": {
+      "mode": "analytic_gap_v3 (bare gap≤0.10µm / wetted gap≤0.30µm — exact sphere/point z)",
+      "wetted_sigma_S_cm": 0.0009487,
+      "bare_sigma_S_cm": 0.0009487,
+      "R_geom_ohm_cm2": 0.0,
+      "n_bottom_contacts": {
+        "wetted": 36,
+        "bare": 36,
+        "canonical_plate": 108
+      },
+      "note": "MODEL OUTPUT (emergent): contact SELECTION analytic (no voxel blur); coupling conductance voxel-scale.  R_geom = L(1/σ_bare − 1/σ_wetted); measured R_int − R_geom = chemistry/degradation share"
+    },
+    "J_smoke_assert_errors": [],
+    "J_smoke_assert_warnings": []
+  },
+  "mutant_wetted": {
+    "exit": 0,
+    "seconds": 1.16252509993501,
+    "command": [
+      "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "-u",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint_stage1_review_20261003\\evidence_gates\\probe_payload_mutation.py",
+      "--mutant-child",
+      "--mutation-line",
+      "2252",
+      "--scaffold",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint_stage1_review_20261003\\evidence_gates\\payload_mutation\\am.csv",
+      "--se",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint_stage1_review_20261003\\evidence_gates\\payload_mutation\\se.npy",
+      "--n-vox",
+      "64",
+      "--step3-vox",
+      "1.0",
+      "--no-ion",
+      "--no-pore",
+      "--no-thermal",
+      "--no-trackb",
+      "--no-field",
+      "--no-step4",
+      "--step3-rint-e",
+      "AM_S|AM_S=0.001",
+      "--out",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint_stage1_review_20261003\\evidence_gates\\payload_mutation\\mutant_wetted.json"
+    ],
+    "sigma_e": 0.0010352120036449418,
+    "interface_model": "r1-phase-boundary-series",
+    "table": {
+      "AM_S|AM_S": 0.001
+    },
+    "faces": {
+      "electronic": {
+        "model": "r1-phase-boundary-series",
+        "unit": "ohm_cm2",
+        "table": {
+          "AM_S|AM_S": 0.001
+        },
+        "pid_used": true,
+        "n_faces_rint": 3816,
+        "faces_by_pair": {
+          "AM_S|AM_S": 3816
+        }
+      }
+    },
+    "collector": {
+      "mode": "analytic_gap_v3 (bare gap≤0.10µm / wetted gap≤0.30µm — exact sphere/point z)",
+      "wetted_sigma_S_cm": 0.0009606,
+      "bare_sigma_S_cm": 0.0009487,
+      "R_geom_ohm_cm2": 0.0544,
+      "n_bottom_contacts": {
+        "wetted": 36,
+        "bare": 36,
+        "canonical_plate": 108
+      },
+      "note": "MODEL OUTPUT (emergent): contact SELECTION analytic (no voxel blur); coupling conductance voxel-scale.  R_geom = L(1/σ_bare − 1/σ_wetted); measured R_int − R_geom = chemistry/degradation share"
+    },
+    "J_smoke_assert_errors": [],
+    "J_smoke_assert_warnings": []
+  },
+  "mutant_bare": {
+    "exit": 0,
+    "seconds": 1.161737299989909,
+    "command": [
+      "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "-u",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint_stage1_review_20261003\\evidence_gates\\probe_payload_mutation.py",
+      "--mutant-child",
+      "--mutation-line",
+      "2255",
+      "--scaffold",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint_stage1_review_20261003\\evidence_gates\\payload_mutation\\am.csv",
+      "--se",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint_stage1_review_20261003\\evidence_gates\\payload_mutation\\se.npy",
+      "--n-vox",
+      "64",
+      "--step3-vox",
+      "1.0",
+      "--no-ion",
+      "--no-pore",
+      "--no-thermal",
+      "--no-trackb",
+      "--no-field",
+      "--no-step4",
+      "--step3-rint-e",
+      "AM_S|AM_S=0.001",
+      "--out",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint_stage1_review_20261003\\evidence_gates\\payload_mutation\\mutant_bare.json"
+    ],
+    "sigma_e": 0.0010352120036449418,
+    "interface_model": "r1-phase-boundary-series",
+    "table": {
+      "AM_S|AM_S": 0.001
+    },
+    "faces": {
+      "electronic": {
+        "model": "r1-phase-boundary-series",
+        "unit": "ohm_cm2",
+        "table": {
+          "AM_S|AM_S": 0.001
+        },
+        "pid_used": true,
+        "n_faces_rint": 3816,
+        "faces_by_pair": {
+          "AM_S|AM_S": 3816
+        }
+      }
+    },
+    "collector": {
+      "mode": "analytic_gap_v3 (bare gap≤0.10µm / wetted gap≤0.30µm — exact sphere/point z)",
+      "wetted_sigma_S_cm": 0.0009487,
+      "bare_sigma_S_cm": 0.0009606,
+      "R_geom_ohm_cm2": 0.0,
+      "n_bottom_contacts": {
+        "wetted": 36,
+        "bare": 36,
+        "canonical_plate": 108
+      },
+      "note": "MODEL OUTPUT (emergent): contact SELECTION analytic (no voxel blur); coupling conductance voxel-scale.  R_geom = L(1/σ_bare − 1/σ_wetted); measured R_int − R_geom = chemistry/degradation share"
+    },
+    "J_smoke_assert_errors": [],
+    "J_smoke_assert_warnings": []
+  },
+  "ion_disabled": {
+    "exit": 0,
+    "seconds": 0.871644000057131,
+    "command": [
+      "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "-u",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint_stage1_review_20261003\\source\\scripts\\mpm_webapp_payload.py",
+      "--scaffold",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint_stage1_review_20261003\\evidence_gates\\payload_mutation\\am.csv",
+      "--se",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint_stage1_review_20261003\\evidence_gates\\payload_mutation\\se.npy",
+      "--n-vox",
+      "64",
+      "--step3-vox",
+      "1.0",
+      "--no-ion",
+      "--no-pore",
+      "--no-thermal",
+      "--no-trackb",
+      "--no-field",
+      "--no-collector",
+      "--no-step4",
+      "--step3-rint-i",
+      "SDCP|SE=0.001",
+      "--out",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint_stage1_review_20261003\\evidence_gates\\payload_mutation\\ion_disabled.json"
+    ],
+    "sigma_e": 0.001049433228717753,
+    "interface_model": "r1-phase-boundary-series",
+    "table": null,
+    "faces": null,
+    "collector": null,
+    "J_smoke_assert_errors": [],
+    "J_smoke_assert_warnings": []
+  },
+  "zero_table": {
+    "exit": 0,
+    "seconds": 0.8745737001299858,
+    "command": [
+      "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "-u",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint_stage1_review_20261003\\source\\scripts\\mpm_webapp_payload.py",
+      "--scaffold",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint_stage1_review_20261003\\evidence_gates\\payload_mutation\\am.csv",
+      "--se",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint_stage1_review_20261003\\evidence_gates\\payload_mutation\\se.npy",
+      "--n-vox",
+      "64",
+      "--step3-vox",
+      "1.0",
+      "--no-ion",
+      "--no-pore",
+      "--no-thermal",
+      "--no-trackb",
+      "--no-field",
+      "--no-collector",
+      "--no-step4",
+      "--step3-rint-e",
+      "AM_S|AM_S=0",
+      "--out",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint_stage1_review_20261003\\evidence_gates\\payload_mutation\\zero_table.json"
+    ],
+    "sigma_e": 0.001049433228717753,
+    "interface_model": "r1-phase-boundary-series",
+    "table": {
+      "AM_S|AM_S": 0.0
+    },
+    "faces": {
+      "electronic": {
+        "model": "r1-phase-boundary-series",
+        "unit": "ohm_cm2",
+        "table": {
+          "AM_S|AM_S": 0.0
+        },
+        "pid_used": true,
+        "n_faces_rint": 0,
+        "faces_by_pair": {}
+      }
+    },
+    "collector": null,
+    "J_smoke_assert_errors": [],
+    "J_smoke_assert_warnings": []
+  },
+  "source_sha256": "3fc01291846655002a2e6e98309e06778dcf3810959499c1982837b4b1071d33"
+}

@@ -1,0 +1,19 @@
+Independent check of evidence_root/probe_units_identifiability.py
+
+Replay: exit0, 0.6858 s; PINNED_SOURCE_BLOBS_MATCH23. Both unit cases satisfy their half-cell-aware analytic assertions.
+
+The dimensional conclusion is correct with an explicit condition: if draft4-3's `vox` uses the production micrometre-valued scalar, then
+  r_face[ohm cm2] = R_c[ohm] * N_c * (vox_um * 1e-4)^2
+                 = R_c * N_c * vox_um^2 * 1e-8.
+The same conversion is required in R_c=r/A_true if r uses ohm cm2 and A_true is supplied in um2. If instead A_true and vox are consistently expressed in cm, the symbolic formula is correct as written. For ratio form r_face=r*(N_c*vox_um^2/A_true_um2), the two area conversions cancel.
+
+The probe correctly converts code face conductance to physical siemens with *1e-4 and includes the bulk half-cell resistance. Its literal-draft branch shows the proposed adapter would inflate the interfacial contribution by1e8 if used with vox_um without conversion. Total effective resistance inflation is close to1e8 because finite bulk resistance remains; the script reports99999900.000101 and99999983.33333626, not exact1e8.
+
+This is NOT evidence of a defect in existing step3_sigma.py's r[ohm cm2] ->r'=r*1e4 conversion. That conversion is correct and is used by both branches of this test. Nor is it evidence of an existing contact-normalization implementation bug: draft:100 is an unimplemented design equation. Recommended wording: 'The draft must specify centimetre conversion at the R_j/R_c-to-area-resistivity adapter; copying its expression with production vox_um would cause an approximately1e8 resistance error.' Avoid 'the current solver has a1e8 unit bug.'
+
+Severity calibration:
+- Existing supported non-AM same-sid r-ON path gives scientifically wrong conductivity: conditional P1 is defensible, explicitly limited to r>0 requests using unsupported/inherited identities; default r=None baseline is unaffected.
+- Current gate/provenance gap is P2. Current call bindings are present and correct; mutation demonstrates lack of regression/contract protection, not that unmodified producer presently omits the binding. A main-only proposed gate's collector blind spot is also P2, even though an introduced mutant can change R_geom greatly.
+- Draft units omission is best P2/design release condition now; it would become an implementation-severity defect if copied verbatim with micrometre scalars. G1/G2 HOLD can be required without grading every design omission P1.
+
+Identifiability example is sound as a synthetic one-dimensional counterexample: one pellet-effective conductivity admits multiple grain-conductivity/interface-resistivity pairs. It does not establish empirical plausibility of the illustrative parameter values or rule out identification from multiple independent datasets/constraints.

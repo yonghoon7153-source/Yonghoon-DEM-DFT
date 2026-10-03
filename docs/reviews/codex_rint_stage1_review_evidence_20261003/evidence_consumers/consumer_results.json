@@ -1,0 +1,127 @@
+{
+  "source_sha256": {
+    "mpm_webapp_payload.py": "3fc01291846655002a2e6e98309e06778dcf3810959499c1982837b4b1071d33",
+    "step3_sigma.py": "e98a713382e060a80b4f005bc8fc6d0e7042eb28e4559f0d6ccd4aa9b6f3bd28",
+    "step4_dyn.py": "828a6d0c1aef7b40834fc162db5a234694aa49b933accbbe961f931ac60f7031"
+  },
+  "pid": {
+    "raster_shape": [
+      11,
+      11,
+      20
+    ],
+    "all_additive_input_points_outside_am": true,
+    "carbon_cells": 20,
+    "inherited_carbon_cells": 8,
+    "je_inherited": [
+      0.03831624353328062,
+      0.037756103759881546
+    ],
+    "je_am_masked": [
+      0.0003027511154070284,
+      0.00031217396939968564
+    ],
+    "je_ratio": [
+      126.56020600210513,
+      120.94571444405501
+    ],
+    "patches_bitwise_unchanged": true,
+    "reaction_i_am": [
+      0.0008788468736755407,
+      0.0008262663281830628
+    ],
+    "reaction_bitwise_unchanged": true,
+    "reaction_kcl": 1.6882548659210986e-08,
+    "no_remaining_am_cells": 0,
+    "fully_overwritten_particle_proxy": [
+      9.0
+    ]
+  },
+  "joule": {
+    "sigma_off": 1.0000000000000029,
+    "sigma_on": 0.04761904761905272,
+    "interface_share_solver": 0.9523809539161676,
+    "interface_share_series_formula": 0.9523809523809523,
+    "faces": 16,
+    "joule_normalized_max_abs_delta_on_off": 2.0265579223632812e-06,
+    "hot_frac_50_on": 0.425,
+    "hot_frac_50_off": 0.425,
+    "conc_ratio_on": 1.176471944945258,
+    "conc_ratio_off": 1.176470668438211,
+    "joule_return_keys": [
+      "conc_ratio",
+      "hot_frac_50",
+      "n",
+      "n_total",
+      "pts",
+      "q",
+      "q_mean",
+      "q_p99_8"
+    ]
+  },
+  "context": {
+    "caller_sid_mismatch_rejected": false,
+    "correct_interface_share": 0.9523809522000901,
+    "wrong_interface_share": 0.0,
+    "jmax_correct": 0.004761905229833308,
+    "jmax_wrong": 0.48095238146750957,
+    "jmax_wrong_over_correct": 100.99999018341352,
+    "pid_alias_is_original": true,
+    "pid_mutation_share_before": 0.9523809522000901,
+    "pid_mutation_share_after": 0.0,
+    "saved_interface_faces_after_pid_mutation": 9
+  },
+  "reaction_scope": {
+    "actual_rxn_currents": [
+      0.0434782608695653,
+      0.0434782608695653
+    ],
+    "actual_rxn_normalized": [
+      1.0,
+      1.0
+    ],
+    "oracle_off_current": 0.043478260869565216,
+    "oracle_with_film_currents": [
+      0.002364066193853428,
+      0.043478260869565216
+    ],
+    "oracle_with_film_normalized": [
+      0.10313901345291479,
+      1.8968609865470851
+    ],
+    "film_path_reaction_suppression_pct": 94.56264775413713,
+    "current_function_has_rint_parameter": false
+  },
+  "serialization": {
+    "actual_save_line": 2771,
+    "stored_keys": [
+      "am_r_um",
+      "origin_shift_um",
+      "periodic_xy",
+      "pid",
+      "sid",
+      "sig_e_S_cm",
+      "sig_i_S_cm",
+      "temperature_provenance",
+      "vox_um",
+      "z_top_um"
+    ],
+    "contains_interface_or_rint": false
+  },
+  "zero_api": {
+    "zero_sigma_bitwise_equal": true,
+    "zero_phi_bitwise_equal": true,
+    "shares_off": {
+      "1": 0.9999000099988647,
+      "3": 9.999000113513754e-05
+    },
+    "shares_zero": {
+      "1": 0.9999000099988647,
+      "3": 9.999000113513586e-05,
+      "-1": 0.0
+    },
+    "max_share_delta": 1.6805133673525319e-18,
+    "coerced_noninteger_bool": "{(1, 3): 1.0}",
+    "unknown_sid_accepted": "{(0, 3): 1.0}"
+  }
+}

@@ -1,0 +1,67 @@
+RINT STAGE 1 — REPRODUCTION / Q4 / G1 CONTRACT AUDIT
+All file:line references below are relative to source/. No production file edited.
+Pinned core sha256 step3_sigma.py = e98a713382e060a80b4f005bc8fc6d0e7042eb28e4559f0d6ccd4aa9b6f3bd28.
+Environment: Python 3.12.14, NumPy 2.3.5, SciPy 1.16.3, Windows 11 10.0.26200.
+Reference probe_outputs versions are Python 3.11.15 / NumPy 2.4.6 / SciPy 1.17.1.
+
+REPRODUCTION
+- step3 --selftest-rint: exit 0, 2.8425 s, PASS. All 48 significant output lines match supplied supplement.
+- probe_p1_pid_inherit: exit 0, 3.1577 s. All 16 significant lines match reference and supplement.
+- probe_p21_face_area: exit 0, 6.9619 s. All 18 significant lines match reference and supplement.
+- probe_p22_cli: exit 0, 2.8222 s. All 3 lines match reference and supplement.
+- Meaning of match: exact printed strings, excluding progress lines. This does not establish unrounded cross-platform bit identity.
+- Evidence: reproduction_metadata.json, reproduction_comparison.json, four *.stdout.txt/*.stderr.txt pairs.
+- Rule J full baseline: exit 0, 8.3556 s; existing plain, fibre, lean2, check_arm, stdout sealing and deliberate exit3/exit4 arms all pass.
+- Rule J against only-main-electronic-rint-keyword mutation: exit 0, 9.4942 s; same checks pass. Original solver/selftest file untouched.
+
+P2 — REQUEST/APPLICATION CONTRACT IS NOT ENFORCED (known P2-3 confirmed and widened)
+Locations: scripts/mpm_webapp_payload.py:1980-1983,2876-2879; scripts/check_method_discipline.py:1634-1748,1777-1794; scripts/sdcp_gain_verdict.py:210-212; scripts/run_contract.py:733-807.
+Real producer fixture, AM_S|AM_S=0.001:
+  OFF sigma_e = 0.001049433228717753; interface_model=None; faces=None.
+  ON  sigma_e = 0.0010352120036449418; 3816 interface faces; table correct.
+  Drop only rint keyword at call line1980: sigma_e equals OFF exactly; model remains r1-phase-boundary-series; requested table retained; faces=None; producer exits0.
+  J smoke_assert_payload reports [], full rule J reports [], actual sr01_stamp_compare --check-arm says '완전 (point)' exit0.
+  Contract-only cohorts made by relabeling actual producer outputs (synthetic SBE/DBE input digests, origin0) also validate_contract pass with the mutant. These copies establish validator behavior, not physics results.
+Evidence: payload_mutation/summary.json; rule_J_mutant.stdout.txt; check_arm_mutant.stdout.txt; contract_edges.json.
+Minimum closure: one shared requested-versus-solved contract, called by producer before publish, cached/fresh check_arm and final/cohort validator. Preserve requested tables independently. Derive actual model/table from each solve's receipt. Require requested table in each enabled successful solve to match that solve's model/unit/canonical table; verify pid/iid support, count schema and sum consistency. Reject missing/mismatched receipts even if actual model=None. Handle disabled/failed/not-solvable states explicitly.
+Why proposed wording is insufficient: after changing interface_model to solver-derived, the bad binding sets model=None, so `model != None => actual.table == requested` is vacuously true. contract_edges.json has this exact counterexample using the real mutated payload.
+
+P2 — ELECTRONIC-ONLY ON TEST DOES NOT COVER WETTED/BARE APPLICATION (new concrete counterexample to Q4 sufficiency)
+Locations: scripts/mpm_webapp_payload.py:2252-2257,2279-2291,2879.
+Both collector variants consume rint but neither stores its interface receipt. Removing only wetted rint leaves main sigma=0.0010352120036449418, 3816 faces and table unchanged, satisfying proposed main-ON numeric and main-table checks. It changes wetted sigma0.0009487 ->0.0009606 and fabricates R_geom0 ->0.0544 ohm_cm2. Removing only bare rint changes bare sigma equivalently; R_geom clamps at0 and masks the inconsistency. All runs exit0 and existing J postconditions pass.
+Evidence: payload_mutation/summary_extended.json, mutant_wetted.json, mutant_bare.json.
+Minimum closure: record and verify electronic_main, electronic_wetted, electronic_bare, ionic individually, or one audited common invocation wrapper with mutation tests for every consumer. Main and ionic receipts alone do not cover collector sub-solves. Existing bindings are correct; this finding is missing regression/contract coverage, not a present missing keyword.
+
+P2 — CLI SILENTLY DROPS REQUESTS (known P2-2 confirmed)
+Locations: scripts/mpm_webapp_payload.py:1136-1143,1346-1351; scripts/step3_sigma.py:166-198.
+Empty flag ->[] ->None; repeated flag replaces first table; electron SE|SE accepted. Supplied real-parser probe matches exactly.
+Q4 parser correction: action=extend and nargs='+' is appropriate; retain unordered-pair duplicate rejection across repeated flags. Build channel validation from final resolved conductivity tables after overrides/temperature, not default hardcoded allowed names. Reject unsupported same-sid identity owner at CLI AND API/solver boundaries. Positive-r pair with an insulating side is an input error. A positive pair absent from one morphology can legitimately have0 faces and should be explicitly recorded/warned; under comparative tables (e.g. SBE lacks SDCP) global rejection of all0-face cases would overblock. Positive same-sid request lacking required identity support is stronger than merely absent contact and should reject until an explicit identity source exists.
+
+P3 — API SILENT COERCION / ROUND-TRIP INCONSISTENCY (known P3-2 confirmed)
+Locations: scripts/step3_sigma.py:201-221,224-238.
+Independent 2x2x6 serial laminate:
+  {(1.7,3):0.001} accepted as AM_S|VGCF, sigma1.3333333333333335 ->0.413793103448278.
+  {(1,3):True} accepted as r=1.0, sigma0.0005997301214454298.
+  {(99,3):0.001} accepted with table VGCF|99 and0 faces; rint_table_from_record rejects that same record.
+  {} vs None retains interface model/table{} vsNone although fields are bitwise identical; explicit r=0 keeps model and0 faces, also bitwise identical.
+Minimum closure: exact integral known non-pore sid keys, excluding bool; finite nonnegative real numeric r excluding bool; reject unsupported owners; specify empty/zero semantics consistently. If accepting NumPy integer types, validate integrality before cast. This can be fixed together with parser/solver owner checks, before ②.
+
+P3 — DISABLED IONIC REQUEST CHANGES MODEL / GENERATION WITHOUT APPLICATION (known P3-4 confirmed)
+Locations: scripts/mpm_webapp_payload.py:2351-2361,2876-2879; scripts/sdcp_gain_verdict.py:141-143.
+Actual --no-ion + --step3-rint-i SDCP|SE=0.001 yields ordinary electronic OFF sigma, interface_model=r1, ionic requested table retained, no interface_faces. J accepts. Zero electronic table likewise model=r1 with0 faces and exact OFF sigma. Distinguish configured, channel enabled, applied positive faces, failed/not-solvable; do not describe global model label alone as proof of active interface physics. Prefer rejecting contradictory positive-r ionic request + --no-ion, or explicitly record disabled requested state without calling it applied.
+
+P3 — COMPARE_DIRS FALSE HOLD ON OFF/ON (known P3-3 confirmed)
+Locations: scripts/sdcp_gain_verdict.py:141-143,2562-2581.
+Using synthetic cohort-label copies of actual OFF/ON producer output, both cohorts individually validate. compare_dirs(expect_differ={'interface_rint_e_ohm_cm2'}) HOLDs on interface_model (None vsr1). Model is a derived enablement summary in this version, but registry treats it independently.
+Minimum closure: model must be a verified derivation of requested/applied model semantics, not blanket exempt whenever any axis changes. Permit model's OFF/ON transition only when explained by the declared rint axis; unrelated model-version changes remain HOLD.
+Additional pre-existing limitation: adding interface_model to expected axes gets past that HOLD but hits six unclassified current-producer manifest fields: electronic_field_pts,fibre_segment_ledger,field_requested,ionic_field_pts,ptfe_block_cells,ptfe_block_scope. Registry source: sdcp_gain_verdict.py:245-253,2588-2594. Thus merely adding derived_from does not yet make the current actual-producer compare path executable. Evidence: contract_edges.json.
+
+P3/FUTURE WIRING CONDITION — NODIGEST IS NOT BY ITSELF A REPRODUCED PRESENT CACHE BUG
+Locations: scripts/run_contract.py:275-299,309-317; scripts/sdcp_gain_vox015_8arm.sh:284-299,478-491,539-547,614-621.
+Different requested rint tables produce the same receipt_digest (probe example3dec77d758d0). BUT a receipt that declares ON rejects an OFF manifest via RCPT|interface_rint_e_ohm_cm2|differ. The runner also compares whole receipt JSON and aborts if it changed. Current runner has no rint knob and P2_EXTRA disallows --step3-rint-e/-i. Thus NODIGEST alone proves a directory-name collision hazard, not silent reuse on the supported current runner.
+Before ⑤ wiring: add canonical lossless rint tag or versioned configuration digest, declare requested tables in full run_receipt, retain cache/fresh receipt checks, and add ON/OFF collision tests. Omitting request declarations or injecting flags after the cache decision would create the hypothesized silent SKIP.
+
+Q4 / G1 RECOMMENDATION
+G1 HOLD for closure, with the proposed parser edits accepted in direction but not sufficient as written. Add strict API validation, authoritative requested-versus-applied checks at every consumer, per-solve receipts including collector variants, and mutation/negative controls. A known serial fixture should assert analytic sigma, exact face/table records, OFF and zero bit identity, and correct channel. `n_faces>0 && sigma<OFF` is a fixture property, not a global production invariant: parallel interfaces can have zero potential drop (the supplied selftest already demonstrates this), absent pairs can be legitimate, and explicit zero resistance is an intentional no-op. Preserve separate zero, absent, disabled and unsupported-identity statuses.
+
+Only evidence scripts/logs were written in evidence_gates/. Mutation is AST-in-memory against the pinned producer; source was not edited. Baseline source_sha256 recorded before tests. No GPU or scientific-scale production run performed.

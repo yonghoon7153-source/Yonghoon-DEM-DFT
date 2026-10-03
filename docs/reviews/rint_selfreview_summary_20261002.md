@@ -1,5 +1,9 @@
 # ① r_int 적대 자기리뷰 결과 (10-02 밤 · 에이전트 · 프로브 = scratchpad/rint_review/) — 압축 대비 메모
 
+> ⛔ **Codex 판정 (10-03) = G1 HOLD · G2 HOLD** (`docs/reviews/codex_review_rint_stage1_20261003.md`) — P1-1 CONFIRMED = `RINT-01` (예고했던 `SELF-81` 은 이 항목으로 갈음) ·
+> P2-3 확대 = `RINT-02` (wetted/bare 솔브까지 · 제안 검사로는 놓친다) · P2-4 = `RINT-04` · `RINT-05` · P2-1 의 (b) 처방은 위치를 못 고친다 (`RINT-06`) · 단위 `RINT-07` · D4 `RINT-08` ·
+> P3 아홉 = `RINT-11`~`19` · 새 관찰 = `RINT-03` (r-OFF 입자별 AM 전류 오염 121–127×).
+
 판정: rint 은 기본 OFF 선택 기구로 안전 (rint=None 19/19 격자 비트 동일 · 단위 SI 독립 검산 −3.2e-14 · 소산 항등식 ON 에서도 |Δ| 1.55e-7 · JSON 안전 · 메모리 OK). ② 진입 전 수정 필요.
 
 | # | 내용 | 재현 | 수정 (반례 먼저) |

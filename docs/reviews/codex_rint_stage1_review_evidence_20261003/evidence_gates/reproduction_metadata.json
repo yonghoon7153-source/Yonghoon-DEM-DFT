@@ -1,0 +1,64 @@
+{
+  "utc_start": "2026-10-03T10:38:39.683779+00:00",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "numpy": "2.3.5",
+  "scipy": "1.16.3",
+  "PYTHONPATH": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\lhs_coverage_review_20260930\\deps;C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint_stage1_review_20261003\\source\\scripts",
+  "source_sha256": {
+    "scripts\\check_method_discipline.py": "f8df5c5cc0a51be36f467a8c6f24557e1cea8d50e56d53c5f280326d4f57c74a",
+    "scripts\\fibre_segment_raster.py": "e2e94d3b955bfdb87446be03a2134d57546714d20ab3e460fd2c4edfd0eab0f0",
+    "scripts\\mpm_webapp_payload.py": "3fc01291846655002a2e6e98309e06778dcf3810959499c1982837b4b1071d33",
+    "scripts\\network_conductivity.py": "73071748a2645339cda513ad34daf63ec83aca0ae83a37a656648da28b31c0a0",
+    "scripts\\run_contract.py": "846835a9f8afe6a5cd316a00bce67716fd0108daa43463313f1a543e82b924b6",
+    "scripts\\sdcp_gain_verdict.py": "125343a6df88efce446ab08d0059d7f4bd16cc77c4a43b4f25174dfbb8c76927",
+    "scripts\\se_material.py": "b79da2232c4a6748ad0b157dd1d6520b8da72e9cb21b9667b2e2ba84194a25f0",
+    "scripts\\sr01_stamp_compare.py": "486b7e40a074e73b024b6b2e763516d5f3ea3ea9eda1fe91d7adb896db3cf13d",
+    "scripts\\step3_sigma.py": "e98a713382e060a80b4f005bc8fc6d0e7042eb28e4559f0d6ccd4aa9b6f3bd28",
+    "scripts\\step4_dyn.py": "828a6d0c1aef7b40834fc162db5a234694aa49b933accbbe961f931ac60f7031",
+    "scripts\\viz_mpm_continuum.py": "0e117ea05ad8856206a1c137fb4e205d6b6c6ad848235589fce108d75e4510c5"
+  },
+  "runs": {
+    "selftest_rint": {
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-u",
+        "scripts/step3_sigma.py",
+        "--selftest-rint"
+      ],
+      "cwd": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint_stage1_review_20261003\\source",
+      "exit": 0,
+      "seconds": 0.8035941999405622
+    },
+    "probe_p1_pid_inherit": {
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-u",
+        "docs/reviews/codex_rint_stage1_request_20261003/probe_p1_pid_inherit.py"
+      ],
+      "cwd": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint_stage1_review_20261003\\source",
+      "exit": 0,
+      "seconds": 0.8723210000898689
+    },
+    "probe_p21_face_area": {
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-u",
+        "docs/reviews/codex_rint_stage1_request_20261003/probe_p21_face_area.py"
+      ],
+      "cwd": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint_stage1_review_20261003\\source",
+      "exit": 0,
+      "seconds": 4.589341999962926
+    },
+    "probe_p22_cli": {
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-u",
+        "docs/reviews/codex_rint_stage1_request_20261003/probe_p22_cli.py"
+      ],
+      "cwd": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint_stage1_review_20261003\\source",
+      "exit": 0,
+      "seconds": 0.903779299929738
+    }
+  }
+}

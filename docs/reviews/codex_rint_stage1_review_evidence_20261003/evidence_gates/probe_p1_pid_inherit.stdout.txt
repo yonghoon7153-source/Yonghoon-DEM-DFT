@@ -1,0 +1,22 @@
+== (a) 합성: VGCF 한 가닥 · pid 0/1/2 (첨가제가 AM 세 입자 자리를 덮었다고 가정)
+    STEP3 solve: 12 dof, plate contacts 1/1 — CG running (CPU, 수 분 소요 가능)…
+    STEP3 solve: 12 dof, plate contacts 1/1 — CG running (CPU, 수 분 소요 가능)…
+    STEP3 solve: 12 dof, plate contacts 1/1 — CG running (CPU, 수 분 소요 가능)…
+  r = 0.0001 Ω·cm²: σ_e OFF 11.1111 → pid 상속 0.131752 (-98.81 %) · 원장 faces_by_pair = {'VGCF|VGCF': 2} · pid −1 이면 σ_e 11.1111 · 면 0
+    STEP3 solve: 12 dof, plate contacts 1/1 — CG running (CPU, 수 분 소요 가능)…
+    STEP3 solve: 12 dof, plate contacts 1/1 — CG running (CPU, 수 분 소요 가능)…
+  r = 0.01 Ω·cm²: σ_e OFF 11.1111 → pid 상속 0.00133317 (-99.99 %) · 원장 faces_by_pair = {'VGCF|VGCF': 2} · pid −1 이면 σ_e 11.1111 · 면 0
+== (b) 생산 경로 rasterize: AM_S 두 구 접촉 (R 1.0 µm · 겹침 δ 0.02 µm) + VGCF 점열
+  vox 0.2:
+    목을 y 로 가로지름 (x = 접촉면): VGCF 복셀 15 · 그 중 pid ≥ 0 3 · pid 종류 [1] · 가짜 VGCF|VGCF 면 0
+    목을 y 로 가로지름 (x = 접촉면 − ½vox): VGCF 복셀 15 · 그 중 pid ≥ 0 7 · pid 종류 [0, 1] · 가짜 VGCF|VGCF 면 2
+    목을 z 로 가로지름 (x = 접촉면 + ½vox): VGCF 복셀 15 · 그 중 pid ≥ 0 3 · pid 종류 [1] · 가짜 VGCF|VGCF 면 0
+    두 구 윗면을 x 로 (z = 꼭대기 − ½vox): VGCF 복셀 20 · 그 중 pid ≥ 0 13 · pid 종류 [0, 1] · 가짜 VGCF|VGCF 면 0
+  vox 0.1:
+    목을 y 로 가로지름 (x = 접촉면): VGCF 복셀 28 · 그 중 pid ≥ 0 6 · pid 종류 [0, 1] · 가짜 VGCF|VGCF 면 2
+    목을 y 로 가로지름 (x = 접촉면 − ½vox): VGCF 복셀 28 · 그 중 pid ≥ 0 6 · pid 종류 [0, 1] · 가짜 VGCF|VGCF 면 2
+    목을 z 로 가로지름 (x = 접촉면 + ½vox): VGCF 복셀 28 · 그 중 pid ≥ 0 8 · pid 종류 [1] · 가짜 VGCF|VGCF 면 0
+    두 구 윗면을 x 로 (z = 꼭대기 − ½vox): VGCF 복셀 39 · 그 중 pid ≥ 0 12 · pid 종류 [0, 1] · 가짜 VGCF|VGCF 면 0
+== (c) per_particle_current: AM 자리를 덮은 VGCF 복셀의 전류가 AM 입자 몫에 들어가는가 (계면 항 OFF)
+    STEP3 solve: 360 dof, plate contacts 36/36 — CG running (CPU, 수 분 소요 가능)…
+  입자별 |J_z| 대리값 — pid 상속 [0.001012, 0.001012] · VGCF 복셀 pid −1 [0.000817, 0.001012] · 입자 0 비 1.238

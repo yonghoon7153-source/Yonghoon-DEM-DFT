@@ -1,0 +1,207 @@
+{
+  "area_is_not_topology": {
+    "sum_interface_conductance_both": 1.0,
+    "R_same_bulk_graph_placement_A": 1.0,
+    "R_same_bulk_graph_placement_B": 1.6923076923076923,
+    "relative_change_percent": 69.23076923076923,
+    "phi_A": [
+      1.0,
+      0.0,
+      1.0
+    ],
+    "phi_B": [
+      1.0,
+      0.0,
+      0.1818181818181818
+    ]
+  },
+  "voxel_boundary_placement": {
+    "Roff_internal": 2.7040764374055257,
+    "rows": [
+      {
+        "Rc_internal": 0.1,
+        "cut_z_um": 1,
+        "N_faces": 15,
+        "Rtotal_internal": 3.0986088618648475,
+        "incremental_R_internal": 0.3945324244593218,
+        "sigma_on_over_off": 0.8726743380505667,
+        "cell_drop_min_max": [
+          0.006007042510777549,
+          0.3225102795161656
+        ]
+      },
+      {
+        "Rc_internal": 0.1,
+        "cut_z_um": 7,
+        "N_faces": 15,
+        "Rtotal_internal": 2.8144304039863495,
+        "incremental_R_internal": 0.11035396658082375,
+        "sigma_on_over_off": 0.9607899465467263,
+        "cell_drop_min_max": [
+          0.03882091715306474,
+          0.08981245876818625
+        ]
+      },
+      {
+        "Rc_internal": 0.1,
+        "cut_z_um": 14,
+        "N_faces": 15,
+        "Rtotal_internal": 2.8053296693071688,
+        "incremental_R_internal": 0.10125323190164304,
+        "sigma_on_over_off": 0.963906833122166,
+        "cell_drop_min_max": [
+          0.05141162014917925,
+          0.06811345479349815
+        ]
+      },
+      {
+        "Rc_internal": 1.0,
+        "cut_z_um": 1,
+        "N_faces": 15,
+        "Rtotal_internal": 5.131641416832592,
+        "incremental_R_internal": 2.427564979427066,
+        "sigma_on_over_off": 0.5269418140822797,
+        "cell_drop_min_max": [
+          0.05489299720077126,
+          0.6503674619200086
+        ]
+      },
+      {
+        "Rc_internal": 1.0,
+        "cut_z_um": 7,
+        "N_faces": 15,
+        "Rtotal_internal": 3.7506768229336145,
+        "incremental_R_internal": 1.0466003855280888,
+        "sigma_on_over_off": 0.7209569272594689,
+        "cell_drop_min_max": [
+          0.23732216439319231,
+          0.34701889904747607
+        ]
+      },
+      {
+        "Rc_internal": 1.0,
+        "cut_z_um": 14,
+        "N_faces": 15,
+        "Rtotal_internal": 3.7084830073335917,
+        "incremental_R_internal": 1.004406569928066,
+        "sigma_on_over_off": 0.7291597216592786,
+        "cell_drop_min_max": [
+          0.27387044739749866,
+          0.30229610727221423
+        ]
+      },
+      {
+        "Rc_internal": 10.0,
+        "cut_z_um": 1,
+        "N_faces": 15,
+        "Rtotal_internal": 15.55510364130476,
+        "incremental_R_internal": 12.851027203899234,
+        "sigma_on_over_off": 0.17383853555466947,
+        "cell_drop_min_max": [
+          0.5148005892560515,
+          0.9044817658001854
+        ]
+      },
+      {
+        "Rc_internal": 10.0,
+        "cut_z_um": 7,
+        "N_faces": 15,
+        "Rtotal_internal": 12.776070696986396,
+        "incremental_R_internal": 10.07199425958087,
+        "sigma_on_over_off": 0.21165164952033022,
+        "cell_drop_min_max": [
+          0.7672183137928407,
+          0.8141642688493252
+        ]
+      },
+      {
+        "Rc_internal": 10.0,
+        "cut_z_um": 14,
+        "N_faces": 15,
+        "Rtotal_internal": 12.709965000970934,
+        "incremental_R_internal": 10.005888563565408,
+        "sigma_on_over_off": 0.21275246920026586,
+        "cell_drop_min_max": [
+          0.7869498525450477,
+          0.7974094499913886
+        ]
+      }
+    ]
+  },
+  "AM_boundary_placement": [
+    {
+      "vox_um": 0.2,
+      "placement": "rasterize_pid",
+      "n_faces": 24,
+      "same_Atrue_um2": 0.06251769380643697,
+      "normalized_sum_gfilm_S": 6.251769380643696e-07,
+      "sigma_off": 0.0033861891274126294,
+      "sigma_on": 0.0021134087432975396,
+      "sigma_on_over_off": 0.6241260200703511
+    },
+    {
+      "vox_um": 0.2,
+      "placement": "contact_midplane",
+      "n_faces": 16,
+      "same_Atrue_um2": 0.06251769380643697,
+      "normalized_sum_gfilm_S": 6.251769380643697e-07,
+      "sigma_off": 0.0033861891274126294,
+      "sigma_on": 0.002192372880598699,
+      "sigma_on_over_off": 0.6474454905222262
+    },
+    {
+      "vox_um": 0.1,
+      "placement": "rasterize_pid",
+      "n_faces": 64,
+      "same_Atrue_um2": 0.06251769380643697,
+      "normalized_sum_gfilm_S": 6.251769380643697e-07,
+      "sigma_off": 0.0026579422945633125,
+      "sigma_on": 0.0017954490573196533,
+      "sigma_on_over_off": 0.6755034001272918
+    },
+    {
+      "vox_um": 0.1,
+      "placement": "contact_midplane",
+      "n_faces": 32,
+      "same_Atrue_um2": 0.06251769380643697,
+      "normalized_sum_gfilm_S": 6.251769380643697e-07,
+      "sigma_off": 0.0026579422945633125,
+      "sigma_on": 0.0018604231230895582,
+      "sigma_on_over_off": 0.699948650839772
+    }
+  ],
+  "L1_scope": {
+    "normal_xz": [
+      0.8660254037844387,
+      0.49999999999999994
+    ],
+    "L1": 1.3660254037844386,
+    "sum_g_common_jump_L1": 1.0,
+    "sum_g_common_jump_axis": 1.0,
+    "heterogeneous_face_jumps": [
+      1.0,
+      2.0
+    ],
+    "current_L1": 1.3660254037844386,
+    "current_axis": 1.25,
+    "energy_L1": 2.098076211353316,
+    "energy_axis": 1.75,
+    "interpretation": "Finite-grid inequivalence, not a proof either continuum limit is wrong."
+  },
+  "sensitivity_and_bounds": {
+    "shared_film_R": 1.0,
+    "model_A_R0": 1.0,
+    "model_B_R0": 10.0,
+    "model_A_sigma_on_over_off": 0.5,
+    "model_B_sigma_on_over_off": 0.9090909090909091,
+    "model_A_delta_ln_sigma": -0.6931471805599453,
+    "model_B_delta_ln_sigma": -0.0953101798043249,
+    "only_intramodel_monotonicity_is_guaranteed": true
+  },
+  "junction_reference": {
+    "correct_pure_contact_model_R": 7.0,
+    "double_count_if_measured_terminal_R_used_as_Rj": 9.0,
+    "junction_power_correct_at_unit_voltage": 0.10204081632653061,
+    "test_requirement": "Define Rj reference planes and retained axial/access resistances."
+  }
+}

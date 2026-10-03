@@ -45,7 +45,7 @@
 - **협착 배수 = τ_FULL / τ_CF** (같은 망 · 가지만 다름).  ⚠ CF 의 bulk 저항이 원기둥 단면 πr² 라 T 기준 1.2–1.4× 과대 — "모형 내부 협착비" 로 부른다.  웹앱 "Constriction overhead" (τ_Lap,eff / τ_Dij) 는 **정의가 다른 둘을 섞은 비** — 협착 배수로 부르지 않는다.
 - ⛔ **COMSOL Tortuosity 칸 = tau2** (√ 아님).  근거 = COMSOL 5.6 BDM 안내서 Eq 6-6 (인쇄 p.376 · species 장) · Bruggeman τ_F = ε^(−1/2) (p.377) · Landesfeind p.A1374 "COMSOL … ε/τ = ε^1.5".  배터리 Porous Electrode 노드 (p.267) 엔 식이 인쇄돼 있지 않다 = **"강하게 시사"** (GUI Equation 캡처로 닫는다).  지금 √ 값에 붙은 "COMSOL/EIS input" 표기는 결함 `TAU-01` (P1).  **1저자 10-03: 지금까지 COMSOL 에 τ_Lap,eff 를 넘긴 적 없음** → 소급 정정 대상 없음.
 - σ₀ 는 tau2 · f 에서 약분된다 (raw 이온 솔브).  다른 것은 **기준 상태** — Minnmann 은 순수 SE 펠릿을 τ² ≡ 1 로 둔다 (σ₀ 1.6 mS/cm @25 °C) · 우리는 σ_grain 3.0 (펠릿 · CL-91).  절대 비교 전 **순수 SE 망 런** 이 관문 (결정 ④ · 보류).
-- ✅ **결정 16 (v2 §0) = 1저자 비준 (10-03 서브 세션 · 권고대로 — 3 = hertz 먼저 · 4 = 기존 순수 SE 4 침대로 망만 · 7 = `CL-94` · 9 = 절차만)** · ✅ **추가 문헌 10 편 흡수 (10-03 · 정본 `e7f425b80`) — 권고 변경 없음** · 결정 4 · 11 · 13 사전등록 항목 · 한정어 보강과 메모 v2 정정 후보 = 부록 `docs/reviews/tau_conventions_judgment_v2_addendum_lit10_20261003.md` · ✅ **실행 1단계 원장 등재 (10-03)** — `TAU-01`~`25` (P1 5 · P2 10 · P3 10 · open) · `CL-94` (hold · 결정 7) + quotation_ban 5 · 결정 7 정정 = CLAUDE.md 9 자리 출처 철회 표지 · `docs/mpm3d_calibration.md` 머리 배너 · `scripts/mpm_dem_match.py` 출력 문구 (⚠ `scripts/mpm3d_compaction.py` docstring · help 는 FAM §12-6 봉인 (mpm3d md5) 기간이라 그 판정 뒤 · 정본 minnmann2022 카드는 정본 다음 커밋) · ⬜ 2단계 라벨 · 정오표 → 봉인 밖 도우미 `tau_flux.py` + 시험 → WSL 명령 → 사전등록 · 인계 `docs/handoff_tau_subsession_20261003.md`.
+- ✅ **결정 16 (v2 §0) = 1저자 비준 (10-03 서브 세션 · 권고대로 — 3 = hertz 먼저 · 4 = 기존 순수 SE 4 침대로 망만 · 7 = `CL-94` · 9 = 절차만)** · ✅ **추가 문헌 10 편 흡수 (10-03 · 정본 `e7f425b80`) — 권고 변경 없음** · 결정 4 · 11 · 13 사전등록 항목 · 한정어 보강과 메모 v2 정정 후보 = 부록 `docs/reviews/tau_conventions_judgment_v2_addendum_lit10_20261003.md` · ✅ **추가 문헌 10 편 (tortuosity_3 · 10-03 저녁 · 정본 `8e3d7a5d7`) — 권고 변경 없음** · M-factor 원전 해소 (Wiedenmann Eq 11 지수 1) · Park σ₀ 식 출처 [18a–c] 에 없음 · COMSOL τ_F = tau2 근거 +2 (Thorat · Kato) · c² 는 이 묶음으로 못 정함 (두 끝 유지) · 기준 상태 장부 = 사전등록 칸 = 부록 2 `docs/reviews/tau_conventions_judgment_v2_addendum2_lit10b_20261003.md` · ✅ **실행 1단계 원장 등재 (10-03)** — `TAU-01`~`25` (P1 5 · P2 10 · P3 10 · open) · `CL-94` (hold · 결정 7) + quotation_ban 5 · 결정 7 정정 = CLAUDE.md 9 자리 출처 철회 표지 · `docs/mpm3d_calibration.md` 머리 배너 · `scripts/mpm_dem_match.py` 출력 문구 (⚠ `scripts/mpm3d_compaction.py` docstring · help 는 FAM §12-6 봉인 (mpm3d md5) 기간이라 그 판정 뒤 · 정본 minnmann2022 카드는 정본 다음 커밋) · ⬜ 2단계 라벨 · 정오표 → 봉인 밖 도우미 `tau_flux.py` + 시험 → WSL 명령 → 사전등록 · 인계 `docs/handoff_tau_subsession_20261003.md`.
 - ⚠ 이 규약은 **문서 · 새 코드부터** 적용한다.  기존 코드 키 개명 (결정 ⑮) 은 비준 뒤 · 시험 먼저 · 웹앱 같은 묶음 (J20-l).
 
 ⛔⛔⛔ **DO-NOT — MPM 을 "진짜 300 MPa 에 닿게" 만들려고 하지 말 것** (2026-09-22 재발, 3번째)
@@ -345,7 +345,8 @@ area round 3·4·5(`codex_*_area_round{3,4,5}_2026091{4,4,5}`) · `section6_audi
      = 실험 +23.1 % 방향 정합 (⛔ 그 값은 CL-33 `hold` = 인용 금지).
    · **CL-47**: σ_VGCF=100 의 라벨이 틀렸다 — 직경-보존 식은 **단섬유** 컨덕턴스를 보존하는데
      (Showa Denko VGCF-H Ø150nm: 단섬유 1e-4 Ω·cm = **1e4 S/cm**, 분말 0.012 Ω·cm = **83 S/cm**)
-     코드 100 은 **분말값**이다.  ★ **사용자 독립 검증 완료** (탄화 1e-3 · 흑연화 1e-4 ·
+     코드 100 은 ~~**분말값**이다~~ [⛔ 정정 10-03 `RINT-10` · CL-47 `correction_20261003`: 도입 때 (`087d1a07c`) 출처 없이 넣은 값 ·
+     분말 83 과 같은 자릿수일 뿐 "분말값을 집어온" 근거 없음 · 이중계상 크기 미식별].  ★ **사용자 독립 검증 완료** (탄화 1e-3 · 흑연화 1e-4 ·
      고흑연화 5e-5 Ω·cm; 분말↔단섬유 2자릿수 차 = 전부 섬유-섬유 **접촉저항**) + 프레임 정정:
      실물 저항망의 민감도는 fiber resistivity 가 아니라 **contact conductance** 에 있다.
      복셀 융합 = 접촉저항 삭제이므로 유효 σ=100 은 그 결손의 lumping = **DEM E_eff 18배 연화와
@@ -628,9 +629,14 @@ the other; their agreement quantifies model trust.
   내부값 규약 → ⑤ 위 대조 → ⑥ 웹앱) · Codex 는 ⑥ 뒤 한 번.  ⚠ **값 인용 단계 아님** — r 를 켜면 입력
   σ 규약(펠릿값)이 바뀐다 (④).
   ★ **10-03 (서브 세션) — Codex 시점 변경 (1저자 *"권고대로"*): P2-1 결정 · ② 설계 **전에** 한 번** → 요청서
-  `docs/reviews/codex_rint_stage1_request_20261003.md` (탐침 3 · 발송 = 사용자 · ⬜ 판정 대기).  검토 대상 설계안 =
+  `docs/reviews/codex_rint_stage1_request_20261003.md` (탐침 3 · 발송 = 사용자) → ⛔ **Codex 판정 (10-03) = G1 HOLD · G2 HOLD**
+  (`docs/reviews/codex_review_rint_stage1_20261003.md` · 증거 `…_evidence_20261003/` · 우리 재현 결정값 차이 0 · 원장 `RINT-01`~`20` = P1 1 · P2 9 · P3 10 ·
+  기본 OFF scalar σ 의 새 P1 없음): pid 를 섬유 경계로 읽음 (`RINT-01` = P1-1) · 주 솔브만 검사하면 wetted/bare rint 누락이 초록 (`02`) ·
+  iid 만으론 r-OFF 입자별 AM 전류 오염 121–127× (`03`) · Joule = bulk 만 (`04`) · STEP4 · reaction = 막 없는 scope (`05`) · 총면적 정규화는 위치를 못 고침 (`06`) ·
+  R_j 단위 1e−8 (`07`) · D4 fallback (`08`) · FULL ≤ vox ≤ CF 는 불변식 아님 (`09`) · "VGCF 100 = 분말값" 철회 (`10`) · ✅ **1저자 비준 10-03** (*"아까 비준사항은 다 비준"*) = G1 수정 묶음 (반례 먼저 · 웹앱 같은 묶음) ·
+  RINT-03 실침대 측정 · G2 = 초안 ①′ v2 → Codex 재검토 (② 구현은 그 뒤) · CL-47 정정 (원장 필드 · 표지 ✅).  검토 대상 설계안 =
   `docs/reviews/contact_resistance_pipeline_draft_20261002.md` (10-02 에이전트 초안 · **1저자 미보고** · ①′ 면적 규약 · `iid` · D1–D9).
-  자기리뷰 (P1-1 · P2-1~4 · P3) 수정은 **아직 0** · `SELF-81` 미등재.  새 관찰: 입자별 전류가 AM 자리를 덮은 탄소 셀을
+  자기리뷰 (P1-1 · P2-1~4 · P3) 수정은 **아직 0** · `SELF-81` 대신 `RINT-01` 로 등재 (10-03).  새 관찰: 입자별 전류가 AM 자리를 덮은 탄소 셀을
   AM 몫에 넣는다 (계면 항 무관 · 1.24×) · 고정 브리지에서 계면이 브리지 공 표면에 놓여 vox 사다리가 **틀린 면적으로 수렴**.
 
 ---

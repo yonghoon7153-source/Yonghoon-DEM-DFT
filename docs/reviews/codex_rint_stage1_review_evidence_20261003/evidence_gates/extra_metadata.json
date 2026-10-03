@@ -1,0 +1,21 @@
+{
+  "contract_edges": {
+    "command": [
+      "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "-u",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint_stage1_review_20261003\\evidence_gates\\probe_contract_edges.py"
+    ],
+    "exit": 0,
+    "seconds": 0.8600900999736041
+  },
+  "rule_J_baseline": {
+    "command": [
+      "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "-u",
+      "-c",
+      "import check_method_discipline as d; e,w=d.check_entrypoint_smoke(); print(repr((e,w))); raise SystemExit(bool(e))"
+    ],
+    "exit": 0,
+    "seconds": 8.355563999852166
+  }
+}

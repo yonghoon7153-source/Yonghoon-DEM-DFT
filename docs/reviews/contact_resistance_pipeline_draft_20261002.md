@@ -1,5 +1,11 @@
 # 계면 저항 파이프라인 설계안 (초안 · 계획만) — ①-수정 → ⑥ 을 모순 없이
 
+> ⛔ **Codex 판정 (10-03) = G1 HOLD · G2 HOLD — 이 초안을 그대로 구현하지 않는다** (`docs/reviews/codex_review_rint_stage1_20261003.md` · 원장 `RINT-01`~`20`).
+> 판정으로 반증 · 철회된 서술 (본문은 10-02 초안 그대로 둔다): :100 *"N_c 면 병렬 = R_c 정확 · origin · vox 무관"* — 각 면 양쪽이 공통 등전위일 때만이고 위치를 못 고친다 (`RINT-06`) ·
+> :100 `r_face = R_c·N_c·vox²` 는 vox 가 µm 이면 ×1e−8 (`RINT-07`) · :103 미등록 면 → (a) L1 + 표지 (D4) = 정량 모드에선 거부 또는 별도 법칙 (`RINT-08`) ·
+> :41 · :53 *"r OFF 전 산출 비트 동일"* — 입자별 AM 전류의 소유권 수정은 의도한 변경 예외 (`RINT-03`) · :149–150 *"σ_FULL ≤ σ_vox ≤ σ_CF"* · 같은 Δlnσ — 불변식 아님 (`RINT-09`) ·
+> :45 · :159 *"VGCF 100 = 분말값"* — 도입 때 hook · 이중계상 크기 미식별 (`RINT-10`).  ⚠ 1저자에게 보고되지 않은 초안이다.
+
 > 2026-10-02 · 에이전트 초안 (리포 변경 0 · 커밋 0) · 1저자 지시 *"다 모순이 안나게 차근차근 진행 · 파이프라인을 잘 짜봐"*
 > 근거: `docs/voxel_contact_free_gap.md` §3·§5·§8 · 리뷰 요약 `docs/reviews/rint_selfreview_summary_20261002.md` (P1-1 … P3-9) ·
 > 정본 litdb `origin/claude/friendly-meitner-lldvar` (10-02 13:09 판, 읽기만) · file:line 은 HEAD `510c25371` 기준

@@ -1,0 +1,34 @@
+{
+  "contract_edges": {
+    "command": [
+      "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "-u",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint_stage1_review_20261003\\evidence_gates\\probe_contract_edges.py"
+    ],
+    "exit": 0,
+    "seconds": 0.9291959998663515
+  },
+  "rule_J_mutant": {
+    "command": [
+      "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "-u",
+      "-c",
+      "import check_method_discipline as d; e,w=d.check_entrypoint_smoke(payload='C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-stoic-knuth-nobvq-x20\\\\rint_stage1_review_20261003\\\\evidence_gates\\\\mutated_payload_entrypoint.py'); print(repr((e,w))); raise SystemExit(bool(e))"
+    ],
+    "exit": 0,
+    "seconds": 9.49423659988679
+  },
+  "check_arm_mutant": {
+    "command": [
+      "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "-u",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint_stage1_review_20261003\\source\\scripts\\sr01_stamp_compare.py",
+      "--check-arm",
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint_stage1_review_20261003\\evidence_gates\\payload_mutation\\mutant_on.json",
+      "--stamp",
+      "point"
+    ],
+    "exit": 0,
+    "seconds": 0.07661350001581013
+  }
+}

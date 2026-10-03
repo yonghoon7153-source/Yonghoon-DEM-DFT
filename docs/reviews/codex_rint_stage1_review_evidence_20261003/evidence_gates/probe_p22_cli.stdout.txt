@@ -1,0 +1,3 @@
+① 값 없는 플래그: argv [] → 인자 [] → 솔버 표 None
+② 플래그 두 번: argv ['AM_S|VGCF=1e-3', '--step3-rint-e', 'AM_P|VGCF=2e-3'] → 인자 ['AM_P|VGCF=2e-3'] → 솔버 표 {(2, 3): 0.002}
+③ 전자 솔브에 SE|SE: argv ['SE|SE=1e-3'] → 인자 ['SE|SE=1e-3'] → 솔버 표 {(6, 6): 0.001}

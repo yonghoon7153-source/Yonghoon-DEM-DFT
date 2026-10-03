@@ -1,0 +1,139 @@
+{
+  "repository": "yonghoon7153-source/Yonghoon-DEM-DFT",
+  "review_ref": "62f9e4cb3e969d13cf0c311858b5159ac75d6396",
+  "implementation_ref": "5e0efdb8d185fb3a7fc152983ebf543f7b873e1c",
+  "files": [
+    {
+      "path": "scripts/step3_sigma.py",
+      "git_blob_sha1": "da2e2864192b1ba115bdac84dc84e70d7d75890e",
+      "chars": 208740
+    },
+    {
+      "path": "scripts/mpm_webapp_payload.py",
+      "git_blob_sha1": "8a8ae88972a382dd93dc19e8cf87eed1d8d5424e",
+      "chars": 214387
+    },
+    {
+      "path": "scripts/check_method_discipline.py",
+      "git_blob_sha1": "c10d36b5c3549a3f30a0bcb94913a8279968c0db",
+      "chars": 151802
+    },
+    {
+      "path": "docs/reviews/rint_selfreview_summary_20261002.md",
+      "git_blob_sha1": "65734d5d482ba0ed5ae4d0e6d18d4fdc6de8f4e8",
+      "chars": 2292
+    },
+    {
+      "path": "docs/reviews/contact_resistance_pipeline_draft_20261002.md",
+      "git_blob_sha1": "7126f5980318e0f359cb62366adceb594062b9f4",
+      "chars": 17144
+    },
+    {
+      "path": "docs/reviews/codex_rint_stage1_request_20261003.md",
+      "git_blob_sha1": "beb48f611310bdf55e4d0160e63fb2095283fa48",
+      "chars": 12278
+    },
+    {
+      "path": "docs/voxel_contact_free_gap.md",
+      "git_blob_sha1": "6cfd031b114d3c4341e51125c46c2bb31b801b0d",
+      "chars": 10356
+    },
+    {
+      "path": "docs/reviews/codex_rint_stage1_request_20261003/probe_p1_pid_inherit.py",
+      "git_blob_sha1": "cdf1a5b0fe82e205e0c92ea81a99b5ff698fed4a",
+      "chars": 4998
+    },
+    {
+      "path": "docs/reviews/codex_rint_stage1_request_20261003/probe_p21_face_area.py",
+      "git_blob_sha1": "f2a47d44309482856f7e625b0c008c26242b3724",
+      "chars": 4918
+    },
+    {
+      "path": "docs/reviews/codex_rint_stage1_request_20261003/probe_p22_cli.py",
+      "git_blob_sha1": "c9018327fd6e94666eee9df2b17442f0651f9f7b",
+      "chars": 1670
+    },
+    {
+      "path": "docs/reviews/codex_rint_stage1_request_20261003/probe_outputs.txt",
+      "git_blob_sha1": "31d2eae39f43dbbda16b92f9b6b88d2509e3fa28",
+      "chars": 2995
+    },
+    {
+      "path": "scripts/se_material.py",
+      "git_blob_sha1": "6052f8d26f918d29ded383ff8bcb17e4ccc1a648",
+      "chars": 17734
+    },
+    {
+      "path": "scripts/run_contract.py",
+      "git_blob_sha1": "d335a9e6d609716620a998cfe88b5af1405d018d",
+      "chars": 56024
+    },
+    {
+      "path": "scripts/fibre_segment_raster.py",
+      "git_blob_sha1": "c117c51152e85b55d23cd1425c4d8e5e25542928",
+      "chars": 12652
+    },
+    {
+      "path": "scripts/viz_mpm_continuum.py",
+      "git_blob_sha1": "9847106afb693e3c280988716382b60e1deb27ad",
+      "chars": 25491
+    },
+    {
+      "path": "scripts/step4_dyn.py",
+      "git_blob_sha1": "db069b3d99e6683d421f10f904e03c6b02634ca6",
+      "chars": 192085
+    },
+    {
+      "path": "scripts/sdcp_gain_verdict.py",
+      "git_blob_sha1": "59fe1e4d3acb6b42319ef3b18c9bb963cceb7278",
+      "chars": 158249
+    },
+    {
+      "path": "scripts/sdcp_gain_vox015_8arm.sh",
+      "git_blob_sha1": "9dbd1d4583a0e03337a0a7353532035fbf72118e",
+      "chars": 44291
+    },
+    {
+      "path": "webapp/static/js/viewer3d.js",
+      "git_blob_sha1": "93fd582a3b713c1abb70fc207a1cba954c003d95",
+      "chars": 446940
+    },
+    {
+      "path": "scripts/network_conductivity.py",
+      "git_blob_sha1": "2e0c4a47721cd8593b039fe1e189419bbb2eea64",
+      "chars": 84202
+    },
+    {
+      "path": "scripts/sr01_stamp_compare.py",
+      "git_blob_sha1": "f4dad220d5614abf4413dbf106c5f6af36d16b67",
+      "chars": 42338
+    },
+    {
+      "path": "docs/reviews/tau_conventions_judgment_v2_20261003.md",
+      "git_blob_sha1": "670c4e5539d93cc14340292881f4625bfb11e42c",
+      "chars": 83620
+    },
+    {
+      "path": "AGENTS.md",
+      "git_blob_sha1": "2829b46196a08ffae439ddbdc20dc093cde511c4",
+      "ref": "5e0efdb8d"
+    }
+  ],
+  "implementation_matches": [
+    {
+      "path": "scripts/step3_sigma.py",
+      "implementation_blob": "da2e2864192b1ba115bdac84dc84e70d7d75890e",
+      "review_blob": "da2e2864192b1ba115bdac84dc84e70d7d75890e"
+    },
+    {
+      "path": "scripts/mpm_webapp_payload.py",
+      "implementation_blob": "8a8ae88972a382dd93dc19e8cf87eed1d8d5424e",
+      "review_blob": "8a8ae88972a382dd93dc19e8cf87eed1d8d5424e"
+    },
+    {
+      "path": "scripts/check_method_discipline.py",
+      "implementation_blob": "c10d36b5c3549a3f30a0bcb94913a8279968c0db",
+      "review_blob": "c10d36b5c3549a3f30a0bcb94913a8279968c0db"
+    }
+  ]
+}
