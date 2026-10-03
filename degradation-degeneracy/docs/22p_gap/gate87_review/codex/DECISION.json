@@ -1,0 +1,19 @@
+{
+  "review": "GATE87",
+  "date": "2026-10-03",
+  "request_head": "672ab83b209c925c3d83ab0fca9b39b90d87f1fd",
+  "production_target": "b8d4b69338f00083ece7e554660888b41d1b4905",
+  "source_digest": "864edfb73b9695a1",
+  "decision": "REQUEST_CHANGES_ROUND2B_NOT_CLOSED",
+  "blocking_findings": [{"id":"G87-N1","priority":"P1","title":"v6 fit-only completion still requires an unproduced same-claim grid receipt","evidence_kind":"STATIC_CALL_AND_STATE_TRACE_NOT_EXECUTED_PROBE"}],
+  "accepted": ["v5_builder_compatibility","v3_spec_envelope_index_binding","entrypoint_preflight_prepare_wiring","v6_naming_only","source_logs_with_scope_limits","historical_receipt_preservation_and_limited_new_receipt_delta"],
+  "round2a_still_closed": true,
+  "execution_GO": false,
+  "implementation_authorized_by_this_review": false,
+  "new_research_leg_authorized": false,
+  "received_program_executions": 0,
+  "project_tests_run_by_reviewer": 0,
+  "COMSOL_calls": 0,
+  "remote_writes": 0,
+  "notes": ["Existing tests remain valid within their scope; positive non-smoke claim issuance and smoke fit completion do not cover one full non-smoke lifecycle.","No independent canonical YAML core-hash regeneration or artifact restoration performed."]
+}

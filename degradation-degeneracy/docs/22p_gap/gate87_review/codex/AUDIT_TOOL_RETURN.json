@@ -1,0 +1,9 @@
+{
+  "provenance": "Subsequent transcription of this reviewer's audit tool return; not submitted project execution or remote OS observation.",
+  "result": {
+    "chunk_id": "f91064",
+    "wall_time_seconds": 3.057684,
+    "exit_code": 0,
+    "output": "{\"checks\": 79, \"logs\": 13, \"mutations_static\": 22, \"v5_golden\": \"b8f90ad97a7509f72742f0962c50646787171fb0214ea83478c9e597117073b4\", \"finding\": \"G87-N1 P1: fit-only vs required grid predecessor\"}\r\n"
+  }
+}

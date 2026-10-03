@@ -1,0 +1,62 @@
+[
+  {
+    "check": "V2 builder inlined AST exactly unchanged",
+    "pass": true
+  },
+  {
+    "check": "Unchanged authority AST _claim_planned_leg",
+    "pass": true
+  },
+  {
+    "check": "Unchanged authority AST resume_claim",
+    "pass": true
+  },
+  {
+    "check": "Unchanged authority AST assert_run_is_authorized",
+    "pass": true
+  },
+  {
+    "check": "Unchanged authority AST LegClaim",
+    "pass": true
+  },
+  {
+    "check": "Unchanged authority AST finalize_leg",
+    "pass": true
+  },
+  {
+    "check": "Unchanged existing fitting guard _stage3_preflight",
+    "pass": true
+  },
+  {
+    "check": "Unchanged existing fitting guard _prepare_stage3",
+    "pass": true
+  },
+  {
+    "check": "Unchanged existing fitting guard _assert_fit_input_is_authorized",
+    "pass": true
+  },
+  {
+    "check": "Unchanged existing fitting guard _record_phase",
+    "pass": true
+  },
+  {
+    "check": "Unchanged existing fitting guard _run_fit_locked",
+    "pass": true
+  },
+  {
+    "check": "io byte identical",
+    "pass": true
+  },
+  {
+    "check": "design_wire byte identical",
+    "pass": true
+  },
+  {
+    "check": "Independent v5 fixture canonical SHA",
+    "pass": true
+  },
+  {
+    "check": "Ledger changes only validator/core anchors",
+    "pass": false
+  }
+]

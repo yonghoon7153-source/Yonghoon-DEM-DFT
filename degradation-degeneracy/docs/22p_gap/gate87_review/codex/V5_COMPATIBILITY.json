@@ -1,0 +1,9 @@
+{
+  "golden": "b8f90ad97a7509f72742f0962c50646787171fb0214ea83478c9e597117073b4",
+  "operational_grid_digest_prefix": "0838df841ae7e4e6",
+  "operational_grid_scope": "Existing spec bytes/address unchanged; not independently reserialized from YAML",
+  "builder_inlined_AST_same": true,
+  "authority_AST_same": true,
+  "planned_entries_unchanged": true,
+  "received_code_execution": false
+}

@@ -1,0 +1,9 @@
+{
+  "scope": "Reviewer-owned auditing script only; not submitted production code/tests",
+  "first_audit_attempt": {"chunk_id": "6298fc", "exit_code": 1, "error": "ModuleNotFoundError: No module named 'yaml'", "phase": "import before any checks"},
+  "correction": "Removed optional PyYAML dependency. Receipt and ledger comparison now use exact text/scalar differences, explicitly without canonical YAML hash regeneration.",
+  "second_audit_attempt": {"chunk_id": "446391", "exit_code": 1, "error": "Reviewer asserted descriptive anchor names instead of actual YAML field names", "evidence": "LEDGER.diff and REVIEW_AUDIT_FAILURE.json retained", "correction": "Use source_digest / verification_receipt_core_sha256; no submitted data changed"},
+  "third_audit_attempt": {"chunk_id": "c063f7", "exit_code": 1, "error": "Previous local review did not include CLAIM_STATUS.yaml", "correction": "Use complete pre-code-to-HEAD GitHub comparison for unchanged claim-status check; do not invent a previous local snapshot"},
+  "environment_changes": 0,
+  "received_program_runs": 0
+}

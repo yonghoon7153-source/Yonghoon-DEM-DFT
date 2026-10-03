@@ -1,0 +1,93 @@
+{
+  "finding": "G87-N1",
+  "severity": "P1",
+  "kind": "Static call/data-flow counterexample, not an executed production probe",
+  "facts": {
+    "shell_fit_only": true,
+    "claim_starts_with_empty_phases": true,
+    "fit_declared_external_input_can_pass_without_grid_receipt": true,
+    "phase_order_fixed_grid_fit": true,
+    "fit_completion_requires_predecessor": true,
+    "commit_before_phase_done": true,
+    "record_phase_skips_if_no_claim": true,
+    "smoke_claim_none": true,
+    "grid_gate_uses_v2": true,
+    "v2_builder_version2": true,
+    "claim_compares_spec_digest": true,
+    "finalize_also_requires_all_phases": true,
+    "positive_claim_test_stops_before_run_fit": true,
+    "positive_completion_test_uses_smoke": true,
+    "s02_input_fixture_is_curves_hash_only": true
+  },
+  "locations": [
+    {
+      "path": "src/fitting.py",
+      "function": "_assert_fit_input_is_authorized",
+      "start": 1184,
+      "end": 1222
+    },
+    {
+      "path": "src/fitting.py",
+      "function": "_assert_fit_authorized",
+      "start": 1243,
+      "end": 1310
+    },
+    {
+      "path": "src/fitting.py",
+      "function": "_record_phase",
+      "start": 849,
+      "end": 862
+    },
+    {
+      "path": "src/fitting.py",
+      "function": "_run_fit_staged",
+      "start": 1655,
+      "end": 1755
+    },
+    {
+      "path": "tools/preserve.py",
+      "function": "_claim_planned_leg",
+      "start": 7307,
+      "end": 7436
+    },
+    {
+      "path": "tools/preserve.py",
+      "function": "phase_done",
+      "start": 6804,
+      "end": 6912
+    },
+    {
+      "path": "tools/preserve.py",
+      "function": "finalize_leg",
+      "start": 8820,
+      "end": 9087
+    },
+    {
+      "path": "src/grid.py",
+      "function": "_assert_grid_authorized",
+      "start": 393,
+      "end": 449
+    }
+  ],
+  "preconditions": [
+    "Fresh prospective v3 plan, correct source identity, external input package digest and v4 envelope/design, isolated non-smoke authority/output",
+    "No predecessor grid receipt for this new claim; fit computation hypothetically returns successfully"
+  ],
+  "trace": [
+    "New claim phases={}",
+    "Matching external input package accepted without a same-claim grid receipt",
+    "run_fit and native stage3 checks are not skipped",
+    "After successful fit, commit_run_outputs precedes _record_phase(fit)",
+    "phase_done(fit) computes predecessors=[grid], absent=[grid], raises PreserveError before writing fit receipt",
+    "finalize also refuses missing grid/fit; legacy grid entry builds v2 spec, mismatching v3 claim"
+  ],
+  "test_gap": [
+    "s02_04 ends at claim issuance",
+    "s04_01 is smoke: claim=None, _record_phase returns",
+    "Use fit_input_package_digest(_fit_input_digests(staged input)), not the existing s02 fixture curves-only hash, for the requested new non-smoke regression"
+  ],
+  "not_claimed": [
+    "No production/research run was executed by reviewer",
+    "No claim about an already-run real v6 leg or numeric error"
+  ]
+}

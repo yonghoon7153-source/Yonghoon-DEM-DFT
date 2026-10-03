@@ -1,0 +1,270 @@
+{
+  "repository_full_name": "yonghoon7153-source/Yonghoon-DEM-DFT",
+  "base": "0b21490d",
+  "head": "672ab83b209c925c3d83ab0fca9b39b90d87f1fd",
+  "status": "ahead",
+  "ahead_by": 7,
+  "behind_by": 0,
+  "total_commits": 7,
+  "too_large": null,
+  "base_commit": {
+    "sha": "0b21490d31b74a90317a1d7000d33d68e29178a0",
+    "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/commits/0b21490d31b74a90317a1d7000d33d68e29178a0",
+    "html_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/commit/0b21490d31b74a90317a1d7000d33d68e29178a0"
+  },
+  "merge_base_commit": {
+    "sha": "0b21490d31b74a90317a1d7000d33d68e29178a0",
+    "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/commits/0b21490d31b74a90317a1d7000d33d68e29178a0",
+    "html_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/commit/0b21490d31b74a90317a1d7000d33d68e29178a0"
+  },
+  "files": [
+    {
+      "filename": "degradation-degeneracy/.gitattributes",
+      "status": "modified",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/08_REVIEW_RESPONSE.md",
+      "status": "modified",
+      "additions": 22,
+      "deletions": 0,
+      "changes": 22,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/GATE87_REQUEST.md",
+      "status": "added",
+      "additions": 79,
+      "deletions": 0,
+      "changes": 79,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/LEG_PRESERVATION.yaml",
+      "status": "modified",
+      "additions": 4,
+      "deletions": 4,
+      "changes": 8,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/STAGE3_CONTRACT.md",
+      "status": "modified",
+      "additions": 2,
+      "deletions": 2,
+      "changes": 4,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/STAGE3_IMPL_ROUND1_SPEC.md",
+      "status": "modified",
+      "additions": 1,
+      "deletions": 1,
+      "changes": 2,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate87_evidence/01_red_test_gate87_round2b.log",
+      "status": "added",
+      "additions": 1305,
+      "deletions": 0,
+      "changes": 1305,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate87_evidence/02_green_attempt1_6failed.log",
+      "status": "added",
+      "additions": 222,
+      "deletions": 0,
+      "changes": 222,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate87_evidence/03_green_attempt2_1failed.log",
+      "status": "added",
+      "additions": 29,
+      "deletions": 0,
+      "changes": 29,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate87_evidence/04_green_63passed.log",
+      "status": "added",
+      "additions": 6,
+      "deletions": 0,
+      "changes": 6,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate87_evidence/05_related_modules_before_receipts.log",
+      "status": "added",
+      "additions": 573,
+      "deletions": 0,
+      "changes": 573,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate87_evidence/06_green_after_witness_fix_63passed.log",
+      "status": "added",
+      "additions": 7,
+      "deletions": 0,
+      "changes": 7,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate87_evidence/07_replay_g87_round1_emit_expect_3survived.log",
+      "status": "added",
+      "additions": 260,
+      "deletions": 0,
+      "changes": 260,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate87_evidence/08_replay_g87_round2_emit_expect_22killed.log",
+      "status": "added",
+      "additions": 267,
+      "deletions": 0,
+      "changes": 267,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate87_evidence/09_replay_g87_verify_expect_rc0.log",
+      "status": "added",
+      "additions": 28,
+      "deletions": 0,
+      "changes": 28,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate87_evidence/10_full_pytest_7fbaa45b_2109passed.log",
+      "status": "added",
+      "additions": 40,
+      "deletions": 0,
+      "changes": 40,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate87_evidence/11_smoke_7fbaa45b_rc0.log",
+      "status": "added",
+      "additions": 103,
+      "deletions": 0,
+      "changes": 103,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate87_evidence/12_full_replay_7fbaa45b_attempt1_cut_at_2h_254_of_374.log",
+      "status": "added",
+      "additions": 259,
+      "deletions": 0,
+      "changes": 259,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate87_evidence/13_full_replay_7fbaa45b_run2_374_of_374_rc0.log",
+      "status": "added",
+      "additions": 393,
+      "deletions": 0,
+      "changes": 393,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate87_evidence/README.md",
+      "status": "added",
+      "additions": 47,
+      "deletions": 0,
+      "changes": 47,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/mutation_replay.py",
+      "status": "modified",
+      "additions": 343,
+      "deletions": 0,
+      "changes": 343,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/receipts/grid_fit_v5.validate.yaml",
+      "status": "modified",
+      "additions": 4,
+      "deletions": 4,
+      "changes": 8,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/receipts/history/grid_fit_v5.validate.f1f4378f46610f08.yaml",
+      "status": "added",
+      "additions": 100,
+      "deletions": 0,
+      "changes": 100,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/receipts/history/paired_fixed5_v4.validate.f1f4378f46610f08.yaml",
+      "status": "added",
+      "additions": 102,
+      "deletions": 0,
+      "changes": 102,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/receipts/paired_fixed5_v4.validate.yaml",
+      "status": "modified",
+      "additions": 4,
+      "deletions": 4,
+      "changes": 8,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/GATE70_WORKING_STATE.md",
+      "status": "modified",
+      "additions": 1,
+      "deletions": 1,
+      "changes": 2,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/run.sh",
+      "status": "modified",
+      "additions": 21,
+      "deletions": 0,
+      "changes": 21,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/src/fitting.py",
+      "status": "modified",
+      "additions": 110,
+      "deletions": 3,
+      "changes": 113,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/tests/conftest.py",
+      "status": "modified",
+      "additions": 3,
+      "deletions": 0,
+      "changes": 3,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/tests/test_gate87_round2b.py",
+      "status": "added",
+      "additions": 700,
+      "deletions": 0,
+      "changes": 700,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/tools/preserve.py",
+      "status": "modified",
+      "additions": 166,
+      "deletions": 4,
+      "changes": 170,
+      "previous_filename": null
+    }
+  ]
+}

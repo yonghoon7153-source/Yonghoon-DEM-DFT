@@ -1,0 +1,80 @@
+[
+  {
+    "file": "01_red_test_gate87_round2b.log",
+    "bytes": 84151,
+    "sha256": "7a90f485217d9ec0687fcc9b87b83c9c22daa555c0e9e0821d60927bc39ebc91",
+    "CR_count": 0
+  },
+  {
+    "file": "02_green_attempt1_6failed.log",
+    "bytes": 17838,
+    "sha256": "9f89cb7a918f641936da3d90e069fd7ffdc52ec1790d9e289d444b609a5f50ce",
+    "CR_count": 0
+  },
+  {
+    "file": "03_green_attempt2_1failed.log",
+    "bytes": 2591,
+    "sha256": "069d9978281172afb53641e3703476aa047e5862ec705f5e18da146f09c02d09",
+    "CR_count": 0
+  },
+  {
+    "file": "04_green_63passed.log",
+    "bytes": 665,
+    "sha256": "1fda62669c3dfccfddcd3a1a37cdc6be7ca444b285fb9546f5bd60a4315ee2b4",
+    "CR_count": 0
+  },
+  {
+    "file": "05_related_modules_before_receipts.log",
+    "bytes": 42821,
+    "sha256": "d3dcc64294e34859237695545a03535fb762630066a0bfcebe792b6a8d9a8df3",
+    "CR_count": 0
+  },
+  {
+    "file": "06_green_after_witness_fix_63passed.log",
+    "bytes": 677,
+    "sha256": "f9d119a1603329ce9fda426f299f9ad17ded47470cad5d7bf6b441143a1f6938",
+    "CR_count": 0
+  },
+  {
+    "file": "07_replay_g87_round1_emit_expect_3survived.log",
+    "bytes": 19875,
+    "sha256": "2cd7af55555f622166674d02b0205982c18dd68a8e8e44e390a247c66ffa5295",
+    "CR_count": 0
+  },
+  {
+    "file": "08_replay_g87_round2_emit_expect_22killed.log",
+    "bytes": 19505,
+    "sha256": "c698d1bf531f48e529bb6f876e9f8840efeab61e732aec1431d017f455564ef1",
+    "CR_count": 0
+  },
+  {
+    "file": "09_replay_g87_verify_expect_rc0.log",
+    "bytes": 2038,
+    "sha256": "8852a18d067ba931f0762ffdedb0143a947f6ee11d1f65594b0d21041e94c1a0",
+    "CR_count": 0
+  },
+  {
+    "file": "10_full_pytest_7fbaa45b_2109passed.log",
+    "bytes": 3449,
+    "sha256": "3bf49fc9f5066b94f74ce911910713e7ef3a40321cc4ed0aedb91225b68fbfb2",
+    "CR_count": 0
+  },
+  {
+    "file": "11_smoke_7fbaa45b_rc0.log",
+    "bytes": 5707,
+    "sha256": "ff0ec69e51c63b9cd81848e2319e42337d357eea4cc8a4b2d5f1fed3dd503d94",
+    "CR_count": 3
+  },
+  {
+    "file": "12_full_replay_7fbaa45b_attempt1_cut_at_2h_254_of_374.log",
+    "bytes": 31415,
+    "sha256": "100600f035bc73d19920bc80120665be0d31d3f0f0d55ca7cc6861dfb481e1be",
+    "CR_count": 0
+  },
+  {
+    "file": "13_full_replay_7fbaa45b_run2_374_of_374_rc0.log",
+    "bytes": 50010,
+    "sha256": "2b8056e0d3224653ace11442281df2576e95c6247922056ba0725bdc5e2aa1c4",
+    "CR_count": 0
+  }
+]

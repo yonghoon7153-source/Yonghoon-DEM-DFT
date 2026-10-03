@@ -1,0 +1,28 @@
+{
+  "src/fitting.py": {
+    "added": [
+      "stage3_context_from_plan"
+    ],
+    "removed": [],
+    "modified": [
+      "_assert_fit_authorized",
+      "main",
+      "_run_fit_staged"
+    ]
+  },
+  "tools/preserve.py": {
+    "added": [
+      "_check_leg_axes",
+      "_check_stage3_axis",
+      "_check_v6_plan_slots",
+      "_repo_relative_key",
+      "leg_run_spec_v3",
+      "stage3_axis_from_envelope"
+    ],
+    "removed": [],
+    "modified": [
+      "leg_run_spec",
+      "planned_index"
+    ]
+  }
+}

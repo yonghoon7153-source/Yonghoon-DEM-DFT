@@ -1,0 +1,29 @@
+{
+  "pytest": {
+    "passed": 2109,
+    "xfailed": 1,
+    "rc": 0,
+    "head": "7fbaa45b1f2a217a41272426260f75bdabf62a28",
+    "clean_start_declared_in_log": true
+  },
+  "smoke_rc": 0,
+  "full_replay": {
+    "hit": 374,
+    "survived": 0,
+    "error": 0,
+    "declared": 11
+  },
+  "partial_replay": {
+    "hit": 254,
+    "rc": 124,
+    "not_acceptance": true
+  },
+  "first_g87_survivors": [
+    "envelope-leg-id-is-bound-to-the-entry-g87",
+    "envelope-source-digest-is-bound-to-the-entry-g87",
+    "envelope-generation-is-v6-g87"
+  ],
+  "final_g87": 22,
+  "remote_process_independently_observed": false,
+  "scope": "Checked preserved source log content and SHA, no reviewer rerun."
+}

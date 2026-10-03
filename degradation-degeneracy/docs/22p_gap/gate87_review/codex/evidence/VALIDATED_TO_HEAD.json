@@ -1,0 +1,126 @@
+{
+  "repository_full_name": "yonghoon7153-source/Yonghoon-DEM-DFT",
+  "base": "7fbaa45b1f2a217a41272426260f75bdabf62a28",
+  "head": "672ab83b209c925c3d83ab0fca9b39b90d87f1fd",
+  "status": "ahead",
+  "ahead_by": 2,
+  "behind_by": 0,
+  "total_commits": 2,
+  "too_large": null,
+  "base_commit": {
+    "sha": "7fbaa45b1f2a217a41272426260f75bdabf62a28",
+    "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/commits/7fbaa45b1f2a217a41272426260f75bdabf62a28",
+    "html_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/commit/7fbaa45b1f2a217a41272426260f75bdabf62a28"
+  },
+  "merge_base_commit": {
+    "sha": "7fbaa45b1f2a217a41272426260f75bdabf62a28",
+    "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/commits/7fbaa45b1f2a217a41272426260f75bdabf62a28",
+    "html_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/commit/7fbaa45b1f2a217a41272426260f75bdabf62a28"
+  },
+  "files": [
+    {
+      "filename": "degradation-degeneracy/.gitattributes",
+      "status": "modified",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/08_REVIEW_RESPONSE.md",
+      "status": "modified",
+      "additions": 22,
+      "deletions": 0,
+      "changes": 22,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/GATE87_REQUEST.md",
+      "status": "added",
+      "additions": 79,
+      "deletions": 0,
+      "changes": 79,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate87_evidence/06_green_after_witness_fix_63passed.log",
+      "status": "added",
+      "additions": 7,
+      "deletions": 0,
+      "changes": 7,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate87_evidence/07_replay_g87_round1_emit_expect_3survived.log",
+      "status": "added",
+      "additions": 260,
+      "deletions": 0,
+      "changes": 260,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate87_evidence/08_replay_g87_round2_emit_expect_22killed.log",
+      "status": "added",
+      "additions": 267,
+      "deletions": 0,
+      "changes": 267,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate87_evidence/09_replay_g87_verify_expect_rc0.log",
+      "status": "added",
+      "additions": 28,
+      "deletions": 0,
+      "changes": 28,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate87_evidence/10_full_pytest_7fbaa45b_2109passed.log",
+      "status": "added",
+      "additions": 40,
+      "deletions": 0,
+      "changes": 40,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate87_evidence/11_smoke_7fbaa45b_rc0.log",
+      "status": "added",
+      "additions": 103,
+      "deletions": 0,
+      "changes": 103,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate87_evidence/12_full_replay_7fbaa45b_attempt1_cut_at_2h_254_of_374.log",
+      "status": "added",
+      "additions": 259,
+      "deletions": 0,
+      "changes": 259,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate87_evidence/13_full_replay_7fbaa45b_run2_374_of_374_rc0.log",
+      "status": "added",
+      "additions": 393,
+      "deletions": 0,
+      "changes": 393,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/22p_gap/gate87_evidence/README.md",
+      "status": "added",
+      "additions": 47,
+      "deletions": 0,
+      "changes": 47,
+      "previous_filename": null
+    },
+    {
+      "filename": "degradation-degeneracy/docs/GATE70_WORKING_STATE.md",
+      "status": "modified",
+      "additions": 1,
+      "deletions": 1,
+      "changes": 2,
+      "previous_filename": null
+    }
+  ]
+}

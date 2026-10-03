@@ -1,0 +1,1305 @@
+
+[conftest] 시험 authority: /tmp/dd-test-authority-mjm0tjo4/docs/22p_gap/LEG_PRESERVATION.yaml (운영 원장의 바이트 복사본 — 70차 E6)
+
+[conftest] 이 checkout 을 처음 보았다 — 얼린 cohort 17개의 좌표를 시험 authority 에 봉인했다: ['g10_2026_09_01', 'g11_2026_09_02', 'g12_2026_09_03', 'g13_2026_09_07', 'g14_2026_09_08', 'g15_2026_09_08', 'g16_2026_09_09', 'g17_2026_09_14', 'g1_2026_08_20', 'g2_2026_08_25', 'g3_2026_08_28', 'g4_2026_08_28', 'g5_2026_08_29', 'g6_2026_09_01', 'g7_2026_09_01', 'g8_2026_09_01', 'g9_2026_09_01']
+..FFFFFFFFFFFFFFFFFFFF...FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF.F.....          [100%]
+=================================== FAILURES ===================================
+__ test_s01_01_the_v3_builder_seals_the_stage3_axis_derived_from_the_envelope __
+
+    def test_s01_01_the_v3_builder_seals_the_stage3_axis_derived_from_the_envelope():
+        p = _planned()
+        env = p.envelope()
+>       axis = _axis(env)
+               ^^^^^^^^^^
+
+tests/test_gate87_round2b.py:183: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+env = {'bank': {'exact_bounds_sha256': 'ac469ebf7ffc50877fbd072a2d18f027d73e247a064640f2da816de40078174e', 'generator': 'pcg...bababababababababababababababababababab', 'reference': 'grid'}, 'leg_id': 'g87_v6_leg', 'min_retention_days': 365, ...}
+
+    def _axis(env: dict) -> dict:
+>       return PV.stage3_axis_from_envelope(env)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'tools.preserve' has no attribute 'stage3_axis_from_envelope'
+
+tests/test_gate87_round2b.py:91: AttributeError
+_ test_s01_02_the_v3_builder_refuses_an_open_or_mistyped_stage3_axis[missing] __
+
+mutate = <function <lambda> at 0x7fb1cab344a0>
+
+    @pytest.mark.parametrize("mutate", [
+        lambda a: a.pop("planned_id"),                                   # 누락
+        lambda a: a.__setitem__("budget", 3),                            # 추가
+        lambda a: a["bank"].pop("length"),                               # 중첩 열림
+        lambda a: a.__setitem__("bank", {**a["bank"], "seed": 1}),       # 중첩 추가
+        lambda a: a.__setitem__("planned_id", a["planned_id"][:16]),     # hex64 아님
+        lambda a: a.__setitem__("roster_sha256", None),                  # 타입
+        lambda a: a.__setitem__("arm", 7),                               # 타입
+    ], ids=["missing", "extra", "bank-open", "bank-extra", "short-planned-id", "roster-none", "arm-int"])
+    def test_s01_02_the_v3_builder_refuses_an_open_or_mistyped_stage3_axis(mutate):
+>       axis = _axis(_planned().envelope())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_gate87_round2b.py:211: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+env = {'bank': {'exact_bounds_sha256': 'ac469ebf7ffc50877fbd072a2d18f027d73e247a064640f2da816de40078174e', 'generator': 'pcg...bababababababababababababababababababab', 'reference': 'grid'}, 'leg_id': 'g87_v6_leg', 'min_retention_days': 365, ...}
+
+    def _axis(env: dict) -> dict:
+>       return PV.stage3_axis_from_envelope(env)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'tools.preserve' has no attribute 'stage3_axis_from_envelope'
+
+tests/test_gate87_round2b.py:91: AttributeError
+__ test_s01_02_the_v3_builder_refuses_an_open_or_mistyped_stage3_axis[extra] ___
+
+mutate = <function <lambda> at 0x7fb1cab34540>
+
+    @pytest.mark.parametrize("mutate", [
+        lambda a: a.pop("planned_id"),                                   # 누락
+        lambda a: a.__setitem__("budget", 3),                            # 추가
+        lambda a: a["bank"].pop("length"),                               # 중첩 열림
+        lambda a: a.__setitem__("bank", {**a["bank"], "seed": 1}),       # 중첩 추가
+        lambda a: a.__setitem__("planned_id", a["planned_id"][:16]),     # hex64 아님
+        lambda a: a.__setitem__("roster_sha256", None),                  # 타입
+        lambda a: a.__setitem__("arm", 7),                               # 타입
+    ], ids=["missing", "extra", "bank-open", "bank-extra", "short-planned-id", "roster-none", "arm-int"])
+    def test_s01_02_the_v3_builder_refuses_an_open_or_mistyped_stage3_axis(mutate):
+>       axis = _axis(_planned().envelope())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_gate87_round2b.py:211: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+env = {'bank': {'exact_bounds_sha256': 'ac469ebf7ffc50877fbd072a2d18f027d73e247a064640f2da816de40078174e', 'generator': 'pcg...bababababababababababababababababababab', 'reference': 'grid'}, 'leg_id': 'g87_v6_leg', 'min_retention_days': 365, ...}
+
+    def _axis(env: dict) -> dict:
+>       return PV.stage3_axis_from_envelope(env)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'tools.preserve' has no attribute 'stage3_axis_from_envelope'
+
+tests/test_gate87_round2b.py:91: AttributeError
+_ test_s01_02_the_v3_builder_refuses_an_open_or_mistyped_stage3_axis[bank-open] _
+
+mutate = <function <lambda> at 0x7fb1cab347c0>
+
+    @pytest.mark.parametrize("mutate", [
+        lambda a: a.pop("planned_id"),                                   # 누락
+        lambda a: a.__setitem__("budget", 3),                            # 추가
+        lambda a: a["bank"].pop("length"),                               # 중첩 열림
+        lambda a: a.__setitem__("bank", {**a["bank"], "seed": 1}),       # 중첩 추가
+        lambda a: a.__setitem__("planned_id", a["planned_id"][:16]),     # hex64 아님
+        lambda a: a.__setitem__("roster_sha256", None),                  # 타입
+        lambda a: a.__setitem__("arm", 7),                               # 타입
+    ], ids=["missing", "extra", "bank-open", "bank-extra", "short-planned-id", "roster-none", "arm-int"])
+    def test_s01_02_the_v3_builder_refuses_an_open_or_mistyped_stage3_axis(mutate):
+>       axis = _axis(_planned().envelope())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_gate87_round2b.py:211: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+env = {'bank': {'exact_bounds_sha256': 'ac469ebf7ffc50877fbd072a2d18f027d73e247a064640f2da816de40078174e', 'generator': 'pcg...bababababababababababababababababababab', 'reference': 'grid'}, 'leg_id': 'g87_v6_leg', 'min_retention_days': 365, ...}
+
+    def _axis(env: dict) -> dict:
+>       return PV.stage3_axis_from_envelope(env)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'tools.preserve' has no attribute 'stage3_axis_from_envelope'
+
+tests/test_gate87_round2b.py:91: AttributeError
+_ test_s01_02_the_v3_builder_refuses_an_open_or_mistyped_stage3_axis[bank-extra] _
+
+mutate = <function <lambda> at 0x7fb1cab34c20>
+
+    @pytest.mark.parametrize("mutate", [
+        lambda a: a.pop("planned_id"),                                   # 누락
+        lambda a: a.__setitem__("budget", 3),                            # 추가
+        lambda a: a["bank"].pop("length"),                               # 중첩 열림
+        lambda a: a.__setitem__("bank", {**a["bank"], "seed": 1}),       # 중첩 추가
+        lambda a: a.__setitem__("planned_id", a["planned_id"][:16]),     # hex64 아님
+        lambda a: a.__setitem__("roster_sha256", None),                  # 타입
+        lambda a: a.__setitem__("arm", 7),                               # 타입
+    ], ids=["missing", "extra", "bank-open", "bank-extra", "short-planned-id", "roster-none", "arm-int"])
+    def test_s01_02_the_v3_builder_refuses_an_open_or_mistyped_stage3_axis(mutate):
+>       axis = _axis(_planned().envelope())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_gate87_round2b.py:211: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+env = {'bank': {'exact_bounds_sha256': 'ac469ebf7ffc50877fbd072a2d18f027d73e247a064640f2da816de40078174e', 'generator': 'pcg...bababababababababababababababababababab', 'reference': 'grid'}, 'leg_id': 'g87_v6_leg', 'min_retention_days': 365, ...}
+
+    def _axis(env: dict) -> dict:
+>       return PV.stage3_axis_from_envelope(env)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'tools.preserve' has no attribute 'stage3_axis_from_envelope'
+
+tests/test_gate87_round2b.py:91: AttributeError
+_ test_s01_02_the_v3_builder_refuses_an_open_or_mistyped_stage3_axis[short-planned-id] _
+
+mutate = <function <lambda> at 0x7fb1cab34cc0>
+
+    @pytest.mark.parametrize("mutate", [
+        lambda a: a.pop("planned_id"),                                   # 누락
+        lambda a: a.__setitem__("budget", 3),                            # 추가
+        lambda a: a["bank"].pop("length"),                               # 중첩 열림
+        lambda a: a.__setitem__("bank", {**a["bank"], "seed": 1}),       # 중첩 추가
+        lambda a: a.__setitem__("planned_id", a["planned_id"][:16]),     # hex64 아님
+        lambda a: a.__setitem__("roster_sha256", None),                  # 타입
+        lambda a: a.__setitem__("arm", 7),                               # 타입
+    ], ids=["missing", "extra", "bank-open", "bank-extra", "short-planned-id", "roster-none", "arm-int"])
+    def test_s01_02_the_v3_builder_refuses_an_open_or_mistyped_stage3_axis(mutate):
+>       axis = _axis(_planned().envelope())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_gate87_round2b.py:211: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+env = {'bank': {'exact_bounds_sha256': 'ac469ebf7ffc50877fbd072a2d18f027d73e247a064640f2da816de40078174e', 'generator': 'pcg...bababababababababababababababababababab', 'reference': 'grid'}, 'leg_id': 'g87_v6_leg', 'min_retention_days': 365, ...}
+
+    def _axis(env: dict) -> dict:
+>       return PV.stage3_axis_from_envelope(env)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'tools.preserve' has no attribute 'stage3_axis_from_envelope'
+
+tests/test_gate87_round2b.py:91: AttributeError
+_ test_s01_02_the_v3_builder_refuses_an_open_or_mistyped_stage3_axis[roster-none] _
+
+mutate = <function <lambda> at 0x7fb1cab34d60>
+
+    @pytest.mark.parametrize("mutate", [
+        lambda a: a.pop("planned_id"),                                   # 누락
+        lambda a: a.__setitem__("budget", 3),                            # 추가
+        lambda a: a["bank"].pop("length"),                               # 중첩 열림
+        lambda a: a.__setitem__("bank", {**a["bank"], "seed": 1}),       # 중첩 추가
+        lambda a: a.__setitem__("planned_id", a["planned_id"][:16]),     # hex64 아님
+        lambda a: a.__setitem__("roster_sha256", None),                  # 타입
+        lambda a: a.__setitem__("arm", 7),                               # 타입
+    ], ids=["missing", "extra", "bank-open", "bank-extra", "short-planned-id", "roster-none", "arm-int"])
+    def test_s01_02_the_v3_builder_refuses_an_open_or_mistyped_stage3_axis(mutate):
+>       axis = _axis(_planned().envelope())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_gate87_round2b.py:211: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+env = {'bank': {'exact_bounds_sha256': 'ac469ebf7ffc50877fbd072a2d18f027d73e247a064640f2da816de40078174e', 'generator': 'pcg...bababababababababababababababababababab', 'reference': 'grid'}, 'leg_id': 'g87_v6_leg', 'min_retention_days': 365, ...}
+
+    def _axis(env: dict) -> dict:
+>       return PV.stage3_axis_from_envelope(env)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'tools.preserve' has no attribute 'stage3_axis_from_envelope'
+
+tests/test_gate87_round2b.py:91: AttributeError
+_ test_s01_02_the_v3_builder_refuses_an_open_or_mistyped_stage3_axis[arm-int] __
+
+mutate = <function <lambda> at 0x7fb1cab34e00>
+
+    @pytest.mark.parametrize("mutate", [
+        lambda a: a.pop("planned_id"),                                   # 누락
+        lambda a: a.__setitem__("budget", 3),                            # 추가
+        lambda a: a["bank"].pop("length"),                               # 중첩 열림
+        lambda a: a.__setitem__("bank", {**a["bank"], "seed": 1}),       # 중첩 추가
+        lambda a: a.__setitem__("planned_id", a["planned_id"][:16]),     # hex64 아님
+        lambda a: a.__setitem__("roster_sha256", None),                  # 타입
+        lambda a: a.__setitem__("arm", 7),                               # 타입
+    ], ids=["missing", "extra", "bank-open", "bank-extra", "short-planned-id", "roster-none", "arm-int"])
+    def test_s01_02_the_v3_builder_refuses_an_open_or_mistyped_stage3_axis(mutate):
+>       axis = _axis(_planned().envelope())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_gate87_round2b.py:211: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+env = {'bank': {'exact_bounds_sha256': 'ac469ebf7ffc50877fbd072a2d18f027d73e247a064640f2da816de40078174e', 'generator': 'pcg...bababababababababababababababababababab', 'reference': 'grid'}, 'leg_id': 'g87_v6_leg', 'min_retention_days': 365, ...}
+
+    def _axis(env: dict) -> dict:
+>       return PV.stage3_axis_from_envelope(env)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'tools.preserve' has no attribute 'stage3_axis_from_envelope'
+
+tests/test_gate87_round2b.py:91: AttributeError
+_____ test_s01_03_the_v3_address_moves_with_planned_id_and_differs_from_v2 _____
+
+    def test_s01_03_the_v3_address_moves_with_planned_id_and_differs_from_v2():
+>       axis = _axis(_planned().envelope())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_gate87_round2b.py:218: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+env = {'bank': {'exact_bounds_sha256': 'ac469ebf7ffc50877fbd072a2d18f027d73e247a064640f2da816de40078174e', 'generator': 'pcg...bababababababababababababababababababab', 'reference': 'grid'}, 'leg_id': 'g87_v6_leg', 'min_retention_days': 365, ...}
+
+    def _axis(env: dict) -> dict:
+>       return PV.stage3_axis_from_envelope(env)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'tools.preserve' has no attribute 'stage3_axis_from_envelope'
+
+tests/test_gate87_round2b.py:91: AttributeError
+______ test_s01_04_grid_and_fit_checks_are_one_function_for_both_versions ______
+
+    def test_s01_04_grid_and_fit_checks_are_one_function_for_both_versions():
+>       axis = _axis(_planned().envelope())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_gate87_round2b.py:227: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+env = {'bank': {'exact_bounds_sha256': 'ac469ebf7ffc50877fbd072a2d18f027d73e247a064640f2da816de40078174e', 'generator': 'pcg...bababababababababababababababababababab', 'reference': 'grid'}, 'leg_id': 'g87_v6_leg', 'min_retention_days': 365, ...}
+
+    def _axis(env: dict) -> dict:
+>       return PV.stage3_axis_from_envelope(env)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'tools.preserve' has no attribute 'stage3_axis_from_envelope'
+
+tests/test_gate87_round2b.py:91: AttributeError
+___ test_s02_01_a_v3_plan_without_a_stage3_context_is_refused_before_fit_one ___
+
+tmp_path = PosixPath('/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/results/_smoke/_unit/test_s02_01_a_v3_plan_without_a_stage3_c_edd6b332')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb1caa13290>
+
+    def test_s02_01_a_v3_plan_without_a_stage3_context_is_refused_before_fit_one(tmp_path, monkeypatch):
+        out = Path(tempfile.mkdtemp(prefix="dd87-s02a-"))
+        led = _isolated_authority(monkeypatch, out)
+        in_dir, ctx, live, ind = _live_pair(tmp_path, out)
+        p = ctx["planned"]
+>       spec = PV.leg_run_spec_v3(LEG, _grid_for(live), dict(live, in_digest=ind), _axis(p.envelope()))
+               ^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'tools.preserve' has no attribute 'leg_run_spec_v3'
+
+tests/test_gate87_round2b.py:267: AttributeError
+____ test_s02_02_a_v2_plan_with_a_stage3_context_is_refused_before_fit_one _____
+
+tmp_path = PosixPath('/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/results/_smoke/_unit/test_s02_02_a_v2_plan_with_a_stage3_cont_957803c4')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb1c23ab150>
+
+    def test_s02_02_a_v2_plan_with_a_stage3_context_is_refused_before_fit_one(tmp_path, monkeypatch):
+        out = Path(tempfile.mkdtemp(prefix="dd87-s02b-"))
+        led = _isolated_authority(monkeypatch, out)
+        in_dir, ctx, live, ind = _live_pair(tmp_path, out)
+        spec = PV.leg_run_spec(LEG, _grid_for(live), dict(live, in_digest=ind))      # v5 계획
+        _write(led, _doc(_entry(spec, src=SRC)))
+        calls = G84._sentinel(monkeypatch)
+        with pytest.raises(PV.PreserveError) as ei:
+            _run_nonsmoke(in_dir, out, ctx)
+>       assert "leg_spec_version" in str(ei.value) or "stage3" in str(ei.value), str(ei.value)
+E       AssertionError: [plan] 계획이 승인한 입력 묶음과 지금 읽는 묶음이 다르다 (계획 c26a6f8a4f862604 ≠ 지금 8fb841cbe05b3083) — 경로가 같아도 바이트가 다르면 다른 실행이다. 지금 묶음: curves_manifest_sha256=e44f0d71833d, curves_manifest_start_sha256=e72641c70b81, curves_sha256=c26a6f8a4f86
+E       assert ('leg_spec_version' in '[plan] 계획이 승인한 입력 묶음과 지금 읽는 묶음이 다르다 (계획 c26a6f8a4f862604 ≠ 지금 8fb841cbe05b3083) — 경로가 같아도 바이트가 다르면 다른 실행이다. 지금 묶음: curves_manifest_sha256=e44f0d71833d, curves_manifest_start_sha256=e72641c70b81, curves_sha256=c26a6f8a4f86' or 'stage3' in '[plan] 계획이 승인한 입력 묶음과 지금 읽는 묶음이 다르다 (계획 c26a6f8a4f862604 ≠ 지금 8fb841cbe05b3083) — 경로가 같아도 바이트가 다르면 다른 실행이다. 지금 묶음: curves_manifest_sha256=e44f0d71833d, curves_manifest_start_sha256=e72641c70b81, curves_sha256=c26a6f8a4f86')
+E        +  where '[plan] 계획이 승인한 입력 묶음과 지금 읽는 묶음이 다르다 (계획 c26a6f8a4f862604 ≠ 지금 8fb841cbe05b3083) — 경로가 같아도 바이트가 다르면 다른 실행이다. 지금 묶음: curves_manifest_sha256=e44f0d71833d, curves_manifest_start_sha256=e72641c70b81, curves_sha256=c26a6f8a4f86' = str(PreserveError('[plan] 계획이 승인한 입력 묶음과 지금 읽는 묶음이 다르다 (계획 c26a6f8a4f862604 ≠ 지금 8fb841cbe05b3083) — 경로가 같아도 바이트가 다르면 다른 실행이다. 지금 묶음: curves_manifest_sha256=e44f0d71833d, curves_manifest_start_sha256=e72641c70b81, curves_sha256=c26a6f8a4f86'))
+E        +    where PreserveError('[plan] 계획이 승인한 입력 묶음과 지금 읽는 묶음이 다르다 (계획 c26a6f8a4f862604 ≠ 지금 8fb841cbe05b3083) — 경로가 같아도 바이트가 다르면 다른 실행이다. 지금 묶음: curves_manifest_sha256=e44f0d71833d, curves_manifest_start_sha256=e72641c70b81, curves_sha256=c26a6f8a4f86') = <ExceptionInfo PreserveError('[plan] 계획이 승인한 입력 묶음과 지금 읽는 묶음이 다르다 (계획 c26a6f8a4f862604 ≠ 지금 8fb841cbe05b3083) — 경로가 같아...: curves_manifest_sha256=e44f0d71833d, curves_manifest_start_sha256=e72641c70b81, curves_sha256=c26a6f8a4f86') tblen=5>.value
+E        +  and   '[plan] 계획이 승인한 입력 묶음과 지금 읽는 묶음이 다르다 (계획 c26a6f8a4f862604 ≠ 지금 8fb841cbe05b3083) — 경로가 같아도 바이트가 다르면 다른 실행이다. 지금 묶음: curves_manifest_sha256=e44f0d71833d, curves_manifest_start_sha256=e72641c70b81, curves_sha256=c26a6f8a4f86' = str(PreserveError('[plan] 계획이 승인한 입력 묶음과 지금 읽는 묶음이 다르다 (계획 c26a6f8a4f862604 ≠ 지금 8fb841cbe05b3083) — 경로가 같아도 바이트가 다르면 다른 실행이다. 지금 묶음: curves_manifest_sha256=e44f0d71833d, curves_manifest_start_sha256=e72641c70b81, curves_sha256=c26a6f8a4f86'))
+E        +    where PreserveError('[plan] 계획이 승인한 입력 묶음과 지금 읽는 묶음이 다르다 (계획 c26a6f8a4f862604 ≠ 지금 8fb841cbe05b3083) — 경로가 같아도 바이트가 다르면 다른 실행이다. 지금 묶음: curves_manifest_sha256=e44f0d71833d, curves_manifest_start_sha256=e72641c70b81, curves_sha256=c26a6f8a4f86') = <ExceptionInfo PreserveError('[plan] 계획이 승인한 입력 묶음과 지금 읽는 묶음이 다르다 (계획 c26a6f8a4f862604 ≠ 지금 8fb841cbe05b3083) — 경로가 같아...: curves_manifest_sha256=e44f0d71833d, curves_manifest_start_sha256=e72641c70b81, curves_sha256=c26a6f8a4f86') tblen=5>.value
+
+tests/test_gate87_round2b.py:287: AssertionError
+______ test_s02_03_an_unknown_or_missing_spec_version_is_refused[absent] _______
+
+tmp_path = PosixPath('/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/results/_smoke/_unit/test_s02_03_an_unknown_or_missing_spec_v_3aba797e')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb1c23abad0>
+version = None
+
+    @pytest.mark.parametrize("version", [None, 1, 4, "3"], ids=["absent", "one", "four", "str3"])
+    def test_s02_03_an_unknown_or_missing_spec_version_is_refused(tmp_path, monkeypatch, version):
+        out = Path(tempfile.mkdtemp(prefix="dd87-s02c-"))
+        led = _isolated_authority(monkeypatch, out)
+        in_dir, ctx, live, ind = _live_pair(tmp_path, out)
+        p = ctx["planned"]
+>       spec = PV.leg_run_spec_v3(LEG, _grid_for(live), dict(live, in_digest=ind), _axis(p.envelope()))
+               ^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'tools.preserve' has no attribute 'leg_run_spec_v3'
+
+tests/test_gate87_round2b.py:297: AttributeError
+________ test_s02_03_an_unknown_or_missing_spec_version_is_refused[one] ________
+
+tmp_path = PosixPath('/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/results/_smoke/_unit/test_s02_03_an_unknown_or_missing_spec_v_30659e4a')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb1c224acd0>
+version = 1
+
+    @pytest.mark.parametrize("version", [None, 1, 4, "3"], ids=["absent", "one", "four", "str3"])
+    def test_s02_03_an_unknown_or_missing_spec_version_is_refused(tmp_path, monkeypatch, version):
+        out = Path(tempfile.mkdtemp(prefix="dd87-s02c-"))
+        led = _isolated_authority(monkeypatch, out)
+        in_dir, ctx, live, ind = _live_pair(tmp_path, out)
+        p = ctx["planned"]
+>       spec = PV.leg_run_spec_v3(LEG, _grid_for(live), dict(live, in_digest=ind), _axis(p.envelope()))
+               ^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'tools.preserve' has no attribute 'leg_run_spec_v3'
+
+tests/test_gate87_round2b.py:297: AttributeError
+_______ test_s02_03_an_unknown_or_missing_spec_version_is_refused[four] ________
+
+tmp_path = PosixPath('/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/results/_smoke/_unit/test_s02_03_an_unknown_or_missing_spec_v_2e9a9391')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb1c0064c50>
+version = 4
+
+    @pytest.mark.parametrize("version", [None, 1, 4, "3"], ids=["absent", "one", "four", "str3"])
+    def test_s02_03_an_unknown_or_missing_spec_version_is_refused(tmp_path, monkeypatch, version):
+        out = Path(tempfile.mkdtemp(prefix="dd87-s02c-"))
+        led = _isolated_authority(monkeypatch, out)
+        in_dir, ctx, live, ind = _live_pair(tmp_path, out)
+        p = ctx["planned"]
+>       spec = PV.leg_run_spec_v3(LEG, _grid_for(live), dict(live, in_digest=ind), _axis(p.envelope()))
+               ^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'tools.preserve' has no attribute 'leg_run_spec_v3'
+
+tests/test_gate87_round2b.py:297: AttributeError
+_______ test_s02_03_an_unknown_or_missing_spec_version_is_refused[str3] ________
+
+tmp_path = PosixPath('/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/results/_smoke/_unit/test_s02_03_an_unknown_or_missing_spec_v_1bb253fd')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb1c1dee6d0>
+version = '3'
+
+    @pytest.mark.parametrize("version", [None, 1, 4, "3"], ids=["absent", "one", "four", "str3"])
+    def test_s02_03_an_unknown_or_missing_spec_version_is_refused(tmp_path, monkeypatch, version):
+        out = Path(tempfile.mkdtemp(prefix="dd87-s02c-"))
+        led = _isolated_authority(monkeypatch, out)
+        in_dir, ctx, live, ind = _live_pair(tmp_path, out)
+        p = ctx["planned"]
+>       spec = PV.leg_run_spec_v3(LEG, _grid_for(live), dict(live, in_digest=ind), _axis(p.envelope()))
+               ^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'tools.preserve' has no attribute 'leg_run_spec_v3'
+
+tests/test_gate87_round2b.py:297: AttributeError
+_______ test_s02_04_a_matching_v3_plan_and_context_reach_claim_issuance ________
+
+tmp_path = PosixPath('/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/results/_smoke/_unit/test_s02_04_a_matching_v3_plan_and_conte_95853d54')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb1c005e210>
+
+    def test_s02_04_a_matching_v3_plan_and_context_reach_claim_issuance(tmp_path, monkeypatch):
+        out = Path(tempfile.mkdtemp(prefix="dd87-s02d-"))
+        led = _isolated_authority(monkeypatch, out)
+        in_dir, ctx, live, ind = _live_pair(tmp_path, out)
+        p = ctx["planned"]
+>       spec = PV.leg_run_spec_v3(LEG, _grid_for(live), dict(live, in_digest=ind), _axis(p.envelope()))
+               ^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'tools.preserve' has no attribute 'leg_run_spec_v3'
+
+tests/test_gate87_round2b.py:315: AttributeError
+___________ test_s03_01_a_v3_entry_with_envelope_and_context_indexes ___________
+
+tmp_path = PosixPath('/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/results/_smoke/_unit/test_s03_01_a_v3_entry_with_envelope_and_a8c1af12')
+
+    def test_s03_01_a_v3_entry_with_envelope_and_context_indexes(tmp_path):
+        p = _planned()
+>       led = _write(tmp_path / "L.yaml", _doc(_v3_entry(p)))
+                                               ^^^^^^^^^^^^
+
+tests/test_gate87_round2b.py:329: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+p = PlannedLegV4(leg_id='g87_v6_leg', protocol_generation='v6', pairing_design_sha256='aa1572711685ffd09bd11b2bb1c570dd4ec..._v6', 'treatment_id': 'none', 'replicate_id': 0}, min_retention_days=365, design_label='p22_grid_primary_v6', notes='')
+grid = None, fit = None, design = 'docs/22p_gap/g87_ctx/design.json'
+provider_runs = None, kw = {}
+
+    def _v3_entry(p: PV.PlannedLegV4, *, grid=None, fit=None, design=DESIGN_REL, provider_runs=None, **kw) -> dict:
+        env = p.envelope()
+>       spec = PV.leg_run_spec_v3(p.leg_id, grid or _grid_axis(), fit or _fit_axis(), _axis(env))
+               ^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'tools.preserve' has no attribute 'leg_run_spec_v3'
+
+tests/test_gate87_round2b.py:123: AttributeError
+___ test_s03_02_a_v3_entry_missing_either_slot_is_refused[planned_envelope] ____
+
+tmp_path = PosixPath('/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/results/_smoke/_unit/test_s03_02_a_v3_entry_missing_either_sl_06fc2f79')
+drop = 'planned_envelope'
+
+    @pytest.mark.parametrize("drop", ["planned_envelope", "stage3_context"])
+    def test_s03_02_a_v3_entry_missing_either_slot_is_refused(tmp_path, drop):
+>       e = _v3_entry(_planned())
+            ^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_gate87_round2b.py:339: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+p = PlannedLegV4(leg_id='g87_v6_leg', protocol_generation='v6', pairing_design_sha256='aa1572711685ffd09bd11b2bb1c570dd4ec..._v6', 'treatment_id': 'none', 'replicate_id': 0}, min_retention_days=365, design_label='p22_grid_primary_v6', notes='')
+grid = None, fit = None, design = 'docs/22p_gap/g87_ctx/design.json'
+provider_runs = None, kw = {}
+
+    def _v3_entry(p: PV.PlannedLegV4, *, grid=None, fit=None, design=DESIGN_REL, provider_runs=None, **kw) -> dict:
+        env = p.envelope()
+>       spec = PV.leg_run_spec_v3(p.leg_id, grid or _grid_axis(), fit or _fit_axis(), _axis(env))
+               ^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'tools.preserve' has no attribute 'leg_run_spec_v3'
+
+tests/test_gate87_round2b.py:123: AttributeError
+____ test_s03_02_a_v3_entry_missing_either_slot_is_refused[stage3_context] _____
+
+tmp_path = PosixPath('/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/results/_smoke/_unit/test_s03_02_a_v3_entry_missing_either_sl_feb116b7')
+drop = 'stage3_context'
+
+    @pytest.mark.parametrize("drop", ["planned_envelope", "stage3_context"])
+    def test_s03_02_a_v3_entry_missing_either_slot_is_refused(tmp_path, drop):
+>       e = _v3_entry(_planned())
+            ^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_gate87_round2b.py:339: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+p = PlannedLegV4(leg_id='g87_v6_leg', protocol_generation='v6', pairing_design_sha256='aa1572711685ffd09bd11b2bb1c570dd4ec..._v6', 'treatment_id': 'none', 'replicate_id': 0}, min_retention_days=365, design_label='p22_grid_primary_v6', notes='')
+grid = None, fit = None, design = 'docs/22p_gap/g87_ctx/design.json'
+provider_runs = None, kw = {}
+
+    def _v3_entry(p: PV.PlannedLegV4, *, grid=None, fit=None, design=DESIGN_REL, provider_runs=None, **kw) -> dict:
+        env = p.envelope()
+>       spec = PV.leg_run_spec_v3(p.leg_id, grid or _grid_axis(), fit or _fit_axis(), _axis(env))
+               ^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'tools.preserve' has no attribute 'leg_run_spec_v3'
+
+tests/test_gate87_round2b.py:123: AttributeError
+___ test_s03_04_an_envelope_that_disagrees_with_the_entry_is_refused[leg_id] ___
+
+tmp_path = PosixPath('/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/results/_smoke/_unit/test_s03_04_an_envelope_that_disagrees_w_30ebff39')
+edit = <function <lambda> at 0x7fb1cab356c0>
+
+    @pytest.mark.parametrize("edit", [
+        lambda env, e: env.__setitem__("leg_id", "someone_else"),
+        lambda env, e: env.__setitem__("source_digest", "0" * 16),
+        lambda env, e: env.__setitem__("protocol_generation", "v6_prep"),
+        lambda env, e: env["inputs"].__setitem__("reference", "halfcell"),     # envelope 자체가 유효하지 않다
+    ], ids=["leg_id", "source_digest", "generation", "invalid-envelope"])
+    def test_s03_04_an_envelope_that_disagrees_with_the_entry_is_refused(tmp_path, edit):
+>       e = _v3_entry(_planned())
+            ^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_gate87_round2b.py:365: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+p = PlannedLegV4(leg_id='g87_v6_leg', protocol_generation='v6', pairing_design_sha256='aa1572711685ffd09bd11b2bb1c570dd4ec..._v6', 'treatment_id': 'none', 'replicate_id': 0}, min_retention_days=365, design_label='p22_grid_primary_v6', notes='')
+grid = None, fit = None, design = 'docs/22p_gap/g87_ctx/design.json'
+provider_runs = None, kw = {}
+
+    def _v3_entry(p: PV.PlannedLegV4, *, grid=None, fit=None, design=DESIGN_REL, provider_runs=None, **kw) -> dict:
+        env = p.envelope()
+>       spec = PV.leg_run_spec_v3(p.leg_id, grid or _grid_axis(), fit or _fit_axis(), _axis(env))
+               ^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'tools.preserve' has no attribute 'leg_run_spec_v3'
+
+tests/test_gate87_round2b.py:123: AttributeError
+_ test_s03_04_an_envelope_that_disagrees_with_the_entry_is_refused[source_digest] _
+
+tmp_path = PosixPath('/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/results/_smoke/_unit/test_s03_04_an_envelope_that_disagrees_w_109b7293')
+edit = <function <lambda> at 0x7fb1cab35760>
+
+    @pytest.mark.parametrize("edit", [
+        lambda env, e: env.__setitem__("leg_id", "someone_else"),
+        lambda env, e: env.__setitem__("source_digest", "0" * 16),
+        lambda env, e: env.__setitem__("protocol_generation", "v6_prep"),
+        lambda env, e: env["inputs"].__setitem__("reference", "halfcell"),     # envelope 자체가 유효하지 않다
+    ], ids=["leg_id", "source_digest", "generation", "invalid-envelope"])
+    def test_s03_04_an_envelope_that_disagrees_with_the_entry_is_refused(tmp_path, edit):
+>       e = _v3_entry(_planned())
+            ^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_gate87_round2b.py:365: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+p = PlannedLegV4(leg_id='g87_v6_leg', protocol_generation='v6', pairing_design_sha256='aa1572711685ffd09bd11b2bb1c570dd4ec..._v6', 'treatment_id': 'none', 'replicate_id': 0}, min_retention_days=365, design_label='p22_grid_primary_v6', notes='')
+grid = None, fit = None, design = 'docs/22p_gap/g87_ctx/design.json'
+provider_runs = None, kw = {}
+
+    def _v3_entry(p: PV.PlannedLegV4, *, grid=None, fit=None, design=DESIGN_REL, provider_runs=None, **kw) -> dict:
+        env = p.envelope()
+>       spec = PV.leg_run_spec_v3(p.leg_id, grid or _grid_axis(), fit or _fit_axis(), _axis(env))
+               ^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'tools.preserve' has no attribute 'leg_run_spec_v3'
+
+tests/test_gate87_round2b.py:123: AttributeError
+_ test_s03_04_an_envelope_that_disagrees_with_the_entry_is_refused[generation] _
+
+tmp_path = PosixPath('/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/results/_smoke/_unit/test_s03_04_an_envelope_that_disagrees_w_b12fd304')
+edit = <function <lambda> at 0x7fb1cab35800>
+
+    @pytest.mark.parametrize("edit", [
+        lambda env, e: env.__setitem__("leg_id", "someone_else"),
+        lambda env, e: env.__setitem__("source_digest", "0" * 16),
+        lambda env, e: env.__setitem__("protocol_generation", "v6_prep"),
+        lambda env, e: env["inputs"].__setitem__("reference", "halfcell"),     # envelope 자체가 유효하지 않다
+    ], ids=["leg_id", "source_digest", "generation", "invalid-envelope"])
+    def test_s03_04_an_envelope_that_disagrees_with_the_entry_is_refused(tmp_path, edit):
+>       e = _v3_entry(_planned())
+            ^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_gate87_round2b.py:365: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+p = PlannedLegV4(leg_id='g87_v6_leg', protocol_generation='v6', pairing_design_sha256='aa1572711685ffd09bd11b2bb1c570dd4ec..._v6', 'treatment_id': 'none', 'replicate_id': 0}, min_retention_days=365, design_label='p22_grid_primary_v6', notes='')
+grid = None, fit = None, design = 'docs/22p_gap/g87_ctx/design.json'
+provider_runs = None, kw = {}
+
+    def _v3_entry(p: PV.PlannedLegV4, *, grid=None, fit=None, design=DESIGN_REL, provider_runs=None, **kw) -> dict:
+        env = p.envelope()
+>       spec = PV.leg_run_spec_v3(p.leg_id, grid or _grid_axis(), fit or _fit_axis(), _axis(env))
+               ^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'tools.preserve' has no attribute 'leg_run_spec_v3'
+
+tests/test_gate87_round2b.py:123: AttributeError
+_ test_s03_04_an_envelope_that_disagrees_with_the_entry_is_refused[invalid-envelope] _
+
+tmp_path = PosixPath('/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/results/_smoke/_unit/test_s03_04_an_envelope_that_disagrees_w_cecee35f')
+edit = <function <lambda> at 0x7fb1cab358a0>
+
+    @pytest.mark.parametrize("edit", [
+        lambda env, e: env.__setitem__("leg_id", "someone_else"),
+        lambda env, e: env.__setitem__("source_digest", "0" * 16),
+        lambda env, e: env.__setitem__("protocol_generation", "v6_prep"),
+        lambda env, e: env["inputs"].__setitem__("reference", "halfcell"),     # envelope 자체가 유효하지 않다
+    ], ids=["leg_id", "source_digest", "generation", "invalid-envelope"])
+    def test_s03_04_an_envelope_that_disagrees_with_the_entry_is_refused(tmp_path, edit):
+>       e = _v3_entry(_planned())
+            ^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_gate87_round2b.py:365: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+p = PlannedLegV4(leg_id='g87_v6_leg', protocol_generation='v6', pairing_design_sha256='aa1572711685ffd09bd11b2bb1c570dd4ec..._v6', 'treatment_id': 'none', 'replicate_id': 0}, min_retention_days=365, design_label='p22_grid_primary_v6', notes='')
+grid = None, fit = None, design = 'docs/22p_gap/g87_ctx/design.json'
+provider_runs = None, kw = {}
+
+    def _v3_entry(p: PV.PlannedLegV4, *, grid=None, fit=None, design=DESIGN_REL, provider_runs=None, **kw) -> dict:
+        env = p.envelope()
+>       spec = PV.leg_run_spec_v3(p.leg_id, grid or _grid_axis(), fit or _fit_axis(), _axis(env))
+               ^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'tools.preserve' has no attribute 'leg_run_spec_v3'
+
+tests/test_gate87_round2b.py:123: AttributeError
+_ test_s03_05_a_stage3_axis_that_is_not_derived_from_the_envelope_is_refused[planned_id] _
+
+tmp_path = PosixPath('/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/results/_smoke/_unit/test_s03_05_a_stage3_axis_that_is_not_de_89bc7489')
+key = 'planned_id'
+
+    @pytest.mark.parametrize("key", ["planned_id", "roster_sha256", "provider_edges_sha256", "arm", "candidate_mode"])
+    def test_s03_05_a_stage3_axis_that_is_not_derived_from_the_envelope_is_refused(tmp_path, key):
+        """손으로 적은 축 ≠ 유도값 — digest 는 자기일관으로 다시 맞춘다 (index 의 주소 대조는 지나야 이 검사가 보인다)."""
+>       e = _v3_entry(_planned())
+            ^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_gate87_round2b.py:375: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+p = PlannedLegV4(leg_id='g87_v6_leg', protocol_generation='v6', pairing_design_sha256='aa1572711685ffd09bd11b2bb1c570dd4ec..._v6', 'treatment_id': 'none', 'replicate_id': 0}, min_retention_days=365, design_label='p22_grid_primary_v6', notes='')
+grid = None, fit = None, design = 'docs/22p_gap/g87_ctx/design.json'
+provider_runs = None, kw = {}
+
+    def _v3_entry(p: PV.PlannedLegV4, *, grid=None, fit=None, design=DESIGN_REL, provider_runs=None, **kw) -> dict:
+        env = p.envelope()
+>       spec = PV.leg_run_spec_v3(p.leg_id, grid or _grid_axis(), fit or _fit_axis(), _axis(env))
+               ^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'tools.preserve' has no attribute 'leg_run_spec_v3'
+
+tests/test_gate87_round2b.py:123: AttributeError
+_ test_s03_05_a_stage3_axis_that_is_not_derived_from_the_envelope_is_refused[roster_sha256] _
+
+tmp_path = PosixPath('/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/results/_smoke/_unit/test_s03_05_a_stage3_axis_that_is_not_de_f048b448')
+key = 'roster_sha256'
+
+    @pytest.mark.parametrize("key", ["planned_id", "roster_sha256", "provider_edges_sha256", "arm", "candidate_mode"])
+    def test_s03_05_a_stage3_axis_that_is_not_derived_from_the_envelope_is_refused(tmp_path, key):
+        """손으로 적은 축 ≠ 유도값 — digest 는 자기일관으로 다시 맞춘다 (index 의 주소 대조는 지나야 이 검사가 보인다)."""
+>       e = _v3_entry(_planned())
+            ^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_gate87_round2b.py:375: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+p = PlannedLegV4(leg_id='g87_v6_leg', protocol_generation='v6', pairing_design_sha256='aa1572711685ffd09bd11b2bb1c570dd4ec..._v6', 'treatment_id': 'none', 'replicate_id': 0}, min_retention_days=365, design_label='p22_grid_primary_v6', notes='')
+grid = None, fit = None, design = 'docs/22p_gap/g87_ctx/design.json'
+provider_runs = None, kw = {}
+
+    def _v3_entry(p: PV.PlannedLegV4, *, grid=None, fit=None, design=DESIGN_REL, provider_runs=None, **kw) -> dict:
+        env = p.envelope()
+>       spec = PV.leg_run_spec_v3(p.leg_id, grid or _grid_axis(), fit or _fit_axis(), _axis(env))
+               ^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'tools.preserve' has no attribute 'leg_run_spec_v3'
+
+tests/test_gate87_round2b.py:123: AttributeError
+_ test_s03_05_a_stage3_axis_that_is_not_derived_from_the_envelope_is_refused[provider_edges_sha256] _
+
+tmp_path = PosixPath('/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/results/_smoke/_unit/test_s03_05_a_stage3_axis_that_is_not_de_f3090367')
+key = 'provider_edges_sha256'
+
+    @pytest.mark.parametrize("key", ["planned_id", "roster_sha256", "provider_edges_sha256", "arm", "candidate_mode"])
+    def test_s03_05_a_stage3_axis_that_is_not_derived_from_the_envelope_is_refused(tmp_path, key):
+        """손으로 적은 축 ≠ 유도값 — digest 는 자기일관으로 다시 맞춘다 (index 의 주소 대조는 지나야 이 검사가 보인다)."""
+>       e = _v3_entry(_planned())
+            ^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_gate87_round2b.py:375: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+p = PlannedLegV4(leg_id='g87_v6_leg', protocol_generation='v6', pairing_design_sha256='aa1572711685ffd09bd11b2bb1c570dd4ec..._v6', 'treatment_id': 'none', 'replicate_id': 0}, min_retention_days=365, design_label='p22_grid_primary_v6', notes='')
+grid = None, fit = None, design = 'docs/22p_gap/g87_ctx/design.json'
+provider_runs = None, kw = {}
+
+    def _v3_entry(p: PV.PlannedLegV4, *, grid=None, fit=None, design=DESIGN_REL, provider_runs=None, **kw) -> dict:
+        env = p.envelope()
+>       spec = PV.leg_run_spec_v3(p.leg_id, grid or _grid_axis(), fit or _fit_axis(), _axis(env))
+               ^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'tools.preserve' has no attribute 'leg_run_spec_v3'
+
+tests/test_gate87_round2b.py:123: AttributeError
+_ test_s03_05_a_stage3_axis_that_is_not_derived_from_the_envelope_is_refused[arm] _
+
+tmp_path = PosixPath('/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/results/_smoke/_unit/test_s03_05_a_stage3_axis_that_is_not_de_4b82c7f7')
+key = 'arm'
+
+    @pytest.mark.parametrize("key", ["planned_id", "roster_sha256", "provider_edges_sha256", "arm", "candidate_mode"])
+    def test_s03_05_a_stage3_axis_that_is_not_derived_from_the_envelope_is_refused(tmp_path, key):
+        """손으로 적은 축 ≠ 유도값 — digest 는 자기일관으로 다시 맞춘다 (index 의 주소 대조는 지나야 이 검사가 보인다)."""
+>       e = _v3_entry(_planned())
+            ^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_gate87_round2b.py:375: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+p = PlannedLegV4(leg_id='g87_v6_leg', protocol_generation='v6', pairing_design_sha256='aa1572711685ffd09bd11b2bb1c570dd4ec..._v6', 'treatment_id': 'none', 'replicate_id': 0}, min_retention_days=365, design_label='p22_grid_primary_v6', notes='')
+grid = None, fit = None, design = 'docs/22p_gap/g87_ctx/design.json'
+provider_runs = None, kw = {}
+
+    def _v3_entry(p: PV.PlannedLegV4, *, grid=None, fit=None, design=DESIGN_REL, provider_runs=None, **kw) -> dict:
+        env = p.envelope()
+>       spec = PV.leg_run_spec_v3(p.leg_id, grid or _grid_axis(), fit or _fit_axis(), _axis(env))
+               ^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'tools.preserve' has no attribute 'leg_run_spec_v3'
+
+tests/test_gate87_round2b.py:123: AttributeError
+_ test_s03_05_a_stage3_axis_that_is_not_derived_from_the_envelope_is_refused[candidate_mode] _
+
+tmp_path = PosixPath('/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/results/_smoke/_unit/test_s03_05_a_stage3_axis_that_is_not_de_570fd2ad')
+key = 'candidate_mode'
+
+    @pytest.mark.parametrize("key", ["planned_id", "roster_sha256", "provider_edges_sha256", "arm", "candidate_mode"])
+    def test_s03_05_a_stage3_axis_that_is_not_derived_from_the_envelope_is_refused(tmp_path, key):
+        """손으로 적은 축 ≠ 유도값 — digest 는 자기일관으로 다시 맞춘다 (index 의 주소 대조는 지나야 이 검사가 보인다)."""
+>       e = _v3_entry(_planned())
+            ^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_gate87_round2b.py:375: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+p = PlannedLegV4(leg_id='g87_v6_leg', protocol_generation='v6', pairing_design_sha256='aa1572711685ffd09bd11b2bb1c570dd4ec..._v6', 'treatment_id': 'none', 'replicate_id': 0}, min_retention_days=365, design_label='p22_grid_primary_v6', notes='')
+grid = None, fit = None, design = 'docs/22p_gap/g87_ctx/design.json'
+provider_runs = None, kw = {}
+
+    def _v3_entry(p: PV.PlannedLegV4, *, grid=None, fit=None, design=DESIGN_REL, provider_runs=None, **kw) -> dict:
+        env = p.envelope()
+>       spec = PV.leg_run_spec_v3(p.leg_id, grid or _grid_axis(), fit or _fit_axis(), _axis(env))
+               ^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'tools.preserve' has no attribute 'leg_run_spec_v3'
+
+tests/test_gate87_round2b.py:123: AttributeError
+________ test_s03_06_provider_runs_must_name_exactly_the_warm_consumers ________
+
+tmp_path = PosixPath('/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/results/_smoke/_unit/test_s03_06_provider_runs_must_name_exac_61e4a107')
+
+    def test_s03_06_provider_runs_must_name_exactly_the_warm_consumers(tmp_path):
+        # no-warm 계획에 provider 를 더하면 추가
+>       e = _v3_entry(_planned(), provider_runs={OBJS[1]: "results/_smoke/g87_provider"})
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_gate87_round2b.py:392: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+p = PlannedLegV4(leg_id='g87_v6_leg', protocol_generation='v6', pairing_design_sha256='aa1572711685ffd09bd11b2bb1c570dd4ec..._v6', 'treatment_id': 'none', 'replicate_id': 0}, min_retention_days=365, design_label='p22_grid_primary_v6', notes='')
+grid = None, fit = None, design = 'docs/22p_gap/g87_ctx/design.json'
+provider_runs = {'pocv_dvdq_dqdv': 'results/_smoke/g87_provider'}, kw = {}
+
+    def _v3_entry(p: PV.PlannedLegV4, *, grid=None, fit=None, design=DESIGN_REL, provider_runs=None, **kw) -> dict:
+        env = p.envelope()
+>       spec = PV.leg_run_spec_v3(p.leg_id, grid or _grid_axis(), fit or _fit_axis(), _axis(env))
+               ^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'tools.preserve' has no attribute 'leg_run_spec_v3'
+
+tests/test_gate87_round2b.py:123: AttributeError
+_________ test_s03_07_context_paths_must_be_repo_relative[abs-design] __________
+
+tmp_path = PosixPath('/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/results/_smoke/_unit/test_s03_07_context_paths_must_be_repo_r_e0dc9bd2')
+design = '/etc/design.json', provider = None
+
+    @pytest.mark.parametrize("design,provider", [
+        ("/etc/design.json", None), ("../design.json", None), ("", None), ("docs/../design.json", None),
+        (DESIGN_REL, "/abs/run"), (DESIGN_REL, "../run"), (DESIGN_REL, ""),
+    ], ids=["abs-design", "dotdot-design", "empty-design", "inner-dotdot", "abs-provider", "dotdot-provider", "empty-provider"])
+    def test_s03_07_context_paths_must_be_repo_relative(tmp_path, design, provider):
+        if provider is None:
+>           e = _v3_entry(_planned(), design=design)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_gate87_round2b.py:413: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+p = PlannedLegV4(leg_id='g87_v6_leg', protocol_generation='v6', pairing_design_sha256='aa1572711685ffd09bd11b2bb1c570dd4ec..._v6', 'treatment_id': 'none', 'replicate_id': 0}, min_retention_days=365, design_label='p22_grid_primary_v6', notes='')
+grid = None, fit = None, design = '/etc/design.json', provider_runs = None
+kw = {}
+
+    def _v3_entry(p: PV.PlannedLegV4, *, grid=None, fit=None, design=DESIGN_REL, provider_runs=None, **kw) -> dict:
+        env = p.envelope()
+>       spec = PV.leg_run_spec_v3(p.leg_id, grid or _grid_axis(), fit or _fit_axis(), _axis(env))
+               ^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'tools.preserve' has no attribute 'leg_run_spec_v3'
+
+tests/test_gate87_round2b.py:123: AttributeError
+________ test_s03_07_context_paths_must_be_repo_relative[dotdot-design] ________
+
+tmp_path = PosixPath('/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/results/_smoke/_unit/test_s03_07_context_paths_must_be_repo_r_5aad4528')
+design = '../design.json', provider = None
+
+    @pytest.mark.parametrize("design,provider", [
+        ("/etc/design.json", None), ("../design.json", None), ("", None), ("docs/../design.json", None),
+        (DESIGN_REL, "/abs/run"), (DESIGN_REL, "../run"), (DESIGN_REL, ""),
+    ], ids=["abs-design", "dotdot-design", "empty-design", "inner-dotdot", "abs-provider", "dotdot-provider", "empty-provider"])
+    def test_s03_07_context_paths_must_be_repo_relative(tmp_path, design, provider):
+        if provider is None:
+>           e = _v3_entry(_planned(), design=design)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_gate87_round2b.py:413: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+p = PlannedLegV4(leg_id='g87_v6_leg', protocol_generation='v6', pairing_design_sha256='aa1572711685ffd09bd11b2bb1c570dd4ec..._v6', 'treatment_id': 'none', 'replicate_id': 0}, min_retention_days=365, design_label='p22_grid_primary_v6', notes='')
+grid = None, fit = None, design = '../design.json', provider_runs = None
+kw = {}
+
+    def _v3_entry(p: PV.PlannedLegV4, *, grid=None, fit=None, design=DESIGN_REL, provider_runs=None, **kw) -> dict:
+        env = p.envelope()
+>       spec = PV.leg_run_spec_v3(p.leg_id, grid or _grid_axis(), fit or _fit_axis(), _axis(env))
+               ^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'tools.preserve' has no attribute 'leg_run_spec_v3'
+
+tests/test_gate87_round2b.py:123: AttributeError
+________ test_s03_07_context_paths_must_be_repo_relative[empty-design] _________
+
+tmp_path = PosixPath('/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/results/_smoke/_unit/test_s03_07_context_paths_must_be_repo_r_c9de10c8')
+design = '', provider = None
+
+    @pytest.mark.parametrize("design,provider", [
+        ("/etc/design.json", None), ("../design.json", None), ("", None), ("docs/../design.json", None),
+        (DESIGN_REL, "/abs/run"), (DESIGN_REL, "../run"), (DESIGN_REL, ""),
+    ], ids=["abs-design", "dotdot-design", "empty-design", "inner-dotdot", "abs-provider", "dotdot-provider", "empty-provider"])
+    def test_s03_07_context_paths_must_be_repo_relative(tmp_path, design, provider):
+        if provider is None:
+>           e = _v3_entry(_planned(), design=design)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_gate87_round2b.py:413: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+p = PlannedLegV4(leg_id='g87_v6_leg', protocol_generation='v6', pairing_design_sha256='aa1572711685ffd09bd11b2bb1c570dd4ec..._v6', 'treatment_id': 'none', 'replicate_id': 0}, min_retention_days=365, design_label='p22_grid_primary_v6', notes='')
+grid = None, fit = None, design = '', provider_runs = None, kw = {}
+
+    def _v3_entry(p: PV.PlannedLegV4, *, grid=None, fit=None, design=DESIGN_REL, provider_runs=None, **kw) -> dict:
+        env = p.envelope()
+>       spec = PV.leg_run_spec_v3(p.leg_id, grid or _grid_axis(), fit or _fit_axis(), _axis(env))
+               ^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'tools.preserve' has no attribute 'leg_run_spec_v3'
+
+tests/test_gate87_round2b.py:123: AttributeError
+________ test_s03_07_context_paths_must_be_repo_relative[inner-dotdot] _________
+
+tmp_path = PosixPath('/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/results/_smoke/_unit/test_s03_07_context_paths_must_be_repo_r_186a6838')
+design = 'docs/../design.json', provider = None
+
+    @pytest.mark.parametrize("design,provider", [
+        ("/etc/design.json", None), ("../design.json", None), ("", None), ("docs/../design.json", None),
+        (DESIGN_REL, "/abs/run"), (DESIGN_REL, "../run"), (DESIGN_REL, ""),
+    ], ids=["abs-design", "dotdot-design", "empty-design", "inner-dotdot", "abs-provider", "dotdot-provider", "empty-provider"])
+    def test_s03_07_context_paths_must_be_repo_relative(tmp_path, design, provider):
+        if provider is None:
+>           e = _v3_entry(_planned(), design=design)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_gate87_round2b.py:413: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+p = PlannedLegV4(leg_id='g87_v6_leg', protocol_generation='v6', pairing_design_sha256='aa1572711685ffd09bd11b2bb1c570dd4ec..._v6', 'treatment_id': 'none', 'replicate_id': 0}, min_retention_days=365, design_label='p22_grid_primary_v6', notes='')
+grid = None, fit = None, design = 'docs/../design.json', provider_runs = None
+kw = {}
+
+    def _v3_entry(p: PV.PlannedLegV4, *, grid=None, fit=None, design=DESIGN_REL, provider_runs=None, **kw) -> dict:
+        env = p.envelope()
+>       spec = PV.leg_run_spec_v3(p.leg_id, grid or _grid_axis(), fit or _fit_axis(), _axis(env))
+               ^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'tools.preserve' has no attribute 'leg_run_spec_v3'
+
+tests/test_gate87_round2b.py:123: AttributeError
+________ test_s03_07_context_paths_must_be_repo_relative[abs-provider] _________
+
+tmp_path = PosixPath('/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/results/_smoke/_unit/test_s03_07_context_paths_must_be_repo_r_91675221')
+design = 'docs/22p_gap/g87_ctx/design.json', provider = '/abs/run'
+
+    @pytest.mark.parametrize("design,provider", [
+        ("/etc/design.json", None), ("../design.json", None), ("", None), ("docs/../design.json", None),
+        (DESIGN_REL, "/abs/run"), (DESIGN_REL, "../run"), (DESIGN_REL, ""),
+    ], ids=["abs-design", "dotdot-design", "empty-design", "inner-dotdot", "abs-provider", "dotdot-provider", "empty-provider"])
+    def test_s03_07_context_paths_must_be_repo_relative(tmp_path, design, provider):
+        if provider is None:
+            e = _v3_entry(_planned(), design=design)
+        else:
+>           e = _v3_entry(_planned(warm=True), design=design, provider_runs={OBJS[1]: provider})
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_gate87_round2b.py:415: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+p = PlannedLegV4(leg_id='g87_v6_leg', protocol_generation='v6', pairing_design_sha256='aa1572711685ffd09bd11b2bb1c570dd4ec..._v6', 'treatment_id': 'none', 'replicate_id': 0}, min_retention_days=365, design_label='p22_grid_primary_v6', notes='')
+grid = None, fit = None, design = 'docs/22p_gap/g87_ctx/design.json'
+provider_runs = {'pocv_dvdq_dqdv': '/abs/run'}, kw = {}
+
+    def _v3_entry(p: PV.PlannedLegV4, *, grid=None, fit=None, design=DESIGN_REL, provider_runs=None, **kw) -> dict:
+        env = p.envelope()
+>       spec = PV.leg_run_spec_v3(p.leg_id, grid or _grid_axis(), fit or _fit_axis(), _axis(env))
+               ^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'tools.preserve' has no attribute 'leg_run_spec_v3'
+
+tests/test_gate87_round2b.py:123: AttributeError
+_______ test_s03_07_context_paths_must_be_repo_relative[dotdot-provider] _______
+
+tmp_path = PosixPath('/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/results/_smoke/_unit/test_s03_07_context_paths_must_be_repo_r_0bd8c8e4')
+design = 'docs/22p_gap/g87_ctx/design.json', provider = '../run'
+
+    @pytest.mark.parametrize("design,provider", [
+        ("/etc/design.json", None), ("../design.json", None), ("", None), ("docs/../design.json", None),
+        (DESIGN_REL, "/abs/run"), (DESIGN_REL, "../run"), (DESIGN_REL, ""),
+    ], ids=["abs-design", "dotdot-design", "empty-design", "inner-dotdot", "abs-provider", "dotdot-provider", "empty-provider"])
+    def test_s03_07_context_paths_must_be_repo_relative(tmp_path, design, provider):
+        if provider is None:
+            e = _v3_entry(_planned(), design=design)
+        else:
+>           e = _v3_entry(_planned(warm=True), design=design, provider_runs={OBJS[1]: provider})
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_gate87_round2b.py:415: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+p = PlannedLegV4(leg_id='g87_v6_leg', protocol_generation='v6', pairing_design_sha256='aa1572711685ffd09bd11b2bb1c570dd4ec..._v6', 'treatment_id': 'none', 'replicate_id': 0}, min_retention_days=365, design_label='p22_grid_primary_v6', notes='')
+grid = None, fit = None, design = 'docs/22p_gap/g87_ctx/design.json'
+provider_runs = {'pocv_dvdq_dqdv': '../run'}, kw = {}
+
+    def _v3_entry(p: PV.PlannedLegV4, *, grid=None, fit=None, design=DESIGN_REL, provider_runs=None, **kw) -> dict:
+        env = p.envelope()
+>       spec = PV.leg_run_spec_v3(p.leg_id, grid or _grid_axis(), fit or _fit_axis(), _axis(env))
+               ^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'tools.preserve' has no attribute 'leg_run_spec_v3'
+
+tests/test_gate87_round2b.py:123: AttributeError
+_______ test_s03_07_context_paths_must_be_repo_relative[empty-provider] ________
+
+tmp_path = PosixPath('/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/results/_smoke/_unit/test_s03_07_context_paths_must_be_repo_r_adae4b4b')
+design = 'docs/22p_gap/g87_ctx/design.json', provider = ''
+
+    @pytest.mark.parametrize("design,provider", [
+        ("/etc/design.json", None), ("../design.json", None), ("", None), ("docs/../design.json", None),
+        (DESIGN_REL, "/abs/run"), (DESIGN_REL, "../run"), (DESIGN_REL, ""),
+    ], ids=["abs-design", "dotdot-design", "empty-design", "inner-dotdot", "abs-provider", "dotdot-provider", "empty-provider"])
+    def test_s03_07_context_paths_must_be_repo_relative(tmp_path, design, provider):
+        if provider is None:
+            e = _v3_entry(_planned(), design=design)
+        else:
+>           e = _v3_entry(_planned(warm=True), design=design, provider_runs={OBJS[1]: provider})
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_gate87_round2b.py:415: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+p = PlannedLegV4(leg_id='g87_v6_leg', protocol_generation='v6', pairing_design_sha256='aa1572711685ffd09bd11b2bb1c570dd4ec..._v6', 'treatment_id': 'none', 'replicate_id': 0}, min_retention_days=365, design_label='p22_grid_primary_v6', notes='')
+grid = None, fit = None, design = 'docs/22p_gap/g87_ctx/design.json'
+provider_runs = {'pocv_dvdq_dqdv': ''}, kw = {}
+
+    def _v3_entry(p: PV.PlannedLegV4, *, grid=None, fit=None, design=DESIGN_REL, provider_runs=None, **kw) -> dict:
+        env = p.envelope()
+>       spec = PV.leg_run_spec_v3(p.leg_id, grid or _grid_axis(), fit or _fit_axis(), _axis(env))
+               ^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'tools.preserve' has no attribute 'leg_run_spec_v3'
+
+tests/test_gate87_round2b.py:123: AttributeError
+__________ test_s03_08_g74_start_conditions_still_apply_to_a_v3_plan ___________
+
+tmp_path = PosixPath('/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/results/_smoke/_unit/test_s03_08_g74_start_conditions_still_a_1dddba85')
+
+    def test_s03_08_g74_start_conditions_still_apply_to_a_v3_plan(tmp_path):
+        p = _planned()
+>       e = _v3_entry(p, grid=dict(_grid_axis(), discharged_cache_sha256=None))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_gate87_round2b.py:422: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+p = PlannedLegV4(leg_id='g87_v6_leg', protocol_generation='v6', pairing_design_sha256='aa1572711685ffd09bd11b2bb1c570dd4ec..._v6', 'treatment_id': 'none', 'replicate_id': 0}, min_retention_days=365, design_label='p22_grid_primary_v6', notes='')
+grid = {'config_digest': 'cccccccccccccccc', 'condition_ids_sha256': 'dddddddddddddddd', 'n_conditions': 3, 'discharged_cache_sha256': None, ...}
+fit = None, design = 'docs/22p_gap/g87_ctx/design.json', provider_runs = None
+kw = {}
+
+    def _v3_entry(p: PV.PlannedLegV4, *, grid=None, fit=None, design=DESIGN_REL, provider_runs=None, **kw) -> dict:
+        env = p.envelope()
+>       spec = PV.leg_run_spec_v3(p.leg_id, grid or _grid_axis(), fit or _fit_axis(), _axis(env))
+               ^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'tools.preserve' has no attribute 'leg_run_spec_v3'
+
+tests/test_gate87_round2b.py:123: AttributeError
+_ test_s04_01_the_entrypoint_builds_the_context_from_the_ledger_and_run_fit_completes _
+
+tmp_path = PosixPath('/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/results/_smoke/_unit/test_s04_01_the_entrypoint_builds_the_co_a5b423ee')
+
+    def test_s04_01_the_entrypoint_builds_the_context_from_the_ledger_and_run_fit_completes(tmp_path):
+        from tests.test_fitting import _tiny_curves
+        in_dir = _tiny_curves(tmp_path / "in")
+        ctx0 = G81._v6_context(in_dir)
+>       root, led, e = _entry_with_design(tmp_path, ctx0)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_gate87_round2b.py:452: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_gate87_round2b.py:443: in _entry_with_design
+    e = _v3_entry(p, provider_runs=provider_runs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+p = PlannedLegV4(leg_id='g22p_v6_armGA_b3', protocol_generation='v6', pairing_design_sha256='aa1572711685ffd09bd11b2bb1c57..._v6', 'treatment_id': 'none', 'replicate_id': 0}, min_retention_days=365, design_label='p22_grid_primary_v6', notes='')
+grid = None, fit = None, design = 'docs/22p_gap/g87_ctx/design.json'
+provider_runs = None, kw = {}
+
+    def _v3_entry(p: PV.PlannedLegV4, *, grid=None, fit=None, design=DESIGN_REL, provider_runs=None, **kw) -> dict:
+        env = p.envelope()
+>       spec = PV.leg_run_spec_v3(p.leg_id, grid or _grid_axis(), fit or _fit_axis(), _axis(env))
+               ^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'tools.preserve' has no attribute 'leg_run_spec_v3'
+
+tests/test_gate87_round2b.py:123: AttributeError
+_ test_s04_02_a_design_file_whose_bytes_differ_from_the_plan_is_refused_before_run_fit _
+
+tmp_path = PosixPath('/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/results/_smoke/_unit/test_s04_02_a_design_file_whose_bytes_di_84544239')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb1c1c2eb50>
+
+    def test_s04_02_a_design_file_whose_bytes_differ_from_the_plan_is_refused_before_run_fit(tmp_path, monkeypatch):
+        from tests.test_fitting import _tiny_curves
+        ctx0 = G81._v6_context(_tiny_curves(tmp_path / "in"))
+>       root, led, _ = _entry_with_design(tmp_path, ctx0, mutate_design=lambda d: d["arms"].append("G_Z"))
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_gate87_round2b.py:470: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_gate87_round2b.py:440: in _entry_with_design
+    mutate_design(design)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+d = {'schema': 'pairing-design/v6.3', 'coordinate': {'unit': 'fraction', 'representation': 'exact_decimal_string', 'binary...성은 아니다 (계약 §12)', 'objective': '같은 조건을 여러 목적함수로 재는 것이 설계다', 'seed': 'bank 는 조건 단위로 고정된다 — seed 는 bank_id 로 내려간다'}, ...}
+
+>   root, led, _ = _entry_with_design(tmp_path, ctx0, mutate_design=lambda d: d["arms"].append("G_Z"))
+                                                                              ^^^^^^^^^^^^^^^^
+E   AttributeError: 'dict' object has no attribute 'append'
+
+tests/test_gate87_round2b.py:470: AttributeError
+_________ test_s04_03_a_missing_design_file_or_provider_dir_is_refused _________
+
+tmp_path = PosixPath('/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/results/_smoke/_unit/test_s04_03_a_missing_design_file_or_pro_bed3f920')
+
+    def test_s04_03_a_missing_design_file_or_provider_dir_is_refused(tmp_path):
+        from tests.test_fitting import _tiny_curves
+        in_dir = _tiny_curves(tmp_path / "in")
+        # 설계 파일 없음
+        ctx0 = G81._v6_context(in_dir)
+>       root, led, _ = _entry_with_design(tmp_path, ctx0)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_gate87_round2b.py:485: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_gate87_round2b.py:443: in _entry_with_design
+    e = _v3_entry(p, provider_runs=provider_runs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+p = PlannedLegV4(leg_id='g22p_v6_armGA_b3', protocol_generation='v6', pairing_design_sha256='aa1572711685ffd09bd11b2bb1c57..._v6', 'treatment_id': 'none', 'replicate_id': 0}, min_retention_days=365, design_label='p22_grid_primary_v6', notes='')
+grid = None, fit = None, design = 'docs/22p_gap/g87_ctx/design.json'
+provider_runs = None, kw = {}
+
+    def _v3_entry(p: PV.PlannedLegV4, *, grid=None, fit=None, design=DESIGN_REL, provider_runs=None, **kw) -> dict:
+        env = p.envelope()
+>       spec = PV.leg_run_spec_v3(p.leg_id, grid or _grid_axis(), fit or _fit_axis(), _axis(env))
+               ^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'tools.preserve' has no attribute 'leg_run_spec_v3'
+
+tests/test_gate87_round2b.py:123: AttributeError
+______ test_s04_04_the_entrypoint_does_not_trust_the_index_for_planned_id ______
+
+tmp_path = PosixPath('/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/results/_smoke/_unit/test_s04_04_the_entrypoint_does_not_trus_da881b03')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb1c1c0b110>
+
+    def test_s04_04_the_entrypoint_does_not_trust_the_index_for_planned_id(tmp_path, monkeypatch):
+        """index 가 뚫려도 (monkeypatch) 진입점은 envelope 를 다시 세워 `run_spec.stage3.planned_id` 와 대조한다."""
+        from tests.test_fitting import _tiny_curves
+        ctx0 = G81._v6_context(_tiny_curves(tmp_path / "in"))
+>       root, led, e = _entry_with_design(tmp_path, ctx0)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_gate87_round2b.py:508: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_gate87_round2b.py:443: in _entry_with_design
+    e = _v3_entry(p, provider_runs=provider_runs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+p = PlannedLegV4(leg_id='g22p_v6_armGA_b3', protocol_generation='v6', pairing_design_sha256='aa1572711685ffd09bd11b2bb1c57..._v6', 'treatment_id': 'none', 'replicate_id': 0}, min_retention_days=365, design_label='p22_grid_primary_v6', notes='')
+grid = None, fit = None, design = 'docs/22p_gap/g87_ctx/design.json'
+provider_runs = None, kw = {}
+
+    def _v3_entry(p: PV.PlannedLegV4, *, grid=None, fit=None, design=DESIGN_REL, provider_runs=None, **kw) -> dict:
+        env = p.envelope()
+>       spec = PV.leg_run_spec_v3(p.leg_id, grid or _grid_axis(), fit or _fit_axis(), _axis(env))
+               ^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'tools.preserve' has no attribute 'leg_run_spec_v3'
+
+tests/test_gate87_round2b.py:123: AttributeError
+____________________ test_s04_05_an_unknown_leg_is_refused _____________________
+
+tmp_path = PosixPath('/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/results/_smoke/_unit/test_s04_05_an_unknown_leg_is_refused_80c6d0c1')
+
+    def test_s04_05_an_unknown_leg_is_refused(tmp_path):
+>       led = _write(tmp_path / "L.yaml", _doc(_v3_entry(_planned())))
+                                               ^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_gate87_round2b.py:520: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+p = PlannedLegV4(leg_id='g87_v6_leg', protocol_generation='v6', pairing_design_sha256='aa1572711685ffd09bd11b2bb1c570dd4ec..._v6', 'treatment_id': 'none', 'replicate_id': 0}, min_retention_days=365, design_label='p22_grid_primary_v6', notes='')
+grid = None, fit = None, design = 'docs/22p_gap/g87_ctx/design.json'
+provider_runs = None, kw = {}
+
+    def _v3_entry(p: PV.PlannedLegV4, *, grid=None, fit=None, design=DESIGN_REL, provider_runs=None, **kw) -> dict:
+        env = p.envelope()
+>       spec = PV.leg_run_spec_v3(p.leg_id, grid or _grid_axis(), fit or _fit_axis(), _axis(env))
+               ^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'tools.preserve' has no attribute 'leg_run_spec_v3'
+
+tests/test_gate87_round2b.py:123: AttributeError
+_ test_s04_06_a_context_that_disagrees_with_the_plan_is_still_refused_by_prepare_stage3 _
+
+tmp_path = PosixPath('/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/results/_smoke/_unit/test_s04_06_a_context_that_disagrees_wit_5b47ae3c')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb1c0069290>
+
+    def test_s04_06_a_context_that_disagrees_with_the_plan_is_still_refused_by_prepare_stage3(tmp_path, monkeypatch):
+        """진입점을 건너 손으로 어긋난 문맥을 만들어도 `run_fit` 안의 대조가 거부한다 (83차 N2 — 우회 없음)."""
+        from tests.test_fitting import _tiny_curves
+        in_dir = _tiny_curves(tmp_path / "in")
+        ctx = G81._v6_context(in_dir)
+>       other = copy.deepcopy(ctx["design"]); other["arms"].append("G_Z")
+                                              ^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'dict' object has no attribute 'append'
+
+tests/test_gate87_round2b.py:530: AttributeError
+_ test_s05_01_stage3_plan_conflicting_with_leg_exits_before_reading_the_ledger _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb1c1d4a050>
+
+    def test_s05_01_stage3_plan_conflicting_with_leg_exits_before_reading_the_ledger(monkeypatch):
+>       seen = _cli(monkeypatch, "--stage3-plan", "X", "--leg", "Y", "--no-adaptive", "--no-warm-start")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_gate87_round2b.py:550: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb1c1d4a050>
+argv = ('--stage3-plan', 'X', '--leg', 'Y', '--no-adaptive', '--no-warm-start')
+
+    def _cli(monkeypatch, *argv):
+        seen = {"ctx": [], "run": []}
+>       monkeypatch.setattr(F, "stage3_context_from_plan",
+                            lambda leg, **kw: (seen["ctx"].append(leg), {"planned": "P", "design": "D", "provider_runs": {}})[1])
+E       AttributeError: <module 'src.fitting' from '/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/src/fitting.py'> has no attribute 'stage3_context_from_plan'
+
+tests/test_gate87_round2b.py:542: AttributeError
+_ test_s05_02_stage3_plan_requires_explicit_no_adaptive_and_no_warm_start[none] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb1c00b0350>
+flags = ()
+
+    @pytest.mark.parametrize("flags", [(), ("--no-adaptive",), ("--no-warm-start",)], ids=["none", "adaptive-only", "warm-only"])
+    def test_s05_02_stage3_plan_requires_explicit_no_adaptive_and_no_warm_start(monkeypatch, flags):
+>       seen = _cli(monkeypatch, "--stage3-plan", "X", *flags)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_gate87_round2b.py:559: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb1c00b0350>
+argv = ('--stage3-plan', 'X')
+
+    def _cli(monkeypatch, *argv):
+        seen = {"ctx": [], "run": []}
+>       monkeypatch.setattr(F, "stage3_context_from_plan",
+                            lambda leg, **kw: (seen["ctx"].append(leg), {"planned": "P", "design": "D", "provider_runs": {}})[1])
+E       AttributeError: <module 'src.fitting' from '/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/src/fitting.py'> has no attribute 'stage3_context_from_plan'
+
+tests/test_gate87_round2b.py:542: AttributeError
+_ test_s05_02_stage3_plan_requires_explicit_no_adaptive_and_no_warm_start[adaptive-only] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb1c1b7c590>
+flags = ('--no-adaptive',)
+
+    @pytest.mark.parametrize("flags", [(), ("--no-adaptive",), ("--no-warm-start",)], ids=["none", "adaptive-only", "warm-only"])
+    def test_s05_02_stage3_plan_requires_explicit_no_adaptive_and_no_warm_start(monkeypatch, flags):
+>       seen = _cli(monkeypatch, "--stage3-plan", "X", *flags)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_gate87_round2b.py:559: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb1c1b7c590>
+argv = ('--stage3-plan', 'X', '--no-adaptive')
+
+    def _cli(monkeypatch, *argv):
+        seen = {"ctx": [], "run": []}
+>       monkeypatch.setattr(F, "stage3_context_from_plan",
+                            lambda leg, **kw: (seen["ctx"].append(leg), {"planned": "P", "design": "D", "provider_runs": {}})[1])
+E       AttributeError: <module 'src.fitting' from '/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/src/fitting.py'> has no attribute 'stage3_context_from_plan'
+
+tests/test_gate87_round2b.py:542: AttributeError
+_ test_s05_02_stage3_plan_requires_explicit_no_adaptive_and_no_warm_start[warm-only] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb1c1b94b10>
+flags = ('--no-warm-start',)
+
+    @pytest.mark.parametrize("flags", [(), ("--no-adaptive",), ("--no-warm-start",)], ids=["none", "adaptive-only", "warm-only"])
+    def test_s05_02_stage3_plan_requires_explicit_no_adaptive_and_no_warm_start(monkeypatch, flags):
+>       seen = _cli(monkeypatch, "--stage3-plan", "X", *flags)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_gate87_round2b.py:559: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb1c1b94b10>
+argv = ('--stage3-plan', 'X', '--no-warm-start')
+
+    def _cli(monkeypatch, *argv):
+        seen = {"ctx": [], "run": []}
+>       monkeypatch.setattr(F, "stage3_context_from_plan",
+                            lambda leg, **kw: (seen["ctx"].append(leg), {"planned": "P", "design": "D", "provider_runs": {}})[1])
+E       AttributeError: <module 'src.fitting' from '/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/src/fitting.py'> has no attribute 'stage3_context_from_plan'
+
+tests/test_gate87_round2b.py:542: AttributeError
+___ test_s05_03_stage3_plan_builds_the_context_once_and_hands_it_to_run_fit ____
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb1c1b9f7d0>
+
+    def test_s05_03_stage3_plan_builds_the_context_once_and_hands_it_to_run_fit(monkeypatch):
+>       seen = _cli(monkeypatch, "--stage3-plan", "X", "--no-adaptive", "--no-warm-start")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_gate87_round2b.py:567: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb1c1b9f7d0>
+argv = ('--stage3-plan', 'X', '--no-adaptive', '--no-warm-start')
+
+    def _cli(monkeypatch, *argv):
+        seen = {"ctx": [], "run": []}
+>       monkeypatch.setattr(F, "stage3_context_from_plan",
+                            lambda leg, **kw: (seen["ctx"].append(leg), {"planned": "P", "design": "D", "provider_runs": {}})[1])
+E       AttributeError: <module 'src.fitting' from '/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/src/fitting.py'> has no attribute 'stage3_context_from_plan'
+
+tests/test_gate87_round2b.py:542: AttributeError
+____________ test_s05_04_stage3_plan_with_the_same_leg_is_accepted _____________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb1c00f22d0>
+
+    def test_s05_04_stage3_plan_with_the_same_leg_is_accepted(monkeypatch):
+>       seen = _cli(monkeypatch, "--stage3-plan", "X", "--leg", "X", "--no-adaptive", "--no-warm-start")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_gate87_round2b.py:576: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb1c00f22d0>
+argv = ('--stage3-plan', 'X', '--leg', 'X', '--no-adaptive', '--no-warm-start')
+
+    def _cli(monkeypatch, *argv):
+        seen = {"ctx": [], "run": []}
+>       monkeypatch.setattr(F, "stage3_context_from_plan",
+                            lambda leg, **kw: (seen["ctx"].append(leg), {"planned": "P", "design": "D", "provider_runs": {}})[1])
+E       AttributeError: <module 'src.fitting' from '/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/src/fitting.py'> has no attribute 'stage3_context_from_plan'
+
+tests/test_gate87_round2b.py:542: AttributeError
+______ test_s05_05_without_stage3_plan_the_legacy_argv_passes_no_context _______
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb1c1d488d0>
+
+    def test_s05_05_without_stage3_plan_the_legacy_argv_passes_no_context(monkeypatch):
+>       seen = _cli(monkeypatch)
+               ^^^^^^^^^^^^^^^^^
+
+tests/test_gate87_round2b.py:582: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb1c1d488d0>
+argv = ()
+
+    def _cli(monkeypatch, *argv):
+        seen = {"ctx": [], "run": []}
+>       monkeypatch.setattr(F, "stage3_context_from_plan",
+                            lambda leg, **kw: (seen["ctx"].append(leg), {"planned": "P", "design": "D", "provider_runs": {}})[1])
+E       AttributeError: <module 'src.fitting' from '/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/src/fitting.py'> has no attribute 'stage3_context_from_plan'
+
+tests/test_gate87_round2b.py:542: AttributeError
+______ test_s06_02_fit_dry_argv_carries_stage3_plan_and_leg_exactly_once _______
+
+    def test_s06_02_fit_dry_argv_carries_stage3_plan_and_leg_exactly_once():
+        r = _dry("--mode", "fit", "--in", "results/_smoke/x", "--out", "results/_smoke/y", "--nproc", "4",
+                 "--stage3-plan", "X", "--no-adaptive", "--no-warm-start")
+>       assert r.returncode == 0, r.stderr
+E       AssertionError: 알 수 없는 인자: --stage3-plan
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['bash', '/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/run.sh', '--mode', 'fit', '--in', '...--reference halfcell --nproc 32\n  ./run.sh --mode score --in results/final_v1\n', stderr='알 수 없는 인자: --stage3-plan\n').returncode
+
+tests/test_gate87_round2b.py:612: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_gate87_round2b.py::test_s01_01_the_v3_builder_seals_the_stage3_axis_derived_from_the_envelope
+FAILED tests/test_gate87_round2b.py::test_s01_02_the_v3_builder_refuses_an_open_or_mistyped_stage3_axis[missing]
+FAILED tests/test_gate87_round2b.py::test_s01_02_the_v3_builder_refuses_an_open_or_mistyped_stage3_axis[extra]
+FAILED tests/test_gate87_round2b.py::test_s01_02_the_v3_builder_refuses_an_open_or_mistyped_stage3_axis[bank-open]
+FAILED tests/test_gate87_round2b.py::test_s01_02_the_v3_builder_refuses_an_open_or_mistyped_stage3_axis[bank-extra]
+FAILED tests/test_gate87_round2b.py::test_s01_02_the_v3_builder_refuses_an_open_or_mistyped_stage3_axis[short-planned-id]
+FAILED tests/test_gate87_round2b.py::test_s01_02_the_v3_builder_refuses_an_open_or_mistyped_stage3_axis[roster-none]
+FAILED tests/test_gate87_round2b.py::test_s01_02_the_v3_builder_refuses_an_open_or_mistyped_stage3_axis[arm-int]
+FAILED tests/test_gate87_round2b.py::test_s01_03_the_v3_address_moves_with_planned_id_and_differs_from_v2
+FAILED tests/test_gate87_round2b.py::test_s01_04_grid_and_fit_checks_are_one_function_for_both_versions
+FAILED tests/test_gate87_round2b.py::test_s02_01_a_v3_plan_without_a_stage3_context_is_refused_before_fit_one
+FAILED tests/test_gate87_round2b.py::test_s02_02_a_v2_plan_with_a_stage3_context_is_refused_before_fit_one
+FAILED tests/test_gate87_round2b.py::test_s02_03_an_unknown_or_missing_spec_version_is_refused[absent]
+FAILED tests/test_gate87_round2b.py::test_s02_03_an_unknown_or_missing_spec_version_is_refused[one]
+FAILED tests/test_gate87_round2b.py::test_s02_03_an_unknown_or_missing_spec_version_is_refused[four]
+FAILED tests/test_gate87_round2b.py::test_s02_03_an_unknown_or_missing_spec_version_is_refused[str3]
+FAILED tests/test_gate87_round2b.py::test_s02_04_a_matching_v3_plan_and_context_reach_claim_issuance
+FAILED tests/test_gate87_round2b.py::test_s03_01_a_v3_entry_with_envelope_and_context_indexes
+FAILED tests/test_gate87_round2b.py::test_s03_02_a_v3_entry_missing_either_slot_is_refused[planned_envelope]
+FAILED tests/test_gate87_round2b.py::test_s03_02_a_v3_entry_missing_either_slot_is_refused[stage3_context]
+FAILED tests/test_gate87_round2b.py::test_s03_04_an_envelope_that_disagrees_with_the_entry_is_refused[leg_id]
+FAILED tests/test_gate87_round2b.py::test_s03_04_an_envelope_that_disagrees_with_the_entry_is_refused[source_digest]
+FAILED tests/test_gate87_round2b.py::test_s03_04_an_envelope_that_disagrees_with_the_entry_is_refused[generation]
+FAILED tests/test_gate87_round2b.py::test_s03_04_an_envelope_that_disagrees_with_the_entry_is_refused[invalid-envelope]
+FAILED tests/test_gate87_round2b.py::test_s03_05_a_stage3_axis_that_is_not_derived_from_the_envelope_is_refused[planned_id]
+FAILED tests/test_gate87_round2b.py::test_s03_05_a_stage3_axis_that_is_not_derived_from_the_envelope_is_refused[roster_sha256]
+FAILED tests/test_gate87_round2b.py::test_s03_05_a_stage3_axis_that_is_not_derived_from_the_envelope_is_refused[provider_edges_sha256]
+FAILED tests/test_gate87_round2b.py::test_s03_05_a_stage3_axis_that_is_not_derived_from_the_envelope_is_refused[arm]
+FAILED tests/test_gate87_round2b.py::test_s03_05_a_stage3_axis_that_is_not_derived_from_the_envelope_is_refused[candidate_mode]
+FAILED tests/test_gate87_round2b.py::test_s03_06_provider_runs_must_name_exactly_the_warm_consumers
+FAILED tests/test_gate87_round2b.py::test_s03_07_context_paths_must_be_repo_relative[abs-design]
+FAILED tests/test_gate87_round2b.py::test_s03_07_context_paths_must_be_repo_relative[dotdot-design]
+FAILED tests/test_gate87_round2b.py::test_s03_07_context_paths_must_be_repo_relative[empty-design]
+FAILED tests/test_gate87_round2b.py::test_s03_07_context_paths_must_be_repo_relative[inner-dotdot]
+FAILED tests/test_gate87_round2b.py::test_s03_07_context_paths_must_be_repo_relative[abs-provider]
+FAILED tests/test_gate87_round2b.py::test_s03_07_context_paths_must_be_repo_relative[dotdot-provider]
+FAILED tests/test_gate87_round2b.py::test_s03_07_context_paths_must_be_repo_relative[empty-provider]
+FAILED tests/test_gate87_round2b.py::test_s03_08_g74_start_conditions_still_apply_to_a_v3_plan
+FAILED tests/test_gate87_round2b.py::test_s04_01_the_entrypoint_builds_the_context_from_the_ledger_and_run_fit_completes
+FAILED tests/test_gate87_round2b.py::test_s04_02_a_design_file_whose_bytes_differ_from_the_plan_is_refused_before_run_fit
+FAILED tests/test_gate87_round2b.py::test_s04_03_a_missing_design_file_or_provider_dir_is_refused
+FAILED tests/test_gate87_round2b.py::test_s04_04_the_entrypoint_does_not_trust_the_index_for_planned_id
+FAILED tests/test_gate87_round2b.py::test_s04_05_an_unknown_leg_is_refused - ...
+FAILED tests/test_gate87_round2b.py::test_s04_06_a_context_that_disagrees_with_the_plan_is_still_refused_by_prepare_stage3
+FAILED tests/test_gate87_round2b.py::test_s05_01_stage3_plan_conflicting_with_leg_exits_before_reading_the_ledger
+FAILED tests/test_gate87_round2b.py::test_s05_02_stage3_plan_requires_explicit_no_adaptive_and_no_warm_start[none]
+FAILED tests/test_gate87_round2b.py::test_s05_02_stage3_plan_requires_explicit_no_adaptive_and_no_warm_start[adaptive-only]
+FAILED tests/test_gate87_round2b.py::test_s05_02_stage3_plan_requires_explicit_no_adaptive_and_no_warm_start[warm-only]
+FAILED tests/test_gate87_round2b.py::test_s05_03_stage3_plan_builds_the_context_once_and_hands_it_to_run_fit
+FAILED tests/test_gate87_round2b.py::test_s05_04_stage3_plan_with_the_same_leg_is_accepted
+FAILED tests/test_gate87_round2b.py::test_s05_05_without_stage3_plan_the_legacy_argv_passes_no_context
+FAILED tests/test_gate87_round2b.py::test_s06_02_fit_dry_argv_carries_stage3_plan_and_leg_exactly_once
+52 failed, 11 passed in 31.46s

@@ -1,0 +1,28 @@
+# 자동 생성 — 직접 편집하지 말 것 (src/weight_sweep.py가 덮어씀)
+# w_dqdv는 임의 튜닝이 아니라 degeneracy 비율 최소화로 선택된 값이다.
+# 탐색 곡선은 results/.../weight_sweep_summary.csv 참조.
+objectives:
+  pocv_dvdq_dqdv_opt:
+    w_pocv: 1.0
+    w_dvdq: 1.0
+    w_dqdv: 0.0
+_provenance:
+  source: src/weight_sweep.py — Phase 6 가중치 탐색
+  metric: degenerate_frac_corrected
+  per_noise_optimum:
+    0.0:
+      w_dqdv: 0.0
+      degenerate_frac_corrected: 0.1518987341772152
+      n: 79
+    0.001:
+      w_dqdv: 0.0
+      degenerate_frac_corrected: 0.13924050632911392
+      n: 79
+    0.005:
+      w_dqdv: 0.0
+      degenerate_frac_corrected: 0.16455696202531644
+      n: 79
+  value_at_w_star: 0.1518987341772152
+  value_at_w1_default: 0.29957805907172996
+  noise_levels_agree: true
+  note: 모든 노이즈 수준에서 같은 w가 최적 — 단일 값 채택 근거 있음.

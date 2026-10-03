@@ -1,0 +1,654 @@
+{
+  "checks": [
+    {
+      "check": "Git blob docs__22p_gap__CLAIM_STATUS.yaml.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned ref docs/22p_gap/CLAIM_STATUS.yaml",
+      "pass": true
+    },
+    {
+      "check": "Git blob docs__22p_gap__gate87_evidence__01_red_test_gate87_round2b.log.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned ref docs/22p_gap/gate87_evidence/01_red_test_gate87_round2b.log",
+      "pass": true
+    },
+    {
+      "check": "Git blob docs__22p_gap__gate87_evidence__02_green_attempt1_6failed.log.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned ref docs/22p_gap/gate87_evidence/02_green_attempt1_6failed.log",
+      "pass": true
+    },
+    {
+      "check": "Git blob docs__22p_gap__gate87_evidence__03_green_attempt2_1failed.log.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned ref docs/22p_gap/gate87_evidence/03_green_attempt2_1failed.log",
+      "pass": true
+    },
+    {
+      "check": "Git blob docs__22p_gap__gate87_evidence__04_green_63passed.log.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned ref docs/22p_gap/gate87_evidence/04_green_63passed.log",
+      "pass": true
+    },
+    {
+      "check": "Git blob docs__22p_gap__gate87_evidence__05_related_modules_before_receipts.log.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned ref docs/22p_gap/gate87_evidence/05_related_modules_before_receipts.log",
+      "pass": true
+    },
+    {
+      "check": "Git blob docs__22p_gap__gate87_evidence__06_green_after_witness_fix_63passed.log.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned ref docs/22p_gap/gate87_evidence/06_green_after_witness_fix_63passed.log",
+      "pass": true
+    },
+    {
+      "check": "Git blob docs__22p_gap__gate87_evidence__07_replay_g87_round1_emit_expect_3survived.log.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned ref docs/22p_gap/gate87_evidence/07_replay_g87_round1_emit_expect_3survived.log",
+      "pass": true
+    },
+    {
+      "check": "Git blob docs__22p_gap__gate87_evidence__08_replay_g87_round2_emit_expect_22killed.log.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned ref docs/22p_gap/gate87_evidence/08_replay_g87_round2_emit_expect_22killed.log",
+      "pass": true
+    },
+    {
+      "check": "Git blob docs__22p_gap__gate87_evidence__09_replay_g87_verify_expect_rc0.log.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned ref docs/22p_gap/gate87_evidence/09_replay_g87_verify_expect_rc0.log",
+      "pass": true
+    },
+    {
+      "check": "Git blob docs__22p_gap__gate87_evidence__10_full_pytest_7fbaa45b_2109passed.log.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned ref docs/22p_gap/gate87_evidence/10_full_pytest_7fbaa45b_2109passed.log",
+      "pass": true
+    },
+    {
+      "check": "Git blob docs__22p_gap__gate87_evidence__11_smoke_7fbaa45b_rc0.log.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned ref docs/22p_gap/gate87_evidence/11_smoke_7fbaa45b_rc0.log",
+      "pass": true
+    },
+    {
+      "check": "Git blob docs__22p_gap__gate87_evidence__12_full_replay_7fbaa45b_attempt1_cut_at_2h_254_of_374.log.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned ref docs/22p_gap/gate87_evidence/12_full_replay_7fbaa45b_attempt1_cut_at_2h_254_of_374.log",
+      "pass": true
+    },
+    {
+      "check": "Git blob docs__22p_gap__gate87_evidence__13_full_replay_7fbaa45b_run2_374_of_374_rc0.log.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned ref docs/22p_gap/gate87_evidence/13_full_replay_7fbaa45b_run2_374_of_374_rc0.log",
+      "pass": true
+    },
+    {
+      "check": "Git blob docs__22p_gap__gate87_evidence__README.md.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned ref docs/22p_gap/gate87_evidence/README.md",
+      "pass": true
+    },
+    {
+      "check": "Git blob docs__22p_gap__LEG_PRESERVATION.yaml.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned ref docs/22p_gap/LEG_PRESERVATION.yaml",
+      "pass": true
+    },
+    {
+      "check": "Git blob docs__22p_gap__mutation_replay.py.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned ref docs/22p_gap/mutation_replay.py",
+      "pass": true
+    },
+    {
+      "check": "Git blob docs__22p_gap__receipts__grid_fit_v5.validate.yaml.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned ref docs/22p_gap/receipts/grid_fit_v5.validate.yaml",
+      "pass": true
+    },
+    {
+      "check": "Git blob docs__22p_gap__receipts__history__grid_fit_v5.validate.f1f4378f46610f08.yaml.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned ref docs/22p_gap/receipts/history/grid_fit_v5.validate.f1f4378f46610f08.yaml",
+      "pass": true
+    },
+    {
+      "check": "Git blob docs__22p_gap__receipts__history__paired_fixed5_v4.validate.f1f4378f46610f08.yaml.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned ref docs/22p_gap/receipts/history/paired_fixed5_v4.validate.f1f4378f46610f08.yaml",
+      "pass": true
+    },
+    {
+      "check": "Git blob docs__22p_gap__receipts__paired_fixed5_v4.validate.yaml.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned ref docs/22p_gap/receipts/paired_fixed5_v4.validate.yaml",
+      "pass": true
+    },
+    {
+      "check": "Git blob docs__22p_gap__STAGE3_CONTRACT.md.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned ref docs/22p_gap/STAGE3_CONTRACT.md",
+      "pass": true
+    },
+    {
+      "check": "Git blob docs__22p_gap__STAGE3_IMPL_ROUND1_SPEC.md.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned ref docs/22p_gap/STAGE3_IMPL_ROUND1_SPEC.md",
+      "pass": true
+    },
+    {
+      "check": "Git blob request.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned ref docs/22p_gap/GATE87_REQUEST.md",
+      "pass": true
+    },
+    {
+      "check": "Git blob run.sh.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned ref run.sh",
+      "pass": true
+    },
+    {
+      "check": "Git blob src__fitting.py.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned ref src/fitting.py",
+      "pass": true
+    },
+    {
+      "check": "Git blob tests__conftest.py.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned ref tests/conftest.py",
+      "pass": true
+    },
+    {
+      "check": "Git blob tests__test_gate87_round2b.py.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned ref tests/test_gate87_round2b.py",
+      "pass": true
+    },
+    {
+      "check": "Git blob tests__test_preserve.py.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned ref tests/test_preserve.py",
+      "pass": true
+    },
+    {
+      "check": "Git blob tools__preserve.py.json",
+      "pass": true
+    },
+    {
+      "check": "Pinned ref tools/preserve.py",
+      "pass": true
+    },
+    {
+      "check": "Flat complete directory src",
+      "pass": true
+    },
+    {
+      "check": "Git tree src",
+      "pass": true
+    },
+    {
+      "check": "Flat complete directory tools",
+      "pass": true
+    },
+    {
+      "check": "Git tree tools",
+      "pass": true
+    },
+    {
+      "check": "Flat complete directory configs",
+      "pass": true
+    },
+    {
+      "check": "Git tree configs",
+      "pass": true
+    },
+    {
+      "check": "Flat complete directory scripts",
+      "pass": true
+    },
+    {
+      "check": "Git tree scripts",
+      "pass": true
+    },
+    {
+      "check": "Scope blob configs/base.yaml",
+      "pass": true
+    },
+    {
+      "check": "Scope blob configs/grid_22p.yaml",
+      "pass": true
+    },
+    {
+      "check": "Scope blob configs/grid_22p_dense.yaml",
+      "pass": true
+    },
+    {
+      "check": "Scope blob configs/grid_22p_fine.yaml",
+      "pass": true
+    },
+    {
+      "check": "Scope blob configs/grid_22p_seed.yaml",
+      "pass": true
+    },
+    {
+      "check": "Scope blob configs/grid_coarse.yaml",
+      "pass": true
+    },
+    {
+      "check": "Scope blob configs/grid_fine.yaml",
+      "pass": true
+    },
+    {
+      "check": "Scope blob configs/objectives.yaml",
+      "pass": true
+    },
+    {
+      "check": "Scope blob configs/objectives_optimized.yaml",
+      "pass": true
+    },
+    {
+      "check": "Scope blob configs/sweep1d.yaml",
+      "pass": true
+    },
+    {
+      "check": "Scope blob requirements-gpu.txt",
+      "pass": true
+    },
+    {
+      "check": "Scope blob requirements.txt",
+      "pass": true
+    },
+    {
+      "check": "Scope blob run.sh",
+      "pass": true
+    },
+    {
+      "check": "Scope blob scripts/archive_results.sh",
+      "pass": true
+    },
+    {
+      "check": "Scope blob scripts/bg.sh",
+      "pass": true
+    },
+    {
+      "check": "Scope blob scripts/check_run.py",
+      "pass": true
+    },
+    {
+      "check": "Scope blob scripts/diagnose_objective.py",
+      "pass": true
+    },
+    {
+      "check": "Scope blob scripts/recompute_lli.py",
+      "pass": true
+    },
+    {
+      "check": "Scope blob scripts/setup_env.sh",
+      "pass": true
+    },
+    {
+      "check": "Scope blob scripts/smoke_e2e.sh",
+      "pass": true
+    },
+    {
+      "check": "Scope blob scripts/verify_env.py",
+      "pass": true
+    },
+    {
+      "check": "Scope blob scripts/watch_fit.sh",
+      "pass": true
+    },
+    {
+      "check": "Scope blob scripts/watch_grid.sh",
+      "pass": true
+    },
+    {
+      "check": "Scope blob src/__init__.py",
+      "pass": true
+    },
+    {
+      "check": "Scope blob src/baseline.py",
+      "pass": true
+    },
+    {
+      "check": "Scope blob src/config.py",
+      "pass": true
+    },
+    {
+      "check": "Scope blob src/curves.py",
+      "pass": true
+    },
+    {
+      "check": "Scope blob src/fitting.py",
+      "pass": true
+    },
+    {
+      "check": "Scope blob src/grid.py",
+      "pass": true
+    },
+    {
+      "check": "Scope blob src/halfcell.py",
+      "pass": true
+    },
+    {
+      "check": "Scope blob src/hessian.py",
+      "pass": true
+    },
+    {
+      "check": "Scope blob src/inventory.py",
+      "pass": true
+    },
+    {
+      "check": "Scope blob src/io.py",
+      "pass": true
+    },
+    {
+      "check": "Scope blob src/model.py",
+      "pass": true
+    },
+    {
+      "check": "Scope blob src/modes.py",
+      "pass": true
+    },
+    {
+      "check": "Scope blob src/objective.py",
+      "pass": true
+    },
+    {
+      "check": "Scope blob src/protocol.py",
+      "pass": true
+    },
+    {
+      "check": "Scope blob src/runner.py",
+      "pass": true
+    },
+    {
+      "check": "Scope blob src/scoring.py",
+      "pass": true
+    },
+    {
+      "check": "Scope blob src/sweep.py",
+      "pass": true
+    },
+    {
+      "check": "Scope blob src/weight_sweep.py",
+      "pass": true
+    },
+    {
+      "check": "Scope blob tools/analyze_22p_gap.py",
+      "pass": true
+    },
+    {
+      "check": "Scope blob tools/archive_bundle.py",
+      "pass": true
+    },
+    {
+      "check": "Scope blob tools/check_derived_fresh.py",
+      "pass": true
+    },
+    {
+      "check": "Scope blob tools/check_sweep_consistency.py",
+      "pass": true
+    },
+    {
+      "check": "Scope blob tools/compare_cases.py",
+      "pass": true
+    },
+    {
+      "check": "Scope blob tools/compare_objectives.py",
+      "pass": true
+    },
+    {
+      "check": "Scope blob tools/design_golden.yaml",
+      "pass": true
+    },
+    {
+      "check": "Scope blob tools/design_wire.py",
+      "pass": true
+    },
+    {
+      "check": "Scope blob tools/diagnose_pini_transition.py",
+      "pass": true
+    },
+    {
+      "check": "Scope blob tools/gen_design_golden.py",
+      "pass": true
+    },
+    {
+      "check": "Scope blob tools/index_yaml.py",
+      "pass": true
+    },
+    {
+      "check": "Scope blob tools/interactive_ab.py",
+      "pass": true
+    },
+    {
+      "check": "Scope blob tools/make_results.py",
+      "pass": true
+    },
+    {
+      "check": "Scope blob tools/plot_grid_summary.py",
+      "pass": true
+    },
+    {
+      "check": "Scope blob tools/plot_map.py",
+      "pass": true
+    },
+    {
+      "check": "Scope blob tools/plot_sweep1d.py",
+      "pass": true
+    },
+    {
+      "check": "Scope blob tools/preserve.py",
+      "pass": true
+    },
+    {
+      "check": "Scope 58",
+      "pass": true
+    },
+    {
+      "check": "Exact 3 production files",
+      "pass": true
+    },
+    {
+      "check": "Digest 864edfb73b9695a1",
+      "pass": true
+    },
+    {
+      "check": "Complete compare TARGET_COMPARE",
+      "pass": true
+    },
+    {
+      "check": "Compare scope TARGET_COMPARE",
+      "pass": true
+    },
+    {
+      "check": "Complete compare AUTH_TO_HEAD",
+      "pass": true
+    },
+    {
+      "check": "Compare scope AUTH_TO_HEAD",
+      "pass": true
+    },
+    {
+      "check": "No tracked class claim cohort change",
+      "pass": true
+    },
+    {
+      "check": "13 log identifiers",
+      "pass": true
+    },
+    {
+      "check": "Log size 01_red_test_gate87_round2b.log",
+      "pass": true
+    },
+    {
+      "check": "Log SHA 01_red_test_gate87_round2b.log",
+      "pass": true
+    },
+    {
+      "check": "Log size 02_green_attempt1_6failed.log",
+      "pass": true
+    },
+    {
+      "check": "Log SHA 02_green_attempt1_6failed.log",
+      "pass": true
+    },
+    {
+      "check": "Log size 03_green_attempt2_1failed.log",
+      "pass": true
+    },
+    {
+      "check": "Log SHA 03_green_attempt2_1failed.log",
+      "pass": true
+    },
+    {
+      "check": "Log size 04_green_63passed.log",
+      "pass": true
+    },
+    {
+      "check": "Log SHA 04_green_63passed.log",
+      "pass": true
+    },
+    {
+      "check": "Log size 05_related_modules_before_receipts.log",
+      "pass": true
+    },
+    {
+      "check": "Log SHA 05_related_modules_before_receipts.log",
+      "pass": true
+    },
+    {
+      "check": "Log size 06_green_after_witness_fix_63passed.log",
+      "pass": true
+    },
+    {
+      "check": "Log SHA 06_green_after_witness_fix_63passed.log",
+      "pass": true
+    },
+    {
+      "check": "Log size 07_replay_g87_round1_emit_expect_3survived.log",
+      "pass": true
+    },
+    {
+      "check": "Log SHA 07_replay_g87_round1_emit_expect_3survived.log",
+      "pass": true
+    },
+    {
+      "check": "Log size 08_replay_g87_round2_emit_expect_22killed.log",
+      "pass": true
+    },
+    {
+      "check": "Log SHA 08_replay_g87_round2_emit_expect_22killed.log",
+      "pass": true
+    },
+    {
+      "check": "Log size 09_replay_g87_verify_expect_rc0.log",
+      "pass": true
+    },
+    {
+      "check": "Log SHA 09_replay_g87_verify_expect_rc0.log",
+      "pass": true
+    },
+    {
+      "check": "Log size 10_full_pytest_7fbaa45b_2109passed.log",
+      "pass": true
+    },
+    {
+      "check": "Log SHA 10_full_pytest_7fbaa45b_2109passed.log",
+      "pass": true
+    },
+    {
+      "check": "Log size 11_smoke_7fbaa45b_rc0.log",
+      "pass": true
+    },
+    {
+      "check": "Log SHA 11_smoke_7fbaa45b_rc0.log",
+      "pass": true
+    },
+    {
+      "check": "Log size 12_full_replay_7fbaa45b_attempt1_cut_at_2h_254_of_374.log",
+      "pass": true
+    },
+    {
+      "check": "Log SHA 12_full_replay_7fbaa45b_attempt1_cut_at_2h_254_of_374.log",
+      "pass": true
+    },
+    {
+      "check": "Log size 13_full_replay_7fbaa45b_run2_374_of_374_rc0.log",
+      "pass": true
+    },
+    {
+      "check": "Log SHA 13_full_replay_7fbaa45b_run2_374_of_374_rc0.log",
+      "pass": true
+    },
+    {
+      "check": "Prior review unchanged",
+      "pass": true
+    }
+  ],
+  "passed": 162,
+  "source_execution": false
+}

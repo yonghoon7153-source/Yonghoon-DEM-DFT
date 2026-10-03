@@ -1,0 +1,326 @@
+{
+  "checks": [
+    {
+      "check": "V2 builder inlined AST exactly unchanged",
+      "pass": true
+    },
+    {
+      "check": "Unchanged authority AST _claim_planned_leg",
+      "pass": true
+    },
+    {
+      "check": "Unchanged authority AST resume_claim",
+      "pass": true
+    },
+    {
+      "check": "Unchanged authority AST assert_run_is_authorized",
+      "pass": true
+    },
+    {
+      "check": "Unchanged authority AST LegClaim",
+      "pass": true
+    },
+    {
+      "check": "Unchanged authority AST finalize_leg",
+      "pass": true
+    },
+    {
+      "check": "Unchanged existing fitting guard _stage3_preflight",
+      "pass": true
+    },
+    {
+      "check": "Unchanged existing fitting guard _prepare_stage3",
+      "pass": true
+    },
+    {
+      "check": "Unchanged existing fitting guard _assert_fit_input_is_authorized",
+      "pass": true
+    },
+    {
+      "check": "Unchanged existing fitting guard _record_phase",
+      "pass": true
+    },
+    {
+      "check": "Unchanged existing fitting guard _run_fit_locked",
+      "pass": true
+    },
+    {
+      "check": "io byte identical",
+      "pass": true
+    },
+    {
+      "check": "design_wire byte identical",
+      "pass": true
+    },
+    {
+      "check": "Independent v5 fixture canonical SHA",
+      "pass": true
+    },
+    {
+      "check": "Ledger changes only validator/core anchors",
+      "pass": true
+    },
+    {
+      "check": "Operational v5 address unchanged",
+      "pass": true
+    },
+    {
+      "check": "No operational v6 plan slots",
+      "pass": true
+    },
+    {
+      "check": "Claim status unchanged since pre-code specification",
+      "pass": true
+    },
+    {
+      "check": "Exact receipt history paired_fixed5_v4",
+      "pass": true
+    },
+    {
+      "check": "Only stated receipt differences paired_fixed5_v4",
+      "pass": true
+    },
+    {
+      "check": "Unique scalar paired_fixed5_v4/core_sha256",
+      "pass": true
+    },
+    {
+      "check": "Unique scalar paired_fixed5_v4/validator_source_digest",
+      "pass": true
+    },
+    {
+      "check": "Unique scalar paired_fixed5_v4/n_checks",
+      "pass": true
+    },
+    {
+      "check": "Receipt validator and count paired_fixed5_v4",
+      "pass": true
+    },
+    {
+      "check": "Core and validator anchored paired_fixed5_v4",
+      "pass": true
+    },
+    {
+      "check": "Exact receipt history grid_fit_v5",
+      "pass": true
+    },
+    {
+      "check": "Only stated receipt differences grid_fit_v5",
+      "pass": true
+    },
+    {
+      "check": "Unique scalar grid_fit_v5/core_sha256",
+      "pass": true
+    },
+    {
+      "check": "Unique scalar grid_fit_v5/validator_source_digest",
+      "pass": true
+    },
+    {
+      "check": "Unique scalar grid_fit_v5/n_checks",
+      "pass": true
+    },
+    {
+      "check": "Receipt validator and count grid_fit_v5",
+      "pass": true
+    },
+    {
+      "check": "Core and validator anchored grid_fit_v5",
+      "pass": true
+    },
+    {
+      "check": "Full mutation markers 374/0/0/11",
+      "pass": true
+    },
+    {
+      "check": "Full replay totals and rc",
+      "pass": true
+    },
+    {
+      "check": "Partial replay is 254 only",
+      "pass": true
+    },
+    {
+      "check": "Full pytest log matches",
+      "pass": true
+    },
+    {
+      "check": "Smoke rc0",
+      "pass": true
+    },
+    {
+      "check": "RED52/11",
+      "pass": true
+    },
+    {
+      "check": "GREEN63 twice",
+      "pass": true
+    },
+    {
+      "check": "Actual 3 first survivors",
+      "pass": true
+    },
+    {
+      "check": "Final g87 mutation22",
+      "pass": true
+    },
+    {
+      "check": "Unique mutation preimage stage3-axis-planned-id-is-the-envelope-digest-g87",
+      "pass": true
+    },
+    {
+      "check": "Unique mutation preimage stage3-axis-keys-are-closed-g87",
+      "pass": true
+    },
+    {
+      "check": "Unique mutation preimage v3-plan-requires-both-v6-slots-g87",
+      "pass": true
+    },
+    {
+      "check": "Unique mutation preimage v2-plan-refuses-v6-slots-g87",
+      "pass": true
+    },
+    {
+      "check": "Unique mutation preimage envelope-leg-id-is-bound-to-the-entry-g87",
+      "pass": true
+    },
+    {
+      "check": "Unique mutation preimage envelope-source-digest-is-bound-to-the-entry-g87",
+      "pass": true
+    },
+    {
+      "check": "Unique mutation preimage envelope-generation-is-v6-g87",
+      "pass": true
+    },
+    {
+      "check": "Unique mutation preimage stage3-axis-is-derived-not-copied-g87",
+      "pass": true
+    },
+    {
+      "check": "Unique mutation preimage provider-runs-match-the-warm-consumers-g87",
+      "pass": true
+    },
+    {
+      "check": "Unique mutation preimage context-paths-are-repo-relative-g87",
+      "pass": true
+    },
+    {
+      "check": "Unique mutation preimage v2-plan-refuses-a-stage3-context-g87",
+      "pass": true
+    },
+    {
+      "check": "Unique mutation preimage v3-plan-refuses-legacy-fallback-g87",
+      "pass": true
+    },
+    {
+      "check": "Unique mutation preimage unknown-spec-version-is-not-authorized-g87",
+      "pass": true
+    },
+    {
+      "check": "Unique mutation preimage entrypoint-compares-the-design-digest-g87",
+      "pass": true
+    },
+    {
+      "check": "Unique mutation preimage entrypoint-does-not-trust-the-index-planned-id-g87",
+      "pass": true
+    },
+    {
+      "check": "Unique mutation preimage entrypoint-requires-provider-run-dirs-g87",
+      "pass": true
+    },
+    {
+      "check": "Unique mutation preimage cli-stage3-plan-conflicting-leg-is-refused-g87",
+      "pass": true
+    },
+    {
+      "check": "Unique mutation preimage cli-stage3-plan-requires-explicit-flags-g87",
+      "pass": true
+    },
+    {
+      "check": "Unique mutation preimage cli-stage3-plan-builds-the-context-g87",
+      "pass": true
+    },
+    {
+      "check": "Unique mutation preimage shell-stage3-plan-is-only-for-mode-fit-g87",
+      "pass": true
+    },
+    {
+      "check": "Unique mutation preimage shell-stage3-plan-conflicting-leg-is-refused-g87",
+      "pass": true
+    },
+    {
+      "check": "Unique mutation preimage shell-passes-stage3-plan-to-python-g87",
+      "pass": true
+    },
+    {
+      "check": "22 static mutation registrations",
+      "pass": true
+    },
+    {
+      "check": "N1 source fact shell_fit_only",
+      "pass": true
+    },
+    {
+      "check": "N1 source fact claim_starts_with_empty_phases",
+      "pass": true
+    },
+    {
+      "check": "N1 source fact fit_declared_external_input_can_pass_without_grid_receipt",
+      "pass": true
+    },
+    {
+      "check": "N1 source fact phase_order_fixed_grid_fit",
+      "pass": true
+    },
+    {
+      "check": "N1 source fact fit_completion_requires_predecessor",
+      "pass": true
+    },
+    {
+      "check": "N1 source fact commit_before_phase_done",
+      "pass": true
+    },
+    {
+      "check": "N1 source fact record_phase_skips_if_no_claim",
+      "pass": true
+    },
+    {
+      "check": "N1 source fact smoke_claim_none",
+      "pass": true
+    },
+    {
+      "check": "N1 source fact grid_gate_uses_v2",
+      "pass": true
+    },
+    {
+      "check": "N1 source fact v2_builder_version2",
+      "pass": true
+    },
+    {
+      "check": "N1 source fact claim_compares_spec_digest",
+      "pass": true
+    },
+    {
+      "check": "N1 source fact finalize_also_requires_all_phases",
+      "pass": true
+    },
+    {
+      "check": "N1 source fact positive_claim_test_stops_before_run_fit",
+      "pass": true
+    },
+    {
+      "check": "N1 source fact positive_completion_test_uses_smoke",
+      "pass": true
+    },
+    {
+      "check": "N1 source fact s02_input_fixture_is_curves_hash_only",
+      "pass": true
+    }
+  ],
+  "passed": 79,
+  "received_code_executions": 0,
+  "project_tests": 0,
+  "COMSOL": 0,
+  "finding": "G87-N1 P1 STATIC",
+  "scope": "Byte/AST/data/log checks only, not functional validation."
+}

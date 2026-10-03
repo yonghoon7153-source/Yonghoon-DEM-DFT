@@ -1,0 +1,159 @@
+{
+  "registrations": [
+    {
+      "name": "stage3-axis-planned-id-is-the-envelope-digest-g87",
+      "target": "PRESERVE",
+      "line": 2116,
+      "preimage_occurrences": 1,
+      "selector": "s01_01"
+    },
+    {
+      "name": "stage3-axis-keys-are-closed-g87",
+      "target": "PRESERVE",
+      "line": 2120,
+      "preimage_occurrences": 1,
+      "selector": "s01_02"
+    },
+    {
+      "name": "v3-plan-requires-both-v6-slots-g87",
+      "target": "PRESERVE",
+      "line": 2124,
+      "preimage_occurrences": 1,
+      "selector": "s03_02"
+    },
+    {
+      "name": "v2-plan-refuses-v6-slots-g87",
+      "target": "PRESERVE",
+      "line": 2128,
+      "preimage_occurrences": 1,
+      "selector": "s03_03"
+    },
+    {
+      "name": "envelope-leg-id-is-bound-to-the-entry-g87",
+      "target": "PRESERVE",
+      "line": 2132,
+      "preimage_occurrences": 1,
+      "selector": "s03_04 and leg_id"
+    },
+    {
+      "name": "envelope-source-digest-is-bound-to-the-entry-g87",
+      "target": "PRESERVE",
+      "line": 2136,
+      "preimage_occurrences": 1,
+      "selector": "s03_04 and source_digest"
+    },
+    {
+      "name": "envelope-generation-is-v6-g87",
+      "target": "PRESERVE",
+      "line": 2140,
+      "preimage_occurrences": 1,
+      "selector": "s03_04 and generation"
+    },
+    {
+      "name": "stage3-axis-is-derived-not-copied-g87",
+      "target": "PRESERVE",
+      "line": 2144,
+      "preimage_occurrences": 1,
+      "selector": "s03_05"
+    },
+    {
+      "name": "provider-runs-match-the-warm-consumers-g87",
+      "target": "PRESERVE",
+      "line": 2148,
+      "preimage_occurrences": 1,
+      "selector": "s03_06"
+    },
+    {
+      "name": "context-paths-are-repo-relative-g87",
+      "target": "PRESERVE",
+      "line": 2152,
+      "preimage_occurrences": 1,
+      "selector": "s03_07"
+    },
+    {
+      "name": "v2-plan-refuses-a-stage3-context-g87",
+      "target": "FITTING",
+      "line": 2157,
+      "preimage_occurrences": 1,
+      "selector": "s02_02"
+    },
+    {
+      "name": "v3-plan-refuses-legacy-fallback-g87",
+      "target": "FITTING",
+      "line": 2161,
+      "preimage_occurrences": 1,
+      "selector": "s02_01"
+    },
+    {
+      "name": "unknown-spec-version-is-not-authorized-g87",
+      "target": "FITTING",
+      "line": 2167,
+      "preimage_occurrences": 1,
+      "selector": "s02_05"
+    },
+    {
+      "name": "entrypoint-compares-the-design-digest-g87",
+      "target": "FITTING",
+      "line": 2172,
+      "preimage_occurrences": 1,
+      "selector": "s04_02"
+    },
+    {
+      "name": "entrypoint-does-not-trust-the-index-planned-id-g87",
+      "target": "FITTING",
+      "line": 2176,
+      "preimage_occurrences": 1,
+      "selector": "s04_04"
+    },
+    {
+      "name": "entrypoint-requires-provider-run-dirs-g87",
+      "target": "FITTING",
+      "line": 2180,
+      "preimage_occurrences": 1,
+      "selector": "s04_03"
+    },
+    {
+      "name": "cli-stage3-plan-conflicting-leg-is-refused-g87",
+      "target": "FITTING",
+      "line": 2184,
+      "preimage_occurrences": 1,
+      "selector": "s05_01"
+    },
+    {
+      "name": "cli-stage3-plan-requires-explicit-flags-g87",
+      "target": "FITTING",
+      "line": 2188,
+      "preimage_occurrences": 1,
+      "selector": "s05_02"
+    },
+    {
+      "name": "cli-stage3-plan-builds-the-context-g87",
+      "target": "FITTING",
+      "line": 2192,
+      "preimage_occurrences": 1,
+      "selector": "s05_03"
+    },
+    {
+      "name": "shell-stage3-plan-is-only-for-mode-fit-g87",
+      "target": "RUNSH",
+      "line": 2196,
+      "preimage_occurrences": 1,
+      "selector": "s06_04"
+    },
+    {
+      "name": "shell-stage3-plan-conflicting-leg-is-refused-g87",
+      "target": "RUNSH",
+      "line": 2200,
+      "preimage_occurrences": 1,
+      "selector": "s06_03"
+    },
+    {
+      "name": "shell-passes-stage3-plan-to-python-g87",
+      "target": "RUNSH",
+      "line": 2204,
+      "preimage_occurrences": 1,
+      "selector": "s06_02"
+    }
+  ],
+  "replay_by_reviewer": false
+}
