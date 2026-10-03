@@ -176,6 +176,14 @@
    "DEM 논문/22. Mechanical instability of electrode-electrolyte interfaces in solid-state batteries.pdf"
   ]
  },
+ "cao2026_dual_binder_18um_sulfide_electrolyte_film": {
+  "figures": 31,
+  "generated": "2026-10-03",
+  "pdfs": [
+   "Cao 2026 - Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533).pdf",
+   "Cao 2026 - Sup) Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533) SI.pdf"
+  ]
+ },
  "carrete2023_deep_ensembles_vs_committees": {
   "figures": 12,
   "generated": "2026-09-09",
@@ -1518,7 +1526,7 @@
   ]
  },
  "nosrati2026_anion_engineering_sulfide_se_review": {
-  "figures": 16,
+  "figures": 18,
   "generated": "2026-10-03",
   "pdfs": [
    "Nosrati 2026 - Anion engineering of sulfide solid electrolytes (Small e76005).pdf"
@@ -1650,6 +1658,14 @@
   "pdfs": [
    "4. ChemMater_2025_Pustorino_Mechanical_and_Electronic_Properties_of_Bulk_and_Surface_Li6PS5Cl_Argyrodite_Li-Filament_Resistance_MAIN.pdf",
    "4. Sup) ChemMater_2025_Pustorino_Mechanical_and_Electronic_Properties_Li6PS5Cl_Li-Filament_SI.pdf"
+  ]
+ },
+ "qi2025_high_voltage_limits_halide_sulfide_assb": {
+  "figures": 32,
+  "generated": "2026-10-03",
+  "pdfs": [
+   "Qi 2025 - Deciphering high-voltage limitations of halide and sulfide ASSLBs (J Energy Chem 103 926).pdf",
+   "Qi 2025 - Sup) Deciphering high-voltage limitations of halide and sulfide ASSLBs (J Energy Chem 103 926) SI.pdf"
   ]
  },
  "qian2025_lipo2f2_coating_stable_cei": {

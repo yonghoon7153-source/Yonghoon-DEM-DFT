@@ -1,0 +1,642 @@
+{
+ "slug": "cao2026_dual_binder_18um_sulfide_electrolyte_film",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-03",
+ "sources": [
+  "Cao 2026 - Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533).pdf",
+  "Cao 2026 - Sup) Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533) SI.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "FIGURE 1 Dry-process fabrication of USF. (a) Schematic illustration of the hot-rolling dry process used to fabricate the USF. (b) Top-view SEM image of USF. (c) Cross-sectional SEM image and corresponding EDS elemental mapping of USF. (d) Comparison of the thickness of sulfide electrolyte films fabricated by dry processing. The corresponding references are listed in Table S1. (e, f) The MIP analysis of LPSCl-PTFE precursor film and USF: (e) apparent pore-size distributions and (f) apparent porosity comparison. (g) Load-depth curves of LPSCl pellet, LPSCl-PTFE precursor film and USF. (h) Hardness and indentation modulus calculated from load-depth curves. (i) Work of indentation and dissipation, and average dissipation efficiency calculated from the load-depth curves.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.2,
+    564.2,
+    635.3
+   ],
+   "w": 2153,
+   "h": 2501,
+   "dpi": 300,
+   "src": "Cao 2026 - Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533).pdf",
+   "blank": 0.691
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "FIGURE 2 Li+ transport behavior and mechanism in the USF. (a) Arrhenius plots of pristine LPSCl (Ea = 0.24 eV), LPSCl-PTFE film (Ea = 0.32 eV), LPSCl-LiTFSI-PMEMA film (Ea = 0.28 eV), and USF (Ea = 0.29 eV). (b) Comparison of ionic and electronic conductivity of pristine LPSCl, LPSCl-PTFE film, LPSCl-LiTFSI-PMEMA film, and USF at 30◦C. (c) 7Li NMR spectra of pristine LPSCl, LiTFSI-PMEMA polymer binder, and USF, the inset shows fitted spectral area fractions of the LPSCl-related, polymer-related, and intermediate components. (d) Cryo-TEM characterization of the USF: high- resolution cryo-TEM image and corresponding FFT patterns showing a conformal LiTFSI-PMEMA layer (∼7 nm thick) on the surface of LPSCl particle. (e) DFT-calculated Li+ migration pathway across the LPSCl/LiTFSI-PMEMA contact region. (f) Calculated Li+ migration energy barrier in the LPSCl phase, the LPSCl/LiTFSI-PMEMA cont",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.3,
+    564.2,
+    404.3
+   ],
+   "w": 2153,
+   "h": 1538,
+   "dpi": 300,
+   "src": "Cao 2026 - Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533).pdf",
+   "blank": 0.715
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 7,
+   "file": "fig_3.png",
+   "caption": "FIGURE 3 Interfacial stability and Li deposition behavior in LiIn||SE||LiIn symmetric cells. (a) CCD test of the LiIn||LPSCl-PTFE||LiIn cell (CCD = 0.9 mA cm‒2). (b) CCD test of the LiIn||USF||LiIn cell (CCD = 2.2 mA cm‒2). (c) Galvanostatic voltage-time profiles of LiIn||SSEs||LiIn symmetrical cells at 0.5 mA cm−2 with fixed capacity of 0.5 mAh cm−2 at room temperature. (d, e) Cross-sectional SEM images of the LiIn/SSEs interface after 200 h of cycling: (d) LiIn||LPSCl-PTFE||LiIn cell, and (e) LiIn||USF||LiIn cell. (f, g) The corresponding schematic illustrations of Li deposition behavior: (f) LiIn||LPSCl-PTFE||LiIn cell, and (g) LiIn||USF||LiIn cell.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.3,
+    564.2,
+    404.3
+   ],
+   "w": 2153,
+   "h": 1538,
+   "dpi": 300,
+   "src": "Cao 2026 - Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533).pdf",
+   "blank": 0.574
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 8,
+   "file": "fig_4.png",
+   "caption": "FIGURE 4 Electrochemical performance of LCO||SSEs||LiIn ASSBs at 30◦C. (a) Rate performance of LCO||LPSCl-PTFE||LiIn and LCO||USF||LiIn cells at 0.1, 0.2, 0.5, 1 C. (b, c) Corresponding voltage-specific capacity profiles: (b) LCO||LPSCl-PTFE||LiIn and (c) LCO||USF||LiIn ASSBs. (d) Long- term cycling performance at 0.5 C. (e–h) Interfacial stability analysis: in situ pressure monitoring during cycling and cross-sectional SEM images of the LCO/electrolyte interface after 200 cycles. (e, g) LCO||LPSCl-PTFE||LiIn ASSBs. (f, h) LCO||USF||LiIn ASSBs.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.1,
+    564.2,
+    381.9
+   ],
+   "w": 2153,
+   "h": 1446,
+   "dpi": 300,
+   "src": "Cao 2026 - Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533).pdf",
+   "blank": 0.676
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 9,
+   "file": "fig_5.png",
+   "caption": "FIGURE 5 Electrochemical performance of high-energy-density NCM721||USF||nSi ASSBs. (a) Cross-sectional SEM image and corresponding EDS elemental mapping of high-energy-density cell composed of the NCM721 cathode, USF, and nSi anode. (b) Voltage-specific capacity profiles at different rates. (c) Cycling performance at 0.5 C and 30◦C. (d) Assembly of the NCM721||USF||nSi all-solid-state pouch cell using CIP. (e) Cycling performance of the pouch cell at 0.1 C and 30◦C.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.0,
+    564.2,
+    309.3
+   ],
+   "w": 2153,
+   "h": 1144,
+   "dpi": 300,
+   "src": "Cao 2026 - Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533).pdf",
+   "blank": 0.683
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 7,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. The SEM image of pristine LPSCl powder.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    29.4,
+    530.5,
+    193.5
+   ],
+   "w": 1941,
+   "h": 685,
+   "dpi": 300,
+   "src": "Cao 2026 - Sup) Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533) SI.pdf",
+   "blank": 0.557
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 7,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Schematic diagram of the preparation process of LiTFSI-PMEMA.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    269.1,
+    476.9,
+    382.6
+   ],
+   "w": 1717,
+   "h": 474,
+   "dpi": 300,
+   "src": "Cao 2026 - Sup) Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533) SI.pdf",
+   "blank": 0.954
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 7,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. The FTIR spectra of MEMA and LiTFSI-PMEMA binder.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    458.2,
+    473.5,
+    619.7
+   ],
+   "w": 1703,
+   "h": 674,
+   "dpi": 300,
+   "src": "Cao 2026 - Sup) Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533) SI.pdf",
+   "blank": 0.871
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 8,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. The GPC curve of purified PMEMA.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    350.2,
+    530.5,
+    567.1
+   ],
+   "w": 1941,
+   "h": 904,
+   "dpi": 300,
+   "src": "Cao 2026 - Sup) Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533) SI.pdf",
+   "blank": 0.125
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 8,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. Optical photographs and thickness measurements of: a) the LPSCl-PTFE precursor film; b) LiTFSI-PMEMA film; c) LPSCl-LiTFSI-PMEMA film; d) final USF after repeated folding and hot rolling.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    350.2,
+    533.5,
+    567.1
+   ],
+   "w": 1953,
+   "h": 904,
+   "dpi": 300,
+   "src": "Cao 2026 - Sup) Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533) SI.pdf",
+   "blank": 0.13
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 9,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. Top-view and cross-sectional SEM images of: a) the LPSCl-PTFE precursor film; b) LiTFSI-PMEMA film; c) LPSCl-LiTFSI-PMEMA film; d) final USF after repeated folding and hot rolling.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    29.4,
+    532.6,
+    264.8
+   ],
+   "w": 1950,
+   "h": 982,
+   "dpi": 300,
+   "src": "Cao 2026 - Sup) Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533) SI.pdf",
+   "blank": 0.402
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 9,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. TG curves of polymerized LiTFSI-PMEMA measured under Ar atmosphere. The green and red dotted lines respectively represent the hot rolling temperature of 100 ℃ and the starting decomposition temperature of 239 ℃.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    343.2,
+    530.3,
+    518.9
+   ],
+   "w": 1940,
+   "h": 732,
+   "dpi": 300,
+   "src": "Cao 2026 - Sup) Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533) SI.pdf",
+   "blank": 0.933
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 10,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. Comparison of median pore diameter (D50) and peak pore diameter for the LPSCl-PTFE precursor film and the USF.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    29.4,
+    530.5,
+    210.5
+   ],
+   "w": 1941,
+   "h": 756,
+   "dpi": 300,
+   "src": "Cao 2026 - Sup) Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533) SI.pdf",
+   "blank": 0.923
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 10,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. XRD patterns of pristine LPSCl, LPSCl-PTFE precursor film, and USF.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    310.7,
+    481.5,
+    472.7
+   ],
+   "w": 1737,
+   "h": 676,
+   "dpi": 300,
+   "src": "Cao 2026 - Sup) Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533) SI.pdf",
+   "blank": 0.948
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 11,
+   "file": "fig_S11.png",
+   "caption": "Figure S11. The XPS P 2p spectra of pristine LPSCl, LPSCl-PTFE precursor film, and USF.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    29.4,
+    530.5,
+    381.7
+   ],
+   "w": 1941,
+   "h": 1469,
+   "dpi": 300,
+   "src": "Cao 2026 - Sup) Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533) SI.pdf",
+   "blank": 0.944
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 11,
+   "file": "fig_S12.png",
+   "caption": "Figure S12. The CV curves of LPSCl+CB||LPSCl pellet||LiIn and USF+CB||USF||LiIn cells.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    450.1,
+    525.3,
+    649.1
+   ],
+   "w": 1919,
+   "h": 830,
+   "dpi": 300,
+   "src": "Cao 2026 - Sup) Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533) SI.pdf",
+   "blank": 0.96
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 12,
+   "file": "fig_S13.png",
+   "caption": "Figure S13. The electrical conductivity of pristine LPSCl, LPSCl-PTFE film, LPSCl-LiTFSI- PMEMA film, and USF tested by direct current polarization method.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    29.4,
+    530.5,
+    272.7
+   ],
+   "w": 1941,
+   "h": 1015,
+   "dpi": 300,
+   "src": "Cao 2026 - Sup) Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533) SI.pdf",
+   "blank": 0.934
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 12,
+   "file": "fig_S14.png",
+   "caption": "Figure S14. Cryo-TEM image and corresponding elemental maps (C, O, F, P, S, Cl) of the USF interior, revealing a homogeneous composite microstructure. The specimen was prepared by ultramicrotomy under an inert atmosphere and transferred onto microgrids via electrostatic adsorption.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    389.7,
+    516.9,
+    544.4
+   ],
+   "w": 1884,
+   "h": 646,
+   "dpi": 300,
+   "src": "Cao 2026 - Sup) Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533) SI.pdf",
+   "blank": 0.154
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 13,
+   "file": "fig_S15.png",
+   "caption": "Figure S15. DFT simulation of Li+ migration within the LPSCl lattice.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    64.9,
+    445.3,
+    262.3
+   ],
+   "w": 1586,
+   "h": 823,
+   "dpi": 300,
+   "src": "Cao 2026 - Sup) Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533) SI.pdf",
+   "blank": 0.794
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 13,
+   "file": "fig_S16.png",
+   "caption": "Figure S16. DFT simulation of l Li+ migration within the LiTFSI-PMEMA chain segments.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    323.7,
+    522.5,
+    509.8
+   ],
+   "w": 1907,
+   "h": 777,
+   "dpi": 300,
+   "src": "Cao 2026 - Sup) Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533) SI.pdf",
+   "blank": 0.916
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 14,
+   "file": "fig_S17.png",
+   "caption": "Figure S17. Air stability test of USF and pristine LPSCl.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    65.6,
+    419.8,
+    281.6
+   ],
+   "w": 1480,
+   "h": 901,
+   "dpi": 300,
+   "src": "Cao 2026 - Sup) Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533) SI.pdf",
+   "blank": 0.943
+  },
+  {
+   "key": "fS18",
+   "kind": "figure",
+   "label": "S18",
+   "page": 14,
+   "file": "fig_S18.png",
+   "caption": "Figure S18. OCV aging behavior of LiIn||USF||LiIn symmetric cells. Nyquist plots of the as- assembled cell and cells aged at open circuit for 3 and 5 days.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    340.1,
+    524.2,
+    506.1
+   ],
+   "w": 1915,
+   "h": 692,
+   "dpi": 300,
+   "src": "Cao 2026 - Sup) Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533) SI.pdf",
+   "blank": 0.956
+  },
+  {
+   "key": "fS19",
+   "kind": "figure",
+   "label": "S19",
+   "page": 15,
+   "file": "fig_S19.png",
+   "caption": "Figure S19. The XPS results of the as-assembled cell and cells aged at open circuit for 3 and 5 days: a) C 1s, b) F 1s, and c) P 2p.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    29.4,
+    530.5,
+    287.6
+   ],
+   "w": 1941,
+   "h": 1077,
+   "dpi": 300,
+   "src": "Cao 2026 - Sup) Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533) SI.pdf",
+   "blank": 0.863
+  },
+  {
+   "key": "fS20",
+   "kind": "figure",
+   "label": "S20",
+   "page": 15,
+   "file": "fig_S20.png",
+   "caption": "Figure S20. The Voltage curve of LCO||LPSCl-PTFE||LiIn ASSBs that happen short-circuit.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    365.8,
+    529.1,
+    518.3
+   ],
+   "w": 1935,
+   "h": 636,
+   "dpi": 300,
+   "src": "Cao 2026 - Sup) Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533) SI.pdf",
+   "blank": 0.961
+  },
+  {
+   "key": "fS21",
+   "kind": "figure",
+   "label": "S21",
+   "page": 16,
+   "file": "fig_S21.png",
+   "caption": "Figure S21. Interfacial impedance evolution of LCO||USF||LiIn and LCO||LPSCl-PTFE||LiIn cells during cycling. Nyquist plots of a) LCO||LPSCl-PTFE||LiIn, and b) LCO||USF||LiIn cells collected after selected cycle numbers. The spectra are vertically offset for clarity. c) Extracted apparent interfacial resistance as a function of cycle number.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    29.4,
+    531.8,
+    275.5
+   ],
+   "w": 1946,
+   "h": 1026,
+   "dpi": 300,
+   "src": "Cao 2026 - Sup) Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533) SI.pdf",
+   "blank": 0.941
+  },
+  {
+   "key": "fS22",
+   "kind": "figure",
+   "label": "S22",
+   "page": 16,
+   "file": "fig_S22.png",
+   "caption": "Figure S22. The voltage curves of LCO||LPSCl-PTFE||LiIn and LCO||USF||LiIn ASSBs after 200 cycles.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    415.8,
+    529.2,
+    626.0
+   ],
+   "w": 1935,
+   "h": 877,
+   "dpi": 300,
+   "src": "Cao 2026 - Sup) Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533) SI.pdf",
+   "blank": 0.95
+  },
+  {
+   "key": "fS23",
+   "kind": "figure",
+   "label": "S23",
+   "page": 17,
+   "file": "fig_S23.png",
+   "caption": "Figure S23. Voltage-dependent in-situ EIS and DRT analysis of the NCM721||USF||nSi full cell after 10 cycles. a) Charge/discharge voltage profile with marked EIS measurement points. b) Nyquist plots collected at selected voltages during charge and discharge. The spectra are vertically offset for clarity. c) Corresponding DRT spectra derived from the voltage- dependent EIS data. The DRT spectra are divided into four major relaxation regions: τ1 is mainly associated with high-frequency ohmic/bulk or local contact contributions; τ2 is related to interphase Li⁺ transport, mainly involving CEI/USF interphase transport under high-voltage operation; τ3 is assigned to cathode/USF interfacial Li⁺ transport and charge-transfer-related processes; and τ4 is mainly associated with slow diffusion, concentration polarization, or SOC-dependent electrode processes. The weak shoulder between τ1 and τ2 is ",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    29.4,
+    533.5,
+    250.5
+   ],
+   "w": 1953,
+   "h": 922,
+   "dpi": 300,
+   "src": "Cao 2026 - Sup) Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533) SI.pdf",
+   "blank": 0.897
+  },
+  {
+   "key": "fS24",
+   "kind": "figure",
+   "label": "S24",
+   "page": 18,
+   "file": "fig_S24.png",
+   "caption": "Figure S24. The voltage curves of NCM721||USF||nSi ASSBs at 30 °C.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    29.4,
+    530.5,
+    286.8
+   ],
+   "w": 1941,
+   "h": 1073,
+   "dpi": 300,
+   "src": "Cao 2026 - Sup) Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533) SI.pdf",
+   "blank": 0.921
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 18,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Molecular weight parameters of purified PMEMA determined by GPC. Sample Calibration Mn / kg mol⁻¹ Mw / kg mol⁻¹ Đ DPn Purified PMEMA PS standards 28.4 90.7 3.19 ~197",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    302.8,
+    521.9,
+    765.1
+   ],
+   "w": 1901,
+   "h": 1927,
+   "dpi": 300,
+   "src": "Cao 2026 - Sup) Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533) SI.pdf",
+   "blank": 0.939
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 18,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Comparison of room-temperature and elevated-temperature ionic conductivities of LiTFSI-PMEMA and representative polymer electrolytes. Solid-state polymer Lithium salt Additive/plasticize Temperat Ionic Ref. electrolytes r/ionic liquid ure (℃) conducti vity (10‒4 S cm‒1) LiDFOB succinonitrile (SN) 30 13.0 Ref.1[1 poly (ethylene glycol) 0] methyl ether acrylate (PEGMEA) PEO/SN/LiTFSI LiTFSI 27 wt.% SN 25 1.9 Ref.2[1 1] RT 0.74 Ref.3[1 dual-layer LiDFOB + SN plasticizer; 2] poly(propylene LiTFSI LLZO filler carbonate) (PPC)-",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    302.8,
+    524.0,
+    765.4
+   ],
+   "w": 1910,
+   "h": 1929,
+   "dpi": 300,
+   "src": "Cao 2026 - Sup) Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533) SI.pdf",
+   "blank": 0.94
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 20,
+   "file": "tab_S3.png",
+   "caption": "Table S3. Summary of typical sulfide-based electrolyte films prepared via dry process. Ref. Sulfide Binder(content) Thickness of Ionic conductivity at electrolyte the films(μm) Room temperature (mS cm-1) S1 [25] Li10GeP2S12 PTFE + Nylon 100 0.36 mesh S2 [26] Li6PS5Cl PLI (7%) 80 0.84 S3 [27] Li6PS5Cl SBR (2.0%) 80 2.34 S4 [28] Li6PS5Cl PVDF-HFP@TPU 70 1.1 (1%) S5 [29] Li6PS5Cl PTFE (0.4%) 55 1.4 S6 [30] Li6PS5Cl XNBR (3.0%) 50 0.1 S7 [31] Li5.7PS4.7Cl1.3 PTFE+PEVA 40 1.1 (7.5%) S8 [32] Li6PS5Cl PTFE (0.2%) 40 8.4 S9 [33] Li6PS5Cl polydopamine 35 0.2 S10 [34] Li5.4PS4.4Cl1.6 PTFE (0.2%) 30 8.4 S11 [35] Li5.3PS4.3ClBr0.7 PTFE + Cellulose 30 6.5 mesh S12 [36] Li6PS5Cl TPA (3%) 25 2.1 S13 [37] Li6PS5Cl PTFE 20 1.0 (0.5 wt%) 20",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    67.2,
+    523.9,
+    811.6
+   ],
+   "w": 1846,
+   "h": 2999,
+   "dpi": 290,
+   "src": "Cao 2026 - Sup) Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533) SI.pdf",
+   "blank": 0.962
+  }
+ ],
+ "missing_labels": [
+  {
+   "key": "fS10",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p10 그래픽 없음(img0/draw3)"
+   ],
+   "near_miss": []
+  }
+ ]
+}
