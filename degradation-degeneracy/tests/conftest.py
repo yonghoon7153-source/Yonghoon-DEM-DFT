@@ -225,6 +225,9 @@ _GATED_ENTRYPOINT_MODULES = frozenset({
     # ★ 87차 — 라운드 2b: production 진입점 `stage3_context_from_plan` 이 만든 문맥으로 `run_fit()` 완주 (s04) ·
     #   비-smoke 승인 분기 (s02) 는 자기 격리 원장을 쓴다.
     "test_gate87_round2b", "tests.test_gate87_round2b",
+    # ★ 88차 — G87-N1: 비-smoke v6 fit-only 의 승인 → 완료 기록 → 최종화를 production `run_fit()` · `finalize_leg()` 로 잰다
+    #   (자기 격리 원장 · 비-smoke 산출 자리).
+    "test_gate88_fit_only_lifecycle", "tests.test_gate88_fit_only_lifecycle",
 })
 
 
