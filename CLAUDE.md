@@ -623,6 +623,11 @@ the other; their agreement quantifies model trust.
   정본 `docs/voxel_contact_free_gap.md` §8.  6 단계 (① 상 경계 → ② VGCF 번호 → ③ SE 번호 → ④ 입력 σ
   내부값 규약 → ⑤ 위 대조 → ⑥ 웹앱) · Codex 는 ⑥ 뒤 한 번.  ⚠ **값 인용 단계 아님** — r 를 켜면 입력
   σ 규약(펠릿값)이 바뀐다 (④).
+  ★ **10-03 (서브 세션) — Codex 시점 변경 (1저자 *"권고대로"*): P2-1 결정 · ② 설계 **전에** 한 번** → 요청서
+  `docs/reviews/codex_rint_stage1_request_20261003.md` (탐침 3 · 발송 = 사용자 · ⬜ 판정 대기).  검토 대상 설계안 =
+  `docs/reviews/contact_resistance_pipeline_draft_20261002.md` (10-02 에이전트 초안 · **1저자 미보고** · ①′ 면적 규약 · `iid` · D1–D9).
+  자기리뷰 (P1-1 · P2-1~4 · P3) 수정은 **아직 0** · `SELF-81` 미등재.  새 관찰: 입자별 전류가 AM 자리를 덮은 탄소 셀을
+  AM 몫에 넣는다 (계면 항 무관 · 1.24×) · 고정 브리지에서 계면이 브리지 공 표면에 놓여 vox 사다리가 **틀린 면적으로 수렴**.
 
 ---
 
