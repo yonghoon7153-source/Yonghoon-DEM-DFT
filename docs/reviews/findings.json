@@ -7113,13 +7113,19 @@
   {
    "id": "RINT-02",
    "severity": "P2",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "claude 자기리뷰 10-02 (P2-3) · codex 10-03 확대",
    "opened_in": "docs/reviews/codex_review_rint_stage1_20261003.md",
    "title": "rint 적용 계약을 주 솔브만 검사하면 wetted/bare collector 솔브의 rint 누락 변이가 초록 — 규칙 J · check_arm 거짓 초록 재현",
    "note": "자리: scripts/mpm_webapp_payload.py:1980–1983 · 2252–2257 · 2278 · 2876–2879; scripts/check_method_discipline.py:1634–1748 · 1777–1794; scripts/sdcp_gain_verdict.py:210–212.  재현: 주 솔브 rint 전달만 삭제 → σ_e = OFF 와 비트 동일 · CLI model=r1 · 실제 면 없음 · 규칙 J PASS · check_arm exit 0.  wetted 호출 rint 만 삭제 → 주 σ_e · 3,816 면 · 표 그대로인데 wetted σ 0.0009487 → 0.0009606 S/cm · collector R_geom 0 → 0.0544 Ω·cm² · bare 변이는 0 clamp 뒤에 가려지는 경로.  ⚠ 원본 네 호출에는 rint 가 올바로 연결돼 있다 — 현재 누락이 아니라 제안 검사 (요청서) 로도 놓치는 변이.  \"model≠None 이면 대조\" 는 배선 삭제로 model=None 이 되면 전제가 거짓이라 통과한다.  최소 수정: 독립 보존한 requested 표 기준으로 enabled/successful 솔브마다 applied 표 · 모델 · 단위 · 소유번호 지원 대조 — electronic_main / electronic_wetted / electronic_bare / ionic 영수증 (또는 동등하게 검증된 공통 호출기) · producer 발행 전 · fresh/cache check_arm · 최종 판정기가 같은 계약 소비.  해결 증거: 네 호출 인자 삭제를 하나씩 심으면 각각 실패 + 원본 수치 · 실제 면 · 표 통과.  등재 2026-10-03 = Codex r_int ① 1단계 판정 반입 (1저자 전달).  ⛔ 1단계 판정 = G1 HOLD · G2 HOLD (기본 OFF 산출을 폐기하라는 판정 아님 · 수정 착수 금지도 아님 — 제시 처방만으로 닫힌다는 판정을 못 낸다는 뜻) · 수정은 1저자 비준 뒤 반례 먼저 (규율 ②) · 코드 → 웹앱 → 게이트 → 커밋 한 묶음 (J20-l).  1저자 비준 10-03: G1 수정 묶음 (반례 먼저 · 웹앱 같은 묶음 J20-l).",
-   "evidence_tests": []
+   "evidence_tests": [
+    "scripts/test_rint_receipts.py A (실물 producer OFF · 전자 ON · 전자+이온 ON 계약 통과) · B (AST 로 찾은 solve_sigma_z(rint=) 호출 넷에서 하나씩 rint= 삭제 → 4/4 게시 거부 exit 4 · 사유에 솔브 이름) · D (check_arm 이 영수증 변조 5 종 거부 · 원본 수용)",
+    "scripts/run_contract.py::--selftest IF-0–IF-22 (영수증 생산자 · 계약 반례 — 옛 코드: 함수 없음)",
+    "scripts/sdcp_gain_verdict.py::--selftest ㊼c · ㊼d (판정기 소비 — 소비 줄을 지운 사본에서 ㊼c 실패 확인)"
+   ],
+   "claimed_fixed_sha": "3e79aa61c",
+   "verification_note": "3e79aa61c: run_contract.interface_receipt · interface_record_ok (세 소비자 공용 계약) — 요청 표 (파서 출력) 와 네 솔브 (electronic_main · wetted · bare · ionic) 적용 영수증을 따로 기록 · 대조 (model · unit · 표 · 면 수 쌍별 합 · pid · solved) · 요청 있는데 솔브 기록 없음 = missing (not_requested 둔갑 금지) · model None 생략 경로 거부 · producer 게시 전 (STEP3_INTERFACE exit 4) · check_arm · 판정기 (HOLD/IFACE) 가 같은 함수 · 솔버 조기 반환에도 계면 기록 (solved False).  Codex 변이 4 종 전부 잡힘 (10-03).  웹앱 화면 없음 (계면 기록 표시 = ⑥).  Codex 재검증 대기."
   },
   {
    "id": "RINT-03",
@@ -7247,24 +7253,35 @@
   {
    "id": "RINT-13",
    "severity": "P3",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "claude 자기리뷰 10-02 (P3-③) · codex 10-03 CONFIRMED P3",
    "opened_in": "docs/reviews/codex_review_rint_stage1_20261003.md",
    "title": "compare_dirs OFF↔ON: r 축만 expected 로 두면 파생 interface_model 에서 HOLD — model 만 면제해도 미분류 6 필드에서 추가 HOLD",
    "note": "registry 보완 필요 — 미분류 6 키는 RINT-20 (rint 이전부터의 drift).  r 축 짝 비교 계약 (expected 축 · 파생 필드 derived_from) 을 같이 정의.  등재 2026-10-03 = Codex r_int ① 1단계 판정 반입 (1저자 전달).  ⛔ 1단계 판정 = G1 HOLD · G2 HOLD (기본 OFF 산출을 폐기하라는 판정 아님 · 수정 착수 금지도 아님 — 제시 처방만으로 닫힌다는 판정을 못 낸다는 뜻) · 수정은 1저자 비준 뒤 반례 먼저 (규율 ②) · 코드 → 웹앱 → 게이트 → 커밋 한 묶음 (J20-l).  1저자 비준 10-03: G1 수정 묶음 (반례 먼저 · 웹앱 같은 묶음 J20-l).",
-   "evidence_tests": []
+   "evidence_tests": [
+    "scripts/sdcp_gain_verdict.py::--selftest ㊼a (OFF ↔ ON · 등록 축 = 전자 계면 표 → interface_model 차이 HOLD 아님 — derived_from 을 뺀 사본에서 실패 확인) · ㊼b (표 같고 모델만 다름 → HOLD)",
+    "scripts/test_rint_receipts.py E2"
+   ],
+   "claimed_fixed_sha": "3e79aa61c",
+   "verification_note": "3e79aa61c: FIELD_CONTRACT interface_model.derived_from = (interface_rint_e_ohm_cm2, interface_rint_i_ohm_cm2) · compare_dirs 가 튜플 부모는 **그 부모 중 등록 축이 실제로 달라졌을 때만** 허용 (PROTOCOL_FIELDS 는 종전대로) · 미분류 키는 RINT-20 이 닫음 (10-03).  Codex 재검증 대기."
   },
   {
    "id": "RINT-14",
    "severity": "P3",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "claude 자기리뷰 10-02 (P3-④) · codex 10-03 CONFIRMED P3",
    "opened_in": "docs/reviews/codex_review_rint_stage1_20261003.md",
    "title": "--step3-rint-i + --no-ion: payload 에 model=r1 이나 이온 적용 · 면 없음 — 모순 요청을 거부하거나 disabled 요청으로 명확히 기록",
    "note": "requested / enabled / solved / applied 분리 (Codex Q4) · 0-face 를 absent geometry / disabled channel / unsupported identity / failed solve 로 나눠 보고.  등재 2026-10-03 = Codex r_int ① 1단계 판정 반입 (1저자 전달).  ⛔ 1단계 판정 = G1 HOLD · G2 HOLD (기본 OFF 산출을 폐기하라는 판정 아님 · 수정 착수 금지도 아님 — 제시 처방만으로 닫힌다는 판정을 못 낸다는 뜻) · 수정은 1저자 비준 뒤 반례 먼저 (규율 ②) · 코드 → 웹앱 → 게이트 → 커밋 한 묶음 (J20-l).  1저자 비준 10-03: G1 수정 묶음 (반례 먼저 · 웹앱 같은 묶음 J20-l).",
-   "evidence_tests": []
+   "evidence_tests": [
+    "scripts/test_rint_receipts.py C (CLI 모순 6 — 빈 --step3-rint-e · 반복 플래그 같은 쌍 · --step3-rint-i + --no-ion · --no-step3 · 절연 상 쌍 전자 · 이온 → 격자 작업 전 거부)",
+    "scripts/step3_sigma.py::--selftest-rint ⓚ1–ⓚ5 (채널 검사 = 실제 σ 표 · override 로 절연 · 복셀 σ 장 · unsupported identity · 조기 반환 계면 기록)",
+    "scripts/run_contract.py::--selftest IF-13–IF-19 (disabled = 계획과 일치할 때만 · failed · absent_geometry · zero_table 구분)"
+   ],
+   "claimed_fixed_sha": "3e79aa61c",
+   "verification_note": "3e79aa61c: CLI nargs=\"+\" · action=\"extend\" (값 없는 플래그 오류 · 반복은 이어 붙여 같은 쌍 거부) · --step3-rint-i + --no-ion · rint + --no-step3/--scaffold 없음 → 거부 · 채널 검사 (rint_channel_check = override · 온도 적용 뒤 실제 σ 표 · GPU 전 + 솔버 입구) · 같은 상 AM 쌍 r>0 인데 pid 없음 → 거부 · 0 면 상태 = absent_geometry / zero_table / disabled / failed 로 구분 (unsupported identity 는 상태가 아니라 거부) (10-03).  Codex 재검증 대기."
   },
   {
    "id": "RINT-15",
@@ -7328,13 +7345,18 @@
   {
    "id": "RINT-20",
    "severity": "P3",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "codex 10-03 (§4 P3-③ 재판정 중 발견)",
    "opened_in": "docs/reviews/codex_review_rint_stage1_20261003.md",
    "title": "compare_dirs 계약 registry drift — 미분류 6 키 (electronic_field_pts · fibre_segment_ledger · field_requested · ionic_field_pts · ptfe_block_cells · ptfe_block_scope)",
    "note": "Codex: 기존 registry drift — rint 구현이 새로 만든 것 아님.  수정: registry 에 6 키 분류 추가 (규율 ⑤ 매니페스트 전수 — 분류 안 된 키는 값이 같아도 HOLD 이므로, 그 키를 내는 산출 사이 OFF↔ON 짝 비교가 지금 HOLD 로 선다).  등재 2026-10-03 = Codex r_int ① 1단계 판정 반입 (1저자 전달).  ⛔ 1단계 판정 = G1 HOLD · G2 HOLD (기본 OFF 산출을 폐기하라는 판정 아님 · 수정 착수 금지도 아님 — 제시 처방만으로 닫힌다는 판정을 못 낸다는 뜻) · 수정은 1저자 비준 뒤 반례 먼저 (규율 ②) · 코드 → 웹앱 → 게이트 → 커밋 한 묶음 (J20-l).",
-   "evidence_tests": []
+   "evidence_tests": [
+    "scripts/test_rint_receipts.py E1 (실물 producer 매니페스트 3 종 manifest_unswept_keys = [])",
+    "scripts/sdcp_gain_verdict.py::--selftest ㊷a · ㊷c (ptfe_block_scope generation 축 거동)"
+   ],
+   "claimed_fixed_sha": "3e79aa61c",
+   "verification_note": "3e79aa61c: 미분류 6 키 분류 — ptfe_block_scope = FIELD_CONTRACT generation 축 (차단 범위도 σ 침대를 바꾼다) · field_requested · electronic_field_pts · ionic_field_pts · fibre_segment_ledger · ptfe_block_cells (+ 새 interface_receipts) = MANIFEST_RESULT_KEYS · 실물 producer 매니페스트 전수 분류를 통합 시험이 매 게이트 강제 (레지스트리 표류 재발 방지) (10-03).  Codex 재검증 대기."
   }
  ]
 }
