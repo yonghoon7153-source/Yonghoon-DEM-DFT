@@ -2,7 +2,7 @@
 title: 팩 ISC/누설 검출에서 균등화 전류가 관측을 덮는가
 description: "In a liquid-cell pack, when detecting/quantifying an internal short or leakage, does the balancing current mask the observation — and if so, what separates leakage from self-discharge spread, capacity spread and the balancer itself"
 created: 2026-09-22
-updated: 2026-10-02
+updated: 2026-10-03
 type: research-question
 tags: [battery, research, pack-fault]
 sources: [raw/papers/lai2025_balanced-capacity-isc-detection-modules.md, raw/papers/zhang2026_si-anode-interphase-calendar-ageing.md]
@@ -149,6 +149,7 @@ feedsInto: "bms-balancing/docs/NEW_MODEL_REQUIREMENTS.md — §3 후보 원인 �
   정상 SEI 유지 전류의 크기 · 시간 모양 · 잡음과 풀셀 보관의 회복분 · 셀 간 산포. 경계: digest 에 `pack-fault` 태그를
   붙이지 않았다(열화 기구 페이지 — SCHEMA 경계 ②) · 채움표 행 없음 · 카드 status 그대로(open). 새 개념
   [[potentiostatic-hold-current-attribution]] — 유지 전류 = 가역 이완 + 부반응 + 단락, 단락의 부호는 셀 구성에 따라 다르다.
+- [2026-10-03] 탐색 음성 2 회째 (단일 출처) — GitHub 브리핑 (2026-10-02 조사분) 이 "추가 추천할 만큼 검증된 실제 미세단락 전용 새 도구는 확인하지 못했다" 고 보고. 후보 둘은 ISC 판별 도구가 아니다: [[pyimpspec]] (EIS · DRT — 브리핑도 "피크만으로 미세단락 원인을 확정할 수 없다") · [[isu-uconn-lfp-gr-emulated-degradation]] (모사 LLI/LAM · 단락 라벨 없음).
 
 ## 이 카드가 주장하지 않는 것
 

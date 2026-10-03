@@ -2,10 +2,10 @@
 title: PyBaMM (합성 truth 엔진 · 의존성)
 description: "degradation-degeneracy 의 합성 truth 를 만드는 전기화학 모델 라이브러리 — 우리가 쓰는 경로(full DFN · composite 음극 · 기본 uniform submesh · LLI 자체 계산)와 릴리스별 영향 판정, 그리고 requirements 상한 부재라는 재현성 위험"
 created: 2026-10-01
-updated: 2026-10-01
+updated: 2026-10-03
 type: entity
 tags: [pybamm, tooling, degradation]
-sources: [raw/articles/2026-10-01-github-research-briefing.md, raw/repositories/2026-10-01-pybamm-26.8-vs-26.9-synthetic-truth.md]
+sources: [raw/articles/2026-10-01-github-research-briefing.md, raw/repositories/2026-10-01-pybamm-26.8-vs-26.9-synthetic-truth.md, raw/articles/2026-10-02-github-research-briefing.md, raw/repositories/2026-10-03-pybamm-pr5813-graded-electrode-and-synthetic-truth.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -69,6 +69,42 @@ PyBaMM 의 수치가 바뀌면 "참값" 자체가 움직인다 — 이 페이지
 - PR 의 "uniform mesh 는 bit-for-bit 불변" 은 **우리 기본 격자에 해당하지 않는다** — subdomain 안은 균일, 접합부는 비균일.
 - 2.7 mV 는 우리 허용치 감각 (ΔV ≤ 1 mV 급) 으로 **무시할 수 없다**. 두 조건만 봤고, 격자 수렴 (어느 쪽이 더 참값에 가까운가) 은 묻지 않았다 — 26.9 는 수치적으로 더 보존적인 쪽이지만 그것이 우리 truth 의 "정답" 을 바꾸는지는 별도 물음.
 
+### develop #5813 (2026-09-30 병합 · **26.9.0.0 미포함**) — 우리 영향 판정 · 실측 (2026-10-03 · `raw/repositories/2026-10-03-pybamm-pr5813-graded-electrode-and-synthetic-truth.md`)
+
+무엇을 고쳤나 (커밋 `bd572504` · CHANGELOG 원문은 `raw/articles/2026-10-02-github-research-briefing.md` 하단): `x_average` · `r_average` 등의
+기호 단순화가 **보조 도메인으로 평균 좌표에 의존하는 인자** (예: x 로 변하는 입자 농도) 를 상수로 보고 곱을 평균들의 곱으로
+쪼갰다 · 분모가 변하는 나눗셈도 쪼갰다. 그래서 **활물질 분율이 x 로 변하면** DFN 의 `LLI [%]` · 총 입자 리튬이 틀린다.
+
+| 판정 축 | 우리 경로 | 근거 |
+|---|---|---|
+| 구배 활물질 분율 | **없다** — 전극마다 스칼라 상수 (`float(b[key])`) · LAM 도 스칼라 배율 (`b.pe_vf * (1 - lam_pe)`) | `degradation-degeneracy/src/baseline.py` · `src/modes.py` |
+| PyBaMM 리튬 재고 · LLI 변수 | **안 쓴다** — `src` · `tests` · `tools` · `scripts` 에서 `Total lithium` · `Loss of lithium` · `LLI [%]` grep 0 건 | 2026-10-03 grep |
+| PyBaMM 열화 서브모델 (SEI · LAM · 도금) | **안 켠다** — 옵션 grep 0 건 | 같은 grep |
+
+실측 (설치본 26.8 ↔ 같은 설치본 사본에 #5813 의 `averages.py` 고침만 덧댄 것 · 운영 환경 불변):
+
+| 시험 A — 구배 음극 (0.675→0.825 · 부반응 0 · Chen2020 · 1 h 방전) | 수정 전 (26.8) | 수정 후 |
+|---|---|---|
+| `LLI [%]` 최대 (참값 0) | **0.273 %** | 9e-13 % |
+| 총 리튬 표류 (상대) | **8.1e-5** | −8.6e-15 |
+| PyBaMM 음극 리튬 ↔ 손 적분 Σ ε·c̄·Δx·A (상대 최대) | **0.92 %** (t=0 은 1e-16 — 초기 농도가 균일해서) | 1.6e-15 |
+| 균일 음극 (대조) — 위 셋 | 9e-13 % · −8e-15 · 1.6e-15 | 같음 |
+
+| 시험 B — 우리 합성 truth (`src.grid._solve_condition` · 10-01 과 같은 드라이버 · 두 조건) | 수정 전 ↔ 수정 후 차이 |
+|---|---|
+| 용량 | Δq = **0** (두 조건 모두) |
+| full-cell ΔV 최대 (위치) | **2.7e-8 · 4.9e-8 V** (방전 끝 한 점 · 중위 1.8e-10 · 8.5e-11 V) · 차이는 전부 양극 전위 (음극 전위 · x 축 동일) |
+| 결정성 대조 — 수정 전 ↔ 수정 전 다시 실행 | 비트 동일 (Δ 0) |
+
+- **브리핑의 '작은 검증' 결론**: 버그는 우리 설치본 (26.8) 에 있고, 구배 전극에서 실제로 LLI 를 0.27 % 까지 만든다 · #5813 이 고친다.
+- **우리 truth 에는 사실상 닿지 않는다** — 용량 동일 · 전압 최대 5e-8 V (#5755 의 2.7 mV 의 약 5 만 분의 1). 다만 결정적
+  재실행이 비트 동일한데 패치 뒤는 비트가 달라진다 → **#5813 이 든 릴리스로 올리면 합성 truth 바이트가 바뀐다** (영수증 ·
+  산출물 해시 재생성 대상). 버전 상한 결정은 여전히 #5755 (2.7 mV) 가 주인이고, #5813 은 그 결정을 바꾸지 않는다.
+- **앞으로 닿는 조건** (그때는 #5813 이 든 버전 · 또는 리튬 재고를 손으로 계산): 구배 전극 · x 로 변하는 활물질 분율을 truth 에
+  넣을 때 (예: ASSB 접촉 손실 truth 에서 비연결 입자 몫을 활물질 분율 `ε_p` 로 넣되 두께 방향으로 다르게 줄 때 — 그 표현은 [[assb-synthetic-truth-contact-loss-requirements]] 표의 '활물질 분율' 행),
+  또는 PyBaMM `LLI [%]` · `Total lithium` 변수를 라벨 · 보존 검사로 쓰기 시작할 때.
+- 열린 물음: #5813 이 든 첫 릴리스 번호 (2026-10-03 원격 태그에 26.9.0.0 뒤 릴리스 없음 — watch).
+
 ### 위험과 할 일
 
 - **재현성 위험 (실재 · 실측됨):** 새 환경에서 `pip install -r requirements.txt` 를 하면 26.9 + CasADi 3.8.1 이 깔리고,
@@ -78,6 +114,8 @@ PyBaMM 의 수치가 바뀌면 "참값" 자체가 움직인다 — 이 페이지
   변경 = **RUN_SCOPE 변경**이다 (CLAUDE.md 하드룰 3) → source_digest 가 바뀌고 기존 영수증 재생성이 따른다.
   브리핑만으로 바꾸지 않는다. 다음 코드 라운드의 사용자 승인 범위에 넣을 후보로 둔다.
 - ~~#5755 열린 물음을 닫는 가장 싼 방법~~ → 2026-10-01 실측으로 닫았다 (위). 남는 것은 **상한 고정의 게이트 승인** 하나.
+- **#5813 (2026-10-03 실측)**: 우리 truth 에는 용량 0 · 전압 ≤5e-8 V — 경로 밖이지만 바이트는 바뀐다. 구배 활물질 분율 ·
+  PyBaMM 리튬 재고 변수를 쓰게 되면 그 전에 #5813 이 든 버전 (26.9.0.0 에는 없다) 을 요구 조건으로 적는다. 상한 고정 판단은 그대로.
 
 ## 이 위키와의 관계
 

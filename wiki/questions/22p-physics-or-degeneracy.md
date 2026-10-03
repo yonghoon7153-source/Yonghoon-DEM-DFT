@@ -2,7 +2,7 @@
 title: 22p 결과는 물리인가 fitting degeneracy 인가
 description: "Is the seminar 22p LLI/LAM decomposition (LAM_PE=LAM_NE=13%, LLI=17%) real physics or an artifact of non-identifiability"
 created: 2026-08-11
-updated: 2026-10-02
+updated: 2026-10-03
 type: research-question
 tags: [battery, degradation, research]
 sources: [raw/repositories/degradation-degeneracy-audit.md, raw/papers/schmitt2022_sic-ocp-shape-change-degradation-modes.md, raw/papers/2026-09-21-siwon-kim-si-gr-ica-lam-si-gitt-ocp.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/cui2024_electrode-utilization-formation-cycle-life.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/mohtat2019_electrode-soh-estimability-expansion.md, raw/papers/natterer2026_re-halfcell-anode-potential-aging.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/sun2025_dl-eis-degradation-mode-diagnostics.md, raw/papers/oney2025_dead-slow-overworked-graphite-operando-microxrd.md]
@@ -1098,6 +1098,7 @@ LAM_PE ≈ LAM_NE 는 물리가 아니라 **flat valley 방향에서 두 전극�
   붙는다 — 판정은 바꾸지 않는다(22p 셀과 화학 · 전류가 다르고, 그 편은 OCV 맞춤을 하지 않는다). 같은 편 표 1 의 li/de 상
   조성은 `n₁` 계수(제거 때 점유율)의 실셀 값 z_eff ≈0.2(`[재현·가정]`)를 준다 → [[birkl-ocv-degradation-diagnostic]] 새 절 ·
   [[thermo-kinetic-loss-partition]] 함정 6 · [[mode-identifiability-unmeasured-lineage]] 표 19 번째 행.
+- **[2026-10-03] GitHub 브리핑 (2026-10-02 조사분) — 새 근거 0, 외부 검증 후보 1.** [[isu-uconn-lfp-gr-emulated-degradation]]: LFP/흑연 11 셀을 원판 지름 · 리튬화 상태로 **설계해 모사**한 실측 곡선 + 설계 참값 (m_P · m_N · LII) 표 + 같은 4 변수 (배율 · 오프셋) 맞춤 코드. 합성 truth 와 실측 노화 사이의 빈칸 (실측 곡선 + 참값) 이라 이 카드의 판정 틀 (근최적 집합이 참값을 포함하는가 · 얼마나 넓은가) 을 실측에 처음 얹을 수 있는 자리다 — 제안 실험 E1–E3 (미착수 · 사용자 승인 뒤 · 성공 기준 사전 고정). 한계: LFP 평탄 고원 (NMC 와 축퇴 구조가 다름) · 모사 열화 · 명목 참값. 같은 브리핑의 [[pybamm]] #5813 (구배 활물질 분율의 LLI 버그) 은 우리 truth 에 용량 0 · 전압 ≤5e-8 V — 판정 불변.
 
 ### 이 카드가 속한 논지 (2026-09-03)
 
