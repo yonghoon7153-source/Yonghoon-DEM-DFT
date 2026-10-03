@@ -4,7 +4,7 @@ created: 2026-09-04
 updated: 2026-10-03
 type: concept
 tags: [battery, degradation, research]
-sources: [raw/papers/lee2020_estimation-error-bound-limited-data-window.md, raw/papers/mohtat2019_electrode-soh-estimability-expansion.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/kim2019_assb-ekf-soc-estimation-weak-observability.md]
+sources: [raw/papers/xie2008_lco-thin-film-orientation-diffusion-gitt-pitt-eis.md, raw/papers/lee2020_estimation-error-bound-limited-data-window.md, raw/papers/mohtat2019_electrode-soh-estimability-expansion.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/kim2019_assb-ekf-soc-estimation-weak-observability.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -83,6 +83,15 @@ DOD = Q / C              C = V_max·V_min 로 정의된 셀 용량
 - **★ 창은 분산을 줄이고 편향은 못 지운다** (`[재현]` · `[해석]`): 99호 EKF4 의 SOC 오차는 축약 모형의 출력 오차(≈−7 … −11 mV)를 평탄 기울기로 나눈 크기와 같다(800 s −0.084 ↔ −0.087 · 600 s −0.045 ↔ −0.048) — 편향이다. 단일 점 감도(분산 쪽)는 σ_SOC = σ_V/\|dE/dSOC\| = 0.44(SOC 0.28) ↔ 0.035(SOC 0.9)(`[재현·가정]` σ_V 31.6 mV = 필터 R_v 10⁻³ V²). 창(궤적)을 넓히면 분산은 줄지만, 모형 불일치는 창 안 모든 점에서 같은 쪽으로 어긋나 **편향은 남는다** — 창 축의 이득은 모형이 맞을 때만의 것이다.
 - **우리 작업과의 연결**: 근최적 폭(분산 쪽)과 모형 불일치(편향 쪽)를 따로 재야 한다는 구분의 상태 추정 표본이다(우리 수치는 `degradation-degeneracy/docs/RESULTS*.md` 정본 — 옮기지 않음).
 
+## ★ 측정 방법별 시간 창 판 — 같은 막 · 같은 전위에서 방법마다 다른 τ 를 본다 (2026-10-03, `assb` 102호)
+
+`raw/papers/xie2008_lco-thin-film-orientation-diffusion-gitt-pitt-eis.md` (Xie · Imanishi · Matsumura · Hirano · Takeda · Yamamoto 2008 *Solid State Ionics* 179, 362 — 액체 셀 LCO 박막 · CV · GITT · PITT · EIS · ASSB 아님).
+
+- **같은 축, 다른 대상**: 이 페이지의 창은 OCV 적합의 DOD 창(매개변수 식별)이고, 102호의 창은 **측정 방법이 보는 시간 구간**이다 — GITT 맞춤 창 = 600 s 펄스 중 앞 100 s(그림 6 · 여섯 점 · 2 mV 계단) · PITT 창 = 2000 s(그림 8 — ln I 굽음 · `[재현]` 창별 D 2.10 → 0.78×10⁻¹² cm² s⁻¹ · ×2.7) · EIS 창 = 1 MHz–1 mHz(Warburg 0.05–0.16 Hz 여섯 점).
+- **★ 창이 시간 상수를 고른다** (`[재현·가정]`): #120 · 4.08 V 에서 EIS 의 무릎 · 저주파 용량(0.70 F ≈ 막 삽입 용량 0.51 F)은 전 막 τ ≈8–30 s 를, GITT · PITT 는 L²/D ≈1400–3400 s 를 준다 — 후자의 무릎(1–3×10⁻⁴ Hz)은 EIS 창(≥1 mHz) 밖이다. 같은 막에서 '측정 D' 가 창(방법)에 따라 ×10²–10³ 다르다.
+- **창이 조건 검사를 정한다**: 인쇄 조건 't ≪ L²/D̃'(GITT)는 이 편 자기 D̃ 로 Li0.5 에서 맞춤 창 t·D/L² 0.18–0.49 · 펄스 600 s 1.05–2.94 · PITT 장시간 해는 창 끝 t·D/L² 0.06–0.10(둘째 항 0.14–0.32).
+- **우리 작업과의 연결**: 프로토콜(창) 선택이 같은 물리량의 '측정값' 을 바꾼다는 이 페이지의 축이 측정 층에서도 성립한다는 표본 — 합성 truth 의 D 를 문헌 측정값으로 고를 때 방법 · 창을 같이 적어야 한다(우리 수치는 `degradation-degeneracy/docs/RESULTS*.md` 정본 — 옮기지 않음).
+
 ## 한계
 
 - **국소·불편 전제**를 그대로 물려받는다. 막대가 `5e3 %` 로 나오는 창에서는
@@ -92,6 +101,7 @@ DOD = Q / C              C = V_max·V_min 로 정의된 셀 용량
   이유). 즉 이 축은 **식별 가능성 ↔ 사용 조건**의 교환이다.
 - **열화된 셀에서 다시 재야 한다.** Lee 2020 의 지도는 fresh 공칭값 한 점에서
   그려졌다. `α`·`β` 가 놓이는 자리가 열화로 이동하면 지도도 이동한다.
+- **102호 절은 액체 셀 측정 편 위의 우리 재현이다** — 시간 상수 대조는 화소 판독 · 반사 경계 유한 Warburg · L = 두께 가정 위이고, 그 편은 창 · 식별성을 다루지 않았다.
 
 ## 관련
 - [[constrained-crb-identifiability]] — 창 이동과 구분되는 두 처방(제약·관측)
@@ -100,3 +110,4 @@ DOD = Q / C              C = V_max·V_min 로 정의된 셀 용량
 - [[fitting-degeneracy]] — 창이 좁을 때 드러나는 축퇴 그 자체
 - [[pvs-sev-lli-lampe-separability]] — "무엇을 더하면 갈리는가" 의 열린 질문
 - [[assb-sensitivity-sweep-vs-identifiability]] — 99호 절: 같은 편의 '민감도 분석'(축약 오차 OAT)과 관측성 논증
+- [[spm-grouped-parameter-identifiability]] — 102호 행: 측정 D̃ 의 두 곱(D̃·(S/Vm)² ↔ D̃/L²)과 방법별 τ

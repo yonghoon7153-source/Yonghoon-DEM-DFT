@@ -1,0 +1,457 @@
+{
+ "slug": "xie2008_lco-thin-film-orientation-diffusion-gitt-pitt-eis",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-03",
+ "sources": [
+  "9e19e109-62._Orientation_dependence_of_Li_ion_diffusion_kinetics_in_LiCoO2_thin_films_prepared_by_RF_magnetron_sputtering.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. XRD patterns of LiCoO2 thin film sputtered for different durations: (a) 30 min, (b) 60 min, and (c) 120 min.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    64.1,
+    299.6,
+    227.4
+   ],
+   "w": 1097,
+   "h": 681,
+   "dpi": 300,
+   "src": "9e19e109-62._Orientation_dependence_of_Li_ion_diffusion_kinetics_in_LiCoO2_thin_films_prepared_by_RF_magnetron_sputtering.pdf",
+   "blank": 0.891,
+   "note": "봤다(p. 363 · 래스터 회색 JPEG 492×421). XRD (a) 30 · (b) 60 · (c) 120 min + 기판(Al₂O₃ ▽ · Au) — (a) 003 강 · 104 약 · (b) 003 · 104 · 107 · (c) 104 강 · 003 약 · 101 은 Au(111) 38.2° 옆 어깨 · Au 64.5 · 77.4° 근처 봉우리 (b)(c) 에서 커짐(본문 언급 0). [도표] 정성 — 집합조직 계수 · 강도비 인쇄 0. 자동 크롭 온전."
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 2,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. A typical cross section morphology of Sample#60.",
+   "rotated_deg": 0,
+   "bbox": [
+    338.2,
+    571.1,
+    535.9,
+    738.6
+   ],
+   "w": 824,
+   "h": 699,
+   "dpi": 300,
+   "src": "9e19e109-62._Orientation_dependence_of_Li_ion_diffusion_kinetics_in_LiCoO2_thin_films_prepared_by_RF_magnetron_sputtering.pdf",
+   "blank": 0.207,
+   "note": "봤다(p. 363 · 래스터 RGB 473×432). SEM 단면 Sample#60 — ⚠ Al₂O₃ 에 직접 증착한 막(전기화학 막은 Au 위). ×10k · 25 kV · 눈금 5 µm = 294 px · 저자 화살표 ≈52 px ≈0.88 µm [도표·화소](본문 'around 0.85 μm' ✅) · 기둥 조직 보임(본문 언급 0). 자동 크롭 온전."
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 3,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. CV curves at scan rates ranging from 0.05 to 10 mV s−1 of Sample#120 (a) and Peak current Ip vs. the square root of the scan rate, v1/2 at a scan rate over 1 mV s−1 (b).",
+   "rotated_deg": 0,
+   "bbox": [
+    295.7,
+    64.1,
+    558.8,
+    378.4
+   ],
+   "w": 1097,
+   "h": 1310,
+   "dpi": 300,
+   "src": "9e19e109-62._Orientation_dependence_of_Li_ion_diffusion_kinetics_in_LiCoO2_thin_films_prepared_by_RF_magnetron_sputtering.pdf",
+   "blank": 0.909,
+   "note": "봤다(p. 364 · 래스터 540×840). (a) #120 CV 0.05–10 mV s⁻¹ — 0 mA 수평선(행 208) · [도표·화소] 양극 봉우리 ≈3.93 V(최저 율 0.16 mA) → ≈4.15 V(0.72) → ≈4.21 V(1.07 mA) · 높은 율 셋은 4.3 V 꼭짓점까지 상승. (b) 다섯 점 v^½ 0.0245 · 0.0283 · 0.0317 · 0.0447 · 0.0634 = 0.6 · 0.8 · 1.0 · 2.0 · 4.0 mV s⁻¹(본문 '0.6–4' ✅ · ⚠ 캡션 'over 1 mV s−1' ✗ — 원문) · LSQ 24.85 mA (V s⁻¹)^-½ → [재현] D 7.81×10⁻¹²(S 0.64 · C 1/Vm · 298 K) ✓ 인쇄 7.7×10⁻¹² · [재현·가정] 2상 + 직렬 R 이면 R 301–348 Ω 로도 닫힘."
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 4,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. OCVof Sample#120 as a function of δ in Li1 −δCoO2. The inset is a dδ / dE vs. voltage plot obtained by differentiating δ with the voltage.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    64.1,
+    299.6,
+    232.6
+   ],
+   "w": 1097,
+   "h": 703,
+   "dpi": 300,
+   "src": "9e19e109-62._Orientation_dependence_of_Li_ion_diffusion_kinetics_in_LiCoO2_thin_films_prepared_by_RF_magnetron_sputtering.pdf",
+   "blank": 0.929,
+   "note": "봤다(p. 365 · 래스터 528×435). OCV(GITT 이완 끝) vs δ · #120 · δ=½@4.15 V 설정 — 점 δ 0.000–0.563 · 3.85–4.26 V · 평탄 3.92–3.95 V(δ 0.04–0.24 · 점 둘) · 삽도 dδ/dE 봉우리 9.2 V⁻¹ @3.921 V · 1.08 @4.08 · 0.85 @4.095 · 0.44 @4.157 [도표]. ⚠ 삽도 y 라벨 'd / dE'(δ 글리프 빠짐 — 원문). 자동 크롭 온전."
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 4,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. The transient voltage change as a function of the square root of the time during a single titration process at 4.095 V for Sample#120.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    557.9,
+    299.6,
+    728.7
+   ],
+   "w": 1097,
+   "h": 713,
+   "dpi": 300,
+   "src": "9e19e109-62._Orientation_dependence_of_Li_ion_diffusion_kinetics_in_LiCoO2_thin_films_prepared_by_RF_magnetron_sputtering.pdf",
+   "blank": 0.947,
+   "note": "봤다(p. 365 · 래스터 539×442). GITT 한 적정 4.095 V(#120) — 여섯 점 V 4.095 · 4.097 · 4.099 · 4.101 · 4.103 · 4.105(정확히 2 mV 계단) @ t^½ 1.09 · 2.04 · 4.90 · 7.02 · 8.49 · 10.01 s^½(t 1.2–100 s — 600 s 펄스 중 앞 100 s 만) · 점선 1.043×10⁻³ V s^-½ [도표·화소] → [재현] D 1.47×10⁻¹¹(삽도 dE/dδ 1.18 V) ↔ 그림 7 δ 0.476 1.26×10⁻¹¹."
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 4,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Comparison of chemical diffusion coefficients for the three samples, as measured using GITT.",
+   "rotated_deg": 0,
+   "bbox": [
+    305.5,
+    64.1,
+    568.6,
+    228.9
+   ],
+   "w": 1097,
+   "h": 687,
+   "dpi": 300,
+   "src": "9e19e109-62._Orientation_dependence_of_Li_ion_diffusion_kinetics_in_LiCoO2_thin_films_prepared_by_RF_magnetron_sputtering.pdf",
+   "blank": 0.904,
+   "note": "봤다(p. 365 · 래스터 524×425). GITT D̃(δ) 세 시료 · 상 경계 점선 0.07 · 0.25 · 0.45 · 'Phase I · I+II · II · mono' · 눈금 보정 화소 판독(x 0.1/0.5 = 142.0/473.0 · y −11/−13 = 88.5/307.5) — 표 1 GITT 12 칸 중 10 칸 ≤0.03 dex(#30 Li0.5 = δ 0.51 점 · #30 Li0.7 0.11). 자동 크롭 온전."
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 4,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Time dependence of the current for Sample#120 when the voltage is increased from 3.92 to 3.93 V. The inset shows the Ln(It/A) vs. t plot.",
+   "rotated_deg": 0,
+   "bbox": [
+    305.5,
+    568.2,
+    568.6,
+    728.6
+   ],
+   "w": 1096,
+   "h": 669,
+   "dpi": 300,
+   "src": "9e19e109-62._Orientation_dependence_of_Li_ion_diffusion_kinetics_in_LiCoO2_thin_films_prepared_by_RF_magnetron_sputtering.pdf",
+   "blank": 0.927,
+   "note": "봤다(p. 365 · 래스터 506×413). PITT 3.92 → 3.93 V(#120) — I 8.0 µA(18 s) → 5.53 µA(2000 s · 차단 0.1 µA cm⁻² 의 86 배) · 삽도 ln(I/A) 2000 s 내내 굽음 → [재현] 창별 D 2.10(100–500 s) · 1.40 · 1.03 · 0.78×10⁻¹²(1500–2000 s) · 3.92 V = 그림 5 dδ/dE 봉우리(2상 평탄 시작)."
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 5,
+   "file": "fig_9.png",
+   "caption": "Fig. 9. Comparison of chemical diffusion coefficients for the three samples, as measured using PITT.",
+   "rotated_deg": 0,
+   "bbox": [
+    26.7,
+    64.1,
+    289.8,
+    228.9
+   ],
+   "w": 1097,
+   "h": 687,
+   "dpi": 300,
+   "src": "9e19e109-62._Orientation_dependence_of_Li_ion_diffusion_kinetics_in_LiCoO2_thin_films_prepared_by_RF_magnetron_sputtering.pdf",
+   "blank": 0.908,
+   "note": "봤다(p. 366 · 래스터 515×425). PITT D̃(δ) — 세 시료 δ 좌표 동일(10 mV 계단 → #120 E(δ) 지도) · #30 은 상 II 에서 δ 와 함께 감소('abnormal'). 화소 판독(x 0.1/0.5 = 153.5/459.5 · y −11/−13 = 67.5/290.5) — ⚠ 표 1 PITT #60 Li0.7 1.0×10⁻¹² ↔ 그림 5.4×10⁻¹²(×5.4) · #120 Li0.7 3.3×10⁻¹² ↔ 1.1×10⁻¹¹(×3.4) · #120 Li0.8 6.8×10⁻¹¹ ↔ ≈3.0×10⁻¹²(×23 — 그림 최대 1.9×10⁻¹¹ 보다 큼) · #30 열 ≤0.03 dex."
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 5,
+   "file": "fig_10.png",
+   "caption": "Fig. 10. Nyquist plots for Sample#120 at various voltages (a) and at 4.08 V (b). The inset in (b) shows plots of Z′ vs. and −Z″ vs. ω −1.",
+   "rotated_deg": 0,
+   "bbox": [
+    26.7,
+    420.0,
+    289.8,
+    728.7
+   ],
+   "w": 1097,
+   "h": 1287,
+   "dpi": 300,
+   "src": "9e19e109-62._Orientation_dependence_of_Li_ion_diffusion_kinetics_in_LiCoO2_thin_films_prepared_by_RF_magnetron_sputtering.pdf",
+   "blank": 0.917,
+   "note": "봤다(p. 366 · 래스터 543×824). (a) Nyquist 3.92–4.24 V(#120) · 저주파 실부 ≈200 → ≈690 Ω(4.24 V). (b) 4.08 V — 고주파 절편 75 Ω(10⁵ Hz) · 45° 구간 0.16–0.05 Hz(Z′ ≈178–185) · 0.001 Hz (≈201, ≈229 Ω) · 삽도 Z′ 6 점 · −Z″ 5 점 vs ω^-½ 1.00–1.78(f 0.050–0.159 Hz) — 기울기 Z′ 3.43 · −Z″ 6.01 Ω s^-½(이상 Warburg 는 같아야) [도표·화소] · [재현] σ=Z′ 이면 D 3.55×10⁻⁹ ✓ 그림 11 · C_lf 0.70 F ↔ 막 C_int 0.51 F. ⚠ 캡션 'Z′ vs. and −Z″ vs. ω −1'(원문 — 삽도 축은 ω^-1/2 / Hz^-1/2)."
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 5,
+   "file": "fig_11.png",
+   "caption": "Fig. 11. Comparison of chemical diffusion coefficients for the three samples, as measured using EIS.",
+   "rotated_deg": 0,
+   "bbox": [
+    295.7,
+    64.1,
+    558.8,
+    228.2
+   ],
+   "w": 1097,
+   "h": 684,
+   "dpi": 300,
+   "src": "9e19e109-62._Orientation_dependence_of_Li_ion_diffusion_kinetics_in_LiCoO2_thin_films_prepared_by_RF_magnetron_sputtering.pdf",
+   "blank": 0.907,
+   "note": "봤다(p. 366 · 래스터 524×423). EIS D̃(δ) 세 시료 · y −12…−8 · 화소 판독(x 0.1/0.5 = 141.0/466.0 · y −8/−12 = 21.5/346.5) — 표 1 EIS ≤0.10 dex(점 선택에 따라 0.16–0.27). 자동 크롭 온전."
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 5,
+   "file": "fig_12.png",
+   "caption": "Fig. 12. Comparison of chemical diffusion coefficients for Sample#120 measured using three different techniques.",
+   "rotated_deg": 0,
+   "bbox": [
+    295.7,
+    564.4,
+    558.7,
+    728.6
+   ],
+   "w": 1097,
+   "h": 685,
+   "dpi": 300,
+   "src": "9e19e109-62._Orientation_dependence_of_Li_ion_diffusion_kinetics_in_LiCoO2_thin_films_prepared_by_RF_magnetron_sputtering.pdf",
+   "blank": 0.922,
+   "note": "봤다(p. 366 · 래스터 518×423). #120 세 방법(○ GITT · △ PITT · □ EIS — 열린 표지 구멍 채움비로 가름) — 그림 7 · 9 · 11 의 #120 과 ≤0.01 dex · EIS − (GITT · PITT) 상 II 2.0–2.8 dex · δ 0.067 1.26 / 2.25 · δ 0.54 1.35 / 1.60 dex."
+  },
+  {
+   "key": "f13",
+   "kind": "figure",
+   "label": "13",
+   "page": 6,
+   "file": "fig_13.png",
+   "caption": "Fig. 13. Compositional dependence of (a) the thermodynamic factor ϕ for Sample#120, and (b) the self-diffusion coefficients D̃self for all three samples.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    64.1,
+    299.6,
+    378.1
+   ],
+   "w": 1097,
+   "h": 1309,
+   "dpi": 300,
+   "src": "9e19e109-62._Orientation_dependence_of_Li_ion_diffusion_kinetics_in_LiCoO2_thin_films_prepared_by_RF_magnetron_sputtering.pdf",
+   "blank": 0.927,
+   "note": "봤다(p. 367 · 래스터 526×839). (a) ϕ(δ) #120 만(0.6–43.5) — [재현] (F/RT)·δ·dE/dδ(그림 5 OCV 중앙차분)와 비 0.7–1.3 · Li 기준 (1−δ) 판은 δ<0.35 에서 2–25 배 큼 → δ 기준(식 7 은 음부호 인쇄). (b) D̃self 세 시료 = D̃_PITT(시료)/ϕ(#120)(δ 0.306 에서 ±0.004 dex)."
+  },
+  {
+   "key": "f15",
+   "kind": "figure",
+   "label": "15",
+   "page": 7,
+   "file": "fig_15.png",
+   "caption": "Fig. 15. Voltage response with time (a) and the equilibrium voltage vs. pola- rization current (b) at 60 ˚C for a Li/polymer electrolyte/Li0.65CoO2/polymer electrolyte/Li cell.",
+   "rotated_deg": 0,
+   "bbox": [
+    295.7,
+    64.1,
+    558.8,
+    361.2
+   ],
+   "w": 1097,
+   "h": 1239,
+   "dpi": 300,
+   "src": "9e19e109-62._Orientation_dependence_of_Li_ion_diffusion_kinetics_in_LiCoO2_thin_films_prepared_by_RF_magnetron_sputtering.pdf",
+   "blank": 0.93,
+   "note": "봤다(p. 368 · 래스터 542×792). (a) 60 °C Li0.65CoO₂ 정제 DC 분극 7 · 10 · 20 · 30 · 50 µA — 63 % 상승 ≈30 s · 50 µA 는 ≈400 s 까지 계단 상승(≈10 mV 양자화) · (b) 다섯 점 + 직선 — 기울기 10.6 kΩ · 절편 0.249 V [도표·화소] → [재현] σ(60 °C) 5.05×10⁻⁶ S cm⁻¹ ✓ 그림 16 · [재현·가정] 자기 σ 로 환산한 전자 차단 이완 ≈14–18 일 ↔ 관측 ≈30 s."
+  },
+  {
+   "key": "f16",
+   "kind": "figure",
+   "label": "16",
+   "page": 7,
+   "file": "fig_16.png",
+   "caption": "Fig. 16. Temperature dependence of the ionic conductivity for Li0.65CoO2. Fig. 14. Compositional dependence of the ionic conductivity σi for the three samples, as calculated from the PITT data.",
+   "rotated_deg": 0,
+   "bbox": [
+    26.7,
+    565.4,
+    552.5,
+    733.2
+   ],
+   "w": 2191,
+   "h": 701,
+   "dpi": 300,
+   "src": "9e19e109-62._Orientation_dependence_of_Li_ion_diffusion_kinetics_in_LiCoO2_thin_films_prepared_by_RF_magnetron_sputtering.pdf",
+   "blank": 0.942,
+   "note": "봤다(p. 368 · 래스터 535×421 + 527×402). ⚠ 과대 · 두 그림 — 캡션 블록 (33, 735, 546, 754) 이 그림 16(오른쪽 단 캡션 한 줄)과 그림 14(왼쪽 단 두 줄)를 한 블록으로 묶음 → 이 파일 = 왼쪽 그림 14 + 오른쪽 그림 16 · 캡션 필드도 두 캡션 이어짐(193 자). 수동 fig_14_manual_p7 · fig_16_manual_p7 로 분리. 캡션 위치는 맞음(뒤바뀜 아님). 자동 파일은 지우지 않음."
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 6,
+   "file": "tab_1.png",
+   "caption": "Table 1 D̃Li of LiCoO2 thin films at various compositions D̃Li by GITT (cm2 s−1) D̃Li by PITT (cm2 s−1) D̃Li by EIS (cm2 s−1) D̃Li by CV (cm2 s−1) Main XRD peaks (003) (003/104) (104) (003) (003/104) (104) (003) (003/104) (104) (003) (003/104) (104) Li0.5CoO2 1.9×10−12 2.9×10−11 3.2×10−11 1.6×10−13 7.1×10−12 1.8×10−11 1.6×10−10 5.8×10−10 6.0×10−9 6.4×10−13 1.2×10−12 7.7×10−12 Li0.6CoO2 6.2×10−13 6.0×10−12 2.8×10−11 1.5×10−13 5.4×10−12 1.2×10−11 5.4×10−11 2.7×10−10 4.8×10−9 Li0.7CoO2 6.0×10−13 2.5×10−12 7.1×10−12 2.2×10−13 1.0×10−12 3.3×10−12 7.4×10−11 5.0×10−10 1.6×10−9 Li0.8CoO2 6.4×10−14 3.5×10−13 2.2×10−12 3.2×10−13 2.0×10−12 6.8×10−11 7.1×10−12 1.2×10−11 2.6×10−10",
+   "rotated_deg": 0,
+   "bbox": [
+    37.5,
+    42.1,
+    568.8,
+    754.7
+   ],
+   "w": 2215,
+   "h": 2970,
+   "dpi": 300,
+   "src": "9e19e109-62._Orientation_dependence_of_Li_ion_diffusion_kinetics_in_LiCoO2_thin_films_prepared_by_RF_magnetron_sputtering.pdf",
+   "blank": 0.881,
+   "note": "봤다(p. 367). ⚠ 과대: 쪽 전체(그림 13 · 본문 두 단 · 식 5 · 표 1)가 잡혔다 → 표 단독 수동 tab_1_manual_p6.png. 자동 파일은 지우지 않음. 캡션 필드에 표 머리 · 값 전부(676 자)."
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 8,
+   "file": "tab_2.png",
+   "caption": "Table 2 Comparison of the ionic conductivity σi measured using different techniques σi by GITT (S cm−1) σi by PITT (S cm−1) σi by EIS (S cm−1) σi by DC polarization (S cm−1) Main XRD peaks (003) (003/104) (104) (003) (003/104) (104) (003) (003/104) (104) Li0.65CoO2 1.5×10−8 6.5×10−8 2.4×10−7 4.9×10−9 1.9×10−7 3.8×10−7 5.2×10−7 3.8×10−6 3.8×10−4 1.1×10−7 Li1.0CoO2 3.4×10−5 6.1×10−5 8.5×10−5 1.6×10−7 3.3×10−7 1.2×10−6 1.1×10−4 5.3×10−4 1.9×10−3 1.0×10−7",
+   "rotated_deg": 0,
+   "bbox": [
+    37.4,
+    42.1,
+    567.7,
+    758.6
+   ],
+   "w": 2211,
+   "h": 2987,
+   "dpi": 300,
+   "src": "9e19e109-62._Orientation_dependence_of_Li_ion_diffusion_kinetics_in_LiCoO2_thin_films_prepared_by_RF_magnetron_sputtering.pdf",
+   "blank": 0.868,
+   "note": "봤다(p. 369). ⚠ 과대: 쪽 전체(표 2 · 본문 두 단 · 결론 · 참고문헌 [1]–[11])가 잡혔다 → 표 단독 수동 tab_2_manual_p8.png. 자동 파일은 지우지 않음. 캡션 필드에 표 값 전부(455 자)."
+  },
+  {
+   "bbox": [
+    30,
+    562,
+    292,
+    756
+   ],
+   "blank": null,
+   "caption": "Fig. 3. Charge and discharge curves of LiCoO2 thin films with different thicknesses at a current density of 10 μA cm−2.",
+   "dpi": 300,
+   "file": "fig_3_manual_p3.png",
+   "h": 809,
+   "key": "f3m",
+   "kind": "figure",
+   "label": "3",
+   "manual": true,
+   "note": "수동 — p. 364 렌더 300 dpi — 자동 누락(캡션 블록이 식 (2) 꼬리 '; t≪L²/D̃ (2)' 와 한 블록으로 묶여 'Fig.' 로 시작하지 않음 · --why 표에도 없음). 봤다(래스터 536×425). 10 µA cm⁻² · 3.0–4.2 V · △ #30 · ◁ #60 · ○ #120 — [도표] 충전 끝 ≈128–134 mAh g⁻¹(본문 132) · 방전 끝 ≈111(#30) · ≈114(#120) · ≈118(#60) · 3.9 V 평탄 · 사이클 번호 미인쇄 · [재현] 132 mAh g⁻¹ = δ 0.482 ↔ 그림 5 의 4.2 V δ 0.535.",
+   "page": 3,
+   "rotated_deg": 0,
+   "src": "9e19e109-62._Orientation_dependence_of_Li_ion_diffusion_kinetics_in_LiCoO2_thin_films_prepared_by_RF_magnetron_sputtering.pdf",
+   "w": 1092
+  },
+  {
+   "bbox": [
+    27,
+    563,
+    290,
+    756
+   ],
+   "blank": null,
+   "caption": "Fig. 14. Compositional dependence of the ionic conductivity σi for the three samples, as calculated from the PITT data.",
+   "dpi": 300,
+   "file": "fig_14_manual_p7.png",
+   "h": 805,
+   "key": "f14m",
+   "kind": "figure",
+   "label": "14",
+   "manual": true,
+   "note": "수동 — p. 368 렌더 300 dpi — 자동 fig_16 이 쪽 아래 두 단(그림 14 왼쪽 + 그림 16 오른쪽)을 한 장으로 잡음(두 캡션이 한 블록) → 왼쪽 단독. 봤다(래스터 535×421). σi(δ) PITT · 세 시료 · [재현] log σ − log D̃self(그림 13b) = 5.301 ± 0.005(겹치지 않은 49 쌍 · δ 0.03–0.54) → C_Li 상수 ≈0.053 mol cm⁻³(≈1/Vm — ×(1−δ) 아님) · δ 0.355 = 표 2 Li0.65 PITT ✓ · 첫 점 δ 0.031 ↔ 표 2 Li1.0 #60 ×2.2 · #120 ×2.6.",
+   "page": 7,
+   "rotated_deg": 0,
+   "src": "9e19e109-62._Orientation_dependence_of_Li_ion_diffusion_kinetics_in_LiCoO2_thin_films_prepared_by_RF_magnetron_sputtering.pdf",
+   "w": 1097
+  },
+  {
+   "bbox": [
+    300,
+    580,
+    553,
+    756
+   ],
+   "blank": null,
+   "caption": "Fig. 16. Temperature dependence of the ionic conductivity for Li0.65CoO2.",
+   "dpi": 300,
+   "file": "fig_16_manual_p7.png",
+   "h": 734,
+   "key": "f16m",
+   "kind": "figure",
+   "label": "16",
+   "manual": true,
+   "note": "수동 — p. 368 렌더 300 dpi — 오른쪽 단독(자동 fig_16 은 그림 14 와 합쳐짐). 봤다(래스터 527×402). log σ vs 1000/T · 네 점 2.8315 · 2.914 · 3.0015 · 3.0944(80 · 70 · 60 · 50 °C) · log σ −4.626 · −4.908 · −5.299 · −5.741 [도표·화소] · 맞춤선 0 · [재현] 선형 Ea 81.8 kJ mol⁻¹ · 구간 65 → 86 → 91(굽음) · 표 2 1.1×10⁻⁷ = 선형 22.3 °C · 50–60 구간 연장 25 °C(RT 값 미인쇄).",
+   "page": 7,
+   "rotated_deg": 0,
+   "src": "9e19e109-62._Orientation_dependence_of_Li_ion_diffusion_kinetics_in_LiCoO2_thin_films_prepared_by_RF_magnetron_sputtering.pdf",
+   "w": 1055
+  },
+  {
+   "bbox": [
+    40,
+    655,
+    567,
+    752
+   ],
+   "blank": null,
+   "caption": "Table 1 D̃Li of LiCoO2 thin films at various compositions",
+   "dpi": 300,
+   "file": "tab_1_manual_p6.png",
+   "h": 405,
+   "key": "t1m",
+   "kind": "table",
+   "label": "1",
+   "manual": true,
+   "note": "수동 — p. 367 렌더 300 dpi — 표 1 단독(자동 t1 은 쪽 전체). 봤다. Li0.5 · 0.6 · 0.7 · 0.8 × GITT · PITT · EIS(각 (003) · (003/104) · (104)) + CV(Li0.5 행에만) — 텍스트 층과 같음 ✅ · 범위 6.4×10⁻¹⁴–6.0×10⁻⁹ cm² s⁻¹(4.97 dex) · ⚠ PITT Li0.7 (003/104) · (104) · Li0.8 (104) 가 그림 9 · 12 와 0.54–1.36 dex 어긋남 · Li0.8 행 = 2상(본문 '신뢰 불가' 구간 · 표 표시 0).",
+   "page": 6,
+   "rotated_deg": 0,
+   "src": "9e19e109-62._Orientation_dependence_of_Li_ion_diffusion_kinetics_in_LiCoO2_thin_films_prepared_by_RF_magnetron_sputtering.pdf",
+   "w": 2197
+  },
+  {
+   "bbox": [
+    40,
+    71,
+    566,
+    150
+   ],
+   "blank": null,
+   "caption": "Table 2 Comparison of the ionic conductivity σi measured using different techniques",
+   "dpi": 300,
+   "file": "tab_2_manual_p8.png",
+   "h": 330,
+   "key": "t2m",
+   "kind": "table",
+   "label": "2",
+   "manual": true,
+   "note": "수동 — p. 369 렌더 300 dpi — 표 2 단독(자동 t2 는 쪽 전체). 봤다. σi Li0.65 · Li1.0 × GITT · PITT · EIS(각 세 막) + DC 분극(1.1 · 1.0×10⁻⁷) — 텍스트 층과 같음 ✅ · Li0.65 PITT = 그림 14 δ≈0.355 ✓ · Li1.0 PITT #60 · #120 은 그림 14 첫 점(δ 0.031)의 ×2.2 · ×2.6(어느 δ 인지 미인쇄) · [재현] 이 편 σ = 일관 Nernst–Einstein 의 1/δ 배(ϕ δ 기준 × C 상수).",
+   "page": 8,
+   "rotated_deg": 0,
+   "src": "9e19e109-62._Orientation_dependence_of_Li_ion_diffusion_kinetics_in_LiCoO2_thin_films_prepared_by_RF_magnetron_sputtering.pdf",
+   "w": 2193
+  }
+ ]
+}
