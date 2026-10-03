@@ -2351,6 +2351,24 @@
    "reviews_work_dated": "2026-06-24 ~ 2026-09-26",
    "shared_input": null,
    "verdict": "⇒ **표 · Methods 에 적는 E_VGCF 입력값은 계산에 실제로 넣은 값 (10 GPa) 이다.**  다른 값 (예: 문헌 수준 ≈10² GPa) 을 입력값으로 적으려면 원고에 쓴 침대를 그 값으로 **다시 압밀하고 STEP3 를 다시 계산**한 뒤에만 — 민감도 팔 (한 침대 · origin 1 팔) 은 원고 결과의 입력이 아니다.  ⛔ 10 GPa 의 출처로 Lawrence 2008 · Endo 2001 을 걸지 않는다 (둘 다 10 GPa 를 주지 않는다).  민감도 (1–100 GPa: porosity 0.18 %p · σ_e ≤ 0.25 %) 는 한정어 (한 침대 · origin 1 팔 · 순서 해석 금지) 와 함께만.  σ_e 가 E 에 반응하는 경로는 압밀 기하뿐이다 (STEP3 σ_VGCF 는 세 팔 동일 78.5398) — E=100 은 CFL 로 dt 가 1.347e-4 로 줄어 플래튼 정지 양자화가 달랐고, 팔 간 σ_e 차이는 origin 위상 산포 (0.68 %) 보다 작다.  ★ **2026-09-26 기본값 교체 (사용자 비준 — \"앞으로 잘못 안 넣게 100 GPa 로 고정\")**: `mpm3d_compaction.ADD_E_NU[\"VGCF\"]` = (100.0, 0.30) · 새 세대 `ADD_E_SET_20260926` · 기본 태그 `ADD_E_SET_20260926_VGCF100GPa` (selftest 가 고정).  근거 = Lawrence 2008 Table 1 (93 · 95 · 105 GPa, D 170–227 nm) · Endo 2001 Fig. 6 (≈110–310 GPa).  **새로 압밀하는 침대부터** 적용 — 이미 돌린 결과 (SDCP · Phase A · Lee) 는 옛 세대 10 GPa 그대로이고 그 원고 · 표의 입력값도 10 GPa 다.  세대가 다른 침대를 나란히 비교할 때는 세대를 적는다 (메타 `E_anchor` · 페이로드 `additive_E_GPa`).  ⚠ 이 세대에서 CFL dt 가 약 0.67 배 → 두꺼운 침대는 목표 도달을 확인."
+  },
+  {
+   "id": "CL-94",
+   "date": "2026-10-03",
+   "status": "hold",
+   "kind": "measurement_record",
+   "claim": "**프레임 [1] MPM 보정 앵커 「순수 SE 기공 ≈ 10 % @ 300 MPa (Minnmann et al., LPSCl 냉간압축)」 — 출처 [미확인].**  Minnmann 2021 (J. Electrochem. Soc. 168, 040537 · 본문 + SI 원문 대조) 에 순수 SE 시료의 기공값도 '300 MPa' 도 없다.  있는 것은 380 MPa 로 눌린 복합 양극 다섯 시료의 기공 7.6 / 13 / 17 / 17 / 15 % (평균 14 %, SI Table S1) 와 본문 문구 '13–17 %' 뿐이다.  카드 계보 (정본 minnmann2022_designing_cathodes_solidstate 꼬리 판정문) 상 이 10 % 는 우리 MPM/DEM 보정 표적 · 수렴값이다 → **순환 앵커 의심**.",
+   "measured": {
+    "metric": "정본 litdb 카드 원문 대조 (minnmann2021 본문 + SI · 10-03 PDF 대조 4ba184975) + 카드 계보 판독 (minnmann2022 · sakuda2013 · minnmann2024)",
+    "value": "순수 SE 기공값 0 건 · '300 MPa' 0 건 (Minnmann 2021 본문 + SI) · 복합 양극 380 MPa 기공 7.6 / 13 / 17 / 17 / 15 % (25→61 vol% CAM, SI Table S1 · 평균 14 %) · Sakuda 2013 = 75Li₂S–25P₂S₅ 유리 (300 MPa 는 Fig 2a 판독 추세값 — 다른 재료) · Minnmann 2024 = 복합 기공 (다른 양)"
+   },
+   "asserted": "CLAUDE.md 프레임 [1] ('pure-SE porosity ≈ 10% @ 300 MPa (Minnmann et al., LPSCl cold-press)') · 2D 챔피언 절 · 3D MPM 보정 절 ('σ_y 0.30 → 10.0 % = Minnmann 300→10 %') · docs/mpm3d_calibration.md · scripts/mpm3d_compaction.py docstring · help · scripts/mpm_dem_match.py 출력",
+   "provenance": "판단 메모 v2 docs/reviews/tau_conventions_judgment_v2_20261003.md §0-2 결정 7 · §4 TAU-10 · §8-3 · 리뷰 docs/reviews/tau_review_lit_20261003.md (B1 · B2) · docs/reviews/tau_review_physics_20261003.md (h2) · 정본 카드 minnmann2021_jes_charge_transport_bottlenecks (4ba184975) · minnmann2022_designing_cathodes_solidstate · sakuda2013_sulfide_mechanical_property · minnmann2024_microstructure_porosity_visualization",
+   "reviews_work_dated": "2026-06-16 ~ 2026-10-03",
+   "shared_input": null,
+   "verdict": "⇒ MPM 보정 σ_y 0.30 GPa (3D) · 0.15 GPa (2D 챔피언) 의 표적 '순수 SE 10 % @ 300 MPa' 은 **외부 앵커가 아니다** — 출처 [미확인] (Minnmann 2021 아님).  값과 보정 결과는 그대로 (재계산 없음) — 바뀌는 것은 '실험 앵커' 라는 지위다.  ⛔ 'Minnmann 300→10 %' 류 문장을 실험 앵커로 인용하지 않는다 (quotation_ban 5 개 · 출처 철회 표지 없이 쓰면 스윕 오류).  Sakuda 2013 · Minnmann 2024 는 다른 재료 · 다른 양이라 대체 앵커가 아니다.  ⬜ 대체 앵커 (순수 LPSCl 펠릿 기공 vs 성형압 실측) 는 원문 확인 카드가 생기면 다시 판단한다 (1저자 결정).",
+   "hold_reason": "출처 [미확인] — 원문 확인된 순수 LPSCl 기공 @ 300 MPa 실측이 생기기 전까지 이 앵커 문장을 실험 앵커로 인용 금지 (결정 7 · 1저자 비준 10-03).",
+   "hold_since": "2026-10-03"
   }
  ],
  "quotation_ban": [
@@ -2601,6 +2619,36 @@
    "pattern": "NCM811 grain bulk; literature",
    "claim": "CL-92",
    "why": "CL-92 — σ_AM 50 mS/cm 는 DEM 접촉망의 모델 기준값이다 (출처 없음, 04-24 도입).  \"literature reference\" · \"grain interior, discharged\" 라벨은 거짓이었다 — 측정 pristine NCM811 은 4.1 mS/cm (Wang 2018) 이고 방전 상태가 σ_e 최저다 (SELF-51)",
+   "allowed_in": []
+  },
+  {
+   "pattern": "Minnmann 300→10",
+   "claim": "CL-94",
+   "why": "CL-94 — 순수 SE 10 % @ 300 MPa 의 출처는 [미확인] 이다.  Minnmann 2021 (본문 + SI) 에 순수 SE 기공값도 300 MPa 도 없고 (380 MPa 복합 양극 7.6–17 % 뿐), 카드 계보상 우리 MPM 보정 수렴값이다 — 외부 앵커로 인용 금지",
+   "allowed_in": []
+  },
+  {
+   "pattern": "(Minnmann et al., LPSCl cold-press)",
+   "claim": "CL-94",
+   "why": "CL-94 — 순수 SE 10 % @ 300 MPa 의 출처는 [미확인] 이다.  Minnmann 2021 (본문 + SI) 에 순수 SE 기공값도 300 MPa 도 없고 (380 MPa 복합 양극 7.6–17 % 뿐), 카드 계보상 우리 MPM 보정 수렴값이다 — 외부 앵커로 인용 금지",
+   "allowed_in": []
+  },
+  {
+   "pattern": "Minnmann pure-SE ~10 % @ 300 MPa",
+   "claim": "CL-94",
+   "why": "CL-94 — 순수 SE 10 % @ 300 MPa 의 출처는 [미확인] 이다.  Minnmann 2021 (본문 + SI) 에 순수 SE 기공값도 300 MPa 도 없고 (380 MPa 복합 양극 7.6–17 % 뿐), 카드 계보상 우리 MPM 보정 수렴값이다 — 외부 앵커로 인용 금지",
+   "allowed_in": []
+  },
+  {
+   "pattern": "pure-SE density (Minnmann ~10 %",
+   "claim": "CL-94",
+   "why": "CL-94 — 순수 SE 10 % @ 300 MPa 의 출처는 [미확인] 이다.  Minnmann 2021 (본문 + SI) 에 순수 SE 기공값도 300 MPa 도 없고 (380 MPa 복합 양극 7.6–17 % 뿐), 카드 계보상 우리 MPM 보정 수렴값이다 — 외부 앵커로 인용 금지",
+   "allowed_in": []
+  },
+  {
+   "pattern": "512 ≈ Minnmann 10",
+   "claim": "CL-94",
+   "why": "CL-94 — 순수 SE 10 % @ 300 MPa 의 출처는 [미확인] 이다.  Minnmann 2021 (본문 + SI) 에 순수 SE 기공값도 300 MPa 도 없고 (380 MPa 복합 양극 7.6–17 % 뿐), 카드 계보상 우리 MPM 보정 수렴값이다 — 외부 앵커로 인용 금지",
    "allowed_in": []
   }
  ],

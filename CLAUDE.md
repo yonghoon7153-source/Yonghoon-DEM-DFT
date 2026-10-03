@@ -45,7 +45,7 @@
 - **협착 배수 = τ_FULL / τ_CF** (같은 망 · 가지만 다름).  ⚠ CF 의 bulk 저항이 원기둥 단면 πr² 라 T 기준 1.2–1.4× 과대 — "모형 내부 협착비" 로 부른다.  웹앱 "Constriction overhead" (τ_Lap,eff / τ_Dij) 는 **정의가 다른 둘을 섞은 비** — 협착 배수로 부르지 않는다.
 - ⛔ **COMSOL Tortuosity 칸 = tau2** (√ 아님).  근거 = COMSOL 5.6 BDM 안내서 Eq 6-6 (인쇄 p.376 · species 장) · Bruggeman τ_F = ε^(−1/2) (p.377) · Landesfeind p.A1374 "COMSOL … ε/τ = ε^1.5".  배터리 Porous Electrode 노드 (p.267) 엔 식이 인쇄돼 있지 않다 = **"강하게 시사"** (GUI Equation 캡처로 닫는다).  지금 √ 값에 붙은 "COMSOL/EIS input" 표기는 결함 `TAU-01` (P1).  **1저자 10-03: 지금까지 COMSOL 에 τ_Lap,eff 를 넘긴 적 없음** → 소급 정정 대상 없음.
 - σ₀ 는 tau2 · f 에서 약분된다 (raw 이온 솔브).  다른 것은 **기준 상태** — Minnmann 은 순수 SE 펠릿을 τ² ≡ 1 로 둔다 (σ₀ 1.6 mS/cm @25 °C) · 우리는 σ_grain 3.0 (펠릿 · CL-91).  절대 비교 전 **순수 SE 망 런** 이 관문 (결정 ④ · 보류).
-- ✅ **결정 16 (v2 §0) = 1저자 비준 (10-03 서브 세션 · 권고대로 — 3 = hertz 먼저 · 4 = 기존 순수 SE 4 침대로 망만 · 7 = `CL-94` · 9 = 절차만)** · ✅ **추가 문헌 10 편 흡수 (10-03 · 정본 `e7f425b80`) — 권고 변경 없음** · 결정 4 · 11 · 13 사전등록 항목 · 한정어 보강과 메모 v2 정정 후보 = 부록 `docs/reviews/tau_conventions_judgment_v2_addendum_lit10_20261003.md` · ⬜ 실행 (원장 등재 → 라벨 · 정오표 → 봉인 밖 도우미 `tau_flux.py` + 시험 → WSL 명령 → 사전등록) · 인계 `docs/handoff_tau_subsession_20261003.md`.
+- ✅ **결정 16 (v2 §0) = 1저자 비준 (10-03 서브 세션 · 권고대로 — 3 = hertz 먼저 · 4 = 기존 순수 SE 4 침대로 망만 · 7 = `CL-94` · 9 = 절차만)** · ✅ **추가 문헌 10 편 흡수 (10-03 · 정본 `e7f425b80`) — 권고 변경 없음** · 결정 4 · 11 · 13 사전등록 항목 · 한정어 보강과 메모 v2 정정 후보 = 부록 `docs/reviews/tau_conventions_judgment_v2_addendum_lit10_20261003.md` · ✅ **실행 1단계 원장 등재 (10-03)** — `TAU-01`~`25` (P1 5 · P2 10 · P3 10 · open) · `CL-94` (hold · 결정 7) + quotation_ban 5 · 결정 7 정정 = CLAUDE.md 9 자리 출처 철회 표지 · `docs/mpm3d_calibration.md` 머리 배너 · `scripts/mpm_dem_match.py` 출력 문구 (⚠ `scripts/mpm3d_compaction.py` docstring · help 는 FAM §12-6 봉인 (mpm3d md5) 기간이라 그 판정 뒤 · 정본 minnmann2022 카드는 정본 다음 커밋) · ⬜ 2단계 라벨 · 정오표 → 봉인 밖 도우미 `tau_flux.py` + 시험 → WSL 명령 → 사전등록 · 인계 `docs/handoff_tau_subsession_20261003.md`.
 - ⚠ 이 규약은 **문서 · 새 코드부터** 적용한다.  기존 코드 키 개명 (결정 ⑮) 은 비준 뒤 · 시험 먼저 · 웹앱 같은 묶음 (J20-l).
 
 ⛔⛔⛔ **DO-NOT — MPM 을 "진짜 300 MPa 에 닿게" 만들려고 하지 말 것** (2026-09-22 재발, 3번째)
@@ -480,7 +480,11 @@ quantified model limit (information, not failure).
 **[1] MPM (true plasticity reference — J2, volume-preserving flow, Taichi GPU)**
 Role: experimental-anchored *true plastic* compaction reference.
 Calibration anchors (experiment, NOT DEM):
-  • pure-SE porosity ≈ 10% @ 300 MPa  (Minnmann et al., LPSCl cold-press)
+  • pure-SE porosity ≈ 10% @ 300 MPa  (~~Minnmann et al., LPSCl cold-press~~)
+    ⛔ **출처 철회 2026-10-03 (원장 `CL-94` · hold · 인용 금지)** — Minnmann 2021 (본문 + SI) 에 순수 SE 기공값도
+    300 MPa 도 없다 (380 MPa 복합 양극 7.6–17 %, 평균 14 % 뿐).  카드 계보상 이 10 % 는 **우리 MPM 보정 수렴값**이다
+    ⇒ 이 줄은 **외부 앵커가 아니다 · 출처 [미확인]**.  값 · 보정 결과 (σ_y 0.30 · 0.15) 는 그대로 — 바뀌는 것은
+    "실험 앵커" 라는 지위다.  아래 2D · 3D MPM 절의 같은 인용 (표지 `CL-94`) 도 같다.
   • SEM-like core-preserved + boundary-flattening morphology  (qualitative)
   • σ_y in literature range 0.05–0.30 GPa  (LPSCl single-crystal → granular)
 Production calibration (2D): E_eff = 1.53 GPa, σ_y = 0.15 GPa.  Pure-SE
@@ -1122,7 +1126,7 @@ Two cap-calibration lines (가)/(나):
         mpm2d_jamming fixed with a self-normalised readout).
       - mpm2d_real9.py = real E=24/σ_y=0.30 J2 attempt (also no cap).
     RESULTS (uma):
-      - dbg320.log: pure-SE (AM0) @300MPa = 11.4% porosity ✓ (≈ Minnmann
+      - dbg320.log: pure-SE (AM0) @300MPa = 11.4% porosity ✓ (≈ ~~Minnmann~~ [`CL-94` 출처 철회]
         300→10%).  450/600MPa readouts = 0.0 are SENTINELS (out.get default —
         soft SE can't build 450+MPa mean-pressure before the wall hits
         wall_floor; NOT real 0%).  The old npy AM0=0/0/0 were these sentinels —
@@ -1144,7 +1148,7 @@ Two cap-calibration lines (가)/(나):
   • (나) homogenized REV Drucker-Prager-CAP — scripts/cap_compaction_heckel.py.
     real E=24, plastic VOLUMETRIC compaction, p_c diverges at φ_min → physical
     residual porosity.  Clean multi-pressure Heckel (100→13.9/300→10.0/600→8.3%,
-    Minnmann 300→10% anchor; φ0=0.5, φ_min=0.03, b=2.5) but NO dip (0D).
+    ~~Minnmann~~ 300→10% anchor [`CL-94` 출처 철회 — 외부 앵커 없음]; φ0=0.5, φ_min=0.03, b=2.5) but NO dip (0D).
     COMPANION reference for the target curve, NOT the chosen path.
 
 WHY 1.53/0.15 is HELD: softening E 24→1.53 is a workaround for J2's missing
@@ -1164,7 +1168,7 @@ Dip resolution-invariance — CONFIRMED (docs/mpm_dip_resolution_invariance.md):
     --yield-se test plastic-SE dip survival.  PLASTIC-SE dip test DONE
     2026-06-08 (champion E=1.53/σ_y=0.15, 320 vs 512):
       - Absolute porosity now REALISTIC: f50 512 = 9–16% (AM90 10.6%) ≈
-        Minnmann/exp ~10–16% (vs rigid 30–50%) — plasticity truly densifies.
+        ~~Minnmann~~/exp ~10–16% [`CL-94` 출처 철회 — 순수 SE 실험값 아님] (vs rigid 30–50%) — plasticity truly densifies.
       - dip APPEARS (min AM70–90, uptick AM100) BUT attenuated + LESS
         resolution-invariant: Pearson(320,512) f05=0.89 / f50=0.80 (vs rigid
         0.99); dip location shifts (f50 320@85 vs 512@70).  Deeper compaction
@@ -1280,7 +1284,7 @@ each calibrated to EXPERIMENT, never to each other.)
     Σ grid_m·(v+wall_vf)/(n_sub·dt·WIDTH) = boundary force/area; force balance →
     ≈ constitutive stress (GPa), dx/n_sub/ρ cancel → resolution-invariant AND
     the TRUE experimental BC (press AT 300 MPa).  pure-SE wallP 320/512 = 23.5/
-    12.7 % (512 ≈ Minnmann 10); the 320→512 shift is genuine small-SE plastic-
+    12.7 % (512 ≈ ~~Minnmann~~ 10 [`CL-94` 출처 철회]); the 320→512 shift is genuine small-SE plastic-
     flow under-resolution that CONVERGES (768), NOT the absP artifact.  (f50
     self-normalised = 22%, TREND-only, rejected for absolute; --readout {f50,
     wallP,absP}, ⚠ CODE default = f50 (trend-only, ~22%); pass --readout wallP for the
@@ -1331,7 +1335,7 @@ each calibrated to EXPERIMENT, never to each other.)
     plastic MPM cannot, at any calibration.
   • REAL-PHYSICS VERDICT (what the MPM actually describes — the payoff): the MPM
     correctly models the PLASTIC half of reality — SE shape-change/morphology
-    (SEM ✓), pure-SE density (Minnmann ~10 % ✓), void-fill flow — and the --nu-se
+    (SEM ✓), pure-SE density (~~Minnmann~~ ~10 % ✓ [`CL-94` 출처 철회 — 외부 앵커 아님]), void-fill flow — and the --nu-se
     fix removed the soft-bulk force-chain ARTIFACT, making it MORE faithful.  It
     CANNOT model the DISCRETE-PACKING half (the Furnas dip, rigid-AM rearrangement).
     DEM is the MIRROR: discrete packing + dip ✓, but rigid SE → NO plastic
@@ -1346,7 +1350,7 @@ each calibrated to EXPERIMENT, never to each other.)
 ### ★ 3D MPM compaction — 3-fix calibration + pure-SE Minnmann + composite (2026-06-16) ★
 Built/calibrated the production 3D MPM `scripts/mpm3d_compaction.py` (MLS-MPM, von
 Mises J2, GPU/Taichi) — the 3D companion to the 2D champion.  Full record:
-`docs/mpm3d_calibration.md`.  Anchors are OURS (Minnmann pure-SE ~10 % @ 300 MPa; our
+`docs/mpm3d_calibration.md`.  Anchors are OURS (~~Minnmann~~ pure-SE ~10 % @ 300 MPa [`CL-94` 출처 철회 — 우리 보정 수렴값 · 외부 앵커 없음]; our
 rigid 3D DEM composite 36–41 %; de Larrard ~20 %), NOT the EA review paper.
 Production LOCKED defaults: **E_SE=1.53, ν_SE=0.49, σ_y=0.30, target=0.30 GPa,
 readout=wallP**.
@@ -1377,7 +1381,7 @@ readout=wallP**.
       (40 %).  Guard ignores the transient; descend continues to the real target.
       Added porosity@target (porosity when target stress FIRST reached, overshoot-proof).
 - **pure-SE calibration ✓** (ν=0.49, σ_y sweep, settled): 0.15→5.6 / 0.20→6.7 /
-  0.25→9.0 / **0.30→10.0 %** = Minnmann 300→10 %.  σ_y=0.30 = top of LPSC lit range.
+  0.25→9.0 / **0.30→10.0 %** = ~~Minnmann 300→10 %~~ [`CL-94` 출처 철회 — 10 % 는 보정 표적 · 출처 [미확인]].  σ_y=0.30 = top of LPSC lit range.
   3D needs stiffer shear than the 2D champion (0.15) — extra flow direction densifies
   more (geometric 2D↔3D, not a model change).  At ν=0.49 wallP≈volume-mean σzz (uniform
   internal stress when incompressible) → readout question closed.
@@ -1414,7 +1418,7 @@ the SE = the 36–41 % problem); (3) fixing forces the SE to bear the load and d
   **관례 오프셋 1.251 %p** 가 겹쳐 있어 (ε_sphere 로 통일하면 14.70 vs 15.63 = **0.93 %p
   과압축**) 보이던 "±1 %p" 는 **두 오차의 상쇄**였다.
   ⇒ **살아남는 것은 응력-정지 두께 하나**다 (30.7 vs 30.28 µm).  The Minnmann pure-SE anchor
-  (10 % @300) still transfers as the SE **material** calibration.
+  (10 % @300) still transfers as the SE **material** calibration.  ⛔ 그 앵커 자체가 `CL-94` 출처 철회 — Minnmann 2021 에 없음 · 외부 앵커 없음.
 - se_frac→porosity MONOTONE (user hypothesis ✓): 0.20→21.3 / 0.27→16.7 / 0.35→7.1 %.
   cell-fill 24.84 % → 16.7 % = −8.2 %p plastic densification (MPM-only).  B3 surface-
   roughness coverage = TRANSPORT-only correction the smooth-sphere MPM correctly ignores.

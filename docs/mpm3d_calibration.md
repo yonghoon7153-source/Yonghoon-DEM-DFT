@@ -1,5 +1,11 @@
 # 3D MPM compaction — calibration & composite finding (2026-06-16)
 
+> ⛔ **2026-10-03 정정 (원장 `CL-94` · hold · 인용 금지)** — 이 문서의 *"Minnmann pure-SE ~10 % @ 300 MPa"* 앵커는
+> **출처 [미확인]** 이다: Minnmann 2021 (본문 + SI) 에 순수 SE 기공값도 300 MPa 도 없다 (380 MPa 복합 양극 7.6–17 %,
+> 평균 14 % 뿐).  10 % 는 우리 MPM 보정 수렴값 ⇒ **외부 앵커 없음**.  보정 값 (E 1.53 · ν 0.49 · σ_y 0.30) 과 결과는
+> 그대로 — 바뀌는 것은 "실험 앵커" 라는 지위다.  아래 본문은 06-16 기록 그대로 둔다 (판단 메모
+> `docs/reviews/tau_conventions_judgment_v2_20261003.md` 결정 7 · TAU-10).
+
 Production 3D MPM = `scripts/mpm3d_compaction.py` (MLS-MPM, von Mises J2, GPU/Taichi).
 The 3D companion to the 2D champion.  This file records the three fixes that made
 the 3D servo behave, the pure-SE calibration to our Minnmann anchor, and the

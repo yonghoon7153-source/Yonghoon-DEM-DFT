@@ -366,7 +366,7 @@ def run_match(args):
 
     # ── Heckel calibration: pure-SE at several pressures → residual porosity ──
     # Verifies the DPC cap BEFORE composites: a correct cap densifies and the
-    # porosity drops with pressure toward a residual (target ~Minnmann 10% @ 300).
+    # porosity drops with pressure toward a residual (target ~10% @ 300 MPa — 출처 [미확인], CL-94 출처 철회: Minnmann 2021 아님).
     if args.heckel:
         _pp = (f"jam_phimin={args.jam_phimin} jam_k={args.jam_k}" if MODEL == 'jam'
                else f"cap_pb0={args.cap_pb0} cap_h={args.cap_h} "
@@ -390,7 +390,7 @@ def run_match(args):
         f50 = float(np.mean(fvals)) if fvals else float('nan')
         print(f"  f50 (self-normalised TREND): {f50:5.1f}%", flush=True)
         print(f"  → wallP@300 = ABSOLUTE re-anchor candidate; want 320≈512 ~10-15% "
-              f"(Minnmann 300→10%)", flush=True)
+              f"(target 10% @ 300 MPa — source unverified, CL-94; not Minnmann 2021)", flush=True)
         return
 
     if args.ps_am_grid:
