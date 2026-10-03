@@ -117,16 +117,17 @@
    "caption": "Figure S1. The SEM image of pristine LPSCl powder.",
    "rotated_deg": 0,
    "bbox": [
-    64.8,
-    29.4,
-    530.5,
-    193.5
+    125.6,
+    89.6,
+    467.8,
+    208.1
    ],
-   "w": 1941,
-   "h": 685,
+   "w": 1427,
+   "h": 495,
    "dpi": 300,
    "src": "Cao 2026 - Sup) Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533) SI.pdf",
-   "blank": 0.557
+   "blank": 0.082,
+   "recrop": "auto crop cut the bottom ~14.6 pt (x-axis title / lower panel edge) — the Word-generated SI caption block starts with an empty line that overlaps the figure, so the tool stopped at the block top; clip = union of raster rects / vector drawings + axis and legend text spans above the 'Figure S1.' caption line + 2 pt (old bbox [64.8, 29.4, 530.5, 193.5]) (2026-10-03, litdb-curator)"
   },
   {
    "key": "fS2",
@@ -137,16 +138,17 @@
    "caption": "Figure S2. Schematic diagram of the preparation process of LiTFSI-PMEMA.",
    "rotated_deg": 0,
    "bbox": [
-    64.8,
-    269.1,
-    476.9,
-    382.6
+    125.4,
+    273.1,
+    469.5,
+    397.2
    ],
-   "w": 1717,
-   "h": 474,
+   "w": 1435,
+   "h": 518,
    "dpi": 300,
    "src": "Cao 2026 - Sup) Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533) SI.pdf",
-   "blank": 0.954
+   "blank": 0.946,
+   "recrop": "auto crop cut the bottom ~14.6 pt (x-axis title / lower panel edge) — the Word-generated SI caption block starts with an empty line that overlaps the figure, so the tool stopped at the block top; clip = union of raster rects / vector drawings + axis and legend text spans above the 'Figure S2.' caption line + 2 pt (old bbox [64.8, 269.1, 476.9, 382.6]) (2026-10-03, litdb-curator)"
   },
   {
    "key": "fS3",
@@ -177,16 +179,17 @@
    "caption": "Figure S4. The GPC curve of purified PMEMA.",
    "rotated_deg": 0,
    "bbox": [
-    64.8,
-    350.2,
-    530.5,
-    567.1
+    182.7,
+    69.6,
+    411.9,
+    267.0
    ],
-   "w": 1941,
-   "h": 904,
+   "w": 956,
+   "h": 823,
    "dpi": 300,
    "src": "Cao 2026 - Sup) Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533) SI.pdf",
-   "blank": 0.125
+   "blank": 0.944,
+   "manual_crop": "auto crop pointed at the Figure S5 photo raster (identical bbox to fS5 — wrong content) — S4 is a vector-only GPC plot at the top of SI p.8 above its caption; clip = vector drawings + axis/legend text spans + 2 pt (old bbox [64.8, 350.2, 530.5, 567.1]) (2026-10-03, litdb-curator)"
   },
   {
    "key": "fS5",
@@ -197,16 +200,17 @@
    "caption": "Figure S5. Optical photographs and thickness measurements of: a) the LPSCl-PTFE precursor film; b) LiTFSI-PMEMA film; c) LPSCl-LiTFSI-PMEMA film; d) final USF after repeated folding and hot rolling.",
    "rotated_deg": 0,
    "bbox": [
-    64.8,
-    350.2,
-    533.5,
-    567.1
+    68.8,
+    354.2,
+    526.5,
+    581.5
    ],
-   "w": 1953,
-   "h": 904,
+   "w": 1908,
+   "h": 948,
    "dpi": 300,
    "src": "Cao 2026 - Sup) Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533) SI.pdf",
-   "blank": 0.13
+   "blank": 0.105,
+   "recrop": "auto crop cut the bottom ~14.4 pt (x-axis title / lower panel edge) — the Word-generated SI caption block starts with an empty line that overlaps the figure, so the tool stopped at the block top; clip = union of raster rects / vector drawings + axis and legend text spans above the 'Figure S5.' caption line + 2 pt (old bbox [64.8, 350.2, 533.5, 567.1]) (2026-10-03, litdb-curator)"
   },
   {
    "key": "fS6",
@@ -237,16 +241,17 @@
    "caption": "Figure S7. TG curves of polymerized LiTFSI-PMEMA measured under Ar atmosphere. The green and red dotted lines respectively represent the hot rolling temperature of 100 ℃ and the starting decomposition temperature of 239 ℃.",
    "rotated_deg": 0,
    "bbox": [
-    64.8,
-    343.2,
-    530.3,
-    518.9
+    170.1,
+    347.2,
+    425.2,
+    533.4
    ],
-   "w": 1940,
-   "h": 732,
+   "w": 1064,
+   "h": 777,
    "dpi": 300,
    "src": "Cao 2026 - Sup) Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533) SI.pdf",
-   "blank": 0.933
+   "blank": 0.879,
+   "recrop": "auto crop cut the bottom ~14.5 pt (x-axis title / lower panel edge) — the Word-generated SI caption block starts with an empty line that overlaps the figure, so the tool stopped at the block top; clip = union of raster rects / vector drawings + axis and legend text spans above the 'Figure S7.' caption line + 2 pt (old bbox [64.8, 343.2, 530.3, 518.9]) (2026-10-03, litdb-curator)"
   },
   {
    "key": "fS8",
@@ -257,16 +262,17 @@
    "caption": "Figure S8. Comparison of median pore diameter (D50) and peak pore diameter for the LPSCl-PTFE precursor film and the USF.",
    "rotated_deg": 0,
    "bbox": [
-    64.8,
-    29.4,
-    530.5,
-    210.5
+    194.3,
+    68.6,
+    400.7,
+    223.7
    ],
-   "w": 1941,
-   "h": 756,
+   "w": 861,
+   "h": 648,
    "dpi": 300,
    "src": "Cao 2026 - Sup) Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533) SI.pdf",
-   "blank": 0.923
+   "blank": 0.808,
+   "recrop": "auto crop cut the bottom ~13.2 pt (x-axis title / lower panel edge) — the Word-generated SI caption block starts with an empty line that overlaps the figure, so the tool stopped at the block top; clip = union of raster rects / vector drawings + axis and legend text spans above the 'Figure S8.' caption line + 2 pt (old bbox [64.8, 29.4, 530.5, 210.5]) (2026-10-03, litdb-curator)"
   },
   {
    "key": "fS9",
@@ -277,16 +283,17 @@
    "caption": "Figure S9. XRD patterns of pristine LPSCl, LPSCl-PTFE precursor film, and USF.",
    "rotated_deg": 0,
    "bbox": [
-    64.8,
-    310.7,
-    481.5,
-    472.7
+    195.2,
+    310.9,
+    398.9,
+    485.3
    ],
-   "w": 1737,
-   "h": 676,
+   "w": 850,
+   "h": 728,
    "dpi": 300,
    "src": "Cao 2026 - Sup) Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533) SI.pdf",
-   "blank": 0.948
+   "blank": 0.895,
+   "recrop": "auto crop cut the bottom ~12.6 pt (x-axis title / lower panel edge) — the Word-generated SI caption block starts with an empty line that overlaps the figure, so the tool stopped at the block top; clip = union of raster rects / vector drawings + axis and legend text spans above the 'Figure S9.' caption line + 2 pt (old bbox [64.8, 310.7, 481.5, 472.7]) (2026-10-03, litdb-curator)"
   },
   {
    "key": "fS10",
@@ -319,16 +326,17 @@
    "caption": "Figure S11. The XPS P 2p spectra of pristine LPSCl, LPSCl-PTFE precursor film, and USF.",
    "rotated_deg": 0,
    "bbox": [
-    64.8,
-    29.4,
-    530.5,
-    381.7
+    191.5,
+    89.4,
+    404.0,
+    406.7
    ],
-   "w": 1941,
-   "h": 1469,
+   "w": 887,
+   "h": 1323,
    "dpi": 300,
    "src": "Cao 2026 - Sup) Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533) SI.pdf",
-   "blank": 0.944
+   "blank": 0.863,
+   "recrop": "auto crop cut the bottom ~25.0 pt (x-axis title / lower panel edge) — the Word-generated SI caption block starts with an empty line that overlaps the figure, so the tool stopped at the block top; clip = union of raster rects / vector drawings + axis and legend text spans above the 'Figure S11.' caption line + 2 pt (old bbox [64.8, 29.4, 530.5, 381.7]) (2026-10-03, litdb-curator)"
   },
   {
    "key": "fS12",
@@ -339,16 +347,17 @@
    "caption": "Figure S12. The CV curves of LPSCl+CB||LPSCl pellet||LiIn and USF+CB||USF||LiIn cells.",
    "rotated_deg": 0,
    "bbox": [
-    64.8,
-    450.1,
-    525.3,
-    649.1
+    174.8,
+    454.1,
+    420.0,
+    662.1
    ],
-   "w": 1919,
-   "h": 830,
+   "w": 1022,
+   "h": 867,
    "dpi": 300,
    "src": "Cao 2026 - Sup) Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533) SI.pdf",
-   "blank": 0.96
+   "blank": 0.923,
+   "recrop": "auto crop cut the bottom ~13.0 pt (x-axis title / lower panel edge) — the Word-generated SI caption block starts with an empty line that overlaps the figure, so the tool stopped at the block top; clip = union of raster rects / vector drawings + axis and legend text spans above the 'Figure S12.' caption line + 2 pt (old bbox [64.8, 450.1, 525.3, 649.1]) (2026-10-03, litdb-curator)"
   },
   {
    "key": "fS13",
@@ -359,16 +368,17 @@
    "caption": "Figure S13. The electrical conductivity of pristine LPSCl, LPSCl-PTFE film, LPSCl-LiTFSI- PMEMA film, and USF tested by direct current polarization method.",
    "rotated_deg": 0,
    "bbox": [
-    64.8,
-    29.4,
-    530.5,
-    272.7
+    165.7,
+    68.9,
+    432.6,
+    287.0
    ],
-   "w": 1941,
-   "h": 1015,
+   "w": 1113,
+   "h": 909,
    "dpi": 300,
    "src": "Cao 2026 - Sup) Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533) SI.pdf",
-   "blank": 0.934
+   "blank": 0.877,
+   "recrop": "auto crop cut the bottom ~14.3 pt (x-axis title / lower panel edge) — the Word-generated SI caption block starts with an empty line that overlaps the figure, so the tool stopped at the block top; clip = union of raster rects / vector drawings + axis and legend text spans above the 'Figure S13.' caption line + 2 pt (old bbox [64.8, 29.4, 530.5, 272.7]) (2026-10-03, litdb-curator)"
   },
   {
    "key": "fS14",
@@ -379,16 +389,17 @@
    "caption": "Figure S14. Cryo-TEM image and corresponding elemental maps (C, O, F, P, S, Cl) of the USF interior, revealing a homogeneous composite microstructure. The specimen was prepared by ultramicrotomy under an inert atmosphere and transferred onto microgrids via electrostatic adsorption.",
    "rotated_deg": 0,
    "bbox": [
-    64.8,
-    389.7,
-    516.9,
-    544.4
+    68.8,
+    393.7,
+    488.1,
+    559.0
    ],
-   "w": 1884,
-   "h": 646,
+   "w": 1748,
+   "h": 690,
    "dpi": 300,
    "src": "Cao 2026 - Sup) Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533) SI.pdf",
-   "blank": 0.154
+   "blank": 0.08,
+   "recrop": "auto crop cut the bottom ~14.6 pt (x-axis title / lower panel edge) — the Word-generated SI caption block starts with an empty line that overlaps the figure, so the tool stopped at the block top; clip = union of raster rects / vector drawings + axis and legend text spans above the 'Figure S14.' caption line + 2 pt (old bbox [64.8, 389.7, 516.9, 544.4]) (2026-10-03, litdb-curator)"
   },
   {
    "key": "fS15",
@@ -459,16 +470,17 @@
    "caption": "Figure S18. OCV aging behavior of LiIn||USF||LiIn symmetric cells. Nyquist plots of the as- assembled cell and cells aged at open circuit for 3 and 5 days.",
    "rotated_deg": 0,
    "bbox": [
-    64.8,
-    340.1,
-    524.2,
-    506.1
+    190.6,
+    344.1,
+    404.6,
+    520.7
    ],
-   "w": 1915,
-   "h": 692,
+   "w": 892,
+   "h": 737,
    "dpi": 300,
    "src": "Cao 2026 - Sup) Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533) SI.pdf",
-   "blank": 0.956
+   "blank": 0.918,
+   "recrop": "auto crop cut the bottom ~14.6 pt (x-axis title / lower panel edge) — the Word-generated SI caption block starts with an empty line that overlaps the figure, so the tool stopped at the block top; clip = union of raster rects / vector drawings + axis and legend text spans above the 'Figure S18.' caption line + 2 pt (old bbox [64.8, 340.1, 524.2, 506.1]) (2026-10-03, litdb-curator)"
   },
   {
    "key": "fS19",
@@ -499,16 +511,17 @@
    "caption": "Figure S20. The Voltage curve of LCO||LPSCl-PTFE||LiIn ASSBs that happen short-circuit.",
    "rotated_deg": 0,
    "bbox": [
-    64.8,
-    365.8,
-    529.1,
-    518.3
+    153.9,
+    369.8,
+    441.4,
+    532.2
    ],
-   "w": 1935,
-   "h": 636,
+   "w": 1199,
+   "h": 678,
    "dpi": 300,
    "src": "Cao 2026 - Sup) Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533) SI.pdf",
-   "blank": 0.961
+   "blank": 0.933,
+   "recrop": "auto crop cut the bottom ~13.9 pt (x-axis title / lower panel edge) — the Word-generated SI caption block starts with an empty line that overlaps the figure, so the tool stopped at the block top; clip = union of raster rects / vector drawings + axis and legend text spans above the 'Figure S20.' caption line + 2 pt (old bbox [64.8, 365.8, 529.1, 518.3]) (2026-10-03, litdb-curator)"
   },
   {
    "key": "fS21",
@@ -559,16 +572,17 @@
    "caption": "Figure S23. Voltage-dependent in-situ EIS and DRT analysis of the NCM721||USF||nSi full cell after 10 cycles. a) Charge/discharge voltage profile with marked EIS measurement points. b) Nyquist plots collected at selected voltages during charge and discharge. The spectra are vertically offset for clarity. c) Corresponding DRT spectra derived from the voltage- dependent EIS data. The DRT spectra are divided into four major relaxation regions: τ1 is mainly associated with high-frequency ohmic/bulk or local contact contributions; τ2 is related to interphase Li⁺ transport, mainly involving CEI/USF interphase transport under high-voltage operation; τ3 is assigned to cathode/USF interfacial Li⁺ transport and charge-transfer-related processes; and τ4 is mainly associated with slow diffusion, concentration polarization, or SOC-dependent electrode processes. The weak shoulder between τ1 and τ2 is ",
    "rotated_deg": 0,
    "bbox": [
-    64.8,
-    29.4,
-    533.5,
-    250.5
+    68.8,
+    68.8,
+    526.5,
+    265.1
    ],
-   "w": 1953,
-   "h": 922,
+   "w": 1908,
+   "h": 819,
    "dpi": 300,
    "src": "Cao 2026 - Sup) Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533) SI.pdf",
-   "blank": 0.897
+   "blank": 0.884,
+   "recrop": "auto crop cut the bottom ~14.6 pt (x-axis title / lower panel edge) — the Word-generated SI caption block starts with an empty line that overlaps the figure, so the tool stopped at the block top; clip = union of raster rects / vector drawings + axis and legend text spans above the 'Figure S23.' caption line + 2 pt (old bbox [64.8, 29.4, 533.5, 250.5]) (2026-10-03, litdb-curator)"
   },
   {
    "key": "fS24",
@@ -579,16 +593,17 @@
    "caption": "Figure S24. The voltage curves of NCM721||USF||nSi ASSBs at 30 °C.",
    "rotated_deg": 0,
    "bbox": [
-    64.8,
-    29.4,
-    530.5,
-    286.8
+    159.1,
+    68.9,
+    435.4,
+    301.4
    ],
-   "w": 1941,
-   "h": 1073,
+   "w": 1153,
+   "h": 969,
    "dpi": 300,
    "src": "Cao 2026 - Sup) Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533) SI.pdf",
-   "blank": 0.921
+   "blank": 0.856,
+   "recrop": "auto crop cut the bottom ~14.6 pt (x-axis title / lower panel edge) — the Word-generated SI caption block starts with an empty line that overlaps the figure, so the tool stopped at the block top; clip = union of raster rects / vector drawings + axis and legend text spans above the 'Figure S24.' caption line + 2 pt (old bbox [64.8, 29.4, 530.5, 286.8]) (2026-10-03, litdb-curator)"
   },
   {
    "key": "tS1",
@@ -599,16 +614,17 @@
    "caption": "Table S1. Molecular weight parameters of purified PMEMA determined by GPC. Sample Calibration Mn / kg mol⁻¹ Mw / kg mol⁻¹ Đ DPn Purified PMEMA PS standards 28.4 90.7 3.19 ~197",
    "rotated_deg": 0,
    "bbox": [
-    65.8,
-    302.8,
-    521.9,
-    765.1
+    68.8,
+    366.9,
+    513.3,
+    436.6
    ],
-   "w": 1901,
-   "h": 1927,
+   "w": 1853,
+   "h": 292,
    "dpi": 300,
    "src": "Cao 2026 - Sup) Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533) SI.pdf",
-   "blank": 0.939
+   "blank": 0.869,
+   "recrop": "auto crop (identical bbox to tS2) spanned the Figure S24 caption + Table S1 + the first rows of Table S2; clip = Table S1 caption + rules + cells only (old bbox [65.8, 302.8, 521.9, 765.1]) (2026-10-03, litdb-curator)"
   },
   {
    "key": "tS2",
@@ -619,16 +635,46 @@
    "caption": "Table S2. Comparison of room-temperature and elevated-temperature ionic conductivities of LiTFSI-PMEMA and representative polymer electrolytes. Solid-state polymer Lithium salt Additive/plasticize Temperat Ionic Ref. electrolytes r/ionic liquid ure (℃) conducti vity (10‒4 S cm‒1) LiDFOB succinonitrile (SN) 30 13.0 Ref.1[1 poly (ethylene glycol) 0] methyl ether acrylate (PEGMEA) PEO/SN/LiTFSI LiTFSI 27 wt.% SN 25 1.9 Ref.2[1 1] RT 0.74 Ref.3[1 dual-layer LiDFOB + SN plasticizer; 2] poly(propylene LiTFSI LLZO filler carbonate) (PPC)-",
    "rotated_deg": 0,
    "bbox": [
-    65.8,
-    302.8,
-    524.0,
-    765.4
+    67.6,
+    474.0,
+    527.0,
+    770.2
    ],
-   "w": 1910,
-   "h": 1929,
-   "dpi": 300,
+   "w": 1136,
+   "h": 3018,
+   "dpi": 178,
    "src": "Cao 2026 - Sup) Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533) SI.pdf",
-   "blank": 0.94
+   "blank": 0.948,
+   "stitched_parts": [
+    {
+     "page": 18,
+     "bbox": [
+      67.6,
+      474.0,
+      527.0,
+      770.2
+     ]
+    },
+    {
+     "page": 19,
+     "bbox": [
+      68.3,
+      68.3,
+      527.0,
+      770.3
+     ]
+    },
+    {
+     "page": 20,
+     "bbox": [
+      67.6,
+      68.3,
+      527.0,
+      282.4
+     ]
+    }
+   ],
+   "recrop": "auto crop (identical bbox to tS1) started at the Figure S24 caption and stopped at the p.18 page end, so the table's p.19–20 continuation — incl. the 'This work' rows (LiTFSI-PMEMA 1.04 · pristine LPSCl 32.3 · LPSCl-PTFE 4.2 · USF 15.6 ×10⁻⁴ S cm⁻¹) — was missing; PNG = vertical stitch of SI p.18 [67.6, 474.0, 527.0, 770.2] + p.19 [68.3, 68.3, 527.0, 770.3] + p.20 [67.6, 68.3, 527.0, 282.4] (dotted separators mark page breaks) at 178 dpi; bbox/page below describe the first part only (old bbox [65.8, 302.8, 524.0, 765.4]) (2026-10-03, litdb-curator)"
   },
   {
    "key": "tS3",
@@ -639,16 +685,37 @@
    "caption": "Table S3. Summary of typical sulfide-based electrolyte films prepared via dry process. Ref. Sulfide Binder(content) Thickness of Ionic conductivity at electrolyte the films(μm) Room temperature (mS cm-1) S1 [25] Li10GeP2S12 PTFE + Nylon 100 0.36 mesh S2 [26] Li6PS5Cl PLI (7%) 80 0.84 S3 [27] Li6PS5Cl SBR (2.0%) 80 2.34 S4 [28] Li6PS5Cl PVDF-HFP@TPU 70 1.1 (1%) S5 [29] Li6PS5Cl PTFE (0.4%) 55 1.4 S6 [30] Li6PS5Cl XNBR (3.0%) 50 0.1 S7 [31] Li5.7PS4.7Cl1.3 PTFE+PEVA 40 1.1 (7.5%) S8 [32] Li6PS5Cl PTFE (0.2%) 40 8.4 S9 [33] Li6PS5Cl polydopamine 35 0.2 S10 [34] Li5.4PS4.4Cl1.6 PTFE (0.2%) 30 8.4 S11 [35] Li5.3PS4.3ClBr0.7 PTFE + Cellulose 30 6.5 mesh S12 [36] Li6PS5Cl TPA (3%) 25 2.1 S13 [37] Li6PS5Cl PTFE 20 1.0 (0.5 wt%) 20",
    "rotated_deg": 0,
    "bbox": [
-    65.8,
-    67.2,
-    523.9,
-    811.6
+    68.3,
+    319.8,
+    527.0,
+    773.8
    ],
-   "w": 1846,
-   "h": 2999,
-   "dpi": 290,
+   "w": 1915,
+   "h": 2098,
+   "dpi": 300,
    "src": "Cao 2026 - Sup) Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533) SI.pdf",
-   "blank": 0.962
+   "blank": 0.95,
+   "stitched_parts": [
+    {
+     "page": 20,
+     "bbox": [
+      68.3,
+      319.8,
+      527.0,
+      773.8
+     ]
+    },
+    {
+     "page": 21,
+     "bbox": [
+      67.6,
+      69.3,
+      527.0,
+      116.3
+     ]
+    }
+   ],
+   "recrop": "auto crop started at the top of SI p.20 (tail of Table S2) and missed the table's last row on p.21 ('This work' 18 µm · 1.56 mS cm⁻¹); PNG = vertical stitch of SI p.20 [68.3, 319.8, 527.0, 773.8] + p.21 [67.6, 69.3, 527.0, 116.3] at 300 dpi; bbox/page below describe the first part only (old bbox [65.8, 67.2, 523.9, 811.6]) (2026-10-03, litdb-curator)"
   }
  ],
  "missing_labels": [

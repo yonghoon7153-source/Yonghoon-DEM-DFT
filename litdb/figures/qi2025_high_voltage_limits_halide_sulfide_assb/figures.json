@@ -26,7 +26,8 @@
    "h": 1134,
    "dpi": 300,
    "src": "Qi 2025 - Deciphering high-voltage limitations of halide and sulfide ASSLBs (J Energy Chem 103 926).pdf",
-   "blank": 0.875
+   "blank": 0.875,
+   "viewed": true
   },
   {
    "key": "f2",
@@ -46,7 +47,8 @@
    "h": 1622,
    "dpi": 300,
    "src": "Qi 2025 - Deciphering high-voltage limitations of halide and sulfide ASSLBs (J Energy Chem 103 926).pdf",
-   "blank": 0.89
+   "blank": 0.89,
+   "viewed": true
   },
   {
    "key": "f3",
@@ -66,7 +68,8 @@
    "h": 2172,
    "dpi": 300,
    "src": "Qi 2025 - Deciphering high-voltage limitations of halide and sulfide ASSLBs (J Energy Chem 103 926).pdf",
-   "blank": 0.459
+   "blank": 0.459,
+   "viewed": true
   },
   {
    "key": "f4",
@@ -86,7 +89,8 @@
    "h": 1539,
    "dpi": 300,
    "src": "Qi 2025 - Deciphering high-voltage limitations of halide and sulfide ASSLBs (J Energy Chem 103 926).pdf",
-   "blank": 0.872
+   "blank": 0.872,
+   "viewed": true
   },
   {
    "key": "f5",
@@ -106,7 +110,8 @@
    "h": 887,
    "dpi": 300,
    "src": "Qi 2025 - Deciphering high-voltage limitations of halide and sulfide ASSLBs (J Energy Chem 103 926).pdf",
-   "blank": 0.737
+   "blank": 0.737,
+   "viewed": true
   },
   {
    "key": "f6",
@@ -126,7 +131,8 @@
    "h": 1897,
    "dpi": 300,
    "src": "Qi 2025 - Deciphering high-voltage limitations of halide and sulfide ASSLBs (J Energy Chem 103 926).pdf",
-   "blank": 0.708
+   "blank": 0.708,
+   "viewed": true
   },
   {
    "key": "fS1",
@@ -134,19 +140,22 @@
    "label": "S1",
    "page": 6,
    "file": "fig_S1.png",
-   "caption": "Fig. S1. Various properties of LZC and LPSC. (a) XRD patterns, (b) Arrhenius plots of ionic",
+   "caption": "Fig. S1. Various properties of LZC and LPSC. (a) XRD patterns, (b) Arrhenius plots of ionic conductivities, (c) DC polarization measurements with a voltage step of 0.4 V, and (d) CV curves at 0.2 mV s−1.",
    "rotated_deg": 0,
    "bbox": [
     64.8,
-    76.4,
+    113.8,
     527.0,
     411.0
    ],
    "w": 1926,
-   "h": 1395,
+   "h": 1239,
    "dpi": 300,
    "src": "Qi 2025 - Sup) Deciphering high-voltage limitations of halide and sulfide ASSLBs (J Energy Chem 103 926) SI.pdf",
-   "blank": 0.949
+   "blank": 0.947,
+   "recrop": "2026-10-03 수동 재크롭 (litdb-curator) — 자동 bbox 상단(y 76.4)이 SI 절 제목 '2. Supplementary Figures and Tables' (y 82.4–95.7) 를 포함 → y 113.8 로 내림 (그림은 'T (°C)' 라벨 y 115.8 에서 시작)",
+   "viewed": true,
+   "caption_fix": "2026-10-03 원문 대조 교정 (litdb-curator) — SI 캡션이 2배 줄간격이라 도구가 첫 줄(91자)에서 잘랐다 → 인쇄 캡션 전체"
   },
   {
    "key": "fS2",
@@ -174,7 +183,7 @@
    "label": "S3",
    "page": 8,
    "file": "fig_S3.png",
-   "caption": "Fig. S3. Typical SEM image of LPSC and the corresponding EDS element mappings of P, S,",
+   "caption": "Fig. S3. Typical SEM image of LPSC and the corresponding EDS element mappings of P, S, and Cl.",
    "rotated_deg": 0,
    "bbox": [
     64.8,
@@ -186,7 +195,8 @@
    "h": 1111,
    "dpi": 300,
    "src": "Qi 2025 - Sup) Deciphering high-voltage limitations of halide and sulfide ASSLBs (J Energy Chem 103 926) SI.pdf",
-   "blank": 0.34
+   "blank": 0.34,
+   "caption_fix": "2026-10-03 원문 대조 교정 (litdb-curator) — SI 캡션이 2배 줄간격이라 도구가 첫 줄(86자)에서 잘랐다 → 인쇄 캡션 전체"
   },
   {
    "key": "fS4",
@@ -194,7 +204,7 @@
    "label": "S4",
    "page": 9,
    "file": "fig_S4.png",
-   "caption": "Fig. S4. Scheme of two cell configurations with different electrolytes and cathode composite",
+   "caption": "Fig. S4. Scheme of two cell configurations with different electrolytes and cathode composite combinations and NCM85 as CAM (black). (a) Cell with LPSC (orange) as the electrolyte and catholyte: NCM85/LPSC|LPSC|Li-In (referred to as the NCM85/LPSC cell below), (b) Cell with LZC|LPSC as bilayer electrolyte and LZC (blue) as catholyte: NCM85/LZC|LZC|LPSC|Li-In (referred to as the NCM85/LZC cell below).",
    "rotated_deg": 0,
    "bbox": [
     64.8,
@@ -206,7 +216,8 @@
    "h": 781,
    "dpi": 300,
    "src": "Qi 2025 - Sup) Deciphering high-voltage limitations of halide and sulfide ASSLBs (J Energy Chem 103 926) SI.pdf",
-   "blank": 0.593
+   "blank": 0.593,
+   "caption_fix": "2026-10-03 원문 대조 교정 (litdb-curator) — SI 캡션이 2배 줄간격이라 도구가 첫 줄(92자)에서 잘랐다 → 인쇄 캡션 전체"
   },
   {
    "key": "fS5",
@@ -214,7 +225,7 @@
    "label": "S5",
    "page": 10,
    "file": "fig_S5.png",
-   "caption": "Fig. S5. Rate capabilities from 0.1 C to 1.0 C of the NCM85/LZC and NCM85/LPSC cells at",
+   "caption": "Fig. S5. Rate capabilities from 0.1 C to 1.0 C of the NCM85/LZC and NCM85/LPSC cells at (a) 4.2 V cutoff voltage and (b) 4.5 V cutoff voltage. The composite cathodes of the cells all consisted of 70 wt% NCM85 and 30 wt% SSEs (LZC or LPSC).",
    "rotated_deg": 0,
    "bbox": [
     64.8,
@@ -226,7 +237,8 @@
    "h": 777,
    "dpi": 300,
    "src": "Qi 2025 - Sup) Deciphering high-voltage limitations of halide and sulfide ASSLBs (J Energy Chem 103 926) SI.pdf",
-   "blank": 0.894
+   "blank": 0.894,
+   "caption_fix": "2026-10-03 원문 대조 교정 (litdb-curator) — SI 캡션이 2배 줄간격이라 도구가 첫 줄(87자)에서 잘랐다 → 인쇄 캡션 전체"
   },
   {
    "key": "fS6",
@@ -234,7 +246,7 @@
    "label": "S6",
    "page": 11,
    "file": "fig_S6.png",
-   "caption": "Fig. S6. EIS results of NCM85/LZC and NCM85/LPSC cells after the 1st cycle and 100th",
+   "caption": "Fig. S6. EIS results of NCM85/LZC and NCM85/LPSC cells after the 1st cycle and 100th cycles at 4.5 V. The composite cathodes of the cells all consisted of 70 wt% NCM85 and 30 wt% SSEs (LZC or LPSC).",
    "rotated_deg": 0,
    "bbox": [
     64.8,
@@ -246,7 +258,8 @@
    "h": 1150,
    "dpi": 300,
    "src": "Qi 2025 - Sup) Deciphering high-voltage limitations of halide and sulfide ASSLBs (J Energy Chem 103 926) SI.pdf",
-   "blank": 0.964
+   "blank": 0.964,
+   "caption_fix": "2026-10-03 원문 대조 교정 (litdb-curator) — SI 캡션이 2배 줄간격이라 도구가 첫 줄(84자)에서 잘랐다 → 인쇄 캡션 전체"
   },
   {
    "key": "fS7",
@@ -274,7 +287,7 @@
    "label": "S8",
    "page": 13,
    "file": "fig_S8.png",
-   "caption": "Fig. S8. Effects of the introduction of conductive carbon on electrochemical properties of the",
+   "caption": "Fig. S8. Effects of the introduction of conductive carbon on electrochemical properties of the NCM85/LZC cells at 4.2 V. (a) First cycle voltage profiles with different contents of VGCF at 0.1 C, (b) rate capacities from 0.1 C to 1.0 C, and (c) long-term cycling performances at 0.2 C.",
    "rotated_deg": 0,
    "bbox": [
     64.8,
@@ -286,7 +299,8 @@
    "h": 1369,
    "dpi": 300,
    "src": "Qi 2025 - Sup) Deciphering high-voltage limitations of halide and sulfide ASSLBs (J Energy Chem 103 926) SI.pdf",
-   "blank": 0.923
+   "blank": 0.923,
+   "caption_fix": "2026-10-03 원문 대조 교정 (litdb-curator) — SI 캡션이 2배 줄간격이라 도구가 첫 줄(94자)에서 잘랐다 → 인쇄 캡션 전체"
   },
   {
    "key": "fS9",
@@ -294,7 +308,7 @@
    "label": "S9",
    "page": 14,
    "file": "fig_S9.png",
-   "caption": "Fig. S9. Effects of the introduction of conductive carbon on electrochemical properties of the",
+   "caption": "Fig. S9. Effects of the introduction of conductive carbon on electrochemical properties of the NCM85/LPSC cells at 4.2 V. (a) First cycle voltage profiles with different contents of VGCF at 0.1 C and (b) long-term cycling performances at 0.2 C.",
    "rotated_deg": 0,
    "bbox": [
     64.8,
@@ -306,7 +320,8 @@
    "h": 674,
    "dpi": 300,
    "src": "Qi 2025 - Sup) Deciphering high-voltage limitations of halide and sulfide ASSLBs (J Energy Chem 103 926) SI.pdf",
-   "blank": 0.91
+   "blank": 0.91,
+   "caption_fix": "2026-10-03 원문 대조 교정 (litdb-curator) — SI 캡션이 2배 줄간격이라 도구가 첫 줄(94자)에서 잘랐다 → 인쇄 캡션 전체"
   },
   {
    "key": "fS10",
@@ -314,7 +329,7 @@
    "label": "S10",
    "page": 15,
    "file": "fig_S10.png",
-   "caption": "Fig. S10. (a) S 2p and (b) P 2p XPS spectra of cycled NCM85/LPSC cathodes with different",
+   "caption": "Fig. S10. (a) S 2p and (b) P 2p XPS spectra of cycled NCM85/LPSC cathodes with different VGCF content at 4.2V. The cycling number was set at 200 cycles at 0.2 C.",
    "rotated_deg": 0,
    "bbox": [
     64.8,
@@ -326,7 +341,8 @@
    "h": 737,
    "dpi": 300,
    "src": "Qi 2025 - Sup) Deciphering high-voltage limitations of halide and sulfide ASSLBs (J Energy Chem 103 926) SI.pdf",
-   "blank": 0.849
+   "blank": 0.849,
+   "caption_fix": "2026-10-03 원문 대조 교정 (litdb-curator) — SI 캡션이 2배 줄간격이라 도구가 첫 줄(88자)에서 잘랐다 → 인쇄 캡션 전체"
   },
   {
    "key": "fS11",
@@ -346,7 +362,8 @@
    "h": 802,
    "dpi": 300,
    "src": "Qi 2025 - Sup) Deciphering high-voltage limitations of halide and sulfide ASSLBs (J Energy Chem 103 926) SI.pdf",
-   "blank": 0.934
+   "blank": 0.934,
+   "viewed": true
   },
   {
    "key": "fS12",
@@ -354,7 +371,7 @@
    "label": "S12",
    "page": 17,
    "file": "fig_S12.png",
-   "caption": "Fig. S12. (a) Initial charge/discharge curves of the NCM85/LZC cell with 5 wt% VGCF at 4.5",
+   "caption": "Fig. S12. (a) Initial charge/discharge curves of the NCM85/LZC cell with 5 wt% VGCF at 4.5 V, and (b) corresponding cycling performance at 0.2 C.",
    "rotated_deg": 0,
    "bbox": [
     64.8,
@@ -366,7 +383,30 @@
    "h": 664,
    "dpi": 300,
    "src": "Qi 2025 - Sup) Deciphering high-voltage limitations of halide and sulfide ASSLBs (J Energy Chem 103 926) SI.pdf",
-   "blank": 0.928
+   "blank": 0.928,
+   "caption_fix": "2026-10-03 원문 대조 교정 (litdb-curator) — SI 캡션이 2배 줄간격이라 도구가 첫 줄(90자)에서 잘랐다 → 인쇄 캡션 전체"
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 18,
+   "file": "fig_S13.png",
+   "caption": "Fig. S13. DC polarization measurements of (a) NCM85 and (b) NCM85/LPSC cathodes with a voltage step of 0.4 V.",
+   "rotated_deg": 0,
+   "bbox": [
+    101.6,
+    77.7,
+    493.9,
+    209.5
+   ],
+   "w": 1635,
+   "h": 550,
+   "dpi": 300,
+   "src": "Qi 2025 - Sup) Deciphering high-voltage limitations of halide and sulfide ASSLBs (J Energy Chem 103 926) SI.pdf",
+   "blank": 0.933,
+   "manual_crop": "SI p.18 vector plot (two log-current panels, flat DC-polarization traces). Tool listed fS13 as a number gap ('그래픽 없음(img0/draw3)'): graphics() drops paths thinner than 1.5 pt, and these panels are mostly flat lines, so only 3 of 48 paths were counted (< min_draw 6); clip = union of all vector paths + label text spans above the caption + 2 pt, 300 dpi, tool _shrink (2026-10-03, litdb-curator)",
+   "viewed": true
   },
   {
    "key": "fS14",
@@ -374,7 +414,7 @@
    "label": "S14",
    "page": 19,
    "file": "fig_S14.png",
-   "caption": "Fig. S14. (a) Low-magnification and (b) high-magnification SEM images of NCM85/LPSC",
+   "caption": "Fig. S14. (a) Low-magnification and (b) high-magnification SEM images of NCM85/LPSC cathodes with 2 wt% VGCF.",
    "rotated_deg": 0,
    "bbox": [
     64.8,
@@ -386,7 +426,8 @@
    "h": 663,
    "dpi": 300,
    "src": "Qi 2025 - Sup) Deciphering high-voltage limitations of halide and sulfide ASSLBs (J Energy Chem 103 926) SI.pdf",
-   "blank": 0.239
+   "blank": 0.239,
+   "caption_fix": "2026-10-03 원문 대조 교정 (litdb-curator) — SI 캡션이 2배 줄간격이라 도구가 첫 줄(83자)에서 잘랐다 → 인쇄 캡션 전체"
   },
   {
    "key": "fS15",
@@ -394,7 +435,7 @@
    "label": "S15",
    "page": 20,
    "file": "fig_S15.png",
-   "caption": "Fig. S15. Effects of conductive carbon content in the high-loading cathodes of the NCM85/LZC",
+   "caption": "Fig. S15. Effects of conductive carbon content in the high-loading cathodes of the NCM85/LZC and NCM85/LPSC cells at 4.5 V and 60 °C. (a,d) First cycle voltage profiles with different contents of VGCF at 0.1 C, (b,e) corresponding dQ/dV curves, and (c,f) cycling stabilities at 0.2 C. The NCM85 loading of all cells was 26.0 mg cm−2.",
    "rotated_deg": 0,
    "bbox": [
     64.8,
@@ -406,7 +447,30 @@
    "h": 1009,
    "dpi": 300,
    "src": "Qi 2025 - Sup) Deciphering high-voltage limitations of halide and sulfide ASSLBs (J Energy Chem 103 926) SI.pdf",
-   "blank": 0.898
+   "blank": 0.898,
+   "caption_fix": "2026-10-03 원문 대조 교정 (litdb-curator) — SI 캡션이 2배 줄간격이라 도구가 첫 줄(92자)에서 잘랐다 → 인쇄 캡션 전체"
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 21,
+   "file": "fig_S16.png",
+   "caption": "Fig. S16. (a) Full and magnified pattern of XRD results of the bare NCM85, 0.5 wt%, 1.0 wt%, and 3.0 wt% LZPO@NCM85 powders. (b) Cycling performance comparison of different cathodes for NCM85/LZC cells in the voltage range of 2.7-4.5 V at 0.2 C.",
+   "rotated_deg": 0,
+   "bbox": [
+    73.9,
+    75.8,
+    522.9,
+    192.7
+   ],
+   "w": 1872,
+   "h": 487,
+   "dpi": 300,
+   "src": "Qi 2025 - Sup) Deciphering high-voltage limitations of halide and sulfide ASSLBs (J Energy Chem 103 926) SI.pdf",
+   "blank": 0.878,
+   "manual_crop": "SI p.21 vector plot (XRD + cycling, 1710 paths). Tool listed fS16 as '영역 없음' (region_for returned no rect above the double-spaced caption); clip = union of all vector paths + label text spans above the caption + 2 pt, 300 dpi, tool _shrink (2026-10-03, litdb-curator)",
+   "viewed": true
   },
   {
    "key": "fS17",
@@ -414,7 +478,7 @@
    "label": "S17",
    "page": 22,
    "file": "fig_S17.png",
-   "caption": "Fig. S17. Typical SEM image of NCM85 and the corresponding EDS element mappings of Ni,",
+   "caption": "Fig. S17. Typical SEM image of NCM85 and the corresponding EDS element mappings of Ni, Co, and O.",
    "rotated_deg": 0,
    "bbox": [
     64.8,
@@ -426,7 +490,8 @@
    "h": 1142,
    "dpi": 300,
    "src": "Qi 2025 - Sup) Deciphering high-voltage limitations of halide and sulfide ASSLBs (J Energy Chem 103 926) SI.pdf",
-   "blank": 0.341
+   "blank": 0.341,
+   "caption_fix": "2026-10-03 원문 대조 교정 (litdb-curator) — SI 캡션이 2배 줄간격이라 도구가 첫 줄(86자)에서 잘랐다 → 인쇄 캡션 전체"
   },
   {
    "key": "fS18",
@@ -434,7 +499,7 @@
    "label": "S18",
    "page": 23,
    "file": "fig_S18.png",
-   "caption": "Fig. S18. Galvanostatic charge-discharge voltage profiles at 0.5 C of the (a)",
+   "caption": "Fig. S18. Galvanostatic charge-discharge voltage profiles at 0.5 C of the (a) LZPO@NCM85/LZC cell and (b) LZPO@NCM85/LPSC cell at the 1st, 10th, 20th, 50th, 100th, 300th and 600th cycles.",
    "rotated_deg": 0,
    "bbox": [
     64.8,
@@ -446,7 +511,8 @@
    "h": 696,
    "dpi": 300,
    "src": "Qi 2025 - Sup) Deciphering high-voltage limitations of halide and sulfide ASSLBs (J Energy Chem 103 926) SI.pdf",
-   "blank": 0.907
+   "blank": 0.907,
+   "caption_fix": "2026-10-03 원문 대조 교정 (litdb-curator) — SI 캡션이 2배 줄간격이라 도구가 첫 줄(77자)에서 잘랐다 → 인쇄 캡션 전체"
   },
   {
    "key": "fS19",
@@ -454,7 +520,7 @@
    "label": "S19",
    "page": 24,
    "file": "fig_S19.png",
-   "caption": "Fig. S19. Rate capabilities of the (a) LZPO@NCM85/LZC cell and (b) LZPO@NCM85/LPSC",
+   "caption": "Fig. S19. Rate capabilities of the (a) LZPO@NCM85/LZC cell and (b) LZPO@NCM85/LPSC cell from 0.1 C to 1.0 C.",
    "rotated_deg": 0,
    "bbox": [
     64.8,
@@ -466,7 +532,30 @@
    "h": 701,
    "dpi": 300,
    "src": "Qi 2025 - Sup) Deciphering high-voltage limitations of halide and sulfide ASSLBs (J Energy Chem 103 926) SI.pdf",
-   "blank": 0.928
+   "blank": 0.928,
+   "caption_fix": "2026-10-03 원문 대조 교정 (litdb-curator) — SI 캡션이 2배 줄간격이라 도구가 첫 줄(82자)에서 잘랐다 → 인쇄 캡션 전체"
+  },
+  {
+   "key": "fS20",
+   "kind": "figure",
+   "label": "S20",
+   "page": 25,
+   "file": "fig_S20.png",
+   "caption": "Fig. S20. Initial charge/discharge curves of the (a) LZPO@NCM85/LZC cell and (b) LZPO@NCM85/LPSC cell with high-loading cathodes of 26.0 mg cm−2 at 0.2 C and 60 ℃.",
+   "rotated_deg": 0,
+   "bbox": [
+    104.1,
+    73.6,
+    494.0,
+    231.2
+   ],
+   "w": 1626,
+   "h": 658,
+   "dpi": 300,
+   "src": "Qi 2025 - Sup) Deciphering high-voltage limitations of halide and sulfide ASSLBs (J Energy Chem 103 926) SI.pdf",
+   "blank": 0.932,
+   "manual_crop": "SI p.25 vector plot (two voltage profiles). Tool listed fS20 as a number gap ('그래픽 없음(img0/draw4)'): thin-path filter left 4 of 75 paths (< min_draw 6); clip = union of all vector paths + label text spans above the caption + 2 pt, 300 dpi, tool _shrink (2026-10-03, litdb-curator)",
+   "viewed": true
   },
   {
    "key": "fS21",
@@ -474,7 +563,7 @@
    "label": "S21",
    "page": 26,
    "file": "fig_S21.png",
-   "caption": "Fig. S21. EIS results of NCM85/LZC, NCM85/LPSC, and LZPO@NCM85/SSEs (LZC or",
+   "caption": "Fig. S21. EIS results of NCM85/LZC, NCM85/LPSC, and LZPO@NCM85/SSEs (LZC or LPSC) cells after 100 cycles at 0.2 C and 4.5 V. The composite cathodes of all cells were composed of 68 wt% CAMs, 30 wt% SSEs, and 2 wt% VGCF.",
    "rotated_deg": 0,
    "bbox": [
     64.8,
@@ -486,7 +575,8 @@
    "h": 1151,
    "dpi": 300,
    "src": "Qi 2025 - Sup) Deciphering high-voltage limitations of halide and sulfide ASSLBs (J Energy Chem 103 926) SI.pdf",
-   "blank": 0.957
+   "blank": 0.957,
+   "caption_fix": "2026-10-03 원문 대조 교정 (litdb-curator) — SI 캡션이 2배 줄간격이라 도구가 첫 줄(75자)에서 잘랐다 → 인쇄 캡션 전체"
   },
   {
    "key": "fS22",
@@ -494,7 +584,7 @@
    "label": "S22",
    "page": 27,
    "file": "fig_S22.png",
-   "caption": "Fig. S22. Impedance evolution during the initial charge cycle of the bare NCM85/LZC and",
+   "caption": "Fig. S22. Impedance evolution during the initial charge cycle of the bare NCM85/LZC and LZPO@NCM85/LZC cells. (a,b) In-situ EIS measurements and (c,d) corresponding distributions of relaxation times evaluated by the distribution of relaxation time (DRT).",
    "rotated_deg": 0,
    "bbox": [
     64.8,
@@ -506,7 +596,30 @@
    "h": 1372,
    "dpi": 300,
    "src": "Qi 2025 - Sup) Deciphering high-voltage limitations of halide and sulfide ASSLBs (J Energy Chem 103 926) SI.pdf",
-   "blank": 0.934
+   "blank": 0.934,
+   "caption_fix": "2026-10-03 원문 대조 교정 (litdb-curator) — SI 캡션이 2배 줄간격이라 도구가 첫 줄(87자)에서 잘랐다 → 인쇄 캡션 전체"
+  },
+  {
+   "key": "fS23",
+   "kind": "figure",
+   "label": "S23",
+   "page": 28,
+   "file": "fig_S23.png",
+   "caption": "Fig. S23. First cycle voltage profiles of the (a) NCM85/LZC and (b) NCM85/LPSC cells under different cutoff voltages and conductive carbon contents at 0.1 C.",
+   "rotated_deg": 0,
+   "bbox": [
+    103.8,
+    74.4,
+    494.1,
+    230.5
+   ],
+   "w": 1627,
+   "h": 652,
+   "dpi": 300,
+   "src": "Qi 2025 - Sup) Deciphering high-voltage limitations of halide and sulfide ASSLBs (J Energy Chem 103 926) SI.pdf",
+   "blank": 0.895,
+   "manual_crop": "SI p.28 vector plot (first-cycle profiles, 4.2/4.5 V x 0/2 wt% VGCF). Tool listed fS23 as a number gap ('그래픽 없음(img0/draw0)'): thin-path filter left 0 of 96 paths; clip = union of all vector paths + label text spans above the caption + 2 pt, 300 dpi, tool _shrink (2026-10-03, litdb-curator)",
+   "viewed": true
   },
   {
    "key": "fS24",
@@ -514,7 +627,7 @@
    "label": "S24",
    "page": 29,
    "file": "fig_S24.png",
-   "caption": "Fig. S24. DOS values of selected elements and total elements of possible reaction products such",
+   "caption": "Fig. S24. DOS values of selected elements and total elements of possible reaction products such as (a) LiCl, (b) ZrCl4, and (c) Li2ZrO3 at the NCM85/LZC interfaces.",
    "rotated_deg": 0,
    "bbox": [
     64.8,
@@ -526,7 +639,9 @@
    "h": 454,
    "dpi": 300,
    "src": "Qi 2025 - Sup) Deciphering high-voltage limitations of halide and sulfide ASSLBs (J Energy Chem 103 926) SI.pdf",
-   "blank": 0.92
+   "blank": 0.92,
+   "caption_fix": "2026-10-03 원문 대조 교정 (litdb-curator) — SI 캡션이 2배 줄간격이라 도구가 첫 줄(95자)에서 잘랐다 → 인쇄 캡션 전체",
+   "viewed": true
   },
   {
    "key": "fS25",
@@ -534,7 +649,7 @@
    "label": "S25",
    "page": 30,
    "file": "fig_S25.png",
-   "caption": "Fig. S25. DOS values of selected elements and total elements of possible reaction products such",
+   "caption": "Fig. S25. DOS values of selected elements and total elements of possible reaction products such as (a) Li3PO4, (b) Li2S, and (c) P2S5 at the NCM85/LPSC interfaces.",
    "rotated_deg": 0,
    "bbox": [
     64.8,
@@ -546,7 +661,9 @@
    "h": 449,
    "dpi": 300,
    "src": "Qi 2025 - Sup) Deciphering high-voltage limitations of halide and sulfide ASSLBs (J Energy Chem 103 926) SI.pdf",
-   "blank": 0.916
+   "blank": 0.916,
+   "caption_fix": "2026-10-03 원문 대조 교정 (litdb-curator) — SI 캡션이 2배 줄간격이라 도구가 첫 줄(95자)에서 잘랐다 → 인쇄 캡션 전체",
+   "viewed": true
   },
   {
    "key": "fS26",
@@ -554,7 +671,7 @@
    "label": "S26",
    "page": 31,
    "file": "fig_S26.png",
-   "caption": "Fig. S26. Basic physicochemical properties of LIC. (a) XRD patterns, (b) Arrhenius plots of",
+   "caption": "Fig. S26. Basic physicochemical properties of LIC. (a) XRD patterns, (b) Arrhenius plots of ionic conductivities, and (c) DC polarization measurements with a voltage step of 0.4 V.",
    "rotated_deg": 0,
    "bbox": [
     64.8,
@@ -566,7 +683,8 @@
    "h": 635,
    "dpi": 300,
    "src": "Qi 2025 - Sup) Deciphering high-voltage limitations of halide and sulfide ASSLBs (J Energy Chem 103 926) SI.pdf",
-   "blank": 0.943
+   "blank": 0.943,
+   "caption_fix": "2026-10-03 원문 대조 교정 (litdb-curator) — SI 캡션이 2배 줄간격이라 도구가 첫 줄(91자)에서 잘랐다 → 인쇄 캡션 전체"
   },
   {
    "key": "fS27",
@@ -574,7 +692,7 @@
    "label": "S27",
    "page": 32,
    "file": "fig_S27.png",
-   "caption": "Fig. S27. (a) Initial charge/discharge curves of the NCM85/LIC cell with 2 wt% VGCF at 4.5",
+   "caption": "Fig. S27. (a) Initial charge/discharge curves of the NCM85/LIC cell with 2 wt% VGCF at 4.5 V, and (b) corresponding cycling performance at 0.2 C.",
    "rotated_deg": 0,
    "bbox": [
     64.8,
@@ -586,7 +704,8 @@
    "h": 606,
    "dpi": 300,
    "src": "Qi 2025 - Sup) Deciphering high-voltage limitations of halide and sulfide ASSLBs (J Energy Chem 103 926) SI.pdf",
-   "blank": 0.933
+   "blank": 0.933,
+   "caption_fix": "2026-10-03 원문 대조 교정 (litdb-curator) — SI 캡션이 2배 줄간격이라 도구가 첫 줄(90자)에서 잘랐다 → 인쇄 캡션 전체"
   },
   {
    "key": "fS28",
@@ -594,7 +713,7 @@
    "label": "S28",
    "page": 33,
    "file": "fig_S28.png",
-   "caption": "Fig. S28. (a) Calculated mutual reaction energies between the potential cathode/electrolyte",
+   "caption": "Fig. S28. (a) Calculated mutual reaction energies between the potential cathode/electrolyte interface composition of NCM85/LIC interface. DOS values of selected elements and total elements of (b) InClO and In2O3.",
    "rotated_deg": 0,
    "bbox": [
     64.8,
@@ -606,7 +725,9 @@
    "h": 817,
    "dpi": 300,
    "src": "Qi 2025 - Sup) Deciphering high-voltage limitations of halide and sulfide ASSLBs (J Energy Chem 103 926) SI.pdf",
-   "blank": 0.918
+   "blank": 0.918,
+   "caption_fix": "2026-10-03 원문 대조 교정 (litdb-curator) — SI 캡션이 2배 줄간격이라 도구가 첫 줄(91자)에서 잘랐다 → 인쇄 캡션 전체",
+   "viewed": true
   },
   {
    "key": "tS1",
@@ -626,7 +747,8 @@
    "h": 988,
    "dpi": 300,
    "src": "Qi 2025 - Sup) Deciphering high-voltage limitations of halide and sulfide ASSLBs (J Energy Chem 103 926) SI.pdf",
-   "blank": 0.936
+   "blank": 0.936,
+   "viewed": true
   },
   {
    "key": "tS2",
@@ -639,14 +761,16 @@
    "bbox": [
     65.8,
     72.9,
-    512.6,
+    527.0,
     281.7
    ],
-   "w": 1862,
+   "w": 1922,
    "h": 871,
    "dpi": 300,
    "src": "Qi 2025 - Sup) Deciphering high-voltage limitations of halide and sulfide ASSLBs (J Energy Chem 103 926) SI.pdf",
-   "blank": 0.942
+   "blank": 0.941,
+   "recrop": "2026-10-03 수동 재크롭 (litdb-curator) — 자동 bbox 오른쪽 끝(x 512.6)이 Ref. 열의 '[14, 15]' (text x1 519.5) 를 '[14, 15' 로 잘랐다 → x1 527.0 (표 괘선 x1 524.5 + 2.5). ⚠ 표 값의 정본은 PDF 텍스트다",
+   "viewed": true
   }
  ],
  "missing_labels": [
@@ -656,7 +780,8 @@
    "skipped": [
     "p18 그래픽 없음(img0/draw3)"
    ],
-   "near_miss": []
+   "near_miss": [],
+   "resolved": "manual_crop fig_S13.png (2026-10-03, litdb-curator) - see figures[fS13].manual_crop"
   },
   {
    "key": "fS16",
@@ -664,7 +789,8 @@
    "skipped": [
     "p21 영역 없음"
    ],
-   "near_miss": []
+   "near_miss": [],
+   "resolved": "manual_crop fig_S16.png (2026-10-03, litdb-curator) - see figures[fS16].manual_crop"
   },
   {
    "key": "fS20",
@@ -672,7 +798,8 @@
    "skipped": [
     "p25 그래픽 없음(img0/draw4)"
    ],
-   "near_miss": []
+   "near_miss": [],
+   "resolved": "manual_crop fig_S20.png (2026-10-03, litdb-curator) - see figures[fS20].manual_crop"
   },
   {
    "key": "fS23",
@@ -680,7 +807,8 @@
    "skipped": [
     "p28 그래픽 없음(img0/draw0)"
    ],
-   "near_miss": []
+   "near_miss": [],
+   "resolved": "manual_crop fig_S23.png (2026-10-03, litdb-curator) - see figures[fS23].manual_crop"
   }
  ]
 }
