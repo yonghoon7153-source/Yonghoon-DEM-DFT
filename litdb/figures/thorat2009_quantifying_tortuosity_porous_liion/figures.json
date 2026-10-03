@@ -1,0 +1,265 @@
+{
+ "slug": "thorat2009_quantifying_tortuosity_porous_liion",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-03",
+ "sources": [
+  "26. Quantifying tortuosity in porous Li-ion battery materials.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Schematic of a symmetric cell geometry for testing separators. Lithium foils are used as anode and cathode, between which are placed one or more separator layers ﬁlled with the electrolyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    25.9,
+    540.7,
+    289.5,
+    716.0
+   ],
+   "w": 1099,
+   "h": 731,
+   "dpi": 300,
+   "src": "26. Quantifying tortuosity in porous Li-ion battery materials.pdf",
+   "blank": 0.492,
+   "viewed": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Schematic of a symmetric cell geometry for testing porous-electrode ﬁlms. The active-material ﬁlm is delaminated from its current collector and placed between separators, which in turn are placed between lithium foil electrodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    295.4,
+    50.1,
+    559.0,
+    203.5
+   ],
+   "w": 1100,
+   "h": 641,
+   "dpi": 300,
+   "src": "26. Quantifying tortuosity in porous Li-ion battery materials.pdf",
+   "blank": 0.676,
+   "viewed": true
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Image showing procedure to remove aluminum current collector (curled top layer) from active-material ﬁlm (bottom black layer) using a razor blade.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.7,
+    49.5,
+    300.3,
+    223.5
+   ],
+   "w": 1099,
+   "h": 726,
+   "dpi": 300,
+   "src": "26. Quantifying tortuosity in porous Li-ion battery materials.pdf",
+   "blank": 0.237,
+   "viewed": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Nyquist plot obtained from AC impedance experiment for separator cell shown in Fig. 1. The intercept with the real axis at high frequency (R∞) is used to ﬁnd the effective ionic conductivity in the separator region.",
+   "rotated_deg": 0,
+   "bbox": [
+    306.2,
+    49.7,
+    569.8,
+    197.5
+   ],
+   "w": 1100,
+   "h": 617,
+   "dpi": 300,
+   "src": "26. Quantifying tortuosity in porous Li-ion battery materials.pdf",
+   "blank": 0.95,
+   "viewed": true
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Illustration of possible current paths in a cathode ﬁlm. The current ﬂows mostly through the least-resistance path (arrows), making unreliable the measurement of κeff without detailed knowledge of the local behavior of electronic and ionic paths.",
+   "rotated_deg": 0,
+   "bbox": [
+    295.4,
+    49.5,
+    559.0,
+    174.5
+   ],
+   "w": 1100,
+   "h": 522,
+   "dpi": 300,
+   "src": "26. Quantifying tortuosity in porous Li-ion battery materials.pdf",
+   "blank": 0.897,
+   "viewed": true
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 6,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Model-experiment comparison for galvanostatic polarization (t < 120 s), fol- lowed by interrupt and relaxation (t > 120 s) in a cell containing three separators.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.7,
+    579.1,
+    300.3,
+    724.6
+   ],
+   "w": 1099,
+   "h": 608,
+   "dpi": 300,
+   "src": "26. Quantifying tortuosity in porous Li-ion battery materials.pdf",
+   "blank": 0.931,
+   "viewed": true
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 6,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. The variation of the apparent tortuosity τapp with the number of separators. The data suggest good agreement between the AC-impedance and polarization-interrupt experiments. The slope of the linear ﬁt corresponds to the true tortuosity, while the non-zero intercept suggests a surface resistance at the lithium electrodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    306.2,
+    50.4,
+    569.8,
+    207.5
+   ],
+   "w": 1100,
+   "h": 656,
+   "dpi": 300,
+   "src": "26. Quantifying tortuosity in porous Li-ion battery materials.pdf",
+   "blank": 0.926,
+   "viewed": true
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 7,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Model-experiment comparison for polarization and relaxation in the LiFePO4 ﬁlm. Two model curves are shown: the ﬁrst is considered the best ﬁt of the relaxation data. The second is shown to illustrate the sensitivity of the model result to tortuosity by using a value that differs from the best ﬁt by 5%.",
+   "rotated_deg": 0,
+   "bbox": [
+    25.9,
+    49.8,
+    289.5,
+    186.5
+   ],
+   "w": 1099,
+   "h": 571,
+   "dpi": 300,
+   "src": "26. Quantifying tortuosity in porous Li-ion battery materials.pdf",
+   "blank": 0.92,
+   "viewed": true
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 7,
+   "file": "fig_9.png",
+   "caption": "Fig. 9. The effect of porosity on the tortuosity of cathode ﬁlms. The tortuosity is well correlated by a power-law equation (inset).",
+   "rotated_deg": 0,
+   "bbox": [
+    25.9,
+    576.2,
+    289.5,
+    724.6
+   ],
+   "w": 1099,
+   "h": 620,
+   "dpi": 300,
+   "src": "26. Quantifying tortuosity in porous Li-ion battery materials.pdf",
+   "blank": 0.913,
+   "viewed": true
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 8,
+   "file": "fig_10.png",
+   "caption": "Fig. 10. TEM image of LiFePO4 particles suggesting a non-monodisperse and non- spherical particle distribution.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.7,
+    49.5,
+    300.3,
+    277.5
+   ],
+   "w": 1099,
+   "h": 951,
+   "dpi": 300,
+   "src": "26. Quantifying tortuosity in porous Li-ion battery materials.pdf",
+   "blank": 0.224,
+   "viewed": true
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 8,
+   "file": "fig_11.png",
+   "caption": "Fig. 11. Transport model validation from a polarization-interrupt experiment for a thicker LiFePO4 cathode ﬁlm (140 µm) at 45% porosity, where the effective transport properties in the model are parametrized from experiments on thinner (≈100 µm) cells. The good agreement between the model and experiment in terms of relaxation decay rate suggests the tortuosity correlation given in the text is accurate for different thicknesses.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.7,
+    307.4,
+    300.3,
+    456.7
+   ],
+   "w": 1099,
+   "h": 623,
+   "dpi": 300,
+   "src": "26. Quantifying tortuosity in porous Li-ion battery materials.pdf",
+   "blank": 0.908,
+   "viewed": true
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 2,
+   "file": "tab_1.png",
+   "caption": "Table 1 Reported tortuosities in the form τ = γϵ^(1−α) for selected porous structures.",
+   "rotated_deg": 0,
+   "bbox": [
+    40.5,
+    652.5,
+    566.0,
+    746.5
+   ],
+   "w": 2191,
+   "h": 393,
+   "dpi": 300,
+   "src": "26. Quantifying tortuosity in porous Li-ion battery materials.pdf",
+   "blank": 0.255,
+   "manual_crop": "auto crop took almost the whole PDF p.2 (body text of both columns included); clip = caption top to the bottom rule of the full-width table at the foot of PDF p.2 = printed 593 (2026-10-03)",
+   "viewed": true
+  }
+ ],
+ "missing_labels": []
+}

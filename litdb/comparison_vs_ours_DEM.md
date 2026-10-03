@@ -1136,7 +1136,7 @@
   - **R_ion 측정·분해 (대칭셀 LNO-coated, bulk+gb):** 62 wt% **34.9** / 72 **48.1** / 82 **19.0** Ω·cm² → **82 wt%
     최저 이온저항**(같은 분말질량 → CAM↑ → 부피↓ → thin·compact → 이온 percolation↑). → 우리 σ_ionic 직접 외부
     앵커 (⚠ wt% 62:37/72:27/82:17 → vol% → φ_SE 매핑 선행; 대략 62 wt% ≈ φ_SE 0.45–0.50, 82 wt% ≈ 0.25).
-    ★ **단 "R_ion 이 깨끗이 분리된 셀"(대칭셀/uncoated)만** 쓸 것 — coated full-cell 은 R_ct 와 lumped (§5.5 Morasch
+    ★ **단 "R_ion 이 깨끗이 분리된 셀"(대칭셀/uncoated)만** 쓸 것 — coated full-cell 은 R_ct 와 lumped (§5.5 Morasch — ⚠ 이 Morasch 는 **2021** JES 168 080519 (정본 카드 없음 · `morasch2018_…` 와 다른 논문 · 10-03 대조)
     R_int/R_i 교훈: 비 작으면 영역 겹침).
   - ★ **GB(입계) 를 *분리 측정* → 우리 Cronau(r_SE) GB 인자 정당화:** **R_i,gb ≈ R_i,bulk 또는 더 큼**(62: bulk
     9.3 vs gb 25.6; uncoated 82: bulk 59.7 vs gb 209.5) + **GB 가 온도에 더 민감**(62: gb 25.6→3.1 vs bulk 9.3→6.0
@@ -3365,7 +3365,7 @@
     절대값은 논문이 명시 표로 안 줌 → R(T) 3점 Arrhenius 추정(TREND-only). 우리 σ-솔버는 *상온 단일* → σ(T) =
     σ(300K)·exp[−E_a/k(1/T−1/300)] 형태로 T-축 추가 가능. (우리 σ_thermal=*열전도*지 *전도도의 온도의존* 아님 — 다른 축.)
   - ★ **modified TLM 2-BC 분해 = 우리 솔버 검증의 *방법론* 교훈:** R_int/R_i 비가 작으면(coated full-cell) 이온수송·
-    전하전달 영역이 *겹쳐* full-cell 단독 분석이 오해 → **대칭셀/uncoated 병용 필수**(Morasch). ⇒ 우리가 실험 R_ion 을
+    전하전달 영역이 *겹쳐* full-cell 단독 분석이 오해 → **대칭셀/uncoated 병용 필수**(Morasch **2021** JES 168 080519 — `morasch2018_…` 아님 · 10-03 대조). ⇒ 우리가 실험 R_ion 을
     σ_ionic 앵커로 쓸 때 *깨끗이 분리된 셀의 R_ion* 만 쓸 것 (Bazzoun/Minnmann 이 대칭셀/full-blocking 쓴 이유).
   - **도전제 형상(0D Super P vs 1D VGCF):** VGCF 가 전자저항·R_int 둘 다 낮춤(1D 전자망 + SE-카본 계면면적↓ → 산화분해↓)
     = Lee 2025 VGCF σ_e 와 같은 결 → 우리 σ_e 도전제 형상 구분 약함 보강(우리 production = Super P 0D 가정).
@@ -4421,7 +4421,7 @@ Faraday FutureCat; 2026-09-26 추가; 원장 **SELF-51** 뿌리 감사 — [Sedl
 > 상세: digest §3.4 · §8 ③ · §12 D6.
 
 
-## J. tortuosity 정의 묶음 — **같은 양 · 다른 이름** (2026-10-03 신설 7 편 · 같은 날 10 편 추가 = 17 편)
+## J. tortuosity 정의 묶음 — **같은 양 · 다른 이름** (2026-10-03 신설 7 편 · 같은 날 10 편 + 10 편 추가 = 27 편)
 
 > 문헌마다 같은 양을 τ 로도 τ² 로도 부른다. 이 절은 **양**으로 묶고 이름은 원문 그대로 병기한다.
 > 우리 쪽 정의: 웹앱 τ_Lap,eff = √(φ_SE·σ₀/σ_full) (`webapp/app.py:2610` · σ_full = 전체 단면 정규화 `scripts/network_conductivity.py:857`).  φ_SE = **모든** SE 구 부피 합 ÷ 전극 부피 (비관통 SE 포함 · 겹침 이중계상 — `scripts/dem_analysis_core.py:1128–1129`).
@@ -4429,12 +4429,12 @@ Faraday FutureCat; 2026-09-26 추가; 원장 **SELF-51** 뿌리 감사 — [Sedl
 
 | 양 (우리 기호) | 정의 | 문헌 이름 (원문) | 카드 |
 |---|---|---|---|
-| f | σ_eff/σ₀ | ε/τ² "diffusibility" (Tjaden) · f_e = ε/τ_F (COMSOL 5.6 Eq 6-6) · 1/N_M · 1/N_m (Park 2019 p.124: N_m = τ/ε = σ₀/σ_eff) | `tjaden2018_…` · `landesfeind2016_…` · `park2019_…` |
-| **tau2** (옛 이름 T · 키 `tau2_ion_<mode>`) | φ·σ₀/σ_eff = φ/f | κ = τ² "tortuosity factor" (Tjaden · Bielefeld 2020 · Minnmann 2021 보고값) · τ (Landesfeind Eq 5 N_M = τ/ε · TauFactor `TauFactor.m:3495` · Nguyen Eq 1 · Park 2020 SI Fig S9 · COMSOL τ_F) · τ_exp = τ_elc 'electrical tortuosity' (Holzer Eq 2) · τ_FEM (Ender Eq 2) · 'tortuosity' τ (Froboese Eq 15) · τ_eff 'effective tortuosity' (Kaiser Eq 2 — 2021 같은 그룹은 τ²) · τ_cond · τ_diff (Hlushkou Eq 3 · Eq 9) · τ (Landesfeind 2018 Eq 9) · τ = ε·N_m (Park 2019) · j = (εσ/τ)∇φ 의 τ (Park 2020 CEJ SI Fig S2) · PI τ (Pouraghajan Eq 1–2) · Minnmann R_ion 의 원전 = Siroma 표 3 T형 open–open (DC → L·z_A, 관통) | 7 편 + 이번 10 편 |
+| f | σ_eff/σ₀ | ε/τ² "diffusibility" (Tjaden) · f_e = ε/τ_F (COMSOL 5.6 Eq 6-6) · 1/N_M · 1/N_m (Park 2019 p.124: N_m = τ/ε = σ₀/σ_eff) · ε/τ (Thorat Eq 1 κ_eff = κε/τ · Kato Eq 2 κ_eff = (ε/τ)κ · Malifarge Eq 8 κ_eff = (ε₂/τ₂)κ) · 1/Z̃(0) (Cooper 개방계 Z̃(0) = τ/ε) · 1/F (Wiedenmann formation factor) · Asano f 0.125/0.078/0.055 (원문 값만으로 확정되는 유일한 양) | `tjaden2018_…` · `landesfeind2016_…` · `park2019_…` · `thorat2009_…` · `kato2018_…` · `malifarge2017_…` · `cooper2017_…` · `wiedenmann2013_…` · `asano2017_…` |
+| **tau2** (옛 이름 T · 키 `tau2_ion_<mode>`) | φ·σ₀/σ_eff = φ/f | κ = τ² "tortuosity factor" (Tjaden · Bielefeld 2020 · Minnmann 2021 보고값) · τ (Landesfeind Eq 5 N_M = τ/ε · TauFactor `TauFactor.m:3495` · Nguyen Eq 1 · Park 2020 SI Fig S9 · COMSOL τ_F) · τ_exp = τ_elc 'electrical tortuosity' (Holzer Eq 2) · τ_FEM (Ender Eq 2) · 'tortuosity' τ (Froboese Eq 15) · τ_eff 'effective tortuosity' (Kaiser Eq 2 — 2021 같은 그룹은 τ²) · τ_cond · τ_diff (Hlushkou Eq 3 · Eq 9) · τ (Landesfeind 2018 Eq 9) · τ = ε·N_m (Park 2019) · j = (εσ/τ)∇φ 의 τ (Park 2020 CEJ SI Fig S2) · PI τ (Pouraghajan Eq 1–2) · Minnmann R_ion 의 원전 = Siroma 표 3 T형 open–open (DC → L·z_A, 관통) · τ "tortuosity" (Thorat Eq 1 — "factor" 낱말 0 회) · τ "tortuosity factor" (Kato · 기호는 τ 지만 이미 τ² — 제곱하지 않는다) · τ₂ "electrolyte / pore tortuosity" (Malifarge) · τ "tortuosity factor" Z̃(0) = τ/ε (Cooper = TauFactor 같은 양) · "electrode resistance tortuosity" (Morasch → Landesfeind 2016 Eq 13) · τ_elc "electric tortuosity" (Wiedenmann Eq 6) · Asano "tortuosity 4–6" (식 없음 · φσ₀/σ_eff 재구성만 자릿수가 맞음 · 기공 미보고라 상한) | 7 편 + 이번 10 편 · `thorat2009_…` · `kato2018_…` · `malifarge2017_…` · `cooper2017_…` · `morasch2018_…` · `wiedenmann2013_…` · `asano2017_…` |
 | tau = √tau2 (키 `tau_ion_<mode>` · 웹앱 τ_Lap,eff) | √(φσ₀/σ_eff) | τ (Tjaden 식 3) · τ_i (Minnmann) | `tjaden2018_…` · `minnmann2021_…` |
-| τ_geo (키 `tau_geo_SE_dij`) | 최단 경로 / 두께 | τ = Δl/Δx (Tjaden 식 1) · τ_path (Landesfeind Eq 3) · τ_i = l_i/l₀ (Minnmann Eq 3) · τ_geom (Ender) · τ_geo = skeleton Dijkstra ÷ 입출구 거리 (Holzer) | 우리 τ_Dij · τ_Dij,all · 벽 τ · `ender2011_…` · `holzer2013_…` |
-| τ_e (우리에 없음) | R_ion·A·κ₀·ε/L (대칭셀 EIS-TLM · 이중층 경계) | electrode tortuosity factor (Nguyen Eq 2) · Landesfeind Eq 13 의 τ · Landesfeind 2018 EIS τ (차단 대칭셀) · Kaiser TLM τ · Pouraghajan BE τ (eSCM) · Siroma Z/E형 (z_C = 0) 저주파 L·z_A/3 (de Levie) | `nguyen2020_…` · `landesfeind2016_…` · `landesfeind2018_…` · `kaiser2018_…` · `pouraghajan2018_…` · `siroma2015_…` |
-| (우리 열 없음) | δ = τ_geo/τ_exp (τ_geo 1 승) · β = (r_min/r_max)² | constrictivity δ · constriction factor β (Holzer Eq 3 · Fig 15 사인 맞춤 a 0.3 · b 0.7) — **FULL/CF 는 δ 도 β 도 아니다** (영문 이름에 constrictivity 금지) | `holzer2013_…` |
+| τ_geo (키 `tau_geo_SE_dij`) | 최단 경로 / 두께 | τ = Δl/Δx (Tjaden 식 1) · τ_path (Landesfeind Eq 3) · τ_i = l_i/l₀ (Minnmann Eq 3) · τ_geom (Ender) · τ_geo = skeleton Dijkstra ÷ 입출구 거리 (Holzer) · τ_geo = skeleton Dijkstra l_eff/L · **모든** source–sink 쌍 평균 ÷ 두께 (Wiedenmann p.1452 — 원문은 이 기하 τ 를 'tortuosity factor' 로 부른다 = 우리 규칙과 **이름 반대**) · 같은 8 시료 평균 1.77 (원문) ↔ 1.62 (Holzer 카드) = 분모 · 쌍 규약 차 | 우리 τ_Dij · τ_Dij,all · 벽 τ · `ender2011_…` · `holzer2013_…` · `wiedenmann2013_…` |
+| τ_e (우리에 없음) | R_ion·A·κ₀·ε/L (대칭셀 EIS-TLM · 이중층 경계) | electrode tortuosity factor (Nguyen Eq 2) · Landesfeind Eq 13 의 τ · Landesfeind 2018 EIS τ (차단 대칭셀) · Kaiser TLM τ · Pouraghajan BE τ (eSCM) · Siroma Z/E형 (z_C = 0) 저주파 L·z_A/3 (de Levie) · Malifarge τ₂ (차단 대칭셀 Z형 TLM 전 스펙트럼 · Eq 11 = Tröltzsch–Kanoun ≡ Siroma Z형 open–open ≡ Landesfeind 2018 Eq 1 ≡ Pouraghajan Eq 5) · Morasch 차단 겉보기 τ (방향 의존 — 투과형은 방향 무관, A3463) · ⚠ Cooper 는 τ_e 지배식의 원전이 아니다 (부피 축전 확산 · FD 틀 · DC 관문) | `nguyen2020_…` · `landesfeind2016_…` · `landesfeind2018_…` · `kaiser2018_…` · `pouraghajan2018_…` · `siroma2015_…` · `malifarge2017_…` · `morasch2018_…` · `cooper2017_…` |
+| (우리 열 없음) | δ = τ_geo/τ_exp (τ_geo 1 승) · β = (r_min/r_max)² | constrictivity δ · constriction factor β (Holzer Eq 3 · Fig 15 사인 맞춤 a 0.3 · b 0.7) — **FULL/CF 는 δ 도 β 도 아니다** (영문 이름에 constrictivity 금지) · Wiedenmann Eq 11 σ_eff/σ₀ = εβ/τ_geo (p.1448 · 지수 전부 1 · 맞춤 0 · 원문에 'M-factor' 낱말 없음) · β_geo = (r_min/r_max)² 0.42–0.67 ≠ δ_elc 0.32–0.91 | `holzer2013_…` · `wiedenmann2013_…` |
 
 - ⛔ **COMSOL Tortuosity 칸 = tau2** (√ 값 아님). 웹앱 · 내보내기의 "COMSOL/EIS input = τ_Lap,eff" 표기는 √ 값이라 그대로 넣으면 σ_eff 가 √tau2 배 과대 — 메인 리포 결함 `TAU-01` (P1) · 정정 방침 1저자 비준 2026-10-03 (결정 16 · 권고대로: 지금 표기 제거 · 이미 전달한 배포 v1 · v1.1 열 사전은 정오표 (값 불변) · v1.2 에서 문구 교체).  1저자 10-03: 지금까지 COMSOL 에 τ_Lap,eff 를 넘긴 적 없음 → COMSOL 런 소급 정정 대상 없음.
 - 같은 시료에서 τ_flux / τ_geo = 1.24–1.59 (Tjaden 표 4·5) — 기하 τ 로 수송을 대신하지 않는다.
@@ -4451,6 +4451,16 @@ Faraday FutureCat; 2026-09-26 추가; 원장 **SELF-51** 뿌리 감사 — [Sedl
   - **Park σ₀ 조성식 (−4.45·10⁻³·ε_s + 4.64·10⁻³) 출처**: Froboese 2019 · Park 2019 · Park 2020 CEJ 셋 다 아님 (원문 전수 확인) → `[미확인]` · Park 역산 T = 추세 전용 유지.  Park 2020 CEJ 의 SE 는 **산화물 LLZO-Ta · 흑연 음극** · Park 2019 는 흑연 + LSTP 음극 — 우리 LPSCl/NCM 과 이전 한계.
   - **Holzer 2013 에 M-factor (ε·β/τ²) 꼴 · 지수는 없다** (기대와 다름) · 분해식의 τ_geo 는 1 승 (Eq 11 · Fig 16).  Froboese 는 고분자 (PEO:LiTFSI) + 비활성 유리구 모델계 · 입경비 효과는 공정 기공과 교란 → 메모 결론 ④ 의 "입경비 지배" 는 "방향이 맞는 후보 중 하나" 로.
   - **원문 오식 · 불일치 추가** (각 카드 §10): Holzer Eq 8 역수 · Eq 9 부호 · "β = 1.77" · Froboese 인쇄 τ 791 (재계산 ≈80 — 인용 금지) · Pouraghajan z_c/z_cc 뒤바뀜 · 유한 Z₀ 가지 (재유도 전 사용 금지) · Park 2019 σ_eff 본문 ↔ 그림 · Park 2020 CEJ Table S3 ↔ 그림 4 건 · Hlushkou 1.34 ↔ 1.365 · Ender 질량 열 합 · Landesfeind 2018 R_Ion 전극 수 규약 · κ-불변 평균이 2016 원문과 다름.
+- **추가 10 편 (tortuosity_3 · 10-03 저녁) 에서 나온 것** — 결정 16 권고 변경 **없음** (10 편 모두 "no") · 메인 리포 부록 2 에 정리
+  - **M-factor 원전 닫힘**: Wiedenmann 2013 Eq 11 σ_eff/σ₀ = εβ/τ_geo — 지수 전부 1 은 유도 가정 (Eq 5) 에서 나온 값이고 맞춤이 아니다 (p.1448).  위 "Holzer 에 M-factor 꼴 · 지수 없음" 다음 단계 = **원전에도 경험 지수는 없다** · τ_geo 를 τ_geo² 로 바꾸면 측정/계산 0.74–1.37 → 1.27–2.65 (카드 산술) · √τ_elc/τ_geo 원표값 **0.77–1.30** (8 점 중 2 점 < 1 — 위 Holzer 카드 경유 0.76–1.46 대체).
+  - **Park σ₀ 조성식 출처 — Jung 2019 (Park [18b]) 에도 없다** (본문 10 쪽 + SI 10 쪽 전수 · S/cm 수치는 인용값 하나) → [18a–c] 어디에도 없음 = **출처 미상 모형 입력** (크기는 펠릿 수준) · Park 역산 tau2 = 추세 전용 유지.  Jung 의 ee-TLM: 복합체 이온 저항 중 입계 몫 91–93 % · 무코팅 40 h 숙성에 σ_i −59 % (LiNbO₃ −9 %) — 비-bulk 이온 항의 실측 크기 (계면 저항 트랙 · 펠릿 σ₀ 입계와 이중계상 주의).
+  - **기준 상태 장부가 또 늘었다**: Kato = 같은 SE 냉간 펠릿 ≡ 1 (420 MPa · LGPS 3.2 ↔ 소결 8.3 mS/cm → σ₀ 만 바꿔도 τ 2.47 ↔ 6.48) · ε · q · 두께 = 기공 0 기준 (상자 기준이면 τ × (1−p)²) · Asano = 한 논문 안 σ₀ 4.0 ↔ ≈3.5 (×1.14) · Thorat · Malifarge · Morasch · Cooper = 액체 벌크 (또는 수송 입력 D = 1) · Wiedenmann = 순수 KOH 0.645 S/cm (표 기준 행 τ ≡ 1).  ⇒ tau2 비교 전 σ₀ 출처 · ε 기준 (고체/상자) · 두께 장부를 같이 적는다.
+  - **EIS 는 연결형 · 경계형 · 방향까지 적는다**: Malifarge 해석식은 레일 대칭 (R_e ↔ R_i 를 바꿔도 같은 꼴) → 스펙트럼 하나로 이온/전자 레일을 못 가른다 = 독립 σ_el,eff 측정 필요 · Morasch 구배 전극 모의 −46…+66 % · 같은 전극 정/역 2.12× · Cooper 같은 τ·ε 인데 스펙트럼 다름 · 구배를 뒤집으면 폐쇄 저주파 실수부 ×3.1 · 1D 환산 −19/−23 %.  Kato 는 EIS 가 아니라 **율속 (용량–전류) · 옴 한계** 기반 tau2 (방법 내부 불일치 20–25 %).
+  - **Bruggeman · COMSOL τ_F 관례**: Thorat τ = 1.8 ε^−0.53 (α 1.53 · γ 1.8 · κ_eff = κε/τ) — α 1.5 이면 τ_F = ε^−½ 와 같은 꼴 → COMSOL τ_F 칸 = tau2 (메인 결정 5 지지 · 배터리 인터페이스 GUI 캡처는 여전히 필요) · Bruggeman 배수: Malifarge 판상 흑연 2.3–3.7× · Kato 1.86 / 2.51 · Morasch 구배 방향만으로 2.00–4.25× (카드 산술).
+  - **접촉 면적 (메인 결정 9 · LHS-25)**: Molerus 1975 인쇄 꼴은 σ = (F/d²)k(1−ε)/π (Eq 4 · d = 지름) — f = 4πR²p/(ZD) 는 그것을 F 로 푼 Arzt 판 (R = 1 이면 4πp/(ZD) · 4π 는 반지름과 짝) · "다이 압밀은 국소압으로" 단서는 Molerus 에 없다 (Arzt 문장) · 소성 접촉 A = F/p_f (p_f ≈ 3σ_f) = E3 꼴의 원전 · f = πδh 는 c² = 1 (기하 절단) → E2 값으로 쓰지 않는다.  Kakar 1967 D − D₀ = (3/2)D₀(a/R)² (Eq 6) · 실측 밀도 ≲ 0.71 (납 · 사파이어) 이라 Arzt 띠 (0.84–0.90) 의 c² 는 안 나온다 · 같은 부피 보존 모델로 D 0.84/0.90 c² 1.17–1.62 (Arzt 1.27/1.40 이 그 산포 안 · 카드 산술).
+  - **전자 tau2 (메인 결정 14)**: Asano σ_e 가 SOC 0 → 50 % 에서 조성마다 ×26 / ×34 / ×45 → f_e 자체가 상태 의존 · σ₀ 메타에 AM SOC 필수 · 기본 인계는 f_el 만.  Malifarge β (전자 ÷ 이온 저항) 로 Minnmann 본문값을 보면 β ≈ 20 → 0.002 (CAM 25 → 61 vol%) — "AM 등전위" 가정은 질량비 80:20 이상에서만 6 % 안 (카드 산술).
+  - **다른 카드 정정 후보 (이번 커밋에서 그 카드는 안 고침 · 새 카드 §10 에 근거)**: holzer2013 Archie m 배정 반대 (원문 ol 2.31 · wo 2.95) · τ_geo 평균 1.62 ↔ 원문 1.77 · landesfeind2016 Eq 4 [미확인] → 닫힘 · tjaden2018 41행 "AC + PI" (막은 PI 만) · nguyen2020 κ₀ 0.046 S/m 의 Thorat 귀속 (Landesfeind 2016 값) · nguyen2020 ref 42 "부록 eSCM 대응" (원문엔 Keiser · de Levie 대응) · arzt1982 "국소압" 귀속 (Arzt 문장) · minnmann2021 [27] "49 vol% 최적" · cronau2022 [22] "입경 감소 성공" (Asano 원문에 없음) · kim2025 · interfacial_impedance 의 "Morasch R_int/R_i" = **Morasch 2021** (JES 168 080519 · 정본 카드 없음) · park2020 §4 · froboese §8(f) "[18b] 미대조" → 대조 완료 (값 없음) · mcgeary1961 단순입방 53.36 ↔ π/6 = 52.36 %.
+  - **원문 오식 추가** (각 카드 §10): Kato Fig 1 (b)/(c) 표지 뒤바뀜 · 15.7 ↔ 15.8 mAh/cm² · Cooper p.685 저주파 극한 서술 · p.686 단위 · Morasch st 위상 극소 본문 39.1° ↔ 그림 ≈33.6° · Wiedenmann 14 건 · Jung 그림 2b ↔ 2c 이온 합 7.7 % · Thorat Stephenson γ 18 ↔ 21 · Kakar 능면체 0.65560 (0.65600 이 맞음).
 - LHS-25 (접촉 면적 합의 표면 한도): Arzt 1982 는 impingement 이후 규칙을 주지 않는다 — 후보 A (입자별 표면 예산) · B (라게르 면 상한) 는 `arzt1982_…` §LHS-25.
 
 ## 🗨️ Q&A 로그

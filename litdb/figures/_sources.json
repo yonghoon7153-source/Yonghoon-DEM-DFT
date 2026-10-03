@@ -61,6 +61,13 @@
    "4. The influence of an increasing particle coordination on the densification of spherical powders.pdf"
   ]
  },
+ "asano2017_ncm111_li3ps4_composite_electronic_ionic_conductivity": {
+  "figures": 5,
+  "generated": "2026-10-03",
+  "pdfs": [
+   "23. Electronic and Ionic Conductivities of LiNi13Mn13Co13O2-Li3PS4 Positive Composite Electrodes for All-Solid-State Lithium Batteries.pdf"
+  ]
+ },
  "asylbekov2023_cb_fragmentation_pbe_dem_dry_mixing": {
   "figures": 12,
   "generated": "2026-09-19",
@@ -255,6 +262,13 @@
   "pdfs": [
    "654e8db5-18._Impact_of_degradation_mechanisms_at_the_cathodeelectrolyte_interface_of_garnet-based_all-solid-state_batteries.pdf",
    "a4da61d2-18._Sup_Impact_of_degradation_mechanisms_at_the_cathodeelectrolyte_interface_of_garnet-based_all-solid-state_batteries.pdf"
+  ]
+ },
+ "cooper2017_simulated_impedance_diffusion_porous_media": {
+  "figures": 6,
+  "generated": "2026-10-03",
+  "pdfs": [
+   "25. Simulated impedance of diffusion in porous media.pdf"
   ]
  },
  "cronau2021_stack_pressure_ionic_conductivity": {
@@ -767,6 +781,14 @@
    "건식전극 논문/10. PPMA low P si anode ASSB.pdf"
   ]
  },
+ "jung2019_cathode_electrolyte_chemical_reaction_sulfide_assb": {
+  "figures": 12,
+  "generated": "2026-10-03",
+  "pdfs": [
+   "20. Understanding the effects of chemical reactions at the cathode–electrolyte interface in sulfide based all-solid-state batteries.pdf",
+   "20. Sup) Understanding the effects of chemical reactions at the cathode–electrolyte interface in sulfide based all-solid-state batteries.pdf"
+  ]
+ },
  "jung2023_single_crystal_ncm_morphology": {
   "figures": 7,
   "generated": "2026-08-05",
@@ -812,6 +834,13 @@
    "8. Sup) Ion transport limitations in all-solid-state lithium battery electrodes containing a sulfide-based electrolyte.pdf"
   ]
  },
+ "kakar1967_deformation_theory_hot_pressing": {
+  "figures": 8,
+  "generated": "2026-10-03",
+  "pdfs": [
+   "29. Deformation theory of hot‐pressing.pdf"
+  ]
+ },
  "kalikadien2026_uma_tm_catalyst_conformer_ranking": {
   "figures": 5,
   "generated": "2026-08-25",
@@ -849,6 +878,14 @@
   "generated": "2026-08-05",
   "pdfs": [
    "★ 랩실 논문/01. Intertwined nature of electrochemical reactions and mechanical instability in sulfide-based all-solid-state batteries.pdf"
+  ]
+ },
+ "kato2018_thick_electrode_assb_cycle_tortuosity": {
+  "figures": 14,
+  "generated": "2026-10-03",
+  "pdfs": [
+   "22. All-solid-state batteries with thick electrode configurations.pdf",
+   "22. Sup) All-solid-state batteries with thick electrode configurations.pdf"
   ]
  },
  "kauwe2021_ml_materials_properties_dissertation_sparks": {
@@ -1382,6 +1419,13 @@
    "117. MLIP_MACHIN1_MAIN.pdf"
   ]
  },
+ "malifarge2017_tortuosity_symmetric_cell_impedance_tlm": {
+  "figures": 6,
+  "generated": "2026-10-03",
+  "pdfs": [
+   "24. Determination of tortuosity using impedance spectra analysis of symmetric cell.pdf"
+  ]
+ },
  "marcolongo_ionic_correlations_failure_nernst_einstein": {
   "figures": 7,
   "generated": "2026-09-22",
@@ -1461,6 +1505,20 @@
   "generated": "2026-08-05",
   "pdfs": [
    "DEM 논문/24. Minnmann_2024_J._Electrochem._Soc._171_060514 Visualizing the Impact of the Composite Cathode Microstructure and Porosity on Solid-State Battery Performance.pdf"
+  ]
+ },
+ "molerus1975_theory_of_yield_cohesive_powders": {
+  "figures": 10,
+  "generated": "2026-10-03",
+  "pdfs": [
+   "28. Theory of yield of cohesive powders.pdf"
+  ]
+ },
+ "morasch2018_binder_gradient_impedance_tortuosity": {
+  "figures": 7,
+  "generated": "2026-10-03",
+  "pdfs": [
+   "27. Detection of binder gradients using impedance spectroscopy and their influence on the tortuosity of Li-ion battery graphite electrodes.pdf"
   ]
  },
  "morgan2021_anion_disorder_superionic_mechanism_li6ps5x": {
@@ -2047,6 +2105,13 @@
    "DEM 논문/07. Micromechanical analysis of cohesive granular materials using the discrete element method with an adhesive elasto-plastic contact model.pdf"
   ]
  },
+ "thorat2009_quantifying_tortuosity_porous_liion": {
+  "figures": 12,
+  "generated": "2026-10-03",
+  "pdfs": [
+   "26. Quantifying tortuosity in porous Li-ion battery materials.pdf"
+  ]
+ },
  "thorntonning1998_adhesive_elastoplastic_contact": {
   "figures": 7,
   "generated": "2026-08-05",
@@ -2248,6 +2313,13 @@
   "generated": "2026-08-05",
   "pdfs": [
    "DFT 먹인 논문/10. Ultraviolet photoelectron spectroscopy Practical aspects and best practices.pdf"
+  ]
+ },
+ "wiedenmann2013_pore_structure_ion_conductivity_ceramic_diaphragms": {
+  "figures": 10,
+  "generated": "2026-10-03",
+  "pdfs": [
+   "21. Three‐dimensional pore structure and ion conductivity of porous ceramic diaphragms.pdf"
   ]
  },
  "wilson2022_batch_active_learning_interatomic_potentials": {

@@ -1,0 +1,162 @@
+{
+ "slug": "asano2017_ncm111_li3ps4_composite_electronic_ionic_conductivity",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-03",
+ "sources": [
+  "23. Electronic and Ionic Conductivities of LiNi13Mn13Co13O2-Li3PS4 Positive Composite Electrodes for All-Solid-State Lithium Batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Summary of techniques and cell conﬁgurations used for electronic and ionic conductivity measurements. (SS: Stainless-steel plate).",
+   "rotated_deg": 0,
+   "bbox": [
+    302.0,
+    535.0,
+    548.5,
+    727.5
+   ],
+   "w": 1028,
+   "h": 803,
+   "dpi": 300,
+   "src": "23. Electronic and Ionic Conductivities of LiNi13Mn13Co13O2-Li3PS4 Positive Composite Electrodes for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.842,
+   "manual_crop": "auto crop stopped 1.5 pt short and cut the bottom border line of the table-style schematic; clip = full extent of the vector drawing on PDF p.2 = printed A3961 (2026-10-03)",
+   "viewed": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Time dependence of the current in the DC polarizations of the composite electrode with 48 vol. % of NMC in (a) ion-blocking cell (length: 0.032 cm, area: 0.816 cm2) and (b) electron-blocking cell (length: 0.034 cm, area: 0.843 cm2) under a constant voltage of 50 mV for 600 s.",
+   "rotated_deg": 0,
+   "bbox": [
+    29.9,
+    567.7,
+    556.0,
+    731.5
+   ],
+   "w": 2193,
+   "h": 683,
+   "dpi": 300,
+   "src": "23. Electronic and Ionic Conductivities of LiNi13Mn13Co13O2-Li3PS4 Positive Composite Electrodes for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.94,
+   "viewed": true
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 3,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Nyquist plot of the composite electrode (NMC: 48 vol. %, L (length): 0.032 cm) (rion: ionic resistance, re: electronic resistance).",
+   "rotated_deg": 0,
+   "bbox": [
+    296.9,
+    60.9,
+    556.0,
+    236.4
+   ],
+   "w": 1080,
+   "h": 733,
+   "dpi": 300,
+   "src": "23. Electronic and Ionic Conductivities of LiNi13Mn13Co13O2-Li3PS4 Positive Composite Electrodes for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.939,
+   "viewed": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4.png",
+   "caption": "Figure 4. (a) Electronic and Ionic conductivities of the composites (NMC: 48 vol. %, 55 vol. %, and 62 vol. %) measured by the DC polarization and the AC impedance techniques at SOC 0 % (before charging). (b) Electronic and Ionic conductivities of the composites at SOC 50 % measured by the DC polarization technique.",
+   "rotated_deg": 0,
+   "bbox": [
+    29.1,
+    537.9,
+    555.2,
+    722.4
+   ],
+   "w": 2193,
+   "h": 769,
+   "dpi": 300,
+   "src": "23. Electronic and Ionic Conductivities of LiNi13Mn13Co13O2-Li3PS4 Positive Composite Electrodes for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.907,
+   "viewed": true
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 4,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Reversible capacities at various current densities of all-solid-state cells as function of the volume ratio of NMC in the composite electrodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    296.1,
+    284.6,
+    555.2,
+    458.0
+   ],
+   "w": 1081,
+   "h": 724,
+   "dpi": 300,
+   "src": "23. Electronic and Ionic Conductivities of LiNi13Mn13Co13O2-Li3PS4 Positive Composite Electrodes for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.928,
+   "viewed": true
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "I",
+   "page": 4,
+   "file": "tab_1.png",
+   "caption": "Table I. Electronic and Ionic conductivities of the composite positive electrodes measured by the DC polarization and the AC impedance techniques at SOC 0 %.",
+   "rotated_deg": 0,
+   "bbox": [
+    33.5,
+    67.5,
+    551.0,
+    163.0
+   ],
+   "w": 2157,
+   "h": 399,
+   "dpi": 300,
+   "src": "23. Electronic and Ionic Conductivities of LiNi13Mn13Co13O2-Li3PS4 Positive Composite Electrodes for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.932,
+   "manual_crop": "auto extractor returned no table for Table I (full-width table at the top of PDF p.4 = printed A3962, not detected); clip = caption top to the last table row (2026-10-03)",
+   "viewed": true
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "II",
+   "page": 4,
+   "file": "tab_2.png",
+   "caption": "Table II. Electronic and Ionic conductivities of the composite positive electrodes at SOC 0 % and SOC 50 % measured by DC polarization technique.",
+   "rotated_deg": 0,
+   "bbox": [
+    33.5,
+    179.5,
+    551.0,
+    275.0
+   ],
+   "w": 2157,
+   "h": 399,
+   "dpi": 300,
+   "src": "23. Electronic and Ionic Conductivities of LiNi13Mn13Co13O2-Li3PS4 Positive Composite Electrodes for All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.925,
+   "manual_crop": "auto extractor returned no table for Table II (full-width table below Table I on PDF p.4 = printed A3962, not detected); clip = caption top to the last table row, above the resumed two-column body text (2026-10-03)",
+   "viewed": true
+  }
+ ],
+ "missing_labels": []
+}

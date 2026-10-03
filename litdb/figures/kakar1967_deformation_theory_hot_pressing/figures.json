@@ -1,0 +1,298 @@
+{
+ "slug": "kakar1967_deformation_theory_hot_pressing",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-03",
+ "sources": [
+  "29. Deformation theory of hot‐pressing.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "FIG. 1. Geometrical relationships of various models showing the critical stage.",
+   "rotated_deg": 0,
+   "bbox": [
+    40.3,
+    61.0,
+    265.5,
+    251.4
+   ],
+   "w": 940,
+   "h": 794,
+   "dpi": 300,
+   "src": "29. Deformation theory of hot‐pressing.pdf",
+   "blank": 0.925,
+   "manual_crop": "auto crop was a full page-width strip (right-column text included); clip = left-column figure, below the running head and above the caption on PDF p.3 (printed 3224); the curator's recommended bbox was checked on a render and tightened to the measured ink extent (2026-10-03)",
+   "viewed": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "FIG. 2. Theoretical relationship of R vs a/R for the proposed models.",
+   "rotated_deg": 0,
+   "bbox": [
+    38.1,
+    501.0,
+    259.7,
+    688.0
+   ],
+   "w": 925,
+   "h": 780,
+   "dpi": 300,
+   "src": "29. Deformation theory of hot‐pressing.pdf",
+   "blank": 0.942,
+   "manual_crop": "auto extractor found no graphic for this caption; clip = left-column plot incl. the stacked a/R axis label, above the caption on PDF p.4 (printed 3225); the curator's recommended bbox was checked on a render and tightened to the measured ink extent (2026-10-03)",
+   "viewed": true
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "FIG. 3. Theoretical relationship of a/R vs percent bulk density for the various models.",
+   "rotated_deg": 0,
+   "bbox": [
+    38.8,
+    61.0,
+    266.9,
+    213.0
+   ],
+   "w": 952,
+   "h": 634,
+   "dpi": 300,
+   "src": "29. Deformation theory of hot‐pressing.pdf",
+   "blank": 0.948,
+   "manual_crop": "auto extractor found no graphic for this caption; clip = left-column plot incl. the a/R axis label, below the running head and above the caption on PDF p.5 (printed 3226); the curator's recommended bbox was checked on a render and tightened to the measured ink extent (2026-10-03)",
+   "viewed": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "FIG. 4. Photomicrograph of the contact faces formed during hot-pressing of lead and sapphire spheres.",
+   "rotated_deg": 0,
+   "bbox": [
+    43.1,
+    536.0,
+    265.5,
+    656.2
+   ],
+   "w": 928,
+   "h": 502,
+   "dpi": 300,
+   "src": "29. Deformation theory of hot‐pressing.pdf",
+   "blank": 0.398,
+   "manual_crop": "auto crop was a full page-width strip (right-column text included); clip = left-column photomicrograph incl. the LEAD / SAPPHIRE labels, above the caption on PDF p.6 (printed 3227); the curator's recommended bbox was checked on a render and tightened to the measured ink extent (2026-10-03)",
+   "viewed": true
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "FIG. 5. Percent bulk density vs a/R for lead at room temperature and sapphire at ▲–1570°, ●–1600°, and ■–1700°C.",
+   "rotated_deg": 0,
+   "bbox": [
+    288.3,
+    61.7,
+    496.6,
+    279.0
+   ],
+   "w": 869,
+   "h": 906,
+   "dpi": 300,
+   "src": "29. Deformation theory of hot‐pressing.pdf",
+   "blank": 0.945,
+   "manual_crop": "auto crop held only the lower part of the plot plus left-column text; clip = right-column plot incl. the y-axis label, above the caption on PDF p.6 (printed 3227); the curator's recommended bbox was checked on a render and tightened to the measured ink extent (2026-10-03)",
+   "viewed": true
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "FIG. 6. Percent bulk density vs a/R for lead at 50° and 100°C.",
+   "rotated_deg": 0,
+   "bbox": [
+    43.9,
+    62.4,
+    256.8,
+    284.0
+   ],
+   "w": 888,
+   "h": 924,
+   "dpi": 300,
+   "src": "29. Deformation theory of hot‐pressing.pdf",
+   "blank": 0.935,
+   "manual_crop": "auto extractor found no graphic for this caption; clip = left-column plot incl. the a/R axis label, below the running head and above the caption on PDF p.7 (printed 3228); the curator's recommended bbox was checked on a render and tightened to the measured ink extent (2026-10-03)",
+   "viewed": true
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 7,
+   "file": "fig_7.png",
+   "caption": "FIG. 7. Experimental values of Z vs percent bulk density in the case of lead spheres.",
+   "rotated_deg": 0,
+   "bbox": [
+    40.3,
+    481.1,
+    263.3,
+    677.6
+   ],
+   "w": 931,
+   "h": 820,
+   "dpi": 300,
+   "src": "29. Deformation theory of hot‐pressing.pdf",
+   "blank": 0.931,
+   "manual_crop": "auto crop was a full page-width strip (right-column text and the Fig. 8 caption included); clip = left-column plot, above the caption on PDF p.7 (printed 3228); the curator's recommended bbox was checked on a render and tightened to the measured ink extent (2026-10-03)",
+   "viewed": true
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 7,
+   "file": "fig_8.png",
+   "caption": "FIG. 8. Percent bulk strain vs a/R for lead at different temperatures and sapphire at ▲–1570°, ●–1600°, and ■–1700°C.",
+   "rotated_deg": 0,
+   "bbox": [
+    291.9,
+    268.9,
+    485.1,
+    462.5
+   ],
+   "w": 806,
+   "h": 808,
+   "dpi": 300,
+   "src": "29. Deformation theory of hot‐pressing.pdf",
+   "blank": 0.941,
+   "manual_crop": "auto crop held only the lower half of the plot plus left-column text; clip = right-column plot incl. the a/R axis label, above the caption on PDF p.7 (printed 3228); the curator's recommended bbox was checked on a render and tightened to the measured ink extent (2026-10-03)",
+   "viewed": true
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 8,
+   "file": "fig_9.png",
+   "caption": "FIG. 9. Percent bulk density vs percent bulk strain for lead at different temperatures and sapphire at ■–1570°, ▲–1600°, and ●–1700°C.",
+   "rotated_deg": 0,
+   "bbox": [
+    56.8,
+    266.7,
+    249.7,
+    484.1
+   ],
+   "w": 805,
+   "h": 907,
+   "dpi": 300,
+   "src": "29. Deformation theory of hot‐pressing.pdf",
+   "blank": 0.93,
+   "manual_crop": "auto extractor found no graphic for this caption; clip = left-column plot incl. the bulk-strain axis label, above the caption on PDF p.8 (printed 3229); the curator's recommended bbox was checked on a render and tightened to the measured ink extent (2026-10-03)",
+   "viewed": true
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 8,
+   "file": "fig_10.png",
+   "caption": "FIG. 10. Percent bulk density vs a/R vs Z for lead at room temperature and sapphire at ▲–1570°, ●–1600°, and ■–1700°C.",
+   "rotated_deg": 0,
+   "bbox": [
+    304.9,
+    65.3,
+    488.7,
+    225.5
+   ],
+   "w": 767,
+   "h": 668,
+   "dpi": 300,
+   "src": "29. Deformation theory of hot‐pressing.pdf",
+   "blank": 0.929,
+   "manual_crop": "auto crop was a full page-width strip (left-column text included); clip = right-column 3D plot, below the running head and above the caption on PDF p.8 (printed 3229); the curator's recommended bbox was checked on a render and tightened to the measured ink extent (2026-10-03)",
+   "viewed": true
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 8,
+   "file": "fig_11.png",
+   "caption": "FIG. 11. Percent bulk density vs a/R vs Z for lead at 50° and 100°C.",
+   "rotated_deg": 0,
+   "bbox": [
+    308.4,
+    509.5,
+    482.2,
+    681.2
+   ],
+   "w": 725,
+   "h": 717,
+   "dpi": 300,
+   "src": "29. Deformation theory of hot‐pressing.pdf",
+   "blank": 0.925,
+   "manual_crop": "auto crop was a full page-width strip (left-column text and the Fig. 9 caption included); clip = right-column 3D plot incl. the LEAD legend, above the caption on PDF p.8 (printed 3229); the curator's recommended bbox was checked on a render and tightened to the measured ink extent (2026-10-03)",
+   "viewed": true
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 9,
+   "file": "fig_12.png",
+   "caption": "FIG. 12. D vs (a/R)² for lead at different temperatures and sapphire at ▲–1570°, ●–1600°, and ■–1700°C.",
+   "rotated_deg": 0,
+   "bbox": [
+    67.6,
+    63.2,
+    241.8,
+    297.7
+   ],
+   "w": 727,
+   "h": 978,
+   "dpi": 300,
+   "src": "29. Deformation theory of hot‐pressing.pdf",
+   "blank": 0.951,
+   "manual_crop": "auto extractor found no graphic for this caption; clip = left-column plot incl. the (a/R)² axis label, below the running head and above the caption on PDF p.9 (printed 3230); the curator's recommended bbox was checked on a render and tightened to the measured ink extent (2026-10-03)",
+   "viewed": true
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "I",
+   "page": 4,
+   "file": "tab_1.png",
+   "caption": "TABLE I. Basic models and their characteristics.",
+   "rotated_deg": 0,
+   "bbox": [
+    35.2,
+    60.2,
+    505.5,
+    196.2
+   ],
+   "w": 1961,
+   "h": 568,
+   "dpi": 300,
+   "src": "29. Deformation theory of hot‐pressing.pdf",
+   "blank": 0.937,
+   "manual_crop": "auto crop was the wrong region (truncated right half of the table plus body text and Fig. 2); clip = table title top to the end of the footnote line, full width of PDF p.4 (printed 3225); the curator's recommended bbox was checked on a render and tightened to the measured ink extent (2026-10-03)",
+   "viewed": true
+  }
+ ],
+ "missing_labels": []
+}

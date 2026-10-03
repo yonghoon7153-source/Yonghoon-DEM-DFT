@@ -1,7 +1,7 @@
 <!-- digest 표준 양식 확장 (paper-level STANDALONE).  ★ = 사용자가 특히 원한 항목.  깊이 기준 = bazzoun2026_dem_fem_rnm_ionic.md,
      τ 묶음 형식 기준 = landesfeind2016_tortuosity_eis_electrodes_separators.md · tjaden2018_… · taufactor_….
      이 논문은 시뮬레이션이 아니라 액체 전해질 LIB 의 *측정법 비교* 논문이다 → §4 를 두 측정 사슬 + 일반 전송선 모델 (TLM) 유도로 확장했다.
-     값 표지: stated = 본문·캡션·표 원문 / 그림 인쇄값 = 그림 안에 숫자로 찍힌 값 / 판독 = 그림 막대·곡선에서 읽은 값 (TREND 전용, 정밀 인용 금지)
+     값 표지: stated = 본문·캡션·표 원문 / 그림 인쇄값 = 그림 안에 숫자로 찍힌 값 / 판독 = 그림 막대·곡선에서 읽은 값 (TREND 전용, 정밀값으로 쓰지 않는다)
      / 파생 = 카드 작성자 계산 (식 명시) / 우리 유도 = 원문 식에서 카드 작성자가 끌어낸 극한·축약 (원문에 없음, 수치 검산 기록 §10-3). -->
 # 두 τ 측정법의 실측 비교 — DC 편극-중단 (polarization-interrupt, 확산 · eRDM) vs 차단 전해질 EIS (blocking-electrolyte, 전도 · eSCM) + 접촉저항 · 전하이동 · 전자 레일을 넣은 일반 전송선 모델 — Pouraghajan (J. Electrochem. Soc. 2018)
 

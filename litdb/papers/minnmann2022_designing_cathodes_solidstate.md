@@ -430,3 +430,5 @@ Fig 7은 *타 논문 그림 재인용*. 따라서 σ/porosity 수치 CSV를 만�
 2022 AEM 아님); 87 %@300 MPa = **Sakuda 2013**; pure-SE 10 % = 우리 MPM 보정 수렴값. 이 2022
 Perspective의 정량 기여 = 설계 임계(CAM 60–70 vol%, 3–5 µm, 작은 SE, tailored PSD)뿐. + refs.bib
 @Minnmann2021 → 040537/abf8d7로 정정 권고(파일 미수정).*
+
+> ⟦10-03 정정 — 메인 리포 원장 `CL-94` (hold)⟧ 위 판정문 앞부분의 *"~10 % pure-SE … = Minnmann 2021 JES 040537"* 귀속은 **틀렸다** — Minnmann 2021 본문 + SI 에 순수 SE 기공값도 300 MPa 도 없다 (정본 `minnmann2021_jes_charge_transport_bottlenecks` 10-03 원문 대조 · 있는 것은 380 MPa 복합 양극 기공 7.6–17 %, 평균 14 %).  같은 문장 끝의 *"pure-SE 10 % = 우리 MPM 보정 수렴값"* 이 맞는 쪽이다 → **출처 [미확인] · 외부 앵커 없음** (메인 결정 7 · TAU-10).  이 카드의 다른 서술은 바꾸지 않았다.

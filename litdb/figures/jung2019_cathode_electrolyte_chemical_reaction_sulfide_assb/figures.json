@@ -1,0 +1,266 @@
+{
+ "slug": "jung2019_cathode_electrolyte_chemical_reaction_sulfide_assb",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-03",
+ "sources": [
+  "20. Understanding the effects of chemical reactions at the cathode–electrolyte interface in sulfide based all-solid-state batteries.pdf",
+  "20. Sup) Understanding the effects of chemical reactions at the cathode–electrolyte interface in sulfide based all-solid-state batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 Chemical degradation between the cathode and solid electrolyte at the steady state. (a) Conﬁguration of the cell comprising only a cathode and an electrolyte to separate the chemical reaction eﬀects from decomposition parameters. Cross-sectional SEM images of the cathode and electrolyte composite pellet (1 : 1, v/v). (b) SEM and EDS mapping images of the solid-state composite electrode of NCM and argyrodite. (c and d) EIS spectra of the composite of uncoated bare NCM or LiNbO3-coated NCM with the argyrodite electrolyte. SEM images of the solid-state electrode of NCM and argyrodite before and after aging for (e and f) bare NCM and (g and h) LiNbO3 coated NCM.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    44.6,
+    558.8,
+    418.3
+   ],
+   "w": 2177,
+   "h": 1559,
+   "dpi": 300,
+   "src": "20. Understanding the effects of chemical reactions at the cathode–electrolyte interface in sulfide based all-solid-state batteries.pdf",
+   "blank": 0.581,
+   "viewed": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 Resistance increase induced by chemical reaction at the cathode–electrolyte interface as a function of time. (a) TLM as an equivalent circuit of the composite pellet having a porous structure, including both electronic and ionic pathways. Fitting results using the TLM to acquire (b) ionic and (c) electronic resistances of the bulk and grain boundary. Electronic resistance values of (d) bulk and (e) grain boundary as a function of time. Ionic resistance values of (f) bulk and (g) grain boundary as a function of time. (h) Electronic and (i) ionic capacitance changes at grain boundary. (j) Resistance increase of bare NCM or LiNbO3-coated NCM after 40 h aging with chemical reaction compared with that of a fresh cell.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    44.6,
+    558.8,
+    482.7
+   ],
+   "w": 2177,
+   "h": 1827,
+   "dpi": 300,
+   "src": "20. Understanding the effects of chemical reactions at the cathode–electrolyte interface in sulfide based all-solid-state batteries.pdf",
+   "blank": 0.805,
+   "viewed": true
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 Chemical analyses after chemical reaction at the cathode–electrolyte interface. (a and c) S 2p and (b and d) Cl 2p XPS spectra of the aged cell with bare NCM or LiNbO3-coated NCM on the surface (solid line) and after etching (dashed line) compared with those of pristine argyrodite. TOF-SIMS proﬁles as a function of sputtering time of fresh (left) and aged cells (right) of (e) bare NCM and (f) LiNbO3-coated NCM composite pellet.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    366.4,
+    558.8,
+    686.7
+   ],
+   "w": 2177,
+   "h": 1336,
+   "dpi": 300,
+   "src": "20. Understanding the effects of chemical reactions at the cathode–electrolyte interface in sulfide based all-solid-state batteries.pdf",
+   "blank": 0.823,
+   "viewed": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 Eﬀects of chemical instability at the cathode-solid electrolyte interface on electrochemical performance. (a) Electrochemical proﬁle of the ﬁrst cycle of the fresh cell (w/o rest) and aged cell (w/rest). Charge/discharge current densities are 16 and 7 mA g−1, respectively; (b) cyclability and energy eﬃciency of fresh and aged cells as a function of the number of cycles. Charge/discharge current densities for cycling are 50 and 80 mA g−1, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    44.6,
+    558.8,
+    287.0
+   ],
+   "w": 2177,
+   "h": 1011,
+   "dpi": 300,
+   "src": "20. Understanding the effects of chemical reactions at the cathode–electrolyte interface in sulfide based all-solid-state batteries.pdf",
+   "blank": 0.875,
+   "viewed": true
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 1,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. (a) XRD patterns of bare NCM powder and LiNbO3-coated NCM powder. (b) TEM image of LiNbO3-coated NCM. Scale bar is 50 nm.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    116.2,
+    523.3,
+    325.3
+   ],
+   "w": 1881,
+   "h": 872,
+   "dpi": 300,
+   "src": "20. Sup) Understanding the effects of chemical reactions at the cathode–electrolyte interface in sulfide based all-solid-state batteries.pdf",
+   "blank": 0.591,
+   "manual_crop": "auto crop included the 'Supporting information' page heading above the figure; clip = the single embedded raster bbox on SI p.1 (2026-10-03)",
+   "viewed": true
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 2,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Surface TEM and EDS mapping images of LiNbO3-coated secondary and single particle of NCM electrode.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.0,
+    529.3,
+    416.5
+   ],
+   "w": 1931,
+   "h": 1407,
+   "dpi": 300,
+   "src": "20. Sup) Understanding the effects of chemical reactions at the cathode–electrolyte interface in sulfide based all-solid-state batteries.pdf",
+   "blank": 0.156,
+   "viewed": true
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 3,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Cross-section SEM images of cathode and electrolyte composite pellet (1:1, v/v).",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.1,
+    527.6,
+    402.3
+   ],
+   "w": 1924,
+   "h": 1348,
+   "dpi": 300,
+   "src": "20. Sup) Understanding the effects of chemical reactions at the cathode–electrolyte interface in sulfide based all-solid-state batteries.pdf",
+   "blank": 0.092,
+   "viewed": true
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 4,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. In-situ SEM image during chemical reaction between bare NCM and argyrodite without external pressure in vacuum state. (Left) Fresh composite pellet of bare NCM and argyrodite. (Right) SEM image after 5 days. Yellow arrows indicate microstructural changes. Scale bar is 10 micrometer.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.7,
+    79.0,
+    532.3,
+    282.6
+   ],
+   "w": 1949,
+   "h": 849,
+   "dpi": 300,
+   "src": "20. Sup) Understanding the effects of chemical reactions at the cathode–electrolyte interface in sulfide based all-solid-state batteries.pdf",
+   "blank": 0.131,
+   "viewed": true
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 5,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. Difference in XPS peak (solid line: surface versus pristine electrolyte; dash-dot line: etched region versus surface) for (a) bare NCM and (b) LiNbO3-coated NCM with argyrodite electrolyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.1,
+    529.3,
+    261.9
+   ],
+   "w": 1931,
+   "h": 763,
+   "dpi": 300,
+   "src": "20. Sup) Understanding the effects of chemical reactions at the cathode–electrolyte interface in sulfide based all-solid-state batteries.pdf",
+   "blank": 0.914,
+   "viewed": true
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 6,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. P 2p XPS spectra of aged cell with bare NCM or LiNbO3-coated NCM at the surface (solid line) and after etching (dashed line) compared with that of pristine argyrodite.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.1,
+    529.3,
+    652.8
+   ],
+   "w": 1931,
+   "h": 2391,
+   "dpi": 300,
+   "src": "20. Sup) Understanding the effects of chemical reactions at the cathode–electrolyte interface in sulfide based all-solid-state batteries.pdf",
+   "blank": 0.933,
+   "viewed": true
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 7,
+   "file": "tab_S1.png",
+   "caption": "Table S1. EIS fitting parameter for bare NCM and argyrodite composite",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    80.6,
+    531.3,
+    574.9
+   ],
+   "w": 1935,
+   "h": 2061,
+   "dpi": 300,
+   "src": "20. Sup) Understanding the effects of chemical reactions at the cathode–electrolyte interface in sulfide based all-solid-state batteries.pdf",
+   "blank": 0.913,
+   "viewed": true
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 8,
+   "file": "tab_S2.png",
+   "caption": "Table S2. EIS fitting parameter for LiNbO3-coated NCM and argyrodite composite",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    80.6,
+    529.3,
+    577.6
+   ],
+   "w": 1927,
+   "h": 2072,
+   "dpi": 300,
+   "src": "20. Sup) Understanding the effects of chemical reactions at the cathode–electrolyte interface in sulfide based all-solid-state batteries.pdf",
+   "blank": 0.908,
+   "viewed": true
+  }
+ ],
+ "missing_labels": []
+}
