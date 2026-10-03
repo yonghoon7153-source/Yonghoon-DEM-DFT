@@ -36,14 +36,26 @@
   "tmux": "cv7probe",
   "log": "~/work/runs/cascade_v7_probe_1003.log",
   "gpu_start_max_mib": 16000,
-  "감시": "python3 ~/bin/cv7_watch.py (tools/doping/watch_cv7probe.py 를 `git -C ~/lldvar show FETCH_HEAD:…` 로 꺼낸 사본 · stdlib · 읽기만 · D 없음 · 러너 worktree 를 안 건드린다) 또는 러너 --status — ⛔ out_root/logs/<태그>.log · msd.json 은 열지 않는다 (드라이버가 D 를 쓴다)"
+  "감시": "python3 ~/bin/cv7_watch.py [--loop 300] (tools/doping/watch_cv7probe.py 를 `git -C ~/lldvar show FETCH_HEAD:…` 로 꺼낸 사본 · stdlib · 읽기만 · D 없음 · 러너 worktree 를 안 건드린다) 또는 러너 --status — ⛔ out_root/logs/<태그>.log · msd.json 은 열지 않는다 (드라이버가 D 를 쓴다)"
  },
  "repo_구조_sha16": {
   "H0_host": "5bca9a4f1d9bc119",
   "P1_Al2O3_C": "ed8c8fc11d1adb75",
   "P2_Al2S3_C": "6d585560dce5d0d8"
  },
- "발사": null,
+ "발사": {
+  "출처": "사용자 붙여넣기 10-03 20:28:30 (cv7_watch · 러너 로그 끝 줄) — 결과값 출력 없음",
+  "첫_런_시작_KST": "2026-10-03 20:24:38 (러너 로그 '▶ H0_host__T800__s1' 줄)",
+  "러너_PID": 1960683,
+  "tmux": "cv7probe (P1b 의 agc 와 함께)",
+  "worktree_HEAD": "a2924895 (~/wt_cv7probe_1003)",
+  "사전점검_dry_run_20_21_47": "selftest PASS (kgy uma python) · 상한 141.0 (원장) · 준비 3 구조 수렴·입력 해시 = repo 구조 (H0_host 208 원자 sha16 126476a9c0f5a28d · P1_Al2O3_C 204 원자 49ae8eb539264c08 · P2_Al2S3_C 204 원자 25729b035d928dfe) · 드라이버 sha16 c3e2d358ee53cefa (li2s v2 와 같음) · 판독기 sha16 1068046cb2398ea2 · 판독기 selftest PASS · 계획 12 줄 개정 순서 그대로",
+  "GPU_합계": "시작 직전 5,271 MiB → 3.6 분 뒤 7,834 MiB · 사용률 100 % (P1b pw.x 와 공유 — 증가분 ≈ 2.6 GB 는 프로세스별이 아니라 합계 차이)",
+  "디스크": "320 GB 여유",
+  "첫_외삽": "0.06 h 에 md.log 2.4 / 405 ps → 남은 ≈ 10.7 h · 예상 끝 10-04 07:10 (이 런 속도 외삽 · UMA 로드 포함 · 공유 변동에 따라 빗나간다)",
+  "판독기_첫_지목": "next [800, 'H0_host', 1] · '800 K: 계획 6 런 중 0 런 통과 · 남은 6 — 전부 통과해야 T* 다'",
+  "비용_게이트": "누적 0.00 + 단가 11.80 (추정) ≤ 상한 141"
+ },
  "⛔": [
   "탐침 출력·감시 화면에 D 를 싣지 않는다 · 대표 쌍의 D 를 열지 않는다 (개정 §6)",
   "탐침 결과를 보고 사다리 · 시드 · 문턱 · 생산 길이 · 대표 부모를 바꾸지 않는다 — 바꾸면 새 카드",

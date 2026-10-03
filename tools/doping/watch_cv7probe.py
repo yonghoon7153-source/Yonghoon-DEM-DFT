@@ -2,7 +2,8 @@
 """watch_cv7probe.py — cascade v7 탐침 한 화면 (run_cascade_v7_probe.py 의 감시 짝 · 읽기만 · **D 없음**).
 
     python3 ~/bin/cv7_watch.py                              # 기본 out_root ~/work/runs/cascade_v7_probe_1003
-    watch -n 600 -t python3 ~/bin/cv7_watch.py
+    python3 ~/bin/cv7_watch.py --loop 300                   # 5 분마다 화면을 지우고 다시 그린다 (Ctrl-C 로 끝)
+      ⚠ `watch -n …` 는 화면 폭보다 긴 줄을 **잘라 버린다** (줄바꿈 안 함) — 그래서 --loop 를 따로 둔다.
     python3 tools/doping/watch_cv7probe.py --selftest
 
 배포 — 러너가 도는 worktree(~/wt_cv7probe_1003)를 **건드리지 않고** repo 에서 이 파일만 꺼낸다.
@@ -43,6 +44,7 @@ from pathlib import Path
 
 DEFAULT_OUT = "~/work/runs/cascade_v7_probe_1003"
 SESSION = "cv7probe"
+OTHER_SESSIONS = {"agc": "P1b"}             # 같은 GPU 를 나눠 쓰는 잡 — 있는지만 보인다
 RUNNER_NAME = "run_cascade_v7_probe"
 SUBDIR = "d0.00_cfg0"
 JUDGE_KEYS = ("T_K", "structure", "seed", "eligible", "framework_alarm", "sub_window_ratios", "events", "error")
@@ -132,8 +134,12 @@ def report(out_root, log=None, now=None, nvsmi="nvidia-smi", tmux="tmux") -> tup
         return 2, L + ["⛔ out_root 가 없다 — 탐침이 아직 안 떴거나 경로가 다르다 (--out_root)"]
     state, _ = runner_state(out_root)
     sess = _sh([tmux, "ls", "-F", "#S"])
-    L.append(f"① {state} · tmux 세션: {', '.join(sess.split()) if sess else '없음/못 읽음'}"
-             + ("" if sess and SESSION in sess.split() else f" (⚠ {SESSION} 없음)"))
+    names = sess.split() if sess else []
+    shown = [f"{SESSION} {'✓' if SESSION in names else '⚠ 없음'}"] + \
+            [f"{k}({v}) {'✓' if k in names else '없음'}" for k, v in OTHER_SESSIONS.items()]
+    rest = len([n for n in names if n != SESSION and n not in OTHER_SESSIONS])
+    L.append(f"① {state} · tmux " + (" · ".join(shown) + (f" · 그 밖 {rest} 개" if rest else "") if sess is not None
+                                     else f"못 읽음 (⚠ {SESSION} 없음)"))
     try:
         age = (now - log.stat().st_mtime) / 60.0
         L.append(f"   러너 로그 {log.name} · 마지막 갱신 {age:.0f} 분 전 (러너는 30 분마다 진행 줄을 쓴다)")
@@ -192,6 +198,22 @@ def report(out_root, log=None, now=None, nvsmi="nvidia-smi", tmux="tmux") -> tup
     return 0, L
 
 
+def loop(out_root, log, every, n=None, out=sys.stdout) -> int:
+    """every 초마다 화면을 지우고 다시 그린다. Ctrl-C 로 끝 (rc 0). n 은 시험용 반복 수."""
+    k = 0
+    try:
+        while n is None or k < n:
+            rc, L = report(out_root, log)
+            out.write("\033[2J\033[H" + "\n".join(L) + f"\n\n(다음 갱신 {every:g} 초 뒤 · Ctrl-C 로 끝)\n")
+            out.flush()
+            k += 1
+            if n is None or k < n:
+                time.sleep(every)
+    except KeyboardInterrupt:
+        pass
+    return 0
+
+
 def _selftest() -> int:
     fails = []
 
@@ -237,6 +259,17 @@ def _selftest() -> int:
         ck("⛔ D 봉인: 판독 산출물·msd.json·런 로그의 D 가 화면에 없다", "9.87" not in txt and "1.234" not in txt and "D_Li" not in txt)
         ck("⛔음성 잠금 PID 가 러너가 아니면(PID 재사용) '살아 있음' 이라 하지 않는다", "다른 프로세스" in txt and "살아 있음 (PID" not in txt)
         ck("⛔음성 GPU·tmux 못 읽음 → '못 읽음/없음' (비어 있음 아님)", "GPU 못 읽음" in txt and "⚠ cv7probe 없음" in txt)
+        ft = tmp / "tmux"
+        ft.write_text("#!/bin/sh\nprintf 'agc\\ncv7probe\\nfoo\\nbar\\n'\n"); ft.chmod(0o755)
+        _, L = report(out, now=now, nvsmi="/bin/false", tmux=str(ft))
+        ck("tmux: 우리 세션 ✓ · P1b(agc) ✓ · 나머지는 개수만", "cv7probe ✓ · agc(P1b) ✓ · 그 밖 2 개" in "\n".join(L))
+        ft.write_text("#!/bin/sh\nprintf 'foo\\n'\n")
+        _, L = report(out, now=now, nvsmi="/bin/false", tmux=str(ft))
+        ck("⛔음성 우리 세션이 없으면 '⚠ 없음'", "cv7probe ⚠ 없음" in "\n".join(L) and "agc(P1b) 없음" in "\n".join(L))
+        import io
+        buf = io.StringIO()
+        loop(out, None, 0, n=2, out=buf)
+        ck("--loop: 화면을 지우고 n 번 다시 그린다", buf.getvalue().count("\033[2J") == 2 and buf.getvalue().count("════ cascade v7") == 2)
         p = subprocess.Popen([sys.executable, "-c", "pass"])
         p.wait()
         (out / ".runner.lock").write_text(f"{p.pid}\n")
@@ -269,10 +302,13 @@ def main() -> int:
     ap = argparse.ArgumentParser(description="cascade v7 탐침 감시 (읽기만 · D 없음)")
     ap.add_argument("--out_root", default=DEFAULT_OUT)
     ap.add_argument("--log", default=None, help="러너 로그 (기본 <out_root>.log)")
+    ap.add_argument("--loop", type=float, default=None, metavar="SEC", help="SEC 초마다 다시 그린다 (Ctrl-C 로 끝)")
     ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args()
     if a.selftest:
         return _selftest()
+    if a.loop:
+        return loop(a.out_root, a.log, max(a.loop, 5.0))
     rc, L = report(a.out_root, a.log)
     print("\n".join(L))
     return rc
