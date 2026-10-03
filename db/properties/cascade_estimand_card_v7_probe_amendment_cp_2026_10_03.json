@@ -2,7 +2,7 @@
  "schema": "campaign_prereg_amendment/v1",
  "record_kind": "amendment",
  "date": "2026-10-03",
- "status": "proposed — 사용자 결정 4 반영 (10-03 AskUserQuestion) · 개정 전문 비준 대기 · 탐침 GPU 0",
+ "status": "ratified (2026-10-03 · 사용자 · cascade 1저자) — 탐침 실행은 별도 승인 (400 ps 러너 · kgy · 시점) · 탐침 GPU 0",
  "track": "cascade (1저자 = 사용자 · 통지할 제3자 없음)",
  "citable": false,
  "results_seen": false,
@@ -75,6 +75,12 @@
    "state": "proposed",
    "by": "사용자 결정 4 (AskUserQuestion) + 에이전트 초안",
    "note": "회신 CP 수령 → 에이전트가 P0-1 판독기 수정(selftest 59 → 74 · 깨기 8/8) · 합성 null 재현(200 ps 가 회신과 같음) + 400 · 800 ps 확장 → AskUserQuestion 넷의 답: '생산 400 ps 로 늘림 (Recommended)' · '다음 사다리 온도로 (Recommended)' · '제외 · 탐침 전용 시드 (Recommended)' · '결속 + 경보 거부권 (Recommended)' → 판독기에 반영 (selftest 91 · 새 규칙 깨기 9/9). 트랙 cascade = 사용자 1저자 — 통지할 제3자 없음. 개정 전문(대표 부모 C 추첨 · 예산 · 문구)은 비준 전이다."
+  },
+  {
+   "at": "2026-10-03",
+   "state": "ratified",
+   "by": "사용자 (cascade · 1저자)",
+   "note": "사용자 비준 (AskUserQuestion '비준 (Recommended)') — 개정 전문 (대표 부모 C · 탐침 시드 3·4 · 예산 추정 · 허용 문구 포함)."
   }
  ]
 }

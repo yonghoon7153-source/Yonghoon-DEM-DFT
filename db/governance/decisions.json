@@ -6709,7 +6709,7 @@
    "title": "cascade D_rel v7 (초안) — 무도핑 H0 탐침이 v6 자격을 먼저 통과하는 가장 낮은 온도 T* (800 → 1000 K) 에서만 본 라운드",
    "statement": "v6(600 K · 방법상 무효)의 재개가 아니라 마감 §5 의 **새 카드**다. 바꾸는 것은 온도 하나(600 K → T*). 탐침: 무도핑 H0 만 · 800 K seed 1 → seed 2 → (불통과면) 1000 K seed 1 → seed 2 · 통과 = v6 와 같은 자격(aggregation_eligible · 카드 정의 곡선) ∧ 골격 경보 ok/framework_static · 두 시드 다 통과한 가장 낮은 온도 = T* · 둘 다 불통과면 열지 않는다. 그 외(셀 · 공통부피 · 처방 · 부모 10 · 시드 2 · 프로토콜 · 집계 · δ)는 v6 그대로. 탐침 출력에 D 값을 싣지 않는다.",
    "rationale": "v6 는 600 K · 200 ps 에서 Li MSD 가 2–100 ps 내내 휘어(H0 포함) 보고량이 정의되지 않았다. 같은 600 K 에서 런을 늘려도 판정 창의 휨은 그대로라, 직선 구간에 닿는 조건을 바꿔야 한다. 온도는 준비 구조를 그대로 쓰는 가장 싼 손잡이다(무질서 호스트는 준비부터 · 늦은 창은 4 배). P1/P2 비교는 탐침에서 보지 않으므로 손잡이 선택이 그 비교에 끌려가지 않는다.",
-   "decision_state": "proposed",
+   "decision_state": "active",
    "record_kind": "estimand_card",
    "results_seen": false,
    "card": "db/properties/cascade_estimand_card_v7_probe_2026_10_01.json",
@@ -6736,17 +6736,30 @@
     "견적": "v6 실측 ≈ 5.89 h/런 × 최대 4 런 ≈ 24 GPU-h"
    },
    "proposed_by": "claude-session-2026-10-01",
-   "status": "proposed",
+   "status": "active",
    "status_history": [
     {
      "at": "2026-10-01",
      "state": "proposed",
      "by": "agent",
      "note": "사용자 AskUserQuestion '탐침 카드부터 쓴다'. ⏳ 외부 리뷰 · 사용자 비준 · 탐침 실행 승인. 트랙 cascade = 사용자 1저자."
+    },
+    {
+     "at": "2026-10-03",
+     "state": "active",
+     "by": "사용자 (cascade · 1저자)",
+     "note": "AskUserQuestion '비준 (Recommended)'. 개정 CP (D-2026-10-03-cascade-v7-amend-cp) 와 함께 비준 — 카드 원문(200 ps · H0 만 탐침 · 4 런 30 GPU-h)이 개정과 충돌하면 **개정이 이긴다**. 외부 리뷰 = 회신 CP (NO-GO 초안 그대로 → 개정으로 이행). 탐침 실행 · 본 라운드 상한은 별도 승인. 트랙 cascade = 사용자 1저자 — 통지할 제3자 없음."
     }
    ],
    "ratification": {
-    "state": "proposed"
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-10-03T09:31:45Z",
+    "commit": "07e4577b0366ffe3b4eab9f84517ec14f985d364",
+    "decision_digest": "sha256:00a2693cf3c87f60421ec750a7d413467a8244b9bd3aaebdd39ebadc6c838c82",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "비준_근거": "사용자 2026-10-03 — AskUserQuestion '비준 (Recommended)' (cascade v7 카드 + 개정 CP 함께 · 탐침 실행은 별도 승인)."
    }
   },
   {
@@ -6845,7 +6858,7 @@
    "title": "cascade D_rel v7 개정 CP — 회신 CP 이행: 판독기 온도 결속 · 생산 400 ps · 대표 부모 C 쌍 탐침(사다리 결속) · 탐침 시드 집계 제외 · 본 라운드 결속 + 골격 경보 거부권",
    "statement": "카드 v7 (proposed) 을 회신 CP 대로 고친다. ① 판독기가 온도(msd·aimd·폴더·태그·사다리)·prod·dt·save·시간축 끝을 결속한다 (이행됨 · v6 경로 제외). ② 생산 200 → 400 ps — 자격 기준과 창은 그대로. ③ 각 사다리 온도에서 H0 시드 1·2 + 부모 C 의 P1/P2 × 탐침 시드 3·4 (계획 6 런) 가 전부 자격 통과여야 T* · 하나라도 불통과면 다음 사다리 온도 · 1000 K 도 탈락이면 열지 않는다 · 부모 교체 없음 · D 봉인. ④ 탐침 시드 3·4 런은 최종 집계에서 제외 — 본 라운드는 T* 에서 40 런 (시드 1·2) 새로. ⑤ 본 라운드 판정 = judge_eprime --card v7 (T* 는 탐침 산출물에서만 · 결속 + 골격 경보 거부권 · v6 §4 집계). ⑥ 허용 문구 = 회신 Q-CP-4 권장 문구 + 자격 통과 집합 조건부. 예산: 탐침 ≤ 12 런 ≈ 141 GPU-h (추정) · 본 라운드는 탐침 실측 단가 × 40 으로 첫 런 전 비준.",
    "rationale": "회신 CP: 초안 그대로 실행 NO-GO (P0 3 · P1). 합성 브라운 null 로 200 ps 는 이상 확산도 런당 22 % 탈락(회신과 같음) · 같은 기준·같은 창에서 400 ps 는 ≈ 1 %, 800 ps 는 0 % — 기준을 풀지 않고 표집 잡음을 줄이는 쪽을 골랐다 (사용자 결정). H0 는 처방 셀의 충분조건이 아니라서 대표 쌍을 같은 온도에서 먼저 본다. 탐침 시드를 집계에서 빼야 착수 조건의 선택 효과가 집계에 안 들어간다. 골격 경보는 사각이 있어 거부권으로만 쓴다.",
-   "decision_state": "proposed",
+   "decision_state": "active",
    "record_kind": "amendment",
    "results_seen": false,
    "card": "db/properties/cascade_estimand_card_v7_probe_amendment_cp_2026_10_03.json",
@@ -6876,17 +6889,30 @@
     "견적": "400 ps ≈ 11.8 GPU-h/런 (v6 5.89 × 2 · 추정) × 최대 12 런"
    },
    "proposed_by": "claude-session-2026-10-03 (대피 세션 claude/evac-2026-10-02)",
-   "status": "proposed",
+   "status": "active",
    "status_history": [
     {
      "at": "2026-10-03",
      "state": "proposed",
      "by": "사용자 결정 4 (AskUserQuestion) + 에이전트 초안",
      "note": "AskUserQuestion 답: '생산 400 ps 로 늘림 (Recommended)' · '다음 사다리 온도로 (Recommended)' · '제외 · 탐침 전용 시드 (Recommended)' · '결속 + 경보 거부권 (Recommended)'. 트랙 cascade = 사용자 1저자 (통지할 제3자 없음). 개정 전문은 비준 전 — 대표 부모 C 추첨 · 예산 · 문구를 포함한 전문을 사용자가 비준하면 active."
+    },
+    {
+     "at": "2026-10-03",
+     "state": "active",
+     "by": "사용자 (cascade · 1저자)",
+     "note": "AskUserQuestion '비준 (Recommended)'. 개정 전문 비준 (대표 부모 C 추첨 · 탐침 시드 3·4 · 예산 추정 · 허용 문구 포함). 탐침은 400 ps 러너 작성 · 실행 승인(kgy · 시점) 뒤. 본 라운드 상한(탐침 실측 단가 × 40)은 첫 런 전에 다시 비준. 트랙 cascade = 사용자 1저자 — 통지할 제3자 없음."
     }
    ],
    "ratification": {
-    "state": "proposed"
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-10-03T09:31:45Z",
+    "commit": "07e4577b0366ffe3b4eab9f84517ec14f985d364",
+    "decision_digest": "sha256:d7c93290f60d2125298fefc0c402574aad523d3ea92b6f1f03dda7cad7211fc6",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "비준_근거": "사용자 2026-10-03 — AskUserQuestion '비준 (Recommended)' (cascade v7 카드 + 개정 CP 함께 · 탐침 실행은 별도 승인)."
    }
   }
  ]

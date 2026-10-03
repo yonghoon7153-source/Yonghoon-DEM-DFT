@@ -3,7 +3,7 @@
  "kind": "estimand",
  "record_kind": "estimand_card",
  "date": "2026-10-01",
- "status": "proposed — 사용자(cascade 1저자) 비준 전 · 외부 리뷰 전 · 탐침 실행 전",
+ "status": "ratified (2026-10-03 · 사용자 · 개정 CP 와 함께 — 충돌하면 개정이 이긴다) · 외부 리뷰 = 회신 CP · 탐침 실행 전",
  "citable": false,
  "results_seen": false,
  "system": "lpscl_cascade_pilot",
@@ -100,6 +100,12 @@
    "state": "proposed",
    "by": "agent (기록)",
    "note": "회신 CP 수령 (NO-GO 초안 그대로 · 방향 조건부 GO) → 개정 CP `cascade_estimand_card_v7_probe_amendment_cp_2026_10_03.json` (proposed · 사용자 결정 4 반영). 이 카드의 원문(200 ps · H0 만 탐침 · 4 런 30 GPU-h)은 리뷰 받은 판이라 그대로 둔다 — 개정과 충돌하면 개정이 이긴다 (비준 뒤)."
+  },
+  {
+   "at": "2026-10-03",
+   "state": "ratified",
+   "by": "사용자 (cascade · 1저자)",
+   "note": "사용자 비준 (AskUserQuestion '비준 (Recommended)') — 개정 CP 와 함께. 원문은 리뷰 받은 판 그대로 둔다."
   }
  ],
  "by": "claude-session-2026-10-01 (초안)"
