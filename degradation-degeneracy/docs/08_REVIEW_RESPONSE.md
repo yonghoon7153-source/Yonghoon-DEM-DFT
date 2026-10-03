@@ -8918,3 +8918,22 @@ attempt / 순서 위반 음성) → 최소 GREEN → 변이 (`-g88` · 순서 ·
 등록부 전체 변이 재생 → GATE88. 변경 파일이 기존 승인 (§126 · §13-1 상한 `tools/preserve.py` · `src/fitting.py` · `run.sh`) 을 넘으면
 그 차이만 먼저 승인 요청. 이 회신은 구현 · 시험 실행 승인이 아니다. 이미 수용한 부분과 과거 원문 · 중단/실패 기록은 다시 열거나
 고치지 않는다.
+
+## §129 G87-N1 한정 보완 착수 승인 기록 — v6 fit-only claim 의 phase 계약 (2026-10-03 · 구현 전 · 실행 GO 아님)
+
+**사용자 결정 (2026-10-03):** "관련해서 codex 보낼거 부탁하고 게잍 ㅡ는 계약대로 착수하자" — 채팅 승인 질문 (§128 다음) 의 선택지 1
+"이 계약대로 착수". 같은 메시지의 앞 절반 (pybamm 상한 · REIL 외부 검증의 Codex 사전 검토 요청문) 은 이 게이트 라운드와 **섞지 않는다**
+— 별도 문서 · 별도 발송.
+
+**범위 · 고정:** `docs/22p_gap/STAGE3_IMPL_ROUND1_SPEC.md` **§14** (이 커밋 · 코드 변경 전). 요지 — 생산 파일 상한 `tools/preserve.py` ·
+`src/fitting.py` (§13-1 경계 안 · `run.sh` · `src/io.py` · `src/grid.py` 불변 → 경계 확장 승인 불필요) · claim 의 phase 집합은 승인 spec
+이 정한다 (`leg_spec_version 2` → grid → fit 그대로 · `3` + `fit.in_digest` hex64 → fit 하나 · `3` + null → 계획 index 에서 거부) ·
+v3 claim 만 `phases_required: ["fit"]` 봉인 (v2 claim 키 · 바이트 불변) · fit-only 의 fit receipt 에 실제로 읽은 staged 입력 묶음의
+digest 결속 · `finalize_leg` 가 계획 `fit.in_digest` 와 재대조 + phase 집합 재유도 대조 · 실행 기록에 grid 를 적지 않는다.
+
+**하지 않음 (리뷰어 명시 + 승인 밖 그대로):** v2 순서 규칙 삭제 · 가짜 grid 영수증 · 선행 영수증 수동 삽입 · smoke 우회 ·
+claim/phase/종결 함수 대체 · grid v6 · `--mode all` v6 · 실행 GO · 새 연구 leg · 운영 원장 v6 계획 · 세대표 등록 · p_ini ·
+class/투영 게시 · requirements 상한 (§13-7 보류 그대로 — 사전 검토 요청은 별도).
+
+**절차:** RED (`tests/test_gate88_fit_only_lifecycle.py` — 격리 원장 · 비-smoke 출력 · 실제 입력 묶음 digest) → 최소 GREEN → 변이
+`-g88` → 영수증 history 보존 + 1 회 재생성 → 전체 회귀 · smoke · 등록부 전체 변이 재생 → GATE88 요청문.

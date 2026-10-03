@@ -318,3 +318,41 @@ RED 에서 "통과" 로 떨어지는 node 가 실제 결함 증거다 (s00 의 �
 ### 13-7. 보류 (이 라운드에 넣지 않음)
 
 `requirements.txt` 의 pybamm 상한 고정 (26.9 #5755 가 합성 truth 를 ≤2.7 mV 움직임 — `wiki/entities/pybamm.md`) 은 RUN_SCOPE 변경이라 같은 영수증 사이클을 탈 수 있지만 **범위가 섞인다**. 사용자가 따로 정하기 전에는 넣지 않는다.
+
+## §14 G87-N1 한정 보완 — v6 fit-only claim 의 phase 계약 (2026-10-03 · 코드 변경 전 · 사용자 승인 "계약대로 착수하자" · 원문은 원장 §129)
+
+> §1–§13 불변. 87차 회신 (원장 §128) 이 2b 종결을 G87-N1 (P1) 한 건으로 보류했다. 좌표는 `b8d4b693` (= 현재 RUN_SCOPE · source_digest `864edfb73b9695a1`). **실행 GO 아님.**
+
+### 14-1. 범위
+
+| 항목 | 내용 |
+|---|---|
+| 항목 | G87-N1 하나 — 밖 producer 입력을 쓰는 v6 fit-only claim 의 발급 → 완료 기록 → 재개 → 최종화 연결 |
+| 생산 파일 상한 | `tools/preserve.py` · `src/fitting.py` (§13-1 승인 경계 안) · `run.sh` · `src/io.py` · `src/grid.py` 불변 · 밖이 필요하면 멈추고 그 차이만 승인 요청 |
+| 함께 | `tests/test_gate88_fit_only_lifecycle.py` (RED 먼저 · `conftest._GATED_ENTRYPOINT_MODULES` 확인) · `docs/22p_gap/mutation_replay.py` (`-g88`) · 영수증 history 보존 → 두 leg 1 회 재생성 · 전체 회귀 · smoke · 등록부 전체 변이 재생 → GATE88 |
+| 하지 않음 | v2 순서 규칙 삭제 · 가짜 grid 영수증 · 선행 영수증 수동 삽입 · smoke 우회 · claim/phase/종결 함수 대체 · grid v6 · `--mode all` v6 · 실행 GO · 새 연구 leg · 운영 원장 v6 계획 · 세대표 · p_ini · requirements 상한 |
+
+### 14-2. 고정 — claim 의 phase 집합은 승인 spec 이 정한다
+
+| # | 규칙 |
+|---|---|
+| a | 한 함수 `claim_phases_for_spec(spec)`: `leg_spec_version 2` → `("grid", "fit")` (지금 그대로) · `3` 且 `fit.in_digest` hex64 → `("fit",)` · `3` 且 `fit.in_digest` null → 거부 (v6 에는 같은 claim 의 grid 경로가 없다 — 계획 index `_check_v6_plan_slots` 한 자리에서 시작 전 `PreserveError("plan")`) · 그 밖 (버전 부재 · 미지) → 지금처럼 `("grid", "fit")` — 버전 분기의 거부는 소비자 (`_assert_fit_authorized` · §13-2 d) 의 몫이고 claim 은 그것을 다시 하지 않는다 (버전 없는 손 spec 으로 lifecycle 을 재는 기존 시험 `tests/test_preserve.py` `_RUN_SPEC_L` 이 그대로 지나야 한다) |
+| b | 봉인 자리: **v3 claim 만** 발급 때 claim record 에 `phases_required: ["fit"]` — `open_leg_run` 이 받은 spec 에서 유도 (호출자가 주는 값 아님). v2 claim record 의 키 · 바이트 불변 (`CLAIM_KEYS` 그대로). 닫힌 키 검사 (`:7444` · `:8801`) 는 두 집합만 허용 (v2 = `CLAIM_KEYS` · v3 = `CLAIM_KEYS` + `phases_required`) · 값은 정확히 `["fit"]` |
+| c | `phase_done`: phase ∈ claim 의 집합 (fit-only claim 에 grid → 거부) · 순서 · consumed 규칙은 claim 의 집합 위에서 (v2 는 지금과 바이트 같음). fit-only 의 fit receipt 는 **밖 입력 결속**을 반드시 담는다 — `input_package_digest` (실제로 읽은 staged 묶음 = `_assert_fit_input_is_authorized` 가 대조한 값 · `:1688`) + 키별 digest 셋 (`PHASE_INPUT_KEYS`) — 셋으로 다시 계산한 묶음 digest 가 `input_package_digest` 와 같아야 한다 (계산 함수는 하나 · 두 벌 금지 · 기존 변이 앵커 `got = fit_input_package_digest(got_map)` 줄은 그대로). 없거나 다르면 거부. `consumed = {"external_input": <input_package_digest>}`. producer 근거 = 묶음 안의 curves manifest (생산 실행의 provenance) — 묶음 digest 가 그 바이트를 결속한다 · 계획 grid 축 (G74-1 `discharged_cache_sha256`) 은 그대로 |
+| d | `finalize_leg`: missing = claim 집합 − 닫힌 phase · v2 consumed 대조 그대로 · fit-only 는 `consumed.external_input` == 계획 (`declared_leg_run_spec`) 의 `fit.in_digest` (compare_digest · 없거나 다르면 거부) 且 claim 의 `phases_required` == `claim_phases_for_spec(계획 spec)` 재유도 (v2 claim 에 키를 끼운 위조 거부) · 실행 기록의 `phases` 는 claim 집합 그대로 (fit 하나 — grid 를 적지 않는다) |
+| e | 재개 · 상태: `phases_done()` · `resume` 응답 · 상태 view (`:7828`) 는 claim 집합을 쓴다 (fit-only 에서 fit 이 닫혔으면 남은 일 = finalize) · 다른 attempt · token 거부는 그대로 |
+| f | 그대로: `CLAIM_PHASES` 와 v2 grid → fit 순서 (`:6895`) · v2 null 분기 `assert_phase_input_binding` · grid gate (v2 spec 만 — v3 계획 아래 grid 는 digest 불일치 거부 · 음성 대조로 고정) · smoke 면제 (claim None) |
+
+### 14-3. 회귀 (RED 먼저 · node `f00`–)
+
+| node | 내용 |
+|---|---|
+| 양성 | 격리 원장 + 비-smoke 출력 + v3 계획 (`in_digest = fit_input_package_digest(_fit_input_digests(in))` — 곡선 단독 SHA 아님) → `run_fit` (수치 본체 `_run_fit_locked` 만 inert · 승인 검사 · 입력 검사 · commit · `_record_phase` · `phase_done` · `finalize_leg` 는 실물) → executed · 원장 기록 `phases` = {fit} · `consumed.external_input` = 계획 in_digest. 지금 코드: `phase_done` 거부 → RED |
+| 음성 (입력) | 묶음 한 바이트 변경 · 곡선 단독 SHA 를 in_digest 로 → 시작 전 거부 (수치 0) · v3 + `in_digest: null` → 계획 index 거부 |
+| 음성 (소유 · 결속) | 다른 attempt / token 으로 phase_done · finalize → 거부 · fit receipt 에 결속 누락 → 거부 · durable `consumed` 변조 → finalize 거부 · fit-only claim 에 grid phase → 거부 · v2 claim 에 `phases_required` 끼우기 → 읽기 · finalize 거부 |
+| 대조 (처음부터 GREEN) | v2 fit-before-grid → 거부 · v2 finalize fit 하나 → 거부 · v3 계획 아래 grid gate → 거부 |
+| 변이 `-g88` | v2 순서 규칙 제거 · 집합 유도 뒤집기 · `external_input` 대조 생략 · 결속 누락 허용 · 닫힌 키 검사 완화 · 기록에 grid 끼우기 — 각각 위 node 가 죽인다 |
+
+### 14-4. 영수증 · 순서
+
+RUN_SCOPE (`tools/preserve.py` · `src/fitting.py`) 가 바뀌므로 source_digest · 두 leg 영수증의 validator identity 가 움직인다 → history 보존 뒤 1 회 재생성 (2a · 2b 와 같은 절차) → 전체 pytest · smoke (clean) · 등록부 전체 변이 재생 → GATE88.
