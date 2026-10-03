@@ -1,0 +1,306 @@
+{
+ "slug": "danilov2008_liquid-electrolyte-transport-electroneutrality-dissociation",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-03",
+ "sources": [
+  "e83153cd-61._Mathematical_modelling_of_ionic_transport_in_the_electrolyte_of_Li-ion_batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Schematic representation of a conventional Li-ion battery, indicating the movements of Li-ions in the LiPF6 salt-containing electolyte during charge and discharge.",
+   "rotated_deg": 0,
+   "bbox": [
+    26.6,
+    484.9,
+    289.7,
+    716.9
+   ],
+   "w": 1097,
+   "h": 968,
+   "dpi": 300,
+   "src": "e83153cd-61._Mathematical_modelling_of_ionic_transport_in_the_electrolyte_of_Li-ion_batteries.pdf",
+   "blank": 0.945,
+   "note": "봤다(p. 5570 · 래스터 회색 JPEG 667×510). ⚠ 과대: 위쪽에 식 (4.1) 한 줄이 같이 잡혔다(그림 내용은 온전 — 수동 크롭 안 함 · 자동 파일 그대로). 내용: 왼쪽 Positive Electrode LiCoO₂ | LiPF₆ electrolyte | 오른쪽 Negative Electrode LiC₆ · y 축 0 = 음극 계면(오른쪽) → L = 양극 계면(왼쪽) · Li⁺ 화살 Charge = 오른쪽(음극 쪽 · −y) · Discharge = 왼쪽. 캡션 'electolyte' 는 원문 오타."
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Development of the ionic concentration proﬁle in the electrolyte, calculated according to Eq. (14), during constant-current charging (1.0 C-rate) and relaxation upon current interruption after 50 min.",
+   "rotated_deg": 0,
+   "bbox": [
+    295.6,
+    61.3,
+    558.7,
+    237.9
+   ],
+   "w": 1097,
+   "h": 737,
+   "dpi": 300,
+   "src": "e83153cd-61._Mathematical_modelling_of_ionic_transport_in_the_electrolyte_of_Li-ion_batteries.pdf",
+   "blank": 0.685,
+   "note": "봤다(p. 5572 · 래스터 RGB 671×458 · MATLAB 3D 면). c [mol/m³] 0–3000 · y(무차원 0–1.0) · t 0–80 min. 초기 1500 평탄 → y=1(양극) 쪽 ≈2800 · y=0 쪽 ≈200 아래 → 50 min 에 끔 → 80 min 평탄. ⚠ y 눈금 '1.0 · 0.8 · 0.4 · 0.4 · 0.2 · 0'(0.6 자리에 0.4 — 그림 2–7 · 10 공통 원문 오기). [재현] 표 1 정상 c(0) 194.1 · c(L) 2805.9 mol m⁻³."
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Development of the electric ﬁeld in the electrolyte, calculated according to Eq. (19), under the same conditions of Fig. 2. is close to zero, and reaches a value of about −1200 V/m. This high electric ﬁeld region is, however, quite narrow and its overall con- tribution to the total overpotential are therefore rather moderate. Contrastingly, the electric ﬁeld is low near the positive electrode, where c(L,t) is large. This behaviour is explained by the presence of c(y,t) in denominator of the Eq. (19). Obviously, in order to build up non-uniform electric ﬁeld in the electrolyte as shown in Fig. 3, ionic charge separation is required. However, the degree of devi- ation from electro-neutrality is calculated to be smaller than ten orders of magnitude with respect to the equilibrium electrolyte concentration. Fig. 4 illustrates the development of the Galvany potential dif- ference acro",
+   "rotated_deg": 0,
+   "bbox": [
+    295.6,
+    278.4,
+    558.7,
+    455.4
+   ],
+   "w": 1097,
+   "h": 739,
+   "dpi": 300,
+   "src": "e83153cd-61._Mathematical_modelling_of_ionic_transport_in_the_electrolyte_of_Li-ion_batteries.pdf",
+   "blank": 0.703,
+   "note": "봤다(p. 5572 · 래스터). E [V/m] 0 … −1250 · 정상 y=0 바닥 ≈ −1200(본문 'about −1200 V/m') · t=0 ≈ −130 균일 · 끈 뒤 ≈0. [재현] 식 (31) E(y,0) −127.8 · 식 (34) E_ss(0) −1235 V/m(표 1 · x 0.9017 이면 −1625). ⚠ 캡션 필드 오염: 캡션 뒤에 오른쪽 단 본문('is close to zero, and reaches …' ~ 'Fig. 4 illustrates … acro')이 붙고 900 자에서 잘림 — 인쇄 캡션은 'Fig. 3. Development of the electric field in the electrolyte, calculated according to Eq. (19), under the same conditions of Fig. 2.' 까지. 같은 y 눈금 오기."
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Development of the migration overpotential in the electrolyte, calculated according to Eq. (30), under the same battery operation conditions used in Fig. 2.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.4,
+    60.8,
+    299.5,
+    239.9
+   ],
+   "w": 1097,
+   "h": 747,
+   "dpi": 300,
+   "src": "e83153cd-61._Mathematical_modelling_of_ionic_transport_in_the_electrolyte_of_Li-ion_batteries.pdf",
+   "blank": 0.685,
+   "note": "봤다(p. 5573 · 래스터). 축 이름 φ [V](0–0.08) — 위치별 전위 φ(y,t)(식 28)의 면이지 스칼라 η(식 30)가 아니다(캡션 'migration overpotential … according to Eq. (30)' ↔ 본문 'Galvany potential difference … integration of the electric field (Eq. (28))'). [도표] y=1 에서 t=0 ≈0.036 · 정상 ≈0.07 V. [재현] 표 1: η₀ 35.79 · 정상 이동 몫 68.63 mV(x 0.9017 이면 37.07 · 76.11). 같은 y 눈금 오기."
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Development of the calculated (Eq. (22)) diffusion (a) and migration (b) ﬂuxes of Li+ ions in the electrolyte under the same battery operating conditions of Fig. 2.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.4,
+    389.7,
+    299.5,
+    725.5
+   ],
+   "w": 1097,
+   "h": 1400,
+   "dpi": 300,
+   "src": "e83153cd-61._Mathematical_modelling_of_ionic_transport_in_the_electrolyte_of_Li-ion_batteries.pdf",
+   "blank": 0.652,
+   "note": "봤다(p. 5573 · 래스터). (a) J_dif_Li⁺ · (b) J_mig_Li⁺ ×10⁻⁴ mol m⁻² s⁻¹(0 … −2.0). [도표] 정상 둘 다 ≈ −1.85 · 이동 초기 ≈ −1.5. [재현] −I/(2FA) = −1.866×10⁻⁴(본문 'about −18 × 10⁻⁵') · 초기 −t₊I/(FA) = −1.49×10⁻⁴. 같은 y 눈금 오기."
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 5,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Development of the calculated (Eq. (23)) diffusion (a) and migration (b) ﬂuxes of PF− 6 ions in the electrolyte under the same battery operating conditions of Fig. 2.",
+   "rotated_deg": 0,
+   "bbox": [
+    305.4,
+    61.1,
+    568.5,
+    402.9
+   ],
+   "w": 1097,
+   "h": 1425,
+   "dpi": 300,
+   "src": "e83153cd-61._Mathematical_modelling_of_ionic_transport_in_the_electrolyte_of_Li-ion_batteries.pdf",
+   "blank": 0.677,
+   "note": "봤다(p. 5573 · 래스터). (a) J_dif_PF₆⁻(0 … −3.0) · (b) J_mig_PF₆⁻(0 … 3.0) ×10⁻⁴. [도표] 정상 ±≈2.8 · 이동 초기 ≈ +2.2. [재현] ±(D₋/D₊)·I/(2FA) = 2.798×10⁻⁴(본문 '28 × 10⁻⁵') · 초기 t₋I/(FA) = 2.239×10⁻⁴. 같은 y 눈금 오기."
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 6,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Development of the total ﬂux of Li+ (a) and PF−",
+   "rotated_deg": 0,
+   "bbox": [
+    26.6,
+    61.1,
+    279.0,
+    405.9
+   ],
+   "w": 1053,
+   "h": 1438,
+   "dpi": 300,
+   "src": "e83153cd-61._Mathematical_modelling_of_ionic_transport_in_the_electrolyte_of_Li-ion_batteries.pdf",
+   "blank": 0.728,
+   "note": "봤다(p. 5574 · 래스터). (a) J_tot_Li⁺(0 … −4.0) · (b) J_tot_PF₆⁻(−2.5 … 2.5) ×10⁻⁴ — t · y 축을 바꿔 그림(본문 명시). [도표] 정상 Li⁺ ≈ −3.7 · PF₆⁻ 0 · 켤 때 PF₆⁻ ≈ +2.2 · 끌 때 ≈ −2.2. [재현] −I/(FA) = −3.731×10⁻⁴ · 켤 때 +t₋I/(FA) = +2.239×10⁻⁴ · 끌 때 −2t₊D₋(∂c/∂y) = −2.239×10⁻⁴. ⚠ 캡션 필드가 55 자에서 잘림(PF₆ 아래첨자 줄바꿈) — 인쇄 캡션 '… PF6− (b) ions in the electrolyte, under the same constant-current charging and current interruption conditions, as shown in the previous figures.'"
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 6,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Calculated total overpotential (a) and the corresponding diffusion (b) and migration (c) overpotentials across the electrolyte under the same battery operating conditions used in Fig. 2. Curve (d) shows the voltage across the electrolyte attained immediately after current interruption during constant-current charging. Difference between curves (a) and (d) represents \u0005down.",
+   "rotated_deg": 0,
+   "bbox": [
+    26.6,
+    535.1,
+    289.7,
+    699.5
+   ],
+   "w": 1098,
+   "h": 686,
+   "dpi": 300,
+   "src": "e83153cd-61._Mathematical_modelling_of_ionic_transport_in_the_electrolyte_of_Li-ion_batteries.pdf",
+   "blank": 0.941,
+   "note": "봤다(p. 5574 · 래스터 회색 568×424 — 화소 판독: y 0.20/0.15/0.10/0.05/0/−0.05 V = 8.5/75.5/144.0/211.0/279.5/346.5 행 · x 0/20/40/60/80 min = 122.5/230.5/340.5/449.5/554.5 열 · 0.74 mV/px). [도표] 50 min 직전 (a) 137.8 · (b)=(c) 68.7 · (d) 82.0 mV · (c) 0.3 min 37.7. [재현] 표 1 PDE 재풀이 137.2 · 68.6 · 82.4 · 37.35 — 전 시간대 ±1 mV(이동 ±0.3) · x 0.9017 이면 152.2 · 76.1 · 91.3 ✗. ⚠ 캡션 필드의 'η_down' 이 제어문자(U+0005)로 깨짐."
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 7,
+   "file": "fig_9.png",
+   "caption": "Fig. 9. Simulated (line) and experimentally measured (symbols) overpotentials dur- ing constant-current charging (0.4 C-rate) and after current interruption. The voltage measurement have been performed with an in-house made Lithylene Li-ion battery using spatially spaced micro-reference electrodes in the electrolyte (see Ref. [13]).",
+   "rotated_deg": 0,
+   "bbox": [
+    305.4,
+    61.6,
+    568.5,
+    237.9
+   ],
+   "w": 1097,
+   "h": 736,
+   "dpi": 300,
+   "src": "e83153cd-61._Mathematical_modelling_of_ionic_transport_in_the_electrolyte_of_Li-ion_batteries.pdf",
+   "blank": 0.952,
+   "note": "봤다(p. 5575 · 래스터 회색 588×457 — 화소 판독 y 15/10/5/−5 mV = 8.0/102.0/196.0/384.5 행 · 0.053 mV/px). [도표] 선 정상 9.95 ± 0.1 mV · 켬 ≈ −0.24 min · 끔 ≈31.6 min(본문 'about 30 min') · 끈 직후 ≈5.0–5.2 mV 로 수직 하강 · 표지(회색 타원)는 선 위에 겹침 · 잔차 · 오차 표기 0. [재현·가정] 표 1 Lithylene 행 전 두께면 정상 32.96 mV(×3.3) — 가운데 29.6 µm(두께의 0.311) 구간 가정이면 상승 ±0.15 · 감쇠 ±0.4 mV 로 닫힘(기준극 위치 미인쇄)."
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 8,
+   "file": "fig_10.png",
+   "caption": "Fig. 10. Development of the concentration proﬁle of un-dissociated LiPF6 molecules in the electrolyte during constant-current charging and current interruption at 50 min. The degree of salt dissociation is taken 80%.",
+   "rotated_deg": 0,
+   "bbox": [
+    295.6,
+    61.7,
+    558.7,
+    238.9
+   ],
+   "w": 1097,
+   "h": 739,
+   "dpi": 300,
+   "src": "e83153cd-61._Mathematical_modelling_of_ionic_transport_in_the_electrolyte_of_Li-ion_batteries.pdf",
+   "blank": 0.694,
+   "note": "봤다(p. 5576 · 래스터). c_LiPF₆ [mol/m³] 0–1000 · 초기 300 평탄(= (1−δ)c₀ · δ 0.8) · [도표] y=1 쪽 정상 ≈800–950(3D 원근 — 판독 폭 넓음) · y=0 쪽 0 가까이. [재현] 식 (44)–(47) 재풀이 50 min s(L) 790(L 2.8×10⁻⁴) · 812(2.9×10⁻⁴) — 판정 안 함. 같은 y 눈금 오기."
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 8,
+   "file": "fig_11.png",
+   "caption": "Fig. 11. Development of the calculated total overpotentials (curves (a)) and the corresponding diffusion (curves (b)) and migration overpotentials (curves (c)) across the electrolyte during constant-current charging and after current interruption for electrolytes with various degree of salt dissociation: 100% (A), 85% (B), 70% (C) and 65.69% (D).",
+   "rotated_deg": 0,
+   "bbox": [
+    26.6,
+    435.2,
+    558.6,
+    724.2
+   ],
+   "w": 2218,
+   "h": 1205,
+   "dpi": 300,
+   "src": "e83153cd-61._Mathematical_modelling_of_ionic_transport_in_the_electrolyte_of_Li-ion_batteries.pdf",
+   "blank": 0.952,
+   "note": "봤다(p. 5576 · 래스터 회색 983×770 — 네 판 화소 판독 ≈0.9 mV/px · (D) 10.8 mV/px). [도표] 50 min 직전 (A) δ 1: (a) 137.4 · (b)(c) 69.3 · (B) 0.85: 172.4 · (c) 91.8 · (b) 82.0 · (C) 0.70: 240.5 · 131.8 · 110.1 · (D) 0.6569: 50 min 가까이 ≈3 V 로 폭주. [재현] (A) = 표 1(L 2.8×10⁻⁴) 137.2 · (B)(C) = L 2.9×10⁻⁴ 172.7/91.0/81.7 · 240.1/130.3/109.8(전 시간대 ±1–2 mV) — L 2.8×10⁻⁴ 면 151.8 · 189.8 ✗ — 한 그림 안에서 (A) 와 (B)–(D) 의 매개변수가 다르다. 캡션 (b) 확산 · (c) 이동 = 그림 배치와 같음(본문 (ii) · (iv) 는 글자 뒤바뀜)."
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 9,
+   "file": "fig_12.png",
+   "caption": "Fig. 12. Development of the steady-state total overpotential (a) and corresponding diffusion (b), migration (c) and migration residual (d) overpotentials as a function of the salt dissociation degree (ı).",
+   "rotated_deg": 0,
+   "bbox": [
+    36.4,
+    528.8,
+    299.5,
+    716.9
+   ],
+   "w": 1097,
+   "h": 785,
+   "dpi": 300,
+   "src": "e83153cd-61._Mathematical_modelling_of_ionic_transport_in_the_electrolyte_of_Li-ion_batteries.pdf",
+   "blank": 0.939,
+   "note": "봤다(p. 5577 · 래스터 회색 584×490 — y 0.5…0 V = 8…407 행 · x δ 0.65…1.00 = 79…565.5 열 · 1.25 mV/px). [도표] δ 0.997: (a) 151.6 · (b)(c) 76.3 · (d) 14.9 · 0.90: 164.1/80.1/85.1/16.1 · 0.80: 185.4/85.1/98.9/16.1 · 0.70: 243.1/110.2/132.7/21.1 mV · 곡선 시작 δ ≈0.658. [재현] L 2.9×10⁻⁴ · 50 min 재풀이 152.4/76.1/76.3/15.2 · 163.9/78.9/85.0/15.8 · 184.9/86.1/98.8/17.2 · 240.1/109.8/130.3/22.0 ✅ — δ→1 끝이 그림 8 · 11(A) 의 137 mV 와 다름. (d) 'migration residual' 은 본문 정의 0 — 식 (40)(끈 직후 이동 몫) 값과 맞음. ⚠ 캡션 필드의 δ 가 'ı' 로 깨짐."
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 4,
+   "file": "tab_1.png",
+   "caption": "Table 1 Parameter values for Li-ion batteries used in the simulations Battery type DLi+ (m2 s−1) DPF6",
+   "rotated_deg": 0,
+   "bbox": [
+    27.6,
+    43.4,
+    557.7,
+    747.2
+   ],
+   "w": 2209,
+   "h": 2934,
+   "dpi": 300,
+   "src": "e83153cd-61._Mathematical_modelling_of_ionic_transport_in_the_electrolyte_of_Li-ion_batteries.pdf",
+   "blank": 0.788,
+   "note": "봤다(p. 5572) — ⚠ 과대: 쪽 전체(본문 두 단 · 그림 2 · 3 · 식 27–30)가 잡혔다 → 표 단독 수동 tab_1_manual_p4.png. 자동 파일은 지우지 않음. 캡션 필드에 표 머리 글자가 붙고 잘림('… DPF6')."
+  },
+  {
+   "key": "t1m",
+   "kind": "table",
+   "label": "1",
+   "page": 4,
+   "file": "tab_1_manual_p4.png",
+   "caption": "Table 1 Parameter values for Li-ion batteries used in the simulations",
+   "rotated_deg": 0,
+   "bbox": [
+    28,
+    686,
+    558,
+    749
+   ],
+   "w": 2209,
+   "h": 263,
+   "dpi": 300,
+   "src": "e83153cd-61._Mathematical_modelling_of_ionic_transport_in_the_electrolyte_of_Li-ion_batteries.pdf",
+   "blank": null,
+   "manual": true,
+   "note": "수동 — p. 5572 렌더 300 dpi — 표 1 단독(자동 t1 은 쪽 전체). 봤다. 열 Battery type · D_Li⁺ · D_PF₆⁻ (m² s⁻¹) · L (m) · c₀ (mol m⁻³) · I (A) · A (m²) · T (°C) — CGR17500: 2×10⁻¹¹ · 3×10⁻¹¹ · 2.8×10⁻⁴ · 1500 · 0.72 · 2×10⁻² · 25 / L Lithylene: 1.07×10⁻¹¹ · 1.07×10⁻¹¹ · 9.5×10⁻⁵ · 1000 · 0.12 · 8.9×10⁻³ · 25. 출처 = 본문 'all taken from Ref. [11]'(Bergveld · Kruijt · Notten 2002 책) — 표 안 출처 각주 0. [재현] t₊ 0.4 · 0.5 · x 0.8706(인쇄 0.9017 = L 2.9×10⁻⁴ 이면 정확)."
+  }
+ ]
+}

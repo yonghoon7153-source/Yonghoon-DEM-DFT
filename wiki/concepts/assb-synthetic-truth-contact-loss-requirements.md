@@ -5,7 +5,7 @@ created: 2026-09-23
 updated: 2026-10-03
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/deng2021_assb-reduced-order-model-pade-polynomial.md, raw/papers/raijmakers2020_thin-film-assb-model-double-layer-dc-ac-joint-fit.md, raw/papers/schmidt2024_nitsche-contact-delamination-resolved-ssb-cathode.md, raw/papers/bielefeld2023_useful-models-ssb-simplicity-perspective.md, raw/papers/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm.md, raw/papers/chen2013_sofc-miec-composite-electrode-percolation-theory.md, raw/papers/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd-si.md, raw/papers/li2024_assb-composite-cathode-model-contact-area-edl.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/ren2023_oxide-ssb-composite-cathode-architecture-perspective.md, raw/papers/bielefeld2022_voids-kinetics-morphology-composite-cathode-fem.md, raw/papers/bielefeld2020_effective-ionic-conductivity-binder-composite-cathode.md, raw/papers/asheri2023_data-driven-multiscale-ssb-delamination-surrogate.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md]
+sources: [raw/papers/danilov2008_liquid-electrolyte-transport-electroneutrality-dissociation.md, raw/papers/deng2021_assb-reduced-order-model-pade-polynomial.md, raw/papers/raijmakers2020_thin-film-assb-model-double-layer-dc-ac-joint-fit.md, raw/papers/schmidt2024_nitsche-contact-delamination-resolved-ssb-cathode.md, raw/papers/bielefeld2023_useful-models-ssb-simplicity-perspective.md, raw/papers/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm.md, raw/papers/chen2013_sofc-miec-composite-electrode-percolation-theory.md, raw/papers/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd-si.md, raw/papers/li2024_assb-composite-cathode-model-contact-area-edl.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/ren2023_oxide-ssb-composite-cathode-architecture-perspective.md, raw/papers/bielefeld2022_voids-kinetics-morphology-composite-cathode-fem.md, raw/papers/bielefeld2020_effective-ionic-conductivity-binder-composite-cathode.md, raw/papers/asheri2023_data-driven-multiscale-ssb-delamination-surrogate.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -52,6 +52,12 @@ evidenceScope: multi-source-mixed
 | **R7** | **표면 피복 `φ` 와 통째 비연결 `u` 를 별개 변수로** 둔다 | 37호 · 39호 (CT 가 잰 것은 `φ`) · 55호 Hlushkou (void 경로 효과만) · 56호 (`φ` 자리만) · **68호 Chen 2013**(SOFC 좌표수 해석식 — `u = 1 − P^e` 와 `φ_cov = Z·sin²θ/4` 가 한 식 안의 두 인자, `[재현]`) · **94호**(`φ` 만 동적 계산 — 같은 연구실 27호의 `u` 와 두 편에 따로) | 두 효과를 한 **시뮬레이션** 구조에서 같이 계산한 편 0 · 68호 해석식은 둘을 따로 주지만 **정적 · SOFC · 검증 0** 이고 반응 속도에서는 곱 · 22호 세 점 대조 실패 |
 | **R8** | **`θ(N)` 의 형태를 명시적 가정으로 적는다** — 계단형(첫 충전만) vs 점진형 | 23호 Koerver 원문("contact loss should only occur during the initial charge") ↔ 33·53호가 이것을 **역전 인용** · Barai 2021(원장 ★★★★, 사이클 축 박리 모델 — 미흡수) · 83호(입계 피로 CZM 의 N 축 — 파괴 사이클 95–1545 · 파라미터 0 · 모양 후보만 · CAM\|SE 판 아님) · 93호(결론 제안 — ε · τ · 비표면적의 사이클 진화를 수정 Newman 에 · 형태 · 자료 0) · 94호(이력 없는 가역 접촉 법칙 — N 축 누적 구성상 0 · 충전마다 열리고 방전마다 닫히는 "SoC 주기형" 이 셋째 후보 · 반 사이클 하나만 계산) | ⚠ **미결정** — 두 형태를 다 돌릴지는 사용자 결정 대기(원장 §3-b) |
 
+## 목록 밖 메모 — SE 전해질 수송 모형 · 중성종 닫음 (2026-10-03 · 101호 · 요구로 올리지 않음)
+
+- `[인쇄]` 계보(26 · 91 · 98 · 99 · 100호)의 SE 수송 식은 액체 유기 전해질 원전(101호 Danilov & Notten 2008 — Li⁺ · PF₆⁻ · 움직이는 중성 LiPF₆ 이온쌍)의 꼴이다 — 'SE 에 농도 구배 · 이온 + 공공' 은 원전이 아니라 91 · 98호의 이식(n⁻ = nBO 전하 · 고정 Li⁰ · 공공 · 국소 닫음)이다(101호 digest 중심 표 — ✅ 11 · 부분 2 · ❌ 4).
+- `[재현·가정]` 같은 식 · 같은 (액체) 매개변수에서 중성종 닫음만 바꿔도 전해질 과전압의 농도 항이 74.0 → 7.4 mV · 이원 가정 몫(같은 σ 단일 이온 대비)이 72 → 17 % 로 움직인다(δ 0.8 · 50 min — 반사실).
+- `[해석]` 접촉 손실 truth 에서 SE 전해질 과전압은 '전해질 수송 ↔ 계면 · 접촉' 배정의 상대 몫을 정한다 — truth 설계 문서에 **SE 전해질 모형(이원 해리 ↔ 단일 이온)과 중성종 닫음(확산 ↔ 고정 ↔ 국소 보존)** 을 R1–R8 표 옆에 적어 두는 것이 이 메모의 전부다. ⚠ 요구(R9)로 올리지 않는다 — 새 판단 거리(원장 §3-b · 글자는 호출자)이고 결정 대기다.
+
 ## 쓰는 법
 
 - truth 설계 문서에 **R1–R8 각각의 충족 여부를 표로 적는다.** 충족하지 못한 요구가 있으면 그 truth
@@ -70,6 +76,7 @@ evidenceScope: multi-source-mixed
 - 94호를 R4 · R7 충족 표본으로 쓰지 않는다 — 압력이 구성상 접촉만 움직이는 것은 무시 가정의 결과이고, 계산된 것은 `φ` 하나(`θ` · `u` 0)이며, 실험 대조 0 인 모형이다.
 - 98호를 R5 충족 표본으로 쓰지 않는다 — 기하 면적당 꼴은 형식이고, 실제 계면 면적 · 면적 변화 · 노화가 지면에 없다. 등가 유전 두께는 ε_r 를 기하 축전기에서 역산한 가정 위의 우리 계산이다.
 - 100호를 R1 위반의 측정 표본으로 쓰지 않는다 — 신품 축약 모형의 구조(인쇄 식 · 표)이고 열화를 다루지 않았다. 'A 를 줄이면 용량 · 수송 · i₀ 가 함께 움직인다' 는 그 구조 위의 우리 대수다.
+- 101호를 SE 전해질 모형 선택(이원 ↔ 단일 이온)의 근거로 쓰지 않는다 — 액체 원전이고 고체에 대해 말하지 않으며, 닫음 비교는 액체 매개변수 위의 반사실이다.
 
 ## 관련
 
