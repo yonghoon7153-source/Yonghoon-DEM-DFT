@@ -1,0 +1,23 @@
+# -k only-for-fit-only --emit-expect (자체 점검 고정 다섯째 · f00_06) · HEAD 38522285f3e7573699a7180fe1220fe6da0f2d25 + 작업 트리 (시험 f03_05 · f03_06 · f00_06 + 등록 5 · RUN_SCOPE = e462a3d19 와 같음)
+# 2026-10-03T10:21:53Z · python3 docs/22p_gap/mutation_replay.py -k only-for-fit-only --emit-expect
+sandbox: /tmp/mutation_replay_5s2mh0lh/degradation-degeneracy
+
+★ 안 물었다    fit-input-binding-is-only-for-fit-only-claims-g88 node 1 · -k f00_06
+
+=== 관측한 EXPECT (그대로 붙여 넣어라) ===
+{
+    "fit-input-binding-is-only-for-fit-only-claims-g88": {
+        "fail": [
+            "tests/test_gate88_fit_only_lifecycle.py::test_f00_06_a_v2_fit_receipt_carries_no_external_input_binding"
+        ],
+        "witness": {
+            "tests/test_gate88_fit_only_lifecycle.py::test_f00_06_a_v2_fit_receipt_carries_no_external_input_binding": "AssertionError: v2 claim 의 fit 완료 기록에 밖 입력 결속이 실린다 (v2 receipt 바이트가 바뀐다)"
+        }
+    }
+}
+
+scenario_total 1 · scenario_executable 1 · scenario_declared 0 · site_total 1 · site_executable 1 · site_declared 0 · ran 1
+
+=== 문제 ===
+fit-input-binding-is-only-for-fit-only-claims-g88: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+rc=1

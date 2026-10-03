@@ -161,6 +161,26 @@ def test_f00_05_a_v2_lifecycle_still_closes_grid_then_fit_with_the_consumed_bind
     assert set(ph["fit"]["consumed"]) == {"grid"}, "v2 fit 의 소비 결속이 grid 하나가 아니다"
 
 
+def test_f00_06_a_v2_fit_receipt_carries_no_external_input_binding(tmp_path, monkeypatch):
+    """§14-2 c — 밖 입력 결속은 fit 전용 claim 만 싣는다. v2 claim 의 fit 완료 기록은 지금 바이트 그대로다
+    (`out` · `n_rows` · `finished_at` — v2 의 생산자는 같은 claim 의 grid 이고 그 결속은 `consumed` 가 한다).
+    발송 전 자체 점검으로 더한 node — 처음부터 GREEN 이고, `-g88` 변이가 "v2 에도 결속을 싣는" 사본에서 빨개짐을 증명한다."""
+    out, led, spec, in_dir = _v2_setup(tmp_path, monkeypatch, "f00f")
+    c = PV.open_leg_run(LEG, spec, SRC, ledger=led)
+    assert c.required_phases() == PV.CLAIM_PHASES
+    binding = F._fit_input_binding(c, in_dir)
+    assert binding is None, "v2 claim 의 fit 완료 기록에 밖 입력 결속이 실린다 (v2 receipt 바이트가 바뀐다)"
+    seen = []
+
+    class _Spy:
+        def phase_done(self, phase, receipt):
+            seen.append((phase, dict(receipt)))
+
+    F._record_phase(_Spy(), "fit", {"n_rows": 3}, out, input_binding=binding)
+    assert [p for p, _ in seen] == ["fit"]
+    assert sorted(seen[0][1]) == ["finished_at", "n_rows", "out"], "v2 fit receipt 의 키가 바뀌었다"
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 # f01 — 양성: 비-smoke v6 fit-only 의 승인 → 입력 대조 → 계산 → commit → 완료 기록 → 최종화
 # ─────────────────────────────────────────────────────────────────────────────
@@ -257,6 +277,57 @@ def test_f03_04_another_attempt_can_not_record_or_finalize(tmp_path, monkeypatch
     with pytest.raises(PV.PreserveError):
         PV.finalize_leg(LEG, dict(EVIDENCE), ledger=led, token="0" * 64)
     assert _finalize_ok(led, token=c.token)["status"] == "executed"
+
+
+#: f03_05 · f03_06 — GREEN 이 더한 fail-closed 분기 가운데 f00–f04 가 닿지 않던 셋을 고정한다 (발송 전 자체 점검 · 요청문 §6).
+#: 정상 lifecycle 은 이 값들을 만들지 않으므로 도달 경로는 durable 변조 · 손으로 만든 receipt 뿐이다 — 그래서 처음부터 GREEN 이고,
+#: "무는가" 는 `-g88` 변이 (분기를 끈 사본에서 빨개지는가) 가 증명한다.
+@pytest.mark.parametrize("tag,value", [("grid_fit", ["grid", "fit"]), ("fit_twice", ["fit", "fit"]),
+                                       ("scalar", "fit"), ("empty", [])],
+                         ids=["grid_fit", "fit_twice", "scalar", "empty"])
+def test_f03_05_a_claim_phase_set_other_than_exactly_fit_is_refused_where_it_is_used(tmp_path, monkeypatch, tag, value):
+    """claim 의 `phases_required` 값은 정확히 `["fit"]` 이다 (§14-2 b). 키 집합 검사 (`_claim_record_keys_ok`) 는 값을 보지
+    않으므로, 다른 값은 집합을 쓰는 자리 (`phase_done` · `required_phases()` · `finalize_leg`) 에서 거부돼야 한다."""
+    out, led, in_dir, ctx, spec, ind = _v3_setup(tmp_path, monkeypatch, f"f03e_{tag}")
+    c = PV.open_leg_run(LEG, spec, SRC, ledger=led)
+    rec = json.loads(c.path.read_text(encoding="utf-8"))
+    rec["phases_required"] = value
+    c.path.write_text(json.dumps(rec, sort_keys=True, ensure_ascii=False, separators=(",", ":")) + "\n",
+                      encoding="utf-8")
+    with pytest.raises(PV.PreserveError) as ei:
+        c.phase_done("fit", _fit_receipt(in_dir))
+    assert "phases_required" in str(ei.value), "거부 이유가 claim phase 집합 값 규칙이 아니다"
+    with pytest.raises(PV.PreserveError) as ei:
+        c.required_phases()
+    assert "phases_required" in str(ei.value), "거부 이유가 claim phase 집합 값 규칙이 아니다"
+    assert PV.planned_index(ledger=led)[LEG]["status"] == "running"
+
+
+@pytest.mark.parametrize("how", ["inputs_extra_key", "inputs_not_hex", "receipt_package_tampered"])
+def test_f03_06_a_self_consistent_binding_forgery_is_refused(tmp_path, monkeypatch, how):
+    """결속을 **자기일관하게** 위조해도 닫히지 않는다 — `inputs` 는 `PHASE_INPUT_KEYS` 의 hex64 로 닫혀 있고 (§14-2 c),
+    finalize 는 receipt 의 묶음 digest 와 `consumed.external_input` 을 서로 대조한다 (§14-2 d · 계획 대조와 별도)."""
+    out, led, in_dir, ctx, spec, ind = _v3_setup(tmp_path, monkeypatch, f"f03f_{how}")
+    c = PV.open_leg_run(LEG, spec, SRC, ledger=led)
+    r = _fit_receipt(in_dir)
+    if how == "receipt_package_tampered":
+        c.phase_done("fit", r)
+        rec = json.loads(c.path.read_text(encoding="utf-8"))
+        rec["phases"]["fit"]["receipt"]["input_package_digest"] = "cd" * 32    # consumed 는 그대로 (계획과 같다)
+        c.path.write_text(json.dumps(rec, sort_keys=True, ensure_ascii=False, separators=(",", ":")) + "\n",
+                          encoding="utf-8")
+        with pytest.raises(PV.PreserveError) as ei:
+            PV.finalize_leg(LEG, dict(EVIDENCE), ledger=led, token=c.token)
+        assert "소비한 밖 입력" in str(ei.value), "거부 이유가 receipt 묶음 ↔ 소비 결속 대조가 아니다"
+        return
+    if how == "inputs_extra_key":
+        r["inputs"] = dict(r["inputs"], extra_sha256="ab" * 32)
+    else:
+        r["inputs"] = dict(r["inputs"], curves_sha256="zz" * 32)
+        r["input_package_digest"] = PV.input_package_digest(r["inputs"])         # 묶음 digest 는 위조한 inputs 와 일치
+    with pytest.raises(PV.PreserveError) as ei:
+        c.phase_done("fit", r)
+    assert "`inputs` 가" in str(ei.value), "거부 이유가 inputs 닫힘 규칙이 아니다"
 
 
 # ─────────────────────────────────────────────────────────────────────────────

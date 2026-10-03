@@ -2270,6 +2270,28 @@ MUTANTS = [
      '    return input_package_digest(digests)\n',
      '    return input_package_digest(digests)[::-1]  # 변이: 두 번째 공식 — preserve 의 재계산과 갈린다\n',
      "f01_01 or f03_03 or f03_04 or f04_01"),
+    # 발송 전 자체 점검 — 위 16 이 닿지 않던 GREEN 의 fail-closed 분기 셋 (값 · 닫힘 · 대조). 시험 f03_05 · f03_06 은 처음부터
+    # GREEN 이고 (정상 lifecycle 은 이 값을 만들지 않는다), 아래가 "그 분기가 무는가" 를 증명한다 (요청문 §6).
+    ("claim-phase-set-value-is-exactly-fit-g88", PRESERVE,                  # §14-2 b: 값은 정확히 ["fit"]
+     '    if rec["phases_required"] != list(FIT_ONLY_PHASES):\n',
+     '    if False:  # 변이: 값을 보지 않는다 (키만 있으면 fit 전용으로 읽는다)\n',
+     "f03_05"),
+    ("input-binding-keys-are-closed-g88", PRESERVE,                         # §14-2 c: inputs 키 집합 닫힘
+     '    if (not isinstance(inputs, dict) or set(inputs) != set(PHASE_INPUT_KEYS)\n',
+     '    if (not isinstance(inputs, dict)  # 변이: 키 집합 검사를 끈다\n',
+     "f03_06 and inputs_extra_key"),
+    ("input-binding-values-are-hex64-g88", PRESERVE,                        # §14-2 c: inputs 값 hex64 (자기일관 위조)
+     '            or not all(_is_hex64(inputs[k]) for k in PHASE_INPUT_KEYS)):\n',
+     '            or False):  # 변이: 값의 hex64 검사를 끈다\n',
+     "f03_06 and inputs_not_hex"),
+    ("finalize-binds-the-receipt-package-to-the-consumer-g88", PRESERVE,    # §14-2 d: receipt 묶음 ↔ consumed
+     '                        and secrets.compare_digest(str(_rc_pkg), str(_ext))):\n',
+     '                        ):  # 변이: receipt 묶음 ↔ 소비 결속 대조를 끈다\n',
+     "f03_06 and receipt_package_tampered"),
+    ("fit-input-binding-is-only-for-fit-only-claims-g88", FITTING,          # §14-2 c: v2 receipt 바이트 불변
+     '    if claim is None or claim.required_phases() != FIT_ONLY_PHASES:\n',
+     '    if claim is None:  # 변이: v2 claim 에도 밖 입력 결속을 싣는다 (v2 receipt 바이트가 바뀐다)\n',
+     "f00_06"),
 ]
 
 #: 여러 지점을 **함께** 되돌려야 관측되는 변이 (심층 방어라 하나만 지우면
@@ -7028,6 +7050,64 @@ EXPECT: dict = {
         ],
         "witness": {
             "tests/test_gate88_fit_only_lifecycle.py::test_f02_02_a_v3_plan_without_an_external_input_digest_is_refused_by_the_index":
+                "Failed: DID NOT RAISE PreserveError",
+        }
+    },
+    # ── 88차 발송 전 자체 점검 고정 다섯 (시험 f03_05 · f03_06 · f00_06 · 관측: 2026-10-03 `-k g88 --emit-expect` 회차 08 넷 ·
+    #   `-k only-for-fit-only --emit-expect` 회차 09 하나). 증인은 관측 문장 그대로 (전부 고정 이유 — 값 꼬리 없음).
+    #   회차 08 에서 fit-only-claim-refuses-other-phases-g88 의 baseline 이 빨갰다 — 같은 시각 같은 모듈을 손으로 돌려 고정
+    #   scratch 경로 (`/tmp/dd87/f03a`) 를 두 프로세스가 같이 썼다. 선언 (위) 은 그대로 · 검증 회차는 단독 실행.
+    "claim-phase-set-value-is-exactly-fit-g88": {
+        "fail": [
+            "tests/test_gate88_fit_only_lifecycle.py::test_f03_05_a_claim_phase_set_other_than_exactly_fit_is_refused_where_it_is_used[empty]",
+            "tests/test_gate88_fit_only_lifecycle.py::test_f03_05_a_claim_phase_set_other_than_exactly_fit_is_refused_where_it_is_used[fit_twice]",
+            "tests/test_gate88_fit_only_lifecycle.py::test_f03_05_a_claim_phase_set_other_than_exactly_fit_is_refused_where_it_is_used[grid_fit]",
+            "tests/test_gate88_fit_only_lifecycle.py::test_f03_05_a_claim_phase_set_other_than_exactly_fit_is_refused_where_it_is_used[scalar]",
+        ],
+        "witness": {
+            "tests/test_gate88_fit_only_lifecycle.py::test_f03_05_a_claim_phase_set_other_than_exactly_fit_is_refused_where_it_is_used[empty]":
+                "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate88_fit_only_lifecycle.py::test_f03_05_a_claim_phase_set_other_than_exactly_fit_is_refused_where_it_is_used[fit_twice]":
+                "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate88_fit_only_lifecycle.py::test_f03_05_a_claim_phase_set_other_than_exactly_fit_is_refused_where_it_is_used[grid_fit]":
+                "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate88_fit_only_lifecycle.py::test_f03_05_a_claim_phase_set_other_than_exactly_fit_is_refused_where_it_is_used[scalar]":
+                "Failed: DID NOT RAISE PreserveError",
+        }
+    },
+    "finalize-binds-the-receipt-package-to-the-consumer-g88": {
+        "fail": [
+            "tests/test_gate88_fit_only_lifecycle.py::test_f03_06_a_self_consistent_binding_forgery_is_refused[receipt_package_tampered]",
+        ],
+        "witness": {
+            "tests/test_gate88_fit_only_lifecycle.py::test_f03_06_a_self_consistent_binding_forgery_is_refused[receipt_package_tampered]":
+                "Failed: DID NOT RAISE PreserveError",
+        }
+    },
+    "fit-input-binding-is-only-for-fit-only-claims-g88": {
+        "fail": [
+            "tests/test_gate88_fit_only_lifecycle.py::test_f00_06_a_v2_fit_receipt_carries_no_external_input_binding",
+        ],
+        "witness": {
+            "tests/test_gate88_fit_only_lifecycle.py::test_f00_06_a_v2_fit_receipt_carries_no_external_input_binding":
+                "AssertionError: v2 claim 의 fit 완료 기록에 밖 입력 결속이 실린다 (v2 receipt 바이트가 바뀐다)",
+        }
+    },
+    "input-binding-keys-are-closed-g88": {
+        "fail": [
+            "tests/test_gate88_fit_only_lifecycle.py::test_f03_06_a_self_consistent_binding_forgery_is_refused[inputs_extra_key]",
+        ],
+        "witness": {
+            "tests/test_gate88_fit_only_lifecycle.py::test_f03_06_a_self_consistent_binding_forgery_is_refused[inputs_extra_key]":
+                "AssertionError: 거부 이유가 inputs 닫힘 규칙이 아니다",
+        }
+    },
+    "input-binding-values-are-hex64-g88": {
+        "fail": [
+            "tests/test_gate88_fit_only_lifecycle.py::test_f03_06_a_self_consistent_binding_forgery_is_refused[inputs_not_hex]",
+        ],
+        "witness": {
+            "tests/test_gate88_fit_only_lifecycle.py::test_f03_06_a_self_consistent_binding_forgery_is_refused[inputs_not_hex]":
                 "Failed: DID NOT RAISE PreserveError",
         }
     },
