@@ -305,6 +305,11 @@ def check_arm(path, want, expect_backend=None, receipt=None):
     _fok, _fwhy = _RC.ptfe_record_ok(_man)
     if not _fok:
         return f'PTFE 도장 기록이 계약과 다르다 — {_fwhy}'
+    #  ★ G1-2 (Codex r_int 1단계 RINT-02 · 10-03) — ① 계면 요청 ↔ 네 솔브 적용 영수증 (producer · 판정기와 같은 함수).
+    #    캐시 (SKIP) 경로도 이것을 지난다 — 배선이 빠진 옛 산출물이 캐시로 되살아나지 않게.
+    _iok, _iwhy = _RC.interface_record_ok(_man)
+    if not _iok:
+        return f'계면 저항 요청 ↔ 적용 영수증이 계약과 다르다 — {_iwhy}'
     if _man.get('component_plan') is not None:
         _pok, _pwhy = _RC.plan_ok(_man.get('component_plan'))
         if not _pok:

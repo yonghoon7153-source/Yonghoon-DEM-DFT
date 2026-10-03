@@ -277,6 +277,34 @@ def rint_table_from_record(rec):
     return parse_rint_table([f'{k}={v}' for k, v in rec.items()])
 
 
+def rint_channel_check(rint, sigma_of_sid, sid=None):
+    """RINT-14 (Codex 1단계 Q4 · 10-03) — 요청 쌍의 두 상이 **이 채널의 실제 σ** 에서 전도체인가 → 아니면 ValueError.
+
+    절연 상이 낀 쌍은 어떤 면도 만들 수 없어 요청이 조용히 무효가 된다 (Codex: 서로 다른 상태를 "면 0" 하나로
+    덮지 않는다).  기본 이름 허용목록이 아니라 override · 온도 적용이 끝난 **실제 표**로 판정한다 (σ_VGCF = 0 으로
+    덮으면 VGCF 쌍도 거부).  1-D 표 = 표 값 (표가 0 이라 적은 상은 '없음' 이 아니라 '절연') · 복셀별 σ 장 = 그 상이
+    격자에 **있을 때만** 셀 값 (없는 상 = 면 0 = 영수증 `absent_geometry` 소관)."""
+    if not rint:
+        return
+    a = np.asarray(sigma_of_sid, np.float64)
+    bad = []
+    for (s1, s2), _v in rint.items():
+        for s_ in sorted({int(s1), int(s2)}):
+            nm = SID_NAME.get(s_, str(s_))
+            if a.ndim == 1:
+                if not (0 <= s_ < a.shape[0]) or not (a[s_] > 0.0):
+                    bad.append(f'{nm}(σ={a[s_] if 0 <= s_ < a.shape[0] else "표 밖"})')
+            else:
+                if sid is None:
+                    raise ValueError('rint_channel_check: 복셀별 σ 장에는 sid 격자가 필요하다')
+                m = (np.asarray(sid) == s_)
+                if m.any() and not (a[m] > 0.0).any():
+                    bad.append(f'{nm}(격자의 σ 전부 0)')
+    if bad:
+        raise ValueError(f'rint: 이 채널의 실제 σ 표에서 절연인 상이 낀 쌍 — {sorted(set(bad))} '
+                         f'(어떤 면도 만들 수 없어 요청이 조용히 무효가 된다 · RINT-14)')
+
+
 def face_rint(sid_a, sid_b, rint, pid_a=None, pid_b=None):
     """면마다 r [Ω·cm²] (0 = 계면 아님).  다른 sid 면 = 표의 그 쌍 · 같은 sid 면 = 표에 (s, s) 가
     있고 **pid 가 둘 다 ≥ 0 이고 서로 다를 때만** (입자 경계).  pid 가 없으면 같은 상 면은 무영향."""
@@ -911,12 +939,31 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
         if pid.shape != tuple(sid.shape):
             raise ValueError(f'solve_sigma_z: pid 모양 {pid.shape} ≠ sid {tuple(sid.shape)} — '
                              f'다른 격자의 번호를 쓰게 된다')
+    if _rint:
+        #  ★ G1-2 (Codex Q4 · RINT-14) — 입구에서 거부한다 (0 면으로 조용히 무효가 되는 두 경우):
+        #    ⓐ 이 채널의 실제 σ 에서 절연인 상이 낀 쌍  ⓑ 같은 상 AM 쌍 (r > 0) 인데 입자 번호 pid 가 없음
+        rint_channel_check(_rint, sigma_of_sid, sid)
+        _same = sorted(SID_NAME[a] for (a, b), v in _rint.items() if a == b and v > 0.0)
+        if _same and pid is None:
+            raise ValueError(f'solve_sigma_z: 같은 상 계면 {_same} 은 입자 번호 pid 가 있어야 한다 — 없으면 면 0 '
+                             f'으로 조용히 무효 (unsupported identity · RINT-02/14)')
     _faces = {}                                              # 계면 면 수 (상 쌍별 · 실물 증거)
+
+    def _iface(solved):
+        #  ① 계면 원장 — **쓴 것**: 표 · pid 사용 · 실제로 걸린 면 수 · 이 해가 풀렸는가.  r 를 안 줬으면 None.
+        #  ★ G1-2 (RINT-02) — 조기 반환 해에도 싣는다 (solved False): 요청 표가 이 호출에 **전달됐는지**를
+        #    영수증이 해의 성패와 무관하게 알아야 배선 삭제를 잡는다.
+        if _rint is None:
+            return None
+        return {'model': INTERFACE_MODEL_VERSION, 'unit': 'ohm_cm2',
+                'table': rint_table_record(_rint), 'pid_used': pid is not None,
+                'n_faces_rint': int(sum(_faces.values())),
+                'faces_by_pair': dict(sorted(_faces.items())), 'solved': bool(solved)}
     cond = sig > 0
     if not cond.any():
         return {'sigma_eff': 0.0, 'n_dof': 0, 'n_floating_dropped': 0, 'cg_info': 0, 'resid': 0.0,
                 'unconverged': False, 'reason': 'no_conductive_voxels',
-                'periodic_xy': bool(periodic_xy)}
+                'periodic_xy': bool(periodic_xy), 'interface': _iface(False)}
     occ = np.where(cond.any((0, 1)))[0]
     k_bot = int(occ[0])
     am_occ = np.where((((sid == 1) | (sid == 2)) & cond).any((0, 1)))[0]
@@ -930,7 +977,7 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
     if z_plate - z_b <= 1.5 * vox:                         # degenerate (≈1-layer bed) → no through-path
         return {'sigma_eff': 0.0, 'n_dof': int(cond.sum()), 'n_floating_dropped': 0, 'cg_info': 0,
                 'resid': 0.0, 'unconverged': False, 'reason': 'degenerate_thin_bed',
-                'periodic_xy': bool(periodic_xy)}
+                'periodic_xy': bool(periodic_xy), 'interface': _iface(False)}
     band = plate_band_um if plate_band_um is not None else (vox + 0.10)
     # BOTTOM band override (collector GEOMETRY axis): 'wetted/primer' = default band (vox+0.1 —
     # a conformal conductive film reaches ~0.2µm gaps, + quantization half-voxel); 'bare' passes a
@@ -979,7 +1026,7 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
                 'resid': 0.0, 'unconverged': False,
                 'reason': f'no_plate_contact(bot={int(bot_m.sum())},top={int(top_m.sum())},'
                           f'z_b={z_b:.2f},z_plate={z_plate:.2f},band={band:.2f})',
-                'periodic_xy': bool(periodic_xy)}
+                'periodic_xy': bool(periodic_xy), 'interface': _iface(False)}
     # FLOATING ISLANDS (components touching NEITHER plate contact) = singular blocks, zero current
     # by physics → dropped (their je reads 0).
     # ★ 리뷰 B#1 caveat: 이 label 은 6-connectivity(비주기)라 periodic_xy=True 의 x/y wrap 커플링을
@@ -1008,7 +1055,7 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
     if n_dof == 0:
         return {'sigma_eff': 0.0, 'n_dof': 0, 'n_floating_dropped': n_float, 'cg_info': 0,
                 'resid': 0.0, 'unconverged': False, 'reason': 'all_floating_dropped',
-                'periodic_xy': bool(periodic_xy)}
+                'periodic_xy': bool(periodic_xy), 'interface': _iface(False)}
     #  ★★★ 2026-08-30 (Codex R13 C-4) — **관통 성분이 없으면 조기반환한다.**
     #    `plate` 는 위 주석대로 **합집합**("한쪽에라도 닿음")이라, 양쪽 판에 각각 닿지만
     #    서로 이어지지 않은 두 성분이 있으면 `n_dof > 0` 인 채 정상 솔브 경로를 탄다.
@@ -1025,7 +1072,7 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
                 'n_plate_reachable_dof': n_plate_reachable_dof,
                 'n_floating_dropped': n_float, 'cg_info': 0, 'resid': 0.0,
                 'unconverged': False, 'reason': 'no_through_component',
-                'periodic_xy': bool(periodic_xy)}
+                'periodic_xy': bool(periodic_xy), 'interface': _iface(False)}
     sig = np.where(cond, sig, 0.0)
     idx = -np.ones(sid.shape, np.int64)
     idx[cond] = np.arange(n_dof)
@@ -1124,13 +1171,9 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
            #    각 항목 = (셀좌표 (i,j,k), g[S/cm·µm²/µm], φ_plate).
            'plate_edges': {'bot': (_cb, _gb, 1.0), 'top': (_ct, _gt, 0.0)},
            'vox_um': float(vox),
-           #  ① 계면 저항 원장 (2026-10-02) — **쓴 것**을 적는다: 표 · pid 사용 · 실제로 걸린 면 수.
+           #  ① 계면 저항 원장 (2026-10-02) — **쓴 것**을 적는다: 표 · pid 사용 · 실제로 걸린 면 수 · solved.
            #    r 를 안 줬으면 None (옛 결과와 구분).  `_rint` 는 진단이 같은 배율을 재현하는 맥락.
-           'interface': (None if _rint is None else {
-               'model': INTERFACE_MODEL_VERSION, 'unit': 'ohm_cm2',
-               'table': rint_table_record(_rint), 'pid_used': pid is not None,
-               'n_faces_rint': int(sum(_faces.values())),
-               'faces_by_pair': dict(sorted(_faces.items()))}),
+           'interface': _iface(True),
            #  ★ RINT-11 · 19 — 맥락은 **면이 실제로 걸린** 해에만 (면 0 이면 진단도 옛 경로 비트 동일) +
            #    솔브가 본 sid · pid · σ 의 지문 (진단이 다른 격자 · 바뀐 pid 로 계면 몫을 내지 않게).
            '_rint': ((_rint, pid, _grid_fp(sid), _grid_fp(pid), _grid_fp(np.asarray(sigma_of_sid, np.float64)))
@@ -3658,9 +3701,13 @@ def _selftest_rint():
     chk('ⓒ5 계면 항은 σ 를 **내린다** (상한 가지에서 내려온다)', r1['sigma_eff'] < r0['sigma_eff'])
 
     # ── ⓓ 비트 동일 ────────────────────────────────────────────────────────────
-    for lbl, tb in (('{}', {}), ('r=0', {(1, 3): 0.0}), ('격자에 없는 쌍', {(1, 2): 1e-3}),
-                    ('같은 상 쌍 · pid 없음', {(1, 1): 1e-3})):
-        rr = solve_sigma_z(sid, sig, 0.5, return_field=True, rint=tb, **kw)
+    #  ⚠ 2026-10-03 (G1-2) — '격자에 없는 쌍' 은 **σ 표에서 그 상이 전도체**여야 한다 (RINT-14 채널 검사:
+    #    표가 σ=0 이라 적은 상은 '없음' 이 아니라 '절연' 이다 → 거부 · ⓚ1).  sid 2 에 σ>0 를 준 표로 바꾼다
+    #    (격자에 sid 2 가 없으므로 σ 격자 · 해는 r0 와 같다).  '같은 상 쌍 · pid 없음' 은 이제 거부 (ⓚ3).
+    sig_abs = np.array([0.0, 1.0, 2.0, 4.0])
+    for lbl, tb, sg in (('{}', {}, sig), ('r=0', {(1, 3): 0.0}, sig), ('격자에 없는 쌍', {(1, 2): 1e-3}, sig_abs),
+                        ('같은 상 쌍 · r=0 · pid 없음', {(1, 1): 0.0}, sig)):
+        rr = solve_sigma_z(sid, sg, 0.5, return_field=True, rint=tb, **kw)
         chk(f'ⓓ {lbl}: σ_eff 비트 동일 · φ 동일 · 계면 면 0',
             rr['sigma_eff'].hex() == r0['sigma_eff'].hex() and np.array_equal(rr['phi'], r0['phi'])
             and (rr.get('interface') or {}).get('n_faces_rint', 0) == 0)
@@ -3779,9 +3826,9 @@ def _selftest_rint():
         chk('ⓙ5 유효 pid 마스크 (n_am 밖 번호는 셈에서 빠진다)', False, 'IndexError')
     #  ⓙ6 RINT-11: r 표는 있는데 걸린 면이 0 이면 진단도 옛 경로 그대로 (분담 키 · 값 비트 동일)
     sh_off = phase_current_share(r0, sid, sig)
-    for lbl, tb in (('r=0', {(1, 3): 0.0}), ('격자에 없는 쌍', {(1, 2): 1e-3})):
-        rr = solve_sigma_z(sid, sig, 0.5, return_field=True, rint=tb, **kw)
-        shz = phase_current_share(rr, sid, sig)
+    for lbl, tb, sg in (('r=0', {(1, 3): 0.0}, sig), ('격자에 없는 쌍', {(1, 2): 1e-3}, sig_abs)):
+        rr = solve_sigma_z(sid, sg, 0.5, return_field=True, rint=tb, **kw)
+        shz = phase_current_share(rr, sid, sg)
         chk(f'ⓙ6 {lbl}: 면 0 → 진단 맥락 없음 · 분담 키 · 값 비트 동일 · 원장은 남음',
             rint_ctx_from(rr, sid) is None and set(shz) == set(sh_off)
             and all(float(shz[k]).hex() == float(sh_off[k]).hex() for k in sh_off)
@@ -3796,6 +3843,39 @@ def _selftest_rint():
     pidm[...] = 0                                                     # 호출자가 솔브 뒤 배열을 바꾼다
     chk('ⓙ7 솔브 뒤 pid 가 바뀌면 → 거부 (옛: 저장 면은 그대로인데 계면 몫 0)',
         _raises(lambda: phase_current_share(rpm, sid1, sig1)))
+
+    # ── ⓚ G1-2 (Codex Q4 · RINT-02 · 14) — 반례를 먼저 옮긴 것 ─────────────────────────
+    #  ⓚ1 채널 검사 = **이 채널의 실제 σ 표** (override · 온도가 끝난 것) — 절연 상이 낀 쌍은 어떤 면도 못
+    #     만들어 요청이 조용히 무효 ("면 0" 하나로 덮임) → 거부.  기본 이름 허용목록으로 판정하지 않는다.
+    _te = electronic_sigma_table(0.010, 0.005, 100.0, 10.0, 250.0)
+    _ti = ionic_sigma_table(1e-3, 3e-3)
+    chk('ⓚ1 전자 표에서 AM_S|SE (SE σ_e = 0) → 거부',
+        _raises(lambda: solve_sigma_z(sid, _te, 0.5, rint={(1, 6): 1e-3}, **kw)))
+    chk('ⓚ1 이온 표에서 AM_S|SE (AM σ_ion = 0) → 거부',
+        _raises(lambda: solve_sigma_z(sid, _ti, 0.5, rint={(1, 6): 1e-3}, **kw)))
+    chk('ⓚ1 override 로 절연이 된 상 (σ_VGCF = 0) 의 쌍 → 거부 (이름이 아니라 실제 표)',
+        _raises(lambda: solve_sigma_z(sid, electronic_sigma_table(0.010, 0.005, 0.0, 10.0, 250.0), 0.5,
+                                      rint={(1, 3): 1e-3}, **kw)))
+    _rk = solve_sigma_z(sid, _ti, 0.5, rint={(5, 6): 1e-3}, **kw)
+    chk('ⓚ1 이온 표의 SDCP|SE (둘 다 전도 · 격자에 없음) → 허용 · 면 0',
+        (_rk.get('interface') or {}).get('n_faces_rint') == 0, repr(_rk.get('interface')))
+    chk('ⓚ1 공개 함수: 표 밖 sid → 거부', _raises(lambda: rint_channel_check({(1, 12): 1e-3}, _te)))
+    #  ⓚ2 복셀별 σ 장 — 그 상이 격자에 **있으면** 셀 값으로 본다 (없으면 면 0 = 영수증 absent_geometry 소관)
+    _fz = sigma_field(sig, sid).copy(); _fz[sid == 3] = 0.0
+    chk('ⓚ2 복셀 σ 장: 있는 상의 셀이 전부 0 → 거부', _raises(lambda: rint_channel_check({(1, 3): 1e-3}, _fz, sid)))
+    chk('ⓚ2 복셀 σ 장: 격자에 없는 상은 판정 안 함 (허용)',
+        not _raises(lambda: rint_channel_check({(1, 2): 1e-3}, sigma_field(sig, sid), sid)))
+    #  ⓚ3 unsupported identity — 같은 상 AM 쌍 (r > 0) 인데 pid 없음 → 거부 (옛: 면 0 으로 조용히 무효)
+    chk('ⓚ3 AM_S|AM_S r>0 · pid 없음 → 거부', _raises(lambda: solve_sigma_z(sid1, sig1, 0.5, rint={(1, 1): 1e-4}, **kw)))
+    #  ⓚ4 조기 반환 해도 계면 기록을 싣는다 (solved False) — 요청 표가 이 호출에 **전달됐는지** 영수증이 안다
+    _rd = solve_sigma_z(sid, sig, 0.5, rint={(1, 3): 1e-4}, z_bot_um=0.0, z_top_um=0.5)
+    _ri = _rd.get('interface') or {}
+    chk('ⓚ4 조기 반환 (degenerate_thin_bed) 에도 interface 기록 · solved False · 표 · 면 0',
+        _rd.get('reason') == 'degenerate_thin_bed' and _ri.get('solved') is False
+        and _ri.get('table') == {'AM_S|VGCF': 1e-4} and _ri.get('n_faces_rint') == 0, repr(_rd))
+    chk('ⓚ4 r 없는 조기 반환 → interface None',
+        solve_sigma_z(sid, sig, 0.5, z_bot_um=0.0, z_top_um=0.5).get('interface', 'absent') is None)
+    chk('ⓚ5 정상 해의 기록은 solved True', r1['interface'].get('solved') is True)
     print('STEP3 RINT SELFTEST', 'PASS' if ok else 'FAIL')
     return 0 if ok else 1
 

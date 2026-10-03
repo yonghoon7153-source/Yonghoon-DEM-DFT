@@ -887,6 +887,16 @@ def _sig_str(a, v, fmt='.4g'):
     return format(v, fmt)
 
 
+def _step3_sigma_tables(a, s3):
+    """→ (전자 σ 표, 이온 σ 표) — STEP3 솔브와 ① 계면 채널 검사 (GPU 전) 가 **같은 함수**를 쓴다 (G1-2 · RINT-14).
+
+    ⚠ 표의 상별 정의는 `step3_sigma.electronic_sigma_table` · `ionic_sigma_table` 하나다 (R5-CX-09 — 사본 금지).
+      여기는 그 인자 묶음만 한 곳에 둔다 — 두 호출부가 인자를 따로 적으면 채널 검사가 푸는 표와 갈라진다."""
+    return (s3.electronic_sigma_table(a.sigma_am_s, a.sigma_am_p, a.sigma_vgcf, a.sigma_superp, a.sigma_sdcp,
+                                      a.sigma_ptfe, a.sigma_swcnt),
+            s3.ionic_sigma_table(a.sigma_ion_sdcp, a.sigma_ion_se, a.swcnt_ion_block))
+
+
 def _payload_reject_reason(a, step3):
     """의미적으로 실패한 payload 인가 → 사유 문자열 (없으면 None).
 
@@ -996,6 +1006,12 @@ def _payload_reject_reason(a, step3):
         _fok, _fwhy = _RC.ptfe_record_ok(_m)
         if not _fok:
             return f'STEP3_STAMP: {_fwhy}'
+    #  ★ G1-2 (Codex r_int 1단계 RINT-02 · 10-03) — ① 계면 요청 ↔ 네 솔브 적용 영수증.  check_arm · 판정기와 같은 함수.
+    #    exit 4 (요청 ↔ 적용 불일치 = 규약 불일치 부류).
+    if not a.allow_partial_step3:
+        _iok, _iwhy = _RC.interface_record_ok(_m)
+        if not _iok:
+            return f'STEP3_INTERFACE: {_iwhy}'
     return None
 
 
@@ -1133,14 +1149,18 @@ def main():
                          'same/adjacent voxels; smaller = finer necks but ∝1/vox³ dof.')
     #  ★ 2026-10-02 (①, CL-81) — 상 경계 계면 저항.  기본 없음 = 옛 조립과 **비트 동일**
     #    (CONTACT_FREE 가지).  표는 `step3_sigma.parse_rint_table` 이 해석한다.
-    ap.add_argument('--step3-rint-e', nargs='*', default=None, metavar='A|B=OHM_CM2',
+    #  ★ G1-2 (Codex Q4 · 10-03) — `nargs='+'` · `action='extend'`: 값 없는 플래그는 argparse 오류 (옛: 조용히 OFF) ·
+    #    반복 플래그는 이어 붙여 같은 쌍이면 parse_rint_table 이 거부 (옛: 마지막 것만).
+    ap.add_argument('--step3-rint-e', nargs='+', action='extend', default=None, metavar='A|B=OHM_CM2',
                     help='① 전자 솔브의 상 경계 계면 저항 (면적비저항, Ω·cm²) — 예 AM_S|VGCF=1e-3 '
-                         'AM_P|VGCF=1e-3.  같은 상 쌍 (AM_S|AM_S) 은 입자 번호가 다른 면에만 걸린다.  '
+                         'AM_P|VGCF=1e-3.  같은 상 쌍은 AM_S|AM_S · AM_P|AM_P 만 (입자 번호가 다른 면 · RINT-01).  '
+                         '플래그를 여러 번 주면 이어 붙고 같은 쌍은 거부.  이 채널 σ 에서 절연인 상의 쌍은 거부.  '
                          '기본 없음 = 옛 조립과 비트 동일 (CONTACT_FREE 가지, CL-81).  '
-                         '⚠ 켜면 입력 σ 를 내부값으로 바꿔야 이중계상이 없다 (④, 1저자 결정).')
-    ap.add_argument('--step3-rint-i', nargs='*', default=None, metavar='A|B=OHM_CM2',
+                         '⚠ 켜면 입력 σ (SE 펠릿값 · VGCF closure 값) 와 이중계상 위험 — 크기 미식별 (④ 규약 전 값 인용 금지).')
+    ap.add_argument('--step3-rint-i', nargs='+', action='extend', default=None, metavar='A|B=OHM_CM2',
                     help='① 이온 솔브의 상 경계 계면 저항 (Ω·cm²) — 예 SDCP|SE=2.5e-2.  '
-                         '규약은 --step3-rint-e 와 같다 (SE|SE 입계는 ③ 의 SE 번호 격자 뒤에만 뜻이 있다).')
+                         '규약은 --step3-rint-e 와 같다.  SE|SE 입계는 지원 안 함 (③ SE 번호 격자 뒤 · RINT-01).  '
+                         '--no-ion 과 함께 주면 거부.')
     ap.add_argument('--cam', choices=('nmc811', 'nca'), default='nmc811',
                     help='★A8 CAM 재료 프리셋 — σ_e(AM) 기본값 결정 (docs/nca_material_preset.md 검증표). '
                          'nmc811: S/P = 10/5 mS/cm (A1 corpus-fit).  nca: S=P = 10 mS/cm 단일값 — '
@@ -1345,10 +1365,22 @@ def main():
     #    (매니페스트 `interface_faces` = 실물 증거).
     a._rint_e = a._rint_i = None
     a._iface = {}
+    a._iface_rcpt = {}                                     # G1-2 — 네 솔브의 적용 영수증 (run_contract.interface_receipt)
     if a.step3_rint_e or a.step3_rint_i:
         from step3_sigma import parse_rint_table as _prt
-        a._rint_e = _prt(a.step3_rint_e)
-        a._rint_i = _prt(a.step3_rint_i)
+        try:                                                # 반복 플래그 사이 같은 쌍 · 모르는 상 · 같은 상 비-AM …
+            a._rint_e = _prt(a.step3_rint_e)
+            a._rint_i = _prt(a.step3_rint_i)
+        except ValueError as _e_p:
+            raise SystemExit(str(_e_p))
+        #  ★ G1-2 (Codex 자기리뷰 P3-4 · RINT-14) — 모순 요청은 기록으로 덮지 않고 **거부**한다
+        #    (옛: --no-ion 인데 model=r1 이 매니페스트에 남고 이온 적용 · 면은 없었다).
+        if a.step3_rint_i and a.no_ion:
+            raise SystemExit('--step3-rint-i 와 --no-ion 은 함께 줄 수 없다 — 이온 솔브를 끄면 이온 계면 표가 '
+                             '적용될 곳이 없다 (RINT-14)')
+        if a.no_step3 or not a.scaffold:
+            raise SystemExit('--step3-rint-e/-i 는 STEP3 가 도는 런에만 — --no-step3 이거나 --scaffold 가 없으면 '
+                             '계면 표가 적용될 솔브가 없다 (RINT-14)')
     a._protocol_expect = (a.expect_protocol or '').strip()
     a._physics_expect = {}
     for _kv in (a.expect_physics or '').split(','):
@@ -1442,6 +1474,16 @@ def main():
         a.sigma_am_s = 0.010
     if a.sigma_am_p is None:
         a.sigma_am_p = 0.010 if a.cam == 'nca' else 0.005
+    #  ★ G1-2 (Codex Q4 · RINT-14) — ① 계면 요청의 채널 검사를 **GPU · 격자 작업 전에** — override · 온도 적용이
+    #    끝난 실제 σ 표 (STEP3 가 푸는 것과 같은 함수 `_step3_sigma_tables`).  솔버 입구가 같은 검사를 한 번 더 한다.
+    if a._rint_e or a._rint_i:
+        import step3_sigma as _s3c
+        _te_c, _ti_c = _step3_sigma_tables(a, _s3c)
+        try:
+            _s3c.rint_channel_check(a._rint_e, _te_c)
+            _s3c.rint_channel_check(a._rint_i, _ti_c)
+        except ValueError as _e_c:
+            raise SystemExit(f'--step3-rint: {_e_c}')
     if a.save_step4_grid and not a.save_step4_grid.endswith('.npz'):
         a.save_step4_grid += '.npz'                      # savez 자동 append와 소비자(--grid) 일관화
     vc = _vc()
@@ -1963,9 +2005,7 @@ def main():
                 raise SystemExit(0)
             #  ★ R5-CX-09 — 표는 `step3_sigma` 의 **공용 함수**가 만든다 (selftest 가 같은
             #    것을 소비한다).  사본을 두면 회귀가 생산을 증언하지 못한다.
-            _sig3 = _s3.electronic_sigma_table(
-                a.sigma_am_s, a.sigma_am_p, a.sigma_vgcf, a.sigma_superp, a.sigma_sdcp,
-                a.sigma_ptfe, a.sigma_swcnt)                        # ELECTRONIC table: SE = e-insulator;
+            _sig3 = _step3_sigma_tables(a, _s3)[0]           # ELECTRONIC table: SE = e-insulator;
             #   idx7 = PTFE sensitivity hook (default 0 → sid7 미존재); idx8 = SWCNT sheath (A14, 도체)
             _ztop = float(sim_m.get('thickness_um') or ((top - FLOOR) * UM))   # PRESS PLANE (wall_z) —
             #   `top` has a +0.01-box (~0.4µm) void-cap padding that floats the plate off the bed
@@ -1981,6 +2021,8 @@ def main():
                                       z_top_um=_zt3, z_bot_um=_zb3, periodic_xy=a.periodic,
                                       rint=a._rint_e, pid=(pid3 if a._rint_e else None))   # ① 계면 (기본 None)
             a._iface['electronic'] = _res3.get('interface')
+            #  ★ G1-2 (RINT-02) — 솔브마다 **적용 영수증** (요청 표는 파서 출력 그대로 · 솔브 기록과 따로 본다)
+            a._iface_rcpt['electronic_main'] = _RC.interface_receipt(_res3, _s3.rint_table_record(a._rint_e))
             if _res3.get('reason'):
                 print(f"  ⚠ STEP3 σ_e not solvable: {_res3['reason']}")
                 _s3mark('electronic', 'not_solvable', _res3['reason'])
@@ -2250,6 +2292,9 @@ def main():
                     print('  STEP3: --no-collector — 집전체 기하 솔브 2회 건너뜀 (wetted/bare)', flush=True)
                     _res3w = _res3b = None
                     jb_am = None
+                    for _nmr in ('electronic_wetted', 'electronic_bare'):     # G1-2 — 끈 솔브도 영수증
+                        a._iface_rcpt[_nmr] = _RC.interface_receipt(
+                            None, _s3.rint_table_record(a._rint_e), disabled_why='--no-collector')
                 else:
                     _mw, _mb = _bot_mask(0.30), _bot_mask(0.10)
                     _res3w = _s3.solve_sigma_z(sid3, _sig3, a.step3_vox, return_field=False,
@@ -2258,6 +2303,8 @@ def main():
                     _res3b = _s3.solve_sigma_z(sid3, _sig3, a.step3_vox, return_field=True,
                                                z_top_um=_zt3, z_bot_um=_zb3, bot_allowed=_mb, periodic_xy=a.periodic,
                                                rint=a._rint_e, pid=(pid3 if a._rint_e else None))
+                    a._iface_rcpt['electronic_wetted'] = _RC.interface_receipt(_res3w, _s3.rint_table_record(a._rint_e))
+                    a._iface_rcpt['electronic_bare'] = _RC.interface_receipt(_res3b, _s3.rint_table_record(a._rint_e))
                     jb_am = None
                     if 'phi' in _res3b:
                         jb_am = np.nan_to_num(_s3.per_particle_current(_res3b, sid3, pid3, _sig3, len(r)),
@@ -2347,8 +2394,7 @@ def main():
                 # idx8 SWCNT = 기본 SE-투명(σ_i=σ_ion_se): 실제 skin 2-10nm sub-voxel → 1-voxel
                 # 스탬프가 이온망을 끊으면 차단 40-200× 과대표현(trade-off 상한 이중계상).
                 # --swcnt-ion-block = 상한 시나리오 opt-in (σ_i=0 → 해당 복셀 이온 dof·BV면 소멸).
-                _sig3i = _s3.ionic_sigma_table(a.sigma_ion_sdcp, a.sigma_ion_se,
-                                               a.swcnt_ion_block)
+                _sig3i = _step3_sigma_tables(a, _s3)[1]       # ① 채널 검사와 같은 함수 (G1-2)
                 #  ⚠ **끈 것과 못 푼 것을 구분한다** — n_dof=0 스텁으로 아래 분기를 건너뛰되
                 #    상태는 `disabled` 로 남긴다.  `not_solvable`(SE 미퍼콜) 로 적으면 거짓말이다.
                 if a.no_ion:
@@ -2357,11 +2403,15 @@ def main():
                     print('  STEP3: --no-ion — 이온 솔브 건너뜀 (σ_e 전용).  '
                           'σ_ion·τ_full·Track-B 는 이 payload 에 **없다**', flush=True)
                     _res3i = {'n_dof': 0}
+                    a._iface_rcpt['ionic'] = _RC.interface_receipt(          # G1-2 — 끈 솔브도 영수증
+                        None, _s3.rint_table_record(a._rint_i), disabled_why='--no-ion')
                 else:
                     _res3i = _s3.solve_sigma_z(sid3, _sig3i, a.step3_vox, return_field=True,
                                                z_top_um=_zt3, z_bot_um=_zb3, periodic_xy=a.periodic,
                                                rint=a._rint_i, pid=(pid3 if a._rint_i else None))   # ① 계면 (기본 None)
                     a._iface['ionic'] = _res3i.get('interface')
+                    #  ⚠ 아래 reason 가드가 `_res3i` 를 덮어쓰기 **전에** 영수증을 뜬다 (G1-2)
+                    a._iface_rcpt['ionic'] = _RC.interface_receipt(_res3i, _s3.rint_table_record(a._rint_i))
                 #  ★★★ 2026-08-30 (코드리뷰) — **`reason` 가드**.  전자 분기(:1660)에는 있고
                 #    이온 분기에는 **없었다**.  `solve_sigma_z` 의 조기반환 중 `no_plate_contact`
                 #    는 `n_dof = cond.sum()` = **양수**를 그대로 돌려주면서 `sigma_eff = 0.0`,
@@ -2880,6 +2930,16 @@ def main():
             'interface_rint_e_ohm_cm2': _s3.rint_table_record(a._rint_e),
             'interface_rint_i_ohm_cm2': _s3.rint_table_record(a._rint_i),
             'interface_faces': ({k: v for k, v in a._iface.items() if v is not None} or None),
+            #  ★ G1-2 (Codex r_int 1단계 RINT-02) — 네 솔브의 **적용 영수증**.  요청 표 (위 두 키 = 파서 출력) 와
+            #    따로 기록해 `run_contract.interface_record_ok` 가 producer (게시 전) · check_arm · 판정기에서
+            #    대조한다.  솔브가 기록을 안 남긴 자리는 요청이 있으면 `missing` (= 계약 위반) 으로 채운다.
+            'interface_receipts': {
+                _nm: a._iface_rcpt.get(_nm) or (
+                    {'status': 'not_requested'}
+                    if (a._rint_e if _ch == 'e' else a._rint_i) is None
+                    else {'status': 'missing', 'why': '이 솔브의 영수증이 없다 — STEP3 가 그 전에 멈췄거나 '
+                                                      '배선이 빠졌다'})
+                for _nm, (_ch, _pk) in _RC.INTERFACE_SOLVES.items()},
             #  ★★ 2026-08-25 (A1 2차) — 침대 기하(z 늘림)와 SE 점구름 **출처**.
             #    둘 다 `_s3.rasterize` 로 들어가는데 규약에 없었다 (digest 는 파일
             #    내용만 덮는다).  `se_source` 는 합성일 때만 모양(frac@n_vox)을 싣는다.

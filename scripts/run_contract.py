@@ -809,6 +809,184 @@ def component_evidence_ok(step3, required):
     return True, None
 
 
+#: ★ 2026-10-03 (Codex r_int 1단계 `RINT-02` · `13` · `14` · 1저자 비준 G1) — ① 계면 저항 **요청 ↔ 적용 영수증**.
+#   요청 표 (`interface_rint_e_ohm_cm2` · `_i_`) 는 CLI 파서가 솔브와 **독립으로** 만든다.  영수증은 네 솔브 각각이
+#   **실제로 받은** 표 · 모델 · 단위 · 면 수다.  주 솔브만 보면 wetted/bare 호출의 배선 삭제가 산다 (Codex 변이 탐침:
+#   wetted 호출의 rint 만 지우면 주 σ · 면 · 표는 그대로인데 wetted σ 0.0009487 → 0.0009606 · R_geom 0 → 0.0544 Ω·cm²).
+#   솔브 이름 → (채널 꼬리 'e'|'i', 그 솔브를 끄는 `component_plan` 키 | None = 끌 수 없음).
+INTERFACE_SOLVES = {'electronic_main': ('e', None), 'electronic_wetted': ('e', 'collector'),
+                    'electronic_bare': ('e', 'collector'), 'ionic': ('i', 'ionic')}
+#: 정상 상태 — 면 0 을 하나로 덮지 않는다 (Codex Q4: absent geometry / disabled / unsupported identity / failed).
+#   unsupported identity (같은 상 AM 쌍인데 pid 없음 · 절연 상 쌍) 는 솔버 · 파서가 **거부**하므로 상태가 아니다.
+#   'missing' · 'applied_without_request' 는 생산자가 쓰는 **위반 표지**다 — 적히면 계약이 거부한다.
+INTERFACE_OK_STATUSES = ('applied', 'absent_geometry', 'zero_table', 'failed', 'disabled', 'not_requested')
+INTERFACE_UNIT = 'ohm_cm2'
+_IFACE_REC_KEYS = ('model', 'unit', 'table', 'pid_used', 'n_faces_rint', 'faces_by_pair', 'solved')
+
+
+def interface_receipt(res, requested, disabled_why=None):
+    """솔브 결과 1 건 → 영수증 dict.  `requested` = 그 채널의 **요청** 기록 (`rint_table_record` · 없으면 None).
+
+    ⚠ 상태는 요청과 솔브 기록을 **따로** 보고 정한다 — 솔브 기록만 보고 정하면 배선이 지워진 호출이
+      'not_requested' 로 둔갑한다 (Codex: *"model 이 None 이면 검사도 생략하는 구조는 금지"*)."""
+    if disabled_why is not None:
+        return ({'status': 'not_requested'} if requested is None
+                else {'status': 'disabled', 'why': str(disabled_why)})
+    rec = res.get('interface') if isinstance(res, dict) else None
+    if requested is None:
+        if isinstance(rec, dict):
+            return {'status': 'applied_without_request', **{k: rec.get(k) for k in _IFACE_REC_KEYS}}
+        return {'status': 'not_requested'}
+    if not isinstance(res, dict):
+        return {'status': 'missing', 'why': '솔브 결과가 없다'}
+    if not isinstance(rec, dict):
+        return {'status': 'missing',
+                'why': '솔브 결과에 계면 기록이 없다 — 요청 표가 이 호출에 전달되지 않았다'}
+    out = {k: rec.get(k) for k in _IFACE_REC_KEYS}
+    if res.get('reason') or rec.get('solved') is not True:
+        out.update(status='failed', why=str(res.get('reason') or 'unsolved'))
+    elif type(out['n_faces_rint']) is int and out['n_faces_rint'] > 0:      # noqa: E721
+        out['status'] = 'applied'
+    elif isinstance(out['table'], dict) and out['table'] and all(v == 0 for v in out['table'].values()):
+        out['status'] = 'zero_table'
+    else:
+        out['status'] = 'absent_geometry'
+    return out
+
+
+def _iface_table_ok(tb):
+    """요청 표 기록 모양 → `(ok, why)`.  키 'A|B' (sid 오름차순 · 정본 이름) · 값 유한 0 이상 실수 (bool 금지) ·
+    같은 상 쌍은 pid 소유 상 (AM) 만.  이름 · 소유 상의 정본은 `step3_sigma` 다 (사본을 두지 않는다)."""
+    if not isinstance(tb, dict) or not tb:
+        return False, f'비지 않은 dict 이어야 한다 ({tb!r})'
+    try:
+        from step3_sigma import SID_NAME, PID_OWNER_SIDS
+    except Exception as e:                                       # noqa: BLE001
+        return False, (f'step3_sigma 를 불러 표를 확인할 수 없다 ({type(e).__name__}) — '
+                       f'확인 못 한 것을 통과시키지 않는다')
+    _sid = {v: k for k, v in SID_NAME.items()}
+    for k, v in tb.items():
+        if not isinstance(k, str) or k.count('|') != 1:
+            return False, f'키 {k!r} 가 "A|B" 가 아니다'
+        a, b = k.split('|')
+        if a not in _sid or b not in _sid:
+            return False, f'키 {k!r} 에 모르는 상'
+        if _sid[a] > _sid[b]:
+            return False, f'키 {k!r} 가 정본 순서 (sid 오름차순) 가 아니다'
+        if a == b and _sid[a] not in PID_OWNER_SIDS:
+            return False, f'같은 상 쌍 {k} 은 pid 소유 상 (AM) 만 (RINT-01)'
+        if isinstance(v, bool) or not isinstance(v, (int, float)) or not math.isfinite(v) or v < 0:
+            return False, f'{k} = {v!r} (유한한 0 이상 실수여야 한다)'
+    return True, None
+
+
+def interface_record_ok(man):
+    """① 계면 저항 **요청 ↔ 적용** 계약 → `(ok, reason|None)`.  producer (게시 전) · `check_arm` · 판정기가
+    같이 쓴다 (RINT-02 · 13 · 14).
+
+    · 요청 표 · 모델 · 영수증이 **전부 없으면** 항 없음 (옛 세대 포함) = 통과
+    · 모델 ⇔ 요청 — 요청이 있는데 모델 None 이면 위반 (검사를 끄는 경로) · 요청 없는데 모델만 있어도 위반
+    · 요청이 있으면 네 솔브 영수증이 정확히 있어야 한다.  채널 요청이 있는데 `not_requested` = 배선 삭제 ·
+      채널 요청이 없는데 적용 = 요청 밖 적용
+    · applied · absent_geometry · zero_table · failed — 솔브 기록의 model · unit · 표가 요청과 **같고**, 면 수는
+      쌍별 합과 같고, 쌍은 표 안 · 양의 r 쌍에만 면이 있다.  같은 상 AM 쌍이면 pid 를 썼어야 한다
+    · disabled — 그 솔브를 끄는 계획 키가 False 일 때만 (주 전자 솔브는 끌 수 없다)
+    """
+    m = man if isinstance(man, dict) else {}
+    req = {'e': m.get('interface_rint_e_ohm_cm2'), 'i': m.get('interface_rint_i_ohm_cm2')}
+    model = m.get('interface_model')
+    rc = m.get('interface_receipts')
+    any_req = any(v is not None for v in req.values())
+    for ch, tb in req.items():
+        if tb is not None:
+            _ok, _why = _iface_table_ok(tb)
+            if not _ok:
+                return False, f'IFACE|table|{ch}| 요청 표 {_why}'
+    if any_req:
+        try:
+            from step3_sigma import INTERFACE_MODEL_VERSION as _MV
+        except Exception as e:                                   # noqa: BLE001
+            return False, f'IFACE|model|unverifiable| step3_sigma 를 불러올 수 없다 ({type(e).__name__})'
+        if model is None:
+            return False, ('IFACE|model|absent| 요청 표가 있는데 interface_model 이 None — '
+                           '"model 이 없으면 검사 생략" 경로는 금지 (Codex Q4)')
+        if model != _MV:
+            return False, f'IFACE|model|unknown| {model!r} ≠ 이 코드의 {_MV!r}'
+    elif model is not None:
+        return False, f'IFACE|model|orphan| 요청 표가 없는데 interface_model={model!r}'
+    if rc is None:
+        if any_req:
+            return False, ('IFACE|receipts|absent| 요청 표가 있는데 솔브 영수증이 없다 — 네 솔브가 표를 '
+                           '실제로 받았는지 확인할 수 없다 (RINT-02)')
+        return True, None
+    if not isinstance(rc, dict):
+        return False, f'IFACE|receipts|shape| dict 이어야 하는데 {type(rc).__name__}'
+    if set(rc) != set(INTERFACE_SOLVES):
+        return False, f'IFACE|receipts|keys| {sorted(rc)} ≠ {sorted(INTERFACE_SOLVES)}'
+    plan = m.get('component_plan') if isinstance(m.get('component_plan'), dict) else None
+    for name, (ch, plan_key) in INTERFACE_SOLVES.items():
+        r = rc[name]
+        if not isinstance(r, dict):
+            return False, f'IFACE|{name}|shape| 영수증이 dict 가 아니다'
+        st = r.get('status')
+        tb = req[ch]
+        if st == 'missing':
+            return False, f'IFACE|{name}|missing| 요청 표가 이 솔브에 전달되지 않았다 ({r.get("why")})'
+        if st == 'applied_without_request':
+            return False, f'IFACE|{name}|unrequested| 요청 없는 계면 표가 이 솔브에 적용됐다'
+        if st not in INTERFACE_OK_STATUSES:
+            return False, f'IFACE|{name}|status| 모르는 상태 {st!r}'
+        if st == 'not_requested':
+            if tb is not None:
+                return False, (f'IFACE|{name}|dropped| 채널 {ch} 표가 요청됐는데 영수증은 not_requested — '
+                               f'배선이 빠졌다')
+            continue
+        if tb is None:
+            return False, f'IFACE|{name}|unrequested| 채널 {ch} 요청이 없는데 상태 {st}'
+        if st == 'disabled':
+            if plan_key is None:
+                return False, f'IFACE|{name}|disabled| 이 솔브는 끌 수 없다'
+            if plan is None or plan.get(plan_key) is not False:
+                return False, (f'IFACE|{name}|disabled| 계획 `{plan_key}` = '
+                               f'{None if plan is None else plan.get(plan_key)!r} 인데 disabled')
+            continue
+        if r.get('model') != model:
+            return False, f'IFACE|{name}|model| 솔브 {r.get("model")!r} ≠ 매니페스트 {model!r}'
+        if r.get('unit') != INTERFACE_UNIT:
+            return False, f'IFACE|{name}|unit| {r.get("unit")!r} ≠ {INTERFACE_UNIT!r}'
+        if r.get('table') != tb:
+            return False, f'IFACE|{name}|table| 솔브가 받은 표 {r.get("table")!r} ≠ 요청 {tb!r}'
+        if type(r.get('pid_used')) is not bool:                  # noqa: E721
+            return False, f'IFACE|{name}|pid| pid_used={r.get("pid_used")!r} (bool 이어야 한다)'
+        if any(k.split('|')[0] == k.split('|')[1] and v > 0 for k, v in tb.items()) and r['pid_used'] is not True:
+            return False, f'IFACE|{name}|pid| 같은 상 AM 쌍이 있는데 pid 를 안 썼다 (unsupported identity)'
+        n, fb = r.get('n_faces_rint'), r.get('faces_by_pair')
+        if type(n) is not int or n < 0:                          # noqa: E721
+            return False, f'IFACE|{name}|faces| n_faces_rint={n!r} (음이 아닌 정수)'
+        if not isinstance(fb, dict) or any(type(c) is not int or c < 0 for c in fb.values()):  # noqa: E721
+            return False, f'IFACE|{name}|faces| faces_by_pair={fb!r}'
+        if any(k not in tb for k in fb):
+            return False, f'IFACE|{name}|faces| 표 밖 쌍에 면 {sorted(set(fb) - set(tb))}'
+        if any(c > 0 and tb[k] <= 0 for k, c in fb.items()):
+            return False, f'IFACE|{name}|faces| r = 0 쌍에 면이 있다'
+        if sum(fb.values()) != n:
+            return False, f'IFACE|{name}|faces| 쌍별 합 {sum(fb.values())} ≠ n_faces_rint {n}'
+        if st == 'failed':
+            if not r.get('why') or n != 0:
+                return False, f'IFACE|{name}|failed| 사유 없음 또는 면 {n} (실패한 솔브는 면 0)'
+            continue
+        if r.get('solved') is not True:
+            return False, f'IFACE|{name}|solved| 상태 {st} 인데 solved={r.get("solved")!r}'
+        if st == 'applied' and n <= 0:
+            return False, f'IFACE|{name}|applied| 면 0 인데 applied'
+        _zero = all(v == 0 for v in tb.values())
+        if st == 'absent_geometry' and (n != 0 or _zero):
+            return False, f'IFACE|{name}|absent| 면 {n} · 표 전부 0={_zero}'
+        if st == 'zero_table' and (n != 0 or not _zero):
+            return False, f'IFACE|{name}|zero| 면 {n} · 표 전부 0={_zero}'
+    return True, None
+
+
 def _selftest():
     ok = fail = 0
 
@@ -1108,6 +1286,117 @@ def _selftest():
         globals()['RECEIPT_AXES'] = _saved_ax
     chk(len(set(RECEIPT_AXES) & set(RECEIPT_AXES_NODIGEST)) == 0,
         'RCPT-disjoint ★ 두 목록이 겹치지 않는다 (겹치면 NODIGEST 의 약속이 거짓이 된다)')
+
+    #  ── ① 계면 저항 요청 ↔ 적용 영수증 (2026-10-03 · Codex r_int 1단계 RINT-02 · 13 · 14) ──────────
+    #  반례를 먼저 옮긴 것: 배선 삭제 (영수증 not_requested / missing) · 요청 밖 적용 · model None 생략 ·
+    #  표 · 단위 · 모델 · 면 수 위조 · 계획과 어긋난 disabled.  정상 증인: 항 없음 · 전자 ON · 이온 실패.
+    import sys as _sys_if
+    import os as _os_if
+    _here_if = _os_if.path.dirname(_os_if.path.abspath(__file__))
+    if _here_if not in _sys_if.path:
+        _sys_if.path.insert(0, _here_if)
+    try:
+        from step3_sigma import INTERFACE_MODEL_VERSION as _MVif
+    except Exception:                                            # noqa: BLE001
+        _MVif = None
+    chk(_MVif is not None, 'IF-0 step3_sigma 의 INTERFACE_MODEL_VERSION 을 읽는다 (계약의 정본 출처)')
+    _te_if = {'AM_S|AM_S': 0.001, 'AM_S|VGCF': 0.002}
+    _ti_if = {'SDCP|SE': 0.001}
+
+    def _rec_if(tb, n_by_pair, solved=True, pid=True):
+        return {'model': _MVif, 'unit': 'ohm_cm2', 'table': dict(tb), 'pid_used': pid,
+                'n_faces_rint': int(sum(n_by_pair.values())), 'faces_by_pair': dict(n_by_pair), 'solved': solved}
+    _res_e = {'interface': _rec_if(_te_if, {'AM_S|AM_S': 30, 'AM_S|VGCF': 4})}
+    _res_fail = {'reason': 'no_plate_contact(bot=0,top=3)', 'interface': _rec_if(_ti_if, {}, solved=False)}
+    _res_nofaces = {'interface': _rec_if(_ti_if, {})}
+    _plan_full = {'electronic': True, 'ionic': True, 'thermal': False, 'pore': False, 'collector': True}
+
+    def _man_if(e=_te_if, i=None, receipts=None, model='auto', plan=None):
+        m = {'interface_rint_e_ohm_cm2': e, 'interface_rint_i_ohm_cm2': i,
+             'interface_model': (_MVif if (e or i) else None) if model == 'auto' else model,
+             'component_plan': dict(plan or _plan_full)}
+        if receipts is not None:
+            m['interface_receipts'] = receipts
+        return m
+    _rc_e = {'electronic_main': interface_receipt(_res_e, _te_if),
+             'electronic_wetted': interface_receipt(_res_e, _te_if),
+             'electronic_bare': interface_receipt(_res_e, _te_if),
+             'ionic': interface_receipt({'interface': None}, None)}
+    chk([r['status'] for r in _rc_e.values()] == ['applied', 'applied', 'applied', 'not_requested'],
+        'IF-1 영수증 생산자: 면 > 0 = applied · 요청 없는 채널 = not_requested')
+    chk(interface_record_ok(_man_if(receipts=_rc_e)) == (True, None), 'IF-2 정상 증인 (전자 ON · 네 영수증)')
+    chk(interface_record_ok({'interface_model': None, 'interface_rint_e_ohm_cm2': None,
+                             'interface_rint_i_ohm_cm2': None}) == (True, None)
+        and interface_record_ok({}) == (True, None), 'IF-3 항 없음 · 옛 세대 (키 없음) = 통과')
+    _rc_off = {k: {'status': 'not_requested'} for k in INTERFACE_SOLVES}
+    chk(interface_record_ok(_man_if(e=None, receipts=_rc_off)) == (True, None),
+        'IF-3b 항 없음 + 영수증 전부 not_requested = 통과')
+    #  배선 삭제 — 솔브 결과에 계면 기록이 없다 → 생산자가 missing 을 쓰고 계약이 거부
+    _miss = interface_receipt({'sigma_eff': 1.0}, _te_if)
+    chk(_miss['status'] == 'missing', 'IF-4 생산자: 요청이 있는데 솔브 기록 없음 → missing (not_requested 로 둔갑 금지)')
+    for _nm in INTERFACE_SOLVES:
+        if _nm == 'ionic':
+            continue
+        _r = dict(_rc_e); _r[_nm] = _miss
+        _o, _w = interface_record_ok(_man_if(receipts=_r))
+        chk(not _o and 'missing' in (_w or '') and _nm in (_w or ''), f'IF-5 {_nm} 배선 삭제 (missing) → 거부')
+        _r2 = dict(_rc_e); _r2[_nm] = {'status': 'not_requested'}
+        _o2, _w2 = interface_record_ok(_man_if(receipts=_r2))
+        chk(not _o2 and 'dropped' in (_w2 or ''), f'IF-6 {_nm} 요청 있는데 not_requested → 거부')
+    _o, _w = interface_record_ok(_man_if(receipts=_rc_e, model=None))
+    chk(not _o and 'model|absent' in (_w or ''), 'IF-7 표는 있는데 model None → 거부 ("model 없으면 검사 생략" 금지)')
+    _o, _w = interface_record_ok(_man_if(e=None, receipts=_rc_off, model=_MVif))
+    chk(not _o and 'orphan' in (_w or ''), 'IF-8 요청 없는데 model 만 있음 → 거부')
+    _o, _w = interface_record_ok(_man_if(e=None, receipts={**_rc_off, 'electronic_main': interface_receipt(_res_e, None)}))
+    chk(not _o and 'unrequested' in (_w or ''), 'IF-9 요청 없는 표가 적용됨 (applied_without_request) → 거부')
+    _o, _w = interface_record_ok(_man_if(receipts=None))
+    chk(not _o and 'receipts|absent' in (_w or ''), 'IF-10 요청이 있는데 영수증 통째로 없음 → 거부')
+    _bad_tab = dict(_rc_e); _bad_tab['electronic_bare'] = dict(_rc_e['electronic_bare'], table={'AM_S|AM_S': 0.001})
+    _o, _w = interface_record_ok(_man_if(receipts=_bad_tab))
+    chk(not _o and '|table|' in (_w or ''), 'IF-11 솔브가 받은 표 ≠ 요청 → 거부')
+    for _lbl, _patch in (('unit', {'unit': 'ohm'}), ('model', {'model': 'r0'}),
+                         ('면 수 합 모순', {'n_faces_rint': 0}), ('표 밖 쌍 면', {'faces_by_pair': {'AM_S|SE': 34}}),
+                         ('pid_used 비 bool', {'pid_used': 1}), ('pid 없이 같은 상 쌍', {'pid_used': False}),
+                         ('solved False 인데 applied', {'solved': False})):
+        _r = dict(_rc_e); _r['electronic_main'] = dict(_rc_e['electronic_main'], **_patch)
+        _o, _w = interface_record_ok(_man_if(receipts=_r))
+        chk(not _o, f'IF-12 주 영수증 {_lbl} → 거부', )
+    #  disabled 는 계획이 그 솔브를 끈 경우에만
+    _dis = interface_receipt(None, _te_if, disabled_why='--no-collector')
+    _r = dict(_rc_e); _r['electronic_wetted'] = _dis; _r['electronic_bare'] = _dis
+    chk(interface_record_ok(_man_if(receipts=_r, plan=dict(_plan_full, collector=False))) == (True, None),
+        'IF-13 --no-collector (계획 collector False) + wetted/bare disabled = 통과')
+    _o, _w = interface_record_ok(_man_if(receipts=_r))
+    chk(not _o and 'disabled' in (_w or ''), 'IF-14 계획은 collector True 인데 disabled → 거부')
+    _r = dict(_rc_e); _r['electronic_main'] = _dis
+    _o, _w = interface_record_ok(_man_if(receipts=_r))
+    chk(not _o and 'disabled' in (_w or ''), 'IF-15 주 전자 솔브는 disabled 불가')
+    #  이온: 실패한 솔브도 표를 받았는지 안다 (조기 반환 기록) · 면 0 = absent_geometry
+    _rc_i = dict(_rc_e); _rc_i['ionic'] = interface_receipt(_res_fail, _ti_if)
+    chk(_rc_i['ionic']['status'] == 'failed' and interface_record_ok(_man_if(i=_ti_if, receipts=_rc_i)) == (True, None),
+        'IF-16 이온 솔브 실패 (사유) + 표 수신 = failed · 통과')
+    _rc_i2 = dict(_rc_e); _rc_i2['ionic'] = interface_receipt(_res_nofaces, _ti_if)
+    chk(_rc_i2['ionic']['status'] == 'absent_geometry'
+        and interface_record_ok(_man_if(i=_ti_if, receipts=_rc_i2)) == (True, None),
+        'IF-17 이온 표의 쌍이 격자에 없음 = absent_geometry · 통과')
+    _rc_i3 = dict(_rc_e); _rc_i3['ionic'] = interface_receipt({'reason': 'no_plate_contact'}, _ti_if)
+    chk(_rc_i3['ionic']['status'] == 'missing' and not interface_record_ok(_man_if(i=_ti_if, receipts=_rc_i3))[0],
+        'IF-18 실패한 솔브인데 계면 기록도 없음 (배선 삭제) = missing → 거부')
+    _zt = {'AM_S|VGCF': 0.0}
+    _rc_z = {'electronic_main': interface_receipt({'interface': _rec_if(_zt, {})}, _zt),
+             'electronic_wetted': interface_receipt({'interface': _rec_if(_zt, {})}, _zt),
+             'electronic_bare': interface_receipt({'interface': _rec_if(_zt, {})}, _zt),
+             'ionic': {'status': 'not_requested'}}
+    chk(_rc_z['electronic_main']['status'] == 'zero_table' and interface_record_ok(_man_if(e=_zt, receipts=_rc_z)) == (True, None),
+        'IF-19 명시 r = 0 표 = zero_table (absent 와 구분) · 통과')
+    for _lbl, _tb in (('같은 상 비-AM', {'VGCF|VGCF': 1e-3}), ('모르는 상', {'AM_X|VGCF': 1e-3}),
+                      ('역순 키', {'VGCF|AM_S': 1e-3}), ('bool 값', {'AM_S|VGCF': True}), ('음수', {'AM_S|VGCF': -1.0})):
+        _o, _w = interface_record_ok(_man_if(e=_tb, receipts=None))
+        chk(not _o and '|table|' in (_w or ''), f'IF-20 요청 표 모양 {_lbl} → 거부')
+    _o, _w = interface_record_ok(_man_if(receipts={k: v for k, v in _rc_e.items() if k != 'ionic'}))
+    chk(not _o and 'keys' in (_w or ''), 'IF-21 영수증 키 누락 → 거부')
+    _o, _w = interface_record_ok(_man_if(receipts=dict(_rc_e, electronic_main={'status': 'mystery'})))
+    chk(not _o and 'status' in (_w or ''), 'IF-22 모르는 상태 → 거부')
 
     print(f'\nrun_contract selftest: {ok}/{ok + fail} PASS'
           + ('' if not fail else '   ✗ 실패 있음'))

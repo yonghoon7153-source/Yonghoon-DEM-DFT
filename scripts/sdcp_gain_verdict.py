@@ -94,6 +94,9 @@ FIELD_CONTRACT = {
     #  ★ G2 (D13 원장 ②) — PTFE 이온 차단 노브.  SE(6)→SE_blk(9) 로 σ 침대를 바꾼다.
     'ptfe_block_um':        dict(scope='physics', across_dir=True, required=True,
                             required_since='2026-08-25'),
+    #  ★ 2026-10-03 (Codex r_int 1단계 RINT-20) — 차단 범위 ('se' · 'ion') 도 σ 침대를 바꾼다 (`record` 회계 ·
+    #    p2 보존 — run_contract CLI_ACCOUNTING).  실물 매니페스트에 있는데 레지스트리에 없었다 → generation 축.
+    'ptfe_block_scope':     dict(scope='physics', across_dir=True, generation=True),
     'sigma_ptfe_S_cm':      dict(scope='physics', across_dir=True, required=True,
                             required_since='2026-08-20'),
     'ptfe_stamp':           dict(scope='physics', across_dir=True, required=True,
@@ -138,7 +141,11 @@ FIELD_CONTRACT = {
     #    없으면 통과** (옛 payload 는 이 키가 없고 그것이 "항 없음" 세대다).  표 값은 dict —
     #    `_canon` 이 JSON 으로 접어 비교한다.  규약 해시(`PROTOCOL_FIELDS`)에는 넣지 않는다
     #    (p2 봉인 코호트 보존 · 채택 시 p3 = `run_contract.CLI_ACCOUNTING` 의 청구서).
-    'interface_model':          dict(scope='physics', across_dir=True, generation=True),
+    #  ★ G1-2 (Codex r_int 1단계 RINT-13 · 10-03) — `interface_model` 은 두 표의 **파생**이다 (표가 있으면 모델 판,
+    #    없으면 None).  OFF ↔ ON 대조 (`--expect-differ interface_rint_e_ohm_cm2`) 에서 모델이 따라 바뀌는 것은 결과지
+    #    위반이 아니다 — 부모 표가 실제로 달라졌을 때만 허용 (`derived_from` 튜플 = 부모 축 이름).
+    'interface_model':          dict(scope='physics', across_dir=True, generation=True,
+                                     derived_from=('interface_rint_e_ohm_cm2', 'interface_rint_i_ohm_cm2')),
     'interface_rint_e_ohm_cm2': dict(scope='physics', across_dir=True, generation=True),
     'interface_rint_i_ohm_cm2': dict(scope='physics', across_dir=True, generation=True),
     # ── 침대 정체성 — 침대 **안**에서만 고정 (FA-06: SBE 에 SDCP 가 없는 것은 정상) ──
@@ -210,6 +217,16 @@ MANIFEST_RESULT_KEYS = {
     #  ★ 2026-10-02 (①) — 계면 면 수 (상 쌍별 **실물 증거**).  표(`interface_rint_*`)가 같아도
     #    침대마다 다른 것이 정상 — 규약은 표가 고정하고, 이것은 그 표가 실제로 걸린 면을 센 것이다.
     'interface_faces': '① 계면 저항이 실제로 걸린 면 수 (채널 · 상 쌍별) — 표는 FIELD_CONTRACT 가 본다',
+    #  ★ 2026-10-03 (G1-2 · RINT-02) — 네 솔브의 적용 영수증.  요청 ↔ 적용 대조는 `run_contract.interface_record_ok`
+    #    (세 소비자 공용 계약) 가 따로 본다 — 여기서는 키를 분류만 한다.
+    'interface_receipts': '① 네 솔브 (주 · wetted · bare · 이온) 의 계면 표 적용 영수증 — 계약은 interface_record_ok',
+    #  ★ 2026-10-03 (Codex r_int 1단계 RINT-20 · 기존 레지스트리 표류) — 실물 producer 매니페스트에 있는데 분류가
+    #    없던 다섯.  `--compare-dir` 이 실물 산출물을 받으면 `manifest_unswept_keys` 로 전부 HOLD 했을 것이다.
+    'field_requested': '요청 플래그 (`--no-field` 의 반대) — σ 를 안 바꾼다.  러너 영수증이 대조한다 (RECEIPT_AXES_NODIGEST)',
+    'electronic_field_pts': '런 결과 — 전자 |J| 점군 개수 (그림 예산 · `--field-max-points` 의 함수)',
+    'ionic_field_pts': '런 결과 — 이온 |J| 점군 개수',
+    'fibre_segment_ledger': '런 결과 — phase 별 실제 선분 · 점 스탬프 내역 (도장 `fibre_stamp` ≠ 실물)',
+    'ptfe_block_cells': '런 결과 — 상별 실제 PTFE 차단 셀 수 (도장 `ptfe_block_*` ≠ 실물)',
 }
 
 #: 다른 축의 **그림자**.  값 = 그것을 설명하는 raw 축 이름.
@@ -311,7 +328,9 @@ _GEN_FIELDS_LEGACY = ('sigma_ion_se_S_cm', 'sigma_ion_sdcp_S_cm',
                #      존재 자체를 요구하려면 `--require-digest` (도핑 트랙이 쓴다).
                'input_digest', 'code_sha',
                #  ★ 2026-10-02 (①, CL-81) — 계면 저항 규약 셋 (레지스트리와 같은 집합 유지 = ㊷c).
-               'interface_model', 'interface_rint_e_ohm_cm2', 'interface_rint_i_ohm_cm2')
+               'interface_model', 'interface_rint_e_ohm_cm2', 'interface_rint_i_ohm_cm2',
+               #  ★ 2026-10-03 (RINT-20) — PTFE 차단 범위 (실물 매니페스트에 있던 미분류 키).
+               'ptfe_block_scope')
 
 #  ⚠ `mpm_seed` 는 **팔마다 달라야 하는 축이 될 수도 있다** (코팅처럼 시딩 자체가 확률적인
 #  경우 = seed 앙상블).  현행 origin 앙상블은 같은 압밀 산물을 재사용하므로 seed 가 고정이고,
@@ -718,6 +737,8 @@ def _validate_contract_raw(arms, seed_ensemble=False, require_arms=None,
             for _fn, _lbl in ((lambda: _RC.strict_type_ok(_man), '타입'),
                               (lambda: _RC.plan_required(_man), '계획 존재'),
                               (lambda: _RC.ptfe_record_ok(_man), 'PTFE 기록'),
+                              #  ★ G1-2 (RINT-02) — ① 계면 요청 ↔ 네 솔브 적용 영수증 (producer · check_arm 과 같은 함수)
+                              (lambda: _RC.interface_record_ok(_man), '계면 영수증'),
                               (lambda: (_RC.plan_ok(_man['component_plan'])
                                         if _man.get('component_plan') is not None
                                         else (True, None)), '계획 스키마'),
@@ -1024,6 +1045,8 @@ def _selftest():
                 sdcp_bridge_um=0.0,
                 #  ★ 2026-08-25 (G2) — PTFE 이온 차단 노브 (0 = 생산 = off).
                 ptfe_block_um=0.0,
+                #  ★ 2026-10-03 (RINT-20) — 차단 범위 (producer 기본 'se').  안 실으면 ㊷a ⓒ 가 검증 못 한다.
+                ptfe_block_scope='se',
                 #  ★ 2026-08-24 (CDXR2-6) — PTFE 규약.  σ_PTFE 만으로는 exact-zero 와
                 #    미스탬프가 구분되지 않으므로 규약 자체가 고정 인자다.
                 ptfe_stamp='off', ptfe_zero_dof=False,
@@ -1052,6 +1075,21 @@ def _selftest():
                 #    픽스처에 없으면 "전부 없음" 이라 세대-혼합 게이트가 발화하지 않아
                 #    생성된 거동 시험이 **거짓 통과**한다.
                 code_sha='abc1234')
+
+    #  ★ 2026-10-03 (G1-2 · RINT-02) — 계면 표를 실은 픽스처는 **네 솔브 영수증**도 싣는다 (실제 producer 처럼).
+    #    안 실으면 새 계약 (`interface_record_ok`) 이 모든 픽스처를 HOLD 해 다른 시험이 **다른 이유로** 걸린다.
+    #    영수증은 손으로 적지 않고 생산자와 같은 `interface_receipt` 로 가짜 솔브 기록에서 만든다.
+    def _fx_receipts(e, i):
+        def _r(tb, n):
+            _k0 = next(iter(tb))
+            return {'interface': {'model': _FIX['interface_model'], 'unit': 'ohm_cm2', 'table': dict(tb),
+                                  'pid_used': True, 'n_faces_rint': n,
+                                  'faces_by_pair': ({_k0: n} if n else {}), 'solved': True}}
+        return {'electronic_main': _RC.interface_receipt(_r(e, 7), e),
+                'electronic_wetted': _RC.interface_receipt(_r(e, 5), e),
+                'electronic_bare': _RC.interface_receipt(_r(e, 3), e),
+                'ionic': _RC.interface_receipt(_r(i, 0), i)}
+    _FIX['interface_receipts'] = _fx_receipts(_FIX['interface_rint_e_ohm_cm2'], _FIX['interface_rint_i_ohm_cm2'])
     #  ⚠ `input_digest` 는 **침대마다 달라야** 한다 (같으면 같은 침대를 읽는 것이다,
     #    FA-06/㉙d) — 그래서 `_FIX` 공통이 아니라 `mk()` 가 침대별로 넣는다.
 
@@ -2266,6 +2304,38 @@ def _selftest():
                 _xd_bad.append(f'{_f} ({_c["decision"]})')
     chk(f'㊷b ★★ `across_dir` 선언 {len(_XDIR_FIELDS)} 필드가 cross-dir 에서 정말 고정인가 '
         f'(위반: {_xd_bad[:2]}{"…" if len(_xd_bad) > 2 else ""})', not _xd_bad)
+
+    #  ── ㊼ 2026-10-03 (Codex r_int 1단계 RINT-13 · RINT-02 · G1-2) — 반례를 시험으로 ───────────────────
+    #  ⓐ OFF ↔ ON 대조: 등록 축 = 전자 계면 표.  `interface_model` 은 그 표의 파생이라 따라 바뀌어도 HOLD 사유가
+    #     아니다 (옛: 고정 인자 불일치로 HOLD — Codex 재현).  ⓑ 표는 같은데 모델만 다름 = 손으로 바뀐 기록 → HOLD.
+    _te47 = {'AM_S|VGCF': 1e-3}
+    _rc47 = _fx_receipts(_te47, {'SDCP|SE': 1e-3})
+    _rc47['ionic'] = {'status': 'not_requested'}
+    _on47 = dict(interface_model=_FIX['interface_model'], interface_rint_e_ohm_cm2=_te47,
+                 interface_rint_i_ohm_cm2=None, interface_receipts=_rc47)
+    with _tf22.TemporaryDirectory() as _A47, _tf22.TemporaryDirectory() as _B47:
+        _mk2(_A47, yvgcf=False, dbe_mul=1.42)
+        _mk2(_B47, yvgcf=False, dbe_mul=1.30, **_on47)
+        _c47 = compare_dirs(_A47, _B47, {'interface_rint_e_ohm_cm2'})
+        chk(f'㊼a ★★ OFF ↔ ON (등록 축 = 전자 계면 표) — 파생 `interface_model` 차이는 HOLD 사유가 아니다 '
+            f'({_c47["decision"]}: {str(_c47.get("reason"))[:90]})',
+            _c47['decision'] != 'HOLD' and 'interface_model' not in str(_c47.get('reason')))
+    with _tf22.TemporaryDirectory() as _A47b, _tf22.TemporaryDirectory() as _B47b:
+        _mk2(_A47b, yvgcf=False, dbe_mul=1.42, **_on47)
+        _mk2(_B47b, yvgcf=True, dbe_mul=1.30, **dict(_on47, interface_model='r9-forged'))
+        _c47b = compare_dirs(_A47b, _B47b, {_XAXIS})
+        chk(f'㊼b 표는 같은데 모델만 다름 (등록 축은 다른 축) → HOLD ({_c47b["decision"]})',
+            _c47b['decision'] == 'HOLD')
+    #  ⓒ 판정기가 공용 계면 계약을 소비한다 — 표는 있는데 영수증이 없는 팔 → HOLD (IFACE) · 있으면 통과
+    _m47 = _stamp_pid(dict(_FIX_MAN, interface_model=_FIX['interface_model'],
+                           interface_rint_e_ohm_cm2=_te47, interface_rint_i_ohm_cm2=None))
+    _v47 = verdict(mk(base, [v * 1.12 for v in base], _manifest=_m47))
+    chk(f'㊼c ★★ 판정기: 계면 표는 있는데 네 솔브 영수증이 없는 팔 → HOLD/IFACE '
+        f'({_v47["decision"]}/{_v47.get("hold_code")})',
+        _v47['decision'] == 'HOLD' and _v47.get('hold_code') == 'IFACE')
+    _v47ok = verdict(mk(base, [v * 1.12 for v in base], _manifest=dict(_m47, interface_receipts=_rc47)))
+    chk(f'㊼d 정상 증인 — 같은 팔에 영수증이 있으면 IFACE 로 막지 않는다 ({_v47ok.get("hold_code")})',
+        _v47ok.get('hold_code') != 'IFACE')
     #  ★★★ ㊷d/e — **선언 자체를 뒤집는 mutant** 를 잡는다.  ⓐ~ⓓ 는 선언에서 시험을
     #    생성하므로, 선언을 뒤집으면 그 필드가 **시험 대상에서 빠져** 조용히 초록이 된다
     #    (Codex 실측: `required=True→False` · `across_dir=True→False` 둘 다 126/126 PASS).
@@ -2559,8 +2629,13 @@ def compare_dirs(dir_a, dir_b, expect_differ):
                 #    고정축 불일치로 세어 정상 한-축 실험을 HOLD 했다 (Codex 실측 과잉차단).
                 #    ⇒ 등록 축이 실제로 달라진 경우에만 id 차이를 자동 허용한다.
                 #      (등록 축이 안 달라졌는데 id 만 다르면 그것은 여전히 위반이다.)
-                if FIELD_CONTRACT.get(fld, {}).get('derived_from') and not same:
-                    if any(_canon(ra.get(_x)) != _canon(rb.get(_x)) for _x in expect_differ):
+                _dfrom = FIELD_CONTRACT.get(fld, {}).get('derived_from')
+                if _dfrom and not same:
+                    #  ★ G1-2 (RINT-13) — 부모 축이 **튜플**로 등록된 파생 (`interface_model` ← 두 계면 표) 은
+                    #    그 부모 중 등록 축이 실제로 달라졌을 때만 허용한다.  'PROTOCOL_FIELDS' 는 종전대로.
+                    _par = (list(expect_differ) if _dfrom == 'PROTOCOL_FIELDS'
+                            else [x for x in _dfrom if x in expect_differ])
+                    if any(_canon(ra.get(_x)) != _canon(rb.get(_x)) for _x in _par):
                         continue
                     return dict(out, decision='HOLD',
                                 reason=f'{bed} {key} 에서 파생 필드 `{fld}` 가 다른데 등록 축 '
