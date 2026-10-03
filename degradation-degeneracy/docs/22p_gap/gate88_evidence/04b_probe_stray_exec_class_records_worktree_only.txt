@@ -1,0 +1,6 @@
+== 30bc2bd4aee55d40194a4c6782722a585260a2ea4f29557c07df9dd18124c984.json
+{"content_id":"30bc2bd4aee55d40194a4c6782722a585260a2ea4f29557c07df9dd18124c984","evidence":"산출 완료 시점 등록 · leg=L phase=grid class=canonical","execution_class":"canonical","recorded_at":"2026-10-03T09:26:13Z","sealed":true}
+
+== 3b34eb8964f924f847a828a68d5ee894394a3050c89b151ae5242e5f23cf45a5.json
+{"content_id":"3b34eb8964f924f847a828a68d5ee894394a3050c89b151ae5242e5f23cf45a5","evidence":"산출 완료 시점 등록 · leg=L phase=grid class=canonical","execution_class":"canonical","recorded_at":"2026-10-03T09:26:13Z","sealed":true}
+

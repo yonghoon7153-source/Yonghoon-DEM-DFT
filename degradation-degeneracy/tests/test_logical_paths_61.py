@@ -154,9 +154,9 @@ def test_the_phase_receipt_records_the_logical_place(tmp_path, monkeypatch):
     seen = {}
     real = F._record_phase
 
-    def _spy(claim, phase, summary, out_dir):
+    def _spy(claim, phase, summary, out_dir, **kw):            # ★ 88차 — 선택 키워드 (input_binding) 를 그대로 넘긴다
         seen[phase] = str(out_dir)
-        return real(claim, phase, summary, out_dir)
+        return real(claim, phase, summary, out_dir, **kw)
 
     monkeypatch.setattr(F, "_record_phase", _spy)
     in_dir = _tiny_curves(tmp_path / "in")

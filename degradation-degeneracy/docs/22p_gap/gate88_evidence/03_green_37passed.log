@@ -1,0 +1,53 @@
+# GREEN — HEAD 5cdf22bea1bf46577843c9fd5c59dd123a11ad7d + 작업 트리 (tools/preserve.py · src/fitting.py · tests/test_lock_lifetime_62.py · tests/test_logical_paths_61.py)
+# 2026-10-03T09:35:03Z · python -m pytest tests/test_gate88_fit_only_lifecycle.py tests/test_lock_lifetime_62.py tests/test_logical_paths_61.py -q -p no:cacheprovider -rA
+
+[conftest] 시험 authority: /tmp/dd-test-authority-mn1028nf/docs/22p_gap/LEG_PRESERVATION.yaml (운영 원장의 바이트 복사본 — 70차 E6)
+
+[conftest] 이 checkout 을 처음 보았다 — 얼린 cohort 17개의 좌표를 시험 authority 에 봉인했다: ['g10_2026_09_01', 'g11_2026_09_02', 'g12_2026_09_03', 'g13_2026_09_07', 'g14_2026_09_08', 'g15_2026_09_08', 'g16_2026_09_09', 'g17_2026_09_14', 'g1_2026_08_20', 'g2_2026_08_25', 'g3_2026_08_28', 'g4_2026_08_28', 'g5_2026_08_29', 'g6_2026_09_01', 'g7_2026_09_01', 'g8_2026_09_01', 'g9_2026_09_01']
+.....................................                                    [100%]
+==================================== PASSES ====================================
+__________________ test_grid_dry_run_discards_the_capability ___________________
+----------------------------- Captured stdout call -----------------------------
+[dry-run] 조건 수: 0 (완료 스킵 0, guards 불능 0, 실행 대상 0)
+[dry-run] 실측 0.0 s/cond × 0 / 1 proc ≈ 0.0 min
+[dry-run] 예상 출력 크기 ≈ 0 MB (parquet 압축 전)
+=========================== short test summary info ============================
+PASSED tests/test_gate88_fit_only_lifecycle.py::test_f00_01_a_v2_claim_still_refuses_fit_before_grid
+PASSED tests/test_gate88_fit_only_lifecycle.py::test_f00_02_a_v2_claim_still_refuses_to_finalize_with_grid_only
+PASSED tests/test_gate88_fit_only_lifecycle.py::test_f00_03_the_grid_gate_under_a_v3_plan_is_refused
+PASSED tests/test_gate88_fit_only_lifecycle.py::test_f00_04_a_v2_claim_with_an_injected_phase_set_can_not_be_finalized_fit_only
+PASSED tests/test_gate88_fit_only_lifecycle.py::test_f00_05_a_v2_lifecycle_still_closes_grid_then_fit_with_the_consumed_binding
+PASSED tests/test_gate88_fit_only_lifecycle.py::test_f01_01_a_v6_fit_only_leg_runs_records_and_finalizes
+PASSED tests/test_gate88_fit_only_lifecycle.py::test_f02_01_inputs_other_than_the_approved_package_are_refused_before_fit_one[other_package]
+PASSED tests/test_gate88_fit_only_lifecycle.py::test_f02_01_inputs_other_than_the_approved_package_are_refused_before_fit_one[curves_only_sha]
+PASSED tests/test_gate88_fit_only_lifecycle.py::test_f02_02_a_v3_plan_without_an_external_input_digest_is_refused_by_the_index
+PASSED tests/test_gate88_fit_only_lifecycle.py::test_f03_01_a_fit_only_claim_refuses_a_grid_phase
+PASSED tests/test_gate88_fit_only_lifecycle.py::test_f03_02_a_fit_receipt_without_a_consistent_input_binding_is_refused[no_package]
+PASSED tests/test_gate88_fit_only_lifecycle.py::test_f03_02_a_fit_receipt_without_a_consistent_input_binding_is_refused[no_inputs]
+PASSED tests/test_gate88_fit_only_lifecycle.py::test_f03_02_a_fit_receipt_without_a_consistent_input_binding_is_refused[inputs_disagree]
+PASSED tests/test_gate88_fit_only_lifecycle.py::test_f03_03_finalize_refuses_an_external_input_other_than_the_plan
+PASSED tests/test_gate88_fit_only_lifecycle.py::test_f03_04_another_attempt_can_not_record_or_finalize
+PASSED tests/test_gate88_fit_only_lifecycle.py::test_f04_01_a_fit_only_claim_resumes_with_fit_as_its_only_phase
+PASSED tests/test_lock_lifetime_62.py::test_fit_releases_the_lock_only_after_commit_and_receipt
+PASSED tests/test_lock_lifetime_62.py::test_grid_source_releases_the_lock_after_merge_manifest_commit_and_receipt
+PASSED tests/test_lock_lifetime_62.py::test_fit_failure_before_commit_discards_the_capability
+PASSED tests/test_lock_lifetime_62.py::test_grid_dry_run_discards_the_capability
+PASSED tests/test_lock_lifetime_62.py::test_grid_manifest_payload_records_the_logical_curves_path
+PASSED tests/test_lock_lifetime_62.py::test_grid_manifest_payload_with_no_merge_records_none
+PASSED tests/test_lock_lifetime_62.py::test_the_same_logical_fit_resumed_keeps_one_run_signature
+PASSED tests/test_lock_lifetime_62.py::test_the_run_spec_does_not_carry_a_staging_pathname
+PASSED tests/test_lock_lifetime_62.py::test_fit_refused_by_a_live_lock_holder_discards_the_capability
+PASSED tests/test_lock_lifetime_62.py::test_fit_failure_before_the_lock_discards_the_capability
+PASSED tests/test_lock_lifetime_62.py::test_grid_failure_before_the_lock_discards_the_capability[False]
+PASSED tests/test_lock_lifetime_62.py::test_grid_failure_before_the_lock_discards_the_capability[True]
+PASSED tests/test_lock_lifetime_62.py::test_grid_refused_by_a_live_lock_holder_discards_the_capability
+PASSED tests/test_logical_paths_61.py::test_the_sealed_input_path_exists_after_a_successful_fit
+PASSED tests/test_logical_paths_61.py::test_the_sealed_output_path_exists_after_a_successful_fit
+PASSED tests/test_logical_paths_61.py::test_the_returned_summary_points_at_a_path_that_survives
+PASSED tests/test_logical_paths_61.py::test_no_durable_record_mentions_a_process_local_handle
+PASSED tests/test_logical_paths_61.py::test_the_run_lock_is_gone_after_a_successful_fit
+PASSED tests/test_logical_paths_61.py::test_the_phase_receipt_records_the_logical_place
+PASSED tests/test_logical_paths_61.py::test_a_failed_lock_release_is_not_swallowed
+PASSED tests/test_logical_paths_61.py::test_releasing_a_missing_or_foreign_lock_is_loud_but_never_deletes
+37 passed in 17.60s
+rc=0

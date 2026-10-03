@@ -846,20 +846,36 @@ def parse_halfcell_kw(items) -> dict:
     return kw
 
 
-def _record_phase(claim, phase: str, summary: dict, out_dir) -> None:
+def _record_phase(claim, phase: str, summary: dict, out_dir, input_binding: dict | None = None) -> None:
     """끝난 phase 의 receipt 를 claim 에 남긴다 (48차 P0-4).
 
     smoke namespace 는 claim 이 없다(`None`) — 그때는 남길 것도 없다.
     receipt 는 **재계산 없이 finalize** 하기 위한 근거이므로, 그 phase 가
     무엇을 만들었는지 가리키는 값만 담는다.
+
+    ★ 88차 §14-2 c — fit 전용 claim 이면 `input_binding` (실제로 읽은 staged 밖 입력 묶음의 `input_package_digest` ·
+      `inputs`) 을 같이 담는다. v2 claim 의 receipt 는 그대로다 (`input_binding` 없음).
     """
     if claim is None:
         return
-    claim.phase_done(phase, {
+    receipt = {
         "out": str(out_dir),
         "n_rows": int(summary.get("n_rows") or summary.get("n_fits") or 0),
         "finished_at": __import__("time").strftime("%Y-%m-%dT%H:%M:%SZ",
-                                                  __import__("time").gmtime())})
+                                                  __import__("time").gmtime())}
+    if input_binding is not None:
+        receipt.update(input_binding)
+    claim.phase_done(phase, receipt)
+
+
+def _fit_input_binding(claim, in_dir) -> dict | None:
+    """★ 88차 §14-2 c — fit 전용 claim 이 소비한 밖 입력 묶음 (방금 계획과 대조한 **staged** 바이트). 그 밖이면 None."""
+    from tools.preserve import FIT_ONLY_PHASES
+
+    if claim is None or claim.required_phases() != FIT_ONLY_PHASES:
+        return None
+    got = _fit_input_digests(in_dir)
+    return {"input_package_digest": fit_input_package_digest(got), "inputs": got}
 
 
 def _file_digest16(path) -> str:
@@ -1167,18 +1183,13 @@ def fit_input_package_digest(digests: dict) -> str:
 
     계획이 적는 `fit.in_digest` 가 이 값이다. 파일 하나가 아니라 묶음이므로,
     곡선을 그대로 두고 manifest 만 갈아 끼우는 교체가 표현 불가능해진다.
+
+    ★ 88차 §14-2 c — 계산 본체는 `tools.preserve.input_package_digest` 하나다 (fit 전용 claim 의 phase 기록이 같은
+      함수로 다시 계산해 대조한다 · 두 벌 금지). 값은 그대로다.
     """
-    import hashlib as _h
+    from tools.preserve import input_package_digest
 
-    from tools.preserve import PHASE_INPUT_KEYS, PreserveError
-
-    if set(digests) != set(PHASE_INPUT_KEYS):
-        raise PreserveError(
-            "plan",
-            f"입력 묶음 digest 의 key 집합이 계약과 다르다: {sorted(digests)} "
-            f"≠ {sorted(PHASE_INPUT_KEYS)}")
-    body = "\n".join(f"{k}={digests[k]}" for k in PHASE_INPUT_KEYS)
-    return _h.sha256(body.encode("utf-8")).hexdigest()
+    return input_package_digest(digests)
 
 
 def _assert_fit_input_is_authorized(claim, live_fit: dict, in_dir) -> None:
@@ -1686,6 +1697,8 @@ def _run_fit_staged(_staged, in_dir, out_dir, obj_cfg, objectives, bounds,
     tok = None
     try:
         _assert_fit_input_is_authorized(claim, _fit_axis, _staged["in_dir"])
+        # ★ 88차 §14-2 c — fit 전용 claim 이면 방금 계획과 대조한 staged 묶음을 완료 기록의 결속으로 들고 간다.
+        _input_binding = _fit_input_binding(claim, _staged["in_dir"])
         # ★ 60차 P0-4 — grid 와 **같은 문장**. gate 뒤의 모든 쓰기를 판정한 실물
         #   아래로 옮긴다 (면제 판정이 두 진입점에 있으면 배선도 두 진입점에
         #   있어야 하고, 그러면 하나가 또 빠진다 — 58차 L1 의 교훈).
@@ -1737,7 +1750,7 @@ def _run_fit_staged(_staged, in_dir, out_dir, obj_cfg, objectives, bounds,
         #   `phase_done()`·`finalize_leg()` 을 만들어 놓고 production 에서 한
         #   번도 부르지 않았다 — lifecycle 이 있는데 아무 것도 그 상태를
         #   움직이지 않으면 그것은 lifecycle 이 아니라 죽은 코드다.
-        _record_phase(claim, "fit", summary, logical_out)
+        _record_phase(claim, "fit", summary, logical_out, input_binding=_input_binding)
     except BaseException:
         # ★ 62차 P1-2 — commit 에 **도달하지 못한** 모든 종료는 권한을 버린다.
         #   리뷰어 실측: production 에 `discard_execution_capability()` 호출자가

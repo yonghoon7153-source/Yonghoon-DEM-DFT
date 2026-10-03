@@ -1,0 +1,12 @@
+# 관련 모듈 21 (docs_lint 제외 — 전체 회귀에서) · worktree HEAD 9e53a7edb333662711a25dc65ca41726a9597106 + GREEN 작업 트리
+# 2026-10-03T09:25:12Z · python -m pytest tests/test_bundle_containment_60.py tests/test_evidence_domain_58.py tests/test_fitting.py tests/test_gate63_defensive.py tests/test_gate74_defensive.py tests/test_gate79_stage3_logging.py tests/test_gate81_stage3_wire.py tests/test_gate84_round2a.py tests/test_gate87_round2b.py tests/test_gate88_fit_only_lifecycle.py tests/test_grid.py tests/test_handle_carry_59.py tests/test_issuance_durability_58.py tests/test_issuance_surface_59.py tests/test_lifecycle_roots_60.py tests/test_lock_lifetime_62.py tests/test_logical_paths_61.py tests/test_phase_receipt_immutability_58.py tests/test_preserve.py tests/test_run_schema_binding_59.py tests/test_smooth_cache.py -q -p no:cacheprovider
+
+[conftest] 시험 authority: /tmp/dd-test-authority-owhiwgpk/docs/22p_gap/LEG_PRESERVATION.yaml (운영 원장의 바이트 복사본 — 70차 E6)
+
+[conftest] 이 checkout 을 처음 보았다 — 얼린 cohort 17개의 좌표를 시험 authority 에 봉인했다: ['g10_2026_09_01', 'g11_2026_09_02', 'g12_2026_09_03', 'g13_2026_09_07', 'g14_2026_09_08', 'g15_2026_09_08', 'g16_2026_09_09', 'g17_2026_09_14', 'g1_2026_08_20', 'g2_2026_08_25', 'g3_2026_08_28', 'g4_2026_08_28', 'g5_2026_08_29', 'g6_2026_09_01', 'g7_2026_09_01', 'g8_2026_09_01', 'g9_2026_09_01']
+........................................................................ [  8%]
+...................................................xs...........F.FFFFFF [ 17%]
+........................................................................ [ 25%]
+........................................................................ [ 34%]
+..........................................................F............. [ 43%]
+..rc=143

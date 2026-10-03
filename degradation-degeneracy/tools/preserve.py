@@ -4009,6 +4009,53 @@ CLAIM_PHASES = ("grid", "fit")
 #:                        디스크의 이 파일에 **없다**.
 CLAIM_KEYS = ("leg_id", "cohort_id", "attempt_id", "attempt_verifier",
               "run_spec_digest", "source_digest", "opened_at", "phases")
+#: ★ 88차 §14-2 b (G87-N1) — **v3 (v6) fit 전용 claim 만** 이 키 하나를 더 싣는다: 그 실행이 닫아야 할 phase 집합.
+#:   v2 claim record 는 `CLAIM_KEYS` 그대로다 (키 · 바이트 불변 — §13-1 "v5 claim 바이트 변경 없음").
+CLAIM_KEYS_FIT_ONLY = CLAIM_KEYS + ("phases_required",)
+#: ★ 88차 §14-2 a — 밖 producer 의 입력 묶음을 쓰는 v6 fit 전용 실행의 phase 집합.
+FIT_ONLY_PHASES = ("fit",)
+
+
+def _claim_record_keys_ok(rec: dict) -> bool:
+    """★ 88차 §14-2 b — claim record 의 닫힌 키 집합은 **둘뿐**이다 (v2 = `CLAIM_KEYS` · fit 전용 = + `phases_required`)."""
+    return set(rec) in (set(CLAIM_KEYS), set(CLAIM_KEYS_FIT_ONLY))
+
+
+def _claim_required_phases(rec: dict) -> tuple:
+    """★ 88차 §14-2 b — claim record 가 닫아야 할 phase 집합. 키가 없으면 (v2) `CLAIM_PHASES` · 있으면 정확히 `["fit"]`."""
+    if "phases_required" not in rec:
+        return CLAIM_PHASES
+    if rec["phases_required"] != list(FIT_ONLY_PHASES):
+        raise PreserveError(
+            "plan", f"claim 의 phases_required 가 계약 ({list(FIT_ONLY_PHASES)}) 과 다르다: "
+                    f"{rec['phases_required']!r} (88차 §14-2 b)")
+    return FIT_ONLY_PHASES
+
+
+def claim_phases_for_spec(spec) -> tuple:
+    """★ 88차 §14-2 a (G87-N1) — 한 claim 이 닫아야 할 phase 집합은 **승인 spec 이 정한다.**
+
+    87차까지 집합은 상수 `CLAIM_PHASES = ("grid", "fit")` 하나였다. 그런데 v6 (`leg_spec_version 3`) 경로는 fit 만 돌고
+    (`run.sh --stage3-plan` — grid · all 은 지원 안 함) 입력은 밖 producer 의 묶음이다 (계획 `fit.in_digest` hex64). 그
+    claim 은 grid 를 계산하지 않으므로 grid 영수증이 생길 수 없는데, 상수 집합 아래서는 fit 본체와 commit 이 끝난 **뒤**
+    `phase_done("fit")` 이 "선행 grid 미완" 으로 거부했다 (87차 G87-N1 · 88차 RED 실측 — 산출이 commit 된 채 claim 이 남았다).
+    가짜 grid 영수증을 넣거나 순서 규칙을 지우지 않고, 집합을 계획에서 유도한다:
+
+      · v2 (그리고 버전 없는 손 spec) → `("grid", "fit")` — 지금 그대로 · 순서 규칙 그대로
+      · v3 且 `fit.in_digest` hex64 → `("fit",)` — 밖 입력 묶음이 생산자다 (fit receipt 가 그 묶음을 결속한다)
+      · v3 且 그 밖 (null 등) → 거부 — "이 다리의 grid 가 입력을 만든다" 는 v6 에 없는 경로다
+
+    미지 버전의 거부는 소비자 (`src.fitting._assert_fit_authorized` · §13-2 d) 의 몫이다 — 여기서 다시 하지 않는다.
+    """
+    if isinstance(spec, dict) and spec.get("leg_spec_version") == 3:
+        ind = (spec.get("fit") or {}).get("in_digest")
+        if not _is_hex64(ind):
+            raise PreserveError(
+                "plan", f"v6 (leg_spec_version 3) 계획의 fit.in_digest 가 밖 입력 묶음 digest (hex64) 가 아니다: {ind!r} — "
+                        "v6 는 fit 전용이라 같은 claim 의 grid 가 입력을 만들 수 없다. 밖 producer 의 입력 묶음 digest "
+                        "(`fit_input_package_digest`) 를 계획에 적으라 (88차 §14-2 a · G87-N1)")
+        return FIT_ONLY_PHASES
+    return CLAIM_PHASES
 
 DEFAULT_LEDGER = (Path(__file__).resolve().parents[1]
                   / "docs" / "22p_gap" / "LEG_PRESERVATION.yaml")
@@ -6098,6 +6145,8 @@ def _check_v6_plan_slots(e: dict) -> None:
         raise PreserveError(
             "plan", f"계획 항목 {lid!r} 은 leg_spec_version 3 (v6) 인데 {missing} 가 없다 — v6 계획은 "
                     "`planned_envelope` 와 `stage3_context` 를 둘 다 적어야 한다 (87차 §13-3 b)")
+    # ★ 88차 §14-2 a — v6 는 fit 전용이다: 계획 `fit.in_digest` 는 밖 입력 묶음 digest 여야 한다 (claim 집합과 같은 함수).
+    claim_phases_for_spec(spec)
     env = e["planned_envelope"]
     bad = check_planned_envelope(env)
     if bad or env.get("schema") != "planned-leg/v4":
@@ -6653,6 +6702,46 @@ PHASE_INPUT_KEYS = ("curves_sha256", "curves_manifest_sha256",
                     "curves_manifest_start_sha256")
 
 
+def input_package_digest(digests: dict) -> str:
+    """입력 **묶음 하나**의 내용 주소 (51차 P1-E1) — 계산 본체는 여기 하나다.
+
+    ★ 88차 §14-2 c — `src.fitting.fit_input_package_digest` 가 이것을 부르고, fit 전용 claim 의 `phase_done("fit")` 이
+    receipt 의 `inputs` 로 같은 값을 **다시 계산**해 `input_package_digest` 와 대조한다. 두 자리에 같은 공식을 따로 두면
+    한쪽만 바뀌는 날 결속이 조용히 갈린다.
+    """
+    if set(digests) != set(PHASE_INPUT_KEYS):
+        raise PreserveError(
+            "plan",
+            f"입력 묶음 digest 의 key 집합이 계약과 다르다: {sorted(digests)} "
+            f"≠ {sorted(PHASE_INPUT_KEYS)}")
+    body = "\n".join(f"{k}={digests[k]}" for k in PHASE_INPUT_KEYS)
+    return hashlib.sha256(body.encode("utf-8")).hexdigest()
+
+
+def _assert_external_input_binding(receipt: dict) -> None:
+    """★ 88차 §14-2 c — fit 전용 claim 의 fit receipt 는 **실제로 읽은** 밖 입력 묶음을 결속해야 한다.
+
+    `input_package_digest` (hex64) 와 키별 `inputs` (`PHASE_INPUT_KEYS` 의 hex64 로 닫힘) 가 둘 다 있어야 하고, `inputs` 로
+    다시 계산한 묶음 digest 가 `input_package_digest` 와 같아야 한다. 계획과의 대조는 `finalize_leg` 가 한다 (계획을 읽는
+    자리가 거기다).
+    """
+    pkg = receipt.get("input_package_digest")
+    inputs = receipt.get("inputs")
+    if not _is_hex64(pkg):
+        raise PreserveError(
+            "plan", f"fit 전용 claim 의 fit receipt 에 밖 입력 묶음 결속 `input_package_digest` (hex64) 가 없다: {pkg!r} — "
+                    "무엇을 소비했는지 모르는 fit 은 닫을 수 없다 (88차 §14-2 c)")
+    if (not isinstance(inputs, dict) or set(inputs) != set(PHASE_INPUT_KEYS)
+            or not all(_is_hex64(inputs[k]) for k in PHASE_INPUT_KEYS)):
+        raise PreserveError(
+            "plan", f"fit 전용 claim 의 fit receipt `inputs` 가 {list(PHASE_INPUT_KEYS)} 의 hex64 로 닫혀 있지 않다: "
+                    f"{inputs!r} (88차 §14-2 c)")
+    if not secrets.compare_digest(input_package_digest(inputs), str(pkg)):
+        raise PreserveError(
+            "plan", "fit 전용 claim 의 fit receipt: `inputs` 로 다시 계산한 묶음 digest 가 `input_package_digest` 와 다르다 "
+                    "— 결속이 자기모순이다 (88차 §14-2 c)")
+
+
 def assert_phase_input_binding(claim, inputs: dict) -> None:
     """fit 이 읽는 곡선이 **이 claim 의 grid 가 만든 것**인가 (49차 P0-5).
 
@@ -6792,6 +6881,10 @@ class LegClaim:
     def _read(self) -> dict:
         return json.loads(self.path.read_text(encoding="utf-8"))
 
+    def required_phases(self) -> tuple:
+        """★ 88차 §14-2 b — 이 claim 이 닫아야 할 phase 집합 (claim record 에서 · v2 는 `CLAIM_PHASES`)."""
+        return _claim_required_phases(self._read())
+
     def phases_done(self) -> tuple:
         rec = self._read()
         return tuple(p for p in CLAIM_PHASES if p in (rec.get("phases") or {}))
@@ -6846,6 +6939,15 @@ class LegClaim:
                     "plan", f"claim 이 다른 attempt 로 바뀌었다 "
                             f"({rec['attempt_id']} ≠ {self.attempt_id}) — 이 "
                             "실행은 더 이상 권한이 없다")
+            # ★ 88차 §14-2 c (G87-N1) — 이 claim 이 닫아야 할 집합 **안의** phase 만 기록한다. 밖 입력을 쓰는 v6 fit 전용
+            #   claim 은 grid 를 계산하지 않으므로 grid 를 적을 자리가 없다 (가짜 grid 영수증 금지 — 87차 리뷰어).
+            _required = _claim_required_phases(rec)
+            if phase not in _required:
+                raise PreserveError(
+                    "plan", f"{self.leg_id!r} 의 claim 이 닫는 phase 는 {list(_required)} 다 — {phase!r} 는 이 실행의 "
+                            "phase 가 아니다 (밖 입력을 쓰는 v6 fit 전용 claim 은 grid 를 기록하지 않는다 · 88차 §14-2 c)")
+            if _required == FIT_ONLY_PHASES:
+                _assert_external_input_binding(receipt)
             # ★ 58차 L6 — **닫힌 phase 는 불변이다.** 이 자리는 claim lock 안이라
             #   lost update 는 없었다. 그런데 lock 이 막는 것은 **동시 쓰기**이지
             #   **덮어쓰기**가 아니다 — 술어가 없으면 lock 은 무조건 대입을
@@ -6892,7 +6994,7 @@ class LegClaim:
             #   그래서 **순서 자체를 강제**한다: 뒤 phase 는 앞 phase 가 전부
             #   닫힌 뒤에만 닫을 수 있고, 그때 `consumed` 는 **모든** 선행
             #   phase 를 담는다 (하나라도 빠지면 그 짝은 결속되지 않았다).
-            _order = list(CLAIM_PHASES)
+            _order = list(_required)
             _before = _order[:_order.index(phase)]
             if _before:
                 _have = rec.get("phases") or {}
@@ -6908,6 +7010,10 @@ class LegClaim:
                     p: hashlib.sha256(
                         _canon_json(_have[p].get("receipt")).encode("utf-8")
                     ).hexdigest() for p in _before}
+            # ★ 88차 §14-2 c — fit 전용 claim 의 생산자는 같은 claim 의 phase 가 아니라 **밖 입력 묶음**이다. 소비자는 자기가
+            #   읽은 묶음을 적는다 — finalize 가 그것을 계획 `fit.in_digest` 와 대조한다.
+            if _required == FIT_ONLY_PHASES:
+                entry["consumed"] = {"external_input": receipt["input_package_digest"]}
             rec.setdefault("phases", {})[phase] = entry
             _atomic_write_json(self.path, rec)
 
@@ -7380,6 +7486,9 @@ def _claim_planned_leg(leg_id: str, run_spec: dict, source_digest: str,
            "opened_at": dt.datetime.now(dt.timezone.utc).strftime(
                "%Y-%m-%dT%H:%M:%SZ"),
            "phases": {}}
+    # ★ 88차 §14-2 b — 집합은 **승인된 spec 에서** 유도한다 (호출자가 주는 값이 아니다). v2 는 키를 싣지 않는다.
+    if claim_phases_for_spec(run_spec) == FIT_ONLY_PHASES:
+        rec["phases_required"] = list(FIT_ONLY_PHASES)
     body = (json.dumps(rec, sort_keys=True, ensure_ascii=False,
                        separators=(",", ":")) + "\n").encode("utf-8")
     try:
@@ -7441,7 +7550,7 @@ def _read_claim_record(leg_id: str, claims_root=None) -> tuple[Path, dict]:
     if not path.is_file():
         raise PreserveError("plan", f"이어받을 claim 이 없다: {path}")
     rec = json.loads(path.read_text(encoding="utf-8"))
-    if set(rec) != set(CLAIM_KEYS):
+    if not _claim_record_keys_ok(rec):
         raise PreserveError(
             "plan", f"claim schema 가 계약과 다르다: {sorted(rec)}")
     return path, rec
@@ -8798,7 +8907,7 @@ def _already_finalized(leg_id: str, token: str, ledger=None) -> dict | None:
                 "남의 실행을 대신 닫을 수 없다")
         return {"attempt_id": ev.get("attempt_id")}
     rec = json.loads(cp.read_text(encoding="utf-8"))
-    if set(rec) != set(CLAIM_KEYS):
+    if not _claim_record_keys_ok(rec):
         return None
     doc = _load_ledger(ledger)
     row = next((e for e in doc.get("planned") or []
@@ -8935,7 +9044,9 @@ def finalize_leg(leg_id: str, evidence: dict, ledger=None, *,
             raise PreserveError(
                 "plan", f"claim 이 다른 attempt 로 바뀌었다 "
                         f"({snap['attempt_id']} ≠ {claim.attempt_id})")
-        missing = [p for p in CLAIM_PHASES
+        # ★ 88차 §14-2 d — 남은 phase 는 **이 claim 의 집합** 기준이다 (v2 = grid · fit 그대로).
+        _required = _claim_required_phases(snap)
+        missing = [p for p in _required
                    if p not in (snap.get("phases") or {})]
         if missing:
             raise PreserveError(
@@ -8953,7 +9064,7 @@ def finalize_leg(leg_id: str, evidence: dict, ledger=None, *,
         #   그러므로 **없으면 오류**다. 뒤 phase 는 자기보다 앞선 **모든**
         #   phase 를 결속해야 하고, 하나라도 빠지거나 어긋나면 닫지 않는다.
         _phases = snap.get("phases") or {}
-        _order = list(CLAIM_PHASES)
+        _order = list(_required)
         for _ph, _ent in _phases.items():
             if _ph not in _order:                          # pragma: no cover
                 continue                    # 도메인 검사는 `phase_done` 이 한다
@@ -9008,6 +9119,27 @@ def finalize_leg(leg_id: str, evidence: dict, ledger=None, *,
                 raise PreserveError(
                     "plan", f"{leg_id!r} 의 계획 상태가 {plan.get('status')!r} 이라 "
                             "executed 로 닫을 수 없다")
+            # ★ 88차 §14-2 d (G87-N1) — 집합을 계획 spec 에서 **다시 유도**해 claim 에 적힌 집합과 대조한다. claim 파일에
+            #   `phases_required` 를 끼워 넣어 v2 실행을 fit 하나로 닫는 길을 막는다.
+            _plan_spec = plan.get("run_spec") or {}
+            _want_required = claim_phases_for_spec(_plan_spec)
+            if _want_required != _required:
+                raise PreserveError(
+                    "plan", f"{leg_id!r} 의 claim 이 적은 phase 집합 {list(_required)} 이 계획 spec 에서 유도한 "
+                            f"{list(_want_required)} 와 다르다 — executed 로 닫지 않는다 (88차 §14-2 d)")
+            if _required == FIT_ONLY_PHASES:
+                # fit 이 소비했다고 적은 밖 입력이 **계획이 승인한 묶음**인가 — 아니면 그 fit 은 이 계획의 산물이 아니다.
+                _fit_ent = _phases.get("fit") or {}
+                _ext = (_fit_ent.get("consumed") or {}).get("external_input")
+                _plan_in = (_plan_spec.get("fit") or {}).get("in_digest")
+                _rc_pkg = (_fit_ent.get("receipt") or {}).get("input_package_digest")
+                if not (_is_hex64(_ext) and _is_hex64(_plan_in)
+                        and secrets.compare_digest(str(_ext), str(_plan_in))
+                        and secrets.compare_digest(str(_rc_pkg), str(_ext))):
+                    raise PreserveError(
+                        "plan", f"{leg_id!r}: fit 이 소비한 밖 입력 (consumed.external_input {str(_ext)[:16]} · receipt "
+                                f"{str(_rc_pkg)[:16]}) 이 계획 fit.in_digest {str(_plan_in)[:16]} 와 다르다 — 승인한 입력의 "
+                                "산물이라고 말할 근거가 없으므로 닫을 수 없다 (88차 §14-2 d)")
             coh = next((c for c in doc.get("cohorts") or []
                         if c.get("cohort_id") == claim.cohort_id), None)
             if coh is None:
@@ -9042,7 +9174,7 @@ def finalize_leg(leg_id: str, evidence: dict, ledger=None, *,
             rec_evidence = dict(evidence)
             rec_evidence["verifier_origin"] = "normal_finalize"
             rec_evidence["phases"] = {ph: snap["phases"][ph]
-                                      for ph in CLAIM_PHASES}
+                                      for ph in _required}
             rec_evidence["attempt_id"] = claim.attempt_id
             rec_evidence["run_spec_digest"] = claim.run_spec_digest
             # ★ 56차 P0-3 — 소유 증명의 **검증자를 원장에** 봉인한다. 55차까지

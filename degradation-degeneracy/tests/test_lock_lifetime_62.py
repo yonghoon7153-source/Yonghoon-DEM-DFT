@@ -93,9 +93,9 @@ def test_fit_releases_the_lock_only_after_commit_and_receipt(tmp_path, monkeypat
         seq.append("commit:" + ("held" if _lock_held(out) else "free"))
         return real_commit(cap, paths)
 
-    def _receipt(claim, phase, summary, out_dir):
+    def _receipt(claim, phase, summary, out_dir, **kw):       # ★ 88차 — 선택 키워드 (input_binding) 를 그대로 넘긴다
         seq.append("receipt:" + ("held" if _lock_held(out) else "free"))
-        return real_receipt(claim, phase, summary, out_dir)
+        return real_receipt(claim, phase, summary, out_dir, **kw)
 
     def _release(tok, *a, **k):
         seq.append("release")
