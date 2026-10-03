@@ -3,11 +3,11 @@ title: "CO 프롬프트 — li2s 소셀 유리 MD v2 카드 (잠정): 550 K 800 
 tags: [review, li2s, lpscl_smallcell, glass, md, gate, beta, estimand, card, v2, external-first-author, prompt, letter]
 letter: CO
 date: 2026-09-30
-updated: 2026-09-30
+updated: 2026-10-03
 track: li2s / lpscl_smallcell_glass
 channel: li2s1a
 kind: prompt
-status: 초안 (2026-09-30) — 사용자 검토 · 발송 대기
+status: 초안 (2026-09-30) · 10-03 실행 상태 덧붙임 (10 런 완주 · 결과 미열람) — 사용자 검토 · 발송 대기
 confidence: medium
 verificationStatus: verified
 verifiedAt: 2026-09-30
@@ -31,6 +31,8 @@ evidenceScope: multi-source-primary
 회신 CN 감사합니다. 마감 기록에 주신 문장·표기·덧붙일 것 둘을 전부 싣고 닫았습니다 (`lpscl_smallcell_glass_md_closed_2026_09_30.json` · 옛 카드 재개 조건 없음).
 
 그 마감이 남긴 출발 사실로 **새 카드**를 하나 만들었습니다. 옛 카드를 다시 여는 것이 아니고, 옛 런은 새 카드의 판정에 쓰지 않습니다. 저희 쪽에서 실행을 먼저 승인해 **잠정 카드로 두 기계에서 돌리기 시작합니다** — 규칙은 결과 보기 전에 박았고, 결과는 회신 전까지 보지 않습니다. 고치실 곳이 있으면 결과 전에 고칩니다.
+
+**[10-03 덧붙임] 실행 상태** — 10 런이 모두 끝났습니다 (gabia 10-03 16:56 · kgy 10-02 12:56). 전부 종료 코드 0 이고 중단 흔적은 없으며, 공존 가드는 한 번도 발동하지 않았습니다 (gabia GPU 합계 최대 43,437 MiB · 저희 MD 최대 2,038 MiB). **결과(β · D · MSD)는 아직 아무도 보지 않았습니다** — 런마다 파일 해시만 기록했습니다. 사용 시간은 gabia 런 합 ≈ 63 h · kgy 큐 ≈ 35 h 로 상한 150 GPU-h 안입니다. 판독은 이 편지의 회신을 받은 뒤 하겠습니다. 그래서 아래 규칙을 지금 고치셔도 결과 전입니다.
 
 **1. 무엇을 재나**
 - 같은 5 담금질 시드(relax 판 `final.xyz` · 옛 본 런과 같은 초기구조 · 값으로 판별)로 **550 K · 800 ps** 와 **600 K · 400 ps** 각 5 런, 모두 10 런입니다.

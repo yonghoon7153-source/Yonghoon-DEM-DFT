@@ -41,5 +41,96 @@
   "예외_4_소멸": "D-2026-09-30-gabia-uma-coexist-elastic-li2s-v2 — 자기 조건('5 런이 끝나면 소멸')대로 10-03 16:56:59 소멸. 위 피크는 마지막 런(T600 seed5) 값이고, 런별 피크는 gabia queue_coexist.tsv 에 있다 (인벤토리 때 받는다).",
   "results_seen": false,
   "⏭": "① 두 기계 인벤토리 (해시·크기·종료 코드만 · 결과값 출력 없음) ② 편지 CO 발송 (사용자 · 초안 2026-09-30) ③ 회신 CO 뒤 판독 (카드 §1b·§4 · 10 런 · msd_diffusive_check.py)"
+ },
+ "✅_인벤토리_2026_10_03": {
+  "근거": "사용자 붙여넣기 10-03 (gabia kserver116-27 · kgy esp-Z590) — 해시·크기·종료 코드만 · 결과값(β·D·MSD) 출력 없음 · results_seen false 그대로",
+  "gabia_queue_coexist_tsv": [
+   {
+    "T": 600,
+    "seed": 2,
+    "rc": 0,
+    "done": 1,
+    "wall_s": 26452,
+    "peak_total_MiB": 43437,
+    "peak_ours_MiB": 2038,
+    "killed": "",
+    "start": "2026-10-01 01:43:00",
+    "host_min_MiB": 44576
+   },
+   {
+    "T": 550,
+    "seed": 1,
+    "rc": 0,
+    "done": 1,
+    "wall_s": 66886,
+    "peak_total_MiB": 41975,
+    "peak_ours_MiB": 1992,
+    "killed": "",
+    "start": "2026-10-01 09:03:53",
+    "host_min_MiB": 44893
+   },
+   {
+    "T": 600,
+    "seed": 4,
+    "rc": 0,
+    "done": 1,
+    "wall_s": 33574,
+    "peak_total_MiB": 42021,
+    "peak_ours_MiB": 2038,
+    "killed": "",
+    "start": "2026-10-02 03:38:40",
+    "host_min_MiB": 44701
+   },
+   {
+    "T": 550,
+    "seed": 3,
+    "rc": 0,
+    "done": 1,
+    "wall_s": 67077,
+    "peak_total_MiB": 43193,
+    "peak_ours_MiB": 2038,
+    "killed": "",
+    "start": "2026-10-02 12:58:15",
+    "host_min_MiB": 44415
+   },
+   {
+    "T": 600,
+    "seed": 5,
+    "rc": 0,
+    "done": 1,
+    "wall_s": 33646,
+    "peak_total_MiB": 43147,
+    "peak_ours_MiB": 1992,
+    "killed": "",
+    "start": "2026-10-03 07:36:13",
+    "host_min_MiB": 44485
+   }
+  ],
+  "gabia_런": {
+   "seed1/T550": "파일 7 · 120M · msd de5b08e873240d40 · meta 47f3990702168db9",
+   "seed2/T600": "파일 7 · 61M · msd 5ca2d8e8bf0f3f0e · meta fd6959aa0ab4c8e8",
+   "seed3/T550": "파일 7 · 120M · msd e576e912ad7f8cea · meta 45c845bb1a6bcfab",
+   "seed4/T600": "파일 7 · 61M · msd 38e23d555b65c030 · meta f4aa20ff94aee656",
+   "seed5/T600": "파일 7 · 61M · msd e0c59c8c7abaf013 · meta 3feb5c251326f605"
+  },
+  "kgy_큐_로그": [
+   "[2026-10-01 01:46:02] 드라이버 sha16 c3e2d358ee53cefa ✅",
+   "[2026-10-01 16:01:26] ✅ T600 seed1 끝 (rc 0)",
+   "[2026-10-01 22:12:02] ✅ T550 seed2 끝 (rc 0)",
+   "[2026-10-02 01:10:08] ✅ T600 seed3 끝 (rc 0)",
+   "[2026-10-02 07:02:49] ✅ T550 seed4 끝 (rc 0)",
+   "[2026-10-02 12:56:44] ✅ T550 seed5 끝 (rc 0)",
+   "[2026-10-02 12:56:44] ■ 큐 끝 · 600:1:400 550:2:800 600:3:400 550:4:800 550:5:800"
+  ],
+  "kgy_런": {
+   "seed1/T600": "파일 7 · 61M · msd 2a8bea8227c2624a · meta 210ef92e0771c707",
+   "seed2/T550": "파일 7 · 120M · msd 9c894393e36cecf9 · meta 2c5fa8832fb3e274",
+   "seed3/T600": "파일 7 · 61M · msd c19fccb939999f44 · meta b013f29f79558283",
+   "seed4/T550": "파일 7 · 120M · msd d686c341822499d4 · meta 8e7dbc61a6386aca",
+   "seed5/T550": "파일 7 · 120M · msd 2ed95215ab77debf · meta 660a4a086d9d72eb"
+  },
+  "판독": "10 런 전부 종료 코드 0 · 파일 7 · 중단 흔적(_aborted_) 없음 · msd.json 해시 10 개 서로 다름 · 크기 400 ps 61M / 800 ps 120M 로 길이와 맞음 · 두 기계 드라이버 sha16 c3e2d358ee53cefa 같음. gabia 예외 (4) 의 런별 피크 합계 최대 43,437 MiB (T600 seed2) < 가드 46,000 · 우리 MD 최대 2,038 MiB < 3,500 · host 최저 44,415 MiB. gabia 런 벽시계 합 227,635 s ≈ 63.2 h · kgy 큐 벽시계 01:46 → 다음날 12:56 ≈ 35.2 h — 카드 상한 150 GPU-h 안.",
+  "디스크": "gabia /data 2.1T 남음 · kgy / 299G 남음",
+  "⏭": "원자료 합치기·판독은 편지 CO 회신 뒤 (카드 '결과는 회신 전까지 안 본다')"
  }
 }
