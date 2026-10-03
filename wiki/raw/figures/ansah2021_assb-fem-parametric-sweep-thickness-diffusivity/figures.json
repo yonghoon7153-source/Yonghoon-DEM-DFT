@@ -1,0 +1,249 @@
+{
+ "slug": "ansah2021_assb-fem-parametric-sweep-thickness-diffusivity",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-03",
+ "sources": [
+  "463fa050-64._A_comprehensive_parametric_study_for_solid-state_lithium-ion_battery_through_finite_element_simulation.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 A schematic diagram of the SSB showing the anode, solid electrolyte and cathode along the x- axis. The anode (lithium alloy of InLi) and cathode ­(LiCoO2) is separated by the SE",
+   "rotated_deg": 0,
+   "bbox": [
+    300.1,
+    532.6,
+    552.4,
+    677.6
+   ],
+   "w": 1052,
+   "h": 605,
+   "dpi": 300,
+   "src": "463fa050-64._A_comprehensive_parametric_study_for_solid-state_lithium-ion_battery_through_finite_element_simulation.pdf",
+   "blank": 0.474,
+   "note": "봤다(p. 2 · 래스터 JPEG 969×554 — 원본 해상도 그대로 크롭). 도식: Li alloy (Anode) | Solid electrolyte | LiCoO₂ (Cathode) · x = 0(음극|SE) · x = L_e(SE|양극) · x = L_e + L_c — 양극을 **구 입자 복합체**(회색 바탕 + 파란 구)로 그렸다 ↔ 식 (3) · (13)–(14) 는 x 방향 평면 판(입자 반경 · 공극 · 양극 안 SE 매개변수 0 — D). 두께 축척 아님(L_e 700 ↔ L_c 200 µm 인데 폭 비슷). 캡션 필드 깨끗(soft hyphen 하나)."
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 Predicted discharge profiles at a discharging rate of 0.1, 0.5 and 1 C for cathode electrode thickness of a 100, b 200, c 300 and d 600 μm",
+   "rotated_deg": 0,
+   "bbox": [
+    45.0,
+    51.8,
+    550.3,
+    380.0
+   ],
+   "w": 2106,
+   "h": 1369,
+   "dpi": 300,
+   "src": "463fa050-64._A_comprehensive_parametric_study_for_solid-state_lithium-ion_battery_through_finite_element_simulation.pdf",
+   "blank": 0.917,
+   "note": "봤다(p. 7 · 래스터 1772×1318 Flate · 축 눈금 화소 판독). 네 판 (a)–(d) = L_c 100 · 200 · 300 · 600 µm × 0.1 · 0.5 · 1 C · 차단 2.5 V. [도표·화소] 끝 용량 (a) 46.17 · 45.33 · 44.15 (b) 92.05 · 89.08 · 86.02 (c) 130.63 · 122.93 · 115.35 (d) 217.42 · 194.17 · 176.4 mAh/g ↔ 인쇄 (a) 46.13 · 45.35 · 44.13 (b) 92.00 · 89.23 · 86.74 (c) 130.63 · 122.93 · 115.35 (d) 217.62 · 194.53 · 176.65 — ⚠ (a) 0.1 C 46.17 은 같은 조건(100 µm · 0.1 C)의 그림 3 · 5(48.4)와 다르다(D). 범례 '1.0 C' ↔ (b)(c) '1 C' 표기 혼용. 캡션 필드 깨끗."
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 Variation of the cell capacity with discharging rates of 0.1, 0.5 and 1.0 C at varying cathode electrode thickness of 100, 200, 300 and 600 μm",
+   "rotated_deg": 0,
+   "bbox": [
+    45.0,
+    427.1,
+    297.3,
+    603.4
+   ],
+   "w": 1052,
+   "h": 736,
+   "dpi": 300,
+   "src": "463fa050-64._A_comprehensive_parametric_study_for_solid-state_lithium-ion_battery_through_finite_element_simulation.pdf",
+   "blank": 0.906,
+   "note": "봤다(p. 7 · 래스터 969×685 Flate · 표지 중심 화소 판독 ±0.4). 용량 vs C-rate(0.1 · 0.5 · 1.0) · L_c 100 · 200 · 300 · 600 µm. [도표·화소] 0.1 C 48.24 · 91.82 · 130.64 · 217.39 / 0.5 C 45.35 · 88.72 · 123.62 · 194.67 / 1 C 45.14 · 85.00 · 114.95 · 176.70 — 100 µm · 0.1 C 는 그림 3(48.43)과 같고 그림 4(a) · 본문(46.13)과 다름 · 200 µm · 1 C 85.00 ↔ 그림 4(b) 86.02 ↔ 인쇄 86.74. 캡션 필드 깨끗."
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 4,
+   "file": "tab_1.png",
+   "caption": "Table 1 Model parameter description and values used for the simulation of the SSB",
+   "rotated_deg": 0,
+   "bbox": [
+    45.6,
+    27.6,
+    549.4,
+    756.6
+   ],
+   "w": 2072,
+   "h": 2998,
+   "dpi": 296,
+   "src": "463fa050-64._A_comprehensive_parametric_study_for_solid-state_lithium-ion_battery_through_finite_element_simulation.pdf",
+   "blank": 0.923,
+   "note": "봤다 — ⚠ 과대: 자동 크롭이 p. 4 쪽 전체(머리글 · 식 (3)–(11) · 표 1 · 바닥글)를 잡음(캡션이 표 왼쪽 옆 단 x 51–159 pt 라 '표 본체' 영역을 가두지 못함) → 표 단독은 수동 tab_1_manual_p4.png. 자동 파일은 지우지 않음 — 이 쪽 렌더로 식 (3)–(11) 을 읽었다(식 (4) 분자 'd' 누락 · 이동 항 부호 '+' · 식 (5) N ↔ C 자리 뒤바뀜 · 식 (11) θ = C_Li+/C_Lis,max — digest D 항목). 캡션 필드 깨끗."
+  },
+  {
+   "key": "f2m",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2_manual_p5.png",
+   "bbox": [
+    45,
+    50,
+    550,
+    312
+   ],
+   "w": 2105,
+   "h": 1092,
+   "caption": "Fig. 2 Comparison of discharge profiles between model prediction and experimental data for 1,5,10 and 20 cycles at a discharging rate of 0.1 C. (R2: a measure of the accuracy between the modeled and experimental data)",
+   "note": "수동 — p. 5 렌더 300 dpi(그림 + 왼쪽 옆 캡션). 자동 제외 '그래픽 없음(img0/draw0)' — Springer 옆 캡션(x 51–157 pt)이라 크로퍼가 캡션 위 · 아래만 찾음. 봤다(원본 래스터 xref 451 · 1418×1035 Flate · 축 눈금 화소 판독). 모형(실선) 넷 · 실험(속 빈 표지 — □ 1 · ○ 5 · △ 10 · ◇ 20 사이클) 넷 · 그림 안 'Average R² – 0.96'. [도표·화소] 모형 끝(2.51 V) 91.9 · 81.1 · 65.8 · 52.45 mAh/g · 실험 마지막 표지 ≈93.3(2.56 V) · ≈80.9(2.57) · ≈65.6(2.60) · ≈53(2.68) · 모형 Q 5 mAh/g 전압 3.968 · 3.909 · 3.852 · 3.835 V — **사이클마다 다른 모형 곡선**(바꾼 매개변수 인쇄 0 · 모형에 열화 항 0 · C_max 쓸기(그림 7a)는 처음 ≈10 mAh/g 가 겹쳐 이 꼴이 안 남). 축 'Cell voltage (V)' 기준 미인쇄(모형 = Li 기준 OCP · 음극 InLi).",
+   "manual": true,
+   "dpi": 300,
+   "rotated_deg": 0,
+   "blank": null,
+   "src": "463fa050-64._A_comprehensive_parametric_study_for_solid-state_lithium-ion_battery_through_finite_element_simulation.pdf"
+  },
+  {
+   "key": "f3m",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3_manual_p6.png",
+   "bbox": [
+    45,
+    50,
+    297,
+    462
+   ],
+   "w": 1051,
+   "h": 1717,
+   "caption": "Fig. 3 a Predicted discharge profile for various cathode electrode thickness and b variation between the cell capacity and the electrode thickness",
+   "note": "수동 — p. 6 렌더 300 dpi(그림 + 아래 캡션). 자동 누락 — 캡션이 'Fig. 3   a Predicted …' 처럼 소문자 패널 글자로 시작해 캡션으로 안 잡힘(같은 쪽 본문 줄머리 'Fig. 2. The discharge …' 가 캡션으로 오인돼 '그래픽 없음' 제외). 봤다(원본 래스터 xref 472 · 969×1472 · 화소 판독). (a) L_c 100–600 µm · 0.1 C · [도표·화소] 끝 48.36 · 70.64 · 91.91 · 111.85 · 130.61 · 217.3 mAh/g · Q 30 에서 3.747 · 3.802 · 3.830 · 3.846 · — · 3.865 V(두꺼울수록 높음 — 고정 질량 정규화로 읽힘) · (b) 48.43 · 70.93 · 92.05 · 111.96 · 130.83 · 217.72(인쇄 ±0.17) — 100–300 µm 직선 외삽(600 µm 255.2)보다 −14.7 % · µm 당 0.484 → 0.363 mAh g⁻¹.",
+   "manual": true,
+   "dpi": 300,
+   "rotated_deg": 0,
+   "blank": null,
+   "src": "463fa050-64._A_comprehensive_parametric_study_for_solid-state_lithium-ion_battery_through_finite_element_simulation.pdf"
+  },
+  {
+   "key": "f6m",
+   "kind": "figure",
+   "label": "6",
+   "page": 8,
+   "file": "fig_6_manual_p8.png",
+   "bbox": [
+    45,
+    50,
+    550,
+    317
+   ],
+   "w": 2105,
+   "h": 1113,
+   "caption": "Fig. 6 Computed variation of the thickness of the SE with respect to the capacity of the SSB",
+   "note": "수동 — p. 8 렌더 300 dpi(그림 + 왼쪽 옆 캡션). 자동 제외 '그래픽 없음' — 옆 캡션. 봤다(원본 래스터 xref 526 · 1418×1057 · 표지 중심 화소 판독 ±0.04 · 눈금 보정 잔차 0.07). L_e 200 · 400 · 600 · 700 · 900 µm → 130.04 · 122.15 · 100.07 · 92.02 · 75.01 mAh/g · 본문 '+41.30 %' = 기준 700 µm(92) ✅ · '−22.67 %' = (92.02 − 75.01)/75.01 — **기준이 900 µm 값**(기준 92 면 −18.49 %) — D. 간격 비균등(200 · 400 · 600 · 700 · 900).",
+   "manual": true,
+   "dpi": 300,
+   "rotated_deg": 0,
+   "blank": null,
+   "src": "463fa050-64._A_comprehensive_parametric_study_for_solid-state_lithium-ion_battery_through_finite_element_simulation.pdf"
+  },
+  {
+   "key": "f7m",
+   "kind": "figure",
+   "label": "7",
+   "page": 9,
+   "file": "fig_7_manual_p9.png",
+   "bbox": [
+    45,
+    50,
+    297,
+    494
+   ],
+   "w": 1051,
+   "h": 1851,
+   "caption": "Fig. 7 a Predicted discharge profiles for various maximum lithium concentrations in the solid phase. The dashed line represents the initial maximum concentration value used for the modeling construction and b the variation of the cell capacity with the maximum lithium concentration in the solid phase",
+   "note": "수동 — p. 9 렌더 300 dpi(그림 + 아래 캡션). 자동 누락 — 캡션이 'Fig. 7   a Predicted …'(소문자 패널 글자 시작). 봤다(원본 래스터 xref 541 · 969×1519 · 화소 판독). (a) C_max 2130 · 2230 · 2280 · **2330(점선 = 초기값)** · 2380 · 2430 · 2530 mol m⁻³ · 0.1 C · 끝 83.27 · 87.57 · 89.75 · 91.94 · 94.13 · 96.38 · 100.76 · 처음 ≈10 mAh/g 겹침(Q 30 폭 33 mV · Q 60 72 mV) · 가로축 눈금 23 간격 · (b) 83.34 · 87.62 · 89.82 · 92.02 · 94.22 · 96.42 · 100.70 — 직선(기울기 0.0436 mAh g⁻¹ per mol m⁻³ · 절편 −9.48 · 잔차 ≤0.06) · 원점 비례 아님 · 초기값 2330 = 91호 a_max 2.33×10⁴ 의 1/10(`[해석]` 자릿수).",
+   "manual": true,
+   "dpi": 300,
+   "rotated_deg": 0,
+   "blank": null,
+   "src": "463fa050-64._A_comprehensive_parametric_study_for_solid-state_lithium-ion_battery_through_finite_element_simulation.pdf"
+  },
+  {
+   "key": "f8m",
+   "kind": "figure",
+   "label": "8",
+   "page": 10,
+   "file": "fig_8_manual_p10.png",
+   "bbox": [
+    45,
+    50,
+    550,
+    319
+   ],
+   "w": 2105,
+   "h": 1122,
+   "caption": "Fig. 8 Predicted effect of cathode diffusivity of lithium-ion on the performance of the SSB. The dashed line represents the initial value used for the modeling. The SSB is discharged at 0.1 and 1.0 C-rates whiles varying the cathode diffusivity",
+   "note": "수동 — p. 10 렌더 300 dpi(그림 + 왼쪽 옆 캡션). 자동 제외 '그래픽 없음' — 옆 캡션. 봤다(원본 래스터 xref 546 · 1418×1065 · 로그 축 화소 판독 — 십년 눈금 131.3 px · 보정 0.004 decade · 0.06 mAh/g). 0.1 C(빨강) 1e-18 … 1e-11 → 2.79 · 25.59 · 82.34 · 90.74 · 91.60(이후 같음) · 1.0 C(검정) 1e-17 … 1e-11 → 1.76 · 17.08 · 77.43 · 88.97 · 90.12 · 90.23 · 90.40 · **점선(초기값) log D −14.28 → ≈5.2×10⁻¹⁵ m² s⁻¹ ↔ 표 1 1.76×10⁻¹⁵(×3.0)**(D) · 본문 '1 C … does not saturate' ↔ 1e-14 이후 +1.6 % 평탄(D) · 저 D 구간 용량 ∝ D → [재현·가정] 평면 확산 길이 ≈1.0 µm(0.1 C) ↔ 인쇄 L_c 200 µm.",
+   "manual": true,
+   "dpi": 300,
+   "rotated_deg": 0,
+   "blank": null,
+   "src": "463fa050-64._A_comprehensive_parametric_study_for_solid-state_lithium-ion_battery_through_finite_element_simulation.pdf"
+  },
+  {
+   "key": "t1m",
+   "kind": "table",
+   "label": "1",
+   "page": 4,
+   "file": "tab_1_manual_p4.png",
+   "bbox": [
+    45,
+    522,
+    550,
+    724
+   ],
+   "w": 2105,
+   "h": 842,
+   "caption": "Table 1 Model parameter description and values used for the simulation of the SSB",
+   "note": "수동 — p. 4 렌더 300 dpi — 표 1 단독(+ 왼쪽 옆 캡션 · 각주 '* Values from cell design'). 봤다. 12 행 — 텍스트 층과 같음 ✅ · 출처 칸: '*' 넷(L_c 200 µm · L_e 700 µm · A 7.8×10⁻⁷ m² · D_Li+ 6.7×10⁻¹² m² s⁻¹ — 본문 'The cathode thickness used for the experimental studies is 200 μm (Table 1)') · [17, 21] 넷(D_Lis 1.76×10⁻¹⁵ · α_pos 0.5 · k 5.1×10⁻⁴ mol m⁻² s⁻¹ · δ 0.18) · [21, 27] 하나(C_Lis 10,818 mol m⁻³) · 상수 셋(R 8.314 · F 96,487 · T 298 K). 표에 없음: C_Lis,max(그림 7 점선 2330) · C_Lis,min · C_Li,all · C₀ · σ · SE 전도도 · 차단 전압 · 1C 기준 · mAh/g 분모 질량. ⚠ D_Lis · δ · C_Lis(= δ·a₀ = 0.18 × 6.01×10⁴) · k(가수 5.1)는 91호(Danilov 2011 표 II) · 99호(Kim 2019 표 1 — k_pos 5.1×10⁻⁴) 계보의 값과 숫자로 같음.",
+   "manual": true,
+   "dpi": 300,
+   "rotated_deg": 0,
+   "blank": null,
+   "src": "463fa050-64._A_comprehensive_parametric_study_for_solid-state_lithium-ion_battery_through_finite_element_simulation.pdf"
+  },
+  {
+   "key": "fTOCm",
+   "kind": "figure",
+   "label": "TOC",
+   "page": 2,
+   "file": "fig_TOC_manual_p2.png",
+   "bbox": [
+    45,
+    50,
+    550,
+    262
+   ],
+   "w": 2105,
+   "h": 884,
+   "caption": "Graphic Abstract — This work summarizes the relationship between some design parameters and the performance of a solid-state battery through modeling approach.",
+   "note": "수동 크롭 — 본문 2 쪽 'Graphic Abstract'(그림 번호 · 캡션 없음 — 자동 대상 아님 · 원본 래스터 xref 20, 1299×723 Flate · rect 141.8–453.5 × 81.9–255.5 pt) · 300 dpi. 봤다: 가로 Cell capacity 40–220 mAh/g · 왼쪽 세로 Max. Li conc. in solid phase 2100–2600 mol m⁻³ · 오른쪽 세로 Electrode and electrolyte thickness 150–900 µm · 추세 화살표 셋(Max. Li conc. ↑ · Electrode thickness ↑ · Electrolyte thickness ↓) — 자료점 0(그림 3 · 6 · 7 끝점과 같은 방향의 모식).",
+   "manual": true,
+   "dpi": 300,
+   "rotated_deg": 0,
+   "blank": null,
+   "src": "463fa050-64._A_comprehensive_parametric_study_for_solid-state_lithium-ion_battery_through_finite_element_simulation.pdf"
+  }
+ ]
+}
