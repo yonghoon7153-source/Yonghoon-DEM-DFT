@@ -636,7 +636,7 @@ the other; their agreement quantifies model trust.
   R_j 단위 1e−8 (`07`) · D4 fallback (`08`) · FULL ≤ vox ≤ CF 는 불변식 아님 (`09`) · "VGCF 100 = 분말값" 철회 (`10`) · ✅ **1저자 비준 10-03** (*"아까 비준사항은 다 비준"*) = G1 수정 묶음 (반례 먼저 · 웹앱 같은 묶음) ·
   RINT-03 실침대 측정 · G2 = 초안 ①′ v2 → Codex 재검토 (② 구현은 그 뒤) · CL-47 정정 (원장 필드 · 표지 ✅).  검토 대상 설계안 =
   `docs/reviews/contact_resistance_pipeline_draft_20261002.md` (10-02 에이전트 초안 · **1저자 미보고** · ①′ 면적 규약 · `iid` · D1–D9).
-  자기리뷰 (P1-1 · P2-1~4 · P3) 수정은 **아직 0** · `SELF-81` 대신 `RINT-01` 로 등재 (10-03).  새 관찰: 입자별 전류가 AM 자리를 덮은 탄소 셀을
+  ✅ **G1-1 수정 `f1f92d009` (10-03 · 반례 먼저)** = `RINT-01` · `03` · `11` · `12` · `19` claimed_fixed (같은 상 계면 = AM 만 · je = 최종 sid AM 셀만 = r-OFF 에서도 바뀌는 **선언된 예외** `je_definition = am-final-sid-v2` · 진단 맥락 지문 · 웹앱 je 정의 표지) · ⬜ G1-2 (네 솔브 적용 영수증 · CLI 모순 요청 · 레지스트리) → G1-3 (Joule bulk-only · STEP4 거부 · rxn scope) → Codex G1 재검증 · `SELF-81` 대신 `RINT-01` 로 등재 (10-03).  새 관찰: 입자별 전류가 AM 자리를 덮은 탄소 셀을
   AM 몫에 넣는다 (계면 항 무관 · 1.24×) · 고정 브리지에서 계면이 브리지 공 표면에 놓여 vox 사다리가 **틀린 면적으로 수렴**.
 
 ---

@@ -7098,13 +7098,17 @@
   {
    "id": "RINT-01",
    "severity": "P1",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "claude 자기리뷰 10-02 (P1-1) · codex 10-03 CONFIRMED",
    "opened_in": "docs/reviews/codex_review_rint_stage1_20261003.md",
    "title": "r-ON same-sid 면이 AM 입자 번호 (pid) 를 섬유 경계로 읽는다 — 한 VGCF 가닥 안에 가짜 계면 (자기리뷰 P1-1 · Codex CONFIRMED)",
    "note": "자리: scripts/step3_sigma.py:242–258 (face_rint) · :647–676 (첨가제 스탬프가 sid 만 바꾸고 pid 는 AM 번호 유지).  재현: 한 가닥에 AM pid 0/1/2 → VGCF|VGCF r=1e−4 Ω·cm² 에서 σ_e 11.1111 → 0.131752 S/cm · 가짜 면 2 (pid −1 이면 0) · 실제 rasterize 로도 두 AM 목을 지나는 섬유에서 가짜 면 2.  무너지는 것: same-sid 규칙을 VGCF · SE 로 그대로 확장해도 입자/가닥 경계를 잰다는 주장.  안 무너지는 것: rint=None scalar σ · 다른-sid 직렬 막 산술.  최소 수정 (Codex): ① 에서 same-sid 는 AM_S/AM_P 만 — CLI · API · 면 규칙 모두 강제 · 지원 안 하는 소유번호 요청은 거부 (면 0 경고로 넘기지 않음) · ②③ 은 final sid 마스크 + 분리 이름공간 iid 선행.  해결 증거: 가짜 면 탐침 거부 · 서로 다른 두 AM 사이 막 유지 · 가닥 내부 막 없음 (pid 오염 여부 무관).  자기리뷰가 예고한 `SELF-81` 은 이 항목으로 갈음 (같은 결함).  등재 2026-10-03 = Codex r_int ① 1단계 판정 반입 (1저자 전달).  ⛔ 1단계 판정 = G1 HOLD · G2 HOLD (기본 OFF 산출을 폐기하라는 판정 아님 · 수정 착수 금지도 아님 — 제시 처방만으로 닫힌다는 판정을 못 낸다는 뜻) · 수정은 1저자 비준 뒤 반례 먼저 (규율 ②) · 코드 → 웹앱 → 게이트 → 커밋 한 묶음 (J20-l).  1저자 비준 10-03: G1 수정 묶음 (반례 먼저 · 웹앱 같은 묶음 J20-l).",
-   "evidence_tests": []
+   "evidence_tests": [
+    "scripts/step3_sigma.py::--selftest-rint ⓙ1–ⓙ7 (반례 먼저 · 옛 코드에서 실패 확인) ⓙ1 파서 거부 7 · ⓙ2 API 거부 · ⓙ3 면 규칙 거부 · ⓙ4 원 반례 (VGCF|VGCF + AM pid 침대) 솔브 거부 · AM 두 입자 막 5/6 유지"
+   ],
+   "claimed_fixed_sha": "f1f92d009",
+   "verification_note": "f1f92d009: 같은 상 계면 = pid 소유 상 (AM_S · AM_P) 만 — PID_OWNER_SIDS · parse_rint_table · _check_rint_table · face_rint 셋이 강제 · step3 selftest 전부 PASS · 게이트 rc 0 (10-03).  ⬜ ② VGCF 가닥 · ③ SE 입자 번호는 별도 이름공간 iid 뒤 (G2 · ② 설계).  Codex 재검증 대기."
   },
   {
    "id": "RINT-02",
@@ -7120,13 +7124,18 @@
   {
    "id": "RINT-03",
    "severity": "P2",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "claude 10-03 (요청서 §3 새 관찰) · codex 10-03 CONFIRMED (121–127× 반례)",
    "opened_in": "docs/reviews/codex_review_rint_stage1_20261003.md",
    "title": "iid 만 추가하면 r-OFF 에서도 입자별 AM 전류 지도가 틀리다 — AM pid 를 물려받은 탄소 셀이 AM 평균에 섞임 (121–127× · 입자 순위 역전)",
    "note": "자리: scripts/step3_sigma.py:1113–1115; scripts/mpm_webapp_payload.py:1989 · 3029; 초안 contact_resistance_pipeline_draft_20261002.md:110.  재현 (실제 rasterize · 두 AM 구 + 접선 VGCF · 입력 섬유점 전부 AM 밖): 탄소 20 셀 중 8 셀이 AM pid · r OFF 에서 AM0 0.0383162435 vs final sid 집계 0.0003027511 (126.5602×) · AM1 0.0377561038 vs 0.0003121740 (120.9457×) · 순위 역전 (함수 내부 |J_z| 대리량 — 실험 전류밀도로 인용 금지).  reaction (:1891 · 1902) · am_surface_patches (:3340 · 3362) 는 AM sid 를 먼저 가려 pid 정리 전후 비트 동일 — 모든 pid 소비처가 같은 결함은 아님.  최소 수정: per_particle_current 에 final sid∈{1,2} ∧ 유효 pid 마스크 (raw pid 보존 가능) · iid 는 별도.  ⚠ 계약 수정: 초안:41 · 53 의 \"r OFF 전 산출 비트 동일\" 과 양립 불가 → σ · φ · reaction · patch 는 보존하고 je 소유권 수정은 버전 · 의도한 변경 예외로 선언 (잘못된 je 를 비트 동일 때문에 보존하지 않는다).  웹앱 짝: 입자별 전류 표시.  등재 2026-10-03 = Codex r_int ① 1단계 판정 반입 (1저자 전달).  ⛔ 1단계 판정 = G1 HOLD · G2 HOLD (기본 OFF 산출을 폐기하라는 판정 아님 · 수정 착수 금지도 아님 — 제시 처방만으로 닫힌다는 판정을 못 낸다는 뜻) · 수정은 1저자 비준 뒤 반례 먼저 (규율 ②) · 코드 → 웹앱 → 게이트 → 커밋 한 묶음 (J20-l).  ★ 선행 기록: docs/reviews/deep_review_20260816_sdcp_stamp.md §7 \"pid 누출\" (SDCP 셀이 AM pid 유지 → per_particle_current 에 산입 · \"뷰어 프록시 한정, 무해 수준. 기록만\") — 그 \"무해\" 는 **셀 수** (AM 셀의 0.10 %) 근거였다.  탄소 셀 전류밀도가 AM 셀보다 크면 적은 셀이 평균을 지배한다 (이 항목 반례 121–127×) → 전류 가중으로는 무해 판정이 서지 않는다.  1저자 비준 10-03: G1 묶음 ⓒ (final sid 마스크 · r-OFF 값 변경 = 의도한 변경 선언) + 실침대 1 개 마스크 전/후 측정 (웹앱 화면 표지 결정용).",
-   "evidence_tests": []
+   "evidence_tests": [
+    "scripts/step3_sigma.py::--selftest-rint ⓙ1–ⓙ7 (반례 먼저 · 옛 코드에서 실패 확인) ⓙ5 je = AM 셀만 평균 (판별력: 탄소 포함 집계와 > 5×) · n_am 밖 pid 마스크",
+    "webapp/test_je_definition_label.py (시험 먼저 2/10 → 22/22)"
+   ],
+   "claimed_fixed_sha": "f1f92d009",
+   "verification_note": "f1f92d009: per_particle_current 마스크 = 최종 sid ∈ {1, 2} ∧ 0 ≤ pid < n_am · 정의 판 PER_PARTICLE_CURRENT_DEF = am-final-sid-v2 (r-OFF 에서도 je · jb 가 바뀌는 **선언된 예외** — σ · φ · 소산 분담 · 반응 · patch 는 그대로) · payload step3.je_definition · 웹앱 표지 (옛 payload = 옛 정의 경고 · A/B 불일치 경고) · 게이트 rc 0 (10-03).  ⬜ 비준 ② 실침대 1 개 마스크 전/후 측정 (명령 = 1저자).  Codex 재검증 대기."
   },
   {
    "id": "RINT-04",
@@ -7202,30 +7211,38 @@
    "found_by": "codex 10-03 (Q7 출처 정정)",
    "opened_in": "docs/reviews/codex_review_rint_stage1_20261003.md",
    "title": "출처 정정: 요청서 §5–6 · 초안 :45 · 159 의 \"σ_VGCF 100 = 분말값 → 단섬유값으로 바꾸면 이중계상이 없다\" 철회 — 도입 커밋 087d1a07c 의 default 100 은 hook · 현재 역할은 직경보존 국소 섬유 closure · 이중계상 크기 · 분해 미식별",
-   "note": "자리: docs/reviews/codex_rint_stage1_request_20261003.md:100 · 104; 초안:45 · 159; scripts/step3_sigma.py:21–43 · 1358–1415 (diameter_preserving_sigma = σ×A_real/A_vox).  Codex Q7: AM 10/5 mS/cm = 상별 국소 σ 로 쓰지만 출처 지위는 corpus-fit hook · VGCF 100 = 측정 분말값 그 자체로 입증 안 됨 (도입 커밋 087d1a07c 2026-07-09 의 실제 코드가 default=100 을 hook 으로 넣음 · 증거 evidence_root/vgcf_origin_excerpt.json) · SE 3.0 의 입내/입계 분해는 입력 숫자만으로 식별 안 됨.  합성 1D 반례: 같은 σ_eff 0.003 S/cm 를 σ_grain 0.003 / 0.006 / 0.03 + 서로 다른 r ≥ 0 이 모두 재현 (비식별성 — 재료값 추천 아님).  ⚠ CL-47 (live) 의 \"코드 100 은 분말값\" 문구와의 관계 = 1저자 결정.  최소 수정 (④ 전): 내부값 채택 조건 5 (원문/SI 확인 · 각 항이 제외/포함하는 저항 · σ_internal 과 r 를 한 유효값으로 동시에 정하지 않음 · 보정/holdout 사전 분리 · 결손이면 감도 시나리오) · 병기 열 (legacy effective-hook / intrinsic+explicit-interface scenario · 실제 phase σ(T_ref,T) · r/R_j · 면적 정의 · 출처/추정 · calibration/holdout · 모델 ID) · 기존 팔을 소급해 \"내부값\" 이라 부르지 않음.  등재 2026-10-03 = Codex r_int ① 1단계 판정 반입 (1저자 전달).  ⛔ 1단계 판정 = G1 HOLD · G2 HOLD (기본 OFF 산출을 폐기하라는 판정 아님 · 수정 착수 금지도 아님 — 제시 처방만으로 닫힌다는 판정을 못 낸다는 뜻) · 수정은 1저자 비준 뒤 반례 먼저 (규율 ②) · 코드 → 웹앱 → 게이트 → 커밋 한 묶음 (J20-l).  1저자 비준 10-03 (CL-47 정정): claims.json CL-47 `correction_20261003` 필드 · CLAUDE.md CL-47 줄 표지 · docs/voxel_contact_free_gap.md §8 표지 = 이 커밋 · 남은 것 = scripts/step3_sigma.py:157 · :21–43 · :1358–1415 주석 (G1 코드 묶음) → 그때 claimed_fixed.",
+   "note": "자리: docs/reviews/codex_rint_stage1_request_20261003.md:100 · 104; 초안:45 · 159; scripts/step3_sigma.py:21–43 · 1358–1415 (diameter_preserving_sigma = σ×A_real/A_vox).  Codex Q7: AM 10/5 mS/cm = 상별 국소 σ 로 쓰지만 출처 지위는 corpus-fit hook · VGCF 100 = 측정 분말값 그 자체로 입증 안 됨 (도입 커밋 087d1a07c 2026-07-09 의 실제 코드가 default=100 을 hook 으로 넣음 · 증거 evidence_root/vgcf_origin_excerpt.json) · SE 3.0 의 입내/입계 분해는 입력 숫자만으로 식별 안 됨.  합성 1D 반례: 같은 σ_eff 0.003 S/cm 를 σ_grain 0.003 / 0.006 / 0.03 + 서로 다른 r ≥ 0 이 모두 재현 (비식별성 — 재료값 추천 아님).  ⚠ CL-47 (live) 의 \"코드 100 은 분말값\" 문구와의 관계 = 1저자 결정.  최소 수정 (④ 전): 내부값 채택 조건 5 (원문/SI 확인 · 각 항이 제외/포함하는 저항 · σ_internal 과 r 를 한 유효값으로 동시에 정하지 않음 · 보정/holdout 사전 분리 · 결손이면 감도 시나리오) · 병기 열 (legacy effective-hook / intrinsic+explicit-interface scenario · 실제 phase σ(T_ref,T) · r/R_j · 면적 정의 · 출처/추정 · calibration/holdout · 모델 ID) · 기존 팔을 소급해 \"내부값\" 이라 부르지 않음.  등재 2026-10-03 = Codex r_int ① 1단계 판정 반입 (1저자 전달).  ⛔ 1단계 판정 = G1 HOLD · G2 HOLD (기본 OFF 산출을 폐기하라는 판정 아님 · 수정 착수 금지도 아님 — 제시 처방만으로 닫힌다는 판정을 못 낸다는 뜻) · 수정은 1저자 비준 뒤 반례 먼저 (규율 ②) · 코드 → 웹앱 → 게이트 → 커밋 한 묶음 (J20-l).  1저자 비준 10-03 (CL-47 정정): claims.json CL-47 `correction_20261003` 필드 · CLAUDE.md CL-47 줄 표지 · docs/voxel_contact_free_gap.md §8 표지 = 이 커밋 · 남은 것 = scripts/step3_sigma.py:157 · :21–43 · :1358–1415 주석 (G1 코드 묶음) → 그때 claimed_fixed.  10-03 진행: 코드 주석 정정 = f1f92d009 (step3_sigma ① 머리 — \"VGCF 100 분말값\" 서술 → 도입 hook · closure 값 · 이중계상 크기 미식별) · CL-47 정정 = 80432b89d · 요청서 · 초안 = 머리 배너.  ⬜ 초안 ①′ v2 (G2) 에서 :45 · 159 본문 정정 뒤 claimed_fixed.",
    "evidence_tests": []
   },
   {
    "id": "RINT-11",
    "severity": "P3",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "claude 자기리뷰 10-02 (P3-①) · codex 10-03 CONFIRMED P3",
    "opened_in": "docs/reviews/codex_review_rint_stage1_20261003.md",
    "title": "r=0 / 무관 쌍에서 분담 ULP 차 (1.68e−18) + interface=0 키 추가 — \"전 산출 비트 동일\" 계약 위배 (수치 중요성 없음)",
    "note": "σ · φ 는 비트 동일 · 분담 차 1.68e−18 · interface 0.0 키 추가.  수정 후보 (자기리뷰): _rint 맥락을 면 > 0 일 때만 · 또는 계약 문구를 \"σ · φ 비트 동일\" 로 좁힘 (RINT-03 의 의도한 변경 예외와 함께 정리).  등재 2026-10-03 = Codex r_int ① 1단계 판정 반입 (1저자 전달).  ⛔ 1단계 판정 = G1 HOLD · G2 HOLD (기본 OFF 산출을 폐기하라는 판정 아님 · 수정 착수 금지도 아님 — 제시 처방만으로 닫힌다는 판정을 못 낸다는 뜻) · 수정은 1저자 비준 뒤 반례 먼저 (규율 ②) · 코드 → 웹앱 → 게이트 → 커밋 한 묶음 (J20-l).  1저자 비준 10-03: G1 수정 묶음 (반례 먼저 · 웹앱 같은 묶음 J20-l).",
-   "evidence_tests": []
+   "evidence_tests": [
+    "scripts/step3_sigma.py::--selftest-rint ⓙ1–ⓙ7 (반례 먼저 · 옛 코드에서 실패 확인) ⓙ6 r=0 · 격자에 없는 쌍: 면 0 → 진단 맥락 없음 · 분담 키 · 값 비트 동일 · 원장은 남음"
+   ],
+   "claimed_fixed_sha": "f1f92d009",
+   "verification_note": "f1f92d009: 진단 맥락 `_rint` 를 면 > 0 인 해에만 둔다 — r 표가 있어도 걸린 면 0 이면 진단 경로 = 옛 경로 비트 동일 · interface 원장 기록은 그대로 (10-03).  Codex 재검증 대기."
   },
   {
    "id": "RINT-12",
    "severity": "P3",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "claude 자기리뷰 10-02 (P3-②) · codex 10-03 CONFIRMED P3",
    "opened_in": "docs/reviews/codex_review_rint_stage1_20261003.md",
    "title": "솔버 API 의 조용한 형 변환 — (1.7,3)→(1,3) · True→1 · 미지 sid 허용 뒤 왕복 실패",
    "note": "CLI 와 API 모두 엄격 검사 (float sid 절삭 · bool 수치 변환 거부 · 미지 sid · 지원 안 하는 same-sid 소유번호 거부 — G1-1).  등재 2026-10-03 = Codex r_int ① 1단계 판정 반입 (1저자 전달).  ⛔ 1단계 판정 = G1 HOLD · G2 HOLD (기본 OFF 산출을 폐기하라는 판정 아님 · 수정 착수 금지도 아님 — 제시 처방만으로 닫힌다는 판정을 못 낸다는 뜻) · 수정은 1저자 비준 뒤 반례 먼저 (규율 ②) · 코드 → 웹앱 → 게이트 → 커밋 한 묶음 (J20-l).  1저자 비준 10-03: G1 수정 묶음 (반례 먼저 · 웹앱 같은 묶음 J20-l).",
-   "evidence_tests": []
+   "evidence_tests": [
+    "scripts/step3_sigma.py::--selftest-rint ⓙ1–ⓙ7 (반례 먼저 · 옛 코드에서 실패 확인) ⓙ2 API 거부 8 (같은 상 비-AM 2 · float sid · bool sid · bool 값 · 모르는 sid 2 · 문자열 값) · numpy 정수 키 · 실수 값 허용"
+   ],
+   "claimed_fixed_sha": "f1f92d009",
+   "verification_note": "f1f92d009: _check_rint_table 이 sid 정수형 (bool · float 금지) · SID_NAME 안 · 같은 상 = AM 만 · 값 실수 (bool · 문자열 금지) 를 강제 — 조용한 형 변환 없음 (10-03).  Codex 재검증 대기."
   },
   {
    "id": "RINT-13",
@@ -7296,13 +7313,17 @@
   {
    "id": "RINT-19",
    "severity": "P3",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "claude 자기리뷰 10-02 (P3-⑨) · codex 10-03 CONFIRMED P3 + Q8 추가",
    "opened_in": "docs/reviews/codex_review_rint_stage1_20261003.md",
    "title": "진단 맥락 무결성: rint_ctx_from 이 caller sid 를 그대로 받고 res 의 pid 참조가 가변 — 잘못된 sid 로 계면 몫 0.95238→0 · |J|max 101×, pid 변경 뒤 저장 9 면 그대로인데 진단 몫 0",
    "note": "자리: scripts/step3_sigma.py:290–295 · :1082.  Codex: API 오사용/가변 pid 로 진단 오염 가능 · 실제 생산 mismatch 는 미확인 → P3.  수정: 불변 간선 원장 또는 sid · pid/iid · σ · 경계/면 법칙 전체 무결성 확인 (sid 지문만으로 부족 · G1-5).  등재 2026-10-03 = Codex r_int ① 1단계 판정 반입 (1저자 전달).  ⛔ 1단계 판정 = G1 HOLD · G2 HOLD (기본 OFF 산출을 폐기하라는 판정 아님 · 수정 착수 금지도 아님 — 제시 처방만으로 닫힌다는 판정을 못 낸다는 뜻) · 수정은 1저자 비준 뒤 반례 먼저 (규율 ②) · 코드 → 웹앱 → 게이트 → 커밋 한 묶음 (J20-l).  1저자 비준 10-03: G1 수정 묶음 (반례 먼저 · 웹앱 같은 묶음 J20-l).",
-   "evidence_tests": []
+   "evidence_tests": [
+    "scripts/step3_sigma.py::--selftest-rint ⓙ1–ⓙ7 (반례 먼저 · 옛 코드에서 실패 확인) ⓙ7 진단 맥락이 다른 sid · 다른 σ · 솔브 뒤 바뀐 pid 를 거부"
+   ],
+   "claimed_fixed_sha": "f1f92d009",
+   "verification_note": "f1f92d009: 솔브가 sid · pid · σ 의 blake2b 지문을 res[\"_rint\"] 에 남기고 rint_ctx_from 이 진단 입력과 대조 — 어긋나면 ValueError (fail-closed) · 진단 소비처 넷 (per_particle_current · phase_current_share · joule_hotspot · field_point_cloud) 전부 σ 를 넘긴다 (10-03).  ⚠ 지문 = 무결성 확인이지 불변 간선 원장은 아니다 (Codex 대안 중 하나).  Codex 재검증 대기."
   },
   {
    "id": "RINT-20",
