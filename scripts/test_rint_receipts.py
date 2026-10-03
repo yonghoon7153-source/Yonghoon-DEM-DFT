@@ -16,6 +16,8 @@ Codex 변이 탐침: 실제 producer 에서 **주 전자 솔브의 `rint=` 만**
   D  소비자 — 정상 ON 산출물의 영수증을 하나씩 변조하면 `check_arm` 이 거부한다 (원본은 받아들인다)
   E  레지스트리 (RINT-20) — 실물 producer 매니페스트 키가 판정기 레지스트리에 **전부** 분류돼 있다
      (`manifest_unswept_keys` = 빈 목록) · OFF ↔ ON 비교에서 `interface_model` 은 표의 파생이라 HOLD 사유가 아니다
+  F  G1-3 — r-ON 이면 반응 솔브 비활성 (RINT-05) · r-ON + --save-step4-grid 거부 (C) · Joule 요약 = bulk_only ·
+     지도 밖 계면 몫 (RINT-04) · r = 0 표는 OFF 와 σ_e · n_dof · 입자 je 비트 동일 (Codex G1-5 OFF/zero 회귀)
 
   python3 scripts/test_rint_receipts.py
 """
@@ -171,6 +173,9 @@ def main():
             '--no-step3': base + ['--no-ion', '--no-step3'] + e_on,
             '절연 상 쌍 (AM_S|SE 전자)': base + ['--no-ion', '--step3-rint-e', 'AM_S|SE=1e-3'],
             '절연 상 쌍 (AM_S|SE 이온)': base + ['--step3-rint-i', 'AM_S|SE=1e-3'],
+            #  ★ G1-3 (RINT-05) — STEP4 는 계면 막을 받지 않는다 → r-ON 그리드 저장은 다른 물리를 한 모델처럼 낸다
+            'r-ON + --save-step4-grid': [x for x in base if x != '--no-step4'] + ['--no-ion'] + e_on
+                                        + ['--save-step4-grid', os.path.join(d, 'g.npz')],
         }
         for lbl, args in bad.items():
             out = os.path.join(d, 'bad.json')
@@ -214,8 +219,50 @@ def main():
         else:
             chk('D0 e_on 산출물이 있어야 소비자 시험을 돈다', False)
 
+        print('F  G1-3 — 반응 솔브 r-ON 비활성 (RINT-05) · Joule bulk-only 범위 (RINT-04) · OFF ↔ r=0 비트 동일')
+        nofld = [x for x in base if x not in ('--no-step4', '--no-field')]
+        more = {
+            'rxn_off': [x for x in base if x != '--no-step4'] + ['--no-ion'],
+            'rxn_on': [x for x in base if x != '--no-step4'] + ['--no-ion'] + e_on,
+            'joule_on': nofld + ['--no-step4', '--no-ion', '--joule-heat'] + e_on,
+            'e_zero': base + ['--no-ion', '--step3-rint-e', 'AM_S|VGCF=0'],
+        }
+        for k, args in more.items():
+            out = os.path.join(d, f'{k}.json')
+            rc, log = run_payload(args + ['--out', out], d)
+            res[k] = (rc, log, out)
+            chk(f'F0 {k}: exit 0 · 산출물 있음', rc == 0 and os.path.exists(out), f'rc={rc} {log.strip()[-240:]}')
+        if all(res[k][0] == 0 for k in more):
+            p_roff, s_roff, _ = load_manifest(res['rxn_off'][2])
+            p_ron, s_ron, _ = load_manifest(res['rxn_on'][2])
+            rx_off, rx_on = s_roff.get('rxn') or {}, s_ron.get('rxn') or {}
+            print(f'      rxn_off: {dict((k, rx_off.get(k)) for k in ("n_bv_faces", "active_am_pct", "status"))}')
+            #  ⚠ 이 픽스처는 SE 망이 판에 안 닿아 반응 솔브가 원래 `missing_network` 로 건너뛴다 (양성 대조 불가) —
+            #    여기서는 **r_int 때문에 꺼지지 않는다** 만 본다 (끄는 것은 r-ON 에서만).
+            chk('F1 r 없음 → 반응 솔브가 r_int 사유로 꺼지지 않는다', rx_off.get('status') != 'disabled', repr(rx_off)[:200])
+            chk('F2 r-ON → 반응 솔브 비활성 · 사유 RINT-05 · 입자 jrxn 없음',
+                rx_on.get('status') == 'disabled' and 'RINT-05' in str(rx_on.get('reason'))
+                and not any('jrxn' in q for q in (p_ron.get('particles') or [])), repr(rx_on)[:200])
+            _, s_j, m_j = load_manifest(res['joule_on'][2])
+            jo = s_j.get('joule') or {}
+            ish = (s_j.get('dissipation_share') or {}).get('interface')
+            print(f'      joule_on: scope={jo.get("scope")} · 지도 밖 계면 몫={jo.get("interface_share_outside_map")} · 분담 interface={ish}')
+            chk('F3 Joule 요약 = bulk_only · 제외 = 계면 I²R · 판 결합 · 지도 밖 계면 몫 = 소산 분담의 interface (> 0)',
+                jo.get('scope') == 'bulk_only' and set(jo.get('excluded') or ()) >= {'interface_I2R', 'plate_coupling'}
+                and isinstance(ish, (int, float)) and ish > 0 and jo.get('interface_share_outside_map') == ish,
+                repr(jo)[:240])
+            p_o, s_o, _ = load_manifest(res['off'][2])
+            p_z, s_z, m_z = load_manifest(res['e_zero'][2])
+            st_z = (m_z.get('interface_receipts') or {}).get('electronic_main', {}).get('status')
+            je_o = [q.get('je') for q in (p_o.get('particles') or [])]
+            je_z = [q.get('je') for q in (p_z.get('particles') or [])]
+            chk('F4 r = 0 표 → 영수증 zero_table · σ_e · n_dof · 입자 je 가 OFF 와 **비트 동일** (OFF/zero 회귀)',
+                st_z == 'zero_table' and s_z.get('sigma_e_eff_S_cm') == s_o.get('sigma_e_eff_S_cm')
+                and s_z.get('n_dof') == s_o.get('n_dof') and je_o == je_z and len(je_o) > 0,
+                f'{st_z} σ {s_z.get("sigma_e_eff_S_cm")!r} vs {s_o.get("sigma_e_eff_S_cm")!r}')
+
         print('E  레지스트리 — 실물 매니페스트 키 전수 분류 (RINT-20) · 파생 model (RINT-13)')
-        for k in ('off', 'e_on', 'ei_on'):
+        for k in ('off', 'e_on', 'ei_on', 'rxn_on', 'joule_on', 'e_zero'):
             out = res.get(k, (1, '', ''))[2]
             if out and os.path.exists(out):
                 _, _, man = load_manifest(out)

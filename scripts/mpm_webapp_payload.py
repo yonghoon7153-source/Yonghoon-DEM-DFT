@@ -1381,6 +1381,11 @@ def main():
         if a.no_step3 or not a.scaffold:
             raise SystemExit('--step3-rint-e/-i 는 STEP3 가 도는 런에만 — --no-step3 이거나 --scaffold 가 없으면 '
                              '계면 표가 적용될 솔브가 없다 (RINT-14)')
+        #  ★ G1-3 (Codex RINT-05) — STEP4 그리드는 σ 표로 bulk 간선만 만든다 (계면 막 · 표 · 적용 여부가 npz 에 없다).
+        #    r-ON 그리드를 저장하면 다른 물리를 한 모델처럼 내보낸다 → 이 단계에서는 거부 (STEP4 물리 확장은 별건).
+        if a.save_step4_grid:
+            raise SystemExit('--save-step4-grid 와 --step3-rint-e/-i 는 함께 줄 수 없다 — STEP4 는 계면 막을 받지 '
+                             '않는다 (막 없는 반응수송 · RINT-05)')
     a._protocol_expect = (a.expect_protocol or '').strip()
     a._physics_expect = {}
     for _kv in (a.expect_physics or '').split(','):
@@ -2208,6 +2213,10 @@ def main():
                 if _jhs is not None:                        # #29 Joule 발열 hot-spot 요약 (joule_field는 별도 export)
                     step3['joule'] = {'hot_frac_50': _jhs['hot_frac_50'], 'conc_ratio': round(_jhs['conc_ratio'], 2),
                                       'n_pts': _jhs['n'],
+                                      #  ★ G1-3 (RINT-04) — 범위 · 포함 · 제외 + **지도 밖** 계면 몫 (소산 분담과 같은 값)
+                                      'scope': _jhs.get('scope'), 'included': _jhs.get('included'),
+                                      'excluded': _jhs.get('excluded'),
+                                      'interface_share_outside_map': (step3.get('dissipation_share') or {}).get('interface', 0.0),
                                       'note': 'Joule 발열밀도 q∝|J|²/σ (전자망, run-relative) — 어디서 발열 몰리나. '
                                               'hot_frac_50=q 총합 50% 담는 상위복셀 분율(작을수록 집중).  ★절대 ΔT(K)·'
                                               'STEP5 R(N) Arrhenius 연동 = LPSCl 분해 Eₐ 앵커 대기(v2).'}
@@ -2782,7 +2791,15 @@ def main():
                 # 이온망(분리막 급전)을 AM|SE·AM|SDCP 접촉면의 선형화 Butler-Volmer 컨덕턴스로 결합한
                 # 단일 Kirchhoff 시스템 → 입자별 i_n.  분포는 RELATIVE(i/ī, linear라 C-rate 스케일 무관);
                 # 절대화(A/m²·SOC 의존)는 STEP4-v2.  analytic sandwich selftest: --selftest-rxn.
-                if not a.no_step4:
+                if not a.no_step4 and (a._rint_e or a._rint_i):
+                    #  ★ G1-3 (Codex RINT-05) — 반응 솔브는 계면 막을 받지 않는다 (σ 표의 bulk 간선 · 두 경로 탐침:
+                    #    막 없는 해 [1,1] vs 한 경로에 같은 막 [0.103, 1.897]).  r-ON 과 한 payload 에 무표지로 섞이면
+                    #    다른 scope 를 한 모델처럼 내보낸다 ⇒ r-ON 에서는 끄고 사유를 남긴다 (입자 jrxn 없음).
+                    step3['rxn'] = {'status': 'disabled',
+                                    'reason': 'r_int ON — STEP4 반응 솔브는 계면 막을 받지 않는다 (막 없는 반응수송 = '
+                                              '다른 scope · RINT-05)'}
+                    print('  STEP4 rxn: r_int ON — 반응 솔브를 끈다 (계면 막 없는 반응수송 = 다른 scope · RINT-05)')
+                elif not a.no_step4:
                   try:                                       # STEP4 실패가 STEP3 결과를 못 물귀신하게 격리
                     _t4 = _time.time()
                     _gpp = a.i0_a_m2 * 1e-4 * 38.92          # i0[A/m²→A/cm²] × F/RT[V⁻¹] = g″ [S/cm²]

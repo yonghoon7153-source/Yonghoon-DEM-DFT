@@ -1619,7 +1619,12 @@ def joule_hotspot(res, sid, sigma_of_sid, vox, sel_sids, box_lo=(0.0, 0.0, 0.0),
             #    **전** 전수로 쟀는데 `q` 는 추출된 것이라, 소비자가 `q` 에 백분위를 걸면
             #    필드 정규화가 다시 예산의 함수가 된다 (전자·이온·열류는 고쳤는데 여기만
             #    남아 있었다).  ⇒ 전수 p99.8·평균을 같이 돌려준다.
-            'q_p99_8': float(_q_p998), 'q_mean': float(_q_mean), 'n_total': int(_q_n)}
+            'q_p99_8': float(_q_p998), 'q_mean': float(_q_mean), 'n_total': int(_q_n),
+            #  ★ 2026-10-03 (Codex r_int 1단계 RINT-04 · G1-3) — **범위를 결과가 말한다.**  이 지도는 상 셀 안의
+            #    bulk J²/σ 만이다.  계면 I²R (r_int 를 켜면 소산의 대부분일 수 있다 — 두 슬래브 탐침 95 %) 과 판 결합
+            #    간선은 지도 밖이다 ⇒ 총 발열 hotspot 으로 읽지 않는다.  지도 밖 계면 몫은 소산 분담이 따로 센다.
+            'scope': 'bulk_only', 'included': ['bulk_cell_J2_over_sigma'],
+            'excluded': ['interface_I2R', 'plate_coupling']}
 
 
 def field_point_cloud(res, sid, sigma_of_sid, vox, sel_sids, box_lo=(0.0, 0.0, 0.0),
@@ -3876,6 +3881,15 @@ def _selftest_rint():
     chk('ⓚ4 r 없는 조기 반환 → interface None',
         solve_sigma_z(sid, sig, 0.5, z_bot_um=0.0, z_top_um=0.5).get('interface', 'absent') is None)
     chk('ⓚ5 정상 해의 기록은 solved True', r1['interface'].get('solved') is True)
+
+    # ── ⓛ G1-3 (Codex RINT-04) — Joule 지도는 **bulk 셀 J²/σ 만** 이다: 범위 · 포함 · 제외를 결과가 말한다 ──
+    #  두 슬래브 + r 에서 계면 소산이 대부분인데 지도 ON/OFF 가 거의 같다 (Codex 탐침: 최대 차 2.03e−6 · hot_frac_50
+    #  둘 다 0.425) — bulk 소산으로는 맞고, **총 발열 hotspot 으로 읽는 것**이 틀린 것.
+    _jh = joule_hotspot(r1, sid, sig, 0.5, (1, 3)) or {}
+    chk('ⓛ1 joule_hotspot 결과에 scope = bulk_only', _jh.get('scope') == 'bulk_only', repr(_jh.get('scope')))
+    chk('ⓛ2 제외 항목 = 계면 I²R · 판 결합 간선 (지도 밖)',
+        set(_jh.get('excluded') or ()) >= {'interface_I2R', 'plate_coupling'}, repr(_jh.get('excluded')))
+    chk('ⓛ3 포함 항목 = bulk 셀 J²/σ', _jh.get('included') == ['bulk_cell_J2_over_sigma'], repr(_jh.get('included')))
     print('STEP3 RINT SELFTEST', 'PASS' if ok else 'FAIL')
     return 0 if ok else 1
 

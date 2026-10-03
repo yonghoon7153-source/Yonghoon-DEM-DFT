@@ -191,6 +191,7 @@ run 'webapp: ledger_view'         python3 webapp/test_ledger_view.py
 run 'webapp: meta_json_robust'    python3 webapp/test_meta_json_robust.py   # 09-26 깨진 meta.json → / 500 회귀
 run 'webapp: atoms_only_viewer'   python3 webapp/test_atoms_only_viewer.py  # 10-02 atom 만 올린 케이스 결과 페이지 500 · atom+mesh 3D 판 (WEB-01)
 run 'webapp: je_definition_label' python3 webapp/test_je_definition_label.py  # 10-03 RINT-03 — 입자별 je·jb 정의 표지 (옛 payload = 옛 정의 경고 · A/B 불일치)
+run 'webapp: rint_scope_labels'   python3 webapp/test_rint_scope_labels.py  # 10-03 RINT-04 · 05 · 17 · 18 — Joule bulk-only · 반응 솔브 r-ON 꺼짐 · 상/계면 · 단자 R_int
 #  ★ 2026-10-03 (Codex r_int 1단계 RINT-02 · 13 · 14 · 20) — ① 계면 요청 ↔ 네 솔브 적용 영수증을 **실물 producer** 로.
 #    `solve_sigma_z(..., rint=)` 호출 넷을 AST 로 찾아 하나씩 `rint=` 를 지우면 게시가 거부돼야 한다 (주 솔브만 보던
 #    옛 사후 단언은 wetted/bare 배선 삭제를 초록으로 냈다) · CLI 모순 요청 · check_arm 영수증 변조 · 레지스트리 전수 분류.

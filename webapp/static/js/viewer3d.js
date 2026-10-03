@@ -79,6 +79,33 @@ function jeDefMismatch(sA, sB) {
   return '<div style="margin-top:2px;color:#f59e0b;font-size:10.5px">⚠ A/B 의 je 정의가 다름 ('
     + jeEscH(a || '옛 정의') + ' ↔ ' + jeEscH(b || '옛 정의') + ') — 패턴 비교 불가 · 옛 쪽 payload 재생성 (RINT-03)</div>';
 }
+/* ★ 2026-10-03 (Codex r_int 1단계 RINT-04 · G1-3) — Joule 지도는 **bulk 셀 J²/σ 만** 이다.  계면 I²R (r_int 를 켠
+ * 침대에서는 소산의 대부분일 수 있다 — 두 슬래브 탐침 95 %) 과 판 결합 간선은 지도 밖이다.  총 발열 hotspot 으로
+ * 읽지 않게 범위 · 지도 밖 계면 몫을 말한다.  옛 payload (scope 없음) = 같은 bulk 지도지만 표지가 없다. */
+function jouleScopeNote(s3) {
+  const j = s3 && s3.joule;
+  if (!j) return '';
+  let t;
+  if (j.scope === 'bulk_only') {
+    const sh = Number(j.interface_share_outside_map);
+    t = 'bulk 셀 발열만 (q=J²/σ) — 계면 I²R · 판 결합은 지도 밖'
+      + (isFinite(sh) && sh > 0 ? ' · 지도 밖 계면 몫 ' + (100 * sh).toFixed(0) + '%' : '')
+      + ' · 총 발열 hotspot 으로 읽지 말 것 (RINT-04)';
+  } else if (j.scope === undefined || j.scope === null) {
+    t = '⚠ 옛 payload — 범위 표지 없음 (bulk 셀 발열만 · 계면 I²R 미포함 · RINT-04)';
+  } else {
+    t = '⚠ 알 수 없는 Joule 범위 "' + String(j.scope) + '" — 해석 보류 (RINT-04)';
+  }
+  return '<div style="margin-top:3px;color:#fbbf24;font-size:10.5px">' + jeEscH(t) + '</div>';
+}
+/* ★ 2026-10-03 (RINT-05 · G1-3) — r_int 를 켠 침대에서는 STEP4 반응 솔브를 끈다 (반응 솔브는 계면 막을 받지 않는다 =
+ * 막 없는 반응수송 · 다른 scope).  데이터가 없는 이유를 화면이 말한다. */
+function rxnScopeNote(s3) {
+  const rx = s3 && s3.rxn;
+  if (!rx || rx.status !== 'disabled') return '';
+  return '<div style="margin-top:3px;color:#fbbf24;font-size:10.5px">⚠ 반응 솔브 꺼짐 — '
+    + jeEscH(rx.reason || 'r_int ON (RINT-05)') + '</div>';
+}
 function rygColor(t) {
   // t ∈ [0,1] → red→yellow→green (for coverage low→high)
   if (t < 0.5) {
@@ -302,7 +329,7 @@ function wireVProfileDownload(state, btnId) {
     g.font = '16px sans-serif';
     for (let i = 0; i <= 5; i++) { const x = xlo + (xhi - xlo) * i / 5; g.fillText(x.toFixed(useCap ? 2 : 0), PX(x), xAxisY + 24); }
     g.textAlign = 'left'; g.font = 'bold 18px sans-serif';
-    g.fillText(`STEP4-v2 ${st.charge ? '충전' : '방전'} ${st.c_rate}C${st.r_int_ohm_cm2 > 0 ? ` · R_int ${st.r_int_ohm_cm2}Ω·cm²` : ''}${_ppLab(st)}  (${(state.data && state.data.case) || ''})${hasD ? '  ·  과전압 분해' : ''}${_convLab(st)}`, mL, mT - 18);
+    g.fillText(`STEP4-v2 ${st.charge ? '충전' : '방전'} ${st.c_rate}C${st.r_int_ohm_cm2 > 0 ? ` · R_int(셀 단자) ${st.r_int_ohm_cm2}Ω·cm²` : ''}${_ppLab(st)}  (${(state.data && state.data.case) || ''})${hasD ? '  ·  과전압 분해' : ''}${_convLab(st)}`, mL, mT - 18);
     const dl = (url, fn) => { const a = document.createElement('a'); a.href = url; a.download = fn; document.body.appendChild(a); a.click(); a.remove(); };
     const _cn = String(state._st4SrcName || (state.data && state.data.case) || '').replace(/[^A-Za-z0-9._-]/g, '').slice(0, 48);
     const base = `step4_${st.charge ? 'charge' : 'discharge'}_${st.c_rate}C${st.r_int_ohm_cm2 > 0 ? '_rint' + st.r_int_ohm_cm2 : ''}${_ppTag(st)}${_cn ? '_' + _cn : ''}`;
@@ -356,7 +383,7 @@ function renderSt4Soc(state) {
      <div style="display:flex;justify-content:space-between;font-size:10px;color:#9ca3af"><span id="st4-clo"></span><span id="st4-chi"></span></div>
      <div style="margin-top:3px;color:#9ca3af;font-size:10.5px">구형 1D 확산(입자당 ${nr}셸) — 각도방향 균일(동심 코어-셸).
      겉이 먼저 차는 shrinking-core가 시간축으로 보임.  "단면 뷰" 체크와 조합 → 내부 링 단면.
-     ${st.c_rate}C · ${st.charge ? '충전' : '방전'}${st.r_int_ohm_cm2 > 0 ? ` · R_int ${st.r_int_ohm_cm2}Ω·cm²` : ''}${_ppLab(st)} · I_1C=${Number(st.i_1c_a).toExponential(2)} A</div>`);
+     ${st.c_rate}C · ${st.charge ? '충전' : '방전'}${st.r_int_ohm_cm2 > 0 ? ` · R_int(셀 단자) ${st.r_int_ohm_cm2}Ω·cm²` : ''}${_ppLab(st)} · I_1C=${Number(st.i_1c_a).toExponential(2)} A</div>`);
   const tS = document.getElementById('st4-t'), dS = document.getElementById('st4-d');
   const dynCb = document.getElementById('st4-dyn');
   const _xlab = v => `x=${v.toFixed(3)}${st.c_max_mol_m3 ? ' (' + (v * st.c_max_mol_m3 / 1000).toFixed(1) + ' mmol/cm³)' : ''}`;
@@ -580,7 +607,7 @@ function renderSt4Faces(state) {
      <div style="display:flex;justify-content:space-between;font-size:10px;color:#9ca3af"><span>0</span><span>|i/ī| (0–p95)</span><span>핫스팟</span></div>
      <div style="margin-top:3px;color:#9ca3af;font-size:10.5px">면전류를 입자 표면에 각도-커널(≈15°) 보간한 <b>시각화 보조</b> — 정량 원자료는 면 값(npz).
      비접촉 표면 = 회색.  면 ${Number(F.n_kept).toLocaleString()}/${Number(F.n_total).toLocaleString()}${F.n_kept < F.n_total ? ' (서브샘플)' : ''} ·
-     ī(면평균 |i|) 시점별 정규화 · ${st.charge ? '충전' : '방전'} ${st.c_rate}C${st.r_int_ohm_cm2 > 0 ? ` · R_int ${st.r_int_ohm_cm2}Ω·cm²` : ''}${_ppLab(st)}</div>
+     ī(면평균 |i|) 시점별 정규화 · ${st.charge ? '충전' : '방전'} ${st.c_rate}C${st.r_int_ohm_cm2 > 0 ? ` · R_int(셀 단자) ${st.r_int_ohm_cm2}Ω·cm²` : ''}${_ppLab(st)}</div>
      <div style="margin-top:6px;padding:6px 7px;background:#0d1117;border:1px solid #2a2d3e;border-radius:6px">
        <b style="display:block;font-size:11.5px;color:#cbd5e1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">두께방향 프로파일 — 현재 시점</b>
        <div style="display:flex;align-items:center;gap:4px;margin-top:3px;flex-wrap:wrap">
@@ -938,7 +965,7 @@ function renderSt4Faces(state) {
       drawZProfileCanvas(pc, state._st4fProf.curves, '');      // 1.75:1 = 다른 export와 동일 타이포 스케일
       g.drawImage(pc, 8, 38 + ((H - 44 - 320) / 2 | 0));
       g.fillStyle = '#111'; g.font = 'bold 21px sans-serif'; g.textAlign = 'left';      // 헤더 (동기 수치)
-      g.fillText(`${st.charge ? '충전' : '방전'} ${st.c_rate}C${st.r_int_ohm_cm2 > 0 ? ` · R_int ${st.r_int_ohm_cm2}Ω·cm²` : ''}${_ppLab(st)} — t=${tNow.toFixed(1)}s · V=${VT[ii].toFixed(3)}V`
+      g.fillText(`${st.charge ? '충전' : '방전'} ${st.c_rate}C${st.r_int_ohm_cm2 > 0 ? ` · R_int(셀 단자) ${st.r_int_ohm_cm2}Ω·cm²` : ''}${_ppLab(st)} — t=${tNow.toFixed(1)}s · V=${VT[ii].toFixed(3)}V`
         + `${ar2 > 0 ? ` · ${xsC[ii].toFixed(2)}mAh/cm²` : ` · ${st.charge ? '충전창' : 'DoD'} ${xsC[ii].toFixed(1)}%`}`
         + (hasD ? '    ' + series.map(s => `${s[2]} ${Math.max(s[0][ii], 0).toFixed(1)}mV`).join(' · ') : '') + _convLab(st), 12, 26);
       g.font = '13px sans-serif'; g.fillStyle = '#6b7280';
@@ -3422,6 +3449,7 @@ function applyViewMode(state, mode) {
     setLegend(state,
       `<b>${joule ? '🔥 Joule 발열밀도 q∝|J|²/σ' : thermal ? '🔥 열류 |k∇T|' : ionic ? '이온 (Li⁺) 전류밀도' : '전자 (e⁻) 전류밀도'} FIELD (STEP3 · ${ionic ? 'SE+SDCP' : 'AM+carbon'}${joule ? ' 발열=전자망' : ''})</b>`
       + (sigTxt ? `<div style="margin-top:3px"><b style="font-size:13px">${sigTxt}</b></div>` : '')
+      + (joule ? jouleScopeNote(s3) : '')                   // RINT-04 — bulk-only · 지도 밖 계면 몫
       + `<div style="margin:5px 0 2px 0;height:10px;border-radius:3px;background:linear-gradient(90deg,${stops.join(',')})"></div>`
       + (fsc
          ? `<div style="display:flex;justify-content:space-between;font-size:10px;color:#9ca3af"><span>0</span><span>|J| / ⟨J_z⟩ &nbsp;(색 패턴 = 1V·1C 동일)</span><span>×${fmtP(fsc.focus_top)}</span></div>`
@@ -3581,9 +3609,9 @@ function applyViewMode(state, mode) {
       m.userData.particles.forEach(p => { if (p.jrxn !== undefined) vals.push(p.jrxn); });
     });
     if (!vals.length) {
-      setLegend(state, '<i>이 payload엔 STEP4 반응전류(<b>jrxn</b>)가 없어요 — 최신 '
+      setLegend(state, (rxnScopeNote(s3) || ('<i>이 payload엔 STEP4 반응전류(<b>jrxn</b>)가 없어요 — 최신 '
         + '<b>mpm_webapp_payload.py</b>(--step4 기본 ON)로 payload를 재생성해 업로드하세요 '
-        + '(MPM 재실행 불필요).</i>');
+        + '(MPM 재실행 불필요).</i>')));   // RINT-05 — r-ON 으로 끈 것이면 그 사유
       return;
     }
     if (state.meshes.MESH) {                                 // SE = 얇은 이온-공급 맥락
@@ -3803,7 +3831,7 @@ function applyViewMode(state, mode) {
       + `<div style="margin:5px 0 2px 0;height:10px;border-radius:3px;background:linear-gradient(90deg,${stops.join(',')})"></div>
        <div style="display:flex;justify-content:space-between;font-size:10px;color:#9ca3af"><span>0</span><span>|J_z| (0–p99.8)</span><span>high</span></div>`
       + jeDefNote(s3)
-      + (s3 && s3.dissipation_share ?`<div style="margin-top:3px;color:#9ca3af;font-size:11px">손실(발열) 분담: `
+      + (s3 && s3.dissipation_share ?`<div style="margin-top:3px;color:#9ca3af;font-size:11px">손실(발열) 분담 (상/계면): `
           + Object.entries(s3.dissipation_share).map(([k, v]) => `${k} ${(100 * v).toFixed(0)}%`).join(' · ') + `</div>` : ''));
     return;
   }
@@ -5368,8 +5396,8 @@ function showMPMAnalysisSummary(state) {
   zprof(3, zJe, '④ 평균 |J_z| vs z (깊이 프로파일)', '⟨|J_z|⟩ 상대', '#dc2626');
   zprof(4, zCov, '⑤ 평균 coverage vs z', '⟨coverage⟩ %', '#2563eb');
   zprof(5, zCnt, '⑥ AM 입자 수 vs z', 'count', '#6b7280');
-  bars(6, s3.dissipation_share, '⑦ 전자 손실(발열) 분담', '각 상의 전력손실 %');
-  bars(7, s3.ion_dissipation_share, '⑧ 이온 손실 분담 (Li⁺ 경로)', '각 상의 전력손실 %');
+  bars(6, s3.dissipation_share, '⑦ 전자 손실(발열) 분담', '각 상/계면의 전력손실 %');   // RINT-18 — 계면은 상이 아니다
+  bars(7, s3.ion_dissipation_share, '⑧ 이온 손실 분담 (Li⁺ 경로)', '각 상/계면의 전력손실 %');
   zprof(8, zEc, '⑨ 집전체 연결 비율 vs z', '연결 fraction 0–1', '#7c3aed');
 
   // ---- 약어 (abbreviations) ----
@@ -5385,7 +5413,7 @@ function showMPMAnalysisSummary(state) {
     ['R_geom', '모델 기하 계면저항 (Ω·cm²) = L·(1/σ_bare − 1/σ_wetted) · 측정 R_int − R_geom = 화학/열화 몫'],
     ['coverage', 'AM 입자 표면이 SE로 덮인 비율 (%)'],
     ['econn', '집전체에 전기 연결(1) / 고립(0) · 100% = 모든 AM이 외부회로 도달'],
-    ['z / 손실분담', 'z = 두께방향(0 하단 집전체 ~ 상단 압축면) · 손실(발열)분담 = 각 상의 전력손실 % (∝ J²·R)'],
+    ['z / 손실분담', 'z = 두께방향(0 하단 집전체 ~ 상단 압축면) · 손실(발열)분담 = 각 상/계면의 전력손실 % (∝ J²·R · 계면 = 상이 아닌 상 경계 r_int 몫)'],
     ['pore-τ', '기공(void)상 유효확산 tortuosity (D_eff/D0 = ε/τ) · 구조 지표 — Li⁺ 수송 τ 아님(수송은 SE 접촉망 σ_ion) · 비퍼콜 = 기공 폐색(기체 불투과)'],
     ['분산 D / nn', 'D = 셀별 첨가제 점수 분산/평균(AM-마스킹, 랜덤=1·응집↑, 같은 phase run간 비교) · nn = SE→최근접 첨가제 거리(µm), ×N = 동밀도 랜덤 대비'],
     ['전류 집중 (focus)', 'focus = J(p99.8) / J_app.  분자 = **도체 복셀만**의 |J| 99.8 백분위(장 전수 — 그림 점군 아님, SELF-45) · 분모 J_app = I/A = σ_eff·ΔV/L = **공극·SE 를 포함한 전 단면** 평균 인가 전류밀도.  ⇒ 분자·분모의 모집단이 다르므로 Markov 상한 500 이 걸리지 않는다.  같은 모집단 비 J(p99.8)/⟨|J|⟩_도체셀 은 정의상 ≤ 500 이고 옆에 같이 표시된다.  선형해라 바이어스 무관 · 낮을수록 균일=병목 해소 · 운전 국소 mA/cm² = focus×면적전류×C'],
@@ -7013,7 +7041,7 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
         const rx = (s3x || {}).rxn || {};
         return '반응 전류 i/ī (STEP4 저율·선형화 BV) · active AM ' + (rx.active_am_pct != null ? rx.active_am_pct + '%' : '—')
           + (rx.n_bv_faces ? ' · BV faces ' + Number(rx.n_bv_faces).toLocaleString() : '')
-          + ' · 자기 p99.8+감마 — 패턴 비교용 (payload에 jrxn 필요)';
+          + ' · 자기 p99.8+감마 — 패턴 비교용 (payload에 jrxn 필요)' + rxnScopeNote(s3x);   // RINT-05
       };
       $('cmp-leg-a').innerHTML = cap(sA);
       $('cmp-leg-b').innerHTML = cap(sB);

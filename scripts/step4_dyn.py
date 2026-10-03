@@ -1493,7 +1493,8 @@ def simulate(sys_, ocp, r_p_m, d_s, kin, c_rate, nr=20, v_min=3.0, v_max=4.5,
              cv_hold=False, i_cut_frac=0.05, r_int_ohm_cm2=0.0, x_init=None,
              dudt=None, i0_p=None, n_chk=12, x_field=None, j_field=None, verbose=True):
     """CC 방전(기본)/충전 (+cv_hold=True → V-리밋 도달 후 CV 홀드 = CCCV).
-    r_int_ohm_cm2: 집전체 실측 R_int 직렬(시나리오 부하, STEP3 규약) — 터미널 V·컷오프에 반영.
+    r_int_ohm_cm2: 셀 단자 (집전체) 직렬 ASR R_int (시나리오 부하, STEP3 규약) — 터미널 V·컷오프에 반영.
+      ⚠ STEP3 내부 상 경계 계면 r (interface_rint_*, 상 경계 면마다 직렬) 와 다른 양 — scope 가 다르다 (RINT-17).
     dudt: (x_tab, dUdT_tab) 있으면 Q_rev = Σ I_f·T·dU/dT(x_f) 출력 (관례: I_f = 탈리튬 +).
     d_s: 스칼라 또는 [n_am] per-particle [m²/s] (bimodal poly/SC — RadialDiffusion 브로드캐스트).
     i0_p: None(공유 kin.i0_ref) 또는 [n_am] per-particle i0_ref [A/m²] — SOC-모양 i0(x)는 공유하고
@@ -2859,7 +2860,9 @@ def main():
                     help='★필름옴성 채널: 사이클 계면상의 순수 Li⁺ 필름 ASR [Ω·cm²] 추가분 (--asr-film에 더함, '
                          '자동 ×1e-4 → Ω·m²).  전하이동(R_ct)은 여기 넣지 말 것 — 그건 --i0-cycle-mult (비-이중계산, 리뷰 N1-F9).')
     ap.add_argument('--r-int-ohm-cm2', type=float, default=0.0,
-                    help='집전체 실측 R_int 직렬 [Ω·cm²] (STEP3 시나리오 규약; 46=DBE)')
+                    help='셀 단자 (집전체) 직렬 ASR R_int [Ω·cm²] — 터미널 V · 컷오프 (STEP3 시나리오 규약; 46=DBE).  '
+                         '⚠ STEP3 내부 상 경계 계면 r (payload --step3-rint-e/-i · 매니페스트 interface_rint_*) 와 '
+                         '다른 양 (RINT-17)')
     ap.add_argument('--i0-temp-scale', action='store_true',
                     help='★i0 를 --temp-k 에 따라 kim2025 R_ct(T) 앵커로 스케일 (기본 OFF).  '
                          'kim2025(우리와 같은 NCM811+LPSCl) 이 같은 셀을 30/45/60 °C 에서 측정 — '
