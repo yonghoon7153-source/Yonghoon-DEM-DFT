@@ -36,7 +36,7 @@
   "tmux": "cv7probe",
   "log": "~/work/runs/cascade_v7_probe_1003.log",
   "gpu_start_max_mib": 16000,
-  "감시": "python … run_cascade_v7_probe.py --status --out_root ~/work/runs/cascade_v7_probe_1003 (읽기만 · D 없음) — ⛔ out_root/logs/<태그>.log 는 tail 하지 않는다 (드라이버가 D 를 찍는다)"
+  "감시": "python3 ~/bin/cv7_watch.py (tools/doping/watch_cv7probe.py 를 `git -C ~/lldvar show FETCH_HEAD:…` 로 꺼낸 사본 · stdlib · 읽기만 · D 없음 · 러너 worktree 를 안 건드린다) 또는 러너 --status — ⛔ out_root/logs/<태그>.log · msd.json 은 열지 않는다 (드라이버가 D 를 쓴다)"
  },
  "repo_구조_sha16": {
   "H0_host": "5bca9a4f1d9bc119",
