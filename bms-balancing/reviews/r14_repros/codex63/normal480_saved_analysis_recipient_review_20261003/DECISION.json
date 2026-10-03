@@ -1,0 +1,17 @@
+{
+  "date": "2026-10-03",
+  "decision": "ACCEPTED_SAVED_ANALYSIS_0_480",
+  "blocking_findings": [],
+  "accepted_scope": ["input provenance", "5740 stored time series", "signed algebraic voltage decomposition", "3856 selected profile rows", "secant trends", "seven-page PDF presentation"],
+  "original_normal_gate": "INCOMPLETE",
+  "overall_convergence": "INCOMPLETE",
+  "internal_effective_policy": "UNVERIFIED",
+  "actual_core_utilization": "UNVERIFIED",
+  "native_execution_approved": false,
+  "automatic_960_extension": false,
+  "new_rtol_test_approved": false,
+  "source_code_executions": 0,
+  "COMSOL_calls": 0,
+  "external_messages_sent": 0,
+  "next_step": "User chooses model/experiment comparison or bounded tolerance sensitivity; existing stored-result interpretation need not be repeated."
+}

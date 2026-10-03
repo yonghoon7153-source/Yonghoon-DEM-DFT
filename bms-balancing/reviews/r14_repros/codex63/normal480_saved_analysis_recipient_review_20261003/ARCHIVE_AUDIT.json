@@ -1,0 +1,22 @@
+{
+  "status": "PASS",
+  "zip": {
+    "bytes": 3632054,
+    "sha256": "86653210a90c929d16f62272a9f2091ec79599ad26fc8998694dd7ff9bc00056"
+  },
+  "pdf": {
+    "bytes": 1341498,
+    "sha256": "87a75f7770e69d77d872c8e471976d7d6eb1c48374e1308116cb969383f5a874"
+  },
+  "payload_count": 28,
+  "manifest_sha256": "7edf0e719c7480a87a04ab7957a4affd1f325bc2fa810f0c97fd9f5f68fd499c",
+  "exact_set_size_sha_crc_path_case_links": true,
+  "standalone_pdf_equals_zip": true,
+  "prior_review_byte_comparisons": {
+    "DECISION.json": true,
+    "NEXT_CODEX_REPLY_KO.md": true,
+    "REVIEW_KO.md": true,
+    "REVIEW_MANIFEST.json": true
+  },
+  "pdf_pages": 7
+}

@@ -1,0 +1,65 @@
+{
+  "scope": "Recipient saved-data analysis review. Original received PDF/ZIP and native evidence are referenced, not repackaged. No simulation or new approval.",
+  "files": [
+    {
+      "file": "REVIEW_KO.md",
+      "bytes": 6812,
+      "sha256": "9c36630eb0b0fb3d625cd87d787c91740c3ba9a62dd85b0de6c552479b1a897e"
+    },
+    {
+      "file": "CLAUDE_REPLY_KO.md",
+      "bytes": 1997,
+      "sha256": "3518283aa0e4015576a1ea49fd8e041b699f651309b7761a15410c183f4181c5"
+    },
+    {
+      "file": "NEXT_CODEX_REPLY_KO.md",
+      "bytes": 1908,
+      "sha256": "9b8303f937327f35fc1bacbdd7091af0ae4a583f4cd438014d43cc04b5cf9ce0"
+    },
+    {
+      "file": "DECISION.json",
+      "bytes": 802,
+      "sha256": "2d91bc723c077aa0a29d279f45679a29289865145b8b5f8cb485d43cad01cefd"
+    },
+    {
+      "file": "REVIEWER_NOTE.md",
+      "bytes": 1175,
+      "sha256": "5b4a9311b6ce73fbf580f13b8b07acb3f9848f58969c8bf02dfbea777e859ce2"
+    },
+    {
+      "file": "ARCHIVE_AUDIT.json",
+      "bytes": 662,
+      "sha256": "fee4d9f3972add3528485f7dde719d4c388aa2e21f4c1b9cdd279ce8c1e285f4"
+    },
+    {
+      "file": "NUMERIC_AUDIT.json",
+      "bytes": 9731,
+      "sha256": "5e1884f167bb62ae8dc08b1654cfd4ade9c0852815be2e7d1f3d72ff434e5a53"
+    },
+    {
+      "file": "CONTEXT_AUDIT.json",
+      "bytes": 2864,
+      "sha256": "1a6715ee815ffa4dd41dc79faefed6e28b4707ed4a84774b4a3800537c9e7cb0"
+    },
+    {
+      "file": "audit_archive.py",
+      "bytes": 2316,
+      "sha256": "598ea42402aaebd7022a0523b9330e2bb53237b713c006773b3fda442db8e24b"
+    },
+    {
+      "file": "audit_data.py",
+      "bytes": 9721,
+      "sha256": "08294b36a41cfd780c34096c376aaf6811c0198884c23e48c8d85f66cf576ca9"
+    },
+    {
+      "file": "audit_context.py",
+      "bytes": 3980,
+      "sha256": "c40d2d69e17336f2360397c64f10c97d28cb55d67e67be759d2b6c517965bfe1"
+    },
+    {
+      "file": "seal_review.py",
+      "bytes": 2154,
+      "sha256": "2f01b6637d95c8b7487a70add28f01881bb1eac1c56fece20763ee65bf4186ab"
+    }
+  ]
+}

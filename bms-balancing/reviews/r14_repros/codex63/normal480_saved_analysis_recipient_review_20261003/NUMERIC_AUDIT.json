@@ -1,0 +1,283 @@
+{
+  "status": "PASS",
+  "scope": "Independent Decimal50 recalculation and raw-file comparison; not supplied analyzer execution or simulation",
+  "checks": [
+    {
+      "check": "Native ZIP independently matches analysis input binding",
+      "pass": true
+    },
+    {
+      "check": "Used raw/source size and SHA candidate/src/Normal480Candidate.java",
+      "pass": true
+    },
+    {
+      "check": "Used raw/source size and SHA candidate/CONTRACT.json",
+      "pass": true
+    },
+    {
+      "check": "Used raw/source size and SHA candidate/CODE_MANIFEST.json",
+      "pass": true
+    },
+    {
+      "check": "Used raw/source size and SHA run/tables/preflight_global.csv",
+      "pass": true
+    },
+    {
+      "check": "Used raw/source size and SHA run/tables/preflight_boundary1.csv",
+      "pass": true
+    },
+    {
+      "check": "Used raw/source size and SHA run/tables/preflight_boundary4.csv",
+      "pass": true
+    },
+    {
+      "check": "Used raw/source size and SHA run/tables/electrolyte_guard.csv",
+      "pass": true
+    },
+    {
+      "check": "Used raw/source size and SHA run/tables/preflight_MaxLine_ce.csv",
+      "pass": true
+    },
+    {
+      "check": "Used raw/source size and SHA run/tables/preflight_MinLine_ce.csv",
+      "pass": true
+    },
+    {
+      "check": "Used raw/source size and SHA run/tables/axes_profile_N.csv",
+      "pass": true
+    },
+    {
+      "check": "Used raw/source size and SHA run/tables/axes_profile_P.csv",
+      "pass": true
+    },
+    {
+      "check": "Used raw/source size and SHA run/tables/guard_binding.csv",
+      "pass": true
+    },
+    {
+      "check": "Used raw/source size and SHA run/tables/units_nglobal_evaluated.csv",
+      "pass": true
+    },
+    {
+      "check": "Used raw/source size and SHA run/tables/units_point1_evaluated.csv",
+      "pass": true
+    },
+    {
+      "check": "Used raw/source size and SHA run/tables/units_point4_evaluated.csv",
+      "pass": true
+    },
+    {
+      "check": "Used raw/source size and SHA run/tables/units_eguard_evaluated.csv",
+      "pass": true
+    },
+    {
+      "check": "Used raw/source size and SHA run/tables/units_MaxLinece_evaluated.csv",
+      "pass": true
+    },
+    {
+      "check": "Used raw/source size and SHA run/tables/units_MinLinece_evaluated.csv",
+      "pass": true
+    },
+    {
+      "check": "Used raw/source size and SHA run/tables/units_profileN_evaluated.csv",
+      "pass": true
+    },
+    {
+      "check": "Used raw/source size and SHA run/tables/units_profileP_evaluated.csv",
+      "pass": true
+    },
+    {
+      "check": "All 5740 times identical, ordered unique, 0 to 480",
+      "pass": true
+    },
+    {
+      "check": "Every time-series field traced or recalculated from raw inputs",
+      "pass": true
+    },
+    {
+      "check": "KEY_TIMES exactly 8 original stored rows",
+      "pass": true
+    },
+    {
+      "check": "Seven declared intervals including overlapping total/recent windows",
+      "pass": true
+    },
+    {
+      "check": "Interval signed contribution, residual and secant arithmetic",
+      "pass": true
+    },
+    {
+      "check": "42 electrode contributions use P positive N negative",
+      "pass": true
+    },
+    {
+      "check": "112 secants use exact endpoint times, not sample counts",
+      "pass": true
+    },
+    {
+      "check": "3856 selected profile rows and same-coordinate gaps equal native CSV",
+      "pass": true
+    },
+    {
+      "check": "Local gap extrema from paired coordinates",
+      "pass": true
+    },
+    {
+      "check": "Summary key rows and maximum diagnostics",
+      "pass": true
+    },
+    {
+      "check": "Submitted preservation before/after identical",
+      "pass": true
+    }
+  ],
+  "time_series_fields_compared": 321440,
+  "profile_source_rows_scanned": {
+    "N": 1383340,
+    "P": 1383340
+  },
+  "profile_rows_compared": 3856,
+  "source_preservation_reported_count": 23,
+  "intervals": [
+    {
+      "start_s": "0",
+      "end_s": "5",
+      "duration_s": "5",
+      "voltage_change_mV": "121.5647305207167000",
+      "Eeq_change_mV": "123.5629570371207000",
+      "etaMid_change_mV": "-2.772077150568819000",
+      "phiL_change_mV": "0.7738506341649000",
+      "residual_V": "-8.1E-17",
+      "voltage_secant_mV_per_s": "24.3129461041433400"
+    },
+    {
+      "start_s": "5",
+      "end_s": "30",
+      "duration_s": "25",
+      "voltage_change_mV": "188.8001104990365000",
+      "Eeq_change_mV": "189.4238585337472000",
+      "etaMid_change_mV": "-3.900465269621956000",
+      "phiL_change_mV": "3.2767172349114000",
+      "residual_V": "-1.44E-16",
+      "voltage_secant_mV_per_s": "7.5520044199614600"
+    },
+    {
+      "start_s": "30",
+      "end_s": "120",
+      "duration_s": "90",
+      "voltage_change_mV": "278.3164981100828000",
+      "Eeq_change_mV": "277.4370702796065000",
+      "etaMid_change_mV": "-5.143217554943180000",
+      "phiL_change_mV": "6.0226453854190000",
+      "residual_V": "4.80E-16",
+      "voltage_secant_mV_per_s": "3.0924055345564755555555555555555555555555555555556"
+    },
+    {
+      "start_s": "120",
+      "end_s": "240",
+      "duration_s": "120",
+      "voltage_change_mV": "160.0275670397341000",
+      "Eeq_change_mV": "161.1606417940149000",
+      "etaMid_change_mV": "-3.3840247250811475000",
+      "phiL_change_mV": "2.2509499708008000",
+      "residual_V": "-4.525E-16",
+      "voltage_secant_mV_per_s": "1.3335630586644508333333333333333333333333333333333"
+    },
+    {
+      "start_s": "240",
+      "end_s": "480",
+      "duration_s": "240",
+      "voltage_change_mV": "166.7872237504593000",
+      "Eeq_change_mV": "170.6828545030986000",
+      "etaMid_change_mV": "-4.5013125426332535000",
+      "phiL_change_mV": "0.6056817899937000",
+      "residual_V": "2.535E-16",
+      "voltage_secant_mV_per_s": "0.69494676562691375"
+    },
+    {
+      "start_s": "0",
+      "end_s": "480",
+      "duration_s": "480",
+      "voltage_change_mV": "915.4961299200294000",
+      "Eeq_change_mV": "922.2673821475879000",
+      "etaMid_change_mV": "-19.701097242848356000",
+      "phiL_change_mV": "12.9298450152898000",
+      "residual_V": "5.6E-17",
+      "voltage_secant_mV_per_s": "1.90728360400006125"
+    },
+    {
+      "start_s": "360",
+      "end_s": "480",
+      "duration_s": "120",
+      "voltage_change_mV": "60.3979298327153000",
+      "Eeq_change_mV": "62.0024949588432000",
+      "etaMid_change_mV": "-1.736753259793447000",
+      "phiL_change_mV": "0.1321881336653000",
+      "residual_V": "2.47E-16",
+      "voltage_secant_mV_per_s": "0.50331608193929416666666666666666666666666666666667"
+    }
+  ],
+  "maximum_level_identity_residual_V": "6.545E-16",
+  "maximum_change_identity_residual_V": "7.495E-16",
+  "maximum_Li_relative_drift": "3.3931521893319485367048848364398532433492213006249E-15",
+  "final": {
+    "time_s": "480.0",
+    "Li_N_mol_m2": "0.02426440569427407",
+    "Li_P_mol_m2": "1.1639612728400042",
+    "Li_electrolyte_mol_m2": "0.04867728538091192",
+    "xavg_N": "0.02408216933206102",
+    "xavg_P": "0.9142805778839984",
+    "xsurf_N_min": "0.03540055840004727",
+    "xsurf_N_max": "0.036116360809861525",
+    "xsurf_P_min": "0.9113684064343738",
+    "xsurf_P_max": "0.9136704456221286",
+    "ocp_guard": "0.0",
+    "reaction_N_A_m2": "-2.5035995286543424",
+    "reaction_P_A_m2": "2.50359952865434",
+    "leak_leftward_A_m2": "1.2569340573206301E-15",
+    "ce_min_all_mol_m3": "1078.7950417127677",
+    "ce_min_d1_mol_m3": "1078.7950417127677",
+    "ce_min_d2_mol_m3": "1209.8106302612207",
+    "ce_min_d3_mol_m3": "1228.0154956240808",
+    "threshold_mol_m3": "0.0",
+    "electrolyte_guard": "0.0",
+    "surface_guard": "0.0",
+    "voltage_V": "3.1461077189331967",
+    "voltage_change_from0_mV": "915.4961299200294000",
+    "Eeq_N_V": "0.4966630603700704",
+    "Eeq_N_contribution_from0_mV": "916.3903522385563000",
+    "Eeq_P_V": "3.5842638046565396",
+    "Eeq_P_contribution_from0_mV": "5.8770299090316000",
+    "Eeq_PminusN_V": "3.0876007442864692",
+    "Eeq_net_change_from0_mV": "922.2673821475879000",
+    "etaMid_N_V": "-0.03701218057832528",
+    "etaMid_N_contribution_from0_mV": "-17.49930265450800000",
+    "etaMid_P_V": "0.006001241431404569",
+    "etaMid_P_contribution_from0_mV": "-2.201794588340356000",
+    "etaMid_PminusN_V": "0.043013422009729849",
+    "etaMid_net_change_from0_mV": "-19.701097242848356000",
+    "phiL_N_V": "-0.4596508797917451",
+    "phiL_N_contribution_from0_mV": "-898.8910495840483000",
+    "phiL_P_V": "-0.4441573271547476",
+    "phiL_P_contribution_from0_mV": "911.8208945993381000",
+    "phiL_PminusN_V": "0.0154935526369975",
+    "phiL_net_change_from0_mV": "12.9298450152898000",
+    "voltage_identity_residual_V": "1.51E-16",
+    "change_identity_residual_V": "5.6E-17",
+    "ce_max_all_MaxLine_mol_m3": "1283.2470864773422",
+    "ce_min_all_MinLine_mol_m3": "1078.7950417127677",
+    "ce_global_spread_mol_m3": "204.4520447645745",
+    "Li_total_mol_m2": "1.23690296391519019",
+    "Li_relative_change": "8.8931794335600271393265983323417645167599319292052E-16",
+    "Li_N_change_mol_m2": "0.012455030601117244",
+    "Li_P_change_mol_m2": "-0.0124550306011159",
+    "Li_electrolyte_change_mol_m2": "-2.44E-16",
+    "reaction_sum_A_m2": "-2.4E-15",
+    "N_OCP_lower_margin": "0.03540055840004727",
+    "N_OCP_upper_margin": "0.943883639190138475",
+    "P_OCP_lower_margin": "0.6884753721267482",
+    "P_OCP_upper_margin": "0.0695745877322604"
+  },
+  "no_new_native_execution": true,
+  "received_code_executions": 0
+}

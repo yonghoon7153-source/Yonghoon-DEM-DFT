@@ -1,0 +1,107 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "check": "Unit readback units_eguard_evaluated.csv",
+      "pass": true
+    },
+    {
+      "check": "Unit readback units_MaxLinece_evaluated.csv",
+      "pass": true
+    },
+    {
+      "check": "Unit readback units_MinLinece_evaluated.csv",
+      "pass": true
+    },
+    {
+      "check": "Unit readback units_nglobal_evaluated.csv",
+      "pass": true
+    },
+    {
+      "check": "Unit readback units_point1_evaluated.csv",
+      "pass": true
+    },
+    {
+      "check": "Unit readback units_point4_evaluated.csv",
+      "pass": true
+    },
+    {
+      "check": "Unit readback units_profileN_evaluated.csv",
+      "pass": true
+    },
+    {
+      "check": "Unit readback units_profileP_evaluated.csv",
+      "pass": true
+    },
+    {
+      "check": "B020 prior summary byte identity",
+      "pass": true
+    },
+    {
+      "check": "B020 summary delta Eeq",
+      "pass": true
+    },
+    {
+      "check": "B020 summary delta etaMid",
+      "pass": true
+    },
+    {
+      "check": "B020 summary delta phiL",
+      "pass": true
+    },
+    {
+      "check": "B020 voltage change delta",
+      "pass": true
+    },
+    {
+      "check": "Definitions trace to sealed Java text",
+      "pass": true
+    },
+    {
+      "check": "Source temperature definition retained",
+      "pass": true
+    },
+    {
+      "check": "Prior reviewer ZIP bound",
+      "pass": true
+    },
+    {
+      "check": "Review preserves original standalone PDF",
+      "pass": true
+    },
+    {
+      "check": "Review preserves original analysis ZIP",
+      "pass": true
+    }
+  ],
+  "visual_review": {
+    "pages_inspected": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "render": "Bundled Poppler 105 dpi",
+    "readable_axes_units_legends_tables": true,
+    "unintended_clipping_observed": false,
+    "not_claimed": "Every PDF vector point reverse-verified"
+  },
+  "source_preservation_scope": {
+    "sender_before_after_entries": 23,
+    "mapped_to_current_recipient_bytes": 23,
+    "mapping": "native ZIP, prior reviewer ZIP, 20 input binding entries, prior B020 summary",
+    "not_claimed": "Current sender filesystem/MPH/prefs/OS/process state"
+  },
+  "originals_after": {
+    "NORMAL480_ANALYSIS.pdf": "87a75f7770e69d77d872c8e471976d7d6eb1c48374e1308116cb969383f5a874",
+    "COMSOL63_NORMAL480_SAVED_ANALYSIS_20261001.zip": "86653210a90c929d16f62272a9f2091ec79599ad26fc8998694dd7ff9bc00056"
+  },
+  "limitations": [
+    "The post-delivery timing and execution counts of the sender analysis were not independently observed.",
+    "No source analyzer, COMSOL or received test was executed.",
+    "Rtol-only 30-second proposal is not acceptance of 480-second convergence and is not a new execution approval."
+  ]
+}
