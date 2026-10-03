@@ -1,0 +1,215 @@
+# -k g88 --emit-expect · HEAD e462a3d1929c9a6be4a8ca3665dce7f80bc7134d + 작업 트리 (mutation_replay.py 에 -g88 16 등록 · RUN_SCOPE = HEAD)
+# 2026-10-03T09:36:13Z · python3 docs/22p_gap/mutation_replay.py -k g88 --emit-expect
+sandbox: /tmp/mutation_replay_8lpjy412/degradation-degeneracy
+
+★ 안 물었다    fit-only-claim-seals-its-phase-set-g88 node 1 · -k f01_01
+★ 안 물었다    v3-plan-needs-an-external-input-digest-g88 node 1 · -k f02_02
+★ 안 물었다    index-asks-the-v6-external-input-rule-g88 node 1 · -k f02_02
+★ 안 물었다    fit-only-claim-refuses-other-phases-g88 node 1 · -k f03_01
+★ 안 물었다    fit-only-receipt-carries-the-input-binding-g88 node 3 · -k f03_02
+★ 안 물었다    input-binding-recomputes-the-package-g88 node 1 · -k f03_02 and inputs_disagree
+★ 안 물었다    fit-only-consumer-names-the-external-input-g88 node 3 · -k f01_01 or f03_04 or f04_01
+★ 안 물었다    phase-order-runs-over-the-claim-set-g88 node 4 · -k f01_01 or f03_03 or f03_04 or f04_01
+★ 안 물었다    finalize-counts-remaining-over-the-claim-set-g88 node 4 · -k f01_01 or f03_03 or f03_04 or f04_01
+★ 안 물었다    finalize-checks-consumption-over-the-claim-set-g88 node 4 · -k f01_01 or f03_03 or f03_04 or f04_01
+★ 안 물었다    finalize-compares-the-external-input-with-the-plan-g88 node 1 · -k f03_03
+★ 안 물었다    finalize-rederives-the-phase-set-g88 node 1 · -k f00_04
+★ 안 물었다    finalize-records-only-the-claim-phases-g88 node 3 · -k f01_01 or f03_04 or f04_01
+★ 안 물었다    claim-record-has-two-closed-key-sets-g88 node 4 · -k f01_01 or f03_03 or f03_04 or f04_01
+★ 안 물었다    fit-carries-the-staged-input-binding-g88 node 1 · -k f01_01
+★ 안 물었다    one-package-digest-function-g88 node 4 · -k f01_01 or f03_03 or f03_04 or f04_01
+
+=== 관측한 EXPECT (그대로 붙여 넣어라) ===
+{
+    "claim-record-has-two-closed-key-sets-g88": {
+        "fail": [
+            "tests/test_gate88_fit_only_lifecycle.py::test_f01_01_a_v6_fit_only_leg_runs_records_and_finalizes",
+            "tests/test_gate88_fit_only_lifecycle.py::test_f03_03_finalize_refuses_an_external_input_other_than_the_plan",
+            "tests/test_gate88_fit_only_lifecycle.py::test_f03_04_another_attempt_can_not_record_or_finalize",
+            "tests/test_gate88_fit_only_lifecycle.py::test_f04_01_a_fit_only_claim_resumes_with_fit_as_its_only_phase"
+        ],
+        "witness": {
+            "tests/test_gate88_fit_only_lifecycle.py::test_f01_01_a_v6_fit_only_leg_runs_records_and_finalizes": "tools.preserve.PreserveError: [plan] claim schema 가 계약과 다르다: ['attempt_id', 'attempt_verifier', 'cohort_id', 'leg_id', 'opened_at', 'phases', 'phases_required', 'run_spec_digest', 'source_digest']",
+            "tests/test_gate88_fit_only_lifecycle.py::test_f03_03_finalize_refuses_an_external_input_other_than_the_plan": "AssertionError: 거부 이유가 계획 입력 재대조가 아니다",
+            "tests/test_gate88_fit_only_lifecycle.py::test_f03_04_another_attempt_can_not_record_or_finalize": "tools.preserve.PreserveError: [plan] claim schema 가 계약과 다르다: ['attempt_id', 'attempt_verifier', 'cohort_id', 'leg_id', 'opened_at', 'phases', 'phases_required', 'run_spec_digest', 'source_digest']",
+            "tests/test_gate88_fit_only_lifecycle.py::test_f04_01_a_fit_only_claim_resumes_with_fit_as_its_only_phase": "tools.preserve.PreserveError: [plan] claim schema 가 계약과 다르다: ['attempt_id', 'attempt_verifier', 'cohort_id', 'leg_id', 'opened_at', 'phases', 'phases_required', 'run_spec_digest', 'source_digest']"
+        }
+    },
+    "finalize-checks-consumption-over-the-claim-set-g88": {
+        "fail": [
+            "tests/test_gate88_fit_only_lifecycle.py::test_f01_01_a_v6_fit_only_leg_runs_records_and_finalizes",
+            "tests/test_gate88_fit_only_lifecycle.py::test_f03_03_finalize_refuses_an_external_input_other_than_the_plan",
+            "tests/test_gate88_fit_only_lifecycle.py::test_f03_04_another_attempt_can_not_record_or_finalize",
+            "tests/test_gate88_fit_only_lifecycle.py::test_f04_01_a_fit_only_claim_resumes_with_fit_as_its_only_phase"
+        ],
+        "witness": {
+            "tests/test_gate88_fit_only_lifecycle.py::test_f01_01_a_v6_fit_only_leg_runs_records_and_finalizes": "tools.preserve.PreserveError: [plan] 'g87_v6_leg': phase 'fit' 가 선행 phase ['grid'] 를 결속한 기록(`consumed`)이 없다 — 이 산출이 그 생산자를 보고 계산했다고 말할 근거가 없으므로 닫을 수 없다. 역순 실행이나 59차 이전 코드가 남긴 durable state 다 (59차 M7)",
+            "tests/test_gate88_fit_only_lifecycle.py::test_f03_03_finalize_refuses_an_external_input_other_than_the_plan": "AssertionError: 거부 이유가 계획 입력 재대조가 아니다",
+            "tests/test_gate88_fit_only_lifecycle.py::test_f03_04_another_attempt_can_not_record_or_finalize": "tools.preserve.PreserveError: [plan] 'g87_v6_leg': phase 'fit' 가 선행 phase ['grid'] 를 결속한 기록(`consumed`)이 없다 — 이 산출이 그 생산자를 보고 계산했다고 말할 근거가 없으므로 닫을 수 없다. 역순 실행이나 59차 이전 코드가 남긴 durable state 다 (59차 M7)",
+            "tests/test_gate88_fit_only_lifecycle.py::test_f04_01_a_fit_only_claim_resumes_with_fit_as_its_only_phase": "tools.preserve.PreserveError: [plan] 'g87_v6_leg': phase 'fit' 가 선행 phase ['grid'] 를 결속한 기록(`consumed`)이 없다 — 이 산출이 그 생산자를 보고 계산했다고 말할 근거가 없으므로 닫을 수 없다. 역순 실행이나 59차 이전 코드가 남긴 durable state 다 (59차 M7)"
+        }
+    },
+    "finalize-compares-the-external-input-with-the-plan-g88": {
+        "fail": [
+            "tests/test_gate88_fit_only_lifecycle.py::test_f03_03_finalize_refuses_an_external_input_other_than_the_plan"
+        ],
+        "witness": {
+            "tests/test_gate88_fit_only_lifecycle.py::test_f03_03_finalize_refuses_an_external_input_other_than_the_plan": "Failed: DID NOT RAISE PreserveError"
+        }
+    },
+    "finalize-counts-remaining-over-the-claim-set-g88": {
+        "fail": [
+            "tests/test_gate88_fit_only_lifecycle.py::test_f01_01_a_v6_fit_only_leg_runs_records_and_finalizes",
+            "tests/test_gate88_fit_only_lifecycle.py::test_f03_03_finalize_refuses_an_external_input_other_than_the_plan",
+            "tests/test_gate88_fit_only_lifecycle.py::test_f03_04_another_attempt_can_not_record_or_finalize",
+            "tests/test_gate88_fit_only_lifecycle.py::test_f04_01_a_fit_only_claim_resumes_with_fit_as_its_only_phase"
+        ],
+        "witness": {
+            "tests/test_gate88_fit_only_lifecycle.py::test_f01_01_a_v6_fit_only_leg_runs_records_and_finalizes": "tools.preserve.PreserveError: [plan] 'g87_v6_leg' 의 phase 가 남았다: ['grid'] — 모든 phase 가 끝나야 executed 로 닫는다",
+            "tests/test_gate88_fit_only_lifecycle.py::test_f03_03_finalize_refuses_an_external_input_other_than_the_plan": "AssertionError: 거부 이유가 계획 입력 재대조가 아니다",
+            "tests/test_gate88_fit_only_lifecycle.py::test_f03_04_another_attempt_can_not_record_or_finalize": "tools.preserve.PreserveError: [plan] 'g87_v6_leg' 의 phase 가 남았다: ['grid'] — 모든 phase 가 끝나야 executed 로 닫는다",
+            "tests/test_gate88_fit_only_lifecycle.py::test_f04_01_a_fit_only_claim_resumes_with_fit_as_its_only_phase": "tools.preserve.PreserveError: [plan] 'g87_v6_leg' 의 phase 가 남았다: ['grid'] — 모든 phase 가 끝나야 executed 로 닫는다"
+        }
+    },
+    "finalize-records-only-the-claim-phases-g88": {
+        "fail": [
+            "tests/test_gate88_fit_only_lifecycle.py::test_f01_01_a_v6_fit_only_leg_runs_records_and_finalizes",
+            "tests/test_gate88_fit_only_lifecycle.py::test_f03_04_another_attempt_can_not_record_or_finalize",
+            "tests/test_gate88_fit_only_lifecycle.py::test_f04_01_a_fit_only_claim_resumes_with_fit_as_its_only_phase"
+        ],
+        "witness": {
+            "tests/test_gate88_fit_only_lifecycle.py::test_f01_01_a_v6_fit_only_leg_runs_records_and_finalizes": "KeyError: 'grid'",
+            "tests/test_gate88_fit_only_lifecycle.py::test_f03_04_another_attempt_can_not_record_or_finalize": "KeyError: 'grid'",
+            "tests/test_gate88_fit_only_lifecycle.py::test_f04_01_a_fit_only_claim_resumes_with_fit_as_its_only_phase": "KeyError: 'grid'"
+        }
+    },
+    "finalize-rederives-the-phase-set-g88": {
+        "fail": [
+            "tests/test_gate88_fit_only_lifecycle.py::test_f00_04_a_v2_claim_with_an_injected_phase_set_can_not_be_finalized_fit_only"
+        ],
+        "witness": {
+            "tests/test_gate88_fit_only_lifecycle.py::test_f00_04_a_v2_claim_with_an_injected_phase_set_can_not_be_finalized_fit_only": "Failed: DID NOT RAISE PreserveError"
+        }
+    },
+    "fit-carries-the-staged-input-binding-g88": {
+        "fail": [
+            "tests/test_gate88_fit_only_lifecycle.py::test_f01_01_a_v6_fit_only_leg_runs_records_and_finalizes"
+        ],
+        "witness": {
+            "tests/test_gate88_fit_only_lifecycle.py::test_f01_01_a_v6_fit_only_leg_runs_records_and_finalizes": "tools.preserve.PreserveError: [plan] fit 전용 claim 의 fit receipt 에 밖 입력 묶음 결속 `input_package_digest` (hex64) 가 없다: None — 무엇을 소비했는지 모르는 fit 은 닫을 수 없다 (88차 §14-2 c)"
+        }
+    },
+    "fit-only-claim-refuses-other-phases-g88": {
+        "fail": [
+            "tests/test_gate88_fit_only_lifecycle.py::test_f03_01_a_fit_only_claim_refuses_a_grid_phase"
+        ],
+        "witness": {
+            "tests/test_gate88_fit_only_lifecycle.py::test_f03_01_a_fit_only_claim_refuses_a_grid_phase": "AssertionError: 거부 이유가 claim phase 집합 규칙이 아니다"
+        }
+    },
+    "fit-only-claim-seals-its-phase-set-g88": {
+        "fail": [
+            "tests/test_gate88_fit_only_lifecycle.py::test_f01_01_a_v6_fit_only_leg_runs_records_and_finalizes"
+        ],
+        "witness": {
+            "tests/test_gate88_fit_only_lifecycle.py::test_f01_01_a_v6_fit_only_leg_runs_records_and_finalizes": "tools.preserve.PreserveError: [plan] 'g87_v6_leg': phase 'fit' 를 닫으려는데 선행 phase ['grid'] 가 아직 안 닫혔다 — 순서를 뒤집으면 소비자가 생산자를 결속할 대상이 없어 결속이 통째로 사라진다 (59차 M7). 선행 phase 를 먼저 닫으라"
+        }
+    },
+    "fit-only-consumer-names-the-external-input-g88": {
+        "fail": [
+            "tests/test_gate88_fit_only_lifecycle.py::test_f01_01_a_v6_fit_only_leg_runs_records_and_finalizes",
+            "tests/test_gate88_fit_only_lifecycle.py::test_f03_04_another_attempt_can_not_record_or_finalize",
+            "tests/test_gate88_fit_only_lifecycle.py::test_f04_01_a_fit_only_claim_resumes_with_fit_as_its_only_phase"
+        ],
+        "witness": {
+            "tests/test_gate88_fit_only_lifecycle.py::test_f01_01_a_v6_fit_only_leg_runs_records_and_finalizes": "tools.preserve.PreserveError: [plan] 'g87_v6_leg': fit 이 소비한 밖 입력 (consumed.external_input None · receipt 57cf078823b506ee) 이 계획 fit.in_digest 57cf078823b506ee 와 다르다 — 승인한 입력의 산물이라고 말할 근거가 없으므로 닫을 수 없",
+            "tests/test_gate88_fit_only_lifecycle.py::test_f03_04_another_attempt_can_not_record_or_finalize": "tools.preserve.PreserveError: [plan] 'g87_v6_leg': fit 이 소비한 밖 입력 (consumed.external_input None · receipt e8931d92731da9c8) 이 계획 fit.in_digest e8931d92731da9c8 와 다르다 — 승인한 입력의 산물이라고 말할 근거가 없으므로 닫을 수 없",
+            "tests/test_gate88_fit_only_lifecycle.py::test_f04_01_a_fit_only_claim_resumes_with_fit_as_its_only_phase": "tools.preserve.PreserveError: [plan] 'g87_v6_leg': fit 이 소비한 밖 입력 (consumed.external_input None · receipt 67b7c9a4a1061c7f) 이 계획 fit.in_digest 67b7c9a4a1061c7f 와 다르다 — 승인한 입력의 산물이라고 말할 근거가 없으므로 닫을 수 없"
+        }
+    },
+    "fit-only-receipt-carries-the-input-binding-g88": {
+        "fail": [
+            "tests/test_gate88_fit_only_lifecycle.py::test_f03_02_a_fit_receipt_without_a_consistent_input_binding_is_refused[inputs_disagree]",
+            "tests/test_gate88_fit_only_lifecycle.py::test_f03_02_a_fit_receipt_without_a_consistent_input_binding_is_refused[no_inputs]",
+            "tests/test_gate88_fit_only_lifecycle.py::test_f03_02_a_fit_receipt_without_a_consistent_input_binding_is_refused[no_package]"
+        ],
+        "witness": {
+            "tests/test_gate88_fit_only_lifecycle.py::test_f03_02_a_fit_receipt_without_a_consistent_input_binding_is_refused[inputs_disagree]": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate88_fit_only_lifecycle.py::test_f03_02_a_fit_receipt_without_a_consistent_input_binding_is_refused[no_inputs]": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate88_fit_only_lifecycle.py::test_f03_02_a_fit_receipt_without_a_consistent_input_binding_is_refused[no_package]": "KeyError: 'input_package_digest'"
+        }
+    },
+    "index-asks-the-v6-external-input-rule-g88": {
+        "fail": [
+            "tests/test_gate88_fit_only_lifecycle.py::test_f02_02_a_v3_plan_without_an_external_input_digest_is_refused_by_the_index"
+        ],
+        "witness": {
+            "tests/test_gate88_fit_only_lifecycle.py::test_f02_02_a_v3_plan_without_an_external_input_digest_is_refused_by_the_index": "Failed: DID NOT RAISE PreserveError"
+        }
+    },
+    "input-binding-recomputes-the-package-g88": {
+        "fail": [
+            "tests/test_gate88_fit_only_lifecycle.py::test_f03_02_a_fit_receipt_without_a_consistent_input_binding_is_refused[inputs_disagree]"
+        ],
+        "witness": {
+            "tests/test_gate88_fit_only_lifecycle.py::test_f03_02_a_fit_receipt_without_a_consistent_input_binding_is_refused[inputs_disagree]": "Failed: DID NOT RAISE PreserveError"
+        }
+    },
+    "one-package-digest-function-g88": {
+        "fail": [
+            "tests/test_gate88_fit_only_lifecycle.py::test_f01_01_a_v6_fit_only_leg_runs_records_and_finalizes",
+            "tests/test_gate88_fit_only_lifecycle.py::test_f03_03_finalize_refuses_an_external_input_other_than_the_plan",
+            "tests/test_gate88_fit_only_lifecycle.py::test_f03_04_another_attempt_can_not_record_or_finalize",
+            "tests/test_gate88_fit_only_lifecycle.py::test_f04_01_a_fit_only_claim_resumes_with_fit_as_its_only_phase"
+        ],
+        "witness": {
+            "tests/test_gate88_fit_only_lifecycle.py::test_f01_01_a_v6_fit_only_leg_runs_records_and_finalizes": "tools.preserve.PreserveError: [plan] fit 전용 claim 의 fit receipt: `inputs` 로 다시 계산한 묶음 digest 가 `input_package_digest` 와 다르다 — 결속이 자기모순이다 (88차 §14-2 c)",
+            "tests/test_gate88_fit_only_lifecycle.py::test_f03_03_finalize_refuses_an_external_input_other_than_the_plan": "tools.preserve.PreserveError: [plan] fit 전용 claim 의 fit receipt: `inputs` 로 다시 계산한 묶음 digest 가 `input_package_digest` 와 다르다 — 결속이 자기모순이다 (88차 §14-2 c)",
+            "tests/test_gate88_fit_only_lifecycle.py::test_f03_04_another_attempt_can_not_record_or_finalize": "tools.preserve.PreserveError: [plan] fit 전용 claim 의 fit receipt: `inputs` 로 다시 계산한 묶음 digest 가 `input_package_digest` 와 다르다 — 결속이 자기모순이다 (88차 §14-2 c)",
+            "tests/test_gate88_fit_only_lifecycle.py::test_f04_01_a_fit_only_claim_resumes_with_fit_as_its_only_phase": "tools.preserve.PreserveError: [plan] fit 전용 claim 의 fit receipt: `inputs` 로 다시 계산한 묶음 digest 가 `input_package_digest` 와 다르다 — 결속이 자기모순이다 (88차 §14-2 c)"
+        }
+    },
+    "phase-order-runs-over-the-claim-set-g88": {
+        "fail": [
+            "tests/test_gate88_fit_only_lifecycle.py::test_f01_01_a_v6_fit_only_leg_runs_records_and_finalizes",
+            "tests/test_gate88_fit_only_lifecycle.py::test_f03_03_finalize_refuses_an_external_input_other_than_the_plan",
+            "tests/test_gate88_fit_only_lifecycle.py::test_f03_04_another_attempt_can_not_record_or_finalize",
+            "tests/test_gate88_fit_only_lifecycle.py::test_f04_01_a_fit_only_claim_resumes_with_fit_as_its_only_phase"
+        ],
+        "witness": {
+            "tests/test_gate88_fit_only_lifecycle.py::test_f01_01_a_v6_fit_only_leg_runs_records_and_finalizes": "tools.preserve.PreserveError: [plan] 'g87_v6_leg': phase 'fit' 를 닫으려는데 선행 phase ['grid'] 가 아직 안 닫혔다 — 순서를 뒤집으면 소비자가 생산자를 결속할 대상이 없어 결속이 통째로 사라진다 (59차 M7). 선행 phase 를 먼저 닫으라",
+            "tests/test_gate88_fit_only_lifecycle.py::test_f03_03_finalize_refuses_an_external_input_other_than_the_plan": "tools.preserve.PreserveError: [plan] 'g87_v6_leg': phase 'fit' 를 닫으려는데 선행 phase ['grid'] 가 아직 안 닫혔다 — 순서를 뒤집으면 소비자가 생산자를 결속할 대상이 없어 결속이 통째로 사라진다 (59차 M7). 선행 phase 를 먼저 닫으라",
+            "tests/test_gate88_fit_only_lifecycle.py::test_f03_04_another_attempt_can_not_record_or_finalize": "tools.preserve.PreserveError: [plan] 'g87_v6_leg': phase 'fit' 를 닫으려는데 선행 phase ['grid'] 가 아직 안 닫혔다 — 순서를 뒤집으면 소비자가 생산자를 결속할 대상이 없어 결속이 통째로 사라진다 (59차 M7). 선행 phase 를 먼저 닫으라",
+            "tests/test_gate88_fit_only_lifecycle.py::test_f04_01_a_fit_only_claim_resumes_with_fit_as_its_only_phase": "tools.preserve.PreserveError: [plan] 'g87_v6_leg': phase 'fit' 를 닫으려는데 선행 phase ['grid'] 가 아직 안 닫혔다 — 순서를 뒤집으면 소비자가 생산자를 결속할 대상이 없어 결속이 통째로 사라진다 (59차 M7). 선행 phase 를 먼저 닫으라"
+        }
+    },
+    "v3-plan-needs-an-external-input-digest-g88": {
+        "fail": [
+            "tests/test_gate88_fit_only_lifecycle.py::test_f02_02_a_v3_plan_without_an_external_input_digest_is_refused_by_the_index"
+        ],
+        "witness": {
+            "tests/test_gate88_fit_only_lifecycle.py::test_f02_02_a_v3_plan_without_an_external_input_digest_is_refused_by_the_index": "Failed: DID NOT RAISE PreserveError"
+        }
+    }
+}
+
+scenario_total 16 · scenario_executable 16 · scenario_declared 0 · site_total 16 · site_executable 16 · site_declared 0 · ran 16
+
+=== 문제 ===
+fit-only-claim-seals-its-phase-set-g88: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+v3-plan-needs-an-external-input-digest-g88: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+index-asks-the-v6-external-input-rule-g88: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+fit-only-claim-refuses-other-phases-g88: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+fit-only-receipt-carries-the-input-binding-g88: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+input-binding-recomputes-the-package-g88: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+fit-only-consumer-names-the-external-input-g88: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+phase-order-runs-over-the-claim-set-g88: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+finalize-counts-remaining-over-the-claim-set-g88: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+finalize-checks-consumption-over-the-claim-set-g88: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+finalize-compares-the-external-input-with-the-plan-g88: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+finalize-rederives-the-phase-set-g88: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+finalize-records-only-the-claim-phases-g88: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+claim-record-has-two-closed-key-sets-g88: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+fit-carries-the-staged-input-binding-g88: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+one-package-digest-function-g88: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+rc=1
