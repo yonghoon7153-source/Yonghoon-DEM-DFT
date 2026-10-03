@@ -7146,24 +7146,35 @@
   {
    "id": "RINT-04",
    "severity": "P2",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "claude 자기리뷰 10-02 (P2-4) · codex 10-03 CONFIRMED",
    "opened_in": "docs/reviews/codex_review_rint_stage1_20261003.md",
    "title": "r-ON Joule 지도는 bulk J²/σ 만 — 계면 I²R (탐침 기준 소산의 95 %) 이 지도에 없는데 발열 위치로 읽힌다",
    "note": "자리: scripts/step3_sigma.py:1492–1494; scripts/mpm_webapp_payload.py:2164–2168; webapp/static/js/viewer3d.js:3394 · 3463.  재현 (두 슬래브 · σ=1 S/cm · h=0.5 µm · r=0.01 Ω·cm²): σ_eff 1 → 0.0476190476 S/cm · 계면 소산 몫 0.9523809539 (직렬식 0.9523809524) · 그런데 정규화 Joule 지도 ON/OFF 최대 차 2.03e−6 · hot_frac_50 둘 다 0.425.  bulk 소산으로는 맞다 — 계면 I²R 을 뺀 지도를 전체 발열 위치로 읽는 것이 틀림.  최소 수정: bulk-only 이름 · included/excluded 항목 · 지도 밖 interface 소산 몫을 기계 필드와 화면에 함께 · 총 발열 hotspot 금지 · 전체 지도가 필요하면 계면 면 지도 또는 등록된 셀 배분 연산자 + bulk+interface(+plate) 총량을 IV 와 대조.  웹앱 짝: 뷰어 Joule 패널.  등재 2026-10-03 = Codex r_int ① 1단계 판정 반입 (1저자 전달).  ⛔ 1단계 판정 = G1 HOLD · G2 HOLD (기본 OFF 산출을 폐기하라는 판정 아님 · 수정 착수 금지도 아님 — 제시 처방만으로 닫힌다는 판정을 못 낸다는 뜻) · 수정은 1저자 비준 뒤 반례 먼저 (규율 ②) · 코드 → 웹앱 → 게이트 → 커밋 한 묶음 (J20-l).  1저자 비준 10-03: G1 수정 묶음 (반례 먼저 · 웹앱 같은 묶음 J20-l).",
-   "evidence_tests": []
+   "evidence_tests": [
+    "scripts/step3_sigma.py::--selftest-rint ⓛ1–ⓛ3 (joule_hotspot scope = bulk_only · 포함 · 제외 — 옛 코드 실패 확인)",
+    "scripts/test_rint_receipts.py F3 (실물 producer --joule-heat + r-ON: step3.joule scope = bulk_only · 제외 = 계면 I²R · 판 결합 · 지도 밖 계면 몫 = 소산 분담 interface > 0 — 옛 payload 실패 확인)",
+    "webapp/test_rint_scope_labels.py (시험 먼저 0/8 → 15/15) A1–A5 · C1"
+   ],
+   "claimed_fixed_sha": "9d918d411",
+   "verification_note": "9d918d411: joule_hotspot · step3.joule 이 범위 (bulk_only) · 포함 (bulk 셀 J²/σ) · 제외 (계면 I²R · 판 결합) · 지도 밖 계면 몫 (소산 분담과 같은 값) 을 기계 필드로 · 뷰어 Joule 범례 jouleScopeNote (총 발열 hotspot 으로 읽지 말 것 · 옛 payload = 범위 표지 없음 경고) (10-03).  ⬜ 전체 발열 지도 (계면 면 지도 + bulk+interface+plate 총량 IV 대조) 는 만들지 않았다 — 최소 수정 범위.  Codex 재검증 대기."
   },
   {
    "id": "RINT-05",
    "severity": "P2",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "claude 자기리뷰 10-02 (P2-4) · codex 10-03 CONFIRMED",
    "opened_in": "docs/reviews/codex_review_rint_stage1_20261003.md",
    "title": "STEP4 grid 저장 · reaction 은 막 없는 bulk 규약 — r-ON 과 한 payload 에 무표지로 섞인다 (npz 키 10 개에 rint 표 · iid · 적용 여부 없음)",
    "note": "자리: scripts/mpm_webapp_payload.py:2737–2755 · 2771–2789; scripts/step3_sigma.py:1867–1874; scripts/step4_dyn.py:970–971 · 1062 · 3067–3083.  재현: producer 의 np.savez_compressed 호출 (AST) 실행 · 포착 → 키 10 개 · rint 없음 · STEP4 는 σ 표로 bulk-only 간선.  두 경로 reaction 탐침: OFF 해 [1,1] vs 한 경로에 같은 막을 넣은 직렬 기준해 [0.1031390135, 1.8968609865] — reaction KCL 통과만으로 r-ON σ 와 같은 물리라 할 수 없다.  최소 수정: r-ON + --save-step4-grid 거부 · rxn 은 \"막 없는 반응수송 대조\" 로 scope 분리 또는 r-ON 에서 비활성 · 장래 reader 가 실제 법칙을 소비 · 검증.  한정 (Codex): STEP4 물리를 즉시 구현하라는 요구 아님 — 서로 다른 scope 를 한 모델처럼 내보내는 계약 결함 · r-ON 과 공동 결론에 쓰면 그 결론은 기각 대상.  등재 2026-10-03 = Codex r_int ① 1단계 판정 반입 (1저자 전달).  ⛔ 1단계 판정 = G1 HOLD · G2 HOLD (기본 OFF 산출을 폐기하라는 판정 아님 · 수정 착수 금지도 아님 — 제시 처방만으로 닫힌다는 판정을 못 낸다는 뜻) · 수정은 1저자 비준 뒤 반례 먼저 (규율 ②) · 코드 → 웹앱 → 게이트 → 커밋 한 묶음 (J20-l).  1저자 비준 10-03: G1 수정 묶음 (반례 먼저 · 웹앱 같은 묶음 J20-l).",
-   "evidence_tests": []
+   "evidence_tests": [
+    "scripts/test_rint_receipts.py C (r-ON + --save-step4-grid → 격자 작업 전 거부) · F1 · F2 (r-ON → step3.rxn status disabled · 사유 RINT-05 · 입자 jrxn 없음 · r 없으면 r_int 사유로 안 꺼짐) — 옛 payload 실패 확인",
+    "webapp/test_rint_scope_labels.py (시험 먼저 0/8 → 15/15) B1–B2 · C2–C3"
+   ],
+   "claimed_fixed_sha": "9d918d411",
+   "verification_note": "9d918d411: r-ON + --save-step4-grid 거부 (STEP4 npz 는 bulk 간선 · 계면 막 · 표 없음) · r-ON 이면 STEP4-v1 반응 솔브 끔 (막 없는 반응수송 = 다른 scope · 사유 기록 · jrxn 없음) · 뷰어 반응전류 범례 · 비교 캡션 rxnScopeNote (끈 사유) (10-03).  ⬜ STEP4 가 계면 법칙을 실제로 소비하는 확장은 별건 (Codex 한정: 즉시 구현 요구 아님).  Codex 재검증 대기."
   },
   {
    "id": "RINT-06",
@@ -7308,24 +7319,32 @@
   {
    "id": "RINT-17",
    "severity": "P3",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "claude 자기리뷰 10-02 (P3-⑦) · codex 10-03 P3 명명",
    "opened_in": "docs/reviews/codex_review_rint_stage1_20261003.md",
    "title": "이름: interface_rint_* (내부 계면 ASR) vs r_int_ohm_cm2 (STEP4 셀 terminal ASR) — scope 분리 명명",
    "note": "Codex: 실제 같은 키 overwrite 는 없음 (유사 명칭) · terminal ASR 와 internal-interface ASR 의 scope 를 이름에서 가른다.  등재 2026-10-03 = Codex r_int ① 1단계 판정 반입 (1저자 전달).  ⛔ 1단계 판정 = G1 HOLD · G2 HOLD (기본 OFF 산출을 폐기하라는 판정 아님 · 수정 착수 금지도 아님 — 제시 처방만으로 닫힌다는 판정을 못 낸다는 뜻) · 수정은 1저자 비준 뒤 반례 먼저 (규율 ②) · 코드 → 웹앱 → 게이트 → 커밋 한 묶음 (J20-l).",
-   "evidence_tests": []
+   "evidence_tests": [
+    "webapp/test_rint_scope_labels.py (시험 먼저 0/8 → 15/15) E1 (STEP4 화면 R_int 표지 4 곳 = 셀 단자)"
+   ],
+   "claimed_fixed_sha": "9d918d411",
+   "verification_note": "9d918d411: 명명 scope 분리 — STEP4 R_int = \"셀 단자 (집전체) 직렬 ASR\" (step4_dyn --r-int-ohm-cm2 help · docstring · 뷰어 그림 제목 · 범례 4 곳 \"R_int(셀 단자)\") ↔ STEP3 내부 상 경계 계면 r = interface_rint_* (payload --step3-rint-* help) — 다른 양임을 양쪽에 적음 · 키 이름은 바꾸지 않음 (기존 payload · 파일 이름 호환) (10-03).  Codex 재검증 대기."
   },
   {
    "id": "RINT-18",
    "severity": "P3",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "claude 자기리뷰 10-02 (P3-⑧) · codex 10-03 CONFIRMED P3",
    "opened_in": "docs/reviews/codex_review_rint_stage1_20261003.md",
    "title": "viewer3d.js \"각 상의 전력손실 %\" 에 interface 막대 — 계면은 상이 아님 → \"상/계면 소산\"",
    "note": "자리: webapp/static/js/viewer3d.js:5340 (자기리뷰 기록).  웹앱 짝 = 이 항목 자체 (J20-l · ⑥ 묶음 전이라도 r-ON 산출을 화면에 올리기 전).  등재 2026-10-03 = Codex r_int ① 1단계 판정 반입 (1저자 전달).  ⛔ 1단계 판정 = G1 HOLD · G2 HOLD (기본 OFF 산출을 폐기하라는 판정 아님 · 수정 착수 금지도 아님 — 제시 처방만으로 닫힌다는 판정을 못 낸다는 뜻) · 수정은 1저자 비준 뒤 반례 먼저 (규율 ②) · 코드 → 웹앱 → 게이트 → 커밋 한 묶음 (J20-l).  1저자 비준 10-03: G1 수정 묶음 (반례 먼저 · 웹앱 같은 묶음 J20-l).",
-   "evidence_tests": []
+   "evidence_tests": [
+    "webapp/test_rint_scope_labels.py (시험 먼저 0/8 → 15/15) D1–D3 (\"각 상의 전력손실 %\" 없음 · 막대 둘 · 약어표 · je 범례 = 상/계면)"
+   ],
+   "claimed_fixed_sha": "9d918d411",
+   "verification_note": "9d918d411: 뷰어 손실 분담 표지 = \"각 상/계면의 전력손실 %\" (전자 · 이온 막대) · 약어표 · je 범례 \"손실(발열) 분담 (상/계면)\" — 계면은 상이 아니다 (10-03).  Codex 재검증 대기."
   },
   {
    "id": "RINT-19",
