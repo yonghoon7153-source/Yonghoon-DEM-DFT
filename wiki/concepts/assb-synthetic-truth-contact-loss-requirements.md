@@ -5,7 +5,7 @@ created: 2026-09-23
 updated: 2026-10-03
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/raijmakers2020_thin-film-assb-model-double-layer-dc-ac-joint-fit.md, raw/papers/schmidt2024_nitsche-contact-delamination-resolved-ssb-cathode.md, raw/papers/bielefeld2023_useful-models-ssb-simplicity-perspective.md, raw/papers/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm.md, raw/papers/chen2013_sofc-miec-composite-electrode-percolation-theory.md, raw/papers/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd-si.md, raw/papers/li2024_assb-composite-cathode-model-contact-area-edl.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/ren2023_oxide-ssb-composite-cathode-architecture-perspective.md, raw/papers/bielefeld2022_voids-kinetics-morphology-composite-cathode-fem.md, raw/papers/bielefeld2020_effective-ionic-conductivity-binder-composite-cathode.md, raw/papers/asheri2023_data-driven-multiscale-ssb-delamination-surrogate.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md]
+sources: [raw/papers/deng2021_assb-reduced-order-model-pade-polynomial.md, raw/papers/raijmakers2020_thin-film-assb-model-double-layer-dc-ac-joint-fit.md, raw/papers/schmidt2024_nitsche-contact-delamination-resolved-ssb-cathode.md, raw/papers/bielefeld2023_useful-models-ssb-simplicity-perspective.md, raw/papers/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm.md, raw/papers/chen2013_sofc-miec-composite-electrode-percolation-theory.md, raw/papers/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd-si.md, raw/papers/li2024_assb-composite-cathode-model-contact-area-edl.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/ren2023_oxide-ssb-composite-cathode-architecture-perspective.md, raw/papers/bielefeld2022_voids-kinetics-morphology-composite-cathode-fem.md, raw/papers/bielefeld2020_effective-ionic-conductivity-binder-composite-cathode.md, raw/papers/asheri2023_data-driven-multiscale-ssb-delamination-surrogate.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -43,7 +43,7 @@ evidenceScope: multi-source-mixed
 
 | ID | 요구 | 출처 (assb 호) | 상태 |
 |---|---|---|---|
-| **R1** | **용량에 곱해지되 `ε_p` 와 별개인 `θ`** 를 둔다 | 37호 | 계보의 모든 모델이 위반(27·28·37·58호) · 83호는 CAM\|SE 접촉 항 자체가 없다(가정) |
+| **R1** | **용량에 곱해지되 `ε_p` 와 별개인 `θ`** 를 둔다 | 37호 · **100호 Deng 2021**(37호가 물은 축약 모형 — 확인) | 계보의 모든 모델이 위반(27·28·37·58호) · 83호는 CAM\|SE 접촉 항 자체가 없다(가정) · 100호 축약 모형(ROM)도 위반 — θ · ε_p 둘 다 0 · 면적 A 한 값이 용량 극 · 수송 이득 · i₀(A·k_pos)에 같이 들어간다(37호 A_eff 는 그 꼴 위의 BV 분모 추가) |
 | **R2** | **비연결 입자가 자기 SOC 의 Li 를 붙든다** — 끊긴 순간의 리튬화 상태가 재고에서 빠진다(LLI 와도 얽힘) | 37호 | 계보 측정 0 (38호 Conforto 도 "inactive" 로만) |
 | **R3** | **죽은 부피가 전해질이 되지 않는다** — 비연결 입자·void 가 이온 경로로 바뀌지 않게 | 37호 · 56호(검증 구조가 void 14 % 를 SE 로 채움) · 57호 · **93호**(원칙 인쇄 — "The assumption that all volume that is not filled with CAM contains electrolyte no longer applies" · 같은 저자 56호 검증 구조는 위반) | 56호가 정확히 이것을 위반 |
 | **R4** | **`θ` 에만 반응하는 조작** 을 truth 에 둔다 (압력 되돌림 등) | 37호 · 39호 Sakka (압력이 `φ` ×1.10 · `R_ct` ×14 — 여러 인자를 같이 움직임) · 57호 (바인더 한 손잡이가 경로와 접촉 두 곱을 같이 깎음) · 56호 (`φ` 스윕은 θ-전용 아님) · 94호 (모형 — OCV · i₀ 응력 의존을 무시해 압력이 구성상 접촉만 움직이나, 움직이는 것은 `θ` 가 아니라 `φ`) | 실측·모델 모두 **θ-전용 조작 0** — [[assb-pressure-reapplication-separation-test]] 설계 조건 참조 |
@@ -69,6 +69,7 @@ evidenceScope: multi-source-mixed
 - 93호의 R3 원칙 인쇄를 R3 가 검증됐다는 뜻으로 쓰지 않는다 — 저자 문장(1차 자료 0)이고, 같은 저자 56호 검증 구조는 위반했다.
 - 94호를 R4 · R7 충족 표본으로 쓰지 않는다 — 압력이 구성상 접촉만 움직이는 것은 무시 가정의 결과이고, 계산된 것은 `φ` 하나(`θ` · `u` 0)이며, 실험 대조 0 인 모형이다.
 - 98호를 R5 충족 표본으로 쓰지 않는다 — 기하 면적당 꼴은 형식이고, 실제 계면 면적 · 면적 변화 · 노화가 지면에 없다. 등가 유전 두께는 ε_r 를 기하 축전기에서 역산한 가정 위의 우리 계산이다.
+- 100호를 R1 위반의 측정 표본으로 쓰지 않는다 — 신품 축약 모형의 구조(인쇄 식 · 표)이고 열화를 다루지 않았다. 'A 를 줄이면 용량 · 수송 · i₀ 가 함께 움직인다' 는 그 구조 위의 우리 대수다.
 
 ## 관련
 

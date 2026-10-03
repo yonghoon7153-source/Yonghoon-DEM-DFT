@@ -1,0 +1,376 @@
+{
+ "slug": "deng2021_assb-reduced-order-model-pade-polynomial",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-03",
+ "sources": [
+  "eaa8e755-60._A_reduced-order_electrochemical_model_for_all-solid-state_batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Schematic of the model for ASSBs (reprinted from [9], with permission from Elsevier).",
+   "rotated_deg": 0,
+   "bbox": [
+    306.0,
+    52.1,
+    569.0,
+    186.0
+   ],
+   "w": 1096,
+   "h": 559,
+   "dpi": 300,
+   "src": "eaa8e755-60._A_reduced-order_electrochemical_model_for_all-solid-state_batteries.pdf",
+   "blank": 0.487,
+   "note": "봤다(p. 465 · 벡터). Li metal (Anode) | Li3PO4 (Solid electrolyte) | LiCoO2 (Cathode) · x = 0 · x = L_e(전해질) · y = L_p(계면) · y = 0(양극 뒷면) · 방전 중 Li → Li⁺ · Li⁺ → Li_s · Load · i(왼쪽 화살) · e⁻. 캡션 'reprinted from [9]' ↔ 본문 'modified based on the work of Kim et al. [9]' — 99호 그림 1 의 좌표(L · M · y = 0 · 1500 · 1820 nm)를 전해질 x · 양극 y(계면이 y = L_p) 두 좌표로 바꾼 판. 면적 · 집전체 · 접촉 표시 0. 라벨 · 내용 온전 · 잘림 0."
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Frequency response of PDE-based model and approximate transfer functions for Li+ ion concentration in the cathode. (a) Amplitude response. (b) Phase response.",
+   "rotated_deg": 0,
+   "bbox": [
+    306.0,
+    80.5,
+    568.9,
+    442.8
+   ],
+   "w": 1096,
+   "h": 1511,
+   "dpi": 300,
+   "src": "eaa8e755-60._A_reduced-order_electrochemical_model_for_all-solid-state_batteries.pdf",
+   "blank": 0.925,
+   "note": "봤다(p. 467 · 벡터) — ⚠ 과대: 그림 위에 표 II 의 3차 열 조각(왼쪽 열 잘림 — 둘째 열의 'F' 끝 글자만 보임)이 같이 잡혔다 → 그림만 수동 fig_2_manual_p4.png · 표 II 는 tab_2_manual_p4.png. 자동 파일은 지우지 않음. 내용: 양극 y = L_p 전달함수 — PDE(검정 실선) · 1–4차 표지 · x 'Frequency [rad/s]' 10⁻³–10³ · (a) 크기 [dB] (b) 위상 [deg]. `[도표·벡터]`(프레임 x 338.45–552.95 = 10⁻³–10³ · 크기 y 245.33 = 180 · 313.13 = 60 dB · 위상 y 357.35 = −45 · 416.63 = −90°) PDE = 정확한 coth 전달함수 ±0.13 dB · ±0.06° · 표지 = 표 II(y = L_p 행) Padé(4차 = 우리 [3/3]) ±0.75 dB · ±0.34°(범례 표지 제외). `[재현]` 1 dB · 5° 기준 유효 대역 3차 1.18 rad/s(0.19 Hz) · 4차 3.83 rad/s — 본문 기준 2.5 Hz(15.7 rad/s)에서 3차는 −6.1 dB · −40°, 1 s 표본의 Nyquist(π rad/s)에서 −23°."
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Frequency response of PDE-based model and approximate transfer functions for Li+ ion concentration in the electrolyte. (a) Amplitude response. (b) Phase response.",
+   "rotated_deg": 0,
+   "bbox": [
+    43.0,
+    81.8,
+    344.4,
+    372.9
+   ],
+   "w": 1257,
+   "h": 1214,
+   "dpi": 300,
+   "src": "eaa8e755-60._A_reduced-order_electrochemical_model_for_all-solid-state_batteries.pdf",
+   "blank": 0.91,
+   "note": "봤다(p. 468 · 벡터) — ⚠ 과대: 위쪽에 표 III 의 왼쪽 조각(전달함수 · 1st · 2nd 열)과 오른쪽에 본문 단 글자('a high-a…' · 'C. Batte…')가 같이 잡혔다 → 수동 fig_3_manual_p5.png(그림만) · tab_3_manual_p5.png(표 단독). 자동 파일은 지우지 않음. 내용: 전해질 x = 0 전달함수 — PDE(검정) · 1–4차 표지. `[도표·벡터]`(프레임 x 78.61–287.77 = 10⁻³–10³ rad/s · 크기 y 178.78 = 500 · 255.64 = 0 dB · 위상 y 283.35 = 100 · 351.7 = −100°) ★ 표지는 표 III Padé 를 D_amb = 2D_Li⁺D_n⁻/(D_Li⁺ + D_n⁻) = 1.53×10⁻¹⁵ m² s⁻¹ 로 계산한 값(1차 −45° @8.19×10⁻³ rad/s → D 1.535×10⁻¹⁵ · 인쇄 정의 D_e = D_Li⁺D_n⁻/(D_Li⁺ + D_n⁻) 그대로면 6.5 dB · 19.5° 어긋남). ★ PDE 곡선은 식 (22) 의 정확한 응답이 아니다 — ω 10⁻³ 위상 −3.9°(정확 −7.0 · 1차 표지 −6.9) · 0.1 rad/s 142.5 dB(정확 137.1) · 1 rad/s 142.9(127.1) · 632 rad/s 499(99.0) dB · 위상 −32° 골 뒤 +87°(1.58 rad/s) 그다음 들쭉날쭉 — 정확 응답은 크기 단조 감소 · 위상 −45° 로 수렴. 본문 'The magnitude response of the PDE-based model diverges … its phase response oscillates' 는 계산 산물로 읽힘(원인 미확정 · 코드 미공개)."
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Calculation ﬂowchart of the proposed ROM.",
+   "rotated_deg": 0,
+   "bbox": [
+    43.0,
+    52.7,
+    263.5,
+    336.0
+   ],
+   "w": 919,
+   "h": 1181,
+   "dpi": 300,
+   "src": "eaa8e755-60._A_reduced-order_electrochemical_model_for_all-solid-state_batteries.pdf",
+   "blank": 0.675,
+   "note": "봤다(p. 469 · 벡터) — ⚠ 오른쪽 잘림: 전해질 가지 상자 셋('Calculate the electrolyte concentration c_Li⁺(0, t) and c_Li⁺(L_e, t)' · 'Calculate the distribution of electric field E(x, t)' · 'Calculate the mass-transfer overpotential η_mt(t)')의 오른쪽이 잘렸다 → 수동 fig_4_manual_p6.png. 내용: 시작(초기 SOC → 벌크 농도) → 양극 · 전해질 두 끝 농도(전달함수) → 벌크 농도 · η_ct · 전기장 분포 → Eeq(θ̄) · η_d · η_mt → V_t → t ≥ t_max 이면 끝(전압 컷오프 판정 상자 0) · 아니면 t + Δt. 자동 파일은 지우지 않음."
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Li+ ion concentration simulated by the PDE-based model (lines) and ROM (markers) under 10-C constant current. (a) cLis evolution over time. (b) cLis distributions along the y-axis. (c) c+ Li evolution over time. (d) c+ Li distributions along the x-axis.",
+   "rotated_deg": 0,
+   "bbox": [
+    306.0,
+    52.1,
+    568.9,
+    261.1
+   ],
+   "w": 1096,
+   "h": 872,
+   "dpi": 300,
+   "src": "eaa8e755-60._A_reduced-order_electrochemical_model_for_all-solid-state_batteries.pdf",
+   "blank": 0.908,
+   "note": "봤다(p. 469 · 벡터 + 1-bit 마스크 넷 — (a)(c) 의 PDE 선이 그림 조각). 10C 정전류 · (a) c_Lis y = L_p · y = 0 (b) 양극 단면 1 · 10 · 50 · 100 · 300 s (c) c_Li⁺ x = 0 · x = L_e (d) 전해질 단면. `[도표·벡터]`(d: x 433.27 = 0 · 553.21 = 1400 nm · y 163.39 = 1.5×10⁴ · 241.03 = 0.7×10⁴ mol m⁻³) PDE 300 s c(0) 14,592 · c(L_e/2) 10,813 · c(L_e) 7,068 — `[재현]` 재풀이(표 I · D_amb · r 항 포함) ±10 mol m⁻³(x = L_e 끝 −24 … −38) · ROM 표지(1 s 삼차식의 골 ≈1.01×10⁴ @≈350 nm · 마루 ≈1.15×10⁴ @≈1150 nm 포함) = 우리 3차 Padé(D_amb) + 식 (27)(둘째 항 L_e 꼴) RMS 2–38 mol m⁻³(인쇄 L_e² 꼴이면 3.6×10⁹) · (c) 표지 = D_amb 3차 계단 응답 ±50(D_e 면 400–870 어긋남) · (b) PDE 단면 재풀이 −17 … −39 mol m⁻³. 캡션 필드 'c+ Li' = c_Li⁺. 라벨 · 내용 온전 · 잘림 0."
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Li+ ion concentration simulated by the PDE-based model (lines) and ROM (markers) under the UDDS cycle. (a) Current proﬁle. (b) cLis evolution over time. (c) c+",
+   "rotated_deg": 0,
+   "bbox": [
+    43.0,
+    53.1,
+    305.9,
+    358.1
+   ],
+   "w": 1096,
+   "h": 1272,
+   "dpi": 300,
+   "src": "eaa8e755-60._A_reduced-order_electrochemical_model_for_all-solid-state_batteries.pdf",
+   "blank": 0.877,
+   "note": "봤다(p. 470 · 벡터 + 1-bit 마스크 여섯 — (b)(c) 의 PDE 선). UDDS · (a) 전류 C-rate `[도표·벡터]`(x 76.84 = 0 · 289.66 = 2700 s · y 115.48 = 0 · 104.8 = 2C) 2,742 s · UDDS 두 번 반복(자기상관 지연 1,370 s · r 0.985) · −3.88 … +8.65C · 평균 1.285C · 순 ∫I dt = 0.979 Q(방전 1.076 · 회생 0.098 Q) — 축척 방법 미인쇄(본문 'extracted from a commercial electric vehicle and is then scaled down') (b) c_Lis 1.2 → 2.32×10⁴ + 확대 삽도(1,530–1,700 s) (c) c_Li⁺ x = 0 1.08–1.21 · x = L_e 0.96–1.05×10⁴. ⚠ 캡션 필드가 '(c) c+' 에서 끊김(인쇄 '(c) c_Li⁺ evolution over time.') — 캡션 원문은 PDF 가 정본. 라벨 · 내용 온전."
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 7,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Potentials and voltage response of the PDE-based model and ROM under 10-C constant current. (a) Mass-transfer overpotential. (b) Diffusion overpotential. (c) Charge transfer overpotential. (d) Battery terminal voltage. TABLE IV",
+   "rotated_deg": 0,
+   "bbox": [
+    306.0,
+    53.0,
+    568.9,
+    313.0
+   ],
+   "w": 1096,
+   "h": 1085,
+   "dpi": 300,
+   "src": "eaa8e755-60._A_reduced-order_electrochemical_model_for_all-solid-state_batteries.pdf",
+   "blank": 0.916,
+   "note": "봤다(p. 470 · 벡터). 10C 정전류 · (a) η_mt (b) η_d (c) η_ct,pos (d) V_t · PDE(파랑 실선) · ROM(빨강 일점쇄선). `[도표·벡터]`(프레임 x 336.9–554.7 = 0–350 s · a y 62.08 = 0 · 100.0 = −40 mV · b 131.44 = 0 · 159.82 = −0.4 V · c 195.64 = 0 · 229.72 = −80 mV · d 256.66 = 4.2 · 292.24 = 3.2 V) PDE η_mt 1.06 s −8.22 · 100 s −26.89 · 300 s −38.35 · 339 s −39.30 mV · η_d 18 s −47.3 · 300 s −21.1 · 339 s −426 mV · η_ct 1 s −6.61 · 100 s −3.23 · 339 s −65.5 mV · V 1 s 4.2524 · 100 s 3.9876 · 300 s 3.8173 · 끝 339.01 s 3.3502 V. ★ `[재현]` 재풀이(표 I · SOC₀ 1.0 · T 298.15 K · 식 (9) Nernst 항 포함) η_mt ±0.05 mV(1–330 s) — Nernst 항을 빼면 최대 19.3 mV 어긋남 · V ±1.4 mV(1–300 s) · 3.35 V 도달 339.61 ↔ 339.01 s · ROM η_mt = 우리 ROM(3차 Padé D_amb · 식 27 · 28 의 맞는 꼴 · Nernst 항) ±0.08 mV · ROM − PDE η_mt RMSE 0.38 · 최대 0.67 mV ↔ 표 IV 0.38 · 0.66. ⚠ 캡션 필드 끝에 'TABLE IV'(바로 아래 표 머리)가 붙음 — 캡션 원문은 PDF 가 정본."
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 8,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Potentials and voltage response of the PDE-based model and ROM under the UDDS cycle. (a) Mass-transfer overpotential. (b) Diffusion overpotential. (c) Charge transfer overpotential. (d) Battery terminal voltage.",
+   "rotated_deg": 0,
+   "bbox": [
+    43.0,
+    53.1,
+    305.9,
+    313.9
+   ],
+   "w": 1096,
+   "h": 1088,
+   "dpi": 300,
+   "src": "eaa8e755-60._A_reduced-order_electrochemical_model_for_all-solid-state_batteries.pdf",
+   "blank": 0.887,
+   "note": "봤다(p. 471 · 벡터). UDDS · (a) η_mt 0 … −14 mV (b) η_d — 끝(≈2,700 s) −210 mV 스파이크 (c) η_ct,pos −13 … +6 mV (d) V_t 4.29 → ≈3.45 V(끝 스파이크). `[도표·벡터]`(x 74.04 = 0 · 291.3 = 2700 s · d y 257.13 = 4.2 · 289.29 = 3.4 V · 범례 견본 선은 뺌) ROM − PDE(대시 꼭짓점 기준 — 균일 1 s 아님) V 최대 36.7 mV @2,722 s · η_d 최대 36.0 mV @2,713 s ↔ 표 IV 40.5 · 35.9 — 최대 오차는 방전 끝. 라벨 · 내용 온전 · 잘림 0."
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 8,
+   "file": "fig_9.png",
+   "caption": "Fig. 9. Comparison of voltage responses for the experimental data, the PDE-based model, and ROM.",
+   "rotated_deg": 0,
+   "bbox": [
+    306.0,
+    52.7,
+    569.0,
+    159.0
+   ],
+   "w": 1096,
+   "h": 444,
+   "dpi": 300,
+   "src": "eaa8e755-60._A_reduced-order_electrochemical_model_for_all-solid-state_batteries.pdf",
+   "blank": 0.918,
+   "note": "봤다(p. 471 · 벡터). 6.4 · 12.8 · 25.6C · Experiment(검정 점선 + 표지) · PDE(파랑) · ROM(빨강) · 0–600 s · 3.0–4.2 V. `[도표·벡터]`(프레임 x 336.77 = 0 · 556.68 = 600 s · y 61.8 = 4.2 · 135.01 = 3.0 V) 실험 첫 표지 4.173 · 4.151 · 4.111 V(91호 Q = 0 4.177 · 4.156 · 4.116 — 91호 digest 전사) · 실험 점선 끝 546.4 · 266.6 · 124.2 s ↔ 91호 측정 용량 9.86 · 9.76 · 9.57 µAh cm⁻² ÷ (C · 10 µA cm⁻²) = 554.6 · 274.5 · 134.6 s(×0.985 · 0.972 · 0.924) · PDE 끝 543.1 · 262.1 · 122.0 s ≈ Danilov 자기 모형선(91호 전사 541.7 · 257.9 · 121.1 s). `[재현·외부 값]` 표 I + 식 (14) 로는 t = 1 s 전압이 +74 … +92 mV 높다 — [7] 의 외삽 EMF(91호 전사 11 점 · 선형 보간)로 바꾸면 −2.0 … +2.6 mV · 대부분 ±7 mV(EMF 보간 마디 근처 ≤22 mV) → 이 그림은 식 (14) 가 아니라 [7] EMF 로 계산된 것으로 읽힘(지면 인쇄 0). PDE − 실험(SOC 100–10 % 창) 중앙값 −4.8 · −8.7 · −8.1 mV. 라벨 · 내용 온전."
+  },
+  {
+   "key": "t1m",
+   "kind": "table",
+   "label": "I",
+   "page": 3,
+   "file": "tab_1_manual_p3.png",
+   "caption": "TABLE I Set of Model Parameters for ASSBs [9], [27]",
+   "rotated_deg": 0,
+   "bbox": [
+    345,
+    55,
+    530,
+    312
+   ],
+   "w": 772,
+   "h": 1071,
+   "dpi": 300,
+   "src": "eaa8e755-60._A_reduced-order_electrochemical_model_for_all-solid-state_batteries.pdf",
+   "blank": null,
+   "manual": true,
+   "note": "수동 — p. 466 렌더 300 dpi — 표 I 단독(자동 0 — 표 캡션 미인식 · 첫 렌더는 바닥 행 α_neg 이 잘려 영역을 넓혀 다시 렌더). 봤다. 열 'Parameters · Estimated value · Dimension' · 16 행: A 1 cm² · L_e 1500 nm · L_p 320 nm · c_Li⁺,0 6.01×10⁴ mol m⁻³ · δ 0.18 · c_Lis,max 2.33×10⁴ · c_Lis,min 1.165×10⁴ mol m⁻³ · D_Lis 1.76×10⁻¹⁵ · D_Li⁺ 0.9×10⁻¹⁵ · D_n⁻ 5.1×10⁻¹⁵ m² s⁻¹ · k_r 0.9×10⁻⁸ · k_pos 5.1×10⁻⁴ · k_neg 1×10⁻² m³ mol⁻¹ s⁻¹ · α_pos 0.6 · α_neg 0.5. ★ 99호 표 1 과 견주면 D_n⁻ 2.1 → 5.1×10⁻¹⁵(99호 그림이 쓴 값) · c_max · c_min 새로 인쇄(= 91호 a_max · a_max/2) · k_neg · α_neg 새로(출처 미인쇄) · T 없음 · k_r · k_pos 그대로. 머리 [27] = Tian & Qi 2017(접촉 면적 손실 모의 · 미열람)."
+  },
+  {
+   "key": "t2m",
+   "kind": "table",
+   "label": "II",
+   "page": 4,
+   "file": "tab_2_manual_p4.png",
+   "caption": "TABLE II Approximate Transfer Functions for Li+ ion Concentration in the Cathode",
+   "rotated_deg": 0,
+   "bbox": [
+    70,
+    55,
+    545,
+    232
+   ],
+   "w": 1980,
+   "h": 738,
+   "dpi": 300,
+   "src": "eaa8e755-60._A_reduced-order_electrochemical_model_for_all-solid-state_batteries.pdf",
+   "blank": null,
+   "manual": true,
+   "note": "수동 — p. 467 렌더 300 dpi — 표 II 단독(자동 f2 위에 3차 열만 잘려 들어감). 봤다. 양극 C_Lis(L_p, s)/I(s) · C_Lis(0, s)/I(s) 의 1 · 2 · 3차 — 계수는 1/(AFL_p) 과 L_p²/D_Lis 두 묶음으로만 쓰인다. `[재현·대수]` √u coth √u · √u / sinh √u(u = L_p² s / D_Lis)의 [1/1] · [2/2] Padé 와 계수 전부 일치 — 단 y = 0 2차 분자 '+ L_p s/(20AD_Lis F)' 는 −L_p s/(20AD_Lis F) 이어야(부호 오기 · 3차 행은 맞음)."
+  },
+  {
+   "key": "t3m",
+   "kind": "table",
+   "label": "III",
+   "page": 5,
+   "file": "tab_3_manual_p5.png",
+   "caption": "TABLE III Approximate Transfer Functions for Li+ ion Concentration in the Electrolyte",
+   "rotated_deg": 0,
+   "bbox": [
+    60,
+    55,
+    555,
+    160
+   ],
+   "w": 2063,
+   "h": 438,
+   "dpi": 300,
+   "src": "eaa8e755-60._A_reduced-order_electrochemical_model_for_all-solid-state_batteries.pdf",
+   "blank": null,
+   "manual": true,
+   "note": "수동 — p. 468 렌더 300 dpi — 표 III 단독(자동 f3 위에 왼쪽 조각만). 봤다. 전해질 C_Li⁺(0, s)/I(s) 1 · 2 · 3차 — 계수는 L_e/(4AD_Li⁺F) 와 L_e²/D_e 두 묶음. `[재현·대수]` tanh z / z(z² = L_e² s/(4D_e))의 [0/1] · [1/2] · [2/3] Padé 와 일치 — 그러나 그림 3 · 5 의 ROM 은 D_e 자리에 D_amb = 2D_Li⁺D_n⁻/(D_Li⁺ + D_n⁻)(식 5 의 계수)를 썼다(식 21 의 인쇄 정의는 2 가 빠짐)."
+  },
+  {
+   "key": "t4m",
+   "kind": "table",
+   "label": "IV",
+   "page": 7,
+   "file": "tab_4_manual_p7.png",
+   "caption": "TABLE IV Statistical Results of Overpotential and Voltage Errors",
+   "rotated_deg": 0,
+   "bbox": [
+    312,
+    345,
+    563,
+    518
+   ],
+   "w": 1046,
+   "h": 722,
+   "dpi": 300,
+   "src": "eaa8e755-60._A_reduced-order_electrochemical_model_for_all-solid-state_batteries.pdf",
+   "blank": null,
+   "manual": true,
+   "note": "수동 — p. 470 렌더 300 dpi — 표 IV 단독(자동 0). 봤다. RMSE · MaxAE(mV) — 10C: η_mt 0.38 · 0.66 · η_d 6.60 · 76.30 · η_ct,pos(α = 0.5) 0.48 · 5.60 · η_ct,pos(α = 0.6) 0.06 · 0.68 · V_t 0.54 · 4.60 / UDDS: η_mt 0.12 · 0.53 · η_d 2.90 · 35.90 · η_ct,pos(α = 0.5) 0.09 · 2.10 · (α = 0.6) 0.08 · 1.80 · V_t 2.60 · 40.5. ★ 초록 'the voltage errors of the proposed ROM are less than 2.6 mV' = UDDS RMSE(같은 줄 최대 40.5 mV) · 10C 에서 η_d 최대 76.3 mV 인데 V_t 최대 4.6 mV — V 는 θ_s 만 본다(식 16 둘째 줄)."
+  },
+  {
+   "key": "t5m",
+   "kind": "table",
+   "label": "V",
+   "page": 9,
+   "file": "tab_5_manual_p9.png",
+   "caption": "TABLE V Comparison of Performance Between Different Models",
+   "rotated_deg": 0,
+   "bbox": [
+    45,
+    55,
+    570,
+    162
+   ],
+   "w": 2188,
+   "h": 446,
+   "dpi": 300,
+   "src": "eaa8e755-60._A_reduced-order_electrochemical_model_for_all-solid-state_batteries.pdf",
+   "blank": null,
+   "manual": true,
+   "note": "수동 — p. 472 렌더 300 dpi — 표 V 단독(자동 0). 봤다. 조건(지속) 1C 3574 · 2C 1777 · 5C 699 · 10C 340 · UDDS 2742 s × COMSOL 실행 11 · 6 · 3 · 2 · 104 s / 원 PDE(MATLAB · 유한차분 10 + 10 · ode45) 1.64 · 0.84 · 0.40 · 0.25 · 1.21 s · RMSE 0.08 · 0.14 · 0.19 · 0.23 · 0.50 mV / 단순 PDE(r 항 무시) 0.87 · 0.50 · 0.27 · 0.17 · 0.68 s · RMSE 0.24 · 0.41 · 0.46 · 0.50 · 2.20 mV / ROM 0.44 · 0.23 · 0.11 · 0.07 · 0.34 s · RMSE 0.24 · 0.41 · 0.48 · 0.54 · 2.60 mV. `[재현]` 단계당(Δt 1 s) 0.123 · 0.129 · 0.157 · 0.206 · 0.124 ms(10C 는 0.2 ms 를 넘는다) · ROM ÷ 단순 PDE 실행 시간 0.41–0.51."
+  },
+  {
+   "key": "f2m",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2_manual_p4.png",
+   "caption": "Fig. 2. Frequency response of PDE-based model and approximate transfer functions for Li+ ion concentration in the cathode. (a) Amplitude response. (b) Phase response.",
+   "rotated_deg": 0,
+   "bbox": [
+    306,
+    232,
+    569,
+    443
+   ],
+   "w": 1096,
+   "h": 880,
+   "dpi": 300,
+   "src": "eaa8e755-60._A_reduced-order_electrochemical_model_for_all-solid-state_batteries.pdf",
+   "blank": null,
+   "manual": true,
+   "note": "수동 — p. 467 렌더 300 dpi — 그림 2 단독(자동 f2 의 표 II 조각 뺌). 봤다. 판독 · 재현은 f2 note 와 같음."
+  },
+  {
+   "key": "f3m",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3_manual_p5.png",
+   "caption": "Fig. 3. Frequency response of PDE-based model and approximate transfer functions for Li+ ion concentration in the electrolyte. (a) Amplitude response. (b) Phase response.",
+   "rotated_deg": 0,
+   "bbox": [
+    43,
+    165,
+    302,
+    374
+   ],
+   "w": 1080,
+   "h": 872,
+   "dpi": 300,
+   "src": "eaa8e755-60._A_reduced-order_electrochemical_model_for_all-solid-state_batteries.pdf",
+   "blank": null,
+   "manual": true,
+   "note": "수동 — p. 468 렌더 300 dpi — 그림 3 단독(자동 f3 의 표 III 조각 · 본문 단 글자 뺌). 봤다. 판독 · 재현은 f3 note 와 같음."
+  },
+  {
+   "key": "f4m",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4_manual_p6.png",
+   "caption": "Fig. 4. Calculation flowchart of the proposed ROM.",
+   "rotated_deg": 0,
+   "bbox": [
+    43,
+    52,
+    306,
+    337
+   ],
+   "w": 1096,
+   "h": 1189,
+   "dpi": 300,
+   "src": "eaa8e755-60._A_reduced-order_electrochemical_model_for_all-solid-state_batteries.pdf",
+   "blank": null,
+   "manual": true,
+   "note": "수동 — p. 469 렌더 300 dpi — 그림 4 전체(자동 f4 에서 잘린 오른쪽 전해질 가지 포함). 봤다. 끝 판정은 t ≥ t_max 하나(전압 컷오프 상자 0)."
+  }
+ ]
+}
