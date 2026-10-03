@@ -72,6 +72,31 @@ def _v2_setup(tmp_path, monkeypatch, name: str):
     return out, led, spec, in_dir
 
 
+#: 변이 증인은 실행마다 같아야 한다 (G67-T1-b) — 입력 묶음 digest 는 실행마다 달라지므로 (tiny curves 의 서명 · 경로) 거부
+#: 메시지 원문을 증인으로 쓰지 않고 **이유 범주**만 적는다. 원문은 RED 로그 (`gate88_evidence/01_red_test_gate88.log`) 에 있다.
+_WHY = (("선행 phase", "grid 선행 요구 (G87-N1)"),
+        ("밖 입력 묶음 결속 `input_package_digest`", "fit receipt 에 밖 입력 결속 없음"),
+        ("`inputs` 가", "fit receipt inputs 닫힘 위반"),
+        ("자기모순", "결속 자기모순"),
+        ("계획 spec 에서 유도한", "phase 집합 재유도 불일치"),
+        ("소비한 밖 입력", "소비한 입력이 계획과 다름"),
+        ("claim schema", "claim 키 집합 위반"),
+        ("phase 가 남았다", "남은 phase"),
+        ("입력 묶음과 지금 읽는 묶음", "입력 묶음 대조"))
+
+
+def _why(exc: BaseException) -> str:
+    s = str(exc)
+    return next((label for key, label in _WHY if key in s), f"기타 {type(exc).__name__}")
+
+
+def _finalize_ok(led: Path, token=None) -> dict:
+    try:
+        return PV.finalize_leg(LEG, dict(EVIDENCE), ledger=led, **({} if token is None else {"token": token}))
+    except PV.PreserveError as exc:
+        pytest.fail(f"fit-only claim 을 executed 로 닫지 못했다 — {_why(exc)}")
+
+
 def _leg_record(led: Path) -> dict:
     doc = yaml.safe_load(led.read_text(encoding="utf-8"))
     return next(e for e in doc.get("legs") or [] if e["leg_id"] == LEG)
@@ -85,7 +110,7 @@ def test_f00_01_a_v2_claim_still_refuses_fit_before_grid(tmp_path, monkeypatch):
     c = PV.open_leg_run(LEG, spec, SRC, ledger=led)
     with pytest.raises(PV.PreserveError) as ei:
         c.phase_done("fit", {"fits": 3})
-    assert "선행" in str(ei.value) and "grid" in str(ei.value), str(ei.value)
+    assert "선행" in str(ei.value) and "grid" in str(ei.value), "거부 이유가 v2 순서 규칙이 아니다"
 
 
 def test_f00_02_a_v2_claim_still_refuses_to_finalize_with_grid_only(tmp_path, monkeypatch):
@@ -94,7 +119,7 @@ def test_f00_02_a_v2_claim_still_refuses_to_finalize_with_grid_only(tmp_path, mo
     c.phase_done("grid", {"rows": 3})
     with pytest.raises(PV.PreserveError) as ei:
         PV.finalize_leg(LEG, dict(EVIDENCE), ledger=led, token=c.token)
-    assert "phase" in str(ei.value) and "fit" in str(ei.value), str(ei.value)
+    assert "phase" in str(ei.value) and "fit" in str(ei.value), "거부 이유가 남은 phase 규칙이 아니다"
 
 
 def test_f00_03_the_grid_gate_under_a_v3_plan_is_refused(tmp_path, monkeypatch):
@@ -130,10 +155,10 @@ def test_f00_05_a_v2_lifecycle_still_closes_grid_then_fit_with_the_consumed_bind
     c = PV.open_leg_run(LEG, spec, SRC, ledger=led)
     c.phase_done("grid", {"rows": 3})
     c.phase_done("fit", {"fits": 3})
-    assert PV.finalize_leg(LEG, dict(EVIDENCE), ledger=led, token=c.token)["status"] == "executed"
+    assert _finalize_ok(led, token=c.token)["status"] == "executed"
     ph = _leg_record(led)["evidence"]["phases"]
-    assert set(ph) == {"grid", "fit"}, ph
-    assert set(ph["fit"]["consumed"]) == {"grid"}, ph["fit"]
+    assert set(ph) == {"grid", "fit"}, "v2 실행 기록의 phase 가 grid · fit 둘이 아니다"
+    assert set(ph["fit"]["consumed"]) == {"grid"}, "v2 fit 의 소비 결속이 grid 하나가 아니다"
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -141,18 +166,19 @@ def test_f00_05_a_v2_lifecycle_still_closes_grid_then_fit_with_the_consumed_bind
 # ─────────────────────────────────────────────────────────────────────────────
 def test_f01_01_a_v6_fit_only_leg_runs_records_and_finalizes(tmp_path, monkeypatch):
     out, led, in_dir, ctx, spec, ind = _v3_setup(tmp_path, monkeypatch, "f01a")
-    G87._run_nonsmoke(in_dir, out, ctx)                       # 실물 lifecycle — 대체 · 수동 삽입 없음
-    c_view = PV.inspect_leg_run(LEG, ledger=led)
-    assert c_view["phases_done"] == ["fit"], c_view
-    r = PV.finalize_leg(LEG, dict(EVIDENCE), ledger=led)
-    assert r["status"] == "executed", r
+    try:
+        G87._run_nonsmoke(in_dir, out, ctx)                   # 실물 lifecycle — 대체 · 수동 삽입 없음
+    except PV.PreserveError as exc:
+        pytest.fail(f"비-smoke fit-only 실행이 승인 · 입력 대조 · 완료 기록 중에 거부됐다 — {_why(exc)}")
+    assert PV.inspect_leg_run(LEG, ledger=led)["phases_done"] == ["fit"], "상태 view 의 닫힌 phase 가 fit 하나가 아니다"
+    assert _finalize_ok(led)["status"] == "executed"
     ph = _leg_record(led)["evidence"]["phases"]
-    assert set(ph) == {"fit"}, f"fit-only 실행 기록에 다른 phase 가 있다: {sorted(ph)}"
-    assert ph["fit"]["consumed"] == {"external_input": ind}, ph["fit"]
+    assert set(ph) == {"fit"}, "fit-only 실행 기록에 fit 밖의 phase 가 있다 (grid 를 적었다)"
+    assert ph["fit"]["consumed"] == {"external_input": ind}, "fit 의 소비 결속이 계획의 밖 입력 묶음이 아니다"
     rec = ph["fit"]["receipt"]
-    assert rec["input_package_digest"] == ind
-    assert F.fit_input_package_digest(rec["inputs"]) == ind
-    assert PV.planned_index(ledger=led)[LEG]["status"] == "executed"
+    assert rec["input_package_digest"] == ind, "fit receipt 의 묶음 digest 가 계획과 다르다"
+    assert F.fit_input_package_digest(rec["inputs"]) == ind, "fit receipt 의 inputs 로 다시 계산한 묶음이 다르다"
+    assert PV.planned_index(ledger=led)[LEG]["status"] == "executed", "계획이 executed 로 닫히지 않았다"
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -166,8 +192,8 @@ def test_f02_01_inputs_other_than_the_approved_package_are_refused_before_fit_on
     calls = G84._sentinel(monkeypatch)
     with pytest.raises(PV.PreserveError) as ei:
         G87._run_nonsmoke(in_dir, out, ctx)
-    assert "입력 묶음" in str(ei.value), str(ei.value)
-    assert calls == []
+    assert "입력 묶음" in str(ei.value), "거부 이유가 입력 묶음 대조가 아니다"
+    assert calls == [], "거부가 첫 수치 작업 뒤다"
 
 
 def test_f02_02_a_v3_plan_without_an_external_input_digest_is_refused_by_the_index(tmp_path, monkeypatch):
@@ -175,7 +201,7 @@ def test_f02_02_a_v3_plan_without_an_external_input_digest_is_refused_by_the_ind
     out, led, in_dir, ctx, spec, _ = _v3_setup(tmp_path, monkeypatch, "f02b", in_digest=None)
     with pytest.raises(PV.PreserveError) as ei:
         PV.planned_index(ledger=led)
-    assert "in_digest" in str(ei.value), str(ei.value)
+    assert "in_digest" in str(ei.value), "거부 이유가 v6 밖 입력 (fit.in_digest) 규칙이 아니다"
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -186,7 +212,7 @@ def test_f03_01_a_fit_only_claim_refuses_a_grid_phase(tmp_path, monkeypatch):
     c = PV.open_leg_run(LEG, spec, SRC, ledger=led)
     with pytest.raises(PV.PreserveError) as ei:
         c.phase_done("grid", {"rows": 3})
-    assert "grid" in str(ei.value), str(ei.value)
+    assert "grid" in str(ei.value), "거부 이유가 claim phase 집합 규칙이 아니다"
 
 
 @pytest.mark.parametrize("over", [{"input_package_digest": None}, {"inputs": None}, "mismatch"],
@@ -203,7 +229,7 @@ def test_f03_02_a_fit_receipt_without_a_consistent_input_binding_is_refused(tmp_
             r.pop(k) if v is None else r.__setitem__(k, v)
     with pytest.raises(PV.PreserveError) as ei:
         c.phase_done("fit", r)
-    assert "input_package_digest" in str(ei.value) or "inputs" in str(ei.value), str(ei.value)
+    assert "input_package_digest" in str(ei.value) or "inputs" in str(ei.value), "거부 이유가 밖 입력 결속 규칙이 아니다"
 
 
 def test_f03_03_finalize_refuses_an_external_input_other_than_the_plan(tmp_path, monkeypatch):
@@ -217,7 +243,7 @@ def test_f03_03_finalize_refuses_an_external_input_other_than_the_plan(tmp_path,
                       encoding="utf-8")
     with pytest.raises(PV.PreserveError) as ei:
         PV.finalize_leg(LEG, dict(EVIDENCE), ledger=led, token=c.token)
-    assert "in_digest" in str(ei.value) or "external_input" in str(ei.value), str(ei.value)
+    assert "in_digest" in str(ei.value) or "external_input" in str(ei.value), "거부 이유가 계획 입력 재대조가 아니다"
 
 
 def test_f03_04_another_attempt_can_not_record_or_finalize(tmp_path, monkeypatch):
@@ -230,7 +256,7 @@ def test_f03_04_another_attempt_can_not_record_or_finalize(tmp_path, monkeypatch
     c.phase_done("fit", _fit_receipt(in_dir))
     with pytest.raises(PV.PreserveError):
         PV.finalize_leg(LEG, dict(EVIDENCE), ledger=led, token="0" * 64)
-    assert PV.finalize_leg(LEG, dict(EVIDENCE), ledger=led, token=c.token)["status"] == "executed"
+    assert _finalize_ok(led, token=c.token)["status"] == "executed"
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -245,5 +271,5 @@ def test_f04_01_a_fit_only_claim_resumes_with_fit_as_its_only_phase(tmp_path, mo
     assert r.phases_done() == ()
     r.phase_done("fit", _fit_receipt(in_dir))
     assert PV.resume_claim(LEG, token=token, ledger=led).phases_done() == ("fit",)
-    assert PV.inspect_leg_run(LEG, ledger=led)["phases_done"] == ["fit"]
-    assert PV.finalize_leg(LEG, dict(EVIDENCE), ledger=led, token=token)["status"] == "executed"
+    assert PV.inspect_leg_run(LEG, ledger=led)["phases_done"] == ["fit"], "상태 view 의 닫힌 phase 가 fit 하나가 아니다"
+    assert _finalize_ok(led, token=token)["status"] == "executed"

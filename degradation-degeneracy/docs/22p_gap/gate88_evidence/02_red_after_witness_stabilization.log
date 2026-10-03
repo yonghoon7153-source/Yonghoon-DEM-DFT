@@ -1,0 +1,661 @@
+# RED 재확인 (증인 고정 뒤) — HEAD 9e53a7edb333662711a25dc65ca41726a9597106 · RUN_SCOPE diff vs HEAD: 
+# 2026-10-03T09:27:31Z · python -m pytest tests/test_gate88_fit_only_lifecycle.py -q -p no:cacheprovider -rA
+
+[conftest] 시험 authority: /tmp/dd-test-authority-8euqyrmz/docs/22p_gap/LEG_PRESERVATION.yaml (운영 원장의 바이트 복사본 — 70차 E6)
+
+[conftest] 이 checkout 을 처음 보았다 — 얼린 cohort 17개의 좌표를 시험 authority 에 봉인했다: ['g10_2026_09_01', 'g11_2026_09_02', 'g12_2026_09_03', 'g13_2026_09_07', 'g14_2026_09_08', 'g15_2026_09_08', 'g16_2026_09_09', 'g17_2026_09_14', 'g1_2026_08_20', 'g2_2026_08_25', 'g3_2026_08_28', 'g4_2026_08_28', 'g5_2026_08_29', 'g6_2026_09_01', 'g7_2026_09_01', 'g8_2026_09_01', 'g9_2026_09_01']
+.....F..FFFFFFFF                                                         [100%]
+=================================== FAILURES ===================================
+___________ test_f01_01_a_v6_fit_only_leg_runs_records_and_finalizes ___________
+
+tmp_path = PosixPath('/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/results/_smoke/_unit/test_f01_01_a_v6_fit_only_leg_runs_recor_32097843')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f429247f890>
+
+    def test_f01_01_a_v6_fit_only_leg_runs_records_and_finalizes(tmp_path, monkeypatch):
+        out, led, in_dir, ctx, spec, ind = _v3_setup(tmp_path, monkeypatch, "f01a")
+        try:
+>           G87._run_nonsmoke(in_dir, out, ctx)                   # 실물 lifecycle — 대체 · 수동 삽입 없음
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_gate88_fit_only_lifecycle.py:170: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_gate87_round2b.py:281: in _run_nonsmoke
+    return F.run_fit(in_dir, out_dir, _obj_cfg_min(), G81._OBJ_W, _BOUNDS_MIN, "expanded", 2, nproc=1,
+src/fitting.py:1645: in run_fit
+    return _run_fit_staged(_staged, in_dir, out_dir, obj_cfg, objectives,
+src/fitting.py:1740: in _run_fit_staged
+    _record_phase(claim, "fit", summary, logical_out)
+src/fitting.py:858: in _record_phase
+    claim.phase_done(phase, {
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <tools.preserve.LegClaim object at 0x7f428943cac0>, phase = 'fit'
+receipt = {'finished_at': '2026-10-03T09:27:38Z', 'n_rows': 6, 'out': '/tmp/dd87/f01a'}
+
+    def phase_done(self, phase: str, receipt: dict) -> None:
+        """한 phase 를 **durable 하게** 닫는다. 중단 뒤 재개가 여기서 이어진다."""
+        if self._token is None:
+            raise PreserveError(
+                "plan", f"{self.leg_id!r} 의 claim 을 소유 증명 없이 열었다 — "
+                        "phase 를 기록할 수 없다 (진단용 읽기다)")
+        if phase not in CLAIM_PHASES:
+            raise PreserveError(
+                "plan", f"모르는 phase: {phase!r} — {list(CLAIM_PHASES)} 중 하나")
+        _assert_json_domain(receipt, f"phase[{phase}]")
+        # ★ 60차 P1-2 — **검사한 것과 봉인한 것이 같아야 한다.** 59차 M9 는
+        #   finalize 의 evidence 에 대해 이것을 고쳤는데, phase receipt 는 그대로
+        #   caller 의 **같은 reference** 를 들고 lock 안으로 들어가 나중에
+        #   직렬화했다. 검사와 봉인 사이에 caller 가 고치면 다른 값이 굳는다.
+        #   그래서 여기서 정규 바이트로 굳히고, 아래에서는 그 바이트를 다시
+        #   해독한 값만 쓴다.
+        receipt = json.loads(_canon_json(receipt))
+        # ★ 48차 P0-6 — read-modify-write 를 **임계 구역** 안에서 한다. 47차는
+        #   `grid` 와 `fit` 을 동시에 닫으면 둘 다 `phases` 가 빈 record 를 읽고
+        #   각자 자기 것만 담아 덮어써서 하나가 사라졌다 (실측). 그러면
+        #   `finalize_leg()` 이 "phase 가 남았다" 며 거부하고, 이미 끝난 10시간
+        #   계산을 다시 돌리게 된다.
+        with _ledger_lock(self.path):
+            # ★ 50차 P0 — **쓰는 지점**이 소유 증명을 확인한다. 49차는 자격
+            #   검사가 `resume_claim()` 에만 있었고, 생성자는 언제든 부를 수
+            #   있으므로 공개 `attempt_id` 만 읽어 만든 claim 객체가 그대로
+            #   phase 를 기록했다 (리뷰어 실측). 읽기 함수에 둔 검사는 검사가
+            #   아니다 — 검사는 쓰기 옆에 있어야 한다.
+            if not self.path.is_file():
+                raise PreserveError(
+                    "plan",
+                    f"{self.leg_id!r} 의 claim 이 이미 닫혔다 ({self.path}) — "
+                    "닫힌 실행에는 phase 를 쓸 수 없다 (부활 금지)")
+            rec = self._read()
+            if not secrets.compare_digest(_token_verifier(self._token),
+                                          str(rec["attempt_verifier"])):
+                raise PreserveError(
+                    "plan",
+                    f"{self.leg_id!r} 의 claim 소유 증명이 맞지 않는다 — 이 "
+                    "실행은 phase 를 기록할 권한이 없다")
+            if rec["attempt_id"] != self.attempt_id:
+                raise PreserveError(
+                    "plan", f"claim 이 다른 attempt 로 바뀌었다 "
+                            f"({rec['attempt_id']} ≠ {self.attempt_id}) — 이 "
+                            "실행은 더 이상 권한이 없다")
+            # ★ 58차 L6 — **닫힌 phase 는 불변이다.** 이 자리는 claim lock 안이라
+            #   lost update 는 없었다. 그런데 lock 이 막는 것은 **동시 쓰기**이지
+            #   **덮어쓰기**가 아니다 — 술어가 없으면 lock 은 무조건 대입을
+            #   순서대로 해 줄 뿐이다.
+            #
+            #   왜 막아야 하나: 이 receipt 를 읽고 계산한 소비자가 이미 있을 수
+            #   있다. 늦은 writer 가 덮으면 **그 소비자의 근거가 소리 없이
+            #   바뀐다.** 리뷰어 반례는 공개 API 만 쓰는 정상 일정이었다 —
+            #   grid(A) → fit 이 A 를 검증하고 기록 → 늦은 grid(B) → finalize 성공.
+            #   원장에는 B 가 봉인되는데 fit 은 A 를 보고 계산했다.
+            #
+            #   **같은 값의 재시도는 통과한다** (멱등). 재시도는 정상 운용이고,
+            #   막으면 crash 복구가 불가능해진다. 다른 값이면 거부다.
+            prev = (rec.get("phases") or {}).get(phase)
+            if prev is not None:
+                if _canon_json(prev.get("receipt")) != _canon_json(receipt):
+                    raise PreserveError(
+                        "plan",
+                        f"{self.leg_id!r} 의 phase {phase!r} 는 이미 "
+                        f"{prev.get('at')} 에 닫혔고, 지금 주는 receipt 가 그때와 "
+                        "다르다 — 닫힌 phase 는 덮어쓸 수 없다 (이 값을 읽고 "
+                        "계산한 소비자가 이미 있을 수 있다). 같은 값의 재시도는 "
+                        "허용된다")
+                return                       # 멱등 재시도 — timestamp 도 안 바꾼다
+            entry = {
+                "at": dt.datetime.now(dt.timezone.utc).strftime(
+                    "%Y-%m-%dT%H:%M:%SZ"),
+                "receipt": receipt}
+            # ★ 58차 L6 (둘째 절반) — **소비자는 자기가 본 생산자를 적는다.**
+            #   불변성만으로는 부족하다. 불변성이 없던 시절에 이미 어긋난
+            #   durable state 가 남아 있을 수 있고, finalize 는 원장에 봉인하는
+            #   마지막 문이다. 그 문이 phase 키의 **존재만** 보면 어긋난 짝을
+            #   그대로 `executed` 로 닫는다.
+            #
+            #   그래서 fit 이 닫힐 때 그 순간의 grid receipt 정규형 해시를
+            #   같이 남긴다. finalize 가 그것을 다시 계산해 대조한다.
+            #
+            # ★ 59차 M7 — 58차는 `if first is not None:` 이었다. 선행 phase 가
+            #   아직 없으면 결속을 **조용히 생략**했으므로, 순서를 뒤집는 것만으로
+            #   결속을 없앨 수 있었다 (`fit → grid` 역순이면 fit 은 아무것도
+            #   소비하지 않았다고 적힌다). 그것은 "생산자-소비자 결속" 이 아니라
+            #   생산자가 마침 먼저 왔을 때만 붙는 장식이다.
+            #
+            #   그래서 **순서 자체를 강제**한다: 뒤 phase 는 앞 phase 가 전부
+            #   닫힌 뒤에만 닫을 수 있고, 그때 `consumed` 는 **모든** 선행
+            #   phase 를 담는다 (하나라도 빠지면 그 짝은 결속되지 않았다).
+            _order = list(CLAIM_PHASES)
+            _before = _order[:_order.index(phase)]
+            if _before:
+                _have = rec.get("phases") or {}
+                _open = [p for p in _before if p not in _have]
+                if _open:
+>                   raise PreserveError(
+                        "plan",
+                        f"{self.leg_id!r}: phase {phase!r} 를 닫으려는데 선행 "
+                        f"phase {_open} 가 아직 안 닫혔다 — 순서를 뒤집으면 "
+                        "소비자가 생산자를 결속할 대상이 없어 결속이 통째로 "
+                        "사라진다 (59차 M7). 선행 phase 를 먼저 닫으라")
+E                   tools.preserve.PreserveError: [plan] 'g87_v6_leg': phase 'fit' 를 닫으려는데 선행 phase ['grid'] 가 아직 안 닫혔다 — 순서를 뒤집으면 소비자가 생산자를 결속할 대상이 없어 결속이 통째로 사라진다 (59차 M7). 선행 phase 를 먼저 닫으라
+
+tools/preserve.py:6901: PreserveError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/results/_smoke/_unit/test_f01_01_a_v6_fit_only_leg_runs_recor_32097843')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f429247f890>
+
+    def test_f01_01_a_v6_fit_only_leg_runs_records_and_finalizes(tmp_path, monkeypatch):
+        out, led, in_dir, ctx, spec, ind = _v3_setup(tmp_path, monkeypatch, "f01a")
+        try:
+            G87._run_nonsmoke(in_dir, out, ctx)                   # 실물 lifecycle — 대체 · 수동 삽입 없음
+        except PV.PreserveError as exc:
+>           pytest.fail(f"비-smoke fit-only 실행이 승인 · 입력 대조 · 완료 기록 중에 거부됐다 — {_why(exc)}")
+E           Failed: 비-smoke fit-only 실행이 승인 · 입력 대조 · 완료 기록 중에 거부됐다 — grid 선행 요구 (G87-N1)
+
+tests/test_gate88_fit_only_lifecycle.py:172: Failed
+_ test_f02_02_a_v3_plan_without_an_external_input_digest_is_refused_by_the_index _
+
+tmp_path = PosixPath('/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/results/_smoke/_unit/test_f02_02_a_v3_plan_without_an_externa_4bdb968c')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f4289710d90>
+
+    def test_f02_02_a_v3_plan_without_an_external_input_digest_is_refused_by_the_index(tmp_path, monkeypatch):
+        """v3 + `fit.in_digest: null` = '이 다리의 grid 가 입력을 만든다' — v6 에는 그 grid 가 없다 → 계획 index 에서 거부."""
+        out, led, in_dir, ctx, spec, _ = _v3_setup(tmp_path, monkeypatch, "f02b", in_digest=None)
+>       with pytest.raises(PV.PreserveError) as ei:
+E       Failed: DID NOT RAISE PreserveError
+
+tests/test_gate88_fit_only_lifecycle.py:202: Failed
+______________ test_f03_01_a_fit_only_claim_refuses_a_grid_phase _______________
+
+tmp_path = PosixPath('/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/results/_smoke/_unit/test_f03_01_a_fit_only_claim_refuses_a_g_4580973f')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f42894665d0>
+
+    def test_f03_01_a_fit_only_claim_refuses_a_grid_phase(tmp_path, monkeypatch):
+        out, led, in_dir, ctx, spec, ind = _v3_setup(tmp_path, monkeypatch, "f03a")
+        c = PV.open_leg_run(LEG, spec, SRC, ledger=led)
+>       with pytest.raises(PV.PreserveError) as ei:
+E       Failed: DID NOT RAISE PreserveError
+
+tests/test_gate88_fit_only_lifecycle.py:213: Failed
+_ test_f03_02_a_fit_receipt_without_a_consistent_input_binding_is_refused[no_package] _
+
+tmp_path = PosixPath('/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/results/_smoke/_unit/test_f03_02_a_fit_receipt_without_a_cons_08e7ccab')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f428822dc10>
+over = {'input_package_digest': None}
+
+    @pytest.mark.parametrize("over", [{"input_package_digest": None}, {"inputs": None}, "mismatch"],
+                             ids=["no_package", "no_inputs", "inputs_disagree"])
+    def test_f03_02_a_fit_receipt_without_a_consistent_input_binding_is_refused(tmp_path, monkeypatch, over):
+        out, led, in_dir, ctx, spec, ind = _v3_setup(tmp_path, monkeypatch, "f03b")
+        c = PV.open_leg_run(LEG, spec, SRC, ledger=led)
+        if over == "mismatch":
+            r = _fit_receipt(in_dir)
+            r["inputs"] = dict(r["inputs"], curves_sha256="cd" * 32)
+        else:
+            r = _fit_receipt(in_dir)
+            for k, v in over.items():
+                r.pop(k) if v is None else r.__setitem__(k, v)
+        with pytest.raises(PV.PreserveError) as ei:
+            c.phase_done("fit", r)
+>       assert "input_package_digest" in str(ei.value) or "inputs" in str(ei.value), "거부 이유가 밖 입력 결속 규칙이 아니다"
+E       AssertionError: 거부 이유가 밖 입력 결속 규칙이 아니다
+E       assert ('input_package_digest' in "[plan] 'g87_v6_leg': phase 'fit' 를 닫으려는데 선행 phase ['grid'] 가 아직 안 닫혔다 — 순서를 뒤집으면 소비자가 생산자를 결속할 대상이 없어 결속이 통째로 사라진다 (59차 M7). 선행 phase 를 먼저 닫으라" or 'inputs' in "[plan] 'g87_v6_leg': phase 'fit' 를 닫으려는데 선행 phase ['grid'] 가 아직 안 닫혔다 — 순서를 뒤집으면 소비자가 생산자를 결속할 대상이 없어 결속이 통째로 사라진다 (59차 M7). 선행 phase 를 먼저 닫으라")
+E        +  where "[plan] 'g87_v6_leg': phase 'fit' 를 닫으려는데 선행 phase ['grid'] 가 아직 안 닫혔다 — 순서를 뒤집으면 소비자가 생산자를 결속할 대상이 없어 결속이 통째로 사라진다 (59차 M7). 선행 phase 를 먼저 닫으라" = str(PreserveError("[plan] 'g87_v6_leg': phase 'fit' 를 닫으려는데 선행 phase ['grid'] 가 아직 안 닫혔다 — 순서를 뒤집으면 소비자가 생산자를 결속할 대상이 없어 결속이 통째로 사라진다 (59차 M7). 선행 phase 를 먼저 닫으라"))
+E        +    where PreserveError("[plan] 'g87_v6_leg': phase 'fit' 를 닫으려는데 선행 phase ['grid'] 가 아직 안 닫혔다 — 순서를 뒤집으면 소비자가 생산자를 결속할 대상이 없어 결속이 통째로 사라진다 (59차 M7). 선행 phase 를 먼저 닫으라") = <ExceptionInfo PreserveError("[plan] 'g87_v6_leg': phase 'fit' 를 닫으려는데 선행 phase ['grid'] 가 아직 안 닫혔다 — 순서를 뒤집으면 소비자가 생산자를 결속할 대상이 없어 결속이 통째로 사라진다 (59차 M7). 선행 phase 를 먼저 닫으라") tblen=2>.value
+E        +  and   "[plan] 'g87_v6_leg': phase 'fit' 를 닫으려는데 선행 phase ['grid'] 가 아직 안 닫혔다 — 순서를 뒤집으면 소비자가 생산자를 결속할 대상이 없어 결속이 통째로 사라진다 (59차 M7). 선행 phase 를 먼저 닫으라" = str(PreserveError("[plan] 'g87_v6_leg': phase 'fit' 를 닫으려는데 선행 phase ['grid'] 가 아직 안 닫혔다 — 순서를 뒤집으면 소비자가 생산자를 결속할 대상이 없어 결속이 통째로 사라진다 (59차 M7). 선행 phase 를 먼저 닫으라"))
+E        +    where PreserveError("[plan] 'g87_v6_leg': phase 'fit' 를 닫으려는데 선행 phase ['grid'] 가 아직 안 닫혔다 — 순서를 뒤집으면 소비자가 생산자를 결속할 대상이 없어 결속이 통째로 사라진다 (59차 M7). 선행 phase 를 먼저 닫으라") = <ExceptionInfo PreserveError("[plan] 'g87_v6_leg': phase 'fit' 를 닫으려는데 선행 phase ['grid'] 가 아직 안 닫혔다 — 순서를 뒤집으면 소비자가 생산자를 결속할 대상이 없어 결속이 통째로 사라진다 (59차 M7). 선행 phase 를 먼저 닫으라") tblen=2>.value
+
+tests/test_gate88_fit_only_lifecycle.py:232: AssertionError
+_ test_f03_02_a_fit_receipt_without_a_consistent_input_binding_is_refused[no_inputs] _
+
+tmp_path = PosixPath('/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/results/_smoke/_unit/test_f03_02_a_fit_receipt_without_a_cons_6067cc54')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f4289466e90>
+over = {'inputs': None}
+
+    @pytest.mark.parametrize("over", [{"input_package_digest": None}, {"inputs": None}, "mismatch"],
+                             ids=["no_package", "no_inputs", "inputs_disagree"])
+    def test_f03_02_a_fit_receipt_without_a_consistent_input_binding_is_refused(tmp_path, monkeypatch, over):
+        out, led, in_dir, ctx, spec, ind = _v3_setup(tmp_path, monkeypatch, "f03b")
+        c = PV.open_leg_run(LEG, spec, SRC, ledger=led)
+        if over == "mismatch":
+            r = _fit_receipt(in_dir)
+            r["inputs"] = dict(r["inputs"], curves_sha256="cd" * 32)
+        else:
+            r = _fit_receipt(in_dir)
+            for k, v in over.items():
+                r.pop(k) if v is None else r.__setitem__(k, v)
+        with pytest.raises(PV.PreserveError) as ei:
+            c.phase_done("fit", r)
+>       assert "input_package_digest" in str(ei.value) or "inputs" in str(ei.value), "거부 이유가 밖 입력 결속 규칙이 아니다"
+E       AssertionError: 거부 이유가 밖 입력 결속 규칙이 아니다
+E       assert ('input_package_digest' in "[plan] 'g87_v6_leg': phase 'fit' 를 닫으려는데 선행 phase ['grid'] 가 아직 안 닫혔다 — 순서를 뒤집으면 소비자가 생산자를 결속할 대상이 없어 결속이 통째로 사라진다 (59차 M7). 선행 phase 를 먼저 닫으라" or 'inputs' in "[plan] 'g87_v6_leg': phase 'fit' 를 닫으려는데 선행 phase ['grid'] 가 아직 안 닫혔다 — 순서를 뒤집으면 소비자가 생산자를 결속할 대상이 없어 결속이 통째로 사라진다 (59차 M7). 선행 phase 를 먼저 닫으라")
+E        +  where "[plan] 'g87_v6_leg': phase 'fit' 를 닫으려는데 선행 phase ['grid'] 가 아직 안 닫혔다 — 순서를 뒤집으면 소비자가 생산자를 결속할 대상이 없어 결속이 통째로 사라진다 (59차 M7). 선행 phase 를 먼저 닫으라" = str(PreserveError("[plan] 'g87_v6_leg': phase 'fit' 를 닫으려는데 선행 phase ['grid'] 가 아직 안 닫혔다 — 순서를 뒤집으면 소비자가 생산자를 결속할 대상이 없어 결속이 통째로 사라진다 (59차 M7). 선행 phase 를 먼저 닫으라"))
+E        +    where PreserveError("[plan] 'g87_v6_leg': phase 'fit' 를 닫으려는데 선행 phase ['grid'] 가 아직 안 닫혔다 — 순서를 뒤집으면 소비자가 생산자를 결속할 대상이 없어 결속이 통째로 사라진다 (59차 M7). 선행 phase 를 먼저 닫으라") = <ExceptionInfo PreserveError("[plan] 'g87_v6_leg': phase 'fit' 를 닫으려는데 선행 phase ['grid'] 가 아직 안 닫혔다 — 순서를 뒤집으면 소비자가 생산자를 결속할 대상이 없어 결속이 통째로 사라진다 (59차 M7). 선행 phase 를 먼저 닫으라") tblen=2>.value
+E        +  and   "[plan] 'g87_v6_leg': phase 'fit' 를 닫으려는데 선행 phase ['grid'] 가 아직 안 닫혔다 — 순서를 뒤집으면 소비자가 생산자를 결속할 대상이 없어 결속이 통째로 사라진다 (59차 M7). 선행 phase 를 먼저 닫으라" = str(PreserveError("[plan] 'g87_v6_leg': phase 'fit' 를 닫으려는데 선행 phase ['grid'] 가 아직 안 닫혔다 — 순서를 뒤집으면 소비자가 생산자를 결속할 대상이 없어 결속이 통째로 사라진다 (59차 M7). 선행 phase 를 먼저 닫으라"))
+E        +    where PreserveError("[plan] 'g87_v6_leg': phase 'fit' 를 닫으려는데 선행 phase ['grid'] 가 아직 안 닫혔다 — 순서를 뒤집으면 소비자가 생산자를 결속할 대상이 없어 결속이 통째로 사라진다 (59차 M7). 선행 phase 를 먼저 닫으라") = <ExceptionInfo PreserveError("[plan] 'g87_v6_leg': phase 'fit' 를 닫으려는데 선행 phase ['grid'] 가 아직 안 닫혔다 — 순서를 뒤집으면 소비자가 생산자를 결속할 대상이 없어 결속이 통째로 사라진다 (59차 M7). 선행 phase 를 먼저 닫으라") tblen=2>.value
+
+tests/test_gate88_fit_only_lifecycle.py:232: AssertionError
+_ test_f03_02_a_fit_receipt_without_a_consistent_input_binding_is_refused[inputs_disagree] _
+
+tmp_path = PosixPath('/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/results/_smoke/_unit/test_f03_02_a_fit_receipt_without_a_cons_7d48e1d3')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f42897f1c90>
+over = 'mismatch'
+
+    @pytest.mark.parametrize("over", [{"input_package_digest": None}, {"inputs": None}, "mismatch"],
+                             ids=["no_package", "no_inputs", "inputs_disagree"])
+    def test_f03_02_a_fit_receipt_without_a_consistent_input_binding_is_refused(tmp_path, monkeypatch, over):
+        out, led, in_dir, ctx, spec, ind = _v3_setup(tmp_path, monkeypatch, "f03b")
+        c = PV.open_leg_run(LEG, spec, SRC, ledger=led)
+        if over == "mismatch":
+            r = _fit_receipt(in_dir)
+            r["inputs"] = dict(r["inputs"], curves_sha256="cd" * 32)
+        else:
+            r = _fit_receipt(in_dir)
+            for k, v in over.items():
+                r.pop(k) if v is None else r.__setitem__(k, v)
+        with pytest.raises(PV.PreserveError) as ei:
+            c.phase_done("fit", r)
+>       assert "input_package_digest" in str(ei.value) or "inputs" in str(ei.value), "거부 이유가 밖 입력 결속 규칙이 아니다"
+E       AssertionError: 거부 이유가 밖 입력 결속 규칙이 아니다
+E       assert ('input_package_digest' in "[plan] 'g87_v6_leg': phase 'fit' 를 닫으려는데 선행 phase ['grid'] 가 아직 안 닫혔다 — 순서를 뒤집으면 소비자가 생산자를 결속할 대상이 없어 결속이 통째로 사라진다 (59차 M7). 선행 phase 를 먼저 닫으라" or 'inputs' in "[plan] 'g87_v6_leg': phase 'fit' 를 닫으려는데 선행 phase ['grid'] 가 아직 안 닫혔다 — 순서를 뒤집으면 소비자가 생산자를 결속할 대상이 없어 결속이 통째로 사라진다 (59차 M7). 선행 phase 를 먼저 닫으라")
+E        +  where "[plan] 'g87_v6_leg': phase 'fit' 를 닫으려는데 선행 phase ['grid'] 가 아직 안 닫혔다 — 순서를 뒤집으면 소비자가 생산자를 결속할 대상이 없어 결속이 통째로 사라진다 (59차 M7). 선행 phase 를 먼저 닫으라" = str(PreserveError("[plan] 'g87_v6_leg': phase 'fit' 를 닫으려는데 선행 phase ['grid'] 가 아직 안 닫혔다 — 순서를 뒤집으면 소비자가 생산자를 결속할 대상이 없어 결속이 통째로 사라진다 (59차 M7). 선행 phase 를 먼저 닫으라"))
+E        +    where PreserveError("[plan] 'g87_v6_leg': phase 'fit' 를 닫으려는데 선행 phase ['grid'] 가 아직 안 닫혔다 — 순서를 뒤집으면 소비자가 생산자를 결속할 대상이 없어 결속이 통째로 사라진다 (59차 M7). 선행 phase 를 먼저 닫으라") = <ExceptionInfo PreserveError("[plan] 'g87_v6_leg': phase 'fit' 를 닫으려는데 선행 phase ['grid'] 가 아직 안 닫혔다 — 순서를 뒤집으면 소비자가 생산자를 결속할 대상이 없어 결속이 통째로 사라진다 (59차 M7). 선행 phase 를 먼저 닫으라") tblen=2>.value
+E        +  and   "[plan] 'g87_v6_leg': phase 'fit' 를 닫으려는데 선행 phase ['grid'] 가 아직 안 닫혔다 — 순서를 뒤집으면 소비자가 생산자를 결속할 대상이 없어 결속이 통째로 사라진다 (59차 M7). 선행 phase 를 먼저 닫으라" = str(PreserveError("[plan] 'g87_v6_leg': phase 'fit' 를 닫으려는데 선행 phase ['grid'] 가 아직 안 닫혔다 — 순서를 뒤집으면 소비자가 생산자를 결속할 대상이 없어 결속이 통째로 사라진다 (59차 M7). 선행 phase 를 먼저 닫으라"))
+E        +    where PreserveError("[plan] 'g87_v6_leg': phase 'fit' 를 닫으려는데 선행 phase ['grid'] 가 아직 안 닫혔다 — 순서를 뒤집으면 소비자가 생산자를 결속할 대상이 없어 결속이 통째로 사라진다 (59차 M7). 선행 phase 를 먼저 닫으라") = <ExceptionInfo PreserveError("[plan] 'g87_v6_leg': phase 'fit' 를 닫으려는데 선행 phase ['grid'] 가 아직 안 닫혔다 — 순서를 뒤집으면 소비자가 생산자를 결속할 대상이 없어 결속이 통째로 사라진다 (59차 M7). 선행 phase 를 먼저 닫으라") tblen=2>.value
+
+tests/test_gate88_fit_only_lifecycle.py:232: AssertionError
+______ test_f03_03_finalize_refuses_an_external_input_other_than_the_plan ______
+
+tmp_path = PosixPath('/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/results/_smoke/_unit/test_f03_03_finalize_refuses_an_external_fab504fa')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f42897d2710>
+
+    def test_f03_03_finalize_refuses_an_external_input_other_than_the_plan(tmp_path, monkeypatch):
+        """claim 에 적힌 결속이 계획 `fit.in_digest` 와 다르면 executed 로 닫지 않는다 (durable state 변조 · 다른 바이트)."""
+        out, led, in_dir, ctx, spec, ind = _v3_setup(tmp_path, monkeypatch, "f03c")
+        c = PV.open_leg_run(LEG, spec, SRC, ledger=led)
+>       c.phase_done("fit", _fit_receipt(in_dir))
+
+tests/test_gate88_fit_only_lifecycle.py:239: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <tools.preserve.LegClaim object at 0x7f428950d8a0>, phase = 'fit'
+receipt = {'finished_at': '2026-10-03T00:00:00Z', 'input_package_digest': 'ff7c8bdac3e5e3382bf74d94eb1b565f1131efb8fe88cbfd5e2cf...0500304792bc7', 'curves_sha256': '5c7049658cc3452b1febc0d54a783986ef44e02cd37e21bc53c5efe1acca4f81'}, 'n_rows': 3, ...}
+
+    def phase_done(self, phase: str, receipt: dict) -> None:
+        """한 phase 를 **durable 하게** 닫는다. 중단 뒤 재개가 여기서 이어진다."""
+        if self._token is None:
+            raise PreserveError(
+                "plan", f"{self.leg_id!r} 의 claim 을 소유 증명 없이 열었다 — "
+                        "phase 를 기록할 수 없다 (진단용 읽기다)")
+        if phase not in CLAIM_PHASES:
+            raise PreserveError(
+                "plan", f"모르는 phase: {phase!r} — {list(CLAIM_PHASES)} 중 하나")
+        _assert_json_domain(receipt, f"phase[{phase}]")
+        # ★ 60차 P1-2 — **검사한 것과 봉인한 것이 같아야 한다.** 59차 M9 는
+        #   finalize 의 evidence 에 대해 이것을 고쳤는데, phase receipt 는 그대로
+        #   caller 의 **같은 reference** 를 들고 lock 안으로 들어가 나중에
+        #   직렬화했다. 검사와 봉인 사이에 caller 가 고치면 다른 값이 굳는다.
+        #   그래서 여기서 정규 바이트로 굳히고, 아래에서는 그 바이트를 다시
+        #   해독한 값만 쓴다.
+        receipt = json.loads(_canon_json(receipt))
+        # ★ 48차 P0-6 — read-modify-write 를 **임계 구역** 안에서 한다. 47차는
+        #   `grid` 와 `fit` 을 동시에 닫으면 둘 다 `phases` 가 빈 record 를 읽고
+        #   각자 자기 것만 담아 덮어써서 하나가 사라졌다 (실측). 그러면
+        #   `finalize_leg()` 이 "phase 가 남았다" 며 거부하고, 이미 끝난 10시간
+        #   계산을 다시 돌리게 된다.
+        with _ledger_lock(self.path):
+            # ★ 50차 P0 — **쓰는 지점**이 소유 증명을 확인한다. 49차는 자격
+            #   검사가 `resume_claim()` 에만 있었고, 생성자는 언제든 부를 수
+            #   있으므로 공개 `attempt_id` 만 읽어 만든 claim 객체가 그대로
+            #   phase 를 기록했다 (리뷰어 실측). 읽기 함수에 둔 검사는 검사가
+            #   아니다 — 검사는 쓰기 옆에 있어야 한다.
+            if not self.path.is_file():
+                raise PreserveError(
+                    "plan",
+                    f"{self.leg_id!r} 의 claim 이 이미 닫혔다 ({self.path}) — "
+                    "닫힌 실행에는 phase 를 쓸 수 없다 (부활 금지)")
+            rec = self._read()
+            if not secrets.compare_digest(_token_verifier(self._token),
+                                          str(rec["attempt_verifier"])):
+                raise PreserveError(
+                    "plan",
+                    f"{self.leg_id!r} 의 claim 소유 증명이 맞지 않는다 — 이 "
+                    "실행은 phase 를 기록할 권한이 없다")
+            if rec["attempt_id"] != self.attempt_id:
+                raise PreserveError(
+                    "plan", f"claim 이 다른 attempt 로 바뀌었다 "
+                            f"({rec['attempt_id']} ≠ {self.attempt_id}) — 이 "
+                            "실행은 더 이상 권한이 없다")
+            # ★ 58차 L6 — **닫힌 phase 는 불변이다.** 이 자리는 claim lock 안이라
+            #   lost update 는 없었다. 그런데 lock 이 막는 것은 **동시 쓰기**이지
+            #   **덮어쓰기**가 아니다 — 술어가 없으면 lock 은 무조건 대입을
+            #   순서대로 해 줄 뿐이다.
+            #
+            #   왜 막아야 하나: 이 receipt 를 읽고 계산한 소비자가 이미 있을 수
+            #   있다. 늦은 writer 가 덮으면 **그 소비자의 근거가 소리 없이
+            #   바뀐다.** 리뷰어 반례는 공개 API 만 쓰는 정상 일정이었다 —
+            #   grid(A) → fit 이 A 를 검증하고 기록 → 늦은 grid(B) → finalize 성공.
+            #   원장에는 B 가 봉인되는데 fit 은 A 를 보고 계산했다.
+            #
+            #   **같은 값의 재시도는 통과한다** (멱등). 재시도는 정상 운용이고,
+            #   막으면 crash 복구가 불가능해진다. 다른 값이면 거부다.
+            prev = (rec.get("phases") or {}).get(phase)
+            if prev is not None:
+                if _canon_json(prev.get("receipt")) != _canon_json(receipt):
+                    raise PreserveError(
+                        "plan",
+                        f"{self.leg_id!r} 의 phase {phase!r} 는 이미 "
+                        f"{prev.get('at')} 에 닫혔고, 지금 주는 receipt 가 그때와 "
+                        "다르다 — 닫힌 phase 는 덮어쓸 수 없다 (이 값을 읽고 "
+                        "계산한 소비자가 이미 있을 수 있다). 같은 값의 재시도는 "
+                        "허용된다")
+                return                       # 멱등 재시도 — timestamp 도 안 바꾼다
+            entry = {
+                "at": dt.datetime.now(dt.timezone.utc).strftime(
+                    "%Y-%m-%dT%H:%M:%SZ"),
+                "receipt": receipt}
+            # ★ 58차 L6 (둘째 절반) — **소비자는 자기가 본 생산자를 적는다.**
+            #   불변성만으로는 부족하다. 불변성이 없던 시절에 이미 어긋난
+            #   durable state 가 남아 있을 수 있고, finalize 는 원장에 봉인하는
+            #   마지막 문이다. 그 문이 phase 키의 **존재만** 보면 어긋난 짝을
+            #   그대로 `executed` 로 닫는다.
+            #
+            #   그래서 fit 이 닫힐 때 그 순간의 grid receipt 정규형 해시를
+            #   같이 남긴다. finalize 가 그것을 다시 계산해 대조한다.
+            #
+            # ★ 59차 M7 — 58차는 `if first is not None:` 이었다. 선행 phase 가
+            #   아직 없으면 결속을 **조용히 생략**했으므로, 순서를 뒤집는 것만으로
+            #   결속을 없앨 수 있었다 (`fit → grid` 역순이면 fit 은 아무것도
+            #   소비하지 않았다고 적힌다). 그것은 "생산자-소비자 결속" 이 아니라
+            #   생산자가 마침 먼저 왔을 때만 붙는 장식이다.
+            #
+            #   그래서 **순서 자체를 강제**한다: 뒤 phase 는 앞 phase 가 전부
+            #   닫힌 뒤에만 닫을 수 있고, 그때 `consumed` 는 **모든** 선행
+            #   phase 를 담는다 (하나라도 빠지면 그 짝은 결속되지 않았다).
+            _order = list(CLAIM_PHASES)
+            _before = _order[:_order.index(phase)]
+            if _before:
+                _have = rec.get("phases") or {}
+                _open = [p for p in _before if p not in _have]
+                if _open:
+>                   raise PreserveError(
+                        "plan",
+                        f"{self.leg_id!r}: phase {phase!r} 를 닫으려는데 선행 "
+                        f"phase {_open} 가 아직 안 닫혔다 — 순서를 뒤집으면 "
+                        "소비자가 생산자를 결속할 대상이 없어 결속이 통째로 "
+                        "사라진다 (59차 M7). 선행 phase 를 먼저 닫으라")
+E                   tools.preserve.PreserveError: [plan] 'g87_v6_leg': phase 'fit' 를 닫으려는데 선행 phase ['grid'] 가 아직 안 닫혔다 — 순서를 뒤집으면 소비자가 생산자를 결속할 대상이 없어 결속이 통째로 사라진다 (59차 M7). 선행 phase 를 먼저 닫으라
+
+tools/preserve.py:6901: PreserveError
+____________ test_f03_04_another_attempt_can_not_record_or_finalize ____________
+
+tmp_path = PosixPath('/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/results/_smoke/_unit/test_f03_04_another_attempt_can_not_reco_73bfc301')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f4289711110>
+
+    def test_f03_04_another_attempt_can_not_record_or_finalize(tmp_path, monkeypatch):
+        out, led, in_dir, ctx, spec, ind = _v3_setup(tmp_path, monkeypatch, "f03d")
+        c = PV.open_leg_run(LEG, spec, SRC, ledger=led)
+        stranger = PV.LegClaim(LEG, c.cohort_id, c.attempt_id, c.run_spec_digest, c.source_digest, c.path,
+                               token="0" * 64)
+        with pytest.raises(PV.PreserveError):
+            stranger.phase_done("fit", _fit_receipt(in_dir))
+>       c.phase_done("fit", _fit_receipt(in_dir))
+
+tests/test_gate88_fit_only_lifecycle.py:256: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <tools.preserve.LegClaim object at 0x7f42925264a0>, phase = 'fit'
+receipt = {'finished_at': '2026-10-03T00:00:00Z', 'input_package_digest': '060aaa1275ba9b943f746323aac2cb7c8310778744c9867ed2b43...6ded68aeae408', 'curves_sha256': '59c111840f995652e0803ad45cd7a5f06207c380ecb84a3cb5b78c14639ca15f'}, 'n_rows': 3, ...}
+
+    def phase_done(self, phase: str, receipt: dict) -> None:
+        """한 phase 를 **durable 하게** 닫는다. 중단 뒤 재개가 여기서 이어진다."""
+        if self._token is None:
+            raise PreserveError(
+                "plan", f"{self.leg_id!r} 의 claim 을 소유 증명 없이 열었다 — "
+                        "phase 를 기록할 수 없다 (진단용 읽기다)")
+        if phase not in CLAIM_PHASES:
+            raise PreserveError(
+                "plan", f"모르는 phase: {phase!r} — {list(CLAIM_PHASES)} 중 하나")
+        _assert_json_domain(receipt, f"phase[{phase}]")
+        # ★ 60차 P1-2 — **검사한 것과 봉인한 것이 같아야 한다.** 59차 M9 는
+        #   finalize 의 evidence 에 대해 이것을 고쳤는데, phase receipt 는 그대로
+        #   caller 의 **같은 reference** 를 들고 lock 안으로 들어가 나중에
+        #   직렬화했다. 검사와 봉인 사이에 caller 가 고치면 다른 값이 굳는다.
+        #   그래서 여기서 정규 바이트로 굳히고, 아래에서는 그 바이트를 다시
+        #   해독한 값만 쓴다.
+        receipt = json.loads(_canon_json(receipt))
+        # ★ 48차 P0-6 — read-modify-write 를 **임계 구역** 안에서 한다. 47차는
+        #   `grid` 와 `fit` 을 동시에 닫으면 둘 다 `phases` 가 빈 record 를 읽고
+        #   각자 자기 것만 담아 덮어써서 하나가 사라졌다 (실측). 그러면
+        #   `finalize_leg()` 이 "phase 가 남았다" 며 거부하고, 이미 끝난 10시간
+        #   계산을 다시 돌리게 된다.
+        with _ledger_lock(self.path):
+            # ★ 50차 P0 — **쓰는 지점**이 소유 증명을 확인한다. 49차는 자격
+            #   검사가 `resume_claim()` 에만 있었고, 생성자는 언제든 부를 수
+            #   있으므로 공개 `attempt_id` 만 읽어 만든 claim 객체가 그대로
+            #   phase 를 기록했다 (리뷰어 실측). 읽기 함수에 둔 검사는 검사가
+            #   아니다 — 검사는 쓰기 옆에 있어야 한다.
+            if not self.path.is_file():
+                raise PreserveError(
+                    "plan",
+                    f"{self.leg_id!r} 의 claim 이 이미 닫혔다 ({self.path}) — "
+                    "닫힌 실행에는 phase 를 쓸 수 없다 (부활 금지)")
+            rec = self._read()
+            if not secrets.compare_digest(_token_verifier(self._token),
+                                          str(rec["attempt_verifier"])):
+                raise PreserveError(
+                    "plan",
+                    f"{self.leg_id!r} 의 claim 소유 증명이 맞지 않는다 — 이 "
+                    "실행은 phase 를 기록할 권한이 없다")
+            if rec["attempt_id"] != self.attempt_id:
+                raise PreserveError(
+                    "plan", f"claim 이 다른 attempt 로 바뀌었다 "
+                            f"({rec['attempt_id']} ≠ {self.attempt_id}) — 이 "
+                            "실행은 더 이상 권한이 없다")
+            # ★ 58차 L6 — **닫힌 phase 는 불변이다.** 이 자리는 claim lock 안이라
+            #   lost update 는 없었다. 그런데 lock 이 막는 것은 **동시 쓰기**이지
+            #   **덮어쓰기**가 아니다 — 술어가 없으면 lock 은 무조건 대입을
+            #   순서대로 해 줄 뿐이다.
+            #
+            #   왜 막아야 하나: 이 receipt 를 읽고 계산한 소비자가 이미 있을 수
+            #   있다. 늦은 writer 가 덮으면 **그 소비자의 근거가 소리 없이
+            #   바뀐다.** 리뷰어 반례는 공개 API 만 쓰는 정상 일정이었다 —
+            #   grid(A) → fit 이 A 를 검증하고 기록 → 늦은 grid(B) → finalize 성공.
+            #   원장에는 B 가 봉인되는데 fit 은 A 를 보고 계산했다.
+            #
+            #   **같은 값의 재시도는 통과한다** (멱등). 재시도는 정상 운용이고,
+            #   막으면 crash 복구가 불가능해진다. 다른 값이면 거부다.
+            prev = (rec.get("phases") or {}).get(phase)
+            if prev is not None:
+                if _canon_json(prev.get("receipt")) != _canon_json(receipt):
+                    raise PreserveError(
+                        "plan",
+                        f"{self.leg_id!r} 의 phase {phase!r} 는 이미 "
+                        f"{prev.get('at')} 에 닫혔고, 지금 주는 receipt 가 그때와 "
+                        "다르다 — 닫힌 phase 는 덮어쓸 수 없다 (이 값을 읽고 "
+                        "계산한 소비자가 이미 있을 수 있다). 같은 값의 재시도는 "
+                        "허용된다")
+                return                       # 멱등 재시도 — timestamp 도 안 바꾼다
+            entry = {
+                "at": dt.datetime.now(dt.timezone.utc).strftime(
+                    "%Y-%m-%dT%H:%M:%SZ"),
+                "receipt": receipt}
+            # ★ 58차 L6 (둘째 절반) — **소비자는 자기가 본 생산자를 적는다.**
+            #   불변성만으로는 부족하다. 불변성이 없던 시절에 이미 어긋난
+            #   durable state 가 남아 있을 수 있고, finalize 는 원장에 봉인하는
+            #   마지막 문이다. 그 문이 phase 키의 **존재만** 보면 어긋난 짝을
+            #   그대로 `executed` 로 닫는다.
+            #
+            #   그래서 fit 이 닫힐 때 그 순간의 grid receipt 정규형 해시를
+            #   같이 남긴다. finalize 가 그것을 다시 계산해 대조한다.
+            #
+            # ★ 59차 M7 — 58차는 `if first is not None:` 이었다. 선행 phase 가
+            #   아직 없으면 결속을 **조용히 생략**했으므로, 순서를 뒤집는 것만으로
+            #   결속을 없앨 수 있었다 (`fit → grid` 역순이면 fit 은 아무것도
+            #   소비하지 않았다고 적힌다). 그것은 "생산자-소비자 결속" 이 아니라
+            #   생산자가 마침 먼저 왔을 때만 붙는 장식이다.
+            #
+            #   그래서 **순서 자체를 강제**한다: 뒤 phase 는 앞 phase 가 전부
+            #   닫힌 뒤에만 닫을 수 있고, 그때 `consumed` 는 **모든** 선행
+            #   phase 를 담는다 (하나라도 빠지면 그 짝은 결속되지 않았다).
+            _order = list(CLAIM_PHASES)
+            _before = _order[:_order.index(phase)]
+            if _before:
+                _have = rec.get("phases") or {}
+                _open = [p for p in _before if p not in _have]
+                if _open:
+>                   raise PreserveError(
+                        "plan",
+                        f"{self.leg_id!r}: phase {phase!r} 를 닫으려는데 선행 "
+                        f"phase {_open} 가 아직 안 닫혔다 — 순서를 뒤집으면 "
+                        "소비자가 생산자를 결속할 대상이 없어 결속이 통째로 "
+                        "사라진다 (59차 M7). 선행 phase 를 먼저 닫으라")
+E                   tools.preserve.PreserveError: [plan] 'g87_v6_leg': phase 'fit' 를 닫으려는데 선행 phase ['grid'] 가 아직 안 닫혔다 — 순서를 뒤집으면 소비자가 생산자를 결속할 대상이 없어 결속이 통째로 사라진다 (59차 M7). 선행 phase 를 먼저 닫으라
+
+tools/preserve.py:6901: PreserveError
+_______ test_f04_01_a_fit_only_claim_resumes_with_fit_as_its_only_phase ________
+
+tmp_path = PosixPath('/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/results/_smoke/_unit/test_f04_01_a_fit_only_claim_resumes_wit_0b0b8ea4')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f42ba235890>
+
+    def test_f04_01_a_fit_only_claim_resumes_with_fit_as_its_only_phase(tmp_path, monkeypatch):
+        out, led, in_dir, ctx, spec, ind = _v3_setup(tmp_path, monkeypatch, "f04a")
+        c = PV.open_leg_run(LEG, spec, SRC, ledger=led)
+        token = c.token
+        del c                                                     # 실행이 죽었다
+        r = PV.resume_claim(LEG, token=token, ledger=led)
+        assert r.phases_done() == ()
+>       r.phase_done("fit", _fit_receipt(in_dir))
+
+tests/test_gate88_fit_only_lifecycle.py:272: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <tools.preserve.LegClaim object at 0x7f42925486a0>, phase = 'fit'
+receipt = {'finished_at': '2026-10-03T00:00:00Z', 'input_package_digest': '823080d784f94c36a8c1843c1f5e2d3f034fe16d16f94bdc4488a...d3ab6eeebda45', 'curves_sha256': '28d155b9748f1ac02a55afb0099eb1253608115eb16c3140a19b7a2f3be54393'}, 'n_rows': 3, ...}
+
+    def phase_done(self, phase: str, receipt: dict) -> None:
+        """한 phase 를 **durable 하게** 닫는다. 중단 뒤 재개가 여기서 이어진다."""
+        if self._token is None:
+            raise PreserveError(
+                "plan", f"{self.leg_id!r} 의 claim 을 소유 증명 없이 열었다 — "
+                        "phase 를 기록할 수 없다 (진단용 읽기다)")
+        if phase not in CLAIM_PHASES:
+            raise PreserveError(
+                "plan", f"모르는 phase: {phase!r} — {list(CLAIM_PHASES)} 중 하나")
+        _assert_json_domain(receipt, f"phase[{phase}]")
+        # ★ 60차 P1-2 — **검사한 것과 봉인한 것이 같아야 한다.** 59차 M9 는
+        #   finalize 의 evidence 에 대해 이것을 고쳤는데, phase receipt 는 그대로
+        #   caller 의 **같은 reference** 를 들고 lock 안으로 들어가 나중에
+        #   직렬화했다. 검사와 봉인 사이에 caller 가 고치면 다른 값이 굳는다.
+        #   그래서 여기서 정규 바이트로 굳히고, 아래에서는 그 바이트를 다시
+        #   해독한 값만 쓴다.
+        receipt = json.loads(_canon_json(receipt))
+        # ★ 48차 P0-6 — read-modify-write 를 **임계 구역** 안에서 한다. 47차는
+        #   `grid` 와 `fit` 을 동시에 닫으면 둘 다 `phases` 가 빈 record 를 읽고
+        #   각자 자기 것만 담아 덮어써서 하나가 사라졌다 (실측). 그러면
+        #   `finalize_leg()` 이 "phase 가 남았다" 며 거부하고, 이미 끝난 10시간
+        #   계산을 다시 돌리게 된다.
+        with _ledger_lock(self.path):
+            # ★ 50차 P0 — **쓰는 지점**이 소유 증명을 확인한다. 49차는 자격
+            #   검사가 `resume_claim()` 에만 있었고, 생성자는 언제든 부를 수
+            #   있으므로 공개 `attempt_id` 만 읽어 만든 claim 객체가 그대로
+            #   phase 를 기록했다 (리뷰어 실측). 읽기 함수에 둔 검사는 검사가
+            #   아니다 — 검사는 쓰기 옆에 있어야 한다.
+            if not self.path.is_file():
+                raise PreserveError(
+                    "plan",
+                    f"{self.leg_id!r} 의 claim 이 이미 닫혔다 ({self.path}) — "
+                    "닫힌 실행에는 phase 를 쓸 수 없다 (부활 금지)")
+            rec = self._read()
+            if not secrets.compare_digest(_token_verifier(self._token),
+                                          str(rec["attempt_verifier"])):
+                raise PreserveError(
+                    "plan",
+                    f"{self.leg_id!r} 의 claim 소유 증명이 맞지 않는다 — 이 "
+                    "실행은 phase 를 기록할 권한이 없다")
+            if rec["attempt_id"] != self.attempt_id:
+                raise PreserveError(
+                    "plan", f"claim 이 다른 attempt 로 바뀌었다 "
+                            f"({rec['attempt_id']} ≠ {self.attempt_id}) — 이 "
+                            "실행은 더 이상 권한이 없다")
+            # ★ 58차 L6 — **닫힌 phase 는 불변이다.** 이 자리는 claim lock 안이라
+            #   lost update 는 없었다. 그런데 lock 이 막는 것은 **동시 쓰기**이지
+            #   **덮어쓰기**가 아니다 — 술어가 없으면 lock 은 무조건 대입을
+            #   순서대로 해 줄 뿐이다.
+            #
+            #   왜 막아야 하나: 이 receipt 를 읽고 계산한 소비자가 이미 있을 수
+            #   있다. 늦은 writer 가 덮으면 **그 소비자의 근거가 소리 없이
+            #   바뀐다.** 리뷰어 반례는 공개 API 만 쓰는 정상 일정이었다 —
+            #   grid(A) → fit 이 A 를 검증하고 기록 → 늦은 grid(B) → finalize 성공.
+            #   원장에는 B 가 봉인되는데 fit 은 A 를 보고 계산했다.
+            #
+            #   **같은 값의 재시도는 통과한다** (멱등). 재시도는 정상 운용이고,
+            #   막으면 crash 복구가 불가능해진다. 다른 값이면 거부다.
+            prev = (rec.get("phases") or {}).get(phase)
+            if prev is not None:
+                if _canon_json(prev.get("receipt")) != _canon_json(receipt):
+                    raise PreserveError(
+                        "plan",
+                        f"{self.leg_id!r} 의 phase {phase!r} 는 이미 "
+                        f"{prev.get('at')} 에 닫혔고, 지금 주는 receipt 가 그때와 "
+                        "다르다 — 닫힌 phase 는 덮어쓸 수 없다 (이 값을 읽고 "
+                        "계산한 소비자가 이미 있을 수 있다). 같은 값의 재시도는 "
+                        "허용된다")
+                return                       # 멱등 재시도 — timestamp 도 안 바꾼다
+            entry = {
+                "at": dt.datetime.now(dt.timezone.utc).strftime(
+                    "%Y-%m-%dT%H:%M:%SZ"),
+                "receipt": receipt}
+            # ★ 58차 L6 (둘째 절반) — **소비자는 자기가 본 생산자를 적는다.**
+            #   불변성만으로는 부족하다. 불변성이 없던 시절에 이미 어긋난
+            #   durable state 가 남아 있을 수 있고, finalize 는 원장에 봉인하는
+            #   마지막 문이다. 그 문이 phase 키의 **존재만** 보면 어긋난 짝을
+            #   그대로 `executed` 로 닫는다.
+            #
+            #   그래서 fit 이 닫힐 때 그 순간의 grid receipt 정규형 해시를
+            #   같이 남긴다. finalize 가 그것을 다시 계산해 대조한다.
+            #
+            # ★ 59차 M7 — 58차는 `if first is not None:` 이었다. 선행 phase 가
+            #   아직 없으면 결속을 **조용히 생략**했으므로, 순서를 뒤집는 것만으로
+            #   결속을 없앨 수 있었다 (`fit → grid` 역순이면 fit 은 아무것도
+            #   소비하지 않았다고 적힌다). 그것은 "생산자-소비자 결속" 이 아니라
+            #   생산자가 마침 먼저 왔을 때만 붙는 장식이다.
+            #
+            #   그래서 **순서 자체를 강제**한다: 뒤 phase 는 앞 phase 가 전부
+            #   닫힌 뒤에만 닫을 수 있고, 그때 `consumed` 는 **모든** 선행
+            #   phase 를 담는다 (하나라도 빠지면 그 짝은 결속되지 않았다).
+            _order = list(CLAIM_PHASES)
+            _before = _order[:_order.index(phase)]
+            if _before:
+                _have = rec.get("phases") or {}
+                _open = [p for p in _before if p not in _have]
+                if _open:
+>                   raise PreserveError(
+                        "plan",
+                        f"{self.leg_id!r}: phase {phase!r} 를 닫으려는데 선행 "
+                        f"phase {_open} 가 아직 안 닫혔다 — 순서를 뒤집으면 "
+                        "소비자가 생산자를 결속할 대상이 없어 결속이 통째로 "
+                        "사라진다 (59차 M7). 선행 phase 를 먼저 닫으라")
+E                   tools.preserve.PreserveError: [plan] 'g87_v6_leg': phase 'fit' 를 닫으려는데 선행 phase ['grid'] 가 아직 안 닫혔다 — 순서를 뒤집으면 소비자가 생산자를 결속할 대상이 없어 결속이 통째로 사라진다 (59차 M7). 선행 phase 를 먼저 닫으라
+
+tools/preserve.py:6901: PreserveError
+==================================== PASSES ====================================
+=========================== short test summary info ============================
+PASSED tests/test_gate88_fit_only_lifecycle.py::test_f00_01_a_v2_claim_still_refuses_fit_before_grid
+PASSED tests/test_gate88_fit_only_lifecycle.py::test_f00_02_a_v2_claim_still_refuses_to_finalize_with_grid_only
+PASSED tests/test_gate88_fit_only_lifecycle.py::test_f00_03_the_grid_gate_under_a_v3_plan_is_refused
+PASSED tests/test_gate88_fit_only_lifecycle.py::test_f00_04_a_v2_claim_with_an_injected_phase_set_can_not_be_finalized_fit_only
+PASSED tests/test_gate88_fit_only_lifecycle.py::test_f00_05_a_v2_lifecycle_still_closes_grid_then_fit_with_the_consumed_binding
+PASSED tests/test_gate88_fit_only_lifecycle.py::test_f02_01_inputs_other_than_the_approved_package_are_refused_before_fit_one[other_package]
+PASSED tests/test_gate88_fit_only_lifecycle.py::test_f02_01_inputs_other_than_the_approved_package_are_refused_before_fit_one[curves_only_sha]
+FAILED tests/test_gate88_fit_only_lifecycle.py::test_f01_01_a_v6_fit_only_leg_runs_records_and_finalizes
+FAILED tests/test_gate88_fit_only_lifecycle.py::test_f02_02_a_v3_plan_without_an_external_input_digest_is_refused_by_the_index
+FAILED tests/test_gate88_fit_only_lifecycle.py::test_f03_01_a_fit_only_claim_refuses_a_grid_phase
+FAILED tests/test_gate88_fit_only_lifecycle.py::test_f03_02_a_fit_receipt_without_a_consistent_input_binding_is_refused[no_package]
+FAILED tests/test_gate88_fit_only_lifecycle.py::test_f03_02_a_fit_receipt_without_a_consistent_input_binding_is_refused[no_inputs]
+FAILED tests/test_gate88_fit_only_lifecycle.py::test_f03_02_a_fit_receipt_without_a_consistent_input_binding_is_refused[inputs_disagree]
+FAILED tests/test_gate88_fit_only_lifecycle.py::test_f03_03_finalize_refuses_an_external_input_other_than_the_plan
+FAILED tests/test_gate88_fit_only_lifecycle.py::test_f03_04_another_attempt_can_not_record_or_finalize
+FAILED tests/test_gate88_fit_only_lifecycle.py::test_f04_01_a_fit_only_claim_resumes_with_fit_as_its_only_phase
+9 failed, 7 passed in 8.81s
+rc=1
