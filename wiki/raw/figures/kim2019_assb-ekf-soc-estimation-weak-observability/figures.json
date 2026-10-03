@@ -1,0 +1,353 @@
+{
+ "slug": "kim2019_assb-ekf-soc-estimation-weak-observability",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-03",
+ "sources": [
+  "11632c88-59._On_state_estimation_of_all_solid-state_batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. A schematic of a solid-state battery showing the transport of Liþ during battery discharge.",
+   "rotated_deg": 0,
+   "bbox": [
+    116.5,
+    60.7,
+    451.4,
+    253.7
+   ],
+   "w": 1396,
+   "h": 805,
+   "dpi": 300,
+   "src": "11632c88-59._On_state_estimation_of_all_solid-state_batteries.pdf",
+   "blank": 0.431,
+   "note": "봤다(p. 664 · 래스터 조각 둘 + 벡터 — 셀 도식). Li metal (Anode) | Li3PO4 (Solid-Electrolyte) | LiCoO2 (Cathode) · L = 1500 nm · M = 320 nm · y = 0 · 1500 · 1820 nm · 방전 중 Li → Li⁺(y = 0) · Li⁺ → Li_s(y = L) · 외부 회로 Load · 전류 i 왼쪽 화살 · e⁻ 양극 쪽. 전해질은 91호 셀과 같은 Li3PO4(LiPON 아님) · 면적 · 집전체 · 접촉 표시 0. 라벨 · 내용 온전 · 잘림 0. 캡션 필드 'Liþ' = Li⁺(텍스트 층 대체 문자)."
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Voltage response during battery discharge at different current rates. Fig. 3. Overpotentials with time during constant discharge at 10-C current.",
+   "rotated_deg": 0,
+   "bbox": [
+    38.6,
+    524.6,
+    551.5,
+    733.0
+   ],
+   "w": 2138,
+   "h": 869,
+   "dpi": 300,
+   "src": "11632c88-59._On_state_estimation_of_all_solid-state_batteries.pdf",
+   "blank": 0.965,
+   "note": "봤다(p. 666 · 벡터) — ⚠ 자동 항목 하나에 그림 2(왼쪽)와 그림 3(오른쪽)이 같이 잡혔다(캡션 필드도 두 캡션 이어 붙음) → 그림 3 자동 누락 · 분리는 수동 fig_2_manual_p4.png · fig_3_manual_p4.png. 이 크롭은 그림 2 의 y 축 제목 'Voltage (V)' 가 왼쪽 끝에서 잘렸다. 자동 파일은 지우지 않음."
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Concentration proﬁle of Li-ions at the electrolyte and positive electrode with time during constant discharge at 10-C current.",
+   "rotated_deg": 0,
+   "bbox": [
+    101.5,
+    458.5,
+    503.6,
+    732.9
+   ],
+   "w": 1677,
+   "h": 1144,
+   "dpi": 300,
+   "src": "11632c88-59._On_state_estimation_of_all_solid-state_batteries.pdf",
+   "blank": 0.953,
+   "note": "봤다(p. 667 · 벡터). 10C 방전 1 · 10 · 50 · 100 · 300 s 의 농도 단면 — 전해질(0 → L) + 양극(L → L+M · x 축은 척도 아님: L/2 · L · L+M 눈금 간격 204.4 ↔ 61.3 pt). `[도표·벡터]`(프레임 x 175.0 / 277.21 / 379.42 / 440.75 · y 701.64 = 0.6×10⁴ · 475.78 = 2.4×10⁴) 전해질 초기 10,818(= δc₀) · 300 s c(0) 14,531 · c(L/2) 10,813 · c(L) 7,089 mol m⁻³ · 양극 1 s 11,766–12,015 → 300 s 21,514–22,394. ★ 양극 초기 ≈1.177×10⁴ = c_min + 0.01Δ (c_max 2.33×10⁴ · c_min = c_max/2 — 91호 a_max · 표 1 미인쇄) · 이 단면으로 식 (14) 를 풀면 −∫E dy 가 그림 3 η_mt 와 ±0.3 mV(Nernst 항은 빠짐 — digest R4). 라벨 · 내용 온전."
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Voltage response of the models under 10-C constant current operation.",
+   "rotated_deg": 0,
+   "bbox": [
+    155.9,
+    65.7,
+    451.7,
+    321.9
+   ],
+   "w": 1233,
+   "h": 1069,
+   "dpi": 300,
+   "src": "11632c88-59._On_state_estimation_of_all_solid-state_batteries.pdf",
+   "blank": 0.942,
+   "note": "봤다(p. 668 · 벡터) — ⚠ 왼쪽 잘림: 세 판의 y 축 눈금 글자 · 제목('Current (C-rate)' · 'Voltage (V)' · 'Voltage Error (V)')이 잘려 끝 자리만 보인다 → 수동 fig_5_manual_p6.png. 내용: 10C 정전류 · 모형 1–4 전압 · 오차(= V₁ − V_k 부호). x 축 제목은 인쇄 그대로 'Time (t)'. 자동 파일은 지우지 않음."
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 6,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Voltage response of the models under pulse relaxation discharge current.",
+   "rotated_deg": 0,
+   "bbox": [
+    155.8,
+    354.8,
+    449.4,
+    609.3
+   ],
+   "w": 1225,
+   "h": 1061,
+   "dpi": 300,
+   "src": "11632c88-59._On_state_estimation_of_all_solid-state_batteries.pdf",
+   "blank": 0.935,
+   "note": "봤다(p. 668 · 벡터) — ⚠ 왼쪽 잘림(그림 5 와 같음) → 수동 fig_6_manual_p6.png. 내용: 10C 1 분 펄스 + 4 분 휴지 ×4 · 1200 s · 모형 1–4 전압 · 오차. 자동 파일은 지우지 않음."
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 7,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Performance of the EKF-based estimators: current (top) terminal voltage (middle) and SOC (bottom).",
+   "rotated_deg": 0,
+   "bbox": [
+    137.2,
+    339.7,
+    467.9,
+    600.4
+   ],
+   "w": 1379,
+   "h": 1087,
+   "dpi": 300,
+   "src": "11632c88-59._On_state_estimation_of_all_solid-state_batteries.pdf",
+   "blank": 0.843,
+   "note": "봤다(p. 669 · 래스터 1328×1037). (위) 전류 C-rate — `[도표·화소]` 5.04C(60 s) / 2.50C(240 s) 반복 ×3 + 900–960 s 5C · 1000 s (가운데) V_meas(파랑 · 잡음 — 화소 띠 p5/p95 −63/+68 mV) · V_t(검정) · EKF4(빨강 파선) · EKF3(초록 일점쇄선) (아래) SOC Actual · EKF4 · EKF3 + 삽도(600–950 s · 0.1–0.45). 판독(x 140 → 1286.5 px = 0 → 1000 s · SOC y 595.5 → 923): Actual 300 · 600 · 900 s = 0.708 · 0.435 · 0.156 · EKF4 오차 750–800 s ≈−0.084 … −0.087 · EKF3 ≈−0.043 … −0.046. ★ 이 그림의 Actual SOC 는 그림 2–6 의 1C 기준으로 쿨롱 계산한 값보다 빨리 떨어진다 — 전류 ×1.10–1.11 이면 V · SOC 둘 다 맞음(digest R11). 라벨 · 내용 온전 · 잘림 0."
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 9,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Performance of the EKF3 in estimating Li-ion concentration in the electrolyte during the battery operation.",
+   "rotated_deg": 0,
+   "bbox": [
+    128.6,
+    60.7,
+    476.6,
+    329.3
+   ],
+   "w": 1451,
+   "h": 1120,
+   "dpi": 300,
+   "src": "11632c88-59._On_state_estimation_of_all_solid-state_batteries.pdf",
+   "blank": 0.917,
+   "note": "봤다(p. 671 · 벡터). 전해질 농도 — Plant(실선) 6 곡선 · EKF3(점선) 6 곡선(마디 여섯 · 경계 둘 포함) · 'Interface between anode and electrolyte' · '… cathode and electrolyte' 표지. `[도표·벡터]`(프레임 x 174.79–452.48 = 0–1000 s · y 77.74 = 1.4×10⁴ · 296.62 = 0.8×10⁴) Plant t = 0 10,904 · 10,818 ×4 · 10,732 · EKF3 t = 0 11,880 ×3(= 1.1 δc₀ — 인쇄 초기값 목록은 이 1.1 배를 EKF4 줄에 적었다) + 9,558 · 8,694 · 11,016 · 여섯 마디 합 64,908 = 6 δc₀(t = 0 · 990 s 모두 — 총량 보존) · 990 s EKF3 ↔ Plant ±70 mol m⁻³. 라벨 · 내용 온전."
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 9,
+   "file": "fig_9.png",
+   "caption": "Fig. 9. Comparison of overpotential prediction errors between EKF3 and EKF4: the prediction error is deﬁned as.Dh ¼ hplant \u0002 hest",
+   "rotated_deg": 0,
+   "bbox": [
+    105.6,
+    355.7,
+    498.8,
+    630.0
+   ],
+   "w": 1640,
+   "h": 1144,
+   "dpi": 300,
+   "src": "11632c88-59._On_state_estimation_of_all_solid-state_batteries.pdf",
+   "blank": 0.91,
+   "note": "봤다(p. 671 · 래스터 1422×1094). Δη = η_plant − η_est — 네 판 Δη_diff(±0.02) · Δη_mt(+0.01 … −0.02) · Δη_ct(×10⁻³ · +1 … −2) · Δη_total(±0.02) · EKF3(초록) · EKF4(빨강 점선). `[도표·화소]`(x 171 → 1381 px = 0 → 1000 s · total 판 y 839 = +0.02 · 975 = −0.02 — 1 화소 ≈0.29 mV · 선 폭 ±0.6 mV) EKF4 Δη_mt ≈−7 … −11 mV · Δη_total ≈−7 … −11 mV(100–850 s) · EKF3 Δη_mt 300 s 뒤 ≈−1 … +0.2 · Δη_total ≈−1.6 … +0.7 mV · 900–960 s 초록 스파이크. 캡션 필드 '.Dh ¼ hplant  hest' = 'Δη = η_plant − η_est'(텍스트 층 대체 · 마침표 위치도 인쇄 그대로). 라벨 · 내용 온전."
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 2,
+   "file": "tab_1.png",
+   "caption": "Table 1 All Solid-State Battery Model Parameters [15]. Parameters Dimension Estimated value L nm 1500 M nm 320 A cm2 1 cLiþ;0 mol m\u00023 6:01 \u0003 104 d e 0.18 kr m3mol\u00021s\u00021 0:9 \u0003 10\u00028 DLiþ m2s\u00021 0:9 \u0003 10\u000215 Dn\u0002 m2s\u00021 2:1 \u0003 10\u000215 DLi m2s\u00021 1:76 \u0003 10\u000215 kpos m3mol\u00021s\u00021 5:1 \u0003 10\u00024 apos e 0.6 1 A 1C rate means that the discharge current will discharge the entire battery in 1 h.",
+   "rotated_deg": 0,
+   "bbox": [
+    27.8,
+    42.8,
+    557.9,
+    748.5
+   ],
+   "w": 2210,
+   "h": 2941,
+   "dpi": 300,
+   "src": "11632c88-59._On_state_estimation_of_all_solid-state_batteries.pdf",
+   "blank": 0.815,
+   "note": "봤다 — ⚠ 과대 영역: p. 664 쪽 전체(쪽 머리 · 그림 1 · 본문 두 단 · 표 1 · 각주)가 잡혔다 → 표 1 단독은 수동 tab_1_manual_p2.png. 캡션 필드에 표 1 글자 전부와 각주 1('A 1C rate means …')이 섞였다(원문 캡션은 'Table 1 All Solid-State Battery Model Parameters [15].'). 자동 파일은 지우지 않음."
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 7,
+   "file": "tab_2.png",
+   "caption": "Table 2 Sensitivity analysis result for different parameters. Parameter Reference Sensitivity Error 10-C Constant 10-C Pulse Relaxation (Unit) Value Range Model 2 Model 3 Model 4 Model 2 Model 3 Model 4 Comparisons with reference parametersa Max. Abs. 0.0005 0.0233 0.0435 8.9E-05 0.0027 0.0099 RMS 0.0002 0.0025 0.0143 6.9E-05 0.0005 0.0049 DLi 1.76E-15 1.76E-17 Max. Abs. 6.9E-06 0.0194 0.0261 6.9E-06 0.0190 0.0256 (m2s\u00021) RMS 1.9E-07 0.0002 0.0005 2.5E-06 0.0030 0.0064 1.76E-13 Max. Abs. 0.0005 0.0234 0.0438 8.9E-05 0.0027 0.0097 RMS 0.0002 0.0004 0.0124 2.5E-06 0.0005 0.0049 Dn\u0002 5.1E-15 5.1E-17 Max. Abs. 9.1E-05 0.0191 0.0229 0.0002 0.0027 0.0065 RMS 5.2E-05 0.0021 0.0050 8.6E-05 0.0005 0.0059 (m2s\u00021) 5.1E-13 Max. Abs. 0.0006 0.0235 0.0491 0.0001 0.0027 0.0125 RMS 0.0002 0.0025 0.0184 8.6E-05 0.0005 0.0055 kpos 5.1E-4 5.1E-6 Max. Abs. 0.0006 0.0869 0.1182 0.0002 0.0505 0.0690 (m3mol\u00021s\u0002",
+   "rotated_deg": 0,
+   "bbox": [
+    37.5,
+    42.8,
+    567.6,
+    744.7
+   ],
+   "w": 2209,
+   "h": 2925,
+   "dpi": 300,
+   "src": "11632c88-59._On_state_estimation_of_all_solid-state_batteries.pdf",
+   "blank": 0.904,
+   "note": "봤다 — ⚠ 과대 영역: p. 669 쪽 전체(쪽 머리 · 표 2 · 그림 7 · 본문)가 잡혔다 → 표 2 단독(각주 a · b 포함)은 수동 tab_2_manual_p7.png. 캡션 필드에 표 2 글자가 섞이고 900 자에서 잘렸다 · 대체 문자('m2s1' = m² s⁻¹ · 'm3mol1s1' = m³ mol⁻¹ s⁻¹). 자동 파일은 지우지 않음."
+  },
+  {
+   "key": "f2m",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2_manual_p4.png",
+   "caption": "Fig. 2. Voltage response during battery discharge at different current rates.",
+   "rotated_deg": 0,
+   "bbox": [
+    28,
+    520,
+    300,
+    746
+   ],
+   "w": 1134,
+   "h": 943,
+   "dpi": 300,
+   "src": "11632c88-59._On_state_estimation_of_all_solid-state_batteries.pdf",
+   "blank": null,
+   "manual": true,
+   "note": "수동 — p. 666 렌더 300 dpi — 자동 f2(그림 2 + 3 병합)에서 그림 2 만 분리 · y 축 제목 포함. 봤다. 5C · 10C · 20C 방전 → 3.4 V(축 바닥) · `[도표·벡터]`(프레임 x 56.87–276.39 = 0–700 s · y 532.84 = 4.4 V · 705.87 = 3.4 V) 시작 4.2728 · 4.2644 · 4.2482 V · 3.4 V 도달 689.40 · 334.56 · 157.18 s(이론 720 · 360 · 180 s 의 0.958 · 0.929 · 0.873) · 10C 100 s 3.9948 V. 재풀이(digest R6) 691.63 · 335.77 · 157.84 s."
+  },
+  {
+   "key": "f3m",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3_manual_p4.png",
+   "caption": "Fig. 3. Overpotentials with time during constant discharge at 10-C current.",
+   "rotated_deg": 0,
+   "bbox": [
+    292,
+    520,
+    560,
+    746
+   ],
+   "w": 1118,
+   "h": 943,
+   "dpi": 300,
+   "src": "11632c88-59._On_state_estimation_of_all_solid-state_batteries.pdf",
+   "blank": null,
+   "manual": true,
+   "note": "수동 — p. 666 렌더 300 dpi — 자동에서 누락된 그림 3(그림 2 와 한 항목으로 잡힘). 봤다. η_ct(파랑) · η_diff(빨강 점선) · η_mt(검정 일점쇄선) · η_total(자홍 파선) · 10C. `[도표·벡터]`(프레임 x 330.92–545.52 = 0–350 s · y 537.18 = 0 · 706.32 = −0.3 V) η_mt 첫 점 −6.21 → 1 s −6.99 → 100 s −14.73 → 300 s −19.55 → 335 s −19.92 mV · η_ct 첫 점 −8.99 · 100 s −3.42 · 335 s −49.6(끝 −81.7) · η_diff 최저 −47.6 mV @≈20–25 s · 240 s −4.1 · η_total = 세 성분 합. ★ η_mt(0⁺) −6.2 mV = D_n⁻ 5.1×10⁻¹⁵(표 2 기준값)의 옴 강하(표 1 의 2.1×10⁻¹⁵ 이면 −12.3) · η_mt 곡선에는 식 (14) 의 Nernst 항이 없다(digest R3 · R4)."
+  },
+  {
+   "key": "f5m",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5_manual_p6.png",
+   "caption": "Fig. 5. Voltage response of the models under 10-C constant current operation.",
+   "rotated_deg": 0,
+   "bbox": [
+    105,
+    60,
+    460,
+    334
+   ],
+   "w": 1480,
+   "h": 1142,
+   "dpi": 300,
+   "src": "11632c88-59._On_state_estimation_of_all_solid-state_batteries.pdf",
+   "blank": null,
+   "manual": true,
+   "note": "수동 — p. 668 렌더 300 dpi — 자동 f5 의 왼쪽 잘림 보충(y 축 눈금 · 제목 포함). 봤다. 'Current (C-rate)' 0–10 · 'Voltage (V)' 3.4–4.4 · 'Voltage Error (V)' ±0.05 · x 'Time (t)'(인쇄 그대로). `[도표·벡터]`(오차 판 눈금 0.05 = y 255.54 · 0 = 273.61 · −0.05 = 291.67 · x 161.95–445.65 = 0–350 s · 곡선 끝 334.50 s) M2 max 0.0005 · RMS 0.0002 · M3 0.0233 · 0.0025 · M4 0.0435 · 0.0143 V = 표 2 기준 행 그대로(같은 계산) · M3 0.5 s +1.13 · 300 s −2.66 mV · M4 0.5 s −1.23 · 100 s −10.66 · 300 s −18.70 mV."
+  },
+  {
+   "key": "f6m",
+   "kind": "figure",
+   "label": "6",
+   "page": 6,
+   "file": "fig_6_manual_p6.png",
+   "caption": "Fig. 6. Voltage response of the models under pulse relaxation discharge current.",
+   "rotated_deg": 0,
+   "bbox": [
+    105,
+    349,
+    460,
+    622
+   ],
+   "w": 1480,
+   "h": 1138,
+   "dpi": 300,
+   "src": "11632c88-59._On_state_estimation_of_all_solid-state_batteries.pdf",
+   "blank": null,
+   "manual": true,
+   "note": "수동 — p. 668 렌더 300 dpi — 자동 f6 의 왼쪽 잘림 보충. 봤다. 10C 1 분 + 휴지 4 분 ×4 · 1200 s · 'Voltage Error (V)' ±0.01. `[도표·벡터]`(오차 판 0.01 = y 539.74 · 0 = 561.27 · −0.01 = 582.8 · x 161.75–443.44 = 0–1200 s) M2 max 1×10⁻⁴ · M3 max 0.0027 @t = 0.009 s(첫 점 · α 0.6 ↔ 0.5 의 SOC 0.99 순간값 — 손계산 2.68 mV) · RMS 0.0005 · M4 max 0.0099 @960 s · RMS 0.0049 = 표 2 기준 행 그대로 · ⚠ M3 휴지 구간 −0.1 … −0.8 mV 표류 · M4 의 t = 0⁺ +0.59 mV(M3 2.68 과 다름)는 우리 재풀이에 없다(원인 미확정)."
+  },
+  {
+   "key": "t1m",
+   "kind": "table",
+   "label": "1",
+   "page": 2,
+   "file": "tab_1_manual_p2.png",
+   "caption": "Table 1 All Solid-State Battery Model Parameters [15].",
+   "rotated_deg": 0,
+   "bbox": [
+    299,
+    600,
+    557,
+    742
+   ],
+   "w": 1076,
+   "h": 592,
+   "dpi": 300,
+   "src": "11632c88-59._On_state_estimation_of_all_solid-state_batteries.pdf",
+   "blank": null,
+   "manual": true,
+   "note": "수동 — p. 664 렌더 300 dpi — 표 1 단독. 봤다(지수 부호 · 단위를 렌더로 확인). 열 'Parameters · Dimension · Estimated value' · 11 행: L 1500 nm · M 320 nm · A 1 cm² · c_Li⁺,0 6.01×10⁴ mol m⁻³ · δ 0.18 · k_r 0.9×10⁻⁸ m³ mol⁻¹ s⁻¹ · D_Li⁺ 0.9×10⁻¹⁵ · D_n⁻ 2.1×10⁻¹⁵ · D_Li 1.76×10⁻¹⁵ m² s⁻¹ · k_pos 5.1×10⁻⁴ m³ mol⁻¹ s⁻¹ · α_pos 0.6. ★ 머리 출처 '[15]' = Tian & Qi 2017(접촉 면적 손실 모의) — 본문은 '[10] 모형'(91호). c_Lis,max · c_Lis,min · c_Lis,0 · T · 1C 전류 미인쇄. D_n⁻ 2.1 ↔ 표 2 기준 5.1 ↔ 그림 재풀이 5.1."
+  },
+  {
+   "key": "t2m",
+   "kind": "table",
+   "label": "2",
+   "page": 7,
+   "file": "tab_2_manual_p7.png",
+   "caption": "Table 2 Sensitivity analysis result for different parameters.",
+   "rotated_deg": 0,
+   "bbox": [
+    40,
+    62,
+    566,
+    328
+   ],
+   "w": 2193,
+   "h": 1109,
+   "dpi": 300,
+   "src": "11632c88-59._On_state_estimation_of_all_solid-state_batteries.pdf",
+   "blank": null,
+   "manual": true,
+   "note": "수동 — p. 669 렌더 300 dpi — 표 2 단독 + 각주 a · b(첫 수동 크롭은 각주가 잘려 영역을 넓혀 다시 렌더). 봤다. 기준 행 + 매개변수 다섯(D_Li · D_n⁻ · k_pos ×1/100 · ×100 · L 1.1 · 1.9 µm · D_Li⁺ ×1/100(Not converged) · ×100) × 10C 정전류 · 10C 펄스 이완 × 모형 2 · 3 · 4 × Max. Abs. · RMS(V). 각주 a 'Comparison of the full-order model (Model 1) and Models 2, 3, and 4 for the reference values.' · b 'Convergence issue. It can be due to unrealistic values of diffusion coefficient of Li ions in electrolyte for lower than reference value.' · k_r · δ 행 0 · 본문 'six critical parameters' ↔ 표 다섯."
+  }
+ ]
+}

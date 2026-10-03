@@ -292,6 +292,13 @@
    "6a611bdd-55._Parameter_estimation_of_the_Doyle_Fuller_Newman_model_for_Lithium-ion_batteries_by_parameter_normalization_grouping_and_sensitivity_analysis.pdf"
   ]
  },
+ "kim2019_assb-ekf-soc-estimation-weak-observability": {
+  "figures": 16,
+  "generated": "2026-10-03",
+  "pdfs": [
+   "11632c88-59._On_state_estimation_of_all_solid-state_batteries.pdf"
+  ]
+ },
  "kim2023_argyrodite-coated-ncm-normal-pressure-assb": {
   "figures": 20,
   "generated": "2026-09-29",

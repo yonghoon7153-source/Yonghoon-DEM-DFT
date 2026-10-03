@@ -5,7 +5,7 @@ created: 2026-09-23
 updated: 2026-10-03
 type: concept
 tags: [battery, degradation, research]
-sources: [raw/papers/raijmakers2020_thin-film-assb-model-double-layer-dc-ac-joint-fit.md, raw/papers/lu2022_nondestructive-eis-lumped-dfne-parameter-estimation.md, raw/papers/khalik2021_dfn-grouping-sensitivity-parameter-estimation.md, raw/papers/danilov2011_thin-film-assb-model-weak-electrolyte-parameter-fit.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode-si.md, raw/papers/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd-si.md, raw/papers/miss2022_exchange-current-density-tlm-thickness-lco-nmc-assb.md, raw/papers/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd.md, raw/papers/li2024_assb-composite-cathode-model-contact-area-edl.md, raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md]
+sources: [raw/papers/kim2019_assb-ekf-soc-estimation-weak-observability.md, raw/papers/raijmakers2020_thin-film-assb-model-double-layer-dc-ac-joint-fit.md, raw/papers/lu2022_nondestructive-eis-lumped-dfne-parameter-estimation.md, raw/papers/khalik2021_dfn-grouping-sensitivity-parameter-estimation.md, raw/papers/danilov2011_thin-film-assb-model-weak-electrolyte-parameter-fit.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode-si.md, raw/papers/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd-si.md, raw/papers/miss2022_exchange-current-density-tlm-thickness-lco-nmc-assb.md, raw/papers/conforto2021_chemo-mechanical-ncm-active-mass-eis-psd.md, raw/papers/li2024_assb-composite-cathode-model-contact-area-edl.md, raw/papers/chien2023_ici-rapid-solid-state-diffusion-coefficient.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/park2024_asymmetric-kinetics-low-mass-loading-nmc111-latp-li-metal.md, raw/papers/iwakiri2024_new-ssb-model-parameter-estimation-sensitivity.md, raw/papers/sinzig2024_p2d-validity-ssb-global-sensitivity.md, raw/papers/yanev2024_resistive-diffusive-limitations-thiophosphate-composite-cathode.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -84,6 +84,9 @@ evidenceScope: multi-source-primary
 | 98호 | D⁰_Li⊕ · D⁰_e⁻(공통 β(x) — 비 상수) | `[재현·대수]` 모형이 보는 것은 D⁰_p = 2D_Li⊕D_e⁻/(D_Li⊕+D_e⁻)(벌크)와 경계 분배 t_e = D_e⁻/(D_Li⊕+D_e⁻)(식 30.3 · 30.4) 두 조합 · t_e 를 보는 관측(η^p_mt · 농도 단면)은 작은 몫(4C ≈−4 mV `[도표·화소]`) — 26호 `D_e⁻` 10 자릿수 표류(위 26호 행 '0 열')가 이 편 값(5.06×10⁻¹³ · t_e 0.807)에서 t_e → 1 극한으로 간 자리 |
 | 98호 | 숨은 면적 인자 × (k₁ˢ · k₂ˢ) · × (c^p_dl · c^n_dl) | 전류 · 축전기 모두 **기하 면적당** — `[해석·대수]` 면적 인자 f_A 가 k(→ i₀)와 c_dl 에 같은 배수로 곱해져 R_ct·C_dl 면적 불변 · 소신호 EIS 에서 '면적 채널' 이 둘째 서명이 되려면 c_dl 이 실제 계면에 비례한다는 truth 전제가 필요(96호 셋째 행 · DFN 판 `k̂₀ × A_eff` 와 같은 꼴 · 이 편은 면적 하나 · 열화 0) |
 | 98호 | c_max = EMF 용량 ÷ (F·A·M·Δx 0.5) | 이 표 `Q_th` 자리(용량 스케일)를 **같은 율 묶음 외삽 EMF 의 용량으로 고정**(각주 d · `[재현]` 3.222×10⁴) — 91호 a_max 와 같은 "용량 스케일은 입력" 선택 · 26호가 이것을 적합 변수로 바꿔 ×1.05(위 26호 `D·a_max` 행) |
+| 99호 Kim 2019 (ASSB 박막 · 91호 모형 위 상태 추정 · 실험 0) | L · δc₀ · (D_Li⁺ + D_n⁻) → 식 (28) 옴 상수 하나(모형 4 · EKF4) | `[인쇄]` η_mt,k = −LRT/(c_Li⁺F²A(D_Li⁺ + D_n⁻))u_k — 균일 농도 가정이 전해질 둘을 **합 (D_Li⁺ + D_n⁻)** 하나로 묶는다 · `[재현]` 같은 합이 모형 1 의 켜는 순간 η_mt(0⁺)(−6.15 ↔ 그림 −6.21 mV)를 정해 표 1 D_n⁻ 2.1 ↔ 그림 5.1 을 가른다 — 순간값은 합만 본다 |
+| 99호 | A · k_pos(식 17 F·A·k_pos) | 면적 · 속도 상수 **한 곱** · A 는 같은 값이 플럭스 경계(식 3 · 4 · 11)에도 — `[재현·대수]` 인쇄 단위로 차원 불일치(C m⁵ mol⁻² s⁻¹) · 수치 i₀ 0.28–0.88 mA · 접촉 손실(A_eff)의 자리는 k_pos 이름 · 추정기에서는 상태도 매개변수도 아님 → SOC 편향 통로(A_eff ×0.5 → 평탄 −0.040 `[재현·가정]`) |
+| 99호 | c_max − c_min · M · A(용량 스케일 — 미인쇄) | 이 표 `Q_th` 자리를 **고정 입력**으로(91호 a_max 2.33×10⁴ — 그림 4 폐합) · SOC 정의의 분모 — 상태 추정기가 용량을 모른다(LAM 은 모형 불일치로만) · 원전(28호)과 같은 쪽 끝 |
 
 ## ★ DFN 판 (2026-10-02, 95호 Khalik 2021 — ⚠ 액체 · 도구)
 
@@ -117,6 +120,7 @@ evidenceScope: multi-source-primary
 - **DFN 판(95호)의 `u` ≈ `LAM_PE` 는 범위 선택(`R̂_f,p` [0, 0]) 위의 묶음 대수다** — 이 편은 열화 · 접촉을 다루지 않고, 남은 척도 대칭 · `α_c` 가정은 인쇄 식 위의 `[재현·대수]` 이다(저자 툴박스 이산화 미확인).
 - **96호의 `C̄dl` · `k̄0` 면적 서명도 모형 정의(식 [1] · 그림 1) 위의 대수다** — 그 편은 노화 · 접촉을 다루지 않았고, 전극 배정이 τ 순서 가정이며 C̄dl 이 CPE 계수라 면적 비례가 n_dl 과 섞인다. 비 구조의 척도 불변은 부록 계수 위의 `[재현·대수]` 다.
 - **98호의 행들은 인쇄 식 위의 대수다** — 그 편은 식별성 계산을 하지 않았고(ρ 문장 하나), 면적 인자는 모형에 없는 변수(우리 `[해석·대수]`)이며, 경계 분배의 관측 감도는 판독 몫(η^p_mt ≈−4 mV `[도표·화소]`) 수준의 근거다.
+- **99호의 행들은 인쇄 식 위의 대수와 우리 재풀이다** — 그 편은 식별성 계산을 하지 않았고(관측성은 평탄 논증), 손잡이 편향 예시(A_eff ×0.5)는 i₀ 한 점(10C · 중간 SOC) 위의 `[재현·가정]` 이다.
 
 ## 관련
 

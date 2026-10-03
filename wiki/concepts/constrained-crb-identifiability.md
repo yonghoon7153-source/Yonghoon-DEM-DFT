@@ -1,10 +1,10 @@
 ---
 title: 제약 Cramér–Rao 하한으로 재는 식별 가능성
 created: 2026-09-04
-updated: 2026-10-02
+updated: 2026-10-03
 type: concept
 tags: [battery, degradation, research]
-sources: [raw/papers/danilov2011_thin-film-assb-model-weak-electrolyte-parameter-fit.md, raw/papers/mohtat2019_electrode-soh-estimability-expansion.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/lee2020_estimation-error-bound-limited-data-window.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md]
+sources: [raw/papers/danilov2011_thin-film-assb-model-weak-electrolyte-parameter-fit.md, raw/papers/mohtat2019_electrode-soh-estimability-expansion.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/lee2020_estimation-error-bound-limited-data-window.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/kim2019_assb-ekf-soc-estimation-weak-observability.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -126,6 +126,7 @@ DW-deep·σ = 10 mV·95 %): `V_max` 등식 하나를 걸면 `y₁₀₀` 2.5 →
   `σ(LLI)`·`σ(LAM_pe)`·`σ(LAM_ne)`. **`LLI` 는 비대각 성분을 요구**하므로 이
   계산 하나가 "대각선만 보고하는 관습" 을 정면으로 깬다.
 - **ASSB 원형 모형에 돌린 첫 국소 FIM (2026-10-02, `assb` 91호)**: Danilov 2011 박막 모형(`raw/papers/danilov2011_thin-film-assb-model-weak-electrolyte-parameter-fit.md`)의 적합 일곱을 우리 재풀이 모형 위에서 — 여섯 율 방전 · σ_V 1 mV 가정 · ln 매개변수 — 조건수 **9.5×10⁵** · 전해질 넷 \|ρ\| ≥ 0.98. **제약 없는 국소 CRB**(이 페이지의 제약판 아님 · 한 점 · 우리 모형 꼴)이고 저자 분석이 아니다 — "추정 논문이 대각 · 비대각 어느 쪽도 보고하지 않을 때 원전 수치로 비대각을 세울 수 있다" 의 ASSB 표본.
+- **ASSB 상태 추정 편의 '약한 관측성' 에 붙인 단일 점 감도 (2026-10-03, `assb` 99호)**: Kim 2019(`raw/papers/kim2019_assb-ekf-soc-estimation-weak-observability.md`)는 관측성을 계산하지 않았다(OCV 평탄 논증 + 합성 EKF 한 번). 우리가 붙인 것은 이 기계의 가장 작은 조각 — 측정 점 하나의 Fisher 정보 (∂V/∂SOC)²/σ_V² — 이다: `[재현·가정]` σ_V 31.6 mV(필터 R_v 10⁻³ V²)면 σ_SOC 0.44(SOC 0.28 · \|dE/dSOC\| 0.072 V) ↔ 0.035(SOC 0.9 · 0.895 V). 그리고 그 편의 '9 %' 는 이 하한(분산)이 아니라 **편향**(모형 불일치 ≈−7 … −11 mV ÷ 기울기)이었다 — 한계 2(불편 추정 전제)의 실례: CRB 는 모형이 틀린 추정기의 오차를 설명하지 않는다. 매개변수가 아니라 상태 대상이라 이 페이지의 제약판은 적용하지 않았다.
 - **주의**: 우리 연구 수치의 정본은 artifact + `degradation-degeneracy/docs/`
   이며, 이 페이지의 수치 언급은 참조다.
 

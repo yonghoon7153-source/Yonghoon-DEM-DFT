@@ -1,10 +1,10 @@
 ---
 title: 관측 창(data window)이 정하는 식별 가능성
 created: 2026-09-04
-updated: 2026-09-04
+updated: 2026-10-03
 type: concept
 tags: [battery, degradation, research]
-sources: [raw/papers/lee2020_estimation-error-bound-limited-data-window.md, raw/papers/mohtat2019_electrode-soh-estimability-expansion.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md]
+sources: [raw/papers/lee2020_estimation-error-bound-limited-data-window.md, raw/papers/mohtat2019_electrode-soh-estimability-expansion.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/kim2019_assb-ekf-soc-estimation-weak-observability.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -74,6 +74,15 @@ DOD = Q / C              C = V_max·V_min 로 정의된 셀 용량
 **대각 성분만** 색칠한다. 같은 지도를 `(LLI, LAM_PE, LAM_NE)` 좌표에서,
 **상관을 포함해** 그리는 것이 비어 있는 칸이다.
 
+## ★ ASSB 상태 추정 판 — 평탄 창 · '궤적 창' 처방 · 창은 편향을 못 지운다 (2026-10-03, `assb` 99호)
+
+`raw/papers/kim2019_assb-ekf-soc-estimation-weak-observability.md` (Kim · Lin · Abbasalinejad · Kim · Chung 2019 *Electrochim. Acta* 317, 663 — 91호 박막 모형 위 EKF · 합성 · 실험 0).
+
+- **같은 축, 다른 대상**: 이 페이지의 창은 반쪽전지 OCV 적합의 DOD 창(매개변수 식별)이고, 99호의 '약한 관측성' 은 LCO 평형 곡선의 평탄 창에서 **상태(SOC)** 추정이 흔들리는 것이다. `[재현]` 99호 식 (22): \|dE/dSOC\| 최소 0.072 V/SOC(SOC 0.28) · ≤0.17 V/SOC 인 창 SOC 0.195–0.399 · 고 SOC(0.4–0.99) 중앙 0.658 — Lee 2020 의 "반쪽전지 기울기가 식별 가능성을 몬다" 와 같은 축이 상태 추정에서 그대로 선다.
+- **처방은 창이다 — 미래 과제로**: `[인쇄]` "Future work will investigate approaches to improving the performance of state estimation by using a trajectory of voltage measurement over a time interval instead of a single point measurement to address weak unobservability." — 실행 0.
+- **★ 창은 분산을 줄이고 편향은 못 지운다** (`[재현]` · `[해석]`): 99호 EKF4 의 SOC 오차는 축약 모형의 출력 오차(≈−7 … −11 mV)를 평탄 기울기로 나눈 크기와 같다(800 s −0.084 ↔ −0.087 · 600 s −0.045 ↔ −0.048) — 편향이다. 단일 점 감도(분산 쪽)는 σ_SOC = σ_V/\|dE/dSOC\| = 0.44(SOC 0.28) ↔ 0.035(SOC 0.9)(`[재현·가정]` σ_V 31.6 mV = 필터 R_v 10⁻³ V²). 창(궤적)을 넓히면 분산은 줄지만, 모형 불일치는 창 안 모든 점에서 같은 쪽으로 어긋나 **편향은 남는다** — 창 축의 이득은 모형이 맞을 때만의 것이다.
+- **우리 작업과의 연결**: 근최적 폭(분산 쪽)과 모형 불일치(편향 쪽)를 따로 재야 한다는 구분의 상태 추정 표본이다(우리 수치는 `degradation-degeneracy/docs/RESULTS*.md` 정본 — 옮기지 않음).
+
 ## 한계
 
 - **국소·불편 전제**를 그대로 물려받는다. 막대가 `5e3 %` 로 나오는 창에서는
@@ -90,3 +99,4 @@ DOD = Q / C              C = V_max·V_min 로 정의된 셀 용량
 - [[birkl-ocv-degradation-diagnostic]] — 창 끝점을 컷오프 등식으로 죽이는 처방
 - [[fitting-degeneracy]] — 창이 좁을 때 드러나는 축퇴 그 자체
 - [[pvs-sev-lli-lampe-separability]] — "무엇을 더하면 갈리는가" 의 열린 질문
+- [[assb-sensitivity-sweep-vs-identifiability]] — 99호 절: 같은 편의 '민감도 분석'(축약 오차 OAT)과 관측성 논증
