@@ -1,0 +1,53 @@
+{
+ "schema": "cascade_v7_probe_runlog/v1",
+ "record_kind": "runlog",
+ "date": "2026-10-03",
+ "track": "cascade — 사용자 = 1저자 (결정이 그 자리에서 난다 · 통지할 제3자 없음)",
+ "citable": false,
+ "results_seen": false,
+ "제목": "cascade v7 탐침 실행 기록 — 400 ps · 사다리 800 → 1000 K · 계획 6 런/온도 (H0 시드 1·2 → 부모 C 쌍 시드 3·4) · kgy",
+ "카드": "db/properties/cascade_estimand_card_v7_probe_2026_10_01.json",
+ "개정": "db/properties/cascade_estimand_card_v7_probe_amendment_cp_2026_10_03.json",
+ "결정": [
+  "D-2026-10-01-cascade-v7-probe-card",
+  "D-2026-10-03-cascade-v7-amend-cp"
+ ],
+ "실행_승인": {
+  "at": "2026-10-03",
+  "by": "사용자 (cascade 1저자)",
+  "원문": "그리고 CP 탐침 러너를 언제 쓸지 정하는 거야. 지금 kgy에서 돌리자",
+  "범위": "개정 §7 둘째 줄 '탐침 실행 승인 (kgy · 상한 141 GPU-h · 시점)' — 탐침만 (≤ 12 런 · 상한은 원장 cost_cap.total_gpu_h 141). 본 라운드 40 런은 T* 뒤 탐침 실측 단가 × 40 으로 상한을 내고 따로 비준한다.",
+  "기계": "kgy RTX3090 24 GB — 점착 P1b (pw.x · 트랙 W_ad = 사용자) 와 GPU 를 나눠 쓴다. P1b 카드 §8 가드: 합계 > 23,000 MiB 면 P1b 러너가 **자기 잡을** 멈춘다 (탐침 쪽엔 kill 가드 없음 · kgy 는 프로세스별 VRAM 을 못 읽는다). UMA 204 원자 MD ≈ 2.9 GB (li2s cellconv 카드 실측) + P1b 피크 13.8 GB ≈ 16.7 GB.",
+  "⚠_공유_비용": "같은 GPU 를 나눠 쓰면 둘 다 느려진다 — v6 단가 5.89 GPU-h/200 ps 는 UMA 끼리 공유한 값이다. pw.x 와 공유하면 단가가 더 오를 수 있고, 그러면 상한 141 이 12 런 전에 걸린다 (러너가 멈추고 보고한다 · 상한 재비준)."
+ },
+ "러너": {
+  "path": "tools/doping/run_cascade_v7_probe.py",
+  "sha256": "eaa14ffe64bef568b3b1e22e864772961e1f061543e7d84f53f3909052415dfd",
+  "구조": "매 런 전에 judge_eprime.py --probe 를 불러 그 산출물의 next 하나만 돈다 — T* 규칙은 판독기 한 곳 (select_probe_temperature). T* 또는 사다리 소진이면 멈춘다 · 본 라운드를 띄우지 않는다.",
+  "selftest": "81 ✓ (음성 포함 · 가짜 드라이버·판독기·nvidia-smi · 진짜 select_probe_temperature) · 깨기 26/26 빨간불 (복사 트리 병렬 · 2026-10-03 로컬)",
+  "⚠_발견_selftest": "판독기 `_same(a, b, rel)` 의 허용오차는 rel × max(1, |b|) 라 |b| < 1 에서 절대값이 된다 — 처음에 md.log 시간 간격(ps)을 `_same(dt, 0.002, rel=1e-3)` 로 비교했더니 dt 0.001 ps 를 통과시켰다 (음성 시험이 잡음). 러너는 전용 `dt_matches` (소수 4 자리 인쇄의 반 자리 5e-5 ps) 를 쓴다. 판독기 자신의 `_same` 사용처 6 곳은 온도(≥ 800)와 prod·dt·save(≥ 2 fs)라 영향 없음 (2026-10-03 확인).",
+  "멈춤_코드": "0 끝(T*·사다리 소진) · 2 사전점검 · 3 상한 · 4 런 실패 · 5 판독기/산출물/'확인 못 함' 표지 · 6 판독기↔디스크 어긋남 · 9 설정 불일치(우리 런만 죽임) · 10 잠금 · 11 out_root 참/끊긴 런 · 12 GPU 대기·디스크 · 130 사람 중단"
+ },
+ "실행_매개변수": {
+  "worktree": "~/wt_cv7probe_1003 (claude/evac-2026-10-02 · detached · ~/lldvar 에서 git worktree add) — ⛔ 탐침이 도는 동안 checkout·삭제 금지",
+  "out_root": "~/work/runs/cascade_v7_probe_1003",
+  "prep_root": "~/work/runs/cascade_v6_40run_0921 (v6 prep — 초기 좌표로만 재사용 · 개정 ⑩ · 러너가 out_root/prep 으로 복사해 해시를 박는다)",
+  "python": "/home/kgy/apps/miniforge3/envs/uma/bin/python",
+  "tmux": "cv7probe",
+  "log": "~/work/runs/cascade_v7_probe_1003.log",
+  "gpu_start_max_mib": 16000,
+  "감시": "python … run_cascade_v7_probe.py --status --out_root ~/work/runs/cascade_v7_probe_1003 (읽기만 · D 없음) — ⛔ out_root/logs/<태그>.log 는 tail 하지 않는다 (드라이버가 D 를 찍는다)"
+ },
+ "repo_구조_sha16": {
+  "H0_host": "5bca9a4f1d9bc119",
+  "P1_Al2O3_C": "ed8c8fc11d1adb75",
+  "P2_Al2S3_C": "6d585560dce5d0d8"
+ },
+ "발사": null,
+ "⛔": [
+  "탐침 출력·감시 화면에 D 를 싣지 않는다 · 대표 쌍의 D 를 열지 않는다 (개정 §6)",
+  "탐침 결과를 보고 사다리 · 시드 · 문턱 · 생산 길이 · 대표 부모를 바꾸지 않는다 — 바꾸면 새 카드",
+  "끊긴 런은 같은 (T, 구조, 시드) 로만 다시 돈다 (인프라 재시도) — 다른 부모·시드로 대체하지 않는다",
+  "탐침 시드 3·4 런을 본 라운드 집계에 넣지 않는다"
+ ]
+}
