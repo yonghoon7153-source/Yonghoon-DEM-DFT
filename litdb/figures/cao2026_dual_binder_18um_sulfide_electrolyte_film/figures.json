@@ -26,7 +26,8 @@
    "h": 2501,
    "dpi": 300,
    "src": "Cao 2026 - Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533).pdf",
-   "blank": 0.691
+   "blank": 0.691,
+   "viewed": true
   },
   {
    "key": "f2",
@@ -46,7 +47,8 @@
    "h": 1538,
    "dpi": 300,
    "src": "Cao 2026 - Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533).pdf",
-   "blank": 0.715
+   "blank": 0.715,
+   "viewed": true
   },
   {
    "key": "f3",
@@ -66,7 +68,8 @@
    "h": 1538,
    "dpi": 300,
    "src": "Cao 2026 - Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533).pdf",
-   "blank": 0.574
+   "blank": 0.574,
+   "viewed": true
   },
   {
    "key": "f4",
@@ -86,7 +89,8 @@
    "h": 1446,
    "dpi": 300,
    "src": "Cao 2026 - Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533).pdf",
-   "blank": 0.676
+   "blank": 0.676,
+   "viewed": true
   },
   {
    "key": "f5",
@@ -106,7 +110,8 @@
    "h": 1144,
    "dpi": 300,
    "src": "Cao 2026 - Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533).pdf",
-   "blank": 0.683
+   "blank": 0.683,
+   "viewed": true
   },
   {
    "key": "fS1",
@@ -148,7 +153,8 @@
    "dpi": 300,
    "src": "Cao 2026 - Sup) Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533) SI.pdf",
    "blank": 0.946,
-   "recrop": "auto crop cut the bottom ~14.6 pt (x-axis title / lower panel edge) — the Word-generated SI caption block starts with an empty line that overlaps the figure, so the tool stopped at the block top; clip = union of raster rects / vector drawings + axis and legend text spans above the 'Figure S2.' caption line + 2 pt (old bbox [64.8, 269.1, 476.9, 382.6]) (2026-10-03, litdb-curator)"
+   "recrop": "auto crop cut the bottom ~14.6 pt (x-axis title / lower panel edge) — the Word-generated SI caption block starts with an empty line that overlaps the figure, so the tool stopped at the block top; clip = union of raster rects / vector drawings + axis and legend text spans above the 'Figure S2.' caption line + 2 pt (old bbox [64.8, 269.1, 476.9, 382.6]) (2026-10-03, litdb-curator)",
+   "viewed": true
   },
   {
    "key": "fS3",
@@ -210,7 +216,8 @@
    "dpi": 300,
    "src": "Cao 2026 - Sup) Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533) SI.pdf",
    "blank": 0.105,
-   "recrop": "auto crop cut the bottom ~14.4 pt (x-axis title / lower panel edge) — the Word-generated SI caption block starts with an empty line that overlaps the figure, so the tool stopped at the block top; clip = union of raster rects / vector drawings + axis and legend text spans above the 'Figure S5.' caption line + 2 pt (old bbox [64.8, 350.2, 533.5, 567.1]) (2026-10-03, litdb-curator)"
+   "recrop": "auto crop cut the bottom ~14.4 pt (x-axis title / lower panel edge) — the Word-generated SI caption block starts with an empty line that overlaps the figure, so the tool stopped at the block top; clip = union of raster rects / vector drawings + axis and legend text spans above the 'Figure S5.' caption line + 2 pt (old bbox [64.8, 350.2, 533.5, 567.1]) (2026-10-03, litdb-curator)",
+   "viewed": true
   },
   {
    "key": "fS6",
@@ -230,7 +237,8 @@
    "h": 982,
    "dpi": 300,
    "src": "Cao 2026 - Sup) Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533) SI.pdf",
-   "blank": 0.402
+   "blank": 0.402,
+   "viewed": true
   },
   {
    "key": "fS7",
@@ -357,7 +365,8 @@
    "dpi": 300,
    "src": "Cao 2026 - Sup) Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533) SI.pdf",
    "blank": 0.923,
-   "recrop": "auto crop cut the bottom ~13.0 pt (x-axis title / lower panel edge) — the Word-generated SI caption block starts with an empty line that overlaps the figure, so the tool stopped at the block top; clip = union of raster rects / vector drawings + axis and legend text spans above the 'Figure S12.' caption line + 2 pt (old bbox [64.8, 450.1, 525.3, 649.1]) (2026-10-03, litdb-curator)"
+   "recrop": "auto crop cut the bottom ~13.0 pt (x-axis title / lower panel edge) — the Word-generated SI caption block starts with an empty line that overlaps the figure, so the tool stopped at the block top; clip = union of raster rects / vector drawings + axis and legend text spans above the 'Figure S12.' caption line + 2 pt (old bbox [64.8, 450.1, 525.3, 649.1]) (2026-10-03, litdb-curator)",
+   "viewed": true
   },
   {
    "key": "fS13",
@@ -378,7 +387,8 @@
    "dpi": 300,
    "src": "Cao 2026 - Sup) Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533) SI.pdf",
    "blank": 0.877,
-   "recrop": "auto crop cut the bottom ~14.3 pt (x-axis title / lower panel edge) — the Word-generated SI caption block starts with an empty line that overlaps the figure, so the tool stopped at the block top; clip = union of raster rects / vector drawings + axis and legend text spans above the 'Figure S13.' caption line + 2 pt (old bbox [64.8, 29.4, 530.5, 272.7]) (2026-10-03, litdb-curator)"
+   "recrop": "auto crop cut the bottom ~14.3 pt (x-axis title / lower panel edge) — the Word-generated SI caption block starts with an empty line that overlaps the figure, so the tool stopped at the block top; clip = union of raster rects / vector drawings + axis and legend text spans above the 'Figure S13.' caption line + 2 pt (old bbox [64.8, 29.4, 530.5, 272.7]) (2026-10-03, litdb-curator)",
+   "viewed": true
   },
   {
    "key": "fS14",
@@ -419,7 +429,8 @@
    "h": 823,
    "dpi": 300,
    "src": "Cao 2026 - Sup) Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533) SI.pdf",
-   "blank": 0.794
+   "blank": 0.794,
+   "viewed": true
   },
   {
    "key": "fS16",
@@ -439,7 +450,8 @@
    "h": 777,
    "dpi": 300,
    "src": "Cao 2026 - Sup) Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533) SI.pdf",
-   "blank": 0.916
+   "blank": 0.916,
+   "viewed": true
   },
   {
    "key": "fS17",
@@ -459,7 +471,8 @@
    "h": 901,
    "dpi": 300,
    "src": "Cao 2026 - Sup) Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533) SI.pdf",
-   "blank": 0.943
+   "blank": 0.943,
+   "viewed": true
   },
   {
    "key": "fS18",
@@ -480,7 +493,8 @@
    "dpi": 300,
    "src": "Cao 2026 - Sup) Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533) SI.pdf",
    "blank": 0.918,
-   "recrop": "auto crop cut the bottom ~14.6 pt (x-axis title / lower panel edge) — the Word-generated SI caption block starts with an empty line that overlaps the figure, so the tool stopped at the block top; clip = union of raster rects / vector drawings + axis and legend text spans above the 'Figure S18.' caption line + 2 pt (old bbox [64.8, 340.1, 524.2, 506.1]) (2026-10-03, litdb-curator)"
+   "recrop": "auto crop cut the bottom ~14.6 pt (x-axis title / lower panel edge) — the Word-generated SI caption block starts with an empty line that overlaps the figure, so the tool stopped at the block top; clip = union of raster rects / vector drawings + axis and legend text spans above the 'Figure S18.' caption line + 2 pt (old bbox [64.8, 340.1, 524.2, 506.1]) (2026-10-03, litdb-curator)",
+   "viewed": true
   },
   {
    "key": "fS19",
@@ -500,7 +514,8 @@
    "h": 1077,
    "dpi": 300,
    "src": "Cao 2026 - Sup) Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533) SI.pdf",
-   "blank": 0.863
+   "blank": 0.863,
+   "viewed": true
   },
   {
    "key": "fS20",
@@ -541,7 +556,8 @@
    "h": 1026,
    "dpi": 300,
    "src": "Cao 2026 - Sup) Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533) SI.pdf",
-   "blank": 0.941
+   "blank": 0.941,
+   "viewed": true
   },
   {
    "key": "fS22",
@@ -582,7 +598,8 @@
    "dpi": 300,
    "src": "Cao 2026 - Sup) Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533) SI.pdf",
    "blank": 0.884,
-   "recrop": "auto crop cut the bottom ~14.6 pt (x-axis title / lower panel edge) — the Word-generated SI caption block starts with an empty line that overlaps the figure, so the tool stopped at the block top; clip = union of raster rects / vector drawings + axis and legend text spans above the 'Figure S23.' caption line + 2 pt (old bbox [64.8, 29.4, 533.5, 250.5]) (2026-10-03, litdb-curator)"
+   "recrop": "auto crop cut the bottom ~14.6 pt (x-axis title / lower panel edge) — the Word-generated SI caption block starts with an empty line that overlaps the figure, so the tool stopped at the block top; clip = union of raster rects / vector drawings + axis and legend text spans above the 'Figure S23.' caption line + 2 pt (old bbox [64.8, 29.4, 533.5, 250.5]) (2026-10-03, litdb-curator)",
+   "viewed": true
   },
   {
    "key": "fS24",
