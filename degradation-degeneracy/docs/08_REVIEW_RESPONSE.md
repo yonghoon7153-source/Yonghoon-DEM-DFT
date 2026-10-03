@@ -8863,3 +8863,58 @@ pytest **2046 passed / 1 xfailed / rc 0** · smoke **rc 0 / 168 s** · 같은 so
 
 **요청:** `docs/22p_gap/GATE87_REQUEST.md` · 증거 `docs/22p_gap/gate87_evidence/` (README 전체 sha256). **아님:** 실행 GO · 새 연구 leg ·
 운영 원장 v6 계획 항목 · 세대표 등록 · p_ini · class 변경 · 투영 게시 · requirements 상한 (§13-7 보류 — 사용자 별도 결정).
+
+## §128 87차 회신 접수 — `REQUEST_CHANGES_ROUND2B_NOT_CLOSED` · **G87-N1 P1** · 2a · 이전 종결 유지
+
+**패키지:** `docs/22p_gap/gate87_review/` (`GATE87_REVIEW_20261003.zip` 1,744,749 B · SHA-256
+`8c46223de5873fce1a4629e5ab647260e59754fec447fb2e2f1ea8012215924d` · codex/ payload 152 · 전부 manifest 일치 · manifest
+`aeecca02…` · `reference/` 의 `.log` 13 개는 `.gitignore *.log` 때문에 `git add -f` · 154 파일 전부 `-text` · 규칙 `f7ff978d` →
+보존 `89651dec`). 검토자 스크립트 실행 · import 0. 검토자 쪽 실행: 수신 코드 · pytest · 변이 · 복원 · 영수증 재생성 · COMSOL **0**
+(`DECISION.json`: `received_program_executions 0` · `project_tests_run_by_reviewer 0` · `remote_writes 0`). 검토자 자체 정적/데이터
+확인 162 + 79 건은 제품 기능 시험 수가 아니다. 고정 HEAD `672ab83b` · 생산 `b8d4b693` · RUN_SCOPE 58 파일에서 source_digest
+`864edfb73b9695a1` 독립 재계산 일치 · 생산 변경 `run.sh` · `src/fitting.py` · `tools/preserve.py` 셋 · `src/io.py` 불변.
+
+| 항목 | 판정 |
+|---|---|
+| G84-N2 · v5 spec 불변 | 수용 — 공유 helper 를 원위치에 대입한 AST 가 이전 builder 와 같음 · 골든 `b8f90ad9…` 독립 계산 일치 · 기존 계획 바이트 · 주소 불변 |
+| v3 builder · index 결속 | 수용 — 9 키 축 · envelope 유도 · leg/source/세대 · 문맥 양쪽 필수 · provider 키 집합 |
+| 진입점 · CLI 배선 | **부분 수용** — 기존 preflight/prepare 우회는 없음 · 실행 완료까지의 수용은 G87-N1 로 보류 |
+| R2-c 이름 | 수용 — `v6` 하나 · 새 validator digest 는 세대표에 등록하지 않음 |
+| 새 영수증 | 한정 수용 — 이전 두 원문이 history 와 바이트 동일 · 차이는 `core_sha256` · `validator_source_digest` · `validator_commit` · `generated_at_utc` 뿐 · 검사 수 35/34 · producer · bundle · outputs · restore 불변. 재복원 · 재채점 · core YAML canonical hash 독립 재생성은 하지 않음 |
+| 원문 로그 13 | 크기 · 전체 SHA-256 대조 — **보존 로그의 확인**이지 원격 프로세스 관측 · 재실행이 아님. 첫 전체 변이 254 뒤 rc 124 중단은 성공으로 합산하지 않음 · g87 첫 emit-expect 의 실제 생존 3 (EXPECT 미선언 표시를 전부 생존으로 세지 않음) · 시험 통과를 G87-N1 부재의 증명으로 넓히지 않음 |
+| 2a · 이전 종결 | 유지 |
+| 2b 종결 | **보류** (P1 1 건) · 실행 GO · 새 연구 leg · 운영 v6 계획 · 세대표 등록 · p_ini · class/투영 게시 · requirements 상한 미승인 |
+
+**G87-N1 (P1) — v6 fit-only 새 claim 이 완료 기록에서 같은 claim 의 grid 선행 영수증을 요구받는다.** 리뷰어 근거는 정적 호출 ·
+상태 추적이다 (`G87_N1_STATIC_TRACE.json` · 실행 재현 아님 · 산출물이 틀렸다는 판정 아님). 우리 대조 (2026-10-03 · 판정 대상
+`b8d4b6933` 을 읽기만 · 현재 서브 head 와 RUN_SCOPE diff 0) — 고리 다섯이 코드 그대로다:
+
+1. `run.sh:222–232` — `--stage3-plan` 은 `--mode fit` 에서만 (grid · all 은 rc 1).
+2. `src/fitting.py:1243–1308` `_assert_fit_authorized` — v3 계획 + 맞는 문맥이면 `assert_run_is_authorized(leg, "fit", …)` 로 새
+   claim · `tools/preserve.py:7377–7382` claim 초기값 `"phases": {}`.
+3. `src/fitting.py:1184–1222` `_assert_fit_input_is_authorized` — 계획 `fit.in_digest` 가 hex64 (밖 입력) 이면 입력 **묶음** digest
+   (`fit_input_package_digest`) 만 대조한다 · grid receipt 를 보지 않는다 (null 분기만 `assert_phase_input_binding` 이 grid receipt 를 요구).
+4. `src/fitting.py:1735` `commit_run_outputs` → `:1740` `_record_phase(claim, "fit", …)` — 거부 자리는 산출 commit **뒤**다.
+5. `tools/preserve.py:3997` `CLAIM_PHASES = ("grid", "fit")` · `:6895–6906` `phase_done("fit")` 은 grid 가 없으면 `PreserveError` ·
+   `:8938–8943` `finalize_leg` 는 두 phase 를 요구 · `:9044–9045` 실행 기록도 두 phase 를 옮긴다 (fit 하나면 `KeyError` 자리).
+
+덧: `src/grid.py:393–436` `_assert_grid_authorized` 는 v2 `leg_run_spec` 만 만든다 → v3 계획 아래 "grid 를 먼저" 는 digest
+불일치로 거부된다 — 제시된 v6 경로가 아니다 (리뷰어와 같은 판독).
+
+**왜 놓쳤나 (우리 쪽 기록):** §13 고정 표가 v6 fit-only claim 의 **phase 계약** (밖 입력의 결속 · 완료 · 재개 · 최종화) 을 정하지
+않았다. s02 는 "claim 발급까지 도달" (13-6) 로, s04 는 smoke 완주로 고정했고 그 사이 — 비-smoke 의 완료 기록 — 는 계약에도
+시험에도 없었다. `test_s02_04` 의 `in_digest` 는 곡선 단독 sha256 이라 전체 실행이었다면 입력 묶음 검사에서 먼저 거부돼 이 결함을
+가렸을 것이고 (리뷰어: 별도 결함으로 세지 않음 · 재현 조건), `test_s04_01` 은 claim=None 이라 `_record_phase` 가 `src/fitting.py:856`
+에서 바로 돌아간다. 요청문 §1 은 s04 를 "진입점 한 곳" 의 증인으로만 적었다 — 완주를 비-smoke lifecycle 의 증거라고 쓰지는
+않았지만, 그 빈칸을 신고하지도 않았다.
+
+**수용하지 않는 길 (리뷰어 명시):** v2 순서 규칙 삭제 · 가짜 grid 영수증 삽입 · smoke 우회 · claim/phase/종결 함수 대체 · 선행
+영수증 수동 삽입 · 곡선 단독 SHA 로 입력 대조.
+
+**다음 (사용자 별도 승인 필요):** G87-N1 한정 보완. 순서 — 외부 producer 입력의 결속과 v6 fit-only 의 완료 · 재개 · 최종화 계약을
+**먼저 고정** (초안은 채팅 승인 질문 · 승인되면 `STAGE3_IMPL_ROUND1_SPEC.md` §14 로, 코드 변경 전 커밋) → RED (격리 원장 · 비-smoke
+출력 · 실제 `fit_input_package_digest(_fit_input_digests(…))` · 수치 본체만 inert · 승인 검사 → 완료 기록 → 최종화 양성 + 입력 /
+attempt / 순서 위반 음성) → 최소 GREEN → 변이 (`-g88` · 순서 · 결속 제거 변이 포함) → 영수증 history + 1 회 → 전체 회귀 · smoke ·
+등록부 전체 변이 재생 → GATE88. 변경 파일이 기존 승인 (§126 · §13-1 상한 `tools/preserve.py` · `src/fitting.py` · `run.sh`) 을 넘으면
+그 차이만 먼저 승인 요청. 이 회신은 구현 · 시험 실행 승인이 아니다. 이미 수용한 부분과 과거 원문 · 중단/실패 기록은 다시 열거나
+고치지 않는다.
