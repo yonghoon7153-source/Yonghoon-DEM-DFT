@@ -406,6 +406,13 @@
    "DEM 논문/40. An electro-mechanical contact model for particulate systems.pdf"
   ]
  },
+ "ender2011_3d_reconstruction_composite_cathode": {
+  "figures": 4,
+  "generated": "2026-10-03",
+  "pdfs": [
+   "9. Three-dimensional reconstruction of a composite cathode for lithium-ion cells.pdf"
+  ]
+ },
  "endo2001_vgcf_basic_properties_battery_applications": {
   "figures": 16,
   "generated": "2026-09-25",
@@ -441,6 +448,13 @@
   "pdfs": [
    "7. FirstPrinciples_prediction_ESW_reaction_mechanisms_SSE_MAIN.pdf",
    "7. Sup) FirstPrinciples_prediction_ESW_SI.pdf"
+  ]
+ },
+ "froboese2019_microstructure_ionic_conductivity_assb_electrode": {
+  "figures": 19,
+  "generated": "2026-10-03",
+  "pdfs": [
+   "2. Effect of microstructure on the ionic conductivity of an all solid-state battery electrode.pdf"
   ]
  },
  "fujimura2013_ml_conductivity_origin": {
@@ -577,6 +591,21 @@
   "generated": "2026-08-05",
   "pdfs": [
    "DFT 먹인 논문/25. Operando analysis of electronic band structure in an all-solid-state thin-film battery.pdf"
+  ]
+ },
+ "hlushkou2018_void_space_ion_transport_assb_cathode": {
+  "figures": 11,
+  "generated": "2026-10-03",
+  "pdfs": [
+   "6. The influence of void space on ion transport in a composite cathode for all-solid-state batteries.pdf",
+   "6. Sup) The influence of void space on ion transport in a composite cathode for all-solid-state batteries.pdf"
+  ]
+ },
+ "holzer2013_constrictivity_effective_transport_porous_layers": {
+  "figures": 16,
+  "generated": "2026-10-03",
+  "pdfs": [
+   "1. The influence of constrictivity on the effective transport properties of porous layers in electrolysis and fuel cells.pdf"
   ]
  },
  "honrao2021_interpretable_ml_sse_anode_coatings": {
@@ -773,6 +802,14 @@
   "pdfs": [
    "DFT 먹인 논문/41. High-throughput computational screening for solid-state Li-ion conductors.pdf",
    "DFT 먹인 논문/41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf"
+  ]
+ },
+ "kaiser2018_ion_transport_limitations_assb_sulfide_electrodes": {
+  "figures": 14,
+  "generated": "2026-10-03",
+  "pdfs": [
+   "8. Ion transport limitations in all-solid-state lithium battery electrodes containing a sulfide-based electrolyte.pdf",
+   "8. Sup) Ion transport limitations in all-solid-state lithium battery electrodes containing a sulfide-based electrolyte.pdf"
   ]
  },
  "kalikadien2026_uma_tm_catalyst_conformer_ranking": {
@@ -1008,6 +1045,13 @@
   "generated": "2026-10-02",
   "pdfs": [
    "5. Tortuosity determination of battery electrodes and separators by impedance spectroscopy.pdf"
+  ]
+ },
+ "landesfeind2018_tortuosity_impedance_vs_tomography": {
+  "figures": 7,
+  "generated": "2026-10-03",
+  "pdfs": [
+   "3. Tortuosity of battery electrodes validation of impedance-derived values and critical comparison with 3D tomography.pdf"
   ]
  },
  "lawrence2008_single_vgcnf_elastic_modulus_morphology": {
@@ -1576,12 +1620,28 @@
    "88._Sup_Microstructural_insights_into_fast_ion_transport_in_solid_electrolytes_via_multiscale_modeling.pdf"
   ]
  },
+ "park2019_electrode_design_methodology_assb_3d": {
+  "figures": 16,
+  "generated": "2026-10-03",
+  "pdfs": [
+   "4. Electrode design methodology for all-solid-state batteries 3D structural analysis and performance prediction.pdf",
+   "4. Sup) Electrode design methodology for all-solid-state batteries 3D structural analysis and performance prediction.pdf"
+  ]
+ },
  "park2020_digitaltwin_assb_foundational": {
   "figures": 26,
   "generated": "2026-08-05",
   "pdfs": [
    "이용민 교수님/22. Digital Twin-Driven All-Solid-State Battery Unravelingthe Physical and Electrochemical Behaviors.pdf",
    "이용민 교수님/22. Sup) Digital Twin-Driven All-Solid-State Battery Unravelingthe Physical and Electrochemical Behaviors.pdf"
+  ]
+ },
+ "park2020_dimension_controlled_se_percolation_contact_area": {
+  "figures": 17,
+  "generated": "2026-10-03",
+  "pdfs": [
+   "5. Dimension-controlled solid oxide electrolytes for all-solid-state electrodes Percolation pathways, specific contact area, and effective ionic conductivity.pdf",
+   "5. Sup) Dimension-controlled solid oxide electrolytes for all-solid-state electrodes Percolation pathways, specific contact area, and effective ionic conductivity.pdf"
   ]
  },
  "park2024_sevennet_parallel_gnn_md": {
@@ -1627,6 +1687,13 @@
   "pdfs": [
    "34b02e87-63._PETMAD_as_a_lightweight_universal_interatomic_potential_for_advanced_materials_modeling.pdf",
    "c90694f1-63._Sup_PETMAD_as_a_lightweight_universal_interatomic_potential_for_advanced_materials_modeling.pdf"
+  ]
+ },
+ "pouraghajan2018_tortuosity_polarization_interrupt_vs_blocking_electrolyte": {
+  "figures": 15,
+  "generated": "2026-10-03",
+  "pdfs": [
+   "10. Quantifying tortuosity of porous Li-ion battery electrodes Comparing polarization-interrupt and blocking-electrolyte methods.pdf"
   ]
  },
  "pranami2015_estimating_error_diffusion_coefficients_md": {
@@ -1836,6 +1903,13 @@
   "pdfs": [
    "74. Shin2026_BH4_Reorientation_Li_Transport_Li6PS5X.pdf",
    "74. Sup) Shin2026_BH4_Reorientation_Li_Transport_Li6PS5X.pdf"
+  ]
+ },
+ "siroma2015_transmission_line_model_porous_electrode_impedance": {
+  "figures": 16,
+  "generated": "2026-10-03",
+  "pdfs": [
+   "7. Mathematical solutions of comprehensive variations of a transmission-line model of the theoretical impedance of porous electrodes.pdf"
   ]
  },
  "sjolin2023_accelerated_workflow_antiperovskite_sse": {

@@ -1,0 +1,340 @@
+{
+ "slug": "holzer2013_constrictivity_effective_transport_porous_layers",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-03",
+ "sources": [
+  "1. The influence of constrictivity on the effective transport properties of porous layers in electrolysis and fuel cells.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 6,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 Examples of raw data (virtual 2D slices) a from FIB- tomography of LSC cathode (pixel resolution 7.5 nm) and b from SRlCT of olivine membrane with 32 % porosity (voxel resolution 740 nm, after binning)",
+   "rotated_deg": 0,
+   "bbox": [
+    300.1,
+    53.2,
+    550.3,
+    475.3
+   ],
+   "w": 1043,
+   "h": 1760,
+   "dpi": 300,
+   "src": "1. The influence of constrictivity on the effective transport properties of porous layers in electrolysis and fuel cells.pdf",
+   "blank": 0.167
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 9,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 Illustration of the continuous-pore size distribution (c-PSD) method, from Mu¨nch and Holzer [20] (reproduced with kind permission from JACerS). The pore object (a), which is transformed into a coloured distance map (b) is ﬁlled with a sphere of maximum radius (c) whose centre is placed at the local maximum of the distance map. The sphere",
+   "rotated_deg": 0,
+   "bbox": [
+    45.0,
+    53.2,
+    550.3,
+    559.8
+   ],
+   "w": 2106,
+   "h": 2112,
+   "dpi": 300,
+   "src": "1. The influence of constrictivity on the effective transport properties of porous layers in electrolysis and fuel cells.pdf",
+   "blank": 0.441
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 10,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 Image volume from FIB-tomography (voxel resolution: 15 nm), which represents the microstructure of a porous SOFC cathode with particles of (La,Sr)CoO3 (sample name: LSC 2). a The colour code represents the particle radii resulting from the c-PSD analysis. b Illustration of the MIP-simulation. The intrusion starts at the y–z-plane on the right side of the cube and it propagates along the x-axis to the left through the LSC-phase. The colour code represents MIP radii between 820 nm (red) and 1 nm (dark blue). Disconnected particles are black. Pore space is white (Color ﬁgure online)",
+   "rotated_deg": 0,
+   "bbox": [
+    45.0,
+    53.2,
+    295.1,
+    478.0
+   ],
+   "w": 1043,
+   "h": 1771,
+   "dpi": 300,
+   "src": "1. The influence of constrictivity on the effective transport properties of porous layers in electrolysis and fuel cells.pdf",
+   "blank": 0.22
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 10,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 Comparison of particle size distributions (c-PSD and MIP-PSD) for the LSC perovskite phase in a porous SOFC cathode. The PSD- measurements are based on the same image volume from FIB-tomogra- phy (see Fig. 3a, b). Note the signiﬁcantly smaller radii (r50 = 66 nm) of the MIP curve compared to the c-PSD curve (r50 = 157 nm). This difference is attributed to the bottlenecks which strongly inﬂuence the MIP-PSD, but which are hardly affecting the c-PSD-measurements",
+   "rotated_deg": 0,
+   "bbox": [
+    300.1,
+    68.4,
+    550.3,
+    208.9
+   ],
+   "w": 1043,
+   "h": 586,
+   "dpi": 300,
+   "src": "1. The influence of constrictivity on the effective transport properties of porous layers in electrolysis and fuel cells.pdf",
+   "blank": 0.918
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 12,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 Simulation of mercury intrusion for a porous LSC cathode (a intrusion of LSC-phase; b, c intrusion of pore-phase). The MIP intrusion of the LSC-phase (a) shows a pronounced constriction effect. The critical intrusion depth (IDcrit) is reached after approxi- mately 3 lm. At the intrusion entrance (x–y-plane) the LSC-particles show a wide size distribution and the statistics for a representative analysis of the largest particles (red) is very poor. The MIP intrusion of the pore-phase (b, c) is less strongly affected by constrictions. Therefore, the MIP radii of the pores do not change signiﬁcantly with increasing intrusions depth. However, the pore structure shows a crack in the back left part of the cube (c), which may trigger a breakthrough event (Color ﬁgure online)",
+   "rotated_deg": 0,
+   "bbox": [
+    53.0,
+    58.0,
+    288.0,
+    627.0
+   ],
+   "w": 980,
+   "h": 2372,
+   "dpi": 300,
+   "src": "1. The influence of constrictivity on the effective transport properties of porous layers in electrolysis and fuel cells.pdf",
+   "blank": 0.147,
+   "manual_crop": "auto extractor reported no region (side caption: the raster occupies the full left column of PDF p.12 = printed 2945 while the caption sits at the top of the right column); clip = the image bbox (2026-10-03)",
+   "viewed": true
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 13,
+   "file": "fig_6.png",
+   "caption": "Fig. 6 MIP-PSD-curves for LSC (a) and pores (b). The MIP-simula- tions are performed repeatedly on data cubes from FIB-tomography, whereby the thickness of the cube is increased in steps of 75 nm up to 1.5 lm thickness, and then in steps of 1.25 lm up to 7.6 lm thickness. For the LSC-phase (a), the bottleneck effect becomes more pronounced with increasing thickness. The critical intrusion depth (IDcrit) is 3 lm. At larger sample thicknesses, the r50 radius is stable at 66 nm (i.e. rmin). For smaller sample thicknesses r50 is variable. The MIP-PSDs for the pore-phase (b) are less strongly affected by constrictions and hence they do not change signiﬁcantly with increasing sample thickness. However, a small crack on the backside of the cube leads to a ‘mini break through’ at an intrusion depth of 5 lm",
+   "rotated_deg": 0,
+   "bbox": [
+    45.0,
+    249.2,
+    295.1,
+    352.0
+   ],
+   "w": 1043,
+   "h": 429,
+   "dpi": 300,
+   "src": "1. The influence of constrictivity on the effective transport properties of porous layers in electrolysis and fuel cells.pdf",
+   "blank": 0.893
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 13,
+   "file": "fig_7.png",
+   "caption": "Fig. 7 Variation of rmin (from MIP) and rmax (from c-PSD) as a function of the sample thickness for the LSC-phase (a) and for the pore-phase (b) in a SOFC cathode. It is important to note that the volume fraction of pore is changing from 0.43 to 0.53 with increasing sample thickness due to a heterogeneous composition. rmin and the constriction factor (b) approach a plateau-value if the sample thicknesses is larger than IDcrit (at 3 lm). However, variable volume factions and a local crack ‘destabilize’ the plateau. The inﬂuence of these local heterogeneities on the constriction factors for pore and LSC-phases is discussed in the text",
+   "rotated_deg": 0,
+   "bbox": [
+    300.1,
+    67.9,
+    550.3,
+    343.0
+   ],
+   "w": 1043,
+   "h": 1147,
+   "dpi": 300,
+   "src": "1. The influence of constrictivity on the effective transport properties of porous layers in electrolysis and fuel cells.pdf",
+   "blank": 0.916
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 14,
+   "file": "fig_8.png",
+   "caption": "Fig. 8 MIP-PSDs (grey) for six different intrusion directions in a porous LSC cathode and comparison with the corresponding c-PSD (black). The PSDs are measured for the LSC-phase (a) and for the pore-phase (b). Note the perfect reproducibility of the r50 MIP (i.e. rmin) for all six directions of the intrusion",
+   "rotated_deg": 0,
+   "bbox": [
+    45.0,
+    171.6,
+    295.1,
+    351.3
+   ],
+   "w": 1043,
+   "h": 749,
+   "dpi": 300,
+   "src": "1. The influence of constrictivity on the effective transport properties of porous layers in electrolysis and fuel cells.pdf",
+   "blank": 0.904
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 14,
+   "file": "fig_9.png",
+   "caption": "Fig. 9 PSD-curves representing the distribution of MIP radii in the outlet plane (MIP-out). The MIP-simulations are performed for six different intrusion directions based on a FIB-tomograph from a porous LSC cathode. PSDs are shown for the LSC-phase (a) and for the pores (b). A MIP analysis representing the PSD of the total sample volume (MIP-total, bold grey curve), and the corresponding c-PSD are also shown for comparison",
+   "rotated_deg": 0,
+   "bbox": [
+    300.1,
+    266.1,
+    550.3,
+    349.9
+   ],
+   "w": 1043,
+   "h": 350,
+   "dpi": 300,
+   "src": "1. The influence of constrictivity on the effective transport properties of porous layers in electrolysis and fuel cells.pdf",
+   "blank": 0.918
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 15,
+   "file": "fig_10.png",
+   "caption": "Fig. 10 MIP-PSD-curves measured only from the inlet-planes (i.e. MIP-in). Results are shown for LSC (a) and for pores (b). The MIP-in PSDs are performed for six different intrusion directions from a FIB cube of a porous LSC cathode. The large variation is attributed to statistical problems caused by the relatively small area of the inlet- planes. The average PSD curve includes all six MIP-in analyses (bold grey) and it is nearly identical with the c-PSD curve from the total FIB volume (bold black)",
+   "rotated_deg": 0,
+   "bbox": [
+    45.0,
+    68.8,
+    295.1,
+    349.4
+   ],
+   "w": 1043,
+   "h": 1170,
+   "dpi": 300,
+   "src": "1. The influence of constrictivity on the effective transport properties of porous layers in electrolysis and fuel cells.pdf",
+   "blank": 0.896
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 15,
+   "file": "fig_11.png",
+   "caption": "Fig. 11 Effective ion conductivities (reff, measured and calculated) versus porosity in olivine and wollastonite diaphragms (data from Wiedenmann et al. [37]). The measured ion conductivities (black circles and open triangles) are determined with 4-point EIS. The calculated conductivities (black squares and grey rhombi) are obtained by substitution of e, sgeo (both obtained from tomography and image analysis) and r0 into Eq. 2. Note the measured conduc- tivities follow two different exponential trends, which are compatible with Archie’s law. In contrast, the calculated conductivities are signiﬁcantly higher than the measured conductivities. In the calcu- lated conductivities, the effect of bottlenecks is not considered. Hence, the different results illustrate the importance of the constrictivity",
+   "rotated_deg": 0,
+   "bbox": [
+    300.1,
+    472.3,
+    550.3,
+    585.8
+   ],
+   "w": 1043,
+   "h": 473,
+   "dpi": 300,
+   "src": "1. The influence of constrictivity on the effective transport properties of porous layers in electrolysis and fuel cells.pdf",
+   "blank": 0.948
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 16,
+   "file": "fig_12.png",
+   "caption": "Fig. 12 Geometric and electrical tortuosities from olivine and wollastonite diaphragms plotted versus the corresponding porosity (data from [37]). The geometric tortuosity (sgeo), which is obtained by image analysis directly from tomographs, hardly changes with porosity. The average sgeo is 1.62. In contrast, the electrical tortuosity (selc), which is calculated indirectly using the effective conductivity (reff) from EIS, shows unrealistically high values up to 5.6. The reason for this difference is that the experimental tortuosity errone- ously includes the effect of bottlenecks, whereas the geometric tortuosity strictly only describes the pore paths lengths",
+   "rotated_deg": 0,
+   "bbox": [
+    45.0,
+    500.7,
+    295.2,
+    615.7
+   ],
+   "w": 1043,
+   "h": 480,
+   "dpi": 300,
+   "src": "1. The influence of constrictivity on the effective transport properties of porous layers in electrolysis and fuel cells.pdf",
+   "blank": 0.937
+  },
+  {
+   "key": "f13",
+   "kind": "figure",
+   "label": "13",
+   "page": 16,
+   "file": "fig_13.png",
+   "caption": "Fig. 13 Plot of pore radii rmin versus rmax in wollastonite and olivine diaphragms. The rmin from MIP-PSD is interpreted as a characteristic measure for the dimension of the pore necks. The rmax from c-PSD reﬂects the average size of the non-constricted pore bulges. The grey lines deﬁne trends with constant b (since b = rmin",
+   "rotated_deg": 0,
+   "bbox": [
+    309.7,
+    480.4,
+    543.3,
+    626.1
+   ],
+   "w": 974,
+   "h": 608,
+   "dpi": 300,
+   "src": "1. The influence of constrictivity on the effective transport properties of porous layers in electrolysis and fuel cells.pdf",
+   "blank": 0.929,
+   "manual_crop": "auto extractor found no graphic for this caption; clip = right column strip between the last body-text block and the caption top on PDF p.16 (printed 2933+n), white margins trimmed (2026-10-03)",
+   "viewed": true
+  },
+  {
+   "key": "f14",
+   "kind": "figure",
+   "label": "14",
+   "page": 17,
+   "file": "fig_14.png",
+   "caption": "Fig. 14 Plot of constriction factor (b) versus porosity (e) in diaphragms made of wollastonite (ﬁlled circles) and olivine (open triangles). With decreasing porosity the constriction effect becomes stronger (i.e. b is decreasing). In addition, the data points from olivine and wollastonite do not deﬁne a clear, single trend line. It is assumed that the different grain shapes in the two materials (olivine and wollastonite) lead to measurable differences of the pore neck dimensions and associated constriction factors",
+   "rotated_deg": 0,
+   "bbox": [
+    53.1,
+    58.3,
+    288.3,
+    202.4
+   ],
+   "w": 981,
+   "h": 602,
+   "dpi": 300,
+   "src": "1. The influence of constrictivity on the effective transport properties of porous layers in electrolysis and fuel cells.pdf",
+   "blank": 0.955,
+   "manual_crop": "auto extractor found no graphic for this caption; clip = left column strip between the last body-text block and the caption top on PDF p.17 (printed 2933+n), white margins trimmed (2026-10-03)",
+   "viewed": true
+  },
+  {
+   "key": "f15",
+   "kind": "figure",
+   "label": "15",
+   "page": 17,
+   "file": "fig_15.png",
+   "caption": "Fig. 15 Plot of constrictivity (d) versus constriction factor (b) for porous diaphragms of olivine (ﬁlled circles) and wollastonite (open triangles). The constriction factor (b) is geometrically well-deﬁned (rmin",
+   "rotated_deg": 0,
+   "bbox": [
+    53.1,
+    312.3,
+    288.3,
+    458.0
+   ],
+   "w": 981,
+   "h": 608,
+   "dpi": 300,
+   "src": "1. The influence of constrictivity on the effective transport properties of porous layers in electrolysis and fuel cells.pdf",
+   "blank": 0.929,
+   "manual_crop": "auto extractor found no graphic for this caption; clip = left column strip between the last body-text block and the caption top on PDF p.17 (printed 2933+n), white margins trimmed (2026-10-03)",
+   "viewed": true
+  },
+  {
+   "key": "f16",
+   "kind": "figure",
+   "label": "16",
+   "page": 17,
+   "file": "fig_16.png",
+   "caption": "Fig. 16 Predicted resistivities (y-axis, using Eqs. 9–11) are plotted against the corresponding measured resistivities (x-axis). The mea- sured resistivities are obtained with EIS [37]. The calculation of the predicted resistivities is based on microstructure parameters that are measured from tomographs by means of 3D-image analysis. Thereby, the predictions based on d (black, ﬁlled symbols) show a better match with the measured resistivity (i.e. black reference line) than the predictions based on b (open symbols)",
+   "rotated_deg": 0,
+   "bbox": [
+    300.1,
+    68.7,
+    550.3,
+    215.3
+   ],
+   "w": 1043,
+   "h": 612,
+   "dpi": 300,
+   "src": "1. The influence of constrictivity on the effective transport properties of porous layers in electrolysis and fuel cells.pdf",
+   "blank": 0.919
+  }
+ ],
+ "missing_labels": []
+}

@@ -1,0 +1,353 @@
+{
+ "slug": "park2020_dimension_controlled_se_percolation_contact_area",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-03",
+ "sources": [
+  "5. Dimension-controlled solid oxide electrolytes for all-solid-state electrodes Percolation pathways, specific contact area, and effective ionic conductivity.pdf",
+  "5. Sup) Dimension-controlled solid oxide electrolytes for all-solid-state electrodes Percolation pathways, specific contact area, and effective ionic conductivity.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 4,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. (a) Percolation pathway analysis as a function of volume fraction of solid electrolyte, (b) 3D structures formed by solid electrolytes of (b)-(1) 1D 2500 nm, (b)-(2) 2D 2500 nm, and (b)-(3) 0D 250 nm particles, and (c) to- mography (at volume fraction of 20%) of 3D solid electrolyte structures formed by 0D 250 nm and 1D 2500 nm.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    51.0,
+    294.7,
+    565.9
+   ],
+   "w": 1097,
+   "h": 2146,
+   "dpi": 300,
+   "src": "5. Dimension-controlled solid oxide electrolytes for all-solid-state electrodes Percolation pathways, specific contact area, and effective ionic conductivity.pdf",
+   "blank": 0.687
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. (a) Electrode thickness at diﬀerent lengths and widths of the 1D/2D solid electrolyte and (b) 3D electrode structure of the electrode with 2D 7500 nm electrolyte and its tomography image.",
+   "rotated_deg": 0,
+   "bbox": [
+    300.6,
+    51.0,
+    563.6,
+    417.9
+   ],
+   "w": 1097,
+   "h": 1530,
+   "dpi": 300,
+   "src": "5. Dimension-controlled solid oxide electrolytes for all-solid-state electrodes Percolation pathways, specific contact area, and effective ionic conductivity.pdf",
+   "blank": 0.667
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. (a) 3D electrode structures with graphite:LLZO-Ta = 60:40, (b) its tomography, and (c) ion density tomography images of the electrode with 1D 2500 nm or 2D 2500 nm electrolytes.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    51.0,
+    563.6,
+    294.2
+   ],
+   "w": 2218,
+   "h": 1014,
+   "dpi": 300,
+   "src": "5. Dimension-controlled solid oxide electrolytes for all-solid-state electrodes Percolation pathways, specific contact area, and effective ionic conductivity.pdf",
+   "blank": 0.546
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. (a) Speciﬁc contact area between the solid electrolyte and graphite and the eﬀective ionic conductivity of the electrode with 1D and 2D solid electrolytes and (b) voltage proﬁle of 0D 250 nm, 1D 2500 nm, and 2D 2500 nm electrolytes at 0.1, 0.3, and 0.5 C.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    51.0,
+    563.6,
+    236.3
+   ],
+   "w": 2218,
+   "h": 773,
+   "dpi": 300,
+   "src": "5. Dimension-controlled solid oxide electrolytes for all-solid-state electrodes Percolation pathways, specific contact area, and effective ionic conductivity.pdf",
+   "blank": 0.881
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Tomography images of blended electrodes with (a) 0D 250 nm, (b) 0D:1D = 2:2, and (c) 1D 5000 nm under the ratio of graphite:LLZO-Ta = 60:40.",
+   "rotated_deg": 0,
+   "bbox": [
+    39.7,
+    51.0,
+    555.5,
+    522.2
+   ],
+   "w": 2150,
+   "h": 1964,
+   "dpi": 300,
+   "src": "5. Dimension-controlled solid oxide electrolytes for all-solid-state electrodes Percolation pathways, specific contact area, and effective ionic conductivity.pdf",
+   "blank": 0.322
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. (a) Speciﬁc contact area between solid electrolyte and graphite and eﬀective ionic conductivity values of 0D 250 nm, 0D:1D = 3:1, 0D:1D = 2:2, and 1D 5000 nm and (b) their rate capability results at 0.1, 0.3, and 0.5 C.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    541.1,
+    563.6,
+    724.5
+   ],
+   "w": 2218,
+   "h": 765,
+   "dpi": 300,
+   "src": "5. Dimension-controlled solid oxide electrolytes for all-solid-state electrodes Percolation pathways, specific contact area, and effective ionic conductivity.pdf",
+   "blank": 0.869
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 8,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. (a) Speciﬁc contact area between solid electrolyte and graphite and eﬀective ionic conductivity values of graphite:LLZO-Ta = 60:40 wt% with 0D 250 nm, graphite:LLZO-Ta = 60:40 wt% with 0D:1D = 2:2, graphite:LLZO-Ta = 70:30 wt% with 0D 250 nm, and graphite:LLZO-Ta = 70:30 wt% with 0D:1D = 2:2 and (b) their voltage proﬁle at 0.12, 0.36, and 0.60 mA cm−2.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    51.0,
+    563.7,
+    238.4
+   ],
+   "w": 2218,
+   "h": 782,
+   "dpi": 300,
+   "src": "5. Dimension-controlled solid oxide electrolytes for all-solid-state electrodes Percolation pathways, specific contact area, and effective ionic conductivity.pdf",
+   "blank": 0.855
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Fig. S1. Schematic of dimension-controlled solid electrolytes",
+   "rotated_deg": 0,
+   "bbox": [
+    77.9,
+    79.0,
+    517.0,
+    355.7
+   ],
+   "w": 1831,
+   "h": 1154,
+   "dpi": 300,
+   "src": "5. Sup) Dimension-controlled solid oxide electrolytes for all-solid-state electrodes Percolation pathways, specific contact area, and effective ionic conductivity.pdf",
+   "blank": 0.706
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Fig. S2. Domain with governing equations and its boundary conditions (Ohm’s law)",
+   "rotated_deg": 0,
+   "bbox": [
+    89.1,
+    79.0,
+    509.3,
+    297.6
+   ],
+   "w": 1751,
+   "h": 911,
+   "dpi": 300,
+   "src": "5. Sup) Dimension-controlled solid oxide electrolytes for all-solid-state electrodes Percolation pathways, specific contact area, and effective ionic conductivity.pdf",
+   "blank": 0.776
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 4,
+   "file": "fig_S3.png",
+   "caption": "Fig. S3. Domain with governing equations and its boundary conditions (model by Newman)",
+   "rotated_deg": 0,
+   "bbox": [
+    70.0,
+    79.0,
+    528.5,
+    404.4
+   ],
+   "w": 1911,
+   "h": 1357,
+   "dpi": 300,
+   "src": "5. Sup) Dimension-controlled solid oxide electrolytes for all-solid-state electrodes Percolation pathways, specific contact area, and effective ionic conductivity.pdf",
+   "blank": 0.908
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 6,
+   "file": "fig_S4.png",
+   "caption": "Fig. S4. (a) The 0D 250 nm, 0D 500 nm, and 0D 1000 nm 3D electrode structures with graphite:LLZO-Ta = 60:40 and their (b) tomography and (c) ion density tomography images",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    147.7,
+    529.3,
+    480.1
+   ],
+   "w": 1931,
+   "h": 1386,
+   "dpi": 300,
+   "src": "5. Sup) Dimension-controlled solid oxide electrolytes for all-solid-state electrodes Percolation pathways, specific contact area, and effective ionic conductivity.pdf",
+   "blank": 0.429
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 7,
+   "file": "fig_S5.png",
+   "caption": "Fig. S5. Specific contact area between the solid electrolyte and graphite and effective ionic conductivity as a function of the 0D particle diameter",
+   "rotated_deg": 0,
+   "bbox": [
+    73.2,
+    79.0,
+    525.1,
+    374.2
+   ],
+   "w": 1883,
+   "h": 1231,
+   "dpi": 300,
+   "src": "5. Sup) Dimension-controlled solid oxide electrolytes for all-solid-state electrodes Percolation pathways, specific contact area, and effective ionic conductivity.pdf",
+   "blank": 0.945
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 7,
+   "file": "fig_S6.png",
+   "caption": "Fig. S6. Voltage profile based on volumetric capacity of 0D 250 nm, 1D 2500 nm, and 2D 2500 nm electrolytes at 0.1, 0.3, and 0.5 C.",
+   "rotated_deg": 0,
+   "bbox": [
+    74.3,
+    432.3,
+    523.9,
+    702.9
+   ],
+   "w": 1874,
+   "h": 1128,
+   "dpi": 300,
+   "src": "5. Sup) Dimension-controlled solid oxide electrolytes for all-solid-state electrodes Percolation pathways, specific contact area, and effective ionic conductivity.pdf",
+   "blank": 0.945
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 8,
+   "file": "fig_S7.png",
+   "caption": "Fig. S7. Simulated value of solid electrolyte volume fraction at the solid electrolyte volume fraction targets for 0D 500 nm and 1D 5000 nm for addition to the electrode with 1D 5000 nm",
+   "rotated_deg": 0,
+   "bbox": [
+    71.9,
+    79.0,
+    526.4,
+    365.0
+   ],
+   "w": 1895,
+   "h": 1193,
+   "dpi": 300,
+   "src": "5. Sup) Dimension-controlled solid oxide electrolytes for all-solid-state electrodes Percolation pathways, specific contact area, and effective ionic conductivity.pdf",
+   "blank": 0.854
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 2,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Gaussian conditions for the particle of graphite Unit: μm Mean Value Standard Deviation",
+   "rotated_deg": 0,
+   "bbox": [
+    112.7,
+    423.0,
+    532.5,
+    586.7
+   ],
+   "w": 1750,
+   "h": 683,
+   "dpi": 300,
+   "src": "5. Sup) Dimension-controlled solid oxide electrolytes for all-solid-state electrodes Percolation pathways, specific contact area, and effective ionic conductivity.pdf",
+   "blank": 0.952
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 3,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Intrinsic electric and ionic conductivities of electrode materials Unit: S cm-1 Electric Ionic conductivity conductivity",
+   "rotated_deg": 0,
+   "bbox": [
+    115.7,
+    364.9,
+    496.5,
+    528.6
+   ],
+   "w": 1587,
+   "h": 683,
+   "dpi": 300,
+   "src": "5. Sup) Dimension-controlled solid oxide electrolytes for all-solid-state electrodes Percolation pathways, specific contact area, and effective ionic conductivity.pdf",
+   "blank": 0.956
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 4,
+   "file": "tab_S3.png",
+   "caption": "Table S3. Model parameters and formulas",
+   "rotated_deg": 0,
+   "bbox": [
+    73.4,
+    404.2,
+    407.7,
+    766.3
+   ],
+   "w": 1393,
+   "h": 1509,
+   "dpi": 300,
+   "src": "5. Sup) Dimension-controlled solid oxide electrolytes for all-solid-state electrodes Percolation pathways, specific contact area, and effective ionic conductivity.pdf",
+   "blank": 0.944
+  }
+ ],
+ "missing_labels": []
+}

@@ -1,0 +1,293 @@
+{
+ "slug": "kaiser2018_ion_transport_limitations_assb_sulfide_electrodes",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-03",
+ "sources": [
+  "8. Ion transport limitations in all-solid-state lithium battery electrodes containing a sulfide-based electrolyte.pdf",
+  "8. Sup) Ion transport limitations in all-solid-state lithium battery electrodes containing a sulfide-based electrolyte.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Non-Faradaic transmission line equivalent circuit for a composite electrode with negligible electronic resistance.",
+   "rotated_deg": 0,
+   "bbox": [
+    93.2,
+    51.0,
+    502.2,
+    178.1
+   ],
+   "w": 1705,
+   "h": 531,
+   "dpi": 300,
+   "src": "8. Ion transport limitations in all-solid-state lithium battery electrodes containing a sulfide-based electrolyte.pdf",
+   "blank": 0.119
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Determination of the ion transport resistance of a composite electrode in a Li metal | electrolyte | composite electrode | electrolyte | Li metal setup. A) Charge transport at high frequencies; B) Charge transport at low frequencies.",
+   "rotated_deg": 0,
+   "bbox": [
+    300.6,
+    196.5,
+    563.7,
+    576.2
+   ],
+   "w": 1097,
+   "h": 1583,
+   "dpi": 300,
+   "src": "8. Ion transport limitations in all-solid-state lithium battery electrodes containing a sulfide-based electrolyte.pdf",
+   "blank": 0.467
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Schematic illustrations and cross-sectional optical microscopy images of all measurement setups. A) Type-A cells: Symmetrical cells with the layers: composite electrode|electrolyte|composite electrode were employed for TLM-based measurements; B) Type-B cells: Symmetrical cells with the layers: lithium metal |electro- lyte|composite electrode|electrolyte|lithium metal were used to measure the Li+ current through the composite electrode under electron-blocking conditions; C) Type-C cells: Symmetrical cells with the layers: lithium metal | electrolyte | composite electrode| electrolyte | composite electrode | electrolyte | lithium metal were employed to carry out both types of measurements on the same composite electrodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    51.0,
+    563.7,
+    246.0
+   ],
+   "w": 2218,
+   "h": 814,
+   "dpi": 300,
+   "src": "8. Ion transport limitations in all-solid-state lithium battery electrodes containing a sulfide-based electrolyte.pdf",
+   "blank": 0.489
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Impedance spectra obtained for symmetrical type-A cells shown in Fig. 3A, with diﬀerent thickness of both composite electrode layers, dcomposites. In order to facilitate the comparison of the spectra, the electrolyte resistance Relectrolyte was subtracted. Interfacial resistances between the layers were not detectable. The solid lines represent the best ﬁts to Eq. (5). The total ionic conductivity of the pure electrolyte was σion,electrolyte,25 °C = 0.68 mS cm−1.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    302.1,
+    294.7,
+    510.2
+   ],
+   "w": 1097,
+   "h": 868,
+   "dpi": 300,
+   "src": "8. Ion transport limitations in all-solid-state lithium battery electrodes containing a sulfide-based electrolyte.pdf",
+   "blank": 0.952
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Dependence of the ionic resistance of the composite electrodes, Rion, on the thickness of both composite electrode layers, dcomposites, for a volume fraction of the solid electrolyte of ε = 0.66.",
+   "rotated_deg": 0,
+   "bbox": [
+    300.6,
+    302.1,
+    563.7,
+    507.4
+   ],
+   "w": 1097,
+   "h": 857,
+   "dpi": 300,
+   "src": "8. Ion transport limitations in all-solid-state lithium battery electrodes containing a sulfide-based electrolyte.pdf",
+   "blank": 0.964
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 5,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Impedance spectrum for a type-B cell shown in Fig. 3B. The spectrum was recorded in a frequency range from 0.5 MHz to 70 mHz on a sample with a volume fraction of the solid electrolyte of ε = 0.66. The average thickness of the composite-electrode was 393 μm, and the ionic conductivity of the pure elec- trolyte was σion,electrolyte,25 °C = 0.81 mS cm−1. The solid line represents the best ﬁt to Eq. (12).",
+   "rotated_deg": 0,
+   "bbox": [
+    300.6,
+    553.2,
+    563.7,
+    678.3
+   ],
+   "w": 1097,
+   "h": 523,
+   "dpi": 300,
+   "src": "8. Ion transport limitations in all-solid-state lithium battery electrodes containing a sulfide-based electrolyte.pdf",
+   "blank": 0.942
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 6,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Comparison of a TLM-based impedance measurement (black squares) and a Li+ current measurements under electron-blocking conditions (blue cir- cles) for a sample with a volume fraction of the solid electrolyte of ε = 0.66. The LPSI electrolyte resistance was subtracted from both spectra. The solid lines represent the best ﬁts to Eq. (5) and to Eq. (12), respectively. The thickness of both composite electrodes was 780 μm, and the ionic conductivity of the pure electrolyte was σion,electrolyte,25 °C = 0.78 mS cm−1. (For interpretation of the references to colour in this ﬁgure legend, the reader is referred to the Web version of this article.)",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    51.0,
+    294.7,
+    256.4
+   ],
+   "w": 1097,
+   "h": 857,
+   "dpi": 300,
+   "src": "8. Ion transport limitations in all-solid-state lithium battery electrodes containing a sulfide-based electrolyte.pdf",
+   "blank": 0.957
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 6,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. A) Relation between eﬀective tortuosity τeff and volume fraction of the solid electrolyte, ε , obtained from the TLM-based measurements (black squares) and from the Li+ current measurements under electron-blocking condition (blue circles). The Bruggeman exponent α was determined from the linear ﬁt in the log-log plot in a volume fraction range = ε 0.4 – 0.66. B) Eﬀective ionic conductivity of the composite electrode calculated from the Li+ current measurements under electron- blocking condition as illustrated in Fig. 3B. The blue dots represent the data measured in this study. The orange squares refer to composite electrodes with the same eﬀective tortuosities, but with the solid electrolyte Li7P2S8I replaced by Li10GeP2S12 exhibiting an ionic conductivity of σion,electrolyte,25 °C = 10 mS cm−1. The dashed line refers to an eﬀective lithium ion conductivity of 10−4 mS cm−1, which",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    472.9,
+    563.7,
+    667.1
+   ],
+   "w": 2218,
+   "h": 810,
+   "dpi": 300,
+   "src": "8. Ion transport limitations in all-solid-state lithium battery electrodes containing a sulfide-based electrolyte.pdf",
+   "blank": 0.962
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 3,
+   "file": "fig_S1.png",
+   "caption": "Fig. S1: Impedance spectrum (Bode plot) of a composite electrode with ε = 0.66 between two stainless steel electrodes.The applied pressure was fixed to 4 t/cm². The sample thickness was 231 µm.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    536.1,
+    532.5,
+    729.2
+   ],
+   "w": 1949,
+   "h": 806,
+   "dpi": 300,
+   "src": "8. Sup) Ion transport limitations in all-solid-state lithium battery electrodes containing a sulfide-based electrolyte.pdf",
+   "blank": 0.97
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 4,
+   "file": "fig_S2.png",
+   "caption": "Fig. S2: Cross-sectional FIB-SEM image of the composite anode with 𝜀= 0.665.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    262.8,
+    484.9,
+    584.1
+   ],
+   "w": 1751,
+   "h": 1339,
+   "dpi": 300,
+   "src": "8. Sup) Ion transport limitations in all-solid-state lithium battery electrodes containing a sulfide-based electrolyte.pdf",
+   "blank": 0.275
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 2,
+   "file": "tab_S1.png",
+   "caption": "Table S1: Electrode composition for electrolyte volume fraction ε = 0.665. Compound ρ [g/cm3] wt% Vol%",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    264.3,
+    529.4,
+    469.3
+   ],
+   "w": 1932,
+   "h": 855,
+   "dpi": 300,
+   "src": "8. Sup) Ion transport limitations in all-solid-state lithium battery electrodes containing a sulfide-based electrolyte.pdf",
+   "blank": 0.949
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 2,
+   "file": "tab_S2.png",
+   "caption": "Table S2: Electrode composition for electrolyte volume fraction ε = 0.493 Compound ρ [g/cm3] wt% Vol%",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    482.4,
+    529.4,
+    687.3
+   ],
+   "w": 1932,
+   "h": 855,
+   "dpi": 300,
+   "src": "8. Sup) Ion transport limitations in all-solid-state lithium battery electrodes containing a sulfide-based electrolyte.pdf",
+   "blank": 0.949
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 3,
+   "file": "tab_S3.png",
+   "caption": "Table S3: Electrode composition for ε = 0.398. Compound ρ [g/cm3] wt% Vol%",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    67.7,
+    529.3,
+    272.7
+   ],
+   "w": 1932,
+   "h": 855,
+   "dpi": 300,
+   "src": "8. Sup) Ion transport limitations in all-solid-state lithium battery electrodes containing a sulfide-based electrolyte.pdf",
+   "blank": 0.951
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 3,
+   "file": "tab_S4.png",
+   "caption": "Table S4: Electrode composition for ε = 0.297. Compound ρ [g/cm3] wt% Vol%",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    285.8,
+    529.3,
+    490.8
+   ],
+   "w": 1932,
+   "h": 855,
+   "dpi": 300,
+   "src": "8. Sup) Ion transport limitations in all-solid-state lithium battery electrodes containing a sulfide-based electrolyte.pdf",
+   "blank": 0.952
+  }
+ ],
+ "missing_labels": []
+}

@@ -4421,24 +4421,36 @@ Faraday FutureCat; 2026-09-26 추가; 원장 **SELF-51** 뿌리 감사 — [Sedl
 > 상세: digest §3.4 · §8 ③ · §12 D6.
 
 
-## J. tortuosity 정의 묶음 — **같은 양 · 다른 이름** (2026-10-03 신설, 7 편)
+## J. tortuosity 정의 묶음 — **같은 양 · 다른 이름** (2026-10-03 신설 7 편 · 같은 날 10 편 추가 = 17 편)
 
 > 문헌마다 같은 양을 τ 로도 τ² 로도 부른다. 이 절은 **양**으로 묶고 이름은 원문 그대로 병기한다.
-> 우리 쪽 정의: 웹앱 τ_Lap,eff = √(φ_SE·σ₀/σ_full) (`webapp/app.py:2610` · σ_full = 전체 단면 정규화 `scripts/network_conductivity.py:857`).
+> 우리 쪽 정의: 웹앱 τ_Lap,eff = √(φ_SE·σ₀/σ_full) (`webapp/app.py:2610` · σ_full = 전체 단면 정규화 `scripts/network_conductivity.py:857`).  φ_SE = **모든** SE 구 부피 합 ÷ 전극 부피 (비관통 SE 포함 · 겹침 이중계상 — `scripts/dem_analysis_core.py:1128–1129`).
+> ★ **τ 명명 규약 비준 (2026-10-03 · 메인 리포 CLAUDE.md ★★ τ 블록)**: 키 `f_ion_<mode>` · `tau2_ion_<mode>` (옛 이름 T) · `tau_ion_<mode>` · `tau_geo_SE_dij`.  'tortuosity factor' 는 tau2 에만 쓴다.
 
 | 양 (우리 기호) | 정의 | 문헌 이름 (원문) | 카드 |
 |---|---|---|---|
-| f | σ_eff/σ₀ | ε/τ² "diffusibility" (Tjaden) · f_e = ε/τ_F (COMSOL 5.6 Eq 6-6) · 1/N_M | `tjaden2018_…` · `landesfeind2016_…` |
-| T (키 `tau2` 권고) | φ·σ₀/σ_eff = φ/f | κ = τ² "tortuosity factor" (Tjaden · Bielefeld 2020 · Minnmann 2021 보고값) · τ (Landesfeind Eq 5 N_M = τ/ε · TauFactor `TauFactor.m:3495` · Nguyen Eq 1 · Park 2020 SI Fig S9 · COMSOL τ_F) | 7 편 전부 |
-| τ_flux = √T | √(φσ₀/σ_eff) | τ (Tjaden 식 3) · τ_i (Minnmann) | `tjaden2018_…` · `minnmann2021_…` |
-| τ_geo | 최단 경로 / 두께 | τ = Δl/Δx (Tjaden 식 1) · τ_path (Landesfeind Eq 3) · τ_i = l_i/l₀ (Minnmann Eq 3) | 우리 τ_Dij · τ_Dij,all · 벽 τ |
-| τ_e (우리에 없음) | R_ion·A·κ₀·ε/L (대칭셀 EIS-TLM · 이중층 경계) | electrode tortuosity factor (Nguyen Eq 2) · Landesfeind Eq 13 의 τ | `nguyen2020_…` · `landesfeind2016_…` |
+| f | σ_eff/σ₀ | ε/τ² "diffusibility" (Tjaden) · f_e = ε/τ_F (COMSOL 5.6 Eq 6-6) · 1/N_M · 1/N_m (Park 2019 p.124: N_m = τ/ε = σ₀/σ_eff) | `tjaden2018_…` · `landesfeind2016_…` · `park2019_…` |
+| **tau2** (옛 이름 T · 키 `tau2_ion_<mode>`) | φ·σ₀/σ_eff = φ/f | κ = τ² "tortuosity factor" (Tjaden · Bielefeld 2020 · Minnmann 2021 보고값) · τ (Landesfeind Eq 5 N_M = τ/ε · TauFactor `TauFactor.m:3495` · Nguyen Eq 1 · Park 2020 SI Fig S9 · COMSOL τ_F) · τ_exp = τ_elc 'electrical tortuosity' (Holzer Eq 2) · τ_FEM (Ender Eq 2) · 'tortuosity' τ (Froboese Eq 15) · τ_eff 'effective tortuosity' (Kaiser Eq 2 — 2021 같은 그룹은 τ²) · τ_cond · τ_diff (Hlushkou Eq 3 · Eq 9) · τ (Landesfeind 2018 Eq 9) · τ = ε·N_m (Park 2019) · j = (εσ/τ)∇φ 의 τ (Park 2020 CEJ SI Fig S2) · PI τ (Pouraghajan Eq 1–2) · Minnmann R_ion 의 원전 = Siroma 표 3 T형 open–open (DC → L·z_A, 관통) | 7 편 + 이번 10 편 |
+| tau = √tau2 (키 `tau_ion_<mode>` · 웹앱 τ_Lap,eff) | √(φσ₀/σ_eff) | τ (Tjaden 식 3) · τ_i (Minnmann) | `tjaden2018_…` · `minnmann2021_…` |
+| τ_geo (키 `tau_geo_SE_dij`) | 최단 경로 / 두께 | τ = Δl/Δx (Tjaden 식 1) · τ_path (Landesfeind Eq 3) · τ_i = l_i/l₀ (Minnmann Eq 3) · τ_geom (Ender) · τ_geo = skeleton Dijkstra ÷ 입출구 거리 (Holzer) | 우리 τ_Dij · τ_Dij,all · 벽 τ · `ender2011_…` · `holzer2013_…` |
+| τ_e (우리에 없음) | R_ion·A·κ₀·ε/L (대칭셀 EIS-TLM · 이중층 경계) | electrode tortuosity factor (Nguyen Eq 2) · Landesfeind Eq 13 의 τ · Landesfeind 2018 EIS τ (차단 대칭셀) · Kaiser TLM τ · Pouraghajan BE τ (eSCM) · Siroma Z/E형 (z_C = 0) 저주파 L·z_A/3 (de Levie) | `nguyen2020_…` · `landesfeind2016_…` · `landesfeind2018_…` · `kaiser2018_…` · `pouraghajan2018_…` · `siroma2015_…` |
+| (우리 열 없음) | δ = τ_geo/τ_exp (τ_geo 1 승) · β = (r_min/r_max)² | constrictivity δ · constriction factor β (Holzer Eq 3 · Fig 15 사인 맞춤 a 0.3 · b 0.7) — **FULL/CF 는 δ 도 β 도 아니다** (영문 이름에 constrictivity 금지) | `holzer2013_…` |
 
-- ⛔ **COMSOL Tortuosity 칸 = T** (√T 아님). 웹앱 · 내보내기의 "COMSOL/EIS input = τ_Lap,eff" 표기는 √T 라 그대로 넣으면 σ_eff 가 √T 배 과대 (stoic-knuth 쪽 판단 메모 · 정정 비준 대기).
+- ⛔ **COMSOL Tortuosity 칸 = tau2** (√ 값 아님). 웹앱 · 내보내기의 "COMSOL/EIS input = τ_Lap,eff" 표기는 √ 값이라 그대로 넣으면 σ_eff 가 √tau2 배 과대 — 메인 리포 결함 `TAU-01` (P1) · 정정 방침 1저자 비준 2026-10-03 (결정 16 · 권고대로: 지금 표기 제거 · 이미 전달한 배포 v1 · v1.1 열 사전은 정오표 (값 불변) · v1.2 에서 문구 교체).  1저자 10-03: 지금까지 COMSOL 에 τ_Lap,eff 를 넘긴 적 없음 → COMSOL 런 소급 정정 대상 없음.
 - 같은 시료에서 τ_flux / τ_geo = 1.24–1.59 (Tjaden 표 4·5) — 기하 τ 로 수송을 대신하지 않는다.
-- 전고체 복합양극 T: Minnmann τ_ion² 2.40–130 (φ_NCM 25–61 %, SI Table S2) · Park 2020 측정 σ_eff 역산 4.3 / 11 / 21 (추세 전용) — Bruggeman 의 2.8–65×.
-- σ₀ 기준이 문헌마다 다르다: Minnmann = 순수 SE 펠릿 1.6 mS/cm @25 °C (순수 τ² ≡ 1) · Park = 조성 의존식 (Table S1) · 우리 = σ_grain 3.0 (펠릿, CL-91). **T 를 비교하기 전에 σ₀ 를 맞춘다.**
+- 전고체 복합양극 tau2: Minnmann τ_ion² 2.40–130 (φ_NCM 25–61 %, SI Table S2) · Park 2020 측정 σ_eff 역산 4.3 / 11 / 21 (추세 전용) — Bruggeman 의 2.8–65×.
+- σ₀ 기준이 문헌마다 다르다: Minnmann = 순수 SE 펠릿 1.6 mS/cm @25 °C (순수 τ² ≡ 1) · Park = 조성 의존식 (Table S1) · 우리 = σ_grain 3.0 (펠릿, CL-91). **tau2 를 비교하기 전에 σ₀ 를 맞춘다.**
+- **TauFactor Python 판** (`tldr-group/taufactor` · MIT · © 2023 Isaac Squires — 카드 `taufactor_…` 는 MATLAB 2016 v1.10 + 1.424.0 대조만 다룬다): main `ac1a4d3` 의 `taufactor/solvers/classic.py` — L23 경계값 (−0.5, 0.5) · L46 `D_rel = mean_fl·Nx/|Δbc|` · L47–48 `tau = D_mean/D_rel` · L132 `D_mean = mean(vol_x)` (= 비연결 포함 **전체** 전도상 분율, `base.py:265–281`) · L70 `D_eff = D_0·D_rel` ⇒ **tau = ε·D₀/D_eff = 우리 tau2** (이진상; 다상은 L317 `D_mean = Σ VF·D`).  비관통: 반복 중 `tau = 0` (`classic.py:62–66`) → 수렴 시 `inf` (`base.py:194`) — ⚠ 수렴 전 `tau_t` 기록에는 비관통 원소가 0 으로 남는다 (0 을 '굴곡 없음' 으로 읽지 말 것 · 우리 규약 = N/A).  ε 는 복셀 합집합 분율이고 우리 φ_SE 는 구 부피 합 (겹침 이중계상) — 같은 '전체 상' 규약이지만 겹침만큼 다르다 (복셀 대조 시 같은 φ 로 다시 정규화).  커밋 `23cf471` (2026-10-02 · *"surface tau history"*) = 수렴 검사 (100 반복) 마다 `tau_t` 를 **항상** 기록 (옛 판은 debug 모드에서만 · 그때만 초기화) · 시험 `test_solver_records_tau_history_without_debug` · PR #135 (`ac1a4d3`) 로 main 병합 · **v1.2.1 (2026-01-13 · `14a7a50`) 에 없음 · HEAD `pyproject.toml` 도 1.2.1 = 미배포**.  ⇒ 복셀 수송 교차검증 (결정 11 의 복셀 ÷ 망 대조 · STEP3 τ) 에 쓸 때는 **1.2.1 다음 릴리스를 watch** 하고 판을 고정한다 (1저자 10-03 권고 · 메인 확인 = 클론 정적 읽기).
 - 원문 오식: Minnmann 2021 Eq 4 인쇄본 역수 누락 (보고값은 φσ₀/σ_eff) · Landesfeind Table II Separion 행 내적 불일치 · Tjaden 표 4 Shearing 행 방법 표기.
+- **10 편 추가에서 나온 것 (10-03)**
+  - **EIS 표기는 연결형까지 적는다** (Siroma 표 2–4): 균질 1D 에선 T형 (관통 · DC L·z_A) 과 Z형 (차단 · 저주파 L·z_A/3) 이 같은 z_A 를 준다 → τ_e ≠ 관통 τ 는 균질 가정이 깨질 때만 생긴다.  "R_ion = 3·R_eff" 는 균일 r · c · z_C = 0 일 때만 정확 (2 층 3:1 예 ±37.5 % · 카드 §10) · 실험 앵커엔 고상 β 보정 (Pouraghajan: β 무시 시 [(1+β) − 3β/(1+β)] 배).  Minnmann 인쇄 식 [1] 의 앞계수 z_el² 는 이온 차단 (SS) 셀 판 — 이온 셀엔 z_ion² 판.
+  - **기준 상태가 tau2 한 이름 아래 셋이다** — Park 2019 · 2020 (치밀 고유 σ = 1 · 문헌 입력 σ₀) · 펠릿 ≡ 1 (Minnmann · Kaiser · Hlushkou · Froboese — 펠릿 압밀이 서로 다르다: Kaiser · Hlushkou 276 MPa · 30 min · Froboese 732 MPa 고분자 · 복합체 Kaiser 392 MPa · 5 min) · 우리 (펠릿 σ₀ 3.0 위 Holm).  Froboese 순수 펠릿 τ = φ_pure 0.956 → 정규화 목표가 1 인지 φ_pure 인지도 사전등록 항목 (결정 4).
+  - **연속체 tau2 ≥ 1**: Ender τ_FEM ≥ 1 (세 상) · Hlushkou 1.27 / 1.74 · Park 전부 · Holzer Eq 2 (일정 반경 원기둥 τ ≥ 1) → 우리 CF 가지 T < 1 (26/157) = 원기둥 bulk 산물 판정과 맞다 (결정 11).
+  - **flux ÷ 기하 순서는 √ 척도에서 반례가 있다**: Ender √τ_FEM/τ_geom 0.71–0.87 · Holzer √τ_elc/τ_geo 0.76–1.46 (격막 8 점) → 위 Tjaden 1.24–1.59 를 일반 법칙으로 쓰지 않는다 · CF 결함의 근거는 T_CF < 1 (Wiener) 로 둔다.  Holzer 틀에서는 연속상 τ_eff/τ_geo 격차 자체가 협착 δ 다 → 웹앱 "Constriction overhead" 는 **접촉 (Holm) 협착 배수**로 읽을 수 없다는 뜻으로 한정.
+  - **τ_e ↔ conventional 실측 셋**: Kaiser (ASSB · ε ≥ 0.4 에서 ±25 % · ε 0.3 에서 TLM ≈7× (판독) — 문턱 근처 갈림 1 사례) · Pouraghajan (액체 · 같은 전극 차 불확도 안 · 부호 섞임) · Landesfeind 2018 (EIS ÷ XTM 1.51–2.31 = CBD 해상도 차 · 정의 차는 강구에서 ≲ 4 %) → 결정 13 "부호 불정" 유지.
+  - **Park σ₀ 조성식 (−4.45·10⁻³·ε_s + 4.64·10⁻³) 출처**: Froboese 2019 · Park 2019 · Park 2020 CEJ 셋 다 아님 (원문 전수 확인) → `[미확인]` · Park 역산 T = 추세 전용 유지.  Park 2020 CEJ 의 SE 는 **산화물 LLZO-Ta · 흑연 음극** · Park 2019 는 흑연 + LSTP 음극 — 우리 LPSCl/NCM 과 이전 한계.
+  - **Holzer 2013 에 M-factor (ε·β/τ²) 꼴 · 지수는 없다** (기대와 다름) · 분해식의 τ_geo 는 1 승 (Eq 11 · Fig 16).  Froboese 는 고분자 (PEO:LiTFSI) + 비활성 유리구 모델계 · 입경비 효과는 공정 기공과 교란 → 메모 결론 ④ 의 "입경비 지배" 는 "방향이 맞는 후보 중 하나" 로.
+  - **원문 오식 · 불일치 추가** (각 카드 §10): Holzer Eq 8 역수 · Eq 9 부호 · "β = 1.77" · Froboese 인쇄 τ 791 (재계산 ≈80 — 인용 금지) · Pouraghajan z_c/z_cc 뒤바뀜 · 유한 Z₀ 가지 (재유도 전 사용 금지) · Park 2019 σ_eff 본문 ↔ 그림 · Park 2020 CEJ Table S3 ↔ 그림 4 건 · Hlushkou 1.34 ↔ 1.365 · Ender 질량 열 합 · Landesfeind 2018 R_Ion 전극 수 규약 · κ-불변 평균이 2016 원문과 다름.
 - LHS-25 (접촉 면적 합의 표면 한도): Arzt 1982 는 impingement 이후 규칙을 주지 않는다 — 후보 A (입자별 표면 예산) · B (라게르 면 상한) 는 `arzt1982_…` §LHS-25.
 
 ## 🗨️ Q&A 로그
