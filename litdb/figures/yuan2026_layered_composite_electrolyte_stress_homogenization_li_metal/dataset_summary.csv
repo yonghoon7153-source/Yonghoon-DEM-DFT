@@ -1,0 +1,133 @@
+# Derived summary for Yuan et al. Nat. Commun. 2026 (Article in Press, DOI 10.1038/s41467-026-78129-0) — Supplementary Data:
+#   Sup2 zip 'DFT_after geometry optimization' (7 files: 3 xlsx molecules + 4 cif slabs) · Sup3 xlsx source data (22 sheets).
+# !! literature data and litdb-curator re-analysis of it (2026-10-04) — NOT Yonghoon-DEM-DFT campaign results. 'derived_*' / 'sup2_audit' rows are our arithmetic on the authors' files; cite as such.
+# Tools: openpyxl (read-only) · Python stdlib. Digest: litdb/papers/yuan2026_layered_composite_electrolyte_stress_homogenization_li_metal.md §11.
+section,quantity,series,value,unit,method_note
+sup3_sheet,Figure 1,"main Fig. 1a (time, voltage; time, normalized stress) · 1b (5x5 stress maps, 5th and 25th cycle) · 1f (FEM stress vs normalized time)",A1:R72003,cell range,
+sup3_sheet,Figure 3,"main Fig. 3b-g (nanoindentation modulus/hardness vs depth, 3 tests + mean + SD; 4x4 map points)",A1:AD18,cell range,
+sup3_sheet,Figure 4,"main Fig. 4a-g (Arrhenius, DSC, LSV, t+ i-t + EIS before/after, 7Li NMR, Raman, FTIR)",A1:AT7472,cell range,Fig. 4h DFT values are NOT in the source data
+sup3_sheet,Figure 5,"main Fig. 5a,b (symmetric cells 60/30 °C) · 5g (XPS Li 1s, O 1s) · 5h (layered pouch normalized stress, voltage) · 5i (5x5 maps)",A1:AH374892,cell range,
+sup3_sheet,Figure 6,"main Fig. 6a-e (rate, 1C 60 °C, curves, 0.2C 30 °C, pouch)",A1:AG503,cell range,
+sup3_sheet,Figure S9c,"SI Fig. S9c (layered SPE FEM stress vs normalized time, 0-0.49)",A1:B52,cell range,
+sup3_sheet,Figure S17,SI Fig. S17 (XRD of SiO2 NS),A1:B4250,cell range,
+sup3_sheet,Figure S18,SI Fig. S18 (Raman of SiO2 NS),A1:B1740,cell range,
+sup3_sheet,Figure S19,SI Fig. S19 (EPR of SiO2 NS),A1:D1027,cell range,
+sup3_sheet,Figure S20,"SI Fig. S21 (SiO2 NS load-depth, experiment + fit)",A1:D1027,cell range,sheet name is one number below the SI figure it feeds
+sup3_sheet,Figure S21,"SI Fig. S25c (electrolyte nanoindentation load-displacement, 5 traces) [inferred from axes]",A1:J3035,cell range,sheet name does not match SI numbering
+sup3_sheet,Figure S22,SI Fig. S26b (tensile stress-strain bare/layered),A1:D60973,cell range,sheet name does not match SI numbering
+sup3_sheet,Figure S27,"SI Fig. S27 (toughness vs breaking strength, 14 refs + this work)",A1:C17,cell range,"columns = (toughness, breaking strength); Table S11 header says the reverse for the reference rows"
+sup3_sheet,Figure S28,SI Fig. S28 (EIS 25-80 °C layered-0.3 / bare),A1:AC84,cell range,
+sup3_sheet,Figure S29,"SI Fig. S29 (Ea bars: bare 0.53, 0.2: 0.47, 0.3: 0.39, 0.4: 0.56)",A1:B6,cell range,labels typed 'SiO3'/'SiO4'
+sup3_sheet,Figure S30,SI Fig. S30 (TGA),A1:D12003,cell range,
+sup3_sheet,Figure S31,SI Fig. S31 (bare SPE t+: i-t + EIS before/after),A1:F5003,cell range,
+sup3_sheet,Figure S33,SI Fig. S33 (symmetric 0.2 mA/cm2 60 °C + calendar-aging EIS 0-30 d),A1:AA154460,cell range,inner header says 'Figure S32a/b' (older numbering)
+sup3_sheet,Figure S35,"SI Fig. S35 (XPS C 1s, O 1s, S 2p)",A1:L405,cell range,inner header says 'Figure S33a' (older numbering)
+sup3_sheet,Figure S37,SI Fig. S37 (rate charge/discharge curves),A1:J841,cell range,
+sup3_sheet,Figure S38,SI Fig. S38 (1st-400th discharge curves),A1:J2030,cell range,
+sup3_sheet,Figure S40,"SI Fig. S40 (comparison: sigma, t+, cycles; = Table S12 values)",A1:D19,cell range,
+sup3_sheet,(no sheet),"SI Fig. S2-S8, S10-S16, S23-S26 photos/schematics/simulation snapshots; Fig. S32 CDD; all Tables",,,no numeric source data for FEM/PFM fields or DFT energies
+sup2_structure,supplementary data 4_amorphous SiO2.cif,O78Si48,126,atoms,"P1 cell 17.0191 x 9.8260 x 30.7805 A, 90/90/90; atoms span z 1.06-12.36 A (vacuum ~19.5 A); Si coordination by O (<2.0 A) = {1: 1, 2: 7, 3: 20, 4: 20}"
+sup2_structure,supplementary data 5_amorphous SiO2-TFSI-.cif,C2F6N1O82S2Si48,141,atoms,"P1 cell 17.0191 x 9.8260 x 30.7805 A, 90/90/90; atoms span z 1.06-17.13 A (vacuum ~14.7 A); Si coordination by O (<2.0 A) = {1: 1, 2: 7, 3: 20, 4: 20}"
+sup2_structure,supplementary data 6_crystalline SiO2.cif,O96Si48,144,atoms,"P1 cell 17.0191 x 9.8260 x 30.7805 A, 90/90/90; atoms span z 1.48-12.67 A (vacuum ~19.6 A); Si coordination by O (<2.0 A) = {2: 2, 3: 3, 4: 43}"
+sup2_structure,supplementary data 7_crystalline SiO2-TFSI.cif,C2F6N1O100S2Si48,159,atoms,"P1 cell 17.0191 x 9.8260 x 30.7805 A, 90/90/90; atoms span z 1.48-17.19 A (vacuum ~15.1 A); Si coordination by O (<2.0 A) = {2: 2, 3: 4, 4: 42}"
+sup2_structure,supplementary data 1_TFSI-.xlsx,C2F6N1O4S2,15,atoms,"Cartesian 'Final Coordinates (Angstroms)' from Materials Studio, no cell (isolated molecule)"
+sup2_structure,supplementary data 2_PEO.xlsx,C14H30O8,52,atoms,"Cartesian 'Final Coordinates (Angstroms)' from Materials Studio, no cell (isolated molecule)"
+sup2_structure,supplementary data 3_PEO-TFSI-.xlsx,C16F6H30N1O12S2,67,atoms,"Cartesian 'Final Coordinates (Angstroms)' from Materials Studio, no cell (isolated molecule)"
+sup2_audit,closest TFSI-slab contact (5_amorphous SiO2-TFSI-),O133-Si63,1.763,A,our measurement on the deposited structure
+sup2_audit,2nd closest TFSI-slab contact (5_amorphous SiO2-TFSI-),O133-O115,2.74,A,
+sup2_audit,O neighbours (<2.3 A) of the binding Si in the clean slab (4_amorphous SiO2),Si63,1,count,amorphous: the TFSI O binds the single 1-coordinated Si of the slab
+sup2_audit,closest TFSI-slab contact (7_crystalline SiO2-TFSI),N147-Si71,1.819,A,our measurement on the deposited structure
+sup2_audit,2nd closest TFSI-slab contact (7_crystalline SiO2-TFSI),O151-O133,2.696,A,
+sup2_audit,O neighbours (<2.3 A) of the binding Si in the clean slab (6_crystalline SiO2),Si71,4,count,crystalline: TFSI N takes the place of a slab O (Si71-O99 1.817 A -> Si71-N 1.819 A)
+sup2_audit,S-O bond lengths in adsorbed TFSI (amorphous model),O133 is the Si-bound O,1.455/1.455/1.473/1.600,A,the Si-bound O stretches S-O by ~0.15 A = covalent Si-O-S bridge
+sup2_audit,O deficiency of the amorphous slab,Si48O78 vs Si48O96,18.75,% of O missing,SiO1.625; 28 of 48 Si under-coordinated
+derived_sigma,sigma at 25 °C,Bare SPE,2.17e-05,S/cm,10^(log sigma) from Fig. 4a source data
+derived_sigma,sigma at 30 °C,Bare SPE,2.7e-05,S/cm,10^(log sigma) from Fig. 4a source data
+derived_sigma,sigma at 60 °C,Bare SPE,0.000233,S/cm,10^(log sigma) from Fig. 4a source data
+derived_Ea,Arrhenius slope Ea 25-80 °C (7 pts),Bare SPE,0.534,eV,least squares on log10 sigma vs 1000/T; R2=0.9788; our refit
+derived_Ea,Arrhenius slope Ea 25-40 °C (3 pts),Bare SPE,0.722,eV,least squares on log10 sigma vs 1000/T; R2=0.9651; our refit
+derived_Ea,Arrhenius slope Ea 60-80 °C (3 pts),Bare SPE,0.388,eV,least squares on log10 sigma vs 1000/T; R2=0.9986; our refit
+reported_Ea,Fig. S29 bar value,Bare SPE,0.53,eV,
+derived_sigma,sigma at 25 °C,Layered SPE-0.2SiO2,6.62e-05,S/cm,10^(log sigma) from Fig. 4a source data
+derived_sigma,sigma at 30 °C,Layered SPE-0.2SiO2,8.74e-05,S/cm,10^(log sigma) from Fig. 4a source data
+derived_sigma,sigma at 60 °C,Layered SPE-0.2SiO2,0.000732,S/cm,10^(log sigma) from Fig. 4a source data
+derived_Ea,Arrhenius slope Ea 25-80 °C (7 pts),Layered SPE-0.2SiO2,0.562,eV,least squares on log10 sigma vs 1000/T; R2=0.9864; our refit
+derived_Ea,Arrhenius slope Ea 25-40 °C (3 pts),Layered SPE-0.2SiO2,0.664,eV,least squares on log10 sigma vs 1000/T; R2=0.9844; our refit
+derived_Ea,Arrhenius slope Ea 60-80 °C (3 pts),Layered SPE-0.2SiO2,0.427,eV,least squares on log10 sigma vs 1000/T; R2=0.9225; our refit
+reported_Ea,Fig. S29 bar value,Layered SPE-0.2SiO2,0.47,eV,0.2/0.4 bars are swapped relative to the Fig. 4a data refit
+derived_sigma,sigma at 25 °C,Layered SPE-0.3SiO2,0.000232,S/cm,10^(log sigma) from Fig. 4a source data
+derived_sigma,sigma at 30 °C,Layered SPE-0.3SiO2,0.000329,S/cm,10^(log sigma) from Fig. 4a source data
+derived_sigma,sigma at 60 °C,Layered SPE-0.3SiO2,0.00163,S/cm,10^(log sigma) from Fig. 4a source data
+derived_Ea,Arrhenius slope Ea 25-80 °C (7 pts),Layered SPE-0.3SiO2,0.392,eV,least squares on log10 sigma vs 1000/T; R2=0.9584; our refit
+derived_Ea,Arrhenius slope Ea 25-40 °C (3 pts),Layered SPE-0.3SiO2,0.571,eV,least squares on log10 sigma vs 1000/T; R2=0.9998; our refit
+derived_Ea,Arrhenius slope Ea 60-80 °C (3 pts),Layered SPE-0.3SiO2,0.185,eV,least squares on log10 sigma vs 1000/T; R2=0.9779; our refit
+reported_Ea,Fig. S29 bar value,Layered SPE-0.3SiO2,0.39,eV,
+derived_sigma,sigma at 25 °C,Layered SPE-0.4SiO2,5.53e-05,S/cm,10^(log sigma) from Fig. 4a source data
+derived_sigma,sigma at 30 °C,Layered SPE-0.4SiO2,6.27e-05,S/cm,10^(log sigma) from Fig. 4a source data
+derived_sigma,sigma at 60 °C,Layered SPE-0.4SiO2,0.000363,S/cm,10^(log sigma) from Fig. 4a source data
+derived_Ea,Arrhenius slope Ea 25-80 °C (7 pts),Layered SPE-0.4SiO2,0.474,eV,least squares on log10 sigma vs 1000/T; R2=0.9925; our refit
+derived_Ea,Arrhenius slope Ea 25-40 °C (3 pts),Layered SPE-0.4SiO2,0.459,eV,least squares on log10 sigma vs 1000/T; R2=0.9593; our refit
+derived_Ea,Arrhenius slope Ea 60-80 °C (3 pts),Layered SPE-0.4SiO2,0.416,eV,least squares on log10 sigma vs 1000/T; R2=0.9413; our refit
+reported_Ea,Fig. S29 bar value,Layered SPE-0.4SiO2,0.56,eV,0.2/0.4 bars are swapped relative to the Fig. 4a data refit
+hop_check,"Gamma = nu0 exp(-Ea/kT), Ea 0.39 eV",T 303.15 K,3.28e+06,1/s,"nu0 1e13 1/s assumed; 1/Gamma = 3.05e-07 s; apparent Arrhenius slope of a polymer conductor, not a single-hop barrier"
+hop_check,"Gamma = nu0 exp(-Ea/kT), Ea 0.39 eV",T 333.15 K,1.26e+07,1/s,"nu0 1e13 1/s assumed; 1/Gamma = 7.94e-08 s; apparent Arrhenius slope of a polymer conductor, not a single-hop barrier"
+hop_check,"Gamma = nu0 exp(-Ea/kT), Ea 0.54 eV",T 303.15 K,1.05e+04,1/s,"nu0 1e13 1/s assumed; 1/Gamma = 9.49e-05 s; apparent Arrhenius slope of a polymer conductor, not a single-hop barrier"
+hop_check,"Gamma = nu0 exp(-Ea/kT), Ea 0.54 eV",T 333.15 K,6.78e+04,1/s,"nu0 1e13 1/s assumed; 1/Gamma = 1.48e-05 s; apparent Arrhenius slope of a polymer conductor, not a single-hop barrier"
+derived_stress_map,mean,bare 5th cycle (Fig. 1b),0.14,MPa,5x5 pressure-film map (10 mm pitch)
+derived_stress_map,CV = SD/mean,bare 5th cycle (Fig. 1b),0.248,-,
+derived_stress_map,max/min,bare 5th cycle (Fig. 1b),2.46,-,
+derived_stress_map,column means left->right,bare 5th cycle (Fig. 1b),0.096 / 0.115 / 0.140 / 0.176 / 0.172,MPa,monotonic left->right gradient in all four maps
+derived_stress_map,CV after removing column means,bare 5th cycle (Fig. 1b),0.104,-,non-uniformity left after the shared column gradient
+derived_stress_map,mean,bare 25th cycle (Fig. 1b),0.2147,MPa,5x5 pressure-film map (10 mm pitch)
+derived_stress_map,CV = SD/mean,bare 25th cycle (Fig. 1b),0.194,-,
+derived_stress_map,max/min,bare 25th cycle (Fig. 1b),1.9,-,
+derived_stress_map,column means left->right,bare 25th cycle (Fig. 1b),0.164 / 0.179 / 0.223 / 0.255 / 0.253,MPa,monotonic left->right gradient in all four maps
+derived_stress_map,CV after removing column means,bare 25th cycle (Fig. 1b),0.086,-,non-uniformity left after the shared column gradient
+derived_stress_map,mean,layered 5th cycle (Fig. 5i),0.1107,MPa,5x5 pressure-film map (10 mm pitch)
+derived_stress_map,CV = SD/mean,layered 5th cycle (Fig. 5i),0.242,-,
+derived_stress_map,max/min,layered 5th cycle (Fig. 5i),2.86,-,
+derived_stress_map,column means left->right,layered 5th cycle (Fig. 5i),0.081 / 0.096 / 0.114 / 0.134 / 0.128,MPa,monotonic left->right gradient in all four maps
+derived_stress_map,CV after removing column means,layered 5th cycle (Fig. 5i),0.163,-,non-uniformity left after the shared column gradient
+derived_stress_map,mean,layered 25th cycle (Fig. 5i),0.1302,MPa,5x5 pressure-film map (10 mm pitch)
+derived_stress_map,CV = SD/mean,layered 25th cycle (Fig. 5i),0.187,-,
+derived_stress_map,max/min,layered 25th cycle (Fig. 5i),2.39,-,
+derived_stress_map,column means left->right,layered 25th cycle (Fig. 5i),0.107 / 0.120 / 0.135 / 0.152 / 0.137,MPa,monotonic left->right gradient in all four maps
+derived_stress_map,CV after removing column means,layered 25th cycle (Fig. 5i),0.144,-,non-uniformity left after the shared column gradient
+derived_stress_map,increment 5th->25th: mean,bare,0.0748,MPa,
+derived_stress_map,increment 5th->25th: CV,bare,0.23,-,
+derived_stress_map,increment 5th->25th: mean,layered,0.0195,MPa,
+derived_stress_map,increment 5th->25th: CV,layered,0.79,-,
+derived_pouch,"normalized stress at 25 h (bare pouch, Fig. 1a)",end / max,1.507 / 1.530,-,text: 1.0 -> 1.5
+derived_pouch,"normalized stress at 25 h (layered pouch, Fig. 5h)",end / max,1.152 / 1.172,-,text: 1.0 -> 1.1
+derived_fem,"source-data peak (Fig. 1f, bare)",t_norm 0.3,33.01,unit not stated,plotted axis 'von Mise stress (MPa)' peaks at figure-read ≈1.65 -> source/plot ≈ 20
+derived_fem,"source-data peak (Fig. S9c, layered)",t_norm 0.16,14.46,unit not stated,plotted peak figure-read ≈0.72 MPa -> source/plot ≈ 20; series stops at t_norm 0.49 and rises again over the last 3 points
+derived_tplus,Iss/I0 layered (Fig. 4d),"I0 108.4 uA, Iss 83.7 uA",0.772,-,equals the reported t+ 0.77 -> no Bruce-Vincent correction visible
+derived_tplus,Bruce-Vincent estimate layered,"dV 10 mV, R0 ~52 ohm, Rss ~54 ohm (Nyquist closing point, crude)",0.61,-,our estimate; t+ = Iss(dV - I0 R0)/(I0(dV - Iss Rss))
+derived_tplus,Iss/I0 bare (Fig. S31),"I0 53.6 uA (t = 1 s), Iss 18.7 uA",0.349,-,equals reported 0.35; I0 exceeds dV/R_total (10 mV / ~384 ohm ≈ 26 uA) of its own EIS -> BV correction not applicable as given
+derived_nmr,7Li peak position,LiTFSI,-0.708,ppm,text says layered shifts 0.09 ppm vs bare; data give 0.114
+derived_nmr,7Li peak position,Bare SPE,-0.574,ppm,text says layered shifts 0.09 ppm vs bare; data give 0.114
+derived_nmr,7Li peak position,Layered SPE-0.3SiO2,-0.46,ppm,text says layered shifts 0.09 ppm vs bare; data give 0.114
+derived_cell,layered 1C 60 °C retention 500/1,112.63/136.66 mAh/g,82.4,%,text 82.4 %
+derived_cell,bare 1C 60 °C retention 150/1,59.78/111.80 mAh/g,53.5,%,text 53.6 %
+derived_cell,layered 0.2C 30 °C retention 400/1,134.65/159.43 mAh/g,84.5,%,text 84.3 %
+derived_cell,pouch 0.2C 60 °C retention 100/1,5.359/6.338 mAh,84.5,%,text/abstract 85.7 % = 5.4/6.3 (rounded values)
+derived_symcell,last time point,bare 60 °C (Fig. 5a),338.5,h,
+derived_symcell,"max |V| in [0,10) h",bare 60 °C (Fig. 5a),0.1301,V,
+derived_symcell,"max |V| in [200,210) h",bare 60 °C (Fig. 5a),0.0176,V,
+derived_symcell,last time point,layered 60 °C (Fig. 5a),3041,h,
+derived_symcell,"max |V| in [0,10) h",layered 60 °C (Fig. 5a),0.0169,V,
+derived_symcell,"max |V| in [200,210) h",layered 60 °C (Fig. 5a),0.0168,V,
+derived_symcell,"max |V| in [690,700) h",layered 60 °C (Fig. 5a),0.0166,V,
+derived_symcell,"max |V| in [2990,3000) h",layered 60 °C (Fig. 5a),0.0193,V,
+derived_symcell,last time point,bare 30 °C (Fig. 5b),82.9,h,
+derived_symcell,"max |V| in [0,10) h",bare 30 °C (Fig. 5b),0.4235,V,
+derived_symcell,last time point,layered 30 °C (Fig. 5b),741,h,
+derived_symcell,"max |V| in [0,10) h",layered 30 °C (Fig. 5b),0.1948,V,
+derived_symcell,"max |V| in [200,210) h",layered 30 °C (Fig. 5b),0.1864,V,
+derived_symcell,"max |V| in [690,700) h",layered 30 °C (Fig. 5b),0.17,V,
+derived_symcell,"max |V| in [0,10) h",layered 0.2 mA/cm2 60 °C (Fig. S33a),0.0375,V,polarization grows ~1.8x over 1200 h
+derived_symcell,"max |V| in [1190,1200) h",layered 0.2 mA/cm2 60 °C (Fig. S33a),0.0673,V,polarization grows ~1.8x over 1200 h
+derived_conc,Li+ concentration of bare SPE (EO:Li 16),PEO 1.21 + LiTFSI 1.33 g/cm3 (additive volumes),1.25,mol/L,EO/Li = 16.02; PFM main-text runs use 4.0 M (Table S5) — ~3x higher
+derived_conc,Li+ concentration of layered SPE-0.3,PEO 1.21 + LiTFSI 1.33 g/cm3 (additive volumes) + SiO2 2.2,1.12,mol/L,
+audit_table,Table S11 header vs Fig. S27 source columns,ref rows,swapped,-,"Table S11: (breaking 'MPa', toughness) = (33.6, 2) for ref 1; Fig. S27 source: toughness 33.6, breaking strength 2"
+audit_table,this-work breaking strength,Table S11 / Sup3 S27 / main text yield,22 / 25.45 / 20.5,MPa,three numbers for related quantities

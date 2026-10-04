@@ -14,19 +14,21 @@
    "label": "1",
    "page": 3,
    "file": "fig_1.png",
-   "caption": "Fig. 1 | Stress monitoring and mechano-electrochemical coupling relation- ships. a In situ monitoring of expansion force variations in a Li|Bare solid polymer electrolyte (SPE)|Li symmetric pouch cell at 0.1 mA/cm2. b 2D stress distribution in the Li|Bare SPE|Li symmetric pouch cell at different cycles. c Stress monitoring in a Li|Bare SPE|Li symmetric pouch cell after 50,000 s Li plating/stripping via 3D stress visualization technique. d The ﬁnite element method (FEM) simulation result of the stress response property of bare SPE at different stress propagation periods (Time 1 indicates the initial stage. Time 2 indicates the middle stage). e Visualization of the",
+   "caption": "Fig. 1 | Stress monitoring and mechano-electrochemical coupling relationships. a In situ monitoring of expansion force variations in a Li|Bare solid polymer electrolyte (SPE)|Li symmetric pouch cell at 0.1 mA/cm2. b 2D stress distribution in the Li|Bare SPE|Li symmetric pouch cell at different cycles. c Stress monitoring in a Li|Bare SPE|Li symmetric pouch cell after 50,000 s Li plating/stripping via 3D stress visualization technique. d The finite element method (FEM) simulation result of the stress response property of bare SPE at different stress propagation periods (Time 1 indicates the initial stage. Time 2 indicates the middle stage). e Visualization of the stress response within a specific horizontal line (white dashed line in d) parallel to the X-axis based on FEM simulation in the bare SPE system. f Stress variation over time at the point where X = 0 on the white dashed line based on FEM simulation in the bare SPE system. g The schematic of the mechano-electrochemical coupling relationships in the bare SPE system. Phase field model (PFM) simulation results of galvanostatic cycling under the modulation of h bare SPE system and i layered SPE system. In simulation with the applied current density of 0.2 mA/cm2 for 3600 s Li plating.",
    "rotated_deg": 0,
    "bbox": [
-    33.7,
-    68.4,
-    540.4,
-    615.0
+    58.1,
+    46.9,
+    543.5,
+    612.0
    ],
-   "w": 2112,
-   "h": 2278,
+   "w": 2024,
+   "h": 2355,
    "dpi": 300,
    "src": "Yuan 2026 - Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0).pdf",
-   "blank": 0.445
+   "blank": 0.443,
+   "recrop": "auto crop cut the top ~18-21 pt (panel letters a-c and the first plot rows at y≈50-68): the tool treats every block inside the top 9 % of the page as a running-head boundary, and Nat. Commun. figures start right under the header; clip = union of vector/raster graphics + all text blocks between y=44 (below running head) and the caption top − 1.5 pt, + 3 pt (old bbox [33.7, 68.4, 540.4, 615.0]); caption replaced by the full main-text caption (tool kept only the first block) (2026-10-04, litdb-curator)",
+   "viewed": true
   },
   {
    "key": "f2",
@@ -34,19 +36,21 @@
    "label": "2",
    "page": 6,
    "file": "fig_2.png",
-   "caption": "Fig. 2 | Fabrication and characterization of the layered SPE. a Schematic illus- tration of the layered SPE featuring amorphous tablets and multiscale crosslinked interfaces. b Optical photograph of large-scale synthesis of 2D amorphous SiO2 NSs. Scanning electron microscopy (SEM) (c), atomic force microscopy (AFM) (d), and transmission electron microscopy (TEM) (e) images of SiO2 NSs, showing thin features. f High-resolution TEM image of SiO2 NSs. The insert is the selected area",
+   "caption": "Fig. 2 | Fabrication and characterization of the layered SPE. a Schematic illustration of the layered SPE featuring amorphous tablets and multiscale crosslinked interfaces. b Optical photograph of large-scale synthesis of 2D amorphous SiO2 NSs. Scanning electron microscopy (SEM) (c), atomic force microscopy (AFM) (d), and transmission electron microscopy (TEM) (e) images of SiO2 NSs, showing thin features. f High-resolution TEM image of SiO2 NSs. The insert is the selected area electron diffraction (SAED) pattern of amorphous SiO2 NSs. g Digital photograph of a 1-m-long roll of the layered SPE film. h Cross-section SEM image of the layered SPE film, showing a densely interlaced, homogeneously stacked and layered arrangement. i Corresponding Si element energy-dispersive X-ray spectroscopy (EDX) mapping.",
    "rotated_deg": 0,
    "bbox": [
-    33.7,
-    65.2,
-    549.0,
-    615.7
+    55.4,
+    46.9,
+    546.0,
+    612.7
    ],
-   "w": 2148,
-   "h": 2295,
+   "w": 2045,
+   "h": 2358,
    "dpi": 300,
    "src": "Yuan 2026 - Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0).pdf",
-   "blank": 0.308
+   "blank": 0.29,
+   "recrop": "auto crop cut the top ~18-21 pt (panel letters a-c and the first plot rows at y≈50-68): the tool treats every block inside the top 9 % of the page as a running-head boundary, and Nat. Commun. figures start right under the header; clip = union of vector/raster graphics + all text blocks between y=44 (below running head) and the caption top − 1.5 pt, + 3 pt (old bbox [33.7, 65.2, 549.0, 615.7]); caption replaced by the full main-text caption (tool kept only the first block) (2026-10-04, litdb-curator)",
+   "viewed": true
   },
   {
    "key": "f3",
@@ -54,19 +58,21 @@
    "label": "3",
    "page": 7,
    "file": "fig_3.png",
-   "caption": "Fig. 3 | Micromechanical and macromechanical properties of layered SPE. a Representative scheme for one-direction (Z) probing of nanoindentation contact response. Young’s modulus (b) and hardness (c) of electrolyte ﬁlms measured by static nanoindentation test. Typical contour maps of Young’s modulus distribution (d) and hardness distribution (e) for layered SPE obtained from a scanning area of",
+   "caption": "Fig. 3 | Micromechanical and macromechanical properties of layered SPE. a Representative scheme for one-direction (Z) probing of nanoindentation contact response. Young's modulus (b) and hardness (c) of electrolyte films measured by static nanoindentation test. Typical contour maps of Young's modulus distribution (d) and hardness distribution (e) for layered SPE obtained from a scanning area of 60 μm × 60 μm. Typical contour maps of Young's modulus distribution (f) and hardness distribution (g) for bare SPE obtained from a scanning area of 60 μm × 60 μm. 3D AFM Young's modulus mappings of layered SPE (h) and bare SPE (i). All the mechanical tests are conducted at 25 ± 2 °C with 25% relative humidity (RH).",
    "rotated_deg": 0,
    "bbox": [
-    33.7,
-    67.5,
-    544.5,
-    466.7
+    57.8,
+    46.9,
+    543.6,
+    463.7
    ],
-   "w": 2129,
-   "h": 1664,
+   "w": 2025,
+   "h": 1738,
    "dpi": 300,
    "src": "Yuan 2026 - Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0).pdf",
-   "blank": 0.677
+   "blank": 0.668,
+   "recrop": "auto crop cut the top ~18-21 pt (panel letters a-c and the first plot rows at y≈50-68): the tool treats every block inside the top 9 % of the page as a running-head boundary, and Nat. Commun. figures start right under the header; clip = union of vector/raster graphics + all text blocks between y=44 (below running head) and the caption top − 1.5 pt, + 3 pt (old bbox [33.7, 67.5, 544.5, 466.7]); caption replaced by the full main-text caption (tool kept only the first block) (2026-10-04, litdb-curator)",
+   "viewed": true
   },
   {
    "key": "f4",
@@ -74,19 +80,21 @@
    "label": "4",
    "page": 8,
    "file": "fig_4.png",
-   "caption": "Fig. 4 | Electrochemical and physicochemical properties of layered SPE. a Arrhenius plots of the electrolytes. “Layered SPE-xSiO2” refers to the PEO-LiTFSI- xSiO2 system (Li+: EO = 1:16), and x refers to the mass ratio of SiO2 NSs to PEO. b Differential scanning calorimetry (DSC) proﬁles of electrolytes from 0 to 100 °C. c The linear sweep voltammetry (LSV) curves of Li|Layered SPE-0.3 SiO2|SS and Li| Bare SPE|SScells at a scan rate of 1 mV/s at 60 °C. d Li+ transference number test and polarization curve of layered SPE-0.3 SiO2 with the inserted electrochemical",
+   "caption": "Fig. 4 | Electrochemical and physicochemical properties of layered SPE. a Arrhenius plots of the electrolytes. \"Layered SPE-xSiO2\" refers to the PEO-LiTFSI-xSiO2 system (Li+: EO = 1:16), and x refers to the mass ratio of SiO2 NSs to PEO. b Differential scanning calorimetry (DSC) profiles of electrolytes from 0 to 100 °C. c The linear sweep voltammetry (LSV) curves of Li|Layered SPE-0.3 SiO2|SS and Li|Bare SPE|SS cells at a scan rate of 1 mV/s at 60 °C. d Li+ transference number test and polarization curve of layered SPE-0.3 SiO2 with the inserted electrochemical impedance spectra (EIS) before and after the polarization tested at 60 °C. e 7Li solid-state nuclear magnetic resonance (NMR) spectra of SPEs and LiTFSI for comparison. f Raman spectra of electrolytes. g Fourier-transform infrared spectroscopy (FTIR) analysis of PEO, bare SPE, and layered SPE-0.3 SiO2, with enlarged views of the 1300–1400 and 1020–1180 cm−1 regions. h Density functional theory (DFT) simulations of the structures of the PEO chain and amorphous SiO2.",
    "rotated_deg": 0,
    "bbox": [
-    33.7,
-    438.2,
-    546.4,
-    614.8
+    57.3,
+    46.9,
+    543.4,
+    611.8
    ],
-   "w": 2137,
-   "h": 737,
+   "w": 2027,
+   "h": 2355,
    "dpi": 300,
    "src": "Yuan 2026 - Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0).pdf",
-   "blank": 0.217
+   "blank": 0.609,
+   "recrop": "auto crop cut the top ~18-21 pt (panel letters a-c and the first plot rows at y≈50-68): the tool treats every block inside the top 9 % of the page as a running-head boundary, and Nat. Commun. figures start right under the header; Fig. 4 was cut far worse (old crop kept only y≥438 = panels g-h) because the Fig. 4a legend block has 8 words and passed is_prose as body text; clip = union of vector/raster graphics + all text blocks between y=44 (below running head) and the caption top − 1.5 pt, + 3 pt (old bbox [33.7, 438.2, 546.4, 614.8]); caption replaced by the full main-text caption (tool kept only the first block) (2026-10-04, litdb-curator)",
+   "viewed": true
   },
   {
    "key": "f5",
@@ -94,19 +102,43 @@
    "label": "5",
    "page": 10,
    "file": "fig_5.png",
-   "caption": "Fig. 5 | Modulation of layered SPE in Li plating/stripping stability, morphology, and component evolution of Li metal electrode. Li plating/stripping stability of symmetric coin cells at 0.1 mA/cm2, cutoff capacity of 0.05 mA h/cm2 under 60 °C (a) and 30 °C (b). Ex situ SEM (c) and 3D AFM images (d) of the Li metal electrode after 300 h Li plating/stripping at 60 °C with 0.1 mA/cm2, obtained from the Li|Bare SPE|Li symmetric cell under Ar atmosphere. Ex situ SEM (e) and 3D AFM images (f) of the Li metal negative electrode after 300 h Li plating/stripping at 60 °C with 0.1 mA/cm2 obtained from the Li|Layered SPE|Li symmetric cell. g Li 1s and O 1s",
+   "caption": "Fig. 5 | Modulation of layered SPE in Li plating/stripping stability, morphology, and component evolution of Li metal electrode. Li plating/stripping stability of symmetric coin cells at 0.1 mA/cm2, cutoff capacity of 0.05 mA h/cm2 under 60 °C (a) and 30 °C (b). Ex situ SEM (c) and 3D AFM images (d) of the Li metal electrode after 300 h Li plating/stripping at 60 °C with 0.1 mA/cm2, obtained from the Li|Bare SPE|Li symmetric cell under Ar atmosphere. Ex situ SEM (e) and 3D AFM images (f) of the Li metal negative electrode after 300 h Li plating/stripping at 60 °C with 0.1 mA/cm2 obtained from the Li|Layered SPE|Li symmetric cell. g Li 1s and O 1s X-ray photoelectron spectroscopy (XPS) spectra were conducted on the Li metal electrode surface after 300 h Li plating/stripping. h In situ monitoring of internal expansion force variations in a 50 mm × 50 mm Li|Layered SPE|Li symmetric pouch cell at 30 °C with 0.1 mA/cm2. i Stress maps for a Li|Layered SPE|Li pouch cell at different cycles at 30 °C with 0.1 mA/cm2. j Visualization of stress growth in a Li|Layered SPE|Li pouch cell plating/stripping at 30 °C with 0.1 mA/cm2 via a 3D real-time visualization technique.",
    "rotated_deg": 0,
    "bbox": [
-    33.7,
-    155.7,
-    542.8,
-    612.1
+    57.8,
+    46.9,
+    543.6,
+    609.8
    ],
-   "w": 2122,
-   "h": 1903,
+   "w": 2026,
+   "h": 2347,
    "dpi": 300,
    "src": "Yuan 2026 - Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0).pdf",
-   "blank": 0.721
+   "blank": 0.738,
+   "recrop": "auto crop cut the top ~18-21 pt (panel letters a-c and the first plot rows at y≈50-68): the tool treats every block inside the top 9 % of the page as a running-head boundary, and Nat. Commun. figures start right under the header; Fig. 5 old crop started at y≈156 (panels a-b lost) for the same legend-as-prose reason; clip = union of vector/raster graphics + all text blocks between y=44 (below running head) and the caption top − 1.5 pt, + 3 pt (old bbox [33.7, 155.7, 542.8, 612.1]); caption replaced by the full main-text caption (tool kept only the first block) (2026-10-04, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 11,
+   "file": "fig_6.png",
+   "caption": "Fig. 6 | Electrochemical performance of all-solid-state Li metal full cells. a Rate performance of Li|Layered SPE|LiFePO4 (LFP) and Li|Bare SPE|LFP coin cells at 60 °C (1 C = 170 mA/g). b Cycling performance of Li|Bare SPE|LFP and Li|Layered SPE|LFP full cells at 1 C under 60 °C. c Corresponding charge and discharge curves of the Li|Layered SPE|LFP coin cell at different cycle numbers at 60 °C. d Cycling performance of Li|Layered SPE|LFP and Li|Bare SPE|LFP at 0.2 C (0.2 C = 34 mA/g) under 30 °C. e Cycling performance of Li|Layered SPE|LFP pouch cell at 0.2 C (1.53 mA) under 60 °C.",
+   "rotated_deg": 0,
+   "bbox": [
+    57.5,
+    46.7,
+    542.8,
+    299.3
+   ],
+   "w": 2023,
+   "h": 1054,
+   "dpi": 300,
+   "src": "Yuan 2026 - Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0).pdf",
+   "blank": 0.907,
+   "manual_crop": "tool produced no Fig. 6 at all and its gap check did not flag it (gap list stops at the highest label found = 5); Fig. 6 sits at the top of main p.11 above its caption (y=307); clip = union of graphics + in-figure text blocks between y=44 and the caption top − 1.5 pt, + 3 pt (2026-10-04, litdb-curator)",
+   "viewed": true
   },
   {
    "key": "fS1",
@@ -127,6 +159,248 @@
    "dpi": 300,
    "src": "Yuan 2026 - Sup) Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0) SI.pdf",
    "blank": 0.776
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 11,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. a-b, (a) Optical image and (b) Schematic of the in-situ stress monitoring system.",
+   "rotated_deg": 0,
+   "bbox": [
+    82.1,
+    72.9,
+    513.1,
+    195.6
+   ],
+   "w": 1198,
+   "h": 342,
+   "dpi": 200,
+   "src": "Yuan 2026 - Sup) Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0) SI.pdf",
+   "blank": 0.504,
+   "manual_crop": "SI text layer has a broken font encoding (g→e, b→l, h→o, d→' ', e.g. 'Fieure'/'Talle'), so the tool's caption regex never fired on this page and the number was reported as a gap; caption text repaired by hand from the text layer (rendered PDF glyphs are intact); figure is a single embedded raster above the caption — clip = raster bbox + 3 pt, rendered at the raster's native 200 dpi (300 dpi would only upsample) (2026-10-04, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 12,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. a-b, Visualization of stress distribution in a Li|Bare SPE|Li symmetric pouch cell (a) after 1000 s and (b) after 50000 s Li plating/stripping using a 3D sterss visualization technique",
+   "rotated_deg": 0,
+   "bbox": [
+    160.4,
+    90.2,
+    434.4,
+    256.2
+   ],
+   "w": 762,
+   "h": 462,
+   "dpi": 200,
+   "src": "Yuan 2026 - Sup) Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0) SI.pdf",
+   "blank": 0.647,
+   "manual_crop": "SI text layer has a broken font encoding (g→e, b→l, h→o, d→' ', e.g. 'Fieure'/'Talle'), so the tool's caption regex never fired on this page and the number was reported as a gap; caption text repaired by hand from the text layer (rendered PDF glyphs are intact); figure is a single embedded raster above the caption — clip = raster bbox + 3 pt, rendered at the raster's native 200 dpi (300 dpi would only upsample) (2026-10-04, litdb-curator)",
+   "viewed": "thumbnail only (contact sheet ~440 px, crop-bounds check)"
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 13,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Schematic illustration of the geometry and boundary conditions of models applied for bare SPE in this work.",
+   "rotated_deg": 0,
+   "bbox": [
+    152.9,
+    69.3,
+    442.3,
+    293.1
+   ],
+   "w": 805,
+   "h": 623,
+   "dpi": 200,
+   "src": "Yuan 2026 - Sup) Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0) SI.pdf",
+   "blank": 0.74,
+   "manual_crop": "SI text layer has a broken font encoding (g→e, b→l, h→o, d→' ', e.g. 'Fieure'/'Talle'), so the tool's caption regex never fired on this page and the number was reported as a gap; caption text repaired by hand from the text layer (rendered PDF glyphs are intact); figure is a single embedded raster above the caption — clip = raster bbox + 3 pt, rendered at the raster's native 200 dpi (300 dpi would only upsample) (2026-10-04, litdb-curator)",
+   "viewed": "thumbnail only (contact sheet ~440 px, crop-bounds check)"
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 15,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. Schematic illustration of the geometry and boundary conditions of model applied in bare SPE system. The Li nucleation site is initially modeled as three semi-elliptical shapes, representing a protrusion on the Li metal electrode. A total current density of 0.2 mA/cm2 is applied to the whole simulation domain.",
+   "rotated_deg": 0,
+   "bbox": [
+    82.1,
+    74.2,
+    513.2,
+    319.4
+   ],
+   "w": 1198,
+   "h": 682,
+   "dpi": 200,
+   "src": "Yuan 2026 - Sup) Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0) SI.pdf",
+   "blank": 0.932,
+   "manual_crop": "SI text layer has a broken font encoding (g→e, b→l, h→o, d→' ', e.g. 'Fieure'/'Talle'), so the tool's caption regex never fired on this page and the number was reported as a gap; caption text repaired by hand from the text layer (rendered PDF glyphs are intact); figure is a single embedded raster above the caption — clip = raster bbox + 3 pt, rendered at the raster's native 200 dpi (300 dpi would only upsample) (2026-10-04, litdb-curator)",
+   "viewed": "thumbnail only (contact sheet ~440 px, crop-bounds check)"
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 21,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. The simulated results of Li plating/stripping in the bare SPE system based on the galvanostatic phase field phase model with the applied current density of 0.2 mA/cm2 and initial lithium ion concentration of 4 M. a-c, Snapshots showing the time-dependent evolution of Li deposition morphology during Li plating and stripping, along with the corresponding distributions of (a) stress field, (b) ion concentration field, and (c) electric field.",
+   "rotated_deg": 0,
+   "bbox": [
+    95.9,
+    233.6,
+    498.7,
+    690.3
+   ],
+   "w": 1120,
+   "h": 1270,
+   "dpi": 200,
+   "src": "Yuan 2026 - Sup) Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0) SI.pdf",
+   "blank": 0.301,
+   "manual_crop": "SI text layer has a broken font encoding (g→e, b→l, h→o, d→' ', e.g. 'Fieure'/'Talle'), so the tool's caption regex never fired on this page and the number was reported as a gap; caption text repaired by hand from the text layer (rendered PDF glyphs are intact); figure is a single embedded raster above the caption — clip = raster bbox + 3 pt, rendered at the raster's native 200 dpi (300 dpi would only upsample) (2026-10-04, litdb-curator)",
+   "viewed": "thumbnail only (contact sheet ~440 px, crop-bounds check)"
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 23,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. Schematic illustration of the geometry and boundary conditions of models applied for layered SPE in this work.",
+   "rotated_deg": 0,
+   "bbox": [
+    152.9,
+    100.5,
+    442.3,
+    324.3
+   ],
+   "w": 805,
+   "h": 622,
+   "dpi": 200,
+   "src": "Yuan 2026 - Sup) Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0) SI.pdf",
+   "blank": 0.74,
+   "manual_crop": "SI text layer has a broken font encoding (g→e, b→l, h→o, d→' ', e.g. 'Fieure'/'Talle'), so the tool's caption regex never fired on this page and the number was reported as a gap; caption text repaired by hand from the text layer (rendered PDF glyphs are intact); figure is a single embedded raster above the caption — clip = raster bbox + 3 pt, rendered at the raster's native 200 dpi (300 dpi would only upsample) (2026-10-04, litdb-curator)",
+   "viewed": "thumbnail only (contact sheet ~440 px, crop-bounds check)"
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 24,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. The response properties of the layered SPE to electrolyte-Li interfacial stress. a, The simulated results of stress response properties of bare SPE at different stress propagation period (Time 1indicates the initial stage. Time 2 indicates the middle stage. b, Visualization of the stress response within a specific horizontal line (white dashed line in (a)). c, Stress variation over time at the point where X=0 on the white dashed line, demonstrating the entire process of stress accumulation to decay.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.0,
+    73.7,
+    544.3,
+    210.7
+   ],
+   "w": 1371,
+   "h": 382,
+   "dpi": 200,
+   "src": "Yuan 2026 - Sup) Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0) SI.pdf",
+   "blank": 0.681,
+   "manual_crop": "SI text layer has a broken font encoding (g→e, b→l, h→o, d→' ', e.g. 'Fieure'/'Talle'), so the tool's caption regex never fired on this page and the number was reported as a gap; caption text repaired by hand from the text layer (rendered PDF glyphs are intact); figure is a single embedded raster above the caption — clip = raster bbox + 3 pt, rendered at the raster's native 200 dpi (300 dpi would only upsample) (2026-10-04, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 25,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. Schematic illustration of the geometry and boundary conditions of model applied in layered SPE system. The Li nucleation site is initially modeled as three semi-elliptical shapes, representing a protrusion on the Li metal electrode. A total current density of 0.2 mA/cm2 is applied to the whole simulation domian.",
+   "rotated_deg": 0,
+   "bbox": [
+    82.1,
+    74.2,
+    513.2,
+    319.4
+   ],
+   "w": 1198,
+   "h": 682,
+   "dpi": 200,
+   "src": "Yuan 2026 - Sup) Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0) SI.pdf",
+   "blank": 0.693,
+   "manual_crop": "SI text layer has a broken font encoding (g→e, b→l, h→o, d→' ', e.g. 'Fieure'/'Talle'), so the tool's caption regex never fired on this page and the number was reported as a gap; caption text repaired by hand from the text layer (rendered PDF glyphs are intact); figure is a single embedded raster above the caption — clip = raster bbox + 3 pt, rendered at the raster's native 200 dpi (300 dpi would only upsample) (2026-10-04, litdb-curator)",
+   "viewed": "thumbnail only (contact sheet ~440 px, crop-bounds check)"
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 26,
+   "file": "fig_S11.png",
+   "caption": "Figure S11. The simulated results of Li plating/stripping process in the layered SPE system based on the galvanostatic phase field phase model with the applied current density of 0.2 mA/cm2 and initial lithium ion concentration of 4 M. a-c, Snapshots showing the time-dependent evolution of Li deposition morphology during Li plating and stripping, along with the corresponding distributions of (a) stress field, (b) ion concentration field, and (c) electric field.",
+   "rotated_deg": 0,
+   "bbox": [
+    82.1,
+    75.4,
+    513.2,
+    567.7
+   ],
+   "w": 1198,
+   "h": 1368,
+   "dpi": 200,
+   "src": "Yuan 2026 - Sup) Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0) SI.pdf",
+   "blank": 0.316,
+   "manual_crop": "SI text layer has a broken font encoding (g→e, b→l, h→o, d→' ', e.g. 'Fieure'/'Talle'), so the tool's caption regex never fired on this page and the number was reported as a gap; caption text repaired by hand from the text layer (rendered PDF glyphs are intact); figure is a single embedded raster above the caption — clip = raster bbox + 3 pt, rendered at the raster's native 200 dpi (300 dpi would only upsample) (2026-10-04, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 28,
+   "file": "fig_S12.png",
+   "caption": "Figure S12. The simulated results of Li plating/stripping in the bare SPE system based on the galvanostatic phase field phase model with the applied current density of 0.2 mA/cm2 and initial lithium ion concentration of 1.2 M. a-c, Snapshots showing the time-dependent evolution of Li deposition morphology during Li plating and stripping, along with the corresponding distributions of (a) stress field, (b) ion concentration field, and (c) electric field.",
+   "rotated_deg": 0,
+   "bbox": [
+    82.1,
+    69.3,
+    513.2,
+    558.1
+   ],
+   "w": 1198,
+   "h": 1359,
+   "dpi": 200,
+   "src": "Yuan 2026 - Sup) Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0) SI.pdf",
+   "blank": 0.301,
+   "manual_crop": "SI text layer has a broken font encoding (g→e, b→l, h→o, d→' ', e.g. 'Fieure'/'Talle'), so the tool's caption regex never fired on this page and the number was reported as a gap; caption text repaired by hand from the text layer (rendered PDF glyphs are intact); figure is a single embedded raster above the caption — clip = raster bbox + 3 pt, rendered at the raster's native 200 dpi (300 dpi would only upsample) (2026-10-04, litdb-curator)",
+   "viewed": "thumbnail only (contact sheet ~440 px, crop-bounds check)"
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 30,
+   "file": "fig_S13.png",
+   "caption": "Figure S13. The simulated results of Li plating/stripping process in the layered SPE system based on the galvanostatic phase field phase model with the applied current density of 0.2 mA/cm2 and initial lithium ion concentration of 1.2 M. a-c, Snapshots showing the time-dependent evolution of Li deposition morphology during Li plating and stripping, along with the corresponding distributions of (a) stress field, (b) ion concentration field, and (c) electric field.",
+   "rotated_deg": 0,
+   "bbox": [
+    82.1,
+    75.4,
+    513.2,
+    567.7
+   ],
+   "w": 1198,
+   "h": 1368,
+   "dpi": 200,
+   "src": "Yuan 2026 - Sup) Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0) SI.pdf",
+   "blank": 0.314,
+   "manual_crop": "SI text layer has a broken font encoding (g→e, b→l, h→o, d→' ', e.g. 'Fieure'/'Talle'), so the tool's caption regex never fired on this page and the number was reported as a gap; caption text repaired by hand from the text layer (rendered PDF glyphs are intact); figure is a single embedded raster above the caption — clip = raster bbox + 3 pt, rendered at the raster's native 200 dpi (300 dpi would only upsample) (2026-10-04, litdb-curator)",
+   "viewed": "thumbnail only (contact sheet ~440 px, crop-bounds check)"
   },
   {
    "key": "fS14",
@@ -209,6 +483,72 @@
    "blank": 0.972
   },
   {
+   "key": "fS19",
+   "kind": "figure",
+   "label": "S19",
+   "page": 37,
+   "file": "fig_S19.png",
+   "caption": "Figure S19. Electron Paramagnetic Resonance (EPR) curve of SiO2 NSs.",
+   "rotated_deg": 0,
+   "bbox": [
+    167.1,
+    71.5,
+    428.2,
+    290.9
+   ],
+   "w": 726,
+   "h": 611,
+   "dpi": 200,
+   "src": "Yuan 2026 - Sup) Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0) SI.pdf",
+   "blank": 0.91,
+   "manual_crop": "SI text layer has a broken font encoding (g→e, b→l, h→o, d→' ', e.g. 'Fieure'/'Talle'), so the tool's caption regex never fired on this page and the number was reported as a gap; caption text repaired by hand from the text layer (rendered PDF glyphs are intact); figure is a single embedded raster above the caption — clip = raster bbox + 3 pt, rendered at the raster's native 200 dpi (300 dpi would only upsample) (2026-10-04, litdb-curator)",
+   "viewed": "thumbnail only (contact sheet ~440 px, crop-bounds check)"
+  },
+  {
+   "key": "fS20",
+   "kind": "figure",
+   "label": "S20",
+   "page": 38,
+   "file": "fig_S20.png",
+   "caption": "Figure S20. Images illustrating the mechanical property measurement. a, Schematic of sample preparation. b, Schematic of nanoindentation on suspended SiO2 NS. c, SEM image of a SiO2 NS fully covering on a 2-μm circular well.",
+   "rotated_deg": 0,
+   "bbox": [
+    110.2,
+    315.6,
+    484.5,
+    405.0
+   ],
+   "w": 1040,
+   "h": 249,
+   "dpi": 200,
+   "src": "Yuan 2026 - Sup) Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0) SI.pdf",
+   "blank": 0.467,
+   "manual_crop": "SI text layer has a broken font encoding (g→e, b→l, h→o, d→' ', e.g. 'Fieure'/'Talle'), so the tool's caption regex never fired on this page and the number was reported as a gap; caption text repaired by hand from the text layer (rendered PDF glyphs are intact); figure is a single embedded raster above the caption — clip = raster bbox + 3 pt, rendered at the raster's native 200 dpi (300 dpi would only upsample) (2026-10-04, litdb-curator)",
+   "viewed": "thumbnail only (contact sheet ~440 px, crop-bounds check)"
+  },
+  {
+   "key": "fS21",
+   "kind": "figure",
+   "label": "S21",
+   "page": 40,
+   "file": "fig_S21.png",
+   "caption": "Figure S21. Force-displacement curve and the corresponding fitting curve.",
+   "rotated_deg": 0,
+   "bbox": [
+    181.3,
+    70.2,
+    414.0,
+    261.0
+   ],
+   "w": 647,
+   "h": 530,
+   "dpi": 200,
+   "src": "Yuan 2026 - Sup) Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0) SI.pdf",
+   "blank": 0.897,
+   "manual_crop": "SI text layer has a broken font encoding (g→e, b→l, h→o, d→' ', e.g. 'Fieure'/'Talle'), so the tool's caption regex never fired on this page and the number was reported as a gap; caption text repaired by hand from the text layer (rendered PDF glyphs are intact); figure is a single embedded raster above the caption — clip = raster bbox + 3 pt, rendered at the raster's native 200 dpi (300 dpi would only upsample) (2026-10-04, litdb-curator)",
+   "viewed": "thumbnail only (contact sheet ~440 px, crop-bounds check)"
+  },
+  {
    "key": "fS22",
    "kind": "figure",
    "label": "S22",
@@ -227,6 +567,160 @@
    "dpi": 300,
    "src": "Yuan 2026 - Sup) Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0) SI.pdf",
    "blank": 0.263
+  },
+  {
+   "key": "fS25",
+   "kind": "figure",
+   "label": "S25",
+   "page": 44,
+   "file": "fig_S25.png",
+   "caption": "Figure S25. a, Schematic illustration of the nanoindentation test for the 2D Young's modulus distribution of the electrolytes. b, Schematic of the nanoindentation test. c, Static nanoindentation tests for partial loading-unloading curves under the force control mode (10 mN).",
+   "rotated_deg": 0,
+   "bbox": [
+    82.1,
+    70.7,
+    513.2,
+    198.0
+   ],
+   "w": 1198,
+   "h": 354,
+   "dpi": 200,
+   "src": "Yuan 2026 - Sup) Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0) SI.pdf",
+   "blank": 0.687,
+   "manual_crop": "SI text layer has a broken font encoding (g→e, b→l, h→o, d→' ', e.g. 'Fieure'/'Talle'), so the tool's caption regex never fired on this page and the number was reported as a gap; caption text repaired by hand from the text layer (rendered PDF glyphs are intact); figure is a single embedded raster above the caption — clip = raster bbox + 3 pt, rendered at the raster's native 200 dpi (300 dpi would only upsample) (2026-10-04, litdb-curator)",
+   "viewed": "thumbnail only (contact sheet ~440 px, crop-bounds check)"
+  },
+  {
+   "key": "fS26",
+   "kind": "figure",
+   "label": "S26",
+   "page": 45,
+   "file": "fig_S26.png",
+   "caption": "Figure S26. a, Representative uniaxial tensile stress-strain scheme and photograph before and after stretching of layered SPE. b, Tensile strain-stress curves of layered SPE and bare SPE films with a tension rate of 1 mm/min.",
+   "rotated_deg": 0,
+   "bbox": [
+    58.2,
+    86.4,
+    537.0,
+    260.3
+   ],
+   "w": 1331,
+   "h": 484,
+   "dpi": 200,
+   "src": "Yuan 2026 - Sup) Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0) SI.pdf",
+   "blank": 0.67,
+   "manual_crop": "SI text layer has a broken font encoding (g→e, b→l, h→o, d→' ', e.g. 'Fieure'/'Talle'), so the tool's caption regex never fired on this page and the number was reported as a gap; caption text repaired by hand from the text layer (rendered PDF glyphs are intact); figure is a single embedded raster above the caption — clip = raster bbox + 3 pt, rendered at the raster's native 200 dpi (300 dpi would only upsample) (2026-10-04, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "fS27",
+   "kind": "figure",
+   "label": "S27",
+   "page": 46,
+   "file": "fig_S27.png",
+   "caption": "Figure S27. Comparison between toughness and breaking strength obtained in this work and those of previously reported works. The detailed information is presented in Table S11.",
+   "rotated_deg": 0,
+   "bbox": [
+    95.9,
+    71.5,
+    498.7,
+    321.6
+   ],
+   "w": 1120,
+   "h": 696,
+   "dpi": 200,
+   "src": "Yuan 2026 - Sup) Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0) SI.pdf",
+   "blank": 0.891,
+   "manual_crop": "SI text layer has a broken font encoding (g→e, b→l, h→o, d→' ', e.g. 'Fieure'/'Talle'), so the tool's caption regex never fired on this page and the number was reported as a gap; caption text repaired by hand from the text layer (rendered PDF glyphs are intact); figure is a single embedded raster above the caption — clip = raster bbox + 3 pt, rendered at the raster's native 200 dpi (300 dpi would only upsample) (2026-10-04, litdb-curator)",
+   "viewed": "thumbnail only (contact sheet ~440 px, crop-bounds check)"
+  },
+  {
+   "key": "fS29",
+   "kind": "figure",
+   "label": "S29",
+   "page": 49,
+   "file": "fig_S29.png",
+   "caption": "Figure S29. Comparisons of activation energy for bare SPE and layered SPE with different SiO2 ratios.",
+   "rotated_deg": 0,
+   "bbox": [
+    167.1,
+    86.4,
+    428.2,
+    276.0
+   ],
+   "w": 726,
+   "h": 527,
+   "dpi": 200,
+   "src": "Yuan 2026 - Sup) Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0) SI.pdf",
+   "blank": 0.576,
+   "manual_crop": "SI text layer has a broken font encoding (g→e, b→l, h→o, d→' ', e.g. 'Fieure'/'Talle'), so the tool's caption regex never fired on this page and the number was reported as a gap; caption text repaired by hand from the text layer (rendered PDF glyphs are intact); figure is a single embedded raster above the caption — clip = raster bbox + 3 pt, rendered at the raster's native 200 dpi (300 dpi would only upsample) (2026-10-04, litdb-curator)",
+   "viewed": "thumbnail only (contact sheet ~440 px, crop-bounds check)"
+  },
+  {
+   "key": "fS31",
+   "kind": "figure",
+   "label": "S31",
+   "page": 51,
+   "file": "fig_S31.png",
+   "caption": "Figure S31. The Li+ transference number test result and polarization curve of bare SPE with the inserted electrochemical impedance spectra (EIS) before and after the polarization tested at 60 ℃.",
+   "rotated_deg": 0,
+   "bbox": [
+    212.9,
+    70.2,
+    382.3,
+    213.6
+   ],
+   "w": 471,
+   "h": 399,
+   "dpi": 200,
+   "src": "Yuan 2026 - Sup) Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0) SI.pdf",
+   "blank": 0.877,
+   "manual_crop": "SI text layer has a broken font encoding (g→e, b→l, h→o, d→' ', e.g. 'Fieure'/'Talle'), so the tool's caption regex never fired on this page and the number was reported as a gap; caption text repaired by hand from the text layer (rendered PDF glyphs are intact); figure is a single embedded raster above the caption — clip = raster bbox + 3 pt, rendered at the raster's native 200 dpi (300 dpi would only upsample) (2026-10-04, litdb-curator)",
+   "viewed": "thumbnail only (contact sheet ~440 px, crop-bounds check)"
+  },
+  {
+   "key": "fS32",
+   "kind": "figure",
+   "label": "S32",
+   "page": 53,
+   "file": "fig_S32.png",
+   "caption": "Figure S32. a-b, The differential charge density plots for TFSI- adsorbed on (a) crystalline SiO2 and (b) amorphous SiO2 NSs with oxygen vacancies. The color blue represents the charge increase and the color yellow represents the charge decrease.",
+   "rotated_deg": 0,
+   "bbox": [
+    76.8,
+    72.3,
+    518.5,
+    290.1
+   ],
+   "w": 1351,
+   "h": 667,
+   "dpi": 220,
+   "src": "Yuan 2026 - Sup) Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0) SI.pdf",
+   "blank": 0.731,
+   "manual_crop": "SI text layer has a broken font encoding (g→e, b→l, h→o, d→' ', e.g. 'Fieure'/'Talle'), so the tool's caption regex never fired on this page and the number was reported as a gap; caption text repaired by hand from the text layer (rendered PDF glyphs are intact); figure is a single embedded raster above the caption — clip = raster bbox + 3 pt, rendered at the raster's native 220 dpi (300 dpi would only upsample) (2026-10-04, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "fS33",
+   "kind": "figure",
+   "label": "S33",
+   "page": 54,
+   "file": "fig_S33.png",
+   "caption": "Figure S33. a, Li plating/stripping stability performance of Li|layered SPE|Li symmetrical coin cell at a current density of 0.2 mA/cm2, cutoff capacity of 0.1 mAh/cm2 and 60 °C. b, Nyquist plot of Li|layered SPE|Li symmetrical coin cells at different aging durations. The EIS measurements were conducted at 60 °C with an AC perturbation amplitude of 10 mV over a frequency range from 10 MHz to 0.01 Hz, using 10 data points per decade, under open-circuit voltage conditions in the potentiostatic mode.",
+   "rotated_deg": 0,
+   "bbox": [
+    82.1,
+    72.9,
+    513.2,
+    195.6
+   ],
+   "w": 1198,
+   "h": 342,
+   "dpi": 200,
+   "src": "Yuan 2026 - Sup) Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0) SI.pdf",
+   "blank": 0.816,
+   "manual_crop": "SI text layer has a broken font encoding (g→e, b→l, h→o, d→' ', e.g. 'Fieure'/'Talle'), so the tool's caption regex never fired on this page and the number was reported as a gap; caption text repaired by hand from the text layer (rendered PDF glyphs are intact); figure is a single embedded raster above the caption — clip = raster bbox + 3 pt, rendered at the raster's native 200 dpi (300 dpi would only upsample) (2026-10-04, litdb-curator)",
+   "viewed": true
   },
   {
    "key": "fS34",
@@ -249,230 +743,596 @@
    "blank": 0.371
   },
   {
+   "key": "fS36",
+   "kind": "figure",
+   "label": "S36",
+   "page": 57,
+   "file": "fig_S36.png",
+   "caption": "Figure S36. a-b, Visualization of stress distribution in a Li|Layered SPE|Li symmetric pouch cell after (a) 1000 s and after (b) 50000 s Li plating/stripping using a 3D stress visualization technique.",
+   "rotated_deg": 0,
+   "bbox": [
+    152.9,
+    76.4,
+    442.0,
+    192.3
+   ],
+   "w": 804,
+   "h": 323,
+   "dpi": 200,
+   "src": "Yuan 2026 - Sup) Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0) SI.pdf",
+   "blank": 0.631,
+   "manual_crop": "SI text layer has a broken font encoding (g→e, b→l, h→o, d→' ', e.g. 'Fieure'/'Talle'), so the tool's caption regex never fired on this page and the number was reported as a gap; caption text repaired by hand from the text layer (rendered PDF glyphs are intact); figure is a single embedded raster above the caption — clip = raster bbox + 3 pt, rendered at the raster's native 200 dpi (300 dpi would only upsample) (2026-10-04, litdb-curator)",
+   "viewed": "thumbnail only (contact sheet ~440 px, crop-bounds check)"
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 4,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Model parameters applied in mechanical simulation.",
+   "rotated_deg": 0,
+   "bbox": [
+    22.0,
+    74.0,
+    548.0,
+    328.0
+   ],
+   "w": 2193,
+   "h": 1059,
+   "dpi": 300,
+   "src": "Yuan 2026 - Sup) Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0) SI.pdf",
+   "blank": 0.962,
+   "manual_crop": "SI text layer has a broken font encoding (g→e, b→l, h→o, d→' ', e.g. 'Fieure'/'Talle'), so the tool's caption regex never fired on this page and the number was reported as a gap; caption text repaired by hand from the text layer (rendered PDF glyphs are intact); clip = caption line .. last row/footnote + margin, x 16-548 pt (Word line-number gutter partly included) (2026-10-04, litdb-curator)",
+   "viewed": "thumbnail only (contact sheet ~440 px, crop-bounds check)"
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 4,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Mesh details for the mechanical simulation of electrolytes.",
+   "rotated_deg": 0,
+   "bbox": [
+    22.0,
+    358.0,
+    548.0,
+    498.0
+   ],
+   "w": 2193,
+   "h": 584,
+   "dpi": 300,
+   "src": "Yuan 2026 - Sup) Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0) SI.pdf",
+   "blank": 0.939,
+   "manual_crop": "SI text layer has a broken font encoding (g→e, b→l, h→o, d→' ', e.g. 'Fieure'/'Talle'), so the tool's caption regex never fired on this page and the number was reported as a gap; caption text repaired by hand from the text layer (rendered PDF glyphs are intact); clip = caption line .. last row/footnote + margin, x 16-548 pt (Word line-number gutter partly included) (2026-10-04, litdb-curator)",
+   "viewed": "thumbnail only (contact sheet ~440 px, crop-bounds check)"
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 14,
+   "file": "tab_S3.png",
+   "caption": "Table S3. Summary of mechanical performances of ceramic-based solid electrolytes.",
+   "rotated_deg": 0,
+   "bbox": [
+    16.0,
+    74.0,
+    548.0,
+    284.0
+   ],
+   "w": 2218,
+   "h": 876,
+   "dpi": 300,
+   "src": "Yuan 2026 - Sup) Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0) SI.pdf",
+   "blank": 0.94,
+   "manual_crop": "SI text layer has a broken font encoding (g→e, b→l, h→o, d→' ', e.g. 'Fieure'/'Talle'), so the tool's caption regex never fired on this page and the number was reported as a gap; caption text repaired by hand from the text layer (rendered PDF glyphs are intact); clip = caption line .. last row/footnote + margin, x 16-548 pt (Word line-number gutter partly included) (2026-10-04, litdb-curator)",
+   "viewed": "thumbnail only (contact sheet ~440 px, crop-bounds check)"
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 14,
+   "file": "tab_S4.png",
+   "caption": "Table S4. Summary of mechanical performances of polymer-based solid electrolytes.",
+   "rotated_deg": 0,
+   "bbox": [
+    16.0,
+    311.0,
+    548.0,
+    568.0
+   ],
+   "w": 2218,
+   "h": 1072,
+   "dpi": 300,
+   "src": "Yuan 2026 - Sup) Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0) SI.pdf",
+   "blank": 0.945,
+   "manual_crop": "SI text layer has a broken font encoding (g→e, b→l, h→o, d→' ', e.g. 'Fieure'/'Talle'), so the tool's caption regex never fired on this page and the number was reported as a gap; caption text repaired by hand from the text layer (rendered PDF glyphs are intact); clip = caption line .. last row/footnote + margin, x 16-548 pt (Word line-number gutter partly included) (2026-10-04, litdb-curator)",
+   "viewed": "thumbnail only (contact sheet ~440 px, crop-bounds check)"
+  },
+  {
+   "key": "tS5",
+   "kind": "table",
+   "label": "S5",
+   "page": 18,
+   "file": "tab_S5.png",
+   "caption": "Table S5. Model parameters applied in the PFM simulations",
+   "rotated_deg": 0,
+   "bbox": [
+    16.0,
+    74.0,
+    548.0,
+    746.0
+   ],
+   "w": 1183,
+   "h": 2955,
+   "dpi": 160,
+   "src": "Yuan 2026 - Sup) Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0) SI.pdf",
+   "blank": 0.939,
+   "manual_crop": "SI text layer has a broken font encoding (g→e, b→l, h→o, d→' ', e.g. 'Fieure'/'Talle'), so the tool's caption regex never fired on this page and the number was reported as a gap; caption text repaired by hand from the text layer (rendered PDF glyphs are intact); table runs over SI p.18-19 — the two page parts (p.18 [16,74,548,746] · p.19 [16,74,548,731]) are rendered at 160 dpi and stacked vertically so the stitched long side stays ≤3000 px (2026-10-04, litdb-curator)",
+   "viewed": "thumbnail only (contact sheet ~440 px, crop-bounds check)",
+   "pages": [
+    18,
+    19
+   ],
+   "bbox_p19": [
+    16.0,
+    74.0,
+    548.0,
+    731.0
+   ]
+  },
+  {
+   "key": "tS6",
+   "kind": "table",
+   "label": "S6",
+   "page": 20,
+   "file": "tab_S6.png",
+   "caption": "Table S6. Contributions of the chemical potential (fchem), the interfacial energy gradient (fgrad), the elastic energy contribution (fels) and electrostatic (felec) to the overall mechano-electrichemical coupling in bare SPE system with initial lithium ion concentration of 4 M.",
+   "rotated_deg": 0,
+   "bbox": [
+    16.0,
+    70.0,
+    548.0,
+    390.0
+   ],
+   "w": 2218,
+   "h": 1334,
+   "dpi": 300,
+   "src": "Yuan 2026 - Sup) Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0) SI.pdf",
+   "blank": 0.932,
+   "manual_crop": "SI text layer has a broken font encoding (g→e, b→l, h→o, d→' ', e.g. 'Fieure'/'Talle'), so the tool's caption regex never fired on this page and the number was reported as a gap; caption text repaired by hand from the text layer (rendered PDF glyphs are intact); clip = caption line .. last row/footnote + margin, x 16-548 pt (Word line-number gutter partly included) (2026-10-04, litdb-curator)",
+   "viewed": "thumbnail only (contact sheet ~440 px, crop-bounds check)"
+  },
+  {
+   "key": "tS7",
+   "kind": "table",
+   "label": "S7",
+   "page": 27,
+   "file": "tab_S7.png",
+   "caption": "Table S7. Contributions of the chemical potential (fchem), the interfacial energy gradient (fgrad), the elastic energy contribution (fels) and electrostatic (felec) to the overall mechano-electrichemical coupling in layered SPE system with initial lithium ion concentration of 4 M.",
+   "rotated_deg": 0,
+   "bbox": [
+    16.0,
+    70.0,
+    548.0,
+    405.0
+   ],
+   "w": 2218,
+   "h": 1397,
+   "dpi": 300,
+   "src": "Yuan 2026 - Sup) Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0) SI.pdf",
+   "blank": 0.933,
+   "manual_crop": "SI text layer has a broken font encoding (g→e, b→l, h→o, d→' ', e.g. 'Fieure'/'Talle'), so the tool's caption regex never fired on this page and the number was reported as a gap; caption text repaired by hand from the text layer (rendered PDF glyphs are intact); clip = caption line .. last row/footnote + margin, x 16-548 pt (Word line-number gutter partly included) (2026-10-04, litdb-curator)",
+   "viewed": "thumbnail only (contact sheet ~440 px, crop-bounds check)"
+  },
+  {
    "key": "tS8",
    "kind": "table",
    "label": "S8",
-   "page": 5,
+   "page": 29,
    "file": "tab_S8.png",
-   "caption": "Table S8, the simulations for the bare SPE indicate that a non-uniform stress ﬁeld exacerbates inhomogeneous Li⁺ deposition. Conversely, under the lower-concentration condition, the layered SPE system maintains highly uniform Li⁺ deposition during both plating and stripping (Fig. S13 and Table S9). Ultimately, these ﬁndings conﬁrm that the stress-homogenization strategy enabled by the layered SPE is highly robust and broadly applicable across a wide range of lithium-ion concentrations. Design and characterization of layered SPE As shown in Fig. 2a, a micro-to-macro multiscale construction strategy is employed to fabricate the layered SPE. Due to the passive properties of SiO2, it is widely used as an inorganic ﬁller in SPEs to prevent side reactions with highly reactive Li metal. In Figs. 2b and S14, we syn- thesize amorphous 2D SiO2 NSs on a large scale via a wet chemical method. The sc",
+   "caption": "Table S8. Contributions of the chemical potential (fchem), the interfacial energy gradient (fgrad), the elastic energy contribution (fels) and electrostatic (felec) to the overall mechano-electrichemical coupling in bare SPE system with initial lithium ion concentration of 1.2 M.",
    "rotated_deg": 0,
    "bbox": [
-    34.7,
-    19.3,
-    566.4,
-    776.5
+    16.0,
+    70.0,
+    548.0,
+    390.0
    ],
-   "w": 2105,
-   "h": 2998,
-   "dpi": 285,
-   "src": "Yuan 2026 - Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0).pdf",
-   "blank": 0.811
+   "w": 2218,
+   "h": 1334,
+   "dpi": 300,
+   "src": "Yuan 2026 - Sup) Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0) SI.pdf",
+   "blank": 0.932,
+   "manual_crop": "REPLACES a false positive: the tool's tS8 was main-text p.5 cropped as a whole page (bbox [34.7, 19.3, 566.4, 776.5], src main PDF) because the body paragraph starts with 'Table S8, the simulations ...'; the real Table S8 is on SI p.29 under a broken-encoding caption 'Talle S8.'. SI text layer has a broken font encoding (g→e, b→l, h→o, d→' ', e.g. 'Fieure'/'Talle'), so the tool's caption regex never fired on this page and the number was reported as a gap; caption text repaired by hand from the text layer (rendered PDF glyphs are intact); clip = caption line .. last table row + margin, x 16-548 pt (line-number gutter partly included) (2026-10-04, litdb-curator)",
+   "viewed": "thumbnail only (contact sheet ~440 px, crop-bounds check)"
+  },
+  {
+   "key": "tS9",
+   "kind": "table",
+   "label": "S9",
+   "page": 31,
+   "file": "tab_S9.png",
+   "caption": "Table S9. Contributions of the chemical potential (fchem), the interfacial energy gradient (fgrad), the elastic energy contribution (fels) and electrostatic (felec) to the overall mechano-electrichemical coupling in layered SPE system with initial lithium ion concentration of 1.2 M.",
+   "rotated_deg": 0,
+   "bbox": [
+    16.0,
+    70.0,
+    548.0,
+    405.0
+   ],
+   "w": 2218,
+   "h": 1397,
+   "dpi": 300,
+   "src": "Yuan 2026 - Sup) Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0) SI.pdf",
+   "blank": 0.935,
+   "manual_crop": "SI text layer has a broken font encoding (g→e, b→l, h→o, d→' ', e.g. 'Fieure'/'Talle'), so the tool's caption regex never fired on this page and the number was reported as a gap; caption text repaired by hand from the text layer (rendered PDF glyphs are intact); clip = caption line .. last row/footnote + margin, x 16-548 pt (Word line-number gutter partly included) (2026-10-04, litdb-curator)",
+   "viewed": "thumbnail only (contact sheet ~440 px, crop-bounds check)"
+  },
+  {
+   "key": "tS10",
+   "kind": "table",
+   "label": "S10",
+   "page": 40,
+   "file": "tab_S10.png",
+   "caption": "Table S10. Mechanical properties of SiO₂ NSs",
+   "rotated_deg": 0,
+   "bbox": [
+    16.0,
+    409.0,
+    548.0,
+    581.0
+   ],
+   "w": 2218,
+   "h": 717,
+   "dpi": 300,
+   "src": "Yuan 2026 - Sup) Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0) SI.pdf",
+   "blank": 0.957,
+   "manual_crop": "SI text layer has a broken font encoding (g→e, b→l, h→o, d→' ', e.g. 'Fieure'/'Talle'), so the tool's caption regex never fired on this page and the number was reported as a gap; caption text repaired by hand from the text layer (rendered PDF glyphs are intact); clip = caption line .. last row/footnote + margin, x 16-548 pt (Word line-number gutter partly included) (2026-10-04, litdb-curator)",
+   "viewed": "thumbnail only (contact sheet ~440 px, crop-bounds check)"
+  },
+  {
+   "key": "tS11",
+   "kind": "table",
+   "label": "S11",
+   "page": 47,
+   "file": "tab_S11.png",
+   "caption": "Table S11. Comparison of mechanical properties of our work with reported work.",
+   "rotated_deg": 0,
+   "bbox": [
+    16.0,
+    74.0,
+    548.0,
+    541.0
+   ],
+   "w": 2218,
+   "h": 1947,
+   "dpi": 300,
+   "src": "Yuan 2026 - Sup) Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0) SI.pdf",
+   "blank": 0.948,
+   "manual_crop": "SI text layer has a broken font encoding (g→e, b→l, h→o, d→' ', e.g. 'Fieure'/'Talle'), so the tool's caption regex never fired on this page and the number was reported as a gap; caption text repaired by hand from the text layer (rendered PDF glyphs are intact); clip = caption line .. last row/footnote + margin, x 16-548 pt (Word line-number gutter partly included) (2026-10-04, litdb-curator)",
+   "viewed": "thumbnail only (contact sheet ~440 px, crop-bounds check)"
   }
  ],
  "missing_labels": [
   {
+   "key": "f6",
+   "why": "번호 공백 — 도구가 찾은 최대 번호 위라 도구 목록에 안 올랐다 (2026-10-04 litdb-curator 추가)",
+   "skipped": [],
+   "near_miss": [],
+   "resolved": "manual_crop fig_6.png (2026-10-04, litdb-curator) - see figures[f6].manual_crop"
+  },
+  {
    "key": "fS2",
    "why": "번호 공백 — 이 번호가 추출되지 않았다",
    "skipped": [],
-   "near_miss": []
+   "near_miss": [],
+   "resolved": "manual_crop fig_S2.png (2026-10-04, litdb-curator) - see figures[fS2].manual_crop"
   },
   {
    "key": "fS3",
    "why": "번호 공백 — 이 번호가 추출되지 않았다",
    "skipped": [],
-   "near_miss": []
+   "near_miss": [],
+   "resolved": "manual_crop fig_S3.png (2026-10-04, litdb-curator) - see figures[fS3].manual_crop"
   },
   {
    "key": "fS4",
    "why": "번호 공백 — 이 번호가 추출되지 않았다",
    "skipped": [],
-   "near_miss": []
+   "near_miss": [],
+   "resolved": "manual_crop fig_S4.png (2026-10-04, litdb-curator) - see figures[fS4].manual_crop"
   },
   {
    "key": "fS5",
    "why": "번호 공백 — 이 번호가 추출되지 않았다",
    "skipped": [],
-   "near_miss": []
+   "near_miss": [],
+   "resolved": "manual_crop fig_S5.png (2026-10-04, litdb-curator) - see figures[fS5].manual_crop"
   },
   {
    "key": "fS6",
    "why": "번호 공백 — 이 번호가 추출되지 않았다",
    "skipped": [],
-   "near_miss": []
+   "near_miss": [],
+   "resolved": "manual_crop fig_S6.png (2026-10-04, litdb-curator) - see figures[fS6].manual_crop"
   },
   {
    "key": "fS7",
    "why": "번호 공백 — 이 번호가 추출되지 않았다",
    "skipped": [],
-   "near_miss": []
+   "near_miss": [],
+   "not_cropped": "번호 공백 — SI 글자 인코딩 깨짐 · 우리 축 밖이라 안 잘랐다: schematic of the mechano-electrochemical coupling (same content as main Fig. 1g) (2026-10-04, litdb-curator)"
   },
   {
    "key": "fS8",
    "why": "번호 공백 — 이 번호가 추출되지 않았다",
    "skipped": [],
-   "near_miss": []
+   "near_miss": [],
+   "resolved": "manual_crop fig_S8.png (2026-10-04, litdb-curator) - see figures[fS8].manual_crop"
   },
   {
    "key": "fS9",
    "why": "번호 공백 — 이 번호가 추출되지 않았다",
    "skipped": [],
-   "near_miss": []
+   "near_miss": [],
+   "resolved": "manual_crop fig_S9.png (2026-10-04, litdb-curator) - see figures[fS9].manual_crop"
   },
   {
    "key": "fS10",
    "why": "번호 공백 — 이 번호가 추출되지 않았다",
    "skipped": [],
-   "near_miss": []
+   "near_miss": [],
+   "resolved": "manual_crop fig_S10.png (2026-10-04, litdb-curator) - see figures[fS10].manual_crop"
   },
   {
    "key": "fS11",
    "why": "번호 공백 — 이 번호가 추출되지 않았다",
    "skipped": [],
-   "near_miss": []
+   "near_miss": [],
+   "resolved": "manual_crop fig_S11.png (2026-10-04, litdb-curator) - see figures[fS11].manual_crop"
   },
   {
    "key": "fS12",
    "why": "번호 공백 — 이 번호가 추출되지 않았다",
    "skipped": [],
-   "near_miss": []
+   "near_miss": [],
+   "resolved": "manual_crop fig_S12.png (2026-10-04, litdb-curator) - see figures[fS12].manual_crop"
   },
   {
    "key": "fS13",
    "why": "번호 공백 — 이 번호가 추출되지 않았다",
    "skipped": [],
-   "near_miss": []
+   "near_miss": [],
+   "resolved": "manual_crop fig_S13.png (2026-10-04, litdb-curator) - see figures[fS13].manual_crop"
   },
   {
    "key": "fS18",
    "why": "번호 공백 — 이 번호가 추출되지 않았다",
    "skipped": [],
-   "near_miss": []
+   "near_miss": [],
+   "not_cropped": "번호 공백 — SI 글자 인코딩 깨짐 · 우리 축 밖이라 안 잘랐다: Raman spectrum of SiO2 NSs (606/495 cm-1 — values in main text) (2026-10-04, litdb-curator)"
   },
   {
    "key": "fS19",
    "why": "번호 공백 — 이 번호가 추출되지 않았다",
    "skipped": [],
-   "near_miss": []
+   "near_miss": [],
+   "resolved": "manual_crop fig_S19.png (2026-10-04, litdb-curator) - see figures[fS19].manual_crop"
   },
   {
    "key": "fS20",
    "why": "번호 공백 — 이 번호가 추출되지 않았다",
    "skipped": [],
-   "near_miss": []
+   "near_miss": [],
+   "resolved": "manual_crop fig_S20.png (2026-10-04, litdb-curator) - see figures[fS20].manual_crop"
   },
   {
    "key": "fS21",
    "why": "번호 공백 — 이 번호가 추출되지 않았다",
    "skipped": [],
-   "near_miss": []
+   "near_miss": [],
+   "resolved": "manual_crop fig_S21.png (2026-10-04, litdb-curator) - see figures[fS21].manual_crop"
   },
   {
    "key": "fS23",
    "why": "번호 공백 — 이 번호가 추출되지 않았다",
    "skipped": [],
-   "near_miss": []
+   "near_miss": [],
+   "not_cropped": "번호 공백 — SI 글자 인코딩 깨짐 · 우리 축 밖이라 안 잘랐다: flame-test photos (2026-10-04, litdb-curator)"
   },
   {
    "key": "fS24",
    "why": "번호 공백 — 이 번호가 추출되지 않았다",
    "skipped": [],
-   "near_miss": []
+   "near_miss": [],
+   "not_cropped": "번호 공백 — SI 글자 인코딩 깨짐 · 우리 축 밖이라 안 잘랐다: cross-section SEM + Si/O EDS of layered SPE (main Fig. 2h,i covers it) (2026-10-04, litdb-curator)"
   },
   {
    "key": "fS25",
    "why": "번호 공백 — 이 번호가 추출되지 않았다",
    "skipped": [],
-   "near_miss": []
+   "near_miss": [],
+   "resolved": "manual_crop fig_S25.png (2026-10-04, litdb-curator) - see figures[fS25].manual_crop"
   },
   {
    "key": "fS26",
    "why": "번호 공백 — 이 번호가 추출되지 않았다",
    "skipped": [],
-   "near_miss": []
+   "near_miss": [],
+   "resolved": "manual_crop fig_S26.png (2026-10-04, litdb-curator) - see figures[fS26].manual_crop"
   },
   {
    "key": "fS27",
    "why": "번호 공백 — 이 번호가 추출되지 않았다",
    "skipped": [],
-   "near_miss": []
+   "near_miss": [],
+   "resolved": "manual_crop fig_S27.png (2026-10-04, litdb-curator) - see figures[fS27].manual_crop"
   },
   {
    "key": "fS28",
    "why": "번호 공백 — 이 번호가 추출되지 않았다",
    "skipped": [],
-   "near_miss": []
+   "near_miss": [],
+   "not_cropped": "번호 공백 — SI 글자 인코딩 깨짐 · 우리 축 밖이라 안 잘랐다: EIS of layered/bare SPE at 25-80 °C (numbers re-read from Sup3 sheet 'Figure S28') (2026-10-04, litdb-curator)"
   },
   {
    "key": "fS29",
    "why": "번호 공백 — 이 번호가 추출되지 않았다",
    "skipped": [],
-   "near_miss": []
+   "near_miss": [],
+   "resolved": "manual_crop fig_S29.png (2026-10-04, litdb-curator) - see figures[fS29].manual_crop"
   },
   {
    "key": "fS30",
    "why": "번호 공백 — 이 번호가 추출되지 않았다",
    "skipped": [],
-   "near_miss": []
+   "near_miss": [],
+   "not_cropped": "번호 공백 — SI 글자 인코딩 깨짐 · 우리 축 밖이라 안 잘랐다: TGA of bare/layered SPE (5 % / 23 % residue — in main text) (2026-10-04, litdb-curator)"
   },
   {
    "key": "fS31",
    "why": "번호 공백 — 이 번호가 추출되지 않았다",
    "skipped": [],
-   "near_miss": []
+   "near_miss": [],
+   "resolved": "manual_crop fig_S31.png (2026-10-04, litdb-curator) - see figures[fS31].manual_crop"
   },
   {
    "key": "fS32",
    "why": "번호 공백 — 이 번호가 추출되지 않았다",
    "skipped": [],
-   "near_miss": []
+   "near_miss": [],
+   "resolved": "manual_crop fig_S32.png (2026-10-04, litdb-curator) - see figures[fS32].manual_crop"
   },
   {
    "key": "fS33",
    "why": "번호 공백 — 이 번호가 추출되지 않았다",
    "skipped": [],
-   "near_miss": []
+   "near_miss": [],
+   "resolved": "manual_crop fig_S33.png (2026-10-04, litdb-curator) - see figures[fS33].manual_crop"
+  },
+  {
+   "key": "fS35",
+   "why": "번호 공백 — 도구가 찾은 최대 번호 위라 도구 목록에 안 올랐다 (2026-10-04 litdb-curator 추가)",
+   "skipped": [],
+   "near_miss": [],
+   "not_cropped": "번호 공백 — SI 글자 인코딩 깨짐 · 우리 축 밖이라 안 잘랐다: ex-situ XPS C 1s / O 1s / S 2p of cycled Li (main Fig. 5g covers Li 1s / O 1s) (2026-10-04, litdb-curator)"
+  },
+  {
+   "key": "fS36",
+   "why": "번호 공백 — 도구가 찾은 최대 번호 위라 도구 목록에 안 올랐다 (2026-10-04 litdb-curator 추가)",
+   "skipped": [],
+   "near_miss": [],
+   "resolved": "manual_crop fig_S36.png (2026-10-04, litdb-curator) - see figures[fS36].manual_crop"
+  },
+  {
+   "key": "fS37",
+   "why": "번호 공백 — 도구가 찾은 최대 번호 위라 도구 목록에 안 올랐다 (2026-10-04 litdb-curator 추가)",
+   "skipped": [],
+   "near_miss": [],
+   "not_cropped": "번호 공백 — SI 글자 인코딩 깨짐 · 우리 축 밖이라 안 잘랐다: rate charge/discharge curves of Li|Layered SPE|LFP (2026-10-04, litdb-curator)"
+  },
+  {
+   "key": "fS38",
+   "why": "번호 공백 — 도구가 찾은 최대 번호 위라 도구 목록에 안 올랐다 (2026-10-04 litdb-curator 추가)",
+   "skipped": [],
+   "near_miss": [],
+   "not_cropped": "번호 공백 — SI 글자 인코딩 깨짐 · 우리 축 밖이라 안 잘랐다: 1st-400th discharge curves at 30 °C (2026-10-04, litdb-curator)"
+  },
+  {
+   "key": "fS39",
+   "why": "번호 공백 — 도구가 찾은 최대 번호 위라 도구 목록에 안 올랐다 (2026-10-04 litdb-curator 추가)",
+   "skipped": [],
+   "near_miss": [],
+   "not_cropped": "번호 공백 — SI 글자 인코딩 깨짐 · 우리 축 밖이라 안 잘랐다: photo of the 50 × 50 mm pouch cell (2026-10-04, litdb-curator)"
+  },
+  {
+   "key": "fS40",
+   "why": "번호 공백 — 도구가 찾은 최대 번호 위라 도구 목록에 안 올랐다 (2026-10-04 litdb-curator 추가)",
+   "skipped": [],
+   "near_miss": [],
+   "not_cropped": "번호 공백 — SI 글자 인코딩 깨짐 · 우리 축 밖이라 안 잘랐다: Ragone-type comparison chart (data = Table S12 / Sup3 'Figure S40') (2026-10-04, litdb-curator)"
   },
   {
    "key": "tS1",
    "why": "번호 공백 — 이 번호가 추출되지 않았다",
    "skipped": [],
-   "near_miss": []
+   "near_miss": [],
+   "resolved": "manual_crop tab_S1.png (2026-10-04, litdb-curator) - see figures[tS1].manual_crop"
   },
   {
    "key": "tS2",
    "why": "번호 공백 — 이 번호가 추출되지 않았다",
    "skipped": [],
-   "near_miss": []
+   "near_miss": [],
+   "resolved": "manual_crop tab_S2.png (2026-10-04, litdb-curator) - see figures[tS2].manual_crop"
   },
   {
    "key": "tS3",
    "why": "번호 공백 — 이 번호가 추출되지 않았다",
    "skipped": [],
-   "near_miss": []
+   "near_miss": [],
+   "resolved": "manual_crop tab_S3.png (2026-10-04, litdb-curator) - see figures[tS3].manual_crop"
   },
   {
    "key": "tS4",
    "why": "번호 공백 — 이 번호가 추출되지 않았다",
    "skipped": [],
-   "near_miss": []
+   "near_miss": [],
+   "resolved": "manual_crop tab_S4.png (2026-10-04, litdb-curator) - see figures[tS4].manual_crop"
   },
   {
    "key": "tS5",
    "why": "번호 공백 — 이 번호가 추출되지 않았다",
    "skipped": [],
-   "near_miss": []
+   "near_miss": [],
+   "resolved": "manual_crop tab_S5.png (2026-10-04, litdb-curator) - see figures[tS5].manual_crop"
   },
   {
    "key": "tS6",
    "why": "번호 공백 — 이 번호가 추출되지 않았다",
    "skipped": [],
-   "near_miss": []
+   "near_miss": [],
+   "resolved": "manual_crop tab_S6.png (2026-10-04, litdb-curator) - see figures[tS6].manual_crop"
   },
   {
    "key": "tS7",
    "why": "번호 공백 — 이 번호가 추출되지 않았다",
    "skipped": [],
-   "near_miss": []
+   "near_miss": [],
+   "resolved": "manual_crop tab_S7.png (2026-10-04, litdb-curator) - see figures[tS7].manual_crop"
+  },
+  {
+   "key": "tS9",
+   "why": "번호 공백 — 도구가 찾은 최대 번호 위라 도구 목록에 안 올랐다 (2026-10-04 litdb-curator 추가)",
+   "skipped": [],
+   "near_miss": [],
+   "resolved": "manual_crop tab_S9.png (2026-10-04, litdb-curator) - see figures[tS9].manual_crop"
+  },
+  {
+   "key": "tS10",
+   "why": "번호 공백 — 도구가 찾은 최대 번호 위라 도구 목록에 안 올랐다 (2026-10-04 litdb-curator 추가)",
+   "skipped": [],
+   "near_miss": [],
+   "resolved": "manual_crop tab_S10.png (2026-10-04, litdb-curator) - see figures[tS10].manual_crop"
+  },
+  {
+   "key": "tS11",
+   "why": "번호 공백 — 도구가 찾은 최대 번호 위라 도구 목록에 안 올랐다 (2026-10-04 litdb-curator 추가)",
+   "skipped": [],
+   "near_miss": [],
+   "resolved": "manual_crop tab_S11.png (2026-10-04, litdb-curator) - see figures[tS11].manual_crop"
+  },
+  {
+   "key": "tS12",
+   "why": "번호 공백 — 도구가 찾은 최대 번호 위라 도구 목록에 안 올랐다 (2026-10-04 litdb-curator 추가)",
+   "skipped": [],
+   "near_miss": [],
+   "not_cropped": "번호 공백 — SI 글자 인코딩 깨짐 · 우리 축 밖이라 안 잘랐다: comparison table of reported SPEs (σ, t+, cycle number) — text layer read; plotted values are Sup3 sheet 'Figure S40' (2026-10-04, litdb-curator)"
   }
- ]
+ ],
+ "curator_note": "2026-10-04 litdb-curator: main Fig. 1-5 recropped (top cut), Fig. 6 added (tool missed it silently), false-positive tab_S8 (main p.5 page) replaced by the real SI Table S8, 22 SI figures + 11 SI tables hand-cropped (SI font encoding broken); see each entry's recrop/manual_crop and missing_labels[].resolved/not_cropped"
 }

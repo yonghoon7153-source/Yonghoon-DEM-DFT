@@ -26,7 +26,8 @@
    "h": 2320,
    "dpi": 300,
    "src": "Kim 2026 - Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596).pdf",
-   "blank": 0.828
+   "blank": 0.828,
+   "viewed": true
   },
   {
    "key": "f2",
@@ -46,7 +47,8 @@
    "h": 1180,
    "dpi": 300,
    "src": "Kim 2026 - Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596).pdf",
-   "blank": 0.347
+   "blank": 0.347,
+   "viewed": true
   },
   {
    "key": "f3",
@@ -66,7 +68,8 @@
    "h": 1432,
    "dpi": 300,
    "src": "Kim 2026 - Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596).pdf",
-   "blank": 0.858
+   "blank": 0.858,
+   "viewed": true
   },
   {
    "key": "f4",
@@ -86,7 +89,8 @@
    "h": 1889,
    "dpi": 300,
    "src": "Kim 2026 - Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596).pdf",
-   "blank": 0.587
+   "blank": 0.587,
+   "viewed": true
   },
   {
    "key": "f5",
@@ -106,7 +110,8 @@
    "h": 2283,
    "dpi": 300,
    "src": "Kim 2026 - Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596).pdf",
-   "blank": 0.763
+   "blank": 0.763,
+   "viewed": true
   },
   {
    "key": "f6",
@@ -126,7 +131,8 @@
    "h": 2147,
    "dpi": 300,
    "src": "Kim 2026 - Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596).pdf",
-   "blank": 0.695
+   "blank": 0.695,
+   "viewed": true
   },
   {
    "key": "fS1",
@@ -169,6 +175,28 @@
    "blank": 0.724
   },
   {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 3,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Electrochemical performance of Bi power electrodes in EC/PC and TEGDME electrolyte. (a) The 1st and 2nd cycle charge-discharge curves. (b) Cycling stability at ~0.3C rate.",
+   "rotated_deg": 0,
+   "manual_crop": "tool reported fS3 as a number gap ('p3 그래픽 없음(img0/draw0)') — S3 is a vector-only two-panel plot (no raster) on SI p.3 between the S2 caption (y 386.5–399.0) and its own caption (y 640.1); clip = union of vector drawings (147.2,487.0,500.5,595.5) and axis/legend text spans (105.8..504.5, 465.6..622.2) + 2 pt (2026-10-04, litdb-curator)",
+   "bbox": [
+    103.8,
+    463.6,
+    506.5,
+    624.2
+   ],
+   "w": 1679,
+   "h": 670,
+   "dpi": 300,
+   "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
+   "blank": 0.921,
+   "viewed": true
+  },
+  {
    "key": "fS4",
    "kind": "figure",
    "label": "S4",
@@ -206,7 +234,8 @@
    "h": 793,
    "dpi": 300,
    "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
-   "blank": 0.943
+   "blank": 0.943,
+   "viewed": true
   },
   {
    "key": "fS6",
@@ -226,7 +255,8 @@
    "h": 1047,
    "dpi": 300,
    "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
-   "blank": 0.958
+   "blank": 0.958,
+   "viewed": true
   },
   {
    "key": "fS7",
@@ -246,7 +276,8 @@
    "h": 2217,
    "dpi": 300,
    "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
-   "blank": 0.86
+   "blank": 0.86,
+   "viewed": true
   },
   {
    "key": "fS8",
@@ -266,7 +297,8 @@
    "h": 806,
    "dpi": 300,
    "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
-   "blank": 0.897
+   "blank": 0.897,
+   "viewed": true
   },
   {
    "key": "fS9",
@@ -286,7 +318,8 @@
    "h": 1377,
    "dpi": 300,
    "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
-   "blank": 0.496
+   "blank": 0.496,
+   "viewed": true
   },
   {
    "key": "fS10",
@@ -306,7 +339,8 @@
    "h": 1516,
    "dpi": 300,
    "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
-   "blank": 0.439
+   "blank": 0.439,
+   "viewed": true
   },
   {
    "key": "fS11",
@@ -326,7 +360,8 @@
    "h": 1724,
    "dpi": 300,
    "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
-   "blank": 0.526
+   "blank": 0.526,
+   "viewed": true
   },
   {
    "key": "fS12",
@@ -346,7 +381,8 @@
    "h": 771,
    "dpi": 300,
    "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
-   "blank": 0.658
+   "blank": 0.658,
+   "viewed": true
   },
   {
    "key": "fS13",
@@ -366,7 +402,8 @@
    "h": 1301,
    "dpi": 300,
    "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
-   "blank": 0.664
+   "blank": 0.664,
+   "viewed": true
   },
   {
    "key": "fS14",
@@ -386,7 +423,8 @@
    "h": 1317,
    "dpi": 300,
    "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
-   "blank": 0.698
+   "blank": 0.698,
+   "viewed": true
   },
   {
    "key": "fS15",
@@ -406,7 +444,8 @@
    "h": 1407,
    "dpi": 300,
    "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
-   "blank": 0.627
+   "blank": 0.627,
+   "viewed": true
   },
   {
    "key": "fS16",
@@ -526,7 +565,8 @@
    "h": 1013,
    "dpi": 300,
    "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
-   "blank": 0.739
+   "blank": 0.739,
+   "viewed": true
   },
   {
    "key": "fS22",
@@ -546,7 +586,8 @@
    "h": 2376,
    "dpi": 300,
    "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
-   "blank": 0.902
+   "blank": 0.902,
+   "viewed": true
   },
   {
    "key": "fS23",
@@ -566,7 +607,8 @@
    "h": 672,
    "dpi": 300,
    "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
-   "blank": 0.883
+   "blank": 0.883,
+   "viewed": true
   },
   {
    "key": "fS24",
@@ -606,7 +648,8 @@
    "h": 1294,
    "dpi": 300,
    "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
-   "blank": 0.947
+   "blank": 0.947,
+   "viewed": true
   },
   {
    "key": "fS26",
@@ -626,7 +669,30 @@
    "h": 1182,
    "dpi": 300,
    "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
-   "blank": 0.833
+   "blank": 0.833,
+   "viewed": true
+  },
+  {
+   "key": "fS27",
+   "kind": "figure",
+   "label": "S27",
+   "page": 24,
+   "file": "fig_S27.png",
+   "caption": "Figure S27. High-precision leakage current analysis (a) for Bi electrodes in EC/PC and TEGDME with (b) raw data in EC/PC and (c) raw data in TEGDME.",
+   "rotated_deg": 0,
+   "manual_crop": "tool reported fS27 as a number gap ('p24 그래픽 없음(img0/draw0)') — S27 is a vector-only three-panel plot (16,467 drawing paths, no raster) at the top of SI p.24 above its caption (y 388.6); clip = union of vector drawings (165.4,94.0,484.1,350.9) and axis/legend text spans (123.4..486.9, 71.8..378.5) + 2 pt (2026-10-04, litdb-curator)",
+   "bbox": [
+    121.4,
+    69.8,
+    488.9,
+    380.5
+   ],
+   "w": 1533,
+   "h": 1296,
+   "dpi": 300,
+   "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
+   "blank": 0.915,
+   "viewed": true
   },
   {
    "key": "fS28",
@@ -646,7 +712,8 @@
    "h": 899,
    "dpi": 300,
    "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
-   "blank": 0.682
+   "blank": 0.682,
+   "viewed": true
   },
   {
    "key": "fS29",
@@ -666,7 +733,8 @@
    "h": 928,
    "dpi": 300,
    "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
-   "blank": 0.734
+   "blank": 0.734,
+   "viewed": true
   },
   {
    "key": "fS30",
@@ -686,7 +754,8 @@
    "h": 956,
    "dpi": 300,
    "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
-   "blank": 0.726
+   "blank": 0.726,
+   "viewed": true
   },
   {
    "key": "fS31",
@@ -706,7 +775,8 @@
    "h": 956,
    "dpi": 300,
    "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
-   "blank": 0.734
+   "blank": 0.734,
+   "viewed": true
   },
   {
    "key": "fS32",
@@ -726,7 +796,8 @@
    "h": 899,
    "dpi": 300,
    "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
-   "blank": 0.717
+   "blank": 0.717,
+   "viewed": true
   },
   {
    "key": "fS33",
@@ -746,7 +817,8 @@
    "h": 824,
    "dpi": 300,
    "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
-   "blank": 0.955
+   "blank": 0.955,
+   "viewed": true
   },
   {
    "key": "fS34",
@@ -766,7 +838,8 @@
    "h": 453,
    "dpi": 300,
    "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
-   "blank": 0.389
+   "blank": 0.389,
+   "viewed": true
   },
   {
    "key": "fS35",
@@ -786,7 +859,8 @@
    "h": 1572,
    "dpi": 300,
    "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
-   "blank": 0.31
+   "blank": 0.31,
+   "viewed": true
   },
   {
    "key": "tS1",
@@ -846,7 +920,8 @@
    "h": 921,
    "dpi": 300,
    "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
-   "blank": 0.922
+   "blank": 0.922,
+   "viewed": true
   },
   {
    "key": "tS4",
@@ -936,7 +1011,8 @@
    "skipped": [
     "p3 그래픽 없음(img0/draw0)"
    ],
-   "near_miss": []
+   "near_miss": [],
+   "resolved": "manual_crop fig_S3.png (2026-10-04, litdb-curator) - see figures[fS3].manual_crop"
   },
   {
    "key": "fS27",
@@ -944,7 +1020,8 @@
    "skipped": [
     "p24 그래픽 없음(img0/draw0)"
    ],
-   "near_miss": []
+   "near_miss": [],
+   "resolved": "manual_crop fig_S27.png (2026-10-04, litdb-curator) - see figures[fS27].manual_crop"
   }
  ]
 }
