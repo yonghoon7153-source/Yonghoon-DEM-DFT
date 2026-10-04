@@ -13,6 +13,9 @@ manifest · e12 requirements 하한 · 주석. RED 에서는 전부 빨갛다 (�
 
 합성 환경은 `tmp_path` 의 가짜 site 디렉터리다 — `*.dist-info` 의 METADATA · RECORD 와 파일을 쓰고 RECORD 의 sha256 은 실제로
 계산한다. 측정 경로는 함수 인자로 준다 (실제 `sys.path` 를 건드리지 않는다).
+
+★ 91차 (원장 §138 · 고정 표 §13-5 — G90-N1): 결과 이름 셋 (`path_origin` · `path_origins` · `path_origins_in_record`) 과 범위 선언
+`not_measured` 를 따라간다 — 사례 · node 이름 · 검사 강도는 그대로다. 범위 자체의 시험은 `tests/test_gate91_env_profile_scope.py`.
 """
 from __future__ import annotations
 
@@ -39,12 +42,13 @@ SMOKE = ROOT / "scripts" / "smoke_e2e.sh"
 REQ = ROOT / "requirements.txt"
 
 #: 고정 표 §4-2 — 결과 dict 의 닫힌 키 · 수 칸 · 불일치 축.
-RESULT_KEYS = {"profile", "lock_path", "lock_sha256", "status", "reason", "mismatches", "unverifiable", "counts"}
+RESULT_KEYS = {"profile", "lock_path", "lock_sha256", "status", "reason", "mismatches", "unverifiable", "counts",
+               "not_measured"}
 COUNT_KEYS = {"dists_locked", "dists_measured", "shadowed_locked", "shadowed_measured",
-              "files_verified", "files_unhashed", "origins_verified"}
+              "files_verified", "files_unhashed", "path_origins_in_record"}
 MISMATCH_KEYS = {"axis", "subject", "locked", "measured"}
 AXES = {"python", "implementation", "system", "machine", "libc", "dist_missing", "dist_extra",
-        "dist_version", "dist_record", "shadowed", "file", "origin"}
+        "dist_version", "dist_record", "shadowed", "file", "path_origin"}
 #: 고정 표 §4-1 — `env_fingerprint()` 의 module 축 (순서도 지문과 같다).
 KEY_MODULES = ("numpy", "scipy", "pandas", "joblib", "pyarrow", "pybamm", "matplotlib", "yaml",
                "pybammsolvers", "casadi")
@@ -153,7 +157,7 @@ def _assert_closed(r: dict) -> None:
         return
     assert r["reason"] == ""
     assert set(r["counts"]) == COUNT_KEYS and all(type(v) is int for v in r["counts"].values())
-    assert set(r["unverifiable"]) == {"dists_without_record", "origins"}
+    assert set(r["unverifiable"]) == {"dists_without_record", "path_origins"}
     for m in r["mismatches"]:
         assert set(m) == MISMATCH_KEYS and m["axis"] in AXES, sorted(m)
     keys = [(m["axis"], m["subject"]) for m in r["mismatches"]]
@@ -196,8 +200,8 @@ def test_e02_synthetic_round_trip_matches(synth, tmp_path):
     assert r["status"] == "MATCH", [(m["axis"], m["subject"]) for m in r["mismatches"]]
     assert r["lock_sha256"] == hashlib.sha256(lock.read_bytes()).hexdigest()
     assert r["counts"] == {"dists_locked": 11, "dists_measured": 11, "shadowed_locked": 1, "shadowed_measured": 1,
-                           "files_verified": 21, "files_unhashed": 10, "origins_verified": 9}
-    assert r["unverifiable"] == {"dists_without_record": ["pyyaml"], "origins": ["yaml"]}
+                           "files_verified": 21, "files_unhashed": 10, "path_origins_in_record": 9}
+    assert r["unverifiable"] == {"dists_without_record": ["pyyaml"], "path_origins": ["yaml"]}
 
 
 # ── e03 · 축마다 정확히 그 축 ───────────────────────────────────────────────────
@@ -258,7 +262,7 @@ AXIS_CASES = {
     "shadowed": (_lock_side(lambda t: _drop_line(t, r"^#@ shadowed extra-dist==0\.9 .*\n")), {"shadowed"}),
     "file_hash": (_env_side(_touch_file), {"file"}),
     "file_missing": (_env_side(_remove_file), {"file"}),
-    "origin_stray": (_env_side(_stray_copy), {"origin"}),
+    "origin_stray": (_env_side(_stray_copy), {"path_origin"}),
     "env_upgrade": (_env_side(_upgrade), {"dist_version", "dist_record"}),
 }
 
