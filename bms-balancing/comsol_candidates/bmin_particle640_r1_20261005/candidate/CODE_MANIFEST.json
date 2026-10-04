@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "run_id": "bmin_particle640_candidate_001",
+  "approved": false,
+  "usable": false,
+  "status": "OFFLINE_CANDIDATE_NOT_VALIDATED",
+  "previous_manifest_sha256": "3722a51fb1caeddd72fca3751f2ed78ed3e05d5f1938fa452503b3fa5c421a03",
+  "files": [
+    {
+      "file": "src/Bmin640Candidate.java",
+      "bytes": 80813,
+      "sha256": "ef0ca60aeae1d9bd3790bbfe49a5732984c489cc7928b9692f102e061f5462ff"
+    },
+    {
+      "file": "src/diagnostic_consumer.py",
+      "bytes": 26065,
+      "sha256": "d1a28157b2a2ea23ab285b40e4686de349ddc2133127707137eeaa47303660dd"
+    },
+    {
+      "file": "src/candidate_entry.py",
+      "bytes": 13995,
+      "sha256": "0a0d308101d54ce11af305033d77ede2e6f4a28c97ff15852a230b283c178fed"
+    },
+    {
+      "file": "PARENT_COMMAND.ps1",
+      "bytes": 24469,
+      "sha256": "fda741a149fdb32cd42879d19e0510292f62f7fa9db2089242f8a89a0c91e783"
+    },
+    {
+      "file": "CONTRACT.json",
+      "bytes": 55211,
+      "sha256": "98820a8447b8ed830447125567312c7033e77a141bab59e84f1a1b83b3b2ce42"
+    }
+  ]
+}

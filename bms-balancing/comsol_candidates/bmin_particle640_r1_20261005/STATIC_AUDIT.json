@@ -1,0 +1,237 @@
+{
+  "kind": "SOURCE_TEXT_JSON_HASH_DIFF_ONLY",
+  "candidate_manifest_sha256": "9dcb47f0ec3ec346b491d90c2836e3b30f54eb88fd5e4fbd216fc34782275cdb",
+  "previous_manifest_sha256": "3722a51fb1caeddd72fca3751f2ed78ed3e05d5f1938fa452503b3fa5c421a03",
+  "checks_total": 42,
+  "checks_failed": 0,
+  "candidate_imports": 0,
+  "candidate_parse_compile_tests": 0,
+  "JVM_COMSOL_gate_calls": 0,
+  "native_compatibility": "UNTESTED",
+  "functional_status": "UNTESTED",
+  "reverse_reconstruction_r1_to_v1": {
+    "src/diagnostic_consumer.py": [
+      {
+        "op": "restore_block",
+        "finding": "BMIN-N2",
+        "r1_lines": [
+          313,
+          335
+        ],
+        "r1_block_sha256": "c9d2fc5fb9c3d66623b7c786a59dcad791b530165eae1951a2dc11e7de127ff7",
+        "v1_lines": [
+          313,
+          320
+        ],
+        "v1_block_sha256": "1320a046c3bc0501a4e2f1dca7c44bb0be8232be5cd4ccc0319176723d9bea67"
+      }
+    ],
+    "PARENT_COMMAND.ps1": [
+      {
+        "op": "inverse_literals",
+        "entries": 4,
+        "occurrences": 6
+      },
+      {
+        "op": "restore_block",
+        "finding": "BMIN-N1",
+        "r1_lines": [
+          135,
+          186
+        ],
+        "r1_block_sha256": "9a2e909c1b72966c8f90b25ce285b707093a2e9f5bd459fb03184e072c19e636",
+        "v1_lines": [
+          134,
+          141
+        ],
+        "v1_block_sha256": "eed42d73cf48639c4262042881b82a8867f16575e99d4ca2c40487deb73bcffa"
+      }
+    ]
+  },
+  "checks": [
+    {
+      "check": "v1 package = bytes at the reviewed commit 74502af93",
+      "status": "STATIC_MATCH",
+      "detail": {
+        "files": 29,
+        "changed": []
+      }
+    },
+    {
+      "check": "v1 CODE_MANIFEST = 3722a51f…",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "v1 static audit re-run: 81 checks, 0 failed, rc 0 (v1 -> NORMAL480 chain) and its STATIC_AUDIT.json unchanged",
+      "status": "STATIC_MATCH",
+      "detail": {
+        "stdout": "{\"checks\": 81, \"failed\": 0, \"manifest\": \"3722a51fb1caeddd72fca3751f2ed78ed3e05d5f1938fa452503b3fa5c421a03\"}",
+        "git_status": ""
+      }
+    },
+    {
+      "check": "build_candidate_r1.py --check reproduces candidate/ and R1_LITERAL_CHANGES.json",
+      "status": "STATIC_MATCH",
+      "detail": [
+        "manifest 9dcb47f0ec3ec346b491d90c2836e3b30f54eb88fd5e4fbd216fc34782275cdb"
+      ]
+    },
+    {
+      "check": "src/Bmin640Candidate.java ASCII only",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "src/Bmin640Candidate.java byte-identical to v1",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "src/candidate_entry.py ASCII only",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "src/candidate_entry.py byte-identical to v1",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "src/diagnostic_consumer.py ASCII only",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "src/diagnostic_consumer.py all CRLF",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "src/diagnostic_consumer.py: undoing only the declared r1 changes gives the exact v1 bytes",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "PARENT_COMMAND.ps1 ASCII only",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "PARENT_COMMAND.ps1 all CRLF",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "PARENT_COMMAND.ps1: undoing only the declared r1 changes gives the exact v1 bytes",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "consumer: every function except mesh_evidence byte-identical to v1",
+      "status": "STATIC_MATCH",
+      "detail": {
+        "identical": 20
+      }
+    },
+    {
+      "check": "parent BHash byte-identical to v1",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "parent BRef byte-identical to v1",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "parent BRead byte-identical to v1",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "parent BSave byte-identical to v1",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "parent BInvoke byte-identical to v1",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "parent function set = v1 + GNativeAxis",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "GNativeAxis repeats GDecision's three nested helpers byte for byte",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "GDecision differs from v1 only by the declared transient_dof condition",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "GFields is called three times with the native axis",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "GNativeAxis is computed once, right after GDecision",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "parent names the native-axis cause NATIVE_CHILD_RETURN_MISSING_OR_ERROR",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "parent names the native-axis cause NATIVE_CHILD_RC",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "parent names the native-axis cause TERMINATION_EVIDENCE_MISSING",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "parent names the native-axis cause RESULT_IDENTITY",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "parent names the native-axis cause TERMINATION_EVIDENCE_INVALID",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "parent names the native-axis cause CONSUMER_NATIVE_LABEL_MISMATCH",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "parent names the native-axis cause NATIVE_AXIS_NOT_EVALUATED",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "consumer names TRANSIENT_DOF_READBACK_COUNT",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "consumer names TRANSIENT_DOF_READBACK_FORMAT",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "consumer names TRANSIENT_DOF_READBACK_VALUE",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "CONTRACT differs from v1 only in expected_transient_dof.status",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "r1 manifest: flags false, previous = v1, five files with exact bytes",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "COMMAND_MAP.json: v1 bytes with only the manifest SHA replaced",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "NATIVE_APPROVAL_FIELD_SPEC.json: v1 bytes with only the manifest SHA replaced",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "validation plan: bound to r1 manifest, approvals false, counts consistent, N1 / N2 / C1 cases present",
+      "status": "STATIC_MATCH",
+      "detail": []
+    },
+    {
+      "check": "r1 documents name the r1 manifest SHA",
+      "status": "STATIC_MATCH",
+      "detail": []
+    },
+    {
+      "check": "r1 documents carry the SPEC section 44-2 sentence",
+      "status": "STATIC_MATCH"
+    }
+  ]
+}

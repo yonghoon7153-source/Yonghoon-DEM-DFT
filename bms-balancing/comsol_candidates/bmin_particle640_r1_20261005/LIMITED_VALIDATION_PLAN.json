@@ -1,0 +1,469 @@
+{
+  "approved": false,
+  "usable": false,
+  "status": "PROPOSAL_NO_TESTS_RUN",
+  "manifest_sha256": "9dcb47f0ec3ec346b491d90c2836e3b30f54eb88fd5e4fbd216fc34782275cdb",
+  "scope": "Changed parts only of the B-min candidate r1 (v1 changed parts + the r1 corrections BMIN-N1 / BMIN-N2 / C1). Not a repeat of the accepted 111/78/1198/30 s suites, NORMAL480 or rtol30. Submitting this plan is not a pass.",
+  "v2_section_8_required_items": {
+    "outside-particle-axis mutation rejected": [
+      "PY03-02",
+      "PY03-03",
+      "PY03-04"
+    ],
+    "baseline forgery rejected": [
+      "PY04-01",
+      "PY04-02",
+      "PY04-03"
+    ],
+    "required endpoint missing": [
+      "PY02-01",
+      "PY05-01",
+      "PY05-02"
+    ],
+    "same count, wrong times / coordinates": [
+      "PY05-03",
+      "PY05-04",
+      "PY05-06"
+    ],
+    "value exactly equal to a limit": [
+      "PS01-04",
+      "PS01-16",
+      "PY01-02"
+    ],
+    "limit excess": [
+      "PY01-03",
+      "PY01-04",
+      "PS01-02"
+    ],
+    "NaN": [
+      "PY06-01"
+    ],
+    "normal / protective / error separation": [
+      "PS01-07",
+      "PS01-09",
+      "PS01-12",
+      "PS01-13",
+      "PS01-14",
+      "PS01-15",
+      "PY01-01",
+      "PY02-04",
+      "PY02-05",
+      "PY03-01",
+      "PY07-01"
+    ],
+    "parent budget decision": [
+      "PS01-05",
+      "PS01-06",
+      "PS01-10",
+      "PS01-11",
+      "PY07-02"
+    ],
+    "exit-code linkage": [
+      "PY01-01",
+      "PY01-03",
+      "PY02-04",
+      "PS01-08"
+    ]
+  },
+  "equality_rule": "Equal to a limit is within (<=). With every validity condition holding, max |dV| <= 0.001 V and max |dx_surface| <= 1e-4 for both electrodes gives WITHIN_LIMITS_THIS_WINDOW; any one strictly greater gives EXCEEDS_LIMITS (SPEC section 44-2).",
+  "groups": [
+    {
+      "id": "PY01",
+      "engine": "Python",
+      "actual_target": "consumer.analyze -> actual candidate_entry.analyze (inert table / log source)",
+      "cases": [
+        {
+          "id": "PY01-01",
+          "fixture": "150 s normal end, all 1,637 requested stored, primary maxima dV 0.0004 V, dx_N 3e-5, dx_P 2e-5",
+          "expected": "limited BMIN640_150S_COMPARISON_COMPLETE; native_completion NORMAL_150S_COMPLETED; evidence_validity VALID; mesh_comparison WITHIN_LIMITS_THIS_WINDOW; entry rc 0; overall INCOMPLETE"
+        },
+        {
+          "id": "PY01-02",
+          "fixture": "as PY01-01 but max dV exactly 0.001 and max dx_N exactly 0.0001 (decimal strings in the CSV)",
+          "expected": "WITHIN_LIMITS_THIS_WINDOW (equality is within)"
+        },
+        {
+          "id": "PY01-03",
+          "fixture": "as PY01-01 but one primary voltage delta 0.0010000000001",
+          "expected": "EXCEEDS_LIMITS; evidence_validity VALID; limited still BMIN640_150S_COMPARISON_COMPLETE; errors []; entry rc 0 (an excess is a result, not a failure)"
+        },
+        {
+          "id": "PY01-04",
+          "fixture": "as PY01-01 but only dx_P = 0.00010001 at 137.4 s, coordinate index 200",
+          "expected": "EXCEEDS_LIMITS; windows.primary.surface_x_P reports time 137.4, index 200 and the contract coordinate string"
+        }
+      ]
+    },
+    {
+      "id": "PY02",
+      "engine": "Python",
+      "actual_target": "consumer.guard_evidence / native_stop / three_fields",
+      "cases": [
+        {
+          "id": "PY02-01",
+          "fixture": "no guard, last stored 149.9",
+          "expected": "DID_NOT_REACH_150 (termination axis); native_completion NOT_ESTABLISHED; INCONCLUSIVE"
+        },
+        {
+          "id": "PY02-02",
+          "fixture": "a stored time 150.1",
+          "expected": "GUARD_TIME_RANGE"
+        },
+        {
+          "id": "PY02-03",
+          "fixture": "correct 150 s tables but console carries NORMAL480_PRODUCER_COMPLETE",
+          "expected": "PRODUCER_OUTPUT_FAILURE"
+        },
+        {
+          "id": "PY02-04",
+          "fixture": "electrolyte guard crosses at 130 s, coherent native stop line",
+          "expected": "PROTECTED_STOP_150S_INCOMPLETE; native_completion PROTECTIVE_STOP; evidence INVALID; INCONCLUSIVE; primary_compared = requested times 120 .. t_minus (100 of 301 when t_minus = 129.9), recorded; entry rc 1"
+        },
+        {
+          "id": "PY02-05",
+          "fixture": "electrolyte guard crosses at 100 s (before the window)",
+          "expected": "as PY02-04 with primary_compared 0 and primary windows None"
+        }
+      ]
+    },
+    {
+      "id": "PY03",
+      "engine": "Python",
+      "actual_target": "consumer configuration axis (binding_evidence / runtime_evidence I-2 / mesh_evidence I-3) after a valid termination",
+      "cases": [
+        {
+          "id": "PY03-01",
+          "fixture": "console AXES_PARTICLE lines with Nel=320 (an unchanged NORMAL480 source)",
+          "expected": "MESH_READBACK:AXES_PARTICLE=pce1|Nel=640|Nord=1|Distribution=CubicRoot; native_completion NORMAL_150S_COMPLETED kept; evidence INVALID; INCONCLUSIVE; no numeric section"
+        },
+        {
+          "id": "PY03-02",
+          "fixture": "AXES_PHYSICAL_MESH_DOMAIN=2|numelem=120 (physical axis changed)",
+          "expected": "MESH_READBACK:AXES_PHYSICAL_MESH_DOMAIN=2|numelem=60"
+        },
+        {
+          "id": "PY03-03",
+          "fixture": "runtime read-back electrolyte_positive_check differs from NORMAL480 (a key outside runtime_settings_required)",
+          "expected": "RUNTIME_SETTING_VS_NORMAL480:electrolyte_positive_check"
+        },
+        {
+          "id": "PY03-04",
+          "fixture": "runtime read-back rtol 1.0E-7",
+          "expected": "RUNTIME_SETTING:rtol"
+        },
+        {
+          "id": "PY03-05",
+          "fixture": "batch log: exactly one 'Number of degrees of freedom solved for: 156925 (plus 12 internal DOFs).' inside the single Time-Dependent Solver section (the Stationary 1202+12 line before it)",
+          "expected": "mesh_readback PASS; transient_dof 156925 / 12; transient_dof_matches_expected true; review_note null; dof_outside_transient_section lists 1202 / 12"
+        },
+        {
+          "id": "PY03-06",
+          "fixture": "as PY03-05 but the transient line reads 157000 (plus 12)",
+          "expected": "mesh_readback PASS (record only); transient_dof_matches_expected false; transient_dof_difference solved +75; review_note set; native / evidence / mesh fields unaffected by the difference"
+        },
+        {
+          "id": "PY03-07",
+          "fixture": "transient DOF line deleted; only the Stationary 1202+12 line (outside the section) remains",
+          "expected": "TRANSIENT_DOF_READBACK_COUNT:0 (configuration axis) -> evidence INVALID; mesh INCONCLUSIVE; consumer native_completion NORMAL_150S_COMPLETED kept"
+        },
+        {
+          "id": "PY03-08",
+          "fixture": "no DOF line anywhere in batch.log",
+          "expected": "TRANSIENT_DOF_READBACK_COUNT:0"
+        },
+        {
+          "id": "PY03-09",
+          "fixture": "two DOF lines inside the Time-Dependent Solver section (ambiguous)",
+          "expected": "TRANSIENT_DOF_READBACK_COUNT:2"
+        },
+        {
+          "id": "PY03-10",
+          "fixture": "one malformed line inside the section ('Number of degrees of freedom solved for: 156925.' without the internal part)",
+          "expected": "TRANSIENT_DOF_READBACK_FORMAT"
+        }
+      ]
+    },
+    {
+      "id": "PY04",
+      "engine": "Python",
+      "actual_target": "pinned baseline identity (consumer) and entry pre-run identity with inert transport",
+      "cases": [
+        {
+          "id": "PY04-01",
+          "fixture": "baseline axes_profile_N.csv with one byte changed at the bound path",
+          "expected": "SOURCE_IDENTITY (numeric axis); INCONCLUSIVE"
+        },
+        {
+          "id": "PY04-02",
+          "fixture": "baseline axes_runtime_settings.csv replaced by the NORMAL240 read-back",
+          "expected": "SOURCE_IDENTITY (configuration axis)"
+        },
+        {
+          "id": "PY04-03",
+          "fixture": "entry execute with a baseline size mismatch, inert C2 / transport",
+          "expected": "BASELINE_IDENTITY before any compile reservation; status INCOMPLETE; no native attempt recorded"
+        }
+      ]
+    },
+    {
+      "id": "PY05",
+      "engine": "Python",
+      "actual_target": "consumer.window_coverage / profile (I-7a/b/c)",
+      "cases": [
+        {
+          "id": "PY05-01",
+          "fixture": "candidate tables lack 149.9",
+          "expected": "STRICT_REQUEST_TIME_MISSING with 149.9 in missing_target and missing_strict_requested"
+        },
+        {
+          "id": "PY05-02",
+          "fixture": "candidate tables lack 120",
+          "expected": "STRICT_REQUEST_TIME_MISSING (120 in missing_target)"
+        },
+        {
+          "id": "PY05-03",
+          "fixture": "same count, wrong times: candidate read-back tlist and tables carry 120.15 instead of 120.1",
+          "expected": "RUNTIME_TLIST (configuration axis) before any comparison"
+        },
+        {
+          "id": "PY05-04",
+          "fixture": "contract dict passed directly with primary_comparison_times_s having 120.15 for 120.1 (count 301)",
+          "expected": "PRIMARY_CONTRACT"
+        },
+        {
+          "id": "PY05-05",
+          "fixture": "baseline tables lack 135",
+          "expected": "STRICT_REQUEST_TIME_MISSING (135 in missing_baseline)"
+        },
+        {
+          "id": "PY05-06",
+          "fixture": "one candidate profile coordinate off by 2e-15 m; separately a time block with 240 rows",
+          "expected": "PROFILE_COORD_DOMAIN; PROFILE_COUNT"
+        },
+        {
+          "id": "PY05-07",
+          "fixture": "an extra stored time 120.05 on both sides with a large voltage delta there",
+          "expected": "auxiliary_count 1; auxiliary maxima reported; primary maxima and the verdict unchanged"
+        }
+      ]
+    },
+    {
+      "id": "PY06",
+      "engine": "Python",
+      "actual_target": "consumer.numeric invariants (I-5, I-6) and LIMIT_CONTRACT",
+      "cases": [
+        {
+          "id": "PY06-01",
+          "fixture": "NaN in preflight_boundary4.csv phis_V at 130 s",
+          "expected": "NONFINITE (numeric axis); INCONCLUSIVE"
+        },
+        {
+          "id": "PY06-02",
+          "fixture": "total Li relative drift 2e-6",
+          "expected": "LI_DRIFT"
+        },
+        {
+          "id": "PY06-03",
+          "fixture": "initial Li_N differs from NORMAL480 by 2e-9 mol/m2",
+          "expected": "INITIAL_LI_COMPONENT"
+        },
+        {
+          "id": "PY06-04",
+          "fixture": "contract limits voltage_V '0.002' (dict passed directly)",
+          "expected": "LIMIT_CONTRACT"
+        }
+      ]
+    },
+    {
+      "id": "PY07",
+      "engine": "Python",
+      "actual_target": "native state linkage and entry analysis budget",
+      "cases": [
+        {
+          "id": "PY07-01",
+          "fixture": "NATIVE_STATE errors [NATIVE_PHASE_BUDGET], status INCOMPLETE, otherwise normal tables",
+          "expected": "native_completion NOT_ESTABLISHED with the state errors in native_completion_cause; INCONCLUSIVE; entry rc 1"
+        },
+        {
+          "id": "PY07-02",
+          "fixture": "entry analyze with a clock making analysis_elapsed_seconds 901",
+          "expected": "FINAL_BUDGET appended; limited INCOMPLETE; consumer fields stay provisional (field_authority) and PS01-05 shows the parent result INCONCLUSIVE"
+        }
+      ]
+    },
+    {
+      "id": "JV01",
+      "engine": "Java helper (exact checkShape and TIMES extracted; no COMSOL jars, no model)",
+      "actual_target": "Bmin640Candidate.checkShape",
+      "cases": [
+        {
+          "id": "JV01-01",
+          "fixture": "time vector 0 .. 150",
+          "expected": "accepted"
+        },
+        {
+          "id": "JV01-02",
+          "fixture": "time vector ending 150.0001",
+          "expected": "TIME_ORDER"
+        }
+      ]
+    },
+    {
+      "id": "PS01",
+      "engine": "Windows PowerShell 5.1 (actual GDecision and GFields extracted from the sealed PARENT_COMMAND.ps1)",
+      "actual_target": "GDecision / GNativeAxis / GFields extracted from the sealed r1 PARENT_COMMAND.ps1, fed Python-generated result JSON and child-return records",
+      "cases": [
+        {
+          "id": "PS01-01",
+          "fixture": "PY01-01 result",
+          "expected": "AWAITING_BMIN640_150S_EXTERNAL_ACCEPTANCE; GFields mesh_comparison WITHIN_LIMITS_THIS_WINDOW"
+        },
+        {
+          "id": "PS01-02",
+          "fixture": "PY01-03 result",
+          "expected": "AWAITING_BMIN640_150S_EXTERNAL_ACCEPTANCE; GFields EXCEEDS_LIMITS"
+        },
+        {
+          "id": "PS01-03",
+          "fixture": "PY01-03 result with mesh_comparison edited to WITHIN_LIMITS_THIS_WINDOW",
+          "expected": "INCOMPLETE (label disagrees with the decimal recomputation)"
+        },
+        {
+          "id": "PS01-04",
+          "fixture": "PY01-02 result (maxima strings exactly '0.001' and '0.0001')",
+          "expected": "AWAITING; WITHIN_LIMITS_THIS_WINDOW"
+        },
+        {
+          "id": "PS01-05",
+          "fixture": "PY01-01 result with analysis elapsed 901",
+          "expected": "GDecision INCOMPLETE; GFields native_completion NORMAL_150S_COMPLETED (parent-verified axis), INVALID, INCONCLUSIVE"
+        },
+        {
+          "id": "PS01-06",
+          "fixture": "PY01-01 result with overall 10,501",
+          "expected": "INCOMPLETE"
+        },
+        {
+          "id": "PS01-07",
+          "fixture": "PY02-04 result; and the same with mesh_comparison WITHIN_LIMITS_THIS_WINDOW",
+          "expected": "PROTECTED_STOP_150S_INCOMPLETE and GNativeAxis PROTECTIVE_STOP (GFields PROTECTIVE_STOP, INVALID, INCONCLUSIVE); the edited one: GDecision INCOMPLETE, native axis still PROTECTIVE_STOP, INCONCLUSIVE"
+        },
+        {
+          "id": "PS01-08",
+          "fixture": "PY01-01 result with analysis rc 1; and native rc 1",
+          "expected": "INCOMPLETE both"
+        },
+        {
+          "id": "PS01-09",
+          "fixture": "PY03-01 result (normal 150 s termination, configuration evidence failed) with native child rc 0",
+          "expected": "GDecision INCOMPLETE; GNativeAxis NORMAL_150S_COMPLETED (cause null); GFields native_completion NORMAL_150S_COMPLETED, evidence_validity INVALID, mesh_comparison INCONCLUSIVE"
+        },
+        {
+          "id": "PS01-10",
+          "fixture": "PY07-02 result (normal termination; entry added FINAL_BUDGET after analysis elapsed 901 s) with native child rc 0",
+          "expected": "GDecision INCOMPLETE; GFields NORMAL_150S_COMPLETED / INVALID / INCONCLUSIVE"
+        },
+        {
+          "id": "PS01-11",
+          "fixture": "PY01-01 result accepted by GDecision, then the final delivery / post-write budget fails (GFields called with limited INCOMPLETE and the computed native axis)",
+          "expected": "GFields NORMAL_150S_COMPLETED / INVALID / INCONCLUSIVE"
+        },
+        {
+          "id": "PS01-12",
+          "fixture": "native child record rc 1 (native failure) with any result",
+          "expected": "GNativeAxis NOT_ESTABLISHED cause NATIVE_CHILD_RC; GFields INVALID / INCONCLUSIVE"
+        },
+        {
+          "id": "PS01-13",
+          "fixture": "native child rc 0; DIAGNOSTIC_RESULT absent; and separately a result without termination / native_termination",
+          "expected": "GNativeAxis NOT_ESTABLISHED cause TERMINATION_EVIDENCE_MISSING (both)"
+        },
+        {
+          "id": "PS01-14",
+          "fixture": "PY02-04 protective result with native_completion edited to NORMAL_150S_COMPLETED",
+          "expected": "GNativeAxis NOT_ESTABLISHED cause CONSUMER_NATIVE_LABEL_MISMATCH (the label is not copied)"
+        },
+        {
+          "id": "PS01-15",
+          "fixture": "protective stop at 130 s plus a configuration evidence failure",
+          "expected": "GNativeAxis PROTECTIVE_STOP; GFields PROTECTIVE_STOP / INVALID / INCONCLUSIVE"
+        },
+        {
+          "id": "PS01-16",
+          "fixture": "C1 explicit precision case: consumer maximum voltage delta string with 31 significant digits just above 0.001 ('0.001000000000000000000000000001') labelled EXCEEDS_LIMITS by the consumer",
+          "expected": "GDecision INCOMPLETE. The string has 30 decimal places, beyond the 28-place scale of .NET decimal: TryParse either rounds it to 0.001 (parent label WITHIN != consumer EXCEEDS -> disagreement) or fails; both paths are INCOMPLETE (fail-closed), never WITHIN. This documents the disagreement principle, not a precision guarantee."
+        },
+        {
+          "id": "PS01-17",
+          "fixture": "PY01-01 result with mesh_readback.status PASS but transient_dof removed (and separately solved 0)",
+          "expected": "GDecision INCOMPLETE (BMIN-N2 structural check)"
+        }
+      ]
+    }
+  ],
+  "logical_groups": 9,
+  "cases": 54,
+  "sessions": {
+    "python": {
+      "count": 1,
+      "seconds": 210
+    },
+    "java_compile": {
+      "count": 1,
+      "seconds": 90
+    },
+    "stub_jvm": {
+      "count": 1,
+      "seconds": 60
+    },
+    "windows_powershell_5_1": {
+      "count": 1,
+      "seconds": 150
+    }
+  },
+  "budget_seconds": {
+    "harness_and_seal": 600,
+    "python": 210,
+    "java_compile": 90,
+    "jvm": 60,
+    "powershell": 150,
+    "preserve_package": 300,
+    "incomplete_record": 120,
+    "overall": 1530
+  },
+  "engines": "Python = CONTRACT.python (fixed hash); PowerShell = the fixed powershell.exe hash in PARENT_COMMAND.ps1; Java helper compiler / JVM = the candidates of the accepted normal-30 s validation COMMANDS.json, identities confirmed before the first test. No other engine, permission or ExecutionPolicy fallback.",
+  "harness_sha256": null,
+  "harness_state": "Not written or executed. Exact harness / engine / call seal required after separate authorization and before the first test.",
+  "inert_required_before_target_import": true,
+  "first_failure_stop_no_retry": true,
+  "no_COMSOL_full_model_compile": true,
+  "fixtures": "Temporary test location only. No future_run / future_parent / future_authorizations, no user approval / release / runtime token. Production functions are extracted from the sealed bytes; no Python re-implementation of the PowerShell decision.",
+  "reused_acceptance": "BSave / BInvoke / C2 / owned Job / post-write budget bodies are byte-identical to NORMAL480 (STATIC_AUDIT) and keep their earlier acceptance; only the new comparison / state / three-field / budget branches are validated here.",
+  "executor": "User decision (the normal 30 / 60 s changed-part validations were run by CX on the Windows machine).",
+  "r1_additions": {
+    "BMIN-N1 (native axis kept apart)": [
+      "PS01-09 (expectation changed)",
+      "PS01-05 (expectation changed)",
+      "PS01-07 (expectation extended)",
+      "PS01-10",
+      "PS01-11",
+      "PS01-12",
+      "PS01-13",
+      "PS01-14",
+      "PS01-15"
+    ],
+    "BMIN-N2 (transient DOF observation required)": [
+      "PY03-05 (split)",
+      "PY03-06",
+      "PY03-07",
+      "PY03-08",
+      "PY03-09",
+      "PY03-10",
+      "PS01-17"
+    ],
+    "C1 (precision wording)": [
+      "PS01-03 / PS01-04 = limit-adjacent values and label consistency only",
+      "PS01-16 explicit precision case (fail-closed)"
+    ]
+  }
+}

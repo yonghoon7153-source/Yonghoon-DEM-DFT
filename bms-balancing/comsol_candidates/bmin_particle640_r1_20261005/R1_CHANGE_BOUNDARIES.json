@@ -1,0 +1,41 @@
+{
+  "kind": "DECLARED_R1_CHANGE_BOUNDARIES_NOT_VALIDATION",
+  "functional_status": "UNTESTED",
+  "native_approval": false,
+  "from": "../bmin_particle640_20261004/candidate (v1 · CODE_MANIFEST 3722a51fb1caeddd72fca3751f2ed78ed3e05d5f1938fa452503b3fa5c421a03 · reviewed at commit 74502af93)",
+  "to": "candidate (r1)",
+  "review": "reviews/r14_repros/codex63/comsol_bmin_candidate_review_20261005 (LOCAL_CORRECTIONS_REQUIRED · BMIN-N1 · BMIN-N2 · C1) · SPEC section 48",
+  "rule": "Undoing only the operations below, in order, must give the exact v1 bytes (tools/static_audit_r1.py). v1 itself is chained to the NORMAL480 originals by its own static audit (81 checks), which the r1 audit runs again.",
+  "scope_kept": "Java, entry, physics, request list, coordinates, baseline CSV bindings, limits, budgets, paths and identifiers are unchanged (byte-identical Java and entry; CONTRACT differs in one status string).",
+  "files": {
+    "src/Bmin640Candidate.java": {"kind": "UNCHANGED", "line_endings": "LF"},
+    "src/candidate_entry.py": {"kind": "UNCHANGED", "line_endings": "LF"},
+    "src/diagnostic_consumer.py": {
+      "kind": "ONE_DECLARED_BLOCK",
+      "line_endings": "CRLF",
+      "reverse": [
+        {"op": "restore_block", "finding": "BMIN-N2", "new": ["def mesh_evidence(", null], "old": ["def mesh_evidence(", null],
+         "reason": "mesh_evidence now requires exactly one well-formed DOF line inside the single Time-Dependent Solver section (the same opening / closing markers native_stop already requires once): missing, outside-only (e.g. the Stationary initialization 1202+12), ambiguous (two or more lines) or malformed is TRANSIENT_DOF_READBACK_* -> I-3 incomplete. A valid value different from the extrapolated 156,925+12 is recorded with its difference and a review note, never a failure. The six mesh read-back lines are unchanged."}
+      ]
+    },
+    "PARENT_COMMAND.ps1": {
+      "kind": "LITERALS_PLUS_ONE_DECLARED_BLOCK",
+      "line_endings": "CRLF",
+      "reverse": [
+        {"op": "inverse_literals", "table": "PARENT_COMMAND.ps1",
+         "reason": "BMIN-N1: $bNativeAxis initialised, computed once right after GDecision by GNativeAxis, and passed to the three GFields calls (PARENT_LOCAL_DECISION, FINAL_BOUNDARY, POST_WRITE console line). BMIN-N2: GDecision also requires mesh_readback.transient_dof with an integer solved > 0."},
+        {"op": "restore_block", "finding": "BMIN-N1", "new": ["function GNativeAxis(", "\ntry {\n"], "old": ["function GFields(", "\ntry {\n"], "end_offset": 1,
+         "reason": "GNativeAxis: the parent verifies the native child return (returned, rc 0, no exception / new error), run / manifest binding of the result, and the termination evidence (the same structural checks GDecision applies: reported / final / safe-prefix times, stored-time count, guards, stop reason, normal 150 s or a coherent protective stop) and then requires the consumer label to agree; any failure gives NOT_ESTABLISHED with a cause (NATIVE_CHILD_RETURN_MISSING_OR_ERROR, NATIVE_CHILD_RC, TERMINATION_EVIDENCE_MISSING, RESULT_IDENTITY, TERMINATION_EVIDENCE_INVALID, CONSUMER_NATIVE_LABEL_MISMATCH). GFields takes native_completion from that axis whatever the comparison / evidence / analysis / delivery outcome; only a parent-accepted normal result (AWAITING label and a NORMAL axis) carries the consumer comparison verdict, everything else is evidence_validity INVALID and mesh_comparison INCONCLUSIVE. GNativeAxis repeats GDecision's three nested helpers byte for byte (PowerShell nested functions are not visible outside their parent)."}
+      ]
+    },
+    "CONTRACT.json": {"kind": "JSON", "changed": {"expected_transient_dof.status": "RECORD_ONLY -> OBSERVATION_REQUIRED_DIFFERENCE_RECORD_ONLY (BMIN-N2)"}},
+    "CODE_MANIFEST.json": {"kind": "JSON", "changed": "previous_manifest_sha256 = v1 manifest; sizes / SHA-256 of the three changed files"},
+    "COMMAND_MAP.json": {"kind": "JSON", "changed": "manifest SHA only (manifest_sha256 and the last argv of parent / execute / analyze)"},
+    "NATIVE_APPROVAL_FIELD_SPEC.json": {"kind": "JSON", "changed": "code_manifest_sha256 only"}
+  },
+  "known_limits": [
+    "The entry (unchanged) returns rc 1 when its preservation / policy / cleanup checks fail after a native run; the parent cannot tell those apart from a native failure, so such a run stays native_completion NOT_ESTABLISHED (cause NATIVE_CHILD_RC) - conservative; the stage of each error is in NATIVE_STATE.json.",
+    "GNativeAxis checks the consumer's structured termination output (as GDecision does), not the raw native logs; the consumer reads the logs."
+  ],
+  "c1_wording": "PS01-03 / PS01-04 check the limit-adjacent values and label consistency only; they are not decimal-precision rounding tests. r1 adds PS01-16 (a 31-significant-digit maximum just above the limit) whose expected result is INCOMPLETE through the consumer / parent disagreement - the fail-closed principle, not a precision guarantee."
+}

@@ -3753,3 +3753,25 @@ v1 후보 · 꾸러미 문서 · 요청문 바이트 그대로 (검토 대상 �
 - 다음 (검토자 · 우리 같음): 추가 계산이 아니라 **정상 셀 한 개의 원자료와 시험 조건 확보**. 받으면 조건 대응표부터 채우고 비교 가능 여부를 판단한다
   — 비교 구간 · 정렬 · 지표는 결과 전에 고정 (§42).
 - 이 절이 바꾸지 않는 것: 준비본 · v2 · 대응표 바이트 · B-min · 게이트 리뷰와 무관 · RUN_SCOPE 0.
+
+## 52. B-min 후보 r1 — 국소 보완 (BMIN-N1 · BMIN-N2 · C1) · 정적 대조 42/42 · 재검토 요청 (검증 · native 미승인) (2026-10-05)
+
+> **추가 기록이다.** §48-2 의 보완 지시를 수행했다. v1 꾸러미는 덮어쓰지 않았고 (검토 커밋 `74502af93` 바이트 그대로), r1 은 새 꾸러미
+> `comsol_candidates/bmin_particle640_r1_20261005/` (규칙 `e80c1bf7d`) 다.
+
+| 항목 | r1 |
+|---|---|
+| manifest | **`9dcb47f0ec3ec346b491d90c2836e3b30f54eb88fd5e4fbd216fc34782275cdb`** (이전 = v1 `3722a51f…`) · run_id · root · 경로 · 예산 v1 과 같다 |
+| BMIN-N1 | 부모 `GNativeAxis` (자식 반환 · run / manifest 결속 · GDecision 과 같은 종료 구조 검사 · consumer 라벨 일치 — 실패 원인 6 + 미평가) · `GFields` 가 그 축을 비교 / 증거 / 분석 / 전달 결과와 상관없이 싣는다 · 받아들인 정상 결과만 consumer 비교 판정 · 나머지 INVALID · INCONCLUSIVE · 호출 셋 · 초기화 · GDecision 직후 1 회 계산 |
+| BMIN-N2 | consumer `mesh_evidence` — 단일 Time-Dependent 구간 안 DOF 줄 정확히 하나 · 형식 · solved > 0 (`TRANSIENT_DOF_READBACK_COUNT` / `_FORMAT` / `_VALUE` → I-3 미완) · 예상과 다른 유효값은 값 · 차이 · `review_note` 만 · 부모 GDecision 의 `transient_dof.solved` 구조 검사 · CONTRACT 상태 문구 |
+| C1 | PS01-03 / 04 = 한도 부근 값 · 라벨 일치 검사로 좁힘 · PS01-16 (소수 30 자리 → INCOMPLETE · 불일치 = 미완) |
+| 그대로 | Java · entry 바이트 동일 · 물리 · 목록 · 좌표 · 기준 · 한도 · 예산 |
+| 정적 대조 | `tools/static_audit_r1.py` **42/42 · rc 0** (두 번 실행 바이트 동일) — r1 → v1 역재구성 · v1 = 검토 커밋 바이트 · v1 감사 81 재실행 (v1 → NORMAL480) · 유지 함수 · 보조 함수 동일 · GDecision 차이 = DOF 조건 하나 · 봉인 · 문서 결속 |
+| 검증안 | 9 군 **54 사례** (v1 41 + N1 7 · N2 5 · C1 1 · 기대값 갱신 셋 · PY03-05 분리) · 1,530 s · 비활성 |
+| 알려 둔 한계 | entry (그대로) 가 보존 · 정책 · 정리 실패 때도 rc 1 → 그런 실행은 `NOT_ESTABLISHED` (`NATIVE_CHILD_RC`) 로 보수적 · `GNativeAxis` 는 consumer 의 구조화 종료 출력을 본다 (원 로그는 consumer) |
+
+재검토 요청문 `docs/COMSOL_BMIN_CANDIDATE_R1_REVIEW_REQUEST_20261005.md` (검토 대상 = 이 절과 그 요청문이 든 커밋의 바이트 · Q1–Q4 · 자체 신고 a–d).
+발송은 사용자. 다음 (각각 별도 승인): 재검토 회신 → 변경부 검증 → native 1 회 → 결과 수신 검토.
+
+이 절이 바꾸지 않는 것: v1 꾸러미 · v1 요청문 바이트 · B-min v2 · 정상 gate INCOMPLETE · 실효 정책 UNVERIFIED · 960 s · 유한 σ · 다른 공간 축 미승인 ·
+게이트 리뷰와 무관 · RUN_SCOPE 0. 컴파일 · 기능 시험 · COMSOL/JVM · native 없음.

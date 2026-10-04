@@ -1,0 +1,38 @@
+{
+  "from": "../bmin_particle640_20261004/candidate (v1 · manifest 3722a51fb1caeddd72fca3751f2ed78ed3e05d5f1938fa452503b3fa5c421a03)",
+  "to": "candidate (r1)",
+  "PARENT_COMMAND.ps1": [
+    {
+      "before": "\n$limited='INCOMPLETE'\nfunction BHash(",
+      "after": "\n$limited='INCOMPLETE'\n$bNativeAxis=$null\nfunction BHash(",
+      "count": 1,
+      "finding": "BMIN-N1"
+    },
+    {
+      "before": "@{run_id=$c.run_id;manifest_sha256=$ManifestSha} $bClock.Elapsed.TotalSeconds\n",
+      "after": "@{run_id=$c.run_id;manifest_sha256=$ManifestSha} $bClock.Elapsed.TotalSeconds\n    $bNativeAxis=GNativeAxis $bRunReturn $result @{run_id=$c.run_id;manifest_sha256=$ManifestSha}\n",
+      "count": 1,
+      "finding": "BMIN-N1"
+    },
+    {
+      "before": "fields=(GFields $limited $result)",
+      "after": "fields=(GFields $limited $bNativeAxis $result)",
+      "count": 3,
+      "finding": "BMIN-N1"
+    },
+    {
+      "before": "$Result.mesh_readback.status -cne 'PASS' -or ",
+      "after": "$Result.mesh_readback.status -cne 'PASS' -or -not (GStruct $Result.mesh_readback.transient_dof) -or $Result.mesh_readback.transient_dof.solved -isnot [int] -or $Result.mesh_readback.transient_dof.solved -le 0 -or ",
+      "count": 1,
+      "finding": "BMIN-N2"
+    }
+  ],
+  "blocks": "src/diagnostic_consumer.py mesh_evidence (BMIN-N2) and PARENT_COMMAND.ps1 GFields -> GNativeAxis + GFields (BMIN-N1) are declared in R1_CHANGE_BOUNDARIES.json",
+  "CONTRACT.json": {
+    "expected_transient_dof.status": {
+      "before": "RECORD_ONLY",
+      "after": "OBSERVATION_REQUIRED_DIFFERENCE_RECORD_ONLY",
+      "finding": "BMIN-N2"
+    }
+  }
+}
