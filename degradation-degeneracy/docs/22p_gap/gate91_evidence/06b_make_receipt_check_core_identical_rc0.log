@@ -1,0 +1,7 @@
+# make_receipt.py --check paired_fixed5_v4 grid_fit_v5 (91차 · 7ff263197 + 재생성 영수증 · 앵커 작업 트리) · HEAD 7ff263197 · dirty 3 · source_digest f0175fff71132003
+# 2026-10-04T23:51:58Z · python3 docs/22p_gap/make_receipt.py --check paired_fixed5_v4 grid_fit_v5
+
+✅ paired_fixed5_v4: core 재생성 바이트 동일 · core_sha 1e3ea7c806f8d535
+✅ grid_fit_v5: core 재생성 바이트 동일 · core_sha 23c78ed0c9cd7b89
+rc=0
+# 끝 2026-10-04T23:53:22Z · HEAD 7ff263197 · dirty 3
