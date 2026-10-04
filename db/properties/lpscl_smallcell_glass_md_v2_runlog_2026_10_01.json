@@ -132,5 +132,30 @@
   "판독": "10 런 전부 종료 코드 0 · 파일 7 · 중단 흔적(_aborted_) 없음 · msd.json 해시 10 개 서로 다름 · 크기 400 ps 61M / 800 ps 120M 로 길이와 맞음 · 두 기계 드라이버 sha16 c3e2d358ee53cefa 같음. gabia 예외 (4) 의 런별 피크 합계 최대 43,437 MiB (T600 seed2) < 가드 46,000 · 우리 MD 최대 2,038 MiB < 3,500 · host 최저 44,415 MiB. gabia 런 벽시계 합 227,635 s ≈ 63.2 h · kgy 큐 벽시계 01:46 → 다음날 12:56 ≈ 35.2 h — 카드 상한 150 GPU-h 안.",
   "디스크": "gabia /data 2.1T 남음 · kgy / 299G 남음",
   "⏭": "원자료 합치기·판독은 편지 CO 회신 뒤 (카드 '결과는 회신 전까지 안 본다')"
+ },
+ "⚠_판독_도구_정정_2026_10_04_결과_전": {
+  "⛔_트랙": "li2s = 외부 1저자. 규칙 변경이 아니다 — 비준된 판독 규칙(카드 v2 §4 · 개정 CO)을 도구가 더 충실히 따르게 고친 것과 실행 블록의 실수를 적는다.",
+  "무엇이_있었나": [
+   "합치기 ✅ — kgy 5 런 → gabia `.incoming` rsync · `rsync -a -c --dry-run -i` 빈 출력 (5 런 전부 바이트 같음 · 사용자 붙여넣기 10-04).",
+   "gabia 첫 판독 시도 (10-04 14:29:15 · 도구 70ce36ea) — 판독 도구 selftest 가 **실패**했다 (합성 브라운 궤적 시험 ✗ → KeyError). 원인: 미니 트리에 tools/ionic 만 꺼냈고, selftest 의 합성 MTO 곡선은 드라이버 함수 `tools/modelc_v3/disorder_ensemble_diffusion.py::msd_multi_origin` 으로 만든다 (`msd_diffusive_check.mto_from_traj` 가 파일 위치로 불러온다). 로컬 깨기 시험은 modelc_v3 까지 복사해서 이걸 못 잡았다 — 미니 트리로 그대로 재현했다.",
+   "그런데도 판독이 시작됐다 — 블록이 `selftest | tail -n 1 && …` 였다 (`&&` 가 tail 의 성공을 본다). kgy 블록에서는 `{ …; r=$?; tail; [ $r = 0 ]; }` 로 막았는데 gabia 블록에서 빠뜨렸다 (에이전트 실수).",
+   "판독은 결과 줄을 찍기 전이었다 — 사용자 붙여넣기의 마지막 줄 = 첫 런 진행 표시 (`… T550 seed1 (gabia)`) · 결과는 맨 끝에 한꺼번에 찍힌다 · 사용자에게 Ctrl-C 를 요청했다."
+  ],
+  "판독_경로는_영향이_없었다": "드라이버가 msd.json 에 MTO 곡선(`msd_Li_A2_mto` · `times_ps_mto`)을 직접 쓴다 (disorder_ensemble_diffusion.py:192 extra) — read_run 은 그것을 읽고 드라이버 파일이 필요 없다. 실패는 selftest 의 합성 곡선 단계에서만 났다. 그래도 절차대로 selftest 통과 뒤 판독을 다시 한다 (부트스트랩 시드 고정 — 같은 결과).",
+  "고친_것": [
+   "glass_v2_readout.aggregate — **오류·결측 런이 하나라도 있으면 갈래를 내지 않는다** ('판정 보류' · rc 3). 종전에는 오류 런을 '통과 아님' 으로만 세어 N 이 줄면 갈래가 '닫는다'(v2-1)로 갈 수 있었다 — 도구가 못 잰 것이 판정이 되는 길 (카드 §4 '런 유효성 위반은 판독 전 재실행이지 제외가 아니다').",
+   "selftest — 드라이버가 없으면 이유를 말하고 실패한다 (KeyError 로 죽지 않는다) · 오류·결측 → 보류 · 종료 코드 3 음성 시험.",
+   "꺼내는 파일에 tools/modelc_v3/disorder_ensemble_diffusion.py 를 더한다 (sha16 c3e2d358ee53cefa = 10 런을 돌린 드라이버와 같다).",
+   "블록 — selftest 종료 코드를 `{ …; r=$?; tail; [ $r = 0 ]; }` 로 본다."
+  ],
+  "시험": "glass_v2_readout selftest 25 ✓ (repo) · 미니 트리(드라이버 포함) PASS · 미니 트리(드라이버 없음) FAIL 이유 표시 · 깨기 F1–F4 4/4 빨강",
+  "도구_sha16_새판": {
+   "tools/ionic/msd_diffusive_check.py": "a2c06ce2bde2e733",
+   "tools/ionic/quench_ss_event.py": "02d61d82e9b64cc0",
+   "tools/ionic/melt_quench_uma.py": "47c7e0aab5d14fbd",
+   "tools/ionic/glass_v2_readout.py": "1773186f71a0338a",
+   "tools/modelc_v3/disorder_ensemble_diffusion.py": "c3e2d358ee53cefa"
+  },
+  "개정_CO_의_sha16_목록": "개정 CO §12 ② · 도구_selftest 의 glass_v2_readout sha16 758222365cb7013b 는 이 정정으로 대체된다 (개정 파일은 비준된 기록이라 고치지 않는다 — 이 기록이 이긴다)."
  }
 }

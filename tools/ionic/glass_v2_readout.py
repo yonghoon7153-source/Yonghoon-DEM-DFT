@@ -231,12 +231,26 @@ def aggregate(runs, framework_mode="record"):
                     "framework_literal_moved_count": sum(1 for r in recs
                                                          if (r.get("framework") or {}).get("literal_framework_moved")),
                     "beta_by_machine_descriptive": mach}
-    b_main = branch(per_T[600]["N"], per_T[550]["N"])
-    b_common = branch(per_T[600]["N_common_b256_record"], per_T[550]["N_common_b256_record"])
-    return {"per_T": per_T, "branch": b_main, "branch_common_b256_record": b_common,
+    #: ⛔ 2026-10-04 (gabia 첫 판독 시도 · 결과 전) — 오류 런을 '통과 아님' 으로만 세면 N 이 줄어 **갈래가 '닫는다'(v2-1)
+    #:   로 갈 수 있다** — 도구가 못 잰 것이 판정이 된다. 카드 §4 '점·시드를 빼지 않는다 (런 유효성 위반은 판독 전 재실행)'
+    #:   대로 **오류 런이 하나라도 있으면 갈래를 내지 않는다** (통과도 미통과도 아니다 · 고치고 다시 판독).
+    errs = sorted(f"T{k[0]} seed{k[1]}: {r['error']}" for k, r in runs.items() if r and r.get("error"))
+    errs += [f"T{T} seed{sd}: 런 없음" for T in TEMPS for sd in SEEDS if (T, sd) not in runs]
+    if errs:
+        held = f"판정 보류 — 오류·결측 런 {len(errs)} 개 (통과도 미통과도 아니다 · 고치고 다시 판독한다)"
+        b_main = b_common = held
+    else:
+        b_main = branch(per_T[600]["N"], per_T[550]["N"])
+        b_common = branch(per_T[600]["N_common_b256_record"], per_T[550]["N_common_b256_record"])
+    return {"per_T": per_T, "branch": b_main, "branch_common_b256_record": b_common, "errors": errs,
             "branch_same_under_common_b": b_main.split(" ")[0] == b_common.split(" ")[0],
             "framework_mode": framework_mode,
             "⛔": "갈래는 규칙의 기계적 적용이다 — 확정은 외부 1저자 · D·σ 절대값은 싣지 않는다"}
+
+
+def exit_code(agg) -> int:
+    """판독 종료 코드 — 오류·결측 런이 있어 갈래를 안 냈으면 3 (통과·미통과가 아니다), 아니면 0."""
+    return 3 if agg.get("errors") else 0
 
 
 def collect(root, n_boot=400, framework=True):
@@ -343,6 +357,14 @@ def _selftest() -> int:
     runs3 = dict(runs2); runs3[(550, 3)] = {"error": "traj.xyz 를 못 읽었다", "C1_pass": True,
                                              "C2": {"final_verdict": "통과"}}
     ck("⛔음성 오류 런은 '통과' 가 적혀 있어도 세지 않는다", aggregate(runs3)["per_T"][550]["N"] == 2)
+    _a3 = aggregate(runs3)
+    ck("⛔음성 오류 런이 하나라도 있으면 갈래를 내지 않는다 (판정 보류 — '닫는다' 로 새지 않는다)",
+       _a3["branch"].startswith("판정 보류") and _a3["branch_common_b256_record"].startswith("판정 보류") and len(_a3["errors"]) == 1)
+    runs4 = dict(runs2); runs4.pop((600, 5))
+    ck("⛔음성 런이 빠져도 갈래를 내지 않는다", aggregate(runs4)["branch"].startswith("판정 보류"))
+    ck("양성 오류가 없으면 errors 가 비고 갈래가 나온다", aggregate(runs2)["errors"] == [])
+    ck("⛔음성 종료 코드: 보류면 3 · 갈래가 나오면 0 (스크립트가 보류를 성공으로 넘기지 않는다)",
+       exit_code(_a3) == 3 and exit_code(aggregate(runs2)) == 0)
     old = old_550_reference()
     ck("옛 550 K 기술 비교: 다섯 시드 · seed1 은 초기구조가 다르다고 적는다",
        isinstance(old, dict) and len(old) == 5 and "⚠" in old[1] and old[2]["beta_MTO_old_400ps"] == 0.8198)
@@ -377,6 +399,11 @@ def _selftest() -> int:
         js.write_text(json.dumps({"T_K": 600.0, "times_ps": [0.1 * i for i in range(1, 551)],
                                   "msd_Li_A2": [0.375 * 0.1 * i for i in range(1, 551)], "save_fs": 100.0}))
         got = M.mto_from_traj(js, 100.0)
+        ck("합성 MTO 곡선을 드라이버 함수(tools/modelc_v3/disorder_ensemble_diffusion.py · msd_multi_origin)로 만들었다 "
+           "— 없으면 꺼낼 때 그 파일도 같이 꺼낸다 (판독 경로는 msd.json 의 MTO 를 읽어 필요 없다)", bool(got))
+        if not got:
+            print(f"selftest FAIL ({len(fails)} 실패) — 드라이버가 없어 합성 시험을 못 했다")
+            return 1
         dd = json.loads(js.read_text()); dd.update(got or {}); js.write_text(json.dumps(dd))
         r = read_run(js, n_boot=40)
         ck("합성 브라운 궤적: C1 통과 · β_MTO ≈ 1 · σ 사다리 끝 b = 64 (원점 550 → 블록 ≥ 8)",
@@ -423,6 +450,10 @@ def main() -> int:
     agg = aggregate(runs, framework_mode=a.framework if a.framework != "off" else "record")
     old = old_550_reference()
     print("\n".join(show(agg, runs, old)))
+    if agg["errors"]:
+        print("⛔ 오류 런이 있어 갈래를 내지 않았다 (rc 3):")
+        for e in agg["errors"]:
+            print("   ·", e)
     if a.out:
         pathlib.Path(a.out).parent.mkdir(parents=True, exist_ok=True)
         pathlib.Path(a.out).write_text(json.dumps({"aggregate": agg, "runs": {f"T{k[0]}_s{k[1]}": v for k, v in strip_D(runs).items()},
@@ -430,7 +461,7 @@ def main() -> int:
                                                    "amendment": "db/properties/lpscl_smallcell_glass_md_v2_amendment_co_2026_10_04.json"},
                                                   ensure_ascii=False, indent=1, default=str) + "\n", encoding="utf-8")
         print(f"-> {a.out}")
-    return 0
+    return exit_code(agg)
 
 
 if __name__ == "__main__":
