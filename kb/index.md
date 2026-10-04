@@ -1,15 +1,17 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-10-04 · managed-files: 499
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-10-04 · managed-files: 500
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
-## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 296건)
+## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 297건)
 - 2026-10-04 · `kb/reviews/li2s1a_CO_prompt_li2s_glass_v2_card_2026_09_30.md` — CO 프롬프트 — li2s 소셀 유리 MD v2 카드 (잠정): 550 K 800 ps · 600 K 400 ps · 같은 5 시드 · 기계–시드 교차 · σ 사다리를 b_min 에 닿게 · 확인 요청 여섯 (외부 1저자에게) · 초안 (2026-09-30) · 10-03 실행 상태 덧붙임 (10 …
 - 2026-10-04 · `kb/reviews/li2s1a_CO_reply_li2s_glass_v2_card_2026_10_04.md` — 회신 CO — 외부 1저자 (li2s 소셀 유리 MD v2 카드): Q-CO-1~6 · 800 ps σ 도 여전히 하한 · 두 온도 공통 b = 256 열 · 끝 두 b 판정 갈리면 경계 · near-miss σ 거리 다섯 · 대조 계 후보 a-Li₃PS₄ 유리 · 골격 게이트 숫자를 지금 · 보조 창 50–200 ps 기록 열 · 수령 (2026-10-04 · 사용자 붙여넣기) — 회신 원문 · 고…
 - 2026-10-04 · `kb/reviews/li2s1a_CQ_prompt_li2s_glass_v2_readout_2026_10_04.md` — CQ 프롬프트 — li2s 소셀 유리 MD v2 판독: 회신 CO 규칙을 결과 전에 넣고 한 번 판독 · 갈래 v2-2 (규칙 적용) · near-miss · 보조 창 · 골격 기록 · 확인 요청 다섯 (외부 1저자에게) · 초안 (2026-10-04) — 사용자 검토 · 발송 대기
+- 2026-10-04 · `kb/reports/weekly_2026_10_04.md` — 주간 정리 2026-09-28 ~ 10-04 (주간보고 초안) · 초안 (2026-10-04 · 도는 계산은 10-04 17:59 실측…
+- 2026-10-04 · `kb/projects/cascade_rebuild_log_2026_09.md` — cascade 재건 일지 — 2026-09 (누적) · open
 - 2026-10-03 · `kb/reviews/codex_CP_prompt_cascade_v7_probe_card_2026_10_01.md` — CP 프롬프트 — cascade D_rel v7 탐침 카드 (초안): v6 방법상 무효 뒤 온도 하나만 바꾼다 · 무도핑 H0 탐침이 v6 자격을 먼저 통과한 가장 낮은 온도 T* · 확인 요청 다섯 · 발송 완료 2026-10-03 (사용자 'codex 돌아왔다 cp 보…
 - 2026-10-03 · `kb/reviews/codex_CP_reply_cascade_v7_probe_card_2026_10_03.md` — 회신 CP — cascade D_rel v7 탐침 카드: 초안 그대로 실행 NO-GO · 온도 탐침 방향은 조건부 GO · P0 3 (온도 메타 결속 · 10 % 자격 기준의 통계적 역할 · H0 통과 → 40 런 자동 착수 끊기) · P1 (framework_alarm 은 보조 지표 · Q-CP-1 · Q-CP-4) · 수령 (2026-10-03 · 사용자 붙여넣기) — 회신 원문 · 고…
 - 2026-10-02 · `kb/projects/handoff_2026_10_02_evacuation.md` — 대피 인계 — 2026-10-02 (friendly 세션 토큰 소진 → 서브 대시보드 세션 · 머지 때 충돌 0 설계) · 진행
@@ -25,8 +27,6 @@
 - 2026-09-30 · `kb/projects/handoff_cei_2026_09_30.md` — CEI (Nd 계면) 인계 카드 — 실험 쪽 1저자에게 작업 양도 (2026-09-30) · 발송 대기 — 외부 리뷰 회신 CM(NO-GO) 이행판 · 사용자가 …
 - 2026-09-30 · `kb/syntheses/cei_nd_manuscript_framing_2026_09_18.md` — Nd 원고 논지 확정안 — "고전압 안정성 개선" 대신 "고전압 계면 분해 산물의 재분배" 로 (09-30 · 외부 리뷰 회신 CM — 종전 "양극 계면 열화 억제" 철회) · 확정 — 사용자 승인 2026-09-29 "ㅇㅇ si 쪽으로 가는게 …
 - 2026-09-29 · `kb/projects/handoff_2026_09_29_return_to_origin.md` — origin 복귀·통합 카드 — claude/evac-2026-09-28 → claude/friendly-meitner-lldvar (2026-09-29) · 발송 대기 — 사용자가 §0 프롬프트를 origin 세션에 붙여 넣는다
-- 2026-09-29 · `kb/projects/merge_request_2026_09_28.md` — 머지 요청 (최종) — 대피 브랜치 claude/evac-2026-09-28 → claude/friendly-meitner-lldvar · 최종 — 09-29 01:4x KST 실측 (fast-forward …
-- 2026-09-28 · `kb/reviews/li2s1a_CH_prompt_li2s_cd_reply_pilot800_2026_09_27.md` — CH 프롬프트 — li2s 소셀 유리 MD: 회신 CD 반영 · 파일럿 400 K 800 ps 결과 (C2·C1 미통과 → 400 K 측정 안 됨) · 카드 개정 v2 · 다섯 시드 P 배위 통계 (새 항목 1) · 결정·확인 요청 셋 (외부 1저자에게) · 발송됨 (사용자 · 2026-09-27 · 발송판 = 다섯 시드 결과…
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -406,13 +406,14 @@
 - `kb/reviews/vasp_bundle_codex_request_2026_08_11.md` — Codex 검토 요청 — VASP 외주 원샷 번들 (자리 선호 + E_ads)  (2026-08-11 · 회신 대기)
 - `kb/reviews/vasp_bundle_v2_rereview_request_2026_08_11.md` — Codex 재검토 요청 — VASP 번들 v2 (HOLD 10항 반영 완료 · 발송 GO/NO-GO)  (2026-08-11 · 회신 대기 (GO/NO-GO))
 
-## reports/ (6)
+## reports/ (7)
 - `kb/reports/paper_first_author_requests_2026_08.md` — 논문 1저자 요청 — 답변 누적 (2026-08~)
 - `kb/reports/sdcp_preliminary_final_2026_08_03.md` — SDCP 예비 최종 보고서 (2026-08-03)
 - `kb/reports/sdcp_review_action_plan_2026_08_03.md` — SDCP 파이프라인 — 리뷰 2건 통합 실행계획 (2026-08-03)
 - `kb/reports/weekly_2026_09_14.md` — 주간 정리 2026-09-07 ~ 09-13 (주간보고 초안)  (2026-09-14 · 완료 (2026-09-14 · 다음 주 문서는 새 파일))
 - `kb/reports/weekly_2026_09_20.md` — 주간 정리 2026-09-14 ~ 09-20 (주간보고 초안)  (2026-09-20 · 완료 (2026-09-20 · 다음 주 문서는 새 파일))
 - `kb/reports/weekly_2026_09_27.md` — 주간 정리 2026-09-21 ~ 09-27 (주간보고 초안)  (2026-09-28 · 완료 (2026-09-28 · 다음 주 문서는 새 파일))
+- `kb/reports/weekly_2026_10_04.md` — 주간 정리 2026-09-28 ~ 10-04 (주간보고 초안)  (2026-10-04 · 초안 (2026-10-04 · 도는 계산은 10-04 17:59 실측…)
 
 ## projects/ (41)
 - `kb/projects/HANDOFF_2026_08_31_session.md` — 인수인계 — 2026-08-31 세션 (외주 C-12 AR→AV · 폴라론 S0 · nscf 사고)  (2026-09-03 · 활성)
@@ -420,7 +421,7 @@
 - `kb/projects/MUST_READ_digital_twin_north_star.md` — 🚨🚨🚨 MUST READ — AI 계산 스크리닝 플랫폼 North Star (구: Digital Twin)
 - `kb/projects/PRESENTATION_digital_twin_overview.md` — AI 계산 기반 스크리닝 플랫폼 — 발표용 종합 정리 (구: Digital Twin)
 - `kb/projects/cascade_pipeline_fixes_2026_08_19.md` — cascade 파이프라인 수정 목록 — codex 교차리뷰용 (2026-08-19 전수 정독 산물)  (2026-08-19 · 진행 — 진단 확정, 수정 미착수 (내일 codex 교차리뷰 예정))
-- `kb/projects/cascade_rebuild_log_2026_09.md` — cascade 재건 일지 — 2026-09 (누적)  (2026-09-19 · open)
+- `kb/projects/cascade_rebuild_log_2026_09.md` — cascade 재건 일지 — 2026-09 (누적)  (2026-10-04 · open)
 - `kb/projects/cascade_v23_review_2026_07_11.md` — Cascade v23 전체 리뷰 — 의도 지도 · 빠진 것 점검 · 후보군 구축 (2026-07-11)
 - `kb/projects/cei_explainer_prompt_2026_09_30.md` — CEI 설명·인계 AI 프롬프트 — 처음 보는 대학원생 눈높이 우선 (2026-09-30)  (2026-09-30 · 발송 대기 — 인계 묶음(zip)에 들어간다)
 - `kb/projects/cei_reading_guide_2026_09_30.md` — CEI 페이지 읽기 지침서 — 1저자·처음 보는 대학원생용 (2026-09-30)  (2026-09-30 · 발송 대기 — 인계 묶음(zip)에 들어간다)

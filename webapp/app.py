@@ -2070,7 +2070,11 @@ def _handoffs():
 #: 이고, 다른 구간이 생기면 그 구간은 "기록 없음" 만 찍힌다(수를 만들지 않는다).
 JOURNAL_GAPS = {("2026-08-26", "2026-09-07"): "커밋 806개",
                 # 2026-09-24 실측: git log --since=2026-09-15 --until=2026-09-22T23:59:59 --oneline | wc -l
-                ("2026-09-15", "2026-09-22"): "커밋 340개 — 그 주의 흐름은 kb/open_items.md ⏭-NOW-p~w"}
+                ("2026-09-15", "2026-09-22"): "커밋 340개 — 그 주의 흐름은 kb/open_items.md ⏭-NOW-p~w",
+                # 2026-10-05 실측 (KST · friendly + 대피 브랜치 합집합 · 중복 제거):
+                #   git log HEAD origin/claude/friendly-meitner-lldvar --since="2026-09-25T00:00:00+09:00"
+                #     --until="2026-10-04T23:59:59+09:00" --format=%H | sort -u | wc -l
+                ("2026-09-25", "2026-10-04"): "커밋 298개 — 그 흐름은 주간 정리 09-27 · 10-04 (/weekly) 와 kb/open_items.md ⏭-NOW-x~z6"}
 
 
 @app.route("/log")
