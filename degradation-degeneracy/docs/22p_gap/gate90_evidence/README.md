@@ -22,6 +22,7 @@
 | `11_smoke_257d4cc1c_rc0.log` | `./scripts/smoke_e2e.sh` — **rc 0** · 기록 단계 줄 MATCH · 19:05:45Z → 19:08:32Z · 시작 HEAD = 끝 HEAD · dirty 0 | clean `257d4cc1c` |
 | `12_full_replay_257d4cc1c_410_of_410_rc0.log` | 등록부 전체 재생 (`-k` 없음 · 분리 프로세스 · 시간 상한 없음) — **scenario 421 (executable 410 · declared 11) · site 459 · ran 410 · 410/410 call 단계에서 선언한 이유로 물었다 · rc 0** · 19:08:32Z → 21:53:04Z (2:44:32) · 시작 HEAD = 끝 HEAD · dirty 0 | clean `257d4cc1c` |
 | `13_docs_lint_fixed_table_1f3829b9a_358passed.log` | **보충** — 고정 표 커밋의 `pytest tests/test_docs_lint.py` 원문 · **358 passed · rc 0** (25:40) · 끝 HEAD `cff5e409b` (그 사이 차이는 docs-lint 가 읽지 않는 `tests/` 시험 파일 하나) · dirty 0 | `1f3829b9a` |
+| `14_docs_lint_send_24f499ba6_358passed.log` | **발송 뒤 덧붙임** — 발송 HEAD 의 `pytest tests/test_docs_lint.py` 원문 · **358 passed · rc 0** · 21:55:08Z → 22:23:10Z (27:59) · 시작 HEAD = 끝 HEAD · dirty 0 | `24f499ba6` (발송 SHA) |
 
 ## 전체 sha256 · 크기 (바이트)
 
@@ -42,10 +43,11 @@ e2640d134bd1f357c4c9ea3677a01faf6f633e477be3507737696231463f2ff9  1849  04_repla
 dc9328a124c91dadd1c4c8f48892ba4d72f73bcf22f0015f66828f3936c7e521  6462  11_smoke_257d4cc1c_rc0.log
 45b2bfee822b1de0702a39d8ccec3f3a6ac9b6ba2ba4f3e320a99a1bf75cf59c  53612  12_full_replay_257d4cc1c_410_of_410_rc0.log
 52db2ebd8f5003cf7289eb0f36b66c93f0e6a7e6043fdfb9ebdcff7d2eeb0de2  1147  13_docs_lint_fixed_table_1f3829b9a_358passed.log
+105c18cb2d455a6cbe305563fbac01c1678826aca5fb3fc975726ac9021943e8  1219  14_docs_lint_send_24f499ba6_358passed.log
 ```
 
 ## 없는 것 (그대로 적는다)
 
 - 번호 09 는 비워 두었다 (89차 증거의 09 자리 — 재생성 뒤 영수증 모듈 — 는 이번에 07 로 앞당겼다).
 - 이 라운드 사이의 게이트 차수 밖 docs-lint (`1fb9a24ed` · 358 passed) 원문은 싣지 않았다 — REIL 문서의 점검이지 이 게이트의 판정 근거가 아니다.
-- 발송 HEAD 의 docs-lint 는 발송문에 적는다 (이 README 가 든 커밋보다 뒤라서).
+- 발송 HEAD 의 docs-lint 는 발송문에 적는다 (이 README 가 든 커밋보다 뒤라서). — 발송 뒤 덧붙임: 그 원문이 14 번이다 (README 표 · sha256 에 한 줄씩 더했다).
