@@ -8959,3 +8959,54 @@ class/투영 게시 · requirements 상한 (§13-7 보류 그대로 — 사전 �
 **요청:** `docs/22p_gap/GATE88_REQUEST.md` · 증거 `docs/22p_gap/gate88_evidence/` (README 전체 sha256). **아님:** 실행 GO · 새 연구 leg ·
 운영 원장 v6 계획 항목 · 세대표 등록 · p_ini · class 변경 · 투영 게시 · requirements (pybamm 고정 — 게이트 차수 밖 사전 검토 회신 접수
 `docs/22p_gap/PYBAMM_PIN_PREREVIEW_REPLY_20261003.md` · G87-N1 종결 뒤 별도 라운드 · 사용자 결정).
+
+## §131 88차 회신 접수 — `REQUEST_CHANGES_ROUND2B_NOT_CLOSED` · **G88-N1 P1** · G87-N1 정상 경로 · 2a · 이전 수용 유지
+
+**패키지:** `docs/22p_gap/gate88_review/` (`GATE88_REVIEW_20261004.zip` 1,540,485 B · SHA-256
+`3f299425d40081492e9cfdeab1c0f4cb7cdd80c3e24effcc17e12aef3c256465` · codex/ payload 12 + manifest · 전부 manifest 일치 · CRLF 0 ·
+규칙 `be6358fd1` → 보존 `0e0a1975c` · index blob = 바이트 14/14). 검토자 스크립트 (`reviewer_static_audit.py`) 실행 · import 0.
+검토자 쪽 실행: 수신 코드 · pytest · 변이 · 복원 · 영수증 재생성 · COMSOL **0** (`DECISION.json`). 고정 요청 `d6056415b` · 생산
+`e462a3d19` · RUN_SCOPE 58 파일에서 source_digest `7dd546baaee9e823` 독립 재계산 일치 · 87차 대비 생산 변경 두 파일
+(`src/fitting.py` · `tools/preserve.py`) · 나머지 56 blob 동일 · 생산 이후 요청까지 7 커밋 RUN_SCOPE 변경 없음 · 본진 동결
+`e2f56971` 이 요청 커밋의 조상.
+
+| 항목 | 판정 |
+|---|---|
+| 원래 G87-N1 (grid 선행 거부) | **정상 경로 수정 수용** — v3 밖 입력 = fit-only · v3 null = index 거부 · 비-smoke 완료 · 최종화 양성 연결 |
+| 입력 생산자 의미 | 수용 — 가짜 grid 대신 실제 staged 입력 묶음과 `external_input` 기록 |
+| v2 불변 | 한정 수용 — 순서 · 소비 결속 · fit receipt 에 결속을 싣지 않는 분기 |
+| 87차 수용 부분 | 유지 — 기존 builder · 축 · 승인/입력 검사 · preflight · prepare · 수치 본체 · 문맥 진입 함수 AST 동일 · `run.sh` · `src/io.py` · `src/grid.py` 바이트 동일 |
+| 재개 · 상태 view | 정상 도달 상태의 fit-only 표시 수용 · 요청문 §6-c 의 등가 설명을 임의로 손상된 durable state 전체의 보증으로 넓히지 않음 |
+| 새 영수증 | 한정 수용 — 이전 두 원문 = history 바이트 동일 · 차이는 `core_sha256` · `validator_source_digest` · stamp (`validator_commit` · 시각 · platform) 뿐 · 35/34 · 원장 변경은 두 leg 의 core · validator digest 뿐 · canonical core 재생성 · 복원 · 재채점은 하지 않음 |
+| 원문 로그 16 | 크기 · SHA-256 대조 — 13 · 14 · 15 의 시작/끝 HEAD `07aefea11` · dirty 0 · 2133/1 xfail/rc 0 · smoke rc 0 · 395/395 · 11 의 21/21. **보존 기록의 대조**이지 재실행 · 원격 관측 아님. 중단 · 오염 · 충돌 회차는 따로 두고 최종 PASS 에 합산하지 않음 |
+| 절차 한계 (리뷰어) | 고정 scratch 동시 사용 · 격리 없는 탐침은 절차 문제 · 시작/끝 dirty 0 만으로 실행 중 작업 트리 전체의 무변경을 증명했다고 쓰지 않음 · §6-l 은 제출자 설명으로 남김 · 발송 HEAD 의 docs-lint 358 PASS 는 발송문 보고이며 16 원문 집합 밖 — 이것만으로 추가 전체 재시험을 요구하지 않음 |
+| 2a · 이전 종결 | 유지 |
+| 2b 종결 | **보류** (G88-N1 P1) · 실행 GO · 새 연구 leg · 운영 v6 계획 · 세대표 · p_ini · class/투영 · requirements 미승인 · PyBaMM 고정은 분리한 별도 라운드 그대로 |
+
+**G88-N1 (P1) — fit 전용 최종화가 durable `receipt.inputs` 를 다시 검사하지 않는다.** 리뷰어 근거는 정적 호출 · 데이터 흐름
+추적이다 (`G88_N1_STATIC_TRACE.json` · 실행 재현 아님 · 과거 산출 오염 판정 아님 · f03_03 / f03_06 과 같은 "phase 기록 뒤 durable
+claim 변조" 모델). 우리 대조 (2026-10-04 · `e462a3d19` = 현재 RUN_SCOPE 을 읽기만) — 고리가 코드 그대로다:
+
+1. `tools/preserve.py:6721` `_assert_external_input_binding` (키 집합 · hex64 · 묶음 재계산) 의 호출은 **`:6950` (`phase_done` 기록
+   시점) 하나뿐**이다 (`grep` 정의 1 + 호출 1).
+2. `:7552–7556` `_read_claim_record` 는 최상위 키 집합만 · `:7577–7599` `resume_claim` 은 token · 계획 identity · cohort · run_spec 만 본다.
+3. `:9048–9054` 남은 phase = claim 집합 기준 → fit 이 있으면 통과 · `:9067–9073` 선행 소비 대조는 fit 이 첫 phase 라 건너뛴다.
+4. `:9125–9129` 집합 재유도 일치 · `:9130–9142` fit 전용 분기의 비교는 `consumed.external_input` · 계획 `fit.in_digest` · receipt
+   `input_package_digest` **세 문자열**뿐 — `inputs` 는 읽지 않는다.
+5. `:9176–9177` 같은 snapshot 의 fit phase 를 실행 기록에 복사 · `:9206` 원장 기록.
+
+→ `phase_done` 뒤 저장 claim 의 `phases.fit.receipt.inputs` 만 지우거나 (또는 값 하나를 다른 hex64 로 · 키 추가 · 비hex) 바꾸면
+세 문자열이 그대로라 `executed` 로 옮겨진다.
+
+**왜 놓쳤나 (우리 쪽 기록):** 발송 전 자체 점검 (`07aefea11`) 은 **작성 시점** 의 inputs 검사 (f03_02 · f03_06 inputs 둘 — 잘못된
+receipt 를 `phase_done` 에 처음 주는 경우) 와 **최종화의 문자열 대조** (f03_03 consumed · f03_06 receipt package) 를 각각 묶었다. 그
+사이 — 작성 뒤 변조된 inputs 를 최종화가 소비하는 길 — 은 계약 §14-2 d 에도 없었다 (§14-2 d 는 최종화의 비교 대상을 "consumed ·
+계획 in_digest · 집합 재유도" 로 적었고 receipt 의 내부 결속은 적지 않았다). 2133 PASS · 395/395 를 이 빈칸이 없다는 증거로 넓히지
+않는다 (리뷰어와 같음).
+
+**다음 (사용자 별도 승인 필요):** G88-N1 한정 보완 — 최종화가 원장에 옮길 **같은 snapshot 의 fit receipt** 에 기존 공통
+`_assert_external_input_binding` 을 원장 · claim · token 변경 전에 적용 · 기존 계획 / consumed / receipt package 비교 유지 · v2 ·
+수치 본체 · 기수용 경로 불변. 계약을 먼저 고정 (`STAGE3_IMPL_ROUND1_SPEC.md` §15 · 코드 변경 전 커밋) → RED (정상 durable 양성 +
+`phase_done` 뒤 inputs 삭제 · 유효 hex64 값 교체 · 키 추가 · 비hex → 실제 `finalize_leg` 거부 · 결속 이유 · 원장 바이트 불변) → 최소
+GREEN → 변이 (새 호출 제거 포함) → 영수증 history + 1 회 → 전체 회귀 · smoke · 등록부 전체 재생 → GATE89. 이 회신은 구현 · 시험
+실행 승인이 아니다. 이미 수용한 부분과 과거 원문 · 중단/실패/충돌 기록은 다시 열거나 고치지 않는다.
