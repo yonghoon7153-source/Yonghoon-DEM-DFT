@@ -9182,3 +9182,36 @@ core 밖 기록 · 이번에 바꾸지 않는다 (개선 후보로만 적는다)
 **다음 (사용자 결정 필요):** G90-N1 정정의 범위 — 문서 정정만 · 코드의 문구 · 이름까지 · 실제 loaded-origin 측정 (검토자: 별도 승인 범위) 중
 선택. 이 회신은 구현 · 실행 승인이 아니다 (`DECISION.json` permissions 전부 false). N1 정정 접수 전 무조건 종결 보류 · 나머지 수용은 다시
 열지 않는다. D guard · 버전 간 수치 비교 · 새 연구 leg · 운영 v6 계획 · 세대표 · p_ini · COMSOL · 설치는 별도.
+
+## §138 G90-N1 정정 착수 승인 기록 — 선택지 B (경로 검색 범위로 도구의 이름 · 문구를 좁힌다 · RUN_SCOPE 1 파일) (2026-10-05 · 구현 전 · 실행 GO 아님)
+
+**사용자 결정 (2026-10-05):** "B로하자" — §137 다음의 채팅 질문에 대한 답. 질문의 선택지: A 문서만 (고정 표 정정 절 · 원장 · GATE91 요청문 ·
+RUN_SCOPE 0) · **B (권고) A + 도구의 문구와 이름까지 — 키 `origins_verified` → 경로 검색 의미의 이름 · 결과에 "로드된 module origin 미측정"
+표시 · 요약 줄 정정 · RUN_SCOPE 1 파일 (`tools/env_profile.py`) · RED → GREEN → 변이 → 영수증 → 전체 회귀 · 재생 → GATE91** · C 실제로 로드된
+origin 의 측정 (검토자: 별도 승인 범위 · 권하지 않음). C1 문구 정정은 셋 모두에 들어 있었다. 같은 날 따로 온 B-min r1 재검토 회신 (COMSOL SPEC
+§54 — 국소 보완 지시) 은 이 게이트 라운드와 **섞지 않는다** (게이트 차수 밖 · 별도 꾸러미 · 별도 발송).
+
+**범위 · 고정:** `docs/22p_gap/PYBAMM_PIN_ROUND_SPEC.md` **§13** (이 커밋 · 코드 변경 전). 요지 — RUN_SCOPE 상한 `tools/env_profile.py` 하나 ·
+결과 이름 셋 (`counts.origins_verified` → `path_origins_in_record` · `unverifiable.origins` → `path_origins` · 불일치 축 `origin` → `path_origin`) ·
+새 범위 선언 키 `not_measured` = `["loaded_module_origin"]` (세 상태 모두 · `None` 아님) · docstring 의 "실제 origin" 을 경로 검색 범위로 · C1 경계
+문장 ("C 일치 여부는 실행 gate 가 아니나, 측정 기능을 요구하는 회귀의 지원 환경에서는 측정 불가를 시험 실패로 본다") · 요약 줄 "경로 검색 origin
+의 RECORD 소속 N (로드된 module origin 미측정)". 판정 논리 · lock 바이트 · smoke · `make_receipt.py` · B 기록 불변.
+
+**유효 정정 (원문은 고치지 않는다):** §135 "고정 표가 초안에 더한 세부 (2)" 의 "사전 검토 Q5 의 "설치 식별과 실제 origin" 을 C 대조의 한 축으로
+넣었다" → 넣은 것은 그 좁은 꼴, 곧 **`PathFinder` 경로 검색 origin 의 RECORD 소속**이다 (로드된 module origin 은 미측정). §136 표의 "origin 확인
+9" 도 같은 뜻 (경로 검색 origin 의 RECORD 소속 9) 으로 읽는다. 고정 표 §4-1 · §4-2 · §4-4 (C1) · §8 e03 · §9 한 행과 GATE90 요청문 §1 · §4 · §5 ·
+§6-a 의 같은 표현은 고정 표 §13-4 와 GATE91 요청문이 정정한다. 기존 `MATCH` · 90차 수용 · 과거 수치 결과는 이 좁은 의미로 그대로다 (재분류 없음).
+
+**시험 · 변이:** `tests/test_gate90_env_profile.py` 는 이름 따라가기만 (상수 셋 · `_assert_closed` 한 줄 · e02 기대 두 칸 · e03 `origin_stray` 기대
+축 — 사례 · node · 검사 강도 불변 · 90차 고정 표 §8 "기존 시험은 바꾸지 않는다" 의 예외로 §13-5 에 고정) · 새
+`tests/test_gate91_env_profile_scope.py` — s01 (세 상태의 `not_measured`) · s02 (검토자 반례의 고정: 실제 numpy 가 로드된 프로세스에서 합성 경로의
+경로 검색 origin 은 RECORD 안의 가짜 numpy → 수에 들어간다 = 이 수는 로드 확인이 아니다) · s03 (요약 · docstring 문구). 변이: 기존 `-g90` 두 행의
+원문 따라가기 (`env-profile-checks-module-origin-g90` 의 원문 줄 · `env-profile-measurement-failure-is-unmeasured-g90` 치환문의 키) + 새 `-g91` 둘
+(`not_measured` 빈 목록 · 요약 옛 문구). 다른 `-g90` 의 증인이 바뀌면 멈추고 보고한다.
+
+**하지 않음:** 실제로 로드된 module origin 의 측정 (선택지 C — D guard 라운드의 후보로만) · C 의 fail-closed · lock 재생성 · 설치 · 업그레이드 ·
+grid 영수증 stamp `validator_tree_dirty` 의 순서 개선 (§137 의 개선 후보) · 실행 GO · 새 연구 leg · 운영 v6 계획 · 세대표 · p_ini · class · 투영
+게시.
+
+**절차:** RED → 최소 GREEN → 변이 (`-g90` 두 행 따라가기 + `-g91` 둘) → 영수증 history 보존 + 1 회 재생성 → 전체 회귀 · smoke · 등록부 전체 변이
+재생 → GATE91 요청문 → docs-lint.

@@ -210,3 +210,110 @@ REIL · COMSOL 작업은 게이트 차수 밖으로 따로 (이 라운드에 섞
 
 둘 다 구현 뒤 자체 재독에서 찾았다 (리뷰가 짚은 것이 아니다). 원장 §135 의 같은 "일곱" 은 원장 §136 에서 정정한다 · GREEN 커밋
 `e2160c2ef` 메시지는 고칠 수 없어 GATE90 요청문 §6-j 에 적는다.
+
+## §13 G90-N1 정정 — 경로 검색 범위로 이름 · 문구를 좁힌다 (91차 라운드 · 원장 §138 · 2026-10-05 · **코드 변경 전**)
+
+> 90차 회신 (원장 §137 — `CONDITIONAL_ACCEPTANCE` · G90-N1 P2 · 비차단 C1) 의 정정 범위 셋 중 사용자가 **B** 를 골랐다 ("B로하자" — 문서 정정 +
+> 도구의 문구와 이름까지 · RUN_SCOPE 1 파일). 위 §0–§12 는 승인 · 구현된 그대로 두고, 이 절이 그중 아래 자리의 **유효 정정**이다. 실제로
+> 로드된 module origin 의 측정 (선택지 C) 은 하지 않는다 — 검토자도 별도 승인 범위로 나눴다 (§13-7).
+
+### 13-1. 무엇이 틀렸나 (검토자 G90-N1 · 정적 반례)
+
+`_origin` 은 `importlib.machinery.PathFinder.find_spec(module, paths)` 가 그 경로에서 **찾은** 파일만 RECORD 와 대조한다. `sys.modules[module]` 에
+이미 로드된 객체 · 그 `__file__` / `__spec__.origin` · 다른 meta-path finder 의 선택은 읽지 않는다 — 캐시된 객체가 다른 곳에서 왔어도 경로 검색은
+정상 설치 파일을 찾아 RECORD 소속에 성공할 수 있다. 그래서 이 축을 "실제 origin" · "origin 확인" 으로 부를 수 없다. 측정 자체의 고장은 아니다
+(90차 수용 · 기존 `MATCH` 는 이 좁은 의미로 그대로 · 과거 결과의 재분류 없음).
+
+### 13-2. 파일 상한 (이 밖이 필요하면 멈추고 그 차이만 승인 요청)
+
+| 파일 | RUN_SCOPE | 변경 |
+|---|---|---|
+| `tools/env_profile.py` | **안** | 이름 · 문구 · 범위 선언 키 하나 (§13-3) — 측정 · 비교 · 상태 결정 · CLI rc · lock 문법 · `emit_lock` 출력은 그대로 |
+| `tests/test_gate90_env_profile.py` | 밖 | 이름 따라가기만 (§13-5) — 사례 · node 이름 · 검사 강도 불변 |
+| `tests/test_gate91_env_profile_scope.py` (새) | 밖 | s01–s03 (§13-5) |
+| `docs/22p_gap/mutation_replay.py` | 밖 | `-g90` 두 행의 원문 따라가기 + `-g91` 둘 + EXPECT (§13-6) |
+
+불변: `requirements-validation-C.lock.txt` (머리 주석에 origin 문구가 없다 — 바이트 그대로 · 다시 내지 않는다) · `requirements.txt` ·
+`scripts/smoke_e2e.sh` · `docs/22p_gap/make_receipt.py` (stamp 는 `compare_lock()` 결과 dict 를 그대로 싣는다 — 새 이름 · 키는 재생성 때 따라
+들어간다) · B 기록 · `src/` · `run.sh` · `configs/` · `tests/conftest.py`. 저장소 안에서 결과 dict 를 키로 읽는 것은 시험뿐이다 (stamp 안을 읽는
+코드는 없다 — `tools/preserve.py::read_verification_receipt` 는 최상위 키만 본다 · §5-2).
+
+### 13-3. 이름 · 문구 (`tools/env_profile.py`)
+
+| 자리 | 지금 (`e2160c2ef`) | 바꾼 뒤 |
+|---|---|---|
+| 결과 `counts` 의 칸 | `origins_verified` | **`path_origins_in_record`** — 핵심 module 10 중 `PathFinder.find_spec(m, 경로)` 가 찾은 origin 파일이 RECORD 가 있는 유효 배포판 **하나**의 파일 목록에 든 수 |
+| 결과 `unverifiable` 의 칸 | `origins` | **`path_origins`** |
+| 불일치 축 | `origin` (locked 칸 "RECORD 가 있는 설치 배포판 하나의 파일") | **`path_origin`** (locked 칸 "경로 검색 origin 이 RECORD 가 있는 유효 배포판 하나의 파일") |
+| 새 결과 키 | — | **`not_measured`** = `["loaded_module_origin"]` — **세 상태 모두 같은 값** (상수 `NOT_MEASURED`). 측정 칸이 아니라 도구 범위의 선언이라 `UNMEASURED` 에서도 `None` 이 아니다. 빈 목록이면 "모든 것을 쟀다" 로 읽힌다 |
+| `measure()` 의 안쪽 dict · `_origin` 의 판정 이름 | `origins` {`verified` · `unverifiable` · `mismatches`} · `"verified"` | `path_origins` {`in_record` · `unverifiable` · `mismatches`} · `"in_record"` (결과 dict 밖이지만 같은 뜻으로) |
+| 모듈 docstring 8–10행 | "핵심 module 열 개의 실제 origin (사전 검토 Q5)" | "핵심 module 열 개를 `PathFinder` 로 경로 검색한 origin 파일의 RECORD 소속 (사전 검토 Q5 를 좁힌 꼴) — 이미 로드된 module 객체 (`sys.modules`) · 그 `__file__` / `__spec__.origin` · 다른 meta-path finder 의 선택은 보지 않는다. 로드된 module origin 은 측정하지 않는다 (결과 `not_measured` · 91차 G90-N1)" |
+| 모듈 docstring D3 문단 (5–6행) 뒤 | — | C1 경계 문장 "C 일치 여부는 실행 gate 가 아니나, 측정 기능을 요구하는 회귀의 지원 환경에서는 측정 불가를 시험 실패로 본다 (e06 · e08)" |
+| `_origin` docstring | "핵심 module 의 실제 origin → …" | "핵심 module 을 `PathFinder.find_spec(module, paths)` 로 경로 검색한 origin 파일의 RECORD 소속 → ("in_record", 주인) · ("unverifiable", origin) · ("mismatch", 관측). 이미 로드된 module 객체 · 다른 meta-path finder 는 보지 않는다 (91차 G90-N1)" |
+| 요약 줄 | "· origin 확인 N" | "· 경로 검색 origin 의 RECORD 소속 N (로드된 module origin 미측정)" |
+| 확인 불가 줄 | "· 확인 불가 — origin: …" | "· 확인 불가 — 경로 검색 origin: …" |
+
+판정 논리 불변 — `_origin` 의 세 갈래와 그 조건 · `measure` 의 측정 · `compare` 의 비교와 정렬 · 상태 결정 · CLI rc · lock 문법 · `emit_lock`.
+
+### 13-4. 유효 정정 (원문은 그대로 둔다 · 정정은 여기와 GATE91 요청문)
+
+| 자리 | 원문 | 유효 정정 |
+|---|---|---|
+| §4-1 origin 행 | "origin … — 사전 검토 Q5 "설치 식별과 실제 origin"" | **경로 검색 origin 의 RECORD 소속** — Q5 를 좁힌 꼴. 실제로 로드된 module origin 은 미측정 (`not_measured`) |
+| §4-2 표 | 닫힌 키 8 · axis `origin` · `unverifiable` {`dists_without_record`, `origins`} · `counts` 의 `origins_verified` | 닫힌 키 9 (`not_measured` 더함 · 세 상태 모두 `["loaded_module_origin"]`) · `path_origin` · {`dists_without_record`, `path_origins`} · `path_origins_in_record` |
+| §4-4 첫 문장 (C1) | "`MISMATCH` · `UNMEASURED` 는 pytest · smoke · `run.sh` · 영수증 생성 어느 것도 막지 않는다" | C 일치 여부 (`MATCH` / `MISMATCH`) 는 실행 gate 가 아니다 — pytest · smoke · `run.sh` · 영수증 생성을 막지 않는다. 다만 측정 기능을 요구하는 회귀 (e06 실제 환경 · e08 CLI) 의 지원 환경에서는 측정 불가 (`UNMEASURED`) 를 시험 실패로 본다. smoke · `run.sh` · 영수증 생성은 `UNMEASURED` 에도 막히지 않는다 |
+| §8 e03 행 | `origin_stray` → 축 `origin` | 사례 이름 그대로 · 기대 축 `path_origin` |
+| §9 `env-profile-checks-module-origin-g90` 행 | "origin 판정 (주인 없음 → 통과)" | "경로 검색 origin 의 RECORD 소속 판정 (주인 없음 → 통과)" — 이름 · 죽이는 node 그대로 |
+| 원장 §135 "고정 표가 초안에 더한 세부 (2)" · §136 표 | "사전 검토 Q5 의 "설치 식별과 실제 origin" 을 C 대조의 한 축으로 넣었다" · "origin 확인 9" | 넣은 것은 그 좁은 꼴 (경로 검색 origin 의 RECORD 소속) 이고 9 는 그 수다 — 원장 §138 |
+| GATE90 요청문 §1 (4-1 행) · §4 · §5 · §6-a | "주인 하나 = 확인" · "origin 확인 9" · "확인 불가 … origin `yaml`" · "실제 origin" 축 | GATE91 요청문이 같은 뜻 ("경로 검색 origin 의 RECORD 소속 9 (로드된 module origin 미측정)") 으로 정정한다 |
+
+### 13-5. 시험 — RED 먼저
+
+`tests/test_gate90_env_profile.py` — **이름 따라가기만** (90차 §8 "기존 시험은 바꾸지 않는다" 의 예외로 여기 고정한다):
+
+| 자리 | 지금 | 바꾼 뒤 |
+|---|---|---|
+| `RESULT_KEYS` | 8 키 | + `not_measured` |
+| `COUNT_KEYS` | `origins_verified` | `path_origins_in_record` |
+| `AXES` | `origin` | `path_origin` |
+| `_assert_closed` 의 `unverifiable` 키 | {`dists_without_record`, `origins`} | {`dists_without_record`, `path_origins`} |
+| e02 기대 | `"origins_verified": 9` · `"origins": ["yaml"]` | `"path_origins_in_record": 9` · `"path_origins": ["yaml"]` |
+| e03 `AXIS_CASES["origin_stray"]` | {`origin`} | {`path_origin`} |
+| 모듈 docstring | — | 91차 한 줄 (이 갱신의 출처) |
+
+RED 기대: `_assert_closed` 를 쓰는 33 node (e02 · e03 × 14 · e04 × 12 · e05 × 3 · e06 · e08 · e10) 실패 · 나머지 5 (e01 · e07 · e09 · e11 · e12)
+통과. 그 밖의 차이가 나면 멈추고 보고한다.
+
+새 `tests/test_gate91_env_profile_scope.py` (import 는 시험 안 · 합성 site 는 90차 시험의 helper 를 가져다 쓴다 · assert 메시지는 결정적 —
+tmp 경로 · 측정값을 싣지 않는다):
+
+| node | 내용 | RED 기대 |
+|---|---|---|
+| s01 [`MATCH` · `MISMATCH` · `UNMEASURED`] | 합성 환경의 세 상태 (왕복 · lock 쪽 python 교란 · lock 파일 없음) 모두 `not_measured == ["loaded_module_origin"]` | 실패 (키 없음) |
+| s02 | **검토자 반례의 고정** — 이 프로세스에는 실제 `numpy` 가 로드돼 있고 (`sys.modules["numpy"].__file__` 은 합성 site 밖), 합성 경로의 경로 검색은 RECORD 안의 가짜 `numpy` 를 찾는다 → `MATCH` · `path_origins_in_record` 9 (numpy 포함) · `path_origin` 불일치 0 · `not_measured` 선언 · 대조 뒤 `sys.modules["numpy"]` 는 같은 객체 (도구는 import 하지 않는다). 곧 이 수는 로드된 module 의 확인이 아니다 | 실패 (키 없음) |
+| s03 | 문구 — 요약에 "경로 검색 origin 의 RECORD 소속 9 (로드된 module origin 미측정)" · "확인 불가 — 경로 검색 origin: yaml" · "origin 확인" 없음 / 모듈 docstring 에 "로드된 module origin 은 측정하지 않는다" · C1 경계 문장 · "실제 origin" 없음 / `_origin` docstring 에 `PathFinder` · "실제 origin" 없음 | 실패 (옛 문구) |
+
+새 node 이름이 등록부의 기존 `-k` 와 겹치지 않음을 KeywordMatcher 로 확인한다 (90차와 같은 절차).
+
+### 13-6. 변이
+
+| 이름 | 끄는 것 | 죽이는 node |
+|---|---|---|
+| `env-profile-checks-module-origin-g90` (기존 · **원문 따라가기**) | 원문 줄 `measured["origins"]["mismatches"]` → `measured["path_origins"]["mismatches"]` · 치환은 그대로 (주인 없는 경로 검색 origin 통과) | e03 `origin_stray` (그대로) |
+| `env-profile-measurement-failure-is-unmeasured-g90` (기존 · **치환문 따라가기**) | 치환문 안의 옛 키 둘 (`origins` · `origins_verified`) 을 새 이름으로 — 원문 줄 · 뜻 그대로 | e05 (그대로) |
+| `env-profile-declares-loaded-origin-unmeasured-g91` (새) | `not_measured` 를 빈 목록으로 (모든 것을 쟀다고 주장) | s01 |
+| `env-profile-summary-states-path-search-scope-g91` (새) | 요약 줄을 옛 문구 "origin 확인 N" 으로 | s03 |
+
+다른 `-g90` 11 행과 모든 `-g90` 의 이름 · `-k` · fail node · 증인은 불변이어야 한다 — 바뀌면 멈추고 보고한다. 증인은 `--emit-expect` 관측값으로
+고정한다.
+
+### 13-7. 영수증 · 순서 · 하지 않음
+
+`tools/env_profile.py` 가 바뀌므로 source_digest 가 움직인다 (`3f84c0db52d2b9ac` → 새 값) · `make_receipt.py` 는 불변 (`make_receipt_sha256`
+그대로) → 두 leg (`paired_fixed5_v4` · `grid_fit_v5`) 영수증 history 보존 → clean 커밋에서 1 회 재생성 (stamp 의 `environment_profile_C` 가 새
+이름 · `not_measured` 를 싣는다) · LEG_PRESERVATION 앵커 2×2 → 전체 pytest · strict smoke · 등록부 전체 변이 재생 (clean · 순차 · 시작 = 끝 HEAD ·
+dirty 0 · 동시 실행 없음) → GATE91 요청 (§13-4 정정 대응 · C1 경계) → docs-lint.
+
+하지 않음: 실제로 로드된 module origin 의 측정 (`sys.modules` · `__spec__` · meta-path 구분 — 선택지 C · 검토자 "별도 승인 범위" · D guard
+라운드의 후보로만) · C 의 fail-closed · lock 재생성 · 설치 · grid 영수증 stamp `validator_tree_dirty` 의 순서 개선 (원장 §137 의 개선 후보) ·
+그 밖 §11 그대로. COMSOL B-min r2 (게이트 차수 밖 · COMSOL SPEC §54) 는 이 라운드와 섞지 않는다.
