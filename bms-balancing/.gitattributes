@@ -81,3 +81,5 @@ reviews/r14_repros/codex63/comsol_a0_bmin_documents_20261004/** -text
 comsol_candidates/bmin_particle640_20261004/** -text
 # 2026-10-04: REIL 부속 B 재검토 묶음 (게이트 차수 밖 · DOCUMENT_ACCEPTED_RV2A_N1_N2_N3_CLOSED_NO_EXECUTION_AUTHORIZATION · RV2A-N1–N3 · 문서 조건 C2 종결 · 실행 · 구현 · P0 승인 아님) — bytes 그대로
 reviews/prereview_reil_v2_annexB_20261004/** -text
+# 2026-10-05: B-min 오프라인 후보 준비 검토 회신 묶음 (국소 정정 필요 — P2 BMIN-N1 · BMIN-N2 · 비차단 C1 · 변경부 검증 · native 승인 아님) — bytes 그대로
+reviews/r14_repros/codex63/comsol_bmin_candidate_review_20261005/** -text
