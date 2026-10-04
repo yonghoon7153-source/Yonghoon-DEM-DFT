@@ -1,0 +1,478 @@
+{
+ "slug": "yuan2026_layered_composite_electrolyte_stress_homogenization_li_metal",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-04",
+ "sources": [
+  "Yuan 2026 - Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0).pdf",
+  "Yuan 2026 - Sup) Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0) SI.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 | Stress monitoring and mechano-electrochemical coupling relation- ships. a In situ monitoring of expansion force variations in a Li|Bare solid polymer electrolyte (SPE)|Li symmetric pouch cell at 0.1 mA/cm2. b 2D stress distribution in the Li|Bare SPE|Li symmetric pouch cell at different cycles. c Stress monitoring in a Li|Bare SPE|Li symmetric pouch cell after 50,000 s Li plating/stripping via 3D stress visualization technique. d The ﬁnite element method (FEM) simulation result of the stress response property of bare SPE at different stress propagation periods (Time 1 indicates the initial stage. Time 2 indicates the middle stage). e Visualization of the",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    68.4,
+    540.4,
+    615.0
+   ],
+   "w": 2112,
+   "h": 2278,
+   "dpi": 300,
+   "src": "Yuan 2026 - Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0).pdf",
+   "blank": 0.445
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 6,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 | Fabrication and characterization of the layered SPE. a Schematic illus- tration of the layered SPE featuring amorphous tablets and multiscale crosslinked interfaces. b Optical photograph of large-scale synthesis of 2D amorphous SiO2 NSs. Scanning electron microscopy (SEM) (c), atomic force microscopy (AFM) (d), and transmission electron microscopy (TEM) (e) images of SiO2 NSs, showing thin features. f High-resolution TEM image of SiO2 NSs. The insert is the selected area",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    65.2,
+    549.0,
+    615.7
+   ],
+   "w": 2148,
+   "h": 2295,
+   "dpi": 300,
+   "src": "Yuan 2026 - Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0).pdf",
+   "blank": 0.308
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 7,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 | Micromechanical and macromechanical properties of layered SPE. a Representative scheme for one-direction (Z) probing of nanoindentation contact response. Young’s modulus (b) and hardness (c) of electrolyte ﬁlms measured by static nanoindentation test. Typical contour maps of Young’s modulus distribution (d) and hardness distribution (e) for layered SPE obtained from a scanning area of",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    67.5,
+    544.5,
+    466.7
+   ],
+   "w": 2129,
+   "h": 1664,
+   "dpi": 300,
+   "src": "Yuan 2026 - Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0).pdf",
+   "blank": 0.677
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 8,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 | Electrochemical and physicochemical properties of layered SPE. a Arrhenius plots of the electrolytes. “Layered SPE-xSiO2” refers to the PEO-LiTFSI- xSiO2 system (Li+: EO = 1:16), and x refers to the mass ratio of SiO2 NSs to PEO. b Differential scanning calorimetry (DSC) proﬁles of electrolytes from 0 to 100 °C. c The linear sweep voltammetry (LSV) curves of Li|Layered SPE-0.3 SiO2|SS and Li| Bare SPE|SScells at a scan rate of 1 mV/s at 60 °C. d Li+ transference number test and polarization curve of layered SPE-0.3 SiO2 with the inserted electrochemical",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    438.2,
+    546.4,
+    614.8
+   ],
+   "w": 2137,
+   "h": 737,
+   "dpi": 300,
+   "src": "Yuan 2026 - Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0).pdf",
+   "blank": 0.217
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 10,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 | Modulation of layered SPE in Li plating/stripping stability, morphology, and component evolution of Li metal electrode. Li plating/stripping stability of symmetric coin cells at 0.1 mA/cm2, cutoff capacity of 0.05 mA h/cm2 under 60 °C (a) and 30 °C (b). Ex situ SEM (c) and 3D AFM images (d) of the Li metal electrode after 300 h Li plating/stripping at 60 °C with 0.1 mA/cm2, obtained from the Li|Bare SPE|Li symmetric cell under Ar atmosphere. Ex situ SEM (e) and 3D AFM images (f) of the Li metal negative electrode after 300 h Li plating/stripping at 60 °C with 0.1 mA/cm2 obtained from the Li|Layered SPE|Li symmetric cell. g Li 1s and O 1s",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    155.7,
+    542.8,
+    612.1
+   ],
+   "w": 2122,
+   "h": 1903,
+   "dpi": 300,
+   "src": "Yuan 2026 - Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0).pdf",
+   "blank": 0.721
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 10,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. a, Schematic illustration of symmetric pouch cell with Li|SPE|Li configuration. b, The optical photo of 216 symmetric pouch cell with Li|SPE|Li configuration. 217 218",
+   "rotated_deg": 0,
+   "bbox": [
+    13.4,
+    71.3,
+    550.0,
+    244.1
+   ],
+   "w": 2236,
+   "h": 721,
+   "dpi": 300,
+   "src": "Yuan 2026 - Sup) Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0) SI.pdf",
+   "blank": 0.776
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 32,
+   "file": "fig_S14.png",
+   "caption": "Figure S14. a, Large-scale preparation mechanism of SiO2 NSs. b, the optical photo of SiO2 NSs after freeze 421 drying. 422 423",
+   "rotated_deg": 0,
+   "bbox": [
+    13.4,
+    68.3,
+    522.1,
+    290.6
+   ],
+   "w": 2120,
+   "h": 927,
+   "dpi": 300,
+   "src": "Yuan 2026 - Sup) Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0) SI.pdf",
+   "blank": 0.349
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 33,
+   "file": "fig_S15.png",
+   "caption": "Figure S15. a, SEM image of SiO2 NSs. b, Corresponding mapping of Si element. 425 426",
+   "rotated_deg": 0,
+   "bbox": [
+    13.4,
+    73.8,
+    539.6,
+    244.3
+   ],
+   "w": 2193,
+   "h": 711,
+   "dpi": 300,
+   "src": "Yuan 2026 - Sup) Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0) SI.pdf",
+   "blank": 0.202
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 34,
+   "file": "fig_S16.png",
+   "caption": "Figure S16. a, TEM image of SiO2 NSs. Corresponding mapping of b, Si element and c, O element. 428 429",
+   "rotated_deg": 0,
+   "bbox": [
+    13.4,
+    68.4,
+    518.9,
+    216.5
+   ],
+   "w": 2106,
+   "h": 618,
+   "dpi": 300,
+   "src": "Yuan 2026 - Sup) Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0) SI.pdf",
+   "blank": 0.313
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 35,
+   "file": "fig_S17.png",
+   "caption": "Figure S17. XRD pattern of SiO2 NSs. 432 433",
+   "rotated_deg": 0,
+   "bbox": [
+    13.4,
+    68.3,
+    433.9,
+    321.9
+   ],
+   "w": 1752,
+   "h": 1058,
+   "dpi": 300,
+   "src": "Yuan 2026 - Sup) Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0) SI.pdf",
+   "blank": 0.972
+  },
+  {
+   "key": "fS22",
+   "kind": "figure",
+   "label": "S22",
+   "page": 41,
+   "file": "fig_S22.png",
+   "caption": "Figure S22. a, Optical photo for testing the thickness of layered SPE and indicating the reading of 107 μm. b, 501 Optical photo of bare SPE and layered SPE. 502 503",
+   "rotated_deg": 0,
+   "bbox": [
+    13.4,
+    70.9,
+    524.9,
+    212.7
+   ],
+   "w": 2131,
+   "h": 592,
+   "dpi": 300,
+   "src": "Yuan 2026 - Sup) Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0) SI.pdf",
+   "blank": 0.263
+  },
+  {
+   "key": "fS34",
+   "kind": "figure",
+   "label": "S34",
+   "page": 55,
+   "file": "fig_S34.png",
+   "caption": "Figure S34. a, Ex-situ SEM images with different magnifications of Li metal negative electrode obtained from 601 Li|bare SPE|Li battery after 300 h Li plating/stripping at 0.1 mA/cm2, cutoff capacity of 0.05 mAh/cm2 under 60 ℃. 602 b, Ex-situ SEM images with different magnifications of Li metal negative electrode obtained from Li|layered SPE|Li 603 battery after 300 h Li plating/stripping at 0.1 mA/cm2. 604 605",
+   "rotated_deg": 0,
+   "bbox": [
+    13.4,
+    76.9,
+    550.1,
+    330.6
+   ],
+   "w": 2236,
+   "h": 1058,
+   "dpi": 300,
+   "src": "Yuan 2026 - Sup) Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0) SI.pdf",
+   "blank": 0.371
+  },
+  {
+   "key": "tS8",
+   "kind": "table",
+   "label": "S8",
+   "page": 5,
+   "file": "tab_S8.png",
+   "caption": "Table S8, the simulations for the bare SPE indicate that a non-uniform stress ﬁeld exacerbates inhomogeneous Li⁺ deposition. Conversely, under the lower-concentration condition, the layered SPE system maintains highly uniform Li⁺ deposition during both plating and stripping (Fig. S13 and Table S9). Ultimately, these ﬁndings conﬁrm that the stress-homogenization strategy enabled by the layered SPE is highly robust and broadly applicable across a wide range of lithium-ion concentrations. Design and characterization of layered SPE As shown in Fig. 2a, a micro-to-macro multiscale construction strategy is employed to fabricate the layered SPE. Due to the passive properties of SiO2, it is widely used as an inorganic ﬁller in SPEs to prevent side reactions with highly reactive Li metal. In Figs. 2b and S14, we syn- thesize amorphous 2D SiO2 NSs on a large scale via a wet chemical method. The sc",
+   "rotated_deg": 0,
+   "bbox": [
+    34.7,
+    19.3,
+    566.4,
+    776.5
+   ],
+   "w": 2105,
+   "h": 2998,
+   "dpi": 285,
+   "src": "Yuan 2026 - Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0).pdf",
+   "blank": 0.811
+  }
+ ],
+ "missing_labels": [
+  {
+   "key": "fS2",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [],
+   "near_miss": []
+  },
+  {
+   "key": "fS3",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [],
+   "near_miss": []
+  },
+  {
+   "key": "fS4",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [],
+   "near_miss": []
+  },
+  {
+   "key": "fS5",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [],
+   "near_miss": []
+  },
+  {
+   "key": "fS6",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [],
+   "near_miss": []
+  },
+  {
+   "key": "fS7",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [],
+   "near_miss": []
+  },
+  {
+   "key": "fS8",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [],
+   "near_miss": []
+  },
+  {
+   "key": "fS9",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [],
+   "near_miss": []
+  },
+  {
+   "key": "fS10",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [],
+   "near_miss": []
+  },
+  {
+   "key": "fS11",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [],
+   "near_miss": []
+  },
+  {
+   "key": "fS12",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [],
+   "near_miss": []
+  },
+  {
+   "key": "fS13",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [],
+   "near_miss": []
+  },
+  {
+   "key": "fS18",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [],
+   "near_miss": []
+  },
+  {
+   "key": "fS19",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [],
+   "near_miss": []
+  },
+  {
+   "key": "fS20",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [],
+   "near_miss": []
+  },
+  {
+   "key": "fS21",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [],
+   "near_miss": []
+  },
+  {
+   "key": "fS23",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [],
+   "near_miss": []
+  },
+  {
+   "key": "fS24",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [],
+   "near_miss": []
+  },
+  {
+   "key": "fS25",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [],
+   "near_miss": []
+  },
+  {
+   "key": "fS26",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [],
+   "near_miss": []
+  },
+  {
+   "key": "fS27",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [],
+   "near_miss": []
+  },
+  {
+   "key": "fS28",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [],
+   "near_miss": []
+  },
+  {
+   "key": "fS29",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [],
+   "near_miss": []
+  },
+  {
+   "key": "fS30",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [],
+   "near_miss": []
+  },
+  {
+   "key": "fS31",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [],
+   "near_miss": []
+  },
+  {
+   "key": "fS32",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [],
+   "near_miss": []
+  },
+  {
+   "key": "fS33",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [],
+   "near_miss": []
+  },
+  {
+   "key": "tS1",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [],
+   "near_miss": []
+  },
+  {
+   "key": "tS2",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [],
+   "near_miss": []
+  },
+  {
+   "key": "tS3",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [],
+   "near_miss": []
+  },
+  {
+   "key": "tS4",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [],
+   "near_miss": []
+  },
+  {
+   "key": "tS5",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [],
+   "near_miss": []
+  },
+  {
+   "key": "tS6",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [],
+   "near_miss": []
+  },
+  {
+   "key": "tS7",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [],
+   "near_miss": []
+  }
+ ]
+}

@@ -1,0 +1,950 @@
+{
+ "slug": "kim2026_electrolyte_interfacial_reactivity_alloying_anode_pulverization",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-04",
+ "sources": [
+  "Kim 2026 - Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596).pdf",
+  "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 4,
+   "file": "fig_1.png",
+   "caption": "FIGURE 1 Electrochemical performance of Bi anodes in different electrolytes. (a) The first and second cycle charge/discharge curves of Bi electrodes in EC/PC and TEGDME electrolytes. (b) Cycling performance and Coulombic efficiency of Bi electrodes in EC/PC and TEGDME electrolytes. (c) Normalized discharge curves of Bi electrodes at the fifth cycle in EC/PC and TEGDME electrolytes. (d) Plots of dQ/dV for selected cycles of Bi electrodes in EC/PC and TEGDME electrolytes. The peaks near 0.7 V and below 0.5 V correspond to the Bi-to-NaBi and NaBi-to-Na3 Bi transitions, respectively. (e–h) Evolution of capacity contributions from different sodiation phases of Bi during cycling in (e, f) EC/PC and (g, h) TEGDME electrolytes. All Bi electrodes have an areal electrode capacity of > 3.0 mAh/cm2 .",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    34.9,
+    568.2,
+    591.4
+   ],
+   "w": 2170,
+   "h": 2320,
+   "dpi": 300,
+   "src": "Kim 2026 - Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596).pdf",
+   "blank": 0.828
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 6,
+   "file": "fig_2.png",
+   "caption": "FIGURE 2 Structural characterization of Bi anodes after cycling in different electrolytes. (a) SEM and (b) 3D-XRM images of Bi electrodes after 10 cycles in EC/PC electrolyte. (c) SEM and (d) 3D-XRM images of Bi electrodes after 10 cycles in TEGDME electrolyte. (e, f) Cryo-TEM images of the Bi electrode after 10 cycles in EC/PC electrolyte (inset: SAED image of multicrystalline fine Bi). (g, h) Cryo-TEM images of the Bi electrode after 10 cycles in TEGDME electrolyte (insets: high-resolution TEM and SAED images of well-crystalized large Bi).",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.4,
+    568.2,
+    318.3
+   ],
+   "w": 2170,
+   "h": 1180,
+   "dpi": 300,
+   "src": "Kim 2026 - Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596).pdf",
+   "blank": 0.347
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 8,
+   "file": "fig_3.png",
+   "caption": "FIGURE 3 Chemical composition of the SEI on Bi anodes. (a–c) The XPS C 1s, F 1s, and P 2p spectra from the Bi electrode (a) after 10 cycles in EC/PC, (b) after 10 cycles in TEGDME, and (c) after 100 cycles in TEGDME.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    34.9,
+    568.3,
+    378.3
+   ],
+   "w": 2170,
+   "h": 1432,
+   "dpi": 300,
+   "src": "Kim 2026 - Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596).pdf",
+   "blank": 0.858
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 9,
+   "file": "fig_4.png",
+   "caption": "FIGURE 4 Structural characterization of the SEI on Bi anodes. (a) Cryo-STEM and (b) EDS mapping images of the Bi electrode after 10 cycles in EC/PC electrolyte. (c) Cryo-STEM and (d) EDS mapping images of the Bi electrode after 10 cycles in TEGDME electrolyte. TEM scale bars in (a–d) are 200 nm. (e–j) APT analysis of the SEI structure on Bi electrodes after 10 cycles in (e–g) EC/PC and (h–j) TEGDME electrolytes. (e) and (h) The intermixing structure of Bi and SEI elements (C and F). (f) and (i) Typical high-magnification view of the spacial distribution of Bi, F, and C ions in (e) and (h). Purple iso-concentration surfaces represent regions with > 30 at% Bi (Bi-rich domain). Light gray iso-concentration surfaces represent regions with < 30 at% Bi (SEI-rich domain). Red iso-concentration surfaces represent regions with > 10 at% F. Yellow iso-concentration surfaces represent regions with >",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.0,
+    568.3,
+    488.3
+   ],
+   "w": 2170,
+   "h": 1889,
+   "dpi": 300,
+   "src": "Kim 2026 - Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596).pdf",
+   "blank": 0.587
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 11,
+   "file": "fig_5.png",
+   "caption": "FIGURE 5 Analysis of solvation species in bulk electrolytes and electrolyte reactivity at the electrolyte-electrode interface. (a-b) Distribution of Na+ solvates for (a) NaPF6 -EC/PC and (b) NaPF6 -TEGDME electrolytes. (c) Calculated reduction potential of key electrolyte components and typical solvation structures in bulk EC/PC and TEGDME electrolytes. (d, e) Configurations and decompositions of (d) NaPF6 -EC/PC and (e) NaPF6 -TEGDME electrolytes on Bi, NaBi, and Na3 Bi (100) surfaces after 5 ps AIMD simulations in neutral environments. Color code: sodium, blue; bismuth, green; carbon, cyan; oxygen, red; hydrogen, white; phosphorus, tan; fluorine, pink.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    34.8,
+    568.1,
+    582.3
+   ],
+   "w": 2170,
+   "h": 2283,
+   "dpi": 300,
+   "src": "Kim 2026 - Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596).pdf",
+   "blank": 0.763
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 13,
+   "file": "fig_6.png",
+   "caption": "FIGURE 6 Analysis of grain nucleation, grain sizes, and distributions of pressure and stress during the sodiation of Bi and desodiation of Na3 Bi in different electrolytes. (a) Nucleation behavior of Nax Bi grains during sodiation of Bi in EC/PC and TEGDME electrolytes. (b) Grain size distribution of Nax Bi and Bi (normalized by the particle radius R) during the sodiation (Nax Bi) and desodiation (Bi) in EC/PC and TEGDME electrolytes. (c) Relative number density of nucleated grain boundaries in EC/PC and TEGDME electrolytes, normalized against that in TEGDME. (d, e) Grain pressure distribution during (d) sodiation of Bi and (e) desodiation of Na3 Bi in EC/PC and TEGDME electrolytes; (f) Stress component σx during desodiation of Na3 Bi in EC/PC and TEGDME electrolytes. The brown layer in (a) represents the SEI. The white lines in (a) and (d–f) represent grain boundaries and interfaces of ",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.2,
+    568.2,
+    550.3
+   ],
+   "w": 2170,
+   "h": 2147,
+   "dpi": 300,
+   "src": "Kim 2026 - Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596).pdf",
+   "blank": 0.695
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. SEM images of a typical pristine Bi film electrode.",
+   "rotated_deg": 0,
+   "bbox": [
+    87.8,
+    87.4,
+    512.0,
+    500.0
+   ],
+   "w": 1769,
+   "h": 1720,
+   "dpi": 300,
+   "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
+   "blank": 0.357
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. 3D-XRM images of a typical pristine Bi film electrode.",
+   "rotated_deg": 0,
+   "bbox": [
+    87.8,
+    86.6,
+    512.0,
+    377.9
+   ],
+   "w": 1769,
+   "h": 1215,
+   "dpi": 300,
+   "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
+   "blank": 0.724
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 4,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Prussian blue analogue half-cell performance in EC/PC and TEGDME electrolyte. (a) Initial charge/discharge curves. (b) Cycling stability at C/3 rate.",
+   "rotated_deg": 0,
+   "bbox": [
+    87.7,
+    90.6,
+    592.1,
+    263.3
+   ],
+   "w": 2103,
+   "h": 721,
+   "dpi": 300,
+   "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
+   "blank": 0.952
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 4,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. Full-cell performance of a Bi film electrode paired with a Prussian blue analogue cathode. (a) Initial charge-discharge curves in EC/PC and TEGDME electrolyte. (b) Cycling stability of the cells in (a).",
+   "rotated_deg": 0,
+   "bbox": [
+    87.7,
+    368.5,
+    527.2,
+    558.7
+   ],
+   "w": 1832,
+   "h": 793,
+   "dpi": 300,
+   "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
+   "blank": 0.943
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 5,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. In-situ XRD spectra of a Bi film electrode collected at the fully desodiated state after each cycle in the EC/PC electrolyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    87.7,
+    61.7,
+    527.2,
+    312.8
+   ],
+   "w": 1832,
+   "h": 1047,
+   "dpi": 300,
+   "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
+   "blank": 0.958
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 6,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. Electrochemical impedance spectra of the Na||Bi half-cells in EC/PC and TEGDME electrolyte. Nyquist plots after 1 cycle and 10 cycles in (a, b) EC/PC and (c, d) TEGDME electrolyte. Summary of (e) RSEI and (f) Rct of the Na||Bi half-cells in EC/PC and TEGDME electrolyte. All the RSEI and Rct values were estimated by fitting the Nyquist plot with equivalent circuit described in the plots in (a-d).",
+   "rotated_deg": 0,
+   "bbox": [
+    87.8,
+    61.6,
+    527.3,
+    593.5
+   ],
+   "w": 1833,
+   "h": 2217,
+   "dpi": 300,
+   "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
+   "blank": 0.86
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 7,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. Nyquist plots of Na||Na symmetric cells after 1 cycle and 10 cycles in (a) EC/PC and (b) TEGDME electrolyte. The areal capacity of the Na||Na symmetric cells for EIS analysis was controlled at 3.0 mAh/cm2 to unify the total depth of discharge with Na||Bi half-cells.",
+   "rotated_deg": 0,
+   "bbox": [
+    87.8,
+    86.6,
+    527.2,
+    279.7
+   ],
+   "w": 1832,
+   "h": 806,
+   "dpi": 300,
+   "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
+   "blank": 0.897
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 8,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. SEM images of Bi film electrodes after the 1st cycle in (a, b) EC/PC and (c, d) TEGDME electrolyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    87.8,
+    61.6,
+    527.2,
+    391.9
+   ],
+   "w": 1832,
+   "h": 1377,
+   "dpi": 300,
+   "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
+   "blank": 0.496
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 9,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. SEM images of Bi film electrodes after the 10th cycle in (a, b) EC/PC and (c, d) TEGDME electrolyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    87.8,
+    61.6,
+    527.1,
+    425.1
+   ],
+   "w": 1832,
+   "h": 1516,
+   "dpi": 300,
+   "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
+   "blank": 0.439
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 10,
+   "file": "fig_S11.png",
+   "caption": "Figure S11. XRM images of fully sodiated Bi film electrodes after the 1st sodiation in (a, b) EC/PC and (c, d) TEGDME electrolyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    87.8,
+    61.6,
+    527.2,
+    475.0
+   ],
+   "w": 1832,
+   "h": 1724,
+   "dpi": 300,
+   "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
+   "blank": 0.526
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 11,
+   "file": "fig_S12.png",
+   "caption": "Figure S12. XRD images of fully desodiated Bi film electrodes after the 1st cycle in (a) EC/PC and (b) TEGDME electrolyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    87.8,
+    61.6,
+    527.2,
+    246.5
+   ],
+   "w": 1832,
+   "h": 771,
+   "dpi": 300,
+   "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
+   "blank": 0.658
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 11,
+   "file": "fig_S13.png",
+   "caption": "Figure S13. XRM images of a Bi film electrodes after 10 cycles in EC/PC electrolyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    96.5,
+    342.7,
+    515.4,
+    654.7
+   ],
+   "w": 1746,
+   "h": 1301,
+   "dpi": 300,
+   "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
+   "blank": 0.664
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 12,
+   "file": "fig_S14.png",
+   "caption": "Figure S14. XRM images of a Bi film electrode after 10 cycles in TEGDME electrolyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    89.6,
+    61.6,
+    522.0,
+    377.5
+   ],
+   "w": 1802,
+   "h": 1317,
+   "dpi": 300,
+   "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
+   "blank": 0.698
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 13,
+   "file": "fig_S15.png",
+   "caption": "Figure S15. XRM images of a Bi film electrode after 100 cycles in TEGDME electrolyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    87.8,
+    61.6,
+    509.5,
+    399.1
+   ],
+   "w": 1758,
+   "h": 1407,
+   "dpi": 300,
+   "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
+   "blank": 0.627
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 13,
+   "file": "fig_S16.png",
+   "caption": "Figure S16. Cryo-TEM images of a Bi electrode after 100 cycles in TEGDME electrolyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    87.8,
+    476.5,
+    512.8,
+    660.4
+   ],
+   "w": 1772,
+   "h": 767,
+   "dpi": 300,
+   "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
+   "blank": 0.384
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 14,
+   "file": "fig_S17.png",
+   "caption": "Figure S17. Cryo-TEM image and EDS mapping images of a Bi electrode after the 10th cycle in EC/PC electrolyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    87.8,
+    91.6,
+    527.2,
+    324.8
+   ],
+   "w": 1832,
+   "h": 973,
+   "dpi": 300,
+   "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
+   "blank": 0.428
+  },
+  {
+   "key": "fS18",
+   "kind": "figure",
+   "label": "S18",
+   "page": 14,
+   "file": "fig_S18.png",
+   "caption": "Figure S18. Cryo-TEM image and EDS mapping images of a Bi electrode after the 10th cycle in TEGDME electrolyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    87.8,
+    399.8,
+    527.2,
+    634.4
+   ],
+   "w": 1832,
+   "h": 979,
+   "dpi": 300,
+   "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
+   "blank": 0.433
+  },
+  {
+   "key": "fS19",
+   "kind": "figure",
+   "label": "S19",
+   "page": 15,
+   "file": "fig_S19.png",
+   "caption": "Figure S19. Cryo-TEM image and EDS mapping images of a Bi electrode after the 100th cycle in TEGDME electrolyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    87.8,
+    83.0,
+    527.2,
+    297.8
+   ],
+   "w": 1832,
+   "h": 896,
+   "dpi": 300,
+   "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
+   "blank": 0.398
+  },
+  {
+   "key": "fS20",
+   "kind": "figure",
+   "label": "S20",
+   "page": 15,
+   "file": "fig_S20.png",
+   "caption": "Figure S20. Atom Probe Tomography (APT) results show 3D reconstructions of Bi electrodes after 10 cycles in (a) EC/PC and (b) TEGDME electrolyte featuring all ions.",
+   "rotated_deg": 0,
+   "bbox": [
+    87.8,
+    372.7,
+    527.2,
+    568.0
+   ],
+   "w": 1832,
+   "h": 815,
+   "dpi": 300,
+   "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
+   "blank": 0.867
+  },
+  {
+   "key": "fS21",
+   "kind": "figure",
+   "label": "S21",
+   "page": 16,
+   "file": "fig_S21.png",
+   "caption": "Figure S21. Atom Probe Tomography (APT) results show 3D reconstructions of TEGDME specimen after 100 cycles in TEGDME. (a) All ions, (b) Intermixing structure of Bi and P, (c) Intermixing structure of Bi and F, (d) Intermixing structure of Bi and C, (e) Intermixing structure of Bi-rich and SEI-rich regions. Purple iso-concentration surfaces represent regions with > 30 at% Bi (Bi-rich domain). Light gray iso-concentration surfaces represent regions with < 30 at% Bi (SEI-rich domain). Red iso-concentration surfaces represent regions with > 10 at% F. Yellow iso-concentration surfaces represent regions with > 20 at% C. Cyan iso- concentration surfaces represent regions with > 1 at% P.",
+   "rotated_deg": 0,
+   "bbox": [
+    87.8,
+    86.6,
+    527.2,
+    329.3
+   ],
+   "w": 1832,
+   "h": 1013,
+   "dpi": 300,
+   "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
+   "blank": 0.739
+  },
+  {
+   "key": "fS22",
+   "kind": "figure",
+   "label": "S22",
+   "page": 18,
+   "file": "fig_S22.png",
+   "caption": "Figure S22. Bi 4f, C 1s, P 2p, and F 1s XPS depth profiles of the Bi electrodes cycled in EC/PC and TEGDME electrolytes collected after sequential Ar ion sputtering for 0, 40, and 210 s.",
+   "rotated_deg": 0,
+   "bbox": [
+    87.8,
+    61.6,
+    527.3,
+    631.7
+   ],
+   "w": 1832,
+   "h": 2376,
+   "dpi": 300,
+   "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
+   "blank": 0.902
+  },
+  {
+   "key": "fS23",
+   "kind": "figure",
+   "label": "S23",
+   "page": 19,
+   "file": "fig_S23.png",
+   "caption": "Figure S23. ToF-SIMS depth profiles of the Bi electrodes after 10 cycles in EC/PC and TEGDME electrolytes. Depth profiles of (a) Bi+, (b) C+, (c) P-, and (d) NaF2- secondary ion fragments acquired during sputtering.",
+   "rotated_deg": 0,
+   "bbox": [
+    87.7,
+    273.4,
+    527.2,
+    434.5
+   ],
+   "w": 1832,
+   "h": 672,
+   "dpi": 300,
+   "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
+   "blank": 0.883
+  },
+  {
+   "key": "fS24",
+   "kind": "figure",
+   "label": "S24",
+   "page": 22,
+   "file": "fig_S24.png",
+   "caption": "Figure S24. Snapshots of electrolyte solution (a and b) in classical MD simulation.",
+   "rotated_deg": 0,
+   "bbox": [
+    87.8,
+    61.6,
+    478.2,
+    223.0
+   ],
+   "w": 1628,
+   "h": 674,
+   "dpi": 300,
+   "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
+   "blank": 0.78
+  },
+  {
+   "key": "fS25",
+   "kind": "figure",
+   "label": "S25",
+   "page": 22,
+   "file": "fig_S25.png",
+   "caption": "Figure S25. Structures of individual solvent molecules and Na+ complexes (a) and Na+ radial distribution functions in EC/PC (b) and TEGDME (c) electrolyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    87.8,
+    299.8,
+    527.2,
+    610.3
+   ],
+   "w": 1832,
+   "h": 1294,
+   "dpi": 300,
+   "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
+   "blank": 0.947
+  },
+  {
+   "key": "fS26",
+   "kind": "figure",
+   "label": "S26",
+   "page": 23,
+   "file": "fig_S26.png",
+   "caption": "Figure S26. Initial configurations of the interface models. (a) NaPF6-EC/PC on Bi (1 0 0). (b) NaPF6-EC/PC on Na3Bi (1 0 0). (c) NaPF6-EC/PC on NaBi (1 0 0). (d) NaPF6-TEGDME on Bi (1 0 0). (e) NaPF6-TEGDME on Na3Bi (1 0 0). (f) NaPF6-TEGDME on NaBi (1 0 0). Color code: Bi, Green; Na, Blue; C, cyan; O, red; H, white; P, tan; F, pink.",
+   "rotated_deg": 0,
+   "bbox": [
+    87.8,
+    61.6,
+    527.2,
+    344.9
+   ],
+   "w": 1832,
+   "h": 1182,
+   "dpi": 300,
+   "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
+   "blank": 0.833
+  },
+  {
+   "key": "fS28",
+   "kind": "figure",
+   "label": "S28",
+   "page": 30,
+   "file": "fig_S28.png",
+   "caption": "Figure S28. Illustration of a simulation cell of the phase-field model.",
+   "rotated_deg": 0,
+   "bbox": [
+    87.8,
+    241.9,
+    489.2,
+    457.6
+   ],
+   "w": 1674,
+   "h": 899,
+   "dpi": 300,
+   "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
+   "blank": 0.682
+  },
+  {
+   "key": "fS29",
+   "kind": "figure",
+   "label": "S29",
+   "page": 31,
+   "file": "fig_S29.png",
+   "caption": "Figure S29. (a-d) Sequential snapshots at increasing time steps illustrating the nucleation, growth, and coalescence of Na3Bi grains during sodiation of Bi in the presence of a thick solid electrolyte interphase (SEI).",
+   "rotated_deg": 0,
+   "bbox": [
+    87.8,
+    61.6,
+    527.2,
+    284.0
+   ],
+   "w": 1832,
+   "h": 928,
+   "dpi": 300,
+   "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
+   "blank": 0.734
+  },
+  {
+   "key": "fS30",
+   "kind": "figure",
+   "label": "S30",
+   "page": 31,
+   "file": "fig_S30.png",
+   "caption": "Figure S30. (a-d) Sequential snapshots at increasing time steps illustrating the nucleation, growth, and coalescence of Na3Bi grains during sodiation of Bi in the presence of a thin solid electrolyte interphase (SEI).",
+   "rotated_deg": 0,
+   "bbox": [
+    87.8,
+    373.4,
+    527.3,
+    602.6
+   ],
+   "w": 1832,
+   "h": 956,
+   "dpi": 300,
+   "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
+   "blank": 0.726
+  },
+  {
+   "key": "fS31",
+   "kind": "figure",
+   "label": "S31",
+   "page": 32,
+   "file": "fig_S31.png",
+   "caption": "Figure S31. (a-d) Sequential snapshots at increasing time steps illustrating the nucleation, growth, and coalescence of Bi grains during the desodiation of NaxBi in the presence of a thick solid electrolyte interphase (SEI).",
+   "rotated_deg": 0,
+   "bbox": [
+    87.8,
+    61.6,
+    527.3,
+    290.8
+   ],
+   "w": 1832,
+   "h": 956,
+   "dpi": 300,
+   "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
+   "blank": 0.734
+  },
+  {
+   "key": "fS32",
+   "kind": "figure",
+   "label": "S32",
+   "page": 32,
+   "file": "fig_S32.png",
+   "caption": "Figure S32. (a-d) Sequential snapshots at increasing time steps illustrating the nucleation, growth, and coalescence of Bi grains during the desodiation of NaxBi in the presence of a thin solid electrolyte interphase (SEI).",
+   "rotated_deg": 0,
+   "bbox": [
+    87.8,
+    358.7,
+    527.2,
+    574.3
+   ],
+   "w": 1832,
+   "h": 899,
+   "dpi": 300,
+   "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
+   "blank": 0.717
+  },
+  {
+   "key": "fS33",
+   "kind": "figure",
+   "label": "S33",
+   "page": 34,
+   "file": "fig_S33.png",
+   "caption": "Figure S33. Electrochemical performance of Na||Sn half-cells in EC/PC and TEGDME electrolyte. (a) Initial charge-discharge curves. (b) cycling stability of the cells in (a).",
+   "rotated_deg": 0,
+   "bbox": [
+    87.7,
+    54.8,
+    527.2,
+    252.3
+   ],
+   "w": 1832,
+   "h": 824,
+   "dpi": 300,
+   "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
+   "blank": 0.955
+  },
+  {
+   "key": "fS34",
+   "kind": "figure",
+   "label": "S34",
+   "page": 34,
+   "file": "fig_S34.png",
+   "caption": "Figure S34. Cryo-TEM images of Sn film electrodes after 10 cycles in EC/PC (a, b) and TEGDME (c, d) electrolyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    87.7,
+    358.9,
+    527.2,
+    467.5
+   ],
+   "w": 1832,
+   "h": 453,
+   "dpi": 300,
+   "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
+   "blank": 0.389
+  },
+  {
+   "key": "fS35",
+   "kind": "figure",
+   "label": "S35",
+   "page": 35,
+   "file": "fig_S35.png",
+   "caption": "Figure S35. Cryo-TEM images and EDS mapping of Sn film electrodes after 10 cycles in EC/PC (a) and TEGDME (b) electrolyte. References 1. Abraham, M.J., et al., GROMACS: High performance molecular simulations through multi-level parallelism from laptops to supercomputers. SoftwareX, 2015, 1-2, 19-25. 2. Jorgensen, W.L., Maxwell, D.S., and Tirado-Rives, J., Development and testing of the OPLS all-atom force field on conformational energetics and properties of organic liquids. Journal of the American Chemical Society, 1996, 118, 11225-11236. 3. Bedrov, D., et al., Molecular dynamics simulations of ionic liquids and electrolytes using polarizable force fields. Chemical Reviews, 2019, 119, 7940-7995. 4. Berendsen, H.J.C., et al., Molecular dynamics with coupling to an external bath. The Journal of Chemical Physics, 1984, 81, 3684-3690. 5. Bussi, G., Donadio, D., and Parrinello, M., Canonical ",
+   "rotated_deg": 0,
+   "bbox": [
+    87.5,
+    61.6,
+    527.2,
+    438.7
+   ],
+   "w": 1833,
+   "h": 1572,
+   "dpi": 300,
+   "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
+   "blank": 0.31
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 17,
+   "file": "tab_S1.png",
+   "caption": "Table S1. The elemental concentrations of Bi-rich and SEI-rich phases of Bi anodes after 10 cycles in EC/PC and 10 and 100 cycles in TEGDME",
+   "rotated_deg": 0,
+   "bbox": [
+    92.2,
+    88.4,
+    522.8,
+    375.5
+   ],
+   "w": 1795,
+   "h": 1197,
+   "dpi": 300,
+   "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
+   "blank": 0.779
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 21,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Classical MD Simulation systems parameters. Density of electrolyte (g/c",
+   "rotated_deg": 0,
+   "bbox": [
+    88.7,
+    64.2,
+    524.0,
+    647.5
+   ],
+   "w": 1815,
+   "h": 2432,
+   "dpi": 300,
+   "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
+   "blank": 0.917
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 28,
+   "file": "tab_S3.png",
+   "caption": "Table S3. Material properties and model parameters used in the simulations. [25-30] Bi Na3Bi SEI Electrolyte 𝐶ଵଵ 300.0 300.0 30.0 0.9 Elastic constants 𝐶ଵଶ in Voigt notation 100.0 100.0 10.0 0.3 (GPa) 100.0 100.0 10.0 0.3 𝐶ସସ ሺ௣ሻ 0.01 0.01 0.01 0.0 Stress-free strain, 𝑒௖ ሺ௣ሻ 0.0 0.05 0.0 0.0 Stress-free strain, 𝑒଴ Dielectric constant, 𝜀ሺ௣ሻ 1000.0 100.0 50.0 10.0 Interface mobility, 𝐿௣∗ 10.0 10.0 0.0 0.0",
+   "rotated_deg": 0,
+   "bbox": [
+    110.1,
+    327.7,
+    504.7,
+    548.4
+   ],
+   "w": 1646,
+   "h": 921,
+   "dpi": 300,
+   "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
+   "blank": 0.922
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 29,
+   "file": "tab_S4.png",
+   "caption": "Table S4. Dimensionless model parameters and material properties used in the simulations. Symbols Value 𝜉ఙ 0.8 𝜉ୗ୉୍ 0.9 ∗ 0.01 𝜔ሶ଴ ∗ 0.2 𝜔ሶଵ ∗ 0.2 𝜔ሶଶ ∗ሺ௣ሻൌ𝑀୒ୟ ∗଴ 1.0 𝑀୒ୟ 𝑀୒ୟశ ∗଴ 0.6 𝑙଴ (nm) 50.0 𝐷ே௔శ (m2/s) 7.0ൈ10ିଵଶ 𝑉௠௢௟ (mଷ/mol) 21.3 ൈ10ି଺",
+   "rotated_deg": 0,
+   "bbox": [
+    94.4,
+    63.2,
+    520.4,
+    335.5
+   ],
+   "w": 1776,
+   "h": 1135,
+   "dpi": 300,
+   "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
+   "blank": 0.952
+  },
+  {
+   "key": "tS5",
+   "kind": "table",
+   "label": "S5",
+   "page": 33,
+   "file": "tab_S5.png",
+   "caption": "Table S5. Effect of SEI thickness on Na3Bi grain size during sodiation and desodiation. Grain size Sodiation Desodiation R=90(𝒍𝟎) Thin SEI Thick SEI Thin SEI Thick SEI",
+   "rotated_deg": 0,
+   "bbox": [
+    103.3,
+    63.2,
+    511.5,
+    233.2
+   ],
+   "w": 1702,
+   "h": 709,
+   "dpi": 300,
+   "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
+   "blank": 0.264
+  },
+  {
+   "key": "tS6",
+   "kind": "table",
+   "label": "S6",
+   "page": 33,
+   "file": "tab_S6.png",
+   "caption": "Table S6. Effect of Na3Bi particle size (with a thin SEI) on Bi grain size during desodiation. Grain size Particle size with thin SEI under desodiation R (𝒍𝟎) 30 50 70 90",
+   "rotated_deg": 0,
+   "bbox": [
+    92.8,
+    267.5,
+    522.0,
+    437.5
+   ],
+   "w": 1790,
+   "h": 709,
+   "dpi": 300,
+   "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
+   "blank": 0.36
+  },
+  {
+   "key": "tS7",
+   "kind": "table",
+   "label": "S7",
+   "page": 33,
+   "file": "tab_S7.png",
+   "caption": "Table S7. Effect of Na3Bi particle size (with a thick SEI) on Bi grain size during desodiation. Grain size Particle size with thick SEI under desodiation R (𝒍𝟎) 30 50 70 90",
+   "rotated_deg": 0,
+   "bbox": [
+    90.3,
+    471.8,
+    524.5,
+    641.8
+   ],
+   "w": 1810,
+   "h": 709,
+   "dpi": 300,
+   "src": "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf",
+   "blank": 0.377
+  }
+ ],
+ "missing_labels": [
+  {
+   "key": "fS3",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p3 그래픽 없음(img0/draw0)"
+   ],
+   "near_miss": []
+  },
+  {
+   "key": "fS27",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p24 그래픽 없음(img0/draw0)"
+   ],
+   "near_miss": []
+  }
+ ]
+}

@@ -177,7 +177,7 @@
   ]
  },
  "cao2026_dual_binder_18um_sulfide_electrolyte_film": {
-  "figures": 31,
+  "figures": 32,
   "generated": "2026-10-03",
   "pdfs": [
    "Cao 2026 - Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533).pdf",
@@ -928,6 +928,14 @@
    "이용민 교수님/04. Sup) Charge-engineered cellulose nanofibril binders for PFAS-free, high-loading lithium battery positive electrodes.pdf"
   ]
  },
+ "kim2026_electrolyte_interfacial_reactivity_alloying_anode_pulverization": {
+  "figures": 46,
+  "generated": "2026-10-04",
+  "pdfs": [
+   "Kim 2026 - Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596).pdf",
+   "Kim 2026 - Sup) Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596) SI.pdf"
+  ]
+ },
  "kim2026_hts_li3sc2po43_coating_midni_ncm": {
   "figures": 14,
   "generated": "2026-08-05",
@@ -1661,7 +1669,7 @@
   ]
  },
  "qi2025_high_voltage_limits_halide_sulfide_assb": {
-  "figures": 32,
+  "figures": 36,
   "generated": "2026-10-03",
   "pdfs": [
    "Qi 2025 - Deciphering high-voltage limitations of halide and sulfide ASSLBs (J Energy Chem 103 926).pdf",
@@ -2324,6 +2332,14 @@
   "pdfs": [
    "114. AdvEnergyMater_aenm71556_MAIN.pdf",
    "114. Sup) AdvEnergyMater_aenm71556_SI.pdf"
+  ]
+ },
+ "yuan2026_layered_composite_electrolyte_stress_homogenization_li_metal": {
+  "figures": 13,
+  "generated": "2026-10-04",
+  "pdfs": [
+   "Yuan 2026 - Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0).pdf",
+   "Yuan 2026 - Sup) Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0) SI.pdf"
   ]
  },
  "yun2023_deciphering_degradation_halide_vs_sulfide": {
