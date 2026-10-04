@@ -83,3 +83,5 @@ comsol_candidates/bmin_particle640_20261004/** -text
 reviews/prereview_reil_v2_annexB_20261004/** -text
 # 2026-10-05: B-min 오프라인 후보 준비 검토 회신 묶음 (국소 정정 필요 — P2 BMIN-N1 · BMIN-N2 · 비차단 C1 · 변경부 검증 · native 승인 아님) — bytes 그대로
 reviews/r14_repros/codex63/comsol_bmin_candidate_review_20261005/** -text
+# 2026-10-05: B-min 오프라인 후보 r1 꾸러미 (준비 검토 BMIN-N1 · N2 · C1 국소 보완 · v1 에서 판정 / 증거 소비부만 · CRLF 원문 유지 — 컴파일 · 시험 · 실행 아님) — bytes 그대로
+comsol_candidates/bmin_particle640_r1_20261005/** -text
