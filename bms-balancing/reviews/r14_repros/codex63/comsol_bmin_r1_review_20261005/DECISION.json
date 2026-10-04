@@ -1,0 +1,37 @@
+{
+  "date": "2026-10-05",
+  "status": "LOCAL_CORRECTION_REQUIRED",
+  "scope": "COMSOL B-min R1 offline preparation static re-review only; separate from degradation gate rounds",
+  "repository": "yonghoon7153-source/Yonghoon-DEM-DFT",
+  "commit": "741dde19b5d07be1872e8bdcedaa90611cbf5b71",
+  "request_blob": "f5fa9e2e1d8bbe3d8bd2eb146903c4ab2669b5fb",
+  "candidate_manifest_sha256": "9dcb47f0ec3ec346b491d90c2836e3b30f54eb88fd5e4fbd216fc34782275cdb",
+  "findings": [
+    {
+      "id": "BMIN-R1-N1",
+      "priority": "P2",
+      "prior_item": "BMIN-N2",
+      "file": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/candidate/src/diagnostic_consumer.py",
+      "lines": [322, 325],
+      "title": "Line counting plus substring search accepts two DOF observations on one line",
+      "evidence_kind": "Static source-path inference and reviewer-owned string-only model; no candidate function execution",
+      "fix_scope": "Require whole-line DOF grammar or equivalent complete consumption, retain whitespace allowance and valid-different-value record-only policy; add same-line ambiguous/malformed cases"
+    }
+  ],
+  "answers": {
+    "Q1": "ACCEPTED_AT_STATIC_PREPARATION_LEVEL; conservative rc1 NOT_ESTABLISHED accepted, no entry change requested",
+    "Q2": "PARTIAL; original missing/outside-only cases closed, same-line ambiguity remains; NORMAL480 actual transient section has exactly one DOF line",
+    "Q3": "ACCEPTED_PRINCIPLE; 30 decimal places / 28 significant digits, not 31; classify PS01-16 separately from exact equality",
+    "Q4": "54 unique IDs and 1530-second sum confirmed; supplement narrow edge/coverage cases and preseal revised counts/budget before any authorized execution"
+  },
+  "candidate_imports": 0,
+  "candidate_parse_compile_execute": 0,
+  "submitted_audit_programs_run": 0,
+  "candidate_functional_tests": 0,
+  "COMSOL_JVM_native_calls": 0,
+  "implementation_authorized_by_this_review": false,
+  "limited_validation_authorized_by_this_review": false,
+  "native_approved": false,
+  "overall_normal_gate": "INCOMPLETE",
+  "effective_policy": "UNVERIFIED"
+}

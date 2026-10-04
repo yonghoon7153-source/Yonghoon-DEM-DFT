@@ -1,0 +1,83 @@
+{
+  "schema": 1,
+  "scope": "Reviewer artifact identity, not COMSOL/native acceptance",
+  "candidate_commit": "741dde19b5d07be1872e8bdcedaa90611cbf5b71",
+  "payload_count": 15,
+  "files": [
+    {
+      "file": "ADDITIONAL_REFERENCE_TEXT.json",
+      "bytes": 11886,
+      "sha256": "0be284fe08e0d2ef5ecfe1e4ccb2f85e256643367f5ad4dba29859883ac3d76e"
+    },
+    {
+      "file": "CLAUDE_REPLY_KO.md",
+      "bytes": 2678,
+      "sha256": "4604c5ce0d25ffccb3272025ca673a74f6e91bfdd021551c97cf410ff9857fac"
+    },
+    {
+      "file": "DECISION.json",
+      "bytes": 2101,
+      "sha256": "2a168590a7243dc41a154663f2beb21481df3f03cc72c7f180d8e1140003dfd7"
+    },
+    {
+      "file": "GIT_TREE.json",
+      "bytes": 4549976,
+      "sha256": "61d1cbaa72b94d45f4555023051709133bcb6899685b5f933057ae94aaaf9c44"
+    },
+    {
+      "file": "INDEPENDENT_STATIC_AUDIT.json",
+      "bytes": 14791,
+      "sha256": "bd0a08222ce1c595084a297ae9dd244f1dae5c55100cc26f42a267eae99e1b3c"
+    },
+    {
+      "file": "PRIOR_REFERENCE_TEXT.json",
+      "bytes": 1217954,
+      "sha256": "198446f80b3e21880195d787f30b460106bec5d28895d6ca14af1aa2e07bcdc9"
+    },
+    {
+      "file": "README.md",
+      "bytes": 1514,
+      "sha256": "bc99b33c538889bd2be488fde0688884c08b5e332ba5adb7aa75d15be71c90a1"
+    },
+    {
+      "file": "RECEIVED_REQUEST.md",
+      "bytes": 4083,
+      "sha256": "fc4a8d0ceb209a9aa23bd796a1ebce74cc7b67de796a950a723382c89e605ff8"
+    },
+    {
+      "file": "reference/diagnostic_consumer.py.txt",
+      "bytes": 25731,
+      "sha256": "ee74ed31e40ac1533fe977b7763676b37616b8b6d08ad7dafcc95f40491ca020"
+    },
+    {
+      "file": "reference/LIMITED_VALIDATION_PLAN.json.txt",
+      "bytes": 19219,
+      "sha256": "77e20e79d11a8a59188b30b8a46a23636b46a10dc77bd6ee46bd2eb526938005"
+    },
+    {
+      "file": "reference/PARENT_COMMAND.ps1.txt",
+      "bytes": 24220,
+      "sha256": "0b3b6c4d1be8f8e4c0ee3bcfd324a8615ea37591efe2da6b15cc4e66dc257310"
+    },
+    {
+      "file": "REFERENCE_TEXT.json",
+      "bytes": 708971,
+      "sha256": "a911c7d1439e84953c837e7b03a71b949be7c9cfff13e09fb0c955346b01cd82"
+    },
+    {
+      "file": "REVIEW_KO.md",
+      "bytes": 9663,
+      "sha256": "9dc46e1e3a8f745aa3bc94a41dcf071792ac4eedc6242505ce546daf8bdfb593"
+    },
+    {
+      "file": "reviewer_static_check.py",
+      "bytes": 8152,
+      "sha256": "0d638bc0cdd38198219940123e9aafe4cd629355dfef51bc5f077226e463dbca"
+    },
+    {
+      "file": "REVIEWER_STATIC_TOOL_RETURN.json",
+      "bytes": 3104,
+      "sha256": "ab675ee74042e6c54c9eab732f3c1a7581fc6e873b3ff31b83387ad8c4cf130f"
+    }
+  ]
+}

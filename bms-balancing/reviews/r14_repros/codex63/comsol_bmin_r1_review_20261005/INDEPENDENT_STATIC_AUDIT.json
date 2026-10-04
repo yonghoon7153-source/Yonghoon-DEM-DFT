@@ -1,0 +1,409 @@
+{
+  "scope": "Static source text / JSON / hash / archived log checks only. Candidate functions and submitted tools were NOT imported, parsed as code, compiled, or executed.",
+  "commit": "741dde19b5d07be1872e8bdcedaa90611cbf5b71",
+  "connector_blobs": [
+    {
+      "path": "bms-balancing/docs/COMSOL_BMIN_CANDIDATE_R1_REVIEW_REQUEST_20261005.md",
+      "bytes": 5443,
+      "sha256": "de3700bf5527cc47805e8a8f6132a1d98321bf7f2b31f2bed71207908928f85e",
+      "git_blob": "f5fa9e2e1d8bbe3d8bd2eb146903c4ab2669b5fb",
+      "match": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/PREPARATION_KO.md",
+      "bytes": 7318,
+      "sha256": "49178eb3813de1a776ba3b6d17a62d6015ff19f771267eed2c80348291c0c846",
+      "git_blob": "5abba39602faf0e1aa4ef214691d64345fd1b786",
+      "match": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/R1_CHANGE_BOUNDARIES.json",
+      "bytes": 4988,
+      "sha256": "b683b3470fcfc685842f0465dd835321a9c6f1313ef4fa7f577e8d6244ae013f",
+      "git_blob": "e3bd135ee9afee4a09a7738e28d72d2a50e262db",
+      "match": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/R1_LITERAL_CHANGES.json",
+      "bytes": 1640,
+      "sha256": "a3ecb2f364ae7ba709e88a33ec769f1267e51090c29a09cb177af57df67309e8",
+      "git_blob": "4fa2b4d61b237727d011d91a23bf9b28f32305be",
+      "match": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/STATIC_AUDIT.json",
+      "bytes": 6820,
+      "sha256": "47a3133dc5dca4c124dd23c9214aee223a4ce6305431e4035afa677bf4d9d059",
+      "git_blob": "b9475c7469b1262b1184ffd307c915c5586595f1",
+      "match": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/LIMITED_VALIDATION_PLAN.json",
+      "bytes": 19218,
+      "sha256": "4803de2cc743d25646087aeaed1c4d6e755dd0a8020bfb26865a1063e55ed556",
+      "git_blob": "fa1ebab4badca4783268c7866619d5205a38faad",
+      "match": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/candidate/CODE_MANIFEST.json",
+      "bytes": 1050,
+      "sha256": "9dcb47f0ec3ec346b491d90c2836e3b30f54eb88fd5e4fbd216fc34782275cdb",
+      "git_blob": "e222a6805fa8fa930d5e1c5afec875469830c2b0",
+      "match": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/candidate/src/Bmin640Candidate.java",
+      "bytes": 80813,
+      "sha256": "ef0ca60aeae1d9bd3790bbfe49a5732984c489cc7928b9692f102e061f5462ff",
+      "git_blob": "20055a24bd7d1c219b875fd5d3a772ed3e573c47",
+      "match": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/candidate/src/diagnostic_consumer.py",
+      "bytes": 26065,
+      "sha256": "d1a28157b2a2ea23ab285b40e4686de349ddc2133127707137eeaa47303660dd",
+      "git_blob": "724d2b242fd9618e6242965ae19fcc8f0a5dc819",
+      "match": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/candidate/src/candidate_entry.py",
+      "bytes": 13995,
+      "sha256": "0a0d308101d54ce11af305033d77ede2e6f4a28c97ff15852a230b283c178fed",
+      "git_blob": "e1c4f047ccd5ec13d7467df565178981b3fb538c",
+      "match": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/candidate/PARENT_COMMAND.ps1",
+      "bytes": 24469,
+      "sha256": "fda741a149fdb32cd42879d19e0510292f62f7fa9db2089242f8a89a0c91e783",
+      "git_blob": "40f38a93d73cb0b76a47495887381baf201e6ce0",
+      "match": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/candidate/CONTRACT.json",
+      "bytes": 55211,
+      "sha256": "98820a8447b8ed830447125567312c7033e77a141bab59e84f1a1b83b3b2ce42",
+      "git_blob": "9ac6604ab75fdb7b2a1c80d44cb30fc7f89cba42",
+      "match": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/candidate/COMMAND_MAP.json",
+      "bytes": 6189,
+      "sha256": "f1381cb781b2de507052b595c913a0d9f7428b8fe261c4d1d22df6877f0833f6",
+      "git_blob": "6c134235103e76439c8995dfb550c30e5a229134",
+      "match": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/candidate/NATIVE_APPROVAL_FIELD_SPEC.json",
+      "bytes": 4346,
+      "sha256": "ddeb04ab6efe1006d4df21a7c1435b1974b649f11438973e9928d37caaaaa416",
+      "git_blob": "b49de01673bfde58a59e3f9559844e93b8ebed6e",
+      "match": true
+    },
+    {
+      "path": "bms-balancing/docs/COMSOL_REBUILD_SPEC.md",
+      "bytes": 420408,
+      "sha256": "967d02e994f3b06e7cf4d1e493fe31fc0292192d9e949c2eada907b4e092b2dd",
+      "git_blob": "a2346b2280f94c853889393d2c85023bef0fa3c7",
+      "match": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/VALIDATION_REQUEST_KO.md",
+      "bytes": 4335,
+      "sha256": "46aebe8edf418f350156c3eb91f8c2232725b7cb8d64e47b814fe7a000425d4c",
+      "git_blob": "bc7b9a37b79024f1b283a45063845f4de3111e4b",
+      "match": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/NATIVE_BMIN640_APPROVAL_DRAFT_KO.md",
+      "bytes": 6319,
+      "sha256": "7a62bfe89dc48b08681200964c62fe3ba9661adc0cdedbd92507aa8077cb266f",
+      "git_blob": "c6f59d08d9ac51390ba66daf33fdb5cf2b5cc8b7",
+      "match": true
+    }
+  ],
+  "manifest": {
+    "bytes": 1050,
+    "sha256": "9dcb47f0ec3ec346b491d90c2836e3b30f54eb88fd5e4fbd216fc34782275cdb"
+  },
+  "manifest_matches_claim": true,
+  "manifest_files": [
+    {
+      "file": "src/Bmin640Candidate.java",
+      "match": true
+    },
+    {
+      "file": "src/diagnostic_consumer.py",
+      "match": true
+    },
+    {
+      "file": "src/candidate_entry.py",
+      "match": true
+    },
+    {
+      "file": "PARENT_COMMAND.ps1",
+      "match": true
+    },
+    {
+      "file": "CONTRACT.json",
+      "match": true
+    }
+  ],
+  "byte_identical": {
+    "src/Bmin640Candidate.java": true,
+    "src/candidate_entry.py": true
+  },
+  "reverse": {
+    "parent_exact_v1": true,
+    "parent_inverse_occurrences": [
+      1,
+      1,
+      3,
+      1
+    ],
+    "consumer_exact_v1": true
+  },
+  "contract_changed_top_keys": [
+    "expected_transient_dof"
+  ],
+  "dof_status": {
+    "before": {
+      "solved": 156925,
+      "internal": 12,
+      "status": "RECORD_ONLY",
+      "basis": "2045 + 242*Nel matched exactly at Nel 40/80/160/320 (SPEC l.460, l.618, l.788); 640 is an extrapolation"
+    },
+    "after": {
+      "solved": 156925,
+      "internal": 12,
+      "status": "RECORD_ONLY",
+      "basis": "2045 + 242*Nel matched exactly at Nel 40/80/160/320 (SPEC l.460, l.618, l.788); 640 is an extrapolation"
+    }
+  },
+  "contract_inverse_exact_object": true,
+  "binding_only_manifest_change": {
+    "COMMAND_MAP.json": true,
+    "NATIVE_APPROVAL_FIELD_SPEC.json": true
+  },
+  "prior_selected_tree_preservation": [
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/BASELINE_IDENTITIES.json",
+      "same_blob": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/CHANGE_BOUNDARIES.json",
+      "same_blob": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/LIMITED_VALIDATION_PLAN.json",
+      "same_blob": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/LITERAL_CHANGE_MAP.json",
+      "same_blob": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/NATIVE_BMIN640_APPROVAL_DRAFT_KO.md",
+      "same_blob": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/PREPARATION_KO.md",
+      "same_blob": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/RESOURCE_BUDGET_KO.md",
+      "same_blob": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/STATIC_AUDIT.json",
+      "same_blob": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/VALIDATION_REQUEST_KO.md",
+      "same_blob": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/basis/source480/candidate/CODE_MANIFEST.json",
+      "same_blob": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/basis/source480/candidate/COMMAND_MAP.json",
+      "same_blob": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/basis/source480/candidate/CONTRACT.json",
+      "same_blob": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/basis/source480/candidate/NATIVE_APPROVAL_FIELD_SPEC.json",
+      "same_blob": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/basis/source480/candidate/PARENT_COMMAND.ps1",
+      "same_blob": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/basis/source480/candidate/src/Normal480Candidate.java",
+      "same_blob": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/basis/source480/candidate/src/candidate_entry.py",
+      "same_blob": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/basis/source480/candidate/src/diagnostic_consumer.py",
+      "same_blob": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/basis/source480/run/tables/axes_runtime_settings.csv",
+      "same_blob": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/candidate/CODE_MANIFEST.json",
+      "same_blob": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/candidate/COMMAND_MAP.json",
+      "same_blob": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/candidate/CONTRACT.json",
+      "same_blob": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/candidate/NATIVE_APPROVAL_FIELD_SPEC.json",
+      "same_blob": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/candidate/PARENT_COMMAND.ps1",
+      "same_blob": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/candidate/src/Bmin640Candidate.java",
+      "same_blob": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/candidate/src/candidate_entry.py",
+      "same_blob": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/candidate/src/diagnostic_consumer.py",
+      "same_blob": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/tools/build_candidate.py",
+      "same_blob": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/tools/static_audit.py",
+      "same_blob": true
+    }
+  ],
+  "plan": {
+    "groups": 9,
+    "case_ids": 54,
+    "unique_ids": 54,
+    "by_group": {
+      "PY01": 4,
+      "PY02": 5,
+      "PY03": 10,
+      "PY04": 3,
+      "PY05": 7,
+      "PY06": 4,
+      "PY07": 2,
+      "JV01": 2,
+      "PS01": 17
+    },
+    "budget_sum": 1530,
+    "overall": 1530,
+    "manifest_matches": true,
+    "all_cases_unexecuted_by_reviewer": true
+  },
+  "precision_literal": {
+    "text": "0.001000000000000000000000000001",
+    "decimal_places": 30,
+    "significant_digits": 28,
+    "greater_than_limit_exactly": true,
+    "powershell_not_executed": true
+  },
+  "normal480_archive": {
+    "file": "C:\\Users\\Administrator\\Downloads\\COMSOL63_NORMAL480_NATIVE_RESULT_20261001.zip",
+    "bytes": 420748594,
+    "sha256": "e991ab4c918f6576b18d6225a86ed41759ab6ee726dd6543b9a9158e581cbc30"
+  },
+  "batch_members": [
+    "run/batch.log"
+  ],
+  "batch_log_identity": {
+    "member": "run/batch.log",
+    "bytes": 886975,
+    "sha256": "805e649493f6d793e0b780a3899c40132d2e15011742de047fecae16711fcfa8"
+  },
+  "normal480_dof": {
+    "opening": "<---- Time-Dependent Solver 1 in Study 1/Solution 1 (sol1) ---------------------",
+    "closing": "----- Time-Dependent Solver 1 in Study 1/Solution 1 (sol1) -------------------->",
+    "all_mentions": [
+      [
+        86,
+        "Number of degrees of freedom solved for: 1202 (plus 12 internal DOFs)."
+      ],
+      [
+        131,
+        "Number of degrees of freedom solved for: 79485 (plus 12 internal DOFs)."
+      ]
+    ],
+    "transient_mentions": [
+      "Number of degrees of freedom solved for: 79485 (plus 12 internal DOFs)."
+    ],
+    "transient_regex_matches": [
+      [
+        "79485",
+        "12"
+      ]
+    ]
+  },
+  "static_string_cases": [
+    {
+      "id": "valid",
+      "text": "Number of degrees of freedom solved for: 79485 (plus 12 internal DOFs).",
+      "matching_lines": 1,
+      "valid_occurrences": 1,
+      "statically_predicted_branch": "ACCEPTS_FIRST_MATCH"
+    },
+    {
+      "id": "two_lines",
+      "text": "Number of degrees of freedom solved for: 79485 (plus 12 internal DOFs).\nNumber of degrees of freedom solved for: 156925 (plus 12 internal DOFs).",
+      "matching_lines": 2,
+      "valid_occurrences": 2,
+      "statically_predicted_branch": "COUNT"
+    },
+    {
+      "id": "two_same_line",
+      "text": "Number of degrees of freedom solved for: 79485 (plus 12 internal DOFs). Number of degrees of freedom solved for: 156925 (plus 12 internal DOFs).",
+      "matching_lines": 1,
+      "valid_occurrences": 2,
+      "statically_predicted_branch": "ACCEPTS_FIRST_MATCH"
+    },
+    {
+      "id": "valid_then_malformed_same_line",
+      "text": "Number of degrees of freedom solved for: 79485 (plus 12 internal DOFs). Number of degrees of freedom solved for: ???",
+      "matching_lines": 1,
+      "valid_occurrences": 1,
+      "statically_predicted_branch": "ACCEPTS_FIRST_MATCH"
+    },
+    {
+      "id": "zero",
+      "text": "Number of degrees of freedom solved for: 0 (plus 12 internal DOFs).",
+      "matching_lines": 1,
+      "valid_occurrences": 1,
+      "statically_predicted_branch": "VALUE"
+    },
+    {
+      "id": "missing_internal",
+      "text": "Number of degrees of freedom solved for: 79485.",
+      "matching_lines": 1,
+      "valid_occurrences": 0,
+      "statically_predicted_branch": "FORMAT"
+    }
+  ]
+}
