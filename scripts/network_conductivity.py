@@ -965,6 +965,26 @@ def solve_network(network_data, mode='full', return_field=False):
     return G_eff, sigma_ratio
 
 
+
+def constriction_power_share(field):
+    """④a (J20-s · 1저자 비준 10-04 · LHS-30) — 같은 FULL 해의 협착 저항 전력 몫 Σ I²R_c / Σ I²R_total.
+
+    field = solve_network(..., mode='full', return_field=True) 의 세 번째 값.  합은 **관통 간선만** (edge_records) —
+    가상 전극 연결 (경계 전도도) 은 들어가지 않는다.  R_total = R_bulk + R_c (build_network).
+    `bulk_resistance_fraction` (간선별 비율의 비가중 평균 · L2-08) 과 다른 양이다: 전류가 안 흐르는 간선은 여기서 0 표.
+    반환 (몫 또는 None, 상태 'computed' · 'not_computed (…)').
+    """
+    if not field or not field.get('edge_records'):
+        return None, 'not_computed (no percolating FULL solution)'
+    num = den = 0.0
+    for r in field['edge_records']:
+        i2 = float(r['I']) ** 2
+        num += i2 * float(r['R_constr'])
+        den += i2 * float(r['R_total'])
+    if not (den > 0 and np.isfinite(den) and np.isfinite(num)):
+        return None, 'not_computed (zero or non-finite dissipation)'
+    return num / den, 'computed'
+
 def dump_network_raw(dump_dir, atoms_raw, net, field_full, tag='hertzian'):
     """Write per-node/per-edge raw CSV + solution JSON for reviewer audit.
     dump_dir/
@@ -1130,13 +1150,19 @@ def run_decomposition(atoms_raw, contacts_raw, target_types, scale,
           f"(협착 쪽 {1-bulk_frac:.1%})  ⚠ 전력(I²R) 기여도가 아니다 — L2-08")
 
     # === Run 1: FULL ===
+    #  ★ 10-04 ④a — 전류장을 **항상** 받는다 (해는 같다 — 출력만 더한다 · σ 비트 동일 = test_network_boundary_rule GOLD).
+    #    협착 전력 몫 Σ I²R_c / Σ I²R_total 은 이 해에서만 낸다 (다른 해를 섞지 않는다).
     print("  Solving FULL network (bulk + constriction)...")
-    if dump_raw_dir:
-        G_full, sigma_full, _field = solve_network(net, mode='full', return_field=True)
-        if _field and dump_tag:
-            dump_network_raw(dump_raw_dir, atoms_raw, net, _field, tag=dump_tag)
-    else:
-        G_full, sigma_full = solve_network(net, mode='full')
+    G_full, sigma_full, _field = solve_network(net, mode='full', return_field=True)
+    if dump_raw_dir and _field and dump_tag:
+        dump_network_raw(dump_raw_dir, atoms_raw, net, _field, tag=dump_tag)
+    cps, cps_status = constriction_power_share(_field)
+    #  키 = 채널 · 모드 꼬리 명시 (τ 명명 규약 — 새 코드부터) · 한 양 = 한 이름
+    _cps_key = 'constriction_power_share_{}_{}'.format({'ionic': 'ion', 'electronic': 'el', 'thermal': 'th'}.get(_mode, _mode),
+                                                       'physics' if contact_mode == 'physics' else 'hertz')
+    if cps is not None:
+        print(f"  협착 저항 전력 몫 Σ I²R_c / Σ I²R_total (FULL 해 · 관통 간선): {cps:.1%}  "
+              f"[{_cps_key}] ↔ 접촉별 비가중 평균 {1 - bulk_frac:.1%}")
 
     # === Run 2: CONTACT-FREE (ideal contacts, upper bound) ===
     print("  Solving CONTACT_FREE network (R_constriction=0)...")
@@ -1181,6 +1207,9 @@ def run_decomposition(atoms_raw, contacts_raw, target_types, scale,
         'boundary_band_frac': net.get('boundary_band_frac'),
         'phi_se': round(phi_se, 4),
         'bulk_resistance_fraction': round(bulk_frac, 4),
+        #  ★ 10-04 ④a — 같은 FULL 해의 전력 몫 (관통 간선 · 가상 전극 제외) · 옛 열과 다른 양 (L2-08 · LHS-30)
+        _cps_key: (round(cps, 6) if cps is not None else None),
+        _cps_key + '_status': cps_status,
         'active_fraction': round(active_fraction, 4),
         'percolating_fraction': round(perc_fraction, 4),
         'sigma_full': round(sigma_full, 8) if sigma_full else None,
@@ -1345,6 +1374,10 @@ def _run_all_networks(atoms_raw, contacts_raw, target_types, am_types, type_map,
             results['electronic_percolating_fraction'] = results_el.get('percolating_fraction')
             results['electronic_boundary_rule']      = results_el.get('boundary_rule')        # ★ 10-04 안 A
             results['electronic_boundary_band_frac'] = results_el.get('boundary_band_frac')
+            # ★ 10-04 ④a — 전자 채널 협착 전력 몫 (꼬리 이름 그대로 — 이온 중심 결과에 싣는다)
+            for _k, _v in results_el.items():
+                if _k.startswith('constriction_power_share_el_'):
+                    results[_k] = _v
             # 값이 실제로 0/None 이면 '계산됐고 답이 0' — 실패가 아니다 (thermal 과 같은 규약).
             el_status, el_reason = status_for_value(
                 results['electronic_sigma_full_mScm'], 'electronic')
@@ -1368,6 +1401,10 @@ def _run_all_networks(atoms_raw, contacts_raw, target_types, am_types, type_map,
             results['thermal_bulk_frac']       = results_th.get('bulk_resistance_fraction')
             results['thermal_boundary_rule']      = results_th.get('boundary_rule')           # ★ 10-04 안 A
             results['thermal_boundary_band_frac'] = results_th.get('boundary_band_frac')
+            # ★ 10-04 ④a — 열 채널 협착 전력 몫 (꼬리 이름 그대로)
+            for _k, _v in results_th.items():
+                if _k.startswith('constriction_power_share_th_'):
+                    results[_k] = _v
             # 값이 실제로 0/None 이면 '계산됐고 답이 0' 이라는 뜻 — 실패가 아니다.
             if results['thermal_sigma_full_mScm'] is None:
                 th_status, th_reason = 'valid_null', '솔버가 κ 를 None 으로 반환 (열망 미퍼콜)'

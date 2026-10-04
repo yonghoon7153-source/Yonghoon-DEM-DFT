@@ -1066,6 +1066,32 @@
 - **안 한 것**: 등급 축 (기계적 안정성) 은 여전히 옛 `stress_cv` — 전환은 바뀌는 등급값 보고 뒤 (②b TAU-03 과 같은 절차) · 값은 접촉 단계 재실행 (130 + 64 ·
   Codex 뒤) 에서 생긴다 · 인계표 열은 그 뒤 · `stress_z_layer_cv` (z 층 CV) 는 옛 규약만 (LW 층 판 없음 — 소비자 = 그룹 그림 하나).
 
+### J20-s ④a 구현 (10-04 · 시험 먼저 → 생산 → 웹앱 같은 묶음)
+
+- 생산: `network_conductivity.constriction_power_share(field)` = **같은 FULL 해**의 Σ I²R_c / Σ I²R_total (관통 간선만 · 가상 전극 연결 제외 ·
+  R_total = R_bulk + R_c) · `run_decomposition` 이 FULL 해를 **항상** 전류장과 함께 받는다 (해는 같다 — σ 비트 동일 = `test_network_boundary_rule` GOLD 8/8).
+  키 = 채널 · 모드 꼬리 (τ 명명 규약): `constriction_power_share_{ion,el,th}_{hertz,physics}` + `_status` (`computed` · `not_computed (…)` — 관통 없음 = None ·
+  0 으로 안 채움) · 옛 `bulk_resistance_fraction` 은 값 · 키 그대로.
+- 웹앱 머지: hertz 세 키 = `network_conductivity.json` (hertzian 결과) → `NET_MERGE_KEYS` · physics 세 키 = dual 에서 **이름 그대로**
+  (`NET_PHYSICS_TAILED_KEYS` — 옛 `<key>_physics` 미러를 두 번 붙이지 않는다) · 스캐너 (`network_projection_preflight`) 도 같은 규칙.
+- real_14 (리포 덤프 · 망 CLI 그대로 · 감사기 값과 6/6 일치):
+
+  | 채널 | hertz 전력 몫 | hertz 비가중 (1 − bf) | physics 전력 몫 | physics 비가중 |
+  |---|---|---|---|---|
+  | 이온 | **78.6 %** | 76.6 % | **82.8 %** | 78.2 % |
+  | 전자 | 83.3 % | 86.9 % | 83.0 % | 88.9 % |
+  | 열 | 61.6 % | 69.3 % | **54.4 %** | 70.4 % |
+
+- 웹앱 (같은 묶음): 케이스 표 새 행 *"Constriction 전력 몫 (I²R · %)"* (H · P = 이온 hertz · physics × 100 · 없으면 '—') · 옛 행 논문 라벨 =
+  *"per-edge unweighted mean, not a power share (L2-08)"* · **옛 행의 physics 칸이 CSV 세대 (Step 4b) 에서 Hertz 값의 복사였던 것** 을 metrics 로 정정
+  (physics 없으면 '—' — TAU-21 과 같은 규칙) · 툴팁 · 별칭 · 그룹 열 `Constriction (비가중)` · `Constriction I²R` · 보고서 · 등급 설명 (축 값 불변) ·
+  옛 주석 *"σ_ionic moves while σ_bulk stays fixed"* 정정 (모드 차이 = 간선마다 **접촉 면적 → R_c**).  시험 `scripts/test_constriction_power_share.py` 16/16
+  (옛 0/1) · `webapp/test_constriction_power_labels.py` 21/21 (옛 1/21).
+- ⚠ `network_conductivity.py` = S3 수치 모듈 (`seal_s3_prerun.NUMERIC_MODULES`) → **S3 를 돌리기 전 재봉인** (봉인 = 수정 금지가 아니라 재봉인 강제 ·
+  결정 16 · 1저자 "재봉인은 나중").  인계 = 이온 hertz 먼저 (v2 결정 3) · 값은 망 배치 (130 + 64 · Codex 뒤) 에서.
+- 자기 결함 `SELF-82`: ④b 웹앱 시험 E1 이 `axis_values` 의 반환 (= {축 이름표: 값}) 을 키 조각으로 걸러 **빈 dict 끼리** 비교해 늘 PASS 였다 —
+  이 묶음에서 두 E1 (④b · ④a) 을 축 키 → 이름표 · 기대값으로 고쳤다.
+
 
 ## 인계 판정 (지금)
 

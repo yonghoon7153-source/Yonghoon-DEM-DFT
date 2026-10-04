@@ -2124,6 +2124,14 @@ const METRIC_TIPS = {
       + '같은 표를 행사한다. 반례: 같은 망에서 이 통계 45 % ↔ 실제 소산 몫 ΣI²R_c/ΣI²R_total 8.18 % '
       + '(5.5배). 69~81 %: SE 0.5 μm 에서 목이 지배, 큰 SE 에서 감소 — 이 비율이 높을수록 접촉 품질이 중요.'
   },
+  'Constriction 전력 몫 (I²R · %)': {
+    title: 'Constriction 전력 몫 — Σ I²R_c / Σ I²R_total (④a)',
+    formula: 'share = Σ_e I_e² R_c,e / Σ_e I_e² R_total,e   (R_total = R_bulk + R_c · I_e = 같은 FULL 망 해의 간선 전류)\n'
+      + '합 = 관통 간선만 · 가상 전극 연결 (경계 전도도) 제외 · 이온 채널 · Hertz / Physics 칸 = 접촉 면적 모드',
+    desc: '협착 (접촉 목) 저항에서 실제로 소산되는 전력의 몫입니다. 위 행 (접촉별 비가중 평균) 과 달리 전류가 많이 흐르는 접촉이 크게 셉니다.',
+    meaning: '반례 (L2-08): 같은 망에서 비가중 평균 45 % ↔ 이 값 8.18 % (5.5 배). real_14 이온 hertz 78.6 % (비가중 76.6 %) · 열 physics 는 54 % ↔ 70 % 로 크게 갈린다. '
+      + '재분석 (망 단계) 전 케이스는 빈칸입니다. 등급 축 (협착 R 비율) 은 아직 위 행 — 전환은 바뀌는 등급값 보고 뒤.'
+  },
   'σ_brug / σ_ionic': {
     title: 'Bruggeman Overestimation vs Network Solver',
     formula: {% if metrics and metrics.sigma_ratio is defined and metrics.sigma_full_mScm is defined and metrics.sigma_full_mScm %}
@@ -2715,7 +2723,8 @@ const PAPER_TO_ORIG = {
   'σ_Bruggeman — EMT estimate (mS/cm)': 'σ_Bruggeman (mS/cm)',
   'Bruggeman coefficient, σ_Bruggeman / σ_grain': 'σ_brug/σ_grain (Bruggeman)',
   'σ_ionic — full network solver (mS/cm)': 'σ_ionic (mS/cm)',
-  'Constriction-resistance fraction (%)': 'Constriction 비율(%)',
+  'Constriction R fraction — per-edge unweighted mean, not a power share (L2-08) (%)': 'Constriction 비율(%)',
+  'Constriction power share Σ I²R_c / Σ I²R_total — same FULL solution, percolating edges (%)': 'Constriction 전력 몫 (I²R · %)',
   'σ_e — electronic conductivity (mS/cm)': 'σ_electronic (mS/cm)',
   'κ — thermal conductivity (mS/cm equiv)': 'σ_thermal (mS/cm equiv)',
   'σ_ionic^physics — Tabor plastic film (mS/cm)': 'σ_ionic [physics] (mS/cm)',

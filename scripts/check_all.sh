@@ -198,6 +198,7 @@ run 'webapp: rint_scope_labels'   python3 webapp/test_rint_scope_labels.py  # 10
 run 'webapp: tau_labels'          python3 webapp/test_tau_labels.py         # 10-04 τ 2단계 ① TAU-01 · 02 · 21 — √ 행 COMSOL/EIS 표기 제거 · tau2 행 · physics 빈칸 · 정오표
 run 'webapp: tau_handover_status' python3 webapp/test_tau_handover_status.py  # 10-04 τ 2단계 ② — 케이스 τ 블록 인계 상태 · 띠 규칙 행 (tau_flux 표시 · J20-l)
 run 'webapp: stress_lw_labels'    python3 webapp/test_stress_lw_labels.py   # 10-04 ④b — Love–Weber 줄 · 옛 줄 이름표 (50/50) · 그룹 표 · 그림 (0 안 그림) · 보고서 · 등급 축 불변
+run 'webapp: constriction_power'  python3 webapp/test_constriction_power_labels.py  # 10-04 ④a — 협착 전력 몫 행 · 옛 행 이름표 (비가중 · L2-08) · physics 칸 복사 정정 · 그룹 열 · 보고서 · 등급 축 불변
 #  ★ 2026-10-03 (Codex r_int 1단계 RINT-02 · 13 · 14 · 20) — ① 계면 요청 ↔ 네 솔브 적용 영수증을 **실물 producer** 로.
 #    `solve_sigma_z(..., rint=)` 호출 넷을 AST 로 찾아 하나씩 `rint=` 를 지우면 게시가 거부돼야 한다 (주 솔브만 보던
 #    옛 사후 단언은 wetted/bare 배선 삭제를 초록으로 냈다) · CLI 모순 요청 · check_arm 영수증 변조 · 레지스트리 전수 분류.
@@ -209,6 +210,9 @@ run 'tau_flux (이온 인계 열 · 게이트 G1–G6)' python3 scripts/test_tau
 #  ★ 2026-10-04 (J20-s ④b · 1저자 비준 *"권고대로"* · 원장 LHS-29) — Love–Weber 입자 응력 새 열 (접촉점 · 전체 텐서 · 벽 접촉 표지 ·
 #    검사 = 열 · F = Fn + Ft · 접촉점 · 전체 virial ↔ c_strs) · real_14 독립 구현 대조 · 생산 CLI 끝단 (옛 키 불변).
 run 'love_weber_stress (④b · LHS-29)' python3 scripts/test_love_weber_stress.py
+#  ★ 2026-10-04 (J20-s ④a · LHS-30) — 협착 저항 전력 몫 Σ I²R_c / Σ I²R_total (같은 FULL 해 · 관통 간선) · L2-08 반례 손풀이 8.1818 % ·
+#    채널 · 모드 꼬리 키 · 머지 목록 (legacy hertz · dual physics 이름 그대로).  σ 비트 동일은 network boundary_rule GOLD 가 같이 지킨다.
+run 'constriction_power_share (④a · LHS-30)' python3 scripts/test_constriction_power_share.py
 #  ★ 2026-09-09 (Codex Q2-1) — 커버리지 재현기를 산문 스니펫에서 도구로 옮겼다.
 #    옛 스니펫은 디렉터리 항목을 **현재** 파일 집합으로 펼쳐 감사 이후 생긴 파일까지 셌고
 #    `.lstrip('./')` 가 dotfile 경로를 망가뜨렸다.  selftest 가 두 반례를 고정한다.

@@ -173,12 +173,11 @@ def main():
 
     print('E  등급 엔진')
     import grade_engine as G
-    base = dict(MET_OLD)
-    ax0 = G.axis_values(base) if hasattr(G, 'axis_values') else None
-    ax1 = G.axis_values(dict(base, **{k: v for k, v in MET_LW.items() if 'lw' in k})) if ax0 is not None else None
-    same = ax0 is not None and {k: v for k, v in ax0.items() if 'sigma_vm' in str(k) or 'stress' in str(k)} == \
-        {k: v for k, v in ax1.items() if 'sigma_vm' in str(k) or 'stress' in str(k)}
-    chk('E1 등급 축 값 불변 — LW 키를 더해도 stress 축 같은 값 (전환은 등급값 보고 뒤)', same, repr(ax0 and {k: v for k, v in ax0.items() if 'stress' in str(k) or 'sigma_vm' in str(k)}))
+    lab_s = next(ax['label'] for ax in G.AXES if ax.get('key') == '__sigma_vm_cv_pct')      # axis_values = {이름표: 값}
+    v0 = G.axis_values(dict(MET_OLD)).get(lab_s)
+    v1 = G.axis_values(dict(MET_OLD, **{k: v for k, v in MET_LW.items() if 'lw' in k})).get(lab_s)
+    chk('E1 등급 축 값 불변 — LW 키를 더해도 같은 값 = 옛 stress_cv (213.1) · 전환은 등급값 보고 뒤',
+        v0 is not None and v0 == v1 == MET_OLD['stress_cv'], repr((v0, v1)))
     gsrc = _read('scripts/grade_engine.py')
     chk('E2 등급 축 설명 — 50/50 분할 · LHS-29 한정어', '50/50' in gsrc and 'LHS-29' in gsrc)
     chk('E3 쉬운 툴팁 __sigma_vm_cv_pct — 옛 규약 · Love–Weber 전환 보류 표기',

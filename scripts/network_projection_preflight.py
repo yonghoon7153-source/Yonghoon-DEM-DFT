@@ -69,7 +69,7 @@ def simulate_merge(case_dir):
 
     app.py 의 순서를 그대로 따른다:
       ① `_NET_MERGE_KEYS` 전부 pop  ② legacy JSON 에서 non-None 만 채움
-      ③ dual JSON 에서 `NET_PHYSICS_MIRROR_KEYS` 를 `<key>_physics` 로 미러
+      ③ dual JSON 에서 `NET_PHYSICS_MIRROR_KEYS` 를 `<key>_physics` 로 미러 · `NET_PHYSICS_TAILED_KEYS` 는 이름 그대로 (④a)
     """
     fm = _read(os.path.join(case_dir, FM))
     if fm is None:
@@ -86,6 +86,9 @@ def simulate_merge(case_dir):
     for k in ps.NET_PHYSICS_MIRROR_KEYS:
         if rP.get(k) is not None:
             after[f'{k}_physics'] = rP[k]
+    for k in ps.NET_PHYSICS_TAILED_KEYS:          # ★ 10-04 ④a — 꼬리 붙은 physics 키는 이름 그대로 (production 과 같게)
+        if rP.get(k) is not None:
+            after[k] = rP[k]
     return before, after
 
 

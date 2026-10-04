@@ -1931,6 +1931,30 @@ def normalize_network_summary_layout(tables, metrics):
         if _find_row(label) is None:
             _insert_after('Stress CV(%)', [label, '—', '—', '0%'])
 
+    # ④a (J20-s · 1저자 비준 10-04 · LHS-30) — 협착 두 행.  두 경로 (Step 4 · 4b) 가 다 지나는 여기서 한 번만.
+    #   ① 옛 행 'Constriction 비율(%)' (조회 키 그대로 · 값 정의 그대로 = 1 − 접촉별 R_bulk/R_total 비가중 평균 · L2-08):
+    #      CSV 세대 (Step 4b) 는 physics 칸에 Hertz 값이 복사돼 있었다 → metrics 로 두 칸을 다시 쓴다 · physics 없으면 '—' (TAU-21 규칙).
+    #   ② 새 행 'Constriction 전력 몫 (I²R · %)' = 같은 FULL 해의 Σ I²R_c / Σ I²R_total × 100 (관통 간선) · 값 없으면 '—'.
+    def _num_or_none(x):
+        return float(x) if isinstance(x, (int, float)) and not isinstance(x, bool) and x == x else None
+    _ri = _find_row('Constriction 비율(%)')
+    if _ri is not None and metrics:
+        _bfh = _num_or_none(metrics.get('bulk_resistance_fraction'))
+        _bfp = _num_or_none(metrics.get('bulk_resistance_fraction_physics'))
+        _ch = round((1 - _bfh) * 100, 1) if _bfh is not None else data[_ri][1]
+        _cp = round((1 - _bfp) * 100, 1) if _bfp is not None else '—'
+        data[_ri] = [data[_ri][0], _ch, _cp,
+                     _pct_delta((1 - _bfh) * 100 if _bfh is not None else None, (1 - _bfp) * 100 if _bfp is not None else None)
+                     if _bfp is not None else '']
+    if _ri is not None and _find_row('Constriction 전력 몫 (I²R · %)') is None:
+        _cph = _num_or_none(metrics.get('constriction_power_share_ion_hertz')) if metrics else None
+        _cpp = _num_or_none(metrics.get('constriction_power_share_ion_physics')) if metrics else None
+        _insert_after('Constriction 비율(%)', [
+            'Constriction 전력 몫 (I²R · %)',
+            round(100 * _cph, 1) if _cph is not None else '—',
+            round(100 * _cpp, 1) if _cpp is not None else '—',
+            _pct_delta(_cph, _cpp) if (_cph is not None and _cpp is not None) else ''])
+
     # ④b Love–Weber 줄 (J20-s · 1저자 비준 10-04) — 항상 낸다 (모든 케이스 같은 줄 · 값 없으면 '—' · 0 으로 안 채움).
     #   새 세대 CSV (analyze_contacts) 는 상태 OK 일 때 값 줄을 이미 쓴다 → 없는 줄만 metrics 에서 채운다.
     #   상태 줄이 '—' 의 이유를 말한다 (재분석 전 · 열 없음 · FAILED 사유).  자리는 Pass F 정렬 표가 옛 줄 뒤로 잡는다.
@@ -2059,6 +2083,7 @@ def normalize_network_summary_layout(tables, metrics):
         'R_brug (과대추정 배수)',
         'σ_ionic ratio (physics/Hertzian)',
         'Constriction 비율(%)',
+        'Constriction 전력 몫 (I²R · %)',       # ④a 10-04 — 같은 FULL 해의 Σ I²R_c / Σ I²R_total
         'σ_electronic (mS/cm)',
         'σ_thermal (mS/cm equiv)',
         'Contact-free / Full',
@@ -2248,7 +2273,8 @@ _PAPER_LABEL_MAP = {
     # Network solver — Hertzian
     'σ_ionic (mS/cm)':             'σ_ionic — full network solver (mS/cm)',
     'R_brug (과대추정 배수)':       'Bruggeman overestimation, R_brug = σ_Bruggeman / σ_ionic',
-    'Constriction 비율(%)':         'Constriction-resistance fraction (%)',
+    'Constriction 비율(%)':         'Constriction R fraction — per-edge unweighted mean, not a power share (L2-08) (%)',
+    'Constriction 전력 몫 (I²R · %)': 'Constriction power share Σ I²R_c / Σ I²R_total — same FULL solution, percolating edges (%)',
     'σ_electronic (mS/cm)':        'σ_e — electronic conductivity (mS/cm)',
     'σ_thermal (mS/cm equiv)':     'κ — thermal conductivity (mS/cm equiv)',
     # Physics (Tabor)
@@ -2728,8 +2754,9 @@ def transform_network_summary_4col(tables, metrics, meta):
                                           r_h, r_p,
                                           fmt=lambda x: f"{x:.1f}×"))
             if metrics.get('bulk_resistance_fraction') is not None:
-                # Constriction % = (1 - bulk_fraction) × 100. bulk_fraction shifts
-                # in Physics mode because σ_ionic moves while σ_bulk stays fixed.
+                # Constriction % = (1 − bulk_fraction) × 100 · bulk_fraction = 접촉별 R_bulk/R_total 의 **비가중 평균** (L2-08 —
+                # 전력 몫 아님).  Physics 모드에서 달라지는 이유 = 간선마다 **접촉 면적 → R_c** 가 바뀌어서다 (R_bulk 는 그대로) ·
+                # 전력 몫은 '협착 전력 몫' 행 (④a · constriction_power_share_ion_*).  ⚠ 옛 주석 ("σ_ionic 이 움직여서") 은 틀렸다.
                 bf_h = metrics.get('bulk_resistance_fraction')
                 bf_p = metrics.get('bulk_resistance_fraction_physics', bf_h)
                 cstr_h = (1 - bf_h) * 100 if bf_h is not None else None
@@ -2950,6 +2977,10 @@ def _merge_dual_into_metrics(results_dir, met_data):
     for k in _NET_PHYSICS_MIRROR_KEYS:
         if rP.get(k) is not None:
             met_data[f'{k}_physics'] = rP[k]
+    #  ★ 10-04 ④a — 이미 모드 꼬리가 붙은 키는 이름 그대로 (협착 전력 몫 physics · 상태)
+    for k in _ps.NET_PHYSICS_TAILED_KEYS:
+        if rP.get(k) is not None:
+            met_data[k] = rP[k]
     met_data['network_dual'] = {
         'hertzian': {k: rH.get(k) for k in _NET_PHYSICS_MIRROR_KEYS},
         'physics':  {k: rP.get(k) for k in _NET_PHYSICS_MIRROR_KEYS},
@@ -6844,7 +6875,8 @@ GROUP_DISPLAY_KEYS = [
     ('σ_electronic (Stage E)', '(mS/cm)', '_sigma_e_stage_e_display', '전송 (Stage E)'),
     ('σ_thermal (Stage E)', '(mS/cm)', '_sigma_k_stage_e_display', '전송 (Stage E)'),
     ('R_brug', '(×)', 'R_brug_over_full', '전송 (Stage E)'),
-    ('Constriction', '(%)', '_constriction_pct', '전송 (Stage E)'),
+    ('Constriction (비가중)', '(%)', '_constriction_pct', '전송 (Stage E)'),     # 1 − 접촉별 R_bulk/R_total 비가중 평균 (L2-08 · 전력 몫 아님)
+    ('Constriction I²R', '(%)', '_constriction_power_pct', '전송 (Stage E)'),      # ④a 10-04 — Σ I²R_c / Σ I²R_total (이온 · hertz)
     # ── 접촉력 (force chain) ──
     ('Fn AM-AM', '(μN)', 'fn_AM_P_AM_P_mean', '접촉력'),
     ('Fn AM-SE', '(μN)', 'fn_AM_P_SE_mean', '접촉력'),
@@ -6873,7 +6905,7 @@ GROUP_LOWER_BETTER = {
     'Porosity', 'Porosity (union)', 'Porosity (union exact)', 'Overlap fraction', '두께', '두께 (질량 보존)',
     'SE-SE CN std', 'AM-AM CN std', 'Tortuosity', 'Tortuosity all-SE', 'AM Vulnerable',
     'Ionic Isolated (path)', 'Isolated: SE not linked', 'Isolated: no SE',
-    'R_brug', 'Constriction', 'CP mean', 'CP max', 'Stress CV (50/50)', 'Stress CV LW', 'Stress CV LW (벽 제외)',
+    'R_brug', 'Constriction (비가중)', 'Constriction I²R', 'CP mean', 'CP max', 'Stress CV (50/50)', 'Stress CV LW', 'Stress CV LW (벽 제외)',
 }
 
 
@@ -6956,10 +6988,14 @@ def group():
             if metrics.get('am_ionic_isolated_pct') is None and isinstance(metrics.get('ionic_active_pct'), (int, float)):
                 metrics['am_ionic_isolated_pct'] = 100.0 - metrics['ionic_active_pct']
 
-            # Derived: constriction percentage
+            # Derived: constriction percentage (1 − 접촉별 비가중 평균 · L2-08)
             bf = metrics.get('bulk_resistance_fraction')
             if bf is not None and bf > 0:
                 metrics['_constriction_pct'] = round((1 - bf) * 100, 1)
+            # ④a 10-04 — 같은 FULL 해의 협착 전력 몫 (이온 · hertz) · 키 없으면 빈칸 (0 으로 안 채움)
+            _cps = metrics.get('constriction_power_share_ion_hertz')
+            if isinstance(_cps, (int, float)) and not isinstance(_cps, bool) and _cps == _cps:
+                metrics['_constriction_power_pct'] = round(100 * _cps, 1)
 
             # Stage E σ display (phantom-aware) — matches what production form fits.
             # For σ_e: requires raw > 0 AND not both-fallback (input_1mAh_5 raw=51.89
@@ -9551,7 +9587,10 @@ def serve_report(case_id):
         if sigma_brug:
             L.append(f'σ_brug/σ_ionic = {sigma_brug/sigma_net:.1f}×   (Bruggeman overestimation)')
         if metrics.get('bulk_resistance_fraction') is not None:
-            L.append(f'Constriction fraction = {(1-metrics["bulk_resistance_fraction"])*100:.1f}%')
+            L.append(f'Constriction fraction (접촉별 R_c/R_total 비가중 평균 · 전력 몫 아님 · L2-08) = {(1-metrics["bulk_resistance_fraction"])*100:.1f}%')
+        if isinstance(metrics.get('constriction_power_share_ion_hertz'), (int, float)):
+            #  ④a 10-04 — 같은 FULL 해의 Σ I²R_c / Σ I²R_total (관통 간선 · 가상 전극 제외)
+            L.append(f'Constriction power share (I²R · 이온 · hertz) = {100 * metrics["constriction_power_share_ion_hertz"]:.1f}%')
     L.append('```')
     L.append('')
 

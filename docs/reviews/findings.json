@@ -7412,9 +7412,11 @@
    "found_by": "claude (10-04 서브 세션 · J20-s LHS 감사 묶음 ④–⑦ · 코드 판독 + LIGGGHTS 공개 소스 + real_14 실측)",
    "opened_in": "docs/reviews/lhs_handover_judgments_20260924.md",
    "title": "σ_VM 열 (`stress_cv` · `stress_ratio_<상>` · `stress_z_layer_cv`) 이 LIGGGHTS `compute stress/atom` ÷ 입자 부피인데, 입자 접촉 virial 을 **두 입자에 0.5 · (x_i − x_j) ⊗ F 로 똑같이** 나눈 값이다 (공개 소스 pair_gran_base.h ev_tally_xyz · pair.cpp Pair::ev_tally_xyz) — 크기가 다른 쌍에서 큰 입자 응력은 과소 · 작은 입자는 과대 (r 6:1 손풀이 0.575 배 · 7.21 배).  real_14: stress_ratio_AM_P 0.884 (웹앱) ↔ 3.217 (Love–Weber · 입자 중심 → 접촉점) = 상 응력 대소가 **뒤집힌다** · stress_cv 213 → 133 %.  벽 · 판 접촉은 virial 0 (fix wall/gran) · 대각 성분만",
-   "note": "소비자: 웹앱 케이스 표 σ_*/σ_mean 행 (app.py · rebuild_tables_from_metrics) · 그룹 비교 · 등급 축 \"기계적 안정성\" (grade_engine.py stress_cv) · 탐색 적합 (physics_fit_v35 · screening — 생산 폼 아님).  처방 후보 (J20-s ④b, 비준 대기): 접촉 덤프 (힘 · 접촉점) 로 Love–Weber 입자 응력 전 텐서 새 열 · 옛 열 이름표 · 등급 축 전환은 바뀌는 등급값 보고 뒤.  실측 원자료 docs/data/lhs_audit_bundle4_20261004/real14_audit.json (리포만으로 재현).",
+   "note": "소비자: 웹앱 케이스 표 σ_*/σ_mean 행 (app.py · rebuild_tables_from_metrics) · 그룹 비교 · 등급 축 \"기계적 안정성\" (grade_engine.py stress_cv) · 탐색 적합 (physics_fit_v35 · screening — 생산 폼 아님).  처방 후보 (J20-s ④b, 비준 대기): 접촉 덤프 (힘 · 접촉점) 로 Love–Weber 입자 응력 전 텐서 새 열 · 옛 열 이름표 · 등급 축 전환은 바뀌는 등급값 보고 뒤.  실측 원자료 docs/data/lhs_audit_bundle4_20261004/real14_audit.json (리포만으로 재현).  ★ 10-04 ④b 구현 `e501d8702` (1저자 비준 *\"권고대로\"*): 새 열 stress_cv_lw · stress_ratio_<상>_lw · 벽 접촉 표지 · _nowall (dem_analysis_core.calc_love_weber_stress · 검사 = F = Fn+Ft · 접촉점 · 전체 virial ↔ c_strs) · 옛 열 = 이름표만 · 웹앱 같은 묶음 · real_14 AM_P 0.884 → 2.737 (벽 제외 3.016).  열린 채로 둔다 — 등급 축 전환 (등급값 보고 뒤) · 값 = 접촉 단계 재실행 (130 + 64) 뒤.",
    "evidence_tests": [
-    "scripts/lhs_stress_constriction_audit.py"
+    "scripts/lhs_stress_constriction_audit.py",
+    "scripts/test_love_weber_stress.py",
+    "webapp/test_stress_lw_labels.py"
    ]
   },
   {
@@ -7425,9 +7427,11 @@
    "found_by": "claude (10-04 서브 세션 · J20-s LHS 감사 묶음 ④–⑦ · 코드 판독 + LIGGGHTS 공개 소스 + real_14 실측)",
    "opened_in": "docs/reviews/lhs_handover_judgments_20260924.md",
    "title": "`bulk_resistance_fraction` 인계 전 정의 — 간선별 R_bulk/R_total 의 비가중 평균 (L2-08 = 이름표만 고침) 이라 거시 전력 몫이 아니다.  real_14 이온 1−bf 0.766 ↔ I²R 가중 0.786 (hertz) · 0.782 ↔ 0.828 (physics) · 열 physics 0.704 ↔ 0.544.  웹앱 주석 (app.py \"σ_ionic moves while σ_bulk stays fixed\") 은 모드 차이의 이유를 틀리게 적는다 (실제 = 접촉 면적 → R_c)",
-   "note": "처방 후보 (J20-s ④a): 새 열 constriction_power_share_ion_hertz (같은 FULL 해 · 관통 간선 · 가상 전극 제외) · 옛 열 이름표 · 봉인 모듈이라 S3 재봉인 묶음 · 주석 정정.  문턱 근처 침대의 크기는 미측정 (망 배치에서).",
+   "note": "처방 후보 (J20-s ④a): 새 열 constriction_power_share_ion_hertz (같은 FULL 해 · 관통 간선 · 가상 전극 제외) · 옛 열 이름표 · 봉인 모듈이라 S3 재봉인 묶음 · 주석 정정.  문턱 근처 침대의 크기는 미측정 (망 배치에서).  ★ 10-04 ④a 구현 (이 묶음 · sha 는 다음 원장 갱신): 새 열 constriction_power_share_{ion,el,th}_{hertz,physics} (같은 FULL 해 · 관통 간선) · real_14 = 감사기 6/6 (이온 hertz 0.7861) · 옛 행 이름표 · CSV 세대 physics 칸 Hertz 복사 정정 · 주석 정정 · 등급 축 값 불변 (전환 = 등급값 보고 뒤).",
    "evidence_tests": [
-    "scripts/lhs_stress_constriction_audit.py"
+    "scripts/lhs_stress_constriction_audit.py",
+    "scripts/test_constriction_power_share.py",
+    "webapp/test_constriction_power_labels.py"
    ]
   },
   {
@@ -7454,6 +7458,20 @@
    "note": "처방 (J20-s ⑦): 인계 제외 · 웹앱 표시 문구는 그대로 두되 \"선별 경로\" 표기 후보.",
    "evidence_tests": [
     "scripts/analyze_contacts.py (판독 · 경로 선택 :700–753)"
+   ]
+  },
+  {
+   "id": "SELF-82",
+   "severity": "P3",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "claude (10-04 · ④a 웹앱 시험을 쓰다 자기 발견)",
+   "opened_in": "docs/reviews/lhs_handover_judgments_20260924.md",
+   "title": "④b 웹앱 시험 `webapp/test_stress_lw_labels.py` E1 (등급 축 값 불변) 이 공허하게 통과했다 — grade_engine.axis_values 는 {축 이름표: 값} 을 돌려주는데 키 조각 ('stress' · 'sigma_vm') 으로 걸러 이름표 'CV(σ_VM) (%)' 를 못 잡고 빈 dict 끼리 비교 → 값이 바뀌어도 PASS (커밋 e501d8702 에 들어감)",
+   "note": "④a 묶음에서 두 E1 (④b · ④a) 을 AXES 의 key → label 로 찾고 기대값 (옛 stress_cv 213.1 · (1 − bf_physics) × 100) 과 None 아님을 요구하도록 고쳤다.  재발 방지: 반환 구조를 시험 안에서 직접 단언 (값이 None 이면 실패).  닫는 조건 = ④a 커밋 sha 기록.",
+   "evidence_tests": [
+    "webapp/test_stress_lw_labels.py",
+    "webapp/test_constriction_power_labels.py"
    ]
   }
  ]

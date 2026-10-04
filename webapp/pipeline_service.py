@@ -94,6 +94,23 @@ NET_MERGE_KEYS = (
     'thermal_sigma_full_mScm_physics',
     'bulk_resistance_fraction_physics',
     'R_brug_over_full_physics',
+    #  ★ 10-04 ④a (J20-s · LHS-30) — 협착 저항 전력 몫 Σ I²R_c / Σ I²R_total (같은 FULL 해 · 관통 간선).  키에 채널 · 모드 꼬리.
+    #    hertz = legacy JSON (network_conductivity.json = hertzian 결과) 에서 · physics = dual 에서 **이름 그대로** (NET_PHYSICS_TAILED_KEYS).
+    #    여기 둔 것은 세대마다 먼저 걷어내기 위해서다 (옛 세대 값이 새 도장 밑에 남지 않게 — RC5-03).
+    'constriction_power_share_ion_hertz', 'constriction_power_share_ion_hertz_status',
+    'constriction_power_share_el_hertz', 'constriction_power_share_el_hertz_status',
+    'constriction_power_share_th_hertz', 'constriction_power_share_th_hertz_status',
+    'constriction_power_share_ion_physics', 'constriction_power_share_ion_physics_status',
+    'constriction_power_share_el_physics', 'constriction_power_share_el_physics_status',
+    'constriction_power_share_th_physics', 'constriction_power_share_th_physics_status',
+)
+
+#: ★ 10-04 ④a — dual 파일의 physics 결과에서 **이름 그대로** 옮기는 키 (이미 `_physics` 꼬리가 있다 → 아래 미러처럼
+#:   `<key>_physics` 를 또 붙이지 않는다).  `_merge_dual_into_metrics` 와 스캐너 (`network_projection_preflight`) 가 같이 쓴다.
+NET_PHYSICS_TAILED_KEYS = (
+    'constriction_power_share_ion_physics', 'constriction_power_share_ion_physics_status',
+    'constriction_power_share_el_physics', 'constriction_power_share_el_physics_status',
+    'constriction_power_share_th_physics', 'constriction_power_share_th_physics_status',
 )
 
 #: ⚠ physics 키는 `network_conductivity_physics.json` 이 아니라 **dual 파일**에서
