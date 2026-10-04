@@ -9,8 +9,9 @@
 #   bash scripts/run_dem_webapp.sh --open       # 실행 + 브라우저 열기
 #   bash scripts/run_dem_webapp.sh --bg --open  # 백그라운드 + 브라우저 (셸을 안 잡는다)
 #   bash scripts/run_dem_webapp.sh --no-pull    # 오프라인/작업 중일 때
-#   bash scripts/run_dem_webapp.sh --stop       # 그 포트를 쥔 인스턴스만 멈춘다 (pid 파일 안 믿는다)
-#   PORT=5050 bash scripts/run_dem_webapp.sh    # 포트 바꾸기
+#   bash scripts/run_dem_webapp.sh --stop       # 그 포트를 쥔 **DEM 웹앱**만 멈춘다 (pid 파일 안 믿는다 · 다른 프로그램이면 멈추지 않는다)
+#   bash scripts/run_dem_webapp.sh --print-paths  # 이 포트의 로그 · pid 파일 경로만 찍고 끝 (포트를 보지 않는다)
+#   PORT=5050 bash scripts/run_dem_webapp.sh    # 포트 바꾸기 — 로그 · pid 는 포트별 (dem_webapp_5050.*) · 기본 5002 만 옛 이름
 #
 # 환경변수로 경로를 바꿀 수 있다 (기본값은 이 랩 WSL 규약):
 #   DEM_WEB_DATA=~/Yonghoon-DEM-DFT   데이터(uploads/results/archive/mpm_lab)와 venv 가 있는 곳
@@ -19,15 +20,16 @@
 set -uo pipefail
 
 PORT="${PORT:-5002}"
-OPEN=0; BG=0; PULL=1; STOP=0
+OPEN=0; BG=0; PULL=1; STOP=0; PRINT_PATHS=0
 for a in "$@"; do
   case "$a" in
     --open) OPEN=1;;
     --bg) BG=1;;
     --no-pull) PULL=0;;
     --stop) STOP=1;;
-    -h|--help) sed -n '1,24p' "$0"; exit 0;;
-    *) echo "알 수 없는 인자: $a  (--open · --bg · --no-pull · --stop)"; exit 2;;
+    --print-paths) PRINT_PATHS=1;;
+    -h|--help) sed -n '1,26p' "$0"; exit 0;;
+    *) echo "알 수 없는 인자: $a  (--open · --bg · --no-pull · --stop · --print-paths)"; exit 2;;
   esac
 done
 
@@ -44,15 +46,38 @@ _port_pid() {                       # 그 포트를 LISTEN 중인 PID (없으면
   [ -z "$p" ] && p="$(lsof -ti tcp:"$PORT" -sTCP:LISTEN 2>/dev/null | head -1)"
   printf '%s' "$p"
 }
-_stop_port() {                      # 그 포트를 비운다 (TERM → 안 죽으면 KILL)
+#  ★★ 2026-10-04 실사고 (원장 `SELF-83`) — 위 수리가 **포트 주인을 확인하지 않고** 껐다.  두 번째 인스턴스를 다른 포트로
+#    띄우라는 명령을 받은 1저자 PC 에서 그 포트를 **다른 웹 서비스**가 쓰고 있었고, 이 함수가 그것을 꺼 버렸다.
+#    ⇒ **DEM 웹앱 체크아웃에서 뜬 app.py 만** 끈다: 작업 폴더 (cwd) = <리포>/webapp (app.py 가 있고 ../scripts/run_dem_webapp.sh 가
+#      있다) ∧ 명령에 app.py.  그 밖의 프로세스 · 확인할 수 없는 경우는 **끄지 않고 멈춘다** (fail-closed — 사람이 판단).
+_is_dem_webapp() {                  # 그 PID 가 DEM 웹앱 체크아웃의 app.py 인가 (0 = 그렇다)
+  local pid="$1" cwd='' cmd=''
+  cwd="$(readlink "/proc/$pid/cwd" 2>/dev/null)"
+  [ -z "$cwd" ] && cwd="$(lsof -a -p "$pid" -d cwd -Fn 2>/dev/null | sed -n 's/^n//p' | head -1)"
+  cmd="$(tr '\0' ' ' < "/proc/$pid/cmdline" 2>/dev/null)"
+  [ -z "$cmd" ] && cmd="$(ps -o args= -p "$pid" 2>/dev/null)"
+  [ -n "$cwd" ] && [ -f "$cwd/app.py" ] && [ -f "$cwd/../scripts/run_dem_webapp.sh" ] || return 1
+  case "$cmd" in *app.py*) return 0;; esac
+  return 1
+}
+_stop_port() {                      # 그 포트를 비운다 (TERM → 안 죽으면 KILL) — DEM 웹앱일 때만
   local pid; pid="$(_port_pid)"
   [ -z "$pid" ] && { echo "[dem] 포트 $PORT 비어 있음"; return 0; }
-  echo "[dem] 포트 $PORT 를 PID $pid 가 쓰고 있다 — 옛 인스턴스를 멈춘다"
+  if ! _is_dem_webapp "$pid"; then
+    echo "[dem] ⛔ 포트 $PORT 를 DEM 웹앱이 아닌 프로세스가 쓰고 있다 — 멈추지 않는다 (PID $pid)"
+    echo "[dem]    명령: $( (tr '\0' ' ' < "/proc/$pid/cmdline" 2>/dev/null || ps -o args= -p "$pid" 2>/dev/null) | cut -c1-120)"
+    echo "[dem]    다른 포트를 쓰거나 (PORT=…) 그 프로그램을 직접 정리한 뒤 다시"
+    return 1
+  fi
+  echo "[dem] 포트 $PORT 를 PID $pid (DEM 웹앱) 가 쓰고 있다 — 옛 인스턴스를 멈춘다"
   kill "$pid" 2>/dev/null
   for _ in $(seq 1 20); do
     sleep 0.5; [ -z "$(_port_pid)" ] && { echo "[dem] 옛 인스턴스 종료 ✓"; return 0; }
   done
   pid="$(_port_pid)"
+  if [ -n "$pid" ] && ! _is_dem_webapp "$pid"; then
+    echo "[dem] ⛔ 포트 $PORT 를 이제 DEM 웹앱이 아닌 프로세스 (PID $pid) 가 쥐었다 — KILL 하지 않는다"; return 1
+  fi
   [ -n "$pid" ] && { echo "[dem] TERM 무시 → KILL $pid"; kill -9 "$pid" 2>/dev/null; sleep 1; }
   [ -z "$(_port_pid)" ] && { echo "[dem] 옛 인스턴스 종료 ✓"; return 0; }
   echo "[dem] ⛔ 포트 $PORT 를 못 비웠다 (PID $(_port_pid)) — 직접 kill 후 다시"; return 1
@@ -65,6 +90,12 @@ CODE="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")/.." && pwd)"
 #  데이터는 `~/Yonghoon-DEM-DFT/webapp/*`).  같은 곳이면 그냥 같은 곳이다.
 DATA="${DEM_WEB_DATA:-$HOME/Yonghoon-DEM-DFT}"
 [ -d "$DATA" ] || DATA="$CODE"
+#  ★★ 2026-10-04 (`SELF-83`) — `--bg` 로그 · pid 파일 이름이 포트와 무관해, 같은 데이터 폴더로 두 번째 인스턴스를 다른 포트에 띄우면
+#    첫 인스턴스의 로그를 비우고 pid 파일을 덮었다.  ⇒ 포트별 이름.  기본 포트 5002 만 옛 이름 그대로 (1저자 습관 · alias).
+if [ "$PORT" = "5002" ]; then _PSFX=""; else _PSFX="_$PORT"; fi
+LOG="$DATA/webapp/dem_webapp${_PSFX}.log"
+PIDF="$DATA/webapp/dem_webapp${_PSFX}.pid"
+if [ "$PRINT_PATHS" = 1 ]; then echo "LOG=$LOG"; echo "PID=$PIDF"; exit 0; fi
 
 echo "[dem] 코드 $CODE"
 echo "[dem] 데이터 $DATA"
@@ -219,11 +250,10 @@ _stop_port || exit 1
 
 cd "$CODE/webapp" || exit 1
 if [ "$BG" = 1 ]; then
-  LOG="$DATA/webapp/dem_webapp.log"
   echo "[dem] 백그라운드 실행 → $LOG"
   PORT="$PORT" nohup python3 app.py >"$LOG" 2>&1 &
   PID=$!
-  echo "$PID" > "$DATA/webapp/dem_webapp.pid"
+  echo "$PID" > "$PIDF"
   #  뜰 때까지 잠깐 기다렸다가 연다 (바로 열면 연결 거부 화면이 뜬다)
   for _ in $(seq 1 40); do
     kill -0 "$PID" 2>/dev/null || break        # ★ 우리 프로세스가 죽었으면 즉시 탈출
@@ -233,7 +263,7 @@ if [ "$BG" = 1 ]; then
   if kill -0 "$PID" 2>/dev/null; then
     echo "[dem] ✓ PID $PID · $URL"
     [ "$OPEN" = 1 ] && _open
-    echo "[dem] 끄기:  kill \$(cat $DATA/webapp/dem_webapp.pid)"
+    echo "[dem] 끄기:  PORT=$PORT bash $CODE/scripts/run_dem_webapp.sh --stop   (또는 kill \$(cat $PIDF))"
     echo "[dem] 로그:  tail -f $LOG"
   else
     echo "[dem] ⛔ 떠오르지 못했다 — 로그 마지막:"; tail -20 "$LOG"; exit 1
