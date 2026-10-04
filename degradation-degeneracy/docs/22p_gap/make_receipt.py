@@ -228,18 +228,32 @@ def build(leg: str) -> dict:
             "core_sha256": hashlib.sha256(
                 _dump(core).encode("utf-8")).hexdigest(),
             "core": core,
-            "stamp": {
-                "_주의": "기록용. core 재생성 대조에서 제외된다.",
-                "validator_commit": _git("rev-parse", "HEAD"),
-                "validator_tree_dirty": bool(_git("status", "--porcelain")),
-                "generated_at_utc": datetime.now(timezone.utc)
-                                    .strftime("%Y-%m-%dT%H:%M:%SZ"),
-                "runtime": {"python": platform.python_version(),
-                            "platform": platform.platform()},
-            },
+            "stamp": _stamp(),
         }
     finally:
         shutil.rmtree(root, ignore_errors=True)
+
+
+def _stamp() -> dict:
+    """영수증 stamp — **기록용** (core 재생성 대조 · `core_sha256` 밖).
+
+    ★ 90차 (원장 §135 · 고정 표 `PYBAMM_PIN_ROUND_SPEC.md` §5-2) — 실행 환경 ↔ 프로필 C lock 의 대조 결과를
+      `environment_profile_C` 로 싣는다. 기록 대조다 — `MISMATCH` · `UNMEASURED` 여도 영수증 생성을 막지 않는다.
+      소비자 `tools/preserve.py::read_verification_receipt` 는 영수증의 최상위 키 집합만 보고 stamp 안은 보지 않으므로
+      바뀌지 않는다.
+    """
+    from tools.env_profile import compare_lock
+
+    return {
+        "_주의": "기록용. core 재생성 대조에서 제외된다.",
+        "validator_commit": _git("rev-parse", "HEAD"),
+        "validator_tree_dirty": bool(_git("status", "--porcelain")),
+        "generated_at_utc": datetime.now(timezone.utc)
+                            .strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "runtime": {"python": platform.python_version(),
+                    "platform": platform.platform()},
+        "environment_profile_C": compare_lock(),
+    }
 
 
 def _score_manifest(run_dir: Path) -> list[dict]:

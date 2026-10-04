@@ -68,6 +68,12 @@ ok()   { printf '   ✅ %s\n' "$1"; }
 FAILED_CHECKS=()
 bad()  { printf '   ❌ %s\n' "$1"; fail=$((fail+1)); FAILED_CHECKS+=("$1"); }
 
+# ★ 90차 (원장 §135 · 고정 표 PYBAMM_PIN_ROUND_SPEC.md §5-1) — 실행 환경 ↔ 프로필 C lock 의 대조를 **기록만** 한다.
+#   불일치 (MISMATCH) · 측정 불가 (UNMEASURED) 는 smoke 를 막지 않는다 (D3 — 기록 대조). 도구 자체가 죽으면 기록이
+#   만들어지지 않은 것이므로 실패로 센다. 모듈로 불러 계산 진입점 (python -m src.*) 과 같은 sys.path 로 잰다.
+step "환경 프로필 C 대조 (기록 전용 · 원장 §135)"
+"$PY" -m tools.env_profile || bad "환경 프로필 C 대조 도구 실패"
+
 rm -rf "$BASE"
 mkdir -p "$BASE"
 

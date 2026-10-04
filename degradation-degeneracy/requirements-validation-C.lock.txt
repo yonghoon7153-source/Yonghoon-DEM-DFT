@@ -1,0 +1,190 @@
+# requirements-validation-C.lock.txt — 프로필 C: 현재 검증 환경의 정확 고정 (기록 대조 전용)
+#
+# ★ 90차 (원장 §135 · 고정 표 docs/22p_gap/PYBAMM_PIN_ROUND_SPEC.md §3) — `python -m tools.env_profile --emit-lock` 의
+#   출력 그대로다. 손으로 고치지 않는다 (정규형 고정점: emit_lock(parse_lock(text)) == text).
+# 대조: `python -m tools.env_profile` (smoke 로그 · 영수증 stamp `environment_profile_C`). 불일치여도 아무것도 막지 않는다.
+# 선언하지 않는 것: 정본 (v4) 생산 환경 (그것은 프로필 B — 고정 표 §6 의 기록) · C 로 만든 수치가 B 의 수치와 같다는 것 ·
+#   설치 처방 (리눅스 시스템 배포판을 담는다 — `pip install -r` 용이 아니다) · 다른 기계에 강제하는 것.
+# 문법 (닫힘): `#@ <지시> <JSON 문자열>` · `<이름>==<버전>  # record-sha256 <hex64|none>` (PEP 503 이름 · 엄격 오름차순) ·
+#   `#@ shadowed <이름>==<버전> record-sha256 <hex64|none>` (경로 순서로 가려진 항목). record-sha256 = 설치된 RECORD
+#   텍스트의 sha256 (none = RECORD 없음 — 설치 파일 대조 불가).
+#@ profile "C"
+#@ python "3.11.15"
+#@ implementation "CPython"
+#@ system "Linux"
+#@ machine "x86_64"
+#@ libc "glibc 2.39"
+
+annotated-types==0.8.0  # record-sha256 8aca43183e620f57ed3b240da554dedf6cf840e43aa2789f63cff7a8396561bb
+anyio==4.15.1  # record-sha256 bf283795dfdd8f15d592bc15c7788515eeb095df665dc0edd24eb9eac074be96
+anytree==2.13.0  # record-sha256 e118a0c658d63a1c4e40406551815f8def442f274a3a650fd95ef332eec1a244
+argcomplete==3.1.4  # record-sha256 none
+argon2-cffi==25.1.0  # record-sha256 7b05311a76142835613fdae1391416c7e7c14a4732fa512ed474e648f5c521ec
+argon2-cffi-bindings==26.1.0  # record-sha256 28d870be201a7859096180d245e39a7cb3ecb5d129a660c0243c616b0e60212e
+arrow==1.4.0  # record-sha256 8d5df7cb0131fdd5dd35125ac97ecbc3f73cbf2cff0d969b4dc08415e9d55f63
+asttokens==3.0.2  # record-sha256 f2c065795b7a790b3d9efa4749bc78898ac85a7ede01ae0f99f42d3b54dc34d0
+async-lru==2.3.0  # record-sha256 b37b54f6cef525241ba6153ae399a407633a86db3332ca39d807dcf4e6978d32
+attrs==26.1.0  # record-sha256 bd56b0a44556594a01dc2fae804b1cefe21d37943ba7e2f622dde22c0709def2
+babel==2.18.0  # record-sha256 4702aabf77a259df98e4a51ad98c259bab0ce6709624048e8c42566a0257875b
+backoff==2.2.1  # record-sha256 3f62810defce61daf9e77f0546d7371e77d36cfc11ac272cd581bff162670471
+beautifulsoup4==4.15.0  # record-sha256 4ef352419a718ec393c833b7857954b0652ab396354bdf6fcfc885b76ff2f1b5
+black==26.5.1  # record-sha256 bbbfbb7bf916766be6bae632a2e7a605e005eb0bb182e4059e6fad4aab7a4a9a
+bleach==6.4.0  # record-sha256 a94590c8df82a63599a128a64fdc09692439547066244193aad3c5144dd80408
+blinker==1.7.0  # record-sha256 none
+bpx==1.1.1  # record-sha256 82ceada99f97993d7d33ee12cfd8bd0febcd20cf0e4db126e2547e9f7146a660
+casadi==3.7.2  # record-sha256 116b1b109f74135a9dcc0edefd5f54027b53e4c4aff2994faf58b8da0515e097
+certifi==2026.2.25  # record-sha256 20ea7883680f6935729f27329d6d254f21ad1dddbd9ccc0bcc2659379e6ed801
+cffi==2.1.1  # record-sha256 4897d0151af22027ee22a569ed0a3a7f65d70df554f1a1501ca45039e3f353a3
+charset-normalizer==3.4.6  # record-sha256 863c367765a59668309083d0683c4c4b0e1ad2c8be1bdf0428c344fbd0e04029
+click==8.5.0  # record-sha256 ac19a8b841223b6ed0635bf398577fc1432942333212975d2a36d3886850aaa5
+cloudpickle==3.1.2  # record-sha256 99673ca23b64c3e102bad5e8f4361520424120f4c5316347c6c299795b2ad3fd
+colorama==0.4.6  # record-sha256 2ae3762039c35c23e4829bab30f8e768eced773ecac67d026223caabfbd493f4
+comm==0.2.3  # record-sha256 857135f6f98fff9aaba8d2e9e7d460e34c4137ed5d40a08e2765594bef4c0833
+conan==2.27.0  # record-sha256 6962829eb0237bb923483017a6809ca37ace4141472d34ac660c89ff6ddb8819
+contourpy==1.3.3  # record-sha256 f64770812b948e954eeb76f82c937bc5133fdd72026b30501e6a15d91c322189
+cryptography==41.0.7  # record-sha256 none
+cycler==0.12.1  # record-sha256 564b9fd56f9f1730196522406a8ac8766040b69bc979b97b325e05f3490f6108
+dbus-python==1.3.2  # record-sha256 none
+debugpy==1.8.22  # record-sha256 93bb7a80876cc2c5b1a03a327ba26a34a51ee2ca0e65114725f0e82534f3207b
+defusedxml==0.7.1  # record-sha256 a28e03ffb568a1bbda75fe2548aba0acf51da3e3ad42ab7a894111fab825f0dd
+distro==1.9.0  # record-sha256 none
+et-xmlfile==2.0.0  # record-sha256 d317f82e92dcc9a3bc806879cc75aee30b5ca8246f1c877bf0cc4e56660a9278
+executing==2.2.1  # record-sha256 ed092b34303bd84d55e304bb826ef3dbc301d4dbada61de3c1219fd5ba527650
+fasteners==0.20  # record-sha256 83fa0926a015d46fb0cfcd140bcbfb3d7ef2b90e56a07d6ee741d1ae3c2a73df
+fastjsonschema==2.22.2  # record-sha256 a1a4bffa8eb4fbddd24e90feb35eb5ce0286843c983395a4df8f3ebf9fc60676
+fonttools==4.66.0  # record-sha256 5284752e0fa2c97798d4ac3bb89d559011cfbbfdf98ae1857a38f190f8c8e5af
+fqdn==1.5.1  # record-sha256 16177367e152e05f12ffdf82eb2744d8fed938891ef6137085948c52b901997c
+h11==0.16.0  # record-sha256 393c249c97166fed45d8a448190cc41603f56a08f76f1ee42db3a920a55468b1
+httpcore==1.0.9  # record-sha256 f52dd9f37c958133cde008e0e648d6149daa1f90a755a2fe36081eecb743e6a7
+httplib2==0.20.4  # record-sha256 ffa46319d989b939534dfa649fc3efc8704eaf0c83358fecb7a964fe74898fa3
+httpx==0.28.1  # record-sha256 b5af040812d65b617fb0d4273545c56eb32bf54ba5ef02b87261531a73cc14fe
+idna==3.11  # record-sha256 67d43a4ef862885f3e996acec145e288045ab4c44d5f7913ea362f83e2d39267
+iniconfig==2.3.0  # record-sha256 60cf1998a07c4c4d314d586130c9caba025b3caf655b5260716ddc3a54262c7a
+ipykernel==7.3.0  # record-sha256 b5b5f07d566b6bb6263d0fd27c36250f7cda7c5ab6a1ee30a04434a119574a08
+ipython==9.17.1  # record-sha256 dbdf5647c61ac2a662d6a4f9878152b27001b6ca53a6f525ff98a9789e30b2fb
+ipython-pygments-lexers==1.1.1  # record-sha256 c82cf6ad58287d4a50b59b6b5d138a3253a794868d84b1089b1ea87c5e3a1478
+ipywidgets==8.1.9  # record-sha256 a1a7cc3e6392e4d369c668ce9bbc588854b6a8706ac620e32e3adf209bbb63f4
+isoduration==20.11.0  # record-sha256 b47e4e8a980f127022bb6677fb9445ede46f3fbc40436dd6a2359796bba087d1
+jedi==0.20.0  # record-sha256 60f281d9dd027d55da342ac60d59042890afc0e4bd5beb8e8b753822282fa149
+jinja2==3.1.6  # record-sha256 91151bad4737abfc252611c853e57e3d14dc7e64151a2dd0949766ad33886c22
+joblib==1.6.0  # record-sha256 9c65f84476b2860990bc10bb31a19a3894e484fc7744ff5ed0bd52525fa2090b
+json5==0.15.0  # record-sha256 bda1ce637e3ea9c8e6962abe2cbaeaa80f0afbb7b4414a09ce66f79af689f141
+jsonpointer==3.1.1  # record-sha256 c760899b5ff64f05e61e584d2e501b7d88f7921af751d4a87d241e847344e98f
+jsonschema==4.26.0  # record-sha256 7a76c72bb00b401dbe8d2fdce4d7dffa0fdb2c1835b45fc82f96f9c7bed94266
+jsonschema-specifications==2025.9.1  # record-sha256 a9628ff8294efc8a627c0ca5d4d38500d8609ef893a73a554c164e12bd0c1243
+jupyter==1.1.1  # record-sha256 1086096603cc47cebb9983767d4793e2e691c960329e3a5a3c75c3a1acec2246
+jupyter-builder==1.2.3  # record-sha256 ebd3bed2ded163f416bd5ee77ffa6f8fcd789ea9676fa3c116d4512e02b92e55
+jupyter-client==8.10.0  # record-sha256 cdb9f1510e5998d6184400711ce030e8f17236e046fd6e469fa21d89a7861527
+jupyter-console==6.6.3  # record-sha256 2b2eb8f5c18e904ee0d1aec4939e1d37b95e3d175e8ecc582fd43133fc86f1dd
+jupyter-core==5.9.1  # record-sha256 99fecf416ce2e2bc9b2b01160bc8312be876716d8824f1e849e157907a64259d
+jupyter-events==0.12.1  # record-sha256 8b7fe2da5cbdf536201a05a5e4950f68f5db6b0a3d071ca7e9edd4b708bbd6b3
+jupyter-lsp==2.3.1  # record-sha256 a09284256ee6ca78d262d115b66de9ada78a3fd6e5f5e204a26437166e360906
+jupyter-server==2.21.1  # record-sha256 1c069281d9330882ff1902936e44a6857db9f251e9f8725d5367fd3eaf9a6bc7
+jupyter-server-terminals==0.5.4  # record-sha256 521744b66348edef3232d29aa2364ce1bcdb5f8aa2c80a888f1fa9c86b69289b
+jupyterlab==4.6.4  # record-sha256 b81e81c8ebabe7774411a6486d64c692fd8bad63b619b41f4bd2d8f37d0da16c
+jupyterlab-pygments==0.3.0  # record-sha256 672ff8865167dd879c859996afcd0b19eb2d900819c1f605d67a50d716fa6d1d
+jupyterlab-server==2.28.1  # record-sha256 9c2e9022df5d98d52d645361ee52054c1dc3e10ea9ba4513085ec40beb97718c
+jupyterlab-widgets==3.0.17  # record-sha256 a0dc91e80bb96f416834d5253ed5f51692203bb1967cf3e098ede136b0482af6
+kiwisolver==1.5.1  # record-sha256 026de1a2707ce8f1e3fe8d90ad0e3c2e837ff2c0b4a00b4e866fc80dfca35c0a
+lark==1.3.1  # record-sha256 755873457e638d4597783a10627185c85a7b91cce4fa74943cd0726c7c18ae07
+latexcodec==3.0.1  # record-sha256 3d6baebc66a02443c65250f3482b099f9eb4d922e0019d0f9ce6ff86353286a9
+launchpadlib==1.11.0  # record-sha256 none
+lazr-restfulclient==0.14.6  # record-sha256 none
+lazr-uri==1.0.6  # record-sha256 none
+markdown-it-py==4.2.0  # record-sha256 d59977491eaec3f08c89b137438b3ee2dd4d15f66dff3e815b0664f90d7cd8f7
+markupsafe==3.0.3  # record-sha256 43a31a54753a9235220a61968b0f7e907ba71ee65875523f3cb63185d784a5ca
+matplotlib==3.11.2  # record-sha256 0026be91603fd8f235c3e77b10a6645b41edc6a30cb2488b8889450b1f7dbee6
+matplotlib-inline==0.2.2  # record-sha256 6e8ae6543f5867325f6eecb99be1482464311d8dad3e6d0d4210b74112eb9452
+mdurl==0.1.2  # record-sha256 bda7c4854c66cd4daedddb5347837eb7b362119e7714b45263576d5924221c71
+meshio==5.3.5  # record-sha256 a454db67a8c07142f5006e9bf82a78344fb095932a47f7f1e32a4925ffda28f0
+mistune==3.3.4  # record-sha256 e5b197f26e470de3df84d6a54c9dbe8ea95bedfa0bc0411ef2cb8cde08f04184
+mpmath==1.3.0  # record-sha256 8052e4c7314cdcbc6c50183c546a342e58a1a9e4589d1354d31a4ef3a705c395
+mypy-extensions==1.1.0  # record-sha256 20f0c754257dcfc94b88d5e5dba2f7bd59504a76c0c8c481231df037a1cc894f
+nbclient==0.11.0  # record-sha256 741e3b2c4f00e5f38785bf5b504801b3eedb50dde15cdee2d18894a4eea81eb1
+nbconvert==7.17.1  # record-sha256 949da52f635e1107c83ecfe6b8d8716ba8bfa94a179512d2aa00be7572f2c250
+nbformat==5.11.1  # record-sha256 9b4a7ab8e052ae849378aff6f96089421ee75f3aa1b52224c95e09f03b1b3499
+nest-asyncio2==1.7.3  # record-sha256 896d485c5d1fb04e0352d65ba7f410095f923b0dd672adff6815b77e4905bc0d
+notebook==7.6.3  # record-sha256 821c9ec3f1811ad7d842d384de9cd8de73284955504d3cf37e6f4a7751a6b9a4
+notebook-shim==0.2.4  # record-sha256 2decf2f284ddd31bb63009bc917c80c8a46d43ce06f81e08e71e81c9ae6532a8
+numpy==2.4.6  # record-sha256 c3dd00f045ea91bf972a08daad232f99a627186b0799af0379317a9edcc9fa86
+oauthlib==3.2.2  # record-sha256 none
+openpyxl==3.1.5  # record-sha256 2b7f886697d3afd17f12a98eb9386fad66d98f5fece698ce30abb925b74b24bd
+overrides==7.7.0  # record-sha256 3852876124709311aae2f7ff108283d1d010b466482fd92908cf32bb92bdf80e
+packaging==26.3  # record-sha256 b349f7a1a2346fdc4a27282d8fbab1c11a2e2ca92b2a8ba572be62493fd00327
+pandas==3.0.5  # record-sha256 0cf9ba06ee2488a8c75425c84415686ef5489a9e72feebb75f40d124bf574e98
+pandocfilters==1.5.1  # record-sha256 5b2c3c43873997467183668faa7c02e0760bb288123f2edad5857fd32dd87d55
+parso==0.8.7  # record-sha256 b0fcbdb670c12ab012442a4e69ce94291a5a796e085f70813f581dbbc67d4002
+patch-ng==1.18.1  # record-sha256 2b768520794a207b42ccd3a338881fc0e4265c0b8cd756b16506728f3e3482ba
+pathspec==1.1.1  # record-sha256 31e240696c6b240fcae7ff9130b3bc800e441db8cc8fec59cd6eb703831c9fc9
+pexpect==4.9.0  # record-sha256 766d27e46231f47e7d65ca97a3d7ce913ca74e4e032881c7ae7f6e5df44697ea
+pillow==12.3.0  # record-sha256 d67571156a1abfdcb25fbb895cdd005a3d59c4d1a9c11f253febdd84419d1e93
+pip==24.0  # record-sha256 none
+platformdirs==4.12.0  # record-sha256 867c96df4a8756503ffd5b673b0e886d50c6a12442d9db05e27996dc9e2f88e0
+pluggy==1.6.0  # record-sha256 ac3c42a936c786b42b92f6c5310ed48f760330718f071c3c4c31855a1717544b
+pooch==1.9.0  # record-sha256 f5ff5debc733aa81c56ab2709ecd5dac460cf573452a8c65a01b0c4ce2218910
+posthog==7.60.1  # record-sha256 b027a054757dc3d609caae2352224277a64f1752666177aa86eedc918dfcd0a5
+prometheus-client==0.26.0  # record-sha256 2bed5c5b6b9c116424ec0e7679fc2acf31b5fa617846223b39d547f30d645401
+prompt-toolkit==3.0.53  # record-sha256 7ed142430e0c5a0634a803f43eee73ee3e358a0436864a12b451a92db43d0227
+psutil==7.2.2  # record-sha256 cdc0fdcbe823c0533785085d41a002e8d67d4ea338515edb4d063e74062e8d07
+ptyprocess==0.7.0  # record-sha256 2d42d9811f9067a05ac93dbd58ed3ca150ede319709c0b54976b5c642b7027a7
+pure-eval==0.2.4  # record-sha256 81c5863ca8865002311979698447a04fcbd22b9c14b830501ebb81f9162cfe5a
+pyarrow==25.0.1  # record-sha256 d7c46765c1d341c21fa138fe84044e1021c5bfcdd7eee0b9cea68a8f55f5c8d6
+pybamm==26.8.0.0  # record-sha256 ae9606ff154fdb64ab83abfa4997e0647533a2fb1025328a9cc058248f3c40b5
+pybammsolvers==0.9.1  # record-sha256 474b4098acdc7ac8cef58449cff961670abe054d44d608f9407aed4f18a71fc7
+pybtex==0.26.1  # record-sha256 5724d1a11b66d7f9c9e2d55bd295ae8bf032a4d56440a86b02a3005da3052662
+pycparser==3.0  # record-sha256 5192a85147780baa9341bf63a3b42e3b818d5c7ca219779bae4888f1bf78b6ab
+pydantic==2.13.5  # record-sha256 6e393725dc45b432f077cc86627a08e0d663b1734772608ee4f66e13a8c6dbc0
+pydantic-core==2.46.5  # record-sha256 8207aff2053f8b9e584af8ceac182febdb3491206b019e9140d9f7004fe3fe70
+pygments==2.21.0  # record-sha256 41a99838b974f5e6cf39a8e387a449418e6762c666427e3c24152760aa6e2f4c
+pygobject==3.48.2  # record-sha256 none
+pyjwt==2.7.0  # record-sha256 none
+pymupdf==1.28.2  # record-sha256 4e0d129ccf7bde2f2488331617e9ee2ca4e2c0153a05aec8df7a2f4eeb8231e1
+pyparsing==3.1.1  # record-sha256 none
+pytest==9.1.1  # record-sha256 7a423734645a175fcbf3fecb9703a3a9fd6756bdcda1ce7438bd1968b82261c9
+pytest-json-report==1.5.0  # record-sha256 029426fa9ce32822b8774e2c54ef417144b5b97ef53bd6acd8c94d3f3fd7c2ca
+pytest-metadata==3.1.1  # record-sha256 db897bd01850a0e010a455640a7ec5b30c35f219c007618d78fbd206d23911c0
+python-apt==2.7.7+ubuntu5.2  # record-sha256 none
+python-dateutil==2.9.0.post0  # record-sha256 ea009219f435165e7013386035f57b84d75e0676dec16cefcf99db3310324aa2
+python-json-logger==4.2.0  # record-sha256 2a8591c9ba0cf740122fdb67fe5416d17ca3b07ae58269cce8139b88ab171c96
+pytokens==0.4.1  # record-sha256 2bca96e8c6986a8e3905535fbec6364fa94615c20c52240f2df19ada29cc043c
+pyyaml==6.0.1  # record-sha256 none
+pyzmq==27.2.0  # record-sha256 9fddbf6b1ccad270a56c9fe0bff2f0fe744899f08f60f952c0eaf265cd72fff4
+referencing==0.37.0  # record-sha256 dec74300561a47a0d28ec39371da5c952d4b0bb713aa6529694b6a6b52ec4060
+requests==2.33.1  # record-sha256 0d20d243fc610115fcdaf734697b6ad9c828f6658f4ad542d0c487683fb307f8
+rfc3339-validator==0.1.4  # record-sha256 e0de2375f9b5d93b1cb7551ac35d9f5590ee4a4ecb2336aac7cbaea98c0e11f0
+rfc3986-validator==0.1.1  # record-sha256 7d8436bbbdef66774eaa1d131f7b232be497d098b5aee03955e75acbf5217c00
+rfc3987-syntax==1.1.0  # record-sha256 0e8cdb6d4d56bc98b403eb0d098d21aeac79090c45b89528fe596732b6c590ad
+rich==15.0.0  # record-sha256 d1538647fc6920348d34b1fc523e8a9a5cd957b2d1cc3d3627528bf4af3eefb6
+rpds-py==2026.6.3  # record-sha256 e13d7b7a4be5afc24787b030379e5be599a40e2e3f4aae3c025ece21444fc128
+scikit-fem==12.0.2  # record-sha256 b6cbc55ec12a1b976c77eba5a1d0a486da8b8e971625419c2bbd88ff874e1a54
+scipy==1.17.1  # record-sha256 b8ea386fea9f83a6696fb52817f71582fb1174192a306225bc87ea13177b1b64
+send2trash==2.1.0  # record-sha256 2314259af07a76aa92aab6a2b87aa4b74aacf22495b705852134251ecd41474b
+setuptools==68.1.2  # record-sha256 none
+six==1.16.0  # record-sha256 none
+soupsieve==2.10  # record-sha256 0f498c090ee8e116e1132a9f61b81ce2c50ff022042c5a192d82644270ec8d18
+stack-data==0.6.3  # record-sha256 9d52616ad2f745f7e5df4f854103e7dd69c55cebe8a2861d48059ef1b2a969b2
+sympy==1.14.0  # record-sha256 3eb714822b0627fa62b04eee1f758877891703641de34c1b299757bfbbe759b5
+terminado==0.18.1  # record-sha256 05908a778988bdd86bf9e3120713fb06efb8a999700e26f7a1e634f27d1bf8f7
+tinycss2==1.5.1  # record-sha256 1773dbed0c0fb8305f63bf4de4d9f8fc63b40f0732077a2d6354167d4bb36127
+toml==0.10.2  # record-sha256 none
+tornado==6.5.10  # record-sha256 a8fec524feae3f0d25a7d110637a7360bdec3e6256cf496b26258eb5d31b7e7d
+tqdm==4.70.1  # record-sha256 8cd19875ceda76e48e5357c0d8b61ba87591b1da141ffa988e4c3cb221e65550
+traitlets==5.16.1  # record-sha256 5f60746bd43c84b88498fb44723e995fb3a01528b2744c33101a7c0a666380df
+typing-extensions==4.16.0  # record-sha256 bef8a87e9866f1a161c8eb7a1b1c1af3a2d81b6cecf39368228972c0078d1988
+typing-inspection==0.4.4  # record-sha256 408b0b1d9c5165808960f48c419d34dcf1a57990eb7f8ea9be214ae716301752
+tzdata==2026.4  # record-sha256 f8b667c761ceedcb68942b378d61fdc802a3c78b3ae562de580c33ff769abc0d
+uri-template==1.3.0  # record-sha256 f45f33e2cd44b06b73e8e03ef45f3c780e3aa9b77b8f19efb7e4f420b612c17c
+urllib3==2.6.3  # record-sha256 c9867c9bf014c5039e82cc802cbff6c6e5884fec449905d8ae8f609cd5ec4882
+wadllib==1.3.6  # record-sha256 none
+wcwidth==0.9.1  # record-sha256 f8c196e49b91ee8f74db1ae1b8ba04ec64661e0de2cf94d35ac9596dfb6b8215
+webcolors==25.10.0  # record-sha256 b5b74c83020cb8643c5f40e2a4cb1fdbf73ef46c0b1276fede9b3da00367292f
+webencodings==0.6.1  # record-sha256 03deb8d09a8f6cd56f01d5f4419c06a512f1e37632cdf6854d49266942c3eaa0
+websocket-client==1.9.2  # record-sha256 4c121e640d0064ff8cc0621309a4275fba4c9fed1d3bbebe7615f7b96fa143f9
+wheel==0.42.0  # record-sha256 none
+widgetsnbextension==4.0.16  # record-sha256 cba24bfd3bbd68d4e64594c2589bbdb22a58ebd575b47c3bb03eb4d9951a0de1
+xarray==2026.7.0  # record-sha256 6045ce487b591e88a93345b903c440347faf6f5da440896a33d25476f96a30ec
+xmltodict==0.13.0  # record-sha256 none
+yq==3.1.0  # record-sha256 none
+
+#@ shadowed cryptography==41.0.7 record-sha256 none
+#@ shadowed packaging==24.0 record-sha256 none

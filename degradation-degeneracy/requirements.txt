@@ -1,7 +1,12 @@
 # ── 핵심 ──
-# 검증 완료 조합 (2026-08-05, docs/ENV_REPORT.md):
-#   pybamm 26.7.1.0 / numpy 2.4.6 / scipy 1.17.1 / pandas 3.0.5 / Python 3.11
-#   IDAKLU OK, composite DFN OK, 1 solve ≈ 2 s
+# ★ 90차 (원장 §135 · D5) — 이 파일은 **하한만** 둔다. 생산 환경 선언이 아니다.
+#   · v4 정본 producer 환경 기록 = 프로필 B — docs/22p_gap/env_profile_B_v4.yaml (기록 전용)
+#   · 현재 검증 환경의 정확 고정 = 프로필 C — requirements-validation-C.lock.txt (기록 대조 전용 · 막지 않는다)
+#   옛 주석 "검증 완료 조합 (2026-08-05, docs/ENV_REPORT.md): pybamm 26.7.1.0 / numpy 2.4.6 /
+#   scipy 1.17.1 / pandas 3.0.5 / Python 3.11 · IDAKLU OK, composite DFN OK, 1 solve ≈ 2 s" 는
+#   scaffold 커밋 61bce598d 때 scripts/verify_env.py 진단의 기록이다 — v4 정본 producer 기록
+#   (Python 3.10.12 · numpy 2.2.6 · scipy 1.15.3 · pandas 2.3.3 · pybamm 26.7.1.0) 과 다르고,
+#   인용한 docs/ENV_REPORT.md 는 .gitignore 된 로컬 출력이라 저장소에 없다.
 pybamm[all]>=24.5        # [all] 이 IDAKLU solver 포함. 이거 없으면 2~5배 느림
 numpy>=1.24
 scipy>=1.11
