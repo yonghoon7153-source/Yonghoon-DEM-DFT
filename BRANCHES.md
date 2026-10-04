@@ -333,5 +333,8 @@ git push -u origin claude/14-gate-code-review-9qkx05
 | 2026-10-04 | `degradation-degeneracy/.gitattributes` 규칙 `docs/22p_gap/gate89_review/** -text !eol` (89차 리뷰 패키지 보존 전) | `992ea2a63` | 밖 | 할 일 없음 |
 | 2026-10-04 | 원장 §134 — 89차 회신 접수 (G88-N1 종결 · 단계 3 라운드 2b 종결) · 패키지 보존 `023876a66` | 이 행이 든 커밋 | 밖 | 할 일 없음 (ff 로 그대로 들어간다) |
 | 2026-10-04 | `bms-balancing/.gitattributes` 규칙 — REIL 부속 B 재검토 묶음 `reviews/prereview_reil_v2_annexB_20261004/** -text` (게이트 차수 밖) | `1815a8945` | 밖 | 할 일 없음 |
+| 2026-10-04 | `bms-balancing/.gitattributes` 규칙 — B-min 후보 준비 검토 회신 묶음 `reviews/r14_repros/codex63/comsol_bmin_candidate_review_20261005/** -text` (게이트 차수 밖 · 이 행은 §135 커밋에서 뒤늦게 적었다) | `3077aeae7` | 밖 | 할 일 없음 |
+| 2026-10-04 | `bms-balancing/.gitattributes` 규칙 — B-min 후보 r1 꾸러미 `comsol_candidates/bmin_particle640_r1_20261005/** -text` (게이트 차수 밖 · 이 행은 §135 커밋에서 뒤늦게 적었다) | `e80c1bf7d` | 밖 | 할 일 없음 |
+| 2026-10-04 | 원장 §135 — PyBaMM 환경 고정 라운드 착수 승인 기록 · 고정 표 `degradation-degeneracy/docs/22p_gap/PYBAMM_PIN_ROUND_SPEC.md` (코드 변경 전 · C lock + B 기록 · 기록 대조) | 이 행이 든 커밋 | 밖 | 할 일 없음 (ff 로 그대로 들어간다 · 이후 GREEN 커밋은 RUN_SCOPE **안**) |
 
 ### 복귀 결과 (복귀 정리 커밋이 덧붙인다)

@@ -3471,3 +3471,9 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - 문서 `bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md` · [[isu-uconn-lfp-gr-emulated-degradation]] 부속 B 재검토 절에 한 줄
 - C1-core 미확보 (논문 미열람 · 공개 여부 미확인) · C6 미시행 · C3 / C4 / C5 미승인 · 제안 순서 C1-core → C6 → P0 → 비용 측정 → 실행 · 다음 입력 = 논문 또는 저자 명세
 - 하지 않은 것: 자료 개봉 · 노트북 · 설치 · 비용 측정 · 맞춤 · 논문 다운로드 · RUN_SCOPE
+
+## [2026-10-04] update | PyBaMM 환경 고정 라운드 착수 — 원장 §135 · 고정 표 (코드 변경 전)
+- 사용자 "권고대로 너가 순서대로 해줘 같이 쳐내가자" → D1–D6 권고 그대로 (C + B · C 기록 대조 · 새 lock 파일 · 주석 정정 · D 별도 · 재생성 / 비교 밖)
+- 고정 표 `degradation-degeneracy/docs/22p_gap/PYBAMM_PIN_ROUND_SPEC.md` · [[pybamm]] 에 한 줄 · 작업 상태 `docs/GATE70_WORKING_STATE.md` 새 절
+- 다음: RED (`tests/test_gate90_env_profile.py` e01–e12) → GREEN → 변이 `-g90` → 영수증 → 전체 회귀 · smoke · 재생 → GATE90
+- 하지 않은 것: RUN_SCOPE · 설치 · 버전 비교 · 재생성 (이 커밋은 문서만)

@@ -9087,3 +9087,39 @@ fail node 는 불변 (§15-4 · 승인 질문에서 사용자에게 미리 알�
 **다음 (사용자 별도 승인 필요):** 사용자가 정한 순서대로 **PyBaMM 고정** — 별도 범위 · 기준 identity · 검증안 · 승인 라운드 (사전 검토
 회신 기록 `docs/22p_gap/PYBAMM_PIN_PREREVIEW_REPLY_20261003.md` 가 출발점). 이 회신은 requirements 변경 · 구현 착수 승인이 아니고 자동
 시작하지 않는다. 이미 수용한 부분과 과거 원문 · 중단 / 실패 기록은 다시 열거나 고치지 않는다.
+
+## §135 PyBaMM 환경 고정 라운드 착수 승인 기록 — C lock + B 역사 프로필 · 기록 대조 (2026-10-04 · 구현 전 · 실행 GO 아님)
+
+**사용자 결정 (2026-10-04):** "권고대로 너가 순서대로 해줘 같이 쳐내가자" — 직전 우리 채팅 보고의 2 절 (PyBaMM 결정 D1–D6 ·
+범위 초안 `docs/22p_gap/PYBAMM_PIN_ROUND_SCOPE_20261004.md` (커밋 `666524050`) §5 의 권고) 과 3 절 (REIL 다음 순서 — 선행 조건 문서
+`bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md`) 을 인용하고 이어 쓴 답이다. 권고 그대로로 읽는다: **D1** 착수 · **D2** C + B (D 는 새 생산 계획이 생길 때 별도 라운드) · **D3** C 는 기록 대조
+(fail-closed 아님 — pytest · smoke 를 막지 않는다) · **D4** 새 lock 파일 `requirements-validation-C.lock.txt` (`requirements.txt` 하한 유지) ·
+**D5** `requirements.txt` 주석 "검증 완료 조합" 을 같은 라운드에서 정정 · **D6** 정본 재생성 · 새 세대 생산 · 26.7.1 ↔ 26.8 비교는 범위 밖.
+같은 답의 REIL 부분 (C6 환경 프로필 초안 — 문서만) 은 이 게이트 라운드와 **섞지 않는다** — 게이트 차수 밖 · 별도 문서.
+
+**범위 · 고정:** `docs/22p_gap/PYBAMM_PIN_ROUND_SPEC.md` (이 커밋 · 코드 변경 전). 요지 — RUN_SCOPE 상한 네 파일: 새 lock
+(`requirements-validation-C.lock.txt` · 이 컨테이너 실측 Python 3.11.15 · Linux · x86_64 · glibc 2.39 · 유효 배포판 170 + 가려진 항목 2 ·
+배포판마다 RECORD 텍스트 sha256) · 새 `tools/env_profile.py` (측정 · 닫힌 lock 문법 · 대조 · 정규형 출력 · CLI rc 0) · `requirements.txt`
+주석만 (요구 줄 12 개 바이트 불변) · `scripts/smoke_e2e.sh` 기록 단계 하나. RUN_SCOPE 밖: `docs/22p_gap/make_receipt.py` (영수증 stamp 에
+`environment_profile_C` — core 밖) · 새 B 기록 `docs/22p_gap/env_profile_B_v4.yaml` (네 v4 producer manifest 의 env 일곱 자리 · solver 기록
+원문 · 한계) · 시험 · 변이. `src/` 전부 · `run.sh` · `configs/` · `requirements-gpu.txt` · `tests/conftest.py` 불변. 대조 결과는 `MATCH` ·
+`MISMATCH` · `UNMEASURED` 셋 (측정하지 않은 칸은 `None`) 이고 어느 것도 실행을 막지 않는다 — 도구 자체의 예외만 smoke 실패로 센다.
+
+**고정 표가 초안에 더한 세부 (알려 둔다):** (1) 대조 목록은 `pip freeze` 167 이 아니라 `importlib.metadata` 전체다 — `pip freeze` 는 `pip` ·
+`setuptools` · `wheel` 을 숨기고 같은 이름의 두 위치를 하나로 보인다 (실측 유효 170 · 가려진 2). (2) 사전 검토 Q5 의 "설치 식별과 실제
+origin" 을 C 대조의 한 축으로 넣었다 — `env_fingerprint()` 의 module 축 10 개의 origin 파일이 RECORD 가 있는 유효 배포판 하나의 파일
+목록에 있는가 (RECORD 없는 Debian 배포판 안이면 확인 불가로 따로 적는다). (3) 설치 파일의 RECORD 대조 (설치 뒤 변경 감지 — 초안 3-A
+"RECORD 해시" 의 뜻) 는 RECORD 가 덮는 범위로 한정 · 실측 24,804 파일 · 약 1.0 GB.
+
+**시험 · 변이:** 새 파일 `tests/test_gate90_env_profile.py` — e01 커밋된 lock · e02 합성 왕복 `MATCH` · e03 축마다 정확히 그 축 (lock 쪽
+교란 10 · 환경 쪽 교란 4) · e04 형식 오류 → `UNMEASURED` · e05 측정 예외 → `UNMEASURED` · e06 실제 환경 typed · e07 핵심 module =
+지문 축 · e08 CLI rc 0 · e09 smoke 정적 · e10 영수증 stamp · e11 B = 네 manifest · e12 requirements 하한 · 주석. 변이 `-g90` 13 (고정 표 §9).
+기존 시험은 바꾸지 않는다 — 예상 실패는 영수증 재생성 전 validator identity 낡음뿐이고, 그 밖이면 멈추고 보고한다.
+
+**하지 않음:** D guard (봉인 profile → 계획 · 생산 진입 · resume · worker · solver fallback 거부) · C 의 fail-closed · 설치 · 버전 변경 · B 로
+정본 재생성 · 새 세대 · 버전 비교 계산 · `requirements.txt` 하한 변경 · 실행 GO · 새 연구 leg · 운영 v6 계획 · 세대표 · p_ini · class ·
+투영 게시. 기존 정본 수용은 소급 취소하지 않는다.
+
+**절차:** RED (각 node 가 실패하는 것을 눈으로 본다) → 최소 GREEN → 변이 `-g90` (emit-expect → verify) → 영수증 history 보존 + clean
+커밋 1 회 재생성 · LEG_PRESERVATION 앵커 2×2 → 전체 pytest · strict smoke · 등록부 전체 변이 재생 (clean · 시작 = 끝 HEAD) → GATE90
+요청문 · 증거 README · 발송 HEAD docs-lint. 같은 라운드에 다른 보완을 끼우지 않는다.

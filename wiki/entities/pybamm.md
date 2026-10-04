@@ -2,7 +2,7 @@
 title: PyBaMM (합성 truth 엔진 · 의존성)
 description: "degradation-degeneracy 의 합성 truth 를 만드는 전기화학 모델 라이브러리 — 우리가 쓰는 경로(full DFN · composite 음극 · 기본 uniform submesh · LLI 자체 계산)와 릴리스별 영향 판정, 그리고 requirements 상한 부재라는 재현성 위험"
 created: 2026-10-01
-updated: 2026-10-03
+updated: 2026-10-04
 type: entity
 tags: [pybamm, tooling, degradation]
 sources: [raw/articles/2026-10-01-github-research-briefing.md, raw/repositories/2026-10-01-pybamm-26.8-vs-26.9-synthetic-truth.md, raw/articles/2026-10-02-github-research-briefing.md, raw/repositories/2026-10-03-pybamm-pr5813-graded-electrode-and-synthetic-truth.md]
@@ -129,6 +129,10 @@ PyBaMM 의 수치가 바뀌면 "참값" 자체가 움직인다 — 이 페이지
   전부 (Python · 전이 의존성 · 플랫폼 · 배포 바이트 · 패치가 남는다). 배치: **G87-N1 종결 뒤 별도 사용자 승인 · 별도 라운드.**
 - **#5813 (2026-10-03 실측)**: 우리 truth 에는 용량 0 · 전압 ≤5e-8 V — 경로 밖이지만 바이트는 바뀐다. 구배 활물질 분율 ·
   PyBaMM 리튬 재고 변수를 쓰게 되면 그 전에 #5813 이 든 버전 (26.9.0.0 에는 없다) 을 요구 조건으로 적는다. 상한 고정 판단은 그대로.
+- **환경 고정 라운드 착수 (2026-10-04 · 원장 §135 · 고정 표 `degradation-degeneracy/docs/22p_gap/PYBAMM_PIN_ROUND_SPEC.md`):**
+  사용자 결정 = C + B 이번 라운드 · C 는 **기록 대조** (불일치여도 시험을 막지 않는다) · 새 lock 파일 (`requirements.txt` 하한 유지) ·
+  B 는 v4 producer manifest 의 기록만 · D 는 새 생산 계획이 생길 때 별도 라운드 · 재생성 · 버전 비교는 범위 밖. **구현 전**
+  (RED 다음) — "고정됐다" 로 인용하지 않는다. 정본은 원장 · 고정 표 · 이후 게이트 요청문이다.
 
 ## 이 위키와의 관계
 
