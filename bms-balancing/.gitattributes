@@ -69,3 +69,5 @@ reviews/r14_repros/codex63/normal480_native_recipient_review_20261001/** -text
 reviews/r14_repros/codex63/normal480_saved_analysis_recipient_review_20261003/** -text
 # 2026-10-03: PyBaMM 환경 고정 · REIL 외부 검증 프로토콜 사전 검토 묶음 (게이트 차수 밖 · PyBaMM PINNING_RECOMMENDED_WITH_SEPARATE_PROFILES · REIL PROTOCOL_REVISION_REQUIRED_BEFORE_CONFIRMATORY_EXECUTION · 구현 · 실행 승인 아님) — bytes 그대로
 reviews/prereview_pybamm_reil_20261003/** -text
+# 2026-10-04: REIL 프로토콜 v2 재검토 묶음 (게이트 차수 밖 · DESIGN_DIRECTION_ACCEPTED_DOCUMENT_REVISION_REQUIRED · RV2-N1–N4 문서 보완 · 실행 · 구현 · P0 승인 아님) — bytes 그대로
+reviews/prereview_reil_v2_20261004/** -text
