@@ -1,0 +1,62 @@
+{
+  "kind": "STATIC_CONTROL_FLOW_ARGUMENTS_NOT_EXECUTED_TESTS",
+  "candidate_manifest": "3722a51fb1caeddd72fca3751f2ed78ed3e05d5f1938fa452503b3fa5c421a03",
+  "cases": [
+    {
+      "id": "N1-CONFIG",
+      "premise": "Valid native return, normal 150s terminal proof; configuration read-back then fails",
+      "path": [
+        "consumer 251-254 establishes termination",
+        "consumer 258 returns three_fields after configuration failure",
+        "consumer 274-275 preserves NORMAL_150S_COMPLETED",
+        "parent GDecision 63/66 yields INCOMPLETE",
+        "GFields 137-140 writes NOT_ESTABLISHED"
+      ],
+      "contract_expected": {
+        "native_completion": "NORMAL_150S_COMPLETED if parent independently verifies native proof",
+        "evidence_validity": "INVALID",
+        "mesh_comparison": "INCONCLUSIVE"
+      }
+    },
+    {
+      "id": "N1-POST",
+      "premise": "Native completion independently established, but analysis or final delivery budget later exceeded",
+      "path": [
+        "entry 169-170 or parent 195-198 downgrades limited",
+        "GFields 137-140 writes NOT_ESTABLISHED"
+      ],
+      "correction": "Retain independent termination fact; record failed I8 and INCONCLUSIVE"
+    },
+    {
+      "id": "N2-MISSING",
+      "premise": "All six mesh console lines valid; no DOF match in batch",
+      "path": [
+        "findall at consumer 316 returns empty list",
+        "consumer 318-320 unconditionally returns PASS",
+        "parent 104 requires only mesh_readback.status PASS"
+      ],
+      "correction": "Missing required transient readback is incomplete"
+    },
+    {
+      "id": "N2-STATIONARY-ONLY",
+      "premise": "Only stationary DOF line present, matched transient solver section otherwise retained",
+      "path": [
+        "findall spans entire batch",
+        "found[-1] can be stationary DOF",
+        "False last_dof_matches_expected is record-only; PASS remains"
+      ],
+      "historical_anchor": {
+        "zip_sha256": "e991ab4c918f6576b18d6225a86ed41759ab6ee726dd6543b9a9158e581cbc30",
+        "member": "run/batch.log",
+        "stationary_dof_line": 86,
+        "stationary_solved": 1202,
+        "transient_start_line": 128,
+        "transient_dof_line": 131,
+        "transient_solved": 79485,
+        "internal": 12,
+        "transient_end_line": 12759
+      },
+      "correction": "Bind observed DOF to transient section, not only last match in entire batch"
+    }
+  ]
+}

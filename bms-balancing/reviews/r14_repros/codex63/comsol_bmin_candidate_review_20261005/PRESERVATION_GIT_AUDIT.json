@@ -1,0 +1,537 @@
+{
+  "scope": "Git object identity comparison at fixed commits; not remote execution-machine observation",
+  "reference": "899f966de97f37541d37e39b3dfc53e41b0f72fb",
+  "target": "74502af93db0f01bb3ae99eca981cc215300b8bf",
+  "files": [
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/basis/source480/NORMAL480_CANDIDATE_8FILES.zip",
+      "old_blob": "084d638fa2a1e8cfac764dd81ccb908f9c813abe",
+      "new_blob": "084d638fa2a1e8cfac764dd81ccb908f9c813abe",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/basis/source480/candidate/CODE_MANIFEST.json",
+      "old_blob": "fcb179dd920b9a6a54f906e3b44db5b69d585c23",
+      "new_blob": "fcb179dd920b9a6a54f906e3b44db5b69d585c23",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/basis/source480/candidate/COMMAND_MAP.json",
+      "old_blob": "f34367b1f37c8a91eeae027ab572bb5d7ed12139",
+      "new_blob": "f34367b1f37c8a91eeae027ab572bb5d7ed12139",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/basis/source480/candidate/CONTRACT.json",
+      "old_blob": "f37c91cf46c4ecf0a30c7421195bd789b6f8632e",
+      "new_blob": "f37c91cf46c4ecf0a30c7421195bd789b6f8632e",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/basis/source480/candidate/NATIVE_APPROVAL_FIELD_SPEC.json",
+      "old_blob": "7b9ef8cab9dda80c87dfb7f3d70e745904c1f174",
+      "new_blob": "7b9ef8cab9dda80c87dfb7f3d70e745904c1f174",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/basis/source480/candidate/PARENT_COMMAND.ps1",
+      "old_blob": "fd1c096583a9edc012a6f7846400bd3c40b50ea7",
+      "new_blob": "fd1c096583a9edc012a6f7846400bd3c40b50ea7",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/basis/source480/candidate/src/Normal480Candidate.java",
+      "old_blob": "bed6441afcc841a9bdbe030d3d3a29f5acb97cce",
+      "new_blob": "bed6441afcc841a9bdbe030d3d3a29f5acb97cce",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/basis/source480/candidate/src/candidate_entry.py",
+      "old_blob": "9a61b5d0a2ec4347051217a582149de0bf1f442a",
+      "new_blob": "9a61b5d0a2ec4347051217a582149de0bf1f442a",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/basis/source480/candidate/src/diagnostic_consumer.py",
+      "old_blob": "3cac4a82013744c126584e8619a38f231f8c2388",
+      "new_blob": "3cac4a82013744c126584e8619a38f231f8c2388",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/basis/source480/run/tables/axes_runtime_settings.csv",
+      "old_blob": "2f1b941ea6b46e0a5483a963d8236ce7be656620",
+      "new_blob": "2f1b941ea6b46e0a5483a963d8236ce7be656620",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/docs/COMSOL_BMIN_SCOPE_20261004.md",
+      "old_blob": "9a7d7306b0084470143d90d06a49a1979bc98c85",
+      "new_blob": "9a7d7306b0084470143d90d06a49a1979bc98c85",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/docs/COMSOL_BMIN_SCOPE_v2_20261004.md",
+      "old_blob": "3c4ffaf687d0f9de3657d10d6342018aaa060f07",
+      "new_blob": "3c4ffaf687d0f9de3657d10d6342018aaa060f07",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/docs/COMSOL_DATA_REQUEST_DRAFT_20261004.md",
+      "old_blob": "7198d98cfc0e5aed472ac14cbd8233038ce3456f",
+      "new_blob": "7198d98cfc0e5aed472ac14cbd8233038ce3456f",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/docs/COMSOL_DATA_REQUEST_DRAFT_v2_20261004.md",
+      "old_blob": "4f09b6b117749155da28a9f55ed8086525f3969f",
+      "new_blob": "4f09b6b117749155da28a9f55ed8086525f3969f",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/docs/COMSOL_EXPERIMENT_CORRESPONDENCE_v1_20261004.md",
+      "old_blob": "758c1d635713d40ff091927e18787e0b69d37c32",
+      "new_blob": "758c1d635713d40ff091927e18787e0b69d37c32",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/docs/COMSOL_EXPERIMENT_CORRESPONDENCE_v2_20261004.md",
+      "old_blob": "6dc88ce7269a0e6dc770ef581bd9987a61a5d844",
+      "new_blob": "6dc88ce7269a0e6dc770ef581bd9987a61a5d844",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/docs/COMSOL_NEXT_PLAN_20261004.md",
+      "old_blob": "810eaf7e35823c3065a25faf7cc59f279df3e53d",
+      "new_blob": "810eaf7e35823c3065a25faf7cc59f279df3e53d",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/comsol_a0_bmin_documents_20261004/A0_EXPERIMENT_MATCH_TABLE_KO.md",
+      "old_blob": "92878b2960f3eb9f65f79e19c083e2a3186b3641",
+      "new_blob": "92878b2960f3eb9f65f79e19c083e2a3186b3641",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/comsol_a0_bmin_documents_20261004/BASELINE_BINDING.json",
+      "old_blob": "f2de154e84a3e6a5a66fd232948b7c1660fccf2c",
+      "new_blob": "f2de154e84a3e6a5a66fd232948b7c1660fccf2c",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/comsol_a0_bmin_documents_20261004/BMIN_PREPARATION_SCOPE_KO.md",
+      "old_blob": "8b3a7b88902bd7963ac194f2f35dcb2f2dda24dc",
+      "new_blob": "8b3a7b88902bd7963ac194f2f35dcb2f2dda24dc",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/comsol_a0_bmin_documents_20261004/CLAUDE_REPLY_KO.md",
+      "old_blob": "14f48e12e1d246f51261a49e22abf014938933dc",
+      "new_blob": "14f48e12e1d246f51261a49e22abf014938933dc",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/comsol_a0_bmin_documents_20261004/COMSOL_A0_BMIN_DOCUMENTS_20261004.zip",
+      "old_blob": "a763ea7799e89f8403b6cadcddde3fd10750031f",
+      "new_blob": "a763ea7799e89f8403b6cadcddde3fd10750031f",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/comsol_a0_bmin_documents_20261004/DOCUMENT_CHECK.json",
+      "old_blob": "ae539d6cc23e5f5947f09f672231bb0769e93d67",
+      "new_blob": "ae539d6cc23e5f5947f09f672231bb0769e93d67",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/comsol_a0_bmin_documents_20261004/EXPERIMENT_DATA_REQUEST_DRAFT_KO.md",
+      "old_blob": "16d7c24242f81bc0651cec87ed979d00e0d7bae0",
+      "new_blob": "16d7c24242f81bc0651cec87ed979d00e0d7bae0",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/comsol_a0_bmin_documents_20261004/PACKAGE_MANIFEST.json",
+      "old_blob": "f2ec66749519cca938e206c7fb9968dd25cb976b",
+      "new_blob": "f2ec66749519cca938e206c7fb9968dd25cb976b",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/comsol_a0_bmin_documents_20261004/PLANNING_DECISIONS.json",
+      "old_blob": "8aa2e182939a8203d8a8d248a3e2eab8c17f45f9",
+      "new_blob": "8aa2e182939a8203d8a8d248a3e2eab8c17f45f9",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/comsol_a0_bmin_documents_20261004/README_KO.md",
+      "old_blob": "c3961f4644e85fb1f0fee272a92d7de3c5282043",
+      "new_blob": "c3961f4644e85fb1f0fee272a92d7de3c5282043",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/comsol_a0_bmin_documents_20261004/SOURCE_IDENTITIES.json",
+      "old_blob": "9e8b2839c6ffdbf7b6248ff912c48782fbe48c57",
+      "new_blob": "9e8b2839c6ffdbf7b6248ff912c48782fbe48c57",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/comsol_a0_bmin_documents_20261004/SOURCE_INDEX.md",
+      "old_blob": "ece452c8bd502d10c2d9f37fda9f8af4dc956508",
+      "new_blob": "ece452c8bd502d10c2d9f37fda9f8af4dc956508",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/normal480_native_recipient_review_20261001/ADDITIONAL_AUDIT.json",
+      "old_blob": "28cdcd76164fb5e85dc7ae2e5ec6d5327e6b5d7b",
+      "new_blob": "28cdcd76164fb5e85dc7ae2e5ec6d5327e6b5d7b",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/normal480_native_recipient_review_20261001/ARCHIVE_AUDIT.json",
+      "old_blob": "aac47a680ba8faedd316de07b577c449b907f1d6",
+      "new_blob": "aac47a680ba8faedd316de07b577c449b907f1d6",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/normal480_native_recipient_review_20261001/CLAUDE_UPDATE_KO.md",
+      "old_blob": "8e1568f9082f53de9d4c5294b866421aa09d217f",
+      "new_blob": "8e1568f9082f53de9d4c5294b866421aa09d217f",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/normal480_native_recipient_review_20261001/DECISION.json",
+      "old_blob": "91e3fc70aff896a46384ef502316f3dd98a8dfee",
+      "new_blob": "91e3fc70aff896a46384ef502316f3dd98a8dfee",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/normal480_native_recipient_review_20261001/FINAL_SOURCE_CHECK.json",
+      "old_blob": "4c7851f5ff324a3d526b39ca7354c628379c1f8b",
+      "new_blob": "4c7851f5ff324a3d526b39ca7354c628379c1f8b",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/normal480_native_recipient_review_20261001/NEXT_CODEX_REPLY_KO.md",
+      "old_blob": "fd87268cdc2ceac6518076797e5012f8248a1002",
+      "new_blob": "fd87268cdc2ceac6518076797e5012f8248a1002",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/normal480_native_recipient_review_20261001/NUMERIC_AUDIT.json",
+      "old_blob": "69f17473fee8bdfa553a83eb5be4896c719dd296",
+      "new_blob": "69f17473fee8bdfa553a83eb5be4896c719dd296",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/normal480_native_recipient_review_20261001/RECORDS_AUDIT.json",
+      "old_blob": "3bb5687112896bf0429fe75a62af7f8178dcc178",
+      "new_blob": "3bb5687112896bf0429fe75a62af7f8178dcc178",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/normal480_native_recipient_review_20261001/REVIEWER_PROCESS_NOTE.md",
+      "old_blob": "7c65af7dd0a9bcc26bf21ef77e2bc67e380bfc96",
+      "new_blob": "7c65af7dd0a9bcc26bf21ef77e2bc67e380bfc96",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/normal480_native_recipient_review_20261001/REVIEW_KO.md",
+      "old_blob": "10d340b6fe83cf2bba90496b8fed58cda6049491",
+      "new_blob": "10d340b6fe83cf2bba90496b8fed58cda6049491",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/normal480_native_recipient_review_20261001/REVIEW_MANIFEST.json",
+      "old_blob": "a1ebb4dcc9a95c9666beaa89e2fbba0ba2db0d72",
+      "new_blob": "a1ebb4dcc9a95c9666beaa89e2fbba0ba2db0d72",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/normal480_native_recipient_review_20261001/SUPPLEMENTAL_AUDIT.json",
+      "old_blob": "11437e4431aae55f4877fa8e5bf9cfb588e7b756",
+      "new_blob": "11437e4431aae55f4877fa8e5bf9cfb588e7b756",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/normal480_native_recipient_review_20261001/USER_SUPPLIED_FINAL_RETURN.json",
+      "old_blob": "d888cf248122701908b900654f569fd99a5cacb7",
+      "new_blob": "d888cf248122701908b900654f569fd99a5cacb7",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/normal480_native_recipient_review_20261001/audit_additional.py",
+      "old_blob": "52f20b3a6bdbce78231fc7fb94647c5b239c6bb1",
+      "new_blob": "52f20b3a6bdbce78231fc7fb94647c5b239c6bb1",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/normal480_native_recipient_review_20261001/audit_archives.py",
+      "old_blob": "7c6d5166d4022c2880ab9cd5a0a6546515453336",
+      "new_blob": "7c6d5166d4022c2880ab9cd5a0a6546515453336",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/normal480_native_recipient_review_20261001/audit_numeric.py",
+      "old_blob": "1f6ff384b443fa53520ab532a93d6369b1651c44",
+      "new_blob": "1f6ff384b443fa53520ab532a93d6369b1651c44",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/normal480_native_recipient_review_20261001/audit_records.py",
+      "old_blob": "31bc0821326f9f46a65fcb8a19adde868aa33959",
+      "new_blob": "31bc0821326f9f46a65fcb8a19adde868aa33959",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/normal480_native_recipient_review_20261001/audit_supplemental.py",
+      "old_blob": "8edaf53004178196b461e69f181081a6ed9d4942",
+      "new_blob": "8edaf53004178196b461e69f181081a6ed9d4942",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/normal480_native_recipient_review_20261001/seal_review.py",
+      "old_blob": "dcc3388580a6e7139b80f91751455630ec6be4fd",
+      "new_blob": "dcc3388580a6e7139b80f91751455630ec6be4fd",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/ARCHIVE_AUDIT.json",
+      "old_blob": "e13f9a4a8af547b920d4f05838e441637d0234e0",
+      "new_blob": "e13f9a4a8af547b920d4f05838e441637d0234e0",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/CLAUDE_UPDATE_KO.md",
+      "old_blob": "ba156fe468992bea22269cf251aa94c24e1eaa40",
+      "new_blob": "ba156fe468992bea22269cf251aa94c24e1eaa40",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/DECISION.json",
+      "old_blob": "85a9492a3e8af9d4969c375f3457cc20c8623dbc",
+      "new_blob": "85a9492a3e8af9d4969c375f3457cc20c8623dbc",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/INPUT_ZIPS_PRESERVATION.json",
+      "old_blob": "38be41374354a1a9c60c1fc6bb6c016b344bd652",
+      "new_blob": "38be41374354a1a9c60c1fc6bb6c016b344bd652",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/NEXT_CODEX_REPLY_KO.md",
+      "old_blob": "cfc252ba6bb8d495671e33d3585937262c32e5e8",
+      "new_blob": "cfc252ba6bb8d495671e33d3585937262c32e5e8",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/RECIPIENT_AUDIT_NOTE.md",
+      "old_blob": "a43e27ad55af9ea5a1fe4d07593eac108a87d2bd",
+      "new_blob": "a43e27ad55af9ea5a1fe4d07593eac108a87d2bd",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/REVIEW_KO.md",
+      "old_blob": "593cd16195c1af5f471c9613a84b54fdcb10514c",
+      "new_blob": "593cd16195c1af5f471c9613a84b54fdcb10514c",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/REVIEW_MANIFEST.json",
+      "old_blob": "b2e0d0966b5f8f0d6f7aec6270de8067b505c374",
+      "new_blob": "b2e0d0966b5f8f0d6f7aec6270de8067b505c374",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/STATIC_DATA_AUDIT.json",
+      "old_blob": "b1de3976a6f407f5b480f0e0de687be277eb1c6d",
+      "new_blob": "b1de3976a6f407f5b480f0e0de687be277eb1c6d",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/audit_package.py",
+      "old_blob": "5b0dcc320ed08ef3addaf7d86e63d2b804d082f7",
+      "new_blob": "5b0dcc320ed08ef3addaf7d86e63d2b804d082f7",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/audit_static.py",
+      "old_blob": "9d1a3cdbb3ba5b7f4d6c7930f839e5f8f4219e0e",
+      "new_blob": "9d1a3cdbb3ba5b7f4d6c7930f839e5f8f4219e0e",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/reference/BASELINE_IDENTITIES.json",
+      "old_blob": "ecfebc55bfa2e4bd8a00f43bbf9f60d75d3f4e77",
+      "new_blob": "ecfebc55bfa2e4bd8a00f43bbf9f60d75d3f4e77",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/reference/CHANGE_BOUNDARIES.json",
+      "old_blob": "f4e8e472470b7e1d756f409dc043066ac8b79e3a",
+      "new_blob": "f4e8e472470b7e1d756f409dc043066ac8b79e3a",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/reference/CODE_MANIFEST.json",
+      "old_blob": "ef6ee7f58a26ee3d4bb6e61b34788d649e77da15",
+      "new_blob": "ef6ee7f58a26ee3d4bb6e61b34788d649e77da15",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/reference/COMMAND_MAP.json",
+      "old_blob": "70dac4879af2e2de6df4a28352b1ad4aeb9a2fc8",
+      "new_blob": "70dac4879af2e2de6df4a28352b1ad4aeb9a2fc8",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/reference/CONTRACT.json",
+      "old_blob": "5d952fb6ec0929ed9991de07a2505eb8dbbb0f3c",
+      "new_blob": "5d952fb6ec0929ed9991de07a2505eb8dbbb0f3c",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/reference/FINAL_STATIC_BINDING.json",
+      "old_blob": "dbd65f3d0b73aa587d3f91b1d77e0824ed8c09c2",
+      "new_blob": "dbd65f3d0b73aa587d3f91b1d77e0824ed8c09c2",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/reference/LIMITED_VALIDATION_PLAN.json",
+      "old_blob": "e8fcbc060b2edd6555549113f6d38a0b5418fe0c",
+      "new_blob": "e8fcbc060b2edd6555549113f6d38a0b5418fe0c",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/reference/LITERAL_CHANGE_MAP.json",
+      "old_blob": "f457821f096b14ced675a65485e8d9dbe4cf5432",
+      "new_blob": "f457821f096b14ced675a65485e8d9dbe4cf5432",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/reference/NATIVE60_APPROVAL_DRAFT_KO.md",
+      "old_blob": "cebbba8bd087ae75da31ee5fd56a89657d437063",
+      "new_blob": "cebbba8bd087ae75da31ee5fd56a89657d437063",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/reference/NATIVE_APPROVAL_FIELD_SPEC.json",
+      "old_blob": "1d4332624a3809a26c13d993ba46b90d12ea96a8",
+      "new_blob": "1d4332624a3809a26c13d993ba46b90d12ea96a8",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/reference/PARENT_COMMAND.ps1",
+      "old_blob": "eb2373f9fbb862ea92731435865536a7d98c299f",
+      "new_blob": "eb2373f9fbb862ea92731435865536a7d98c299f",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/reference/PREPARATION_KO.md",
+      "old_blob": "18921165ea643b627f1fdd8d8bf2bbe55c88c95f",
+      "new_blob": "18921165ea643b627f1fdd8d8bf2bbe55c88c95f",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/reference/PRESERVATION_AFTER.json",
+      "old_blob": "fe7182784d0bd5b1c2ff1f7e34c6604b7fa62e37",
+      "new_blob": "fe7182784d0bd5b1c2ff1f7e34c6604b7fa62e37",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/reference/PRESERVATION_BEFORE.json",
+      "old_blob": "fe7182784d0bd5b1c2ff1f7e34c6604b7fa62e37",
+      "new_blob": "fe7182784d0bd5b1c2ff1f7e34c6604b7fa62e37",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/reference/RESOURCE_BUDGET_KO.md",
+      "old_blob": "893807185ea4dd904c9716475ededb25ac094a07",
+      "new_blob": "893807185ea4dd904c9716475ededb25ac094a07",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/reference/STATIC_AUDIT.json",
+      "old_blob": "7017ead49a20d403ae844a48188fb7aae9991caa",
+      "new_blob": "7017ead49a20d403ae844a48188fb7aae9991caa",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/reference/VALIDATION_REQUEST_KO.md",
+      "old_blob": "bf7c4229c142764d6be7da40a3d5d4f9b6ec1f79",
+      "new_blob": "bf7c4229c142764d6be7da40a3d5d4f9b6ec1f79",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/reference/basis/source30/CODE_MANIFEST.json",
+      "old_blob": "a2bd6af59ed6170f7263b2b4df4c2b3a707c3f28",
+      "new_blob": "a2bd6af59ed6170f7263b2b4df4c2b3a707c3f28",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/reference/basis/source30/CONTRACT.json",
+      "old_blob": "70de124f6296ac5a91d4c2bc337a59ff7831cf3d",
+      "new_blob": "70de124f6296ac5a91d4c2bc337a59ff7831cf3d",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/reference/basis/source30/PARENT_COMMAND.ps1",
+      "old_blob": "d337cb99b7efd6eeb275d7963434ac27857e5d94",
+      "new_blob": "d337cb99b7efd6eeb275d7963434ac27857e5d94",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/reference/basis/source30/src/Normal30Candidate.java",
+      "old_blob": "eb68fe1a4ca55bd443c93bc415464122b340e58e",
+      "new_blob": "eb68fe1a4ca55bd443c93bc415464122b340e58e",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/reference/basis/source30/src/candidate_entry.py",
+      "old_blob": "fb59c207ccff271b45687d138747ba1ebde7eb69",
+      "new_blob": "fb59c207ccff271b45687d138747ba1ebde7eb69",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/reference/basis/source30/src/diagnostic_consumer.py",
+      "old_blob": "3e05ac7a6bc313d8d38c7c15de90f33dd11c8c06",
+      "new_blob": "3e05ac7a6bc313d8d38c7c15de90f33dd11c8c06",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/reference/delivery/DELIVERY_RECEIPT.json",
+      "old_blob": "25e22afa9ab25791ab293064cec7974f64540548",
+      "new_blob": "25e22afa9ab25791ab293064cec7974f64540548",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/reference/delivery/PACKAGING_TOOL_RETURN.json",
+      "old_blob": "262f20bc50104496c62f5865ecde96de8a1a1242",
+      "new_blob": "262f20bc50104496c62f5865ecde96de8a1a1242",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/reference/src/Normal60Candidate.java",
+      "old_blob": "2d6d38bc92473d16ff7809729f5c9ece5dabf58a",
+      "new_blob": "2d6d38bc92473d16ff7809729f5c9ece5dabf58a",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/reference/src/candidate_entry.py",
+      "old_blob": "b6e739e1d881c1af9a12419ce2c042eafeb9ffba",
+      "new_blob": "b6e739e1d881c1af9a12419ce2c042eafeb9ffba",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/reference/src/diagnostic_consumer.py",
+      "old_blob": "17da032a8c58b81b69eb5edcbfe399b40f0f0703",
+      "new_blob": "17da032a8c58b81b69eb5edcbfe399b40f0f0703",
+      "unchanged": true
+    },
+    {
+      "path": "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/seal_review.py",
+      "old_blob": "b479fc3e070439e520da8aae74511990970f7ffb",
+      "new_blob": "b479fc3e070439e520da8aae74511990970f7ffb",
+      "unchanged": true
+    }
+  ],
+  "spec_prefix_unchanged": true,
+  "static_audit_reference_fixed": true
+}

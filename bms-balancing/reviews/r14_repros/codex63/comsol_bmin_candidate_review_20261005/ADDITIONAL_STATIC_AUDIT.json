@@ -1,0 +1,76 @@
+{
+  "method": "Reviewer text delimiters only, no received code parsing/import/execution. Line ending conventions separately checked in INDEPENDENT_STATIC_AUDIT.",
+  "consumer": [
+    {
+      "name": "need",
+      "normalized_text_identical": true
+    },
+    {
+      "name": "number",
+      "normalized_text_identical": true
+    },
+    {
+      "name": "identity",
+      "normalized_text_identical": true
+    },
+    {
+      "name": "pinned",
+      "normalized_text_identical": true
+    },
+    {
+      "name": "rows",
+      "normalized_text_identical": true
+    },
+    {
+      "name": "timed",
+      "normalized_text_identical": true
+    },
+    {
+      "name": "extract_tables",
+      "normalized_text_identical": true
+    },
+    {
+      "name": "rounded_contains",
+      "normalized_text_identical": true
+    },
+    {
+      "name": "binding_evidence",
+      "normalized_text_identical": true
+    },
+    {
+      "name": "profile",
+      "normalized_text_identical": true
+    },
+    {
+      "name": "units_evidence",
+      "normalized_text_identical": true
+    }
+  ],
+  "parent": [
+    {
+      "name": "BHash",
+      "normalized_text_identical": true
+    },
+    {
+      "name": "BRef",
+      "normalized_text_identical": true
+    },
+    {
+      "name": "BRead",
+      "normalized_text_identical": true
+    },
+    {
+      "name": "BSave",
+      "normalized_text_identical": true
+    },
+    {
+      "name": "BInvoke",
+      "normalized_text_identical": true
+    }
+  ],
+  "commands_equal": true,
+  "budget_fields_equal": true,
+  "manifest_binding": true,
+  "approval_path": true,
+  "release_path": true
+}

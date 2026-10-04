@@ -1,0 +1,90 @@
+{
+  "kind": "DECLARED_CHANGE_BOUNDARIES_NOT_VALIDATION",
+  "functional_status": "UNTESTED",
+  "native_approval": false,
+  "basis": "basis/source480/candidate (NORMAL480 originals, bytes = R480 ARCHIVE_AUDIT)",
+  "target": "candidate",
+  "allowed_categories": {
+    "①": "particle radial mesh Nel of pce1 and pce2: 320 -> 640 (B-min v2 section 3, allowed diff 1)",
+    "②": "end time 480 -> 150 s and the request list = first 1,637 entries of the NORMAL480 list (allowed diff 2)",
+    "③": "run/output paths and identifiers (allowed diff 3)",
+    "④": "baseline binding to NORMAL480 run/tables, judgment and budget connection (allowed diff 4)"
+  },
+  "rule": "Each file must be reconstructed to the exact basis bytes by undoing only the operations below, in the listed order (tools/static_audit.py). Anything else is an undeclared change and a rejection reason.",
+  "files": {
+    "src/Bmin640Candidate.java": {
+      "basis": "src/Normal480Candidate.java",
+      "kind": "LITERAL_ONLY",
+      "line_endings": "LF",
+      "reverse": [
+        {"op": "inverse_literals", "table": "src/Normal480Candidate.java -> src/Bmin640Candidate.java"}
+      ]
+    },
+    "src/candidate_entry.py": {
+      "basis": "src/candidate_entry.py",
+      "kind": "LITERAL_ONLY",
+      "line_endings": "LF",
+      "reverse": [
+        {"op": "inverse_literals", "table": "src/candidate_entry.py"}
+      ]
+    },
+    "src/diagnostic_consumer.py": {
+      "basis": "src/diagnostic_consumer.py",
+      "kind": "LITERALS_PLUS_DECLARED_BLOCKS",
+      "line_endings": "CRLF",
+      "reverse": [
+        {"op": "restore_block", "category": "④", "new": ["def window_coverage(", "def profile("], "old": ["def coverage(", "def profile("],
+         "reason": "coverage (0..min(240, safe end) prefix vs NORMAL240) -> window_coverage: primary = contract requested times in [120,150] (301, also pinned as a list in CONTRACT), I-7a all 1,637 requested present, I-7b primary present on both sides, auxiliary = extra exact common stored times (reported, never judged), outside-window requested times (observation only); plus extreme() returning max |delta| with signed value, time and coordinate"},
+        {"op": "restore_block", "category": "④", "new": ["def numeric(", "def incomplete_result("], "old": ["def numeric(", "def incomplete_result("],
+         "reason": "baseline = NORMAL480 run/tables only (B020 0-5 s comparison and its tables removed); tolerance raises SAMPLE_TOLERANCE / B020_SAMPLE_TOLERANCE removed so an excess is a result, not an error; windows primary/auxiliary/outside with voltage, both surface profiles, total Li, electrolyte minima and Min/MaxLine deltas; LIMIT_CONTRACT pins 0.001 V and 1e-4. Unchanged inside: initial Li vs baseline <= 1e-9, Li drift <= 1e-6, voltage identity <= 1e-8, surface/OCP ranges, profile() coordinate/domain/time checks"},
+        {"op": "restore_block", "category": "④", "new": ["def incomplete_result(", "def analyze("], "old": ["def incomplete_result(", "def analyze("],
+         "reason": "default result carries the three fields: native_completion NOT_ESTABLISHED, evidence_validity INVALID, mesh_comparison INCONCLUSIVE"},
+        {"op": "restore_block", "category": "④", "new": ["def analyze(", "def runtime_evidence("], "old": ["def analyze(", "def runtime_evidence("],
+         "reason": "termination and native stop evaluated first (so native_completion is independent of the configuration evidence), then a separate configuration axis (binding, runtime I-2, mesh I-3 via mesh_evidence); labels BMIN640_150S_COMPARISON_COMPLETE / PROTECTED_STOP_150S_INCOMPLETE; three_fields() added: native_completion, evidence_validity, mesh_comparison with the <= rule (equal to a limit is within, strictly greater exceeds)"},
+        {"op": "restore_block", "category": "④", "new": ["def runtime_evidence(", null], "old": ["def runtime_evidence(", null],
+         "reason": "runtime_evidence adds I-2: every key of the NORMAL480 axes_runtime_settings.csv read-back must be equal except study_tlist, which must be its 1,637-entry prefix; mesh_evidence (I-3) added: physical 120/60/120, Nel 640/640, actual mesh lines exactly once, transient DOF recorded only; late_summary (>240 s interval of NORMAL480) removed"},
+        {"op": "remove_insert", "category": "④", "after": "    HEADERS[_n]='time_s coordinate_m x_surface x_particle_average Eeq_V etaMid_V phil_V domain_id'.split()\n", "before": "def need(",
+         "reason": "header contract for preflight_MinLine_ce.csv / preflight_MaxLine_ce.csv (time_s, ce_mol_m3 - same names the Java numericTable writes), read for the electrolyte min/max observation"},
+        {"op": "inverse_literals", "table": "src/diagnostic_consumer.py"}
+      ]
+    },
+    "PARENT_COMMAND.ps1": {
+      "basis": "PARENT_COMMAND.ps1",
+      "kind": "LITERALS_PLUS_DECLARED_BLOCKS",
+      "line_endings": "CRLF",
+      "reverse": [
+        {"op": "remove_insert", "category": "④", "after": "    return 'PROTECTED_STOP_150S_INCOMPLETE'\n}\n", "before": "try {\n",
+         "reason": "GFields: final three fields for PARENT_LOCAL_DECISION, FINAL_BOUNDARY and the POST_WRITE console line; only a parent-accepted normal result carries the consumer verdict, everything else is INCONCLUSIVE (the consumer native_completion is copied as consumer_native_completion_unverified for cause analysis only)"},
+        {"op": "inverse_literals", "table": "PARENT_COMMAND.ps1"},
+        {"op": "restore_block", "category": "④", "new": ["    foreach ($key in @('primary_expected'", "    $required=@("], "old": ["    foreach ($key in @('expected_requested','common_stored','missing_target','missing_baseline','target_noncommon','full_intersection','strict_requested_through_safe_end','missing_strict_requested')) {\n        if (-not (GHas $coverage $key)", "    $required=@("],
+         "reason": "GDecision: NORMAL240 prefix coverage checks -> 301-time window checks (1,637 strict when normal); B020 secondary block removed; maximum_voltage_delta_V / maximum_surface_delta are no longer gates (Li drift and voltage identity stay); late_interval check removed; mesh_readback and runtime baseline_comparison PASS required; independent decimal recomputation of the label from the three primary maxima (equal is within) and its consistency with native_completion / evidence_validity / mesh_comparison; initial Li loop kept byte-identical"}
+      ]
+    }
+  },
+  "unchanged_functions": {
+    "src/diagnostic_consumer.py": ["need", "number", "identity", "pinned", "rows", "timed", "extract_tables", "guard_evidence (literals only)", "rounded_contains", "native_stop (literals only)", "binding_evidence", "profile", "units_evidence"],
+    "PARENT_COMMAND.ps1": ["BHash", "BRef", "BRead", "BSave", "BInvoke"],
+    "src/candidate_entry.py": "all function bodies except the five declared literals",
+    "src/Bmin640Candidate.java": "all model, physics, material, solver, guard, output and API bodies except the declared literals"
+  },
+  "removed_features": {
+    "B020 0-5 s secondary comparison": "B-min baseline is NORMAL480 run/tables only (B-min v2 section 3); early 0-120 s differences are reported as outside_window_observation without acceptance (section 5)",
+    "NORMAL240 prefix comparison (comparison_end_s, baseline_requested_times_s)": "replaced by the fixed 120-150 s window",
+    "late_summary (>240 s)": "not applicable to a 150 s run",
+    "tolerance raise inside numeric()": "an excess is EXCEEDS_LIMITS (a valid comparison), not a numeric error (section 6)"
+  },
+  "json_files": {
+    "CONTRACT.json": {
+      "changed": {"run_id": "③", "root": "③", "run_root": "③", "approval_path": "③", "release_path": "③", "candidate_java": "③",
+                  "baseline_files": "④", "requested_times_s": "②", "maximum_physical_s": "②", "budgets_seconds": "④",
+                  "resource_proposal": "④ (disk_start_gib 50 -> 15)", "policy": "③ (native_permission_status text only)", "commands": "③", "future_native_blockers": "③"},
+      "removed": {"baseline_requested_times_s": "④", "comparison_end_s": "④", "b020_requested_times_s": "④"},
+      "added": {"baseline_run": "④", "comparison_window_s": "④", "primary_comparison_count": "④", "primary_comparison_times_s": "④",
+                "comparison_rule": "④", "changed_axis": "①", "mesh_readback_required": "①", "expected_transient_dof": "① (record only)"}
+    },
+    "CODE_MANIFEST.json": "③ run_id, file name of the Java source, sizes and SHA-256 of the five files, previous_manifest_sha256 = NORMAL480 manifest",
+    "COMMAND_MAP.json": "③ paths, class name, approval file name and manifest SHA only",
+    "NATIVE_APPROVAL_FIELD_SPEC.json": "③ run_id, manifest SHA, paths, approval field native_bmin640_one_shot, activation text; ④ budgets"
+  }
+}
+

@@ -1,0 +1,81 @@
+{
+  "date": "2026-10-05",
+  "repo": "yonghoon7153-source/Yonghoon-DEM-DFT",
+  "commit": "74502af93db0f01bb3ae99eca981cc215300b8bf",
+  "request_blob": "1c4f56ce61e663451e2b5118137e39808e9d9687",
+  "candidate_manifest_sha256": "3722a51fb1caeddd72fca3751f2ed78ed3e05d5f1938fa452503b3fa5c421a03",
+  "status": "LOCAL_CORRECTIONS_REQUIRED",
+  "priority_counts": {
+    "P1": 0,
+    "P2": 2
+  },
+  "findings": [
+    {
+      "id": "BMIN-N1",
+      "priority": "P2",
+      "file": "candidate/PARENT_COMMAND.ps1",
+      "lines": [
+        134,
+        140
+      ],
+      "topic": "Final native completion collapsed into overall comparison/evidence acceptance",
+      "acceptance": "Independently validated native terminal observation retained when only configuration/analysis/delivery validity fails; comparison remains INCONCLUSIVE; unverified consumer labels never promoted"
+    },
+    {
+      "id": "BMIN-N2",
+      "priority": "P2",
+      "file": "candidate/src/diagnostic_consumer.py",
+      "lines": [
+        313,
+        320
+      ],
+      "topic": "Missing or non-transient DOF readback accepted",
+      "acceptance": "Require unambiguous DOF observation within the already matched transient solver section; missing/ambiguous incomplete; deviation from extrapolated expected value record-only"
+    }
+  ],
+  "nonblocking": [
+    {
+      "id": "C1",
+      "topic": "PS01-03/04 do not test decimal precision rounding boundaries; narrow claim or add an explicit planned case"
+    }
+  ],
+  "accepted": {
+    "declared_reverse_reconstruction": 4,
+    "manifest_payloads": 5,
+    "basis_files_vs_original_zip": 9,
+    "baseline_tables_current_zip_hashes": 9,
+    "historical_baseline_paths": 9,
+    "git_preserved_blobs": 88,
+    "requested_times": 1637,
+    "primary_times": 301,
+    "coordinates_per_electrode": 241,
+    "normal480_Nord_distribution": true,
+    "section_46_7_fixed_reference": true
+  },
+  "scope": {
+    "candidate_imports": 0,
+    "candidate_parses_compiles": 0,
+    "candidate_function_calls": 0,
+    "supplied_tools_run": 0,
+    "COMSOL_JVM_calls": 0,
+    "native_calls": 0,
+    "production_edits": 0,
+    "external_messages": 0,
+    "reviewer_own_data_check_script_invocations": 2,
+    "remarks": "Additional read-only archive/text/Git metadata checks were made; static checks are not functional test counts."
+  },
+  "authorization": {
+    "candidate_correction_authorized_by_this_review": false,
+    "limited_validation_approved": false,
+    "native_approved": false,
+    "new_B_approved": false
+  },
+  "limitations": [
+    "Current execution-machine paths/prefs/resources not observed",
+    "Full NORMAL480 numeric analysis and complete payload audit not repeated",
+    "Candidate functional and native compatibility untested"
+  ],
+  "overall": "INCOMPLETE",
+  "normal_gate": "INCOMPLETE",
+  "next": "User-approved narrow correction and reseal; later limited-validation approval separate; native approval separate"
+}
