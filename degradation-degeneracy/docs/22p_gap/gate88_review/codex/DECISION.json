@@ -1,0 +1,49 @@
+{
+  "status": "REQUEST_CHANGES_ROUND2B_NOT_CLOSED",
+  "reviewed_at": "2026-10-04",
+  "request_sha": "d6056415baac1a80496274407b1a22f718ba4ad5",
+  "code_sha": "e462a3d1929c9a6be4a8ca3665dce7f80bc7134d",
+  "source_digest": "7dd546baaee9e823",
+  "source_digest_independently_recomputed": true,
+  "run_scope_files": 58,
+  "findings": [
+    {
+      "id": "G88-N1",
+      "priority": "P1",
+      "title": "Fit-only finalizer does not revalidate durable receipt.inputs",
+      "path": "degradation-degeneracy/tools/preserve.py",
+      "lines": [
+        9130,
+        9138
+      ],
+      "evidence_kind": "static source/data-flow trace, not runtime reproduction",
+      "impact": "A receipt whose mandatory inputs map was deleted or changed after phase_done can be promoted to executed while package/consumed/planned digest strings remain unchanged.",
+      "minimum_fix": "Apply the shared external-input binding validator to the exact durable fit receipt snapshot before ledger mutation, retaining plan/package/consumed comparisons and v2 behavior."
+    }
+  ],
+  "original_G87_N1_normal_lifecycle": "ACCEPTED_FIXED",
+  "G87_N1_full_completion_resume_binding": "NOT_CLOSED_DUE_TO_G88_N1",
+  "v2_invariance": "ACCEPTED_WITHIN_REVIEW_SCOPE",
+  "previously_accepted_G87_scope": "MAINTAINED",
+  "round2b": "NOT_CLOSED",
+  "receipt_update": "ACCEPTED_BYTE_DIFF_AND_HISTORY_SCOPE",
+  "logs_verified": 16,
+  "submitted_tests": {
+    "pytest_passed": 2133,
+    "xfailed": 1,
+    "pytest_rc": 0,
+    "smoke_rc": 0,
+    "all_mutations_killed": 395,
+    "all_mutations_rc": 0,
+    "g88_mutations_killed": 21
+  },
+  "evidence_limit": "Submitted preserved logs verified; reviewer did not rerun tests or observe remote processes.",
+  "received_program_executions": 0,
+  "project_tests_run_by_reviewer": 0,
+  "remote_writes": 0,
+  "comsol_runs": 0,
+  "execution_GO": false,
+  "research_leg_authorized": false,
+  "implementation_authorized": false,
+  "note": "Preserve round2a and prior accepted conclusions; no retroactive relabeling of past results."
+}

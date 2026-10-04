@@ -1,0 +1,68 @@
+{
+  "schema": "gate88-review-package/v1",
+  "created_date": "2026-10-04",
+  "scope": "Reviewer static review only. No execution authorization.",
+  "payload_count": 12,
+  "files": [
+    {
+      "path": "CLAUDE_REPLY.md",
+      "bytes": 2350,
+      "sha256": "bdf868e63fc538554604b464c0590d98be082dddea14901a23dc0461a3e01f69"
+    },
+    {
+      "path": "DECISION.json",
+      "bytes": 2033,
+      "sha256": "195f85701c5e349baf4c7efca8273128bace4f31312a11981ed7c77cf9573821"
+    },
+    {
+      "path": "G88_N1_STATIC_TRACE.json",
+      "bytes": 2565,
+      "sha256": "7de04b2640186b3d81b18b00dc876ad2efcc370d55cd5a8944a7fb54166d0e63"
+    },
+    {
+      "path": "PRIOR_REFERENCE.json",
+      "bytes": 792817,
+      "sha256": "9da806a3c0ca4c324f3d36d9257bef01e9f4c91ddc189d457cdf60744fe76004"
+    },
+    {
+      "path": "PRODUCTION.diff",
+      "bytes": 20907,
+      "sha256": "912ae72fe2101a12773283ca15b5101d2b8b68fd6e85374e355d68534006a89f"
+    },
+    {
+      "path": "README_KO.md",
+      "bytes": 1313,
+      "sha256": "a88d8d52b065fb8b0ab2dd97987edb76f5452b13991daf950e9714929de0354f"
+    },
+    {
+      "path": "RECEIVED_SNAPSHOT.json",
+      "bytes": 2849558,
+      "sha256": "c5e46ab6e12750c19f179431c5e570afb917f59bd662d04937e1c882e235f411"
+    },
+    {
+      "path": "REVIEW_KO.md",
+      "bytes": 9263,
+      "sha256": "b4db5cd7101af11e66f8b52f26cb1dfe3962874c71c7bdd062b14754c129ad4b"
+    },
+    {
+      "path": "REVIEWER_METHOD.json",
+      "bytes": 1527,
+      "sha256": "6165054ee996a0c3d30faf866e6c2d7ddbba600299365e48049353f676d9cfb6"
+    },
+    {
+      "path": "reviewer_static_audit.py",
+      "bytes": 4460,
+      "sha256": "9c5c5d9481cd41d0319fb584dd7ca9f68c08c6ee24b7d0c690f46146fcbef4e8"
+    },
+    {
+      "path": "RUN_SCOPE_SNAPSHOT.json",
+      "bytes": 1623277,
+      "sha256": "88cfec922794d4f056f3958781b359eaf0ba2084ccd4dd1d62ac2b7c2ff23354"
+    },
+    {
+      "path": "STATIC_AUDIT.json",
+      "bytes": 48445,
+      "sha256": "444c6b6551d134f53db569a2d01a48efe001b1a655e52903fa3ba7d0af6b07d8"
+    }
+  ]
+}

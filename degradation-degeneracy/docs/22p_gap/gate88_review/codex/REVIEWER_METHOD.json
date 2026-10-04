@@ -1,0 +1,19 @@
+{
+  "method": "Read-only fixed-commit GitHub reads; source, hashes, AST and log inspection only.",
+  "started_scope": "Gate88 G87-N1 fit-only phase contract; no COMSOL/Java/received program/test execution",
+  "source_digest_calculation": "Independent reviewer reader hashes sorted POSIX RUN_SCOPE paths plus UTF-8 bytes; no source_digest() import/call",
+  "claim_gap": "Static data-flow proof under the same post-phase_done durable-state tampering model as submitted f03_03/f03_06. No claim mutation or execution reproduction was performed.",
+  "log_boundaries": "16 README-listed artifacts verified byte size/SHA. Final send-head docs-lint is reported, not in those 16 files. No blanket clean-tree-during-entire-run claim.",
+  "transport": "UTF-8 connector output was re-encoded and verified against Git blob hashes, including preserved CR control bytes in logs. JSON snapshots retain exact content strings; snapshots are not working checkouts.",
+  "scope_comparison": "58 current tree blobs compared against 58 Gate87 tree blobs, 2 differ. The old-to-current general compare file list hit 300 files; scope comparison does not rely on that truncated list. Code-to-send compare has no RUN_SCOPE changes.",
+  "limitations": [
+    "No remote OS audit",
+    "No independent product test or mutation replay",
+    "No receipt regeneration/restore/rescore",
+    "No proof of all historical process/authority state",
+    "No execution approval"
+  ],
+  "production_edits": 0,
+  "remote_writes": 0,
+  "received_program_executions": 0
+}

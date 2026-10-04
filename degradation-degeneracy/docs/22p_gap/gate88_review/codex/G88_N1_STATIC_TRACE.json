@@ -1,0 +1,59 @@
+{
+  "id": "G88-N1",
+  "kind": "STATIC_PATH_TRACE_NOT_EXECUTION",
+  "preconditions": [
+    "Valid v3 plan with external fit.in_digest K, valid token/attempt/source/cohort, running state",
+    "A valid fit receipt has been durably recorded by phase_done with inputs M, package_digest K and consumed.external_input K",
+    "No ledger/plan/source/token modification and no previously-finalized leg"
+  ],
+  "one_field_counterexample": {
+    "operation": "Remove only claim.phases.fit.receipt.inputs from the stored claim; keep every digest string and identity unchanged",
+    "not_performed": "No received function was executed and no live claim file was altered"
+  },
+  "path": [
+    {
+      "at": "preserve.py:7552-7556",
+      "fact": "Read checks only top-level claim key sets"
+    },
+    {
+      "at": "preserve.py:7577-7599",
+      "fact": "Resume validates token and planned identity, not receipt.inputs"
+    },
+    {
+      "at": "preserve.py:9048-9054",
+      "fact": "Required fit phase remains present"
+    },
+    {
+      "at": "preserve.py:9067-9073",
+      "fact": "fit is the first/only required phase, so predecessor-consumption loop skips it"
+    },
+    {
+      "at": "preserve.py:9125-9129",
+      "fact": "Required phases still equal the plan-derived fit-only set"
+    },
+    {
+      "at": "preserve.py:9133-9138",
+      "fact": "External_input K = plan.in_digest K = receipt.input_package_digest K; no inputs map access or recomputation"
+    },
+    {
+      "at": "preserve.py:9153,9174-9177,9206",
+      "fact": "Original snapshot can be copied into executed ledger record"
+    }
+  ],
+  "local_static_check": {
+    "external_binding_validator_calls": [
+      6721,
+      6950
+    ],
+    "finalizer_calls": 0
+  },
+  "expected_after_fix": "Reject before any ledger/claim/token mutation with binding-specific reason",
+  "proposed_regressions": [
+    "Unmodified durable receipt -> real finalize succeeds",
+    "After phase_done, delete only receipt.inputs -> real finalize rejects and ledger bytes unchanged",
+    "After phase_done, change a valid hex64 input value only -> reject with package recomputation mismatch",
+    "After phase_done, add an input key or use a non-hex64 input value -> reject closed-set/type contract",
+    "Preserve existing consumed, receipt package, plan mismatch and v2 lifecycle tests; mutation removing new finalizer check must be detected"
+  ],
+  "inference_limit": "This proves a missing validation path under the stated durable-state corruption model, not that any past numerical result or submitted log was corrupted."
+}
