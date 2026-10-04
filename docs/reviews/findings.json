@@ -7437,32 +7437,34 @@
   {
    "id": "LHS-31",
    "severity": "P2",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "claude (10-04 서브 세션 · J20-s LHS 감사 묶음 ④–⑦ · 코드 판독 + LIGGGHTS 공개 소스 + real_14 실측)",
    "opened_in": "docs/reviews/lhs_handover_judgments_20260924.md",
    "title": "Auerbach 힘 기반 파쇄 열 (`fracture_index_force` · `frac_<단계>_force_pct`) 의 인계 한정어 미기재 — ① 마지막 프레임 힘 (압축 중 최대 아님 → 손상 하한) ② 벽 · 판 접촉 제외 ③ P_c 에 R_min (R* 아님) ④ K_IC_P 0.3 = 소결 펠릿값 (정본 카드 xu2017 — 이차입자 0.102 의 3 배) · K_IC_S 1.0 측정 근거 없음 — P_c ∝ K_IC² ⑤ A 200 · 배수 1·3·11·32 원전 카드 없음",
-   "note": "처방 (J20-s ⑥): 위 한정어로 인계 (열 사전 문구) · δ 판과 나란히 인용 금지 (09-19 그대로) · 상수 결정은 별도 (fracture_model.py 머리 주석의 Liu 2020 · Quinn 2020 · Lawn 1998 은 litdb 카드 확인 전 [미확인]).  ★ 10-04 밤 ⑤⑥⑦ 묶음 (J20-s · sha 는 다음 원장 갱신): 인계 열 사전 한정어 CAVEAT_LHS31 (①–⑥) · 힘 기반 전체 집계만 (δ 판 · 상 쌍별 = WA_EXCLUDED) · 관문 ⑥R1–R3 · 웹앱 툴팁 같은 한정어 (Severe % · fracture_index · 쉬운 설명) · 인용 [미확인] 은 그대로 (상수 결정 별도).",
+   "note": "처방 (J20-s ⑥): 위 한정어로 인계 (열 사전 문구) · δ 판과 나란히 인용 금지 (09-19 그대로) · 상수 결정은 별도 (fracture_model.py 머리 주석의 Liu 2020 · Quinn 2020 · Lawn 1998 은 litdb 카드 확인 전 [미확인]).  ★ 10-04 밤 ⑤⑥⑦ 묶음 (J20-s · 커밋 6e754ec15): 인계 열 사전 한정어 CAVEAT_LHS31 (①–⑥) · 힘 기반 전체 집계만 (δ 판 · 상 쌍별 = WA_EXCLUDED) · 관문 ⑥R1–R3 · 웹앱 툴팁 같은 한정어 (Severe % · fracture_index · 쉬운 설명) · 인용 [미확인] 은 그대로 (상수 결정 별도).  ★ 10-04 밤 원장: 이 결함의 제목 (인계 한정어 미기재) 은 6e754ec15 로 닫았다 → claimed_fixed.  상수 결정 (K_IC · A · 배수) 과 fracture_model.py 인용 [미확인] 은 이 결함 밖 — 별도 (규율 ⑥).",
    "evidence_tests": [
     "scripts/fracture_model.py (판독)",
     "scripts/lhs_design_dataset.py --selftest (㉕)",
     "webapp/test_s567_labels.py"
-   ]
+   ],
+   "claimed_fixed_sha": "6e754ec15"
   },
   {
    "id": "LHS-32",
    "severity": "P3",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "claude (10-04 서브 세션 · J20-s LHS 감사 묶음 ④–⑦ · 코드 판독 + LIGGGHTS 공개 소스 + real_14 실측)",
    "opened_in": "docs/reviews/lhs_handover_judgments_20260924.md",
    "title": "`path_hop_area_mean` · `path_hop_area_min_mean` 은 덩어리마다 고른 경로 30 개 (τ 순 best · 평균 근처 · worst 각 10) 의 평균 = 선별 표본 통계 — 모집단 기술자가 아니다",
-   "note": "처방 (J20-s ⑦): 인계 제외 · 웹앱 표시 문구는 그대로 두되 \"선별 경로\" 표기 후보.  ★ 10-04 밤 ⑤⑥⑦ 묶음 (J20-s · sha 는 다음 원장 갱신): 생성기 WA_EXCLUDED 로 인계 제외 (실데이터 표에 0 열 · selftest ㉕b · c) · 웹앱 툴팁 \"선별 표본 · 인계 제외\" 표기.",
+   "note": "처방 (J20-s ⑦): 인계 제외 · 웹앱 표시 문구는 그대로 두되 \"선별 경로\" 표기 후보.  ★ 10-04 밤 ⑤⑥⑦ 묶음 (J20-s · 커밋 6e754ec15): 생성기 WA_EXCLUDED 로 인계 제외 (실데이터 표에 0 열 · selftest ㉕b · c) · 웹앱 툴팁 \"선별 표본 · 인계 제외\" 표기.  ★ 10-04 밤 원장: 처방 (인계 제외 · 선별 표기) = 6e754ec15 → claimed_fixed.",
    "evidence_tests": [
     "scripts/analyze_contacts.py (판독 · 경로 선택 :700–753)",
     "scripts/lhs_design_dataset.py --selftest (㉕b · ㉕c)",
     "webapp/test_s567_labels.py"
-   ]
+   ],
+   "claimed_fixed_sha": "6e754ec15"
   },
   {
    "id": "SELF-82",
