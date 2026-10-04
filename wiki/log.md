@@ -3445,3 +3445,14 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
   같은 문구 취소선 정정
 - 재검토 산술 (713 · 77 · 54,901 · 109,817,477 · 275 · 50/13 · 25/3 · 25/8) 을 정확한 분수로 따로 대조 — 일치
 - 하지 않은 것: 설치 · 실행 · xlsx 개봉 · P0 · 비용 측정 · 맞춤 · RUN_SCOPE · 진행 중 88차 게이트에 섞기
+
+## [2026-10-04] update | REIL 정정 부속 문서 A — Codex 재검토 요청 발송
+- 요청문 `bms-balancing/docs/REIL_V2_ANNEX_A_REREVIEW_REQUEST_20261004.md` · 고정 커밋 `a82d7135e` · 사용자가 발송 · 게이트 차수 밖 · 문서 검토만
+
+## [2026-10-04] update | REIL 부속 A 재검토 회신 — RV2-N1 종결 · 세 국소 정정 → 부속 B
+- 묶음: `bms-balancing/reviews/prereview_reil_v2_annexA_20261004/` (ZIP 56,968 B · sha256 cbac063e… · manifest 11/11 · 기준 커밋 `a82d7135e`) ·
+  판정 `DOCUMENT_CONDITIONALLY_ACCEPTABLE_THREE_LOCAL_CORRECTIONS_REQUIRED` · 게이트 차수 밖 · 실행 0
+- RV2A-N1 (P1) 수치 수용 증인 ≠ 정확 집합 증인 · RV2A-N2 (P2) 적응적 시작점의 봉인 시점 · 부족 · RV2A-N3 (P2) 격자점 교차는 격자 index
+- 처리: 부속 B `bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2_ANNEX_B.md` (부속 A 보존 · 대체 문장 줄 번호) · 재검토 요청문 ·
+  [[isu-uconn-lfp-gr-emulated-degradation]] 부속 A 재검토 절 · 발송 줄. 반례 셋 상수 산술로 재현 · 자체 재독 둘 (v2 기록 항목 · LII 등급)
+- 하지 않은 것: 설치 · 실행 · xlsx 개봉 · P0 · 비용 측정 · 맞춤 · RUN_SCOPE · 진행 중 89차 게이트에 섞기

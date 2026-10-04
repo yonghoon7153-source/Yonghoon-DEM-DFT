@@ -136,6 +136,28 @@ v2 의 Codex 재검토 판정은 `DESIGN_DIRECTION_ACCEPTED_DOCUMENT_REVISION_RE
 - **C1 을 둘로:** C1-core (시트 의미 · LII 정의 · 셀/step 선택 — 확인적 맞춤의 선행 조건) · C1-E3b (출판 비교 수치 · 요약 방식 — E3b 등록만의
   선행 조건). E3b 는 미등록 그대로.
 - 승인 아님: P0 · 비용 측정 · 맞춤 · 설치 · 구현. 다음은 부속 A 의 재검토 (사용자 결정).
+- **2026-10-04 부속 A 재검토 요청 발송** (사용자 전달 · 요청문 `bms-balancing/docs/REIL_V2_ANNEX_A_REREVIEW_REQUEST_20261004.md` ·
+  고정 커밋 `a82d7135e` · Q1–Q6) — 회신은 아래 절.
+
+## 부속 A 재검토 (2026-10-04) — RV2-N1 종결 · 세 국소 정정 → 부속 B · 실행 0
+
+판정 `DOCUMENT_CONDITIONALLY_ACCEPTABLE_THREE_LOCAL_CORRECTIONS_REQUIRED` (묶음 `bms-balancing/reviews/prereview_reil_v2_annexA_20261004/` ·
+고정 커밋 `a82d7135e`). **RV2-N1 (결합 · H4 문턱 · 공통 갱신) 종결 수용** · N2–N4 는 핵심 수용 · 국소 정정 셋. 부속 A 는 보존하고 (재검토
+요구) 정정은 부속 B `bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2_ANNEX_B.md` (유효 프로토콜 = v2 + A + B · B > A > v2).
+
+| 재검토 | 요지 | 부속 B |
+|---|---|---|
+| RV2A-N1 (P1) | `1e-10` 안의 위반도 정확 집합 밖일 수 있다 (G 위반 5e-11 반례) — "상태 불변" 보증은 틀렸다 | 보증 삭제 · 증인 두 등급 (`exact_feasible` · `numerically_accepted`) · 수치 수용에만 기대는 양립 · 폭은 `수치 경계 의존` + UNRESOLVED · P0 의 PRIOR_INCOMPATIBLE 불변 |
+| RV2A-N2 (P2) | 이웃 · Phase A 결과에 기대는 시작점은 맞춤 전에 다 봉인할 수 없다 · Phase A 증인 1–3 개의 동시 양립 | 봉인 시점 둘 (고정 배열은 맞춤 전 · 적응적 시작점은 그 실행 직전 · 근거 run · 증인 · 변환) · `min(4, n_valid)` + Sobol 12 · s2 부족 · 숨은 추가 시작 없음 |
+| RV2A-N3 (P2) | 같은 격자점 교차가 반올림으로 둘이 될 수 있다 | 평탄 거부 → 끝점 정확 일치는 격자 index · `Q_j` 그대로 → 엄격한 부호 변화만 보간 |
+
+- 재검토의 자료 무관 반례 셋을 같은 상수 산술로 재현했다 — 셋 다 맞다.
+- 자체 재독으로 둘을 더: 부속 A 가 v2 205–219 를 대체하며 v2 218–219 의 **기록 항목**을 다시 적지 않아 효력이 사라져 있었다 (부속 B §2-5
+  에서 되살림) · 프로파일 등식 잔차로 등급을 매기면 LII 프로파일 증인이 일괄로 수치 수용이 된다 (등급은 주장의 정확한 집합 기준 · §1-2).
+- 수용 범위의 문구도 좁혔다 (부속 B §4): 공통 갱신의 "조이기만" 은 같은 최종 저장 점 집합의 비교일 때 · 최종 ρ 는 모든 저장 쌍을 다시
+  비교 · 독립 풀은 방법별 발견 최소 (전역 최소 아님) · Sobol 16 중 앞 12 에 균형 성질을 주장하지 않음 · ν 는 사전 선택 폭 · 대조는 구현 진단.
+- 재검토 요청문 `bms-balancing/docs/REIL_V2_ANNEX_B_REREVIEW_REQUEST_20261004.md` (발송은 사용자 결정). 승인 아님: P0 · 비용 측정 · 맞춤 ·
+  설치 · 구현. 문서 조건이 닫혀도 C1-core · 판 고정 · P0 · 비용 측정 · 실행의 별도 승인과 E3b 미등록은 그대로.
 
 ## 이 위키와의 관계
 
