@@ -9035,3 +9035,24 @@ fail node 는 불변 (§15-4 · 승인 질문에서 사용자에게 미리 알�
 **절차:** RED → 최소 GREEN → 변이 `-g89` (+ `-g88` 증인 한 건) → 영수증 history 보존 + 1 회 재생성 → 전체 회귀 · smoke · 등록부 전체
 변이 재생 → GATE89 요청문. 88차 발송 HEAD `d6056415b` 의 docs-lint 358 passed 원문 로그를 gate89 증거에 보충으로 싣는다 (88차 리뷰어:
 16 원문 밖).
+
+## §133 89차 요청 — **G88-N1 한정 보완** 결과 (fit 전용 최종화의 durable 입력 결속 재검사 · 라운드 2b 종결 재요청 · 실행 GO 아님) · 판정 대상 `26c11d6fc`
+
+**승인 → 고정 → 구현 순서 (§132):** 고정 표 §15 커밋 `abf857752` (코드 변경 전) → 증거 규칙 `b1b44cf0f` → RED
+`tests/test_gate89_finalize_input_binding.py` 6 node `76a5da16e` (4 failed / 2 passed — d02 넷 `DID NOT RAISE` = G88-N1 실행 재현:
+기록 뒤 바꾼 `inputs` 를 최종화가 executed 로 닫는다) → GREEN `26c11d6fc` (RUN_SCOPE 1 파일 `tools/preserve.py` +4 · source_digest
+`7dd546baaee9e823` → `803e2b7781cbc9cd`) → history `14978adb0` → 변이 2 + EXPECT · `-g88` 한 항목 증인 갱신 `134f26f48` → 영수증
+`66129fc6a` (paired 35 · grid 34 · identity 줄만).
+
+| 항목 | 결과 |
+|---|---|
+| G88-N1 | `finalize_leg` 의 fit 전용 분기가 기존 세 문자열 비교 뒤 · 두 lock 안 · 원장 · claim 변경 전에, 위에서 한 번 읽은 snapshot 의 fit receipt 에 기존 `_assert_external_input_binding` 을 건다 (`:9146` · 정의 하나 · 호출 둘) · 기록 뒤 `inputs` 삭제 / 다른 유효 hex64 / 키 추가 / 비hex → 결속 이유로 거부 · 원장 · claim 바이트 불변 (d02 × 4) · durable receipt 는 그대로 원장으로 (d01) |
+| 불변 | 기존 거부 이유 (88차 f03_03 · f03_06 — test_gate88 24 passed) · v2 최종화 (f00_05 — fit receipt 에 `inputs` 없음 → executed) · 자기일관 위조는 기존 receipt ↔ consumed 비교가 잡는다 (d03) |
+| 변이 | `-g89` 2 (새 호출 제거 → d02 · receipt ↔ consumed 비교 끄기 → d03) · `-g88` `finalize-binds-the-receipt-package-to-the-consumer-g88` 증인만 갱신 (본문 · `-k` · fail node 불변 · 원래 증인 주석 보존) · 단독 대조 **g89 2/2 · g88 21/21 · rc 0** |
+| 전체 회귀 (`66129fc6a` clean) | pytest **2139 passed / 1 xfailed / rc 0** (0:52:30) · smoke **rc 0** (2:25) |
+| 등록부 전체 재생 (`66129fc6a`) | **397/397 call 단계에서 물었다 · rc 0** (scenario 408 · executable 397 · site 446 · 2:26:43) |
+| 보충 | 88차 발송 HEAD `d6056415b` 의 docs-lint 358 passed 원문 (`gate89_evidence/13_…` — 88차 리뷰어: 16 원문 밖) |
+| 자체 신고 | 요청문 §6 a–h (RED 첫 회 머리 줄 · `or {}` 등가 방어 · 순서 · 시점의 고정 · 같은 자리의 변이 둘 · 예상된 7 실패 · 범위 밖 · 동시 실행 없음 · 게이트 차수 밖 작업) |
+
+**요청:** `docs/22p_gap/GATE89_REQUEST.md` · 증거 `docs/22p_gap/gate89_evidence/` (README 전체 sha256). **아님:** 실행 GO · 새 연구 leg ·
+운영 원장 v6 계획 항목 · 세대표 등록 · p_ini · class 변경 · 투영 게시 · requirements (pybamm 고정 — 2b 종결 뒤 별도 라운드 · 사용자 결정).

@@ -1,0 +1,14 @@
+
+[conftest] 시험 authority: /tmp/dd-test-authority-854ssuih/docs/22p_gap/LEG_PRESERVATION.yaml (운영 원장의 바이트 복사본 — 70차 E6)
+
+[conftest] 이 checkout 을 처음 보았다 — 얼린 cohort 17개의 좌표를 시험 authority 에 봉인했다: ['g10_2026_09_01', 'g11_2026_09_02', 'g12_2026_09_03', 'g13_2026_09_07', 'g14_2026_09_08', 'g15_2026_09_08', 'g16_2026_09_09', 'g17_2026_09_14', 'g1_2026_08_20', 'g2_2026_08_25', 'g3_2026_08_28', 'g4_2026_08_28', 'g5_2026_08_29', 'g6_2026_09_01', 'g7_2026_09_01', 'g8_2026_09_01', 'g9_2026_09_01']
+registry -k exprs: 395
+overlaps (non-g88 mutation selecting a test_gate89 node): 0
+tests/test_gate89_finalize_input_binding.py::test_d01_a_durable_fit_receipt_is_carried_into_the_ledger_record_as_recorded
+tests/test_gate89_finalize_input_binding.py::test_d02_finalize_refuses_a_fit_receipt_whose_inputs_changed_after_recording[inputs_deleted]
+tests/test_gate89_finalize_input_binding.py::test_d02_finalize_refuses_a_fit_receipt_whose_inputs_changed_after_recording[inputs_extra_key]
+tests/test_gate89_finalize_input_binding.py::test_d02_finalize_refuses_a_fit_receipt_whose_inputs_changed_after_recording[inputs_value_not_hex]
+tests/test_gate89_finalize_input_binding.py::test_d02_finalize_refuses_a_fit_receipt_whose_inputs_changed_after_recording[inputs_value_other_hex64]
+tests/test_gate89_finalize_input_binding.py::test_d03_a_self_consistent_receipt_forgery_after_recording_is_refused_by_the_consumer_binding
+
+6 tests collected in 1.15s

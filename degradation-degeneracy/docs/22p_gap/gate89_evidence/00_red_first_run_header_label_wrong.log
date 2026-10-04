@@ -1,0 +1,106 @@
+start 2026-10-04T06:48:00Z HEAD b1b44cf0f598213550d5242d1d0ed3379442bf9b dirty=2 (작업 트리 = 새 시험 + conftest 등록 · RUN_SCOPE 는 e462a3d19 그대로)
+source_digest e462a3d19
+
+[conftest] 시험 authority: /tmp/dd-test-authority-oos9e236/docs/22p_gap/LEG_PRESERVATION.yaml (운영 원장의 바이트 복사본 — 70차 E6)
+
+[conftest] 이 checkout 을 처음 보았다 — 얼린 cohort 17개의 좌표를 시험 authority 에 봉인했다: ['g10_2026_09_01', 'g11_2026_09_02', 'g12_2026_09_03', 'g13_2026_09_07', 'g14_2026_09_08', 'g15_2026_09_08', 'g16_2026_09_09', 'g17_2026_09_14', 'g1_2026_08_20', 'g2_2026_08_25', 'g3_2026_08_28', 'g4_2026_08_28', 'g5_2026_08_29', 'g6_2026_09_01', 'g7_2026_09_01', 'g8_2026_09_01', 'g9_2026_09_01']
+============================= test session starts ==============================
+platform linux -- Python 3.11.15, pytest-9.1.1, pluggy-1.6.0
+rootdir: /home/user/Yonghoon-DEM-DFT/degradation-degeneracy
+plugins: metadata-3.1.1, platformdirs-4.12.0, anyio-4.15.1, json-report-1.5.0
+collected 6 items
+
+tests/test_gate89_finalize_input_binding.py .FFFF.                       [100%]
+
+=================================== FAILURES ===================================
+_ test_d02_finalize_refuses_a_fit_receipt_whose_inputs_changed_after_recording[inputs_deleted] _
+
+tmp_path = PosixPath('/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/results/_smoke/_unit/test_d02_finalize_refuses_a_fit_receipt__a526ebce')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fd32d705250>
+how = 'inputs_deleted'
+
+    @pytest.mark.parametrize("how", sorted(_D02))
+    def test_d02_finalize_refuses_a_fit_receipt_whose_inputs_changed_after_recording(tmp_path, monkeypatch, how):
+        """G88-N1 — `phase_done` 뒤 저장 claim 의 `phases.fit.receipt.inputs` 만 바꾼다 (`input_package_digest` · `consumed` · 계획은
+        그대로 — 세 문자열 비교는 통과한다). 실제 `finalize_leg` 가 결속 이유로 거부하고 원장 · claim 바이트를 바꾸지 않는다."""
+        change, why = _D02[how]
+        out, led, in_dir, ctx, spec, ind = G88._v3_setup(tmp_path, monkeypatch, f"g89_d02_{how}")
+        c = PV.open_leg_run(LEG, spec, SRC, ledger=led)
+        c.phase_done("fit", G88._fit_receipt(in_dir))
+        _rewrite_claim(c, lambda rec: change(rec["phases"]["fit"]["receipt"]))
+        led_before, claim_before = led.read_bytes(), c.path.read_bytes()
+>       with pytest.raises(PV.PreserveError) as ei:
+E       Failed: DID NOT RAISE PreserveError
+
+tests/test_gate89_finalize_input_binding.py:87: Failed
+_ test_d02_finalize_refuses_a_fit_receipt_whose_inputs_changed_after_recording[inputs_extra_key] _
+
+tmp_path = PosixPath('/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/results/_smoke/_unit/test_d02_finalize_refuses_a_fit_receipt__a9f203be')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fd32d7b0a90>
+how = 'inputs_extra_key'
+
+    @pytest.mark.parametrize("how", sorted(_D02))
+    def test_d02_finalize_refuses_a_fit_receipt_whose_inputs_changed_after_recording(tmp_path, monkeypatch, how):
+        """G88-N1 — `phase_done` 뒤 저장 claim 의 `phases.fit.receipt.inputs` 만 바꾼다 (`input_package_digest` · `consumed` · 계획은
+        그대로 — 세 문자열 비교는 통과한다). 실제 `finalize_leg` 가 결속 이유로 거부하고 원장 · claim 바이트를 바꾸지 않는다."""
+        change, why = _D02[how]
+        out, led, in_dir, ctx, spec, ind = G88._v3_setup(tmp_path, monkeypatch, f"g89_d02_{how}")
+        c = PV.open_leg_run(LEG, spec, SRC, ledger=led)
+        c.phase_done("fit", G88._fit_receipt(in_dir))
+        _rewrite_claim(c, lambda rec: change(rec["phases"]["fit"]["receipt"]))
+        led_before, claim_before = led.read_bytes(), c.path.read_bytes()
+>       with pytest.raises(PV.PreserveError) as ei:
+E       Failed: DID NOT RAISE PreserveError
+
+tests/test_gate89_finalize_input_binding.py:87: Failed
+_ test_d02_finalize_refuses_a_fit_receipt_whose_inputs_changed_after_recording[inputs_value_not_hex] _
+
+tmp_path = PosixPath('/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/results/_smoke/_unit/test_d02_finalize_refuses_a_fit_receipt__7db8b956')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fd321142b10>
+how = 'inputs_value_not_hex'
+
+    @pytest.mark.parametrize("how", sorted(_D02))
+    def test_d02_finalize_refuses_a_fit_receipt_whose_inputs_changed_after_recording(tmp_path, monkeypatch, how):
+        """G88-N1 — `phase_done` 뒤 저장 claim 의 `phases.fit.receipt.inputs` 만 바꾼다 (`input_package_digest` · `consumed` · 계획은
+        그대로 — 세 문자열 비교는 통과한다). 실제 `finalize_leg` 가 결속 이유로 거부하고 원장 · claim 바이트를 바꾸지 않는다."""
+        change, why = _D02[how]
+        out, led, in_dir, ctx, spec, ind = G88._v3_setup(tmp_path, monkeypatch, f"g89_d02_{how}")
+        c = PV.open_leg_run(LEG, spec, SRC, ledger=led)
+        c.phase_done("fit", G88._fit_receipt(in_dir))
+        _rewrite_claim(c, lambda rec: change(rec["phases"]["fit"]["receipt"]))
+        led_before, claim_before = led.read_bytes(), c.path.read_bytes()
+>       with pytest.raises(PV.PreserveError) as ei:
+E       Failed: DID NOT RAISE PreserveError
+
+tests/test_gate89_finalize_input_binding.py:87: Failed
+_ test_d02_finalize_refuses_a_fit_receipt_whose_inputs_changed_after_recording[inputs_value_other_hex64] _
+
+tmp_path = PosixPath('/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/results/_smoke/_unit/test_d02_finalize_refuses_a_fit_receipt__8aa72389')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fd32d7b1a50>
+how = 'inputs_value_other_hex64'
+
+    @pytest.mark.parametrize("how", sorted(_D02))
+    def test_d02_finalize_refuses_a_fit_receipt_whose_inputs_changed_after_recording(tmp_path, monkeypatch, how):
+        """G88-N1 — `phase_done` 뒤 저장 claim 의 `phases.fit.receipt.inputs` 만 바꾼다 (`input_package_digest` · `consumed` · 계획은
+        그대로 — 세 문자열 비교는 통과한다). 실제 `finalize_leg` 가 결속 이유로 거부하고 원장 · claim 바이트를 바꾸지 않는다."""
+        change, why = _D02[how]
+        out, led, in_dir, ctx, spec, ind = G88._v3_setup(tmp_path, monkeypatch, f"g89_d02_{how}")
+        c = PV.open_leg_run(LEG, spec, SRC, ledger=led)
+        c.phase_done("fit", G88._fit_receipt(in_dir))
+        _rewrite_claim(c, lambda rec: change(rec["phases"]["fit"]["receipt"]))
+        led_before, claim_before = led.read_bytes(), c.path.read_bytes()
+>       with pytest.raises(PV.PreserveError) as ei:
+E       Failed: DID NOT RAISE PreserveError
+
+tests/test_gate89_finalize_input_binding.py:87: Failed
+==================================== PASSES ====================================
+=========================== short test summary info ============================
+PASSED tests/test_gate89_finalize_input_binding.py::test_d01_a_durable_fit_receipt_is_carried_into_the_ledger_record_as_recorded
+PASSED tests/test_gate89_finalize_input_binding.py::test_d03_a_self_consistent_receipt_forgery_after_recording_is_refused_by_the_consumer_binding
+FAILED tests/test_gate89_finalize_input_binding.py::test_d02_finalize_refuses_a_fit_receipt_whose_inputs_changed_after_recording[inputs_deleted]
+FAILED tests/test_gate89_finalize_input_binding.py::test_d02_finalize_refuses_a_fit_receipt_whose_inputs_changed_after_recording[inputs_extra_key]
+FAILED tests/test_gate89_finalize_input_binding.py::test_d02_finalize_refuses_a_fit_receipt_whose_inputs_changed_after_recording[inputs_value_not_hex]
+FAILED tests/test_gate89_finalize_input_binding.py::test_d02_finalize_refuses_a_fit_receipt_whose_inputs_changed_after_recording[inputs_value_other_hex64]
+========================= 4 failed, 2 passed in 7.81s ==========================
+pytest rc=1
+end 2026-10-04T06:48:10Z HEAD b1b44cf0f598213550d5242d1d0ed3379442bf9b dirty=2
