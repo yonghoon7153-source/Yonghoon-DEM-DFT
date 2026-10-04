@@ -50,6 +50,9 @@ RUNSH = ROOT / "run.sh"                                              # 70차 G70
 ARCHSH = ROOT / "scripts" / "archive_results.sh"                     # 74차 G74-4
 IDXY = ROOT / "tools" / "index_yaml.py"                              # 75차 G75-N2
 DW = ROOT / "tools" / "design_wire.py"                               # 81차 G81-N1·N3
+ENVP = ROOT / "tools" / "env_profile.py"                             # 90차 PyBaMM 고정 (C 기록 대조)
+SMOKESH = ROOT / "scripts" / "smoke_e2e.sh"                          # 90차 (smoke 기록 단계)
+MKR = ROOT / "docs" / "22p_gap" / "make_receipt.py"                  # 90차 (영수증 stamp)
 
 #: ★ 46차 #9 조건 9 — 변이는 **작업 트리에 손대지 않는다.** 45차 runner 는
 #:   실제 저장소 파일을 고쳤다가 `finally` 로 되돌렸다. 그러면 (a) 중단되면
@@ -2304,6 +2307,62 @@ MUTANTS = [
      '                        and secrets.compare_digest(str(_rc_pkg), str(_ext))):\n',
      '                        ):  # 변이: receipt 묶음 ↔ 소비 결속 대조를 끈다 (89차 d03 — 자기일관 위조)\n',
      "test_gate89 and d03"),
+    # ── 90차 PyBaMM 환경 고정 라운드 (고정 표 `PYBAMM_PIN_ROUND_SPEC.md` §9 · 원장 §135) ──
+    #   C 는 **기록 대조**다 (막지 않는다). 그래서 변이가 죽이는 것은 "보고해야 할 차이를 보고하는가" 다 — 축마다 하나.
+    ("env-profile-compares-interpreter-and-platform-g90", ENVP,      # §4-1 해석기 · 플랫폼 다섯 축
+     "        if locked[k] != measured[k]:\n",
+     "        if False:  # 변이: 해석기 · 플랫폼 다섯 축을 비교하지 않는다\n",
+     "test_gate90 and e03 and (python or implementation or system or machine or libc)"),
+    ("env-profile-reports-missing-dists-g90", ENVP,                  # lock 에만 있는 배포판
+     "    for n in sorted(lock_d.keys() - got_d.keys()):\n",
+     "    for n in []:  # 변이: lock 에만 있는 배포판을 보고하지 않는다\n",
+     "test_gate90 and e03 and dist_missing"),
+    ("env-profile-reports-extra-dists-g90", ENVP,                    # 환경에만 있는 배포판
+     "    for n in sorted(got_d.keys() - lock_d.keys()):\n",
+     "    for n in []:  # 변이: 환경에만 있는 배포판을 보고하지 않는다\n",
+     "test_gate90 and e03 and dist_extra"),
+    ("env-profile-reports-version-drift-g90", ENVP,                  # 버전 (lock 쪽 · 재설치 둘 다)
+     '        if lock_d[n]["version"] != got_d[n]["version"]:\n',
+     "        if False:  # 변이: 버전 차이를 보고하지 않는다\n",
+     "test_gate90 and e03 and (dist_version or env_upgrade)"),
+    ("env-profile-reports-record-drift-g90", ENVP,                   # 같은 버전의 다른 빌드
+     '        if lock_d[n]["record"] != got_d[n]["record"]:\n',
+     "        if False:  # 변이: RECORD digest 차이를 보고하지 않는다\n",
+     "test_gate90 and e03 and dist_record"),
+    ("env-profile-reports-shadowed-drift-g90", ENVP,                 # 경로 순서로 가려진 항목
+     '    got_s = Counter(tuple(x) for x in measured["shadowed"])\n',
+     "    got_s = lock_s  # 변이: 가려진 항목을 lock 과 같다고 본다\n",
+     "test_gate90 and e03 and shadowed"),
+    ("env-profile-verifies-installed-files-g90", ENVP,               # 설치 뒤 변경 (RECORD 재해시)
+     '    for n, rel, want, got in measured["files"]["mismatches"]:\n',
+     "    for n, rel, want, got in []:  # 변이: 설치 파일 재해시 대조의 불일치를 버린다\n",
+     "test_gate90 and e03 and (file_hash or file_missing)"),
+    ("env-profile-checks-module-origin-g90", ENVP,                   # 사전 검토 Q5 — 실제 origin
+     '    for module, seen in measured["origins"]["mismatches"]:\n',
+     "    for module, seen in []:  # 변이: 주인 없는 origin 을 통과시킨다\n",
+     "test_gate90 and e03 and origin_stray"),
+    ("env-profile-lock-grammar-is-closed-g90", ENVP,                 # §3-1 닫힌 문법
+     '            raise bad(no, f"모르는 줄 {line[:80]!r}")\n',
+     "            continue  # 변이: 모르는 줄을 건너뛴다 (열린 문법)\n",
+     "test_gate90 and e04 and garbage_line"),
+    ("env-profile-measurement-failure-is-unmeasured-g90", ENVP,      # §4-2 측정 실패 ≠ MATCH
+     '        res["reason"] = f"측정 실패: {exc!r}"\n',
+     '        res.update(status="MATCH", mismatches=[], unverifiable={"dists_without_record": [], "origins": []}, '
+     'counts={k: 0 for k in ("dists_locked", "dists_measured", "shadowed_locked", "shadowed_measured", '
+     '"files_verified", "files_unhashed", "origins_verified")})  # 변이: 측정 예외 → 빈 결과 MATCH\n',
+     "test_gate90 and e05"),
+    ("env-profile-cli-is-record-only-g90", ENVP,                     # §4-3 · D3 — rc 0 세 상태 모두
+     "    print(_summary(r))\n    return 0\n",
+     '    print(_summary(r))\n    return 0 if r["status"] == "MATCH" else 1  # 변이: 불일치에 rc 1 (fail-closed 로 바뀐다)\n',
+     "test_gate90 and e08"),
+    ("smoke-records-env-profile-g90", SMOKESH,                       # §5-1 smoke 기록 단계
+     '"$PY" -m tools.env_profile || bad "환경 프로필 C 대조 도구 실패"\n',
+     ":  # 변이: smoke 의 환경 프로필 C 기록 단계를 뺀다\n",
+     "test_gate90 and e09"),
+    ("receipt-stamp-records-env-profile-g90", MKR,                   # §5-2 영수증 stamp
+     '        "environment_profile_C": compare_lock(),\n',
+     "",
+     "test_gate90 and e10"),
 ]
 
 #: 여러 지점을 **함께** 되돌려야 관측되는 변이 (심층 방어라 하나만 지우면
@@ -7155,6 +7214,149 @@ EXPECT: dict = {
         "witness": {
             "tests/test_gate89_finalize_input_binding.py::test_d03_a_self_consistent_receipt_forgery_after_recording_is_refused_by_the_consumer_binding":
                 "Failed: DID NOT RAISE PreserveError",
+        }
+    },
+    # ── 90차 PyBaMM 환경 고정 라운드 (고정 표 `PYBAMM_PIN_ROUND_SPEC.md` §9 · 관측: 2026-10-04 `-k g90 --emit-expect` ·
+    #   `gate90_evidence/03` · 13/13 사망 · 증인은 결정적 메시지 — tmp 경로 · 측정값을 싣지 않는다) ──
+    "env-profile-compares-interpreter-and-platform-g90": {
+        "fail": [
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[implementation]",
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[libc]",
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[machine]",
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[python]",
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[system]",
+        ],
+        "witness": {
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[implementation]":
+                "AssertionError: status MATCH",
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[libc]":
+                "AssertionError: status MATCH",
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[machine]":
+                "AssertionError: status MATCH",
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[python]":
+                "AssertionError: status MATCH",
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[system]":
+                "AssertionError: status MATCH",
+        }
+    },
+    "env-profile-reports-missing-dists-g90": {
+        "fail": [
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[dist_missing]",
+        ],
+        "witness": {
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[dist_missing]":
+                "AssertionError: status MATCH",
+        }
+    },
+    "env-profile-reports-extra-dists-g90": {
+        "fail": [
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[dist_extra]",
+        ],
+        "witness": {
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[dist_extra]":
+                "AssertionError: status MATCH",
+        }
+    },
+    "env-profile-reports-version-drift-g90": {
+        "fail": [
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[dist_version]",
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[env_upgrade]",
+        ],
+        "witness": {
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[dist_version]":
+                "AssertionError: status MATCH",
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[env_upgrade]":
+                "AssertionError: 축 ['dist_record']",
+        }
+    },
+    "env-profile-reports-record-drift-g90": {
+        "fail": [
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[dist_record]",
+        ],
+        "witness": {
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[dist_record]":
+                "AssertionError: status MATCH",
+        }
+    },
+    "env-profile-reports-shadowed-drift-g90": {
+        "fail": [
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[shadowed]",
+        ],
+        "witness": {
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[shadowed]":
+                "AssertionError: status MATCH",
+        }
+    },
+    "env-profile-verifies-installed-files-g90": {
+        "fail": [
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[file_hash]",
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[file_missing]",
+        ],
+        "witness": {
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[file_hash]":
+                "AssertionError: status MATCH",
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[file_missing]":
+                "AssertionError: status MATCH",
+        }
+    },
+    "env-profile-checks-module-origin-g90": {
+        "fail": [
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[origin_stray]",
+        ],
+        "witness": {
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[origin_stray]":
+                "AssertionError: status MATCH",
+        }
+    },
+    "env-profile-lock-grammar-is-closed-g90": {
+        "fail": [
+            "tests/test_gate90_env_profile.py::test_e04_malformed_lock_is_unmeasured[garbage_line]",
+        ],
+        "witness": {
+            "tests/test_gate90_env_profile.py::test_e04_malformed_lock_is_unmeasured[garbage_line]":
+                "AssertionError: status MATCH",
+        }
+    },
+    "env-profile-measurement-failure-is-unmeasured-g90": {
+        "fail": [
+            "tests/test_gate90_env_profile.py::test_e05_measurement_failure_is_unmeasured[enumeration_raises]",
+            "tests/test_gate90_env_profile.py::test_e05_measurement_failure_is_unmeasured[nameless_dist]",
+            "tests/test_gate90_env_profile.py::test_e05_measurement_failure_is_unmeasured[unknown_hash_algorithm]",
+        ],
+        "witness": {
+            "tests/test_gate90_env_profile.py::test_e05_measurement_failure_is_unmeasured[enumeration_raises]":
+                "AssertionError: status MATCH",
+            "tests/test_gate90_env_profile.py::test_e05_measurement_failure_is_unmeasured[nameless_dist]":
+                "AssertionError: status MATCH",
+            "tests/test_gate90_env_profile.py::test_e05_measurement_failure_is_unmeasured[unknown_hash_algorithm]":
+                "AssertionError: status MATCH",
+        }
+    },
+    "env-profile-cli-is-record-only-g90": {
+        "fail": [
+            "tests/test_gate90_env_profile.py::test_e08_cli_is_record_only",
+        ],
+        "witness": {
+            "tests/test_gate90_env_profile.py::test_e08_cli_is_record_only":
+                "AssertionError: rc 1 (MISMATCH) — 기록 전용이면 0",
+        }
+    },
+    "smoke-records-env-profile-g90": {
+        "fail": [
+            "tests/test_gate90_env_profile.py::test_e09_smoke_records_the_profile_once",
+        ],
+        "witness": {
+            "tests/test_gate90_env_profile.py::test_e09_smoke_records_the_profile_once":
+                "AssertionError: smoke 의 env_profile 호출 0 개",
+        }
+    },
+    "receipt-stamp-records-env-profile-g90": {
+        "fail": [
+            "tests/test_gate90_env_profile.py::test_e10_receipt_stamp_records_the_profile",
+        ],
+        "witness": {
+            "tests/test_gate90_env_profile.py::test_e10_receipt_stamp_records_the_profile":
+                "AssertionError: ['_주의', 'generated_at_utc', 'runtime', 'validator_commit', 'validator_tree_dirty']",
         }
     },
 }

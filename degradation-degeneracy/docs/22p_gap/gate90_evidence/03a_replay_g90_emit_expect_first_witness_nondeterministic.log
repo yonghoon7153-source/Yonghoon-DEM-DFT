@@ -1,0 +1,160 @@
+# -k g90 --emit-expect · HEAD c547c2458 + 등록 13 (작업 트리) · source_digest 3f84c0db52d2b9ac
+# 2026-10-04T17:45:33Z
+sandbox: /tmp/mutation_replay__nm9odnr/degradation-degeneracy
+
+★ 안 물었다    env-profile-compares-interpreter-and-platform-g90 node 5 · -k test_gate90 and e03 and (python or implementation or system or machine or libc)
+★ 안 물었다    env-profile-reports-missing-dists-g90 node 1 · -k test_gate90 and e03 and dist_missing
+★ 안 물었다    env-profile-reports-extra-dists-g90 node 1 · -k test_gate90 and e03 and dist_extra
+★ 안 물었다    env-profile-reports-version-drift-g90 node 2 · -k test_gate90 and e03 and (dist_version or env_upgrade)
+★ 안 물었다    env-profile-reports-record-drift-g90 node 1 · -k test_gate90 and e03 and dist_record
+★ 안 물었다    env-profile-reports-shadowed-drift-g90 node 1 · -k test_gate90 and e03 and shadowed
+★ 안 물었다    env-profile-verifies-installed-files-g90 node 2 · -k test_gate90 and e03 and (file_hash or file_missing)
+★ 안 물었다    env-profile-checks-module-origin-g90 node 1 · -k test_gate90 and e03 and origin_stray
+★ 안 물었다    env-profile-lock-grammar-is-closed-g90 node 1 · -k test_gate90 and e04 and garbage_line
+★ 안 물었다    env-profile-measurement-failure-is-unmeasured-g90 node 3 · -k test_gate90 and e05
+★ 안 물었다    env-profile-cli-is-record-only-g90 node 1 · -k test_gate90 and e08
+★ 안 물었다    smoke-records-env-profile-g90  node 1 · -k test_gate90 and e09
+★ 안 물었다    receipt-stamp-records-env-profile-g90 node 1 · -k test_gate90 and e10
+
+=== 관측한 EXPECT (그대로 붙여 넣어라) ===
+{
+    "env-profile-checks-module-origin-g90": {
+        "fail": [
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[origin_stray]"
+        ],
+        "witness": {
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[origin_stray]": "AssertionError: {'profile': 'C', 'lock_path': '/tmp/pytest-of-root/pytest-1881/test_e03_each_axis_is_reported0/case.lock.txt', 'lock_sha256': 'bae14a70bf09e7ab99d0ddc2fa4f7a18ba5a268cfa57c3b03246086cb"
+        }
+    },
+    "env-profile-cli-is-record-only-g90": {
+        "fail": [
+            "tests/test_gate90_env_profile.py::test_e08_cli_is_record_only"
+        ],
+        "witness": {
+            "tests/test_gate90_env_profile.py::test_e08_cli_is_record_only": "AssertionError:"
+        }
+    },
+    "env-profile-compares-interpreter-and-platform-g90": {
+        "fail": [
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[implementation]",
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[libc]",
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[machine]",
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[python]",
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[system]"
+        ],
+        "witness": {
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[implementation]": "AssertionError: {'profile': 'C', 'lock_path': '/tmp/pytest-of-root/pytest-1867/test_e03_each_axis_is_reported0/case.lock.txt', 'lock_sha256': '7d3db1f510c590a0b0bde32ebbd5cd3da74877ae4bbb69fd4c4c826a1",
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[libc]": "AssertionError: {'profile': 'C', 'lock_path': '/tmp/pytest-of-root/pytest-1867/test_e03_each_axis_is_reported1/case.lock.txt', 'lock_sha256': '29199f241f32da9c3b777eb7ec532239acd6adc41da13402cc2c54b38",
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[machine]": "AssertionError: {'profile': 'C', 'lock_path': '/tmp/pytest-of-root/pytest-1867/test_e03_each_axis_is_reported2/case.lock.txt', 'lock_sha256': '3b80bbf185f3a966955c64602c73d6a9722d8d9c2025d64db69485eaa",
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[python]": "AssertionError: {'profile': 'C', 'lock_path': '/tmp/pytest-of-root/pytest-1867/test_e03_each_axis_is_reported3/case.lock.txt', 'lock_sha256': '95ed7ad08e6001ef690c6062f8b30484a838ac2eeb1ef3c3c1ed99ee7",
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[system]": "AssertionError: {'profile': 'C', 'lock_path': '/tmp/pytest-of-root/pytest-1867/test_e03_each_axis_is_reported4/case.lock.txt', 'lock_sha256': '2c6537fdf7c3df1ca4e27c256118a2ce186846d3895c694604abbd784"
+        }
+    },
+    "env-profile-lock-grammar-is-closed-g90": {
+        "fail": [
+            "tests/test_gate90_env_profile.py::test_e04_malformed_lock_is_unmeasured[garbage_line]"
+        ],
+        "witness": {
+            "tests/test_gate90_env_profile.py::test_e04_malformed_lock_is_unmeasured[garbage_line]": "AssertionError: {'profile': 'C', 'lock_path': '/tmp/pytest-of-root/pytest-1883/test_e04_malformed_lock_is_unm0/case.lock.txt', 'lock_sha256': '0e7b752fa1bb6a13dbe13049dfb673d42008ae2c67b5af0c57fb35ec0"
+        }
+    },
+    "env-profile-measurement-failure-is-unmeasured-g90": {
+        "fail": [
+            "tests/test_gate90_env_profile.py::test_e05_measurement_failure_is_unmeasured[enumeration_raises]",
+            "tests/test_gate90_env_profile.py::test_e05_measurement_failure_is_unmeasured[nameless_dist]",
+            "tests/test_gate90_env_profile.py::test_e05_measurement_failure_is_unmeasured[unknown_hash_algorithm]"
+        ],
+        "witness": {
+            "tests/test_gate90_env_profile.py::test_e05_measurement_failure_is_unmeasured[enumeration_raises]": "AssertionError: {'profile': 'C', 'lock_path': '/tmp/pytest-of-root/pytest-1885/test_e05_measurement_failure_i0/base.lock.txt', 'lock_sha256': 'bae14a70bf09e7ab99d0ddc2fa4f7a18ba5a268cfa57c3b03246086cb",
+            "tests/test_gate90_env_profile.py::test_e05_measurement_failure_is_unmeasured[nameless_dist]": "AssertionError: {'profile': 'C', 'lock_path': '/tmp/pytest-of-root/pytest-1885/test_e05_measurement_failure_i1/base.lock.txt', 'lock_sha256': 'bae14a70bf09e7ab99d0ddc2fa4f7a18ba5a268cfa57c3b03246086cb",
+            "tests/test_gate90_env_profile.py::test_e05_measurement_failure_is_unmeasured[unknown_hash_algorithm]": "AssertionError: {'profile': 'C', 'lock_path': '/tmp/pytest-of-root/pytest-1885/test_e05_measurement_failure_i2/base.lock.txt', 'lock_sha256': 'bae14a70bf09e7ab99d0ddc2fa4f7a18ba5a268cfa57c3b03246086cb"
+        }
+    },
+    "env-profile-reports-extra-dists-g90": {
+        "fail": [
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[dist_extra]"
+        ],
+        "witness": {
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[dist_extra]": "AssertionError: {'profile': 'C', 'lock_path': '/tmp/pytest-of-root/pytest-1871/test_e03_each_axis_is_reported0/case.lock.txt', 'lock_sha256': 'c5acc465ed434af5a7364a13af828dc11040a35b2c4fd6b458b90e857"
+        }
+    },
+    "env-profile-reports-missing-dists-g90": {
+        "fail": [
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[dist_missing]"
+        ],
+        "witness": {
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[dist_missing]": "AssertionError: {'profile': 'C', 'lock_path': '/tmp/pytest-of-root/pytest-1869/test_e03_each_axis_is_reported0/case.lock.txt', 'lock_sha256': '56677e3dc0425c6bccdaabd12e7574932896d503c18146c80615f7e00"
+        }
+    },
+    "env-profile-reports-record-drift-g90": {
+        "fail": [
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[dist_record]"
+        ],
+        "witness": {
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[dist_record]": "AssertionError: {'profile': 'C', 'lock_path': '/tmp/pytest-of-root/pytest-1875/test_e03_each_axis_is_reported0/case.lock.txt', 'lock_sha256': '26644f35745d140a56105b5e9890990a0c31a22c36371b0c77e3bb4a2"
+        }
+    },
+    "env-profile-reports-shadowed-drift-g90": {
+        "fail": [
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[shadowed]"
+        ],
+        "witness": {
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[shadowed]": "AssertionError: {'profile': 'C', 'lock_path': '/tmp/pytest-of-root/pytest-1877/test_e03_each_axis_is_reported0/case.lock.txt', 'lock_sha256': '113105752d04e595cc7acc68493777c6c95c5c4e5b325c7ae647e2a4a"
+        }
+    },
+    "env-profile-reports-version-drift-g90": {
+        "fail": [
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[dist_version]",
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[env_upgrade]"
+        ],
+        "witness": {
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[dist_version]": "AssertionError: {'profile': 'C', 'lock_path': '/tmp/pytest-of-root/pytest-1873/test_e03_each_axis_is_reported0/case.lock.txt', 'lock_sha256': 'e4e36247a33451014b1ba3d98c3635d63b35fc4028e55f8b9104c6b8d",
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[env_upgrade]": "AssertionError: [{'axis': 'dist_record', 'subject': 'extra-dist', 'locked': 'a3f69b15f5ab720e5bd976cb22bc88160f41ebcec6b0ca9eedbdd9852f5c2487', 'measured': 'e2bb242116dc43f9b60486bd4891da36ceece1b56e7"
+        }
+    },
+    "env-profile-verifies-installed-files-g90": {
+        "fail": [
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[file_hash]",
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[file_missing]"
+        ],
+        "witness": {
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[file_hash]": "AssertionError: {'profile': 'C', 'lock_path': '/tmp/pytest-of-root/pytest-1879/test_e03_each_axis_is_reported0/case.lock.txt', 'lock_sha256': 'bae14a70bf09e7ab99d0ddc2fa4f7a18ba5a268cfa57c3b03246086cb",
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[file_missing]": "AssertionError: {'profile': 'C', 'lock_path': '/tmp/pytest-of-root/pytest-1879/test_e03_each_axis_is_reported1/case.lock.txt', 'lock_sha256': 'bae14a70bf09e7ab99d0ddc2fa4f7a18ba5a268cfa57c3b03246086cb"
+        }
+    },
+    "receipt-stamp-records-env-profile-g90": {
+        "fail": [
+            "tests/test_gate90_env_profile.py::test_e10_receipt_stamp_records_the_profile"
+        ],
+        "witness": {
+            "tests/test_gate90_env_profile.py::test_e10_receipt_stamp_records_the_profile": "AssertionError: ['_주의', 'generated_at_utc', 'runtime', 'validator_commit', 'validator_tree_dirty']"
+        }
+    },
+    "smoke-records-env-profile-g90": {
+        "fail": [
+            "tests/test_gate90_env_profile.py::test_e09_smoke_records_the_profile_once"
+        ],
+        "witness": {
+            "tests/test_gate90_env_profile.py::test_e09_smoke_records_the_profile_once": "AssertionError: []"
+        }
+    }
+}
+
+scenario_total 13 · scenario_executable 13 · scenario_declared 0 · site_total 13 · site_executable 13 · site_declared 0 · ran 13
+
+=== 문제 ===
+env-profile-compares-interpreter-and-platform-g90: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+env-profile-reports-missing-dists-g90: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+env-profile-reports-extra-dists-g90: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+env-profile-reports-version-drift-g90: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+env-profile-reports-record-drift-g90: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+env-profile-reports-shadowed-drift-g90: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+env-profile-verifies-installed-files-g90: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+env-profile-checks-module-origin-g90: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+env-profile-lock-grammar-is-closed-g90: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+env-profile-measurement-failure-is-unmeasured-g90: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+env-profile-cli-is-record-only-g90: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+smoke-records-env-profile-g90: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+receipt-stamp-records-env-profile-g90: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+rc=1
+# END 2026-10-04T17:49:02Z

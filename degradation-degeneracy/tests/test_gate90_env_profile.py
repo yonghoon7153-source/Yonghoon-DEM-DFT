@@ -147,14 +147,15 @@ def _assert_closed(r: dict) -> None:
     assert r["profile"] == "C"
     assert r["status"] in ("MATCH", "MISMATCH", "UNMEASURED")
     if r["status"] == "UNMEASURED":
-        assert isinstance(r["reason"], str) and r["reason"], r
-        assert r["mismatches"] is None and r["unverifiable"] is None and r["counts"] is None, r
+        assert isinstance(r["reason"], str) and r["reason"], "UNMEASURED 인데 reason 이 비었다"
+        assert r["mismatches"] is None and r["unverifiable"] is None and r["counts"] is None, \
+            "UNMEASURED 인데 측정 칸이 None 이 아니다"
         return
     assert r["reason"] == ""
     assert set(r["counts"]) == COUNT_KEYS and all(type(v) is int for v in r["counts"].values())
     assert set(r["unverifiable"]) == {"dists_without_record", "origins"}
     for m in r["mismatches"]:
-        assert set(m) == MISMATCH_KEYS and m["axis"] in AXES, m
+        assert set(m) == MISMATCH_KEYS and m["axis"] in AXES, sorted(m)
     keys = [(m["axis"], m["subject"]) for m in r["mismatches"]]
     assert keys == sorted(keys)
     assert (r["status"] == "MATCH") == (r["mismatches"] == [])
@@ -192,7 +193,7 @@ def test_e02_synthetic_round_trip_matches(synth, tmp_path):
     assert ep.emit_lock(ep.parse_lock(text)) == text
     r = ep.compare_lock(lock, paths=synth.paths)
     _assert_closed(r)
-    assert r["status"] == "MATCH", r["mismatches"]
+    assert r["status"] == "MATCH", [(m["axis"], m["subject"]) for m in r["mismatches"]]
     assert r["lock_sha256"] == hashlib.sha256(lock.read_bytes()).hexdigest()
     assert r["counts"] == {"dists_locked": 11, "dists_measured": 11, "shadowed_locked": 1, "shadowed_measured": 1,
                            "files_verified": 21, "files_unhashed": 10, "origins_verified": 9}
@@ -272,8 +273,9 @@ def test_e03_each_axis_is_reported(synth, tmp_path, case):
     lock.write_bytes(text2.encode("utf-8"))
     r = ep.compare_lock(lock, paths=paths)
     _assert_closed(r)
-    assert r["status"] == "MISMATCH", r
-    assert {m["axis"] for m in r["mismatches"]} == want, r["mismatches"]
+    assert r["status"] == "MISMATCH", f"status {r['status']}"
+    got = {m["axis"] for m in r["mismatches"]}
+    assert got == want, f"축 {sorted(got)}"
 
 
 # ── e04 · 형식 오류 → UNMEASURED ──────────────────────────────────────────────
@@ -328,7 +330,7 @@ def test_e04_malformed_lock_is_unmeasured(synth, tmp_path, case):
         lock.write_bytes(bad.encode("utf-8"))
     r = ep.compare_lock(lock, paths=synth.paths)
     _assert_closed(r)
-    assert r["status"] == "UNMEASURED", r
+    assert r["status"] == "UNMEASURED", f"status {r['status']}"
     if case == "missing_file":
         assert r["lock_sha256"] is None
     else:
@@ -375,7 +377,7 @@ def test_e05_measurement_failure_is_unmeasured(synth, tmp_path, monkeypatch, cas
     MEASURE_FAILURES[case](synth, monkeypatch)
     r = ep.compare_lock(lock, paths=synth.paths)
     _assert_closed(r)
-    assert r["status"] == "UNMEASURED", r
+    assert r["status"] == "UNMEASURED", f"status {r['status']}"
     assert r["lock_sha256"] == hashlib.sha256(lock.read_bytes()).hexdigest()
 
 
@@ -385,7 +387,7 @@ def test_e06_real_environment_result_is_typed():
     ep = _ep()
     r = ep.compare_lock()
     _assert_closed(r)
-    assert r["status"] in ("MATCH", "MISMATCH"), r["reason"]
+    assert r["status"] in ("MATCH", "MISMATCH"), f"status {r['status']}: {r['reason']}"
     assert r["lock_path"] == "requirements-validation-C.lock.txt"
     assert r["lock_sha256"] == hashlib.sha256(LOCK.read_bytes()).hexdigest()
     assert r["counts"]["dists_locked"] == 170 and r["counts"]["shadowed_locked"] == 2
@@ -420,19 +422,20 @@ def test_e08_cli_is_record_only(tmp_path):
     off = tmp_path / "mismatch.lock.txt"
     off.write_bytes(_set_directive(text, "python", "0.0.0").encode("utf-8"))
     p = _cli("--lock", str(off))
-    assert p.returncode == 0, p.stderr
-    assert "MISMATCH" in p.stdout and re.search(r"^\s*✗ python ", p.stdout, re.M), p.stdout[-2000:]
+    assert p.returncode == 0, f"rc {p.returncode} (MISMATCH) — 기록 전용이면 0"
+    assert "MISMATCH" in p.stdout and re.search(r"^\s*✗ python ", p.stdout, re.M), "MISMATCH 요약 · python 축 줄 없음"
     broken = tmp_path / "broken.lock.txt"
     broken.write_bytes((text + "this is not a lock line\n").encode("utf-8"))
     p = _cli("--lock", str(broken))
-    assert p.returncode == 0 and "UNMEASURED" in p.stdout, (p.returncode, p.stdout[-2000:], p.stderr[-2000:])
+    assert p.returncode == 0, f"rc {p.returncode} (UNMEASURED) — 기록 전용이면 0"
+    assert "UNMEASURED" in p.stdout, "UNMEASURED 요약 없음"
     p = _cli("--json", "--lock", str(off))
-    assert p.returncode == 0, p.stderr
+    assert p.returncode == 0, f"rc {p.returncode} (--json)"
     r = json.loads(p.stdout)
     _assert_closed(r)
     assert r["status"] == "MISMATCH" and "python" in {m["axis"] for m in r["mismatches"]}
     p = _cli("--emit-lock")
-    assert p.returncode == 0, p.stderr
+    assert p.returncode == 0, f"rc {p.returncode} (--emit-lock)"
     assert ep.emit_lock(ep.parse_lock(p.stdout)) == p.stdout
 
 
@@ -441,7 +444,7 @@ def test_e08_cli_is_record_only(tmp_path):
 def test_e09_smoke_records_the_profile_once():
     lines = SMOKE.read_text(encoding="utf-8").splitlines()
     calls = [i for i, line in enumerate(lines) if "-m tools.env_profile" in line]
-    assert len(calls) == 1, calls
+    assert len(calls) == 1, f"smoke 의 env_profile 호출 {len(calls)} 개"
     line = lines[calls[0]]
     assert line.lstrip().startswith('"$PY" -m tools.env_profile'), line
     assert re.search(r'\|\|\s*bad\s+"', line) and "|| true" not in line and "exit" not in line, line

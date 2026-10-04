@@ -1,0 +1,160 @@
+# -k g90 --emit-expect · HEAD c547c2458 + 등록 13 · 시험 메시지 결정화 (작업 트리) · source_digest 3f84c0db52d2b9ac
+# 2026-10-04T17:50:24Z
+sandbox: /tmp/mutation_replay_bt22qq5h/degradation-degeneracy
+
+★ 안 물었다    env-profile-compares-interpreter-and-platform-g90 node 5 · -k test_gate90 and e03 and (python or implementation or system or machine or libc)
+★ 안 물었다    env-profile-reports-missing-dists-g90 node 1 · -k test_gate90 and e03 and dist_missing
+★ 안 물었다    env-profile-reports-extra-dists-g90 node 1 · -k test_gate90 and e03 and dist_extra
+★ 안 물었다    env-profile-reports-version-drift-g90 node 2 · -k test_gate90 and e03 and (dist_version or env_upgrade)
+★ 안 물었다    env-profile-reports-record-drift-g90 node 1 · -k test_gate90 and e03 and dist_record
+★ 안 물었다    env-profile-reports-shadowed-drift-g90 node 1 · -k test_gate90 and e03 and shadowed
+★ 안 물었다    env-profile-verifies-installed-files-g90 node 2 · -k test_gate90 and e03 and (file_hash or file_missing)
+★ 안 물었다    env-profile-checks-module-origin-g90 node 1 · -k test_gate90 and e03 and origin_stray
+★ 안 물었다    env-profile-lock-grammar-is-closed-g90 node 1 · -k test_gate90 and e04 and garbage_line
+★ 안 물었다    env-profile-measurement-failure-is-unmeasured-g90 node 3 · -k test_gate90 and e05
+★ 안 물었다    env-profile-cli-is-record-only-g90 node 1 · -k test_gate90 and e08
+★ 안 물었다    smoke-records-env-profile-g90  node 1 · -k test_gate90 and e09
+★ 안 물었다    receipt-stamp-records-env-profile-g90 node 1 · -k test_gate90 and e10
+
+=== 관측한 EXPECT (그대로 붙여 넣어라) ===
+{
+    "env-profile-checks-module-origin-g90": {
+        "fail": [
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[origin_stray]"
+        ],
+        "witness": {
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[origin_stray]": "AssertionError: status MATCH"
+        }
+    },
+    "env-profile-cli-is-record-only-g90": {
+        "fail": [
+            "tests/test_gate90_env_profile.py::test_e08_cli_is_record_only"
+        ],
+        "witness": {
+            "tests/test_gate90_env_profile.py::test_e08_cli_is_record_only": "AssertionError: rc 1 (MISMATCH) — 기록 전용이면 0"
+        }
+    },
+    "env-profile-compares-interpreter-and-platform-g90": {
+        "fail": [
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[implementation]",
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[libc]",
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[machine]",
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[python]",
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[system]"
+        ],
+        "witness": {
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[implementation]": "AssertionError: status MATCH",
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[libc]": "AssertionError: status MATCH",
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[machine]": "AssertionError: status MATCH",
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[python]": "AssertionError: status MATCH",
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[system]": "AssertionError: status MATCH"
+        }
+    },
+    "env-profile-lock-grammar-is-closed-g90": {
+        "fail": [
+            "tests/test_gate90_env_profile.py::test_e04_malformed_lock_is_unmeasured[garbage_line]"
+        ],
+        "witness": {
+            "tests/test_gate90_env_profile.py::test_e04_malformed_lock_is_unmeasured[garbage_line]": "AssertionError: status MATCH"
+        }
+    },
+    "env-profile-measurement-failure-is-unmeasured-g90": {
+        "fail": [
+            "tests/test_gate90_env_profile.py::test_e05_measurement_failure_is_unmeasured[enumeration_raises]",
+            "tests/test_gate90_env_profile.py::test_e05_measurement_failure_is_unmeasured[nameless_dist]",
+            "tests/test_gate90_env_profile.py::test_e05_measurement_failure_is_unmeasured[unknown_hash_algorithm]"
+        ],
+        "witness": {
+            "tests/test_gate90_env_profile.py::test_e05_measurement_failure_is_unmeasured[enumeration_raises]": "AssertionError: status MATCH",
+            "tests/test_gate90_env_profile.py::test_e05_measurement_failure_is_unmeasured[nameless_dist]": "AssertionError: status MATCH",
+            "tests/test_gate90_env_profile.py::test_e05_measurement_failure_is_unmeasured[unknown_hash_algorithm]": "AssertionError: status MATCH"
+        }
+    },
+    "env-profile-reports-extra-dists-g90": {
+        "fail": [
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[dist_extra]"
+        ],
+        "witness": {
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[dist_extra]": "AssertionError: status MATCH"
+        }
+    },
+    "env-profile-reports-missing-dists-g90": {
+        "fail": [
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[dist_missing]"
+        ],
+        "witness": {
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[dist_missing]": "AssertionError: status MATCH"
+        }
+    },
+    "env-profile-reports-record-drift-g90": {
+        "fail": [
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[dist_record]"
+        ],
+        "witness": {
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[dist_record]": "AssertionError: status MATCH"
+        }
+    },
+    "env-profile-reports-shadowed-drift-g90": {
+        "fail": [
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[shadowed]"
+        ],
+        "witness": {
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[shadowed]": "AssertionError: status MATCH"
+        }
+    },
+    "env-profile-reports-version-drift-g90": {
+        "fail": [
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[dist_version]",
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[env_upgrade]"
+        ],
+        "witness": {
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[dist_version]": "AssertionError: status MATCH",
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[env_upgrade]": "AssertionError: 축 ['dist_record']"
+        }
+    },
+    "env-profile-verifies-installed-files-g90": {
+        "fail": [
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[file_hash]",
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[file_missing]"
+        ],
+        "witness": {
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[file_hash]": "AssertionError: status MATCH",
+            "tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[file_missing]": "AssertionError: status MATCH"
+        }
+    },
+    "receipt-stamp-records-env-profile-g90": {
+        "fail": [
+            "tests/test_gate90_env_profile.py::test_e10_receipt_stamp_records_the_profile"
+        ],
+        "witness": {
+            "tests/test_gate90_env_profile.py::test_e10_receipt_stamp_records_the_profile": "AssertionError: ['_주의', 'generated_at_utc', 'runtime', 'validator_commit', 'validator_tree_dirty']"
+        }
+    },
+    "smoke-records-env-profile-g90": {
+        "fail": [
+            "tests/test_gate90_env_profile.py::test_e09_smoke_records_the_profile_once"
+        ],
+        "witness": {
+            "tests/test_gate90_env_profile.py::test_e09_smoke_records_the_profile_once": "AssertionError: smoke 의 env_profile 호출 0 개"
+        }
+    }
+}
+
+scenario_total 13 · scenario_executable 13 · scenario_declared 0 · site_total 13 · site_executable 13 · site_declared 0 · ran 13
+
+=== 문제 ===
+env-profile-compares-interpreter-and-platform-g90: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+env-profile-reports-missing-dists-g90: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+env-profile-reports-extra-dists-g90: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+env-profile-reports-version-drift-g90: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+env-profile-reports-record-drift-g90: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+env-profile-reports-shadowed-drift-g90: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+env-profile-verifies-installed-files-g90: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+env-profile-checks-module-origin-g90: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+env-profile-lock-grammar-is-closed-g90: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+env-profile-measurement-failure-is-unmeasured-g90: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+env-profile-cli-is-record-only-g90: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+smoke-records-env-profile-g90: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+receipt-stamp-records-env-profile-g90: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+rc=1
+# END 2026-10-04T17:53:49Z
