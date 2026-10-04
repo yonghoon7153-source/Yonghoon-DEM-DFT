@@ -217,10 +217,20 @@ _NET = [
     ('MPM protocol', ('mpm.protocol',), None),
     ('MPM n_grid', ('mpm.n_grid',), 0),
     ('── 응력 ──', None, None),
+    #  옛 네 줄 = LIGGGHTS stress/atom (접촉 virial 50/50 분할) · 대각 성분 (LHS-29 — 이름표는 웹앱이 정정)
     ('Stress CV(%)', ('stress_cv',), 1),
     ('σ_AM_P/σ_mean', ('stress_ratio_AM_P',), 3),
     ('σ_AM_S/σ_mean', ('stress_ratio_AM_S',), 3),
     ('σ_SE/σ_mean', ('stress_ratio_SE',), 3),
+    #  ④b Love–Weber (J20-s · 10-04) — 키가 있을 때만 (analyze_contacts 가 상태 OK 일 때만 쓴다) · 표 이름 = analyze_contacts 와 같은 철자
+    ('Stress CV — Love–Weber (%)', ('stress_cv_lw',), 1),
+    ('σ_AM_P/σ_mean — Love–Weber', ('stress_ratio_AM_P_lw',), 3),
+    ('σ_AM_S/σ_mean — Love–Weber', ('stress_ratio_AM_S_lw',), 3),
+    ('σ_SE/σ_mean — Love–Weber', ('stress_ratio_SE_lw',), 3),
+    ('Stress CV — Love–Weber · 벽 접촉 제외 (%)', ('stress_cv_lw_nowall',), 1),
+    ('σ_AM_P/σ_mean — Love–Weber · 벽 접촉 제외', ('stress_ratio_AM_P_lw_nowall',), 3),
+    ('σ_AM_S/σ_mean — Love–Weber · 벽 접촉 제외', ('stress_ratio_AM_S_lw_nowall',), 3),
+    ('σ_SE/σ_mean — Love–Weber · 벽 접촉 제외', ('stress_ratio_SE_lw_nowall',), 3),
 ]
 
 

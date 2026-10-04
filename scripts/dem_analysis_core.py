@@ -1226,6 +1226,161 @@ def calc_von_mises_stress(atoms_raw, type_map, scale, plate_z, n_layers=10):
     }
 
 
+# ─── Love–Weber 입자 응력 (④b · J20-s · 1저자 비준 10-04 · 원장 LHS-29) ─────────────────
+#  위 `calc_von_mises_stress` 의 입력 (LIGGGHTS `compute stress/atom` ÷ 부피) 은 입자 접촉 virial 0.5 · (x_i − x_j) ⊗ F 를 두 입자에
+#  **똑같이** 나눈다 (공개 소스 `pair_gran_base.h` → `Pair::ev_tally_xyz` 의 0.5) — 크기가 다른 쌍에서 큰 입자의 응력이 작게 · 작은 입자가
+#  크게 잡힌다 (real_14 `stress_ratio_AM_P` 0.884 ↔ 3.2 · 대소가 뒤집힌다).  옛 열은 그대로 두고 (이름표만 정정) 새 열을 낸다.
+LW_DEFINITION = 'love_weber_branch_full_tensor_v1'
+LW_WALL_SCOPE = 'floor_zplane0+mesh_plate (x·y periodic assumed)'
+LW_TOL_FORCE_DECOMP = 1e-3     # max|F − (Fn + Ft)| / max|F| — 열 대응 (c_cpl 번호) 검사 · real_14 실측 1.4e-6 (덤프 %g 6 자리)
+LW_TOL_BRANCH_OVER_R = 1.01    # max |x_c − x_i| / r_i — 접촉점이 입자 안 · real_14 실측 1.00014
+LW_TOL_VIRIAL = 1e-2           # |Σ V σ_LW,aa − Σ c_strs,aa| / Σ_a |Σ c_strs,aa| — 두 덤프 짝 · real_14 실측 5e-5 (허용 200 배)
+_LW_NEED = ('fx', 'fy', 'fz', 'cp_x', 'cp_y', 'cp_z', 'fn_x', 'fn_y', 'fn_z', 'ft_x', 'ft_y', 'ft_z')
+
+
+def calc_love_weber_stress(atoms_raw, contacts_raw, type_map, plate_z, box_x=None, box_y=None,
+                           plate_z_source='mesh', return_arrays=False):
+    """Love–Weber 입자 평균 응력 — 접촉 덤프 (힘 · 접촉점) 로, 전체 텐서.
+
+    σ_i = (1/V_i) Σ_c (x_c − x_i) ⊗ f_c^(i)     V_i = 4/3 π r_i³ · f_c^(i) = 접촉 c 가 입자 i 에 주는 힘
+      (덤프 `fx·fy·fz` = id1 이 받는 힘 → id2 는 −f) · 인장 양수 = LIGGGHTS c_strs 와 같은 부호 · x·y 최소영상
+    VM = √(½[(σxx−σyy)² + (σyy−σzz)² + (σzz−σxx)²] + 3(σxy² + σyz² + σzx²))  — 대칭부 (입자 하나의 b⊗f 는 비대칭일 수 있다 →
+      비대칭 크기 ‖σ − σᵀ‖/‖σ‖ 의 중앙값을 기록)
+    요약 통계는 옛 열과 같은 정의 (모든 입자 · 접촉 없는 입자 = 0 · 모집단 std/mean × 100 · 상 평균 / 전체 평균) — 규약만 다르다.
+
+    벽: 바닥 (zplane 0) · 판 (mesh) 접촉은 접촉 덤프에도 stress/atom 에도 없다 → 벽에 닿은 입자 (z − r < 0 · z + r > plate_z) 의 응력은
+      불완전.  표지 수 · 상별 비율 + 벽 제외 통계 (`_nowall`).  판 높이가 mesh 가 아니면 판 표지 · 벽 제외 통계 = None (바닥 표지는 낸다).
+      옆면은 x·y 주기로 가정 (LHS 침대 `boundary p p f` — 덱을 읽지 않는다 · 옛 벽-RVE 케이스의 옆벽 입자는 표지에 안 잡힌다).
+    검사 (실패 = 값 없이 상태 — 0 으로 채우지 않는다): 열 · 유한값 · 원자 id 짝 · F = Fn + Ft · 접촉점이 두 입자 안 ·
+      c_strs 가 있으면 전체 virial Σ V σ_LW = Σ c_strs (접촉점과 무관한 정확식 → 두 덤프의 프레임 · 힘 부호 · 열 대응).
+
+    반환 dict: status ('OK' | 'NOT_COMPUTED (…)' | 'FAILED (…)') · definition · vm_cv · type_stress{상: mean · ratio} ·
+      vm_cv_nowall · type_stress_nowall · wall{scope · plate_flag · n_floor · n_plate · by_type{상: n · n_floor · n_plate · frac_wall}} ·
+      n_particles · n_contacts · n_no_contact · asym_frob_median · checks{force_decomp_rel · branch_over_r_max · virial_total_rel ·
+      virial_status}.  return_arrays=True 면 ids · tensor (n,3,3) · arrays_vm (시험 · 감사용 — 저장하지 않는다).
+    """
+    out = {'status': None, 'definition': LW_DEFINITION, 'vm_cv': None, 'type_stress': {},
+           'vm_cv_nowall': None, 'type_stress_nowall': None, 'wall': {}, 'checks': {}}
+    if not contacts_raw:
+        out['status'] = 'NOT_COMPUTED (no_contacts)'
+        return out
+    missing = [k for k in _LW_NEED if k not in contacts_raw[0]]
+    if missing:
+        out['status'] = 'NOT_COMPUTED (missing contact columns: ' + ', '.join(missing) + ')'
+        return out
+    ids = list(atoms_raw.keys())
+    row = {aid: k for k, aid in enumerate(ids)}
+    n = len(ids)
+    pos = np.array([[atoms_raw[a]['x'], atoms_raw[a]['y'], atoms_raw[a]['z']] for a in ids], dtype=float)
+    rad = np.array([atoms_raw[a]['radius'] for a in ids], dtype=float)
+    vol = (4.0 / 3.0) * np.pi * rad ** 3
+    names = np.array([type_map.get(atoms_raw[a]['type'], '') for a in ids], dtype=object)
+    i1 = np.array([row.get(c['id1'], -1) for c in contacts_raw])
+    i2 = np.array([row.get(c['id2'], -1) for c in contacts_raw])
+    bad = int(((i1 < 0) | (i2 < 0)).sum())
+    out['n_particles'], out['n_contacts'] = n, len(contacts_raw)
+    if bad:
+        out['status'] = f'FAILED (contact_ids_not_in_atoms: {bad})'
+        return out
+    col = {k: np.array([c[k] for c in contacts_raw], dtype=float) for k in _LW_NEED}
+    F = np.stack([col['fx'], col['fy'], col['fz']], 1)
+    cp = np.stack([col['cp_x'], col['cp_y'], col['cp_z']], 1)
+    Fnt = np.stack([col['fn_x'] + col['ft_x'], col['fn_y'] + col['ft_y'], col['fn_z'] + col['ft_z']], 1)
+    nonfin = int((~np.isfinite(np.concatenate([F, cp, Fnt], 1))).any(1).sum())
+    if nonfin:
+        out['status'] = f'FAILED (non_finite contact values: {nonfin})'
+        return out
+    fmax = float(np.max(np.abs(F)))
+    fdec = float(np.max(np.abs(F - Fnt)) / fmax) if fmax > 0 else 0.0
+    out['checks']['force_decomp_rel'] = fdec
+    if fdec > LW_TOL_FORCE_DECOMP:
+        out['status'] = f'FAILED (force_columns: max|F − (Fn+Ft)|/max|F| = {fdec:.3g} > {LW_TOL_FORCE_DECOMP:g})'
+        return out
+
+    def _mi(d):
+        d = d.copy()
+        for ax, L in ((0, box_x), (1, box_y)):
+            if L:
+                d[:, ax] -= L * np.round(d[:, ax] / L)
+        return d
+    b1, b2 = _mi(cp - pos[i1]), _mi(cp - pos[i2])
+    bor = float(max(np.max(np.linalg.norm(b1, axis=1) / rad[i1]), np.max(np.linalg.norm(b2, axis=1) / rad[i2])))
+    out['checks']['branch_over_r_max'] = bor
+    if bor > LW_TOL_BRANCH_OVER_R:
+        out['status'] = f'FAILED (contact_point off particle: max |x_c − x_i|/r_i = {bor:.4g} > {LW_TOL_BRANCH_OVER_R:g})'
+        return out
+    T = np.zeros((n, 3, 3))
+    np.add.at(T, i1, b1[:, :, None] * F[:, None, :])
+    np.add.at(T, i2, b2[:, :, None] * (-F)[:, None, :])
+    # 전체 virial 대조 — Σ_i T_i,aa = Σ_c (x_id2 − x_id1)_a F_a (접촉점이 지워진다) = LIGGGHTS Σ c_strs (같은 부호)
+    if n and all(('sigma_xx' in atoms_raw[a] and 'sigma_yy' in atoms_raw[a] and 'sigma_zz' in atoms_raw[a]) for a in ids):
+        cs = np.array([[atoms_raw[a]['sigma_xx'], atoms_raw[a]['sigma_yy'], atoms_raw[a]['sigma_zz']] for a in ids], dtype=float)
+        tot_c = (cs * vol[:, None]).sum(0)
+        tot_lw = np.array([T[:, 0, 0].sum(), T[:, 1, 1].sum(), T[:, 2, 2].sum()])
+        den = float(np.abs(tot_c).sum())
+        vrel = float(np.max(np.abs(tot_lw - tot_c)) / den) if den > 0 else float('inf')
+        out['checks']['virial_total_rel'] = vrel
+        out['checks']['virial_status'] = 'checked'
+        if not vrel <= LW_TOL_VIRIAL:
+            out['status'] = (f'FAILED (virial_mismatch: |Σ V σ_LW − Σ c_strs| / Σ|Σ c_strs| = {vrel:.3g} > {LW_TOL_VIRIAL:g} — '
+                             '원자 · 접촉 덤프의 프레임 · 힘 부호 · 열 대응)')
+            return out
+    else:
+        out['checks']['virial_total_rel'] = None
+        out['checks']['virial_status'] = 'unavailable (no c_strs in atom dump)'
+    sig = T / vol[:, None, None]
+    s = 0.5 * (sig + np.transpose(sig, (0, 2, 1)))
+    sxx, syy, szz = s[:, 0, 0], s[:, 1, 1], s[:, 2, 2]
+    sxy, syz, szx = s[:, 0, 1], s[:, 1, 2], s[:, 2, 0]
+    vm = np.sqrt(np.maximum(0.5 * ((sxx - syy) ** 2 + (syy - szz) ** 2 + (szz - sxx) ** 2)
+                            + 3.0 * (sxy ** 2 + syz ** 2 + szx ** 2), 0.0))
+    fro = np.linalg.norm(sig.reshape(n, 9), axis=1)
+    asym = np.linalg.norm((sig - np.transpose(sig, (0, 2, 1))).reshape(n, 9), axis=1)
+    nz = fro > 0
+    out['asym_frob_median'] = float(np.median(asym[nz] / fro[nz])) if nz.any() else None
+    deg = np.bincount(np.r_[i1, i2], minlength=n)
+    out['n_no_contact'] = int((deg == 0).sum())
+    phases = sorted({v for v in type_map.values()})
+
+    def _summ(mask):
+        v = vm[mask]
+        if v.size == 0:
+            return None, {}
+        mean = float(v.mean())
+        cv = float(v.std() / mean * 100) if mean > 0 else 0.0
+        ts = {}
+        for nm in phases:
+            m = mask & (names == nm)
+            if m.any():
+                tmean = float(vm[m].mean())
+                ts[nm] = {'mean': tmean, 'ratio': (tmean / mean) if mean > 0 else 0.0}
+        return cv, ts
+    allm = np.ones(n, dtype=bool)
+    out['vm_cv'], out['type_stress'] = _summ(allm)
+    floor = (pos[:, 2] - rad) < 0.0
+    plate_ok = plate_z_source == 'mesh' and plate_z is not None
+    plate = ((pos[:, 2] + rad) > plate_z) if plate_ok else np.zeros(n, dtype=bool)
+    wall = floor | plate
+    by_type = {}
+    for nm in phases:
+        m = names == nm
+        k = int(m.sum())
+        if k:
+            by_type[nm] = {'n': k, 'n_floor': int((floor & m).sum()),
+                           'n_plate': int((plate & m).sum()) if plate_ok else None,
+                           'frac_wall': float((wall & m).sum() / k) if plate_ok else None,
+                           'frac_floor': float((floor & m).sum() / k)}
+    out['wall'] = {'scope': LW_WALL_SCOPE,
+                   'plate_flag': 'mesh' if plate_ok else f'unavailable (plate_z_source={plate_z_source})',
+                   'n_floor': int(floor.sum()), 'n_plate': int(plate.sum()) if plate_ok else None, 'by_type': by_type}
+    if plate_ok:
+        out['vm_cv_nowall'], out['type_stress_nowall'] = _summ(~wall)
+    out['status'] = 'OK'
+    if return_arrays:
+        out['ids'], out['tensor'], out['arrays_vm'] = ids, sig, vm
+    return out
+
+
 # ─── Full Analysis ─────────────────────────────────────────────────────────
 
 def _get_box_xy(results_dir):
@@ -1348,6 +1503,16 @@ def run_full_analysis(atoms_raw, contacts_raw, type_map, scale, results_dir, box
             print(f"    {tn}: σ/σ_mean = {sv['ratio']:.2f}")
     else:
         print("  Stress: N/A (no stress data)")
+    # 8b. Love–Weber 입자 응력 (④b · 접촉 덤프의 힘 · 접촉점 · 전체 텐서) — 옛 열 (위 · stress/atom 50/50 분할) 과 따로 둔다
+    stress_lw = calc_love_weber_stress(atoms_raw, contacts_raw, type_map, plate_z, box_x=box_x, box_y=box_y,
+                                       plate_z_source=pz_source)
+    if stress_lw['status'] == 'OK':
+        _w = stress_lw['wall']
+        print(f"  Stress (Love–Weber): CV {stress_lw['vm_cv']:.1f}% · "
+              + ' · '.join(f"{tn} {sv['ratio']:.2f}" for tn, sv in stress_lw['type_stress'].items())
+              + f" · 벽 접촉 바닥 {_w['n_floor']} · 판 {_w['n_plate'] if _w['n_plate'] is not None else 'N/A'}")
+    else:
+        print(f"  Stress (Love–Weber): {stress_lw['status']}")
 
     # 9. Contact Force Distribution
     force_dist = calc_contact_force_distribution(atoms_raw, contacts_raw, type_map, scale)
@@ -1409,6 +1574,7 @@ def run_full_analysis(atoms_raw, contacts_raw, type_map, scale, results_dir, box
         'tortuosity_all': tau_all,
         'ionic_active': ionic,
         'stress': stress,
+        'stress_lw': stress_lw,
         'force_dist': force_dist,
         'contact_pressure': contact_pressure,
         'overlap_ratio': overlap,

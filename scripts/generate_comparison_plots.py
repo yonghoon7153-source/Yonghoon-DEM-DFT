@@ -666,43 +666,55 @@ def plot_coverage(all_data, names, ax=None):
 
 
 def plot_stress_cv(all_data, names, ax=None):
+    """두 규약을 같이 — 실선 = Love–Weber (stress_cv_lw · ④b 10-04) · 점선 = 옛 열 (stress_cv = LIGGGHTS stress/atom 50/50 분할 ·
+    대각 · LHS-29).  값이 없는 케이스는 그리지 않는다 (_metric_points — 0 으로 채우지 않는다 · 재분석 전 케이스에는 LW 가 없다)."""
     standalone = ax is None
     if standalone:
         fig, ax = plt.subplots(figsize=FIG_SINGLE)
-    xs = list(range(len(names)))
-    ys = [_get(d, "stress_cv") for d in all_data]
-    ax.plot(xs, ys, marker="s", markersize=9, color=BLACK, linewidth=1.5, zorder=3)
-    if ys:
-        ymin, ymax = min(ys), max(ys)
+    allv = []
+    for key, sty, lab in (("stress_cv", dict(color=GRAY, linestyle="--", marker="s", markerfacecolor="white"),
+                           "stress/atom 50/50 split (old · diagonal)"),
+                          ("stress_cv_lw", dict(color=BLACK, linestyle="-", marker="s"), "Love–Weber (full tensor)")):
+        pts = _metric_points(all_data, key)
+        if pts:
+            xs, ys = zip(*pts)
+            ax.plot(xs, ys, markersize=9, linewidth=1.5, zorder=3, label=lab, **sty)
+            allv += list(ys)
+    if allv:
+        ymin, ymax = min(allv), max(allv)
         pad = max((ymax - ymin) * 0.15, 1)
         ax.set_ylim(ymin - pad, ymax + pad)
     _apply_style(ax, "Von Mises CV (%)", names)
     ax.set_title("Stress Distribution Uniformity", fontsize=13, fontweight="bold", pad=10)
+    ax.legend(fontsize=8, frameon=False)
     if standalone:
         return _save(fig, "", "")
     return ax
 
 
 def plot_stress_ratio(all_data, names, ax=None):
+    """상별 σ/σ_mean — 실선 = Love–Weber (stress_ratio_<상>_lw) · 점선 = 옛 열 (stress/atom 50/50 분할 · 크기 편향 · LHS-29).
+    값이 없는 케이스는 그리지 않는다 (옛 판 `_get` 은 0 으로 채웠다)."""
     standalone = ax is None
     if standalone:
         fig, ax = plt.subplots(figsize=FIG_SINGLE)
-    xs = list(range(len(names)))
 
     type_keys = ['AM_P', 'AM_S', 'SE']
     colors = {'AM_P': RED, 'AM_S': '#FF8C00', 'SE': GREEN}
     markers = {'AM_P': 's', 'AM_S': 'o', 'SE': '^'}
 
     for tk in type_keys:
-        ys = [_get(d, f"stress_ratio_{tk}") for d in all_data]
-        if any(v > 0 for v in ys):
-            ax.plot(xs, ys, marker=markers[tk], markersize=8, color=colors[tk],
-                    linewidth=1.5, label=tk, zorder=3)
+        for suffix, ls, mfc, lab in (('', '--', 'white', f'{tk} (50/50 old)'), ('_lw', '-', colors[tk], f'{tk} Love–Weber')):
+            pts = _metric_points(all_data, f"stress_ratio_{tk}{suffix}")
+            if pts:
+                xs, ys = zip(*pts)
+                ax.plot(xs, ys, marker=markers[tk], markersize=8, color=colors[tk], linestyle=ls,
+                        markerfacecolor=mfc, linewidth=1.5, label=lab, zorder=3)
 
-    ax.axhline(y=1.0, color=GRAY, linestyle='--', linewidth=1, alpha=0.5, label='mean')
+    ax.axhline(y=1.0, color=GRAY, linestyle=':', linewidth=1, alpha=0.5, label='mean')
     _apply_style(ax, "σ / σ_mean", names)
     ax.set_title("Stress Ratio by Type", fontsize=13, fontweight="bold", pad=10)
-    ax.legend(fontsize=9, frameon=False)
+    ax.legend(fontsize=7, frameon=False, ncol=2)
     if standalone:
         return _save(fig, "", "")
     return ax
@@ -3605,14 +3617,14 @@ PLOT_REGISTRY = {
         "func": plot_stress_cv,
         "file": "stress_cv.png",
         "title": "Stress CV",
-        "description": "Von Mises 응력 변동계수(CV).\n\nCV 낮을수록 전극 내 응력이 균일.\n유효영률 사용으로 절대값은 참고용, 상대 비교만 유효.",
+        "description": "Von Mises 응력 변동계수(CV) — 두 규약.\n실선 = Love–Weber (접촉점 · 전체 텐서 · ④b 10-04) · 점선 = 옛 열 (LIGGGHTS stress/atom 50/50 분할 · 대각 · 크기 편향 LHS-29).\n\nCV 낮을수록 전극 내 응력이 균일.\n유효영률 사용으로 절대값은 참고용, 상대 비교만 유효.  LW 값 없는 케이스 (재분석 전) 는 안 그린다.",
         "origin_tip": "Line+Symbol → X: P:S, Y: VM CV (%).\nSymbol: Square, Black.\nCV < 100%면 양호.",
     },
     "stress_ratio": {
         "func": plot_stress_ratio,
         "file": "stress_ratio.png",
         "title": "Stress Ratio by Type",
-        "description": "입자 유형별 응력 비율 (σ_type / σ_mean).\n\n> 1.0 = 평균보다 응력 집중\n< 1.0 = 평균보다 하중 적음\n\nSE > 1.0이면 SE에 응력 집중 → 소성변형 유발.",
+        "description": "입자 유형별 응력 비율 (σ_type / σ_mean) — 실선 = Love–Weber · 점선 = 옛 50/50 분할 (큰 입자 과소 · LHS-29 — real_14 AM_P 0.884 ↔ 2.74).\n\n> 1.0 = 평균보다 응력 집중\n< 1.0 = 평균보다 하중 적음\n\nSE > 1.0이면 SE에 응력 집중 → 소성변형 유발.  벽 · 판 접촉 입자의 벽 힘은 두 규약 다 없다.",
         "origin_tip": "Multi-line → X: P:S, Y: σ/σ_mean.\nAM_P: Red, AM_S: Orange, SE: Green.\ny=1.0에 점선 (mean baseline).",
     },
     "se_network": {
@@ -7432,11 +7444,16 @@ def main():
             ('Coverage AM_S(%)', lambda d: _resolve_coverage(d)[2]),
             ('Coverage AM_S std', lambda d: _resolve_coverage(d)[3])],
         'stress_cv': [('Case', None),
-            ('Stress CV(%)', lambda d: _get(d, 'stress_cv'))],
+            ('Stress CV(%) [stress/atom 50/50 · diag]', lambda d: _get(d, 'stress_cv')),
+            ('Stress CV(%) [Love–Weber]', lambda d: d.get('stress_cv_lw', '')),
+            ('Stress CV(%) [Love–Weber · no wall]', lambda d: d.get('stress_cv_lw_nowall', ''))],
         'stress_ratio': [('Case', None),
-            ('σ_AM_P/σ_mean', lambda d: _get(d, 'stress_ratio_AM_P')),
-            ('σ_AM_S/σ_mean', lambda d: _get(d, 'stress_ratio_AM_S')),
-            ('σ_SE/σ_mean', lambda d: _get(d, 'stress_ratio_SE'))],
+            ('σ_AM_P/σ_mean [50/50]', lambda d: _get(d, 'stress_ratio_AM_P')),
+            ('σ_AM_S/σ_mean [50/50]', lambda d: _get(d, 'stress_ratio_AM_S')),
+            ('σ_SE/σ_mean [50/50]', lambda d: _get(d, 'stress_ratio_SE')),
+            ('σ_AM_P/σ_mean [LW]', lambda d: d.get('stress_ratio_AM_P_lw', '')),
+            ('σ_AM_S/σ_mean [LW]', lambda d: d.get('stress_ratio_AM_S_lw', '')),
+            ('σ_SE/σ_mean [LW]', lambda d: d.get('stress_ratio_SE_lw', ''))],
         'stress_z_layer': [('Case', None),
             ('Z_data', lambda d: str(d.get('stress_z_layer_cv', [])))],
     }

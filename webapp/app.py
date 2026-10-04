@@ -1926,9 +1926,41 @@ def normalize_network_summary_layout(tables, metrics):
         _insert_after(anchor, ['Coverage AM_S(%)', '—', '—', '0%'])
 
     # von-Mises stress ratio rows — always emit AM_P / AM_S / SE
+    #   (옛 네 줄 = LIGGGHTS stress/atom 접촉 virial 50/50 분할 · 대각 성분 — 값 그대로 · 이름표는 _PAPER_LABEL_MAP · LHS-29)
     for label in ('σ_AM_P/σ_mean', 'σ_AM_S/σ_mean', 'σ_SE/σ_mean'):
         if _find_row(label) is None:
             _insert_after('Stress CV(%)', [label, '—', '—', '0%'])
+
+    # ④b Love–Weber 줄 (J20-s · 1저자 비준 10-04) — 항상 낸다 (모든 케이스 같은 줄 · 값 없으면 '—' · 0 으로 안 채움).
+    #   새 세대 CSV (analyze_contacts) 는 상태 OK 일 때 값 줄을 이미 쓴다 → 없는 줄만 metrics 에서 채운다.
+    #   상태 줄이 '—' 의 이유를 말한다 (재분석 전 · 열 없음 · FAILED 사유).  자리는 Pass F 정렬 표가 옛 줄 뒤로 잡는다.
+    if _find_row('Stress CV(%)') is not None or _find_row('── 응력 ──') is not None:
+        _lw_ok = bool(metrics) and metrics.get('stress_lw_status') == 'OK'
+
+        def _lw_num(key, nd):
+            x = metrics.get(key) if (metrics and _lw_ok) else None
+            return f'{x:.{nd}f}' if isinstance(x, (int, float)) and not isinstance(x, bool) and x == x else '—'
+        _lw_rows = [('Stress CV — Love–Weber (%)', _lw_num('stress_cv_lw', 1))]
+        _lw_rows += [(f'σ_{p}/σ_mean — Love–Weber', _lw_num(f'stress_ratio_{p}_lw', 3)) for p in ('AM_P', 'AM_S', 'SE')]
+        _lw_rows += [('Stress CV — Love–Weber · 벽 접촉 제외 (%)', _lw_num('stress_cv_lw_nowall', 1))]
+        _lw_rows += [(f'σ_{p}/σ_mean — Love–Weber · 벽 접촉 제외', _lw_num(f'stress_ratio_{p}_lw_nowall', 3))
+                     for p in ('AM_P', 'AM_S', 'SE')]
+        _fr = []
+        for p in ('AM_P', 'AM_S', 'SE'):
+            x = metrics.get(f'stress_lw_wall_frac_{p}') if (metrics and _lw_ok) else None
+            if isinstance(x, (int, float)) and not isinstance(x, bool) and x == x:
+                _fr.append(f'{p} {100 * x:.1f}')
+        _lw_rows.append(('벽 접촉 입자 (%) — 바닥 · 판', ' · '.join(_fr) if _fr else '—'))
+        _st = metrics.get('stress_lw_status') if metrics else None
+        _lw_rows.append(('Love–Weber 상태 (④b · LHS-29)',
+                         str(_st) if _st else 'NOT_COMPUTED (재분석 전 케이스 — 접촉 단계 재실행 필요)'))
+        _anchor = next((a for a in ('σ_SE/σ_mean', 'σ_AM_S/σ_mean', 'σ_AM_P/σ_mean', 'Stress CV(%)', '── 응력 ──')
+                        if _find_row(a) is not None), None)
+        for _lab, _val in _lw_rows:
+            if _find_row(_lab) is None and _anchor is not None:
+                _txt = _lab in ('벽 접촉 입자 (%) — 바닥 · 판', 'Love–Weber 상태 (④b · LHS-29)')
+                _insert_after(_anchor, [_lab, _val, _val, '' if _txt else '0%'])
+                _anchor = _lab
 
     # R_brug + Plastic amplification — always emit
     if _find_row('R_brug (과대추정 배수)') is None:
@@ -2055,9 +2087,16 @@ def normalize_network_summary_layout(tables, metrics):
         'AM-AM CN mean', 'AM-AM 접촉 수',
         '접촉 반경(µm)', '침투 깊이 δ(µm)', '법선력(µN)',
         '접촉 압력(MPa)', 'Hop 거리(µm)',
-        # 응력
+        # 응력 — 옛 네 줄 (stress/atom 50/50 · 대각) → ④b Love–Weber (10-04)
         'Stress CV(%)',
         'σ_AM_P/σ_mean', 'σ_AM_S/σ_mean', 'σ_SE/σ_mean',
+        'Stress CV — Love–Weber (%)',
+        'σ_AM_P/σ_mean — Love–Weber', 'σ_AM_S/σ_mean — Love–Weber', 'σ_SE/σ_mean — Love–Weber',
+        'Stress CV — Love–Weber · 벽 접촉 제외 (%)',
+        'σ_AM_P/σ_mean — Love–Weber · 벽 접촉 제외', 'σ_AM_S/σ_mean — Love–Weber · 벽 접촉 제외',
+        'σ_SE/σ_mean — Love–Weber · 벽 접촉 제외',
+        '벽 접촉 입자 (%) — 바닥 · 판',
+        'Love–Weber 상태 (④b · LHS-29)',
         # Stage E
         'σ_ionic — SE size factor',
         'σ_e — AM crystal × size',
@@ -2149,7 +2188,7 @@ _PAPER_SECTION_MAP = {
     '── AM-AM 접촉 역학 ──':
         '── AM-AM 접촉 역학 (AM-AM contact mechanics) ──',
     '── 응력 ──':
-        '── 응력 분포 (Particle-stress distribution — von Mises) ──',
+        '── 응력 분포 (Particle stress — von Mises · two conventions: LIGGGHTS stress/atom 50/50 split vs Love–Weber) ──',
     '── Stage E (literature-grounded σ_grain corrections) ──':
         '── Stage E · σ_grain 보정 (Stage E — σ_grain corrections; model assumptions, not literature values) ──',
     '── Cell-level ASR (Ohm slab: R = L_cathode / σ) ──':
@@ -2270,15 +2309,35 @@ _PAPER_LABEL_MAP = {
     '법선력(µN)':                   'Mean normal force, ⟨F_n⟩ (μN)',
     '접촉 압력(MPa)':               'Mean contact pressure, ⟨p⟩ (MPa)',
     'Hop 거리(µm)':                 'Mean inter-particle hop distance (μm)',
-    # Stress
+    # Stress — 옛 네 줄 = LIGGGHTS stress/atom (접촉 virial 50/50 분할) · 대각 성분 (값 그대로 · 이름표 정정 · LHS-29) · ④b Love–Weber 줄
     'Stress CV(%)':
-        'Particle-stress coefficient of variation, CV(σ_VM) (%)',
+        'Particle-stress CV(σ_VM) — LIGGGHTS stress/atom, 50/50 pair split, diagonal only (%)',
     'σ_AM_P/σ_mean':
-        'von-Mises stress ratio, ⟨σ_VM⟩_AM_P / ⟨σ_VM⟩_all',
+        '⟨σ_VM⟩_AM_P / ⟨σ_VM⟩_all — stress/atom 50/50 split, diagonal only (size-biased)',
     'σ_AM_S/σ_mean':
-        'von-Mises stress ratio, ⟨σ_VM⟩_AM_S / ⟨σ_VM⟩_all',
+        '⟨σ_VM⟩_AM_S / ⟨σ_VM⟩_all — stress/atom 50/50 split, diagonal only (size-biased)',
     'σ_SE/σ_mean':
-        'von-Mises stress ratio, ⟨σ_VM⟩_SE / ⟨σ_VM⟩_all',
+        '⟨σ_VM⟩_SE / ⟨σ_VM⟩_all — stress/atom 50/50 split, diagonal only (size-biased)',
+    'Stress CV — Love–Weber (%)':
+        'Particle-stress CV(σ_VM) — Love–Weber (contact-point branch vectors, full tensor) (%)',
+    'σ_AM_P/σ_mean — Love–Weber':
+        '⟨σ_VM⟩_AM_P / ⟨σ_VM⟩_all — Love–Weber',
+    'σ_AM_S/σ_mean — Love–Weber':
+        '⟨σ_VM⟩_AM_S / ⟨σ_VM⟩_all — Love–Weber',
+    'σ_SE/σ_mean — Love–Weber':
+        '⟨σ_VM⟩_SE / ⟨σ_VM⟩_all — Love–Weber',
+    'Stress CV — Love–Weber · 벽 접촉 제외 (%)':
+        'Particle-stress CV(σ_VM) — Love–Weber, wall-contact particles excluded (%)',
+    'σ_AM_P/σ_mean — Love–Weber · 벽 접촉 제외':
+        '⟨σ_VM⟩_AM_P / ⟨σ_VM⟩_all — Love–Weber, wall-contact particles excluded',
+    'σ_AM_S/σ_mean — Love–Weber · 벽 접촉 제외':
+        '⟨σ_VM⟩_AM_S / ⟨σ_VM⟩_all — Love–Weber, wall-contact particles excluded',
+    'σ_SE/σ_mean — Love–Weber · 벽 접촉 제외':
+        '⟨σ_VM⟩_SE / ⟨σ_VM⟩_all — Love–Weber, wall-contact particles excluded',
+    '벽 접촉 입자 (%) — 바닥 · 판':
+        'Wall-contact particles per phase (%) — floor · platen (wall forces absent from both conventions; Love–Weber flag)',
+    'Love–Weber 상태 (④b · LHS-29)':
+        'Love–Weber stress status (checks: columns · F = Fn + Ft · contact point · total virial vs c_strs)',
     # Stage E (already paper-style; tightened wording only)
     'σ_ionic — SE size factor':
         'σ_ionic correction — SE-size factor (model assumption)',
@@ -6792,11 +6851,19 @@ GROUP_DISPLAY_KEYS = [
     ('Fn SE-SE', '(μN)', 'fn_SE_SE_mean', '접촉력'),
     ('CP mean', '(MPa)', 'contact_pressure_mean', '접촉력'),
     ('CP max', '(MPa)', 'contact_pressure_max', '접촉력'),
-    # ── 응력 분포 ──
-    ('Stress CV', '(%)', 'stress_cv', '응력'),
-    ('σ_AM_P/σ_mean', '', 'stress_ratio_AM_P', '응력'),
-    ('σ_AM_S/σ_mean', '', 'stress_ratio_AM_S', '응력'),
-    ('σ_SE/σ_mean', '', 'stress_ratio_SE', '응력'),
+    # ── 응력 분포 ── 옛 네 열 = LIGGGHTS stress/atom (접촉 virial 50/50 분할) · 대각 — 열 이름에 규약 표기 (LHS-29) · ④b Love–Weber 열
+    ('Stress CV (50/50)', '(%)', 'stress_cv', '응력'),
+    ('σ_AM_P/σ_mean (50/50)', '', 'stress_ratio_AM_P', '응력'),
+    ('σ_AM_S/σ_mean (50/50)', '', 'stress_ratio_AM_S', '응력'),
+    ('σ_SE/σ_mean (50/50)', '', 'stress_ratio_SE', '응력'),
+    ('Stress CV LW', '(%)', 'stress_cv_lw', '응력'),
+    ('σ_AM_P/σ_mean LW', '', 'stress_ratio_AM_P_lw', '응력'),
+    ('σ_AM_S/σ_mean LW', '', 'stress_ratio_AM_S_lw', '응력'),
+    ('σ_SE/σ_mean LW', '', 'stress_ratio_SE_lw', '응력'),
+    ('Stress CV LW (벽 제외)', '(%)', 'stress_cv_lw_nowall', '응력'),
+    ('σ_AM_P/σ_mean LW (벽 제외)', '', 'stress_ratio_AM_P_lw_nowall', '응력'),
+    ('σ_AM_S/σ_mean LW (벽 제외)', '', 'stress_ratio_AM_S_lw_nowall', '응력'),
+    ('σ_SE/σ_mean LW (벽 제외)', '', 'stress_ratio_SE_lw_nowall', '응력'),
 ]
 
 # 낮을수록 좋은 열 — **표의 열 이름과 같은 철자** (test_closed_param_groupview E2 가 강제).
@@ -6806,7 +6873,7 @@ GROUP_LOWER_BETTER = {
     'Porosity', 'Porosity (union)', 'Porosity (union exact)', 'Overlap fraction', '두께', '두께 (질량 보존)',
     'SE-SE CN std', 'AM-AM CN std', 'Tortuosity', 'Tortuosity all-SE', 'AM Vulnerable',
     'Ionic Isolated (path)', 'Isolated: SE not linked', 'Isolated: no SE',
-    'R_brug', 'Constriction', 'CP mean', 'CP max', 'Stress CV',
+    'R_brug', 'Constriction', 'CP mean', 'CP max', 'Stress CV (50/50)', 'Stress CV LW', 'Stress CV LW (벽 제외)',
 }
 
 
@@ -9504,12 +9571,28 @@ def serve_report(case_id):
         if sigma_th is not None:
             L.append(f'- **σ_thermal**: {sigma_th:.3f} mS/cm equiv')
         if metrics.get('stress_cv'):
-            L.append(f'- **Stress CV**: {metrics["stress_cv"]:.1f}%')
-            for skey in ['sigma_AM_P_ratio', 'sigma_AM_S_ratio', 'sigma_SE_ratio']:
-                val = metrics.get(skey)
-                if val:
-                    slabel = skey.replace('sigma_', 'σ_').replace('_ratio', '/σ_mean')
-                    L.append(f'- **{slabel}**: {val:.3f}')
+            #  옛 네 줄 = LIGGGHTS stress/atom (접촉 virial 50/50 분할) · 대각 — 이름표 정정 (LHS-29).  상 비 키 = stress_ratio_<상>
+            #  (옛 판은 없는 키 sigma_AM_P_ratio 를 읽어 상 비가 보고서에 한 번도 안 나왔다 · 10-04 ④b 같은 묶음에서 고침)
+            L.append(f'- **Stress CV (LIGGGHTS stress/atom 50/50 분할 · 대각)**: {metrics["stress_cv"]:.1f}%')
+            for ph in ('AM_P', 'AM_S', 'SE'):
+                val = metrics.get(f'stress_ratio_{ph}')
+                if isinstance(val, (int, float)) and not isinstance(val, bool):
+                    L.append(f'- **σ_{ph}/σ_mean (50/50 분할)**: {val:.3f}')
+        if metrics.get('stress_lw_status') == 'OK' and isinstance(metrics.get('stress_cv_lw'), (int, float)):
+            #  ④b Love–Weber (접촉점 · 전체 텐서 · J20-s 10-04) — 벽 · 판 접촉 입자의 벽 힘은 두 규약 다 없다
+            L.append(f'- **Stress CV (Love–Weber)**: {metrics["stress_cv_lw"]:.1f}%'
+                     + (f' · 벽 접촉 제외 {metrics["stress_cv_lw_nowall"]:.1f}%'
+                        if isinstance(metrics.get('stress_cv_lw_nowall'), (int, float)) else ''))
+            for ph in ('AM_P', 'AM_S', 'SE'):
+                val = metrics.get(f'stress_ratio_{ph}_lw')
+                if isinstance(val, (int, float)) and not isinstance(val, bool):
+                    vn = metrics.get(f'stress_ratio_{ph}_lw_nowall')
+                    wf = metrics.get(f'stress_lw_wall_frac_{ph}')
+                    L.append(f'- **σ_{ph}/σ_mean (Love–Weber)**: {val:.3f}'
+                             + (f' · 벽 접촉 제외 {vn:.3f}' if isinstance(vn, (int, float)) else '')
+                             + (f' · 벽 접촉 입자 {100 * wf:.1f}%' if isinstance(wf, (int, float)) else ''))
+        elif metrics.get('stress_lw_status'):
+            L.append(f'- **Stress (Love–Weber)**: {metrics["stress_lw_status"]}')
         L.append('')
 
     L.append('### Scaling Law Reference\n')
@@ -9641,7 +9724,8 @@ _GRADE_PLAIN = {
     'fracture_index_force': '압착 중 생긴 균열을 종합한 점수예요(심할수록 큼). 단 사이클 중 손상이 아니라 '
         '제조 시점 손상이라 비중이 작습니다.',
     '__sigma_vm_cv_pct': '입자들이 받는 힘(응력)이 얼마나 들쭉날쭉한지예요. 작을수록 골고루 눌린 거고, '
-        '크면 특정 입자에 힘이 몰리는 "핫스팟"이 있다는 뜻입니다.',
+        '크면 특정 입자에 힘이 몰리는 "핫스팟"이 있다는 뜻입니다. ⚠ 지금 이 축은 옛 규약 (LIGGGHTS stress/atom 50/50 분할 · '
+        '대각) 의 값이에요 — 크기가 다른 입자에서 편향이 있어 (LHS-29) Love–Weber 값으로 바꿀 예정이고, 바뀌는 등급값을 먼저 보고한 뒤에 바꿉니다.',
     'sigma_full_mScm_stage_e_physics': '이 전극의 이온 전도도 — 이온이 얼마나 잘 흐르는지를 나타내는 가장 '
         '중요한 값이에요(높을수록 좋음). 배터리 성능 1순위 지표입니다.',
     'thermal_sigma_full_mScm_stage_e_physics': '열을 얼마나 잘 퍼뜨리는지(냉각 능력)예요. 고체전지에서 '

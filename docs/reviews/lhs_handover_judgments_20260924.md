@@ -1009,7 +1009,7 @@
 - 다음: `LREL-05` · `06` claimed_fixed (이 커밋 sha) · 관문 보강 (`LREL-01`~`04` — 반례 먼저) · 열 사전 문구 (다음 생성).
 
 
-## J20-s. ③ 마감 · ④–⑦ 1차 감사 — 코드 정의 + real_14 실측 (10-04 서브 세션 · 1저자 *"권고에 맞게 진행 · 순서 꼬이지 않게 너가 잘 컨트롤해"* · ⬜ 비준 대기)
+## J20-s. ③ 마감 · ④–⑦ 1차 감사 — 코드 정의 + real_14 실측 (10-04 서브 세션 · 1저자 *"권고에 맞게 진행 · 순서 꼬이지 않게 너가 잘 컨트롤해"* · ✅ 비준 10-04 *"권고대로"* · ④b 구현 10-04)
 
 - 배경: 망 배치 (τ · 협착 분율) 는 이 감사 → 수정 → 리뷰 → 봉인 **뒤** (1저자 10-04 *"아직 network 까지 갈 수 없는 거 아니야"*).  ⑤ · ⑥ · ⑦ · ④b 는
   **접촉 단계** 열이라 10-01 재실행 (`docs/data/lhs_webapp_contact_d1ec42fba/` · 130) 에 값이 이미 있다 · ④a (`bulk_resistance_fraction`) 만 망 단계.
@@ -1019,18 +1019,52 @@
 
 | 묶음 | 열 | 코드 | 판정 | 핵심 |
 |---|---|---|---|---|
-| ③ φ_SE | `phi_se_mass_conserving` · `phi_am_mass_conserving` · `thickness_mass_conserving_um` · `porosity_union_exact_pct` · `_se_pct` | 웹앱 ③ (10-01) ↔ 수확기 | ✅ **마감** | 웹앱 (d1ec42fba · MC n 4,000,000 · 케이스별 seed) ↔ 인계표 (수확기) 130/130 — union Δ 중앙 0.015 · p90 0.035 · 최대 0.075 %p · φ_SE ≤ 1.7e-4 · φ_AM ≤ 6.7e-4 · L_mc ≤ 0.031 µm = **두 MC 독립 추출의 잡음** (SE √2 × 0.015 %p) · 정본은 인계표 (수확기 열 · J20-e) 그대로 |
+| ③ φ_SE | `phi_se_mass_conserving` · `phi_am_mass_conserving` · `thickness_mass_conserving_um` · `porosity_union_exact_pct` · `_se_pct` | 웹앱 ③ (10-01) ↔ 수확기 | ✅ **마감** | 웹앱 (d1ec42fba · MC n 4,000,000 · 케이스별 seed) ↔ 인계표 (수확기) 130/130 — union Δ 중앙 0.015 · p90 0.035 · 최대 0.075 %p · φ_SE ≤ 1.7e-4 · φ_AM ≤ 6.7e-4 · L_mc ≤ 0.031 µm = **두 MC 독립 추출의 잡음** (SE √2 × 0.015 %p) · lhsx **64/64** 도 같다 (`lhsx_webapp_contact_d1ec42fba` ↔ `lhsx_handover_20261001` — φ_SE 중앙 9e-5 · 최대 2.8e-4 · φ_AM ≤ 1.8e-4 · L_mc ≤ 0.018 µm · union 중앙 0.0115 · 최대 0.040 %p) ⇒ **130 + 64 마감** · 정본은 인계표 (수확기 열 · J20-e) 그대로 |
 | ④a 협착 분율 | `bulk_resistance_fraction` (+ `_physics`) | `network_conductivity.py` `run_decomposition` (`bulk_frac` · L2-08 주석) | ⚠ **이름 · 정의** | 간선마다 R_bulk/(R_bulk+R_c) 의 **비가중 평균** (전류 없는 간선 · 비관통 덩어리 포함) — 거시 전력 몫이 아니다 (`L2-08` = 이름표만 고침).  real_14 이온: 보고 1−bf **0.766** ↔ I²R 가중 **0.786** (hertz) · 0.782 ↔ **0.828** (physics) · 열 physics 0.704 ↔ **0.544** — 잘 관통된 침대에서도 2–16 %p, 문턱 근처 침대는 미측정.  웹앱 주석 *"σ_ionic moves while σ_bulk stays fixed"* (app.py:2672) = 이유 틀림 (모드에 따라 **접촉 면적 → R_c** 가 바뀐다) |
 | ④b σ_VM | `stress_cv` · `stress_ratio_{AM_P,AM_S,SE}` (+ `stress_z_layer_cv`) | `dem_analysis_core.calc_von_mises_stress` ← `analyze_contacts.load_atoms_raw` (`c_strs` ÷ 4/3πr³) | ⛔ **규약 결함** (원장 `LHS-29`) | LIGGGHTS `stress/atom` 의 입자 접촉 몫 = **0.5 · (x_i − x_j) ⊗ F** 를 두 입자에 똑같이 (공개 소스 `pair_gran_base.h` `ev_tally_xyz(…, delta)` · `pair.cpp` `Pair::ev_tally_xyz` 의 0.5) — 재현 중앙 비 **1.000000** · 크기가 다른 쌍에서 큰 입자 응력 과소 · 작은 입자 과대 (손풀이: r 6 : 1 에서 0.575 배 · 7.21 배).  real_14: `stress_ratio_AM_P` **0.884** (웹앱) ↔ **3.217** (Love–Weber · 입자 중심 → 접촉점) — **대소가 뒤집힌다** · AM_S 1.085 ↔ 2.343 · SE 0.999 ↔ 0.980 · `stress_cv` **213 → 133 %**.  벽 · 판 접촉은 virial 0 (`fix wall/gran` 에 virial 없음 · 바닥에 닿은 입자 AM_P 7 · AM_S 52 · SE 2237) · 대각 성분만 (덤프 `c_strs[1–3]`).  소비자 = 웹앱 케이스 표 σ_*/σ_mean 행 · 그룹 비교 · **등급 축 "기계적 안정성" (`grade_engine.py` stress_cv)** · 탐색 적합 (v35 · screening — 생산 폼 아님) |
 | ⑤ F1 | `se_se_cn_aug` · `_std` · `_n_extra` · `_h_spread_sim` | `calc_se_se_cn` F1 (`dem_analysis_core.py` · LHS-22 주기 수정 뒤) | ✅ **조건부** | 탄성 CN + 표면 틈 ≤ h 인 SE–SE 쌍 · h = 10 nm 물리 (`H_SPREAD_REAL_M` · 확대 배율 반영 = DESC-03 의 혼용 없음) — **10 nm 는 출처 없는 모델 상수** ("2 × h_film_min") → 감도 기술자 한정어 · SE–SE 만 · 반올림 쌍 (접촉 감사 v2 의 114 쌍 / 130 침대) 이 탄성 CN 과 겹쳐 셀 수 있음 (무시 가능 수준) |
 | ⑥ Auerbach | `fracture_index_force` · `frac_<단계>_force_pct` (+ `n_*`) | `calc_fracture_stages` · `fracture_model.fracture_classify_force_sim` | ✅ **조건부** (원장 `LHS-31`) | AM–AM 만 · F/P_c (P_c = A K_IC² R_min / E*) 의 배수 1 · 3 · 11 · 32 로 단계.  힘 환산 F/scale 은 덱 E/1000 과 정합.  한정: ① **마지막 프레임 힘** (압축 중 최대 아님 → 손상 **하한**) ② 벽 · 판 접촉 제외 (판에 닿은 AM_P 의 최대 하중 빠짐) ③ R_min 선택 (R* 이면 P_c 절반) ④ **K_IC_P 0.3 = 소결 펠릿값** (정본 카드 `xu2017` — 이차입자 0.102 의 3 배) · K_IC_S 1.0 측정 근거 없음 (카드 판정 ⚠) — P_c ∝ K_IC² 라 이차입자값이면 P_c 1/8.6 ⑤ A 200 · 배수 원전 (Lawn Table 3.4) 카드 없음 [미확인] ⑥ δ 판과 나란히 인용 금지 (09-19 그대로) |
 | ⑦ A_dem_geometric | `area_<쌍>_mean` · `_total` · `_n` · `se_se_cn_eff_area` (`_perc`) | `analyze_contacts` · `calc_se_se_cn` · `c_cpl[22]` | ✅ **조건부** | `c_cpl[22]` = 두 구 **교차원 넓이의 정확식** (공개 소스 `compute_pair_gran_local.cpp:558` — 반지름이 달라도 정확) · 작은 δ 에서 Hertz πR*δ 의 ≈ 2 배 (이름 주의 그대로 · L1-04) · `_total` · `_n` = 총량 (입자당 · 부피당으로 나눠 쓰기) · coverage 는 J20-m 으로 이미 인계 · ⛔ `path_hop_area_*` = 덩어리마다 고른 경로 30 개 (best · mean · worst 10) 의 평균 = **선별 표본 통계** → 인계 제외 (원장 `LHS-32`) |
 
-- 비준 대기 (권고):
+- 비준 (10-04 · 1저자 *"권고대로"* — 아래 권고 그대로):
   - **④a**: 옛 열은 이름표 *"접촉별 R_bulk/R_total 비가중 평균 (전력 몫 아님 · L2-08)"* + 새 열 **`constriction_power_share_ion_hertz`** (같은 FULL 해의 Σ I²R_c / Σ I²R_total · 관통 간선 · 가상 전극 제외) 를 망 단계에서 같이 계산 · hertz 먼저 (v2 결정 3) · 봉인 모듈 수정 = S3 재봉인과 같은 묶음 · 웹앱 주석 정정 (`LHS-30`).
   - **④b**: (가) **접촉 덤프로 Love–Weber 입자 응력**을 새로 계산 (전 텐서 — 대각만 아님 · 벽 접촉 입자 표지 열) → 새 열 `stress_cv_lw` · `stress_ratio_<상>_lw` · 옛 열은 *"LIGGGHTS stress/atom 50/50 분할"* 이름표로 남김 · 웹앱 표 · 그룹 비교 같은 묶음 · **등급 축 전환은 바뀌는 등급값 보고 뒤** (②b TAU-03 과 같은 절차).  (나) 인계 제외만.  → **(가) 권고** — 접촉 단계라 재실행이 싸다 (건당 16–37 s).
   - **⑤ · ⑥ · ⑦**: 위 한정어로 인계 (열 사전 문구 · 생성기 묶음 추가 · 새 계산 없음 — d1ec42fba 값) · `path_hop_area_*` 제외.
   - **순서**: ④a · ④b 수정 (시험 먼저 · 웹앱 같은 묶음) → Codex **한 번** (④ 수정 + 망 경로 + `stop_after='network'`) → 접촉 단계 재실행 (④b 새 열) + 망 배치 (④a · τ) — 설계만 보내고 다시 고치는 왕복을 줄인다 (coverage 는 5 회 왕복).
+
+### J20-s ④b 구현 (10-04 · 시험 먼저 → 생산 → 웹앱 같은 묶음)
+
+- 생산: `dem_analysis_core.calc_love_weber_stress` (`LW_DEFINITION = love_weber_branch_full_tensor_v1`) ← `run_full_analysis` (결과 키 `stress_lw`) ·
+  `analyze_contacts.load_contacts_raw` 가 접촉 덤프의 전체 힘 (`fx·fy·fz` = c_cpl[10–12] = id1 이 받는 힘) · 접선 성분 · 접촉점 (`cp_*` = c_cpl[24–26]) 을
+  **열이 있을 때만** 싣는다 (옛 키 · 값 불변 — 열 배열에서 한 번에 뽑음).
+  σ_i = (1/V_i) Σ_c (x_c − x_i) ⊗ f_c (인장 양수 = c_strs 부호 · x·y 최소영상) · VM = 전체 텐서의 **대칭부** · 요약 통계 = 옛 열과 같은 정의 (모든 입자 ·
+  접촉 없는 입자 = 0 · 모집단 std/mean · 상 평균/전체 평균) — **규약만** 다르다.
+- 검사 (실패 = 값 키 없이 `stress_lw_status` 에 사유 · 0 으로 안 채움): 열 · 유한값 · 원자 id 짝 · max|F − (Fn+Ft)|/max|F| ≤ 1e-3 · 접촉점 ≤ 1.01 r ·
+  c_strs 가 있으면 **전체 virial Σ V σ_LW = Σ c_strs** (접촉점이 지워지는 정확식 → 두 덤프의 프레임 · 힘 부호 · 열 대응) ≤ 1 % (실측 5.0e-5 · 200 배 여유).
+- 벽: 바닥 (z − r < 0 · zplane 0) · 판 (z + r > plate_z · mesh 일 때만 — 추정값이면 판 표지 · 벽 제외 통계 = 없음) · 옆면 = x·y 주기 가정 (덱을 읽지 않는다 ·
+  옛 벽-RVE 케이스의 옆벽 입자는 표지 밖 — 한정어).
+- 새 키: `stress_lw_status` · `_definition` · `stress_cv_lw` · `stress_ratio_<상>_lw` · `stress_cv_lw_nowall` · `stress_ratio_<상>_lw_nowall` ·
+  `stress_lw_n_wall_floor` · `_n_wall_plate` · `stress_lw_wall_frac_<상>` · `stress_lw_floor_frac_<상>` · `stress_lw_n_no_contact` · `stress_lw_asym_frob_median` ·
+  `stress_lw_check_{force_decomp_rel, branch_over_r_max, virial_total_rel, virial_status}` · 케이스 표 (`network_summary.csv`) 줄 = 옛 네 줄 뒤.
+- real_14 (리포 덤프 · `scripts/test_love_weber_stress.py` L12 가 매번 다시 잰다):
+
+  | 규약 | stress_cv | AM_P | AM_S | SE |
+  |---|---|---|---|---|
+  | 옛 열 (stress/atom 50/50 · 대각) | 213.1 % | 0.884 | 1.085 | 0.999 |
+  | Love–Weber · 대각만 (감사기 · 10-04 1차) | 132.5 % | 3.217 | 2.343 | 0.980 |
+  | **Love–Weber · 전체 텐서 (생산)** | **120.7 %** | **2.737** | **2.341** | **0.981** |
+  | Love–Weber · 전체 텐서 · 벽 접촉 제외 | 122.9 % | 3.016 | 2.446 | 0.982 |
+
+  벽 접촉 입자 비율 AM_P **41.7 %** · AM_S 20.0 % · SE 9.8 % (바닥 2214 · 판 1104) — 큰 입자일수록 벽에 닿는다 → AM_P 비는 벽 제외 줄과 같이 읽는다.
+  전단을 넣으면 AM_P 비가 3.22 → 2.74 로 준다 (다수인 SE 의 VM 이 전단으로 더 커져 전체 평균이 오른다).  비대칭 ‖σ − σᵀ‖/‖σ‖ 중앙 0.0105 (대칭부로 VM).
+  대각 σ_LW 는 독립 구현 (감사기 `per_particle_virials`) 과 입자마다 상대 차 < 1e-9.
+- 웹앱 (같은 묶음 · J20-l): 케이스 표 — 옛 네 줄 논문 라벨 = *"LIGGGHTS stress/atom, 50/50 pair split, diagonal only"* (값 그대로) · Love–Weber 줄 10 개
+  (값 · 벽 제외 · 벽 접촉 비율 · 상태 — 재분석 전 케이스 = '—' + *"NOT_COMPUTED (재분석 전 케이스 — 접촉 단계 재실행 필요)"*) · 툴팁 · 별칭 ·
+  그룹 표 열 (옛 열 이름에 `(50/50)` · LW 8 열 · 낮을수록 좋음 철자 = 열 이름) · 그룹 그림 (실선 LW · 점선 옛 · 값 없는 케이스 안 그림 · CSV) ·
+  보고서 (상 비 키 정정 — 옛 판은 없는 키 `sigma_AM_P_ratio` 를 읽어 상 비가 한 번도 안 나왔다) · 등급 설명 · 쉬운 툴팁 (전환 보류 표기).
+  시험 `webapp/test_stress_lw_labels.py` 33/33 (옛 웹앱 6/33) · 생산 `scripts/test_love_weber_stress.py` 42/42 (옛 코드 0/1).
+- **안 한 것**: 등급 축 (기계적 안정성) 은 여전히 옛 `stress_cv` — 전환은 바뀌는 등급값 보고 뒤 (②b TAU-03 과 같은 절차) · 값은 접촉 단계 재실행 (130 + 64 ·
+  Codex 뒤) 에서 생긴다 · 인계표 열은 그 뒤 · `stress_z_layer_cv` (z 층 CV) 는 옛 규약만 (LW 층 판 없음 — 소비자 = 그룹 그림 하나).
 
 
 ## 인계 판정 (지금)

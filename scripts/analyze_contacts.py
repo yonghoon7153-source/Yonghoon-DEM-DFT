@@ -53,16 +53,29 @@ def load_contacts_raw(csv_path):
     # Vectorized contact list construction (much faster than iterrows for large files)
     fn = np.sqrt(df['fn_x'].values**2 + df['fn_y'].values**2 + df['fn_z'].values**2)
     ft = np.sqrt(df['ft_x'].values**2 + df['ft_y'].values**2 + df['ft_z'].values**2)
+    #  ④b (J20-s · 10-04) — Love–Weber 입자 응력용: 전체 힘 (fx·fy·fz = id1 이 받는 힘 · c_cpl[10–12]) · 접선 성분 · 접촉점
+    #  (cp_* = c_cpl[24–26]).  열이 있는 덤프만 (옛 덤프 · 손 픽스처는 없다 → 소비자가 NOT_COMPUTED).  값은 열 배열에서 한 번에 뽑는다
+    #  (옛 판의 행마다 .iloc 과 같은 값 — 키 · 값 불변).
+    opt = []
+    for grp in (('fx', 'fy', 'fz'), ('cp_x', 'cp_y', 'cp_z')):
+        if all(g in df.columns for g in grp):
+            opt += list(grp)
+    keep = ['id1', 'id2', 'fn_x', 'fn_y', 'fn_z', 'ft_x', 'ft_y', 'ft_z', 'contact_area', 'delta'] + opt
+    arr = {k: df[k].values for k in keep}
     contacts = []
     for i in range(len(df)):
-        contacts.append({
-            'id1': int(df['id1'].iloc[i]), 'id2': int(df['id2'].iloc[i]),
+        c = {
+            'id1': int(arr['id1'][i]), 'id2': int(arr['id2'][i]),
             'fn': float(fn[i]),
-            'fn_x': float(df['fn_x'].iloc[i]), 'fn_y': float(df['fn_y'].iloc[i]), 'fn_z': float(df['fn_z'].iloc[i]),
+            'fn_x': float(arr['fn_x'][i]), 'fn_y': float(arr['fn_y'][i]), 'fn_z': float(arr['fn_z'][i]),
             'ft': float(ft[i]),
-            'contact_area': float(df['contact_area'].iloc[i]),
-            'delta': float(df['delta'].iloc[i]),
-        })
+            'contact_area': float(arr['contact_area'][i]),
+            'delta': float(arr['delta'][i]),
+            'ft_x': float(arr['ft_x'][i]), 'ft_y': float(arr['ft_y'][i]), 'ft_z': float(arr['ft_z'][i]),
+        }
+        for k in opt:
+            c[k] = float(arr[k][i])
+        contacts.append(c)
     print(f"  Loaded {len(contacts)} contacts from {os.path.basename(csv_path)}")
     return contacts, df
 
@@ -311,13 +324,33 @@ def save_results(results, atoms_raw, contacts_raw, df_atom, df_contact,
                     rows.append({'지표': 'σ_thermal [physics] (mS/cm equiv)',
                                  '값': round(_met['thermal_sigma_full_mScm_physics'], 3)})
     # ── 응력 ──
+    #  옛 줄 (Stress CV(%) · σ_<상>/σ_mean) = LIGGGHTS stress/atom (접촉 virial 50/50 분할) · 대각 성분 — 이름표는 웹앱이 정정한다 (LHS-29).
+    #  ④b (J20-s · 10-04) Love–Weber 줄은 그 뒤에 — 상태가 OK 일 때만 (실패 · 열 없음 = 줄 없음 · 웹앱이 '—' + 상태로 채운다).
     stress = results.get('stress')
-    if stress:
+    stress_lw = results.get('stress_lw') or {}
+    if stress or stress_lw.get('status') == 'OK':
         rows.append({'지표': '── 응력 ──', '값': ''})
+    if stress:
         rows.append({'지표': 'Stress CV(%)', '값': round(stress['vm_cv'], 1)})
         for tn in ['AM_P', 'AM_S', 'SE']:
             if tn in stress['type_stress']:
                 rows.append({'지표': f'σ_{tn}/σ_mean', '값': round(stress['type_stress'][tn]['ratio'], 3)})
+    if stress_lw.get('status') == 'OK':
+        rows.append({'지표': 'Stress CV — Love–Weber (%)', '값': round(stress_lw['vm_cv'], 1)})
+        for tn in ['AM_P', 'AM_S', 'SE']:
+            if tn in stress_lw['type_stress']:
+                rows.append({'지표': f'σ_{tn}/σ_mean — Love–Weber', '값': round(stress_lw['type_stress'][tn]['ratio'], 3)})
+        if stress_lw.get('vm_cv_nowall') is not None:
+            rows.append({'지표': 'Stress CV — Love–Weber · 벽 접촉 제외 (%)', '값': round(stress_lw['vm_cv_nowall'], 1)})
+            for tn in ['AM_P', 'AM_S', 'SE']:
+                if tn in (stress_lw.get('type_stress_nowall') or {}):
+                    rows.append({'지표': f'σ_{tn}/σ_mean — Love–Weber · 벽 접촉 제외',
+                                 '값': round(stress_lw['type_stress_nowall'][tn]['ratio'], 3)})
+        _bt = stress_lw['wall'].get('by_type', {})
+        _fr = [f"{tn} {100 * _bt[tn]['frac_wall']:.1f}" for tn in ['AM_P', 'AM_S', 'SE']
+               if tn in _bt and _bt[tn].get('frac_wall') is not None]
+        if _fr:
+            rows.append({'지표': '벽 접촉 입자 (%) — 바닥 · 판', '값': ' · '.join(_fr)})
     pd.DataFrame(rows).to_csv(os.path.join(output_dir, 'network_summary.csv'), index=False)
 
     # Auto-detect P:S ratio from mass (count × volume × density)
@@ -449,13 +482,40 @@ def save_results(results, atoms_raw, contacts_raw, df_atom, df_contact,
     for lbl, v in results['coverage'].items():
         metrics[f'coverage_{lbl}_mean'] = v['mean']
         metrics[f'coverage_{lbl}_std'] = v['std']
-    # Stress (relative)
+    # Stress (relative) — 옛 키 = LIGGGHTS stress/atom (접촉 virial 50/50 분할) · 대각 성분 (값 · 키 불변 · LHS-29)
     stress = results.get('stress')
     if stress:
         metrics['stress_cv'] = stress['vm_cv']
         for tn, sv in stress['type_stress'].items():
             metrics[f'stress_ratio_{tn}'] = sv['ratio']
         metrics['stress_z_layer_cv'] = stress['z_layer_cv']
+    # ④b Love–Weber (J20-s · 1저자 비준 10-04) — 새 키만 더한다.  상태가 OK 가 아니면 값 키를 쓰지 않는다 (0 으로 안 채움).
+    stress_lw = results.get('stress_lw')
+    if stress_lw:
+        metrics['stress_lw_status'] = stress_lw['status']
+        metrics['stress_lw_definition'] = stress_lw['definition']
+        for ck, cv_ in (stress_lw.get('checks') or {}).items():
+            metrics[f'stress_lw_check_{ck}'] = cv_
+        if stress_lw['status'] == 'OK':
+            metrics['stress_cv_lw'] = stress_lw['vm_cv']
+            for tn, sv in stress_lw['type_stress'].items():
+                metrics[f'stress_ratio_{tn}_lw'] = sv['ratio']
+            if stress_lw.get('vm_cv_nowall') is not None:
+                metrics['stress_cv_lw_nowall'] = stress_lw['vm_cv_nowall']
+                for tn, sv in (stress_lw.get('type_stress_nowall') or {}).items():
+                    metrics[f'stress_ratio_{tn}_lw_nowall'] = sv['ratio']
+            _w = stress_lw['wall']
+            metrics['stress_lw_wall_scope'] = _w['scope']
+            metrics['stress_lw_plate_flag'] = _w['plate_flag']
+            metrics['stress_lw_n_wall_floor'] = _w['n_floor']
+            if _w['n_plate'] is not None:
+                metrics['stress_lw_n_wall_plate'] = _w['n_plate']
+            for tn, bt in _w['by_type'].items():
+                metrics[f'stress_lw_floor_frac_{tn}'] = bt['frac_floor']
+                if bt['frac_wall'] is not None:
+                    metrics[f'stress_lw_wall_frac_{tn}'] = bt['frac_wall']
+            metrics['stress_lw_n_no_contact'] = stress_lw['n_no_contact']
+            metrics['stress_lw_asym_frob_median'] = stress_lw['asym_frob_median']
     # New metrics
     force_dist = results.get('force_dist', {})
     for ct, v in force_dist.items():

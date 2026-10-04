@@ -329,8 +329,9 @@ AXES: list[dict[str, Any]] = [
     {'category': '기계적 안정성',
      'key': '__sigma_vm_cv_pct', 'label': 'CV(σ_VM) (%)',
      'direction': 'lower', 'thresholds': [100, 130, 160, 200, 250, 320],
-     'formula': '100 × stress_cv  (CV = σ(stress) / ⟨stress⟩)',
-     'meaning': '응력 분포 불균일도 — hotspot 식별.',
+     'formula': '100 × stress_cv  (CV = σ(stress) / ⟨stress⟩) — stress_cv = LIGGGHTS stress/atom (접촉 virial 50/50 분할) · 대각 성분',
+     'meaning': '응력 분포 불균일도 — hotspot 식별.  ⚠ 입력 규약 결함 (LHS-29 · 크기가 다른 쌍에서 큰 입자 과소 · 작은 입자 과대) — '
+                'Love–Weber 열 (stress_cv_lw · ④b 10-04) 로 바꾸는 것은 바뀌는 등급값 보고 뒤 (②b TAU-03 과 같은 절차).  지금 값 = 옛 규약.',
      'weight': 0.3},
 
     # ── 9. 전도도 (Absolute conductivity) ──
