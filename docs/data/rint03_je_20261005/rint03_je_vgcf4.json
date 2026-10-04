@@ -1,0 +1,29 @@
+[
+ {
+  "n_am": 1498,
+  "n_am_with_cells": 1498,
+  "n_carbon_cells_with_am_pid": 93352,
+  "n_am_contaminated": 1498,
+  "old_je_mass_share_from_non_am_cells": 0.974142,
+  "ratio_old_over_new": {
+   "median": 42.607926,
+   "p90": 91.892084,
+   "max": 203.881662,
+   "n_gt_1p1": 1498,
+   "n_gt_2": 1495
+  },
+  "spearman_old_new": 0.27021,
+  "top10pct_overlap": 0.14,
+  "je_def_module": "am-final-sid-v2",
+  "grid": "/home/kgy/pa100/kits/VGCF_PTFE_4_1/run_VGCF4_PTFE1_20260927_022040_2903748/step4_grid.npz",
+  "status": "OK",
+  "sigma_e_eff_S_cm": 4.145609804769797,
+  "shape": [
+   126,
+   126,
+   316
+  ],
+  "vox_um": 0.4,
+  "periodic_xy": false
+ }
+]

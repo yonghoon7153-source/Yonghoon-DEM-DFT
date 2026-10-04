@@ -11,6 +11,11 @@ sid 만 바꾸고 남긴 AM 번호를 가진 **탄소 셀**의 전류가 AM 평�
 origin_shift_um · am_r_um · periodic_xy).  σ_e 를 payload 와 같은 인자로 다시 풀고 (r 끔), 면 전류 |J_z| 대리량을 한 번 만든 뒤
 두 마스크로 나눈다.  ★ 새 정의 값은 `step3_sigma.per_particle_current` 의 출력과 **같아야** 한다 (복제 검산 — 다르면 거부).
 
+출력 열 주의: `n_carbon_cells_with_am_pid` 는 이름과 달리 **유효 AM 번호를 단 비-AM 셀 전부** (최종 sid ∉ {1, 2} — 탄소뿐 아니라
+PTFE · SE 등도 센다) 다.  전류는 σ_e > 0 인 셀만 나르므로 `old_je_mass_share_from_non_am_cells` 는 사실상 그중 **도체 (탄소)** 의 몫이다.
+열 이름은 이미 낸 JSON (kgy 10-05) 과 맞추려고 그대로 둔다.  수렴 정보 (`cg_info` · `resid` · `unconverged`) 를 싣고, 소비자 계약
+(cg_info == 0 ∧ unconverged False ∧ 0 ≤ resid ≤ 1e-6) 을 못 채우면 상태 = `UNCONVERGED` (SELF-85 — 옛 판은 미수렴 해도 `OK`).
+
   python3 scripts/rint03_je_compare.py --selftest
   python3 scripts/rint03_je_compare.py GRID.npz [GRID2.npz …] [--json OUT.json]
 """
@@ -112,8 +117,12 @@ def run_grid(path):
     res = S3.solve_sigma_z(sid, sig, vox, return_field=True, z_top_um=z_top, z_bot_um=float(osh[2]), periodic_xy=periodic)
     if res.get('reason') or 'phi' not in res:
         return {'grid': path, 'status': 'NOT_SOLVABLE', 'reason': res.get('reason')}
+    # ★ SELF-85 — 수렴 정보를 싣고 상태를 가른다 (옛 판: 미수렴 해도 'OK').  계약 = R4-CX-02 의 conjunction.
+    cg_info, resid = int(res.get('cg_info', 0)), float(res.get('resid', float('nan')))
+    unconv = bool(res.get('unconverged')) or cg_info != 0 or not (0.0 <= resid <= 1e-6)
     out = compare(res, sid, pid, sig, n_am)
-    out.update({'grid': path, 'status': 'OK', 'sigma_e_eff_S_cm': float(res['sigma_eff']), 'shape': list(sid.shape),
+    out.update({'grid': path, 'status': 'UNCONVERGED' if unconv else 'OK', 'cg_info': cg_info, 'resid': resid,
+                'unconverged': unconv, 'sigma_e_eff_S_cm': float(res['sigma_eff']), 'shape': list(sid.shape),
                 'vox_um': vox, 'periodic_xy': periodic})
     return out
 
@@ -161,6 +170,25 @@ def selftest():
     res4 = S3.solve_sigma_z(sid4, sig4, 0.5, return_field=True, **kw)
     out4 = compare(res4, sid4, pid, sig4, 2)
     chk('T4 순위가 뒤집히면 top 10 % 겹침 < 1 · Spearman < 1', out4['top10pct_overlap'] < 1.0 and (out4['spearman_old_new'] or 1) < 1.0, out4)
+    # T5 · T6 (SELF-85) 수렴 정보 — 옛 판은 미수렴 해도 'OK' 로 냈다 (JSON 에 cg_info · resid 없음).
+    #   소비자 수렴 계약 (R4-CX-02) = cg_info == 0 ∧ unconverged False ∧ 0 ≤ resid ≤ 1e-6.
+    import tempfile
+    with tempfile.TemporaryDirectory() as td:
+        p5 = os.path.join(td, 'step4_grid.npz')
+        np.savez(p5, sid=sid, pid=pid, vox_um=np.float64(0.5), z_top_um=np.float64(5.0),
+                 sig_e_S_cm=sig, am_r_um=np.ones(2), origin_shift_um=np.zeros(3), periodic_xy=np.bool_(False))
+        r5 = run_grid(p5)
+        chk('T5 수렴한 해 = OK 이고 cg_info 0 · resid ≤ 1e-6 · unconverged False 를 싣는다',
+            r5.get('status') == 'OK' and r5.get('cg_info') == 0 and r5.get('unconverged') is False
+            and isinstance(r5.get('resid'), float) and 0.0 <= r5['resid'] <= 1e-6, r5)
+        mi = S3.CG_MAXITER
+        try:
+            S3.CG_MAXITER = 1                             # CG 한 번 → 미수렴
+            r6 = run_grid(p5)
+        finally:
+            S3.CG_MAXITER = mi
+        chk('T6 미수렴 해는 OK 가 아니다 (status UNCONVERGED · cg_info > 0 · unconverged True)',
+            r6.get('status') == 'UNCONVERGED' and (r6.get('cg_info') or 0) > 0 and r6.get('unconverged') is True, r6)
     print(f'\n{ok} PASS · {len(fails)} FAIL')
     return 0 if not fails else 1
 

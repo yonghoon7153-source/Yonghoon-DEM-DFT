@@ -1,0 +1,29 @@
+[
+ {
+  "n_am": 2491,
+  "n_am_with_cells": 2491,
+  "n_carbon_cells_with_am_pid": 0,
+  "n_am_contaminated": 0,
+  "old_je_mass_share_from_non_am_cells": 0.0,
+  "ratio_old_over_new": {
+   "median": 1.0,
+   "p90": 1.0,
+   "max": 1.0,
+   "n_gt_1p1": 0,
+   "n_gt_2": 0
+  },
+  "spearman_old_new": 1.0,
+  "top10pct_overlap": 1.0,
+  "je_def_module": "am-final-sid-v2",
+  "grid": "/home/kgy/mpm_fig_wt/kit_260925_000513_123978/run_fig_20261001_164534/step4_grid.npz",
+  "status": "OK",
+  "sigma_e_eff_S_cm": 0.0010475798690334753,
+  "shape": [
+   125,
+   125,
+   284
+  ],
+  "vox_um": 0.4,
+  "periodic_xy": false
+ }
+]

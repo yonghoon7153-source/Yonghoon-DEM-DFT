@@ -7179,7 +7179,7 @@
     "webapp/test_je_definition_label.py (시험 먼저 2/10 → 22/22)"
    ],
    "claimed_fixed_sha": "f1f92d009",
-   "verification_note": "f1f92d009: per_particle_current 마스크 = 최종 sid ∈ {1, 2} ∧ 0 ≤ pid < n_am · 정의 판 PER_PARTICLE_CURRENT_DEF = am-final-sid-v2 (r-OFF 에서도 je · jb 가 바뀌는 **선언된 예외** — σ · φ · 소산 분담 · 반응 · patch 는 그대로) · payload step3.je_definition · 웹앱 표지 (옛 payload = 옛 정의 경고 · A/B 불일치 경고) · 게이트 rc 0 (10-03).  ⬜ 비준 ② 실침대 1 개 마스크 전/후 측정 (명령 = 1저자).  Codex 재검증 대기."
+   "verification_note": "f1f92d009: per_particle_current 마스크 = 최종 sid ∈ {1, 2} ∧ 0 ≤ pid < n_am · 정의 판 PER_PARTICLE_CURRENT_DEF = am-final-sid-v2 (r-OFF 에서도 je · jb 가 바뀌는 **선언된 예외** — σ · φ · 소산 분담 · 반응 · patch 는 그대로) · payload step3.je_definition · 웹앱 표지 (옛 payload = 옛 정의 경고 · A/B 불일치 경고) · 게이트 rc 0 (10-03).  ✅ 실침대 측정 10-05 (kgy · 킷 step4_grid.npz 셋 · vox 0.4 · 세 해 수렴 — 로그에 미수렴 경고 없음): VGCF 4 wt% = 옛 je 질량의 97.4 % 가 AM 번호를 단 비-AM (탄소) 셀 · 1,498/1,498 입자 오염 · 옛/새 비 중앙 42.6× (최대 204×) · Spearman 0.27 · top 10 % 겹침 14 % / VGCF 1 wt% = 6.4 % · 비 중앙 1.05× (33 입자 > 2× · 최대 27×) · Spearman 0.954 / 첨가제 없는 ps45 5:5 = 두 정의 같음 (음성 대조).  크기는 격자 의존 (탄소 셀 폭 = vox).  요청서 codex_rint_g1_lhs_network_request_20261004.md §1-2 · 증거 docs/data/rint03_je_20261005/.  Codex 재검증 대기."
   },
   {
    "id": "RINT-04",
@@ -7519,6 +7519,19 @@
     "scripts/grade_engine.py --selftest (②b · ②e)"
    ],
    "claimed_fixed_sha": "14ac9b344"
+  },
+  {
+   "id": "SELF-85",
+   "severity": "P3",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "claude (10-05 새벽 · kgy RINT-03 vgcf1 런이 예상보다 오래 걸려 미수렴 가능성을 따지다 자기 발견)",
+   "opened_in": "docs/reviews/codex_rint_g1_lhs_network_request_20261004.md",
+   "title": "RINT-03 측정 도구 `rint03_je_compare.py` 가 수렴 정보 (cg_info · resid · unconverged) 를 출력에 싣지 않아 미수렴 해도 `status: OK` 로 냈다 — 소비자 수렴 계약 (R4-CX-02 의 conjunction) 을 적용할 수 없었다.  10-05 kgy 세 그리드는 로그에 `⚠ STEP3 CG not converged` 줄이 없어 결과 영향 없음",
+   "note": "처방: run_grid 가 cg_info · resid · unconverged 를 싣고 계약 (cg_info == 0 ∧ unconverged False ∧ 0 ≤ resid ≤ 1e-6) 을 못 채우면 status = UNCONVERGED (main rc 2).  시험 먼저 — T5 (수렴 해는 세 필드를 싣고 OK) · T6 (CG_MAXITER 1 → UNCONVERGED) 옛 코드 7 PASS · 2 FAIL → 9/9.  같은 부류: R4-CX-02 (열 블록이 cg_info 를 안 실어 계약이 blind).  열 `n_carbon_cells_with_am_pid` 의 이름이 실제 (AM 번호를 단 비-AM 셀 전부) 와 다른 것도 같은 커밋에서 머리말에 명시 (이미 낸 JSON 과 맞추려고 이름은 유지).  고침 = RINT-03 §1-2 를 채운 커밋 (claimed_fixed sha 는 다음 원장 커밋).",
+   "evidence_tests": [
+    "scripts/rint03_je_compare.py --selftest (T5 · T6)"
+   ]
   }
  ]
 }
