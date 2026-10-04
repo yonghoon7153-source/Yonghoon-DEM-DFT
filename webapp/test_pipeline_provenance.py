@@ -443,13 +443,13 @@ def main():
         shutil.rmtree(res_dir, ignore_errors=True)
         ps._RUNNER = make_runner(contact_rc=0)
         try:
-            webapp.run_pipeline('case1', 'standard', '1:AM,3:SE', 1000, stop_after='network')
+            webapp.run_pipeline('case1', 'standard', '1:AM,3:SE', 1000, stop_after='stage_e')
             _t10c = 'no error'
         except ValueError:
             _t10c = 'ValueError'
         except TypeError as _e:
             _t10c = f'TypeError: {_e}'
-        chk(f'T10c) stop_after 가 None · contact · coverage 가 아니면 ValueError — 조용히 전체를 돌지 않는다 ({_t10c})', _t10c == 'ValueError')
+        chk(f'T10c) stop_after 가 None · contact · coverage · network 가 아니면 ValueError — 조용히 전체를 돌지 않는다 ({_t10c})', _t10c == 'ValueError')
         shutil.rmtree(res_dir, ignore_errors=True)
         ps._RUNNER = make_runner(contact_rc=1)
         try:
@@ -543,7 +543,7 @@ def main():
             chk(f'T11d) {_mode} 피복 rc 1 → failed ({_or.get("status")})',
                 _or.get('status') == 'failed' and _or.get('stopped_after') == 'coverage')
         _t11e = []
-        for _bad in ('network', 'Coverage', 'coverage ', '', 'stage_e', 0, False):
+        for _bad in ('Network', 'network ', 'Coverage', 'coverage ', '', 'stage_e', 0, False):
             shutil.rmtree(res_dir, ignore_errors=True)
             ps._RUNNER = make_cov_runner()
             try:
@@ -553,7 +553,7 @@ def main():
                 pass
             except TypeError as _e:
                 _t11e.append(f'{_bad!r}: TypeError {_e}')
-        chk(f'T11e) None · contact · coverage 밖의 값은 전부 ValueError (조용히 전체를 돌지 않는다) {_t11e}', not _t11e)
+        chk(f'T11e) None · contact · coverage · network 밖의 값은 전부 ValueError (조용히 전체를 돌지 않는다) {_t11e}', not _t11e)
         _rc, _oc = _run11('standard', '1:AM,3:SE', 'coverage', contact_rc=1)
         chk('T11f) stop_after=coverage 이어도 접촉 분석 실패는 failed · 피복은 돌지 않는다',
             _oc.get('status') == 'failed' and 'coverage_physics_vs_hertzian.py' not in _scripts(_rc))
@@ -579,7 +579,7 @@ def main():
         try:
             _g = {}
             for _cid in ('case_csv', 'case_raw'):
-                for _stop in ('coverage', 'contact', None):
+                for _stop in ('coverage', 'contact', 'network', None):
                     shutil.rmtree(os.path.join(tmp, 'results', _cid), ignore_errors=True)
                     _rr = make_cov_runner()
                     ps._RUNNER = _rr
@@ -587,11 +587,14 @@ def main():
                     _kw = {'figures': False, 'auto_db': False}
                     if _stop:
                         _kw['stop_after'] = _stop
-                    _o = webapp.run_pipeline(_cid, 'standard', '1:AM,2:SE', 1000, **_kw)
+                    try:
+                        _o = webapp.run_pipeline(_cid, 'standard', '1:AM,2:SE', 1000, **_kw)
+                    except ValueError as _e:                 # 옛 코드 — 'network' 을 모른다 (시험이 멈추지 않고 FAIL 로 남게)
+                        _o = {'status': f'ValueError: {_e}'}
                     _fm_p = os.path.join(tmp, 'results', _cid, 'full_metrics.json')
                     _g[(_cid, _stop)] = (_o, os.path.exists(_fm_p), len(_rr.calls), list(_spawned))
             for _cid, _lbl in (('case_csv', 'CSV-only'), ('case_raw', 'raw atom-only')):
-                for _stop in ('coverage', 'contact'):
+                for _stop in ('coverage', 'contact', 'network'):
                     _o, _has_fm, _ncall, _sp = _g[(_cid, _stop)]
                     _expr = _o.get('status') or ('done' if _o.get('success') else 'failed')     # 배치의 상태식 (lhs_webapp_batch)
                     chk(f'T11g) ★ LHSC-02 {_lbl} + stop_after={_stop}: failed (success False · 배치 상태식 failed · stopped_after 표지) · '
@@ -948,6 +951,121 @@ def main():
             ps._RUNNER = _prev_rr5
         chk(f'T11t) ★ LHSC-03-R5: 필수 단계 재현 — Codex 변이 둘 (상별 평균 0 · 상별 std 40) 은 failed (옛: done) {_stg5}',
             all(v[0] is False and v[1] == 'failed' for v in _stg5.values()) and len(_stg5) == 2)
+
+        # T12 (τ 인계 · ④a 망 단계 — 1저자 10-05 *"먼저 구현하고 같이 요청서로 codex에 보내자"* · 요청서 §5-2): stop_after='network' 은
+        #   network solver → baseline 머지 → 채널 판정 → **망 정지 계약** 에서 멈춘다 (Stage E · 이중 공극률 · 고급 분석 · 그림 없음).
+        #   계약 (`_ps.network_stop_verdict` · fail-closed): ① network_content_verdict strict ② 이번 실행 network_run_id 도장 ·
+        #   network_solver_status success ③ 두 모드 sigma_full_status ∈ {computed, valid_zero} · full_metrics σ = dual 의 같은 세대 값
+        #   (valid_zero 면 둘 다 None) ④ 두 모드 constriction_power_share_ion_* = dual 과 같고 (0–1 · computed) 또는 (None · 사유 상태)
+        #   ⑤ dual 두 모드 boundary_rule ∈ {L0, L1, L2} · boundary_band_frac 유한 양수.  하나라도 어기면 failed (done 금지).
+        def _net_rec(mode, **over):
+            _tail = 'hertz' if mode == 'hertzian' else 'physics'
+            _r = {'sigma_full': 0.05 if mode == 'hertzian' else 0.083, 'sigma_full_mScm': 0.15 if mode == 'hertzian' else 0.25,
+                  'sigma_full_status': 'computed',
+                  f'constriction_power_share_ion_{_tail}': 0.78 if mode == 'hertzian' else 0.55,
+                  f'constriction_power_share_ion_{_tail}_status': 'computed',
+                  'boundary_rule': 'L0', 'boundary_band_frac': 0.08, **_ALL_CH_OK}
+            _r.update(over)
+            return _r
+
+        def make_net_runner(contact_rc=0, net_rc=0, H=None, P=None, legacy=None):
+            """make_cov_runner + 실제 모양의 network 산출물 (모드별 JSON · legacy = Hertz 사본 · dual = {'hertzian', 'physics', ratio})."""
+            _base = make_cov_runner(contact_rc=contact_rc)
+            _H = H if H is not None else _net_rec('hertzian')
+            _P = P if P is not None else _net_rec('physics')
+
+            def _r(cmd, **kw):
+                script = os.path.basename(str(cmd[1])) if len(cmd) > 1 else ''
+                if script != 'network_conductivity.py':
+                    return _base(cmd, **kw)
+                _base.calls.append(cmd)
+                if net_rc == 0:
+                    for _n, _d in (('network_conductivity_hertzian.json', _H), ('network_conductivity_physics.json', _P),
+                                   ('network_conductivity.json', legacy if legacy is not None else _H),
+                                   ('network_conductivity_dual.json', {'hertzian': _H, 'physics': _P,
+                                                                       'ratio_physics_over_hertzian': {}})):
+                        with open(os.path.join(res_dir, _n), 'w') as _f:
+                            json.dump(_d, _f)
+                return subprocess.CompletedProcess(cmd, net_rc, '', '')
+            _r.calls = _base.calls
+            return _r
+
+        def _run12(mode, tm, stop, preserve=False, **rk):
+            shutil.rmtree(res_dir, ignore_errors=True)
+            _r = make_net_runner(**rk)
+            ps._RUNNER = _r
+            _kw = {'figures': False, 'auto_db': False}
+            if stop:
+                _kw['stop_after'] = stop
+            if preserve:
+                _kw.update(preserve_network=True, network_snapshot=None)
+            try:
+                _o = webapp.run_pipeline('case1', mode, tm, 1000, **_kw)
+            except (TypeError, ValueError) as _e:           # 옛 코드 — 'network' 을 모른다
+                _o = {'status': f'{type(_e).__name__}: {_e}'}
+            _fmp = os.path.join(res_dir, 'full_metrics.json')
+            return _r, _o, (json.load(open(_fmp)) if os.path.exists(_fmp) else {})
+
+        _bi = ('bimodal', '1:AM_P,2:AM_S,3:SE')
+        for _mode, _tm in (('standard', '1:AM,3:SE'), _bi):
+            _rf, _of, _ = _run12(_mode, _tm, None)
+            _rs, _os12, _fm12 = _run12(_mode, _tm, 'network')
+            _ss = _scripts(_rs)
+            chk(f'T12a) ★ {_mode} stop_after=network: network solver 에서 끝난다 (Stage E · 이중 공극률 · 고급 분석 없음) · done · '
+                f'stopped_after · network_run_id = full_metrics 의 이번 도장 · physics σ 머지 ({_os12.get("status")})',
+                _ss[-1:] == ['network_conductivity.py'] and 'run_network_full_corrections.py' not in _ss
+                and 'recompute_porosity_dual.py' not in _ss and 'advanced_analysis.py' not in _ss
+                and _os12.get('status') == 'done' and _os12.get('stopped_after') == 'network'
+                and bool(_os12.get('network_run_id')) and _os12.get('network_run_id') == _fm12.get('active_network_run_id')
+                and _fm12.get('sigma_full_mScm_physics') == 0.25 and 'sigma_full_mScm_stage_e' not in _fm12
+                and 'stage_e_status' not in _fm12)
+            chk(f'T12b) ★ {_mode} 멈춘 실행의 명령 = 전체 실행의 앞부분 (인자까지 같다)',
+                len(_rs.calls) >= 4 and [list(map(str, c)) for c in _rs.calls]
+                == [list(map(str, c)) for c in _rf.calls[:len(_rs.calls)]])
+        _strip = (lambda d, pre: {k: v for k, v in d.items() if not k.startswith(pre)})
+        _bad12 = {
+            '③ physics σ not_computed': dict(P=_net_rec('physics', sigma_full=None, sigma_full_mScm=None, sigma_full_status='not_computed')),
+            '③ Hertz computed 인데 σ None': dict(H=_net_rec('hertzian', sigma_full_mScm=None)),
+            '③ legacy ≠ Hertz (세대 섞임 · 머지 σ 9.0)': dict(legacy=_net_rec('hertzian', sigma_full_mScm=9.0)),
+            '④ physics 협착 몫 값 · 상태 둘 다 없음': dict(P=_strip(_net_rec('physics'), 'constriction_power_share')),
+            '④ physics 협착 몫 1.3 (범위 밖)': dict(P=_net_rec('physics', constriction_power_share_ion_physics=1.3)),
+            '④ Hertz 협착 몫 None 인데 상태 computed': dict(H=_net_rec('hertzian', constriction_power_share_ion_hertz=None)),
+            '⑤ Hertz 띠 규칙 없음': dict(H=_strip(_net_rec('hertzian'), 'boundary_rule')),
+            '⑤ physics 띠 규칙 L9': dict(P=_net_rec('physics', boundary_rule='L9')),
+            '⑤ Hertz 띠 폭 NaN': dict(H=_net_rec('hertzian', boundary_band_frac=float('nan'))),
+        }
+        _g12 = {}
+        for _lbl, _rk in _bad12.items():
+            _rb, _ob, _ = _run12(*_bi, 'network', **_rk)
+            _g12[_lbl] = (_ob.get('status'), _ob.get('stopped_after'), 'run_network_full_corrections.py' in _scripts(_rb),
+                          any('Network stop contract' in str(x) for x in (_ob.get('failed_stages') or [])))
+        _miss12 = {k: v for k, v in _g12.items() if v != ('failed', 'network', False, True)}
+        chk(f'T12c) ★ 망 정지 계약 변이 {len(_bad12)} 종 → 전부 failed (계약 단계 · Stage E 안 돎 · stopped_after) {_miss12 or ""}',
+            not _miss12 and len(_g12) == len(_bad12))
+        _vz = dict(sigma_full=None, sigma_full_mScm=None, sigma_full_status='valid_zero', ionic_status='valid_null')
+        _ok12 = {
+            'SE 비관통 (두 모드 valid_zero · σ None · 협착 몫 None + 사유)': dict(
+                H=_net_rec('hertzian', constriction_power_share_ion_hertz=None,
+                           constriction_power_share_ion_hertz_status='not_computed (no percolating FULL solution)', **_vz),
+                P=_net_rec('physics', constriction_power_share_ion_physics=None,
+                           constriction_power_share_ion_physics_status='not_computed (no percolating FULL solution)', **_vz)),
+            '띠 폴백 L1 (기록됨 — tau_flux G1 이 BAND_FALLBACK 으로 표지)': dict(H=_net_rec('hertzian', boundary_rule='L1', boundary_band_frac=0.3)),
+        }
+        _g12p = {_l: _run12(*_bi, 'network', **_rk)[1].get('status') for _l, _rk in _ok12.items()}
+        chk(f'T12d) 양성 대조: SE 비관통 (명시 상태) · 띠 폴백 L1 (기록) 은 done {_g12p}',
+            all(v == 'done' for v in _g12p.values()) and len(_g12p) == len(_ok12))
+        _rp, _op, _ = _run12(*_bi, 'network', preserve=True)
+        chk(f'T12e) ★ stop_after=network + preserve_network → ValueError (망을 새로 푸는 정지점 — solver 를 안 부르는 보존과 섞지 않는다) '
+            f'({_op.get("status")!r})', str(_op.get('status', '')).startswith('ValueError'))
+        _rn, _on, _ = _run12(*_bi, 'network', net_rc=1)
+        chk(f'T12f) network solver rc 1 → failed · Stage E 안 돎 · stopped_after ({_on.get("status")})',
+            _on.get('status') == 'failed' and _on.get('stopped_after') == 'network'
+            and 'run_network_full_corrections.py' not in _scripts(_rn))
+        _rg, _og, _fmg = _run12(*_bi, 'network')
+        _vg = getattr(ps, 'network_stop_verdict', None)
+        _g12g = (_vg(res_dir, _og.get('network_run_id'))[0], _vg(res_dir, 'OTHER-RUN')[0], _vg(res_dir, None)[0]) if _vg else None
+        chk(f'T12g) ★ ② 도장 계약: 같은 산출물이라도 이번 run_id 가 아니면 (다른 id · None) 거부 {_g12g}',
+            _g12g == (True, False, False))
     finally:
         ps._RUNNER = prev_runner
         for k, v in prev_env.items():

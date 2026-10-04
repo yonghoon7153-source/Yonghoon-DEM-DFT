@@ -1,6 +1,6 @@
-# Codex 검토 요청 — r_int G1 재검증 · LHS ④ 수정 (④a 협착 전력 몫 · ④b Love–Weber) · ⑤⑥⑦ 인계 생성기 · 망 경로 (τ ② 도우미 · 띠 규칙) · `stop_after='network'` 설계 (2026-10-04)
+# Codex 검토 요청 — r_int G1 재검증 · LHS ④ 수정 (④a 협착 전력 몫 · ④b Love–Weber) · ⑤⑥⑦ 인계 생성기 · 망 경로 (τ ② 도우미 · 띠 규칙) · `stop_after='network'` 구현 (2026-10-04 · 10-05 보강)
 
-> **성격** — 코드 재검증 (G1–G4) + 설계 리뷰 (G5).  1저자 순서판 (10-04 · *"순서 꼬이지 않게"*) 의 2번: 두 통으로 나눴던 요청 (r_int G1 재검증 · LHS 망 감사) 을
+> **성격** — 코드 재검증 (G1–G4) + 망 경로 구현 리뷰 (G5 · 10-05 1저자 *"먼저 구현하고 같이 요청서로 codex에 보내자"* — 설계만 보내던 계획을 바꿔 구현을 같이 싣는다).  1저자 순서판 (10-04 · *"순서 꼬이지 않게"*) 의 2번: 두 통으로 나눴던 요청 (r_int G1 재검증 · LHS 망 감사) 을
 > **한 통**으로 묶는다 — 설계만 보내고 다시 고치는 왕복을 줄이려는 것이다 (coverage 는 5 회 왕복).  발송 = 1저자.
 >
 > **고정** — 코드 = 이 요청서 커밋 (브랜치 `claude/sdcp-dem-manuscript-si-pqwtv8`).  검토 대상 커밋 (오래된 순):
@@ -13,11 +13,12 @@
 > | `c911adf05` | τ 결정 16 ② — 안 A 띠 규칙 기록 (`network_conductivity.boundary_sets` 추출 · 동작 중립) · 이온 인계 도우미 `scripts/tau_flux.py` (게이트 G1–G6 · 모드 꼬리) · 웹앱 상태 행 | TAU-14 · 22 · 25 |
 > | `2993b8ce8` | LHS 감사 J20-s — ③ φ_SE 마감 · ④–⑦ 1차 · 검사기 `scripts/lhs_stress_constriction_audit.py` | LHS-29 ~ 32 (등재) |
 > | `23c3e32be` | RINT-03 실침대 측정 도구 `scripts/rint03_je_compare.py` (읽기 전용) | RINT-03 |
-> | (이 요청서 커밋) | RINT-03 실측 (§1-2 · 증거 `docs/data/rint03_je_20261005/`) + 도구 수렴 필드 (T5 · T6 — 미수렴을 `UNCONVERGED` 로) | RINT-03 · SELF-85 |
+> | `17944f99b` | RINT-03 실측 (§1-2 · 증거 `docs/data/rint03_je_20261005/`) + 도구 수렴 필드 (T5 · T6 — 미수렴을 `UNCONVERGED` 로) | RINT-03 · SELF-85 |
 > | `e501d8702` | ④b Love–Weber 입자 응력 새 열 | LHS-29 |
 > | `0786e420b` | ④a 협착 저항 전력 몫 새 열 · 옛 행 이름표 · physics 칸 복사 정정 | LHS-30 · SELF-82 |
 > | `6e754ec15` | ⑤⑥⑦ 인계 생성기 묶음 (f1 · fracture · area · 명시 제외 · 관문) | LHS-31 · 32 |
 > | `14ac9b344` | ②b TAU-03 — 등급 τ · overhead = Hertz 원 솔버 σ + 짝 σ₀ (한 도우미) · COMSOL 2D 두 모드 행 · regime DB (G6 · 선택) | TAU-03 · 16 · SELF-84 |
+> | (이 요청서 커밋) | `stop_after='network'` — 망 정지 계약 `pipeline_service.network_stop_verdict` · `app._network_and_stage_e(stop_before_stage_e=…)` · 배치 `--stop-after network` (§5) | — (새 기능 · G5) |
 >
 > ⚠ `network_conductivity.py` 는 S3 수치 모듈 (`seal_s3_prerun.NUMERIC_MODULES`) 이다 — `c911adf05` · `0786e420b` 가 바꿨다 → S3 전에 **재봉인** (봉인 = 수정 금지가 아니라 재봉인 강제 · τ 결정 16).
 >
@@ -31,7 +32,7 @@
 | G2 | GO / HOLD | **④b Love–Weber** — 새 열의 정의 · 검사 · 벽 처리 · 웹앱 표지 (LHS-29) |
 | G3 | GO / HOLD | **④a 전력 몫 + 망 모듈 변경** — `constriction_power_share` 정의 (LHS-30) · 안 A 추출의 비트 동일 · 머지 경로 |
 | G4 | GO / HOLD | **⑤⑥⑦ 생성기** — 묶음 · 명시 제외 · 관문 ⑤F1 · ⑥R1–R3 · ⑦A1–A5 · 열 사전 한정어 (LHS-31 · 32) |
-| G5 | GO / HOLD | **망 경로 설계** — `stop_after='network'` (아직 코드 없음 · §5) + `tau_flux` 게이트 + 배치 계획 (130 + 64) + 재봉인 순서.  이 설계로 구현 → WSL 배치를 돌려도 되는가 |
+| G5 | GO / HOLD | **망 경로** — `stop_after='network'` **구현** (이 요청서 커밋 · §5) + `tau_flux` 게이트 + 배치 계획 (130 + 64) + 재봉인 순서.  이 코드로 재봉인 → WSL 배치를 돌려도 되는가 |
 | G6 | GO / HOLD (선택) | **②b TAU-03** — 등급 τ · overhead 축 = Hertz 원 솔버 σ + 짝 σ₀ (한 도우미 `tau_flux.tau2_from_metrics` · `se_material.sigma_grain_context`) · COMSOL 2D 두 모드 행 · regime DB (§5-4) |
 | Q1–Q10 | 답 | §7 |
 
@@ -116,25 +117,28 @@
 - 10-01 원자료 (`d1ec42fba`) 메모리 실행: 130/130 · 64/64 통과 (인계표 재생성 = G5 뒤).
 - 시험: `lhs_design_dataset.py --selftest` 233/233 (㉕a–z 26 먼저 실패 확인) · `webapp/test_s567_labels.py` 13/13.
 
-## §5 망 경로 설계 — `stop_after='network'` (코드 없음 · 이 설계를 판정해 달라)
+## §5 망 경로 — `stop_after='network'` (구현 · 이 요청서 커밋 · 코드와 설계를 판정해 달라)
 
 ### §5-1 왜
 
 τ 인계 (tau2 · f · 결정 16) 와 ④a 는 **망 단계**에서만 생긴다.  지금 배치 (`scripts/lhs_webapp_batch.py`) 의 정지점은 `contact` · `coverage` 뿐이고,
 `stop_after=None` (전체) 은 Stage E · 그림 · 고급 분석 · 자동 DB 까지 돈다 (건당 575–743 s).
 
-### §5-2 제안
+### §5-2 구현 (설계 10-04 → 구현 10-05 · 시험 먼저)
 
-| 항목 | 제안 |
+| 항목 | 구현 |
 |---|---|
-| 값 | `PIPELINE_STOP_AFTER = (None, 'contact', 'coverage', 'network')` — 밖의 값은 ValueError (지금 규칙 그대로) |
-| 정지 위치 | `_network_and_stage_e` 안 — **baseline 머지 뒤 · Stage E 앞**.  tau2 · f 는 솔버 무차원 `sigma_full` (raw) 로 계산한다 (Stage E = Cronau · 파괴 인자 — τ 이름을 붙이지 않는다 · 결정 6) |
-| 내용 계약 (`_network_written` · fail-closed) | ① `network_content_verdict(strict=True)` (네 JSON · 두 모드 · 세 채널) ② 이번 실행의 `network_run_id` 도장 ③ full_metrics 에 `sigma_full_mScm` · `sigma_full_mScm_physics` (또는 명시 상태) ④ 두 모드 `constriction_power_share_ion_*` 값 또는 상태 ⑤ dual JSON 에 `boundary_rule` · `boundary_band_frac` (이온) — 하나라도 빠지면 `failed` (done 금지) |
-| 상태 | `_stopped_after(stages, log, 'network')` — 끝의 판정과 같은 `summarize` |
-| atoms-only | 지금 `LHSC-02` 규칙 그대로 (`stop_after` 가 있으면 거부) |
-| 배치 | `lhs_webapp_batch.py --stop-after network` · status.json `stop_after` · 다른 정지점 폴더와 섞기 거부 (지금 규칙) |
-| 그다음 | `scripts/tau_flux.py <케이스 폴더>…` → f · tau2 · tau (두 모드) · 게이트 G1–G6 (§5-3) |
-| 재봉인 | 구현 → 게이트 → **재봉인** (`seal_s3_prerun`) → WSL 배치.  배치와 S3 가 같은 봉인 수치 모듈을 쓰게 한다 |
+| 값 | `app.PIPELINE_STOP_AFTER = (None, 'contact', 'coverage', 'network')` — 밖의 값은 ValueError (지금 규칙 그대로 · `Network` · `network ` 도 거부) |
+| 정지 위치 | `app._network_and_stage_e(…, stop_before_stage_e=True)` — network solver (지금 lock · stash · 내용 verify 그대로) → baseline 머지 → 채널 판정 → **망 정지 계약** → return.  Stage E · 이중 공극률 · 그림 · 고급 분석 · 자동 DB 는 돌지 않는다.  피복 단계는 전체 실행과 같은 optional 계약.  멈추기 전 명령 = 전체 실행의 앞부분 (인자까지 같다) |
+| 내용 계약 (`pipeline_service.network_stop_verdict(results_dir, run_id)` · required 단계 · fail-closed) | ① `network_content_verdict(strict=True)` ② full_metrics `network_run_id` · `active_network_run_id` = **이번 실행** run_id · `network_solver_status` = success ③ 두 모드 dual `sigma_full_status` ∈ {computed, valid_zero} — computed 면 full_metrics σ (`sigma_full_mScm` · `sigma_full_mScm_physics` = `tau_flux.METRIC_SIGMA_KEY`) 가 dual 의 **같은 값** (양수), valid_zero (비관통) 면 둘 다 None ④ 두 모드 `constriction_power_share_ion_<꼬리>` + `_status` — full_metrics = dual 이고 (값 0–1 · computed) 또는 (None · 비지 않은 사유) ⑤ dual 두 모드 `boundary_rule` ∈ {L0, L1, L2} (생산자 `BOUNDARY_RULES`) · `boundary_band_frac` 유한 양수.  하나라도 어기면 단계 `Network stop contract (stop_after=network)` 실패 → `failed` |
+| ★ 설계에 없던 결정 둘 | (가) ③ 에서 `sigma_full_status = not_computed` 를 **거부** — 이온 채널 판정은 σ None 을 `valid_null` (ok) 로 통과시켜 '비관통' 과 '못 풂' 을 못 가른다 · 계약은 원 σ 상태로 가른다 (Q11) (나) `stop_after='network'` + `preserve_network=True` → **ValueError** — 망을 새로 푸는 정지점에 solver 미호출 · 옛 세대 복원을 섞지 않는다 (계약 ② 도 run_id None 이라 실패) (Q11) |
+| 상태 | `_stopped_after(stages, log, 'network', network_run_id=…)` — 끝의 판정과 같은 `summarize` · 반환에 이번 실행 `network_run_id` (contact · coverage 는 None 그대로) |
+| atoms-only | `LHSC-02` 규칙 그대로 — `stop_after='network'` 도 계산 · 도장 · 러너 호출 없이 failed (T11g 에 network 추가) |
+| 배치 | `lhs_webapp_batch.py --stop-after network` · status.json `stop_after` · 케이스 기록에 `network_run_id` · 다른 정지점 · 전체 폴더와 섞기 거부 (어느 방향이든 rc 2) |
+| 시험 | `webapp/test_pipeline_provenance.py` **217/227 → 227/227** (옛 코드 실패 10 = T11g × 2 · T12a × 2 · T12b × 2 · T12c · T12d · T12f · T12g) — T12a 두 모드 끝 = network solver · Stage E · 이중 공극률 · 고급 분석 없음 · 반환 run_id = full_metrics 도장 · physics σ 머지 / T12b 명령 = 전체 실행 앞부분 / T12c 계약 변이 9 종 (③ physics not_computed · computed 인데 σ None · legacy ≠ Hertz 세대 섞임 · ④ 값 · 상태 둘 다 없음 · 1.3 · None 인데 computed · ⑤ 띠 규칙 없음 · L9 · 띠 폭 NaN) 전부 failed / T12d 양성 대조 (SE 비관통 두 모드 valid_zero · 띠 폴백 L1) done / T12e preserve → ValueError / T12f solver rc 1 → failed · Stage E 없음 / T12g ② 다른 run_id · None 거부 · `lhs_webapp_batch.py --selftest` ⑲ · ⑳ (옛 파서 = `SystemExit 2` · 섞기 통과 → 고친 뒤 통과) |
+| 웹앱 화면 | 해당 없음 — `stopped_after` 는 배치 전용 필드이고 화면에 정지점 표시가 없다 (J20-l: 없음을 적는다) |
+| 그다음 | `scripts/tau_flux.py <케이스 폴더>…` → f · tau2 · tau (두 모드) · 게이트 G1–G6 (§5-3).  tau_flux 입력의 장부 (L_gap · L_mc · φ_mc) · `percolation_pct` 는 **접촉 단계** (`analyze_contacts` — bimodal 도 같은 함수) 가 쓰므로 Stage E 앞 정지로 빠지는 입력이 없다 |
+| 재봉인 | 구현 (이 커밋) → **Codex GO** → (판정 반영 수정) → 게이트 → **재봉인** (`seal_s3_prerun` · `network_conductivity.py` 가 S3 수치 모듈) → WSL 배치.  배치와 S3 가 같은 봉인 수치 모듈을 쓰게 한다 |
 
 ### §5-3 `tau_flux` 게이트 (`c911adf05` · 결정 16 §5-2)
 
@@ -172,10 +176,11 @@ G6 = 메타 `ion_net_constriction_<m>` · 두 모드 다 물리 타깃 HOLD (값
 - **Q4 (G3)** — 전력 몫에서 가상 전극 연결 간선의 소산을 빼는 것이 맞는가 (분모 · 분자 둘 다).  비관통 = None (0 아님) 규칙.
 - **Q5 (G3)** — 안 A 추출 뒤 비트 동일을 GOLD 8 침대로 본 것이 충분한가.
 - **Q6 (G4)** — 반올림 반폭 관문 (0.005 · 5e-5) · 접촉 0 쌍 총합 0 채움 (평균 N/A) · `path_hop_area` · 상 쌍별 파괴 제외의 근거가 충분한가.
-- **Q7 (G5)** — 정지 위치 (Stage E 앞) 와 내용 계약 ①–⑤ 가 충분한가.  빠진 키 · 상태는.
+- **Q7 (G5)** — 정지 위치 (Stage E 앞) 와 내용 계약 ①–⑤ (`network_stop_verdict`) 가 충분한가.  빠진 키 · 상태는.  같은 세대 판정을 full_metrics ↔ dual **값 일치**로 본 것이 맞는가.
 - **Q8 (G5)** — 재봉인 순서 (구현 → 게이트 → 재봉인 → 배치) 가 맞는가.  배치를 봉인 전에 돌리면 무엇이 깨지는가.
 - **Q9 (G6)** — 등급 · COMSOL 의 τ 를 원 솔버 Hertz σ + 짝 σ₀ 로 통일한 것이 결정 6 을 닫는가.  COMSOL 2D 에서 두 모드 행 + Stage-E 행 (짝 아님 경고) 구성이 오용을 막는가.
 - **Q10** — 그 밖에 이 경로에서 보이는 P1.
+- **Q11 (G5 · 설계에 없던 결정)** — (가) `sigma_full_status = not_computed` 거부가 맞는가 (못 푼 침대가 done 으로 넘어가지 않게 — 대신 그런 침대는 배치에서 failed 로 남는다).  (나) `preserve_network` 와 `stop_after='network'` 를 ValueError 로 막은 것이 맞는가.
 
 ## §8 출력 형식
 
@@ -214,4 +219,6 @@ python3 scripts/lhs_design_dataset.py --selftest
 python3 webapp/test_stress_lw_labels.py && python3 webapp/test_constriction_power_labels.py && python3 webapp/test_s567_labels.py
 python3 webapp/test_tau_grade_unify.py && python3 webapp/test_tau_labels.py && python3 scripts/grade_engine.py --selftest
 python3 scripts/lhs_stress_constriction_audit.py --selftest
+python3 webapp/test_pipeline_provenance.py          # T12 망 정지 (stop_after='network') · T11g atoms-only
+python3 scripts/lhs_webapp_batch.py --selftest      # ⑲ · ⑳ --stop-after network
 ```

@@ -3099,7 +3099,7 @@ def _refresh_post_network_warnings(met_data):
 
 def _network_and_stage_e(results_dir, scripts, atoms_csv, contacts_csv, type_map, scale,
                          log, preserve_network=False, network_snapshot=None,
-                         runner=None):
+                         runner=None, stop_before_stage_e=False):
     """network baseline → (복원) → Stage E 를 **한 곳에서** 수행한다.
 
     코드리뷰 F-02 / F-03 / F-17 대응.  옛 구조의 문제:
@@ -3112,6 +3112,9 @@ def _network_and_stage_e(results_dir, scripts, atoms_csv, contacts_csv, type_map
       preserve=True  → **solver 호출 0회**, 스냅샷을 먼저 복원 → 그 baseline 으로 Stage E.
       preserve=False → 파일 lock 을 잡고 solver 1회 → provenance 도장 → 그것으로 Stage E.
     어느 쪽이든 Stage E 는 **화면에 실제로 남을 baseline** 을 본다.
+
+    stop_before_stage_e=True (`run_pipeline(stop_after='network')`) — 머지 · 채널 판정까지 하고 **Stage E 앞**에서 멈춘다.
+      마지막 단계 = 망 정지 계약 (`_ps.network_stop_verdict` · required · 이번 실행 run_id) — 어기면 failed.
 
     → (stages, network_run_id)
     """
@@ -3288,6 +3291,19 @@ def _network_and_stage_e(results_dir, scripts, atoms_csv, contacts_csv, type_map
     except Exception as _e:                                        # noqa: BLE001
         log.append({'step': 'Network Merge', 'stdout': '', 'stderr': str(_e), 'rc': 1})
 
+    # ── stop_after='network' (Codex 요청서 §5-2 · 1저자 10-05) — Stage E 앞에서 멈춘다 ──
+    #   τ 인계 (tau2 · f) 와 ④a 는 원 솔버 σ 로 계산한다 (Stage E = Cronau · 파괴 재료 인자 — τ 이름을 붙이지 않는다 · 결정 6).
+    #   계약은 **이번 실행의** run_id 로 본다 — 보존 (solver 미호출) 경로는 run_pipeline 이 미리 거부하고, 여기 와도 None 이라 실패한다.
+    if stop_before_stage_e:
+        _ok_stop, _why_stop = _ps.network_stop_verdict(results_dir, None if preserve_network else run_id)
+        _sst = _ps.StageOutcome(
+            step='Network stop contract (stop_after=network)', stdout=(_why_stop if _ok_stop else ''),
+            stderr=('' if _ok_stop else '★ 망 정지 계약 실패: ' + _why_stop), rc=(0 if _ok_stop else 1), ok=_ok_stop,
+            required=True, missing_outputs=[], stale_outputs=[], verify_failed=(not _ok_stop))
+        stages.append(_sst)
+        log.append(_sst)
+        return stages, prov.get('network_run_id')
+
     # ── Stage E — 위에서 확정된 baseline 위에서만 돈다 ──
     #   ★ RV-01 (Codex 재검증): 옛 호출은 expects/results_dir 이 없어 **rc=0 이고 아무것도
     #     안 써도 성공**이었다.  앱이 subprocess 뒤에 직접 쓰는 stage_e_run_id 는 solver 가
@@ -3395,13 +3411,16 @@ def _network_and_stage_e(results_dir, scripts, atoms_csv, contacts_csv, type_map
 #:   'contact'  = 접촉 분석까지 (LHS ① 접촉 위상 — 1저자 09-29 밤 "단독적으로 하나씩")
 #:   'coverage' = 접촉 → 피복 (Hertz 명명 · legacy Physics · physics v2) 까지 — network · Stage E 없음
 #:                (1저자 09-29 밤 cap (physics) coverage 새 판 병기 — "① + cap coverage 한 번에")
-PIPELINE_STOP_AFTER = (None, 'contact', 'coverage')
+#:   'network'  = 접촉 → 피복 → network solver → 머지 · 채널 판정 → 망 정지 계약 — Stage E · 이중 공극률 · 고급 분석 · 그림 없음
+#:                (τ 인계 tau2 · f 와 ④a 협착 전력 몫 · Codex 요청서 §5-2 · 1저자 10-05 "먼저 구현하고 같이 요청서로")
+PIPELINE_STOP_AFTER = (None, 'contact', 'coverage', 'network')
 
 
-def _stopped_after(stages, log, where):
-    """`run_pipeline(stop_after=where)` 의 반환 — 지금까지의 단계로 상태를 판정한다 (끝의 판정과 같은 `_ps.summarize`)."""
+def _stopped_after(stages, log, where, network_run_id=None):
+    """`run_pipeline(stop_after=where)` 의 반환 — 지금까지의 단계로 상태를 판정한다 (끝의 판정과 같은 `_ps.summarize`).
+    network_run_id = 'network' 정지에서 이번 실행의 망 세대 (contact · coverage 는 망을 안 푼다 → None)."""
     status, failed_stages = _ps.summarize(stages)
-    return {'success': status != 'failed', 'status': status, 'log': log, 'network_run_id': None,
+    return {'success': status != 'failed', 'status': status, 'log': log, 'network_run_id': network_run_id,
             'failed_stages': [s.get('step') for s in failed_stages], 'stopped_after': where}
 
 
@@ -3636,7 +3655,7 @@ def run_pipeline(case_id, mode, type_map, scale=1000,
                        ★ 두 키워드는 LHS 일괄 배치 (`scripts/lhs_webapp_batch.py`, 2026-09-28) 용이다 — 130 건에
                          그림 수백 장과 동시 DB 재구축 130 번은 필요 없다.  기본값 = 웹앱 동작 그대로
                          (test_pipeline_provenance T9: 뺀 것은 그림 · DB 뿐이고 계산 단계 순서가 같다).
-    stop_after       : None (기본 · 전 단계) · 'contact' · 'coverage' (`PIPELINE_STOP_AFTER`).
+    stop_after       : None (기본 · 전 단계) · 'contact' · 'coverage' · 'network' (`PIPELINE_STOP_AFTER`).
                        'contact'  — 접촉 분석 단계 (`analyze_contacts[_bimodal].py`) 가 성공하면 거기서 멈춘다
                                     (network · Stage E · 고급 분석 없음).  ★ LHS 묶음별 채우기
                                     (1저자 2026-09-29 밤 "단독적으로 하나씩") 용.
@@ -3644,14 +3663,20 @@ def run_pipeline(case_id, mode, type_map, scale=1000,
                                     에서 멈춘다 (network · Stage E 없음).  ★ cap (physics) coverage 새 판 인계
                                     (1저자 09-29 밤).  이 모드에서는 피복 단계가 **required + 내용 검증**이다
                                     (`_coverage_stage` — rc 0 인데 판정을 안 쓴 실행은 failed).
-                       멈추기 전 명령은 전체 실행과 **인자까지 같다** (test_pipeline_provenance T10 · T11).
+                       'network'  — 접촉 → 피복 → network solver → 머지 · 채널 판정 → **망 정지 계약**
+                                    (`_ps.network_stop_verdict` · required) 에서 멈춘다 (Stage E · 이중 공극률 · 고급 분석 없음).
+                                    ★ τ 인계 (tau2 · f) · ④a 협착 전력 몫 (Codex 요청서 §5-2 · 1저자 10-05).  피복 단계는
+                                    전체 실행과 같은 optional 계약 · preserve_network 와 함께 주면 ValueError (test T12).
+                       멈추기 전 명령은 전체 실행과 **인자까지 같다** (test_pipeline_provenance T10 · T11 · T12).
                        다른 값은 ValueError (조용히 전체를 돌지 않는다).
                        ★ 접촉 파일이 없는 atoms-only 입력 (raw atom-only · CSV-only) 은 stop_after 가 있으면 **failed**
                          (`_atoms_only_refused` · Codex `LHSC-02` — 옛 판은 viewer 전용 조기 반환으로 계산 없이 success/done) ·
                          None 이면 viewer 전용 성공 그대로 (T11g · T11h).
     """
     if stop_after not in PIPELINE_STOP_AFTER:
-        raise ValueError(f"stop_after={stop_after!r} — None · 'contact' · 'coverage' 만 허용")
+        raise ValueError(f"stop_after={stop_after!r} — None · 'contact' · 'coverage' · 'network' 만 허용")
+    if stop_after == 'network' and preserve_network:
+        raise ValueError("stop_after='network' 은 망을 새로 푸는 정지점이다 — preserve_network (solver 미호출 · 옛 세대 복원) 와 섞지 않는다")
     # Clear pyc cache to ensure latest code runs
     import glob as globmod
     scripts_dir = os.path.join(os.path.dirname(__file__), '..', 'scripts')
@@ -3821,8 +3846,11 @@ def run_pipeline(case_id, mode, type_map, scale=1000,
         #     만들고서야 옛 network 를 덮어써 baseline/Stage E 세대가 섞였다 (F-02/F-17).
         _net_stages, _net_run_id = _network_and_stage_e(
             results_dir, scripts, atoms_csv, contacts_csv, type_map, scale, log,
-            preserve_network=preserve_network, network_snapshot=network_snapshot)
+            preserve_network=preserve_network, network_snapshot=network_snapshot,
+            stop_before_stage_e=(stop_after == 'network'))
         stages.extend(_net_stages)
+        if stop_after == 'network':
+            return _stopped_after(stages, log, 'network', network_run_id=_net_run_id)
 
         # Step 2e: Dual porosity (sphere-sum + union + overlap%) — auto-compute
         # so the UI shows ε_sphere / ε_union / overlap without a manual rerun.
@@ -3899,8 +3927,11 @@ def run_pipeline(case_id, mode, type_map, scale=1000,
         # Network baseline (또는 보존 복원) → Stage E — bimodal 과 **같은 함수**를 쓴다.
         _net_stages, _net_run_id = _network_and_stage_e(
             results_dir, scripts, atoms_csv, contacts_csv, type_map, scale, log,
-            preserve_network=preserve_network, network_snapshot=network_snapshot)
+            preserve_network=preserve_network, network_snapshot=network_snapshot,
+            stop_before_stage_e=(stop_after == 'network'))
         stages.extend(_net_stages)
+        if stop_after == 'network':
+            return _stopped_after(stages, log, 'network', network_run_id=_net_run_id)
 
         # Step 2e: Dual porosity (sphere-sum + union + overlap%) — auto-compute
         # so the UI shows ε_sphere / ε_union / overlap without a manual rerun.

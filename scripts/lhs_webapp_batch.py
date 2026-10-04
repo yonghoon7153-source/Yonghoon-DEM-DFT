@@ -44,6 +44,7 @@
     python3 scripts/lhs_webapp_batch.py … --case lhs00_000       # 한 건 먼저 (시간 · 산출 확인)
     python3 scripts/lhs_webapp_batch.py … --stop-after contact   # ① 접촉 위상만 (묶음별 · 산출 폴더는 따로)
     python3 scripts/lhs_webapp_batch.py … --stop-after coverage  # ① + 피복 (legacy Physics + physics v2 · network 없음)
+    python3 scripts/lhs_webapp_batch.py … --stop-after network   # ① + 피복 + 망 (τ 인계 · ④a · 망 정지 계약 · Stage E 없음)
     python3 scripts/lhs_webapp_batch.py --selftest
 
 산출 (`--out-dir`)
@@ -327,6 +328,8 @@ def run_batch(args, deps=None) -> int:
             stages = [dict(step=s.get('step'), rc=s.get('rc'), ok=s.get('ok'))
                       for s in (out.get('log') or []) if isinstance(s, dict)]
             rec['stop_after'] = stop
+            if stop == 'network':
+                rec['network_run_id'] = out.get('network_run_id')   # 이번 실행의 망 세대 (망 정지 계약이 본 도장)
             rec.update(status=out.get('status') or ('done' if out.get('success') else 'failed'),
                        failed_stages=out.get('failed_stages') or [], stages=stages,
                        mode=mode, type_map=tm, sha=st['sha'], mesh_pick=st['mesh_pick'],
@@ -425,6 +428,7 @@ def _selftest() -> int:
                     _fm['coverage_status_physics_v2'] = 'blank: 시험'
                 (rd / 'full_metrics.json').write_text(json.dumps(_fm))
                 return {'status': 'done', 'success': True, 'failed_stages': [],
+                        'network_run_id': ('RUN-T19' if kw.get('stop_after') == 'network' else None),
                         'log': [{'step': 'Parse', 'rc': 0, 'ok': True}]}
 
         class FakeTMR:
@@ -680,6 +684,37 @@ def _selftest() -> int:
                     _mix.append(f'{_lbl}: rc {_rc}')
             chk(f'⑯ ★ 피복만 폴더 ↔ 접촉만 · 전체 폴더 — 어느 방향으로 섞어도 거부 (rc 2 · 실행 0)  {_mix or ""}',
                 not _mix and len(calls) == n1 + 1)
+            # ⑲–⑳ τ 인계 · ④a 망 단계 (Codex 요청서 §5-2 · 1저자 10-05 *"먼저 구현하고 같이 요청서로"*) — `--stop-after network` 는
+            #   접촉 → 피복 → network solver → 망 정지 계약까지 (Stage E 없음).  케이스 기록에 이번 실행의 network_run_id 를 남기고,
+            #   다른 모드 폴더와 어느 방향으로도 섞지 않는다.
+            out_n = tmp / 'out_network'
+            base_n = ['--harvest-dir', str(hdir), '--cohort', str(coh), '--work', str(tmp / 'work_n'), '--out-dir', str(out_n)]
+            n2 = len(calls)
+            try:
+                rc19 = run_batch(_parse(base_n + ['--stop-after', 'network']), deps)
+            except SystemExit as e:                         # 옛 파서 — choices 에 network 가 없다
+                rc19 = f'SystemExit {e.code}'
+            st19 = json.loads((out_n / 'status.json').read_text(encoding='utf-8')) if (out_n / 'status.json').exists() else {}
+            r19 = st19.get('cases', {}).get('lhs00_900') or {}
+            chk(f'⑲ ★ --stop-after network → run_pipeline(stop_after="network") · status.json 최상위 · 케이스에 stop_after · '
+                f'network_run_id 기록 (rc {rc19})',
+                rc19 == 0 and len(calls) == n2 + 1 and calls[-1].get('stop_after') == 'network'
+                and st19.get('stop_after') == 'network' and r19.get('stop_after') == 'network'
+                and r19.get('network_run_id') == 'RUN-T19' and r19.get('status') == 'done')
+            _mix2 = []
+            for _lbl, _argv in (('망 폴더 ← 피복만', base_n + ['--stop-after', 'coverage', '--force']),
+                                ('망 폴더 ← 전체', base_n + ['--force']),
+                                ('피복만 폴더 ← 망', base_v + ['--stop-after', 'network', '--force']),
+                                ('접촉만 폴더 ← 망', base_c + ['--stop-after', 'network', '--force']),
+                                ('전체 폴더 ← 망', base + ['--stop-after', 'network', '--force'])):
+                try:
+                    _rc = run_batch(_parse(_argv), deps)
+                except SystemExit as e:
+                    _rc = f'SystemExit {e.code}'
+                if _rc != 2:
+                    _mix2.append(f'{_lbl}: rc {_rc}')
+            chk(f'⑳ ★ 망 폴더 ↔ 피복만 · 접촉만 · 전체 폴더 — 어느 방향으로 섞어도 거부 (rc 2 · 실행 0)  {_mix2 or ""}',
+                not _mix2 and len(calls) == n2 + 1)
         finally:
             for k, v in env_keep.items():
                 if v is None:
@@ -703,10 +738,12 @@ def _parse(argv=None):
     ap.add_argument('--root-from', default='', help='코호트 경로 접두사')
     ap.add_argument('--root-to', default='', help='실제 경로 접두사로 치환')
     ap.add_argument('--force', action='store_true', help='done · partial 도 다시 돌린다')
-    ap.add_argument('--stop-after', choices=['contact', 'coverage'], default=None,
+    ap.add_argument('--stop-after', choices=['contact', 'coverage', 'network'], default=None,
                     help='웹앱 파이프라인을 이 단계에서 멈춘다 — contact = 접촉 분석까지 (① 접촉 위상 · network · Stage E 없음) · '
                          'coverage = 접촉 → 피복까지 (① + legacy Physics · physics v2 피복 — `*_physics_v2` 키 · network · '
-                         'Stage E 없음; 피복 단계가 v2 판정을 안 쓰면 그 케이스는 failed). '
+                         'Stage E 없음; 피복 단계가 v2 판정을 안 쓰면 그 케이스는 failed) · '
+                         'network = 접촉 → 피복 → network solver → 망 정지 계약까지 (τ 인계 tau2 · f 와 ④a 협착 전력 몫 · '
+                         'Stage E 없음; 계약을 어기면 그 케이스는 failed · 케이스 기록에 network_run_id). '
                          '산출 폴더에 모드가 새겨지고 다른 모드와 섞으면 거부한다')
     ap.add_argument('--selftest', action='store_true')
     return ap.parse_args(argv)

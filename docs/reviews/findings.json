@@ -7523,15 +7523,16 @@
   {
    "id": "SELF-85",
    "severity": "P3",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "claude (10-05 새벽 · kgy RINT-03 vgcf1 런이 예상보다 오래 걸려 미수렴 가능성을 따지다 자기 발견)",
    "opened_in": "docs/reviews/codex_rint_g1_lhs_network_request_20261004.md",
    "title": "RINT-03 측정 도구 `rint03_je_compare.py` 가 수렴 정보 (cg_info · resid · unconverged) 를 출력에 싣지 않아 미수렴 해도 `status: OK` 로 냈다 — 소비자 수렴 계약 (R4-CX-02 의 conjunction) 을 적용할 수 없었다.  10-05 kgy 세 그리드는 로그에 `⚠ STEP3 CG not converged` 줄이 없어 결과 영향 없음",
-   "note": "처방: run_grid 가 cg_info · resid · unconverged 를 싣고 계약 (cg_info == 0 ∧ unconverged False ∧ 0 ≤ resid ≤ 1e-6) 을 못 채우면 status = UNCONVERGED (main rc 2).  시험 먼저 — T5 (수렴 해는 세 필드를 싣고 OK) · T6 (CG_MAXITER 1 → UNCONVERGED) 옛 코드 7 PASS · 2 FAIL → 9/9.  같은 부류: R4-CX-02 (열 블록이 cg_info 를 안 실어 계약이 blind).  열 `n_carbon_cells_with_am_pid` 의 이름이 실제 (AM 번호를 단 비-AM 셀 전부) 와 다른 것도 같은 커밋에서 머리말에 명시 (이미 낸 JSON 과 맞추려고 이름은 유지).  고침 = RINT-03 §1-2 를 채운 커밋 (claimed_fixed sha 는 다음 원장 커밋).",
+   "note": "처방: run_grid 가 cg_info · resid · unconverged 를 싣고 계약 (cg_info == 0 ∧ unconverged False ∧ 0 ≤ resid ≤ 1e-6) 을 못 채우면 status = UNCONVERGED (main rc 2).  시험 먼저 — T5 (수렴 해는 세 필드를 싣고 OK) · T6 (CG_MAXITER 1 → UNCONVERGED) 옛 코드 7 PASS · 2 FAIL → 9/9.  같은 부류: R4-CX-02 (열 블록이 cg_info 를 안 실어 계약이 blind).  열 `n_carbon_cells_with_am_pid` 의 이름이 실제 (AM 번호를 단 비-AM 셀 전부) 와 다른 것도 같은 커밋에서 머리말에 명시 (이미 낸 JSON 과 맞추려고 이름은 유지).  고침 = 17944f99b (RINT-03 §1-2 를 채운 커밋).",
    "evidence_tests": [
     "scripts/rint03_je_compare.py --selftest (T5 · T6)"
-   ]
+   ],
+   "claimed_fixed_sha": "17944f99b"
   }
  ]
 }

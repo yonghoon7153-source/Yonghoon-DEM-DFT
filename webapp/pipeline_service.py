@@ -646,6 +646,75 @@ def network_content_verdict(results_dir, modes=('hertzian', 'physics'), strict=T
     return (not bad), ('; '.join(bad) if bad else 'ok: ' + ', '.join(seen))
 
 
+#: ── `run_pipeline(stop_after='network')` 의 망 정지 계약 (Codex 요청서 §5-2 · 1저자 10-05 *"먼저 구현하고 같이 요청서로"*) ──
+#:   τ 인계 (tau2 · f — `scripts/tau_flux.py`) 와 ④a 협착 전력 몫이 쓰는 망 산출물이 **이번 실행의 것으로 다 있는가**.
+#:   (dual 의 모드 키, 모드 꼬리, full_metrics 의 σ 키) — σ 키 = `tau_flux.METRIC_SIGMA_KEY` 와 같은 원 솔버 σ (Stage-E 아님).
+NETWORK_STOP_MODES = (('hertzian', 'hertz', 'sigma_full_mScm'), ('physics', 'physics', 'sigma_full_mScm_physics'))
+#: 생산자 `network_conductivity._sigma_status` 의 값 중 계약이 받는 것 — `not_computed` (풀지 못함) 는 거부한다
+#:   (그 경우 이온 채널 판정은 `valid_null` 로 통과하므로 채널 판정만으로는 '비관통' 과 '못 풂' 을 못 가른다).
+NETWORK_STOP_SIGMA_OK = ('computed', 'valid_zero')
+#: 생산자 `network_conductivity.BOUNDARY_RULES` 와 같아야 한다 (L1 · L2 = 기록된 폴백 — 막지 않는다 · tau_flux G1 이 표지).
+NETWORK_STOP_BOUNDARY_RULES = ('L0', 'L1', 'L2')
+
+
+def _stop_num(v):
+    """유한 실수 (bool · 문자열 · NaN · ±inf 아님)."""
+    return isinstance(v, (int, float)) and not isinstance(v, bool) and math.isfinite(v)
+
+
+def network_stop_verdict(results_dir, run_id):
+    """`stop_after='network'` 로 멈춘 결과 폴더 → (ok, reason).  fail-closed — 읽기 실패 · 키 없음 · 모순은 전부 False.
+
+      ① `network_content_verdict(strict=True)` — 네 JSON · 두 모드 · 세 채널
+      ② full_metrics 의 `network_run_id` · `active_network_run_id` = 이번 실행 (`run_id`) · `network_solver_status` = success
+      ③ 두 모드 dual `sigma_full_status` ∈ `NETWORK_STOP_SIGMA_OK` — computed 면 full_metrics σ 가 dual 의 같은 값 (양수),
+         valid_zero (비관통) 면 둘 다 None (숫자 필드는 0 을 None 으로 접는 옛 규약 · F-12)
+      ④ 두 모드 `constriction_power_share_ion_<꼬리>` (+ `_status`) — full_metrics = dual (같은 세대) 이고
+         (값 0–1 · 'computed') 또는 (None · 비지 않은 사유 상태)
+      ⑤ dual 두 모드 `boundary_rule` ∈ `NETWORK_STOP_BOUNDARY_RULES` · `boundary_band_frac` 유한 양수
+    """
+    ok_c, why_c = network_content_verdict(results_dir, strict=True)
+    bad = [] if ok_c else [f'① {why_c}']
+    try:
+        with open(os.path.join(results_dir, 'full_metrics.json'), encoding='utf-8') as f:
+            fm = json.load(f)
+        with open(os.path.join(results_dir, 'network_conductivity_dual.json'), encoding='utf-8') as f:
+            dual = json.load(f)
+    except (OSError, ValueError) as e:
+        return False, '; '.join(bad + [f'읽기 실패 ({type(e).__name__})'])
+    if not isinstance(fm, dict) or not isinstance(dual, dict):
+        return False, '; '.join(bad + ['full_metrics · dual 이 객체가 아니다'])
+    if not run_id or fm.get('network_run_id') != run_id or fm.get('active_network_run_id') != run_id:
+        bad.append(f'② 도장 network_run_id={fm.get("network_run_id")!r} · active={fm.get("active_network_run_id")!r} ≠ 이번 실행 {run_id!r}')
+    if fm.get('network_solver_status') != 'success':
+        bad.append(f'② network_solver_status={fm.get("network_solver_status")!r}')
+    for dkey, tail, fkey in NETWORK_STOP_MODES:
+        rec = dual.get(dkey)
+        if not isinstance(rec, dict):
+            bad.append(f'{dkey}: dual 레코드 없음')
+            continue
+        st, sv, fv = rec.get('sigma_full_status'), rec.get('sigma_full_mScm'), fm.get(fkey)
+        if st not in NETWORK_STOP_SIGMA_OK:
+            bad.append(f'③ {dkey}: sigma_full_status={st!r}')
+        elif st == 'computed' and not (_stop_num(sv) and sv > 0 and _stop_num(fv) and fv == sv):
+            bad.append(f'③ {dkey}: computed 인데 σ dual={sv!r} · full_metrics {fkey}={fv!r} (같은 세대의 양수여야)')
+        elif st == 'valid_zero' and not (sv is None and fv is None):
+            bad.append(f'③ {dkey}: valid_zero 인데 σ dual={sv!r} · full_metrics {fkey}={fv!r}')
+        ck = f'constriction_power_share_ion_{tail}'
+        cv, cs = fm.get(ck), fm.get(ck + '_status')
+        if cv != rec.get(ck) or cs != rec.get(ck + '_status'):
+            bad.append(f'④ {ck}: full_metrics ({cv!r}, {cs!r}) ≠ dual ({rec.get(ck)!r}, {rec.get(ck + "_status")!r})')
+        elif cv is None:
+            if not (isinstance(cs, str) and cs.strip() and cs != 'computed'):
+                bad.append(f'④ {ck}: 값 없음 · 사유 상태 없음 ({cs!r})')
+        elif not (_stop_num(cv) and 0.0 <= cv <= 1.0 and cs == 'computed'):
+            bad.append(f'④ {ck}: 값 {cv!r} · 상태 {cs!r} (0–1 · computed 여야)')
+        br, bf = rec.get('boundary_rule'), rec.get('boundary_band_frac')
+        if br not in NETWORK_STOP_BOUNDARY_RULES or not (_stop_num(bf) and bf > 0):
+            bad.append(f'⑤ {dkey}: boundary_rule={br!r} · boundary_band_frac={bf!r}')
+    return (not bad), ('; '.join(bad) if bad else 'ok')
+
+
 #: ★ RC6-07 (Codex 6회차, Windows 실측): 자식 프로세스의 출력 인코딩을 계약하지 않으면
 #:   **Windows 기본 CP949 에서 solver 가 첫 non-ASCII 로그에 죽는다**.
 #:     UnicodeEncodeError: 'cp949' codec can't encode character '\u2014'
