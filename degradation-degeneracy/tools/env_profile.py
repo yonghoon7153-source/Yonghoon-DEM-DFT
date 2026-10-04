@@ -3,11 +3,14 @@
 ★ 90차 (원장 §135 · 고정 표 `docs/22p_gap/PYBAMM_PIN_ROUND_SPEC.md` §3–§5) — 사전 검토 회신 P3: 지금은 "무엇으로
   돌렸나" 는 기록되지만 (`src/io.py::env_fingerprint` · effective_solver · worker 서명 대조) "그 환경이 승인된 것인가" 를
   묻는 곳이 없었다. 이 모듈은 실행 환경을 `requirements-validation-C.lock.txt` 와 대조해 **일치 / 불일치 목록을 남긴다.**
-  어떤 실행도 막지 않는다 (D3 — 불일치여도 pytest · smoke · run.sh · 영수증 생성은 그대로 돈다).
+  어떤 실행도 막지 않는다 (D3 — 불일치여도 pytest · smoke · run.sh · 영수증 생성은 그대로 돈다). C 일치 여부는 실행 gate 가
+  아니나, 측정 기능을 요구하는 회귀의 지원 환경에서는 측정 불가를 시험 실패로 본다 (e06 · e08 — 91차 C1).
 
   · 측정은 그 프로세스의 `sys.path` 순서 그대로다 — 해석기 · 플랫폼 다섯 축 · 배포판 (정규 이름의 첫 항목 = 유효 · 뒤 항목 =
     가려진 것 · RECORD 텍스트 sha256) · 설치 파일의 RECORD 재해시 (설치 뒤 변경 감지 — RECORD 가 덮는 범위만) · 핵심
-    module 열 개의 실제 origin (사전 검토 Q5).
+    module 열 개를 `PathFinder` 로 경로 검색한 origin 파일의 RECORD 소속 (사전 검토 Q5 를 좁힌 꼴).
+  · 그 origin 은 **경로 검색 결과**다 — 이미 로드된 module 객체 (`sys.modules`) · 그 `__file__` / `__spec__.origin` · 다른
+    meta-path finder 의 선택은 보지 않는다. 로드된 module origin 은 측정하지 않는다 (결과 `not_measured` · 91차 G90-N1).
   · 결과는 닫힌 dict 다. `MATCH` · `MISMATCH` · `UNMEASURED` — 측정하지 못한 칸은 `None` 이다. 빈 목록으로 쓰면
     "불일치 없음" 으로 읽힌다 (61차 P1-3). `UNMEASURED` 를 `MATCH` 로 적지 않는다.
   · 선언하지 않는 것: C 는 정본 (v4) 생산 환경이 아니다 (그것은 프로필 B — 고정 표 §6 의 기록) · 설치 처방이 아니다 ·
@@ -42,9 +45,11 @@ KEY_MODULES = ("numpy", "scipy", "pandas", "joblib", "pyarrow", "pybamm", "matpl
                "pybammsolvers", "casadi")
 #: lock 지시 — 이 순서로 쓰고, 각각 정확히 한 번 있어야 한다.
 DIRECTIVES = ("profile", "python", "implementation", "system", "machine", "libc")
-#: 결과 `mismatches[].axis` 의 닫힌 집합 (고정 표 §4-2).
+#: 결과 `mismatches[].axis` 의 닫힌 집합 (고정 표 §4-2 · 91차 §13-3 — `origin` → `path_origin`).
 AXES = ("python", "implementation", "system", "machine", "libc", "dist_missing", "dist_extra",
-        "dist_version", "dist_record", "shadowed", "file", "origin")
+        "dist_version", "dist_record", "shadowed", "file", "path_origin")
+#: 이 도구가 재지 않는 것 — 결과 `not_measured` 로 세 상태 모두 그대로 싣는다 (측정 칸이 아니라 범위 선언 · 91차 G90-N1).
+NOT_MEASURED = ("loaded_module_origin",)
 
 _NAME = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*")
 _VERSION = re.compile(r"[^\s#]+")
@@ -108,7 +113,11 @@ def _verify_files(dist) -> tuple[int, int, list]:
 
 
 def _origin(module: str, paths: list, effective: dict, files: dict, no_record: list):
-    """핵심 module 의 실제 origin → ("verified", 주인) · ("unverifiable", origin) · ("mismatch", 관측)."""
+    """핵심 module 을 `PathFinder.find_spec(module, paths)` 로 경로 검색한 origin 파일의 RECORD 소속
+    → ("in_record", 주인) · ("unverifiable", origin) · ("mismatch", 관측).
+
+    이미 로드된 module 객체 (`sys.modules`) · 다른 meta-path finder 는 보지 않는다 (91차 G90-N1 — 결과 `not_measured`).
+    """
     spec = importlib.machinery.PathFinder.find_spec(module, paths)
     origin = getattr(spec, "origin", None) if spec is not None else None
     if spec is None:
@@ -121,7 +130,7 @@ def _origin(module: str, paths: list, effective: dict, files: dict, no_record: l
         if any(os.path.realpath(f.locate()) == real for f in entries
                if f.parts and f.parts[0].split(".")[0] == module))
     if len(owners) == 1:
-        return "verified", owners[0]
+        return "in_record", owners[0]
     if not owners:
         for name in no_record:
             base = os.path.realpath(effective[name].locate_file(""))
@@ -166,7 +175,7 @@ def measure(paths=None) -> dict:
     origins, origin_unverifiable, origin_bad = {}, [], []
     for module in KEY_MODULES:
         kind, value = _origin(module, paths, effective, files, no_record)
-        if kind == "verified":
+        if kind == "in_record":
             origins[module] = value
         elif kind == "unverifiable":
             origin_unverifiable.append(module)
@@ -182,7 +191,7 @@ def measure(paths=None) -> dict:
         "shadowed": sorted(shadowed),
         "dists_without_record": no_record,
         "files": {"verified": verified, "unhashed": unhashed, "mismatches": file_bad},
-        "origins": {"verified": origins, "unverifiable": origin_unverifiable, "mismatches": origin_bad},
+        "path_origins": {"in_record": origins, "unverifiable": origin_unverifiable, "mismatches": origin_bad},
     }
 
 
@@ -294,8 +303,8 @@ def compare(locked: dict, measured: dict) -> list:
         out.append(_mm("shadowed", f"{n}=={v}", None, r))
     for n, rel, want, got in measured["files"]["mismatches"]:
         out.append(_mm("file", f"{n}:{rel}", want, got))
-    for module, seen in measured["origins"]["mismatches"]:
-        out.append(_mm("origin", module, "RECORD 가 있는 설치 배포판 하나의 파일", seen))
+    for module, seen in measured["path_origins"]["mismatches"]:
+        out.append(_mm("path_origin", module, "경로 검색 origin 이 RECORD 가 있는 유효 배포판 하나의 파일", seen))
     return sorted(out, key=lambda x: (x["axis"], x["subject"]))
 
 
@@ -308,10 +317,14 @@ def _display(path: Path) -> str:
 
 
 def compare_lock(lock_path=None, *, paths=None) -> dict:
-    """lock 과 지금 환경을 대조한 닫힌 결과 dict (고정 표 §4-2). 예외를 내지 않는다 — 못 하면 `UNMEASURED`."""
+    """lock 과 지금 환경을 대조한 닫힌 결과 dict (고정 표 §4-2 · §13-3). 예외를 내지 않는다 — 못 하면 `UNMEASURED`.
+
+    `not_measured` 는 측정 칸이 아니라 범위 선언이라 세 상태 모두 같은 값이다 (`UNMEASURED` 에서도 `None` 이 아니다).
+    """
     lp = Path(LOCK_DEFAULT if lock_path is None else lock_path)
     res = {"profile": "C", "lock_path": _display(lp), "lock_sha256": None, "status": "UNMEASURED",
-           "reason": "", "mismatches": None, "unverifiable": None, "counts": None}
+           "reason": "", "mismatches": None, "unverifiable": None, "counts": None,
+           "not_measured": list(NOT_MEASURED)}
     try:
         raw = lp.read_bytes()
     except OSError as exc:
@@ -336,11 +349,11 @@ def compare_lock(lock_path=None, *, paths=None) -> dict:
         status="MISMATCH" if found else "MATCH",
         mismatches=found,
         unverifiable={"dists_without_record": list(measured["dists_without_record"]),
-                      "origins": list(measured["origins"]["unverifiable"])},
+                      "path_origins": list(measured["path_origins"]["unverifiable"])},
         counts={"dists_locked": len(locked["dists"]), "dists_measured": len(measured["dists"]),
                 "shadowed_locked": len(locked["shadowed"]), "shadowed_measured": len(measured["shadowed"]),
                 "files_verified": measured["files"]["verified"], "files_unhashed": measured["files"]["unhashed"],
-                "origins_verified": len(measured["origins"]["verified"])})
+                "path_origins_in_record": len(measured["path_origins"]["in_record"])})
     return res
 
 
@@ -355,13 +368,13 @@ def _summary(r: dict) -> str:
     c = r["counts"]
     lines = [head + f" · 배포판 lock {c['dists_locked']} / 측정 {c['dists_measured']} · 가려진 {c['shadowed_locked']}"
              f" / {c['shadowed_measured']} · 설치 파일 일치 {c['files_verified']} (해시 없음 {c['files_unhashed']})"
-             f" · origin 확인 {c['origins_verified']}"]
+             f" · 경로 검색 origin 의 RECORD 소속 {c['path_origins_in_record']} (로드된 module origin 미측정)"]
     u = r["unverifiable"]
     if u["dists_without_record"]:
         lines.append(f"  · 확인 불가 — RECORD 없는 배포판 {len(u['dists_without_record'])}: "
                      + ", ".join(u["dists_without_record"]))
-    if u["origins"]:
-        lines.append("  · 확인 불가 — origin: " + ", ".join(u["origins"]))
+    if u["path_origins"]:
+        lines.append("  · 확인 불가 — 경로 검색 origin: " + ", ".join(u["path_origins"]))
     for m in r["mismatches"]:
         lines.append(f"  ✗ {m['axis']} {m['subject']} locked={m['locked']} measured={m['measured']}")
     lines.append("  (기록 전용 — 불일치여도 아무것도 막지 않는다 · 원장 §135)")
