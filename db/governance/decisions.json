@@ -6196,7 +6196,7 @@
    "title": "소셀 유리 평형 MD v2 (잠정) — 550 K 800 ps · 600 K 400 ps · 같은 5 담금질 시드 · 기계–시드 교차 · 보고량은 온도별 게이트 통과 수 (절대값 아님)",
    "statement": "옛 카드(D-2026-09-21 · 갈래1 로 닫힘)의 재개가 아니라 마감 §5 가 말한 **새 카드**다. 같은 5 담금질 시드(relax 판 final.xyz · 값 판별)로 550 K 800 ps · 600 K 400 ps 새 난수(--seed 1000 + 시드) 10 런을 gabia·kgy 에 교차 배정해 돌리고, 온도별 C1·C2 통과 수 N₅₅₀/5 · N₆₀₀/5 와 시드 간 상대 산포를 보고한다. C2 = 주 MTO · σ 사다리 끝 · 2σ · 가까운 문턱 (회신 CD·CH·CL) · 사다리는 b_min 50 ps 에 닿는 데까지 늘린다 (800 ps 끝 b 512 · 8 블록 · 400 ps 는 256 · 하한 표기). 갈래: N₆₀₀ ≤ 2 닫음 · N₆₀₀ ≥ 3 · N₅₅₀ ≤ 2 → 550 K 위 설계는 새 결정 · 둘 다 ≥ 3 → 둘째 묶음은 외부 1저자 결정. ⛔ Ea·D·σ 절대값 · 상온 전도도 · 결정 비교는 이 카드 밖.",
    "rationale": "마감 기록의 출발 사실 (550 K 문턱 부근 · 600 K 명확 통과 · 초과분 · STO–MTO 폭 · 기계–시드 겹침) 과 회신 CN 의 '다음 설계자가 온도·길이를 어디서 손볼지' 에서 설계했다. 465 K 는 β 가 문턱에서 멀어 길이로 안 풀려 뺐다. 옛 σ 사다리(최대 3.2 ps 블록)는 회신 CD 의 b_min 50 ps 에 못 미쳤다 — 800 ps 에서는 닿는다. 트랙 li2s = 외부 1저자 — 사용자 결정은 실행 승인이라 이 결정은 proposed(잠정)이고, 외부 1저자 동의(편지 CO)가 오면 비준을 받는다. 회신이 규칙을 바꾸면 결과를 보기 전에 바꾼다.",
-   "decision_state": "proposed",
+   "decision_state": "active",
    "record_kind": "estimand_card",
    "results_seen": false,
    "card": "db/properties/lpscl_smallcell_glass_md_v2_estimand_2026_09_30.json",
@@ -6224,7 +6224,7 @@
     "견적": "gabia ≈ 65 h (550 K 800 ps × 2 · 600 K × 3 · 400 ps 실측 83 s/ps) + kgy ≈ 47 h (550 K × 3 · 600 K × 2 · ≈ 52 s/ps 추정) ≈ 112 GPU-h"
    },
    "proposed_by": "claude-session-2026-09-30",
-   "status": "proposed",
+   "status": "active",
    "status_history": [
     {
      "at": "2026-09-30",
@@ -6237,10 +6237,23 @@
      "state": "proposed",
      "by": "agent",
      "note": "회신 CO 수령 (외부 1저자 · 결과 미열람 상태) — 방향 확인 + 판독 전 고칠 것 (σ 두 온도 하한 · 공통 b 256 열 · 끝 두 b 규칙 · near-miss · 보조 창 50–200 · 대조 계 후보 a-Li₃PS₄ 유리 · 골격 게이트 숫자) → 개정 D-2026-10-04-lpscl-smallcell-glass-md-v2-amend-co (proposed) 에 편입. 비준은 카드와 개정을 같이 받는다."
+    },
+    {
+     "at": "2026-10-04",
+     "state": "active",
+     "by": "사용자 (카드 저자)",
+     "note": "사용자 비준 — AskUserQuestion '비준 · 판독으로 (Recommended)' + 골격 범위 '기록만 · 게이트는 650 K부터 (Recommended)' (2026-10-04 · 카드 v2 + 개정 CO 함께). 규칙은 외부 1저자 회신 CO 에서 왔고, 이 비준은 원장의 active 전환과 판독 실행 승인이다. 골격 게이트 범위·정의(seed5) 해석은 잠정 — 판독 편지로 외부 1저자 확인. 트랙 = li2s (사용자 ≠ 1저자 · 사용자 = 카드 저자)."
     }
    ],
    "ratification": {
-    "state": "proposed"
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-10-04T05:24:04Z",
+    "commit": "a6e37f4dcebe25ad4cf2d1e80d5d48a8d6b213a1",
+    "decision_digest": "sha256:c71c09e50f2a8679fec9954939e6cfbcc33eeebac8465c015fd514ee563c5304",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "비준_근거": "사용자 2026-10-04 — AskUserQuestion '비준 · 판독으로 (Recommended)' · 골격 '기록만 · 게이트는 650 K부터 (Recommended)' (카드 v2 + 개정 CO 함께 · 트랙 li2s = 외부 1저자 — 비준은 기록·실행 승인)."
    }
   },
   {
@@ -6944,7 +6957,7 @@
    "title": "소셀 유리 MD v2 개정 CO (판독 전) — 회신 CO 규칙 편입: σ 두 온도 하한 · 공통 b 256 기록 열 · 끝 두 b 갈리면 경계 · near-miss σ 거리 다섯 · 보조 창 50–200 ps 기록 열 · 대조 계 후보 a-Li₃PS₄ 유리 · 골격 게이트 숫자 (범위·정의 잠정)",
    "statement": "외부 1저자 회신 CO 대로 v2 카드 판독 규칙을 결과 전에 고친다. ① σ 는 550 K (끝 b 512 · 51.2 ps) 도 'b_min 에 닿았으나 여전히 하한' ② 두 온도 모두 b = 256 σ 로 낸 C2·N·갈래를 기록 열로 나란히 (주 판정은 각자의 끝값) ③ 사다리 끝 두 b 에서 '통과' 가 한쪽뿐이면 경계 (통과 선언에만) ④ 온도마다 다섯 런의 σ 거리 (끝 b · 앞 b · 공통 b) 를 전부 적는다 ⑤ N₅₅₀ ≥ 3 이면 마감에 '옛 런이 틀렸던 것이 아니라 당시 해상도로는 선언할 수 없었던 것' ⑥ 대조 계 후보 = 같은 protocol·셀의 a-Li₃PS₄ 유리 (기록만 · 실행은 둘째 묶음) ⑦ 골격 게이트 숫자 (① P 이탈 프레임 ≤ 5 % ② S 소속 이동 0 ③ S–S < 2.30 Å 0 · 어기면 D 보고에서 제외 · 개수는 센다) — 이 묶음은 기록 · 게이트는 둘째 묶음부터 (잠정) ⑧ 기계 효과 = 궤적 잡음 (기술 통계만) ⑨ 옛 550 K β 를 기술 비교로 ⑩ β_MTO(50–200 ps) 기록 전용 열. 판정 창 2–50 · 문턱 3/5 · 세 갈래 · C1·C2 는 그대로.",
    "rationale": "회신 CO: 옛 σ 가 b_min 의 1/16 수준이었다는 발견 뒤, 800 ps 의 51.2 ps 블록도 창 길이에 겨우 닿아 인접 블록이 독립이 아니고 (σ 하한 → nσ 상한 → 통과 선언이 낙관적), 두 온도의 끝 b 가 달라 N₅₅₀·N₆₀₀ 이 다른 잣대로 재진다. 결과 전이라 지금 넣으면 사전등록이다. 범위·정의 해석 둘 (골격 게이트를 이 묶음에도 거는가 · seed5 의 담금질 결함을 어떻게 읽는가) 은 외부 1저자 확인 대상이라 잠정으로 적는다.",
-   "decision_state": "proposed",
+   "decision_state": "active",
    "record_kind": "amendment",
    "results_seen": false,
    "card": "db/properties/lpscl_smallcell_glass_md_v2_amendment_co_2026_10_04.json",
@@ -6969,17 +6982,30 @@
     "⛔ 이 카드 안에서 prod 800 ps 초과 · 문턱 완화 · 점·시드 제외 · 풀링 · 옛 런 혼입 금지"
    ],
    "proposed_by": "claude-session-2026-10-04",
-   "status": "proposed",
+   "status": "active",
    "status_history": [
     {
      "at": "2026-10-04",
      "state": "proposed",
      "by": "agent",
      "note": "회신 CO 규칙 편입 · 판독 도구 결과 전 커밋 (selftest 217 · 42 · 20 · 깨기 12/12) · 트랙 li2s = 외부 1저자 → 사용자 비준은 기록·실행 승인 (외부 1저자 동의를 대신하지 않는다) · 골격 게이트 범위·정의는 잠정 (다음 편지)."
+    },
+    {
+     "at": "2026-10-04",
+     "state": "active",
+     "by": "사용자 (카드 저자)",
+     "note": "사용자 비준 — AskUserQuestion '비준 · 판독으로 (Recommended)' + 골격 범위 '기록만 · 게이트는 650 K부터 (Recommended)' (2026-10-04 · 카드 v2 + 개정 CO 함께). 규칙은 외부 1저자 회신 CO 에서 왔고, 이 비준은 원장의 active 전환과 판독 실행 승인이다. 골격 게이트 범위·정의(seed5) 해석은 잠정 — 판독 편지로 외부 1저자 확인. 트랙 = li2s (사용자 ≠ 1저자 · 사용자 = 카드 저자)."
     }
    ],
    "ratification": {
-    "state": "proposed"
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-10-04T05:24:04Z",
+    "commit": "a6e37f4dcebe25ad4cf2d1e80d5d48a8d6b213a1",
+    "decision_digest": "sha256:b64e496c6900f3fd6e70f7a53b1c2121c7f1326ffff7ca796d3681672037cadd",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "비준_근거": "사용자 2026-10-04 — AskUserQuestion '비준 · 판독으로 (Recommended)' · 골격 '기록만 · 게이트는 650 K부터 (Recommended)' (카드 v2 + 개정 CO 함께 · 트랙 li2s = 외부 1저자 — 비준은 기록·실행 승인)."
    }
   }
  ]

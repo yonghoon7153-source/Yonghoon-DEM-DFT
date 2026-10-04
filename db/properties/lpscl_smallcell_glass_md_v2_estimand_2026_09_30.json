@@ -3,7 +3,7 @@
  "kind": "estimand",
  "record_kind": "estimand_card",
  "date": "2026-09-30",
- "status": "proposed — **잠정** (사용자 실행 승인 09-30 · 외부 1저자 동의 대기 · 편지 CO)",
+ "status": "ratified (2026-10-04 · 사용자 = 카드 저자 · 트랙 li2s — 외부 1저자 회신 CO 로 방향 확인 · 판독 규칙은 개정 CO 가 이긴다)",
  "citable": false,
  "results_seen": false,
  "system": "lpscl_amorphous",
@@ -143,6 +143,12 @@
    "state": "proposed",
    "by": "agent",
    "note": "회신 CO 수령 (결과 미열람) → 판독 규칙 개정은 `lpscl_smallcell_glass_md_v2_amendment_co_2026_10_04.json` (σ 표기 · 공통 b 256 · 끝 두 b · near-miss · 보조 창 · 대조 계 후보 · 골격 게이트 숫자). 이 카드 본문은 그대로 두고 개정이 이긴다."
+  },
+  {
+   "at": "2026-10-04",
+   "state": "ratified",
+   "by": "사용자 (카드 저자)",
+   "note": "사용자 비준 — AskUserQuestion '비준 · 판독으로 (Recommended)' + 골격 범위 '기록만 · 게이트는 650 K부터 (Recommended)' (2026-10-04 · 카드 v2 + 개정 CO 함께). 규칙은 외부 1저자 회신 CO 에서 왔고, 이 비준은 원장의 active 전환과 판독 실행 승인이다. 골격 게이트 범위·정의(seed5) 해석은 잠정 — 판독 편지로 외부 1저자 확인. 트랙 = li2s (사용자 ≠ 1저자 · 사용자 = 카드 저자)."
   }
  ]
 }
