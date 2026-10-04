@@ -71,3 +71,5 @@ reviews/r14_repros/codex63/normal480_saved_analysis_recipient_review_20261003/**
 reviews/prereview_pybamm_reil_20261003/** -text
 # 2026-10-04: REIL 프로토콜 v2 재검토 묶음 (게이트 차수 밖 · DESIGN_DIRECTION_ACCEPTED_DOCUMENT_REVISION_REQUIRED · RV2-N1–N4 문서 보완 · 실행 · 구현 · P0 승인 아님) — bytes 그대로
 reviews/prereview_reil_v2_20261004/** -text
+# 2026-10-04: REIL 부속 A 재검토 묶음 (게이트 차수 밖 · DOCUMENT_CONDITIONALLY_ACCEPTABLE_THREE_LOCAL_CORRECTIONS_REQUIRED · RV2-N1 종결 · RV2A-N1–N3 국소 정정 · 실행 · 구현 · P0 승인 아님) — bytes 그대로
+reviews/prereview_reil_v2_annexA_20261004/** -text
