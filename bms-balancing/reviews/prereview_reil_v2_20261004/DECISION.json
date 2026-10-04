@@ -1,0 +1,86 @@
+{
+  "date": "2026-10-04",
+  "scope": "REIL protocol v2 design prereview only; outside numbered gates",
+  "repository": "yonghoon7153-source/Yonghoon-DEM-DFT",
+  "ref": "ed397bab4381a00315f36413a3152fd06e386c87",
+  "source_path": "bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2.md",
+  "source_git_blob_sha1": "872ca88b3b5c57aebf295bd0109e95a830b3ae13",
+  "decision": "DESIGN_DIRECTION_ACCEPTED_DOCUMENT_REVISION_REQUIRED",
+  "findings": [
+    {
+      "id": "RV2-N1",
+      "priority": "P1",
+      "topic": "Complete scalar/vector/shape threshold contract",
+      "lines": [
+        125,
+        134,
+        179,
+        186,
+        215,
+        231,
+        234
+      ]
+    },
+    {
+      "id": "RV2-N2",
+      "priority": "P1",
+      "topic": "Feasible witness selection and numerical classification",
+      "lines": [
+        164,
+        175,
+        192,
+        197
+      ]
+    },
+    {
+      "id": "RV2-N3",
+      "priority": "P2",
+      "topic": "Deterministic finite search, grid interpretation and budget",
+      "lines": [
+        171,
+        186,
+        207,
+        219
+      ]
+    },
+    {
+      "id": "RV2-N4",
+      "priority": "P2",
+      "topic": "H4 cutoff approximation, controls and falsification scope",
+      "lines": [
+        228,
+        234
+      ]
+    }
+  ],
+  "minor_corrections": [
+    "G boundary vs zero-margin equality",
+    "Use exact ratios 50/13 and 25/3",
+    "tau=.02 gap=.20 upper bound max_q<=3.125"
+  ],
+  "accepted": [
+    "S vs H(S), separate marginal/joint compatibility",
+    "UNRESOLVED for narrow or missed witnesses",
+    "Units and empirical noise-width interpretation",
+    "Nominal truth vs measurement uncertainty",
+    "Three fixed domains, extrapolation labels, pre-fit P0",
+    "Two-sided H4 normalization direction",
+    "E3a code-path scope, E3b remains unregistered"
+  ],
+  "scope_limits": {
+    "data_opened": false,
+    "provided_code_imported_or_executed": false,
+    "model_fit_run": false,
+    "tests_run": false,
+    "installation_performed": false,
+    "comsol_run": false,
+    "implementation_authorized": false,
+    "p0_authorized": false,
+    "e3_authorized": false,
+    "h_authorized": false,
+    "gate88_changed": false
+  },
+  "next_action": "Document-only corrections, subject to user direction. Core experimental definitions and separate execution approvals remain prerequisites.",
+  "recipient_review": true,
+  "producer_receipts_modified": false
+}

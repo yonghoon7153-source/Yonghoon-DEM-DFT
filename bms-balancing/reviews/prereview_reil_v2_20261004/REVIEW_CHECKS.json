@@ -1,0 +1,49 @@
+{
+  "scope": "Reviewer static/document and algebra checks, not a functional test suite",
+  "date": "2026-10-04",
+  "source_ref": "ed397bab4381a00315f36413a3152fd06e386c87",
+  "v2_blob_local_matches_remote": true,
+  "v1_blob_local_matches_remote": true,
+  "prior_review_local_byte_match": true,
+  "algebra": {
+    "a0_offset_difference": [
+      0.0001,
+      0.5
+    ],
+    "a1_offset_difference": [
+      0.0001,
+      2
+    ],
+    "a2_offset_difference": [
+      -2,
+      2
+    ],
+    "q_upper_gap_013": "50/13",
+    "q_upper_gap_006": "25/3",
+    "q_upper_gap_020_tau_002": "25/8 = 3.125",
+    "scope": "Symbolic/elementary arithmetic only, no dataset fitting or P0"
+  },
+  "budget_arithmetic": {
+    "units": 77,
+    "locals_per_unit": 713,
+    "local_calls": 54901,
+    "max_objective_calls_excluding_other_work": 109817477,
+    "e3_top_level": 66,
+    "e3_optimizer_calls": 275,
+    "scope": "Nominal schedule upper bounds, not measured performance"
+  },
+  "review_findings": [
+    "RV2-N1",
+    "RV2-N2",
+    "RV2-N3",
+    "RV2-N4"
+  ],
+  "data_processing_runs": 0,
+  "model_runs": 0,
+  "provided_code_runs": 0,
+  "tests_run": 0,
+  "installs": 0,
+  "producer_changes": 0,
+  "local_tools_used": "Read-only source acquisition, static file hashing, writing review artifacts and delivery packaging",
+  "boundary": "Filesystem review/packaging calls are not claimed to be zero tool/process calls"
+}

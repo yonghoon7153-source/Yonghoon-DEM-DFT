@@ -1,0 +1,94 @@
+{
+  "date": "2026-10-04",
+  "repository": "yonghoon7153-source/Yonghoon-DEM-DFT",
+  "ref": "ed397bab4381a00315f36413a3152fd06e386c87",
+  "scope": "Fixed-ref text and source review; supplied code never imported/executed; no xlsx or pickle read",
+  "files": [
+    {
+      "path": "bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2.md",
+      "local": "reference/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2.md",
+      "git_blob_sha1": "872ca88b3b5c57aebf295bd0109e95a830b3ae13",
+      "bytes": 27795,
+      "sha256": "74ccb30ff3667efb4f3842a63c6ebf21296a1137bb1165682631f6b5c005fd60",
+      "local_git_blob_matches": true,
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/ed397bab4381a00315f36413a3152fd06e386c87/bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2.md"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL.md",
+      "local": "reference/REIL_EXTERNAL_VALIDATION_PROTOCOL_v1.md",
+      "git_blob_sha1": "dd6e7c5081d66d3e8f08a586f7a655602b587121",
+      "bytes": 12122,
+      "sha256": "706f3dbd06de42ae1c0d96794d696ee9ffaf2e98082011af67b449d1b1dfef7e",
+      "local_git_blob_matches": true,
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/ed397bab4381a00315f36413a3152fd06e386c87/bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL.md"
+    },
+    {
+      "path": "bms-balancing/reviews/prereview_pybamm_reil_20261003/REIL_PROTOCOL_REVIEW_KO.md",
+      "local": "reference/PRIOR_REIL_PROTOCOL_REVIEW_KO.md",
+      "git_blob_sha1": "ad081b718fa1d329c2d9fe553270d5ef29c776b6",
+      "bytes": 17710,
+      "sha256": "df09255841e94d5d120cde7ced5a9143ce7e732ff5074895da2977382708737a",
+      "matches_prior_local_review": true,
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/ed397bab4381a00315f36413a3152fd06e386c87/bms-balancing/reviews/prereview_pybamm_reil_20261003/REIL_PROTOCOL_REVIEW_KO.md"
+    }
+  ],
+  "external_sources": [
+    {
+      "url": "https://github.com/REIL-UConn/Multi-Objective-Optimization-for-Lithium-Ion-Battery-Degradation-Diagnostics/blob/1188c371e5836df4a7e5f5acf336a34ffd4027e6/util_LFP.py",
+      "git_blob_sha1": "33a2f3768f5a046ba6e028c19760ad68f28dde84",
+      "mode": "Remote source text read, not executed",
+      "relevant_lines": [
+        [
+          130,
+          236
+        ],
+        [
+          564,
+          613
+        ],
+        [
+          682,
+          725
+        ]
+      ]
+    },
+    {
+      "path": "bms-balancing/reviews/prereview_pybamm_reil_20261003/external/NOTEBOOK_SOURCE_EXCERPTS.json",
+      "mode": "Prior local source-cell snapshot read; no notebook outputs or execution",
+      "bytes": 7543,
+      "sha256": "95cca5f35aaaf72757812068251d72064b464cff6ef3f523c756f33d27d243a9",
+      "cells": [
+        3,
+        4,
+        6,
+        8,
+        9,
+        11,
+        12,
+        13
+      ]
+    },
+    {
+      "url": "https://docs.scipy.org/doc/scipy/reference/optimize.minimize-cobyqa.html",
+      "retrieved": "2026-10-04",
+      "claim": "Version/options/feasibility tolerance are distinct from independent witness acceptance; documentation is not an installed environment"
+    },
+    {
+      "url": "https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.linprog.html",
+      "retrieved": "2026-10-04",
+      "claim": "Linear programming numerical statuses and residuals; not an exact arithmetic certificate"
+    },
+    {
+      "url": "https://pymoo.org/constraints/",
+      "retrieved": "2026-10-04",
+      "claim": "G<=0 convention"
+    }
+  ],
+  "not_verified": [
+    "xlsx values or max_q",
+    "full paper and nominal-truth uncertainty",
+    "actual solver environment",
+    "later commits preserving protocol",
+    "entire prior review archive"
+  ]
+}

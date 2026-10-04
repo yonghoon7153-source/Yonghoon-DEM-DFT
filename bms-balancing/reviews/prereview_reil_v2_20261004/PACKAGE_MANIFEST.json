@@ -1,0 +1,52 @@
+{
+  "payload_count": 9,
+  "files": [
+    {
+      "path": "CLAUDE_REPLY_KO.md",
+      "bytes": 4384,
+      "sha256": "cd1d627c45a6fcdb6af6946993d961dadb0be9df5d4f3717f86a66fa2f12aa7e"
+    },
+    {
+      "path": "DECISION.json",
+      "bytes": 2433,
+      "sha256": "d34af4d884b49f1f073f7fa7b5178fa09b0352e0f426f15ff1a9f37f592d2912"
+    },
+    {
+      "path": "README_KO.md",
+      "bytes": 1091,
+      "sha256": "fc215112275880e4b8ff6b379bb12e6882df47b24a1706bf67eea98405594032"
+    },
+    {
+      "path": "reference/PRIOR_REIL_PROTOCOL_REVIEW_KO.md",
+      "bytes": 17710,
+      "sha256": "df09255841e94d5d120cde7ced5a9143ce7e732ff5074895da2977382708737a"
+    },
+    {
+      "path": "reference/REIL_EXTERNAL_VALIDATION_PROTOCOL_v1.md",
+      "bytes": 12122,
+      "sha256": "706f3dbd06de42ae1c0d96794d696ee9ffaf2e98082011af67b449d1b1dfef7e"
+    },
+    {
+      "path": "reference/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2.md",
+      "bytes": 27795,
+      "sha256": "74ccb30ff3667efb4f3842a63c6ebf21296a1137bb1165682631f6b5c005fd60"
+    },
+    {
+      "path": "REVIEW_CHECKS.json",
+      "bytes": 1402,
+      "sha256": "85023c1badaf21f4233e74e26d2252d329ededa300239e92f60ea00822d0a903"
+    },
+    {
+      "path": "REVIEW_KO.md",
+      "bytes": 18443,
+      "sha256": "763b685f299bff1fe9540a97fde36bd428d32061db309f37480abb30d09f5cfd"
+    },
+    {
+      "path": "SOURCE_INDEX.json",
+      "bytes": 3756,
+      "sha256": "8c1b35be6faed7725123d4b42af8abfe24ce17bd4ecb734dc53a92b9f3a40938"
+    }
+  ],
+  "scope": "Independent reviewer document package; not a producer receipt or research result",
+  "ref": "ed397bab4381a00315f36413a3152fd06e386c87"
+}
