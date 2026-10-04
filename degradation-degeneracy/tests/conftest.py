@@ -228,6 +228,9 @@ _GATED_ENTRYPOINT_MODULES = frozenset({
     # ★ 88차 — G87-N1: 비-smoke v6 fit-only 의 승인 → 완료 기록 → 최종화를 production `run_fit()` · `finalize_leg()` 로 잰다
     #   (자기 격리 원장 · 비-smoke 산출 자리).
     "test_gate88_fit_only_lifecycle", "tests.test_gate88_fit_only_lifecycle",
+    # ★ 89차 — G88-N1: fit 전용 최종화의 durable 입력 결속 재검사를 88차 모듈의 helper (자기 격리 원장 · 비-smoke 산출
+    #   자리) 로 잰다. 같은 helper 가 같은 조건 (smoke 안의 tmp_path) 을 보도록 gated 로 둔다.
+    "test_gate89_finalize_input_binding", "tests.test_gate89_finalize_input_binding",
 })
 
 
