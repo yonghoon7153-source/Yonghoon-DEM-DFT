@@ -77,3 +77,5 @@ reviews/prereview_reil_v2_annexA_20261004/** -text
 reviews/r14_repros/codex63/rtol30_native_recipient_review_20261004/** -text
 # 2026-10-04: Codex A0 · B-min 문서 묶음 (송신 측의 대응표 · 준비 범위 · 요청문 초안 · 기준 결속 · 계획 결정 — 후보 · 검증 · native · 발송 승인 없음) — bytes 그대로
 reviews/r14_repros/codex63/comsol_a0_bmin_documents_20261004/** -text
+# 2026-10-04: B-min 오프라인 후보 꾸러미 (받은 NORMAL480 candidate/ 원본 바이트 basis/source480 + 우리 후보 · CRLF 원문 유지 — §45 승인 · 컴파일 · 시험 · 실행 아님) — bytes 그대로
+comsol_candidates/bmin_particle640_20261004/** -text
