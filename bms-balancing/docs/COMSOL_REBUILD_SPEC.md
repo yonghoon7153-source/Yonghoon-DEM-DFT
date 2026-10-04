@@ -3661,3 +3661,23 @@ Q2 (판정 구현) · Q3 (I-1–I-8 · 특히 `Nord` / `Distribution` 을 R480 �
 비교 기준 (와 기록한 SPEC 바이트 수) 이 움직였다. 기준을 **후보 작성 직전 커밋 `899f966de`** (= 위에서 말한 "직전 HEAD") 로 고정하고 HEAD 에 따라 변하는
 바이트 수를 기록에서 뺐다. 두 번 돌려 바이트가 같음을 확인했다. 결과 81/81 · 후보 8 파일 · manifest `3722a51f…` · 꾸러미 문서는 그대로다.
 준비 검토의 대상은 이 정정이 든 커밋이다 (요청문 바이트는 같다).
+
+## 47. B-min 준비 검토 요청 발송 (사용자 전달) · 요청문 Q5 (기준 표 경로) 의 저장소 안 근거 (2026-10-04)
+
+> **추가 기록이다.** 사용자 알림 (2026-10-04): "발송문 먼저 보낼게" — §46 의 요청문 `docs/COMSOL_BMIN_CANDIDATE_REVIEW_REQUEST_20261004.md` 을 고정
+> 커밋 **`74502af93db0f01bb3ae99eca981cc215300b8bf`** (요청문 blob `1c4f56ce61e6…` · 후보 manifest `3722a51f…` · `7e6ec0e99` 와 요청문 · `candidate/` 바이트
+> 같음) 로 사용자가 보낸다. 회신은 받은 묶음을 바이트 그대로 보존한 뒤 새 절로 접수한다.
+
+### 47-1. Q5 — 경로 가정의 근거 (발송 뒤에 찾은 저장소 안의 사실 · 요청문은 고치지 않는다)
+
+- NORMAL480 entry 의 `analyze` 가 표를 `Path(c['run_root'])/'tables'` 로 푼다 (`basis/source480/candidate/src/candidate_entry.py:162` — `consumer.extract_tables(run/'batch_console.log',run/'tables')`).
+  `run_root` = `…/normal480_offline_preparation_20261001/future_run_001` 이므로 표의 자리는 정확히 B-min 계약이 결속한 `…/future_run_001/tables/<이름>` 이다.
+- R480 수신 검토 묶음의 `RECORDS_AUDIT.json` (`reviews/r14_repros/codex63/normal480_native_recipient_review_20261001/`) 에 기준 9 파일의 그 절대 경로가 모두
+  `preserved before …` · `preserved after …` 검사로 들어 있다 (9/9 · 둘 다 pass). 이 묶음의 범위는 "Independent byte/JSON/event consistency review, not remote OS
+  observation" 이다 — 곧 **NORMAL480 실행 자신의 보존 기록**에 그 경로가 있다는 뜻이지, 검토자가 그 기계에서 파일을 직접 본 것은 아니다.
+- 그래서 남는 불확실성은 **지금도 그 자리에 같은 바이트로 있느냐** 하나다 (옮기거나 지웠으면 compile 전에 `BASELINE_IDENTITY` 로 멈춘다). 경로의 형태 자체는
+  가정이 아니라 NORMAL480 의 기록과 같다.
+
+### 47-2. 이 절이 **바꾸지 않는** 것
+
+§46 의 후보 · 요청문 · 꾸러미 문서 바이트 그대로 · 변경부 검증 · native 미승인 · 게이트 리뷰 (`degradation-degeneracy`) 와 무관 · RUN_SCOPE 0.
