@@ -3435,3 +3435,13 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
   경계 셋 · 상자의 max_q 조건 (우리) → v2 `bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2.md` · [[isu-uconn-lfp-gr-emulated-degradation]] 사전 검토 절 · 방법 절에
   부등식 줄 · [[22p-physics-or-degeneracy]] Status Log
 - 하지 않은 것: 설치 · 실행 · xlsx 개봉 · 맞춤 · requirements · RUN_SCOPE · 진행 중 GATE88 에 섞기
+
+## [2026-10-04] update | Codex REIL v2 재검토 회신 — 설계 방향 수용 · 문서 보완 넷 → 정정 부속 문서 A
+- 묶음: `bms-balancing/reviews/prereview_reil_v2_20261004/` (ZIP 43,510 B · sha256 38d65238… · manifest 9/9 · 기준 커밋 `ed397bab4`) · 게이트 차수 밖 · 실행 0
+- 판정 `DESIGN_DIRECTION_ACCEPTED_DOCUMENT_REVISION_REQUIRED` — RV2-N1 (결합 · H4 문턱 · 후속 최소) · N2 (유효 증인 · 수치 규칙 · P0) 는 P1 ·
+  N3 (결정적 탐색 · 예산 · 비용 측정 승인 경계) · N4 (H4 대조 ↔ 반증) 는 P2 · 상자 문구 정정
+- 처리: `bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2_ANNEX_A.md` (유효 프로토콜 = v2 + 부속 A · 대체한 v2 문장을 줄 번호로) ·
+  [[isu-uconn-lfp-gr-emulated-degradation]] 사전 검토 표의 '경계' 줄 취소선 정정 + v2 재검토 절 · [[22p-physics-or-degeneracy]] 10-03 줄의
+  같은 문구 취소선 정정
+- 재검토 산술 (713 · 77 · 54,901 · 109,817,477 · 275 · 50/13 · 25/3 · 25/8) 을 정확한 분수로 따로 대조 — 일치
+- 하지 않은 것: 설치 · 실행 · xlsx 개봉 · P0 · 비용 측정 · 맞춤 · RUN_SCOPE · 진행 중 88차 게이트에 섞기
