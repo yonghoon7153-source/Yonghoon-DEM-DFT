@@ -1,0 +1,6 @@
+start 2026-10-04T07:04:16Z HEAD 134f26f48a4146432a677515c2ddbdc0d460a376 dirty=0
+source_digest 803e2b7781cbc9cd
+✅ paired_fixed5_v4: docs/22p_gap/receipts/paired_fixed5_v4.validate.yaml · 검사 35건 · 산출 2건 · core_sha 20645070605f0f03
+✅ grid_fit_v5: docs/22p_gap/receipts/grid_fit_v5.validate.yaml · 검사 34건 · 산출 2건 · core_sha e556380777b21106
+make_receipt rc=0
+end 2026-10-04T07:05:31Z HEAD 134f26f48a4146432a677515c2ddbdc0d460a376 dirty=2
