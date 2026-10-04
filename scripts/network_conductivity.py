@@ -175,6 +175,63 @@ def get_sigma_disk_factor(regime, t1, t2, sigma_model='uniform',
     return factor
 
 
+#: ★ 2026-10-04 — τ 결정 16 ② 안 A (1저자 비준 *"권고대로"*).  `build_network` 의 띠 선택을 이 함수로 옮기고 (식 · 순서 그대로 =
+#:   **동작 중립** — `scripts/test_network_boundary_rule.py` 가 추출 전 기준값과 대조) **쓴 규칙과 띠 폭을 돌려준다**.
+#:   옛 코드는 L0 → L1 → L2 폴백을 조용히 하고 남기지 않았다 (`LHS-17` · `TAU-14`) — 인계 게이트 G1 (L0 일 때만 값,
+#:   `scripts/tau_flux.py`) 은 이 기록 없이는 판정할 수 없다.
+#:   ⚠ 이 모듈은 S3 수치 모듈 (`seal_s3_prerun.NUMERIC_MODULES`) — 봉인은 수정 금지가 아니라 **재봉인 강제**다 (S3 전에 다시 봉인).
+#:   ⚠ `dem_analysis_core.calc_percolation` 도 같은 규칙을 **따로** 들고 있다 (기록 없음 — LHS-17 의 그쪽 절반은 열림).
+BOUNDARY_RULES = ('L0', 'L1', 'L2')
+
+
+def boundary_sets(atoms_raw, target_ids, plate_z, boundary_factor):
+    """(bottom_ids, top_ids, rule, band_frac) — rule ∈ BOUNDARY_RULES.
+
+    band_frac = (바닥 띠 폭 + 위 띠 폭) / plate_z (판 간격 기준 · 바닥 = z 0).  L0 은 입자마다 문턱이 달라 **가장 큰 반지름**으로
+    잰다 (= 2·boundary_factor·r_max / plate_z — `TAU-24` 의 띠 끝 단락 상한 4r_SE/L) · L1 = 0.30 · L2 = 관측 범위 문턱 기준.
+    띠 노드는 등전위로 묶이고 정규화는 판 간격이라 T 를 이 비만큼까지 낮출 수 있다 (v2 §3-6).
+    """
+    target_ids = list(target_ids)
+    if not target_ids:
+        return set(), set(), None, None
+    # ── C4 patch: per-particle plate-contact test ───────────────────────
+    # Match calc_percolation behavior — each particle judged by its own
+    # radius, not a global min(r) threshold. r_SE-independent → fair across
+    # D0.5 vs D1.5 cases.
+    bottom_ids = {aid for aid in target_ids
+                  if atoms_raw[aid]['z'] <= atoms_raw[aid]['radius'] * boundary_factor}
+    top_ids = {aid for aid in target_ids
+               if atoms_raw[aid]['z'] >= plate_z - atoms_raw[aid]['radius'] * boundary_factor}
+    r_max = max(atoms_raw[aid]['radius'] for aid in target_ids)
+    rule, w_bot, w_top = 'L0', r_max * boundary_factor, r_max * boundary_factor
+
+    # Fallback L1: thin electrodes / strict boundary → 15%/85% of plate_z
+    if len(bottom_ids) < 3 or len(top_ids) < 3:
+        z_bottom = plate_z * 0.15
+        z_top = plate_z * 0.85
+        bottom_ids = {aid for aid in target_ids if atoms_raw[aid]['z'] <= z_bottom}
+        top_ids = {aid for aid in target_ids if atoms_raw[aid]['z'] >= z_top}
+        rule, w_bot, w_top = 'L1', z_bottom, plate_z - z_top
+
+    # Fallback L2: when plate_z overshoots the actual particle range
+    # (mesh_info.json absent → plate_z uses atom max z+r which overshoots
+    # the true top plane by one AM radius), anchor the 15/85% split to the
+    # OBSERVED z-range of target particles. Prevents silent percolation=0
+    # for thick electrodes where top_ids empties under plate_z-based bounds.
+    if len(bottom_ids) < 3 or len(top_ids) < 3:
+        z_vals = [atoms_raw[aid]['z'] for aid in target_ids]
+        z_min_obs = min(z_vals); z_max_obs = max(z_vals)
+        span = z_max_obs - z_min_obs
+        z_bottom = z_min_obs + span * 0.15
+        z_top = z_max_obs - span * 0.15
+        bottom_ids = {aid for aid in target_ids if atoms_raw[aid]['z'] <= z_bottom}
+        top_ids = {aid for aid in target_ids if atoms_raw[aid]['z'] >= z_top}
+        rule, w_bot, w_top = 'L2', z_bottom, plate_z - z_top
+
+    band_frac = float((w_bot + w_top) / plate_z) if plate_z > 0 else None
+    return bottom_ids, top_ids, rule, band_frac
+
+
 def build_network(atoms_raw, contacts_raw, target_types, scale,
                   plate_z, box_x=0.05, box_y=0.05, boundary_factor=2.0,
                   mode='ionic', type_map=None, results_dir=None,
@@ -214,39 +271,9 @@ def build_network(atoms_raw, contacts_raw, target_types, scale,
         return None
 
     # Boundary detection: z-coordinate based (consistent with EIS measurement)
-    bottom_ids = None
-    top_ids = None
-
-    # ── C4 patch: per-particle plate-contact test ───────────────────────
-    # Match calc_percolation behavior — each particle judged by its own
-    # radius, not a global min(r) threshold. r_SE-independent → fair across
-    # D0.5 vs D1.5 cases.
-    if not bottom_ids or not top_ids:
-        bottom_ids = {aid for aid in target_ids
-                      if atoms_raw[aid]['z'] <= atoms_raw[aid]['radius'] * boundary_factor}
-        top_ids = {aid for aid in target_ids
-                   if atoms_raw[aid]['z'] >= plate_z - atoms_raw[aid]['radius'] * boundary_factor}
-
-        # Fallback L1: thin electrodes / strict boundary → 15%/85% of plate_z
-        if len(bottom_ids) < 3 or len(top_ids) < 3:
-            z_bottom = plate_z * 0.15
-            z_top = plate_z * 0.85
-            bottom_ids = {aid for aid in target_ids if atoms_raw[aid]['z'] <= z_bottom}
-            top_ids = {aid for aid in target_ids if atoms_raw[aid]['z'] >= z_top}
-
-        # Fallback L2: when plate_z overshoots the actual particle range
-        # (mesh_info.json absent → plate_z uses atom max z+r which overshoots
-        # the true top plane by one AM radius), anchor the 15/85% split to the
-        # OBSERVED z-range of target particles. Prevents silent percolation=0
-        # for thick electrodes where top_ids empties under plate_z-based bounds.
-        if len(bottom_ids) < 3 or len(top_ids) < 3:
-            z_vals = [atoms_raw[aid]['z'] for aid in target_ids]
-            z_min_obs = min(z_vals); z_max_obs = max(z_vals)
-            span = z_max_obs - z_min_obs
-            z_bottom = z_min_obs + span * 0.15
-            z_top = z_max_obs - span * 0.15
-            bottom_ids = {aid for aid in target_ids if atoms_raw[aid]['z'] <= z_bottom}
-            top_ids = {aid for aid in target_ids if atoms_raw[aid]['z'] >= z_top}
+    #  ★ 2026-10-04 (τ 결정 16 ② 안 A) — 띠 선택을 `boundary_sets` 로 옮기고 쓴 규칙 · 띠 폭을 **기록**한다 (동작 중립).
+    bottom_ids, top_ids, boundary_rule, boundary_band_frac = boundary_sets(
+        atoms_raw, target_ids, plate_z, boundary_factor)
 
     # Determine SE types for thermal mode
     se_type_set = set()
@@ -510,6 +537,9 @@ def build_network(atoms_raw, contacts_raw, target_types, scale,
         #   ⇒ **발동 조건**: 침대 두께 < 4·r_max (여기선 ≈24 µm).  생산 침대는 30 µm+ 라
         #   여태 안 물렸지만, 고압·박막 케이스는 물린다.  숫자를 남겨 조용한 실패를 막는다.
         'n_boundary_overlap': len(set(bottom_ids) & set(top_ids)),
+        #  ★ 2026-10-04 (안 A) — 어느 띠 규칙을 썼나 · 띠 폭 / 판 간격 (`boundary_sets`).  L0 이 아니면 인계 G1 이 값을 막는다.
+        'boundary_rule': boundary_rule,
+        'boundary_band_frac': boundary_band_frac,
     }
 
 
@@ -1146,6 +1176,9 @@ def run_decomposition(atoms_raw, contacts_raw, target_types, scale,
         #    안 올리면 호출자는 σ 가 왜 not_computed 인지 알 방법이 없다 (P600 실사고).
         'n_boundary_overlap': net.get('n_boundary_overlap'),
         'boundary_factor': boundary_factor,
+        #  ★ 2026-10-04 (τ 결정 16 ② 안 A) — 쓴 띠 규칙 (L0 · L1 · L2) · 띠 폭 / 판 간격.  옛 산출물에는 없다 (LHS-17).
+        'boundary_rule': net.get('boundary_rule'),
+        'boundary_band_frac': net.get('boundary_band_frac'),
         'phi_se': round(phi_se, 4),
         'bulk_resistance_fraction': round(bulk_frac, 4),
         'active_fraction': round(active_fraction, 4),
@@ -1310,6 +1343,8 @@ def _run_all_networks(atoms_raw, contacts_raw, target_types, am_types, type_map,
             results['electronic_n_edges']         = results_el.get('n_edges')
             results['electronic_active_fraction']      = results_el.get('active_fraction')
             results['electronic_percolating_fraction'] = results_el.get('percolating_fraction')
+            results['electronic_boundary_rule']      = results_el.get('boundary_rule')        # ★ 10-04 안 A
+            results['electronic_boundary_band_frac'] = results_el.get('boundary_band_frac')
             # 값이 실제로 0/None 이면 '계산됐고 답이 0' — 실패가 아니다 (thermal 과 같은 규약).
             el_status, el_reason = status_for_value(
                 results['electronic_sigma_full_mScm'], 'electronic')
@@ -1331,6 +1366,8 @@ def _run_all_networks(atoms_raw, contacts_raw, target_types, am_types, type_map,
             results['thermal_sigma_full_mScm'] = results_th.get('sigma_full_mScm')
             results['thermal_R_brug']          = results_th.get('R_brug_over_full')
             results['thermal_bulk_frac']       = results_th.get('bulk_resistance_fraction')
+            results['thermal_boundary_rule']      = results_th.get('boundary_rule')           # ★ 10-04 안 A
+            results['thermal_boundary_band_frac'] = results_th.get('boundary_band_frac')
             # 값이 실제로 0/None 이면 '계산됐고 답이 0' 이라는 뜻 — 실패가 아니다.
             if results['thermal_sigma_full_mScm'] is None:
                 th_status, th_reason = 'valid_null', '솔버가 κ 를 None 으로 반환 (열망 미퍼콜)'

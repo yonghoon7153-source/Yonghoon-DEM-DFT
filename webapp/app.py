@@ -693,6 +693,50 @@ def _tau_block_rows(phi_se, sigma0, sig_full_h, sig_full_p, sig_bulk, tau_dij, t
     return rows
 
 
+#  ★ 10-04 τ 결정 16 ② (1저자 비준 *"권고대로"*) — 이온 인계 열의 **상태** 두 행.  계산 = `scripts/tau_flux.py` (v2 §5-1 열 · §5-2 게이트
+#    G1–G6 · 상태/메타 모드 꼬리) — 웹앱은 표시만 한다 (같은 정의 · 이름 · 한정어, J20-l).  값 행 (tau2 · √ · 비율) 은 ① 그대로.
+ION_HANDOVER_STATUS_LABEL = 'tau2 인계 상태 (게이트 G1–G6 · v2 §5-2)'
+ION_HANDOVER_BAND_LABEL = '띠 규칙 · 띠 폭/판 간격 (G1 · TAU-24)'
+
+
+def _ion_handover(results_dir, metrics):
+    """그 케이스의 `tau_flux.ion_columns` — dual 파일 (`network_conductivity_dual.json`) + full_metrics 장부 (L_gap · L_mc · φ_mc ·
+    percolation_pct).  파일이 없거나 깨지면 도우미가 NOT_COMPUTED (missing_input) 로 답한다 (조용히 빠지지 않는다).
+    도우미 자체를 못 불러오면 None (→ 화면 "미계산")."""
+    try:
+        import tau_flux as _tf
+    except Exception:                                    # noqa: BLE001 — 표시용: 도우미 없음 = 미계산
+        return None
+    dual = None
+    try:
+        with open(os.path.join(results_dir, 'network_conductivity_dual.json'), encoding='utf-8') as _fh:
+            dual = json.load(_fh)
+    except (OSError, ValueError, TypeError):
+        dual = None
+    m = metrics if isinstance(metrics, dict) else {}
+    return _tf.ion_columns(dual, m, m.get('percolation_pct'))
+
+
+def _ion_handover_rows(ih):
+    """케이스 τ 블록 뒤 두 행 — [상태 (사유)] · [띠 규칙 · 띠 폭/판 간격].  ih = `_ion_handover` 결과 (None = 도우미 미계산)."""
+    if not isinstance(ih, dict):
+        return [_same_row(ION_HANDOVER_STATUS_LABEL, '미계산 (도우미 결과 없음)')]
+
+    def _st(m):
+        s = ih.get(f'ion_net_status_{m}') or '—'
+        r = ih.get(f'ion_net_status_reason_{m}') or ''
+        return f'{s} ({r})' if r else s
+
+    def _band(m):
+        r = ih.get(f'ion_net_band_rule_{m}') or ''
+        f = ih.get(f'ion_net_band_frac_{m}')
+        if not r:
+            return '기록 없음 (안 A 전 산출물 — 망 재계산 뒤 생긴다)'
+        return f'{r} · {f:.3f}' if isinstance(f, (int, float)) and not isinstance(f, bool) else r
+    return [[ION_HANDOVER_STATUS_LABEL, _st('hertz'), _st('physics'), ''],
+            [ION_HANDOVER_BAND_LABEL, _band('hertz'), _band('physics'), '']]
+
+
 def _inject_input_params(metrics, results_dir):
     """Pull am_se_ratio (and other input-side parameters needed by the
     grade engine) from input_params.json when not already in metrics.
@@ -1994,6 +2038,8 @@ def normalize_network_summary_layout(tables, metrics):
         'tau2 = φ·σ₀/σ_full (tortuosity factor · 협착 포함)',
         'τ_Lap,eff = √tau2 (Laplace · 협착 포함)',
         'τ_Lap,eff / τ_Dij (정의가 다른 두 τ 의 비)',
+        'tau2 인계 상태 (게이트 G1–G6 · v2 §5-2)',
+        '띠 규칙 · 띠 폭/판 간격 (G1 · TAU-24)',
         'AM Percolation (%)',
         'Electronic Active AM (%)',
         # Tier-1
@@ -2192,6 +2238,10 @@ _PAPER_LABEL_MAP = {
         'τ_Laplace,eff = √tau2 — Laplacian + constriction',
     'τ_Lap,eff / τ_Dij (정의가 다른 두 τ 의 비)':
         'τ_Laplace,eff / τ_Dijkstra — ratio of two differently defined τ (not a constriction factor)',
+    'tau2 인계 상태 (게이트 G1–G6 · v2 §5-2)':
+        'tau2 handover status — gates G1–G6 (τ judgment v2 §5-2 · scripts/tau_flux.py)',
+    '띠 규칙 · 띠 폭/판 간격 (G1 · TAU-24)':
+        'Boundary band rule · band width / plate gap (G1 · TAU-24)',
     'AM Percolation (%)':          'AM percolation, top↔bottom (%)',
     'Electronic Active AM (%)':    'Current-collector-connected AM, f_AM^cc (%)',
     # Tier-1 corrections
@@ -2770,6 +2820,10 @@ def transform_network_summary_4col(tables, metrics, meta):
             new_rows.extend(_tau_block_rows(phi_se, SIGMA_GRAIN_MS, sig_full,
                                             metrics.get('sigma_full_mScm_physics'), sig_bulk,
                                             tau_dij, metrics.get('tortuosity_all_mean')))
+        # ── τ 인계 상태 (τ 결정 16 ② · scripts/tau_flux.py) — 라우트가 `_ion_handover` 를 붙였을 때만 · 비관통 케이스도 상태가 보이게
+        #    τ 블록 조건 (σ > 0) 과 따로 둔다.  자리는 `_CANONICAL_ROW_ORDER` 가 비율 행 뒤로 잡는다.
+        if '_ion_handover' in metrics and not _has_label(ION_HANDOVER_STATUS_LABEL):
+            new_rows.extend(_ion_handover_rows(metrics.get('_ion_handover')))
 
         # AM Percolation (electronic)
         if (not _has_label('AM Percolation (%)')
@@ -6580,6 +6634,8 @@ def _load_case_tables(results_dir, meta):
             metrics[_rk + '_stage_e_physics'] = None
 
     # 4-column transform + section injection — shared helpers
+    #  ★ 10-04 τ 결정 16 ② — 이온 인계 상태 (tau_flux) 를 표시용으로 붙인다 (계산은 도우미 · 값 행은 그대로).
+    metrics['_ion_handover'] = _ion_handover(results_dir, metrics)
     transform_network_summary_4col(tables, metrics, meta)
     inject_tier1_patch_rows(tables, metrics)
     inject_stage_e_rows(tables, metrics)

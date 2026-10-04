@@ -1858,6 +1858,18 @@ const METRIC_TIPS = {
     desc: '망 해에서 역산한 τ (√tau2 · 병렬 경로 · 접촉 협착 포함) 와 한 경로의 기하 τ (Dijkstra) 의 비.  두 τ 는 정의가 달라 (흐름 τ ↔ 기하 τ) 이 비를 협착 배수로 부르지 않는다 — 같은 망의 FULL/CF 비가 "모형 내부 협착비" 다 (CLAUDE.md τ 블록 · TAU-08).',
     meaning: '참고 지표 — 클수록 한 경로의 기하 우회만으로 설명되지 않는 저항 (병렬 · 협착 · bulk 모형) 이 크다.'
   },
+  'tau2 인계 상태 (게이트 G1–G6 · v2 §5-2)': {
+    title: 'tau2 인계 상태 — 인계 열을 싣는가 (게이트 G1–G6)',
+    formula: '도우미 scripts/tau_flux.py (τ 판정 v2 §5-1 열 · §5-2 게이트) — 웹앱은 표시만\nf_ion = σ_ratio·L_gap/L_mc (재척도 · 해 아님) · tau2 = φ_mc/f_ion (= φ_구합/σ_ratio · 위 tau2 행과 정의상 같은 수) · tau = √tau2',
+    desc: '상태 다섯: OK · NOT_PERCOLATING (관통 성분 없음 → f = 0 · tau2 빈칸 = ∞) · BAND_FALLBACK (G1 — 띠 규칙이 L0 가 아님 · 값 빈칸) · MODEL_BELOW_CONTINUUM_BOUND (G5 — T < 1 · 원기둥 bulk 모델 성질 · 값 유지) · NOT_COMPUTED (빈칸 + 사유).\n사유 넷: missing_input (망 결과 · 장부 · 띠 규칙 기록 · 온도 기록 없음) · percolation_disagree (G2 — 솔버 관통 ≠ calc_percolation) · solver_guard (관통인데 σ 없음 — 솔버 관문) · temperature_mismatch (G4 — σ₀ 와 σ_full 의 온도가 다름).\n⚠ 띠 규칙은 안 A (10-04) 뒤 망을 다시 푼 케이스에만 기록된다 — 그 전 케이스는 NOT_COMPUTED (missing_input) 이 정상이다 (짐작하지 않는다).',
+    meaning: '인계 열 (f_ion · tau2_ion · tau_ion) 은 이 상태가 OK 또는 MODEL_BELOW_CONTINUUM_BOUND 일 때만 값을 싣는다.  두 모드 모두 1세대 협착식 — ML 기술자 전용 · 실험 절대 대조 보류 (G6).'
+  },
+  '띠 규칙 · 띠 폭/판 간격 (G1 · TAU-24)': {
+    title: '경계 띠 규칙 · 띠 폭 / 판 간격',
+    formula: 'L0 = 입자 자기 반지름 × 2 (양 끝 ≥ 3 개) · L1 = 판 높이의 15/85 % · L2 = 관측 z 범위의 15/85 %\n띠 폭/판 간격 = (바닥 띠 폭 + 위 띠 폭)/판 간격 — L0 이면 4r_SE/L (가장 큰 SE 반지름)',
+    desc: '망 솔버가 1 V · 0 V 를 거는 바닥 · 위 띠를 고른 규칙.  옛 코드는 L0 → L1 → L2 폴백을 조용히 하고 남기지 않았다 (LHS-17 · TAU-14) — 안 A (10-04) 부터 결과에 남는다.  L1 폴백은 곧은 사슬에서 T 를 21–29 % 낮춘다 → 인계 G1 은 L0 만 통과.',
+    meaning: 'L0 도 띠 노드를 등전위로 묶어 T 를 이 비 (4r_SE/L) 만큼까지 낮출 수 있다 (TAU-24 — 게이트가 아니라 한정어).  "기록 없음" = 안 A 전 산출물.'
+  },
   'Tortuosity median': {
     title: 'Tortuosity 중앙값',
     formula: 'median = 경로 τ값들을 정렬했을 때 중앙에 위치하는 값',
@@ -2654,6 +2666,10 @@ const PAPER_TO_ORIG = {
       'τ_Lap,eff = √tau2 (Laplace · 협착 포함)',
   'τ_Laplace,eff / τ_Dijkstra — ratio of two differently defined τ (not a constriction factor)':
       'τ_Lap,eff / τ_Dij (정의가 다른 두 τ 의 비)',
+  'tau2 handover status — gates G1–G6 (τ judgment v2 §5-2 · scripts/tau_flux.py)':
+      'tau2 인계 상태 (게이트 G1–G6 · v2 §5-2)',
+  'Boundary band rule · band width / plate gap (G1 · TAU-24)':
+      '띠 규칙 · 띠 폭/판 간격 (G1 · TAU-24)',
   'AM percolation, top↔bottom (%)': 'AM Percolation (%)',
   'Current-collector-connected AM, f_AM^cc (%)': 'Electronic Active AM (%)',
   'Coverage of AM, shape-corrected ⭐ (B3)': 'Coverage AM rough(%)   ⭐ [B3]',
