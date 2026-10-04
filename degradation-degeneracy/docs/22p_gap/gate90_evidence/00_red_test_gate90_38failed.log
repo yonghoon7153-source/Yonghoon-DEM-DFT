@@ -1,0 +1,1159 @@
+# RED — tests/test_gate90_env_profile.py · HEAD 1f3829b9a + 작업 트리 (새 시험 파일만) · source_digest 803e2b7781cbc9cd
+# 2026-10-04T17:17:32Z · python -m pytest tests/test_gate90_env_profile.py -rA -p no:cacheprovider
+
+[conftest] 시험 authority: /tmp/dd-test-authority-fr4_0c9q/docs/22p_gap/LEG_PRESERVATION.yaml (운영 원장의 바이트 복사본 — 70차 E6)
+
+[conftest] 이 checkout 을 처음 보았다 — 얼린 cohort 17개의 좌표를 시험 authority 에 봉인했다: ['g10_2026_09_01', 'g11_2026_09_02', 'g12_2026_09_03', 'g13_2026_09_07', 'g14_2026_09_08', 'g15_2026_09_08', 'g16_2026_09_09', 'g17_2026_09_14', 'g1_2026_08_20', 'g2_2026_08_25', 'g3_2026_08_28', 'g4_2026_08_28', 'g5_2026_08_29', 'g6_2026_09_01', 'g7_2026_09_01', 'g8_2026_09_01', 'g9_2026_09_01']
+============================= test session starts ==============================
+platform linux -- Python 3.11.15, pytest-9.1.1, pluggy-1.6.0
+rootdir: /home/user/Yonghoon-DEM-DFT/degradation-degeneracy
+plugins: metadata-3.1.1, platformdirs-4.12.0, anyio-4.15.1, json-report-1.5.0
+collected 38 items
+
+tests/test_gate90_env_profile.py FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF  [100%]
+
+=================================== FAILURES ===================================
+_______________ test_e01_committed_lock_is_canonical_and_pinned ________________
+
+    def test_e01_committed_lock_is_canonical_and_pinned():
+>       raw = LOCK.read_bytes()
+              ^^^^^^^^^^^^^^^^^
+
+tests/test_gate90_env_profile.py:166: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.11/pathlib.py:1050: in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/requirements-validation-C.lock.txt')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/requirements-validation-C.lock.txt'
+
+/usr/lib/python3.11/pathlib.py:1044: FileNotFoundError
+____________________ test_e02_synthetic_round_trip_matches _____________________
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-1861/test_e02_synthetic_round_trip_0/site'), site2=PosixPath('/tm...t-1861/test_e02_synthetic_round_trip_0/site', '/tmp/pytest-of-root/pytest-1861/test_e02_synthetic_round_trip_0/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1861/test_e02_synthetic_round_trip_0')
+
+    def test_e02_synthetic_round_trip_matches(synth, tmp_path):
+>       ep = _ep()
+             ^^^^^
+
+tests/test_gate90_env_profile.py:190: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_gate90_env_profile.py:76: in _ep
+    return importlib.import_module("tools.env_profile")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1204: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1176: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'tools.env_profile', import_ = <function _gcd_import at 0x7f9b48ef7d80>
+
+>   ???
+E   ModuleNotFoundError: No module named 'tools.env_profile'
+
+<frozen importlib._bootstrap>:1140: ModuleNotFoundError
+__________________ test_e03_each_axis_is_reported[dist_extra] __________________
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-1861/test_e03_each_axis_is_reported0/site'), site2=PosixPath('/tm...t-1861/test_e03_each_axis_is_reported0/site', '/tmp/pytest-of-root/pytest-1861/test_e03_each_axis_is_reported0/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1861/test_e03_each_axis_is_reported0')
+case = 'dist_extra'
+
+    @pytest.mark.parametrize("case", sorted(AXIS_CASES))
+    def test_e03_each_axis_is_reported(synth, tmp_path, case):
+>       ep = _ep()
+             ^^^^^
+
+tests/test_gate90_env_profile.py:267: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_gate90_env_profile.py:76: in _ep
+    return importlib.import_module("tools.env_profile")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1204: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1176: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'tools.env_profile', import_ = <function _gcd_import at 0x7f9b48ef7d80>
+
+>   ???
+E   ModuleNotFoundError: No module named 'tools.env_profile'
+
+<frozen importlib._bootstrap>:1140: ModuleNotFoundError
+_________________ test_e03_each_axis_is_reported[dist_missing] _________________
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-1861/test_e03_each_axis_is_reported1/site'), site2=PosixPath('/tm...t-1861/test_e03_each_axis_is_reported1/site', '/tmp/pytest-of-root/pytest-1861/test_e03_each_axis_is_reported1/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1861/test_e03_each_axis_is_reported1')
+case = 'dist_missing'
+
+    @pytest.mark.parametrize("case", sorted(AXIS_CASES))
+    def test_e03_each_axis_is_reported(synth, tmp_path, case):
+>       ep = _ep()
+             ^^^^^
+
+tests/test_gate90_env_profile.py:267: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_gate90_env_profile.py:76: in _ep
+    return importlib.import_module("tools.env_profile")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1204: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1176: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'tools.env_profile', import_ = <function _gcd_import at 0x7f9b48ef7d80>
+
+>   ???
+E   ModuleNotFoundError: No module named 'tools.env_profile'
+
+<frozen importlib._bootstrap>:1140: ModuleNotFoundError
+_________________ test_e03_each_axis_is_reported[dist_record] __________________
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-1861/test_e03_each_axis_is_reported2/site'), site2=PosixPath('/tm...t-1861/test_e03_each_axis_is_reported2/site', '/tmp/pytest-of-root/pytest-1861/test_e03_each_axis_is_reported2/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1861/test_e03_each_axis_is_reported2')
+case = 'dist_record'
+
+    @pytest.mark.parametrize("case", sorted(AXIS_CASES))
+    def test_e03_each_axis_is_reported(synth, tmp_path, case):
+>       ep = _ep()
+             ^^^^^
+
+tests/test_gate90_env_profile.py:267: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_gate90_env_profile.py:76: in _ep
+    return importlib.import_module("tools.env_profile")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1204: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1176: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'tools.env_profile', import_ = <function _gcd_import at 0x7f9b48ef7d80>
+
+>   ???
+E   ModuleNotFoundError: No module named 'tools.env_profile'
+
+<frozen importlib._bootstrap>:1140: ModuleNotFoundError
+_________________ test_e03_each_axis_is_reported[dist_version] _________________
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-1861/test_e03_each_axis_is_reported3/site'), site2=PosixPath('/tm...t-1861/test_e03_each_axis_is_reported3/site', '/tmp/pytest-of-root/pytest-1861/test_e03_each_axis_is_reported3/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1861/test_e03_each_axis_is_reported3')
+case = 'dist_version'
+
+    @pytest.mark.parametrize("case", sorted(AXIS_CASES))
+    def test_e03_each_axis_is_reported(synth, tmp_path, case):
+>       ep = _ep()
+             ^^^^^
+
+tests/test_gate90_env_profile.py:267: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_gate90_env_profile.py:76: in _ep
+    return importlib.import_module("tools.env_profile")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1204: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1176: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'tools.env_profile', import_ = <function _gcd_import at 0x7f9b48ef7d80>
+
+>   ???
+E   ModuleNotFoundError: No module named 'tools.env_profile'
+
+<frozen importlib._bootstrap>:1140: ModuleNotFoundError
+_________________ test_e03_each_axis_is_reported[env_upgrade] __________________
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-1861/test_e03_each_axis_is_reported4/site'), site2=PosixPath('/tm...t-1861/test_e03_each_axis_is_reported4/site', '/tmp/pytest-of-root/pytest-1861/test_e03_each_axis_is_reported4/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1861/test_e03_each_axis_is_reported4')
+case = 'env_upgrade'
+
+    @pytest.mark.parametrize("case", sorted(AXIS_CASES))
+    def test_e03_each_axis_is_reported(synth, tmp_path, case):
+>       ep = _ep()
+             ^^^^^
+
+tests/test_gate90_env_profile.py:267: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_gate90_env_profile.py:76: in _ep
+    return importlib.import_module("tools.env_profile")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1204: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1176: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'tools.env_profile', import_ = <function _gcd_import at 0x7f9b48ef7d80>
+
+>   ???
+E   ModuleNotFoundError: No module named 'tools.env_profile'
+
+<frozen importlib._bootstrap>:1140: ModuleNotFoundError
+__________________ test_e03_each_axis_is_reported[file_hash] ___________________
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-1861/test_e03_each_axis_is_reported5/site'), site2=PosixPath('/tm...t-1861/test_e03_each_axis_is_reported5/site', '/tmp/pytest-of-root/pytest-1861/test_e03_each_axis_is_reported5/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1861/test_e03_each_axis_is_reported5')
+case = 'file_hash'
+
+    @pytest.mark.parametrize("case", sorted(AXIS_CASES))
+    def test_e03_each_axis_is_reported(synth, tmp_path, case):
+>       ep = _ep()
+             ^^^^^
+
+tests/test_gate90_env_profile.py:267: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_gate90_env_profile.py:76: in _ep
+    return importlib.import_module("tools.env_profile")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1204: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1176: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'tools.env_profile', import_ = <function _gcd_import at 0x7f9b48ef7d80>
+
+>   ???
+E   ModuleNotFoundError: No module named 'tools.env_profile'
+
+<frozen importlib._bootstrap>:1140: ModuleNotFoundError
+_________________ test_e03_each_axis_is_reported[file_missing] _________________
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-1861/test_e03_each_axis_is_reported6/site'), site2=PosixPath('/tm...t-1861/test_e03_each_axis_is_reported6/site', '/tmp/pytest-of-root/pytest-1861/test_e03_each_axis_is_reported6/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1861/test_e03_each_axis_is_reported6')
+case = 'file_missing'
+
+    @pytest.mark.parametrize("case", sorted(AXIS_CASES))
+    def test_e03_each_axis_is_reported(synth, tmp_path, case):
+>       ep = _ep()
+             ^^^^^
+
+tests/test_gate90_env_profile.py:267: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_gate90_env_profile.py:76: in _ep
+    return importlib.import_module("tools.env_profile")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1204: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1176: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'tools.env_profile', import_ = <function _gcd_import at 0x7f9b48ef7d80>
+
+>   ???
+E   ModuleNotFoundError: No module named 'tools.env_profile'
+
+<frozen importlib._bootstrap>:1140: ModuleNotFoundError
+________________ test_e03_each_axis_is_reported[implementation] ________________
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-1861/test_e03_each_axis_is_reported7/site'), site2=PosixPath('/tm...t-1861/test_e03_each_axis_is_reported7/site', '/tmp/pytest-of-root/pytest-1861/test_e03_each_axis_is_reported7/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1861/test_e03_each_axis_is_reported7')
+case = 'implementation'
+
+    @pytest.mark.parametrize("case", sorted(AXIS_CASES))
+    def test_e03_each_axis_is_reported(synth, tmp_path, case):
+>       ep = _ep()
+             ^^^^^
+
+tests/test_gate90_env_profile.py:267: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_gate90_env_profile.py:76: in _ep
+    return importlib.import_module("tools.env_profile")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1204: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1176: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'tools.env_profile', import_ = <function _gcd_import at 0x7f9b48ef7d80>
+
+>   ???
+E   ModuleNotFoundError: No module named 'tools.env_profile'
+
+<frozen importlib._bootstrap>:1140: ModuleNotFoundError
+_____________________ test_e03_each_axis_is_reported[libc] _____________________
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-1861/test_e03_each_axis_is_reported8/site'), site2=PosixPath('/tm...t-1861/test_e03_each_axis_is_reported8/site', '/tmp/pytest-of-root/pytest-1861/test_e03_each_axis_is_reported8/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1861/test_e03_each_axis_is_reported8')
+case = 'libc'
+
+    @pytest.mark.parametrize("case", sorted(AXIS_CASES))
+    def test_e03_each_axis_is_reported(synth, tmp_path, case):
+>       ep = _ep()
+             ^^^^^
+
+tests/test_gate90_env_profile.py:267: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_gate90_env_profile.py:76: in _ep
+    return importlib.import_module("tools.env_profile")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1204: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1176: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'tools.env_profile', import_ = <function _gcd_import at 0x7f9b48ef7d80>
+
+>   ???
+E   ModuleNotFoundError: No module named 'tools.env_profile'
+
+<frozen importlib._bootstrap>:1140: ModuleNotFoundError
+___________________ test_e03_each_axis_is_reported[machine] ____________________
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-1861/test_e03_each_axis_is_reported9/site'), site2=PosixPath('/tm...t-1861/test_e03_each_axis_is_reported9/site', '/tmp/pytest-of-root/pytest-1861/test_e03_each_axis_is_reported9/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1861/test_e03_each_axis_is_reported9')
+case = 'machine'
+
+    @pytest.mark.parametrize("case", sorted(AXIS_CASES))
+    def test_e03_each_axis_is_reported(synth, tmp_path, case):
+>       ep = _ep()
+             ^^^^^
+
+tests/test_gate90_env_profile.py:267: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_gate90_env_profile.py:76: in _ep
+    return importlib.import_module("tools.env_profile")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1204: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1176: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'tools.env_profile', import_ = <function _gcd_import at 0x7f9b48ef7d80>
+
+>   ???
+E   ModuleNotFoundError: No module named 'tools.env_profile'
+
+<frozen importlib._bootstrap>:1140: ModuleNotFoundError
+_________________ test_e03_each_axis_is_reported[origin_stray] _________________
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-1861/test_e03_each_axis_is_reported10/site'), site2=PosixPath('/t...1861/test_e03_each_axis_is_reported10/site', '/tmp/pytest-of-root/pytest-1861/test_e03_each_axis_is_reported10/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1861/test_e03_each_axis_is_reported10')
+case = 'origin_stray'
+
+    @pytest.mark.parametrize("case", sorted(AXIS_CASES))
+    def test_e03_each_axis_is_reported(synth, tmp_path, case):
+>       ep = _ep()
+             ^^^^^
+
+tests/test_gate90_env_profile.py:267: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_gate90_env_profile.py:76: in _ep
+    return importlib.import_module("tools.env_profile")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1204: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1176: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'tools.env_profile', import_ = <function _gcd_import at 0x7f9b48ef7d80>
+
+>   ???
+E   ModuleNotFoundError: No module named 'tools.env_profile'
+
+<frozen importlib._bootstrap>:1140: ModuleNotFoundError
+____________________ test_e03_each_axis_is_reported[python] ____________________
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-1861/test_e03_each_axis_is_reported11/site'), site2=PosixPath('/t...1861/test_e03_each_axis_is_reported11/site', '/tmp/pytest-of-root/pytest-1861/test_e03_each_axis_is_reported11/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1861/test_e03_each_axis_is_reported11')
+case = 'python'
+
+    @pytest.mark.parametrize("case", sorted(AXIS_CASES))
+    def test_e03_each_axis_is_reported(synth, tmp_path, case):
+>       ep = _ep()
+             ^^^^^
+
+tests/test_gate90_env_profile.py:267: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_gate90_env_profile.py:76: in _ep
+    return importlib.import_module("tools.env_profile")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1204: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1176: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'tools.env_profile', import_ = <function _gcd_import at 0x7f9b48ef7d80>
+
+>   ???
+E   ModuleNotFoundError: No module named 'tools.env_profile'
+
+<frozen importlib._bootstrap>:1140: ModuleNotFoundError
+___________________ test_e03_each_axis_is_reported[shadowed] ___________________
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-1861/test_e03_each_axis_is_reported12/site'), site2=PosixPath('/t...1861/test_e03_each_axis_is_reported12/site', '/tmp/pytest-of-root/pytest-1861/test_e03_each_axis_is_reported12/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1861/test_e03_each_axis_is_reported12')
+case = 'shadowed'
+
+    @pytest.mark.parametrize("case", sorted(AXIS_CASES))
+    def test_e03_each_axis_is_reported(synth, tmp_path, case):
+>       ep = _ep()
+             ^^^^^
+
+tests/test_gate90_env_profile.py:267: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_gate90_env_profile.py:76: in _ep
+    return importlib.import_module("tools.env_profile")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1204: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1176: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'tools.env_profile', import_ = <function _gcd_import at 0x7f9b48ef7d80>
+
+>   ???
+E   ModuleNotFoundError: No module named 'tools.env_profile'
+
+<frozen importlib._bootstrap>:1140: ModuleNotFoundError
+____________________ test_e03_each_axis_is_reported[system] ____________________
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-1861/test_e03_each_axis_is_reported13/site'), site2=PosixPath('/t...1861/test_e03_each_axis_is_reported13/site', '/tmp/pytest-of-root/pytest-1861/test_e03_each_axis_is_reported13/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1861/test_e03_each_axis_is_reported13')
+case = 'system'
+
+    @pytest.mark.parametrize("case", sorted(AXIS_CASES))
+    def test_e03_each_axis_is_reported(synth, tmp_path, case):
+>       ep = _ep()
+             ^^^^^
+
+tests/test_gate90_env_profile.py:267: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_gate90_env_profile.py:76: in _ep
+    return importlib.import_module("tools.env_profile")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1204: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1176: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'tools.env_profile', import_ = <function _gcd_import at 0x7f9b48ef7d80>
+
+>   ???
+E   ModuleNotFoundError: No module named 'tools.env_profile'
+
+<frozen importlib._bootstrap>:1140: ModuleNotFoundError
+____________ test_e04_malformed_lock_is_unmeasured[bad_json_value] _____________
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-1861/test_e04_malformed_lock_is_unm0/site'), site2=PosixPath('/tm...t-1861/test_e04_malformed_lock_is_unm0/site', '/tmp/pytest-of-root/pytest-1861/test_e04_malformed_lock_is_unm0/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1861/test_e04_malformed_lock_is_unm0')
+case = 'bad_json_value'
+
+    @pytest.mark.parametrize("case", sorted(MALFORMED))
+    def test_e04_malformed_lock_is_unmeasured(synth, tmp_path, case):
+>       ep = _ep()
+             ^^^^^
+
+tests/test_gate90_env_profile.py:320: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_gate90_env_profile.py:76: in _ep
+    return importlib.import_module("tools.env_profile")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1204: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1176: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'tools.env_profile', import_ = <function _gcd_import at 0x7f9b48ef7d80>
+
+>   ???
+E   ModuleNotFoundError: No module named 'tools.env_profile'
+
+<frozen importlib._bootstrap>:1140: ModuleNotFoundError
+___________ test_e04_malformed_lock_is_unmeasured[bad_record_field] ____________
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-1861/test_e04_malformed_lock_is_unm1/site'), site2=PosixPath('/tm...t-1861/test_e04_malformed_lock_is_unm1/site', '/tmp/pytest-of-root/pytest-1861/test_e04_malformed_lock_is_unm1/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1861/test_e04_malformed_lock_is_unm1')
+case = 'bad_record_field'
+
+    @pytest.mark.parametrize("case", sorted(MALFORMED))
+    def test_e04_malformed_lock_is_unmeasured(synth, tmp_path, case):
+>       ep = _ep()
+             ^^^^^
+
+tests/test_gate90_env_profile.py:320: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_gate90_env_profile.py:76: in _ep
+    return importlib.import_module("tools.env_profile")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1204: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1176: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'tools.env_profile', import_ = <function _gcd_import at 0x7f9b48ef7d80>
+
+>   ???
+E   ModuleNotFoundError: No module named 'tools.env_profile'
+
+<frozen importlib._bootstrap>:1140: ModuleNotFoundError
+__________ test_e04_malformed_lock_is_unmeasured[duplicate_directive] __________
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-1861/test_e04_malformed_lock_is_unm2/site'), site2=PosixPath('/tm...t-1861/test_e04_malformed_lock_is_unm2/site', '/tmp/pytest-of-root/pytest-1861/test_e04_malformed_lock_is_unm2/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1861/test_e04_malformed_lock_is_unm2')
+case = 'duplicate_directive'
+
+    @pytest.mark.parametrize("case", sorted(MALFORMED))
+    def test_e04_malformed_lock_is_unmeasured(synth, tmp_path, case):
+>       ep = _ep()
+             ^^^^^
+
+tests/test_gate90_env_profile.py:320: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_gate90_env_profile.py:76: in _ep
+    return importlib.import_module("tools.env_profile")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1204: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1176: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'tools.env_profile', import_ = <function _gcd_import at 0x7f9b48ef7d80>
+
+>   ???
+E   ModuleNotFoundError: No module named 'tools.env_profile'
+
+<frozen importlib._bootstrap>:1140: ModuleNotFoundError
+____________ test_e04_malformed_lock_is_unmeasured[duplicate_dist] _____________
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-1861/test_e04_malformed_lock_is_unm3/site'), site2=PosixPath('/tm...t-1861/test_e04_malformed_lock_is_unm3/site', '/tmp/pytest-of-root/pytest-1861/test_e04_malformed_lock_is_unm3/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1861/test_e04_malformed_lock_is_unm3')
+case = 'duplicate_dist'
+
+    @pytest.mark.parametrize("case", sorted(MALFORMED))
+    def test_e04_malformed_lock_is_unmeasured(synth, tmp_path, case):
+>       ep = _ep()
+             ^^^^^
+
+tests/test_gate90_env_profile.py:320: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_gate90_env_profile.py:76: in _ep
+    return importlib.import_module("tools.env_profile")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1204: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1176: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'tools.env_profile', import_ = <function _gcd_import at 0x7f9b48ef7d80>
+
+>   ???
+E   ModuleNotFoundError: No module named 'tools.env_profile'
+
+<frozen importlib._bootstrap>:1140: ModuleNotFoundError
+_____________ test_e04_malformed_lock_is_unmeasured[garbage_line] ______________
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-1861/test_e04_malformed_lock_is_unm4/site'), site2=PosixPath('/tm...t-1861/test_e04_malformed_lock_is_unm4/site', '/tmp/pytest-of-root/pytest-1861/test_e04_malformed_lock_is_unm4/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1861/test_e04_malformed_lock_is_unm4')
+case = 'garbage_line'
+
+    @pytest.mark.parametrize("case", sorted(MALFORMED))
+    def test_e04_malformed_lock_is_unmeasured(synth, tmp_path, case):
+>       ep = _ep()
+             ^^^^^
+
+tests/test_gate90_env_profile.py:320: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_gate90_env_profile.py:76: in _ep
+    return importlib.import_module("tools.env_profile")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1204: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1176: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'tools.env_profile', import_ = <function _gcd_import at 0x7f9b48ef7d80>
+
+>   ???
+E   ModuleNotFoundError: No module named 'tools.env_profile'
+
+<frozen importlib._bootstrap>:1140: ModuleNotFoundError
+___________ test_e04_malformed_lock_is_unmeasured[missing_directive] ___________
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-1861/test_e04_malformed_lock_is_unm5/site'), site2=PosixPath('/tm...t-1861/test_e04_malformed_lock_is_unm5/site', '/tmp/pytest-of-root/pytest-1861/test_e04_malformed_lock_is_unm5/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1861/test_e04_malformed_lock_is_unm5')
+case = 'missing_directive'
+
+    @pytest.mark.parametrize("case", sorted(MALFORMED))
+    def test_e04_malformed_lock_is_unmeasured(synth, tmp_path, case):
+>       ep = _ep()
+             ^^^^^
+
+tests/test_gate90_env_profile.py:320: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_gate90_env_profile.py:76: in _ep
+    return importlib.import_module("tools.env_profile")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1204: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1176: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'tools.env_profile', import_ = <function _gcd_import at 0x7f9b48ef7d80>
+
+>   ???
+E   ModuleNotFoundError: No module named 'tools.env_profile'
+
+<frozen importlib._bootstrap>:1140: ModuleNotFoundError
+_____________ test_e04_malformed_lock_is_unmeasured[missing_file] ______________
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-1861/test_e04_malformed_lock_is_unm6/site'), site2=PosixPath('/tm...t-1861/test_e04_malformed_lock_is_unm6/site', '/tmp/pytest-of-root/pytest-1861/test_e04_malformed_lock_is_unm6/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1861/test_e04_malformed_lock_is_unm6')
+case = 'missing_file'
+
+    @pytest.mark.parametrize("case", sorted(MALFORMED))
+    def test_e04_malformed_lock_is_unmeasured(synth, tmp_path, case):
+>       ep = _ep()
+             ^^^^^
+
+tests/test_gate90_env_profile.py:320: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_gate90_env_profile.py:76: in _ep
+    return importlib.import_module("tools.env_profile")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1204: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1176: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'tools.env_profile', import_ = <function _gcd_import at 0x7f9b48ef7d80>
+
+>   ???
+E   ModuleNotFoundError: No module named 'tools.env_profile'
+
+<frozen importlib._bootstrap>:1140: ModuleNotFoundError
+_______________ test_e04_malformed_lock_is_unmeasured[not_utf8] ________________
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-1861/test_e04_malformed_lock_is_unm7/site'), site2=PosixPath('/tm...t-1861/test_e04_malformed_lock_is_unm7/site', '/tmp/pytest-of-root/pytest-1861/test_e04_malformed_lock_is_unm7/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1861/test_e04_malformed_lock_is_unm7')
+case = 'not_utf8'
+
+    @pytest.mark.parametrize("case", sorted(MALFORMED))
+    def test_e04_malformed_lock_is_unmeasured(synth, tmp_path, case):
+>       ep = _ep()
+             ^^^^^
+
+tests/test_gate90_env_profile.py:320: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_gate90_env_profile.py:76: in _ep
+    return importlib.import_module("tools.env_profile")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1204: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1176: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'tools.env_profile', import_ = <function _gcd_import at 0x7f9b48ef7d80>
+
+>   ???
+E   ModuleNotFoundError: No module named 'tools.env_profile'
+
+<frozen importlib._bootstrap>:1140: ModuleNotFoundError
+_____________ test_e04_malformed_lock_is_unmeasured[profile_not_c] _____________
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-1861/test_e04_malformed_lock_is_unm8/site'), site2=PosixPath('/tm...t-1861/test_e04_malformed_lock_is_unm8/site', '/tmp/pytest-of-root/pytest-1861/test_e04_malformed_lock_is_unm8/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1861/test_e04_malformed_lock_is_unm8')
+case = 'profile_not_c'
+
+    @pytest.mark.parametrize("case", sorted(MALFORMED))
+    def test_e04_malformed_lock_is_unmeasured(synth, tmp_path, case):
+>       ep = _ep()
+             ^^^^^
+
+tests/test_gate90_env_profile.py:320: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_gate90_env_profile.py:76: in _ep
+    return importlib.import_module("tools.env_profile")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1204: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1176: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'tools.env_profile', import_ = <function _gcd_import at 0x7f9b48ef7d80>
+
+>   ???
+E   ModuleNotFoundError: No module named 'tools.env_profile'
+
+<frozen importlib._bootstrap>:1140: ModuleNotFoundError
+___________ test_e04_malformed_lock_is_unmeasured[unknown_directive] ___________
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-1861/test_e04_malformed_lock_is_unm9/site'), site2=PosixPath('/tm...t-1861/test_e04_malformed_lock_is_unm9/site', '/tmp/pytest-of-root/pytest-1861/test_e04_malformed_lock_is_unm9/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1861/test_e04_malformed_lock_is_unm9')
+case = 'unknown_directive'
+
+    @pytest.mark.parametrize("case", sorted(MALFORMED))
+    def test_e04_malformed_lock_is_unmeasured(synth, tmp_path, case):
+>       ep = _ep()
+             ^^^^^
+
+tests/test_gate90_env_profile.py:320: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_gate90_env_profile.py:76: in _ep
+    return importlib.import_module("tools.env_profile")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1204: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1176: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'tools.env_profile', import_ = <function _gcd_import at 0x7f9b48ef7d80>
+
+>   ???
+E   ModuleNotFoundError: No module named 'tools.env_profile'
+
+<frozen importlib._bootstrap>:1140: ModuleNotFoundError
+___________ test_e04_malformed_lock_is_unmeasured[unnormalized_name] ___________
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-1861/test_e04_malformed_lock_is_unm10/site'), site2=PosixPath('/t...1861/test_e04_malformed_lock_is_unm10/site', '/tmp/pytest-of-root/pytest-1861/test_e04_malformed_lock_is_unm10/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1861/test_e04_malformed_lock_is_unm10')
+case = 'unnormalized_name'
+
+    @pytest.mark.parametrize("case", sorted(MALFORMED))
+    def test_e04_malformed_lock_is_unmeasured(synth, tmp_path, case):
+>       ep = _ep()
+             ^^^^^
+
+tests/test_gate90_env_profile.py:320: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_gate90_env_profile.py:76: in _ep
+    return importlib.import_module("tools.env_profile")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1204: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1176: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'tools.env_profile', import_ = <function _gcd_import at 0x7f9b48ef7d80>
+
+>   ???
+E   ModuleNotFoundError: No module named 'tools.env_profile'
+
+<frozen importlib._bootstrap>:1140: ModuleNotFoundError
+_______________ test_e04_malformed_lock_is_unmeasured[unsorted] ________________
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-1861/test_e04_malformed_lock_is_unm11/site'), site2=PosixPath('/t...1861/test_e04_malformed_lock_is_unm11/site', '/tmp/pytest-of-root/pytest-1861/test_e04_malformed_lock_is_unm11/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1861/test_e04_malformed_lock_is_unm11')
+case = 'unsorted'
+
+    @pytest.mark.parametrize("case", sorted(MALFORMED))
+    def test_e04_malformed_lock_is_unmeasured(synth, tmp_path, case):
+>       ep = _ep()
+             ^^^^^
+
+tests/test_gate90_env_profile.py:320: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_gate90_env_profile.py:76: in _ep
+    return importlib.import_module("tools.env_profile")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1204: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1176: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'tools.env_profile', import_ = <function _gcd_import at 0x7f9b48ef7d80>
+
+>   ???
+E   ModuleNotFoundError: No module named 'tools.env_profile'
+
+<frozen importlib._bootstrap>:1140: ModuleNotFoundError
+________ test_e05_measurement_failure_is_unmeasured[enumeration_raises] ________
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-1861/test_e05_measurement_failure_i0/site'), site2=PosixPath('/tm...t-1861/test_e05_measurement_failure_i0/site', '/tmp/pytest-of-root/pytest-1861/test_e05_measurement_failure_i0/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1861/test_e05_measurement_failure_i0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f9b47044ad0>
+case = 'enumeration_raises'
+
+    @pytest.mark.parametrize("case", sorted(MEASURE_FAILURES))
+    def test_e05_measurement_failure_is_unmeasured(synth, tmp_path, monkeypatch, case):
+>       ep = _ep()
+             ^^^^^
+
+tests/test_gate90_env_profile.py:373: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_gate90_env_profile.py:76: in _ep
+    return importlib.import_module("tools.env_profile")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1204: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1176: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'tools.env_profile', import_ = <function _gcd_import at 0x7f9b48ef7d80>
+
+>   ???
+E   ModuleNotFoundError: No module named 'tools.env_profile'
+
+<frozen importlib._bootstrap>:1140: ModuleNotFoundError
+__________ test_e05_measurement_failure_is_unmeasured[nameless_dist] ___________
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-1861/test_e05_measurement_failure_i1/site'), site2=PosixPath('/tm...t-1861/test_e05_measurement_failure_i1/site', '/tmp/pytest-of-root/pytest-1861/test_e05_measurement_failure_i1/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1861/test_e05_measurement_failure_i1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f9b4730bcd0>
+case = 'nameless_dist'
+
+    @pytest.mark.parametrize("case", sorted(MEASURE_FAILURES))
+    def test_e05_measurement_failure_is_unmeasured(synth, tmp_path, monkeypatch, case):
+>       ep = _ep()
+             ^^^^^
+
+tests/test_gate90_env_profile.py:373: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_gate90_env_profile.py:76: in _ep
+    return importlib.import_module("tools.env_profile")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1204: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1176: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'tools.env_profile', import_ = <function _gcd_import at 0x7f9b48ef7d80>
+
+>   ???
+E   ModuleNotFoundError: No module named 'tools.env_profile'
+
+<frozen importlib._bootstrap>:1140: ModuleNotFoundError
+______ test_e05_measurement_failure_is_unmeasured[unknown_hash_algorithm] ______
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-1861/test_e05_measurement_failure_i2/site'), site2=PosixPath('/tm...t-1861/test_e05_measurement_failure_i2/site', '/tmp/pytest-of-root/pytest-1861/test_e05_measurement_failure_i2/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1861/test_e05_measurement_failure_i2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f9b472bab90>
+case = 'unknown_hash_algorithm'
+
+    @pytest.mark.parametrize("case", sorted(MEASURE_FAILURES))
+    def test_e05_measurement_failure_is_unmeasured(synth, tmp_path, monkeypatch, case):
+>       ep = _ep()
+             ^^^^^
+
+tests/test_gate90_env_profile.py:373: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_gate90_env_profile.py:76: in _ep
+    return importlib.import_module("tools.env_profile")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1204: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1176: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'tools.env_profile', import_ = <function _gcd_import at 0x7f9b48ef7d80>
+
+>   ???
+E   ModuleNotFoundError: No module named 'tools.env_profile'
+
+<frozen importlib._bootstrap>:1140: ModuleNotFoundError
+__________________ test_e06_real_environment_result_is_typed ___________________
+
+    def test_e06_real_environment_result_is_typed():
+>       ep = _ep()
+             ^^^^^
+
+tests/test_gate90_env_profile.py:385: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_gate90_env_profile.py:76: in _ep
+    return importlib.import_module("tools.env_profile")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1204: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1176: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'tools.env_profile', import_ = <function _gcd_import at 0x7f9b48ef7d80>
+
+>   ???
+E   ModuleNotFoundError: No module named 'tools.env_profile'
+
+<frozen importlib._bootstrap>:1140: ModuleNotFoundError
+________________ test_e07_key_modules_are_the_fingerprint_axes _________________
+
+    def test_e07_key_modules_are_the_fingerprint_axes():
+>       ep = _ep()
+             ^^^^^
+
+tests/test_gate90_env_profile.py:402: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_gate90_env_profile.py:76: in _ep
+    return importlib.import_module("tools.env_profile")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1204: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1176: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'tools.env_profile', import_ = <function _gcd_import at 0x7f9b48ef7d80>
+
+>   ???
+E   ModuleNotFoundError: No module named 'tools.env_profile'
+
+<frozen importlib._bootstrap>:1140: ModuleNotFoundError
+_________________________ test_e08_cli_is_record_only __________________________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1861/test_e08_cli_is_record_only0')
+
+    def test_e08_cli_is_record_only(tmp_path):
+>       ep = _ep()
+             ^^^^^
+
+tests/test_gate90_env_profile.py:418: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_gate90_env_profile.py:76: in _ep
+    return importlib.import_module("tools.env_profile")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1204: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1176: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'tools.env_profile', import_ = <function _gcd_import at 0x7f9b48ef7d80>
+
+>   ???
+E   ModuleNotFoundError: No module named 'tools.env_profile'
+
+<frozen importlib._bootstrap>:1140: ModuleNotFoundError
+___________________ test_e09_smoke_records_the_profile_once ____________________
+
+    def test_e09_smoke_records_the_profile_once():
+        lines = SMOKE.read_text(encoding="utf-8").splitlines()
+        calls = [i for i, line in enumerate(lines) if "-m tools.env_profile" in line]
+>       assert len(calls) == 1, calls
+E       AssertionError: []
+E       assert 0 == 1
+E        +  where 0 = len([])
+
+tests/test_gate90_env_profile.py:444: AssertionError
+__________________ test_e10_receipt_stamp_records_the_profile __________________
+
+    def test_e10_receipt_stamp_records_the_profile():
+        mr = _make_receipt()
+>       st = mr._stamp()
+             ^^^^^^^^^
+E       AttributeError: module 'make_receipt_gate90' has no attribute '_stamp'
+
+tests/test_gate90_env_profile.py:457: AttributeError
+_________________ test_e11_b_profile_is_the_v4_producer_record _________________
+
+    def test_e11_b_profile_is_the_v4_producer_record():
+        import yaml
+    
+>       b = yaml.safe_load(B_PROFILE.read_text(encoding="utf-8"))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_gate90_env_profile.py:484: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.11/pathlib.py:1058: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/docs/22p_gap/env_profile_B_v4.yaml')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/docs/22p_gap/env_profile_B_v4.yaml'
+
+/usr/lib/python3.11/pathlib.py:1044: FileNotFoundError
+___________ test_e12_requirements_bounds_kept_and_comment_corrected ____________
+
+    def test_e12_requirements_bounds_kept_and_comment_corrected():
+        text = REQ.read_text(encoding="utf-8")
+        assert [line for line in text.split("\n") if line.strip() and not line.lstrip().startswith("#")] \
+            == REQUIREMENT_LINES
+>       assert text.count("검증 완료 조합") == 1 and '옛 주석 "검증 완료 조합' in text
+E       assert (1 == 1 and '옛 주석 "검증 완료 조합' in '# ── 핵심 ──\n# 검증 완료 조합 (2026-08-05, docs/ENV_REPORT.md):\n#   pybamm 26.7.1.0 / numpy 2.4.6 / scipy 1.17.1 / pandas 3... 생성 도구의 의존성이 환경마다 다르면 증거를 재현할 수 없다.\npytest-json-report>=1.5\n\n# ── GPU (Phase 7, 선택) ──\n# requirements-gpu.txt 참조\n')
+E        +  where 1 = <built-in method count of str object at 0x2f5afa90>('검증 완료 조합')
+E        +    where <built-in method count of str object at 0x2f5afa90> = '# ── 핵심 ──\n# 검증 완료 조합 (2026-08-05, docs/ENV_REPORT.md):\n#   pybamm 26.7.1.0 / numpy 2.4.6 / scipy 1.17.1 / pandas 3... 생성 도구의 의존성이 환경마다 다르면 증거를 재현할 수 없다.\npytest-json-report>=1.5\n\n# ── GPU (Phase 7, 선택) ──\n# requirements-gpu.txt 참조\n'.count
+
+tests/test_gate90_env_profile.py:520: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_gate90_env_profile.py::test_e01_committed_lock_is_canonical_and_pinned
+FAILED tests/test_gate90_env_profile.py::test_e02_synthetic_round_trip_matches
+FAILED tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[dist_extra]
+FAILED tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[dist_missing]
+FAILED tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[dist_record]
+FAILED tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[dist_version]
+FAILED tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[env_upgrade]
+FAILED tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[file_hash]
+FAILED tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[file_missing]
+FAILED tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[implementation]
+FAILED tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[libc]
+FAILED tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[machine]
+FAILED tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[origin_stray]
+FAILED tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[python]
+FAILED tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[shadowed]
+FAILED tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[system]
+FAILED tests/test_gate90_env_profile.py::test_e04_malformed_lock_is_unmeasured[bad_json_value]
+FAILED tests/test_gate90_env_profile.py::test_e04_malformed_lock_is_unmeasured[bad_record_field]
+FAILED tests/test_gate90_env_profile.py::test_e04_malformed_lock_is_unmeasured[duplicate_directive]
+FAILED tests/test_gate90_env_profile.py::test_e04_malformed_lock_is_unmeasured[duplicate_dist]
+FAILED tests/test_gate90_env_profile.py::test_e04_malformed_lock_is_unmeasured[garbage_line]
+FAILED tests/test_gate90_env_profile.py::test_e04_malformed_lock_is_unmeasured[missing_directive]
+FAILED tests/test_gate90_env_profile.py::test_e04_malformed_lock_is_unmeasured[missing_file]
+FAILED tests/test_gate90_env_profile.py::test_e04_malformed_lock_is_unmeasured[not_utf8]
+FAILED tests/test_gate90_env_profile.py::test_e04_malformed_lock_is_unmeasured[profile_not_c]
+FAILED tests/test_gate90_env_profile.py::test_e04_malformed_lock_is_unmeasured[unknown_directive]
+FAILED tests/test_gate90_env_profile.py::test_e04_malformed_lock_is_unmeasured[unnormalized_name]
+FAILED tests/test_gate90_env_profile.py::test_e04_malformed_lock_is_unmeasured[unsorted]
+FAILED tests/test_gate90_env_profile.py::test_e05_measurement_failure_is_unmeasured[enumeration_raises]
+FAILED tests/test_gate90_env_profile.py::test_e05_measurement_failure_is_unmeasured[nameless_dist]
+FAILED tests/test_gate90_env_profile.py::test_e05_measurement_failure_is_unmeasured[unknown_hash_algorithm]
+FAILED tests/test_gate90_env_profile.py::test_e06_real_environment_result_is_typed
+FAILED tests/test_gate90_env_profile.py::test_e07_key_modules_are_the_fingerprint_axes
+FAILED tests/test_gate90_env_profile.py::test_e08_cli_is_record_only - Module...
+FAILED tests/test_gate90_env_profile.py::test_e09_smoke_records_the_profile_once
+FAILED tests/test_gate90_env_profile.py::test_e10_receipt_stamp_records_the_profile
+FAILED tests/test_gate90_env_profile.py::test_e11_b_profile_is_the_v4_producer_record
+FAILED tests/test_gate90_env_profile.py::test_e12_requirements_bounds_kept_and_comment_corrected
+============================== 38 failed in 0.97s ==============================
+rc=1
