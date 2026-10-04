@@ -1,0 +1,143 @@
+start 2026-10-04T06:52:01Z HEAD 76a5da16e9b7155117823c6866a898132427cd3f dirty=1 (작업 트리 = GREEN · 영수증 재생성 전)
+source_digest 803e2b7781cbc9cd
+
+[conftest] 시험 authority: /tmp/dd-test-authority-todjkl86/docs/22p_gap/LEG_PRESERVATION.yaml (운영 원장의 바이트 복사본 — 70차 E6)
+
+[conftest] 이 checkout 을 처음 보았다 — 얼린 cohort 17개의 좌표를 시험 authority 에 봉인했다: ['g10_2026_09_01', 'g11_2026_09_02', 'g12_2026_09_03', 'g13_2026_09_07', 'g14_2026_09_08', 'g15_2026_09_08', 'g16_2026_09_09', 'g17_2026_09_14', 'g1_2026_08_20', 'g2_2026_08_25', 'g3_2026_08_28', 'g4_2026_08_28', 'g5_2026_08_29', 'g6_2026_09_01', 'g7_2026_09_01', 'g8_2026_09_01', 'g9_2026_09_01']
+........................................................................ [ 14%]
+........................................................................ [ 29%]
+........................................................................ [ 43%]
+........................................................................ [ 58%]
+........................................................................ [ 73%]
+........................................................................ [ 87%]
+..........F.FFFFFF..........................................             [100%]
+=================================== FAILURES ===================================
+_ test_g74_3_01_the_live_ledger_keeps_grid_fit_v5_as_diagnostic_only_outside_the_projection_roster _
+
+    def test_g74_3_01_the_live_ledger_keeps_grid_fit_v5_as_diagnostic_only_outside_the_projection_roster():
+        """① 진단 전용 양성 — 실행/영수증 결속 유지 · 투영 membership 아님 · active claim 없음."""
+        reg, creg, roles_ok, sealed = _live()
+        leg = _leg(reg, "grid_fit_v5")
+        assert leg.get("claim_scope") == "no_active_claim", leg.get("claim_scope")
+        assert not leg.get("claim_roles")
+        assert (leg["preservation_status"], leg["validation_status"]) == ("full_bundle", "current_validated")
+        assert leg["evidence"]["out"] == "results/grid_fit_v5"
+        g18 = _cohort(reg, "g18_2026_09_15")
+        assert g18["legs"] == ["paired_fixed5_v4"], g18["legs"]          # 투영 명부 — 봉인 그대로
+        assert g18.get("executed_legs") == ["grid_fit_v5"], g18.get("executed_legs")
+        assert g18.get("prospective_legs") == []
+        assert DL._scope_problems(reg) == []
+>       assert DL._no_active_claim_evidence_problems(reg) == []
+E       assert ['grid_fit_v5...않는다 (70차 E3)'] == []
+E         
+E         Left contains one more item: "grid_fit_v5: 영수증을 typed 로 읽지 못한다: [plan] 'grid_fit_v5' 의 검증 영수증(docs/22p_gap/receipts/grid_fit_v5.validate.yaml)이 typ...bc9cd'. `python3 docs/22p_gap/make_receipt.py grid_fit_v5` 로 다시 만들라 — 영수증을 소비할 수 없으므로 `full_bundle` 로 올리지 않는다 (70차 E3)"
+E         Use -v to get more diff
+
+tests/test_gate74_defensive.py:188: AssertionError
+_ test_g74_3_03_the_full_bundle_evidence_contract_still_binds_a_no_active_claim_leg[_drop_out] _
+
+mutate = <function _drop_out at 0x7f3031c20ea0>
+
+    @pytest.mark.parametrize("mutate", [_drop_out, _drop_receipt, _alter_core, _unvalidated,
+                                        _pending, _validator_drift])
+    def test_g74_3_03_the_full_bundle_evidence_contract_still_binds_a_no_active_claim_leg(mutate):
+        """③ out/receipt/hash/필수 상태를 빼거나 바꾸면 거부 — diagnostic 이 면제가 아니다."""
+        reg, *_ = _live()
+>       assert DL._no_active_claim_evidence_problems(reg) == []
+E       assert ['grid_fit_v5...않는다 (70차 E3)'] == []
+E         
+E         Left contains one more item: "grid_fit_v5: 영수증을 typed 로 읽지 못한다: [plan] 'grid_fit_v5' 의 검증 영수증(docs/22p_gap/receipts/grid_fit_v5.validate.yaml)이 typ...bc9cd'. `python3 docs/22p_gap/make_receipt.py grid_fit_v5` 로 다시 만들라 — 영수증을 소비할 수 없으므로 `full_bundle` 로 올리지 않는다 (70차 E3)"
+E         Use -v to get more diff
+
+tests/test_gate74_defensive.py:231: AssertionError
+_ test_g74_3_03_the_full_bundle_evidence_contract_still_binds_a_no_active_claim_leg[_drop_receipt] _
+
+mutate = <function _drop_receipt at 0x7f3031c20f40>
+
+    @pytest.mark.parametrize("mutate", [_drop_out, _drop_receipt, _alter_core, _unvalidated,
+                                        _pending, _validator_drift])
+    def test_g74_3_03_the_full_bundle_evidence_contract_still_binds_a_no_active_claim_leg(mutate):
+        """③ out/receipt/hash/필수 상태를 빼거나 바꾸면 거부 — diagnostic 이 면제가 아니다."""
+        reg, *_ = _live()
+>       assert DL._no_active_claim_evidence_problems(reg) == []
+E       assert ['grid_fit_v5...않는다 (70차 E3)'] == []
+E         
+E         Left contains one more item: "grid_fit_v5: 영수증을 typed 로 읽지 못한다: [plan] 'grid_fit_v5' 의 검증 영수증(docs/22p_gap/receipts/grid_fit_v5.validate.yaml)이 typ...bc9cd'. `python3 docs/22p_gap/make_receipt.py grid_fit_v5` 로 다시 만들라 — 영수증을 소비할 수 없으므로 `full_bundle` 로 올리지 않는다 (70차 E3)"
+E         Use -v to get more diff
+
+tests/test_gate74_defensive.py:231: AssertionError
+_ test_g74_3_03_the_full_bundle_evidence_contract_still_binds_a_no_active_claim_leg[_alter_core] _
+
+mutate = <function _alter_core at 0x7f3031c20fe0>
+
+    @pytest.mark.parametrize("mutate", [_drop_out, _drop_receipt, _alter_core, _unvalidated,
+                                        _pending, _validator_drift])
+    def test_g74_3_03_the_full_bundle_evidence_contract_still_binds_a_no_active_claim_leg(mutate):
+        """③ out/receipt/hash/필수 상태를 빼거나 바꾸면 거부 — diagnostic 이 면제가 아니다."""
+        reg, *_ = _live()
+>       assert DL._no_active_claim_evidence_problems(reg) == []
+E       assert ['grid_fit_v5...않는다 (70차 E3)'] == []
+E         
+E         Left contains one more item: "grid_fit_v5: 영수증을 typed 로 읽지 못한다: [plan] 'grid_fit_v5' 의 검증 영수증(docs/22p_gap/receipts/grid_fit_v5.validate.yaml)이 typ...bc9cd'. `python3 docs/22p_gap/make_receipt.py grid_fit_v5` 로 다시 만들라 — 영수증을 소비할 수 없으므로 `full_bundle` 로 올리지 않는다 (70차 E3)"
+E         Use -v to get more diff
+
+tests/test_gate74_defensive.py:231: AssertionError
+_ test_g74_3_03_the_full_bundle_evidence_contract_still_binds_a_no_active_claim_leg[_unvalidated] _
+
+mutate = <function _unvalidated at 0x7f3031c21080>
+
+    @pytest.mark.parametrize("mutate", [_drop_out, _drop_receipt, _alter_core, _unvalidated,
+                                        _pending, _validator_drift])
+    def test_g74_3_03_the_full_bundle_evidence_contract_still_binds_a_no_active_claim_leg(mutate):
+        """③ out/receipt/hash/필수 상태를 빼거나 바꾸면 거부 — diagnostic 이 면제가 아니다."""
+        reg, *_ = _live()
+>       assert DL._no_active_claim_evidence_problems(reg) == []
+E       assert ['grid_fit_v5...않는다 (70차 E3)'] == []
+E         
+E         Left contains one more item: "grid_fit_v5: 영수증을 typed 로 읽지 못한다: [plan] 'grid_fit_v5' 의 검증 영수증(docs/22p_gap/receipts/grid_fit_v5.validate.yaml)이 typ...bc9cd'. `python3 docs/22p_gap/make_receipt.py grid_fit_v5` 로 다시 만들라 — 영수증을 소비할 수 없으므로 `full_bundle` 로 올리지 않는다 (70차 E3)"
+E         Use -v to get more diff
+
+tests/test_gate74_defensive.py:231: AssertionError
+_ test_g74_3_03_the_full_bundle_evidence_contract_still_binds_a_no_active_claim_leg[_pending] _
+
+mutate = <function _pending at 0x7f3031c21120>
+
+    @pytest.mark.parametrize("mutate", [_drop_out, _drop_receipt, _alter_core, _unvalidated,
+                                        _pending, _validator_drift])
+    def test_g74_3_03_the_full_bundle_evidence_contract_still_binds_a_no_active_claim_leg(mutate):
+        """③ out/receipt/hash/필수 상태를 빼거나 바꾸면 거부 — diagnostic 이 면제가 아니다."""
+        reg, *_ = _live()
+>       assert DL._no_active_claim_evidence_problems(reg) == []
+E       assert ['grid_fit_v5...않는다 (70차 E3)'] == []
+E         
+E         Left contains one more item: "grid_fit_v5: 영수증을 typed 로 읽지 못한다: [plan] 'grid_fit_v5' 의 검증 영수증(docs/22p_gap/receipts/grid_fit_v5.validate.yaml)이 typ...bc9cd'. `python3 docs/22p_gap/make_receipt.py grid_fit_v5` 로 다시 만들라 — 영수증을 소비할 수 없으므로 `full_bundle` 로 올리지 않는다 (70차 E3)"
+E         Use -v to get more diff
+
+tests/test_gate74_defensive.py:231: AssertionError
+_ test_g74_3_03_the_full_bundle_evidence_contract_still_binds_a_no_active_claim_leg[_validator_drift] _
+
+mutate = <function _validator_drift at 0x7f3031c211c0>
+
+    @pytest.mark.parametrize("mutate", [_drop_out, _drop_receipt, _alter_core, _unvalidated,
+                                        _pending, _validator_drift])
+    def test_g74_3_03_the_full_bundle_evidence_contract_still_binds_a_no_active_claim_leg(mutate):
+        """③ out/receipt/hash/필수 상태를 빼거나 바꾸면 거부 — diagnostic 이 면제가 아니다."""
+        reg, *_ = _live()
+>       assert DL._no_active_claim_evidence_problems(reg) == []
+E       assert ['grid_fit_v5...않는다 (70차 E3)'] == []
+E         
+E         Left contains one more item: "grid_fit_v5: 영수증을 typed 로 읽지 못한다: [plan] 'grid_fit_v5' 의 검증 영수증(docs/22p_gap/receipts/grid_fit_v5.validate.yaml)이 typ...bc9cd'. `python3 docs/22p_gap/make_receipt.py grid_fit_v5` 로 다시 만들라 — 영수증을 소비할 수 없으므로 `full_bundle` 로 올리지 않는다 (70차 E3)"
+E         Use -v to get more diff
+
+tests/test_gate74_defensive.py:231: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_gate74_defensive.py::test_g74_3_01_the_live_ledger_keeps_grid_fit_v5_as_diagnostic_only_outside_the_projection_roster
+FAILED tests/test_gate74_defensive.py::test_g74_3_03_the_full_bundle_evidence_contract_still_binds_a_no_active_claim_leg[_drop_out]
+FAILED tests/test_gate74_defensive.py::test_g74_3_03_the_full_bundle_evidence_contract_still_binds_a_no_active_claim_leg[_drop_receipt]
+FAILED tests/test_gate74_defensive.py::test_g74_3_03_the_full_bundle_evidence_contract_still_binds_a_no_active_claim_leg[_alter_core]
+FAILED tests/test_gate74_defensive.py::test_g74_3_03_the_full_bundle_evidence_contract_still_binds_a_no_active_claim_leg[_unvalidated]
+FAILED tests/test_gate74_defensive.py::test_g74_3_03_the_full_bundle_evidence_contract_still_binds_a_no_active_claim_leg[_pending]
+FAILED tests/test_gate74_defensive.py::test_g74_3_03_the_full_bundle_evidence_contract_still_binds_a_no_active_claim_leg[_validator_drift]
+7 failed, 485 passed in 73.82s (0:01:13)
+pytest rc=1
+end 2026-10-04T06:53:17Z HEAD 76a5da16e9b7155117823c6866a898132427cd3f dirty=1

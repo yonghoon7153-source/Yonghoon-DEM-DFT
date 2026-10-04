@@ -1,0 +1,32 @@
+start 2026-10-04T06:49:59Z HEAD 76a5da16e9b7155117823c6866a898132427cd3f dirty=1 (작업 트리 = GREEN tools/preserve.py +4)
+source_digest 803e2b7781cbc9cd
+
+[conftest] 시험 authority: /tmp/dd-test-authority-45necglz/docs/22p_gap/LEG_PRESERVATION.yaml (운영 원장의 바이트 복사본 — 70차 E6)
+
+[conftest] 이 checkout 을 처음 보았다 — 얼린 cohort 17개의 좌표를 시험 authority 에 봉인했다: ['g10_2026_09_01', 'g11_2026_09_02', 'g12_2026_09_03', 'g13_2026_09_07', 'g14_2026_09_08', 'g15_2026_09_08', 'g16_2026_09_09', 'g17_2026_09_14', 'g1_2026_08_20', 'g2_2026_08_25', 'g3_2026_08_28', 'g4_2026_08_28', 'g5_2026_08_29', 'g6_2026_09_01', 'g7_2026_09_01', 'g8_2026_09_01', 'g9_2026_09_01']
+============================= test session starts ==============================
+platform linux -- Python 3.11.15, pytest-9.1.1, pluggy-1.6.0
+rootdir: /home/user/Yonghoon-DEM-DFT/degradation-degeneracy
+plugins: metadata-3.1.1, platformdirs-4.12.0, anyio-4.15.1, json-report-1.5.0
+collected 6 items
+
+tests/test_gate89_finalize_input_binding.py ......                       [100%]
+
+==================================== PASSES ====================================
+=========================== short test summary info ============================
+PASSED tests/test_gate89_finalize_input_binding.py::test_d01_a_durable_fit_receipt_is_carried_into_the_ledger_record_as_recorded
+PASSED tests/test_gate89_finalize_input_binding.py::test_d02_finalize_refuses_a_fit_receipt_whose_inputs_changed_after_recording[inputs_deleted]
+PASSED tests/test_gate89_finalize_input_binding.py::test_d02_finalize_refuses_a_fit_receipt_whose_inputs_changed_after_recording[inputs_extra_key]
+PASSED tests/test_gate89_finalize_input_binding.py::test_d02_finalize_refuses_a_fit_receipt_whose_inputs_changed_after_recording[inputs_value_not_hex]
+PASSED tests/test_gate89_finalize_input_binding.py::test_d02_finalize_refuses_a_fit_receipt_whose_inputs_changed_after_recording[inputs_value_other_hex64]
+PASSED tests/test_gate89_finalize_input_binding.py::test_d03_a_self_consistent_receipt_forgery_after_recording_is_refused_by_the_consumer_binding
+============================== 6 passed in 4.96s ===============================
+gate89 rc=0
+
+[conftest] 시험 authority: /tmp/dd-test-authority-kxn987do/docs/22p_gap/LEG_PRESERVATION.yaml (운영 원장의 바이트 복사본 — 70차 E6)
+
+[conftest] 이 checkout 을 처음 보았다 — 얼린 cohort 17개의 좌표를 시험 authority 에 봉인했다: ['g10_2026_09_01', 'g11_2026_09_02', 'g12_2026_09_03', 'g13_2026_09_07', 'g14_2026_09_08', 'g15_2026_09_08', 'g16_2026_09_09', 'g17_2026_09_14', 'g1_2026_08_20', 'g2_2026_08_25', 'g3_2026_08_28', 'g4_2026_08_28', 'g5_2026_08_29', 'g6_2026_09_01', 'g7_2026_09_01', 'g8_2026_09_01', 'g9_2026_09_01']
+........................                                                 [100%]
+24 passed in 9.69s
+gate88 rc=0
+end 2026-10-04T06:50:18Z HEAD 76a5da16e9b7155117823c6866a898132427cd3f dirty=1
