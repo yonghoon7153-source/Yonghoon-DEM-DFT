@@ -95,11 +95,18 @@
 | 4 장 Electrochemistry — Porous Electrode 노드 | "The Electrode volume fraction is used to calculate the effective electrical conductivity of the porous matrix when the correction factor is set to Bruggeman or Tortuosity." — p.144 (Primary and Secondary Current Distribution) · p.156 (Tertiary Current Distribution, Nernst–Planck).  물리 리뷰 표기 p.143 · p.155 는 0-기준 색인이다 (인쇄 +1) | 보강만 — Tortuosity 선택지에서 부피분율이 계산에 쓰인다 (물리 리뷰 읽기: ε 가 곱해짐 → σ/τ 꼴 배제 · ε/τ ↔ ε/τ² 미결) · 전극 (전자) 상 문장이고 배터리 인터페이스가 아니다 |
 | **배터리 인터페이스** — Porous Electrode 노드 (p.266 머리) | "the Electrode tortuosity τs and Electrolyte tortuosity τl parameters may also be used by the Effective Transport Parameter Correction (next section)" (p.267) — 식 없음 | **강하게 시사 (strongly implied) — 인쇄 근거 없음** → 사용 버전 GUI Equation 보기 캡처 1 장으로 닫는다 (미실행) |
 | 외부 | Landesfeind A1374 "(e.g., Comsol Multiphysics), where it is expressed terms of ε/τ = ε^1.5" | 같은 관례 |
+| **배터리 모듈 앱 예제** — *Homogenizing a Heterogeneous Electrode Model* (Application Library · 첫 줄 "Model created in COMSOL Multiphysics 6.4" · 1저자 업로드 PDF 10-04) | 식 (1) "The effective flux parameter will depend on both the volume fraction, ε, and the tortuosity, τ, of the porous conductive binder domain according to" **f_eff = ε/τ** (p.2) · 식 (2)–(5) 3D 라플라스 (확산계수 1 · u = 0/1) 경계 플럭스 평균 × 두께 → f_eff 0.55 (p.4) · 0.554 (p.11) · 1D 균질 모델 Porous Electrode: "Effective Transport Parameter Correction … From the Electrolyte conductivity list, choose User defined.  In the fl text field, type f_eff*(eps_l_b^1.5)" · "From the Electric conductivity list, choose User defined.  In the fs text field, type f_eff" (p.14) | **같은 관례 (배터리 모듈 문서의 인쇄 식)** — 단 그 예제는 Tortuosity 선택지를 쓰지 않고 f 를 **User defined** 로 직접 넣는다 → 노드 Tortuosity 선택지의 식은 여전히 미인쇄 (위 행 그대로) |
 
 - 쓸 때의 조건 (물리 c1):
   - T 로 COMSOL 이 σ_full 을 재현하려면 COMSOL σ₀ 칸이 **같은 3.0 (우리 간선 재료값)** 이어야 한다.  측정 펠릿값 (예: Minnmann 1.6) 이나 결정립값과 짝지으면 다른 σ_eff 가 나온다.
   - P2D 매개변수로는 Nguyen 이 τ_e 를 권한다 — "should be preferred" (p5 · p8) · "should be used" (p7).
   - √T 에서 "COMSOL" 을 빼는 것은 지금 해도 된다.  T 에 "COMSOL 입력" 표지를 다는 것은 GUI 확인 뒤에 한다.
+- ✅ **10-04 D1 (1저자 비준 "권고에 맞게 진행") — COMSOL 인계 경로**:
+  - COMSOL 에는 **`f_ion` 을 Porous Electrode 보정 User defined (fl) 칸**으로 넘긴다 — 위 앱 예제와 같은 방식이라 τ 관례가 끼지 않는다.  예제 구성상 fl 은 부피분율을 포함한 σ 배수다 (fl = f_eff·eps_l_b^1.5 — 두 인자 모두 부피분율 포함 → σ_eff = fl·σ) = 우리 f 정의 (σ_eff/σ₀).
+  - 같은 틀로 짝짓는다: 두께 L_mc · εl = φ_mc · `f_ion` (판 간격 틀이면 L_gap · φ_구합 · `f_ion_<mode>_gap` — 두 틀을 섞지 않는다).
+  - Tortuosity 칸을 쓴다면 `tau2` — "COMSOL 입력" 표지는 GUI Equation 확인 뒤 (결정 5 그대로).
+  - 이름 함정: 그 예제는 f_eff 를 "sometimes referred to as the McMullin number (Ref. 2)" 라 부른다 — Landesfeind 등의 N_M = τ/ε = **1/f (역수)** 와 반대다.  우리 표의 f 행 (= 1/N_M) 그대로 두고 "McMullin" 낱말로 열 이름을 만들지 않는다.
+  - PDF 는 COMSOL 라이선스 문서라 리포에 넣지 않는다 (쪽 · 식 번호 인용만).  웹앱 반영 = tau2 툴팁 · COMSOL 2D 내보내기 `f_ion` 행 · README (`webapp/test_tau_labels.py` J1–J4).
 - COMSOL 자체 표기도 흔들린다.  같은 양을 "fluid tortuosity factor" (p.376) · "tortuosity" (p.343 · p.348) · "tortuosity factors" (p.450) 로 부른다.  p.377 은 "the effective transport factor is τ_F = ε_p^−1/3 (Millington–Quirk)" 처럼 이름을 바꿔 적는다.  **⇒ COMSOL 의 "tortuosity" 낱말 = tortuosity factor = T.**
 - 에이전트 기록의 "Diluted Species 375쪽" 은 두 번 틀렸다: Eq 6-6 은 Transport of Concentrated Species 절에 있고 인쇄 p.376 이다.
 - Arzt 1982 는 τ 를 다루지 않는다 (§6 접촉면적 전용).
@@ -326,7 +333,7 @@ SE 적은 쪽 원인 후보 (물리 b4 · b6):
 ### 5-1. 열 (모드 = `hertz` · `physics`, 같은 정의 · 면적과 협착식만 다름)
 | 열 | 식 (정확히) | 이름 · 한정어 |
 |---|---|---|
-| `f_ion_<mode>` | f_mc = σ_ratio × (L_gap/L_mc).  σ_ratio = G_FULL·L_gap/(box_x·box_y) (솔버 무차원 `sigma_full`, 8 자리 — `TAU-25`) · L_gap = 판 간격 · L_mc = 질량 보존 두께 (결정 1) | "유효 전도도 비 (diffusibility · COMSOL f_e · 1/N_M) — **판 간격 해의 질량보존 두께 재척도 (해 아님)**" · σ₀ 수치에 무관 (§3-1) |
+| `f_ion_<mode>` | f_mc = σ_ratio × (L_gap/L_mc).  σ_ratio = G_FULL·L_gap/(box_x·box_y) (솔버 무차원 `sigma_full`, 8 자리 — `TAU-25`) · L_gap = 판 간격 · L_mc = 질량 보존 두께 (결정 1) | "유효 전도도 비 (diffusibility · COMSOL f_e · 1/N_M) — **판 간격 해의 질량보존 두께 재척도 (해 아님)**" · σ₀ 수치에 무관 (§3-1) · COMSOL 에는 이 값을 Porous Electrode 보정 **User defined (fl)** 로 (같은 틀 L_mc · φ_mc · 10-04 D1) |
 | `f_ion_<mode>_gap` (메타) | σ_ratio 그대로 | "판 간격 기준으로 풀린 값 — φ_mc 와 짝짓지 말 것 (T 를 L_gap/L_mc 배 낮춘다)" |
 | `tau2_ion_<mode>` | T = φ_SE,mc / f_ion (= φ_구합·σ₀/σ_full — 현행 웹앱 T 와 **정의상** 같은 수) | "**접촉망 모델 T** (간선 재료 σ₀ 기준 · Holm 협착 포함 (1세대) · 원기둥 bulk · z 관통 conventional) — 문헌 tortuosity factor 와 같은 정의식, 물리 기준 상태는 다름".  COMSOL: "종 수송 인터페이스 Eq 6-6 (p.376) 의 τ_F 와 같은 꼴.  배터리 인터페이스는 **강하게 시사 (strongly implied) — 인쇄 근거 없음** → 사용 버전 GUI Equation 보기 확인 전에는 'COMSOL 입력' 이라 쓰지 않는다.  σ_full 재현은 COMSOL σ₀ = `ion_sigma0_mScm` 일 때만" |
 | `tau_ion_<mode>` | τ = √T | "τ² 관례의 τ (Minnmann √τ²) — **COMSOL 입력 아님**" |
@@ -350,7 +357,7 @@ SE 적은 쪽 원인 후보 (물리 b4 · b6):
 
 ### 5-3. 붙일 한정어 (열 사전 문구)
 - "flux 기반 · 관통 (두 평행 띠 Dirichlet) **conventional tortuosity factor** (Nguyen Eq 1) — **electrode tortuosity factor τ_e (Nguyen Eq 2) 가 아니다** · 차단 대칭셀 EIS-TLM 의 τ (Landesfeind Eq 13 형 — Nguyen 이 eSCM 으로 분류) 와 **한정어 없이 비교하지 않는다**."
-- "COMSOL: 종 수송 인터페이스 Eq 6-6 (p.376) · Tortuosity model 문장 (p.377) 의 τ_F 와 같은 꼴 — 배터리 인터페이스 (Porous Electrode, p.266–267) 는 식이 인쇄돼 있지 않다: **강하게 시사 (strongly implied)** · GUI Equation 보기로 확인 전에는 'COMSOL 입력' 이라 쓰지 않는다 · COMSOL σ₀ 칸 = 3.0 (`ion_sigma0_mScm`) 과 짝일 때만 σ_full 재현."
+- "COMSOL: 종 수송 인터페이스 Eq 6-6 (p.376) · Tortuosity model 문장 (p.377) 의 τ_F 와 같은 꼴 — 배터리 인터페이스 (Porous Electrode, p.266–267) 는 식이 인쇄돼 있지 않다: **강하게 시사 (strongly implied)** · GUI Equation 보기로 확인 전에는 'COMSOL 입력' 이라 쓰지 않는다 · COMSOL σ₀ 칸 = 3.0 (`ion_sigma0_mScm`) 과 짝일 때만 σ_full 재현.  COMSOL 에 넣을 때는 `f_ion` 을 Porous Electrode 보정 User defined (fl) 칸으로 (배터리 모듈 앱 예제 *Homogenizing a Heterogeneous Electrode Model* 과 같은 방식 · 같은 틀 L_mc · φ_mc) — 이 경로는 τ 관례와 무관."
 - "**1세대 협착식** (hertz = 반공간 Maxwell, a/r 0.30–0.44 에서 R_c 과대 · physics = ψ 분모 + 접촉별 상한값 면적 + 절벽) — ML 기술자 전용 · **실험 절대 대조 금지** (순수 SE 게이트 · S3 판정 전)."
 - "z 한 축 (Tjaden 식 21 τ_C 와 직접 비교 금지) · 형상 · CBD 차단 없음 · σ₀ 펠릿값 위 Holm 접촉 저항 = 부분 이중계상 (방향 T↑ — 순수 SE 게이트로 크기 확인)."
 - "띠 끝 단락 → T 하향 ≤ 4r_SE/L (`ion_net_band_frac`)."

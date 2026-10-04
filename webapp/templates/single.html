@@ -1843,7 +1843,7 @@ const METRIC_TIPS = {
   'tau2 = φ·σ₀/σ_full (tortuosity factor · 협착 포함)': {
     title: 'tau2 — tortuosity factor (접촉망 모델 T)',
     formula: 'tau2 = φ_SE × σ₀ / σ_full\n(σ₀ = {{ "%.1f"|format(sigma_grain(metrics)) }} mS/cm — 간선 재료 σ = 펠릿값 (CL-91) · σ_full 과 같은 온도)',
-    desc: 'Kirchhoff 회로망 FULL 모드 (원기둥 bulk + 접촉 Holm 협착) 의 유효 전도도를 φ_SE 로 정규화해 뒤집은 값.  문헌 tortuosity factor (Tjaden κ = τ² · Landesfeind τ · TauFactor τ · COMSOL 종 수송 τ_F) 와 같은 정의식이다 — 물리 기준 상태 (σ₀) 는 다르다.\n\nCOMSOL: 종 수송 인터페이스 Eq 6-6 (p.376) 의 τ_F 와 같은 꼴.  배터리 Porous Electrode 노드는 식이 인쇄돼 있지 않다 = 강하게 시사 — 사용 버전 GUI Equation 보기로 확인하기 전에는 "COMSOL 입력" 이라 하지 않는다.  σ_full 재현은 COMSOL σ₀ 칸 = 위 σ₀ 일 때만.',
+    desc: 'Kirchhoff 회로망 FULL 모드 (원기둥 bulk + 접촉 Holm 협착) 의 유효 전도도를 φ_SE 로 정규화해 뒤집은 값.  문헌 tortuosity factor (Tjaden κ = τ² · Landesfeind τ · TauFactor τ · COMSOL 종 수송 τ_F) 와 같은 정의식이다 — 물리 기준 상태 (σ₀) 는 다르다.\n\nCOMSOL: 종 수송 인터페이스 Eq 6-6 (p.376) 의 τ_F 와 같은 꼴.  배터리 모듈 앱 예제 (Homogenizing a Heterogeneous Electrode Model · 6.4) 식 (1) f_eff = ε/τ 도 같은 꼴이고, 그 예제는 Tortuosity 칸 대신 Porous Electrode 보정을 User defined 로 두고 f (= φ/tau2 = σ_full/σ₀) 를 직접 넣는다 — 이 경로면 τ 관례가 끼지 않는다.  노드의 Tortuosity 선택지 식은 인쇄본에 없다 = 강하게 시사 — 사용 버전 GUI Equation 보기로 확인하기 전에는 tau2 를 "COMSOL 입력" 이라 하지 않는다.  σ_full 재현은 COMSOL σ₀ 칸 = 위 σ₀ 일 때만.',
     meaning: '1세대 협착식 (hertz = 반공간 Maxwell · physics = ψ 분모 + 상한값 면적) — ML 기술자 전용 · 실험 절대 대조 보류 (순수 SE 게이트 · 결정 4).  physics σ 가 없으면 physics 칸은 "—".'
   },
   'τ_Lap,eff = √tau2 (Laplace · 협착 포함)': {

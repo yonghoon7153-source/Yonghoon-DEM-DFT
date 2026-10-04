@@ -21,6 +21,9 @@
   G  LHS 열 사전 — 벽 τ 문구: tau2 · "COMSOL/EIS 입력 τ 는 τ_Laplace" 없음 · 생성기 selftest ㉓b 가 같은 단언
   H  전달본 정오표 — 배포 v1 · v1.1 폴더에 ERRATA (TSV 는 커밋 바이트 그대로)
   I  기타 자리 — plot_section7 축 이름 · GRADING_STORY · bruggeman 문서 · stage4 PyBaMM 주석
+  J  COMSOL 앱 예제 근거 (10-04 · D1 비준 — 1저자 업로드 PDF) — tau2 툴팁에 앱 예제 식 (1) f_eff = ε/τ · User defined f 경로 ·
+     노드 Tortuosity 선택지 식은 아직 미인쇄 (강하게 시사 유지) · COMSOL 2D 내보내기 f_ion 행 (= σ_i/σ_grain = φ/tau2 · 식별자 이름) ·
+     README 에 User defined 안내 · 판정 v2 · CLAUDE.md τ 블록에 근거 기록
 
   python3 webapp/test_tau_labels.py
 """
@@ -254,6 +257,25 @@ chk('I2 GRADING_STORY √ 행에 COMSOL/EIS input 없음', '| τ_Laplace,eff | 1
 chk('I3 bruggeman 문서 √ 행에 "COMSOL · EIS 입력" 없음', 'COMSOL · EIS 입력' not in _read('docs/bruggeman_tortuosity_network_20261002.md'))
 chk('I4 stage4 PyBaMM 주석 — tortuosity factor 칸 = tau2 (√ 값 아님)',
     '# ← τ_Laplace,eff' not in _read('docs/stage4_electrochem_research.md'))
+
+# ── J  COMSOL 앱 예제 근거 (10-04 · D1) ───────────────────────────────────────
+print('J  COMSOL 앱 예제 근거 (D1)')
+chk('J1 tau2 툴팁 — 앱 예제 식 (1) f_eff = ε/τ · User defined 로 f 직접 · 노드 Tortuosity 식은 강하게 시사 (GUI 확인 전) 유지',
+    bool(tt2) and 'Homogenizing' in tt2 and 'f_eff = ε/τ' in tt2 and 'User defined' in tt2 and '강하게 시사' in tt2 and 'GUI' in tt2, tt2[-400:])
+fir = byname.get('f_ion')
+chk('J2 COMSOL 2D 내보내기 f_ion 행 = σ_full/σ_grain (= φ/tau2 · 같은 σ_full 선택) · 단위 1 · 이름 = 식별자 f_ion · 설명에 User defined',
+    fir is not None and fir.get('unit') == '1' and fir.get('comsol_name') == 'f_ion'
+    and float(fir['value']) == round(0.25 / EC.SIGMA_GRAIN_MS, 6) and 'User defined' in str(fir.get('source', ''))
+    and t2r is not None and abs(float(fir['value']) * float(t2r['value']) - 0.30) < 1e-5, repr(fir))
+_ri = ESRC.find('검산: σ_i = φ·σ_grain/tau2')          # README [B] 블록 안 (코드 주석의 f_ion 과 구별)
+_rb = ESRC[_ri:ESRC.find('[C] BOUNDARY', _ri)] if _ri >= 0 else ''
+chk('J3 README 블록에 f_ion · User defined 안내 · 같은 틀 (L_cat · phiSE)',
+    'f_ion    = σ_i/σ_grain = φ/tau2' in _rb and 'User defined' in _rb and 'L_cat' in _rb and 'phiSE' in _rb, _rb[:300])
+_J = _read('docs/reviews/tau_conventions_judgment_v2_20261003.md')
+_C = _read('CLAUDE.md')
+chk('J4 판정 v2 · CLAUDE.md τ 블록에 근거 (Homogenizing … 식 (1) f_eff = ε/τ · User defined · McMullin 이름 함정)',
+    all(k in _J for k in ('Homogenizing a Heterogeneous Electrode Model', 'f_eff = ε/τ', 'User defined', 'McMullin'))
+    and all(k in _C for k in ('Homogenizing a Heterogeneous Electrode Model', 'User defined')), 'docs 확인')
 
 print(f'\n{_ok} PASS · {len(_fail)} FAIL')
 if _fail:

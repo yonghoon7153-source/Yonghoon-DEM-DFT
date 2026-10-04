@@ -76,6 +76,10 @@ def numerical_parameters(case_dir: Path, slice_data: dict) -> list[dict]:
     if phi_se and sig_full and sig_full > 0:
         tau2 = phi_se * SIGMA_GRAIN_MS / sig_full
         tau_lap_eff = tau2 ** 0.5
+    # f = σ_full/σ₀ (= φ/tau2) — COMSOL Porous Electrode 보정 'User defined' 칸 (fl) 에 넣는 꼴.  배터리 모듈 앱 예제
+    #   (Homogenizing a Heterogeneous Electrode Model · 6.4 · 식 (1) f_eff = ε/τ) 가 Tortuosity 칸 대신 이 경로로 f 를 직접 넣는다
+    #   → τ 관례가 끼지 않는다 (D1 · 1저자 비준 10-04).  같은 틀: 두께 L_cat · phiSE · σ₀ = sigma_grain.
+    f_ion = (sig_full / SIGMA_GRAIN_MS) if (sig_full and sig_full > 0) else None
     tau_lap_bulk = None
     if phi_se and sig_bulk and sig_bulk > 0:
         tau_lap_bulk = (phi_se * SIGMA_GRAIN_MS / sig_bulk) ** 0.5
@@ -106,6 +110,8 @@ def numerical_parameters(case_dir: Path, slice_data: dict) -> list[dict]:
          'kappa', '3D effective thermal conductivity'),
         ('tau2',            tau2,                                    '1',
          'tau2', '★ tortuosity factor = φ·σ_grain/σ_i (COMSOL 종 수송 τ_F 꼴 · 배터리 노드는 GUI Equation 확인 뒤 · σ₀ 칸 = sigma_grain)'),
+        ('f_ion',           f_ion,                                   '1',
+         'f_ion', '★ f = σ_i/σ_grain = φ/tau2 — Porous Electrode 보정을 User defined 로 두고 fl 칸에 넣는 꼴 (COMSOL 앱 예제 Homogenizing a Heterogeneous Electrode Model 6.4 와 같은 방식 · τ 관례 무관) · 같은 틀 L_cat · phiSE'),
         ('tau_Laplace_eff', tau_lap_eff,                             '1',
          '—', '√tau2 (τ² 관례의 τ) — 입력 칸 값 아님 (tau2 행을 쓴다)'),
         ('tau_Laplace_bulk', tau_lap_bulk,                           '1',
@@ -664,6 +670,9 @@ COMSOL 모델은 (A) DOMAIN, (B) MATERIAL(수치), (C) BOUNDARY 로 구성.
     sigma_i  = σ_ionic effective (mS/cm)
     tau2     = tortuosity factor = φ·sigma_grain/sigma_i   ← 검산: σ_i = φ·σ_grain/tau2
                (COMSOL 종 수송 τ_F 꼴 · 배터리 Porous Electrode 노드는 GUI Equation 보기로 확인 뒤 · σ₀ 칸 = sigma_grain)
+    f_ion    = σ_i/σ_grain = φ/tau2   ← Porous Electrode 보정 'User defined' 의 fl 칸에 넣는 꼴
+               (COMSOL 앱 예제 Homogenizing a Heterogeneous Electrode Model 6.4 와 같은 방식 — τ 관례 무관 ·
+                같은 틀: 두께 L_cat · εl = phiSE · σ₀ = sigma_grain)
     tau_eff  = √tau2 (참고 · 입력 칸 값 아님)
   AM domain:
     sigma_e  = σ_electronic (mS/cm),  kappa = thermal
