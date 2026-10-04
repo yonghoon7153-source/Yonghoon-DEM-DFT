@@ -9123,3 +9123,28 @@ origin" 을 C 대조의 한 축으로 넣었다 — `env_fingerprint()` 의 modu
 **절차:** RED (각 node 가 실패하는 것을 눈으로 본다) → 최소 GREEN → 변이 `-g90` (emit-expect → verify) → 영수증 history 보존 + clean
 커밋 1 회 재생성 · LEG_PRESERVATION 앵커 2×2 → 전체 pytest · strict smoke · 등록부 전체 변이 재생 (clean · 시작 = 끝 HEAD) → GATE90
 요청문 · 증거 README · 발송 HEAD docs-lint. 같은 라운드에 다른 보완을 끼우지 않는다.
+
+## §136 90차 요청 — **PyBaMM 환경 고정 라운드** 결과 (프로필 C lock · 기록 대조 + 프로필 B 역사 기록) · 실행 GO 아님 · 판정 대상 `e2160c2ef`
+
+**승인 → 고정 → 구현 순서 (§135):** 고정 표 `docs/22p_gap/PYBAMM_PIN_ROUND_SPEC.md` 커밋 `1f3829b9a` (코드 변경 전) → RED
+`tests/test_gate90_env_profile.py` 38 node `cff5e409b` (38 failed — 33 `ModuleNotFoundError: tools.env_profile` · lock · B · smoke 단계 ·
+`_stamp` · 주석 정정 전) → 증거 규칙 `fb29e63f0` · RED 증거 `2165a9183` → GREEN `e2160c2ef` (RUN_SCOPE 4 파일 · +608 −3 · source_digest
+`803e2b7781cbc9cd` → `3f84c0db52d2b9ac`) → 증거 `c547c2458` → 영수증 history `cbf25ad61` → 변이 13 + EXPECT · 시험 메시지 결정화
+`2586138c3` → 영수증 재생성 `1296af1f5` (paired 35 · grid 34 · stamp 에 `environment_profile_C` MATCH).
+
+| 항목 | 결과 |
+|---|---|
+| C lock | `requirements-validation-C.lock.txt` 190 줄 · `python -m tools.env_profile --emit-lock` 출력 · 정규형 고정점 · Python 3.11.15 · CPython · Linux · x86_64 · glibc 2.39 · 유효 170 · 가려진 2 · RECORD 없는 유효 22 · 핵심 배포판 고정 표 §3-2 그대로 |
+| 대조 | `tools/env_profile.py` — 축 12 · 결과 dict (MATCH / MISMATCH / UNMEASURED · 측정하지 않은 칸 `None`) · CLI 세 상태 rc 0 · 이 컨테이너 실측 **MATCH** (170/170 · 2/2 · 설치 파일 일치 24,804 · origin 확인 9 · 확인 불가 yaml) |
+| 기록 자리 | smoke `bad()` 뒤 · 단계 0 전 한 단계 (`\|\| bad` — 도구 예외만 실패) · 영수증 stamp `environment_profile_C` (core 밖 · `tools/preserve.py` 불변) · 게이트 증거 JSON (08) |
+| B | `docs/22p_gap/env_profile_B_v4.yaml` — 네 v4 producer manifest (경로 · 바이트 · sha256 · env 여덟 자리 · solver 다섯 기록 원문) · 한계 · 주장하지 않는 것 · 어떤 실행 코드도 읽지 않는다 |
+| requirements | 주석만 — 옛 "검증 완료 조합" 을 옛 주석으로 인용 · B · C 를 가리킴 · "하한만" · 요구 줄 12 개 바이트 불변 (e12) |
+| 회귀 · 변이 | GREEN 38 passed · 관련 모듈 577 passed / 10 failed (영수증 낡음 — 재생성 뒤 113 passed) · `-g90` 13/13 · rc 0 (21 node · 결정적 증인) |
+| 전체 회귀 (`257d4cc1c` clean) | pytest **2177 passed / 1 xfailed / rc 0** (1:00:47) · smoke **rc 0** (2:47 · 기록 단계 MATCH) · env JSON MATCH · 등록부 전체 재생 **410/410 call 단계에서 물었다 · rc 0** (scenario 421 · executable 410 · declared 11 · site 459 · 2:44:32) |
+| 자체 신고 | 요청문 §6 a–k — 특히 j (env 자리 수 "일곱" → **여덟** — 고정 표 §12 · 이 절) · k (e04 사례 하나 더함) · b (GREEN 뒤 시험 메시지 결정화) |
+
+**§135 정정 (덧붙임):** §135 의 "네 v4 producer manifest 의 env 일곱 자리" 는 **여덟 자리**다 (grid_curves_v4 둘 + 세 fit 둘씩). 판정 영향 없음 —
+e11 은 manifest 를 걸어 찾은 집합과 전수 대조한다. 고정 표의 같은 자리는 §12 정정 절로 덧붙였다.
+
+**요청:** `docs/22p_gap/GATE90_REQUEST.md` · 증거 `docs/22p_gap/gate90_evidence/` (README 전체 sha256). **아님:** 실행 GO · D guard ·
+설치 · 재생성 · 새 세대 · 버전 비교 · requirements 하한 변경 · 새 연구 leg · 운영 v6 계획 · 세대표 · p_ini · class · 투영 게시.

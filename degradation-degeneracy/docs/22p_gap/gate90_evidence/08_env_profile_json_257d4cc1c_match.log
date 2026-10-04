@@ -1,0 +1,5 @@
+start 2026-10-04T18:04:52Z HEAD 257d4cc1ca71daae04a6692f975892479a309abc dirty=0
+
+{"counts": {"dists_locked": 170, "dists_measured": 170, "files_unhashed": 10373, "files_verified": 24804, "origins_verified": 9, "shadowed_locked": 2, "shadowed_measured": 2}, "lock_path": "requirements-validation-C.lock.txt", "lock_sha256": "d886f30ff675fef723fb9bcedd98297910fb1f8f1809370c18d8980dc5e63b39", "mismatches": [], "profile": "C", "reason": "", "status": "MATCH", "unverifiable": {"dists_without_record": ["argcomplete", "blinker", "cryptography", "dbus-python", "distro", "launchpadlib", "lazr-restfulclient", "lazr-uri", "oauthlib", "pip", "pygobject", "pyjwt", "pyparsing", "python-apt", "pyyaml", "setuptools", "six", "toml", "wadllib", "wheel", "xmltodict", "yq"], "origins": ["yaml"]}}
+env_profile rc=0
+end 2026-10-04T18:04:55Z HEAD 257d4cc1ca71daae04a6692f975892479a309abc dirty=0

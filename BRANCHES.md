@@ -336,5 +336,8 @@ git push -u origin claude/14-gate-code-review-9qkx05
 | 2026-10-04 | `bms-balancing/.gitattributes` 규칙 — B-min 후보 준비 검토 회신 묶음 `reviews/r14_repros/codex63/comsol_bmin_candidate_review_20261005/** -text` (게이트 차수 밖 · 이 행은 §135 커밋에서 뒤늦게 적었다) | `3077aeae7` | 밖 | 할 일 없음 |
 | 2026-10-04 | `bms-balancing/.gitattributes` 규칙 — B-min 후보 r1 꾸러미 `comsol_candidates/bmin_particle640_r1_20261005/** -text` (게이트 차수 밖 · 이 행은 §135 커밋에서 뒤늦게 적었다) | `e80c1bf7d` | 밖 | 할 일 없음 |
 | 2026-10-04 | 원장 §135 — PyBaMM 환경 고정 라운드 착수 승인 기록 · 고정 표 `degradation-degeneracy/docs/22p_gap/PYBAMM_PIN_ROUND_SPEC.md` (코드 변경 전 · C lock + B 기록 · 기록 대조) | 이 행이 든 커밋 | 밖 | 할 일 없음 (ff 로 그대로 들어간다 · 이후 GREEN 커밋은 RUN_SCOPE **안**) |
+| 2026-10-04 | `degradation-degeneracy/.gitattributes` 규칙 `docs/22p_gap/gate90_evidence/** -text !eol` | `fb29e63f0` | 밖 | 할 일 없음 |
+| 2026-10-04 | **RUN_SCOPE — 90차 GREEN** (새 `requirements-validation-C.lock.txt` · 새 `tools/env_profile.py` · `requirements.txt` 주석만 · `scripts/smoke_e2e.sh` +6 · source_digest `803e2b7781cbc9cd` → `3f84c0db52d2b9ac`) | `e2160c2ef` | **안** | 90차 판정 대상 — ff 복귀라 SHA 그대로 유효 · 영수증 재생성 `1296af1f5` |
+| 2026-10-04 | 원장 §136 — 90차 요청 (`GATE90_REQUEST.md`) · 게이트 요청 발송 대기 (발송문은 사용자 전달) · 고정 표 §12 정정 덧붙임 | 이 행이 든 커밋 | 밖 | 90차 회신은 서브 또는 복귀 뒤 본진에서 받는다 |
 
 ### 복귀 결과 (복귀 정리 커밋이 덧붙인다)

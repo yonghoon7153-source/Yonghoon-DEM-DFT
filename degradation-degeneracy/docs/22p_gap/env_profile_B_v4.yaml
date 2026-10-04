@@ -1,5 +1,5 @@
 # B 프로필 — v4 정본 producer 환경의 기록 (기록 전용 · 원장 §135 · 고정 표 docs/22p_gap/PYBAMM_PIN_ROUND_SPEC.md §6)
-# 네 producer manifest 의 env (일곱 자리 — 서로 같다) 와 solver 기록을 원문 그대로 옮겼다. 손으로 고치지 않는다.
+# 네 producer manifest 의 env (여덟 자리 — 서로 같다) 와 solver 기록을 원문 그대로 옮겼다. 손으로 고치지 않는다.
 # 어떤 실행 코드도 이 파일을 읽지 않는다. 대조 시험: tests/test_gate90_env_profile.py::test_e11_b_profile_is_the_v4_producer_record
 profile: B
 kind: HISTORICAL_PRODUCER_RECORD_ONLY

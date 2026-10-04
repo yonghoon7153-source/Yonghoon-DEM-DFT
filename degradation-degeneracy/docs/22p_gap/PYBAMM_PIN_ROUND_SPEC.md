@@ -200,3 +200,13 @@ D guard (봉인 profile → 계획 · 생산 진입 · resume · worker 대조 �
 fail-closed · 설치 · 업그레이드 · 다운그레이드 · B 로 정본 재생성 · 새 세대 생산 · 26.7.1 ↔ 26.8 비교 계산 · `requirements.txt` 하한 변경 ·
 `requirements-gpu.txt` · `src/` · `run.sh` · `tests/conftest.py` · 실행 GO · 새 연구 leg · 운영 v6 계획 · 세대표 · p_ini · class · 투영 게시.
 REIL · COMSOL 작업은 게이트 차수 밖으로 따로 (이 라운드에 섞지 않는다).
+
+## §12 정정 (2026-10-04 · 구현 뒤 · 덧붙임 — 위 §0–§11 은 승인된 고정 표 그대로 둔다)
+
+| 자리 | 원문 | 정정 | 판정 영향 |
+|---|---|---|---|
+| §6 `env` 행 | "일곱 자리에 같은 13 키 그대로" | **여덟 자리** — `grid_curves_v4` 의 `env` · `grid_run_spec.env` 둘 + 세 fit (`grid_fit_v4` · `halfcell_fit_v4` · `paired_fixed5_v4`) 의 `run_spec.env` · `start_provenance.env` 둘씩. 같은 13 키라는 내용은 그대로 | 없음 — e11 은 manifest 를 걸어 찾은 env 자리 집합과 B 기록의 `env_paths` 를 전수 대조한다 (센 수를 적어 두지 않는다) |
+| §8 e04 행 | 사례 11 가지 나열 | 실제 시험은 **12 사례** — `profile_not_c` (`#@ profile "B"` → `UNMEASURED`) 를 더했다. §3-1 의 "`profile` 은 `"C"`" 규칙을 지키는 사례다 | 없음 — 같은 축 (§3-1) 의 음성 사례 하나가 늘었다 |
+
+둘 다 구현 뒤 자체 재독에서 찾았다 (리뷰가 짚은 것이 아니다). 원장 §135 의 같은 "일곱" 은 원장 §136 에서 정정한다 · GREEN 커밋
+`e2160c2ef` 메시지는 고칠 수 없어 GATE90 요청문 §6-j 에 적는다.
