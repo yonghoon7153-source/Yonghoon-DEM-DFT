@@ -5945,7 +5945,7 @@
    "found_by": "claude (② 코드 정의 감사 09-29 · dem_analysis_core.calc_percolation · network_conductivity.build_network)",
    "opened_in": "docs/reviews/lhs_handover_judgments_20260924.md",
    "title": "웹앱 퍼콜레이션 경계 밴드가 **조용히 바뀐다** — 한쪽 밴드에 입자 < 3 이면 L1 (plate_z 의 15/85 %) → 여전히 < 3 이면 L2 (관측 z-범위 15/85 %) 로 **두 밴드를 함께** 교체하는데, 어느 규칙이 쓰였는지 **산출물 어디에도 없다** (`calc_percolation` · `build_network` 같은 코드) ⇒ 같은 열 이름 (`percolation_pct` · `n_components` · `electronic_*_fraction` · `se_se_cn_*_perc`) 이 케이스마다 다른 정의로 채워질 수 있다",
-   "note": "L0 = z_i ≤ 2·r_i (바닥 z = 0 암묵) · z_i ≥ plate_z − 2·r_i.  LHS 규모: SE 밴드 1–2 µm · AM_S 1–5 · AM_P 5–15 µm — 발동 빈도는 실측 전 미상 (SE 가 적은 am_pct 95 · mono_AM_P 와 AM_S 만의 얇은 밴드에서 가능).  검사기 `scripts/lhs_perc_audit.py` 가 케이스마다 단계 (L0/L1/L2) · L0 인원 · 쓰인 인원을 세고 재현을 정본과 대조한다 (selftest ② L1 · ③ L2 · ⑫ 변이).  처방 후보 (저자 결정 · J20-b ⓑ): 인계표에 단계 열 + 발동 케이스 표지 · 열 사전 한정어.  ⛔ 값은 바꾸지 않는다 — 웹앱 규약 그대로가 생산 코퍼스와 같은 정의다.  검증 = WSL 130 건 실측에서 단계 분포.  ★ WSL 실측 (09-29 · c0c2d4f44 · 1저자 · 130 건): SE · AM 밴드 단계 **L0 130/130** · 폴백 L1/L2 **0 건** ⇒ 규칙 ⓑ 로 인계표 단계 열 · 발동 표지 불요 (J20-b ② 판정표).  코드 결함 (단계 미기록) 은 그대로 open — 생산 코퍼스 · 다른 침대에서는 발동할 수 있다 · 처방은 산출물에 단계 기록.",
+   "note": "L0 = z_i ≤ 2·r_i (바닥 z = 0 암묵) · z_i ≥ plate_z − 2·r_i.  LHS 규모: SE 밴드 1–2 µm · AM_S 1–5 · AM_P 5–15 µm — 발동 빈도는 실측 전 미상 (SE 가 적은 am_pct 95 · mono_AM_P 와 AM_S 만의 얇은 밴드에서 가능).  검사기 `scripts/lhs_perc_audit.py` 가 케이스마다 단계 (L0/L1/L2) · L0 인원 · 쓰인 인원을 세고 재현을 정본과 대조한다 (selftest ② L1 · ③ L2 · ⑫ 변이).  처방 후보 (저자 결정 · J20-b ⓑ): 인계표에 단계 열 + 발동 케이스 표지 · 열 사전 한정어.  ⛔ 값은 바꾸지 않는다 — 웹앱 규약 그대로가 생산 코퍼스와 같은 정의다.  검증 = WSL 130 건 실측에서 단계 분포.  ★ WSL 실측 (09-29 · c0c2d4f44 · 1저자 · 130 건): SE · AM 밴드 단계 **L0 130/130** · 폴백 L1/L2 **0 건** ⇒ 규칙 ⓑ 로 인계표 단계 열 · 발동 표지 불요 (J20-b ② 판정표).  코드 결함 (단계 미기록) 은 그대로 open — 생산 코퍼스 · 다른 침대에서는 발동할 수 있다 · 처방은 산출물에 단계 기록.  ·  10-04 진행 (c911adf05): 망 솔버 (`build_network`) 쪽은 안 A 로 결과에 `boundary_rule` · `boundary_band_frac` 이 남는다 (이온 · 전자 · 열) · 인계 게이트 G1 이 L0 만 통과.  `dem_analysis_core.calc_percolation` (percolation_pct 등) 쪽은 아직 기록 없음 (open 유지).",
    "evidence_tests": [
     "scripts/lhs_perc_audit.py"
    ]
@@ -6975,13 +6975,19 @@
   {
    "id": "TAU-14",
    "severity": "P2",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "claude (10-03 · τ 적대 리뷰 셋 — 코드 · 문헌 · 물리 — 반영 판단 메모 v2 §4)",
    "opened_in": "docs/reviews/tau_conventions_judgment_v2_20261003.md",
    "title": "띠 폴백 L1 이 σ · T 값을 바꾼다 (`LHS-17` 증거 추가)",
    "note": "자리: (봉인) `network_conductivity.py:230–247` · `dem_analysis_core.py:505–523`  ·  시험 먼저 → 최소 수정: 인계 게이트: 띠 규칙 L0 일 때만 값 (§5-2 G1) · `ion_net_band_rule` 열  ·  웹앱 짝: 웹앱 표에 띠 규칙 표시.  등재 2026-10-03 = 결정 16 실행 1단계 (1저자 비준 10-03 · 판단 메모 v2 §4 표 그대로 옮김).  ⛔ 공통 제약 (메모 §4 머리): S3 봉인 모듈 수정은 재봉인 강제 · f/T/τ 는 봉인 밖 새 도우미 · 코드 → 웹앱 → 게이트 → 커밋 한 묶음 (J20-l).",
-   "evidence_tests": []
+   "evidence_tests": [
+    "scripts/test_network_boundary_rule.py ①–⑧ (옛 코드 1/8 → 8/8 — ① 동작 중립 = 추출 전 HEAD eedada5d3 기준값과 비트 동일)",
+    "scripts/test_tau_flux.py B1 · B2 · B3 · K1 · K2 (띠 L1/L2 → BAND_FALLBACK 빈칸 · 기록 없음 → NOT_COMPUTED (missing_input) · 실제 솔버 결과 계약)",
+    "webapp/test_tau_handover_status.py T2 · T3 · T7 (케이스 τ 블록 띠 규칙 행 · 옛 산출물 \"기록 없음\")"
+   ],
+   "claimed_fixed_sha": "c911adf05",
+   "verification_note": "c911adf05: 안 A (1저자 비준 10-04) — `network_conductivity.boundary_sets` 로 띠 선택 추출 (식 · 순서 그대로 · 동작 중립 기준값 대조) + 결과에 `boundary_rule` (L0/L1/L2) · `boundary_band_frac` 기록 (이온 상위 · `electronic_*` · `thermal_*` 병합) · 인계 게이트 G1 = `scripts/tau_flux.py` (L0 아니면 BAND_FALLBACK · 기록 없으면 NOT_COMPUTED (missing_input) — 짐작하지 않는다) · 웹앱 케이스 τ 블록 + MD 보고서에 띠 규칙 행.  ⚠ S3 수치 모듈 수정 → S3 전에 재봉인 (결정 16).  `dem_analysis_core.calc_percolation` 쪽 띠 기록은 열림 (LHS-17 의 그쪽 절반).  값은 망을 다시 푼 케이스에서만 생긴다 (옛 산출물 = missing_input)."
   },
   {
    "id": "TAU-15",
@@ -7067,13 +7073,17 @@
   {
    "id": "TAU-22",
    "severity": "P2",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "claude (10-03 · τ 적대 리뷰 셋 — 코드 · 문헌 · 물리 — 반영 판단 메모 v2 §4)",
    "opened_in": "docs/reviews/tau_conventions_judgment_v2_20261003.md",
    "title": "**비관통이면 `sigma_full_status` 가 'valid_zero' 가 아니라 'not_computed'** — `solve_network` 가 관통 성분이 없으면 (None, None) 을 돌려준다.  docstring 의 \"'valid_zero' = 퍼콜 경로 없음\" 은 도달 불가 → 상태로 NOT_PERCOLATING 을 판별할 수 없다",
    "note": "자리: (봉인) `network_conductivity.py:540–576` ↔ `:94–112` · 결과 dict :1164  ·  시험 먼저 → 최소 수정: 인계 도우미 시험: 위 띠만 닿는 합성 → f = 0 · `NOT_PERCOLATING` (`percolating_fraction == 0` ∧ `calc_percolation`) · sentinel 결함 자체는 원장 등재 후보 — 수정은 다음 재봉인  ·  웹앱 짝: 없음 (보고).  등재 2026-10-03 = 결정 16 실행 1단계 (1저자 비준 10-03 · 판단 메모 v2 §4 표 그대로 옮김) (리뷰 원번호 코드 M2).  ⛔ 공통 제약 (메모 §4 머리): S3 봉인 모듈 수정은 재봉인 강제 · f/T/τ 는 봉인 밖 새 도우미 · 코드 → 웹앱 → 게이트 → 커밋 한 묶음 (J20-l).",
-   "evidence_tests": []
+   "evidence_tests": [
+    "scripts/test_tau_flux.py C3 (sigma_full_status 무관) · D1 (비관통 → NOT_PERCOLATING · f = 0) · K3 (위 띠에만 닿는 합성을 실제 솔버 + calc_percolation 에 — 솔버 상태 not_computed (valid_zero 아님) · 0 % · L0 → NOT_PERCOLATING)"
+   ],
+   "claimed_fixed_sha": "c911adf05",
+   "verification_note": "c911adf05: 인계 도우미 `scripts/tau_flux.py` 의 G2 · G3 은 `percolating_fraction == 0` ∧ `calc_percolation` `percolation_pct == 0` 으로 판정 — `sigma_full_status` 를 보지 않는다 (처방 시험 = 위 띠만 닿는 합성 K3 그대로).  ⚠ 봉인 모듈 docstring 의 \"valid_zero = 퍼콜 경로 없음\" (도달 불가 sentinel) 정정은 처방대로 **다음 재봉인** 묶음 (원장 등재 후보 — 이 항목의 처방 밖)."
   },
   {
    "id": "TAU-23",
@@ -7094,19 +7104,23 @@
    "found_by": "claude (10-03 · τ 적대 리뷰 셋 — 코드 · 문헌 · 물리 — 반영 판단 메모 v2 §4)",
    "opened_in": "docs/reviews/tau_conventions_judgment_v2_20261003.md",
    "title": "**L0 띠도 띠 노드를 등전위로 묶고 정규화는 판 간격** — 실효 길이가 L 보다 짧아 T 를 ≤ 4r_SE/L 낮춘다 (L1 폴백과 같은 기전, 크기만 작다; 중앙 6 % · p90 12 % · 최대 17 %, 상한 추정) · r_SE/L 에 따라 달라 입경군 간 대조를 비튼다",
-   "note": "자리: (봉인) `network_conductivity.py:225–249` · 620–666 · 853–857  ·  시험 먼저 → 최소 수정: 메타 `ion_net_band_frac` (= 4r_SE/L) + 한정어 · (선택) L_eff 보정판 병기 — 보정식은 런 전 등록  ·  웹앱 짝: 웹앱 표에 띠 두께/L.  등재 2026-10-03 = 결정 16 실행 1단계 (1저자 비준 10-03 · 판단 메모 v2 §4 표 그대로 옮김) (리뷰 원번호 코드 M5).  ⛔ 공통 제약 (메모 §4 머리): S3 봉인 모듈 수정은 재봉인 강제 · f/T/τ 는 봉인 밖 새 도우미 · 코드 → 웹앱 → 게이트 → 커밋 한 묶음 (J20-l).",
+   "note": "자리: (봉인) `network_conductivity.py:225–249` · 620–666 · 853–857  ·  시험 먼저 → 최소 수정: 메타 `ion_net_band_frac` (= 4r_SE/L) + 한정어 · (선택) L_eff 보정판 병기 — 보정식은 런 전 등록  ·  웹앱 짝: 웹앱 표에 띠 두께/L.  등재 2026-10-03 = 결정 16 실행 1단계 (1저자 비준 10-03 · 판단 메모 v2 §4 표 그대로 옮김) (리뷰 원번호 코드 M5).  ⛔ 공통 제약 (메모 §4 머리): S3 봉인 모듈 수정은 재봉인 강제 · f/T/τ 는 봉인 밖 새 도우미 · 코드 → 웹앱 → 게이트 → 커밋 한 묶음 (J20-l).  ·  10-04 진행 (c911adf05): 메타 `boundary_band_frac` (솔버 · L0 = 2·bf·r_max/판 = 4r_SE/L 상한) → 인계 `ion_net_band_frac_<m>` (tau_flux) · 웹앱 케이스 τ 블록 띠 행 \"L0 · 0.0xx\" + 툴팁 한정어.  남은 것: 인계 열 사전 문구 (값이 생길 때 생성기에) · (선택) L_eff 보정판 = 런 전 등록 (open 유지).",
    "evidence_tests": []
   },
   {
    "id": "TAU-25",
    "severity": "P3",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "claude (10-03 · τ 적대 리뷰 셋 — 코드 · 문헌 · 물리 — 반영 판단 메모 v2 §4)",
    "opened_in": "docs/reviews/tau_conventions_judgment_v2_20261003.md",
    "title": "`sigma_full_mScm` 은 소수 6 자리 반올림 — φσ₀/σ_full_mScm 와 φ/`sigma_full` 이 코퍼스에서 최대 0.11 % 다르다",
    "note": "자리: (봉인) `network_conductivity.py:1156`  ·  수정: 인계 T 는 무차원 `sigma_full` (8 자리) 로 계산 · G4 \"비트 동일\" 시험 대상  ·  웹앱 짝: —.  등재 2026-10-03 = 결정 16 실행 1단계 (1저자 비준 10-03 · 판단 메모 v2 §4 표 그대로 옮김) (리뷰 원번호 코드 M9).  ⛔ 공통 제약 (메모 §4 머리): S3 봉인 모듈 수정은 재봉인 강제 · f/T/τ 는 봉인 밖 새 도우미 · 코드 → 웹앱 → 게이트 → 커밋 한 묶음 (J20-l).",
-   "evidence_tests": []
+   "evidence_tests": [
+    "scripts/test_tau_flux.py A1 · A2 · E1 · K1 (f_gap = 솔버 무차원 sigma_full 그대로 · σ_grain 두 값에서 tau2 · f 비트 동일 · tau2 = φ_망/σ_ratio)"
+   ],
+   "claimed_fixed_sha": "c911adf05",
+   "verification_note": "c911adf05: 인계 T (`tau2_ion_<m>`) 는 무차원 `sigma_full` (8 자리) 로 계산한다 (`scripts/tau_flux.py` — σ₀ 는 메타뿐 · 6 자리 `sigma_full_mScm` 안 씀).  웹앱 값 행 (tau2 = φ·σ₀/σ_full_mScm) 은 화면 표시라 그대로 (인계 열 아님 · 최대 0.11 % 차는 이 항목이 기록한 그대로)."
   },
   {
    "id": "RINT-01",
