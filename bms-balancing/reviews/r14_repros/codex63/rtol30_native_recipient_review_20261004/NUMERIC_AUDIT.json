@@ -1,0 +1,214 @@
+{
+  "method": "Independent recipient Decimal50 arithmetic on saved CSV only; supplied analyzer never imported or called.",
+  "runtime_settings_match": true,
+  "coverage": {
+    "NORMAL30": {
+      "target_saved": 1311,
+      "reference_saved": 1237,
+      "exact_common": 1196,
+      "mandatory_requested": 437,
+      "target_noncommon": 115,
+      "reference_noncommon": 41,
+      "no_interpolation": true
+    },
+    "B020": {
+      "target_saved": 1311,
+      "reference_saved": 987,
+      "exact_common": 946,
+      "mandatory_requested": 187,
+      "target_noncommon": 365,
+      "reference_noncommon": 41,
+      "no_interpolation": true
+    }
+  },
+  "profile_checks": {
+    "target_N": {
+      "rows": 315951,
+      "saved_times": 1311,
+      "coordinates_per_time": 241,
+      "first_coordinate": "0.0",
+      "last_coordinate": "0.000052",
+      "finite_and_valid_fraction": true
+    },
+    "NORMAL30_N": {
+      "rows": 298117,
+      "saved_times": 1237,
+      "coordinates_per_time": 241,
+      "first_coordinate": "0.0",
+      "last_coordinate": "0.000052",
+      "finite_and_valid_fraction": true
+    },
+    "B020_N": {
+      "rows": 237867,
+      "saved_times": 987,
+      "coordinates_per_time": 241,
+      "first_coordinate": "0.0",
+      "last_coordinate": "0.000052",
+      "finite_and_valid_fraction": true
+    },
+    "target_P": {
+      "rows": 315951,
+      "saved_times": 1311,
+      "coordinates_per_time": 241,
+      "first_coordinate": "0.000077",
+      "last_coordinate": "0.000121",
+      "finite_and_valid_fraction": true
+    },
+    "NORMAL30_P": {
+      "rows": 298117,
+      "saved_times": 1237,
+      "coordinates_per_time": 241,
+      "first_coordinate": "0.000077",
+      "last_coordinate": "0.000121",
+      "finite_and_valid_fraction": true
+    },
+    "B020_P": {
+      "rows": 237867,
+      "saved_times": 987,
+      "coordinates_per_time": 241,
+      "first_coordinate": "0.000077",
+      "last_coordinate": "0.000121",
+      "finite_and_valid_fraction": true
+    }
+  },
+  "comparison_rows": {
+    "('NORMAL30', 'N')": 288236,
+    "('B020', 'N')": 227986,
+    "('NORMAL30', 'P')": 288236,
+    "('B020', 'P')": 227986
+  },
+  "comparisons": {
+    "NORMAL30": {
+      "0_to_5_inclusive": {
+        "voltage": {
+          "maximum_absolute_delta": "0.0000023812821772",
+          "signed_delta_candidate_minus_reference": "-0.0000023812821772",
+          "first_argmax": {
+            "time_s": "0.2"
+          },
+          "equal_maximum_count": 1
+        },
+        "surface": {
+          "maximum_absolute_delta": "3.9797189265E-8",
+          "signed_delta_candidate_minus_reference": "-3.9797189265E-8",
+          "first_argmax": {
+            "time_s": "0.2",
+            "electrode": "N",
+            "coordinate_m": "0.000052",
+            "domain_id": "1.0"
+          },
+          "equal_maximum_count": 1
+        },
+        "common_time_count": 946
+      },
+      "after_5_to_30": {
+        "voltage": {
+          "maximum_absolute_delta": "4.281635275E-7",
+          "signed_delta_candidate_minus_reference": "-4.281635275E-7",
+          "first_argmax": {
+            "time_s": "5.7"
+          },
+          "equal_maximum_count": 1
+        },
+        "surface": {
+          "maximum_absolute_delta": "6.997292348E-9",
+          "signed_delta_candidate_minus_reference": "-6.997292348E-9",
+          "first_argmax": {
+            "time_s": "5.7",
+            "electrode": "N",
+            "coordinate_m": "0.000052",
+            "domain_id": "1.0"
+          },
+          "equal_maximum_count": 1
+        },
+        "common_time_count": 250
+      },
+      "0_to_30_inclusive": {
+        "voltage": {
+          "maximum_absolute_delta": "0.0000023812821772",
+          "signed_delta_candidate_minus_reference": "-0.0000023812821772",
+          "first_argmax": {
+            "time_s": "0.2"
+          },
+          "equal_maximum_count": 1
+        },
+        "surface": {
+          "maximum_absolute_delta": "3.9797189265E-8",
+          "signed_delta_candidate_minus_reference": "-3.9797189265E-8",
+          "first_argmax": {
+            "time_s": "0.2",
+            "electrode": "N",
+            "coordinate_m": "0.000052",
+            "domain_id": "1.0"
+          },
+          "equal_maximum_count": 1
+        },
+        "common_time_count": 1196
+      }
+    },
+    "B020": {
+      "0_to_5_inclusive": {
+        "voltage": {
+          "maximum_absolute_delta": "0.0000023812821745",
+          "signed_delta_candidate_minus_reference": "-0.0000023812821745",
+          "first_argmax": {
+            "time_s": "0.2"
+          },
+          "equal_maximum_count": 1
+        },
+        "surface": {
+          "maximum_absolute_delta": "3.9797189261E-8",
+          "signed_delta_candidate_minus_reference": "-3.9797189261E-8",
+          "first_argmax": {
+            "time_s": "0.2",
+            "electrode": "N",
+            "coordinate_m": "0.000052",
+            "domain_id": "1.0"
+          },
+          "equal_maximum_count": 1
+        },
+        "common_time_count": 946
+      },
+      "after_5_to_30": {
+        "voltage": {},
+        "surface": {},
+        "common_time_count": 0
+      },
+      "0_to_30_inclusive": {
+        "voltage": {
+          "maximum_absolute_delta": "0.0000023812821745",
+          "signed_delta_candidate_minus_reference": "-0.0000023812821745",
+          "first_argmax": {
+            "time_s": "0.2"
+          },
+          "equal_maximum_count": 1
+        },
+        "surface": {
+          "maximum_absolute_delta": "3.9797189261E-8",
+          "signed_delta_candidate_minus_reference": "-3.9797189261E-8",
+          "first_argmax": {
+            "time_s": "0.2",
+            "electrode": "N",
+            "coordinate_m": "0.000052",
+            "domain_id": "1.0"
+          },
+          "equal_maximum_count": 1
+        },
+        "common_time_count": 946
+      }
+    }
+  },
+  "invariants": {
+    "Li_initial_component_absolute_deltas": {
+      "Li_N_mol_m2": "0E-18",
+      "Li_P_mol_m2": "0E-16",
+      "Li_electrolyte_mol_m2": "0E-18"
+    },
+    "maximum_Li_relative_drift": "2.9436423925083689831171040480051240550475374685669E-15",
+    "maximum_voltage_identity_V": "7.02E-16",
+    "minimum_electrolyte_mol_m3": "1167.3169515506452",
+    "all_saved_guards_zero": true,
+    "units_tables_equal": 19
+  },
+  "matches_producer_metrics_and_locations": true
+}

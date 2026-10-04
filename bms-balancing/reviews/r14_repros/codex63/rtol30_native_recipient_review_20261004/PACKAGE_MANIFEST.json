@@ -1,0 +1,56 @@
+{
+  "scope": "Recipient limited RTOL30 evidence and saved-data review, not a native approval",
+  "payload_count": 10,
+  "files": [
+    {
+      "file": "ARCHIVE_AUDIT.json",
+      "bytes": 902,
+      "sha256": "442db93a293467e0b1651cc66cf879edaf573b762553faf69f8491c4d0105ed9"
+    },
+    {
+      "file": "CLAUDE_REPLY_KO.md",
+      "bytes": 2934,
+      "sha256": "49ea5429d6a960f044cc51fd3ae2dc0dec693336af09bf95ddbed0c4a26ff50d"
+    },
+    {
+      "file": "DECISION.json",
+      "bytes": 1489,
+      "sha256": "594622e8529a09393b73c6e3f3f8147803973441fb845e77097e27a801f9e7a2"
+    },
+    {
+      "file": "EVIDENCE_AUDIT.json",
+      "bytes": 501851,
+      "sha256": "1bf5519b33251855c5133f8d653ff4907840f390982d05752189922226d2fc77"
+    },
+    {
+      "file": "NUMERIC_AUDIT.json",
+      "bytes": 6543,
+      "sha256": "a08bf45597a91d12b136a0ea8b69ad69e77c75959fcd43f469219fd48fc4a94a"
+    },
+    {
+      "file": "README_KO.md",
+      "bytes": 1271,
+      "sha256": "ab9cd79908953a73346fafc90fb93c5175bd4185623a8a236bb991bb9443becb"
+    },
+    {
+      "file": "REVIEW_KO.md",
+      "bytes": 11751,
+      "sha256": "711678234d3edf97ae5b99020176fe979c874fb33bece3498ba8d7702488ade7"
+    },
+    {
+      "file": "reviewer_audit.py",
+      "bytes": 23339,
+      "sha256": "678048868bd6284ea11cbbd0b619b47428630d2337b9042f3e3a0845c6ff6ac2"
+    },
+    {
+      "file": "REVIEWER_METHOD_NOTES.json",
+      "bytes": 918,
+      "sha256": "68e0a972f817c7a566834e897e258986d7581f6366e792a8573a9c33e295f0b2"
+    },
+    {
+      "file": "USER_PROVIDED_FINAL_RETURN_FIELDS.json",
+      "bytes": 1230,
+      "sha256": "74bede5b388c982391c1e94edbaefced938ab0a882435c42ec94b1bc1530e7c5"
+    }
+  ]
+}

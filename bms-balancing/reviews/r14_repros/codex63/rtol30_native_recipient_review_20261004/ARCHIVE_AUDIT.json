@@ -1,0 +1,25 @@
+{
+  "archives": [
+    {
+      "file": "COMSOL63_RTOL30_NATIVE_RESULT_20261004.zip",
+      "bytes": 122053456,
+      "sha256": "1f879c8805491cefdc990b666bfe1a6a8e74d7ef47beb84f7e6ba1a66c14e3f5",
+      "payload_count": 2517,
+      "entries": 2518,
+      "uncompressed_bytes": 391792419,
+      "manifest_sha256": "f4b461de6750919dabeec647683202f18df459e987dc669006f33b45d92d4e27",
+      "CRC_exact_set_path_case_size_SHA": true
+    },
+    {
+      "file": "RTOL30_NATIVE_DELIVERY_SUPPLEMENT_20261004.zip",
+      "bytes": 20824,
+      "sha256": "778618d3d92beb91aa02e4cd23570af3dbfbc868e0bb1f019ef0abbe27de7e8b",
+      "payload_count": 4,
+      "entries": 5,
+      "uncompressed_bytes": 731029,
+      "manifest_sha256": "d5f5db1d14d8f3658646f41a500a65c8e832c057b28e10f24f5dd80a5811ad76",
+      "CRC_exact_set_path_case_size_SHA": true
+    }
+  ],
+  "provided_code_executed": false
+}

@@ -73,3 +73,5 @@ reviews/prereview_pybamm_reil_20261003/** -text
 reviews/prereview_reil_v2_20261004/** -text
 # 2026-10-04: REIL 부속 A 재검토 묶음 (게이트 차수 밖 · DOCUMENT_CONDITIONALLY_ACCEPTABLE_THREE_LOCAL_CORRECTIONS_REQUIRED · RV2-N1 종결 · RV2A-N1–N3 국소 정정 · 실행 · 구현 · P0 승인 아님) — bytes 그대로
 reviews/prereview_reil_v2_annexA_20261004/** -text
+# 2026-10-04: 정상 fresh 0→30 s rtol 1e-6 → 1e-7 한정 민감도 native 결과 독립 수신 검토 묶음 (ACCEPTED_LIMITED_RTOL30_SENSITIVITY · 차단 0 · 같은 시험 반복 없음 · 새 계산 승인 없음 · 다음은 계획만) — bytes 그대로
+reviews/r14_repros/codex63/rtol30_native_recipient_review_20261004/** -text

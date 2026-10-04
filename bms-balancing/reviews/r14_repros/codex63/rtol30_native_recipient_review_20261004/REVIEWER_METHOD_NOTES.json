@@ -1,0 +1,16 @@
+{
+  "scope": "Recipient-owned offline evidence review only. No supplied analyzer or COMSOL execution.",
+  "initial_evidence_check": {
+    "chunk_id": "a0e583",
+    "exit_code": 1,
+    "reason": "Reviewer compared native time token 1.002e-05 with normalized report 0.00001002 as strings. The decimal values are equal.",
+    "correction": "Compare time_s as exact Decimal values; retain exact checks for counters, line indices and other tokens.",
+    "producer_files_changed": false,
+    "producer_or_native_failure": false
+  },
+  "other_scope_notes": [
+    "Initial broad local file search encountered access-denied directories belonging to unrelated historical reviews; no access or permission changes were made.",
+    "No user-supplied source was imported or run. Reviewer arithmetic reads saved CSV and JSON only.",
+    "Source files and sealed archives are read-only; outputs are separate recipient records."
+  ]
+}

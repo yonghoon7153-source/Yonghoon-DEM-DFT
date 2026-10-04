@@ -1,0 +1,27 @@
+{
+  "recipient_record_scope": "Selected structured fields transcribed from user message; not a copy of the original sidecar bytes or direct recipient tool observation.",
+  "producer_provenance": "Actual supplement packaging tool completion subsequently serialized, intentionally outside both sealed ZIPs",
+  "chunk_id": "94bf3e",
+  "wall_time_seconds": 0.6087466,
+  "exit_code": 0,
+  "original_token_count": 223,
+  "output_parsed_fields": {
+    "status": "SUPPLEMENT_PACKAGED_VERIFIED",
+    "supplement": {
+      "file": "RTOL30_NATIVE_DELIVERY_SUPPLEMENT_20261004.zip",
+      "bytes": 20824,
+      "sha256": "778618d3d92beb91aa02e4cd23570af3dbfbc868e0bb1f019ef0abbe27de7e8b"
+    },
+    "supplement_after_readback_snapshot_seconds": 0.06199999991804361,
+    "snapshot_scope": "Supplement only, after ZIP reread/hash and before closeout/tool return. Not total collection or native time; no wall-time addition.",
+    "main": {
+      "file": "COMSOL63_RTOL30_NATIVE_RESULT_20261004.zip",
+      "bytes": 122053456,
+      "sha256": "1f879c8805491cefdc990b666bfe1a6a8e74d7ef47beb84f7e6ba1a66c14e3f5"
+    },
+    "native_reruns": 0,
+    "recipient": null,
+    "independent_acceptance": "PENDING"
+  },
+  "native_approval_created": false
+}
