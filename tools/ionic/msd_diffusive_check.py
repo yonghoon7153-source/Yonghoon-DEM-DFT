@@ -586,8 +586,17 @@ def _boundary_verdict(ref, sigma, ref_curve):
             "⛔_폐기된_규칙": "회신 CC 의 절대폭 σ > 0.005 (회신 CH 가 오적용으로 판정)"}
 
 
-def c2_verdicts(b_sto, b_mto, curve, sigma_plateau=None, plateau_block=None):
+def c2_verdicts(b_sto, b_mto, curve, sigma_plateau=None, plateau_block=None, common_b=None, two_end=False):
     """C2 (β 0.8–1.2) 판정 한 벌 — 회신 CD · CH · CL 규칙 그대로. → dict
+
+    회신 CO (2026-10-04 · li2s v2 카드 · 결과 전) 두 가지를 **opt-in** 으로 덧붙인다 — 기본값이면 옛 판정 그대로다
+    (옛 판독 재현). v2 판독은 둘 다 켠다:
+    · `two_end=True` — 사다리 **끝 두 b** 에서 각각 판정해 '통과' 가 한쪽에만 있으면 **경계**
+      (*"σ가 하한이면 nσ는 상한이고 … 통과 선언은 낙관 쪽으로 틀립니다 … 통과 판정에만 걸립니다"*).
+      통과가 끼지 않은 판정(미통과·경계)은 끝 b 의 것을 그대로 둔다. 최종 판정 = `two_end.final_verdict`
+      (점이 둘 미만이면 None = 판정 보류 — 통과가 아니다).
+    · `common_b=N` — 사다리의 b = N σ 로 같은 판정을 한 번 더 (*"두 온도 모두에 대해 b = 256(25.6 ps)에서의 σ를
+      공통 열로"*). **기록 열이다 — 판정이 아니다.** 사다리에 N 이 없으면 '못 냈다' 로 적고 다른 b 로 대신하지 않는다.
 
     · **주 추정자 = MTO** (회신 CD Q-CC-1 *"MTO로 정합니다"*). STO 는 **병기**(같은 σ).
       MTO 가 없으면 STO 를 주로 쓰고 `main_curve` 에 그렇게 적는다.
@@ -624,6 +633,27 @@ def c2_verdicts(b_sto, b_mto, curve, sigma_plateau=None, plateau_block=None):
         out["ref_plateau_sigma"] = {"block": plateau_block, "sigma": sigma_plateau,
                                     "main": _boundary_verdict(main_b, sigma_plateau, main_lab),
                                     "⚠": "참고 — 규칙이 아니다 (plateau b 는 b_min 아래)"}
+    if two_end and out.get("main") is not None:
+        if len(cur) >= 2:
+            b_p, s_p = cur[-2]
+            v_p = _boundary_verdict(main_b, s_p, main_lab)
+            v_e = out["main"]["ch_2sigma_verdict"]
+            split = (v_e == "통과") != (v_p["ch_2sigma_verdict"] == "통과")
+            out["two_end"] = {
+                "rule": "끝 두 b 에서 '통과' 가 한쪽뿐이면 경계 · 통과가 끼지 않으면 끝 b 판정 그대로 (회신 CO Q-CO-1)",
+                "b_prev": b_p, "sigma_prev": s_p, "n_sigma_prev": v_p["n_sigma"], "verdict_prev": v_p["ch_2sigma_verdict"],
+                "b_end": cur[-1][0], "verdict_end": v_e, "split_on_pass": split,
+                "final_verdict": "경계 · 끝 두 b 갈림" if split else v_e}
+        else:
+            out["two_end"] = {"status": "사다리 점이 둘 미만 — 끝 두 b 규칙을 못 걸었다 (판정 보류 · 통과 아님)",
+                              "final_verdict": None}
+    if common_b is not None and out.get("main") is not None:
+        hit = [sg for b, sg in cur if b == int(common_b)]
+        out["common_b"] = ({"block": int(common_b), "sigma": hit[0],
+                            "main": _boundary_verdict(main_b, hit[0], main_lab),
+                            "⚠": "기록 열 — 판정 아님 (회신 CO Q-CO-1 ②: 두 온도를 같은 잣대로 보면)"}
+                           if hit else {"block": int(common_b),
+                                        "status": "사다리에 그 b 가 없거나 σ 를 못 냈다 — 못 냈다 (다른 b 로 대신하지 않는다)"})
     return out
 
 
@@ -2113,6 +2143,27 @@ def selftest():
         "[음성] 사다리 없이 고정 블록이면 σ 를 '보수값 아님' 으로 적는다")
     chk(c2_verdicts(0.9, 0.9, None).get("status", "").startswith("σ 없음"),
         "[음성] σ 가 없으면 판정하지 않는다")
+    # ── 회신 CO (2026-10-04 · li2s v2) — 끝 두 b 규칙 · 공통 b 열 (opt-in) ──────────────
+    chk("two_end" not in _c6 and "common_b" not in _c6,
+        "[음성] 기본값(opt-in 아님)이면 새 키가 없다 — 옛 판정 그대로 (옛 판독 재현)")
+    _t1 = c2_verdicts(0.6, 0.92, [(192, 0.020), (256, 0.030)], two_end=True, common_b=256)
+    chk(_t1["two_end"]["final_verdict"] == "통과" and not _t1["two_end"]["split_on_pass"]
+        and abs(_t1["common_b"]["sigma"] - 0.030) < 1e-12 and _t1["common_b"]["main"]["ch_2sigma_verdict"] == "통과",
+        "[양성] 끝 두 b 모두 통과 (6.0σ · 4.0σ) → 통과 · 공통 b 256 열 σ 0.030")
+    _t2 = c2_verdicts(0.6, 0.86, [(384, 0.031), (512, 0.028)], two_end=True, common_b=256)
+    chk(_t2["main"]["ch_2sigma_verdict"] == "통과" and _t2["two_end"]["final_verdict"] == "경계 · 끝 두 b 갈림",
+        "[⛔음성] 끝 b 만 통과 (2.14σ) · 앞 b 는 경계 (1.94σ) → **경계** — 8 블록 σ 의 흔들림이 통과를 만들지 못한다 (회신 CO)")
+    chk(_t2["common_b"].get("status", "").startswith("사다리에 그 b"),
+        "[⛔음성] 사다리에 공통 b 256 이 없으면 '못 냈다' — 다른 b 로 대신하지 않는다")
+    _t3 = c2_verdicts(0.6, 0.70, [(192, 0.020), (256, 0.045)], two_end=True)
+    chk(_t3["two_end"]["final_verdict"] == "미통과" and not _t3["two_end"]["split_on_pass"],
+        "[음성] 둘 다 미통과면 미통과 그대로")
+    _t4 = c2_verdicts(0.6, 0.72, [(192, 0.045), (256, 0.035)], two_end=True)
+    chk(_t4["two_end"]["final_verdict"] == "미통과" and _t4["two_end"]["verdict_prev"] == "경계 · 구분 불가",
+        "[음성] 통과가 안 끼면 끝 b 판정 그대로 (끝 미통과 · 앞 경계 → 미통과) — 규칙은 통과 선언에만 걸린다")
+    _t5 = c2_verdicts(0.6, 0.92, [(256, 0.030)], two_end=True)
+    chk(_t5["two_end"]["final_verdict"] is None,
+        "[⛔음성] 사다리 점이 하나면 끝 두 b 규칙을 못 건다 → 판정 보류 (None · 통과 아님)")
 
     # ── loglog_slope 곡선 도달 검사 (2026-09-30 · li2s 창 스캔의 '100-300!' 칸) ─────────
     _tc = [i * 0.1 for i in range(1, 2001)]                     # MTO 처럼 lag 200 ps 에서 끝난다
@@ -3012,6 +3063,12 @@ def main():
     ap.add_argument("--block_scan", metavar="1,2,4,8",
                     help="--ea_boot 와 함께: 블록 사다리에서 σ(Ea) plateau 를 찾아 b 를 고른다. "
                          "⛔ plateau 가 없으면 **b 를 고르지 않고 판정을 보류한다**(종료코드 2).")
+    ap.add_argument("--common_b", type=int, default=None, metavar="N",
+                    help="--beta_boot 와 함께: 사다리 b = N 의 σ 로 C2 를 한 번 더 판정해 **기록 열**로 싣는다 "
+                         "(회신 CO Q-CO-1 ② · 판정 아님 · 사다리에 N 이 없으면 '못 냈다')")
+    ap.add_argument("--two_end", action="store_true",
+                    help="--beta_boot 와 함께: 사다리 끝 두 b 에서 판정해 '통과' 가 한쪽뿐이면 경계 "
+                         "(회신 CO Q-CO-1 · 통과 선언에만 걸린다)")
     ap.add_argument("--n_boot", type=int, default=400, metavar="B",
                     help="부트스트랩 복제 수 (기본 400)")
     ap.add_argument("--save_fs", type=float, default=None, metavar="FS",
@@ -3112,6 +3169,20 @@ def main():
                 print(f"    병기 {lv['ref_curve']} {lv['beta_ref']:.4f} · 같은 σ · {lv['nearest_threshold']} 까지 "
                       f"{lv['distance_to_nearest']:+.4f} = {lv['n_sigma']:.2f}σ → {lv['ch_2sigma_verdict']} "
                       f"(판정에 안 씀 · 회신 CD)")
+            te = c2.get("two_end")
+            if te:
+                if te.get("final_verdict") is None:
+                    print(f"    끝 두 b (회신 CO): {te.get('status')}")
+                else:
+                    print(f"    끝 두 b (회신 CO): b={te['b_prev']} σ {te['sigma_prev']:.5f} → {te['n_sigma_prev']:.2f}σ "
+                          f"{te['verdict_prev']} · b={te['b_end']} → {te['verdict_end']} ⇒ **{te['final_verdict']}**")
+            cb = c2.get("common_b")
+            if cb:
+                if "main" in cb:
+                    print(f"    공통 b = {cb['block']} 열 (기록 · 판정 아님 · 회신 CO): σ {cb['sigma']:.5f} → "
+                          f"{cb['main']['n_sigma']:.2f}σ {cb['main']['ch_2sigma_verdict']}")
+                else:
+                    print(f"    공통 b = {cb['block']} 열: {cb['status']}")
             rp = c2.get("ref_plateau_sigma")
             if rp:
                 print(f"    참고 — plateau b = {rp['block']} 의 σ {rp['sigma']:.5f} 로는 {c2['main_curve']} "
@@ -3121,7 +3192,7 @@ def main():
             print("\n⛔ **블록 길이를 고르지 않는다** ⇒ σ(β) 는 '못 구했다' 로 적는다 (회신 BU 규칙). 아무 b 나 골라 숫자를 만들지 않는다.")
             res["status"] = "판정보류_블록_plateau_없음"
             if scan and scan.get("curve"):
-                c2 = c2_verdicts(b_sto, b_mto, scan["curve"])
+                c2 = c2_verdicts(b_sto, b_mto, scan["curve"], common_b=a.common_b, two_end=a.two_end)
                 c2["⚠_plateau_없음"] = ("사다리 끝 보수값으로 낸 판정이다 — 회신 CD 조건 ②(사다리가 전부 b_min 아래라 모든 σ 는 "
                                         "하한 · 보고는 끝값)에 따른 **우리 읽기**이고 외부 1저자 확인 전이다 (li2s 원장 2026-09-30). "
                                         "종료 코드는 2 로 둔다.")
@@ -3136,7 +3207,8 @@ def main():
             raise SystemExit("⛔ 부트스트랩 실패 — 창에 점이 모자라거나 곡선이 0 이하거나 창 끝에 못 닿는다.")
         res["beta_boot"] = bb
         c2 = c2_verdicts(b_sto, b_mto, scan["curve"] if scan else None,
-                         sigma_plateau=bb["sigma_beta"], plateau_block=bb["block"])
+                         sigma_plateau=bb["sigma_beta"], plateau_block=bb["block"],
+                         common_b=a.common_b, two_end=a.two_end)
         res["c2_verdicts"] = c2
         print(f"\n  β̂(행렬) = {bb['beta_matrix_mean']:.4f}   σ(β) = {bb['sigma_beta']:.5f}   [68 % {bb['lo68']:.4f}, {bb['hi68']:.4f}]"
               f"   block {bb['block']} · 재표본 {bb['n_boot_used']}/{bb['n_boot']} · 원점 {bb['n_origin']}")

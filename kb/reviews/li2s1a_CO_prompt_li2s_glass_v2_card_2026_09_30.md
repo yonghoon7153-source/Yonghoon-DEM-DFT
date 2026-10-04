@@ -3,11 +3,11 @@ title: "CO 프롬프트 — li2s 소셀 유리 MD v2 카드 (잠정): 550 K 800 
 tags: [review, li2s, lpscl_smallcell, glass, md, gate, beta, estimand, card, v2, external-first-author, prompt, letter]
 letter: CO
 date: 2026-09-30
-updated: 2026-10-03
+updated: 2026-10-04
 track: li2s / lpscl_smallcell_glass
 channel: li2s1a
 kind: prompt
-status: 초안 (2026-09-30) · 10-03 실행 상태 덧붙임 (10 런 완주 · 결과 미열람) — 사용자 검토 · 발송 대기
+status: 초안 (2026-09-30) · 10-03 실행 상태 덧붙임 (10 런 완주 · 결과 미열람) → 발송됨 (사용자) · ✅ 회신 CO 수령 2026-10-04 (`li2s1a_CO_reply_li2s_glass_v2_card_2026_10_04.md`)
 confidence: medium
 verificationStatus: verified
 verifiedAt: 2026-09-30

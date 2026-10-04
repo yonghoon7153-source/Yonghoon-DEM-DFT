@@ -137,6 +137,12 @@
    "state": "proposed",
    "by": "agent",
    "note": "사용자 '이거 gabia, kgy에서 더하자 ㅇㅇ · 아직 이온전도도 값 관련해서는 안 닫힌거잖아' → 에이전트가 한계 둘(절대값 인용 금지 · 상온 전도도 미정의)과 설계를 제시 → AskUserQuestion: '잠정 카드로 바로 (Recommended)' · '옛 예외와 같은 조건 (Recommended)' · '550 K 800 ps + 600 K, 5시드 (Recommended)'. 트랙 li2s = 외부 1저자 → 잠정 · 편지 CO."
+  },
+  {
+   "at": "2026-10-04",
+   "state": "proposed",
+   "by": "agent",
+   "note": "회신 CO 수령 (결과 미열람) → 판독 규칙 개정은 `lpscl_smallcell_glass_md_v2_amendment_co_2026_10_04.json` (σ 표기 · 공통 b 256 · 끝 두 b · near-miss · 보조 창 · 대조 계 후보 · 골격 게이트 숫자). 이 카드 본문은 그대로 두고 개정이 이긴다."
   }
  ]
 }

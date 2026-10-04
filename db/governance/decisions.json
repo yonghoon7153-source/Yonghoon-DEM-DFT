@@ -6231,6 +6231,12 @@
      "state": "proposed",
      "by": "agent",
      "note": "사용자 '이거 gabia, kgy에서 더하자 ㅇㅇ · 아직 이온전도도 값 관련해서는 안 닫힌거잖아' → AskUserQuestion '잠정 카드로 바로 (Recommended)' · '옛 예외와 같은 조건 (Recommended)' · '550 K 800 ps + 600 K, 5시드 (Recommended)'. 트랙 li2s = 외부 1저자 → 잠정 (실행 승인 ≠ 규칙 동의) · 편지 CO."
+    },
+    {
+     "at": "2026-10-04",
+     "state": "proposed",
+     "by": "agent",
+     "note": "회신 CO 수령 (외부 1저자 · 결과 미열람 상태) — 방향 확인 + 판독 전 고칠 것 (σ 두 온도 하한 · 공통 b 256 열 · 끝 두 b 규칙 · near-miss · 보조 창 50–200 · 대조 계 후보 a-Li₃PS₄ 유리 · 골격 게이트 숫자) → 개정 D-2026-10-04-lpscl-smallcell-glass-md-v2-amend-co (proposed) 에 편입. 비준은 카드와 개정을 같이 받는다."
     }
    ],
    "ratification": {
@@ -6913,6 +6919,67 @@
     "decision_digest": "sha256:d7c93290f60d2125298fefc0c402574aad523d3ea92b6f1f03dda7cad7211fc6",
     "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
     "비준_근거": "사용자 2026-10-03 — AskUserQuestion '비준 (Recommended)' (cascade v7 카드 + 개정 CP 함께 · 탐침 실행은 별도 승인)."
+   }
+  },
+  {
+   "id": "D-2026-10-04-lpscl-smallcell-glass-md-v2-amend-co",
+   "schema_version": 2,
+   "kind": "estimand",
+   "scope": "lpscl_smallcell.glass_md_v2",
+   "slot": "lpscl_smallcell_glass_md_v2_amend_co",
+   "applies_to": {
+    "systems": [
+     "lpscl_smallcell_glass"
+    ],
+    "tasks": [
+     "li2s_glass_md_v2_batch1_550K800ps_600K400ps"
+    ],
+    "methods": [
+     "uma_md_turbo"
+    ],
+    "use_cases": [
+     "internal"
+    ]
+   },
+   "title": "소셀 유리 MD v2 개정 CO (판독 전) — 회신 CO 규칙 편입: σ 두 온도 하한 · 공통 b 256 기록 열 · 끝 두 b 갈리면 경계 · near-miss σ 거리 다섯 · 보조 창 50–200 ps 기록 열 · 대조 계 후보 a-Li₃PS₄ 유리 · 골격 게이트 숫자 (범위·정의 잠정)",
+   "statement": "외부 1저자 회신 CO 대로 v2 카드 판독 규칙을 결과 전에 고친다. ① σ 는 550 K (끝 b 512 · 51.2 ps) 도 'b_min 에 닿았으나 여전히 하한' ② 두 온도 모두 b = 256 σ 로 낸 C2·N·갈래를 기록 열로 나란히 (주 판정은 각자의 끝값) ③ 사다리 끝 두 b 에서 '통과' 가 한쪽뿐이면 경계 (통과 선언에만) ④ 온도마다 다섯 런의 σ 거리 (끝 b · 앞 b · 공통 b) 를 전부 적는다 ⑤ N₅₅₀ ≥ 3 이면 마감에 '옛 런이 틀렸던 것이 아니라 당시 해상도로는 선언할 수 없었던 것' ⑥ 대조 계 후보 = 같은 protocol·셀의 a-Li₃PS₄ 유리 (기록만 · 실행은 둘째 묶음) ⑦ 골격 게이트 숫자 (① P 이탈 프레임 ≤ 5 % ② S 소속 이동 0 ③ S–S < 2.30 Å 0 · 어기면 D 보고에서 제외 · 개수는 센다) — 이 묶음은 기록 · 게이트는 둘째 묶음부터 (잠정) ⑧ 기계 효과 = 궤적 잡음 (기술 통계만) ⑨ 옛 550 K β 를 기술 비교로 ⑩ β_MTO(50–200 ps) 기록 전용 열. 판정 창 2–50 · 문턱 3/5 · 세 갈래 · C1·C2 는 그대로.",
+   "rationale": "회신 CO: 옛 σ 가 b_min 의 1/16 수준이었다는 발견 뒤, 800 ps 의 51.2 ps 블록도 창 길이에 겨우 닿아 인접 블록이 독립이 아니고 (σ 하한 → nσ 상한 → 통과 선언이 낙관적), 두 온도의 끝 b 가 달라 N₅₅₀·N₆₀₀ 이 다른 잣대로 재진다. 결과 전이라 지금 넣으면 사전등록이다. 범위·정의 해석 둘 (골격 게이트를 이 묶음에도 거는가 · seed5 의 담금질 결함을 어떻게 읽는가) 은 외부 1저자 확인 대상이라 잠정으로 적는다.",
+   "decision_state": "proposed",
+   "record_kind": "amendment",
+   "results_seen": false,
+   "card": "db/properties/lpscl_smallcell_glass_md_v2_amendment_co_2026_10_04.json",
+   "record": "db/raw/lpscl_glass_md_v2_2026_09_30/",
+   "depends_on": [
+    "D-2026-09-30-lpscl-smallcell-glass-md-v2"
+   ],
+   "amends": [
+    "D-2026-09-30-lpscl-smallcell-glass-md-v2"
+   ],
+   "evidence": [
+    "kb/reviews/li2s1a_CO_reply_li2s_glass_v2_card_2026_10_04.md",
+    "tools/ionic/msd_diffusive_check.py::c2_verdicts (common_b · two_end)",
+    "tools/ionic/quench_ss_event.py::production_framework",
+    "tools/ionic/glass_v2_readout.py"
+   ],
+   "review": "kb/reviews/li2s1a_CO_reply_li2s_glass_v2_card_2026_10_04.md",
+   "reopen_criteria": [
+    "갈래_v2-1 — N₆₀₀ ≤ 2 ⇒ 닫는다 (연장·온도 추가로 가지 않는다)",
+    "갈래_v2-2 — N₆₀₀ ≥ 3 · N₅₅₀ ≤ 2 ⇒ 550 K 위 설계(셋째 온도 · 골격 게이트)는 새 결정",
+    "갈래_v2-3 — N₆₀₀ ≥ 3 · N₅₅₀ ≥ 3 ⇒ 둘째 묶음(셋째 온도 또는 대조 계)은 외부 1저자 결정",
+    "⛔ 이 카드 안에서 prod 800 ps 초과 · 문턱 완화 · 점·시드 제외 · 풀링 · 옛 런 혼입 금지"
+   ],
+   "proposed_by": "claude-session-2026-10-04",
+   "status": "proposed",
+   "status_history": [
+    {
+     "at": "2026-10-04",
+     "state": "proposed",
+     "by": "agent",
+     "note": "회신 CO 규칙 편입 · 판독 도구 결과 전 커밋 (selftest 217 · 42 · 20 · 깨기 12/12) · 트랙 li2s = 외부 1저자 → 사용자 비준은 기록·실행 승인 (외부 1저자 동의를 대신하지 않는다) · 골격 게이트 범위·정의는 잠정 (다음 편지)."
+    }
+   ],
+   "ratification": {
+    "state": "proposed"
    }
   }
  ]
