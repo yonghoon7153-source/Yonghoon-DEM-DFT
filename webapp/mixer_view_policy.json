@@ -7,6 +7,16 @@
    "pattern": "(E0|L0|LA|LB[1-3]|LC)_s[0-9]+",
    "basis": "층상 본 캠페인 (docs/reviews/mixer_layered_prereg_20260921.md) §2 주 판정 기록 2026-09-30 — docs/data/mixer_final10_20260930/verdict_20260930.json (10 런 8 바퀴 M 열람 끝 · E0 겹침 계약 09-28 열람 끝)",
    "since": "2026-09-30"
+  },
+  {
+   "pattern": "(LC_ref_r2|LH_ref_r2|E0_ref)_s32452843",
+   "basis": "고-Bo 강성 축 DEV seed 1 · 2 바퀴 · 개발 자료 · 판정 미사용 · 확인 시드와 섞지 않음 — dev-rot M 열람 기록 2026-10-02 08:35:52 KST docs/data/mixer_highbo_devrot_prelim_20261002/ (LC_ref_r2 · LH_ref_r2 · E0_ref = 판독 --ref 기준) · 등록 docs/reviews/mixer_highbo_stiffness_prereg_20260929.md §4-d · §11 · 정책 등재 2026-10-04 (1저자 — 침대 보기 · GIF)",
+   "since": "2026-10-02"
+  },
+  {
+   "pattern": "(LHx10_ref_r2|LHx30_ref_r2)_s32452843",
+   "basis": "고-Bo 강성 축 DEV 탐색 dev-bo (AM–AM Bo_code 384 · 1152 = 공동 개입 B · 사후 선택 수준) · 2 바퀴 · 개발 자료 · 판정 미사용 — M 열람 기록 2026-10-03 19:13:56 KST docs/data/mixer_highbo_devbo_prelim_20261003/ · 등록 docs/reviews/mixer_highbo_stiffness_prereg_20260929.md §11-6 · 정책 등재 2026-10-04 (1저자 — 침대 보기 · GIF · 덩어리 · 벽 부착 짐작을 영상으로 확인)",
+   "since": "2026-10-03"
   }
  ]
 }

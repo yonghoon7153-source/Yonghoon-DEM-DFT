@@ -316,7 +316,8 @@ def main():
                r_container=0.5 * SCALE)
     mkrun(root_a, 'LB3_s15', steps=(1,), r_container=0.5 * SCALE * 1.01)                  # 1 % 어긋난 기록
     for nm in ('LH_s32452843', 'LC_ref_r2_s32452843', 'E0_ref_dthalf_s32452843', 'npprobe20_E0_ref_s32452843',
-               'LC_s32452843_old'):
+               'LC_s32452843_old', 'LH_ref_r2_s32452843', 'LHx30_ref_r2_s32452843', 'LH_ref_s32452843',
+               'LH_ref_r2_s15485863', 'LHx10_ref_r2_s49979687'):
         mkrun(root_a, nm)
     for nm in ('bad name', '.hidden', 'L0_s1-copy'):
         mkrun(root_a, nm)
@@ -357,13 +358,24 @@ def main():
     chk('②d 두 번째 루트의 런도 잡힌다', runs.get((1, 'LC_s67867967'), {}).get('allowed') is True)
 
     # ── ③ 맹검 잠금 ──
-    locked = ('LH_s32452843', 'LC_ref_r2_s32452843', 'E0_ref_dthalf_s32452843', 'npprobe20_E0_ref_s32452843',
-              'LC_s32452843_old')
+    #  10-04 (1저자 *"믹서 lh 도 웹앱에서 gif 등으로 볼 수 있게"*): DEV seed 1 의 2 바퀴 런은 M 열람 기록이 있어 열린다 —
+    #  정지된 09-28 LH (M · 겹침 미열람) · 후행 8 바퀴 (`LH_ref_s32452843`) · holdout 시드 · 다른 개발 시드 · 기록 없는 E0 는 그대로 잠금.
+    locked = ('LH_s32452843', 'E0_ref_dthalf_s32452843', 'npprobe20_E0_ref_s32452843', 'LC_s32452843_old',
+              'LH_ref_s32452843', 'LH_ref_r2_s15485863', 'LHx10_ref_r2_s49979687')
     chk('③ 고-Bo · 강성 축 · NP 프로브 · 패턴 밖 이름은 잠긴다 (프레임 목록도 안 준다)',
         all(runs.get((0, n), {}).get('allowed') is False and not runs[(0, n)].get('steps') for n in locked))
     chk('③b 잠긴 런에는 사유 문자열이 있다 (맹검)', all('맹검' in runs.get((0, n), {}).get('reason', '') for n in locked))
     rr = c.get('/api/mixer/frame?root=0&run=LH_s32452843&step=1&view=3d')
     chk('③c 잠긴 런의 프레임 요청은 403', rr.status_code == 403 and rr.get_json().get('ok') is False)
+    dev = {'LC_ref_r2_s32452843': 'mixer_highbo_devrot_prelim_20261002', 'LH_ref_r2_s32452843': 'mixer_highbo_devrot_prelim_20261002',
+           'LHx30_ref_r2_s32452843': 'mixer_highbo_devbo_prelim_20261003'}
+    chk('③d DEV seed 1 의 2 바퀴 런 (M 열람 기록 있음) 은 열린다 · 근거 = 그 열람 기록 폴더 + "판정 미사용" 표지',
+        all(runs.get((0, n), {}).get('allowed') is True and runs[(0, n)].get('steps') == [1, 201, 1001]
+            and rec in runs[(0, n)].get('basis', '') and '판정 미사용' in runs[(0, n)].get('basis', '')
+            for n, rec in dev.items()))
+    rd = c.get('/api/mixer/frame?root=0&run=LHx30_ref_r2_s32452843&step=201&view=3d')
+    chk('③e 열린 DEV 런 (점착 ×30) 의 프레임 요청은 200 (GIF · PNG 재료)',
+        rd.status_code == 200 and rd.get_json().get('ok') is True and rd.get_json().get('n_total') == len(ROWS))
 
     # ── ④ 이름 규약 밖 디렉터리 ──
     chk('④ 규약 밖 디렉터리 (공백 · 점 · 하이픈) 는 목록에 없다',
@@ -475,12 +487,26 @@ def main():
     pol = mixer_bed.load_policy()
     chk('⑭ 선적 정책: 항목마다 basis · since · 패턴 컴파일', pol['ok'] and pol['allow']
         and all(a['basis'].strip() and a['since'].strip() for a in pol['allow']))
-    names_ok = ['E0_s32452843', 'L0_s32452843', 'LA_s49979687', 'LB1_s32452843', 'LB3_s32452843', 'LC_s67867967']
-    names_lock = ['LH_s32452843', 'LC_ref_s32452843', 'LH_ref_r2_s32452843', 'E0_soft_s1', 'LB4_s1', 'LC_s1x',
-                  'npprobe5_E0_ref_s32452843', 'L0_s32452843_r2', 'xLC_s1']
-    chk('⑭b 선적 정책: 층상 캠페인 이름은 열림 · 나머지는 잠김 (fullmatch — 앞뒤 덧붙임도 잠김)',
+    names_ok = ['E0_s32452843', 'L0_s32452843', 'LA_s49979687', 'LB1_s32452843', 'LB3_s32452843', 'LC_s67867967',
+                #  DEV seed 1 · 2 바퀴 · M 열람 (dev-rot 10-02 · dev-bo 10-03) + 두 판독의 공통 기준 E0
+                'LC_ref_r2_s32452843', 'LH_ref_r2_s32452843', 'LHx10_ref_r2_s32452843', 'LHx30_ref_r2_s32452843',
+                'E0_ref_s32452843']
+    names_lock = ['LH_s32452843', 'LH_s49979687', 'LH_s67867967',          # 09-28 정지 LH (M · 겹침 미열람 · 재발사 맹검)
+                  'LC_ref_s32452843', 'LH_ref_s32452843', 'LC_ref2_s32452843', 'LH_ref2_s32452843',   # 후행 8 바퀴 (r₁ · t₁ 등록)
+                  'LH_ref_dt2_s32452843', 'E0_ref2_s32452843', 'E0_ref_dthalf_s32452843',            # 기록 반입 없는 DEV E0
+                  'E0_ref_s49979687', 'E0_ref_s67867967',
+                  'E0_ref_s15485863', 'LC_ref_s15485863', 'LH_ref_s86028121', 'LH_soft_s104395301',   # 확인 (holdout) 블록
+                  'LH_ref_r2_s15485863', 'LHx10_ref_r2_s49979687', 'LHx10_ref_s32452843',
+                  'xLHx10_ref_r2_s32452843', 'LHx10_ref_r2_s32452843_b', 'LHx100_ref_r2_s32452843',
+                  'E0_soft_s1', 'LB4_s1', 'LC_s1x', 'npprobe5_E0_ref_s32452843', 'L0_s32452843_r2', 'xLC_s1']
+    chk('⑭b 선적 정책: 층상 캠페인 · M 열람된 DEV seed 1 런만 열림 · 나머지는 잠김 (fullmatch — 앞뒤 덧붙임도 잠김)',
         all(mixer_bed.classify(n, pol)[0] for n in names_ok)
         and not any(mixer_bed.classify(n, pol)[0] for n in names_lock))
+    import re as _re
+    repo = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    cited = [(a['pattern'], _re.findall(r'docs/[A-Za-z0-9_./-]+[A-Za-z0-9_/]', a['basis'])) for a in pol['allow']]
+    chk('⑭d 선적 정책: 항목마다 근거 basis 가 리포 안의 기록 경로를 하나 이상 적고, 그 경로가 실제로 있다',
+        all(paths and all(os.path.exists(os.path.join(repo, q)) for q in paths) for _, paths in cited))
     pdir = tempfile.mkdtemp(prefix='mxpol_')                   # 런 루트 밖 (⑪ 스냅숏과 섞지 않는다)
     broken = {'json': '{', 'empty_basis': json.dumps({'schema': 'mixer_view_policy/1', 'allow': [
         {'pattern': '.*', 'basis': ' ', 'since': '2026-09-30'}]}),
