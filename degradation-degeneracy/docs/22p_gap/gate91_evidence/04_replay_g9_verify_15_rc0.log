@@ -1,0 +1,25 @@
+# 변이 -k g9 확인 (91차: EXPECT 15 — -g90 13 · -g91 2) · HEAD fe0cdfb06 · dirty 1 · source_digest f0175fff71132003
+# 2026-10-04T23:44:52Z · python docs/22p_gap/mutation_replay.py -k g9
+
+sandbox: /tmp/mutation_replay_e5w8idv2/degradation-degeneracy
+
+물었다        env-profile-compares-interpreter-and-platform-g90 node 5 · -k test_gate90 and e03 and (python or implementation or system or machine or libc)
+물었다        env-profile-reports-missing-dists-g90 node 1 · -k test_gate90 and e03 and dist_missing
+물었다        env-profile-reports-extra-dists-g90 node 1 · -k test_gate90 and e03 and dist_extra
+물었다        env-profile-reports-version-drift-g90 node 2 · -k test_gate90 and e03 and (dist_version or env_upgrade)
+물었다        env-profile-reports-record-drift-g90 node 1 · -k test_gate90 and e03 and dist_record
+물었다        env-profile-reports-shadowed-drift-g90 node 1 · -k test_gate90 and e03 and shadowed
+물었다        env-profile-verifies-installed-files-g90 node 2 · -k test_gate90 and e03 and (file_hash or file_missing)
+물었다        env-profile-checks-module-origin-g90 node 1 · -k test_gate90 and e03 and origin_stray
+물었다        env-profile-lock-grammar-is-closed-g90 node 1 · -k test_gate90 and e04 and garbage_line
+물었다        env-profile-measurement-failure-is-unmeasured-g90 node 3 · -k test_gate90 and e05
+물었다        env-profile-cli-is-record-only-g90 node 1 · -k test_gate90 and e08
+물었다        smoke-records-env-profile-g90  node 1 · -k test_gate90 and e09
+물었다        receipt-stamp-records-env-profile-g90 node 1 · -k test_gate90 and e10
+물었다        env-profile-declares-loaded-origin-unmeasured-g91 node 3 · -k test_gate91 and s01
+물었다        env-profile-summary-states-path-search-scope-g91 node 1 · -k test_gate91 and s03
+
+scenario_total 15 · scenario_executable 15 · scenario_declared 0 · site_total 15 · site_executable 15 · site_declared 0 · ran 15
+실행한 변이 15건이 전부 기대 node 를 call 단계에서 물었다
+rc=0
+# 끝 2026-10-04T23:48:13Z · HEAD fe0cdfb06 · dirty 1
