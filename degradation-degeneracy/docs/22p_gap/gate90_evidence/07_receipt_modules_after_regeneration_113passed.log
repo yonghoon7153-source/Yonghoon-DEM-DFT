@@ -1,0 +1,10 @@
+# 재생성 뒤 — HEAD 2586138c3 + 재생성 영수증 · 원장 앵커 (작업 트리) · source_digest 3f84c0db52d2b9ac
+# 2026-10-04T18:00:29Z · python -m pytest tests/test_gate70_defensive.py tests/test_gate71_defensive.py tests/test_gate72_defensive.py tests/test_gate74_defensive.py -q -rfE -p no:cacheprovider
+
+[conftest] 시험 authority: /tmp/dd-test-authority-fiegxhmr/docs/22p_gap/LEG_PRESERVATION.yaml (운영 원장의 바이트 복사본 — 70차 E6)
+
+[conftest] 이 checkout 을 처음 보았다 — 얼린 cohort 17개의 좌표를 시험 authority 에 봉인했다: ['g10_2026_09_01', 'g11_2026_09_02', 'g12_2026_09_03', 'g13_2026_09_07', 'g14_2026_09_08', 'g15_2026_09_08', 'g16_2026_09_09', 'g17_2026_09_14', 'g1_2026_08_20', 'g2_2026_08_25', 'g3_2026_08_28', 'g4_2026_08_28', 'g5_2026_08_29', 'g6_2026_09_01', 'g7_2026_09_01', 'g8_2026_09_01', 'g9_2026_09_01']
+........................................................................ [ 63%]
+.........................................                                [100%]
+113 passed in 68.06s (0:01:08)
+rc=0

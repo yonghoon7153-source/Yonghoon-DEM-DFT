@@ -1,0 +1,5 @@
+# make_receipt.py --check paired_fixed5_v4 grid_fit_v5 · HEAD 2586138c3 + 재생성 영수증 (작업 트리)
+# 2026-10-04T18:01:46Z
+✅ paired_fixed5_v4: core 재생성 바이트 동일 · core_sha 8408f8c2dc38be18
+✅ grid_fit_v5: core 재생성 바이트 동일 · core_sha 7f0f40f06d51c160
+rc=0

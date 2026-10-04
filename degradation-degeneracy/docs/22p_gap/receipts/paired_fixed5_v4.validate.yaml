@@ -1,7 +1,7 @@
 schema_version: 2
 _주의: 이 파일은 손으로 쓰지 않는다. `python3 docs/22p_gap/make_receipt.py <leg>` 가 만들고 `--check` 가 **core 바이트 동일**
   재생성을 확인한다.
-core_sha256: 20645070605f0f0330b478cb4b77ad283f2ef542e4bcec138298e39a739694e0
+core_sha256: 8408f8c2dc38be1818ed0f6d6653848579105003cceef7c129624a19db308188
 core:
   leg_id: paired_fixed5_v4
   bundle:
@@ -62,11 +62,11 @@ core:
       필수_입력_존재: 통과
       행별_서명: 통과
   identity:
-    validator_source_digest: 803e2b7781cbc9cd
+    validator_source_digest: 3f84c0db52d2b9ac
     src_io_sha256: e8f9561b6492d5a5
     src_scoring_sha256: 69e69cb046f4b4ae
     archive_bundle_sha256: 5f7fc3c89dfe5dba
-    make_receipt_sha256: 9c8cf71af310de03
+    make_receipt_sha256: 61be9d0faefbb837
     row_projection_sha256: b8eae978b9525c3e
     row_projection_compute_sha256: 150416386d3c0b93
   outputs:
@@ -94,9 +94,50 @@ core:
   outputs_agree: true
 stamp:
   _주의: 기록용. core 재생성 대조에서 제외된다.
-  validator_commit: 134f26f48a4146432a677515c2ddbdc0d460a376
+  validator_commit: 2586138c3eef6ca26e13ee5b08cda92179dbb4db
   validator_tree_dirty: false
-  generated_at_utc: '2026-10-04T07:04:54Z'
+  generated_at_utc: '2026-10-04T17:59:16Z'
   runtime:
     python: 3.11.15
     platform: Linux-6.18.44-fc-v64-x86_64-with-glibc2.39
+  environment_profile_C:
+    profile: C
+    lock_path: requirements-validation-C.lock.txt
+    lock_sha256: d886f30ff675fef723fb9bcedd98297910fb1f8f1809370c18d8980dc5e63b39
+    status: MATCH
+    reason: ''
+    mismatches: []
+    unverifiable:
+      dists_without_record:
+      - argcomplete
+      - blinker
+      - cryptography
+      - dbus-python
+      - distro
+      - launchpadlib
+      - lazr-restfulclient
+      - lazr-uri
+      - oauthlib
+      - pip
+      - pygobject
+      - pyjwt
+      - pyparsing
+      - python-apt
+      - pyyaml
+      - setuptools
+      - six
+      - toml
+      - wadllib
+      - wheel
+      - xmltodict
+      - yq
+      origins:
+      - yaml
+    counts:
+      dists_locked: 170
+      dists_measured: 170
+      shadowed_locked: 2
+      shadowed_measured: 2
+      files_verified: 24804
+      files_unhashed: 10373
+      origins_verified: 9

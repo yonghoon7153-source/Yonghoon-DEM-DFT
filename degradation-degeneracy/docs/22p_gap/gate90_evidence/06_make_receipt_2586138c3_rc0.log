@@ -1,0 +1,6 @@
+# make_receipt.py paired_fixed5_v4 grid_fit_v5 · clean HEAD 2586138c3 · dirty 0 · source_digest 3f84c0db52d2b9ac
+# 2026-10-04T17:58:36Z
+✅ paired_fixed5_v4: docs/22p_gap/receipts/paired_fixed5_v4.validate.yaml · 검사 35건 · 산출 2건 · core_sha 8408f8c2dc38be18
+✅ grid_fit_v5: docs/22p_gap/receipts/grid_fit_v5.validate.yaml · 검사 34건 · 산출 2건 · core_sha 7f0f40f06d51c160
+rc=0
+# END 2026-10-04T18:00:01Z
