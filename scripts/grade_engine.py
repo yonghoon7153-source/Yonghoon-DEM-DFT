@@ -11,7 +11,8 @@ literature-anchored absolute thresholds or corpus-percentile thresholds
 Literature anchors (sulfide ASSB cathode):
   • Porosity ε ≈ 10–15%        — Yoon 2025, Park 2023, Ohno 2020
   • SE percolation ≥ 99 %      — Bielefeld 2019, Liu & Yin 2025
-  • τ_Laplace,eff ≤ 2.5         — Tippens 2019, Famprikis 2019
+  • τ_Laplace,eff (Hertz) ≤ 2.5 — 내부 등급선 (출처 없음 · 옛 표기 Tippens 2019 · Famprikis 2019 = 확인 전 ·
+                                  Famprikis 카드에 없음 · TAU-16)
   • σ_ionic ≥ 0.1 mS/cm        — Janek/Zeier 2023 review threshold
   • σ_e   ≥ 0.5 mS/cm          — minimum for high-rate sulfide cathode
   • ASR_ionic ≤ 100 Ω·cm²       — workable @ 1 mAh/cm² C/3
@@ -161,36 +162,41 @@ AXES: list[dict[str, Any]] = [
 
     # ── 4. 경로 효율 (Path efficiency) ──
     {'category': '경로 효율 (Tortuosity)',
-     'key': '__tau_lap_eff', 'label': 'τ_Laplace,eff ⭐ (σ_grain **3.0 고정**)',
+     'key': '__tau_lap_eff', 'label': 'τ_Laplace,eff (Hertz) ⭐',
      'direction': 'lower', 'thresholds': [1.8, 2.2, 2.8, 3.5, 4.5, 6.0],
-     'formula': '√(φ_SE × **3.0** / σ_full)  — Stage E physics 우선, σ_grain 은 **상수 3 mS/cm**',
+     'formula': '√tau2_H = √(φ_SE × σ₀ / σ_full,H) — **원 솔버 Hertz σ** (Stage-E 아님) · σ₀ = 그 런의 짝 σ₀ '
+                '(웹앱 τ 블록 Hertz 칸과 같은 도우미 `tau_flux.tau2_from_metrics` · TAU-03)',
      'meaning': 'τ_Laplace,eff = √tau2 (τ² 관례의 τ — 연속체 입력 칸의 꼴은 이 값이 아니라 tau2 · '
-                'τ 명명 규약 10-03 · TAU-01).  문턱은 내부 등급선 (옛 출처 표기 "Tippens 2019, Famprikis 2019" 는 '
-                '확인 전 — TAU-16).  <2.5 우수, >5 endpoint dominated.\n'
-                '⚠ ★ L4-04 — **앱 표시값과 같은 공식이 아니다**.  앱(`webapp/app.py`)은 '
-                '**baseline 온도에 맞춘 σ_grain** 을 쓰는데 여기는 3.0 을 박아 둔다 ⇒ '
-                '모든 σ_ion 과 대응 grain 을 함께 ×4 하면 앱 τ 는 3.4641 그대로인데 '
-                '이 축은 3.4641 → 1.7321 로 움직여 등급이 **B− → A** 가 된다 '
-                '(공통 스케일 불변성 위반).  온도를 바꿔 비교할 때 이 축을 쓰지 말 것.',
+                'τ 명명 규약 10-03 · TAU-01).  **문턱 = 내부 등급선** (출처 없음 — 옛 표기 "Tippens 2019, '
+                'Famprikis 2019" 는 확인 전 · Famprikis 카드에 없음 · TAU-16).  √ 척도 문턱이다 — tau2 축으로 옮기면 '
+                '문턱을 제곱한다.\n'
+                '★ 10-04 (1저자 비준 · 결정 6 · 결정 3 "hertz 먼저"): Stage-E physics σ 를 쓰지 않는다 — Stage-E 는 '
+                'Cronau(r_SE) · 파괴 같은 재료 인자를 곱한 값이라 τ 가 아니다.  physics 모드 τ 는 웹앱 τ 블록 physics 칸 '
+                '(접촉별 면적 상한 LHS-25 가 걸린다).  옛 축 (Stage-E physics · σ₀ 상수) 대비 코퍼스 157 에서 '
+                'τ_옛/τ_H 0.852–1.584 (중앙 1.227).\n'
+                'L4-04 해소: σ₀ 를 그 런의 σ_full 과 같은 온도의 짝으로 쓴다 — σ 와 σ₀ 를 함께 ×4 해도 τ 불변.',
      'weight': 1.0},
 
     {'category': '경로 효율 (Tortuosity)',
-     'key': '__tau_lap_bulk', 'label': 'τ_Laplace,bulk (구조, σ_grain **3.0 고정**)',
+     'key': '__tau_lap_bulk', 'label': 'τ_Laplace,bulk (구조 · 짝 σ₀)',
      'direction': 'lower', 'thresholds': [1.2, 1.4, 1.7, 2.0, 2.5, 3.0],
-     'formula': '√(φ_SE × **3.0** / σ_bulk_net)  — constriction 제외 (geometric Laplacian)',
+     'formula': '√(φ_SE × σ₀ / σ_bulk_net) — constriction 제외 (CF 가지 · 원기둥 bulk) · σ₀ = 짝 σ₀ (같은 도우미)',
      'meaning': 'Bruggeman 가정 φ^−0.5 ≈ 1.85.  **τ_Dijkstra 와 다른 정량이고 서로의 대체 열이 '
-                '아니다** (L4-04).  σ_grain 이 상수라 위 τ_eff 와 같은 온도 주의가 걸린다.',
+                '아니다** (L4-04).  문턱 = 내부 등급선.',
      'weight': 0.5},
 
     {'category': '경로 효율 (Tortuosity)',
      'key': '__constriction_overhead',
-     'label': 'Constriction overhead τ_eff/τ_bulk (= √저항비)',
+     'label': '모델 내부 협착 비 τ_eff,H/τ_bulk (원기둥 bulk 기준 · Hertz · = √저항비)',
      'direction': 'lower', 'thresholds': [1.5, 1.8, 2.2, 2.8, 3.5, 5.0],
-     'formula': 'τ_Laplace,eff / τ_Laplace,bulk = **√(σ_bulk_net/σ_full)** — 둘 다 있어야 한다',
-     'meaning': '좁은 contact 으로 인한 추가 저항.  1배 = geometric 만, 높을수록 constriction '
-                'loss 큼.\n⚠ ★ L4-04 — 이것은 **저항비의 제곱근**이다.  저항비 자체로 읽으면 '
+     'formula': 'τ_Laplace,eff(Hertz) / τ_Laplace,bulk = **√(σ_bulk_net / σ_full,H)** — 같은 망 · 같은 모드 '
+                '(FULL ÷ CF · σ₀ 약분) · 둘 다 있어야 한다',
+     'meaning': '좁은 contact 으로 인한 추가 저항 (모델 안의 비).  1배 = CF (bulk) 만.\n'
+                '⚠ **물리 협착 배수가 아니다** — CF 의 원기둥 bulk 과전도 때문에 T 로 ≈ 1.2–1.4 배 과대 '
+                '(결정 11 · TAU-08).  옛 축은 분자 Stage-E physics ÷ 분모 CF 라 모드가 섞여 있었다 (TAU-03).\n'
+                '⚠ ★ L4-04 — 이것은 **저항비의 제곱근**이다.  저항비 자체로 읽으면 '
                 '틀린다 (같은 침대에서 overhead 2 ↔ 앱 eff/Dijkstra 2.3094 — 서로의 대체 열이 '
-                '아니고 등록된 Dijkstra target 도 아니다).',
+                '아니고 등록된 Dijkstra target 도 아니다).  문턱 = 내부 등급선.',
      'weight': 0.7},
 
     {'category': '경로 효율 (Tortuosity)',
@@ -775,6 +781,28 @@ def _sigma_e_effective(metrics: dict) -> float | None:
     return None
 
 
+#: τ 축이 도우미에 넘기는 키 — φ · 모드별 σ · 짝 σ₀ 판정에 쓰는 온도 키 (`se_material.sigma_grain_context`).
+_TAU_AXIS_KEYS = ('phi_se', 'sigma_full_mScm', 'sigma_full_mScm_physics', 'sigma_bulk_net_mScm',
+                  'temperature_provenance', 'stage_e_temperature_provenance', 'sigma_grain_S_cm')
+
+
+def _tau_axis(metrics: dict, mode: str) -> float | None:
+    """√tau2 (mode = hertz · physics · bulk) — 웹앱 τ 블록과 같은 도우미 (`tau_flux.tau2_from_metrics` · TAU-03).
+    CSV 에서 온 문자열 값도 옛 축처럼 받는다 (숫자로 바뀌는 것만)."""
+    import tau_flux as _tf
+    m = {}
+    for k in _TAU_AXIS_KEYS:
+        v = metrics.get(k)
+        if isinstance(v, str):
+            try:
+                v = float(v)
+            except ValueError:
+                v = None
+        m[k] = v
+    t2, _sigma0 = _tf.tau2_from_metrics(m, mode)
+    return math.sqrt(t2) if t2 is not None else None
+
+
 def _sigma_ionic_effective(metrics: dict) -> float | None:
     for k in ('sigma_full_mScm_stage_e_physics', 'sigma_full_mScm_physics',
               'sigma_full_mScm_stage_e', 'sigma_full_mScm'):
@@ -925,32 +953,18 @@ def _derived_value(key: str, metrics: dict) -> float | None:
             except (TypeError, ValueError): return None
         return None
 
-    # τ_Laplace,eff = √tau2 = √(φ_SE × 3.0 / σ_full) — ⚠ 웹앱 표시값과 같은 공식이 아니다 (σ₀ 3.0 고정 · σ 모드
-    #   순서 stage_e_physics → physics → stage_e → raw · L4-04 · TAU-03 — 한 도우미로 통일은 τ 2단계 ②).
+    # τ 세 축 (TAU-03 · 1저자 비준 10-04 밤) — 웹앱 τ 블록과 **같은 도우미** (`tau_flux.tau2_from_metrics`):
+    #   σ = 원 솔버 Hertz σ (Stage-E 아님 · 결정 6 · 결정 3) · σ₀ = 그 런의 짝 σ₀ (L4-04).  옛 판 = Stage-E physics 우선 + 3.0 고정.
     if key == '__tau_lap_eff':
-        phi_se = metrics.get('phi_se')
-        sig_full = _sigma_ionic_effective(metrics)
-        try:
-            if phi_se and sig_full and sig_full > 0:
-                return (float(phi_se) * 3.0 / float(sig_full)) ** 0.5
-        except (TypeError, ValueError):
-            return None
-        return None
+        return _tau_axis(metrics, 'hertz')
 
     if key == '__tau_lap_bulk':
-        phi_se = metrics.get('phi_se')
-        sig_bulk = metrics.get('sigma_bulk_net_mScm')
-        try:
-            if phi_se and sig_bulk and sig_bulk > 0:
-                return (float(phi_se) * 3.0 / float(sig_bulk)) ** 0.5
-        except (TypeError, ValueError):
-            return None
-        return None
+        return _tau_axis(metrics, 'bulk')
 
     if key == '__constriction_overhead':
-        # τ_eff / τ_bulk — both Laplacian derivations from φ_SE + σ.
-        num = _derived_value('__tau_lap_eff', metrics)
-        den = _derived_value('__tau_lap_bulk', metrics)
+        # 모델 내부 협착 비 = τ_eff,H / τ_bulk = √(σ_bulk_net / σ_full,H) — 같은 망 · 같은 모드 (σ₀ 약분 · 결정 11).
+        num = _tau_axis(metrics, 'hertz')
+        den = _tau_axis(metrics, 'bulk')
         if num and den and den > 0:
             return num / den
         return None
@@ -1983,21 +1997,30 @@ def _selftest() -> int:
     chk('① 대조: 계산부에 리터럴 175 가 남아 있지 않다 (상수 한 자리만)',
         not _lits, f'남은 줄 {_lits}' if _lits else '')
 
-    # ── ② L4-04: τ 라벨이 σ_grain 고정과 √저항비를 말하는가 ─────────────────
+    # ── ② L4-04 · TAU-03 (10-04 · 1저자 비준): τ 축 = Hertz 원 솔버 σ + 짝 σ₀ (웹앱과 같은 도우미) ────────
     t_eff, t_bulk = axis('__tau_lap_eff'), axis('__tau_lap_bulk')
     ovh = axis('__constriction_overhead')
-    chk('②a L4-04: τ_eff 가 σ_grain **3.0 고정**임을 말한다 (앱은 온도에 맞춘 값)',
-        '3.0' in text(t_eff) and '고정' in text(t_eff))
-    chk('②b L4-04: τ_eff 가 **앱과 같은 공식** 이라고 말하지 않는다 '
-        '(공통 스케일 불변성이 다르다)',
-        'app.py 표시값과 동일 공식' not in text(t_eff))
-    chk('②c L4-04: overhead 가 **√저항비**임을 말한다 (저항비 자체가 아니다)',
-        '√' in text(ovh))
+    chk('②a TAU-03: τ_eff 가 Hertz · 짝 σ₀ · 원 솔버 σ 라고 말하고 "3.0 고정" 이라고 말하지 않는다',
+        '(Hertz)' in t_eff['label'] and '짝 σ₀' in text(t_eff) and '원 솔버 Hertz σ' in text(t_eff)
+        and '3.0 고정' not in text(t_eff))
+    #  ★ 옛 ②e (*"코드가 실제로 3.0 을 쓴다"*) 는 모듈 소스에서 문자열을 찾았는데, 그 문자열이 **이 selftest 자신**에 있어
+    #    늘 통과했다 (공허한 대조 · SELF-84).  ⇒ 문자열 대신 **값**으로 잰다.
+    _m = {'phi_se': 0.30, 'sigma_full_mScm': 0.12, 'sigma_full_mScm_physics': 0.30,
+          'sigma_full_mScm_stage_e_physics': 0.20, 'sigma_bulk_net_mScm': 0.50}
+    _sg = 3.0
+    _te = _derived_value('__tau_lap_eff', _m)
+    chk('②b TAU-03 값: τ_eff = √(φ·σ₀/σ_full,H) — Stage-E · physics σ 를 고르지 않는다 (웹앱 τ 블록 Hertz 칸과 같은 값)',
+        _te is not None and abs(_te - (0.30 * _sg / 0.12) ** 0.5) < 1e-12, f'{_te}')
+    _m4 = {**_m, 'sigma_full_mScm': 0.48, 'sigma_bulk_net_mScm': 2.0,
+           'temperature_provenance': {'sigma_ion_T_factor': 4.0}}
+    _pair = [(_derived_value(k, _m), _derived_value(k, _m4))
+             for k in ('__tau_lap_eff', '__tau_lap_bulk', '__constriction_overhead')]
+    chk('②e L4-04 값: σ 와 짝 σ₀ 를 함께 ×4 → τ_eff · τ_bulk · overhead 불변 (Codex 반례 3.4641 → 1.7321 이 닫힘)',
+        all(a is not None and b is not None and abs(a - b) < 1e-12 for a, b in _pair), repr(_pair))
+    chk('②c L4-04: overhead 가 **√저항비**이고 물리 협착 배수가 아님을 말한다 (모델 내부 협착 비 · 결정 11)',
+        '√' in text(ovh) and '모델 내부 협착 비' in ovh['label'] and '물리 협착 배수' in text(ovh))
     chk('②d L4-04: τ_bulk 가 τ_Dijkstra 의 대체 열이 아님을 말한다',
         'Dijkstra' in text(t_bulk))
-    #  라벨이 말하는 3.0 이 **실제로 코드에 있는가** (대조 — 라벨만 고치면 거짓말이 된다)
-    chk('②e 대조: 코드가 실제로 3.0 을 쓴다 (라벨만 바꾼 것이 아니다)',
-        'float(phi_se) * 3.0 / float(sig_full)' in src)
 
     # ── ③ L2-07: Bruggeman 이라고 말하지 않는가 ─────────────────────────────
     b = axis('R_brug_over_full_physics')

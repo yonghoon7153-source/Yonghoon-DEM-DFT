@@ -518,8 +518,9 @@ P1-a 명명 · P1-b/c/d 문서 명문화 · P1-e 하드코딩 제거 · P1-f σ 
 | `scripts/physics_surface_contact_fit.py` | `:41 SIGMA_GRAIN` | 형상 탐색 피팅 |
 | `scripts/triage_cases.py` | `:35 SIGMA_GRAIN_MS` | 케이스 선별 CLI |
 | `scripts/verify_case.py` | `:32 SIGMA_GRAIN_MS` | 단건 점검 CLI |
-| `scripts/build_tau_regime_db.py` | `:28 SIGMA_GRAIN_MS` | τ 레짐 DB 빌더 |
-| `scripts/export_comsol_2d.py` | `:48 SIGMA_GRAIN_MS` | COMSOL export |
+| ~~`scripts/build_tau_regime_db.py`~~ | ~~`:28 SIGMA_GRAIN_MS`~~ | τ 레짐 DB 빌더 — ✅ 10-04 TAU-03: τ 는 `tau_flux.tau2_from_metrics` (짝 σ₀) · 상수는 `_tau_from_sigma` 예시에만 |
+| ~~`scripts/export_comsol_2d.py`~~ | ~~`:48 SIGMA_GRAIN_MS`~~ | COMSOL export — ✅ 10-04 TAU-03: 행 값 = `se_material.sigma_grain_context` (짝 σ₀) |
+| (추가) `scripts/grade_engine.py` | τ 세 축 (`3.0` 리터럴) | ✅ 10-04 TAU-03: 같은 도우미 (짝 σ₀) — 옛 목록에 빠져 있었다 |
 | `scripts/fit_constrained.py` | `:45 SIGMA_GRAIN` | 제약 피팅 |
 | `scripts/screening_ionic_thin_focus.py` | `:23 SG` | 스크리닝 |
 | `scripts/analyze_network_results.py` | `:166,185` | τ_eff2 계산 |

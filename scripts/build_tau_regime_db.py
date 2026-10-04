@@ -22,7 +22,10 @@ Usage:
   python3 scripts/build_tau_regime_db.py
 """
 from __future__ import annotations
-import os, json, math, csv
+import os, json, math, csv, sys
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import tau_flux as _tau_flux   # noqa: E402 — τ 소비처 공용 도우미 (TAU-03 · 웹앱 τ 블록 · 등급 τ 축과 같은 식 · 짝 σ₀)
 
 
 SIGMA_GRAIN_MS = 3.0  # mS/cm, LPSCl SE phase — project value (04-24 origin: own MLIP-MD estimate); = lower end of the Cronau 2021 SI Fig. S2c µC pellet plateau (SELF-51)
@@ -41,7 +44,10 @@ def _find_meta(cid: str) -> dict:
 
 
 def _tau_from_sigma(phi_SE, sigma_mScm):
-    """τ = √(φ_SE × σ_grain / σ_mScm), None if invalid."""
+    """τ = √(φ_SE × σ_grain / σ_mScm), None if invalid.
+
+    ⚠ 10-04 (TAU-03) 부터 `load_case` 는 이 함수가 아니라 `tau_flux.tau2_from_metrics` (짝 σ₀) 를 쓴다 — 이 함수는 τ² 관례의
+      예로 남긴다 (step3_sigma.py · plot_tau_regime_si.py 주석이 가리킨다).  σ_grain = 25 °C 상수라 온도 런에 쓰지 말 것."""
     if not (phi_SE and sigma_mScm and phi_SE > 0 and sigma_mScm > 0):
         return None
     try:
@@ -91,8 +97,12 @@ def load_case(root: str) -> dict | None:
     sig_bulk = m.get('sigma_bulk_net_mScm')
 
     tau_Dij = m.get('tortuosity_mean')
-    tau_Lap_geom = _tau_from_sigma(phi_SE, sig_bulk)
-    tau_Lap_eff = _tau_from_sigma(phi_SE, sig_full)
+    # ★ TAU-03 (10-04) — 웹앱 τ 블록 · 등급 τ 축과 같은 도우미 · σ₀ = 그 런의 짝 σ₀ (옛 판 3.0 고정 = 25 °C 에서만 같았다).
+    #   σ = 원 솔버 Hertz σ (이 DB 는 원래 raw H 였다 — 값은 25 °C 코퍼스에서 그대로).
+    _t2_geom, _s0 = _tau_flux.tau2_from_metrics(m, 'bulk')
+    _t2_eff, _s0 = _tau_flux.tau2_from_metrics(m, 'hertz')
+    tau_Lap_geom = math.sqrt(_t2_geom) if _t2_geom is not None else None
+    tau_Lap_eff = math.sqrt(_t2_eff) if _t2_eff is not None else None
 
     le_over_d = _safe_div(tau_Lap_eff, tau_Dij)
     le_over_lg = _safe_div(tau_Lap_eff, tau_Lap_geom)

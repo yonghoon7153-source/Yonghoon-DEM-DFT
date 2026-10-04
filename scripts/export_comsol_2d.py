@@ -45,7 +45,10 @@ from extract_2d_microstructure import (   # noqa: E402
     VOID, AM_P, AM_S, SE, PHASE_NAMES,
 )
 
-SIGMA_GRAIN_MS = 3.0   # σ₀ (mS/cm) = 펠릿값 (CL-91) — tau2 의 기준 · COMSOL σ₀ 칸의 짝
+import se_material as _se_material   # noqa: E402 — σ₀ = 그 런의 짝 σ₀ (sigma_grain_context · TAU-03)
+import tau_flux as _tau_flux         # noqa: E402 — τ 소비처 공용 도우미 (웹앱 τ 블록 · 등급 τ 축과 같은 식)
+
+SIGMA_GRAIN_MS = _se_material.SIGMA_GRAIN_MS_CM_25C   # 25 °C σ₀ (펠릿값 3.0 · CL-91) — 행 값은 그 런의 짝 σ₀ (sigma_grain_context)
 
 
 def _fnum(d, *keys):
@@ -66,31 +69,33 @@ def numerical_parameters(case_dir: Path, slice_data: dict) -> list[dict]:
     fm = json.loads(fm_file.read_text()) if fm_file.exists() else {}
 
     phi_se   = _fnum(fm, 'phi_se')
-    sig_full = _fnum(fm, 'sigma_full_mScm_stage_e_physics',
-                     'sigma_full_mScm_physics', 'sigma_full_mScm')
-    sig_bulk = _fnum(fm, 'sigma_bulk_net_mScm')
-    # tau2 = φ_SE × σ₀ / σ_full = tortuosity factor (τ 명명 규약 10-03 · TAU-01) · τ_Laplace,eff = √tau2 (참고 · 입력 칸 값 아님).
-    #   COMSOL 종 수송 τ_F 와 같은 꼴 — 배터리 Porous Electrode 노드는 식이 인쇄돼 있지 않아 GUI Equation 보기로 확인 뒤 쓴다.
-    #   ⚠ sig_full 선택 순서 (stage_e_physics → physics → raw) 는 웹앱 · 등급과 다르다 (TAU-03 — 한 도우미로 통일은 τ 2단계 ②).
-    tau2 = tau_lap_eff = None
-    if phi_se and sig_full and sig_full > 0:
-        tau2 = phi_se * SIGMA_GRAIN_MS / sig_full
-        tau_lap_eff = tau2 ** 0.5
-    # f = σ_full/σ₀ (= φ/tau2) — COMSOL Porous Electrode 보정 'User defined' 칸 (fl) 에 넣는 꼴.  배터리 모듈 앱 예제
-    #   (Homogenizing a Heterogeneous Electrode Model · 6.4 · 식 (1) f_eff = ε/τ) 가 Tortuosity 칸 대신 이 경로로 f 를 직접 넣는다
-    #   → τ 관례가 끼지 않는다 (D1 · 1저자 비준 10-04).  같은 틀: 두께 L_cat · phiSE · σ₀ = sigma_grain.
-    f_ion = (sig_full / SIGMA_GRAIN_MS) if (sig_full and sig_full > 0) else None
-    tau_lap_bulk = None
-    if phi_se and sig_bulk and sig_bulk > 0:
-        tau_lap_bulk = (phi_se * SIGMA_GRAIN_MS / sig_bulk) ** 0.5
+    # ★ TAU-03 (1저자 비준 10-04 밤 *"권고대로"*) — τ · f 는 **원 솔버 σ** 로 · **두 면적 모드 다** (고르지 않는다 · 결정 3) ·
+    #   σ₀ = 그 런의 짝 σ₀ (`se_material.sigma_grain_context` — 웹앱 τ 블록 · 등급 τ 축과 같은 도우미 `tau_flux`).
+    #   Stage-E σ (Cronau(r_SE) · 파괴 같은 재료 인자 포함) 는 τ 이름 없이 따로 싣는다 — f · tau2 와 짝이 아니다 (결정 6).
+    #   옛 판: σ_i · tau2 · f_ion 이 전부 Stage-E physics σ (stage_e_physics → physics → raw) + σ₀ 3.0 고정.
+    sigma0 = _se_material.sigma_grain_context(fm)[0]
+    by_mode = {}
+    for mode in ('hertz', 'physics'):
+        sig_m = _fnum(fm, _tau_flux.METRIC_SIGMA_KEY[mode])
+        t2, _s0 = _tau_flux.tau2_from_metrics(fm, mode)
+        by_mode[mode] = {
+            'sigma': sig_m if (sig_m and sig_m > 0) else None,
+            'f': (sig_m / sigma0) if (sig_m and sig_m > 0) else None,
+            'tau2': t2,
+            'tau': (t2 ** 0.5) if t2 is not None else None,
+        }
+    sig_stage_e = _fnum(fm, 'sigma_full_mScm_stage_e_physics')
+    t2_bulk, _s0 = _tau_flux.tau2_from_metrics(fm, 'bulk')
+    tau_lap_bulk = (t2_bulk ** 0.5) if t2_bulk is not None else None
 
     fr = slice_data['phase_fracs']
 
     # ASR_ionic — full_metrics에 저장 안 됨 (on-the-fly).  L × 0.1 / σ_ionic.
     L_um = _fnum(fm, 'thickness_um')
     asr_ionic = None
-    if L_um and sig_full and sig_full > 0:
-        asr_ionic = L_um * 0.1 / sig_full   # Ω·cm²
+    sig_asr = _fnum(fm, 'sigma_full_mScm_stage_e_physics', 'sigma_full_mScm_physics', 'sigma_full_mScm')   # τ 아님 — 옛 선택 그대로
+    if L_um and sig_asr and sig_asr > 0:
+        asr_ionic = L_um * 0.1 / sig_asr   # Ω·cm²
 
     rows = [
         # name, value, unit, COMSOL parameter suggestion, source
@@ -98,24 +103,35 @@ def numerical_parameters(case_dir: Path, slice_data: dict) -> list[dict]:
          'phiSE', '3D SE volume fraction (ρ-weighted)'),
         ('phi_void',       _fnum(fm, 'porosity') and _fnum(fm, 'porosity')/100,
          '1', 'eps', '3D porosity (full_metrics)'),
-        ('sigma_grain',    SIGMA_GRAIN_MS,                           'mS/cm',
-         'sigma_grain', 'σ₀ = 펠릿값 3.0 (CL-91) — tau2 의 기준 · 입력 시 σ₀ 칸과 짝'),
-        ('sigma_ionic_eff', sig_full,                                'mS/cm',
-         'sigma_i', '★ 3D effective ionic σ (Stage E / network solver)'),
+        ('sigma_grain',    sigma0,                                   'mS/cm',
+         'sigma_grain', 'σ₀ = 그 런의 짝 σ₀ (25 °C = 펠릿값 3.0 · CL-91 · 온도 런이면 배수) — tau2 · f 의 기준 · 입력 시 σ₀ 칸과 짝'),
+        ('sigma_ionic_hertz', by_mode['hertz']['sigma'],              'mS/cm',
+         'sigma_i_hertz', '원 솔버 σ_ionic · Hertz 면적 (교차 원판 c_cpl[22]) — f_ion_hertz · tau2_ion_hertz 의 짝'),
+        ('sigma_ionic_physics', by_mode['physics']['sigma'],          'mS/cm',
+         'sigma_i_physics', '원 솔버 σ_ionic · physics 면적 (접촉별 상한 · LHS-25) — f_ion_physics · tau2_ion_physics 의 짝'),
+        ('sigma_ionic_stage_e', sig_stage_e,                          'mS/cm',
+         'sigma_i_stageE', 'Stage-E physics σ — 재료 인자 포함 (Cronau(r_SE) · 파괴) · τ 이름 없음 · f_ion · tau2 와 짝이 아니다'),
         ('sigma_e_eff',    _fnum(fm, 'electronic_sigma_full_mScm_stage_e_physics',
                                   'electronic_sigma_full_mScm_physics'), 'mS/cm',
          'sigma_e', '3D effective electronic σ'),
         ('kappa_eff',      _fnum(fm, 'thermal_sigma_full_mScm_stage_e_physics',
                                   'thermal_sigma_full_mScm_physics'), 'mS/cm-eq',
          'kappa', '3D effective thermal conductivity'),
-        ('tau2',            tau2,                                    '1',
-         'tau2', '★ tortuosity factor = φ·σ_grain/σ_i (COMSOL 종 수송 τ_F 꼴 · 배터리 노드는 GUI Equation 확인 뒤 · σ₀ 칸 = sigma_grain)'),
-        ('f_ion',           f_ion,                                   '1',
-         'f_ion', '★ f = σ_i/σ_grain = φ/tau2 — Porous Electrode 보정을 User defined 로 두고 fl 칸에 넣는 꼴 (COMSOL 앱 예제 Homogenizing a Heterogeneous Electrode Model 6.4 와 같은 방식 · τ 관례 무관) · 같은 틀 L_cat · phiSE'),
-        ('tau_Laplace_eff', tau_lap_eff,                             '1',
-         '—', '√tau2 (τ² 관례의 τ) — 입력 칸 값 아님 (tau2 행을 쓴다)'),
+        ('f_ion_hertz',     by_mode['hertz']['f'],                    '1',
+         'f_ion_hertz', '★ f = σ_i_hertz/σ_grain = φ/tau2 — Porous Electrode 보정을 User defined 로 두고 fl 칸에 넣는 꼴 (COMSOL 앱 예제 '
+                        'Homogenizing a Heterogeneous Electrode Model 6.4 와 같은 방식 · τ 관례 무관) · 같은 틀 L_cat · phiSE · Hertz 면적'),
+        ('f_ion_physics',   by_mode['physics']['f'],                  '1',
+         'f_ion_physics', '★ f = σ_i_physics/σ_grain = φ/tau2 — User defined (fl) 칸 · physics 면적 (접촉별 상한 · LHS-25)'),
+        ('tau2_ion_hertz',  by_mode['hertz']['tau2'],                 '1',
+         'tau2_ion_hertz', '★ tortuosity factor = φ·σ_grain/σ_i_hertz (COMSOL 종 수송 τ_F 꼴 · 배터리 노드는 GUI Equation 확인 뒤 · σ₀ 칸 = sigma_grain)'),
+        ('tau2_ion_physics', by_mode['physics']['tau2'],              '1',
+         'tau2_ion_physics', '★ tortuosity factor = φ·σ_grain/σ_i_physics (physics 면적 · 같은 주의)'),
+        ('tau_ion_hertz',   by_mode['hertz']['tau'],                  '1',
+         '—', '√tau2 (τ² 관례의 τ · Hertz) — 입력 칸 값 아님 (tau2 행을 쓴다)'),
+        ('tau_ion_physics', by_mode['physics']['tau'],                '1',
+         '—', '√tau2 (τ² 관례의 τ · physics) — 입력 칸 값 아님'),
         ('tau_Laplace_bulk', tau_lap_bulk,                           '1',
-         'tau_bulk', '3D geometric tortuosity (no constriction)'),
+         'tau_bulk', '3D geometric tortuosity (no constriction · CF 원기둥 bulk · 짝 σ₀)'),
         ('tau_Dijkstra',   _fnum(fm, 'tortuosity_recommended', 'tortuosity_mean'),
          '1', 'tau_geo', '3D geodesic tortuosity'),
         ('coverage_AM',    _fnum(fm, 'coverage_AM_mean_physics_rough',
@@ -666,14 +682,21 @@ COMSOL 모델은 (A) DOMAIN, (B) MATERIAL(수치), (C) BOUNDARY 로 구성.
   각 domain에 부여할 3D-측정 EFFECTIVE 물성.  2D 형상 위에 3D 유효
   물성을 올려서 2D-FEM이 3D 결과를 재현하게 함.
 
-  SE domain:
-    sigma_i  = σ_ionic effective (mS/cm)
-    tau2     = tortuosity factor = φ·sigma_grain/sigma_i   ← 검산: σ_i = φ·σ_grain/tau2
-               (COMSOL 종 수송 τ_F 꼴 · 배터리 Porous Electrode 노드는 GUI Equation 보기로 확인 뒤 · σ₀ 칸 = sigma_grain)
-    f_ion    = σ_i/σ_grain = φ/tau2   ← Porous Electrode 보정 'User defined' 의 fl 칸에 넣는 꼴
+  SE domain (두 면적 모드 — 고르지 않고 둘 다 싣는다 · τ 판정 v2 결정 3 · TAU-03):
+    sigma_grain      = σ₀ — 그 런의 짝 σ₀ (25 °C = 펠릿값 3.0 · CL-91 · 온도 런이면 배수) · 아래 f · tau2 의 기준
+    sigma_i_hertz    = 원 솔버 σ_ionic, Hertz 면적 (mS/cm)
+    sigma_i_physics  = 원 솔버 σ_ionic, physics 면적 (접촉별 상한 · LHS-25) (mS/cm)
+    f_ion_hertz      = sigma_i_hertz/σ_grain = φ/tau2_ion_hertz   ← Porous Electrode 보정 'User defined' 의 fl 칸에 넣는 꼴
+    f_ion_physics    = sigma_i_physics/σ_grain = φ/tau2_ion_physics
                (COMSOL 앱 예제 Homogenizing a Heterogeneous Electrode Model 6.4 와 같은 방식 — τ 관례 무관 ·
                 같은 틀: 두께 L_cat · εl = phiSE · σ₀ = sigma_grain)
-    tau_eff  = √tau2 (참고 · 입력 칸 값 아님)
+    tau2_ion_hertz   = tortuosity factor = φ·sigma_grain/sigma_i_hertz   ← 검산: σ_i = φ·σ_grain/tau2
+    tau2_ion_physics = φ·sigma_grain/sigma_i_physics
+               (COMSOL 종 수송 τ_F 꼴 · 배터리 Porous Electrode 노드는 GUI Equation 보기로 확인 뒤 · σ₀ 칸 = sigma_grain)
+    tau_ion_<mode>   = √tau2 (참고 · 입력 칸 값 아님)
+    sigma_i_stageE   = Stage-E physics σ — 재료 인자 포함 (Cronau(r_SE) · 파괴).
+               ⚠ f · tau2 와 짝이 아니다 — f_ion_<mode> · tau2_ion_<mode> 와 함께 넣지 말 것
+                 (재료 인자를 두 번 넣거나 면적 모드를 섞는다).  옛 판의 sigma_i 행이 이 값이었다.
   AM domain:
     sigma_e  = σ_electronic (mS/cm),  kappa = thermal
   cell-level (post-processing 검증):

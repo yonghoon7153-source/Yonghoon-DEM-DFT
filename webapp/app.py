@@ -669,13 +669,15 @@ def _tau_block_rows(phi_se, sigma0, sig_full_h, sig_full_p, sig_bulk, tau_dij, t
       physics σ 가 없으면 physics 칸 '—' (TAU-21 — 옛 판은 Hertz 값을 조용히 복사했다).
       비율 τ_Lap,eff / τ_Dij 는 정의가 다른 두 τ 의 비라 협착 배수로 부르지 않는다 (CLAUDE.md τ 블록 · TAU-08)."""
     import math as _m
+    _tf = _tau_flux()       # ★ TAU-03 (10-04) — 등급 τ 축 · COMSOL 2D · regime DB 와 같은 도우미 (`tau_flux.tau2_value`)
 
     def _t2(s):
-        return phi_se * sigma0 / s if (s and s > 0) else None
+        return _tf.tau2_value(phi_se, sigma0, s)
     t2_h, t2_p = _t2(sig_full_h), _t2(sig_full_p)
     sq_h = _m.sqrt(t2_h) if t2_h is not None else None
     sq_p = _m.sqrt(t2_p) if t2_p is not None else None
-    t_geom = _m.sqrt(phi_se * sigma0 / sig_bulk) if (sig_bulk and sig_bulk > 0) else None
+    t2_geom = _t2(sig_bulk)
+    t_geom = _m.sqrt(t2_geom) if t2_geom is not None else None
     rows = [[TAU_SECTION_LABEL, '', '', '']]
     if tau_dij:
         rows.append(_same_row('τ_Dij (Dijkstra, 기하만)', round(tau_dij, 2)))
@@ -7637,6 +7639,13 @@ def _se_material():
     return se_material
 
 
+def _tau_flux():
+    """scripts/tau_flux.py (τ 소비처 공용 도우미 · TAU-03) 지연 임포트 — 경로는 `_se_material()` 과 같다."""
+    _se_material()
+    import tau_flux
+    return tau_flux
+
+
 def _sigma_grain_mS_cm(metrics=None):
     """σ_grain [mS/cm] — 이 파일에서 파생량(σ_Bruggeman, τ_Laplace)을 만들 때 쓰는 단 하나의 값.
 
@@ -7661,67 +7670,11 @@ def _sigma_grain_mS_cm(metrics=None):
 def _sigma_grain_context(metrics=None):
     """(σ_grain [mS/cm], mixed_T_note|None) — 값과 "왜 이 값인가" 를 함께 돌려준다.
 
-    ★ 2026-07-28 재검증(HIGH, e-follow-on) 수정: 위 C-1 중앙화가 두 provenance 키를
-      **같은 것처럼** 취급했는데, 둘은 스케일한 σ 가 다르다.
-
-        temperature_provenance          — network_conductivity.py / mpm_webapp_payload.py.
-                                          `sigma_full_mScm` **자체**가 Arrhenius 로 스케일됨.
-        stage_e_temperature_provenance  — run_network_full_corrections.py --temp-c.
-                                          `sigma_full_mScm_stage_e` 만 스케일하고
-                                          **베이스라인 `sigma_full_mScm` 은 25 °C 로 남긴다**
-                                          (그 스크립트 selftest 가 "T 런도 베이스라인은 25 °C
-                                          그대로" 를 명시적으로 검증한다).
-
-      그런데 이 헬퍼의 **모든** 소비자(app.py:2402/2419/2536/2551/5311/8004)는 σ_grain 을
-      `metrics['sigma_full_mScm']`(= 베이스라인)와 짝지어 나눈다:
-          σ_brug/σ_ionic = σ_grain·ratio / σ_full        τ_Lap_eff = √(φ_SE·σ_grain/σ_full)
-      따라서 Stage-E 키를 따라 분자만 ×4.44(60 °C) 하면 분모는 25 °C 그대로라 비율이 ×4.44,
-      τ 가 ×2.1 로 **조용히 틀린다** — 이 함수가 막으려던 바로 그 오류를 반대 방향으로
-      새로 만든 셈이다.  ⇒ 짝이 맞는 `temperature_provenance` 만 따르고, Stage-E-only 런은
-      25 °C 상수를 쓴 뒤(= 25 °C 베이스라인과 정확히 짝이 맞음) 혼합상태를 note 로 노출한다.
-
-    ★ 기본값 불변: 온도 키가 없는 런(=현존 전 코퍼스)은 bitwise 3.0, note=None.
+    ★ 10-04 (TAU-03 · 1저자 비준 *"권고대로"*): 판정 규칙 전문은 `scripts/se_material.sigma_grain_context` 로 옮겼다 —
+      등급 τ 축 · COMSOL 2D 내보내기 · regime DB 도 **같은 짝 σ₀** 를 쓴다 (옛 셋은 3.0 고정 — L4-04).  여기는 그것을
+      그대로 돌려준다 (값 · 경고 같음 — `webapp/test_tau_grade_unify.py` W1).  기본값 불변: 온도 키 없는 런 = bitwise 3.0.
     """
-    base = _se_material().SIGMA_GRAIN_MS_CM_25C
-    if not isinstance(metrics, dict):
-        return base, None
-
-    def _fac(key):
-        prov = metrics.get(key)
-        if isinstance(prov, dict):
-            f = prov.get('sigma_ion_T_factor')
-            if isinstance(f, (int, float)) and not isinstance(f, bool) and f > 0:
-                return float(f)
-        return None
-
-    # ★ S-4 (2026-07-29 적대리뷰 CONFIRMED): `is not None` 은 **존재**를 짝맞음으로 오판한다.
-    #   network_conductivity.py:1106 은 `temperature_provenance` 를 factor 1.0 이어도 **무조건**
-    #   발행하므로, 실제 프로덕션 산출물은 거의 항상 {1.0 인 paired 키} + {60 °C 인 Stage-E 키}
-    #   형태다.  옛 코드는 그 조합에서 paired 를 "있다"고 보고 `(3.0, None)` 을 돌려줘 → 아래
-    #   혼합-온도 경고 분기가 **실재하는 유일한 조합에서 절대 실행되지 않았다**.  값(3.0)은 25 °C
-    #   베이스라인과 짝이 맞아 옳으므로 어떤 수치 검증에도 안 걸렸다 — 잃는 건 경고뿐이었다.
-    #   ⇒ 판정을 "존재" 가 아니라 **배수가 실제로 1 이 아닌가** 로 바꾼다.
-    f_paired = _fac('temperature_provenance')          # σ_full 이 같이 움직인 경우만
-    if f_paired is not None and abs(f_paired - 1.0) > 1e-12:
-        return base * f_paired, None                   # 짝맞는 T 런 → 그대로 스케일
-
-    f_stage_e = _fac('stage_e_temperature_provenance')
-    if f_stage_e is not None and abs(f_stage_e - 1.0) > 1e-12:
-        # (paired 키가 1.0 으로 함께 있어도 여기 도달한다 — S-4 수정의 요점)
-        prov = metrics['stage_e_temperature_provenance']
-        t_c = prov.get('T_C', prov.get('temp_C'))
-        return base, (
-            f'⚠ 혼합 온도: 이 런은 Stage-E σ_ion 만 {t_c if t_c is not None else "?"} °C 로 '
-            f'스케일(×{f_stage_e:.3g})했고 베이스라인 σ_full 은 25 °C 입니다.  σ_brug·τ_Laplace 는 '
-            f'그 25 °C 베이스라인과 짝을 맞추려고 σ_grain = {base:g} mS/cm(25 °C)를 씁니다 — '
-            f'Stage-E 값과 직접 비교하지 마세요.')
-
-    s_cm = metrics.get('sigma_grain_S_cm')
-    if isinstance(s_cm, (int, float)) and not isinstance(s_cm, bool) and s_cm > 0:
-        if float(s_cm) == _se_material().SIGMA_GRAIN_S_CM_25C:
-            return base, None              # bitwise-safe (0.003*1000 ≠ 3.0)
-        return float(s_cm) * 1000.0, None
-    return base, None
+    return _se_material().sigma_grain_context(metrics)
 
 
 # 킷 run_mpm.sh 안의 STEP3(σ) 호출 = 온도를 주입할 유일한 지점.  생성기(scripts/mpm_input_from_case.py)
@@ -9726,11 +9679,11 @@ _GRADE_PLAIN = {
     'se_se_cn_std': '위 "이웃 수"가 알갱이마다 얼마나 들쭉날쭉한지예요. 작을수록 모두 고르게 쌓인 거라 '
         '좋고, 크면 어떤 건 외톨이·어떤 건 과밀이라 불균일합니다.',
     '__tau_lap_eff': '이온이 위→아래로 갈 때 실제로 얼마나 "돌아가고 좁아져서" 느려지는지를 한 숫자로 '
-        '나타낸 거예요(굴곡도 τ). 1이면 직선, 클수록 빙 돌아가 느립니다. 작을수록 좋아요. 연속체 모델 입력 칸에 넣는 꼴은 이 값의 제곱(tau2)입니다.',
+        '나타낸 거예요(굴곡도 τ · Hertz 접촉 면적 기준 · 그 런의 짝 σ₀ 로 계산 — 케이스 τ 블록 Hertz 칸과 같은 값). 1이면 직선, 클수록 빙 돌아가 느립니다. 작을수록 좋아요. 연속체 모델 입력 칸에 넣는 꼴은 이 값의 제곱(tau2)입니다.',
     '__tau_lap_bulk': '위 굴곡도에서 "좁아짐(병목)" 효과를 빼고 길이 순수하게 얼마나 돌아가는지만 본 값이에요. '
         '구조 자체의 우회 정도입니다.',
-    '__constriction_overhead': '전체 굴곡도가 "순수 우회"보다 몇 배 더 나빠졌는지예요. 1배면 좁아짐 손해가 '
-        '없는 거고, 클수록 좁은 통로 때문에 추가로 느려진 겁니다.',
+    '__constriction_overhead': '전체 굴곡도(Hertz)가 "좁아짐을 뺀 우회"보다 몇 배 더 나빠졌는지예요 — 모델 안의 비라 실제 협착 배수보다 '
+        '큽니다(원기둥 bulk 기준). 1배면 좁아짐 손해가 없는 거고, 클수록 좁은 통로 때문에 추가로 느려진 겁니다.',
     'tortuosity_recommended': '이온이 갈 수 있는 가장 짧은 길이 직선 대비 얼마나 더 돌아가는지(기하학적 우회만). '
         '1.0이면 거의 직선, 클수록 미로처럼 돌아갑니다.',
     'path_hop_area_mean_physics': '이온이 길을 한 칸씩 건널 때 거치는 접촉면의 평균 넓이예요. '

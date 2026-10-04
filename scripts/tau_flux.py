@@ -65,6 +65,37 @@ def _pos(v):
     return v if v is not None and v > 0 else None
 
 
+#  ── 소비처 공용 tau2 (TAU-03 · 결정 6 · 1저자 비준 10-04 밤 *"권고대로"*) ────────────────────────────────────────────────
+#  웹앱 τ 블록 · 등급 τ · overhead 축 · COMSOL 2D 내보내기 · regime DB 가 **이 두 함수**를 쓴다 (옛 다섯 변형 — 등급 · 내보내기는
+#  Stage-E physics σ + 3.0 고정이었다).  인계 열 (`ion_columns`) 은 솔버 무차원 σ_ratio (8 자리) 로 따로 계산한다 (`TAU-25`) —
+#  여기 값은 full_metrics 의 mS/cm σ (6 자리 반올림) 라 그것과 최대 0.11 % 다를 수 있다 (화면 · 등급용).
+METRIC_SIGMA_KEY = {'hertz': 'sigma_full_mScm', 'physics': 'sigma_full_mScm_physics'}   # 원 솔버 σ — Stage-E 키 없음
+
+
+def tau2_value(phi_se, sigma0, sigma_full):
+    """tau2 = φ_SE · σ₀ / σ_full (tortuosity factor).  σ₀ 와 σ_full 은 **같은 런 · 같은 온도의 짝**이어야 한다 —
+    짝이면 σ₀ 는 약분되는 수다 (망 σ_full 이 σ₀ 에 정비례).  셋 중 하나라도 양의 유한수가 아니면 None."""
+    phi, s0, s = _pos(phi_se), _pos(sigma0), _pos(sigma_full)
+    return phi * s0 / s if (phi is not None and s0 is not None and s is not None) else None
+
+
+def tau2_from_metrics(metrics, mode='hertz'):
+    """full_metrics → (tau2 | None, σ₀).  σ = **원 솔버 σ** (`METRIC_SIGMA_KEY` — Stage-E σ 는 Cronau · 파괴 같은 재료 인자를 담아
+    τ 가 아니다 · 결정 6) · physics σ 가 없으면 None (Hertz 로 대체하지 않는다 · TAU-21) · σ₀ = `se_material.sigma_grain_context`
+    (웹앱과 같은 짝 σ₀ — 온도 런이면 배수 · L4-04).  σ_bulk_net 은 `mode='bulk'` (모드 무관 CF 가지 · 원기둥 bulk)."""
+    try:
+        import se_material as _sem
+    except ImportError:                                  # 같은 폴더 (scripts/) — 호출자 sys.path 에 없을 때
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        import se_material as _sem
+    if mode not in METRIC_SIGMA_KEY and mode != 'bulk':
+        raise ValueError(f'mode={mode!r} — hertz · physics · bulk 만')
+    m = metrics if isinstance(metrics, dict) else {}
+    sigma0 = _sem.sigma_grain_context(m)[0]
+    key = 'sigma_bulk_net_mScm' if mode == 'bulk' else METRIC_SIGMA_KEY[mode]
+    return tau2_value(m.get('phi_se'), sigma0, m.get(key)), sigma0
+
+
 def column_names():
     out = []
     for m in MODES:

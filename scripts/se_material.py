@@ -8,11 +8,12 @@ TRUE for the production σ path, and ONLY that path:
     network_conductivity.py · step3_sigma.py · voxel_conductivity.py ·
     mpm_webapp_payload.py · generate_comparison_plots.SE_SG (the LOOCV-0.975 σ_ionic
     scaling law) · webapp/predictor_engine.py · webapp/app.py · webapp templates
-    (via the `sigma_grain()` Jinja global)
+    (via the `sigma_grain()` Jinja global) · grade_engine.py τ axes · export_comsol_2d.py ·
+    build_tau_regime_db.py (2026-10-04 TAU-03 — via `sigma_grain_context` + `tau_flux.tau2_from_metrics`)
 
 NOT YET TRUE repo-wide.  ~10 offline analysis / one-shot fitting scripts still carry a
 bare 3.0 (physics_surface_contact_fit.py, triage_cases.py, verify_case.py,
-build_tau_regime_db.py, export_comsol_2d.py, fit_constrained.py,
+fit_constrained.py,
 screening_ionic_thin_focus.py, analyze_network_results.py, the v-series fit scripts, and
 some plot-local SIGMA_BULK constants inside generate_comparison_plots.py).  The current
 inventory lives in docs/temp_pressure_capability.md §9-2.
@@ -203,6 +204,71 @@ def provenance(T_C=None, ea_ev=None, T_ref_C=None, sigma_e_modelled=False):
                'F1) — a T-swept run is NOT a full-physics temperature sweep.')
         ),
     }
+
+
+def sigma_grain_context(metrics=None):
+    """(σ_grain [mS/cm], mixed_T_note|None) — 이 런의 σ_full 과 **짝이 맞는** σ₀ 와 "왜 이 값인가".
+
+    ★ 10-04 (TAU-03 · 1저자 비준 *"권고대로"*): `webapp/app.py` 의 `_sigma_grain_context` 를 여기로 옮겼다 — 웹앱 τ 블록 ·
+      등급 τ 축 · COMSOL 2D 내보내기 · regime DB 가 **같은 σ₀** 를 쓰게 한다 (옛 등급 · 내보내기 · DB 는 3.0 을 박아 두어 온도 런에서
+      τ 가 틀렸다 — L4-04).  웹앱 함수는 이것을 그대로 돌려준다 (값 · 경고 같음 — `webapp/test_tau_grade_unify.py` W1).
+
+    ★ 2026-07-28 재검증(HIGH, e-follow-on) 수정: 두 provenance 키는 스케일한 σ 가 다르다.
+
+        temperature_provenance          — network_conductivity.py / mpm_webapp_payload.py.
+                                          `sigma_full_mScm` **자체**가 Arrhenius 로 스케일됨.
+        stage_e_temperature_provenance  — run_network_full_corrections.py --temp-c.
+                                          `sigma_full_mScm_stage_e` 만 스케일하고
+                                          **베이스라인 `sigma_full_mScm` 은 25 °C 로 남긴다**
+                                          (그 스크립트 selftest 가 "T 런도 베이스라인은 25 °C
+                                          그대로" 를 명시적으로 검증한다).
+
+      소비자는 σ_grain 을 `metrics['sigma_full_mScm']`(= 베이스라인)와 짝지어 나눈다:
+          σ_brug/σ_ionic = σ_grain·ratio / σ_full        τ_Lap_eff = √(φ_SE·σ_grain/σ_full)
+      따라서 Stage-E 키를 따라 분자만 ×4.44(60 °C) 하면 분모는 25 °C 그대로라 비율이 ×4.44,
+      τ 가 ×2.1 로 **조용히 틀린다**.  ⇒ 짝이 맞는 `temperature_provenance` 만 따르고, Stage-E-only 런은
+      25 °C 상수를 쓴 뒤(= 25 °C 베이스라인과 정확히 짝이 맞음) 혼합상태를 note 로 노출한다.
+
+    ★ S-4 (2026-07-29 적대리뷰 CONFIRMED): `is not None` 은 **존재**를 짝맞음으로 오판한다 —
+      network_conductivity 는 `temperature_provenance` 를 factor 1.0 이어도 **무조건** 발행하므로 판정은
+      "배수가 실제로 1 이 아닌가" 다.
+
+    ★ 기본값 불변: 온도 키가 없는 런(=현존 전 코퍼스)은 bitwise 3.0, note=None.
+      `sigma_grain_S_cm` 폴백도 3.0e-3 이면 곱하지 않고 상수를 돌려준다 (0.003*1000 = 3.0000000000000004).
+    """
+    base = SIGMA_GRAIN_MS_CM_25C
+    if not isinstance(metrics, dict):
+        return base, None
+
+    def _fac(key):
+        prov = metrics.get(key)
+        if isinstance(prov, dict):
+            f = prov.get('sigma_ion_T_factor')
+            if isinstance(f, (int, float)) and not isinstance(f, bool) and f > 0:
+                return float(f)
+        return None
+
+    f_paired = _fac('temperature_provenance')          # σ_full 이 같이 움직인 경우만
+    if f_paired is not None and abs(f_paired - 1.0) > 1e-12:
+        return base * f_paired, None                   # 짝맞는 T 런 → 그대로 스케일
+
+    f_stage_e = _fac('stage_e_temperature_provenance')
+    if f_stage_e is not None and abs(f_stage_e - 1.0) > 1e-12:
+        # (paired 키가 1.0 으로 함께 있어도 여기 도달한다 — S-4 수정의 요점)
+        prov = metrics['stage_e_temperature_provenance']
+        t_c = prov.get('T_C', prov.get('temp_C'))
+        return base, (
+            f'⚠ 혼합 온도: 이 런은 Stage-E σ_ion 만 {t_c if t_c is not None else "?"} °C 로 '
+            f'스케일(×{f_stage_e:.3g})했고 베이스라인 σ_full 은 25 °C 입니다.  σ_brug·τ_Laplace 는 '
+            f'그 25 °C 베이스라인과 짝을 맞추려고 σ_grain = {base:g} mS/cm(25 °C)를 씁니다 — '
+            f'Stage-E 값과 직접 비교하지 마세요.')
+
+    s_cm = metrics.get('sigma_grain_S_cm')
+    if isinstance(s_cm, (int, float)) and not isinstance(s_cm, bool) and s_cm > 0:
+        if float(s_cm) == SIGMA_GRAIN_S_CM_25C:
+            return base, None              # bitwise-safe (0.003*1000 ≠ 3.0)
+        return float(s_cm) * 1000.0, None
+    return base, None
 
 
 def temperature_argparse(ap):

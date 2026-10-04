@@ -28,7 +28,7 @@ DOE BatPaC, Janek 2023 review, automotive battery roadmap consensus:
 ### 원칙 3: 데이터 vs 근사 — 실 metric 우선
 - 실 metric 있으면 그대로 사용 (`am_vulnerable_pct`, `electronic_sigma_loss_pct_stage_e`)
 - 없으면 axis 제거 또는 informational만 — 가짜 근사 금지
-- Derived metric (τ_Lap_eff = √(φ × σ_grain / σ_full))은 OK — 정의 명확
+- Derived metric (τ_Lap_eff = √(φ × σ_grain / σ_full))은 OK — 정의 명확 (★ 10-04 TAU-03: σ_full = 원 솔버 **Hertz** σ · σ_grain = 그 런의 **짝 σ₀** — Stage-E σ 는 재료 인자를 담아 τ 가 아니다)
 
 ---
 
@@ -77,9 +77,9 @@ DOE BatPaC, Janek 2023 review, automotive battery roadmap consensus:
 ### E. 경로 효율 / Tortuosity (6.3%)
 | Axis | Weight | 이유 |
 |---|---|---|
-| τ_Laplace,eff | 1.0 | √tau2 (입력 칸의 꼴은 tau2 · TAU-01) |
-| Constriction overhead τ_eff/τ_bulk | 0.7 | 좁은 contact loss |
-| τ_Laplace,bulk | 0.5 | 구조 only |
+| τ_Laplace,eff (Hertz) | 1.0 | √tau2 (입력 칸의 꼴은 tau2 · TAU-01) · 원 솔버 Hertz σ + 짝 σ₀ — 웹앱 τ 블록 Hertz 칸과 같은 도우미 (TAU-03 · 10-04) · 문턱 = 내부 등급선 (TAU-16) |
+| 모델 내부 협착 비 τ_eff,H/τ_bulk (원기둥 bulk 기준) | 0.7 | 좁은 contact loss · √저항비 · 물리 협착 배수 아님 (결정 11) |
+| τ_Laplace,bulk (짝 σ₀) | 0.5 | 구조 only |
 | A_hop mean | 0.5 | 보조 |
 | τ_Dijkstra | 0.3 | sanity check |
 

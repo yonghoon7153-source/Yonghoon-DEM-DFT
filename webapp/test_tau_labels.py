@@ -212,13 +212,19 @@ with tempfile.TemporaryDirectory() as td:
     finally:
         EC.ROOT = _old_root
 byname = {r['parameter']: r for r in rows}
-t2r, sqr = byname.get('tau2'), byname.get('tau_Laplace_eff')
-_w = 0.30 * EC.SIGMA_GRAIN_MS / 0.25
-chk('F1 tau2 행 = φ·σ_grain/σ_full (같은 σ_full 선택 — physics) · 단위 1',
-    t2r is not None and t2r.get('unit') == '1' and float(t2r['value']) == round(_w, 6), repr(t2r))   # 내보내기는 소수 6 자리
-chk('F2 √ 행 = √tau2 · 입력 칸 제안 "—" · 설명에 COMSOL · EIS 입력 주장 없음',
+#  ★ 10-04 TAU-03 (1저자 비준): 행이 모드별로 나뉘었다 (옛 단일 tau2 · f_ion · tau_Laplace_eff 행 = Stage-E physics 우선 → 없음).
+#    같은 단언을 두 모드에 건다 — 상세 (Stage-E 행 · 짝 σ₀ · physics 빈칸) 는 webapp/test_tau_grade_unify.py C1–C5.
+t2r, sqr = byname.get('tau2_ion_hertz'), byname.get('tau_ion_hertz')
+t2p, sqp = byname.get('tau2_ion_physics'), byname.get('tau_ion_physics')
+_w = 0.30 * EC.SIGMA_GRAIN_MS / 0.12
+_wp = 0.30 * EC.SIGMA_GRAIN_MS / 0.25
+chk('F1 tau2_ion_<mode> 행 = φ·σ_grain/σ_full,<mode> (Hertz 0.12 · physics 0.25) · 단위 1',
+    t2r is not None and t2r.get('unit') == '1' and float(t2r['value']) == round(_w, 6)
+    and t2p is not None and float(t2p['value']) == round(_wp, 6), repr((t2r, t2p)))   # 내보내기는 소수 6 자리
+chk('F2 √ 행 (tau_ion_<mode>) = √tau2 · 입력 칸 제안 "—" · 설명에 COMSOL · EIS 입력 주장 없음',
     sqr is not None and float(sqr['value']) == round(math.sqrt(_w), 6) and sqr.get('comsol_name') == '—'
-    and not any(s in str(sqr) for s in ('COMSOL/EIS', 'COMSOL / EIS', 'EIS input')), repr(sqr))
+    and sqp is not None and float(sqp['value']) == round(math.sqrt(_wp), 6)
+    and not any(s in str(sqr) + str(sqp) for s in ('COMSOL/EIS', 'COMSOL / EIS', 'EIS input')), repr((sqr, sqp)))
 ESRC = _read('scripts/export_comsol_2d.py')
 chk('F3 README 검산식 = σ_i = φ·σ_grain/tau2 · 옛 "σ_grain / (φ·tau_eff²)" 없음',
     'σ_grain / (φ·tau_eff²)' not in ESRC and 'σ_i = φ·σ_grain/tau2' in ESRC)
@@ -262,15 +268,18 @@ chk('I4 stage4 PyBaMM 주석 — tortuosity factor 칸 = tau2 (√ 값 아님)',
 print('J  COMSOL 앱 예제 근거 (D1)')
 chk('J1 tau2 툴팁 — 앱 예제 식 (1) f_eff = ε/τ · User defined 로 f 직접 · 노드 Tortuosity 식은 강하게 시사 (GUI 확인 전) 유지',
     bool(tt2) and 'Homogenizing' in tt2 and 'f_eff = ε/τ' in tt2 and 'User defined' in tt2 and '강하게 시사' in tt2 and 'GUI' in tt2, tt2[-400:])
-fir = byname.get('f_ion')
-chk('J2 COMSOL 2D 내보내기 f_ion 행 = σ_full/σ_grain (= φ/tau2 · 같은 σ_full 선택) · 단위 1 · 이름 = 식별자 f_ion · 설명에 User defined',
-    fir is not None and fir.get('unit') == '1' and fir.get('comsol_name') == 'f_ion'
-    and float(fir['value']) == round(0.25 / EC.SIGMA_GRAIN_MS, 6) and 'User defined' in str(fir.get('source', ''))
-    and t2r is not None and abs(float(fir['value']) * float(t2r['value']) - 0.30) < 1e-5, repr(fir))
-_ri = ESRC.find('검산: σ_i = φ·σ_grain/tau2')          # README [B] 블록 안 (코드 주석의 f_ion 과 구별)
+fir, fip = byname.get('f_ion_hertz'), byname.get('f_ion_physics')
+chk('J2 COMSOL 2D 내보내기 f_ion_<mode> 행 = σ_full,<mode>/σ_grain (= φ/tau2) · 단위 1 · 이름 = 식별자 f_ion_<mode> · 설명에 User defined',
+    fir is not None and fir.get('unit') == '1' and fir.get('comsol_name') == 'f_ion_hertz'
+    and float(fir['value']) == round(0.12 / EC.SIGMA_GRAIN_MS, 6) and 'User defined' in str(fir.get('source', ''))
+    and t2r is not None and abs(float(fir['value']) * float(t2r['value']) - 0.30) < 1e-5
+    and fip is not None and fip.get('comsol_name') == 'f_ion_physics' and float(fip['value']) == round(0.25 / EC.SIGMA_GRAIN_MS, 6),
+    repr((fir, fip)))
+_ri = ESRC.find('[B] MATERIAL — Global')          # README [B] 블록 (코드 주석의 f_ion 과 구별)
 _rb = ESRC[_ri:ESRC.find('[C] BOUNDARY', _ri)] if _ri >= 0 else ''
-chk('J3 README 블록에 f_ion · User defined 안내 · 같은 틀 (L_cat · phiSE)',
-    'f_ion    = σ_i/σ_grain = φ/tau2' in _rb and 'User defined' in _rb and 'L_cat' in _rb and 'phiSE' in _rb, _rb[:300])
+chk('J3 README 블록에 f_ion_<mode> · User defined 안내 · 같은 틀 (L_cat · phiSE) · 검산식',
+    'f_ion_hertz      = sigma_i_hertz/σ_grain = φ/tau2_ion_hertz' in _rb and 'User defined' in _rb and 'L_cat' in _rb
+    and 'phiSE' in _rb and '검산: σ_i = φ·σ_grain/tau2' in _rb, _rb[:300])
 _J = _read('docs/reviews/tau_conventions_judgment_v2_20261003.md')
 _C = _read('CLAUDE.md')
 chk('J4 판정 v2 · CLAUDE.md τ 블록에 근거 (Homogenizing … 식 (1) f_eff = ε/τ · User defined · McMullin 이름 함정)',
