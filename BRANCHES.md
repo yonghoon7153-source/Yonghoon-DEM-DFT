@@ -321,5 +321,6 @@ git push -u origin claude/14-gate-code-review-9qkx05
 | 2026-10-03 | 원장 §130 — 88차 요청 (`GATE88_REQUEST.md`) · 게이트 요청 발송 대기 (발송문은 사용자 전달) | 이 행이 든 커밋 | 밖 | 88차 회신은 서브 또는 복귀 뒤 본진에서 받는다 |
 | 2026-10-04 | `degradation-degeneracy/.gitattributes` 규칙 `docs/22p_gap/gate88_review/** -text !eol` (88차 리뷰 패키지 보존 전) | `be6358fd1` | 밖 | 할 일 없음 |
 | 2026-10-04 | 원장 §131 — 88차 회신 접수 (2b 종결 보류 · G88-N1 P1) · 패키지 보존 `0e0a1975c` | 이 행이 든 커밋 | 밖 | 할 일 없음 (ff 로 그대로 들어간다) |
+| 2026-10-04 | `bms-balancing/.gitattributes` 규칙 — REIL v2 재검토 묶음 `reviews/prereview_reil_v2_20261004/** -text` (게이트 차수 밖) | `6c78b5d74` | 밖 | 할 일 없음 |
 
 ### 복귀 결과 (복귀 정리 커밋이 덧붙인다)
