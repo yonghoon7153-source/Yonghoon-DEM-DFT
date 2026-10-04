@@ -3477,3 +3477,8 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - 고정 표 `degradation-degeneracy/docs/22p_gap/PYBAMM_PIN_ROUND_SPEC.md` · [[pybamm]] 에 한 줄 · 작업 상태 `docs/GATE70_WORKING_STATE.md` 새 절
 - 다음: RED (`tests/test_gate90_env_profile.py` e01–e12) → GREEN → 변이 `-g90` → 영수증 → 전체 회귀 · smoke · 재생 → GATE90
 - 하지 않은 것: RUN_SCOPE · 설치 · 버전 비교 · 재생성 (이 커밋은 문서만)
+
+## [2026-10-04] update | REIL N2 — C6 실행 환경 프로필 초안 (문서만 · 게이트 차수 밖)
+- 문서 `bms-balancing/docs/REIL_C6_ENV_PROFILE_DRAFT_20261004.md` · 선행 조건 문서 §5 덧붙임 · [[isu-uconn-lfp-gr-emulated-degradation]] 에 한 줄
+- 프로필 축 · 부속 A §3-1 옵션 8 개 대조 목록 · Sobol 배열 봉인 · 실행 기계 후보 셋 (이 컨테이너 · 사용자 Windows · 서버 — 결정은 사용자)
+- 하지 않은 것: 설치 · 버전 실측 · 옵션 introspection · 자료 개봉 · 실행 · 판 번호 선택

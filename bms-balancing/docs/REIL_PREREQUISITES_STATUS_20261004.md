@@ -43,3 +43,10 @@
 
 자료 (`LFP_Data.xlsx` · `results/*.pkl`) 개봉 · 노트북 · 제공 코드 실행 · 설치 · 비용 측정 · 맞춤 · 논문 다운로드 (공개 여부 미확인) · 프로토콜 수정. 게이트
 리뷰 (`degradation-degeneracy`) · PyBaMM 고정 · COMSOL 과 무관 · RUN_SCOPE 0.
+
+## §5 진행 (2026-10-04 · 덧붙임 — 위 §0–§4 는 그대로)
+
+- **N2 초안 작성** — `REIL_C6_ENV_PROFILE_DRAFT_20261004.md`: 프로필 축 (Python · 플랫폼 · NumPy · SciPy 의 COBYQA · BLAS · pandas ·
+  openpyxl · pymoo · 전이 의존성) · 부속 A §3-1 옵션 8 개의 대조 목록 · Sobol 배열 봉인 · 부속 B §2-5 환경 기록 항목 · 실행 기계
+  후보 셋. 문서만 — 설치 · 버전 실측 · 옵션 introspection · 실행 0. 판 번호는 고르지 않았다.
+- **사용자에게 남은 것:** N1 의 입력 (논문 또는 저자 명세) 과 실행할 기계의 결정 (N2 초안 §4). C6 실행은 그 뒤 별도 승인.

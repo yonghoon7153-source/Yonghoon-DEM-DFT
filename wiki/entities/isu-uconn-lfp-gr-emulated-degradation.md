@@ -194,6 +194,8 @@ v2 의 Codex 재검토 판정은 `DESIGN_DIRECTION_ACCEPTED_DOCUMENT_REVISION_RE
 - **2026-10-04 선행 조건 확보 상태 제시** — `bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md`: C1-core **미확보** (논문 미열람 · 공개 여부
   미확인 — 웹 검색에서 찾지 못했고 Crossref 는 이 환경의 네트워크 정책이 막는다) · C6 미시행 (문서 쪽 옵션 표 · 배열 봉인 규칙만) · 제안 순서
   C1-core → C6 → P0 → 비용 측정 → 실행. 지금 필요한 입력은 논문 (또는 저자 명세) 하나 — 각 단계는 사용자 결정.
+- **2026-10-04 N2 (C6 준비) 초안** — `bms-balancing/docs/REIL_C6_ENV_PROFILE_DRAFT_20261004.md`: 실행 환경 프로필의 축 · 부속 A §3-1 옵션
+  8 개의 대조 목록 · Sobol 배열 봉인 · 실행 기계 후보 셋 (결정은 사용자). 문서만 — 설치 · 버전 실측 · 실행 0 · 판 번호를 고르지 않았다.
 
 ## 이 위키와의 관계
 
