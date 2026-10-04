@@ -520,19 +520,20 @@
       "status": "STATIC_MATCH"
     },
     {
-      "check": "preservation: protected repository files = HEAD bytes",
+      "check": "preservation: protected repository files = bytes at the pre-candidate commit",
       "status": "STATIC_MATCH",
       "detail": {
+        "reference_commit": "899f966de97f37541d37e39b3dfc53e41b0f72fb",
         "protected_count": 88,
         "changed": []
       }
     },
     {
-      "check": "preservation: COMSOL_REBUILD_SPEC.md only appended (HEAD bytes are a prefix)",
+      "check": "preservation: COMSOL_REBUILD_SPEC.md only appended since the pre-candidate commit (its bytes are a prefix)",
       "status": "STATIC_MATCH",
       "detail": {
-        "head_bytes": 397625,
-        "now_bytes": 405034
+        "reference_commit": "899f966de97f37541d37e39b3dfc53e41b0f72fb",
+        "reference_bytes": 397625
       }
     },
     {

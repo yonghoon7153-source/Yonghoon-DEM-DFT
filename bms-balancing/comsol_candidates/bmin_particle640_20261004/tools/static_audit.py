@@ -230,28 +230,31 @@ def main():
     ent = (CAND / "src/candidate_entry.py").read_text(encoding="ascii")
     check("entry approval field and success label", "a.get('native_bmin640_one_shot') is True" in ent and "=='BMIN640_150S_COMPARISON_COMPLETE' else 1" in ent)
 
-    # 7. 보존 — 이 저장소 안의 보존 대상은 마지막 커밋 (HEAD) 바이트 그대로 · SPEC 는 덧붙이기만 (HEAD 바이트가 접두)
-    #    (정상 60 s 준비본의 PRESERVATION before / after 에 해당 — 실행 기계의 생산 원본 · 기준 CSV 는 여기서 볼 수 없다)
+    # 7. 보존 — 이 저장소 안의 보존 대상은 후보 작성 직전 커밋 (REFERENCE) 의 바이트 그대로 · SPEC 는 덧붙이기만 (REFERENCE 바이트가 접두)
+    #    (정상 60 s 준비본의 PRESERVATION before / after 에 해당 — 실행 기계의 생산 원본 · 기준 CSV 는 여기서 볼 수 없다).
+    #    기준을 HEAD 가 아니라 고정 커밋으로 두어, 커밋 뒤에 다시 돌려도 같은 결과 · 같은 바이트가 나오게 한다.
     root = REPO_BMS.parent
+    REFERENCE = "899f966de97f37541d37e39b3dfc53e41b0f72fb"
     def head(rel):
-        r = subprocess.run(["git", "-C", str(root), "show", "HEAD:" + rel], capture_output=True)
+        r = subprocess.run(["git", "-C", str(root), "show", REFERENCE + ":" + rel], capture_output=True)
         return r.stdout if r.returncode == 0 else None
     protected = []
     for d in ("bms-balancing/comsol_candidates/bmin_particle640_20261004/basis",
               "bms-balancing/reviews/r14_repros/codex63/normal480_native_recipient_review_20261001",
               "bms-balancing/reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930",
               "bms-balancing/reviews/r14_repros/codex63/comsol_a0_bmin_documents_20261004"):
-        ls = subprocess.run(["git", "-C", str(root), "ls-tree", "-r", "--name-only", "HEAD", "--", d], capture_output=True, text=True).stdout.split()
+        ls = subprocess.run(["git", "-C", str(root), "ls-tree", "-r", "--name-only", REFERENCE, "--", d], capture_output=True, text=True).stdout.split()
         protected += ls
     protected += ["bms-balancing/docs/" + n for n in ("COMSOL_BMIN_SCOPE_20261004.md", "COMSOL_BMIN_SCOPE_v2_20261004.md", "COMSOL_EXPERIMENT_CORRESPONDENCE_v1_20261004.md",
                                                       "COMSOL_EXPERIMENT_CORRESPONDENCE_v2_20261004.md", "COMSOL_DATA_REQUEST_DRAFT_20261004.md",
                                                       "COMSOL_DATA_REQUEST_DRAFT_v2_20261004.md", "COMSOL_NEXT_PLAN_20261004.md")]
     changed = [rel for rel in protected if head(rel) is None or head(rel) != (root / rel).read_bytes()]
-    check("preservation: protected repository files = HEAD bytes", not changed and len(protected) > 30, {"protected_count": len(protected), "changed": changed})
+    check("preservation: protected repository files = bytes at the pre-candidate commit", not changed and len(protected) > 30,
+          {"reference_commit": REFERENCE, "protected_count": len(protected), "changed": changed})
     spec_head = head("bms-balancing/docs/COMSOL_REBUILD_SPEC.md")
     spec_now = (REPO_BMS / "docs/COMSOL_REBUILD_SPEC.md").read_bytes()
-    check("preservation: COMSOL_REBUILD_SPEC.md only appended (HEAD bytes are a prefix)", spec_head is not None and spec_now.startswith(spec_head),
-          {"head_bytes": None if spec_head is None else len(spec_head), "now_bytes": len(spec_now)})
+    check("preservation: COMSOL_REBUILD_SPEC.md only appended since the pre-candidate commit (its bytes are a prefix)", spec_head is not None and spec_now.startswith(spec_head),
+          {"reference_commit": REFERENCE, "reference_bytes": None if spec_head is None else len(spec_head)})
 
     plan = json.loads((PKG / "LIMITED_VALIDATION_PLAN.json").read_text(encoding="utf-8"))
     check("validation plan bound to this manifest, approvals false, counts consistent", plan["manifest_sha256"] == msha and plan["approved"] is False
