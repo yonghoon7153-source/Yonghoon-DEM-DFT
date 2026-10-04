@@ -223,10 +223,15 @@ def test_derived_quantities_bitwise(app):
     chk('[C-1] 표의 σ_brug/σ_ionic 이 옛 3.0 수식 결과와 동일',
         got is not None and got[1] == f'{want_brug:.1f}×', f'{got}')
     want_tau = math.sqrt(metrics['phi_se'] * 3.0 / metrics['sigma_full_mScm'])
-    tau_row = next((r for k, r in rows.items() if k.startswith('τ_Lap_eff')), None)
-    chk('[C-1] 표의 τ_Lap_eff 가 옛 3.0 수식 결과와 동일',
+    #  10-04 τ 명명 규약 (TAU-01) — √ 행 이름이 'τ_Lap_eff ⭐ …' → 'τ_Lap,eff = √tau2 …' 로 바뀌고 tau2 행이 생겼다 (값 규칙 불변).
+    tau_row = next((r for k, r in rows.items() if k.startswith('τ_Lap,eff = √tau2')), None)
+    chk('[C-1] 표의 τ_Lap,eff (= √tau2) 가 옛 3.0 수식 결과와 동일',
         tau_row is not None and abs(float(tau_row[1]) - round(want_tau, 2)) < 1e-9,
         f'{tau_row} vs {round(want_tau, 2)}')
+    t2_row = next((r for k, r in rows.items() if k.startswith('tau2 = ')), None)
+    chk('[C-1] 표의 tau2 가 옛 3.0 수식 (φ·3.0/σ_full) 결과와 동일',
+        t2_row is not None and abs(float(t2_row[1]) - round(want_tau ** 2, 3)) < 1e-9,
+        f'{t2_row} vs {round(want_tau ** 2, 3)}')
 
 
 # ══════════════════════════════════════════════════════════════════════════════

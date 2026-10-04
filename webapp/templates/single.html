@@ -1819,8 +1819,8 @@ const METRIC_TIPS = {
   'Tortuosity mean': {
     title: 'Tortuosity (굴곡도) — Dijkstra geodesic',
     formula: 'τ_Dij = L_path / L_direct\nL_path = shortest path 실제 거리 (Dijkstra 최단경로)\nL_direct = 출발점-도착점 z 방향 직선 거리',
-    desc: 'Dijkstra 단일 최단경로 기반. 기하학적 우회만 반영 (GB 저항 제외).\n수천 case screening 용 cheap surrogate.\n\n※ COMSOL / EIS 비교는 τ_Lap_eff 섹션 참조.',
-    meaning: 'τ_Dij < 1.5 우수, τ_Dij > 2 구불구불한 경로.\n실제 유효 이온 전도도는 σ_eff ∝ σ_bulk/τ² 관계 — 단 COMSOL 입력은 Dijkstra 아니라 τ_Lap_eff (GB constriction 포함) 사용 권장. τ_Dij 만 쓰면 실제 저항의 ~3× 과소평가.'
+    desc: 'Dijkstra 단일 최단경로 기반. 기하학적 우회만 반영 (GB 저항 제외).\n수천 case screening 용 cheap surrogate.\n\n※ 수송 굴곡도 (tau2 · τ_Lap,eff = √tau2) 는 τ 비교 섹션 참조.',
+    meaning: 'τ_Dij < 1.5 우수, τ_Dij > 2 구불구불한 경로.\n유효 이온 전도도는 σ_eff = φ·σ₀/tau2 관계 — 수송 쪽은 Dijkstra 가 아니라 망 해에서 역산한 tau2 (병렬 경로 · 접촉 협착 포함) 를 쓴다. τ_Dij 만 쓰면 망 해 저항을 크게 과소평가한다 (τ 비교 섹션의 비율 행).'
   },
   'τ_Dij (Dijkstra, 기하만)': {
     title: 'τ_Dij — Dijkstra geodesic tortuosity',
@@ -1838,19 +1838,25 @@ const METRIC_TIPS = {
     title: 'τ_Lap_geom — Laplace bulk-only tortuosity',
     formula: 'τ_Lap_geom = √(φ_SE × σ_grain / σ_bulk_net)',
     desc: 'Kirchhoff 회로망 CONTACT_FREE 모드 (R_bulk only, 접촉 저항 제외). 병렬 경로 모두 합산.',
-    meaning: '참고 지표. 일반적으로 τ_Dij 의 0.8배 정도 (병렬 경로 덕분에 조금 낮음). COMSOL 입력엔 부적합 (GB 구성력 누락).'
+    meaning: '참고 지표. 일반적으로 τ_Dij 의 0.8배 정도 (병렬 경로 덕분에 조금 낮음). 입력 칸 값으로 쓰지 않는다 — 접촉 협착이 빠진 모형 내부 기준선이다 (TAU-07).'
   },
-  'τ_Lap_eff ⭐ (Laplace, GB 포함 — COMSOL/EIS)': {
-    title: 'τ_Lap_eff — Laplace effective tortuosity (COMSOL input)',
-    formula: 'τ_Lap_eff = √(φ_SE × σ_grain / σ_full)\n(σ_grain = {{ "%.1f"|format(sigma_grain(metrics)) }} mS/cm, LPSCl bulk MLIP-MD value)',
-    desc: 'Kirchhoff 회로망 FULL 모드 (R_bulk + R_constriction 전부 포함).\n모든 저항 (기하 + GB 병목 + 병렬 경로) 반영한 effective tortuosity — EIS 측정값과 동일 레벨.\n\n⭐ COMSOL 의 σ_catholyte / τ_effective 입력에 사용하는 값.',
-    meaning: 'Minnmann 2021 EIS τ_ion = 2.07 (42 vol% CAM) 와 우리 DEM τ_Lap_eff = 2.10 (input_particulate_11, 42.7 vol% SE) 이 1.4% 오차로 일치 — parameter-free external validation. 이 값을 COMSOL 에 넣어야 정확한 catholyte 전도 모델 작동.'
+  'tau2 = φ·σ₀/σ_full (tortuosity factor · 협착 포함)': {
+    title: 'tau2 — tortuosity factor (접촉망 모델 T)',
+    formula: 'tau2 = φ_SE × σ₀ / σ_full\n(σ₀ = {{ "%.1f"|format(sigma_grain(metrics)) }} mS/cm — 간선 재료 σ = 펠릿값 (CL-91) · σ_full 과 같은 온도)',
+    desc: 'Kirchhoff 회로망 FULL 모드 (원기둥 bulk + 접촉 Holm 협착) 의 유효 전도도를 φ_SE 로 정규화해 뒤집은 값.  문헌 tortuosity factor (Tjaden κ = τ² · Landesfeind τ · TauFactor τ · COMSOL 종 수송 τ_F) 와 같은 정의식이다 — 물리 기준 상태 (σ₀) 는 다르다.\n\nCOMSOL: 종 수송 인터페이스 Eq 6-6 (p.376) 의 τ_F 와 같은 꼴.  배터리 Porous Electrode 노드는 식이 인쇄돼 있지 않다 = 강하게 시사 — 사용 버전 GUI Equation 보기로 확인하기 전에는 "COMSOL 입력" 이라 하지 않는다.  σ_full 재현은 COMSOL σ₀ 칸 = 위 σ₀ 일 때만.',
+    meaning: '1세대 협착식 (hertz = 반공간 Maxwell · physics = ψ 분모 + 상한값 면적) — ML 기술자 전용 · 실험 절대 대조 보류 (순수 SE 게이트 · 결정 4).  physics σ 가 없으면 physics 칸은 "—".'
   },
-  'τ_Lap_eff / τ_Dij': {
-    title: 'τ_Lap_eff / τ_Dij — Dijkstra surrogate factor',
-    formula: 'ratio = τ_Lap_eff / τ_Dij',
-    desc: 'Dijkstra geodesic 이 COMSOL-comparable effective τ 대비 얼마나 낮은지. 일반적으로 1.5–2.0 배.',
-    meaning: 'n=56 case median 이 1.76×. 즉 τ_Dij 에 1.76 곱하면 τ_Lap_eff 에 근사. GB constriction 의 τ 기여도를 보여주는 지표. 값이 1 에 가까우면 GB 없음 (순수 SE pellet), 2 이상이면 composite 전형.'
+  'τ_Lap,eff = √tau2 (Laplace · 협착 포함)': {
+    title: 'τ_Lap,eff — √tau2 (τ² 관례의 τ)',
+    formula: 'τ_Lap,eff = √tau2 = √(φ_SE × σ₀ / σ_full)\n(σ₀ = {{ "%.1f"|format(sigma_grain(metrics)) }} mS/cm — 펠릿값, CL-91)',
+    desc: 'tau2 의 제곱근 (Minnmann 의 √τ² · Tjaden 식 3 의 flux τ).  입력 칸에 넣는 꼴은 이 값이 아니라 tau2 다 — √ 값을 넣으면 유효 전도도가 √tau2 배 과대가 된다.',
+    meaning: '정의 · 한정어는 tau2 행과 같다.  1 이면 직선 · 클수록 우회와 접촉 협착이 크다.  physics σ 가 없으면 physics 칸은 "—".'
+  },
+  'τ_Lap,eff / τ_Dij (정의가 다른 두 τ 의 비)': {
+    title: 'τ_Lap,eff / τ_Dij — 정의가 다른 두 τ 의 비',
+    formula: 'ratio = τ_Lap,eff / τ_Dij',
+    desc: '망 해에서 역산한 τ (√tau2 · 병렬 경로 · 접촉 협착 포함) 와 한 경로의 기하 τ (Dijkstra) 의 비.  두 τ 는 정의가 달라 (흐름 τ ↔ 기하 τ) 이 비를 협착 배수로 부르지 않는다 — 같은 망의 FULL/CF 비가 "모형 내부 협착비" 다 (CLAUDE.md τ 블록 · TAU-08).',
+    meaning: '참고 지표 — 클수록 한 경로의 기하 우회만으로 설명되지 않는 저항 (병렬 · 협착 · bulk 모형) 이 크다.'
   },
   'Tortuosity median': {
     title: 'Tortuosity 중앙값',
@@ -2642,9 +2648,12 @@ const PAPER_TO_ORIG = {
   'τ_Dijkstra,all — every bottom SE, shortest path to top (geometric)': 'τ_Dij,all (Dijkstra 전체, 기하만)',
   'τ_Laplace,bulk — Laplacian without constriction':
       'τ_Lap_geom (Laplace, GB 제외)',
-  'τ_Laplace,eff ⭐ — Laplacian + constriction (COMSOL / EIS input)':
-      'τ_Lap_eff ⭐ (Laplace, GB 포함 — COMSOL/EIS)',
-  'Constriction overhead, τ_Laplace,eff / τ_Dijkstra': 'τ_Lap_eff / τ_Dij',
+  'tau2 — tortuosity factor φ·σ₀/σ_full (network model · 1st-gen constriction)':
+      'tau2 = φ·σ₀/σ_full (tortuosity factor · 협착 포함)',
+  'τ_Laplace,eff = √tau2 — Laplacian + constriction':
+      'τ_Lap,eff = √tau2 (Laplace · 협착 포함)',
+  'τ_Laplace,eff / τ_Dijkstra — ratio of two differently defined τ (not a constriction factor)':
+      'τ_Lap,eff / τ_Dij (정의가 다른 두 τ 의 비)',
   'AM percolation, top↔bottom (%)': 'AM Percolation (%)',
   'Current-collector-connected AM, f_AM^cc (%)': 'Electronic Active AM (%)',
   'Coverage of AM, shape-corrected ⭐ (B3)': 'Coverage AM rough(%)   ⭐ [B3]',

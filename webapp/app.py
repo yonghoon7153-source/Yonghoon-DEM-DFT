@@ -646,6 +646,53 @@ def _same_row(label, val):
     return [label, val, val, '0%']
 
 
+#  ★ 10-04 τ 명명 규약 (CLAUDE.md ★★ τ 블록 · 결정 16 실행 2단계 ① · TAU-01 · 21 · 08 라벨) — 케이스 τ 블록 행 이름.
+#    tau2 = φ_SE·σ₀/σ_full = tortuosity factor (Tjaden κ = Landesfeind τ = COMSOL τ_F 꼴) · τ_Lap,eff = √tau2.
+#    ⚠ 'COMSOL 입력' 표지는 배터리 Porous Electrode 노드의 GUI Equation 확인 뒤 (결정 5) — 그 전에는 꼴만 말한다.
+TAU_SECTION_LABEL = '── τ 비교 (Dijkstra vs Laplace · tau2 = tortuosity factor) ──'
+TAU2_ROW_LABEL = 'tau2 = φ·σ₀/σ_full (tortuosity factor · 협착 포함)'
+TAU_SQRT_ROW_LABEL = 'τ_Lap,eff = √tau2 (Laplace · 협착 포함)'
+TAU_RATIO_ROW_LABEL = 'τ_Lap,eff / τ_Dij (정의가 다른 두 τ 의 비)'
+
+
+def _dual_row_strict(label, h_val, p_val, fmt):
+    """[label, Hertz, Physics, Δ%] — physics 값이 없으면 physics 칸 '—' (Hertz 값을 복사하지 않는다 · TAU-21)."""
+    h_disp = fmt(h_val) if h_val is not None else '—'
+    p_disp = fmt(p_val) if p_val is not None else '—'
+    delta = _pct_delta(h_val, p_val) if (h_val is not None and p_val is not None) else ''
+    return [label, h_disp, p_disp, delta]
+
+
+def _tau_block_rows(phi_se, sigma0, sig_full_h, sig_full_p, sig_bulk, tau_dij, tau_dij_all):
+    """케이스 τ 블록 (Step 4 · Step 4b 공용 — 두 경로가 같은 행을 낸다).  값 규칙은 옛 판과 같고 tau2 행만 더했다.
+      tau2 = φ_SE·σ₀/σ_full (σ₀ = 그 런의 σ_grain · σ_full 과 같은 T) · τ_Lap,eff = √tau2 · τ_Lap_geom = √(φ_SE·σ₀/σ_bulk_net)
+      physics σ 가 없으면 physics 칸 '—' (TAU-21 — 옛 판은 Hertz 값을 조용히 복사했다).
+      비율 τ_Lap,eff / τ_Dij 는 정의가 다른 두 τ 의 비라 협착 배수로 부르지 않는다 (CLAUDE.md τ 블록 · TAU-08)."""
+    import math as _m
+
+    def _t2(s):
+        return phi_se * sigma0 / s if (s and s > 0) else None
+    t2_h, t2_p = _t2(sig_full_h), _t2(sig_full_p)
+    sq_h = _m.sqrt(t2_h) if t2_h is not None else None
+    sq_p = _m.sqrt(t2_p) if t2_p is not None else None
+    t_geom = _m.sqrt(phi_se * sigma0 / sig_bulk) if (sig_bulk and sig_bulk > 0) else None
+    rows = [[TAU_SECTION_LABEL, '', '', '']]
+    if tau_dij:
+        rows.append(_same_row('τ_Dij (Dijkstra, 기하만)', round(tau_dij, 2)))
+    if tau_dij_all:                                  # 기하 τ 전체판 (10-02) — 바닥 관통 SE 전부 · 표본 아님
+        rows.append(_same_row('τ_Dij,all (Dijkstra 전체, 기하만)', round(tau_dij_all, 2)))
+    if t_geom:
+        rows.append(_same_row('τ_Lap_geom (Laplace, GB 제외)', round(t_geom, 2)))
+    rows.append(_dual_row_strict(TAU2_ROW_LABEL, t2_h, t2_p, fmt=lambda x: round(x, 3)))
+    rows.append(_dual_row_strict(TAU_SQRT_ROW_LABEL, sq_h, sq_p, fmt=lambda x: round(x, 2)))
+    if tau_dij and tau_dij > 0:
+        rows.append(_dual_row_strict(TAU_RATIO_ROW_LABEL,
+                                     sq_h / tau_dij if sq_h is not None else None,
+                                     sq_p / tau_dij if sq_p is not None else None,
+                                     fmt=lambda x: f"{x:.2f}×"))
+    return rows
+
+
 def _inject_input_params(metrics, results_dir):
     """Pull am_se_ratio (and other input-side parameters needed by the
     grade engine) from input_params.json when not already in metrics.
@@ -1944,8 +1991,9 @@ def normalize_network_summary_layout(tables, metrics):
         'τ_Dij (Dijkstra, 기하만)',
         'τ_Dij,all (Dijkstra 전체, 기하만)',
         'τ_Lap_geom (Laplace, GB 제외)',
-        'τ_Lap_eff ⭐ (Laplace, GB 포함 — COMSOL/EIS)',
-        'τ_Lap_eff / τ_Dij',
+        'tau2 = φ·σ₀/σ_full (tortuosity factor · 협착 포함)',
+        'τ_Lap,eff = √tau2 (Laplace · 협착 포함)',
+        'τ_Lap,eff / τ_Dij (정의가 다른 두 τ 의 비)',
         'AM Percolation (%)',
         'Electronic Active AM (%)',
         # Tier-1
@@ -2047,8 +2095,9 @@ _PAPER_SECTION_MAP = {
         '── 네트워크 솔버 · Hertz 계열 vs Physics 계열 (Network solver — c_cpl[22] disc area vs Tabor + volume caps) ──',
     '── Physics (Plastic film, Tabor+volume) ──':
         '── 네트워크 솔버 · Physics 계열 v1 (Network solver — Tabor plastic film + volume conservation) ──',
-    '── τ 비교 (Dijkstra vs Laplace, COMSOL input = τ_Lap_eff) ──':
-        '── 굴곡도 비교 (Tortuosity — Dijkstra vs Laplacian; COMSOL/EIS input = τ_Laplace,eff) ──',
+    #  ★ 10-04 τ 명명 규약 (CLAUDE.md · 결정 16 · TAU-01) — 입력 칸의 꼴은 tau2 (√ 값이 아니다) · 'COMSOL 입력' 표지는 GUI 확인 뒤.
+    '── τ 비교 (Dijkstra vs Laplace · tau2 = tortuosity factor) ──':
+        '── 굴곡도 비교 (Tortuosity — Dijkstra vs Laplacian; tau2 = φ·σ₀/σ_full = tortuosity factor) ──',
     '── Tier 1 patches (post-Auerbach refinements) ──':
         '── Tier-1 보정 (Tier-1 corrections — post-Auerbach refinements) ──',
     '── AM-AM 접촉 역학 ──':
@@ -2137,10 +2186,12 @@ _PAPER_LABEL_MAP = {
         'τ_Dijkstra,all — every bottom SE, shortest path to top (geometric)',
     'τ_Lap_geom (Laplace, GB 제외)':
         'τ_Laplace,bulk — Laplacian without constriction',
-    'τ_Lap_eff ⭐ (Laplace, GB 포함 — COMSOL/EIS)':
-        'τ_Laplace,eff ⭐ — Laplacian + constriction (COMSOL / EIS input)',
-    'τ_Lap_eff / τ_Dij':
-        'Constriction overhead, τ_Laplace,eff / τ_Dijkstra',
+    'tau2 = φ·σ₀/σ_full (tortuosity factor · 협착 포함)':
+        'tau2 — tortuosity factor φ·σ₀/σ_full (network model · 1st-gen constriction)',
+    'τ_Lap,eff = √tau2 (Laplace · 협착 포함)':
+        'τ_Laplace,eff = √tau2 — Laplacian + constriction',
+    'τ_Lap,eff / τ_Dij (정의가 다른 두 τ 의 비)':
+        'τ_Laplace,eff / τ_Dijkstra — ratio of two differently defined τ (not a constriction factor)',
     'AM Percolation (%)':          'AM percolation, top↔bottom (%)',
     'Electronic Active AM (%)':    'Current-collector-connected AM, f_AM^cc (%)',
     # Tier-1 corrections
@@ -2593,7 +2644,6 @@ def transform_network_summary_4col(tables, metrics, meta):
             # ── τ 3종 비교 (Dijkstra vs Laplace geom vs Laplace eff) ──
             # Derivation only, no re-analysis needed; σ_grain 은 se_material 단일 출처 +
             # 이 런의 온도 provenance 를 따른다 (σ_full 과 같은 T 여야 τ 가 옳다 — _sigma_grain_mS_cm 참조).
-            import math as _math
             phi_se = metrics.get('phi_se')
             sig_full = metrics.get('sigma_full_mScm')
             sig_bulk = metrics.get('sigma_bulk_net_mScm')
@@ -2603,32 +2653,11 @@ def transform_network_summary_4col(tables, metrics, meta):
                 net_rows.append(_dual_row('⚠ σ_grain 온도 정합', _sg_note, _sg_note,
                                           fmt=lambda x: x))
             if phi_se and sig_full and sig_full > 0:
-                # τ_Lap_eff = √(φ_SE × σ_grain / σ_full) ← COMSOL input (GB 포함)
-                # σ_full IS mode-dependent, so τ_Lap_eff shifts in Physics mode.
-                # τ_Lap_geom uses σ_bulk_net (mode-agnostic) so it stays fixed.
-                sig_full_p = metrics.get('sigma_full_mScm_physics')
-                tau_lap_eff_h = _math.sqrt(phi_se * SIGMA_GRAIN_MS / sig_full)
-                tau_lap_eff_p = (_math.sqrt(phi_se * SIGMA_GRAIN_MS / sig_full_p)
-                                 if sig_full_p and sig_full_p > 0 else tau_lap_eff_h)
-                tau_lap_geom = (_math.sqrt(phi_se * SIGMA_GRAIN_MS / sig_bulk)
-                                if sig_bulk and sig_bulk > 0 else None)
-                net_rows.append(['── τ 비교 (Dijkstra vs Laplace, COMSOL input = τ_Lap_eff) ──', '', '', ''])
-                if tau_dij:
-                    net_rows.append(_same_row('τ_Dij (Dijkstra, 기하만)', round(tau_dij, 2)))
-                if metrics.get('tortuosity_all_mean'):     # 기하 τ 전체판 (10-02) — 바닥 관통 SE 전부 · 표본 아님
-                    net_rows.append(_same_row('τ_Dij,all (Dijkstra 전체, 기하만)',
-                                              round(metrics['tortuosity_all_mean'], 2)))
-                if tau_lap_geom:
-                    net_rows.append(_same_row('τ_Lap_geom (Laplace, GB 제외)', round(tau_lap_geom, 2)))
-                net_rows.append(_dual_row('τ_Lap_eff ⭐ (Laplace, GB 포함 — COMSOL/EIS)',
-                                          tau_lap_eff_h, tau_lap_eff_p,
-                                          fmt=lambda x: round(x, 2)))
-                if tau_dij and tau_dij > 0:
-                    ratio_h = tau_lap_eff_h / tau_dij
-                    ratio_p = tau_lap_eff_p / tau_dij
-                    net_rows.append(_dual_row('τ_Lap_eff / τ_Dij',
-                                              ratio_h, ratio_p,
-                                              fmt=lambda x: f"{x:.2f}×"))
+                # tau2 = φ_SE × σ₀ / σ_full (tortuosity factor) · τ_Lap,eff = √tau2 — 공용 `_tau_block_rows` (Step 4b 와 같은 행).
+                # σ_full IS mode-dependent → physics σ 가 없으면 physics 칸 '—' (TAU-21).  τ_Lap_geom = σ_bulk_net (mode-agnostic).
+                net_rows.extend(_tau_block_rows(phi_se, SIGMA_GRAIN_MS, sig_full,
+                                                metrics.get('sigma_full_mScm_physics'), sig_bulk,
+                                                tau_dij, metrics.get('tortuosity_all_mean')))
 
             if metrics.get('electronic_sigma_full_mScm'):
                 net_rows.append(_dual_row('σ_electronic (mS/cm)',
@@ -2731,38 +2760,16 @@ def transform_network_summary_4col(tables, metrics, meta):
                                        fmt=lambda x: f"{x:.1f}×"))
 
         # ── τ 3종 비교 ── (always-inject if absent)
-        import math as _math
         phi_se   = metrics.get('phi_se')
         sig_full = metrics.get('sigma_full_mScm')
         sig_bulk = metrics.get('sigma_bulk_net_mScm')
         tau_dij  = metrics.get('tortuosity_mean')
         SIGMA_GRAIN_MS = _sigma_grain_mS_cm(metrics)   # se_material 단일 출처 + 런의 T provenance
-        tau_section_label = '── τ 비교 (Dijkstra vs Laplace, COMSOL input = τ_Lap_eff) ──'
-        if (not _has_label(tau_section_label)
+        if (not _has_label(TAU_SECTION_LABEL)
                 and phi_se and sig_full and sig_full > 0):
-            sig_full_p = metrics.get('sigma_full_mScm_physics')
-            tau_lap_eff_h = _math.sqrt(phi_se * SIGMA_GRAIN_MS / sig_full)
-            tau_lap_eff_p = (_math.sqrt(phi_se * SIGMA_GRAIN_MS / sig_full_p)
-                             if sig_full_p and sig_full_p > 0 else tau_lap_eff_h)
-            tau_lap_geom = (_math.sqrt(phi_se * SIGMA_GRAIN_MS / sig_bulk)
-                            if sig_bulk and sig_bulk > 0 else None)
-            new_rows.append([tau_section_label, '', '', ''])
-            if tau_dij:
-                new_rows.append(_same_row('τ_Dij (Dijkstra, 기하만)', round(tau_dij, 2)))
-            if metrics.get('tortuosity_all_mean'):         # 기하 τ 전체판 (10-02)
-                new_rows.append(_same_row('τ_Dij,all (Dijkstra 전체, 기하만)',
-                                          round(metrics['tortuosity_all_mean'], 2)))
-            if tau_lap_geom:
-                new_rows.append(_same_row('τ_Lap_geom (Laplace, GB 제외)', round(tau_lap_geom, 2)))
-            new_rows.append(_dual_row('τ_Lap_eff ⭐ (Laplace, GB 포함 — COMSOL/EIS)',
-                                       tau_lap_eff_h, tau_lap_eff_p,
-                                       fmt=lambda x: round(x, 2)))
-            if tau_dij and tau_dij > 0:
-                ratio_h = tau_lap_eff_h / tau_dij
-                ratio_p = tau_lap_eff_p / tau_dij
-                new_rows.append(_dual_row('τ_Lap_eff / τ_Dij',
-                                           ratio_h, ratio_p,
-                                           fmt=lambda x: f"{x:.2f}×"))
+            new_rows.extend(_tau_block_rows(phi_se, SIGMA_GRAIN_MS, sig_full,
+                                            metrics.get('sigma_full_mScm_physics'), sig_bulk,
+                                            tau_dij, metrics.get('tortuosity_all_mean')))
 
         # AM Percolation (electronic)
         if (not _has_label('AM Percolation (%)')
@@ -9541,7 +9548,7 @@ _GRADE_PLAIN = {
     'se_se_cn_std': '위 "이웃 수"가 알갱이마다 얼마나 들쭉날쭉한지예요. 작을수록 모두 고르게 쌓인 거라 '
         '좋고, 크면 어떤 건 외톨이·어떤 건 과밀이라 불균일합니다.',
     '__tau_lap_eff': '이온이 위→아래로 갈 때 실제로 얼마나 "돌아가고 좁아져서" 느려지는지를 한 숫자로 '
-        '나타낸 거예요(굴곡도). 1이면 직선, 클수록 빙 돌아가 느립니다. 작을수록 좋고 COMSOL/EIS에 넣는 핵심 값.',
+        '나타낸 거예요(굴곡도 τ). 1이면 직선, 클수록 빙 돌아가 느립니다. 작을수록 좋아요. 연속체 모델 입력 칸에 넣는 꼴은 이 값의 제곱(tau2)입니다.',
     '__tau_lap_bulk': '위 굴곡도에서 "좁아짐(병목)" 효과를 빼고 길이 순수하게 얼마나 돌아가는지만 본 값이에요. '
         '구조 자체의 우회 정도입니다.',
     '__constriction_overhead': '전체 굴곡도가 "순수 우회"보다 몇 배 더 나빠졌는지예요. 1배면 좁아짐 손해가 '

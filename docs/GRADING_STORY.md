@@ -77,7 +77,7 @@ DOE BatPaC, Janek 2023 review, automotive battery roadmap consensus:
 ### E. 경로 효율 / Tortuosity (6.3%)
 | Axis | Weight | 이유 |
 |---|---|---|
-| τ_Laplace,eff | 1.0 | COMSOL/EIS input |
+| τ_Laplace,eff | 1.0 | √tau2 (입력 칸의 꼴은 tau2 · TAU-01) |
 | Constriction overhead τ_eff/τ_bulk | 0.7 | 좁은 contact loss |
 | τ_Laplace,bulk | 0.5 | 구조 only |
 | A_hop mean | 0.5 | 보조 |

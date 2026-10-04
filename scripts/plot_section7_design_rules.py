@@ -103,7 +103,7 @@ def main():
           'σ_electronic — fracture-aware (mS/cm)',
           'σ_e (mS/cm)', cmap='Oranges', fmt='{:.2f}')
     panel(axes[1, 0], rows, 'tau',
-          'τ_Laplace,eff — COMSOL/EIS input',
+          'τ_Laplace,eff = √tau2 (Laplace · constriction)',
           'τ_eff', cmap='RdPu', fmt='{:.2f}')
     panel(axes[1, 1], rows, 'severe',
           'Severe damage fraction (%)',

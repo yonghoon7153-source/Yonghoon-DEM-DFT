@@ -45,7 +45,7 @@ from extract_2d_microstructure import (   # noqa: E402
     VOID, AM_P, AM_S, SE, PHASE_NAMES,
 )
 
-SIGMA_GRAIN_MS = 3.0   # bulk LPSCl ionic conductivity (mS/cm)
+SIGMA_GRAIN_MS = 3.0   # σ₀ (mS/cm) = 펠릿값 (CL-91) — tau2 의 기준 · COMSOL σ₀ 칸의 짝
 
 
 def _fnum(d, *keys):
@@ -69,10 +69,13 @@ def numerical_parameters(case_dir: Path, slice_data: dict) -> list[dict]:
     sig_full = _fnum(fm, 'sigma_full_mScm_stage_e_physics',
                      'sigma_full_mScm_physics', 'sigma_full_mScm')
     sig_bulk = _fnum(fm, 'sigma_bulk_net_mScm')
-    # τ_Laplace,eff = √(φ_SE × σ_grain / σ_full)  — COMSOL/EIS input
-    tau_lap_eff = None
+    # tau2 = φ_SE × σ₀ / σ_full = tortuosity factor (τ 명명 규약 10-03 · TAU-01) · τ_Laplace,eff = √tau2 (참고 · 입력 칸 값 아님).
+    #   COMSOL 종 수송 τ_F 와 같은 꼴 — 배터리 Porous Electrode 노드는 식이 인쇄돼 있지 않아 GUI Equation 보기로 확인 뒤 쓴다.
+    #   ⚠ sig_full 선택 순서 (stage_e_physics → physics → raw) 는 웹앱 · 등급과 다르다 (TAU-03 — 한 도우미로 통일은 τ 2단계 ②).
+    tau2 = tau_lap_eff = None
     if phi_se and sig_full and sig_full > 0:
-        tau_lap_eff = (phi_se * SIGMA_GRAIN_MS / sig_full) ** 0.5
+        tau2 = phi_se * SIGMA_GRAIN_MS / sig_full
+        tau_lap_eff = tau2 ** 0.5
     tau_lap_bulk = None
     if phi_se and sig_bulk and sig_bulk > 0:
         tau_lap_bulk = (phi_se * SIGMA_GRAIN_MS / sig_bulk) ** 0.5
@@ -92,7 +95,7 @@ def numerical_parameters(case_dir: Path, slice_data: dict) -> list[dict]:
         ('phi_void',       _fnum(fm, 'porosity') and _fnum(fm, 'porosity')/100,
          '1', 'eps', '3D porosity (full_metrics)'),
         ('sigma_grain',    SIGMA_GRAIN_MS,                           'mS/cm',
-         'sigma_grain', 'LPSCl bulk grain σ (constant)'),
+         'sigma_grain', 'σ₀ = 펠릿값 3.0 (CL-91) — tau2 의 기준 · 입력 시 σ₀ 칸과 짝'),
         ('sigma_ionic_eff', sig_full,                                'mS/cm',
          'sigma_i', '★ 3D effective ionic σ (Stage E / network solver)'),
         ('sigma_e_eff',    _fnum(fm, 'electronic_sigma_full_mScm_stage_e_physics',
@@ -101,8 +104,10 @@ def numerical_parameters(case_dir: Path, slice_data: dict) -> list[dict]:
         ('kappa_eff',      _fnum(fm, 'thermal_sigma_full_mScm_stage_e_physics',
                                   'thermal_sigma_full_mScm_physics'), 'mS/cm-eq',
          'kappa', '3D effective thermal conductivity'),
+        ('tau2',            tau2,                                    '1',
+         'tau2', '★ tortuosity factor = φ·σ_grain/σ_i (COMSOL 종 수송 τ_F 꼴 · 배터리 노드는 GUI Equation 확인 뒤 · σ₀ 칸 = sigma_grain)'),
         ('tau_Laplace_eff', tau_lap_eff,                             '1',
-         'tau_eff', '★ 3D tortuosity (COMSOL/EIS input) = √(φ·σ_grain/σ_full)'),
+         '—', '√tau2 (τ² 관례의 τ) — 입력 칸 값 아님 (tau2 행을 쓴다)'),
         ('tau_Laplace_bulk', tau_lap_bulk,                           '1',
          'tau_bulk', '3D geometric tortuosity (no constriction)'),
         ('tau_Dijkstra',   _fnum(fm, 'tortuosity_recommended', 'tortuosity_mean'),
@@ -657,7 +662,9 @@ COMSOL 모델은 (A) DOMAIN, (B) MATERIAL(수치), (C) BOUNDARY 로 구성.
 
   SE domain:
     sigma_i  = σ_ionic effective (mS/cm)
-    tau_eff  = τ_Laplace,eff   ← σ_eff = σ_grain / (φ·tau_eff²) 검산용
+    tau2     = tortuosity factor = φ·sigma_grain/sigma_i   ← 검산: σ_i = φ·σ_grain/tau2
+               (COMSOL 종 수송 τ_F 꼴 · 배터리 Porous Electrode 노드는 GUI Equation 보기로 확인 뒤 · σ₀ 칸 = sigma_grain)
+    tau_eff  = √tau2 (참고 · 입력 칸 값 아님)
   AM domain:
     sigma_e  = σ_electronic (mS/cm),  kappa = thermal
   cell-level (post-processing 검증):

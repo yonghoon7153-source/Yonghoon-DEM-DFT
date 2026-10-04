@@ -881,7 +881,7 @@ HANDOVER_TAU_WALL = (
      '안에서** 잇는 쌍의 SE 중심 경로 최단 길이 (Dijkstra · 가중 = 중심 거리 · x·y 주기) / 두 끝 중심의 z 거리 · 무작위 200 쌍 (seed 42 · '
      '쌍 평균이라 쌍이 많은 큰 성분 쪽으로 가중) · [1, 20) 절단 평균.  접촉 = 원자 좌표 기하 (d ≤ r_i + r_j) — 덤프 접촉과 같은 집합 (J20-a '
      '130/130).  status OK 일 때만 값 · 비관통은 빈칸 (N/A · 0 이 아니다).  ⚠ **수송 τ 가 아니다** — 협착 · 단면 병목을 보지 않아 1 근처에 '
-     '모인다 (LHS 1.29–4.15 · lhsx 1.26–1.60) · COMSOL/EIS 입력 τ 는 τ_Laplace,eff = √(φ_SE·σ_grain/σ_full) (망 단계 · 이 표에 없음) · '
+     '모인다 (LHS 1.29–4.15 · lhsx 1.26–1.60) · 수송 굴곡도는 망 단계의 tau2 = φ_SE·σ₀/σ_full (tortuosity factor · τ_Laplace,eff = √tau2 · 이 표에 없음 · τ 명명 규약 10-03 · TAU-01) · '
      '관문 T1–T3 (10-01)'),
     ('tortuosity_SE_wall_median', 'tau_median',     '같은 표본의 중앙값 (status OK 일 때만) · 같은 한정어 (기하 최단경로 · 수송 τ 아님)'),
     ('tortuosity_SE_wall_status', 'status',
@@ -3219,8 +3219,9 @@ def _selftest():
     _dm9 = {d['column']: d for d in column_dictionary(_c9, webapp=_wa8())} if _c9 else {}
     _tm = (_dm9.get('tortuosity_SE_wall') or {}).get('meaning', '')
     _wm = (_dm9.get('wall_touch_frac_SE_floor') or {}).get('meaning', '')
-    chk('㉓b ★ 열 사전 — 벽 τ = 기하 최단경로 · 수송 τ 아님 (COMSOL 입력 = τ_Laplace,eff) · 비관통 N/A · 표본 200 쌍',
-        '기하 최단경로' in _tm and 'COMSOL' in _tm and 'τ_Laplace' in _tm and 'N/A' in _tm and '200 쌍' in _tm)
+    chk('㉓b ★ 열 사전 — 벽 τ = 기하 최단경로 · 수송 τ 아님 (수송 굴곡도 = 망 단계 tau2 · τ 명명 규약 10-03 — 옛 "COMSOL/EIS 입력 τ 는 '
+        'τ_Laplace,eff" 철회 TAU-01) · 비관통 N/A · 표본 200 쌍',
+        '기하 최단경로' in _tm and 'tau2' in _tm and 'COMSOL/EIS 입력 τ 는 τ_Laplace' not in _tm and 'N/A' in _tm and '200 쌍' in _tm)
     chk('㉓c ★ 벽 접촉 비율 문구 = 수확기 규칙 (겹침 깊이 > 0 · 접선은 안 셈) — 옛 "≤ 0 · ≥ plate_z" 없음',
         '겹침 깊이 > 0' in _wm and '접선' in _wm and '≤ 0' not in _wm and 'z − r < 0' in _wm)
     try:

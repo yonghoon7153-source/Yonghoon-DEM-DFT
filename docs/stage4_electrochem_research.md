@@ -41,7 +41,7 @@ Refs: Doyle-Fuller-Newman 1993 (10.1149/1.2221597), Newman & Thomas-Alyea textbo
 import pybamm
 model = pybamm.lithium_ion.DFN(options={"transport efficiency": "tortuosity factor"})  # ★ our τ hook
 pv = pybamm.ParameterValues("Chen2020")            # NMC811/graphite set (Chen 2020)
-pv["Positive electrode tortuosity factor (electrolyte)"] = OUR_TAU   # ← τ_Laplace,eff
+pv["Positive electrode tortuosity factor (electrolyte)"] = OUR_TAU2  # ← tau2 = τ_Laplace,eff² (PyBaMM B = ε/τ_f 꼴 · √ 값 아님 · TAU-01)
 pv["Positive electrode conductivity [S.m-1]"]          = OUR_SIGMA_E # ← σ_e (incl CBD)
 pv["Positive electrode porosity"]                      = OUR_EPS
 pv["Positive particle radius [m]"]                     = OUR_R

@@ -164,8 +164,9 @@ AXES: list[dict[str, Any]] = [
      'key': '__tau_lap_eff', 'label': 'τ_Laplace,eff ⭐ (σ_grain **3.0 고정**)',
      'direction': 'lower', 'thresholds': [1.8, 2.2, 2.8, 3.5, 4.5, 6.0],
      'formula': '√(φ_SE × **3.0** / σ_full)  — Stage E physics 우선, σ_grain 은 **상수 3 mS/cm**',
-     'meaning': 'COMSOL/EIS input tortuosity (Tippens 2019, Famprikis 2019). '
-                '<2.5 우수, >5 endpoint dominated.\n'
+     'meaning': 'τ_Laplace,eff = √tau2 (τ² 관례의 τ — 연속체 입력 칸의 꼴은 이 값이 아니라 tau2 · '
+                'τ 명명 규약 10-03 · TAU-01).  문턱은 내부 등급선 (옛 출처 표기 "Tippens 2019, Famprikis 2019" 는 '
+                '확인 전 — TAU-16).  <2.5 우수, >5 endpoint dominated.\n'
                 '⚠ ★ L4-04 — **앱 표시값과 같은 공식이 아니다**.  앱(`webapp/app.py`)은 '
                 '**baseline 온도에 맞춘 σ_grain** 을 쓰는데 여기는 3.0 을 박아 둔다 ⇒ '
                 '모든 σ_ion 과 대응 grain 을 함께 ×4 하면 앱 τ 는 3.4641 그대로인데 '
@@ -922,8 +923,8 @@ def _derived_value(key: str, metrics: dict) -> float | None:
             except (TypeError, ValueError): return None
         return None
 
-    # τ_Laplace,eff (COMSOL/EIS input) — same formula as webapp/app.py:2026
-    #   τ_Lap_eff = √(φ_SE × σ_grain / σ_full)
+    # τ_Laplace,eff = √tau2 = √(φ_SE × 3.0 / σ_full) — ⚠ 웹앱 표시값과 같은 공식이 아니다 (σ₀ 3.0 고정 · σ 모드
+    #   순서 stage_e_physics → physics → stage_e → raw · L4-04 · TAU-03 — 한 도우미로 통일은 τ 2단계 ②).
     if key == '__tau_lap_eff':
         phi_se = metrics.get('phi_se')
         sig_full = _sigma_ionic_effective(metrics)
