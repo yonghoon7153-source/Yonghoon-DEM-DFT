@@ -1,0 +1,1240 @@
+# RED (91차) — 이름 따라간 test_gate90 + 새 test_gate91 · 코드 = e2160c2ef 그대로 · HEAD 4b32db749 · dirty 0 · source_digest 3f84c0db52d2b9ac
+# 2026-10-04T23:31:11Z · python -m pytest tests/test_gate90_env_profile.py tests/test_gate91_env_profile_scope.py -rA -p no:cacheprovider
+
+
+[conftest] 시험 authority: /tmp/dd-test-authority-l9sgxbrn/docs/22p_gap/LEG_PRESERVATION.yaml (운영 원장의 바이트 복사본 — 70차 E6)
+
+[conftest] 이 checkout 을 처음 보았다 — 얼린 cohort 17개의 좌표를 시험 authority 에 봉인했다: ['g10_2026_09_01', 'g11_2026_09_02', 'g12_2026_09_03', 'g13_2026_09_07', 'g14_2026_09_08', 'g15_2026_09_08', 'g16_2026_09_09', 'g17_2026_09_14', 'g1_2026_08_20', 'g2_2026_08_25', 'g3_2026_08_28', 'g4_2026_08_28', 'g5_2026_08_29', 'g6_2026_09_01', 'g7_2026_09_01', 'g8_2026_09_01', 'g9_2026_09_01']
+============================= test session starts ==============================
+platform linux -- Python 3.11.15, pytest-9.1.1, pluggy-1.6.0
+rootdir: /home/user/Yonghoon-DEM-DFT/degradation-degeneracy
+plugins: metadata-3.1.1, platformdirs-4.12.0, anyio-4.15.1, json-report-1.5.0
+collected 43 items
+
+tests/test_gate90_env_profile.py .FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF.F.F..  [ 88%]
+tests/test_gate91_env_profile_scope.py FFFFF                             [100%]
+
+=================================== FAILURES ===================================
+____________________ test_e02_synthetic_round_trip_matches _____________________
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-2598/test_e02_synthetic_round_trip_0/site'), site2=PosixPath('/tm...t-2598/test_e02_synthetic_round_trip_0/site', '/tmp/pytest-of-root/pytest-2598/test_e02_synthetic_round_trip_0/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-2598/test_e02_synthetic_round_trip_0')
+
+    def test_e02_synthetic_round_trip_matches(synth, tmp_path):
+        ep = _ep()
+        lock, text = _lock_for(ep, synth.paths, tmp_path / "c.lock.txt")
+        assert ep.emit_lock(ep.parse_lock(text)) == text
+        r = ep.compare_lock(lock, paths=synth.paths)
+>       _assert_closed(r)
+
+tests/test_gate90_env_profile.py:199: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+r = {'profile': 'C', 'lock_path': '/tmp/pytest-of-root/pytest-2598/test_e02_synthetic_round_trip_0/c.lock.txt', 'lock_sha256': 'bae14a70bf09e7ab99d0ddc2fa4f7a18ba5a268cfa57c3b03246086cb19868be', 'status': 'MATCH', ...}
+
+    def _assert_closed(r: dict) -> None:
+>       assert set(r) == RESULT_KEYS, sorted(r)
+E       AssertionError: ['counts', 'lock_path', 'lock_sha256', 'mismatches', 'profile', 'reason', ...]
+E       assert {'counts', 'l...'reason', ...} == {'counts', 'l...profile', ...}
+E         
+E         Extra items in the right set:
+E         'not_measured'
+E         Use -v to get more diff
+
+tests/test_gate90_env_profile.py:150: AssertionError
+__________________ test_e03_each_axis_is_reported[dist_extra] __________________
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-2598/test_e03_each_axis_is_reported0/site'), site2=PosixPath('/tm...t-2598/test_e03_each_axis_is_reported0/site', '/tmp/pytest-of-root/pytest-2598/test_e03_each_axis_is_reported0/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-2598/test_e03_each_axis_is_reported0')
+case = 'dist_extra'
+
+    @pytest.mark.parametrize("case", sorted(AXIS_CASES))
+    def test_e03_each_axis_is_reported(synth, tmp_path, case):
+        ep = _ep()
+        _, text = _lock_for(ep, synth.paths, tmp_path / "base.lock.txt")
+        change, want = AXIS_CASES[case]
+        text2, paths = change(text, synth)
+        lock = tmp_path / "case.lock.txt"
+        lock.write_bytes(text2.encode("utf-8"))
+        r = ep.compare_lock(lock, paths=paths)
+>       _assert_closed(r)
+
+tests/test_gate90_env_profile.py:279: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+r = {'profile': 'C', 'lock_path': '/tmp/pytest-of-root/pytest-2598/test_e03_each_axis_is_reported0/case.lock.txt', 'lock_sha256': 'c5acc465ed434af5a7364a13af828dc11040a35b2c4fd6b458b90e8571c62a39', 'status': 'MISMATCH', ...}
+
+    def _assert_closed(r: dict) -> None:
+>       assert set(r) == RESULT_KEYS, sorted(r)
+E       AssertionError: ['counts', 'lock_path', 'lock_sha256', 'mismatches', 'profile', 'reason', ...]
+E       assert {'counts', 'l...'reason', ...} == {'counts', 'l...profile', ...}
+E         
+E         Extra items in the right set:
+E         'not_measured'
+E         Use -v to get more diff
+
+tests/test_gate90_env_profile.py:150: AssertionError
+_________________ test_e03_each_axis_is_reported[dist_missing] _________________
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-2598/test_e03_each_axis_is_reported1/site'), site2=PosixPath('/tm...t-2598/test_e03_each_axis_is_reported1/site', '/tmp/pytest-of-root/pytest-2598/test_e03_each_axis_is_reported1/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-2598/test_e03_each_axis_is_reported1')
+case = 'dist_missing'
+
+    @pytest.mark.parametrize("case", sorted(AXIS_CASES))
+    def test_e03_each_axis_is_reported(synth, tmp_path, case):
+        ep = _ep()
+        _, text = _lock_for(ep, synth.paths, tmp_path / "base.lock.txt")
+        change, want = AXIS_CASES[case]
+        text2, paths = change(text, synth)
+        lock = tmp_path / "case.lock.txt"
+        lock.write_bytes(text2.encode("utf-8"))
+        r = ep.compare_lock(lock, paths=paths)
+>       _assert_closed(r)
+
+tests/test_gate90_env_profile.py:279: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+r = {'profile': 'C', 'lock_path': '/tmp/pytest-of-root/pytest-2598/test_e03_each_axis_is_reported1/case.lock.txt', 'lock_sha256': '56677e3dc0425c6bccdaabd12e7574932896d503c18146c80615f7e005a13949', 'status': 'MISMATCH', ...}
+
+    def _assert_closed(r: dict) -> None:
+>       assert set(r) == RESULT_KEYS, sorted(r)
+E       AssertionError: ['counts', 'lock_path', 'lock_sha256', 'mismatches', 'profile', 'reason', ...]
+E       assert {'counts', 'l...'reason', ...} == {'counts', 'l...profile', ...}
+E         
+E         Extra items in the right set:
+E         'not_measured'
+E         Use -v to get more diff
+
+tests/test_gate90_env_profile.py:150: AssertionError
+_________________ test_e03_each_axis_is_reported[dist_record] __________________
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-2598/test_e03_each_axis_is_reported2/site'), site2=PosixPath('/tm...t-2598/test_e03_each_axis_is_reported2/site', '/tmp/pytest-of-root/pytest-2598/test_e03_each_axis_is_reported2/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-2598/test_e03_each_axis_is_reported2')
+case = 'dist_record'
+
+    @pytest.mark.parametrize("case", sorted(AXIS_CASES))
+    def test_e03_each_axis_is_reported(synth, tmp_path, case):
+        ep = _ep()
+        _, text = _lock_for(ep, synth.paths, tmp_path / "base.lock.txt")
+        change, want = AXIS_CASES[case]
+        text2, paths = change(text, synth)
+        lock = tmp_path / "case.lock.txt"
+        lock.write_bytes(text2.encode("utf-8"))
+        r = ep.compare_lock(lock, paths=paths)
+>       _assert_closed(r)
+
+tests/test_gate90_env_profile.py:279: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+r = {'profile': 'C', 'lock_path': '/tmp/pytest-of-root/pytest-2598/test_e03_each_axis_is_reported2/case.lock.txt', 'lock_sha256': '26644f35745d140a56105b5e9890990a0c31a22c36371b0c77e3bb4a2f1e8881', 'status': 'MISMATCH', ...}
+
+    def _assert_closed(r: dict) -> None:
+>       assert set(r) == RESULT_KEYS, sorted(r)
+E       AssertionError: ['counts', 'lock_path', 'lock_sha256', 'mismatches', 'profile', 'reason', ...]
+E       assert {'counts', 'l...'reason', ...} == {'counts', 'l...profile', ...}
+E         
+E         Extra items in the right set:
+E         'not_measured'
+E         Use -v to get more diff
+
+tests/test_gate90_env_profile.py:150: AssertionError
+_________________ test_e03_each_axis_is_reported[dist_version] _________________
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-2598/test_e03_each_axis_is_reported3/site'), site2=PosixPath('/tm...t-2598/test_e03_each_axis_is_reported3/site', '/tmp/pytest-of-root/pytest-2598/test_e03_each_axis_is_reported3/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-2598/test_e03_each_axis_is_reported3')
+case = 'dist_version'
+
+    @pytest.mark.parametrize("case", sorted(AXIS_CASES))
+    def test_e03_each_axis_is_reported(synth, tmp_path, case):
+        ep = _ep()
+        _, text = _lock_for(ep, synth.paths, tmp_path / "base.lock.txt")
+        change, want = AXIS_CASES[case]
+        text2, paths = change(text, synth)
+        lock = tmp_path / "case.lock.txt"
+        lock.write_bytes(text2.encode("utf-8"))
+        r = ep.compare_lock(lock, paths=paths)
+>       _assert_closed(r)
+
+tests/test_gate90_env_profile.py:279: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+r = {'profile': 'C', 'lock_path': '/tmp/pytest-of-root/pytest-2598/test_e03_each_axis_is_reported3/case.lock.txt', 'lock_sha256': 'e4e36247a33451014b1ba3d98c3635d63b35fc4028e55f8b9104c6b8dd5c93a8', 'status': 'MISMATCH', ...}
+
+    def _assert_closed(r: dict) -> None:
+>       assert set(r) == RESULT_KEYS, sorted(r)
+E       AssertionError: ['counts', 'lock_path', 'lock_sha256', 'mismatches', 'profile', 'reason', ...]
+E       assert {'counts', 'l...'reason', ...} == {'counts', 'l...profile', ...}
+E         
+E         Extra items in the right set:
+E         'not_measured'
+E         Use -v to get more diff
+
+tests/test_gate90_env_profile.py:150: AssertionError
+_________________ test_e03_each_axis_is_reported[env_upgrade] __________________
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-2598/test_e03_each_axis_is_reported4/site'), site2=PosixPath('/tm...t-2598/test_e03_each_axis_is_reported4/site', '/tmp/pytest-of-root/pytest-2598/test_e03_each_axis_is_reported4/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-2598/test_e03_each_axis_is_reported4')
+case = 'env_upgrade'
+
+    @pytest.mark.parametrize("case", sorted(AXIS_CASES))
+    def test_e03_each_axis_is_reported(synth, tmp_path, case):
+        ep = _ep()
+        _, text = _lock_for(ep, synth.paths, tmp_path / "base.lock.txt")
+        change, want = AXIS_CASES[case]
+        text2, paths = change(text, synth)
+        lock = tmp_path / "case.lock.txt"
+        lock.write_bytes(text2.encode("utf-8"))
+        r = ep.compare_lock(lock, paths=paths)
+>       _assert_closed(r)
+
+tests/test_gate90_env_profile.py:279: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+r = {'profile': 'C', 'lock_path': '/tmp/pytest-of-root/pytest-2598/test_e03_each_axis_is_reported4/case.lock.txt', 'lock_sha256': 'bae14a70bf09e7ab99d0ddc2fa4f7a18ba5a268cfa57c3b03246086cb19868be', 'status': 'MISMATCH', ...}
+
+    def _assert_closed(r: dict) -> None:
+>       assert set(r) == RESULT_KEYS, sorted(r)
+E       AssertionError: ['counts', 'lock_path', 'lock_sha256', 'mismatches', 'profile', 'reason', ...]
+E       assert {'counts', 'l...'reason', ...} == {'counts', 'l...profile', ...}
+E         
+E         Extra items in the right set:
+E         'not_measured'
+E         Use -v to get more diff
+
+tests/test_gate90_env_profile.py:150: AssertionError
+__________________ test_e03_each_axis_is_reported[file_hash] ___________________
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-2598/test_e03_each_axis_is_reported5/site'), site2=PosixPath('/tm...t-2598/test_e03_each_axis_is_reported5/site', '/tmp/pytest-of-root/pytest-2598/test_e03_each_axis_is_reported5/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-2598/test_e03_each_axis_is_reported5')
+case = 'file_hash'
+
+    @pytest.mark.parametrize("case", sorted(AXIS_CASES))
+    def test_e03_each_axis_is_reported(synth, tmp_path, case):
+        ep = _ep()
+        _, text = _lock_for(ep, synth.paths, tmp_path / "base.lock.txt")
+        change, want = AXIS_CASES[case]
+        text2, paths = change(text, synth)
+        lock = tmp_path / "case.lock.txt"
+        lock.write_bytes(text2.encode("utf-8"))
+        r = ep.compare_lock(lock, paths=paths)
+>       _assert_closed(r)
+
+tests/test_gate90_env_profile.py:279: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+r = {'profile': 'C', 'lock_path': '/tmp/pytest-of-root/pytest-2598/test_e03_each_axis_is_reported5/case.lock.txt', 'lock_sha256': 'bae14a70bf09e7ab99d0ddc2fa4f7a18ba5a268cfa57c3b03246086cb19868be', 'status': 'MISMATCH', ...}
+
+    def _assert_closed(r: dict) -> None:
+>       assert set(r) == RESULT_KEYS, sorted(r)
+E       AssertionError: ['counts', 'lock_path', 'lock_sha256', 'mismatches', 'profile', 'reason', ...]
+E       assert {'counts', 'l...'reason', ...} == {'counts', 'l...profile', ...}
+E         
+E         Extra items in the right set:
+E         'not_measured'
+E         Use -v to get more diff
+
+tests/test_gate90_env_profile.py:150: AssertionError
+_________________ test_e03_each_axis_is_reported[file_missing] _________________
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-2598/test_e03_each_axis_is_reported6/site'), site2=PosixPath('/tm...t-2598/test_e03_each_axis_is_reported6/site', '/tmp/pytest-of-root/pytest-2598/test_e03_each_axis_is_reported6/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-2598/test_e03_each_axis_is_reported6')
+case = 'file_missing'
+
+    @pytest.mark.parametrize("case", sorted(AXIS_CASES))
+    def test_e03_each_axis_is_reported(synth, tmp_path, case):
+        ep = _ep()
+        _, text = _lock_for(ep, synth.paths, tmp_path / "base.lock.txt")
+        change, want = AXIS_CASES[case]
+        text2, paths = change(text, synth)
+        lock = tmp_path / "case.lock.txt"
+        lock.write_bytes(text2.encode("utf-8"))
+        r = ep.compare_lock(lock, paths=paths)
+>       _assert_closed(r)
+
+tests/test_gate90_env_profile.py:279: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+r = {'profile': 'C', 'lock_path': '/tmp/pytest-of-root/pytest-2598/test_e03_each_axis_is_reported6/case.lock.txt', 'lock_sha256': 'bae14a70bf09e7ab99d0ddc2fa4f7a18ba5a268cfa57c3b03246086cb19868be', 'status': 'MISMATCH', ...}
+
+    def _assert_closed(r: dict) -> None:
+>       assert set(r) == RESULT_KEYS, sorted(r)
+E       AssertionError: ['counts', 'lock_path', 'lock_sha256', 'mismatches', 'profile', 'reason', ...]
+E       assert {'counts', 'l...'reason', ...} == {'counts', 'l...profile', ...}
+E         
+E         Extra items in the right set:
+E         'not_measured'
+E         Use -v to get more diff
+
+tests/test_gate90_env_profile.py:150: AssertionError
+________________ test_e03_each_axis_is_reported[implementation] ________________
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-2598/test_e03_each_axis_is_reported7/site'), site2=PosixPath('/tm...t-2598/test_e03_each_axis_is_reported7/site', '/tmp/pytest-of-root/pytest-2598/test_e03_each_axis_is_reported7/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-2598/test_e03_each_axis_is_reported7')
+case = 'implementation'
+
+    @pytest.mark.parametrize("case", sorted(AXIS_CASES))
+    def test_e03_each_axis_is_reported(synth, tmp_path, case):
+        ep = _ep()
+        _, text = _lock_for(ep, synth.paths, tmp_path / "base.lock.txt")
+        change, want = AXIS_CASES[case]
+        text2, paths = change(text, synth)
+        lock = tmp_path / "case.lock.txt"
+        lock.write_bytes(text2.encode("utf-8"))
+        r = ep.compare_lock(lock, paths=paths)
+>       _assert_closed(r)
+
+tests/test_gate90_env_profile.py:279: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+r = {'profile': 'C', 'lock_path': '/tmp/pytest-of-root/pytest-2598/test_e03_each_axis_is_reported7/case.lock.txt', 'lock_sha256': '7d3db1f510c590a0b0bde32ebbd5cd3da74877ae4bbb69fd4c4c826a177523e5', 'status': 'MISMATCH', ...}
+
+    def _assert_closed(r: dict) -> None:
+>       assert set(r) == RESULT_KEYS, sorted(r)
+E       AssertionError: ['counts', 'lock_path', 'lock_sha256', 'mismatches', 'profile', 'reason', ...]
+E       assert {'counts', 'l...'reason', ...} == {'counts', 'l...profile', ...}
+E         
+E         Extra items in the right set:
+E         'not_measured'
+E         Use -v to get more diff
+
+tests/test_gate90_env_profile.py:150: AssertionError
+_____________________ test_e03_each_axis_is_reported[libc] _____________________
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-2598/test_e03_each_axis_is_reported8/site'), site2=PosixPath('/tm...t-2598/test_e03_each_axis_is_reported8/site', '/tmp/pytest-of-root/pytest-2598/test_e03_each_axis_is_reported8/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-2598/test_e03_each_axis_is_reported8')
+case = 'libc'
+
+    @pytest.mark.parametrize("case", sorted(AXIS_CASES))
+    def test_e03_each_axis_is_reported(synth, tmp_path, case):
+        ep = _ep()
+        _, text = _lock_for(ep, synth.paths, tmp_path / "base.lock.txt")
+        change, want = AXIS_CASES[case]
+        text2, paths = change(text, synth)
+        lock = tmp_path / "case.lock.txt"
+        lock.write_bytes(text2.encode("utf-8"))
+        r = ep.compare_lock(lock, paths=paths)
+>       _assert_closed(r)
+
+tests/test_gate90_env_profile.py:279: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+r = {'profile': 'C', 'lock_path': '/tmp/pytest-of-root/pytest-2598/test_e03_each_axis_is_reported8/case.lock.txt', 'lock_sha256': '29199f241f32da9c3b777eb7ec532239acd6adc41da13402cc2c54b383a45ca4', 'status': 'MISMATCH', ...}
+
+    def _assert_closed(r: dict) -> None:
+>       assert set(r) == RESULT_KEYS, sorted(r)
+E       AssertionError: ['counts', 'lock_path', 'lock_sha256', 'mismatches', 'profile', 'reason', ...]
+E       assert {'counts', 'l...'reason', ...} == {'counts', 'l...profile', ...}
+E         
+E         Extra items in the right set:
+E         'not_measured'
+E         Use -v to get more diff
+
+tests/test_gate90_env_profile.py:150: AssertionError
+___________________ test_e03_each_axis_is_reported[machine] ____________________
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-2598/test_e03_each_axis_is_reported9/site'), site2=PosixPath('/tm...t-2598/test_e03_each_axis_is_reported9/site', '/tmp/pytest-of-root/pytest-2598/test_e03_each_axis_is_reported9/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-2598/test_e03_each_axis_is_reported9')
+case = 'machine'
+
+    @pytest.mark.parametrize("case", sorted(AXIS_CASES))
+    def test_e03_each_axis_is_reported(synth, tmp_path, case):
+        ep = _ep()
+        _, text = _lock_for(ep, synth.paths, tmp_path / "base.lock.txt")
+        change, want = AXIS_CASES[case]
+        text2, paths = change(text, synth)
+        lock = tmp_path / "case.lock.txt"
+        lock.write_bytes(text2.encode("utf-8"))
+        r = ep.compare_lock(lock, paths=paths)
+>       _assert_closed(r)
+
+tests/test_gate90_env_profile.py:279: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+r = {'profile': 'C', 'lock_path': '/tmp/pytest-of-root/pytest-2598/test_e03_each_axis_is_reported9/case.lock.txt', 'lock_sha256': '3b80bbf185f3a966955c64602c73d6a9722d8d9c2025d64db69485eaa553f694', 'status': 'MISMATCH', ...}
+
+    def _assert_closed(r: dict) -> None:
+>       assert set(r) == RESULT_KEYS, sorted(r)
+E       AssertionError: ['counts', 'lock_path', 'lock_sha256', 'mismatches', 'profile', 'reason', ...]
+E       assert {'counts', 'l...'reason', ...} == {'counts', 'l...profile', ...}
+E         
+E         Extra items in the right set:
+E         'not_measured'
+E         Use -v to get more diff
+
+tests/test_gate90_env_profile.py:150: AssertionError
+_________________ test_e03_each_axis_is_reported[origin_stray] _________________
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-2598/test_e03_each_axis_is_reported10/site'), site2=PosixPath('/t...2598/test_e03_each_axis_is_reported10/site', '/tmp/pytest-of-root/pytest-2598/test_e03_each_axis_is_reported10/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-2598/test_e03_each_axis_is_reported10')
+case = 'origin_stray'
+
+    @pytest.mark.parametrize("case", sorted(AXIS_CASES))
+    def test_e03_each_axis_is_reported(synth, tmp_path, case):
+        ep = _ep()
+        _, text = _lock_for(ep, synth.paths, tmp_path / "base.lock.txt")
+        change, want = AXIS_CASES[case]
+        text2, paths = change(text, synth)
+        lock = tmp_path / "case.lock.txt"
+        lock.write_bytes(text2.encode("utf-8"))
+        r = ep.compare_lock(lock, paths=paths)
+>       _assert_closed(r)
+
+tests/test_gate90_env_profile.py:279: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+r = {'profile': 'C', 'lock_path': '/tmp/pytest-of-root/pytest-2598/test_e03_each_axis_is_reported10/case.lock.txt', 'lock_sha256': 'bae14a70bf09e7ab99d0ddc2fa4f7a18ba5a268cfa57c3b03246086cb19868be', 'status': 'MISMATCH', ...}
+
+    def _assert_closed(r: dict) -> None:
+>       assert set(r) == RESULT_KEYS, sorted(r)
+E       AssertionError: ['counts', 'lock_path', 'lock_sha256', 'mismatches', 'profile', 'reason', ...]
+E       assert {'counts', 'l...'reason', ...} == {'counts', 'l...profile', ...}
+E         
+E         Extra items in the right set:
+E         'not_measured'
+E         Use -v to get more diff
+
+tests/test_gate90_env_profile.py:150: AssertionError
+____________________ test_e03_each_axis_is_reported[python] ____________________
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-2598/test_e03_each_axis_is_reported11/site'), site2=PosixPath('/t...2598/test_e03_each_axis_is_reported11/site', '/tmp/pytest-of-root/pytest-2598/test_e03_each_axis_is_reported11/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-2598/test_e03_each_axis_is_reported11')
+case = 'python'
+
+    @pytest.mark.parametrize("case", sorted(AXIS_CASES))
+    def test_e03_each_axis_is_reported(synth, tmp_path, case):
+        ep = _ep()
+        _, text = _lock_for(ep, synth.paths, tmp_path / "base.lock.txt")
+        change, want = AXIS_CASES[case]
+        text2, paths = change(text, synth)
+        lock = tmp_path / "case.lock.txt"
+        lock.write_bytes(text2.encode("utf-8"))
+        r = ep.compare_lock(lock, paths=paths)
+>       _assert_closed(r)
+
+tests/test_gate90_env_profile.py:279: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+r = {'profile': 'C', 'lock_path': '/tmp/pytest-of-root/pytest-2598/test_e03_each_axis_is_reported11/case.lock.txt', 'lock_sha256': '95ed7ad08e6001ef690c6062f8b30484a838ac2eeb1ef3c3c1ed99ee7fdbbae9', 'status': 'MISMATCH', ...}
+
+    def _assert_closed(r: dict) -> None:
+>       assert set(r) == RESULT_KEYS, sorted(r)
+E       AssertionError: ['counts', 'lock_path', 'lock_sha256', 'mismatches', 'profile', 'reason', ...]
+E       assert {'counts', 'l...'reason', ...} == {'counts', 'l...profile', ...}
+E         
+E         Extra items in the right set:
+E         'not_measured'
+E         Use -v to get more diff
+
+tests/test_gate90_env_profile.py:150: AssertionError
+___________________ test_e03_each_axis_is_reported[shadowed] ___________________
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-2598/test_e03_each_axis_is_reported12/site'), site2=PosixPath('/t...2598/test_e03_each_axis_is_reported12/site', '/tmp/pytest-of-root/pytest-2598/test_e03_each_axis_is_reported12/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-2598/test_e03_each_axis_is_reported12')
+case = 'shadowed'
+
+    @pytest.mark.parametrize("case", sorted(AXIS_CASES))
+    def test_e03_each_axis_is_reported(synth, tmp_path, case):
+        ep = _ep()
+        _, text = _lock_for(ep, synth.paths, tmp_path / "base.lock.txt")
+        change, want = AXIS_CASES[case]
+        text2, paths = change(text, synth)
+        lock = tmp_path / "case.lock.txt"
+        lock.write_bytes(text2.encode("utf-8"))
+        r = ep.compare_lock(lock, paths=paths)
+>       _assert_closed(r)
+
+tests/test_gate90_env_profile.py:279: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+r = {'profile': 'C', 'lock_path': '/tmp/pytest-of-root/pytest-2598/test_e03_each_axis_is_reported12/case.lock.txt', 'lock_sha256': '113105752d04e595cc7acc68493777c6c95c5c4e5b325c7ae647e2a4aa0f8ec4', 'status': 'MISMATCH', ...}
+
+    def _assert_closed(r: dict) -> None:
+>       assert set(r) == RESULT_KEYS, sorted(r)
+E       AssertionError: ['counts', 'lock_path', 'lock_sha256', 'mismatches', 'profile', 'reason', ...]
+E       assert {'counts', 'l...'reason', ...} == {'counts', 'l...profile', ...}
+E         
+E         Extra items in the right set:
+E         'not_measured'
+E         Use -v to get more diff
+
+tests/test_gate90_env_profile.py:150: AssertionError
+____________________ test_e03_each_axis_is_reported[system] ____________________
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-2598/test_e03_each_axis_is_reported13/site'), site2=PosixPath('/t...2598/test_e03_each_axis_is_reported13/site', '/tmp/pytest-of-root/pytest-2598/test_e03_each_axis_is_reported13/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-2598/test_e03_each_axis_is_reported13')
+case = 'system'
+
+    @pytest.mark.parametrize("case", sorted(AXIS_CASES))
+    def test_e03_each_axis_is_reported(synth, tmp_path, case):
+        ep = _ep()
+        _, text = _lock_for(ep, synth.paths, tmp_path / "base.lock.txt")
+        change, want = AXIS_CASES[case]
+        text2, paths = change(text, synth)
+        lock = tmp_path / "case.lock.txt"
+        lock.write_bytes(text2.encode("utf-8"))
+        r = ep.compare_lock(lock, paths=paths)
+>       _assert_closed(r)
+
+tests/test_gate90_env_profile.py:279: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+r = {'profile': 'C', 'lock_path': '/tmp/pytest-of-root/pytest-2598/test_e03_each_axis_is_reported13/case.lock.txt', 'lock_sha256': '2c6537fdf7c3df1ca4e27c256118a2ce186846d3895c694604abbd7847049865', 'status': 'MISMATCH', ...}
+
+    def _assert_closed(r: dict) -> None:
+>       assert set(r) == RESULT_KEYS, sorted(r)
+E       AssertionError: ['counts', 'lock_path', 'lock_sha256', 'mismatches', 'profile', 'reason', ...]
+E       assert {'counts', 'l...'reason', ...} == {'counts', 'l...profile', ...}
+E         
+E         Extra items in the right set:
+E         'not_measured'
+E         Use -v to get more diff
+
+tests/test_gate90_env_profile.py:150: AssertionError
+____________ test_e04_malformed_lock_is_unmeasured[bad_json_value] _____________
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-2598/test_e04_malformed_lock_is_unm0/site'), site2=PosixPath('/tm...t-2598/test_e04_malformed_lock_is_unm0/site', '/tmp/pytest-of-root/pytest-2598/test_e04_malformed_lock_is_unm0/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-2598/test_e04_malformed_lock_is_unm0')
+case = 'bad_json_value'
+
+    @pytest.mark.parametrize("case", sorted(MALFORMED))
+    def test_e04_malformed_lock_is_unmeasured(synth, tmp_path, case):
+        ep = _ep()
+        _, text = _lock_for(ep, synth.paths, tmp_path / "base.lock.txt")
+        lock = tmp_path / "case.lock.txt"
+        if case == "not_utf8":
+            lock.write_bytes(text.encode("utf-8") + b"\xff\xfe broken\n")
+        elif case != "missing_file":
+            bad = MALFORMED[case](text)
+            assert bad != text
+            lock.write_bytes(bad.encode("utf-8"))
+        r = ep.compare_lock(lock, paths=synth.paths)
+>       _assert_closed(r)
+
+tests/test_gate90_env_profile.py:336: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+r = {'profile': 'C', 'lock_path': '/tmp/pytest-of-root/pytest-2598/test_e04_malformed_lock_is_unm0/case.lock.txt', 'lock_sha256': 'c05d9b24ed711a3c5f34af4a31b82460fadd308ae7db8a296d08b8f33e894837', 'status': 'UNMEASURED', ...}
+
+    def _assert_closed(r: dict) -> None:
+>       assert set(r) == RESULT_KEYS, sorted(r)
+E       AssertionError: ['counts', 'lock_path', 'lock_sha256', 'mismatches', 'profile', 'reason', ...]
+E       assert {'counts', 'l...'reason', ...} == {'counts', 'l...profile', ...}
+E         
+E         Extra items in the right set:
+E         'not_measured'
+E         Use -v to get more diff
+
+tests/test_gate90_env_profile.py:150: AssertionError
+___________ test_e04_malformed_lock_is_unmeasured[bad_record_field] ____________
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-2598/test_e04_malformed_lock_is_unm1/site'), site2=PosixPath('/tm...t-2598/test_e04_malformed_lock_is_unm1/site', '/tmp/pytest-of-root/pytest-2598/test_e04_malformed_lock_is_unm1/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-2598/test_e04_malformed_lock_is_unm1')
+case = 'bad_record_field'
+
+    @pytest.mark.parametrize("case", sorted(MALFORMED))
+    def test_e04_malformed_lock_is_unmeasured(synth, tmp_path, case):
+        ep = _ep()
+        _, text = _lock_for(ep, synth.paths, tmp_path / "base.lock.txt")
+        lock = tmp_path / "case.lock.txt"
+        if case == "not_utf8":
+            lock.write_bytes(text.encode("utf-8") + b"\xff\xfe broken\n")
+        elif case != "missing_file":
+            bad = MALFORMED[case](text)
+            assert bad != text
+            lock.write_bytes(bad.encode("utf-8"))
+        r = ep.compare_lock(lock, paths=synth.paths)
+>       _assert_closed(r)
+
+tests/test_gate90_env_profile.py:336: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+r = {'profile': 'C', 'lock_path': '/tmp/pytest-of-root/pytest-2598/test_e04_malformed_lock_is_unm1/case.lock.txt', 'lock_sha256': '12ffe1416f5af1c247c045655bfee0c83b43ea2e21ccbe96de0ea2010147ac34', 'status': 'UNMEASURED', ...}
+
+    def _assert_closed(r: dict) -> None:
+>       assert set(r) == RESULT_KEYS, sorted(r)
+E       AssertionError: ['counts', 'lock_path', 'lock_sha256', 'mismatches', 'profile', 'reason', ...]
+E       assert {'counts', 'l...'reason', ...} == {'counts', 'l...profile', ...}
+E         
+E         Extra items in the right set:
+E         'not_measured'
+E         Use -v to get more diff
+
+tests/test_gate90_env_profile.py:150: AssertionError
+__________ test_e04_malformed_lock_is_unmeasured[duplicate_directive] __________
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-2598/test_e04_malformed_lock_is_unm2/site'), site2=PosixPath('/tm...t-2598/test_e04_malformed_lock_is_unm2/site', '/tmp/pytest-of-root/pytest-2598/test_e04_malformed_lock_is_unm2/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-2598/test_e04_malformed_lock_is_unm2')
+case = 'duplicate_directive'
+
+    @pytest.mark.parametrize("case", sorted(MALFORMED))
+    def test_e04_malformed_lock_is_unmeasured(synth, tmp_path, case):
+        ep = _ep()
+        _, text = _lock_for(ep, synth.paths, tmp_path / "base.lock.txt")
+        lock = tmp_path / "case.lock.txt"
+        if case == "not_utf8":
+            lock.write_bytes(text.encode("utf-8") + b"\xff\xfe broken\n")
+        elif case != "missing_file":
+            bad = MALFORMED[case](text)
+            assert bad != text
+            lock.write_bytes(bad.encode("utf-8"))
+        r = ep.compare_lock(lock, paths=synth.paths)
+>       _assert_closed(r)
+
+tests/test_gate90_env_profile.py:336: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+r = {'profile': 'C', 'lock_path': '/tmp/pytest-of-root/pytest-2598/test_e04_malformed_lock_is_unm2/case.lock.txt', 'lock_sha256': '763c66b1ecf273f78b0d6328eefe64d53adbd65308a2e3a397b45bcaddd9a98d', 'status': 'UNMEASURED', ...}
+
+    def _assert_closed(r: dict) -> None:
+>       assert set(r) == RESULT_KEYS, sorted(r)
+E       AssertionError: ['counts', 'lock_path', 'lock_sha256', 'mismatches', 'profile', 'reason', ...]
+E       assert {'counts', 'l...'reason', ...} == {'counts', 'l...profile', ...}
+E         
+E         Extra items in the right set:
+E         'not_measured'
+E         Use -v to get more diff
+
+tests/test_gate90_env_profile.py:150: AssertionError
+____________ test_e04_malformed_lock_is_unmeasured[duplicate_dist] _____________
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-2598/test_e04_malformed_lock_is_unm3/site'), site2=PosixPath('/tm...t-2598/test_e04_malformed_lock_is_unm3/site', '/tmp/pytest-of-root/pytest-2598/test_e04_malformed_lock_is_unm3/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-2598/test_e04_malformed_lock_is_unm3')
+case = 'duplicate_dist'
+
+    @pytest.mark.parametrize("case", sorted(MALFORMED))
+    def test_e04_malformed_lock_is_unmeasured(synth, tmp_path, case):
+        ep = _ep()
+        _, text = _lock_for(ep, synth.paths, tmp_path / "base.lock.txt")
+        lock = tmp_path / "case.lock.txt"
+        if case == "not_utf8":
+            lock.write_bytes(text.encode("utf-8") + b"\xff\xfe broken\n")
+        elif case != "missing_file":
+            bad = MALFORMED[case](text)
+            assert bad != text
+            lock.write_bytes(bad.encode("utf-8"))
+        r = ep.compare_lock(lock, paths=synth.paths)
+>       _assert_closed(r)
+
+tests/test_gate90_env_profile.py:336: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+r = {'profile': 'C', 'lock_path': '/tmp/pytest-of-root/pytest-2598/test_e04_malformed_lock_is_unm3/case.lock.txt', 'lock_sha256': '79ba78be148942451185b70f836ad05f404d9a010f90a6b26abfd3e41ec4795b', 'status': 'UNMEASURED', ...}
+
+    def _assert_closed(r: dict) -> None:
+>       assert set(r) == RESULT_KEYS, sorted(r)
+E       AssertionError: ['counts', 'lock_path', 'lock_sha256', 'mismatches', 'profile', 'reason', ...]
+E       assert {'counts', 'l...'reason', ...} == {'counts', 'l...profile', ...}
+E         
+E         Extra items in the right set:
+E         'not_measured'
+E         Use -v to get more diff
+
+tests/test_gate90_env_profile.py:150: AssertionError
+_____________ test_e04_malformed_lock_is_unmeasured[garbage_line] ______________
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-2598/test_e04_malformed_lock_is_unm4/site'), site2=PosixPath('/tm...t-2598/test_e04_malformed_lock_is_unm4/site', '/tmp/pytest-of-root/pytest-2598/test_e04_malformed_lock_is_unm4/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-2598/test_e04_malformed_lock_is_unm4')
+case = 'garbage_line'
+
+    @pytest.mark.parametrize("case", sorted(MALFORMED))
+    def test_e04_malformed_lock_is_unmeasured(synth, tmp_path, case):
+        ep = _ep()
+        _, text = _lock_for(ep, synth.paths, tmp_path / "base.lock.txt")
+        lock = tmp_path / "case.lock.txt"
+        if case == "not_utf8":
+            lock.write_bytes(text.encode("utf-8") + b"\xff\xfe broken\n")
+        elif case != "missing_file":
+            bad = MALFORMED[case](text)
+            assert bad != text
+            lock.write_bytes(bad.encode("utf-8"))
+        r = ep.compare_lock(lock, paths=synth.paths)
+>       _assert_closed(r)
+
+tests/test_gate90_env_profile.py:336: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+r = {'profile': 'C', 'lock_path': '/tmp/pytest-of-root/pytest-2598/test_e04_malformed_lock_is_unm4/case.lock.txt', 'lock_sha256': '0e7b752fa1bb6a13dbe13049dfb673d42008ae2c67b5af0c57fb35ec0f05d428', 'status': 'UNMEASURED', ...}
+
+    def _assert_closed(r: dict) -> None:
+>       assert set(r) == RESULT_KEYS, sorted(r)
+E       AssertionError: ['counts', 'lock_path', 'lock_sha256', 'mismatches', 'profile', 'reason', ...]
+E       assert {'counts', 'l...'reason', ...} == {'counts', 'l...profile', ...}
+E         
+E         Extra items in the right set:
+E         'not_measured'
+E         Use -v to get more diff
+
+tests/test_gate90_env_profile.py:150: AssertionError
+___________ test_e04_malformed_lock_is_unmeasured[missing_directive] ___________
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-2598/test_e04_malformed_lock_is_unm5/site'), site2=PosixPath('/tm...t-2598/test_e04_malformed_lock_is_unm5/site', '/tmp/pytest-of-root/pytest-2598/test_e04_malformed_lock_is_unm5/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-2598/test_e04_malformed_lock_is_unm5')
+case = 'missing_directive'
+
+    @pytest.mark.parametrize("case", sorted(MALFORMED))
+    def test_e04_malformed_lock_is_unmeasured(synth, tmp_path, case):
+        ep = _ep()
+        _, text = _lock_for(ep, synth.paths, tmp_path / "base.lock.txt")
+        lock = tmp_path / "case.lock.txt"
+        if case == "not_utf8":
+            lock.write_bytes(text.encode("utf-8") + b"\xff\xfe broken\n")
+        elif case != "missing_file":
+            bad = MALFORMED[case](text)
+            assert bad != text
+            lock.write_bytes(bad.encode("utf-8"))
+        r = ep.compare_lock(lock, paths=synth.paths)
+>       _assert_closed(r)
+
+tests/test_gate90_env_profile.py:336: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+r = {'profile': 'C', 'lock_path': '/tmp/pytest-of-root/pytest-2598/test_e04_malformed_lock_is_unm5/case.lock.txt', 'lock_sha256': '9d73b545ca6aeb8dcc4f0ba94ac7134f57edcc7a68ced487d0f3aac18d6b6e4e', 'status': 'UNMEASURED', ...}
+
+    def _assert_closed(r: dict) -> None:
+>       assert set(r) == RESULT_KEYS, sorted(r)
+E       AssertionError: ['counts', 'lock_path', 'lock_sha256', 'mismatches', 'profile', 'reason', ...]
+E       assert {'counts', 'l...'reason', ...} == {'counts', 'l...profile', ...}
+E         
+E         Extra items in the right set:
+E         'not_measured'
+E         Use -v to get more diff
+
+tests/test_gate90_env_profile.py:150: AssertionError
+_____________ test_e04_malformed_lock_is_unmeasured[missing_file] ______________
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-2598/test_e04_malformed_lock_is_unm6/site'), site2=PosixPath('/tm...t-2598/test_e04_malformed_lock_is_unm6/site', '/tmp/pytest-of-root/pytest-2598/test_e04_malformed_lock_is_unm6/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-2598/test_e04_malformed_lock_is_unm6')
+case = 'missing_file'
+
+    @pytest.mark.parametrize("case", sorted(MALFORMED))
+    def test_e04_malformed_lock_is_unmeasured(synth, tmp_path, case):
+        ep = _ep()
+        _, text = _lock_for(ep, synth.paths, tmp_path / "base.lock.txt")
+        lock = tmp_path / "case.lock.txt"
+        if case == "not_utf8":
+            lock.write_bytes(text.encode("utf-8") + b"\xff\xfe broken\n")
+        elif case != "missing_file":
+            bad = MALFORMED[case](text)
+            assert bad != text
+            lock.write_bytes(bad.encode("utf-8"))
+        r = ep.compare_lock(lock, paths=synth.paths)
+>       _assert_closed(r)
+
+tests/test_gate90_env_profile.py:336: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+r = {'profile': 'C', 'lock_path': '/tmp/pytest-of-root/pytest-2598/test_e04_malformed_lock_is_unm6/case.lock.txt', 'lock_sha256': None, 'status': 'UNMEASURED', ...}
+
+    def _assert_closed(r: dict) -> None:
+>       assert set(r) == RESULT_KEYS, sorted(r)
+E       AssertionError: ['counts', 'lock_path', 'lock_sha256', 'mismatches', 'profile', 'reason', ...]
+E       assert {'counts', 'l...'reason', ...} == {'counts', 'l...profile', ...}
+E         
+E         Extra items in the right set:
+E         'not_measured'
+E         Use -v to get more diff
+
+tests/test_gate90_env_profile.py:150: AssertionError
+_______________ test_e04_malformed_lock_is_unmeasured[not_utf8] ________________
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-2598/test_e04_malformed_lock_is_unm7/site'), site2=PosixPath('/tm...t-2598/test_e04_malformed_lock_is_unm7/site', '/tmp/pytest-of-root/pytest-2598/test_e04_malformed_lock_is_unm7/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-2598/test_e04_malformed_lock_is_unm7')
+case = 'not_utf8'
+
+    @pytest.mark.parametrize("case", sorted(MALFORMED))
+    def test_e04_malformed_lock_is_unmeasured(synth, tmp_path, case):
+        ep = _ep()
+        _, text = _lock_for(ep, synth.paths, tmp_path / "base.lock.txt")
+        lock = tmp_path / "case.lock.txt"
+        if case == "not_utf8":
+            lock.write_bytes(text.encode("utf-8") + b"\xff\xfe broken\n")
+        elif case != "missing_file":
+            bad = MALFORMED[case](text)
+            assert bad != text
+            lock.write_bytes(bad.encode("utf-8"))
+        r = ep.compare_lock(lock, paths=synth.paths)
+>       _assert_closed(r)
+
+tests/test_gate90_env_profile.py:336: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+r = {'profile': 'C', 'lock_path': '/tmp/pytest-of-root/pytest-2598/test_e04_malformed_lock_is_unm7/case.lock.txt', 'lock_sha256': 'cdb34caca580970d5876ab84b95cfbda7882a5d7b53e0bb66b3eaaeaaa1fdded', 'status': 'UNMEASURED', ...}
+
+    def _assert_closed(r: dict) -> None:
+>       assert set(r) == RESULT_KEYS, sorted(r)
+E       AssertionError: ['counts', 'lock_path', 'lock_sha256', 'mismatches', 'profile', 'reason', ...]
+E       assert {'counts', 'l...'reason', ...} == {'counts', 'l...profile', ...}
+E         
+E         Extra items in the right set:
+E         'not_measured'
+E         Use -v to get more diff
+
+tests/test_gate90_env_profile.py:150: AssertionError
+_____________ test_e04_malformed_lock_is_unmeasured[profile_not_c] _____________
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-2598/test_e04_malformed_lock_is_unm8/site'), site2=PosixPath('/tm...t-2598/test_e04_malformed_lock_is_unm8/site', '/tmp/pytest-of-root/pytest-2598/test_e04_malformed_lock_is_unm8/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-2598/test_e04_malformed_lock_is_unm8')
+case = 'profile_not_c'
+
+    @pytest.mark.parametrize("case", sorted(MALFORMED))
+    def test_e04_malformed_lock_is_unmeasured(synth, tmp_path, case):
+        ep = _ep()
+        _, text = _lock_for(ep, synth.paths, tmp_path / "base.lock.txt")
+        lock = tmp_path / "case.lock.txt"
+        if case == "not_utf8":
+            lock.write_bytes(text.encode("utf-8") + b"\xff\xfe broken\n")
+        elif case != "missing_file":
+            bad = MALFORMED[case](text)
+            assert bad != text
+            lock.write_bytes(bad.encode("utf-8"))
+        r = ep.compare_lock(lock, paths=synth.paths)
+>       _assert_closed(r)
+
+tests/test_gate90_env_profile.py:336: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+r = {'profile': 'C', 'lock_path': '/tmp/pytest-of-root/pytest-2598/test_e04_malformed_lock_is_unm8/case.lock.txt', 'lock_sha256': 'e5b2e4740d127045ee7508e1b55f98cdb7ffb7f1f23224e935f754a82047042b', 'status': 'UNMEASURED', ...}
+
+    def _assert_closed(r: dict) -> None:
+>       assert set(r) == RESULT_KEYS, sorted(r)
+E       AssertionError: ['counts', 'lock_path', 'lock_sha256', 'mismatches', 'profile', 'reason', ...]
+E       assert {'counts', 'l...'reason', ...} == {'counts', 'l...profile', ...}
+E         
+E         Extra items in the right set:
+E         'not_measured'
+E         Use -v to get more diff
+
+tests/test_gate90_env_profile.py:150: AssertionError
+___________ test_e04_malformed_lock_is_unmeasured[unknown_directive] ___________
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-2598/test_e04_malformed_lock_is_unm9/site'), site2=PosixPath('/tm...t-2598/test_e04_malformed_lock_is_unm9/site', '/tmp/pytest-of-root/pytest-2598/test_e04_malformed_lock_is_unm9/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-2598/test_e04_malformed_lock_is_unm9')
+case = 'unknown_directive'
+
+    @pytest.mark.parametrize("case", sorted(MALFORMED))
+    def test_e04_malformed_lock_is_unmeasured(synth, tmp_path, case):
+        ep = _ep()
+        _, text = _lock_for(ep, synth.paths, tmp_path / "base.lock.txt")
+        lock = tmp_path / "case.lock.txt"
+        if case == "not_utf8":
+            lock.write_bytes(text.encode("utf-8") + b"\xff\xfe broken\n")
+        elif case != "missing_file":
+            bad = MALFORMED[case](text)
+            assert bad != text
+            lock.write_bytes(bad.encode("utf-8"))
+        r = ep.compare_lock(lock, paths=synth.paths)
+>       _assert_closed(r)
+
+tests/test_gate90_env_profile.py:336: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+r = {'profile': 'C', 'lock_path': '/tmp/pytest-of-root/pytest-2598/test_e04_malformed_lock_is_unm9/case.lock.txt', 'lock_sha256': '6c1c81a90ba3cf971ffb4ae5a0aba5f85b3910cbcf5269f182529b539b6709a4', 'status': 'UNMEASURED', ...}
+
+    def _assert_closed(r: dict) -> None:
+>       assert set(r) == RESULT_KEYS, sorted(r)
+E       AssertionError: ['counts', 'lock_path', 'lock_sha256', 'mismatches', 'profile', 'reason', ...]
+E       assert {'counts', 'l...'reason', ...} == {'counts', 'l...profile', ...}
+E         
+E         Extra items in the right set:
+E         'not_measured'
+E         Use -v to get more diff
+
+tests/test_gate90_env_profile.py:150: AssertionError
+___________ test_e04_malformed_lock_is_unmeasured[unnormalized_name] ___________
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-2598/test_e04_malformed_lock_is_unm10/site'), site2=PosixPath('/t...2598/test_e04_malformed_lock_is_unm10/site', '/tmp/pytest-of-root/pytest-2598/test_e04_malformed_lock_is_unm10/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-2598/test_e04_malformed_lock_is_unm10')
+case = 'unnormalized_name'
+
+    @pytest.mark.parametrize("case", sorted(MALFORMED))
+    def test_e04_malformed_lock_is_unmeasured(synth, tmp_path, case):
+        ep = _ep()
+        _, text = _lock_for(ep, synth.paths, tmp_path / "base.lock.txt")
+        lock = tmp_path / "case.lock.txt"
+        if case == "not_utf8":
+            lock.write_bytes(text.encode("utf-8") + b"\xff\xfe broken\n")
+        elif case != "missing_file":
+            bad = MALFORMED[case](text)
+            assert bad != text
+            lock.write_bytes(bad.encode("utf-8"))
+        r = ep.compare_lock(lock, paths=synth.paths)
+>       _assert_closed(r)
+
+tests/test_gate90_env_profile.py:336: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+r = {'profile': 'C', 'lock_path': '/tmp/pytest-of-root/pytest-2598/test_e04_malformed_lock_is_unm10/case.lock.txt', 'lock_sha256': '75c9b33cf6ef4eb6a41cd11dd827fd9f6781ed20bee2848a4e855baf77b2af7f', 'status': 'UNMEASURED', ...}
+
+    def _assert_closed(r: dict) -> None:
+>       assert set(r) == RESULT_KEYS, sorted(r)
+E       AssertionError: ['counts', 'lock_path', 'lock_sha256', 'mismatches', 'profile', 'reason', ...]
+E       assert {'counts', 'l...'reason', ...} == {'counts', 'l...profile', ...}
+E         
+E         Extra items in the right set:
+E         'not_measured'
+E         Use -v to get more diff
+
+tests/test_gate90_env_profile.py:150: AssertionError
+_______________ test_e04_malformed_lock_is_unmeasured[unsorted] ________________
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-2598/test_e04_malformed_lock_is_unm11/site'), site2=PosixPath('/t...2598/test_e04_malformed_lock_is_unm11/site', '/tmp/pytest-of-root/pytest-2598/test_e04_malformed_lock_is_unm11/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-2598/test_e04_malformed_lock_is_unm11')
+case = 'unsorted'
+
+    @pytest.mark.parametrize("case", sorted(MALFORMED))
+    def test_e04_malformed_lock_is_unmeasured(synth, tmp_path, case):
+        ep = _ep()
+        _, text = _lock_for(ep, synth.paths, tmp_path / "base.lock.txt")
+        lock = tmp_path / "case.lock.txt"
+        if case == "not_utf8":
+            lock.write_bytes(text.encode("utf-8") + b"\xff\xfe broken\n")
+        elif case != "missing_file":
+            bad = MALFORMED[case](text)
+            assert bad != text
+            lock.write_bytes(bad.encode("utf-8"))
+        r = ep.compare_lock(lock, paths=synth.paths)
+>       _assert_closed(r)
+
+tests/test_gate90_env_profile.py:336: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+r = {'profile': 'C', 'lock_path': '/tmp/pytest-of-root/pytest-2598/test_e04_malformed_lock_is_unm11/case.lock.txt', 'lock_sha256': '1b2fcba55728d37b5891d9a61cfa587a4bc0465cd352c77385fcecad6afbb4b4', 'status': 'UNMEASURED', ...}
+
+    def _assert_closed(r: dict) -> None:
+>       assert set(r) == RESULT_KEYS, sorted(r)
+E       AssertionError: ['counts', 'lock_path', 'lock_sha256', 'mismatches', 'profile', 'reason', ...]
+E       assert {'counts', 'l...'reason', ...} == {'counts', 'l...profile', ...}
+E         
+E         Extra items in the right set:
+E         'not_measured'
+E         Use -v to get more diff
+
+tests/test_gate90_env_profile.py:150: AssertionError
+________ test_e05_measurement_failure_is_unmeasured[enumeration_raises] ________
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-2598/test_e05_measurement_failure_i0/site'), site2=PosixPath('/tm...t-2598/test_e05_measurement_failure_i0/site', '/tmp/pytest-of-root/pytest-2598/test_e05_measurement_failure_i0/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-2598/test_e05_measurement_failure_i0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fac9a583490>
+case = 'enumeration_raises'
+
+    @pytest.mark.parametrize("case", sorted(MEASURE_FAILURES))
+    def test_e05_measurement_failure_is_unmeasured(synth, tmp_path, monkeypatch, case):
+        ep = _ep()
+        lock, _ = _lock_for(ep, synth.paths, tmp_path / "base.lock.txt")
+        MEASURE_FAILURES[case](synth, monkeypatch)
+        r = ep.compare_lock(lock, paths=synth.paths)
+>       _assert_closed(r)
+
+tests/test_gate90_env_profile.py:383: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+r = {'profile': 'C', 'lock_path': '/tmp/pytest-of-root/pytest-2598/test_e05_measurement_failure_i0/base.lock.txt', 'lock_sha256': 'bae14a70bf09e7ab99d0ddc2fa4f7a18ba5a268cfa57c3b03246086cb19868be', 'status': 'UNMEASURED', ...}
+
+    def _assert_closed(r: dict) -> None:
+>       assert set(r) == RESULT_KEYS, sorted(r)
+E       AssertionError: ['counts', 'lock_path', 'lock_sha256', 'mismatches', 'profile', 'reason', ...]
+E       assert {'counts', 'l...'reason', ...} == {'counts', 'l...profile', ...}
+E         
+E         Extra items in the right set:
+E         'not_measured'
+E         Use -v to get more diff
+
+tests/test_gate90_env_profile.py:150: AssertionError
+__________ test_e05_measurement_failure_is_unmeasured[nameless_dist] ___________
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-2598/test_e05_measurement_failure_i1/site'), site2=PosixPath('/tm...t-2598/test_e05_measurement_failure_i1/site', '/tmp/pytest-of-root/pytest-2598/test_e05_measurement_failure_i1/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-2598/test_e05_measurement_failure_i1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fac9a543a90>
+case = 'nameless_dist'
+
+    @pytest.mark.parametrize("case", sorted(MEASURE_FAILURES))
+    def test_e05_measurement_failure_is_unmeasured(synth, tmp_path, monkeypatch, case):
+        ep = _ep()
+        lock, _ = _lock_for(ep, synth.paths, tmp_path / "base.lock.txt")
+        MEASURE_FAILURES[case](synth, monkeypatch)
+        r = ep.compare_lock(lock, paths=synth.paths)
+>       _assert_closed(r)
+
+tests/test_gate90_env_profile.py:383: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+r = {'profile': 'C', 'lock_path': '/tmp/pytest-of-root/pytest-2598/test_e05_measurement_failure_i1/base.lock.txt', 'lock_sha256': 'bae14a70bf09e7ab99d0ddc2fa4f7a18ba5a268cfa57c3b03246086cb19868be', 'status': 'UNMEASURED', ...}
+
+    def _assert_closed(r: dict) -> None:
+>       assert set(r) == RESULT_KEYS, sorted(r)
+E       AssertionError: ['counts', 'lock_path', 'lock_sha256', 'mismatches', 'profile', 'reason', ...]
+E       assert {'counts', 'l...'reason', ...} == {'counts', 'l...profile', ...}
+E         
+E         Extra items in the right set:
+E         'not_measured'
+E         Use -v to get more diff
+
+tests/test_gate90_env_profile.py:150: AssertionError
+______ test_e05_measurement_failure_is_unmeasured[unknown_hash_algorithm] ______
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-2598/test_e05_measurement_failure_i2/site'), site2=PosixPath('/tm...t-2598/test_e05_measurement_failure_i2/site', '/tmp/pytest-of-root/pytest-2598/test_e05_measurement_failure_i2/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-2598/test_e05_measurement_failure_i2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fac9a5f8150>
+case = 'unknown_hash_algorithm'
+
+    @pytest.mark.parametrize("case", sorted(MEASURE_FAILURES))
+    def test_e05_measurement_failure_is_unmeasured(synth, tmp_path, monkeypatch, case):
+        ep = _ep()
+        lock, _ = _lock_for(ep, synth.paths, tmp_path / "base.lock.txt")
+        MEASURE_FAILURES[case](synth, monkeypatch)
+        r = ep.compare_lock(lock, paths=synth.paths)
+>       _assert_closed(r)
+
+tests/test_gate90_env_profile.py:383: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+r = {'profile': 'C', 'lock_path': '/tmp/pytest-of-root/pytest-2598/test_e05_measurement_failure_i2/base.lock.txt', 'lock_sha256': 'bae14a70bf09e7ab99d0ddc2fa4f7a18ba5a268cfa57c3b03246086cb19868be', 'status': 'UNMEASURED', ...}
+
+    def _assert_closed(r: dict) -> None:
+>       assert set(r) == RESULT_KEYS, sorted(r)
+E       AssertionError: ['counts', 'lock_path', 'lock_sha256', 'mismatches', 'profile', 'reason', ...]
+E       assert {'counts', 'l...'reason', ...} == {'counts', 'l...profile', ...}
+E         
+E         Extra items in the right set:
+E         'not_measured'
+E         Use -v to get more diff
+
+tests/test_gate90_env_profile.py:150: AssertionError
+__________________ test_e06_real_environment_result_is_typed ___________________
+
+    def test_e06_real_environment_result_is_typed():
+        ep = _ep()
+        r = ep.compare_lock()
+>       _assert_closed(r)
+
+tests/test_gate90_env_profile.py:393: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+r = {'profile': 'C', 'lock_path': 'requirements-validation-C.lock.txt', 'lock_sha256': 'd886f30ff675fef723fb9bcedd98297910fb1f8f1809370c18d8980dc5e63b39', 'status': 'MATCH', ...}
+
+    def _assert_closed(r: dict) -> None:
+>       assert set(r) == RESULT_KEYS, sorted(r)
+E       AssertionError: ['counts', 'lock_path', 'lock_sha256', 'mismatches', 'profile', 'reason', ...]
+E       assert {'counts', 'l...'reason', ...} == {'counts', 'l...profile', ...}
+E         
+E         Extra items in the right set:
+E         'not_measured'
+E         Use -v to get more diff
+
+tests/test_gate90_env_profile.py:150: AssertionError
+_________________________ test_e08_cli_is_record_only __________________________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-2598/test_e08_cli_is_record_only0')
+
+    def test_e08_cli_is_record_only(tmp_path):
+        ep = _ep()
+        text = LOCK.read_text(encoding="utf-8")
+        off = tmp_path / "mismatch.lock.txt"
+        off.write_bytes(_set_directive(text, "python", "0.0.0").encode("utf-8"))
+        p = _cli("--lock", str(off))
+        assert p.returncode == 0, f"rc {p.returncode} (MISMATCH) — 기록 전용이면 0"
+        assert "MISMATCH" in p.stdout and re.search(r"^\s*✗ python ", p.stdout, re.M), "MISMATCH 요약 · python 축 줄 없음"
+        broken = tmp_path / "broken.lock.txt"
+        broken.write_bytes((text + "this is not a lock line\n").encode("utf-8"))
+        p = _cli("--lock", str(broken))
+        assert p.returncode == 0, f"rc {p.returncode} (UNMEASURED) — 기록 전용이면 0"
+        assert "UNMEASURED" in p.stdout, "UNMEASURED 요약 없음"
+        p = _cli("--json", "--lock", str(off))
+        assert p.returncode == 0, f"rc {p.returncode} (--json)"
+        r = json.loads(p.stdout)
+>       _assert_closed(r)
+
+tests/test_gate90_env_profile.py:439: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+r = {'counts': {'dists_locked': 170, 'dists_measured': 170, 'files_unhashed': 10373, 'files_verified': 24804, ...}, 'lock_...b607b06bab6fa', 'mismatches': [{'axis': 'python', 'locked': '0.0.0', 'measured': '3.11.15', 'subject': 'python'}], ...}
+
+    def _assert_closed(r: dict) -> None:
+>       assert set(r) == RESULT_KEYS, sorted(r)
+E       AssertionError: ['counts', 'lock_path', 'lock_sha256', 'mismatches', 'profile', 'reason', ...]
+E       assert {'counts', 'l...'reason', ...} == {'counts', 'l...profile', ...}
+E         
+E         Extra items in the right set:
+E         'not_measured'
+E         Use -v to get more diff
+
+tests/test_gate90_env_profile.py:150: AssertionError
+__________________ test_e10_receipt_stamp_records_the_profile __________________
+
+    def test_e10_receipt_stamp_records_the_profile():
+        mr = _make_receipt()
+        st = mr._stamp()
+        assert set(st) == {"_주의", "validator_commit", "validator_tree_dirty", "generated_at_utc", "runtime",
+                           "environment_profile_C"}, sorted(st)
+>       _assert_closed(st["environment_profile_C"])
+
+tests/test_gate90_env_profile.py:467: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+r = {'profile': 'C', 'lock_path': 'requirements-validation-C.lock.txt', 'lock_sha256': 'd886f30ff675fef723fb9bcedd98297910fb1f8f1809370c18d8980dc5e63b39', 'status': 'MATCH', ...}
+
+    def _assert_closed(r: dict) -> None:
+>       assert set(r) == RESULT_KEYS, sorted(r)
+E       AssertionError: ['counts', 'lock_path', 'lock_sha256', 'mismatches', 'profile', 'reason', ...]
+E       assert {'counts', 'l...'reason', ...} == {'counts', 'l...profile', ...}
+E         
+E         Extra items in the right set:
+E         'not_measured'
+E         Use -v to get more diff
+
+tests/test_gate90_env_profile.py:150: AssertionError
+________ test_s01_every_result_declares_loaded_origin_unmeasured[MATCH] ________
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-2598/test_s01_every_result_declares0/site'), site2=PosixPath('/tm...t-2598/test_s01_every_result_declares0/site', '/tmp/pytest-of-root/pytest-2598/test_s01_every_result_declares0/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-2598/test_s01_every_result_declares0')
+state = 'MATCH'
+
+    @pytest.mark.parametrize("state", sorted(STATES))
+    def test_s01_every_result_declares_loaded_origin_unmeasured(synth, tmp_path, state):
+        ep = _ep()
+        lock = STATES[state](ep, synth, tmp_path)
+        r = ep.compare_lock(lock, paths=synth.paths)
+        assert r["status"] == state, f"status {r['status']}"
+        # 측정 칸이 아니라 도구 범위의 선언이다 — UNMEASURED 에서도 None 이 아니고, 빈 목록 ("모든 것을 쟀다") 도 아니다.
+>       assert r.get("not_measured") == LOADED_ORIGIN, f"not_measured {r.get('not_measured')!r}"
+E       AssertionError: not_measured None
+E       assert None == ['loaded_module_origin']
+E        +  where None = <built-in method get of dict object at 0x7fac69b29180>('not_measured')
+E        +    where <built-in method get of dict object at 0x7fac69b29180> = {'profile': 'C', 'lock_path': '/tmp/pytest-of-root/pytest-2598/test_s01_every_result_declares0/c.lock.txt', 'lock_sha256': 'bae14a70bf09e7ab99d0ddc2fa4f7a18ba5a268cfa57c3b03246086cb19868be', 'status': 'MATCH', ...}.get
+
+tests/test_gate91_env_profile_scope.py:62: AssertionError
+______ test_s01_every_result_declares_loaded_origin_unmeasured[MISMATCH] _______
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-2598/test_s01_every_result_declares1/site'), site2=PosixPath('/tm...t-2598/test_s01_every_result_declares1/site', '/tmp/pytest-of-root/pytest-2598/test_s01_every_result_declares1/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-2598/test_s01_every_result_declares1')
+state = 'MISMATCH'
+
+    @pytest.mark.parametrize("state", sorted(STATES))
+    def test_s01_every_result_declares_loaded_origin_unmeasured(synth, tmp_path, state):
+        ep = _ep()
+        lock = STATES[state](ep, synth, tmp_path)
+        r = ep.compare_lock(lock, paths=synth.paths)
+        assert r["status"] == state, f"status {r['status']}"
+        # 측정 칸이 아니라 도구 범위의 선언이다 — UNMEASURED 에서도 None 이 아니고, 빈 목록 ("모든 것을 쟀다") 도 아니다.
+>       assert r.get("not_measured") == LOADED_ORIGIN, f"not_measured {r.get('not_measured')!r}"
+E       AssertionError: not_measured None
+E       assert None == ['loaded_module_origin']
+E        +  where None = <built-in method get of dict object at 0x7fac6888ffc0>('not_measured')
+E        +    where <built-in method get of dict object at 0x7fac6888ffc0> = {'profile': 'C', 'lock_path': '/tmp/pytest-of-root/pytest-2598/test_s01_every_result_declares1/off.lock.txt', 'lock_sha256': '95ed7ad08e6001ef690c6062f8b30484a838ac2eeb1ef3c3c1ed99ee7fdbbae9', 'status': 'MISMATCH', ...}.get
+
+tests/test_gate91_env_profile_scope.py:62: AssertionError
+_____ test_s01_every_result_declares_loaded_origin_unmeasured[UNMEASURED] ______
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-2598/test_s01_every_result_declares2/site'), site2=PosixPath('/tm...t-2598/test_s01_every_result_declares2/site', '/tmp/pytest-of-root/pytest-2598/test_s01_every_result_declares2/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-2598/test_s01_every_result_declares2')
+state = 'UNMEASURED'
+
+    @pytest.mark.parametrize("state", sorted(STATES))
+    def test_s01_every_result_declares_loaded_origin_unmeasured(synth, tmp_path, state):
+        ep = _ep()
+        lock = STATES[state](ep, synth, tmp_path)
+        r = ep.compare_lock(lock, paths=synth.paths)
+        assert r["status"] == state, f"status {r['status']}"
+        # 측정 칸이 아니라 도구 범위의 선언이다 — UNMEASURED 에서도 None 이 아니고, 빈 목록 ("모든 것을 쟀다") 도 아니다.
+>       assert r.get("not_measured") == LOADED_ORIGIN, f"not_measured {r.get('not_measured')!r}"
+E       AssertionError: not_measured None
+E       assert None == ['loaded_module_origin']
+E        +  where None = <built-in method get of dict object at 0x7fac6894d600>('not_measured')
+E        +    where <built-in method get of dict object at 0x7fac6894d600> = {'profile': 'C', 'lock_path': '/tmp/pytest-of-root/pytest-2598/test_s01_every_result_declares2/absent.lock.txt', 'lock_sha256': None, 'status': 'UNMEASURED', ...}.get
+
+tests/test_gate91_env_profile_scope.py:62: AssertionError
+___________ test_s02_path_search_count_is_not_a_loaded_module_check ____________
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-2598/test_s02_path_search_count_is_0/site'), site2=PosixPath('/tm...t-2598/test_s02_path_search_count_is_0/site', '/tmp/pytest-of-root/pytest-2598/test_s02_path_search_count_is_0/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-2598/test_s02_path_search_count_is_0')
+
+    def test_s02_path_search_count_is_not_a_loaded_module_check(synth, tmp_path):
+        """이미 로드된 객체가 다른 곳에서 왔어도 경로 검색은 RECORD 안의 파일을 찾아 수에 넣는다 (90차 검토의 정적 반례 그대로).
+    
+        이 프로세스의 `numpy` 는 실제 설치본이고 (합성 site 밖), 합성 경로의 경로 검색은 RECORD 가 있는 가짜 `numpy` 를 찾는다.
+        도구는 그 가짜를 `path_origins_in_record` 에 센다 — 그러니 이 수는 "로드된 module 의 확인" 이 아니고, 결과는 그것을
+        `not_measured` 로 스스로 밝힌다. 로드된 origin 을 재는 것은 별도 승인 범위다 (고정 표 §13-7).
+        """
+        import numpy
+    
+        ep = _ep()
+        loaded = Path(numpy.__file__).resolve()
+        assert synth.site.resolve() not in loaded.parents, "전제: 로드된 numpy 는 합성 site 밖이다"
+        lock, _ = _lock_for(ep, synth.paths, tmp_path / "c.lock.txt")
+        r = ep.compare_lock(lock, paths=synth.paths)
+        assert r["status"] == "MATCH", f"status {r['status']}"
+>       assert r["counts"].get("path_origins_in_record") == 9, f"counts {sorted(r['counts'])}"
+E       AssertionError: counts ['dists_locked', 'dists_measured', 'files_unhashed', 'files_verified', 'origins_verified', 'shadowed_locked', 'shadowed_measured']
+E       assert None == 9
+E        +  where None = <built-in method get of dict object at 0x7fac6888ce80>('path_origins_in_record')
+E        +    where <built-in method get of dict object at 0x7fac6888ce80> = {'dists_locked': 11, 'dists_measured': 11, 'shadowed_locked': 1, 'shadowed_measured': 1, ...}.get
+
+tests/test_gate91_env_profile_scope.py:82: AssertionError
+_________ test_s03_summary_and_docstrings_state_the_path_search_scope __________
+
+synth = namespace(site=PosixPath('/tmp/pytest-of-root/pytest-2598/test_s03_summary_and_docstring0/site'), site2=PosixPath('/tm...t-2598/test_s03_summary_and_docstring0/site', '/tmp/pytest-of-root/pytest-2598/test_s03_summary_and_docstring0/site2'])
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-2598/test_s03_summary_and_docstring0')
+
+    def test_s03_summary_and_docstrings_state_the_path_search_scope(synth, tmp_path):
+        ep = _ep()
+        lock, _ = _lock_for(ep, synth.paths, tmp_path / "c.lock.txt")
+        text = ep._summary(ep.compare_lock(lock, paths=synth.paths))
+>       assert "origin 확인" not in text, "요약에 옛 문구 'origin 확인' 이 남아 있다"
+E       AssertionError: 요약에 옛 문구 'origin 확인' 이 남아 있다
+E       assert 'origin 확인' not in '환경 프로필 C 대조...다 · 원장 §135)'
+E         
+E         'origin 확인' is contained here:
+E            없음 10) · origin 확인 9
+E             · 확인 불가 — RECORD 없는 배포판 1: pyyaml
+E             · 확인 불가 — origin: yaml
+E             (기록 전용 — 불일치여도 아무것도 막지 않는다 · 원장 §135)
+
+tests/test_gate91_env_profile_scope.py:96: AssertionError
+==================================== PASSES ====================================
+=========================== short test summary info ============================
+PASSED tests/test_gate90_env_profile.py::test_e01_committed_lock_is_canonical_and_pinned
+PASSED tests/test_gate90_env_profile.py::test_e07_key_modules_are_the_fingerprint_axes
+PASSED tests/test_gate90_env_profile.py::test_e09_smoke_records_the_profile_once
+PASSED tests/test_gate90_env_profile.py::test_e11_b_profile_is_the_v4_producer_record
+PASSED tests/test_gate90_env_profile.py::test_e12_requirements_bounds_kept_and_comment_corrected
+FAILED tests/test_gate90_env_profile.py::test_e02_synthetic_round_trip_matches
+FAILED tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[dist_extra]
+FAILED tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[dist_missing]
+FAILED tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[dist_record]
+FAILED tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[dist_version]
+FAILED tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[env_upgrade]
+FAILED tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[file_hash]
+FAILED tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[file_missing]
+FAILED tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[implementation]
+FAILED tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[libc]
+FAILED tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[machine]
+FAILED tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[origin_stray]
+FAILED tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[python]
+FAILED tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[shadowed]
+FAILED tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[system]
+FAILED tests/test_gate90_env_profile.py::test_e04_malformed_lock_is_unmeasured[bad_json_value]
+FAILED tests/test_gate90_env_profile.py::test_e04_malformed_lock_is_unmeasured[bad_record_field]
+FAILED tests/test_gate90_env_profile.py::test_e04_malformed_lock_is_unmeasured[duplicate_directive]
+FAILED tests/test_gate90_env_profile.py::test_e04_malformed_lock_is_unmeasured[duplicate_dist]
+FAILED tests/test_gate90_env_profile.py::test_e04_malformed_lock_is_unmeasured[garbage_line]
+FAILED tests/test_gate90_env_profile.py::test_e04_malformed_lock_is_unmeasured[missing_directive]
+FAILED tests/test_gate90_env_profile.py::test_e04_malformed_lock_is_unmeasured[missing_file]
+FAILED tests/test_gate90_env_profile.py::test_e04_malformed_lock_is_unmeasured[not_utf8]
+FAILED tests/test_gate90_env_profile.py::test_e04_malformed_lock_is_unmeasured[profile_not_c]
+FAILED tests/test_gate90_env_profile.py::test_e04_malformed_lock_is_unmeasured[unknown_directive]
+FAILED tests/test_gate90_env_profile.py::test_e04_malformed_lock_is_unmeasured[unnormalized_name]
+FAILED tests/test_gate90_env_profile.py::test_e04_malformed_lock_is_unmeasured[unsorted]
+FAILED tests/test_gate90_env_profile.py::test_e05_measurement_failure_is_unmeasured[enumeration_raises]
+FAILED tests/test_gate90_env_profile.py::test_e05_measurement_failure_is_unmeasured[nameless_dist]
+FAILED tests/test_gate90_env_profile.py::test_e05_measurement_failure_is_unmeasured[unknown_hash_algorithm]
+FAILED tests/test_gate90_env_profile.py::test_e06_real_environment_result_is_typed
+FAILED tests/test_gate90_env_profile.py::test_e08_cli_is_record_only - Assert...
+FAILED tests/test_gate90_env_profile.py::test_e10_receipt_stamp_records_the_profile
+FAILED tests/test_gate91_env_profile_scope.py::test_s01_every_result_declares_loaded_origin_unmeasured[MATCH]
+FAILED tests/test_gate91_env_profile_scope.py::test_s01_every_result_declares_loaded_origin_unmeasured[MISMATCH]
+FAILED tests/test_gate91_env_profile_scope.py::test_s01_every_result_declares_loaded_origin_unmeasured[UNMEASURED]
+FAILED tests/test_gate91_env_profile_scope.py::test_s02_path_search_count_is_not_a_loaded_module_check
+FAILED tests/test_gate91_env_profile_scope.py::test_s03_summary_and_docstrings_state_the_path_search_scope
+======================== 38 failed, 5 passed in 12.84s =========================
+rc=1
+# 끝 2026-10-04T23:31:26Z · HEAD 4b32db749 · dirty 0

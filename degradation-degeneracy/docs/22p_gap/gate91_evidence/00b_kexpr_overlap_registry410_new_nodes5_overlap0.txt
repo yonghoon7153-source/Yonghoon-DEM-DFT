@@ -1,0 +1,14 @@
+
+[conftest] 시험 authority: /tmp/dd-test-authority-hl2753ua/docs/22p_gap/LEG_PRESERVATION.yaml (운영 원장의 바이트 복사본 — 70차 E6)
+
+[conftest] 이 checkout 을 처음 보았다 — 얼린 cohort 17개의 좌표를 시험 authority 에 봉인했다: ['g10_2026_09_01', 'g11_2026_09_02', 'g12_2026_09_03', 'g13_2026_09_07', 'g14_2026_09_08', 'g15_2026_09_08', 'g16_2026_09_09', 'g17_2026_09_14', 'g1_2026_08_20', 'g2_2026_08_25', 'g3_2026_08_28', 'g4_2026_08_28', 'g5_2026_08_29', 'g6_2026_09_01', 'g7_2026_09_01', 'g8_2026_09_01', 'g9_2026_09_01']
+tests/test_gate91_env_profile_scope.py::test_s01_every_result_declares_loaded_origin_unmeasured[MATCH]
+tests/test_gate91_env_profile_scope.py::test_s01_every_result_declares_loaded_origin_unmeasured[MISMATCH]
+tests/test_gate91_env_profile_scope.py::test_s01_every_result_declares_loaded_origin_unmeasured[UNMEASURED]
+tests/test_gate91_env_profile_scope.py::test_s02_path_search_count_is_not_a_loaded_module_check
+tests/test_gate91_env_profile_scope.py::test_s03_summary_and_docstrings_state_the_path_search_scope
+
+5 tests collected in 0.07s
+registry -k expressions checked: 410 (MUTANTS 389 + MULTI 32 · k 없음 11)
+new nodes collected: 5 · collect rc 0
+overlapping (expression, node) pairs: 0
