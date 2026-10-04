@@ -3466,3 +3466,8 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - 처리: [[isu-uconn-lfp-gr-emulated-degradation]] 부속 B 발송 줄 + 부속 B 재검토 절 (검토자의 적용 범위 읽기 · 남는 선행 조건 표)
 - 남는 것 (기존 선행 조건 · 각각 별도 승인): C1-core 명세 · C6 판 · 환경 고정 · C3 P0 · C5 비용 측정 · C4 실행 · E3b 미등록
 - 하지 않은 것: 설치 · 실행 · xlsx 개봉 · P0 · 비용 측정 · 맞춤 · 검토자 도구 실행 · RUN_SCOPE · 89차 게이트 · PyBaMM 고정에 섞기
+
+## [2026-10-04] update | REIL 선행 조건 확보 상태 · 다음 한정 범위 제시 (부속 B 수용 뒤)
+- 문서 `bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md` · [[isu-uconn-lfp-gr-emulated-degradation]] 부속 B 재검토 절에 한 줄
+- C1-core 미확보 (논문 미열람 · 공개 여부 미확인) · C6 미시행 · C3 / C4 / C5 미승인 · 제안 순서 C1-core → C6 → P0 → 비용 측정 → 실행 · 다음 입력 = 논문 또는 저자 명세
+- 하지 않은 것: 자료 개봉 · 노트북 · 설치 · 비용 측정 · 맞춤 · 논문 다운로드 · RUN_SCOPE
