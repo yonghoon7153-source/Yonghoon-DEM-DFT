@@ -1,0 +1,11 @@
+{
+  "case": "cached module and current path resolution differ",
+  "pathfinder_origin": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate90_review_20261005\\fixtures\\site\\g90_inert_origin.py",
+  "import_returned_cached_module": true,
+  "cached_module_origin": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate90_review_20261005\\fixtures\\stray\\g90_inert_origin.py",
+  "origins_differ": true,
+  "submitted_programs_executed": 0,
+  "scientific_packages_imported": 0,
+  "fixture_module_bodies_executed": 0,
+  "scope": "Illustrates Python import semantics, not a dynamic test of tools.env_profile or the submitter environment."
+}

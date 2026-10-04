@@ -1,0 +1,1962 @@
+{
+  "base_to_request": {
+    "repository_full_name": "yonghoon7153-source/Yonghoon-DEM-DFT",
+    "base": "26c11d6fc7feeb92bd68fce4c3972d849ada2774",
+    "head": "24f499ba6a5e45a75613e9842ce99a679b5ce863",
+    "status": "ahead",
+    "ahead_by": 46,
+    "behind_by": 0,
+    "total_commits": 46,
+    "too_large": null,
+    "base_commit": {
+      "sha": "26c11d6fc7feeb92bd68fce4c3972d849ada2774",
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/commits/26c11d6fc7feeb92bd68fce4c3972d849ada2774",
+      "html_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/commit/26c11d6fc7feeb92bd68fce4c3972d849ada2774"
+    },
+    "merge_base_commit": {
+      "sha": "26c11d6fc7feeb92bd68fce4c3972d849ada2774",
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/commits/26c11d6fc7feeb92bd68fce4c3972d849ada2774",
+      "html_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/commit/26c11d6fc7feeb92bd68fce4c3972d849ada2774"
+    },
+    "files": [
+      {
+        "filename": "BRANCHES.md",
+        "status": "modified",
+        "additions": 16,
+        "deletions": 0,
+        "changes": 16,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/.gitattributes",
+        "status": "modified",
+        "additions": 14,
+        "deletions": 0,
+        "changes": 14,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/comsol_candidates/bmin_particle640_20261004/BASELINE_IDENTITIES.json",
+        "status": "added",
+        "additions": 26,
+        "deletions": 0,
+        "changes": 26,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/comsol_candidates/bmin_particle640_20261004/CHANGE_BOUNDARIES.json",
+        "status": "added",
+        "additions": 89,
+        "deletions": 0,
+        "changes": 89,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/comsol_candidates/bmin_particle640_20261004/LIMITED_VALIDATION_PLAN.json",
+        "status": "added",
+        "additions": 85,
+        "deletions": 0,
+        "changes": 85,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/comsol_candidates/bmin_particle640_20261004/LITERAL_CHANGE_MAP.json",
+        "status": "added",
+        "additions": 291,
+        "deletions": 0,
+        "changes": 291,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/comsol_candidates/bmin_particle640_20261004/NATIVE_BMIN640_APPROVAL_DRAFT_KO.md",
+        "status": "added",
+        "additions": 56,
+        "deletions": 0,
+        "changes": 56,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/comsol_candidates/bmin_particle640_20261004/PREPARATION_KO.md",
+        "status": "added",
+        "additions": 115,
+        "deletions": 0,
+        "changes": 115,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/comsol_candidates/bmin_particle640_20261004/RESOURCE_BUDGET_KO.md",
+        "status": "added",
+        "additions": 29,
+        "deletions": 0,
+        "changes": 29,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/comsol_candidates/bmin_particle640_20261004/STATIC_AUDIT.json",
+        "status": "added",
+        "additions": 553,
+        "deletions": 0,
+        "changes": 553,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/comsol_candidates/bmin_particle640_20261004/VALIDATION_REQUEST_KO.md",
+        "status": "added",
+        "additions": 54,
+        "deletions": 0,
+        "changes": 54,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/comsol_candidates/bmin_particle640_20261004/basis/source480/NORMAL480_CANDIDATE_8FILES.zip",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/comsol_candidates/bmin_particle640_20261004/basis/source480/candidate/CODE_MANIFEST.json",
+        "status": "added",
+        "additions": 35,
+        "deletions": 0,
+        "changes": 35,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/comsol_candidates/bmin_particle640_20261004/basis/source480/candidate/COMMAND_MAP.json",
+        "status": "added",
+        "additions": 100,
+        "deletions": 0,
+        "changes": 100,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/comsol_candidates/bmin_particle640_20261004/basis/source480/candidate/CONTRACT.json",
+        "status": "added",
+        "additions": 8464,
+        "deletions": 0,
+        "changes": 8464,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/comsol_candidates/bmin_particle640_20261004/basis/source480/candidate/NATIVE_APPROVAL_FIELD_SPEC.json",
+        "status": "added",
+        "additions": 67,
+        "deletions": 0,
+        "changes": 67,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/comsol_candidates/bmin_particle640_20261004/basis/source480/candidate/PARENT_COMMAND.ps1",
+        "status": "added",
+        "additions": 196,
+        "deletions": 0,
+        "changes": 196,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/comsol_candidates/bmin_particle640_20261004/basis/source480/candidate/src/Normal480Candidate.java",
+        "status": "added",
+        "additions": 694,
+        "deletions": 0,
+        "changes": 694,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/comsol_candidates/bmin_particle640_20261004/basis/source480/candidate/src/candidate_entry.py",
+        "status": "added",
+        "additions": 182,
+        "deletions": 0,
+        "changes": 182,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/comsol_candidates/bmin_particle640_20261004/basis/source480/candidate/src/diagnostic_consumer.py",
+        "status": "added",
+        "additions": 267,
+        "deletions": 0,
+        "changes": 267,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/comsol_candidates/bmin_particle640_20261004/basis/source480/run/tables/axes_runtime_settings.csv",
+        "status": "added",
+        "additions": 23,
+        "deletions": 0,
+        "changes": 23,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/comsol_candidates/bmin_particle640_20261004/candidate/CODE_MANIFEST.json",
+        "status": "added",
+        "additions": 35,
+        "deletions": 0,
+        "changes": 35,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/comsol_candidates/bmin_particle640_20261004/candidate/COMMAND_MAP.json",
+        "status": "added",
+        "additions": 100,
+        "deletions": 0,
+        "changes": 100,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/comsol_candidates/bmin_particle640_20261004/candidate/CONTRACT.json",
+        "status": "added",
+        "additions": 2777,
+        "deletions": 0,
+        "changes": 2777,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/comsol_candidates/bmin_particle640_20261004/candidate/NATIVE_APPROVAL_FIELD_SPEC.json",
+        "status": "added",
+        "additions": 68,
+        "deletions": 0,
+        "changes": 68,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/comsol_candidates/bmin_particle640_20261004/candidate/PARENT_COMMAND.ps1",
+        "status": "added",
+        "additions": 204,
+        "deletions": 0,
+        "changes": 204,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/comsol_candidates/bmin_particle640_20261004/candidate/src/Bmin640Candidate.java",
+        "status": "added",
+        "additions": 694,
+        "deletions": 0,
+        "changes": 694,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/comsol_candidates/bmin_particle640_20261004/candidate/src/candidate_entry.py",
+        "status": "added",
+        "additions": 182,
+        "deletions": 0,
+        "changes": 182,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/comsol_candidates/bmin_particle640_20261004/candidate/src/diagnostic_consumer.py",
+        "status": "added",
+        "additions": 320,
+        "deletions": 0,
+        "changes": 320,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/comsol_candidates/bmin_particle640_20261004/tools/build_candidate.py",
+        "status": "added",
+        "additions": 630,
+        "deletions": 0,
+        "changes": 630,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/comsol_candidates/bmin_particle640_20261004/tools/static_audit.py",
+        "status": "added",
+        "additions": 279,
+        "deletions": 0,
+        "changes": 279,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/LIMITED_VALIDATION_PLAN.json",
+        "status": "added",
+        "additions": 469,
+        "deletions": 0,
+        "changes": 469,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/NATIVE_BMIN640_APPROVAL_DRAFT_KO.md",
+        "status": "added",
+        "additions": 57,
+        "deletions": 0,
+        "changes": 57,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/PREPARATION_KO.md",
+        "status": "added",
+        "additions": 54,
+        "deletions": 0,
+        "changes": 54,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/R1_CHANGE_BOUNDARIES.json",
+        "status": "added",
+        "additions": 41,
+        "deletions": 0,
+        "changes": 41,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/R1_LITERAL_CHANGES.json",
+        "status": "added",
+        "additions": 38,
+        "deletions": 0,
+        "changes": 38,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/STATIC_AUDIT.json",
+        "status": "added",
+        "additions": 237,
+        "deletions": 0,
+        "changes": 237,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/VALIDATION_REQUEST_KO.md",
+        "status": "added",
+        "additions": 44,
+        "deletions": 0,
+        "changes": 44,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/candidate/CODE_MANIFEST.json",
+        "status": "added",
+        "additions": 35,
+        "deletions": 0,
+        "changes": 35,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/candidate/COMMAND_MAP.json",
+        "status": "added",
+        "additions": 100,
+        "deletions": 0,
+        "changes": 100,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/candidate/CONTRACT.json",
+        "status": "added",
+        "additions": 2777,
+        "deletions": 0,
+        "changes": 2777,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/candidate/NATIVE_APPROVAL_FIELD_SPEC.json",
+        "status": "added",
+        "additions": 68,
+        "deletions": 0,
+        "changes": 68,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/candidate/PARENT_COMMAND.ps1",
+        "status": "added",
+        "additions": 250,
+        "deletions": 0,
+        "changes": 250,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/candidate/src/Bmin640Candidate.java",
+        "status": "added",
+        "additions": 694,
+        "deletions": 0,
+        "changes": 694,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/candidate/src/candidate_entry.py",
+        "status": "added",
+        "additions": 182,
+        "deletions": 0,
+        "changes": 182,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/candidate/src/diagnostic_consumer.py",
+        "status": "added",
+        "additions": 335,
+        "deletions": 0,
+        "changes": 335,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/tools/build_candidate_r1.py",
+        "status": "added",
+        "additions": 247,
+        "deletions": 0,
+        "changes": 247,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/tools/static_audit_r1.py",
+        "status": "added",
+        "additions": 188,
+        "deletions": 0,
+        "changes": 188,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/docs/COMSOL_BMIN_CANDIDATE_R1_REVIEW_REQUEST_20261005.md",
+        "status": "added",
+        "additions": 56,
+        "deletions": 0,
+        "changes": 56,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/docs/COMSOL_BMIN_CANDIDATE_REVIEW_REQUEST_20261004.md",
+        "status": "added",
+        "additions": 71,
+        "deletions": 0,
+        "changes": 71,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/docs/COMSOL_BMIN_SCOPE_20261004.md",
+        "status": "added",
+        "additions": 192,
+        "deletions": 0,
+        "changes": 192,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/docs/COMSOL_BMIN_SCOPE_v2_20261004.md",
+        "status": "added",
+        "additions": 222,
+        "deletions": 0,
+        "changes": 222,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/docs/COMSOL_DATA_REQUEST_DRAFT_20261004.md",
+        "status": "added",
+        "additions": 68,
+        "deletions": 0,
+        "changes": 68,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/docs/COMSOL_DATA_REQUEST_DRAFT_v2_20261004.md",
+        "status": "added",
+        "additions": 88,
+        "deletions": 0,
+        "changes": 88,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/docs/COMSOL_DATA_REQUEST_FINAL_20261005.md",
+        "status": "added",
+        "additions": 75,
+        "deletions": 0,
+        "changes": 75,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/docs/COMSOL_EXPERIMENT_CORRESPONDENCE_v1_20261004.md",
+        "status": "added",
+        "additions": 108,
+        "deletions": 0,
+        "changes": 108,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/docs/COMSOL_EXPERIMENT_CORRESPONDENCE_v2_20261004.md",
+        "status": "added",
+        "additions": 121,
+        "deletions": 0,
+        "changes": 121,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/docs/COMSOL_NEXT_PLAN_20261004.md",
+        "status": "added",
+        "additions": 173,
+        "deletions": 0,
+        "changes": 173,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/docs/COMSOL_REBUILD_SPEC.md",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/docs/REIL_C6_ENV_PROFILE_DRAFT_20261004.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2_ANNEX_B.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/docs/REIL_V2_ANNEX_B_REREVIEW_REQUEST_20261004.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/prereview_reil_v2_annexA_20261004/CLAUDE_REPLY_KO.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/prereview_reil_v2_annexA_20261004/DECISION.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/prereview_reil_v2_annexA_20261004/PACKAGE_MANIFEST.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/prereview_reil_v2_annexA_20261004/README_KO.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/prereview_reil_v2_annexA_20261004/REIL_V2_ANNEX_A_REVIEW_20261004.zip",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/prereview_reil_v2_annexA_20261004/REVIEW_CHECKS.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/prereview_reil_v2_annexA_20261004/REVIEW_KO.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/prereview_reil_v2_annexA_20261004/SOURCE_INDEX.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/prereview_reil_v2_annexA_20261004/reference/PRIOR_REVIEW_KO.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/prereview_reil_v2_annexA_20261004/reference/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/prereview_reil_v2_annexA_20261004/reference/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2_ANNEX_A.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/prereview_reil_v2_annexA_20261004/reference/REIL_V2_ANNEX_A_REREVIEW_REQUEST_20261004.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/prereview_reil_v2_annexA_20261004/reviewer_document_checks.py",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/prereview_reil_v2_annexB_20261004/CLAUDE_REPLY_KO.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/prereview_reil_v2_annexB_20261004/DECISION.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/prereview_reil_v2_annexB_20261004/PACKAGE_MANIFEST.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/prereview_reil_v2_annexB_20261004/PRIOR_DECISION.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/prereview_reil_v2_annexB_20261004/PRIOR_REVIEW_KO.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/prereview_reil_v2_annexB_20261004/README_KO.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/prereview_reil_v2_annexB_20261004/RECEIVED_SNAPSHOT.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/prereview_reil_v2_annexB_20261004/REIL_V2_ANNEX_B_REVIEW_20261004.zip",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/prereview_reil_v2_annexB_20261004/REVIEWER_TOOL_RETURN.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/prereview_reil_v2_annexB_20261004/REVIEW_CHECKS.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/prereview_reil_v2_annexB_20261004/REVIEW_KO.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/prereview_reil_v2_annexB_20261004/reviewer_document_checks.py",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_a0_bmin_documents_20261004/A0_EXPERIMENT_MATCH_TABLE_KO.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_a0_bmin_documents_20261004/BASELINE_BINDING.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_a0_bmin_documents_20261004/BMIN_PREPARATION_SCOPE_KO.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_a0_bmin_documents_20261004/CLAUDE_REPLY_KO.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_a0_bmin_documents_20261004/COMSOL_A0_BMIN_DOCUMENTS_20261004.zip",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_a0_bmin_documents_20261004/DOCUMENT_CHECK.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_a0_bmin_documents_20261004/EXPERIMENT_DATA_REQUEST_DRAFT_KO.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_a0_bmin_documents_20261004/PACKAGE_MANIFEST.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_a0_bmin_documents_20261004/PLANNING_DECISIONS.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_a0_bmin_documents_20261004/README_KO.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_a0_bmin_documents_20261004/SOURCE_IDENTITIES.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_a0_bmin_documents_20261004/SOURCE_INDEX.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_bmin_candidate_review_20261005/ADDITIONAL_STATIC_AUDIT.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_bmin_candidate_review_20261005/CLAUDE_REPLY_KO.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_bmin_candidate_review_20261005/COMSOL_BMIN_CANDIDATE_REVIEW_20261005.zip",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_bmin_candidate_review_20261005/DECISION.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_bmin_candidate_review_20261005/INDEPENDENT_STATIC_AUDIT.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_bmin_candidate_review_20261005/PRESERVATION_GIT_AUDIT.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_bmin_candidate_review_20261005/REFERENCE_TEXT.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_bmin_candidate_review_20261005/REVIEWER_STATIC_TOOL_RETURN.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_bmin_candidate_review_20261005/REVIEW_KO.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_bmin_candidate_review_20261005/REVIEW_MANIFEST.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_bmin_candidate_review_20261005/STATIC_PATH_CASES.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_bmin_candidate_review_20261005/reference/CHANGE_BOUNDARIES.json.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_bmin_candidate_review_20261005/reference/LIMITED_VALIDATION_PLAN.json.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_bmin_candidate_review_20261005/reference/PREPARATION_KO.md.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_bmin_candidate_review_20261005/reference/candidate__PARENT_COMMAND.ps1.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_bmin_candidate_review_20261005/reference/candidate__src__candidate_entry.py.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_bmin_candidate_review_20261005/reference/candidate__src__diagnostic_consumer.py.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/comsol_bmin_candidate_review_20261005/reviewer_static_check.py",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/rtol30_native_recipient_review_20261004/ARCHIVE_AUDIT.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/rtol30_native_recipient_review_20261004/CLAUDE_REPLY_KO.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/rtol30_native_recipient_review_20261004/DECISION.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/rtol30_native_recipient_review_20261004/EVIDENCE_AUDIT.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/rtol30_native_recipient_review_20261004/NUMERIC_AUDIT.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/rtol30_native_recipient_review_20261004/PACKAGE_MANIFEST.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/rtol30_native_recipient_review_20261004/README_KO.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/rtol30_native_recipient_review_20261004/REVIEWER_METHOD_NOTES.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/rtol30_native_recipient_review_20261004/REVIEW_KO.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/rtol30_native_recipient_review_20261004/RTOL30_NATIVE_RECIPIENT_REVIEW_20261004.zip",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/rtol30_native_recipient_review_20261004/USER_PROVIDED_FINAL_RETURN_FIELDS.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/reviews/r14_repros/codex63/rtol30_native_recipient_review_20261004/reviewer_audit.py",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/.gitattributes",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/08_REVIEW_RESPONSE.md",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/GATE89_REQUEST.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/GATE90_REQUEST.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/LEG_PRESERVATION.yaml",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/PYBAMM_PIN_ROUND_SCOPE_20261004.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/PYBAMM_PIN_ROUND_SPEC.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/env_profile_B_v4.yaml",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate89_evidence/00_red_first_run_header_label_wrong.log",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate89_evidence/01b_kexpr_overlap_registry395_new_nodes0.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate89_evidence/04_replay_g89_emit_expect_2killed.log",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate89_evidence/05_replay_g88_finalize_binds_emit_expect_witness_changed.log",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate89_evidence/06_replay_g89_verify_rc0.log",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate89_evidence/07_replay_g88_verify_21_rc0.log",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate89_evidence/08_make_receipt_134f26f48_rc0.log",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate89_evidence/09_gate74_defensive_after_receipts_41passed.log",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate89_evidence/10_full_pytest_66129fc6a_2139passed.log",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate89_evidence/11_smoke_66129fc6a_rc0.log",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate89_evidence/12_full_replay_66129fc6a_397_of_397_rc0.log",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate89_evidence/13_docs_lint_gate88_send_d6056415b_358passed.log",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate89_evidence/14_docs_lint_send_8113f12bd_358passed.log",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate89_evidence/README.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate89_review/GATE89_REVIEW_20261004.zip",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate89_review/codex/CLAUDE_REPLY_KO.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate89_review/codex/DECISION.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate89_review/codex/PACKAGE_MANIFEST.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate89_review/codex/PRIOR_RECEIVED_SNAPSHOT.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate89_review/codex/PRIOR_RUN_SCOPE_SNAPSHOT.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate89_review/codex/PRODUCTION.diff",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate89_review/codex/README.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate89_review/codex/RECEIVED_SNAPSHOT.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate89_review/codex/REVIEWER_FINAL_STATIC_RETURN.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate89_review/codex/REVIEWER_TOOL_RETURNS.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate89_review/codex/REVIEW_KO.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate89_review/codex/STATIC_AUDIT.json",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate89_review/codex/reviewer_static_audit.py",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate90_evidence/00_red_test_gate90_38failed.log",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate90_evidence/00b_kexpr_overlap_registry397_new_nodes38_overlap0.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate90_evidence/01_green_test_gate90_38passed.log",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate90_evidence/02_related_modules_10failed_stale_receipt_identity.log",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate90_evidence/03_replay_g90_emit_expect_13killed.log",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate90_evidence/03a_replay_g90_emit_expect_first_witness_nondeterministic.log",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate90_evidence/04_replay_g90_verify_13_rc0.log",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate90_evidence/05_green_after_message_fix_38passed.log",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate90_evidence/06_make_receipt_2586138c3_rc0.log",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate90_evidence/06b_make_receipt_check_core_identical_rc0.log",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate90_evidence/07_receipt_modules_after_regeneration_113passed.log",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate90_evidence/08_env_profile_json_257d4cc1c_match.log",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate90_evidence/10_full_pytest_257d4cc1c_2177passed.log",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate90_evidence/11_smoke_257d4cc1c_rc0.log",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate90_evidence/12_full_replay_257d4cc1c_410_of_410_rc0.log",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate90_evidence/13_docs_lint_fixed_table_1f3829b9a_358passed.log",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate90_evidence/README.md",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/make_receipt.py",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/mutation_replay.py",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/receipts/grid_fit_v5.validate.yaml",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/receipts/history/grid_fit_v5.validate.7dd546baaee9e823.yaml",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/receipts/history/grid_fit_v5.validate.803e2b7781cbc9cd.yaml",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/receipts/history/paired_fixed5_v4.validate.7dd546baaee9e823.yaml",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/receipts/history/paired_fixed5_v4.validate.803e2b7781cbc9cd.yaml",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/receipts/paired_fixed5_v4.validate.yaml",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/GATE70_WORKING_STATE.md",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/requirements-validation-C.lock.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/requirements.txt",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/scripts/smoke_e2e.sh",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/tests/test_gate90_env_profile.py",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/tools/env_profile.py",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/entities/isu-uconn-lfp-gr-emulated-degradation.md",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/entities/pybamm.md",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/log.md",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      }
+    ]
+  },
+  "code_to_request": {
+    "repository_full_name": "yonghoon7153-source/Yonghoon-DEM-DFT",
+    "base": "e2160c2ef276d4944fa4ad76fbaa001671a1a95e",
+    "head": "24f499ba6a5e45a75613e9842ce99a679b5ce863",
+    "status": "ahead",
+    "ahead_by": 6,
+    "behind_by": 0,
+    "total_commits": 6,
+    "too_large": null,
+    "base_commit": {
+      "sha": "e2160c2ef276d4944fa4ad76fbaa001671a1a95e",
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/commits/e2160c2ef276d4944fa4ad76fbaa001671a1a95e",
+      "html_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/commit/e2160c2ef276d4944fa4ad76fbaa001671a1a95e"
+    },
+    "merge_base_commit": {
+      "sha": "e2160c2ef276d4944fa4ad76fbaa001671a1a95e",
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/commits/e2160c2ef276d4944fa4ad76fbaa001671a1a95e",
+      "html_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/commit/e2160c2ef276d4944fa4ad76fbaa001671a1a95e"
+    },
+    "files": [
+      {
+        "filename": "BRANCHES.md",
+        "status": "modified",
+        "additions": 3,
+        "deletions": 0,
+        "changes": 3,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/docs/REIL_C6_ENV_PROFILE_DRAFT_20261004.md",
+        "status": "added",
+        "additions": 72,
+        "deletions": 0,
+        "changes": 72,
+        "previous_filename": null
+      },
+      {
+        "filename": "bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md",
+        "status": "modified",
+        "additions": 7,
+        "deletions": 0,
+        "changes": 7,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/08_REVIEW_RESPONSE.md",
+        "status": "modified",
+        "additions": 25,
+        "deletions": 0,
+        "changes": 25,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/GATE90_REQUEST.md",
+        "status": "added",
+        "additions": 119,
+        "deletions": 0,
+        "changes": 119,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/LEG_PRESERVATION.yaml",
+        "status": "modified",
+        "additions": 4,
+        "deletions": 4,
+        "changes": 8,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/PYBAMM_PIN_ROUND_SPEC.md",
+        "status": "modified",
+        "additions": 10,
+        "deletions": 0,
+        "changes": 10,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/env_profile_B_v4.yaml",
+        "status": "modified",
+        "additions": 1,
+        "deletions": 1,
+        "changes": 2,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate90_evidence/01_green_test_gate90_38passed.log",
+        "status": "added",
+        "additions": 56,
+        "deletions": 0,
+        "changes": 56,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate90_evidence/02_related_modules_10failed_stale_receipt_identity.log",
+        "status": "added",
+        "additions": 396,
+        "deletions": 0,
+        "changes": 396,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate90_evidence/03_replay_g90_emit_expect_13killed.log",
+        "status": "added",
+        "additions": 160,
+        "deletions": 0,
+        "changes": 160,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate90_evidence/03a_replay_g90_emit_expect_first_witness_nondeterministic.log",
+        "status": "added",
+        "additions": 160,
+        "deletions": 0,
+        "changes": 160,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate90_evidence/04_replay_g90_verify_13_rc0.log",
+        "status": "added",
+        "additions": 22,
+        "deletions": 0,
+        "changes": 22,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate90_evidence/05_green_after_message_fix_38passed.log",
+        "status": "added",
+        "additions": 56,
+        "deletions": 0,
+        "changes": 56,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate90_evidence/06_make_receipt_2586138c3_rc0.log",
+        "status": "added",
+        "additions": 6,
+        "deletions": 0,
+        "changes": 6,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate90_evidence/06b_make_receipt_check_core_identical_rc0.log",
+        "status": "added",
+        "additions": 5,
+        "deletions": 0,
+        "changes": 5,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate90_evidence/07_receipt_modules_after_regeneration_113passed.log",
+        "status": "added",
+        "additions": 10,
+        "deletions": 0,
+        "changes": 10,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate90_evidence/08_env_profile_json_257d4cc1c_match.log",
+        "status": "added",
+        "additions": 5,
+        "deletions": 0,
+        "changes": 5,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate90_evidence/10_full_pytest_257d4cc1c_2177passed.log",
+        "status": "added",
+        "additions": 42,
+        "deletions": 0,
+        "changes": 42,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate90_evidence/11_smoke_257d4cc1c_rc0.log",
+        "status": "added",
+        "additions": 110,
+        "deletions": 0,
+        "changes": 110,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate90_evidence/12_full_replay_257d4cc1c_410_of_410_rc0.log",
+        "status": "added",
+        "additions": 429,
+        "deletions": 0,
+        "changes": 429,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate90_evidence/13_docs_lint_fixed_table_1f3829b9a_358passed.log",
+        "status": "added",
+        "additions": 18,
+        "deletions": 0,
+        "changes": 18,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/gate90_evidence/README.md",
+        "status": "added",
+        "additions": 51,
+        "deletions": 0,
+        "changes": 51,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/mutation_replay.py",
+        "status": "modified",
+        "additions": 202,
+        "deletions": 0,
+        "changes": 202,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/receipts/grid_fit_v5.validate.yaml",
+        "status": "modified",
+        "additions": 46,
+        "deletions": 5,
+        "changes": 51,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/receipts/history/grid_fit_v5.validate.803e2b7781cbc9cd.yaml",
+        "status": "added",
+        "additions": 100,
+        "deletions": 0,
+        "changes": 100,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/receipts/history/paired_fixed5_v4.validate.803e2b7781cbc9cd.yaml",
+        "status": "added",
+        "additions": 102,
+        "deletions": 0,
+        "changes": 102,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/22p_gap/receipts/paired_fixed5_v4.validate.yaml",
+        "status": "modified",
+        "additions": 46,
+        "deletions": 5,
+        "changes": 51,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/docs/GATE70_WORKING_STATE.md",
+        "status": "modified",
+        "additions": 11,
+        "deletions": 1,
+        "changes": 12,
+        "previous_filename": null
+      },
+      {
+        "filename": "degradation-degeneracy/tests/test_gate90_env_profile.py",
+        "status": "modified",
+        "additions": 18,
+        "deletions": 15,
+        "changes": 33,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/entities/isu-uconn-lfp-gr-emulated-degradation.md",
+        "status": "modified",
+        "additions": 2,
+        "deletions": 0,
+        "changes": 2,
+        "previous_filename": null
+      },
+      {
+        "filename": "wiki/log.md",
+        "status": "modified",
+        "additions": 5,
+        "deletions": 0,
+        "changes": 5,
+        "previous_filename": null
+      }
+    ]
+  },
+  "green_commit": {
+    "commit": {
+      "sha": "e2160c2ef276d4944fa4ad76fbaa001671a1a95e",
+      "message": "feat(env): GREEN — 프로필 C lock · tools/env_profile.py (기록 대조) · B 기록 · requirements 주석 정정 · smoke 기록 단계 · 영수증 stamp (고정 표 PYBAMM_PIN_ROUND_SPEC.md · 원장 §135)\n\ntest_gate90 38 passed / rc 0 (RED cff5e409b 에서 38 failed). RUN_SCOPE 네 파일 (고정 표 §2 상한\n그대로) — source_digest 803e2b7781cbc9cd → 3f84c0db52d2b9ac:\n- requirements-validation-C.lock.txt (새) — `python -m tools.env_profile --emit-lock` 출력 그대로 ·\n  Python 3.11.15 · CPython · Linux · x86_64 · glibc 2.39 · 유효 배포판 170 · 가려진 2 (cryptography\n  41.0.7 · packaging 24.0) · 배포판마다 RECORD 텍스트 sha256 (RECORD 없는 22 = none) · 정규형 고정점\n- tools/env_profile.py (새) — 측정 (sys.path 순서 · 해석기 · 플랫폼 다섯 축 · 배포판 · 설치 파일\n  RECORD 재해시 · 핵심 module 10 의 실제 origin) · 닫힌 lock 문법 · 대조 · 결과 dict (MATCH /\n  MISMATCH / UNMEASURED · 측정하지 않은 칸 None) · CLI (세 상태 모두 rc 0 · --emit-lock 측정 실패면 rc 1)\n- requirements.txt — 주석만 (옛 \"검증 완료 조합\" 을 옛 주석으로 인용 · B · C 를 가리킴 · 하한만\n  둔다). 요구 줄 12 개 바이트 불변\n- scripts/smoke_e2e.sh — bad() 뒤 · 단계 0 전에 기록 단계 하나 (`\"$PY\" -m tools.env_profile ||\n  bad …` — 불일치는 막지 않고 도구가 죽으면 실패)\nRUN_SCOPE 밖: docs/22p_gap/make_receipt.py (_stamp() helper · stamp.environment_profile_C — core\n밖) · docs/22p_gap/env_profile_B_v4.yaml (새 · 네 v4 producer manifest 의 env 일곱 자리 · solver\n기록 원문 · 한계 · 어떤 코드도 읽지 않는다).\n\n이 컨테이너 실측: MATCH · 170/170 · 2/2 · 설치 파일 일치 24,804 (해시 없음 10,373) · origin 확인 9\n(yaml 은 RECORD 없는 Debian 배포판이라 확인 불가로 따로) · 약 2 s. src/ · run.sh · configs/ ·\nconftest 불변. 영수증 재생성 · 변이 등록은 뒤 커밋.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01CcftdupvBKEC3iP9HX2VA2",
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/commits/e2160c2ef276d4944fa4ad76fbaa001671a1a95e",
+      "html_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/commit/e2160c2ef276d4944fa4ad76fbaa001671a1a95e",
+      "diff": "@@ -0,0 +1,73 @@\n+# B 프로필 — v4 정본 producer 환경의 기록 (기록 전용 · 원장 §135 · 고정 표 docs/22p_gap/PYBAMM_PIN_ROUND_SPEC.md §6)\n+# 네 producer manifest 의 env (일곱 자리 — 서로 같다) 와 solver 기록을 원문 그대로 옮겼다. 손으로 고치지 않는다.\n+# 어떤 실행 코드도 이 파일을 읽지 않는다. 대조 시험: tests/test_gate90_env_profile.py::test_e11_b_profile_is_the_v4_producer_record\n+profile: B\n+kind: HISTORICAL_PRODUCER_RECORD_ONLY\n+sources:\n+- path: artifacts/grid_curves_v4/curves_manifest.yaml\n+  bytes: 3713\n+  sha256: a6e5ab9cf348ff44e8a9b6fe6c68faa3cbd88a6c797c372dd5745e8bc6de5ecc\n+  env_paths:\n+  - env\n+  - grid_run_spec.env\n+- path: artifacts/grid_fit_v4/manifest.yaml\n+  bytes: 6576\n+  sha256: 228664b1ca8dea7f19f92ae60016448b8706482be900b90b7a5b80de04cf33b7\n+  env_paths:\n+  - run_spec.env\n+  - start_provenance.env\n+- path: artifacts/halfcell_fit_v4/manifest.yaml\n+  bytes: 7711\n+  sha256: 3fa4106ac916dc3bc6d817ccff2a5d2c16a36418579077f280ad623c0724bb69\n+  env_paths:\n+  - run_spec.env\n+  - start_provenance.env\n+- path: artifacts/paired_fixed5_v4/manifest.yaml\n+  bytes: 6310\n+  sha256: 7a14333ee4ace2367f1d0b076ac584271cdfb494b2b5e75ea05c86d6e61c4cfc\n+  env_paths:\n+  - run_spec.env\n+  - start_provenance.env\n+env:\n+  python: 3.10.12\n+  platform: Linux-5.15.0-130-generic-x86_64-with-glibc2.35\n+  machine: x86_64\n+  numpy: 2.2.6\n+  scipy: 1.15.3\n+  pandas: 2.3.3\n+  joblib: 1.5.3\n+  pyarrow: 25.0.1\n+  pybamm: 26.7.1.0\n+  matplotlib: 3.10.9\n+  yaml: 6.0.3\n+  pybammsolvers: 0.9.0\n+  casadi: 3.7.2\n+solver:\n+  artifacts/grid_curves_v4/curves_manifest.yaml:solver: IDAKLUSolver\n+  artifacts/grid_curves_v4/curves_manifest.yaml:grid_run_spec.effective_solver:\n+    requested:\n+      type: idaklu\n+      fallback: casadi\n+      rtol: 1.0e-06\n+      atol: 1.0e-06\n+      casadi_mode: safe\n+    effective_class: IDAKLUSolver\n+    pybamm: 26.7.1.0\n+    pybammsolvers: 0.9.0\n+    casadi: 3.7.2\n+  artifacts/grid_fit_v4/manifest.yaml:run_spec.producer.solver: IDAKLUSolver\n+  artifacts/halfcell_fit_v4/manifest.yaml:run_spec.producer.solver: IDAKLUSolver\n+  artifacts/paired_fixed5_v4/manifest.yaml:run_spec.producer.solver: IDAKLUSolver\n+not_recorded:\n+- 전이 의존성 (위 13 축 밖의 배포판 전부)\n+- 배포 파일 해시 (RECORD) — 같은 버전 문자열의 다른 바이트를 가릴 수 없다 (사전 검토 P2)\n+- 로컬 패치 · 설치 뒤 파일 변경\n+- native 라이브러리 (SUNDIALS · BLAS · OpenMP) 와 그 빌드\n+- Python 빌드 (컴파일러 · 빌드 옵션) · 플랫폼 문자열 밖의 OS 구성\n+- smoothing backend 축 — 지문 (src/io.py::env_fingerprint) 에 그 축이 생기기 전의 기록이다\n+not_claimed:\n+- B 를 다시 설치하면 v4 정본이 같게 나온다\n+- B = C (현재 검증 환경 · requirements-validation-C.lock.txt)\n+- pybamm 26.7.1 ↔ 26.8 (또는 다른 판) 의 수치 동등\n+use: v4 정본 재생성을 시도할 때의 기준 기록. 재생성 동등성을 주장하려면 그때 사전 고정 비교가 따로 필요하다 (사전 검토 Q2). 재생성 · 새 세대 · 버전 비교는 이번 라운드\n+  범위 밖 (원장 §135 D6).\n@@ -228,20 +228,34 @@ def build(leg: str) -> dict:\n             \"core_sha256\": hashlib.sha256(\n                 _dump(core).encode(\"utf-8\")).hexdigest(),\n             \"core\": core,\n-            \"stamp\": {\n-                \"_주의\": \"기록용. core 재생성 대조에서 제외된다.\",\n-                \"validator_commit\": _git(\"rev-parse\", \"HEAD\"),\n-                \"validator_tree_dirty\": bool(_git(\"status\", \"--porcelain\")),\n-                \"generated_at_utc\": datetime.now(timezone.utc)\n-                                    .strftime(\"%Y-%m-%dT%H:%M:%SZ\"),\n-                \"runtime\": {\"python\": platform.python_version(),\n-                            \"platform\": platform.platform()},\n-            },\n+            \"stamp\": _stamp(),\n         }\n     finally:\n         shutil.rmtree(root, ignore_errors=True)\n \n \n+def _stamp() -> dict:\n+    \"\"\"영수증 stamp — **기록용** (core 재생성 대조 · `core_sha256` 밖).\n+\n+    ★ 90차 (원장 §135 · 고정 표 `PYBAMM_PIN_ROUND_SPEC.md` §5-2) — 실행 환경 ↔ 프로필 C lock 의 대조 결과를\n+      `environment_profile_C` 로 싣는다. 기록 대조다 — `MISMATCH` · `UNMEASURED` 여도 영수증 생성을 막지 않는다.\n+      소비자 `tools/preserve.py::read_verification_receipt` 는 영수증의 최상위 키 집합만 보고 stamp 안은 보지 않으므로\n+      바뀌지 않는다.\n+    \"\"\"\n+    from tools.env_profile import compare_lock\n+\n+    return {\n+        \"_주의\": \"기록용. core 재생성 대조에서 제외된다.\",\n+        \"validator_commit\": _git(\"rev-parse\", \"HEAD\"),\n+        \"validator_tree_dirty\": bool(_git(\"status\", \"--porcelain\")),\n+        \"generated_at_utc\": datetime.now(timezone.utc)\n+                            .strftime(\"%Y-%m-%dT%H:%M:%SZ\"),\n+        \"runtime\": {\"python\": platform.python_version(),\n+                    \"platform\": platform.platform()},\n+        \"environment_profile_C\": compare_lock(),\n+    }\n+\n+\n def _score_manifest(run_dir: Path) -> list[dict]:\n     \"\"\"복원한 fits 만으로 재채점하고 산출을 두 digest 로 적는다.\"\"\"\n     import pandas as pd\n@@ -0,0 +1,190 @@\n+# requirements-validation-C.lock.txt — 프로필 C: 현재 검증 환경의 정확 고정 (기록 대조 전용)\n+#\n+# ★ 90차 (원장 §135 · 고정 표 docs/22p_gap/PYBAMM_PIN_ROUND_SPEC.md §3) — `python -m tools.env_profile --emit-lock` 의\n+#   출력 그대로다. 손으로 고치지 않는다 (정규형 고정점: emit_lock(parse_lock(text)) == text).\n+# 대조: `python -m tools.env_profile` (smoke 로그 · 영수증 stamp `environment_profile_C`). 불일치여도 아무것도 막지 않는다.\n+# 선언하지 않는 것: 정본 (v4) 생산 환경 (그것은 프로필 B — 고정 표 §6 의 기록) · C 로 만든 수치가 B 의 수치와 같다는 것 ·\n+#   설치 처방 (리눅스 시스템 배포판을 담는다 — `pip install -r` 용이 아니다) · 다른 기계에 강제하는 것.\n+# 문법 (닫힘): `#@ <지시> <JSON 문자열>` · `<이름>==<버전>  # record-sha256 <hex64|none>` (PEP 503 이름 · 엄격 오름차순) ·\n+#   `#@ shadowed <이름>==<버전> record-sha256 <hex64|none>` (경로 순서로 가려진 항목). record-sha256 = 설치된 RECORD\n+#   텍스트의 sha256 (none = RECORD 없음 — 설치 파일 대조 불가).\n+#@ profile \"C\"\n+#@ python \"3.11.15\"\n+#@ implementation \"CPython\"\n+#@ system \"Linux\"\n+#@ machine \"x86_64\"\n+#@ libc \"glibc 2.39\"\n+\n+annotated-types==0.8.0  # record-sha256 8aca43183e620f57ed3b240da554dedf6cf840e43aa2789f63cff7a8396561bb\n+anyio==4.15.1  # record-sha256 bf283795dfdd8f15d592bc15c7788515eeb095df665dc0edd24eb9eac074be96\n+anytree==2.13.0  # record-sha256 e118a0c658d63a1c4e40406551815f8def442f274a3a650fd95ef332eec1a244\n+argcomplete==3.1.4  # record-sha256 none\n+argon2-cffi==25.1.0  # record-sha256 7b05311a76142835613fdae1391416c7e7c14a4732fa512ed474e648f5c521ec\n+argon2-cffi-bindings==26.1.0  # record-sha256 28d870be201a7859096180d245e39a7cb3ecb5d129a660c0243c616b0e60212e\n+arrow==1.4.0  # record-sha256 8d5df7cb0131fdd5dd35125ac97ecbc3f73cbf2cff0d969b4dc08415e9d55f63\n+asttokens==3.0.2  # record-sha256 f2c065795b7a790b3d9efa4749bc78898ac85a7ede01ae0f99f42d3b54dc34d0\n+async-lru==2.3.0  # record-sha256 b37b54f6cef525241ba6153ae399a407633a86db3332ca39d807dcf4e6978d32\n+attrs==26.1.0  # record-sha256 bd56b0a44556594a01dc2fae804b1cefe21d37943ba7e2f622dde22c0709def2\n+babel==2.18.0  # record-sha256 4702aabf77a259df98e4a51ad98c259bab0ce6709624048e8c42566a0257875b\n+backoff==2.2.1  # record-sha256 3f62810defce61daf9e77f0546d7371e77d36cfc11ac272cd581bff162670471\n+beautifulsoup4==4.15.0  # record-sha256 4ef352419a718ec393c833b7857954b0652ab396354bdf6fcfc885b76ff2f1b5\n+black==26.5.1  # record-sha256 bbbfbb7bf916766be6bae632a2e7a605e005eb0bb182e4059e6fad4aab7a4a9a\n+bleach==6.4.0  # record-sha256 a94590c8df82a63599a128a64fdc09692439547066244193aad3c5144dd80408\n+blinker==1.7.0  # record-sha256 none\n+bpx==1.1.1  # record-sha256 82ceada99f97993d7d33ee12cfd8bd0febcd20cf0e4db126e2547e9f7146a660\n+casadi==3.7.2  # record-sha256 116b1b109f74135a9dcc0edefd5f54027b53e4c4aff2994faf58b8da0515e097\n+certifi==2026.2.25  # record-sha256 20ea7883680f6935729f27329d6d254f21ad1dddbd9ccc0bcc2659379e6ed801\n+cffi==2.1.1  # record-sha256 4897d0151af22027ee22a569ed0a3a7f65d70df554f1a1501ca45039e3f353a3\n+charset-normalizer==3.4.6  # record-sha256 863c367765a59668309083d0683c4c4b0e1ad2c8be1bdf0428c344fbd0e04029\n+click==8.5.0  # record-sha256 ac19a8b841223b6ed0635bf398577fc1432942333212975d2a36d3886850aaa5\n+cloudpickle==3.1.2  # record-sha256 99673ca23b64c3e102bad5e8f4361520424120f4c5316347c6c299795b2ad3fd\n+colorama==0.4.6  # record-sha256 2ae3762039c35c23e4829bab30f8e768eced773ecac67d026223caabfbd493f4\n+comm==0.2.3  # record-sha256 857135f6f98fff9aaba8d2e9e7d460e34c4137ed5d40a08e2765594bef4c0833\n+conan==2.27.0  # record-sha256 6962829eb0237bb923483017a6809ca37ace4141472d34ac660c89ff6ddb8819\n+contourpy==1.3.3  # record-sha256 f64770812b948e954eeb76f82c937bc5133fdd72026b30501e6a15d91c322189\n+cryptography==41.0.7  # record-sha256 none\n+cycler==0.12.1  # record-sha256 564b9fd56f9f1730196522406a8ac8766040b69bc979b97b325e05f3490f6108\n+dbus-python==1.3.2  # record-sha256 none\n+debugpy==1.8.22  # record-sha256 93bb7a80876cc2c5b1a03a327ba26a34a51ee2ca0e65114725f0e82534f3207b\n+defusedxml==0.7.1  # record-sha256 a28e03ffb568a1bbda75fe2548aba0acf51da3e3ad42ab7a894111fab825f0dd\n+distro==1.9.0  # record-sha256 none\n+et-xmlfile==2.0.0  # record-sha256 d317f82e92dcc9a3bc806879cc75aee30b5ca8246f1c877bf0cc4e56660a9278\n+executing==2.2.1  # record-sha256 ed092b34303bd84d55e304bb826ef3dbc301d4dbada61de3c1219fd5ba527650\n+fasteners==0.20  # record-sha256 83fa0926a015d46fb0cfcd140bcbfb3d7ef2b90e56a07d6ee741d1ae3c2a73df\n+fastjsonschema==2.22.2  # record-sha256 a1a4bffa8eb4fbddd24e90feb35eb5ce0286843c983395a4df8f3ebf9fc60676\n+fonttools==4.66.0  # record-sha256 5284752e0fa2c97798d4ac3bb89d559011cfbbfdf98ae1857a38f190f8c8e5af\n+fqdn==1.5.1  # record-sha256 16177367e152e05f12ffdf82eb2744d8fed938891ef6137085948c52b901997c\n+h11==0.16.0  # record-sha256 393c249c97166fed45d8a448190cc41603f56a08f76f1ee42db3a920a55468b1\n+httpcore==1.0.9  # record-sha256 f52dd9f37c958133cde008e0e648d6149daa1f90a755a2fe36081eecb743e6a7\n+httplib2==0.20.4  # record-sha256 ffa46319d989b939534dfa649fc3efc8704eaf0c83358fecb7a964fe74898fa3\n+httpx==0.28.1  # record-sha256 b5af040812d65b617fb0d4273545c56eb32bf54ba5ef02b87261531a73cc14fe\n+idna==3.11  # record-sha256 67d43a4ef862885f3e996acec145e288045ab4c44d5f7913ea362f83e2d39267\n+iniconfig==2.3.0  # record-sha256 60cf1998a07c4c4d314d586130c9caba025b3caf655b5260716ddc3a54262c7a\n+ipykernel==7.3.0  # record-sha256 b5b5f07d566b6bb6263d0fd27c36250f7cda7c5ab6a1ee30a04434a119574a08\n+ipython==9.17.1  # record-sha256 dbdf5647c61ac2a662d6a4f9878152b27001b6ca53a6f525ff98a9789e30b2fb\n+ipython-pygments-lexers==1.1.1  # record-sha256 c82cf6ad58287d4a50b59b6b5d138a3253a794868d84b1089b1ea87c5e3a1478\n+ipywidgets==8.1.9  # record-sha256 a1a7cc3e6392e4d369c668ce9bbc588854b6a8706ac620e32e3adf209bbb63f4\n+isoduration==20.11.0  # record-sha256 b47e4e8a980f127022bb6677fb9445ede46f3fbc40436dd6a2359796bba087d1\n+jedi==0.20.0  # record-sha256 60f281d9dd027d55da342ac60d59042890afc0e4bd5beb8e8b753822282fa149\n+jinja2==3.1.6  # record-sha256 91151bad4737abfc252611c853e57e3d14dc7e64151a2dd0949766ad33886c22\n+joblib==1.6.0  # record-sha256 9c65f84476b2860990bc10bb31a19a3894e484fc7744ff5ed0bd52525fa2090b\n+json5==0.15.0  # record-sha256 bda1ce637e3ea9c8e6962abe2cbaeaa80f0afbb7b4414a09ce66f79af689f141\n+jsonpointer==3.1.1  # record-sha256 c760899b5ff64f05e61e584d2e501b7d88f7921af751d4a87d241e847344e98f\n+jsonschema==4.26.0  # record-sha256 7a76c72bb00b401dbe8d2fdce4d7dffa0fdb2c1835b45fc82f96f9c7bed94266\n+jsonschema-specifications==2025.9.1  # record-sha256 a9628ff8294efc8a627c0ca5d4d38500d8609ef893a73a554c164e12bd0c1243\n+jupyter==1.1.1  # record-sha256 1086096603cc47cebb9983767d4793e2e691c960329e3a5a3c75c3a1acec2246\n+jupyter-builder==1.2.3  # record-sha256 ebd3bed2ded163f416bd5ee77ffa6f8fcd789ea9676fa3c116d4512e02b92e55\n+jupyter-client==8.10.0  # record-sha256 cdb9f1510e5998d6184400711ce030e8f17236e046fd6e469fa21d89a7861527\n+jupyter-console==6.6.3  # record-sha256 2b2eb8f5c18e904ee0d1aec4939e1d37b95e3d175e8ecc582fd43133fc86f1dd\n+jupyter-core==5.9.1  # record-sha256 99fecf416ce2e2bc9b2b01160bc8312be876716d8824f1e849e157907a64259d\n+jupyter-events==0.12.1  # record-sha256 8b7fe2da5cbdf536201a05a5e4950f68f5db6b0a3d071ca7e9edd4b708bbd6b3\n+jupyter-lsp==2.3.1  # record-sha256 a09284256ee6ca78d262d115b66de9ada78a3fd6e5f5e204a26437166e360906\n+jupyter-server==2.21.1  # record-sha256 1c069281d9330882ff1902936e44a6857db9f251e9f8725d5367fd3eaf9a6bc7\n+jupyter-server-terminals==0.5.4  # record-sha256 521744b66348edef3232d29aa2364ce1bcdb5f8aa2c80a888f1fa9c86b69289b\n+jupyterlab==4.6.4  # record-sha256 b81e81c8ebabe7774411a6486d64c692fd8bad63b619b41f4bd2d8f37d0da16c\n+jupyterlab-pygments==0.3.0  # record-sha256 672ff8865167dd879c859996afcd0b19eb2d900819c1f605d67a50d716fa6d1d\n+jupyterlab-server==2.28.1  # record-sha256 9c2e9022df5d98d52d645361ee52054c1dc3e10ea9ba4513085ec40beb97718c\n+jupyterlab-widgets==3.0.17  # record-sha256 a0dc91e80bb96f416834d5253ed5f51692203bb1967cf3e098ede136b0482af6\n+kiwisolver==1.5.1  # record-sha256 026de1a2707ce8f1e3fe8d90ad0e3c2e837ff2c0b4a00b4e866fc80dfca35c0a\n+lark==1.3.1  # record-sha256 755873457e638d4597783a10627185c85a7b91cce4fa74943cd0726c7c18ae07\n+latexcodec==3.0.1  # record-sha256 3d6baebc66a02443c65250f3482b099f9eb4d922e0019d0f9ce6ff86353286a9\n+launchpadlib==1.11.0  # record-sha256 none\n+lazr-restfulclient==0.14.6  # record-sha256 none\n+lazr-uri==1.0.6  # record-sha256 none\n+markdown-it-py==4.2.0  # record-sha256 d59977491eaec3f08c89b137438b3ee2dd4d15f66dff3e815b0664f90d7cd8f7\n+markupsafe==3.0.3  # record-sha256 43a31a54753a9235220a61968b0f7e907ba71ee65875523f3cb63185d784a5ca\n+matplotlib==3.11.2  # record-sha256 0026be91603fd8f235c3e77b10a6645b41edc6a30cb2488b8889450b1f7dbee6\n+matplotlib-inline==0.2.2  # record-sha256 6e8ae6543f5867325f6eecb99be1482464311d8dad3e6d0d4210b74112eb9452\n+mdurl==0.1.2  # record-sha256 bda7c4854c66cd4daedddb5347837eb7b362119e7714b45263576d5924221c71\n+meshio==5.3.5  # record-sha256 a454db67a8c07142f5006e9bf82a78344fb095932a47f7f1e32a4925ffda28f0\n+mistune==3.3.4  # record-sha256 e5b197f26e470de3df84d6a54c9dbe8ea95bedfa0bc0411ef2cb8cde08f04184\n+mpmath==1.3.0  # record-sha256 8052e4c7314cdcbc6c50183c546a342e58a1a9e4589d1354d31a4ef3a705c395\n+mypy-extensions==1.1.0  # record-sha256 20f0c754257dcfc94b88d5e5dba2f7bd59504a76c0c8c481231df037a1cc894f\n+nbclient==0.11.0  # record-sha256 741e3b2c4f00e5f38785bf5b504801b3eedb50dde15cdee2d18894a4eea81eb1\n+nbconvert==7.17.1  # record-sha256 949da52f635e1107c83ecfe6b8d8716ba8bfa94a179512d2aa00be7572f2c250\n+nbformat==5.11.1  # record-sha256 9b4a7ab8e052ae849378aff6f96089421ee75f3aa1b52224c95e09f03b1b3499\n+nest-asyncio2==1.7.3  # record-sha256 896d485c5d1fb04e0352d65ba7f410095f923b0dd672adff6815b77e4905bc0d\n+notebook==7.6.3  # record-sha256 821c9ec3f1811ad7d842d384de9cd8de73284955504d3cf37e6f4a7751a6b9a4\n+notebook-shim==0.2.4  # record-sha256 2decf2f284ddd31bb63009bc917c80c8a46d43ce06f81e08e71e81c9ae6532a8\n+numpy==2.4.6  # record-sha256 c3dd00f045ea91bf972a08daad232f99a627186b0799af0379317a9edcc9fa86\n+oauthlib==3.2.2  # record-sha256 none\n+openpyxl==3.1.5  # record-sha256 2b7f886697d3afd17f12a98eb9386fad66d98f5fece698ce30abb925b74b24bd\n+overrides==7.7.0  # record-sha256 3852876124709311aae2f7ff108283d1d010b466482fd92908cf32bb92bdf80e\n+packaging==26.3  # record-sha256 b349f7a1a2346fdc4a27282d8fbab1c11a2e2ca92b2a8ba572be62493fd00327\n+pandas==3.0.5  # record-sha256 0cf9ba06ee2488a8c75425c84415686ef5489a9e72feebb75f40d124bf574e98\n+pandocfilters==1.5.1  # record-sha256 5b2c3c43873997467183668faa7c02e0760bb288123f2edad5857fd32dd87d55\n+parso==0.8.7  # record-sha256 b0fcbdb670c12ab012442a4e69ce94291a5a796e085f70813f581dbbc67d4002\n+patch-ng==1.18.1  # record-sha256 2b768520794a207b42ccd3a338881fc0e4265c0b8cd756b16506728f3e3482ba\n+pathspec==1.1.1  # record-sha256 31e240696c6b240fcae7ff9130b3bc800e441db8cc8fec59cd6eb703831c9fc9\n+pexpect==4.9.0  # record-sha256 766d27e46231f47e7d65ca97a3d7ce913ca74e4e032881c7ae7f6e5df44697ea\n+pillow==12.3.0  # record-sha256 d67571156a1abfdcb25fbb895cdd005a3d59c4d1a9c11f253febdd84419d1e93\n+pip==24.0  # record-sha256 none\n+platformdirs==4.12.0  # record-sha256 867c96df4a8756503ffd5b673b0e886d50c6a12442d9db05e27996dc9e2f88e0\n+pluggy==1.6.0  # record-sha256 ac3c42a936c786b42b92f6c5310ed48f760330718f071c3c4c31855a1717544b\n+pooch==1.9.0  # record-sha256 f5ff5debc733aa81c56ab2709ecd5dac460cf573452a8c65a01b0c4ce2218910\n+posthog==7.60.1  # record-sha256 b027a054757dc3d609caae2352224277a64f1752666177aa86eedc918dfcd0a5\n+prometheus-client==0.26.0  # record-sha256 2bed5c5b6b9c116424ec0e7679fc2acf31b5fa617846223b39d547f30d645401\n+prompt-toolkit==3.0.53  # record-sha256 7ed142430e0c5a0634a803f43eee73ee3e358a0436864a12b451a92db43d0227\n+psutil==7.2.2  # record-sha256 cdc0fdcbe823c0533785085d41a002e8d67d4ea338515edb4d063e74062e8d07\n+ptyprocess==0.7.0  # record-sha256 2d42d9811f9067a05ac93dbd58ed3ca150ede319709c0b54976b5c642b7027a7\n+pure-eval==0.2.4  # record-sha256 81c5863ca8865002311979698447a04fcbd22b9c14b830501ebb81f9162cfe5a\n+pyarrow==25.0.1  # record-sha256 d7c46765c1d341c21fa138fe84044e1021c5bfcdd7eee0b9cea68a8f55f5c8d6\n+pybamm==26.8.0.0  # record-sha256 ae9606ff154fdb64ab83abfa4997e0647533a2fb1025328a9cc058248f3c40b5\n+pybammsolvers==0.9.1  # record-sha256 474b4098acdc7ac8cef58449cff961670abe054d44d608f9407aed4f18a71fc7\n+pybtex==0.26.1  # record-sha256 5724d1a11b66d7f9c9e2d55bd295ae8bf032a4d56440a86b02a3005da3052662\n+pycparser==3.0  # record-sha256 5192a85147780baa9341bf63a3b42e3b818d5c7ca219779bae4888f1bf78b6ab\n+pydantic==2.13.5  # record-sha256 6e393725dc45b432f077cc86627a08e0d663b1734772608ee4f66e13a8c6dbc0\n+pydantic-core==2.46.5  # record-sha256 8207aff2053f8b9e584af8ceac182febdb3491206b019e9140d9f7004fe3fe70\n+pygments==2.21.0  # record-sha256 41a99838b974f5e6cf39a8e387a449418e6762c666427e3c24152760aa6e2f4c\n+pygobject==3.48.2  # record-sha256 none\n+pyjwt==2.7.0  # record-sha256 none\n+pymupdf==1.28.2  # record-sha256 4e0d129ccf7bde2f2488331617e9ee2ca4e2c0153a05aec8df7a2f4eeb8231e1\n+pyparsing==3.1.1  # record-sha256 none\n+pytest==9.1.1  # record-sha256 7a423734645a175fcbf3fecb9703a3a9fd6756bdcda1ce7438bd1968b82261c9\n+pytest-json-report==1.5.0  # record-sha256 029426fa9ce32822b8774e2c54ef417144b5b97ef53bd6acd8c94d3f3fd7c2ca\n+pytest-metadata==3.1.1  # record-sha256 db897bd01850a0e010a455640a7ec5b30c35f219c007618d78fbd206d23911c0\n+python-apt==2.7.7+ubuntu5.2  # record-sha256 none\n+python-dateutil==2.9.0.post0  # record-sha256 ea009219f435165e7013386035f57b84d75e0676dec16cefcf99db3310324aa2\n+python-json-logger==4.2.0  # record-sha256 2a8591c9ba0cf740122fdb67fe5416d17ca3b07ae58269cce8139b88ab171c96\n+pytokens==0.4.1  # record-sha256 2bca96e8c6986a8e3905535fbec6364fa94615c20c52240f2df19ada29cc043c\n+pyyaml==6.0.1  # record-sha256 none\n+pyzmq==27.2.0  # record-sha256 9fddbf6b1ccad270a56c9fe0bff2f0fe744899f08f60f952c0eaf265cd72fff4\n+referencing==0.37.0  # record-sha256 dec74300561a47a0d28ec39371da5c952d4b0bb713aa6529694b6a6b52ec4060\n+requests==2.33.1  # record-sha256 0d20d243fc610115fcdaf734697b6ad9c828f6658f4ad542d0c487683fb307f8\n+rfc3339-validator==0.1.4  # record-sha256 e0de2375f9b5d93b1cb7551ac35d9f5590ee4a4ecb2336aac7cbaea98c0e11f0\n+rfc3986-validator==0.1.1  # record-sha256 7d8436bbbdef66774eaa1d131f7b232be497d098b5aee03955e75acbf5217c00\n+rfc3987-syntax==1.1.0  # record-sha256 0e8cdb6d4d56bc98b403eb0d098d21aeac79090c45b89528fe596732b6c590ad\n+rich==15.0.0  # record-sha256 d1538647fc6920348d34b1fc523e8a9a5cd957b2d1cc3d3627528bf4af3eefb6\n+rpds-py==2026.6.3  # record-sha256 e13d7b7a4be5afc24787b030379e5be599a40e2e3f4aae3c025ece21444fc128\n+scikit-fem==12.0.2  # record-sha256 b6cbc55ec12a1b976c77eba5a1d0a486da8b8e971625419c2bbd88ff874e1a54\n+scipy==1.17.1  # record-sha256 b8ea386fea9f83a6696fb52817f71582fb1174192a306225bc87ea13177b1b64\n+send2trash==2.1.0  # record-sha256 2314259af07a76aa92aab6a2b87aa4b74aacf22495b705852134251ecd41474b\n+setuptools==68.1.2  # record-sha256 none\n+six==1.16.0  # record-sha256 none\n+soupsieve==2.10  # record-sha256 0f498c090ee8e116e1132a9f61b81ce2c50ff022042c5a192d82644270ec8d18\n+stack-data==0.6.3  # record-sha256 9d52616ad2f745f7e5df4f854103e7dd69c55cebe8a2861d48059ef1b2a969b2\n+sympy==1.14.0  # record-sha256 3eb714822b0627fa62b04eee1f758877891703641de34c1b299757bfbbe759b5\n+terminado==0.18.1  # record-sha256 05908a778988bdd86bf9e3120713fb06efb8a999700e26f7a1e634f27d1bf8f7\n+tinycss2==1.5.1  # record-sha256 1773dbed0c0fb8305f63bf4de4d9f8fc63b40f0732077a2d6354167d4bb36127\n+toml==0.10.2  # record-sha256 none\n+tornado==6.5.10  # record-sha256 a8fec524feae3f0d25a7d110637a7360bdec3e6256cf496b26258eb5d31b7e7d\n+tqdm==4.70.1  # record-sha256 8cd19875ceda76e48e5357c0d8b61ba87591b1da141ffa988e4c3cb221e65550\n+traitlets==5.16.1  # record-sha256 5f60746bd43c84b88498fb44723e995fb3a01528b2744c33101a7c0a666380df\n+typing-extensions==4.16.0  # record-sha256 bef8a87e9866f1a161c8eb7a1b1c1af3a2d81b6cecf39368228972c0078d1988\n+typing-inspection==0.4.4  # record-sha256 408b0b1d9c5165808960f48c419d34dcf1a57990eb7f8ea9be214ae716301752\n+tzdata==2026.4  # record-sha256 f8b667c761ceedcb68942b378d61fdc802a3c78b3ae562de580c33ff769abc0d\n+uri-template==1.3.0  # record-sha256 f45f33e2cd44b06b73e8e03ef45f3c780e3aa9b77b8f19efb7e4f420b612c17c\n+urllib3==2.6.3  # record-sha256 c9867c9bf014c5039e82cc802cbff6c6e5884fec449905d8ae8f609cd5ec4882\n+wadllib==1.3.6  # record-sha256 none\n+wcwidth==0.9.1  # record-sha256 f8c196e49b91ee8f74db1ae1b8ba04ec64661e0de2cf94d35ac9596dfb6b8215\n+webcolors==25.10.0  # record-sha256 b5b74c83020cb8643c5f40e2a4cb1fdbf73ef46c0b1276fede9b3da00367292f\n+webencodings==0.6.1  # record-sha256 03deb8d09a8f6cd56f01d5f4419c06a512f1e37632cdf6854d49266942c3eaa0\n+websocket-client==1.9.2  # record-sha256 4c121e640d0064ff8cc0621309a4275fba4c9fed1d3bbebe7615f7b96fa143f9\n+wheel==0.42.0  # record-sha256 none\n+widgetsnbextension==4.0.16  # record-sha256 cba24bfd3bbd68d4e64594c2589bbdb22a58ebd575b47c3bb03eb4d9951a0de1\n+xarray==2026.7.0  # record-sha256 6045ce487b591e88a93345b903c440347faf6f5da440896a33d25476f96a30ec\n+xmltodict==0.13.0  # record-sha256 none\n+yq==3.1.0  # record-sha256 none\n+\n+#@ shadowed cryptography==41.0.7 record-sha256 none\n+#@ shadowed packaging==24.0 record-sha256 none\n@@ -1,7 +1,12 @@\n # ── 핵심 ──\n-# 검증 완료 조합 (2026-08-05, docs/ENV_REPORT.md):\n-#   pybamm 26.7.1.0 / numpy 2.4.6 / scipy 1.17.1 / pandas 3.0.5 / Python 3.11\n-#   IDAKLU OK, composite DFN OK, 1 solve ≈ 2 s\n+# ★ 90차 (원장 §135 · D5) — 이 파일은 **하한만** 둔다. 생산 환경 선언이 아니다.\n+#   · v4 정본 producer 환경 기록 = 프로필 B — docs/22p_gap/env_profile_B_v4.yaml (기록 전용)\n+#   · 현재 검증 환경의 정확 고정 = 프로필 C — requirements-validation-C.lock.txt (기록 대조 전용 · 막지 않는다)\n+#   옛 주석 \"검증 완료 조합 (2026-08-05, docs/ENV_REPORT.md): pybamm 26.7.1.0 / numpy 2.4.6 /\n+#   scipy 1.17.1 / pandas 3.0.5 / Python 3.11 · IDAKLU OK, composite DFN OK, 1 solve ≈ 2 s\" 는\n+#   scaffold 커밋 61bce598d 때 scripts/verify_env.py 진단의 기록이다 — v4 정본 producer 기록\n+#   (Python 3.10.12 · numpy 2.2.6 · scipy 1.15.3 · pandas 2.3.3 · pybamm 26.7.1.0) 과 다르고,\n+#   인용한 docs/ENV_REPORT.md 는 .gitignore 된 로컬 출력이라 저장소에 없다.\n pybamm[all]>=24.5        # [all] 이 IDAKLU solver 포함. 이거 없으면 2~5배 느림\n numpy>=1.24\n scipy>=1.11\n@@ -68,6 +68,12 @@ ok()   { printf '   ✅ %s\\n' \"$1\"; }\n FAILED_CHECKS=()\n bad()  { printf '   ❌ %s\\n' \"$1\"; fail=$((fail+1)); FAILED_CHECKS+=(\"$1\"); }\n \n+# ★ 90차 (원장 §135 · 고정 표 PYBAMM_PIN_ROUND_SPEC.md §5-1) — 실행 환경 ↔ 프로필 C lock 의 대조를 **기록만** 한다.\n+#   불일치 (MISMATCH) · 측정 불가 (UNMEASURED) 는 smoke 를 막지 않는다 (D3 — 기록 대조). 도구 자체가 죽으면 기록이\n+#   만들어지지 않은 것이므로 실패로 센다. 모듈로 불러 계산 진입점 (python -m src.*) 과 같은 sys.path 로 잰다.\n+step \"환경 프로필 C 대조 (기록 전용 · 원장 §135)\"\n+\"$PY\" -m tools.env_profile || bad \"환경 프로필 C 대조 도구 실패\"\n+\n rm -rf \"$BASE\"\n mkdir -p \"$BASE\"\n \n@@ -0,0 +1,404 @@\n+\"\"\"env_profile.py — 프로필 C (현재 검증 환경의 정확 고정) 의 측정 · lock · 대조. **기록 전용.**\n+\n+★ 90차 (원장 §135 · 고정 표 `docs/22p_gap/PYBAMM_PIN_ROUND_SPEC.md` §3–§5) — 사전 검토 회신 P3: 지금은 \"무엇으로\n+  돌렸나\" 는 기록되지만 (`src/io.py::env_fingerprint` · effective_solver · worker 서명 대조) \"그 환경이 승인된 것인가\" 를\n+  묻는 곳이 없었다. 이 모듈은 실행 환경을 `requirements-validation-C.lock.txt` 와 대조해 **일치 / 불일치 목록을 남긴다.**\n+  어떤 실행도 막지 않는다 (D3 — 불일치여도 pytest · smoke · run.sh · 영수증 생성은 그대로 돈다).\n+\n+  · 측정은 그 프로세스의 `sys.path` 순서 그대로다 — 해석기 · 플랫폼 다섯 축 · 배포판 (정규 이름의 첫 항목 = 유효 · 뒤 항목 =\n+    가려진 것 · RECORD 텍스트 sha256) · 설치 파일의 RECORD 재해시 (설치 뒤 변경 감지 — RECORD 가 덮는 범위만) · 핵심\n+    module 열 개의 실제 origin (사전 검토 Q5).\n+  · 결과는 닫힌 dict 다. `MATCH` · `MISMATCH` · `UNMEASURED` — 측정하지 못한 칸은 `None` 이다. 빈 목록으로 쓰면\n+    \"불일치 없음\" 으로 읽힌다 (61차 P1-3). `UNMEASURED` 를 `MATCH` 로 적지 않는다.\n+  · 선언하지 않는 것: C 는 정본 (v4) 생산 환경이 아니다 (그것은 프로필 B — 고정 표 §6 의 기록) · 설치 처방이 아니다 ·\n+    다른 기계에 강제하지 않는다.\n+\n+사용 (프로젝트 root 에서 — 계산 진입점 `python -m src.*` 과 같은 sys.path):\n+    python -m tools.env_profile                 # 대조 요약 (rc 0 — 세 상태 모두)\n+    python -m tools.env_profile --json          # 결과 dict\n+    python -m tools.env_profile --emit-lock     # 지금 환경의 정규형 lock (측정 실패면 rc 1 · 부분 lock 없음)\n+\"\"\"\n+from __future__ import annotations\n+\n+import argparse\n+import base64\n+import hashlib\n+import importlib\n+import importlib.machinery\n+import importlib.metadata as md\n+import json\n+import os\n+import platform\n+import re\n+import sys\n+from collections import Counter\n+from pathlib import Path\n+\n+ROOT = Path(__file__).resolve().parent.parent\n+LOCK_DEFAULT = ROOT / \"requirements-validation-C.lock.txt\"\n+\n+#: `src/io.py::env_fingerprint()` 의 module 축 — 순서까지 같다 (e07 이 대조한다).\n+KEY_MODULES = (\"numpy\", \"scipy\", \"pandas\", \"joblib\", \"pyarrow\", \"pybamm\", \"matplotlib\", \"yaml\",\n+               \"pybammsolvers\", \"casadi\")\n+#: lock 지시 — 이 순서로 쓰고, 각각 정확히 한 번 있어야 한다.\n+DIRECTIVES = (\"profile\", \"python\", \"implementation\", \"system\", \"machine\", \"libc\")\n+#: 결과 `mismatches[].axis` 의 닫힌 집합 (고정 표 §4-2).\n+AXES = (\"python\", \"implementation\", \"system\", \"machine\", \"libc\", \"dist_missing\", \"dist_extra\",\n+        \"dist_version\", \"dist_record\", \"shadowed\", \"file\", \"origin\")\n+\n+_NAME = re.compile(r\"[a-z0-9]+(?:-[a-z0-9]+)*\")\n+_VERSION = re.compile(r\"[^\\s#]+\")\n+_HEX64 = re.compile(r\"[0-9a-f]{64}\")\n+_DIRECTIVE = re.compile(r\"#@ (?P<key>[a-z]+) (?P<value>.+)\")\n+_SHADOW = re.compile(r\"#@ shadowed (?P<name>[^=\\s#]+)==(?P<version>[^\\s#]+) record-sha256 (?P<record>\\S+)\")\n+_DIST = re.compile(r\"(?P<name>[^=\\s#]+)==(?P<version>[^\\s#]+)  # record-sha256 (?P<record>\\S+)\")\n+\n+#: `emit_lock` 이 쓰는 머리 주석 (정규형의 일부 — 바꾸면 커밋된 lock 도 다시 낸다).\n+HEADER = (\n+    \"# requirements-validation-C.lock.txt — 프로필 C: 현재 검증 환경의 정확 고정 (기록 대조 전용)\",\n+    \"#\",\n+    \"# ★ 90차 (원장 §135 · 고정 표 docs/22p_gap/PYBAMM_PIN_ROUND_SPEC.md §3) — `python -m tools.env_profile --emit-lock` 의\",\n+    \"#   출력 그대로다. 손으로 고치지 않는다 (정규형 고정점: emit_lock(parse_lock(text)) == text).\",\n+    \"# 대조: `python -m tools.env_profile` (smoke 로그 · 영수증 stamp `environment_profile_C`). 불일치여도 아무것도 막지 않는다.\",\n+    \"# 선언하지 않는 것: 정본 (v4) 생산 환경 (그것은 프로필 B — 고정 표 §6 의 기록) · C 로 만든 수치가 B 의 수치와 같다는 것 ·\",\n+    \"#   설치 처방 (리눅스 시스템 배포판을 담는다 — `pip install -r` 용이 아니다) · 다른 기계에 강제하는 것.\",\n+    \"# 문법 (닫힘): `#@ <지시> <JSON 문자열>` · `<이름>==<버전>  # record-sha256 <hex64|none>` (PEP 503 이름 · 엄격 오름차순) ·\",\n+    \"#   `#@ shadowed <이름>==<버전> record-sha256 <hex64|none>` (경로 순서로 가려진 항목). record-sha256 = 설치된 RECORD\",\n+    \"#   텍스트의 sha256 (none = RECORD 없음 — 설치 파일 대조 불가).\",\n+)\n+\n+\n+class LockFormatError(ValueError):\n+    \"\"\"lock 이 닫힌 문법 밖이다.\"\"\"\n+\n+\n+def normalize(name: str) -> str:\n+    \"\"\"PEP 503 정규 이름.\"\"\"\n+    return re.sub(r\"[-_.]+\", \"-\", name).lower()\n+\n+\n+# ── 측정 ──────────────────────────────────────────────────────────────────────\n+\n+def _verify_files(dist) -> tuple[int, int, list]:\n+    \"\"\"RECORD 의 해시 있는 항목을 다시 해시한다 → (일치 수, 해시 없는 수, [(상대경로, 기대, 관측 | None)]).\n+\n+    없는 파일은 불일치다 (관측 `None`). 그 밖의 읽기 오류 · 모르는 해시 알고리즘은 **측정 실패**로 올린다 —\n+    파일 하나를 못 읽은 것을 \"그 파일은 맞다\" 로도 \"다르다\" 로도 적지 않는다.\n+    \"\"\"\n+    ok, unhashed, bad = 0, 0, []\n+    for f in dist.files or ():\n+        if f.hash is None:\n+            unhashed += 1\n+            continue\n+        h = hashlib.new(f.hash.mode)                     # 모르는 알고리즘 → ValueError (측정 실패)\n+        want = f\"{f.hash.mode}={f.hash.value}\"\n+        try:\n+            with open(f.locate(), \"rb\") as fh:\n+                for chunk in iter(lambda: fh.read(1 << 20), b\"\"):\n+                    h.update(chunk)\n+        except FileNotFoundError:\n+            bad.append((str(f), want, None))\n+            continue\n+        got = base64.urlsafe_b64encode(h.digest()).rstrip(b\"=\").decode()\n+        if got == f.hash.value:\n+            ok += 1\n+        else:\n+            bad.append((str(f), want, f\"{f.hash.mode}={got}\"))\n+    return ok, unhashed, bad\n+\n+\n+def _origin(module: str, paths: list, effective: dict, files: dict, no_record: list):\n+    \"\"\"핵심 module 의 실제 origin → (\"verified\", 주인) · (\"unverifiable\", origin) · (\"mismatch\", 관측).\"\"\"\n+    spec = importlib.machinery.PathFinder.find_spec(module, paths)\n+    origin = getattr(spec, \"origin\", None) if spec is not None else None\n+    if spec is None:\n+        return \"mismatch\", \"<not found>\"\n+    if not origin or not os.path.isfile(origin):\n+        return \"mismatch\", f\"<{origin or 'namespace'}>\"\n+    real = os.path.realpath(origin)\n+    owners = sorted(\n+        name for name, entries in files.items()\n+        if any(os.path.realpath(f.locate()) == real for f in entries\n+               if f.parts and f.parts[0].split(\".\")[0] == module))\n+    if len(owners) == 1:\n+        return \"verified\", owners[0]\n+    if not owners:\n+        for name in no_record:\n+            base = os.path.realpath(effective[name].locate_file(\"\"))\n+            if os.path.commonpath([base, real]) == base:\n+                return \"unverifiable\", real\n+    return \"mismatch\", real if not owners else f\"{real} (주인 {', '.join(owners)})\"\n+\n+\n+def measure(paths=None) -> dict:\n+    \"\"\"그 프로세스의 `sys.path` (또는 주어진 경로 목록) 순서로 환경을 잰다. 실패는 예외로 올린다.\"\"\"\n+    importlib.invalidate_caches()\n+    paths = [str(p) for p in (sys.path if paths is None else paths)]\n+    effective, meta, shadowed = {}, {}, []\n+    for entry in paths:\n+        for dist in md.distributions(path=[entry]):\n+            raw, version = dist.metadata[\"Name\"], dist.version\n+            if not raw or not version:\n+                raise ValueError(f\"이름 · 버전 없는 배포판 메타데이터 ({entry})\")\n+            name = normalize(raw)\n+            if not _NAME.fullmatch(name) or not _VERSION.fullmatch(version):\n+                raise ValueError(f\"lock 에 쓸 수 없는 배포판 이름 · 버전: {raw!r} {version!r} ({entry})\")\n+            record = dist.read_text(\"RECORD\")\n+            digest = \"none\" if record is None else hashlib.sha256(record.encode(\"utf-8\")).hexdigest()\n+            if name in effective:\n+                shadowed.append((name, version, digest))\n+            else:\n+                effective[name], meta[name] = dist, (version, digest)\n+    dists, files, no_record = {}, {}, []\n+    verified = unhashed = 0\n+    file_bad = []\n+    for name in sorted(effective):\n+        version, digest = meta[name]\n+        dists[name] = {\"version\": version, \"record\": digest}\n+        if digest == \"none\":\n+            no_record.append(name)\n+            continue\n+        files[name] = list(effective[name].files or ())\n+        ok, un, bad = _verify_files(effective[name])\n+        verified += ok\n+        unhashed += un\n+        file_bad += [(name, rel, want, got) for rel, want, got in bad]\n+    origins, origin_unverifiable, origin_bad = {}, [], []\n+    for module in KEY_MODULES:\n+        kind, value = _origin(module, paths, effective, files, no_record)\n+        if kind == \"verified\":\n+            origins[module] = value\n+        elif kind == \"unverifiable\":\n+            origin_unverifiable.append(module)\n+        else:\n+            origin_bad.append((module, value))\n+    return {\n+        \"python\": platform.python_version(),\n+        \"implementation\": platform.python_implementation(),\n+        \"system\": platform.system(),\n+        \"machine\": platform.machine(),\n+        \"libc\": \" \".join(platform.libc_ver()).strip(),\n+        \"dists\": dists,\n+        \"shadowed\": sorted(shadowed),\n+        \"dists_without_record\": no_record,\n+        \"files\": {\"verified\": verified, \"unhashed\": unhashed, \"mismatches\": file_bad},\n+        \"origins\": {\"verified\": origins, \"unverifiable\": origin_unverifiable, \"mismatches\": origin_bad},\n+    }\n+\n+\n+# ── lock ─────────────────────────────────────────────────────────────────────\n+\n+def emit_lock(profile: dict) -> str:\n+    \"\"\"정규형 lock 텍스트 — `measure()` 나 `parse_lock()` 의 결과에서.\"\"\"\n+    lines = list(HEADER)\n+    lines += [f\"#@ {k} {json.dumps('C' if k == 'profile' else profile[k], ensure_ascii=False)}\" for k in DIRECTIVES]\n+    lines.append(\"\")\n+    lines += [f\"{n}=={d['version']}  # record-sha256 {d['record']}\" for n, d in sorted(profile[\"dists\"].items())]\n+    if profile[\"shadowed\"]:\n+        lines.append(\"\")\n+        lines += [f\"#@ shadowed {n}=={v} record-sha256 {r}\" for n, v, r in sorted(profile[\"shadowed\"])]\n+    return \"\\n\".join(lines) + \"\\n\"\n+\n+\n+def parse_lock(text: str) -> dict:\n+    \"\"\"닫힌 문법 (고정 표 §3-1) 으로 읽는다. 어긋나면 `LockFormatError` (줄 번호를 담는다).\"\"\"\n+    seen, dists, shadowed = {}, {}, []\n+    last, last_shadow = None, None\n+\n+    def bad(no: int, why: str) -> LockFormatError:\n+        return LockFormatError(f\"줄 {no}: {why}\")\n+\n+    lines = text.split(\"\\n\")\n+    if lines and lines[-1] == \"\":\n+        lines.pop()\n+    for no, line in enumerate(lines, 1):\n+        if line == \"\" or (line.startswith(\"#\") and not line.startswith(\"#@\")):\n+            continue\n+        if line.startswith(\"#@ shadowed \"):\n+            m = _SHADOW.fullmatch(line)\n+            if m is None:\n+                raise bad(no, \"가려진 항목의 꼴이 아니다\")\n+            key = (m[\"name\"], m[\"version\"], m[\"record\"])\n+            if not _NAME.fullmatch(key[0]):\n+                raise bad(no, f\"정규형 아닌 이름 {key[0]!r}\")\n+            if key[2] != \"none\" and not _HEX64.fullmatch(key[2]):\n+                raise bad(no, f\"record-sha256 칸 {key[2]!r}\")\n+            if last_shadow is not None and key < last_shadow:\n+                raise bad(no, \"가려진 항목의 정렬이 어긋났다\")\n+            shadowed.append(key)\n+            last_shadow = key\n+            continue\n+        if line.startswith(\"#@\"):\n+            m = _DIRECTIVE.fullmatch(line)\n+            if m is None or m[\"key\"] not in DIRECTIVES:\n+                raise bad(no, f\"모르는 지시 {line!r}\")\n+            if m[\"key\"] in seen:\n+                raise bad(no, f\"지시 {m['key']} 가 두 번 있다\")\n+            try:\n+                value = json.loads(m[\"value\"])\n+            except ValueError as exc:\n+                raise bad(no, f\"지시 {m['key']} 의 값이 JSON 이 아니다 ({exc})\") from exc\n+            if not isinstance(value, str):\n+                raise bad(no, f\"지시 {m['key']} 의 값이 문자열이 아니다\")\n+            if m[\"key\"] == \"profile\" and value != \"C\":\n+                raise bad(no, f\"profile 이 C 가 아니다 ({value!r})\")\n+            seen[m[\"key\"]] = value\n+            continue\n+        m = _DIST.fullmatch(line)\n+        if m is None:\n+            raise bad(no, f\"모르는 줄 {line[:80]!r}\")\n+        name, version, record = m[\"name\"], m[\"version\"], m[\"record\"]\n+        if not _NAME.fullmatch(name):\n+            raise bad(no, f\"정규형 아닌 이름 {name!r}\")\n+        if record != \"none\" and not _HEX64.fullmatch(record):\n+            raise bad(no, f\"record-sha256 칸 {record!r}\")\n+        if last is not None and name <= last:\n+            raise bad(no, f\"배포판 정렬 · 중복 ({last!r} 다음 {name!r})\")\n+        dists[name] = {\"version\": version, \"record\": record}\n+        last = name\n+    missing = [k for k in DIRECTIVES if k not in seen]\n+    if missing:\n+        raise LockFormatError(f\"지시가 없다: {', '.join(missing)}\")\n+    out = {k: seen[k] for k in DIRECTIVES}\n+    out.update(dists=dists, shadowed=shadowed)\n+    return out\n+\n+\n+# ── 대조 ─────────────────────────────────────────────────────────────────────\n+\n+def _mm(axis: str, subject: str, locked, measured) -> dict:\n+    return {\"axis\": axis, \"subject\": subject, \"locked\": locked, \"measured\": measured}\n+\n+\n+def compare(locked: dict, measured: dict) -> list:\n+    \"\"\"축마다 다른 것을 모은다 → (axis, subject) 순 목록. 빈 목록 = 비교한 모든 축이 같다.\"\"\"\n+    out = []\n+    for k in DIRECTIVES[1:]:\n+        if locked[k] != measured[k]:\n+            out.append(_mm(k, k, locked[k], measured[k]))\n+    lock_d, got_d = locked[\"dists\"], measured[\"dists\"]\n+    for n in sorted(lock_d.keys() - got_d.keys()):\n+        out.append(_mm(\"dist_missing\", n, lock_d[n][\"version\"], None))\n+    for n in sorted(got_d.keys() - lock_d.keys()):\n+        out.append(_mm(\"dist_extra\", n, None, got_d[n][\"version\"]))\n+    for n in sorted(lock_d.keys() & got_d.keys()):\n+        if lock_d[n][\"version\"] != got_d[n][\"version\"]:\n+            out.append(_mm(\"dist_version\", n, lock_d[n][\"version\"], got_d[n][\"version\"]))\n+        if lock_d[n][\"record\"] != got_d[n][\"record\"]:\n+            out.append(_mm(\"dist_record\", n, lock_d[n][\"record\"], got_d[n][\"record\"]))\n+    lock_s = Counter(tuple(x) for x in locked[\"shadowed\"])\n+    got_s = Counter(tuple(x) for x in measured[\"shadowed\"])\n+    for n, v, r in sorted((lock_s - got_s).elements()):\n+        out.append(_mm(\"shadowed\", f\"{n}=={v}\", r, None))\n+    for n, v, r in sorted((got_s - lock_s).elements()):\n+        out.append(_mm(\"shadowed\", f\"{n}=={v}\", None, r))\n+    for n, rel, want, got in measured[\"files\"][\"mismatches\"]:\n+        out.append(_mm(\"file\", f\"{n}:{rel}\", want, got))\n+    for module, seen in measured[\"origins\"][\"mismatches\"]:\n+        out.append(_mm(\"origin\", module, \"RECORD 가 있는 설치 배포판 하나의 파일\", seen))\n+    return sorted(out, key=lambda x: (x[\"axis\"], x[\"subject\"]))\n+\n+\n+def _display(path: Path) -> str:\n+    p = path.resolve()\n+    try:\n+        return p.relative_to(ROOT).as_posix()\n+    except ValueError:\n+        return str(p)\n+\n+\n+def compare_lock(lock_path=None, *, paths=None) -> dict:\n+    \"\"\"lock 과 지금 환경을 대조한 닫힌 결과 dict (고정 표 §4-2). 예외를 내지 않는다 — 못 하면 `UNMEASURED`.\"\"\"\n+    lp = Path(LOCK_DEFAULT if lock_path is None else lock_path)\n+    res = {\"profile\": \"C\", \"lock_path\": _display(lp), \"lock_sha256\": None, \"status\": \"UNMEASURED\",\n+           \"reason\": \"\", \"mismatches\": None, \"unverifiable\": None, \"counts\": None}\n+    try:\n+        raw = lp.read_bytes()\n+    except OSError as exc:\n+        res[\"reason\"] = f\"lock 을 읽지 못했다: {exc}\"\n+        return res\n+    res[\"lock_sha256\"] = hashlib.sha256(raw).hexdigest()\n+    try:\n+        locked = parse_lock(raw.decode(\"utf-8\"))\n+    except UnicodeDecodeError as exc:\n+        res[\"reason\"] = f\"lock 이 UTF-8 이 아니다: {exc}\"\n+        return res\n+    except LockFormatError as exc:\n+        res[\"reason\"] = f\"lock 형식 오류 — {exc}\"\n+        return res\n+    try:\n+        measured = measure(paths)\n+    except Exception as exc:                              # noqa: BLE001 — 측정 실패는 typed UNMEASURED 다\n+        res[\"reason\"] = f\"측정 실패: {exc!r}\"\n+        return res\n+    found = compare(locked, measured)\n+    res.update(\n+        status=\"MISMATCH\" if found else \"MATCH\",\n+        mismatches=found,\n+        unverifiable={\"dists_without_record\": list(measured[\"dists_without_record\"]),\n+                      \"origins\": list(measured[\"origins\"][\"unverifiable\"])},\n+        counts={\"dists_locked\": len(locked[\"dists\"]), \"dists_measured\": len(measured[\"dists\"]),\n+                \"shadowed_locked\": len(locked[\"shadowed\"]), \"shadowed_measured\": len(measured[\"shadowed\"]),\n+                \"files_verified\": measured[\"files\"][\"verified\"], \"files_unhashed\": measured[\"files\"][\"unhashed\"],\n+                \"origins_verified\": len(measured[\"origins\"][\"verified\"])})\n+    return res\n+\n+\n+# ── CLI ──────────────────────────────────────────────────────────────────────\n+\n+def _summary(r: dict) -> str:\n+    head = f\"환경 프로필 C 대조: {r['status']} · lock {r['lock_path']}\"\n+    if r[\"lock_sha256\"]:\n+        head += f\" (sha256 {r['lock_sha256'][:16]}…)\"\n+    if r[\"status\"] == \"UNMEASURED\":\n+        return head + f\"\\n  이유: {r['reason']}\\n  (기록 전용 — 아무것도 막지 않는다 · 원장 §135)\"\n+    c = r[\"counts\"]\n+    lines = [head + f\" · 배포판 lock {c['dists_locked']} / 측정 {c['dists_measured']} · 가려진 {c['shadowed_locked']}\"\n+             f\" / {c['shadowed_measured']} · 설치 파일 일치 {c['files_verified']} (해시 없음 {c['files_unhashed']})\"\n+             f\" · origin 확인 {c['origins_verified']}\"]\n+    u = r[\"unverifiable\"]\n+    if u[\"dists_without_record\"]:\n+        lines.append(f\"  · 확인 불가 — RECORD 없는 배포판 {len(u['dists_without_record'])}: \"\n+                     + \", \".join(u[\"dists_without_record\"]))\n+    if u[\"origins\"]:\n+        lines.append(\"  · 확인 불가 — origin: \" + \", \".join(u[\"origins\"]))\n+    for m in r[\"mismatches\"]:\n+        lines.append(f\"  ✗ {m['axis']} {m['subject']} locked={m['locked']} measured={m['measured']}\")\n+    lines.append(\"  (기록 전용 — 불일치여도 아무것도 막지 않는다 · 원장 §135)\")\n+    return \"\\n\".join(lines)\n+\n+\n+def main(argv=None) -> int:\n+    ap = argparse.ArgumentParser(prog=\"python -m tools.env_profile\",\n+                                 description=\"실행 환경 ↔ 프로필 C lock 대조 (기록 전용 · 원장 §135)\")\n+    ap.add_argument(\"--lock\", default=None, help=\"대조할 lock (기본: 프로젝트 root 의 requirements-validation-C.lock.txt)\")\n+    mode = ap.add_mutually_exclusive_group()\n+    mode.add_argument(\"--json\", action=\"store_true\", help=\"결과 dict 를 JSON 으로\")\n+    mode.add_argument(\"--emit-lock\", action=\"store_true\", help=\"지금 환경의 정규형 lock 을 낸다\")\n+    a = ap.parse_args(argv)\n+    if a.emit_lock:\n+        if a.lock is not None:\n+            ap.error(\"--emit-lock 은 --lock 과 함께 쓰지 않는다\")\n+        try:\n+            text = emit_lock(measure())\n+        except Exception as exc:                          # noqa: BLE001\n+            print(f\"✗ 측정 실패 — lock 을 내지 않는다: {exc!r}\", file=sys.stderr)\n+            return 1\n+        sys.stdout.buffer.write(text.encode(\"utf-8\"))\n+        sys.stdout.flush()\n+        return 0\n+    r = compare_lock(a.lock)\n+    if a.json:\n+        sys.stdout.buffer.write((json.dumps(r, sort_keys=True, ensure_ascii=False) + \"\\n\").encode(\"utf-8\"))\n+        sys.stdout.flush()\n+        return 0\n+    try:\n+        sys.stdout.reconfigure(errors=\"backslashreplace\")\n+    except Exception:                                     # noqa: BLE001 — 출력 장치가 바꿀 수 없는 경우\n+        pass\n+    print(_summary(r))\n+    return 0\n+\n+\n+if __name__ == \"__main__\":\n+    raise SystemExit(main())",
+      "files": [
+        {
+          "filename": "degradation-degeneracy/docs/22p_gap/env_profile_B_v4.yaml",
+          "patch": "@@ -0,0 +1,73 @@\n+# B 프로필 — v4 정본 producer 환경의 기록 (기록 전용 · 원장 §135 · 고정 표 docs/22p_gap/PYBAMM_PIN_ROUND_SPEC.md §6)\n+# 네 producer manifest 의 env (일곱 자리 — 서로 같다) 와 solver 기록을 원문 그대로 옮겼다. 손으로 고치지 않는다.\n+# 어떤 실행 코드도 이 파일을 읽지 않는다. 대조 시험: tests/test_gate90_env_profile.py::test_e11_b_profile_is_the_v4_producer_record\n+profile: B\n+kind: HISTORICAL_PRODUCER_RECORD_ONLY\n+sources:\n+- path: artifacts/grid_curves_v4/curves_manifest.yaml\n+  bytes: 3713\n+  sha256: a6e5ab9cf348ff44e8a9b6fe6c68faa3cbd88a6c797c372dd5745e8bc6de5ecc\n+  env_paths:\n+  - env\n+  - grid_run_spec.env\n+- path: artifacts/grid_fit_v4/manifest.yaml\n+  bytes: 6576\n+  sha256: 228664b1ca8dea7f19f92ae60016448b8706482be900b90b7a5b80de04cf33b7\n+  env_paths:\n+  - run_spec.env\n+  - start_provenance.env\n+- path: artifacts/halfcell_fit_v4/manifest.yaml\n+  bytes: 7711\n+  sha256: 3fa4106ac916dc3bc6d817ccff2a5d2c16a36418579077f280ad623c0724bb69\n+  env_paths:\n+  - run_spec.env\n+  - start_provenance.env\n+- path: artifacts/paired_fixed5_v4/manifest.yaml\n+  bytes: 6310\n+  sha256: 7a14333ee4ace2367f1d0b076ac584271cdfb494b2b5e75ea05c86d6e61c4cfc\n+  env_paths:\n+  - run_spec.env\n+  - start_provenance.env\n+env:\n+  python: 3.10.12\n+  platform: Linux-5.15.0-130-generic-x86_64-with-glibc2.35\n+  machine: x86_64\n+  numpy: 2.2.6\n+  scipy: 1.15.3\n+  pandas: 2.3.3\n+  joblib: 1.5.3\n+  pyarrow: 25.0.1\n+  pybamm: 26.7.1.0\n+  matplotlib: 3.10.9\n+  yaml: 6.0.3\n+  pybammsolvers: 0.9.0\n+  casadi: 3.7.2\n+solver:\n+  artifacts/grid_curves_v4/curves_manifest.yaml:solver: IDAKLUSolver\n+  artifacts/grid_curves_v4/curves_manifest.yaml:grid_run_spec.effective_solver:\n+    requested:\n+      type: idaklu\n+      fallback: casadi\n+      rtol: 1.0e-06\n+      atol: 1.0e-06\n+      casadi_mode: safe\n+    effective_class: IDAKLUSolver\n+    pybamm: 26.7.1.0\n+    pybammsolvers: 0.9.0\n+    casadi: 3.7.2\n+  artifacts/grid_fit_v4/manifest.yaml:run_spec.producer.solver: IDAKLUSolver\n+  artifacts/halfcell_fit_v4/manifest.yaml:run_spec.producer.solver: IDAKLUSolver\n+  artifacts/paired_fixed5_v4/manifest.yaml:run_spec.producer.solver: IDAKLUSolver\n+not_recorded:\n+- 전이 의존성 (위 13 축 밖의 배포판 전부)\n+- 배포 파일 해시 (RECORD) — 같은 버전 문자열의 다른 바이트를 가릴 수 없다 (사전 검토 P2)\n+- 로컬 패치 · 설치 뒤 파일 변경\n+- native 라이브러리 (SUNDIALS · BLAS · OpenMP) 와 그 빌드\n+- Python 빌드 (컴파일러 · 빌드 옵션) · 플랫폼 문자열 밖의 OS 구성\n+- smoothing backend 축 — 지문 (src/io.py::env_fingerprint) 에 그 축이 생기기 전의 기록이다\n+not_claimed:\n+- B 를 다시 설치하면 v4 정본이 같게 나온다\n+- B = C (현재 검증 환경 · requirements-validation-C.lock.txt)\n+- pybamm 26.7.1 ↔ 26.8 (또는 다른 판) 의 수치 동등\n+use: v4 정본 재생성을 시도할 때의 기준 기록. 재생성 동등성을 주장하려면 그때 사전 고정 비교가 따로 필요하다 (사전 검토 Q2). 재생성 · 새 세대 · 버전 비교는 이번 라운드\n+  범위 밖 (원장 §135 D6)."
+        },
+        {
+          "filename": "degradation-degeneracy/docs/22p_gap/make_receipt.py",
+          "patch": "@@ -228,20 +228,34 @@ def build(leg: str) -> dict:\n             \"core_sha256\": hashlib.sha256(\n                 _dump(core).encode(\"utf-8\")).hexdigest(),\n             \"core\": core,\n-            \"stamp\": {\n-                \"_주의\": \"기록용. core 재생성 대조에서 제외된다.\",\n-                \"validator_commit\": _git(\"rev-parse\", \"HEAD\"),\n-                \"validator_tree_dirty\": bool(_git(\"status\", \"--porcelain\")),\n-                \"generated_at_utc\": datetime.now(timezone.utc)\n-                                    .strftime(\"%Y-%m-%dT%H:%M:%SZ\"),\n-                \"runtime\": {\"python\": platform.python_version(),\n-                            \"platform\": platform.platform()},\n-            },\n+            \"stamp\": _stamp(),\n         }\n     finally:\n         shutil.rmtree(root, ignore_errors=True)\n \n \n+def _stamp() -> dict:\n+    \"\"\"영수증 stamp — **기록용** (core 재생성 대조 · `core_sha256` 밖).\n+\n+    ★ 90차 (원장 §135 · 고정 표 `PYBAMM_PIN_ROUND_SPEC.md` §5-2) — 실행 환경 ↔ 프로필 C lock 의 대조 결과를\n+      `environment_profile_C` 로 싣는다. 기록 대조다 — `MISMATCH` · `UNMEASURED` 여도 영수증 생성을 막지 않는다.\n+      소비자 `tools/preserve.py::read_verification_receipt` 는 영수증의 최상위 키 집합만 보고 stamp 안은 보지 않으므로\n+      바뀌지 않는다.\n+    \"\"\"\n+    from tools.env_profile import compare_lock\n+\n+    return {\n+        \"_주의\": \"기록용. core 재생성 대조에서 제외된다.\",\n+        \"validator_commit\": _git(\"rev-parse\", \"HEAD\"),\n+        \"validator_tree_dirty\": bool(_git(\"status\", \"--porcelain\")),\n+        \"generated_at_utc\": datetime.now(timezone.utc)\n+                            .strftime(\"%Y-%m-%dT%H:%M:%SZ\"),\n+        \"runtime\": {\"python\": platform.python_version(),\n+                    \"platform\": platform.platform()},\n+        \"environment_profile_C\": compare_lock(),\n+    }\n+\n+\n def _score_manifest(run_dir: Path) -> list[dict]:\n     \"\"\"복원한 fits 만으로 재채점하고 산출을 두 digest 로 적는다.\"\"\"\n     import pandas as pd"
+        },
+        {
+          "filename": "degradation-degeneracy/requirements-validation-C.lock.txt",
+          "patch": "@@ -0,0 +1,190 @@\n+# requirements-validation-C.lock.txt — 프로필 C: 현재 검증 환경의 정확 고정 (기록 대조 전용)\n+#\n+# ★ 90차 (원장 §135 · 고정 표 docs/22p_gap/PYBAMM_PIN_ROUND_SPEC.md §3) — `python -m tools.env_profile --emit-lock` 의\n+#   출력 그대로다. 손으로 고치지 않는다 (정규형 고정점: emit_lock(parse_lock(text)) == text).\n+# 대조: `python -m tools.env_profile` (smoke 로그 · 영수증 stamp `environment_profile_C`). 불일치여도 아무것도 막지 않는다.\n+# 선언하지 않는 것: 정본 (v4) 생산 환경 (그것은 프로필 B — 고정 표 §6 의 기록) · C 로 만든 수치가 B 의 수치와 같다는 것 ·\n+#   설치 처방 (리눅스 시스템 배포판을 담는다 — `pip install -r` 용이 아니다) · 다른 기계에 강제하는 것.\n+# 문법 (닫힘): `#@ <지시> <JSON 문자열>` · `<이름>==<버전>  # record-sha256 <hex64|none>` (PEP 503 이름 · 엄격 오름차순) ·\n+#   `#@ shadowed <이름>==<버전> record-sha256 <hex64|none>` (경로 순서로 가려진 항목). record-sha256 = 설치된 RECORD\n+#   텍스트의 sha256 (none = RECORD 없음 — 설치 파일 대조 불가).\n+#@ profile \"C\"\n+#@ python \"3.11.15\"\n+#@ implementation \"CPython\"\n+#@ system \"Linux\"\n+#@ machine \"x86_64\"\n+#@ libc \"glibc 2.39\"\n+\n+annotated-types==0.8.0  # record-sha256 8aca43183e620f57ed3b240da554dedf6cf840e43aa2789f63cff7a8396561bb\n+anyio==4.15.1  # record-sha256 bf283795dfdd8f15d592bc15c7788515eeb095df665dc0edd24eb9eac074be96\n+anytree==2.13.0  # record-sha256 e118a0c658d63a1c4e40406551815f8def442f274a3a650fd95ef332eec1a244\n+argcomplete==3.1.4  # record-sha256 none\n+argon2-cffi==25.1.0  # record-sha256 7b05311a76142835613fdae1391416c7e7c14a4732fa512ed474e648f5c521ec\n+argon2-cffi-bindings==26.1.0  # record-sha256 28d870be201a7859096180d245e39a7cb3ecb5d129a660c0243c616b0e60212e\n+arrow==1.4.0  # record-sha256 8d5df7cb0131fdd5dd35125ac97ecbc3f73cbf2cff0d969b4dc08415e9d55f63\n+asttokens==3.0.2  # record-sha256 f2c065795b7a790b3d9efa4749bc78898ac85a7ede01ae0f99f42d3b54dc34d0\n+async-lru==2.3.0  # record-sha256 b37b54f6cef525241ba6153ae399a407633a86db3332ca39d807dcf4e6978d32\n+attrs==26.1.0  # record-sha256 bd56b0a44556594a01dc2fae804b1cefe21d37943ba7e2f622dde22c0709def2\n+babel==2.18.0  # record-sha256 4702aabf77a259df98e4a51ad98c259bab0ce6709624048e8c42566a0257875b\n+backoff==2.2.1  # record-sha256 3f62810defce61daf9e77f0546d7371e77d36cfc11ac272cd581bff162670471\n+beautifulsoup4==4.15.0  # record-sha256 4ef352419a718ec393c833b7857954b0652ab396354bdf6fcfc885b76ff2f1b5\n+black==26.5.1  # record-sha256 bbbfbb7bf916766be6bae632a2e7a605e005eb0bb182e4059e6fad4aab7a4a9a\n+bleach==6.4.0  # record-sha256 a94590c8df82a63599a128a64fdc09692439547066244193aad3c5144dd80408\n+blinker==1.7.0  # record-sha256 none\n+bpx==1.1.1  # record-sha256 82ceada99f97993d7d33ee12cfd8bd0febcd20cf0e4db126e2547e9f7146a660\n+casadi==3.7.2  # record-sha256 116b1b109f74135a9dcc0edefd5f54027b53e4c4aff2994faf58b8da0515e097\n+certifi==2026.2.25  # record-sha256 20ea7883680f6935729f27329d6d254f21ad1dddbd9ccc0bcc2659379e6ed801\n+cffi==2.1.1  # record-sha256 4897d0151af22027ee22a569ed0a3a7f65d70df554f1a1501ca45039e3f353a3\n+charset-normalizer==3.4.6  # record-sha256 863c367765a59668309083d0683c4c4b0e1ad2c8be1bdf0428c344fbd0e04029\n+click==8.5.0  # record-sha256 ac19a8b841223b6ed0635bf398577fc1432942333212975d2a36d3886850aaa5\n+cloudpickle==3.1.2  # record-sha256 99673ca23b64c3e102bad5e8f4361520424120f4c5316347c6c299795b2ad3fd\n+colorama==0.4.6  # record-sha256 2ae3762039c35c23e4829bab30f8e768eced773ecac67d026223caabfbd493f4\n+comm==0.2.3  # record-sha256 857135f6f98fff9aaba8d2e9e7d460e34c4137ed5d40a08e2765594bef4c0833\n+conan==2.27.0  # record-sha256 6962829eb0237bb923483017a6809ca37ace4141472d34ac660c89ff6ddb8819\n+contourpy==1.3.3  # record-sha256 f64770812b948e954eeb76f82c937bc5133fdd72026b30501e6a15d91c322189\n+cryptography==41.0.7  # record-sha256 none\n+cycler==0.12.1  # record-sha256 564b9fd56f9f1730196522406a8ac8766040b69bc979b97b325e05f3490f6108\n+dbus-python==1.3.2  # record-sha256 none\n+debugpy==1.8.22  # record-sha256 93bb7a80876cc2c5b1a03a327ba26a34a51ee2ca0e65114725f0e82534f3207b\n+defusedxml==0.7.1  # record-sha256 a28e03ffb568a1bbda75fe2548aba0acf51da3e3ad42ab7a894111fab825f0dd\n+distro==1.9.0  # record-sha256 none\n+et-xmlfile==2.0.0  # record-sha256 d317f82e92dcc9a3bc806879cc75aee30b5ca8246f1c877bf0cc4e56660a9278\n+executing==2.2.1  # record-sha256 ed092b34303bd84d55e304bb826ef3dbc301d4dbada61de3c1219fd5ba527650\n+fasteners==0.20  # record-sha256 83fa0926a015d46fb0cfcd140bcbfb3d7ef2b90e56a07d6ee741d1ae3c2a73df\n+fastjsonschema==2.22.2  # record-sha256 a1a4bffa8eb4fbddd24e90feb35eb5ce0286843c983395a4df8f3ebf9fc60676\n+fonttools==4.66.0  # record-sha256 5284752e0fa2c97798d4ac3bb89d559011cfbbfdf98ae1857a38f190f8c8e5af\n+fqdn==1.5.1  # record-sha256 16177367e152e05f12ffdf82eb2744d8fed938891ef6137085948c52b901997c\n+h11==0.16.0  # record-sha256 393c249c97166fed45d8a448190cc41603f56a08f76f1ee42db3a920a55468b1\n+httpcore==1.0.9  # record-sha256 f52dd9f37c958133cde008e0e648d6149daa1f90a755a2fe36081eecb743e6a7\n+httplib2==0.20.4  # record-sha256 ffa46319d989b939534dfa649fc3efc8704eaf0c83358fecb7a964fe74898fa3\n+httpx==0.28.1  # record-sha256 b5af040812d65b617fb0d4273545c56eb32bf54ba5ef02b87261531a73cc14fe\n+idna==3.11  # record-sha256 67d43a4ef862885f3e996acec145e288045ab4c44d5f7913ea362f83e2d39267\n+iniconfig==2.3.0  # record-sha256 60cf1998a07c4c4d314d586130c9caba025b3caf655b5260716ddc3a54262c7a\n+ipykernel==7.3.0  # record-sha256 b5b5f07d566b6bb6263d0fd27c36250f7cda7c5ab6a1ee30a04434a119574a08\n+ipython==9.17.1  # record-sha256 dbdf5647c61ac2a662d6a4f9878152b27001b6ca53a6f525ff98a9789e30b2fb\n+ipython-pygments-lexers==1.1.1  # record-sha256 c82cf6ad58287d4a50b59b6b5d138a3253a794868d84b1089b1ea87c5e3a1478\n+ipywidgets==8.1.9  # record-sha256 a1a7cc3e6392e4d369c668ce9bbc588854b6a8706ac620e32e3adf209bbb63f4\n+isoduration==20.11.0  # record-sha256 b47e4e8a980f127022bb6677fb9445ede46f3fbc40436dd6a2359796bba087d1\n+jedi==0.20.0  # record-sha256 60f281d9dd027d55da342ac60d59042890afc0e4bd5beb8e8b753822282fa149\n+jinja2==3.1.6  # record-sha256 91151bad4737abfc252611c853e57e3d14dc7e64151a2dd0949766ad33886c22\n+joblib==1.6.0  # record-sha256 9c65f84476b2860990bc10bb31a19a3894e484fc7744ff5ed0bd52525fa2090b\n+json5==0.15.0  # record-sha256 bda1ce637e3ea9c8e6962abe2cbaeaa80f0afbb7b4414a09ce66f79af689f141\n+jsonpointer==3.1.1  # record-sha256 c760899b5ff64f05e61e584d2e501b7d88f7921af751d4a87d241e847344e98f\n+jsonschema==4.26.0  # record-sha256 7a76c72bb00b401dbe8d2fdce4d7dffa0fdb2c1835b45fc82f96f9c7bed94266\n+jsonschema-specifications==2025.9.1  # record-sha256 a9628ff8294efc8a627c0ca5d4d38500d8609ef893a73a554c164e12bd0c1243\n+jupyter==1.1.1  # record-sha256 1086096603cc47cebb9983767d4793e2e691c960329e3a5a3c75c3a1acec2246\n+jupyter-builder==1.2.3  # record-sha256 ebd3bed2ded163f416bd5ee77ffa6f8fcd789ea9676fa3c116d4512e02b92e55\n+jupyter-client==8.10.0  # record-sha256 cdb9f1510e5998d6184400711ce030e8f17236e046fd6e469fa21d89a7861527\n+jupyter-console==6.6.3  # record-sha256 2b2eb8f5c18e904ee0d1aec4939e1d37b95e3d175e8ecc582fd43133fc86f1dd\n+jupyter-core==5.9.1  # record-sha256 99fecf416ce2e2bc9b2b01160bc8312be876716d8824f1e849e157907a64259d\n+jupyter-events==0.12.1  # record-sha256 8b7fe2da5cbdf536201a05a5e4950f68f5db6b0a3d071ca7e9edd4b708bbd6b3\n+jupyter-lsp==2.3.1  # record-sha256 a09284256ee6ca78d262d115b66de9ada78a3fd6e5f5e204a26437166e360906\n+jupyter-server==2.21.1  # record-sha256 1c069281d9330882ff1902936e44a6857db9f251e9f8725d5367fd3eaf9a6bc7\n+jupyter-server-terminals==0.5.4  # record-sha256 521744b66348edef3232d29aa2364ce1bcdb5f8aa2c80a888f1fa9c86b69289b\n+jupyterlab==4.6.4  # record-sha256 b81e81c8ebabe7774411a6486d64c692fd8bad63b619b41f4bd2d8f37d0da16c\n+jupyterlab-pygments==0.3.0  # record-sha256 672ff8865167dd879c859996afcd0b19eb2d900819c1f605d67a50d716fa6d1d\n+jupyterlab-server==2.28.1  # record-sha256 9c2e9022df5d98d52d645361ee52054c1dc3e10ea9ba4513085ec40beb97718c\n+jupyterlab-widgets==3.0.17  # record-sha256 a0dc91e80bb96f416834d5253ed5f51692203bb1967cf3e098ede136b0482af6\n+kiwisolver==1.5.1  # record-sha256 026de1a2707ce8f1e3fe8d90ad0e3c2e837ff2c0b4a00b4e866fc80dfca35c0a\n+lark==1.3.1  # record-sha256 755873457e638d4597783a10627185c85a7b91cce4fa74943cd0726c7c18ae07\n+latexcodec==3.0.1  # record-sha256 3d6baebc66a02443c65250f3482b099f9eb4d922e0019d0f9ce6ff86353286a9\n+launchpadlib==1.11.0  # record-sha256 none\n+lazr-restfulclient==0.14.6  # record-sha256 none\n+lazr-uri==1.0.6  # record-sha256 none\n+markdown-it-py==4.2.0  # record-sha256 d59977491eaec3f08c89b137438b3ee2dd4d15f66dff3e815b0664f90d7cd8f7\n+markupsafe==3.0.3  # record-sha256 43a31a54753a9235220a61968b0f7e907ba71ee65875523f3cb63185d784a5ca\n+matplotlib==3.11.2  # record-sha256 0026be91603fd8f235c3e77b10a6645b41edc6a30cb2488b8889450b1f7dbee6\n+matplotlib-inline==0.2.2  # record-sha256 6e8ae6543f5867325f6eecb99be1482464311d8dad3e6d0d4210b74112eb9452\n+mdurl==0.1.2  # record-sha256 bda7c4854c66cd4daedddb5347837eb7b362119e7714b45263576d5924221c71\n+meshio==5.3.5  # record-sha256 a454db67a8c07142f5006e9bf82a78344fb095932a47f7f1e32a4925ffda28f0\n+mistune==3.3.4  # record-sha256 e5b197f26e470de3df84d6a54c9dbe8ea95bedfa0bc0411ef2cb8cde08f04184\n+mpmath==1.3.0  # record-sha256 8052e4c7314cdcbc6c50183c546a342e58a1a9e4589d1354d31a4ef3a705c395\n+mypy-extensions==1.1.0  # record-sha256 20f0c754257dcfc94b88d5e5dba2f7bd59504a76c0c8c481231df037a1cc894f\n+nbclient==0.11.0  # record-sha256 741e3b2c4f00e5f38785bf5b504801b3eedb50dde15cdee2d18894a4eea81eb1\n+nbconvert==7.17.1  # record-sha256 949da52f635e1107c83ecfe6b8d8716ba8bfa94a179512d2aa00be7572f2c250\n+nbformat==5.11.1  # record-sha256 9b4a7ab8e052ae849378aff6f96089421ee75f3aa1b52224c95e09f03b1b3499\n+nest-asyncio2==1.7.3  # record-sha256 896d485c5d1fb04e0352d65ba7f410095f923b0dd672adff6815b77e4905bc0d\n+notebook==7.6.3  # record-sha256 821c9ec3f1811ad7d842d384de9cd8de73284955504d3cf37e6f4a7751a6b9a4\n+notebook-shim==0.2.4  # record-sha256 2decf2f284ddd31bb63009bc917c80c8a46d43ce06f81e08e71e81c9ae6532a8\n+numpy==2.4.6  # record-sha256 c3dd00f045ea91bf972a08daad232f99a627186b0799af0379317a9edcc9fa86\n+oauthlib==3.2.2  # record-sha256 none\n+openpyxl==3.1.5  # record-sha256 2b7f886697d3afd17f12a98eb9386fad66d98f5fece698ce30abb925b74b24bd\n+overrides==7.7.0  # record-sha256 3852876124709311aae2f7ff108283d1d010b466482fd92908cf32bb92bdf80e\n+packaging==26.3  # record-sha256 b349f7a1a2346fdc4a27282d8fbab1c11a2e2ca92b2a8ba572be62493fd00327\n+pandas==3.0.5  # record-sha256 0cf9ba06ee2488a8c75425c84415686ef5489a9e72feebb75f40d124bf574e98\n+pandocfilters==1.5.1  # record-sha256 5b2c3c43873997467183668faa7c02e0760bb288123f2edad5857fd32dd87d55\n+parso==0.8.7  # record-sha256 b0fcbdb670c12ab012442a4e69ce94291a5a796e085f70813f581dbbc67d4002\n+patch-ng==1.18.1  # record-sha256 2b768520794a207b42ccd3a338881fc0e4265c0b8cd756b16506728f3e3482ba\n+pathspec==1.1.1  # record-sha256 31e240696c6b240fcae7ff9130b3bc800e441db8cc8fec59cd6eb703831c9fc9\n+pexpect==4.9.0  # record-sha256 766d27e46231f47e7d65ca97a3d7ce913ca74e4e032881c7ae7f6e5df44697ea\n+pillow==12.3.0  # record-sha256 d67571156a1abfdcb25fbb895cdd005a3d59c4d1a9c11f253febdd84419d1e93\n+pip==24.0  # record-sha256 none\n+platformdirs==4.12.0  # record-sha256 867c96df4a8756503ffd5b673b0e886d50c6a12442d9db05e27996dc9e2f88e0\n+pluggy==1.6.0  # record-sha256 ac3c42a936c786b42b92f6c5310ed48f760330718f071c3c4c31855a1717544b\n+pooch==1.9.0  # record-sha256 f5ff5debc733aa81c56ab2709ecd5dac460cf573452a8c65a01b0c4ce2218910\n+posthog==7.60.1  # record-sha256 b027a054757dc3d609caae2352224277a64f1752666177aa86eedc918dfcd0a5\n+prometheus-client==0.26.0  # record-sha256 2bed5c5b6b9c116424ec0e7679fc2acf31b5fa617846223b39d547f30d645401\n+prompt-toolkit==3.0.53  # record-sha256 7ed142430e0c5a0634a803f43eee73ee3e358a0436864a12b451a92db43d0227\n+psutil==7.2.2  # record-sha256 cdc0fdcbe823c0533785085d41a002e8d67d4ea338515edb4d063e74062e8d07\n+ptyprocess==0.7.0  # record-sha256 2d42d9811f9067a05ac93dbd58ed3ca150ede319709c0b54976b5c642b7027a7\n+pure-eval==0.2.4  # record-sha256 81c5863ca8865002311979698447a04fcbd22b9c14b830501ebb81f9162cfe5a\n+pyarrow==25.0.1  # record-sha256 d7c46765c1d341c21fa138fe84044e1021c5bfcdd7eee0b9cea68a8f55f5c8d6\n+pybamm==26.8.0.0  # record-sha256 ae9606ff154fdb64ab83abfa4997e0647533a2fb1025328a9cc058248f3c40b5\n+pybammsolvers==0.9.1  # record-sha256 474b4098acdc7ac8cef58449cff961670abe054d44d608f9407aed4f18a71fc7\n+pybtex==0.26.1  # record-sha256 5724d1a11b66d7f9c9e2d55bd295ae8bf032a4d56440a86b02a3005da3052662\n+pycparser==3.0  # record-sha256 5192a85147780baa9341bf63a3b42e3b818d5c7ca219779bae4888f1bf78b6ab\n+pydantic==2.13.5  # record-sha256 6e393725dc45b432f077cc86627a08e0d663b1734772608ee4f66e13a8c6dbc0\n+pydantic-core==2.46.5  # record-sha256 8207aff2053f8b9e584af8ceac182febdb3491206b019e9140d9f7004fe3fe70\n+pygments==2.21.0  # record-sha256 41a99838b974f5e6cf39a8e387a449418e6762c666427e3c24152760aa6e2f4c\n+pygobject==3.48.2  # record-sha256 none\n+pyjwt==2.7.0  # record-sha256 none\n+pymupdf==1.28.2  # record-sha256 4e0d129ccf7bde2f2488331617e9ee2ca4e2c0153a05aec8df7a2f4eeb8231e1\n+pyparsing==3.1.1  # record-sha256 none\n+pytest==9.1.1  # record-sha256 7a423734645a175fcbf3fecb9703a3a9fd6756bdcda1ce7438bd1968b82261c9\n+pytest-json-report==1.5.0  # record-sha256 029426fa9ce32822b8774e2c54ef417144b5b97ef53bd6acd8c94d3f3fd7c2ca\n+pytest-metadata==3.1.1  # record-sha256 db897bd01850a0e010a455640a7ec5b30c35f219c007618d78fbd206d23911c0\n+python-apt==2.7.7+ubuntu5.2  # record-sha256 none\n+python-dateutil==2.9.0.post0  # record-sha256 ea009219f435165e7013386035f57b84d75e0676dec16cefcf99db3310324aa2\n+python-json-logger==4.2.0  # record-sha256 2a8591c9ba0cf740122fdb67fe5416d17ca3b07ae58269cce8139b88ab171c96\n+pytokens==0.4.1  # record-sha256 2bca96e8c6986a8e3905535fbec6364fa94615c20c52240f2df19ada29cc043c\n+pyyaml==6.0.1  # record-sha256 none\n+pyzmq==27.2.0  # record-sha256 9fddbf6b1ccad270a56c9fe0bff2f0fe744899f08f60f952c0eaf265cd72fff4\n+referencing==0.37.0  # record-sha256 dec74300561a47a0d28ec39371da5c952d4b0bb713aa6529694b6a6b52ec4060\n+requests==2.33.1  # record-sha256 0d20d243fc610115fcdaf734697b6ad9c828f6658f4ad542d0c487683fb307f8\n+rfc3339-validator==0.1.4  # record-sha256 e0de2375f9b5d93b1cb7551ac35d9f5590ee4a4ecb2336aac7cbaea98c0e11f0\n+rfc3986-validator==0.1.1  # record-sha256 7d8436bbbdef66774eaa1d131f7b232be497d098b5aee03955e75acbf5217c00\n+rfc3987-syntax==1.1.0  # record-sha256 0e8cdb6d4d56bc98b403eb0d098d21aeac79090c45b89528fe596732b6c590ad\n+rich==15.0.0  # record-sha256 d1538647fc6920348d34b1fc523e8a9a5cd957b2d1cc3d3627528bf4af3eefb6\n+rpds-py==2026.6.3  # record-sha256 e13d7b7a4be5afc24787b030379e5be599a40e2e3f4aae3c025ece21444fc128\n+scikit-fem==12.0.2  # record-sha256 b6cbc55ec12a1b976c77eba5a1d0a486da8b8e971625419c2bbd88ff874e1a54\n+scipy==1.17.1  # record-sha256 b8ea386fea9f83a6696fb52817f71582fb1174192a306225bc87ea13177b1b64\n+send2trash==2.1.0  # record-sha256 2314259af07a76aa92aab6a2b87aa4b74aacf22495b705852134251ecd41474b\n+setuptools==68.1.2  # record-sha256 none\n+six==1.16.0  # record-sha256 none\n+soupsieve==2.10  # record-sha256 0f498c090ee8e116e1132a9f61b81ce2c50ff022042c5a192d82644270ec8d18\n+stack-data==0.6.3  # record-sha256 9d52616ad2f745f7e5df4f854103e7dd69c55cebe8a2861d48059ef1b2a969b2\n+sympy==1.14.0  # record-sha256 3eb714822b0627fa62b04eee1f758877891703641de34c1b299757bfbbe759b5\n+terminado==0.18.1  # record-sha256 05908a778988bdd86bf9e3120713fb06efb8a999700e26f7a1e634f27d1bf8f7\n+tinycss2==1.5.1  # record-sha256 1773dbed0c0fb8305f63bf4de4d9f8fc63b40f0732077a2d6354167d4bb36127\n+toml==0.10.2  # record-sha256 none\n+tornado==6.5.10  # record-sha256 a8fec524feae3f0d25a7d110637a7360bdec3e6256cf496b26258eb5d31b7e7d\n+tqdm==4.70.1  # record-sha256 8cd19875ceda76e48e5357c0d8b61ba87591b1da141ffa988e4c3cb221e65550\n+traitlets==5.16.1  # record-sha256 5f60746bd43c84b88498fb44723e995fb3a01528b2744c33101a7c0a666380df\n+typing-extensions==4.16.0  # record-sha256 bef8a87e9866f1a161c8eb7a1b1c1af3a2d81b6cecf39368228972c0078d1988\n+typing-inspection==0.4.4  # record-sha256 408b0b1d9c5165808960f48c419d34dcf1a57990eb7f8ea9be214ae716301752\n+tzdata==2026.4  # record-sha256 f8b667c761ceedcb68942b378d61fdc802a3c78b3ae562de580c33ff769abc0d\n+uri-template==1.3.0  # record-sha256 f45f33e2cd44b06b73e8e03ef45f3c780e3aa9b77b8f19efb7e4f420b612c17c\n+urllib3==2.6.3  # record-sha256 c9867c9bf014c5039e82cc802cbff6c6e5884fec449905d8ae8f609cd5ec4882\n+wadllib==1.3.6  # record-sha256 none\n+wcwidth==0.9.1  # record-sha256 f8c196e49b91ee8f74db1ae1b8ba04ec64661e0de2cf94d35ac9596dfb6b8215\n+webcolors==25.10.0  # record-sha256 b5b74c83020cb8643c5f40e2a4cb1fdbf73ef46c0b1276fede9b3da00367292f\n+webencodings==0.6.1  # record-sha256 03deb8d09a8f6cd56f01d5f4419c06a512f1e37632cdf6854d49266942c3eaa0\n+websocket-client==1.9.2  # record-sha256 4c121e640d0064ff8cc0621309a4275fba4c9fed1d3bbebe7615f7b96fa143f9\n+wheel==0.42.0  # record-sha256 none\n+widgetsnbextension==4.0.16  # record-sha256 cba24bfd3bbd68d4e64594c2589bbdb22a58ebd575b47c3bb03eb4d9951a0de1\n+xarray==2026.7.0  # record-sha256 6045ce487b591e88a93345b903c440347faf6f5da440896a33d25476f96a30ec\n+xmltodict==0.13.0  # record-sha256 none\n+yq==3.1.0  # record-sha256 none\n+\n+#@ shadowed cryptography==41.0.7 record-sha256 none\n+#@ shadowed packaging==24.0 record-sha256 none"
+        },
+        {
+          "filename": "degradation-degeneracy/requirements.txt",
+          "patch": "@@ -1,7 +1,12 @@\n # ── 핵심 ──\n-# 검증 완료 조합 (2026-08-05, docs/ENV_REPORT.md):\n-#   pybamm 26.7.1.0 / numpy 2.4.6 / scipy 1.17.1 / pandas 3.0.5 / Python 3.11\n-#   IDAKLU OK, composite DFN OK, 1 solve ≈ 2 s\n+# ★ 90차 (원장 §135 · D5) — 이 파일은 **하한만** 둔다. 생산 환경 선언이 아니다.\n+#   · v4 정본 producer 환경 기록 = 프로필 B — docs/22p_gap/env_profile_B_v4.yaml (기록 전용)\n+#   · 현재 검증 환경의 정확 고정 = 프로필 C — requirements-validation-C.lock.txt (기록 대조 전용 · 막지 않는다)\n+#   옛 주석 \"검증 완료 조합 (2026-08-05, docs/ENV_REPORT.md): pybamm 26.7.1.0 / numpy 2.4.6 /\n+#   scipy 1.17.1 / pandas 3.0.5 / Python 3.11 · IDAKLU OK, composite DFN OK, 1 solve ≈ 2 s\" 는\n+#   scaffold 커밋 61bce598d 때 scripts/verify_env.py 진단의 기록이다 — v4 정본 producer 기록\n+#   (Python 3.10.12 · numpy 2.2.6 · scipy 1.15.3 · pandas 2.3.3 · pybamm 26.7.1.0) 과 다르고,\n+#   인용한 docs/ENV_REPORT.md 는 .gitignore 된 로컬 출력이라 저장소에 없다.\n pybamm[all]>=24.5        # [all] 이 IDAKLU solver 포함. 이거 없으면 2~5배 느림\n numpy>=1.24\n scipy>=1.11"
+        },
+        {
+          "filename": "degradation-degeneracy/scripts/smoke_e2e.sh",
+          "patch": "@@ -68,6 +68,12 @@ ok()   { printf '   ✅ %s\\n' \"$1\"; }\n FAILED_CHECKS=()\n bad()  { printf '   ❌ %s\\n' \"$1\"; fail=$((fail+1)); FAILED_CHECKS+=(\"$1\"); }\n \n+# ★ 90차 (원장 §135 · 고정 표 PYBAMM_PIN_ROUND_SPEC.md §5-1) — 실행 환경 ↔ 프로필 C lock 의 대조를 **기록만** 한다.\n+#   불일치 (MISMATCH) · 측정 불가 (UNMEASURED) 는 smoke 를 막지 않는다 (D3 — 기록 대조). 도구 자체가 죽으면 기록이\n+#   만들어지지 않은 것이므로 실패로 센다. 모듈로 불러 계산 진입점 (python -m src.*) 과 같은 sys.path 로 잰다.\n+step \"환경 프로필 C 대조 (기록 전용 · 원장 §135)\"\n+\"$PY\" -m tools.env_profile || bad \"환경 프로필 C 대조 도구 실패\"\n+\n rm -rf \"$BASE\"\n mkdir -p \"$BASE\"\n "
+        },
+        {
+          "filename": "degradation-degeneracy/tools/env_profile.py",
+          "patch": "@@ -0,0 +1,404 @@\n+\"\"\"env_profile.py — 프로필 C (현재 검증 환경의 정확 고정) 의 측정 · lock · 대조. **기록 전용.**\n+\n+★ 90차 (원장 §135 · 고정 표 `docs/22p_gap/PYBAMM_PIN_ROUND_SPEC.md` §3–§5) — 사전 검토 회신 P3: 지금은 \"무엇으로\n+  돌렸나\" 는 기록되지만 (`src/io.py::env_fingerprint` · effective_solver · worker 서명 대조) \"그 환경이 승인된 것인가\" 를\n+  묻는 곳이 없었다. 이 모듈은 실행 환경을 `requirements-validation-C.lock.txt` 와 대조해 **일치 / 불일치 목록을 남긴다.**\n+  어떤 실행도 막지 않는다 (D3 — 불일치여도 pytest · smoke · run.sh · 영수증 생성은 그대로 돈다).\n+\n+  · 측정은 그 프로세스의 `sys.path` 순서 그대로다 — 해석기 · 플랫폼 다섯 축 · 배포판 (정규 이름의 첫 항목 = 유효 · 뒤 항목 =\n+    가려진 것 · RECORD 텍스트 sha256) · 설치 파일의 RECORD 재해시 (설치 뒤 변경 감지 — RECORD 가 덮는 범위만) · 핵심\n+    module 열 개의 실제 origin (사전 검토 Q5).\n+  · 결과는 닫힌 dict 다. `MATCH` · `MISMATCH` · `UNMEASURED` — 측정하지 못한 칸은 `None` 이다. 빈 목록으로 쓰면\n+    \"불일치 없음\" 으로 읽힌다 (61차 P1-3). `UNMEASURED` 를 `MATCH` 로 적지 않는다.\n+  · 선언하지 않는 것: C 는 정본 (v4) 생산 환경이 아니다 (그것은 프로필 B — 고정 표 §6 의 기록) · 설치 처방이 아니다 ·\n+    다른 기계에 강제하지 않는다.\n+\n+사용 (프로젝트 root 에서 — 계산 진입점 `python -m src.*` 과 같은 sys.path):\n+    python -m tools.env_profile                 # 대조 요약 (rc 0 — 세 상태 모두)\n+    python -m tools.env_profile --json          # 결과 dict\n+    python -m tools.env_profile --emit-lock     # 지금 환경의 정규형 lock (측정 실패면 rc 1 · 부분 lock 없음)\n+\"\"\"\n+from __future__ import annotations\n+\n+import argparse\n+import base64\n+import hashlib\n+import importlib\n+import importlib.machinery\n+import importlib.metadata as md\n+import json\n+import os\n+import platform\n+import re\n+import sys\n+from collections import Counter\n+from pathlib import Path\n+\n+ROOT = Path(__file__).resolve().parent.parent\n+LOCK_DEFAULT = ROOT / \"requirements-validation-C.lock.txt\"\n+\n+#: `src/io.py::env_fingerprint()` 의 module 축 — 순서까지 같다 (e07 이 대조한다).\n+KEY_MODULES = (\"numpy\", \"scipy\", \"pandas\", \"joblib\", \"pyarrow\", \"pybamm\", \"matplotlib\", \"yaml\",\n+               \"pybammsolvers\", \"casadi\")\n+#: lock 지시 — 이 순서로 쓰고, 각각 정확히 한 번 있어야 한다.\n+DIRECTIVES = (\"profile\", \"python\", \"implementation\", \"system\", \"machine\", \"libc\")\n+#: 결과 `mismatches[].axis` 의 닫힌 집합 (고정 표 §4-2).\n+AXES = (\"python\", \"implementation\", \"system\", \"machine\", \"libc\", \"dist_missing\", \"dist_extra\",\n+        \"dist_version\", \"dist_record\", \"shadowed\", \"file\", \"origin\")\n+\n+_NAME = re.compile(r\"[a-z0-9]+(?:-[a-z0-9]+)*\")\n+_VERSION = re.compile(r\"[^\\s#]+\")\n+_HEX64 = re.compile(r\"[0-9a-f]{64}\")\n+_DIRECTIVE = re.compile(r\"#@ (?P<key>[a-z]+) (?P<value>.+)\")\n+_SHADOW = re.compile(r\"#@ shadowed (?P<name>[^=\\s#]+)==(?P<version>[^\\s#]+) record-sha256 (?P<record>\\S+)\")\n+_DIST = re.compile(r\"(?P<name>[^=\\s#]+)==(?P<version>[^\\s#]+)  # record-sha256 (?P<record>\\S+)\")\n+\n+#: `emit_lock` 이 쓰는 머리 주석 (정규형의 일부 — 바꾸면 커밋된 lock 도 다시 낸다).\n+HEADER = (\n+    \"# requirements-validation-C.lock.txt — 프로필 C: 현재 검증 환경의 정확 고정 (기록 대조 전용)\",\n+    \"#\",\n+    \"# ★ 90차 (원장 §135 · 고정 표 docs/22p_gap/PYBAMM_PIN_ROUND_SPEC.md §3) — `python -m tools.env_profile --emit-lock` 의\",\n+    \"#   출력 그대로다. 손으로 고치지 않는다 (정규형 고정점: emit_lock(parse_lock(text)) == text).\",\n+    \"# 대조: `python -m tools.env_profile` (smoke 로그 · 영수증 stamp `environment_profile_C`). 불일치여도 아무것도 막지 않는다.\",\n+    \"# 선언하지 않는 것: 정본 (v4) 생산 환경 (그것은 프로필 B — 고정 표 §6 의 기록) · C 로 만든 수치가 B 의 수치와 같다는 것 ·\",\n+    \"#   설치 처방 (리눅스 시스템 배포판을 담는다 — `pip install -r` 용이 아니다) · 다른 기계에 강제하는 것.\",\n+    \"# 문법 (닫힘): `#@ <지시> <JSON 문자열>` · `<이름>==<버전>  # record-sha256 <hex64|none>` (PEP 503 이름 · 엄격 오름차순) ·\",\n+    \"#   `#@ shadowed <이름>==<버전> record-sha256 <hex64|none>` (경로 순서로 가려진 항목). record-sha256 = 설치된 RECORD\",\n+    \"#   텍스트의 sha256 (none = RECORD 없음 — 설치 파일 대조 불가).\",\n+)\n+\n+\n+class LockFormatError(ValueError):\n+    \"\"\"lock 이 닫힌 문법 밖이다.\"\"\"\n+\n+\n+def normalize(name: str) -> str:\n+    \"\"\"PEP 503 정규 이름.\"\"\"\n+    return re.sub(r\"[-_.]+\", \"-\", name).lower()\n+\n+\n+# ── 측정 ──────────────────────────────────────────────────────────────────────\n+\n+def _verify_files(dist) -> tuple[int, int, list]:\n+    \"\"\"RECORD 의 해시 있는 항목을 다시 해시한다 → (일치 수, 해시 없는 수, [(상대경로, 기대, 관측 | None)]).\n+\n+    없는 파일은 불일치다 (관측 `None`). 그 밖의 읽기 오류 · 모르는 해시 알고리즘은 **측정 실패**로 올린다 —\n+    파일 하나를 못 읽은 것을 \"그 파일은 맞다\" 로도 \"다르다\" 로도 적지 않는다.\n+    \"\"\"\n+    ok, unhashed, bad = 0, 0, []\n+    for f in dist.files or ():\n+        if f.hash is None:\n+            unhashed += 1\n+            continue\n+        h = hashlib.new(f.hash.mode)                     # 모르는 알고리즘 → ValueError (측정 실패)\n+        want = f\"{f.hash.mode}={f.hash.value}\"\n+        try:\n+            with open(f.locate(), \"rb\") as fh:\n+                for chunk in iter(lambda: fh.read(1 << 20), b\"\"):\n+                    h.update(chunk)\n+        except FileNotFoundError:\n+            bad.append((str(f), want, None))\n+            continue\n+        got = base64.urlsafe_b64encode(h.digest()).rstrip(b\"=\").decode()\n+        if got == f.hash.value:\n+            ok += 1\n+        else:\n+            bad.append((str(f), want, f\"{f.hash.mode}={got}\"))\n+    return ok, unhashed, bad\n+\n+\n+def _origin(module: str, paths: list, effective: dict, files: dict, no_record: list):\n+    \"\"\"핵심 module 의 실제 origin → (\"verified\", 주인) · (\"unverifiable\", origin) · (\"mismatch\", 관측).\"\"\"\n+    spec = importlib.machinery.PathFinder.find_spec(module, paths)\n+    origin = getattr(spec, \"origin\", None) if spec is not None else None\n+    if spec is None:\n+        return \"mismatch\", \"<not found>\"\n+    if not origin or not os.path.isfile(origin):\n+        return \"mismatch\", f\"<{origin or 'namespace'}>\"\n+    real = os.path.realpath(origin)\n+    owners = sorted(\n+        name for name, entries in files.items()\n+        if any(os.path.realpath(f.locate()) == real for f in entries\n+               if f.parts and f.parts[0].split(\".\")[0] == module))\n+    if len(owners) == 1:\n+        return \"verified\", owners[0]\n+    if not owners:\n+        for name in no_record:\n+            base = os.path.realpath(effective[name].locate_file(\"\"))\n+            if os.path.commonpath([base, real]) == base:\n+                return \"unverifiable\", real\n+    return \"mismatch\", real if not owners else f\"{real} (주인 {', '.join(owners)})\"\n+\n+\n+def measure(paths=None) -> dict:\n+    \"\"\"그 프로세스의 `sys.path` (또는 주어진 경로 목록) 순서로 환경을 잰다. 실패는 예외로 올린다.\"\"\"\n+    importlib.invalidate_caches()\n+    paths = [str(p) for p in (sys.path if paths is None else paths)]\n+    effective, meta, shadowed = {}, {}, []\n+    for entry in paths:\n+        for dist in md.distributions(path=[entry]):\n+            raw, version = dist.metadata[\"Name\"], dist.version\n+            if not raw or not version:\n+                raise ValueError(f\"이름 · 버전 없는 배포판 메타데이터 ({entry})\")\n+            name = normalize(raw)\n+            if not _NAME.fullmatch(name) or not _VERSION.fullmatch(version):\n+                raise ValueError(f\"lock 에 쓸 수 없는 배포판 이름 · 버전: {raw!r} {version!r} ({entry})\")\n+            record = dist.read_text(\"RECORD\")\n+            digest = \"none\" if record is None else hashlib.sha256(record.encode(\"utf-8\")).hexdigest()\n+            if name in effective:\n+                shadowed.append((name, version, digest))\n+            else:\n+                effective[name], meta[name] = dist, (version, digest)\n+    dists, files, no_record = {}, {}, []\n+    verified = unhashed = 0\n+    file_bad = []\n+    for name in sorted(effective):\n+        version, digest = meta[name]\n+        dists[name] = {\"version\": version, \"record\": digest}\n+        if digest == \"none\":\n+            no_record.append(name)\n+            continue\n+        files[name] = list(effective[name].files or ())\n+        ok, un, bad = _verify_files(effective[name])\n+        verified += ok\n+        unhashed += un\n+        file_bad += [(name, rel, want, got) for rel, want, got in bad]\n+    origins, origin_unverifiable, origin_bad = {}, [], []\n+    for module in KEY_MODULES:\n+        kind, value = _origin(module, paths, effective, files, no_record)\n+        if kind == \"verified\":\n+            origins[module] = value\n+        elif kind == \"unverifiable\":\n+            origin_unverifiable.append(module)\n+        else:\n+            origin_bad.append((module, value))\n+    return {\n+        \"python\": platform.python_version(),\n+        \"implementation\": platform.python_implementation(),\n+        \"system\": platform.system(),\n+        \"machine\": platform.machine(),\n+        \"libc\": \" \".join(platform.libc_ver()).strip(),\n+        \"dists\": dists,\n+        \"shadowed\": sorted(shadowed),\n+        \"dists_without_record\": no_record,\n+        \"files\": {\"verified\": verified, \"unhashed\": unhashed, \"mismatches\": file_bad},\n+        \"origins\": {\"verified\": origins, \"unverifiable\": origin_unverifiable, \"mismatches\": origin_bad},\n+    }\n+\n+\n+# ── lock ─────────────────────────────────────────────────────────────────────\n+\n+def emit_lock(profile: dict) -> str:\n+    \"\"\"정규형 lock 텍스트 — `measure()` 나 `parse_lock()` 의 결과에서.\"\"\"\n+    lines = list(HEADER)\n+    lines += [f\"#@ {k} {json.dumps('C' if k == 'profile' else profile[k], ensure_ascii=False)}\" for k in DIRECTIVES]\n+    lines.append(\"\")\n+    lines += [f\"{n}=={d['version']}  # record-sha256 {d['record']}\" for n, d in sorted(profile[\"dists\"].items())]\n+    if profile[\"shadowed\"]:\n+        lines.append(\"\")\n+        lines += [f\"#@ shadowed {n}=={v} record-sha256 {r}\" for n, v, r in sorted(profile[\"shadowed\"])]\n+    return \"\\n\".join(lines) + \"\\n\"\n+\n+\n+def parse_lock(text: str) -> dict:\n+    \"\"\"닫힌 문법 (고정 표 §3-1) 으로 읽는다. 어긋나면 `LockFormatError` (줄 번호를 담는다).\"\"\"\n+    seen, dists, shadowed = {}, {}, []\n+    last, last_shadow = None, None\n+\n+    def bad(no: int, why: str) -> LockFormatError:\n+        return LockFormatError(f\"줄 {no}: {why}\")\n+\n+    lines = text.split(\"\\n\")\n+    if lines and lines[-1] == \"\":\n+        lines.pop()\n+    for no, line in enumerate(lines, 1):\n+        if line == \"\" or (line.startswith(\"#\") and not line.startswith(\"#@\")):\n+            continue\n+        if line.startswith(\"#@ shadowed \"):\n+            m = _SHADOW.fullmatch(line)\n+            if m is None:\n+                raise bad(no, \"가려진 항목의 꼴이 아니다\")\n+            key = (m[\"name\"], m[\"version\"], m[\"record\"])\n+            if not _NAME.fullmatch(key[0]):\n+                raise bad(no, f\"정규형 아닌 이름 {key[0]!r}\")\n+            if key[2] != \"none\" and not _HEX64.fullmatch(key[2]):\n+                raise bad(no, f\"record-sha256 칸 {key[2]!r}\")\n+            if last_shadow is not None and key < last_shadow:\n+                raise bad(no, \"가려진 항목의 정렬이 어긋났다\")\n+            shadowed.append(key)\n+            last_shadow = key\n+            continue\n+        if line.startswith(\"#@\"):\n+            m = _DIRECTIVE.fullmatch(line)\n+            if m is None or m[\"key\"] not in DIRECTIVES:\n+                raise bad(no, f\"모르는 지시 {line!r}\")\n+            if m[\"key\"] in seen:\n+                raise bad(no, f\"지시 {m['key']} 가 두 번 있다\")\n+            try:\n+                value = json.loads(m[\"value\"])\n+            except ValueError as exc:\n+                raise bad(no, f\"지시 {m['key']} 의 값이 JSON 이 아니다 ({exc})\") from exc\n+            if not isinstance(value, str):\n+                raise bad(no, f\"지시 {m['key']} 의 값이 문자열이 아니다\")\n+            if m[\"key\"] == \"profile\" and value != \"C\":\n+                raise bad(no, f\"profile 이 C 가 아니다 ({value!r})\")\n+            seen[m[\"key\"]] = value\n+            continue\n+        m = _DIST.fullmatch(line)\n+        if m is None:\n+            raise bad(no, f\"모르는 줄 {line[:80]!r}\")\n+        name, version, record = m[\"name\"], m[\"version\"], m[\"record\"]\n+        if not _NAME.fullmatch(name):\n+            raise bad(no, f\"정규형 아닌 이름 {name!r}\")\n+        if record != \"none\" and not _HEX64.fullmatch(record):\n+            raise bad(no, f\"record-sha256 칸 {record!r}\")\n+        if last is not None and name <= last:\n+            raise bad(no, f\"배포판 정렬 · 중복 ({last!r} 다음 {name!r})\")\n+        dists[name] = {\"version\": version, \"record\": record}\n+        last = name\n+    missing = [k for k in DIRECTIVES if k not in seen]\n+    if missing:\n+        raise LockFormatError(f\"지시가 없다: {', '.join(missing)}\")\n+    out = {k: seen[k] for k in DIRECTIVES}\n+    out.update(dists=dists, shadowed=shadowed)\n+    return out\n+\n+\n+# ── 대조 ─────────────────────────────────────────────────────────────────────\n+\n+def _mm(axis: str, subject: str, locked, measured) -> dict:\n+    return {\"axis\": axis, \"subject\": subject, \"locked\": locked, \"measured\": measured}\n+\n+\n+def compare(locked: dict, measured: dict) -> list:\n+    \"\"\"축마다 다른 것을 모은다 → (axis, subject) 순 목록. 빈 목록 = 비교한 모든 축이 같다.\"\"\"\n+    out = []\n+    for k in DIRECTIVES[1:]:\n+        if locked[k] != measured[k]:\n+            out.append(_mm(k, k, locked[k], measured[k]))\n+    lock_d, got_d = locked[\"dists\"], measured[\"dists\"]\n+    for n in sorted(lock_d.keys() - got_d.keys()):\n+        out.append(_mm(\"dist_missing\", n, lock_d[n][\"version\"], None))\n+    for n in sorted(got_d.keys() - lock_d.keys()):\n+        out.append(_mm(\"dist_extra\", n, None, got_d[n][\"version\"]))\n+    for n in sorted(lock_d.keys() & got_d.keys()):\n+        if lock_d[n][\"version\"] != got_d[n][\"version\"]:\n+            out.append(_mm(\"dist_version\", n, lock_d[n][\"version\"], got_d[n][\"version\"]))\n+        if lock_d[n][\"record\"] != got_d[n][\"record\"]:\n+            out.append(_mm(\"dist_record\", n, lock_d[n][\"record\"], got_d[n][\"record\"]))\n+    lock_s = Counter(tuple(x) for x in locked[\"shadowed\"])\n+    got_s = Counter(tuple(x) for x in measured[\"shadowed\"])\n+    for n, v, r in sorted((lock_s - got_s).elements()):\n+        out.append(_mm(\"shadowed\", f\"{n}=={v}\", r, None))\n+    for n, v, r in sorted((got_s - lock_s).elements()):\n+        out.append(_mm(\"shadowed\", f\"{n}=={v}\", None, r))\n+    for n, rel, want, got in measured[\"files\"][\"mismatches\"]:\n+        out.append(_mm(\"file\", f\"{n}:{rel}\", want, got))\n+    for module, seen in measured[\"origins\"][\"mismatches\"]:\n+        out.append(_mm(\"origin\", module, \"RECORD 가 있는 설치 배포판 하나의 파일\", seen))\n+    return sorted(out, key=lambda x: (x[\"axis\"], x[\"subject\"]))\n+\n+\n+def _display(path: Path) -> str:\n+    p = path.resolve()\n+    try:\n+        return p.relative_to(ROOT).as_posix()\n+    except ValueError:\n+        return str(p)\n+\n+\n+def compare_lock(lock_path=None, *, paths=None) -> dict:\n+    \"\"\"lock 과 지금 환경을 대조한 닫힌 결과 dict (고정 표 §4-2). 예외를 내지 않는다 — 못 하면 `UNMEASURED`.\"\"\"\n+    lp = Path(LOCK_DEFAULT if lock_path is None else lock_path)\n+    res = {\"profile\": \"C\", \"lock_path\": _display(lp), \"lock_sha256\": None, \"status\": \"UNMEASURED\",\n+           \"reason\": \"\", \"mismatches\": None, \"unverifiable\": None, \"counts\": None}\n+    try:\n+        raw = lp.read_bytes()\n+    except OSError as exc:\n+        res[\"reason\"] = f\"lock 을 읽지 못했다: {exc}\"\n+        return res\n+    res[\"lock_sha256\"] = hashlib.sha256(raw).hexdigest()\n+    try:\n+        locked = parse_lock(raw.decode(\"utf-8\"))\n+    except UnicodeDecodeError as exc:\n+        res[\"reason\"] = f\"lock 이 UTF-8 이 아니다: {exc}\"\n+        return res\n+    except LockFormatError as exc:\n+        res[\"reason\"] = f\"lock 형식 오류 — {exc}\"\n+        return res\n+    try:\n+        measured = measure(paths)\n+    except Exception as exc:                              # noqa: BLE001 — 측정 실패는 typed UNMEASURED 다\n+        res[\"reason\"] = f\"측정 실패: {exc!r}\"\n+        return res\n+    found = compare(locked, measured)\n+    res.update(\n+        status=\"MISMATCH\" if found else \"MATCH\",\n+        mismatches=found,\n+        unverifiable={\"dists_without_record\": list(measured[\"dists_without_record\"]),\n+                      \"origins\": list(measured[\"origins\"][\"unverifiable\"])},\n+        counts={\"dists_locked\": len(locked[\"dists\"]), \"dists_measured\": len(measured[\"dists\"]),\n+                \"shadowed_locked\": len(locked[\"shadowed\"]), \"shadowed_measured\": len(measured[\"shadowed\"]),\n+                \"files_verified\": measured[\"files\"][\"verified\"], \"files_unhashed\": measured[\"files\"][\"unhashed\"],\n+                \"origins_verified\": len(measured[\"origins\"][\"verified\"])})\n+    return res\n+\n+\n+# ── CLI ──────────────────────────────────────────────────────────────────────\n+\n+def _summary(r: dict) -> str:\n+    head = f\"환경 프로필 C 대조: {r['status']} · lock {r['lock_path']}\"\n+    if r[\"lock_sha256\"]:\n+        head += f\" (sha256 {r['lock_sha256'][:16]}…)\"\n+    if r[\"status\"] == \"UNMEASURED\":\n+        return head + f\"\\n  이유: {r['reason']}\\n  (기록 전용 — 아무것도 막지 않는다 · 원장 §135)\"\n+    c = r[\"counts\"]\n+    lines = [head + f\" · 배포판 lock {c['dists_locked']} / 측정 {c['dists_measured']} · 가려진 {c['shadowed_locked']}\"\n+             f\" / {c['shadowed_measured']} · 설치 파일 일치 {c['files_verified']} (해시 없음 {c['files_unhashed']})\"\n+             f\" · origin 확인 {c['origins_verified']}\"]\n+    u = r[\"unverifiable\"]\n+    if u[\"dists_without_record\"]:\n+        lines.append(f\"  · 확인 불가 — RECORD 없는 배포판 {len(u['dists_without_record'])}: \"\n+                     + \", \".join(u[\"dists_without_record\"]))\n+    if u[\"origins\"]:\n+        lines.append(\"  · 확인 불가 — origin: \" + \", \".join(u[\"origins\"]))\n+    for m in r[\"mismatches\"]:\n+        lines.append(f\"  ✗ {m['axis']} {m['subject']} locked={m['locked']} measured={m['measured']}\")\n+    lines.append(\"  (기록 전용 — 불일치여도 아무것도 막지 않는다 · 원장 §135)\")\n+    return \"\\n\".join(lines)\n+\n+\n+def main(argv=None) -> int:\n+    ap = argparse.ArgumentParser(prog=\"python -m tools.env_profile\",\n+                                 description=\"실행 환경 ↔ 프로필 C lock 대조 (기록 전용 · 원장 §135)\")\n+    ap.add_argument(\"--lock\", default=None, help=\"대조할 lock (기본: 프로젝트 root 의 requirements-validation-C.lock.txt)\")\n+    mode = ap.add_mutually_exclusive_group()\n+    mode.add_argument(\"--json\", action=\"store_true\", help=\"결과 dict 를 JSON 으로\")\n+    mode.add_argument(\"--emit-lock\", action=\"store_true\", help=\"지금 환경의 정규형 lock 을 낸다\")\n+    a = ap.parse_args(argv)\n+    if a.emit_lock:\n+        if a.lock is not None:\n+            ap.error(\"--emit-lock 은 --lock 과 함께 쓰지 않는다\")\n+        try:\n+            text = emit_lock(measure())\n+        except Exception as exc:                          # noqa: BLE001\n+            print(f\"✗ 측정 실패 — lock 을 내지 않는다: {exc!r}\", file=sys.stderr)\n+            return 1\n+        sys.stdout.buffer.write(text.encode(\"utf-8\"))\n+        sys.stdout.flush()\n+        return 0\n+    r = compare_lock(a.lock)\n+    if a.json:\n+        sys.stdout.buffer.write((json.dumps(r, sort_keys=True, ensure_ascii=False) + \"\\n\").encode(\"utf-8\"))\n+        sys.stdout.flush()\n+        return 0\n+    try:\n+        sys.stdout.reconfigure(errors=\"backslashreplace\")\n+    except Exception:                                     # noqa: BLE001 — 출력 장치가 바꿀 수 없는 경우\n+        pass\n+    print(_summary(r))\n+    return 0\n+\n+\n+if __name__ == \"__main__\":\n+    raise SystemExit(main())"
+        }
+      ],
+      "repository_full_name": "yonghoon7153-source/Yonghoon-DEM-DFT",
+      "comments": null,
+      "author": {
+        "login": "claude",
+        "name": null,
+        "email": null,
+        "avatar_url": "https://avatars.githubusercontent.com/u/81847?v=4",
+        "id": 81847
+      },
+      "committer": {
+        "login": "claude",
+        "name": null,
+        "email": null,
+        "avatar_url": "https://avatars.githubusercontent.com/u/81847?v=4",
+        "id": 81847
+      },
+      "created_at": "2026-10-04T17:40:24Z",
+      "git_author_email": null,
+      "display_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/commit/e2160c2ef276d4944fa4ad76fbaa001671a1a95e",
+      "display_title": "feat(env): GREEN — 프로필 C lock · tools/env_profile.py (기록 대조) · B 기록 · requirements 주석 정정 · smoke 기록 단계 · 영수증 stamp (고정 표 PYBAMM_PIN_ROUND_SPEC.md · 원장 §135)"
+    },
+    "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/commit/e2160c2ef276d4944fa4ad76fbaa001671a1a95e",
+    "title": "feat(env): GREEN — 프로필 C lock · tools/env_profile.py (기록 대조) · B 기록 · requirements 주석 정정 · smoke 기록 단계 · 영수증 stamp (고정 표 PYBAMM_PIN_ROUND_SPEC.md · 원장 §135)\n\ntest_gate90 38 passed / rc 0 (RED cff5e409b 에서 38 failed). RUN_SCOPE 네 파일 (고정 표 §2 상한\n그대로) — source_digest 803e2b7781cbc9cd → 3f84c0db52d2b9ac:\n- requirements-validation-C.lock.txt (새) — `python -m tools.env_profile --emit-lock` 출력 그대로 ·\n  Python 3.11.15 · CPython · Linux · x86_64 · glibc 2.39 · 유효 배포판 170 · 가려진 2 (cryptography\n  41.0.7 · packaging 24.0) · 배포판마다 RECORD 텍스트 sha256 (RECORD 없는 22 = none) · 정규형 고정점\n- tools/env_profile.py (새) — 측정 (sys.path 순서 · 해석기 · 플랫폼 다섯 축 · 배포판 · 설치 파일\n  RECORD 재해시 · 핵심 module 10 의 실제 origin) · 닫힌 lock 문법 · 대조 · 결과 dict (MATCH /\n  MISMATCH / UNMEASURED · 측정하지 않은 칸 None) · CLI (세 상태 모두 rc 0 · --emit-lock 측정 실패면 rc 1)\n- requirements.txt — 주석만 (옛 \"검증 완료 조합\" 을 옛 주석으로 인용 · B · C 를 가리킴 · 하한만\n  둔다). 요구 줄 12 개 바이트 불변\n- scripts/smoke_e2e.sh — bad() 뒤 · 단계 0 전에 기록 단계 하나 (`\"$PY\" -m tools.env_profile ||\n  bad …` — 불일치는 막지 않고 도구가 죽으면 실패)\nRUN_SCOPE 밖: docs/22p_gap/make_receipt.py (_stamp() helper · stamp.environment_profile_C — core\n밖) · docs/22p_gap/env_profile_B_v4.yaml (새 · 네 v4 producer manifest 의 env 일곱 자리 · solver\n기록 원문 · 한계 · 어떤 코드도 읽지 않는다).\n\n이 컨테이너 실측: MATCH · 170/170 · 2/2 · 설치 파일 일치 24,804 (해시 없음 10,373) · origin 확인 9\n(yaml 은 RECORD 없는 Debian 배포판이라 확인 불가로 따로) · 약 2 s. src/ · run.sh · configs/ ·\nconftest 불변. 영수증 재생성 · 변이 등록은 뒤 커밋.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01CcftdupvBKEC3iP9HX2VA2",
+    "diff": "@@ -0,0 +1,73 @@\n+# B 프로필 — v4 정본 producer 환경의 기록 (기록 전용 · 원장 §135 · 고정 표 docs/22p_gap/PYBAMM_PIN_ROUND_SPEC.md §6)\n+# 네 producer manifest 의 env (일곱 자리 — 서로 같다) 와 solver 기록을 원문 그대로 옮겼다. 손으로 고치지 않는다.\n+# 어떤 실행 코드도 이 파일을 읽지 않는다. 대조 시험: tests/test_gate90_env_profile.py::test_e11_b_profile_is_the_v4_producer_record\n+profile: B\n+kind: HISTORICAL_PRODUCER_RECORD_ONLY\n+sources:\n+- path: artifacts/grid_curves_v4/curves_manifest.yaml\n+  bytes: 3713\n+  sha256: a6e5ab9cf348ff44e8a9b6fe6c68faa3cbd88a6c797c372dd5745e8bc6de5ecc\n+  env_paths:\n+  - env\n+  - grid_run_spec.env\n+- path: artifacts/grid_fit_v4/manifest.yaml\n+  bytes: 6576\n+  sha256: 228664b1ca8dea7f19f92ae60016448b8706482be900b90b7a5b80de04cf33b7\n+  env_paths:\n+  - run_spec.env\n+  - start_provenance.env\n+- path: artifacts/halfcell_fit_v4/manifest.yaml\n+  bytes: 7711\n+  sha256: 3fa4106ac916dc3bc6d817ccff2a5d2c16a36418579077f280ad623c0724bb69\n+  env_paths:\n+  - run_spec.env\n+  - start_provenance.env\n+- path: artifacts/paired_fixed5_v4/manifest.yaml\n+  bytes: 6310\n+  sha256: 7a14333ee4ace2367f1d0b076ac584271cdfb494b2b5e75ea05c86d6e61c4cfc\n+  env_paths:\n+  - run_spec.env\n+  - start_provenance.env\n+env:\n+  python: 3.10.12\n+  platform: Linux-5.15.0-130-generic-x86_64-with-glibc2.35\n+  machine: x86_64\n+  numpy: 2.2.6\n+  scipy: 1.15.3\n+  pandas: 2.3.3\n+  joblib: 1.5.3\n+  pyarrow: 25.0.1\n+  pybamm: 26.7.1.0\n+  matplotlib: 3.10.9\n+  yaml: 6.0.3\n+  pybammsolvers: 0.9.0\n+  casadi: 3.7.2\n+solver:\n+  artifacts/grid_curves_v4/curves_manifest.yaml:solver: IDAKLUSolver\n+  artifacts/grid_curves_v4/curves_manifest.yaml:grid_run_spec.effective_solver:\n+    requested:\n+      type: idaklu\n+      fallback: casadi\n+      rtol: 1.0e-06\n+      atol: 1.0e-06\n+      casadi_mode: safe\n+    effective_class: IDAKLUSolver\n+    pybamm: 26.7.1.0\n+    pybammsolvers: 0.9.0\n+    casadi: 3.7.2\n+  artifacts/grid_fit_v4/manifest.yaml:run_spec.producer.solver: IDAKLUSolver\n+  artifacts/halfcell_fit_v4/manifest.yaml:run_spec.producer.solver: IDAKLUSolver\n+  artifacts/paired_fixed5_v4/manifest.yaml:run_spec.producer.solver: IDAKLUSolver\n+not_recorded:\n+- 전이 의존성 (위 13 축 밖의 배포판 전부)\n+- 배포 파일 해시 (RECORD) — 같은 버전 문자열의 다른 바이트를 가릴 수 없다 (사전 검토 P2)\n+- 로컬 패치 · 설치 뒤 파일 변경\n+- native 라이브러리 (SUNDIALS · BLAS · OpenMP) 와 그 빌드\n+- Python 빌드 (컴파일러 · 빌드 옵션) · 플랫폼 문자열 밖의 OS 구성\n+- smoothing backend 축 — 지문 (src/io.py::env_fingerprint) 에 그 축이 생기기 전의 기록이다\n+not_claimed:\n+- B 를 다시 설치하면 v4 정본이 같게 나온다\n+- B = C (현재 검증 환경 · requirements-validation-C.lock.txt)\n+- pybamm 26.7.1 ↔ 26.8 (또는 다른 판) 의 수치 동등\n+use: v4 정본 재생성을 시도할 때의 기준 기록. 재생성 동등성을 주장하려면 그때 사전 고정 비교가 따로 필요하다 (사전 검토 Q2). 재생성 · 새 세대 · 버전 비교는 이번 라운드\n+  범위 밖 (원장 §135 D6).\n@@ -228,20 +228,34 @@ def build(leg: str) -> dict:\n             \"core_sha256\": hashlib.sha256(\n                 _dump(core).encode(\"utf-8\")).hexdigest(),\n             \"core\": core,\n-            \"stamp\": {\n-                \"_주의\": \"기록용. core 재생성 대조에서 제외된다.\",\n-                \"validator_commit\": _git(\"rev-parse\", \"HEAD\"),\n-                \"validator_tree_dirty\": bool(_git(\"status\", \"--porcelain\")),\n-                \"generated_at_utc\": datetime.now(timezone.utc)\n-                                    .strftime(\"%Y-%m-%dT%H:%M:%SZ\"),\n-                \"runtime\": {\"python\": platform.python_version(),\n-                            \"platform\": platform.platform()},\n-            },\n+            \"stamp\": _stamp(),\n         }\n     finally:\n         shutil.rmtree(root, ignore_errors=True)\n \n \n+def _stamp() -> dict:\n+    \"\"\"영수증 stamp — **기록용** (core 재생성 대조 · `core_sha256` 밖).\n+\n+    ★ 90차 (원장 §135 · 고정 표 `PYBAMM_PIN_ROUND_SPEC.md` §5-2) — 실행 환경 ↔ 프로필 C lock 의 대조 결과를\n+      `environment_profile_C` 로 싣는다. 기록 대조다 — `MISMATCH` · `UNMEASURED` 여도 영수증 생성을 막지 않는다.\n+      소비자 `tools/preserve.py::read_verification_receipt` 는 영수증의 최상위 키 집합만 보고 stamp 안은 보지 않으므로\n+      바뀌지 않는다.\n+    \"\"\"\n+    from tools.env_profile import compare_lock\n+\n+    return {\n+        \"_주의\": \"기록용. core 재생성 대조에서 제외된다.\",\n+        \"validator_commit\": _git(\"rev-parse\", \"HEAD\"),\n+        \"validator_tree_dirty\": bool(_git(\"status\", \"--porcelain\")),\n+        \"generated_at_utc\": datetime.now(timezone.utc)\n+                            .strftime(\"%Y-%m-%dT%H:%M:%SZ\"),\n+        \"runtime\": {\"python\": platform.python_version(),\n+                    \"platform\": platform.platform()},\n+        \"environment_profile_C\": compare_lock(),\n+    }\n+\n+\n def _score_manifest(run_dir: Path) -> list[dict]:\n     \"\"\"복원한 fits 만으로 재채점하고 산출을 두 digest 로 적는다.\"\"\"\n     import pandas as pd\n@@ -0,0 +1,190 @@\n+# requirements-validation-C.lock.txt — 프로필 C: 현재 검증 환경의 정확 고정 (기록 대조 전용)\n+#\n+# ★ 90차 (원장 §135 · 고정 표 docs/22p_gap/PYBAMM_PIN_ROUND_SPEC.md §3) — `python -m tools.env_profile --emit-lock` 의\n+#   출력 그대로다. 손으로 고치지 않는다 (정규형 고정점: emit_lock(parse_lock(text)) == text).\n+# 대조: `python -m tools.env_profile` (smoke 로그 · 영수증 stamp `environment_profile_C`). 불일치여도 아무것도 막지 않는다.\n+# 선언하지 않는 것: 정본 (v4) 생산 환경 (그것은 프로필 B — 고정 표 §6 의 기록) · C 로 만든 수치가 B 의 수치와 같다는 것 ·\n+#   설치 처방 (리눅스 시스템 배포판을 담는다 — `pip install -r` 용이 아니다) · 다른 기계에 강제하는 것.\n+# 문법 (닫힘): `#@ <지시> <JSON 문자열>` · `<이름>==<버전>  # record-sha256 <hex64|none>` (PEP 503 이름 · 엄격 오름차순) ·\n+#   `#@ shadowed <이름>==<버전> record-sha256 <hex64|none>` (경로 순서로 가려진 항목). record-sha256 = 설치된 RECORD\n+#   텍스트의 sha256 (none = RECORD 없음 — 설치 파일 대조 불가).\n+#@ profile \"C\"\n+#@ python \"3.11.15\"\n+#@ implementation \"CPython\"\n+#@ system \"Linux\"\n+#@ machine \"x86_64\"\n+#@ libc \"glibc 2.39\"\n+\n+annotated-types==0.8.0  # record-sha256 8aca43183e620f57ed3b240da554dedf6cf840e43aa2789f63cff7a8396561bb\n+anyio==4.15.1  # record-sha256 bf283795dfdd8f15d592bc15c7788515eeb095df665dc0edd24eb9eac074be96\n+anytree==2.13.0  # record-sha256 e118a0c658d63a1c4e40406551815f8def442f274a3a650fd95ef332eec1a244\n+argcomplete==3.1.4  # record-sha256 none\n+argon2-cffi==25.1.0  # record-sha256 7b05311a76142835613fdae1391416c7e7c14a4732fa512ed474e648f5c521ec\n+argon2-cffi-bindings==26.1.0  # record-sha256 28d870be201a7859096180d245e39a7cb3ecb5d129a660c0243c616b0e60212e\n+arrow==1.4.0  # record-sha256 8d5df7cb0131fdd5dd35125ac97ecbc3f73cbf2cff0d969b4dc08415e9d55f63\n+asttokens==3.0.2  # record-sha256 f2c065795b7a790b3d9efa4749bc78898ac85a7ede01ae0f99f42d3b54dc34d0\n+async-lru==2.3.0  # record-sha256 b37b54f6cef525241ba6153ae399a407633a86db3332ca39d807dcf4e6978d32\n+attrs==26.1.0  # record-sha256 bd56b0a44556594a01dc2fae804b1cefe21d37943ba7e2f622dde22c0709def2\n+babel==2.18.0  # record-sha256 4702aabf77a259df98e4a51ad98c259bab0ce6709624048e8c42566a0257875b\n+backoff==2.2.1  # record-sha256 3f62810defce61daf9e77f0546d7371e77d36cfc11ac272cd581bff162670471\n+beautifulsoup4==4.15.0  # record-sha256 4ef352419a718ec393c833b7857954b0652ab396354bdf6fcfc885b76ff2f1b5\n+black==26.5.1  # record-sha256 bbbfbb7bf916766be6bae632a2e7a605e005eb0bb182e4059e6fad4aab7a4a9a\n+bleach==6.4.0  # record-sha256 a94590c8df82a63599a128a64fdc09692439547066244193aad3c5144dd80408\n+blinker==1.7.0  # record-sha256 none\n+bpx==1.1.1  # record-sha256 82ceada99f97993d7d33ee12cfd8bd0febcd20cf0e4db126e2547e9f7146a660\n+casadi==3.7.2  # record-sha256 116b1b109f74135a9dcc0edefd5f54027b53e4c4aff2994faf58b8da0515e097\n+certifi==2026.2.25  # record-sha256 20ea7883680f6935729f27329d6d254f21ad1dddbd9ccc0bcc2659379e6ed801\n+cffi==2.1.1  # record-sha256 4897d0151af22027ee22a569ed0a3a7f65d70df554f1a1501ca45039e3f353a3\n+charset-normalizer==3.4.6  # record-sha256 863c367765a59668309083d0683c4c4b0e1ad2c8be1bdf0428c344fbd0e04029\n+click==8.5.0  # record-sha256 ac19a8b841223b6ed0635bf398577fc1432942333212975d2a36d3886850aaa5\n+cloudpickle==3.1.2  # record-sha256 99673ca23b64c3e102bad5e8f4361520424120f4c5316347c6c299795b2ad3fd\n+colorama==0.4.6  # record-sha256 2ae3762039c35c23e4829bab30f8e768eced773ecac67d026223caabfbd493f4\n+comm==0.2.3  # record-sha256 857135f6f98fff9aaba8d2e9e7d460e34c4137ed5d40a08e2765594bef4c0833\n+conan==2.27.0  # record-sha256 6962829eb0237bb923483017a6809ca37ace4141472d34ac660c89ff6ddb8819\n+contourpy==1.3.3  # record-sha256 f64770812b948e954eeb76f82c937bc5133fdd72026b30501e6a15d91c322189\n+cryptography==41.0.7  # record-sha256 none\n+cycler==0.12.1  # record-sha256 564b9fd56f9f1730196522406a8ac8766040b69bc979b97b325e05f3490f6108\n+dbus-python==1.3.2  # record-sha256 none\n+debugpy==1.8.22  # record-sha256 93bb7a80876cc2c5b1a03a327ba26a34a51ee2ca0e65114725f0e82534f3207b\n+defusedxml==0.7.1  # record-sha256 a28e03ffb568a1bbda75fe2548aba0acf51da3e3ad42ab7a894111fab825f0dd\n+distro==1.9.0  # record-sha256 none\n+et-xmlfile==2.0.0  # record-sha256 d317f82e92dcc9a3bc806879cc75aee30b5ca8246f1c877bf0cc4e56660a9278\n+executing==2.2.1  # record-sha256 ed092b34303bd84d55e304bb826ef3dbc301d4dbada61de3c1219fd5ba527650\n+fasteners==0.20  # record-sha256 83fa0926a015d46fb0cfcd140bcbfb3d7ef2b90e56a07d6ee741d1ae3c2a73df\n+fastjsonschema==2.22.2  # record-sha256 a1a4bffa8eb4fbddd24e90feb35eb5ce0286843c983395a4df8f3ebf9fc60676\n+fonttools==4.66.0  # record-sha256 5284752e0fa2c97798d4ac3bb89d559011cfbbfdf98ae1857a38f190f8c8e5af\n+fqdn==1.5.1  # record-sha256 16177367e152e05f12ffdf82eb2744d8fed938891ef6137085948c52b901997c\n+h11==0.16.0  # record-sha256 393c249c97166fed45d8a448190cc41603f56a08f76f1ee42db3a920a55468b1\n+httpcore==1.0.9  # record-sha256 f52dd9f37c958133cde008e0e648d6149daa1f90a755a2fe36081eecb743e6a7\n+httplib2==0.20.4  # record-sha256 ffa46319d989b939534dfa649fc3efc8704eaf0c83358fecb7a964fe74898fa3\n+httpx==0.28.1  # record-sha256 b5af040812d65b617fb0d4273545c56eb32bf54ba5ef02b87261531a73cc14fe\n+idna==3.11  # record-sha256 67d43a4ef862885f3e996acec145e288045ab4c44d5f7913ea362f83e2d39267\n+iniconfig==2.3.0  # record-sha256 60cf1998a07c4c4d314d586130c9caba025b3caf655b5260716ddc3a54262c7a\n+ipykernel==7.3.0  # record-sha256 b5b5f07d566b6bb6263d0fd27c36250f7cda7c5ab6a1ee30a04434a119574a08\n+ipython==9.17.1  # record-sha256 dbdf5647c61ac2a662d6a4f9878152b27001b6ca53a6f525ff98a9789e30b2fb\n+ipython-pygments-lexers==1.1.1  # record-sha256 c82cf6ad58287d4a50b59b6b5d138a3253a794868d84b1089b1ea87c5e3a1478\n+ipywidgets==8.1.9  # record-sha256 a1a7cc3e6392e4d369c668ce9bbc588854b6a8706ac620e32e3adf209bbb63f4\n+isoduration==20.11.0  # record-sha256 b47e4e8a980f127022bb6677fb9445ede46f3fbc40436dd6a2359796bba087d1\n+jedi==0.20.0  # record-sha256 60f281d9dd027d55da342ac60d59042890afc0e4bd5beb8e8b753822282fa149\n+jinja2==3.1.6  # record-sha256 91151bad4737abfc252611c853e57e3d14dc7e64151a2dd0949766ad33886c22\n+joblib==1.6.0  # record-sha256 9c65f84476b2860990bc10bb31a19a3894e484fc7744ff5ed0bd52525fa2090b\n+json5==0.15.0  # record-sha256 bda1ce637e3ea9c8e6962abe2cbaeaa80f0afbb7b4414a09ce66f79af689f141\n+jsonpointer==3.1.1  # record-sha256 c760899b5ff64f05e61e584d2e501b7d88f7921af751d4a87d241e847344e98f\n+jsonschema==4.26.0  # record-sha256 7a76c72bb00b401dbe8d2fdce4d7dffa0fdb2c1835b45fc82f96f9c7bed94266\n+jsonschema-specifications==2025.9.1  # record-sha256 a9628ff8294efc8a627c0ca5d4d38500d8609ef893a73a554c164e12bd0c1243\n+jupyter==1.1.1  # record-sha256 1086096603cc47cebb9983767d4793e2e691c960329e3a5a3c75c3a1acec2246\n+jupyter-builder==1.2.3  # record-sha256 ebd3bed2ded163f416bd5ee77ffa6f8fcd789ea9676fa3c116d4512e02b92e55\n+jupyter-client==8.10.0  # record-sha256 cdb9f1510e5998d6184400711ce030e8f17236e046fd6e469fa21d89a7861527\n+jupyter-console==6.6.3  # record-sha256 2b2eb8f5c18e904ee0d1aec4939e1d37b95e3d175e8ecc582fd43133fc86f1dd\n+jupyter-core==5.9.1  # record-sha256 99fecf416ce2e2bc9b2b01160bc8312be876716d8824f1e849e157907a64259d\n+jupyter-events==0.12.1  # record-sha256 8b7fe2da5cbdf536201a05a5e4950f68f5db6b0a3d071ca7e9edd4b708bbd6b3\n+jupyter-lsp==2.3.1  # record-sha256 a09284256ee6ca78d262d115b66de9ada78a3fd6e5f5e204a26437166e360906\n+jupyter-server==2.21.1  # record-sha256 1c069281d9330882ff1902936e44a6857db9f251e9f8725d5367fd3eaf9a6bc7\n+jupyter-server-terminals==0.5.4  # record-sha256 521744b66348edef3232d29aa2364ce1bcdb5f8aa2c80a888f1fa9c86b69289b\n+jupyterlab==4.6.4  # record-sha256 b81e81c8ebabe7774411a6486d64c692fd8bad63b619b41f4bd2d8f37d0da16c\n+jupyterlab-pygments==0.3.0  # record-sha256 672ff8865167dd879c859996afcd0b19eb2d900819c1f605d67a50d716fa6d1d\n+jupyterlab-server==2.28.1  # record-sha256 9c2e9022df5d98d52d645361ee52054c1dc3e10ea9ba4513085ec40beb97718c\n+jupyterlab-widgets==3.0.17  # record-sha256 a0dc91e80bb96f416834d5253ed5f51692203bb1967cf3e098ede136b0482af6\n+kiwisolver==1.5.1  # record-sha256 026de1a2707ce8f1e3fe8d90ad0e3c2e837ff2c0b4a00b4e866fc80dfca35c0a\n+lark==1.3.1  # record-sha256 755873457e638d4597783a10627185c85a7b91cce4fa74943cd0726c7c18ae07\n+latexcodec==3.0.1  # record-sha256 3d6baebc66a02443c65250f3482b099f9eb4d922e0019d0f9ce6ff86353286a9\n+launchpadlib==1.11.0  # record-sha256 none\n+lazr-restfulclient==0.14.6  # record-sha256 none\n+lazr-uri==1.0.6  # record-sha256 none\n+markdown-it-py==4.2.0  # record-sha256 d59977491eaec3f08c89b137438b3ee2dd4d15f66dff3e815b0664f90d7cd8f7\n+markupsafe==3.0.3  # record-sha256 43a31a54753a9235220a61968b0f7e907ba71ee65875523f3cb63185d784a5ca\n+matplotlib==3.11.2  # record-sha256 0026be91603fd8f235c3e77b10a6645b41edc6a30cb2488b8889450b1f7dbee6\n+matplotlib-inline==0.2.2  # record-sha256 6e8ae6543f5867325f6eecb99be1482464311d8dad3e6d0d4210b74112eb9452\n+mdurl==0.1.2  # record-sha256 bda7c4854c66cd4daedddb5347837eb7b362119e7714b45263576d5924221c71\n+meshio==5.3.5  # record-sha256 a454db67a8c07142f5006e9bf82a78344fb095932a47f7f1e32a4925ffda28f0\n+mistune==3.3.4  # record-sha256 e5b197f26e470de3df84d6a54c9dbe8ea95bedfa0bc0411ef2cb8cde08f04184\n+mpmath==1.3.0  # record-sha256 8052e4c7314cdcbc6c50183c546a342e58a1a9e4589d1354d31a4ef3a705c395\n+mypy-extensions==1.1.0  # record-sha256 20f0c754257dcfc94b88d5e5dba2f7bd59504a76c0c8c481231df037a1cc894f\n+nbclient==0.11.0  # record-sha256 741e3b2c4f00e5f38785bf5b504801b3eedb50dde15cdee2d18894a4eea81eb1\n+nbconvert==7.17.1  # record-sha256 949da52f635e1107c83ecfe6b8d8716ba8bfa94a179512d2aa00be7572f2c250\n+nbformat==5.11.1  # record-sha256 9b4a7ab8e052ae849378aff6f96089421ee75f3aa1b52224c95e09f03b1b3499\n+nest-asyncio2==1.7.3  # record-sha256 896d485c5d1fb04e0352d65ba7f410095f923b0dd672adff6815b77e4905bc0d\n+notebook==7.6.3  # record-sha256 821c9ec3f1811ad7d842d384de9cd8de73284955504d3cf37e6f4a7751a6b9a4\n+notebook-shim==0.2.4  # record-sha256 2decf2f284ddd31bb63009bc917c80c8a46d43ce06f81e08e71e81c9ae6532a8\n+numpy==2.4.6  # record-sha256 c3dd00f045ea91bf972a08daad232f99a627186b0799af0379317a9edcc9fa86\n+oauthlib==3.2.2  # record-sha256 none\n+openpyxl==3.1.5  # record-sha256 2b7f886697d3afd17f12a98eb9386fad66d98f5fece698ce30abb925b74b24bd\n+overrides==7.7.0  # record-sha256 3852876124709311aae2f7ff108283d1d010b466482fd92908cf32bb92bdf80e\n+packaging==26.3  # record-sha256 b349f7a1a2346fdc4a27282d8fbab1c11a2e2ca92b2a8ba572be62493fd00327\n+pandas==3.0.5  # record-sha256 0cf9ba06ee2488a8c75425c84415686ef5489a9e72feebb75f40d124bf574e98\n+pandocfilters==1.5.1  # record-sha256 5b2c3c43873997467183668faa7c02e0760bb288123f2edad5857fd32dd87d55\n+parso==0.8.7  # record-sha256 b0fcbdb670c12ab012442a4e69ce94291a5a796e085f70813f581dbbc67d4002\n+patch-ng==1.18.1  # record-sha256 2b768520794a207b42ccd3a338881fc0e4265c0b8cd756b16506728f3e3482ba\n+pathspec==1.1.1  # record-sha256 31e240696c6b240fcae7ff9130b3bc800e441db8cc8fec59cd6eb703831c9fc9\n+pexpect==4.9.0  # record-sha256 766d27e46231f47e7d65ca97a3d7ce913ca74e4e032881c7ae7f6e5df44697ea\n+pillow==12.3.0  # record-sha256 d67571156a1abfdcb25fbb895cdd005a3d59c4d1a9c11f253febdd84419d1e93\n+pip==24.0  # record-sha256 none\n+platformdirs==4.12.0  # record-sha256 867c96df4a8756503ffd5b673b0e886d50c6a12442d9db05e27996dc9e2f88e0\n+pluggy==1.6.0  # record-sha256 ac3c42a936c786b42b92f6c5310ed48f760330718f071c3c4c31855a1717544b\n+pooch==1.9.0  # record-sha256 f5ff5debc733aa81c56ab2709ecd5dac460cf573452a8c65a01b0c4ce2218910\n+posthog==7.60.1  # record-sha256 b027a054757dc3d609caae2352224277a64f1752666177aa86eedc918dfcd0a5\n+prometheus-client==0.26.0  # record-sha256 2bed5c5b6b9c116424ec0e7679fc2acf31b5fa617846223b39d547f30d645401\n+prompt-toolkit==3.0.53  # record-sha256 7ed142430e0c5a0634a803f43eee73ee3e358a0436864a12b451a92db43d0227\n+psutil==7.2.2  # record-sha256 cdc0fdcbe823c0533785085d41a002e8d67d4ea338515edb4d063e74062e8d07\n+ptyprocess==0.7.0  # record-sha256 2d42d9811f9067a05ac93dbd58ed3ca150ede319709c0b54976b5c642b7027a7\n+pure-eval==0.2.4  # record-sha256 81c5863ca8865002311979698447a04fcbd22b9c14b830501ebb81f9162cfe5a\n+pyarrow==25.0.1  # record-sha256 d7c46765c1d341c21fa138fe84044e1021c5bfcdd7eee0b9cea68a8f55f5c8d6\n+pybamm==26.8.0.0  # record-sha256 ae9606ff154fdb64ab83abfa4997e0647533a2fb1025328a9cc058248f3c40b5\n+pybammsolvers==0.9.1  # record-sha256 474b4098acdc7ac8cef58449cff961670abe054d44d608f9407aed4f18a71fc7\n+pybtex==0.26.1  # record-sha256 5724d1a11b66d7f9c9e2d55bd295ae8bf032a4d56440a86b02a3005da3052662\n+pycparser==3.0  # record-sha256 5192a85147780baa9341bf63a3b42e3b818d5c7ca219779bae4888f1bf78b6ab\n+pydantic==2.13.5  # record-sha256 6e393725dc45b432f077cc86627a08e0d663b1734772608ee4f66e13a8c6dbc0\n+pydantic-core==2.46.5  # record-sha256 8207aff2053f8b9e584af8ceac182febdb3491206b019e9140d9f7004fe3fe70\n+pygments==2.21.0  # record-sha256 41a99838b974f5e6cf39a8e387a449418e6762c666427e3c24152760aa6e2f4c\n+pygobject==3.48.2  # record-sha256 none\n+pyjwt==2.7.0  # record-sha256 none\n+pymupdf==1.28.2  # record-sha256 4e0d129ccf7bde2f2488331617e9ee2ca4e2c0153a05aec8df7a2f4eeb8231e1\n+pyparsing==3.1.1  # record-sha256 none\n+pytest==9.1.1  # record-sha256 7a423734645a175fcbf3fecb9703a3a9fd6756bdcda1ce7438bd1968b82261c9\n+pytest-json-report==1.5.0  # record-sha256 029426fa9ce32822b8774e2c54ef417144b5b97ef53bd6acd8c94d3f3fd7c2ca\n+pytest-metadata==3.1.1  # record-sha256 db897bd01850a0e010a455640a7ec5b30c35f219c007618d78fbd206d23911c0\n+python-apt==2.7.7+ubuntu5.2  # record-sha256 none\n+python-dateutil==2.9.0.post0  # record-sha256 ea009219f435165e7013386035f57b84d75e0676dec16cefcf99db3310324aa2\n+python-json-logger==4.2.0  # record-sha256 2a8591c9ba0cf740122fdb67fe5416d17ca3b07ae58269cce8139b88ab171c96\n+pytokens==0.4.1  # record-sha256 2bca96e8c6986a8e3905535fbec6364fa94615c20c52240f2df19ada29cc043c\n+pyyaml==6.0.1  # record-sha256 none\n+pyzmq==27.2.0  # record-sha256 9fddbf6b1ccad270a56c9fe0bff2f0fe744899f08f60f952c0eaf265cd72fff4\n+referencing==0.37.0  # record-sha256 dec74300561a47a0d28ec39371da5c952d4b0bb713aa6529694b6a6b52ec4060\n+requests==2.33.1  # record-sha256 0d20d243fc610115fcdaf734697b6ad9c828f6658f4ad542d0c487683fb307f8\n+rfc3339-validator==0.1.4  # record-sha256 e0de2375f9b5d93b1cb7551ac35d9f5590ee4a4ecb2336aac7cbaea98c0e11f0\n+rfc3986-validator==0.1.1  # record-sha256 7d8436bbbdef66774eaa1d131f7b232be497d098b5aee03955e75acbf5217c00\n+rfc3987-syntax==1.1.0  # record-sha256 0e8cdb6d4d56bc98b403eb0d098d21aeac79090c45b89528fe596732b6c590ad\n+rich==15.0.0  # record-sha256 d1538647fc6920348d34b1fc523e8a9a5cd957b2d1cc3d3627528bf4af3eefb6\n+rpds-py==2026.6.3  # record-sha256 e13d7b7a4be5afc24787b030379e5be599a40e2e3f4aae3c025ece21444fc128\n+scikit-fem==12.0.2  # record-sha256 b6cbc55ec12a1b976c77eba5a1d0a486da8b8e971625419c2bbd88ff874e1a54\n+scipy==1.17.1  # record-sha256 b8ea386fea9f83a6696fb52817f71582fb1174192a306225bc87ea13177b1b64\n+send2trash==2.1.0  # record-sha256 2314259af07a76aa92aab6a2b87aa4b74aacf22495b705852134251ecd41474b\n+setuptools==68.1.2  # record-sha256 none\n+six==1.16.0  # record-sha256 none\n+soupsieve==2.10  # record-sha256 0f498c090ee8e116e1132a9f61b81ce2c50ff022042c5a192d82644270ec8d18\n+stack-data==0.6.3  # record-sha256 9d52616ad2f745f7e5df4f854103e7dd69c55cebe8a2861d48059ef1b2a969b2\n+sympy==1.14.0  # record-sha256 3eb714822b0627fa62b04eee1f758877891703641de34c1b299757bfbbe759b5\n+terminado==0.18.1  # record-sha256 05908a778988bdd86bf9e3120713fb06efb8a999700e26f7a1e634f27d1bf8f7\n+tinycss2==1.5.1  # record-sha256 1773dbed0c0fb8305f63bf4de4d9f8fc63b40f0732077a2d6354167d4bb36127\n+toml==0.10.2  # record-sha256 none\n+tornado==6.5.10  # record-sha256 a8fec524feae3f0d25a7d110637a7360bdec3e6256cf496b26258eb5d31b7e7d\n+tqdm==4.70.1  # record-sha256 8cd19875ceda76e48e5357c0d8b61ba87591b1da141ffa988e4c3cb221e65550\n+traitlets==5.16.1  # record-sha256 5f60746bd43c84b88498fb44723e995fb3a01528b2744c33101a7c0a666380df\n+typing-extensions==4.16.0  # record-sha256 bef8a87e9866f1a161c8eb7a1b1c1af3a2d81b6cecf39368228972c0078d1988\n+typing-inspection==0.4.4  # record-sha256 408b0b1d9c5165808960f48c419d34dcf1a57990eb7f8ea9be214ae716301752\n+tzdata==2026.4  # record-sha256 f8b667c761ceedcb68942b378d61fdc802a3c78b3ae562de580c33ff769abc0d\n+uri-template==1.3.0  # record-sha256 f45f33e2cd44b06b73e8e03ef45f3c780e3aa9b77b8f19efb7e4f420b612c17c\n+urllib3==2.6.3  # record-sha256 c9867c9bf014c5039e82cc802cbff6c6e5884fec449905d8ae8f609cd5ec4882\n+wadllib==1.3.6  # record-sha256 none\n+wcwidth==0.9.1  # record-sha256 f8c196e49b91ee8f74db1ae1b8ba04ec64661e0de2cf94d35ac9596dfb6b8215\n+webcolors==25.10.0  # record-sha256 b5b74c83020cb8643c5f40e2a4cb1fdbf73ef46c0b1276fede9b3da00367292f\n+webencodings==0.6.1  # record-sha256 03deb8d09a8f6cd56f01d5f4419c06a512f1e37632cdf6854d49266942c3eaa0\n+websocket-client==1.9.2  # record-sha256 4c121e640d0064ff8cc0621309a4275fba4c9fed1d3bbebe7615f7b96fa143f9\n+wheel==0.42.0  # record-sha256 none\n+widgetsnbextension==4.0.16  # record-sha256 cba24bfd3bbd68d4e64594c2589bbdb22a58ebd575b47c3bb03eb4d9951a0de1\n+xarray==2026.7.0  # record-sha256 6045ce487b591e88a93345b903c440347faf6f5da440896a33d25476f96a30ec\n+xmltodict==0.13.0  # record-sha256 none\n+yq==3.1.0  # record-sha256 none\n+\n+#@ shadowed cryptography==41.0.7 record-sha256 none\n+#@ shadowed packaging==24.0 record-sha256 none\n@@ -1,7 +1,12 @@\n # ── 핵심 ──\n-# 검증 완료 조합 (2026-08-05, docs/ENV_REPORT.md):\n-#   pybamm 26.7.1.0 / numpy 2.4.6 / scipy 1.17.1 / pandas 3.0.5 / Python 3.11\n-#   IDAKLU OK, composite DFN OK, 1 solve ≈ 2 s\n+# ★ 90차 (원장 §135 · D5) — 이 파일은 **하한만** 둔다. 생산 환경 선언이 아니다.\n+#   · v4 정본 producer 환경 기록 = 프로필 B — docs/22p_gap/env_profile_B_v4.yaml (기록 전용)\n+#   · 현재 검증 환경의 정확 고정 = 프로필 C — requirements-validation-C.lock.txt (기록 대조 전용 · 막지 않는다)\n+#   옛 주석 \"검증 완료 조합 (2026-08-05, docs/ENV_REPORT.md): pybamm 26.7.1.0 / numpy 2.4.6 /\n+#   scipy 1.17.1 / pandas 3.0.5 / Python 3.11 · IDAKLU OK, composite DFN OK, 1 solve ≈ 2 s\" 는\n+#   scaffold 커밋 61bce598d 때 scripts/verify_env.py 진단의 기록이다 — v4 정본 producer 기록\n+#   (Python 3.10.12 · numpy 2.2.6 · scipy 1.15.3 · pandas 2.3.3 · pybamm 26.7.1.0) 과 다르고,\n+#   인용한 docs/ENV_REPORT.md 는 .gitignore 된 로컬 출력이라 저장소에 없다.\n pybamm[all]>=24.5        # [all] 이 IDAKLU solver 포함. 이거 없으면 2~5배 느림\n numpy>=1.24\n scipy>=1.11\n@@ -68,6 +68,12 @@ ok()   { printf '   ✅ %s\\n' \"$1\"; }\n FAILED_CHECKS=()\n bad()  { printf '   ❌ %s\\n' \"$1\"; fail=$((fail+1)); FAILED_CHECKS+=(\"$1\"); }\n \n+# ★ 90차 (원장 §135 · 고정 표 PYBAMM_PIN_ROUND_SPEC.md §5-1) — 실행 환경 ↔ 프로필 C lock 의 대조를 **기록만** 한다.\n+#   불일치 (MISMATCH) · 측정 불가 (UNMEASURED) 는 smoke 를 막지 않는다 (D3 — 기록 대조). 도구 자체가 죽으면 기록이\n+#   만들어지지 않은 것이므로 실패로 센다. 모듈로 불러 계산 진입점 (python -m src.*) 과 같은 sys.path 로 잰다.\n+step \"환경 프로필 C 대조 (기록 전용 · 원장 §135)\"\n+\"$PY\" -m tools.env_profile || bad \"환경 프로필 C 대조 도구 실패\"\n+\n rm -rf \"$BASE\"\n mkdir -p \"$BASE\"\n \n@@ -0,0 +1,404 @@\n+\"\"\"env_profile.py — 프로필 C (현재 검증 환경의 정확 고정) 의 측정 · lock · 대조. **기록 전용.**\n+\n+★ 90차 (원장 §135 · 고정 표 `docs/22p_gap/PYBAMM_PIN_ROUND_SPEC.md` §3–§5) — 사전 검토 회신 P3: 지금은 \"무엇으로\n+  돌렸나\" 는 기록되지만 (`src/io.py::env_fingerprint` · effective_solver · worker 서명 대조) \"그 환경이 승인된 것인가\" 를\n+  묻는 곳이 없었다. 이 모듈은 실행 환경을 `requirements-validation-C.lock.txt` 와 대조해 **일치 / 불일치 목록을 남긴다.**\n+  어떤 실행도 막지 않는다 (D3 — 불일치여도 pytest · smoke · run.sh · 영수증 생성은 그대로 돈다).\n+\n+  · 측정은 그 프로세스의 `sys.path` 순서 그대로다 — 해석기 · 플랫폼 다섯 축 · 배포판 (정규 이름의 첫 항목 = 유효 · 뒤 항목 =\n+    가려진 것 · RECORD 텍스트 sha256) · 설치 파일의 RECORD 재해시 (설치 뒤 변경 감지 — RECORD 가 덮는 범위만) · 핵심\n+    module 열 개의 실제 origin (사전 검토 Q5).\n+  · 결과는 닫힌 dict 다. `MATCH` · `MISMATCH` · `UNMEASURED` — 측정하지 못한 칸은 `None` 이다. 빈 목록으로 쓰면\n+    \"불일치 없음\" 으로 읽힌다 (61차 P1-3). `UNMEASURED` 를 `MATCH` 로 적지 않는다.\n+  · 선언하지 않는 것: C 는 정본 (v4) 생산 환경이 아니다 (그것은 프로필 B — 고정 표 §6 의 기록) · 설치 처방이 아니다 ·\n+    다른 기계에 강제하지 않는다.\n+\n+사용 (프로젝트 root 에서 — 계산 진입점 `python -m src.*` 과 같은 sys.path):\n+    python -m tools.env_profile                 # 대조 요약 (rc 0 — 세 상태 모두)\n+    python -m tools.env_profile --json          # 결과 dict\n+    python -m tools.env_profile --emit-lock     # 지금 환경의 정규형 lock (측정 실패면 rc 1 · 부분 lock 없음)\n+\"\"\"\n+from __future__ import annotations\n+\n+import argparse\n+import base64\n+import hashlib\n+import importlib\n+import importlib.machinery\n+import importlib.metadata as md\n+import json\n+import os\n+import platform\n+import re\n+import sys\n+from collections import Counter\n+from pathlib import Path\n+\n+ROOT = Path(__file__).resolve().parent.parent\n+LOCK_DEFAULT = ROOT / \"requirements-validation-C.lock.txt\"\n+\n+#: `src/io.py::env_fingerprint()` 의 module 축 — 순서까지 같다 (e07 이 대조한다).\n+KEY_MODULES = (\"numpy\", \"scipy\", \"pandas\", \"joblib\", \"pyarrow\", \"pybamm\", \"matplotlib\", \"yaml\",\n+               \"pybammsolvers\", \"casadi\")\n+#: lock 지시 — 이 순서로 쓰고, 각각 정확히 한 번 있어야 한다.\n+DIRECTIVES = (\"profile\", \"python\", \"implementation\", \"system\", \"machine\", \"libc\")\n+#: 결과 `mismatches[].axis` 의 닫힌 집합 (고정 표 §4-2).\n+AXES = (\"python\", \"implementation\", \"system\", \"machine\", \"libc\", \"dist_missing\", \"dist_extra\",\n+        \"dist_version\", \"dist_record\", \"shadowed\", \"file\", \"origin\")\n+\n+_NAME = re.compile(r\"[a-z0-9]+(?:-[a-z0-9]+)*\")\n+_VERSION = re.compile(r\"[^\\s#]+\")\n+_HEX64 = re.compile(r\"[0-9a-f]{64}\")\n+_DIRECTIVE = re.compile(r\"#@ (?P<key>[a-z]+) (?P<value>.+)\")\n+_SHADOW = re.compile(r\"#@ shadowed (?P<name>[^=\\s#]+)==(?P<version>[^\\s#]+) record-sha256 (?P<record>\\S+)\")\n+_DIST = re.compile(r\"(?P<name>[^=\\s#]+)==(?P<version>[^\\s#]+)  # record-sha256 (?P<record>\\S+)\")\n+\n+#: `emit_lock` 이 쓰는 머리 주석 (정규형의 일부 — 바꾸면 커밋된 lock 도 다시 낸다).\n+HEADER = (\n+    \"# requirements-validation-C.lock.txt — 프로필 C: 현재 검증 환경의 정확 고정 (기록 대조 전용)\",\n+    \"#\",\n+    \"# ★ 90차 (원장 §135 · 고정 표 docs/22p_gap/PYBAMM_PIN_ROUND_SPEC.md §3) — `python -m tools.env_profile --emit-lock` 의\",\n+    \"#   출력 그대로다. 손으로 고치지 않는다 (정규형 고정점: emit_lock(parse_lock(text)) == text).\",\n+    \"# 대조: `python -m tools.env_profile` (smoke 로그 · 영수증 stamp `environment_profile_C`). 불일치여도 아무것도 막지 않는다.\",\n+    \"# 선언하지 않는 것: 정본 (v4) 생산 환경 (그것은 프로필 B — 고정 표 §6 의 기록) · C 로 만든 수치가 B 의 수치와 같다는 것 ·\",\n+    \"#   설치 처방 (리눅스 시스템 배포판을 담는다 — `pip install -r` 용이 아니다) · 다른 기계에 강제하는 것.\",\n+    \"# 문법 (닫힘): `#@ <지시> <JSON 문자열>` · `<이름>==<버전>  # record-sha256 <hex64|none>` (PEP 503 이름 · 엄격 오름차순) ·\",\n+    \"#   `#@ shadowed <이름>==<버전> record-sha256 <hex64|none>` (경로 순서로 가려진 항목). record-sha256 = 설치된 RECORD\",\n+    \"#   텍스트의 sha256 (none = RECORD 없음 — 설치 파일 대조 불가).\",\n+)\n+\n+\n+class LockFormatError(ValueError):\n+    \"\"\"lock 이 닫힌 문법 밖이다.\"\"\"\n+\n+\n+def normalize(name: str) -> str:\n+    \"\"\"PEP 503 정규 이름.\"\"\"\n+    return re.sub(r\"[-_.]+\", \"-\", name).lower()\n+\n+\n+# ── 측정 ──────────────────────────────────────────────────────────────────────\n+\n+def _verify_files(dist) -> tuple[int, int, list]:\n+    \"\"\"RECORD 의 해시 있는 항목을 다시 해시한다 → (일치 수, 해시 없는 수, [(상대경로, 기대, 관측 | None)]).\n+\n+    없는 파일은 불일치다 (관측 `None`). 그 밖의 읽기 오류 · 모르는 해시 알고리즘은 **측정 실패**로 올린다 —\n+    파일 하나를 못 읽은 것을 \"그 파일은 맞다\" 로도 \"다르다\" 로도 적지 않는다.\n+    \"\"\"\n+    ok, unhashed, bad = 0, 0, []\n+    for f in dist.files or ():\n+        if f.hash is None:\n+            unhashed += 1\n+            continue\n+        h = hashlib.new(f.hash.mode)                     # 모르는 알고리즘 → ValueError (측정 실패)\n+        want = f\"{f.hash.mode}={f.hash.value}\"\n+        try:\n+            with open(f.locate(), \"rb\") as fh:\n+                for chunk in iter(lambda: fh.read(1 << 20), b\"\"):\n+                    h.update(chunk)\n+        except FileNotFoundError:\n+            bad.append((str(f), want, None))\n+            continue\n+        got = base64.urlsafe_b64encode(h.digest()).rstrip(b\"=\").decode()\n+        if got == f.hash.value:\n+            ok += 1\n+        else:\n+            bad.append((str(f), want, f\"{f.hash.mode}={got}\"))\n+    return ok, unhashed, bad\n+\n+\n+def _origin(module: str, paths: list, effective: dict, files: dict, no_record: list):\n+    \"\"\"핵심 module 의 실제 origin → (\"verified\", 주인) · (\"unverifiable\", origin) · (\"mismatch\", 관측).\"\"\"\n+    spec = importlib.machinery.PathFinder.find_spec(module, paths)\n+    origin = getattr(spec, \"origin\", None) if spec is not None else None\n+    if spec is None:\n+        return \"mismatch\", \"<not found>\"\n+    if not origin or not os.path.isfile(origin):\n+        return \"mismatch\", f\"<{origin or 'namespace'}>\"\n+    real = os.path.realpath(origin)\n+    owners = sorted(\n+        name for name, entries in files.items()\n+        if any(os.path.realpath(f.locate()) == real for f in entries\n+               if f.parts and f.parts[0].split(\".\")[0] == module))\n+    if len(owners) == 1:\n+        return \"verified\", owners[0]\n+    if not owners:\n+        for name in no_record:\n+            base = os.path.realpath(effective[name].locate_file(\"\"))\n+            if os.path.commonpath([base, real]) == base:\n+                return \"unverifiable\", real\n+    return \"mismatch\", real if not owners else f\"{real} (주인 {', '.join(owners)})\"\n+\n+\n+def measure(paths=None) -> dict:\n+    \"\"\"그 프로세스의 `sys.path` (또는 주어진 경로 목록) 순서로 환경을 잰다. 실패는 예외로 올린다.\"\"\"\n+    importlib.invalidate_caches()\n+    paths = [str(p) for p in (sys.path if paths is None else paths)]\n+    effective, meta, shadowed = {}, {}, []\n+    for entry in paths:\n+        for dist in md.distributions(path=[entry]):\n+            raw, version = dist.metadata[\"Name\"], dist.version\n+            if not raw or not version:\n+                raise ValueError(f\"이름 · 버전 없는 배포판 메타데이터 ({entry})\")\n+            name = normalize(raw)\n+            if not _NAME.fullmatch(name) or not _VERSION.fullmatch(version):\n+                raise ValueError(f\"lock 에 쓸 수 없는 배포판 이름 · 버전: {raw!r} {version!r} ({entry})\")\n+            record = dist.read_text(\"RECORD\")\n+            digest = \"none\" if record is None else hashlib.sha256(record.encode(\"utf-8\")).hexdigest()\n+            if name in effective:\n+                shadowed.append((name, version, digest))\n+            else:\n+                effective[name], meta[name] = dist, (version, digest)\n+    dists, files, no_record = {}, {}, []\n+    verified = unhashed = 0\n+    file_bad = []\n+    for name in sorted(effective):\n+        version, digest = meta[name]\n+        dists[name] = {\"version\": version, \"record\": digest}\n+        if digest == \"none\":\n+            no_record.append(name)\n+            continue\n+        files[name] = list(effective[name].files or ())\n+        ok, un, bad = _verify_files(effective[name])\n+        verified += ok\n+        unhashed += un\n+        file_bad += [(name, rel, want, got) for rel, want, got in bad]\n+    origins, origin_unverifiable, origin_bad = {}, [], []\n+    for module in KEY_MODULES:\n+        kind, value = _origin(module, paths, effective, files, no_record)\n+        if kind == \"verified\":\n+            origins[module] = value\n+        elif kind == \"unverifiable\":\n+            origin_unverifiable.append(module)\n+        else:\n+            origin_bad.append((module, value))\n+    return {\n+        \"python\": platform.python_version(),\n+        \"implementation\": platform.python_implementation(),\n+        \"system\": platform.system(),\n+        \"machine\": platform.machine(),\n+        \"libc\": \" \".join(platform.libc_ver()).strip(),\n+        \"dists\": dists,\n+        \"shadowed\": sorted(shadowed),\n+        \"dists_without_record\": no_record,\n+        \"files\": {\"verified\": verified, \"unhashed\": unhashed, \"mismatches\": file_bad},\n+        \"origins\": {\"verified\": origins, \"unverifiable\": origin_unverifiable, \"mismatches\": origin_bad},\n+    }\n+\n+\n+# ── lock ─────────────────────────────────────────────────────────────────────\n+\n+def emit_lock(profile: dict) -> str:\n+    \"\"\"정규형 lock 텍스트 — `measure()` 나 `parse_lock()` 의 결과에서.\"\"\"\n+    lines = list(HEADER)\n+    lines += [f\"#@ {k} {json.dumps('C' if k == 'profile' else profile[k], ensure_ascii=False)}\" for k in DIRECTIVES]\n+    lines.append(\"\")\n+    lines += [f\"{n}=={d['version']}  # record-sha256 {d['record']}\" for n, d in sorted(profile[\"dists\"].items())]\n+    if profile[\"shadowed\"]:\n+        lines.append(\"\")\n+        lines += [f\"#@ shadowed {n}=={v} record-sha256 {r}\" for n, v, r in sorted(profile[\"shadowed\"])]\n+    return \"\\n\".join(lines) + \"\\n\"\n+\n+\n+def parse_lock(text: str) -> dict:\n+    \"\"\"닫힌 문법 (고정 표 §3-1) 으로 읽는다. 어긋나면 `LockFormatError` (줄 번호를 담는다).\"\"\"\n+    seen, dists, shadowed = {}, {}, []\n+    last, last_shadow = None, None\n+\n+    def bad(no: int, why: str) -> LockFormatError:\n+        return LockFormatError(f\"줄 {no}: {why}\")\n+\n+    lines = text.split(\"\\n\")\n+    if lines and lines[-1] == \"\":\n+        lines.pop()\n+    for no, line in enumerate(lines, 1):\n+        if line == \"\" or (line.startswith(\"#\") and not line.startswith(\"#@\")):\n+            continue\n+        if line.startswith(\"#@ shadowed \"):\n+            m = _SHADOW.fullmatch(line)\n+            if m is None:\n+                raise bad(no, \"가려진 항목의 꼴이 아니다\")\n+            key = (m[\"name\"], m[\"version\"], m[\"record\"])\n+            if not _NAME.fullmatch(key[0]):\n+                raise bad(no, f\"정규형 아닌 이름 {key[0]!r}\")\n+            if key[2] != \"none\" and not _HEX64.fullmatch(key[2]):\n+                raise bad(no, f\"record-sha256 칸 {key[2]!r}\")\n+            if last_shadow is not None and key < last_shadow:\n+                raise bad(no, \"가려진 항목의 정렬이 어긋났다\")\n+            shadowed.append(key)\n+            last_shadow = key\n+            continue\n+        if line.startswith(\"#@\"):\n+            m = _DIRECTIVE.fullmatch(line)\n+            if m is None or m[\"key\"] not in DIRECTIVES:\n+                raise bad(no, f\"모르는 지시 {line!r}\")\n+            if m[\"key\"] in seen:\n+                raise bad(no, f\"지시 {m['key']} 가 두 번 있다\")\n+            try:\n+                value = json.loads(m[\"value\"])\n+            except ValueError as exc:\n+                raise bad(no, f\"지시 {m['key']} 의 값이 JSON 이 아니다 ({exc})\") from exc\n+            if not isinstance(value, str):\n+                raise bad(no, f\"지시 {m['key']} 의 값이 문자열이 아니다\")\n+            if m[\"key\"] == \"profile\" and value != \"C\":\n+                raise bad(no, f\"profile 이 C 가 아니다 ({value!r})\")\n+            seen[m[\"key\"]] = value\n+            continue\n+        m = _DIST.fullmatch(line)\n+        if m is None:\n+            raise bad(no, f\"모르는 줄 {line[:80]!r}\")\n+        name, version, record = m[\"name\"], m[\"version\"], m[\"record\"]\n+        if not _NAME.fullmatch(name):\n+            raise bad(no, f\"정규형 아닌 이름 {name!r}\")\n+        if record != \"none\" and not _HEX64.fullmatch(record):\n+            raise bad(no, f\"record-sha256 칸 {record!r}\")\n+        if last is not None and name <= last:\n+            raise bad(no, f\"배포판 정렬 · 중복 ({last!r} 다음 {name!r})\")\n+        dists[name] = {\"version\": version, \"record\": record}\n+        last = name\n+    missing = [k for k in DIRECTIVES if k not in seen]\n+    if missing:\n+        raise LockFormatError(f\"지시가 없다: {', '.join(missing)}\")\n+    out = {k: seen[k] for k in DIRECTIVES}\n+    out.update(dists=dists, shadowed=shadowed)\n+    return out\n+\n+\n+# ── 대조 ─────────────────────────────────────────────────────────────────────\n+\n+def _mm(axis: str, subject: str, locked, measured) -> dict:\n+    return {\"axis\": axis, \"subject\": subject, \"locked\": locked, \"measured\": measured}\n+\n+\n+def compare(locked: dict, measured: dict) -> list:\n+    \"\"\"축마다 다른 것을 모은다 → (axis, subject) 순 목록. 빈 목록 = 비교한 모든 축이 같다.\"\"\"\n+    out = []\n+    for k in DIRECTIVES[1:]:\n+        if locked[k] != measured[k]:\n+            out.append(_mm(k, k, locked[k], measured[k]))\n+    lock_d, got_d = locked[\"dists\"], measured[\"dists\"]\n+    for n in sorted(lock_d.keys() - got_d.keys()):\n+        out.append(_mm(\"dist_missing\", n, lock_d[n][\"version\"], None))\n+    for n in sorted(got_d.keys() - lock_d.keys()):\n+        out.append(_mm(\"dist_extra\", n, None, got_d[n][\"version\"]))\n+    for n in sorted(lock_d.keys() & got_d.keys()):\n+        if lock_d[n][\"version\"] != got_d[n][\"version\"]:\n+            out.append(_mm(\"dist_version\", n, lock_d[n][\"version\"], got_d[n][\"version\"]))\n+        if lock_d[n][\"record\"] != got_d[n][\"record\"]:\n+            out.append(_mm(\"dist_record\", n, lock_d[n][\"record\"], got_d[n][\"record\"]))\n+    lock_s = Counter(tuple(x) for x in locked[\"shadowed\"])\n+    got_s = Counter(tuple(x) for x in measured[\"shadowed\"])\n+    for n, v, r in sorted((lock_s - got_s).elements()):\n+        out.append(_mm(\"shadowed\", f\"{n}=={v}\", r, None))\n+    for n, v, r in sorted((got_s - lock_s).elements()):\n+        out.append(_mm(\"shadowed\", f\"{n}=={v}\", None, r))\n+    for n, rel, want, got in measured[\"files\"][\"mismatches\"]:\n+        out.append(_mm(\"file\", f\"{n}:{rel}\", want, got))\n+    for module, seen in measured[\"origins\"][\"mismatches\"]:\n+        out.append(_mm(\"origin\", module, \"RECORD 가 있는 설치 배포판 하나의 파일\", seen))\n+    return sorted(out, key=lambda x: (x[\"axis\"], x[\"subject\"]))\n+\n+\n+def _display(path: Path) -> str:\n+    p = path.resolve()\n+    try:\n+        return p.relative_to(ROOT).as_posix()\n+    except ValueError:\n+        return str(p)\n+\n+\n+def compare_lock(lock_path=None, *, paths=None) -> dict:\n+    \"\"\"lock 과 지금 환경을 대조한 닫힌 결과 dict (고정 표 §4-2). 예외를 내지 않는다 — 못 하면 `UNMEASURED`.\"\"\"\n+    lp = Path(LOCK_DEFAULT if lock_path is None else lock_path)\n+    res = {\"profile\": \"C\", \"lock_path\": _display(lp), \"lock_sha256\": None, \"status\": \"UNMEASURED\",\n+           \"reason\": \"\", \"mismatches\": None, \"unverifiable\": None, \"counts\": None}\n+    try:\n+        raw = lp.read_bytes()\n+    except OSError as exc:\n+        res[\"reason\"] = f\"lock 을 읽지 못했다: {exc}\"\n+        return res\n+    res[\"lock_sha256\"] = hashlib.sha256(raw).hexdigest()\n+    try:\n+        locked = parse_lock(raw.decode(\"utf-8\"))\n+    except UnicodeDecodeError as exc:\n+        res[\"reason\"] = f\"lock 이 UTF-8 이 아니다: {exc}\"\n+        return res\n+    except LockFormatError as exc:\n+        res[\"reason\"] = f\"lock 형식 오류 — {exc}\"\n+        return res\n+    try:\n+        measured = measure(paths)\n+    except Exception as exc:                              # noqa: BLE001 — 측정 실패는 typed UNMEASURED 다\n+        res[\"reason\"] = f\"측정 실패: {exc!r}\"\n+        return res\n+    found = compare(locked, measured)\n+    res.update(\n+        status=\"MISMATCH\" if found else \"MATCH\",\n+        mismatches=found,\n+        unverifiable={\"dists_without_record\": list(measured[\"dists_without_record\"]),\n+                      \"origins\": list(measured[\"origins\"][\"unverifiable\"])},\n+        counts={\"dists_locked\": len(locked[\"dists\"]), \"dists_measured\": len(measured[\"dists\"]),\n+                \"shadowed_locked\": len(locked[\"shadowed\"]), \"shadowed_measured\": len(measured[\"shadowed\"]),\n+                \"files_verified\": measured[\"files\"][\"verified\"], \"files_unhashed\": measured[\"files\"][\"unhashed\"],\n+                \"origins_verified\": len(measured[\"origins\"][\"verified\"])})\n+    return res\n+\n+\n+# ── CLI ──────────────────────────────────────────────────────────────────────\n+\n+def _summary(r: dict) -> str:\n+    head = f\"환경 프로필 C 대조: {r['status']} · lock {r['lock_path']}\"\n+    if r[\"lock_sha256\"]:\n+        head += f\" (sha256 {r['lock_sha256'][:16]}…)\"\n+    if r[\"status\"] == \"UNMEASURED\":\n+        return head + f\"\\n  이유: {r['reason']}\\n  (기록 전용 — 아무것도 막지 않는다 · 원장 §135)\"\n+    c = r[\"counts\"]\n+    lines = [head + f\" · 배포판 lock {c['dists_locked']} / 측정 {c['dists_measured']} · 가려진 {c['shadowed_locked']}\"\n+             f\" / {c['shadowed_measured']} · 설치 파일 일치 {c['files_verified']} (해시 없음 {c['files_unhashed']})\"\n+             f\" · origin 확인 {c['origins_verified']}\"]\n+    u = r[\"unverifiable\"]\n+    if u[\"dists_without_record\"]:\n+        lines.append(f\"  · 확인 불가 — RECORD 없는 배포판 {len(u['dists_without_record'])}: \"\n+                     + \", \".join(u[\"dists_without_record\"]))\n+    if u[\"origins\"]:\n+        lines.append(\"  · 확인 불가 — origin: \" + \", \".join(u[\"origins\"]))\n+    for m in r[\"mismatches\"]:\n+        lines.append(f\"  ✗ {m['axis']} {m['subject']} locked={m['locked']} measured={m['measured']}\")\n+    lines.append(\"  (기록 전용 — 불일치여도 아무것도 막지 않는다 · 원장 §135)\")\n+    return \"\\n\".join(lines)\n+\n+\n+def main(argv=None) -> int:\n+    ap = argparse.ArgumentParser(prog=\"python -m tools.env_profile\",\n+                                 description=\"실행 환경 ↔ 프로필 C lock 대조 (기록 전용 · 원장 §135)\")\n+    ap.add_argument(\"--lock\", default=None, help=\"대조할 lock (기본: 프로젝트 root 의 requirements-validation-C.lock.txt)\")\n+    mode = ap.add_mutually_exclusive_group()\n+    mode.add_argument(\"--json\", action=\"store_true\", help=\"결과 dict 를 JSON 으로\")\n+    mode.add_argument(\"--emit-lock\", action=\"store_true\", help=\"지금 환경의 정규형 lock 을 낸다\")\n+    a = ap.parse_args(argv)\n+    if a.emit_lock:\n+        if a.lock is not None:\n+            ap.error(\"--emit-lock 은 --lock 과 함께 쓰지 않는다\")\n+        try:\n+            text = emit_lock(measure())\n+        except Exception as exc:                          # noqa: BLE001\n+            print(f\"✗ 측정 실패 — lock 을 내지 않는다: {exc!r}\", file=sys.stderr)\n+            return 1\n+        sys.stdout.buffer.write(text.encode(\"utf-8\"))\n+        sys.stdout.flush()\n+        return 0\n+    r = compare_lock(a.lock)\n+    if a.json:\n+        sys.stdout.buffer.write((json.dumps(r, sort_keys=True, ensure_ascii=False) + \"\\n\").encode(\"utf-8\"))\n+        sys.stdout.flush()\n+        return 0\n+    try:\n+        sys.stdout.reconfigure(errors=\"backslashreplace\")\n+    except Exception:                                     # noqa: BLE001 — 출력 장치가 바꿀 수 없는 경우\n+        pass\n+    print(_summary(r))\n+    return 0\n+\n+\n+if __name__ == \"__main__\":\n+    raise SystemExit(main())",
+    "display_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/commit/e2160c2ef276d4944fa4ad76fbaa001671a1a95e",
+    "display_title": "feat(env): GREEN — 프로필 C lock · tools/env_profile.py (기록 대조) · B 기록 · requirements 주석 정정 · smoke 기록 단계 · 영수증 stamp (고정 표 PYBAMM_PIN_ROUND_SPEC.md · 원장 §135)\n\ntest_gate90 38 passed / rc 0 (RED cff5e409b 에서 38 failed). RUN_SCOPE 네 파일 (고정 표 §2 상한\n그대로) — source_digest 803e2b7781cbc9cd → 3f84c0db52d2b9ac:\n- requirements-validation-C.lock.txt (새) — `python -m tools.env_profile --emit-lock` 출력 그대로 ·\n  Python 3.11.15 · CPython · Linux · x86_64 · glibc 2.39 · 유효 배포판 170 · 가려진 2 (cryptography\n  41.0.7 · packaging 24.0) · 배포판마다 RECORD 텍스트 sha256 (RECORD 없는 22 = none) · 정규형 고정점\n- tools/env_profile.py (새) — 측정 (sys.path 순서 · 해석기 · 플랫폼 다섯 축 · 배포판 · 설치 파일\n  RECORD 재해시 · 핵심 module 10 의 실제 origin) · 닫힌 lock 문법 · 대조 · 결과 dict (MATCH /\n  MISMATCH / UNMEASURED · 측정하지 않은 칸 None) · CLI (세 상태 모두 rc 0 · --emit-lock 측정 실패면 rc 1)\n- requirements.txt — 주석만 (옛 \"검증 완료 조합\" 을 옛 주석으로 인용 · B · C 를 가리킴 · 하한만\n  둔다). 요구 줄 12 개 바이트 불변\n- scripts/smoke_e2e.sh — bad() 뒤 · 단계 0 전에 기록 단계 하나 (`\"$PY\" -m tools.env_profile ||\n  bad …` — 불일치는 막지 않고 도구가 죽으면 실패)\nRUN_SCOPE 밖: docs/22p_gap/make_receipt.py (_stamp() helper · stamp.environment_profile_C — core\n밖) · docs/22p_gap/env_profile_B_v4.yaml (새 · 네 v4 producer manifest 의 env 일곱 자리 · solver\n기록 원문 · 한계 · 어떤 코드도 읽지 않는다).\n\n이 컨테이너 실측: MATCH · 170/170 · 2/2 · 설치 파일 일치 24,804 (해시 없음 10,373) · origin 확인 9\n(yaml 은 RECORD 없는 Debian 배포판이라 확인 불가로 따로) · 약 2 s. src/ · run.sh · configs/ ·\nconftest 불변. 영수증 재생성 · 변이 등록은 뒤 커밋.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01CcftdupvBKEC3iP9HX2VA2"
+  }
+}

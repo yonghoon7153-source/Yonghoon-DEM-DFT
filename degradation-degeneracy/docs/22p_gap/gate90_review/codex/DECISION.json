@@ -1,0 +1,53 @@
+{
+  "date": "2026-10-05",
+  "status": "CONDITIONAL_ACCEPTANCE",
+  "round_closed": false,
+  "request_ref": "24f499ba6a5e45a75613e9842ce99a679b5ce863",
+  "code_ref": "e2160c2ef276d4944fa4ad76fbaa001671a1a95e",
+  "source_digest_recomputed": "3f84c0db52d2b9ac",
+  "findings": [
+    {
+      "id": "G90-N1",
+      "priority": 2,
+      "title": "PathFinder 검색 관측을 실제 loaded module 관측으로 표현함",
+      "file": "degradation-degeneracy/tools/env_profile.py",
+      "start": 110,
+      "end": 130,
+      "basis": "Static path plus independent standard-library illustration; not a dynamic execution of submitted comparator",
+      "required": "Narrow C origin claim and records to path-based resolution, with loaded origin unmeasured; or separately authorize a bounded loaded-origin implementation"
+    }
+  ],
+  "comments": [
+    {
+      "id": "G90-C1",
+      "priority": 3,
+      "title": "D3 기록 전용 정책과 e06 환경 가용성 회귀의 적용 범위를 구분"
+    }
+  ],
+  "accepted": [
+    "C committed lock and canonical form",
+    "B historical profile",
+    "requirements bounds unchanged",
+    "smoke and stamp wiring within record-only scope",
+    "submitted log evidence and receipt preservation"
+  ],
+  "actions": {
+    "submitted_code_imported": false,
+    "submitted_tests_run": false,
+    "comsol": false,
+    "pybamm_solve": false,
+    "restore_rescore": false,
+    "installation": false,
+    "source_modified": false,
+    "external_sent": false,
+    "reviewer_static_audit": true,
+    "reviewer_stdlib_illustration": true
+  },
+  "permissions": {
+    "implementation_approved": false,
+    "execution_go": false,
+    "D_guard_approved": false,
+    "new_research_leg_approved": false
+  },
+  "historical_results_not_reclassified": true
+}

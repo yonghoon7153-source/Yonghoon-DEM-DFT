@@ -1,0 +1,112 @@
+{
+  "schema": "review-package/v1",
+  "scope": "GATE90 static recipient review; no execution approval",
+  "payload_count": 21,
+  "files": [
+    {
+      "path": "CLAUDE_REPLY_KO.md",
+      "bytes": 2282,
+      "sha256": "39e6a2d8f4aefcc40cfbfd6cba83f89db88b6a3ba75a1e01ee4e3cd55081c97c"
+    },
+    {
+      "path": "DECISION.json",
+      "bytes": 1774,
+      "sha256": "fe58624f28d3ed80279734c617b70ab30ec9794fab7748638f7e0a404407219c"
+    },
+    {
+      "path": "EXPECTED_LOG_HASHES.json",
+      "bytes": 2836,
+      "sha256": "d3f1698a612ebb75565ff7b64dd8065232d5adede10afdfa14c44703373a3ddf"
+    },
+    {
+      "path": "fixtures/site/g90_inert_origin.py",
+      "bytes": 81,
+      "sha256": "3fc553bd4dd2306a388b28bc47fd3c6f0d8075ef4fcbac60fbccd1022bfa135b"
+    },
+    {
+      "path": "fixtures/stray/g90_inert_origin.py",
+      "bytes": 57,
+      "sha256": "f4dee707303637c7bdf1212c8491da415c30afb1c1efd909a6fc2f753e22d004"
+    },
+    {
+      "path": "GIT_COMPARISONS.json",
+      "bytes": 212584,
+      "sha256": "920e8c81ddd2fa72811cf9cf950f6f7ce64bba982ef715209f07f07a06c84110"
+    },
+    {
+      "path": "IMPORT_SEMANTICS_ILLUSTRATION.json",
+      "bytes": 745,
+      "sha256": "c30bdb4bc70162856b90c8bf8904034ccfbe337cb9ae20fed312f3da5f8b15e3"
+    },
+    {
+      "path": "prior_review_data/PRIOR_RUN_SCOPE_SNAPSHOT.json",
+      "bytes": 1623277,
+      "sha256": "88cfec922794d4f056f3958781b359eaf0ba2084ccd4dd1d62ac2b7c2ff23354"
+    },
+    {
+      "path": "prior_review_data/RECEIVED_SNAPSHOT.json",
+      "bytes": 1811987,
+      "sha256": "5a3ff362ef4aed80833fccca243e5350b568a0e98fa023886b0bc8829376d652"
+    },
+    {
+      "path": "README.md",
+      "bytes": 1448,
+      "sha256": "21afe50b90f21da048374079f41918875619d7d36d86428390e0b5a4405f4fe6"
+    },
+    {
+      "path": "REFERENCE_TEXT.json",
+      "bytes": 745514,
+      "sha256": "f42ec6280e93e522ce0244aa027be39244215b2abddbfceea3464cf83724185c"
+    },
+    {
+      "path": "reference/docs__22p_gap__GATE90_REQUEST.md.txt",
+      "bytes": 14598,
+      "sha256": "fd6904bda4e0e644761deaa23ce644e1b2b8b1af34de85345057570292fecbce"
+    },
+    {
+      "path": "reference/docs__22p_gap__PYBAMM_PIN_ROUND_SPEC.md.txt",
+      "bytes": 21694,
+      "sha256": "958c0604855fa6fe0ff30e261820e92ad536c36cf4c6855df11a7ab7a0606c20"
+    },
+    {
+      "path": "reference/tests__test_gate90_env_profile.py.txt",
+      "bytes": 25537,
+      "sha256": "ebe949931b84b1dad7bfd187f66e5cbd6ee09d5af145f3eba0564eadaac87d01"
+    },
+    {
+      "path": "reference/tools__env_profile.py.txt",
+      "bytes": 20947,
+      "sha256": "429684609f259e872b90b91538a5264be3d9cbb970636c476bf561f7bf1b0ef4"
+    },
+    {
+      "path": "REQUEST_TREE.json",
+      "bytes": 4131542,
+      "sha256": "ae05cabfe50413eaac57c13bd18d1314e52fadce5dc41b68b1979cfcdf43622f"
+    },
+    {
+      "path": "REVIEW_KO.md",
+      "bytes": 9791,
+      "sha256": "4cdd8467073a8ceacbb153bc941cb1601f8ef507a2fed1d7bfcc499155f82cb3"
+    },
+    {
+      "path": "reviewer_import_semantics.py",
+      "bytes": 1411,
+      "sha256": "d6bb618564752da12d4ca916237324c7904bd9c96542f5f31570bbde2211d259"
+    },
+    {
+      "path": "reviewer_static_audit.py",
+      "bytes": 9279,
+      "sha256": "bfa18adee3c036727de9b175f91bb7df752a80ec07a1a6e746715d0ae5a1c7bd"
+    },
+    {
+      "path": "REVIEWER_TOOL_RETURNS.json",
+      "bytes": 44448,
+      "sha256": "1dae8c95b938e48b1fbd7caa607e3f598fbd988ffe4239664032df18c556be41"
+    },
+    {
+      "path": "STATIC_AUDIT.json",
+      "bytes": 38053,
+      "sha256": "10a7ba60831dc96a3e5f10004e138ad3b86905b4a49db203df8bdc7c30393a15"
+    }
+  ]
+}

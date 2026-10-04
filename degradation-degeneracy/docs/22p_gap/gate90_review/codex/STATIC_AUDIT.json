@@ -1,0 +1,856 @@
+{
+  "method": "Text/hash/AST only; no submitted module import/function call, no suites, no solver, no installation.",
+  "git_blob_checks": [
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/GATE90_REQUEST.md",
+      "ref": "24f499ba6a5e45a75613e9842ce99a679b5ce863",
+      "bytes": 14598,
+      "sha256": "fd6904bda4e0e644761deaa23ce644e1b2b8b1af34de85345057570292fecbce",
+      "blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/PYBAMM_PIN_ROUND_SPEC.md",
+      "ref": "24f499ba6a5e45a75613e9842ce99a679b5ce863",
+      "bytes": 21694,
+      "sha256": "958c0604855fa6fe0ff30e261820e92ad536c36cf4c6855df11a7ab7a0606c20",
+      "blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/tools/env_profile.py",
+      "ref": "24f499ba6a5e45a75613e9842ce99a679b5ce863",
+      "bytes": 20947,
+      "sha256": "429684609f259e872b90b91538a5264be3d9cbb970636c476bf561f7bf1b0ef4",
+      "blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/requirements-validation-C.lock.txt",
+      "ref": "24f499ba6a5e45a75613e9842ce99a679b5ce863",
+      "bytes": 17079,
+      "sha256": "d886f30ff675fef723fb9bcedd98297910fb1f8f1809370c18d8980dc5e63b39",
+      "blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/tests/test_gate90_env_profile.py",
+      "ref": "24f499ba6a5e45a75613e9842ce99a679b5ce863",
+      "bytes": 25537,
+      "sha256": "ebe949931b84b1dad7bfd187f66e5cbd6ee09d5af145f3eba0564eadaac87d01",
+      "blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/env_profile_B_v4.yaml",
+      "ref": "24f499ba6a5e45a75613e9842ce99a679b5ce863",
+      "bytes": 3113,
+      "sha256": "04f7754da1d09eebdd224dfd5388b9c74a16b3d96d63b5505e24bc26c8f33aad",
+      "blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/gate90_evidence/README.md",
+      "ref": "24f499ba6a5e45a75613e9842ce99a679b5ce863",
+      "bytes": 6684,
+      "sha256": "40dc826648ee9444e3187d390b0f282c7455ad223ddaf1bab355018809fe4248",
+      "blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/make_receipt.py",
+      "ref": "24f499ba6a5e45a75613e9842ce99a679b5ce863",
+      "bytes": 19634,
+      "sha256": "61be9d0faefbb83764879b238c6f74a08e681e9e33482e5cbc1900abb91e53ba",
+      "blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/scripts/smoke_e2e.sh",
+      "ref": "24f499ba6a5e45a75613e9842ce99a679b5ce863",
+      "bytes": 41519,
+      "sha256": "f2489308e2ad0ec726a8f691ab3556b68f51604475d16f8c15996c2d49a7877c",
+      "blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/requirements.txt",
+      "ref": "24f499ba6a5e45a75613e9842ce99a679b5ce863",
+      "bytes": 1711,
+      "sha256": "039ccbda773bda53cc3305404f3c549f1a34d96c1cb7253f9341c2b4d0db02c7",
+      "blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/PYBAMM_PIN_PREREVIEW_REPLY_20261003.md",
+      "ref": "24f499ba6a5e45a75613e9842ce99a679b5ce863",
+      "bytes": 9514,
+      "sha256": "0042d00f9ed3911953d07dca2f6ab419cd3ccd8b8faa74231fb0736747dfbd37",
+      "blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/LEG_PRESERVATION.yaml",
+      "ref": "24f499ba6a5e45a75613e9842ce99a679b5ce863",
+      "bytes": 65166,
+      "sha256": "abbc894b719130198fc8749a47c7da7c71ef2d28bdefa1afd3560449be17fa34",
+      "blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/receipts/paired_fixed5_v4.validate.yaml",
+      "ref": "24f499ba6a5e45a75613e9842ce99a679b5ce863",
+      "bytes": 4670,
+      "sha256": "0e3451a779d154378981fc36a25ba638856b2fc9c488dd799367c79ce131673d",
+      "blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/receipts/grid_fit_v5.validate.yaml",
+      "ref": "24f499ba6a5e45a75613e9842ce99a679b5ce863",
+      "bytes": 4605,
+      "sha256": "a924e8c3317528f6676feaf60e508e1ebcc8be48f7c89ba8594bf5c8bfe3b01d",
+      "blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/artifacts/grid_curves_v4/curves_manifest.yaml",
+      "ref": "24f499ba6a5e45a75613e9842ce99a679b5ce863",
+      "bytes": 3713,
+      "sha256": "a6e5ab9cf348ff44e8a9b6fe6c68faa3cbd88a6c797c372dd5745e8bc6de5ecc",
+      "blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/artifacts/grid_fit_v4/manifest.yaml",
+      "ref": "24f499ba6a5e45a75613e9842ce99a679b5ce863",
+      "bytes": 6576,
+      "sha256": "228664b1ca8dea7f19f92ae60016448b8706482be900b90b7a5b80de04cf33b7",
+      "blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/artifacts/halfcell_fit_v4/manifest.yaml",
+      "ref": "24f499ba6a5e45a75613e9842ce99a679b5ce863",
+      "bytes": 7711,
+      "sha256": "3fa4106ac916dc3bc6d817ccff2a5d2c16a36418579077f280ad623c0724bb69",
+      "blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/artifacts/paired_fixed5_v4/manifest.yaml",
+      "ref": "24f499ba6a5e45a75613e9842ce99a679b5ce863",
+      "bytes": 6310,
+      "sha256": "7a14333ee4ace2367f1d0b076ac584271cdfb494b2b5e75ea05c86d6e61c4cfc",
+      "blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/receipts/history/paired_fixed5_v4.validate.803e2b7781cbc9cd.yaml",
+      "ref": "24f499ba6a5e45a75613e9842ce99a679b5ce863",
+      "bytes": 3803,
+      "sha256": "4a0fa3979706c57c48907fb4edcac58c081ae998659b6a524c35400706164f6d",
+      "blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/receipts/history/grid_fit_v5.validate.803e2b7781cbc9cd.yaml",
+      "ref": "24f499ba6a5e45a75613e9842ce99a679b5ce863",
+      "bytes": 3738,
+      "sha256": "c880c691ac0408332a41cac8e4bc94129d705eda72a92a30031b96415a4ddd55",
+      "blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/src/io.py",
+      "ref": "24f499ba6a5e45a75613e9842ce99a679b5ce863",
+      "bytes": 141436,
+      "sha256": "e8f9561b6492d5a54595f557e38762156fab9a014d857c6d3aee668f85e16a38",
+      "blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/gate90_evidence/00_red_test_gate90_38failed.log",
+      "ref": "24f499ba6a5e45a75613e9842ce99a679b5ce863",
+      "bytes": 57819,
+      "sha256": "5c087216ee0c428893c3502aa1cc3c9352937684b03e884e68a859dfdc7bb996",
+      "blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/gate90_evidence/00b_kexpr_overlap_registry397_new_nodes38_overlap0.txt",
+      "ref": "24f499ba6a5e45a75613e9842ce99a679b5ce863",
+      "bytes": 3860,
+      "sha256": "1d29c3c9288f7edf824755bfbef3f58b62cc12133a66b7475640f13777c41db5",
+      "blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/gate90_evidence/01_green_test_gate90_38passed.log",
+      "ref": "24f499ba6a5e45a75613e9842ce99a679b5ce863",
+      "bytes": 4788,
+      "sha256": "cb47100b67b2cb30c3379cd72817efa4635952302362b4f73f1a369837d24987",
+      "blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/gate90_evidence/02_related_modules_10failed_stale_receipt_identity.log",
+      "ref": "24f499ba6a5e45a75613e9842ce99a679b5ce863",
+      "bytes": 30665,
+      "sha256": "299c443e9b9cf83d50181e6f27d502fb5e919d835afcb6419dee15f31a88f95e",
+      "blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/gate90_evidence/03_replay_g90_emit_expect_13killed.log",
+      "ref": "24f499ba6a5e45a75613e9842ce99a679b5ce863",
+      "bytes": 10031,
+      "sha256": "c14c00d17c6e5dd2ede4eaf7cbaf27b1bd88190ae228a5abd684a523bef3858d",
+      "blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/gate90_evidence/03a_replay_g90_emit_expect_first_witness_nondeterministic.log",
+      "ref": "24f499ba6a5e45a75613e9842ce99a679b5ce863",
+      "bytes": 13016,
+      "sha256": "b0ca43bd69c66ad8009bb54cbd359af31a03c5716b0776cc348ce93cd0f846b0",
+      "blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/gate90_evidence/04_replay_g90_verify_13_rc0.log",
+      "ref": "24f499ba6a5e45a75613e9842ce99a679b5ce863",
+      "bytes": 1849,
+      "sha256": "e2640d134bd1f357c4c9ea3677a01faf6f633e477be3507737696231463f2ff9",
+      "blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/gate90_evidence/05_green_after_message_fix_38passed.log",
+      "ref": "24f499ba6a5e45a75613e9842ce99a679b5ce863",
+      "bytes": 4813,
+      "sha256": "497d26c08a98079d0b546928ffd31a2fd63988d902c3a7cc6618e6921c3c4483",
+      "blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/gate90_evidence/06_make_receipt_2586138c3_rc0.log",
+      "ref": "24f499ba6a5e45a75613e9842ce99a679b5ce863",
+      "bytes": 431,
+      "sha256": "0e825109e79ebc5c1cb32bbc1775805dc66f128bd23dbaf2dd790c7505f9578d",
+      "blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/gate90_evidence/06b_make_receipt_check_core_identical_rc0.log",
+      "ref": "24f499ba6a5e45a75613e9842ce99a679b5ce863",
+      "bytes": 300,
+      "sha256": "67baa7c034eb91d3af464d4a183cfaca4f8375df6b67b1f13760110d2366fe16",
+      "blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/gate90_evidence/07_receipt_modules_after_regeneration_113passed.log",
+      "ref": "24f499ba6a5e45a75613e9842ce99a679b5ce863",
+      "bytes": 1080,
+      "sha256": "63b178dcbac3f0f26cba9f4ea6f2d31d6ee33a0dc998b517d5b5b724db839184",
+      "blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/gate90_evidence/08_env_profile_json_257d4cc1c_match.log",
+      "ref": "24f499ba6a5e45a75613e9842ce99a679b5ce863",
+      "bytes": 883,
+      "sha256": "6507957816822bde3ab26b9d319a3402506fad8483234d4c8a781c11ef778758",
+      "blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/gate90_evidence/10_full_pytest_257d4cc1c_2177passed.log",
+      "ref": "24f499ba6a5e45a75613e9842ce99a679b5ce863",
+      "bytes": 3584,
+      "sha256": "616020f20656ac8341c86848bc42f52d8547fc1efdc0035225c8c6c29039eb41",
+      "blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/gate90_evidence/11_smoke_257d4cc1c_rc0.log",
+      "ref": "24f499ba6a5e45a75613e9842ce99a679b5ce863",
+      "bytes": 6462,
+      "sha256": "dc9328a124c91dadd1c4c8f48892ba4d72f73bcf22f0015f66828f3936c7e521",
+      "blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/gate90_evidence/12_full_replay_257d4cc1c_410_of_410_rc0.log",
+      "ref": "24f499ba6a5e45a75613e9842ce99a679b5ce863",
+      "bytes": 53612,
+      "sha256": "45b2bfee822b1de0702a39d8ccec3f3a6ac9b6ba2ba4f3e320a99a1bf75cf59c",
+      "blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/gate90_evidence/13_docs_lint_fixed_table_1f3829b9a_358passed.log",
+      "ref": "24f499ba6a5e45a75613e9842ce99a679b5ce863",
+      "bytes": 1147,
+      "sha256": "52db2ebd8f5003cf7289eb0f36b66c93f0e6a7e6043fdfb9ebdcff7d2eeb0de2",
+      "blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/gate90_evidence/14_docs_lint_send_24f499ba6_358passed.log",
+      "ref": "4432dfc1ae336617c61c62bb8b15ad3f499c79f7",
+      "bytes": 1219,
+      "sha256": "105c18cb2d455a6cbe305563fbac01c1678826aca5fb3fc975726ac9021943e8",
+      "blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/requirements.txt",
+      "ref": "26c11d6fc7feeb92bd68fce4c3972d849ada2774",
+      "bytes": 1031,
+      "sha256": "51496f89996c6de208281743bbba85cb0a822653d293a8752392d6a0528c1458",
+      "blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/scripts/smoke_e2e.sh",
+      "ref": "26c11d6fc7feeb92bd68fce4c3972d849ada2774",
+      "bytes": 40941,
+      "sha256": "b188fc73fb32da6f6bb5e928450c0d8f8734c57fe92e4358e47799e064762ba9",
+      "blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/make_receipt.py",
+      "ref": "26c11d6fc7feeb92bd68fce4c3972d849ada2774",
+      "bytes": 19016,
+      "sha256": "9c8cf71af310de03d2ee9a72d31fcc9172d8920af65fdf097277513c8106c07c",
+      "blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/receipts/paired_fixed5_v4.validate.yaml",
+      "ref": "8113f12bd8f3e457670117ceef53501967e8594c",
+      "bytes": 3803,
+      "sha256": "4a0fa3979706c57c48907fb4edcac58c081ae998659b6a524c35400706164f6d",
+      "blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/receipts/grid_fit_v5.validate.yaml",
+      "ref": "8113f12bd8f3e457670117ceef53501967e8594c",
+      "bytes": 3738,
+      "sha256": "c880c691ac0408332a41cac8e4bc94129d705eda72a92a30031b96415a4ddd55",
+      "blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/gate90_evidence/README.md",
+      "ref": "4432dfc1ae336617c61c62bb8b15ad3f499c79f7",
+      "bytes": 7160,
+      "sha256": "d603e60b64c6e0322c886e13c641c3c454eb4f6968e8b818c69d567f1bc7cdf3",
+      "blob_match": true
+    }
+  ],
+  "log_checks": [
+    {
+      "sha256": "5c087216ee0c428893c3502aa1cc3c9352937684b03e884e68a859dfdc7bb996",
+      "bytes": 57819,
+      "file": "00_red_test_gate90_38failed.log",
+      "bytes_match": true,
+      "sha_match": true
+    },
+    {
+      "sha256": "1d29c3c9288f7edf824755bfbef3f58b62cc12133a66b7475640f13777c41db5",
+      "bytes": 3860,
+      "file": "00b_kexpr_overlap_registry397_new_nodes38_overlap0.txt",
+      "bytes_match": true,
+      "sha_match": true
+    },
+    {
+      "sha256": "cb47100b67b2cb30c3379cd72817efa4635952302362b4f73f1a369837d24987",
+      "bytes": 4788,
+      "file": "01_green_test_gate90_38passed.log",
+      "bytes_match": true,
+      "sha_match": true
+    },
+    {
+      "sha256": "299c443e9b9cf83d50181e6f27d502fb5e919d835afcb6419dee15f31a88f95e",
+      "bytes": 30665,
+      "file": "02_related_modules_10failed_stale_receipt_identity.log",
+      "bytes_match": true,
+      "sha_match": true
+    },
+    {
+      "sha256": "c14c00d17c6e5dd2ede4eaf7cbaf27b1bd88190ae228a5abd684a523bef3858d",
+      "bytes": 10031,
+      "file": "03_replay_g90_emit_expect_13killed.log",
+      "bytes_match": true,
+      "sha_match": true
+    },
+    {
+      "sha256": "b0ca43bd69c66ad8009bb54cbd359af31a03c5716b0776cc348ce93cd0f846b0",
+      "bytes": 13016,
+      "file": "03a_replay_g90_emit_expect_first_witness_nondeterministic.log",
+      "bytes_match": true,
+      "sha_match": true
+    },
+    {
+      "sha256": "e2640d134bd1f357c4c9ea3677a01faf6f633e477be3507737696231463f2ff9",
+      "bytes": 1849,
+      "file": "04_replay_g90_verify_13_rc0.log",
+      "bytes_match": true,
+      "sha_match": true
+    },
+    {
+      "sha256": "497d26c08a98079d0b546928ffd31a2fd63988d902c3a7cc6618e6921c3c4483",
+      "bytes": 4813,
+      "file": "05_green_after_message_fix_38passed.log",
+      "bytes_match": true,
+      "sha_match": true
+    },
+    {
+      "sha256": "0e825109e79ebc5c1cb32bbc1775805dc66f128bd23dbaf2dd790c7505f9578d",
+      "bytes": 431,
+      "file": "06_make_receipt_2586138c3_rc0.log",
+      "bytes_match": true,
+      "sha_match": true
+    },
+    {
+      "sha256": "67baa7c034eb91d3af464d4a183cfaca4f8375df6b67b1f13760110d2366fe16",
+      "bytes": 300,
+      "file": "06b_make_receipt_check_core_identical_rc0.log",
+      "bytes_match": true,
+      "sha_match": true
+    },
+    {
+      "sha256": "63b178dcbac3f0f26cba9f4ea6f2d31d6ee33a0dc998b517d5b5b724db839184",
+      "bytes": 1080,
+      "file": "07_receipt_modules_after_regeneration_113passed.log",
+      "bytes_match": true,
+      "sha_match": true
+    },
+    {
+      "sha256": "6507957816822bde3ab26b9d319a3402506fad8483234d4c8a781c11ef778758",
+      "bytes": 883,
+      "file": "08_env_profile_json_257d4cc1c_match.log",
+      "bytes_match": true,
+      "sha_match": true
+    },
+    {
+      "sha256": "616020f20656ac8341c86848bc42f52d8547fc1efdc0035225c8c6c29039eb41",
+      "bytes": 3584,
+      "file": "10_full_pytest_257d4cc1c_2177passed.log",
+      "bytes_match": true,
+      "sha_match": true
+    },
+    {
+      "sha256": "dc9328a124c91dadd1c4c8f48892ba4d72f73bcf22f0015f66828f3936c7e521",
+      "bytes": 6462,
+      "file": "11_smoke_257d4cc1c_rc0.log",
+      "bytes_match": true,
+      "sha_match": true
+    },
+    {
+      "sha256": "45b2bfee822b1de0702a39d8ccec3f3a6ac9b6ba2ba4f3e320a99a1bf75cf59c",
+      "bytes": 53612,
+      "file": "12_full_replay_257d4cc1c_410_of_410_rc0.log",
+      "bytes_match": true,
+      "sha_match": true
+    },
+    {
+      "sha256": "52db2ebd8f5003cf7289eb0f36b66c93f0e6a7e6043fdfb9ebdcff7d2eeb0de2",
+      "bytes": 1147,
+      "file": "13_docs_lint_fixed_table_1f3829b9a_358passed.log",
+      "bytes_match": true,
+      "sha_match": true
+    },
+    {
+      "sha256": "105c18cb2d455a6cbe305563fbac01c1678826aca5fb3fc975726ac9021943e8",
+      "bytes": 1219,
+      "file": "14_docs_lint_send_24f499ba6_358passed.log",
+      "bytes_match": true,
+      "sha_match": true
+    }
+  ],
+  "run_scope": {
+    "changed_files": [
+      "degradation-degeneracy/requirements-validation-C.lock.txt",
+      "degradation-degeneracy/requirements.txt",
+      "degradation-degeneracy/scripts/smoke_e2e.sh",
+      "degradation-degeneracy/tools/env_profile.py"
+    ],
+    "post_code_changes": [],
+    "file_count": 60,
+    "recomputed_source_digest": "3f84c0db52d2b9ac",
+    "files": [
+      {
+        "path": "degradation-degeneracy/configs/base.yaml",
+        "blob": "37a3a34cfc06f954c330298537633a03a1cc5620",
+        "sha256": "26fe6c7cc2a2d719815a6aed7db7350917747d352de0bd3d9f7823a8cdc6fc71"
+      },
+      {
+        "path": "degradation-degeneracy/configs/grid_22p.yaml",
+        "blob": "9fd6d492a933b2d521897dfc403738554f2ca64c",
+        "sha256": "e3718c62f6fc92e6f4e6381762c970293d2cef9a3dab4f6198e6855149be4b45"
+      },
+      {
+        "path": "degradation-degeneracy/configs/grid_22p_dense.yaml",
+        "blob": "0d0c9aab7a0dd5abb9edd7afb78ee48ed1fbadef",
+        "sha256": "142c5081d893f664d377499205e7ed39fc26089b4b8e7b6483e3ea8293d8fb63"
+      },
+      {
+        "path": "degradation-degeneracy/configs/grid_22p_fine.yaml",
+        "blob": "8371363cdafbff4920ab5a2ac90b9c6d07075875",
+        "sha256": "ed8c96053efebc8dcf0eba9ce73104cea4358749a706177b44e18630820e2650"
+      },
+      {
+        "path": "degradation-degeneracy/configs/grid_22p_seed.yaml",
+        "blob": "db355960391f6fe486f90c4a06b7b62688920d5a",
+        "sha256": "1fa2168e676fe89d05cb077d12c014705a8bcb57153371d8f572190cc0db960c"
+      },
+      {
+        "path": "degradation-degeneracy/configs/grid_coarse.yaml",
+        "blob": "7a7fba7b8a5136f5912c22d52c5965ff915a4859",
+        "sha256": "4a0b949dab492cf7e7a25333d7f499bdbe6668628fcfa1c4b1e8358e574b4082"
+      },
+      {
+        "path": "degradation-degeneracy/configs/grid_fine.yaml",
+        "blob": "fdd160112bd8d3ee1c517d33e05b7bb4231d5ff5",
+        "sha256": "15ea258a338081848f745c353763dc8ba8189657a3b51526f9f390e730626040"
+      },
+      {
+        "path": "degradation-degeneracy/configs/objectives.yaml",
+        "blob": "299c04276cd336e62f8615ed47d476736bd860af",
+        "sha256": "70ec9517eb4e711f682d854eb7a15950cf243a4ea43aa51613ced6c97f8673d4"
+      },
+      {
+        "path": "degradation-degeneracy/configs/objectives_optimized.yaml",
+        "blob": "30bd03ea7b72977c169b9c58e5573272a5429348",
+        "sha256": "ec9d48c4e3089d6b6d1e372125e9d87fa3512a552c414c4e69004a000f8b3ea6"
+      },
+      {
+        "path": "degradation-degeneracy/configs/sweep1d.yaml",
+        "blob": "a2efadfa629ff6fded6ec23c3f8ed031378f6fdc",
+        "sha256": "3ff4bcf922b9f52c6773a6f6e5ff028e6874f18f12a9c948861fe1ea7ad9e7e8"
+      },
+      {
+        "path": "degradation-degeneracy/requirements-gpu.txt",
+        "blob": "aa2882b2bcad47446775b3e2e77b517479cbfedd",
+        "sha256": "8e04e2ae6e8d3a93cc912be9b4825c33316fd949e5d592ac8f0634357b0478bb"
+      },
+      {
+        "path": "degradation-degeneracy/requirements-validation-C.lock.txt",
+        "blob": "25c4dde53989624e7900ab0248494c0152d85083",
+        "sha256": "d886f30ff675fef723fb9bcedd98297910fb1f8f1809370c18d8980dc5e63b39"
+      },
+      {
+        "path": "degradation-degeneracy/requirements.txt",
+        "blob": "8c53a77e4637766e76b2abf2f536b6656d69745b",
+        "sha256": "039ccbda773bda53cc3305404f3c549f1a34d96c1cb7253f9341c2b4d0db02c7"
+      },
+      {
+        "path": "degradation-degeneracy/run.sh",
+        "blob": "24bd1d5bf78673359624b1f210dcf61e3048ee72",
+        "sha256": "173286fe587fdd950866e35247832205c96f5edef55d490718a06f621da72163"
+      },
+      {
+        "path": "degradation-degeneracy/scripts/archive_results.sh",
+        "blob": "a01a88aaa2610602bf67ae07df9ec75864d66864",
+        "sha256": "033369ab2c39578cc2d3750fa5c459a2b04e72d8f07c447025caf22cff605e03"
+      },
+      {
+        "path": "degradation-degeneracy/scripts/bg.sh",
+        "blob": "cf25309bd031db0d01733b695e5eafd2c447040f",
+        "sha256": "699f4198ed7189cd4c5d9027a696b7b669b6aa299039fbaa0cd20088f5429536"
+      },
+      {
+        "path": "degradation-degeneracy/scripts/check_run.py",
+        "blob": "2e395bf8efc0d8eae3d6d793d21b267c6bf1ca9a",
+        "sha256": "5baaebee5b401ca40ee73360e487486f8bd22824c70e50a16efa8a6ade9f1ce6"
+      },
+      {
+        "path": "degradation-degeneracy/scripts/diagnose_objective.py",
+        "blob": "400217b57579e7accebdcd6e699c03f4655592e1",
+        "sha256": "87af8d00a9e0de263b9c944f0b43464f187b1b6906fdc656ca5b0ef0bf67ede5"
+      },
+      {
+        "path": "degradation-degeneracy/scripts/recompute_lli.py",
+        "blob": "459e23bdc3ef565a1063d26134d639d33d454eb7",
+        "sha256": "f2d96112237c697ba89864febc32b896ff7cf3112ecb1c179b7cdb140b364e8d"
+      },
+      {
+        "path": "degradation-degeneracy/scripts/setup_env.sh",
+        "blob": "af7e90fb53466eba11d6e98dd6ac5e104a24983c",
+        "sha256": "60b530f7aa475309e78ad291ba76ba5cadc3af769c95cee0fb876eaf500de7f0"
+      },
+      {
+        "path": "degradation-degeneracy/scripts/smoke_e2e.sh",
+        "blob": "38d49b8604f7818466d34021a1f4b6d3719afd44",
+        "sha256": "f2489308e2ad0ec726a8f691ab3556b68f51604475d16f8c15996c2d49a7877c"
+      },
+      {
+        "path": "degradation-degeneracy/scripts/verify_env.py",
+        "blob": "9b91fa4a52d9e78ae5e210470901b0955eb190b6",
+        "sha256": "18068c72c73394a5f74a82291ad3ee93fa432fc2d386d4983e8daac1b86fd6c0"
+      },
+      {
+        "path": "degradation-degeneracy/scripts/watch_fit.sh",
+        "blob": "075efeb0dba31377a7b25e95aa6cd5e777805a1d",
+        "sha256": "8a3d942ecb9cd224ba28281f031cc01155fd6d8be9e36dde8297d9793f1f4ea0"
+      },
+      {
+        "path": "degradation-degeneracy/scripts/watch_grid.sh",
+        "blob": "ecbe1fb6f8908efa4943b242c9c84263a3c49605",
+        "sha256": "b3d6b87e3a0724c95bc44a80f3d5d81eecb1f4b677dabac021b8f50b8565e796"
+      },
+      {
+        "path": "degradation-degeneracy/src/__init__.py",
+        "blob": "d639d01e2bd3b35bbc5df7dabe90e2a4540de2f2",
+        "sha256": "5165e2618734da76cdc2eaf8830456de2e62ffe4bd457b08ef36dfa209a2afba"
+      },
+      {
+        "path": "degradation-degeneracy/src/baseline.py",
+        "blob": "8c7c0a8664cb52b95c1fec2b8a56e52bb7af1edc",
+        "sha256": "ce2288e9ad9bdf924a67d4809b23cfc12853aac9090642b9c3cd9f3faf677a14"
+      },
+      {
+        "path": "degradation-degeneracy/src/config.py",
+        "blob": "71cd84003c0827558664f1cba6181e2e0748a7bd",
+        "sha256": "bb484b08796f11c8affc6bf8f4505d296c812fe206b104c994d120386bc94057"
+      },
+      {
+        "path": "degradation-degeneracy/src/curves.py",
+        "blob": "ac1a337e5cde52bf4fe572738c682b589e529a95",
+        "sha256": "161c21ca3813071969cfb5679ae701b95059235a0612dd5464694a96e31a11d1"
+      },
+      {
+        "path": "degradation-degeneracy/src/fitting.py",
+        "blob": "723a47489d6c7c811be6be285e4e6c70b607e62a",
+        "sha256": "b9a24eccd4be188eba1fd62b235d7a26d2c38adf5fd4820a03c4d12776ad2ec8"
+      },
+      {
+        "path": "degradation-degeneracy/src/grid.py",
+        "blob": "5702c0d061d980d44018fc2b746c04fc6423f827",
+        "sha256": "0b70f3f109ee79654c40535ea22c1f87f57feccde77ed45afaadcea6b9ef6f01"
+      },
+      {
+        "path": "degradation-degeneracy/src/halfcell.py",
+        "blob": "51b30edec0dd19edda4e6461bed6fc694d4f9a06",
+        "sha256": "75073523310d54c76df4fd1f4d30a1e9006b1ddb9cb963b5399a20c6c8ef5c25"
+      },
+      {
+        "path": "degradation-degeneracy/src/hessian.py",
+        "blob": "13895858d80a553b461444464bffe755186c317b",
+        "sha256": "eb0c6afee492ea0fec114d9a83a40be21148b348d5644565b8b3a09f4600f047"
+      },
+      {
+        "path": "degradation-degeneracy/src/inventory.py",
+        "blob": "ea33221fab0cd74868587e4b5e78fb2633931666",
+        "sha256": "ea8b5e2a1f8fa7c417610bc18d478e9842c65e9ade0cdb471bb7052b40237847"
+      },
+      {
+        "path": "degradation-degeneracy/src/io.py",
+        "blob": "9284a4370bc6afb52722fb60e78657016ea44111",
+        "sha256": "e8f9561b6492d5a54595f557e38762156fab9a014d857c6d3aee668f85e16a38"
+      },
+      {
+        "path": "degradation-degeneracy/src/model.py",
+        "blob": "50cb5d479841977948ada4ed0be09569fd5440a8",
+        "sha256": "ae5faf879011d376073eb843e6f09e5ffd246f1855143967b6c1ba87e6defe01"
+      },
+      {
+        "path": "degradation-degeneracy/src/modes.py",
+        "blob": "68b94790a58929b211fb21b3534b10b569fedafa",
+        "sha256": "3e5ba16720b6d9d3dd716e4f88d0a4d369787773675fd6061c6c85bebc287e46"
+      },
+      {
+        "path": "degradation-degeneracy/src/objective.py",
+        "blob": "d8b0f2771e4cd72d5a204a09d6fdd2260b0042f7",
+        "sha256": "b60e5e9b1be320e8d7aee04cec6813e3deabf0a86043170b093015b65eb02d2c"
+      },
+      {
+        "path": "degradation-degeneracy/src/protocol.py",
+        "blob": "350eb61d81b9d7bb512dc725d0f5448184be5825",
+        "sha256": "47ca32d35a483ff4923dfd0e51b81628e4dfe930d2e7430ea78adf14be6c6c84"
+      },
+      {
+        "path": "degradation-degeneracy/src/runner.py",
+        "blob": "aa0351e32595de255d1dc9924f9eac8a504ba27d",
+        "sha256": "d7938749a23624bd3ff18056fe3538a18f16996f12bb3e3d6835984386cb6a82"
+      },
+      {
+        "path": "degradation-degeneracy/src/scoring.py",
+        "blob": "434324c889c4febff1905cfec884272e07fe7d93",
+        "sha256": "69e69cb046f4b4aee2acf039faa9d69fc9ed032eab96093e54b0ca68b860a43d"
+      },
+      {
+        "path": "degradation-degeneracy/src/sweep.py",
+        "blob": "ac06f021dc0d9ed1f551c8cdcfc18d34f2693b75",
+        "sha256": "5db99fd0f77e03ef613cc8390d3cd4e320b80240abe7e579b314364425c42524"
+      },
+      {
+        "path": "degradation-degeneracy/src/weight_sweep.py",
+        "blob": "3bd1f1dc36f2000ce4b4ddfdd33d18e9eeb5c4e7",
+        "sha256": "b68077d76c12268f07fa638b53847d24f6c4d026793efc226b03a4cd73e413c1"
+      },
+      {
+        "path": "degradation-degeneracy/tools/analyze_22p_gap.py",
+        "blob": "315ebee3b225239ec0532c1b5589fff2039622fe",
+        "sha256": "b4f18bfa86eed8b5cf86507dd3f0dbd58a83edb2937e129452b3aef19039a164"
+      },
+      {
+        "path": "degradation-degeneracy/tools/archive_bundle.py",
+        "blob": "43db05edca3803a00cd9f75ec570ab880dfcb216",
+        "sha256": "5f7fc3c89dfe5dba5a6653c0f162c6615c1449808ba83f8e724683a0ed903d41"
+      },
+      {
+        "path": "degradation-degeneracy/tools/check_derived_fresh.py",
+        "blob": "c7094cc9f25a1849780e76fa209fcac97ff439e7",
+        "sha256": "8819cb2acd2d920189832b03cd41c90c61de0faeffb07ed186e6d8fdfce6aa53"
+      },
+      {
+        "path": "degradation-degeneracy/tools/check_sweep_consistency.py",
+        "blob": "f48826b6048e7cb3449f67dbe0c8e96e3b2d9475",
+        "sha256": "5c31f80c97460bf7c6bfed05aa59969ae1686a363d5246e9f1633651700c6f20"
+      },
+      {
+        "path": "degradation-degeneracy/tools/compare_cases.py",
+        "blob": "9e91a6198010335d0b4f7c684ef1e66ce0a0b4e8",
+        "sha256": "918271276a73dfc155692a2e5df4180cc1dae6272cd24c6b8d2525d92310225a"
+      },
+      {
+        "path": "degradation-degeneracy/tools/compare_objectives.py",
+        "blob": "6227d1b394a4e8b0519f9102444311fe829d26bf",
+        "sha256": "9b2b1bc22404568362202d8d67fa4d398a4864384242e54e6885a076d561e890"
+      },
+      {
+        "path": "degradation-degeneracy/tools/design_golden.yaml",
+        "blob": "280c1b904d54ff2152a71f025654f058916c69b5",
+        "sha256": "6dde9078c31f9f2ffa4bd6ef57b71a9f1fd8521b5cf3fd24998b2a26f5107b9b"
+      },
+      {
+        "path": "degradation-degeneracy/tools/design_wire.py",
+        "blob": "1f388c039d97384f8316afa975338e60c6d866c9",
+        "sha256": "4609706a54fa8a53665846761b6dbaa54eeb5a9012fd8aed65dbd27ab7f12f1f"
+      },
+      {
+        "path": "degradation-degeneracy/tools/diagnose_pini_transition.py",
+        "blob": "725b8b8ffaa380bed3f74a468e5b7a0e730815d3",
+        "sha256": "68234373abaffa97f8bc5debc68a81b2e7e3990e2334df7f579deacf8088f62b"
+      },
+      {
+        "path": "degradation-degeneracy/tools/env_profile.py",
+        "blob": "6c9166bf5512906f3582594b96d0dfe7855bcd13",
+        "sha256": "429684609f259e872b90b91538a5264be3d9cbb970636c476bf561f7bf1b0ef4"
+      },
+      {
+        "path": "degradation-degeneracy/tools/gen_design_golden.py",
+        "blob": "907ba3ec7c028d4a969282215b870f5484b56a82",
+        "sha256": "5b3c96735948ab650833337b0830083418d2bed4f9fbd1d4188774e7f7040183"
+      },
+      {
+        "path": "degradation-degeneracy/tools/index_yaml.py",
+        "blob": "2bfed95fdc864ebe33a5ec0c826ddc1c1e837a64",
+        "sha256": "c199b7da2aa23dd4003143de2fcdc6cc65f06b81a3e06d4fd8cba1183c1cdb6e"
+      },
+      {
+        "path": "degradation-degeneracy/tools/interactive_ab.py",
+        "blob": "1b06e3c5e168f6f26bdabe52053219c7428e4a34",
+        "sha256": "fd6686c5d122317f902b0302e28cda8307240842fd39d2bd4d6e40ef93c5f402"
+      },
+      {
+        "path": "degradation-degeneracy/tools/make_results.py",
+        "blob": "6d53940881313130af6bf4c835e63346ccbe718a",
+        "sha256": "db6a3186f430b283cc7be1eec5f1c4a4f0af1ed6fb38f20c220e073450003e22"
+      },
+      {
+        "path": "degradation-degeneracy/tools/plot_grid_summary.py",
+        "blob": "3c51850d21f0c07093f71280599470b925ffdcf1",
+        "sha256": "7ec2076a57031dbeecf8ed98eb6c7e1a36b565d0354af53a7477b7c24557d400"
+      },
+      {
+        "path": "degradation-degeneracy/tools/plot_map.py",
+        "blob": "a0f57fe5ecac6b592078ac9453f9bff569b1e330",
+        "sha256": "421670597eb994bd689564c56e807af2b9c501bf6f8008e575213960ac8be06e"
+      },
+      {
+        "path": "degradation-degeneracy/tools/plot_sweep1d.py",
+        "blob": "d8e7acce385dddd410f72fca4b61aaf183d49a66",
+        "sha256": "df911d7cc60d38088bb1329733af16387b4fa55beb537e2f31b158754a42a89b"
+      },
+      {
+        "path": "degradation-degeneracy/tools/preserve.py",
+        "blob": "e8f3105b784fc8ff8e184b3e671a2d68d138ad9f",
+        "sha256": "e3469ffb5143444ec1d2b0855a6f4caba9de5add2b9a31cf7ec1f550dfa3d7ef"
+      }
+    ]
+  },
+  "lock": {
+    "sha256": "d886f30ff675fef723fb9bcedd98297910fb1f8f1809370c18d8980dc5e63b39",
+    "canonical": true,
+    "directives": {
+      "profile": "C",
+      "python": "3.11.15",
+      "implementation": "CPython",
+      "system": "Linux",
+      "machine": "x86_64",
+      "libc": "glibc 2.39"
+    },
+    "dists": 170,
+    "shadowed": [
+      [
+        "cryptography",
+        "41.0.7",
+        "none"
+      ],
+      [
+        "packaging",
+        "24.0",
+        "none"
+      ]
+    ],
+    "record_absent": 22
+  },
+  "B_manifest_checks": [
+    {
+      "path": "artifacts/grid_curves_v4/curves_manifest.yaml",
+      "bytes": 3713,
+      "sha256": "a6e5ab9cf348ff44e8a9b6fe6c68faa3cbd88a6c797c372dd5745e8bc6de5ecc",
+      "env_lines": [
+        29,
+        119
+      ],
+      "all_13_values_match": true
+    },
+    {
+      "path": "artifacts/grid_fit_v4/manifest.yaml",
+      "bytes": 6576,
+      "sha256": "228664b1ca8dea7f19f92ae60016448b8706482be900b90b7a5b80de04cf33b7",
+      "env_lines": [
+        165,
+        222
+      ],
+      "all_13_values_match": true
+    },
+    {
+      "path": "artifacts/halfcell_fit_v4/manifest.yaml",
+      "bytes": 7711,
+      "sha256": "3fa4106ac916dc3bc6d817ccff2a5d2c16a36418579077f280ad623c0724bb69",
+      "env_lines": [
+        189,
+        251
+      ],
+      "all_13_values_match": true
+    },
+    {
+      "path": "artifacts/paired_fixed5_v4/manifest.yaml",
+      "bytes": 6310,
+      "sha256": "7a14333ee4ace2367f1d0b076ac584271cdfb494b2b5e75ea05c86d6e61c4cfc",
+      "env_lines": [
+        159,
+        214
+      ],
+      "all_13_values_match": true
+    }
+  ],
+  "B_total_env_locations": 8,
+  "requirements_lines_unchanged": true,
+  "receipt_checks": [
+    {
+      "leg": "paired_fixed5_v4",
+      "history_byte_identical": true,
+      "core_changes_only": [
+        "validator_source_digest",
+        "make_receipt_sha256"
+      ],
+      "core_sha_recorded_not_recomputed": "8408f8c2dc38be1818ed0f6d6653848579105003cceef7c129624a19db308188",
+      "stamp_match_record_present": true,
+      "anchor_present": true
+    },
+    {
+      "leg": "grid_fit_v5",
+      "history_byte_identical": true,
+      "core_changes_only": [
+        "validator_source_digest",
+        "make_receipt_sha256"
+      ],
+      "core_sha_recorded_not_recomputed": "7f0f40f06d51c160b19ea038cec6535ce939eef7ef792264664c347349e2736a",
+      "stamp_match_record_present": true,
+      "anchor_present": true
+    }
+  ],
+  "replay_log_line_counts": {
+    "killed": 410,
+    "survived": 0,
+    "errors": 0
+  },
+  "small_diffs": {
+    "requirements.txt": "--- gate89/requirements.txt\n+++ gate90/requirements.txt\n@@ -1,7 +1,12 @@\n # ── 핵심 ──\n-# 검증 완료 조합 (2026-08-05, docs/ENV_REPORT.md):\n-#   pybamm 26.7.1.0 / numpy 2.4.6 / scipy 1.17.1 / pandas 3.0.5 / Python 3.11\n-#   IDAKLU OK, composite DFN OK, 1 solve ≈ 2 s\n+# ★ 90차 (원장 §135 · D5) — 이 파일은 **하한만** 둔다. 생산 환경 선언이 아니다.\n+#   · v4 정본 producer 환경 기록 = 프로필 B — docs/22p_gap/env_profile_B_v4.yaml (기록 전용)\n+#   · 현재 검증 환경의 정확 고정 = 프로필 C — requirements-validation-C.lock.txt (기록 대조 전용 · 막지 않는다)\n+#   옛 주석 \"검증 완료 조합 (2026-08-05, docs/ENV_REPORT.md): pybamm 26.7.1.0 / numpy 2.4.6 /\n+#   scipy 1.17.1 / pandas 3.0.5 / Python 3.11 · IDAKLU OK, composite DFN OK, 1 solve ≈ 2 s\" 는\n+#   scaffold 커밋 61bce598d 때 scripts/verify_env.py 진단의 기록이다 — v4 정본 producer 기록\n+#   (Python 3.10.12 · numpy 2.2.6 · scipy 1.15.3 · pandas 2.3.3 · pybamm 26.7.1.0) 과 다르고,\n+#   인용한 docs/ENV_REPORT.md 는 .gitignore 된 로컬 출력이라 저장소에 없다.\n pybamm[all]>=24.5        # [all] 이 IDAKLU solver 포함. 이거 없으면 2~5배 느림\n numpy>=1.24\n scipy>=1.11",
+    "scripts/smoke_e2e.sh": "--- gate89/scripts/smoke_e2e.sh\n+++ gate90/scripts/smoke_e2e.sh\n@@ -67,6 +67,12 @@\n #   한 번 실패했는데 그 이유로 사후 진단이 불가능했다 (재현도 4회 실패).\n FAILED_CHECKS=()\n bad()  { printf '   ❌ %s\\n' \"$1\"; fail=$((fail+1)); FAILED_CHECKS+=(\"$1\"); }\n+\n+# ★ 90차 (원장 §135 · 고정 표 PYBAMM_PIN_ROUND_SPEC.md §5-1) — 실행 환경 ↔ 프로필 C lock 의 대조를 **기록만** 한다.\n+#   불일치 (MISMATCH) · 측정 불가 (UNMEASURED) 는 smoke 를 막지 않는다 (D3 — 기록 대조). 도구 자체가 죽으면 기록이\n+#   만들어지지 않은 것이므로 실패로 센다. 모듈로 불러 계산 진입점 (python -m src.*) 과 같은 sys.path 로 잰다.\n+step \"환경 프로필 C 대조 (기록 전용 · 원장 §135)\"\n+\"$PY\" -m tools.env_profile || bad \"환경 프로필 C 대조 도구 실패\"\n \n rm -rf \"$BASE\"\n mkdir -p \"$BASE\"",
+    "docs/22p_gap/make_receipt.py": "--- gate89/docs/22p_gap/make_receipt.py\n+++ gate90/docs/22p_gap/make_receipt.py\n@@ -228,18 +228,32 @@\n             \"core_sha256\": hashlib.sha256(\n                 _dump(core).encode(\"utf-8\")).hexdigest(),\n             \"core\": core,\n-            \"stamp\": {\n-                \"_주의\": \"기록용. core 재생성 대조에서 제외된다.\",\n-                \"validator_commit\": _git(\"rev-parse\", \"HEAD\"),\n-                \"validator_tree_dirty\": bool(_git(\"status\", \"--porcelain\")),\n-                \"generated_at_utc\": datetime.now(timezone.utc)\n-                                    .strftime(\"%Y-%m-%dT%H:%M:%SZ\"),\n-                \"runtime\": {\"python\": platform.python_version(),\n-                            \"platform\": platform.platform()},\n-            },\n+            \"stamp\": _stamp(),\n         }\n     finally:\n         shutil.rmtree(root, ignore_errors=True)\n+\n+\n+def _stamp() -> dict:\n+    \"\"\"영수증 stamp — **기록용** (core 재생성 대조 · `core_sha256` 밖).\n+\n+    ★ 90차 (원장 §135 · 고정 표 `PYBAMM_PIN_ROUND_SPEC.md` §5-2) — 실행 환경 ↔ 프로필 C lock 의 대조 결과를\n+      `environment_profile_C` 로 싣는다. 기록 대조다 — `MISMATCH` · `UNMEASURED` 여도 영수증 생성을 막지 않는다.\n+      소비자 `tools/preserve.py::read_verification_receipt` 는 영수증의 최상위 키 집합만 보고 stamp 안은 보지 않으므로\n+      바뀌지 않는다.\n+    \"\"\"\n+    from tools.env_profile import compare_lock\n+\n+    return {\n+        \"_주의\": \"기록용. core 재생성 대조에서 제외된다.\",\n+        \"validator_commit\": _git(\"rev-parse\", \"HEAD\"),\n+        \"validator_tree_dirty\": bool(_git(\"status\", \"--porcelain\")),\n+        \"generated_at_utc\": datetime.now(timezone.utc)\n+                            .strftime(\"%Y-%m-%dT%H:%M:%SZ\"),\n+        \"runtime\": {\"python\": platform.python_version(),\n+                    \"platform\": platform.platform()},\n+        \"environment_profile_C\": compare_lock(),\n+    }\n \n \n def _score_manifest(run_dir: Path) -> list[dict]:"
+  },
+  "limitations": [
+    "Submitted logs were read, not independently rerun.",
+    "No environment measurement on producer host.",
+    "Receipt core hashes are recorded values checked against anchors; no YAML reserialization or restore/rescore was performed."
+  ]
+}
