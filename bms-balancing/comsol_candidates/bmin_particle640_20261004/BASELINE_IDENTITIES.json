@@ -1,0 +1,26 @@
+{
+  "kind": "BASELINE_BINDING_NOT_EXECUTION",
+  "approved": false,
+  "baseline": "NORMAL480 (normal480_candidate_001) - accepted limited fresh 0 -> 480 s diagnostic, physical 300 (120/60/120), particle Nel 320/320 (SPEC section 39)",
+  "source_of_values": "B-min v2 section 3 table (docs/COMSOL_BMIN_SCOPE_v2_20261004.md), copied from R480 ARCHIVE_AUDIT.json member sizes / SHA-256; CX BASELINE_BINDING.json 11 items agreed (SPEC section 44-1)",
+  "repository_bytes": "Only candidate/ originals and run/tables/axes_runtime_settings.csv are in this repository (basis/source480). The CSV tables below are not; the execution machine must hold them at the bound paths.",
+  "bound_path_assumption": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/normal480_offline_preparation_20261001/future_run_001/tables/<name> - the NORMAL480 run root, by the same pattern NORMAL480 used for NORMAL240 (future_run_001/tables). Not observed by us; the entry checks every file before compile (BASELINE_IDENTITY) and after the run (BASELINE_CHANGED), and the consumer re-checks on read (SOURCE_IDENTITY). A wrong path or byte stops the run before any native call.",
+  "not_the_baseline": "baseline/ inside the same NORMAL480 ZIP holds shorter older references; similar names are not substitutes (CX).",
+  "result_zip": {"name": "COMSOL63_NORMAL480_NATIVE_RESULT_20261001.zip", "bytes": 420748594, "sha256": "e991ab4c918f6576b18d6225a86ed41759ab6ee726dd6543b9a9158e581cbc30",
+                 "manifest_bytes": 2076814, "manifest_sha256": "df992301a3ce93c5e50707bd858c6fe819b89f5189499bce0e3b6c29979c164b"},
+  "bound_tables": [
+    {"name": "axes_profile_N.csv", "role": "surface fraction profile, negative electrode, 241 contract coordinates (domain 1)", "bytes": 203575457, "sha256": "acdb34debf8d7c3c1108f1215f879000d887bcb4836e558a467b21c957153442", "used_for": "I-7c, primary surface_x_N"},
+    {"name": "axes_profile_P.csv", "role": "surface fraction profile, positive electrode (domain 3)", "bytes": 197290767, "sha256": "2c91c90047aaabf6ffe203f8b4c970b0e2850af4d7ad143cde59ebed1f3dc5be", "used_for": "I-7c, primary surface_x_P"},
+    {"name": "preflight_boundary1.csv", "role": "z = 0 point (phis for the voltage)", "bytes": 1391054, "sha256": "9773647829502178f22cfc5db3c682a046aa7b26ef35d035c1ee95527df31ceb", "used_for": "primary voltage_V"},
+    {"name": "preflight_boundary4.csv", "role": "z = 121 um point", "bytes": 1448183, "sha256": "bdebcf47edc3e0aa3c33fd2cfa58cbc9f3cc3bf0b405e4591451019a8af4d6f4", "used_for": "primary voltage_V"},
+    {"name": "preflight_global.csv", "role": "Li inventory, average and surface ranges", "bytes": 1595210, "sha256": "ac14d0d2cd7d90dd65dd098874ea5078476fc37a2958cea527fe78a2afb1771d", "used_for": "I-6 initial Li vs baseline, total Li observation, stored time set"},
+    {"name": "electrolyte_guard.csv", "role": "electrolyte minima and guards", "bytes": 666849, "sha256": "7117e79c6d5a14414b44520431831ccf9f0dd2372df4994e8ef070953bd5d4ed", "used_for": "electrolyte minimum observation (no tolerance)"},
+    {"name": "preflight_MinLine_ce.csv", "role": "electrolyte line minimum", "bytes": 171715, "sha256": "c59462b7f1d533d80016dad19b53c65c6891adead9cf0b498ec7cf014e715c69", "used_for": "electrolyte min/max observation (no tolerance)"},
+    {"name": "preflight_MaxLine_ce.csv", "role": "electrolyte line maximum", "bytes": 171672, "sha256": "8d13c3f2b38459eeb26b70e297413a5d2531c470155ededc110314b1c4a69f01", "used_for": "electrolyte min/max observation (no tolerance)"},
+    {"name": "axes_runtime_settings.csv", "role": "runtime settings read-back (22 keys)", "bytes": 28190, "sha256": "19f32130a461b65aca63af0f96f7e4b80a871f5256149e861f2923e7c6d758dc", "used_for": "I-2: all keys equal except study_tlist = its 1,637-entry prefix; bytes also preserved here as basis/source480/run/tables/axes_runtime_settings.csv"}
+  ],
+  "contract_reused": {"name": "candidate/CONTRACT.json of NORMAL480", "bytes": 125504, "sha256": "58d398a663ceb35e49154c32ab04ce0ea5720f7fe0664db0e0fa09f1dfdf3b08",
+                      "taken": "requested_times_s first 1,637 entries, coordinates N/P 241 each verbatim, limits, runtime_settings_required, guard / solver / native pins"},
+  "range_facts": "NORMAL480 stored 5,740 times including all 4,937 requested; profiles 1,383,340 rows each; all three guards 0 at every stored time (SPEC section 39-1). All 301 primary times are requested times of NORMAL480, so they are stored there.",
+  "claims": "Identity binding only. No claim that the bound path exists on the execution machine, that the tables were re-read by us, or that NORMAL480 is a converged reference."
+}

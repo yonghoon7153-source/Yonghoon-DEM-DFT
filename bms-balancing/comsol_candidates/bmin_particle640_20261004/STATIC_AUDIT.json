@@ -1,0 +1,552 @@
+{
+  "kind": "SOURCE_TEXT_JSON_HASH_DIFF_ONLY",
+  "candidate_manifest_sha256": "3722a51fb1caeddd72fca3751f2ed78ed3e05d5f1938fa452503b3fa5c421a03",
+  "checks_total": 81,
+  "checks_failed": 0,
+  "candidate_imports": 0,
+  "candidate_parse_compile_tests": 0,
+  "JVM_COMSOL_gate_calls": 0,
+  "native_compatibility": "UNTESTED",
+  "functional_status": "UNTESTED",
+  "reverse_reconstruction": {
+    "src/Bmin640Candidate.java": {
+      "basis": "src/Normal480Candidate.java",
+      "kind": "LITERAL_ONLY",
+      "regions": [
+        {
+          "op": "inverse_literals",
+          "entries": 8,
+          "occurrences": 10
+        }
+      ]
+    },
+    "src/candidate_entry.py": {
+      "basis": "src/candidate_entry.py",
+      "kind": "LITERAL_ONLY",
+      "regions": [
+        {
+          "op": "inverse_literals",
+          "entries": 5,
+          "occurrences": 7
+        }
+      ]
+    },
+    "src/diagnostic_consumer.py": {
+      "basis": "src/diagnostic_consumer.py",
+      "kind": "LITERALS_PLUS_DECLARED_BLOCKS",
+      "regions": [
+        {
+          "op": "restore_block",
+          "category": "④",
+          "candidate_lines": [
+            127,
+            154
+          ],
+          "candidate_block_sha256": "68757f6bf3252dafd15c8811602c62b3901510e0855a95788394ddf10caef833",
+          "basis_lines": [
+            125,
+            143
+          ],
+          "basis_block_sha256": "1ee2f3b6cf18ee464c3f411e26cccbd8cef668384c6329d98f3fe244f3ce2f53"
+        },
+        {
+          "op": "restore_block",
+          "category": "④",
+          "candidate_lines": [
+            184,
+            238
+          ],
+          "candidate_block_sha256": "27034765612ee489f6b53b90421094c179ac8fd8e422e205aeac975dc61d32a9",
+          "basis_lines": [
+            173,
+            217
+          ],
+          "basis_block_sha256": "7a8dee6a28d7f63a5ad5d81e2efbe190351d6380ffdf319650665848fd31dced"
+        },
+        {
+          "op": "restore_block",
+          "category": "④",
+          "candidate_lines": [
+            239,
+            246
+          ],
+          "candidate_block_sha256": "5b634bac3a990f6209f721694a93d6b2783ff882534759dba8b197b6b2acec66",
+          "basis_lines": [
+            218,
+            224
+          ],
+          "basis_block_sha256": "5bc6b5a7628a0fbcf877531c031d0e175b2b351519c7a3fbe741d65cb1c431b0"
+        },
+        {
+          "op": "restore_block",
+          "category": "④",
+          "candidate_lines": [
+            247,
+            296
+          ],
+          "candidate_block_sha256": "2b921c5d86197c3f11b329391f461ea327a541281d9677a8fba809a411d967b0",
+          "basis_lines": [
+            225,
+            245
+          ],
+          "basis_block_sha256": "4af79b21e3825ea4e60f88a07fd55652b383694e69a01a5645ceccb8989e5544"
+        },
+        {
+          "op": "restore_block",
+          "category": "④",
+          "candidate_lines": [
+            297,
+            320
+          ],
+          "candidate_block_sha256": "43c4edaafe16a6d368869c31afdd8b9ade102a8dbf6ade18ed225efa2f16b0cb",
+          "basis_lines": [
+            246,
+            267
+          ],
+          "basis_block_sha256": "79634014717ad62e0a6cfdf35162f93a6b93c5eea25f5da40266082c10ab4541"
+        },
+        {
+          "op": "remove_insert",
+          "category": "④",
+          "candidate_lines": [
+            17,
+            18
+          ],
+          "inserted_sha256": "8ef5737be3e598bf9ddba988598b29201f3b4c012f61690b6ee17596ce5d2b9d",
+          "inserted_line_count": 2
+        },
+        {
+          "op": "inverse_literals",
+          "entries": 7,
+          "occurrences": 7
+        }
+      ]
+    },
+    "PARENT_COMMAND.ps1": {
+      "basis": "PARENT_COMMAND.ps1",
+      "kind": "LITERALS_PLUS_DECLARED_BLOCKS",
+      "regions": [
+        {
+          "op": "remove_insert",
+          "category": "④",
+          "candidate_lines": [
+            134,
+            141
+          ],
+          "inserted_sha256": "eed42d73cf48639c4262042881b82a8867f16575e99d4ca2c40487deb73bcffa",
+          "inserted_line_count": 8
+        },
+        {
+          "op": "inverse_literals",
+          "entries": 25,
+          "occurrences": 27
+        },
+        {
+          "op": "restore_block",
+          "category": "④",
+          "candidate_lines": [
+            96,
+            120
+          ],
+          "candidate_block_sha256": "1d7292b912c695a66286cbfc1ec29eb91100ba8f18aa3042b52da1e5578745f5",
+          "basis_lines": [
+            96,
+            120
+          ],
+          "basis_block_sha256": "21f5521cd73295635e1829a876416d2f006bf570b29ee3b68ecc9ce96ed76fc5"
+        }
+      ]
+    }
+  },
+  "checks": [
+    {
+      "check": "basis bytes CODE_MANIFEST.json",
+      "status": "STATIC_MATCH",
+      "detail": {
+        "bytes": 1046,
+        "sha256": "7a5cc2f1717ae7a80cd7e423861965ad51c5f639272eab7f3a3c7680499ae22c"
+      }
+    },
+    {
+      "check": "basis sha prefix in SPEC §45-2 CODE_MANIFEST.json",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "basis bytes COMMAND_MAP.json",
+      "status": "STATIC_MATCH",
+      "detail": {
+        "bytes": 6045,
+        "sha256": "e29109239edc0246657d41a097ea2ed369fa446c559286dad5aa5b7e3d925fec"
+      }
+    },
+    {
+      "check": "basis sha prefix in SPEC §45-2 COMMAND_MAP.json",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "basis bytes CONTRACT.json",
+      "status": "STATIC_MATCH",
+      "detail": {
+        "bytes": 125504,
+        "sha256": "58d398a663ceb35e49154c32ab04ce0ea5720f7fe0664db0e0fa09f1dfdf3b08"
+      }
+    },
+    {
+      "check": "basis sha prefix in SPEC §45-2 CONTRACT.json",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "basis bytes NATIVE_APPROVAL_FIELD_SPEC.json",
+      "status": "STATIC_MATCH",
+      "detail": {
+        "bytes": 4125,
+        "sha256": "8f4c90fb13382bde3f11a307e4247a829a00f1a5caa7558b9597ffb2f5d5a327"
+      }
+    },
+    {
+      "check": "basis sha prefix in SPEC §45-2 NATIVE_APPROVAL_FIELD_SPEC.json",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "basis bytes PARENT_COMMAND.ps1",
+      "status": "STATIC_MATCH",
+      "detail": {
+        "bytes": 19213,
+        "sha256": "e8a770f5908c30a981875c49d92e4e6657efc6bf0273c217001fbadb69d667c9"
+      }
+    },
+    {
+      "check": "basis sha prefix in SPEC §45-2 PARENT_COMMAND.ps1",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "basis bytes src/Normal480Candidate.java",
+      "status": "STATIC_MATCH",
+      "detail": {
+        "bytes": 99959,
+        "sha256": "c70526cf6884eabc57b63dd43dce4b47fb0decf59af68d3f550f1b987d053797"
+      }
+    },
+    {
+      "check": "basis sha prefix in SPEC §45-2 src/Normal480Candidate.java",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "basis bytes src/candidate_entry.py",
+      "status": "STATIC_MATCH",
+      "detail": {
+        "bytes": 13999,
+        "sha256": "6178a0c5b6ce79b22dc3e1a1ee717536fb8ef055834c2a28e1221c1b4b0937e5"
+      }
+    },
+    {
+      "check": "basis sha prefix in SPEC §45-2 src/candidate_entry.py",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "basis bytes src/diagnostic_consumer.py",
+      "status": "STATIC_MATCH",
+      "detail": {
+        "bytes": 20369,
+        "sha256": "c952e7c2674efd45f31d534998a4b63629558d45ec47d03d37b3e08682ed835c"
+      }
+    },
+    {
+      "check": "basis sha prefix in SPEC §45-2 src/diagnostic_consumer.py",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "basis run/tables/axes_runtime_settings.csv bytes",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "build_candidate.py --check reproduces candidate/ and LITERAL_CHANGE_MAP.json",
+      "status": "STATIC_MATCH",
+      "detail": [
+        "manifest 3722a51fb1caeddd72fca3751f2ed78ed3e05d5f1938fa452503b3fa5c421a03"
+      ]
+    },
+    {
+      "check": "src/Bmin640Candidate.java LF only",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "src/Bmin640Candidate.java ASCII only (Windows PowerShell 5.1 / javac / python -X utf8 read without BOM)",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "src/Bmin640Candidate.java: undoing only the declared changes gives the exact basis bytes",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "src/candidate_entry.py LF only",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "src/candidate_entry.py ASCII only (Windows PowerShell 5.1 / javac / python -X utf8 read without BOM)",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "src/candidate_entry.py: undoing only the declared changes gives the exact basis bytes",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "src/diagnostic_consumer.py all CRLF",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "src/diagnostic_consumer.py ASCII only (Windows PowerShell 5.1 / javac / python -X utf8 read without BOM)",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "src/diagnostic_consumer.py: undoing only the declared changes gives the exact basis bytes",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "PARENT_COMMAND.ps1 all CRLF",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "PARENT_COMMAND.ps1 ASCII only (Windows PowerShell 5.1 / javac / python -X utf8 read without BOM)",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "PARENT_COMMAND.ps1: undoing only the declared changes gives the exact basis bytes",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "consumer need byte-identical",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "consumer number byte-identical",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "consumer identity byte-identical",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "consumer pinned byte-identical",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "consumer rows byte-identical",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "consumer timed byte-identical",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "consumer extract_tables byte-identical",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "consumer rounded_contains byte-identical",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "consumer binding_evidence byte-identical",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "consumer profile byte-identical",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "consumer units_evidence byte-identical",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "consumer function set",
+      "status": "STATIC_MATCH",
+      "detail": {
+        "added": [
+          "extreme",
+          "mesh_evidence",
+          "three_fields",
+          "window_coverage"
+        ],
+        "removed": [
+          "coverage",
+          "late_summary"
+        ]
+      }
+    },
+    {
+      "check": "parent BHash byte-identical",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "parent BRef byte-identical",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "parent BRead byte-identical",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "parent BSave byte-identical",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "parent BInvoke byte-identical",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "parent function set",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "approved/usable false (CONTRACT · CODE_MANIFEST · FIELD_SPEC)",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "manifest lists the five sealed files with exact sizes / SHA-256",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "previous_manifest_sha256 = NORMAL480 manifest",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "COMMAND_MAP / FIELD_SPEC carry the manifest SHA",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "native commands equal in CONTRACT / COMMAND_MAP / FIELD_SPEC",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "budgets equal in CONTRACT / FIELD_SPEC and sum to overall",
+      "status": "STATIC_MATCH",
+      "detail": {
+        "preflight_and_input": 180,
+        "compile_batch": 9000,
+        "process_cleanup_total": 120,
+        "analysis": 900,
+        "delivery": 300,
+        "overall": 10500
+      }
+    },
+    {
+      "check": "approval / release paths agree",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "candidate_java pin = candidate source bytes",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "CONTRACT key diff = declared",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "CONTRACT inner changes: resource_proposal only disk_start_gib, policy only native_permission_status",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "requested_times_s = first 1,637 NORMAL480 entries, ends at 150",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "primary 301 = requested times in [120,150] incl. 120, 149.9, 150",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "coordinates, limits, runtime_settings_required, guard and solver contract unchanged",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "limits 0.001 V / 1e-4 strings",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "comparison rule states equal-is-within and strictly-greater-exceeds",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "baseline_files sizes / SHA-256 appear in B-min v2 section 3",
+      "status": "STATIC_MATCH",
+      "detail": []
+    },
+    {
+      "check": "baseline_files point at NORMAL480 run tables",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "runtime settings baseline entry = basis read-back bytes",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "NORMAL480 read-back satisfies runtime_settings_required and its tlist prefix = requested",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "Java tlist = CONTRACT requested_times_s",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "Java particle Nel 640 twice, 320 none",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "Java physical mesh 120/60/120 unchanged",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "Java one runAll, no loadCopy, class name = file name",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "Java prints the read-back prefixes the consumer requires",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "mesh_readback_required = physical 120/60/120, Nel 640/640, mesh1 300 edges",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "expected transient DOF = 2045 + 242*640 (record only)",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "parent root and approval field",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "entry approval field and success label",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "preservation: protected repository files = HEAD bytes",
+      "status": "STATIC_MATCH",
+      "detail": {
+        "protected_count": 88,
+        "changed": []
+      }
+    },
+    {
+      "check": "preservation: COMSOL_REBUILD_SPEC.md only appended (HEAD bytes are a prefix)",
+      "status": "STATIC_MATCH",
+      "detail": {
+        "head_bytes": 397625,
+        "now_bytes": 405034
+      }
+    },
+    {
+      "check": "validation plan bound to this manifest, approvals false, counts consistent",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "package documents name this manifest SHA",
+      "status": "STATIC_MATCH",
+      "detail": []
+    },
+    {
+      "check": "package documents carry the SPEC section 44-2 sentence",
+      "status": "STATIC_MATCH"
+    }
+  ]
+}

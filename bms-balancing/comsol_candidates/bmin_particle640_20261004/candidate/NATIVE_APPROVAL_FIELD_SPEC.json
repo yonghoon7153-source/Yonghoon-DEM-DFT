@@ -1,0 +1,68 @@
+{
+  "document_kind": "FIELD_SPECIFICATION_NOT_AUTHORIZATION",
+  "approved": false,
+  "usable": false,
+  "run_id": "bmin_particle640_candidate_001",
+  "code_manifest_sha256": "3722a51fb1caeddd72fca3751f2ed78ed3e05d5f1938fa452503b3fa5c421a03",
+  "future_approval_path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/bmin_particle640_offline_preparation_20261004/future_authorizations/bmin640_001.json",
+  "future_release_path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/bmin_particle640_offline_preparation_20261004/future_authorizations/VALIDATION_RELEASE.json",
+  "activation_requires": [
+    "separate accepted changed-branch validation bound to unchanged manifest",
+    "actual user native B-min640 decision (one attempt, fresh 0 -> 150 s)",
+    "current approved default prefs identity",
+    "current permission/path review using accepted route; no policy change",
+    "NORMAL480 run/tables identities observed on the execution machine before the run"
+  ],
+  "required_future_fields": {
+    "approved": "boolean true only after actual user authorization",
+    "native_bmin640_one_shot": "boolean true only for separately approved one native B-min640 attempt",
+    "allow_policy_changes": false,
+    "effective_policy_unverified_accepted": "explicit user decision",
+    "commands": {
+      "compile": [
+        "C:/Program Files/COMSOL/COMSOL63/Multiphysics/bin/win64/comsolcompile.exe",
+        "-prefsdir",
+        "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/bmin_particle640_offline_preparation_20261004/future_run_001/prefs",
+        "-configuration",
+        "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/bmin_particle640_offline_preparation_20261004/future_run_001/config_compile",
+        "-data",
+        "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/bmin_particle640_offline_preparation_20261004/future_run_001/data_compile",
+        "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/bmin_particle640_offline_preparation_20261004/future_run_001/Bmin640Candidate.java"
+      ],
+      "batch": [
+        "C:/Program Files/COMSOL/COMSOL63/Multiphysics/bin/win64/comsolbatch.exe",
+        "-prefsdir",
+        "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/bmin_particle640_offline_preparation_20261004/future_run_001/prefs",
+        "-configuration",
+        "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/bmin_particle640_offline_preparation_20261004/future_run_001/config_batch",
+        "-data",
+        "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/bmin_particle640_offline_preparation_20261004/future_run_001/data_batch",
+        "-np",
+        "16",
+        "-inputfile",
+        "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/bmin_particle640_offline_preparation_20261004/future_run_001/Bmin640Candidate.class",
+        "-outputfile",
+        "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/bmin_particle640_offline_preparation_20261004/future_run_001/result.mph",
+        "-batchlog",
+        "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/bmin_particle640_offline_preparation_20261004/future_run_001/batch.log"
+      ]
+    },
+    "budgets_seconds": {
+      "preflight_and_input": 180,
+      "compile_batch": 9000,
+      "process_cleanup_total": 120,
+      "analysis": 900,
+      "delivery": 300,
+      "overall": 10500
+    },
+    "user_decision": "exact existing original statement record path/bytes/SHA, not created now",
+    "validation_release": "path/bytes/SHA of separate accepted release, not created now",
+    "default_prefs_identity": "path/bytes/SHA of exact current user-approved file; not guessed"
+  },
+  "future_release_required": {
+    "changed_branch_validation": "PASS only from actual accepted test results",
+    "native_permission_route_reviewed": "explicit assessment, not native-success guarantee",
+    "manifest_bytes_unchanged_since_validation": true,
+    "validation_evidence": "nonempty pinned source/engine/result records"
+  }
+}

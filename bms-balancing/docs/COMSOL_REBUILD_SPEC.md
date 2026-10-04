@@ -3590,3 +3590,67 @@ gate INCOMPLETE · 실험 타당성 NOT_ESTABLISHED · 게이트 리뷰 (`degrad
 ### 45-3. 이 절이 **바꾸지 않는** 것
 
 §25-6 · … · §44-4 전부 그대로. B-min v2 · 대응표 v2 · 요청문 v2 불변 · 정상 gate INCOMPLETE · 게이트 리뷰 (`degradation-degeneracy`) 와 무관.
+
+## 46. B-min 오프라인 후보 작성 — 정적 대조 81/81 · 준비 검토 요청 · 변경부 검증 · native 미승인 (2026-10-04)
+
+> **추가 기록이다.** §45 의 승인 (작성 · 제출까지) 을 수행한 결과다. 입력은 사용자가 결과 ZIP 에서 꺼내 올린 NORMAL480 `candidate/` 8 파일 +
+> `run/tables/axes_runtime_settings.csv` 이고, R480 `ARCHIVE_AUDIT.json` 의 크기 · SHA-256 과 9/9 일치를 확인한 뒤에만 썼다 (보존 `a4cbe7212` · 규칙
+> `comsol_candidates/bmin_particle640_20261004/** -text`).
+
+### 46-1. 후보 — 위치 · 식별
+
+| 항목 | 값 |
+|---|---|
+| 꾸러미 | `comsol_candidates/bmin_particle640_20261004/` (`candidate/` = 실행 기계의 root 에 놓일 8 파일 · `basis/source480/` = 원본 · 문서 · `tools/`) |
+| 실행 기계의 root (예정) | `outputs/bmin_particle640_offline_preparation_20261004/` · run_id `bmin_particle640_candidate_001` |
+| CODE_MANIFEST | **`3722a51fb1caeddd72fca3751f2ed78ed3e05d5f1938fa452503b3fa5c421a03`** (이전 NORMAL480 `7a5cc2f1…`) · 승인 플래그 전부 false |
+| 소스 | `Bmin640Candidate.java` 80,813 B · `candidate_entry.py` 13,995 · `diagnostic_consumer.py` 24,598 (CRLF) · `PARENT_COMMAND.ps1` 19,346 (CRLF) · `CONTRACT.json` 55,179 — 네 소스 ASCII |
+| 만드는 법 | `tools/build_candidate.py` — 원본 바이트 대조 → (이전 · 이후 · 횟수 · 분류) 치환 → 선언 블록 교체. `--check` 가 같은 바이트를 다시 만든다 |
+
+### 46-2. 바뀐 것 — B-min v2 §3 의 ①–④ 만
+
+| 분류 | 내용 |
+|---|---|
+| ① 입자 Nel | `pce1` · `pce2` 의 `Nel` "320" → "640" (Java 두 곳) · 계약 `changed_axis` · `mesh_readback_required` (`AXES_PARTICLE=pce1|Nel=640|Nord=1|Distribution=CubicRoot` 등) · `expected_transient_dof` 156,925 + 12 (기록만) |
+| ② 150 s · 요청 | Java `checkShape` 상한 · `tlist` = NORMAL480 목록의 앞 1,637 개 (끝 "150") · consumer 종료 표식 (`NORMAL_150S_REACHED` · `DID_NOT_REACH_150`) · 부모 범위 0–150 · 요청 수 1,637 |
+| ③ 경로 · 식별 | root · run_id · 클래스 `Bmin640Candidate` · 완료 표식 `BMIN640_PRODUCER_COMPLETE` · 승인 필드 `native_bmin640_one_shot` · 명령 · manifest |
+| ④ 기준 · 판정 · 예산 | 기준 = NORMAL480 `run/tables` 9 파일 (v2 §3 값 · B020 과 NORMAL240 결속은 뺐다) · consumer `window_coverage` (주 301 · I-7a/b · 보조 · 창 밖 관측) · `numeric` (창별 최대 \|ΔV\| · 전극별 \|Δx_surface\| · 총 Li · 전해질 최소 / Min·MaxLine — tolerance `raise` 제거) · `three_fields` (≤ 규칙) · `runtime_evidence` (I-2: NORMAL480 read-back 22 키와 `study_tlist` 접두 외 차이 0) · `mesh_evidence` (I-3) · 부모 `GDecision` 창 검사 · `[decimal]` 재계산 · `GFields` · 예산 (분석 1,800 → 900 · 전체 11,400 → 10,500 · 디스크 50 → 15 GiB) |
+
+- 판정 문장 (§44-2 그대로 · 계약 `comparison_rule` 은 같은 뜻의 영문): 한도와 같으면 허용한다 (≤). 모든 유효 조건이 성립할 때 max \|ΔV\| ≤ 0.001 V
+  **그리고** 두 전극 max \|Δx_surface\| ≤ 1e−4 이면 `WITHIN_LIMITS_THIS_WINDOW`, 어느 하나라도 **엄격히 크면** `EXCEEDS_LIMITS` 다.
+- 세 필드 — consumer 가 잠정값을 쓰고 (종료 판정을 구성 증거보다 먼저 두어 `native_completion` 을 분리), 부모 POST_WRITE 기록이 최종이다. 부모가 받아들인
+  정상 결과만 consumer 판정을 싣고 나머지는 `INCONCLUSIVE`. 부모 성공 상태 `AWAITING_BMIN640_150S_EXTERNAL_ACCEPTANCE`.
+- 바꾸지 않은 것: 물리 메시 120 / 60 / 120 · 물성 · OCP · 초기화 · guard · solver (rtol 1e−6 · 초기 step · cap · strict · all stored — 연구 층 `rtol 1e-5`
+  문자열도 그대로) · 출력 API · 좌표 · 한도 · `BSave` / `BInvoke` / C2 / Job / post-write 본문.
+
+### 46-3. 정적 대조 — 81/81 (`STATIC_AUDIT.json` · 텍스트 · JSON · 해시만)
+
+- **역재구성:** `CHANGE_BOUNDARIES.json` 의 순서대로 선언 블록을 원본 블록으로 되돌리고 · 선언 삽입을 지우고 · `LITERAL_CHANGE_MAP.json` 의 치환을 거꾸로 하면
+  네 소스 모두 NORMAL480 원본과 바이트가 정확히 같다 — 선언 밖 변경 0. (처음 실행에서 부모의 원본 블록 표식이 두 곳 — 주 비교 · B020 — 에 걸려 유일하지
+  않아 실패했고, 표식을 다음 줄까지 넓혀 고쳤다. 변경 자체의 문제는 아니었다.)
+- 바뀌면 안 되는 함수 바이트 동일 (consumer 11 · 부모 5) · JSON 결속 (manifest · 명령 · 예산 합 10,500 · 경로) · 계약 값 (요청 접두 · 주 301 · 불변 키 16) · 기준 9
+  파일의 크기 · SHA 가 B-min v2 §3 문서 값과 같음 · NORMAL480 read-back 이 계약 요구를 충족 · 보존 대상 88 파일 = 직전 HEAD 바이트 · 이 SPEC 은 덧붙이기만.
+- 후보 코드의 import · 구문 해석 · 컴파일 · 실행 0 · JVM · COMSOL 0. 기능 PASS 를 정적 대조로 선언하지 않는다.
+
+**작성 중 스스로 고친 것 (커밋 전):** (1) 처음 설계는 구성 증거 (I-2 · I-3) 실패 시 종료 판정 전에 빠져나가 정상 종료한 실행도 `native_completion`
+NOT_ESTABLISHED 가 되었다 — 세 필드 분리에 어긋나 종료 판정을 먼저 두는 순서로 바꿨다. (2) 검증안 PY02-04 의 기대값을 "주 비교 121" 로 잘못 셌다 — 130 s
+보호 중단이면 t_minus 129.9 · 100 개다. (3) 검증 요청문 표에 §44-2 가 피하라고 한 "한도와 같은 값 → 안" 을 다시 썼다 — "→ 허용 (≤)" 로 고쳤다.
+
+### 46-4. 함께 낸 것 (모두 미승인 · 미실행)
+
+`BASELINE_IDENTITIES.json` (경로 가정 = NORMAL480 run root `future_run_001/tables/` — 실행 기계에서 관측하지 않았다 · 틀리면 compile 전 `BASELINE_IDENTITY`) ·
+`RESOURCE_BUDGET_KO.md` (180 + 9,000 + 120 + 900 + 300 = 10,500 s · 디스크 ≥ 15 GiB — v2 §7 제안을 키에 옮긴 것) · `LIMITED_VALIDATION_PLAN.json` +
+`VALIDATION_REQUEST_KO.md` (변경부 9 군 41 사례 · 1,470 s · v2 §8-3 목록 ↔ 사례 · 실행 주체는 사용자 결정) · `NATIVE_BMIN640_APPROVAL_DRAFT_KO.md` (비활성) ·
+`PREPARATION_KO.md` (요약 · I-1–I-8 ↔ 이유 문자열 · 한계).
+
+### 46-5. 준비 검토 요청 · 다음
+
+요청문 `docs/COMSOL_BMIN_CANDIDATE_REVIEW_REQUEST_20261004.md` — 검토 대상은 **이 절과 그 요청문이 든 커밋의 바이트**, Q1 (허용 diff 경계 · 역재구성 독립 재현) ·
+Q2 (판정 구현) · Q3 (I-1–I-8 · 특히 `Nord` / `Distribution` 을 R480 콘솔과 대조) · Q4 (뺀 기능) · Q5 (기준 경로 가정) · Q6 (검증안 · 예산). 발송은 사용자 결정.
+
+다음 (각각 별도 사용자 결정 · 자동 시작 없음): ① 준비 검토 회신 → ② 변경부 검증 승인 · 수행 · 결과 수용 → ③ native 최대 1 회 승인 → ④ 결과 수신 검토.
+
+### 46-6. 이 절이 **바꾸지 않는** 것
+
+§25-6 · … · §45 전부 그대로. B-min v2 · 대응표 v2 · 요청문 v2 · 다음 계획 불변 · 정상 gate INCOMPLETE · 실효 정책 UNVERIFIED · 게이트 리뷰
+(`degradation-degeneracy`) 와 무관 · RUN_SCOPE 0. 컴파일 · 기능 시험 · 변경부 검증 · COMSOL/JVM/solve · native · 정책 변경 · 유한 σ · 960 s · 자료 요청 발송 없음.

@@ -1,0 +1,115 @@
+# B-min 오프라인 후보 — 입자 반경 메시 320 → 640 · fresh 0 → 150 s · 120–150 s 창 비교 (준비본)
+
+상태: **오프라인 후보 작성 완료 · 정적 대조만 함 (81/81) · 변경부 기능 검증 미실행 · native 미승인.** 후보 코드의 import · 구문 해석 · 컴파일 · 실행,
+JVM · COMSOL 호출은 0 회다. 모든 승인 플래그는 false (`approved` / `usable`).
+
+근거: 사용자 승인 (2026-10-04 "ㄱㄱㄱ" — COMSOL_REBUILD_SPEC §45: 후보 **작성 · 제출까지**) · 범위 문서 B-min v2 (`docs/COMSOL_BMIN_SCOPE_v2_20261004.md`
+— §44 에서 수용) · 문구 정정 §44-2. 출발점은 NORMAL480 의 봉인 생산 파일 8 개 (`basis/source480/` — R480 ARCHIVE_AUDIT 와 9/9 바이트 일치 · `a4cbe7212`).
+
+## 1. 위치 · 식별
+
+| 항목 | 값 |
+|---|---|
+| 이 저장소 | `bms-balancing/comsol_candidates/bmin_particle640_20261004/` — `candidate/` 가 실행 기계의 root 에 그대로 놓일 내용 |
+| 실행 기계의 root (예정) | `C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/bmin_particle640_offline_preparation_20261004/` |
+| run_id | `bmin_particle640_candidate_001` |
+| CODE_MANIFEST SHA-256 | **`3722a51fb1caeddd72fca3751f2ed78ed3e05d5f1938fa452503b3fa5c421a03`** (이전 = NORMAL480 `7a5cc2f1…`) |
+| 클래스 · 표식 | `Bmin640Candidate` · `BMIN640_PRODUCER_COMPLETE` · 성공 라벨 `BMIN640_150S_COMPARISON_COMPLETE` · 부모 `AWAITING_BMIN640_150S_EXTERNAL_ACCEPTANCE` |
+| 승인 필드 | `native_bmin640_one_shot` (예정 파일 `future_authorizations/bmin640_001.json` — 만들지 않았다) |
+
+| `candidate/` 파일 | 바이트 | SHA-256 | 줄 끝 |
+|---|---:|---|---|
+| `CODE_MANIFEST.json` | 1,050 | `3722a51fb1caeddd72fca3751f2ed78ed3e05d5f1938fa452503b3fa5c421a03` | LF |
+| `CONTRACT.json` | 55,179 | `1a2ea97d5266d7022c46f5a6d62ceb3bae728c3c6a59c4277f467edcda9596da` | LF |
+| `COMMAND_MAP.json` | 6,189 | `1394bf1b390c958c69be644082f5ee67f0bce11353bd2df2529e377328d2e654` | LF |
+| `NATIVE_APPROVAL_FIELD_SPEC.json` | 4,346 | `8a84f8a8aa6c298c2266a4012256dd4a8f274951adb238695be65909f0cb0c1c` | LF |
+| `PARENT_COMMAND.ps1` | 19,346 | `88be3c3a8926488145e59bc3f970d9f99aa2248465423075c7d77f9f63ea1fc6` | **CRLF** (원본과 같게) |
+| `src/Bmin640Candidate.java` | 80,813 | `ef0ca60aeae1d9bd3790bbfe49a5732984c489cc7928b9692f102e061f5462ff` | LF |
+| `src/candidate_entry.py` | 13,995 | `0a0d308101d54ce11af305033d77ede2e6f4a28c97ff15852a230b283c178fed` | LF |
+| `src/diagnostic_consumer.py` | 24,598 | `e0ce85a501f7f1f079224b849b2464b876fec284e55bca279d431b2ff3ad5421` | **CRLF** (원본과 같게) |
+
+네 소스 모두 ASCII 만 쓴다 (BOM 없는 PS 5.1 · javac · `python -X utf8` 이 같은 바이트로 읽는다). 저장소 규칙 `comsol_candidates/bmin_particle640_20261004/** -text`
+(`a4cbe7212`) 로 CRLF 가 그대로 커밋된다.
+
+## 2. 무엇을 바꿨나 — 허용 diff ①–④ 만 (B-min v2 §3)
+
+| 파일 | 종류 | 내용 |
+|---|---|---|
+| Java | 문자 치환만 (8 항목 10 곳) | ① `pce1` · `pce2` 의 `Nel` "320" → "640" · ② `checkShape` 상한 480 → 150 · 요청 `tlist` = NORMAL480 목록의 앞 1,637 개 (끝 "150") · 설명 / 라벨의 480 → 150 · ③ 클래스명 · 완료 표식. 물리 메시 (120 / 60 / 120) · 물성 · OCP · guard · solver (rtol 1e−6 · 초기 step · cap · strict) · 출력 API 본문은 바이트 그대로 — 연구 rtol 문자열 (`study … rtol 1e-5`) 과 실제 Time solver rtol 1e−6 의 두 층 문자열도 손대지 않았다 (CX 주의) |
+| entry | 문자 치환만 (5 항목 7 곳) | ③ 모듈 · 클래스 이름 · 승인 필드 `native_bmin640_one_shot` · ④ 성공 라벨 |
+| consumer | 문자 치환 7 + 선언 블록 5 + 삽입 1 | ② 종료 150 s 표식 (`NORMAL_END_CONTRACT` · `GUARD_TIME_RANGE` · `STOP_PAIR` · `DID_NOT_REACH_150`) · ③ 완료 표식 · ④ 아래 §3 |
+| 부모 PS1 | 문자 치환 25 항목 27 곳 + 선언 블록 1 + 삽입 1 | ② 150 s 범위 · 요청 1,637 · ③ root · 승인 필드 · ④ 예산 상수 (10,500 · 분석 900) · 창 검사 · 세 필드 재계산 · `GFields` |
+| JSON 넷 | 키 단위 | `CHANGE_BOUNDARIES.json` `json_files` — 계약의 바뀐 키 14 · 지운 키 3 (`baseline_requested_times_s` · `comparison_end_s` · `b020_requested_times_s`) · 더한 키 8 |
+
+정확한 목록: 문자 치환은 `LITERAL_CHANGE_MAP.json` (각 항목의 이전 · 이후 · 횟수 · 분류), 블록 · 삽입은 `CHANGE_BOUNDARIES.json` (경계 표식 · 이유 ·
+분류). `tools/static_audit.py` 가 **선언된 변경만 되돌리면 NORMAL480 원본과 바이트가 정확히 같다**는 것을 네 소스 모두에 대해 확인한다 (역재구성) —
+선언 밖의 변경은 여기서 걸린다. consumer 의 `need` · `number` · `identity` · `pinned` · `rows` · `timed` · `extract_tables` · `rounded_contains` · `binding_evidence` ·
+`profile` · `units_evidence` 와 부모의 `BHash` · `BRef` · `BRead` · `BSave` · `BInvoke` 는 바이트 그대로다.
+
+**뺀 것 (이유와 함께 선언):** B020 0–5 s 보조 비교와 그 표 6 개 (B-min 의 기준은 NORMAL480 `run/tables` 하나 — v2 §3) · NORMAL240 접두 비교
+(`comparison_end_s` 240) · `late_summary` (>240 s) · consumer 안의 한도 초과 `raise` (`SAMPLE_TOLERANCE` — 초과는 오류가 아니라 `EXCEEDS_LIMITS`).
+
+## 3. 판정 — 결과를 보기 전에 고정 (B-min v2 §5 · §6 · SPEC §44-2)
+
+- **주 비교 (판정):** 계약 `requested_times_s` 의 120 ≤ t ≤ 150 — 301 개 (120.0 … 150.0 · 계약에 목록으로도 고정 `primary_comparison_times_s` · consumer 가 다시
+  유도해 같아야 한다). 양쪽 모두에 있어야 한다 (I-7b). 보간 · 근접 대체 · 반올림 일치 없음.
+- **지표:** ΔV = (phis@경계 4 − phis@경계 1)_640 − (같은 것)_NORMAL480 의 max \|ΔV\| · 전극별 241 계약 좌표 pointwise max \|Δx_surface\| — 최대의 부호 있는 값 ·
+  시각 · 좌표 index · 좌표 원문을 함께 기록한다 (`numeric.windows.primary`). 같은 최대가 여럿이면 시각 · 좌표 순서의 첫 값.
+- **판정 문장 (§44-2 그대로):** 한도와 같으면 허용한다 (≤). 모든 유효 조건이 성립할 때 max \|ΔV\| ≤ 0.001 V **그리고** 두 전극 max \|Δx_surface\| ≤ 1e−4
+  이면 `WITHIN_LIMITS_THIS_WINDOW`, 어느 하나라도 **엄격히 크면** `EXCEEDS_LIMITS` 다. 앞 두 필드 중 하나라도 성립하지 않으면 `INCONCLUSIVE`.
+  계약의 `comparison_rule` 이 같은 뜻의 영문이고, consumer 는 `Decimal` 로 · 부모는 `[decimal]` 로 따로 계산해 둘이 같아야 부모가 받아들인다.
+- **보조 (판정 밖):** 창 안의 추가 정확 공통 저장 시각 (`auxiliary`) · 창 밖 요청 시각 0–120 s (`outside_window_observation` — 새 독립 수용 없음) · 총 Li 차 ·
+  전해질 최소 (전체 · domain 1–3) · Min/MaxLine 차 — 모두 문턱 없음.
+- **세 필드:** consumer 가 `native_completion` · `evidence_validity` · `mesh_comparison` 을 따로 적고 (종료를 먼저 판정해 구성 증거와 섞이지 않게 했다), 부모의
+  POST_WRITE 기록이 최종이다 — 부모가 받아들인 정상 결과만 consumer 의 판정을 싣고 나머지는 `INCONCLUSIVE` (consumer 의 `native_completion` 은
+  `consumer_native_completion_unverified` 로 원인 분석용으로만 옮긴다).
+
+| 유효 조건 (v2 §6) | 후보에서 걸리는 자리 (이유 문자열) |
+|---|---|
+| I-1 기준 바이트 | entry `BASELINE_IDENTITY` (compile 전) · `BASELINE_CHANGED` (뒤) · consumer `SOURCE_IDENTITY` (읽을 때마다) |
+| I-2 설정 read-back | `RUNTIME_TLIST` · `RUNTIME_SETTING:<키>` (기존 18 키) · `RUNTIME_SETTING_KEYS_VS_NORMAL480` · `BASELINE_TLIST_PREFIX` · `RUNTIME_SETTING_VS_NORMAL480:<키>` (NORMAL480 read-back 22 키와 `study_tlist` 외 전부 같아야) |
+| I-3 메시 read-back | `MESH_READBACK:<줄>` — 물리 `numelem` 120 / 60 / 120 · `AXES_PARTICLE=pce1|Nel=640|Nord=1|Distribution=CubicRoot` (pce2 도) · `AXES_ACTUAL_MESH=mesh1|edges=300|vertices=301` 각 정확히 한 번. 자유도는 기록만 (예상 156,925 + 내부 12 · `last_dof_matches_expected`) |
+| I-4 실행 | `native_completion` (`DID_NOT_REACH_150` · `NATIVE_STOP_COUNT` · `SOLVER_SECTION` · `FINAL_NATIVE_STEP` · `NATIVE_STORED_*` · `PRODUCER_OUTPUT_FAILURE` · `NATIVE_FATAL` · entry 상태 오류) |
+| I-5 guard · 범위 · 유한 · 단위 | `GUARD_*` · `INITIAL_GUARD` · `GUARD_BEFORE_FINAL` · `PROFILE_SURFACE_RANGE` · `GLOBAL_SURFACE_RANGE` · `GLOBAL_OCP_GUARD` · `NONFINITE` · `UNIT_STAGE` |
+| I-6 내부 일관성 | `LI_DRIFT` (≤ 1e−6) · `VOLTAGE_IDENTITY` (≤ 1e−8 V) · `INITIAL_LI_COMPONENT` (NORMAL480 대비 ≤ 1e−9 mol/m²) |
+| I-7a / b | `STRICT_REQUEST_TIME_MISSING` (`missing_strict_requested` · `missing_target` · `missing_baseline`) · `REQUEST_CONTRACT` · `PRIMARY_CONTRACT` · `WINDOW_CONTRACT` |
+| I-7c 좌표 | `PROFILE_COORD_DOMAIN` · `PROFILE_COUNT` · `PROFILE_UNEXPECTED_TIME` · `PROFILE_MISSING_TIME_OR_COUNT` · `COORDINATE_CONTRACT` (계약 좌표는 NORMAL480 원문 그대로 · 1e−15 m 는 표현 검사에만) |
+| I-8 예산 | entry `PREFLIGHT_BUDGET` · `NATIVE_PHASE_BUDGET` · `FINAL_BUDGET` · `OVERALL_BUDGET` · 부모 `OVERALL_BUDGET` · `FINAL_POST_WRITE_BUDGET` · 분석 900 / 전달 300 |
+
+## 4. 꾸러미 문서
+
+| 파일 | 내용 |
+|---|---|
+| `BASELINE_IDENTITIES.json` | NORMAL480 `run/tables` 9 파일의 크기 · SHA-256 · 용도 · 경로 가정 |
+| `LITERAL_CHANGE_MAP.json` | 네 소스의 문자 치환 전부 (분류 ①–④) — `tools/build_candidate.py` 가 만든다 |
+| `CHANGE_BOUNDARIES.json` | 블록 · 삽입의 경계 · 이유 · 역재구성 순서 · JSON 키 차이 · 뺀 기능 |
+| `RESOURCE_BUDGET_KO.md` | 예산 제안 (미승인) |
+| `LIMITED_VALIDATION_PLAN.json` · `VALIDATION_REQUEST_KO.md` | 변경부 검증안 9 군 41 사례 (미실행) · 사용자 채택용 비활성 문구 |
+| `NATIVE_BMIN640_APPROVAL_DRAFT_KO.md` | 비활성 native 승인 초안 |
+| `STATIC_AUDIT.json` | 정적 대조 81 항목 · 역재구성 영역 (줄 범위 · SHA) · 보존 대조 (이 저장소의 보존 대상 88 파일 = HEAD 바이트 · SPEC 은 덧붙이기만) — 정상 60 s 준비본의 PRESERVATION before / after 에 해당 (실행 기계의 생산 원본 · 기준 CSV 는 여기서 볼 수 없다) |
+| `tools/build_candidate.py` · `tools/static_audit.py` | 후보를 원본에서 결정적으로 다시 만드는 도구 (`--check`) · 정적 대조 도구 — 둘 다 후보 코드를 실행하지 않는다 |
+
+재현: 패키지 루트에서 `python3 tools/build_candidate.py --check` (바이트 재생성 대조) · `python3 tools/static_audit.py` (81 항목 · rc 0).
+
+## 5. 한계 — 정적 대조가 말하지 않는 것
+
+- **기능은 하나도 시험하지 않았다.** 새 분기 (창 비교 · 세 필드 · I-2 · I-3 · 부모 `[decimal]` 재계산 · `GFields`) 가 실제 엔진에서 뜻대로 도는지는 변경부 검증의 몫이다.
+- 기준 표의 경로는 NORMAL480 run root 의 `future_run_001/tables/` 로 가정했다 (NORMAL480 이 NORMAL240 을 결속한 방식과 같은 형태) — 실행 기계에서
+  관측하지 않았다. 틀리면 compile 전에 `BASELINE_IDENTITY` 로 멈춘다 (낭비 없음 · 비교 없음).
+- `Nord=1|Distribution=CubicRoot` 는 정상 60 s native 수신 검토의 보충 대조 (`normal60_native_recipient_review_20260930/SUPPLEMENTAL_AUDIT.json`) 와 입자 160 실행
+  기록에서 옮긴 값이다 — NORMAL480 콘솔 로그는 이 저장소에 없다 (결과 ZIP 안에 있다). 수신 검토에서 대조를 권한다.
+- 예상 자유도 156,925 + 12 는 네 점 직선의 외삽이라 판정에 쓰지 않는다.
+- 부모의 `[decimal]::TryParse` (InvariantCulture · Float) 는 .NET 의 유효 자릿수 (28–29) 를 넘는 문자열을 반올림할 수 있다 — 차이 값은 보통 20 자리
+  이내라 영향이 없을 것으로 보지만 PS01-03 · PS01-04 가 이 경계를 직접 본다.
+- consumer 의 세 필드는 잠정값이다 (`field_authority`) — entry 가 분석 예산을 넘겨 `INCOMPLETE` 로 내린 경우에도 consumer 값이 결과 파일에 남는다. 최종은
+  부모 POST_WRITE 이고 그때 `INCONCLUSIVE` 다 (PY07-02 · PS01-05).
+- 분석 900 s 는 산술 규모 추정이다 (`RESOURCE_BUDGET_KO.md`).
+
+## 6. 하지 않은 것 · 다음
+
+하지 않은 것: 후보 import · 구문 해석 · 컴파일 · 기능 시험 · harness · JVM · COMSOL · native · 정책 변경 · 실제 승인 / release / USER_DECISION 생성 · 실행 기계
+파일 접근 · 유한 σ · 960 s · 자료 요청 발송. 생산 원본 · 기준 CSV · 과거 실패 / pending · 영수증은 바꾸지 않았다 (이 저장소에는 원본 사본만 있고 그대로다 —
+`basis/source480` 바이트 대조 9/9).
+
+다음 (각각 별도 사용자 결정): ① 이 후보의 준비 검토 (제출) → ② 변경부 검증 승인 · 수행 · 결과 수용 (`VALIDATION_REQUEST_KO.md`) → ③ native 최대 1 회의 별도
+승인 (`NATIVE_BMIN640_APPROVAL_DRAFT_KO.md`) → ④ 결과 수신 검토 (세 필드). 어느 단계도 자동으로 다음을 시작하지 않는다.
