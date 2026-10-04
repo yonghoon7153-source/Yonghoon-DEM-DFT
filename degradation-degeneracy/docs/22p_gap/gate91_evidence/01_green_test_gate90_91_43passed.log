@@ -1,0 +1,64 @@
+# GREEN (91차) — b9abe993c + tools/env_profile.py 작업 트리 (이름 · 문구 · not_measured) · HEAD b9abe993c · dirty 1 · source_digest f0175fff71132003
+# 2026-10-04T23:32:31Z · python -m pytest tests/test_gate90_env_profile.py tests/test_gate91_env_profile_scope.py -rA -p no:cacheprovider
+
+
+[conftest] 시험 authority: /tmp/dd-test-authority-pcj7jbt9/docs/22p_gap/LEG_PRESERVATION.yaml (운영 원장의 바이트 복사본 — 70차 E6)
+
+[conftest] 이 checkout 을 처음 보았다 — 얼린 cohort 17개의 좌표를 시험 authority 에 봉인했다: ['g10_2026_09_01', 'g11_2026_09_02', 'g12_2026_09_03', 'g13_2026_09_07', 'g14_2026_09_08', 'g15_2026_09_08', 'g16_2026_09_09', 'g17_2026_09_14', 'g1_2026_08_20', 'g2_2026_08_25', 'g3_2026_08_28', 'g4_2026_08_28', 'g5_2026_08_29', 'g6_2026_09_01', 'g7_2026_09_01', 'g8_2026_09_01', 'g9_2026_09_01']
+============================= test session starts ==============================
+platform linux -- Python 3.11.15, pytest-9.1.1, pluggy-1.6.0
+rootdir: /home/user/Yonghoon-DEM-DFT/degradation-degeneracy
+plugins: metadata-3.1.1, platformdirs-4.12.0, anyio-4.15.1, json-report-1.5.0
+collected 43 items
+
+tests/test_gate90_env_profile.py ......................................  [ 88%]
+tests/test_gate91_env_profile_scope.py .....                             [100%]
+
+==================================== PASSES ====================================
+=========================== short test summary info ============================
+PASSED tests/test_gate90_env_profile.py::test_e01_committed_lock_is_canonical_and_pinned
+PASSED tests/test_gate90_env_profile.py::test_e02_synthetic_round_trip_matches
+PASSED tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[dist_extra]
+PASSED tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[dist_missing]
+PASSED tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[dist_record]
+PASSED tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[dist_version]
+PASSED tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[env_upgrade]
+PASSED tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[file_hash]
+PASSED tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[file_missing]
+PASSED tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[implementation]
+PASSED tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[libc]
+PASSED tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[machine]
+PASSED tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[origin_stray]
+PASSED tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[python]
+PASSED tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[shadowed]
+PASSED tests/test_gate90_env_profile.py::test_e03_each_axis_is_reported[system]
+PASSED tests/test_gate90_env_profile.py::test_e04_malformed_lock_is_unmeasured[bad_json_value]
+PASSED tests/test_gate90_env_profile.py::test_e04_malformed_lock_is_unmeasured[bad_record_field]
+PASSED tests/test_gate90_env_profile.py::test_e04_malformed_lock_is_unmeasured[duplicate_directive]
+PASSED tests/test_gate90_env_profile.py::test_e04_malformed_lock_is_unmeasured[duplicate_dist]
+PASSED tests/test_gate90_env_profile.py::test_e04_malformed_lock_is_unmeasured[garbage_line]
+PASSED tests/test_gate90_env_profile.py::test_e04_malformed_lock_is_unmeasured[missing_directive]
+PASSED tests/test_gate90_env_profile.py::test_e04_malformed_lock_is_unmeasured[missing_file]
+PASSED tests/test_gate90_env_profile.py::test_e04_malformed_lock_is_unmeasured[not_utf8]
+PASSED tests/test_gate90_env_profile.py::test_e04_malformed_lock_is_unmeasured[profile_not_c]
+PASSED tests/test_gate90_env_profile.py::test_e04_malformed_lock_is_unmeasured[unknown_directive]
+PASSED tests/test_gate90_env_profile.py::test_e04_malformed_lock_is_unmeasured[unnormalized_name]
+PASSED tests/test_gate90_env_profile.py::test_e04_malformed_lock_is_unmeasured[unsorted]
+PASSED tests/test_gate90_env_profile.py::test_e05_measurement_failure_is_unmeasured[enumeration_raises]
+PASSED tests/test_gate90_env_profile.py::test_e05_measurement_failure_is_unmeasured[nameless_dist]
+PASSED tests/test_gate90_env_profile.py::test_e05_measurement_failure_is_unmeasured[unknown_hash_algorithm]
+PASSED tests/test_gate90_env_profile.py::test_e06_real_environment_result_is_typed
+PASSED tests/test_gate90_env_profile.py::test_e07_key_modules_are_the_fingerprint_axes
+PASSED tests/test_gate90_env_profile.py::test_e08_cli_is_record_only
+PASSED tests/test_gate90_env_profile.py::test_e09_smoke_records_the_profile_once
+PASSED tests/test_gate90_env_profile.py::test_e10_receipt_stamp_records_the_profile
+PASSED tests/test_gate90_env_profile.py::test_e11_b_profile_is_the_v4_producer_record
+PASSED tests/test_gate90_env_profile.py::test_e12_requirements_bounds_kept_and_comment_corrected
+PASSED tests/test_gate91_env_profile_scope.py::test_s01_every_result_declares_loaded_origin_unmeasured[MATCH]
+PASSED tests/test_gate91_env_profile_scope.py::test_s01_every_result_declares_loaded_origin_unmeasured[MISMATCH]
+PASSED tests/test_gate91_env_profile_scope.py::test_s01_every_result_declares_loaded_origin_unmeasured[UNMEASURED]
+PASSED tests/test_gate91_env_profile_scope.py::test_s02_path_search_count_is_not_a_loaded_module_check
+PASSED tests/test_gate91_env_profile_scope.py::test_s03_summary_and_docstrings_state_the_path_search_scope
+============================= 43 passed in 17.80s ==============================
+rc=0
+# 끝 2026-10-04T23:32:51Z · HEAD b9abe993c · dirty 1
