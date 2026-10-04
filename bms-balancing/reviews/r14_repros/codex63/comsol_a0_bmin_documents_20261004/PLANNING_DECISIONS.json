@@ -1,0 +1,60 @@
+{
+  "schema": 1,
+  "status": "DOCUMENT_SCOPE_COMPLETED_NOT_CANDIDATE_PREPARED",
+  "document_work_authorized": true,
+  "candidate_implementation_approved": false,
+  "validation_approved": false,
+  "native_approved": false,
+  "external_send_approved": false,
+  "B_min": {
+    "reference": "NORMAL480",
+    "physical_mesh": [
+      120,
+      60,
+      120
+    ],
+    "particle_mesh_reference": [
+      320,
+      320
+    ],
+    "particle_mesh_proposed": [
+      640,
+      640
+    ],
+    "fresh_t0": true,
+    "end_s": 150,
+    "primary_window_s": [
+      120,
+      150
+    ],
+    "required_request_source": "normal480 CONTRACT.json requested_times_s exact prefix/items; original coordinate strings",
+    "prefix_count": 1637,
+    "window_count": 301,
+    "window_first": "120",
+    "window_last": "150",
+    "N_count": 241,
+    "P_count": 241,
+    "N_first": "0",
+    "N_last": "5.2E-5",
+    "P_first": "7.7E-5",
+    "P_last": "1.21E-4",
+    "cost_150_reference_s": 3002.53125,
+    "cost_150_double_s": 6005.0625,
+    "native_attempts_proposed": 1,
+    "automatic_retries_proposed": 0,
+    "time_interpolation": false,
+    "limits": {
+      "voltage_V": "0.001",
+      "surface_fraction": "0.0001",
+      "comparison": "Both <=; any > is EXCEEDS_LIMITS; missing evidence is INCONCLUSIVE"
+    },
+    "cost_is_unvalidated_scenario_not_budget": true
+  },
+  "new_native_runs": 0,
+  "received_code_execution": 0,
+  "new_functional_tests": 0,
+  "candidate_source_changes": 0,
+  "normal_gate": "INCOMPLETE",
+  "experimental_validity": "NOT_ESTABLISHED"
+}
+

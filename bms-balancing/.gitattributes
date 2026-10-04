@@ -75,3 +75,5 @@ reviews/prereview_reil_v2_20261004/** -text
 reviews/prereview_reil_v2_annexA_20261004/** -text
 # 2026-10-04: 정상 fresh 0→30 s rtol 1e-6 → 1e-7 한정 민감도 native 결과 독립 수신 검토 묶음 (ACCEPTED_LIMITED_RTOL30_SENSITIVITY · 차단 0 · 같은 시험 반복 없음 · 새 계산 승인 없음 · 다음은 계획만) — bytes 그대로
 reviews/r14_repros/codex63/rtol30_native_recipient_review_20261004/** -text
+# 2026-10-04: Codex A0 · B-min 문서 묶음 (송신 측의 대응표 · 준비 범위 · 요청문 초안 · 기준 결속 · 계획 결정 — 후보 · 검증 · native · 발송 승인 없음) — bytes 그대로
+reviews/r14_repros/codex63/comsol_a0_bmin_documents_20261004/** -text

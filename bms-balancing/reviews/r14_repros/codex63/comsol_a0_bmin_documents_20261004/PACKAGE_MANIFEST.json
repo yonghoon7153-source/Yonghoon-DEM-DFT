@@ -1,0 +1,59 @@
+{
+  "schema": 1,
+  "purpose": "A0 correspondence documents and B-min preparation scope only",
+  "payload_count": 10,
+  "files": [
+    {
+      "file": "A0_EXPERIMENT_MATCH_TABLE_KO.md",
+      "bytes": 7767,
+      "sha256": "5e0727de2847cfdd7908aab70f3d2aa444230d80c3b503422590c0184ea17efc"
+    },
+    {
+      "file": "BASELINE_BINDING.json",
+      "bytes": 2788,
+      "sha256": "b6cfcd1c7ea7593bd2edb65538f320744904c183869f343eee5bdad05de4c61b"
+    },
+    {
+      "file": "BMIN_PREPARATION_SCOPE_KO.md",
+      "bytes": 9662,
+      "sha256": "4f2dc1d0a981cb85f2db8e4ba42d0fe215a22505d3ccb664d947f45cfa5cc790"
+    },
+    {
+      "file": "CLAUDE_REPLY_KO.md",
+      "bytes": 3225,
+      "sha256": "30bae9931b871f63a6b64f0861eddeffd23f065d5547d608c061e449234a02f9"
+    },
+    {
+      "file": "DOCUMENT_CHECK.json",
+      "bytes": 10410,
+      "sha256": "33518a6d2d9b1c74e2c90e041cac7b8eecc56124bab2958c2757d40b84591c5b"
+    },
+    {
+      "file": "EXPERIMENT_DATA_REQUEST_DRAFT_KO.md",
+      "bytes": 2976,
+      "sha256": "763a2137c9336842bdaedf3a000c38a28e6d87dd6a1e716b5608cae6c26f8828"
+    },
+    {
+      "file": "PLANNING_DECISIONS.json",
+      "bytes": 1549,
+      "sha256": "fd5c0415ea62f84814a7c8af061d1dc73065d5843c8921b5e3cad0a3931bf4d8"
+    },
+    {
+      "file": "README_KO.md",
+      "bytes": 2977,
+      "sha256": "7a6f8a7692ad4e5273fec10e46b2baafb53c78afe8d948fbcccd1095f58adc1a"
+    },
+    {
+      "file": "SOURCE_IDENTITIES.json",
+      "bytes": 8550,
+      "sha256": "f56db3ac345a9f503dad6e2403b516c85e996ba9bd85f22fd78bc35a01b6e82f"
+    },
+    {
+      "file": "SOURCE_INDEX.md",
+      "bytes": 3969,
+      "sha256": "da7c5166c3833fe820419fb05df8cbf7fa793874fe475d6dccbe80d84a72abe4"
+    }
+  ],
+  "self_included": false
+}
+

@@ -1,0 +1,151 @@
+{
+  "schema": 1,
+  "date": "2026-10-04",
+  "scope": "Document preparation only; selected files hashed, prior numerical analyses not rerun.",
+  "repository": {
+    "name": "yonghoon7153-source/Yonghoon-DEM-DFT",
+    "read_commit": "9fa175f3e7fb7c8dcdee46ce132d98b07bcdf563",
+    "branch_observed": "claude/dashboard-standby-e2f56971",
+    "note": "Commit resolved by same-ref compare; this is a document-source reference, not a new model code seal."
+  },
+  "documents": [
+    {
+      "id": "SPEC",
+      "path": "bms-balancing/docs/COMSOL_REBUILD_SPEC.md",
+      "git_blob_sha": "93a34b3a0cc962ab1cb16cf8d3b358084b852955",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/9fa175f3e7fb7c8dcdee46ce132d98b07bcdf563/bms-balancing/docs/COMSOL_REBUILD_SPEC.md"
+    },
+    {
+      "id": "MPHR",
+      "path": "bms-balancing/docs/MICROSHORT_MPH_REVIEW.md",
+      "git_blob_sha": "181f544daac2fea32f65d964a4b86acfe163498e",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/9fa175f3e7fb7c8dcdee46ce132d98b07bcdf563/bms-balancing/docs/MICROSHORT_MPH_REVIEW.md"
+    },
+    {
+      "id": "READY",
+      "path": "bms-balancing/reviews/r14_repros/codex63/electrolyte_guard/outputs/NEXT_MODEL_READINESS_DECISION.md",
+      "git_blob_sha": "d82acd88a1432fc1d3e1cdd33a74ab83bc9517cd",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/9fa175f3e7fb7c8dcdee46ce132d98b07bcdf563/bms-balancing/reviews/r14_repros/codex63/electrolyte_guard/outputs/NEXT_MODEL_READINESS_DECISION.md"
+    },
+    {
+      "id": "SEM",
+      "path": "bms-balancing/docs/MSC_SEMINAR_2026-09-23_APPLICATION.md",
+      "git_blob_sha": "2a178833639590e89725a1b5f95fed1baa4c4e7d",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/9fa175f3e7fb7c8dcdee46ce132d98b07bcdf563/bms-balancing/docs/MSC_SEMINAR_2026-09-23_APPLICATION.md"
+    }
+  ],
+  "selected_local_sources_before": [
+    {
+      "path": "C:\\Users\\Administrator\\Downloads\\COMSOL_NEXT_PLAN_20261004.md",
+      "bytes": 14927,
+      "sha256": "de8366fe4f01fef1683b8b32d3488a8ca0db23df655030f923acaa5bbf513791"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\normal480_native_review_20261001\\ARCHIVE_AUDIT.json",
+      "bytes": 2052576,
+      "sha256": "8ecbd6129ad5eeb9f2f6e409cd046219dfef1f4b9069c1766f568fcfd1995499"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\normal480_native_review_20261001\\DECISION.json",
+      "bytes": 2250,
+      "sha256": "e4dcdb16e1db8b3e2d5ba78f53f0a1ec2fae14a1702b34b04884f0771b80a0ec"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\normal480_native_review_20261001\\received\\candidate\\CODE_MANIFEST.json",
+      "bytes": 1046,
+      "sha256": "7a5cc2f1717ae7a80cd7e423861965ad51c5f639272eab7f3a3c7680499ae22c"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\normal480_native_review_20261001\\received\\candidate\\CONTRACT.json",
+      "bytes": 125504,
+      "sha256": "58d398a663ceb35e49154c32ab04ce0ea5720f7fe0664db0e0fa09f1dfdf3b08"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\normal480_native_review_20261001\\received\\candidate\\src\\Normal480Candidate.java",
+      "bytes": 99959,
+      "sha256": "c70526cf6884eabc57b63dd43dce4b47fb0decf59af68d3f550f1b987d053797"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\normal480_native_review_20261001\\received\\run\\DIAGNOSTIC_RESULT.json",
+      "bytes": 726474,
+      "sha256": "24819a3a0b891c77dc69b40e2ada86eacece0b957cc207abbf40760d250b7783"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\normal480_native_review_20261001\\received\\run\\compile_RETURN.json",
+      "bytes": 741,
+      "sha256": "5cab3bdfdf9aee83053a2a2c28eb5db61f2166928e741131a470ecdbad95f04f"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\normal480_native_review_20261001\\received\\run\\batch_RETURN.json",
+      "bytes": 766,
+      "sha256": "0ecaf7c82e8067f43869420dfcb8cd402fa40ce9b6c796143fa37a5961483183"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\normal480_saved_analysis_review_20261003\\received\\SUMMARY.json",
+      "bytes": 29952,
+      "sha256": "a74155b32cb55325f78dacd708c859b7f85b32d13cd71e49210af67d3287dd4e"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\normal480_saved_analysis_review_20261003\\received\\INPUT_BINDING.json",
+      "bytes": 4313,
+      "sha256": "d062c26a49cbf13906347eba7c5a6e215b631f2577ce21ce7f950a9d4a9a0217"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\normal480_saved_analysis_review_20261003\\DECISION.json",
+      "bytes": 802,
+      "sha256": "2d91bc723c077aa0a29d279f45679a29289865145b8b5f8cb485d43cad01cefd"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\rtol30_native_review_20261004\\DECISION.json",
+      "bytes": 1489,
+      "sha256": "594622e8529a09393b73c6e3f3f8147803973441fb845e77097e27a801f9e7a2"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\normal480_native_review_20261001\\received\\run\\tables\\preflight_global.csv",
+      "bytes": 1595210,
+      "sha256": "ac14d0d2cd7d90dd65dd098874ea5078476fc37a2958cea527fe78a2afb1771d"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\normal480_native_review_20261001\\received\\run\\tables\\preflight_boundary1.csv",
+      "bytes": 1391054,
+      "sha256": "9773647829502178f22cfc5db3c682a046aa7b26ef35d035c1ee95527df31ceb"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\normal480_native_review_20261001\\received\\run\\tables\\preflight_boundary4.csv",
+      "bytes": 1448183,
+      "sha256": "bdebcf47edc3e0aa3c33fd2cfa58cbc9f3cc3bf0b405e4591451019a8af4d6f4"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\normal480_native_review_20261001\\received\\run\\tables\\electrolyte_guard.csv",
+      "bytes": 666849,
+      "sha256": "7117e79c6d5a14414b44520431831ccf9f0dd2372df4994e8ef070953bd5d4ed"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\normal480_native_review_20261001\\received\\run\\tables\\axes_profile_N.csv",
+      "bytes": 203575457,
+      "sha256": "acdb34debf8d7c3c1108f1215f879000d887bcb4836e558a467b21c957153442"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\normal480_native_review_20261001\\received\\run\\tables\\axes_profile_P.csv",
+      "bytes": 197290767,
+      "sha256": "2c91c90047aaabf6ffe203f8b4c970b0e2850af4d7ad143cde59ebed1f3dc5be"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\normal480_native_review_20261001\\received\\run\\tables\\preflight_MinLine_ce.csv",
+      "bytes": 171715,
+      "sha256": "c59462b7f1d533d80016dad19b53c65c6891adead9cf0b498ec7cf014e715c69"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\normal480_native_review_20261001\\received\\run\\tables\\preflight_MaxLine_ce.csv",
+      "bytes": 171672,
+      "sha256": "8d13c3f2b38459eeb26b70e297413a5d2531c470155ededc110314b1c4a69f01"
+    }
+  ],
+  "limits": [
+    "No current experiment inventory beyond consulted records.",
+    "No full ZIP or MPH reverification.",
+    "No received code imported or executed.",
+    "No COMSOL, JVM, functional suite, experiment processing or message sending."
+  ]
+}
+

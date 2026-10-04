@@ -1,0 +1,81 @@
+{
+  "scope": "Fixed B-min reference selection, not an executable approval.",
+  "reference_run": "normal480_candidate_001",
+  "native_package_identity_from_prior_audit": {
+    "file": "COMSOL63_NORMAL480_NATIVE_RESULT_20261001.zip",
+    "bytes": 420748594,
+    "sha256": "e991ab4c918f6576b18d6225a86ed41759ab6ee726dd6543b9a9158e581cbc30",
+    "rehash_this_turn": false
+  },
+  "current_selected_members_compared_to_prior_audit": [
+    {
+      "entry": "candidate/CODE_MANIFEST.json",
+      "bytes": 1046,
+      "sha256": "7a5cc2f1717ae7a80cd7e423861965ad51c5f639272eab7f3a3c7680499ae22c",
+      "prior_audit_matches": true
+    },
+    {
+      "entry": "candidate/CONTRACT.json",
+      "bytes": 125504,
+      "sha256": "58d398a663ceb35e49154c32ab04ce0ea5720f7fe0664db0e0fa09f1dfdf3b08",
+      "prior_audit_matches": true
+    },
+    {
+      "entry": "candidate/src/Normal480Candidate.java",
+      "bytes": 99959,
+      "sha256": "c70526cf6884eabc57b63dd43dce4b47fb0decf59af68d3f550f1b987d053797",
+      "prior_audit_matches": true
+    },
+    {
+      "entry": "run/tables/preflight_global.csv",
+      "bytes": 1595210,
+      "sha256": "ac14d0d2cd7d90dd65dd098874ea5078476fc37a2958cea527fe78a2afb1771d",
+      "prior_audit_matches": true
+    },
+    {
+      "entry": "run/tables/preflight_boundary1.csv",
+      "bytes": 1391054,
+      "sha256": "9773647829502178f22cfc5db3c682a046aa7b26ef35d035c1ee95527df31ceb",
+      "prior_audit_matches": true
+    },
+    {
+      "entry": "run/tables/preflight_boundary4.csv",
+      "bytes": 1448183,
+      "sha256": "bdebcf47edc3e0aa3c33fd2cfa58cbc9f3cc3bf0b405e4591451019a8af4d6f4",
+      "prior_audit_matches": true
+    },
+    {
+      "entry": "run/tables/electrolyte_guard.csv",
+      "bytes": 666849,
+      "sha256": "7117e79c6d5a14414b44520431831ccf9f0dd2372df4994e8ef070953bd5d4ed",
+      "prior_audit_matches": true
+    },
+    {
+      "entry": "run/tables/axes_profile_N.csv",
+      "bytes": 203575457,
+      "sha256": "acdb34debf8d7c3c1108f1215f879000d887bcb4836e558a467b21c957153442",
+      "prior_audit_matches": true
+    },
+    {
+      "entry": "run/tables/axes_profile_P.csv",
+      "bytes": 197290767,
+      "sha256": "2c91c90047aaabf6ffe203f8b4c970b0e2850af4d7ad143cde59ebed1f3dc5be",
+      "prior_audit_matches": true
+    },
+    {
+      "entry": "run/tables/preflight_MinLine_ce.csv",
+      "bytes": 171715,
+      "sha256": "c59462b7f1d533d80016dad19b53c65c6891adead9cf0b498ec7cf014e715c69",
+      "prior_audit_matches": true
+    },
+    {
+      "entry": "run/tables/preflight_MaxLine_ce.csv",
+      "bytes": 171672,
+      "sha256": "8d13c3f2b38459eeb26b70e297413a5d2531c470155ededc110314b1c4a69f01",
+      "prior_audit_matches": true
+    }
+  ],
+  "reference_is_run_tables_not_historical_baseline_directory": true,
+  "native_approved": false
+}
+
