@@ -82,19 +82,22 @@ g2x, g2l, g2n, g2r = [], [], [], []
 for v in np.round(np.arange(0, 1.01, 0.1), 1):
     k = ok & (np.abs(ps - v) < 0.01)
     g2x.append(float(v)); g2l.append(f'{int(round(v * 10))}:{10 - int(round(v * 10))}'); g2n.append(int(k.sum()))
-    g2r.append(round(float(np.median(res[k]) * 100), 1))
-wcsv('G2', ['AM_P fraction', 'P:S', 'n', 'Residual', 'Residual (denser)', 'Residual (looser)'], ['', '', '', '%', '%', '%'],
+    g2r.append(round(float(np.expm1(np.median(res[k])) * 100), 1))   # 예측 대비 공극률 비 (%) — ln 잔차 × 100 이 아니다 (10-05 정정)
+wcsv('G2', ['AM_P fraction', 'P:S', 'n', 'Porosity vs prediction', 'Denser than predicted', 'Looser than predicted'], ['', '', '', '%', '%', '%'],
      [g2x, g2l, g2n, g2r, [v if v < 0 else float('nan') for v in g2r], [v if v >= 0 else float('nan') for v in g2r]])
 S['G2'] = list(zip(g2l, g2n, g2r))
 
-EDG = [(0, 20, '<20'), (20, 30, '20-30'), (30, 40, '30-40'), (40, 50, '40-50'), (50, 71, '>=50')]
+#  ★ 10-05 정정: 130 설계점의 활물질 함량은 70–95 wt% **여섯 수준** (5 wt% 간격) 이라 SE 부피분율도 여섯 값 (11 · 21 · 30 · 37 · 44 · 51 %) 에 모인다.
+#    옛 10 % 폭 구간 (20-30 등) 은 21 % · 30 % 두 수준을 한 칸에 합쳤다 → 활물질 함량 수준별 중앙값으로 바꾼다.
+amL = col(L, 'am_pct')
+LV = sorted({int(round(v)) for v in amL[ok]}, reverse=True)
 bx, bl, bn, bm = [], [], [], []
-for a, c, lab in EDG:
-    k = ok & (se * 100 >= a) & (se * 100 < c)
-    bx.append((a + min(c, 70)) / 2); bl.append(lab); bn.append(int(k.sum())); bm.append(round(float(np.median(U[k])), 1))
-wcsv('G3', ['SE fraction of solid', 'Porosity (union)', 'Bin center', 'Bin median', 'Bin', 'n'], ['vol %', '%', 'vol %', '%', '', ''],
+for lv in LV:
+    k = ok & (np.round(amL) == lv)
+    bx.append(round(float(np.median(se[k]) * 100), 1)); bl.append(f'AM {lv}'); bn.append(int(k.sum())); bm.append(round(float(np.median(U[k])), 1))
+wcsv('G3', ['SE fraction of solid', 'Porosity (union)', 'Level SE (median)', 'Level median', 'Level (AM wt %)', 'n'], ['vol %', '%', 'vol %', '%', '', ''],
      [[round(float(v) * 100, 2) for v in se[ok]], [round(float(v), 2) for v in U[ok]], bx, bm, bl, bn])
-S['G3_bins'] = list(zip(bl, bn, bm))
+S['G3_levels'] = list(zip(bl, bn, bm, bx))
 okp = ok & np.isfinite(dp)
 PE = [(4.9, 7, '5-7'), (7, 9, '7-9'), (9, 11, '9-11'), (11, 13, '11-13'), (13, 15.1, '13-15')]
 px, pl, pn, pm = [], [], [], []
@@ -121,12 +124,17 @@ S['G5'] = dict(n130=int(len(sl)), span130=int(span.sum()), nonspan130=int((~span
                n64=int(len(sx)), span64=int(np.isfinite(tx).sum()), tau64=[round(float(np.nanmin(tx)), 2), round(float(np.nanmax(tx)), 2)],
                se64=[round(float(sx.min() * 100), 1), round(float(sx.max() * 100), 1)],
                iso64_max=round(float(np.nanmax(100 - ax_)), 2))
-S['G5']['bins'] = []
-for a, c, lab in EDG:
-    k = (sl * 100 >= a) & (sl * 100 < c)
-    S['G5']['bins'].append(dict(bin=lab, n=int(k.sum()), span=int((k & span).sum()),
-                                tau_med=round(float(np.median(tl[k & span])), 2) if (k & span).any() else None,
-                                iso_med=round(float(np.median(100 - al[k])), 1), risk_med=round(float(np.median(rl[k])), 1)))
+S['G5']['levels'] = []                                   # 활물질 함량 수준별 (G3 와 같은 여섯 수준)
+for lv in LV:
+    k = np.round(amL) == lv
+    S['G5']['levels'].append(dict(level=f'AM {lv}', se_med=round(float(np.median(sl[k]) * 100), 1), n=int(k.sum()), span=int((k & span).sum()),
+                                  tau_med=round(float(np.median(tl[k & span])), 2) if (k & span).any() else None,
+                                  iso_med=round(float(np.median(100 - al[k])), 1), iso_max=round(float(np.max(100 - al[k])), 1),
+                                  risk_med=round(float(np.median(rl[k])), 1)))
+#  모든 설계점의 고립이 13 % 아래가 되는 가장 낮은 SE 수준 (그 위 수준도 전부) — 2-13 지침 ①
+_lv_up = sorted(S['G5']['levels'], key=lambda d: d['se_med'])
+_ok_from = [d for i, d in enumerate(_lv_up) if all(e['iso_max'] < 13 for e in _lv_up[i:])]
+S['G5']['iso13_from'] = dict(se_med=_ok_from[0]['se_med'], level=_ok_from[0]['level']) if _ok_from else None
 
 arms = [json.load(open(p)) for p in glob.glob(str(D / 'phase_a_104arms_20260921/verdict_dir_20260921/*.json'))]
 prim = [a for a in arms if a.get('role') == 'primary']
@@ -187,15 +195,15 @@ ax.bar(g2x, g2r, width=0.07, color=[SKY if v < 0 else ORANGE for v in g2r], edge
 ax.axhline(0, color=GRAY, lw=0.8)
 for xi, yi in zip(g2x, g2r):
     ax.annotate(f'{yi:+.0f}', (xi, yi), textcoords='offset points', xytext=(0, 3 if yi >= 0 else -11), ha='center', fontsize=8.5, color=GRAY)
-ax.set_xlabel('Large-AM fraction in AM'); ax.set_ylabel('Porosity residual (%)'); ax.set_xlim(-0.08, 1.08); ax.set_ylim(-22, 17)
+ax.set_xlabel('Large-AM fraction in AM'); ax.set_ylabel('Porosity vs prediction (%)'); ax.set_xlim(-0.08, 1.08); ax.set_ylim(-22, 17)
 save(fig, 'G2')
 
-for name, xv, xl, bxv, bmv, c, xlim in (('G3', se[ok] * 100, 'SE fraction of solid (vol %)', bx, bm, RED, (5, 75)),
-                                         ('G4', dp[okp], 'Large-AM diameter, D$_P$ (µm)', px, pm, SKY, (4, 16))):
+for name, xv, xl, bxv, bmv, c, xlim, mlab in (('G3', se[ok] * 100, 'SE fraction of solid (vol %)', bx, bm, RED, (5, 56), 'AM-level median'),
+                                               ('G4', dp[okp], 'Large-AM diameter, D$_P$ (µm)', px, pm, SKY, (4, 16), 'Bin median')):
     yv = U[ok] if name == 'G3' else U[okp]
     fig, ax = fig_()
     ax.plot(xv, yv, 'o', ms=4.5, mfc='none', mec='#9AA0A8', mew=0.8, label='130 design points')
-    ax.plot(bxv, bmv, '-o', color=c, lw=2, ms=7, label='Bin median')
+    ax.plot(bxv, bmv, '-o', color=c, lw=2, ms=7, label=mlab)
     ax.set_xlabel(xl); ax.set_ylabel('Porosity, union (%)'); ax.legend(loc='upper right'); ax.set_xlim(*xlim); ax.set_ylim(0, 32)
     save(fig, name)
 
@@ -260,8 +268,8 @@ OGS = {
  'G2': ('130 설계점 — 함량 · 입경 보정 뒤 공극률 편차 vs 대입자 몫 (열 두 개 = 치밀 · 성김)',
         'plotxy iy:=[%(bk$)]1!(1,5) plot:=100 ogl:=<new>;\nset %C -c color(79,189,255);\n'
         'plotxy iy:=[%(bk$)]1!(1,6) plot:=100 ogl:=1!;\nset %C -c color(244,162,97);\n',
-        dict(w=10, h=8, y2=Y2_LINE, xt='Large-AM fraction in AM', yt='Porosity residual (%)'), ''),
- 'G3': ('130 설계점 — 공극률 vs 고체 중 SE 부피분율 (점 + 구간 중앙값)',
+        dict(w=10, h=8, y2=Y2_LINE, xt='Large-AM fraction in AM', yt='Porosity vs prediction (%)'), ''),
+ 'G3': ('130 설계점 — 공극률 vs 고체 중 SE 부피분율 (점 + 활물질 함량 수준별 중앙값)',
         'plotxy iy:=[%(bk$)]1!(1,2) plot:=201 ogl:=<new>;\nset %C -c color(154,160,168); set %C -k 2; set %C -z 7;\n'
         'plotxy iy:=[%(bk$)]1!(3,4) plot:=202 ogl:=1!;\nset %C -c color(241,64,64); set %C -w 1000; set %C -k 2; set %C -z 10;\n',
         dict(w=10, h=8, y2=Y2_LINE, xt='SE fraction of solid (vol %)', yt='Porosity, union (%)'), ''),
@@ -293,5 +301,5 @@ for g, (title, plot, ax_kw, extra) in OGS.items():
            f'// 결과: 새 그래프 + BML 서식 (바깥 틱 · 위/오른쪽 축선 · #404040 · 틱 라벨 Aptos 28 pt).  축 제목 글꼴 · 범례는 GUIDE.md 의 GUI 단계.\n'
            'string bk$ = %H;\n' + plot + AX.format(**ax_kw) + extra)
     (O / f'{g}.ogs').write_text(txt, encoding='utf-8')
-print(json.dumps({k: S[k] for k in ('G1', 'G2_control', 'G3_bins', 'G4_bins', 'G5')}, ensure_ascii=False)[:2500])
+print(json.dumps({k: S[k] for k in ('G1', 'G2_control', 'G3_levels', 'G4_bins', 'G5')}, ensure_ascii=False)[:2500])
 print('G6', S['G6']['max_origin_spread_pct'], '| G7', S['G7']['runs'])

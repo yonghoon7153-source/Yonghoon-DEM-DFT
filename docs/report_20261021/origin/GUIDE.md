@@ -22,7 +22,7 @@
 |---|---|---|---|---|
 | **G1** | 2-6 왼쪽 | A 대입자 몫 (X) · B P:S · C 공극률 union · D 구 부피 합 · E 두께 | DoubleY — 왼쪽 C (빨강 선+원) · 오른쪽 E (하늘 점선+네모) | X 눈금 글자를 P:S 로: 아래 축 더블클릭 → Tick Labels > Display = **Tick-indexed dataset** > Col(B) · 눈금 = 0, 0.3, 0.5, 0.7, 1.0 (Scale > Major Ticks = By Custom Positions) · 왼쪽 Y 15–22 · 오른쪽 Y 108–120 |
 | **G2** | 2-6 오른쪽 | A 대입자 몫 · B P:S · C n · D 편차 · E 편차 (치밀 = 음수) · F 편차 (성김 = 양수) | 열 두 개 겹침 (E 하늘 · F 주황) | 막대 폭: 더블클릭 > Spacing = 30 % · Overlap 100 % · Y −22 ~ 17 · y = 0 기준선: Graph > Add Straight Line (Y = 0) · 값 표시: Plot Details > Label 탭 Enable |
-| **G3** | 2-7 왼쪽 | A SE 부피분율 (점 X) · B 공극률 (점 Y) · C 구간 중심 · D 구간 중앙값 · E 구간 · F n | 점 (회색 빈 원) + 선 (빨강) | 회색 점: Symbol > Fill = None (빈 원) · X 5–75 · Y 0–32 · 범례 = "130 design points" · "Bin median" |
+| **G3** | 2-7 왼쪽 | A SE 부피분율 (점 X) · B 공극률 (점 Y) · C 활물질 수준의 SE 중앙 · D 수준별 공극률 중앙값 · E 활물질 수준 (wt %) · F n | 점 (회색 빈 원) + 선 (빨강) | 회색 점: Symbol > Fill = None (빈 원) · X 5–75 · Y 0–32 · 범례 = "130 design points" · "Bin median" |
 | **G4** | 2-7 오른쪽 | A 대입자 지름 · B 공극률 · C 구간 중심 · D 구간 중앙값 | 점 + 선 (하늘) | X 4–16 · Y 0–32 · 범례 G3 과 같게 |
 | **G5a** | 2-8 왼쪽 | A·B = 130 관통 (SE %, 굴곡도) · C·D = 64 SE 과량 · E·F = 130 비관통 (SE %, 0.9 고정) | 점 셋 (하늘 원 · 주황 삼각 · 빨강 ×) | × 는 "경로 없음" 표시용 (굴곡도 값이 아님 — 범례 "No SE path (24)") · X 5–90 · Y 0.7–4.5 · SE ≤ 21 % 띠: Insert > Rectangle 연회색 (선택) |
 | **G5b** | 2-8 오른쪽 | A·B = 130 (SE %, 고립 %) · C·D = 64 | 점 둘 | X 5–90 · Y −5–105 |

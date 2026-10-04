@@ -19,4 +19,4 @@ layer.x2.showAxes = 3; layer.x2.color = color(64,64,64); layer.x2.thickness = 1;
 layer.y2.showAxes = 3; layer.y2.color = color(64,64,64); layer.y2.thickness = 1; layer.y2.ticks = 0; layer.y2.showLabels = 0;
 page.margincontrol = 1;
 label -xb Large-AM fraction in AM;
-label -yl Porosity residual (%);
+label -yl Porosity vs prediction (%);
