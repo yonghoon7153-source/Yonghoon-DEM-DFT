@@ -328,5 +328,6 @@ git push -u origin claude/14-gate-code-review-9qkx05
 | 2026-10-04 | `bms-balancing/.gitattributes` 규칙 — REIL 부속 A 재검토 묶음 `reviews/prereview_reil_v2_annexA_20261004/** -text` (게이트 차수 밖) | `aeb35d3b5` | 밖 | 할 일 없음 |
 | 2026-10-04 | `bms-balancing/.gitattributes` 규칙 — 정상 30 s rtol 한정 민감도 수신 검토 묶음 `reviews/r14_repros/codex63/rtol30_native_recipient_review_20261004/** -text` | `555c123c6` | 밖 | 할 일 없음 |
 | 2026-10-04 | 원장 §133 — 89차 요청 (`GATE89_REQUEST.md`) · 게이트 요청 발송 대기 (발송문은 사용자 전달) | 이 행이 든 커밋 | 밖 | 89차 회신은 서브 또는 복귀 뒤 본진에서 받는다 |
+| 2026-10-04 | `bms-balancing/.gitattributes` 규칙 — 송신 측 A0 · B-min 문서 묶음 `reviews/r14_repros/codex63/comsol_a0_bmin_documents_20261004/** -text` (게이트 차수 밖) | `1935915f8` | 밖 | 할 일 없음 |
 
 ### 복귀 결과 (복귀 정리 커밋이 덧붙인다)
