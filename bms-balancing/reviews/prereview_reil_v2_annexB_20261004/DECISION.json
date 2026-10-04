@@ -1,0 +1,45 @@
+{
+  "date": "2026-10-04",
+  "fixed_commit": "e64f587bcd2b26876fcd005bae52aa18311d5b9b",
+  "effective_protocol": [
+    "v2",
+    "annex_A",
+    "annex_B"
+  ],
+  "precedence": [
+    "annex_B",
+    "annex_A",
+    "v2"
+  ],
+  "decision": "DOCUMENT_ACCEPTED_RV2A_N1_N2_N3_CLOSED_NO_EXECUTION_AUTHORIZATION",
+  "items": {
+    "RV2A-N1": "CLOSED",
+    "RV2A-N2": "CLOSED",
+    "RV2A-N3": "CLOSED"
+  },
+  "C2_document_acceptance": "CLOSED",
+  "blocking_findings": [],
+  "additional_document_revision_required": false,
+  "prior_RV2_N1_acceptance": "PRESERVED",
+  "scope": "Document review plus data-independent scalar arithmetic; no implementation validation",
+  "remaining_preexisting_prerequisites": [
+    "C1-core substantive paper/equivalent definitions",
+    "C6 version and environment fixation",
+    "C3 separately authorized P0",
+    "C5 separately authorized pilot cost measurement",
+    "C4 separate actual execution authorization"
+  ],
+  "E3b": "UNREGISTERED; C1-E3b only gates E3b, not an additional E3a/H blocker",
+  "P0_approved": false,
+  "data_opening_approved": false,
+  "cost_measurement_approved": false,
+  "implementation_approved": false,
+  "installation_approved": false,
+  "fitting_approved": false,
+  "execution_approved": false,
+  "gate89_scope": false,
+  "pybamm_pin_scope": false,
+  "comsol_calls": 0,
+  "empirical_data_opened": false,
+  "provided_programs_executed": false
+}

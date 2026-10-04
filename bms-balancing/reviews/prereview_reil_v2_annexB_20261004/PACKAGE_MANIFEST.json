@@ -1,0 +1,61 @@
+{
+  "scope": "Reviewer document review package; no implementation or execution authorization",
+  "fixed_commit": "e64f587bcd2b26876fcd005bae52aa18311d5b9b",
+  "payload_count": 10,
+  "files": [
+    {
+      "path": "CLAUDE_REPLY_KO.md",
+      "bytes": 2918,
+      "sha256": "ba65eed79d5e94e69b49e072a857117167a34e54811b280b8c39b87f8b0052bb"
+    },
+    {
+      "path": "DECISION.json",
+      "bytes": 1394,
+      "sha256": "8d1e963a1c7f220d48e2184ee093efd45ba4a3e43cb5328fdd79160339c8edef"
+    },
+    {
+      "path": "PRIOR_DECISION.json",
+      "bytes": 2290,
+      "sha256": "057d60bdb1da817e69d5c1ca5adfcb2b7493379d68bb8b8f7d1545ab1d71295d"
+    },
+    {
+      "path": "PRIOR_REVIEW_KO.md",
+      "bytes": 16137,
+      "sha256": "1ca1ff5a4740703125a1137f7412c7b04e8fee0ffea8d3c290490cb4bbf620ea"
+    },
+    {
+      "path": "README_KO.md",
+      "bytes": 1211,
+      "sha256": "f009ff78cb472906694742b410ee41b775d261879709978fa78bfc971de613dc"
+    },
+    {
+      "path": "RECEIVED_SNAPSHOT.json",
+      "bytes": 112190,
+      "sha256": "4280672597a904a07348a4d035b422799c7a7ddf9d1121292b6a45b3dd41a2bf"
+    },
+    {
+      "path": "REVIEW_CHECKS.json",
+      "bytes": 5345,
+      "sha256": "05c21762a9eaf66db49c8f3d5367d7c61b567f65191d2e8c6ba1fc49d38ff990"
+    },
+    {
+      "path": "REVIEW_KO.md",
+      "bytes": 12499,
+      "sha256": "828da777b1ce98e062e5ed31e42f3a9e705f3ec28214df0f9067df06dcbef222"
+    },
+    {
+      "path": "reviewer_document_checks.py",
+      "bytes": 5541,
+      "sha256": "1b8158cb866eda162e4550d5910c4561300a698813e97a9de88a0f2c2348c54b"
+    },
+    {
+      "path": "REVIEWER_TOOL_RETURN.json",
+      "bytes": 9650,
+      "sha256": "b0bd55a480f2d3afd874f81420e2dd3e03a8a5517baf47d92f37dd673510b8a5"
+    }
+  ],
+  "excluded": [
+    "PACKAGE_MANIFEST.json",
+    "ZIP container"
+  ]
+}

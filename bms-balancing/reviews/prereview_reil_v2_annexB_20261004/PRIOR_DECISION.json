@@ -1,0 +1,48 @@
+{
+  "date": "2026-10-04",
+  "repository": "yonghoon7153-source/Yonghoon-DEM-DFT",
+  "fixed_commit": "a82d7135ea5f91f4d9596e1dd370df4365c6fef0",
+  "decision": "DOCUMENT_CONDITIONALLY_ACCEPTABLE_THREE_LOCAL_CORRECTIONS_REQUIRED",
+  "scope": "v2 plus Annex A document review, outside numbered gates",
+  "prior_findings": {
+    "RV2-N1": "CLOSED",
+    "RV2-N2": "SUBSTANTIALLY_ACCEPTED_WITH_RV2A-N1_REMAINING",
+    "RV2-N3": "SUBSTANTIALLY_ACCEPTED_WITH_RV2A-N2_REMAINING",
+    "RV2-N4": "SUBSTANTIALLY_ACCEPTED_WITH_RV2A-N3_REMAINING"
+  },
+  "remaining": [
+    {
+      "id": "RV2A-N1",
+      "priority": "P1",
+      "section": "2-2 and 7",
+      "lines": [123, 132, 414, 417],
+      "issue": "Small feasibility tolerance does change exact set membership at a boundary. Qualify tolerance-dependent witnesses and remove state-invariance/error-bound guarantees."
+    },
+    {
+      "id": "RV2A-N2",
+      "priority": "P2",
+      "section": "3-1, 3-3 and 3-4",
+      "lines": [199, 201, 217, 234],
+      "issue": "Pre-fit sealing of all start arrays conflicts with neighbor/Phase-A adaptive starts. Joint search also needs a deterministic rule for fewer than four valid Phase-A points."
+    },
+    {
+      "id": "RV2A-N3",
+      "priority": "P2",
+      "section": "4-2",
+      "lines": [298, 301],
+      "issue": "Float-equality deduplication of independently interpolated endpoint roots may reject a unique grid-node crossing. Bind exact endpoint hits to the grid index and Q value."
+    }
+  ],
+  "priority_meaning": "Importance for confirmatory document interpretation, not an executed production-code defect classification",
+  "confirmatory_document_conditions_closed": false,
+  "implementation_approved": false,
+  "execution_approved": false,
+  "P0_approved": false,
+  "cost_pilot_approved": false,
+  "provided_code_executed": false,
+  "dataset_opened": false,
+  "reviewer_activity": "Fixed-ref text reads, official documentation, file hashes and synthetic scalar/rational arithmetic only",
+  "remaining_external_preconditions": ["C1-core", "environment and version pin", "separately authorized P0", "separately authorized cost measurement", "separately authorized actual execution"],
+  "E3b": "UNREGISTERED",
+  "other_workstreams": "No changes or authorization to GATE89 or PyBaMM pinning"
+}
