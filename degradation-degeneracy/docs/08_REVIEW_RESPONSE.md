@@ -9056,3 +9056,34 @@ fail node 는 불변 (§15-4 · 승인 질문에서 사용자에게 미리 알�
 
 **요청:** `docs/22p_gap/GATE89_REQUEST.md` · 증거 `docs/22p_gap/gate89_evidence/` (README 전체 sha256). **아님:** 실행 GO · 새 연구 leg ·
 운영 원장 v6 계획 항목 · 세대표 등록 · p_ini · class 변경 · 투영 게시 · requirements (pybamm 고정 — 2b 종결 뒤 별도 라운드 · 사용자 결정).
+
+## §134 89차 회신 접수 — `ACCEPT_G88_N1_AND_CLOSE_STAGE3_ROUND2B` · **G88-N1 종결 · 단계 3 라운드 2b 종결** · 새 차단 0 · 실행 GO 아님
+
+**패키지:** `docs/22p_gap/gate89_review/` (`GATE89_REVIEW_20261004.zip` 1,785,934 B · SHA-256
+`ce9fbe39884cedc86937652637923b81fb1dc164cf904a7545a5b5cad7aa0bbd` · codex/ payload 12 + manifest · 전부 manifest 일치 · CRLF 0 ·
+규칙 `992ea2a63` → 보존 `023876a66` · index blob = 바이트 14/14). 검토자 스크립트 (`reviewer_static_audit.py`) 실행 · import 0.
+검토자 쪽 실행: 수신 코드 import · pytest · smoke · 변이 · 복원 · 영수증 재생성 · COMSOL **0** (`DECISION.json`). 고정 요청 `8113f12bd` ·
+코드 `26c11d6fc` · RUN_SCOPE 58 파일 · 88차 대비 변경은 `tools/preserve.py` +4 −0 뿐 (57 blob 동일) · source_digest `803e2b7781cbc9cd`
+독립 재계산 일치 · 코드 → 요청 RUN_SCOPE diff 0 · 동결 본진 `e2f56971` 의 후손 (검토자 — GitHub compare 의 merge-base) · 고정 표 §15 =
+`abf857752` 원문.
+
+| 항목 | 판정 |
+|---|---|
+| G88-N1 | **종결** — `finalize_leg` `:9146` 의 공통 `_assert_external_input_binding` 이 원장에 옮길 같은 snap (`:9042` → phases → fit entry `:9132`) 의 fit receipt 에 걸린다 · fit 전용 분기 (`:9130`) · 두 lock (`:9010` · `:9098`) 안 · 세 digest 비교 (`:9136–9142`) 뒤 · executed 전환 (`:9157`) · 원장 쓰기 (`:9210`) · claim 삭제 (`:9216`) 전. 새 호출 하나를 뺀 모듈 AST = 88차 AST (바뀐 최상위 함수는 `finalize_leg` 하나) · 새 함수 · 두 번째 공식 없음 |
+| 회귀 | d01 양성 · d02 네 반례 (기록 뒤 inputs 변조 → 실제 최종화 경로 거부 · 이유 · 원장 / claim 바이트 불변) · d03 자기일관 위조 대조 적합 · 88차 시험 소스 바이트 불변 · f03_06 이유 단언 · v2 대조 유지 |
+| 변이 | `-g89` 둘 + 사전 고지한 `-g88` 증인 한 건 갱신 수용 · 같은 치환 지점의 두 시나리오를 독립 지점 둘로 세지 않는다 |
+| 원문 로그 | README 15 + 발송 뒤 14 번 (1,163 B · `d7d276af…`) 의 크기 · SHA-256 일치 — 10 (clean `66129fc6a` · 2139 passed / 1 xfailed / rc 0) · 11 (smoke rc 0) · 12 (397 / 신고 11 / ran 397 / rc 0 · scenario 408 · site 446 과 구분) · 14 (요청 HEAD docs-lint 358 / rc 0) · 13 (88차 발송 docs-lint) — **제출 원문 확인 수준**의 수용이며 검토자 재실행 · 당시 OS 관측이 아니다 |
+| 영수증 | history 두 사본 = 88차 현행본 바이트 동일 · 새 세대의 차이는 `core_sha256` · `validator_source_digest` · `validator_commit` · 생성 시각뿐 · 35 / 34 · 원장 네 앵커 변경 일치 → 새 세대 수용 |
+| 자체 신고 a–h | 유지 — a 의 첫 RED 머리 · 재실행은 합산하지 않음 · b 의 `or {}` 는 독립 방어 효과를 주장하지 않음 · c 의 순서는 소스 · 단언으로 확인 (줄 이동 변이 실행으로 넓히지 않음) · f (일반 durable 자료형 손상 · 다른 read / view 경로) · g (동시 실행) 는 검증 완료로 올리지 않되 새 차단 조건도 아님 · h (REIL · COMSOL · PyBaMM) 는 별도 · 이번 종결로 수용 · 승인하지 않음 |
+| 87 · 88차 수용 · 2a 종결 | 유지 |
+| **2b 종결** | **종결** — 같은 잔여의 재검증 라운드 · 전체 회귀 반복을 추가 요구하지 않음 |
+| 실행 GO · 새 연구 leg · 운영 v6 계획 · 세대표 · p_ini · class · 투영 게시 · requirements · COMSOL | 미승인 · `grid_fit_v5` 진단 전용 지위와 기존 과학적 주장 한계 유지 |
+
+**검토자가 적은 한계 (`DECISION.json` limits):** 일반 손상 durable 자료형의 새 강화 없음 · 동시 실행 새 검증 없음 · 중복 변이 지점을 독립
+커버리지로 세지 않음 · YAML core 직렬화 해시는 독립 재계산하지 않음 (receipt identity · 정확한 텍스트 diff · history · 생산 로그는 검토).
+검토자 정적 도구의 첫 출력이 Windows CP949 인코딩에서 실패해 UTF-8 로 다시 냈다 — 검토자 쪽 도구 문제이고 생산 코드 · 제출 시험의 실패가
+아니다 (관련 반환은 패키지에 따로 보존).
+
+**다음 (사용자 별도 승인 필요):** 사용자가 정한 순서대로 **PyBaMM 고정** — 별도 범위 · 기준 identity · 검증안 · 승인 라운드 (사전 검토
+회신 기록 `docs/22p_gap/PYBAMM_PIN_PREREVIEW_REPLY_20261003.md` 가 출발점). 이 회신은 requirements 변경 · 구현 착수 승인이 아니고 자동
+시작하지 않는다. 이미 수용한 부분과 과거 원문 · 중단 / 실패 기록은 다시 열거나 고치지 않는다.
