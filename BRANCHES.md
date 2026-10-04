@@ -339,5 +339,7 @@ git push -u origin claude/14-gate-code-review-9qkx05
 | 2026-10-04 | `degradation-degeneracy/.gitattributes` 규칙 `docs/22p_gap/gate90_evidence/** -text !eol` | `fb29e63f0` | 밖 | 할 일 없음 |
 | 2026-10-04 | **RUN_SCOPE — 90차 GREEN** (새 `requirements-validation-C.lock.txt` · 새 `tools/env_profile.py` · `requirements.txt` 주석만 · `scripts/smoke_e2e.sh` +6 · source_digest `803e2b7781cbc9cd` → `3f84c0db52d2b9ac`) | `e2160c2ef` | **안** | 90차 판정 대상 — ff 복귀라 SHA 그대로 유효 · 영수증 재생성 `1296af1f5` |
 | 2026-10-04 | 원장 §136 — 90차 요청 (`GATE90_REQUEST.md`) · 게이트 요청 발송 대기 (발송문은 사용자 전달) · 고정 표 §12 정정 덧붙임 | 이 행이 든 커밋 | 밖 | 90차 회신은 서브 또는 복귀 뒤 본진에서 받는다 |
+| 2026-10-05 | `degradation-degeneracy/.gitattributes` 규칙 `docs/22p_gap/gate90_review/** -text !eol` (90차 리뷰 패키지 보존 전) | `e56630fc9` | 밖 | 할 일 없음 |
+| 2026-10-05 | 원장 §137 — 90차 회신 접수 (`CONDITIONAL_ACCEPTANCE` · G90-N1 P2 · C1) · 패키지 보존 `a8ec8f9ed` | 이 행이 든 커밋 | 밖 | 할 일 없음 (ff 로 그대로 들어간다) |
 
 ### 복귀 결과 (복귀 정리 커밋이 덧붙인다)

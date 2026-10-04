@@ -9148,3 +9148,37 @@ e11 은 manifest 를 걸어 찾은 집합과 전수 대조한다. 고정 표의 
 
 **요청:** `docs/22p_gap/GATE90_REQUEST.md` · 증거 `docs/22p_gap/gate90_evidence/` (README 전체 sha256). **아님:** 실행 GO · D guard ·
 설치 · 재생성 · 새 세대 · 버전 비교 · requirements 하한 변경 · 새 연구 leg · 운영 v6 계획 · 세대표 · p_ini · class · 투영 게시.
+
+## §137 90차 회신 접수 — `CONDITIONAL_ACCEPTANCE` · **G90-N1 P2** (경로 검색 관측을 실제 로드 관측으로 표현) · 비차단 C1 · 나머지 수용 · 실행 GO 아님
+
+**패키지:** `docs/22p_gap/gate90_review/` (`GATE90_REVIEW_20261005.zip` 1,747,564 B · SHA-256
+`7d9aaedc1f4d2fb481401cfee7cad71fd33596a82c0051d2e03369eb3d79faab` · codex/ payload 21 + manifest · 전부 manifest 일치 · CRLF 0 · 경로 · 대소문자 ·
+링크 이상 없음 · 규칙 `e56630fc9` → 보존 `a8ec8f9ed` · index blob = 바이트 23/23). 검토자 행위: 제출 코드 import · 시험 · smoke · 변이 · 복원 ·
+계산 · 설치 **0** — 리뷰어 데이터 · 해시 · AST 검사와 표준 라이브러리 불활성 예시만 (`DECISION.json` actions). 요청 `24f499ba6` · 코드
+`e2160c2ef` · RUN_SCOPE 60 파일로 source_digest `3f84c0db52d2b9ac` 독립 재계산 일치 · 89차 코드 → 요청 HEAD 의 RUN_SCOPE 순변경 네 파일 ·
+제출 로그 17 개 (발송 뒤 14 포함) 크기 · SHA 대조.
+
+| 항목 | 판정 |
+|---|---|
+| C lock | **수용** — 지시 6 · 유효 170 · 가려진 2 · RECORD 없는 22 · 정규형 고정점 (독립 데이터 검사) · lock SHA-256 `d886f30f…` |
+| 대조 · D3 경계 | 일반 오류의 typed `UNMEASURED` · `None` · 상태별 CLI rc 0 **수용** · 실제 origin 주장은 **N1 정정 필요** · 회귀 적용 경계는 C1 |
+| smoke · stamp · 증거 | **수용** (기록 전용 범위 — smoke 단일 호출 · 도구 자체 실패 처리 · core 밖 stamp) · loaded-origin 증명으로 넓히지 않음 |
+| B | **수용** — 네 manifest 크기 · SHA · env 여덟 자리 · 13 값 · solver 전사 · 역사적 한계 · 미주장 셋 |
+| requirements | **수용** — 요구 줄 12 불변 · 주석 정정 · C lock 은 설치 처방 아님 |
+| 회귀 · 변이 · 영수증 | 제출 원문 근거로 **수용** (독립 재실행 아님) · 전체 재생 줄머리 독립 집계 물었다 410 / 안 물었다 0 / 실행오류 0 · 두 이전 영수증 history = 89차 발송 ref 원문 바이트 · core 차이는 `validator_source_digest` · `make_receipt_sha256` 뿐 · **N1 을 덮는 시험은 현 목록에 없다** |
+| **G90-N1 (P2)** | `tools/env_profile.py:110–130` (`_origin`) 은 `PathFinder.find_spec(module, paths)` 가 현재 경로에서 찾은 파일만 RECORD 와 대조한다 — `sys.modules[module]` 에 이미 로드된 객체 · 그 `__file__` / `__spec__.origin` · 다른 meta-path finder 의 선택은 읽지 않는다. 캐시된 객체가 다른 경로에서 왔어도 PathFinder 는 정상 설치 파일을 찾아 RECORD 소속 확인에 성공할 수 있으므로 "실제 로드된 module origin 확인" 이라 부를 수 없다 (정적 제어 경로의 반례 · 실제 오염 판정 아님). 위치: `:8–12` · `:110–130` · `:167–185` · `:297–298` · `:338–343` · 고정 표 §4-1 · 요청문 §1 · §4 · §5 |
+| 최소 종결 조건 | (1) 확인한 것 = "PathFinder 경로 검색 결과와 설치 RECORD 소속" (2) `origins_verified` 의 단위를 이 범위로 명시 (3) 실제 loaded-origin 은 **미측정** — 기존 MATCH 는 이 좁은 의미로 보존 · 과거 수치 결과 소급 변경 없음 (4) 요청문 · 고정 표의 유효 정정 · 영수증 stamp 설명 · 최종 요약이 같은 의미. 실제 loaded-origin 보장을 이번에 하려면 별도 승인 범위 (이미 로드된 객체와 경로 검색을 구분해 관측 · 불명확한 값은 확인 수로 올리지 않음 · 반례: 정상 · 캐시 origin 불일치 · origin 없음) |
+| 비차단 C1 | 고정 표 §4-4 "UNMEASURED 는 pytest 도 막지 않는다" ↔ e06 (`tests/test_gate90_env_profile.py:386–390`) 의 UNMEASURED 실패 · e08 의 측정 가능 전제. 경계 문구: "C 일치 여부는 실행 gate 가 아니나, 측정 기능을 요구하는 회귀의 지원 환경에서는 측정 불가를 시험 실패로 본다" (요청문 §6-g 신고를 읽음) |
+| 89차 수용 · 기존 정본 · B 역사 기록 · 검증 원문 | 유지 · 다시 열지 않음 · 과거 결과 재분류 없음 (`historical_results_not_reclassified`) |
+
+**검토자가 적은 한계 · 사실:** 원격 환경 · 설치 파일 24,804 의 직접 측정 아님 · YAML core 재직렬화 · 복원 · 재채점 없음 · 새 grid 영수증 stamp 의
+`validator_tree_dirty: true` 를 지우거나 clean 으로 바꿔 읽지 않음 (순차 작성 시점의 stamp 와 전체 검증의 clean 관측은 다른 기록). 검토자 도구의 첫
+텍스트 검사가 YAML anchor/alias 를 놓쳐 멈췄고 판독기만 보완했다 (제출 실패로 세지 않음 · `REVIEWER_TOOL_RETURNS.json`).
+
+**우리 확인 (접수 때):** grid 영수증 stamp 의 `validator_tree_dirty: true` 는 `make_receipt.py paired_fixed5_v4 grid_fit_v5` 가 두 leg 를 순차로
+쓰면서 앞 leg 의 영수증 파일이 이미 바뀐 작업 트리를 본 결과다 — 이전 두 세대 (`803e2b7781cbc9cd` · `7dd546baaee9e823`) 의 grid stamp 도 같다 ·
+core 밖 기록 · 이번에 바꾸지 않는다 (개선 후보로만 적는다).
+
+**다음 (사용자 결정 필요):** G90-N1 정정의 범위 — 문서 정정만 · 코드의 문구 · 이름까지 · 실제 loaded-origin 측정 (검토자: 별도 승인 범위) 중
+선택. 이 회신은 구현 · 실행 승인이 아니다 (`DECISION.json` permissions 전부 false). N1 정정 접수 전 무조건 종결 보류 · 나머지 수용은 다시
+열지 않는다. D guard · 버전 간 수치 비교 · 새 연구 leg · 운영 v6 계획 · 세대표 · p_ini · COMSOL · 설치는 별도.
