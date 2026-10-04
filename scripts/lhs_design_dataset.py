@@ -1041,6 +1041,14 @@ CAVEAT_PERC = ('경계 = 바닥 벽 z 0 · 플래튼 plate_z 기준 2·r 밴드 
                '수확기 벽 밴드 관통 (tau_wall_n_span_components > 0) 과 같은 집합 (관문 P1)')
 CAVEAT_COUNT = ('총량 (개수) — 두께 · 입자 수에 비례한다 · 특징으로 쓰려면 입자당 · 부피당으로 나눌 것 · 면적이 아니다 '
                 '(A_dem_geometric 주의는 해당 없음)')
+#: ⑤⑥⑦ 한정어 (J20-s · 열 사전 문구 — 정본 = 판정 J20-s 표)
+CAVEAT_F1 = ('h = 10 nm (H_SPREAD_REAL_M · 확대 배율 반영) 는 **출처 없는 모델 상수** ("2 × h_film_min") — 감도 기술자로만 · SE–SE 만 · '
+             '반올림 쌍 (덤프 %g · 접촉 감사 v2 의 114 쌍 / 130 침대) 이 탄성 CN 과 겹쳐 셀 수 있음 (무시 가능 수준) · ' + CAVEAT_WALL)
+CAVEAT_LHS31 = ('LHS-31 한정: ① 마지막 프레임 힘 (압축 중 최대 아님 → 손상 **하한**) ② 벽 · 판 접촉 제외 (판에 닿은 AM_P 의 최대 하중 빠짐) '
+                '③ R_min 선택 (R* 이면 P_c 절반) ④ K_IC_P 0.3 = 소결 펠릿값 (정본 카드 xu2017 — 이차입자 0.102 의 3 배) · K_IC_S 1.0 측정 근거 '
+                '없음 — P_c ∝ K_IC² ⑤ A 200 · 배수 원전 (Lawn Table 3.4) 카드 없음 [미확인] ⑥ δ 판 열과 나란히 인용 금지')
+CAVEAT_FRAC_AUERBACH = CAVEAT_FRAC_FORCE + ' · ' + CAVEAT_LHS31
+CAVEAT_AREA_TOTAL = CAVEAT_NAME + ' · 총량 (µm²) — 두께 · 입자 수에 비례한다 · 특징으로 쓰려면 입자당 · 부피당으로 나눌 것'
 WA_DEFINE = {
     'se_se_cn': ('z_SE-SE — SE 1 개당 SE 접촉 수, SE 전 입자 평균 (접촉 0 · 벽 · 플래튼에 닿은 입자 포함)', CAVEAT_WALL),
     'se_se_cn_std': ('z_SE-SE 의 입자간 표준편차 (모집단 · SE 전 입자)', CAVEAT_WALL),
@@ -1079,6 +1087,23 @@ WA_DEFINE = {
     'A_binding_total_n_contacts': ('Physics 모듈이 센 전체 접촉 개수 — 같은 집합인지는 한 건 대조 전', CAVEAT_COUNT),
     'n_am_am_contacts_total': ('파괴 모듈이 센 AM–AM 접촉 개수', CAVEAT_COUNT),
     'n_am_am_contacts_excluded': ('파괴 모듈이 제외한 AM–AM 접촉 개수', CAVEAT_COUNT),
+    #  ⑤⑥⑦ (J20-s · 1저자 비준 10-04)
+    'se_se_cn_aug': ('F1 근접쌍 CN — 탄성 접촉 (덤프) 에 표면 틈 ≤ h 인 SE–SE 쌍을 더해 센 SE 1 개당 SE 접촉 수, SE 전 입자 평균 · '
+                     '= se_se_cn + 2 × se_se_cn_aug_n_extra / N_SE (관문 ⑤F1 · 10-01 실측 130/130 · 64/64 상대차 ≤ 2.2e-16) · J20-s ⑤', CAVEAT_F1),
+    'se_se_cn_aug_std': ('F1 근접쌍 CN 의 입자간 표준편차 (모집단 · SE 전 입자) · J20-s ⑤', CAVEAT_F1),
+    'se_se_cn_aug_n_extra': ('F1 이 더한 SE–SE 근접쌍 개수 (탄성 접촉이 아닌 쌍 · 쌍 하나 = 두 입자에 하나씩) · J20-s ⑤',
+                             CAVEAT_F1 + ' · ' + CAVEAT_COUNT),
+    'se_se_cn_aug_h_spread_sim': ('F1 의 틈 문턱 h (sim 길이 = 10 nm × 확대 배율 · LHS 1e-05 전부) · J20-s ⑤', CAVEAT_F1),
+    'fracture_index_force': ('Auerbach 힘 기반 파괴 지수 = (파편화 + 분쇄) 개수 / n_total_AM_AM_force (소수 넷째 자리 반올림) — AM–AM 접촉만 · '
+                             '단계 = F/P_c 의 배수 1 · 3 · 11 · 32 (P_c = A K_IC² R_min / E*) · J20-s ⑥', CAVEAT_FRAC_AUERBACH),
+    'n_total_AM_AM_force': ('힘 기반 분류에 들어간 AM–AM 접촉 수 (법선력 fn > 0) — ≤ am_am_n_contacts (관문 ⑥R3 · 10-01 실측 194/194 같음) · '
+                            'J20-s ⑥', CAVEAT_FRAC_AUERBACH + ' · ' + CAVEAT_COUNT),
+    'se_se_cn_eff_area': ('SE 표면 중 SE–SE 접촉이 덮은 비율 (무차원) = Σ A_contact (접촉 하나를 두 입자에 하나씩) / Σ 4πr² (SE 전 입자) = '
+                          '2 × area_SE_SE_total / (N_SE · 4π r_SE²) (관문 ⑦A4 · SE 단분산 · 10-01 실측 상대차 ≤ 2.2e-12) · J20-s ⑦', CAVEAT_NAME),
+    'se_se_cn_eff_area_perc': ('같은 비율 — 관통 SE 성분에 속한 SE 만 · 관통 없으면 빈칸 (N/A · percolation_pct 0 과 같은 집합 — 관문 ⑦A5) · J20-s ⑦',
+                               CAVEAT_NAME),
+    'am_am_mean_area': ('AM–AM 접촉 하나의 평균 면적 (µm²) = am_am_total_area / am_am_n_contacts (관문 ⑦A3) · J20-s ⑦', CAVEAT_NAME),
+    'am_am_total_area': ('AM–AM 접촉 면적 총합 (µm²) = AM_P–AM_P + AM_P–AM_S + AM_S–AM_S 총합 (관문 ⑦A3) · J20-s ⑦', CAVEAT_AREA_TOTAL),
 }
 _STAT_KO = {'mean': '평균', 'std': '표준편차 (모집단)', 'median': '중앙값', 'max': '최댓값'}
 
@@ -1105,6 +1130,25 @@ def wa_define(col):
     m = re.fullmatch(r'area_(.+)_n', col)
     if m:
         return (f'{m.group(1)} 접촉 개수 (쌍 종류별 덤프 행 수)', CAVEAT_COUNT)
+    m = re.fullmatch(r'frac_([a-z]+)_force_pct', col)                       # ⑥ (J20-s)
+    if m and m.group(1) in FRAC_STAGES:
+        s_ = m.group(1)
+        return (f'힘 기반 {FRAC_STAGE_KO[s_]} ({s_}) 단계 비율 (%) = 100 × n_{s_}_force_AM_AM / n_total_AM_AM_force (소수 둘째 자리 반올림 · '
+                '다섯 단계 합 ≈ 100 · 관문 ⑥R2) · J20-s ⑥', CAVEAT_FRAC_AUERBACH)
+    m = re.fullmatch(r'n_([a-z]+)_force_AM_AM', col)
+    if m and m.group(1) in FRAC_STAGES:
+        s_ = m.group(1)
+        return (f'힘 기반 {FRAC_STAGE_KO[s_]} ({s_}) 단계 AM–AM 접촉 수 — 다섯 단계 합 = n_total_AM_AM_force (관문 ⑥R1) · J20-s ⑥',
+                CAVEAT_FRAC_AUERBACH + ' · ' + CAVEAT_COUNT)
+    m = WA_AREA_PAIR.fullmatch(col)                                         # ⑦ (J20-s)
+    if m:
+        a_, b_, st = m.groups()
+        pair = f'{a_.replace("AM전체", "AM 전체")}–{b_}'
+        if st == 'mean':
+            return (f'{pair} 접촉 하나의 평균 면적 (µm²) = 총합 / 개수 (관문 ⑦A1) · 접촉 0 쌍은 빈칸 (N/A — 접촉 0 개에서 평균은 정의되지 '
+                    '않는다) · J20-s ⑦', CAVEAT_NAME)
+        return (f'{pair} 접촉 면적 총합 (µm²) — 접촉 0 쌍 = 0 (두 상이 다 있으면 측정된 0 · J20-h 와 같은 규칙)'
+                + (' · = AM_P–SE + AM_S–SE (관문 ⑦A2)' if a_ == 'AM전체' else '') + ' · J20-s ⑦', CAVEAT_AREA_TOTAL)
     return None
 
 
@@ -1139,11 +1183,33 @@ WA_DERIVED = (
 )
 #: 비율 합 = 100 의 부동소수 여유 (%p) — 물리 허용치가 아니다 (개수 / N × 100 의 반올림만)
 WA_PCT_SUM_TOL = 1e-7
-WA_GROUPS = ('contact', 'percolation')
+#: ⑤⑥⑦ (J20-s · 1저자 비준 10-04 *"권고대로"*) — **접촉 분석 단계**가 full_metrics 에 쓰는 열 · 새 계산 없음 (10-01 d1ec42fba 배치 값).
+#:   ⑤ F1 근접쌍 CN — calc_se_se_cn 의 F1 출력 (analyze_contacts.py:438–441).
+WA_GROUP_F1_EXACT = ('se_se_cn_aug', 'se_se_cn_aug_std', 'se_se_cn_aug_n_extra', 'se_se_cn_aug_h_spread_sim')
+#:   ⑥ Auerbach 힘 기반 파괴 — calc_fracture_stages 의 **힘 기반 전체 집계**만 (δ 판 · 상 쌍별은 WA_EXCLUDED).
+FRAC_STAGES = ('intact', 'microcrack', 'multicrack', 'fragmentation', 'pulverization')    # fracture_model.ALL_STAGES 와 같은 순서
+FRAC_STAGE_KO = {'intact': '무손상', 'microcrack': '미세 균열', 'multicrack': '다중 균열', 'fragmentation': '파편화', 'pulverization': '분쇄'}
+WA_GROUP_FRAC_EXACT = (('fracture_index_force', 'n_total_AM_AM_force') + tuple(f'frac_{s}_force_pct' for s in FRAC_STAGES)
+                       + tuple(f'n_{s}_force_AM_AM' for s in FRAC_STAGES))
+#:   ⑦ 접촉 면적 (A_dem_geometric · c_cpl[22]) — calc_interface_area 의 쌍별 평균 · 총합 + calc_se_se_cn 면적 피복 + calc_am_am_cn 면적.
+#:   쌍별 개수 (area_<쌍>_n) 는 ① 접촉 묶음 (J20-g) 그대로.
+WA_AREA_PAIR = re.compile(r'area_(AM_P|AM_S|SE|AM전체)_(AM_P|AM_S|SE)_(mean|total)')
+WA_GROUP_AREA_EXACT = ('se_se_cn_eff_area', 'se_se_cn_eff_area_perc', 'am_am_mean_area', 'am_am_total_area')
+#: ⑤⑥⑦ 근처의 census ✅ 열 중 **인계하지 않는 것** (패턴, 사유) — 묶음 · 검토 여부와 무관하게 먼저 뺀다 (selftest ㉕b · ㉕c).
+WA_EXCLUDED = (
+    (r'path_hop_area_.*', 'LHS-32 — 덩어리마다 고른 경로 30 개 (best · mean · worst 10) 의 평균 = 선별 표본 통계'),
+    (r'frac_[a-z]+_pct|fracture_index|n_[a-z]+_AM_AM|n_total_AM_AM',
+     'δ 판 파괴 분류 — 힘 기반 열과 나란히 인용 금지 (09-19 · LHS-31 ⑥) · 힘 기반 (Auerbach) 만 인계'),
+    (r'(frac|n)_[a-z]+(_force)?_(AM_P|AM_S)-(AM_P|AM_S)(_pct)?|n_total(_force)?_(AM_P|AM_S)-(AM_P|AM_S)',
+     '상 쌍별 파괴 분해 — 접촉 0 쌍에서도 비율 0 % (분모 max(n, 1)) 라 N/A 와 0 을 못 가르고, mono 상 이름 규약 (J20-k (B)) 을 이 열에 '
+     '옮기는 관문이 없다 · 전체 집계만 인계'),
+    (r'area_.+_physics', 'physics 면적 — coverage 인계는 기하면적만 (J20-m) · 접촉별 추정 면적 합에 표면 한도가 없다 (LHS-25)'),
+)
+WA_GROUPS = ('contact', 'percolation', 'f1', 'fracture', 'area')
 #: 7c — 웹앱 배치 단계 (`lhs_webapp_batch --stop-after`) → 그 배치가 **다 낸** 묶음.  coverage 단계는 접촉 단계를 포함한다 (접촉 분석 → 피복)
 #:   — 5번 배치 (`--stop-after coverage`) 를 contact 묶음으로 받는다.  묶음 제한 없이 (전체) 부르면 여전히 거부 (뒤 단계 열이 빈칸).
 #:   ② 퍼콜레이션도 접촉 분석 단계 산출이다 (위).
-WA_STAGE_GROUPS = {'contact': ('contact', 'percolation'), 'coverage': ('contact', 'percolation')}
+WA_STAGE_GROUPS = {'contact': WA_GROUPS, 'coverage': WA_GROUPS}         # ⑤⑥⑦ 도 접촉 분석 단계 산출 (J20-s)
 
 
 def wa_group_contact(col):
@@ -1158,7 +1224,31 @@ def wa_group_perc(col):
     return col in WA_GROUP_PERC_EXACT or col in WA_IONIC_DEC_KEYS
 
 
-WA_GROUP_FN = {'contact': wa_group_contact, 'percolation': wa_group_perc}
+def wa_group_f1(col):
+    """⑤ F1 근접쌍 CN 묶음인가 (J20-s)."""
+    return col in WA_GROUP_F1_EXACT
+
+
+def wa_group_frac(col):
+    """⑥ Auerbach 힘 기반 파괴 — 전체 집계 열인가 (J20-s · LHS-31)."""
+    return col in WA_GROUP_FRAC_EXACT
+
+
+def wa_group_area(col):
+    """⑦ 접촉 면적 (A_dem_geometric) 묶음인가 — 쌍별 평균 · 총합 · SE 면적 피복 · AM–AM 면적 (J20-s)."""
+    return col in WA_GROUP_AREA_EXACT or WA_AREA_PAIR.fullmatch(col) is not None
+
+
+def wa_excluded(col):
+    """⑤⑥⑦ — 인계하지 않는 열이면 사유, 아니면 None (WA_EXCLUDED · J20-s)."""
+    for pat, why in WA_EXCLUDED:
+        if re.fullmatch(pat, col) is not None:
+            return why
+    return None
+
+
+WA_GROUP_FN = {'contact': wa_group_contact, 'percolation': wa_group_perc,
+               'f1': wa_group_f1, 'fracture': wa_group_frac, 'area': wa_group_area}
 
 
 def wa_groups_norm(g):
@@ -1192,6 +1282,19 @@ WA_REVIEWED = (
      'calc_ionic_active_am (dem_analysis_core.py:631–) → analyze_contacts — v1.1 ② (1저자 비준 10-01): 계산하고 버리던 단절 · 무접촉 내보내기 + '
      '상별 단절 · 무접촉 계산 추가 (시험 먼저 · analyze_contacts --selftest ⑬–⑱) · 관문 v1.1 D1–D5 (합 100 · 상별 합 100 · 정수 개수 · 상별 개수 '
      '합 = 전체 · 무접촉 ≤ 고립 위험)'),
+    (r'se_se_cn_aug(_std|_n_extra|_h_spread_sim)?',
+     'calc_se_se_cn F1 (dem_analysis_core.py:303–) → analyze_contacts.py:438–441 — J20-s ⑤ 감사 · 1저자 비준 10-04 ("권고대로") · 한정어 (h 10 nm '
+     '출처 없는 모델 상수 · SE–SE 만 · 반올림 쌍) · 관문 ⑤F1 (aug = se_se_cn + 2 · n_extra / N_SE · 10-01 실측 130/130 · 64/64 상대차 ≤ 2.2e-16)'),
+    (r'fracture_index_force|n_total_AM_AM_force|frac_(intact|microcrack|multicrack|fragmentation|pulverization)_force_pct|'
+     r'n_(intact|microcrack|multicrack|fragmentation|pulverization)_force_AM_AM',
+     'calc_fracture_stages (dem_analysis_core.py:977–) · fracture_model.fracture_classify_force_sim — J20-s ⑥ 감사 (LHS-31) · 1저자 비준 10-04 · '
+     '힘 기반 전체 집계만 (δ 판 · 상 쌍별 = WA_EXCLUDED) · 관문 ⑥R1–R3 (단계 개수 합 = 전체 · 비율 · 지수 = 반올림 폭 안 · 전체 ≤ am_am_n_contacts) · '
+     '10-01 실측 130/130 · 64/64 (전체 = am_am_n_contacts 194/194)'),
+    (r'area_(AM_P|AM_S|SE|AM전체)_(AM_P|AM_S|SE)_(mean|total)|se_se_cn_eff_area(_perc)?|am_am_(mean|total)_area',
+     'calc_interface_area (dem_analysis_core.py:191–) · calc_se_se_cn 면적 (:303–) · calc_am_am_cn (:443–) — J20-s ⑦ 감사 · 1저자 비준 10-04 · '
+     'c_cpl[22] = 두 구 교차원 넓이의 정확식 (A_dem_geometric · 작은 δ 에서 Hertz πR*δ 의 ≈ 2 배 · L1-04) · 관문 ⑦A1–A5 (평균 × 개수 = 총합 · '
+     '접촉 0 쌍 평균 N/A · AM전체 = 상별 합 · AM–AM 총합 = 쌍 합 · eff_area = 2 × SE–SE 총합 / (N_SE · 4π r_SE²) · eff_area_perc 빈칸 ⟺ 비관통) · '
+     '10-01 실측 130/130 · 64/64 · path_hop_area 제외 (LHS-32)'),
 )
 #: 7c (J20-k · 1저자 비준 10-01 *"ㄱㄱ 하자"*) — 09-19 census 판정을 **바꿔 싣는** 열 (열 사전에 옛 판정을 병기한다).  census 에 없는 키
 #:   (7a 새 키) 는 웹앱 배치 머리 (metrics_flat) 에 있을 때만 싣는다 — 옛 배치에 없는 키가 빈칸 = '측정된 N/A' 로 읽히지 않게.
@@ -1266,6 +1369,7 @@ MONO_PHASE_NOTE = MONO_DESIGN_NOTE          # (A) 시절 이름 — 호환
 #: J20-h (1저자 비준 09-30 — *"bimodal 에서 빠진 쌍을 0 으로 채우게 · 시험 먼저"*) — `calc_interface_area` 는 접촉이 0 인 쌍의 키를 만들지 않는다
 #:   (dem_analysis_core.py:131–168 — 덤프에 나온 쌍만 센다) → metrics_flat 빈칸.  두 상이 다 있는 침대에서 그 뜻은 **측정된 0** 이다.
 WA_PAIR_COUNT = re.compile(r'area_(AM_P|AM_S|SE|AM전체)_(AM_P|AM_S|SE)_n')
+WA_PAIR_TOTAL = re.compile(r'area_(AM_P|AM_S|SE|AM전체)_(AM_P|AM_S|SE)_total')     # ⑦ — 접촉 0 쌍 총합 = 0 (J20-h 와 같은 규칙 · J20-s)
 PAIR_ZERO_NOTE = ('접촉 0 인 쌍 = 0 — 웹앱 `calc_interface_area` 는 접촉이 없는 쌍의 키를 만들지 않아 빈칸이 되므로, 두 상이 다 있는 침대 '
                   '(수확 `phase_counts`) 에서 생성기가 0 으로 채운다 (J20-h) · mono 는 설계 상으로 판단 (J20-k (B)) · 상이 없으면 빈칸 (N/A)')
 
@@ -1588,6 +1692,137 @@ def _wa_amse_gates(case, o, take, h, dp, drow):
     return 1
 
 
+#: ⑤⑥⑦ 관문 여유 — 물리 허용치가 아니다 (웹앱 반올림 · 부동소수 합의 순서만)
+WA_FRAC_PCT_TOL = 0.005 + 1e-9          # calc_fracture_stages: round(100 n / N, 2) → 반폭 0.005
+WA_FRAC_FI_TOL = 5e-5 + 1e-12           # round((파편화 + 분쇄) / N, 4)
+WA_AREA_TOL = 1e-9                      # 같은 접촉 면적 합 (10-01 실측 ≤ 3e-14)
+
+
+def _fnum(x):
+    return None if x in (None, '') else float(x)
+
+
+def _wa_f1_gates(case, wr, h):
+    """⑤F1 — se_se_cn_aug = se_se_cn + 2 × n_extra / N_SE (calc_se_se_cn: 근접쌍 하나가 두 입자에 하나씩 더해진다 · 같은 SE 집합의 평균)."""
+    cn, aug, nx, hs = (_fnum(wr.get(k)) for k in ('se_se_cn', 'se_se_cn_aug', 'se_se_cn_aug_n_extra', 'se_se_cn_aug_h_spread_sim'))
+    if cn is None:
+        return 0
+    if aug is None or nx is None or hs is None:
+        raise FillRefusal(f'{case}: se_se_cn 은 있는데 F1 열 (aug · n_extra · h_spread) 이 비었다 — F1 이 꺼진 배치를 N/A 로 싣지 않는다 (관문 ⑤F1 · J20-s)')
+    if not hs > 0:
+        raise FillRefusal(f'{case}: se_se_cn_aug_h_spread_sim {hs!r} ≤ 0 — F1 이 꺼진 값이다 (관문 ⑤F1 · J20-s)')
+    pc = h.get('phase_counts')
+    if not isinstance(pc, dict):
+        raise FillRefusal(f'{case}: 수확 JSON 에 phase_counts 가 없다 — SE 입자 수를 몰라 F1 항등식을 잴 수 없다 (관문 ⑤F1 · J20-s)')
+    n_se = _phase_n(pc, 'SE')
+    exp = cn + 2.0 * nx / n_se if n_se > 0 else float('nan')
+    if not (n_se > 0 and nx >= 0 and nx == int(nx) and abs(aug - exp) <= WA_CN_IDENTITY_TOL * max(1.0, abs(exp))):
+        raise FillRefusal(f'{case}: se_se_cn_aug {aug!r} ≠ se_se_cn {cn!r} + 2 × n_extra {nx:g} / SE {n_se} = {exp!r} — 같은 접촉 집합의 '
+                          'F1 이 아니다 (관문 ⑤F1 · J20-s)')
+    return 1
+
+
+def _wa_frac_gates(case, wr):
+    """⑥R1–R3 — calc_fracture_stages: 단계 개수 합 = 전체 · 비율 = round(100 n / N, 2) · 지수 = round((파편화 + 분쇄) / N, 4) · 전체 ≤ AM–AM 접촉."""
+    n_t = _fnum(wr.get('n_total_AM_AM_force'))
+    amn = _fnum(wr.get('am_am_n_contacts'))
+    if n_t is None:
+        if amn is not None and amn > 0:
+            raise FillRefusal(f'{case}: AM–AM 접촉 {amn:g} 개인데 힘 기반 파괴 열이 없다 — 파괴 단계가 빠진 행 (관문 ⑥R1 · J20-s)')
+        return 0
+    ns = [_fnum(wr.get(f'n_{s}_force_AM_AM')) for s in FRAC_STAGES]
+    if any(n is None or n < 0 or n != int(n) for n in ns) or n_t != int(n_t):
+        raise FillRefusal(f'{case}: 힘 기반 단계 개수가 비었거나 정수가 아니다 {ns} · 전체 {n_t!r} (관문 ⑥R1 · J20-s)')
+    if sum(ns) != n_t:
+        raise FillRefusal(f'{case}: 힘 기반 단계 개수 합 {sum(ns):g} ≠ n_total_AM_AM_force {n_t:g} (관문 ⑥R1 · J20-s)')
+    fi = _fnum(wr.get('fracture_index_force'))
+    fr = [_fnum(wr.get(f'frac_{s}_force_pct')) for s in FRAC_STAGES]
+    if n_t > 0:
+        if fi is None or any(x is None for x in fr):
+            raise FillRefusal(f'{case}: n_total_AM_AM_force {n_t:g} > 0 인데 비율 · 지수가 비었다 (관문 ⑥R2 · J20-s)')
+        for s, x, n in zip(FRAC_STAGES, fr, ns):
+            if abs(x - 100.0 * n / n_t) > WA_FRAC_PCT_TOL:
+                raise FillRefusal(f'{case}: frac_{s}_force_pct {x!r} ≠ 100 × {n:g} / {n_t:g} = {100.0 * n / n_t:.4f} — 반올림 폭 0.005 밖 '
+                                  '(관문 ⑥R2 · J20-s)')
+        e_fi = (ns[3] + ns[4]) / n_t
+        if abs(fi - e_fi) > WA_FRAC_FI_TOL:
+            raise FillRefusal(f'{case}: fracture_index_force {fi!r} ≠ (파편화 + 분쇄) / N = {e_fi:.6f} — 반올림 폭 5e-5 밖 (관문 ⑥R2 · J20-s)')
+    elif fi is not None or any(x is not None for x in fr):
+        raise FillRefusal(f'{case}: n_total_AM_AM_force 0 인데 비율 · 지수가 있다 (관문 ⑥R2 · J20-s)')
+    if amn is not None and n_t > amn:
+        raise FillRefusal(f'{case}: n_total_AM_AM_force {n_t:g} > am_am_n_contacts {amn:g} — fn > 0 AM–AM 접촉은 전 AM–AM 접촉의 부분집합 '
+                          '(관문 ⑥R3 · J20-s)')
+    return 1
+
+
+def _wa_area_prep(case, wr, rep):
+    """⑦A1 — 쌍마다 개수 > 0 이면 평균 × 개수 = 총합 · 개수 0 이면 총합 0 · 평균 없음 (calc_interface_area 의 AM전체–SE 평균 0 대입은 빈칸으로).
+    반환 = 접촉 0 쌍의 평균을 비운 행 **사본** (웹앱 원 행은 안 바꾼다)."""
+    out = dict(wr)
+    for k, v in wr.items():
+        if v in (None, '') or re.fullmatch(r'area_(.+)_n', k) is None:
+            continue
+        b = k[:-2]
+        n = float(v)
+        tot, mean = _fnum(wr.get(b + '_total')), _fnum(wr.get(b + '_mean'))
+        if n > 0:
+            if tot is None or mean is None:
+                raise FillRefusal(f'{case}: {b} 개수 {n:g} > 0 인데 평균 · 총합이 비었다 (관문 ⑦A1 · J20-s)')
+            if abs(mean * n - tot) > WA_AREA_TOL * max(abs(tot), abs(mean * n), 1e-300):
+                raise FillRefusal(f'{case}: {b}_mean {mean!r} × 개수 {n:g} ≠ {b}_total {tot!r} — 같은 접촉의 값이 아니다 (관문 ⑦A1 · J20-s)')
+        else:
+            if tot not in (None, 0.0):
+                raise FillRefusal(f'{case}: {b} 개수 0 인데 총합 {tot!r} ≠ 0 (관문 ⑦A1 · J20-s)')
+            if mean is not None:
+                if mean != 0.0:
+                    raise FillRefusal(f'{case}: {b} 개수 0 인데 평균 {mean!r} 이 있다 — 접촉 0 개에서 평균은 정의되지 않는다 (관문 ⑦A1 · J20-s)')
+                out[b + '_mean'] = ''
+                rep['wa_area_mean_blanked'] += 1
+    return out
+
+
+def _wa_area_gates(case, wr, h, drow, take):
+    """⑦A2–A5 — AM전체–SE = 상별 합 · AM–AM 총합 = 쌍 합 · 평균 = 총합 / 개수 · eff_area = 2 × SE–SE 총합 / (N_SE · 4π r_SE²) ·
+    eff_area_perc 빈칸 ⟺ 비관통 (percolation_pct 0)."""
+    tot = _fnum(wr.get('area_AM전체_SE_total'))
+    if tot is not None:
+        s_ = sum(x for x in (_fnum(wr.get(f'area_{p}_SE_total')) for p in ('AM_P', 'AM_S')) if x is not None)
+        if abs(tot - s_) > WA_AREA_TOL * max(abs(tot), abs(s_), 1e-300):
+            raise FillRefusal(f'{case}: area_AM전체_SE_total {tot!r} ≠ AM_P–SE + AM_S–SE {s_!r} (관문 ⑦A2 · J20-s)')
+        n_all = _fnum(wr.get('area_AM전체_SE_n'))
+        n_s = sum(x for x in (_fnum(wr.get(f'area_{p}_SE_n')) for p in ('AM_P', 'AM_S')) if x is not None)
+        if n_all is not None and n_all != n_s:
+            raise FillRefusal(f'{case}: area_AM전체_SE_n {n_all:g} ≠ AM_P–SE + AM_S–SE 개수 {n_s:g} (관문 ⑦A2 · J20-s)')
+    aat, aam, amn = (_fnum(wr.get(k)) for k in ('am_am_total_area', 'am_am_mean_area', 'am_am_n_contacts'))
+    if aat is not None:
+        s_ = sum((_fnum(wr.get(f'area_{p}_total')) or 0.0) for p in ('AM_P_AM_P', 'AM_P_AM_S', 'AM_S_AM_S'))
+        if abs(aat - s_) > WA_AREA_TOL * max(abs(aat), abs(s_), 1e-300):
+            raise FillRefusal(f'{case}: am_am_total_area {aat!r} ≠ AM–AM 쌍 총합 {s_!r} (관문 ⑦A3 · J20-s)')
+        if amn is not None and amn > 0:
+            e_m = aat / amn
+            if aam is None or abs(aam - e_m) > WA_AREA_TOL * max(abs(aam), abs(e_m), 1e-300):
+                raise FillRefusal(f'{case}: am_am_mean_area {aam!r} ≠ am_am_total_area / am_am_n_contacts = {e_m!r} (관문 ⑦A3 · J20-s)')
+    if 'se_se_cn_eff_area' in take:
+        ea, sst = _fnum(wr.get('se_se_cn_eff_area')), _fnum(wr.get('area_SE_SE_total'))
+        if ea is not None:
+            rse = _fnum(drow.get('r_SE_um'))
+            pc = h.get('phase_counts')
+            if rse is None or not rse > 0 or not isinstance(pc, dict) or sst is None:
+                raise FillRefusal(f'{case}: se_se_cn_eff_area 를 잴 수 없다 — 설계 r_SE_um {drow.get("r_SE_um")!r} · phase_counts · area_SE_SE_total 중 '
+                                  '없는 것이 있다 (관문 ⑦A4 · J20-s)')
+            n_se = _phase_n(pc, 'SE')
+            e_a = 2.0 * sst / (n_se * 4.0 * math.pi * rse * rse) if n_se > 0 else float('nan')
+            if not (n_se > 0 and abs(ea - e_a) <= WA_AREA_TOL * max(abs(e_a), 1e-300)):
+                raise FillRefusal(f'{case}: se_se_cn_eff_area {ea!r} ≠ 2 × area_SE_SE_total / (N_SE {n_se} · 4π r_SE²) = {e_a!r} '
+                                  '(관문 ⑦A4 · J20-s · SE 단분산 = 설계 d_se 하나)')
+    if 'se_se_cn_eff_area_perc' in take:
+        pp, eap = _fnum(wr.get('percolation_pct')), _fnum(wr.get('se_se_cn_eff_area_perc'))
+        if pp is not None and (eap is None) != (pp == 0.0):
+            raise FillRefusal(f'{case}: se_se_cn_eff_area_perc {wr.get("se_se_cn_eff_area_perc")!r} ↔ percolation_pct {pp!r} — 빈칸 ⟺ 비관통이어야 '
+                              '한다 (관문 ⑦A5 · J20-s)')
+    return 1
+
+
 def _wa_perc_gates(case, o, take, h):
     """② 관문 (fail-closed) — 표에 실린 퍼콜레이션 값이 한 SE 그래프에서 나왔고 수확기가 독립으로 재현하는가.  09-29 J20-b 감사 130/130 CLEAN ·
     10-01 실측 130/130 · 64/64 성립.
@@ -1750,7 +1985,8 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp
     wv, wa_take = webapp, []
     _gs = wa_groups_norm(webapp_groups)
     if _gs is not None and (not _gs or any(g not in WA_GROUPS for g in _gs)):
-        raise FillRefusal(f'webapp_groups {webapp_groups!r} — 아는 묶음은 {WA_GROUPS} 뿐이다 (① 접촉 위상 = contact · ② = percolation)')
+        raise FillRefusal(f'webapp_groups {webapp_groups!r} — 아는 묶음은 {WA_GROUPS} 뿐이다 (① 접촉 위상 = contact · ② = percolation · '
+                          f'⑤ F1 = f1 · ⑥ Auerbach 힘 기반 = fracture · ⑦ 면적 = area)')
     if wv is not None:
         #  묶음별 — 접촉 단계만 돈 배치는 그 묶음으로만 부른다 (뒤 단계 열이 빈칸 = 측정된 N/A 로 읽히지 않게)
         _sa = wv.get('stop_after')
@@ -1761,6 +1997,8 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp
         if miss_w:
             raise FillRefusal(f'웹앱 배치가 시도하지 않은 설계행 {len(miss_w)} 건: {miss_w[:5]} — 배치 미완 (재개로 채울 것)')
         ok_cols = [c for c, v in wa_verdicts(wv)[0].items() if str(v).startswith('✅')]     # 7c — 판정 바꿔 싣기 포함
+        _n_excl = sum(1 for c in ok_cols if wa_excluded(c) is not None)       # ⑤⑥⑦ — 인계 제외 열은 묶음 · 검토와 무관하게 먼저 (J20-s)
+        ok_cols = [c for c in ok_cols if wa_excluded(c) is None]
         if _gs is not None:
             ok_cols = [c for c in ok_cols if any(WA_GROUP_FN[g](c) for g in _gs)]
         n_census_ok = len(ok_cols)
@@ -1786,7 +2024,8 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp
                    wa_unreviewed_dropped=n_census_ok - len(ok_cols), wa_pair_zero_filled=0,
                    wa_mono_renamed_cases=0, wa_mono_design_filled=0, wa_mono_absent_blanked=0,
                    wa_cn_identity_checked=0, wa_am_identity_checked=0, wa_amse_identity_checked=0, wa_perc_checked=0,
-                   wa_ionic_checked=0)
+                   wa_ionic_checked=0, wa_f1_checked=0, wa_frac_checked=0, wa_area_checked=0,
+                   wa_area_mean_blanked=0, wa_area_total_zero_filled=0, wa_excluded_dropped=_n_excl)
     for r in rows:
         h = hv[r[key]]
         o = {c: r.get(c, '') for c in design_cols}
@@ -1873,6 +2112,8 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp
                 o['wa_mono_phase_name_webapp'] = wname or ''
                 if wname is not None and wname != dp:
                     rep['wa_mono_renamed_cases'] += 1
+            if wr is not None and any(wa_group_area(c) for c in wa_take):
+                wr = _wa_area_prep(r[key], wr, rep)                         # ⑦A1 — 접촉 0 쌍 평균 = N/A (웹앱 원 행은 안 바꾼다 · J20-s)
             for c in wa_take:
                 src, absent = c, False
                 if dp is not None and wa_phase_specific(c):
@@ -1884,16 +2125,22 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp
                     rep['wa_mono_absent_blanked'] += 1
                 elif dp is not None and wa_phase_specific(c) and v not in (None, ''):
                     rep['wa_mono_design_filled'] += 1
-                if v in (None, '') and wr is not None and not absent and WA_PAIR_COUNT.fullmatch(c):
+                _pm = ((WA_PAIR_COUNT.fullmatch(c) or WA_PAIR_TOTAL.fullmatch(c))
+                       if (v in (None, '') and wr is not None and not absent) else None)
+                if _pm is not None:
                     #  J20-h — 웹앱 행이 있는데 쌍 키가 없다 = 접촉 0.  두 상이 다 있어야 0 (없으면 N/A 빈칸) · 상을 모르면 거부 ·
                     #   mono 는 설계 상으로 판단 (J20-k (B) — 설계 상 = 수확 AM)
                     pc = h.get('phase_counts')
                     if not isinstance(pc, dict):
                         raise FillRefusal(f'{r[key]}: 수확 JSON 에 phase_counts 가 없다 — {c} 의 빈칸이 접촉 0 인지 상이 없는 것인지 '
                                           '가를 수 없다 (J20-h)')
-                    if all(_phase_n_mono(pc, ph, dp) > 0 for ph in WA_PAIR_COUNT.fullmatch(c).groups()):
-                        v = '0'
-                        rep['wa_pair_zero_filled'] += 1
+                    if all(_phase_n_mono(pc, ph, dp) > 0 for ph in _pm.groups()):
+                        if c.endswith('_n'):
+                            v = '0'
+                            rep['wa_pair_zero_filled'] += 1
+                        else:                                            # ⑦ — 총합도 측정된 0 (평균은 N/A 로 둔다 · J20-s)
+                            v = '0.0'
+                            rep['wa_area_total_zero_filled'] += 1
                 o[c] = '' if v is None else str(v)
             #  J20-i — 표에 함께 실린 평균 SE–SE CN 과 SE–SE 접촉 수가 같은 접촉 집합에서 왔는가: se_se_cn = 2 × area_SE_SE_n / N_SE
             #   (calc_se_se_cn 은 SE 전 입자로 나눈 평균 · 접촉 하나가 두 입자에 하나씩).  SE 입자 수를 모르거나 어긋나면 거부한다.
@@ -1935,6 +2182,13 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp
             #  ② — 퍼콜레이션 (P1 관통 일관 + 수확기 독립 재현 · P2 범위 · P3 관통 SE 개수)
             if wr is not None and any(wa_group_perc(c) for c in wa_take):
                 rep['wa_perc_checked'] += _wa_perc_gates(r[key], o, wa_take, h)
+            #  ⑤⑥⑦ (J20-s) — 관문은 웹앱 원 행으로 잰다 (상 이름 옮기기와 무관한 항등식 · 같은 묶음의 짝 열이 표에 없어도 잰다)
+            if wr is not None and any(wa_group_f1(c) for c in wa_take):
+                rep['wa_f1_checked'] += _wa_f1_gates(r[key], wr, h)
+            if wr is not None and any(wa_group_frac(c) for c in wa_take):
+                rep['wa_frac_checked'] += _wa_frac_gates(r[key], wr)
+            if wr is not None and any(wa_group_area(c) for c in wa_take):
+                rep['wa_area_checked'] += _wa_area_gates(r[key], wr, h, r, wa_take)
             #  v1.1 ① — 경로 기준 고립 = 100 − 활성 (유도) · 웹앱 v1.1 이 같은 이름을 내면 같아야 · ①② 관문 D1–D5
             if wa_iso_on:
                 a_ = o.get('ionic_active_pct', '')
@@ -2662,8 +2916,8 @@ def _selftest():
                                        'A_binding_total_n_contacts', 'n_am_am_contacts_total')))
     _neg('⑲r ★ 접촉 단계만 돈 배치 (stop_after=contact) 를 묶음 제한 없이 부르면 거부 — 뒤 단계 열이 빈칸 = N/A 로 읽힌다',
          lambda: build_handover(_dq, _hqs, webapp=_wa2('contact')))
-    _neg('⑲s 모르는 묶음 이름은 거부 (② 뒤 percolation 은 아는 묶음 — fracture 로)',
-         lambda: build_handover(_dq, _hqs, webapp=_wa2(), webapp_groups='fracture'))
+    _neg('⑲s 모르는 묶음 이름은 거부 (⑤⑥⑦ 뒤 f1 · fracture · area 는 아는 묶음 — stress 로 · ④b 새 열은 아직 인계 묶음이 아니다)',
+         lambda: build_handover(_dq, _hqs, webapp=_wa2(), webapp_groups='stress'))
     _g1 = next((r for r in _og if r['case_id'] == 'q1'), {})
     chk('⑲t 같은 프레임 관문은 그대로 — 웹앱 porosity (접촉 단계 산출) − 수확 porosity 가 QC 열에 (여기선 0)',
         _g1.get('qc_wa_porosity_minus_harvest_pct') == repr(0.0) and _g1.get('am_am_cn') == '1.2')
@@ -2745,16 +2999,17 @@ def _selftest():
         and _r20.get('wa_mono_absent_blanked') == 2 and 'wa_mono_phase_blanked' not in _r20)
     chk('⑳c bimodal (n_types 3) 은 상별 쌍 값 그대로',
         _b20.get('area_AM_P_SE_n') == '30' and _b20.get('area_AM_S_SE_n') == '50' and _b20.get('area_AM전체_SE_n') == '80')
-    chk('⑳d 판별 — wa_reviewed (area_<쌍>_n · se_se_cn(_std) · am_am_cn(_std) · am_am_n_contacts · 7c AM–SE CN · 고립 — _perc · _eff_area · _aug · '
-        'am_am 면적 · AM_*_n_particles 는 아님) · '
+    chk('⑳d 판별 — wa_reviewed (area_<쌍>_n · se_se_cn(_std) · am_am_cn(_std) · am_am_n_contacts · 7c AM–SE CN · 고립 — _perc 는 ② 뒤 · '
+        '_eff_area · _aug · am_am 면적은 ⑤⑦ 뒤 (J20-s) 검토됨 · AM_*_n_particles · path_hop_area 는 아님) · '
         'wa_phase_specific (AM_P/AM_S 이름이 든 열 · AM전체 · 소문자 am_ 은 아님)',
         'wa_reviewed' in globals() and 'wa_phase_specific' in globals()
         and globals()['wa_reviewed']('area_AM_P_SE_n') and globals()['wa_reviewed']('se_se_cn')
         and globals()['wa_reviewed']('se_se_cn_std') and globals()['wa_reviewed']('se_se_cn_perc')     # ② 뒤 (J20-b) 검토됨
-        and not globals()['wa_reviewed']('se_se_cn_eff_area') and not globals()['wa_reviewed']('se_se_cn_aug')
+        and globals()['wa_reviewed']('se_se_cn_eff_area') and globals()['wa_reviewed']('se_se_cn_aug')      # ⑤⑦ 뒤 (J20-s) 검토됨
+        and not globals()['wa_reviewed']('path_hop_area_mean')
         and globals()['wa_reviewed']('am_am_cn') and globals()['wa_reviewed']('am_am_cn_std')
-        and globals()['wa_reviewed']('am_am_n_contacts') and not globals()['wa_reviewed']('am_am_mean_area')
-        and not globals()['wa_reviewed']('am_am_total_area') and globals()['wa_reviewed']('AM_P_se_cn_mean')
+        and globals()['wa_reviewed']('am_am_n_contacts') and globals()['wa_reviewed']('am_am_mean_area')
+        and globals()['wa_reviewed']('am_am_total_area') and globals()['wa_reviewed']('AM_P_se_cn_mean')
         and globals()['wa_reviewed']('am_se_cn_median') and globals()['wa_reviewed']('AM_S_vulnerable_pct')
         and not globals()['wa_reviewed']('AM_P_n_particles') and not globals()['wa_reviewed']('am_se_cn_mean_x')
         and globals()['wa_phase_specific']('area_AM_S_AM_S_n') and globals()['wa_phase_specific']('AM_P_se_cn_mean')
@@ -3159,7 +3414,7 @@ def _selftest():
         and 'N/A' in _g8('se_se_cn_perc', 'meaning') and '외톨이' in _g8('top_reachable_pct', 'meaning')
         and 'coverage' in _g8('ionic_active_pct', 'meaning') and 'J20-b' in _g8('percolation_pct', 'meaning')
         and 'LHS-17' in _g8('percolation_pct', 'caveat'))
-    _neg('㉒e 모르는 묶음 이름이 섞이면 거부 (contact,fracture)', lambda: _b8(groups='contact,fracture'))
+    _neg('㉒e 모르는 묶음 이름이 섞이면 거부 (contact,stress — ⑤⑥⑦ 뒤 fracture 는 아는 묶음)', lambda: _b8(groups='contact,stress'))
 
     def _bad8(q, **kv):
         w = _wa8()
@@ -3330,6 +3585,156 @@ def _selftest():
     _neg7('㉔p ★ C2 — 전 입자 z 범위 대비 z 폭 > 1 이면 거부 (덩어리 ⊂ 전 입자)', lambda: _b10(hv=_hq10(b1=_bd10(zs=1.2))), 'v1.1 C2')
     _neg7('㉔q ★ C3 — 벽 간격의 플래튼 ≠ 수확 plate_z_sim 이면 거부 (다른 판)', lambda: _b10(hv=_hq10(b1=_bd10(pz=39.0))), 'v1.1 C3')
     _neg7('㉔r ★ ③ 수확 세대 혼합 — 일부 행만 덩어리 기록이 있으면 거부', lambda: _b10(hv=dict(_hq10(), q2=_hq9()['q2'])), '덩어리')
+    #  ═══ ㉕ ⑤⑥⑦ (J20-s · 1저자 비준 10-04 *"권고대로"*) — F1 근접쌍 · Auerbach 힘 기반 파괴 · 접촉 면적 (A_dem_geometric) 묶음 ═══════════════
+    #   새 계산 없음 (10-01 d1ec42fba 배치 값) · 묶음 f1 · fracture · area (접촉 분석 단계 산출) · 명시 제외 (path_hop_area = LHS-32 · δ 판 ·
+    #   상 쌍별 파괴 · physics 면적) · 관문 ⑤F1 · ⑥R1–R3 · ⑦A1–A5 (10-01 실측 130/130 · 64/64 가 통과한 항등식) · 접촉 0 쌍 평균 = 빈칸 · 총합 0 채움
+    _ST = ('intact', 'microcrack', 'multicrack', 'fragmentation', 'pulverization')
+
+    def _frf(counts):
+        n_t = sum(counts)
+        d = {f'n_{s_}_force_AM_AM': str(n_) for s_, n_ in zip(_ST, counts)}
+        d['n_total_AM_AM_force'] = str(n_t)
+        if n_t:
+            d.update({f'frac_{s_}_force_pct': repr(round(100.0 * n_ / n_t, 2)) for s_, n_ in zip(_ST, counts)})
+            d['fracture_index_force'] = repr(round((counts[3] + counts[4]) / n_t, 4))
+        return d
+    _R_SE = 0.5
+
+    def _eff(tot, nse=100, r_=_R_SE):
+        return repr(2.0 * tot / (nse * 4.0 * _mth.pi * r_ * r_))
+
+    def _wa11():
+        w = _wa10()
+        new_ok = (['se_se_cn_aug', 'se_se_cn_aug_std', 'se_se_cn_aug_n_extra', 'se_se_cn_aug_h_spread_sim', 'fracture_index_force',
+                   'n_total_AM_AM_force', 'se_se_cn_eff_area', 'am_am_mean_area', 'am_am_total_area']
+                  + [f'frac_{s_}_force_pct' for s_ in _ST] + [f'n_{s_}_force_AM_AM' for s_ in _ST]
+                  + [f'area_{p_}_{st}' for p_ in ('AM_P_AM_P', 'AM_P_AM_S', 'AM_S_AM_S', 'AM_P_SE', 'AM_S_SE', 'AM전체_SE', 'SE_SE')
+                     for st in ('mean', 'total')]
+                  #  근처의 census ✅ 열 — 인계 제외 (명시)
+                  + ['path_hop_area_mean', 'path_hop_area_min_mean', 'frac_intact_pct', 'fracture_index', 'n_intact_AM_AM', 'n_total_AM_AM',
+                     'frac_intact_force_AM_P-AM_S_pct', 'n_intact_force_AM_P-AM_P', 'n_total_force_AM_S-AM_S', 'area_SE_SE_total_physics']
+                  #  쌍별 개수 — census 전부 ✅ (① 접촉 묶음 · J20-g) · 접촉 0 쌍 시험 (㉕e · f) 에 필요
+                  + [f'area_{p_}_n' for p_ in ('AM_P_AM_P', 'AM_P_AM_S', 'AM_S_AM_S', 'AM_P_SE', 'AM_S_SE')])
+        for k_ in new_ok:
+            w['verdict'][k_] = '✅ 쓴다(이름 주의)' if 'area' in k_ else '✅ 쓴다'
+        w['why'] = {k_: f'why:{k_}' for k_ in w['verdict']}
+        q1_, q2_ = w['rows']['q1'], w['rows']['q2']
+        #  q1 mono (웹앱 이름 AM_S · SE 100 · AM 11) — F1: 18 + 2 · 50 / 100 = 19 · 면적 = 평균 × 개수 (SE–SE 900 · AM_S–AM_S 11 · AM_S–SE 40)
+        q1_.update(se_se_cn_aug='19.0', se_se_cn_aug_std='2.6', se_se_cn_aug_n_extra='50', se_se_cn_aug_h_spread_sim='1e-05',
+                   area_SE_SE_mean='0.004', area_SE_SE_total='3.6', se_se_cn_eff_area=_eff(3.6),
+                   area_AM_S_AM_S_mean='0.02', area_AM_S_AM_S_total='0.22', am_am_total_area='0.22', am_am_mean_area='0.02',
+                   area_AM_S_SE_mean='0.01', area_AM_S_SE_total='0.4',
+                   path_hop_area_mean='0.5', path_hop_area_min_mean='0.1', frac_intact_pct='50.0', fracture_index='0.2',
+                   n_intact_AM_AM='5', n_total_AM_AM='10', area_SE_SE_total_physics='9.9', **_frf([6, 3, 1, 1, 0]))
+        q1_.update({'area_AM전체_SE_mean': '0.01', 'area_AM전체_SE_total': '0.4'})
+        #  q2 bimodal (AM_P 1 · AM_S 10) — AM_P–AM_P 접촉 0 (개수 0 · 총합 0.0 · 평균 키 없음 = 웹앱 그대로) · 비관통 (eff_area_perc 없음)
+        q2_.update(se_se_cn_aug='17.0', se_se_cn_aug_std='3.1', se_se_cn_aug_n_extra='50', se_se_cn_aug_h_spread_sim='1e-05',
+                   area_SE_SE_mean='0.005', area_SE_SE_total='4.0', se_se_cn_eff_area=_eff(4.0),
+                   area_AM_P_AM_P_n='0', area_AM_P_AM_P_total='0.0',
+                   area_AM_P_AM_S_mean='0.04', area_AM_P_AM_S_total='0.2', area_AM_S_AM_S_mean=repr(0.46 / 17), area_AM_S_AM_S_total='0.46',
+                   am_am_total_area='0.66', am_am_mean_area='0.03',
+                   area_AM_P_SE_mean='0.012', area_AM_P_SE_total='0.36', area_AM_S_SE_mean='0.01', area_AM_S_SE_total='0.5',
+                   **_frf([10, 6, 3, 2, 1]))
+        q2_.update({'area_AM전체_SE_mean': repr(0.86 / 80), 'area_AM전체_SE_total': '0.86',
+                    'frac_intact_force_AM_P-AM_S_pct': '40.0', 'n_intact_force_AM_P-AM_P': '0', 'n_total_force_AM_S-AM_S': '17'})
+        return w
+    _dq11 = [dict(r_, r_SE_um=repr(_R_SE)) for r_ in _dq7]
+    _G567 = 'contact,percolation,f1,fracture,area'
+
+    def _b11(w=None, hv=None, dq=None, groups=_G567):
+        return build_handover(dq or _dq11, hv or _hq10(), webapp=w or _wa11(), webapp_groups=groups)
+    try:
+        _o11, _c11, _r11 = _b11()
+        _e11 = ''
+    except Exception as e:                                                # noqa: BLE001
+        _o11, _c11, _r11, _e11 = [], [], {}, f'{type(e).__name__}: {e}'
+    _m11 = next((r_ for r_ in _o11 if r_['case_id'] == 'q1'), {})
+    _p11 = next((r_ for r_ in _o11 if r_['case_id'] == 'q2'), {})
+    _new11 = (['se_se_cn_aug', 'se_se_cn_aug_std', 'se_se_cn_aug_n_extra', 'se_se_cn_aug_h_spread_sim', 'fracture_index_force',
+               'n_total_AM_AM_force'] + [f'frac_{s_}_force_pct' for s_ in _ST] + [f'n_{s_}_force_AM_AM' for s_ in _ST]
+              + ['se_se_cn_eff_area', 'se_se_cn_eff_area_perc', 'am_am_mean_area', 'am_am_total_area', 'area_SE_SE_mean', 'area_SE_SE_total',
+                 'area_AM_P_SE_mean', 'area_AM_P_AM_P_total', 'area_AM전체_SE_total'])
+    chk('㉕a ★ ⑤⑥⑦ 묶음 — F1 4 · 힘 기반 파괴 12 · 면적 (쌍별 평균 · 총합 · eff_area · AM–AM) 열이 실린다' + (f' — {_e11}' if _e11 else ''),
+        not _e11 and all(c in _c11 for c in _new11))
+    _excl11 = ('path_hop_area_mean', 'path_hop_area_min_mean', 'frac_intact_pct', 'fracture_index', 'n_intact_AM_AM', 'n_total_AM_AM',
+               'frac_intact_force_AM_P-AM_S_pct', 'n_intact_force_AM_P-AM_P', 'n_total_force_AM_S-AM_S', 'area_SE_SE_total_physics')
+    chk('㉕b ★ 명시 제외 — path_hop_area (LHS-32) · δ 판 · 상 쌍별 파괴 · physics 면적은 census ✅ 여도 안 실린다 · wa_excluded 가 사유를 준다',
+        not _e11 and not any(c in _c11 for c in _excl11) and all(wa_excluded(c) for c in _excl11)
+        and not any(wa_excluded(c) for c in _new11) and 'LHS-32' in (wa_excluded('path_hop_area_mean') or ''))
+    try:
+        _c11u = build_handover(_dq11, _hq10(), webapp=_wa11(), webapp_groups=_G567, wa_reviewed_only=False)[1]
+    except Exception as e:                                                # noqa: BLE001
+        _c11u = [f'ERR {type(e).__name__}: {e}']
+    chk('㉕c 검토 목록 밖 경로 (wa_reviewed_only=False) 에서도 제외 열은 안 실린다 — 제외는 묶음 · 검토와 무관하게 먼저',
+        not any(c in _c11u for c in _excl11) and 'se_se_cn_aug' in _c11u)
+    chk('㉕d ★ mono (설계 AM_P · 웹앱 이름 AM_S) — 면적 상별 열은 설계 상 칸 · 없는 상 칸 빈칸 · AM전체 · SE–SE · F1 · 파괴 전체는 그대로',
+        _m11.get('area_AM_P_AM_P_mean') == '0.02' and _m11.get('area_AM_P_AM_P_total') == '0.22' and _m11.get('area_AM_S_AM_S_total') == ''
+        and _m11.get('area_AM_P_SE_total') == '0.4' and _m11.get('area_AM_P_AM_S_mean') == '' and _m11.get('area_AM전체_SE_total') == '0.4'
+        and _m11.get('area_SE_SE_total') == '3.6' and _m11.get('se_se_cn_aug') == '19.0'
+        and _m11.get('fracture_index_force') == repr(round(1 / 11, 4)))
+    chk('㉕e ★ 접촉 0 쌍 (q2 AM_P–AM_P) — 개수 0 · 총합 0.0 (측정된 0) · 평균 빈칸 (N/A — 접촉 0 개에서 평균은 정의되지 않는다)',
+        _p11.get('area_AM_P_AM_P_n') == '0' and _p11.get('area_AM_P_AM_P_total') == '0.0' and _p11.get('area_AM_P_AM_P_mean') == '')
+    _w11z = _wa11()
+    for _k in ('area_AM_P_AM_P_n', 'area_AM_P_AM_P_total'):
+        _w11z['rows']['q2'].pop(_k, None)
+    try:
+        _p11z = next(r_ for r_ in _b11(w=_w11z)[0] if r_['case_id'] == 'q2')
+        _e11z = ''
+    except Exception as e:                                                # noqa: BLE001
+        _p11z, _e11z = {}, f'{type(e).__name__}: {e}'
+    chk('㉕f 옛 배치 (접촉 0 쌍 키 없음) — 두 상이 다 있으면 개수 0 · 총합 0.0 으로 채운다 (J20-h 와 같은 규칙) · 평균은 빈칸' + (f' — {_e11z}' if _e11z else ''),
+        _p11z.get('area_AM_P_AM_P_n') == '0' and _p11z.get('area_AM_P_AM_P_total') == '0.0' and _p11z.get('area_AM_P_AM_P_mean') == '')
+    chk('㉕g 관문 보고 — ⑤ · ⑥ · ⑦ 2 행씩 · 제외 열 수',
+        _r11.get('wa_f1_checked') == 2 and _r11.get('wa_frac_checked') == 2 and _r11.get('wa_area_checked') == 2
+        and _r11.get('wa_excluded_dropped', 0) >= len(_excl11))
+    _dm11 = {d['column']: d for d in column_dictionary(_c11, webapp=_wa11())} if _c11 else {}
+    _g11 = lambda c, k: (_dm11.get(c) or {}).get(k, '')                   # noqa: E731
+    chk('㉕h ★ 열 사전 — F1 항등식 · 10 nm 출처 없는 상수 / 파괴 LHS-31 (마지막 프레임 · K_IC_P 0.3) · δ 판 금지 / 면적 A_dem_geometric · 총량 · '
+        '접촉 0 쌍 평균 N/A · eff_area 식 · J20-s',
+        '2 × se_se_cn_aug_n_extra' in _g11('se_se_cn_aug', 'meaning') and '10 nm' in _g11('se_se_cn_aug', 'caveat')
+        and '출처 없는' in _g11('se_se_cn_aug', 'caveat') and 'LHS-31' in _g11('fracture_index_force', 'caveat')
+        and '마지막 프레임' in _g11('fracture_index_force', 'caveat') and 'K_IC_P 0.3' in _g11('frac_microcrack_force_pct', 'caveat')
+        and 'δ' in _g11('n_total_AM_AM_force', 'caveat') and 'A_dem_geometric' in _g11('area_SE_SE_total', 'caveat')
+        and '총량' in _g11('area_SE_SE_total', 'caveat') and 'N/A' in _g11('area_AM_P_AM_P_mean', 'meaning')
+        and '4π' in _g11('se_se_cn_eff_area', 'meaning') and 'J20-s' in _g11('se_se_cn_aug', 'meaning')
+        and _g11('am_am_total_area', 'source') == 'webapp' and '설계 상 칸' in _g11('area_AM_P_SE_mean', 'meaning'))
+
+    def _w11(q='q1', **kv):
+        w = _wa11()
+        w['rows'][q].update(kv)
+        return w
+    _neg7('㉕i ★ ⑤F1 — aug ≠ se_se_cn + 2 · n_extra / N_SE 이면 거부 (19.5)', lambda: _b11(w=_w11(se_se_cn_aug='19.5')), '⑤F1')
+    _neg7('㉕j ★ ⑤F1 — done 행에 aug 가 비면 거부 (F1 이 꺼진 배치를 N/A 로 싣지 않는다)', lambda: _b11(w=_w11(se_se_cn_aug='')), '⑤F1')
+    _neg7('㉕k ★ ⑥R1 — 단계 개수 합 ≠ n_total_AM_AM_force 이면 거부', lambda: _b11(w=_w11(n_intact_force_AM_AM='7')), '⑥R1')
+    _neg7('㉕l ★ ⑥R2 — 비율이 100 · n/N 에서 반올림 폭 (0.005) 을 넘으면 거부 (+0.02)',
+          lambda: _b11(w=_w11(frac_intact_force_pct=repr(round(600 / 11, 2) + 0.02))), '⑥R2')
+    try:
+        _b11(w=_w11(frac_intact_force_pct=repr(600 / 11)))
+        _ok_r = True
+    except Exception:                                                     # noqa: BLE001
+        _ok_r = False
+    chk('㉕m ⑥R2 — 반올림 안 한 값 (100 · 6/11 그대로) 도 받는다 · 기본 픽스처 = 웹앱처럼 둘째 자리 반올림 (㉕a 가 받는다)', _ok_r)
+    _neg7('㉕n ★ ⑥R2 — fracture_index_force 가 (파편화 + 분쇄)/N 에서 반올림 폭 (5e-5) 을 넘으면 거부', lambda: _b11(w=_w11(fracture_index_force='0.0919')), '⑥R2')
+    _neg7('㉕o ★ ⑥R3 — 힘 기반 전체 > am_am_n_contacts 이면 거부 (fn > 0 AM–AM 접촉 ⊂ 전 AM–AM 접촉)', lambda: _b11(w=_w11(**_frf([7, 3, 1, 1, 0]))), '⑥R3')
+    _neg7('㉕p ★ ⑦A1 — 평균 × 개수 ≠ 총합 이면 거부 (SE–SE)', lambda: _b11(w=_w11(area_SE_SE_total='3.7', se_se_cn_eff_area=_eff(3.7))), '⑦A1')
+    _neg7('㉕q ★ ⑦A1 — 접촉 0 쌍에 0 이 아닌 평균이 있으면 거부', lambda: _b11(w=_w11('q2', area_AM_P_AM_P_mean='0.01')), '⑦A1')
+    _neg7('㉕r ★ ⑦A2 — AM전체–SE 총합 ≠ 상별 합 이면 거부',
+          lambda: _b11(w=_w11('q2', **{'area_AM전체_SE_total': '0.9', 'area_AM전체_SE_mean': repr(0.9 / 80)})), '⑦A2')
+    _neg7('㉕s ★ ⑦A3 — am_am_total_area ≠ AM–AM 쌍 총합 이면 거부', lambda: _b11(w=_w11('q2', am_am_total_area='0.7', am_am_mean_area=repr(0.7 / 22))), '⑦A3')
+    _neg7('㉕t ★ ⑦A3 — am_am_mean_area ≠ am_am_total_area / am_am_n_contacts 이면 거부', lambda: _b11(w=_w11('q2', am_am_mean_area='0.031')), '⑦A3')
+    _neg7('㉕u ★ ⑦A4 — se_se_cn_eff_area ≠ 2 · SE–SE 총합 / (N_SE · 4π r_SE²) 이면 거부', lambda: _b11(w=_w11(se_se_cn_eff_area='0.03')), '⑦A4')
+    _neg7('㉕v ★ ⑦A4 — 설계에 r_SE_um 이 없으면 거부 (eff_area 를 잴 수 없다)', lambda: _b11(dq=_dq7), '⑦A4')
+    _neg7('㉕w ★ ⑦A5 — 비관통 (percolation_pct 0) 인데 eff_area_perc 가 있으면 거부', lambda: _b11(w=_w11('q2', se_se_cn_eff_area_perc='0.01')), '⑦A5')
+    _neg7('㉕x ★ ⑦A5 — 관통인데 eff_area_perc 가 비면 거부', lambda: _b11(w=_w11(se_se_cn_eff_area_perc='')), '⑦A5')
+    try:
+        _c11c = build_handover(_dq11, _hq10(), webapp=dict(_wa11(), stop_after='contact'), webapp_groups='f1,fracture,area')[1]
+    except Exception as e:                                                # noqa: BLE001
+        _c11c = [f'ERR {type(e).__name__}: {e}']
+    chk('㉕y 접촉 단계 배치 (stop_after=contact) 도 f1 · fracture · area 를 받는다 (다 접촉 분석 단계 산출) · 그 묶음만 싣는다 (관문은 웹앱 원 행으로)',
+        'se_se_cn_aug' in _c11c and 'fracture_index_force' in _c11c and 'area_SE_SE_mean' in _c11c
+        and 'se_se_cn' not in _c11c and 'percolation_pct' not in _c11c)
+    chk('㉕z 검토 기록 — 새 열 전부 1저자 검토 (J20-s) · 제외 열은 검토 목록에 없다',
+        all(wa_reviewed(c) and 'J20-s' in (wa_review_note(c) or '') for c in _new11) and not any(wa_reviewed(c) for c in _excl11))
     print(f'\nlhs_design_dataset selftest: {ok}/{ok + len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0
@@ -3371,7 +3776,8 @@ if __name__ == '__main__':
                          '설계행 전부를 배치가 시도했어야 하고 웹앱 porosity = 수확 porosity (같은 프레임) 여야 한다')
     ap.add_argument('--webapp-groups', default=None, metavar='G[,G]',
                     help='(--export-handover --webapp) 웹앱 열을 이 묶음만 싣는다 (쉼표로 여럿) — contact = ① 접촉 위상 · percolation = ② '
-                         '퍼콜레이션 (둘 다 접촉 분석 단계 산출).  `lhs_webapp_batch --stop-after contact|coverage` 산출은 이것 없이는 거부된다')
+                         '퍼콜레이션 · f1 = ⑤ F1 근접쌍 · fracture = ⑥ Auerbach 힘 기반 · area = ⑦ 접촉 면적 (전부 접촉 분석 단계 산출 · J20-s).  '
+                         '`lhs_webapp_batch --stop-after contact|coverage` 산출은 이것 없이는 거부된다')
     ap.add_argument('--census', default='', metavar='TSV',
                     help=f'(--webapp) 전수 판정 census (기본 {DEFAULT_CENSUS_TSV})')
     ap.add_argument('--selftest', action='store_true')

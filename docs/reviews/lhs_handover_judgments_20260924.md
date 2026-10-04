@@ -1092,6 +1092,40 @@
 - 자기 결함 `SELF-82`: ④b 웹앱 시험 E1 이 `axis_values` 의 반환 (= {축 이름표: 값}) 을 키 조각으로 걸러 **빈 dict 끼리** 비교해 늘 PASS 였다 —
   이 묶음에서 두 E1 (④b · ④a) 을 축 키 → 이름표 · 기대값으로 고쳤다.
 
+### J20-s ⑤⑥⑦ 구현 (10-04 밤 · 1저자 *"5,6,7 우선 이어가고"* · 시험 먼저 → 생산 → 웹앱 같은 묶음 · 새 계산 없음 = 10-01 d1ec42fba 값)
+
+- 생성기 `scripts/lhs_design_dataset.py` — 묶음 셋 (`--webapp-groups … f1,fracture,area` · 셋 다 **접촉 분석 단계** 산출 → `stop_after` contact · coverage 배치가 받는다):
+  ⑤ `f1` = `se_se_cn_aug` · `_std` · `_n_extra` · `_h_spread_sim` · ⑥ `fracture` = `fracture_index_force` · `n_total_AM_AM_force` · `frac_<단계>_force_pct` × 5 ·
+  `n_<단계>_force_AM_AM` × 5 (**힘 기반 전체 집계만**) · ⑦ `area` = `area_<쌍>_mean` · `_total` (쌍 7) · `se_se_cn_eff_area` · `_perc` · `am_am_mean_area` ·
+  `am_am_total_area` (쌍별 개수 `_n` 은 ① 그대로).
+- **명시 제외** (`WA_EXCLUDED` — census ✅ 여도 · 묶음 · 검토 여부와 무관하게 먼저 · 실데이터 80 열): `path_hop_area_*` (`LHS-32` 선별 표본) · δ 판 파괴
+  (`frac_<단계>_pct` · `fracture_index` · `n_<단계>_AM_AM` · `n_total_AM_AM`) · 상 쌍별 파괴 (분모 max(n, 1) 이라 접촉 0 쌍도 0 % — N/A 와 0 을 못 가르고,
+  mono 상 이름 규약을 이 열에 옮기는 관문이 없다) · physics 면적 (J20-m).
+- **관문** (웹앱 원 행으로 잰다 — 짝 열이 표에 없어도):
+
+  | 관문 | 식 | 10-01 실측 (130 · 64) |
+  |---|---|---|
+  | ⑤F1 | aug = se_se_cn + 2 · n_extra / N_SE (근접쌍 하나가 두 입자에 하나씩) · se_se_cn 이 있는데 aug 가 비면 거부 | 상대차 ≤ 2.2e-16 |
+  | ⑥R1–R3 | 단계 개수 합 = 전체 · 비율 = round(100 n / N, 2) (반폭 0.005) · 지수 = round((파편화 + 분쇄) / N, 4) (5e-5) · 전체 ≤ am_am_n_contacts | 합 정확 · ≤ 0.005 · ≤ 5e-5 · 전체 = am_am_n_contacts 194/194 |
+  | ⑦A1 | 평균 × 개수 = 총합 · 개수 0 이면 총합 0 · 평균 없음 (AM전체–SE 평균 0 대입은 빈칸으로) | ≤ 2.6e-16 · 접촉 0 쌍 130 의 3 · 64 의 6 |
+  | ⑦A2 · A3 | AM전체–SE = 상별 합 (총합 · 개수) · AM–AM 총합 = 쌍 합 · am_am 평균 = 총합 / 개수 | 0 · ≤ 3e-14 · ≤ 2.3e-16 |
+  | ⑦A4 | eff_area = 2 · area_SE_SE_total / (N_SE · 4π r_SE²) (설계 r_SE · SE 단분산) | ≤ 2.2e-12 |
+  | ⑦A5 | eff_area_perc 빈칸 ⟺ percolation_pct 0 | 194/194 (비관통 24) |
+
+- 접촉 0 쌍: 총합도 측정된 0 으로 채운다 (J20-h 와 같은 규칙 · 옛 배치용) · 평균은 N/A 빈칸.
+- **실데이터 메모리 실행** (파일 안 씀 · `contact,percolation,f1,fracture,area`): 130 → 214 열 (⑤⑥⑦ 34) · 관문 130/130 · 64 → 216 열 · 64/64 · 제외 열이 표에 0 ·
+  빈칸 = mono 의 없는 상 칸 (130 의 30 · 64 의 16) · 접촉 0 쌍 평균 · 비관통 eff_area_perc (24) 뿐.
+- 열 사전 한정어 (`WA_DEFINE` · 위 판정 표와 같은 문구): F1 = h 10 nm 출처 없는 모델 상수 · SE–SE 만 · 반올림 쌍 · ⑥ = LHS-31 ①–⑥ (`CAVEAT_LHS31`) · ⑦ = A_dem_geometric ·
+  총량 주의 · 접촉 0 쌍 평균 N/A · eff_area 식.
+- 시험: `lhs_design_dataset --selftest` **233/233** (㉕a–z 26 = 먼저 26 실패 → 구현 · 옛 시험 셋 갱신: ⑲s · ㉒e 의 "모르는 묶음" = fracture → stress · ⑳d 검토 판별 =
+  ⑤⑦ 열 검토됨 · path_hop_area 아님).
+- 웹앱 같은 묶음 (J20-l) — `webapp/test_s567_labels.py` **13/13** (먼저 0/13): F1 툴팁의 근거 없는 서술 (*"10 nm 는 Tabor … lateral spread 거리"*) 철회 → 출처 없는 모델 상수 ·
+  항등식 · 오타 정정 · 경로 접촉 면적 (케이스 Path Hop Area · Bottleneck · 그룹 Hop Area · Bottleneck) = 선별 표본 · 인계 제외 (LHS-32) · 파괴 (Severe % · fracture_index ·
+  쉬운 설명 둘) = LHS-31 (마지막 프레임 → 하한 · 벽 · 판 제외 · K_IC_P 0.3) · F2 eff_area 식 · AM-AM Mean Area = A_dem_geometric (≈ 2 배).
+- ⚠ 열린 것 (이 묶음에서 바꾸지 않음): 파괴 툴팁의 *"post-compaction NCM 1–5 % (de Vasconcelos 2019, Quinn 2020)"* · `fracture_model.py` 머리 주석의 인용 (Liu 2020 · Quinn 2020 ·
+  Lawn 1998) = litdb 정본 카드 확인 전 [미확인] (규율 ⑥ · LHS-31 노트 그대로).
+- 인계표 재생성 (v1.2) 은 Codex 뒤 (순서판 4번).
+
 
 ## 인계 판정 (지금)
 

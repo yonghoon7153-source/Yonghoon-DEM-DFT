@@ -1891,13 +1891,13 @@ const METRIC_TIPS = {
   'Path Hop Area mean(μm²)': {
     title: 'Path Hop Area (경로 접촉면적 평균)',
     formula: 'Hop Area mean = 평균(경로상 각 SE-SE 접촉의 면적)',
-    desc: '이온이 이동하는 경로에서 각 SE-SE 접촉점의 평균 접촉 면적(μm²)입니다.',
+    desc: '이온이 이동하는 경로에서 각 SE-SE 접촉점의 평균 접촉 면적(μm²)입니다. ⚠ 덩어리마다 고른 경로 30 개 (best · mean · worst 10) 의 평균 = 선별 표본 통계 — LHS 인계에서는 뺀다 (LHS-32 · J20-s ⑦).',
     meaning: '접촉 면적이 클수록 그 지점에서의 이온 전도 저항이 낮습니다. 이 값이 크면 경로 전체가 "넓은 통로"로 구성되어 있다는 뜻입니다.'
   },
   'Path Bottleneck(μm²)': {
     title: 'Path Bottleneck (경로 최소 접촉면적)',
     formula: 'Bottleneck = 평균(각 경로에서 가장 작은 SE-SE 접촉 면적)',
-    desc: '각 경로에서 가장 좁은 접촉점(병목)의 면적을 경로들에 대해 평균한 값(μm²)입니다.',
+    desc: '각 경로에서 가장 좁은 접촉점(병목)의 면적을 경로들에 대해 평균한 값(μm²)입니다. ⚠ 덩어리마다 고른 경로 30 개 (best · mean · worst 10) 의 평균 = 선별 표본 통계 — LHS 인계에서는 뺀다 (LHS-32 · J20-s ⑦).',
     meaning: '전체 저항은 가장 좁은 지점(bottleneck)에 의해 결정됩니다. 호스에서 가장 좁은 부분이 수압을 결정하는 것과 같은 원리입니다. 이 값이 작으면 경로 평균이 좋아도 실제 전도 성능은 낮습니다.'
   },
   'Path Conductance(μm²)': {
@@ -2303,8 +2303,8 @@ const METRIC_TIPS = {
   },
   'SE-SE CN (area-weighted)    [F2]': {
     title: 'SE-SE CN — Area-weighted (F2 size-aware)',
-    formula: 'cn_eff_area = Σ A_SE-SE / Σ 4πR²_SE',
-    desc: 'Standard CN (count-based) 대신 *총 SE-SE 접촉 면적* 을 *총 SE 표면적* 으로 나눈 값. Surface-fraction 표현.',
+    formula: 'cn_eff_area = Σ A_SE-SE / Σ 4πR²_SE = 2 × area_SE_SE_total / (N_SE · 4π r_SE²) (접촉 하나를 두 입자에 하나씩)',
+    desc: 'Standard CN (count-based) 대신 *총 SE-SE 접촉 면적* 을 *총 SE 표면적* 으로 나눈 값. Surface-fraction 표현. 면적 = LIGGGHTS c_cpl[22] (두 구 교차원 넓이의 정확식 = A_dem_geometric · 작은 δ 에서 Hertz πR*δ 의 ≈ 2 배 · J20-s ⑦).',
     meaning: '값 ≈ 0.14 means 평균 SE 표면의 14% 가 다른 SE 와 접촉. Polydisperse (큰/작은 SE 혼재) 시스템에서 더 fair (작은 SE 가 가중되지 않음).'
   },
   'SE-SE CN (perc area-w)      [F2]': {
@@ -2315,14 +2315,14 @@ const METRIC_TIPS = {
   },
   'SE-SE CN (plastic-augmented) [F1]': {
     title: 'SE-SE CN — Plastic-augmented (F1 deformation-aware)',
-    formula: 'CN_aug = CN_standard + (near-miss pairs within h_spread = 10 nm)',
-    desc: 'LIGGGHTS 는 δ > 0 인 *elastic* contact 만 잡음. F1 은 *gap < 10 nm* 의 near-miss pair 도 carbon: plastic flow 시 닿을 가능성 있다고 가정해 추가 카운트. 근접쌍 탐색은 x · y 주기 영상 포함 (최소영상 · 2026-10-01 · LHS-22) — 옛 분석은 경계 너머 근접쌍을 빠뜨려 약간 작게 나왔다 (재분석하면 값이 바뀐다).',
+    formula: 'CN_aug = CN_standard + 2 × n_extra / N_SE (근접쌍 하나가 두 입자에 하나씩 · 표면 틈 ≤ h_spread = 10 nm)',
+    desc: 'LIGGGHTS 는 δ > 0 인 *elastic* contact 만 잡음. F1 은 *gap < 10 nm* 의 near-miss pair 도 소성 유동 (plastic flow) 시 닿을 수 있다고 가정해 추가로 센다. ⚠ 10 nm (= 2 × h_film_min) 는 출처 없는 모델 상수 — 감도 기술자로만 읽는다 (LHS 인계 열 사전과 같은 한정어 · J20-s ⑤). 근접쌍 탐색은 x · y 주기 영상 포함 (최소영상 · 2026-10-01 · LHS-22) — 옛 분석은 경계 너머 근접쌍을 빠뜨려 약간 작게 나왔다 (재분석하면 값이 바뀐다).',
     meaning: 'CN +0.1-0.2 정도 증가. DEM 이 *놓친* plastic deformation 효과 정량화. 이 case 는 well-packed 라 변화 +2% 미만.'
   },
   '(F1 extra near-contact pairs)': {
     title: 'F1 — Near-contact pair count',
     formula: 'gap < 10 nm (= 2 × h_film_min) 인 SE-SE pair 수',
-    desc: 'F1 augmentation 으로 추가된 *near-miss* pair 의 절대 수. 10 nm 는 Tabor plastic film 의 typical lateral spread 거리.',
+    desc: 'F1 augmentation 으로 추가된 *near-miss* pair 의 절대 수. ⚠ 10 nm (= 2 × h_film_min) 는 출처 없는 모델 상수 (J20-s ⑤) — 옛 문구의 "Tabor 막의 옆 퍼짐 거리" 는 근거가 없어 지웠다.',
     meaning: '이 수가 클수록 DEM 의 elastic 가정이 plastic 현실과 더 차이남. ~10,000 정도면 mid-magnitude (이 case 는 well-percolated 라 σ 영향 거의 없음).'
   },
 
@@ -2360,13 +2360,13 @@ const METRIC_TIPS = {
   'Severe %': {
     title: 'Severe — Fragmentation + Pulverization 합',
     formula: 'severe = (n_fragmentation + n_pulverization) / n_total × 100',
-    desc: '심각하게 손상된 접촉의 비율 (frag + pulv). 두 컬럼은 분류기 차이일 뿐, P_c와 F_DEM 자체는 동일.',
+    desc: '심각하게 손상된 접촉의 비율 (frag + pulv). 두 컬럼은 분류기 차이일 뿐, P_c와 F_DEM 자체는 동일. ⚠ LHS-31 한정 (Force 열): 마지막 프레임 힘이라 압축 중 최대가 아니다 → 손상 **하한** · 벽 · 판 접촉 제외 (판에 닿은 AM_P 의 최대 하중 빠짐) · K_IC_P 0.3 = 소결 펠릿값 (이차입자 0.102 의 3 배 — P_c ∝ K_IC²) · δ 열과 나란히 인용 금지 (J20-s ⑥).',
     meaning: '문헌 비교 기준: post-compaction NCM에서 1–5% 정도가 일반적 (de Vasconcelos 2019, Quinn 2020). Force-based(권장) 값이 5%를 넘으면 σ_e Stage E에서 큰 손실 가능.'
   },
   'fracture_index (severe/total)': {
     title: 'Per-case fracture index',
     formula: 'fracture_index = (n_frag + n_pulv) / n_total ∈ [0, 1]',
-    desc: '이 case 의 severe contact 비율. 0 = 모두 정상, 1 = 모두 심각. δ/Force 두 컬럼은 stage 분류 cutoff 차이.',
+    desc: '이 case 의 severe contact 비율. 0 = 모두 정상, 1 = 모두 심각. δ/Force 두 컬럼은 stage 분류 cutoff 차이. ⚠ LHS-31 한정 (Force 열): 마지막 프레임 힘이라 압축 중 최대가 아니다 → 손상 **하한** · 벽 · 판 접촉 제외 (판에 닿은 AM_P 의 최대 하중 빠짐) · K_IC_P 0.3 = 소결 펠릿값 (이차입자 0.102 의 3 배 — P_c ∝ K_IC²) · δ 열과 나란히 인용 금지 (J20-s ⑥).',
     meaning: 'Section 5 validity filter cutoff: < 0.10. Force-based(권장)가 표준.'
   },
 
