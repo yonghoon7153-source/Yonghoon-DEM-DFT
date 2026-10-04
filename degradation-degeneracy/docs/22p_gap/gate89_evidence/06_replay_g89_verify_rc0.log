@@ -1,0 +1,10 @@
+start 2026-10-04T06:56:49Z HEAD 14978adb0c0314b6cab2f6bf5abd0842537f0385 dirty=1 (작업 트리 = 등록 -g89 둘 + EXPECT · -g88 증인 한 건)
+sandbox: /tmp/mutation_replay__2b40acl/degradation-degeneracy
+
+물었다        finalize-rechecks-the-durable-input-binding-g89 node 4 · -k test_gate89 and d02
+물었다        finalize-still-binds-the-receipt-package-to-the-consumer-g89 node 1 · -k test_gate89 and d03
+
+scenario_total 2 · scenario_executable 2 · scenario_declared 0 · site_total 2 · site_executable 2 · site_declared 0 · ran 2
+실행한 변이 2건이 전부 기대 node 를 call 단계에서 물었다
+replay rc=0
+end 2026-10-04T06:57:27Z HEAD 14978adb0c0314b6cab2f6bf5abd0842537f0385 dirty=1

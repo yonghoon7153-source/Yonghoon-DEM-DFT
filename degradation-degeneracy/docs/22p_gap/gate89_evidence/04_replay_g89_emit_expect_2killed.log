@@ -1,0 +1,39 @@
+start 2026-10-04T06:54:33Z HEAD 14978adb0c0314b6cab2f6bf5abd0842537f0385 dirty=1 (작업 트리 = 등록 -g89 둘)
+sandbox: /tmp/mutation_replay_kzf64pw1/degradation-degeneracy
+
+★ 안 물었다    finalize-rechecks-the-durable-input-binding-g89 node 4 · -k test_gate89 and d02
+★ 안 물었다    finalize-still-binds-the-receipt-package-to-the-consumer-g89 node 1 · -k test_gate89 and d03
+
+=== 관측한 EXPECT (그대로 붙여 넣어라) ===
+{
+    "finalize-rechecks-the-durable-input-binding-g89": {
+        "fail": [
+            "tests/test_gate89_finalize_input_binding.py::test_d02_finalize_refuses_a_fit_receipt_whose_inputs_changed_after_recording[inputs_deleted]",
+            "tests/test_gate89_finalize_input_binding.py::test_d02_finalize_refuses_a_fit_receipt_whose_inputs_changed_after_recording[inputs_extra_key]",
+            "tests/test_gate89_finalize_input_binding.py::test_d02_finalize_refuses_a_fit_receipt_whose_inputs_changed_after_recording[inputs_value_not_hex]",
+            "tests/test_gate89_finalize_input_binding.py::test_d02_finalize_refuses_a_fit_receipt_whose_inputs_changed_after_recording[inputs_value_other_hex64]"
+        ],
+        "witness": {
+            "tests/test_gate89_finalize_input_binding.py::test_d02_finalize_refuses_a_fit_receipt_whose_inputs_changed_after_recording[inputs_deleted]": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate89_finalize_input_binding.py::test_d02_finalize_refuses_a_fit_receipt_whose_inputs_changed_after_recording[inputs_extra_key]": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate89_finalize_input_binding.py::test_d02_finalize_refuses_a_fit_receipt_whose_inputs_changed_after_recording[inputs_value_not_hex]": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate89_finalize_input_binding.py::test_d02_finalize_refuses_a_fit_receipt_whose_inputs_changed_after_recording[inputs_value_other_hex64]": "Failed: DID NOT RAISE PreserveError"
+        }
+    },
+    "finalize-still-binds-the-receipt-package-to-the-consumer-g89": {
+        "fail": [
+            "tests/test_gate89_finalize_input_binding.py::test_d03_a_self_consistent_receipt_forgery_after_recording_is_refused_by_the_consumer_binding"
+        ],
+        "witness": {
+            "tests/test_gate89_finalize_input_binding.py::test_d03_a_self_consistent_receipt_forgery_after_recording_is_refused_by_the_consumer_binding": "Failed: DID NOT RAISE PreserveError"
+        }
+    }
+}
+
+scenario_total 2 · scenario_executable 2 · scenario_declared 0 · site_total 2 · site_executable 2 · site_declared 0 · ran 2
+
+=== 문제 ===
+finalize-rechecks-the-durable-input-binding-g89: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+finalize-still-binds-the-receipt-package-to-the-consumer-g89: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+replay rc=1
+end 2026-10-04T06:55:30Z HEAD 14978adb0c0314b6cab2f6bf5abd0842537f0385 dirty=1

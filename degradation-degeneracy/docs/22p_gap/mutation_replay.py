@@ -2292,6 +2292,18 @@ MUTANTS = [
      '    if claim is None or claim.required_phases() != FIT_ONLY_PHASES:\n',
      '    if claim is None:  # 변이: v2 claim 에도 밖 입력 결속을 싣는다 (v2 receipt 바이트가 바뀐다)\n',
      "f00_06"),
+    # ── 89차 G88-N1 한정 보완 (고정 표 §15-4 · 원장 §132) ──
+    ("finalize-rechecks-the-durable-input-binding-g89", PRESERVE,          # §15-2: 최종화가 같은 snapshot 의 결속을 다시 본다
+     '                _assert_external_input_binding(_fit_ent.get("receipt") or {})\n',
+     '                pass  # 변이: 최종화의 durable 입력 결속 재검사를 끈다\n',
+     "test_gate89 and d02"),
+    # 같은 자리를 -g88 (`finalize-binds-the-receipt-package-to-the-consumer-g88`) 도 끈다 — 그 선택자 (f03_06 묶음 digest 단독
+    # 변조) 는 이제 새 검사가 다른 이유로 잡는다 (§15-4 증인 갱신). 새 검사를 **통과하는** 자기일관 위조 (d03) 에서는 이 비교만
+    # 남는다 — 그것이 여전히 무는가를 따로 고정한다.
+    ("finalize-still-binds-the-receipt-package-to-the-consumer-g89", PRESERVE,  # §15-3 d03
+     '                        and secrets.compare_digest(str(_rc_pkg), str(_ext))):\n',
+     '                        ):  # 변이: receipt 묶음 ↔ 소비 결속 대조를 끈다 (89차 d03 — 자기일관 위조)\n',
+     "test_gate89 and d03"),
 ]
 
 #: 여러 지점을 **함께** 되돌려야 관측되는 변이 (심층 방어라 하나만 지우면
@@ -7075,13 +7087,19 @@ EXPECT: dict = {
                 "Failed: DID NOT RAISE PreserveError",
         }
     },
+    # ★ 89차 §15-4 — 증인이 바뀌었다 (`-k finalize-binds-the-receipt-package-to-the-consumer-g88 --emit-expect` 관측값 ·
+    #   `gate89_evidence/05`). 원래 증인은 `Failed: DID NOT RAISE PreserveError` 였다. G88-N1 의 새 검사 (`finalize_leg` 가
+    #   같은 snapshot 의 fit receipt 에 `_assert_external_input_binding`) 가 묶음 digest **단독** 변조를 결속 이유 ("자기모순")
+    #   로 잡으므로, 이 비교를 꺼도 거부는 일어나고 이유 대조만 실패한다 — 변이 본문 · `-k` · fail node 는 그대로. 이 비교가
+    #   여전히 필요함은 새 검사를 **통과하는** 자기일관 위조로 `finalize-still-binds-the-receipt-package-to-the-consumer-g89`
+    #   (d03) 가 따로 증명한다.
     "finalize-binds-the-receipt-package-to-the-consumer-g88": {
         "fail": [
             "tests/test_gate88_fit_only_lifecycle.py::test_f03_06_a_self_consistent_binding_forgery_is_refused[receipt_package_tampered]",
         ],
         "witness": {
             "tests/test_gate88_fit_only_lifecycle.py::test_f03_06_a_self_consistent_binding_forgery_is_refused[receipt_package_tampered]":
-                "Failed: DID NOT RAISE PreserveError",
+                "AssertionError: 거부 이유가 receipt 묶음 ↔ 소비 결속 대조가 아니다",
         }
     },
     "fit-input-binding-is-only-for-fit-only-claims-g88": {
@@ -7108,6 +7126,34 @@ EXPECT: dict = {
         ],
         "witness": {
             "tests/test_gate88_fit_only_lifecycle.py::test_f03_06_a_self_consistent_binding_forgery_is_refused[inputs_not_hex]":
+                "Failed: DID NOT RAISE PreserveError",
+        }
+    },
+    # ── 89차 G88-N1 한정 보완 (고정 표 §15-4 · 관측: 2026-10-04 `-k g89 --emit-expect` · `gate89_evidence/04` · 2/2 사망) ──
+    "finalize-rechecks-the-durable-input-binding-g89": {
+        "fail": [
+            "tests/test_gate89_finalize_input_binding.py::test_d02_finalize_refuses_a_fit_receipt_whose_inputs_changed_after_recording[inputs_deleted]",
+            "tests/test_gate89_finalize_input_binding.py::test_d02_finalize_refuses_a_fit_receipt_whose_inputs_changed_after_recording[inputs_extra_key]",
+            "tests/test_gate89_finalize_input_binding.py::test_d02_finalize_refuses_a_fit_receipt_whose_inputs_changed_after_recording[inputs_value_not_hex]",
+            "tests/test_gate89_finalize_input_binding.py::test_d02_finalize_refuses_a_fit_receipt_whose_inputs_changed_after_recording[inputs_value_other_hex64]",
+        ],
+        "witness": {
+            "tests/test_gate89_finalize_input_binding.py::test_d02_finalize_refuses_a_fit_receipt_whose_inputs_changed_after_recording[inputs_deleted]":
+                "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate89_finalize_input_binding.py::test_d02_finalize_refuses_a_fit_receipt_whose_inputs_changed_after_recording[inputs_extra_key]":
+                "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate89_finalize_input_binding.py::test_d02_finalize_refuses_a_fit_receipt_whose_inputs_changed_after_recording[inputs_value_not_hex]":
+                "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate89_finalize_input_binding.py::test_d02_finalize_refuses_a_fit_receipt_whose_inputs_changed_after_recording[inputs_value_other_hex64]":
+                "Failed: DID NOT RAISE PreserveError",
+        }
+    },
+    "finalize-still-binds-the-receipt-package-to-the-consumer-g89": {
+        "fail": [
+            "tests/test_gate89_finalize_input_binding.py::test_d03_a_self_consistent_receipt_forgery_after_recording_is_refused_by_the_consumer_binding",
+        ],
+        "witness": {
+            "tests/test_gate89_finalize_input_binding.py::test_d03_a_self_consistent_receipt_forgery_after_recording_is_refused_by_the_consumer_binding":
                 "Failed: DID NOT RAISE PreserveError",
         }
     },

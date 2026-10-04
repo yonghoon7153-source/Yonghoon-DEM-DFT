@@ -1,0 +1,23 @@
+start 2026-10-04T06:55:40Z HEAD 14978adb0c0314b6cab2f6bf5abd0842537f0385 dirty=1 (작업 트리 = 등록 -g89 둘 · -g88 EXPECT 는 아직 88차 그대로)
+sandbox: /tmp/mutation_replay_r8nqqicd/degradation-degeneracy
+
+★ 안 물었다    finalize-binds-the-receipt-package-to-the-consumer-g88 node 1 · -k f03_06 and receipt_package_tampered
+
+=== 관측한 EXPECT (그대로 붙여 넣어라) ===
+{
+    "finalize-binds-the-receipt-package-to-the-consumer-g88": {
+        "fail": [
+            "tests/test_gate88_fit_only_lifecycle.py::test_f03_06_a_self_consistent_binding_forgery_is_refused[receipt_package_tampered]"
+        ],
+        "witness": {
+            "tests/test_gate88_fit_only_lifecycle.py::test_f03_06_a_self_consistent_binding_forgery_is_refused[receipt_package_tampered]": "AssertionError: 거부 이유가 receipt 묶음 ↔ 소비 결속 대조가 아니다"
+        }
+    }
+}
+
+scenario_total 1 · scenario_executable 1 · scenario_declared 0 · site_total 1 · site_executable 1 · site_declared 0 · ran 1
+
+=== 문제 ===
+finalize-binds-the-receipt-package-to-the-consumer-g88: tests/test_gate88_fit_only_lifecycle.py::test_f03_06_a_self_consistent_binding_forgery_is_refused[receipt_package_tampered] 이 빨개졌지만 **선언한 이유**가 아니다 — 증인 'Failed: DID NOT RAISE PreserveError' 이 실패 메시지에 없다 ('AssertionError: 거부 이유가 receipt 묶음 ↔ 소비 결속 대조가 아니다')
+replay rc=1
+end 2026-10-04T06:56:01Z HEAD 14978adb0c0314b6cab2f6bf5abd0842537f0385 dirty=1
