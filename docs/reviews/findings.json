@@ -2693,7 +2693,7 @@
    "found_by": "codex",
    "opened_in": "docs/reviews/codex_verdict_dem_stack_L45_20260913.md",
    "title": "τ 의 **분모·온도·라벨이 소비자마다 다르다** (grade 가 σ_grain 3.0 고정)",
-   "note": "(Codex 라벨: **P2-L4-04**)\ngrade `tau_eff = sqrt(phi_SE * **3.0** / sigma_selected)` (`grade_engine.py:893`·`:913`) 인데 앱은 **baseline 온도에 맞춘 sigma_grain** 을 쓴다 (`webapp/app.py:2503`·`:6705`).\n★ Codex: 모든 이온 sigma 와 대응 grain 을 **x4** 하면 앱 tau_eff 는 **3.464101615 그대로**인데 grade 는 **3.464101615 → 1.732050808**, 등급 **B- → A**.  공통 스케일 불변성 검사다.\n그리고 grade overhead = 2 vs 앱 eff/Dijkstra = 2.309401 — **서로의 대체 열이 아니고** 등록 Dijkstra target 도 아니다.  ⚠ grade overhead 는 **저항비의 제곱근**이라 저항비 자체로 설명하면 틀린다.\n⚠ `:340` Bruggeman overestimation 과 `:921` constriction fraction 은 **L2-07·L2-08 의 소비자**다 (1-f 로 옮길 뿐 소산 분율을 새로 재지 않는다).  신규 P1 으로 재계상하지 않았다.\n\n**수정 (라벨만 — 계산 불변)** `62e67e02`: 세 τ 축의 라벨·식·뜻에 **`σ_grain 3.0 고정`** 을 박고, 옛 문구 *\"app.py 표시값과 동일 공식\"* 을 걷어냈다.  Codex 의 공통 스케일 불변성 반례(모든 σ_ion·grain 을 ×4 → 앱 τ **3.464101615** 그대로, grade 는 **3.464101615 → 1.732050808**, 등급 **B− → A**)를 설명에 적었다.  overhead 는 **√(σ_bulk_net/σ_full)** = **저항비의 제곱근**이라고 명시하고(저항비 자체로 읽으면 틀린다), τ_bulk 가 **τ_Dijkstra 의 대체 열이 아니라는** 것도 적었다 (grade overhead 2 ↔ 앱 eff/Dijkstra 2.309401).\n★ 회귀 ②e 는 **라벨이 말하는 3.0 이 실제 코드에 있는지**까지 본다 — 라벨만 고치면 그것도 거짓말이 되기 때문이다.\n⚠ 판정문의 한정어 보존 — `:340`·`:921` 은 **L2-07·L2-08 의 소비자**이지 신규 P1 이 아니다.  ★ 10-04 밤 TAU-03: 라벨 고침 (3.0 고정을 정직하게 표기) → **계산 고침** — 등급 τ · τ_bulk · overhead 가 웹앱과 같은 짝 σ₀ (`se_material.sigma_grain_context`) · σ 와 σ₀ 를 함께 ×4 해도 불변 (시험 G2 · grade selftest ②e · Codex 반례 3.4641 → 1.7321 이 닫힘).",
+   "note": "(Codex 라벨: **P2-L4-04**)\ngrade `tau_eff = sqrt(phi_SE * **3.0** / sigma_selected)` (`grade_engine.py:893`·`:913`) 인데 앱은 **baseline 온도에 맞춘 sigma_grain** 을 쓴다 (`webapp/app.py:2503`·`:6705`).\n★ Codex: 모든 이온 sigma 와 대응 grain 을 **x4** 하면 앱 tau_eff 는 **3.464101615 그대로**인데 grade 는 **3.464101615 → 1.732050808**, 등급 **B- → A**.  공통 스케일 불변성 검사다.\n그리고 grade overhead = 2 vs 앱 eff/Dijkstra = 2.309401 — **서로의 대체 열이 아니고** 등록 Dijkstra target 도 아니다.  ⚠ grade overhead 는 **저항비의 제곱근**이라 저항비 자체로 설명하면 틀린다.\n⚠ `:340` Bruggeman overestimation 과 `:921` constriction fraction 은 **L2-07·L2-08 의 소비자**다 (1-f 로 옮길 뿐 소산 분율을 새로 재지 않는다).  신규 P1 으로 재계상하지 않았다.\n\n**수정 (라벨만 — 계산 불변)** `62e67e02`: 세 τ 축의 라벨·식·뜻에 **`σ_grain 3.0 고정`** 을 박고, 옛 문구 *\"app.py 표시값과 동일 공식\"* 을 걷어냈다.  Codex 의 공통 스케일 불변성 반례(모든 σ_ion·grain 을 ×4 → 앱 τ **3.464101615** 그대로, grade 는 **3.464101615 → 1.732050808**, 등급 **B− → A**)를 설명에 적었다.  overhead 는 **√(σ_bulk_net/σ_full)** = **저항비의 제곱근**이라고 명시하고(저항비 자체로 읽으면 틀린다), τ_bulk 가 **τ_Dijkstra 의 대체 열이 아니라는** 것도 적었다 (grade overhead 2 ↔ 앱 eff/Dijkstra 2.309401).\n★ 회귀 ②e 는 **라벨이 말하는 3.0 이 실제 코드에 있는지**까지 본다 — 라벨만 고치면 그것도 거짓말이 되기 때문이다.\n⚠ 판정문의 한정어 보존 — `:340`·`:921` 은 **L2-07·L2-08 의 소비자**이지 신규 P1 이 아니다.  ★ 10-04 밤 TAU-03: 라벨 고침 (3.0 고정을 정직하게 표기) → **계산 고침** — 등급 τ · τ_bulk · overhead 가 웹앱과 같은 짝 σ₀ (`se_material.sigma_grain_context`) · σ 와 σ₀ 를 함께 ×4 해도 불변 (시험 G2 · grade selftest ②e · Codex 반례 3.4641 → 1.7321 이 닫힘).  계산 고침 커밋 = 14ac9b344 (claimed_fixed_sha 는 첫 라벨 커밋 그대로 둔다 — 검증자는 두 커밋을 같이 본다).",
    "evidence_tests": [
     "scripts/grade_engine.py",
     "webapp/test_tau_grade_unify.py G2"
@@ -6855,17 +6855,18 @@
   {
    "id": "TAU-03",
    "severity": "P1",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "claude (10-03 · τ 적대 리뷰 셋 — 코드 · 문헌 · 물리 — 반영 판단 메모 v2 §4)",
    "opened_in": "docs/reviews/tau_conventions_judgment_v2_20261003.md",
    "title": "**\"τ_Laplace,eff\" 한 이름에 최소 다섯 변형**: 웹앱 H · 웹앱 P (raw + T 짝 σ₀) · 등급 (stage_e_physics → physics → stage_e → raw + 3.0) · COMSOL 2D (stage_e_physics → physics → raw — stage_e 없음 + 3.0) · regime DB (raw H + 3.0).  등급 / 웹앱 H 0.852–1.584 (1.227) 의 주원인은 **모드 불일치 (156/157)** 다 · 재료 인자는 1/157.  `grade_engine.py:925` \"same formula as webapp/app.py:2026\" 은 낡은 줄 번호이고 :169 \"같은 공식이 아니다\" 와 모순이다",
-   "note": "자리: `app.py:2599–2612` · `_sigma_grain_context` :7495 · `grade_engine.py:775–784` · :925 · :932 · `export_comsol_2d.py:48` · 69–70 · `build_tau_regime_db.py:28` · 90 · 95  ·  시험 먼저 → 최소 수정: 같은 metrics → 등급 값 == 웹앱 값 (모드별) · σ_grain ×4 → T 불변 (등급 툴팁의 L4-04 예) → 한 도우미 · Stage-E 판에서 \"τ\" 이름 제거  ·  웹앱 짝: 등급 표 · 그룹 비교 `grade:` 파라미터.  등재 2026-10-03 = 결정 16 실행 1단계 (1저자 비준 10-03 · 판단 메모 v2 §4 표 그대로 옮김).  ⛔ 공통 제약 (메모 §4 머리): S3 봉인 모듈 수정은 재봉인 강제 · f/T/τ 는 봉인 밖 새 도우미 · 코드 → 웹앱 → 게이트 → 커밋 한 묶음 (J20-l).  ★ 10-04 밤 ②b 구현 (1저자 비준 *\"권고대로\"* · 등급값 보고 = case_master 157: τ 축 107 · overhead 122 · 종합 3 바뀜): 한 도우미 `tau_flux.tau2_value` · `tau2_from_metrics` (원 솔버 σ · 모드 명시 · physics 없으면 None) + `se_material.sigma_grain_context` (웹앱에서 옮긴 짝 σ₀) — 웹앱 τ 블록 · 등급 τ · τ_bulk · overhead (Hertz) · COMSOL 2D (hertz · physics 두 모드 행 f_ion_<mode> · tau2_ion_<mode> + Stage-E 행 sigma_i_stageE = τ 이름 없음 · 짝 아님 경고) · regime DB 가 같은 식.  옛 COMSOL 행 sigma_i · tau2 · f_ion · tau_Laplace_eff 없음.  시험 webapp/test_tau_grade_unify.py 19/19 (옛 코드 1/19 — G8 ASR 그대로만) · test_tau_labels F1 · F2 · J2 · J3 를 모드별 행으로 갱신 (43/43) · grade_engine selftest ② 값 검사로.  sha 는 다음 원장 갱신.",
+   "note": "자리: `app.py:2599–2612` · `_sigma_grain_context` :7495 · `grade_engine.py:775–784` · :925 · :932 · `export_comsol_2d.py:48` · 69–70 · `build_tau_regime_db.py:28` · 90 · 95  ·  시험 먼저 → 최소 수정: 같은 metrics → 등급 값 == 웹앱 값 (모드별) · σ_grain ×4 → T 불변 (등급 툴팁의 L4-04 예) → 한 도우미 · Stage-E 판에서 \"τ\" 이름 제거  ·  웹앱 짝: 등급 표 · 그룹 비교 `grade:` 파라미터.  등재 2026-10-03 = 결정 16 실행 1단계 (1저자 비준 10-03 · 판단 메모 v2 §4 표 그대로 옮김).  ⛔ 공통 제약 (메모 §4 머리): S3 봉인 모듈 수정은 재봉인 강제 · f/T/τ 는 봉인 밖 새 도우미 · 코드 → 웹앱 → 게이트 → 커밋 한 묶음 (J20-l).  ★ 10-04 밤 ②b 구현 (1저자 비준 *\"권고대로\"* · 등급값 보고 = case_master 157: τ 축 107 · overhead 122 · 종합 3 바뀜): 한 도우미 `tau_flux.tau2_value` · `tau2_from_metrics` (원 솔버 σ · 모드 명시 · physics 없으면 None) + `se_material.sigma_grain_context` (웹앱에서 옮긴 짝 σ₀) — 웹앱 τ 블록 · 등급 τ · τ_bulk · overhead (Hertz) · COMSOL 2D (hertz · physics 두 모드 행 f_ion_<mode> · tau2_ion_<mode> + Stage-E 행 sigma_i_stageE = τ 이름 없음 · 짝 아님 경고) · regime DB 가 같은 식.  옛 COMSOL 행 sigma_i · tau2 · f_ion · tau_Laplace_eff 없음.  시험 webapp/test_tau_grade_unify.py 19/19 (옛 코드 1/19 — G8 ASR 그대로만) · test_tau_labels F1 · F2 · J2 · J3 를 모드별 행으로 갱신 (43/43) · grade_engine selftest ② 값 검사로.  커밋 14ac9b344.",
    "evidence_tests": [
     "webapp/test_tau_grade_unify.py",
     "scripts/grade_engine.py --selftest (②a · ②b · ②e)",
     "webapp/test_tau_labels.py F1 · F2 · J2 · J3"
-   ]
+   ],
+   "claimed_fixed_sha": "14ac9b344"
   },
   {
    "id": "TAU-04",
@@ -6919,7 +6920,7 @@
    "found_by": "claude (10-03 · τ 적대 리뷰 셋 — 코드 · 문헌 · 물리 — 반영 판단 메모 v2 §4)",
    "opened_in": "docs/reviews/tau_conventions_judgment_v2_20261003.md",
    "title": "\"Constriction overhead\" 섞인 비 · 같은 망 FULL/CF 도 원기둥 bulk 때문에 \"순수 협착\" 이 아니다 (T 로 ≈ 1.2–1.4 배 과대)",
-   "note": "자리: `app.py:2142–2143` · `single.html:1849–1853` (낡은 \"n=56 · 1.76×\") · `grade_engine.py:183–190` · 947–953 (분자 Stage-E physics ÷ 분모 raw CF)  ·  시험 먼저 → 최소 수정: 등급 overhead == √(σ_CF/σ_full) 같은 모드 시험 → 협착 비 = 같은 망 τ_FULL/τ_CF, 이름 \"모델 내부 협착 비 (원기둥 bulk 기준)\" · T_CF · 절벽 간선 비율과 같이 보고 · 물리 협착 배수로 인용 금지 · 웹앱 행 이름 \"flux ÷ 기하\"  ·  웹앱 짝: 같은 묶음.  등재 2026-10-03 = 결정 16 실행 1단계 (1저자 비준 10-03 · 판단 메모 v2 §4 표 그대로 옮김).  ⛔ 공통 제약 (메모 §4 머리): S3 봉인 모듈 수정은 재봉인 강제 · f/T/τ 는 봉인 밖 새 도우미 · 코드 → 웹앱 → 게이트 → 커밋 한 묶음 (J20-l).  ·  10-04 진행 (df6ba82a0): 웹앱 케이스 τ 블록의 비율 행 이름만 \"τ_Lap,eff / τ_Dij (정의가 다른 두 τ 의 비)\" 로 (옛 \"Constriction overhead\" 번역 제거) — 등급 축 \"Constriction overhead τ_eff/τ_bulk\" · FULL/CF \"모형 내부 협착비\" 개명은 남음 (open 유지).  ★ 10-04 밤 (TAU-03 묶음): 등급 overhead = √(σ_bulk_net/σ_full,H) 같은 망 · 같은 모드 · 이름 \"모델 내부 협착 비 τ_eff,H/τ_bulk (원기둥 bulk 기준 · Hertz · = √저항비)\" · \"물리 협착 배수 아님\" (시험 G4 · G5c · grade selftest ②c).  남은 것 = T_CF · 절벽 간선 비율 병기 · 인계 FULL/CF 열 이름 (open 유지).",
+   "note": "자리: `app.py:2142–2143` · `single.html:1849–1853` (낡은 \"n=56 · 1.76×\") · `grade_engine.py:183–190` · 947–953 (분자 Stage-E physics ÷ 분모 raw CF)  ·  시험 먼저 → 최소 수정: 등급 overhead == √(σ_CF/σ_full) 같은 모드 시험 → 협착 비 = 같은 망 τ_FULL/τ_CF, 이름 \"모델 내부 협착 비 (원기둥 bulk 기준)\" · T_CF · 절벽 간선 비율과 같이 보고 · 물리 협착 배수로 인용 금지 · 웹앱 행 이름 \"flux ÷ 기하\"  ·  웹앱 짝: 같은 묶음.  등재 2026-10-03 = 결정 16 실행 1단계 (1저자 비준 10-03 · 판단 메모 v2 §4 표 그대로 옮김).  ⛔ 공통 제약 (메모 §4 머리): S3 봉인 모듈 수정은 재봉인 강제 · f/T/τ 는 봉인 밖 새 도우미 · 코드 → 웹앱 → 게이트 → 커밋 한 묶음 (J20-l).  ·  10-04 진행 (df6ba82a0): 웹앱 케이스 τ 블록의 비율 행 이름만 \"τ_Lap,eff / τ_Dij (정의가 다른 두 τ 의 비)\" 로 (옛 \"Constriction overhead\" 번역 제거) — 등급 축 \"Constriction overhead τ_eff/τ_bulk\" · FULL/CF \"모형 내부 협착비\" 개명은 남음 (open 유지).  ★ 10-04 밤 (TAU-03 묶음 · 커밋 14ac9b344): 등급 overhead = √(σ_bulk_net/σ_full,H) 같은 망 · 같은 모드 · 이름 \"모델 내부 협착 비 τ_eff,H/τ_bulk (원기둥 bulk 기준 · Hertz · = √저항비)\" · \"물리 협착 배수 아님\" (시험 G4 · G5c · grade selftest ②c).  남은 것 = T_CF · 절벽 간선 비율 병기 · 인계 FULL/CF 열 이름 (open 유지).",
    "evidence_tests": [
     "webapp/test_tau_grade_unify.py G4 · G5c"
    ]
@@ -7010,15 +7011,16 @@
   {
    "id": "TAU-16",
    "severity": "P3",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "claude (10-03 · τ 적대 리뷰 셋 — 코드 · 문헌 · 물리 — 반영 판단 메모 v2 §4)",
    "opened_in": "docs/reviews/tau_conventions_judgment_v2_20261003.md",
    "title": "등급 문턱 출처 \"Tippens 2019, Famprikis 2019\" — **Famprikis 카드에 없음** (감사 D #97 은 Famprikis 카드만 대조) · **Tippens 2019 는 미감사 [미확인]** · √ 척도",
-   "note": "자리: `grade_engine.py:14` · 165–167  ·  수정: \"내부 등급선\" 표지 · Tippens 원문 확인 전 인용 금지 · T 축 전환 시 문턱 제곱  ·  웹앱 짝: 등급 툴팁.  등재 2026-10-03 = 결정 16 실행 1단계 (1저자 비준 10-03 · 판단 메모 v2 §4 표 그대로 옮김).  ⛔ 공통 제약 (메모 §4 머리): S3 봉인 모듈 수정은 재봉인 강제 · f/T/τ 는 봉인 밖 새 도우미 · 코드 → 웹앱 → 게이트 → 커밋 한 묶음 (J20-l).  ·  10-04 진행 (df6ba82a0): 등급 √ 축 meaning 에 \"문턱 = 내부 등급선 · 옛 출처 표기 확인 전\" 표지 — 헤더 주석 (grade_engine.py \"Literature anchors\" 의 Tippens · Famprikis) 은 남음 (open 유지).  ★ 10-04 밤 (TAU-03 묶음): 헤더 Literature anchors 의 τ 줄 = \"내부 등급선 (출처 없음 · 옛 표기 Tippens · Famprikis 확인 전)\" · 세 τ 축 meaning 에 내부 등급선 · √ 척도 (tau2 축이면 문턱 제곱) — 시험 G5a · G7.  sha 는 다음 원장 갱신.",
+   "note": "자리: `grade_engine.py:14` · 165–167  ·  수정: \"내부 등급선\" 표지 · Tippens 원문 확인 전 인용 금지 · T 축 전환 시 문턱 제곱  ·  웹앱 짝: 등급 툴팁.  등재 2026-10-03 = 결정 16 실행 1단계 (1저자 비준 10-03 · 판단 메모 v2 §4 표 그대로 옮김).  ⛔ 공통 제약 (메모 §4 머리): S3 봉인 모듈 수정은 재봉인 강제 · f/T/τ 는 봉인 밖 새 도우미 · 코드 → 웹앱 → 게이트 → 커밋 한 묶음 (J20-l).  ·  10-04 진행 (df6ba82a0): 등급 √ 축 meaning 에 \"문턱 = 내부 등급선 · 옛 출처 표기 확인 전\" 표지 — 헤더 주석 (grade_engine.py \"Literature anchors\" 의 Tippens · Famprikis) 은 남음 (open 유지).  ★ 10-04 밤 (TAU-03 묶음): 헤더 Literature anchors 의 τ 줄 = \"내부 등급선 (출처 없음 · 옛 표기 Tippens · Famprikis 확인 전)\" · 세 τ 축 meaning 에 내부 등급선 · √ 척도 (tau2 축이면 문턱 제곱) — 시험 G5a · G7.  커밋 14ac9b344.",
    "evidence_tests": [
     "webapp/test_tau_grade_unify.py G5a · G7"
-   ]
+   ],
+   "claimed_fixed_sha": "14ac9b344"
   },
   {
    "id": "TAU-17",
@@ -7493,15 +7495,16 @@
   {
    "id": "SELF-84",
    "severity": "P3",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "claude (10-04 밤 · TAU-03 구현 중 grade_engine selftest ② 를 고치다 자기 발견)",
    "opened_in": "docs/session_20260923_progress.md",
    "title": "grade_engine selftest ②e \"대조: 코드가 실제로 3.0 을 쓴다\" 가 공허하게 통과했다 — `inspect.getsource(모듈)` 에서 문자열 'float(phi_se) * 3.0 / float(sig_full)' 을 찾는데, 그 문자열이 selftest 자신의 단언에 들어 있어 계산부가 바뀌어도 늘 PASS (SELF-82 와 같은 부류 — 검사가 자기 소스를 본다)",
-   "note": "처방: 문자열 대신 **값**으로 잰다 — ②b τ_eff = √(φ·σ₀/σ_full,H) (Stage-E · physics 와 다른 합성 metrics) · ②e σ 와 짝 σ₀ ×4 → 세 축 불변.  재발 방지 규칙: 소스 문자열 단언은 단언 문자열이 검사 대상 밖 (selftest 함수 줄 제외) 에 있는지 볼 것 — 이 리포의 ① L4-09 대조처럼 selftest 줄을 빼고 훑는다.  고침 = TAU-03 묶음 · sha 는 다음 원장 갱신.",
+   "note": "처방: 문자열 대신 **값**으로 잰다 — ②b τ_eff = √(φ·σ₀/σ_full,H) (Stage-E · physics 와 다른 합성 metrics) · ②e σ 와 짝 σ₀ ×4 → 세 축 불변.  재발 방지 규칙: 소스 문자열 단언은 단언 문자열이 검사 대상 밖 (selftest 함수 줄 제외) 에 있는지 볼 것 — 이 리포의 ① L4-09 대조처럼 selftest 줄을 빼고 훑는다.  고침 = TAU-03 묶음 · 커밋 14ac9b344.",
    "evidence_tests": [
     "scripts/grade_engine.py --selftest (②b · ②e)"
-   ]
+   ],
+   "claimed_fixed_sha": "14ac9b344"
   }
  ]
 }
