@@ -332,5 +332,6 @@ git push -u origin claude/14-gate-code-review-9qkx05
 | 2026-10-04 | `bms-balancing/.gitattributes` 규칙 — B-min 오프라인 후보 경로 `comsol_candidates/bmin_particle640_20261004/** -text` (게이트 차수 밖 · 같은 커밋에 NORMAL480 `candidate/` 원본 보존) | `a4cbe7212` | 밖 | 할 일 없음 |
 | 2026-10-04 | `degradation-degeneracy/.gitattributes` 규칙 `docs/22p_gap/gate89_review/** -text !eol` (89차 리뷰 패키지 보존 전) | `992ea2a63` | 밖 | 할 일 없음 |
 | 2026-10-04 | 원장 §134 — 89차 회신 접수 (G88-N1 종결 · 단계 3 라운드 2b 종결) · 패키지 보존 `023876a66` | 이 행이 든 커밋 | 밖 | 할 일 없음 (ff 로 그대로 들어간다) |
+| 2026-10-04 | `bms-balancing/.gitattributes` 규칙 — REIL 부속 B 재검토 묶음 `reviews/prereview_reil_v2_annexB_20261004/** -text` (게이트 차수 밖) | `1815a8945` | 밖 | 할 일 없음 |
 
 ### 복귀 결과 (복귀 정리 커밋이 덧붙인다)

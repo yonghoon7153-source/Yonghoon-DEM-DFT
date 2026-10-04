@@ -3456,3 +3456,13 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - 처리: 부속 B `bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2_ANNEX_B.md` (부속 A 보존 · 대체 문장 줄 번호) · 재검토 요청문 ·
   [[isu-uconn-lfp-gr-emulated-degradation]] 부속 A 재검토 절 · 발송 줄. 반례 셋 상수 산술로 재현 · 자체 재독 둘 (v2 기록 항목 · LII 등급)
 - 하지 않은 것: 설치 · 실행 · xlsx 개봉 · P0 · 비용 측정 · 맞춤 · RUN_SCOPE · 진행 중 89차 게이트에 섞기
+
+## [2026-10-04] update | REIL 정정 부속 문서 B — Codex 재검토 요청 발송
+- 요청문 `bms-balancing/docs/REIL_V2_ANNEX_B_REREVIEW_REQUEST_20261004.md` · 고정 커밋 `e64f587bc` · 사용자가 발송 · 게이트 차수 밖 · 문서 검토만
+
+## [2026-10-04] update | REIL 부속 B 재검토 회신 — RV2A-N1–N3 종결 · 문서 조건 C2 종결
+- 묶음: `bms-balancing/reviews/prereview_reil_v2_annexB_20261004/` (ZIP 66,652 B · sha256 bc82b48f… · manifest 10/10 · 기준 커밋 `e64f587bc`) ·
+  판정 `DOCUMENT_ACCEPTED_RV2A_N1_N2_N3_CLOSED_NO_EXECUTION_AUTHORIZATION` · 새 차단 0 · 추가 정정본 없음 · 게이트 차수 밖 · 실행 0
+- 처리: [[isu-uconn-lfp-gr-emulated-degradation]] 부속 B 발송 줄 + 부속 B 재검토 절 (검토자의 적용 범위 읽기 · 남는 선행 조건 표)
+- 남는 것 (기존 선행 조건 · 각각 별도 승인): C1-core 명세 · C6 판 · 환경 고정 · C3 P0 · C5 비용 측정 · C4 실행 · E3b 미등록
+- 하지 않은 것: 설치 · 실행 · xlsx 개봉 · P0 · 비용 측정 · 맞춤 · 검토자 도구 실행 · RUN_SCOPE · 89차 게이트 · PyBaMM 고정에 섞기
