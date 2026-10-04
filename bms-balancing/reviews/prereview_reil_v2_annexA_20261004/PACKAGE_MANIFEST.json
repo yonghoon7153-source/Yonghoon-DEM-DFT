@@ -1,0 +1,62 @@
+{
+  "scope": "Recipient document review package; source snapshots and reviewer-owned arithmetic only",
+  "fixed_commit": "a82d7135ea5f91f4d9596e1dd370df4365c6fef0",
+  "payload_count": 11,
+  "files": [
+    {
+      "path": "CLAUDE_REPLY_KO.md",
+      "bytes": 3936,
+      "sha256": "5f9c0c36bd79a1558c71be7b00a18ead2826fc4d17768957bab47d2f3be59d39"
+    },
+    {
+      "path": "DECISION.json",
+      "bytes": 2290,
+      "sha256": "057d60bdb1da817e69d5c1ca5adfcb2b7493379d68bb8b8f7d1545ab1d71295d"
+    },
+    {
+      "path": "README_KO.md",
+      "bytes": 1516,
+      "sha256": "194b53b1824829cdac07fcb7cac94f01270a0e13709bdd8b7db0923d96b2984c"
+    },
+    {
+      "path": "reference/PRIOR_REVIEW_KO.md",
+      "bytes": 18443,
+      "sha256": "763b685f299bff1fe9540a97fde36bd428d32061db309f37480abb30d09f5cfd"
+    },
+    {
+      "path": "reference/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2_ANNEX_A.md",
+      "bytes": 37308,
+      "sha256": "94b0892a4e7fc7a4dc916fa785d1029f269d61dec3c8826d08f83aa9ffeedcca"
+    },
+    {
+      "path": "reference/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2.md",
+      "bytes": 27795,
+      "sha256": "74ccb30ff3667efb4f3842a63c6ebf21296a1137bb1165682631f6b5c005fd60"
+    },
+    {
+      "path": "reference/REIL_V2_ANNEX_A_REREVIEW_REQUEST_20261004.md",
+      "bytes": 4361,
+      "sha256": "0f7d71fd8627d133b763ac7015eb403db1a99ea98344e4f232589838949cdf2e"
+    },
+    {
+      "path": "REVIEW_CHECKS.json",
+      "bytes": 3657,
+      "sha256": "29b554a782b53d5db5fd8d49e410020f9a40ee22d231dd90c4203939268f38be"
+    },
+    {
+      "path": "REVIEW_KO.md",
+      "bytes": 16137,
+      "sha256": "1ca1ff5a4740703125a1137f7412c7b04e8fee0ffea8d3c290490cb4bbf620ea"
+    },
+    {
+      "path": "reviewer_document_checks.py",
+      "bytes": 4668,
+      "sha256": "8ac98ad5960f5a130808f2afbde8c2cc53cb527752ba35806860d321dae7d592"
+    },
+    {
+      "path": "SOURCE_INDEX.json",
+      "bytes": 2815,
+      "sha256": "8c0edf158579fc0ceb64676630b69f25881e14f7a1c9cd2027cfb5c5829f05e0"
+    }
+  ]
+}

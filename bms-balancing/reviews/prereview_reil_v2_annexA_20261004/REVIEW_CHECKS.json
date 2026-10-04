@@ -1,0 +1,100 @@
+{
+  "scope": "Only fixed-text identity, exact rational arithmetic, and a scalar binary64 interpolation counterexample. Not P0, REIL objective evaluation, fitting, implementation validation or empirical data processing.",
+  "source_files": [
+    {
+      "file": "reference/REIL_V2_ANNEX_A_REREVIEW_REQUEST_20261004.md",
+      "bytes": 4361,
+      "sha256": "0f7d71fd8627d133b763ac7015eb403db1a99ea98344e4f232589838949cdf2e",
+      "git_blob_sha1": "d10b75f714377ebf68d47998bd03112b97c0454a",
+      "matches_fixed_ref": true
+    },
+    {
+      "file": "reference/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2_ANNEX_A.md",
+      "bytes": 37308,
+      "sha256": "94b0892a4e7fc7a4dc916fa785d1029f269d61dec3c8826d08f83aa9ffeedcca",
+      "git_blob_sha1": "9f49d6061cf3c9e69ed35e3b00e5e0addafd8fd3",
+      "matches_fixed_ref": true
+    },
+    {
+      "file": "reference/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2.md",
+      "bytes": 27795,
+      "sha256": "74ccb30ff3667efb4f3842a63c6ebf21296a1137bb1165682631f6b5c005fd60",
+      "git_blob_sha1": "872ca88b3b5c57aebf295bd0109e95a830b3ae13",
+      "matches_fixed_ref": true
+    },
+    {
+      "file": "reference/PRIOR_REVIEW_KO.md",
+      "bytes": 18443,
+      "sha256": "763b685f299bff1fe9540a97fde36bd428d32061db309f37480abb30d09f5cfd",
+      "git_blob_sha1": "3b02fe6dd2660f2c7da8383f232606cbf58986f7",
+      "matches_fixed_ref": true
+    }
+  ],
+  "v2_and_prior_review_match_previous_local_copies": true,
+  "budget_arithmetic": {
+    "local_per_unit": 713,
+    "units": 77,
+    "local_total": 54901,
+    "objective_call_cap_excluding_separate_items": 109817477,
+    "E3a_optimizer_calls": 275
+  },
+  "constant_rational_boundaries": {
+    "zero_margin_tau002_lower": "1/400",
+    "nominal_010_lower": "1/1000",
+    "nominal_010_upper": "5",
+    "nominal_020_lower": "1/2000",
+    "nominal_020_upper": "5/2",
+    "nominal_013_lower": "1/1300",
+    "nominal_013_upper": "50/13",
+    "nominal_006_lower": "1/600",
+    "nominal_006_upper": "25/3",
+    "020_tau002_lower": "1/2400",
+    "020_tau002_upper": "25/8",
+    "020_tau005_lower": "1/3000",
+    "020_tau005_upper": "5"
+  },
+  "constraint_tolerance_counterexamples": {
+    "G": {
+      "dP": 0.1,
+      "dN": 0.09990000005,
+      "exact_rational_residual": "2251799871/45035996273704960000",
+      "residual_approx": 5.0000001272643146e-11,
+      "strict_G_satisfied": false,
+      "within_1e_minus10": true
+    },
+    "nominal_box": {
+      "mP": 1.02000000005,
+      "nominal_mP": 1,
+      "tau": "0.02",
+      "exact_rational_residual": "2814751/56294995342131200",
+      "residual_approx": 5.000002190058694e-11,
+      "strict_nominal_box_satisfied": false,
+      "within_1e_minus10": true
+    },
+    "limitation": "These are constraint-only examples. No assertion that a real REIL objective passes its threshold at these points."
+  },
+  "cutoff_endpoint_counterexample": {
+    "grid": "1000 uniform points on [0,0.1], first three nodes only",
+    "Q": [
+      0.0,
+      0.0001001001001001001,
+      0.0002002002002002002
+    ],
+    "V": [
+      1.1,
+      2.0,
+      2.5
+    ],
+    "cutoff": 2.0,
+    "left_formula_result": 0.00010010010010010012,
+    "right_formula_result": 0.0001001001001001001,
+    "difference": 1.3552527156068805e-20,
+    "same_float_dedup_would_merge": false,
+    "exact_shared_node": 0.0001001001001001001,
+    "limitation": "Synthetic arithmetic, not a measured half-cell curve or supplied H4 implementation run."
+  },
+  "provided_programs_executed": false,
+  "data_files_opened": false,
+  "P0_executed": false,
+  "optimizer_executed": false
+}

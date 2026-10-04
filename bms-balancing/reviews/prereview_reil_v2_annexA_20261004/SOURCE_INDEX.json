@@ -1,0 +1,61 @@
+{
+  "date": "2026-10-04",
+  "repository": "yonghoon7153-source/Yonghoon-DEM-DFT",
+  "fixed_commit": "a82d7135ea5f91f4d9596e1dd370df4365c6fef0",
+  "scope": "Fixed-ref document review only; no dataset opening or supplied program execution",
+  "files": [
+    {
+      "key": "annex_request",
+      "git_blob_sha1": "d10b75f714377ebf68d47998bd03112b97c0454a",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/a82d7135ea5f91f4d9596e1dd370df4365c6fef0/bms-balancing/docs/REIL_V2_ANNEX_A_REREVIEW_REQUEST_20261004.md",
+      "local": "reference/REIL_V2_ANNEX_A_REREVIEW_REQUEST_20261004.md"
+    },
+    {
+      "key": "annex",
+      "git_blob_sha1": "9f49d6061cf3c9e69ed35e3b00e5e0addafd8fd3",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/a82d7135ea5f91f4d9596e1dd370df4365c6fef0/bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2_ANNEX_A.md",
+      "local": "reference/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2_ANNEX_A.md"
+    },
+    {
+      "key": "v2",
+      "git_blob_sha1": "872ca88b3b5c57aebf295bd0109e95a830b3ae13",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/a82d7135ea5f91f4d9596e1dd370df4365c6fef0/bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2.md",
+      "local": "reference/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2.md"
+    },
+    {
+      "key": "prior_review",
+      "git_blob_sha1": "3b02fe6dd2660f2c7da8383f232606cbf58986f7",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/a82d7135ea5f91f4d9596e1dd370df4365c6fef0/bms-balancing/reviews/prereview_reil_v2_20261004/REVIEW_KO.md",
+      "local": "reference/PRIOR_REVIEW_KO.md"
+    }
+  ],
+  "official_docs": [
+    {
+      "url": "https://docs.scipy.org/doc/scipy/reference/optimize.minimize-cobyqa.html",
+      "retrieved": "2026-10-04",
+      "scope": "Published option names and meanings, not installed environment observation"
+    },
+    {
+      "url": "https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.qmc.Sobol.html",
+      "retrieved": "2026-10-04",
+      "scope": "seed/rng version boundary, powers-of-two sampling and thinning caveat"
+    },
+    {
+      "url": "https://docs.python.org/3/library/fractions.html",
+      "retrieved": "2026-10-04",
+      "scope": "Exact float-to-rational versus decimal-string rational semantics"
+    },
+    {
+      "url": "https://docs.python.org/3/tutorial/floatingpoint.html",
+      "retrieved": "2026-10-04",
+      "scope": "Binary floating-point rounding; no dataset-specific error bound"
+    }
+  ],
+  "not_verified": [
+    "Actual xlsx/max_q/endpoints/noise/nominal truth uncertainty",
+    "C1-core paper or equivalent specification",
+    "Installed SciPy version and runtime behavior",
+    "P0/E3a/H results and actual cost",
+    "Entire branch or production RUN_SCOPE state"
+  ]
+}
