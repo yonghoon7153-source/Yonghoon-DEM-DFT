@@ -68,13 +68,18 @@
 
 <div class="tx-head">
   <h1>이종기술 회의록 해체</h1>
-  <span class="tx-sub">2026-09-18 · 20분 02초 · <a href="/hetero">← 이종기술 프로젝트 면</a></span>
+  {% set rec = ((doc.head or '').replace('\ufeff', '').strip().split('\n') or [''])[0] %}
+  <span class="tx-sub">{{ rec }}{% if rec %} · {% endif %}{{ ment.label }} · {{ ment.length }} · <a href="/hetero">← 이종기술 프로젝트 면</a></span>
 </div>
+<p class="tx-sub">회의 고르기 —
+  {% for k, lbl, ln in meetings %}{% if k == mkey %}<b>{{ lbl }} ({{ ln }})</b>{% else %}<a href="/hetero/transcript?m={{ k }}">{{ lbl }} ({{ ln }})</a>{% endif %}{% if not loop.last %} · {% endif %}{% endfor %}
+  <span style="display:none">{% for k, lbl, ln in meetings %}?m={{ k }} {% endfor %}</span>
+</p>
 
 <p class="tx-lede">
   원문(<b>raw</b>) · 해독(<b>decoded</b>) · 주장(<b>claim</b>)을 <b>세 층으로 갈라</b> 붙든 것이다.
   셋을 한 칸에 적으면 원문이 해석에 오염되고, 그 오염은 되돌릴 수 없다.
-  범위는 <b>61 발화 전수</b>(비준 2026-09-19) — 선택 해독은 <i>“무엇을 안 골랐나”</i>가 기록에 남지 않는다.
+  범위는 <b>{{ utt|length }} 발화 전수</b>({{ ment.ratified }}) — 선택 해독은 <i>“무엇을 안 골랐나”</i>가 기록에 남지 않는다.
 </p>
 
 {% if t.error %}
@@ -87,9 +92,21 @@
     {% if not t.raw_exists %}
       <br><b class="tx-sub">⚠ 계약① (원문 무손실) 은 <b>검사되지 않았다</b> — 원문 파일이 없다.</b>
     {% else %}
-      <br>계약① = 61 발화를 이어 붙이면 원문과 <b>바이트 동일</b>(sha256 대조).
+      <br>계약① = {{ utt|length }} 발화를 이어 붙이면 원문과 <b>바이트 동일</b>(sha256 대조).
     {% endif %}
   </div>
+{% endif %}
+
+{% if synth %}
+<div class="tx-note" style="border-left-color:var(--accent,#5b8dd6)">
+  <b>회의 종합</b> <span class="tx-sub">(분석자 정리 — 근거 발화 번호를 붙였다 · 결정 · 일정은 아래 발화 원문으로 확인할 것)</span>
+  <ul style="margin:6px 0 0 18px; padding:0">{% for x in synth %}<li style="margin:3px 0">{{ x|mdi }}</li>{% endfor %}</ul>
+</div>
+{% endif %}
+{% if caveats %}
+<details class="tx-note"><summary><b>읽을 때 주의</b> ({{ caveats|length }})</summary>
+  <ul style="margin:6px 0 0 18px; padding:0">{% for x in caveats %}<li style="margin:3px 0">{{ x|mdi }}</li>{% endfor %}</ul>
+</details>
 {% endif %}
 
 <div class="tx-grid">

@@ -4603,11 +4603,20 @@ def hetero_page():
                            inv=_hetero_inventory(), lv=_page_lv('hetero'))
 
 
-TRANSCRIPT_JSON = Path(__file__).resolve().parent.parent / 'docs' / 'data' / 'hetero_transcript_20260918.json'
-TRANSCRIPT_RAW = Path(__file__).resolve().parent.parent / 'docs' / 'data' / 'hetero_meeting_20260918_raw.txt'
+_HT_DATA = Path(__file__).resolve().parent.parent / 'docs' / 'data'
+#: 이종기술 회의록 해체본 등록부 — 키 = 회의 날짜 8 자리 (`?m=`).  등록부 밖 키는 404 — 조용히 다른 회의를 보이지 않는다.
+#:   10-02 회의 (음성 336) = 1저자 10-05 *"녹음 관련해서도 낱낱이 정리해서 이종기술 관련 원장에"* (09-19 비준 (가) 전수 규약 승계).
+HETERO_TRANSCRIPTS = {
+    '20260918': {'json': _HT_DATA / 'hetero_transcript_20260918.json', 'raw': _HT_DATA / 'hetero_meeting_20260918_raw.txt',
+                 'label': '2026-09-18', 'length': '20분 02초', 'ratified': '비준 2026-09-19'},
+    '20261002': {'json': _HT_DATA / 'hetero_transcript_20261002.json', 'raw': _HT_DATA / 'hetero_meeting_20261002_raw.txt',
+                 'label': '2026-10-02', 'length': '18분 41초', 'ratified': '09-19 규약 승계 · 1저자 10-05'},
+}
+TRANSCRIPT_JSON = HETERO_TRANSCRIPTS['20260918']['json']     # 하위호환 — 옛 단일 회의 상수
+TRANSCRIPT_RAW = HETERO_TRANSCRIPTS['20260918']['raw']
 
 
-def _transcript_load():
+def _transcript_load(key=None):
     """회의록 해체본 + **렌더 시점 계약 검증**.
 
     ★ 이 앱의 `_hetero_inventory` 와 같은 사고 — 산문이 아니라 **실물을 본다**.
@@ -4615,16 +4624,18 @@ def _transcript_load():
     ⚠ 계약① (원문 무손실) 은 `raw` 파일이 있어야 검사된다.  없으면 *검사되지 않았다* 고
       적는다 — '통과' 와 '검사 안 함' 을 같은 초록으로 칠하면 그게 false-green 이다.
     """
-    out = {'exists': TRANSCRIPT_JSON.is_file(), 'raw_exists': TRANSCRIPT_RAW.is_file(),
+    ent = HETERO_TRANSCRIPTS[key or max(HETERO_TRANSCRIPTS)]
+    tj, tr = ent['json'], ent['raw']
+    out = {'exists': tj.is_file(), 'raw_exists': tr.is_file(),
            'doc': None, 'report': None, 'error': ''}
     if not out['exists']:
-        out['error'] = f'{TRANSCRIPT_JSON.name} 이 없다'
+        out['error'] = f'{tj.name} 이 없다'
         return out
     try:
         import hetero_transcript as HT
-        doc = json.loads(TRANSCRIPT_JSON.read_text(encoding='utf-8'))
+        doc = json.loads(tj.read_text(encoding='utf-8'))
         out['doc'] = doc
-        out['report'] = HT.check(doc, raw_path=(str(TRANSCRIPT_RAW)
+        out['report'] = HT.check(doc, raw_path=(str(tr)
                                                 if out['raw_exists'] else None))
     except Exception as e:                                        # noqa: BLE001
         out['error'] = f'{type(e).__name__}: {e}'
@@ -4671,14 +4682,21 @@ app.jinja_env.filters['mdi'] = md_inline
 
 @app.route('/hetero/transcript')
 def hetero_transcript_page():
-    """이종기술 회의록 **해체 분석** — 원문 · 해독 · 주장 세 층 (2026-09-18 회의).
+    """이종기술 회의록 **해체 분석** — 원문 · 해독 · 주장 세 층 (`?m=<8 자리 날짜>` · 없으면 최신 회의).
 
-    비준 (가) = 61 발화 **전수**.  선택 해독은 *"무엇을 안 골랐나"* 가 안 남는다.
+    비준 (가) = 발화 **전수** (09-18 61 · 10-02 90).  선택 해독은 *"무엇을 안 골랐나"* 가 안 남는다.
     """
-    t = _transcript_load()
+    key = request.args.get('m') or max(HETERO_TRANSCRIPTS)
+    if key not in HETERO_TRANSCRIPTS:
+        abort(404)
+    t = _transcript_load(key)
     doc = t['doc'] or {}
+    ana = doc.get('analysis') or {}
     return render_template(
         'hetero_transcript.html', active='hetero', t=t, doc=doc,
+        mkey=key, ment=HETERO_TRANSCRIPTS[key],
+        meetings=[(k, v['label'], v['length']) for k, v in sorted(HETERO_TRANSCRIPTS.items())],
+        synth=ana.get('synthesis') or [], caveats=ana.get('caveats') or [],
         utt=doc.get('utterances') or [],
         status_help=CLAIM_STATUS_HELP,
         speakers=sorted({u.get('speaker') or '미상' for u in (doc.get('utterances') or [])}),
