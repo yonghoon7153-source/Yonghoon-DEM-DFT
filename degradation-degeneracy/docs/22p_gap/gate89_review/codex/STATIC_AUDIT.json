@@ -1,0 +1,922 @@
+{
+  "method": "Reviewer-owned standard-library byte/hash/AST/text inspection only. No received modules imported, project tests, fits, smoke, restore, mutation replay, or COMSOL executed.",
+  "received_file_count": 29,
+  "file_checks": [
+    {
+      "path": "degradation-degeneracy/tools/preserve.py",
+      "bytes": 529220,
+      "sha256": "e3469ffb5143444ec1d2b0855a6f4caba9de5add2b9a31cf7ec1f550dfa3d7ef",
+      "git_blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/tests/test_gate89_finalize_input_binding.py",
+      "bytes": 8751,
+      "sha256": "d8eb9fa31d642fb414ddd191745ffd7de7670adf9780d1117b396cf7d745a3c2",
+      "git_blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/STAGE3_IMPL_ROUND1_SPEC.md",
+      "bytes": 65937,
+      "sha256": "a6bee9c19846edfc16d09b9451e80687e5ed2493483af0d09f8d16d276b012cf",
+      "git_blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/src/io.py",
+      "bytes": 141436,
+      "sha256": "e8f9561b6492d5a54595f557e38762156fab9a014d857c6d3aee668f85e16a38",
+      "git_blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/GATE89_REQUEST.md",
+      "bytes": 12541,
+      "sha256": "618c51f32f2efc4a631bbf202156a1a851c690aee0729b571eeb4c4526eaa8fe",
+      "git_blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/gate89_evidence/README.md",
+      "bytes": 6410,
+      "sha256": "6e333247effd2f5e5332d4d056797f5bc1d2aa328466799504697032bd09acc0",
+      "git_blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/tests/test_gate88_fit_only_lifecycle.py",
+      "bytes": 23361,
+      "sha256": "81ed33effe3c695eade6b00bc1f3789bbf19d283e3ebb0a691ffbe59188415ae",
+      "git_blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/mutation_replay.py",
+      "bytes": 561818,
+      "sha256": "a116a8317214ba47d06ff82f043009b563f00b09c38b801e59fd05b1e49431bd",
+      "git_blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/receipts/paired_fixed5_v4.validate.yaml",
+      "bytes": 3803,
+      "sha256": "4a0fa3979706c57c48907fb4edcac58c081ae998659b6a524c35400706164f6d",
+      "git_blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/receipts/grid_fit_v5.validate.yaml",
+      "bytes": 3738,
+      "sha256": "c880c691ac0408332a41cac8e4bc94129d705eda72a92a30031b96415a4ddd55",
+      "git_blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/receipts/history/paired_fixed5_v4.validate.7dd546baaee9e823.yaml",
+      "bytes": 3803,
+      "sha256": "6f6cc18ce27cc77bb8c32f1b7f962a84005d7ea33a85ec0fe518c4ce8eb25dc9",
+      "git_blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/receipts/history/grid_fit_v5.validate.7dd546baaee9e823.yaml",
+      "bytes": 3738,
+      "sha256": "b30eac9802a4b2a5b28c67bac56a5fa907940a601dc7d2a844de3c8b5f69d315",
+      "git_blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/LEG_PRESERVATION.yaml",
+      "bytes": 65166,
+      "sha256": "c00912134cefe0be572df25955eb45ab875f5594d82ff93f03dd1a38891938ca",
+      "git_blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/gate89_evidence/00_red_first_run_header_label_wrong.log",
+      "bytes": 7930,
+      "sha256": "1775b7433a47d04ce9dab636d83dbffe0c983b3efd2c74cc0d7b512396c5f640",
+      "git_blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/gate89_evidence/01_red_test_gate89.log",
+      "bytes": 7937,
+      "sha256": "6f7ac67fd848dfbed63d3c32fde35012703135376de4c26d91a08f4263a5d370",
+      "git_blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/gate89_evidence/01b_kexpr_overlap_registry395_new_nodes0.txt",
+      "bytes": 1507,
+      "sha256": "55120c28c22d1b7359796785865d6801db6a517558ec725f3c8019936cacdd25",
+      "git_blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/gate89_evidence/02_green_gate89_6passed_gate88_24passed.log",
+      "bytes": 2985,
+      "sha256": "fc82cd55c7110c006aaf2d3d81e07a96d28e96f8bcea294b7fadef828316110d",
+      "git_blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/gate89_evidence/03_related_finalize_modules_7failed_stale_receipt_identity.log",
+      "bytes": 11049,
+      "sha256": "e808420b2e2f7b79746978818ecd0c31fc38e7ef94eb6134e5121182836cc3b0",
+      "git_blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/gate89_evidence/04_replay_g89_emit_expect_2killed.log",
+      "bytes": 3036,
+      "sha256": "d9d7a5ee0550991e05a2558f5d6563622208c86f66751911e6180403bdb00458",
+      "git_blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/gate89_evidence/05_replay_g88_finalize_binds_emit_expect_witness_changed.log",
+      "bytes": 1541,
+      "sha256": "04262f6b27b1e794261988d181ec8cf54d33f942728b8b370279152a3d37d913",
+      "git_blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/gate89_evidence/06_replay_g89_verify_rc0.log",
+      "bytes": 717,
+      "sha256": "3fb046d06ddca13d898cc3e819baf4c7ee54a26d4bbbcd35a0359271d439bcad",
+      "git_blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/gate89_evidence/07_replay_g88_verify_21_rc0.log",
+      "bytes": 2473,
+      "sha256": "41805343aa90c0df26f02e907a41c2b18d2008ccd884dcc6133645dc5f70e962",
+      "git_blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/gate89_evidence/08_make_receipt_134f26f48_rc0.log",
+      "bytes": 469,
+      "sha256": "baf8567c42e146e69db12f28795f87a562b76a35f182ed0ac72a93714dfd8d80",
+      "git_blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/gate89_evidence/09_gate74_defensive_after_receipts_41passed.log",
+      "bytes": 909,
+      "sha256": "f2448e8041c5627ce3bb988e8e930e55374123440b910f5ca10afca0c8b4d9a4",
+      "git_blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/gate89_evidence/10_full_pytest_66129fc6a_2139passed.log",
+      "bytes": 3504,
+      "sha256": "e5f8cdf2ef20271d4aff2ec3c3a44318107578ffe733d613c917b92c04b32aa1",
+      "git_blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/gate89_evidence/11_smoke_66129fc6a_rc0.log",
+      "bytes": 5762,
+      "sha256": "effbed4a26edf6a940e175511a03c0385c1278530a9f4e7d8fc4a48671013774",
+      "git_blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/gate89_evidence/12_full_replay_66129fc6a_397_of_397_rc0.log",
+      "bytes": 52232,
+      "sha256": "1c6d2caa7a1161bb36bc39aeeab01f4e53ed8ffae50555e0c3362766ae5fb9a8",
+      "git_blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/gate89_evidence/13_docs_lint_gate88_send_d6056415b_358passed.log",
+      "bytes": 1163,
+      "sha256": "f5445e0d768c75a6d268173750e5eda5d5acd0c5cc5fcdbd397a9651c1a30cec",
+      "git_blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/gate89_evidence/14_docs_lint_send_8113f12bd_358passed.log",
+      "bytes": 1163,
+      "sha256": "d7d276afe86dbb96d98671890d0f6ec47636069413d38baa64ad6948d226be95",
+      "git_blob_match": true
+    }
+  ],
+  "all_git_blobs_match": true,
+  "log_checks": [
+    {
+      "sha256": "1775b7433a47d04ce9dab636d83dbffe0c983b3efd2c74cc0d7b512396c5f640",
+      "bytes": 7930,
+      "name": "00_red_first_run_header_label_wrong.log",
+      "size_match": true,
+      "sha_match": true
+    },
+    {
+      "sha256": "6f7ac67fd848dfbed63d3c32fde35012703135376de4c26d91a08f4263a5d370",
+      "bytes": 7937,
+      "name": "01_red_test_gate89.log",
+      "size_match": true,
+      "sha_match": true
+    },
+    {
+      "sha256": "55120c28c22d1b7359796785865d6801db6a517558ec725f3c8019936cacdd25",
+      "bytes": 1507,
+      "name": "01b_kexpr_overlap_registry395_new_nodes0.txt",
+      "size_match": true,
+      "sha_match": true
+    },
+    {
+      "sha256": "fc82cd55c7110c006aaf2d3d81e07a96d28e96f8bcea294b7fadef828316110d",
+      "bytes": 2985,
+      "name": "02_green_gate89_6passed_gate88_24passed.log",
+      "size_match": true,
+      "sha_match": true
+    },
+    {
+      "sha256": "e808420b2e2f7b79746978818ecd0c31fc38e7ef94eb6134e5121182836cc3b0",
+      "bytes": 11049,
+      "name": "03_related_finalize_modules_7failed_stale_receipt_identity.log",
+      "size_match": true,
+      "sha_match": true
+    },
+    {
+      "sha256": "d9d7a5ee0550991e05a2558f5d6563622208c86f66751911e6180403bdb00458",
+      "bytes": 3036,
+      "name": "04_replay_g89_emit_expect_2killed.log",
+      "size_match": true,
+      "sha_match": true
+    },
+    {
+      "sha256": "04262f6b27b1e794261988d181ec8cf54d33f942728b8b370279152a3d37d913",
+      "bytes": 1541,
+      "name": "05_replay_g88_finalize_binds_emit_expect_witness_changed.log",
+      "size_match": true,
+      "sha_match": true
+    },
+    {
+      "sha256": "3fb046d06ddca13d898cc3e819baf4c7ee54a26d4bbbcd35a0359271d439bcad",
+      "bytes": 717,
+      "name": "06_replay_g89_verify_rc0.log",
+      "size_match": true,
+      "sha_match": true
+    },
+    {
+      "sha256": "41805343aa90c0df26f02e907a41c2b18d2008ccd884dcc6133645dc5f70e962",
+      "bytes": 2473,
+      "name": "07_replay_g88_verify_21_rc0.log",
+      "size_match": true,
+      "sha_match": true
+    },
+    {
+      "sha256": "baf8567c42e146e69db12f28795f87a562b76a35f182ed0ac72a93714dfd8d80",
+      "bytes": 469,
+      "name": "08_make_receipt_134f26f48_rc0.log",
+      "size_match": true,
+      "sha_match": true
+    },
+    {
+      "sha256": "f2448e8041c5627ce3bb988e8e930e55374123440b910f5ca10afca0c8b4d9a4",
+      "bytes": 909,
+      "name": "09_gate74_defensive_after_receipts_41passed.log",
+      "size_match": true,
+      "sha_match": true
+    },
+    {
+      "sha256": "e5f8cdf2ef20271d4aff2ec3c3a44318107578ffe733d613c917b92c04b32aa1",
+      "bytes": 3504,
+      "name": "10_full_pytest_66129fc6a_2139passed.log",
+      "size_match": true,
+      "sha_match": true
+    },
+    {
+      "sha256": "effbed4a26edf6a940e175511a03c0385c1278530a9f4e7d8fc4a48671013774",
+      "bytes": 5762,
+      "name": "11_smoke_66129fc6a_rc0.log",
+      "size_match": true,
+      "sha_match": true
+    },
+    {
+      "sha256": "1c6d2caa7a1161bb36bc39aeeab01f4e53ed8ffae50555e0c3362766ae5fb9a8",
+      "bytes": 52232,
+      "name": "12_full_replay_66129fc6a_397_of_397_rc0.log",
+      "size_match": true,
+      "sha_match": true
+    },
+    {
+      "sha256": "f5445e0d768c75a6d268173750e5eda5d5acd0c5cc5fcdbd397a9651c1a30cec",
+      "bytes": 1163,
+      "name": "13_docs_lint_gate88_send_d6056415b_358passed.log",
+      "size_match": true,
+      "sha_match": true
+    }
+  ],
+  "all_15_manifest_log_size_sha_match": true,
+  "supplemental_send_log": {
+    "ref": "9fa175f3e7fb7c8dcdee46ce132d98b07bcdf563",
+    "path": "degradation-degeneracy/docs/22p_gap/gate89_evidence/14_docs_lint_send_8113f12bd_358passed.log",
+    "bytes": 1163,
+    "sha256": "d7d276afe86dbb96d98671890d0f6ec47636069413d38baa64ad6948d226be95",
+    "size_match": true,
+    "sha_match": true
+  },
+  "run_scope": {
+    "count": 58,
+    "path_set_unchanged": true,
+    "digest": "803e2b7781cbc9cd",
+    "sha256_full": "803e2b7781cbc9cd54ef0a77a08fcb4a71de3a87f995d99276797510f88865e6",
+    "all_blobs_match": true,
+    "changed": [
+      "degradation-degeneracy/tools/preserve.py"
+    ],
+    "files": [
+      {
+        "path": "degradation-degeneracy/configs/base.yaml",
+        "bytes": 5498,
+        "sha256": "26fe6c7cc2a2d719815a6aed7db7350917747d352de0bd3d9f7823a8cdc6fc71",
+        "git_blob": "37a3a34cfc06f954c330298537633a03a1cc5620",
+        "blob_tree_match": true,
+        "unchanged_since_gate88": true
+      },
+      {
+        "path": "degradation-degeneracy/configs/grid_22p.yaml",
+        "bytes": 2747,
+        "sha256": "e3718c62f6fc92e6f4e6381762c970293d2cef9a3dab4f6198e6855149be4b45",
+        "git_blob": "9fd6d492a933b2d521897dfc403738554f2ca64c",
+        "blob_tree_match": true,
+        "unchanged_since_gate88": true
+      },
+      {
+        "path": "degradation-degeneracy/configs/grid_22p_dense.yaml",
+        "bytes": 2824,
+        "sha256": "142c5081d893f664d377499205e7ed39fc26089b4b8e7b6483e3ea8293d8fb63",
+        "git_blob": "0d0c9aab7a0dd5abb9edd7afb78ee48ed1fbadef",
+        "blob_tree_match": true,
+        "unchanged_since_gate88": true
+      },
+      {
+        "path": "degradation-degeneracy/configs/grid_22p_fine.yaml",
+        "bytes": 1630,
+        "sha256": "ed8c96053efebc8dcf0eba9ce73104cea4358749a706177b44e18630820e2650",
+        "git_blob": "8371363cdafbff4920ab5a2ac90b9c6d07075875",
+        "blob_tree_match": true,
+        "unchanged_since_gate88": true
+      },
+      {
+        "path": "degradation-degeneracy/configs/grid_22p_seed.yaml",
+        "bytes": 3145,
+        "sha256": "1fa2168e676fe89d05cb077d12c014705a8bcb57153371d8f572190cc0db960c",
+        "git_blob": "db355960391f6fe486f90c4a06b7b62688920d5a",
+        "blob_tree_match": true,
+        "unchanged_since_gate88": true
+      },
+      {
+        "path": "degradation-degeneracy/configs/grid_coarse.yaml",
+        "bytes": 425,
+        "sha256": "4a0b949dab492cf7e7a25333d7f499bdbe6668628fcfa1c4b1e8358e574b4082",
+        "git_blob": "7a7fba7b8a5136f5912c22d52c5965ff915a4859",
+        "blob_tree_match": true,
+        "unchanged_since_gate88": true
+      },
+      {
+        "path": "degradation-degeneracy/configs/grid_fine.yaml",
+        "bytes": 461,
+        "sha256": "15ea258a338081848f745c353763dc8ba8189657a3b51526f9f390e730626040",
+        "git_blob": "fdd160112bd8d3ee1c517d33e05b7bb4231d5ff5",
+        "blob_tree_match": true,
+        "unchanged_since_gate88": true
+      },
+      {
+        "path": "degradation-degeneracy/configs/objectives.yaml",
+        "bytes": 3994,
+        "sha256": "70ec9517eb4e711f682d854eb7a15950cf243a4ea43aa51613ced6c97f8673d4",
+        "git_blob": "299c04276cd336e62f8615ed47d476736bd860af",
+        "blob_tree_match": true,
+        "unchanged_since_gate88": true
+      },
+      {
+        "path": "degradation-degeneracy/configs/objectives_optimized.yaml",
+        "bytes": 930,
+        "sha256": "ec9d48c4e3089d6b6d1e372125e9d87fa3512a552c414c4e69004a000f8b3ea6",
+        "git_blob": "30bd03ea7b72977c169b9c58e5573272a5429348",
+        "blob_tree_match": true,
+        "unchanged_since_gate88": true
+      },
+      {
+        "path": "degradation-degeneracy/configs/sweep1d.yaml",
+        "bytes": 420,
+        "sha256": "3ff4bcf922b9f52c6773a6f6e5ff028e6874f18f12a9c948861fe1ea7ad9e7e8",
+        "git_blob": "a2efadfa629ff6fded6ec23c3f8ed031378f6fdc",
+        "blob_tree_match": true,
+        "unchanged_since_gate88": true
+      },
+      {
+        "path": "degradation-degeneracy/requirements-gpu.txt",
+        "bytes": 541,
+        "sha256": "8e04e2ae6e8d3a93cc912be9b4825c33316fd949e5d592ac8f0634357b0478bb",
+        "git_blob": "aa2882b2bcad47446775b3e2e77b517479cbfedd",
+        "blob_tree_match": true,
+        "unchanged_since_gate88": true
+      },
+      {
+        "path": "degradation-degeneracy/requirements.txt",
+        "bytes": 1031,
+        "sha256": "51496f89996c6de208281743bbba85cb0a822653d293a8752392d6a0528c1458",
+        "git_blob": "221a5470c5fc0632fb1e10c57c33337b9c30579f",
+        "blob_tree_match": true,
+        "unchanged_since_gate88": true
+      },
+      {
+        "path": "degradation-degeneracy/run.sh",
+        "bytes": 31412,
+        "sha256": "173286fe587fdd950866e35247832205c96f5edef55d490718a06f621da72163",
+        "git_blob": "24bd1d5bf78673359624b1f210dcf61e3048ee72",
+        "blob_tree_match": true,
+        "unchanged_since_gate88": true
+      },
+      {
+        "path": "degradation-degeneracy/scripts/archive_results.sh",
+        "bytes": 24405,
+        "sha256": "033369ab2c39578cc2d3750fa5c459a2b04e72d8f07c447025caf22cff605e03",
+        "git_blob": "a01a88aaa2610602bf67ae07df9ec75864d66864",
+        "blob_tree_match": true,
+        "unchanged_since_gate88": true
+      },
+      {
+        "path": "degradation-degeneracy/scripts/bg.sh",
+        "bytes": 3617,
+        "sha256": "699f4198ed7189cd4c5d9027a696b7b669b6aa299039fbaa0cd20088f5429536",
+        "git_blob": "cf25309bd031db0d01733b695e5eafd2c447040f",
+        "blob_tree_match": true,
+        "unchanged_since_gate88": true
+      },
+      {
+        "path": "degradation-degeneracy/scripts/check_run.py",
+        "bytes": 4182,
+        "sha256": "5baaebee5b401ca40ee73360e487486f8bd22824c70e50a16efa8a6ade9f1ce6",
+        "git_blob": "2e395bf8efc0d8eae3d6d793d21b267c6bf1ca9a",
+        "blob_tree_match": true,
+        "unchanged_since_gate88": true
+      },
+      {
+        "path": "degradation-degeneracy/scripts/diagnose_objective.py",
+        "bytes": 16182,
+        "sha256": "87af8d00a9e0de263b9c944f0b43464f187b1b6906fdc656ca5b0ef0bf67ede5",
+        "git_blob": "400217b57579e7accebdcd6e699c03f4655592e1",
+        "blob_tree_match": true,
+        "unchanged_since_gate88": true
+      },
+      {
+        "path": "degradation-degeneracy/scripts/recompute_lli.py",
+        "bytes": 3650,
+        "sha256": "f2d96112237c697ba89864febc32b896ff7cf3112ecb1c179b7cdb140b364e8d",
+        "git_blob": "459e23bdc3ef565a1063d26134d639d33d454eb7",
+        "blob_tree_match": true,
+        "unchanged_since_gate88": true
+      },
+      {
+        "path": "degradation-degeneracy/scripts/setup_env.sh",
+        "bytes": 5528,
+        "sha256": "60b530f7aa475309e78ad291ba76ba5cadc3af769c95cee0fb876eaf500de7f0",
+        "git_blob": "af7e90fb53466eba11d6e98dd6ac5e104a24983c",
+        "blob_tree_match": true,
+        "unchanged_since_gate88": true
+      },
+      {
+        "path": "degradation-degeneracy/scripts/smoke_e2e.sh",
+        "bytes": 40941,
+        "sha256": "b188fc73fb32da6f6bb5e928450c0d8f8734c57fe92e4358e47799e064762ba9",
+        "git_blob": "0ed80ce467f6602482e4663c87d6875700f15836",
+        "blob_tree_match": true,
+        "unchanged_since_gate88": true
+      },
+      {
+        "path": "degradation-degeneracy/scripts/verify_env.py",
+        "bytes": 9934,
+        "sha256": "18068c72c73394a5f74a82291ad3ee93fa432fc2d386d4983e8daac1b86fd6c0",
+        "git_blob": "9b91fa4a52d9e78ae5e210470901b0955eb190b6",
+        "blob_tree_match": true,
+        "unchanged_since_gate88": true
+      },
+      {
+        "path": "degradation-degeneracy/scripts/watch_fit.sh",
+        "bytes": 6667,
+        "sha256": "8a3d942ecb9cd224ba28281f031cc01155fd6d8be9e36dde8297d9793f1f4ea0",
+        "git_blob": "075efeb0dba31377a7b25e95aa6cd5e777805a1d",
+        "blob_tree_match": true,
+        "unchanged_since_gate88": true
+      },
+      {
+        "path": "degradation-degeneracy/scripts/watch_grid.sh",
+        "bytes": 2638,
+        "sha256": "b3d6b87e3a0724c95bc44a80f3d5d81eecb1f4b677dabac021b8f50b8565e796",
+        "git_blob": "ecbe1fb6f8908efa4943b242c9c84263a3c49605",
+        "blob_tree_match": true,
+        "unchanged_since_gate88": true
+      },
+      {
+        "path": "degradation-degeneracy/src/__init__.py",
+        "bytes": 92,
+        "sha256": "5165e2618734da76cdc2eaf8830456de2e62ffe4bd457b08ef36dfa209a2afba",
+        "git_blob": "d639d01e2bd3b35bbc5df7dabe90e2a4540de2f2",
+        "blob_tree_match": true,
+        "unchanged_since_gate88": true
+      },
+      {
+        "path": "degradation-degeneracy/src/baseline.py",
+        "bytes": 13605,
+        "sha256": "ce2288e9ad9bdf924a67d4809b23cfc12853aac9090642b9c3cd9f3faf677a14",
+        "git_blob": "8c7c0a8664cb52b95c1fec2b8a56e52bb7af1edc",
+        "blob_tree_match": true,
+        "unchanged_since_gate88": true
+      },
+      {
+        "path": "degradation-degeneracy/src/config.py",
+        "bytes": 5241,
+        "sha256": "bb484b08796f11c8affc6bf8f4505d296c812fe206b104c994d120386bc94057",
+        "git_blob": "71cd84003c0827558664f1cba6181e2e0748a7bd",
+        "blob_tree_match": true,
+        "unchanged_since_gate88": true
+      },
+      {
+        "path": "degradation-degeneracy/src/curves.py",
+        "bytes": 4168,
+        "sha256": "161c21ca3813071969cfb5679ae701b95059235a0612dd5464694a96e31a11d1",
+        "git_blob": "ac1a337e5cde52bf4fe572738c682b589e529a95",
+        "blob_tree_match": true,
+        "unchanged_since_gate88": true
+      },
+      {
+        "path": "degradation-degeneracy/src/fitting.py",
+        "bytes": 149987,
+        "sha256": "b9a24eccd4be188eba1fd62b235d7a26d2c38adf5fd4820a03c4d12776ad2ec8",
+        "git_blob": "723a47489d6c7c811be6be285e4e6c70b607e62a",
+        "blob_tree_match": true,
+        "unchanged_since_gate88": true
+      },
+      {
+        "path": "degradation-degeneracy/src/grid.py",
+        "bytes": 50583,
+        "sha256": "0b70f3f109ee79654c40535ea22c1f87f57feccde77ed45afaadcea6b9ef6f01",
+        "git_blob": "5702c0d061d980d44018fc2b746c04fc6423f827",
+        "blob_tree_match": true,
+        "unchanged_since_gate88": true
+      },
+      {
+        "path": "degradation-degeneracy/src/halfcell.py",
+        "bytes": 34552,
+        "sha256": "75073523310d54c76df4fd1f4d30a1e9006b1ddb9cb963b5399a20c6c8ef5c25",
+        "git_blob": "51b30edec0dd19edda4e6461bed6fc694d4f9a06",
+        "blob_tree_match": true,
+        "unchanged_since_gate88": true
+      },
+      {
+        "path": "degradation-degeneracy/src/hessian.py",
+        "bytes": 17102,
+        "sha256": "eb0c6afee492ea0fec114d9a83a40be21148b348d5644565b8b3a09f4600f047",
+        "git_blob": "13895858d80a553b461444464bffe755186c317b",
+        "blob_tree_match": true,
+        "unchanged_since_gate88": true
+      },
+      {
+        "path": "degradation-degeneracy/src/inventory.py",
+        "bytes": 4529,
+        "sha256": "ea8b5e2a1f8fa7c417610bc18d478e9842c65e9ade0cdb471bb7052b40237847",
+        "git_blob": "ea33221fab0cd74868587e4b5e78fb2633931666",
+        "blob_tree_match": true,
+        "unchanged_since_gate88": true
+      },
+      {
+        "path": "degradation-degeneracy/src/io.py",
+        "bytes": 141436,
+        "sha256": "e8f9561b6492d5a54595f557e38762156fab9a014d857c6d3aee668f85e16a38",
+        "git_blob": "9284a4370bc6afb52722fb60e78657016ea44111",
+        "blob_tree_match": true,
+        "unchanged_since_gate88": true
+      },
+      {
+        "path": "degradation-degeneracy/src/model.py",
+        "bytes": 1284,
+        "sha256": "ae5faf879011d376073eb843e6f09e5ffd246f1855143967b6c1ba87e6defe01",
+        "git_blob": "50cb5d479841977948ada4ed0be09569fd5440a8",
+        "blob_tree_match": true,
+        "unchanged_since_gate88": true
+      },
+      {
+        "path": "degradation-degeneracy/src/modes.py",
+        "bytes": 10869,
+        "sha256": "3e5ba16720b6d9d3dd716e4f88d0a4d369787773675fd6061c6c85bebc287e46",
+        "git_blob": "68b94790a58929b211fb21b3534b10b569fedafa",
+        "blob_tree_match": true,
+        "unchanged_since_gate88": true
+      },
+      {
+        "path": "degradation-degeneracy/src/objective.py",
+        "bytes": 11313,
+        "sha256": "b60e5e9b1be320e8d7aee04cec6813e3deabf0a86043170b093015b65eb02d2c",
+        "git_blob": "d8b0f2771e4cd72d5a204a09d6fdd2260b0042f7",
+        "blob_tree_match": true,
+        "unchanged_since_gate88": true
+      },
+      {
+        "path": "degradation-degeneracy/src/protocol.py",
+        "bytes": 1541,
+        "sha256": "47ca32d35a483ff4923dfd0e51b81628e4dfe930d2e7430ea78adf14be6c6c84",
+        "git_blob": "350eb61d81b9d7bb512dc725d0f5448184be5825",
+        "blob_tree_match": true,
+        "unchanged_since_gate88": true
+      },
+      {
+        "path": "degradation-degeneracy/src/runner.py",
+        "bytes": 4421,
+        "sha256": "d7938749a23624bd3ff18056fe3538a18f16996f12bb3e3d6835984386cb6a82",
+        "git_blob": "aa0351e32595de255d1dc9924f9eac8a504ba27d",
+        "blob_tree_match": true,
+        "unchanged_since_gate88": true
+      },
+      {
+        "path": "degradation-degeneracy/src/scoring.py",
+        "bytes": 32192,
+        "sha256": "69e69cb046f4b4aee2acf039faa9d69fc9ed032eab96093e54b0ca68b860a43d",
+        "git_blob": "434324c889c4febff1905cfec884272e07fe7d93",
+        "blob_tree_match": true,
+        "unchanged_since_gate88": true
+      },
+      {
+        "path": "degradation-degeneracy/src/sweep.py",
+        "bytes": 4310,
+        "sha256": "5db99fd0f77e03ef613cc8390d3cd4e320b80240abe7e579b314364425c42524",
+        "git_blob": "ac06f021dc0d9ed1f551c8cdcfc18d34f2693b75",
+        "blob_tree_match": true,
+        "unchanged_since_gate88": true
+      },
+      {
+        "path": "degradation-degeneracy/src/weight_sweep.py",
+        "bytes": 21984,
+        "sha256": "b68077d76c12268f07fa638b53847d24f6c4d026793efc226b03a4cd73e413c1",
+        "git_blob": "3bd1f1dc36f2000ce4b4ddfdd33d18e9eeb5c4e7",
+        "blob_tree_match": true,
+        "unchanged_since_gate88": true
+      },
+      {
+        "path": "degradation-degeneracy/tools/analyze_22p_gap.py",
+        "bytes": 24121,
+        "sha256": "b4f18bfa86eed8b5cf86507dd3f0dbd58a83edb2937e129452b3aef19039a164",
+        "git_blob": "315ebee3b225239ec0532c1b5589fff2039622fe",
+        "blob_tree_match": true,
+        "unchanged_since_gate88": true
+      },
+      {
+        "path": "degradation-degeneracy/tools/archive_bundle.py",
+        "bytes": 29529,
+        "sha256": "5f7fc3c89dfe5dba5a6653c0f162c6615c1449808ba83f8e724683a0ed903d41",
+        "git_blob": "43db05edca3803a00cd9f75ec570ab880dfcb216",
+        "blob_tree_match": true,
+        "unchanged_since_gate88": true
+      },
+      {
+        "path": "degradation-degeneracy/tools/check_derived_fresh.py",
+        "bytes": 2010,
+        "sha256": "8819cb2acd2d920189832b03cd41c90c61de0faeffb07ed186e6d8fdfce6aa53",
+        "git_blob": "c7094cc9f25a1849780e76fa209fcac97ff439e7",
+        "blob_tree_match": true,
+        "unchanged_since_gate88": true
+      },
+      {
+        "path": "degradation-degeneracy/tools/check_sweep_consistency.py",
+        "bytes": 14037,
+        "sha256": "5c31f80c97460bf7c6bfed05aa59969ae1686a363d5246e9f1633651700c6f20",
+        "git_blob": "f48826b6048e7cb3449f67dbe0c8e96e3b2d9475",
+        "blob_tree_match": true,
+        "unchanged_since_gate88": true
+      },
+      {
+        "path": "degradation-degeneracy/tools/compare_cases.py",
+        "bytes": 14675,
+        "sha256": "918271276a73dfc155692a2e5df4180cc1dae6272cd24c6b8d2525d92310225a",
+        "git_blob": "9e91a6198010335d0b4f7c684ef1e66ce0a0b4e8",
+        "blob_tree_match": true,
+        "unchanged_since_gate88": true
+      },
+      {
+        "path": "degradation-degeneracy/tools/compare_objectives.py",
+        "bytes": 43112,
+        "sha256": "9b2b1bc22404568362202d8d67fa4d398a4864384242e54e6885a076d561e890",
+        "git_blob": "6227d1b394a4e8b0519f9102444311fe829d26bf",
+        "blob_tree_match": true,
+        "unchanged_since_gate88": true
+      },
+      {
+        "path": "degradation-degeneracy/tools/design_golden.yaml",
+        "bytes": 5313,
+        "sha256": "6dde9078c31f9f2ffa4bd6ef57b71a9f1fd8521b5cf3fd24998b2a26f5107b9b",
+        "git_blob": "280c1b904d54ff2152a71f025654f058916c69b5",
+        "blob_tree_match": true,
+        "unchanged_since_gate88": true
+      },
+      {
+        "path": "degradation-degeneracy/tools/design_wire.py",
+        "bytes": 46973,
+        "sha256": "4609706a54fa8a53665846761b6dbaa54eeb5a9012fd8aed65dbd27ab7f12f1f",
+        "git_blob": "1f388c039d97384f8316afa975338e60c6d866c9",
+        "blob_tree_match": true,
+        "unchanged_since_gate88": true
+      },
+      {
+        "path": "degradation-degeneracy/tools/diagnose_pini_transition.py",
+        "bytes": 7566,
+        "sha256": "68234373abaffa97f8bc5debc68a81b2e7e3990e2334df7f579deacf8088f62b",
+        "git_blob": "725b8b8ffaa380bed3f74a468e5b7a0e730815d3",
+        "blob_tree_match": true,
+        "unchanged_since_gate88": true
+      },
+      {
+        "path": "degradation-degeneracy/tools/gen_design_golden.py",
+        "bytes": 5640,
+        "sha256": "5b3c96735948ab650833337b0830083418d2bed4f9fbd1d4188774e7f7040183",
+        "git_blob": "907ba3ec7c028d4a969282215b870f5484b56a82",
+        "blob_tree_match": true,
+        "unchanged_since_gate88": true
+      },
+      {
+        "path": "degradation-degeneracy/tools/index_yaml.py",
+        "bytes": 4642,
+        "sha256": "c199b7da2aa23dd4003143de2fcdc6cc65f06b81a3e06d4fd8cba1183c1cdb6e",
+        "git_blob": "2bfed95fdc864ebe33a5ec0c826ddc1c1e837a64",
+        "blob_tree_match": true,
+        "unchanged_since_gate88": true
+      },
+      {
+        "path": "degradation-degeneracy/tools/interactive_ab.py",
+        "bytes": 3667,
+        "sha256": "fd6686c5d122317f902b0302e28cda8307240842fd39d2bd4d6e40ef93c5f402",
+        "git_blob": "1b06e3c5e168f6f26bdabe52053219c7428e4a34",
+        "blob_tree_match": true,
+        "unchanged_since_gate88": true
+      },
+      {
+        "path": "degradation-degeneracy/tools/make_results.py",
+        "bytes": 108627,
+        "sha256": "db6a3186f430b283cc7be1eec5f1c4a4f0af1ed6fb38f20c220e073450003e22",
+        "git_blob": "6d53940881313130af6bf4c835e63346ccbe718a",
+        "blob_tree_match": true,
+        "unchanged_since_gate88": true
+      },
+      {
+        "path": "degradation-degeneracy/tools/plot_grid_summary.py",
+        "bytes": 2494,
+        "sha256": "7ec2076a57031dbeecf8ed98eb6c7e1a36b565d0354af53a7477b7c24557d400",
+        "git_blob": "3c51850d21f0c07093f71280599470b925ffdcf1",
+        "blob_tree_match": true,
+        "unchanged_since_gate88": true
+      },
+      {
+        "path": "degradation-degeneracy/tools/plot_map.py",
+        "bytes": 4734,
+        "sha256": "421670597eb994bd689564c56e807af2b9c501bf6f8008e575213960ac8be06e",
+        "git_blob": "a0f57fe5ecac6b592078ac9453f9bff569b1e330",
+        "blob_tree_match": true,
+        "unchanged_since_gate88": true
+      },
+      {
+        "path": "degradation-degeneracy/tools/plot_sweep1d.py",
+        "bytes": 3070,
+        "sha256": "df911d7cc60d38088bb1329733af16387b4fa55beb537e2f31b158754a42a89b",
+        "git_blob": "d8e7acce385dddd410f72fca4b61aaf183d49a66",
+        "blob_tree_match": true,
+        "unchanged_since_gate88": true
+      },
+      {
+        "path": "degradation-degeneracy/tools/preserve.py",
+        "bytes": 529220,
+        "sha256": "e3469ffb5143444ec1d2b0855a6f4caba9de5add2b9a31cf7ec1f550dfa3d7ef",
+        "git_blob": "e8f3105b784fc8ff8e184b3e671a2d68d138ad9f",
+        "blob_tree_match": true,
+        "unchanged_since_gate88": false
+      }
+    ]
+  },
+  "production_diff": "--- gate88\n+++ gate89\n@@ -9140,6 +9140,10 @@\n                         \"plan\", f\"{leg_id!r}: fit 이 소비한 밖 입력 (consumed.external_input {str(_ext)[:16]} · receipt \"\n                                 f\"{str(_rc_pkg)[:16]}) 이 계획 fit.in_digest {str(_plan_in)[:16]} 와 다르다 — 승인한 입력의 \"\n                                 \"산물이라고 말할 근거가 없으므로 닫을 수 없다 (88차 §14-2 d)\")\n+                # ★ 89차 §15 (G88-N1) — 원장에 옮길 **같은 snapshot** 의 receipt 가 자기 입력 결속을 아직 지키는가. 위 비교는\n+                #   묶음 digest 문자열만 본다 — 기록 뒤 `inputs` 만 지우거나 바꾸면 세 문자열이 그대로라 그 receipt 가 원장으로\n+                #   갔다. 기록 때 (`phase_done`) 와 같은 공통 검사를 원장 · claim 변경 전에 다시 건다.\n+                _assert_external_input_binding(_fit_ent.get(\"receipt\") or {})\n             coh = next((c for c in doc.get(\"cohorts\") or []\n                         if c.get(\"cohort_id\") == claim.cohort_id), None)\n             if coh is None:",
+  "ast_review": {
+    "top_level_function_set_unchanged": true,
+    "changed_functions": [
+      "finalize_leg"
+    ],
+    "new_call_count_in_finalizer": 1,
+    "new_call_line": 9146,
+    "new_call_expression": "_assert_external_input_binding(_fit_ent.get('receipt') or {})",
+    "ancestors": [
+      {
+        "kind": "if",
+        "line": 9130,
+        "test": "_required == FIT_ONLY_PHASES"
+      },
+      {
+        "kind": "with",
+        "line": 9098,
+        "items": [
+          "_ledger_lock(path)"
+        ]
+      },
+      {
+        "kind": "with",
+        "line": 9010,
+        "items": [
+          "_lifecycle_locks(leg_id, token_file, claims_root)"
+        ]
+      }
+    ],
+    "entire_module_ast_after_removing_call_equals_prior": true
+  },
+  "gate88_tests_byte_identical": true,
+  "frozen_spec_byte_identical": true,
+  "receipt_checks": {
+    "paired_fixed5_v4": {
+      "history_byte_identical_to_prior_current": true,
+      "unified_diff": "--- gate88\n+++ gate89\n@@ -1,7 +1,7 @@\n schema_version: 2\n _주의: 이 파일은 손으로 쓰지 않는다. `python3 docs/22p_gap/make_receipt.py <leg>` 가 만들고 `--check` 가 **core 바이트 동일**\n   재생성을 확인한다.\n-core_sha256: 5b32e3b5e8e0a81bc033c3f6a6ee1c50dd3ac6c4e3626c0f8afd765a68c27bdb\n+core_sha256: 20645070605f0f0330b478cb4b77ad283f2ef542e4bcec138298e39a739694e0\n core:\n   leg_id: paired_fixed5_v4\n   bundle:\n@@ -62,7 +62,7 @@\n       필수_입력_존재: 통과\n       행별_서명: 통과\n   identity:\n-    validator_source_digest: 7dd546baaee9e823\n+    validator_source_digest: 803e2b7781cbc9cd\n     src_io_sha256: e8f9561b6492d5a5\n     src_scoring_sha256: 69e69cb046f4b4ae\n     archive_bundle_sha256: 5f7fc3c89dfe5dba\n@@ -94,9 +94,9 @@\n   outputs_agree: true\n stamp:\n   _주의: 기록용. core 재생성 대조에서 제외된다.\n-  validator_commit: 12a2c27bec467db59f1ab5b3e6025f9a31388598\n+  validator_commit: 134f26f48a4146432a677515c2ddbdc0d460a376\n   validator_tree_dirty: false\n-  generated_at_utc: '2026-10-03T09:50:06Z'\n+  generated_at_utc: '2026-10-04T07:04:54Z'\n   runtime:\n     python: 3.11.15\n     platform: Linux-6.18.44-fc-v64-x86_64-with-glibc2.39"
+    },
+    "grid_fit_v5": {
+      "history_byte_identical_to_prior_current": true,
+      "unified_diff": "--- gate88\n+++ gate89\n@@ -1,7 +1,7 @@\n schema_version: 2\n _주의: 이 파일은 손으로 쓰지 않는다. `python3 docs/22p_gap/make_receipt.py <leg>` 가 만들고 `--check` 가 **core 바이트 동일**\n   재생성을 확인한다.\n-core_sha256: f7e4cf939009b0dd7ea68275aa9318774c8d51680e557f5e1c437c743e76c9d5\n+core_sha256: e556380777b2110652d9e8f2fe8e984739733d271fa66a4a599d9c5c27da21c0\n core:\n   leg_id: grid_fit_v5\n   bundle:\n@@ -60,7 +60,7 @@\n       필수_입력_존재: 통과\n       행별_서명: 통과\n   identity:\n-    validator_source_digest: 7dd546baaee9e823\n+    validator_source_digest: 803e2b7781cbc9cd\n     src_io_sha256: e8f9561b6492d5a5\n     src_scoring_sha256: 69e69cb046f4b4ae\n     archive_bundle_sha256: 5f7fc3c89dfe5dba\n@@ -92,9 +92,9 @@\n   outputs_agree: true\n stamp:\n   _주의: 기록용. core 재생성 대조에서 제외된다.\n-  validator_commit: 12a2c27bec467db59f1ab5b3e6025f9a31388598\n+  validator_commit: 134f26f48a4146432a677515c2ddbdc0d460a376\n   validator_tree_dirty: true\n-  generated_at_utc: '2026-10-03T09:50:43Z'\n+  generated_at_utc: '2026-10-04T07:05:31Z'\n   runtime:\n     python: 3.11.15\n     platform: Linux-6.18.44-fc-v64-x86_64-with-glibc2.39"
+    }
+  },
+  "ledger_diff": "--- gate88\n+++ gate89\n@@ -806,12 +806,12 @@\n     payload_index_sha256: eeb8ae8911083c992710ace2c8f255682b64930a03929f12ae72796ade174716\n     member_rehash_by: tools.archive_bundle.check\n     verification_receipt: docs/22p_gap/receipts/paired_fixed5_v4.validate.yaml\n-    verification_receipt_core_sha256: 5b32e3b5e8e0a81bc033c3f6a6ee1c50dd3ac6c4e3626c0f8afd765a68c27bdb\n+    verification_receipt_core_sha256: 20645070605f0f0330b478cb4b77ad283f2ef542e4bcec138298e39a739694e0\n     verification_receipt_generator: docs/22p_gap/make_receipt.py\n     empty_root_restore: true\n     rescored_from_restored_fits: true\n     validator_identity:\n-      source_digest: 7dd546baaee9e823\n+      source_digest: 803e2b7781cbc9cd\n       n_checks: 35\n       ok: true\n     leg_source_digest: d50295f980ccaa81\n@@ -1010,13 +1010,13 @@\n     member_rehash_by: tools.archive_bundle.check\n     fits_sha256: 378ffde80b2a44d99efa3bff3e712b7cd44b41e0073d712fdf63d4efca864042\n     verification_receipt: docs/22p_gap/receipts/grid_fit_v5.validate.yaml\n-    verification_receipt_core_sha256: f7e4cf939009b0dd7ea68275aa9318774c8d51680e557f5e1c437c743e76c9d5\n+    verification_receipt_core_sha256: e556380777b2110652d9e8f2fe8e984739733d271fa66a4a599d9c5c27da21c0\n     verification_receipt_generator: docs/22p_gap/make_receipt.py\n     empty_root_restore: true\n     regeneration_capability: available_raw_present\n     rescored_from_restored_fits: true\n     validator_identity:\n-      source_digest: 7dd546baaee9e823\n+      source_digest: 803e2b7781cbc9cd\n       n_checks: 34\n       ok: true\n     bundle_content_id: d59744657f3a2086a8069c720bea4468a89c3e36e2221475d0db441c62baf8ae",
+  "mutation_registry_diff": "--- gate88\n+++ gate89\n@@ -2292,6 +2292,18 @@\n      '    if claim is None or claim.required_phases() != FIT_ONLY_PHASES:\\n',\n      '    if claim is None:  # 변이: v2 claim 에도 밖 입력 결속을 싣는다 (v2 receipt 바이트가 바뀐다)\\n',\n      \"f00_06\"),\n+    # ── 89차 G88-N1 한정 보완 (고정 표 §15-4 · 원장 §132) ──\n+    (\"finalize-rechecks-the-durable-input-binding-g89\", PRESERVE,          # §15-2: 최종화가 같은 snapshot 의 결속을 다시 본다\n+     '                _assert_external_input_binding(_fit_ent.get(\"receipt\") or {})\\n',\n+     '                pass  # 변이: 최종화의 durable 입력 결속 재검사를 끈다\\n',\n+     \"test_gate89 and d02\"),\n+    # 같은 자리를 -g88 (`finalize-binds-the-receipt-package-to-the-consumer-g88`) 도 끈다 — 그 선택자 (f03_06 묶음 digest 단독\n+    # 변조) 는 이제 새 검사가 다른 이유로 잡는다 (§15-4 증인 갱신). 새 검사를 **통과하는** 자기일관 위조 (d03) 에서는 이 비교만\n+    # 남는다 — 그것이 여전히 무는가를 따로 고정한다.\n+    (\"finalize-still-binds-the-receipt-package-to-the-consumer-g89\", PRESERVE,  # §15-3 d03\n+     '                        and secrets.compare_digest(str(_rc_pkg), str(_ext))):\\n',\n+     '                        ):  # 변이: receipt 묶음 ↔ 소비 결속 대조를 끈다 (89차 d03 — 자기일관 위조)\\n',\n+     \"test_gate89 and d03\"),\n ]\n \n #: 여러 지점을 **함께** 되돌려야 관측되는 변이 (심층 방어라 하나만 지우면\n@@ -7075,13 +7087,19 @@\n                 \"Failed: DID NOT RAISE PreserveError\",\n         }\n     },\n+    # ★ 89차 §15-4 — 증인이 바뀌었다 (`-k finalize-binds-the-receipt-package-to-the-consumer-g88 --emit-expect` 관측값 ·\n+    #   `gate89_evidence/05`). 원래 증인은 `Failed: DID NOT RAISE PreserveError` 였다. G88-N1 의 새 검사 (`finalize_leg` 가\n+    #   같은 snapshot 의 fit receipt 에 `_assert_external_input_binding`) 가 묶음 digest **단독** 변조를 결속 이유 (\"자기모순\")\n+    #   로 잡으므로, 이 비교를 꺼도 거부는 일어나고 이유 대조만 실패한다 — 변이 본문 · `-k` · fail node 는 그대로. 이 비교가\n+    #   여전히 필요함은 새 검사를 **통과하는** 자기일관 위조로 `finalize-still-binds-the-receipt-package-to-the-consumer-g89`\n+    #   (d03) 가 따로 증명한다.\n     \"finalize-binds-the-receipt-package-to-the-consumer-g88\": {\n         \"fail\": [\n             \"tests/test_gate88_fit_only_lifecycle.py::test_f03_06_a_self_consistent_binding_forgery_is_refused[receipt_package_tampered]\",\n         ],\n         \"witness\": {\n             \"tests/test_gate88_fit_only_lifecycle.py::test_f03_06_a_self_consistent_binding_forgery_is_refused[receipt_package_tampered]\":\n-                \"Failed: DID NOT RAISE PreserveError\",\n+                \"AssertionError: 거부 이유가 receipt 묶음 ↔ 소비 결속 대조가 아니다\",\n         }\n     },\n     \"fit-input-binding-is-only-for-fit-only-claims-g88\": {\n@@ -7108,6 +7126,34 @@\n         ],\n         \"witness\": {\n             \"tests/test_gate88_fit_only_lifecycle.py::test_f03_06_a_self_consistent_binding_forgery_is_refused[inputs_not_hex]\":\n+                \"Failed: DID NOT RAISE PreserveError\",\n+        }\n+    },\n+    # ── 89차 G88-N1 한정 보완 (고정 표 §15-4 · 관측: 2026-10-04 `-k g89 --emit-expect` · `gate89_evidence/04` · 2/2 사망) ──\n+    \"finalize-rechecks-the-durable-input-binding-g89\": {\n+        \"fail\": [\n+            \"tests/test_gate89_finalize_input_binding.py::test_d02_finalize_refuses_a_fit_receipt_whose_inputs_changed_after_recording[inputs_deleted]\",\n+            \"tests/test_gate89_finalize_input_binding.py::test_d02_finalize_refuses_a_fit_receipt_whose_inputs_changed_after_recording[inputs_extra_key]\",\n+            \"tests/test_gate89_finalize_input_binding.py::test_d02_finalize_refuses_a_fit_receipt_whose_inputs_changed_after_recording[inputs_value_not_hex]\",\n+            \"tests/test_gate89_finalize_input_binding.py::test_d02_finalize_refuses_a_fit_receipt_whose_inputs_changed_after_recording[inputs_value_other_hex64]\",\n+        ],\n+        \"witness\": {\n+            \"tests/test_gate89_finalize_input_binding.py::test_d02_finalize_refuses_a_fit_receipt_whose_inputs_changed_after_recording[inputs_deleted]\":\n+                \"Failed: DID NOT RAISE PreserveError\",\n+            \"tests/test_gate89_finalize_input_binding.py::test_d02_finalize_refuses_a_fit_receipt_whose_inputs_changed_after_recording[inputs_extra_key]\":\n+                \"Failed: DID NOT RAISE PreserveError\",\n+            \"tests/test_gate89_finalize_input_binding.py::test_d02_finalize_refuses_a_fit_receipt_whose_inputs_changed_after_recording[inputs_value_not_hex]\":\n+                \"Failed: DID NOT RAISE PreserveError\",\n+            \"tests/test_gate89_finalize_input_binding.py::test_d02_finalize_refuses_a_fit_receipt_whose_inputs_changed_after_recording[inputs_value_other_hex64]\":\n+                \"Failed: DID NOT RAISE PreserveError\",\n+        }\n+    },\n+    \"finalize-still-binds-the-receipt-package-to-the-consumer-g89\": {\n+        \"fail\": [\n+            \"tests/test_gate89_finalize_input_binding.py::test_d03_a_self_consistent_receipt_forgery_after_recording_is_refused_by_the_consumer_binding\",\n+        ],\n+        \"witness\": {\n+            \"tests/test_gate89_finalize_input_binding.py::test_d03_a_self_consistent_receipt_forgery_after_recording_is_refused_by_the_consumer_binding\":\n                 \"Failed: DID NOT RAISE PreserveError\",\n         }\n     },",
+  "final_log_observations": {
+    "10_full_pytest_66129fc6a_2139passed.log": {
+      "boundary_lines": [
+        "start 2026-10-04T07:08:17Z HEAD 66129fc6adff6d84648454481cfcc773b3bf7674 dirty=0",
+        "2139 passed, 1 xfailed in 3150.79s (0:52:30)",
+        "pytest rc=0",
+        "end 2026-10-04T08:00:50Z HEAD 66129fc6adff6d84648454481cfcc773b3bf7674 dirty=0"
+      ],
+      "killed_lines": 0,
+      "declared_lines": 0,
+      "unexpected_outcome_lines": []
+    },
+    "11_smoke_66129fc6a_rc0.log": {
+      "boundary_lines": [
+        "start 2026-10-04T08:00:50Z HEAD 66129fc6adff6d84648454481cfcc773b3bf7674 dirty=0",
+        "   ✅ 6조건 × 2목적함수, 조건별 (index,source) 집합 동일, 전부 3 restart·유한",
+        "   ✅ paired 보고서 생성 (n_restarts=3, pairwise 메타 키 포함)",
+        "smoke rc=0",
+        "end 2026-10-04T08:03:15Z HEAD 66129fc6adff6d84648454481cfcc773b3bf7674 dirty=0"
+      ],
+      "killed_lines": 0,
+      "declared_lines": 0,
+      "unexpected_outcome_lines": []
+    },
+    "12_full_replay_66129fc6a_397_of_397_rc0.log": {
+      "boundary_lines": [
+        "start 2026-10-04T08:03:15Z HEAD 66129fc6adff6d84648454481cfcc773b3bf7674 dirty=0",
+        "물었다        producer-cut-is-declared       node 1 · -k producer_semantic_digest_excludes_the_publication_path",
+        "물었다        complete-current-supersedes-pending node 1 · -k complete_current_supersedes_a_leftover_pending",
+        "물었다        ledger-status-enum             node 4 · -k status_is_an_exact_enum",
+        "물었다        planned-status-is-not-standing node 1 · -k standing_authorization",
+        "물었다        warm-edges-are-declared        node 1 · -k warm_consumers_go_through_the_accessors",
+        "물었다        sink-subset-of-roster          node 1 · -k complete_undeclared_leg_never_reaches_pending",
+        "물었다        trust-boundary-declared        node 1 · -k publisher_declares_its_trust_boundary",
+        "물었다        pending-base-generation        node 2 · -k stale_bootstrap_pending",
+        "물었다        pending-closed-schema          node 2 · -k stale_bootstrap_pending",
+        "물었다        finalize-holds-the-claim-lock  node 2 · -k canonical_lock_order_is_declared_and_finalize_holds_the_claim or finalize_recovery_branch_holds_the_claim_lock",
+        "물었다        preservation-status-inside-the-contract node 1 · -k the_runtime_preservation_enum_is_inside_the_contract",
+        "물었다        finalize-writes-the-whole-tuple node 1 · -k finalize_writes_a_complete_contract_status_tuple",
+        "물었다        lifecycle-head-anchors-the-tip node 1 · -k the_lifecycle_journal_is_a_hash_chain",
+        "물었다        lifecycle-completes-a-partial-append node 1 · -k freeze_crash_between_journal_and_anchor_is_recoverable",
+        "물었다        fit-axis-seals-the-smoothing-backend node 1 · -k effective_smoothing_backend_is_inside_the_approval",
+        "물었다        env-fingerprint-seals-the-smoothing-backend node 1 · -k effective_smoothing_backend_is_inside_the_approval",
+        "물었다        freeze-linearizes-its-start    node 1 · -k issuer_refuses_while_a_freeze_is_half_committed",
+        "물었다        append-finishes-the-pending-anchor-first node 1 · -k two_consecutive_partial_appends_are_still_recoverable",
+        "물었다        evidence-paths-are-repo-relative node 1 · -k evidence_tree_digest_does_not_depend_on_the_checkout_path",
+        "물었다        anchor-repair-holds-the-lifecycle-lock node 1 · -k stale_anchor_repair_cannot_rewind_the_head",
+        "물었다        execution-receipt-binds-the-startup-g58 node 2 · -k the_execution_receipt_binds",
+        "물었다        replay-forces-the-declared-environment-g58 node 1 · -k the_replayed_run_itself_sees_only_a_declared_environment",
+        "물었다        run-content-id-refuses-unknown-manifests-g59 node 1 · -k an_undeclared_manifest_in_a_run_dir_is_refused",
+        "물었다        run-manifest-schema-is-production-wide-g59 node 1 · -k the_start_manifest_takes_part_in_the_content_identity",
+        "물었다        startup-binds-every-loaded-module-g59 node 2 · -k the_startup_probe_binds_what_sitecustomize_pulls_in or a_module_with_no_findable_spec_is_still_bound",
+        "물었다        compound-heads-are-import-time-g60 node 5 · -k compound_heads_and_vararg_annotations_are_import_time",
+        "물었다        vararg-annotations-are-import-time-g60 node 5 · -k compound_heads_and_vararg_annotations_are_import_time",
+        "물었다        run-lock-exclusivity-is-a-kernel-op-g62 node 4 · -k two_contenders_that_both_observe_absence_do_not_both_acquire or eight_processes_racing_for_one_lock_yield_exactly_one_holder or a_live_holder_in_another_process_is_refused_by_pid or run_lock_blocks_concurrent_run",
+        "물었다        definition-head-is-the-enclosing-scope-g62 node 3 · -k the_analyzer_does_not_shadow_the_default_with_the_parameter or a_parameter_does_not_exempt_a_capability_in_the_head",
+        "물었다        unreadable-bytes-fail-the-section-g62 node 1 · -k an_unreadable_startup_byte_makes_the_section_failed",
+        "물었다        zip-origins-are-hashed-g62     node 1 · -k a_zip_imported_startup_module_is_hashed_not_unfiled",
+        "물었다        history-refuses-a-vanished-module-g62 node 1 · -k a_startup_module_removed_after_import_is_a_failed_measurement",
+        "물었다        startup-history-is-measured-g60 node 1 · -k a_dropped_submodule_is_measured_by_the_history",
+        "물었다        importable-roots-are-measured-g60 node 1 · -k a_module_imported_after_startup_is_inside_the_receipt",
+        "물었다        startup-history-runs-verbose-imports-g63 node 1 · -k an_ordinary_failed_optional_import_keeps_startup_measured",
+        "물었다        attempted-only-names-are-not-loaded-modules-g63 node 1 · -k an_ordinary_failed_optional_import_keeps_startup_measured",
+        "물었다        type-params-bounds-are-definition-head-g63 node 2 · -k scope_walk_covers_the_bound_of_an_ordinary_generic_function or a_type_parameter_bound_is_evaluated_outside_the_parameters",
+        "물었다        usercustomize-follows-the-startup-activation-g64 node 4 · -k a_forged_absent_namespace_is_still_rejected or a_forged_absent_is_still_rejected or a_forged_absent_namespace_is_rejected_with_user_site_off or the_same_forgery_is_rejected_with_user_site_on",
+        "물었다        parent-compares-the-loaded-origin-g66 node 3 · -k a_cwd_file_that_startup_never_imported_is_not_expected or a_startup_that_cleans_its_own_path_is_still_accepted or a_startup_that_prepends_another_candidate_is_still_accepted",
+        "물었다        failed-restarts-are-recorded-g79 node 1 · -k g79_04_a",
+        "물었다        absent-restart-fields-are-unrecorded-g79 node 1 · -k g79_06",
+        "물었다        the-consumer-checks-the-profile-before-start-g82 node 1 · -k g82_n2_03",
+        "물었다        coverage-checker-derives-from-receipts node 1 · -k coverage_receipts_are_verified_independently",
+        "물었다        flock-two-publisher            node 1 · -k two_independent_publishers",
+        "신고         public-lifecycle-in-two-publisher-fixture — 이 mutant 는 fixture 를 내부 helper 직호출로 되돌리는 것인데, 그러면 fixture 가 문법적으로 다른 코드가 되어 '같은 시험을 다른 코드로 돌린' 것이 된다. 대신 `..._two_independent_publishers_lose_no_leg` 가 두 child 가 **public entry 를 지났다는 marker** 를 남기는지 실행 중에 확인하도록 시험을 보강했다 (45차).",
+        "신고         release-cleanup-holds-the-attempt-path — 이 lock 순서(`LOCK_ORDER`: attempt_path → claim → ledger)는 그대로 지킬 규칙이다. 그런데 그것을 물던 회귀(`release_cleanup_cannot_delete_another_legs_token`)는 **caller 가 다른 다리의 token 경로를 고르는** 상황을 겨눴고, 57차 P0-1 이 그 인자를 없애면서 시나리오 자체가 표현 불가가 되어 지웠다. 12조각 전수 재생이 이것을 `수집 rc 5`(고른 시험 0건)로 드러냈다 — 조각으로 나눠 돌리지 않았으면 안 보였을 자리다. 표현 불가가 된 상황을 흉내 내는 시험을 새로 지어내면 그것은 증거가 아니라 장식이므로, **회귀 없는 방어**임을 신고하고 남긴다. 같은 lock 을 쓰는 다른 자리(`finalize-holds-the-claim-lock`)는 여전히 executable 이다.",
+        "신고         coverage-checks-the-recorded-head — 이 변이는 **변이 sandbox 안에서 관측할 수 없다.** 검사(`git cat-file -e <head>^{commit}`)는 git 역사가 있어야 물을 수 있는데, sandbox 는 추적 파일만 복사한 사본이라 `.git` 이 없다. 그래서 sandbox 에서는 변이 전 baseline 부터 이미 빨갛고(회귀가 '이 저장소에 없는 HEAD' 를 만들 수 없다), 빨간 것은 검사가 지워져서가 아니라 **환경이 다르기** 때문이다 — 그런 빨강은 증거가 아니다. 대신 회귀(`..._the_recorded_head_must_exist_in_this_repository`)가 실저장소에서 매번 돌며, 모든 HEAD 를 40개의 `0` 으로 바꾼 조각이 `rc 1` 로 거부되는지 확인한다 (리뷰어 반례를 그대로 고정한 것이다).",
+        "신고         shadows-are-scoped-g60         — 60차 P0-11 은 shadow 를 **scope 별**로 좁혔다 (59차는 `ast.walk` 로 중첩 함수의 매개변수까지 한 set 에 합쳤다). 의미는 그것이 맞다. 그런데 평평한 shadow 와 결과가 **갈라지는** 형태를 두 벌 지어 실측했더니 둘 다 변이 rc 0 이었다: ① 능력을 부르는 형태는 P0-10 의 둘째 층(호출자가 준 이름을 부르는 것은 거부)이 평평한 shadow 아래서 오히려 **더 넓게** 문다. ② 능력을 이름으로 들고 나오는 형태는 58차 L9-b(`능력을 값으로 옮긴다`)가 shadow 와 무관하게 문다. 평평한 shadow 는 좁힌 것보다 **더 허용적**인데, 더 허용된 자리를 전부 다른 규칙이 이미 막고 있어 관측 가능한 차이가 비어 있다 — 48차 `idempotent-shares-the-validator` 와 같은 형태다. 없는 자리를 만들어 내는 대신 신고한다. 회귀(`..._a_nested_scope_binding_does_not_exempt_the_outer_scope` 와 `..._a_binding_still_shadows_inside_its_own_scope`)는 남긴다.",
+        "scenario_total 408 · scenario_executable 397 · scenario_declared 11 · site_total 446 · site_executable 435 · site_declared 11 · ran 397",
+        "replay rc=0",
+        "end 2026-10-04T10:29:58Z HEAD 66129fc6adff6d84648454481cfcc773b3bf7674 dirty=0"
+      ],
+      "killed_lines": 397,
+      "declared_lines": 11,
+      "unexpected_outcome_lines": []
+    },
+    "14_docs_lint_send_8113f12bd_358passed.log": {
+      "boundary_lines": [
+        "start 2026-10-04T10:34:11Z HEAD 8113f12bd8f3e457670117ceef53501967e8594c dirty=0",
+        "358 passed in 1463.30s (0:24:23)",
+        "rc=0",
+        "end 2026-10-04T10:58:36Z HEAD 8113f12bd8f3e457670117ceef53501967e8594c dirty=0"
+      ],
+      "killed_lines": 0,
+      "declared_lines": 0,
+      "unexpected_outcome_lines": []
+    }
+  },
+  "reviewer_program_executions": {
+    "received_source": 0,
+    "project_tests": 0,
+    "mutation_replay": 0,
+    "receipt_regeneration": 0,
+    "native_or_comsol": 0
+  },
+  "integrity_and_ast_checks_pass": true
+}

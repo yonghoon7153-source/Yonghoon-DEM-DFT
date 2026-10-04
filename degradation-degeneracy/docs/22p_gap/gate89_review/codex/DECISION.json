@@ -1,0 +1,44 @@
+{
+  "date": "2026-10-04",
+  "request_ref": "8113f12bd8f3e457670117ceef53501967e8594c",
+  "code_ref": "26c11d6fc7feeb92bd68fce4c3972d849ada2774",
+  "source_digest": "803e2b7781cbc9cd",
+  "decision": "ACCEPT_G88_N1_AND_CLOSE_STAGE3_ROUND2B",
+  "blocking_findings": [],
+  "G88_N1": "CLOSED",
+  "stage3_round2b": "CLOSED",
+  "prior_acceptance": "PRESERVED",
+  "existing_rejection_reasons": "PRESERVED_WITHIN_REVIEWED_SCOPE",
+  "v2": "UNCHANGED",
+  "receipt_generation": "ACCEPTED_WITH_HISTORY_PRESERVED",
+  "scope_files": 58,
+  "scope_changed_files": [
+    "tools/preserve.py"
+  ],
+  "scope_diff": {
+    "added": 4,
+    "removed": 0
+  },
+  "independent_integrity_ast_checks": "PASS",
+  "logs": {
+    "manifest_verified": 15,
+    "supplemental_verified": 1,
+    "source": "submitter-preserved logs; not reviewer live OS observation"
+  },
+  "source_execution_by_reviewer": 0,
+  "tests_by_reviewer": 0,
+  "comsol_calls_by_reviewer": 0,
+  "execution_go": false,
+  "new_research_leg_approved": false,
+  "operational_v6_plan_approved": false,
+  "generation_registration_approved": false,
+  "p_ini_approved": false,
+  "requirements_change_approved": false,
+  "next": "Separate PyBaMM pin scope/identity/validation and user authorization; no automatic start.",
+  "limits": [
+    "Generic malformed durable-state types not newly hardened",
+    "Concurrent execution not newly validated",
+    "Duplicate mutation site not counted as independent coverage",
+    "YAML core serialization hash not independently recomputed; receipt identity, exact text diff, history and producer logs reviewed"
+  ]
+}

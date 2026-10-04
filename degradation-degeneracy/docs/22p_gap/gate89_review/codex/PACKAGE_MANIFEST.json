@@ -1,0 +1,73 @@
+{
+  "schema": "review-package-manifest/v1",
+  "request_ref": "8113f12bd8f3e457670117ceef53501967e8594c",
+  "source_digest": "803e2b7781cbc9cd",
+  "payload_count": 12,
+  "files": [
+    {
+      "path": "CLAUDE_REPLY_KO.md",
+      "bytes": 2323,
+      "sha256": "445042929a5952af79dc1906f6cc2db364b03ce94ec72918045caec3d35aefc9"
+    },
+    {
+      "path": "DECISION.json",
+      "bytes": 1583,
+      "sha256": "45eaa24c0d96d6a9fc4e88fc54e610fcb164bdc183072144ee92d36a04403338"
+    },
+    {
+      "path": "PRIOR_RECEIVED_SNAPSHOT.json",
+      "bytes": 2849558,
+      "sha256": "c5e46ab6e12750c19f179431c5e570afb917f59bd662d04937e1c882e235f411"
+    },
+    {
+      "path": "PRIOR_RUN_SCOPE_SNAPSHOT.json",
+      "bytes": 1623277,
+      "sha256": "88cfec922794d4f056f3958781b359eaf0ba2084ccd4dd1d62ac2b7c2ff23354"
+    },
+    {
+      "path": "PRODUCTION.diff",
+      "bytes": 1130,
+      "sha256": "21e3fce49e8758454a554ba4cc62e657cbe58a77e31886c2b577df3bda9c82bb"
+    },
+    {
+      "path": "README.md",
+      "bytes": 2081,
+      "sha256": "a1f76348c99402ead002b29d3789bb9a4c19144de39f82129710e8d5c22f93ce"
+    },
+    {
+      "path": "RECEIVED_SNAPSHOT.json",
+      "bytes": 1811987,
+      "sha256": "5a3ff362ef4aed80833fccca243e5350b568a0e98fa023886b0bc8829376d652"
+    },
+    {
+      "path": "REVIEW_KO.md",
+      "bytes": 7730,
+      "sha256": "ba5fa9c0beb9c150bbe55909465bd87a1615c1f41fd68bf24c7ef756f70d7da8"
+    },
+    {
+      "path": "REVIEWER_FINAL_STATIC_RETURN.json",
+      "bytes": 50258,
+      "sha256": "0d5eea31fe28d400e8c3171cea47fb694e38b13ef5079b6dc52fca239333e211"
+    },
+    {
+      "path": "reviewer_static_audit.py",
+      "bytes": 6804,
+      "sha256": "7ab0e7f3e6f4b341eb0a914ab253aba49c607a7bc5ade6c599d0b59bd9ef699d"
+    },
+    {
+      "path": "REVIEWER_TOOL_RETURNS.json",
+      "bytes": 930,
+      "sha256": "b8760bf71696508c5e11b43540d6ee59084baa20ed06d0bcba5e4e5dfd5fc7d3"
+    },
+    {
+      "path": "STATIC_AUDIT.json",
+      "bytes": 54091,
+      "sha256": "36e51df9c4b84cbfbb428b2216fd520a9bc52dbfa40184f8d9c8fdf20f7a9dd5"
+    }
+  ],
+  "excluded": [
+    "PACKAGE_MANIFEST.json",
+    "ZIP container"
+  ],
+  "received_program_execution_authorized": false
+}

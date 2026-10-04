@@ -1,0 +1,13 @@
+--- gate88
++++ gate89
+@@ -9140,6 +9140,10 @@
+                         "plan", f"{leg_id!r}: fit 이 소비한 밖 입력 (consumed.external_input {str(_ext)[:16]} · receipt "
+                                 f"{str(_rc_pkg)[:16]}) 이 계획 fit.in_digest {str(_plan_in)[:16]} 와 다르다 — 승인한 입력의 "
+                                 "산물이라고 말할 근거가 없으므로 닫을 수 없다 (88차 §14-2 d)")
++                # ★ 89차 §15 (G88-N1) — 원장에 옮길 **같은 snapshot** 의 receipt 가 자기 입력 결속을 아직 지키는가. 위 비교는
++                #   묶음 digest 문자열만 본다 — 기록 뒤 `inputs` 만 지우거나 바꾸면 세 문자열이 그대로라 그 receipt 가 원장으로
++                #   갔다. 기록 때 (`phase_done`) 와 같은 공통 검사를 원장 · claim 변경 전에 다시 건다.
++                _assert_external_input_binding(_fit_ent.get("receipt") or {})
+             coh = next((c for c in doc.get("cohorts") or []
+                         if c.get("cohort_id") == claim.cohort_id), None)
+             if coh is None:
