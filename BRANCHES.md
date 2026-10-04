@@ -322,5 +322,6 @@ git push -u origin claude/14-gate-code-review-9qkx05
 | 2026-10-04 | `degradation-degeneracy/.gitattributes` 규칙 `docs/22p_gap/gate88_review/** -text !eol` (88차 리뷰 패키지 보존 전) | `be6358fd1` | 밖 | 할 일 없음 |
 | 2026-10-04 | 원장 §131 — 88차 회신 접수 (2b 종결 보류 · G88-N1 P1) · 패키지 보존 `0e0a1975c` | 이 행이 든 커밋 | 밖 | 할 일 없음 (ff 로 그대로 들어간다) |
 | 2026-10-04 | `bms-balancing/.gitattributes` 규칙 — REIL v2 재검토 묶음 `reviews/prereview_reil_v2_20261004/** -text` (게이트 차수 밖) | `6c78b5d74` | 밖 | 할 일 없음 |
+| 2026-10-04 | 원장 §132 — G88-N1 한정 보완 착수 승인 기록 · 고정 표 `STAGE3_IMPL_ROUND1_SPEC.md` §15 (코드 변경 전) | 이 행이 든 커밋 | 밖 | — |
 
 ### 복귀 결과 (복귀 정리 커밋이 덧붙인다)

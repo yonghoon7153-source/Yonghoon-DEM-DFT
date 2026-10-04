@@ -9010,3 +9010,28 @@ receipt 를 `phase_done` 에 처음 주는 경우) 와 **최종화의 문자열 
 `phase_done` 뒤 inputs 삭제 · 유효 hex64 값 교체 · 키 추가 · 비hex → 실제 `finalize_leg` 거부 · 결속 이유 · 원장 바이트 불변) → 최소
 GREEN → 변이 (새 호출 제거 포함) → 영수증 history + 1 회 → 전체 회귀 · smoke · 등록부 전체 재생 → GATE89. 이 회신은 구현 · 시험
 실행 승인이 아니다. 이미 수용한 부분과 과거 원문 · 중단/실패/충돌 기록은 다시 열거나 고치지 않는다.
+
+## §132 G88-N1 한정 보완 착수 승인 기록 — fit 전용 최종화의 durable 입력 결속 재검사 (2026-10-04 · 구현 전 · 실행 GO 아님)
+
+**사용자 결정 (2026-10-04):** "이대로 시작" — §131 다음의 채팅 승인 질문 ("이대로 시작할까요? 승인하시면 승인 기록(원장 §132)과 §15
+계약을 코드보다 먼저 커밋하고 RED부터 시작합니다") 에 대한 답. 같은 날 따로 온 "부탁해용" (REIL 정정 부속 문서 A 의 Codex 재검토
+요청문) 은 이 게이트 라운드와 **섞지 않는다** — 게이트 차수 밖 · 별도 문서 · 별도 발송.
+
+**범위 · 고정:** `docs/22p_gap/STAGE3_IMPL_ROUND1_SPEC.md` **§15** (이 커밋 · 코드 변경 전). 요지 — 생산 파일 상한 `tools/preserve.py`
+하나 (`src/fitting.py` · `run.sh` · `src/io.py` · `src/grid.py` 불변) · `finalize_leg` 의 fit 전용 분기 안에서 기존 세 문자열 비교
+(`consumed.external_input` = 계획 `fit.in_digest` = receipt `input_package_digest`) **뒤**, 두 lock 안 · 원장 · claim 변경 **전**에, 위에서
+한 번 읽은 snapshot 의 fit receipt 에 기존 `_assert_external_input_binding` 을 적용 (새 함수 · 두 번째 공식 없음) · 기존 거부 이유 · v2 ·
+기수용 경로 불변.
+
+**시험 · 변이:** 새 파일 `tests/test_gate89_finalize_input_binding.py` — d01 durable 양성 · d02 × 4 음성 (`phase_done` 뒤 저장 claim 의
+`inputs` 삭제 / 유효 hex64 교체 / 키 추가 / 비hex → 실제 `finalize_leg` 거부 · 결속 이유 · 원장 · claim 바이트 불변) · d03 자기일관 위조
+대조. `tests/test_gate88_fit_only_lifecycle.py` 는 불변 (88차 검토 원문). 변이 `-g89` 둘 + **기존 `-g88` 한 항목
+(`finalize-binds-the-receipt-package-to-the-consumer-g88`) 의 증인 갱신** — 새 검사가 같은 변조를 다른 이유로 잡기 때문이며 본문 · `-k` ·
+fail node 는 불변 (§15-4 · 승인 질문에서 사용자에게 미리 알림). 그 밖의 기존 증인이 바뀌면 멈추고 보고한다.
+
+**하지 않음:** `phase_done` · `resume_claim` · `inspect_leg_run` · `precheck_leg_run` 쪽 검사 추가 · durable state 의 형 손상 일반 ·
+실행 GO · 새 연구 leg · 운영 원장 v6 계획 · 세대표 등록 · p_ini · class/투영 게시 · requirements (pybamm 고정은 2b 종결 뒤 별도 라운드).
+
+**절차:** RED → 최소 GREEN → 변이 `-g89` (+ `-g88` 증인 한 건) → 영수증 history 보존 + 1 회 재생성 → 전체 회귀 · smoke · 등록부 전체
+변이 재생 → GATE89 요청문. 88차 발송 HEAD `d6056415b` 의 docs-lint 358 passed 원문 로그를 gate89 증거에 보충으로 싣는다 (88차 리뷰어:
+16 원문 밖).

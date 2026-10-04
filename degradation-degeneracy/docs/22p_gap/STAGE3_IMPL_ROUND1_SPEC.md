@@ -356,3 +356,50 @@ RED 에서 "통과" 로 떨어지는 node 가 실제 결함 증거다 (s00 의 �
 ### 14-4. 영수증 · 순서
 
 RUN_SCOPE (`tools/preserve.py` · `src/fitting.py`) 가 바뀌므로 source_digest · 두 leg 영수증의 validator identity 가 움직인다 → history 보존 뒤 1 회 재생성 (2a · 2b 와 같은 절차) → 전체 pytest · smoke (clean) · 등록부 전체 변이 재생 → GATE88.
+
+## §15 G88-N1 한정 보완 — fit 전용 최종화가 원장에 옮길 receipt 의 입력 결속 재검사 (2026-10-04 · 코드 변경 전 · 사용자 승인 "이대로 시작" · 원문은 원장 §132)
+
+> §1–§14 불변. 88차 회신 (원장 §131) 이 2b 종결을 G88-N1 (P1) 한 건으로 보류했다. 좌표는 `e462a3d19` (= 현재 RUN_SCOPE · source_digest `7dd546baaee9e823`). **실행 GO 아님.**
+
+### 15-1. 범위
+
+| 항목 | 내용 |
+|---|---|
+| 항목 | G88-N1 하나 — fit 전용 claim 의 `finalize_leg` 가 원장에 옮길 **같은 snapshot** 의 fit receipt 에 기존 `_assert_external_input_binding` 을 다시 적용 |
+| 생산 파일 상한 | `tools/preserve.py` 하나 (`finalize_leg` fit 전용 분기 `:9130` 안 · 호출 한 줄 + 주석). `src/fitting.py` · `run.sh` · `src/io.py` · `src/grid.py` 불변 · 밖이 필요하면 멈추고 그 차이만 승인 요청 |
+| 함께 | `tests/test_gate89_finalize_input_binding.py` 새 파일 (RED 먼저 · 88차 모듈 helper 재사용 · `conftest._GATED_ENTRYPOINT_MODULES` 등록) · `tests/test_gate88_fit_only_lifecycle.py` **불변** (88차 검토 원문) · `docs/22p_gap/mutation_replay.py` (`-g89` 둘 + 15-4 의 -g88 증인 한 건) · 영수증 history → 두 leg 1 회 · 전체 회귀 · smoke · 등록부 전체 변이 재생 → GATE89 |
+| 하지 않음 | `phase_done` · `resume_claim` · `inspect_leg_run` · `precheck_leg_run` 쪽 검사 추가 (최소 보완 밖 — 필요해 보이면 멈추고 묻는다) · durable state 형 손상 일반 · 결속 함수 두 벌 · 기존 세 문자열 비교의 제거 · 순서 변경 · v2 분기 · 수치 본체 · 실행 GO · 새 연구 leg · 운영 v6 계획 · 세대표 · p_ini · class/투영 · requirements (pybamm 고정은 분리한 별도 라운드) |
+
+### 15-2. 고정
+
+| # | 규칙 |
+|---|---|
+| a | 자리: `finalize_leg` 의 `if _required == FIT_ONLY_PHASES:` 분기 — 두 lock (`_lifecycle_locks` `:9010` · `_ledger_lock` `:9098`) 안 · 원장 `legs` 추가 · `_atomic_write_text` (`:9206`) · claim 삭제 **전**. 거부는 `PreserveError("plan")` |
+| b | 대상: 위에서 **한 번 읽은** `snap` 의 `phases.fit.receipt` — 다시 읽지 않는다 (49차 P0-6: 검사한 것 = 옮기는 것) |
+| c | 검사: 기존 공통 `_assert_external_input_binding(receipt)` 그대로 — 키 집합 = `PHASE_INPUT_KEYS` · 값 hex64 · `input_package_digest(inputs)` 재계산 = receipt `input_package_digest`. 새 함수 · 두 번째 공식 없음 |
+| d | 순서: 기존 세 문자열 비교 (`consumed.external_input` = 계획 `fit.in_digest` = receipt `input_package_digest`) **뒤**. 기존 거부 이유 (f03_03 · f03_06 `receipt_package_tampered` 의 "소비한 밖 입력") 불변. 둘이 함께 원장에 옮기는 `inputs` → 묶음 digest → consumed → 계획 승인값 사슬을 최종화 시점에 닫는다 |
+| e | 그대로: v2 (grid → fit) 최종화 · v2 fit receipt 키 (f00_06) · `_already_finalized` 멱등 분기 · 실행 기록 `phases` = claim 집합 · 재개 / 상태 view |
+
+### 15-3. 회귀 (RED 먼저 · 새 파일 · node `d01`–)
+
+| node | 내용 | RED 기대 |
+|---|---|---|
+| d01 양성 | v3 fit-only: `phase_done("fit", 실제 묶음 receipt)` → token 으로 `resume_claim` (durable 다시 읽기) → 실제 `finalize_leg` → executed · 원장 기록 `phases.fit.receipt` = 기록한 receipt (`inputs` 포함) | 통과 |
+| d02 음성 ×4 | `phase_done` 뒤 저장 claim 의 `phases.fit.receipt` 만 바꾼다 — (i) `inputs` 삭제 · (ii) 값 하나를 다른 **유효 hex64** 로 (`input_package_digest` 그대로) · (iii) 키 추가 · (iv) 값 하나를 비hex 로 → 실제 `finalize_leg` 거부 · 이유 = 결속 오류 (i · iii · iv "`inputs` 가 … 닫혀 있지 않다" · ii "자기모순") · **원장 바이트 · claim 파일 바이트 불변** | 4 failed (DID NOT RAISE — 지금은 executed) |
+| d03 대조 | `phase_done` 뒤 값 하나 + `input_package_digest` 를 그 값으로 다시 계산 (자기일관 위조 · consumed 그대로) → 거부 · 이유 = 기존 "소비한 밖 입력" — 새 검사를 통과하는 위조라서 기존 receipt ↔ consumed 비교가 계속 필요함을 고정 | 통과 |
+
+v2 대조는 새로 만들지 않는다 — 기존 f00_05 (v2 grid → fit 최종화 · fit receipt `{"fits": 3}` 에 `inputs` 없음 → executed) 가 새 검사가 v2 로 새면 빨개진다. 새 node 이름이 등록부의 기존 `-k` 와 겹치지 않음을 KeywordMatcher 로 확인한다 (88차와 같은 절차). 새 모듈은 88차 · 87차 모듈과 **동시에 돌리지 않는다** (고정 scratch 경로 — 88차 §6-f 교훈).
+
+### 15-4. 변이
+
+| 이름 | 바꾸는 것 | 죽이는 node · 증인 |
+|---|---|---|
+| `finalize-rechecks-the-durable-input-binding-g89` | 새 호출 제거 | d02 ×4 · `Failed: DID NOT RAISE PreserveError` |
+| `finalize-still-binds-the-receipt-package-to-the-consumer-g89` | -g88 과 같은 자리 (receipt 묶음 ↔ consumed 비교) 를 끈다 — 선택자만 d03 | d03 · `Failed: DID NOT RAISE PreserveError` |
+| (-g88 증인 갱신) `finalize-binds-the-receipt-package-to-the-consumer-g88` | 본문 · `-k` · fail node 불변 · **증인만** — 새 검사가 pkg 단독 변조를 결속 이유로 잡으므로 `DID NOT RAISE` → 이유 대조 실패 (`--emit-expect` 관측값 · 60차 마감 선례대로 원래 증인을 주석에 남김) | f03_06 `receipt_package_tampered` |
+
+그 밖의 기존 증인이 바뀌면 멈추고 보고한다.
+
+### 15-5. 영수증 · 순서
+
+RUN_SCOPE (`tools/preserve.py`) 가 바뀌므로 source_digest · 두 leg 영수증의 validator identity 가 움직인다 → history 보존 뒤 1 회 재생성 (88차와 같은 절차 · LEG_PRESERVATION 앵커 2×2) → 전체 pytest · smoke (clean) · 등록부 전체 변이 재생 (start HEAD = end HEAD · dirty 0 · 다른 시험 동시 실행 없음) → GATE89. 88차 발송 HEAD `d6056415b` 의 docs-lint 358 PASS 원문 로그를 gate89 증거에 보충으로 싣는다 (리뷰어: 16 원문 밖).
