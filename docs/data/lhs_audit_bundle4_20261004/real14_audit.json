@@ -1,0 +1,77 @@
+{
+ "stress": {
+  "n_atoms": 33289,
+  "n_contacts": 106563,
+  "n_by_type": {
+   "AM_P": 36,
+   "AM_S": 421,
+   "SE": 32832
+  },
+  "repro_median_ratio_xx_yy_zz": [
+   0.999991,
+   0.999993,
+   1.000005
+  ],
+  "n_atoms_no_contact": 9,
+  "total_virial_sym_over_branch": [
+   -1.0,
+   -1.0,
+   -1.0
+  ],
+  "webapp_50_50": {
+   "stress_cv": 213.07552589217207,
+   "stress_ratio_AM_P": 0.8837113373195838,
+   "stress_ratio_AM_S": 1.0850542348557315,
+   "stress_ratio_SE": 0.9990368713140301
+  },
+  "love_weber_branch": {
+   "stress_cv": 132.53865551502096,
+   "stress_ratio_AM_P": 3.2167687382098884,
+   "stress_ratio_AM_S": 2.3432329413744144,
+   "stress_ratio_SE": 0.9803452502773456
+  },
+  "n_floor_touching": {
+   "AM_P": 7,
+   "AM_S": 52,
+   "SE": 2237
+  }
+ },
+ "constriction": {
+  "hertzian/ionic": {
+   "reported_1_minus_bulk_frac_all_edges": 0.7663,
+   "unweighted_perc_edges": 0.7661,
+   "power_weighted_I2R": 0.7861,
+   "n_perc_edges": 74459
+  },
+  "hertzian/electronic": {
+   "reported_1_minus_bulk_frac_all_edges": 0.8693,
+   "unweighted_perc_edges": 0.868,
+   "power_weighted_I2R": 0.8333,
+   "n_perc_edges": 645
+  },
+  "hertzian/thermal": {
+   "reported_1_minus_bulk_frac_all_edges": 0.6926,
+   "unweighted_perc_edges": 0.6926,
+   "power_weighted_I2R": 0.6165,
+   "n_perc_edges": 106559
+  },
+  "physics/ionic": {
+   "reported_1_minus_bulk_frac_all_edges": 0.7823,
+   "unweighted_perc_edges": 0.782,
+   "power_weighted_I2R": 0.8277,
+   "n_perc_edges": 74459
+  },
+  "physics/electronic": {
+   "reported_1_minus_bulk_frac_all_edges": 0.8886,
+   "unweighted_perc_edges": 0.8875,
+   "power_weighted_I2R": 0.8302,
+   "n_perc_edges": 645
+  },
+  "physics/thermal": {
+   "reported_1_minus_bulk_frac_all_edges": 0.7042,
+   "unweighted_perc_edges": 0.7042,
+   "power_weighted_I2R": 0.5441,
+   "n_perc_edges": 106559
+  }
+ }
+}

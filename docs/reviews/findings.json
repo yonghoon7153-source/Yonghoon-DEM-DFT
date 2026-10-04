@@ -7403,6 +7403,58 @@
    ],
    "claimed_fixed_sha": "3e79aa61c",
    "verification_note": "3e79aa61c: 미분류 6 키 분류 — ptfe_block_scope = FIELD_CONTRACT generation 축 (차단 범위도 σ 침대를 바꾼다) · field_requested · electronic_field_pts · ionic_field_pts · fibre_segment_ledger · ptfe_block_cells (+ 새 interface_receipts) = MANIFEST_RESULT_KEYS · 실물 producer 매니페스트 전수 분류를 통합 시험이 매 게이트 강제 (레지스트리 표류 재발 방지) (10-03).  Codex 재검증 대기."
+  },
+  {
+   "id": "LHS-29",
+   "severity": "P1",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "claude (10-04 서브 세션 · J20-s LHS 감사 묶음 ④–⑦ · 코드 판독 + LIGGGHTS 공개 소스 + real_14 실측)",
+   "opened_in": "docs/reviews/lhs_handover_judgments_20260924.md",
+   "title": "σ_VM 열 (`stress_cv` · `stress_ratio_<상>` · `stress_z_layer_cv`) 이 LIGGGHTS `compute stress/atom` ÷ 입자 부피인데, 입자 접촉 virial 을 **두 입자에 0.5 · (x_i − x_j) ⊗ F 로 똑같이** 나눈 값이다 (공개 소스 pair_gran_base.h ev_tally_xyz · pair.cpp Pair::ev_tally_xyz) — 크기가 다른 쌍에서 큰 입자 응력은 과소 · 작은 입자는 과대 (r 6:1 손풀이 0.575 배 · 7.21 배).  real_14: stress_ratio_AM_P 0.884 (웹앱) ↔ 3.217 (Love–Weber · 입자 중심 → 접촉점) = 상 응력 대소가 **뒤집힌다** · stress_cv 213 → 133 %.  벽 · 판 접촉은 virial 0 (fix wall/gran) · 대각 성분만",
+   "note": "소비자: 웹앱 케이스 표 σ_*/σ_mean 행 (app.py · rebuild_tables_from_metrics) · 그룹 비교 · 등급 축 \"기계적 안정성\" (grade_engine.py stress_cv) · 탐색 적합 (physics_fit_v35 · screening — 생산 폼 아님).  처방 후보 (J20-s ④b, 비준 대기): 접촉 덤프 (힘 · 접촉점) 로 Love–Weber 입자 응력 전 텐서 새 열 · 옛 열 이름표 · 등급 축 전환은 바뀌는 등급값 보고 뒤.  실측 원자료 docs/data/lhs_audit_bundle4_20261004/real14_audit.json (리포만으로 재현).",
+   "evidence_tests": [
+    "scripts/lhs_stress_constriction_audit.py"
+   ]
+  },
+  {
+   "id": "LHS-30",
+   "severity": "P3",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "claude (10-04 서브 세션 · J20-s LHS 감사 묶음 ④–⑦ · 코드 판독 + LIGGGHTS 공개 소스 + real_14 실측)",
+   "opened_in": "docs/reviews/lhs_handover_judgments_20260924.md",
+   "title": "`bulk_resistance_fraction` 인계 전 정의 — 간선별 R_bulk/R_total 의 비가중 평균 (L2-08 = 이름표만 고침) 이라 거시 전력 몫이 아니다.  real_14 이온 1−bf 0.766 ↔ I²R 가중 0.786 (hertz) · 0.782 ↔ 0.828 (physics) · 열 physics 0.704 ↔ 0.544.  웹앱 주석 (app.py \"σ_ionic moves while σ_bulk stays fixed\") 은 모드 차이의 이유를 틀리게 적는다 (실제 = 접촉 면적 → R_c)",
+   "note": "처방 후보 (J20-s ④a): 새 열 constriction_power_share_ion_hertz (같은 FULL 해 · 관통 간선 · 가상 전극 제외) · 옛 열 이름표 · 봉인 모듈이라 S3 재봉인 묶음 · 주석 정정.  문턱 근처 침대의 크기는 미측정 (망 배치에서).",
+   "evidence_tests": [
+    "scripts/lhs_stress_constriction_audit.py"
+   ]
+  },
+  {
+   "id": "LHS-31",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "claude (10-04 서브 세션 · J20-s LHS 감사 묶음 ④–⑦ · 코드 판독 + LIGGGHTS 공개 소스 + real_14 실측)",
+   "opened_in": "docs/reviews/lhs_handover_judgments_20260924.md",
+   "title": "Auerbach 힘 기반 파쇄 열 (`fracture_index_force` · `frac_<단계>_force_pct`) 의 인계 한정어 미기재 — ① 마지막 프레임 힘 (압축 중 최대 아님 → 손상 하한) ② 벽 · 판 접촉 제외 ③ P_c 에 R_min (R* 아님) ④ K_IC_P 0.3 = 소결 펠릿값 (정본 카드 xu2017 — 이차입자 0.102 의 3 배) · K_IC_S 1.0 측정 근거 없음 — P_c ∝ K_IC² ⑤ A 200 · 배수 1·3·11·32 원전 카드 없음",
+   "note": "처방 (J20-s ⑥): 위 한정어로 인계 (열 사전 문구) · δ 판과 나란히 인용 금지 (09-19 그대로) · 상수 결정은 별도 (fracture_model.py 머리 주석의 Liu 2020 · Quinn 2020 · Lawn 1998 은 litdb 카드 확인 전 [미확인]).",
+   "evidence_tests": [
+    "scripts/fracture_model.py (판독)"
+   ]
+  },
+  {
+   "id": "LHS-32",
+   "severity": "P3",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "claude (10-04 서브 세션 · J20-s LHS 감사 묶음 ④–⑦ · 코드 판독 + LIGGGHTS 공개 소스 + real_14 실측)",
+   "opened_in": "docs/reviews/lhs_handover_judgments_20260924.md",
+   "title": "`path_hop_area_mean` · `path_hop_area_min_mean` 은 덩어리마다 고른 경로 30 개 (τ 순 best · 평균 근처 · worst 각 10) 의 평균 = 선별 표본 통계 — 모집단 기술자가 아니다",
+   "note": "처방 (J20-s ⑦): 인계 제외 · 웹앱 표시 문구는 그대로 두되 \"선별 경로\" 표기 후보.",
+   "evidence_tests": [
+    "scripts/analyze_contacts.py (판독 · 경로 선택 :700–753)"
+   ]
   }
  ]
 }
