@@ -3681,3 +3681,39 @@ Q2 (판정 구현) · Q3 (I-1–I-8 · 특히 `Nord` / `Distribution` 을 R480 �
 ### 47-2. 이 절이 **바꾸지 않는** 것
 
 §46 의 후보 · 요청문 · 꾸러미 문서 바이트 그대로 · 변경부 검증 · native 미승인 · 게이트 리뷰 (`degradation-degeneracy`) 와 무관 · RUN_SCOPE 0.
+
+## 48. B-min 후보 준비 검토 회신 접수 — `LOCAL_CORRECTIONS_REQUIRED` · P2 BMIN-N1 · BMIN-N2 · 비차단 C1 · 사용자: 국소 보완 지시 (2026-10-05)
+
+> **추가 기록이다.** 묶음 `reviews/r14_repros/codex63/comsol_bmin_candidate_review_20261005/` (ZIP 417,265 B · `e7a50f52…` · payload 16 + `REVIEW_MANIFEST.json`
+> 크기 · SHA 16/16 · CRLF 0 · 규칙 `3077aeae7` → 보존 `dea467628` · index blob = 바이트 18/18). 대상 = 고정 커밋 `74502af93` · manifest `3722a51f…`.
+> 검토자 실행: 후보 · 제출 도구의 import · 컴파일 · 실행 0 · COMSOL/JVM 0 — 검토자 자체 정적 도구만 (`DECISION.json` `scope`).
+
+### 48-1. 판정 (사본)
+
+| 항목 | 판정 |
+|---|---|
+| Q1 허용 diff | **수용** — 네 소스 역재구성을 검토자가 독립 구현해 NORMAL480 원본 바이트로 일치 · 유지 함수 (consumer 11 · 부모 5) 텍스트 일치 · 선언 밖 물리 / 수치 변경 없음 |
+| 기준 · 결속 | **수용** — NORMAL480 결과 ZIP 재해시 일치 · basis 9 = ZIP member · 기준 CSV 9 = ZIP member 크기 / SHA · 요청 1,637 · 주 301 · 좌표 241 × 2 · 한도 · 22 설정 결속 · 보존 88 blob · §46-7 고정 기준 |
+| Q5 경로 | 원 NORMAL480 `DIAGNOSTIC_RESULT.json` 의 `tables_manifest` 9 항목과 path / bytes / SHA 정확히 같음 · `Nord=1|Distribution=CubicRoot` 를 원시 `batch_console.log` (SHA `69caf6ff…`) 에서 직접 확인 — 현 실행 PC 의 현재 존재는 미관측 (native 전 identity 검사 유지) |
+| Q4 제거 기능 | **수용** (B020 · NORMAL240 접두 · >240 s 요약 · tolerance raise) |
+| **BMIN-N1 (P2)** | 부모 `GFields` (134–140행) 가 구성 증거 실패 · 분석 / 전달 예산 초과 때 **확인된 정상 native 종료**까지 `NOT_ESTABLISHED` 로 바꾼다 — 서로 다른 실패 원인을 한 축으로 합치는 계약 불일치. 보완: 부모가 native 자식 반환 · run / manifest 결속 · 종료 증거를 **독립 확인**하는 종료 축을 비교 / 분석 / 전달 수용과 분리 · 확인된 정상 종료는 유지하고 `evidence_validity` INVALID · `mesh_comparison` INCONCLUSIVE · consumer 문자열 무검증 복사 금지 · native 반환 / 종료 근거 실패면 NOT_ESTABLISHED + 원인 · 보호 중단도 독립 보존. 사례: 정상 종료 + 구성 증거 실패 · + 분석 예산 초과 · + 최종 전달 예산 초과 · 실제 native 실패 / 종료 근거 누락 (PS01-09 기대값부터) |
+| **BMIN-N2 (P2)** | consumer `mesh_evidence` (313–320행) 가 DOF 문구가 없어도 PASS · 초기화 DOF 만 남아도 그 마지막 값을 쓴다. NORMAL480 원 로그도 Stationary 1202+12 (batch.log 86행) 와 Time-Dependent 79485+12 (131행) 가 다른 단계다. 보완: 이미 확인하는 **단일 Time-Dependent Solver 구간**의 명확한 DOF 관측을 요구 — 누락 · 구간 밖 값만 · 모호 = I-3 미완 · 예상 156,925+12 와 다른 유효값은 값 · 차이 · 검토 사유를 남기되 실패시키지 않는다 (예상값을 새 합격 문턱으로 만들지 않는다). 사례: 같은 값 · 다른 유효값 · transient DOF 삭제 · 초기화 DOF 만 · 모호 |
+| 비차단 C1 | PS01-03/04 는 한도 부근 · 라벨 일치 검사이지 decimal 자릿수 반올림 경계 시험이 아니다 — PREPARATION 102–103행 · 요청문 자체 신고 d 를 실제 범위로 좁히거나 명시 사례 추가 |
+| Q6 | 9 군 41 사례 · 1,470 s 합은 맞다 — 보완 뒤 새 ID · 기대값 · 횟수 · 예산 · manifest 를 시험 전에 고정. native 10,500 s · 15 GiB 는 제안 그대로 (충분성 실측 · 승인 아님) |
+
+검토자의 다음 제출물 범위: N1 · N2 · C1 에 한정 — Java · entry · 물리 · 시간 목록 · 좌표 · 기준 CSV · 한도는 유지하고, 판정 / 증거 소비부와 계획 · 변경표 ·
+manifest 만 다시 결속 · 최소 diff · 새 CODE_MANIFEST · 정적 역재구성 · 두 항목의 이유별 검증안 · 비활성 승인문 · 제출 뒤 멈춘다. 범위를 넘을 필요가
+생기면 먼저 이유와 새 범위를 제시한다.
+
+### 48-2. 사용자 결정 — 국소 보완
+
+사용자 (2026-10-05): "검토 완료했습니다. 국소 보완 필요: P2 2건입니다. 1. 정상 종료가 확인됐다면, 이후 증거·분석·전달 실패와 구분해서 기록해야
+합니다. 2. 실제 transient 자유도 기록이 누락돼도 PASS가 되는 부분을 막아야 합니다. 예상값과의 차이는 계속 참고사항으로 둡니다. … 보완 후
+변경부 검증과 실제 계산은 각각 별도 승인입니다." — **N1 · N2 (+ C1 문구) 의 국소 보완 지시**로 받는다. 이는 §45 (후보 작성 · 제출까지) 의 범위
+안이다 — 보완본도 오프라인 후보이고 컴파일 · 기능 시험 · 변경부 검증 · COMSOL · native 는 들어 있지 않다. 보완본은 v1 꾸러미를 덮어쓰지 않고 새
+꾸러미 (`comsol_candidates/bmin_particle640_r1_20261005/`) 로 낸다.
+
+### 48-3. 이 절이 **바꾸지 않는** 것
+
+v1 후보 · 꾸러미 문서 · 요청문 바이트 그대로 (검토 대상 기록) · B-min v2 · 정상 gate INCOMPLETE · 실효 정책 UNVERIFIED · 960 s · 유한 σ · 다른 공간
+축 미승인 · 게이트 리뷰 (`degradation-degeneracy`) 와 무관 · RUN_SCOPE 0.
