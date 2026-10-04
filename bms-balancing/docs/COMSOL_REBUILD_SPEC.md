@@ -3785,3 +3785,51 @@ v1 후보 · 꾸러미 문서 · 요청문 바이트 그대로 (검토 대상 �
 > 접수한다.
 
 이 절이 바꾸지 않는 것: §52 의 모든 것 · 승인 플래그 전부 false · 변경부 검증 · native · COMSOL 미승인 · 게이트 리뷰와 무관 · RUN_SCOPE 0.
+
+## 54. B-min 후보 r1 재검토 회신 접수 — `LOCAL_CORRECTION_REQUIRED` · P2 잔여 1건 (BMIN-R1-N1 · 한 줄 안의 DOF 두 관측) · N1 · C1 수용 · 사용자: 국소 보완 지시 (2026-10-05)
+
+> **추가 기록이다.** 묶음 `reviews/r14_repros/codex63/comsol_bmin_r1_review_20261005/` (ZIP 1,101,617 B · `e6fd948f…` · payload 15 + `REVIEW_MANIFEST.json`
+> 크기 · SHA 15/15 · ZIP member 16 = 디스크 바이트 16/16 · CRLF 는 검토자 원문 둘 (`INDEPENDENT_STATIC_AUDIT.json` · `REVIEW_MANIFEST.json`) 에만 있고 그대로
+> 보존 · 규칙 `f0e384d79` → 보존 `b7397ed95` · index blob = 바이트 17/17). 대상 = 고정 커밋 `741dde19b` · 요청문 blob `f5fa9e2e…` · r1 manifest `9dcb47f0…`.
+> 검토자 실행: 후보 import · 구문 해석 · 컴파일 · 실행 0 · 제출 도구 실행 0 · COMSOL / JVM / native 0 — 검토자 자체 JSON · 해시 · 문자열 · ZIP 로그 읽기만
+> (`DECISION.json`).
+
+### 54-1. 판정 (사본)
+
+| 항목 | 판정 |
+|---|---|
+| 식별 | manifest 1,050 B · `9dcb47f0…` · 생산 파일 다섯 크기 / SHA 독립 대조 · Java · entry 는 v1 과 바이트 동일 · 부모 · consumer 의 선언 변경을 검토자 자체 처리로 역치환하면 v1 전체 바이트와 같다 · CONTRACT 차이는 DOF 상태 문구 하나 · COMMAND_MAP · 승인 필드 명세 차이는 manifest SHA 뿐 · 검토자가 이전에 확보한 v1 표본 28 blob 이 고정 커밋에서도 같다 (우리 "29 전체" 와 혼동하지 않는다 — 검토자 표기 · NORMAL480 → v1 검토 전부의 재실행 아님) |
+| **Q1 BMIN-N1** | **준비 수준 수용** — `GNativeAxis` (부모 135–186행) 가 native 자식 반환 타입 / rc / 오류 · 결과 run / manifest · 구조화된 종료 근거와 consumer 라벨 일치를 확인하고, `GFields` 는 비교 · 구성 · 분석 · 전달이 미완이어도 이 종료 축을 보존한다. "독립" = 같은 consumer 의 구조화된 종료 증거를 부모가 **별도 조건으로 소비**한다는 뜻 (원시 native 로그를 다른 관측자로 잰 것이 아니다 — 원시 로그 · 저장 시각 대조는 기존 `native_stop`). entry rc1 → `NOT_ESTABLISHED` / `NATIVE_CHILD_RC` 의 보수적 한계 수용 · entry 변경 요구 없음 · 이를 "solver 실패 확인" 으로 쓰거나 원래 오류를 지우면 안 된다 |
+| **Q2 BMIN-N2** | **부분** — 원래의 누락 · 구간 밖 문제는 닫혔다 · 한 줄 안의 모호성이 남는다 → BMIN-R1-N1 |
+| **BMIN-R1-N1 (P2)** | `candidate/src/diagnostic_consumer.py:322–325` — `mentions` 는 문구를 포함한 **줄** 수만 세고, `re.search` 는 그 줄의 첫 부분 일치를 돌려준다. 한 줄에 서로 다른 DOF 문구 둘 (79485 · 156925) 이 붙어도 `len(mentions)==1` 이고 첫 값을 채택한다 · 정상 문구 뒤에 `Number of degrees of freedom solved for: ???` 꼬리가 붙어도 첫 정상 조각만 읽는다 — "정확히 하나 · 형식 일치 · 모호하면 I-3 미완" 계약과 어긋남. 근거 = 소스 분기 추적 + 검토자 소유 문자열 모형 (`INDEPENDENT_STATIC_AUDIT.json` `static_string_cases` 6 · 후보 함수 실행 아님 · 실제 COMSOL 이 그런 로그를 낸다는 주장 아님 — 손상 / 모호 입력의 수용 경계 지적). 최소 보완: 단일 후보 줄의 앞뒤 공백은 허용하되 **전체 줄**을 DOF 형식과 대조 (또는 동등하게 잔여 내용 거부) · 첫 부분 문자열만 고르지 않는다 · 같은 줄 정상 둘 · 정상 + 불완전 꼬리를 이유 고정 음성 사례로 더한다 · 예상 156925+12 와 다르다는 이유의 거부는 **금지** (다른 유효값 = 기록만 유지) |
+| NORMAL480 원 로그 | 검토자가 원 ZIP (420,748,594 B · `e991ab4c…`) 을 재해시하고 `run/batch.log` (886,975 B · `805e6494…`) 를 직접 읽음: 86행 solved 1202 / internal 12 = Stationary 초기화 (transient 근거로 못 씀) · 131행 79485 / 12 = 단일 Time-Dependent Solver 구간 안의 유일한 DOF 줄 · 그 구간에 다른 DOF 줄 없음 → 새 "단일 transient 관측" 규칙의 양성 자료로 쓸 수 있다 (particle320 기준 로그 · particle640 의 실측 DOF 아님 · 원본 재실행 없음) |
+| **Q3 C1** | **원칙 수용** · 비차단 문구 정정 — PS01-03/04 축소와 PS01-16 의 목적 ("긴 소수의 부모 / consumer 불일치는 INCOMPLETE 로 닫는다") 은 적절 · 실제 목표 엔진에서 확인해야 한다 · 임의 정밀도 십진 비교 보증으로 쓰지 않는다. `0.001000000000000000000000000001` = **소수점 아래 30 자리 · 유효숫자 28 자리** → "31 significant digits" 정정 · PS01-16 을 `v2_section_8_required_items` 의 `value exactly equal to a limit` 목록에서 빼 정밀도 불일치 항목으로 분류 (정확 등호 대조 = 기존 PY01-02 / PS01-04) · 새 생산 코드 변경 사유 아님 |
+| **Q4 검증안** | 9 군 · 고유 ID 54 = Python 35 + Java helper 2 + PowerShell 17 · 예산 합 1,530 s **확인** (일부 ID 는 복수 입력 — "54 ID" 와 엔진 호출 / 하위 입력 수를 혼동하지 않는다 · 세션 · 횟수 · 예산은 제안이지 승인 · 충분성 실측이 아니다). 시작 전에 명시할 것: (1) 같은 줄 중복 / 정상 + 불완전 꼬리 거부를 추가하고 정상 단일 행 · 다른 유효값 수용은 유지 (2) consumer 의 `TRANSIENT_DOF_READBACK_VALUE` 에 직접 도달하는 solved=0 — PS01-17 의 부모 측 0 거부는 consumer 경로의 대체가 아니다 (3) `GNativeAxis` 의 native 반환 누락 / 오류 · 다른 run 또는 manifest · 모양은 있으나 모순된 종료 근거를 이유별로 확인하도록 기존 음성 사례 보강 — PS01-12~15 만으로 여섯 실패 원인이 모두 시험됐다고 부르지 않는다 (검증 커버리지 보강이지 새 생산 제어기 요구가 아니다) (4) 봉인된 함수 · harness · 엔진 · 각 입력 / 기대 이유 · 최종 고유 ID / 하위 사례 수를 실행 전에 고정 · 추가 사례로 총수 · 예산안이 바뀌면 사용자에게 제시 · 별도 승인 없이 횟수 · 예산을 늘리지 않는다 |
+
+검토자가 정한 다음 제출물 범위: DOF 한 줄 파싱 · 해당 검증안 · C1 문구 / 분류 · 변경표 · manifest · 참조 결속만 — Java · entry · 물리 · 수치 허용치 ·
+시간 / 좌표 · 기준 파일은 유지하고, 새 source seal 과 v1 / r1 대비 최소 diff 를 낸 뒤 멈춘다. 그 뒤 변경부 검증 = 사용자 별도 승인 · 검증 수용 뒤
+native 150 s 최대 1 회 = 다시 별도 승인. approved=false / usable=false · 전체 · 정상 gate INCOMPLETE · 실효 정책 UNVERIFIED · 960 s · 유한 σ · 다른 공간
+축 미승인 유지 (`DECISION.json`).
+
+### 54-2. 우리 확인 (접수 때)
+
+- 지적 위치 `diagnostic_consumer.py:322–325` 는 r1 꾸러미 바이트의 그 줄과 같다 (`mentions` 수집 · `need(len(mentions)==1, 'TRANSIENT_DOF_READBACK_COUNT:…')` ·
+  `re.search(pattern, mentions[0])` · `solved>0`). 고정 커밋 `741dde19b` 뒤 r1 · v1 꾸러미와 요청문의 변경은 0 이다 (`git diff 741dde19b HEAD`).
+- C1 자릿수: `0.001000000000000000000000000001` 은 소수점 아래 30 자리 · 유효숫자 28 자리 (우리 계산 일치). "31 significant digits" 는 r1 의 두 곳 —
+  `LIMITED_VALIDATION_PLAN.json` PS01-16 `fixture` (393행) · `R1_CHANGE_BOUNDARIES.json` `c1_wording` (40행). PS01-16 은 같은 검증안의
+  `v2_section_8_required_items` → `value exactly equal to a limit` 목록 (28–30행) 에 들어 있다. `PREPARATION_KO.md` · `VALIDATION_REQUEST_KO.md` · 요청문은
+  "소수 30 자리" 로 적었다 (자릿수는 맞다). 다만 PREPARATION 의 "(.NET decimal 의 28 자리를 넘는다)" 는 유효숫자가 아니라 **소수 자리 (scale) 상한
+  28** 을 넘는다는 뜻이므로 r2 에서 그렇게 풀어 쓴다.
+- 검토자가 대조한 NORMAL480 결과 ZIP 의 크기 · SHA 는 우리 기록 (§39-1 식별 행 · `COMSOL_BMIN_SCOPE_20261004.md` · v1 `BASELINE_IDENTITIES.json`) 과 같다.
+
+### 54-3. 사용자 결정 — 국소 보완 (r2)
+
+사용자 (2026-10-05): "정적 재검토 완료했습니다. P2 잔여 1건입니다. … DOF 문구가 한 줄에 두 개 붙으면 첫 값만 받아들이는 문제가 남았습니다. 이
+부분만 보완하면 됩니다. COMSOL·후보 코드는 실행하지 않았습니다. 보완 후 변경부 검증과 실제 계산은 각각 별도 승인입니다." — §48-2 와 같은 형태로,
+**BMIN-R1-N1 (+ C1 문구 · 분류 · 검증안 보강) 의 국소 보완 지시**로 받는다. §45 범위 안이다 (오프라인 후보 작성 · 제출까지 — 컴파일 · 기능 시험 ·
+변경부 검증 · COMSOL · native 없음). r2 는 v1 · r1 꾸러미를 덮어쓰지 않고 새 꾸러미 `comsol_candidates/bmin_particle640_r2_20261005/` 로 낸다.
+
+### 54-4. 이 절이 **바꾸지 않는** 것
+
+v1 · r1 후보 · 꾸러미 문서 · 요청문 바이트 그대로 (검토 대상 기록) · §52 의 모든 것 · 승인 플래그 전부 false · 정상 gate INCOMPLETE · 실효 정책
+UNVERIFIED · 960 s · 유한 σ · 다른 공간 축 미승인 · 게이트 리뷰 (`degradation-degeneracy`) 와 무관 · RUN_SCOPE 0.

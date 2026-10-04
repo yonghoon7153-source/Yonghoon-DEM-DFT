@@ -341,5 +341,6 @@ git push -u origin claude/14-gate-code-review-9qkx05
 | 2026-10-04 | 원장 §136 — 90차 요청 (`GATE90_REQUEST.md`) · 게이트 요청 발송 대기 (발송문은 사용자 전달) · 고정 표 §12 정정 덧붙임 | 이 행이 든 커밋 | 밖 | 90차 회신은 서브 또는 복귀 뒤 본진에서 받는다 |
 | 2026-10-05 | `degradation-degeneracy/.gitattributes` 규칙 `docs/22p_gap/gate90_review/** -text !eol` (90차 리뷰 패키지 보존 전) | `e56630fc9` | 밖 | 할 일 없음 |
 | 2026-10-05 | 원장 §137 — 90차 회신 접수 (`CONDITIONAL_ACCEPTANCE` · G90-N1 P2 · C1) · 패키지 보존 `a8ec8f9ed` | 이 행이 든 커밋 | 밖 | 할 일 없음 (ff 로 그대로 들어간다) |
+| 2026-10-05 | `bms-balancing/.gitattributes` 규칙 — B-min 후보 r1 재검토 회신 묶음 `reviews/r14_repros/codex63/comsol_bmin_r1_review_20261005/** -text` (게이트 차수 밖 · 보존 `b7397ed95` · 접수 = COMSOL SPEC §54) | `f0e384d79` | 밖 | 할 일 없음 |
 
 ### 복귀 결과 (복귀 정리 커밋이 덧붙인다)
