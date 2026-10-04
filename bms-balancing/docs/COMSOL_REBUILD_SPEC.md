@@ -3551,3 +3551,42 @@ B-min v2 §6 (l.143) 의 "(한도와 같은 값은 안)" 은 "한도 안" 과 "�
 
 §25-6 · … · §43-7 전부 그대로. v1 · v2 문서 불변 · 후보 코드 · suite · COMSOL/JVM · 유한 σ · 960 s · 정책 변경 · 자료 요청 발송 없음 · 정상
 gate INCOMPLETE · 실험 타당성 NOT_ESTABLISHED · 게이트 리뷰 (`degradation-degeneracy`) 와 무관.
+
+## 45. 사용자 승인 — **B-min 오프라인 후보 작성** (작성 · 제출까지) · 필요한 입력 (NORMAL480 `candidate/` 8 파일) 대기 (2026-10-04)
+
+> **추가 기록이다.** 사용자 답 (2026-10-04): "ㄱㄱㄱ" — §44-3 의 질문 (후보 작성 승인 · 누가 쓸지 · 자료 요청) 에 대한 답으로, **이 저장소 쪽에서
+> B-min 오프라인 후보를 작성하는 것**의 승인으로 받는다. 자료 요청의 발송은 여전히 사용자가 한다 (이 승인에 포함되지 않는다).
+
+### 45-1. 승인 범위
+
+| 포함 | 포함하지 않음 |
+|---|---|
+| B-min v2 (`docs/COMSOL_BMIN_SCOPE_v2_20261004.md`) 의 §3 허용 diff 만으로 만든 오프라인 후보: 새 전용 경로 · run 식별 · 최소 diff 소스 · manifest · 계약 (요청 1,637 · 주 비교 301 · 계약 좌표 원문 · NORMAL480 기준 결속) · 비활성 명령 / 승인문 · 새 예산 제안 · 변경부 검증안 · 정적 대조 (diff 경계 · 문자 변경표 · 해시) | 컴파일 · 기능 시험 · 변경부 검증의 실행 (§8 의 2 단계 — 별도 승인) · COMSOL/JVM/solve · native · 정책 변경 · 유한 σ · 960 s · 자료 요청 발송 |
+
+- 후보 문서에는 §44-2 의 문장 ("한도와 같으면 허용 (≤) · 어느 하나라도 엄격히 크면 `EXCEEDS_LIMITS`") 을 그대로 쓴다.
+- 꾸러미 구성은 이미 수용된 정상 60 s 준비본의 형식 (`reviews/r14_repros/codex63/normal60_preparation_recipient_review_20260930/reference/` —
+  CONTRACT · CODE_MANIFEST · COMMAND_MAP · NATIVE_APPROVAL_FIELD_SPEC · PARENT_COMMAND · LITERAL_CHANGE_MAP · CHANGE_BOUNDARIES ·
+  BASELINE_IDENTITIES · RESOURCE_BUDGET · LIMITED_VALIDATION_PLAN · VALIDATION_REQUEST · 비활성 승인문 · PRESERVATION before / after ·
+  STATIC_AUDIT · `basis/` 원본 사본) 을 따른다.
+
+### 45-2. 필요한 입력 — 이 저장소에 없다
+
+후보의 출발점은 NORMAL480 의 봉인 생산 파일이다. 아래 8 개는 결과 ZIP (`e991ab4c…`) 안에만 있고 이 저장소에는 없다 (저장소에는 정상 30 · 60 s
+후보의 원본만 있다). 받으면 R480 `ARCHIVE_AUDIT.json` 의 크기 · SHA-256 과 하나씩 대조한 뒤에만 쓴다 — 하나라도 다르면 쓰지 않는다.
+
+| ZIP 안 경로 | 크기 B | SHA-256 (앞 16) |
+|---|---:|---|
+| `candidate/CODE_MANIFEST.json` | 1,046 | `7a5cc2f1717ae7a8` |
+| `candidate/COMMAND_MAP.json` | 6,045 | `e29109239edc0246` |
+| `candidate/CONTRACT.json` | 125,504 | `58d398a663ceb35e` |
+| `candidate/NATIVE_APPROVAL_FIELD_SPEC.json` | 4,125 | `8f4c90fb13382bde` |
+| `candidate/PARENT_COMMAND.ps1` | 19,213 | `e8a770f5908c30a9` |
+| `candidate/src/Normal480Candidate.java` | 99,959 | `c70526cf6884eabc` |
+| `candidate/src/candidate_entry.py` | 13,999 | `6178a0c5b6ce79b2` |
+| `candidate/src/diagnostic_consumer.py` | 20,369 | `c952e7c2674efd45` |
+
+있으면 함께: `run/tables/axes_runtime_settings.csv` (28,190 B · `19f32130a461b65a…` — 설정 read-back 대조용).
+
+### 45-3. 이 절이 **바꾸지 않는** 것
+
+§25-6 · … · §44-4 전부 그대로. B-min v2 · 대응표 v2 · 요청문 v2 불변 · 정상 gate INCOMPLETE · 게이트 리뷰 (`degradation-degeneracy`) 와 무관.
