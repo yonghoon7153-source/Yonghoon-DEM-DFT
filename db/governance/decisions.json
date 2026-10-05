@@ -7546,7 +7546,7 @@
    "title": "P1b Ag(111)|흑연 3층 W_sep 마감 — (a′) 라벨로 닫기: 헤드라인 0.513 J/m² (k6 · registry 평균) + 'G4 k FAIL · 9×9×1 에서 k 수렴 확인' (대표 k9 · k12 값 동반 · 새 계산 없음)",
    "statement": "k12 탐침 판독 CONVERGED_AT_K9 (|W(12) − W(9)| ≤ 0.01 · 레포 재집계 = kgy 집계) 뒤, 결정 D-2026-10-05-wad-agc-kprobe12 의 재개 조건대로 1저자가 (a′) 를 골랐다: 헤드라인은 사전등록대로 registry 평균 (k 6×6×1) 0.513 J/m² 이고, 라벨에 'G4 k FAIL · 9×9×1 에서 k 수렴 확인' 과 대표 registry 의 k9 · k12 값을 붙인다 (k6 헤드라인은 k 수렴값보다 약 4–5 % 높다). 허용·금지 서술과 재개 조건은 마감 카드에서만 가져온다. 새 계산은 없다.",
    "rationale": "registry 넷의 W 폭이 1e-4 J/m² 라 k 보정 폭은 registry 마다 거의 같다 — (b) 넷도 k9 (약 8 잡 · kgy 하루 · li2s 담금질과 GPU 경합) 는 정보가 적다. 헤드라인을 대표 k9 로 바꾸는 것 (결과 뒤 추정자 교체) 대신 사전등록 헤드라인 + 수렴값 라벨로 닫아 DEM 에 두 값을 같이 준다.",
-   "decision_state": "proposed",
+   "decision_state": "active",
    "record_kind": "closure",
    "results_seen": true,
    "card": "db/properties/wad_agc_graphite_prereg_2026_10_02.json",
@@ -7566,15 +7566,29 @@
    ],
    "enforcement": "① 헤드라인 0.513 은 §1 라벨과 함께만 ② W 값은 화면(webapp)·원장 로그·open_items 에 싣지 않는다 ③ 헤드라인 교체는 새 결정 (재개 조건 ①)",
    "proposed_by": "claude-session-2026-10-05 (evac)",
-   "status": "proposed",
+   "status": "active",
    "status_history": [
     {
      "at": "2026-10-05",
      "state": "proposed",
      "by": "agent",
      "note": "k12 탐침 CONVERGED_AT_K9 → AskUserQuestion — 사용자 '(a′) 라벨로 닫기 (Recommended)'. 본문 확정 커밋 뒤 비준."
+    },
+    {
+     "at": "2026-10-05",
+     "state": "active",
+     "by": "사용자 (1저자 · W_ad 트랙)",
+     "note": "비준 — AskUserQuestion '(a′) 라벨로 닫기 (Recommended)' 를 1저자 결정으로 받는다 · 마감 카드·결과 기록을 담은 커밋에 지문 결속."
     }
-   ]
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-10-05T13:13:51Z",
+    "commit": "89c5ab62d33e7a44e20371e53d1a7493fbec3956",
+    "decision_digest": "sha256:853f8ada5621e35ad1a0b9b6cd7b7eed5d5871d5ccfdde8b536d000d232a55d6"
+   }
   }
  ]
 }
