@@ -1,7 +1,7 @@
 {
  "schema": "adhesion_pipeline/1",
  "title": "점착 파이프라인 — DFT → DEM (→ COMSOL)",
- "updated": "2026-10-04",
+ "updated": "2026-10-05",
  "purpose": "Ag–C 인터레이어·SE 계면의 점착일(W)을 DFT 에서 재서 DEM(JKR 접촉)으로 넘기는 흐름을 **한 곳에 누적**한다. 새 사실은 `log` 에 한 줄씩 덧붙이고, 상태가 바뀌면 해당 항목만 고친다.",
  "⛔_이_원장이_하지_않는_것": [
   "판정 전 물리값(W·γ)은 싣지 않는다 — 결과는 판정이 끝난 뒤 기록 파일에 따로 남기고 여기서는 경로만 건다 (인용 방지).",
@@ -122,12 +122,13 @@
    "cell": "Ag(111) (√3×√3)R30° 4층 (12 Ag) + 흑연 2×2 ABA 3층 (24 C) · V2 와 같은 옆 셀 (+1.078 %) · 두께 점검 4층",
    "machine": "kgy RTX3090 (li2s v2 UMA 와 GPU 공유 · START 12000 · KILL 23000 MiB)",
    "state": "run",
-   "state_text": "카드 비준 (10-02 · 사용자) · kgy 발사 — 1단계 기계 대조 2 → 이완 5 → 2단계 SCF 31 · 속도는 첫 두 잡·첫 이완 실측으로 (7 일 넘으면 다시 물음) · ⏩ 10-03 기계 대조 G1 **PASS** (CTRL 두 잡 kgy–V100 |ΔW| 1.0e-7 J/m² ≤ 0.002 · W 값은 화면에 안 싣는다 · kgy 가 V100 보다 bound 3.94× · far 3.72× 느림) · 첫 이완 AGC_N3_top_fcc 진행 (04:22 351 분 · BFGS 16) — 총 견적은 첫 이완 뒤 · ⏩ 10-03 16:29 이완 2/5 끝 (hollow_fcc 진행 177 분) · 총 견적 1.9–3.2 일 (7 일 안 · kgy 유지) · ⏩ 10-04 15:08 1단계 **7/7 끝** · 2단계 SCF **6/31** (개당 50–80 분 · 피크 7.8 GB · cascade v7 탐침과 GPU 공유) — 남은 25 ≈ 하루 (10-05 오후 · 어림)",
+   "state_text": "카드 비준 (10-02 · 사용자) · kgy 발사 — 1단계 기계 대조 2 → 이완 5 → 2단계 SCF 31 · 속도는 첫 두 잡·첫 이완 실측으로 (7 일 넘으면 다시 물음) · ⏩ 10-03 기계 대조 G1 **PASS** (CTRL 두 잡 kgy–V100 |ΔW| 1.0e-7 J/m² ≤ 0.002 · W 값은 화면에 안 싣는다 · kgy 가 V100 보다 bound 3.94× · far 3.72× 느림) · 첫 이완 AGC_N3_top_fcc 진행 (04:22 351 분 · BFGS 16) — 총 견적은 첫 이완 뒤 · ⏩ 10-03 16:29 이완 2/5 끝 (hollow_fcc 진행 177 분) · 총 견적 1.9–3.2 일 (7 일 안 · kgy 유지) · ⏩ 10-04 15:08 1단계 **7/7 끝** · 2단계 SCF **6/31** (개당 50–80 분 · 피크 7.8 GB · cascade v7 탐침과 GPU 공유) — 남은 25 ≈ 하루 (10-05 오후 · 어림) · ⏩ 10-05 13:35 2단계 **31/31 끝** · 회수 d2bfb55a (211 파일 · SHA256 일치) · 2단계 재생성 대조 ✅ · 레포 집계 = kgy 집계 (차이 0) · 게이트: G0 5/5 · G1 PASS · G3 PASS · **G4 FAIL (k 9×9×1 축 — 대표가 문턱의 두 배 움직임)** · 두께 PASS · ATM 열 계산 · 카드 규칙: 라벨을 값에 붙여 보고 · 새 계산은 1저자(사용자) 결정 — **결정 대기** · W 값은 결과 기록에만 (`db/properties/wad_agc_graphite_result_2026_10_05.json` · 화면에 안 싣는다)",
    "records": [
     "db/properties/wad_agc_graphite_prereg_2026_10_02.json",
     "db/inputs/wad_agc_graphite_2026_10_02/stage1/qe/jobs.json",
     "db/inputs/wad_agc_graphite_2026_10_02/run_kgy.sh",
-    "tools/wad/agc_graphite.py"
+    "tools/wad/agc_graphite.py",
+    "db/properties/wad_agc_graphite_result_2026_10_05.json"
    ]
   },
   {
@@ -1528,6 +1529,11 @@
    "date": "2026-10-04",
    "stage": "dft",
    "text": "⚠ **정정 — 10-03 의 P1b 줄 둘에 W 값을 적었었다** (log 70 · P1b state_text · 내 실수) — 기계 대조 CTRL 두 잡의 W 두 개(V2_top_fcc 와 같은 값)가 이 화면 · /todo · 대시보드에 떴다. 점착 W 는 화면에 싣지 않는다 (V2 결과 기록 '화면 게재는 1저자 별도' · 대피 세션 운영 규칙) → 값 두 개를 지우고 kgy–V100 |ΔW| 1.0e-7 (문턱 0.002) 만 남겼다. 판정(G1 PASS)은 그대로 · 값은 kgy 원출력과 P1b 결과 기록(만들 때)에만."
+  },
+  {
+   "date": "2026-10-05",
+   "stage": "dft",
+   "text": "P1b Ag(111)|흑연 3층 — 2단계 31/31 끝 (kgy 13:35) · 원자료 회수 d2bfb55a · 2단계 재생성 대조 ✅ · 레포 집계 = kgy 집계 · 게이트 G0·G1·G3·두께 PASS · **G4 FAIL (k 축)** → 카드대로 라벨 동반 · 새 계산은 1저자 결정 대기. W 값은 결과 기록에만 (화면에 안 싣는다)."
   }
  ],
  "related_decisions": [

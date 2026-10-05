@@ -1,0 +1,36 @@
+{
+ "schema": "campaign_runlog/v1",
+ "record_kind": "runlog",
+ "date": "2026-10-05",
+ "track": "li2s — ⛔ 외부 1저자 트랙 (규칙 = 회신 CQ · CR) · 사용자 = 카드 저자 · 실행",
+ "card": "db/properties/lpscl_smallcell_glass_control_li3ps4_estimand_2026_10_05.json (비준 · 봉인 — 고치지 않는다 · 실행 기록은 여기)",
+ "decision": "D-2026-10-05-lpscl-smallcell-glass-control-li3ps4 (active · 10-05)",
+ "results_seen": false,
+ "citable": false,
+ "코드": {
+  "담금질_러너": {
+   "path": "db/inputs/lpscl_glass_control_li3ps4_2026_10_05/run_quench_kgy.sh",
+   "sha16": "20a43ca5568d3d97",
+   "내용": "melt_quench_uma.py --system B --n_fu 15 --quench_rate 1e12 --melt_ps 100 --hold_ps 50 --dt_fs 2 --save_ps 1.0 --turbo (A 와 같은 일정) · 시드 1→5 한 번에 하나 · 끝난 시드마다 --seed_gate 입력",
+   "가드": "결정 active 확인 · uma env 절대경로 (fairchem) · 같은 잡 중복 (잡 고유 인자 + comm 필터) · GPU 사용 ≤ 20,000 MiB 일 때 시작 (최대 6 h 대기) · 끝난 시드는 건너뜀 · 결과 없이 폴더만 있는 시드는 멈춤 (흔적 보존) · 한 시드가 실패하면 뒤 시드를 안 돌림",
+   "selftest": "11 통과 (음성 5 · 실제 경로 dry_run 120 원자 포함 · repo 에서 PY=python3)",
+   "일부러_깨기": "n_fu 15→50 → 2 실패 · partial→empty → 1 실패 (빨간불 확인)"
+  },
+  "담금질_도구": {
+   "path": "tools/ionic/melt_quench_uma.py",
+   "sha16": "47c7e0aab5d14fbd"
+  },
+  "판독_도구": {
+   "path": "tools/ionic/glass_v2_readout.py",
+   "sha16": "330b9ed7880c049e",
+   "현황": "R·검출한계 함수 있음 (회신 CR) · 대조 모드 (B 읽기 · N_eff · 골격 문턱 5 · p90² · T₅₀ · 대조표) 는 **600 K 결과 전에** 추가한다"
+  }
+ },
+ "계획": {
+  "①_담금질": "kgy · 시드 1–5 (A 선례 ≈ 3 h/시드 · cascade v7 탐침과 GPU 공유라 더 걸릴 수 있다) · RUN ~/work/runs/lpscl_glass_control_li3ps4_2026_10_05 · 새 worktree (러너 worktree 는 도는 동안 안 옮긴다)",
+  "②_회수_뒤_repo": "시드 게이트 판정 (A 원장 문턱 그대로 · Cl 해당 없음) · 밀도 이탈 (A 와 같은 결정상 부피가법 기준) · T₅₀ 스캔 (담금질 궤적 50 ps 창 · 같은 도구·문턱)",
+  "③_600K_MD": "A 600 K 와 같은 시드–기계 대응 (gabia 2·4·5 · kgy 1·3) · gabia 는 그때 탄성이 GPU 를 쓰면 새 공존 결정 · 러너는 v2 러너를 B 로 일반화 (결과 전 · 시험 포함)",
+  "④_판독": "대조표 커밋 → 판독 한 번 → 갈래 → 마감"
+ },
+ "⏭": "kgy 점검 블록 (새 worktree · selftest · DRY_RUN) → 출력 확인 → 발사 블록 (tmux)"
+}

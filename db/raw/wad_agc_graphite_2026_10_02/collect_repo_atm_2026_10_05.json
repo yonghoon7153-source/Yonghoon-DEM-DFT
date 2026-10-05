@@ -1,0 +1,365 @@
+{
+ "schema": "agc_graphite_collect/v1",
+ "stage1": "db/inputs/wad_agc_graphite_2026_10_02/stage1",
+ "stage2": "db/raw/wad_agc_graphite_2026_10_02/stage2_pkg",
+ "raw1": "db/raw/wad_agc_graphite_2026_10_02/stage1",
+ "raw2": "db/raw/wad_agc_graphite_2026_10_02/stage2",
+ "fallback_raw": null,
+ "prereg": "db/properties/wad_agc_graphite_prereg_2026_10_02.json",
+ "rows": {
+  "AGC_N3_top_fcc": {
+   "status": "OK",
+   "n_C_layers": 3,
+   "registry": "top_fcc",
+   "d0_A": 3.2239,
+   "area_A2": 21.523195,
+   "W_PBE_D3_J_m2": 0.5129835422617702,
+   "W_PBE_D3_Eint_J_m2": 0.5154769582131914,
+   "W_PBE_J_m2": -0.0778375407613907,
+   "dD3_QE_J_m2": 0.5908210830245441,
+   "W_meV_per_C_contact": 86.14097655666139,
+   "substituted": [],
+   "far8_info": {
+    "W_8A_J_m2": 0.49892646546303493,
+    "dW_8to10_J_m2": 0.014057076798735302
+   },
+   "E_d": [
+    {
+     "shift_A": -0.3,
+     "d_A": 2.9239,
+     "dE_meV": 80.94802363665144
+    },
+    {
+     "shift_A": 0.3,
+     "d_A": 3.5239,
+     "dE_meV": 59.74123793497151
+    },
+    {
+     "shift_A": 0.6,
+     "d_A": 3.8239,
+     "dE_meV": 155.96736649252537
+    },
+    {
+     "shift_A": 1.0,
+     "d_A": 4.2239,
+     "dE_meV": 284.99110677622593
+    },
+    {
+     "shift_A": 1.5,
+     "d_A": 4.7239,
+     "dE_meV": 414.07158280039994
+    },
+    {
+     "shift_A": 2.0,
+     "d_A": 5.2239,
+     "dE_meV": 503.93949884638334
+    },
+    {
+     "shift_A": 3.0,
+     "d_A": 6.2239,
+     "dE_meV": 604.8722448210675
+    },
+    {
+     "shift_A": 4.5,
+     "d_A": 7.7239,
+     "dE_meV": 664.7533492809283
+    }
+   ],
+   "E_d_local_min_in_grid": true,
+   "E_d_curve_info": {
+    "points_d_A_dE_meV": [
+     [
+      2.9239,
+      80.94802363665144
+     ],
+     [
+      3.2239,
+      0.0
+     ],
+     [
+      3.5239,
+      59.74123793497151
+     ],
+     [
+      3.8239,
+      155.96736649252537
+     ],
+     [
+      4.2239,
+      284.99110677622593
+     ],
+     [
+      4.7239,
+      414.07158280039994
+     ],
+     [
+      5.2239,
+      503.93949884638334
+     ],
+     [
+      6.2239,
+      604.8722448210675
+     ],
+     [
+      7.7239,
+      664.7533492809283
+     ],
+     [
+      10.0,
+      689.1278124532911
+     ]
+    ],
+    "traction": [
+     {
+      "d_mid_A": 3.0739,
+      "traction_GPa": -2.0085777584305093
+     },
+     {
+      "d_mid_A": 3.3739,
+      "traction_GPa": 1.482369999740893
+     },
+     {
+      "d_mid_A": 3.6739,
+      "traction_GPa": 2.3876761027315
+     },
+     {
+      "d_mid_A": 4.0239,
+      "traction_GPa": 2.401116822258177
+     },
+     {
+      "d_mid_A": 4.4739,
+      "traction_GPa": 1.92173813423942
+     },
+     {
+      "d_mid_A": 4.9739,
+      "traction_GPa": 1.3379451845052812
+     },
+     {
+      "d_mid_A": 5.7239,
+      "traction_GPa": 0.7513386722277239
+     },
+     {
+      "d_mid_A": 6.9739,
+      "traction_GPa": 0.29716810655738385
+     },
+     {
+      "d_mid_A": 8.862,
+      "traction_GPa": 0.07971634442463398
+     }
+    ],
+    "max_traction_info": {
+     "d_mid_A": 4.0239,
+     "traction_GPa": 2.401116822258177
+    },
+    "⚠": "강체 분리 (위 블록만 +z · 이완 없음) · 2체 D3 · 2×2 정합 셀 — DEM 박리 곡선의 근사 입력 (정보 · 판정 아님)"
+   },
+   "G3": {
+    "W_i_J_m2": 0.5173485140581039,
+    "W_ii_J_m2": 0.5197872387325148,
+    "dW_i_J_m2": 0.004364971796333661,
+    "dW_ii_J_m2": 0.006803696470744525,
+    "threshold_abs_dW": 0.01,
+    "status": "PASS"
+   },
+   "G4": {
+    "e70": {
+     "W_J_m2": 0.5128519793505051,
+     "dW_J_m2": -0.0001315629112651484,
+     "threshold_abs_dW": 0.01,
+     "status": "PASS",
+     "substituted": []
+    },
+    "k9": {
+     "W_J_m2": 0.492739261243266,
+     "dW_J_m2": -0.02024428101850423,
+     "threshold_abs_dW": 0.01,
+     "status": "FAIL",
+     "substituted": []
+    },
+    "s05": {
+     "W_J_m2": 0.5154533599396645,
+     "dW_J_m2": 0.002469817677894226,
+     "threshold_abs_dW": 0.01,
+     "status": "PASS",
+     "substituted": []
+    },
+    "status": "FAIL"
+   }
+  },
+  "AGC_N3_top_hcp": {
+   "status": "OK",
+   "n_C_layers": 3,
+   "registry": "top_hcp",
+   "d0_A": 3.2237,
+   "area_A2": 21.523195,
+   "W_PBE_D3_J_m2": 0.5128971502930011,
+   "W_PBE_D3_Eint_J_m2": 0.5154091005134626,
+   "W_PBE_J_m2": -0.07833199044943256,
+   "dD3_QE_J_m2": 0.5912291407390559,
+   "W_meV_per_C_contact": 86.12646948588166,
+   "substituted": [],
+   "far8_info": {
+    "W_8A_J_m2": 0.4988134368162045,
+    "dW_8to10_J_m2": 0.0140837134767966
+   }
+  },
+  "AGC_N3_hollow_fcc": {
+   "status": "OK",
+   "n_C_layers": 3,
+   "registry": "hollow_fcc",
+   "d0_A": 3.2241,
+   "area_A2": 21.523195,
+   "W_PBE_D3_J_m2": 0.5128981630975828,
+   "W_PBE_D3_Eint_J_m2": 0.5154097081925271,
+   "W_PBE_J_m2": -0.07831730482214391,
+   "dD3_QE_J_m2": 0.5912154679191343,
+   "W_meV_per_C_contact": 86.1266395575673,
+   "substituted": [],
+   "far8_info": {
+    "W_8A_J_m2": 0.4988109048116584,
+    "dW_8to10_J_m2": 0.014087258285924442
+   }
+  },
+  "AGC_N3_s01": {
+   "status": "OK",
+   "n_C_layers": 3,
+   "registry": "s01",
+   "d0_A": 3.2236,
+   "area_A2": 21.523195,
+   "W_PBE_D3_J_m2": 0.5129023155811697,
+   "W_PBE_D3_Eint_J_m2": 0.5154155824434427,
+   "W_PBE_J_m2": -0.07835336055564283,
+   "dD3_QE_J_m2": 0.5912556761377155,
+   "W_meV_per_C_contact": 86.12733684892626,
+   "substituted": [],
+   "far8_info": {
+    "W_8A_J_m2": 0.4988182982625381,
+    "dW_8to10_J_m2": 0.014084017318631625
+   }
+  },
+  "AGC_N4_top_fcc": {
+   "status": "OK",
+   "n_C_layers": 4,
+   "registry": "top_fcc",
+   "d0_A": 3.2203,
+   "area_A2": 21.523195,
+   "W_PBE_D3_J_m2": 0.5141910041785301,
+   "W_PBE_D3_Eint_J_m2": 0.511458870919929,
+   "W_PBE_J_m2": -0.07938094893503103,
+   "dD3_QE_J_m2": 0.593571953112367,
+   "W_meV_per_C_contact": 86.3437353980193,
+   "substituted": []
+  }
+ },
+ "headline": {
+  "what": "Ag(111)|흑연(0001) 3층 · W_sep (끝점 10 Å · PBE+D3(BJ) 2체) · registry 평균 [min, max]",
+  "n_ok": 4,
+  "n_registry": 4,
+  "incomplete": [],
+  "mean_J_m2": 0.5129202928083809,
+  "range_J_m2": [
+   0.5128971502930011,
+   0.5129835422617702
+  ],
+  "status": "OK",
+  "ATM_column_mean_dW_J_m2": -0.11531573969056505
+ },
+ "labels": [
+  "이상 Ag(111) · 이상 흑연 기저면 · 2×2 정합 셀 (비정합 아님) · 흑연 +1.078 % 변형 (Ag 격자) · ABA 한 방향",
+  "PBE+D3(BJ) 2체 조건부 (ATM 은 별도 열) · DFT 국소 이완 d₀ 의 고정기하 분리일",
+  "G4 FAIL"
+ ],
+ "gates": {
+  "G0_relax": {
+   "AGC_N3_top_fcc": "OK",
+   "AGC_N3_top_hcp": "OK",
+   "AGC_N3_hollow_fcc": "OK",
+   "AGC_N3_s01": "OK",
+   "AGC_N4_top_fcc": "OK"
+  },
+  "G1_machine": {
+   "W_here_J_m2": 0.4354875181525233,
+   "W_V100_J_m2": 0.4354874168780525,
+   "dW_J_m2": 1.0127447080954255e-07,
+   "threshold_abs_dW": 0.002,
+   "status": "PASS",
+   "FAIL 이면": "P1b 헤드라인 보류 (MACHINE_MISMATCH) — 원인(바이너리·PP·D3 구현) 확인 전 V2·WAD-CC 와 같은 표에 안 놓는다",
+   "dF_vs_V100_meV_info": {
+    "V2_top_fcc_dft_bound": -0.0002721109847467578,
+    "V2_top_fcc_dft_far": -0.0001360616795262836
+   },
+   "speed_info": {
+    "V2_top_fcc_dft_bound": {
+     "wall_here_s": 706,
+     "wall_V100_s": 179,
+     "ratio": 3.9441340782122905
+    },
+    "V2_top_fcc_dft_far": {
+     "wall_here_s": 521,
+     "wall_V100_s": 140,
+     "ratio": 3.7214285714285715
+    }
+   }
+  },
+  "G3": "PASS",
+  "G4": "FAIL",
+  "thickness": {
+   "pair": "AGC_N4_top_fcc − AGC_N3_top_fcc",
+   "dW_J_m2": 0.001207461916759911,
+   "threshold_abs_dW": 0.02,
+   "status": "PASS"
+  }
+ },
+ "info": {
+  "vs_V2": {
+   "top_fcc": {
+    "W_P1b_8A_J_m2": 0.49892646546303493,
+    "W_V2_8A_J_m2": 0.4354874168780525,
+    "dW_graphite_minus_graphene_J_m2": 0.06343904858498245
+   },
+   "top_hcp": {
+    "W_P1b_8A_J_m2": 0.4988134368162045,
+    "W_V2_8A_J_m2": 0.4351179468968249,
+    "dW_graphite_minus_graphene_J_m2": 0.06369548991937957
+   },
+   "hollow_fcc": {
+    "W_P1b_8A_J_m2": 0.4988109048116584,
+    "W_V2_8A_J_m2": 0.43512058018044747,
+    "dW_graphite_minus_graphene_J_m2": 0.06369032463121094
+   },
+   "top_fcc_10A": {
+    "W_P1b_10A_J_m2": 0.5129835422617702,
+    "W_V2_10A_J_m2": 0.44906635009968104,
+    "dW_J_m2": 0.06391719216208919
+   },
+   "⚠": "같은 옆 셀·같은 QE·같은 제약 — 다른 것은 탄소 두께(1 → 3층) · 셀 c(영상 간격 V2 9 Å · 여기 ≥ 10 Å)·기계. V2 의 bridge ≡ top_fcc · top_hcp ≡ hollow_fcc (대칭 동치) 라 V2 는 registry 둘이다."
+  },
+  "ATM": {
+   "method": "simple-dftd3 · PBE D3(BJ) {\"s6\": 1.0, \"s8\": 0.7875, \"a1\": 0.4289, \"a2\": 4.4407, \"alp\": 14.0} · ATM = E(s9=1) − E(s9=0) · 3D 주기",
+   "rows": {
+    "AGC_N3_top_fcc": {
+     "dW_ATM_J_m2": -0.11527769875051008,
+     "dD3_2body_sdftd3_J_m2": 0.5872612779090303
+    },
+    "AGC_N3_top_hcp": {
+     "dW_ATM_J_m2": -0.11532748115418852,
+     "dD3_2body_sdftd3_J_m2": 0.5876696109989107
+    },
+    "AGC_N3_hollow_fcc": {
+     "dW_ATM_J_m2": -0.11532532664294823,
+     "dD3_2body_sdftd3_J_m2": 0.5876566815774684
+    },
+    "AGC_N3_s01": {
+     "dW_ATM_J_m2": -0.11533245221461338,
+     "dD3_2body_sdftd3_J_m2": 0.5876958469720845
+    },
+    "AGC_N4_top_fcc": {
+     "dW_ATM_J_m2": -0.11750906963155514,
+     "dD3_2body_sdftd3_J_m2": 0.5900175217233876
+    }
+   }
+  }
+ },
+ "jobs_not_ok": [],
+ "substituted": []
+}

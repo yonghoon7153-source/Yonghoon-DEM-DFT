@@ -1,0 +1,16 @@
+{
+ "jobs": {
+  "same_list": true,
+  "pw_in_sha_mismatch": [],
+  "disk_vs_manifest_mismatch": []
+ },
+ "fallback_jobs": {
+  "same_list": true,
+  "pw_in_sha_mismatch": [],
+  "disk_vs_manifest_mismatch": []
+ },
+ "structure_geometry_mismatch": [],
+ "status_same": true,
+ "code_sha_same_info": true,
+ "pass": true
+}
