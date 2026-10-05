@@ -123,7 +123,8 @@ def scan(path: Path):
         if FORCED_D.search(line) and not FREE_FIT.search(line):
             viol.append((rel, i, "원점강제 D 추출 — 자유절편(MSD=c+6Dt)이 정본", line.strip()))
         m = WINDOW_ASSIGN.match(line)
-        if m and not WINDOW_NON_TIME.search(m.group(1)):
+        if m and not WINDOW_NON_TIME.search(m.group(1)) and not AUX_WINDOW_OK.search(
+                line + "\n" + (text.splitlines()[i - 2] if i >= 2 else "")):
             for a, b in TUPLE2.findall(m.group(2)):
                 w = (float(a), float(b))
                 if w != CANON_WINDOW:
@@ -194,6 +195,13 @@ BRIT_US = {
 BRIT_RE = _re.compile(r"\b(" + "|".join(sorted(BRIT_US, key=len, reverse=True)) + r")\b", _re.I)
 #: 철자 검사를 끄는 표시 — 사유를 뒤에 적는다 (`# brit-ok: 검출용 단어 목록`).
 BRIT_OK = _re.compile(r"brit-ok\s*:")
+#: 보조 창 표시 — **기록 전용 열**로 선언된 비정본 MSD 창 (2026-10-05 추가)
+#:   실물: `tools/ionic/glass_v2_readout.py` 의 `WINDOW_AUX = (50.0, 200.0)` — 회신 CO 개정
+#:   (2026-10-04 비준)이 "2–50 ps 주 판정 그대로 · 50–200 ps 는 기록 전용 열" 로 사전등록했다.
+#:   EXEMPT 로 파일을 덮으면 같은 파일의 주 창 `WINDOW` 까지 눈이 먼다 → 줄 단위로만 끈다.
+#:   `aux-window-ok: <사유>` 가 그 줄이나 바로 윗줄에 있어야 하고 **사유가 비면 안 된다**
+#:   (brit-ok 와 같은 창 규칙 — 두 줄 위면 다시 잡는다).
+AUX_WINDOW_OK = _re.compile(r"aux-window-ok\s*:\s*\S")
 
 
 def check(root=None):
@@ -429,6 +437,19 @@ def selftest():
         (t / "unitwindow_bad.py").write_text(
             "fit_window = (10.0, 100.0)\n"
             "window_ps = (10.0, 100.0)\n")
+        # 보조 창 표시 (2026-10-05): 사유 있는 aux-window-ok 는 그 줄만 끈다
+        (t / "auxwin_good.py").write_text(
+            "WINDOW = (2.0, 50.0)\n"
+            "WINDOW_AUX = (50.0, 200.0)  # aux-window-ok: 회신 CO 기록 전용 열\n"
+            "# aux-window-ok: 진단 창\n"
+            "WINDOW_DIAG = (10.0, 100.0)\n")
+        # ⛔음성: 사유가 비거나 · 두 줄 위에 있거나 · 표시 없는 창은 그대로 잡는다 (3 건)
+        (t / "auxwin_bad.py").write_text(
+            "WINDOW_AUX = (50.0, 200.0)  # aux-window-ok:\n"
+            "# aux-window-ok: 두 줄 위\n"
+            "x = 1\n"
+            "WINDOW_FAR = (50.0, 200.0)\n"
+            "WINDOW_AUX2 = (50.0, 200.0)  # 표시 없음\n")
         # ⑥ argparse 기본값 (2026-09-08) — **여기가 실제로 새던 자리다.**
         #   음성: 창을 2–20 으로 되돌린 파일을 검사기가 잡아야 한다. 못 잡으면
         #   "0 위반" 은 규약이 지켜졌다는 뜻이 아니라 **안 봤다**는 뜻이다.
@@ -452,6 +473,9 @@ def selftest():
                 ("plotlabel.py", 0, 0, "plot 라벨 오탐 없음"),
                 ("unitwindow.py", 0, 0, "단위 밝힌 창(2θ/eV/Å) 오탐 없음"),
                 ("unitwindow_bad.py", 2, 0, "⛔음성: 단위 안 밝힌 창은 그대로 잡는다"),
+                ("auxwin_good.py", 0, 0, "aux-window-ok 표시(같은 줄·윗줄)는 그 줄만 끈다"),
+                ("auxwin_bad.py", 3, 0,
+                 "⛔음성: aux-window-ok 사유 없음·두 줄 위·표시 없음은 잡는다"),
                 ("argwin_bad.py", 1, 0,
                  "⛔음성: argparse 기본값을 2–20 으로 되돌리면 잡는다 (여러 줄)"),
                 ("argwin_bad2.py", 1, 0, "⛔음성: 5–40 도 잡는다 (한 줄)"),
