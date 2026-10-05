@@ -352,5 +352,6 @@ git push -u origin claude/14-gate-code-review-9qkx05
 | 2026-10-05 | `bms-balancing/.gitattributes` 규칙 — B-min 후보 r2 재검토 회신 묶음 `reviews/r14_repros/codex63/comsol_bmin_r2_review_20261005/** -text` (게이트 차수 밖 · 보존 `4ce80f3ef` · 접수 = COMSOL SPEC §56 · `PREPARATION_ACCEPTED_NOT_VALIDATED` · 한정 검증 · native 미승인) | `50a2c0f8b` | 밖 | 할 일 없음 |
 | 2026-10-05 | `bms-balancing/.gitattributes` 규칙 — REIL C6 봉인 디렉터리 `reil_c6_20261005/** -text` (게이트 차수 밖 · 승인 = REIL 상태 문서 §8-2 · `check` 가 바이트로 대조) | `d50eee2e3` | 밖 | 할 일 없음 |
 | 2026-10-05 | `bms-balancing/.gitattributes` 규칙 — REIL 부속 C 재검토 회신 묶음 `reviews/prereview_reil_v2_annexC_20261005/** -text` (게이트 차수 밖 · 보존 `2e5e74e81` · 접수 = REIL 상태 문서 §9 · `ANNEX_C_CONDITIONALLY_ACCEPTABLE_THREE_LOCAL_DOCUMENT_CORRECTIONS` · 정정 = 부속 D) | `bedb0addc` | 밖 | 할 일 없음 |
+| 2026-10-05 | `bms-balancing/.gitattributes` 규칙 — REIL 부속 C 독립 교차검토 묶음 `reviews/prereview_reil_v2_annexC_crossreview_20261005/** -text` (게이트 차수 밖 · 다른 Codex 세션 · 보존 `f63e5ba4b` · 접수 = REIL 상태 문서 §11 · `PRIOR_CONDITIONAL_DOCUMENT_VERDICT_SUPPORTED_CORRECTIONS_NOT_YET_VERIFIED`) | `60ca5eb60` | 밖 | 할 일 없음 |
 
 ### 복귀 결과 (복귀 정리 커밋이 덧붙인다)

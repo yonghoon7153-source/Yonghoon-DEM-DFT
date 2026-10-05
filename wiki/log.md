@@ -3542,3 +3542,8 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - 출처: `bms-balancing/reil_c6_20261005/` (봉인 · `README.md`) · 상태 문서 `bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md` §10.
 - [[isu-uconn-lfp-gr-emulated-degradation]]: "부속 B 재검토" 절의 진행 목록에 C6 한 줄 (판 · COBYQA 옵션 대조 · Sobol 의 `rng=` ↔ 옛 `seed=` 차이 · 결과 수용은 별도 요청).
 - 하지 않은 것: REIL 자료 · 노트북 열기 · P0 · 맞춤 · 비용 측정 · 수치 복사 (정본은 봉인 파일).
+
+## [2026-10-05] update | isu-uconn-lfp-gr-emulated-degradation — REIL 부속 C 독립 교차검토 (다른 Codex 세션 · 같은 판정 지지)
+- 출처: `bms-balancing/reviews/prereview_reil_v2_annexC_crossreview_20261005/` (받은 바이트 · `PRIOR_CONDITIONAL_DOCUMENT_VERDICT_SUPPORTED_CORRECTIONS_NOT_YET_VERIFIED`) · 상태 문서 `bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md` §11.
+- [[isu-uconn-lfp-gr-emulated-degradation]]: "부속 C 재검토" 절에 한 줄 — N1–N3 타당 · 새 P1 없음 · 부속 D 는 보지 않음 · 독립 검사 63 (이 컨테이너에서 63/63 재현).
+- 하지 않은 것: 묶음의 포장 스크립트 실행 · 자료 개봉 · 맞춤 · 부속 D 수정 (재확인 회신 전).
