@@ -7216,8 +7216,8 @@
      "internal"
     ]
    },
-   "title": "소셀 유리 대조 계 (초안) — a-Li₃PS₄ 유리 120 원자 · 600 K 400 ps · 독립 담금질 5 시드 · A 와 같은 프로토콜·게이트 · 보고량 = 두 유리의 Li D 상대차 (절대값 아님)",
-   "statement": "회신 CQ Q-CQ-4 의 순서(대조 계 담금질 5 시드 → 600 K 400 ps 5 런 · 같은 게이트 → 두 계의 D 상대차)를 카드로 옮긴 **초안**이다. B = a-Li₃PS₄ (Li₄₅P₁₅S₆₀ · melt_quench_uma.py 계 B · A 와 같은 담금질 인자) · MD 는 A 의 v2 600 K 와 같은 설정 · A 는 다시 돌리지 않는다 (v2 600 K 다섯). 보고량: N_B/5 · N_B ≥ 3 이면 R = median D_A / median D_B 와 시드 부트스트랩 95 % · B 시드 산포. 골격 네 지표는 두 계 모두에 결과 전 게이트 (일시 변화 문턱 10 은 제안). 세부는 편지 CR 로 외부 1저자 확인 전까지 잠정.",
+   "title": "소셀 유리 대조 계 — a-Li₃PS₄ 유리 120 원자 · 600 K 400 ps · 독립 담금질 5 시드 · A 와 같은 프로토콜·게이트 · 보고량 = 두 유리의 Li D 상대차 (절대값 아님 · 회신 CR 반영)",
+   "statement": "회신 CQ Q-CQ-4 의 순서를 카드로 옮기고 회신 CR 로 규칙을 확정했다. B = a-Li₃PS₄ (Li₄₅P₁₅S₆₀ · A 와 같은 담금질 인자) · MD 는 A 의 v2 600 K 와 같은 설정 · A 는 다시 돌리지 않는다. 보고량: N_B/5 · **두 계 모두 R 집합 ≥ 4 일 때만** R = median D_A / median D_B 와 시드 부트스트랩 95 % (1 포함이면 결과 전 검출한계와 함께 '구분되지 않았다' — 기준 R₅₀ 1.20 · R₈₀ 1.25) · B 시드 산포 · N_eff. 골격 네 지표는 600 K 에서도 두 계 모두 게이트 (일시 변화 ≤ 5 / 런 · A 실측 기반) · B 탈락은 관측. c2 = 같은 조건의 1차 관측. 밀도는 기록 (−15 % 단서) · T₅₀ 차 ≥ 100 K 사전 문장.",
    "rationale": "인용 정책상 600 K 다섯 런은 상대차로만 쓸 수 있는데 비교 대상이 없다 — 같은 셀·같은 프로토콜의 대조 계가 붙어야 '유리 안의 LiCl 이 Li 수송에 무엇을 하는가' 가 성립한다 (회신 CQ). 650 K 는 Ea 목적이라 지금 급하지 않다.",
    "decision_state": "proposed",
    "record_kind": "estimand_card",
@@ -7230,12 +7230,14 @@
    "evidence": [
     "kb/reviews/li2s1a_CQ_reply_li2s_glass_v2_readout_2026_10_05.md",
     "db/properties/lpscl_smallcell_glass_md_v2_closed_2026_10_05.json",
-    "db/properties/lpscl_smallcell_glass_md_v2_amendment_co_2026_10_04.json (골격 게이트 숫자)"
+    "db/properties/lpscl_smallcell_glass_md_v2_amendment_co_2026_10_04.json (골격 게이트 숫자)",
+    "kb/reviews/li2s1a_CR_reply_li2s_glass_control_card_2026_10_05.md"
    ],
    "reopen_criteria": [
-    "갈래_c1 — N_B ≥ 3 ⇒ R 과 95 % 구간 (1 밖: 방향+R · 1 포함: 구분되지 않음)",
-    "갈래_c2 — N_B ≤ 2 ⇒ R 을 내지 않는다 (그 자체가 정보)",
-    "⛔ 이 카드 안에서 prod 400 ps 초과 · 문턱 완화 · 점·시드 제외 (골격 이동은 R 에서만 뺀다) · 풀링 · A 옛 런 혼입 금지"
+    "갈래_c1a/c1b — R 집합 두 계 모두 ≥ 4 ⇒ R 과 95 % 구간 (1 밖: 방향+R · 1 포함: 검출한계와 함께 구분되지 않음)",
+    "갈래_c1c — N_B ≥ 3 이지만 R 집합 < 4 ⇒ R 을 내지 않는다",
+    "갈래_c2 — N_B ≤ 2 ⇒ 같은 게이트·온도의 1차 관측 · 다음 = B 측정 가능 온도 (새 카드)",
+    "⛔ 이 카드 안에서 prod 400 ps 초과 · 문턱 완화 · 점·시드 제외 (골격 이동은 R 에서만 뺀다) · 풀링 · A 옛 런 혼입 · Tg 맞춘 둘째 런 금지"
    ],
    "cost_cap": {
     "machine": "kgy (담금질 · cascade v7 와 공유) + gabia (탄성이 GPU 를 쓰면 새 공존 결정 필요)",
@@ -7251,6 +7253,12 @@
      "state": "proposed",
      "by": "agent",
      "note": "사용자 '둘 다' (AskUserQuestion — p90² 블록 먼저 · 기다리는 동안 대조 계 카드 초안). 방향은 외부 1저자 회신 CQ Q-CQ-4 · 세부 규칙은 초안 — 사용자 검토 → 편지 CR → 회신 → 결과 전 비준 → 실행. 트랙 = li2s (사용자 ≠ 1저자)."
+    },
+    {
+     "at": "2026-10-05",
+     "state": "proposed",
+     "by": "외부 1저자 (회신 CR)",
+     "note": "규칙 확정 — Q-CR-1~6 전건 + 덧붙임 둘 반영 (카드 `개정_회신_CR_2026_10_05`). 원장 active 전환(실행 승인)은 사용자 몫. 트랙 = li2s (사용자 ≠ 1저자)."
     }
    ]
   }

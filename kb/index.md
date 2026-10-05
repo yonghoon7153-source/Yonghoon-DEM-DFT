@@ -1,14 +1,15 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-10-05 · managed-files: 502
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-10-05 · managed-files: 503
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
-## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 299건)
+## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 300건)
 - 2026-10-05 · `kb/reviews/li2s1a_CQ_reply_li2s_glass_v2_readout_2026_10_05.md` — 회신 CQ — 외부 1저자 (li2s 소셀 유리 MD v2 판독): 갈래 v2-2 확정 · 마감 문장 끝 절 좁힘 (550 K = 문턱 부근 · 미통과 0) · 늦은 창 한 줄 (10 런 0.909–1.029) · 골격 ③ 일시 변화 수도 게이트 (문턱 따로) · 다음 = 대조 계 a-Li₃PS₄ 먼저 (여기서 닫지 않는다) · p90² 따로 재서 넣기 · 수령 (2026-10-05 · 사용자 붙여넣기) — 회신 원문 · 고…
 - 2026-10-05 · `kb/reviews/li2s1a_CR_prompt_li2s_glass_control_card_2026_10_05.md` — CR 프롬프트 — li2s 소셀 유리 MD: 회신 CQ 이행 보고 · 해설 문장 검산 셋 · 대조 계 a-Li₃PS₄ 유리 카드 초안 (600 K 400 ps · 5 담금질 시드 · D 상대차) · 확인 요청 여섯 (외부 1저자에게) · 초안 (2026-10-05) — 사용자 검토 · 발송 대기 (p90²…
+- 2026-10-05 · `kb/reviews/li2s1a_CR_reply_li2s_glass_control_card_2026_10_05.md` — 회신 CR — 외부 1저자 (li2s 소셀 유리 대조 계 카드): 검산 셋 수용 (1.49 eV⁻¹ · 산포 문장은 IQR 에만) · Q-CR-1~6 전건 · R 은 두 계 모두 통과 시드 ≥ 4 · 1 포함 문장에 검출한계 (결과 전 모의) · 골격 게이트 600 K 에서도 · 일시 변화 문턱은 A 실측에서 (예 5) · c2 = 1차 관측 · N_eff 열 · 밀도 −15 % 단서 · Tg 100 K 사전 문장 · 대조표 항목 · 수령 (2026-10-05 · 사용자 붙여넣기) — 회신 원문 · 고…
 - 2026-10-04 · `kb/reviews/li2s1a_CO_prompt_li2s_glass_v2_card_2026_09_30.md` — CO 프롬프트 — li2s 소셀 유리 MD v2 카드 (잠정): 550 K 800 ps · 600 K 400 ps · 같은 5 시드 · 기계–시드 교차 · σ 사다리를 b_min 에 닿게 · 확인 요청 여섯 (외부 1저자에게) · 초안 (2026-09-30) · 10-03 실행 상태 덧붙임 (10 …
 - 2026-10-04 · `kb/reviews/li2s1a_CO_reply_li2s_glass_v2_card_2026_10_04.md` — 회신 CO — 외부 1저자 (li2s 소셀 유리 MD v2 카드): Q-CO-1~6 · 800 ps σ 도 여전히 하한 · 두 온도 공통 b = 256 열 · 끝 두 b 판정 갈리면 경계 · near-miss σ 거리 다섯 · 대조 계 후보 a-Li₃PS₄ 유리 · 골격 게이트 숫자를 지금 · 보조 창 50–200 ps 기록 열 · 수령 (2026-10-04 · 사용자 붙여넣기) — 회신 원문 · 고…
 - 2026-10-04 · `kb/reviews/li2s1a_CQ_prompt_li2s_glass_v2_readout_2026_10_04.md` — CQ 프롬프트 — li2s 소셀 유리 MD v2 판독: 회신 CO 규칙을 결과 전에 넣고 한 번 판독 · 갈래 v2-2 (규칙 적용) · near-miss · 보조 창 · 골격 기록 · 확인 요청 다섯 (외부 1저자에게) · 초안 (2026-10-04) — 사용자 검토 · 발송 대기
@@ -26,7 +27,6 @@
 - 2026-09-30 · `kb/reviews/li2s1a_CN_reply_li2s_main_readout_2026_09_30.md` — 회신 CN — 외부 1저자 (li2s 소셀 유리 MD): 갈래1 확정 · 마지막 문장 좁힘 · 주 표기 1/15 · Ea 적합 단위 질문 닫기 · P–S–S 문구 확정 · (가)(나) 채택 (다) 기각 · 마감 전 덧붙일 것 둘 (550 K 문턱 부근 · STO–MTO 폭) · 수령 (2026-09-30 · 사용자 붙여넣기) — 회신 원문 · 고…
 - 2026-09-30 · `kb/projects/cei_explainer_prompt_2026_09_30.md` — CEI 설명·인계 AI 프롬프트 — 처음 보는 대학원생 눈높이 우선 (2026-09-30) · 발송 대기 — 인계 묶음(zip)에 들어간다
 - 2026-09-30 · `kb/projects/cei_reading_guide_2026_09_30.md` — CEI 페이지 읽기 지침서 — 1저자·처음 보는 대학원생용 (2026-09-30) · 발송 대기 — 인계 묶음(zip)에 들어간다
-- 2026-09-30 · `kb/projects/handoff_cei_2026_09_30.md` — CEI (Nd 계면) 인계 카드 — 실험 쪽 1저자에게 작업 양도 (2026-09-30) · 발송 대기 — 외부 리뷰 회신 CM(NO-GO) 이행판 · 사용자가 …
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -212,7 +212,7 @@
 - `kb/results/vgcf_hbn_figure_plan.md` — VGCF/h-BN 원고 — 층수 연구를 어디에 둘 것인가 (2026-07-31 결정)
 - `kb/results/vgcf_hbn_gallery_mechanism_2026_07_30.md` — h-BN@VGCF — 209 meV 층수효과의 정체: confinement 확정 (2026-07-30)
 
-## reviews/ (194)
+## reviews/ (195)
 - `kb/reviews/ECERD2600097_review_notes.md` — 📝 리뷰 노트 — ECER-D-26-00097 (Fan 외, *Stability Issues in Sulfide-Based ASSB*)
 - `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)  (2026-09-30 · 자동생성)
 - `kb/reviews/_superseded_BN_replan_2026_09_12.md` — 회신 BN 요청 — cascade 재실행 계획의 **선(先)심사**: go / no-go
@@ -395,6 +395,7 @@
 - `kb/reviews/li2s1a_CQ_prompt_li2s_glass_v2_readout_2026_10_04.md` — CQ 프롬프트 — li2s 소셀 유리 MD v2 판독: 회신 CO 규칙을 결과 전에 넣고 한 번 판독 · 갈래 v2-2 (규칙 적용) · near-miss · 보조 창 · 골격 기록 · 확인 요청 다섯 (외부 1저자에게)  (2026-10-04 · 초안 (2026-10-04) — 사용자 검토 · 발송 대기)
 - `kb/reviews/li2s1a_CQ_reply_li2s_glass_v2_readout_2026_10_05.md` — 회신 CQ — 외부 1저자 (li2s 소셀 유리 MD v2 판독): 갈래 v2-2 확정 · 마감 문장 끝 절 좁힘 (550 K = 문턱 부근 · 미통과 0) · 늦은 창 한 줄 (10 런 0.909–1.029) · 골격 ③ 일시 변화 수도 게이트 (문턱 따로) · 다음 = 대조 계 a-Li₃PS₄ 먼저 (여기서 닫지 않는다) · p90² 따로 재서 넣기  (2026-10-05 · 수령 (2026-10-05 · 사용자 붙여넣기) — 회신 원문 · 고…)
 - `kb/reviews/li2s1a_CR_prompt_li2s_glass_control_card_2026_10_05.md` — CR 프롬프트 — li2s 소셀 유리 MD: 회신 CQ 이행 보고 · 해설 문장 검산 셋 · 대조 계 a-Li₃PS₄ 유리 카드 초안 (600 K 400 ps · 5 담금질 시드 · D 상대차) · 확인 요청 여섯 (외부 1저자에게)  (2026-10-05 · 초안 (2026-10-05) — 사용자 검토 · 발송 대기 (p90²…)
+- `kb/reviews/li2s1a_CR_reply_li2s_glass_control_card_2026_10_05.md` — 회신 CR — 외부 1저자 (li2s 소셀 유리 대조 계 카드): 검산 셋 수용 (1.49 eV⁻¹ · 산포 문장은 IQR 에만) · Q-CR-1~6 전건 · R 은 두 계 모두 통과 시드 ≥ 4 · 1 포함 문장에 검출한계 (결과 전 모의) · 골격 게이트 600 K 에서도 · 일시 변화 문턱은 A 실측에서 (예 5) · c2 = 1차 관측 · N_eff 열 · 밀도 −15 % 단서 · Tg 100 K 사전 문장 · 대조표 항목  (2026-10-05 · 수령 (2026-10-05 · 사용자 붙여넣기) — 회신 원문 · 고…)
 - `kb/reviews/litdb_dopant_sota_2026_09_09.md` — litdb_dopant_sota_2026_09_09  (2026-09-09 · 진행)
 - `kb/reviews/section3_review_candidates.md` — 📋 §3 리뷰 코멘트 후보 — 소거법 작업용 (ECER-D-26-00097)
 - `kb/reviews/section3_review_comments_compressed.md` — Comments on Section 3 (Intrinsic Stability of Sulfide SEs) — 압축판 v2

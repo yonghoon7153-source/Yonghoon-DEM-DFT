@@ -33,6 +33,18 @@
   · σ 는 **하한**이다 — 800 ps 의 끝 b = 512 (51.2 ps) 도 창 길이에 겨우 닿았을 뿐 인접 블록이 독립이 아니다 (회신 CO ①).
     그래서 n·σ 는 상한이고 통과 선언은 낙관 쪽으로 틀릴 수 있다 — 끝 두 b 규칙이 그 쪽만 막는다.
   · 옛 550 K seed1 은 파일럿 P-2 라 초기구조가 다르다 (md_init_raw) — 비교표에 그렇게 적는다.
+
+대조 계 카드 (a-Li₃PS₄ 유리 · 회신 CR · 2026-10-05) — 두 계의 D 상대차 R
+    python3 tools/ionic/glass_v2_readout.py --detect_limit [--sigma_ln 0.026 0.094] [--n_a 5 --n_b 5]
+  · `ratio_boot` — R = 중앙값 D_A / 중앙값 D_B · 계 안에서만 복원추출하는 시드 부트스트랩 95 % 백분위 구간.
+    **두 계 모두 통과 시드 ≥ 4 일 때만** R 을 낸다 (회신 CR Q-CR-3 — 3 개 중앙값의 비는 '구분 안 됨' 이
+    계의 성질인지 표본 수인지 못 가른다).
+  · `ratio_detect_limit` — 위와 **같은 부트스트랩 함수**로 모의 실험을 돌려, 참 비가 R 일 때 구간이 1 을 벗어날
+    확률을 낸다 → R₅₀ · R₈₀ (50 · 80 % 검출) 과 R = 1 의 오검출률. 결과 전에 적어 두어 '구분되지 않았다' 를
+    '같다' 로 읽지 않게 한다 (회신 CR · 편지 BU 의 검출한계 형식).
+  ⛔ 검출한계가 못 하는 것: 산포 모양을 로그정규로 가정한다 (치우침·이상치는 σ 를 고르는 데서만 들어간다) ·
+    B 의 산포는 가정이다 (기본 = A 와 같음) · 시드 다섯의 백분위 부트스트랩은 덜 덮인다 — 그건 R = 1 의
+    오검출률 줄로만 보인다 (고치지 않고 적는다).
 """
 from __future__ import annotations
 
@@ -310,6 +322,61 @@ def show(agg, runs, old):
     return L
 
 
+# ── 대조 계 카드 (회신 CR · 2026-10-05) — R 과 검출한계 (같은 부트스트랩) ─────────────
+MIN_SEEDS_FOR_R = 4          # 회신 CR Q-CR-3: 두 계 모두 통과 시드 ≥ 4 일 때만 R
+R_BOOT_SEED = 20261005       # 고정 난수 — 같은 입력이면 같은 구간
+DETECT_GRID = (1.0, 1.05, 1.1, 1.15, 1.2, 1.25, 1.3, 1.4, 1.5, 1.75, 2.0)
+
+
+def _boot_ratio_interval(a, b, n_boot, rng):
+    """계 안에서만 복원추출 → 중앙값의 비 → 백분위 2.5 · 97.5. `ratio_boot` 와 `ratio_detect_limit` 가 **같이** 쓴다."""
+    import numpy as np
+    ia = rng.integers(0, len(a), (n_boot, len(a)))
+    ib = rng.integers(0, len(b), (n_boot, len(b)))
+    rb = np.median(a[ia], axis=1) / np.median(b[ib], axis=1)
+    lo, hi = np.percentile(rb, [2.5, 97.5])
+    return float(lo), float(hi)
+
+
+def ratio_boot(d_a, d_b, n_boot=10000, seed=R_BOOT_SEED, min_seeds=MIN_SEEDS_FOR_R) -> dict:
+    """R = median(D_A) / median(D_B) 와 시드 부트스트랩 95 % 구간 — 비만 돌려준다 (D 는 버린다)."""
+    import numpy as np
+    a = np.asarray([x for x in d_a if x is not None], float)
+    b = np.asarray([x for x in d_b if x is not None], float)
+    if len(a) < min_seeds or len(b) < min_seeds:
+        return {"status": f"R 을 내지 않는다 — 통과 시드 A {len(a)} · B {len(b)} (둘 다 ≥ {min_seeds} 필요 · 회신 CR Q-CR-3)",
+                "n_a": int(len(a)), "n_b": int(len(b))}
+    if (a <= 0).any() or (b <= 0).any():
+        return {"status": "D ≤ 0 인 시드가 있다 — 비가 정의되지 않아 R 을 내지 않는다", "n_a": int(len(a)), "n_b": int(len(b))}
+    lo, hi = _boot_ratio_interval(a, b, n_boot, np.random.default_rng(seed))
+    return {"R": float(np.median(a) / np.median(b)), "lo": lo, "hi": hi, "excludes_1": bool(lo > 1.0 or hi < 1.0),
+            "n_a": int(len(a)), "n_b": int(len(b)), "n_boot": int(n_boot), "seed": int(seed)}
+
+
+def ratio_detect_limit(sigma_ln, n_a=5, n_b=5, sigma_b=None, r_grid=DETECT_GRID, n_sim=2000, n_boot=2000,
+                       seed=7) -> dict:
+    """참 비 R 에서 이 설계가 '구간이 1 밖' 을 낼 확률 — 로그정규 D · 시드 독립 · `_boot_ratio_interval` 그대로."""
+    import numpy as np
+    rng = np.random.default_rng(seed)
+    sb = sigma_ln if sigma_b is None else sigma_b
+    rows = []
+    for r in r_grid:
+        hit = 0
+        for _ in range(n_sim):
+            a = np.exp(rng.normal(0.0, sigma_ln, n_a))
+            b = np.exp(rng.normal(-math.log(r), sb, n_b))
+            lo, hi = _boot_ratio_interval(a, b, n_boot, rng)
+            hit += (lo > 1.0) or (hi < 1.0)
+        rows.append([float(r), hit / n_sim])
+
+    def first(p):
+        return next((r for r, q in rows if r > 1.0 and q >= p), None)
+    return {"sigma_ln_A": sigma_ln, "sigma_ln_B": sb, "n_a": n_a, "n_b": n_b, "n_sim": n_sim, "n_boot": n_boot,
+            "seed": seed, "rows": rows, "false_detect_at_R1": next((q for r, q in rows if r == 1.0), None),
+            "R50": first(0.5), "R80": first(0.8),
+            "⚠": "로그정규·독립 시드 가정 · B 산포는 가정 · 격자 밖이면 None (격자 끝보다 크다)"}
+
+
 def _selftest() -> int:
     import tempfile
     fails = []
@@ -369,6 +436,26 @@ def _selftest() -> int:
     ck("옛 550 K 기술 비교: 다섯 시드 · seed1 은 초기구조가 다르다고 적는다",
        isinstance(old, dict) and len(old) == 5 and "⚠" in old[1] and old[2]["beta_MTO_old_400ps"] == 0.8198)
     ck("⛔음성 옛 기록이 없으면 '못 읽었다' (지어내지 않는다)", "status" in old_550_reference("/nonexistent.json"))
+
+    # ── 대조 계 R · 검출한계 (회신 CR) ──
+    same = ratio_boot([1.0, 1.1, 0.9, 1.05, 0.95], [1.0, 1.1, 0.9, 1.05, 0.95], n_boot=2000)
+    ck("R: 같은 표본이면 R = 1 · 구간이 1 을 포함한다", abs(same.get("R", 0) - 1.0) < 1e-12 and not same["excludes_1"])
+    twice = ratio_boot([2.0, 2.2, 1.8, 2.1, 1.9], [1.0, 1.1, 0.9, 1.05, 0.95], n_boot=2000)
+    ck("R: A 가 두 배면 R = 2 · 구간이 1 밖", abs(twice.get("R", 0) - 2.0) < 1e-12 and twice["lo"] > 1.0)
+    ck("R: 같은 입력·같은 난수면 같은 구간 (재현)", ratio_boot([2.0, 2.2, 1.8, 2.1, 1.9], [1.0, 1.1, 0.9, 1.05, 0.95],
+                                                     n_boot=2000) == twice)
+    ck("⛔음성 R: B 통과 시드 3 이면 R 을 내지 않는다 (둘 다 ≥ 4 · 회신 CR)",
+       "R" not in ratio_boot([1.0, 1.1, 0.9, 1.05, 0.95], [1.0, 1.1, 0.9]))
+    ck("⛔음성 R: A 쪽이 3 이어도 내지 않는다", "R" not in ratio_boot([1.0, 1.1, None, 0.9, None], [1.0, 1.1, 0.9, 1.0]))
+    ck("⛔음성 R: D ≤ 0 이 있으면 내지 않는다", "R" not in ratio_boot([1.0, 1.1, 0.0, 0.9, 1.2], [1.0, 1.1, 0.9, 1.0]))
+    ck("R: 결과에 D 가 없다 (비·구간·시드 수만)", set(twice) <= {"R", "lo", "hi", "excludes_1", "n_a", "n_b", "n_boot", "seed"})
+    dl = ratio_detect_limit(0.10, r_grid=(1.0, 1.2, 3.0), n_sim=300, n_boot=400, seed=11)
+    p = {r: q for r, q in dl["rows"]}
+    ck("검출한계: 참 비 3 이면 거의 늘 검출 (σ_ln 0.10 · n 5/5)", p[3.0] >= 0.95)
+    ck("검출한계: 비가 클수록 검출 확률이 크다 (1 ≤ 1.2 ≤ 3)", p[1.0] <= p[1.2] <= p[3.0])
+    ck("⛔음성 검출한계: R = 1 의 오검출률이 0.3 을 넘지 않는다 (넘으면 구간 절차가 깨진 것)", p[1.0] <= 0.30)
+    big = ratio_detect_limit(0.40, r_grid=(1.0, 1.1, 1.2), n_sim=200, n_boot=300, seed=12)
+    ck("⛔음성 검출한계: 산포가 크고 격자가 짧으면 R₈₀ 이 없다 (None — 지어내지 않는다)", big["R80"] is None)
 
     # 실제 경로: 짧은 합성 궤적 하나 (Li 20 · PS₄ 1 · 1100 프레임 = 110 ps · save 100 fs)
     try:
@@ -431,9 +518,30 @@ def main() -> int:
     ap.add_argument("--framework", choices=["record", "gate", "off"], default="record",
                     help="골격 세 지표: record = 기록만 (기본) · gate = D 상대 산포에서 뺀다 (N 은 그대로) · off = 안 잰다")
     ap.add_argument("--selftest", action="store_true")
+    ap.add_argument("--detect_limit", action="store_true",
+                    help="대조 계 카드 (회신 CR): R 의 설계 검출한계 모의 — 결과 전에 낸다")
+    ap.add_argument("--sigma_ln", type=float, nargs="+", default=None, help="A 의 시드 간 ln D 표준편차 (여럿이면 차례로)")
+    ap.add_argument("--sigma_ln_b", type=float, default=None, help="B 의 σ_ln (기본 = A 와 같음 · 가정)")
+    ap.add_argument("--n_a", type=int, default=5)
+    ap.add_argument("--n_b", type=int, default=5)
+    ap.add_argument("--n_sim", type=int, default=2000)
     a = ap.parse_args()
     if a.selftest:
         return _selftest()
+    if a.detect_limit:
+        if not a.sigma_ln:
+            ap.error("--detect_limit 에는 --sigma_ln 이 필요하다 (눈금을 지어내지 않는다)")
+        res = []
+        for s in a.sigma_ln:
+            d = ratio_detect_limit(s, n_a=a.n_a, n_b=a.n_b, sigma_b=a.sigma_ln_b, n_sim=a.n_sim)
+            res.append(d)
+            print(f"σ_ln A {s:.4f} · B {d['sigma_ln_B']:.4f} · n {a.n_a}/{a.n_b} · 모의 {d['n_sim']} · 부트 {d['n_boot']} → "
+                  f"R₅₀ {d['R50']} · R₈₀ {d['R80']} · R=1 오검출 {d['false_detect_at_R1']:.3f}")
+            print("   " + " · ".join(f"{r:g}:{q:.2f}" for r, q in d["rows"]))
+        if a.out:
+            pathlib.Path(a.out).write_text(json.dumps(res, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+            print(f"-> {a.out}")
+        return 0
     if not a.root:
         ap.error("--root 가 필요하다")
     try:
