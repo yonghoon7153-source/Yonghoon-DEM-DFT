@@ -3854,3 +3854,59 @@ UNVERIFIED · 960 s · 유한 σ · 다른 공간 축 미승인 · 게이트 리
 
 이 절이 바꾸지 않는 것: v1 · r1 꾸러미 · 요청문 바이트 · §54 · 승인 플래그 전부 false · 정상 gate INCOMPLETE · 실효 정책 UNVERIFIED · 960 s · 유한 σ ·
 다른 공간 축 미승인 · 게이트 리뷰와 무관 · RUN_SCOPE 0. 컴파일 · 기능 시험 · COMSOL/JVM · native 없음.
+
+## 56. B-min 후보 r2 재검토 회신 접수 — `PREPARATION_ACCEPTED_NOT_VALIDATED` · BMIN-R1-N1 종결 · C1 정정 수용 · 한정 검증안 수용 (승인 아님) · 새 차단 0 (2026-10-05)
+
+> **추가 기록이다.** 묶음 `reviews/r14_repros/codex63/comsol_bmin_r2_review_20261005/` (ZIP 852,293 B · `4f9e2097…` · payload 18 + `PACKAGE_MANIFEST.json`
+> 크기 · SHA 18/18 · ZIP member 19 = 디스크 바이트 19/19 · CRLF 는 검토자 원문 다섯 (`INDEPENDENT_STATIC_AUDIT.json` · `PRIOR_R1_INDEPENDENT_STATIC_AUDIT.json` ·
+> `reviewer_history/AUDIT_01_SUPERSEDED.json` · `CONSUMER_DIFF.txt` · `NORMAL480_DOF_LINE_131.txt`) 에만 있고 그대로 보존 · 규칙 `50a2c0f8b` → 보존 `4ce80f3ef` ·
+> index blob = 바이트 20/20). 대상 = 고정 커밋 `939b544b8` · 요청문 blob `89c02107…` · r2 manifest `4cdca2e6…` (§55). 발송은 사용자 (§55 의 요청문 · 발송문은
+> 저장소 밖 — 검토자 수신 사본 `RECEIVED_REQUEST.md` 가 우리 발송문과 바이트 동일). 검토자 실행: 후보 · 제출 build / 감사 도구의 import · 구문 해석 · 컴파일 ·
+> 실행 0 · COMSOL / JVM / native · 제한 suite 0 — 검토자 자체 JSON · 파일 해시 · 소스 문자열 · 기존 ZIP 로그 읽기와 독립 문자열 모형만 · 고정 참조 19 개의
+> Git blob 과 후보 manifest 대조 (`DECISION.json` · `README.md`).
+
+### 56-1. 판정 (사본)
+
+| 항목 | 판정 |
+|---|---|
+| 식별 | manifest 1,050 B · `4cdca2e6…` · 생산 파일 다섯 크기 / SHA 직접 대조 · Java · entry · 부모 · CONTRACT = r1 바이트 동일 · consumer 의 선언된 두 변경을 역치환하면 CRLF 포함 r1 전체 바이트와 같다 · COMMAND_MAP · 승인 필드 명세는 manifest SHA 교체만 · run_id · root · native 예산은 이전 후보와 같다 · 승인 / 사용 플래그 전부 false · r1 꾸러미 17 blob = 직전 검토 커밋과 같음 · v1 은 이전 검토에서 확보한 28 표본의 blob 불변 (v1 전체 보존이나 과거 실행을 새로 전수 감사했다는 뜻 아님) |
+| **Q1 BMIN-R1-N1** | **종결 (정적 준비 수준)** — `mesh_evidence` 가 단일 Time-Dependent Solver 구간을 고르고 DOF 문구 줄이 정확히 하나인지 본 뒤 그 **전체 줄**을 정규식과 대조한다: 같은 줄 두 문장 · 같은 문장 둘 · 정상 + 불완전 문장 · 다른 꼬리 = `TRANSIENT_DOF_READBACK_FORMAT` · DOF 두 줄 = COUNT:2 · 없음 = COUNT:0 · solved 0 = VALUE · 앞뒤 공백 = 수용 · 다른 유효 DOF = 수용 · 기록 전용 (예상 156925 / 12 와의 차이를 실패 조건으로 쓰지 않음) · 시각 접두어 줄 = FORMAT 거부 (자동 제거 없음). 근거 = 검토자 소유 데이터 문자열 모형 + 후보 소스 분기 대조 (후보 함수 실행 · 실제 COMSOL 오류 재현 아님) · 선언된 영어 DOF 형식과 구간 표식 안에서 잔여 차단 모호성 없음 — 임의 언어 · 모든 미래 로그 포맷의 보장은 아니다 · 모르는 접두어는 거짓 성공 대신 미완으로 남는 현재 정책 유지 |
+| NORMAL480 원 로그 | 원 ZIP (420,748,594 B · `e991ab4c…`) 재해시 · `run/batch.log` (886,975 B · `805e6494…`) 직접 읽음 — 131행 = `Number of degrees of freedom solved for: 79485 (plus 12 internal DOFs).` 와 CRLF 뿐 (시각 등 접두어 · 후행 설명 · 앞뒤 여백 없음 · 73 B · `c4a34ce5…` · `NORMAL480_DOF_LINE_131.txt` 로 동봉) · 단일 시간 의존 구간 안의 유일한 DOF 줄 · 86행 1202 / 12 는 구간 밖 Stationary 초기화 → PY03-13(b) 양성 대조 문구는 원본과 일치하고 접두어 때문에 이 기준 로그가 거부될 문제는 없다. **particle320 기준 로그**다 — particle640 의 DOF · native 호환성 실측으로 읽지 않는다 |
+| **Q2 C1** | **수용** — 봉인된 PS01-16 fixture 에서 직접 추출한 `0.001000000000000000000000000001` = 소수점 아래 30 자리 · 유효숫자 28 자리 · 정확한 십진값은 한도 (0.001) 보다 크다 → 정확 등호 목록에서 빼 `precision_mismatch_items` 로 옮긴 것이 맞다 (등호 대조는 PY01-02 / PS01-04 에 남음) · 목적 = 부모 / consumer 비교가 다를 때 INCOMPLETE 로 닫는지 · 실제 파싱 실패 / 반올림 경로는 목표 Windows PowerShell 5.1 에서 이후 확인 · 임의 정밀도 십진 비교 보증으로 쓰지 않는다 |
+| **Q3 검증안** | **계획 수용 · 승인 아님** — 기존 54 ID 유지 (PS01-16 정정 외 fixture / expected 문구 같음) · 새 ID 8 · 새 입력 18 이 r1 재검토 Q4 의 네 항목을 덮는다 (PY03-11 · 12 · 13 · PY03-14 · PS01-18 · 19 · 20 · PS01-21 + `preseal_before_first_test`) · 여러 입력 ID 의 입력별 기대 이유 · 기존 PS01-12 · 13 · 14 와 합쳐 부모 원인 이름 일곱 각각에 대응 사례 (계획의 원인별 대응 확인 — 모든 타입 · 분기를 기능 검증했다는 뜻 아님) · 최종 9 군 · 62 ID · 77 입력 = Python 39 / 42 + Java helper 2 / 2 + PowerShell 21 / 33 · 세션 한도 Python 1 / 250 s · Java compile 1 / 90 s · stub JVM 1 / 60 s · PowerShell 1 / 240 s (입력마다 세션을 새로 여는 안 아님) · 전체 600 + 250 + 90 + 60 + 240 + 300 + 120 = 1,660 s 와 증액 산술 (Python +40 ← 210/36×6 = 35 · PowerShell +90 ← 150/21×12 ≈ 85.714) 맞음 — **시간 충분성 실측이나 예산 승인이 아니다** · 첫 실패 · 초과 시 미완 보존 · 자동 수정 / 부분 재시험 / 우회 없이 중지 유지 · harness 없음 · SHA null 은 준비 단계에서 허위 봉인 대신 명시한 것으로 적절 |
+| 유지 | R1 의 종료 축 분리 수용 (부모가 같은 consumer 의 구조화된 종료 근거를 별도 조건으로 소비 — 원시 native 로그를 제삼자가 독립 관측한 것 아님) · entry rc1 → `NOT_ESTABLISHED / NATIVE_CHILD_RC` 의 보수적 한계 (solver 실패 확정으로 바꾸지 않음) · run_id · root 재사용 = 비활성 후보의 같은 실행 제안에 대한 개정 식별 (실제 위치가 비어 있다는 원격 관측 아님 — 추후 배치 때 r2 manifest 와 실물 바이트를 결속 · 충돌 시 중지 · 지금 승인 파일 / runtime / token 만들지 않음) · 자체 신고 a–e 는 종결을 막지 않음 (c 의 원 로그 부재는 이번 직접 읽기로 해소) |
+
+**검토자의 자기 기록:** 자체 점검 첫 판에서 PS01-16 숫자를 손으로 옮기다 0 세 개를 빠뜨려 27 / 25 가 나왔다 — 그 관측을 판단에 쓰지 않고 봉인
+검증안의 문자열을 직접 추출하도록 고친 뒤 30 / 28 을 확인했다. 최초 도구가 rc 0 이어도 그 자릿수 관측은 폐기 (`reviewer_history/` ·
+`REVIEWER_TOOL_RETURNS.json` — 제출 후보 오류나 기능 시험 재시도가 아니다). 제출자의 38/38 STATIC_MATCH 와 r1 / v1 감사 재실행은 제출자 정적
+기록이며 검토자 기능 시험으로 합산하지 않는다.
+
+**검토자가 정한 다음:** **고정 r2 의 한정 검증에 대한 사용자 별도 승인.** 승인 뒤 첫 시험 전에 실제 harness SHA · 봉인 함수의 추출 위치 · 엔진 바이트 ·
+입력별 fixture · 기대 이유 · 호출 · 시간 원점을 고정하고, 첫 실패에서 기록 · 중지한다 · Python 으로 PowerShell 판정을 대체하거나 COMSOL 전체 모델
+compile 을 끼워 넣지 않는다. 검증 결과 수용 뒤 fresh 0 → 150 s · 입자 반경 메시 320 → 640 의 한정 공간 민감도 최대 1 회 = 다시 별도 승인 (주 비교 창
+120–150 s · 480 s 전체 공간 수렴 시험 아님). 같은 준비 검토의 반복 · 기존 전체 시험 / NORMAL480 / rtol30 다시 열기는 필요 없다. approved=false /
+usable=false · 전체 · 정상 gate INCOMPLETE · 실효 정책 UNVERIFIED · 960 s · 유한 σ · 다른 공간 축 · 설정 변경 · 새 연구 실행 미승인 유지
+(`DECISION.json` `preserved_states`). 게이트 91 과 이 건의 판정은 별개다.
+
+### 56-2. 우리 확인 (접수 때)
+
+- `DECISION.json` 의 커밋 · manifest 와 검토문의 요청문 blob 은 이 저장소와 같다 — `939b544b8bb77dbf20a56520af9f74a82acd0a94` ·
+  `candidate/CODE_MANIFEST.json` 1,050 B · `4cdca2e6bf7d073f813d97be73825b8cd2043c2fc44e285f4a190bc6fb97cf25` · 요청문 blob `89c02107243244c7fe3518551d37408403edf5e0`.
+- `939b544b8` → 보존 커밋 `4ce80f3ef` 사이에 `comsol_candidates/` · 요청문 · `reviews/` 의 변경은 새 묶음 20 파일 추가뿐이다 (v1 · r1 · r2 꾸러미와
+  기존 회신 묶음 변경 0) · r1 꾸러미 17 파일은 `741dde19b` → `939b544b8` 사이에도 변경 0.
+- 우리 `LIMITED_VALIDATION_PLAN.json` 에서 다시 센 수가 검토자 표와 같다: `logical_groups` 9 · case ID 62 (Python 39 · Java helper 2 · Windows PowerShell
+  21 · 중복 0) · 입력 합 77 (42 · 2 · 33) · 여러 입력 ID 의 `input_expectations` 수 = 그 ID 의 `inputs` · `sessions` 넷 · `budget_seconds.overall` 1,660 ·
+  `harness_sha256` null · `status` `PROPOSAL_NO_TESTS_RUN` · approved / usable false.
+- PY03-13(b) fixture 의 따옴표 안 문자열은 검토자가 원 로그에서 뽑은 131행 (`NORMAL480_DOF_LINE_131.txt`) 에서 CRLF 를 뺀 바이트와 같다.
+- 이 접수에서 후보 · 감사 도구 · harness 를 실행하거나 후보의 정규식을 돌리지 않았다 (문자열 · 해시 · JSON 대조만) · COMSOL / JVM / PowerShell 호출 0.
+
+### 56-3. 다음 — 사용자 결정 (자동 시작 없음)
+
+이 회신은 한정 검증의 승인이 아니다. (가) 고정 r2 의 변경부 한정 검증 1 건 (9 군 · 62 ID · 77 입력 · 제안 1,660 s) — 채택 문구 초안은 r2 꾸러미
+`VALIDATION_REQUEST_KO.md` 의 "사용자 채택용 문구". 승인이 오면 위 검토자 조건 (첫 시험 전 봉인 · 첫 실패 중지 · 엔진 대체 금지) 그대로이고, 판정은
+목표 엔진 (Windows PowerShell 5.1 · Java helper · Python) 에서 낸다 — 정상 30 s · 60 s 의 한정 검증 (§31 · §35) 처럼 실행과 수신 검토는 현지 쪽이다.
+(나) 검증 결과 수용 뒤의 native 150 s 최대 1 회 — 그때 다시 별도 승인.
+
+이 절이 바꾸지 않는 것: v1 · r1 · r2 꾸러미 · 요청문 바이트 (검토 대상 기록) · §55 · 승인 플래그 전부 false · 정상 gate INCOMPLETE · 실효 정책
+UNVERIFIED · 960 s · 유한 σ · 다른 공간 축 미승인 · 게이트 리뷰 (`degradation-degeneracy` 91차 — 같은 날 따로 종결) 와 무관 · RUN_SCOPE 0. 컴파일 · 기능
+시험 · COMSOL/JVM · native 없음.
