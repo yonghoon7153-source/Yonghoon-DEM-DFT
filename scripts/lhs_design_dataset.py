@@ -1227,9 +1227,15 @@ WA_GROUPS = ('contact', 'percolation', 'f1', 'fracture', 'area')
 #:   `_network_and_stage_e(stop_before_stage_e=True)`) = 접촉 분석 (required · causal — 실패하면 그 케이스는 failed) → 피복 (optional ·
 #:   `*_physics` · `*_physics_v2` · A_binding 키만 쓴다) → network solver → 머지 (`pipeline_service.NET_MERGE_KEYS` — σ · R · 협착 전력 몫 키만) →
 #:   망 정지 계약 · **Stage E 앞**.  뒤 단계가 다섯 묶음의 열을 다시 쓰지 않으므로 done · partial 행은 다섯 묶음을 다 낸다.
-#:   망 단계 고유 산출 (τ 인계 tau2 · f · ④a 협착 전력 몫 · electronic_active_fraction) 은 아직 인계 묶음이 아니다 (망 배치 · Codex 뒤).
+#:   ★ 망 τ 묶음 'tau' (v1.2 · 아래 WA_TAU_GROUP) = 망 단계 고유 산출 중 **이온 망 인계 열** (tau_flux) 만 — network 정지점에만 있다.
+#:   ④a 협착 전력 몫 · electronic_active_fraction 은 아직 인계 묶음이 아니다 (v1.2 범위 밖 · Codex 10-05 3차 §6-5).
 #:   생산 쪽 정지점 (배치 `--stop-after` choices · 웹앱 `PIPELINE_STOP_AFTER`) 이 늘면 여기에 역량을 적기 전까지 거부한다 (selftest ㉖i 가 동기를 본다).
-WA_STAGE_GROUPS = {'contact': WA_GROUPS, 'coverage': WA_GROUPS, 'network': WA_GROUPS}
+#: ★ 망 τ 묶음 (v1.2 · Codex 10-05 3차 재검증 §3 Q5 · §6-5 *"⑤⑥⑦ · 망 τ 만 · LW 제외"*) — network 정지 배치의 케이스 폴더 (`<--work>/results/<case>/`)
+#:   에서 **tau_flux 자신** (`case_row`) 이 낸 이온 망 인계 열 (v2 §5-1 · 모드 꼬리 · `tau_flux.column_names()` 28 열) 을 싣는다.  census 열이 아니라
+#:   (metrics_flat 에 dual 레코드가 없다) 별도 원천 (`load_tau_results` · CLI `--tau-results`) 이 필요하다 — 묶음만 부르거나 원천만 주면 거부.
+WA_TAU_GROUP = 'tau'
+WA_ALL_GROUPS = WA_GROUPS + (WA_TAU_GROUP,)
+WA_STAGE_GROUPS = {'contact': WA_GROUPS, 'coverage': WA_GROUPS, 'network': WA_GROUPS + (WA_TAU_GROUP,)}
 
 
 def wa_group_contact(col):
@@ -1524,6 +1530,244 @@ def load_webapp(dir_path, census_path=None):
             'source': str(d), 'runs': st.get('runs') or [], 'stop_after': st.get('stop_after')}
 
 
+#  ═══ 망 τ 묶음 (v1.2) — 열 사전 · 원천 로더 ═════════════════════════════════════════════════════════════════════════════════════
+#  ★ τ 명명 규약 (CLAUDE.md ★★ τ 블록 · 정본 `docs/reviews/tau_conventions_judgment_v2_20261003.md` §5-1 열 · §5-2 게이트 · §5-3 한정어).
+#    열 이름 · 순서 · 값 · 직렬화 = **tau_flux 그대로** (`column_names` · `case_row` · `_cell`) — 생성기는 τ 를 계산하지 않는다 (규율 ① —
+#    다시 짜면 게이트 G1–G6 · 공용 기술 검사 · 모드 꼬리가 두 벌이 된다).  여기는 열 사전의 **뜻**과 원천의 **출처 관문**만 둔다.
+TAU_NET_SCHEMA = 'lhs_tau_net/v1'
+TAU_NET_SOURCE = 'tau_flux'
+TAU_NET_MODES = ('hertz', 'physics')
+TAU_NET_VERDICT = ('✅ 싣는다 (망 τ 묶음 · v1.2 — Codex 10-05 3차 재검증 §3 Q5 · §6-5 · LW 제외) · ⚠ G6 (협착 세대) — 두 모드 모두 물리 타깃 '
+                   '(실험 절대 대조) HOLD · 값은 싣는다 (ML 기술자 전용)')
+_TAU_AREA = {'hertz': ('hertz = LIGGGHTS c_cpl[22] 기하 교차 원판 π(rδ − δ²/4) (같은 반지름 r · 겹침 δ — 탄성 πR*δ 의 (2 − δ/2r) 배 · '
+                       '"Hertz" 는 이름만 · L1-04) · 협착 maxwell_halfspace'),
+             'physics': ('physics = v1 Tabor · 부피 · 기하 cap 면적 (plastic_coverage — 접촉별 **상한값** · 표면 한도 없음 · LHS-25) · '
+                         '협착 mikic_psi_divide (ψ 분모 · 절벽)')}
+#: 한정어 (v2 §5-3) — 'tortuosity factor' 라는 이름은 tau2 열에만 쓴다 (규약) → 일반 한정어에는 그 낱말을 넣지 않는다.
+CAVEAT_TAU_NET = ('1세대 협착식 (hertz = 반공간 Maxwell R_c = 1/(2σa) — a/r_SE 0.30–0.44 에서 R_c 1.7–2.4 배 과대 · physics = ψ 분모 + 접촉별 상한값 '
+                  '면적 + ψ < 1e-4 절벽) — ML 기술자 전용 · **실험 절대 대조 금지** (G6 HOLD — 순수 SE 게이트 · S3 판정 전) · z 한 축 (Tjaden 식 21 τ_C 와 '
+                  '직접 비교 금지) · 형상 · CBD 차단 없음 · σ₀ 펠릿값 위 Holm 접촉 저항 = 부분 이중계상 (방향 tau2↑) · 띠 끝 단락 → tau2 하향 ≤ 4r_SE/L '
+                  '(ion_net_band_frac_<모드>) · φ = 전 SE (비관통 · 고립 포함 — dead 부피가 tau2 를 키운다) → 1차 수송량은 f · τ_e (Nguyen Eq 2 · '
+                  'electrode) 아님')
+CAVEAT_TAU_NET_T2 = ('flux 기반 · 관통 (두 평행 띠 Dirichlet) conventional tortuosity factor (Nguyen Eq 1) — electrode tortuosity factor τ_e '
+                     '(Nguyen Eq 2) 가 아니다 · 차단 대칭셀 EIS-TLM 의 τ (Landesfeind Eq 13 형) 와 한정어 없이 비교하지 않는다 · 문헌 tau2 와 맞댈 때 '
+                     'Minnmann 은 순수 SE 펠릿 τ² ≡ 1 기준 (σ₀ 1.6 mS/cm @25 °C) — 우리 tau2 는 간선 재료 σ₀ 기준 · ' + CAVEAT_TAU_NET)
+_TAU_STATUS = ('이온 망 인계 상태 (tau_flux 게이트 G1–G6 · v2 §5-2 · 먼저 걸린 것 하나) — OK (값) · MODEL_BELOW_CONTINUUM_BOUND (G5 — f > φ · '
+               'tau2 < 1 · 원기둥 bulk · physics 절벽의 모델 성질 · **값 유지** + 표지 — 빈칸으로 거르면 코퍼스를 tau2 ≥ 1 쪽으로 선별한다) · '
+               'NOT_PERCOLATING (G3 — 비관통 (관통 경로 없음) · 생산자 valid_zero + no_through_path · f = 0 · tau2 · tau 빈칸 (= ∞) · 이온적으로 죽은 '
+               '전극으로 읽지 말 것 (ionic_active_pct 는 유한) · 문턱 근처 관통 여부는 상자 크기의 실현값) · BAND_FALLBACK (G1 — 솔버 띠 규칙이 L0 아님 · '
+               '값 빈칸) · NOT_COMPUTED (빈칸 + 사유 열).  부류 (RGLR-01): NOT_COMPUTED = **기술적 실패** (입력 결손 · 무효 · 솔버 관문 · 온도 짝 · '
+               '관통 불일치 — 값 없음) ↔ BAND_FALLBACK · NOT_PERCOLATING · MODEL_BELOW_CONTINUUM_BOUND = 등록된 **과학적 HOLD** (입력 유효 · 규칙대로 '
+               '빈칸 또는 표지) · G6 = 두 모드 모두 물리 타깃 HOLD (값은 싣는다) · 이 칸이 빈칸 = 웹앱 배치 행이 done · partial 이 아니다 (wa_status · '
+               'tau_flux 를 부르지 않았다)')
+_TAU_REASON = ('NOT_COMPUTED 의 사유 (사유 코드 = ":" 앞) — missing_input (망 결과 · 장부 L_gap · L_mc · φ_mc · calc_percolation · 띠 규칙 기록 · '
+               '온도 기록 없음) · invalid_input: 세부 (공용 기술 검사 tau_flux.ion_record_problem — 생산자 계약 위반: computed 인데 σ 두 표현이 유한 양수가 '
+               '아니거나 서로 다름 (RGLR-02) · 관통 분율 (0, 1] 밖 · 증명된 비관통 조합이 아닌 valid_zero · 모르는 상태) · solver_guard (관통인데 σ 없음 — '
+               '생산자 not_computed) · percolation_disagree (G2 — 솔버 관통 ≠ calc_percolation) · temperature_mismatch (G4 — σ₀ 와 σ_full 의 온도가 다르다 · '
+               '두 모드의 (σ₀, T) 가 다르다) · 다른 상태면 빈칸')
+_TAU_PER_MODE = {
+    'f_ion': ('★ 이온 유효 전도도 비 f = σ_eff/σ₀ ({m} 망 · 무차원 · 단위 1) = σ_ratio × L_gap/L_mc — σ_ratio = 솔버 FULL 해의 무차원 sigma_full '
+              '(8 자리 · TAU-25) · L_gap = 판 간격 · L_mc = 질량 보존 두께 = **판 간격 해의 질량보존 두께 재척도 (해 아님)** · 문헌 ε/τ² (Tjaden) · '
+              'COMSOL f_e (= 1/N_M) · σ₀ 수치에 무관 · COMSOL 에 넣을 때는 Porous Electrode 보정 User defined (fl) 칸 (같은 틀 L_mc · φ_mc — 10-04 D1 · '
+              '앱 예제 Homogenizing a Heterogeneous Electrode Model 식 (1) f_eff = ε/τ) · 판 간격 틀 f_ion_{m}_gap 과 섞지 않는다 · ⚠ 웹앱 COMSOL 2D '
+              '내보내기의 같은 이름 f_ion_{m} 은 판 간격 틀 (σ_full/σ₀ · L_cat · phiSE) = 이 표의 f_ion_{m}_gap 과 같은 양 (반올림 차 ≤ 0.11 % · '
+              'TAU-25) · 값 = 상태 OK · MODEL_BELOW_CONTINUUM_BOUND · NOT_PERCOLATING 이면 0.0 (관통 성분 없음 — 물리적 0) · 그 밖 빈칸 (0 이 아니다)'),
+    'f_ion_gap': ('(메타) 판 간격 기준으로 풀린 f = σ_ratio 그대로 ({m} 망 · 무차원) — **φ_mc 와 짝짓지 말 것** (tau2 를 L_gap/L_mc 배 낮춘다) · '
+                  '짝은 φ_구합 (판 간격 상자 · 구 부피 합) · 값 규칙은 f_ion_{m} 와 같다'),
+    'tau2_ion': ('★ tortuosity factor tau2 = φ_SE,mc / f_ion_{m} ({m} 망 · 무차원 · 단위 1) = φ_구합·σ₀/σ_full — 현행 웹앱 케이스 페이지 tau2 와 '
+                 '정의상 같은 수 (웹앱은 mS/cm σ (6 자리) 로 계산해 최대 0.11 % 다를 수 있다 · TAU-25) · 문헌 tortuosity factor (Tjaden κ = τ² = '
+                 'Landesfeind τ = COMSOL τ_F = TauFactor τ) 와 같은 정의식 — 물리 기준 상태는 다르다 (간선 재료 σ₀ 기준) · COMSOL Tortuosity 칸의 꼴 '
+                 '= tau2 (√ 아님 · 종 수송 Eq 6-6 · 배터리 인터페이스는 강하게 시사 — GUI Equation 확인 전에는 "COMSOL 입력" 이라 쓰지 않는다) · '
+                 '접촉망 모델 tau2 (Holm 협착 포함 · 원기둥 bulk · z 관통) · 값 = 상태 OK · MODEL_BELOW_CONTINUUM_BOUND (tau2 < 1 이어도 값 유지) · '
+                 'NOT_PERCOLATING 이면 빈칸 (= ∞ — 관통 경로 없음) · 그 밖 빈칸 (0 이 아니다)'),
+    'tau_ion': ('τ = √tau2 ({m} 망 · 무차원 · τ² 관례의 τ = Minnmann √τ² · Tjaden 식 3 flux τ · 웹앱 τ_Lap,eff) — **COMSOL 입력 아님** (COMSOL 칸에는 '
+                'tau2 또는 f) · 값 규칙은 tau2_ion_{m} 와 같다'),
+    'ion_net_status': '{m} ' + _TAU_STATUS,
+    'ion_net_status_reason': '{m} ' + _TAU_REASON,
+    'ion_net_area_mode': '면적 모드 (값 = {m}) — {area}',
+    'ion_net_constriction': ('협착식 (G6 세대 메타 · {m}) — maxwell_halfspace (hertz: R_c = 1/(2σa) · ψ 없음) · mikic_psi_divide (physics: ψ 분모 L2-01 · '
+                             'ψ < 1e-4 → R_c = 0 절벽) · 두 모드 모두 1세대 · "unknown:<이름>" = 모르는 저항 모델'),
+    'ion_net_psi': 'ψ 배치 ({m}) — physics 에만 의미 (legacy_divide · L2-01) · hertz 는 빈칸',
+    'ion_net_band_rule': ('솔버 경계 띠 규칙 ({m} · 안 A 10-04) — L0 (입자 자기 반지름 2 배 · 양 끝 ≥ 3) · L1 · L2 (폴백 — G1 → BAND_FALLBACK) · 빈칸 = '
+                          '기록 없는 옛 산출물 (NOT_COMPUTED missing_input)'),
+    'ion_net_band_frac': ('띠 폭 / 판 간격 ({m} · 무차원) — 띠 끝 단락에 의한 tau2 하향의 상한 (≤ 4r_SE/L · TAU-24) · L0 자체도 tau2 를 낮춘다 '
+                          '(중앙 6 % · 최대 17 %)'),
+    'ion_net_basis_check': ('(메타 · 게이트 아님 · {m}) 망 φ (phi_se · 4 자리 · 판 간격 상자 · 구 부피 합) ↔ 장부 φ_mc·L_mc/L_gap (= φ_구합) — ok · '
+                            'mismatch:<차> (망과 장부가 다른 판 높이 · 상자 · SE 집합) · unchecked (값 없음) · 게이트로 쓰려면 새 규칙으로 등록 (1저자)'),
+}
+_TAU_SHARED = {
+    'ion_sigma0_mScm': ('σ₀ (mS/cm) = 간선 재료 σ = 펠릿값 (Cronau 2021 SI 그림 S2c µC-Li₆PS₅Cl 평탄 하단 · CL-91 · 온도 런이면 se_material '
+                        'Arrhenius 값) — f 의 기준 · COMSOL σ₀ 칸의 짝 · 두 모드 공통 (G4 — 두 모드의 (σ₀, T) 가 다르면 빈칸 + 두 모드 NOT_COMPUTED '
+                        'temperature_mismatch) · tau2 · f 는 무차원 σ_ratio 로 계산해 σ₀ 수치에 무관'),
+    'ion_sigma0_T_C': 'σ₀ 의 온도 (°C) — 망 기록 temperature_provenance 의 T_C (없으면 규약 기준 T_ref_C = 25 · NOT_MODELLED) · σ₀ 와 같은 규칙으로 빈칸',
+    'phi_basis': 'φ 기준 = mass_conserving (φ_SE,mc = 장부 phi_se_mass_conserving · 같은 장부 · v2 D3) — tau2 의 분자',
+    'L_basis': '길이 기준 = L_mc (장부 thickness_mass_conserving_um · v2 D3) — f 의 재척도 기준',
+}
+_TAU_COL_RE = re.compile(r'(f_ion|tau2_ion|tau_ion|ion_net_status_reason|ion_net_status|ion_net_area_mode|ion_net_constriction|ion_net_psi|'
+                         r'ion_net_band_rule|ion_net_band_frac|ion_net_basis_check)_(hertz|physics)(_gap)?')
+
+
+def tau_net_define(col):
+    """망 τ 열 (tau_flux.column_names()) → (뜻, 한정어) · 아니면 None.  이름이 정확히 τ 규약 꼴일 때만 (옛 열을 잡지 않는다 — selftest ㉙f1)."""
+    if col in _TAU_SHARED:
+        return _TAU_SHARED[col], CAVEAT_TAU_NET
+    m_ = _TAU_COL_RE.fullmatch(col)
+    if m_ is None or (m_.group(3) and m_.group(1) != 'f_ion'):
+        return None
+    base = 'f_ion_gap' if m_.group(3) else m_.group(1)
+    mode = m_.group(2)
+    text = _TAU_PER_MODE[base].format(m=mode, area=_TAU_AREA[mode])
+    return text, (CAVEAT_TAU_NET_T2 if base == 'tau2_ion' else CAVEAT_TAU_NET)
+
+
+#: 출처 관문 (fail-closed) — 배치 기록 ↔ 케이스 폴더.  P0 기록 · P1 run id · P2 입력 digest · P3 같은 세대 (metrics_flat · dual 투영).
+#:   P3 이 대조하는 full_metrics 키 = 망 정지 계약의 τ 장부 (`pipeline_service.NETWORK_STOP_LEDGER_KEYS`) + 도장 + 망 σ 투영 (상태 포함).
+TAU_TIE_EXTRA = ('network_run_id', 'active_network_run_id', 'network_solver_status',
+                 'sigma_full', 'sigma_full_status', 'sigma_full_physics', 'sigma_full_status_physics')
+#: dual ↔ full_metrics 투영 (생산자 `_merge_dual_into_metrics` — hertz = legacy (= dual hertzian · 망 정지 계약 ⑥) · physics = `<키>_physics` 미러)
+TAU_DUAL_PROJ = (('hertzian', 'sigma_full', 'sigma_full'), ('hertzian', 'sigma_full_status', 'sigma_full_status'),
+                 ('physics', 'sigma_full', 'sigma_full_physics'), ('physics', 'sigma_full_status', 'sigma_full_status_physics'))
+#: 망 도장의 입력 digest 대상 (`app._network_and_stage_e` — `_ps.file_digest(atoms_csv · contacts_csv)`)
+TAU_INPUT_FILES = ('atoms.csv', 'contacts.csv')
+
+
+def _tau_import():
+    """tau_flux (scripts/) · pipeline_service (webapp/) 지연 임포트 — 망 τ 묶음을 부를 때만 (옛 경로의 의존은 늘지 않는다).
+    pipeline_service 는 표준 라이브러리만 임포트한다 (`network_projection_preflight` 와 같은 방식 — 정의를 공유한다 · 사본 금지)."""
+    here = pathlib.Path(__file__).resolve().parent
+    for p in (here, here.parent / 'webapp'):
+        if str(p) not in sys.path:
+            sys.path.append(str(p))
+    import tau_flux as tf                    # noqa: E402
+    import pipeline_service as ps            # noqa: E402
+    return tf, ps
+
+
+def _tau_canon(v):
+    """대조용 정규 JSON (키 순서 무관 · NaN 도 같은 토큰) — pipeline_service._canon 과 같은 뜻."""
+    return json.dumps(v, sort_keys=True, default=str)
+
+
+def load_tau_results(results_dir, webapp):
+    """망 τ 원천 (v1.2) — network 정지 배치 (`lhs_webapp_batch --stop-after network`) 의 케이스 폴더 묶음 (`<--work>/results`) → `build_handover(tau=…)`.
+
+    ★ 왜 케이스 폴더에서 tau_flux 를 직접 부르나 (검증 가능한 쪽):  τ 를 낼 입력 (dual 레코드 두 모드) 은 metrics_flat 에 없고, tau_flux CLI 의
+      TSV/JSON 에는 **출처가 없다** (케이스 이름뿐 — 어느 망 세대인지 대조할 수 없다).  폴더에는 도장 (full_metrics · network_provenance.json 의
+      network_run_id · 입력 digest) 이 있어 **배치 기록과 맞댈 수 있다**.  그래서 관문을 본 바로 그 바이트로 tau_flux 를 부른다 (`case_row` = 웹앱
+      `_ion_handover` 와 같은 입력) — 계산은 한 곳 (tau_flux) · 출처는 배치 status.json 과 대조.
+
+    배치가 done · partial 로 적은 케이스마다 (나머지는 읽지 않는다 — 표에서 τ 칸이 빈칸):
+      P0 기록 — 폴더 · dual · full_metrics · 도장 파일이 있고 읽힌다 (없으면 거부 — 조용히 빈칸으로 두지 않는다)
+      P1 run id — 배치 기록 network_run_id (비지 않은 문자열) = full_metrics network_run_id = active_network_run_id = 도장 network_run_id ·
+         도장 solver_status success · full_metrics network_solver_status success  (다르면 낡은 세대 — 배치 뒤 다시 돌린 폴더 · 다른 배치의 폴더)
+      P2 입력 digest — 도장 input_digests (atoms.csv · contacts.csv) = 지금 폴더 파일의 `pipeline_service.file_digest`
+      P3 같은 세대 — full_metrics 의 τ 장부 (NETWORK_STOP_LEDGER_KEYS) · 도장 · 망 σ 투영 (TAU_TIE_EXTRA) = 배치 metrics_flat 칸 (row_for 직렬화) ·
+         dual σ_ratio · 상태 = full_metrics 투영 (TAU_DUAL_PROJ) · `tau_flux.case_row` 가 읽은 값 = 관문을 본 바이트로 낸 `ion_columns`
+    반환 {'schema', 'source', 'batch_source', 'columns', 'tau_flux_sha256', 'cases': {case: {'network_run_id', 'input_digests', 'dual_sha256',
+         'full_metrics_sha256', 'cells' (tau_flux 직렬화 `_cell`)}}}.  어긋나면 FillRefusal ('τ 정지점' · 'τ P0'–'τ P3')."""
+    wv = webapp if isinstance(webapp, dict) else {}
+    if wv.get('stop_after') != 'network':
+        raise FillRefusal(f'τ 정지점 — 웹앱 배치 stop_after={wv.get("stop_after")!r} ≠ network — 망 τ 는 `lhs_webapp_batch --stop-after network` 배치의 '
+                          '케이스 폴더에서만 싣는다 (그 배치만 케이스 기록에 network_run_id 를 남기고 망 정지 계약을 통과한다 · --webapp 필요)')
+    tf, ps = _tau_import()
+    root = pathlib.Path(results_dir)
+    if not root.is_dir():
+        raise FillRefusal(f'τ P0 — 케이스 폴더 묶음 {root} 이 없다 (배치의 --work 아래 results/)')
+    cols = list(tf.column_names())
+    flat = wv.get('rows') or {}
+    tie = tuple(ps.NETWORK_STOP_LEDGER_KEYS) + TAU_TIE_EXTRA
+    out = {}
+    for case, rec in sorted((wv.get('status') or {}).items()):
+        rec = rec or {}
+        if rec.get('status') not in WA_OK_STATUS:
+            continue
+        rid = rec.get('network_run_id')
+        if not isinstance(rid, str) or not rid:
+            raise FillRefusal(f'{case}: τ P1 — 배치 기록 (status.json) 에 network_run_id 가 없다 ({rid!r}) — 폴더의 망 세대를 대조할 수 없다')
+        cd = root / case
+        raw = {}
+        for n in ('network_conductivity_dual.json', 'full_metrics.json'):
+            try:
+                b_ = (cd / n).read_bytes()
+                raw[n] = (b_, json.loads(b_.decode('utf-8')))
+            except (OSError, ValueError, UnicodeDecodeError) as e:
+                raise FillRefusal(f'{case}: τ P0 — τ 기록 없음 · 못 읽음 {cd / n} ({type(e).__name__}) — 배치 done 케이스의 망 결과가 폴더에 없다')
+        dual, fm = raw['network_conductivity_dual.json'][1], raw['full_metrics.json'][1]
+        if not isinstance(dual, dict) or not isinstance(fm, dict):
+            raise FillRefusal(f'{case}: τ P0 — dual · full_metrics 가 객체가 아니다')
+        prov = ps.read_network_provenance(str(cd))
+        if prov.get('provenance_state') == 'missing':
+            raise FillRefusal(f'{case}: τ P0 — 망 도장 ({ps.PROVENANCE_FILE}) 이 없다 — 어느 세대인지 대조할 수 없다')
+        bad = []
+        if prov.get('provenance_state') != 'valid' or prov.get('solver_status') != 'success':
+            bad.append(f'도장 상태 {prov.get("provenance_state")!r} · solver_status {prov.get("solver_status")!r} (valid · success 여야)')
+        for lab, v_ in (('도장 network_run_id', prov.get('network_run_id')), ('full_metrics network_run_id', fm.get('network_run_id')),
+                        ('full_metrics active_network_run_id', fm.get('active_network_run_id'))):
+            if v_ != rid:
+                bad.append(f'{lab} {v_!r} ≠ 배치 기록 {rid!r}')
+        if fm.get('network_solver_status') != 'success':
+            bad.append(f'full_metrics network_solver_status {fm.get("network_solver_status")!r}')
+        if bad:
+            raise FillRefusal(f'{case}: τ P1 — 낡은 · 다른 망 세대: ' + ' · '.join(bad) + ' — 배치 뒤 다시 돌린 폴더이거나 다른 배치의 폴더다')
+        dig = prov.get('input_digests') if isinstance(prov.get('input_digests'), dict) else {}
+        for n in TAU_INPUT_FILES:
+            want, got = dig.get(n), ps.file_digest(str(cd / n))
+            if not want or not got or want != got:
+                raise FillRefusal(f'{case}: τ P2 — 입력 digest {n}: 도장 {want!r} ≠ 지금 파일 {got!r} — 망이 지금 폴더의 입력에서 나오지 않았다')
+        wr = flat.get(case)
+        if wr is None:
+            raise FillRefusal(f'{case}: τ P3 — 배치 metrics_flat 에 행이 없다 — 표의 다른 열과 같은 세대인지 대조할 수 없다')
+        for k in tie:
+            if k not in wr:
+                raise FillRefusal(f'{case}: τ P3 — 배치 metrics_flat 에 {k} 열이 없다 (network 정지 배치의 row_for 는 이 키를 편다) — 대조 불가')
+            want = '' if fm.get(k) is None else str(fm.get(k))
+            if wr[k] != want:
+                raise FillRefusal(f'{case}: τ P3 — 폴더 full_metrics {k}={want!r} ≠ 배치 metrics_flat {wr[k]!r} — τ 와 표의 다른 열이 다른 세대다')
+        for dk, rk, fk in TAU_DUAL_PROJ:
+            dv = dual.get(dk).get(rk) if isinstance(dual.get(dk), dict) else None
+            if _tau_canon(dv) != _tau_canon(fm.get(fk)):
+                raise FillRefusal(f'{case}: τ P3 — dual[{dk}].{rk}={dv!r} ≠ full_metrics {fk}={fm.get(fk)!r} — dual 이 도장 세대의 망 결과가 아니다')
+        row = tf.case_row(str(cd))                                   # tau_flux 자신 (웹앱 `_ion_handover` 와 같은 입력)
+        chk_ = tf.ion_columns(dual, fm, fm.get('percolation_pct'))
+        if row.get('case') != case or _tau_canon({c: row.get(c) for c in cols}) != _tau_canon({c: chk_.get(c) for c in cols}):
+            raise FillRefusal(f'{case}: τ P3 — tau_flux.case_row 가 읽은 값 ≠ 관문을 본 바이트로 낸 값 (읽는 사이 폴더가 바뀌었다)')
+        out[case] = {'network_run_id': rid, 'input_digests': {n: dig.get(n) for n in TAU_INPUT_FILES},
+                     'dual_sha256': hashlib.sha256(raw['network_conductivity_dual.json'][0]).hexdigest(),
+                     'full_metrics_sha256': hashlib.sha256(raw['full_metrics.json'][0]).hexdigest(),
+                     'cells': {c: tf._cell(row.get(c)) for c in cols}}      # tau_flux 자신의 직렬화 (TSV 와 같은 칸)
+    return {'schema': TAU_NET_SCHEMA, 'source': str(root), 'batch_source': wv.get('source'), 'columns': cols,
+            'tau_flux_sha256': hashlib.sha256(pathlib.Path(tf.__file__).read_bytes()).hexdigest(), 'cases': out}
+
+
+TAU_PROVENANCE_COLS = ('case', 'network_run_id', 'atoms_csv_digest', 'contacts_csv_digest', 'dual_sha256', 'full_metrics_sha256',
+                       'tau_flux_py_sha256', 'results_dir')
+
+
+def _tau_src_label(path):
+    """출처 부록에 적을 폴더 이름 — 리포 안이면 상대 경로 · 홈 아래면 '~/…' (리포에 사용자 홈 경로를 새기지 않는다)."""
+    p = pathlib.Path(path).resolve()
+    root = pathlib.Path(__file__).resolve().parent.parent
+    try:
+        return str(p.relative_to(root))
+    except ValueError:
+        pass
+    try:
+        return str(pathlib.Path('~') / p.relative_to(pathlib.Path.home().resolve()))
+    except (ValueError, RuntimeError):
+        return str(p)
+
+
+def write_tau_provenance(path, tau):
+    """망 τ 출처 부록 TSV — 인계표 CLI 가 `<인계표>_tau_provenance.tsv` 로 쓴다 (τ 칸이 어느 망 세대 · 어느 파일에서 왔는가)."""
+    src = _tau_src_label(tau['source'])
+    with pathlib.Path(path).open('w', encoding='utf-8', newline='') as fh:
+        w = csv.writer(fh, delimiter='\t', lineterminator='\n')
+        w.writerow(TAU_PROVENANCE_COLS)
+        for case, r in sorted(tau['cases'].items()):
+            w.writerow([case, r['network_run_id'], r['input_digests'].get('atoms.csv') or '', r['input_digests'].get('contacts.csv') or '',
+                        r['dual_sha256'], r['full_metrics_sha256'], tau['tau_flux_sha256'], src])
+
+
 def _frac_caveat(col):
     c = col.lower()
     if not any(k in c for k in ('frac_', 'fracture_index', 'fragmentation', 'pulverization', 'microcrack', 'multicrack', 'intact')):
@@ -1564,6 +1808,9 @@ def column_dictionary(cols, webapp=None):
             d.update(source='webapp_batch', meaning=warow[c])
         elif c in qc:
             d.update(source='qc', meaning=qc[c])
+        elif tau_net_define(c) is not None:          # v1.2 망 τ (tau_flux 열 · τ 명명 규약) — 이름이 정확히 τ 꼴일 때만 (옛 열은 안 잡는다)
+            _tm, _tc = tau_net_define(c)
+            d.update(source=TAU_NET_SOURCE, verdict=TAU_NET_VERDICT, meaning=_tm, caveat=_tc)
         elif webapp is not None and c in wverd:
             v = wverd[c]
             why = wwhy.get(c) or '웹앱 파이프라인 산출 (코퍼스 case_master 와 같은 이름 · 같은 계산)'
@@ -2147,8 +2394,8 @@ def _wa_ionic_gates(case, o, take, h, dp):
     return 1
 
 
-def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp_groups=None, wa_reviewed_only=True):
-    """설계행 + 수확 (+ union) (+ 웹앱) → 인계용 행 리스트.  **순수 함수**(파일을 안 쓴다) 라 시험 가능하다.
+def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp_groups=None, wa_reviewed_only=True, tau=None):
+    """설계행 + 수확 (+ union) (+ 웹앱) (+ 망 τ) → 인계용 행 리스트.  **순수 함수**(파일을 안 쓴다) 라 시험 가능하다.
 
     union (J19, 선택): `load_union` 산출 dict 또는 행 목록.  주면 설계 케이스 **전부**에 짝이 있어야 하고 (부분 병기 금지),
     짝마다 구 부피 합 porosity · 두께 · 상별 입자 수가 수확과 같아야 한다 (`_union_cols`).  설계에 없는 union 행 (코호트의 perc 등) 은
@@ -2156,6 +2403,9 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp
     벽 τ (J20): 수확 JSON 에 `tau_wall_detail` 이 **전부** 있으면 새 열로 싣는다 (일부만 있으면 수확 세대 혼합 → 거부).
     webapp (J20, 선택): `load_webapp` 산출.  설계행 **전부**를 배치가 시도했어야 하고, done · partial 행은 웹앱 porosity = 수확 porosity
     (WA_SAME_FRAME_TOL_PCT) 여야 한다.  ✅ 열만 · 이름 충돌이면 기존 열이 정본 (report['wa_collisions']).  거부 · 실패 행은 빈칸 + wa_status.
+    tau (v1.2 망 τ 묶음, 선택): `load_tau_results` 산출.  webapp_groups 에 'tau' 가 있을 때만 받는다 (둘 중 하나만이면 거부) · network 정지 배치만 ·
+    배치 done · partial 케이스 집합 = τ 원천 케이스 집합 · run id 같아야.  τ 열 (tau_flux.column_names()) 은 표 **끝**에 붙는다 — 묶음을 안 부르면
+    표 · 열 사전은 옛 그대로 (selftest ㉙f).  done · partial 이 아닌 행은 τ 칸 전부 빈칸 (wa_status 가 사유).
     반환 (out_rows, cols, report).  계약 위반이면 `FillRefusal`.
     """
     #  ⚠ `load_harvest` 는 **dict(case → h)** 를 준다.  초판은 list 만 받아서
@@ -2206,9 +2456,13 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp
         cols += [n for n, _w in HANDOVER_SE_CLUSTER]
     wv, wa_take = webapp, []
     _gs = wa_groups_norm(webapp_groups)
-    if _gs is not None and (not _gs or any(g not in WA_GROUPS for g in _gs)):
-        raise FillRefusal(f'webapp_groups {webapp_groups!r} — 아는 묶음은 {WA_GROUPS} 뿐이다 (① 접촉 위상 = contact · ② = percolation · '
-                          f'⑤ F1 = f1 · ⑥ Auerbach 힘 기반 = fracture · ⑦ 면적 = area)')
+    if _gs is not None and (not _gs or any(g not in WA_ALL_GROUPS for g in _gs)):
+        raise FillRefusal(f'webapp_groups {webapp_groups!r} — 아는 묶음은 {WA_ALL_GROUPS} 뿐이다 (① 접촉 위상 = contact · ② = percolation · '
+                          f'⑤ F1 = f1 · ⑥ Auerbach 힘 기반 = fracture · ⑦ 면적 = area · 망 τ = tau (network 배치 + --tau-results))')
+    tau_on = _gs is not None and WA_TAU_GROUP in _gs
+    if tau is not None and not tau_on:
+        raise FillRefusal(f'τ 묶음 — 망 τ 원천 (--tau-results) 을 줬는데 webapp_groups={webapp_groups!r} 에 tau 가 없다 — 조용히 버리지 않는다 '
+                          '(…,tau 로 부를 것)')
     if wv is not None:
         #  묶음별 — 접촉 단계만 돈 배치는 그 묶음으로만 부른다 (뒤 단계 열이 빈칸 = 측정된 N/A 로 읽히지 않게)
         _sa = wv.get('stop_after')
@@ -2229,8 +2483,8 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp
         ok_cols = [c for c, v in wa_verdicts(wv)[0].items() if str(v).startswith('✅')]     # 7c — 판정 바꿔 싣기 포함
         _n_excl = sum(1 for c in ok_cols if wa_excluded(c) is not None)       # ⑤⑥⑦ — 인계 제외 열은 묶음 · 검토와 무관하게 먼저 (J20-s)
         ok_cols = [c for c in ok_cols if wa_excluded(c) is None]
-        if _gs is not None:
-            ok_cols = [c for c in ok_cols if any(WA_GROUP_FN[g](c) for g in _gs)]
+        if _gs is not None:                         # 망 τ 묶음은 census 열이 아니다 (별도 원천) — census 거르기에서 뺀다
+            ok_cols = [c for c in ok_cols if any(WA_GROUP_FN[g](c) for g in _gs if g in WA_GROUP_FN)]
         n_census_ok = len(ok_cols)
         if wa_reviewed_only:                        # J20-g — 같이 확인한 열만 (CLI 는 항상 이 경로 · False 는 옛 기제 시험 전용)
             ok_cols = [c for c in ok_cols if wa_reviewed(c)]
@@ -2239,6 +2493,36 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp
         wa_coll = [c for c in ok_cols if c in have]
         wa_iso_on = 'ionic_active_pct' in wa_take                   # v1.1 ① — 활성 열이 실리면 경로 기준 고립 (유도) 도 싣는다
         cols += [n for n, _w in WA_ROW_COLS] + wa_take + ([n for n, _w in WA_DERIVED] if wa_iso_on else []) + [n for n, _a, _b, _w in WA_QC]
+    #  ★ v1.2 망 τ 묶음 — 원천 (`load_tau_results`) 이 이 배치로 읽혔는가 (정지점 · 케이스 집합 · run id) · τ 열은 표 끝 (옛 열 순서 불변)
+    tau_cols = []
+    if tau_on:
+        if wv is None or tau is None:
+            raise FillRefusal('τ 묶음 — webapp_groups 에 tau 가 있는데 ' + ('웹앱 배치 (--webapp) 가 없다' if wv is None else
+                              '망 τ 원천이 없다 (CLI --tau-results <배치 --work>/results)') + ' — 빈 τ 열을 측정된 N/A 로 내보내지 않는다')
+        if wv.get('stop_after') != 'network':
+            raise FillRefusal(f'τ 정지점 — 웹앱 배치 stop_after={wv.get("stop_after")!r} ≠ network — 망 τ 는 network 정지 배치 (케이스 기록에 '
+                              'network_run_id · 망 정지 계약) 에서만 싣는다')
+        _sch = tau.get('schema') if isinstance(tau, dict) else type(tau).__name__
+        if _sch != TAU_NET_SCHEMA or not isinstance(tau.get('cases'), dict):
+            raise FillRefusal(f'τ 묶음 — 망 τ 원천 schema {_sch!r} ≠ {TAU_NET_SCHEMA} (load_tau_results 산출이어야)')
+        tau_cols = list(tau.get('columns') or [])
+        _und = [c for c in tau_cols if tau_net_define(c) is None]
+        if not tau_cols or _und:
+            raise FillRefusal(f'τ 묶음 — 열 사전 정의가 없는 τ 열 {_und[:5]} (tau_flux 가 열을 바꿨다 — tau_net_define 을 먼저 고칠 것)')
+        _have = set(cols)
+        _clash = [c for c in tau_cols if c in _have]
+        if _clash:
+            raise FillRefusal(f'τ 묶음 — τ 열 이름이 표의 다른 열과 겹친다 {_clash[:5]} — 어느 쪽이 정본인지 모른다')
+        _okc = {c for c, r_ in (wv.get('status') or {}).items() if (r_ or {}).get('status') in WA_OK_STATUS}
+        _tcs = set(tau['cases'])
+        if _tcs != _okc:
+            raise FillRefusal(f'τ 케이스 집합 불일치 — τ 원천에만 {sorted(_tcs - _okc)[:5]} · 배치 done · partial 에만 {sorted(_okc - _tcs)[:5]} — '
+                              '이 배치로 읽은 원천이 아니다 (load_tau_results 를 같은 배치로)')
+        for c in sorted(_okc):
+            if (tau['cases'][c] or {}).get('network_run_id') != (wv['status'][c] or {}).get('network_run_id'):
+                raise FillRefusal(f'{c}: τ P1 — τ 기록의 network_run_id {(tau["cases"][c] or {}).get("network_run_id")!r} ≠ 배치 기록 '
+                                  f'{(wv["status"][c] or {}).get("network_run_id")!r} — 다른 배치로 읽은 τ 원천이다')
+        cols += tau_cols
     out, rep = [], {'n': 0, 'blank_by_status': collections.Counter(),
                     'held_back': dict(HANDOVER_HELD_BACK), 'mono_rows': 0, 'mono_harvest_filled': 0}
     if uv is not None:
@@ -2256,6 +2540,9 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp
                    wa_cn_identity_checked=0, wa_am_identity_checked=0, wa_amse_identity_checked=0, wa_perc_checked=0,
                    wa_ionic_checked=0, wa_f1_checked=0, wa_frac_checked=0, wa_area_checked=0, wa_s567_final_checked=0,
                    wa_area_mean_blanked=0, wa_area_total_zero_filled=0, wa_excluded_dropped=_n_excl)
+    if tau_on:
+        rep.update(tau_checked=0, tau_blank_rows=0, tau_status=collections.Counter(), tau_source=tau.get('source'),
+                   tau_flux_sha256=tau.get('tau_flux_sha256'))
     for r in rows:
         h = hv[r[key]]
         o = {c: r.get(c, '') for c in design_cols}
@@ -2483,6 +2770,22 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp
                     st_h = (h.get('status') or {}).get(DESCRIPTOR_STATUS_KEY.get(hc, ''), '')
                     if a not in (None, '') and b is not None and st_h == 'OK':
                         o[name] = repr(float(a) - float(b))
+        #  v1.2 망 τ — 칸 = τ 원천의 tau_flux 직렬화 그대로 (값 · 빈칸 · 상태 · 사유 · 메타 — 생성기는 고치지 않는다).  배치가 done · partial 로
+        #   적지 않은 행 (failed · REFUSED) 은 τ 칸 전부 빈칸 — tau_flux 를 부르지 않았다 (사유 = wa_status · 옆 웹앱 열과 같은 규칙).
+        if tau_on:
+            if ((wv['status'].get(r[key]) or {}).get('status')) in WA_OK_STATUS:
+                tc_ = tau['cases'][r[key]].get('cells') or {}
+                if set(tc_) != set(tau_cols):
+                    raise FillRefusal(f'{r[key]}: τ 기록의 칸 {sorted(set(tc_) ^ set(tau_cols))[:5]} 이 τ 열과 다르다 — 빈칸으로 메우지 않는다')
+                for c in tau_cols:
+                    o[c] = tc_[c]
+                rep['tau_checked'] += 1
+                for m_ in TAU_NET_MODES:
+                    rep['tau_status'][f'{m_}:{tc_.get(f"ion_net_status_{m_}", "")}'] += 1
+            else:
+                for c in tau_cols:
+                    o[c] = ''
+                rep['tau_blank_rows'] += 1
         #  τ T3 — 벽 τ 와 ② 퍼콜레이션이 함께 실리면 비관통 판정이 같아야 한다 (수확기 벽 밴드 ↔ 웹앱 밴드 규칙 · SE 단분산이면 같은 집합 · J20-b F8)
         if tw_on and o.get('percolation_pct', '') not in ('', None):
             if (o.get('tortuosity_SE_wall_status') == 'NOT_PERCOLATING') != (float(o['percolation_pct']) == 0.0):
@@ -4323,6 +4626,399 @@ def _selftest():
         len(_lwn) == 1 and re.fullmatch(_lwn[0].get('pattern', '^$'), 'stress_cv_lw') is not None
         and any(r_.get('pattern') == 'tortuosity_dijkstra_SE' and 'LHS-08' in r_.get('reason', '') for r_ in _rn)
         and any('LHS-32' in r_.get('reason', '') for r_ in _rn))
+    #  ═══ ㉙ 망 τ 묶음 (v1.2 · Codex 10-05 3차 재검증 §3 Q5 · §6-5 "⑤⑥⑦ · 망 τ 만 · LW 제외") ════════════════════════════════════════════
+    #   network 정지 배치 (`lhs_webapp_batch --stop-after network`) 의 케이스 폴더 (`<--work>/results/<case>/`) 에서 **tau_flux 자신** (`case_row`) 이
+    #   낸 이온 망 인계 열 (f · f_gap · tau2 · tau · 상태 · 사유 · 메타 — v2 §5-1 · 모드 꼬리) 을 싣는다.  출처 관문 = 배치 기록 (status.json 의
+    #   network_run_id · metrics_flat 행) ↔ 폴더 (full_metrics 도장 · network_provenance.json · 입력 digest · dual ↔ full_metrics 투영).
+    #   반례 먼저 — 옛 코드는 'tau' 묶음 · 로더 · tau= 인자가 없다 (전부 실패해야 한다).  픽스처 = 실 생산자 레코드
+    #   (`network_conductivity._run_all_networks` · test_tau_flux 와 같은 침대) + 실 도장 (`pipeline_service.stamp_network_provenance`) +
+    #   생산 배치 형식 (`lhs_webapp_batch.write_outputs` → `load_webapp` · metrics_flat 행 = 웹앱 열 + row_for 처럼 편 full_metrics).
+    import contextlib as _cl29
+    import io as _io29
+    import subprocess as _sp29
+    _rt29 = pathlib.Path(__file__).resolve().parent.parent
+    _td29 = pathlib.Path(tempfile.mkdtemp(prefix='lhsdd_tau29_'))
+    _G29 = _G567 + ',tau'
+    try:
+        if str(_rt29 / 'webapp') not in sys.path:
+            sys.path.append(str(_rt29 / 'webapp'))
+        import pipeline_service as _PS29
+        import tau_flux as _TF29
+        import network_conductivity as _NC29
+        _e29 = ''
+    except Exception as e:                                                # noqa: BLE001
+        _PS29 = _TF29 = _NC29 = None
+        _e29 = f'{type(e).__name__}: {e}'
+    _LT29 = globals().get('load_tau_results')
+    _TD29 = globals().get('tau_net_define')
+
+    def _net29(A_, C_, plate_, temp_c=None):
+        """실 생산자 레코드 두 모드 (디스크 모양 = JSON 왕복)."""
+        with _cl29.redirect_stdout(_io29.StringIO()):
+            r_ = {cm: _NC29._run_all_networks(A_, C_, [1], [], {1: 'SE'}, 1.0, plate_, 10.0, 10.0, None, contact_mode=cm, temp_c=temp_c)
+                  for cm in ('hertzian', 'physics')}
+        return json.loads(json.dumps(r_))
+
+    def _led29(A_, plate_, eps_u=None):
+        """장부 (L_gap · L_mc · φ_mc) — eps_u 를 주면 φ_mc·L_mc = φ_구합·L_gap (basis_check ok) · 없으면 L_mc = L_gap."""
+        phi_s = sum(4.0 / 3.0 * math.pi * a_['radius'] ** 3 for a_ in A_.values()) / (10.0 * 10.0 * plate_)
+        if eps_u is None:
+            return {'thickness_um': plate_, 'thickness_mass_conserving_um': plate_, 'phi_se_mass_conserving': phi_s}
+        return {'thickness_um': plate_, 'thickness_mass_conserving_um': plate_ * phi_s / (1.0 - eps_u),
+                'phi_se_mass_conserving': 1.0 - eps_u}
+
+    def _mut29(d_, mode, fn):
+        d2 = json.loads(json.dumps(d_))
+        for m_ in (('hertzian', 'physics') if mode == 'both' else (mode,)):
+            fn(d2[m_])
+        return d2
+    _VAR29 = {}
+    try:
+        _A29 = {i: {'type': 1, 'x': 0.0, 'y': 0.0, 'z': float(z), 'radius': 1.0} for i, z in enumerate(range(21), 1)}     # 관통 사슬 · 판 20
+        _C29 = [{'id1': i, 'id2': i + 1, 'contact_area': 0.1, 'delta': 0.05} for i in range(1, 21)]
+        _B29 = {i: {'type': 1, 'x': 3.0 * i, 'y': 0.0, 'z': float(z), 'radius': 1.0} for i, z in ((1, 0.0), (2, 1.0), (3, 2.0))}
+        _B29.update({10 + k: {'type': 1, 'x': 0.0, 'y': 5.0, 'z': float(z), 'radius': 1.0} for k, z in enumerate(range(10, 21))})
+        _BC29 = [{'id1': 10 + k, 'id2': 11 + k, 'contact_area': 0.1, 'delta': 0.05} for k in range(10)]            # 위 띠에만 닿는 비관통
+        _L1A = {i: {'type': 1, 'x': 0.0, 'y': 0.0, 'z': 0.5 * k, 'radius': 0.4} for i, k in enumerate(range(81), 1)}    # 띠 폴백 L1 · 판 40
+        _L1C = [{'id1': i, 'id2': i + 1, 'contact_area': 0.1 * 0.16, 'delta': 0.05 * 0.4} for i in range(1, 81)]
+        _nok, _nnp, _nl1, _n60 = (_net29(_A29, _C29, 20.0), _net29(_B29, _BC29, 20.0), _net29(_L1A, _L1C, 40.0),
+                                  _net29(_A29, _C29, 20.0, temp_c=60.0))
+        _lok, _lnp = _led29(_A29, 20.0, eps_u=0.97), _led29(_B29, 20.0, eps_u=0.97)
+        _VAR29 = {'OK': (_nok, _lok, 37.0),
+                  'MBCB': (_nok, dict(_lok, thickness_mass_conserving_um=20.0, phi_se_mass_conserving=1e-4), 37.0),
+                  'BAND': (_nl1, _led29(_L1A, 40.0), 37.0),
+                  'NC_PERC': (_nnp, _lnp, 37.0),                                   # 솔버 비관통 ↔ calc_percolation 37 % (G2)
+                  'NC_INVALID': (_mut29(_nok, 'physics', lambda r_: r_.update(sigma_full_mScm=r_['sigma_full_mScm'] * 4)), _lok, 37.0),
+                  'NC_MISSING': (_mut29(_nok, 'both', lambda r_: r_.pop('boundary_rule')), _lok, 37.0),     # 안 A 전 산출물
+                  'NC_TEMP': ({'hertzian': _nok['hertzian'], 'physics': _n60['physics']}, _lok, 37.0),
+                  'NC_SOLVER': (_mut29(_nok, 'hertzian', lambda r_: r_.update(sigma_full_status='not_computed')), _lok, 37.0),
+                  'NPERC': (_nnp, _lnp, 0.0)}
+    except Exception as e:                                                # noqa: BLE001
+        _e29 = _e29 or f'픽스처 {type(e).__name__}: {e}'
+
+    def _case29(res, q, var, rid, prov_rid=None, prov_status='success'):
+        """케이스 폴더 = 웹앱 결과 폴더 모양 — atoms/contacts.csv · 실 도장 · full_metrics (장부 + 도장 + 망 투영) · dual."""
+        du_, le_, pp_ = _VAR29[var]
+        d = res / q
+        d.mkdir(parents=True, exist_ok=True)
+        (d / 'atoms.csv').write_text(f'id,type,x,y,z,radius\n1,1,0.0,0.0,0.0,1.0\n# {q} {var}\n', encoding='utf-8')
+        (d / 'contacts.csv').write_text(f'id1,id2\n# {q} {var}\n', encoding='utf-8')
+        inputs = {n_: _PS29.file_digest(str(d / n_)) for n_ in ('atoms.csv', 'contacts.csv')}
+        _PS29.stamp_network_provenance(str(d), prov_rid or rid, inputs, prov_status,
+                                       argv={'type_map': '1:SE', 'scale': 1, 'contact_mode': 'both'})
+        fm = dict(le_, percolation_pct=pp_, network_run_id=rid, active_network_run_id=rid, network_solver_status='success',
+                  sigma_full=du_['hertzian'].get('sigma_full'), sigma_full_status=du_['hertzian'].get('sigma_full_status'),
+                  sigma_full_physics=du_['physics'].get('sigma_full'), sigma_full_status_physics=du_['physics'].get('sigma_full_status'))
+        (d / 'network_conductivity_dual.json').write_text(json.dumps(du_), encoding='utf-8')
+        (d / 'full_metrics.json').write_text(json.dumps(fm), encoding='utf-8')
+        return fm
+
+    def _bat29(sub, fms, stop='network', st=None, rid=None, w=None):
+        """생산 배치 형식 → load_webapp.  st = {q: 상태} 덮어쓰기 · rid = {q: run id (None = 기록 없음)}."""
+        w = w or _wa11()
+        d = _td29 / sub
+        stj = dict(schema=_LWB.SCHEMA, cases={}, stop_after=stop, harvest_dir='harvest', cohort='cohort.tsv',
+                   runs=[dict(started='2026-10-05T00:00:00', git_sha='0' * 40, dirty=False)])
+        rows_ = {}
+        for q_, s_ in w['status'].items():
+            rec = dict(case=q_, when='2026-10-05T00:00:00', stop_after=stop, status=(st or {}).get(q_, s_['status']),
+                       failed_stages=[], stages=[dict(step='Parse', rc=0, ok=True)], mode='bimodal', type_map='1:AM_P,2:AM_S,3:SE',
+                       sha={}, mesh_pick='exact', contact_scan={}, atom_frames=1, elapsed_s=1.0)
+            if stop == 'network':
+                v_ = (rid or {}).get(q_, f'RUN-{q_}')
+                if v_ is not None:
+                    rec['network_run_id'] = v_
+            stj['cases'][q_] = rec
+            r_ = dict(w['rows'][q_], case=q_)
+            r_.update({k_: v_ for k_, v_ in (fms.get(q_) or {}).items() if not isinstance(v_, (dict, list))})
+            rows_[q_] = r_
+        _LWB.write_outputs(d, stj, rows_)
+        with (d / 'census.tsv').open('w', encoding='utf-8', newline='') as fh:
+            cw_ = csv.writer(fh, delimiter='\t', lineterminator='\n')
+            cw_.writerow(['column', 'verdict', 'why'])
+            for k_, v_ in w['verdict'].items():
+                cw_.writerow([k_, v_, w['why'].get(k_, '')])
+        return load_webapp(d, d / 'census.tsv')
+
+    def _sc29(sub, q1='OK', q2='NPERC', **kw):
+        """시나리오 — 케이스 폴더 (q1 · q2 변이) + 그 폴더 full_metrics 를 행에 편 network 배치."""
+        res = _td29 / sub / 'results'
+        fms = {q_: _case29(res, q_, v_, f'RUN-{q_}') for q_, v_ in (('q1', q1), ('q2', q2)) if v_ is not None}
+        return _bat29(sub + '/batch', fms, **kw), res, fms
+
+    def _ld29(res, lw):
+        if _LT29 is None:
+            raise RuntimeError('load_tau_results 없음 (옛 코드)')
+        return _LT29(res, lw)
+
+    def _bh29(lw, tv, groups=_G29, w_rev=True):
+        return build_handover(_dq11, _hq10(), webapp=lw, webapp_groups=groups, tau=tv, wa_reviewed_only=w_rev)
+
+    def _orc29(var):
+        """오라클 — tau_flux 가 같은 입력에 내는 열 (tau_flux 자신의 직렬화 `_cell`)."""
+        du_, le_, pp_ = _VAR29[var]
+        return {k_: _TF29._cell(v_) for k_, v_ in _TF29.ion_columns(du_, dict(le_, percolation_pct=pp_), pp_).items()}
+    _tc29 = list(_TF29.column_names()) if _TF29 is not None else []
+    try:
+        try:
+            _lw29, _res29, _ = _sc29('a')
+            _tv29 = _ld29(_res29, _lw29)
+            _o29, _c29, _r29 = _bh29(_lw29, _tv29)
+            _e29a = _e29
+        except Exception as e:                                            # noqa: BLE001
+            _lw29 = _tv29 = None
+            _o29, _c29, _r29, _e29a = [], [], {}, _e29 or f'{type(e).__name__}: {e}'
+        _m29 = next((r_ for r_ in _o29 if r_['case_id'] == 'q1'), {})
+        _p29 = next((r_ for r_ in _o29 if r_['case_id'] == 'q2'), {})
+        chk('㉙a ★ network 배치 + 망 τ 묶음 (--webapp-groups …,tau + 케이스 폴더) — tau_flux 열 전부 (지금 28 · 두 모드 f · f_gap · tau2 · tau · 상태 · 사유 · '
+            '메타 + 공통 σ₀ · T · 기준) 이 표 끝에 tau_flux 순서로 · 모든 케이스 (q1 관통 OK · q2 비관통 NOT_PERCOLATING) 값 = tau_flux 그대로 · '
+            '출처 관문 2 행' + (f' — {_e29a}' if _e29a else ''),
+            not _e29a and bool(_tc29) and _c29[-len(_tc29):] == _tc29
+            and all(_m29.get(c_) == _orc29('OK')[c_] for c_ in _tc29) and all(_p29.get(c_) == _orc29('NPERC')[c_] for c_ in _tc29)
+            and _m29.get('ion_net_status_hertz') == _m29.get('ion_net_status_physics') == 'OK'
+            and _p29.get('ion_net_status_hertz') == _p29.get('ion_net_status_physics') == 'NOT_PERCOLATING'
+            and _r29.get('tau_checked') == 2)
+
+        def _sem29(r_, m, st):
+            f_, fg, t2, t_ = (r_.get(f'f_ion_{m}'), r_.get(f'f_ion_{m}_gap'), r_.get(f'tau2_ion_{m}'), r_.get(f'tau_ion_{m}'))
+            if st in ('OK', 'MODEL_BELOW_CONTINUUM_BOUND'):                # 값 유지 (MBCB = 표지 · 빈칸으로 거르지 않는다)
+                return (all(x_ not in ('', None) for x_ in (f_, fg, t2, t_)) and abs(float(t_) - math.sqrt(float(t2))) <= 1e-12 * float(t_)
+                        and (float(t2) < 1.0) == (st == 'MODEL_BELOW_CONTINUUM_BOUND'))
+            if st == 'NOT_PERCOLATING':                                       # f = 0 (물리적 0) · tau2 · tau 빈칸 (= ∞)
+                return f_ == '0.0' and fg == '0.0' and t2 == '' and t_ == ''
+            return f_ == fg == t2 == t_ == ''                                 # BAND_FALLBACK · NOT_COMPUTED — 빈칸 (0 이 아니다)
+        _EXP29 = {'OK': (('OK', ''), ('OK', '')), 'MBCB': (('MODEL_BELOW_CONTINUUM_BOUND', ''),) * 2,
+                  'BAND': (('BAND_FALLBACK', ''),) * 2, 'NC_PERC': (('NOT_COMPUTED', 'percolation_disagree'),) * 2,
+                  'NC_INVALID': (('OK', ''), ('NOT_COMPUTED', 'invalid_input')), 'NC_MISSING': (('NOT_COMPUTED', 'missing_input'),) * 2,
+                  'NC_TEMP': (('NOT_COMPUTED', 'temperature_mismatch'),) * 2, 'NC_SOLVER': (('NOT_COMPUTED', 'solver_guard'), ('OK', ''))}
+        _bad29b = {}
+        for _v29, _x29 in _EXP29.items():
+            try:
+                _lwv, _rsv, _ = _sc29(f'b_{_v29}', q1=_v29)
+                _r1 = next(r_ for r_ in _bh29(_lwv, _ld29(_rsv, _lwv))[0] if r_['case_id'] == 'q1')
+                _got = tuple((_r1.get(f'ion_net_status_{m_}'), _TF29.reason_code(_r1.get(f'ion_net_status_reason_{m_}'))) for m_ in ('hertz', 'physics'))
+                _orc = _orc29(_v29)
+                _same = all(_r1.get(c_) == _orc[c_] for c_ in _tc29)
+                _sem = all(_sem29(_r1, m_, s_) for m_, (s_, _rc_) in zip(('hertz', 'physics'), _x29))
+                if _got != _x29 or not _same or not _sem:
+                    _bad29b[_v29] = (_got, _same, _sem)
+            except Exception as e:                                        # noqa: BLE001
+                _bad29b[_v29] = f'{type(e).__name__}: {str(e)[:120]}'
+        chk(f'㉙b ★ 상태별 = tau_flux 정의 그대로 (두 모드 · 실 생산자 레코드 변이 8) — OK · MODEL_BELOW_CONTINUUM_BOUND (값 유지 + 표지 · tau2 < 1) · '
+            f'NOT_PERCOLATING (f 0.0 · tau2 · tau 빈칸 = ∞) · BAND_FALLBACK (빈칸 · 사유 없음) · NOT_COMPUTED (빈칸 + 사유: percolation_disagree · '
+            f'invalid_input · missing_input · temperature_mismatch · solver_guard) · 셀 = tau_flux 직렬화 {_bad29b or ""}',
+            not _e29 and not _bad29b and len(_EXP29) == 8)
+
+        _neg7('㉙c1 ★ τ 묶음은 contact 배치에 실을 수 없다 (단계 역량 — WA_STAGE_GROUPS)',
+              lambda: _bh29(_bat29('c1a', {}, stop='contact'), None), "stop_after='contact'")
+        _neg7('㉙c2 ★ τ 묶음은 coverage 배치에 실을 수 없다 (단계 역량)',
+              lambda: _bh29(_bat29('c1b', {}, stop='coverage'), None), "stop_after='coverage'")
+        _neg7('㉙c3 ★ 전체 실행 배치 (stop_after 없음 — 케이스 기록에 network_run_id 가 없다) 에 τ 를 실으면 거부',
+              lambda: _bh29(dict(_lw29, stop_after=None), _tv29), 'τ 정지점')
+        _neg7('㉙c4 ★ 로더 — network 정지 배치가 아니면 케이스 폴더를 읽지 않는다 (contact 배치)',
+              lambda: _ld29(_res29, _bat29('c1d', {}, stop='contact')), 'τ 정지점')
+
+        def _c2a():
+            lw_b = _bat29('c2a', {}, st={'q2': 'failed'})                      # 같은 폴더 · 같은 run id · q2 만 failed 인 다른 배치
+            return _bh29(lw_b, _tv29)
+        _neg7('㉙c5 ★ 케이스 집합 불일치 — τ 원천에 배치가 done · partial 로 적지 않은 케이스 (q2 failed) 가 있으면 거부', _c2a, 'τ 케이스')
+        _neg7('㉙c6 ★ 케이스 집합 불일치 — 배치 done 케이스 (q1) 의 τ 기록이 τ 원천에 없으면 거부',
+              lambda: _bh29(_lw29, dict(_tv29, cases={k_: v_ for k_, v_ in _tv29['cases'].items() if k_ != 'q1'})), 'τ 케이스')
+
+        def _c3(kind):
+            def fn():
+                lw_, res_, _ = _sc29(f'c3_{kind}')
+                if kind == 'rerun':                                            # 배치 뒤 같은 케이스를 다시 돌렸다 (새 세대 — 도장 · 입력 모두 새 것)
+                    _case29(res_, 'q1', 'OK', 'RUN-q1-new')
+                elif kind == 'prov':                                           # 도장 파일만 다른 실행의 것
+                    _PS29.stamp_network_provenance(str(res_ / 'q1'), 'RUN-other', _PS29.read_network_provenance(str(res_ / 'q1'))['input_digests'])
+                elif kind == 'failed':                                         # 도장이 실패 세대
+                    _PS29.stamp_network_provenance(str(res_ / 'q1'), 'RUN-q1', _PS29.read_network_provenance(str(res_ / 'q1'))['input_digests'],
+                                                   solver_status='failed')
+                elif kind == 'digest':                                         # 도장 뒤 입력 파일이 바뀌었다
+                    with (res_ / 'q1' / 'atoms.csv').open('a', encoding='utf-8') as fh:
+                        fh.write('2,1,0.0,0.0,1.0,1.0\n')
+                elif kind == 'ledger':                                         # 폴더 full_metrics 장부 ≠ 배치 metrics_flat (같은 도장)
+                    p_ = res_ / 'q1' / 'full_metrics.json'
+                    fm_ = json.loads(p_.read_text(encoding='utf-8'))
+                    fm_['thickness_mass_conserving_um'] *= 1.01
+                    p_.write_text(json.dumps(fm_), encoding='utf-8')
+                elif kind == 'dual':                                           # dual 만 바뀌었다 (full_metrics 투영과 다르다)
+                    p_ = res_ / 'q1' / 'network_conductivity_dual.json'
+                    du_ = json.loads(p_.read_text(encoding='utf-8'))
+                    du_['hertzian']['sigma_full'] *= 2
+                    p_.write_text(json.dumps(du_), encoding='utf-8')
+                elif kind == 'norid':
+                    lw_ = _bat29('c3_norid/batch2', {q_: json.loads((res_ / q_ / 'full_metrics.json').read_text(encoding='utf-8'))
+                                                     for q_ in ('q1', 'q2')}, rid={'q1': None})
+                return _ld29(res_, lw_)
+            return fn
+        _neg7('㉙c7 ★ 낡은 세대 — 폴더 도장 (full_metrics · provenance) 이 배치 기록의 network_run_id 와 다르면 거부 (재실행된 폴더)', _c3('rerun'), 'τ P1')
+        _neg7('㉙c8 ★ 낡은 세대 — network_provenance.json 의 run id ≠ full_metrics 도장이면 거부', _c3('prov'), 'τ P1')
+        _neg7('㉙c9 ★ 도장이 실패 세대 (solver_status failed) 면 거부', _c3('failed'), 'τ P1')
+        _neg7('㉙c10 ★ 입력 digest — 도장의 atoms.csv digest ≠ 지금 파일이면 거부 (망이 지금 입력에서 나오지 않았다)', _c3('digest'), 'τ P2')
+        _neg7('㉙c11 ★ 같은 세대 — 폴더 full_metrics 장부 (L_mc) ≠ 배치 metrics_flat 이면 거부 (τ 와 다른 열이 다른 세대)', _c3('ledger'), 'τ P3')
+        _neg7('㉙c12 ★ 같은 세대 — dual σ_ratio ≠ full_metrics 투영 (sigma_full) 이면 거부 (dual 이 도장 세대가 아니다)', _c3('dual'), 'τ P3')
+        _neg7('㉙c13 ★ 배치 기록에 network_run_id 가 없으면 거부 (출처를 대조할 수 없다)', _c3('norid'), 'τ P1')
+        _neg7('㉙c14 ★ 표 만들 때 — τ 기록의 run id ≠ 배치 기록이면 거부 (다른 배치로 읽은 τ 원천)',
+              lambda: _bh29(_lw29, dict(_tv29, cases=dict(_tv29['cases'], q1=dict(_tv29['cases']['q1'], network_run_id='RUN-x')))), 'τ P1')
+
+        def _c4(kind):
+            def fn():
+                if kind == 'nofolder':
+                    lw_, res_, _ = _sc29('c4_nofolder', q2=None)              # q2 는 배치 done 인데 폴더가 없다
+                    lw_ = _bat29('c4_nofolder/batch2', {'q1': json.loads((res_ / 'q1' / 'full_metrics.json').read_text(encoding='utf-8'))})
+                else:
+                    lw_, res_, _ = _sc29('c4_nodual')
+                    (res_ / 'q1' / 'network_conductivity_dual.json').unlink()
+                return _ld29(res_, lw_)
+            return fn
+        _neg7('㉙c15 ★ τ 기록 없음 — 배치 done 케이스 (q2) 의 폴더가 없으면 거부 (조용히 빈칸으로 두지 않는다)', _c4('nofolder'), 'τ P0')
+        _neg7('㉙c16 ★ τ 기록 없음 — dual 파일이 없으면 거부', _c4('nodual'), 'τ P0')
+        _neg7('㉙c17 ★ τ 원천을 줬는데 묶음에 tau 가 없으면 거부 (조용히 버리지 않는다)', lambda: _bh29(_lw29, _tv29, groups=_G567), 'τ 묶음')
+        _neg7('㉙c18 ★ 묶음에 tau 가 있는데 τ 원천 (--tau-results) 이 없으면 거부', lambda: _bh29(_lw29, None), 'τ 묶음')
+        chk('㉙d ★ 단계 역량 — tau 는 network 에만 (contact · coverage 배치는 τ 묶음을 실을 수 없다) · 다섯 census 묶음은 세 단계 모두',
+            'tau' in WA_STAGE_GROUPS.get('network', ()) and 'tau' not in WA_STAGE_GROUPS.get('contact', ())
+            and 'tau' not in WA_STAGE_GROUPS.get('coverage', ()) and all(g_ in WA_STAGE_GROUPS[s_] for g_ in WA_GROUPS for s_ in WA_STAGE_GROUPS))
+
+        #  (e) LW — τ 를 실어도 LW 열은 명시 제외 (최악: census ✅ · 값 있음 · 검토 목록 밖 경로)
+        _w29e = _wa11()
+        for _c in _LW28:
+            _w29e['verdict'][_c] = '✅ 쓴다'
+            _w29e['why'][_c] = f'why:{_c}'
+            for _q in ('q1', 'q2'):
+                _w29e['rows'][_q][_c] = '1.5'
+        try:
+            _fe29 = {q_: json.loads((_res29 / q_ / 'full_metrics.json').read_text(encoding='utf-8')) for q_ in ('q1', 'q2')}
+            _lwe = _bat29('e/batch', _fe29, w=_w29e)
+            _ce, _ree = [], []
+            for _wr in (True, False):
+                _x = _bh29(_lwe, _ld29(_res29, _lwe), w_rev=_wr)
+                _ce.append(_x[1])
+                _ree.append(_x[2])
+            _xb = _bh29(_lw29, _ld29(_res29, _lw29), w_rev=False)
+            _ee = ''
+        except Exception as e:                                            # noqa: BLE001
+            _ce, _ree, _xb, _ee = [[]], [{}], ([], [], {}), f'{type(e).__name__}: {e}'
+        chk('㉙e ★ LW — τ 묶음을 실어도 LW 열은 안 실린다 (검토 경로 · 검토 목록 밖 경로 둘 다) · 제외 수에 센다 · τ 열은 어느 제외 패턴에도 안 걸린다'
+            + (f' — {_ee}' if _ee else ''),
+            not _ee and all(not any(c_ in cc_ for c_ in _LW28) and all(t_ in cc_ for t_ in _tc29) for cc_ in _ce)
+            and _ree[-1].get('wa_excluded_dropped', 0) - _xb[2].get('wa_excluded_dropped', 0) == len(_LW28)
+            and bool(_tc29) and not any(wa_excluded(t_) for t_ in _tc29))
+
+        #  (f) 묶음을 안 부르면 옛 표 그대로 — 같은 배치에서 τ 판 = 옛 판 + 끝 28 열 · 열 사전의 공통 열 같다 · 커밋된 10-01 표 바이트 재현
+        try:
+            _o29n, _c29n, _ = _bh29(_lw29, None, groups=_G567)
+            _d29n = {d_['column']: d_ for d_ in column_dictionary(_c29n, webapp=_lw29)}
+            _d29t = {d_['column']: d_ for d_ in column_dictionary(_c29, webapp=_lw29)}
+            _ef = ''
+        except Exception as e:                                            # noqa: BLE001
+            _o29n, _c29n, _d29n, _d29t, _ef = [], [], {}, {}, f'{type(e).__name__}: {e}'
+        chk('㉙f1 ★ 묶음 tau 를 안 부르면 표 · 열 사전이 옛 그대로 — τ 판 열 = 옛 판 열 + 끝 τ 열 (tau_flux 순서) · 행 값 (τ 칸 밖) 같다 · 공통 열의 열 사전 항목 같다'
+            + (f' — {_ef}' if _ef else ''),
+            not _ef and not _e29a and bool(_c29n) and _c29 == _c29n + _tc29
+            and [{k_: r_.get(k_) for k_ in _c29n} for r_ in _o29] == [{k_: r_.get(k_) for k_ in _c29n} for r_ in _o29n]
+            and all(_d29t[c_] == _d29n[c_] for c_ in _c29n)
+            and not any(t_ in _d29n for t_ in _tc29))
+        for _lab29, _dsg, _hdir, _uni, _wdir, _gold in (
+                ('130', DESCRIPTOR_FILL_EXPECTED['path'], 'docs/data/lhs_descriptors_cov_1e09f661d', DEFAULT_UNION_TSV,
+                 'docs/data/lhs_webapp_contact_d1ec42fba', 'docs/data/lhs_handover_20261001.csv'),
+                ('64', 'docs/data/lhsx_design_adapted_20260929.csv', 'docs/data/lhsx_descriptors_cov_1e09f661d',
+                 'docs/data/lhs_union_20260927/lhsx64_union.tsv', 'docs/data/lhsx_webapp_contact_d1ec42fba', 'docs/data/lhsx_handover_20261001.csv')):
+            try:
+                with (_rt29 / _dsg).open(encoding='utf-8-sig') as _fh:
+                    _rw29 = list(csv.DictReader(_fh))
+                _og, _cg, _ = build_handover(_rw29, load_harvest(_rt29 / _hdir), union=load_union(_rt29 / _uni),
+                                             webapp=load_webapp(_rt29 / _wdir), webapp_groups='contact,percolation')
+                _sio = _io29.StringIO()
+                _dw = csv.DictWriter(_sio, _cg, lineterminator='\n')
+                _dw.writeheader()
+                for _r in _og:
+                    _dw.writerow(_r)
+                _same29 = _sio.getvalue() == (_rt29 / _gold).read_text(encoding='utf-8')
+                chk(f'㉙f2 ★ 실데이터 {_lab29} — 묶음 tau 없이 커밋된 10-01 인계표 ({_gold.split("/")[-1]}) 를 바이트 그대로 다시 만든다 (옛 표 불변)', _same29)
+            except Exception as e:                                        # noqa: BLE001
+                chk(f'㉙f2 실데이터 {_lab29} ({type(e).__name__}: {e})', False)
+        try:
+            _lwf, _rsf, _ = _sc29('f3', q2=None)
+            _lwf = _bat29('f3/batch2', {'q1': json.loads((_rsf / 'q1' / 'full_metrics.json').read_text(encoding='utf-8'))}, st={'q2': 'failed'})
+            _of, _cf, _rf = _bh29(_lwf, _ld29(_rsf, _lwf))
+            _pf = next(r_ for r_ in _of if r_['case_id'] == 'q2')
+            _ef3 = ''
+        except Exception as e:                                            # noqa: BLE001
+            _pf, _rf, _ef3 = {}, {}, f'{type(e).__name__}: {e}'
+        chk('㉙f3 ★ 배치가 실패한 행 (q2 failed — 폴더 없음) 은 τ 칸 전부 빈칸 (값 · 상태 · 메타 — tau_flux 를 부르지 않았다 · wa_status 가 사유) · '
+            'τ 기록을 요구하지 않는다' + (f' — {_ef3}' if _ef3 else ''),
+            not _ef3 and _pf.get('wa_status') == 'failed' and all(_pf.get(c_) == '' for c_ in _tc29) and bool(_tc29)
+            and _rf.get('tau_checked') == 1 and _rf.get('tau_blank_rows') == 1)
+
+        #  (g) 열 사전 — τ 명명 규약 (CLAUDE.md τ 블록 · v2 §5-1 · §5-3) 의 한정어
+        _g29 = lambda c, k: (_d29t.get(c) or {}).get(k, '')               # noqa: E731
+        _gm = all(
+            _g29(f'tau2_ion_{m_}', 'source') == 'tau_flux' and 'tortuosity factor' in _g29(f'tau2_ion_{m_}', 'meaning')
+            and 'tortuosity factor' not in _g29(f'tau_ion_{m_}', 'meaning') and 'COMSOL 입력 아님' in _g29(f'tau_ion_{m_}', 'meaning')
+            and 'φ_mc 와 짝짓지 말 것' in _g29(f'f_ion_{m_}_gap', 'meaning') and 'User defined' in _g29(f'f_ion_{m_}', 'meaning')
+            and '재척도 (해 아님)' in _g29(f'f_ion_{m_}', 'meaning') and '무차원' in _g29(f'f_ion_{m_}', 'meaning')
+            and all(s_ in _g29(f'ion_net_status_{m_}', 'meaning') for s_ in
+                    ('OK', 'MODEL_BELOW_CONTINUUM_BOUND', 'NOT_PERCOLATING', 'BAND_FALLBACK', 'NOT_COMPUTED', '기술적 실패', '과학적 HOLD', '값 유지', '= ∞'))
+            and all(r_ in _g29(f'ion_net_status_reason_{m_}', 'meaning') for r_ in _TF29.REASONS)
+            and 'G6' in _g29(f'tau2_ion_{m_}', 'verdict') and 'HOLD' in _g29(f'tau2_ion_{m_}', 'verdict')
+            and '실험 절대 대조 금지' in _g29(f'tau2_ion_{m_}', 'caveat') and 'τ_e' in _g29(f'tau2_ion_{m_}', 'caveat')
+            for m_ in ('hertz', 'physics')) if (_d29t and _TF29 is not None) else False
+        chk('㉙g ★ 열 사전 (τ 명명 규약) — tortuosity factor = tau2 에만 · tau = √tau2 COMSOL 입력 아님 · f_gap φ_mc 와 짝짓지 말 것 · f = 재척도 (해 아님) · '
+            'User defined (fl) · 상태 다섯 + 두 부류 · MBCB 값 유지 · 비관통 = ∞ · 사유 다섯 · G6 물리 타깃 HOLD · 1세대 · τ_e 아님', _gm)
+        _cov29 = sorted(c_ for c_ in _tc29 if not (callable(_TD29) and _TD29(c_)))
+        chk('㉙h ★ 열 사전 덮개 — tau_flux.column_names() 의 열마다 정의가 있다 (tau_flux 가 열을 늘리면 여기서 걸린다) · 빈 뜻 없음'
+            + (f' — 정의 없는 열 {_cov29}' if _cov29 else ''),
+            callable(_TD29) and bool(_tc29) and not _cov29 and all(_g29(c_, 'meaning') for c_ in _tc29))
+
+        #  (i) CLI — --tau-results 가 실제로 배선됐는가 (인자 파서 → 로더 → 표 · 열 사전 · 출처 부록).  규율 ⑤ — 배선 자리가 사각지대다.
+        try:
+            _cd = _td29 / 'cli'
+            (_cd / 'harvest').mkdir(parents=True)
+            for _q, _hj in _hq10().items():
+                (_cd / 'harvest' / f'{_q}.json').write_text(json.dumps(_hj), encoding='utf-8')
+            with (_cd / 'design.csv').open('w', encoding='utf-8', newline='') as _fh:
+                _dw = csv.DictWriter(_fh, list(_dq11[0]), lineterminator='\n')
+                _dw.writeheader()
+                for _r in _dq11:
+                    _dw.writerow(_r)
+            _bdir = _td29 / 'a' / 'batch'
+            _cmd = [sys.executable, str(pathlib.Path(__file__).resolve()), '--export-handover', str(_cd / 'h.csv'), '--design', str(_cd / 'design.csv'),
+                    '--harvest', str(_cd / 'harvest'), '--union', '', '--webapp', str(_bdir), '--census', str(_bdir / 'census.tsv'),
+                    '--webapp-groups', _G29, '--tau-results', str(_res29)]
+            _pr = _sp29.run(_cmd, capture_output=True, text=True, timeout=300)
+            with (_cd / 'h.csv').open(encoding='utf-8') as _fh:
+                _hcli = list(csv.DictReader(_fh))
+            with (_cd / 'h_columns.tsv').open(encoding='utf-8') as _fh:
+                _dcli = {r_['column']: r_ for r_ in csv.DictReader(_fh, delimiter='\t')}
+            with (_cd / 'h_tau_provenance.tsv').open(encoding='utf-8') as _fh:
+                _pcli = list(csv.DictReader(_fh, delimiter='\t'))
+            _ei = '' if _pr.returncode == 0 else f'rc {_pr.returncode}: {_pr.stderr[-300:]}'
+        except Exception as e:                                            # noqa: BLE001
+            _hcli, _dcli, _pcli, _ei = [], {}, [], f'{type(e).__name__}: {e}'
+        chk('㉙i ★ CLI --tau-results — 표에 τ 열 (값 = 함수 경로와 같다) · 열 사전에 τ 항목 (출처 tau_flux) · 출처 부록 <표>_tau_provenance.tsv '
+            '(케이스마다 network_run_id · 입력 digest · dual · full_metrics sha256)' + (f' — {_ei}' if _ei else ''),
+            not _ei and [{k_: r_.get(k_) for k_ in _tc29} for r_ in _hcli] == [{k_: r_.get(k_) for k_ in _tc29} for r_ in _o29] and bool(_hcli)
+            and all(_dcli.get(c_, {}).get('source') == 'tau_flux' for c_ in _tc29)
+            and sorted((r_.get('case'), r_.get('network_run_id')) for r_ in _pcli) == [('q1', 'RUN-q1'), ('q2', 'RUN-q2')]
+            and all(len(r_.get('dual_sha256', '')) == 64 and len(r_.get('full_metrics_sha256', '')) == 64 and r_.get('atoms_csv_digest')
+                    for r_ in _pcli))
+        #  (j) J20-l 웹앱 짝 — 케이스 페이지 τ 인계 상태 툴팁 (같은 tau_flux 상태를 보여 준다) 의 값 규칙이 인계표와 같은가.  옛 문구는 "OK · MBCB 일 때만
+        #   값" 이라 NOT_PERCOLATING 의 f_ion 0 (물리적 0 — 인계표에는 0.0 이 실린다) 과 어긋났다.
+        try:
+            _sh29 = (_rt29 / 'webapp' / 'templates' / 'single.html').read_text(encoding='utf-8')
+            _i29 = _sh29.find("'tau2 인계 상태 (게이트 G1–G6 · v2 §5-2)': {")
+            _mt29 = re.search(r"meaning: '([^']*)'", _sh29[_i29:_sh29.find('},', _i29)]) if _i29 >= 0 else None
+            _mt29 = _mt29.group(1) if _mt29 else ''
+        except OSError as e:
+            _mt29 = f'ERR {e}'
+        chk('㉙j ★ J20-l 웹앱 짝 — 케이스 페이지 τ 인계 상태 툴팁의 값 규칙 = 인계표 (tau_flux): OK · MODEL_BELOW_CONTINUUM_BOUND 값 (T < 1 이어도 유지) · '
+            'NOT_PERCOLATING f_ion 0 · tau2 · tau 빈칸 (= ∞) · 그 밖 빈칸 (0 아님) · LHS 인계표 v1.2 망 τ 묶음에 같은 열 · 같은 규칙',
+            all(k_ in _mt29 for k_ in ('MODEL_BELOW_CONTINUUM_BOUND', 'NOT_PERCOLATING', 'f_ion 0', '= ∞', '0 아님', '인계표 v1.2', 'f_ion_gap'))
+            and '일 때만 값을 싣는다' not in _mt29)
+    finally:
+        shutil.rmtree(_td29, ignore_errors=True)
     print(f'\nlhs_design_dataset selftest: {ok}/{ok + len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0
@@ -4351,8 +5047,8 @@ if __name__ == '__main__':
                     help='--fill-descriptors 산출 경로 (기본 = 제자리)')
     ap.add_argument('--export-handover', default='', metavar='CSV',
                     help='설계 CSV + 수확 JSON → **인계표**를 쓴다 (ML 담당에게 넘길 표).  '
-                         '⛔ τ 값 열은 넣지 않는다 (`LHS-08` 열림) — 대신 왜 없는지를 진단 열로 '
-                         '넘긴다.  status != OK 는 빈칸이고 0 이 아니다.')
+                         '⛔ 옛 규약 τ (tortuosity_dijkstra_SE) 값 열은 넣지 않는다 (`LHS-08` 열림) — 대신 왜 없는지를 진단 열로 '
+                         '넘긴다 (망 τ tau2 · f 는 묶음 tau · --tau-results — v1.2).  status != OK 는 빈칸이고 0 이 아니다.')
     ap.add_argument('--harvest', default='', metavar='DIR',
                     help='--export-handover 가 읽을 수확 JSON 디렉터리 '
                          '(기본 = DESCRIPTOR_FILL_EXPECTED["source"] 의 경로)')
@@ -4364,8 +5060,14 @@ if __name__ == '__main__':
                          '설계행 전부를 배치가 시도했어야 하고 웹앱 porosity = 수확 porosity (같은 프레임) 여야 한다')
     ap.add_argument('--webapp-groups', default=None, metavar='G[,G]',
                     help='(--export-handover --webapp) 웹앱 열을 이 묶음만 싣는다 (쉼표로 여럿) — contact = ① 접촉 위상 · percolation = ② '
-                         '퍼콜레이션 · f1 = ⑤ F1 근접쌍 · fracture = ⑥ Auerbach 힘 기반 · area = ⑦ 접촉 면적 (전부 접촉 분석 단계 산출 · J20-s).  '
+                         '퍼콜레이션 · f1 = ⑤ F1 근접쌍 · fracture = ⑥ Auerbach 힘 기반 · area = ⑦ 접촉 면적 (전부 접촉 분석 단계 산출 · J20-s) · '
+                         'tau = 망 τ (v1.2 — 이온 망 인계 열 f · tau2 · tau · 상태 · 메타 · tau_flux · network 배치 + --tau-results 필요).  '
                          '`lhs_webapp_batch --stop-after contact|coverage|network` 산출은 이것 없이는 거부된다 (셋 다 다섯 묶음을 다 낸다 · RGL-03)')
+    ap.add_argument('--tau-results', default='', metavar='DIR',
+                    help='(--export-handover --webapp, 묶음 tau) 망 τ 원천 = network 정지 배치의 케이스 폴더 묶음 (`lhs_webapp_batch --work` 아래 '
+                         'results/ — 케이스마다 network_conductivity_dual.json · full_metrics.json · network_provenance.json · atoms/contacts.csv).  '
+                         '배치 done · partial 케이스마다 출처 관문 P0–P3 (기록 · run id = 배치 status.json · 입력 digest · metrics_flat 과 같은 세대) 뒤 '
+                         'tau_flux.case_row 로 싣는다 · 출처 부록 <인계표>_tau_provenance.tsv')
     ap.add_argument('--census', default='', metavar='TSV',
                     help=f'(--webapp) 전수 판정 census (기본 {DEFAULT_CENSUS_TSV})')
     ap.add_argument('--selftest', action='store_true')
@@ -4420,7 +5122,11 @@ if __name__ == '__main__':
         if a.webapp:
             _wp = pathlib.Path(a.webapp)
             _wv = load_webapp(_wp if _wp.is_absolute() else _root / _wp, a.census or None)
-        _out, _cols, _rep = build_handover(_rows, _harv, union=_uv, webapp=_wv, webapp_groups=a.webapp_groups)
+        _tv = None
+        if a.tau_results:                               # v1.2 망 τ — 원천을 배치 기록으로 대조한 뒤 tau_flux 로 (관문 P0–P3)
+            _tp = pathlib.Path(a.tau_results).expanduser()
+            _tv = load_tau_results(_tp if _tp.is_absolute() else _root / _tp, _wv)
+        _out, _cols, _rep = build_handover(_rows, _harv, union=_uv, webapp=_wv, webapp_groups=a.webapp_groups, tau=_tv)
         _op = pathlib.Path(a.export_handover)
         if not _op.is_absolute():
             _op = _root / _op
@@ -4440,6 +5146,12 @@ if __name__ == '__main__':
         _dp3 = _op.with_name(_op.stem + '_excluded.tsv')
         write_exclusion_notes(_dp3)
         print(f'→ {_op}   {_rep["n"]}행 × {len(_cols)}열   (열 사전 {_dp2.name} · 제외 노트 {_dp3.name})')
+        if _tv is not None:                             # v1.2 망 τ 출처 부록 — τ 칸이 어느 망 세대 · 어느 파일에서 왔는가
+            _dp4 = _op.with_name(_op.stem + '_tau_provenance.tsv')
+            write_tau_provenance(_dp4, _tv)
+            print(f'   v1.2 망 τ (tau_flux {_rep["tau_flux_sha256"][:12]}…) — 원천 {_rep["tau_source"]} · 출처 관문 P0–P3 {_rep["tau_checked"]} 행 · '
+                  f'빈칸 행 (배치 done · partial 아님) {_rep["tau_blank_rows"]} · 상태 {dict(sorted(_rep["tau_status"].items()))} · 출처 부록 {_dp4.name}')
+            print('   ⚠ 망 τ = ML 기술자 전용 · G6 — 두 모드 모두 물리 타깃 (실험 절대 대조) HOLD · tau = √tau2 는 COMSOL 입력 아님 (열 사전)')
         if 'tau_wall_status' in _rep:
             print(f'   J20 벽 τ: {dict(_rep["tau_wall_status"])}')
         if _wv is not None:
