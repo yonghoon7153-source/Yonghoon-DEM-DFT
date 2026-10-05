@@ -1,0 +1,1 @@
+lhs00_000: 케이스 결과 폴더가 없다 (C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\rglr2_reverify_20261005\evidence\launcher_merge_ape1juz1\cases\lhs00_000\work\results\lhs00_000) — 상태 done

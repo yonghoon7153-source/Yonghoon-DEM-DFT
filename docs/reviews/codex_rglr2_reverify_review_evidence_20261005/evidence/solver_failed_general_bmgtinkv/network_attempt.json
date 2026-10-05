@@ -1,0 +1,23 @@
+{
+  "schema": "network_attempt/v2",
+  "network_attempt_run_id": "20261005T222410-6ffe7913",
+  "solver_status": "failed",
+  "latest_attempt_status": "failed",
+  "failure_kind": "solver",
+  "reason": "ve_failed) \u2014 \ubbf8\ud37c\ucf5c\uc774 \uc544\ub2c8\ub2e4 \u00b7 \uc218\uce58 \uc2e4\ud328 = \uac8c\uc2dc \ucc28\ub2e8 (WEB-03 Q1 \u2014 \uc77c\ubc18 \u00b7 \uc815\uc9c0 \uacbd\ub85c \ubaa8\ub450)); physics.ionic=fail (\uad00\ud1b5 \uc131\ubd84\uc740 \uc788\ub294\ub370 \u03c3_ion \uc744 \ud480\uc9c0 \ubabb\ud588\ub2e4 (solve_failed) \u2014 \ubbf8\ud37c\ucf5c\uc774 \uc544\ub2c8\ub2e4 \u00b7 \uc218\uce58 \uc2e4\ud328 = \uac8c\uc2dc \ucc28\ub2e8 (WEB-03 Q1 \u2014 \uc77c\ubc18 \u00b7 \uc815\uc9c0 \uacbd\ub85c \ubaa8\ub450)); physics.thermal=fail (\uad00\ud1b5 \uc131\ubd84\uc740 \uc788\ub294\ub370 \u03ba \uc744 \ud480\uc9c0 \ubabb\ud588\ub2e4 (solve_failed) \u2014 \ubbf8\ud37c\ucf5c\uc774 \uc544\ub2c8\ub2e4 \u00b7 \uc218\uce58 \uc2e4\ud328 = \uac8c\uc2dc \ucc28\ub2e8 (WEB-03 Q1 \u2014 \uc77c\ubc18 \u00b7 \uc815\uc9c0 \uacbd\ub85c \ubaa8\ub450))",
+  "stage": "Network Solver (both modes)",
+  "active_network_run_id": null,
+  "active_status": "none",
+  "previous_generation_kept": false,
+  "input_digests": {
+    "atoms.csv": "d8965a296bef61a0",
+    "contacts.csv": "d8886e55a0205e3d"
+  },
+  "code_sha": "unknown",
+  "attempted_at": "2026-10-05T22:24:10",
+  "argv": {
+    "type_map": "1:SE",
+    "scale": 1,
+    "contact_mode": "both"
+  }
+}

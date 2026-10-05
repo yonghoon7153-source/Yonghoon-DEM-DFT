@@ -1,0 +1,23 @@
+{
+ "run": 1,
+ "n": 194,
+ "finished": 194,
+ "not_started": [],
+ "outcomes": {
+  "done": 194
+ },
+ "interrupted": false,
+ "wall_h": 0.599,
+ "events": 43,
+ "budget_events": 3777,
+ "backfills": 96,
+ "max_concurrent": 18,
+ "kind": "run",
+ "started": "2026-10-05T22:12:38",
+ "ended": "2026-10-05T22:49:21",
+ "lanes": 20,
+ "mem_budget_mb": 12275.03515625,
+ "min_free_gb": 1.0,
+ "code_changed_during_run": [],
+ "git_sha_end": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5"
+}

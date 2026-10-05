@@ -1,0 +1,56 @@
+{
+ "schema": "network_parallel_worker/v1",
+ "case": "lhs00_119",
+ "cohort": "lhs",
+ "attempts": [
+  {
+   "attempt": 1,
+   "run": 1,
+   "cmd": [
+    "/home/yonghoon71/Yonghoon-DEM-DFT/venv/bin/python",
+    "/home/yonghoon71/dem-audit/scripts/lhs_webapp_batch.py",
+    "--stop-after",
+    "network",
+    "--case",
+    "lhs00_119",
+    "--harvest-dir",
+    "/home/yonghoon71/dem-audit/docs/data/lhs_descriptors_cov_1e09f661d",
+    "--cohort",
+    "/home/yonghoon71/dem-audit/docs/data/area_s2_cohort.tsv",
+    "--work",
+    "/home/yonghoon71/net194_11fcf91e8/cases/lhs00_119/work",
+    "--out-dir",
+    "/home/yonghoon71/net194_11fcf91e8/cases/lhs00_119/out"
+   ],
+   "cwd": "/home/yonghoon71/net194_11fcf91e8/cases/lhs00_119",
+   "lock_mode": "per-case",
+   "env": {
+    "OMP_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "VECLIB_MAXIMUM_THREADS": "1",
+    "TMPDIR": "/home/yonghoon71/net194_11fcf91e8/cases/lhs00_119/tmp",
+    "PYTHONDONTWRITEBYTECODE": "1"
+   },
+   "start": "2026-10-05T22:16:10",
+   "end": "2026-10-05T22:16:19",
+   "t_start_s": 208.197,
+   "t_end_s": 217.209,
+   "wall_s": 9.01,
+   "rc": 0,
+   "signal": null,
+   "peak_rss_kb": 261336,
+   "peak_rss_mb": 255.2,
+   "est_mem_mb": 245.5,
+   "contacts": 21212,
+   "user_s": 11.37,
+   "sys_s": 0.58,
+   "outcome": "done",
+   "batch_elapsed_s": 8.3,
+   "why": null,
+   "failed_stages": [],
+   "network_run_id": "20261005T221615-c0feab1d"
+  }
+ ]
+}

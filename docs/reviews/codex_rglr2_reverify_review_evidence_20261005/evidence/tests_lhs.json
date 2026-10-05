@@ -1,0 +1,21 @@
+[
+  {
+    "name": "lhs",
+    "args": [
+      "scripts/lhs_design_dataset.py",
+      "--selftest"
+    ],
+    "rc": 0,
+    "seconds": 7.813,
+    "tail": [
+      "  PASS  ㉙f2 ★ 실데이터 64 — 묶음 tau 없이 커밋된 10-01 인계표 (lhsx_handover_20261001.csv) 를 바이트 그대로 다시 만든다 (옛 표 불변)",
+      "  PASS  ㉙f3 ★ 배치가 실패한 행 (q2 failed — 폴더 없음) 은 τ 칸 전부 빈칸 (값 · 상태 · 메타 — tau_flux 를 부르지 않았다 · wa_status 가 사유) · τ 기록을 요구하지 않는다",
+      "  PASS  ㉙g ★ 열 사전 (τ 명명 규약) — tortuosity factor = tau2 에만 · tau = √tau2 COMSOL 입력 아님 · f_gap φ_mc 와 짝짓지 말 것 · f = 재척도 (해 아님) · User defined (fl) · 상태 다섯 + 두 부류 · MBCB 값 유지 · 비관통 = ∞ · 사유 = tau_flux.REASONS 전부 (여섯) · G6 물리 타깃 HOLD · 1세대 · τ_e 아님",
+      "  PASS  ㉙h ★ 열 사전 덮개 — tau_flux.column_names() 의 열마다 정의가 있다 (tau_flux 가 열을 늘리면 여기서 걸린다) · 빈 뜻 없음",
+      "  PASS  ㉙i ★ CLI --tau-results — 표에 τ 열 (값 = 함수 경로와 같다) · 열 사전에 τ 항목 (출처 tau_flux) · 출처 부록 <표>_tau_provenance.tsv (케이스마다 network_run_id · 입력 digest · dual · full_metrics sha256)",
+      "  PASS  ㉙j ★ J20-l 웹앱 짝 — 케이스 페이지 τ 인계 상태 툴팁의 값 규칙 = 인계표 (tau_flux): OK · MODEL_BELOW_CONTINUUM_BOUND 값 (T < 1 이어도 유지) · NOT_PERCOLATING f_ion 0 · tau2 · tau 빈칸 (= ∞) · 그 밖 빈칸 (0 아님) · LHS 인계표 v1.2 망 τ 묶음에 같은 열 · 같은 규칙",
+      "",
+      "lhs_design_dataset selftest: 312/312 PASS"
+    ]
+  }
+]

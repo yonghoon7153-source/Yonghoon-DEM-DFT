@@ -1,0 +1,64 @@
+{
+ "schema": "network_parallel_launcher/v1",
+ "git": {
+  "sha": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+  "short": "11fcf91e8"
+ },
+ "code_hashes": {
+  "scripts/network_conductivity.py": "b0555f7f7a65c2d327b4cca15791586e980d0b6b75b47c846457d628f19b7592",
+  "scripts/plastic_coverage.py": "fdb00df699d30cf7a24bcbf0485e9e6713955eecc0703ad4aa75fa3fabe91cc3",
+  "scripts/audit_constriction_deleted.py": "7028be8f10d491071e512767987bbcd7d74b47fa227badeded99916c7af512bd",
+  "scripts/extract_se_network_diagnostics.py": "db7151b51252e60c42c2bc2a2b3173ae6f4b97a94226b51a97b1e357e028ea9a",
+  "scripts/dem_analysis_core.py": "39fb19cb7eb962f11fe88546fa0ad93c4a9074846be13d15b27c2eae44fb620f",
+  "scripts/analyze_contacts.py": "a383ada7aef3d13ba08bd84728a20b6207f9b124a01ce3852c01ae2518ca1aa9",
+  "scripts/analyze_contacts_bimodal.py": "8afcc76030b747d8632014fa5b6cae1c1f066007b9247902caefb05288cf1ca5",
+  "scripts/coverage_physics_vs_hertzian.py": "4341b03b38ec1f811a3087d699471860cad366323ae9eb419cf76457e6cd6d01",
+  "scripts/parse_liggghts.py": "4fe3f1f32ebc4168978c7278b7a1d37b072d64fbf00e97d0933351337d223425",
+  "scripts/se_material.py": "767a6a383d4581274b07ee79146a53fbe118f1f6eb0acb9ec0a5af21c9c9930c",
+  "scripts/metrics_json.py": "baa671f895dd6103cf95c25647ee45877d98306f00ab15cd3968fbe4354a7702",
+  "scripts/tau_flux.py": "550dab08bcea0e35c3b84cdf51f797a4d4987d5d5738413347af09d4e4abc863",
+  "scripts/lhs_webapp_batch.py": "b9d0199cc1bd23cd1ed5405a283081c2c3a31bc6ce256670c8a9b63d177b5668",
+  "scripts/lhs_harvest_batch.py": "4d798c631ac893ca32018fde58145bc5c8a2e3e2a6423da61cb87bd13599148e",
+  "scripts/lhs_descriptor_harvest.py": "27624b8a39ab8807645f819776ea0125f423d4d4f61a90e8c3a3fc45b357178b",
+  "webapp/app.py": "3eca948001600a2f73b4057da30d1f0aff1141cad286c13701560c885600e4e3",
+  "webapp/pipeline_service.py": "60e0f9785c475eac542d8fffe4928350248ef39cd8aa829db49031611dc56413",
+  "scripts/export_master_csv.py": "2899dc2410ad8840dadf41993511c225d60f29f77edfdb2fac6703b25ccf767b",
+  "scripts/type_map_resolve.py": "4a289c6412e4b8e1bc0fba573cb287966dfa00a053399097b587f1e14726bfe5"
+ },
+ "plan": {
+  "cohorts": [
+   {
+    "name": "lhs",
+    "harvest_dir": "sealed_harvest",
+    "cohort": "sealed_cohort",
+    "expect_n": 1,
+    "union": "",
+    "design": ""
+   }
+  ],
+  "queue": [
+   {
+    "case": "lhs00_000",
+    "cohort": "lhs",
+    "contacts": 100,
+    "est_mem_mb": 150.5
+   }
+  ]
+ },
+ "lanes": 20,
+ "network_lock": "per-case",
+ "retries": [
+  {
+   "at": "2026-10-05T22:31:13",
+   "argv": [
+    "rglr2_reverify_20261005/probes/new_probes.py"
+   ],
+   "lanes": 20,
+   "cases": [
+    "lhs00_000"
+   ],
+   "git_sha": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+   "dirty": true
+  }
+ ]
+}

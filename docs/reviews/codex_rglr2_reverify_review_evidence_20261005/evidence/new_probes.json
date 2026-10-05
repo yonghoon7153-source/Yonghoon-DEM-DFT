@@ -1,0 +1,302 @@
+{
+  "tau": [
+    {
+      "name": "baseline",
+      "accepted": true,
+      "why": "",
+      "stop_contract_ok": true,
+      "stop_contract_why": "ok",
+      "cells": {
+        "f_ion_hertz": "0.00400388",
+        "tau2_ion_hertz": "10.984918916215548",
+        "ion_net_status_hertz": "OK",
+        "ion_sigma0_mScm": "3.0"
+      }
+    },
+    {
+      "name": "dual_band_only",
+      "accepted": true,
+      "why": "",
+      "stop_contract_ok": false,
+      "stop_contract_why": "⑥ network_conductivity_hertzian.json ≠ dual[hertzian] (정본 = dual · 모드 파일 · legacy 는 그 사본이어야 한다); ⑥ network_conductivity_physics.json ≠ dual[physics] (정본 = dual · 모드 파일 · legacy 는 그 사본이어야 한다); ⑥ network_conductivity.json ≠ dual[hertzian] (정본 = dual · 모드 파일 · legacy 는 그 사본이어야 한다)",
+      "cells": {
+        "f_ion_hertz": "",
+        "tau2_ion_hertz": "",
+        "ion_net_status_hertz": "BAND_FALLBACK",
+        "ion_sigma0_mScm": "3.0"
+      }
+    },
+    {
+      "name": "dual_sigma0_only",
+      "accepted": true,
+      "why": "",
+      "stop_contract_ok": false,
+      "stop_contract_why": "⑥ network_conductivity_hertzian.json ≠ dual[hertzian] (정본 = dual · 모드 파일 · legacy 는 그 사본이어야 한다); ⑥ network_conductivity_physics.json ≠ dual[physics] (정본 = dual · 모드 파일 · legacy 는 그 사본이어야 한다); ⑥ network_conductivity.json ≠ dual[hertzian] (정본 = dual · 모드 파일 · legacy 는 그 사본이어야 한다); ⑥ full_metrics 의 망 소유 키가 이번 세대 투영과 다르다 (옛 세대 값 · 복사 어긋남): ['sigma_full_mScm_physics']; ③ hertzian: computed 인데 full_metrics sigma_full_mScm=0.012012 ≠ dual σ 0.024023 (같은 세대의 값이어야); ③ physics: computed 인데 full_metrics sigma_full_mScm_physics=0.011815 ≠ dual σ 0.023629 (같은 세대의 값이어야); ⑧ σ₀ · 온도 짝: legacy (network_conductivity.json) 기록 ≠ dual Hertz; ⑧ 짝 σ₀: 등급 · 웹앱 τ 가 쓰는 σ₀ 3.0 mS/cm (full_metrics) ≠ 인계 σ₀ 6.0 (망 기록)",
+      "cells": {
+        "f_ion_hertz": "0.00400388",
+        "tau2_ion_hertz": "10.984918916215548",
+        "ion_net_status_hertz": "OK",
+        "ion_sigma0_mScm": "6.0"
+      }
+    },
+    {
+      "name": "atom_input_mutation",
+      "accepted": false,
+      "why": "lhs00_000: τ P2 — 입력 digest atoms.csv: 도장 'd8965a296bef61a0' ≠ 지금 파일 '610603a6af030359' — 망이 지금 폴더의 입력에서 나오지 않았다",
+      "stop_contract_ok": true,
+      "stop_contract_why": "ok",
+      "cells": {
+        "f_ion_hertz": null,
+        "tau2_ion_hertz": null,
+        "ion_net_status_hertz": null,
+        "ion_sigma0_mScm": null
+      }
+    },
+    {
+      "name": "dual_sigma_ratio_only",
+      "accepted": false,
+      "why": "lhs00_000: τ P3 — dual[hertzian].sigma_full=0.01601552 ≠ full_metrics sigma_full=0.00400388 — dual 이 도장 세대의 망 결과가 아니다",
+      "stop_contract_ok": false,
+      "stop_contract_why": "⑥ network_conductivity_hertzian.json ≠ dual[hertzian] (정본 = dual · 모드 파일 · legacy 는 그 사본이어야 한다); ⑥ network_conductivity.json ≠ dual[hertzian] (정본 = dual · 모드 파일 · legacy 는 그 사본이어야 한다); ③ hertzian: 기술적 입력 무효 — invalid_input: 두 σ 표현 불일치 (RGLR-02): σ_dim 0.012012 mS/cm ≠ 1000·σ₀·σ_ratio = 0.048046559999999995 (|차| 0.0360346 > 허용 5.15e-07 — 저장 정밀도 8 · 6 자리 반올림 밖); ⑦ τ 인계 hertz: NOT_COMPUTED (invalid_input: 두 σ 표현 불일치 (RGLR-02): σ_dim 0.012012 mS/cm ≠ 1000·σ₀·σ_ratio = 0.048046559999999995 (|차| 0.0360346 > 허용 5.15e-07 — 저장 정밀도 8 · 6 자리 반올림 밖)) — 기술적 결손 (등록된 과학적 HOLD 아님)",
+      "cells": {
+        "f_ion_hertz": null,
+        "tau2_ion_hertz": null,
+        "ion_net_status_hertz": null,
+        "ion_sigma0_mScm": null
+      }
+    },
+    {
+      "name": "run_id_mismatch",
+      "accepted": false,
+      "why": "lhs00_000: τ P1 — 낡은 · 다른 망 세대: full_metrics network_run_id 'other' ≠ 배치 기록 '20261005T222408-d081912a' — 배치 뒤 다시 돌린 폴더이거나 다른 배치의 폴더다",
+      "stop_contract_ok": false,
+      "stop_contract_why": "② 도장 network_run_id='other' · active='20261005T222408-d081912a' ≠ 이번 실행 '20261005T222408-d081912a'",
+      "cells": {
+        "f_ion_hertz": null,
+        "tau2_ion_hertz": null,
+        "ion_net_status_hertz": null,
+        "ion_sigma0_mScm": null
+      }
+    }
+  ],
+  "launcher": {
+    "merge_rc": 0,
+    "report": {
+      "schema": "network_parallel_launcher/v1#merge",
+      "merged_at": "2026-10-05T22:31:13",
+      "git_sha": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "cohorts": {
+        "lhs": {
+          "n": 1,
+          "counts": {
+            "done": 1
+          },
+          "n_rows": 1,
+          "wall_s": {
+            "median": null,
+            "p90": null,
+            "max": null,
+            "sum": 0
+          },
+          "peak_rss_mb": {
+            "median": null,
+            "max": null
+          },
+          "rss_over_est": {
+            "median": null,
+            "max": null
+          }
+        }
+      },
+      "code_changed_since_launch": [
+        "scripts/network_conductivity.py"
+      ],
+      "structural": [],
+      "mixed_generation": [],
+      "anomalies": [],
+      "failures": [],
+      "allow_mixed_generation": false
+    },
+    "retry_rc": 0,
+    "retry_worker_called": true,
+    "retry_report": {
+      "schema": "network_parallel_launcher/v1#merge",
+      "merged_at": "2026-10-05T22:31:13",
+      "git_sha": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "cohorts": {
+        "lhs": {
+          "n": 1,
+          "counts": {
+            "done": 1
+          },
+          "n_rows": 1,
+          "wall_s": {
+            "median": null,
+            "p90": null,
+            "max": null,
+            "sum": 0
+          },
+          "peak_rss_mb": {
+            "median": null,
+            "max": null
+          },
+          "rss_over_est": {
+            "median": null,
+            "max": null
+          }
+        }
+      },
+      "code_changed_since_launch": [
+        "scripts/network_conductivity.py"
+      ],
+      "structural": [],
+      "mixed_generation": [],
+      "anomalies": [],
+      "failures": [],
+      "allow_mixed_generation": false
+    },
+    "retry_run": {
+      "outcomes": {
+        "done": 1
+      },
+      "wall_h": 0,
+      "max_concurrent": 1,
+      "budget_events": 0,
+      "backfills": 0,
+      "events": 0,
+      "interrupted": false,
+      "kind": "retry",
+      "started": "2026-10-05T22:31:13",
+      "ended": "2026-10-05T22:31:13",
+      "lanes": 20,
+      "mem_budget_mb": 6144.0,
+      "min_free_gb": 1.0,
+      "code_changed_during_run": [],
+      "git_sha_end": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5"
+    },
+    "retry_log": "══ retry — 다시 돌릴 케이스 1 건 (done · partial 아닌 것) · 레인 20\n  CPU {'cpu_count': 28, 'cpu_affinity': 28} · MemAvailable 8.0 GB · 예산 6.0 GB\n══ 실행 2 끝 — {'done': 1} · 0 h · 최대 동시 1 · 예산 대기 0 · backfill 0 · 메모리 바닥 대기 0\n══ merge — C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rglr2_reverify_20261005\\evidence\\launcher_merge_ape1juz1\\merged\n  lhs: 1 건 {'done': 1} · 행 1 · 경과 중앙 None s · p90 None s · 최대 None s · 합 0 s · 최대 RSS 중앙 None MB · 최대 None MB · 실측/추정 중앙 None · 최대 None\n  ⚠ 발사 뒤 바뀐 코드 파일 (지금 트리 기준 — 실행 중 변경이면 위 세대 줄에 나온다): ['scripts/network_conductivity.py']\n━━ 다음 명령 (리포 루트에서 · 그대로 복사) ━━\ncd 'C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rglr2_reverify_20261005\\source'\nmkdir -p 'C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rglr2_reverify_20261005\\evidence\\launcher_merge_ape1juz1\\tau' 'C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rglr2_reverify_20261005\\evidence\\launcher_merge_ape1juz1\\handover'\n# ① τ 관문 — 모든 케이스 폴더 (실패 케이스도 NOT_COMPUTED 행으로 남는다 · 빠지지 않는다)\npython3 scripts/tau_flux.py 'C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rglr2_reverify_20261005\\evidence\\launcher_merge_ape1juz1\\merged\\lhs\\results'/* --tsv 'C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rglr2_reverify_20261005\\evidence\\launcher_merge_ape1juz1\\tau\\lhs_tau_flux.tsv' --json 'C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rglr2_reverify_20261005\\evidence\\launcher_merge_ape1juz1\\tau\\lhs_tau_flux.json'\n# ② 인계 v1.2 — 생성기 (망 배치 = 접촉 단계 다섯 묶음 contact,percolation,f1,fracture,area · RGL-03).  ⚠ τ (f · tau2 · tau) 는 아직 생성기 묶음이 아니다 —\n#    v1.2 = 이 표 + ① 의 τ TSV (case 열로 잇기 = 남은 코드 단계 · Codex 뒤).  LW (④b) 열은 생성기가 명시 제외한다 (frame_unverified).\npython3 scripts/lhs_design_dataset.py --export-handover 'C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rglr2_reverify_20261005\\evidence\\launcher_merge_ape1juz1\\handover\\lhs_handover_v12_20261005.csv' --harvest sealed_harvest --union '' --webapp 'C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rglr2_reverify_20261005\\evidence\\launcher_merge_ape1juz1\\merged\\lhs' --webapp-groups contact,percolation,f1,fracture,area\n# ③ 보낼 묶음 (케이스 결과 원본 · 작업 폴더는 넣지 않는다)\n(cd 'C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rglr2_reverify_20261005\\evidence\\launcher_merge_ape1juz1' && tar czf ~/net194_11fcf91e8_20261005.tar.gz manifest.json runs progress.tsv merged/merge_report.json merged/*/status.json merged/*/metrics_flat.csv merged/*/parallel_cases.tsv tau handover cases/*/worker.json cases/*/log.txt)\n",
+    "followups": [
+      "━━ 다음 명령 (리포 루트에서 · 그대로 복사) ━━",
+      "cd 'C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rglr2_reverify_20261005\\source'",
+      "mkdir -p 'C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rglr2_reverify_20261005\\evidence\\launcher_merge_ape1juz1\\tau' 'C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rglr2_reverify_20261005\\evidence\\launcher_merge_ape1juz1\\handover'",
+      "# ① τ 관문 — 모든 케이스 폴더 (실패 케이스도 NOT_COMPUTED 행으로 남는다 · 빠지지 않는다)",
+      "python3 scripts/tau_flux.py 'C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rglr2_reverify_20261005\\evidence\\launcher_merge_ape1juz1\\merged\\lhs\\results'/* --tsv 'C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rglr2_reverify_20261005\\evidence\\launcher_merge_ape1juz1\\tau\\lhs_tau_flux.tsv' --json 'C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rglr2_reverify_20261005\\evidence\\launcher_merge_ape1juz1\\tau\\lhs_tau_flux.json'",
+      "# ② 인계 v1.2 — 생성기 (망 배치 = 접촉 단계 다섯 묶음 contact,percolation,f1,fracture,area · RGL-03).  ⚠ τ (f · tau2 · tau) 는 아직 생성기 묶음이 아니다 —",
+      "#    v1.2 = 이 표 + ① 의 τ TSV (case 열로 잇기 = 남은 코드 단계 · Codex 뒤).  LW (④b) 열은 생성기가 명시 제외한다 (frame_unverified).",
+      "python3 scripts/lhs_design_dataset.py --export-handover 'C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rglr2_reverify_20261005\\evidence\\launcher_merge_ape1juz1\\handover\\lhs_handover_v12_20261005.csv' --harvest sealed_harvest --union '' --webapp 'C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rglr2_reverify_20261005\\evidence\\launcher_merge_ape1juz1\\merged\\lhs' --webapp-groups contact,percolation,f1,fracture,area",
+      "# ③ 보낼 묶음 (케이스 결과 원본 · 작업 폴더는 넣지 않는다)",
+      "(cd 'C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rglr2_reverify_20261005\\evidence\\launcher_merge_ape1juz1' && tar czf ~/net194_11fcf91e8_20261005.tar.gz manifest.json runs progress.tsv merged/merge_report.json merged/*/status.json merged/*/metrics_flat.csv merged/*/parallel_cases.tsv tau handover cases/*/worker.json cases/*/log.txt)"
+    ],
+    "path": "evidence\\launcher_merge_ape1juz1"
+  },
+  "registration": {
+    "files": 19,
+    "match": true,
+    "checks": [
+      {
+        "path": "scripts/network_conductivity.py",
+        "expected": "b0555f7f7a65c2d327b4cca15791586e980d0b6b75b47c846457d628f19b7592",
+        "actual": "b0555f7f7a65c2d327b4cca15791586e980d0b6b75b47c846457d628f19b7592"
+      },
+      {
+        "path": "scripts/plastic_coverage.py",
+        "expected": "fdb00df699d30cf7a24bcbf0485e9e6713955eecc0703ad4aa75fa3fabe91cc3",
+        "actual": "fdb00df699d30cf7a24bcbf0485e9e6713955eecc0703ad4aa75fa3fabe91cc3"
+      },
+      {
+        "path": "scripts/audit_constriction_deleted.py",
+        "expected": "7028be8f10d491071e512767987bbcd7d74b47fa227badeded99916c7af512bd",
+        "actual": "7028be8f10d491071e512767987bbcd7d74b47fa227badeded99916c7af512bd"
+      },
+      {
+        "path": "scripts/extract_se_network_diagnostics.py",
+        "expected": "db7151b51252e60c42c2bc2a2b3173ae6f4b97a94226b51a97b1e357e028ea9a",
+        "actual": "db7151b51252e60c42c2bc2a2b3173ae6f4b97a94226b51a97b1e357e028ea9a"
+      },
+      {
+        "path": "scripts/dem_analysis_core.py",
+        "expected": "39fb19cb7eb962f11fe88546fa0ad93c4a9074846be13d15b27c2eae44fb620f",
+        "actual": "39fb19cb7eb962f11fe88546fa0ad93c4a9074846be13d15b27c2eae44fb620f"
+      },
+      {
+        "path": "scripts/analyze_contacts.py",
+        "expected": "a383ada7aef3d13ba08bd84728a20b6207f9b124a01ce3852c01ae2518ca1aa9",
+        "actual": "a383ada7aef3d13ba08bd84728a20b6207f9b124a01ce3852c01ae2518ca1aa9"
+      },
+      {
+        "path": "scripts/analyze_contacts_bimodal.py",
+        "expected": "8afcc76030b747d8632014fa5b6cae1c1f066007b9247902caefb05288cf1ca5",
+        "actual": "8afcc76030b747d8632014fa5b6cae1c1f066007b9247902caefb05288cf1ca5"
+      },
+      {
+        "path": "scripts/coverage_physics_vs_hertzian.py",
+        "expected": "4341b03b38ec1f811a3087d699471860cad366323ae9eb419cf76457e6cd6d01",
+        "actual": "4341b03b38ec1f811a3087d699471860cad366323ae9eb419cf76457e6cd6d01"
+      },
+      {
+        "path": "scripts/parse_liggghts.py",
+        "expected": "4fe3f1f32ebc4168978c7278b7a1d37b072d64fbf00e97d0933351337d223425",
+        "actual": "4fe3f1f32ebc4168978c7278b7a1d37b072d64fbf00e97d0933351337d223425"
+      },
+      {
+        "path": "scripts/se_material.py",
+        "expected": "767a6a383d4581274b07ee79146a53fbe118f1f6eb0acb9ec0a5af21c9c9930c",
+        "actual": "767a6a383d4581274b07ee79146a53fbe118f1f6eb0acb9ec0a5af21c9c9930c"
+      },
+      {
+        "path": "scripts/metrics_json.py",
+        "expected": "baa671f895dd6103cf95c25647ee45877d98306f00ab15cd3968fbe4354a7702",
+        "actual": "baa671f895dd6103cf95c25647ee45877d98306f00ab15cd3968fbe4354a7702"
+      },
+      {
+        "path": "scripts/tau_flux.py",
+        "expected": "550dab08bcea0e35c3b84cdf51f797a4d4987d5d5738413347af09d4e4abc863",
+        "actual": "550dab08bcea0e35c3b84cdf51f797a4d4987d5d5738413347af09d4e4abc863"
+      },
+      {
+        "path": "scripts/lhs_webapp_batch.py",
+        "expected": "b9d0199cc1bd23cd1ed5405a283081c2c3a31bc6ce256670c8a9b63d177b5668",
+        "actual": "b9d0199cc1bd23cd1ed5405a283081c2c3a31bc6ce256670c8a9b63d177b5668"
+      },
+      {
+        "path": "scripts/lhs_harvest_batch.py",
+        "expected": "4d798c631ac893ca32018fde58145bc5c8a2e3e2a6423da61cb87bd13599148e",
+        "actual": "4d798c631ac893ca32018fde58145bc5c8a2e3e2a6423da61cb87bd13599148e"
+      },
+      {
+        "path": "scripts/lhs_descriptor_harvest.py",
+        "expected": "27624b8a39ab8807645f819776ea0125f423d4d4f61a90e8c3a3fc45b357178b",
+        "actual": "27624b8a39ab8807645f819776ea0125f423d4d4f61a90e8c3a3fc45b357178b"
+      },
+      {
+        "path": "webapp/app.py",
+        "expected": "3eca948001600a2f73b4057da30d1f0aff1141cad286c13701560c885600e4e3",
+        "actual": "3eca948001600a2f73b4057da30d1f0aff1141cad286c13701560c885600e4e3"
+      },
+      {
+        "path": "webapp/pipeline_service.py",
+        "expected": "60e0f9785c475eac542d8fffe4928350248ef39cd8aa829db49031611dc56413",
+        "actual": "60e0f9785c475eac542d8fffe4928350248ef39cd8aa829db49031611dc56413"
+      },
+      {
+        "path": "scripts/export_master_csv.py",
+        "expected": "2899dc2410ad8840dadf41993511c225d60f29f77edfdb2fac6703b25ccf767b",
+        "actual": "2899dc2410ad8840dadf41993511c225d60f29f77edfdb2fac6703b25ccf767b"
+      },
+      {
+        "path": "scripts/type_map_resolve.py",
+        "expected": "4a289c6412e4b8e1bc0fba573cb287966dfa00a053399097b587f1e14726bfe5",
+        "actual": "4a289c6412e4b8e1bc0fba573cb287966dfa00a053399097b587f1e14726bfe5"
+      }
+    ]
+  },
+  "vm": {
+    "samples": 5000,
+    "stable": 3542,
+    "legacy": 1458,
+    "max_retained_vm_relative_error": 2.8497664377023494e-08,
+    "bound_breaches": 0,
+    "comparison_multiplication_vs_pow_bit_differences": 0
+  },
+  "fixture": "evidence\\handover_provenance_m6k5xcjv"
+}

@@ -1,0 +1,20 @@
+[Storage] NOT configured - SUPABASE_URL=False SUPABASE_KEY=False
+[Security] WARNING: auth OFF - local/private only. For public deploy set WEBAPP_REQUIRE_AUTH=1 + WEBAPP_AUTH_TOKEN.
+① 실 생산자 → 실 정지 helper (세 침대)
+  PASS 관통 · 정상 비관통 · 수치 실패 = done · done · failed ({'through': 'done', 'nonthrough': 'done', 'solve_failed': 'failed'})
+  PASS 수치 실패는 망 솔버 단계 (채널 failed → 내용 검증 · WEB-03 Q1) 에서 걸린다 (['Network Solver (both modes)'])
+  PASS 수치 실패 (첫 실행) → 활성 세대 없음 ('missing') · 망 JSON 없음 [] · full_metrics = 장부 그대로 · 최근 시도 failed ('failed' · 단계 'Network Solver (both modes)' · 종류 'solver')
+② 실 τ 소비자
+  PASS τ 인계 상태 = OK · NOT_PERCOLATING · NOT_COMPUTED (두 모드) ({'through': ('OK', 'OK'), 'nonthrough': ('NOT_PERCOLATING', 'NOT_PERCOLATING'), 'solve_failed': ('NOT_COMPUTED', 'NOT_COMPUTED')})
+  PASS 정상 비관통의 f = 0 · tau2 빈칸 (물리적 0 · 0 으로 채운 τ 아님)
+③ 실 배치 기록 (stop_after=network) → 실 인계 생성기
+  PASS 실 배치에 관통 · 비관통 done 케이스가 있다 (106 · 24)
+  PASS load_webapp 이 배치의 stop_after 를 넘긴다 ('network')
+  PASS network 배치를 ⑤⑥⑦ 다섯 묶음으로 받는다 (옛 코드 = 거부 · RGL-03)
+  PASS failed 로 바꾼 한 행 밖의 129/129 행 = 접촉 단계 판과 같은 값 (관통 · 정상 비관통 done 포함)
+  PASS 수치 실패 행 = wa_status failed ('failed') · 웹앱 열 81 칸 빈칸 · 다른 값으로 바뀐 칸 0
+④ 실 생산자 폴더 → 망 τ 원천 (load_tau_results · 출처 관문 P0–P3) → 인계 생성기 묶음 tau (v1.2)
+  PASS ④ 실 생산자 폴더 → 묶음 tau: 관통 OK · 정상 비관통 NOT_PERCOLATING (f 0.0 · tau2 빈칸) · 칸 = tau_flux.case_row 그대로 · 수치 실패 행 (wa_status failed) τ 칸 전부 빈칸 · 출처 관문 2 행 · 빈칸 행 1
+  PASS ④b 배치 뒤 다시 돌린 폴더 (실 생산자 새 run id) 로는 τ 를 싣지 않는다 — FillRefusal τ P1 (낡은 세대)
+
+test_network_handover_chain: 12/12 PASS

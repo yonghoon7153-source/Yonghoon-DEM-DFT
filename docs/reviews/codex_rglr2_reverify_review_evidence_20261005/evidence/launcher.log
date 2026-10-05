@@ -1,0 +1,25 @@
+⛔ 이 실행기는 Linux/WSL 전용이다 (os.wait4 · 프로세스 묶음)
+⛔ 이 실행기는 Linux/WSL 전용이다 (os.wait4 · 프로세스 묶음)
+⛔ 이 실행기는 Linux/WSL 전용이다 (os.wait4 · 프로세스 묶음)
+  ✓ ① 계획이 결정적 (두 번 같다) · 전 케이스 정확히 한 번 · 접촉 큰 순 (같으면 이름)
+  ✓ ① --case 필터 · 없는 케이스는 계획 거부
+  ✓ ② 비어 있지 않은 ROOT → rc 2 · manifest 없음
+  ✗ ③ --dry-run → rc 0 · ROOT 를 만들지 않는다
+  ✗ ④ 실패가 있으면 rc 1 (조용히 초록이 아니다) · 실행 0.0 s  — rc=2
+  ✗ ④ 케이스마다 worker.json — rc · 경과 · 최대 RSS (KB) · user/sys  — {'lhs99_000': (None, None), 'lhs99_001': (None, None), 'lhs99_002': (None, None), 'lhs99_003': (None, None), 'lhs99_004': (None, None), 'lhs99_005': (None, None), 'lhsx_900': (None, None), 'lhsx_901': (None, None), 'lhsx_902': (None, None)}
+  ✗ ④ crash (SIGKILL) 케이스 = rc −9 · signal SIGKILL · outcome NO_RECORD  — {}
+  ✗ ④ 최대 RSS 는 케이스별 (누적 아님) — 160 MB 할당 0 · 자식 220 MB 0 · 나머지 최대 0
+Traceback (most recent call last):
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\rglr2_reverify_20261005\source\scripts\run_network_194_parallel.py", line 1472, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\rglr2_reverify_20261005\source\scripts\run_network_194_parallel.py", line 1088, in main
+    return _selftest()
+           ^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\rglr2_reverify_20261005\source\scripts\run_network_194_parallel.py", line 1278, in _selftest
+    iv = sorted((l['t_start_s'], l['t_end_s']) for l in last.values())
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\rglr2_reverify_20261005\source\scripts\run_network_194_parallel.py", line 1278, in <genexpr>
+    iv = sorted((l['t_start_s'], l['t_end_s']) for l in last.values())
+                 ~^^^^^^^^^^^^^
+KeyError: 't_start_s'

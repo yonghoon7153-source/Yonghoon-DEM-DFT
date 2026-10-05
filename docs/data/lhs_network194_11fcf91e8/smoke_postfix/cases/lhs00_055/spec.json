@@ -1,0 +1,11 @@
+{
+ "id": "lhs00_055",
+ "kind": "lhs",
+ "stop": "network",
+ "cohort": "/home/yonghoon71/dem-audit/docs/data/area_s2_cohort.tsv",
+ "harvest_dir": "/home/yonghoon71/dem-audit/docs/data/lhs_descriptors_cov_1e09f661d",
+ "expect_perc": true,
+ "root_from": "",
+ "root_to": "",
+ "root": "/home/yonghoon71/net_smoke_11fcf91e8_1005_2206"
+}

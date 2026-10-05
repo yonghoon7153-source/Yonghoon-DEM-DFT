@@ -1,0 +1,450 @@
+{
+ "id": "controls",
+ "kind": "controls",
+ "controls": {
+  "c1_general_positive": {
+   "name": "c1_general_positive",
+   "status": "done",
+   "error": null,
+   "fired": {},
+   "stages": [
+    {
+     "step": "Network Solver (both modes)",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Network channel verdict (ionic/electronic/thermal)",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Network ionic record check (승격 전 공용 기술 검사 · RGLR2-01)",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Stage E (literature-grounded grain corrections)",
+     "rc": 0,
+     "ok": true
+    }
+   ],
+   "candidate_preserved": true,
+   "previous_generation_identical": null,
+   "provenance_run_id": "20261005T220754-5c33290d",
+   "fm_run_id": "20261005T220754-5c33290d",
+   "fm_sigma": 0.012012,
+   "dual_hertz_sigma": 0.012012,
+   "dual_hertz_ratio": 0.00400388,
+   "attempt": {
+    "schema": "network_attempt/v2",
+    "network_attempt_run_id": "20261005T220754-5c33290d",
+    "solver_status": "success",
+    "latest_attempt_status": "success",
+    "failure_kind": "",
+    "reason": "",
+    "stage": "",
+    "active_network_run_id": "20261005T220754-5c33290d",
+    "active_status": "success",
+    "previous_generation_kept": null,
+    "input_digests": {
+     "atoms.csv": "7636d9a49e6269cb",
+     "contacts.csv": "79b29d6e676b97d1"
+    },
+    "code_sha": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+    "attempted_at": "2026-10-05T22:07:54",
+    "argv": {
+     "type_map": "1:SE",
+     "scale": 1,
+     "contact_mode": "both"
+    }
+   },
+   "status_view": {
+    "active_network_run_id": "20261005T220754-5c33290d",
+    "active_status": "success",
+    "active_problem": "",
+    "latest_attempt_run_id": "20261005T220754-5c33290d",
+    "latest_attempt_status": "success",
+    "failure_kind": "",
+    "latest_attempt_stage": "",
+    "latest_attempt_reason": "",
+    "stale": false
+   },
+   "ui_rows": [
+    [
+     "σ_ionic 망 상태 (생산자 sigma_full_status)",
+     "계산됨",
+     "계산됨",
+     ""
+    ]
+   ],
+   "log_tail": ""
+  },
+  "c1_general_ratio_times4": {
+   "name": "c1_general_ratio_times4",
+   "status": "failed",
+   "error": null,
+   "fired": {},
+   "stages": [
+    {
+     "step": "Network Solver (both modes)",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Network channel verdict (ionic/electronic/thermal)",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Network ionic record check (승격 전 공용 기술 검사 · RGLR2-01)",
+     "rc": 1,
+     "ok": false
+    }
+   ],
+   "candidate_preserved": false,
+   "previous_generation_identical": null,
+   "provenance_run_id": null,
+   "fm_run_id": null,
+   "fm_sigma": null,
+   "dual_hertz_sigma": null,
+   "dual_hertz_ratio": null,
+   "attempt": {
+    "schema": "network_attempt/v2",
+    "network_attempt_run_id": "20261005T220754-48c3ce87",
+    "solver_status": "failed",
+    "latest_attempt_status": "failed",
+    "failure_kind": "candidate_rejected",
+    "reason": "Network ionic record check (승격 전 공용 기술 검사 · RGLR2-01): ★ 공용 기술 검사 실패 (승격 전 · 게시 안 함): network_conductivity_dual.json[hertzian]: invalid_input: 두 σ 표현 불일치 (RGLR-02): σ_dim 0.012012 mS/cm ≠ 1000·σ₀·σ_ratio = 0.048046559999999995 (|차| 0.0360346 > 허용 5.15e-07 — 저장 정밀도 8 · 6 자리 반올림 밖); network_conductivity_dual.json[physics]: invalid_input: 두 σ 표현 불일치 (RGLR-02): σ_dim 0.011815 mS/cm ≠ 1000·σ₀·σ_ratio = 0.047258400000000006 (|차| 0.0354434 > 허용 5.15e-07 — 저장 정밀도 8 · 6 자리 반올림 밖); network_conductivity.json: invalid_input: 두 σ 표현 불일치 (RGLR-02): σ_dim 0.012012 mS/cm ≠ 1000·σ₀·σ_ratio = 0.048046559999999995 (|차| 0.0360346 > 허용 5.15e-07 — 저장 정밀도 8 · 6 자리 반올림 밖); network_conductivity_hertzian.json: invalid_input: 두 σ 표현 불일치 (RGLR-02): σ_dim 0.012012 mS/cm ≠ 1000·σ₀·σ_ratio = 0.048046559999999995 (|차| 0.0360346 > 허용 5.15e-07 — 저장 정밀도 8 · 6 자리 반올림 밖); network_conductivity_physics.json: invalid_input: 두 σ 표현 불일치 (RGLR-02): σ_dim 0.011815 mS/cm ≠ 1000·σ₀·σ_ratio = 0.047258400000000006 (|차| 0.0354434 > 허용 5.15e-07 — 저장 정밀도 8 · 6 자리 반올림 밖)",
+    "stage": "Network ionic record check (승격 전 공용 기술 검사 · RGLR2-01)",
+    "active_network_run_id": null,
+    "active_status": "none",
+    "previous_generation_kept": false,
+    "input_digests": {
+     "atoms.csv": "7636d9a49e6269cb",
+     "contacts.csv": "79b29d6e676b97d1"
+    },
+    "code_sha": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+    "attempted_at": "2026-10-05T22:07:54",
+    "argv": {
+     "type_map": "1:SE",
+     "scale": 1,
+     "contact_mode": "both"
+    }
+   },
+   "status_view": {
+    "active_network_run_id": null,
+    "active_status": "none",
+    "active_problem": "",
+    "latest_attempt_run_id": "20261005T220754-48c3ce87",
+    "latest_attempt_status": "failed",
+    "failure_kind": "candidate_rejected",
+    "latest_attempt_stage": "Network ionic record check (승격 전 공용 기술 검사 · RGLR2-01)",
+    "latest_attempt_reason": "Network ionic record check (승격 전 공용 기술 검사 · RGLR2-01): ★ 공용 기술 검사 실패 (승격 전 · 게시 안 함): network_conductivity_dual.json[hertzian]: invalid_input: 두 σ 표현 불일치 (RGLR-02): σ_dim 0.012012 mS/cm ≠ 1000·σ₀·σ_ratio = 0.048046559999999995 (|차| 0.0360346 > 허용 5.15e-07 — 저장 정밀도 8 · 6 자리 반올림 밖); network_conductivity_dual.json[physics]: invalid_input: 두 σ 표현 불일치 (RGLR-02): σ_dim 0.011815 mS/cm ≠ 1000·σ₀·σ_ratio = 0.047258400000000006 (|차| 0.0354434 > 허용 5.15e-07 — 저장 정밀도 8 · 6 자리 반올림 밖); network_conductivity.json: invalid_input: 두 σ 표현 불일치 (RGLR-02): σ_dim 0.012012 mS/cm ≠ 1000·σ₀·σ_ratio = 0.048046559999999995 (|차| 0.0360346 > 허용 5.15e-07 — 저장 정밀도 8 · 6 자리 반올림 밖); network_conductivity_hertzian.json: invalid_input: 두 σ 표현 불일치 (RGLR-02): σ_dim 0.012012 mS/cm ≠ 1000·σ₀·σ_ratio = 0.048046559999999995 (|차| 0.0360346 > 허용 5.15e-07 — 저장 정밀도 8 · 6 자리 반올림 밖); network_conductivity_physics.json: invalid_input: 두 σ 표현 불일치 (RGLR-02): σ_dim 0.011815 mS/cm ≠ 1000·σ₀·σ_ratio = 0.047258400000000006 (|차| 0.0354434 > 허용 5.15e-07 — 저장 정밀도 8 · 6 자리 반올림 밖)",
+    "stale": false
+   },
+   "ui_rows": [
+    [
+     "망 최근 시도 (network_attempt — 활성 세대와 다를 때)",
+     "재계산 실패 (Network ionic record check (승격 전 공용 기술 검사 · RGLR2-01): ★ 공용 기술 검사 실패 (승격 전 · 게시 안 함): network_conductivity_dual.json[hertzian]: invalid_input: 두 σ 표현 불일치 (RGLR-02): σ_dim 0.012012 mS/cm ≠ 1000·σ₀·σ_ratio = 0.048046559999999995 (|차| 0.036…) · 승격 전 검사 거부 · 시도 20261005T220754-48c3ce87 · 활성 세대 없음 (첫 실행 실패 — 게시된 망 결과 없음)",
+     "재계산 실패 (Network ionic record check (승격 전 공용 기술 검사 · RGLR2-01): ★ 공용 기술 검사 실패 (승격 전 · 게시 안 함): network_conductivity_dual.json[hertzian]: invalid_input: 두 σ 표현 불일치 (RGLR-02): σ_dim 0.012012 mS/cm ≠ 1000·σ₀·σ_ratio = 0.048046559999999995 (|차| 0.036…) · 승격 전 검사 거부 · 시도 20261005T220754-48c3ce87 · 활성 세대 없음 (첫 실행 실패 — 게시된 망 결과 없음)",
+     ""
+    ]
+   ],
+   "log_tail": ""
+  },
+  "c1b_general_band_ratio_missing": {
+   "name": "c1b_general_band_ratio_missing",
+   "status": "failed",
+   "error": null,
+   "fired": {},
+   "stages": [
+    {
+     "step": "Network Solver (both modes)",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Network channel verdict (ionic/electronic/thermal)",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Network ionic record check (승격 전 공용 기술 검사 · RGLR2-01)",
+     "rc": 1,
+     "ok": false
+    }
+   ],
+   "candidate_preserved": false,
+   "previous_generation_identical": null,
+   "provenance_run_id": null,
+   "fm_run_id": null,
+   "fm_sigma": null,
+   "dual_hertz_sigma": null,
+   "dual_hertz_ratio": null,
+   "attempt": {
+    "schema": "network_attempt/v2",
+    "network_attempt_run_id": "20261005T220754-e0f1d820",
+    "solver_status": "failed",
+    "latest_attempt_status": "failed",
+    "failure_kind": "candidate_rejected",
+    "reason": "Network ionic record check (승격 전 공용 기술 검사 · RGLR2-01): ★ 공용 기술 검사 실패 (승격 전 · 게시 안 함): network_conductivity_dual.json[hertzian]: invalid_input: computed 인데 σ_ratio (sigma_full) None — 유한 양수여야; network_conductivity_dual.json[physics]: invalid_input: computed 인데 σ_ratio (sigma_full) None — 유한 양수여야; network_conductivity.json: invalid_input: computed 인데 σ_ratio (sigma_full) None — 유한 양수여야; network_conductivity_hertzian.json: invalid_input: computed 인데 σ_ratio (sigma_full) None — 유한 양수여야; network_conductivity_physics.json: invalid_input: computed 인데 σ_ratio (sigma_full) None — 유한 양수여야",
+    "stage": "Network ionic record check (승격 전 공용 기술 검사 · RGLR2-01)",
+    "active_network_run_id": null,
+    "active_status": "none",
+    "previous_generation_kept": false,
+    "input_digests": {
+     "atoms.csv": "a914dd51240cb540",
+     "contacts.csv": "c7eabcc47d05e228"
+    },
+    "code_sha": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+    "attempted_at": "2026-10-05T22:07:54",
+    "argv": {
+     "type_map": "1:SE",
+     "scale": 1,
+     "contact_mode": "both"
+    }
+   },
+   "status_view": {
+    "active_network_run_id": null,
+    "active_status": "none",
+    "active_problem": "",
+    "latest_attempt_run_id": "20261005T220754-e0f1d820",
+    "latest_attempt_status": "failed",
+    "failure_kind": "candidate_rejected",
+    "latest_attempt_stage": "Network ionic record check (승격 전 공용 기술 검사 · RGLR2-01)",
+    "latest_attempt_reason": "Network ionic record check (승격 전 공용 기술 검사 · RGLR2-01): ★ 공용 기술 검사 실패 (승격 전 · 게시 안 함): network_conductivity_dual.json[hertzian]: invalid_input: computed 인데 σ_ratio (sigma_full) None — 유한 양수여야; network_conductivity_dual.json[physics]: invalid_input: computed 인데 σ_ratio (sigma_full) None — 유한 양수여야; network_conductivity.json: invalid_input: computed 인데 σ_ratio (sigma_full) None — 유한 양수여야; network_conductivity_hertzian.json: invalid_input: computed 인데 σ_ratio (sigma_full) None — 유한 양수여야; network_conductivity_physics.json: invalid_input: computed 인데 σ_ratio (sigma_full) None — 유한 양수여야",
+    "stale": false
+   },
+   "ui_rows": [
+    [
+     "망 최근 시도 (network_attempt — 활성 세대와 다를 때)",
+     "재계산 실패 (Network ionic record check (승격 전 공용 기술 검사 · RGLR2-01): ★ 공용 기술 검사 실패 (승격 전 · 게시 안 함): network_conductivity_dual.json[hertzian]: invalid_input: computed 인데 σ_ratio (sigma_full) None — 유한 양수여야; network_conductivity_dual.json[physics]: inva…) · 승격 전 검사 거부 · 시도 20261005T220754-e0f1d820 · 활성 세대 없음 (첫 실행 실패 — 게시된 망 결과 없음)",
+     "재계산 실패 (Network ionic record check (승격 전 공용 기술 검사 · RGLR2-01): ★ 공용 기술 검사 실패 (승격 전 · 게시 안 함): network_conductivity_dual.json[hertzian]: invalid_input: computed 인데 σ_ratio (sigma_full) None — 유한 양수여야; network_conductivity_dual.json[physics]: inva…) · 승격 전 검사 거부 · 시도 20261005T220754-e0f1d820 · 활성 세대 없음 (첫 실행 실패 — 게시된 망 결과 없음)",
+     ""
+    ]
+   ],
+   "log_tail": ""
+  },
+  "c2_single_fault_positive": {
+   "name": "c2_single_fault_positive",
+   "status": "failed",
+   "error": null,
+   "fired": {
+    "fm_write": 1
+   },
+   "stages": [
+    {
+     "step": "Network Solver (both modes)",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Network channel verdict (ionic/electronic/thermal)",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Network stop contract (stop_after=network)",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Network ionic record check (승격 전 공용 기술 검사 · RGLR2-01)",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Network publication (승격 · 실패 시 되돌림)",
+     "rc": 1,
+     "ok": false
+    }
+   ],
+   "candidate_preserved": true,
+   "previous_generation_identical": true,
+   "provenance_run_id": "20261005T220754-496105e0",
+   "fm_run_id": "20261005T220754-496105e0",
+   "fm_sigma": 0.012012,
+   "dual_hertz_sigma": 0.012012,
+   "dual_hertz_ratio": 0.00400388,
+   "attempt": {
+    "schema": "network_attempt/v2",
+    "network_attempt_run_id": "20261005T220754-6dd5f45f",
+    "solver_status": "failed",
+    "latest_attempt_status": "failed",
+    "failure_kind": "publish_exception",
+    "reason": "full_metrics.json 쓰기 중 OSError: smoke injection: full_metrics write failure",
+    "stage": "Network publication (승격 · 실패 시 되돌림)",
+    "active_network_run_id": "20261005T220754-496105e0",
+    "active_status": "success",
+    "previous_generation_kept": true,
+    "input_digests": {
+     "atoms.csv": "7636d9a49e6269cb",
+     "contacts.csv": "79b29d6e676b97d1"
+    },
+    "code_sha": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+    "attempted_at": "2026-10-05T22:07:54",
+    "argv": {
+     "type_map": "1:SE",
+     "scale": 1,
+     "contact_mode": "both"
+    }
+   },
+   "status_view": {
+    "active_network_run_id": "20261005T220754-496105e0",
+    "active_status": "success",
+    "active_problem": "",
+    "latest_attempt_run_id": "20261005T220754-6dd5f45f",
+    "latest_attempt_status": "failed",
+    "failure_kind": "publish_exception",
+    "latest_attempt_stage": "Network publication (승격 · 실패 시 되돌림)",
+    "latest_attempt_reason": "full_metrics.json 쓰기 중 OSError: smoke injection: full_metrics write failure",
+    "stale": true
+   },
+   "ui_rows": [
+    [
+     "σ_ionic 망 상태 (생산자 sigma_full_status)",
+     "계산됨",
+     "계산됨",
+     ""
+    ],
+    [
+     "망 최근 시도 (network_attempt — 활성 세대와 다를 때)",
+     "최근 재계산 실패 (full_metrics.json 쓰기 중 OSError: smoke injection: full_metrics write failure) · 게시 중 예외 (되돌림) · 시도 20261005T220754-6dd5f45f · 활성 세대 20261005T220754-496105e0 의 값 (이전 성공 세대 그대로)",
+     "최근 재계산 실패 (full_metrics.json 쓰기 중 OSError: smoke injection: full_metrics write failure) · 게시 중 예외 (되돌림) · 시도 20261005T220754-6dd5f45f · 활성 세대 20261005T220754-496105e0 의 값 (이전 성공 세대 그대로)",
+     ""
+    ]
+   ],
+   "log_tail": ""
+  },
+  "c2_double_fault_rollback": {
+   "name": "c2_double_fault_rollback",
+   "status": "failed",
+   "error": null,
+   "fired": {
+    "attempt_write": 1,
+    "restore": 1
+   },
+   "stages": [
+    {
+     "step": "Network Solver (both modes)",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Network channel verdict (ionic/electronic/thermal)",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Network stop contract (stop_after=network)",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Network ionic record check (승격 전 공용 기술 검사 · RGLR2-01)",
+     "rc": 0,
+     "ok": true
+    },
+    {
+     "step": "Network publication (승격 · 실패 시 되돌림)",
+     "rc": 1,
+     "ok": false
+    }
+   ],
+   "candidate_preserved": true,
+   "previous_generation_identical": false,
+   "provenance_run_id": "20261005T220754-58391018",
+   "fm_run_id": "20261005T220754-c73f7701",
+   "fm_sigma": 0.008755,
+   "dual_hertz_sigma": 0.012012,
+   "dual_hertz_ratio": 0.00400388,
+   "attempt": {
+    "schema": "network_attempt/v2",
+    "network_attempt_run_id": "20261005T220754-c73f7701",
+    "solver_status": "failed",
+    "latest_attempt_status": "failed",
+    "failure_kind": "rollback_failed",
+    "reason": "최근 시도 success (network_attempt.json) 쓰기 중 OSError: smoke injection: success attempt write failure · ⚠ full_metrics 되돌림 실패 (PermissionError: smoke injection: full_metrics rollback destination unavailable) → 활성 세대 무효 (되돌림 실패 — 값 인용 금지 · 재실행 필요 · 복구 자료 ['.publish_backup_20261005T220754-c73f7701_full_metrics.json'])",
+    "stage": "Network publication (승격 · 실패 시 되돌림)",
+    "active_network_run_id": "20261005T220754-58391018",
+    "active_status": "invalid",
+    "previous_generation_kept": false,
+    "input_digests": {
+     "atoms.csv": "7636d9a49e6269cb",
+     "contacts.csv": "df124fff3c39d5d5"
+    },
+    "code_sha": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+    "attempted_at": "2026-10-05T22:07:54",
+    "argv": {
+     "type_map": "1:SE",
+     "scale": 1,
+     "contact_mode": "both"
+    },
+    "active_problem": "최근 시도 success (network_attempt.json) 쓰기 중 OSError: smoke injection: success attempt write failure · ⚠ full_metrics 되돌림 실패 (PermissionError: smoke injection: full_metrics rollback destination unavailable) → 활성 세대 무효 (되돌림 실패 — 값 인용 금지 · 재실행 필요 · 복구 자료 ['.publish_backup_20261005T220754-c73f7701_full_metrics.json'])"
+   },
+   "status_view": {
+    "active_network_run_id": "20261005T220754-58391018",
+    "active_status": "invalid",
+    "active_problem": "중단된 게시 · 풀이 흔적 ['.publish_backup_20261005T220754-c73f7701_full_metrics.json'] — 진행 중이거나 중단됐다 (재실행 필요); full_metrics 의 망 세대 '20261005T220754-c73f7701' ≠ 도장 '20261005T220754-58391018' — 파일들이 서로 다른 세대를 가리킨다 (되돌림 실패 · 중단된 게시); 최근 시도 '20261005T220754-c73f7701' 가 활성 세대를 무효로 남겼다 (rollback_failed: 최근 시도 success (network_attempt.json) 쓰기 중 OSError: smoke injection: success attempt write failure · ⚠ full_metrics 되돌림 실패 (PermissionError: smoke injection: ful) — 성공한 재계산 전까지 무효",
+    "latest_attempt_run_id": "20261005T220754-c73f7701",
+    "latest_attempt_status": "failed",
+    "failure_kind": "rollback_failed",
+    "latest_attempt_stage": "Network publication (승격 · 실패 시 되돌림)",
+    "latest_attempt_reason": "최근 시도 success (network_attempt.json) 쓰기 중 OSError: smoke injection: success attempt write failure · ⚠ full_metrics 되돌림 실패 (PermissionError: smoke injection: full_metrics rollback destination unavailable) → 활성 세대 무효 (되돌림 실패 — 값 인용 금지 · 재실행 필요 · 복구 자료 ['.publish_backup_20261005T220754-c73f7701_full_metrics.json'])",
+    "stale": false
+   },
+   "ui_rows": [
+    [
+     "σ_ionic 망 상태 (생산자 sigma_full_status)",
+     "활성 세대 무효 — 생산자 상태 인용 금지 (아래 행)",
+     "활성 세대 무효 — 생산자 상태 인용 금지 (아래 행)",
+     ""
+    ],
+    [
+     "망 최근 시도 (network_attempt — 활성 세대와 다를 때)",
+     "최근 재계산 실패 (최근 시도 success (network_attempt.json) 쓰기 중 OSError: smoke injection: success attempt write failure · ⚠ full_metrics 되돌림 실패 (PermissionError: smoke injection: full_metrics rollback destination unavailable) → 활성 세대 무효 (되돌림 실패 — 값 인용 금지 · 재실…) · 게시 중 예외 · 되돌림 실패 (값 무효) · 시도 20261005T220754-c73f7701 · 활성 세대 무효 (도장 20261005T220754-58391018 · 디스크의 망 파일이 한 세대를 가리키지 않는다 — 값 인용 금지 · 재실행 필요)",
+     "최근 재계산 실패 (최근 시도 success (network_attempt.json) 쓰기 중 OSError: smoke injection: success attempt write failure · ⚠ full_metrics 되돌림 실패 (PermissionError: smoke injection: full_metrics rollback destination unavailable) → 활성 세대 무효 (되돌림 실패 — 값 인용 금지 · 재실…) · 게시 중 예외 · 되돌림 실패 (값 무효) · 시도 20261005T220754-c73f7701 · 활성 세대 무효 (도장 20261005T220754-58391018 · 디스크의 망 파일이 한 세대를 가리키지 않는다 — 값 인용 금지 · 재실행 필요)",
+     ""
+    ],
+    [
+     "망 활성 세대 무효 (full_metrics ↔ 도장 · 되돌림 실패 · 중단된 게시)",
+     "활성 세대 무효 — 중단된 게시 · 풀이 흔적 ['.publish_backup_20261005T220754-c73f7701_full_metrics.json'] — 진행 중이거나 중단됐다 (재실행 필요); full_metrics 의 망 세대 '20261005T220754-c73f7701' ≠ 도장 '20261005T220754-58391018' — 파일들이 서로 다른 세대를 가리킨다 (되돌림 실패 · 중단된 게시); 최근 시도 '2026100… · 망 값 (σ · 상태 · τ · Stage E) 인용 금지 · 재실행 필요 (복구 자료 = .publish_backup_* · .network_recovery/)",
+     "활성 세대 무효 — 중단된 게시 · 풀이 흔적 ['.publish_backup_20261005T220754-c73f7701_full_metrics.json'] — 진행 중이거나 중단됐다 (재실행 필요); full_metrics 의 망 세대 '20261005T220754-c73f7701' ≠ 도장 '20261005T220754-58391018' — 파일들이 서로 다른 세대를 가리킨다 (되돌림 실패 · 중단된 게시); 최근 시도 '2026100… · 망 값 (σ · 상태 · τ · Stage E) 인용 금지 · 재실행 필요 (복구 자료 = .publish_backup_* · .network_recovery/)",
+     ""
+    ]
+   ],
+   "log_tail": ""
+  },
+  "c3_vm_near_hydrostatic": {
+   "inputs": [
+    [
+     1073.1,
+     1073.1,
+     1073.1000001073098
+    ],
+    [
+     0.0,
+     0.0,
+     1.0730991562013514e-07
+    ]
+   ],
+   "expanded_radicand": -4.656612873077393e-10,
+   "exact_radicand": 1.1515417990400524e-14,
+   "exact_vm_equal": true,
+   "exact_cv_pct": 0.0,
+   "actual": {
+    "status": "computed",
+    "vm_cv": 0.0,
+    "reason": null,
+    "contract": "v3-invalid-null-stable-vm"
+   },
+   "positive_control": {
+    "status": "computed",
+    "vm_cv": 0.0,
+    "reason": null,
+    "contract": "v3-invalid-null-stable-vm"
+   }
+  }
+ }
+}

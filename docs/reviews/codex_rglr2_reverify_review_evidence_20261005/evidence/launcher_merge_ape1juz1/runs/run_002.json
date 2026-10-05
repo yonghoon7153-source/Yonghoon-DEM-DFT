@@ -1,0 +1,19 @@
+{
+ "outcomes": {
+  "done": 1
+ },
+ "wall_h": 0,
+ "max_concurrent": 1,
+ "budget_events": 0,
+ "backfills": 0,
+ "events": 0,
+ "interrupted": false,
+ "kind": "retry",
+ "started": "2026-10-05T22:31:13",
+ "ended": "2026-10-05T22:31:13",
+ "lanes": 20,
+ "mem_budget_mb": 6144.0,
+ "min_free_gb": 1.0,
+ "code_changed_during_run": [],
+ "git_sha_end": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5"
+}

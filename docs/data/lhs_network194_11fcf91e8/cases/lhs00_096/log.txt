@@ -1,0 +1,8 @@
+===== attempt 1 (run 1) start 2026-10-05T22:33:21 · cwd /home/yonghoon71/net194_11fcf91e8/cases/lhs00_096 · lock per-case
+===== cmd: /home/yonghoon71/Yonghoon-DEM-DFT/venv/bin/python /home/yonghoon71/dem-audit/scripts/lhs_webapp_batch.py --stop-after network --case lhs00_096 --harvest-dir /home/yonghoon71/dem-audit/docs/data/lhs_descriptors_cov_1e09f661d --cohort /home/yonghoon71/dem-audit/docs/data/area_s2_cohort.tsv --work /home/yonghoon71/net194_11fcf91e8/cases/lhs00_096/work --out-dir /home/yonghoon71/net194_11fcf91e8/cases/lhs00_096/out
+[Storage] NOT configured - SUPABASE_URL=False SUPABASE_KEY=False
+[Security] WARNING: auth OFF - local/private only. For public deploy set WEBAPP_REQUIRE_AUTH=1 + WEBAPP_AUTH_TOKEN.
+[1/1] lhs00_096 done 58.6 s · 남은 0 건 ≈ 0.0 h
+상태: {'done': 1}
+physics v2 판정: {'blank': 1} (blank 사유는 status.json · metrics_flat.csv 의 coverage_status_physics_v2)
+===== attempt 1 end 2026-10-05T22:34:20 · outcome done · rc 0 · wall 57.6 s · peak RSS 1085 MB · user 61.6 s · sys 2.5 s

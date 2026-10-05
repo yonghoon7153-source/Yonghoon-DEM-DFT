@@ -1,0 +1,2 @@
+case_id,name,am_type,n_AM,cov_hertzian_pct,cov_physics_pct,delta_pct
+synthetic_network,synthetic_network,AM_P,21,0.0,0.0,0.0

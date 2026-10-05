@@ -1,0 +1,88 @@
+{
+  "phi_se": 0.029321531433504733,
+  "thickness_um": 20.0,
+  "thickness_mass_conserving_um": 20.0,
+  "phi_se_mass_conserving": 0.029321531433504733,
+  "percolation_pct": 0.0,
+  "porosity": 97.06784685664954,
+  "bulk_resistance_fraction": 0.102,
+  "sigma_bruggeman": 0.00502088,
+  "sigma_bruggeman_mScm": 0.015063,
+  "constriction_power_share_ion_hertz_status": "not_computed (no percolating FULL solution)",
+  "constriction_power_share_th_hertz_status": "not_computed (no percolating FULL solution)",
+  "sigma_full_status": "valid_zero",
+  "sigma_full_reason": "no_through_path",
+  "temperature_provenance": {
+    "T_C": null,
+    "T_ref_C": 25.0,
+    "Ea_ion_eV": null,
+    "T_dependence": "NOT_MODELLED",
+    "sigma_ion_T_factor": 1.0,
+    "sigma_e_T_dependence": "NOT_MODELLED",
+    "convention": "sigma*T = sigma0*exp(-Ea/(kB*T))  [Kraft 2017 eq 5]",
+    "Ea_band_eV": {
+      "ma2024": 0.29,
+      "reisacher2023": 0.41,
+      "kraft2017": 0.46
+    },
+    "trust": "T_ref=25 \u00b0C is OUR CONVENTION, not an anchor \u2014 \u03c3_grain=3.0 mS/cm is a project value (lower end of the Cronau 2021 SI Fig. S2c \u00b5C-LPSCl pellet plateau; not single-crystal \u2014 SELF-51; docs/temp_pressure_capability.md T1-b). Ea is a BAND 0.29-0.46 eV (1.8x wide = x2.47..x4.44 at 30->60 \u00b0C); single-value reporting is forbidden \u2014 sweep EA_ION_EV_BAND. T_dependence=NOT_MODELLED: sigma is the 25 \u00b0C value; a run at any other cell temperature UNDER-states sigma_ion (and over-states the ionic ohmic drop)."
+  },
+  "sigma_grain_S_cm": 0.003,
+  "bulk_resistance_fraction_physics": 0.1003,
+  "sigma_full_status_physics": "valid_zero",
+  "sigma_full_reason_physics": "no_through_path",
+  "constriction_power_share_ion_physics_status": "not_computed (no percolating FULL solution)",
+  "constriction_power_share_th_physics_status": "not_computed (no percolating FULL solution)",
+  "network_dual": {
+    "hertzian": {
+      "sigma_full": null,
+      "sigma_full_mScm": null,
+      "sigma_bulk_net": null,
+      "sigma_bulk_net_mScm": null,
+      "electronic_sigma_full_mScm": null,
+      "thermal_sigma_full_mScm": null,
+      "R_brug_over_full": null,
+      "bulk_resistance_fraction": 0.102,
+      "sigma_full_status": "valid_zero",
+      "sigma_full_reason": "no_through_path"
+    },
+    "physics": {
+      "sigma_full": null,
+      "sigma_full_mScm": null,
+      "sigma_bulk_net": null,
+      "sigma_bulk_net_mScm": null,
+      "electronic_sigma_full_mScm": null,
+      "thermal_sigma_full_mScm": null,
+      "R_brug_over_full": null,
+      "bulk_resistance_fraction": 0.1003,
+      "sigma_full_status": "valid_zero",
+      "sigma_full_reason": "no_through_path"
+    },
+    "ratio_physics_over_hertzian": {
+      "sigma_full": null,
+      "sigma_constr_net": null,
+      "electronic_sigma_full": null,
+      "thermal_sigma_full": null
+    }
+  },
+  "physics_resistance_model": "mikic",
+  "physics_solver_at": "2026-10-05 22:24:10",
+  "ionic_channel_verdict": "ok",
+  "ionic_channel_reason": "\uad00\ud1b5 \uc131\ubd84 \uc5c6\uc74c (no_through_path) \u2014 SE \ub9dd\uc774 \ubc14\ub2e5 \ub760 \u2194 \uc704 \ub760\ub97c \uc787\uc9c0 \uc54a\ub294\ub2e4 \u00b7 \u03c3_ion = 0 (\ubb3c\ub9ac\uc801\uc73c\ub85c \uc633\uc740 \ub2f5 \u00b7 \uc22b\uc790 \ud544\ub4dc\ub294 None)",
+  "electronic_channel_verdict": "ok",
+  "electronic_channel_reason": "AM \ud0c0\uc785\uc774 \uc5c6\ub2e4 (\uc804\uc790\ub9dd \uc790\uccb4\uac00 \uc874\uc7ac\ud558\uc9c0 \uc54a\ub294 \ubca0\ub4dc)",
+  "thermal_channel_verdict": "ok",
+  "thermal_channel_reason": "\uc194\ubc84\uac00 \u03ba \ub97c None \uc73c\ub85c \ubc18\ud658 (\uc5f4\ub9dd \ubbf8\ud37c\ucf5c)",
+  "warnings": [
+    {
+      "type": "porosity_too_high",
+      "severity": "warning",
+      "msg": "Porosity=97.1% (>30%): \uc555\ucd95 \ubbf8\uc644\ub8cc \u2014 DEM settling \uc7ac\ud655\uc778"
+    }
+  ],
+  "warning_count": 1,
+  "network_solver_status": "success",
+  "failed_channels": null,
+  "network_run_id": "20261005T222410-3d9b1d14",
+  "active_network_run_id": "20261005T222410-3d9b1d14"
+}

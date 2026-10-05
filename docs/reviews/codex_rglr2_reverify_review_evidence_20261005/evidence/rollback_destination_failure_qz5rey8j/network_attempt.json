@@ -1,0 +1,24 @@
+{
+  "schema": "network_attempt/v2",
+  "network_attempt_run_id": "20261005T222412-eeff6077",
+  "solver_status": "failed",
+  "latest_attempt_status": "failed",
+  "failure_kind": "rollback_failed",
+  "reason": "\ucd5c\uadfc \uc2dc\ub3c4 success (network_attempt.json) \uc4f0\uae30 \uc911 OSError: review injection: success attempt write failure \u00b7 \u26a0 full_metrics \ub418\ub3cc\ub9bc \uc2e4\ud328 (PermissionError: review injection: full_metrics rollback destination unavailable) \u2192 \ud65c\uc131 \uc138\ub300 \ubb34\ud6a8 (\ub418\ub3cc\ub9bc \uc2e4\ud328 \u2014 \uac12 \uc778\uc6a9 \uae08\uc9c0 \u00b7 \uc7ac\uc2e4\ud589 \ud544\uc694 \u00b7 \ubcf5\uad6c \uc790\ub8cc ['.publish_backup_20261005T222412-eeff6077_full_metrics.json'])",
+  "stage": "Network publication (\uc2b9\uaca9 \u00b7 \uc2e4\ud328 \uc2dc \ub418\ub3cc\ub9bc)",
+  "active_network_run_id": "20261005T222412-d9dfa829",
+  "active_status": "invalid",
+  "previous_generation_kept": false,
+  "input_digests": {
+    "atoms.csv": "d8965a296bef61a0",
+    "contacts.csv": "df124fff3c39d5d5"
+  },
+  "code_sha": "unknown",
+  "attempted_at": "2026-10-05T22:24:13",
+  "argv": {
+    "type_map": "1:SE",
+    "scale": 1,
+    "contact_mode": "both"
+  },
+  "active_problem": "\ucd5c\uadfc \uc2dc\ub3c4 success (network_attempt.json) \uc4f0\uae30 \uc911 OSError: review injection: success attempt write failure \u00b7 \u26a0 full_metrics \ub418\ub3cc\ub9bc \uc2e4\ud328 (PermissionError: review injection: full_metrics rollback destination unavailable) \u2192 \ud65c\uc131 \uc138\ub300 \ubb34\ud6a8 (\ub418\ub3cc\ub9bc \uc2e4\ud328 \u2014 \uac12 \uc778\uc6a9 \uae08\uc9c0 \u00b7 \uc7ac\uc2e4\ud589 \ud544\uc694 \u00b7 \ubcf5\uad6c \uc790\ub8cc ['.publish_backup_20261005T222412-eeff6077_full_metrics.json'])"
+}

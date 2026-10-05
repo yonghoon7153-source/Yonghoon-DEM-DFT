@@ -1,0 +1,1 @@
+{"name": "synthetic_network", "created": "", "mode": "standard", "type_map": "1:SE,2:AM_P", "type_map_resolved": "1:SE,2:AM_P", "scale": 1, "files": ["atoms.csv", "contacts.csv", "input_params.json", "mesh_info.json"], "status": "uploaded"}

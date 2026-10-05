@@ -1,0 +1,209 @@
+{
+ "id": "lhs00_055",
+ "kind": "lhs",
+ "stop_after": "network",
+ "type_map": "1:AM_P,2:AM_S,3:SE",
+ "mode": "bimodal",
+ "type_map_fold": "",
+ "type_map_absent": "",
+ "same_frame": "ok",
+ "sha": {
+  "atom": "8474787170fe",
+  "contact": "30cd7bbd8cea",
+  "mesh": "5525d4be5323",
+  "deck": "29c515402359"
+ },
+ "contact_scan": {
+  "n_frames": 1,
+  "n_rows_last": 12254,
+  "n_unique_pairs": 12254,
+  "n_dup_pairs": 0,
+  "n_dup_rows": 0,
+  "n_self_pairs": 0,
+  "n_delta_nonpos": 0,
+  "delta_min": 2.62213e-08,
+  "n_periodic_flag": 993,
+  "has_delta_col": true,
+  "has_periodic_col": true
+ },
+ "cid": "lhs00_055",
+ "status": "done",
+ "success": true,
+ "failed_stages": [],
+ "returned_network_run_id": "20261005T220726-76499348",
+ "pipeline_s": 3.78,
+ "stages": [
+  {
+   "step": "Parse",
+   "rc": 0,
+   "ok": true,
+   "required": true,
+   "err": ""
+  },
+  {
+   "step": "Bimodal Contact Analysis",
+   "rc": 0,
+   "ok": true,
+   "required": true,
+   "err": ""
+  },
+  {
+   "step": "Coverage Physics vs Hertzian",
+   "rc": 0,
+   "ok": true,
+   "required": false,
+   "err": ""
+  },
+  {
+   "step": "Network Solver (both modes)",
+   "rc": 0,
+   "ok": true,
+   "required": true,
+   "err": ""
+  },
+  {
+   "step": "Network channel verdict (ionic/electronic/thermal)",
+   "rc": 0,
+   "ok": true,
+   "required": true,
+   "err": ""
+  },
+  {
+   "step": "Network stop contract (stop_after=network)",
+   "rc": 0,
+   "ok": true,
+   "required": true,
+   "err": ""
+  },
+  {
+   "step": "Network ionic record check (승격 전 공용 기술 검사 · RGLR2-01)",
+   "rc": 0,
+   "ok": true,
+   "required": true,
+   "err": ""
+  },
+  {
+   "step": "Network Merge",
+   "rc": 0,
+   "ok": null,
+   "required": null,
+   "err": ""
+  }
+ ],
+ "fm": {
+  "sigma_full_mScm": 0.014279,
+  "sigma_full_mScm_physics": 0.011931,
+  "electronic_sigma_full_mScm": 3.8446,
+  "electronic_sigma_full_mScm_physics": 2.634686,
+  "thermal_sigma_full_mScm": 23.566505,
+  "thermal_sigma_full_mScm_physics": 16.952057,
+  "network_run_id": "20261005T220726-76499348",
+  "active_network_run_id": "20261005T220726-76499348",
+  "network_solver_status": "success",
+  "stage_e_parent_network_run_id": null,
+  "porosity": 17.112851716742906,
+  "percolation_pct": 97.82674313311198,
+  "stress_cv": 128.75015575996935,
+  "constriction_power_share_ion_hertz": 0.874359,
+  "constriction_power_share_ion_physics": 0.891848,
+  "sigma_full_mScm_stage_e": null,
+  "sigma_full_status": "computed",
+  "sigma_full_status_physics": "computed"
+ },
+ "stage_e_ran": false,
+ "stage_e_missing": [
+  "sigma_full_mScm_stage_e",
+  "sigma_full_mScm_stage_e_physics",
+  "electronic_sigma_full_mScm_stage_e",
+  "electronic_sigma_full_mScm_stage_e_physics",
+  "thermal_sigma_full_mScm_stage_e"
+ ],
+ "provenance": {
+  "network_run_id": "20261005T220726-76499348",
+  "code_sha": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+  "stamped_at": "2026-10-05T22:07:27",
+  "solver_status": "success",
+  "solver": "network_conductivity.py",
+  "argv": {
+   "type_map": "1:AM_P,2:AM_S,3:SE",
+   "scale": 1000,
+   "contact_mode": "both"
+  },
+  "units_contract": "sim_to_real_v1",
+  "input_digests": {
+   "atoms.csv": "5a0e2fa57c926e64",
+   "contacts.csv": "35b71860b48793d2"
+  },
+  "provenance_state": "valid"
+ },
+ "attempt": {
+  "schema": "network_attempt/v2",
+  "network_attempt_run_id": "20261005T220726-76499348",
+  "solver_status": "success",
+  "latest_attempt_status": "success",
+  "failure_kind": "",
+  "reason": "",
+  "stage": "",
+  "active_network_run_id": "20261005T220726-76499348",
+  "active_status": "success",
+  "previous_generation_kept": null,
+  "input_digests": {
+   "atoms.csv": "5a0e2fa57c926e64",
+   "contacts.csv": "35b71860b48793d2"
+  },
+  "code_sha": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+  "attempted_at": "2026-10-05T22:07:27",
+  "argv": {
+   "type_map": "1:AM_P,2:AM_S,3:SE",
+   "scale": 1000,
+   "contact_mode": "both"
+  }
+ },
+ "status_view": {
+  "active_network_run_id": "20261005T220726-76499348",
+  "active_status": "success",
+  "active_problem": "",
+  "latest_attempt_run_id": "20261005T220726-76499348",
+  "latest_attempt_status": "success",
+  "failure_kind": "",
+  "latest_attempt_stage": "",
+  "latest_attempt_reason": "",
+  "stale": false
+ },
+ "dual": {
+  "hertzian": {
+   "sigma_full": 0.00475983,
+   "sigma_full_mScm": 0.014279,
+   "sigma_full_status": "computed",
+   "sigma_full_reason": null,
+   "boundary_rule": "L0",
+   "percolating_fraction": 0.9783,
+   "phi_se": 0.174
+  },
+  "physics": {
+   "sigma_full": 0.00397708,
+   "sigma_full_mScm": 0.011931,
+   "sigma_full_status": "computed",
+   "sigma_full_reason": null,
+   "boundary_rule": "L0",
+   "percolating_fraction": 0.9783,
+   "phi_se": 0.174
+  }
+ },
+ "tau": {
+  "case": "lhs00_055",
+  "f_ion_hertz": 0.004591902353915725,
+  "f_ion_hertz_gap": 0.00475983,
+  "tau2_ion_hertz": 36.56178535078713,
+  "tau_ion_hertz": 6.046634216718185,
+  "ion_net_status_hertz": "OK",
+  "ion_net_status_reason_hertz": "",
+  "f_ion_physics": 0.0038367679126588873,
+  "f_ion_physics_gap": 0.00397708,
+  "tau2_ion_physics": 43.75770232588661,
+  "tau_ion_physics": 6.61496049314632,
+  "ion_net_status_physics": "OK",
+  "ion_net_status_reason_physics": ""
+ },
+ "collector": "해당 없음 — 웹앱 망 경로에는 STEP3 집전체 (collector) 가 없다 (계획/미계획 = mpm_webapp_payload 생산자 · 이 시험 밖)"
+}

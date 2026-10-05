@@ -1,0 +1,44 @@
+{
+ "schema": "lhs_webapp_batch/v1",
+ "cases": {
+  "lhs00_000": {
+   "case": "lhs00_000",
+   "status": "done",
+   "network_run_id": "r1"
+  }
+ },
+ "stop_after": "network",
+ "harvest_dir": "sealed_harvest",
+ "cohort": "sealed_cohort",
+ "runs": [
+  {
+   "git_sha": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+   "dirty": false,
+   "case": "lhs00_000"
+  },
+  {
+   "git_sha": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+   "dirty": true,
+   "case": "lhs00_000"
+  }
+ ],
+ "parallel": {
+  "launcher": "network_parallel_launcher/v1",
+  "manifest": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rglr2_reverify_20261005\\evidence\\launcher_merge_ape1juz1\\manifest.json",
+  "git_sha": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+  "lanes": 20,
+  "network_lock": "per-case",
+  "thread_env": {
+   "OMP_NUM_THREADS": "1",
+   "MKL_NUM_THREADS": "1",
+   "OPENBLAS_NUM_THREADS": "1",
+   "NUMEXPR_NUM_THREADS": "1",
+   "VECLIB_MAXIMUM_THREADS": "1"
+  },
+  "merged_at": "2026-10-05T22:31:13",
+  "n_cases": 1,
+  "counts": {
+   "done": 1
+  }
+ }
+}

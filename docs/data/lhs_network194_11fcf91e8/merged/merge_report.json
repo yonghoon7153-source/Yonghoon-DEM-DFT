@@ -1,0 +1,55 @@
+{
+ "schema": "network_parallel_launcher/v1#merge",
+ "merged_at": "2026-10-05T22:49:21",
+ "git_sha": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+ "cohorts": {
+  "lhs": {
+   "n": 130,
+   "counts": {
+    "done": 130
+   },
+   "n_rows": 130,
+   "wall_s": {
+    "median": 71.6,
+    "p90": 198.2,
+    "max": 345.25,
+    "sum": 10823.3
+   },
+   "peak_rss_mb": {
+    "median": 807.5,
+    "max": 1937.7
+   },
+   "rss_over_est": {
+    "median": 1.1,
+    "max": 2.116
+   }
+  },
+  "lhsx": {
+   "n": 64,
+   "counts": {
+    "done": 64
+   },
+   "n_rows": 64,
+   "wall_s": {
+    "median": 156.2,
+    "p90": 435.4,
+    "max": 718.1,
+    "sum": 13087.7
+   },
+   "peak_rss_mb": {
+    "median": 1386.1,
+    "max": 2589.6
+   },
+   "rss_over_est": {
+    "median": 1.4,
+    "max": 2.554
+   }
+  }
+ },
+ "code_changed_since_launch": [],
+ "structural": [],
+ "mixed_generation": [],
+ "anomalies": [],
+ "failures": [],
+ "allow_mixed_generation": false
+}

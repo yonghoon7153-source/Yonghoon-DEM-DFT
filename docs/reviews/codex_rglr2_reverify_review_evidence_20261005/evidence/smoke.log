@@ -1,0 +1,20 @@
+  ✓ 판정 C1 — ×4 가 done 이면 FAIL · failed 면 PASS · 양성 대조가 done 이 아니면 FAIL
+  ✓ 판정 C2 — 섞인 세대 + kept True · active success = FAIL (수정 전 모양) · kept False · rollback_failed = PASS · 주입 안 됨 = FAIL
+  ✓ 판정 C3 — CV 100 computed = FAIL · CV 0 = PASS (zero) · null = PASS (null) / FAIL (zero)
+Traceback (most recent call last):
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\rglr2_reverify_20261005\source\scripts\wsl_network_smoke.py", line 750, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\rglr2_reverify_20261005\source\scripts\wsl_network_smoke.py", line 739, in main
+    return _selftest()
+           ^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\rglr2_reverify_20261005\source\scripts\wsl_network_smoke.py", line 677, in _selftest
+    rc = run_smoke(a, jobs, out=lambda *x, **k: print(*x))
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\rglr2_reverify_20261005\source\scripts\wsl_network_smoke.py", line 582, in run_smoke
+    t = run_child(root, spec, py)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\rglr2_reverify_20261005\source\scripts\wsl_network_smoke.py", line 550, in run_child
+    _pid, status, ru = os.wait4(p.pid, 0)
+                       ^^^^^^^^
+AttributeError: module 'os' has no attribute 'wait4'. Did you mean: 'write'?

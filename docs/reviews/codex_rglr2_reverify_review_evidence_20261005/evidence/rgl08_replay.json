@@ -1,0 +1,22 @@
+[
+  {
+    "name": "baseline",
+    "accepted": true,
+    "reason": "ok"
+  },
+  {
+    "name": "missing_tau_inputs",
+    "accepted": false,
+    "reason": "⑥ full_metrics 의 망 소유 키가 이번 세대 투영과 다르다 (옛 세대 값 · 복사 어긋남): ['sigma_full', 'sigma_full_physics', 'temperature_provenance', 'sigma_grain_S_cm']; ⑦ hertzian: τ 인계 입력 키 없음 ['sigma_full', 'percolating_fraction', 'temperature_provenance', 'sigma_grain_S_cm']; ③ hertzian: 기술적 입력 무효 — invalid_input: computed 인데 σ_ratio (sigma_full) None — 유한 양수여야 · 관통 분율 None — (0, 1] 밖 · σ₀ (sigma_grain_S_cm) None — 없거나 양수가 아니어서 두 표현 항등식을 검산할 수 없다; ⑦ physics: τ 인계 입력 키 없음 ['sigma_full', 'percolating_fraction', 'temperature_provenance', 'sigma_grain_S_cm']; ③ physics: 기술적 입력 무효 — invalid_input: computed 인데 σ_ratio (sigma_full) None — 유한 양수여야 · 관통 분율 None — (0, 1] 밖 · σ₀ (sigma_grain_S_cm) None — 없거나 양수가 아니어서 두 표현 항등식을 검산할 수 없다; ⑦ τ 인계 hertz: NOT_COMPUTED (missing_input) — 기술적 결손 (등록된 과학적 HOLD 아님); ⑦ τ 인계 physics: NOT_COMPUTED (missing_input) — 기술적 결손 (등록된 과학적 HOLD 아님)"
+  },
+  {
+    "name": "permode_vs_dual_disagree",
+    "accepted": false,
+    "reason": "⑥ network_conductivity_physics.json ≠ dual[physics] (정본 = dual · 모드 파일 · legacy 는 그 사본이어야 한다)"
+  },
+  {
+    "name": "percolating_power_missing",
+    "accepted": false,
+    "reason": "④ constriction_power_share_ion_hertz: 관통 해인데 값 None · 상태 'internal_solver_exception' (0–1 · computed 여야 — 내부 예외 · 풀이 실패는 거부); ④ constriction_power_share_ion_physics: 관통 해인데 값 None · 상태 'internal_solver_exception' (0–1 · computed 여야 — 내부 예외 · 풀이 실패는 거부)"
+  }
+]

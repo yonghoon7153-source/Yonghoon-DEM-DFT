@@ -1,0 +1,36 @@
+{
+ "schema": "network_parallel_launcher/v1#merge",
+ "merged_at": "2026-10-05T22:31:13",
+ "git_sha": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+ "cohorts": {
+  "lhs": {
+   "n": 1,
+   "counts": {
+    "done": 1
+   },
+   "n_rows": 1,
+   "wall_s": {
+    "median": null,
+    "p90": null,
+    "max": null,
+    "sum": 0
+   },
+   "peak_rss_mb": {
+    "median": null,
+    "max": null
+   },
+   "rss_over_est": {
+    "median": null,
+    "max": null
+   }
+  }
+ },
+ "code_changed_since_launch": [
+  "scripts/network_conductivity.py"
+ ],
+ "structural": [],
+ "mixed_generation": [],
+ "anomalies": [],
+ "failures": [],
+ "allow_mixed_generation": false
+}

@@ -1,0 +1,62 @@
+{
+  "commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+  "scope": "review output only; production registry unchanged",
+  "verdict": "HOLD (194 handover / deployment)",
+  "new_p1": 0,
+  "existing": [
+    {
+      "id": "RGLR2-01",
+      "status": "closed",
+      "scope": "shared prepublication ionic record validation"
+    },
+    {
+      "id": "RGLR2-02",
+      "status": "closed",
+      "scope": "rollback failure detection/isolation in guarded consumers; not atomic publication"
+    },
+    {
+      "id": "RGLR2-03",
+      "status": "closed",
+      "scope": "stable diagonal VM calculation with K=2^20"
+    },
+    {
+      "id": "RGL-06",
+      "status": "closed",
+      "scope": "invalid input, zero scale, parser linkage; frame_unverified and LW exclusion remain"
+    },
+    {
+      "id": "RGL-08",
+      "status": "closed",
+      "scope": "producer network-stop input/copy/null contract"
+    }
+  ],
+  "findings": [
+    {
+      "id": "RGLR3-01",
+      "severity": "P2",
+      "status": "open",
+      "title": "Same-HEAD dirty retry bypasses launch code fingerprint",
+      "file": "scripts/run_network_194_parallel.py",
+      "line": 967,
+      "evidence": "evidence/new_probes.json:launcher"
+    },
+    {
+      "id": "RGLR3-02",
+      "severity": "P2",
+      "status": "open",
+      "title": "Tau handover P3 accepts changed dual boundary and sigma0 while batch copies stay unchanged",
+      "file": "scripts/lhs_design_dataset.py",
+      "line": 1629,
+      "evidence": "evidence/new_probes.json:tau"
+    },
+    {
+      "id": "RGLR3-03",
+      "severity": "P3",
+      "status": "open",
+      "title": "Printed follow-up handover command omits tau and --tau-results",
+      "file": "scripts/run_network_194_parallel.py",
+      "line": 864,
+      "evidence": "evidence/new_probes.json:launcher.followups"
+    }
+  ]
+}

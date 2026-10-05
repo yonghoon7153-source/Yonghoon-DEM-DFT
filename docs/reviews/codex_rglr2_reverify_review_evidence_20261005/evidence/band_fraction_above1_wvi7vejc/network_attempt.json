@@ -1,0 +1,23 @@
+{
+  "schema": "network_attempt/v2",
+  "network_attempt_run_id": "20261005T222411-322023fd",
+  "solver_status": "failed",
+  "latest_attempt_status": "failed",
+  "failure_kind": "candidate_rejected",
+  "reason": "Network stop contract (stop_after=network): \u2605 \ub9dd \uc815\uc9c0 \uacc4\uc57d \uc2e4\ud328: \u2462 hertzian: \uae30\uc220\uc801 \uc785\ub825 \ubb34\ud6a8 \u2014 invalid_input: computed \uc778\ub370 \uad00\ud1b5 \ubd84\uc728 2 \u2014 (0, 1] \ubc16; \u2462 physics: \uae30\uc220\uc801 \uc785\ub825 \ubb34\ud6a8 \u2014 invalid_input: computed \uc778\ub370 \uad00\ud1b5 \ubd84\uc728 2 \u2014 (0, 1] \ubc16; \u2466 \u03c4 \uc778\uacc4 hertz: NOT_COMPUTED (invalid_input: computed \uc778\ub370 \uad00\ud1b5 \ubd84\uc728 2 \u2014 (0, 1] \ubc16) \u2014 \uae30\uc220\uc801 \uacb0\uc190 (\ub4f1\ub85d\ub41c \uacfc\ud559\uc801 HOLD \uc544\ub2d8); \u2466 \u03c4 \uc778\uacc4 physics: NOT_COMPUTED (invalid_input: computed \uc778\ub370 \uad00\ud1b5 \ubd84\uc728 2 \u2014 (0, 1] \ubc16) \u2014 \uae30\uc220\uc801 \uacb0\uc190 (\ub4f1\ub85d\ub41c \uacfc\ud559\uc801 HOLD \uc544\ub2d8)",
+  "stage": "Network stop contract (stop_after=network)",
+  "active_network_run_id": null,
+  "active_status": "none",
+  "previous_generation_kept": false,
+  "input_digests": {
+    "atoms.csv": "9b04cb13d56f5952",
+    "contacts.csv": "7d1506ed544f208f"
+  },
+  "code_sha": "unknown",
+  "attempted_at": "2026-10-05T22:24:11",
+  "argv": {
+    "type_map": "1:SE",
+    "scale": 1,
+    "contact_mode": "both"
+  }
+}

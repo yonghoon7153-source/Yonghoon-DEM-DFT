@@ -1,0 +1,30 @@
+{
+  "counts": {
+    "positive": 648,
+    "rounded_zero": 288,
+    "positive_rejected": 0,
+    "zero_accepted": 0
+  },
+  "worst": {
+    "ratio": 0.9872210615678688,
+    "exact_diff": 5.644698125617233e-07,
+    "tolerance": 5.71776509371926e-07,
+    "rec": {
+      "sigma_full_status": "computed",
+      "sigma_full": 1e-07,
+      "sigma_full_mScm": 2e-06,
+      "percolating_fraction": 1.0,
+      "sigma_grain_S_cm": 0.014355301874382767
+    }
+  },
+  "positive_rejections": [],
+  "fixture_tolerance": 5.150000000853491e-07,
+  "fixture_quantization_only": 5.149999999999999e-07,
+  "inside_problem": null,
+  "outside_problem": [
+    "invalid_input",
+    "\ub450 \u03c3 \ud45c\ud604 \ubd88\uc77c\uce58 (RGLR-02): \u03c3_dim 0.012012155515000084 mS/cm \u2260 1000\u00b7\u03c3\u2080\u00b7\u03c3_ratio = 0.012011639999999999 (|\ucc28| 5.15515e-07 > \ud5c8\uc6a9 5.15e-07 \u2014 \uc800\uc7a5 \uc815\ubc00\ub3c4 8 \u00b7 6 \uc790\ub9ac \ubc18\uc62c\ub9bc \ubc16)"
+  ],
+  "numpy": "2.5.3",
+  "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]"
+}

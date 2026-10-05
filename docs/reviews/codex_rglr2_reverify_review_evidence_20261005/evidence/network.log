@@ -1,0 +1,42 @@
+  PASS  SIGMA_BULK_DEFAULT is bitwise 3.0e-3 (= the pre-2026-07-28 literal) — 0x1.89374bc6a7efap-9
+  PASS  … and it IS the shared se_material constant
+  PASS  σ_e prefactor untouched (Reisacher: ohmic regime T-independent)
+  PASS  thermal prefactor untouched (no κ(T) anchor, §F1)
+  PASS  σ_grain_S_cm(None) is bitwise the default
+  PASS  --temp-c 30 → σ_grain x1.28 — x1.2796
+  PASS  --temp-c 45 → σ_grain x2.56 — x2.5555
+  PASS  --temp-c 60 → σ_grain x4.79 — x4.7851
+  PASS  mS/cm readout is exactly linear in σ_grain (same-T ratios cancel T)
+  PASS  provenance OFF/ON contract
+NETWORK TEMP SELFTEST PASS
+  PASS  1) ionic: None → valid_null (실패 아님)
+  PASS  2) ionic: 0 → valid_zero (미퍼콜의 정상 답)
+  PASS  2b) ionic: 0.0 (float) 도 valid_zero
+  PASS  3) ionic: 유한값 → computed, reason 없음
+  PASS  3b) ★ ionic: NaN → failed (미퍼콜이 아니라 수치 실패다)
+  PASS  3c) ★ ionic: inf → failed
+  PASS  1) electronic: None → valid_null (실패 아님)
+  PASS  2) electronic: 0 → valid_zero (미퍼콜의 정상 답)
+  PASS  2b) electronic: 0.0 (float) 도 valid_zero
+  PASS  3) electronic: 유한값 → computed, reason 없음
+  PASS  3b) ★ electronic: NaN → failed (미퍼콜이 아니라 수치 실패다)
+  PASS  3c) ★ electronic: inf → failed
+  PASS  4) 모든 반환 상태가 CHANNEL_STATES 안에 있다
+  PASS  4b) ★ 값 분류를 _sigma_status 와 공유한다 (파일 안 중복 판정 금지)
+  PASS  5) ★ ionic/electronic 의 미퍼콜(valid_zero·valid_null·no_result)이 게이트에서 ok
+  PASS  6) ★ failed 는 게이트에서 fail (솔버 예외는 실패다)
+  PASS  7) ★ AM 이 없는 베드(not_applicable)도 ok
+  PASS  8) 이 파일이 쓰는 상태가 전부 게이트에 알려져 있다 (unknown 0)
+  PASS  9) ★ RGL-02 비관통 사유 · 전력 몫 사유 어휘가 정지 계약 (pipeline_service) 과 같다
+  PASS  #1: 두 mode 가 **같은 간선 집합**을 만든다 (target_types 가 전부라 위상 불변)
+  PASS  #1: ★ AM-AM 저항이 thermal 에서 ~5.7배 작다 (옛 코드는 동일했다)
+  PASS  #1: SE-SE 는 두 mode 가 같다 (기준상이라 k_weight=1)
+  PASS  #1: is_thermal 플래그가 mode 에서 직접 선다
+  PASS  #A2: 전자망 호출이 mode='electronic' 로 도달한다 (옛 판은 'ionic' 이었다): 'electronic'
+  PASS  #A2: 기본 경로는 여전히 ionic (하위호환): 'ionic'
+  PASS  #A2: mode 를 바꿔도 σ_e 가 **비트 단위 동일** (수치 중립): np.float64(0.212695) vs np.float64(0.212695)
+  PASS  #BF: boundary_factor 가 경계 집합을 실제로 바꾼다 (6.0 → (7, 7) · 3.0 → (4, 4))
+  PASS  #BF: 넓은 밴드가 더 많이 잡는다 (7 > 4)
+  PASS  #BF: bottom∩top 겹침이 호출자까지 올라온다 (None 이면 조용한 실패): 0
+  PASS  #BF: ⚠ 경계가 3 미만이면 폴백(15/85 %)이 factor 를 **덮는다** — 작은 망에서는 무효
+NETWORK STATUS SELFTEST PASS (30/30)

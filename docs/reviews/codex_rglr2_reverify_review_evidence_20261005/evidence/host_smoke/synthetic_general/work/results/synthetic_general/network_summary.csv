@@ -1,0 +1,41 @@
+지표,값
+── 구조 ──,
+Porosity(%),91.2
+전극두께(μm),20.0
+── 계면 ──,
+AM-SE Total(μm²),0.0
+SE-SE Total(μm²),2000000000000.0
+Binding % — AM-SE (H/L/T/V/G),-
+Binding % — Total (H/L/T/V/G),-
+Coverage AM_P(%),0.0
+── 이온경로: 연결성 ──,
+SE-SE CN mean,1.9
+SE-SE CN std,0.29
+SE Cluster 수,1(≥10) / 1
+SE Percolation(%),100.0
+Top Reachable(%),100.0
+── 이온경로: 경로 효율 ──,
+Tortuosity mean,1.0
+Tortuosity median,1.0
+Tortuosity std,
+GB Density(hops/μm),1.0
+── 이온경로: 경로 품질 ──,
+Path Hop Area mean(μm²),100000000000.0
+Path Bottleneck(μm²),100000000000.0
+Path Conductance(μm²),5578632037.610367
+── 활성도 ──,
+AM-SE CN mean,0.0
+Ionic Active AM(%),0.0
+Ionic Isolated AM(%),100.0
+  ├ Isolated: SE not linked(%),0.0
+  └ Isolated: no SE contact(%),100.0
+AM Vulnerable(%),100.0
+── 이온전도 ──,
+SE Volume Fraction,0.044
+σ_Bruggeman (mS/cm),0.1319
+σ_brug/σ_grain (Bruggeman),0.044
+── 응력 ──,
+Stress CV(%),—
+σ_AM_P/σ_mean,—
+σ_SE/σ_mean,—
+Stress CV 상태 (50/50 · LHS-33),unavailable_no_c_strs — c_strs 열 없음 — 원자 덤프 (atoms.csv) 에 c_strs[1–3] 세 열이 다 없다 (옛 덱 · 손 픽스처)

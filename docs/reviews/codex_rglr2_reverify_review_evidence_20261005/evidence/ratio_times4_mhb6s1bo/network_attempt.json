@@ -1,0 +1,23 @@
+{
+  "schema": "network_attempt/v2",
+  "network_attempt_run_id": "20261005T222410-3873d71e",
+  "solver_status": "failed",
+  "latest_attempt_status": "failed",
+  "failure_kind": "candidate_rejected",
+  "reason": "Network stop contract (stop_after=network): \u2605 \ub9dd \uc815\uc9c0 \uacc4\uc57d \uc2e4\ud328: \u2462 hertzian: \uae30\uc220\uc801 \uc785\ub825 \ubb34\ud6a8 \u2014 invalid_input: \ub450 \u03c3 \ud45c\ud604 \ubd88\uc77c\uce58 (RGLR-02): \u03c3_dim 0.012012 mS/cm \u2260 1000\u00b7\u03c3\u2080\u00b7\u03c3_ratio = 0.048046559999999995 (|\ucc28| 0.0360346 > \ud5c8\uc6a9 5.15e-07 \u2014 \uc800\uc7a5 \uc815\ubc00\ub3c4 8 \u00b7 6 \uc790\ub9ac \ubc18\uc62c\ub9bc \ubc16); \u2462 physics: \uae30\uc220\uc801 \uc785\ub825 \ubb34\ud6a8 \u2014 invalid_input: \ub450 \u03c3 \ud45c\ud604 \ubd88\uc77c\uce58 (RGLR-02): \u03c3_dim 0.011815 mS/cm \u2260 1000\u00b7\u03c3\u2080\u00b7\u03c3_ratio = 0.047258400000000006 (|\ucc28| 0.0354434 > \ud5c8\uc6a9 5.15e-07 \u2014 \uc800\uc7a5 \uc815\ubc00\ub3c4 8 \u00b7 6 \uc790\ub9ac \ubc18\uc62c\ub9bc \ubc16); \u2466 \u03c4 \uc778\uacc4 hertz: NOT_COMPUTED (invalid_input: \ub450 \u03c3 \ud45c\ud604 \ubd88\uc77c\uce58 (RGLR-02): \u03c3_dim 0.012012 mS/cm \u2260 1000\u00b7\u03c3\u2080\u00b7\u03c3_ratio = 0.048046559999999995 (|\ucc28| 0.0360346 > \ud5c8\uc6a9 5.15e-07 \u2014 \uc800\uc7a5 \uc815\ubc00\ub3c4 8 \u00b7 6 \uc790\ub9ac \ubc18\uc62c\ub9bc \ubc16)) \u2014 \uae30\uc220\uc801 \uacb0\uc190 (\ub4f1\ub85d\ub41c \uacfc\ud559\uc801 HOLD \uc544\ub2d8); \u2466 \u03c4 \uc778\uacc4 physics: NOT_COMPUTED (invalid_input: \ub450 \u03c3 \ud45c\ud604 \ubd88\uc77c\uce58 (RGLR-02): \u03c3_dim 0.011815 mS/cm \u2260 1000\u00b7\u03c3\u2080\u00b7\u03c3_ratio = 0.047258400000000006 (|\ucc28| 0.0354434 > \ud5c8\uc6a9 5.15e-07 \u2014 \uc800\uc7a5 \uc815\ubc00\ub3c4 8 \u00b7 6 \uc790\ub9ac \ubc18\uc62c\ub9bc \ubc16)) \u2014 \uae30\uc220\uc801 \uacb0\uc190 (\ub4f1\ub85d\ub41c \uacfc\ud559\uc801 HOLD \uc544\ub2d8)",
+  "stage": "Network stop contract (stop_after=network)",
+  "active_network_run_id": null,
+  "active_status": "none",
+  "previous_generation_kept": false,
+  "input_digests": {
+    "atoms.csv": "d8965a296bef61a0",
+    "contacts.csv": "d8886e55a0205e3d"
+  },
+  "code_sha": "unknown",
+  "attempted_at": "2026-10-05T22:24:10",
+  "argv": {
+    "type_map": "1:SE",
+    "scale": 1,
+    "contact_mode": "both"
+  }
+}

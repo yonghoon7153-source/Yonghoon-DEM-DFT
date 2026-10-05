@@ -1,0 +1,22 @@
+{
+  "network_cases": 16,
+  "all_cases_without_harness_error": true,
+  "positive_statuses": {
+    "positive": "done",
+    "no_through": "done",
+    "legitimate_band": "done"
+  },
+  "general_bad_statuses": {
+    "general_ratio_times4": "failed",
+    "general_band_ratio_missing": "failed"
+  },
+  "rollback": {
+    "failure_kind": "rollback_failed",
+    "kept": false,
+    "active": "invalid",
+    "raw_grade_tau2": 15.0710327185347,
+    "guarded_grade_tau2": null,
+    "tau_status": "NOT_COMPUTED",
+    "problem": "중단된 게시 · 풀이 흔적 ['.publish_backup_20261005T222412-eeff6077_full_metrics.json'] — 진행 중이거나 중단됐다 (재실행 필요); full_metrics 의 망 세대 '20261005T222412-eeff6077' ≠ 도장 '20261005T222412-d9dfa829' — 파일들이 서로 다른 세대를 가리킨다 (되돌림 실패 · 중단된 게시); 최근 시도 '20261005T222412-eeff6077' 가 활성 세대를 무효로 남겼다 (rollback_failed: 최근 시도 success (network_attempt.json) 쓰기 중 OSError: review injection: success attempt write failure · ⚠ full_metrics 되돌림 실패 (PermissionError: review injection: f) — 성공한 재계산 전까지 무효"
+  }
+}

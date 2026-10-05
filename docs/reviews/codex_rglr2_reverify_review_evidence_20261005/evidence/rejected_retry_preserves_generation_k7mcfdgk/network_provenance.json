@@ -1,0 +1,17 @@
+{
+  "network_run_id": "20261005T222411-c7082eca",
+  "code_sha": "unknown",
+  "stamped_at": "2026-10-05T22:24:11",
+  "solver_status": "success",
+  "solver": "network_conductivity.py",
+  "argv": {
+    "type_map": "1:SE",
+    "scale": 1,
+    "contact_mode": "both"
+  },
+  "units_contract": "sim_to_real_v1",
+  "input_digests": {
+    "atoms.csv": "d8965a296bef61a0",
+    "contacts.csv": "d8886e55a0205e3d"
+  }
+}
