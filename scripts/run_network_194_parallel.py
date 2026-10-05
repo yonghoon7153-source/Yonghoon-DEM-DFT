@@ -99,12 +99,13 @@ HANDOVER_GROUPS = 'contact,percolation,f1,fracture,area'
 THREAD_ENV = {'OMP_NUM_THREADS': '1', 'MKL_NUM_THREADS': '1', 'OPENBLAS_NUM_THREADS': '1',
               'NUMEXPR_NUM_THREADS': '1', 'VECLIB_MAXIMUM_THREADS': '1'}
 
-#: ⑤ 메모리 · 시간 추정 — real_14 (접촉 106,563 · 원자 33,289) 를 `stop_after='network'` 로 돌린 실측 (10-05 · 이 세션 컨테이너 ·
-#:   BLAS 스레드 기본값 · 다른 작업과 경쟁): 최대 RSS 549 MB (자식 중 최대) · 경과 294 s · 결과 폴더 67 MB.
-#:   ⚠ 추정은 입장 관문과 계획 출력에만 쓴다 (값에 영향 없음) — WSL 실측 (worker.json) 으로 고칠 것.
+#: ⑤ 메모리 · 시간 추정 — real_14 (접촉 106,563 · 원자 33,289) 를 `stop_after='network'` 로 돌린 실측 (10-05 · 이 세션 컨테이너):
+#:   `wsl_network_smoke.py` 자식 (단일 스레드 env) = 경과 73.4 s · 최대 RSS 550 MB · 결과 폴더 67 MB
+#:   (같은 날 BLAS 기본 스레드 · 다른 작업과 경쟁한 실행 = 294 s · 549 MB — 시간은 경쟁 탓 · 메모리는 같다).
+#:   ⚠ 추정은 입장 관문과 계획 출력에만 쓴다 (값에 영향 없음) — WSL 실측 (worker.json · progress.tsv) 으로 고칠 것.
 MEM_BASE_MB = 150.0
-MEM_PER_KCONTACT_MB = 4.5               # 150 + 4.5 × 106.6 = 630 MB (실측 549 — 15 % 여유)
-TIME_PER_KCONTACT_S = 2.8               # 294 s / 106.6 k (컨테이너 · 다중 스레드 BLAS — 단일 스레드 WSL 은 더 느릴 수 있다)
+MEM_PER_KCONTACT_MB = 4.5               # 150 + 4.5 × 106.6 = 630 MB (실측 550 — 15 % 여유)
+TIME_PER_KCONTACT_S = 0.7               # 73.4 s / 106.6 k (컨테이너 · 단일 스레드 · 경쟁 없음 — WSL 실측으로 고칠 것)
 DISK_PER_CONTACT_B = 700                # 67 MB / 106.6 k ≈ 630 B (atoms.csv · contacts.csv · *_analyzed.csv 가 대부분)
 
 #: 해시로 남기는 코드 — σ 를 바꿀 수 있는 모듈 (`seal_s3_prerun.NUMERIC_MODULES`) + 망 경로 · 배치 · 소비자.
