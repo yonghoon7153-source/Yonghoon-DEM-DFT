@@ -1,0 +1,99 @@
+{
+ "arrays": {
+  "A0_their_box_seed0": {
+   "npy_sha256": "916ac3733713bc49618ccfdee0aa1090372d05b4cc01fabcfe89b7f40a6cd4f9",
+   "raw_float64_le_sha256": "6b9d62ada1cf8a11a8a899f6131356da6aaa6e51721ce1d7d2df1737a222839b",
+   "shape": [
+    64,
+    4
+   ]
+  },
+  "A0_their_box_seed1": {
+   "npy_sha256": "0e8daccaf05476af5324fb3f4d227b3a1781fc980f19576af8f6132f0ebef445",
+   "raw_float64_le_sha256": "569ecedbb2404e8f1df8c0abe5ec7cad924ea9699fb2342ae0f4195d95d79812",
+   "shape": [
+    64,
+    4
+   ]
+  },
+  "A1_A2_wide_box_seed0": {
+   "npy_sha256": "2e7ba141ddf09bac178bed803bfd82049116ede2691a5758b1055c1e730708d4",
+   "raw_float64_le_sha256": "597d508bfd67497696a07ae73f1fdc4dc7a0d2b72ae608e0390673996e87c2aa",
+   "shape": [
+    64,
+    4
+   ]
+  },
+  "A1_A2_wide_box_seed1": {
+   "npy_sha256": "72a3372631a51496e452a26cae3a96ad65582d8c4385bae99a749900fb88b872",
+   "raw_float64_le_sha256": "8f45db97c6ef4335043803a8e9564f6e3254d99f0f82cf5d188a1c4875f52193",
+   "shape": [
+    64,
+    4
+   ]
+  },
+  "unit_seed0": {
+   "npy_sha256": "e8ca4cc02dfc2f8c5ad6bc906f4452991c93427df3c10b1997419b5207f34bf7",
+   "raw_float64_le_sha256": "61cc7df6394db515fc6f1a161f68713e57b5925b28488a3b5ccbd6b2336dd563",
+   "shape": [
+    64,
+    4
+   ]
+  },
+  "unit_seed1": {
+   "npy_sha256": "870eec2c46821e153692f503066e5506fb8d0fb236657f7572c65304181b01c3",
+   "raw_float64_le_sha256": "2dc1036459e806cb3c485bd289b1f138b1ca5fe42b3253d02d994a3cc15d47fc",
+   "shape": [
+    64,
+    4
+   ]
+  }
+ },
+ "boxes": {
+  "A0_their_box": [
+   [
+    0.6,
+    0.5,
+    0.005,
+    0.0
+   ],
+   [
+    1.1,
+    1.1,
+    0.5,
+    1.0
+   ]
+  ],
+  "A1_A2_wide_box": [
+   [
+    0.3,
+    0.3,
+    -0.5,
+    -0.5
+   ],
+   [
+    1.5,
+    1.5,
+    1.5,
+    1.5
+   ]
+  ]
+ },
+ "call": "scipy.stats.qmc.Sobol(d=4, scramble=True, rng=<seed>).random_base2(m=6)",
+ "legacy_seed_keyword": {
+  "seed0": {
+   "rng_default_rng_same_array_as_rng_int": true,
+   "seed_keyword_same_array_as_rng": false,
+   "seed_keyword_warnings": []
+  },
+  "seed1": {
+   "rng_default_rng_same_array_as_rng_int": true,
+   "seed_keyword_same_array_as_rng": false,
+   "seed_keyword_warnings": []
+  }
+ },
+ "seal_note": "식별 — 정식 봉인은 부속 B §2-1 의 '맞춤 전 (P0 뒤 · 첫 지역 실행 전)' 에 같은 판에서 다시 만들어 이 sha256 과 대조",
+ "seed_keyword": "rng",
+ "signature": "(d: int | numpy.integer, *, scramble: bool = True, bits: int | numpy.integer | None = None, rng: int | numpy.integer | numpy.random._generator.Generator | numpy.random.mtrand.RandomState | None = None, optimization: Optional[Literal['random-cd', 'lloyd']] = None, seed=None) -> None",
+ "warnings": []
+}

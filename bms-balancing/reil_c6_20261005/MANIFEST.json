@@ -1,0 +1,12 @@
+{
+ "COBYQA_OPTIONS.json": "0317d11b240a948f86b75f049a75cef59a6673a7585fb32f8257901d99b9ee14",
+ "PROFILE.json": "c9449c284d755363c75848ad4c6d0582bdb7b6c1799674646b13ed2dfc49191d",
+ "REIL_C6.lock.txt": "caef852326c66d09c1701c22b0b82f7b7ca489b65ce9077bc3a4720375aac0d8",
+ "SOBOL_PHASE_A.json": "887654728fc3d58c4a7c596e3254560a2d48a07dca0e1a50d7d4da007e18cc52",
+ "sobol_A0_their_box_seed0.npy": "916ac3733713bc49618ccfdee0aa1090372d05b4cc01fabcfe89b7f40a6cd4f9",
+ "sobol_A0_their_box_seed1.npy": "0e8daccaf05476af5324fb3f4d227b3a1781fc980f19576af8f6132f0ebef445",
+ "sobol_A1_A2_wide_box_seed0.npy": "2e7ba141ddf09bac178bed803bfd82049116ede2691a5758b1055c1e730708d4",
+ "sobol_A1_A2_wide_box_seed1.npy": "72a3372631a51496e452a26cae3a96ad65582d8c4385bae99a749900fb88b872",
+ "sobol_unit_seed0.npy": "e8ca4cc02dfc2f8c5ad6bc906f4452991c93427df3c10b1997419b5207f34bf7",
+ "sobol_unit_seed1.npy": "870eec2c46821e153692f503066e5506fb8d0fb236657f7572c65304181b01c3"
+}
