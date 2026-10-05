@@ -3492,3 +3492,8 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - 격리: ampworks 는 저장소 밖 얕은 clone (읽기만 · 작업 트리 변경 0) + 스크래치패드의 버리는 venv · 운영 환경 · 저장소 설치 0 · RUN_SCOPE 0 바이트
 - 하지 않은 것: upstream issue · discussion · PR 발송 (사용자 몫 · 3 은 보류 권고 · PR 은 maintainer 가 원할 때) · #40 이후 issue 중복 검색 (이 세션 API 밖)
 - 모델 provenance: entity frontmatter 에 `model` · `effort` 를 두지 않았다 (저장소 산출물에 모델 식별자 금지)
+
+## [2026-10-05] update | potentiostatic-hold-current-attribution — 풀셀 정전위 짝의 음극 SEI 가시성 (모델 · MSC 설계안 검토에서)
+- 출처: `bms-balancing/docs/MSC_PROTOCOL_DESIGNS_REVIEW_2026-10-05.md` (사용자 2026-10-05 MSC 복합 진단 설계안 10종 검토 · "잘 기록해둬용" · 사전 부호표는 "우리가 할 수 있는걸로") · 스크립트 `bms-balancing/scripts/msc_protocol_prescreen.py` · 시험 4
+- 더한 것: "단락이 섞일 때의 부호" 에 `[모델]` 한 줄 — SOC 0.5 정전위 짝은 음극 SEI 손실을 1.4 % 만 본다 · 관련에 문서 경로
+- 경계: 원 설계 문서 (주간보고 PDF) · 발표 설정값 · 외부 저항 시험 측정값은 공개 저장소에 넣지 않았다 (원리 수준 · 우리 말로만)

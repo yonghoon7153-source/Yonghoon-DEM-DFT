@@ -2,7 +2,7 @@
 title: 정전위 유지(float · voltage hold) 전류의 귀속 — 가역 이완 · 부반응 · 단락이 한 숫자에 섞인다
 description: "A potentiostatic (float / voltage-hold) current is one number carrying at least three things — reversible relaxation, side-reaction (SEI repair) current and, if present, a short — and their mix depends on electrode, potential, time window and cell configuration. Records what each hold-based ageing or fault study in this wiki actually measured, the measured size of the mix, and the sign a short takes in each configuration"
 created: 2026-10-02
-updated: 2026-10-02
+updated: 2026-10-05
 type: concept
 tags: [battery, degradation, research]
 sources: [raw/papers/zhang2026_si-anode-interphase-calendar-ageing.md, raw/papers/truong2025_calendar-vs-cycle-aging-protocols-drt-assb.md]
@@ -50,6 +50,7 @@ I_hold(t) = I_rev(t) + I_side(t) + I_short (+ 잡음 · 표류)
 - **풀셀 float(예: 4.1 V CV)**: 내부 단락은 셀을 방전시키고 정전위기는 같은 방향(충전)으로 보상한다 → `I_short` 가 `I_side` 와 **같은 부호로 더해진다**. 한 숫자에서 두 원인이 안 갈리는 자리(MSC 문서 §0 F1).
 - **Li ‖ 음극 반쪽전지 저전위 유지(예: 0.06 V vs Li)**: 내부 연결은 Li → 음극으로 리튬화 전류(≈0.06 V ÷ R_s)를 만들고 정전위기는 **산화(반대 부호)** 로 보상한다 → 측정 누설을 **줄이거나 음수로** 만든다. 그래서 반쪽전지 유지 전류는 풀셀 단락 검출의 기준선이 될 수 없다.
 - **양극 상한 반쪽전지 유지(90호 형식)**: 셀 전압이 수 V 라 단락 전류가 크고 같은 부호(충전 보상)로 더해진다. 90호는 단락을 다루지 않는다.
+- **`[모델]` 풀셀 정전위 계단 · 흑연 평탄부 SOC (2026-10-05 · SPMe 합성)**: SOC 0.5 의 ±10 mV 정전위 짝에서 음극 SEI 로 잃은 리튬은 1.4 % 만 전류로 보였고 옴 누설은 제 크기로 보였다 — 정전위기는 셀 전압이 움직일 때만 전류를 내는데, 음극만의 리튬 손실은 흑연 평탄부가 가린다. 그래서 위 첫 줄의 "같은 부호로 더해진다" 는 양극 쪽 · 고전압 부반응에는 맞고 평탄부의 음극 SEI 에는 약하다. 모델 명제 (양극 쪽 부반응 없음 · 실셀 0) — `bms-balancing/docs/MSC_PROTOCOL_DESIGNS_REVIEW_2026-10-05.md` §3-1 · §6 ①.
 
 ## 이 개념을 쓸 때의 규칙 (제안)
 
@@ -66,6 +67,7 @@ I_hold(t) = I_rev(t) + I_side(t) + I_short (+ 잡음 · 표류)
 - [[drt-peak-count-nonidentifiability]] — 90호가 유지 노화를 읽은 DRT 봉우리 이름의 문제
 - [[anode-free-li-inventory-accounting]] — 쿨롱 장부로 LLI 를 세는 반대 끝(재고 0 ↔ 반쪽전지의 재고 무한)
 - `bms-balancing/docs/MSC_SEMINAR_2026-09-23_APPLICATION.md` §0 · §3 P3 · P7 (repo-root 상대 경로 · 내용 복사 금지)
+- `bms-balancing/docs/MSC_PROTOCOL_DESIGNS_REVIEW_2026-10-05.md` — MSC 복합 진단 설계안 10종 검토 + SPMe 사전 부호표 (repo-root 상대 경로)
 
 ## 이 페이지가 주장하지 않는 것
 
