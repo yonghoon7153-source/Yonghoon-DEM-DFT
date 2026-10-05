@@ -152,6 +152,7 @@
     03:28 얼린 러너 `kill -9` → 새 러너 tmux `el_mc2x_1001` (`stopped` + .bfgs → restart · 새 출력에 *Atomic positions and unit cell read from directory* ·
     *initial density is read from file* · *Starting wfcs from file* 확인 · 첫 SCF 뒤 `number of bfgs steps = 20` — 19 에서 섰으니 이력 승계 ✓). 같은 정지가 다시 필요하면 **새 결정**을 받는다.
     ⚠ 새 출력의 `반복 N회` (watch) 는 **새 파일의 SCF 반복 수**라 이어서 도는지 알려 주지 않는다 — 위 세 줄과 첫 SCF 뒤 `number of bfgs steps` 로 가른다.
+  · ⭐ **2026-10-05 새 예외 (5) — 살아 있다** (`D-2026-10-05-gabia-uma-coexist-elastic-li2s-control` · 사용자 10-05 *"gabia에서 진행하자"* · 비준): li2s **대조 계 B 담금질 gabia 몫 3 시드만** (seed3·4·5 · A 담금질과 같은 시드–기계 대응 · 한 번에 하나) · 가드는 예외 (4) 와 같다 + 회신 CS 대로 `nvidia-smi pmon` 점유 표본 · 러너 `db/inputs/lpscl_glass_control_li3ps4_2026_10_05/run_quench_kgy.sh` `MACHINE=gabia` (`EXCEPTION_ID` 기본값 = 이 예외 · 탄성 작업방에 *.out 이 없으면 시작 거부). 3 시드가 끝나거나 탄성이 끝나면 소멸 · 600 K MD 로 넘어가지 않는다. 바로 아래 '1건' 줄은 옛 (4) 기록이다.
   · ⚠ **지금 살아 있는 예외는 1건 — 범위가 좁다** (`D-2026-09-30-gabia-uma-coexist-elastic-li2s-v2` · 사용자 09-30 *"옛 예외와 같은 조건"*):
     li2s 유리 MD **v2 카드(잠정) 첫 묶음의 gabia 몫 5 런만** (600 K seed2·4·5 · 400 ps · 550 K seed1·3 · 800 ps · `--seed` 1000 + 시드) ·
     조건·가드·러너는 아래 옛 예외(3)와 **같다** (러너 `EXCEPTION_ID` 기본값 = v2). 5 런이 끝나거나 탄성이 끝나면 소멸한다. ⏩ **10-03 16:56:59 소멸** (gabia 몫 5 런 끝 · 가드 발동 0) ⇒ **지금 살아 있는 공존 예외 0 건** — 원장 어휘에 '소멸' 이 없고 비준 다이제스트가 status_history 까지 덮어서 결정 항목은 **안 건드렸다** (`decision_state` active 로 남지만 효력 없음 · 소멸 기록 = `lpscl_smallcell_glass_md_v2_runlog_2026_10_01.json` `✅_완주_2026_10_03`). 새 공존은 새 결정.

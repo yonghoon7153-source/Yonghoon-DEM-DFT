@@ -7441,6 +7441,57 @@
     "commit": "a01f331cdca75e8e766fc040790b5d908878de60",
     "decision_digest": "sha256:2f76951cfcb9bb168102f2cc41511b04405eece36cfb16532192723b12b8c57c"
    }
+  },
+  {
+   "id": "D-2026-10-05-gabia-uma-coexist-elastic-li2s-control",
+   "kind": "policy",
+   "scope": "ops.gabia.gpu.concurrency",
+   "slot": "gabia_gpu_pwx_uma_coexist_exception",
+   "applies_to": {
+    "systems": [
+     "li3ps4_glass",
+     "modelc_2x_elastic"
+    ],
+    "tasks": [
+     "li2s_glass_control_quench_gabia_3seeds"
+    ],
+    "methods": [
+     "melt_quench_uma_npt",
+     "qe_gpu_relax"
+    ],
+    "use_cases": [
+     "internal"
+    ]
+   },
+   "title": "gabia GPU — 'pw.x ↔ UMA 동시 실행 금지' 의 범위 한정 예외 (5): li2s 대조 계 B 담금질 gabia 몫 3 시드 (seed3·4·5) 를 탄성 modelc_2x 옆에서 한 번에 하나씩 — 예외 (4) 와 같은 가드 + nvidia-smi 점유 표본",
+   "statement": "li2s 대조 계 (D-2026-10-05-lpscl-smallcell-glass-control-li3ps4) B = a-Li₃PS₄ 120 원자 담금질의 gabia 몫 **3 시드** (seed3·4·5 · A 담금질과 같은 시드–기계 대응 — A 는 seed1·2 kgy · seed3·4·5 gabia) 에 한해, 탄성 modelc_2x (GPU pw.x · 지금 strain_13_m · 41.4 GB) 가 도는 gabia A6000 에 UMA 담금질을 **한 번에 하나씩** 올려도 된다. 조건은 예외 (4) 와 같고 러너 db/inputs/lpscl_glass_control_li3ps4_2026_10_05/run_quench_kgy.sh (MACHINE=gabia · sha16 0605345893360435 · EXCEPTION_ID 기본값 = 이 결정) 가 기계로 건다: ① GPU 합계 > 46,000 MiB 면 우리 담금질 kill ② 우리 담금질 (PID 트리) > 3,500 MiB (시작 300 s 뒤부터) 면 kill ③ host MemAvailable < 8,192 MiB 면 kill ④ 탄성 작업방 (ELW) 최신 *.out 에 우리 시드 시작 뒤 GPU 메모리 오류가 새로 쓰이면 kill ⑤ 시작은 GPU 합계 ≤ 42,500 · host ≥ 12,288 MiB 일 때만 ⑥ ①–④ 가 한 번이라도 발동하면 **예외를 닫는다** (다음 시드를 안 띄움 · 자동 재시작 없음 · 종료 코드 6/7) ⑦ 탄성 pw.x·탄성 러너는 건드리지 않는다 ⑧ ELW 에 *.out 이 없으면 시작하지 않는다 (④ 가 말없이 무력해지는 것을 막는다). 더해서 회신 CS Q-CS-1 (gabia 는 실측) 대로 60 s 마다 `nvidia-smi pmon` 표본 (우리 PID 트리 sm % · 모든 잡 sm % 합) 을 logs/seed<S>_pmon.tsv 에 남긴다 — 장부의 점유 = Σ Δt × 우리/합 (합이 0 인 표본은 우리 몫 1 · 보수).",
+   "rationale": "gabia 운용 = 우리 트랙 → 결정 = 사용자 (li2s 과학 판정과 무관한 기계 배정 · 탄성 1저자 = 사용자). 사용자 10-05 'gabia에서 진행하자' — kgy 는 cascade v7 탐침 · P1b k12 와 나눠 써서 seed1 melt 100 ps 가 222.9 분이었다. 예외 (3)·(4) 는 9 런을 피크 GPU 합계 43,437 MiB (가드 46,000 안) · 우리 1,992–2,038 MiB 로 가드 발동 없이 끝냈다. 탄성은 13_m 뒤 12_p · 12_m 이 남아 (≈ 6 일) 끝날 때까지 기다리면 gabia 를 못 쓴다. 탄성 쪽 과학 조건은 D-2026-09-11-elastic-conv-threshold 2차 개정 그대로 (경합으로 탄성 잡이 비정상 종료하면 modelc_2x 를 처음부터). 시드–기계 대응은 A 담금질과 같게 (사용자 선택 · 결과 전) — 600 K MD 의 Q-CR-6 과 같은 논리.",
+   "record_kind": "scope_declaration",
+   "card": "db/properties/lpscl_smallcell_glass_control_li3ps4_estimand_2026_10_05.json",
+   "record": "db/inputs/lpscl_glass_control_li3ps4_2026_10_05/run_quench_kgy.sh",
+   "evidence": [
+    "D-2026-09-30-gabia-uma-coexist-elastic-li2s-v2 (예외 (4) · 5 런 · 가드 발동 0 · 피크 43,437 MiB · 10-03 소멸)",
+    "gabia 점검 10-05 20:14 (사용자 붙여넣기): GPU 41,392 / 49,140 MiB · pw.x strain_13_m.in 41,374 MiB · host 47 GB · fairchem ok",
+    "db/inputs/lpscl_glass_control_li3ps4_2026_10_05/run_quench_kgy.sh --SELFTEST 27 (공존 14 · 가짜 nvidia-smi · 음성 포함) · 일부러 깨기 8/8 (① ② WARM ③ ④ pipefail · el_mark · pmon · ELW 거부 · 시작 host)"
+   ],
+   "method_ref": "run_quench_kgy.sh MACHINE=gabia — TOTALCAP 46000 · OURCAP 3500 · WARM 300 s · HOSTFLOOR 8192 · START_MAX_MIB 42500 · SAMPLE 2 s · PMON_S 60 s · ELW /data/work/runs/elastic_modelc_2x (DRY_RUN 이 최신 *.out 을 찍는다) · SEEDS='3 4 5' · RUN /data/work/runs/lpscl_glass_control_li3ps4_2026_10_05",
+   "reopen_criteria": "가드 ①–④ 가 한 번이라도 발동하거나 공존 중 탄성 pw.x 가 비정상 종료하면 **예외를 닫고** 원 규칙 (동시 금지) 으로 돌아간다. 3 시드가 끝나거나 탄성이 끝나면 예외는 소멸한다. 다른 UMA 런 · 다른 GPU pw.x 잡 · 둘 이상 동시 · 600 K MD 로 **넘어가지 않는다** (600 K gabia 런은 새 결정).",
+   "enforcement": "러너가 조건 ①–⑤·⑧ 을 2 s 표본으로 건다. ⚠ 확률적 보호다 — 표본 간격보다 빠른 VRAM 급등은 못 막는다. ⚠ SM 을 나눠 써서 탄성 BFGS 스텝이 느려질 수 있다.",
+   "amends": [],
+   "amends_note": "CLAUDE.md §계산 자원 gabia 에 이 예외 줄을 더한다 (같은 커밋 · 규칙 본문은 그대로).",
+   "schema_version": 2,
+   "decision_state": "proposed",
+   "results_seen": false,
+   "proposed_by": "claude-session-2026-10-05 (evac)",
+   "status": "proposed",
+   "status_history": [
+    {
+     "at": "2026-10-05",
+     "state": "proposed",
+     "by": "agent",
+     "note": "사용자 'gabia에서 진행하자' → gabia 점검 (탄성 13_m GPU 41.4 GB) → AskUserQuestion 두 답 'A 와 같게 (Recommended)' · '비준 (Recommended)' — 본문 확정 커밋 뒤 비준."
+    }
+   ]
   }
  ]
 }
