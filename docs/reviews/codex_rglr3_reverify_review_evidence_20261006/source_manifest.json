@@ -1,0 +1,2781 @@
+{
+  "commit": "061ec1b582746730c6f3d1e2b8b4570081d19bb6",
+  "note": "Git compare hit 300-file limit; prior dependencies not silently certified current",
+  "files": [
+    {
+      "path": ".github/workflows/discipline.yml",
+      "sha": "30a227d765ba323fe2dcc2b0113f6299d59e20e1",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "AGENTS.md",
+      "sha": "2829b46196a08ffae439ddbdc20dc093cde511c4",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/GRADING_STORY.md",
+      "sha": "edceaaeb37db686531808e75ea0dacb87f0b9334",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/bruggeman_tortuosity_network_20261002.md",
+      "sha": "0075431dc593b0a98491f0b0a8177a174eb51e86",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/case_master_column_census_20260919.tsv",
+      "sha": "18b5790f5c76f7bf91df5340251042dc019bc485",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_audit_bundle4_20261004/README.md",
+      "sha": "46b078d2dce72b24c257d835638ea13a63bbbeb2",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_000.json",
+      "sha": "7aa4dc4c42cfc3cba351d12d8849d5fdaea6fc08",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_001.json",
+      "sha": "53e3a394636f56d940cae9b83160e4983003c360",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_002.json",
+      "sha": "cac7f5ef6e187a1f502e437e23af4172129709cb",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_003.json",
+      "sha": "1761cd5957f4c90488504aadfb1a90c7b857f4cc",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_004.json",
+      "sha": "d1e945c7e438a7fe52e8b415417d4546b997debe",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_005.json",
+      "sha": "773ee1cf06bf30c213f83019f79d8725ee6d59d2",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_006.json",
+      "sha": "b57468c2b3c72f99174457952095c0379f047994",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_007.json",
+      "sha": "134109b91888cea3ed3ca1dfa9107e2ef13192d2",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_008.json",
+      "sha": "5efce6d1679be842998f5aec8518db8fa8047cb9",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_009.json",
+      "sha": "26500afe1514bf820f6185bfe94c2a6d8f4dc173",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_010.json",
+      "sha": "942178892ffcd1556a4b6e48ff4e4d9b5c468fd3",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_011.json",
+      "sha": "924277f5b8f3e49264fe2acfa60c701e24b7acc9",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_012.json",
+      "sha": "f457a18fb6353508d84b60e09477d01b67d744ce",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_013.json",
+      "sha": "b895a7abd587764a9481e3652ccfa6cac1409d5e",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_014.json",
+      "sha": "119c1fa92c299b7964e128827833005634bfb5e2",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_015.json",
+      "sha": "f973bd7865f8dca043a3dcb3d412b1a4d1f851df",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_016.json",
+      "sha": "3f052cef1dec566c6870d9beb638a364de08fd9d",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_017.json",
+      "sha": "ebd0d5189493a2058adc206b2d48e5aaba40c4e3",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_018.json",
+      "sha": "210b36fca5151572e9a7e41580257d78096e9a1d",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_019.json",
+      "sha": "b14d9a37256042e5bf6a8b1e0b728dc548423d51",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_020.json",
+      "sha": "51a50768cdc7d6097387d6536a6af615806f631b",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_021.json",
+      "sha": "a28d691900574c1d4ec3593561db9c6ecea37406",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_022.json",
+      "sha": "6d397fbd1972e2dcf91374d17744bad91d391d70",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_023.json",
+      "sha": "24440f4b0137ae2a5305ba4bea5e91f2b85fc5ee",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_024.json",
+      "sha": "7d8f4ac805ea0823a55254a98c987f6d1ea2b622",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_025.json",
+      "sha": "320c7c250b96892704eed41651532dd65e0a15c7",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_026.json",
+      "sha": "bbf563f9a95551343f76f5da86f032eb2207528b",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_027.json",
+      "sha": "b4265efee92a88320f4ecad3a7ba2e2c9a9893c0",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_028.json",
+      "sha": "0d89df70264fce401b5f2f610b3e228002fc71e1",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_029.json",
+      "sha": "7c3c75fb53580d52ed38f8bc6106a9e7cde48c26",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_030.json",
+      "sha": "f534f6641cc9fa1da0a9472a368e06833259c058",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_031.json",
+      "sha": "7c7d81c75d32632a712046cdebbf7a9776e36983",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_032.json",
+      "sha": "79ea3b3473cea6b6663034a3c9dee0c6b2b83058",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_033.json",
+      "sha": "2886c0d7179f856dc9582a639d8642908f458fb3",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_034.json",
+      "sha": "4310fb30f94054baac0ceb0f3edb0ced6d202542",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_035.json",
+      "sha": "027598b6555ed1541c3472c1239421a9cf010012",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_036.json",
+      "sha": "3fcc37c1d07f296e96e2e62c934d189be2692b25",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_037.json",
+      "sha": "1208421dd48ad9a04f8f970226993505c7759f39",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_038.json",
+      "sha": "222848bb33f5ec4659cefa7265e40e484e5b02c9",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_039.json",
+      "sha": "b090f9d019fa07a93b97fc2fbc1d40ddd9cd2e56",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_040.json",
+      "sha": "01054c90b7f3853e4242eea12b1445544564a618",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_041.json",
+      "sha": "ca7a1b429a2e33f9aa93c28370207ae6730ecb44",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_042.json",
+      "sha": "cb2e79018c4392ab6c6382c5284b012c6246d3cf",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_043.json",
+      "sha": "91e37db9685aa6d23a3ac1770eedef7c37d99b38",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_044.json",
+      "sha": "ecbd5cc5bee15023d445fc38a7b80921df7278bd",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_045.json",
+      "sha": "b214c22a0bb13bc945238199f9c5d6e13cb2b984",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_046.json",
+      "sha": "f60de502d172e1955250fa5dc6ab55a73a07b5c7",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_047.json",
+      "sha": "8b068477110824f00206e66da8057b531c6f450d",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_048.json",
+      "sha": "72ef5f945c1cf0f72cb375afe8f0d96a99464555",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_049.json",
+      "sha": "0c8c6e2fe5416184c0e4a3135f1bedfd15340a40",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_050.json",
+      "sha": "c01423d887597630c214295cf791ee770afe4169",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_051.json",
+      "sha": "8cb666005f62a8bcd11d4359ca524ae20697b06c",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_052.json",
+      "sha": "6f24fb8ee70f8240fc2e40179d2dabc20db3cc75",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_053.json",
+      "sha": "4a774da57c715c5a93c909750d5115abe7c29fec",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_054.json",
+      "sha": "76088a5c9058f553540703cba7a7486288de18c3",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_055.json",
+      "sha": "a1201dd699451c4cd660c648960d69260697cc6a",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_056.json",
+      "sha": "03ba4f5333235196439fbd28d697f46e2a7c9ac1",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_057.json",
+      "sha": "0aab26c1f295f1aac8c140e45fa62a735067f747",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_058.json",
+      "sha": "5d529d43d7c4ba54af087a82c1115bdc2afd292d",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_059.json",
+      "sha": "b5b1daad2a488a0eaac80b756661268684b54616",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_060.json",
+      "sha": "584e1e674bb6d41bfd37281e3ff5dbe68d50f267",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_061.json",
+      "sha": "9c0d9fdeebe809c8280cf4c5286e28fcf990191c",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_062.json",
+      "sha": "fb5a7a3d1d2dd3c1542278b29a6dcba4a0b2a2ab",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_063.json",
+      "sha": "3fbfebacbdd0a87554069d3e1c1318b1ea2f38cd",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_064.json",
+      "sha": "d5e46b05ddf33369b7f7c2905c64f1519ce140b8",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_065.json",
+      "sha": "acdac43b5aa4d68a10d92587b7948988fec74775",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_066.json",
+      "sha": "bbf7c765355d8b58e2f88dcb0e0261f28d121bf7",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_067.json",
+      "sha": "d7555c33bba30285b7951300b8390b1c7cb96107",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_068.json",
+      "sha": "f25515fc490dce85a24edfca9e905a9ea6592661",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_069.json",
+      "sha": "3a693a9a1189bdd95337cb883083a30285ee93a5",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_070.json",
+      "sha": "16f42ddf3bb79b6977f881b469768999f7bf2f86",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_071.json",
+      "sha": "f06c6879774c5f39d2af42061534aeeb81de5911",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_072.json",
+      "sha": "8c5e92e6f1852f9a54825f39c41c7a4b9506fc77",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_073.json",
+      "sha": "1a4c5955463244972f30abf16ec908bce5877312",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_074.json",
+      "sha": "b59436d29f774ce3901475e6cab419284dd6fd09",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_075.json",
+      "sha": "569ee2e46bef7fa5e42ff1200205dd88e8e248b2",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_076.json",
+      "sha": "603fb3ccf832070c074163c0ef1abd42c880b442",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_077.json",
+      "sha": "fbe41a02cd663f8754c3b51a3e3f11319963b392",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_078.json",
+      "sha": "32f11e150207d1f72974ec62eba990154b0267bd",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_079.json",
+      "sha": "c9e77365e69d4305537139012a36aae1d17376fe",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_080.json",
+      "sha": "77b92fcca83f66ce09212e15a6736581ade6b6c1",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_081.json",
+      "sha": "ae64e628066ae798ef65dd4a9f9407fff682a4d3",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_082.json",
+      "sha": "55f29888c2f4dfa59fd8d217a4b1084e9c5332f9",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_083.json",
+      "sha": "39d35a43298bc5c1f4dbb0fdec1b136131f65f91",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_084.json",
+      "sha": "6a0416b25afd801d6e182fbe259fe2815141a2bd",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_085.json",
+      "sha": "e6406a4397282de6affae2cce288aee5b6f7acd3",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_086.json",
+      "sha": "dca48695d1efac5941a4d81f70b834a11536f8dc",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_087.json",
+      "sha": "0df8aa438f910ee3d3db72c4bfc00fafeacce9f6",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_088.json",
+      "sha": "164b51ffeb1093649efaf2779ce7c5f46873cc4d",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_089.json",
+      "sha": "a4fcc622cc45225e5361d8bef05e3d73cc5304c0",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_090.json",
+      "sha": "a74553edb7400e872417556c16a311474e26a7aa",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_091.json",
+      "sha": "993058140e8574d72acd233e0426b4e986f68366",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_092.json",
+      "sha": "a70adeeccea32685d807489a2ae2b399f2e69124",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_093.json",
+      "sha": "ea4e516daed63f4a300e12a7768e0210ad4e5b54",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_094.json",
+      "sha": "269b3236d4c52b2658b7685740ade8ab58395550",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_095.json",
+      "sha": "d5cc87e34202fe7a522a71976648eb446d3c2593",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_096.json",
+      "sha": "9c753488fc47ae0c05ba302b1b4672c153b8f83d",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_097.json",
+      "sha": "e98a99003eb1fffdd683e297ddc9f19306e4ee57",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_098.json",
+      "sha": "efde2d5dd3e8f607aa81781258f165809c603b89",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_099.json",
+      "sha": "4d9f73c90754d42e1dec06c1f8473421db958f4b",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_100.json",
+      "sha": "1f1c3fd038f07a27d61a89d81265b378859d9c23",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_101.json",
+      "sha": "3e609791783a7fe6d55c2f623f15838884bacfe7",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_102.json",
+      "sha": "6f8a51d1d663ac0086a5642984c57fe9f5f32577",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_103.json",
+      "sha": "2ea119e4b8be55d9841b388e49e393740b1ab8e8",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_104.json",
+      "sha": "cde7c1e3537363efd8304803eb4fe934313dec6b",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_105.json",
+      "sha": "c7255ebf1f3818f28ce35b518fec1aab7cb5989d",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_106.json",
+      "sha": "ee0cca46c0c7aac0e9860e849c20c0fbabd532d1",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_107.json",
+      "sha": "52b5f609cbbed8e6939aed150d26ca28e578988f",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_108.json",
+      "sha": "4da4568fb219f25a3c952b175e2ea796971999ae",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_109.json",
+      "sha": "70a0a6a724c2ed8aba40b280b689d50d1c660b40",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_110.json",
+      "sha": "59c8c89a32646562a6a3ff419e56687018dc6bdb",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_111.json",
+      "sha": "e9626bedeb035957465cfc0597fd262e28c273db",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_112.json",
+      "sha": "1592f53fb8b03930c60712e43f335eecf9cfa016",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_113.json",
+      "sha": "1bf6cec78e14d54ab6f7372e36aef17a9480cf0c",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_114.json",
+      "sha": "b4a0d0518bbdc223a5c3e5413ebd33cdb638fdba",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_115.json",
+      "sha": "61cec80492970c5394c4e725bf27036ce998b373",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_116.json",
+      "sha": "3e08395baf6b7eb573e90788b958931b39ccba5e",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_117.json",
+      "sha": "d41ab6689cae3fcf1fcf2d7c16c4d93a3687fdb0",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_118.json",
+      "sha": "f7c704a03e51130397dbe3111ca095e3c9b4823b",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_119.json",
+      "sha": "5dfc919aa910c032903b69fbe85f317e35c5fdcf",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_120.json",
+      "sha": "e79493cc6994a4b85995c0fd0010b5646d762230",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_121.json",
+      "sha": "d4cc1fbdd008add39b5be88913c5d4291f9db91e",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_122.json",
+      "sha": "ed2f65ca3b5d3a7ed3c5039d7b06db582ef728dd",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_123.json",
+      "sha": "5aa3864a3d70f7b35d6784f804499c54a782d776",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_124.json",
+      "sha": "3736e6b3f23d762efd68b01a0893e927b3238c12",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_125.json",
+      "sha": "216c4caefacfb40dc297243d08937ff5f06f8273",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_126.json",
+      "sha": "7537867ef0e1f78ee67eb24fc25ff9d56f6c29ca",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_127.json",
+      "sha": "5038046dfdd962510368f48eec63bd3cde5435c8",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_128.json",
+      "sha": "48943a6003697e8e593480c0705db138b744a7c8",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_20260925/lhs00_129.json",
+      "sha": "aaa90519c23448ecc7be6c50ee24335c73f705e5",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_000.json",
+      "sha": "ecc1074d7de5c736d7401d8b1bdb9b60c5f7bfc3",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_001.json",
+      "sha": "13c7b0ede0323f9fc0da4bbebda4c67833482516",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_002.json",
+      "sha": "23f41bc2426c53890e81a8eb820f14647101e646",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_003.json",
+      "sha": "81e051f9ca5bd255dd64c70f8ae2bda33508753e",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_004.json",
+      "sha": "e76f3ea1ef2567db2eeeaec0465512d6e6789709",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_005.json",
+      "sha": "95441ca0f7c7ee7bca53c9c63888638c727848ff",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_006.json",
+      "sha": "f23ff8612d9dd906178e88d70f18006e8b59a2ba",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_007.json",
+      "sha": "e630765634765aa2aeb8dcb73d39ac14f89fe6f7",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_008.json",
+      "sha": "4ad1b91519b79bbf0296a8f4eb3104b7a8e622a5",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_009.json",
+      "sha": "717d11cc222a11045862570145f674a4108c26cd",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_010.json",
+      "sha": "1d12fc5a3c41cec6be862fa6b73e2f1c68f20dcf",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_011.json",
+      "sha": "5ac7db1ba334421d310f522b5204865e24a10396",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_012.json",
+      "sha": "5d9173b0a79f78070ae83918415feaf877702cb0",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_013.json",
+      "sha": "6621752de7ea13f95ea245d1136f0f51141c3545",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_014.json",
+      "sha": "68f00867be7771b4a66665be24d1aa623a9e5782",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_015.json",
+      "sha": "9b720cc90114fe5413bc9ea0c07e8cc232183cab",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_016.json",
+      "sha": "891bf703098919ee1774de657bcc0c9137f2f90a",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_017.json",
+      "sha": "cd4a065d2044da4e1b9d07411d371922ec5e5bf8",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_018.json",
+      "sha": "68637818d4b7e4c8f51c3cc54b432f7cc2a5ba9d",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_019.json",
+      "sha": "db34b6df458b30062ac1058c7fe9e77228ae98bb",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_020.json",
+      "sha": "5523d944b0ca139b1b87264f95580a6ce162afb8",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_021.json",
+      "sha": "17ab3a08e8cbcf59c35b9cdb5c59707a551d665c",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_022.json",
+      "sha": "3f7ca5bcfdc3dec7dbca152ad9df5c1508486add",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_023.json",
+      "sha": "267d1e7b2d765c41ec624a24c86f17cdc5fab58b",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_024.json",
+      "sha": "039b01a438e4a42444cf5b239f9aa0a980db798a",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_025.json",
+      "sha": "da1c933f74e058a8d31d6fbffef857a1eaade48e",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_026.json",
+      "sha": "716b8d508a84184e5069512fdf80a3d063f1dc34",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_027.json",
+      "sha": "3a4c2d26f8e09bf94c0ace7e1ad6e69a6b5e4a67",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_028.json",
+      "sha": "00c1e351dcdefcb684cda8e5c7a20d2618be7666",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_029.json",
+      "sha": "d0b125f5d898bb0a6237edb47d68d65bf1495739",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_030.json",
+      "sha": "f652fa01d8ac6df922f6ea97ccb84aa8535e2ec0",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_031.json",
+      "sha": "ee0e6f20398c95d9ed4ebf6808c9696afed35789",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_032.json",
+      "sha": "28436e06bfb4e9a9aaa8a96425c3e0e52d37e56b",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_033.json",
+      "sha": "770218ddeea6879d04b08c87db0ee5f189d0d318",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_034.json",
+      "sha": "2faa4a6222f600b6027b875cf041f18438c5ba0a",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_035.json",
+      "sha": "6f26a5d63be284b21707ab4687ce1eb62805cd39",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_036.json",
+      "sha": "848a374e0ace4245fec303b6bf6619730776fa73",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_037.json",
+      "sha": "4efc94a4e6e1e8f3bac843d586f031381ec7ac07",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_038.json",
+      "sha": "62870a35ac26a03c706ea8b3c1d542a004c37584",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_039.json",
+      "sha": "f8c402867d72405f26adcb4e34492f002f6f2d0f",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_040.json",
+      "sha": "3d6d03054e252ad67f7a3bb3a178530db880dc5c",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_041.json",
+      "sha": "a3e4ecf1feb252fb28982da9827a21196b8d820c",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_042.json",
+      "sha": "efd1b99206e5d496fbb2ba1973a1573a83af4154",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_043.json",
+      "sha": "20e679700aa37d8ccc73e611bf5c4c9e5e82761e",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_044.json",
+      "sha": "53c65a8b507ba65043e389af86c4a5676d2fac88",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_045.json",
+      "sha": "5ea37b093c62bbf029cf4997951683040c677492",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_046.json",
+      "sha": "5a8b48ec8820bc1e4959a6319ab39ba198554ea1",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_047.json",
+      "sha": "43b9ca065628d9ea4211a2690a76f45530f8f76e",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_048.json",
+      "sha": "f98a2183129bb8c21fc32006f9c35110ea64d681",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_049.json",
+      "sha": "422817419370e01049e80f6cdd23204c6ee7c329",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_050.json",
+      "sha": "b243d98ff1b38146992f0177f1200438562f19b6",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_051.json",
+      "sha": "7769c2b231e09663f982f9320774d05b6b1bf6f8",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_052.json",
+      "sha": "2afd5afa74cf4e6d2c868bd031ac6bc585ca551a",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_053.json",
+      "sha": "dbef0e58faf4649c79b2cc0b9fe254fc46a495c0",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_054.json",
+      "sha": "bb7474d1a6e92fd7fbe11f4965e086a0b2536a18",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_055.json",
+      "sha": "e387eb4e0c58a9308ecaa340404554ea51de7ea2",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_056.json",
+      "sha": "94f97b65a52e285b12c0a3c5dae5eb17954ca7bb",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_057.json",
+      "sha": "e12d3e182e59cae1f642d6065f44d3b7fe836242",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_058.json",
+      "sha": "8b87b75bc0bc6ea150d71e7caf7751b1bb0fdc9f",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_059.json",
+      "sha": "2e497c3eb927a57ab754ab035c3bd32c8138f8b1",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_060.json",
+      "sha": "fa08ca88b38a347a639486682f1c219bc665777e",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_061.json",
+      "sha": "1815a51e1a409be282e3735034741fde81077e97",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_062.json",
+      "sha": "e4e85ad6815be5f9d4800f78fd1005fd70d2f41f",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_063.json",
+      "sha": "7b2757354fe5957a17b8abac9e89e44efdbbc471",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_064.json",
+      "sha": "60453404fa52c25c9b48969711f32321fe66ca5c",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_065.json",
+      "sha": "82c126ca5148e82308c5c01f636e2d2476f81b29",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_066.json",
+      "sha": "4d0783ff6a52c17ce9a0067036091d409c89c6fd",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_067.json",
+      "sha": "a4676dc172a89ee73d70b24ed3d434ec5951f0b5",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_068.json",
+      "sha": "da3704f736998f91c1aba9fd57b380461296f6be",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_069.json",
+      "sha": "5b17a34580d43fd5ad8d4d4eb9db9c30dbb476cc",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_070.json",
+      "sha": "62bc6c90afd7fdc215617cb03cf2d54b15d352c0",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_071.json",
+      "sha": "41ef9a49675985fc53324a311b2b4fef4b1b6f32",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_072.json",
+      "sha": "541bc831c6b305fbe73149dc46ee5f4e553416d4",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_073.json",
+      "sha": "c610bd9418df21a946c49c149d6c6e68db442581",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_074.json",
+      "sha": "9c305365b6f0d25f7bfef4b86a90ff66de65b24c",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_075.json",
+      "sha": "40e9af54425ef8298798ef1a662943befee89bb8",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_076.json",
+      "sha": "82e052aadd41f102d1b311c24a9cb18bd4e3db42",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_077.json",
+      "sha": "0043d5d35b46f66b6beb28aeceafb21dcffba7d3",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_078.json",
+      "sha": "c16f77379a3840a0b55adbe50faa45d02e1806fe",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_079.json",
+      "sha": "91fc4adea6b7bd8f6fdbac99cff0723c1d2d1c96",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_080.json",
+      "sha": "7882f0d13c93b1ca92b8f5fdccf4231a20cbe298",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_081.json",
+      "sha": "2228b12428aeea270f32b5f09dc99c270149f42c",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_082.json",
+      "sha": "eccff29eb3ef6cd643f7423222013b1880c24133",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_083.json",
+      "sha": "ddb9d6faad72e4911e5dc8af6ac4b1f06d859137",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_084.json",
+      "sha": "949b2c0ebe2c2c4d69c10d15eab3ac1fd36bf9ee",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_085.json",
+      "sha": "2c415dd1692560b08f4963383ecb8527d65be84d",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_086.json",
+      "sha": "10cca34c43bcb94ae5a13fc13f2e786029d240b5",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_087.json",
+      "sha": "00774cdf243dab237cb968693943c27e48919f9c",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_088.json",
+      "sha": "5997d65ebc8ddfab1ca979f29832fc0cc1a834d4",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_089.json",
+      "sha": "1f630916162610db40d63dc884471e092bfc8de3",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_090.json",
+      "sha": "6093a0f9f7420eb4853a2344a6c1e107b505fde6",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_091.json",
+      "sha": "31e04ce24dfd654cd39f2b782fdd23676cfed6c6",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_092.json",
+      "sha": "d2b5461bbe4a04ae70d3ca8922a73639b95850ce",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_093.json",
+      "sha": "3f9d7d7ae17720a26bd41b39b24a6028c0579c65",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_094.json",
+      "sha": "408d3b47fa12f8787d4709360161e21310124171",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_095.json",
+      "sha": "ab934e7a038efa1de2cbd7b6b104bb8003947712",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_096.json",
+      "sha": "37d09a2eb2ff5cd0b48e462ddf67b261c2404893",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_097.json",
+      "sha": "aadb81d47ceea760286fddf6abf16e2e6799945a",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_098.json",
+      "sha": "6a499d858025897bfa29030558b046fc1a2bb706",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_099.json",
+      "sha": "e725c86bd44c6c70128ca8367d11b2420b9c985e",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_100.json",
+      "sha": "108f675ab7be7ee762d589e388c630d93675c71e",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_101.json",
+      "sha": "34cdab8e68e9edfdf7f0d5cf42b0cb1407d963f2",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_102.json",
+      "sha": "1336f4978257533ad9288e27a0f1053fe534948b",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_103.json",
+      "sha": "457978bdd2b4a2f88344f256a3d0aa13cd875c30",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_104.json",
+      "sha": "f54273b62da4cd0355581d422e2a403a27768046",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_105.json",
+      "sha": "a1000b0d4f668a8f2a2d882dbf5d378eeff4846d",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_106.json",
+      "sha": "99fbc85b27fb38c2841c447bb4ca43bf0240e016",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_107.json",
+      "sha": "e4063663a28935965989f09038c9f8caf95040cb",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_108.json",
+      "sha": "6d33ac944f3c6b328e186913221c51e152e29211",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_109.json",
+      "sha": "d05487f00f17ebd66c9c1e4d4c30377377e6ed4a",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_110.json",
+      "sha": "ef201e612c8bc71df1c3cb0d55a6f111fa22ce71",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_111.json",
+      "sha": "3b51b2d8ae122f6429f85c6225c6bcaba164e11b",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_112.json",
+      "sha": "875c44e2f1ee73e4b9b824b01da5f384a789aff8",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_113.json",
+      "sha": "8a79ca39f4dd3d7b09949c89e82318c42363d6ae",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_114.json",
+      "sha": "62bcab16ece8184ade930c0fce77f9c1189ced47",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_115.json",
+      "sha": "83fce50a4517881d09eb2e5c00ff7b69b24bb728",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_116.json",
+      "sha": "d8f9b9b74e51cad59081e5e2a3678478c834603a",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_117.json",
+      "sha": "fc87fcfba0dd3488b7370f36536389f738027981",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_118.json",
+      "sha": "ca193cb153da9904e842b48e9f586dd21b59ce28",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_119.json",
+      "sha": "521f3d08b7c97ef9a1616e9671eb7c205c553ab2",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_120.json",
+      "sha": "730067effbbbd183d1f7f0d7455b4756179ba989",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_121.json",
+      "sha": "90f212900949ca32ae2136ba1fae2b46eeabf956",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_122.json",
+      "sha": "f7ca137f756581e23a8fa6f2b1ad2671ae31a2f3",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_123.json",
+      "sha": "485ea85fe039e4c9e6e13af4acf9e14d07f5b3ea",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_124.json",
+      "sha": "4b203cb6f447a40c4e295077529f071300c72668",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_125.json",
+      "sha": "3ac1afca60e1ae138656f00ee5f0066f755d4c28",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_126.json",
+      "sha": "8fcc037f811f7be266ff2dc3cbc5e23efcd06832",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_127.json",
+      "sha": "086de2debd023f6b74c6edcf207182ea4c65b9e7",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_128.json",
+      "sha": "600f1c91ac670926384502e7d27965ed06e7edf7",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_descriptors_cov_1e09f661d/lhs00_129.json",
+      "sha": "a8fcd45980c8573908702765b2bef7e48782fbae",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_design_20260818.csv",
+      "sha": "1d153de3ed4c76dd627cb97a149917fa7c5b40b9",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_handover_20261001.csv",
+      "sha": "8a6af0648a1e9c00492a64e9517e8b4194e76b33",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_percolation_measured_20260915.csv",
+      "sha": "7bafb1d6a3478f6cad3e3a47a90d6160ec297abd",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_release_20261001/ERRATA_20261004.md",
+      "sha": "5e1d22d9b4d4916b0183846b404b5ea5c89edabb",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_release_20261001/lhs_release_20261001_columns.tsv",
+      "sha": "7ab36a56a615bf9cc759153dcdc151dee608ee17",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_release_20261001/lhsx_release_20261001_columns.tsv",
+      "sha": "b9a5e5f0a6660148f03dc942cf23562e54662819",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_release_20261001_v11/ERRATA_20261004.md",
+      "sha": "d5793562bb7661fe42040dc83c37b621679b998d",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_release_20261001_v11/lhs_release_20261001_v11_columns.tsv",
+      "sha": "cbfcde9febd2a59acdc99e6f7909ab96e16b2cf1",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_release_20261001_v11/lhsx_release_20261001_v11_columns.tsv",
+      "sha": "c14f348928fbc78a1359dc08308fa13794fe7c92",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_union_20260927/lhs130_union.tsv",
+      "sha": "174c34d94058f6afe3b1afd1e8e58f482f9ab9c7",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_union_20260927/lhsx64_union.tsv",
+      "sha": "b58ccd8061c7131bdc21e2507f66c483c0c3e2a7",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_webapp_contact_d1ec42fba/metrics_flat.csv",
+      "sha": "6d1a3aadc34ea8f18b6b213d55a3cbc1a70c3a00",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhs_webapp_contact_d1ec42fba/status.json",
+      "sha": "1c018ce1341c5746ee196c9cfbfc1ba9d4c44372",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_001.json",
+      "sha": "6ab90e3b036515420db70b25a650aa4818dd9fcf",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_002.json",
+      "sha": "8c04e300fd466412d1d510f20d8887093c1db590",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_003.json",
+      "sha": "408c7108561a7ba9d14a398cc567a7de0cb75141",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_004.json",
+      "sha": "c8303c2d9bf1fe238e33dcf59e80795511cdd336",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_005.json",
+      "sha": "a2144f2f0b4b7ccdf0406fbd56406b9ea8f57327",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_006.json",
+      "sha": "cea9de7cd2081cecf567c3aec233a9be19f60800",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_007.json",
+      "sha": "cc5d80e7c80b77c82cb867ead761dc4c8075b309",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_008.json",
+      "sha": "f410bee960d470b5fe35ed04c2d250f6eb099c7d",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_009.json",
+      "sha": "9fe47b32710c57ecbf31c6fef0faecfb844a2d9b",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_010.json",
+      "sha": "cb4a4a5f956f71371b52809e2ce38a59d966f95e",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_011.json",
+      "sha": "86691da96ac100da34aa27fc16d68d3d83b3d44a",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_012.json",
+      "sha": "767335accb5de7f4085ba5442e08fa7368dedd1c",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_013.json",
+      "sha": "ba5fe9361ef399eba91503cebbe84514adfadbf0",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_014.json",
+      "sha": "d3289f9460267e7d8ffccbc981bd29bc2b0123c8",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_015.json",
+      "sha": "5955eb074f701228828806a4407dce5a38000897",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_016.json",
+      "sha": "791d9413b0c73bb34f7d88b48640da9113794968",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_017.json",
+      "sha": "e00a9ca5f3379db59cfa0d7a6f1daa3c36a631e2",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_018.json",
+      "sha": "c60d41de01c050541c13764f0d053b59b522f213",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_019.json",
+      "sha": "67c137f273151c080414c016b12ba63c9232a63b",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_020.json",
+      "sha": "a0c017ed13f75e4392c2b63db61a14e5c475c229",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_021.json",
+      "sha": "62e38ee65ed5d81eede092c1daecaa2c8caa370d",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_022.json",
+      "sha": "5f5ac20c5aaad2df7a99aa4fbb2c63f1c4985392",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_023.json",
+      "sha": "460bb21b2eb6b8c892ca1cefe6a9d15916dea695",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_024.json",
+      "sha": "662d08afda08eddbab55ea518de3012d2b3ce17e",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_025.json",
+      "sha": "5b9d1232b1ac4508554c0dc6b07ed5ef9104be51",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_026.json",
+      "sha": "8a3e8407d77938dbdbb18ac2d51d40a03d6227d2",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_027.json",
+      "sha": "d7e35530c9068fbc9cf617e7696bb271edcf6df9",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_028.json",
+      "sha": "c5dd9a60df337da9b08669bb041c3675f79ab06e",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_029.json",
+      "sha": "34ff1e3487bb89690ea589f09fa56ecad8ac2058",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_030.json",
+      "sha": "0140e430b22dfed8dfb988789b660040da50f212",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_031.json",
+      "sha": "b0478bb4750345141054f75c6b0cca9a1364c642",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_032.json",
+      "sha": "eb8ad660ec727a72f4effba56ee70a730f9ce23f",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_033.json",
+      "sha": "b6cca5f562943705886cd2ebd37a062c56fbb10b",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_034.json",
+      "sha": "f7105c1f981c15c8579b1a43fbe1feb4617c4679",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_035.json",
+      "sha": "03a12ddcf6e78203754476349d1accde0166d934",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_036.json",
+      "sha": "60297e11936473539e09ad6cf37c03ab5546755a",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_037.json",
+      "sha": "942b6677d55968644f3434f5a469cce018fcaf6a",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_038.json",
+      "sha": "8a7f132f517654fba5e56f16a74ae5bd63b2343a",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_039.json",
+      "sha": "aaec1c38befff9e3767c045d247924a79b2d39c3",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_040.json",
+      "sha": "af98dc26d843e99271eae3c891a887305ed0cad2",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_041.json",
+      "sha": "c56bc1a1c8218da2c3b1fd5fee9094a664d76b54",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_042.json",
+      "sha": "fd23c462cc97a5e92a5d08f6d0c29194bd694897",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_043.json",
+      "sha": "1511c4459428d2e8091b4a63aa55e95997ba4b2a",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_044.json",
+      "sha": "3dfc475ffe7d28d095d6ba1a9f40607d2be99cb0",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_045.json",
+      "sha": "d4869ac6ca431098352fc1d2ad5814f6fc9e2cd8",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_046.json",
+      "sha": "cd83df786f132ab669d78cd289728534e171f29e",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_047.json",
+      "sha": "e42788c28ac4665b951b72e8cd54460120cdd14a",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_048.json",
+      "sha": "c43dd776e7545c428cce72a270f80a3c1c482ef6",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_049.json",
+      "sha": "fad7cb45f1f0f5af5d2de9279af5181270a80b60",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_050.json",
+      "sha": "0e76c098fbc873c59853dc309bfe8615eb5c78f0",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_051.json",
+      "sha": "d448929c9d47a771ec22503175c382a296ba38e3",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_052.json",
+      "sha": "51585192274d78cd256c02108a86c24ad60e81c9",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_053.json",
+      "sha": "bb7b0fd309f00b5e16c08f3e9cc87832b059f439",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_054.json",
+      "sha": "18c309a394e5294230ae896ea62e0e39146e6b18",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_055.json",
+      "sha": "dab0379b02d4983156cd9b87e0b77c3480d967b8",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_056.json",
+      "sha": "efbe7b0acb88e8cf8ef795eed343baaa72865d5d",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_057.json",
+      "sha": "507fd9b90c0b0f2891fbbc281967b8756611d186",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_058.json",
+      "sha": "bd73946fc33d0eab3f94d8bae375b26e5bf0058a",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_059.json",
+      "sha": "cdb066cbb3ebc00cbec1ce6762a5e2ffaef691ef",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_060.json",
+      "sha": "b2b132a38937785ebd6fdae5660043f53485884b",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_061.json",
+      "sha": "f6933953ebab633dd0169dfd976eb4170470e8ca",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_062.json",
+      "sha": "b18edeb71cda1f41a672c96a93e0cb73b521418b",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_063.json",
+      "sha": "9f0ed351164aa3a56564c6b0ec383187c115763b",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_descriptors_cov_1e09f661d/lhsx_064.json",
+      "sha": "25a5eacefa76efb8944ecce459619a3ad69cf239",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_design_adapted_20260929.csv",
+      "sha": "deb981ee48040e460009db5aff9cb4a4f9270e0c",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_handover_20261001.csv",
+      "sha": "59f3e457e357cc64c9d61412f41c633d1ad8d0bf",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_webapp_contact_d1ec42fba/metrics_flat.csv",
+      "sha": "e8a6f6d3742acc5ef5dada550c9b77e899e82543",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/lhsx_webapp_contact_d1ec42fba/status.json",
+      "sha": "16e500e14c4ed65116b437b9f631ddfcb44430e9",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/real14_reference_20260928/mesh_2060000.stl",
+      "sha": "e5efe41e95e3d7c205ee54d5466799b43d8c64ee",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/rint03_je_20261005/README.md",
+      "sha": "1b5f2f3841089efd77aa7044e4d0be1bd1757eb9",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/rint03_je_20261005/rint03_je_fig.json",
+      "sha": "10a74dfed70a23334438ebdd2deeba3b67630c70",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/rint03_je_20261005/rint03_je_vgcf1.json",
+      "sha": "251008b6cd741a1e410f2c91ded2acbcd079da09",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/data/rint03_je_20261005/rint03_je_vgcf4.json",
+      "sha": "a82d0ea88589dcc4d2939c01189bbaa8c6aa1029",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/reviews/codex_review_rgl_reverify_20261005.md",
+      "sha": "50f081a8d373449268ac34f4c9bdc6f9be610c72",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/reviews/codex_rgl_reverify_request_20261005.md",
+      "sha": "57cf0638627bd3827880d996789b117f8a6434d7",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/reviews/codex_rglr2_fix_probe_rerun_20261005/README.md",
+      "sha": "70cd7ccde73a5bfb9b0cbad76b4c766d5462ef61",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/reviews/codex_rglr2_fix_probe_rerun_20261005/network_adversarial_after_fix.json",
+      "sha": "80ccda071cce28b004c42473c8827fb85bc4d3db",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/reviews/codex_rglr2_fix_probe_rerun_20261005/network_adversarial_after_fix.py",
+      "sha": "053e4bbe0dc0a9b72d71f7560d4b2b6f3481e4a2",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/reviews/codex_rglr2_fix_probe_rerun_20261005/vm_boundary_after_fix.json",
+      "sha": "f95e7e9a760db49bd3cc0b239625056ea3b5c79a",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/reviews/codex_rglr2_fix_probe_rerun_20261005/vm_boundary_after_fix.py",
+      "sha": "831030cfcacf13414cbd37369aa53ede34d99136",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/reviews/codex_rglr2_fix_probe_rerun_20261005/wsl_smoke_prefix_05fbf15aa.md",
+      "sha": "a87c3a75b4cbef524ffbad29c6ce2ce0e1827100",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/reviews/codex_rglr_fix_probe_rerun_20261005/README.md",
+      "sha": "f839d60179dd751583c555b321f951e246f8ac59",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/reviews/codex_rglr_fix_probe_rerun_20261005/lw_replay_after.json",
+      "sha": "9a54f5c401e945a874fed9fd12b4fbad8ea383c1",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/reviews/codex_rglr_fix_probe_rerun_20261005/lw_replay_after.soft_asserts.json",
+      "sha": "7fa8074e0d9feabdb7c6cf41c9077808eaee44fa",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/reviews/codex_rglr_fix_probe_rerun_20261005/lw_replay_before_fde4a812c.json",
+      "sha": "f4c4b71c960ad9b69d97ef78de5085781026abee",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/reviews/codex_rglr_fix_probe_rerun_20261005/lw_replay_before_fde4a812c.soft_asserts.json",
+      "sha": "22ec8693a3a601b661d2f1efc8bd7fba19d4af2f",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/reviews/codex_rglr_fix_probe_rerun_20261005/network_adversarial_after.json",
+      "sha": "35c8a4d232534c70a4e735b055c165cfeb49c311",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/reviews/codex_rglr_fix_probe_rerun_20261005/network_adversarial_after.soft_asserts.json",
+      "sha": "73a99d3d291d7f2fd8f593728fcd38088947997a",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/reviews/codex_rglr_fix_probe_rerun_20261005/network_adversarial_before_fde4a812c.json",
+      "sha": "f879fe0a78b7120a19bbb32e74902ec977a12fc2",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/reviews/codex_rglr_fix_probe_rerun_20261005/network_adversarial_before_fde4a812c.soft_asserts.json",
+      "sha": "3d84d700fa09a259a0a7d0e5841ed01ce99fff31",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/reviews/codex_rglr_fix_probe_rerun_20261005/rglr_after.py",
+      "sha": "a0011bc51404834e58d03c3e062d42987a5f541c",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/reviews/codex_rint_g1_lhs_network_request_20261004.md",
+      "sha": "0b6788eb839043d335765c1ca582cfd1a84001de",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/reviews/lhs_handover_judgments_20260924.md",
+      "sha": "abed06d21ac7f812bc4fa049d067e76fd99e3355",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/reviews/tau_conventions_judgment_v2_20261003.md",
+      "sha": "8f104e82e38454fc8b4db9abf349500c2dc4ff37",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "docs/stage4_electrochem_research.md",
+      "sha": "dbe802f44a1ef03165482038858432be984171d6",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "scripts/build_tau_regime_db.py",
+      "sha": "88a0e010ff016a3caf4092bb23e17746dc785ac1",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "scripts/check_all.sh",
+      "sha": "9a8faa080e1a18b973236a6e1bc4f001f4d8153f",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "scripts/check_method_discipline.py",
+      "sha": "c10d36b5c3549a3f30a0bcb94913a8279968c0db",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "scripts/export_comsol_2d.py",
+      "sha": "1b37bbef3139b5e88fabf52f2bafab8e8a20b712",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "scripts/extract_2d_microstructure.py",
+      "sha": "210e92017e6118e740e1ee7578d24b3233f6d57c",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "scripts/fibre_segment_raster.py",
+      "sha": "c117c51152e85b55d23cd1425c4d8e5e25542928",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "scripts/fracture_model.py",
+      "sha": "860a621575e013e9521430950a4eda9cc9559c54",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "scripts/generate_comparison_plots.py",
+      "sha": "b2e23af602fd59112210b7df76549357ff8da6ca",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "scripts/lens_geometry.py",
+      "sha": "53a20c31554740957c21a0fa52362df0b000cc97",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "scripts/lhs_perc_extract.py",
+      "sha": "99d060ffec7eb68c21a5ac898840b121c578d96f",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "scripts/lhs_stress_constriction_audit.py",
+      "sha": "be604c60903ae5c1bb80bb19c15eb37ad44783a0",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "scripts/lhs_union_webapp.py",
+      "sha": "1926a05d6a4946d238751e3b6ca6cb3fc513fde6",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "scripts/mpm_webapp_payload.py",
+      "sha": "ff3d4577b483bcf852f1722a0e6f61ed13b43dfd",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "scripts/network_mode_io.py",
+      "sha": "8ca2aa549311f358856cf80f9ac2817a0d64f302",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "scripts/network_projection_preflight.py",
+      "sha": "f545797440ea4d1eeb11c553d4b26db3a6250aa9",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "scripts/plot_section7_design_rules.py",
+      "sha": "0a93f956dc33cd764867f43934171185ecf86ead",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "scripts/press_units.py",
+      "sha": "a11fe7b082c11404493b727c4239ddc78106fbaf",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "scripts/rebuild_tables_from_metrics.py",
+      "sha": "965cee33a882f6728ee77a9fa8e324560d661b21",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "scripts/rint03_je_compare.py",
+      "sha": "c15c5433b9175d7ce58d1c07c329662e42d79852",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "scripts/run_contract.py",
+      "sha": "793da282746615b3a271a55e3755ed11b9b629e4",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "scripts/run_network_full_corrections.py",
+      "sha": "a86ac06d06c9dc500969c5b40b555b613d06e967",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "scripts/sdcp_gain_verdict.py",
+      "sha": "361599ff3c687261dcf5541d2fcfb41255c77f98",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "scripts/seal_s3_prerun.py",
+      "sha": "76059c2438fd052673d22100f965d2975e368cd4",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "scripts/sr01_stamp_compare.py",
+      "sha": "0c12d648c67395012491d2e370f18413656f8d58",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "scripts/step3_sigma.py",
+      "sha": "4b33c7a4526f2d55dfbdefa3257e36619a9e4136",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "scripts/step4_dyn.py",
+      "sha": "854969698666eba51f43aa9f3849dc0d8863b9ef",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "scripts/test_constriction_power_share.py",
+      "sha": "ee108eb3f9cb9186f7f976a6c5c95cda2c364c2c",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "scripts/test_love_weber_stress.py",
+      "sha": "29357126b681e2719faf7c8773c3716200db5883",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "scripts/test_network_boundary_rule.py",
+      "sha": "351b082fc0aea86eb9e46f61ba77c19301bd12d5",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "scripts/test_rint_receipts.py",
+      "sha": "9e56cd91cc41715df50f0982b959b82352e2107d",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "scripts/test_tau_flux.py",
+      "sha": "65e05097dea395186d63f4f799f077592b144ac2",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "scripts/viewer3d_data.py",
+      "sha": "dd37dc784d823bf84057a649e8bb547230c4b891",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "scripts/viz_mpm_continuum.py",
+      "sha": "9847106afb693e3c280988716382b60e1deb27ad",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "scripts/webapp_network_batch.py",
+      "sha": "1841d27bbe46e2cae5d7ca12a709601ffe1afeec",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "scripts/wsl_network_smoke.py",
+      "sha": "5d7e2da1451741975f83df95dd0f11a279409376",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "webapp/ledger_view.py",
+      "sha": "23cbb564cfa7fec95182e5f12b6774840f1f31a1",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "webapp/mpm_lab_register.py",
+      "sha": "02e6ac183727d553178445cb28034b41da20864c",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "webapp/predictor_engine.py",
+      "sha": "808866f6c50841b7233cf13adae532b4accf9a41",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "webapp/security.py",
+      "sha": "debba1fcd449667e625528108d004475b4026cc5",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "webapp/static/js/viewer3d.js",
+      "sha": "f1373b9f4f98e812d1964d5735bf1b2afd5bc023",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "webapp/storage_sync.py",
+      "sha": "dd51efeebd7d203e79b038cc3fb310485ca49ee3",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "webapp/structure_predictor.py",
+      "sha": "dc16a33e9442148260f3ef5fff3e8a54bc443bc8",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "webapp/templates/group.html",
+      "sha": "b0d5f9bbb56381a85e9bc724e822a8f1e62e90f0",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "webapp/templates/hetero.html",
+      "sha": "20be47938e00bd0326bd7ecaf2997e38783e9da6",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "webapp/templates/hetero_transcript.html",
+      "sha": "0b6f695b1ae255dc3d72b8b2f69e98a755e30215",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "webapp/templates/mpm_lab.html",
+      "sha": "071fc6ddf3c8768fc2382d9e1c4c0f4b869b72b3",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "webapp/test_closed_param_groupview.py",
+      "sha": "092d9a628c099fdf791fb6b64a22d6aeb558494f",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "webapp/test_closed_param_labels.py",
+      "sha": "02e0a60d3e859c3f315c451798aa690ab3708eab",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "webapp/test_constriction_power_labels.py",
+      "sha": "f5d14447b656162e1796f5876b7f5cd0af38ffd2",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "webapp/test_hetero_transcript_page.py",
+      "sha": "5f7000357c044fa0621778de8d46c11dde3e7940",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "webapp/test_pipeline_provenance.py",
+      "sha": "d182ad80a4c63f33c40fc21b8b296934464d1292",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "webapp/test_rint_scope_labels.py",
+      "sha": "0c65d33c27c554d93c0f57e2a98057034721600c",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "webapp/test_s567_labels.py",
+      "sha": "49f4ed97083443d2d067b0328f1bead53fdb4eea",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "webapp/test_stress_lw_labels.py",
+      "sha": "1836bc503a879aaa18c1a522f2909d1282bc047e",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "webapp/test_tau_grade_unify.py",
+      "sha": "72e20f30899a267c69fcdb90be8ad4f2e3796e9c",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "webapp/test_tau_handover_status.py",
+      "sha": "34473d80a0cd9429ac39c3e8c51c948a32a45009",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "webapp/test_tau_labels.py",
+      "sha": "8b399e318d30397107ad6011f910ff1257f94a08",
+      "source_commit": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+      "role": "prior_fixture_or_dependency_not_revalidated_at_current_pin"
+    },
+    {
+      "path": "scripts/run_network_194_parallel.py",
+      "sha": "534485e63e9af652121a249efb91b1e58f934bff",
+      "sha256": "5790b155e2afdd0e121929355e5eeb7b0bed228bab8e3988179388dfe8e7b89f",
+      "source_commit": "061ec1b582746730c6f3d1e2b8b4570081d19bb6",
+      "role": "fresh_pinned"
+    },
+    {
+      "path": "scripts/lhs_design_dataset.py",
+      "sha": "524e0dfa9b9a84573c0e4020356701e52dbe17b2",
+      "sha256": "7b64051f925fa30a435c07f9b9bbb08f58f5a27fe78242a098ee716e16f3c907",
+      "source_commit": "061ec1b582746730c6f3d1e2b8b4570081d19bb6",
+      "role": "fresh_pinned"
+    },
+    {
+      "path": "webapp/test_network_handover_chain.py",
+      "sha": "8e752aea156243f58474eea26f1cb681160ae12d",
+      "sha256": "17d2edf9a1591eedcea764a88874fb7112c777258bded2b4d7a71aeb5fcb320a",
+      "source_commit": "061ec1b582746730c6f3d1e2b8b4570081d19bb6",
+      "role": "fresh_pinned"
+    },
+    {
+      "path": "webapp/pipeline_service.py",
+      "sha": "e12365babef50a4463d632a2e4187ea716b3b6fa",
+      "sha256": "60e0f9785c475eac542d8fffe4928350248ef39cd8aa829db49031611dc56413",
+      "source_commit": "061ec1b582746730c6f3d1e2b8b4570081d19bb6",
+      "role": "fresh_pinned"
+    },
+    {
+      "path": "scripts/tau_flux.py",
+      "sha": "c3f7b3678d142b4132cd2ae85896c1459c3ef0e1",
+      "sha256": "550dab08bcea0e35c3b84cdf51f797a4d4987d5d5738413347af09d4e4abc863",
+      "source_commit": "061ec1b582746730c6f3d1e2b8b4570081d19bb6",
+      "role": "fresh_pinned"
+    },
+    {
+      "path": "docs/data/lhs_network194_11fcf91e8/README.md",
+      "sha": "f06fa737fd55a7b3689ff2af60a004dae9e1892e",
+      "sha256": "0bdf247a06dffbacef0a4d96355b277c9a95ec0b807de5d2fe5dcfca089c02c4",
+      "source_commit": "061ec1b582746730c6f3d1e2b8b4570081d19bb6",
+      "role": "fresh_pinned"
+    },
+    {
+      "path": "docs/reviews/lhs_network_batch_registration_20261005.md",
+      "sha": "03e3bccf3e2093f66590df8ff75b7211f5f82483",
+      "sha256": "42e6488cbb7a35d00fcc4fc7c1690672bae080a396b30cd7c0f5ea5255360ee2",
+      "source_commit": "061ec1b582746730c6f3d1e2b8b4570081d19bb6",
+      "role": "fresh_pinned"
+    },
+    {
+      "path": "docs/data/lhs_network194_11fcf91e8/manifest.json",
+      "sha": "facd58ae23d5661323fbd17f2005a0e8272b2d47",
+      "sha256": "59fbc2c6640009d3e15b0812553b12c3ca540c77486a6981eef2323f07db803d",
+      "source_commit": "061ec1b582746730c6f3d1e2b8b4570081d19bb6",
+      "role": "fresh_pinned"
+    },
+    {
+      "path": "scripts/network_conductivity.py",
+      "sha": "0d554a49330a7aa02f00a2958404ab499dc5637a",
+      "sha256": "b0555f7f7a65c2d327b4cca15791586e980d0b6b75b47c846457d628f19b7592",
+      "source_commit": "061ec1b582746730c6f3d1e2b8b4570081d19bb6",
+      "role": "fresh_pinned"
+    },
+    {
+      "path": "scripts/plastic_coverage.py",
+      "sha": "59b1d7cbb74f43f7a53594468193c5ef5327b84a",
+      "sha256": "fdb00df699d30cf7a24bcbf0485e9e6713955eecc0703ad4aa75fa3fabe91cc3",
+      "source_commit": "061ec1b582746730c6f3d1e2b8b4570081d19bb6",
+      "role": "fresh_pinned"
+    },
+    {
+      "path": "scripts/dem_analysis_core.py",
+      "sha": "629fb278118161e1ba1abcb00db0bcaa0f2cf1b6",
+      "sha256": "39fb19cb7eb962f11fe88546fa0ad93c4a9074846be13d15b27c2eae44fb620f",
+      "source_commit": "061ec1b582746730c6f3d1e2b8b4570081d19bb6",
+      "role": "fresh_pinned"
+    },
+    {
+      "path": "scripts/grade_engine.py",
+      "sha": "dae17969ed4651226cbca7124f29850218660700",
+      "sha256": "9a4d27ea9e937298ab84c0cf1bcd4c4f4957317e783247fd047923758dc96efc",
+      "source_commit": "061ec1b582746730c6f3d1e2b8b4570081d19bb6",
+      "role": "fresh_pinned"
+    },
+    {
+      "path": "webapp/app.py",
+      "sha": "f26d03aac349f61215ded8fac680db838830ad53",
+      "sha256": "3eca948001600a2f73b4057da30d1f0aff1141cad286c13701560c885600e4e3",
+      "source_commit": "061ec1b582746730c6f3d1e2b8b4570081d19bb6",
+      "role": "fresh_pinned"
+    },
+    {
+      "path": "scripts/lhs_webapp_batch.py",
+      "sha": "081693abed37e824bf71941eafeac680344314e0",
+      "sha256": "b9d0199cc1bd23cd1ed5405a283081c2c3a31bc6ce256670c8a9b63d177b5668",
+      "source_commit": "061ec1b582746730c6f3d1e2b8b4570081d19bb6",
+      "role": "fresh_pinned"
+    },
+    {
+      "path": "scripts/extract_se_network_diagnostics.py",
+      "sha": "2a0bade80a3b6545edabbe83379c5c78616db790",
+      "sha256": "db7151b51252e60c42c2bc2a2b3173ae6f4b97a94226b51a97b1e357e028ea9a",
+      "source_commit": "061ec1b582746730c6f3d1e2b8b4570081d19bb6",
+      "role": "fresh_pinned"
+    },
+    {
+      "path": "scripts/analyze_contacts.py",
+      "sha": "e214dc377c61f3b625f186b20149bf9eb5314f94",
+      "sha256": "a383ada7aef3d13ba08bd84728a20b6207f9b124a01ce3852c01ae2518ca1aa9",
+      "source_commit": "061ec1b582746730c6f3d1e2b8b4570081d19bb6",
+      "role": "fresh_pinned"
+    },
+    {
+      "path": "scripts/analyze_contacts_bimodal.py",
+      "sha": "0ed6796c4458ba8066b98e73c50930c6433bfa74",
+      "sha256": "8afcc76030b747d8632014fa5b6cae1c1f066007b9247902caefb05288cf1ca5",
+      "source_commit": "061ec1b582746730c6f3d1e2b8b4570081d19bb6",
+      "role": "fresh_pinned"
+    },
+    {
+      "path": "scripts/coverage_physics_vs_hertzian.py",
+      "sha": "406a6b9a951561a3703511fcc63396fc229441b6",
+      "sha256": "4341b03b38ec1f811a3087d699471860cad366323ae9eb419cf76457e6cd6d01",
+      "source_commit": "061ec1b582746730c6f3d1e2b8b4570081d19bb6",
+      "role": "fresh_pinned"
+    },
+    {
+      "path": "scripts/parse_liggghts.py",
+      "sha": "c722145aeda89fd6c99fdf08c44b204e87a3dce4",
+      "sha256": "4fe3f1f32ebc4168978c7278b7a1d37b072d64fbf00e97d0933351337d223425",
+      "source_commit": "061ec1b582746730c6f3d1e2b8b4570081d19bb6",
+      "role": "fresh_pinned"
+    },
+    {
+      "path": "scripts/se_material.py",
+      "sha": "506caca0f8744ee89836a026685f0730ef478f94",
+      "sha256": "767a6a383d4581274b07ee79146a53fbe118f1f6eb0acb9ec0a5af21c9c9930c",
+      "source_commit": "061ec1b582746730c6f3d1e2b8b4570081d19bb6",
+      "role": "fresh_pinned"
+    },
+    {
+      "path": "scripts/metrics_json.py",
+      "sha": "a674863ae821cb5673b23ae09f2cfddf7eda405c",
+      "sha256": "baa671f895dd6103cf95c25647ee45877d98306f00ab15cd3968fbe4354a7702",
+      "source_commit": "061ec1b582746730c6f3d1e2b8b4570081d19bb6",
+      "role": "fresh_pinned"
+    },
+    {
+      "path": "scripts/lhs_harvest_batch.py",
+      "sha": "77b028620779668aec1777b21a1a77be4bf1fbbd",
+      "sha256": "4d798c631ac893ca32018fde58145bc5c8a2e3e2a6423da61cb87bd13599148e",
+      "source_commit": "061ec1b582746730c6f3d1e2b8b4570081d19bb6",
+      "role": "fresh_pinned"
+    },
+    {
+      "path": "scripts/lhs_descriptor_harvest.py",
+      "sha": "29aeaa6d362f9912ce2c6399238ae3d56f75ee4e",
+      "sha256": "27624b8a39ab8807645f819776ea0125f423d4d4f61a90e8c3a3fc45b357178b",
+      "source_commit": "061ec1b582746730c6f3d1e2b8b4570081d19bb6",
+      "role": "fresh_pinned"
+    },
+    {
+      "path": "scripts/export_master_csv.py",
+      "sha": "24aa87ff113813570647bb6490130047dedbc35e",
+      "sha256": "2899dc2410ad8840dadf41993511c225d60f29f77edfdb2fac6703b25ccf767b",
+      "source_commit": "061ec1b582746730c6f3d1e2b8b4570081d19bb6",
+      "role": "fresh_pinned"
+    },
+    {
+      "path": "scripts/type_map_resolve.py",
+      "sha": "31092eb1afda0b1316c3f4f7c716c0dd537b9920",
+      "sha256": "4a289c6412e4b8e1bc0fba573cb287966dfa00a053399097b587f1e14726bfe5",
+      "source_commit": "061ec1b582746730c6f3d1e2b8b4570081d19bb6",
+      "role": "fresh_pinned"
+    },
+    {
+      "path": "scripts/audit_constriction_deleted.py",
+      "sha": "d4b3546be3bb859761014efea6dd7ee695c50b88",
+      "sha256": "7028be8f10d491071e512767987bbcd7d74b47fa227badeded99916c7af512bd",
+      "source_commit": "061ec1b582746730c6f3d1e2b8b4570081d19bb6",
+      "role": "fresh_pinned"
+    },
+    {
+      "path": "webapp/templates/single.html",
+      "sha": "e386f12bd45ab8129d6e4e456bd63b29361f8797",
+      "sha256": "ac0c366379baa70672309bb48c667ae235b707ee6e318671452a2fbd7b11f1a4",
+      "source_commit": "061ec1b582746730c6f3d1e2b8b4570081d19bb6",
+      "role": "fresh_pinned"
+    }
+  ]
+}

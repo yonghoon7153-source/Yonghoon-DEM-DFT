@@ -1,0 +1,2 @@
+case	cohort	status	failed_stages	network_run_id	attempts	rc	signal	wall_s	batch_elapsed_s	peak_rss_mb	est_mem_mb	user_s	sys_s	contacts	log	seal	seal_attempt
+lhs00_000	lhs	done		r1	1	0									C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\rglr3_reverify_20261006\evidence\launcher_merge_md_fs651\cases\lhs00_000\log.txt	SEALED_LEGACY	1

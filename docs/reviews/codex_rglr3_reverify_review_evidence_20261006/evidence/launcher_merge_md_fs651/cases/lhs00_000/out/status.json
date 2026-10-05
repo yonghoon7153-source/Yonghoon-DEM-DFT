@@ -1,0 +1,19 @@
+{
+ "schema": "lhs_webapp_batch/v1",
+ "stop_after": "network",
+ "harvest_dir": "sealed_harvest",
+ "cohort": "sealed_cohort",
+ "cases": {
+  "lhs00_000": {
+   "case": "lhs00_000",
+   "status": "failed",
+   "network_run_id": "r1"
+  }
+ },
+ "runs": [
+  {
+   "git_sha": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+   "dirty": false
+  }
+ ]
+}

@@ -1,0 +1,23 @@
+{
+  "schema": "network_attempt/v2",
+  "network_attempt_run_id": "20261006T030648-aea6510f",
+  "solver_status": "failed",
+  "latest_attempt_status": "failed",
+  "failure_kind": "candidate_rejected",
+  "reason": "Network ionic record check (\uc2b9\uaca9 \uc804 \uacf5\uc6a9 \uae30\uc220 \uac80\uc0ac \u00b7 RGLR2-01): \u2605 \uacf5\uc6a9 \uae30\uc220 \uac80\uc0ac \uc2e4\ud328 (\uc2b9\uaca9 \uc804 \u00b7 \uac8c\uc2dc \uc548 \ud568): network_conductivity_dual.json[hertzian]: invalid_input: computed \uc778\ub370 \u03c3_ratio (sigma_full) None \u2014 \uc720\ud55c \uc591\uc218\uc5ec\uc57c; network_conductivity_dual.json[physics]: invalid_input: computed \uc778\ub370 \u03c3_ratio (sigma_full) None \u2014 \uc720\ud55c \uc591\uc218\uc5ec\uc57c; network_conductivity.json: invalid_input: computed \uc778\ub370 \u03c3_ratio (sigma_full) None \u2014 \uc720\ud55c \uc591\uc218\uc5ec\uc57c; network_conductivity_hertzian.json: invalid_input: computed \uc778\ub370 \u03c3_ratio (sigma_full) None \u2014 \uc720\ud55c \uc591\uc218\uc5ec\uc57c; network_conductivity_physics.json: invalid_input: computed \uc778\ub370 \u03c3_ratio (sigma_full) None \u2014 \uc720\ud55c \uc591\uc218\uc5ec\uc57c",
+  "stage": "Network ionic record check (\uc2b9\uaca9 \uc804 \uacf5\uc6a9 \uae30\uc220 \uac80\uc0ac \u00b7 RGLR2-01)",
+  "active_network_run_id": null,
+  "active_status": "none",
+  "previous_generation_kept": false,
+  "input_digests": {
+    "atoms.csv": "9b04cb13d56f5952",
+    "contacts.csv": "7d1506ed544f208f"
+  },
+  "code_sha": "unknown",
+  "attempted_at": "2026-10-06T03:06:48",
+  "argv": {
+    "type_map": "1:SE",
+    "scale": 1,
+    "contact_mode": "both"
+  }
+}

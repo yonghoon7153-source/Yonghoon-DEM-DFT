@@ -1,0 +1,279 @@
+{
+ "zip": {
+  "name": "codex_rglr3_reverify_review_20261006.zip",
+  "sha256": "b961452942b12091311a35a6e29ae0c4cca82fadf98435fe0b832869cfd85043",
+  "entries": 1529,
+  "uncompressed_bytes": 29214970,
+  "root": "rglr3_reverify_20261006/"
+ },
+ "imported": {
+  "verdict": "docs/reviews/codex_review_rglr3_reverify_20261006.md",
+  "verdict_sha256": "bb5f7dc91fc543f99feaa95fb7b6239b82931e17c75097d6be8af830091528f6",
+  "folder": "docs/reviews/codex_rglr3_reverify_review_evidence_20261006/"
+ },
+ "excluded_from_repo": {
+  "source": {
+   "files": 688,
+   "equal_to_our_HEAD_blob": 688,
+   "head": "92b6ebde1ad2df73a27933a6849f9eab01b4ff71",
+   "note": "전부 우리 HEAD 의 같은 경로 blob 과 같다 (manifest 458 · 획득 207 · 우리 증거 ZIP 26 · 겹침 하나로 셈) — source_manifest.json · final_acquisition.json · incoming_manifest.json 으로 복원"
+  },
+  "tau_sources": {
+   "files": 582,
+   "equal_to_committed_tarball": 582,
+   "tarball": "docs/data/lhs_network194_11fcf91e8/handover_v12_20261006/net194_tau_sources_20261006.tar.gz"
+  },
+  "diffs": {
+   "scripts__analyze_contacts.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "scripts__analyze_contacts_bimodal.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "scripts__audit_constriction_deleted.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "scripts__coverage_physics_vs_hertzian.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "scripts__dem_analysis_core.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "scripts__export_master_csv.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "scripts__extract_se_network_diagnostics.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "scripts__grade_engine.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "scripts__lhs_descriptor_harvest.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "scripts__lhs_design_dataset.py": "3d43014708639595832a203ca086c60d5b49e0001fa0f017efe656fa3f9916f7",
+   "scripts__lhs_harvest_batch.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "scripts__lhs_webapp_batch.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "scripts__metrics_json.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "scripts__network_conductivity.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "scripts__parse_liggghts.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "scripts__plastic_coverage.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "scripts__run_network_194_parallel.py": "62ff8036f15cfef6d8142d6e1d39419bc3ba6954bab79fe1e5e7f5637b7afcb8",
+   "scripts__se_material.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "scripts__tau_flux.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "scripts__type_map_resolve.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "webapp__app.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "webapp__pipeline_service.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "webapp__templates__single.html": "f4a1b698280dac8cc3cef439a855574112192afccc15c167fe7ab1be3cf29ba8",
+   "webapp__test_network_handover_chain.py": "b48f0db5d360477a6da2a3d2b33d8f8db86b9053fd9e92bb3abeff6464bd0f8d"
+  },
+  "inputs": {
+   "request_user.md": {
+    "sha256": "7838141f86b55c56bbbfff72a8ef3bb6163de38f6041ba0e0c721c0418edd538",
+    "note": "1저자가 보낸 우리 요청서 본문 (docs/reviews/codex_rglr3_reverify_request_20261006.md 의 표시용 사본 · 바이트 다름 = 마크다운 기호 없음)"
+   },
+   "prior_review.md": {
+    "sha256": "b6745b572e29f989e75aa2898e26fbbc900e95dc19c967a7d83c236fc5d7eb3f",
+    "note": "docs/reviews/codex_review_rglr2_reverify_20261005.md 와 바이트 동일"
+   }
+  }
+ },
+ "reproduction_linux": {
+  "env": {
+   "python": "3.11.15",
+   "numpy": "2.4.6",
+   "scipy": "1.17.1",
+   "pandas": "3.0.6",
+   "os": "Linux container"
+  },
+  "method": "판정 zip 을 그대로 풀어 (source/ 688 = 우리 HEAD blob 과 같음 → 그 묶음 실행 = 우리 트리 실행) 묶음 실행기를 무변경 실행: verify_final_acquisition.py · probes/delivery_audit.py · probes/execution_and_567.py · probes/bulk_counterexample.py · run_tests.py lhs · run_tests.py lhs chain tau pipeline · run_probes.py (7) · source/ 에서 ../probes/new_probes_after_fix.py",
+  "rc": {
+   "verify_final_acquisition": 0,
+   "delivery_audit": 0,
+   "execution_and_567": 0,
+   "bulk_counterexample": 0,
+   "run_tests_lhs": 0,
+   "run_tests_4": 0,
+   "run_probes_7": 0,
+   "new_probes_after_fix": 0
+  },
+  "compare": {
+   "final_integrity.json": {
+    "keys": 624,
+    "diffs": 0,
+    "verdict_like_keys": 0,
+    "verdict_like_unequal": []
+   },
+   "delivery_independent.json": {
+    "keys": 190,
+    "diffs": 0,
+    "verdict_like_keys": 0,
+    "verdict_like_unequal": []
+   },
+   "reread_mutants.json": {
+    "keys": 34,
+    "diffs": 0,
+    "verdict_like_keys": 6,
+    "verdict_like_unequal": []
+   },
+   "reread_baseline.json": {
+    "keys": 221,
+    "diffs": 2,
+    "verdict_like_keys": 1,
+    "verdict_like_unequal": []
+   },
+   "reread_common_cell.json": {
+    "keys": 225,
+    "diffs": 2,
+    "verdict_like_keys": 1,
+    "verdict_like_unequal": []
+   },
+   "reread_audit_duplicate.json": {
+    "keys": 221,
+    "diffs": 2,
+    "verdict_like_keys": 1,
+    "verdict_like_unequal": []
+   },
+   "execution_and_567.json": {
+    "keys": 791,
+    "diffs": 0,
+    "verdict_like_keys": 220,
+    "verdict_like_unequal": []
+   },
+   "bulk_counterexample.json": {
+    "keys": 33,
+    "diffs": 3,
+    "verdict_like_keys": 0,
+    "verdict_like_unequal": [],
+    "note": "nz=40 의 G · q · T 만 상대 ~2.5e-12 (CG 수치) · 판정 T<1 셋 다 같음"
+   },
+   "new_probes_after_fix.json": {
+    "keys": 186,
+    "diffs": 18,
+    "verdict_like_keys": 6,
+    "verdict_like_unequal": [],
+    "note": "차이 = 경로 · 시각 · run id + τ² 1 ULP · vm 곱셈 ↔ pow 비트 차 1 ↔ 0 (libm) — 4차 반입과 같은 부류"
+   },
+   "network_adversarial.json": {
+    "keys": 1838,
+    "diffs": 268,
+    "verdict_like_keys": 122,
+    "verdict_like_unequal": [],
+    "note": "차이 = 합성 fixture 무작위 접미사 · 시각 · run id · 입력 digest · 백업 파일 이름 (시각 포함) — 판정 키 138 중 다른 것 1 = attempt.reason 문자열 안의 백업 파일 이름 (시각)"
+   },
+   "lw_replay.json": {
+    "keys": 150,
+    "diffs": 0,
+    "verdict_like_keys": 15,
+    "verdict_like_unequal": []
+   },
+   "vm_boundary.json": {
+    "keys": 31,
+    "diffs": 0,
+    "verdict_like_keys": 3,
+    "verdict_like_unequal": []
+   },
+   "precision_boundary.json": {
+    "keys": 19,
+    "diffs": 2,
+    "verdict_like_keys": 0,
+    "verdict_like_unequal": [],
+    "note": "차이 = numpy · python 버전 문자열뿐"
+   },
+   "raw18.json": {
+    "keys": 137,
+    "diffs": 24,
+    "verdict_like_keys": 1,
+    "verdict_like_unequal": [],
+    "note": "출력 hex 끝자리 · 우리 ↔ Codex 최대 상대 2.2e-11 (솔버 수치 · BLAS) · 각 환경 안에서 옛 ↔ 새는 1 ULP 안"
+   },
+   "handover_replay.json": {
+    "keys": 18,
+    "diffs": 0,
+    "verdict_like_keys": 0,
+    "verdict_like_unequal": []
+   },
+   "handover_before_after.json": {
+    "keys": 40,
+    "diffs": 0,
+    "verdict_like_keys": 0,
+    "verdict_like_unequal": []
+   }
+  },
+  "tests": {
+   "tests_lhs.json": [
+    {
+     "name": "lhs",
+     "ours_rc": 0,
+     "codex_rc": 0,
+     "ours": "326/326",
+     "codex": "326/326"
+    }
+   ],
+   "tests_lhs_chain_tau_pipeline.json": [
+    {
+     "name": "lhs",
+     "ours_rc": 0,
+     "codex_rc": 1,
+     "ours": "326/326",
+     "codex": "325/326"
+    },
+    {
+     "name": "chain",
+     "ours_rc": 0,
+     "codex_rc": 0,
+     "ours": "19/19",
+     "codex": "19/19"
+    },
+    {
+     "name": "tau",
+     "ours_rc": 0,
+     "codex_rc": 0,
+     "ours": "55/55",
+     "codex": "55/55"
+    },
+    {
+     "name": "pipeline",
+     "ours_rc": 0,
+     "codex_rc": 0,
+     "ours": "284/284",
+     "codex": "284/284"
+    }
+   ],
+   "probe_summary.json": [
+    {
+     "name": "ind_network",
+     "ours_rc": 0,
+     "codex_rc": 0,
+     "ours": null,
+     "codex": null
+    },
+    {
+     "name": "ind_lw",
+     "ours_rc": 0,
+     "codex_rc": 0,
+     "ours": null,
+     "codex": null
+    },
+    {
+     "name": "ind_vm",
+     "ours_rc": 0,
+     "codex_rc": 0,
+     "ours": null,
+     "codex": null
+    },
+    {
+     "name": "ind_precision",
+     "ours_rc": 0,
+     "codex_rc": 0,
+     "ours": null,
+     "codex": null
+    },
+    {
+     "name": "ind_raw18",
+     "ours_rc": 0,
+     "codex_rc": 0,
+     "ours": null,
+     "codex": null
+    },
+    {
+     "name": "ind_handover",
+     "ours_rc": 0,
+     "codex_rc": 0,
+     "ours": null,
+     "codex": null
+    },
+    {
+     "name": "ind_handover_diff",
+     "ours_rc": 0,
+     "codex_rc": 0,
+     "ours": null,
+     "codex": null
+    }
+   ]
+  },
+  "note_tests": "Codex 의 4 묶음 실행에서 lhs 325/326 (rc 1) = 그쪽 부분 스냅샷의 옛 웹 템플릿 (판정문 §2 · 재취득 뒤 326/326) — 우리는 두 번 다 326/326"
+ }
+}

@@ -1,0 +1,49 @@
+{
+ "schema": "network_parallel_launcher/v1#merge",
+ "merged_at": "2026-10-06T03:07:13",
+ "git_sha": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+ "cohorts": {
+  "lhs": {
+   "n": 1,
+   "counts": {
+    "done": 1
+   },
+   "n_rows": 1,
+   "wall_s": {
+    "median": null,
+    "p90": null,
+    "max": null,
+    "sum": 0
+   },
+   "peak_rss_mb": {
+    "median": null,
+    "max": null
+   },
+   "rss_over_est": {
+    "median": null,
+    "max": null
+   }
+  }
+ },
+ "code_changed_since_launch": [
+  "scripts/network_conductivity.py"
+ ],
+ "runs_code_changed_during": {},
+ "structural": [],
+ "mixed_generation": [],
+ "anomalies": [],
+ "failures": [],
+ "seal": {
+  "schema": "launch_seal/v1",
+  "fp": "3bc0a116ddab109c01f6ab1e1f0cf0d3abf67c5cf6c6336d058315c6189eb0b5",
+  "code_root": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rglr3_reverify_20261006\\source",
+  "launch_sha": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+  "verdicts": {
+   "SEALED_LEGACY": 1
+  },
+  "unsealed": [],
+  "dirty_allowed": [],
+  "rule": "case_seal — 지금 기록을 쓴 시도의 시작 · 끝 지문 = 발사 지문 · git sha = 발사 · dirty 는 기록된 --allow-dirty 만 · 옛 형식은 첫 run 의 유일한 시도만 (run_001 실행 중 변화 0 · 깨끗한 사전 점검 · 워커 runs 1 건)"
+ },
+ "allow_mixed_generation": false
+}

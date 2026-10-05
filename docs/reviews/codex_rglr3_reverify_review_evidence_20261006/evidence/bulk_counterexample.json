@@ -1,0 +1,41 @@
+[
+  {
+    "nz": 20,
+    "nodes": 180,
+    "edges": 531,
+    "L": 40,
+    "boundary": "L0",
+    "G": 0.7440348689844989,
+    "q": 0.8267054099827765,
+    "phi": 0.5235987755982988,
+    "T": 0.6333559322046863,
+    "analytic_centerplane_limit": 0.6333333333333333,
+    "log": "  Percolating component: 180 nodes, 531 edges\n  Solve: spsolve\n"
+  },
+  {
+    "nz": 40,
+    "nodes": 360,
+    "edges": 1071,
+    "L": 80,
+    "boundary": "L0",
+    "G": 0.3624883357821425,
+    "q": 0.8055296350714278,
+    "phi": 0.5235987755982988,
+    "T": 0.6500056022791394,
+    "analytic_centerplane_limit": 0.65,
+    "log": "  Percolating component: 360 nodes, 1071 edges\n  Solve: spsolve\n"
+  },
+  {
+    "nz": 80,
+    "nodes": 720,
+    "edges": 2151,
+    "L": 160,
+    "boundary": "L0",
+    "G": 0.17895110114248355,
+    "q": 0.795338227299927,
+    "phi": 0.5235987755982988,
+    "T": 0.6583347280764444,
+    "analytic_centerplane_limit": 0.6583333333333333,
+    "log": "  Percolating component: 720 nodes, 2151 edges\n  Solve: spsolve\n"
+  }
+]

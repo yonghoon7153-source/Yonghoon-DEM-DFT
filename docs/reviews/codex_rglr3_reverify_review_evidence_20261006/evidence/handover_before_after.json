@@ -1,0 +1,56 @@
+{
+  "comparisons": [
+    {
+      "cohort": "130",
+      "groups": "contact,percolation",
+      "rows": 130,
+      "columns": 189,
+      "table_sha256": "4df9c1f580bc1ae69d3cbcc4bbd372d78ab9960b662e1d2112b787e8c311bb1f",
+      "dictionary_sha256": "8f183890ec1d1e0edf3ac622f8f662eb42d102eed6469401081c0772e0d6b422",
+      "byte_identical": true
+    },
+    {
+      "cohort": "130",
+      "groups": "contact,percolation,f1,fracture,area",
+      "rows": 130,
+      "columns": 223,
+      "table_sha256": "3271393f2e662b7b7636ad76eff79c377052ec36bf2fac1bdadcacf082f5a83d",
+      "dictionary_sha256": "c296d90034e6d8234e2202a2e21fdf53b6092cd029eb95438e9d791ce1e9f110",
+      "byte_identical": true
+    },
+    {
+      "cohort": "64",
+      "groups": "contact,percolation",
+      "rows": 64,
+      "columns": 191,
+      "table_sha256": "769cb26972c42783d4a905aef7a15c48a353483ee08796e5fe39f85073b1017d",
+      "dictionary_sha256": "79d07d32e1087cc460c9f08d14c3ca1a5f9162c9fc9d5debec48ae70246d904a",
+      "byte_identical": true
+    },
+    {
+      "cohort": "64",
+      "groups": "contact,percolation,f1,fracture,area",
+      "rows": 64,
+      "columns": 225,
+      "table_sha256": "57290b4f52cf04461b97323a98a219dd6ba2b2b96e0fcabb4b80d3210ebf8f5a",
+      "dictionary_sha256": "a0704d8254e0b43537b0408411e64097d4ef5f332ee399ae09a27bb3ba9c21b9",
+      "byte_identical": true
+    }
+  ],
+  "LW_rejected": [
+    "stress_cv_lw",
+    "stress_cv_lw_nowall",
+    "stress_ratio_AM_P_lw",
+    "stress_ratio_SE_lw_nowall",
+    "stress_lw_timestep",
+    "stress_lw_check_virial_total_rel"
+  ],
+  "legacy_not_LW_excluded": [
+    "stress_cv",
+    "stress_ratio_AM_P",
+    "stress_z_layer_cv",
+    "stress_cv_contract",
+    "stress_cv_status"
+  ],
+  "reference_sha256": "cbfdfe63e43a3b64f3570b1a33115643b60caf2b365638cc8631ca1236cb38a8"
+}

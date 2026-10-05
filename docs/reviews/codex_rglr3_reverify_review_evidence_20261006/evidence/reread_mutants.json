@@ -1,0 +1,73 @@
+[
+  {
+    "name": "baseline",
+    "mutation": null,
+    "rc": 0,
+    "verdict": "PASS",
+    "fails": [],
+    "regression": {
+      "same": 24440,
+      "close": 0,
+      "diff": 0
+    },
+    "C8": {
+      "n": 194,
+      "verdicts": {
+        "SEALED_LEGACY": 194
+      },
+      "merged": {
+        "same": 194
+      }
+    }
+  },
+  {
+    "name": "common_cell",
+    "mutation": [
+      "lhs00_000",
+      "coverage_AM_total_hertz_pct",
+      "13.643988681252257",
+      "99"
+    ],
+    "rc": 0,
+    "verdict": "PASS",
+    "fails": [],
+    "regression": {
+      "same": 24439,
+      "close": 0,
+      "diff": 1
+    },
+    "C8": {
+      "n": 194,
+      "verdicts": {
+        "SEALED_LEGACY": 194
+      },
+      "merged": {
+        "same": 194
+      }
+    }
+  },
+  {
+    "name": "audit_duplicate",
+    "mutation": [
+      "lhsx_064",
+      "lhs00_000"
+    ],
+    "rc": 0,
+    "verdict": "PASS",
+    "fails": [],
+    "regression": {
+      "same": 24440,
+      "close": 0,
+      "diff": 0
+    },
+    "C8": {
+      "n": 194,
+      "verdicts": {
+        "SEALED_LEGACY": 194
+      },
+      "merged": {
+        "same": 194
+      }
+    }
+  }
+]

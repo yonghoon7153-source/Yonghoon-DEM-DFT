@@ -1,0 +1,166 @@
+{
+  "commit": "061ec1b582746730c6f3d1e2b8b4570081d19bb6",
+  "files": [
+    {
+      "path": "scripts/run_network_194_parallel.py",
+      "sha": "534485e63e9af652121a249efb91b1e58f934bff",
+      "display_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/061ec1b582746730c6f3d1e2b8b4570081d19bb6/scripts/run_network_194_parallel.py",
+      "display_title": "run_network_194_parallel.py"
+    },
+    {
+      "path": "scripts/lhs_design_dataset.py",
+      "sha": "524e0dfa9b9a84573c0e4020356701e52dbe17b2",
+      "display_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/061ec1b582746730c6f3d1e2b8b4570081d19bb6/scripts/lhs_design_dataset.py",
+      "display_title": "lhs_design_dataset.py"
+    },
+    {
+      "path": "webapp/test_network_handover_chain.py",
+      "sha": "8e752aea156243f58474eea26f1cb681160ae12d",
+      "display_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/061ec1b582746730c6f3d1e2b8b4570081d19bb6/webapp/test_network_handover_chain.py",
+      "display_title": "test_network_handover_chain.py"
+    },
+    {
+      "path": "webapp/pipeline_service.py",
+      "sha": "e12365babef50a4463d632a2e4187ea716b3b6fa",
+      "display_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/061ec1b582746730c6f3d1e2b8b4570081d19bb6/webapp/pipeline_service.py",
+      "display_title": "pipeline_service.py"
+    },
+    {
+      "path": "scripts/tau_flux.py",
+      "sha": "c3f7b3678d142b4132cd2ae85896c1459c3ef0e1",
+      "display_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/061ec1b582746730c6f3d1e2b8b4570081d19bb6/scripts/tau_flux.py",
+      "display_title": "tau_flux.py"
+    },
+    {
+      "path": "docs/data/lhs_network194_11fcf91e8/README.md",
+      "sha": "f06fa737fd55a7b3689ff2af60a004dae9e1892e",
+      "display_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/061ec1b582746730c6f3d1e2b8b4570081d19bb6/docs/data/lhs_network194_11fcf91e8/README.md",
+      "display_title": "README.md"
+    },
+    {
+      "path": "docs/reviews/lhs_network_batch_registration_20261005.md",
+      "sha": "03e3bccf3e2093f66590df8ff75b7211f5f82483",
+      "display_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/061ec1b582746730c6f3d1e2b8b4570081d19bb6/docs/reviews/lhs_network_batch_registration_20261005.md",
+      "display_title": "lhs_network_batch_registration_20261005.md"
+    },
+    {
+      "path": "docs/data/lhs_network194_11fcf91e8/manifest.json",
+      "sha": "facd58ae23d5661323fbd17f2005a0e8272b2d47",
+      "display_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/061ec1b582746730c6f3d1e2b8b4570081d19bb6/docs/data/lhs_network194_11fcf91e8/manifest.json",
+      "display_title": "manifest.json"
+    },
+    {
+      "path": "scripts/network_conductivity.py",
+      "sha": "0d554a49330a7aa02f00a2958404ab499dc5637a",
+      "display_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/061ec1b582746730c6f3d1e2b8b4570081d19bb6/scripts/network_conductivity.py",
+      "display_title": "network_conductivity.py"
+    },
+    {
+      "path": "scripts/plastic_coverage.py",
+      "sha": "59b1d7cbb74f43f7a53594468193c5ef5327b84a",
+      "display_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/061ec1b582746730c6f3d1e2b8b4570081d19bb6/scripts/plastic_coverage.py",
+      "display_title": "plastic_coverage.py"
+    },
+    {
+      "path": "scripts/dem_analysis_core.py",
+      "sha": "629fb278118161e1ba1abcb00db0bcaa0f2cf1b6",
+      "display_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/061ec1b582746730c6f3d1e2b8b4570081d19bb6/scripts/dem_analysis_core.py",
+      "display_title": "dem_analysis_core.py"
+    },
+    {
+      "path": "scripts/grade_engine.py",
+      "sha": "dae17969ed4651226cbca7124f29850218660700",
+      "display_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/061ec1b582746730c6f3d1e2b8b4570081d19bb6/scripts/grade_engine.py",
+      "display_title": "grade_engine.py"
+    },
+    {
+      "path": "webapp/app.py",
+      "sha": "f26d03aac349f61215ded8fac680db838830ad53",
+      "display_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/061ec1b582746730c6f3d1e2b8b4570081d19bb6/webapp/app.py",
+      "display_title": "app.py"
+    },
+    {
+      "path": "scripts/lhs_webapp_batch.py",
+      "sha": "081693abed37e824bf71941eafeac680344314e0",
+      "display_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/061ec1b582746730c6f3d1e2b8b4570081d19bb6/scripts/lhs_webapp_batch.py",
+      "display_title": "lhs_webapp_batch.py"
+    },
+    {
+      "path": "scripts/extract_se_network_diagnostics.py",
+      "sha": "2a0bade80a3b6545edabbe83379c5c78616db790",
+      "display_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/061ec1b582746730c6f3d1e2b8b4570081d19bb6/scripts/extract_se_network_diagnostics.py",
+      "display_title": "extract_se_network_diagnostics.py"
+    },
+    {
+      "path": "scripts/analyze_contacts.py",
+      "sha": "e214dc377c61f3b625f186b20149bf9eb5314f94",
+      "display_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/061ec1b582746730c6f3d1e2b8b4570081d19bb6/scripts/analyze_contacts.py",
+      "display_title": "analyze_contacts.py"
+    },
+    {
+      "path": "scripts/analyze_contacts_bimodal.py",
+      "sha": "0ed6796c4458ba8066b98e73c50930c6433bfa74",
+      "display_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/061ec1b582746730c6f3d1e2b8b4570081d19bb6/scripts/analyze_contacts_bimodal.py",
+      "display_title": "analyze_contacts_bimodal.py"
+    },
+    {
+      "path": "scripts/coverage_physics_vs_hertzian.py",
+      "sha": "406a6b9a951561a3703511fcc63396fc229441b6",
+      "display_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/061ec1b582746730c6f3d1e2b8b4570081d19bb6/scripts/coverage_physics_vs_hertzian.py",
+      "display_title": "coverage_physics_vs_hertzian.py"
+    },
+    {
+      "path": "scripts/parse_liggghts.py",
+      "sha": "c722145aeda89fd6c99fdf08c44b204e87a3dce4",
+      "display_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/061ec1b582746730c6f3d1e2b8b4570081d19bb6/scripts/parse_liggghts.py",
+      "display_title": "parse_liggghts.py"
+    },
+    {
+      "path": "scripts/se_material.py",
+      "sha": "506caca0f8744ee89836a026685f0730ef478f94",
+      "display_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/061ec1b582746730c6f3d1e2b8b4570081d19bb6/scripts/se_material.py",
+      "display_title": "se_material.py"
+    },
+    {
+      "path": "scripts/metrics_json.py",
+      "sha": "a674863ae821cb5673b23ae09f2cfddf7eda405c",
+      "display_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/061ec1b582746730c6f3d1e2b8b4570081d19bb6/scripts/metrics_json.py",
+      "display_title": "metrics_json.py"
+    },
+    {
+      "path": "scripts/lhs_harvest_batch.py",
+      "sha": "77b028620779668aec1777b21a1a77be4bf1fbbd",
+      "display_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/061ec1b582746730c6f3d1e2b8b4570081d19bb6/scripts/lhs_harvest_batch.py",
+      "display_title": "lhs_harvest_batch.py"
+    },
+    {
+      "path": "scripts/lhs_descriptor_harvest.py",
+      "sha": "29aeaa6d362f9912ce2c6399238ae3d56f75ee4e",
+      "display_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/061ec1b582746730c6f3d1e2b8b4570081d19bb6/scripts/lhs_descriptor_harvest.py",
+      "display_title": "lhs_descriptor_harvest.py"
+    },
+    {
+      "path": "scripts/export_master_csv.py",
+      "sha": "24aa87ff113813570647bb6490130047dedbc35e",
+      "display_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/061ec1b582746730c6f3d1e2b8b4570081d19bb6/scripts/export_master_csv.py",
+      "display_title": "export_master_csv.py"
+    },
+    {
+      "path": "scripts/type_map_resolve.py",
+      "sha": "31092eb1afda0b1316c3f4f7c716c0dd537b9920",
+      "display_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/061ec1b582746730c6f3d1e2b8b4570081d19bb6/scripts/type_map_resolve.py",
+      "display_title": "type_map_resolve.py"
+    },
+    {
+      "path": "scripts/audit_constriction_deleted.py",
+      "sha": "d4b3546be3bb859761014efea6dd7ee695c50b88",
+      "display_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/061ec1b582746730c6f3d1e2b8b4570081d19bb6/scripts/audit_constriction_deleted.py",
+      "display_title": "audit_constriction_deleted.py"
+    },
+    {
+      "path": "webapp/templates/single.html",
+      "sha": "e386f12bd45ab8129d6e4e456bd63b29361f8797",
+      "display_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/061ec1b582746730c6f3d1e2b8b4570081d19bb6/webapp/templates/single.html"
+    }
+  ]
+}

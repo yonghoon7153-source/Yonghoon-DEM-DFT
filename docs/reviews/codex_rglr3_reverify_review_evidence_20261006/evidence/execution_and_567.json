@@ -1,0 +1,1299 @@
+{
+  "worker_records": [
+    {
+      "case": "lhs00_000",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_001",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_002",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_003",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_004",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_005",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_006",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_007",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_008",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_009",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_010",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_011",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_012",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_013",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_014",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_015",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_016",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_017",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_018",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_019",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_020",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_021",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_022",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_023",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_024",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_025",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_026",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_027",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_028",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_029",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_030",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_031",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_032",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_033",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_034",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_035",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_036",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_037",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_038",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_039",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_040",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_041",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_042",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_043",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_044",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_045",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_046",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_047",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_048",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_049",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_050",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_051",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_052",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_053",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_054",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_055",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_056",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_057",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_058",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_059",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_060",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_061",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_062",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_063",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_064",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_065",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_066",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_067",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_068",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_069",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_070",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_071",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_072",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_073",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_074",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_075",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_076",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_077",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_078",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_079",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_080",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_081",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_082",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_083",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_084",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_085",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_086",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_087",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_088",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_089",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_090",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_091",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_092",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_093",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_094",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_095",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_096",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_097",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_098",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_099",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_100",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_101",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_102",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_103",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_104",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_105",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_106",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_107",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_108",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_109",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_110",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_111",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_112",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_113",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_114",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_115",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_116",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_117",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_118",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_119",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_120",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_121",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_122",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_123",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_124",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_125",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_126",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_127",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_128",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhs00_129",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_001",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_002",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_003",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_004",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_005",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_006",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_007",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_008",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_009",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_010",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_011",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_012",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_013",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_014",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_015",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_016",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_017",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_018",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_019",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_020",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_021",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_022",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_023",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_024",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_025",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_026",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_027",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_028",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_029",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_030",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_031",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_032",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_033",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_034",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_035",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_036",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_037",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_038",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_039",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_040",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_041",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_042",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_043",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_044",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_045",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_046",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_047",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_048",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_049",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_050",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_051",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_052",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_053",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_054",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_055",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_056",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_057",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_058",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_059",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_060",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_061",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_062",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_063",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    },
+    {
+      "case": "lhsx_064",
+      "verdict": "SEALED_LEGACY",
+      "record_hash_equal": true
+    }
+  ],
+  "mapping_disagreements": [],
+  "gate_counts": {
+    "rows_area_fracture": 194,
+    "F1_identity": 194
+  },
+  "mono_remaps": [
+    {
+      "case": "lhs00_118",
+      "delivered": "AM_P",
+      "raw": "AM_S"
+    },
+    {
+      "case": "lhs00_121",
+      "delivered": "AM_P",
+      "raw": "AM_S"
+    },
+    {
+      "case": "lhs00_124",
+      "delivered": "AM_P",
+      "raw": "AM_S"
+    },
+    {
+      "case": "lhs00_125",
+      "delivered": "AM_P",
+      "raw": "AM_S"
+    },
+    {
+      "case": "lhs00_126",
+      "delivered": "AM_P",
+      "raw": "AM_S"
+    },
+    {
+      "case": "lhsx_003",
+      "delivered": "AM_P",
+      "raw": "AM_S"
+    },
+    {
+      "case": "lhsx_017",
+      "delivered": "AM_P",
+      "raw": "AM_S"
+    },
+    {
+      "case": "lhsx_048",
+      "delivered": "AM_P",
+      "raw": "AM_S"
+    },
+    {
+      "case": "lhsx_062",
+      "delivered": "AM_P",
+      "raw": "AM_S"
+    }
+  ],
+  "source19": {
+    "scripts/network_conductivity.py": true,
+    "scripts/plastic_coverage.py": true,
+    "scripts/audit_constriction_deleted.py": true,
+    "scripts/extract_se_network_diagnostics.py": true,
+    "scripts/dem_analysis_core.py": true,
+    "scripts/analyze_contacts.py": true,
+    "scripts/analyze_contacts_bimodal.py": true,
+    "scripts/coverage_physics_vs_hertzian.py": true,
+    "scripts/parse_liggghts.py": true,
+    "scripts/se_material.py": true,
+    "scripts/metrics_json.py": true,
+    "scripts/tau_flux.py": true,
+    "scripts/lhs_webapp_batch.py": true,
+    "scripts/lhs_harvest_batch.py": true,
+    "scripts/lhs_descriptor_harvest.py": true,
+    "webapp/app.py": true,
+    "webapp/pipeline_service.py": true,
+    "scripts/export_master_csv.py": true,
+    "scripts/type_map_resolve.py": true
+  },
+  "run": {
+    "run": 1,
+    "n": 194,
+    "finished": 194,
+    "not_started": [],
+    "outcomes": {
+      "done": 194
+    },
+    "interrupted": false,
+    "wall_h": 0.599,
+    "events": 43,
+    "budget_events": 3777,
+    "backfills": 96,
+    "max_concurrent": 18,
+    "kind": "run",
+    "started": "2026-10-05T22:12:38",
+    "ended": "2026-10-05T22:49:21",
+    "lanes": 20,
+    "mem_budget_mb": 12275.03515625,
+    "min_free_gb": 1.0,
+    "code_changed_during_run": [],
+    "git_sha_end": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5"
+  },
+  "merge": {
+    "schema": "network_parallel_launcher/v1#merge",
+    "merged_at": "2026-10-05T22:49:21",
+    "git_sha": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+    "cohorts": {
+      "lhs": {
+        "n": 130,
+        "counts": {
+          "done": 130
+        },
+        "n_rows": 130,
+        "wall_s": {
+          "median": 71.6,
+          "p90": 198.2,
+          "max": 345.25,
+          "sum": 10823.3
+        },
+        "peak_rss_mb": {
+          "median": 807.5,
+          "max": 1937.7
+        },
+        "rss_over_est": {
+          "median": 1.1,
+          "max": 2.116
+        }
+      },
+      "lhsx": {
+        "n": 64,
+        "counts": {
+          "done": 64
+        },
+        "n_rows": 64,
+        "wall_s": {
+          "median": 156.2,
+          "p90": 435.4,
+          "max": 718.1,
+          "sum": 13087.7
+        },
+        "peak_rss_mb": {
+          "median": 1386.1,
+          "max": 2589.6
+        },
+        "rss_over_est": {
+          "median": 1.4,
+          "max": 2.554
+        }
+      }
+    },
+    "code_changed_since_launch": [],
+    "structural": [],
+    "mixed_generation": [],
+    "anomalies": [],
+    "failures": [],
+    "allow_mixed_generation": false
+  },
+  "smoke_keys": [
+    "schema",
+    "created",
+    "root",
+    "git_sha",
+    "python",
+    "thread_env",
+    "argv",
+    "jobs",
+    "timings",
+    "reports",
+    "checks",
+    "rc",
+    "note"
+  ],
+  "smoke_checks": [
+    {
+      "group": "A",
+      "name": "real14_general: 자식 프로세스 정상 종료 · 보고서 있음",
+      "verdict": "PASS",
+      "detail": "rc 0 "
+    },
+    {
+      "group": "A",
+      "name": "real14_general: 원자료 sha256 = README 표 (압축 푼 바이트)",
+      "verdict": "PASS",
+      "detail": "{'atom_2060000.liggghts': ['079c85f15bb3', '079c85f15bb3'], 'contact_2060000.liggghts': ['a609ba940781', 'a609ba940781'], 'mesh_2060000.stl': ['8cbb6dd073ba', '8cbb6dd073ba'], 'input_real_14.liggghts': ['734fa173e9c7', '734fa173e9c7']}"
+    },
+    {
+      "group": "A",
+      "name": "real14_general: 일반 경로 → done/partial (필수 단계 전부 성공) · 실제 Stage E 가 돌았다",
+      "verdict": "PASS",
+      "detail": "status partial · 실패 단계 ['Advanced Analysis', 'Bimodal Specific'] (선택 단계 실패는 partial — advanced_analysis*.py 가 리포에 없다) · Stage E True []"
+    },
+    {
+      "group": "A",
+      "name": "real14_general: 세대 일치 — full_metrics run_id = provenance = Stage E parent = 반환값",
+      "verdict": "PASS",
+      "detail": "20261005T220617-1d567c3b · 20261005T220617-1d567c3b · 20261005T220617-1d567c3b"
+    },
+    {
+      "group": "A",
+      "name": "real14_network: 자식 프로세스 정상 종료 · 보고서 있음",
+      "verdict": "PASS",
+      "detail": "rc 0 "
+    },
+    {
+      "group": "A",
+      "name": "real14_network: 원자료 sha256 = README 표 (압축 푼 바이트)",
+      "verdict": "PASS",
+      "detail": "{'atom_2060000.liggghts': ['079c85f15bb3', '079c85f15bb3'], 'contact_2060000.liggghts': ['a609ba940781', 'a609ba940781'], 'mesh_2060000.stl': ['8cbb6dd073ba', '8cbb6dd073ba'], 'input_real_14.liggghts': ['734fa173e9c7', '734fa173e9c7']}"
+    },
+    {
+      "group": "A",
+      "name": "real14_network: stop_after=network → done · Stage E 안 돌았다 · 망 정지 계약 통과",
+      "verdict": "PASS",
+      "detail": "status done · 실패 단계 [] · 필수 실패 [] · Stage E False"
+    },
+    {
+      "group": "A",
+      "name": "real14_network: 세대 일치 — 반환 run_id = full_metrics = provenance (이번 실행)",
+      "verdict": "PASS",
+      "detail": "20261005T220711-68d8163f · 20261005T220711-68d8163f · 20261005T220711-68d8163f"
+    },
+    {
+      "group": "B",
+      "name": "lhs00_055: 자식 프로세스 정상 종료 · 보고서 있음",
+      "verdict": "PASS",
+      "detail": "rc 0 "
+    },
+    {
+      "group": "B",
+      "name": "lhs00_055: stop_after=network → done · Stage E 안 돌았다 · 망 정지 계약 통과",
+      "verdict": "PASS",
+      "detail": "status done · 실패 단계 [] · 필수 실패 [] · Stage E False"
+    },
+    {
+      "group": "B",
+      "name": "lhs00_055: 세대 일치 — 반환 run_id = full_metrics = provenance (이번 실행)",
+      "verdict": "PASS",
+      "detail": "20261005T220726-76499348 · 20261005T220726-76499348 · 20261005T220726-76499348"
+    },
+    {
+      "group": "B",
+      "name": "lhs00_055: 관통 (인계표 percolation_pct > 0) → 두 모드 σ computed · τ 상태 ≠ NOT_COMPUTED",
+      "verdict": "PASS",
+      "detail": "{'hertzian': 'computed', 'physics': 'computed'} · {'case': 'lhs00_055', 'f_ion_hertz': 0.004591902353915725, 'f_ion_hertz_gap': 0.00475983, 'tau2_ion_hertz': 36.56178535078713, 'tau_ion_hertz': 6.046634216718185, 'ion_net_status_hertz': 'OK', 'ion_net_status_reason_hertz': '', 'f_ion_physics': 0.0038367679126588873, 'f_ion_physics_gap': 0.00397708, 'tau2_ion_physics': 43.75770232588661, 'tau_ion_physics': 6.61496049314632, 'ion_net_status_physics': 'OK', 'ion_net_status_reason_physics': ''}"
+    },
+    {
+      "group": "B",
+      "name": "lhs00_128: 자식 프로세스 정상 종료 · 보고서 있음",
+      "verdict": "PASS",
+      "detail": "rc 0 "
+    },
+    {
+      "group": "B",
+      "name": "lhs00_128: stop_after=network → done · Stage E 안 돌았다 · 망 정지 계약 통과",
+      "verdict": "PASS",
+      "detail": "status done · 실패 단계 [] · 필수 실패 [] · Stage E False"
+    },
+    {
+      "group": "B",
+      "name": "lhs00_128: 세대 일치 — 반환 run_id = full_metrics = provenance (이번 실행)",
+      "verdict": "PASS",
+      "detail": "20261005T220729-c6a51fe6 · 20261005T220729-c6a51fe6 · 20261005T220729-c6a51fe6"
+    },
+    {
+      "group": "B",
+      "name": "lhs00_128: 비관통 (percolation_pct 0) → 두 모드 valid_zero · τ NOT_PERCOLATING",
+      "verdict": "PASS",
+      "detail": "{'hertzian': 'valid_zero', 'physics': 'valid_zero'} · {'case': 'lhs00_128', 'f_ion_hertz': 0.0, 'f_ion_hertz_gap': 0.0, 'tau2_ion_hertz': None, 'tau_ion_hertz': None, 'ion_net_status_hertz': 'NOT_PERCOLATING', 'ion_net_status_reason_hertz': '', 'f_ion_physics': 0.0, 'f_ion_physics_gap': 0.0, 'tau2_ion_physics': None, 'tau_ion_physics': None, 'ion_net_status_physics': 'NOT_PERCOLATING', 'ion_net_status_reason_physics': ''}"
+    },
+    {
+      "group": "B",
+      "name": "lhsx_007: 자식 프로세스 정상 종료 · 보고서 있음",
+      "verdict": "PASS",
+      "detail": "rc 0 "
+    },
+    {
+      "group": "B",
+      "name": "lhsx_007: stop_after=network → done · Stage E 안 돌았다 · 망 정지 계약 통과",
+      "verdict": "PASS",
+      "detail": "status done · 실패 단계 [] · 필수 실패 [] · Stage E False"
+    },
+    {
+      "group": "B",
+      "name": "lhsx_007: 세대 일치 — 반환 run_id = full_metrics = provenance (이번 실행)",
+      "verdict": "PASS",
+      "detail": "20261005T220736-408f4e4e · 20261005T220736-408f4e4e · 20261005T220736-408f4e4e"
+    },
+    {
+      "group": "B",
+      "name": "lhsx_007: 관통 (인계표 percolation_pct > 0) → 두 모드 σ computed · τ 상태 ≠ NOT_COMPUTED",
+      "verdict": "PASS",
+      "detail": "{'hertzian': 'computed', 'physics': 'computed'} · {'case': 'lhsx_007', 'f_ion_hertz': 0.18615301771472362, 'f_ion_hertz_gap': 0.20686717, 'tau2_ion_hertz': 2.5550788493590266, 'tau_ion_hertz': 1.5984614006472058, 'ion_net_status_hertz': 'OK', 'ion_net_status_reason_hertz': '', 'f_ion_physics': 0.20046004514090776, 'f_ion_physics_gap': 0.22276621, 'tau2_ion_physics': 2.372720399084575, 'tau_ion_physics': 1.54036372298382, 'ion_net_status_physics': 'OK', 'ion_net_status_reason_physics': ''}"
+    },
+    {
+      "group": "A",
+      "name": "real_14: 일반 경로 ↔ 망 정지 — 망 σ (이온 두 모드 · 전자 · 열) · 공극률 같다 (같은 입력 · 같은 솔버)",
+      "verdict": "PASS",
+      "detail": "{'sigma_full_mScm': (0.063062, 0.063062), 'sigma_full_mScm_physics': (0.045228, 0.045228), 'electronic_sigma_full_mScm': (3.251662, 3.251662), 'thermal_sigma_full_mScm': (20.889571, 20.889571), 'porosity': (15.639124908717994, 15.639124908717994)}"
+    },
+    {
+      "group": "A",
+      "name": "real_14: 공극률 ε_sphere ≈ 15.639 % (case_master · README)",
+      "verdict": "PASS",
+      "detail": "15.639124908717994"
+    },
+    {
+      "group": "C",
+      "name": "C1 일반 경로 σ_ratio ×4 → failed (RGLR2-01)",
+      "verdict": "PASS",
+      "detail": "σ_ratio ×4 일반 경로 = failed · 양성 대조 done"
+    },
+    {
+      "group": "C",
+      "name": "C1b 일반 경로 L1 + σ_ratio None → failed (RGLR2-01)",
+      "verdict": "PASS",
+      "detail": "L1 + σ_ratio None 일반 경로 = failed"
+    },
+    {
+      "group": "C",
+      "name": "C2 게시 중 I/O 실패 둘 → 되돌림 실패 상태 · \"이전 세대 그대로\" 아님 (RGLR2-02)",
+      "verdict": "PASS",
+      "detail": "섞인 세대를 되돌림 실패로 표시 — kept=False · active=invalid · 주입 {'attempt_write': 1, 'restore': 1}"
+    },
+    {
+      "group": "C",
+      "name": "C3 거의 정수압 VM 쌍 → CV 0 (RGLR2-03)",
+      "verdict": "PASS",
+      "detail": "거의 정수압 쌍 → {'status': 'computed', 'vm_cv': 0.0, 'reason': None, 'contract': 'v3-invalid-null-stable-vm'} (기대 computed · CV 0 — 정확한 불변량 · RGLR2-03 수정 뒤)"
+    }
+  ],
+  "smoke_failures": null
+}

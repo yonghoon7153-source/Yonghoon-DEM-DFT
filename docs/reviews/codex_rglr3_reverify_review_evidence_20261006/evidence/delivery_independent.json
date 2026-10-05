@@ -1,0 +1,337 @@
+{
+  "lhs": {
+    "rows": 130,
+    "columns": 251,
+    "common_columns": 188,
+    "old_cells": 24440,
+    "old_cell_diffs": [],
+    "new_columns": 62,
+    "dropped": [],
+    "source_checks": 130,
+    "status": {
+      "hertz": {
+        "OK": 106,
+        "NOT_PERCOLATING": 24
+      },
+      "physics": {
+        "OK": 106,
+        "NOT_PERCOLATING": 24
+      }
+    },
+    "distributions": {
+      "hertz": {
+        "T": {
+          "n": 106,
+          "min": 1.974105479945862,
+          "median": 4.770128722296638,
+          "max": 1868.1906453894767
+        },
+        "ion_mScm_mc": {
+          "n": 106,
+          "min": 0.00013399465285663132,
+          "median": 0.21042146367675402,
+          "max": 0.7196728182314631
+        },
+        "ion_mScm_gap": {
+          "n": 106,
+          "min": 0.0001371,
+          "median": 0.22732317,
+          "max": 0.78232473
+        }
+      },
+      "physics": {
+        "T": {
+          "n": 106,
+          "min": 1.7920289532735252,
+          "median": 7.346854450215048,
+          "max": 2127.4934586169725
+        },
+        "ion_mScm_mc": {
+          "n": 106,
+          "min": 0.00011766313827432418,
+          "median": 0.13742307293962847,
+          "max": 0.7927941407662986
+        },
+        "ion_mScm_gap": {
+          "n": 106,
+          "min": 0.00012038999999999999,
+          "median": 0.14601997500000002,
+          "max": 0.86181171
+        }
+      }
+    },
+    "below_bound": [],
+    "CF": {
+      "n": 106,
+      "min": 0.0004776,
+      "median": 0.249573665,
+      "max": 0.82644344
+    },
+    "CF_above_phi": 43,
+    "CF_above1": 0,
+    "CF_null": [],
+    "basis_error_max": 1.1102230246251565e-16
+  },
+  "lhsx": {
+    "rows": 64,
+    "columns": 253,
+    "common_columns": 190,
+    "old_cells": 12160,
+    "old_cell_diffs": [],
+    "new_columns": 62,
+    "dropped": [],
+    "source_checks": 64,
+    "status": {
+      "hertz": {
+        "OK": 64
+      },
+      "physics": {
+        "OK": 54,
+        "MODEL_BELOW_CONTINUUM_BOUND": 10
+      }
+    },
+    "distributions": {
+      "hertz": {
+        "T": {
+          "n": 64,
+          "min": 1.253960214393354,
+          "median": 1.587600669916819,
+          "max": 2.5550788493590266
+        },
+        "ion_mScm_mc": {
+          "n": 64,
+          "min": 0.5584590531441709,
+          "median": 1.2553065630323321,
+          "max": 1.8786605097414015
+        },
+        "ion_mScm_gap": {
+          "n": 64,
+          "min": 0.62060151,
+          "median": 1.412157105,
+          "max": 2.14174743
+        }
+      },
+      "physics": {
+        "T": {
+          "n": 64,
+          "min": 0.8911318872078606,
+          "median": 1.2762662333134323,
+          "max": 2.467989049923259
+        },
+        "ion_mScm_mc": {
+          "n": 64,
+          "min": 0.6013801354227233,
+          "median": 1.5825701861597945,
+          "max": 2.643565525355465
+        },
+        "ion_mScm_gap": {
+          "n": 64,
+          "min": 0.66393828,
+          "median": 1.77037356,
+          "max": 3.0137694600000002
+        }
+      }
+    },
+    "below_bound": [
+      {
+        "case": "lhsx_048",
+        "T": 0.9827376308294246,
+        "phi_mc": 0.7181505539044314,
+        "phi_spheres": 0.8257772136226734,
+        "boundary_band_frac": 0.14798790045582036
+      },
+      {
+        "case": "lhsx_050",
+        "T": 0.9998031743372927,
+        "phi_mc": 0.7537366763842329,
+        "phi_spheres": 0.8549799948671714,
+        "boundary_band_frac": 0.11119138483506584
+      },
+      {
+        "case": "lhsx_051",
+        "T": 0.9708494564106228,
+        "phi_mc": 0.7604159959723092,
+        "phi_spheres": 0.8611950976103144,
+        "boundary_band_frac": 0.08593545960740888
+      },
+      {
+        "case": "lhsx_053",
+        "T": 0.9591201593627334,
+        "phi_mc": 0.7521286056597072,
+        "phi_spheres": 0.8542108865827198,
+        "boundary_band_frac": 0.10892825298698211
+      },
+      {
+        "case": "lhsx_054",
+        "T": 0.9753203729486017,
+        "phi_mc": 0.7556759492866981,
+        "phi_spheres": 0.8457631352753617,
+        "boundary_band_frac": 0.08804779991559492
+      },
+      {
+        "case": "lhsx_060",
+        "T": 0.9150366338270433,
+        "phi_mc": 0.7979152829353832,
+        "phi_spheres": 0.9162110284443622,
+        "boundary_band_frac": 0.10539904320753284
+      },
+      {
+        "case": "lhsx_061",
+        "T": 0.9407382158682076,
+        "phi_mc": 0.7871533283755425,
+        "phi_spheres": 0.8997861503731472,
+        "boundary_band_frac": 0.09192832689093323
+      },
+      {
+        "case": "lhsx_062",
+        "T": 0.8911318872078606,
+        "phi_mc": 0.7852551785225518,
+        "phi_spheres": 0.8952220221664052,
+        "boundary_band_frac": 0.1263827773005382
+      },
+      {
+        "case": "lhsx_063",
+        "T": 0.9122818739164561,
+        "phi_mc": 0.7778274643139886,
+        "phi_spheres": 0.8920310864933524,
+        "boundary_band_frac": 0.11102281885246364
+      },
+      {
+        "case": "lhsx_064",
+        "T": 0.9023221727513325,
+        "phi_mc": 0.7753603395328461,
+        "phi_spheres": 0.8858054811918799,
+        "boundary_band_frac": 0.12776583717434248
+      }
+    ],
+    "CF": {
+      "n": 35,
+      "min": 0.65692337,
+      "median": 1.1058214,
+      "max": 1.4972803
+    },
+    "CF_above_phi": 35,
+    "CF_above1": 24,
+    "CF_null": [
+      [
+        "lhsx_033",
+        "solve_failed"
+      ],
+      [
+        "lhsx_034",
+        "solve_failed"
+      ],
+      [
+        "lhsx_035",
+        "solve_failed"
+      ],
+      [
+        "lhsx_037",
+        "solve_failed"
+      ],
+      [
+        "lhsx_038",
+        "solve_failed"
+      ],
+      [
+        "lhsx_039",
+        "solve_failed"
+      ],
+      [
+        "lhsx_041",
+        "solve_failed"
+      ],
+      [
+        "lhsx_042",
+        "solve_failed"
+      ],
+      [
+        "lhsx_043",
+        "solve_failed"
+      ],
+      [
+        "lhsx_044",
+        "solve_failed"
+      ],
+      [
+        "lhsx_045",
+        "solve_failed"
+      ],
+      [
+        "lhsx_047",
+        "solve_failed"
+      ],
+      [
+        "lhsx_048",
+        "solve_failed"
+      ],
+      [
+        "lhsx_049",
+        "solve_failed"
+      ],
+      [
+        "lhsx_050",
+        "solve_failed"
+      ],
+      [
+        "lhsx_051",
+        "solve_failed"
+      ],
+      [
+        "lhsx_052",
+        "solve_failed"
+      ],
+      [
+        "lhsx_053",
+        "solve_failed"
+      ],
+      [
+        "lhsx_054",
+        "solve_failed"
+      ],
+      [
+        "lhsx_055",
+        "solve_failed"
+      ],
+      [
+        "lhsx_056",
+        "solve_failed"
+      ],
+      [
+        "lhsx_057",
+        "solve_failed"
+      ],
+      [
+        "lhsx_058",
+        "solve_failed"
+      ],
+      [
+        "lhsx_059",
+        "solve_failed"
+      ],
+      [
+        "lhsx_060",
+        "solve_failed"
+      ],
+      [
+        "lhsx_061",
+        "solve_failed"
+      ],
+      [
+        "lhsx_062",
+        "solve_failed"
+      ],
+      [
+        "lhsx_063",
+        "solve_failed"
+      ],
+      [
+        "lhsx_064",
+        "solve_failed"
+      ]
+    ],
+    "basis_error_max": 2.220446049250313e-16
+  },
+  "audit_ids_unique": 194,
+  "fail": []
+}

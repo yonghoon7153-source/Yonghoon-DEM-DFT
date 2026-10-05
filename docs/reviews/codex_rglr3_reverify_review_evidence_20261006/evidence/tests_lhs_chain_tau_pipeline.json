@@ -1,0 +1,75 @@
+[
+  {
+    "name": "lhs",
+    "args": [
+      "scripts/lhs_design_dataset.py",
+      "--selftest"
+    ],
+    "rc": 1,
+    "seconds": 7.469,
+    "tail": [
+      "  PASS  ㉙g ★ 열 사전 (τ 명명 규약) — tortuosity factor = tau2 에만 · tau = √tau2 COMSOL 입력 아님 · f_gap φ_mc 와 짝짓지 말 것 · f = 재척도 (해 아님) · User defined (fl) · 상태 다섯 + 두 부류 · MBCB 값 유지 · 비관통 = ∞ · 사유 = tau_flux.REASONS 전부 (여섯) · G6 물리 타깃 HOLD · 1세대 · τ_e 아님",
+      "  PASS  ㉙g2 ★ RGLR3-02 열 사전 — 인계표 τ 상태: done 배치 행의 기술적 결손 (NOT_COMPUTED) 은 싣지 않고 생성기가 거부 (τ P4) · 한정어: 출처 관문 = 지금 파일끼리 (same_generation_checks) · 게시 시점 해시 없음 → 모든 사본을 함께 일관되게 바꾼 편집은 못 잡는다",
+      "  PASS  ㉙h ★ 열 사전 덮개 — tau_flux.column_names() 의 열마다 정의가 있다 (tau_flux 가 열을 늘리면 여기서 걸린다) · 빈 뜻 없음",
+      "  PASS  ㉙i ★ CLI --tau-results — 표에 τ 열 (값 = 함수 경로와 같다) · 열 사전에 τ 항목 (출처 tau_flux) · 출처 부록 <표>_tau_provenance.tsv (케이스마다 network_run_id · 입력 digest · dual · full_metrics sha256)",
+      "  PASS  ㉙i2 ★ RGLR3-02 출처 부록 — 케이스마다 same_generation_checks (P0 기록 · P1 run id · P2 입력 digest · P3 배치 대조 · P4 망 정지 계약 재검사 · P4 활성 세대 · P4 읽기 안정 — 다 통과한 케이스만 행이 있다) · same_generation_basis = 지금 파일끼리 (게시 시점 해시 없음) · 함수 경로 τ 기록과 같다",
+      "  FAIL  ㉙j ★ J20-l 웹앱 짝 — 케이스 페이지 τ 인계 상태 툴팁의 값 규칙 = 인계표 (tau_flux): OK · MODEL_BELOW_CONTINUUM_BOUND 값 (T < 1 이어도 유지) · NOT_PERCOLATING f_ion 0 · tau2 · tau 빈칸 (= ∞) · 그 밖 빈칸 (0 아님) · LHS 인계표 v1.2 망 τ 묶음에 같은 열 · 같은 규칙 · ★ RGLR3-02 — 인계표 행은 인계 때 같은 세대 검사 (τ P4 · 망 정지 계약 재검사) 를 통과한 케이스뿐 · NOT_COMPUTED 는 인계표에 안 실린다",
+      "",
+      "lhs_design_dataset selftest: 325/326 PASS   FAILED: ['㉙j ★ J20-l 웹앱 짝 — 케이스 페이지 τ 인계 상태 툴팁의 값 규칙 = 인계표 (tau_flux): OK · MODEL_BELOW_CONTINUUM_BOUND 값 (T < 1 이어도 유지) · NOT_PERCOLATING f_ion 0 · tau2 · tau 빈칸 (= ∞) · 그 밖 빈칸 (0 아님) · LHS 인계표 v1.2 망 τ 묶음에 같은 열 · 같은 규칙 · ★ RGLR3-02 — 인계표 행은 인계 때 같은 세대 검사 (τ P4 · 망 정지 계약 재검사) 를 통과한 케이스뿐 · NOT_COMPUTED 는 인계표에 안 실린다']"
+    ]
+  },
+  {
+    "name": "chain",
+    "args": [
+      "webapp/test_network_handover_chain.py"
+    ],
+    "rc": 0,
+    "seconds": 3.547,
+    "tail": [
+      "  PASS ④c 정상 L0 · 비관통 · 띠 L1 · L2 = 받는다 · 칸 = tau_flux.case_row 그대로 (옛 판과 같다 · \"L1 을 모두 거부\" 하지 않는다) {'L0_through': ('OK', 'L0'), 'nonthrough': ('NOT_PERCOLATING', 'L0'), 'L1': ('BAND_FALLBACK', 'L1'), 'L2': ('BAND_FALLBACK', 'L2')}",
+      "  PASS ④c dual 만 두 모드 띠 규칙 L0 → L1 (Codex dual_band_only — 옛: BAND_FALLBACK 로 수용) → 거부 (τ P4 — 망 정지 계약 재검사)",
+      "  PASS ④c dual 만 두 모드 σ₀ ×2 · σ_dim 6 자리 재계산 (Codex dual_sigma0_only — 옛: OK · σ₀ 6.0 으로 수용) → 거부 (τ P4 — 망 정지 계약 재검사)",
+      "  PASS ④c atom 입력 바이트 변경 (Codex atom_input_mutation) → 거부 (τ P2)",
+      "  PASS ④c dual σ_ratio 만 ×4 (Codex dual_sigma_ratio_only) → 거부 (τ P3)",
+      "  PASS ④c full_metrics run id 변경 (Codex run_id_mismatch) → 거부 (τ P1)",
+      "",
+      "test_network_handover_chain: 19/19 PASS"
+    ]
+  },
+  {
+    "name": "tau",
+    "args": [
+      "scripts/test_tau_flux.py"
+    ],
+    "rc": 0,
+    "seconds": 1.016,
+    "tail": [
+      "  PASS  L7 상태 어휘 — 생산자 계약 밖 (None · 키 없음 · 모르는 문자열 · 채널 어휘 valid_null) → invalid_input · 생산자 신고 not_computed → solver_guard {'None': 'invalid_input', \"'garbage'\": 'invalid_input', \"'valid_null'\": 'invalid_input', \"'COMPUTED'\": 'invalid_input', '키 없음': 'invalid_input', 'not_computed': 'solver_guard'}",
+      "  PASS  L8 어휘 짝 — 공용 기술 검사의 비관통 사유 = 생산자 (network_conductivity.NO_THROUGH_REASON) · 사유 코드 invalid_input 은 REASONS 안",
+      "  PASS  M1 양성 대조 — 세대 일치 · 접촉 분석만 · 도장 이전 · 되돌림 성공한 재계산 실패 · 다른 단계 stash → τ 인계 그대로 (OK · 같은 tau2) · 세대 문제 없음 ",
+      "  PASS  M2 ★ RGLR2-02 세대가 확정되지 않은 폴더 7 종 → 두 모드 NOT_COMPUTED (generation_invalid: 세부) · f · tau2 · tau 빈칸 (옛: OK — dual 만 읽어 옛 세대 τ 를 실었다) ",
+      "  PASS  M3 세대 문제 사유 = 무엇이 어긋났는지 (두 id) — \"full_metrics 의 망 세대 'R2' ≠ 도장 'R1' — 파일들이 서로 다른 세대를 가리킨다 (되돌림 실패 · 중단된 게시)\"",
+      "  PASS  M4 ★ 등급 τ getter (tau2_from_metrics) — 읽는 쪽이 세대 무효 표지를 단 metrics → tau2 None (hertz · bulk) · 표지 없으면 값 그대로",
+      "",
+      "test_tau_flux: 55/55 PASS"
+    ]
+  },
+  {
+    "name": "pipeline",
+    "args": [
+      "webapp/test_pipeline_provenance.py"
+    ],
+    "rc": 0,
+    "seconds": 18.984,
+    "tail": [
+      "  PASS  T23b) ★ 중단된 게시 흔적 (.publish_backup_*) 이 남은 폴더 → 읽는 쪽 무효 (사유 · 재실행 필요) · 보존 (preserve) 재사용 거부 (스냅샷 없음) · τ 인계 NOT_COMPUTED (옛: success · 스냅샷 · OK) (\"중단된 게시 · 풀이 흔적 ['.publish_backup_RUN-DEAD_full_metrics.json'\" · 'invalid' · False)",
+      "  PASS  T23c) ★ 다음 망 실행 → 흔적을 재사용하지 않고 .network_recovery/<run>/ 로 격리 (복구 자료 보존 · 맨 위에서 치움) · recovery_note 에 왜 (사유 · 흔적 이름) · 새 세대 done · 그 뒤 읽는 쪽 유효 (done · 1 · \"중단된 게시 · 풀이 흔적 ['.publish_backup_RUN-DEAD_full_metrics.json'\")",
+      "  PASS  T23d) ★ 흔적이 있던 폴더에서 다음 실행이 실패 (정지 계약) → 최근 시도 failed · active invalid · previous_generation_kept True 아님 · 읽는 쪽 무효 — 옛 세대를 조용히 유효로 되살리지 않는다 (재실행 필요) (failed · 'invalid' · 'invalid')",
+      "  PASS  T23e) 그 뒤 정상 재계산이 성공하면 유효로 돌아온다 (최근 시도 success · 세대 문제 없음 · τ OK) (done)",
+      "  PASS  T23f) ★ 망 stash (풀이 중 죽은 실행) → recover_stale_stashes 가 옛 망 파일을 되살려 유효 세대로 쓰지 않는다 (옛: 네 JSON + 도장을 제자리로 = 조용한 재사용) · 흔적 보존 · 읽는 쪽 무효 (0 · 0)",
+      "  PASS  T23g) 재분석 라우트가 보존 거부 사유를 meta 에 남긴다 (network_preserve_refused · 확정되지 않은 세대 = 재실행)",
+      "",
+      "test_pipeline_provenance: 284/284 PASS"
+    ]
+  }
+]

@@ -7834,34 +7834,44 @@
     {
       "id": "LHS-33",
       "severity": "P2",
-      "status": "open",
+      "status": "verified",
       "owner": "claude",
       "found_by": "claude (10-05 · RGL-06 수정 중 같은 결함을 옛 열에서 발견 — 수정 에이전트 보고)",
       "opened_in": "docs/reviews/codex_rgl_reverify_request_20261005.md",
       "title": "옛 σ_VM 열 (`stress_cv` · LIGGGHTS stress/atom 50/50 · LHS-29) 의 무효 입력이 0 — `calc_von_mises_stress` 가 평균 0 이면 CV 0 (`mean > 0 else 0`) · c_strs 결측을 0 으로 읽는다 (`a.get(\"sigma_xx\", 0)`) → 등급 축 \"기계적 안정성\" (낮을수록 좋음) 에서 거짓 최고 등급",
-      "note": "자리: scripts/dem_analysis_core.py calc_von_mises_stress.  새 LW 열 (RGL-06) 은 같은 경우를 FAILED / UNDEFINED 로 막았다.  옛 열은 LHS-29 결정 (값 · 키 불변) 때문에 손대지 않았다 — 무효 입력을 빈칸으로 바꾸는 것은 정상 값을 바꾸지 않는다 (⬜ 1저자 결정).  · Codex 재검증 10-05 Q7 (`docs/reviews/codex_review_rgl_reverify_20261005.md`): 수정 필요 — 다만 저장된 0 → null 은 값 변경이므로 **좁은 amendment** (정상 입력의 정의 · 수치 · 키 불변 · 무효/미정의 입력만 null + reason) 로 승인받을 것 · 원본 역사 파일 보존 · 정상 zero CV (균일 분포) 유지 · 등급 소비자 (grade_engine.py:906 이 stress_cv 를 직접 읽음) 도 상태를 따르게.  · ✅ 10-05 좁은 amendment af9e6b15f (1저자 비준 \"비준이야\" — 제안문의 \"무효 입력만 빈칸 · 사유\" 안 · Codex Q7) — 계약 표지 stress_cv_contract = v2-invalid-null · 정상 입력 = 정의 · 수 · 키 불변 (+ stress_cv_status computed) · 무효 · 미정의 = None + stress_cv_status (unavailable_no_c_strs · invalid_input · undefined_zero_mean) + 사유 · 등급 `__sigma_vm_cv_pct` 가 상태를 따른다 (최고 등급으로 안 읽음) · 그림 · CSV · 웹앱 사례 · 그룹 · 툴팁 같은 묶음 · 계약 상수 = scripts/metrics_json.py 한 곳.  한계: 표지 없는 옛 full_metrics 의 저장된 0 은 참 0 과 구별 불가 (커밋된 코퍼스 lhs130 · lhsx64 · case_master 163 에 stress_cv 0 없음 · 최소 ≈ 49–57 %) · 거의 정수압 입자의 VM 근호가 음수로 반올림되면 VM 0 (옛 코드 = 그 입자 NaN → 침대 전체 거짓 CV 0) · 층별 0/0 은 0 그대로 (비트 동일). · ⛔ Codex 3차 재검증 10-05 밤 = **부분 닫힘 → 재개방** (`docs/reviews/codex_review_rglr_reverify_20261005.md`): 결손 · NaN · 0/0 → None + 상태 · 소비자 연동 · 정상 균일 VM 의 CV 0 보존 = 수용.  남은 것 = 전개식 근호가 수치적으로 음수인 비정수압 입자를 VM 0 으로 clamp 해 computed CV 를 만든다 (정확 CV 0 % → 100 % · RGLR2-03 · Q4 답 = 좁은 amendment 밖).  · 10-05 밤 RGLR2-03 수정 (b2d8f80dc 계열) — 위 *\"음수 근호 clamp → VM 0\"* 한정 문장은 낡았다: 이제 반올림 한계 안 입자는 안정식으로 다시 계산 (계약 v3) · LHS-33 자체 (무효 · 미정의 → null + 상태) 는 그대로  · 4차 재검증: 남은 부분 = RGLR2-03 (음수 근호 clamp) 닫힘 · K = 2^20 수용 — LHS-33 자체 닫힘은 다음 요청서에서 명시 확인",
+      "note": "자리: scripts/dem_analysis_core.py calc_von_mises_stress.  새 LW 열 (RGL-06) 은 같은 경우를 FAILED / UNDEFINED 로 막았다.  옛 열은 LHS-29 결정 (값 · 키 불변) 때문에 손대지 않았다 — 무효 입력을 빈칸으로 바꾸는 것은 정상 값을 바꾸지 않는다 (⬜ 1저자 결정).  · Codex 재검증 10-05 Q7 (`docs/reviews/codex_review_rgl_reverify_20261005.md`): 수정 필요 — 다만 저장된 0 → null 은 값 변경이므로 **좁은 amendment** (정상 입력의 정의 · 수치 · 키 불변 · 무효/미정의 입력만 null + reason) 로 승인받을 것 · 원본 역사 파일 보존 · 정상 zero CV (균일 분포) 유지 · 등급 소비자 (grade_engine.py:906 이 stress_cv 를 직접 읽음) 도 상태를 따르게.  · ✅ 10-05 좁은 amendment af9e6b15f (1저자 비준 \"비준이야\" — 제안문의 \"무효 입력만 빈칸 · 사유\" 안 · Codex Q7) — 계약 표지 stress_cv_contract = v2-invalid-null · 정상 입력 = 정의 · 수 · 키 불변 (+ stress_cv_status computed) · 무효 · 미정의 = None + stress_cv_status (unavailable_no_c_strs · invalid_input · undefined_zero_mean) + 사유 · 등급 `__sigma_vm_cv_pct` 가 상태를 따른다 (최고 등급으로 안 읽음) · 그림 · CSV · 웹앱 사례 · 그룹 · 툴팁 같은 묶음 · 계약 상수 = scripts/metrics_json.py 한 곳.  한계: 표지 없는 옛 full_metrics 의 저장된 0 은 참 0 과 구별 불가 (커밋된 코퍼스 lhs130 · lhsx64 · case_master 163 에 stress_cv 0 없음 · 최소 ≈ 49–57 %) · 거의 정수압 입자의 VM 근호가 음수로 반올림되면 VM 0 (옛 코드 = 그 입자 NaN → 침대 전체 거짓 CV 0) · 층별 0/0 은 0 그대로 (비트 동일). · ⛔ Codex 3차 재검증 10-05 밤 = **부분 닫힘 → 재개방** (`docs/reviews/codex_review_rglr_reverify_20261005.md`): 결손 · NaN · 0/0 → None + 상태 · 소비자 연동 · 정상 균일 VM 의 CV 0 보존 = 수용.  남은 것 = 전개식 근호가 수치적으로 음수인 비정수압 입자를 VM 0 으로 clamp 해 computed CV 를 만든다 (정확 CV 0 % → 100 % · RGLR2-03 · Q4 답 = 좁은 amendment 밖).  · 10-05 밤 RGLR2-03 수정 (b2d8f80dc 계열) — 위 *\"음수 근호 clamp → VM 0\"* 한정 문장은 낡았다: 이제 반올림 한계 안 입자는 안정식으로 다시 계산 (계약 v3) · LHS-33 자체 (무효 · 미정의 → null + 상태) 는 그대로  · 4차 재검증: 남은 부분 = RGLR2-03 (음수 근호 clamp) 닫힘 · K = 2^20 수용 — LHS-33 자체 닫힘은 다음 요청서에서 명시 확인  · ✅ Codex 5차 재검증 10-06 (`docs/reviews/codex_review_rglr3_reverify_20261006.md` §3) = **닫힘 (verified)** — 닫은 커밋 = af9e6b15f (좁은 amendment) + b2d8f80dc (RGLR2-03 음수 근호 안정식) · 우리 트리 재현 (10-06 · docs/reviews/codex_rglr3_reverify_review_evidence_20261006/_README_reproduction.md): 묶음 실행기 무변경 · rc 전부 0 · 판정값 차이 0 (환경 차이만)",
       "evidence_tests": [
         "scripts/test_love_weber_stress.py (옛 σ_VM 계약 · 정상 입력 비트 동일 (91 입자 합성 · real_14) · 균일 양의 VM = 0.0 computed · 무효 · 0/0 = None + 상태)",
         "webapp/test_stress_lw_labels.py (등급 축 · 사례 표 · 그룹 표 · 보고서 · 툴팁)",
-        "scripts/lhs_stress_constriction_audit.py --selftest (옛 10/12 → 12/12)"
+        "scripts/lhs_stress_constriction_audit.py --selftest (옛 10/12 → 12/12)",
+        "docs/reviews/codex_rglr3_reverify_review_evidence_20261006/ — Codex 5차 판정 묶음 (§2 독립 실행 · §3 해제 증거) · 우리 트리 재현 _reproduction_compare_linux.json"
       ],
-      "claimed_fixed_sha": "af9e6b15f"
+      "claimed_fixed_sha": "af9e6b15f",
+      "verified_sha": "92b6ebde1",
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_review_rglr3_reverify_20261006.md",
+      "verified_scope": "기술 결함 닫힘 — 결손 · 비유한 · 미정의 값을 가짜 0 으로 안 바꿈 (None + 상태) · 안정 VM 계산 (계약 v3) · 진짜 균일 VM 의 CV 0 유지 · 독립 유리수 5,000 표본 경계 위반 0 · LW 프레임 인증은 닫지 않음 · 194 인계의 stress / LW 열 0 개"
     },
     {
       "id": "WEB-03",
       "severity": "P2",
-      "status": "open",
+      "status": "verified",
       "owner": "claude",
       "found_by": "claude (10-05 · RGL-02 · 04 수정 범위 밖으로 남긴 것 — 수정 에이전트 보고)",
       "opened_in": "docs/reviews/codex_rgl_reverify_request_20261005.md",
       "title": "일반 경로 (Stage E 까지) 의 망 채널 판정이 \"관통인데 풀지 못한\" 이온 (not_computed · solve_failed) 을 통과시킨다 — 정지 계약 · τ 인계만 거부 · 전자 · 열 채널은 같은 경우에도 valid_null",
-      "note": "같이 남긴 것: ① 실패 처리 두 갈래 — 솔버 단계 실패 = 옛 RR2-01/P1c (full_metrics 에 failed 표지) ↔ 후보 거부 = full_metrics 바이트 그대로 ② 전력 몫 \"zero or non-finite dissipation\" 사유는 0 과 수치 실패를 한 문자열에 묶어 등록하지 않았다 (관통 σ > 0 에서 ΣI²R = 0 은 불가 → 거부 쪽) ③ 솔버가 쓴 뒤 승격 전 크래시 = stash 복구가 옛 provenance 와 후보 JSON 을 짝지을 수 있다 (원래 있던 창 · 조금 길어짐).  Codex 재검증 요청 질문.  · Codex 재검증 10-05 Q1 (`docs/reviews/codex_review_rgl_reverify_20261005.md`): **거부해야 한다** — 비관통 · 상 부재 ↔ 관통 풀이 실패는 다른 상태 · 요청한 전자 · 열 채널도 같은 원칙 · 실 CLI 에 spsolve 예외 → 정지 경로 failed · 일반 helper 는 사전 관문 통과 (Stage E 대역 · done · τ NOT_COMPUTED) · 새 P1 로 세지 않음.  Q2: 실패 상태 모델 하나로 (마지막 유효 세대 보존 + attempt 별 실패 기록 · active_status ↔ latest_attempt_status) · app.py:3412 에서 provenance · attempt success 를 먼저 쓰고 full_metrics 를 나중에 써 마지막 쓰기 OSError 시 새 provenance ID ↔ 옛 full_metrics ID 혼합 (LockUnavailable 만 잡음) — 최소 = 동기 예외 rollback + 실패 기록 · 궁극 = 세대별 후보 폴더 + 단일 활성 포인터.  Q3: zero · nonfinite 전력 몫 = 둘 다 실패 (현 fail-closed 동의).  · ✅ 10-05 수정 e03c0a84b (Codex 재검증 Q1 · Q2 · 1저자 비준 = Q1 + Q2 최소) — Q1: 관통인데 못 푼 채널 (이온 · 전자 · 열) = 채널 상태 failed (`_channel_solve_failure` · 생산자 상태 필드만 · 해 · σ 불변 = test_network_boundary_rule ⑨ 원시 hex) → 게시 게이트가 일반 · 정지 경로 모두에서 막는다 (Stage E 안 돎) · 비관통 · 상 부재는 유효 null 그대로.  Q2a: 승격 = 한 거래 (full_metrics 사본 → 도장 → full_metrics → 최근 시도 success) · 도중 동기 예외면 os.replace 로 되돌림 (옛 세대 6/6 · 첫 실행 = 활성 세대 없음) · 최근 시도 failed (publish_exception) · 필수 단계 failed 반환 (BaseException 은 되돌린 뒤 다시 던짐).  Q2b: 실패 어휘 하나 — 솔버 · lock 실패도 full_metrics 를 안 건드린다 (network_solver_status = 활성 세대 상태만) · network_attempt.json v2 (latest_attempt_status · failure_kind solver/lock/candidate_rejected/publish_exception · active_status · previous_generation_kept · input_digests) · 웹앱 \"최근 재계산 실패 (사유) · 활성 세대 … 의 값\" 행 · 목록 필드.  Q3 (영 · 비유한 소산) = 현 fail-closed 그대로.  한계: kill -9 · 정전 같은 비동기 중단의 원자성 (세대별 후보 디렉터리 + 단일 포인터는 미구현 · 남는 .publish_backup_* 청소 없음) · 실패 기록 쓰기 자체가 실패하면 단계 로그에만. · ⛔ Codex 3차 재검증 10-05 밤 = **부분 닫힘 → 재개방** (`docs/reviews/codex_review_rglr_reverify_20261005.md` · 우리 트리 재현 결정값 차이 0): 관통 풀이 실패 채널 게시 거부 (일반 · 정지) = 닫힘 · 단일 쓰기 실패 복원 (6 파일 SHA-256 보존 · 첫 실행 후보 미잔존) = 수용.  남은 것 = 복원 자체가 실패해도 previous_generation_kept = true · active_status = success · 화면 \"이전 성공 세대 그대로\" (RGLR2-02).  · 4차 재검증 (10-05 밤 · docs/reviews/codex_review_rglr2_reverify_20261005.md): 남은 부분 = RGLR2-02 (되돌림 실패 표지) 닫힘 — WEB-03 자체 닫힘은 다음 요청서에서 명시 확인",
+      "note": "같이 남긴 것: ① 실패 처리 두 갈래 — 솔버 단계 실패 = 옛 RR2-01/P1c (full_metrics 에 failed 표지) ↔ 후보 거부 = full_metrics 바이트 그대로 ② 전력 몫 \"zero or non-finite dissipation\" 사유는 0 과 수치 실패를 한 문자열에 묶어 등록하지 않았다 (관통 σ > 0 에서 ΣI²R = 0 은 불가 → 거부 쪽) ③ 솔버가 쓴 뒤 승격 전 크래시 = stash 복구가 옛 provenance 와 후보 JSON 을 짝지을 수 있다 (원래 있던 창 · 조금 길어짐).  Codex 재검증 요청 질문.  · Codex 재검증 10-05 Q1 (`docs/reviews/codex_review_rgl_reverify_20261005.md`): **거부해야 한다** — 비관통 · 상 부재 ↔ 관통 풀이 실패는 다른 상태 · 요청한 전자 · 열 채널도 같은 원칙 · 실 CLI 에 spsolve 예외 → 정지 경로 failed · 일반 helper 는 사전 관문 통과 (Stage E 대역 · done · τ NOT_COMPUTED) · 새 P1 로 세지 않음.  Q2: 실패 상태 모델 하나로 (마지막 유효 세대 보존 + attempt 별 실패 기록 · active_status ↔ latest_attempt_status) · app.py:3412 에서 provenance · attempt success 를 먼저 쓰고 full_metrics 를 나중에 써 마지막 쓰기 OSError 시 새 provenance ID ↔ 옛 full_metrics ID 혼합 (LockUnavailable 만 잡음) — 최소 = 동기 예외 rollback + 실패 기록 · 궁극 = 세대별 후보 폴더 + 단일 활성 포인터.  Q3: zero · nonfinite 전력 몫 = 둘 다 실패 (현 fail-closed 동의).  · ✅ 10-05 수정 e03c0a84b (Codex 재검증 Q1 · Q2 · 1저자 비준 = Q1 + Q2 최소) — Q1: 관통인데 못 푼 채널 (이온 · 전자 · 열) = 채널 상태 failed (`_channel_solve_failure` · 생산자 상태 필드만 · 해 · σ 불변 = test_network_boundary_rule ⑨ 원시 hex) → 게시 게이트가 일반 · 정지 경로 모두에서 막는다 (Stage E 안 돎) · 비관통 · 상 부재는 유효 null 그대로.  Q2a: 승격 = 한 거래 (full_metrics 사본 → 도장 → full_metrics → 최근 시도 success) · 도중 동기 예외면 os.replace 로 되돌림 (옛 세대 6/6 · 첫 실행 = 활성 세대 없음) · 최근 시도 failed (publish_exception) · 필수 단계 failed 반환 (BaseException 은 되돌린 뒤 다시 던짐).  Q2b: 실패 어휘 하나 — 솔버 · lock 실패도 full_metrics 를 안 건드린다 (network_solver_status = 활성 세대 상태만) · network_attempt.json v2 (latest_attempt_status · failure_kind solver/lock/candidate_rejected/publish_exception · active_status · previous_generation_kept · input_digests) · 웹앱 \"최근 재계산 실패 (사유) · 활성 세대 … 의 값\" 행 · 목록 필드.  Q3 (영 · 비유한 소산) = 현 fail-closed 그대로.  한계: kill -9 · 정전 같은 비동기 중단의 원자성 (세대별 후보 디렉터리 + 단일 포인터는 미구현 · 남는 .publish_backup_* 청소 없음) · 실패 기록 쓰기 자체가 실패하면 단계 로그에만. · ⛔ Codex 3차 재검증 10-05 밤 = **부분 닫힘 → 재개방** (`docs/reviews/codex_review_rglr_reverify_20261005.md` · 우리 트리 재현 결정값 차이 0): 관통 풀이 실패 채널 게시 거부 (일반 · 정지) = 닫힘 · 단일 쓰기 실패 복원 (6 파일 SHA-256 보존 · 첫 실행 후보 미잔존) = 수용.  남은 것 = 복원 자체가 실패해도 previous_generation_kept = true · active_status = success · 화면 \"이전 성공 세대 그대로\" (RGLR2-02).  · 4차 재검증 (10-05 밤 · docs/reviews/codex_review_rglr2_reverify_20261005.md): 남은 부분 = RGLR2-02 (되돌림 실패 표지) 닫힘 — WEB-03 자체 닫힘은 다음 요청서에서 명시 확인  · ✅ Codex 5차 재검증 10-06 (`docs/reviews/codex_review_rglr3_reverify_20261006.md` §3) = **닫힘 (verified)** — 닫은 커밋 = e03c0a84b (Q1 · Q2 최소) + 5d0f30984 (RGLR2-02 되돌림 실패 = rollback_failed · 활성 무효) · 우리 트리 재현 (10-06 · docs/reviews/codex_rglr3_reverify_review_evidence_20261006/_README_reproduction.md): 묶음 실행기 무변경 · rc 전부 0 · 판정값 차이 0 (환경 차이만)",
       "evidence_tests": [
         "webapp/test_pipeline_provenance.py (T12h · T17–T20 · 채널별 spsolve 주입 (이온 · 전자 · 열) · 게시 중 OSError 주입 · 6 파일 SHA-256 · 첫 실행 · 265/265)",
         "webapp/test_network_handover_chain.py (10/10 · 실패 단계가 망 솔버 내용 검증으로 앞당겨짐)",
-        "docs/reviews/codex_rglr_fix_probe_rerun_20261005/README.md (Codex new_network 탐침 재실행 (판정 zip 원본 · 우리 트리) — band_ratio_missing · nan · negative · band_fraction_above1 · ratio_times4 · solver_failed_general → failed · write_failure_after_stamp → failed + 옛 세대 동일 · positive · no_through · legitimate_band done 그대로)"
+        "docs/reviews/codex_rglr_fix_probe_rerun_20261005/README.md (Codex new_network 탐침 재실행 (판정 zip 원본 · 우리 트리) — band_ratio_missing · nan · negative · band_fraction_above1 · ratio_times4 · solver_failed_general → failed · write_failure_after_stamp → failed + 옛 세대 동일 · positive · no_through · legitimate_band done 그대로)",
+        "docs/reviews/codex_rglr3_reverify_review_evidence_20261006/ — Codex 5차 판정 묶음 (§2 독립 실행 · §3 해제 증거) · 우리 트리 재현 _reproduction_compare_linux.json"
       ],
-      "claimed_fixed_sha": "e03c0a84b"
+      "claimed_fixed_sha": "e03c0a84b",
+      "verified_sha": "92b6ebde1",
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_review_rglr3_reverify_20261006.md",
+      "verified_scope": "검토된 실패 · 게시 / 소비자 계약 범위 — 잘못된 관통 결과 거부 · 동기 쓰기 실패 복원 · 복원 자체 실패의 활성 세대 무효화 + 검토된 소비자 거부 (독립 탐침 유지) · kill -9 · 정전 다중 파일 원자성 · 모든 미가드 소비자 안전 = 미구현 / 범위 밖 · \"게시 완전 원자성 달성\" 표현 금지"
     },
     {
       "id": "RGLR-01",
@@ -7999,50 +8009,65 @@
     {
       "id": "RGLR3-01",
       "severity": "P2",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-05 밤 4차 재검증 (핀 11fcf91e8 · 456 blob 검증 · 실 망 CLI · 실 helper · 합성 침대 · Windows 11 Python 3.12.14 NumPy 2.5.3)",
       "opened_in": "docs/reviews/codex_review_rglr2_reverify_20261005.md",
       "title": "194 실행기 retry 가 같은 HEAD 의 dirty 코드 변경을 막지 않는다 — 발사 봉인 우회 (code_changed_since_launch 는 기록만 · merge 거부 조건 아님 · 워커는 git sha 만)",
-      "note": "자리: scripts/run_network_194_parallel.py cmd_retry · _run_and_merge · merge.  재현 (실 cmd_retry → _run_and_merge → merge · OS 잠금 · 환경 · 워커만 대역): retry_rc 0 · code_changed_during_run [] · mixed_generation [] · code_changed_since_launch [network_conductivity.py].  무너지는 결론: \"같은 HEAD · manifest · merge 성공 = 모든 케이스가 발사 봉인 코드\".  해제: retry 가 발사 지문 대조 · dirty 거부 · 시도별 코드 지문 · 음성 / 양성 대조.  ★ 실제 10-05 밤 194 배치 (net194_11fcf91e8) = run 한 번 · retry 0 · 194 done · 시도 1/케이스 · code_changed_during_run [] · merge code_changed_since_launch [] · manifest 19 지문 = 등록 표 19/19 (1저자 증거 tar · 반입 예정) ⇒ 이 배치는 retry 경로를 안 탔다  · ✅ 10-05 밤 수정 0c48297f9 (1저자 비준 \"비준이얌\" A) — retry 시작 관문: 워커 체크아웃 (manifest repo_root) 의 HEAD · 19 봉인 해시 · dirty 를 발사 봉인과 대조 · 같은 HEAD 의 코드 변경 · 빠진 해시 · 다른 HEAD · dirty = rc 2 (아무것도 안 돌리고 안 쓴다) · --allow-mixed-generation (코드 · HEAD) · --allow-dirty (트리만 · 코드 변경은 못 넘긴다) 은 manifest.retries · runs · 시도 기록에 남는다 · 시도마다 봉인 기록 (띄우기 직전 · 거둔 직후 지문 · git · dirty · 이 시도가 쓴 기록 sha · 워커 runs 항목) · 실행 중 지문이 봉인과 달라지면 새 케이스를 멈추고 자동 merge 생략 rc 2 · 판정 하나 (case_seal) 를 merge · audit · retry 가 공용 — UNSEALED 가 있으면 merge 거부 rc 2 (넘김 = rc 1 + 기록) · 옛 형식 기록 = 첫 run 의 유일한 시도 · 깨끗한 사전 점검 · run_001 code_changed_during_run [] · 워커 runs 1 건 (발사 sha · dirty false) 일 때만 SEALED_LEGACY · 옛 retry = UNSEALED · retry 는 봉인 안 된 케이스만 다시 돈다 · 봉인 19 파일 불변 (실행기는 봉인 밖)",
+      "note": "자리: scripts/run_network_194_parallel.py cmd_retry · _run_and_merge · merge.  재현 (실 cmd_retry → _run_and_merge → merge · OS 잠금 · 환경 · 워커만 대역): retry_rc 0 · code_changed_during_run [] · mixed_generation [] · code_changed_since_launch [network_conductivity.py].  무너지는 결론: \"같은 HEAD · manifest · merge 성공 = 모든 케이스가 발사 봉인 코드\".  해제: retry 가 발사 지문 대조 · dirty 거부 · 시도별 코드 지문 · 음성 / 양성 대조.  ★ 실제 10-05 밤 194 배치 (net194_11fcf91e8) = run 한 번 · retry 0 · 194 done · 시도 1/케이스 · code_changed_during_run [] · merge code_changed_since_launch [] · manifest 19 지문 = 등록 표 19/19 (1저자 증거 tar · 반입 예정) ⇒ 이 배치는 retry 경로를 안 탔다  · ✅ 10-05 밤 수정 0c48297f9 (1저자 비준 \"비준이얌\" A) — retry 시작 관문: 워커 체크아웃 (manifest repo_root) 의 HEAD · 19 봉인 해시 · dirty 를 발사 봉인과 대조 · 같은 HEAD 의 코드 변경 · 빠진 해시 · 다른 HEAD · dirty = rc 2 (아무것도 안 돌리고 안 쓴다) · --allow-mixed-generation (코드 · HEAD) · --allow-dirty (트리만 · 코드 변경은 못 넘긴다) 은 manifest.retries · runs · 시도 기록에 남는다 · 시도마다 봉인 기록 (띄우기 직전 · 거둔 직후 지문 · git · dirty · 이 시도가 쓴 기록 sha · 워커 runs 항목) · 실행 중 지문이 봉인과 달라지면 새 케이스를 멈추고 자동 merge 생략 rc 2 · 판정 하나 (case_seal) 를 merge · audit · retry 가 공용 — UNSEALED 가 있으면 merge 거부 rc 2 (넘김 = rc 1 + 기록) · 옛 형식 기록 = 첫 run 의 유일한 시도 · 깨끗한 사전 점검 · run_001 code_changed_during_run [] · 워커 runs 1 건 (발사 sha · dirty false) 일 때만 SEALED_LEGACY · 옛 retry = UNSEALED · retry 는 봉인 안 된 케이스만 다시 돈다 · 봉인 19 파일 불변 (실행기는 봉인 밖)  · ✅ Codex 5차 재검증 10-06 (`docs/reviews/codex_review_rglr3_reverify_20261006.md` §3) = **닫힘 (verified)** · 우리 트리 재현 (10-06 · docs/reviews/codex_rglr3_reverify_review_evidence_20261006/_README_reproduction.md): 묶음 실행기 무변경 · rc 전부 0 · 판정값 차이 0 (환경 차이만)",
       "claimed_fixed_sha": "0c48297f9",
       "evidence_tests": [
         "scripts/run_network_194_parallel.py --selftest (28/28 → 51/51 · 반례 22 먼저 = 옛 코드에서 22 실패: ⑳a 같은 HEAD 에서 봉인 파일을 고친 retry 가 돈다 · ㉑c 워커 dirty 기록 배치가 merge rc 0 · ㉓e Codex 시나리오 (retry rc 0 · 워커 호출) · 옛 형식 연결 반례 둘 (LAUNCH_ERROR 단독 시도 · run id 다른 시도) · ㉖ 봉인은 워커 체크아웃에서 잰다)",
         "scripts/run_network_194_parallel.py audit (읽기 전용 · 케이스마다 SEALED · SEALED_DIRTY_ALLOWED · SEALED_LEGACY · UNSEALED · NO_RECORD · rc 0 = 전부 봉인) — Codex new_probes.py 실행기 부분 무변경 실행: 첫 merge rc 0 SEALED_LEGACY · retry rc 2 · 워커 미호출 · run_002 없음",
-        "docs/reviews/codex_rglr3_fix_probe_rerun_20261006/ (10-06 · Codex 4차 판정 묶음 탐침을 고친 트리 061ec1b58 에서 재실행 · drive_fix_probe.py) — 같은 HEAD dirty retry: rc 0 · 워커 실행 · run_002 → rc 2 · 워커 안 띄움 · run_002 없음 · 실제 194 봉인 감사 SEALED_LEGACY 194 · merged 같음 194 (docs/data/lhs_network194_11fcf91e8/handover_v12_20261006/seal_audit.tsv)"
-      ]
+        "docs/reviews/codex_rglr3_fix_probe_rerun_20261006/ (10-06 · Codex 4차 판정 묶음 탐침을 고친 트리 061ec1b58 에서 재실행 · drive_fix_probe.py) — 같은 HEAD dirty retry: rc 0 · 워커 실행 · run_002 → rc 2 · 워커 안 띄움 · run_002 없음 · 실제 194 봉인 감사 SEALED_LEGACY 194 · merged 같음 194 (docs/data/lhs_network194_11fcf91e8/handover_v12_20261006/seal_audit.tsv)",
+        "docs/reviews/codex_rglr3_reverify_review_evidence_20261006/ — Codex 5차 판정 묶음 (§2 독립 실행 · §3 해제 증거) · 우리 트리 재현 _reproduction_compare_linux.json"
+      ],
+      "verified_sha": "92b6ebde1",
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_review_rglr3_reverify_20261006.md",
+      "verified_scope": "같은 HEAD 봉인 코드 변경 retry = rc 2 · 워커 미호출 · 새 run 기록 없음 (실 cmd_retry 시작 관문 run_network_194_parallel.py:278 · :1336) · 실환경 모든 시간 경쟁 증명 아님 · 명시적 override 와 기록은 별도 정책 · 현재 체크아웃만 바뀐 정상 merge rc 0 은 오류 아님 (당시 시도 봉인으로 판정)"
     },
     {
       "id": "RGLR3-02",
       "severity": "P2",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-05 밤 4차 재검증 (핀 11fcf91e8 · 456 blob 검증 · 실 망 CLI · 실 helper · 합성 침대 · Windows 11 Python 3.12.14 NumPy 2.5.3)",
       "opened_in": "docs/reviews/codex_review_rglr2_reverify_20261005.md",
       "title": "τ 인계 로더 (lhs_design_dataset load_tau_results) 의 P3 가 σ_ratio · 상태 두 키만 묶어 dual 의 경계 규칙 · σ₀ 다른 사본을 수용한다 — 동일 세대 증명 아님",
-      "note": "자리: scripts/lhs_design_dataset.py TAU_DUAL_PROJ · P3 · tau_flux.py:334.  재현 (실 생산본 · dual 만 변조 · 입력 · 도장 · run id · full_metrics · metrics_flat 그대로): 두 모드 boundary_rule L0→L1 = 수용 (BAND_FALLBACK · f · τ² 빈칸) · 두 모드 σ₀ ×2 + σ_dim 다시 계산 = 수용 (OK · σ₀ 6.0 mS/cm) — 기존 network_stop_verdict 는 둘 다 거부.  해제: 인계 때 정지 계약 전 사본 · 투영 · σ₀ 대조 재호출 (또는 게시 시 결과 지문) · 정상 L0 · L1 · L2 · 비관통 보존 · 모든 파일 일관 변경은 게시 시 해시 없이는 못 잡는다 (한계 명시)  · ✅ 10-05 밤 수정 74ef3c8a7 (1저자 비준 \"비준이얌\" B) — load_tau_results 가 P0–P3 뒤 done · partial 케이스마다 P4: 배치가 done 을 준 같은 함수 pipeline_service.network_stop_verdict (사본 dual · 모드 파일 둘 · legacy · full_metrics 투영 · σ₀/T 짝 · 띠 규칙 · τ 상태) 재호출 + tau_flux.network_generation_problem + 읽기 안정 (네 망 JSON · 도장 · 시도 파일 · full_metrics · 입력 둘의 file_digest 앞뒤) · P4 실패 = FillRefusal (인계 전체 정지 · P0–P3 와 같다) · 인계표에 NOT_COMPUTED 는 없다 · 출처 부록 열 둘 (same_generation_checks = P0_records;P1_run_id;P2_input_digest;P3_batch_tie;P4_stop_contract;P4_generation;P4_read_stable · same_generation_basis = current_files_no_publish_hash) · 원천 스키마 lhs_tau_net/v2 · Codex 4차 탐침 두 변조 (dual-only 경계 L0→L1 · dual-only σ₀×2 + σ_dim 재계산) 수용 → 거부 · 정상 L0 · 비관통 · L1 · L2 칸 그대로 · 한계: 모든 사본을 일관되게 바꾼 변조는 게시 때 해시 없이는 못 잡는다 (봉인 코드 변경 = amendment 필요) · 봉인 19 파일 불변 (pipeline_service.py 60e0f978… = 등록)",
+      "note": "자리: scripts/lhs_design_dataset.py TAU_DUAL_PROJ · P3 · tau_flux.py:334.  재현 (실 생산본 · dual 만 변조 · 입력 · 도장 · run id · full_metrics · metrics_flat 그대로): 두 모드 boundary_rule L0→L1 = 수용 (BAND_FALLBACK · f · τ² 빈칸) · 두 모드 σ₀ ×2 + σ_dim 다시 계산 = 수용 (OK · σ₀ 6.0 mS/cm) — 기존 network_stop_verdict 는 둘 다 거부.  해제: 인계 때 정지 계약 전 사본 · 투영 · σ₀ 대조 재호출 (또는 게시 시 결과 지문) · 정상 L0 · L1 · L2 · 비관통 보존 · 모든 파일 일관 변경은 게시 시 해시 없이는 못 잡는다 (한계 명시)  · ✅ 10-05 밤 수정 74ef3c8a7 (1저자 비준 \"비준이얌\" B) — load_tau_results 가 P0–P3 뒤 done · partial 케이스마다 P4: 배치가 done 을 준 같은 함수 pipeline_service.network_stop_verdict (사본 dual · 모드 파일 둘 · legacy · full_metrics 투영 · σ₀/T 짝 · 띠 규칙 · τ 상태) 재호출 + tau_flux.network_generation_problem + 읽기 안정 (네 망 JSON · 도장 · 시도 파일 · full_metrics · 입력 둘의 file_digest 앞뒤) · P4 실패 = FillRefusal (인계 전체 정지 · P0–P3 와 같다) · 인계표에 NOT_COMPUTED 는 없다 · 출처 부록 열 둘 (same_generation_checks = P0_records;P1_run_id;P2_input_digest;P3_batch_tie;P4_stop_contract;P4_generation;P4_read_stable · same_generation_basis = current_files_no_publish_hash) · 원천 스키마 lhs_tau_net/v2 · Codex 4차 탐침 두 변조 (dual-only 경계 L0→L1 · dual-only σ₀×2 + σ_dim 재계산) 수용 → 거부 · 정상 L0 · 비관통 · L1 · L2 칸 그대로 · 한계: 모든 사본을 일관되게 바꾼 변조는 게시 때 해시 없이는 못 잡는다 (봉인 코드 변경 = amendment 필요) · 봉인 19 파일 불변 (pipeline_service.py 60e0f978… = 등록)  · ✅ Codex 5차 재검증 10-06 (`docs/reviews/codex_review_rglr3_reverify_20261006.md` §3) = **닫힘 (verified)** · 우리 트리 재현 (10-06 · docs/reviews/codex_rglr3_reverify_review_evidence_20261006/_README_reproduction.md): 묶음 실행기 무변경 · rc 전부 0 · 판정값 차이 0 (환경 차이만)",
       "claimed_fixed_sha": "74ef3c8a7",
       "evidence_tests": [
         "scripts/lhs_design_dataset.py --selftest (312/312 → 326/326 · 새 반례 15 = 옛 로더에서 311/326 · c19 Codex dual 경계 · c20 Codex dual σ₀ · c21 모드 파일만 · c22 legacy 만 · c23 full_metrics σ₀ 만 · c24 세대 무효 폴더 · c25 검사 목록 없는 레코드 · g2 열 사전 · i2 출처 부록 · j 툴팁 · 양성 L0 · 비관통 · L1 · L2)",
         "webapp/test_network_handover_chain.py (12/12 → 19/19 · 옛 로더 17/19 · ④c = Codex 탐침 그대로 · 실 CLI 생산자 폴더)",
         "scripts/test_tau_flux.py (55/55 그대로) · webapp/test_tau_handover_status.py (37/37) · webapp/test_tau_labels.py (43/43)",
-        "docs/reviews/codex_rglr3_fix_probe_rerun_20261006/ — dual 만 띠 L0→L1 · dual 만 σ₀×2: 수용 → 인계 전체 거부 (P4 ⑥ 모드 파일 ↔ dual 사본 불일치) · 입력 · σ_ratio · run id 변조 거부 그대로 · 정상 수용 · 실제 194 인계 v1.2 (1저자 WSL 10-06) 다시 읽기 검산 PASS C1–C8 (docs/data/lhs_network194_11fcf91e8/handover_v12_20261006/reread_20261006.json)"
-      ]
+        "docs/reviews/codex_rglr3_fix_probe_rerun_20261006/ — dual 만 띠 L0→L1 · dual 만 σ₀×2: 수용 → 인계 전체 거부 (P4 ⑥ 모드 파일 ↔ dual 사본 불일치) · 입력 · σ_ratio · run id 변조 거부 그대로 · 정상 수용 · 실제 194 인계 v1.2 (1저자 WSL 10-06) 다시 읽기 검산 PASS C1–C8 (docs/data/lhs_network194_11fcf91e8/handover_v12_20261006/reread_20261006.json)",
+        "docs/reviews/codex_rglr3_reverify_review_evidence_20261006/ — Codex 5차 판정 묶음 (§2 독립 실행 · §3 해제 증거) · 우리 트리 재현 _reproduction_compare_linux.json"
+      ],
+      "verified_sha": "92b6ebde1",
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_review_rglr3_reverify_20261006.md",
+      "verified_scope": "인계 때 기존 망 정지 계약 재호출 (lhs_design_dataset.py:1773~) — dual 만 L0→L1 · σ₀ ×2 변조 둘 다 인계 전체 거부 · 입력 · σ_ratio · run id 음성대조 유지 · 모든 사본을 일관되게 바꾼 사후 편집은 게시 당시 해시 없이 못 잡음 (current_files_no_publish_hash)"
     },
     {
       "id": "RGLR3-03",
       "severity": "P3",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex 10-05 밤 4차 재검증 (핀 11fcf91e8 · 456 blob 검증 · 실 망 CLI · 실 helper · 합성 침대 · Windows 11 Python 3.12.14 NumPy 2.5.3)",
       "opened_in": "docs/reviews/codex_review_rglr2_reverify_20261005.md",
       "title": "194 실행기가 출력하는 후속 인계 명령에 tau 묶음 · --tau-results 가 없다 (수동 case join 안내가 남음)",
-      "note": "자리: scripts/run_network_194_parallel.py HANDOVER_GROUPS · print_followups.  1저자에게는 tau 포함 명령을 따로 줬다 (10-05 밤).  해제: 출력 명령 수정 + 출처 부록 · 사전 포장 · 실행 증거.  · ✅ 10-05 밤 수정 0c48297f9 (1저자 비준 \"비준이얌\" C) — print_followups = ⓪ 봉인 감사 (audit → seal_audit.tsv) · ① τ 진단 표 (진단 전용) · ② 생성기 한 번 (tau + --tau-results) · ③ 묶음에 인계표 · _columns · _tau_provenance · _excluded · seal_audit.tsv · ③b (선택) τ 원천 canonical 파일 · 한계: 출력 명령으로 실제 τ 28 열을 만드는 왕복은 실행기 selftest 안에서 못 한다 (생성기 selftest ㉙i 가 CLI 왕복을 본다) — 실제 실행 증거 = WSL 인계 v1.2 재생성 기록",
+      "note": "자리: scripts/run_network_194_parallel.py HANDOVER_GROUPS · print_followups.  1저자에게는 tau 포함 명령을 따로 줬다 (10-05 밤).  해제: 출력 명령 수정 + 출처 부록 · 사전 포장 · 실행 증거.  · ✅ 10-05 밤 수정 0c48297f9 (1저자 비준 \"비준이얌\" C) — print_followups = ⓪ 봉인 감사 (audit → seal_audit.tsv) · ① τ 진단 표 (진단 전용) · ② 생성기 한 번 (tau + --tau-results) · ③ 묶음에 인계표 · _columns · _tau_provenance · _excluded · seal_audit.tsv · ③b (선택) τ 원천 canonical 파일 · 한계: 출력 명령으로 실제 τ 28 열을 만드는 왕복은 실행기 selftest 안에서 못 한다 (생성기 selftest ㉙i 가 CLI 왕복을 본다) — 실제 실행 증거 = WSL 인계 v1.2 재생성 기록  · ✅ Codex 5차 재검증 10-06 (`docs/reviews/codex_review_rglr3_reverify_20261006.md` §3) = **닫힘 (verified)** · 우리 트리 재현 (10-06 · docs/reviews/codex_rglr3_reverify_review_evidence_20261006/_README_reproduction.md): 묶음 실행기 무변경 · rc 전부 0 · 판정값 차이 0 (환경 차이만)",
       "claimed_fixed_sha": "0c48297f9",
       "evidence_tests": [
         "scripts/run_network_194_parallel.py --selftest (출력 명령 문자열 = --webapp-groups contact,percolation,f1,fracture,area,tau --tau-results <ROOT>/merged/<c>/results · HANDOVER_GROUPS = 생성기 WA_STAGE_GROUPS[network] · 출력 플래그 = 생성기 파서에 있다 · --tau-results 폴더가 케이스마다 있다 · 수동 join 문구 없음)",
-        "docs/reviews/codex_rglr3_fix_probe_rerun_20261006/new_probes_after_fix.json launcher.followups (⓪ 봉인 감사 · ① τ 진단 · ② --webapp-groups …,tau --tau-results · ③ · ③b) · 1저자 WSL 실행 기록 docs/data/lhs_network194_11fcf91e8/handover_v12_20261006/wsl_run_20261006.md"
-      ]
+        "docs/reviews/codex_rglr3_fix_probe_rerun_20261006/new_probes_after_fix.json launcher.followups (⓪ 봉인 감사 · ① τ 진단 · ② --webapp-groups …,tau --tau-results · ③ · ③b) · 1저자 WSL 실행 기록 docs/data/lhs_network194_11fcf91e8/handover_v12_20261006/wsl_run_20261006.md",
+        "docs/reviews/codex_rglr3_reverify_review_evidence_20261006/ — Codex 5차 판정 묶음 (§2 독립 실행 · §3 해제 증거) · 우리 트리 재현 _reproduction_compare_linux.json"
+      ],
+      "verified_sha": "92b6ebde1",
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_review_rglr3_reverify_20261006.md",
+      "verified_scope": "후속 명령에 tau + --tau-results (run_network_194_parallel.py:1162) · 실인계 28 열 · WSL 생성 기록 정합 — 안내 수정이 실제 출력 대신 증거가 되는 것은 아님 (이번엔 실제 출력까지 대조)"
     },
     {
       "id": "SELF-89",
@@ -8058,6 +8083,36 @@
         "scripts/run_network_194_parallel.py --selftest (29 · 봉인 대상 누락 = preflight stop)",
         "docs/reviews/codex_review_rglr2_reverify_20261005.md (등록 19 지문 = 핀 19/19)"
       ]
+    },
+    {
+      "id": "RGLR4-01",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-06 5차 재검증 (핀 92b6ebde1 · ZIP 26 · 획득 207 Git blob 검증 · 194 원천 독립 대조 · 실 검산기 CLI 변조 · 합성 망 · Windows Python 3.12.14 NumPy 2.5.3 · 우리 트리 Linux 재현 판정값 차이 0)",
+      "opened_in": "docs/reviews/codex_review_rglr3_reverify_20261006.md",
+      "title": "다시 읽기 검산기 reread_v12.py 의 C4 (옛 인계 공통 열 회귀) 가 차이 · 열 탈락을 기록만 하고 최종 판정 실패 목록에 넣지 않는다 — 공통 칸 하나를 99 로 바꿔도 PASS · rc 0",
+      "note": "자리: docs/data/lhs_network194_11fcf91e8/handover_v12_20261006/reread_v12.py:143 (C4 diff_cols · dropped_cols) · :262 (최종 판정).  재현 (실 CLI · 복사본만 변조): lhs00_000.coverage_AM_total_hertz_pct 13.643988681252257 → 99 · same 24439 · diff 1 · verdict PASS · fails [] · rc 0 (Codex evidence/reread_mutants.json · 우리 트리 재현 같음).  무너지는 결론: \"검산기 PASS = 옛 공통 열 무변경 보증\" (자동 배포 관문으로 못 씀).  무너지지 않는 것: 고정 194 인계표 자체 — Codex 독립 대조 공통 36,600 칸 차이 0 (원본 칸은 맞다).  해제: 차이 1 칸 · 등록 안 된 열 탈락 = 실패 · 의도된 변화는 세대별 allowlist · 기대값으로 따로 봉인 · 한 칸 변조 · 열 삭제 CLI 회귀가 **비영 종료** (출력에 차이를 적는 것만으로는 부족) · baseline PASS 유지.  재실행 불요 (계산 캠페인 아님 · 검산 · 포장 관문 수정)"
+    },
+    {
+      "id": "RGLR4-02",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-06 5차 재검증 (핀 92b6ebde1 · ZIP 26 · 획득 207 Git blob 검증 · 194 원천 독립 대조 · 실 검산기 CLI 변조 · 합성 망 · Windows Python 3.12.14 NumPy 2.5.3 · 우리 트리 Linux 재현 판정값 차이 0)",
+      "opened_in": "docs/reviews/codex_review_rglr3_reverify_20261006.md",
+      "title": "다시 읽기 검산기의 C8 (봉인 감사) 이 194 줄 · verdict · merged 문자열만 세고 케이스 ID 의 유일성 · 정확한 집합을 안 본다 — lhsx_064 행을 lhs00_000 중복으로 바꿔도 SEALED_LEGACY 194 · PASS · rc 0",
+      "note": "자리: reread_v12.py:249–261 (C8).  재현 (실 CLI · 복사본만): seal_audit.tsv 마지막 lhsx_064 행 → 첫 lhs00_000 행 복제 · 194 줄 · 고유 193 · lhsx_064 증거 없음 · SEALED_LEGACY=194 · merged same 194 · PASS · rc 0 (Codex · 우리 트리 재현 같음).  무너지는 결론: \"C8 PASS = 194 케이스 각각의 봉인 증거 확인\".  무너지지 않는 것: 원본 감사표 = 고유 194 · record hash 194 일치 (Codex 별도 검산 · execution_and_567).  해제: 인계표 / 등록 manifest 의 정확한 ID 집합 ↔ 감사표 집합 · 행 수 · 중복 · 코호트 · record status · record hash 를 병합 기록에 묶어 대조 · 같은 집합 검사만 쓰는 C6 출처 부록도 중복 차단 · 누락+중복 교체 · record sha 변조가 비영 종료 · baseline PASS 유지"
+    },
+    {
+      "id": "SELF-90",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-06 5차 재검증 §2 · §6 QV3 · QV5 (요청서 · 인계 README 문장 대조)",
+      "opened_in": "docs/reviews/codex_review_rglr3_reverify_20261006.md",
+      "title": "5차 요청서 §6-6 초안 · §6-2 표 · 인계 README C7 의 문장 여섯이 과장 · 표지 누락 — \"정의상 1 이 바닥\" · \"Physics = 소성 접촉 면적 민감도\" · \"큰 접촉 면적이 접촉 저항을 거의 지운다\" · \"상태로 거른다\" · σ_ion (판 간격 해) 무표지 · C7 \"독립 재계산\"",
+      "note": "자리: docs/reviews/codex_rglr3_reverify_request_20261006.md §6-2 · §6-6 · docs/data/lhs_network194_11fcf91e8/handover_v12_20261006/README.md C7 행 · CLAUDE.md LHS 행 \"τ 원천 독립 재계산\".  Codex 정정: ① T ≥ 1 은 정의가 아니라 조건부 변분 상한 (같은 영역 · 경계조건 · 국소 σ ≤ σ₀ · 나머지 상 절연 · 중복 없는 전도상 체적일 때 σ_eff ≤ φσ₀) — 저항망에 φ/q 이름을 붙였다고 강제되지 않는다 ② Physics 는 면적 선택 (network_conductivity.py:419 부근) · 협착식 (:483–513 legacy ψ) · g_boundary (:724–726) 가 함께 다르다 = \"면적 + 협착 규약의 결합 민감도\" (면적 단독 인과 분해 아님) ③ legacy 식 Rc = 1/[2σ r s (1−s)^1.5] 는 d log Rc/ds = −1/s + 1.5/(1−s) > 0 (s > 0.4) — 면적이 커질수록 Rc 가 커지고 s ≥ 0.998 에서 0 으로 절벽 ⇒ \"큰 면적이 접촉 저항을 지운다\" 철회 ④ 10 건만 상태로 거르고 나머지 Physics 를 기본 학습에 쓰라는 권고 철회 — T ≥ 1 결과로 조밀 조성 일부를 고르는 선택이고 남은 160 의 물리 타당성을 인증하지 않는다 (Physics 묶음 전체 opt-in) ⑤ §6-2 σ_ion 행 = 판 간격 해 q × 3.0 (L_gap) 인데 같은 표의 수송 tortuosity 는 L_mc 재척도 — basis 표지 없이 한 표 (Hertz 중앙 LHS 0.2273 ↔ f_mc × 3.0 0.2104 · LHSx 1.4122 ↔ 1.2553) ⑥ C7 은 생성기와 같은 tau_flux.ion_columns 를 원천에서 다시 부른 것 = 자료 경로 독립 · 식 독립 아님 (식 독립 검산 = C5 · metrics_flat 에서 φ/σ_ratio).  §6-3 의 7 \"CF 빈칸 = σ_ratio > 1.5 거부로 보이나 미확인\" 은 맞게 유보했다 — 원 JSON 사유 29/29 solve_failed (거부선 · 예외 · 퇴화를 한 사유로 묶는다 · network_conductivity.py SOLVE_FAILED_REASON) 라 확정 불가.  같은 부류 = SELF-67 · SELF-88 (요청서 압축 · 과장).  고침 = 요청서는 발송본이라 그대로 두고 이 항목이 정오표 · 인계 README C7 · CLAUDE.md 문구는 이 반입 커밋에서 고친다 · 배포 README · 열 사전은 Codex §7 문안으로 (1저자 비준 뒤)"
     }
   ]
 }
