@@ -18,7 +18,14 @@ mk() {  # mk <이름> <두번째 run 스텝> <마지막 thermo step | -> <배너
       [ "$4" = 1 ] && echo "Total wall time: 0:00:01"; } > "$d/log.lmp"
   fi
 }
-FAKE="$T/lmp_fake"; printf '#!/usr/bin/env bash\nsleep 2\n' > "$FAKE"; chmod +x "$FAKE"
+FAKE="$T/lmp_fake"; printf '#!/usr/bin/env bash\necho $$ >> "%s/fake_pids"\nsleep 2\n' "$T" > "$FAKE"; chmod +x "$FAKE"
+#  ★ 2026-10-05 — ④ 는 옛 판에서 `kill -0` (아직 살아 있나) 로 봤다 → 가짜 lmp 는 2 초 뒤 끝나므로 check_all 의 부하에서 run_all.sh 가
+#    돌아온 뒤 2 초가 지나면 거짓 실패 (10-05 게이트 실측 · 단독 실행은 통과).  ⇒ 가짜 lmp 가 **스스로 적은 PID** 와 pid 파일을 대조한다
+#    (pid 파일 = 실제로 뜬 그 프로세스 — 뜻은 같고 살아 있는 시간에 기대지 않는다 · 기록이 늦게 써지면 5 초까지 기다린다).
+pid_launched() {
+  local p; p=$(cat "$1" 2>/dev/null) || return 1; [ -n "$p" ] || return 1
+  for _ in $(seq 50); do grep -qx "$p" "$T/fake_pids" 2>/dev/null && return 0; sleep 0.1; done; return 1
+}
 
 echo "── run_all.sh: 완주 판정 · 죽은 런 비재발사 ──"
 mk done_s1 10 11 1        # 배너 있는 완주
@@ -29,7 +36,7 @@ out=$(OUT="$T/runs" LMP="$FAKE" MAXJ=4 bash "$HERE/run_all.sh" 2>&1)
 chk '① 배너 있는 완주 런은 안 띄운다'                          "! [ -f '$T/runs/done_s1/pid' ]"
 chk '② ★ 배너 없는 완주 런도 안 띄운다 (옛 판은 재발사했다)'    "! [ -f '$T/runs/nobanner_s1/pid' ] && grep -q '완료됨 (배너 없음' <<<\"\$out\""
 chk '③ ★ 죽은 미완주 런은 FORCE 없이 안 띄운다 — 목록만'        "! [ -f '$T/runs/dead_s1/pid' ] && grep -q '자동 재발사 안 함' <<<\"\$out\""
-chk '④ 아직 안 돈 런은 띄운다 (pid 파일 = 실제 PID)'             "[ -s '$T/runs/fresh_s1/pid' ] && kill -0 \"\$(cat '$T/runs/fresh_s1/pid')\""
+chk '④ 아직 안 돈 런은 띄운다 (pid 파일 = 실제 PID)'             "pid_launched '$T/runs/fresh_s1/pid'"
 chk '⑤ 미완주 목록을 끝에 찍는다'                               "grep -q '미완주(죽은) 런 1 개' <<<\"\$out\""
 sleep 3
 out2=$(OUT="$T/runs" LMP="$FAKE" MAXJ=4 FORCE=1 bash "$HERE/run_all.sh" 2>&1)
