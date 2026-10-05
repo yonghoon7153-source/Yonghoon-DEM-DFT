@@ -9215,3 +9215,25 @@ grid 영수증 stamp `validator_tree_dirty` 의 순서 개선 (§137 의 개선 
 
 **절차:** RED → 최소 GREEN → 변이 (`-g90` 두 행 따라가기 + `-g91` 둘) → 영수증 history 보존 + 1 회 재생성 → 전체 회귀 · smoke · 등록부 전체 변이
 재생 → GATE91 요청문 → docs-lint.
+
+## §139 91차 요청 — **G90-N1 정정** 결과 (환경 프로필 C 의 origin 축을 경로 검색 범위로 · 이름 · 범위 선언 · 문구 · C1) · 실행 GO 아님 · 판정 대상 `b08bb6944`
+
+**승인 → 고정 → 구현 순서 (§138):** 고정 표 `docs/22p_gap/PYBAMM_PIN_ROUND_SPEC.md` §13 커밋 `69b35f65d` (코드 변경 전) → RED `e06e0cd6d`
+(`tests/test_gate90_env_profile.py` 이름 따라가기 + 새 `tests/test_gate91_env_profile_scope.py` s01–s03 — 43 node 중 38 failed / 5 passed · 고정 표 예측과
+같다) → 증거 규칙 `4b32db749` · RED 증거 `b9abe993c` → GREEN `b08bb6944` (RUN_SCOPE 1 파일 `tools/env_profile.py` · +30 −17 · source_digest
+`3f84c0db52d2b9ac` → `f0175fff71132003`) → 증거 `fe0cdfb06` → 변이 `3b019c9e9` (-g90 두 행 따라가기 + -g91 둘 + EXPECT) · 증거 `06b1bfa48` → 영수증
+history `7ff263197` → 재생성 `f27006370` (paired 35 · grid 34 · stamp 에 새 이름 · `not_measured`).
+
+| 항목 | 결과 |
+|---|---|
+| 이름 | `counts.origins_verified` → `path_origins_in_record` · `unverifiable.origins` → `path_origins` · 축 `origin` → `path_origin` (locked 칸 "경로 검색 origin 이 RECORD 가 있는 유효 배포판 하나의 파일") · 안쪽 `measure()` 이름 같은 뜻으로 |
+| 범위 선언 | 새 결과 키 `not_measured` = `["loaded_module_origin"]` — 세 상태 모두 · `None` 아님 (측정 칸이 아니라 도구 범위의 선언) |
+| 문구 | 모듈 docstring (`PathFinder` 경로 검색 origin 의 RECORD 소속 · 로드된 객체 · 다른 meta-path finder 는 보지 않는다 · 로드된 module origin 은 측정하지 않는다) + **C1 경계 문장** · `_origin` docstring · 요약 "경로 검색 origin 의 RECORD 소속 N (로드된 module origin 미측정)" |
+| 판정 논리 | 불변 — 세 갈래 · 측정 · 비교 · 상태 · CLI rc · lock 문법 · `emit_lock` (lock 바이트 그대로) |
+| 회귀 · 변이 | GREEN 43 passed · 관련 모듈 577 passed / 10 failed (영수증 낡음 — 재생성 뒤 113 passed) · `-k g9` 15/15 · rc 0 (-g90 13 의 증인 불변 · -g91 둘) |
+| 실제 환경 | **MATCH** · 170/170 · 2/2 · 설치 파일 일치 24,804 · 경로 검색 origin 의 RECORD 소속 9 · 확인 불가 yaml · `not_measured` [`loaded_module_origin`] |
+| 전체 회귀 (`f27006370` clean) | pytest **2182 passed / 1 xfailed / rc 0** (0:57:27) · smoke **rc 0** (2:45 · 기록 단계 MATCH) · env JSON MATCH · 등록부 전체 재생 **412/412 call 단계에서 물었다 · rc 0** (scenario 423 · executable 412 · declared 11 · site 461 · 2:34:40) |
+| 자체 신고 | 요청문 §6 a–h — 특히 a (90차 §8 "기존 시험 불변" 의 예외 — 이름 따라가기) · b (s02 = 검토자 반례의 고정) · d (유효 정정 대응) · e (C1 경계) |
+
+**요청:** `docs/22p_gap/GATE91_REQUEST.md` · 증거 `docs/22p_gap/gate91_evidence/` (README 전체 sha256). **아님:** 실행 GO · 실제로 로드된 module origin 의
+측정 (선택지 C) · D guard · C 의 fail-closed · 설치 · lock 재생성 · 새 연구 leg · 운영 v6 계획 · 세대표 · p_ini · class · 투영 게시.

@@ -344,5 +344,8 @@ git push -u origin claude/14-gate-code-review-9qkx05
 | 2026-10-05 | `bms-balancing/.gitattributes` 규칙 — B-min 후보 r1 재검토 회신 묶음 `reviews/r14_repros/codex63/comsol_bmin_r1_review_20261005/** -text` (게이트 차수 밖 · 보존 `b7397ed95` · 접수 = COMSOL SPEC §54) | `f0e384d79` | 밖 | 할 일 없음 |
 | 2026-10-05 | 원장 §138 — G90-N1 정정 착수 승인 기록 (선택지 B) · 고정 표 `degradation-degeneracy/docs/22p_gap/PYBAMM_PIN_ROUND_SPEC.md` §13 (코드 변경 전 · 이름 셋 · `not_measured` · 문구) | 이 행이 든 커밋 | 밖 | — |
 | 2026-10-05 | `bms-balancing/.gitattributes` 규칙 — B-min 후보 r2 꾸러미 `comsol_candidates/bmin_particle640_r2_20261005/** -text` (게이트 차수 밖 · 접수 = COMSOL SPEC §55 · 재검토 요청 `docs/COMSOL_BMIN_CANDIDATE_R2_REVIEW_REQUEST_20261005.md`) | `b4bb5325a` | 밖 | 할 일 없음 |
+| 2026-10-05 | `degradation-degeneracy/.gitattributes` 규칙 `docs/22p_gap/gate91_evidence/** -text !eol` | `4b32db749` | 밖 | 할 일 없음 |
+| 2026-10-05 | **RUN_SCOPE — 91차 GREEN** (`tools/env_profile.py` 이름 셋 · `not_measured` · 문구 — 판정 논리 불변 · source_digest `3f84c0db52d2b9ac` → `f0175fff71132003`) | `b08bb6944` | **안** | 91차 판정 대상 — ff 복귀라 SHA 그대로 유효 · 영수증 재생성 `f27006370` 와 한 짝 |
+| 2026-10-05 | 원장 §139 — 91차 요청 (`GATE91_REQUEST.md`) · 게이트 요청 발송 대기 (발송문은 사용자 전달) | 이 행이 든 커밋 | 밖 | 91차 회신은 서브 또는 복귀 뒤 본진에서 받는다 |
 
 ### 복귀 결과 (복귀 정리 커밋이 덧붙인다)
