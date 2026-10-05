@@ -1,0 +1,57 @@
+{
+  "date": "2026-10-05",
+  "fixed_commit": "4ad68af441cf00981c1b7e27bd71f5a1858ff70e",
+  "decision": "ANNEX_C_CONDITIONALLY_ACCEPTABLE_THREE_LOCAL_DOCUMENT_CORRECTIONS",
+  "C1_core": "PAPER_SIDE_ACCEPTED; physical workbook cell/step correspondence remains P0",
+  "prior_C2_v2_A_B": "CLOSED_PRESERVED",
+  "annex_C": "CONDITIONAL_NOT_UNCONDITIONAL_ACCEPTANCE",
+  "findings": [
+    {
+      "id": "RV2C-N1",
+      "priority": "P2",
+      "scope": "Annex C section 3 / C1 section 4-4",
+      "title": "Nominal target correspondence does not verify fitted normalization; correct Fresh sufficient-condition wording",
+      "status": "DOCUMENT_CORRECTION_REQUIRED"
+    },
+    {
+      "id": "RV2C-N2",
+      "priority": "P2",
+      "scope": "Annex C section 2 / corresponding C1 and wiki statements",
+      "title": "CE product is not a measured lithium inventory loss fraction",
+      "status": "DOCUMENT_CORRECTION_REQUIRED"
+    },
+    {
+      "id": "RV2C-N3",
+      "priority": "P2",
+      "scope": "Annex C section 4 / C1 sheet partition",
+      "title": "Fix cycle/direction tri-state rules and six outside-sheet names before P0",
+      "status": "DOCUMENT_CORRECTION_REQUIRED"
+    }
+  ],
+  "existing_numeric_decision_rules_changed": false,
+  "E3b": "UNREGISTERED; not an added E3a/H prerequisite",
+  "execution_approved": false,
+  "P0_approved": false,
+  "C6_approved_by_this_review": false,
+  "cost_measurement_approved": false,
+  "installation_approved": false,
+  "implementation_approved": false,
+  "fitting_approved": false,
+  "COMSOL_calls": 0,
+  "REIL_data_opened": false,
+  "notebooks_opened": false,
+  "provided_code_opened_or_executed": false,
+  "reviewer_operations": [
+    "read provided PDFs",
+    "render selected pages",
+    "read fixed Markdown",
+    "local artifact hashing and document checks"
+  ],
+  "next_minimum": "Three local document corrections and line/SHA response only; no tests or raw-data opening required",
+  "separate_scopes": [
+    "GATE reviews",
+    "PyBaMM pinning",
+    "COMSOL"
+  ],
+  "PDF_redistributed": false
+}

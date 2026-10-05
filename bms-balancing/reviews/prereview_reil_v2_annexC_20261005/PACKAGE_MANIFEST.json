@@ -1,0 +1,40 @@
+{
+  "scope": "Review delivery; excludes manifest itself and all PDFs/renders/extracted paper text.",
+  "payload": [
+    {
+      "path": "README_KO.md",
+      "bytes": 1361,
+      "sha256": "3ccf30c590b8a9e67430b772629461e20cff38fdb836ae517cdf661b455b98e0"
+    },
+    {
+      "path": "REVIEW_KO.md",
+      "bytes": 12884,
+      "sha256": "3962cd3eda5402ee52e94e7ca0901de0587308198688703f80844bf012ff153f"
+    },
+    {
+      "path": "CLAUDE_REPLY_KO.md",
+      "bytes": 3738,
+      "sha256": "0c9f483cbb179c6cc83fcac59004880e16ae710e11838be0a8eeb15a31c970ed"
+    },
+    {
+      "path": "DECISION.json",
+      "bytes": 2048,
+      "sha256": "0ebf9137b66214e6d0bde1c300e7675319c10cbabca275c1c76eb7bac6b46bf1"
+    },
+    {
+      "path": "RECEIVED_SNAPSHOT.json",
+      "bytes": 205793,
+      "sha256": "c8a4590a9cd7cdf98be0eb3045f5d9aa7b97cf4f6adbe0908be8a30c8aba208d"
+    },
+    {
+      "path": "REVIEW_CHECKS.json",
+      "bytes": 7906,
+      "sha256": "4c02323b4c08c59ad7190ef7fbfcbe62b582e0a83863310d62bac67c87e8d36c"
+    },
+    {
+      "path": "reviewer_document_checks.py",
+      "bytes": 5809,
+      "sha256": "465db9084d4dcdf7b2f3928eb73e0322feb0b373070db28a70e8acaf074a1c71"
+    }
+  ]
+}
