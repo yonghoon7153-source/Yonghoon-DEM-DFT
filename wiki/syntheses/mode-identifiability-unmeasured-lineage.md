@@ -2,10 +2,10 @@
 title: 이 계보는 모드 분해를 재면서 그 분해의 유일성은 모드 좌표에서 재지 않았다
 description: "Fifteen papers report LLI/LAM decompositions; one (Mohtat 2019) quantifies identifiability but not in mode coordinates, and none reports the direction of the degeneracy — yet the instruments are already scattered across the same fifteen"
 created: 2026-09-03
-updated: 2026-10-02
+updated: 2026-10-05
 type: synthesis
 tags: [battery, degradation, identifiability, research]
-sources: [raw/papers/schmitt2022_sic-ocp-shape-change-degradation-modes.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/dubarry2012_synthesize-degradation-modes.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/cui2024_electrode-utilization-formation-cycle-life.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/tao2025_nondestructive-degradation-decoupling.md, raw/papers/wang2025_interpretable-ml-battery-prognosis.md, raw/papers/zhang2020_eis-gpr-capacity-rul.md, raw/papers/su2024_drt-soh-health-features.md, raw/papers/kim2023_graphite-heterogeneity-lifetime.md, raw/papers/2026-09-02-siwon-kim-degradation-mode-ml-seminar.md, raw/papers/mohtat2019_electrode-soh-estimability-expansion.md, raw/papers/wang2025_aging-induced-rate-independent-li-plating.md, raw/papers/sun2025_dl-eis-degradation-mode-diagnostics.md, raw/papers/oney2025_dead-slow-overworked-graphite-operando-microxrd.md]
+sources: [raw/papers/schmitt2022_sic-ocp-shape-change-degradation-modes.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/dubarry2012_synthesize-degradation-modes.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/cui2024_electrode-utilization-formation-cycle-life.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/tao2025_nondestructive-degradation-decoupling.md, raw/papers/wang2025_interpretable-ml-battery-prognosis.md, raw/papers/zhang2020_eis-gpr-capacity-rul.md, raw/papers/su2024_drt-soh-health-features.md, raw/papers/kim2023_graphite-heterogeneity-lifetime.md, raw/papers/2026-09-02-siwon-kim-degradation-mode-ml-seminar.md, raw/papers/mohtat2019_electrode-soh-estimability-expansion.md, raw/papers/wang2025_aging-induced-rate-independent-li-plating.md, raw/papers/sun2025_dl-eis-degradation-mode-diagnostics.md, raw/papers/oney2025_dead-slow-overworked-graphite-operando-microxrd.md, raw/papers/li2026_half-cell-fitting-multiobjective-benchmark.md]
 confidence: high
 explored: false
 verificationStatus: unverified
@@ -18,9 +18,9 @@ targetVenue: 다음 연구세미나 발표 도입부 + degradation-degeneracy �
 
 ## Thesis
 
-흡수한 19편(2026-09-11 Wang (Xiong) 2025 · Cui 2026, 2026-10-02 Sun (Xiong) 2025 · Oney 2025 추가)은 LLI/LAM 분해(또는 그 등가물)를 **보고**하지만 그 분해가 **유일한지**를
+흡수한 20편(2026-09-11 Wang (Xiong) 2025 · Cui 2026, 2026-10-02 Sun (Xiong) 2025 · Oney 2025, 2026-10-05 Li 2026 추가)은 LLI/LAM 분해(또는 그 등가물)를 **보고**하지만 그 분해가 **유일한지**를
 **모드 좌표에서, 축퇴의 방향까지, 추정기로** 잰 논문은 하나도 없고, 그러면서
-**그것을 잴 도구는 이미 이 19편 안에 흩어져 있다** — 빠진 것은 도구가 아니라
+**그것을 잴 도구는 이미 이 20편 안에 흩어져 있다** — 빠진 것은 도구가 아니라
 **그 도구를 자기 결과에 겨누는 한 걸음**이다.
 
 > **⚠ 2026-09-04 — 이 Thesis 는 좁혀졌다.** 원래 문장은 "그 분해가 유일한지를 잰
@@ -38,6 +38,12 @@ targetVenue: 다음 연구세미나 발표 도입부 + degradation-degeneracy �
 > `[해석]` 두 반례가 같은 방향으로 Thesis 를 민다 — 무너뜨리는 게 아니라
 > **"모드 좌표에서" 라는 정어에 무게를 몰아준다.** 이 계보는 `θ` 좌표에서는
 > 이미 상당히 정교하고, **비어 있는 것은 그 다음 한 번의 좌표변환이다.**
+>
+> **⚠ 2026-10-05 세 번째 좁힘 — Li 2026.** "모드 좌표에서" 도 정어 하나로는 이제 과장이다 —
+> 그 편은 반쪽전지 맞춤의 ABC 사후 **주변분포**를 `m_PE` · `m_NE` · LII 로 그린다 (LCO 두 셀 ·
+> Fig. 12). 남는 것은 **방향 0 (결합분포 · 상관 0) · 폭의 기준 (허용오차) 미인쇄 · 참값 대조 0 ·
+> 스스로 축퇴를 인정한 LFP 에는 미적용** 넷이다. 상세는 **Counter-argument (h)**. 위 세 정어 가운데
+> "방향까지" 와 "추정기로" 는 그대로 서 있다.
 
 ## Argument
 
@@ -67,6 +73,7 @@ targetVenue: 다음 연구세미나 발표 도입부 + degradation-degeneracy �
 | **Lee 2020** (2026-09-04 추가) | **16** | **0** | **침묵하지 않되 `estimab*` 0 · `global` 0.** 제약 CRB 를 **창(DW) 축으로** 돌리고, 이 계보에서 **처음으로 비대각을 그림으로** 보인다 (Fig. 7 오차 타원). 그러나 수치 ρ 0회, **모드 좌표로 전파 0회** |
 | **Sun (Xiong) 2025 — EIS 모드 DNN** (2026-10-02 추가) | **0** | **0** | **적합값에 "ground truth" 라는 이름을 붙여 침묵을 지운다** — 반쪽전지 창 5-매개(창 4 + 상수 `R`) PSO 맞춤 출력을 DNN 학습 라벨이자 평가 정답으로 쓰고 `uniqu*` · `uncertain*` · `error bar` · `multi-start` 전부 0 (합자 97 개 · 줄끝 하이픈 정규화 후). 비유일성 문제가 어휘에서 아예 생기지 않는 구성. 라벨 궤적은 세 모드 함께 30–39 % 까지, 그림 9b 에 라벨 간극(6.09 → 14.40 %) — basin 전환 징후 (§10) |
 | **Oney 2025 — 노화 흑연 operando µXRD** (2026-10-02 추가) | **0** | **0** | **같은 전극의 LAM_NE 를 방법 넷으로 재고 두 배 넘게 갈리는데 한 마디로 닫는다** — 완전지 DVA ≈19 % · 반쪽전지 DVA ≈55 %(둘 다 `[재현]`) · operando 34–57 % · 논의 "39% ± 8%" 를 "consistent, albeit different in value" 로. 분해 값의 **방법 · 전류 의존을 보고하고 정량하지 않는** 형. `uniqu*` 0 · `LLI` 0(LCL 6) · 모형 0. 그러면서 이 계보에서 처음으로 **li/de 상 조성을 OCV 밖(회절)에서** 잰다 (§11) |
+| **Li 2026 — REIL 다목적 반쪽전지 맞춤** (2026-10-05 추가) | **10** (본문 — 매개 · 모델 식별성 8 · 피크 "식별" 2 · 보충 +1) | **0** | **침묵하지 않되 주변분포만.** `[인쇄]` "a qualitative measure of parameter identifiability" · "dominated by model non-uniqueness" — ABC 사후 (LCO 두 셀) 를 **모드 좌표** (`m_PE` · `m_NE` · LII) 로 그린다. 허용오차 미인쇄 · `correlat*` 0 · 스스로 "cannot differentiate the degradation mode LAM_PE and LLI" 라고 쓴 LFP 에는 미적용 · 설계 참값이 있는 LFP 11 셀에서는 경우마다 점 하나 (그림 판독상 부등식 경계 · 상자 끝에 붙음). 하이픈 · 합자 정규화 후 셈 (반론 (h)) |
 
 `[2026-09-04]` **Mohtat 행이 이 표의 성격을 바꾼다.** `identifiab*` 23회는 Lin 의
 26회에 맞먹고, `Fisher` 3 · `Cramer/Cramér` 5 · `observab*` 11 · `sensitivit*` 13 이
@@ -496,6 +503,28 @@ electrodes**", 그리고 식 (26) `σ_y·α = σ_x·β`. **다만 그 의존성�
 (선 굵기 ~3 px)만큼의 오차가 있다. 소수 셋째 자리는 주장하지 않는다 — 주장은
 **부호와 대략의 크기**까지다. 그리고 무제약 NE 쌍은 노랑에 완전히 가려
 **측정하지 못했다.**
+
+**(h) "모드 좌표에서 잰 편이 없다" 도 그대로는 과장이다 — Li 2026 은 사후 주변분포를 그린다.** (2026-10-05)
+
+Li 외 2026 (*eTransportation* 29, 100593 · `raw/papers/li2026_half-cell-fitting-multiobjective-benchmark.md` §12) 은
+반쪽전지 맞춤의 ABC (sequential Monte Carlo · 사전 = 매개변수 상자 위 균등 · 거리 = `MSE_end + MSE_QV`) 사후분포를
+**건강 매개변수 `m_PE` · `m_NE` · LII** 로 그린다 (Fig. 12). `LAM = 1 − m/m_fresh` 이고 LLI 는 LII 의 변화라 이것은
+**모드 좌표**다. 그리고 그 흩어짐을 `[인쇄]` "a qualitative measure of parameter identifiability" 로, 매개변수 산포를
+"dominated by model non-uniqueness rather than measurement error" 로 인쇄한다. → **논지를 다시 좁힌다**:
+
+| 논지 성분 | 판정 (Li 2026) |
+|---|---|
+| **모드 좌표에서** 유일성을 본 편이 없다 | **부분적으로 거짓** — 주변 사후분포 셋 (LCO 두 셀) · 폭 순서 `m_NE` > `m_PE` ≫ LII `[도표]` |
+| 축퇴의 **방향** | **참** — 결합분포 · 상관 0 회 (`correlat*` 0) |
+| 폭의 **기준** | **참 (없음)** — ABC 허용오차 미인쇄 · 사전 = 상자 (88.6 % 셀의 `m_PE` 가 ≈0.925 에서 끊김 `[도표]` — 상자 하한일 가능성) |
+| **추정기로 참값 대조** | **참 (안 함)** — 두 셀이 해체 셀 (Table 3) 인데 사후를 해체 측정과 대조하지 않음 · 설계 참값이 있는 LFP 에는 ABC 미적용 |
+| 가장 축퇴가 심한 곳 | **비켜 감** — 저자가 "cannot differentiate the degradation mode LAM_PE and LLI" 라고 쓴 LFP 에 불확실성 분석 0 |
+
+`[해석]` Mohtat (f) · Lee (g) 와 같은 방향으로 Thesis 를 민다 — 무너뜨리지 않고 **"방향까지 · 추정기로"** 두 정어에
+무게를 더 몰아준다. 그리고 이 편은 그 두 정어를 채울 재료를 우리 쪽에 넘긴다: 설계 참값이 있는 실측 곡선
+([[isu-uconn-lfp-gr-emulated-degradation]]). 그 자료에서 이 편의 점 추정은 `[도표]` LFP 평탄부의 골짜기 경계에 붙어
+설계 LLI 를 LAM_PE 로 읽는다 ([[fitting-degeneracy]] 2026-10-05 절) — **재지 않은 대가의 세 번째 실측**으로 §6 · §8 과
+나란히 둘 수 있다 (판독 · 설계값 기준이라 정량은 REIL 프로토콜의 몫).
 
 ## Gap
 

@@ -5,7 +5,7 @@ created: 2026-08-11
 updated: 2026-10-05
 type: research-question
 tags: [battery, degradation, research]
-sources: [raw/repositories/degradation-degeneracy-audit.md, raw/papers/schmitt2022_sic-ocp-shape-change-degradation-modes.md, raw/papers/2026-09-21-siwon-kim-si-gr-ica-lam-si-gitt-ocp.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/cui2024_electrode-utilization-formation-cycle-life.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/mohtat2019_electrode-soh-estimability-expansion.md, raw/papers/natterer2026_re-halfcell-anode-potential-aging.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/sun2025_dl-eis-degradation-mode-diagnostics.md, raw/papers/oney2025_dead-slow-overworked-graphite-operando-microxrd.md]
+sources: [raw/repositories/degradation-degeneracy-audit.md, raw/papers/schmitt2022_sic-ocp-shape-change-degradation-modes.md, raw/papers/2026-09-21-siwon-kim-si-gr-ica-lam-si-gitt-ocp.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/cui2024_electrode-utilization-formation-cycle-life.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/mohtat2019_electrode-soh-estimability-expansion.md, raw/papers/natterer2026_re-halfcell-anode-potential-aging.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/sun2025_dl-eis-degradation-mode-diagnostics.md, raw/papers/oney2025_dead-slow-overworked-graphite-operando-microxrd.md, raw/papers/li2026_half-cell-fitting-multiobjective-benchmark.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -217,6 +217,18 @@ LAM_PE ≈ LAM_NE 는 물리가 아니라 **flat valley 방향에서 두 전극�
   **범위 한정 3개**: (a) 관측이 pOCV 가 아니라 운용 전류 곡선 + 상수 `R` 이라 우리 격자 결론과 같은 층이 아니다
   (오히려 `R ↔ p0 ↔ LLI` 별칭이라는 **추가** 축퇴가 예언된다 — 미검증); (b) 참값이 없으므로 대칭이 물리인지는 이
   편으로 판정되지 않는다; (c) 라벨 간극은 그림 9b 하나의 관측이다.
+
+- **[2026-10-05] 같은 곡선 · 같은 셀에서 두 전극 분할은 절차를 따라 갈리고 LII 는 용량을 따라간다 — 그리고 설계 참값
+  앞에서 LLI 가 LAM_PE 로 읽힌다** (Li, Zhang, Nowacki, Navidi, Schmitt, Hu, Hu 2026 *eTransportation* 29, 100593 — REIL 외부
+  검증의 원전 · `raw/papers/li2026_half-cell-fitting-multiobjective-benchmark.md` §8 · §11-1 · `[도표]` 화소 판독 · E3b 비교
+  기준 아님). (a) LCO/흑연 여섯 셀 (Navidi 2024 와 같은 자료) 의 전 기간 궤적에서 자동 (끝점 + QV · NSGA-II) ↔ 수동 맞춤이 마지막
+  점의 `m_PE` · `m_NE` 를 0.03–0.28 다르게, LII 는 0.02 안에서 같게 낸다. (b) 열화를 제작한 LFP/흑연 11 셀
+  ([[isu-uconn-lfp-gr-emulated-degradation]]) 에서 `MSE_QV` 하나로는 15 mm LFP 셀 여섯과 LAM_PE-1 의 `m_PE − LII` 가 0.00–0.04 —
+  설계상 순수 LLI 가 LAM_PE 감소로 나온다 · 맞춤 LII 는 열 셀에서 충전 용량 ÷ 3.10–3.16 mAh 와 같다 (`[재현]`). `[해석]` 이 카드의
+  전제 (full-cell 곡선 하나로 두 전극 · 모드를 가르기 어렵다) 에 **실측 근거 둘**을 더한다. **범위 한정 셋**: (i) (a) 의 자동 − 수동
+  부호는 두 전극이 같은 셀 넷 · 반대 둘이라 가설의 '같은 부호 결합' 의 직접 근거가 아니다; (ii) (b) 는 LFP 평탄 양극의 LAM_PE ↔
+  LLI 방향이고 22p 의 PE ↔ NE 방향 · 화학과 다르다; (iii) (a) 에는 참값이 없고 (b) 의 참값은 설계값이다 (formation 손실 · N/P 극단
+  셀의 불확실성 — digest §8-4 · §9-3).
 
 ## Evidence Against
 - (방향성 관측, 인용 금지 등급) half-cell 기준(Case 1)과 dQ/dV 항 추가가 복원
@@ -1115,6 +1127,11 @@ LAM_PE ≈ LAM_NE 는 물리가 아니라 **flat valley 방향에서 두 전극�
   덮지 못한다 (기본값 · LLI 단독: LAM_NE 오차 7.8 %p ↔ std 0.014 %p) — [[np-lip-ocv-reparametrization]] 이 짚은 `sqrt(diag)` 관행의 실측 사례 ·
   ② 적합 32 중 28 에서 SSR Hessian 이 양정치가 아니다 — 공분산이 성립하지 않는 자리에서 std 를 낸다. `[해석]` 전압만 맞추면 std 가 14–73 %p 로
   넓다 — 전압 곡선만으로는 창이 흔들려도 목적함수가 거의 안 변하는 방향이 있다는 관측 (판정 아님).
+- **[2026-10-05] Li 외 2026 흡수 (REIL 외부 검증의 원전 · 사용자 업로드 · 논문 에이전트) — Evidence For 1 건 (범위 한정 셋).** `active`
+  유지. 이 편의 LFP 자료가 [[isu-uconn-lfp-gr-emulated-degradation]] 의 설계 참값 자료라, 이 카드의 판정 틀 (근최적 집합이 참값을
+  포함하는가 · 얼마나 넓은가) 을 실측에 얹을 자리가 그대로 남는다 — 이 편은 맞춤 경우마다 점 추정 하나만 냈고 그 점들이 공개
+  코드의 부등식 경계 · 상자 끝에 붙어 있다 (digest §8-3). 식별 가능성 (ABC) 은 LCO 두 셀의 주변분포뿐이라 방향 정보가 없다 →
+  [[mode-identifiability-unmeasured-lineage]] 반론 (h). 수치 판정은 REIL 프로토콜 (E3a / H) 의 몫이고 이 카드에는 옮기지 않는다.
 
 ### 이 카드가 속한 논지 (2026-09-03)
 

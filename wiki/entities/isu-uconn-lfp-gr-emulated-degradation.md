@@ -5,7 +5,7 @@ created: 2026-10-03
 updated: 2026-10-05
 type: entity
 tags: [degradation, tooling, research]
-sources: [raw/articles/2026-10-02-github-research-briefing.md, raw/repositories/2026-10-03-reil-uconn-moo-known-truth-table.md]
+sources: [raw/articles/2026-10-02-github-research-briefing.md, raw/repositories/2026-10-03-reil-uconn-moo-known-truth-table.md, raw/papers/li2026_half-cell-fitting-multiobjective-benchmark.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -204,6 +204,22 @@ v2 의 Codex 재검토 판정은 `DESIGN_DIRECTION_ACCEPTED_DOCUMENT_REVISION_RE
 - **2026-10-05 C1-core (논문 쪽) 확보 — 논문 · 보충 자료 수신** — `bms-balancing/docs/REIL_C1_CORE_SPEC_20261005.md`: 분석 11 시트 = 논문
   Table 1 의 11 행 · 명목 = Table 1 의 모사값 (노트북 명목표 11 행과 일치) · LII 식 (14)–(16) · 맞춤 = 다섯 번째 cycle · #3 은 리튬을 흑연 쪽에 둔 설계
   (가설 (나) 확인) · 참값 불확실성 a–d (formation 손실 · 높은 N/P 의 LAM_NE · 공급사 용량 기준 · pre-formation) · step 대응 · 분석 밖 6 시트는 P0.
+
+## 논문 digest (2026-10-05) — 그림에서 보이는 것
+
+원문 해체분석: `raw/papers/li2026_half-cell-fitting-multiobjective-benchmark.md` (그림 38 장 — `raw/figures/li2026_half-cell-fitting-multiobjective-benchmark/`).
+C1-core 기록과 같은 원문을 다시 읽은 것이고 그 기록 · 프로토콜은 고치지 않았다. 아래는 출판 그림의 판독 (`[도표]`) · 원문 값으로 한
+산술 (`[재현]`) — **E3b 비교 기준이 아니고 판정에 쓰지 않는다.**
+
+- 맞춤 곡선은 **충전 곡선**이다 (Fig. 7 · A.3 — ≈2.33 V → 3.6 V) — C1-core §3 의 추정을 그림이 받친다.
+- `MSE_QV` 하나로 맞추면 15 mm LFP 셀 여섯과 LAM_PE-1 의 `m_PE − LII` 가 0.00–0.04 — 설계 LLI 가 LAM_PE 로 읽힌다 (digest §8-3).
+- 맞춤 LII ≈ 충전 용량 ÷ 3.10–3.16 mAh (열 셀) — `LII·max_q = Q_end + d_N` 이라 LII 는 사실상 용량이다. 이 비가 함의하는 `max_q` ≈ 3.1
+  (`d_N ≈ 0` 가정) 은 C1-core §4-5 의 어림 2.89 보다 크고 부속 A §5-3 의 τ = 0.02 문턱 3.125 와 판독 오차 안에서 겹친다 → P0 (digest §8-4).
+- LAM_PE-1 의 출판 해는 부등식 아래 설계의 '거울' (`m_PE` 1.02–1.09 · `m_NE` 0.50–0.69) · 일부 추정값이 상자 끝 (0.5 · 0.6 · 1.1) 에 붙음 (§8-3 · §8-5).
+- 15 | 12 셀 셋 (명목 N/P 0.63) 에 리튬 석출과 들어맞는 충전 끝 신호 (음의 dV/dQ ≈2.3–2.5 mAh) — 참값 불확실성 후보 (§9-3).
+- formation 손실의 크기 단서: Fig. 9 CE 곱 (15 | 16 · cycle 1–4) ≈0.83 · LAM_PE-1 용량 기반 ≈0.82 (가정 둘 · §8-4 · §9-2).
+- 공개 코드 ↔ 논문: 식 (9) ↔ f1 · 식 (11) ↔ f3 · 부등식 · 상자 · NE 상수 외삽이 논문에 없다 (E3b 등록 때 · E3a 무관) · 식 (7) 의 `δ` 부호가
+  식 (15) · Fig. 5 와 반대 (§2-1 · §3-1).
 
 ## 이 위키와의 관계
 

@@ -3521,3 +3521,13 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - 본 그림: Fig. 1 · 3 · 4 · 5 · 6 · 7 · 8 · 9 · 10 · 12 · 13 · A.4 · A.8 · S1 · S2 · S3 · S5 · S6 · Table 1 (전체) · A.3 (판 열 확대 · 충전 끝 화소 판독) · 축소판으로 크롭만 확인: A.1 · A.2 · A.5 · A.6 · A.7 · S7 · 안 봄: Fig. 2 · 11 · 14 · S4. 화소 판독: Fig. 6 · 9 · A.3 · A.4 · A.8 (보정 방식 · 분해능은 digest 와 figures.json note).
 - 핵심 (digest §0-1 · 전부 `[도표]` 또는 `[재현]` · E3b 기준 아님): (a) Case 1 (MSE_QV) 에서 15 mm LFP 셀 여섯과 LAM_PE-1 의 m_PE − LII 0.00–0.04 — 설계 LLI 가 LAM_PE 로 읽힘 · (b) 맞춤 LII ≈ 5 번째 cycle 충전 용량 ÷ 3.10–3.16 mAh (열 셀) — 공개 코드 대수 (`LII·max_q = Q_end + d_N`) 로 설명 · (c) 추정값 일부가 공개 코드의 상자 끝 (0.5 · 0.6 · 1.1) · LAM_PE-1 은 부등식 아래 설계의 '거울' · (d) 15|12 셀 셋에 석출과 들어맞는 충전 끝 신호 (음의 dV/dQ ≈2.3–2.5 mAh) · (e) 본문 ↔ 그림 어긋남 (Fig. 6(g) 주장 · '최대 20 %' ↔ 0.28) · 보충 Fig. S5 중복 판 · 식 (7) 부호 규약.
 - 하지 않은 것: bms-balancing 문서 수정 (C1-core 와 어긋나거나 더할 점은 호출자 보고로만) · REIL 자료 개봉 · 맞춤 · E3b 등록 · 우리 연구 수치 복사 · 논문 PDF 커밋. 컴파일 페이지 갱신은 다음 커밋.
+
+## [2026-10-05] update | Li 2026 (REIL C1-core 원전) 컴파일 — 엔티티 · fitting-degeneracy · 22p · 계보 synthesis · 근최적 집합 · 창 매개화 계보
+- 출처: `raw/papers/li2026_half-cell-fitting-multiobjective-benchmark.md` (직전 ingest) — 아래 수치는 전부 그 digest 의 `[도표]` · `[재현]` (출판 그림 판독 · E3b 기준 아님 · 우리 연구 수치 0).
+- [[isu-uconn-lfp-gr-emulated-degradation]]: 새 절 "논문 digest (2026-10-05)" — 충전 곡선 확인 · LLI 가 LAM_PE 로 읽힘 · LII ≈ 용량 (`max_q` ≈3.1 은 부속 A §5-3 문턱 3.125 와 겹침 → P0) · LAM_PE-1 거울 · 15|12 석출과 들어맞는 신호 · formation 손실 단서 · 코드 ↔ 논문 차이.
+- [[fitting-degeneracy]]: 새 절 "설계 참값이 있는 실측 — LFP 평탄부에서 LLI 가 LAM_PE 로 읽힌다" (Navidi 2024 절의 짝 — "점이 경계에 붙으면 오차는 경계 위치가 정한다").
+- [[22p-physics-or-degeneracy]]: Evidence For 1 건 (범위 한정 셋 — 부호 섞임 · LFP 방향 · 설계값 참값) · Status Log 1 건 (`active` 유지).
+- [[mode-identifiability-unmeasured-lineage]]: Thesis 20 편 · 세 번째 좁힘 메모 · §1 표 Li 2026 행 · **반론 (h)** — 모드 좌표의 사후 주변분포를 그린 편이 생겼다 (남는 것: 방향 · 폭 기준 · 참값 대조 · LFP 미적용).
+- [[near-optimal-set-width-measurement]]: 외부 대조 절 (ABC 허용오차 = `tol` · 사전이 폭을 자름 · Pareto 산포 ≠ 근최적 집합).
+- [[halfcell-window-parametrization-lineage]]: 비교표 Li 2026 행 · `MSE_end` = 컷오프 등식의 벌점판 메모.
+- index 불변 (새 컴파일 페이지 0 · raw 는 등록 안 함). 하지 않은 것: bms-balancing 문서 수정 (C1-core 와 어긋나거나 더할 점은 호출자 보고로만) · 새 개념 페이지 (기존 절로 충분).

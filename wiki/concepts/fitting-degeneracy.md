@@ -5,7 +5,7 @@ created: 2026-08-11
 updated: 2026-10-05
 type: concept
 tags: [battery, degradation, research]
-sources: [raw/repositories/degradation-degeneracy-audit.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md]
+sources: [raw/repositories/degradation-degeneracy-audit.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/li2026_half-cell-fitting-multiobjective-benchmark.md]
 confidence: high
 explored: false
 verificationStatus: unverified
@@ -136,6 +136,31 @@ Navidi et al. 2024 (*Energy Storage Mater.* **68**, 103343, raw:
 결론으로 자동 적합을 기각하고 **사람의 수동 적합**을 정답으로 삼는다.
 그 수동 절차는 `(m_n, δ_n)` → `(m_p, δ_p)` **블록 교대**다 (부록 A1) —
 좌표 갱신 순서가 degeneracy 를 줄이는지는 값싸게 시험 가능하다 (미실행).
+
+## ★ 설계 참값이 있는 실측 — LFP 평탄부에서 LLI 가 LAM_PE 로 읽힌다 (2026-10-05 추가)
+
+같은 연구실의 후속 Li 외 2026 (*eTransportation* 29, 100593, raw:
+`raw/papers/li2026_half-cell-fitting-multiobjective-benchmark.md`) 은 위 절과 같은 4 변수 창 맞춤을, 열화를
+**제작**해 설계 참값이 있는 LFP/흑연 코인셀 11 개 ([[isu-uconn-lfp-gr-emulated-degradation]]) 에 목적 함수 조합
+여섯으로 건다. 축퇴 쪽에서 그림이 보여 주는 것 (`[도표]` 화소 판독 · E3b 비교 기준 아님 · 우리 수치 아님):
+
+- **flat valley 가 설계 참값 앞에서 보인다.** `MSE_QV` 하나로 맞추면 15 mm LFP 셀 여섯과 LAM_PE-1 에서
+  `m_PE − LII` 가 0.00–0.04 — 설계 (0 · 0.1 · 0.2 · −0.36) 와 상관없이 공개 코드의 부등식 경계 (`d_P − d_N ≥ 1e-4`,
+  논문 미인쇄) 에 붙는다. 설계상 순수 LLI (0.1 · 0.2) 가 `m_PE` 감소로 나온다 — 원문 `[인쇄]` "the half-cell model
+  cannot differentiate the degradation mode LAM_PE and LLI" 의 실제 모양.
+- **잘 정해지는 양은 용량이다.** 맞춤 LII 가 열 셀에서 "충전 용량 ÷ 3.10–3.16 mAh" 와 같다 (`[재현]` — 코드에서
+  `LII·max_q = Q_end + d_N`). 같은 연구실의 LCO 궤적에서도 자동 ↔ 수동 맞춤이 LII 는 0.02 안에서 같게, 두 전극 분할은
+  0.03–0.28 다르게 낸다 (Fig. A.8).
+- **점 추정이 허용 영역의 경계 · 끝에 붙는다** (상자 끝 0.5 · 0.6 · 1.1 포함) — 그 값은 자료가 아니라 영역이 정했을 수
+  있다. 설계가 영역 밖인 셀 (LAM_PE-1) 의 해는 설계의 '거울' (`m_PE` ↑ · `m_NE` ↓) 이다 `[해석]`.
+- 식별 가능성 분석 (ABC) 은 LCO 두 셀의 **주변** 사후분포뿐이다 (허용오차 미인쇄 · 결합분포 0 · LFP 미적용) — 폭
+  순서 `m_NE` > `m_PE` ≫ LII 는 위 두 항과 같은 구조.
+
+`[해석]` 위 절 "산포는 오차의 하한이 아니다" 의 짝: **점 하나가 골짜기의 경계에 붙어 있으면 그 점의 오차는 경계가
+골짜기의 어디에 놓였느냐가 정한다.** 그래서 이 자료에서는 근최적 집합이 설계 참값을 포함하는지 · 얼마나 넓은지
+([[near-optimal-set-width-measurement]]) 를 재는 일이 필요하고, REIL 외부 검증 프로토콜 (`bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2.md`
++ 부속 A · B) 의 H1–H4 가 그 물음이다. **범위 한정**: LFP 평탄 양극의 LAM_PE ↔ LLI 방향 (우리 NMC 의 축퇴와 다르다) ·
+모사 열화 · 설계값 참값 (formation 손실 · N/P 극단 셀의 불확실성) · 그림 판독.
 
 ## ★ 닫힌 형태 null 방향 **둘** 더 — 그리고 그것이 모드 층에만 있다는 것 (2026-09-03 추가)
 

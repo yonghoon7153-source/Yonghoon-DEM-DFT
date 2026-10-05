@@ -2,10 +2,10 @@
 title: 근최적 집합의 폭을 재는 법 (표집·Hessian 이 못 답하는 것)
 description: "유도량이 근최적 집합 위에서 훑는 범위를 직접 미는 방법 — 등방 표집이 참 폭 40 %p 를 0.00 %p 로 보고한 반례에서 나왔다"
 created: 2026-09-14
-updated: 2026-09-14
+updated: 2026-10-05
 type: concept
 tags: [research, degradation, design]
-sources: [raw/transcripts/2026-09-14-bms-handoff-width-and-wiki-candidates.md]
+sources: [raw/transcripts/2026-09-14-bms-handoff-width-and-wiki-candidates.md, raw/papers/li2026_half-cell-fitting-multiobjective-benchmark.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -95,6 +95,22 @@ evidenceScope: user-original
 ([[22p-physics-or-degeneracy]]: `LAM_PE ≈ LAM_NE ≈ 13 %` 가 물리냐 축퇴냐) 에
 **유도량 단위로** 답할 수 있는 형태가 된다 — 지금 본체가 가진 어떤 지표도 그
 형태로는 답하지 않는다.
+
+## 외부 대조 — Pareto 산포 · ABC 사후로 잰 폭 (2026-10-05)
+
+Li 외 2026 (*eTransportation* 29, 100593 · `raw/papers/li2026_half-cell-fitting-multiobjective-benchmark.md` §12) 은
+반쪽전지 맞춤의 NSGA-II Pareto 해 분포를 ABC 사후분포와 겹쳐 보이고 그 흩어짐을 "a qualitative measure of parameter
+identifiability" 라고 부른다 (LCO 두 셀 · 주변분포만). 이 페이지의 언어로 옮기면 `[해석]`:
+
+- **ABC 의 허용오차가 위 한계 2 의 `tol` 이다** — 그 값이 인쇄되지 않아 폭의 절대 크기를 해석할 수 없다. 같은 자료에서
+  허용오차를 바꾸면 폭이 바뀐다.
+- **사전 (상자) 이 폭을 자를 수 있다** — 한 셀의 `m_PE` 사후가 ≈0.925 에서 갑자기 끊긴다 `[도표]`.
+- **Pareto 산포는 근최적 집합이 아니다** — 목적 사이의 교환을 보여 줄 뿐, 한 목적의 문턱 안에서 유도량이 훑는 범위가
+  아니다.
+- 같은 편의 LFP 설계 참값 자료에서는 경우마다 점 하나만 내고, 그 점들이 허용 영역의 경계 · 상자 끝에 붙는다 `[도표]`
+  ([[fitting-degeneracy]] 2026-10-05 절). 근최적 집합을 문턱을 미리 고정해 재는 설계는 REIL 외부 검증 프로토콜
+  (`bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2.md` + 부속 A · B — 결합 `ρ ≤ 1 + δ` · `T_s = Ĵ_s + 2σ̂_v`) 에 있다
+  ([[isu-uconn-lfp-gr-emulated-degradation]]).
 
 ## 관련
 - [[fitting-degeneracy]] — 같은 질문의 본체 판본

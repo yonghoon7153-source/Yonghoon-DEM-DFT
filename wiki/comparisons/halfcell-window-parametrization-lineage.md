@@ -2,10 +2,10 @@
 title: 반쪽전지 창 매개화 계보 비교 (자유도와 제약)
 description: "같은 4개 창 좌표를 무엇으로 매개화하고 여분을 어떻게 죽이는가 — Dubarry 2012 부터 우리 파이프라인까지"
 created: 2026-09-03
-updated: 2026-10-02
+updated: 2026-10-05
 type: comparison
 tags: [battery, degradation, research]
-sources: [raw/papers/khalik2021_dfn-grouping-sensitivity-parameter-estimation.md, raw/papers/schmitt2022_sic-ocp-shape-change-degradation-modes.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/dubarry2012_synthesize-degradation-modes.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/mohtat2019_electrode-soh-estimability-expansion.md, raw/papers/lee2020_estimation-error-bound-limited-data-window.md, raw/papers/wang2025_aging-induced-rate-independent-li-plating.md, raw/papers/cui2026_direct-diagnosis-lfp-degradation-modes.md, raw/transcripts/2026-09-14-bms-handoff-width-and-wiki-candidates.md, raw/papers/sun2025_dl-eis-degradation-mode-diagnostics.md]
+sources: [raw/papers/khalik2021_dfn-grouping-sensitivity-parameter-estimation.md, raw/papers/schmitt2022_sic-ocp-shape-change-degradation-modes.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/dubarry2012_synthesize-degradation-modes.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/mohtat2019_electrode-soh-estimability-expansion.md, raw/papers/lee2020_estimation-error-bound-limited-data-window.md, raw/papers/wang2025_aging-induced-rate-independent-li-plating.md, raw/papers/cui2026_direct-diagnosis-lfp-degradation-modes.md, raw/transcripts/2026-09-14-bms-handoff-width-and-wiki-candidates.md, raw/papers/sun2025_dl-eis-degradation-mode-diagnostics.md, raw/papers/li2026_half-cell-fitting-multiobjective-benchmark.md]
 confidence: high
 explored: false
 verificationStatus: unverified
@@ -47,7 +47,14 @@ their estimation" 의 구체적 목록이다.
 | **Sun (Xiong) 2025 (2026-10-02 추가)** | `p0, n0, Q_PE, Q_NE` **+ 상수 `R`** | **5** | **0** | 창 4 는 여분 없음 — 다섯째는 창이 아니라 **동역학 한 칸**(전 SOC · 전 노화에서 `IR` 일정). PSO(설정 미인쇄), 검증은 맞춤 RMSE 7.52 · 6.55 mV 뿐. 출력이 그대로 DNN 의 "ground truth" | **1–2 C 사이클 CC 충전 곡선**(pOCV 아님), 창 = 충전 시작 전압 → 4.2 V 컷오프 |
 | [[fused-lasso-feature-design-framework]] SI S11 | `β_c, β_a, Q_rem, V_shift` | **4** | 0 | 여분 없음 | C/20 RPT 곡선 |
 | **Khalik 2021 (2026-10-02 추가 · ⚠ 액체 DFN)** | `s_n,0%, s_n,100%, s_p,0%, s_p,100%` (+ Q 측정 · 전극 용량 = `3Q/Δs`) | **4** | **0** | 경우 1(셀 EMF 만): 음극 곡선(흑연)을 빌리고 양극을 `U_EMF + U_n` 으로 **정의** → 창 넷이 OCV 채널에서 **정의상 사라진다**(`[인쇄]` "the same EMF-SOC relation can be reached with any choice between 0 and 1") — 교환 전류의 SOC 모양(식 12b)으로만 추정 · 경우 2(분해 OCP): 측정 쌍을 셀 EMF 에 맞추는 창(방법 미인쇄 "minimized in some way") = 우리와 같은 연산 | 동적 전류 · 전압(DFN 적합) + 셀 EMF(측정법 미인쇄) |
+| **Li 2026 — REIL (2026-10-05 추가)** | `m_PE, m_NE, δ_PE, δ_NE` (Honkura 꼴 · Navidi 와 같은 좌표) | **4** | **0** — 끝점 전압은 등식이 아니라 **목적 (벌점)** `MSE_end` | 여분 없음 (전단사) · 공개 코드에 **부등식** `d_P − d_N ≥ 1e-4` (→ `LII < m_PE`) + 상자 (논문 미인쇄) · 목적 넷의 Pareto 에서 "balanced" 해 하나 | 완전지 저율 **충전** pOCV (LFP C/20 · LCO C/50) + dV/dQ (피크 · 전 곡선) |
 | **우리 (`degradation-degeneracy`)** | `α_PE, β_PE, α_NE, β_NE` | **4** | **0** | 여분 없음 (전단사) | full-cell 전압 곡선 (+옵션 dQ/dV) |
+
+`[2026-10-05]` **Li 2026 의 `MSE_end` 는 Birkl 의 컷오프 등식을 등식이 아니라 벌점으로 거는 꼴이다** — 아래 처방 1 (등식으로
+죽인다) 과 달리 자유도를 줄이지 않고 끝점 정보의 **가중**만 바꾼다 (보충 S3 의 스칼라화 — `α` 0.3–0.5 권장). 대신 공개 코드는
+논문에 없는 부등식과 상자를 걸고, LFP 설계 참값 앞에서 해가 그 경계 · 끝에 붙는다 (`[도표]` — [[fitting-degeneracy]]
+2026-10-05 절 · raw `raw/papers/li2026_half-cell-fitting-multiobjective-benchmark.md` §3 · §8). 공개 코드의 끝점 목적은 논문 식 (9)
+와 꼴이 다르다 (`(ΔV_max)² + ½|ΔV_min|` — 충전 시작 전압 오차가 지배) — 같은 이름의 목적이라도 구현을 대조해야 한다.
 
 ## ★ 여분을 죽이는 방법이 세 가지뿐이다
 
