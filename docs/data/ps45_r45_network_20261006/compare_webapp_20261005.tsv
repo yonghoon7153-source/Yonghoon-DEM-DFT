@@ -1,0 +1,76 @@
+P_S	case_id	old_col	meaning	old_value_as_recorded	new_value_full	old_decimals	equal_at_old_precision	rel_diff
+10:0	260922_222828_6e4ff6	phi_SE	φ_SE (구 부피 합 · 판 간격)	0.295	0.2952859562060244	3	yes	+9.69e-04
+10:0	260922_222828_6e4ff6	sigma_ion_hertz_mScm	σ_ion FULL Hertz	0.1676	0.167574	4	yes	-1.55e-04
+10:0	260922_222828_6e4ff6	sigma_ion_physics_mScm	σ_ion FULL Physics	0.1062	0.106183	4	yes	-1.60e-04
+10:0	260922_222828_6e4ff6	sigma_e_hertz_mScm	σ_e FULL Hertz	1.30	1.302002	2	yes	+1.54e-03
+10:0	260922_222828_6e4ff6	sigma_e_physics_mScm	σ_e FULL Physics	1.06	1.05783	2	yes	-2.05e-03
+10:0	260922_222828_6e4ff6	kappa_hertz	κ FULL Hertz	10.924	10.92414	3	yes	+1.28e-05
+10:0	260922_222828_6e4ff6	kappa_physics	κ FULL Physics	8.954	8.95447	3	yes	+5.25e-05
+10:0	260922_222828_6e4ff6	tau2_hertz	수송 tortuosity Hertz (웹앱 식)	5.286	5.2863682231018725	3	yes	+6.97e-05
+10:0	260922_222828_6e4ff6	tau2_physics	수송 tortuosity Physics (웹앱 식)	8.343	8.342746660181698	3	yes	-3.04e-05
+10:0	260922_222828_6e4ff6	AM_AM_contacts	AM–AM 접촉 수 (전자 망 간선)	733	733.0	0	yes	+0.00e+00
+10:0	260922_222828_6e4ff6	SE_SE_CN	SE–SE 배위수 = 2·간선/노드 (이온 망)	5.57	5.5739059773604875	2	yes	+7.01e-04
+10:0	260922_222828_6e4ff6	porosity_sphere_pct	공극률 ε_sphere %	15.82	15.82465056260396	2	yes	+2.94e-04
+10:0	260922_222828_6e4ff6	thickness_um	두께 (판 간격) µm	112.6	112.59700000000002	1	yes	-2.66e-05
+10:0	260922_222828_6e4ff6	sigma_e_stageE_hertz_mScm	σ_e Stage E Hertz	0.610			n/a (망 단계 뒤 Stage E · 이 배치 범위 밖)	
+10:0	260922_222828_6e4ff6	sigma_e_stageE_physics_mScm	σ_e Stage E Physics	0.547			n/a (망 단계 뒤 Stage E · 이 배치 범위 밖)	
+7:3	260925_000559_082983	phi_SE	φ_SE (구 부피 합 · 판 간격)	0.299	0.2994167244628877	3	yes	+1.39e-03
+7:3	260925_000559_082983	sigma_ion_hertz_mScm	σ_ion FULL Hertz	0.1786	0.178588	4	yes	-6.72e-05
+7:3	260925_000559_082983	sigma_ion_physics_mScm	σ_ion FULL Physics	0.1056	0.105604	4	yes	+3.79e-05
+7:3	260925_000559_082983	sigma_e_hertz_mScm	σ_e FULL Hertz	1.33	1.327271	2	yes	-2.05e-03
+7:3	260925_000559_082983	sigma_e_physics_mScm	σ_e FULL Physics	0.91	0.908344	2	yes	-1.82e-03
+7:3	260925_000559_082983	kappa_hertz	κ FULL Hertz	10.547	10.547302	3	yes	+2.86e-05
+7:3	260925_000559_082983	kappa_physics	κ FULL Physics	8.760	8.760278	3	yes	+3.17e-05
+7:3	260925_000559_082983	tau2_hertz	수송 tortuosity Hertz (웹앱 식)	5.03	5.0297342116416734	2	yes	-5.28e-05
+7:3	260925_000559_082983	tau2_physics	수송 tortuosity Physics (웹앱 식)	8.506	8.50583475425801	3	yes	-1.94e-05
+7:3	260925_000559_082983	AM_AM_contacts	AM–AM 접촉 수 (전자 망 간선)	2208	2208.0	0	yes	+0.00e+00
+7:3	260925_000559_082983	SE_SE_CN	SE–SE 배위수 = 2·간선/노드 (이온 망)	5.38	5.380187829504727	2	yes	+3.49e-05
+7:3	260925_000559_082983	porosity_sphere_pct	공극률 ε_sphere %	14.95	14.953625377990754	2	yes	+2.43e-04
+7:3	260925_000559_082983	thickness_um	두께 (판 간격) µm	111.05	111.05199999999999	2	yes	+1.80e-05
+7:3	260925_000559_082983	sigma_e_stageE_hertz_mScm	σ_e Stage E Hertz	0.878			n/a (망 단계 뒤 Stage E · 이 배치 범위 밖)	
+7:3	260925_000559_082983	sigma_e_stageE_physics_mScm	σ_e Stage E Physics	0.713			n/a (망 단계 뒤 Stage E · 이 배치 범위 밖)	
+5:5	260925_000513_123978	phi_SE	φ_SE (구 부피 합 · 판 간격)	0.296	0.29574045041271296	3	yes	-8.77e-04
+5:5	260925_000513_123978	sigma_ion_hertz_mScm	σ_ion FULL Hertz	0.1628	0.162807	4	yes	+4.30e-05
+5:5	260925_000513_123978	sigma_ion_physics_mScm	σ_ion FULL Physics	0.0955	0.095452	4	yes	-5.03e-04
+5:5	260925_000513_123978	sigma_e_hertz_mScm	σ_e FULL Hertz	1.94	1.937522	2	yes	-1.28e-03
+5:5	260925_000513_123978	sigma_e_physics_mScm	σ_e FULL Physics	1.42	1.423235	2	yes	+2.28e-03
+5:5	260925_000513_123978	kappa_hertz	κ FULL Hertz	10.103	10.103009	3	yes	+8.91e-07
+5:5	260925_000513_123978	kappa_physics	κ FULL Physics	8.387	8.386606	3	yes	-4.70e-05
+5:5	260925_000513_123978	tau2_hertz	수송 tortuosity Hertz (웹앱 식)	5.45	5.449528283416185	2	yes	-8.66e-05
+5:5	260925_000513_123978	tau2_physics	수송 tortuosity Physics (웹앱 식)	9.295	9.29494773538678	3	yes	-5.62e-06
+5:5	260925_000513_123978	AM_AM_contacts	AM–AM 접촉 수 (전자 망 간선)	3878	3878.0	0	yes	+0.00e+00
+5:5	260925_000513_123978	SE_SE_CN	SE–SE 배위수 = 2·간선/노드 (이온 망)	5.06	5.058123275764332	2	yes	-3.71e-04
+5:5	260925_000513_123978	porosity_sphere_pct	공극률 ε_sphere %	16.2	16.202588070883685	1	yes	+1.60e-04
+5:5	260925_000513_123978	thickness_um	두께 (판 간격) µm	112.44	112.43599999999999	2	yes	-3.56e-05
+5:5	260925_000513_123978	sigma_e_stageE_hertz_mScm	σ_e Stage E Hertz	1.514			n/a (망 단계 뒤 Stage E · 이 배치 범위 밖)	
+5:5	260925_000513_123978	sigma_e_stageE_physics_mScm	σ_e Stage E Physics	1.221			n/a (망 단계 뒤 Stage E · 이 배치 범위 밖)	
+3:7	260925_000448_bd85f9	phi_SE	φ_SE (구 부피 합 · 판 간격)	0.291	0.29075685735585627	3	yes	-8.36e-04
+3:7	260925_000448_bd85f9	sigma_ion_hertz_mScm	σ_ion FULL Hertz	0.146	0.146029	3	yes	+1.99e-04
+3:7	260925_000448_bd85f9	sigma_ion_physics_mScm	σ_ion FULL Physics	0.0853	0.085316	4	yes	+1.88e-04
+3:7	260925_000448_bd85f9	sigma_e_hertz_mScm	σ_e FULL Hertz	2.88	2.875445	2	yes	-1.58e-03
+3:7	260925_000448_bd85f9	sigma_e_physics_mScm	σ_e FULL Physics	2.19	2.18544	2	yes	-2.08e-03
+3:7	260925_000448_bd85f9	kappa_hertz	κ FULL Hertz	9.567	9.567232	3	yes	+2.43e-05
+3:7	260925_000448_bd85f9	kappa_physics	κ FULL Physics	8.023	8.023349	3	yes	+4.35e-05
+3:7	260925_000448_bd85f9	tau2_hertz	수송 tortuosity Hertz (웹앱 식)	5.973	5.973269501726156	3	yes	+4.51e-05
+3:7	260925_000448_bd85f9	tau2_physics	수송 tortuosity Physics (웹앱 식)	10.224	10.22399751591224	3	yes	-2.43e-07
+3:7	260925_000448_bd85f9	AM_AM_contacts	AM–AM 접촉 수 (전자 망 간선)	5794	5794.0	0	yes	+0.00e+00
+3:7	260925_000448_bd85f9	SE_SE_CN	SE–SE 배위수 = 2·간선/노드 (이온 망)	4.8	4.800564363233247	1	yes	+1.18e-04
+3:7	260925_000448_bd85f9	porosity_sphere_pct	공극률 ε_sphere %	17.16	17.157471884568267	2	yes	-1.47e-04
+3:7	260925_000448_bd85f9	thickness_um	두께 (판 간격) µm	114.36	114.361	2	yes	+8.74e-06
+3:7	260925_000448_bd85f9	sigma_e_stageE_hertz_mScm	σ_e Stage E Hertz	2.592			n/a (망 단계 뒤 Stage E · 이 배치 범위 밖)	
+3:7	260925_000448_bd85f9	sigma_e_stageE_physics_mScm	σ_e Stage E Physics	2.088			n/a (망 단계 뒤 Stage E · 이 배치 범위 밖)	
+0:10	260925_000001_0bee25	phi_SE	φ_SE (구 부피 합 · 판 간격)	0.284	0.283688968718367	3	yes	-1.10e-03
+0:10	260925_000001_0bee25	sigma_ion_hertz_mScm	σ_ion FULL Hertz	0.1175	0.117497	4	yes	-2.55e-05
+0:10	260925_000001_0bee25	sigma_ion_physics_mScm	σ_ion FULL Physics	0.0695	0.069454	4	yes	-6.62e-04
+0:10	260925_000001_0bee25	sigma_e_hertz_mScm	σ_e FULL Hertz	4.77	4.765758	2	yes	-8.89e-04
+0:10	260925_000001_0bee25	sigma_e_physics_mScm	σ_e FULL Physics	3.85	3.853509	2	yes	+9.11e-04
+0:10	260925_000001_0bee25	kappa_hertz	κ FULL Hertz	8.428	8.428446	3	yes	+5.29e-05
+0:10	260925_000001_0bee25	kappa_physics	κ FULL Physics	7.261	7.261005	3	yes	+6.89e-07
+0:10	260925_000001_0bee25	tau2_hertz	수송 tortuosity Hertz (웹앱 식)	7.243	7.243307541087015	3	yes	+4.25e-05
+0:10	260925_000001_0bee25	tau2_physics	수송 tortuosity Physics (웹앱 식)	12.254	12.253677342631109	3	yes	-2.63e-05
+0:10	260925_000001_0bee25	AM_AM_contacts	AM–AM 접촉 수 (전자 망 간선)	8970	8970.0	0	yes	+0.00e+00
+0:10	260925_000001_0bee25	SE_SE_CN	SE–SE 배위수 = 2·간선/노드 (이온 망)	4.41	4.408226253464349	2	yes	-4.02e-04
+0:10	260925_000001_0bee25	porosity_sphere_pct	공극률 ε_sphere %	19.16	19.161867008619804	2	yes	+9.74e-05
+0:10	260925_000001_0bee25	thickness_um	두께 (판 간격) µm	117.21	117.208	2	yes	-1.71e-05
+0:10	260925_000001_0bee25	sigma_e_stageE_hertz_mScm	σ_e Stage E Hertz	4.766			n/a (망 단계 뒤 Stage E · 이 배치 범위 밖)	
+0:10	260925_000001_0bee25	sigma_e_stageE_physics_mScm	σ_e Stage E Physics	3.854			n/a (망 단계 뒤 Stage E · 이 배치 범위 밖)	

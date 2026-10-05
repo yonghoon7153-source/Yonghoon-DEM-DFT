@@ -1,0 +1,35 @@
+column	meaning	10:0	7:3	5:5	3:7	0:10
+f_ion_hertz	f = σ_eff/σ₀ · Hertz (L_mc 틀)	0.055146275367301864	0.05846988012201077	0.05331870952935189	0.04779463037941978	0.03845304897441728
+f_ion_physics	f · Physics	0.03494325995760298	0.03457484857614417	0.03126006668864462	0.027923563598569023	0.02273001782860235
+f_ion_hertz_gap	f · Hertz (판 간격 틀)	0.05585806	0.05952938	0.05426912	0.04867635	0.03916566
+f_ion_physics_gap	f · Physics (판 간격 틀)	0.03539428	0.03520136	0.03181728	0.0284387	0.02315125
+tau2_ion_hertz	수송 tortuosity = φ_SE,mc/f · Hertz	5.286362544743308	5.029730268699047	5.449516233407009	5.973267456492861	7.243308774022116
+tau2_ion_physics	수송 tortuosity · Physics	8.342759231322814	8.505828310692758	9.294963315931248	10.223985532245013	12.25372144995916
+tau_ion_hertz	√ 수송 tortuosity · Hertz	2.2992091128784495	2.2427060147730122	2.3344198922659585	2.444026893569885	2.6913395872728727
+tau_ion_physics	√ · Physics	2.888383497966088	2.916475323175692	3.0487642276718034	3.197496760318142	3.500531595337937
+ion_net_status_hertz	상태 Hertz	OK	OK	OK	OK	OK
+ion_net_status_physics	상태 Physics	OK	OK	OK	OK	OK
+sigma_bulk_net_mScm_hertz	σ_ion CF (bulk 가지 · 두 모드 같음)	0.710292	0.700889	0.646702	0.580335	0.475847
+R_brug_over_full_hertz	CF/FULL 이온 · Hertz (모형 내부 협착비)	4.2387	3.9246	3.9722	3.9741	4.0499
+R_brug_over_full_physics	CF/FULL 이온 · Physics	6.6893	6.637	6.7752	6.8022	6.8513
+constriction_power_share_ion_hertz	협착 전력 몫 · 이온 · Hertz	0.747437	0.729793	0.733018	0.733205	0.737348
+constriction_power_share_ion_physics	· 이온 · Physics	0.823275	0.801673	0.814288	0.813256	0.817336
+constriction_power_share_el_hertz	· 전자 · Hertz	0.807951	0.85048	0.850945	0.838762	0.800563
+constriction_power_share_el_physics	· 전자 · Physics	0.847171	0.892761	0.885025	0.875061	0.84202
+constriction_power_share_th_hertz	· 열 · Hertz	0.633716	0.617875	0.640908	0.661579	0.694903
+constriction_power_share_th_physics	· 열 · Physics	0.578705	0.503855	0.531658	0.551217	0.58417
+boundary_rule_hertz	경계 띠 규칙	L0	L0	L0	L0	L0
+boundary_band_frac_hertz	경계 띠 두께 분율	0.017762462587813173	0.018009581097143682	0.017787897114803088	0.017488479464152988	0.017063681659954952
+percolating_fraction_hertz	SE 관통 분율	0.9928	0.9954	0.995	0.9931	0.9893
+electronic_percolating_fraction_hertz	AM 관통 분율	0.9826	0.8684	0.9446	0.9841	0.9976
+phi_se_mass_conserving	φ_SE,mc (질량 보존)	0.2915232045838051	0.2940877258568823	0.2905611731245161	0.2854901102404932	0.2785273070242988
+thickness_mass_conserving_um	두께 질량 보존 µm	114.05031327916726	113.06431095745255	114.4401811330592	116.47074196742808	119.38009597975099
+ion_net_constriction_hertz	협착 모델 Hertz	maxwell_halfspace	maxwell_halfspace	maxwell_halfspace	maxwell_halfspace	maxwell_halfspace
+ion_net_constriction_physics	협착 모델 Physics	mikic_psi_divide	mikic_psi_divide	mikic_psi_divide	mikic_psi_divide	mikic_psi_divide
+ion_net_psi_physics	ψ 배치 Physics	legacy_divide	legacy_divide	legacy_divide	legacy_divide	legacy_divide
+ion_sigma0_mScm	σ₀ mScm	3.0	3.0	3.0	3.0	3.0
+ion_sigma0_T_C	σ₀ 온도 °C	25.0	25.0	25.0	25.0	25.0
+phi_basis	φ 기준	mass_conserving	mass_conserving	mass_conserving	mass_conserving	mass_conserving
+L_basis	L 기준	L_mc	L_mc	L_mc	L_mc	L_mc
+network_code_sha	코드 sha	04756e7499eee51ccec2b7f91bd5c2fa28c1efc4	04756e7499eee51ccec2b7f91bd5c2fa28c1efc4	04756e7499eee51ccec2b7f91bd5c2fa28c1efc4	04756e7499eee51ccec2b7f91bd5c2fa28c1efc4	04756e7499eee51ccec2b7f91bd5c2fa28c1efc4
+network_run_id	망 실행 id	20261006T065542-53d87600	20261006T070000-88bef3b0	20261006T070424-51f1d0f4	20261006T070842-2d69f9ae	20261006T065104-0bb1b1a4

@@ -1,0 +1,85 @@
+[
+ {
+  "step": "Parse",
+  "stdout": "Parsing atom file: /home/yonghoon71/ps45_network_20261006/work/uploads/260925_000001_0bee25/atom_3210000.liggghts\n  -> 163348 atoms\nParsing contact file: /home/yonghoon71/ps45_network_20261006/work/uploads/260925_000001_0bee25/contact_3210000.liggghts\n  -> 553453 contacts\nParsing mesh file: /home/yonghoon71/ps45_network_20261006/work/uploads/260925_000001_0bee25/mesh_3210000.stl\n  -> plate_z = 0.117208, 2 triangles\nParsing input script: /home/yonghoon71/ps45_network_20261006/work/uploads/260925_000001_0bee25/input_ps_0_10_r45.liggghts\n  -> AM:SE = 81.6:18.4\n  -> E(sim) = [140000000.0, 140000000.0, 1350000.0]\nParse complete!\n",
+  "stderr": "/home/yonghoon71/dem-web/scripts/parse_liggghts.py:146: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead\n  ast.Constant, ast.Num, ast.Load,\n/home/yonghoon71/dem-web/scripts/parse_liggghts.py:145: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead\n  if isinstance(sub, (ast.Expression, ast.BinOp, ast.UnaryOp,\n",
+  "rc": 0,
+  "ok": true,
+  "required": true,
+  "missing_outputs": [],
+  "stale_outputs": [],
+  "verify_failed": false
+ },
+ {
+  "step": "Contact Analysis",
+  "stdout": "Type map: {2: 'AM_S', 3: 'SE'}, Scale: 1000.0\n  163348 atoms\n  Loaded 553453 contacts from contacts.csv\n  553453 contacts\n\n=== Full Analysis ===\n  box_xy = 0.0500 x 0.0500, plate_z = 0.117208 (mesh), thickness = 117.2 μm\n  Porosity: 19.16% (sphere-sum)  |  union 20.60%  |  overlap 1.77%\n  Porosity union exact (MC 4,000,000): 20.633 ± 0.020%  |  thickness mass-conserving 119.38 μm\n  AM_S-SE: 194558 contacts, total 37648.1 μm²\n  AM_S-AM_S: 8970 contacts, total 3414.1 μm²\n  SE-SE: 349925 contacts, total 27445.7 μm²\n  AM전체-SE: 194558 contacts, total 37648.1 μm²\n  Coverage AM_S: 16.8% ± 4.2%\n  Percolation: 98.9%, Top Reachable: 99.0%\n  Components: 1433, Largest: 98.9%\n  SE-SE CN: 4.41 ± 1.85  (perc-only: 4.45, cn_eff_area: 0.1101, aug: 4.51 +8165 extras)\n  AM-AM CN: 3.91 ± 1.31\n  Tortuosity: 1.29 ± 0.03 (197 samples)\n  Tortuosity (all bottom SE → top, shortest): 1.235 ± 0.016 (n=1803/1803)\n  Ionic Active AM: 100.0%\n  Stress CV: 123.4%\n    AM_S: σ/σ_mean = 1.03\n    SE: σ/σ_mean = 1.00\n  Stress (Love–Weber): CV 80.9% · AM_S 1.74 · SE 0.98 · 벽 접촉 바닥 1644 · 판 1830\n  Force AM_S-SE: 77.818 ± 74.353 μN (max 534.468)\n  Force AM_S-AM_S: 1500.840 ± 1080.429 μN (max 7344.913)\n  Force SE-SE: 34.457 ± 28.798 μN (max 248.567)\n  Contact Pressure: 445.8 ± 734.4 MPa (max 181435.2)\n  Overlap δ/R: 12.69% ± 11.60% (max 109.03%, >5%: 72.5%)\n  AM Risk: vulnerable 0.0% (no SE: 0.0%, single SE: 0.0%)\n  σ_eff/σ_bulk: 0.1688 (φ_SE=0.284, τ=1.29)\n  Fracture stages: 8970 AM-AM contacts, 0 severe (frag+pulv), index=0.000\n\nSaving...\n  Force chains: 553453 contacts, threshold=0.119379, max fn=7.344913\n  Force chains saved: 55346 chains\nDone!\n",
+  "stderr": "",
+  "rc": 0,
+  "ok": true,
+  "required": true,
+  "missing_outputs": [],
+  "stale_outputs": [],
+  "verify_failed": false
+ },
+ {
+  "step": "Coverage Physics vs Hertzian",
+  "stdout": "Processing 1 case(s) ...\n\n=== input_6mAh_real_1_D9  (260925_000001_0bee25) ===\n  → /home/yonghoon71/ps45_network_20261006/work/results/260925_000001_0bee25/coverage_per_am.csv  (4588 AM particles)\n  [path phys] hop_mean=0.3333  bottleneck=0.0021  g_path=0.000324\n  → /home/yonghoon71/ps45_network_20261006/work/results/260925_000001_0bee25/full_metrics.json  (updated physics keys)\n    physics_v2: ok · AM-SE total 109454.02 µm² · cap_conflict 60060/552903 (cap 가지) · 거부 0\n    AM-SE total: H=37,648.1  P=109,516.9  Δ=+190.9%\n    SE-SE total: H=27,445.7  P=88,888.6  Δ=+223.9%\n  input_6mAh_real_1_D9               AM_S   H=16.80%  P=48.86%  Δ=+190.84%  n=4588\n\n→ docs/figures/physics_regime/coverage_hertz_vs_physics_summary.csv  (1 rows)\n\n=== Summary (Δ coverage % : physics vs hertzian) ===\n  AM_S   n_cases=  1  Δ median=+190.84%  mean=+190.84%  max=190.84%\n\nVERDICT: Across all AM types and cases, coverage in Physics mode differs from Hertzian by mean Δ = +190.84%.\n",
+  "stderr": "",
+  "rc": 0,
+  "ok": true,
+  "required": false,
+  "missing_outputs": [],
+  "stale_outputs": [],
+  "verify_failed": false
+ },
+ {
+  "step": "Network Solver (both modes)",
+  "stdout": "  Loaded 553453 contacts from contacts.csv\nLoaded 163348 atoms, 553453 contacts\nbox=0.05×0.05, plate_z=0.117208, scale=1000\n\n============================================================\nIONIC CONDUCTIVITY (SE-SE network) — contact_mode=hertzian\n============================================================\n  Building resistor network (1 target types, contact_mode=hertzian)...\n  Network: 158760 nodes, 349925 edges, 1889 bottom, 2296 top\n  접촉별 R_bulk 비율의 비가중 평균: 25.0% (협착 쪽 75.0%)  ⚠ 전력(I²R) 기여도가 아니다 — L2-08\n  Solving FULL network (bulk + constriction)...\n  Percolating component: 157068 nodes, 349658 edges\n  Large network: 157070 nodes — trying CG solver first...\n  Solve: cg\n  협착 저항 전력 몫 Σ I²R_c / Σ I²R_total (FULL 해 · 관통 간선): 73.7%  [constriction_power_share_ion_hertz] ↔ 접촉별 비가중 평균 75.0%\n  Solving CONTACT_FREE network (R_constriction=0)...\n  Percolating component: 157068 nodes, 349658 edges\n  Large network: 157070 nodes — trying CG solver first...\n  Solve: cg\n  Solving CONSTRICTION_ONLY network (R_bulk=0)...\n  Percolating component: 157068 nodes, 349658 edges\n  Large network: 157070 nodes — trying CG solver first...\n  Solve: cg\n\n  ═══ Decomposition Results ═══\n  φ = 0.2837\n  접촉별 R_bulk 비율(비가중 평균): 25.0% | 협착 75.0%   ⚠ I²R 전력 몫 아님 (L2-08)\n\n  Mode                     σ/σ_bulk  σ (mS/cm)\n  ────────────────────────────────────────────\n  FULL (explicit-contact)   0.039166     0.1175\n  CONTACT_FREE (upper)     0.158616     0.4758\n  CONSTRICTION_ONLY        0.053400     0.1602\n  Bruggeman (φ^1.5)        0.151100     0.4533\n\n  Contact-free overestimation: 4.05×\n  Bruggeman EMT overestimation: 3.86×\n\n============================================================\nELECTRONIC CONDUCTIVITY (AM-AM network) — contact_mode=hertzian\n============================================================\n  Building resistor network (1 target types, contact_mode=hertzian)...\n  Network: 4588 nodes, 8970 edges, 135 bottom, 122 top\n  접촉별 R_bulk 비율의 비가중 평균: 16.5% (협착 쪽 83.5%)  ⚠ 전력(I²R) 기여도가 아니다 — L2-08\n  Solving FULL network (bulk + constriction)...\n  Percolating component: 4577 nodes, 8970 edges\n  Solve: spsolve\n  협착 저항 전력 몫 Σ I²R_c / Σ I²R_total (FULL 해 · 관통 간선): 80.1%  [constriction_power_share_el_hertz] ↔ 접촉별 비가중 평균 83.5%\n  Solving CONTACT_FREE network (R_constriction=0)...\n  Percolating component: 4577 nodes, 8970 edges\n  Solve: spsolve\n  Solving CONSTRICTION_ONLY network (R_bulk=0)...\n  Percolating component: 4577 nodes, 8970 edges\n  Solve: spsolve\n\n  ═══ Decomposition Results ═══\n  φ = 0.5247\n  접촉별 R_bulk 비율(비가중 평균): 16.5% | 협착 83.5%   ⚠ I²R 전력 몫 아님 (L2-08)\n\n  Mode                     σ/σ_bulk  σ (mS/cm)\n  ────────────────────────────────────────────\n  FULL (explicit-contact)   0.095315     4.7658\n  CONTACT_FREE (upper)     0.508291    25.4146\n  CONSTRICTION_ONLY        0.119373     5.9686\n  Bruggeman (φ^1.5)        0.380064    19.0032\n\n  Contact-free overestimation: 5.33×\n  Bruggeman EMT overestimation: 3.99×\n\n============================================================\nTHERMAL CONDUCTIVITY (ALL contacts) — contact_mode=hertzian\n============================================================\n  Building resistor network (2 target types, contact_mode=hertzian)...\n  Network: 163348 nodes, 553453 edges, 2024 bottom, 2418 top\n  접촉별 R_bulk 비율의 비가중 평균: 30.4% (협착 쪽 69.6%)  ⚠ 전력(I²R) 기여도가 아니다 — L2-08\n  Solving FULL network (bulk + constriction)...\n  Percolating component: 163347 nodes, 553453 edges\n  Large network: 163349 nodes — trying CG solver first...\n  Solve: cg\n  협착 저항 전력 몫 Σ I²R_c / Σ I²R_total (FULL 해 · 관통 간선): 69.5%  [constriction_power_share_th_hertz] ↔ 접촉별 비가중 평균 69.6%\n  Solving CONTACT_FREE network (R_constriction=0)...\n  Percolating component: 163347 nodes, 553453 edges\n  Large network: 163349 nodes — trying CG solver first...\n  Solve: cg\n  Solving CONSTRICTION_ONLY network (R_bulk=0)...\n  Percolating component: 163347 nodes, 553453 edges\n  Large network: 163349 nodes — trying CG solver first...\n  Solve: cg\n\n  ═══ Decomposition Results ═══\n  φ = 0.8084\n  접촉별 R_bulk 비율(비가중 평균): 30.4% | 협착 69.6%   ⚠ I²R 전력 몫 아님 (L2-08)\n\n  Mode                     σ/σ_bulk  σ (mS/cm)\n  ────────────────────────────────────────────\n  FULL (explicit-contact)   1.204064     8.4284\n  CONTACT_FREE (upper)     4.749856    33.2490\n  CONSTRICTION_ONLY        1.796920    12.5784\n  Bruggeman (φ^1.5)        0.726816     5.0877\n\n  Contact-free overestimation: 3.94×\n  Bruggeman EMT overestimation: 0.60×\n\nResults saved: /home/yonghoon71/ps45_network_20261006/work/results/260925_000001_0bee25/network_conductivity_hertzian.json\n\n============================================================\nIONIC CONDUCTIVITY (SE-SE network) — contact_mode=physics\n============================================================\n  Building resistor network (1 target types, contact_mode=physics)...\n  Network: 158760 nodes, 349925 edges, 1889 bottom, 2296 top\n  접촉별 R_bulk 비율의 비가중 평균: 19.4% (협착 쪽 80.6%)  ⚠ 전력(I²R) 기여도가 아니다 — L2-08\n  Solving FULL network (bulk + constriction)...\n  Percolating component: 157068 nodes, 349658 edges\n  Large network: 157070 nodes — trying CG solver first...\n  Solve: cg\n  협착 저항 전력 몫 Σ I²R_c / Σ I²R_total (FULL 해 · 관통 간선): 81.7%  [constriction_power_share_ion_physics] ↔ 접촉별 비가중 평균 80.6%\n  Solving CONTACT_FREE network (R_constriction=0)...\n  Percolating component: 157068 nodes, 349658 edges\n  Large network: 157070 nodes — trying CG solver first...\n  Solve: cg\n  Solving CONSTRICTION_ONLY network (R_bulk=0)...\n  Percolating component: 157068 nodes, 349658 edges\n  Large network: 157070 nodes — trying CG solver first...\n  Solve: cg\n\n  ═══ Decomposition Results ═══\n  φ = 0.2837\n  접촉별 R_bulk 비율(비가중 평균): 19.4% | 협착 80.6%   ⚠ I²R 전력 몫 아님 (L2-08)\n\n  Mode                     σ/σ_bulk  σ (mS/cm)\n  ────────────────────────────────────────────\n  FULL (explicit-contact)   0.023151     0.0695\n  CONTACT_FREE (upper)     0.158616     0.4758\n  CONSTRICTION_ONLY        0.021034     0.0631\n  Bruggeman (φ^1.5)        0.151100     0.4533\n\n  Contact-free overestimation: 6.85×\n  Bruggeman EMT overestimation: 6.53×\n\n============================================================\nELECTRONIC CONDUCTIVITY (AM-AM network) — contact_mode=physics\n============================================================\n  Building resistor network (1 target types, contact_mode=physics)...\n  Network: 4588 nodes, 8970 edges, 135 bottom, 122 top\n  접촉별 R_bulk 비율의 비가중 평균: 13.8% (협착 쪽 86.2%)  ⚠ 전력(I²R) 기여도가 아니다 — L2-08\n  Solving FULL network (bulk + constriction)...\n  Percolating component: 4577 nodes, 8970 edges\n  Solve: spsolve\n  협착 저항 전력 몫 Σ I²R_c / Σ I²R_total (FULL 해 · 관통 간선): 84.2%  [constriction_power_share_el_physics] ↔ 접촉별 비가중 평균 86.2%\n  Solving CONTACT_FREE network (R_constriction=0)...\n  Percolating component: 4577 nodes, 8970 edges\n  Solve: spsolve\n  Solving CONSTRICTION_ONLY network (R_bulk=0)...\n  Percolating component: 4577 nodes, 8970 edges\n  Solve: spsolve\n\n  ═══ Decomposition Results ═══\n  φ = 0.5247\n  접촉별 R_bulk 비율(비가중 평균): 13.8% | 협착 86.2%   ⚠ I²R 전력 몫 아님 (L2-08)\n\n  Mode                     σ/σ_bulk  σ (mS/cm)\n  ────────────────────────────────────────────\n  FULL (explicit-contact)   0.077070     3.8535\n  CONTACT_FREE (upper)     0.508291    25.4146\n  CONSTRICTION_ONLY        0.091611     4.5806\n  Bruggeman (φ^1.5)        0.380064    19.0032\n\n  Contact-free overestimation: 6.60×\n  Bruggeman EMT overestimation: 4.93×\n\n============================================================\nTHERMAL CONDUCTIVITY (ALL contacts) — contact_mode=physics\n============================================================\n  Building resistor network (2 target types, contact_mode=physics)...\n  Network: 163348 nodes, 553453 edges, 2024 bottom, 2418 top\n  접촉별 R_bulk 비율의 비가중 평균: 26.9% (협착 쪽 73.1%)  ⚠ 전력(I²R) 기여도가 아니다 — L2-08\n  Solving FULL network (bulk + constriction)...\n  Percolating component: 163347 nodes, 553453 edges\n  Large network: 163349 nodes — trying CG solver first...\n  Solve: cg\n  협착 저항 전력 몫 Σ I²R_c / Σ I²R_total (FULL 해 · 관통 간선): 58.4%  [constriction_power_share_th_physics] ↔ 접촉별 비가중 평균 73.1%\n  Solving CONTACT_FREE network (R_constriction=0)...\n  Percolating component: 163347 nodes, 553453 edges\n  Large network: 163349 nodes — trying CG solver first...\n  Solve: cg\n  Solving CONSTRICTION_ONLY network (R_bulk=0)...\n  Percolating component: 163347 nodes, 553453 edges\n  Large network: 163349 nodes — trying CG solver first...\n  Solve: cg\n\n  ═══ Decomposition Results ═══\n  φ = 0.8084\n  접촉별 R_bulk 비율(비가중 평균): 26.9% | 협착 73.1%   ⚠ I²R 전력 몫 아님 (L2-08)\n\n  Mode                     σ/σ_bulk  σ (mS/cm)\n  ────────────────────────────────────────────\n  FULL (explicit-contact)   1.037286     7.2610\n  CONTACT_FREE (upper)     4.749856    33.2490\n  CONSTRICTION_ONLY        0.729793     5.1086\n  Bruggeman (φ^1.5)        0.726816     5.0877\n\n  Contact-free overestimation: 4.58×\n  Bruggeman EMT overestimation: 0.70×\n\nResults saved: /home/yonghoon71/ps45_network_20261006/work/results/260925_000001_0bee25/network_conductivity_physics.json\nDual-view saved:  /home/yonghoon71/ps45_network_20261006/work/results/260925_000001_0bee25/network_conductivity_dual.json\nLegacy-compat:    /home/yonghoon71/ps45_network_20261006/work/results/260925_000001_0bee25/network_conductivity.json\n",
+  "stderr": "",
+  "rc": 0,
+  "ok": true,
+  "required": true,
+  "missing_outputs": [],
+  "stale_outputs": [],
+  "verify_failed": false
+ },
+ {
+  "step": "Network channel verdict (ionic/electronic/thermal)",
+  "stdout": "ionic=ok (computed); electronic=ok (computed); thermal=ok (computed)",
+  "stderr": "",
+  "rc": 0,
+  "ok": true,
+  "required": true,
+  "missing_outputs": [],
+  "stale_outputs": [],
+  "verify_failed": false
+ },
+ {
+  "step": "Network stop contract (stop_after=network)",
+  "stdout": "ok",
+  "stderr": "",
+  "rc": 0,
+  "ok": true,
+  "required": true,
+  "missing_outputs": [],
+  "stale_outputs": [],
+  "verify_failed": false
+ },
+ {
+  "step": "Network ionic record check (승격 전 공용 기술 검사 · RGLR2-01)",
+  "stdout": "ok",
+  "stderr": "",
+  "rc": 0,
+  "ok": true,
+  "required": true,
+  "missing_outputs": [],
+  "stale_outputs": [],
+  "verify_failed": false
+ },
+ {
+  "step": "Network Merge",
+  "stdout": "41 σ-keys",
+  "stderr": "",
+  "rc": 0
+ }
+]

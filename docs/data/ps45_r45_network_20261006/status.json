@@ -1,0 +1,393 @@
+{
+ "schema": "webapp_network_batch/v1",
+ "cases": {
+  "260925_000001_0bee25": {
+   "case_id": "260925_000001_0bee25",
+   "when": "2026-10-06T06:48:34",
+   "stop_after": "network",
+   "atom_step": 3210000,
+   "mode": "standard",
+   "type_map": "2:AM_S,3:SE",
+   "scale": 1000,
+   "meta_name": "input_6mAh_real_1_D9",
+   "dump_type_counts": "2:4588,3:158760",
+   "type_map_deck": "2:AM_S,3:SE",
+   "type_map_deck_agrees": true,
+   "type_map_deck_errors": "",
+   "deck": "input_ps_0_10_r45.liggghts",
+   "atom_frames": 1,
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 553453,
+    "n_unique_pairs": 553453,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 3.4132e-10,
+    "n_periodic_flag": 28310,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "not_copied": [
+    "meta.json.broken_20260926"
+   ],
+   "source_sha256": {
+    "atom_3210000.liggghts": "6e95545700707bf4b11b97730bdfe9a43ae7d5a66f9281fac8fe47224d37bc1c",
+    "contact_3210000.liggghts": "7dc155747fcb1471257a99162872d578e8413f581902f012d9d4e9a17d8390cb",
+    "mesh_3210000.stl": "9ab7e8a091853fb7454520af75d615116afe20c52e0dceb895c017f7b78ccae7",
+    "input_ps_0_10_r45.liggghts": "e2d469de7fc8baa31a824cafa90f3b2206d50549f4ba8dc5bf559959db68f9d7",
+    "meta.json": "344ae31b50c6b39a847697afe53616645438003dd80feaf07658d3fcde946107"
+   },
+   "elapsed_pipeline_s": 250.7,
+   "status": "done",
+   "failed_stages": [],
+   "stopped_after": "network",
+   "run_network_run_id": "20261006T065104-0bb1b1a4",
+   "stop_contract_ok": true,
+   "stop_contract_msg": "ok",
+   "stage_seconds": [
+    {
+     "script": "parse_liggghts.py",
+     "seconds": 2.438,
+     "rc": 0
+    },
+    {
+     "script": "analyze_contacts.py",
+     "seconds": 130.961,
+     "rc": 0
+    },
+    {
+     "script": "coverage_physics_vs_hertzian.py",
+     "seconds": 15.246,
+     "rc": 0
+    },
+    {
+     "script": "network_conductivity.py",
+     "seconds": 101.995,
+     "rc": 0
+    }
+   ],
+   "elapsed_network_solver_s": 101.995,
+   "source_unchanged": true,
+   "elapsed_case_s": 252.3
+  },
+  "260922_222828_6e4ff6": {
+   "case_id": "260922_222828_6e4ff6",
+   "when": "2026-10-06T06:52:47",
+   "stop_after": "network",
+   "atom_step": 3640000,
+   "mode": "standard",
+   "type_map": "1:AM_P,3:SE",
+   "scale": 1000,
+   "meta_name": "input_6mAh_real_5_D9",
+   "dump_type_counts": "1:403,3:158749",
+   "type_map_deck": "1:AM_P,3:SE",
+   "type_map_deck_agrees": true,
+   "type_map_deck_errors": "",
+   "deck": "input_ps_10_0_r45.liggghts",
+   "atom_frames": 1,
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 535427,
+    "n_unique_pairs": 535427,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 2.345e-09,
+    "n_periodic_flag": 76199,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "not_copied": [],
+   "source_sha256": {
+    "atom_3640000.liggghts": "0f8141a0c93e44de6150c1df5563c372402b03321ddc799152328e121ada5468",
+    "contact_3640000.liggghts": "88e9c8c06ef16e4b6ad9fa11ccbcdc658952259db33363d2383ee0e916b0974b",
+    "mesh_3640000.stl": "869454432d1670f6335057f6248248309eb90361259a002c8233721d45de1a89",
+    "input_ps_10_0_r45.liggghts": "46b964303657b7e25afb9741c4cd20d0cf99b3ce2168ca340e8540f4176a181e",
+    "meta.json": "cf310997efbf77354204bb39fbe2cc02a53a3ade88c033f136641259b7c956aa"
+   },
+   "elapsed_pipeline_s": 267.2,
+   "status": "done",
+   "failed_stages": [],
+   "stopped_after": "network",
+   "run_network_run_id": "20261006T065542-53d87600",
+   "stop_contract_ok": true,
+   "stop_contract_msg": "ok",
+   "stage_seconds": [
+    {
+     "script": "parse_liggghts.py",
+     "seconds": 1.861,
+     "rc": 0
+    },
+    {
+     "script": "analyze_contacts.py",
+     "seconds": 157.683,
+     "rc": 0
+    },
+    {
+     "script": "coverage_physics_vs_hertzian.py",
+     "seconds": 14.033,
+     "rc": 0
+    },
+    {
+     "script": "network_conductivity.py",
+     "seconds": 93.496,
+     "rc": 0
+    }
+   ],
+   "elapsed_network_solver_s": 93.496,
+   "source_unchanged": true,
+   "elapsed_case_s": 268.6
+  },
+  "260925_000559_082983": {
+   "case_id": "260925_000559_082983",
+   "when": "2026-10-06T06:57:16",
+   "stop_after": "network",
+   "atom_step": 3220000,
+   "mode": "bimodal",
+   "type_map": "1:AM_P,2:AM_S,3:SE",
+   "scale": 1000,
+   "meta_name": "input_6mAh_real_4_D9",
+   "dump_type_counts": "1:280,2:1376,3:158761",
+   "type_map_deck": "1:AM_P,2:AM_S,3:SE",
+   "type_map_deck_agrees": true,
+   "type_map_deck_errors": "",
+   "deck": "input_ps_7_3_r45.liggghts",
+   "atom_frames": 1,
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 562646,
+    "n_unique_pairs": 562646,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 9.34867e-10,
+    "n_periodic_flag": 59548,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "not_copied": [],
+   "source_sha256": {
+    "atom_3220000.liggghts": "cb19ca10045b295afa04f494793f423ba95dbbb38727008dc01fc9656c21bd99",
+    "contact_3220000.liggghts": "492452601197bfedde28f5eee9e2684bcb62581769cc700d21479b7426c22b6f",
+    "mesh_3220000.stl": "c25296a6d4d6b185be3c1c0ff98543dbfdb710c281403111c7fae2b9bde2b820",
+    "input_ps_7_3_r45.liggghts": "71d0ec2d4995a710c8b96eba38ca99a52e51e4c4876ab4ccbb58ef3794e8eb62",
+    "meta.json": "9668d7ebfafa95110d482e794d3fc110747da784ee7b1b002abf3114dc0881b1"
+   },
+   "elapsed_pipeline_s": 268.6,
+   "status": "done",
+   "failed_stages": [],
+   "stopped_after": "network",
+   "run_network_run_id": "20261006T070000-88bef3b0",
+   "stop_contract_ok": true,
+   "stop_contract_msg": "ok",
+   "stage_seconds": [
+    {
+     "script": "parse_liggghts.py",
+     "seconds": 2.376,
+     "rc": 0
+    },
+    {
+     "script": "analyze_contacts_bimodal.py",
+     "seconds": 143.993,
+     "rc": 0
+    },
+    {
+     "script": "coverage_physics_vs_hertzian.py",
+     "seconds": 16.86,
+     "rc": 0
+    },
+    {
+     "script": "network_conductivity.py",
+     "seconds": 105.253,
+     "rc": 0
+    }
+   ],
+   "elapsed_network_solver_s": 105.253,
+   "source_unchanged": true,
+   "elapsed_case_s": 270.1
+  },
+  "260925_000513_123978": {
+   "case_id": "260925_000513_123978",
+   "when": "2026-10-06T07:01:46",
+   "stop_after": "network",
+   "atom_step": 2930000,
+   "mode": "bimodal",
+   "type_map": "1:AM_P,2:AM_S,3:SE",
+   "scale": 1000,
+   "meta_name": "input_6mAh_real_3_D9",
+   "dump_type_counts": "1:198,2:2293,3:158766",
+   "type_map_deck": "1:AM_P,2:AM_S,3:SE",
+   "type_map_deck_agrees": true,
+   "type_map_deck_errors": "",
+   "deck": "input_ps_5_5_r45.liggghts",
+   "atom_frames": 1,
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 558496,
+    "n_unique_pairs": 558496,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 2.15604e-09,
+    "n_periodic_flag": 44924,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "not_copied": [],
+   "source_sha256": {
+    "atom_2930000.liggghts": "30221f3be42b6db3502502d7c16159b4868ed2d3d206497d4266fe3c740b4162",
+    "contact_2930000.liggghts": "19cca92fd14fcee283277c7f49d9dae822332efd6d5bea0ef0b70902d1e20211",
+    "mesh_2930000.stl": "673146522d602408930ea2fc4f9becbf8e833874f0f5858e7bc138426213fa2b",
+    "input_ps_5_5_r45.liggghts": "537e39c47de70af408c66bc4e5a69feae499811952c1a0e4e6a42612f2368ceb",
+    "meta.json": "bd2beabb3cc59d272874ae77dbb3e730261657da563cf55784ce4a3abc3b06a1"
+   },
+   "elapsed_pipeline_s": 261.5,
+   "status": "done",
+   "failed_stages": [],
+   "stopped_after": "network",
+   "run_network_run_id": "20261006T070424-51f1d0f4",
+   "stop_contract_ok": true,
+   "stop_contract_msg": "ok",
+   "stage_seconds": [
+    {
+     "script": "parse_liggghts.py",
+     "seconds": 1.993,
+     "rc": 0
+    },
+    {
+     "script": "analyze_contacts_bimodal.py",
+     "seconds": 138.188,
+     "rc": 0
+    },
+    {
+     "script": "coverage_physics_vs_hertzian.py",
+     "seconds": 16.747,
+     "rc": 0
+    },
+    {
+     "script": "network_conductivity.py",
+     "seconds": 104.457,
+     "rc": 0
+    }
+   ],
+   "elapsed_network_solver_s": 104.457,
+   "source_unchanged": true,
+   "elapsed_case_s": 263.0
+  },
+  "260925_000448_bd85f9": {
+   "case_id": "260925_000448_bd85f9",
+   "when": "2026-10-06T07:06:09",
+   "stop_after": "network",
+   "atom_step": 3210000,
+   "mode": "bimodal",
+   "type_map": "1:AM_P,2:AM_S,3:SE",
+   "scale": 1000,
+   "meta_name": "input_6mAh_real_2_D9",
+   "dump_type_counts": "1:121,2:3209,3:158763",
+   "type_map_deck": "1:AM_P,2:AM_S,3:SE",
+   "type_map_deck_agrees": true,
+   "type_map_deck_errors": "",
+   "deck": "input_ps_3_7_r45.liggghts",
+   "atom_frames": 1,
+   "contact_scan": {
+    "n_frames": 1,
+    "n_rows_last": 558388,
+    "n_unique_pairs": 558388,
+    "n_dup_pairs": 0,
+    "n_dup_rows": 0,
+    "n_self_pairs": 0,
+    "n_delta_nonpos": 0,
+    "delta_min": 8.21403e-10,
+    "n_periodic_flag": 27735,
+    "has_delta_col": true,
+    "has_periodic_col": true
+   },
+   "not_copied": [
+    "meta.json.broken_20260926"
+   ],
+   "source_sha256": {
+    "atom_3210000.liggghts": "6e042a823bc7a97ebc0263c761c8d4efad7f1ae081c0628322c6bdb5687e8db2",
+    "contact_3210000.liggghts": "4085ace0e222fe11e449dd7d3f275ea27b2f9d4e2ec79dcbffb17d17f230a666",
+    "mesh_3210000.stl": "3e6fdfc782307323142b5a8132aa9a8c95bb0e86db5ea6c4c332f50b3236fbd1",
+    "input_ps_3_7_r45.liggghts": "88d967f87911290152698c54f5485b489a884bd92b427bddd7067d01ffe8cd35",
+    "meta.json": "0496c642d2ce068f12cd4754f34b9b35ef23eb76885d9de8a933bcbbaa945781"
+   },
+   "elapsed_pipeline_s": 253.1,
+   "status": "done",
+   "failed_stages": [],
+   "stopped_after": "network",
+   "run_network_run_id": "20261006T070842-2d69f9ae",
+   "stop_contract_ok": true,
+   "stop_contract_msg": "ok",
+   "stage_seconds": [
+    {
+     "script": "parse_liggghts.py",
+     "seconds": 2.212,
+     "rc": 0
+    },
+    {
+     "script": "analyze_contacts_bimodal.py",
+     "seconds": 134.765,
+     "rc": 0
+    },
+    {
+     "script": "coverage_physics_vs_hertzian.py",
+     "seconds": 14.467,
+     "rc": 0
+    },
+    {
+     "script": "network_conductivity.py",
+     "seconds": 101.564,
+     "rc": 0
+    }
+   ],
+   "elapsed_network_solver_s": 101.564,
+   "source_unchanged": true,
+   "elapsed_case_s": 254.6
+  }
+ },
+ "stop_after": "network",
+ "runs": [
+  {
+   "started": "2026-10-06T06:48:34",
+   "argv": [
+    "--uploads-root",
+    "/home/yonghoon71/Yonghoon-DEM-DFT/webapp/uploads",
+    "--from-tsv",
+    "docs/data/ps45_r45_union_20260929/r45_union_summary.tsv",
+    "--out",
+    "/home/yonghoon71/ps45_network_20261006",
+    "--only",
+    "260925_000001_0bee25"
+   ],
+   "git_sha": "04756e7499eee51ccec2b7f91bd5c2fa28c1efc4",
+   "dirty": false,
+   "python": "3.12.3",
+   "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+   "numpy": "2.5.2",
+   "scipy": "1.18.1"
+  },
+  {
+   "started": "2026-10-06T06:52:47",
+   "argv": [
+    "--uploads-root",
+    "/home/yonghoon71/Yonghoon-DEM-DFT/webapp/uploads",
+    "--from-tsv",
+    "docs/data/ps45_r45_union_20260929/r45_union_summary.tsv",
+    "--out",
+    "/home/yonghoon71/ps45_network_20261006"
+   ],
+   "git_sha": "04756e7499eee51ccec2b7f91bd5c2fa28c1efc4",
+   "dirty": false,
+   "python": "3.12.3",
+   "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+   "numpy": "2.5.2",
+   "scipy": "1.18.1"
+  }
+ ]
+}
