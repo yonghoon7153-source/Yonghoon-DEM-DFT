@@ -1718,11 +1718,12 @@ def load_tau_results(results_dir, webapp):
         if wr is None:
             raise FillRefusal(f'{case}: τ P3 — 배치 metrics_flat 에 행이 없다 — 표의 다른 열과 같은 세대인지 대조할 수 없다')
         for k in tie:
-            if k not in wr:
-                raise FillRefusal(f'{case}: τ P3 — 배치 metrics_flat 에 {k} 열이 없다 (network 정지 배치의 row_for 는 이 키를 편다) — 대조 불가')
+            #  row_for 는 full_metrics 에 **있는** 키만 펴고 metrics_flat 머리는 행 키의 합집합이다 — 생산자 머지는 None σ 를 키째 안 쓴다 (비관통).
+            #   ⇒ 열 없음 = 빈칸 (None) 으로 읽는다: 폴더에도 값이 없을 때만 맞고, 폴더에 값이 있으면 그대로 어긋남 (fail-closed 유지 · ㉙k).
             want = '' if fm.get(k) is None else str(fm.get(k))
-            if wr[k] != want:
-                raise FillRefusal(f'{case}: τ P3 — 폴더 full_metrics {k}={want!r} ≠ 배치 metrics_flat {wr[k]!r} — τ 와 표의 다른 열이 다른 세대다')
+            got = wr.get(k)
+            if (got or '') != want:
+                raise FillRefusal(f'{case}: τ P3 — 폴더 full_metrics {k}={want!r} ≠ 배치 metrics_flat {got!r} — τ 와 표의 다른 열이 다른 세대다')
         for dk, rk, fk in TAU_DUAL_PROJ:
             dv = dual.get(dk).get(rk) if isinstance(dual.get(dk), dict) else None
             if _tau_canon(dv) != _tau_canon(fm.get(fk)):
@@ -4706,9 +4707,11 @@ def _selftest():
         inputs = {n_: _PS29.file_digest(str(d / n_)) for n_ in ('atoms.csv', 'contacts.csv')}
         _PS29.stamp_network_provenance(str(d), prov_rid or rid, inputs, prov_status,
                                        argv={'type_map': '1:SE', 'scale': 1, 'contact_mode': 'both'})
-        fm = dict(le_, percolation_pct=pp_, network_run_id=rid, active_network_run_id=rid, network_solver_status='success',
-                  sigma_full=du_['hertzian'].get('sigma_full'), sigma_full_status=du_['hertzian'].get('sigma_full_status'),
-                  sigma_full_physics=du_['physics'].get('sigma_full'), sigma_full_status_physics=du_['physics'].get('sigma_full_status'))
+        fm = dict(le_, percolation_pct=pp_, network_run_id=rid, active_network_run_id=rid, network_solver_status='success')
+        #  망 투영 — 생산자 머지 (`_merge_dual_into_metrics`) 처럼 None 값은 키 자체를 안 쓴다 (실 생산자 폴더 실측: 비관통이면 sigma_full 키 없음)
+        fm.update({k_: v_ for k_, v_ in (('sigma_full', du_['hertzian'].get('sigma_full')), ('sigma_full_status', du_['hertzian'].get('sigma_full_status')),
+                                         ('sigma_full_physics', du_['physics'].get('sigma_full')),
+                                         ('sigma_full_status_physics', du_['physics'].get('sigma_full_status'))) if v_ is not None})
         (d / 'network_conductivity_dual.json').write_text(json.dumps(du_), encoding='utf-8')
         (d / 'full_metrics.json').write_text(json.dumps(fm), encoding='utf-8')
         return fm
@@ -4875,6 +4878,17 @@ def _selftest():
             return fn
         _neg7('㉙c15 ★ τ 기록 없음 — 배치 done 케이스 (q2) 의 폴더가 없으면 거부 (조용히 빈칸으로 두지 않는다)', _c4('nofolder'), 'τ P0')
         _neg7('㉙c16 ★ τ 기록 없음 — dual 파일이 없으면 거부', _c4('nodual'), 'τ P0')
+        #  ㉙k — 배치 전부가 비관통이면 생산자가 σ 키를 안 써서 metrics_flat 에 sigma_full 열 자체가 없다 (row_for 는 있는 키만 편다 · 머리 = 행 키의
+        #   합집합).  열 없음 = 빈칸 (None) 으로 읽어야 한다 — 옛 판은 "열 없음" 을 거부해 정상 배치를 막았다 (실 생산자 폴더 대조에서 찾음).
+        try:
+            _lwk, _rsk, _fmk = _sc29('k', q1='NC_PERC', q2='NPERC')
+            _tvk = _ld29(_rsk, _lwk)
+            _ek = '' if 'sigma_full' not in next(iter(_lwk['rows'].values())) else 'metrics_flat 에 sigma_full 열이 있다 (픽스처가 조건을 못 세웠다)'
+        except Exception as e:                                            # noqa: BLE001
+            _tvk, _ek = {}, f'{type(e).__name__}: {e}'
+        chk('㉙k ★ 전부 비관통인 배치 (metrics_flat 에 sigma_full · sigma_full_physics 열 없음 = 생산자가 None 키를 안 씀) — 열 없음을 빈칸으로 읽고 '
+            '받는다 (폴더 full_metrics 에도 키가 없다 · 거짓 거부 없음)' + (f' — {_ek}' if _ek else ''),
+            not _ek and sorted((_tvk.get('cases') or {})) == ['q1', 'q2'] and not any('sigma_full' in f_ for f_ in _fmk.values()))
         _neg7('㉙c17 ★ τ 원천을 줬는데 묶음에 tau 가 없으면 거부 (조용히 버리지 않는다)', lambda: _bh29(_lw29, _tv29, groups=_G567), 'τ 묶음')
         _neg7('㉙c18 ★ 묶음에 tau 가 있는데 τ 원천 (--tau-results) 이 없으면 거부', lambda: _bh29(_lw29, None), 'τ 묶음')
         chk('㉙d ★ 단계 역량 — tau 는 network 에만 (contact · coverage 배치는 τ 묶음을 실을 수 없다) · 다섯 census 묶음은 세 단계 모두',

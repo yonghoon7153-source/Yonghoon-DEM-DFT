@@ -6,8 +6,11 @@
   ③ 세 상태를 실 LHS 배치 (`docs/data/lhs_webapp_contact_d1ec42fba` · 130 · 접촉 단계 생산본) 의 세 케이스 기록에 얹고
      `lhs_webapp_batch.write_outputs` 로 network 배치 (stop_after=network) 를 쓴 뒤 `load_webapp` → `build_handover` (⑤⑥⑦ 다섯 묶음):
      done 두 행 = 접촉 단계 판과 같은 값 · failed 행 = wa_status failed · 웹앱 열 빈칸 · 인계 거부 없음 (RGL-03).
-  ⚠ ③ 의 행 값은 접촉 단계 생산본이다 — 합성 침대는 정지 **상태**만 넘긴다 (인계 생성기는 아직 망 단계 고유 열을 싣지 않는다).
-     옛 코드: ① 의 정상 비관통이 failed (RGL-02) · ③ 은 network 배치를 거부 (RGL-03)."""
+  ⚠ ③ 의 행 값은 접촉 단계 생산본이다 — 합성 침대는 정지 **상태**만 넘긴다 (③ 은 다섯 census 묶음만 — 망 단계 고유 열은 ④).
+  ④ (v1.2 망 τ 묶음) ① 의 실 생산자 폴더를 배치 `--work/results/<case>` 모양으로 놓고 `load_tau_results` (출처 관문 P0–P3 — run id · 도장 ·
+     입력 digest · metrics_flat 과 같은 세대) → `build_handover(webapp_groups='tau')`: 관통 OK · 비관통 NOT_PERCOLATING · 수치 실패 행 τ 빈칸 ·
+     배치 뒤 다시 돌린 폴더 (새 run id) 는 거부.  ⚠ ④ 의 행은 실 배치 케이스 이름 + 합성 침대의 τ — 출처 관문 · 값 규칙 시험이지 그 케이스의 값이 아니다.
+     옛 코드: ① 의 정상 비관통이 failed (RGL-02) · ③ 은 network 배치를 거부 (RGL-03) · ④ 는 묶음 tau · 로더가 없다."""
 import csv
 import json
 import os
@@ -47,7 +50,7 @@ def _run_bed(app, bed, break_solver=False):
     stages, rid = app._network_and_stage_e(d, str(SCRIPTS), a, c, '1:SE', 1, [],
                                            runner=TP._CLIRunner(break_solver=break_solver), stop_before_stage_e=True)
     st, failed = ps.summarize(stages)
-    return d, st, [s.get('step', '') for s in failed]
+    return d, st, [s.get('step', '') for s in failed], rid          # rid = 이번 실행의 망 세대 (배치가 케이스 기록에 남기는 network_run_id)
 
 
 def main():
@@ -136,6 +139,55 @@ def main():
             cleared = [k for k in diff if k not in ('wa_status', 'wa_failed_stages') and rf.get(k) in (None, '')]
             chk(f"수치 실패 행 = wa_status failed ({rf.get('wa_status')!r}) · 웹앱 열 {len(cleared)} 칸 빈칸 · 다른 값으로 바뀐 칸 0",
                 rf.get('wa_status') == 'failed' and len(cleared) > 20 and not bad and set(c_n) == set(c_c), str(bad[:5]))
+
+        print('④ 실 생산자 폴더 → 망 τ 원천 (load_tau_results · 출처 관문 P0–P3) → 인계 생성기 묶음 tau (v1.2)')
+        #  배치 기록 = 이번 실행의 run id · metrics_flat 행 = 실 배치 접촉 단계 행 + 폴더 full_metrics 의 τ 대조 키 (row_for 처럼 **있는** 키만 —
+        #   합성 침대의 porosity 로 같은 프레임 QC 를 덮지 않는다 · 묶음 tau 만 부르니 ① ② 관문은 돌지 않는다)
+        tie = tuple(ps.NETWORK_STOP_LEDGER_KEYS) + tuple(getattr(LDD, 'TAU_TIE_EXTRA', ()))
+        res = tdir / 'results'
+        res.mkdir()
+        st4 = json.loads(json.dumps(st0))
+        st4.update(stop_after='network', cases={})
+        rows4 = {}
+        for k, c in pick.items():
+            d_, s_, f_, rid_ = runs[k]
+            shutil.copytree(d_, res / c)                                  # 배치 --work/results/<case> 모양
+            st4['cases'][c] = dict(st0['cases'][c], stop_after='network', status=s_, failed_stages=f_, network_run_id=rid_)
+            fm_ = json.loads((res / c / 'full_metrics.json').read_text(encoding='utf-8'))
+            rows4[c] = dict(flat[c], **{kk: fm_[kk] for kk in tie if kk in fm_})
+        LWB.write_outputs(tdir / 'batch4', st4, rows4)
+        lw4 = LDD.load_webapp(tdir / 'batch4')
+        rows3 = [r for r in rows if r['case_id'] in set(pick.values())]
+        tcols = list(tf.column_names())
+        try:
+            tv4 = LDD.load_tau_results(res, lw4)
+            o4, _c4, r4 = LDD.build_handover(rows3, hv, union=un, webapp=lw4, webapp_groups='tau', tau=tv4)
+            err4 = ''
+        except Exception as e:                                            # noqa: BLE001 — 옛 코드 (로더 · tau= 없음) 도 실패로 센다
+            o4, r4, err4 = [], {}, f'{type(e).__name__}: {e}'
+        by4 = {r['case_id']: r for r in o4}
+        want4 = {k: {cc: tf._cell(v) for cc, v in tf.case_row(str(res / pick[k])).items() if cc in tcols} for k in ('through', 'nonthrough')}
+        _t4, _n4, _f4 = by4.get(pick['through'], {}), by4.get(pick['nonthrough'], {}), by4.get(pick['solve_failed'], {})
+        chk('④ 실 생산자 폴더 → 묶음 tau: 관통 OK · 정상 비관통 NOT_PERCOLATING (f 0.0 · tau2 빈칸) · 칸 = tau_flux.case_row 그대로 · 수치 실패 행 '
+            '(wa_status failed) τ 칸 전부 빈칸 · 출처 관문 2 행 · 빈칸 행 1',
+            not err4 and all({cc: by4.get(pick[k], {}).get(cc) for cc in tcols} == want4[k] for k in want4)
+            and _t4.get('ion_net_status_hertz') == _t4.get('ion_net_status_physics') == 'OK'
+            and _n4.get('ion_net_status_hertz') == 'NOT_PERCOLATING' and _n4.get('f_ion_hertz') == '0.0' and _n4.get('tau2_ion_hertz') == ''
+            and _f4.get('wa_status') == 'failed' and all(_f4.get(cc) == '' for cc in tcols)
+            and r4.get('tau_checked') == 2 and r4.get('tau_blank_rows') == 1, err4[:200])
+        d5 = _run_bed(app, 'through')                                     # 배치 뒤 같은 케이스를 다시 돌렸다 (새 run id · 새 도장 · 새 dual)
+        try:
+            shutil.rmtree(res / pick['through'])
+            shutil.copytree(d5[0], res / pick['through'])
+            try:
+                LDD.load_tau_results(res, lw4)
+                err5 = '거부하지 않았다'
+            except Exception as e:                                        # noqa: BLE001
+                err5 = f'{type(e).__name__}: {e}'
+        finally:
+            shutil.rmtree(d5[0], ignore_errors=True)
+        chk('④b 배치 뒤 다시 돌린 폴더 (실 생산자 새 run id) 로는 τ 를 싣지 않는다 — FillRefusal τ P1 (낡은 세대)',
+            err5.startswith('FillRefusal') and 'τ P1' in err5, err5[:200])
     finally:
         shutil.rmtree(tdir, ignore_errors=True)
         for v in runs.values():
