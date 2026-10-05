@@ -1199,7 +1199,14 @@ WA_GROUP_FRAC_EXACT = (('fracture_index_force', 'n_total_AM_AM_force') + tuple(f
 #:   쌍별 개수 (area_<쌍>_n) 는 ① 접촉 묶음 (J20-g) 그대로.
 WA_AREA_PAIR = re.compile(r'area_(AM_P|AM_S|SE|AM전체)_(AM_P|AM_S|SE)_(mean|total)')
 WA_GROUP_AREA_EXACT = ('se_se_cn_eff_area', 'se_se_cn_eff_area_perc', 'am_am_mean_area', 'am_am_total_area')
-#: ⑤⑥⑦ 근처의 census ✅ 열 중 **인계하지 않는 것** (패턴, 사유) — 묶음 · 검토 여부와 무관하게 먼저 뺀다 (selftest ㉕b · ㉕c).
+#: ★ Codex 10-05 재검증 Q5 (1저자 비준) — Love–Weber (④b · LHS-29) 열은 194 건 인계에서 **명시 제외**.  지금은 어느 묶음 · 검토 목록 ·
+#:   census 에도 없지만, 그것이 바뀌어도 새어 들어오지 않게 제외 목록에 둔다 (selftest ㉘).  사유 첫 낱말 = frame_unverified.
+WA_LW_FRAME_UNVERIFIED = (
+    'frame_unverified — Love–Weber (④b) 입자 응력: 원자 · 접촉 · mesh 덤프가 같은 프레임인지 인증되지 않았다 '
+    '(parse_liggghts 가 원 덤프의 TIMESTEP 을 CSV 로 옮기지 않고 세 파일을 따로 고른다 · 전역 virial 1 % 는 부호 · 척도 검사일 뿐 '
+    '프레임 · 입자 · 상 배분 대응 증명이 아니다 — Codex 10-05 재검증 Q5 · RGL-06).  194 건에 실으려면 원 덤프의 TIMESTEP · 고른 파일 · '
+    "타입 매핑 · 벽 기하 대응을 먼저 봉인한다 · 그때까지 '검증된 상별 실측 / 학습 타깃' 으로 인계하지 않는다")
+#: ⑤⑥⑦ 근처의 census ✅ 열 중 **인계하지 않는 것** (패턴, 사유) — 묶음 · 검토 여부와 무관하게 먼저 뺀다 (selftest ㉕b · ㉕c · ㉘).
 WA_EXCLUDED = (
     (r'path_hop_area_.*', 'LHS-32 — 덩어리마다 고른 경로 30 개 (best · mean · worst 10) 의 평균 = 선별 표본 통계'),
     (r'frac_[a-z]+_pct|fracture_index|n_[a-z]+_AM_AM|n_total_AM_AM',
@@ -1208,6 +1215,8 @@ WA_EXCLUDED = (
      '상 쌍별 파괴 분해 — 접촉 0 쌍에서도 비율 0 % (분모 max(n, 1)) 라 N/A 와 0 을 못 가르고, mono 상 이름 규약 (J20-k (B)) 을 이 열에 '
      '옮기는 관문이 없다 · 전체 집계만 인계'),
     (r'area_.+_physics', 'physics 면적 — coverage 인계는 기하면적만 (J20-m) · 접촉별 추정 면적 합에 표면 한도가 없다 (LHS-25)'),
+    #  ④b Love–Weber 전부 — 값 (stress_cv_lw · stress_ratio_<상>_lw · _nowall) · 메타 · 검사 · 벽 표지 (stress_lw_*) · 옛 σ_VM 열은 안 잡는다
+    (r'stress_lw_.+|stress_cv_lw(_nowall)?|stress_ratio_.+_lw(_nowall)?', WA_LW_FRAME_UNVERIFIED),
 )
 WA_GROUPS = ('contact', 'percolation', 'f1', 'fracture', 'area')
 #: 7c — 웹앱 배치 단계 (`lhs_webapp_batch --stop-after`) → 그 배치가 **다 낸** 묶음 (단계 역량).  coverage 단계는 접촉 단계를 포함한다 (접촉 분석 →
@@ -1256,6 +1265,21 @@ def wa_excluded(col):
         if re.fullmatch(pat, col) is not None:
             return why
     return None
+
+
+def handover_exclusion_notes():
+    """인계표에서 **명시적으로 뺀** 열과 사유 [(패턴 또는 열, 사유)] — 웹앱 열 제외 (WA_EXCLUDED · LW frame_unverified 포함) + 보류 열
+    (HANDOVER_HELD_BACK).  열 사전 (_columns.tsv) 은 표의 열만 한 줄씩 적으므로 (selftest ⑲m) 빠진 열의 사유는 이 노트로 넘긴다."""
+    return [(p, w) for p, w in WA_EXCLUDED] + [(c, w) for c, w in HANDOVER_HELD_BACK.items()]
+
+
+def write_exclusion_notes(path):
+    """제외 노트 TSV (pattern · reason) — 인계표 CLI 가 열 사전 옆에 `<인계표>_excluded.tsv` 로 쓴다 (받는 쪽이 왜 없는지 읽는다)."""
+    with pathlib.Path(path).open('w', encoding='utf-8', newline='') as fh:
+        w = csv.writer(fh, delimiter='\t', lineterminator='\n')
+        w.writerow(['pattern', 'reason'])
+        for p, why in handover_exclusion_notes():
+            w.writerow([p, why])
 
 
 WA_GROUP_FN = {'contact': wa_group_contact, 'percolation': wa_group_perc,
@@ -4244,6 +4268,61 @@ def _selftest():
         and 'calc_fracture_stages 가 키를 안 쓴다' in _g11('n_total_AM_AM_force', 'meaning')
         and all('RGL-05' in _g11(c_, 'meaning') and '원천 근거' in _g11(c_, 'meaning')
                 for c_ in ('se_se_cn_aug', 'fracture_index_force', 'area_SE_SE_mean')))
+
+    #  ㉘ Codex 10-05 재검증 Q5 (1저자 비준) — Love–Weber (④b) 열은 194 건 인계에서 **명시 제외** (frame_unverified — 원자 · 접촉 · mesh
+    #   덤프의 같은 프레임 미인증: parse_liggghts 가 TIMESTEP 을 CSV 로 옮기지 않고 세 파일을 따로 고른다).  지금은 어느 묶음에도 없지만
+    #   census · 묶음 · 검토 목록이 바뀌어도 새어 들어오지 않게 제외 목록에 둔다 (WA_EXCLUDED — 묶음 · 검토와 무관하게 먼저).
+    _LW28 = ('stress_cv_lw', 'stress_cv_lw_nowall', 'stress_ratio_AM_P_lw', 'stress_ratio_AM_S_lw', 'stress_ratio_SE_lw',
+             'stress_ratio_AM_P_lw_nowall', 'stress_ratio_AM_S_lw_nowall', 'stress_ratio_SE_lw_nowall', 'stress_lw_status',
+             'stress_lw_definition', 'stress_lw_contract', 'stress_lw_quantity', 'stress_lw_nowall_status', 'stress_lw_wall_frac_AM_P',
+             'stress_lw_floor_frac_SE', 'stress_lw_n_wall_floor', 'stress_lw_n_wall_plate', 'stress_lw_plate_flag',
+             'stress_lw_check_virial_total_rel', 'stress_lw_asym_frob_median', 'stress_lw_input_digest_atoms', 'stress_lw_timestep')
+    _miss28 = [c_ for c_ in _LW28 if not str(wa_excluded(c_) or '').startswith('frame_unverified')]
+    chk('㉘a ★ LW 열 전부 (stress_cv_lw · stress_ratio_<상>_lw · _nowall · stress_lw_* 메타 · 벽 표지) = 명시 제외 · 사유 frame_unverified '
+        '(TIMESTEP · 파일 따로 선택 · 프레임 대응 미인증)' + (f' — 제외 안 된 열 {_miss28}' if _miss28 else ''),
+        not _miss28 and 'TIMESTEP' in (wa_excluded('stress_cv_lw') or '') and 'parse_liggghts' in (wa_excluded('stress_cv_lw') or ''))
+    chk('㉘b LW 제외 패턴은 옛 σ_VM 열 · 다른 열을 잡지 않는다 (stress_cv · stress_ratio_<상> · stress_z_layer_cv · stress_cv_status · se_se_cn)',
+        not any(str(wa_excluded(c_) or '').startswith('frame_unverified') for c_ in
+                ('stress_cv', 'stress_ratio_AM_P', 'stress_ratio_AM_S', 'stress_ratio_SE', 'stress_z_layer_cv', 'stress_cv_status',
+                 'stress_cv_contract', 'se_se_cn', 'coverage_AM_P_mean')))
+    _w28 = _wa()
+    for _c in _LW28:                                  # 최악 — census 가 LW 열을 ✅ 로 찍고 값도 있다
+        _w28['verdict'][_c] = '✅ 쓴다'
+        _w28['why'][_c] = f'why:{_c}'
+        for _q in ('q1', 'q2'):
+            _w28['rows'][_q][_c] = '1.5'
+    _dq28 = [{'case_id': 'q1'}, {'case_id': 'q2'}]                       # ⑲ 의 설계 · 수확 (뒤에서 _dq 가 mono 설계로 바뀌었다)
+    _hq28 = {'q1': _hq('q1', eps_s=-2.0, th=30.0), 'q2': _hq('q2', eps_s=20.0, th=40.0)}
+    try:
+        _o28, _c28, _r28 = build_handover(_dq28, _hq28, webapp=_w28, wa_reviewed_only=False)   # 묶음 제한 없음 · 검토 목록 밖 (옛 기제)
+        _o28b, _c28b, _r28b = build_handover(_dq28, _hq28, webapp=_wa(), wa_reviewed_only=False)
+        _e28 = ''
+    except Exception as e:                                                # noqa: BLE001
+        _o28 = _c28 = _o28b = _c28b = []
+        _r28 = _r28b = {}
+        _e28 = f'{type(e).__name__}: {e}'
+    chk('㉘c ★ 최악 경로 (census ✅ · 묶음 제한 없음 · 검토 목록 밖) 에서도 LW 열은 안 실린다 · 제외 수에 센다 · 나머지 열 · 값은 LW 없는 배치와 '
+        '같다' + (f' — {_e28}' if _e28 else '') + (f' — 실린 LW 열 {[c_ for c_ in _LW28 if c_ in _c28]}' if any(c_ in _c28 for c_ in _LW28) else ''),
+        not _e28 and bool(_c28) and not any(c_ in _c28 for c_ in _LW28) and _c28 == _c28b and _o28 == _o28b
+        and _r28.get('wa_excluded_dropped', 0) - _r28b.get('wa_excluded_dropped', 0) == len(_LW28))
+    _wn = globals().get('write_exclusion_notes')
+    _tdn = pathlib.Path(tempfile.mkdtemp(prefix='lds_excl_'))
+    try:
+        _pn = _tdn / 'h_excluded.tsv'
+        if callable(_wn):
+            _wn(_pn)
+        _rn = []
+        if _pn.exists():
+            with _pn.open(encoding='utf-8') as _fhn:
+                _rn = list(csv.DictReader(_fhn, delimiter='\t'))
+    finally:
+        shutil.rmtree(_tdn, ignore_errors=True)
+    _lwn = [r_ for r_ in _rn if str(r_.get('reason', '')).startswith('frame_unverified')]
+    chk('㉘d ★ 생성기가 쓰는 제외 노트 (<인계표>_excluded.tsv · 열 사전 옆) — LW 행 (패턴이 stress_cv_lw 를 잡는다 · 사유 frame_unverified) · '
+        '보류 열 (tortuosity_dijkstra_SE · LHS-08) · 다른 명시 제외 (LHS-32) 도 같은 표',
+        len(_lwn) == 1 and re.fullmatch(_lwn[0].get('pattern', '^$'), 'stress_cv_lw') is not None
+        and any(r_.get('pattern') == 'tortuosity_dijkstra_SE' and 'LHS-08' in r_.get('reason', '') for r_ in _rn)
+        and any('LHS-32' in r_.get('reason', '') for r_ in _rn))
     print(f'\nlhs_design_dataset selftest: {ok}/{ok + len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0
@@ -4357,7 +4436,10 @@ if __name__ == '__main__':
             _w.writeheader()
             for _d in column_dictionary(_cols, webapp=_wv):
                 _w.writerow(_d)
-        print(f'→ {_op}   {_rep["n"]}행 × {len(_cols)}열   (열 사전 {_dp2.name})')
+        #  제외 노트 — 명시 제외 열 (LW frame_unverified · LHS-32 · δ 판 · 상 쌍별 · physics 면적) · 보류 열의 사유 (열 사전은 표의 열만)
+        _dp3 = _op.with_name(_op.stem + '_excluded.tsv')
+        write_exclusion_notes(_dp3)
+        print(f'→ {_op}   {_rep["n"]}행 × {len(_cols)}열   (열 사전 {_dp2.name} · 제외 노트 {_dp3.name})')
         if 'tau_wall_status' in _rep:
             print(f'   J20 벽 τ: {dict(_rep["tau_wall_status"])}')
         if _wv is not None:
@@ -4385,6 +4467,8 @@ if __name__ == '__main__':
         print(f'   빈칸 사유: {dict(_rep["blank_by_status"])}')
         for _k, _v in _rep['held_back'].items():
             print(f'   ⛔ 보류 열 `{_k}` — {_v}')
+        print(f'   ⛔ 명시 제외 (웹앱 열 · 묶음 · 검토와 무관하게 먼저) — LW (④b) `stress_*_lw` · `stress_lw_*` = '
+              f'{WA_LW_FRAME_UNVERIFIED.split(" — ")[0]} (사유 전문 = {_dp3.name})')
         if _uv is not None:
             print(f'   J19 union 병기: {_un} · 설계 밖 union 행 {_rep.get("union_extra")} (인계표에 안 넣음) · '
                   f'SE-rich (≥ {SE_RICH_MIN}) {sum(r["se_rich"] == "True" for r in _out)} 행 · 구 부피 합 열은 그대로')
