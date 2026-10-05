@@ -1,0 +1,175 @@
+[
+  {
+    "name": "baseline",
+    "accepted": true,
+    "why": "",
+    "stop_contract_ok": true,
+    "stop_contract_why": "ok",
+    "cells": {
+      "f_ion_hertz": "0.00400388",
+      "tau2_ion_hertz": "10.984918916215547",
+      "ion_net_status_hertz": "OK",
+      "ion_sigma0_mScm": "3.0"
+    }
+  },
+  {
+    "name": "dual_band_only",
+    "accepted": false,
+    "why": "lhs00_000: τ P4 — 망 정지 계약 재검사 실패 (인계 때 · 배치가 done 을 준 같은 계약 pipeline_service.network_stop_verdict ①–⑧): ⑥ network_conductivity_hertzian.json ≠ dual[hertzian] (정본 = dual · 모드 파일 · legacy 는 그 사본이어야 한다); ⑥ network_conductivity_physics.json ≠ dual[physics] (정본 = dual · 모드 파일 · legacy 는 그 사본이어야 한다); ⑥ network_conductivity.json ≠ dual[hertzian] (정본 = dual · 모드 파일 · legacy 는 그 사본이어야 한다) — 그 계약을 통과한 세대의 폴더가 아니다 (배치 뒤 사본 · 투영 · σ₀ · 띠 규칙이 바뀌었거나 기술적 결손) · 이 케이스 τ 를 싣지 않는다 (NOT_COMPUTED 로도 싣지 않는다 — \"같은 세대 검증 통과\" 로 보이지 않게)",
+    "stop_contract_ok": false,
+    "stop_contract_why": "⑥ network_conductivity_hertzian.json ≠ dual[hertzian] (정본 = dual · 모드 파일 · legacy 는 그 사본이어야 한다); ⑥ network_conductivity_physics.json ≠ dual[physics] (정본 = dual · 모드 파일 · legacy 는 그 사본이어야 한다); ⑥ network_conductivity.json ≠ dual[hertzian] (정본 = dual · 모드 파일 · legacy 는 그 사본이어야 한다)",
+    "cells": {
+      "f_ion_hertz": null,
+      "tau2_ion_hertz": null,
+      "ion_net_status_hertz": null,
+      "ion_sigma0_mScm": null
+    }
+  },
+  {
+    "name": "dual_sigma0_only",
+    "accepted": false,
+    "why": "lhs00_000: τ P4 — 망 정지 계약 재검사 실패 (인계 때 · 배치가 done 을 준 같은 계약 pipeline_service.network_stop_verdict ①–⑧): ⑥ network_conductivity_hertzian.json ≠ dual[hertzian] (정본 = dual · 모드 파일 · legacy 는 그 사본이어야 한다); ⑥ network_conductivity_physics.json ≠ dual[physics] (정본 = dual · 모드 파일 · legacy 는 그 사본이어야 한다); ⑥ network_conductivity.json ≠ dual[hertzian] (정본 = dual · 모드 파일 · legacy 는 그 사본이어야 한다); ⑥ full_metrics 의 망 소유 키가 이번 세대 투영과 다르다 (옛 세대 값 · 복사 어긋남): ['sigma_full_mScm_physics']; ③ hertzian: computed 인데 full_metrics sigma_full_mScm=0.012012 ≠ dual σ 0.024023 (같은 세대의 값이어야); ③ physics: computed 인데 full_metrics sigma_full_mScm_physics=0.011815 ≠ dual σ 0.023629 (같은 세대의 값이어야); ⑧ σ₀ · 온도 짝: legacy (network_conductivity.json) 기록 ≠ dual Hertz; ⑧ 짝 σ₀: 등급 · 웹앱 τ 가 쓰는 σ₀ 3.0 mS/cm (full_metrics) ≠ 인계 σ₀ 6.0 (망 기록) — 그 계약을 통과한 세대의 폴더가 아니다 (배치 뒤 사본 · 투영 · σ₀ · 띠 규칙이 바뀌었거나 기술적 결손) · 이 케이스 τ 를 싣지 않는다 (NOT_COMPUTED 로도 싣지 않는다 — \"같은 세대 검증 통과\" 로 보이지 않게)",
+    "stop_contract_ok": false,
+    "stop_contract_why": "⑥ network_conductivity_hertzian.json ≠ dual[hertzian] (정본 = dual · 모드 파일 · legacy 는 그 사본이어야 한다); ⑥ network_conductivity_physics.json ≠ dual[physics] (정본 = dual · 모드 파일 · legacy 는 그 사본이어야 한다); ⑥ network_conductivity.json ≠ dual[hertzian] (정본 = dual · 모드 파일 · legacy 는 그 사본이어야 한다); ⑥ full_metrics 의 망 소유 키가 이번 세대 투영과 다르다 (옛 세대 값 · 복사 어긋남): ['sigma_full_mScm_physics']; ③ hertzian: computed 인데 full_metrics sigma_full_mScm=0.012012 ≠ dual σ 0.024023 (같은 세대의 값이어야); ③ physics: computed 인데 full_metrics sigma_full_mScm_physics=0.011815 ≠ dual σ 0.023629 (같은 세대의 값이어야); ⑧ σ₀ · 온도 짝: legacy (network_conductivity.json) 기록 ≠ dual Hertz; ⑧ 짝 σ₀: 등급 · 웹앱 τ 가 쓰는 σ₀ 3.0 mS/cm (full_metrics) ≠ 인계 σ₀ 6.0 (망 기록)",
+    "cells": {
+      "f_ion_hertz": null,
+      "tau2_ion_hertz": null,
+      "ion_net_status_hertz": null,
+      "ion_sigma0_mScm": null
+    }
+  },
+  {
+    "name": "atom_input_mutation",
+    "accepted": false,
+    "why": "lhs00_000: τ P2 — 입력 digest atoms.csv: 도장 '7636d9a49e6269cb' ≠ 지금 파일 'f555bda252086dbf' — 망이 지금 폴더의 입력에서 나오지 않았다",
+    "stop_contract_ok": true,
+    "stop_contract_why": "ok",
+    "cells": {
+      "f_ion_hertz": null,
+      "tau2_ion_hertz": null,
+      "ion_net_status_hertz": null,
+      "ion_sigma0_mScm": null
+    }
+  },
+  {
+    "name": "dual_sigma_ratio_only",
+    "accepted": false,
+    "why": "lhs00_000: τ P3 — dual[hertzian].sigma_full=0.01601552 ≠ full_metrics sigma_full=0.00400388 — dual 이 도장 세대의 망 결과가 아니다",
+    "stop_contract_ok": false,
+    "stop_contract_why": "⑥ network_conductivity_hertzian.json ≠ dual[hertzian] (정본 = dual · 모드 파일 · legacy 는 그 사본이어야 한다); ⑥ network_conductivity.json ≠ dual[hertzian] (정본 = dual · 모드 파일 · legacy 는 그 사본이어야 한다); ③ hertzian: 기술적 입력 무효 — invalid_input: 두 σ 표현 불일치 (RGLR-02): σ_dim 0.012012 mS/cm ≠ 1000·σ₀·σ_ratio = 0.048046559999999995 (|차| 0.0360346 > 허용 5.15e-07 — 저장 정밀도 8 · 6 자리 반올림 밖); ⑦ τ 인계 hertz: NOT_COMPUTED (invalid_input: 두 σ 표현 불일치 (RGLR-02): σ_dim 0.012012 mS/cm ≠ 1000·σ₀·σ_ratio = 0.048046559999999995 (|차| 0.0360346 > 허용 5.15e-07 — 저장 정밀도 8 · 6 자리 반올림 밖)) — 기술적 결손 (등록된 과학적 HOLD 아님)",
+    "cells": {
+      "f_ion_hertz": null,
+      "tau2_ion_hertz": null,
+      "ion_net_status_hertz": null,
+      "ion_sigma0_mScm": null
+    }
+  },
+  {
+    "name": "run_id_mismatch",
+    "accepted": false,
+    "why": "lhs00_000: τ P1 — 낡은 · 다른 망 세대: full_metrics network_run_id 'other' ≠ 배치 기록 '20261005T174319-3603339d' — 배치 뒤 다시 돌린 폴더이거나 다른 배치의 폴더다",
+    "stop_contract_ok": false,
+    "stop_contract_why": "② 도장 network_run_id='other' · active='20261005T174319-3603339d' ≠ 이번 실행 '20261005T174319-3603339d'",
+    "cells": {
+      "f_ion_hertz": null,
+      "tau2_ion_hertz": null,
+      "ion_net_status_hertz": null,
+      "ion_sigma0_mScm": null
+    }
+  }
+]
+{
+  "tau": [
+    {
+      "name": "baseline",
+      "accepted": true,
+      "why": "",
+      "stop_contract_ok": true,
+      "stop_contract_why": "ok",
+      "cells": {
+        "f_ion_hertz": "0.00400388",
+        "tau2_ion_hertz": "10.984918916215547",
+        "ion_net_status_hertz": "OK",
+        "ion_sigma0_mScm": "3.0"
+      }
+    },
+    {
+      "name": "dual_band_only",
+      "accepted": false,
+      "why": "lhs00_000: τ P4 — 망 정지 계약 재검사 실패 (인계 때 · 배치가 done 을 준 같은 계약 pipeline_service.network_stop_verdict ①–⑧): ⑥ network_conductivity_hertzian.json ≠ dual[hertzian] (정본 = dual · 모드 파일 · legacy 는 그 사본이어야 한다); ⑥ network_conductivity_physics.json ≠ dual[physics] (정본 = dual · 모드 파일 · legacy 는 그 사본이어야 한다); ⑥ network_conductivity.json ≠ dual[hertzian] (정본 = dual · 모드 파일 · legacy 는 그 사본이어야 한다) — 그 계약을 통과한 세대의 폴더가 아니다 (배치 뒤 사본 · 투영 · σ₀ · 띠 규칙이 바뀌었거나 기술적 결손) · 이 케이스 τ 를 싣지 않는다 (NOT_COMPUTED 로도 싣지 않는다 — \"같은 세대 검증 통과\" 로 보이지 않게)",
+      "stop_contract_ok": false,
+      "stop_contract_why": "⑥ network_conductivity_hertzian.json ≠ dual[hertzian] (정본 = dual · 모드 파일 · legacy 는 그 사본이어야 한다); ⑥ network_conductivity_physics.json ≠ dual[physics] (정본 = dual · 모드 파일 · legacy 는 그 사본이어야 한다); ⑥ network_conductivity.json ≠ dual[hertzian] (정본 = dual · 모드 파일 · legacy 는 그 사본이어야 한다)",
+      "cells": {
+        "f_ion_hertz": null,
+        "tau2_ion_hertz": null,
+        "ion_net_status_hertz": null,
+        "ion_sigma0_mScm": null
+      }
+    },
+    {
+      "name": "dual_sigma0_only",
+      "accepted": false,
+      "why": "lhs00_000: τ P4 — 망 정지 계약 재검사 실패 (인계 때 · 배치가 done 을 준 같은 계약 pipeline_service.network_stop_verdict ①–⑧): ⑥ network_conductivity_hertzian.json ≠ dual[hertzian] (정본 = dual · 모드 파일 · legacy 는 그 사본이어야 한다); ⑥ network_conductivity_physics.json ≠ dual[physics] (정본 = dual · 모드 파일 · legacy 는 그 사본이어야 한다); ⑥ network_conductivity.json ≠ dual[hertzian] (정본 = dual · 모드 파일 · legacy 는 그 사본이어야 한다); ⑥ full_metrics 의 망 소유 키가 이번 세대 투영과 다르다 (옛 세대 값 · 복사 어긋남): ['sigma_full_mScm_physics']; ③ hertzian: computed 인데 full_metrics sigma_full_mScm=0.012012 ≠ dual σ 0.024023 (같은 세대의 값이어야); ③ physics: computed 인데 full_metrics sigma_full_mScm_physics=0.011815 ≠ dual σ 0.023629 (같은 세대의 값이어야); ⑧ σ₀ · 온도 짝: legacy (network_conductivity.json) 기록 ≠ dual Hertz; ⑧ 짝 σ₀: 등급 · 웹앱 τ 가 쓰는 σ₀ 3.0 mS/cm (full_metrics) ≠ 인계 σ₀ 6.0 (망 기록) — 그 계약을 통과한 세대의 폴더가 아니다 (배치 뒤 사본 · 투영 · σ₀ · 띠 규칙이 바뀌었거나 기술적 결손) · 이 케이스 τ 를 싣지 않는다 (NOT_COMPUTED 로도 싣지 않는다 — \"같은 세대 검증 통과\" 로 보이지 않게)",
+      "stop_contract_ok": false,
+      "stop_contract_why": "⑥ network_conductivity_hertzian.json ≠ dual[hertzian] (정본 = dual · 모드 파일 · legacy 는 그 사본이어야 한다); ⑥ network_conductivity_physics.json ≠ dual[physics] (정본 = dual · 모드 파일 · legacy 는 그 사본이어야 한다); ⑥ network_conductivity.json ≠ dual[hertzian] (정본 = dual · 모드 파일 · legacy 는 그 사본이어야 한다); ⑥ full_metrics 의 망 소유 키가 이번 세대 투영과 다르다 (옛 세대 값 · 복사 어긋남): ['sigma_full_mScm_physics']; ③ hertzian: computed 인데 full_metrics sigma_full_mScm=0.012012 ≠ dual σ 0.024023 (같은 세대의 값이어야); ③ physics: computed 인데 full_metrics sigma_full_mScm_physics=0.011815 ≠ dual σ 0.023629 (같은 세대의 값이어야); ⑧ σ₀ · 온도 짝: legacy (network_conductivity.json) 기록 ≠ dual Hertz; ⑧ 짝 σ₀: 등급 · 웹앱 τ 가 쓰는 σ₀ 3.0 mS/cm (full_metrics) ≠ 인계 σ₀ 6.0 (망 기록)",
+      "cells": {
+        "f_ion_hertz": null,
+        "tau2_ion_hertz": null,
+        "ion_net_status_hertz": null,
+        "ion_sigma0_mScm": null
+      }
+    },
+    {
+      "name": "atom_input_mutation",
+      "accepted": false,
+      "why": "lhs00_000: τ P2 — 입력 digest atoms.csv: 도장 '7636d9a49e6269cb' ≠ 지금 파일 'f555bda252086dbf' — 망이 지금 폴더의 입력에서 나오지 않았다",
+      "stop_contract_ok": true,
+      "stop_contract_why": "ok",
+      "cells": {
+        "f_ion_hertz": null,
+        "tau2_ion_hertz": null,
+        "ion_net_status_hertz": null,
+        "ion_sigma0_mScm": null
+      }
+    },
+    {
+      "name": "dual_sigma_ratio_only",
+      "accepted": false,
+      "why": "lhs00_000: τ P3 — dual[hertzian].sigma_full=0.01601552 ≠ full_metrics sigma_full=0.00400388 — dual 이 도장 세대의 망 결과가 아니다",
+      "stop_contract_ok": false,
+      "stop_contract_why": "⑥ network_conductivity_hertzian.json ≠ dual[hertzian] (정본 = dual · 모드 파일 · legacy 는 그 사본이어야 한다); ⑥ network_conductivity.json ≠ dual[hertzian] (정본 = dual · 모드 파일 · legacy 는 그 사본이어야 한다); ③ hertzian: 기술적 입력 무효 — invalid_input: 두 σ 표현 불일치 (RGLR-02): σ_dim 0.012012 mS/cm ≠ 1000·σ₀·σ_ratio = 0.048046559999999995 (|차| 0.0360346 > 허용 5.15e-07 — 저장 정밀도 8 · 6 자리 반올림 밖); ⑦ τ 인계 hertz: NOT_COMPUTED (invalid_input: 두 σ 표현 불일치 (RGLR-02): σ_dim 0.012012 mS/cm ≠ 1000·σ₀·σ_ratio = 0.048046559999999995 (|차| 0.0360346 > 허용 5.15e-07 — 저장 정밀도 8 · 6 자리 반올림 밖)) — 기술적 결손 (등록된 과학적 HOLD 아님)",
+      "cells": {
+        "f_ion_hertz": null,
+        "tau2_ion_hertz": null,
+        "ion_net_status_hertz": null,
+        "ion_sigma0_mScm": null
+      }
+    },
+    {
+      "name": "run_id_mismatch",
+      "accepted": false,
+      "why": "lhs00_000: τ P1 — 낡은 · 다른 망 세대: full_metrics network_run_id 'other' ≠ 배치 기록 '20261005T174319-3603339d' — 배치 뒤 다시 돌린 폴더이거나 다른 배치의 폴더다",
+      "stop_contract_ok": false,
+      "stop_contract_why": "② 도장 network_run_id='other' · active='20261005T174319-3603339d' ≠ 이번 실행 '20261005T174319-3603339d'",
+      "cells": {
+        "f_ion_hertz": null,
+        "tau2_ion_hertz": null,
+        "ion_net_status_hertz": null,
+        "ion_sigma0_mScm": null
+      }
+    }
+  ],
+  "vm": {
+    "samples": 5000,
+    "stable": 3542,
+    "legacy": 1458,
+    "max_retained_vm_relative_error": 2.8497664377023494e-08,
+    "bound_breaches": 0,
+    "comparison_multiplication_vs_pow_bit_differences": 1
+  },
+  "fixture": "evidence/handover_provenance_63mvvsvu"
+}
+{"registration_match": true, "merge_rc": 0, "code_changed": ["scripts/network_conductivity.py"], "mixed": []}
+⛔ retry 거부 — 발사 봉인과 대조 (RGLR3-01) · 아무것도 띄우지 않았다 · 아무 파일도 쓰지 않았다
+   세대: 코드가 발사 봉인과 다르다 (HEAD 가 같아도) — 바뀐 · 빠진 파일 ['scripts/network_conductivity.py']  (진짜 의도면 --allow-mixed-generation · 기록된다 · merge 는 봉인 밖으로 표시)
+   dirty: 추적 파일이 바뀐 트리 (워커 체크아웃 /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/rglr3/repo_driver_check_20261006/source) [' M scripts/network_conductivity.py']  (진짜 의도면 --allow-dirty · 기록된다 · 코드 해시는 봉인과 같아야 한다)

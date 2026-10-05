@@ -1,0 +1,128 @@
+[
+  {
+    "name": "ind_network",
+    "args": [
+      "../probes/network_adversarial.py"
+    ],
+    "rc": 0,
+    "seconds": 3.088,
+    "tail": [
+      "{\"name\": \"band_ratio_negative\", \"status\": \"failed\", \"error\": null, \"previous_generation_identical\": null, \"hertz\": {\"sigma_full\": null, \"sigma_full_mScm\": null, \"sigma_full_status\": null, \"phi_se\": null, \"boundary_rule\": null, \"percolating_fraction\": null}, \"grade_tau2\": null}",
+      "{\"name\": \"band_fraction_above1\", \"status\": \"failed\", \"error\": null, \"previous_generation_identical\": null, \"hertz\": {\"sigma_full\": null, \"sigma_full_mScm\": null, \"sigma_full_status\": null, \"phi_se\": null, \"boundary_rule\": null, \"percolating_fraction\": null}, \"grade_tau2\": null}",
+      "{\"name\": \"rejected_retry_preserves_generation\", \"status\": \"failed\", \"error\": null, \"previous_generation_identical\": true, \"hertz\": {\"sigma_full\": 0.00400388, \"sigma_full_mScm\": 0.012012, \"sigma_full_status\": \"computed\", \"phi_se\": 0.044, \"boundary_rule\": \"L0\", \"percolating_fraction\": 1.0}, \"grade_tau2\": 10.984589697866408}",
+      "{\"name\": \"write_failure_after_stamp\", \"status\": \"failed\", \"error\": null, \"previous_generation_identical\": true, \"hertz\": {\"sigma_full\": 0.00400388, \"sigma_full_mScm\": 0.012012, \"sigma_full_status\": \"computed\", \"phi_se\": 0.044, \"boundary_rule\": \"L0\", \"percolating_fraction\": 1.0}, \"grade_tau2\": 10.984589697866408}",
+      "{\"name\": \"write_failure_first_run\", \"status\": \"failed\", \"error\": null, \"previous_generation_identical\": null, \"hertz\": {\"sigma_full\": null, \"sigma_full_mScm\": null, \"sigma_full_status\": null, \"phi_se\": null, \"boundary_rule\": null, \"percolating_fraction\": null}, \"grade_tau2\": null}",
+      "{\"name\": \"general_ratio_times4\", \"status\": \"failed\", \"error\": null, \"previous_generation_identical\": null, \"hertz\": {\"sigma_full\": null, \"sigma_full_mScm\": null, \"sigma_full_status\": null, \"phi_se\": null, \"boundary_rule\": null, \"percolating_fraction\": null}, \"grade_tau2\": null}",
+      "{\"name\": \"general_band_ratio_missing\", \"status\": \"failed\", \"error\": null, \"previous_generation_identical\": null, \"hertz\": {\"sigma_full\": null, \"sigma_full_mScm\": null, \"sigma_full_status\": null, \"phi_se\": null, \"boundary_rule\": null, \"percolating_fraction\": null}, \"grade_tau2\": null}",
+      "{\"name\": \"rollback_destination_failure\", \"status\": \"failed\", \"error\": null, \"previous_generation_identical\": false, \"hertz\": {\"sigma_full\": 0.00400388, \"sigma_full_mScm\": 0.012012, \"sigma_full_status\": \"computed\", \"phi_se\": 0.044, \"boundary_rule\": \"L0\", \"percolating_fraction\": 1.0}, \"grade_tau2\": 15.071032718534699}"
+    ]
+  },
+  {
+    "name": "ind_lw",
+    "args": [
+      "../probes/lw_replay.py"
+    ],
+    "rc": 0,
+    "seconds": 0.564,
+    "tail": [
+      "    \"status\": \"FAILED (invalid_input: c_strs 결측 2 (id 1, 2) / 2 입자 — 세 성분 (sigma_xx · yy · zz) 은 전 입자에 다 있거나 전부 없어야 한다 (일부만 있으면 전역 virial 검사가 조용히 꺼진다 · RGLR-03))\",",
+      "    \"vm_cv\": null,",
+      "    \"type_stress\": {},",
+      "    \"checks\": {},",
+      "    \"nowall_status\": null,",
+      "    \"contract\": \"love_weber_checks_v2\"",
+      "  }",
+      "}"
+    ]
+  },
+  {
+    "name": "ind_vm",
+    "args": [
+      "../probes/vm_boundary.py"
+    ],
+    "rc": 0,
+    "seconds": 0.244,
+    "tail": [
+      "      }",
+      "    },",
+      "    \"z_layer_cv\": [],",
+      "    \"status\": \"computed\",",
+      "    \"contract\": \"v3-invalid-null-stable-vm\",",
+      "    \"vm_stable_recomputed_n\": 0",
+      "  }",
+      "}"
+    ]
+  },
+  {
+    "name": "ind_precision",
+    "args": [
+      "../probes/precision_boundary.py"
+    ],
+    "rc": 0,
+    "seconds": 0.15,
+    "tail": [
+      "  \"inside_problem\": null,",
+      "  \"outside_problem\": [",
+      "    \"invalid_input\",",
+      "    \"\\ub450 \\u03c3 \\ud45c\\ud604 \\ubd88\\uc77c\\uce58 (RGLR-02): \\u03c3_dim 0.012012155515000084 mS/cm \\u2260 1000\\u00b7\\u03c3\\u2080\\u00b7\\u03c3_ratio = 0.012011639999999999 (|\\ucc28| 5.15515e-07 > \\ud5c8\\uc6a9 5.15e-07 \\u2014 \\uc800\\uc7a5 \\uc815\\ubc00\\ub3c4 8 \\u00b7 6 \\uc790\\ub9ac \\ubc18\\uc62c\\ub9bc \\ubc16)\"",
+      "  ],",
+      "  \"numpy\": \"2.4.6\",",
+      "  \"python\": \"3.11.15 (main, Mar  3 2026, 09:26:23) [GCC 13.3.0]\"",
+      "}"
+    ]
+  },
+  {
+    "name": "ind_raw18",
+    "args": [
+      "../probes/raw18.py"
+    ],
+    "rc": 0,
+    "seconds": 0.71,
+    "tail": [
+      "    \"ideal_electrode_share\": 0.08181818181818182,",
+      "    \"relative_to_ideal_percent\": 12.051760767398445,",
+      "    \"physical_edge_power\": 0.9094044479454131,",
+      "    \"virtual_electrode_power\": 0.06007501223551508,",
+      "    \"source_power_at_unit_current\": 0.9694794601809258,",
+      "    \"electrode_fraction_of_total\": 0.061966255813510104",
+      "  }",
+      "}"
+    ]
+  },
+  {
+    "name": "ind_handover",
+    "args": [
+      "../probes/handover_replay.py"
+    ],
+    "rc": 0,
+    "seconds": 0.869,
+    "tail": [
+      "    \"columns_identical\": true,",
+      "    \"frac_pct_max_abs_error_pp\": 0.004978165938864687,",
+      "    \"frac_index_max_abs_error\": 4.8484848484848034e-05,",
+      "    \"am_area_max_rel_error\": 2.44215442903798e-16,",
+      "    \"pair_area_max_rel_error\": 2.479274501375083e-16,",
+      "    \"pair_checks\": 394",
+      "  }",
+      "]"
+    ]
+  },
+  {
+    "name": "ind_handover_diff",
+    "args": [
+      "../probes/handover_before_after.py"
+    ],
+    "rc": 0,
+    "seconds": 1.452,
+    "tail": [
+      "    \"stress_cv\",",
+      "    \"stress_ratio_AM_P\",",
+      "    \"stress_z_layer_cv\",",
+      "    \"stress_cv_contract\",",
+      "    \"stress_cv_status\"",
+      "  ],",
+      "  \"reference_sha256\": \"cbfdfe63e43a3b64f3570b1a33115643b60caf2b365638cc8631ca1236cb38a8\"",
+      "}"
+    ]
+  }
+]

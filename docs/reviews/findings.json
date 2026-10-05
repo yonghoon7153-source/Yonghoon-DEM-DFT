@@ -8008,7 +8008,8 @@
       "claimed_fixed_sha": "0c48297f9",
       "evidence_tests": [
         "scripts/run_network_194_parallel.py --selftest (28/28 → 51/51 · 반례 22 먼저 = 옛 코드에서 22 실패: ⑳a 같은 HEAD 에서 봉인 파일을 고친 retry 가 돈다 · ㉑c 워커 dirty 기록 배치가 merge rc 0 · ㉓e Codex 시나리오 (retry rc 0 · 워커 호출) · 옛 형식 연결 반례 둘 (LAUNCH_ERROR 단독 시도 · run id 다른 시도) · ㉖ 봉인은 워커 체크아웃에서 잰다)",
-        "scripts/run_network_194_parallel.py audit (읽기 전용 · 케이스마다 SEALED · SEALED_DIRTY_ALLOWED · SEALED_LEGACY · UNSEALED · NO_RECORD · rc 0 = 전부 봉인) — Codex new_probes.py 실행기 부분 무변경 실행: 첫 merge rc 0 SEALED_LEGACY · retry rc 2 · 워커 미호출 · run_002 없음"
+        "scripts/run_network_194_parallel.py audit (읽기 전용 · 케이스마다 SEALED · SEALED_DIRTY_ALLOWED · SEALED_LEGACY · UNSEALED · NO_RECORD · rc 0 = 전부 봉인) — Codex new_probes.py 실행기 부분 무변경 실행: 첫 merge rc 0 SEALED_LEGACY · retry rc 2 · 워커 미호출 · run_002 없음",
+        "docs/reviews/codex_rglr3_fix_probe_rerun_20261006/ (10-06 · Codex 4차 판정 묶음 탐침을 고친 트리 061ec1b58 에서 재실행 · drive_fix_probe.py) — 같은 HEAD dirty retry: rc 0 · 워커 실행 · run_002 → rc 2 · 워커 안 띄움 · run_002 없음 · 실제 194 봉인 감사 SEALED_LEGACY 194 · merged 같음 194 (docs/data/lhs_network194_11fcf91e8/handover_v12_20261006/seal_audit.tsv)"
       ]
     },
     {
@@ -8024,7 +8025,8 @@
       "evidence_tests": [
         "scripts/lhs_design_dataset.py --selftest (312/312 → 326/326 · 새 반례 15 = 옛 로더에서 311/326 · c19 Codex dual 경계 · c20 Codex dual σ₀ · c21 모드 파일만 · c22 legacy 만 · c23 full_metrics σ₀ 만 · c24 세대 무효 폴더 · c25 검사 목록 없는 레코드 · g2 열 사전 · i2 출처 부록 · j 툴팁 · 양성 L0 · 비관통 · L1 · L2)",
         "webapp/test_network_handover_chain.py (12/12 → 19/19 · 옛 로더 17/19 · ④c = Codex 탐침 그대로 · 실 CLI 생산자 폴더)",
-        "scripts/test_tau_flux.py (55/55 그대로) · webapp/test_tau_handover_status.py (37/37) · webapp/test_tau_labels.py (43/43)"
+        "scripts/test_tau_flux.py (55/55 그대로) · webapp/test_tau_handover_status.py (37/37) · webapp/test_tau_labels.py (43/43)",
+        "docs/reviews/codex_rglr3_fix_probe_rerun_20261006/ — dual 만 띠 L0→L1 · dual 만 σ₀×2: 수용 → 인계 전체 거부 (P4 ⑥ 모드 파일 ↔ dual 사본 불일치) · 입력 · σ_ratio · run id 변조 거부 그대로 · 정상 수용 · 실제 194 인계 v1.2 (1저자 WSL 10-06) 다시 읽기 검산 PASS C1–C8 (docs/data/lhs_network194_11fcf91e8/handover_v12_20261006/reread_20261006.json)"
       ]
     },
     {
@@ -8038,7 +8040,8 @@
       "note": "자리: scripts/run_network_194_parallel.py HANDOVER_GROUPS · print_followups.  1저자에게는 tau 포함 명령을 따로 줬다 (10-05 밤).  해제: 출력 명령 수정 + 출처 부록 · 사전 포장 · 실행 증거.  · ✅ 10-05 밤 수정 0c48297f9 (1저자 비준 \"비준이얌\" C) — print_followups = ⓪ 봉인 감사 (audit → seal_audit.tsv) · ① τ 진단 표 (진단 전용) · ② 생성기 한 번 (tau + --tau-results) · ③ 묶음에 인계표 · _columns · _tau_provenance · _excluded · seal_audit.tsv · ③b (선택) τ 원천 canonical 파일 · 한계: 출력 명령으로 실제 τ 28 열을 만드는 왕복은 실행기 selftest 안에서 못 한다 (생성기 selftest ㉙i 가 CLI 왕복을 본다) — 실제 실행 증거 = WSL 인계 v1.2 재생성 기록",
       "claimed_fixed_sha": "0c48297f9",
       "evidence_tests": [
-        "scripts/run_network_194_parallel.py --selftest (출력 명령 문자열 = --webapp-groups contact,percolation,f1,fracture,area,tau --tau-results <ROOT>/merged/<c>/results · HANDOVER_GROUPS = 생성기 WA_STAGE_GROUPS[network] · 출력 플래그 = 생성기 파서에 있다 · --tau-results 폴더가 케이스마다 있다 · 수동 join 문구 없음)"
+        "scripts/run_network_194_parallel.py --selftest (출력 명령 문자열 = --webapp-groups contact,percolation,f1,fracture,area,tau --tau-results <ROOT>/merged/<c>/results · HANDOVER_GROUPS = 생성기 WA_STAGE_GROUPS[network] · 출력 플래그 = 생성기 파서에 있다 · --tau-results 폴더가 케이스마다 있다 · 수동 join 문구 없음)",
+        "docs/reviews/codex_rglr3_fix_probe_rerun_20261006/new_probes_after_fix.json launcher.followups (⓪ 봉인 감사 · ① τ 진단 · ② --webapp-groups …,tau --tau-results · ③ · ③b) · 1저자 WSL 실행 기록 docs/data/lhs_network194_11fcf91e8/handover_v12_20261006/wsl_run_20261006.md"
       ]
     },
     {

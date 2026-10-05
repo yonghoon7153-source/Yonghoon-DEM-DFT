@@ -1,0 +1,344 @@
+{
+ "repo": "/home/user/Yonghoon-DEM-DFT",
+ "batch": "/home/user/Yonghoon-DEM-DFT/docs/data/lhs_network194_11fcf91e8",
+ "lhs": {
+  "cohort": "lhs",
+  "fail": [],
+  "files": {
+   "table": "lhs_handover_v12_20261006.csv",
+   "columns": "lhs_handover_v12_20261006_columns.tsv",
+   "prov": "lhs_handover_v12_20261006_tau_provenance.tsv",
+   "excluded": "lhs_handover_v12_20261006_excluded.tsv",
+   "sha256": {
+    "lhs_handover_v12_20261006.csv": "d1a05c6498f6959057bc6a20394a83acf9a3ff72bfec7149306539513352971a",
+    "lhs_handover_v12_20261006_columns.tsv": "4ccced7f72a52f03ea32d73122e4fac25833472c08c0808f8a24f94721cb72bb",
+    "lhs_handover_v12_20261006_tau_provenance.tsv": "4b85b49bb44b3c234499aed212ab2840b8a62a153ace348e3378ffececa31c39",
+    "lhs_handover_v12_20261006_excluded.tsv": "2564db2f1cb667136d94dac5f74d5dd5ffa6dbb93e9145c7ee128de8b7a7e3a6"
+   }
+  },
+  "shape": [
+   130,
+   251
+  ],
+  "C1_rows": {
+   "n": 130,
+   "expect": 130,
+   "dups": 0,
+   "set_eq_metrics": true,
+   "missing": [],
+   "extra": []
+  },
+  "C2_lw": {
+   "lw_cols_in_table": [],
+   "excluded_rows": 6,
+   "frame_unverified_in_excluded": true
+  },
+  "C3_dictionary": {
+   "n": 251,
+   "only_in_table": [],
+   "only_in_dict": [],
+   "empty_meaning": []
+  },
+  "C4_regression": {
+   "common_cols": 188,
+   "cells": {
+    "same": 24440,
+    "close": 0,
+    "diff": 0
+   },
+   "diff_cols": {},
+   "new_cols": [
+    "am_am_mean_area",
+    "am_am_total_area",
+    "area_AM_P_AM_P_mean",
+    "area_AM_P_AM_P_total",
+    "area_AM_P_AM_S_mean",
+    "area_AM_P_AM_S_total",
+    "area_AM_P_SE_mean",
+    "area_AM_P_SE_total",
+    "area_AM_S_AM_S_mean",
+    "area_AM_S_AM_S_total",
+    "area_AM_S_SE_mean",
+    "area_AM_S_SE_total",
+    "area_AM전체_SE_mean",
+    "area_AM전체_SE_total",
+    "area_SE_SE_mean",
+    "area_SE_SE_total",
+    "frac_fragmentation_force_pct",
+    "frac_intact_force_pct",
+    "frac_microcrack_force_pct",
+    "frac_multicrack_force_pct",
+    "frac_pulverization_force_pct",
+    "fracture_index_force",
+    "n_fragmentation_force_AM_AM",
+    "n_intact_force_AM_AM",
+    "n_microcrack_force_AM_AM",
+    "n_multicrack_force_AM_AM",
+    "n_pulverization_force_AM_AM",
+    "n_total_AM_AM_force",
+    "se_se_cn_aug",
+    "se_se_cn_aug_h_spread_sim",
+    "se_se_cn_aug_n_extra",
+    "se_se_cn_aug_std",
+    "se_se_cn_eff_area",
+    "se_se_cn_eff_area_perc",
+    "f_ion_hertz",
+    "f_ion_hertz_gap",
+    "tau2_ion_hertz",
+    "tau_ion_hertz",
+    "ion_net_status_hertz",
+    "ion_net_status_reason_hertz",
+    "ion_net_area_mode_hertz",
+    "ion_net_constriction_hertz",
+    "ion_net_psi_hertz",
+    "ion_net_band_rule_hertz",
+    "ion_net_band_frac_hertz",
+    "ion_net_basis_check_hertz",
+    "f_ion_physics",
+    "f_ion_physics_gap",
+    "tau2_ion_physics",
+    "tau_ion_physics",
+    "ion_net_status_physics",
+    "ion_net_status_reason_physics",
+    "ion_net_area_mode_physics",
+    "ion_net_constriction_physics",
+    "ion_net_psi_physics",
+    "ion_net_band_rule_physics",
+    "ion_net_band_frac_physics",
+    "ion_net_basis_check_physics",
+    "ion_sigma0_mScm",
+    "ion_sigma0_T_C",
+    "phi_basis",
+    "L_basis"
+   ],
+   "dropped_cols": []
+  },
+  "C5_tau": {
+   "hertz": {
+    "status_counts": {
+     "OK": 106,
+     "NOT_PERCOLATING": 24
+    },
+    "not_computed": 0,
+    "bad": [],
+    "n_bad": 0,
+    "nonperc_eq_metrics": true,
+    "nonperc_eq_perc_audit": true,
+    "n_nonperc": 24
+   },
+   "physics": {
+    "status_counts": {
+     "OK": 106,
+     "NOT_PERCOLATING": 24
+    },
+    "not_computed": 0,
+    "bad": [],
+    "n_bad": 0,
+    "nonperc_eq_metrics": true,
+    "nonperc_eq_perc_audit": true,
+    "n_nonperc": 24
+   },
+   "shared": {
+    "ion_sigma0_mScm": [
+     "3.0"
+    ],
+    "ion_sigma0_T_C": [
+     "25.0"
+    ],
+    "phi_basis": [
+     "mass_conserving"
+    ],
+    "L_basis": [
+     "L_mc"
+    ]
+   }
+  },
+  "C6_provenance": {
+   "n": 130,
+   "set_eq_table": true,
+   "bad": [],
+   "n_bad": 0,
+   "tau_flux_seal": "550dab08bcea0e35c3b84cdf51f797a4d4987d5d5738413347af09d4e4abc863"
+  },
+  "C7_sources": {
+   "n_ok": 130,
+   "n_bad": 0,
+   "bad": []
+  }
+ },
+ "lhsx": {
+  "cohort": "lhsx",
+  "fail": [],
+  "files": {
+   "table": "lhsx_handover_v12_20261006.csv",
+   "columns": "lhsx_handover_v12_20261006_columns.tsv",
+   "prov": "lhsx_handover_v12_20261006_tau_provenance.tsv",
+   "excluded": "lhsx_handover_v12_20261006_excluded.tsv",
+   "sha256": {
+    "lhsx_handover_v12_20261006.csv": "b17e39a8ef435e034f59c365e17481d82530b54f7adaabcd04c7b63ee88953ea",
+    "lhsx_handover_v12_20261006_columns.tsv": "7fd10bde3cb5a07e1c03783ca31a3ee9544ba2cea01cf7c0ca708089a3400e78",
+    "lhsx_handover_v12_20261006_tau_provenance.tsv": "dedd85e567f461f101e2de4ac69eaf35859a8a17cf7e8a96267f94db458ef02a",
+    "lhsx_handover_v12_20261006_excluded.tsv": "2564db2f1cb667136d94dac5f74d5dd5ffa6dbb93e9145c7ee128de8b7a7e3a6"
+   }
+  },
+  "shape": [
+   64,
+   253
+  ],
+  "C1_rows": {
+   "n": 64,
+   "expect": 64,
+   "dups": 0,
+   "set_eq_metrics": true,
+   "missing": [],
+   "extra": []
+  },
+  "C2_lw": {
+   "lw_cols_in_table": [],
+   "excluded_rows": 6,
+   "frame_unverified_in_excluded": true
+  },
+  "C3_dictionary": {
+   "n": 253,
+   "only_in_table": [],
+   "only_in_dict": [],
+   "empty_meaning": []
+  },
+  "C4_regression": {
+   "common_cols": 190,
+   "cells": {
+    "same": 12160,
+    "close": 0,
+    "diff": 0
+   },
+   "diff_cols": {},
+   "new_cols": [
+    "am_am_mean_area",
+    "am_am_total_area",
+    "area_AM_P_AM_P_mean",
+    "area_AM_P_AM_P_total",
+    "area_AM_P_AM_S_mean",
+    "area_AM_P_AM_S_total",
+    "area_AM_P_SE_mean",
+    "area_AM_P_SE_total",
+    "area_AM_S_AM_S_mean",
+    "area_AM_S_AM_S_total",
+    "area_AM_S_SE_mean",
+    "area_AM_S_SE_total",
+    "area_AM전체_SE_mean",
+    "area_AM전체_SE_total",
+    "area_SE_SE_mean",
+    "area_SE_SE_total",
+    "frac_fragmentation_force_pct",
+    "frac_intact_force_pct",
+    "frac_microcrack_force_pct",
+    "frac_multicrack_force_pct",
+    "frac_pulverization_force_pct",
+    "fracture_index_force",
+    "n_fragmentation_force_AM_AM",
+    "n_intact_force_AM_AM",
+    "n_microcrack_force_AM_AM",
+    "n_multicrack_force_AM_AM",
+    "n_pulverization_force_AM_AM",
+    "n_total_AM_AM_force",
+    "se_se_cn_aug",
+    "se_se_cn_aug_h_spread_sim",
+    "se_se_cn_aug_n_extra",
+    "se_se_cn_aug_std",
+    "se_se_cn_eff_area",
+    "se_se_cn_eff_area_perc",
+    "f_ion_hertz",
+    "f_ion_hertz_gap",
+    "tau2_ion_hertz",
+    "tau_ion_hertz",
+    "ion_net_status_hertz",
+    "ion_net_status_reason_hertz",
+    "ion_net_area_mode_hertz",
+    "ion_net_constriction_hertz",
+    "ion_net_psi_hertz",
+    "ion_net_band_rule_hertz",
+    "ion_net_band_frac_hertz",
+    "ion_net_basis_check_hertz",
+    "f_ion_physics",
+    "f_ion_physics_gap",
+    "tau2_ion_physics",
+    "tau_ion_physics",
+    "ion_net_status_physics",
+    "ion_net_status_reason_physics",
+    "ion_net_area_mode_physics",
+    "ion_net_constriction_physics",
+    "ion_net_psi_physics",
+    "ion_net_band_rule_physics",
+    "ion_net_band_frac_physics",
+    "ion_net_basis_check_physics",
+    "ion_sigma0_mScm",
+    "ion_sigma0_T_C",
+    "phi_basis",
+    "L_basis"
+   ],
+   "dropped_cols": []
+  },
+  "C5_tau": {
+   "hertz": {
+    "status_counts": {
+     "OK": 64
+    },
+    "not_computed": 0,
+    "bad": [],
+    "n_bad": 0,
+    "nonperc_eq_metrics": true,
+    "nonperc_eq_perc_audit": true,
+    "n_nonperc": 0
+   },
+   "physics": {
+    "status_counts": {
+     "OK": 54,
+     "MODEL_BELOW_CONTINUUM_BOUND": 10
+    },
+    "not_computed": 0,
+    "bad": [],
+    "n_bad": 0,
+    "nonperc_eq_metrics": true,
+    "nonperc_eq_perc_audit": true,
+    "n_nonperc": 0
+   },
+   "shared": {
+    "ion_sigma0_mScm": [
+     "3.0"
+    ],
+    "ion_sigma0_T_C": [
+     "25.0"
+    ],
+    "phi_basis": [
+     "mass_conserving"
+    ],
+    "L_basis": [
+     "L_mc"
+    ]
+   }
+  },
+  "C6_provenance": {
+   "n": 64,
+   "set_eq_table": true,
+   "bad": [],
+   "n_bad": 0,
+   "tau_flux_seal": "550dab08bcea0e35c3b84cdf51f797a4d4987d5d5738413347af09d4e4abc863"
+  },
+  "C7_sources": {
+   "n_ok": 64,
+   "n_bad": 0,
+   "bad": []
+  }
+ },
+ "C8_seal_audit": {
+  "n": 194,
+  "verdicts": {
+   "SEALED_LEGACY": 194
+  },
+  "merged": {
+   "same": 194
+  }
+ },
+ "verdict": "PASS",
+ "fails": []
+}
