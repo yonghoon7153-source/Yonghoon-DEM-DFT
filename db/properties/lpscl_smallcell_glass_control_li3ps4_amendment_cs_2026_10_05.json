@@ -2,7 +2,7 @@
  "schema": "estimand_amendment/v1",
  "record_kind": "amendment",
  "date": "2026-10-05",
- "status": "회신 CS 반영 · 카드 저자 선택 둘 완료 (140 유지 · 넷이면 다섯째를 마저) → 결정 D-2026-10-05-lpscl-smallcell-glass-control-cost 비준으로 적용",
+ "status": "ratified (2026-10-05 · 사용자 = 카드 저자 · 트랙 li2s — 비준은 실행 승인 · 규칙은 회신 CS) · 결정 D-2026-10-05-lpscl-smallcell-glass-control-cost active",
  "track": "li2s — ⛔ 외부 1저자 트랙 (사용자 ≠ 1저자). 규칙은 회신 CS 원문에서 온다. 회신이 카드 저자에게 고르라고 넘긴 둘(상한 140/160 · 넷에서 멈출 때)만 사용자가 고른다. 우리 해석이 들어간 곳은 '잠정_해석' 으로 따로 적는다.",
  "citable": false,
  "results_seen": false,
@@ -56,5 +56,11 @@
   "잠정_해석": "B 실측 산포가 두 경우 어느 쪽에도 가깝지 않으면 B 실측 σ_ln 으로 같은 함수(glass_v2_readout.ratio_detect_limit)를 다시 돌린 값을 병기한다 — 판독 전에 · 다음 편지에서 확인"
  },
  "불변": "담금질 인자 · 시드 · 온도 · 게이트 · 판독 규칙 · R 정의 · 갈래 · 검출한계 모의값",
- "ratification": null
+ "ratification": {
+  "state": "ratified",
+  "decision": "D-2026-10-05-lpscl-smallcell-glass-control-cost",
+  "commit": "a01f331cdca75e8e766fc040790b5d908878de60",
+  "decision_digest": "sha256:2f76951cfcb9bb168102f2cc41511b04405eece36cfb16532192723b12b8c57c",
+  "timestamp": "2026-10-05T11:10:07Z"
+ }
 }
