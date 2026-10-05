@@ -1,0 +1,37 @@
+  PASS  A1 OK (hertz): f = σ_ratio·L_gap/L_mc · tau2 = φ_mc/f · tau = √tau2 · f_gap = σ_ratio · 상태 OK
+  PASS  A2 tau2 = φ_구합 / σ_ratio (현행 웹앱 T 와 정의상 같은 수 — 결정 1 · v2 §3-7) · 상대 1e-12
+  PASS  A3 키 = v2 §5-1 (상태 · 메타는 모드 꼬리 — 10-04 비준) · 꼬리 없는 상태 키 (`ion_net_status`) 없음
+  PASS  A4 메타: 면적 모드 hertz/physics · 협착 maxwell_halfspace / mikic_psi_divide · ψ = physics 만 legacy_divide · σ₀ 3.0 mS/cm @ 25 °C · phi_basis mass_conserving · L_basis L_mc
+  PASS  A5 띠 메타 = 솔버 기록 그대로 (규칙 L0 · 폭 0.06)
+  PASS  A6 상태 값은 다섯 중 하나 · 사유는 넷 중 하나 — SOLVER_ANOMALY 를 쓰지 않는다 (v2 §5-1 · 물리 f3)
+  PASS  B1 G1 띠 L1 → BAND_FALLBACK · f · tau2 · tau · f_gap 빈칸 (physics 는 L0 그대로 OK)
+  PASS  B2 G1 띠 L2 → BAND_FALLBACK (두 모드)
+  PASS  B3 띠 규칙 기록 없음 (안 A 전의 옛 산출물) → NOT_COMPUTED (missing_input) · 짐작하지 않는다
+  PASS  C1 G2 솔버 관통 > 0 인데 calc_percolation 0 → NOT_COMPUTED (percolation_disagree) · 빈칸
+  PASS  C2 G2 반대 (솔버 0 · calc_percolation 12 %) → NOT_COMPUTED (percolation_disagree)
+  PASS  C3 G2 는 `sigma_full_status` 로 판정하지 않는다 — 관통 · 비관통 모두 상태 문자열과 무관 (TAU-22)
+  PASS  D1 G3 비관통 (두 판정 모두 0) → NOT_PERCOLATING · f = 0 · f_gap = 0 · tau2 · tau 빈칸 (= ∞)
+  PASS  E1 G4 σ_grain 두 값 (3.0 · 1.6 mS/cm) → tau2 · f 비트 동일 · σ₀ 메타만 다르다 (무차원 sigma_full · TAU-25)
+  PASS  E2 G4 호출자가 25 °C 의 σ₀ 를 쓰려는데 망은 60 °C → NOT_COMPUTED (temperature_mismatch) · 빈칸
+  PASS  E3 주장 없음 → σ₀ 메타 = 망 자신의 값 (14.37 mS/cm @ 60 °C) · 짝이 정의상 맞으므로 OK
+  PASS  E4 두 모드의 σ₀ · T 가 다르면 두 모드 다 NOT_COMPUTED (temperature_mismatch) · σ₀ 메타 빈칸
+  PASS  F1 G5 f > φ (T < 1) → MODEL_BELOW_CONTINUUM_BOUND · 값 유지 (빈칸으로 거르지 않는다)
+  PASS  F2 경계 T = 1 은 OK (엄격한 T < 1 만 표지)
+  PASS  G1 관통인데 σ 없음 (솔버 관문 · 경계 겹침 퇴화) → NOT_COMPUTED (solver_guard)
+  PASS  G2 σ 가 0 · 음수 · NaN · inf → NOT_COMPUTED (solver_guard)
+  PASS  H1 질량 보존 두께 없음 → 두 모드 NOT_COMPUTED (missing_input) (판 간격 f 를 φ_mc 와 섞지 않는다)
+  PASS  H2 physics 결과 없음 → physics NOT_COMPUTED (missing_input) · hertz OK
+  PASS  H3 calc_percolation 값 없음 → NOT_COMPUTED (missing_input)
+  PASS  H4 장부 값이 0 · NaN · 음수 · bool → missing_input
+  PASS  H5 G4 — 그 모드의 온도 기록 (temperature_provenance) 이 없으면 짝을 볼 수 없다 → physics NOT_COMPUTED (missing_input) · hertz OK
+  PASS  I1 망 φ (4 자리) = φ_mc·L_mc/L_gap → basis_check ok
+  PASS  I2 망 φ 가 장부와 0.01 어긋남 → basis_check "mismatch:…" (상태는 그대로 — 새 게이트로 쓰려면 등록 · 1저자)
+  PASS  I3 망 φ 없음 → basis_check "unchecked"
+  PASS  J1 case_row: 폴더 (dual + full_metrics) → 같은 열 · 이름 = 폴더 이름
+  PASS  J2 dual 파일 없음 → 두 모드 NOT_COMPUTED (missing_input) — 행은 남긴다 (조용히 빠지지 않는다)
+  PASS  J3 CLI → TSV (머리 = case + 열 · 두 행 · 수는 repr 로 되읽어 같은 값) · rc 0
+  PASS  K1 솔버 결과 그대로 → 두 모드 OK · 띠 L0 · 폭 0.2 · 협착 · ψ · σ₀ 3.0 @ 25 °C · basis ok · tau2 = φ_망/σ_ratio (4 자리 φ 반올림 안)
+  PASS  K2 같은 결과에서 띠 규칙만 지우면 (안 A 전 산출물) → NOT_COMPUTED (missing_input) — 옛 코퍼스를 짐작으로 채우지 않는다
+  PASS  K3 위 띠에만 닿는 합성 → 솔버 관통 0 · 상태 not_computed (valid_zero 아님 · TAU-22) · calc_percolation 0 % · 띠 L0 → NOT_PERCOLATING · f = 0 · tau2 빈칸 (두 모드)
+
+test_tau_flux: 35/35 PASS

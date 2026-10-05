@@ -1,0 +1,62 @@
+ENV ADAPTER: standalone snapshot has no .git. Only HEAD:columns lookups substituted with independently SHA1-verified pinned Git blobs.
+A  케이스 τ 블록 (두 경로)
+[Storage] NOT configured - SUPABASE_URL=False SUPABASE_KEY=False
+[Security] WARNING: auth OFF - local/private only. For public deploy set WEBAPP_REQUIRE_AUTH=1 + WEBAPP_AUTH_TOKEN.
+  PASS  A1a [Step 4] τ 머리 하나 · 새 이름
+  PASS  A1b [Step 4] √ 행 · 머리 (원 · 논문 라벨) 에 COMSOL · EIS 없음 (TAU-01)
+  PASS  A2 [Step 4] tau2 행 = φ·σ₀/σ_full (H · P)
+  PASS  A3 [Step 4] √ 행 = √tau2 (같은 σ₀)
+  PASS  A5 [Step 4] 비율 행 = "정의가 다른 두 τ 의 비" · 옛 이름 · "Constriction overhead" 없음
+  PASS  A4 [Step 4] physics σ 없음 → tau2 · √ · 비율 행의 physics 칸 = "—" (TAU-21 · 옛 판 = Hertz 값 복사)
+  PASS  A1a [Step 4b] τ 머리 하나 · 새 이름
+  PASS  A1b [Step 4b] √ 행 · 머리 (원 · 논문 라벨) 에 COMSOL · EIS 없음 (TAU-01)
+  PASS  A2 [Step 4b] tau2 행 = φ·σ₀/σ_full (H · P)
+  PASS  A3 [Step 4b] √ 행 = √tau2 (같은 σ₀)
+  PASS  A5 [Step 4b] 비율 행 = "정의가 다른 두 τ 의 비" · 옛 이름 · "Constriction overhead" 없음
+  PASS  A4 [Step 4b] physics σ 없음 → tau2 · √ · 비율 행의 physics 칸 = "—" (TAU-21 · 옛 판 = Hertz 값 복사)
+B  번역 · 순서 표
+  PASS  B1 새 원 라벨 셋 (tau2 · √ · 비율) 에 논문 라벨 · 머리 번역 있음
+  PASS  B2 √ · 비율 · 머리 번역에 COMSOL · EIS 없음
+  PASS  B3 옛 원 라벨 키 (√ · 머리 · 옛 비율) 없음 — 화면에서 다시 나타날 길이 없다
+  PASS  B4 정렬 표: tau2 행이 √ 행 바로 앞 · 옛 √ 라벨 없음
+C  single.html 툴팁 · 별칭
+  PASS  C1 √ 행 툴팁이 있고 COMSOL · EIS 낱말이 없다 (TAU-01)
+  PASS  C2 "1.4%" · "parameter-free" · "external validation" · "일치" 철회 — 수치 없이 (TAU-02 · 결정 8)
+  PASS  C3 tau2 툴팁 = tortuosity factor · σ₀ 짝 · "강하게 시사" · GUI Equation 확인 전 한정어
+  PASS  C4 Dijkstra · Laplace,bulk · 비율 툴팁에 "COMSOL 입력은 … τ_Lap_eff" 류 안내 없음
+  PASS  C5 별칭 표 (PAPER_TO_ORIG): 새 논문 라벨 → 새 원 라벨 (√ · tau2 · 비율) · 옛 √ 키 없음
+D  쉬운 툴팁
+  PASS  D1 __tau_lap_eff 쉬운 말 — "COMSOL/EIS에 넣는" 없음 · 입력 칸은 제곱 (tau2) 이라고 말한다
+E  등급 엔진
+  PASS  E1 √ 축 meaning · label 에 "COMSOL/EIS input" 없음 · tau2 언급
+  PASS  E2 낡은 주석 "same formula as webapp/app.py:2026" · "(COMSOL/EIS input)" 없음
+F  COMSOL 2D 내보내기
+  PASS  F1 tau2_ion_<mode> 행 = φ·σ_grain/σ_full,<mode> (Hertz 0.12 · physics 0.25) · 단위 1
+  PASS  F2 √ 행 (tau_ion_<mode>) = √tau2 · 입력 칸 제안 "—" · 설명에 COMSOL · EIS 입력 주장 없음
+  PASS  F3 README 검산식 = σ_i = φ·σ_grain/tau2 · 옛 "σ_grain / (φ·tau_eff²)" 없음
+G  LHS 열 사전
+  PASS  G1 벽 τ 문구: tau2 (= φ_SE·σ₀/σ_full) · "COMSOL/EIS 입력 τ 는 τ_Laplace" 없음
+  PASS  G2 생성기 selftest ㉓b 가 새 단언 (tau2 있음 · 옛 문구 없음) 을 강제한다
+H  전달본 정오표
+  PASS  H1 lhs_release_20261001 에 ERRATA — tau2 · 값 불변 · √ 값은 입력 칸 값이 아님
+ENV ADAPTER: HEAD:docs/data/lhs_release_20261001/lhs_release_20261001_columns.tsv -> verified pinned commit blob 7ab36a56a615bf9cc759153dcdc151dee608ee17
+  PASS  H2 lhs_release_20261001_columns.tsv = 커밋 바이트 그대로 (전달본은 고치지 않는다)
+ENV ADAPTER: HEAD:docs/data/lhs_release_20261001/lhsx_release_20261001_columns.tsv -> verified pinned commit blob b9a5e5f0a6660148f03dc942cf23562e54662819
+  PASS  H2 lhsx_release_20261001_columns.tsv = 커밋 바이트 그대로 (전달본은 고치지 않는다)
+  PASS  H1 lhs_release_20261001_v11 에 ERRATA — tau2 · 값 불변 · √ 값은 입력 칸 값이 아님
+ENV ADAPTER: HEAD:docs/data/lhs_release_20261001_v11/lhs_release_20261001_v11_columns.tsv -> verified pinned commit blob cbfcde9febd2a59acdc99e6f7909ab96e16b2cf1
+  PASS  H2 lhs_release_20261001_v11_columns.tsv = 커밋 바이트 그대로 (전달본은 고치지 않는다)
+ENV ADAPTER: HEAD:docs/data/lhs_release_20261001_v11/lhsx_release_20261001_v11_columns.tsv -> verified pinned commit blob c14f348928fbc78a1359dc08308fa13794fe7c92
+  PASS  H2 lhsx_release_20261001_v11_columns.tsv = 커밋 바이트 그대로 (전달본은 고치지 않는다)
+I  기타 자리
+  PASS  I1 plot_section7 축 이름에 COMSOL/EIS 없음
+  PASS  I2 GRADING_STORY √ 행에 COMSOL/EIS input 없음
+  PASS  I3 bruggeman 문서 √ 행에 "COMSOL · EIS 입력" 없음
+  PASS  I4 stage4 PyBaMM 주석 — tortuosity factor 칸 = tau2 (√ 값 아님)
+J  COMSOL 앱 예제 근거 (D1)
+  PASS  J1 tau2 툴팁 — 앱 예제 식 (1) f_eff = ε/τ · User defined 로 f 직접 · 노드 Tortuosity 식은 강하게 시사 (GUI 확인 전) 유지
+  PASS  J2 COMSOL 2D 내보내기 f_ion_<mode> 행 = σ_full,<mode>/σ_grain (= φ/tau2) · 단위 1 · 이름 = 식별자 f_ion_<mode> · 설명에 User defined
+  PASS  J3 README 블록에 f_ion_<mode> · User defined 안내 · 같은 틀 (L_cat · phiSE) · 검산식
+  PASS  J4 판정 v2 · CLAUDE.md τ 블록에 근거 (Homogenizing … 식 (1) f_eff = ε/τ · User defined · McMullin 이름 함정)
+
+43 PASS · 0 FAIL

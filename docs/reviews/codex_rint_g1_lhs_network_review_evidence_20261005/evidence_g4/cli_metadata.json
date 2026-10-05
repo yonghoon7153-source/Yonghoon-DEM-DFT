@@ -1,0 +1,19 @@
+[
+  {
+    "name": "selftest",
+    "args": [
+      "scripts/lhs_design_dataset.py",
+      "--selftest"
+    ],
+    "exit": 0,
+    "seconds": 0.8399360999464989
+  },
+  {
+    "name": "labels",
+    "args": [
+      "webapp/test_s567_labels.py"
+    ],
+    "exit": 0,
+    "seconds": 0.03020259994082153
+  }
+]

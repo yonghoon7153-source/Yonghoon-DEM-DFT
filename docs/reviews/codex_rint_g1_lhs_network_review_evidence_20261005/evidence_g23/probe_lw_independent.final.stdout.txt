@@ -1,0 +1,212 @@
+{
+  "swapped_forces": {
+    "correct": {
+      "status": "OK",
+      "vm_cv": 50.000000000000014,
+      "type_stress": {
+        "AM_P": {
+          "mean": 0.2148591731740587,
+          "ratio": 0.5
+        },
+        "SE": {
+          "mean": 0.6445775195221761,
+          "ratio": 1.5
+        }
+      },
+      "checks": {
+        "force_decomp_rel": 0.0,
+        "branch_over_r_max": 0.8999999999999999,
+        "virial_total_rel": 1.2335811384723962e-16,
+        "virial_status": "checked"
+      },
+      "wall": {
+        "scope": "floor_zplane0+mesh_plate (x\u00b7y periodic assumed)",
+        "plate_flag": "mesh",
+        "n_floor": 0,
+        "n_plate": 0,
+        "by_type": {
+          "AM_P": {
+            "n": 2,
+            "n_floor": 0,
+            "n_plate": 0,
+            "frac_wall": 0.0,
+            "frac_floor": 0.0
+          },
+          "SE": {
+            "n": 2,
+            "n_floor": 0,
+            "n_plate": 0,
+            "frac_wall": 0.0,
+            "frac_floor": 0.0
+          }
+        }
+      }
+    },
+    "wrong_paired_contact_forces": {
+      "status": "OK",
+      "vm_cv": 49.99999999999999,
+      "type_stress": {
+        "AM_P": {
+          "mean": 0.6445775195221761,
+          "ratio": 1.4999999999999998
+        },
+        "SE": {
+          "mean": 0.2148591731740587,
+          "ratio": 0.49999999999999994
+        }
+      },
+      "checks": {
+        "force_decomp_rel": 0.0,
+        "branch_over_r_max": 0.8999999999999999,
+        "virial_total_rel": 1.2335811384723962e-16,
+        "virial_status": "checked"
+      },
+      "wall": {
+        "scope": "floor_zplane0+mesh_plate (x\u00b7y periodic assumed)",
+        "plate_flag": "mesh",
+        "n_floor": 0,
+        "n_plate": 0,
+        "by_type": {
+          "AM_P": {
+            "n": 2,
+            "n_floor": 0,
+            "n_plate": 0,
+            "frac_wall": 0.0,
+            "frac_floor": 0.0
+          },
+          "SE": {
+            "n": 2,
+            "n_floor": 0,
+            "n_plate": 0,
+            "frac_wall": 0.0,
+            "frac_floor": 0.0
+          }
+        }
+      }
+    }
+  },
+  "invalid_geometry": {
+    "result": {
+      "status": "OK",
+      "vm_cv": 0.0,
+      "type_stress": {
+        "AM_P": {
+          "mean": 0.2148591731740587,
+          "ratio": 0.0
+        },
+        "SE": {
+          "mean": NaN,
+          "ratio": 0.0
+        }
+      },
+      "checks": {
+        "force_decomp_rel": 0.0,
+        "branch_over_r_max": 0.8999999999999999,
+        "virial_total_rel": null,
+        "virial_status": "unavailable (no c_strs in atom dump)"
+      },
+      "wall": {
+        "scope": "floor_zplane0+mesh_plate (x\u00b7y periodic assumed)",
+        "plate_flag": "mesh",
+        "n_floor": 0,
+        "n_plate": 0,
+        "by_type": {
+          "AM_P": {
+            "n": 2,
+            "n_floor": 0,
+            "n_plate": 0,
+            "frac_wall": 0.0,
+            "frac_floor": 0.0
+          },
+          "SE": {
+            "n": 1,
+            "n_floor": 0,
+            "n_plate": 0,
+            "frac_wall": 0.0,
+            "frac_floor": 0.0
+          }
+        }
+      }
+    },
+    "arrays_vm": [
+      0.2148591731740587,
+      0.2148591731740587,
+      NaN
+    ],
+    "finite_AM_P_mean_but_false_zero_ratio": true
+  },
+  "zero_force_bad_decomposition": {
+    "status": "OK",
+    "vm_cv": 0.0,
+    "type_stress": {
+      "AM_P": {
+        "mean": 0.0,
+        "ratio": 0.0
+      }
+    },
+    "checks": {
+      "force_decomp_rel": 0.0,
+      "branch_over_r_max": 0.8999999999999999,
+      "virial_total_rel": null,
+      "virial_status": "unavailable (no c_strs in atom dump)"
+    },
+    "wall": {
+      "scope": "floor_zplane0+mesh_plate (x\u00b7y periodic assumed)",
+      "plate_flag": "mesh",
+      "n_floor": 0,
+      "n_plate": 0,
+      "by_type": {
+        "AM_P": {
+          "n": 2,
+          "n_floor": 0,
+          "n_plate": 0,
+          "frac_wall": 0.0,
+          "frac_floor": 0.0
+        }
+      }
+    }
+  },
+  "zero_virial_valid": {
+    "status": "FAILED (virial_mismatch: |\u03a3 V \u03c3_LW \u2212 \u03a3 c_strs| / \u03a3|\u03a3 c_strs| = inf > 0.01 \u2014 \uc6d0\uc790 \u00b7 \uc811\ucd09 \ub364\ud504\uc758 \ud504\ub808\uc784 \u00b7 \ud798 \ubd80\ud638 \u00b7 \uc5f4 \ub300\uc751)",
+    "vm_cv": null,
+    "type_stress": {},
+    "checks": {
+      "force_decomp_rel": 0.0,
+      "branch_over_r_max": 0.8999999999999999,
+      "virial_total_rel": Infinity,
+      "virial_status": "checked"
+    },
+    "wall": {}
+  },
+  "nan_plate": {
+    "status": "OK",
+    "vm_cv": 0.0,
+    "type_stress": {
+      "AM_P": {
+        "mean": 0.2148591731740587,
+        "ratio": 1.0
+      }
+    },
+    "checks": {
+      "force_decomp_rel": 0.0,
+      "branch_over_r_max": 0.8999999999999999,
+      "virial_total_rel": 1.2335811384723962e-16,
+      "virial_status": "checked"
+    },
+    "wall": {
+      "scope": "floor_zplane0+mesh_plate (x\u00b7y periodic assumed)",
+      "plate_flag": "mesh",
+      "n_floor": 0,
+      "n_plate": 0,
+      "by_type": {
+        "AM_P": {
+          "n": 2,
+          "n_floor": 0,
+          "n_plate": 0,
+          "frac_wall": 0.0,
+          "frac_floor": 0.0
+        }
+      }
+    }
+  }
+}

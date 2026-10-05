@@ -1,0 +1,60 @@
+{
+  "pin": "30c8205c5efb3873ae6fa856881fa184bd041d4d",
+  "python": "C:/Users/Administrator/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+  "env": {
+    "PYTHONUTF8": "1",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "PYTHONPATH": "C:/Users/Administrator/Documents/Codex/2026-08-24/claude-stoic-knuth-nobvq-x20/lhs_coverage_review_20260930/deps;C:/Users/Administrator/Documents/Codex/2026-08-24/claude-stoic-knuth-nobvq-x20/audit_review_evidence_20260909/pydeps",
+    "MPLCONFIGDIR": "C:/Users/Administrator/Documents/Codex/2026-08-24/claude-stoic-knuth-nobvq-x20/rint_g1_lhs_network_review_20261005/evidence_g23/mplcache"
+  },
+  "tests": [
+    {
+      "command": "source/scripts/test_love_weber_stress.py",
+      "exit": 1,
+      "result": "37/38; only missing real14 binary fixture, no formula/CLI failure",
+      "stdout": "test_love_weber_stress.final.stdout.txt"
+    },
+    {
+      "command": "source/scripts/test_constriction_power_share.py",
+      "exit": 0,
+      "result": "16/16",
+      "stdout": "test_constriction_power_share.stdout.txt"
+    },
+    {
+      "command": "source/scripts/test_network_boundary_rule.py",
+      "exit": 0,
+      "result": "8/8",
+      "stdout": "test_network_boundary_rule.stdout.txt"
+    },
+    {
+      "command": "source/scripts/lhs_stress_constriction_audit.py --selftest",
+      "exit": 0,
+      "result": "9 PASS",
+      "stdout": "lhs_stress_constriction_audit.stdout.txt"
+    },
+    {
+      "command": "source/webapp/test_stress_lw_labels.py",
+      "exit": 0,
+      "result": "33/33",
+      "stdout": "test_stress_lw_labels.final.stdout.txt"
+    },
+    {
+      "command": "source/webapp/test_constriction_power_labels.py",
+      "exit": 0,
+      "result": "21/21",
+      "stdout": "test_constriction_power_labels.stdout.txt"
+    },
+    {
+      "command": "evidence_g23/probe_network_independent.py",
+      "exit": 0,
+      "result": "all assertions; raw old/new18hex-identical; actual nonperc status",
+      "stdout": "probe_network_independent.stdout.txt"
+    },
+    {
+      "command": "evidence_g23/probe_lw_independent.py",
+      "exit": 0,
+      "result": "all five falsification assertions confirmed incl actual CSV loader",
+      "stdout": "probe_lw_independent.parser.stdout.txt"
+    }
+  ]
+}

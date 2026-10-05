@@ -1,0 +1,137 @@
+[
+  {
+    "name": "tau_flux",
+    "args": [
+      "scripts/test_tau_flux.py"
+    ],
+    "rc": 0,
+    "seconds": 0.834,
+    "tail": [
+      "  PASS  I3 망 φ 없음 → basis_check \"unchecked\"",
+      "  PASS  J1 case_row: 폴더 (dual + full_metrics) → 같은 열 · 이름 = 폴더 이름",
+      "  PASS  J2 dual 파일 없음 → 두 모드 NOT_COMPUTED (missing_input) — 행은 남긴다 (조용히 빠지지 않는다)",
+      "  PASS  J3 CLI → TSV (머리 = case + 열 · 두 행 · 수는 repr 로 되읽어 같은 값) · rc 0",
+      "  PASS  K1 솔버 결과 그대로 → 두 모드 OK · 띠 L0 · 폭 0.2 · 협착 · ψ · σ₀ 3.0 @ 25 °C · basis ok · tau2 = φ_망/σ_ratio (4 자리 φ 반올림 안)",
+      "  PASS  K2 같은 결과에서 띠 규칙만 지우면 (안 A 전 산출물) → NOT_COMPUTED (missing_input) — 옛 코퍼스를 짐작으로 채우지 않는다",
+      "  PASS  K3 위 띠에만 닿는 합성 → 솔버 관통 0 · 상태 not_computed (valid_zero 아님 · TAU-22) · calc_percolation 0 % · 띠 L0 → NOT_PERCOLATING · f = 0 · tau2 빈칸 (두 모드)",
+      "",
+      "test_tau_flux: 35/35 PASS"
+    ]
+  },
+  {
+    "name": "tau_grade_unify",
+    "args": [
+      "webapp/test_tau_grade_unify.py"
+    ],
+    "rc": 0,
+    "seconds": 2.014,
+    "tail": [
+      "  PASS  C1 f_ion_<mode> = σ_mode/σ₀ · tau2_ion_<mode> = φ·σ₀/σ_mode · tau_ion_<mode> = √ · 단위 1",
+      "  PASS  C2 physics σ 없음 → physics 행 빈칸 (Hertz 복사 없음)",
+      "  PASS  C3 Stage-E 행 = sigma_ionic_stage_e · 설명 \"재료 인자 포함\" · 옛 tau2 · f_ion · tau_Laplace_eff · sigma_ionic_eff 행 없음",
+      "  PASS  C4 σ₀ 행 = 짝 σ₀ (온도 런 ×4) · 그 σ₀ 로 f · tau2 (σ 와 같이 ×4 → f · tau2 불변)",
+      "  PASS  C5 README [B] — 모드별 행 (f_ion_hertz · tau2_ion_hertz · physics) · sigma_i_stageE 짝 아님 경고",
+      "R  regime DB",
+      "  PASS  R1 regime DB — tau2 도우미 경유 (tau2_from_metrics · 짝 σ₀) · 25 °C τ_Lap,eff = √(φ·3.0/σ_full,H) 그대로",
+      "",
+      "19 PASS · 0 FAIL"
+    ]
+  },
+  {
+    "name": "tau_labels",
+    "args": [
+      "webapp/test_tau_labels.py"
+    ],
+    "rc": 1,
+    "seconds": 1.963,
+    "tail": [
+      "  PASS  J2 COMSOL 2D 내보내기 f_ion_<mode> 행 = σ_full,<mode>/σ_grain (= φ/tau2) · 단위 1 · 이름 = 식별자 f_ion_<mode> · 설명에 User defined",
+      "  PASS  J3 README 블록에 f_ion_<mode> · User defined 안내 · 같은 틀 (L_cat · phiSE) · 검산식",
+      "  PASS  J4 판정 v2 · CLAUDE.md τ 블록에 근거 (Homogenizing … 식 (1) f_eff = ε/τ · User defined · McMullin 이름 함정)",
+      "",
+      "39 PASS · 4 FAIL",
+      "  - H2 lhs_release_20261001_columns.tsv = 커밋 바이트 그대로 (전달본은 고치지 않는다)",
+      "  - H2 lhsx_release_20261001_columns.tsv = 커밋 바이트 그대로 (전달본은 고치지 않는다)",
+      "  - H2 lhs_release_20261001_v11_columns.tsv = 커밋 바이트 그대로 (전달본은 고치지 않는다)",
+      "  - H2 lhsx_release_20261001_v11_columns.tsv = 커밋 바이트 그대로 (전달본은 고치지 않는다)"
+    ]
+  },
+  {
+    "name": "tau_handover_status",
+    "args": [
+      "webapp/test_tau_handover_status.py"
+    ],
+    "rc": 0,
+    "seconds": 0.721,
+    "tail": [
+      "  PASS  T6 비관통 (σ 없음 → τ 블록 없음) 이어도 상태 행 = NOT_PERCOLATING (H · P)",
+      "  PASS  T6b dual 파일 없는 케이스 → NOT_COMPUTED (missing_input) — 조용히 빠지지 않는다",
+      "  PASS  T7a 두 라벨에 논문 라벨이 있다",
+      "  PASS  T7b 정렬 표: 비율 행 바로 뒤에 상태 · 띠 행 (그 순서)",
+      "  PASS  T7c 툴팁: 상태 행 = 다섯 상태 · 네 사유 · tau_flux · G5 값 유지 · 띠 행 = L0/L1/L2 · 4r_SE/L (TAU-24) · 안 A 전 산출물",
+      "  PASS  T7d 별칭 표 (PAPER_TO_ORIG) 가 두 논문 라벨 → 원 라벨",
+      "  PASS  T8 케이스 라우트가 transform 전에 _ion_handover 를 붙인다",
+      "",
+      "test_tau_handover_status: 16/16 PASS"
+    ]
+  },
+  {
+    "name": "grade_engine",
+    "args": [
+      "scripts/grade_engine.py",
+      "--selftest"
+    ],
+    "rc": 0,
+    "seconds": 0.144,
+    "tail": [
+      "  ✓ ②c L4-04: overhead 가 **√저항비**이고 물리 협착 배수가 아님을 말한다 (모델 내부 협착 비 · 결정 11)",
+      "  ✓ ②d L4-04: τ_bulk 가 τ_Dijkstra 의 대체 열이 아님을 말한다",
+      "  ✓ ③a L2-07: 라벨이 **CONTACT_FREE/FULL** 이다   CONTACT_FREE / FULL (협착 민감도)",
+      "  ✓ ③b L2-07: 설명이 *\"이론식 대 실측\"* 이라고 말하지 않는다",
+      "  ✓ ③c L2-07: 다른 솔버에 보정 배수로 이식하지 말라고 적혀 있다",
+      "  ✓ ④a L2-08: 라벨/식이 **비가중 평균**이라고 말한다",
+      "  ✓ ④b L2-08: 반례(45 % ↔ 8.18 %)가 설명에 남아 있다",
+      "  ✓ ⑤ 대조: 검사한 축 6개가 전부 실재한다",
+      "등급 축 라벨 SELFTEST PASS"
+    ]
+  },
+  {
+    "name": "pipeline_provenance",
+    "args": [
+      "webapp/test_pipeline_provenance.py"
+    ],
+    "rc": 0,
+    "seconds": 13.045,
+    "tail": [
+      "  PASS  20) ★ PermissionError 2회 뒤 저장된다 (Windows 유실 992/1000 원인)",
+      "  PASS  21) 재시도 대기가 지수 backoff 다 (바쁜대기 아님)",
+      "  PASS  22) ★ 재시도를 다 써도 안 되면 올린다 (조용한 유실 금지)",
+      "  PASS  23) ★ EACCES 아닌 OSError 는 재시도 없이 즉시 올린다",
+      "  PASS  17) 파일 lock 획득",
+      "  PASS  18) ★ lock 미획득 → LockUnavailable (fail-open 아님)",
+      "  PASS  19) require=False 는 진단용으로 False 를 돌려준다",
+      "",
+      "test_pipeline_provenance: 227/227 PASS"
+    ]
+  },
+  {
+    "name": "lhs_webapp_batch",
+    "args": [
+      "scripts/lhs_webapp_batch.py",
+      "--selftest"
+    ],
+    "rc": 1,
+    "seconds": 0.373,
+    "tail": [
+      "    sys.exit(main())",
+      "             ^^^^^^",
+      "  File \"C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint_g1_lhs_network_review_20261005\\source\\scripts\\lhs_webapp_batch.py\", line 755, in main",
+      "    return _selftest()",
+      "           ^^^^^^^^^^^",
+      "  File \"C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rint_g1_lhs_network_review_20261005\\source\\scripts\\lhs_webapp_batch.py\", line 468, in _selftest",
+      "    calls[0]['files'] == sorted(['atom_100.liggghts', 'contact_100.liggghts', 'mesh_100.stl',",
+      "    ~~~~~^^^",
+      "IndexError: list index out of range"
+    ]
+  }
+]

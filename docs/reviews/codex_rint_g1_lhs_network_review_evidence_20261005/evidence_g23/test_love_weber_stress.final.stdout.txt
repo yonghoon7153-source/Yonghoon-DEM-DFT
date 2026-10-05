@@ -1,0 +1,40 @@
+  ✓ L0 dem_analysis_core.calc_love_weber_stress 가 있다 (④b)
+  ✓ L0b 정의 문자열 = love_weber_branch_full_tensor_v1
+  ✓ L1 상태 OK · 정의 문자열
+  ✓ L1 손풀이 σ_zz — 큰 입자 (x_c−x_1)·f/V_1 · 작은 입자 (x_c−x_2)·(−f)/V_2
+  ✓ L1b 압축 = 음수 (인장 양수 · LIGGGHTS c_strs 와 같은 부호)
+  ✓ L1c 50/50 대비 — 큰 입자 LW/옛 = 2(x_c−x_1)/(x_1−x_2) ≈ 2r_1/(r_1+r_2) (1.71) · 작은 입자 ≈ 0.29
+  ✓ L1d 요약 = 옛 정의와 같은 통계 (모집단 std/mean · 상 평균/전체 평균)
+  ✓ L2 비스듬한 접촉 — 전단 σ_xz ≠ 0 (대각만 보던 옛 VM 이 버리던 성분)
+  ✓ L2b VM = √(½Σ(σ_ii−σ_jj)² + 3Σσ_ij²) — 전체 텐서 (손값)
+  ✓ L2c 전체 텐서 VM > 대각 VM (전단 포함 확인)
+  ✓ L3 비대칭 b⊗f — VM 은 대칭부 (손값)
+  ✓ L3b 비대칭 진단 asym_frob_median > 0 (기록)
+  ✓ L4 주기 x 경계 쌍 (접촉점 상자 밖 · 안으로 감싼 두 표기) = 상자 가운데 같은 쌍
+  ✓ L4b 상자를 안 주면 경계 너머 접촉점이 입자 밖 → FAILED (조용히 틀린 값 대신 거부)
+  ✓ L5 c_strs 가 있으면 Σ V σ_LW (대각) = Σ c_strs — 상대 차 ≈ 0 기록
+  ✓ L5b 힘 부호가 뒤집힌 접촉 열 (id2 가 받는 힘으로 잘못 읽음) → FAILED virial_mismatch
+  ✓ L5c 프레임이 다른 원자 덤프 (c_strs 1.5 배) → FAILED virial_mismatch
+  ✓ L5d c_strs 없음 → OK 이되 virial 대조 = None (unavailable 로 기록 · 거부 아님)
+  ✓ L6 전체 힘 ≠ 법선 + 접선 (열 대응 어긋남) → FAILED force_columns
+  ✓ L7 접촉점이 입자 밖 (|x_c − x_i| > 1.01 r_i) → FAILED contact_point
+  ✓ L8 접촉점 열 없음 (옛 덤프 · 손 픽스처) → NOT_COMPUTED (missing …) · 값 없음 (0 으로 안 채움)
+  ✓ L8b NaN 값 → FAILED non_finite
+  ✓ L9 원자 덤프에 없는 id 의 접촉 → FAILED contact_ids (두 덤프 짝 불일치)
+  ✓ L9b 접촉 0 → NOT_COMPUTED (no_contacts)
+  ✓ L10 벽 표지 — 바닥 1 (AM_P) · 판 1 (SE) · 범위 = 바닥 zplane 0 + 판 mesh (x·y 주기 가정)
+  ✓ L10b 상별 벽 비율 — AM_P 1/1 · SE 1/4
+  ✓ L10c 무접촉 입자 1 — VM 0 으로 모집단에 포함 (옛 열과 같은 모집단)
+  ✓ L11 벽 제외 통계 = 벽 입자를 뺀 모집단의 CV · 상 비 (AM_P 는 전부 벽 → 비 없음)
+  ✓ L11b 판 높이가 추정값 (mesh 없음) → 판 표지 unavailable · 벽 제외 통계 None (바닥 표지는 그대로)
+  ✗ L12 real_14 대조  — FileNotFoundError(2, 'No such file or directory')
+  ✓ L13 CLI rc 0 · full_metrics.json
+  ✓ L13b 새 키 — stress_lw_status OK · 정의 · stress_cv_lw · stress_ratio_AM_P_lw · stress_ratio_SE_lw
+  ✓ L13c 벽 키 — 바닥 1 · 판 1 · AM_P 벽 비율 1.0 · SE 1/20 · 벽 제외 CV · SE 비 (AM_P 는 벽뿐 → 키 없음)
+  ✓ L13d 검사 기록 — virial 상대 차 < 1e-9 · 접촉점/반지름 최대 ≤ 1.01
+  ✓ L13e 케이스 표 (network_summary.csv) — 옛 줄 뒤에 Love–Weber 줄 · 벽 제외 · 벽 접촉 비율
+  ✓ L13f 옛 키 값 불변 — 접촉점 열 유무와 무관 (같은 c_strs → 같은 stress_cv · 비)
+  ✓ L13g 접촉점 열 없는 덤프 → stress_lw_status NOT_COMPUTED · LW 값 키 없음 · 표 줄 없음
+  ✓ L13h 원자 덤프 c_strs 와 접촉 덤프가 안 맞으면 (1.5 배) → FAILED 상태 · LW 값 없음 · 옛 키는 그대로
+
+37/38 통과  — 실패: L12 real_14 대조

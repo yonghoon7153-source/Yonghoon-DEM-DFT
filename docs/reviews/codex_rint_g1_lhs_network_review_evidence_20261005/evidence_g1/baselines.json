@@ -1,0 +1,56 @@
+[
+  {
+    "name": "step3_rint",
+    "exit": 0,
+    "last_lines": [
+      "  OK   ⓚ1 이온 표의 SDCP|SE (둘 다 전도 · 격자에 없음) → 허용 · 면 0 — {'model': 'r1-phase-boundary-series', 'unit': 'ohm_cm2', 'table': {'SDCP|SE': 0.001}, 'pid_used': False, 'n_faces_rint': 0, 'faces_by_pair': {}, 'solved': False}",
+      "  OK   ⓚ1 공개 함수: 표 밖 sid → 거부",
+      "  OK   ⓚ2 복셀 σ 장: 있는 상의 셀이 전부 0 → 거부",
+      "  OK   ⓚ2 복셀 σ 장: 격자에 없는 상은 판정 안 함 (허용)",
+      "  OK   ⓚ3 AM_S|AM_S r>0 · pid 없음 → 거부",
+      "  OK   ⓚ4 조기 반환 (degenerate_thin_bed) 에도 interface 기록 · solved False · 표 · 면 0 — {'sigma_eff': 0.0, 'n_dof': 360, 'n_floating_dropped': 0, 'cg_info': 0, 'resid': 0.0, 'unconverged': False, 'reason': 'degenerate_thin_bed', 'periodic_xy': False, 'interface': {'model': 'r1-phase-boundary-series', 'unit': 'ohm_cm2', 'table': {'AM_S|VGCF': 0.0001}, 'pid_used': False, 'n_faces_rint': 0, 'faces_by_pair': {}, 'solved': False}}",
+      "  OK   ⓚ4 r 없는 조기 반환 → interface None",
+      "  OK   ⓚ5 정상 해의 기록은 solved True",
+      "  OK   ⓛ1 joule_hotspot 결과에 scope = bulk_only — 'bulk_only'",
+      "  OK   ⓛ2 제외 항목 = 계면 I²R · 판 결합 간선 (지도 밖) — ['interface_I2R', 'plate_coupling']",
+      "  OK   ⓛ3 포함 항목 = bulk 셀 J²/σ — ['bulk_cell_J2_over_sigma']",
+      "STEP3 RINT SELFTEST PASS"
+    ]
+  },
+  {
+    "name": "receipt_integration",
+    "exit": 0,
+    "last_lines": [
+      "  PASS  F3 Joule 요약 = bulk_only · 제외 = 계면 I²R · 판 결합 · 지도 밖 계면 몫 = 소산 분담의 interface (> 0)",
+      "  PASS  F4 r = 0 표 → 영수증 zero_table · σ_e · n_dof · 입자 je 가 OFF 와 **비트 동일** (OFF/zero 회귀)",
+      "E  레지스트리 — 실물 매니페스트 키 전수 분류 (RINT-20) · 파생 model (RINT-13)",
+      "  PASS  E1 off: 분류 안 된 매니페스트 키 없음",
+      "  PASS  E1 e_on: 분류 안 된 매니페스트 키 없음",
+      "  PASS  E1 ei_on: 분류 안 된 매니페스트 키 없음",
+      "  PASS  E1 rxn_on: 분류 안 된 매니페스트 키 없음",
+      "  PASS  E1 joule_on: 분류 안 된 매니페스트 키 없음",
+      "  PASS  E1 e_zero: 분류 안 된 매니페스트 키 없음",
+      "  PASS  E2 interface_model 은 계면 표 두 축의 파생 (derived_from)",
+      "",
+      "49 PASS · 0 FAIL"
+    ]
+  },
+  {
+    "name": "rint03",
+    "exit": 0,
+    "last_lines": [
+      "  PASS  T1d 옛 je 질량 중 비-AM 셀 몫 > 0.5",
+      "  PASS  T2 탄소 셀 pid −1 이면 옛 = 새 (비 1 · 오염 0)",
+      "  PASS  T3 n_am 밖 번호는 셈에서 빠진다 (IndexError 없음)",
+      "    STEP3 solve: 480 dof, plate contacts 48/48 — CG running (CPU, 수 분 소요 가능)…",
+      "  PASS  T4 순위가 뒤집히면 top 10 % 겹침 < 1 · Spearman < 1",
+      "    STEP3 solve: 480 dof, plate contacts 48/48 — CG running (CPU, 수 분 소요 가능)…",
+      "  PASS  T5 수렴한 해 = OK 이고 cg_info 0 · resid ≤ 1e-6 · unconverged False 를 싣는다",
+      "    STEP3 solve: 480 dof, plate contacts 48/48 — CG running (CPU, 수 분 소요 가능)…",
+      "  ⚠ STEP3 CG not converged (info=1, resid=3.6e-01) — σ UNRELIABLE",
+      "  PASS  T6 미수렴 해는 OK 가 아니다 (status UNCONVERGED · cg_info > 0 · unconverged True)",
+      "",
+      "9 PASS · 0 FAIL"
+    ]
+  }
+]

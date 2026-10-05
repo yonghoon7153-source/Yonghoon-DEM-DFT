@@ -1,0 +1,79 @@
+G4/Q6 독립 검토 (2026-10-05)
+코드 고정: yonghoon7153-source/Yonghoon-DEM-DFT @ 30c8205c5efb3873ae6fa856881fa184bd041d4d
+소스 기준 경로: rint_g1_lhs_network_review_20261005/source/
+판정: G4 HOLD. 정상 입력의 정의/제외/반올림 규칙은 지지하지만, 결측/비유한 입력 관문 및 network 배치 소비 연결을 보완해야 한다.
+생산 수정 없음. 고정 커밋 원본 스냅샷을 취득했고 취득140파일 Git blob140/140 일치. 테스트 스크립트와 출력만 evidence_g4에 생성했다.
+
+1. [P2; network→인계 신규 기능 채택을 막는 통합 blocker] network 배치를 생성기가 거부
+   scripts/lhs_design_dataset.py:1212,1993-1995
+   WA_STAGE_GROUPS가 contact/coverage만 알고 있으므로, 정상 contact fixture의 stop_after만 network로 바꾸면
+   build_handover(..., webapp_groups='f1,fracture,area')가 FillRefusal을 낸다.
+   메시지는 '--webapp-groups network 의 부분집합'을 요구하지만 유효 WA_GROUPS에 network도 없다.
+   접촉 단계 산출인 세 묶음을 network가 포함해도 소비 불가. G5 배치 자체 solver 오류라는 주장은 아님.
+   최소 수정: network가 보장하는 기존 묶음을 단계 매핑에 추가하고 contact/coverage/network 인계 양성 대조를 검사.
+   증거: probe_results.json network_stage_contact_groups, baseline_g4_groups.
+
+2. [P2] NaN/음수도 통과하는 수치 관문
+   scripts/lhs_design_dataset.py:1701-1702,1744-1748,1771,1790,1799,1803,1820
+   float('nan')에 대한 abs(...) > tol은 False다. ⑤⑥⑦ 완성 인계에서 frac_intact_force_pct='nan',
+   fracture_index_force='nan', 양수 접촉의 면적 평균='nan', 면적 총합='nan'을 각각 허용한다.
+   각 경우 wa_f1_checked=wa_frac_checked=wa_area_checked=2인 채 NaN 문자열이 출력에 남는다.
+   유한하지만 잘못된 값도 통과: se_se_cn_eff_area_perc=-1, frac_pulverization_force_pct=-0.004,
+   모든 단계가 intact인 경우 fracture_index_force=-0.00004. 양수 여부만 보는 F1 h에는 inf도 허용된다(:1712).
+   반폭은 유효 숫자의 반올림 오차 허용치이지 물리 범위 검사가 아니다.
+   최소 수정: 공통 유한값 검사 후 숫자별 범위(개수 비음수 정수, 비율0..100, 지수0..1, 면적 비음수)를 검사.
+   증거: fraction_pct_nan, fracture_index_nan, area_positive_count_nan_mean, area_nan_total,
+   area_perc_negative, pct_negative_inside_tolerance, fi_negative_inside_tolerance, f1_h_infinity.
+
+3. [P2] 필수 근거 누락이 관문 생략으로 바뀜
+   scripts/lhs_design_dataset.py:1708-1709,1752,1807,1819-1822
+   groups='f1': q1 se_se_cn을 지우고 aug=-999로 바꾸어도 -999가 완성 인계에 남는다. 2행 중 wa_f1_checked=1.
+   groups='area': 비관통 q2에서 percolation_pct를 지우고 eff_area_perc=0.4를 넣어도 출력0.4, wa_area_checked=2.
+   am_am_n_contacts 누락은 R3를 생략하고, 선택된 se_se_cn_eff_area 자체 누락은 A4를 생략한다.
+   최소 수정: 선택된 묶음의 원천 근거 열을 먼저 요구. 합법적인 상 부재/접촉0/비관통은 별도 상태로 구분.
+   출력 묶음 선택 때문에 원 행의 필수 검사 근거가 선택 사항이 되어서는 안 된다.
+   증거: f1_missing_cn_corrupt_aug, area_missing_pp_corrupt_eap, fracture_missing_am_total, area_missing_global_eff.
+
+4. [P2] 누락 count의 0 채움 뒤에 평균 N/A 규칙을 다시 검사하지 않음
+   scripts/lhs_design_dataset.py:1762-1764,2130-2144 (호출 순서:2116 → 2130 → 2191)
+   q2의 area_AM_P_AM_P_n만 지우고 mean=0.01을 넣는다(total=0.0 유지).
+   A1은 없는 count를 건너뛰고, 출력 단계는 count를0으로 채운다. ALL 묶음 선택에서도 최종 출력은
+   area_AM_P_AM_P_n='0', area_AM_P_AM_P_total='0.0', area_AM_P_AM_P_mean='0.01'.
+   contact/percolation/f1/fracture/area 관문 전부2행 검사로 보고한다.
+   count를 명시0으로 남기면 같은 mean=0.01은 제대로 거부되므로, 누락 키 경로만 false negative다.
+   최소 수정: 쌍의 count/mean/total을 함께 정규화·검증. count 없는 부분 payload에서 0을 추정하려면
+   나머지 필드가0접촉 표현과 양립함을 확인하고, 최종 출력의0접촉 규칙을 재검사.
+   증거: missing_pair_count_positive_mean ↔ explicit_zero_pair_mean_positive 대조.
+
+Q6 답
+반폭0.005 %p와5e-5는 각각 round(...,2), round(...,4)의 검사로 적합하다. 경계 자체는 허용,
+0.005001와5.001e-5는 거부되어 의도와 일치한다. 별도 유한성/범위 검사까지 대체하지는 못한다.
+검증된 접촉0의 총합0/평균빈칸은 타당하다. 상 자체 부재는 총합도N/A로 유지해야 하며 현재 기본 양성 대조는 성립한다.
+모든 쌍 키가 빠진 정상0접촉 legacy 입력은 총합0/평균빈칸으로 처리되지만, 부분 키 누락의 모순은 위4번처럼 거부해야 한다.
+WA_EXCLUDED 우선순위는 지지. census✅인10개 excluded fixture는 wa_reviewed_only=True/False 모두 출력에서 제외된다.
+선별 path_hop_area 표본과 max(n,1) 기반 상쌍별 파괴0/N/A 혼동의 제외 근거도 현재 목적에 충분하다.
+기존에 공개된 F1 모델 상수·Auerbach 물성·기하면적의 물리 타깃 논쟁을 새 결함으로 재등재하지 않았다.
+
+재현
+Python3.12.14, numpy2.3.5, Windows11. PYTHONUTF8=1, PYTHONDONTWRITEBYTECODE=1.
+PYTHONPATH = W/lhs_coverage_review_20260930/deps;R/source/scripts
+P = C:/Users/Administrator/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe
+소스cwd에서 P -u scripts/lhs_design_dataset.py --selftest: rc0,233/233 PASS,0.8399361초.
+소스cwd에서 P -u webapp/test_s567_labels.py: rc0,13/13 PASS,0.0302026초.
+전체 로그 selftest.cli.stdout.txt/labels.cli.stdout.txt,stderr 및 cli_metadata.json.
+P -u R/evidence_g4/probe_g4.py: 실제 build_handover 함수 호출, unmodified selftest의 fixture 복사에 입력 변이.
+P -u R/evidence_g4/replay_g4.py: 취득 원본hash → 위 CLI → 커밋CSV 정합성 검사. rc0.
+
+194행 커밋자료의 제한적 검산 (원 DEM194건 재실행 아님)
+스프레드시트 skill의 읽기 전용·원자료 보존·0/결측 구분 지침을 적용했다. CSV 원본 수정/재출력 없음.
+docs/data/{lhs,lhsx}_webapp_contact_d1ec42fba/metrics_flat.csv를 고정 커밋에서 취득하여 실제 G4 helper 관문을 호출했다.
+130/130+64/64 PASS, 실패0. force_total=am_am_n_contacts194/194. 명시0접촉 쌍3+6, 비관통24+0.
+frac_pct 최대절대오차:130=0.004996359898939318,64=0.004978165938864687.
+fracture_index 최대절대오차:130=4.935064935064626e-5,64=4.8484848484848034e-5.
+F1 최대상대오차:130=2.178081687703956e-16,64=2.0539004373289635e-16.
+A4 최대상대오차:130=1.8874990180689866e-12,64=2.2096496364960295e-12.
+130의 N_SE는 별도 lhs_descriptors_20260925 JSON과130/130 일치. 64의 N_SE는 CSV 생산자 열을 사용했으며
+r_SE는 반올림된 화면 열이 아니라 inp.r_SE*1e6/meta.scale로 재구성했다.
+따라서 이 결과는 커밋된 요약표 산술 정합성이고,194원덤프 독립검산이나194전체 build_handover 재현이라는 주장은 아니다.
+이 데이터 통과는 NaN/필수키누락 변이에서 발견한 차단 능력의 빈틈을 해소하지 않는다.
+상세 committed_194_g4_checks.json; 원본blob acquisition_manifest.json + acquisition_verified.json.

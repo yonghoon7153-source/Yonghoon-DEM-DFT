@@ -1,0 +1,31 @@
+[Storage] NOT configured - SUPABASE_URL=False SUPABASE_KEY=False
+[Security] WARNING: auth OFF - local/private only. For public deploy set WEBAPP_REQUIRE_AUTH=1 + WEBAPP_AUTH_TOKEN.
+A  케이스 표
+  PASS  A1 [Step 4] 새 행 = 78.6 (H) · 82.8 (P) · 옛 행 바로 뒤 · 한 번
+  PASS  A1b [Step 4] 옛 행 값 그대로 (76.6 · 78.2)
+  PASS  A2 [Step 4] 새 키 없는 옛 케이스 → 새 행 "—" (0 으로 안 채움)
+  PASS  A1 [Step 4b] 새 행 = 78.6 (H) · 82.8 (P) · 옛 행 바로 뒤 · 한 번
+  PASS  A1b [Step 4b] 옛 행 값 그대로 (76.6 · 78.2)
+  PASS  A2 [Step 4b] 새 키 없는 옛 케이스 → 새 행 "—" (0 으로 안 채움)
+  PASS  A3 상태 not_computed → "—" (H) · physics 키도 없으면 "—"
+  PASS  A4 physics 값 없음 → physics 칸 "—" (Hertz 값을 복사하지 않는다 — TAU-21 과 같은 규칙)
+B  라벨 · 툴팁
+  PASS  B1 옛 행 논문 라벨 = 비가중 · L2-08 · not a power share
+  PASS  B2 새 행 논문 라벨 = I²R · same FULL solution
+  PASS  B3 별칭 표 — 두 논문 라벨 → 원 라벨
+  PASS  B4 옛 논문 라벨 (Constriction-resistance fraction (%)) 별칭 키 없음
+  PASS  B5 새 행 툴팁 — Σ I²R_c / Σ I²R_total · 관통 간선 · 가상 전극 제외 · 반례 8.18
+C  그룹 표
+  PASS  C1 그룹 열 — Constriction (비가중) = _constriction_pct · Constriction I²R = _constriction_power_pct
+  PASS  C2 낮을수록 좋음 = 열 이름 철자 (두 열)
+  PASS  C3 그룹 로드 유도 — _constriction_power_pct = constriction_power_share_ion_hertz × 100
+  PASS  C4 group.html 툴팁 — 두 열 이름
+D  보고서
+  PASS  D1 보고서 — 옛 줄 "비가중" 이름표 · 새 줄 constriction_power_share_ion_hertz
+E  등급 엔진
+  PASS  E1 협착 축 값 불변 — 새 키를 넣어도 같다 (전환은 등급값 보고 뒤) · 값 = (1 − bf_physics) × 100
+  PASS  E2 협착 축 설명 — 새 열 이름 · 전환 보류
+F  옛 주석
+  PASS  F1 "σ_ionic moves while σ_bulk stays fixed" 주석 없음 · 모드 차이 = 접촉 면적 → R_c
+
+21/21 PASS

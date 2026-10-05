@@ -1,0 +1,16 @@
+    STEP3 solve: 480 dof, plate contacts 48/48 — CG running (CPU, 수 분 소요 가능)…
+  PASS  T1a 복제 새 정의 = 모듈 출력 (compare 가 거부하지 않음)
+  PASS  T1b 오염 입자 = 1 (입자 0 만 탄소 셀을 가짐) · 탄소 셀 수 = 2·6·10
+  PASS  T1c 옛/새 비 최대 > 5 (탄소 전류가 옛 평균을 끌어올림)
+  PASS  T1d 옛 je 질량 중 비-AM 셀 몫 > 0.5
+  PASS  T2 탄소 셀 pid −1 이면 옛 = 새 (비 1 · 오염 0)
+  PASS  T3 n_am 밖 번호는 셈에서 빠진다 (IndexError 없음)
+    STEP3 solve: 480 dof, plate contacts 48/48 — CG running (CPU, 수 분 소요 가능)…
+  PASS  T4 순위가 뒤집히면 top 10 % 겹침 < 1 · Spearman < 1
+    STEP3 solve: 480 dof, plate contacts 48/48 — CG running (CPU, 수 분 소요 가능)…
+  PASS  T5 수렴한 해 = OK 이고 cg_info 0 · resid ≤ 1e-6 · unconverged False 를 싣는다
+    STEP3 solve: 480 dof, plate contacts 48/48 — CG running (CPU, 수 분 소요 가능)…
+  ⚠ STEP3 CG not converged (info=1, resid=3.6e-01) — σ UNRELIABLE
+  PASS  T6 미수렴 해는 OK 가 아니다 (status UNCONVERGED · cg_info > 0 · unconverged True)
+
+9 PASS · 0 FAIL

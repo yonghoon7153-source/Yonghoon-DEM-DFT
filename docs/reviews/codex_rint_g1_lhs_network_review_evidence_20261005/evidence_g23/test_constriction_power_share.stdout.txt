@@ -1,0 +1,18 @@
+  PASS  C0 network_conductivity.constriction_power_share 가 있다 (④a)
+  PASS  C1 반례 전력 몫 = 18/220 = 0.0818182 (손풀이) · 상태 computed
+  PASS  C1b 같은 망의 옛 통계 (1 − 비가중 평균 bulk 비) = 0.45 → 5.5 배 차 (L2-08 그대로)
+  PASS  C1c 가상 전극 연결은 세지 않는다 — 몫은 경계 전도도 크기와 무관 (경로 비만)
+  PASS  C2 [hertzian] run_decomposition 결과에 constriction_power_share_ion_hertz (같은 FULL 해의 값) · _status computed · 0 < 몫 < 1
+  PASS  C2b [hertzian] 옛 bulk_resistance_fraction 키 · 값 그대로 있다 (이름표만 정정)
+  PASS  C2c [hertzian] 꼬리 없는 이름 · 다른 채널 이름을 쓰지 않는다 (한 양 = 한 이름)
+  PASS  C2 [physics] run_decomposition 결과에 constriction_power_share_ion_physics (같은 FULL 해의 값) · _status computed · 0 < 몫 < 1
+  PASS  C2b [physics] 옛 bulk_resistance_fraction 키 · 값 그대로 있다 (이름표만 정정)
+  PASS  C2c [physics] 꼬리 없는 이름 · 다른 채널 이름을 쓰지 않는다 (한 양 = 한 이름)
+  PASS  C3 전자 · 열 채널 꼬리 — _el_hertz · _th_hertz
+  PASS  C4 관통 없음 → constriction_power_share_ion_hertz None · 상태 not_computed
+  PASS  C4b 해 없음 (None) → (None, not_computed …)
+  PASS  C5 _run_all_networks (hertzian) — ion · el · th 세 키 + 상태
+  PASS  C6 pipeline_service.NET_MERGE_KEYS 에 hertz 세 키 + 상태
+  PASS  C6b physics 꼬리 키는 이름 그대로 복사 (옛 _physics 덧붙이기 미러가 아니다 — 두 번 붙지 않게)
+
+16/16 PASS

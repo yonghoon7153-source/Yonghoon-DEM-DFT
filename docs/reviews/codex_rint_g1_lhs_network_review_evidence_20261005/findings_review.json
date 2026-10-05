@@ -1,0 +1,97 @@
+{
+  "schema": "independent_review/v1",
+  "commit": "30c8205c5efb3873ae6fa856881fa184bd041d4d",
+  "verdict": "HOLD",
+  "date": "2026-10-05",
+  "production_modified": false,
+  "campaign_executed": false,
+  "gates": {
+    "G1": "HOLD",
+    "G2": "HOLD",
+    "G3": "GO (metric and boundary extraction only; not campaign authorization)",
+    "G4": "HOLD",
+    "G5": "HOLD",
+    "G6": "HOLD (end-to-end temperature/generation pairing)"
+  },
+  "findings": [
+    {
+      "id": "RGL-01",
+      "severity": "P1",
+      "gate": "G1",
+      "title": "Auxiliary CG nonconvergence accepted",
+      "status": "open_at_reviewed_pin"
+    },
+    {
+      "id": "RGL-02",
+      "severity": "P1",
+      "gate": "G5",
+      "title": "Valid nonpercolating producer rejected",
+      "status": "open_at_reviewed_pin"
+    },
+    {
+      "id": "RGL-03",
+      "severity": "P1",
+      "gate": "G4/G5",
+      "title": "Network stage rejected by handover stage mapping",
+      "status": "open_at_reviewed_pin"
+    },
+    {
+      "id": "RGL-04",
+      "severity": "P1",
+      "gate": "G5",
+      "title": "Required stop gate executes after active publication",
+      "status": "open_at_reviewed_pin"
+    },
+    {
+      "id": "RGL-05",
+      "severity": "P2",
+      "gate": "G4",
+      "title": "Nonfinite, missing prerequisites and inconsistent zero normalization",
+      "status": "open_at_reviewed_pin"
+    },
+    {
+      "id": "RGL-06",
+      "severity": "P2",
+      "gate": "G2",
+      "title": "LW geometry and zero normalization validation failures",
+      "status": "open_at_reviewed_pin"
+    },
+    {
+      "id": "RGL-07",
+      "severity": "P2",
+      "gate": "G6",
+      "title": "Stale temperature metadata paired with fresh network sigma",
+      "status": "open_at_reviewed_pin"
+    },
+    {
+      "id": "RGL-08",
+      "severity": "P2",
+      "gate": "G5",
+      "title": "Incomplete handover contract and cross-artifact consistency",
+      "status": "open_at_reviewed_pin"
+    },
+    {
+      "id": "RGL-09",
+      "severity": "P2",
+      "gate": "G1",
+      "title": "Incorrect Spearman tied ranks",
+      "status": "open_at_reviewed_pin"
+    },
+    {
+      "id": "RGL-10",
+      "severity": "P3",
+      "gate": "G3",
+      "title": "GOLD eight assertions overstated as eight beds and bitwise proof",
+      "status": "open_at_reviewed_pin"
+    }
+  ],
+  "limitations": [
+    "No 194-case batch or full raw-dump replay",
+    "No independent historical r_int three-grid replay",
+    "real14 binary fixtures unavailable",
+    "Native WSL/symlink not validated",
+    "Environment adapters explicitly separated from native tests",
+    "Snapshot is a read-only acquired subset, not a full Git checkout"
+  ]
+}
+

@@ -1,0 +1,129 @@
+{
+  "scope": "G4/Q6",
+  "commit": "30c8205c5efb3873ae6fa856881fa184bd041d4d",
+  "verdict": "HOLD",
+  "cli": {
+    "selftest": {
+      "pass": 233,
+      "total": 233,
+      "exit": 0,
+      "seconds": 0.8399360999464989
+    },
+    "labels": {
+      "pass": 13,
+      "total": 13,
+      "exit": 0,
+      "seconds": 0.03020259994082153
+    }
+  },
+  "exact_acquired_blobs": {
+    "pass": 140,
+    "total": 140
+  },
+  "findings": [
+    {
+      "id": "G4-network",
+      "priority": "P2 local generator; adoption blocker for new network-to-handover workflow",
+      "lines": [
+        1212,
+        1993,
+        1994,
+        1995
+      ],
+      "probe": "network_stage_contact_groups",
+      "accepted": false
+    },
+    {
+      "id": "G4-nonfinite",
+      "priority": "P2",
+      "lines": [
+        1702,
+        1744,
+        1748,
+        1771,
+        1820
+      ],
+      "probes": [
+        "fraction_pct_nan",
+        "fracture_index_nan",
+        "area_positive_count_nan_mean",
+        "area_nan_total"
+      ],
+      "accepted": true,
+      "exported_nonfinite": true
+    },
+    {
+      "id": "G4-missing-prerequisite",
+      "priority": "P2",
+      "lines": [
+        1708,
+        1709,
+        1752,
+        1807,
+        1820
+      ],
+      "probes": [
+        "f1_missing_cn_corrupt_aug",
+        "area_missing_pp_corrupt_eap"
+      ],
+      "accepted": true,
+      "exported_values": {
+        "aug": "-999",
+        "eff_area_perc": "0.4"
+      },
+      "f1_checked": "1/2"
+    },
+    {
+      "id": "G4-zero-pair",
+      "priority": "P2",
+      "lines": [
+        1762,
+        1763,
+        1764,
+        2130,
+        2137,
+        2139,
+        2144
+      ],
+      "probe": "missing_pair_count_positive_mean",
+      "accepted": true,
+      "exported_values": {
+        "n": "0",
+        "total": "0.0",
+        "mean": "0.01"
+      },
+      "all_group_gate_counts": 2
+    }
+  ],
+  "other_finite_invalid_accepted": {
+    "eff_area_perc": "-1",
+    "frac_pulverization_force_pct": "-0.004",
+    "fracture_index_force_when_all_intact": "-0.00004",
+    "f1_std": "-1"
+  },
+  "boundary": {
+    "pct_inclusive_pass": 0.005,
+    "pct_reject": 0.005001,
+    "fi_inclusive_pass": 0.00005,
+    "fi_reject": 0.00005001
+  },
+  "exclusion": {
+    "census_approved_fixture_columns": 10,
+    "excluded_for_reviewed_true_and_false": true
+  },
+  "committed_csv": {
+    "lhs_pass": 130,
+    "lhsx_pass": 64,
+    "explicit_zero_contact_pairs": [
+      3,
+      6
+    ],
+    "nonpercolating": [
+      24,
+      0
+    ],
+    "counts_equal_contacts": 194,
+    "source_nonfinite_g4_values": 0,
+    "scope": "G4 helper checks on committed CSV, not194rawDEM replay or complete194build_handover. lhs130N_SE crosschecked harvest; lhsx64N_SE producerCSV. Read-only Spreadsheets skill used."
+  }
+}

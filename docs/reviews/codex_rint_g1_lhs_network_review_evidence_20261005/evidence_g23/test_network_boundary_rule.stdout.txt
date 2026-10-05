@@ -1,0 +1,10 @@
+  PASS  ① 동작 중립 — 세 픽스처 × 두 면적 모드의 σ · 경계 수 · 관통 분율 · 상태가 추출 전 기준값과 같다
+  PASS  ② 결과에 쓰인 띠 규칙 `boundary_rule` 이 남는다 — L0 · L1 · L2 픽스처가 각각 그 이름 (두 면적 모드)
+  PASS  ③ `boundary_band_frac` = (바닥 띠 문턱 + (판 − 위 띠 문턱)) / 판 — L0 0.2 (= 2·bf·r_max/판) · L1 0.3 · L2 0.86
+  PASS  ④ `boundary_sets(atoms, ids, plate_z, factor)` → (bottom, top, rule, band_frac) — build_network 이 그 함수를 쓴다 (같은 집합)
+  PASS  ⑤ L0 · L1 둘 다 3 개 미만 → L2 로 기록 (5 구 사슬 · 판 8)
+  PASS  ⑥ 다분산 L0 — 띠 폭 = 2·bf·r_max / 판 = 2·2·1.5/20 = 0.3 (TAU-24 의 4r_SE/L 상한)
+  PASS  ⑦ boundary_factor 3 → L0 · 띠 폭 2·3·1/20 = 0.3 (서명에만 있는 죽은 인자가 아니다)
+  PASS  ⑧ 이온 (상위) · 전자 · 열 결과에 띠 규칙이 남는다 (boundary_rule · electronic_boundary_rule · thermal_boundary_rule)
+
+test_network_boundary_rule: 8/8 PASS

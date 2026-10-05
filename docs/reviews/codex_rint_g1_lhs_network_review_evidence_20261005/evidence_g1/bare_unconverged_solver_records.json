@@ -1,0 +1,65 @@
+[
+  {
+    "call": 1,
+    "sigma_eff": 0.0010352120036449418,
+    "cg_info": 0,
+    "resid": 9.561089107260143e-09,
+    "unconverged": false,
+    "interface": {
+      "model": "r1-phase-boundary-series",
+      "unit": "ohm_cm2",
+      "table": {
+        "AM_S|AM_S": 0.001,
+        "AM_S|VGCF": 0.002
+      },
+      "pid_used": true,
+      "n_faces_rint": 3816,
+      "faces_by_pair": {
+        "AM_S|AM_S": 3816
+      },
+      "solved": true
+    }
+  },
+  {
+    "call": 2,
+    "sigma_eff": 0.0009486874831110222,
+    "cg_info": 0,
+    "resid": 9.783687086144589e-09,
+    "unconverged": false,
+    "interface": {
+      "model": "r1-phase-boundary-series",
+      "unit": "ohm_cm2",
+      "table": {
+        "AM_S|AM_S": 0.001,
+        "AM_S|VGCF": 0.002
+      },
+      "pid_used": true,
+      "n_faces_rint": 3816,
+      "faces_by_pair": {
+        "AM_S|AM_S": 3816
+      },
+      "solved": true
+    }
+  },
+  {
+    "call": 3,
+    "sigma_eff": 0.007178713043478262,
+    "cg_info": 1,
+    "resid": 0.3464101615137754,
+    "unconverged": true,
+    "interface": {
+      "model": "r1-phase-boundary-series",
+      "unit": "ohm_cm2",
+      "table": {
+        "AM_S|AM_S": 0.001,
+        "AM_S|VGCF": 0.002
+      },
+      "pid_used": true,
+      "n_faces_rint": 3816,
+      "faces_by_pair": {
+        "AM_S|AM_S": 3816
+      },
+      "solved": true
+    }
+  }
+]

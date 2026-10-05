@@ -1,0 +1,20 @@
+[Storage] NOT configured - SUPABASE_URL=False SUPABASE_KEY=False
+[Security] WARNING: auth OFF - local/private only. For public deploy set WEBAPP_REQUIRE_AUTH=1 + WEBAPP_AUTH_TOKEN.
+  PASS  T1 _ion_handover = tau_flux.ion_columns (dual + 장부) — 두 모드 OK · 같은 키
+  PASS  T2 [Step 4] 상태 행 OK · OK · 띠 행 "L0 · 0.200" (H · P) · 각 한 번
+  PASS  T2b [Step 4] 값 행 (tau2 · √tau2 · 비율) 은 그대로 있다 (표시만 더했다)
+  PASS  T2 [Step 4b] 상태 행 OK · OK · 띠 행 "L0 · 0.200" (H · P) · 각 한 번
+  PASS  T2b [Step 4b] 값 행 (tau2 · √tau2 · 비율) 은 그대로 있다 (표시만 더했다)
+  PASS  T2c 전체 체인 (정규화 · 논문 라벨) 뒤에도 비율 행 → 상태 행 → 띠 행 이 붙어 선다
+  PASS  T3 안 A 전 산출물 → 상태 "NOT_COMPUTED (missing_input)" · 띠 행 "기록 없음 …" (짐작하지 않는다)
+  PASS  T4 _ion_handover 키 없음 → 인계 행 없음 (다른 렌더러 · 옛 시험 무영향)
+  PASS  T5 키는 있는데 None (도우미 못 불러옴) → "미계산 …" 한 행
+  PASS  T6 비관통 (σ 없음 → τ 블록 없음) 이어도 상태 행 = NOT_PERCOLATING (H · P)
+  PASS  T6b dual 파일 없는 케이스 → NOT_COMPUTED (missing_input) — 조용히 빠지지 않는다
+  PASS  T7a 두 라벨에 논문 라벨이 있다
+  PASS  T7b 정렬 표: 비율 행 바로 뒤에 상태 · 띠 행 (그 순서)
+  PASS  T7c 툴팁: 상태 행 = 다섯 상태 · 네 사유 · tau_flux · G5 값 유지 · 띠 행 = L0/L1/L2 · 4r_SE/L (TAU-24) · 안 A 전 산출물
+  PASS  T7d 별칭 표 (PAPER_TO_ORIG) 가 두 논문 라벨 → 원 라벨
+  PASS  T8 케이스 라우트가 transform 전에 _ion_handover 를 붙인다
+
+test_tau_handover_status: 16/16 PASS

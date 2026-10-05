@@ -1,0 +1,932 @@
+[
+  {
+    "label": "healthy",
+    "summary": [
+      "done",
+      []
+    ],
+    "stages": [
+      {
+        "step": "Network Solver (both modes)",
+        "stdout": "synthetic solver fixture",
+        "stderr": "",
+        "rc": 0,
+        "ok": true,
+        "required": true,
+        "missing_outputs": [],
+        "stale_outputs": [],
+        "verify_failed": false
+      },
+      {
+        "step": "Network channel verdict (ionic/electronic/thermal)",
+        "stdout": "ionic=ok (computed); electronic=ok (computed); thermal=ok (computed)",
+        "stderr": "",
+        "rc": 0,
+        "ok": true,
+        "required": true,
+        "missing_outputs": [],
+        "stale_outputs": [],
+        "verify_failed": false
+      },
+      {
+        "step": "Network stop contract (stop_after=network)",
+        "stdout": "ok",
+        "stderr": "",
+        "rc": 0,
+        "ok": true,
+        "required": true,
+        "missing_outputs": [],
+        "stale_outputs": [],
+        "verify_failed": false
+      }
+    ],
+    "stop_gate": [
+      true,
+      "ok"
+    ],
+    "active_provenance": {
+      "network_run_id": "20261005T085651-73b9829b",
+      "code_sha": "unknown",
+      "stamped_at": "2026-10-05T08:56:51",
+      "solver_status": "success",
+      "solver": "network_conductivity.py",
+      "argv": {
+        "type_map": "1:AM,3:SE",
+        "scale": 1000,
+        "contact_mode": "both"
+      },
+      "units_contract": "sim_to_real_v1",
+      "input_digests": {
+        "atoms.csv": "aaf52dc16349094c",
+        "contacts.csv": "f40f3fa11114eea9"
+      },
+      "provenance_state": "valid"
+    },
+    "old_generation_survived": false,
+    "full_metrics": {
+      "phi_se": 0.3,
+      "thickness_um": 100.0,
+      "thickness_mass_conserving_um": 100.0,
+      "phi_se_mass_conserving": 0.3,
+      "percolation_pct": 100.0,
+      "sigma_full": 0.05,
+      "sigma_full_mScm": 0.15,
+      "sigma_bulk_net": 0.1,
+      "sigma_bulk_net_mScm": 0.3,
+      "constriction_power_share_ion_hertz": 0.5,
+      "constriction_power_share_ion_hertz_status": "computed",
+      "sigma_full_physics": 0.05,
+      "sigma_full_mScm_physics": 0.15,
+      "sigma_bulk_net_physics": 0.1,
+      "sigma_bulk_net_mScm_physics": 0.3,
+      "constriction_power_share_ion_physics": 0.5,
+      "constriction_power_share_ion_physics_status": "computed",
+      "network_dual": {
+        "hertzian": {
+          "sigma_full": 0.05,
+          "sigma_full_mScm": 0.15,
+          "sigma_bulk_net": 0.1,
+          "sigma_bulk_net_mScm": 0.3,
+          "electronic_sigma_full_mScm": null,
+          "thermal_sigma_full_mScm": null,
+          "R_brug_over_full": null,
+          "bulk_resistance_fraction": null
+        },
+        "physics": {
+          "sigma_full": 0.05,
+          "sigma_full_mScm": 0.15,
+          "sigma_bulk_net": 0.1,
+          "sigma_bulk_net_mScm": 0.3,
+          "electronic_sigma_full_mScm": null,
+          "thermal_sigma_full_mScm": null,
+          "R_brug_over_full": null,
+          "bulk_resistance_fraction": null
+        },
+        "ratio_physics_over_hertzian": {}
+      },
+      "ionic_channel_verdict": "ok",
+      "ionic_channel_reason": "computed",
+      "electronic_channel_verdict": "ok",
+      "electronic_channel_reason": "computed",
+      "thermal_channel_verdict": "ok",
+      "thermal_channel_reason": "computed",
+      "warnings": [],
+      "warning_count": 0,
+      "network_solver_status": "success",
+      "failed_channels": null,
+      "network_run_id": "20261005T085651-73b9829b",
+      "active_network_run_id": "20261005T085651-73b9829b",
+      "last_network_attempt_run_id": "20261005T085651-73b9829b"
+    },
+    "tau": {
+      "case": "g56_hbmr0s0r",
+      "f_ion_hertz": 0.05,
+      "f_ion_hertz_gap": 0.05,
+      "tau2_ion_hertz": 5.999999999999999,
+      "tau_ion_hertz": 2.449489742783178,
+      "ion_net_status_hertz": "OK",
+      "ion_net_status_reason_hertz": "",
+      "ion_net_area_mode_hertz": "hertz",
+      "ion_net_constriction_hertz": "",
+      "ion_net_psi_hertz": "",
+      "ion_net_band_rule_hertz": "L0",
+      "ion_net_band_frac_hertz": 0.08,
+      "ion_net_basis_check_hertz": "ok",
+      "f_ion_physics": 0.05,
+      "f_ion_physics_gap": 0.05,
+      "tau2_ion_physics": 5.999999999999999,
+      "tau_ion_physics": 2.449489742783178,
+      "ion_net_status_physics": "OK",
+      "ion_net_status_reason_physics": "",
+      "ion_net_area_mode_physics": "physics",
+      "ion_net_constriction_physics": "",
+      "ion_net_psi_physics": "",
+      "ion_net_band_rule_physics": "L0",
+      "ion_net_band_frac_physics": 0.08,
+      "ion_net_basis_check_physics": "ok",
+      "ion_sigma0_mScm": 3.0,
+      "ion_sigma0_T_C": 25.0,
+      "phi_basis": "mass_conserving",
+      "L_basis": "L_mc"
+    },
+    "grade_tau": 2.449489742783178,
+    "paired_sigma0": 3.0
+  },
+  {
+    "label": "missing_tau_inputs",
+    "summary": [
+      "done",
+      []
+    ],
+    "stages": [
+      {
+        "step": "Network Solver (both modes)",
+        "stdout": "synthetic solver fixture",
+        "stderr": "",
+        "rc": 0,
+        "ok": true,
+        "required": true,
+        "missing_outputs": [],
+        "stale_outputs": [],
+        "verify_failed": false
+      },
+      {
+        "step": "Network channel verdict (ionic/electronic/thermal)",
+        "stdout": "ionic=ok (computed); electronic=ok (computed); thermal=ok (computed)",
+        "stderr": "",
+        "rc": 0,
+        "ok": true,
+        "required": true,
+        "missing_outputs": [],
+        "stale_outputs": [],
+        "verify_failed": false
+      },
+      {
+        "step": "Network stop contract (stop_after=network)",
+        "stdout": "ok",
+        "stderr": "",
+        "rc": 0,
+        "ok": true,
+        "required": true,
+        "missing_outputs": [],
+        "stale_outputs": [],
+        "verify_failed": false
+      }
+    ],
+    "stop_gate": [
+      true,
+      "ok"
+    ],
+    "active_provenance": {
+      "network_run_id": "20261005T085651-eeeb0334",
+      "code_sha": "unknown",
+      "stamped_at": "2026-10-05T08:56:51",
+      "solver_status": "success",
+      "solver": "network_conductivity.py",
+      "argv": {
+        "type_map": "1:AM,3:SE",
+        "scale": 1000,
+        "contact_mode": "both"
+      },
+      "units_contract": "sim_to_real_v1",
+      "input_digests": {
+        "atoms.csv": "aaf52dc16349094c",
+        "contacts.csv": "f40f3fa11114eea9"
+      },
+      "provenance_state": "valid"
+    },
+    "old_generation_survived": false,
+    "full_metrics": {
+      "phi_se": 0.3,
+      "thickness_um": 100.0,
+      "thickness_mass_conserving_um": 100.0,
+      "phi_se_mass_conserving": 0.3,
+      "percolation_pct": 100.0,
+      "sigma_full_mScm": 0.15,
+      "sigma_bulk_net": 0.1,
+      "sigma_bulk_net_mScm": 0.3,
+      "constriction_power_share_ion_hertz": 0.5,
+      "constriction_power_share_ion_hertz_status": "computed",
+      "sigma_full_mScm_physics": 0.15,
+      "sigma_bulk_net_physics": 0.1,
+      "sigma_bulk_net_mScm_physics": 0.3,
+      "constriction_power_share_ion_physics": 0.5,
+      "constriction_power_share_ion_physics_status": "computed",
+      "network_dual": {
+        "hertzian": {
+          "sigma_full": null,
+          "sigma_full_mScm": 0.15,
+          "sigma_bulk_net": 0.1,
+          "sigma_bulk_net_mScm": 0.3,
+          "electronic_sigma_full_mScm": null,
+          "thermal_sigma_full_mScm": null,
+          "R_brug_over_full": null,
+          "bulk_resistance_fraction": null
+        },
+        "physics": {
+          "sigma_full": null,
+          "sigma_full_mScm": 0.15,
+          "sigma_bulk_net": 0.1,
+          "sigma_bulk_net_mScm": 0.3,
+          "electronic_sigma_full_mScm": null,
+          "thermal_sigma_full_mScm": null,
+          "R_brug_over_full": null,
+          "bulk_resistance_fraction": null
+        },
+        "ratio_physics_over_hertzian": {}
+      },
+      "ionic_channel_verdict": "ok",
+      "ionic_channel_reason": "computed",
+      "electronic_channel_verdict": "ok",
+      "electronic_channel_reason": "computed",
+      "thermal_channel_verdict": "ok",
+      "thermal_channel_reason": "computed",
+      "warnings": [],
+      "warning_count": 0,
+      "network_solver_status": "success",
+      "failed_channels": null,
+      "network_run_id": "20261005T085651-eeeb0334",
+      "active_network_run_id": "20261005T085651-eeeb0334",
+      "last_network_attempt_run_id": "20261005T085651-eeeb0334"
+    },
+    "tau": {
+      "case": "g56_r92chd7u",
+      "f_ion_hertz": null,
+      "f_ion_hertz_gap": null,
+      "tau2_ion_hertz": null,
+      "tau_ion_hertz": null,
+      "ion_net_status_hertz": "NOT_COMPUTED",
+      "ion_net_status_reason_hertz": "missing_input",
+      "ion_net_area_mode_hertz": "hertz",
+      "ion_net_constriction_hertz": "",
+      "ion_net_psi_hertz": "",
+      "ion_net_band_rule_hertz": "L0",
+      "ion_net_band_frac_hertz": 0.08,
+      "ion_net_basis_check_hertz": "ok",
+      "f_ion_physics": null,
+      "f_ion_physics_gap": null,
+      "tau2_ion_physics": null,
+      "tau_ion_physics": null,
+      "ion_net_status_physics": "NOT_COMPUTED",
+      "ion_net_status_reason_physics": "missing_input",
+      "ion_net_area_mode_physics": "physics",
+      "ion_net_constriction_physics": "",
+      "ion_net_psi_physics": "",
+      "ion_net_band_rule_physics": "L0",
+      "ion_net_band_frac_physics": 0.08,
+      "ion_net_basis_check_physics": "ok",
+      "ion_sigma0_mScm": null,
+      "ion_sigma0_T_C": null,
+      "phi_basis": "mass_conserving",
+      "L_basis": "L_mc"
+    },
+    "grade_tau": 2.449489742783178,
+    "paired_sigma0": 3.0
+  },
+  {
+    "label": "permode_vs_dual_disagree",
+    "summary": [
+      "done",
+      []
+    ],
+    "stages": [
+      {
+        "step": "Network Solver (both modes)",
+        "stdout": "synthetic solver fixture",
+        "stderr": "",
+        "rc": 0,
+        "ok": true,
+        "required": true,
+        "missing_outputs": [],
+        "stale_outputs": [],
+        "verify_failed": false
+      },
+      {
+        "step": "Network channel verdict (ionic/electronic/thermal)",
+        "stdout": "ionic=ok (computed); electronic=ok (computed); thermal=ok (computed)",
+        "stderr": "",
+        "rc": 0,
+        "ok": true,
+        "required": true,
+        "missing_outputs": [],
+        "stale_outputs": [],
+        "verify_failed": false
+      },
+      {
+        "step": "Network stop contract (stop_after=network)",
+        "stdout": "ok",
+        "stderr": "",
+        "rc": 0,
+        "ok": true,
+        "required": true,
+        "missing_outputs": [],
+        "stale_outputs": [],
+        "verify_failed": false
+      }
+    ],
+    "stop_gate": [
+      true,
+      "ok"
+    ],
+    "active_provenance": {
+      "network_run_id": "20261005T085651-323c2785",
+      "code_sha": "unknown",
+      "stamped_at": "2026-10-05T08:56:51",
+      "solver_status": "success",
+      "solver": "network_conductivity.py",
+      "argv": {
+        "type_map": "1:AM,3:SE",
+        "scale": 1000,
+        "contact_mode": "both"
+      },
+      "units_contract": "sim_to_real_v1",
+      "input_digests": {
+        "atoms.csv": "aaf52dc16349094c",
+        "contacts.csv": "f40f3fa11114eea9"
+      },
+      "provenance_state": "valid"
+    },
+    "old_generation_survived": false,
+    "full_metrics": {
+      "phi_se": 0.3,
+      "thickness_um": 100.0,
+      "thickness_mass_conserving_um": 100.0,
+      "phi_se_mass_conserving": 0.3,
+      "percolation_pct": 100.0,
+      "sigma_full": 0.05,
+      "sigma_full_mScm": 0.15,
+      "sigma_bulk_net": 0.1,
+      "sigma_bulk_net_mScm": 0.3,
+      "constriction_power_share_ion_hertz": 0.5,
+      "constriction_power_share_ion_hertz_status": "computed",
+      "sigma_full_physics": 0.05,
+      "sigma_full_mScm_physics": 0.15,
+      "sigma_bulk_net_physics": 0.1,
+      "sigma_bulk_net_mScm_physics": 0.3,
+      "constriction_power_share_ion_physics": 0.5,
+      "constriction_power_share_ion_physics_status": "computed",
+      "network_dual": {
+        "hertzian": {
+          "sigma_full": 0.05,
+          "sigma_full_mScm": 0.15,
+          "sigma_bulk_net": 0.1,
+          "sigma_bulk_net_mScm": 0.3,
+          "electronic_sigma_full_mScm": null,
+          "thermal_sigma_full_mScm": null,
+          "R_brug_over_full": null,
+          "bulk_resistance_fraction": null
+        },
+        "physics": {
+          "sigma_full": 0.05,
+          "sigma_full_mScm": 0.15,
+          "sigma_bulk_net": 0.1,
+          "sigma_bulk_net_mScm": 0.3,
+          "electronic_sigma_full_mScm": null,
+          "thermal_sigma_full_mScm": null,
+          "R_brug_over_full": null,
+          "bulk_resistance_fraction": null
+        },
+        "ratio_physics_over_hertzian": {}
+      },
+      "ionic_channel_verdict": "ok",
+      "ionic_channel_reason": "computed",
+      "electronic_channel_verdict": "ok",
+      "electronic_channel_reason": "computed",
+      "thermal_channel_verdict": "ok",
+      "thermal_channel_reason": "computed",
+      "warnings": [],
+      "warning_count": 0,
+      "network_solver_status": "success",
+      "failed_channels": null,
+      "network_run_id": "20261005T085651-323c2785",
+      "active_network_run_id": "20261005T085651-323c2785",
+      "last_network_attempt_run_id": "20261005T085651-323c2785"
+    },
+    "tau": {
+      "case": "g56_ud3jpqgu",
+      "f_ion_hertz": 0.05,
+      "f_ion_hertz_gap": 0.05,
+      "tau2_ion_hertz": 5.999999999999999,
+      "tau_ion_hertz": 2.449489742783178,
+      "ion_net_status_hertz": "OK",
+      "ion_net_status_reason_hertz": "",
+      "ion_net_area_mode_hertz": "hertz",
+      "ion_net_constriction_hertz": "",
+      "ion_net_psi_hertz": "",
+      "ion_net_band_rule_hertz": "L0",
+      "ion_net_band_frac_hertz": 0.08,
+      "ion_net_basis_check_hertz": "ok",
+      "f_ion_physics": 0.05,
+      "f_ion_physics_gap": 0.05,
+      "tau2_ion_physics": 5.999999999999999,
+      "tau_ion_physics": 2.449489742783178,
+      "ion_net_status_physics": "OK",
+      "ion_net_status_reason_physics": "",
+      "ion_net_area_mode_physics": "physics",
+      "ion_net_constriction_physics": "",
+      "ion_net_psi_physics": "",
+      "ion_net_band_rule_physics": "L0",
+      "ion_net_band_frac_physics": 0.08,
+      "ion_net_basis_check_physics": "ok",
+      "ion_sigma0_mScm": 3.0,
+      "ion_sigma0_T_C": 25.0,
+      "phi_basis": "mass_conserving",
+      "L_basis": "L_mc"
+    },
+    "grade_tau": 2.449489742783178,
+    "paired_sigma0": 3.0
+  },
+  {
+    "label": "stop_gate_failure_after_publication",
+    "summary": [
+      "failed",
+      [
+        {
+          "step": "Network stop contract (stop_after=network)",
+          "stdout": "",
+          "stderr": "★ 망 정지 계약 실패: ⑤ physics: boundary_rule='L9' · boundary_band_frac=0.08",
+          "rc": 1,
+          "ok": false,
+          "required": true,
+          "missing_outputs": [],
+          "stale_outputs": [],
+          "verify_failed": true
+        }
+      ]
+    ],
+    "stages": [
+      {
+        "step": "Network Solver (both modes)",
+        "stdout": "synthetic solver fixture",
+        "stderr": "",
+        "rc": 0,
+        "ok": true,
+        "required": true,
+        "missing_outputs": [],
+        "stale_outputs": [],
+        "verify_failed": false
+      },
+      {
+        "step": "Network channel verdict (ionic/electronic/thermal)",
+        "stdout": "ionic=ok (computed); electronic=ok (computed); thermal=ok (computed)",
+        "stderr": "",
+        "rc": 0,
+        "ok": true,
+        "required": true,
+        "missing_outputs": [],
+        "stale_outputs": [],
+        "verify_failed": false
+      },
+      {
+        "step": "Network stop contract (stop_after=network)",
+        "stdout": "",
+        "stderr": "★ 망 정지 계약 실패: ⑤ physics: boundary_rule='L9' · boundary_band_frac=0.08",
+        "rc": 1,
+        "ok": false,
+        "required": true,
+        "missing_outputs": [],
+        "stale_outputs": [],
+        "verify_failed": true
+      }
+    ],
+    "stop_gate": [
+      false,
+      "⑤ physics: boundary_rule='L9' · boundary_band_frac=0.08"
+    ],
+    "active_provenance": {
+      "network_run_id": "20261005T085651-e9c7f7ae",
+      "code_sha": "unknown",
+      "stamped_at": "2026-10-05T08:56:51",
+      "solver_status": "success",
+      "solver": "network_conductivity.py",
+      "argv": {
+        "type_map": "1:AM,3:SE",
+        "scale": 1000,
+        "contact_mode": "both"
+      },
+      "units_contract": "sim_to_real_v1",
+      "input_digests": {
+        "atoms.csv": "aaf52dc16349094c",
+        "contacts.csv": "f40f3fa11114eea9"
+      },
+      "provenance_state": "valid"
+    },
+    "old_generation_survived": false,
+    "full_metrics": {
+      "phi_se": 0.3,
+      "thickness_um": 100.0,
+      "thickness_mass_conserving_um": 100.0,
+      "phi_se_mass_conserving": 0.3,
+      "percolation_pct": 100.0,
+      "sigma_full": 0.05,
+      "sigma_full_mScm": 0.15,
+      "sigma_bulk_net": 0.1,
+      "sigma_bulk_net_mScm": 0.3,
+      "constriction_power_share_ion_hertz": 0.5,
+      "constriction_power_share_ion_hertz_status": "computed",
+      "sigma_full_physics": 0.05,
+      "sigma_full_mScm_physics": 0.15,
+      "sigma_bulk_net_physics": 0.1,
+      "sigma_bulk_net_mScm_physics": 0.3,
+      "constriction_power_share_ion_physics": 0.5,
+      "constriction_power_share_ion_physics_status": "computed",
+      "network_dual": {
+        "hertzian": {
+          "sigma_full": 0.05,
+          "sigma_full_mScm": 0.15,
+          "sigma_bulk_net": 0.1,
+          "sigma_bulk_net_mScm": 0.3,
+          "electronic_sigma_full_mScm": null,
+          "thermal_sigma_full_mScm": null,
+          "R_brug_over_full": null,
+          "bulk_resistance_fraction": null
+        },
+        "physics": {
+          "sigma_full": 0.05,
+          "sigma_full_mScm": 0.15,
+          "sigma_bulk_net": 0.1,
+          "sigma_bulk_net_mScm": 0.3,
+          "electronic_sigma_full_mScm": null,
+          "thermal_sigma_full_mScm": null,
+          "R_brug_over_full": null,
+          "bulk_resistance_fraction": null
+        },
+        "ratio_physics_over_hertzian": {}
+      },
+      "ionic_channel_verdict": "ok",
+      "ionic_channel_reason": "computed",
+      "electronic_channel_verdict": "ok",
+      "electronic_channel_reason": "computed",
+      "thermal_channel_verdict": "ok",
+      "thermal_channel_reason": "computed",
+      "warnings": [],
+      "warning_count": 0,
+      "network_solver_status": "success",
+      "failed_channels": null,
+      "network_run_id": "20261005T085651-e9c7f7ae",
+      "active_network_run_id": "20261005T085651-e9c7f7ae",
+      "last_network_attempt_run_id": "20261005T085651-e9c7f7ae"
+    },
+    "tau": {
+      "case": "g56_421f72r5",
+      "f_ion_hertz": 0.05,
+      "f_ion_hertz_gap": 0.05,
+      "tau2_ion_hertz": 5.999999999999999,
+      "tau_ion_hertz": 2.449489742783178,
+      "ion_net_status_hertz": "OK",
+      "ion_net_status_reason_hertz": "",
+      "ion_net_area_mode_hertz": "hertz",
+      "ion_net_constriction_hertz": "",
+      "ion_net_psi_hertz": "",
+      "ion_net_band_rule_hertz": "L0",
+      "ion_net_band_frac_hertz": 0.08,
+      "ion_net_basis_check_hertz": "ok",
+      "f_ion_physics": null,
+      "f_ion_physics_gap": null,
+      "tau2_ion_physics": null,
+      "tau_ion_physics": null,
+      "ion_net_status_physics": "NOT_COMPUTED",
+      "ion_net_status_reason_physics": "missing_input",
+      "ion_net_area_mode_physics": "physics",
+      "ion_net_constriction_physics": "",
+      "ion_net_psi_physics": "",
+      "ion_net_band_rule_physics": "",
+      "ion_net_band_frac_physics": 0.08,
+      "ion_net_basis_check_physics": "ok",
+      "ion_sigma0_mScm": 3.0,
+      "ion_sigma0_T_C": 25.0,
+      "phi_basis": "mass_conserving",
+      "L_basis": "L_mc"
+    },
+    "grade_tau": 2.449489742783178,
+    "paired_sigma0": 3.0
+  },
+  {
+    "label": "percolating_power_missing",
+    "summary": [
+      "done",
+      []
+    ],
+    "stages": [
+      {
+        "step": "Network Solver (both modes)",
+        "stdout": "synthetic solver fixture",
+        "stderr": "",
+        "rc": 0,
+        "ok": true,
+        "required": true,
+        "missing_outputs": [],
+        "stale_outputs": [],
+        "verify_failed": false
+      },
+      {
+        "step": "Network channel verdict (ionic/electronic/thermal)",
+        "stdout": "ionic=ok (computed); electronic=ok (computed); thermal=ok (computed)",
+        "stderr": "",
+        "rc": 0,
+        "ok": true,
+        "required": true,
+        "missing_outputs": [],
+        "stale_outputs": [],
+        "verify_failed": false
+      },
+      {
+        "step": "Network stop contract (stop_after=network)",
+        "stdout": "ok",
+        "stderr": "",
+        "rc": 0,
+        "ok": true,
+        "required": true,
+        "missing_outputs": [],
+        "stale_outputs": [],
+        "verify_failed": false
+      }
+    ],
+    "stop_gate": [
+      true,
+      "ok"
+    ],
+    "active_provenance": {
+      "network_run_id": "20261005T085651-232b74ed",
+      "code_sha": "unknown",
+      "stamped_at": "2026-10-05T08:56:51",
+      "solver_status": "success",
+      "solver": "network_conductivity.py",
+      "argv": {
+        "type_map": "1:AM,3:SE",
+        "scale": 1000,
+        "contact_mode": "both"
+      },
+      "units_contract": "sim_to_real_v1",
+      "input_digests": {
+        "atoms.csv": "aaf52dc16349094c",
+        "contacts.csv": "f40f3fa11114eea9"
+      },
+      "provenance_state": "valid"
+    },
+    "old_generation_survived": false,
+    "full_metrics": {
+      "phi_se": 0.3,
+      "thickness_um": 100.0,
+      "thickness_mass_conserving_um": 100.0,
+      "phi_se_mass_conserving": 0.3,
+      "percolation_pct": 100.0,
+      "sigma_full": 0.05,
+      "sigma_full_mScm": 0.15,
+      "sigma_bulk_net": 0.1,
+      "sigma_bulk_net_mScm": 0.3,
+      "constriction_power_share_ion_hertz_status": "internal_solver_exception",
+      "sigma_full_physics": 0.05,
+      "sigma_full_mScm_physics": 0.15,
+      "sigma_bulk_net_physics": 0.1,
+      "sigma_bulk_net_mScm_physics": 0.3,
+      "constriction_power_share_ion_physics_status": "internal_solver_exception",
+      "network_dual": {
+        "hertzian": {
+          "sigma_full": 0.05,
+          "sigma_full_mScm": 0.15,
+          "sigma_bulk_net": 0.1,
+          "sigma_bulk_net_mScm": 0.3,
+          "electronic_sigma_full_mScm": null,
+          "thermal_sigma_full_mScm": null,
+          "R_brug_over_full": null,
+          "bulk_resistance_fraction": null
+        },
+        "physics": {
+          "sigma_full": 0.05,
+          "sigma_full_mScm": 0.15,
+          "sigma_bulk_net": 0.1,
+          "sigma_bulk_net_mScm": 0.3,
+          "electronic_sigma_full_mScm": null,
+          "thermal_sigma_full_mScm": null,
+          "R_brug_over_full": null,
+          "bulk_resistance_fraction": null
+        },
+        "ratio_physics_over_hertzian": {}
+      },
+      "ionic_channel_verdict": "ok",
+      "ionic_channel_reason": "computed",
+      "electronic_channel_verdict": "ok",
+      "electronic_channel_reason": "computed",
+      "thermal_channel_verdict": "ok",
+      "thermal_channel_reason": "computed",
+      "warnings": [],
+      "warning_count": 0,
+      "network_solver_status": "success",
+      "failed_channels": null,
+      "network_run_id": "20261005T085651-232b74ed",
+      "active_network_run_id": "20261005T085651-232b74ed",
+      "last_network_attempt_run_id": "20261005T085651-232b74ed"
+    },
+    "tau": {
+      "case": "g56__dh7yupe",
+      "f_ion_hertz": 0.05,
+      "f_ion_hertz_gap": 0.05,
+      "tau2_ion_hertz": 5.999999999999999,
+      "tau_ion_hertz": 2.449489742783178,
+      "ion_net_status_hertz": "OK",
+      "ion_net_status_reason_hertz": "",
+      "ion_net_area_mode_hertz": "hertz",
+      "ion_net_constriction_hertz": "",
+      "ion_net_psi_hertz": "",
+      "ion_net_band_rule_hertz": "L0",
+      "ion_net_band_frac_hertz": 0.08,
+      "ion_net_basis_check_hertz": "ok",
+      "f_ion_physics": 0.05,
+      "f_ion_physics_gap": 0.05,
+      "tau2_ion_physics": 5.999999999999999,
+      "tau_ion_physics": 2.449489742783178,
+      "ion_net_status_physics": "OK",
+      "ion_net_status_reason_physics": "",
+      "ion_net_area_mode_physics": "physics",
+      "ion_net_constriction_physics": "",
+      "ion_net_psi_physics": "",
+      "ion_net_band_rule_physics": "L0",
+      "ion_net_band_frac_physics": 0.08,
+      "ion_net_basis_check_physics": "ok",
+      "ion_sigma0_mScm": 3.0,
+      "ion_sigma0_T_C": 25.0,
+      "phi_basis": "mass_conserving",
+      "L_basis": "L_mc"
+    },
+    "grade_tau": 2.449489742783178,
+    "paired_sigma0": 3.0
+  },
+  {
+    "label": "stale_temperature_factor4",
+    "summary": [
+      "done",
+      []
+    ],
+    "stages": [
+      {
+        "step": "Network Solver (both modes)",
+        "stdout": "synthetic solver fixture",
+        "stderr": "",
+        "rc": 0,
+        "ok": true,
+        "required": true,
+        "missing_outputs": [],
+        "stale_outputs": [],
+        "verify_failed": false
+      },
+      {
+        "step": "Network channel verdict (ionic/electronic/thermal)",
+        "stdout": "ionic=ok (computed); electronic=ok (computed); thermal=ok (computed)",
+        "stderr": "",
+        "rc": 0,
+        "ok": true,
+        "required": true,
+        "missing_outputs": [],
+        "stale_outputs": [],
+        "verify_failed": false
+      },
+      {
+        "step": "Network stop contract (stop_after=network)",
+        "stdout": "ok",
+        "stderr": "",
+        "rc": 0,
+        "ok": true,
+        "required": true,
+        "missing_outputs": [],
+        "stale_outputs": [],
+        "verify_failed": false
+      }
+    ],
+    "stop_gate": [
+      true,
+      "ok"
+    ],
+    "active_provenance": {
+      "network_run_id": "20261005T085652-8590af9a",
+      "code_sha": "unknown",
+      "stamped_at": "2026-10-05T08:56:52",
+      "solver_status": "success",
+      "solver": "network_conductivity.py",
+      "argv": {
+        "type_map": "1:AM,3:SE",
+        "scale": 1000,
+        "contact_mode": "both"
+      },
+      "units_contract": "sim_to_real_v1",
+      "input_digests": {
+        "atoms.csv": "aaf52dc16349094c",
+        "contacts.csv": "f40f3fa11114eea9"
+      },
+      "provenance_state": "valid"
+    },
+    "old_generation_survived": false,
+    "full_metrics": {
+      "phi_se": 0.3,
+      "thickness_um": 100.0,
+      "thickness_mass_conserving_um": 100.0,
+      "phi_se_mass_conserving": 0.3,
+      "percolation_pct": 100.0,
+      "temperature_provenance": {
+        "sigma_ion_T_factor": 4.0,
+        "T_C": 60.0
+      },
+      "sigma_full": 0.05,
+      "sigma_full_mScm": 0.15,
+      "sigma_bulk_net": 0.1,
+      "sigma_bulk_net_mScm": 0.3,
+      "constriction_power_share_ion_hertz": 0.5,
+      "constriction_power_share_ion_hertz_status": "computed",
+      "sigma_full_physics": 0.05,
+      "sigma_full_mScm_physics": 0.15,
+      "sigma_bulk_net_physics": 0.1,
+      "sigma_bulk_net_mScm_physics": 0.3,
+      "constriction_power_share_ion_physics": 0.5,
+      "constriction_power_share_ion_physics_status": "computed",
+      "network_dual": {
+        "hertzian": {
+          "sigma_full": 0.05,
+          "sigma_full_mScm": 0.15,
+          "sigma_bulk_net": 0.1,
+          "sigma_bulk_net_mScm": 0.3,
+          "electronic_sigma_full_mScm": null,
+          "thermal_sigma_full_mScm": null,
+          "R_brug_over_full": null,
+          "bulk_resistance_fraction": null
+        },
+        "physics": {
+          "sigma_full": 0.05,
+          "sigma_full_mScm": 0.15,
+          "sigma_bulk_net": 0.1,
+          "sigma_bulk_net_mScm": 0.3,
+          "electronic_sigma_full_mScm": null,
+          "thermal_sigma_full_mScm": null,
+          "R_brug_over_full": null,
+          "bulk_resistance_fraction": null
+        },
+        "ratio_physics_over_hertzian": {}
+      },
+      "ionic_channel_verdict": "ok",
+      "ionic_channel_reason": "computed",
+      "electronic_channel_verdict": "ok",
+      "electronic_channel_reason": "computed",
+      "thermal_channel_verdict": "ok",
+      "thermal_channel_reason": "computed",
+      "warnings": [],
+      "warning_count": 0,
+      "network_solver_status": "success",
+      "failed_channels": null,
+      "network_run_id": "20261005T085652-8590af9a",
+      "active_network_run_id": "20261005T085652-8590af9a",
+      "last_network_attempt_run_id": "20261005T085652-8590af9a"
+    },
+    "tau": {
+      "case": "g56_wz07bt6b",
+      "f_ion_hertz": 0.05,
+      "f_ion_hertz_gap": 0.05,
+      "tau2_ion_hertz": 5.999999999999999,
+      "tau_ion_hertz": 2.449489742783178,
+      "ion_net_status_hertz": "OK",
+      "ion_net_status_reason_hertz": "",
+      "ion_net_area_mode_hertz": "hertz",
+      "ion_net_constriction_hertz": "",
+      "ion_net_psi_hertz": "",
+      "ion_net_band_rule_hertz": "L0",
+      "ion_net_band_frac_hertz": 0.08,
+      "ion_net_basis_check_hertz": "ok",
+      "f_ion_physics": 0.05,
+      "f_ion_physics_gap": 0.05,
+      "tau2_ion_physics": 5.999999999999999,
+      "tau_ion_physics": 2.449489742783178,
+      "ion_net_status_physics": "OK",
+      "ion_net_status_reason_physics": "",
+      "ion_net_area_mode_physics": "physics",
+      "ion_net_constriction_physics": "",
+      "ion_net_psi_physics": "",
+      "ion_net_band_rule_physics": "L0",
+      "ion_net_band_frac_physics": 0.08,
+      "ion_net_basis_check_physics": "ok",
+      "ion_sigma0_mScm": 3.0,
+      "ion_sigma0_T_C": 25.0,
+      "phi_basis": "mass_conserving",
+      "L_basis": "L_mc"
+    },
+    "grade_tau": 4.898979485566356,
+    "paired_sigma0": 12.0
+  }
+]

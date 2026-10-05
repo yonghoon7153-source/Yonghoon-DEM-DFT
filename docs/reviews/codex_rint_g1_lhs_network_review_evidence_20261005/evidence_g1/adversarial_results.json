@@ -1,0 +1,311 @@
+{
+  "api": {
+    "sid_mismatch_rejected": true,
+    "sigma_mismatch_rejected": true,
+    "base_receipt_valid": [
+      true,
+      null
+    ],
+    "failed_receipt_with_successful_result_contract": [
+      true,
+      null
+    ],
+    "spearman_ties": {
+      "a": [
+        1,
+        1,
+        2
+      ],
+      "b": [
+        1,
+        2,
+        2
+      ],
+      "actual": 1.0,
+      "tie_aware_reference": 0.5000000000000001
+    },
+    "spearman_all_zero": {
+      "actual": 0.9999999999999999,
+      "reference": "undefined (constant rank)"
+    },
+    "tangent_raster_ownership": {
+      "input_points_outside_am": true,
+      "old_je": [
+        0.03831624353328062,
+        0.037756103759881546
+      ],
+      "new_actual_je": [
+        0.0003027511154070284,
+        0.00031217396939968564
+      ],
+      "old_over_new": [
+        126.56020600210513,
+        120.94571444405501
+      ],
+      "new_matches_explicit_am_mask": true
+    },
+    "nonfinite_residual_warning": {
+      "warning_emitted": false,
+      "unconverged": false,
+      "resid_finite": false,
+      "note": "Process-local injected NaN CG result; not evidence the three historical realbed solves had NaNs."
+    }
+  },
+  "producer": [
+    {
+      "mode": "normal",
+      "rc": 0,
+      "published": true,
+      "warning_present": false,
+      "sigma_e": 0.0010352120036449418,
+      "collector": {
+        "mode": "analytic_gap_v3 (bare gap≤0.10µm / wetted gap≤0.30µm — exact sphere/point z)",
+        "wetted_sigma_S_cm": 0.0009487,
+        "bare_sigma_S_cm": 0.0009487,
+        "R_geom_ohm_cm2": 0.0,
+        "n_bottom_contacts": {
+          "wetted": 36,
+          "bare": 36,
+          "canonical_plate": 108
+        },
+        "note": "MODEL OUTPUT (emergent): contact SELECTION analytic (no voxel blur); coupling conductance voxel-scale.  R_geom = L(1/σ_bare − 1/σ_wetted); measured R_int − R_geom = chemistry/degradation share"
+      },
+      "collector_status": {
+        "status": "complete",
+        "backend": {
+          "requested": "cpu",
+          "used": "cpu",
+          "fallback_reason": null,
+          "precond": "jacobi"
+        }
+      },
+      "receipt_contract": [
+        true,
+        null
+      ],
+      "receipts": {
+        "electronic_main": {
+          "model": "r1-phase-boundary-series",
+          "unit": "ohm_cm2",
+          "table": {
+            "AM_S|AM_S": 0.001,
+            "AM_S|VGCF": 0.002
+          },
+          "pid_used": true,
+          "n_faces_rint": 3816,
+          "faces_by_pair": {
+            "AM_S|AM_S": 3816
+          },
+          "solved": true,
+          "status": "applied"
+        },
+        "electronic_wetted": {
+          "model": "r1-phase-boundary-series",
+          "unit": "ohm_cm2",
+          "table": {
+            "AM_S|AM_S": 0.001,
+            "AM_S|VGCF": 0.002
+          },
+          "pid_used": true,
+          "n_faces_rint": 3816,
+          "faces_by_pair": {
+            "AM_S|AM_S": 3816
+          },
+          "solved": true,
+          "status": "applied"
+        },
+        "electronic_bare": {
+          "model": "r1-phase-boundary-series",
+          "unit": "ohm_cm2",
+          "table": {
+            "AM_S|AM_S": 0.001,
+            "AM_S|VGCF": 0.002
+          },
+          "pid_used": true,
+          "n_faces_rint": 3816,
+          "faces_by_pair": {
+            "AM_S|AM_S": 3816
+          },
+          "solved": true,
+          "status": "applied"
+        },
+        "ionic": {
+          "status": "not_requested"
+        }
+      },
+      "check_arm_rc": 0
+    },
+    {
+      "mode": "wetted_unconverged",
+      "rc": 0,
+      "published": true,
+      "warning_present": true,
+      "sigma_e": 0.0010352120036449418,
+      "collector": {
+        "mode": "analytic_gap_v3 (bare gap≤0.10µm / wetted gap≤0.30µm — exact sphere/point z)",
+        "wetted_sigma_S_cm": 0.007179,
+        "bare_sigma_S_cm": 0.0009487,
+        "R_geom_ohm_cm2": 3.8,
+        "n_bottom_contacts": {
+          "wetted": 36,
+          "bare": 36,
+          "canonical_plate": 108
+        },
+        "note": "MODEL OUTPUT (emergent): contact SELECTION analytic (no voxel blur); coupling conductance voxel-scale.  R_geom = L(1/σ_bare − 1/σ_wetted); measured R_int − R_geom = chemistry/degradation share"
+      },
+      "collector_status": {
+        "status": "complete",
+        "backend": {
+          "requested": "cpu",
+          "used": "cpu",
+          "fallback_reason": null,
+          "precond": "jacobi"
+        }
+      },
+      "receipt_contract": [
+        true,
+        null
+      ],
+      "receipts": {
+        "electronic_main": {
+          "model": "r1-phase-boundary-series",
+          "unit": "ohm_cm2",
+          "table": {
+            "AM_S|AM_S": 0.001,
+            "AM_S|VGCF": 0.002
+          },
+          "pid_used": true,
+          "n_faces_rint": 3816,
+          "faces_by_pair": {
+            "AM_S|AM_S": 3816
+          },
+          "solved": true,
+          "status": "applied"
+        },
+        "electronic_wetted": {
+          "model": "r1-phase-boundary-series",
+          "unit": "ohm_cm2",
+          "table": {
+            "AM_S|AM_S": 0.001,
+            "AM_S|VGCF": 0.002
+          },
+          "pid_used": true,
+          "n_faces_rint": 3816,
+          "faces_by_pair": {
+            "AM_S|AM_S": 3816
+          },
+          "solved": true,
+          "status": "applied"
+        },
+        "electronic_bare": {
+          "model": "r1-phase-boundary-series",
+          "unit": "ohm_cm2",
+          "table": {
+            "AM_S|AM_S": 0.001,
+            "AM_S|VGCF": 0.002
+          },
+          "pid_used": true,
+          "n_faces_rint": 3816,
+          "faces_by_pair": {
+            "AM_S|AM_S": 3816
+          },
+          "solved": true,
+          "status": "applied"
+        },
+        "ionic": {
+          "status": "not_requested"
+        }
+      },
+      "check_arm_rc": 0
+    },
+    {
+      "mode": "bare_unconverged",
+      "rc": 0,
+      "published": true,
+      "warning_present": true,
+      "sigma_e": 0.0010352120036449418,
+      "collector": {
+        "mode": "analytic_gap_v3 (bare gap≤0.10µm / wetted gap≤0.30µm — exact sphere/point z)",
+        "wetted_sigma_S_cm": 0.0009487,
+        "bare_sigma_S_cm": 0.007179,
+        "R_geom_ohm_cm2": 0.0,
+        "n_bottom_contacts": {
+          "wetted": 36,
+          "bare": 36,
+          "canonical_plate": 108
+        },
+        "note": "MODEL OUTPUT (emergent): contact SELECTION analytic (no voxel blur); coupling conductance voxel-scale.  R_geom = L(1/σ_bare − 1/σ_wetted); measured R_int − R_geom = chemistry/degradation share"
+      },
+      "collector_status": {
+        "status": "complete",
+        "backend": {
+          "requested": "cpu",
+          "used": "cpu",
+          "fallback_reason": null,
+          "precond": "jacobi"
+        }
+      },
+      "receipt_contract": [
+        true,
+        null
+      ],
+      "receipts": {
+        "electronic_main": {
+          "model": "r1-phase-boundary-series",
+          "unit": "ohm_cm2",
+          "table": {
+            "AM_S|AM_S": 0.001,
+            "AM_S|VGCF": 0.002
+          },
+          "pid_used": true,
+          "n_faces_rint": 3816,
+          "faces_by_pair": {
+            "AM_S|AM_S": 3816
+          },
+          "solved": true,
+          "status": "applied"
+        },
+        "electronic_wetted": {
+          "model": "r1-phase-boundary-series",
+          "unit": "ohm_cm2",
+          "table": {
+            "AM_S|AM_S": 0.001,
+            "AM_S|VGCF": 0.002
+          },
+          "pid_used": true,
+          "n_faces_rint": 3816,
+          "faces_by_pair": {
+            "AM_S|AM_S": 3816
+          },
+          "solved": true,
+          "status": "applied"
+        },
+        "electronic_bare": {
+          "model": "r1-phase-boundary-series",
+          "unit": "ohm_cm2",
+          "table": {
+            "AM_S|AM_S": 0.001,
+            "AM_S|VGCF": 0.002
+          },
+          "pid_used": true,
+          "n_faces_rint": 3816,
+          "faces_by_pair": {
+            "AM_S|AM_S": 3816
+          },
+          "solved": true,
+          "status": "applied"
+        },
+        "ionic": {
+          "status": "not_requested"
+        }
+      },
+      "check_arm_rc": 0
+    },
+    {
+      "mode": "main_unconverged",
+      "rc": 3,
+      "published": false,
+      "warning_present": true
+    }
+  ]
+}

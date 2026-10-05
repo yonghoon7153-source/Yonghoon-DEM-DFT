@@ -1,0 +1,391 @@
+{
+  "repository": "yonghoon7153-source/Yonghoon-DEM-DFT",
+  "commit": "30c8205c5efb3873ae6fa856881fa184bd041d4d",
+  "files": [
+    {
+      "path": "AGENTS.md",
+      "git_blob": "2829b46196a08ffae439ddbdc20dc093cde511c4",
+      "sha256": null
+    },
+    {
+      "path": "CLAUDE.md",
+      "git_blob": "885302031b0fab5f2154e1df20245b134639e27e",
+      "sha256": null
+    },
+    {
+      "path": "docs/bruggeman_tortuosity_network_20261002.md",
+      "git_blob": "0075431dc593b0a98491f0b0a8177a174eb51e86",
+      "sha256": null
+    },
+    {
+      "path": "docs/GRADING_STORY.md",
+      "git_blob": "edceaaeb37db686531808e75ea0dacb87f0b9334",
+      "sha256": null
+    },
+    {
+      "path": "docs/stage4_electrochem_research.md",
+      "git_blob": "dbe802f44a1ef03165482038858432be984171d6",
+      "sha256": null
+    },
+    {
+      "path": "docs/data/lhs_audit_bundle4_20261004/README.md",
+      "git_blob": "46b078d2dce72b24c257d835638ea13a63bbbeb2",
+      "sha256": null
+    },
+    {
+      "path": "docs/data/lhs_release_20261001/ERRATA_20261004.md",
+      "git_blob": "5e1d22d9b4d4916b0183846b404b5ea5c89edabb",
+      "sha256": null
+    },
+    {
+      "path": "docs/data/lhs_release_20261001/lhs_release_20261001_columns.tsv",
+      "git_blob": "7ab36a56a615bf9cc759153dcdc151dee608ee17",
+      "sha256": null
+    },
+    {
+      "path": "docs/data/lhs_release_20261001/lhsx_release_20261001_columns.tsv",
+      "git_blob": "b9a5e5f0a6660148f03dc942cf23562e54662819",
+      "sha256": null
+    },
+    {
+      "path": "docs/data/lhs_release_20261001_v11/ERRATA_20261004.md",
+      "git_blob": "d5793562bb7661fe42040dc83c37b621679b998d",
+      "sha256": null
+    },
+    {
+      "path": "docs/data/lhs_release_20261001_v11/lhs_release_20261001_v11_columns.tsv",
+      "git_blob": "cbfcde9febd2a59acdc99e6f7909ab96e16b2cf1",
+      "sha256": null
+    },
+    {
+      "path": "docs/data/lhs_release_20261001_v11/lhsx_release_20261001_v11_columns.tsv",
+      "git_blob": "c14f348928fbc78a1359dc08308fa13794fe7c92",
+      "sha256": null
+    },
+    {
+      "path": "docs/data/rint03_je_20261005/README.md",
+      "git_blob": "a6800da418c51f1c6c39a84db8484aae9ca04f31",
+      "sha256": null
+    },
+    {
+      "path": "docs/data/rint03_je_20261005/rint03_je_fig.json",
+      "git_blob": "10a74dfed70a23334438ebdd2deeba3b67630c70",
+      "sha256": null
+    },
+    {
+      "path": "docs/data/rint03_je_20261005/rint03_je_vgcf1.json",
+      "git_blob": "251008b6cd741a1e410f2c91ded2acbcd079da09",
+      "sha256": null
+    },
+    {
+      "path": "docs/data/rint03_je_20261005/rint03_je_vgcf4.json",
+      "git_blob": "a82d0ea88589dcc4d2939c01189bbaa8c6aa1029",
+      "sha256": null
+    },
+    {
+      "path": "docs/reviews/codex_rint_g1_lhs_network_request_20261004.md",
+      "git_blob": "2cdf67be30bd809479de15b26ce72238f4943bf4",
+      "sha256": null
+    },
+    {
+      "path": "docs/reviews/lhs_handover_judgments_20260924.md",
+      "git_blob": "92cde8077787c7165b89f61ea8284e415566f5d4",
+      "sha256": null
+    },
+    {
+      "path": "docs/reviews/tau_conventions_judgment_v2_20261003.md",
+      "git_blob": "8f104e82e38454fc8b4db9abf349500c2dc4ff37",
+      "sha256": null
+    },
+    {
+      "path": "scripts/analyze_contacts.py",
+      "git_blob": "afd13fb66a65f090bd6e23832ebd3d92a0f4eb78",
+      "sha256": null
+    },
+    {
+      "path": "scripts/build_tau_regime_db.py",
+      "git_blob": "88a0e010ff016a3caf4092bb23e17746dc785ac1",
+      "sha256": null
+    },
+    {
+      "path": "scripts/check_all.sh",
+      "git_blob": "19566ad7436e1179c2c0a277ba149d82cad279a4",
+      "sha256": null
+    },
+    {
+      "path": "scripts/check_method_discipline.py",
+      "git_blob": "c10d36b5c3549a3f30a0bcb94913a8279968c0db",
+      "sha256": null
+    },
+    {
+      "path": "scripts/coverage_physics_vs_hertzian.py",
+      "git_blob": "406a6b9a951561a3703511fcc63396fc229441b6",
+      "sha256": null
+    },
+    {
+      "path": "scripts/dem_analysis_core.py",
+      "git_blob": "91747cc6b5a61b10e73d0ae8a24a6571a4a136e3",
+      "sha256": null
+    },
+    {
+      "path": "scripts/export_comsol_2d.py",
+      "git_blob": "1b37bbef3139b5e88fabf52f2bafab8e8a20b712",
+      "sha256": null
+    },
+    {
+      "path": "scripts/extract_2d_microstructure.py",
+      "git_blob": "210e92017e6118e740e1ee7578d24b3233f6d57c",
+      "sha256": null
+    },
+    {
+      "path": "scripts/fibre_segment_raster.py",
+      "git_blob": "c117c51152e85b55d23cd1425c4d8e5e25542928",
+      "sha256": null
+    },
+    {
+      "path": "scripts/generate_comparison_plots.py",
+      "git_blob": "45810023d43321e11cdacd42b4543cf134769c18",
+      "sha256": null
+    },
+    {
+      "path": "scripts/grade_engine.py",
+      "git_blob": "fb705f7d74fe2834cd454d89a08689fcdc2eddeb",
+      "sha256": null
+    },
+    {
+      "path": "scripts/lhs_design_dataset.py",
+      "git_blob": "c73e0d37f015f35be715fbff9bf55384ccbf3abd",
+      "sha256": null
+    },
+    {
+      "path": "scripts/lhs_harvest_batch.py",
+      "git_blob": "77b028620779668aec1777b21a1a77be4bf1fbbd",
+      "sha256": null
+    },
+    {
+      "path": "scripts/lhs_stress_constriction_audit.py",
+      "git_blob": "2898c2f8e598ad9416c6d0c817a3a33ad6cbbf5e",
+      "sha256": null
+    },
+    {
+      "path": "scripts/lhs_webapp_batch.py",
+      "git_blob": "081693abed37e824bf71941eafeac680344314e0",
+      "sha256": null
+    },
+    {
+      "path": "scripts/mpm_webapp_payload.py",
+      "git_blob": "1acdd2e101acd745d8f8cab79b37466f3b3c1a8c",
+      "sha256": null
+    },
+    {
+      "path": "scripts/network_conductivity.py",
+      "git_blob": "5b1f26ddc34e07fdb8eb7baf64c429e16ad9ca47",
+      "sha256": null
+    },
+    {
+      "path": "scripts/network_mode_io.py",
+      "git_blob": "8ca2aa549311f358856cf80f9ac2817a0d64f302",
+      "sha256": null
+    },
+    {
+      "path": "scripts/network_projection_preflight.py",
+      "git_blob": "f545797440ea4d1eeb11c553d4b26db3a6250aa9",
+      "sha256": null
+    },
+    {
+      "path": "scripts/plastic_coverage.py",
+      "git_blob": "59b1d7cbb74f43f7a53594468193c5ef5327b84a",
+      "sha256": null
+    },
+    {
+      "path": "scripts/plot_section7_design_rules.py",
+      "git_blob": "0a93f956dc33cd764867f43934171185ecf86ead",
+      "sha256": null
+    },
+    {
+      "path": "scripts/press_units.py",
+      "git_blob": "a11fe7b082c11404493b727c4239ddc78106fbaf",
+      "sha256": null
+    },
+    {
+      "path": "scripts/rebuild_tables_from_metrics.py",
+      "git_blob": "9b02496928c1a624918eaa14f793d06dd4ca836c",
+      "sha256": null
+    },
+    {
+      "path": "scripts/rint03_je_compare.py",
+      "git_blob": "aad7ee626f4bc4774175a75790d3c395723f2d94",
+      "sha256": null
+    },
+    {
+      "path": "scripts/run_contract.py",
+      "git_blob": "d38bbddce7b093fa2eb6915f8eace70e3240ae06",
+      "sha256": null
+    },
+    {
+      "path": "scripts/run_network_full_corrections.py",
+      "git_blob": "a86ac06d06c9dc500969c5b40b555b613d06e967",
+      "sha256": null
+    },
+    {
+      "path": "scripts/sdcp_gain_verdict.py",
+      "git_blob": "dfaf3f58ab06e8fa30608ae1a847fa968a9d0c5b",
+      "sha256": null
+    },
+    {
+      "path": "scripts/se_material.py",
+      "git_blob": "506caca0f8744ee89836a026685f0730ef478f94",
+      "sha256": null
+    },
+    {
+      "path": "scripts/seal_s3_prerun.py",
+      "git_blob": "76059c2438fd052673d22100f965d2975e368cd4",
+      "sha256": null
+    },
+    {
+      "path": "scripts/sr01_stamp_compare.py",
+      "git_blob": "0c12d648c67395012491d2e370f18413656f8d58",
+      "sha256": null
+    },
+    {
+      "path": "scripts/step3_sigma.py",
+      "git_blob": "a20bee16c36a48fbee0b7762b4afdb5f97b4d292",
+      "sha256": null
+    },
+    {
+      "path": "scripts/step4_dyn.py",
+      "git_blob": "854969698666eba51f43aa9f3849dc0d8863b9ef",
+      "sha256": null
+    },
+    {
+      "path": "scripts/tau_flux.py",
+      "git_blob": "3914ef548a47fadb8395404b2534598ee03a3146",
+      "sha256": null
+    },
+    {
+      "path": "scripts/test_constriction_power_share.py",
+      "git_blob": "d86922815713b97cf4acf6f67d68fdb4fbeb288e",
+      "sha256": null
+    },
+    {
+      "path": "scripts/test_love_weber_stress.py",
+      "git_blob": "7e825036cd94080af0656306536b2749f0e24708",
+      "sha256": null
+    },
+    {
+      "path": "scripts/test_network_boundary_rule.py",
+      "git_blob": "ff6927c53a5aeb969c3051e650a43b408af0524e",
+      "sha256": null
+    },
+    {
+      "path": "scripts/test_rint_receipts.py",
+      "git_blob": "7699dd96cdd1f8783ad5a229f026155570a9cada",
+      "sha256": null
+    },
+    {
+      "path": "scripts/test_tau_flux.py",
+      "git_blob": "bd3de0af6992e88856f7e9ba72dbd768526e67e7",
+      "sha256": null
+    },
+    {
+      "path": "scripts/type_map_resolve.py",
+      "git_blob": "31092eb1afda0b1316c3f4f7c716c0dd537b9920",
+      "sha256": null
+    },
+    {
+      "path": "scripts/viz_mpm_continuum.py",
+      "git_blob": "9847106afb693e3c280988716382b60e1deb27ad",
+      "sha256": null
+    },
+    {
+      "path": "webapp/app.py",
+      "git_blob": "f0ab518d754cac3f6822e8a7149e3578ddbca307",
+      "sha256": null
+    },
+    {
+      "path": "webapp/ledger_view.py",
+      "git_blob": "23cbb564cfa7fec95182e5f12b6774840f1f31a1",
+      "sha256": null
+    },
+    {
+      "path": "webapp/mpm_lab_register.py",
+      "git_blob": "c1fad04c43c6bb1efcf5818142a2c19bf2d3631d",
+      "sha256": null
+    },
+    {
+      "path": "webapp/pipeline_service.py",
+      "git_blob": "b6553d88d7df0f2d2b308394d2599dc584a807da",
+      "sha256": null
+    },
+    {
+      "path": "webapp/predictor_engine.py",
+      "git_blob": "808866f6c50841b7233cf13adae532b4accf9a41",
+      "sha256": null
+    },
+    {
+      "path": "webapp/security.py",
+      "git_blob": "debba1fcd449667e625528108d004475b4026cc5",
+      "sha256": null
+    },
+    {
+      "path": "webapp/storage_sync.py",
+      "git_blob": "dd51efeebd7d203e79b038cc3fb310485ca49ee3",
+      "sha256": null
+    },
+    {
+      "path": "webapp/structure_predictor.py",
+      "git_blob": "dc16a33e9442148260f3ef5fff3e8a54bc443bc8",
+      "sha256": null
+    },
+    {
+      "path": "webapp/test_constriction_power_labels.py",
+      "git_blob": "f5d14447b656162e1796f5876b7f5cd0af38ffd2",
+      "sha256": null
+    },
+    {
+      "path": "webapp/test_pipeline_provenance.py",
+      "git_blob": "e9ef20b9ea4d4472899d6d5454dc1e1b4f2d8e23",
+      "sha256": null
+    },
+    {
+      "path": "webapp/test_s567_labels.py",
+      "git_blob": "49f4ed97083443d2d067b0328f1bead53fdb4eea",
+      "sha256": null
+    },
+    {
+      "path": "webapp/test_stress_lw_labels.py",
+      "git_blob": "1bf9f39c0fe5969ff501780299e31793038b8554",
+      "sha256": null
+    },
+    {
+      "path": "webapp/test_tau_grade_unify.py",
+      "git_blob": "1fe78c8b9bfdb9d61122e0ed3a6688433da57fc3",
+      "sha256": null
+    },
+    {
+      "path": "webapp/test_tau_handover_status.py",
+      "git_blob": "7206a52252006d938e2b72bdee412cf9a2342996",
+      "sha256": null
+    },
+    {
+      "path": "webapp/test_tau_labels.py",
+      "git_blob": "8b399e318d30397107ad6011f910ff1257f94a08",
+      "sha256": null
+    },
+    {
+      "path": "webapp/static/js/viewer3d.js",
+      "git_blob": "625e7d9578bafaf2d1e5ee92d62c3414c625d232",
+      "sha256": null
+    },
+    {
+      "path": "webapp/templates/group.html",
+      "git_blob": "4104584ef855c4b1d3832e404ebfd085b8054898",
+      "sha256": null
+    },
+    {
+      "path": "webapp/templates/single.html",
+      "git_blob": "c8b24483a93f7042fc547f86bd68ca7bb11d410d",
+      "sha256": null
+    }
+  ]
+}

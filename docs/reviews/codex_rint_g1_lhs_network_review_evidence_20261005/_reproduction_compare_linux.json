@@ -1,0 +1,353 @@
+{
+ "what": "Codex RINT G1 · LHS 망 리뷰 zip 을 풀어 놓은 사본에서 여덟 탐침을 무변경 실행 → 증거 JSON · stdout 을 받은 것과 값 단위로 대조",
+ "zip": {
+  "name": "codex_rint_g1_lhs_network_review_20261005.zip",
+  "bytes": 3138836,
+  "sha256": "e42ccd90b76c15807933d8597f1d24c5853c82a18e535315bd5c04e699472aaa",
+  "files": 313
+ },
+ "package_manifest_check": {
+  "n": 312,
+  "ok": 312,
+  "bad": []
+ },
+ "source_blob_check": {
+  "n": 223,
+  "match": 223,
+  "mismatch": [],
+  "missing_binary_fixtures": [
+   "docs/data/real14_reference_20260928/atom_2060000.liggghts.gz",
+   "docs/data/real14_reference_20260928/contact_2060000.liggghts.gz"
+  ]
+ },
+ "env": {
+  "python": "3.11.15",
+  "numpy": "2.4.6",
+  "scipy": "1.17.1",
+  "os": "Linux"
+ },
+ "commands": [
+  "python3 verify_snapshot.py",
+  "python3 evidence_g1/probe_adversarial.py",
+  "python3 evidence_g23/probe_lw_independent.py",
+  "python3 evidence_g23/probe_network_independent.py",
+  "python3 evidence_g4/probe_g4.py",
+  "python3 evidence_g4/replay_g4.py",
+  "python3 evidence_g56/probe_contracts.py",
+  "python3 evidence_g56/probe_actual_zero.py"
+ ],
+ "volatile_key_regex": "(time|elapsed|seconds|duration|date|python|platform|path|dir|cwd|version|host|sys_|executable|tmp|started|finished|utc)",
+ "classes": {
+  "cg_resid": "CG 잔차 값 (상대 ≤ 5.2e-8 · σ · 판정 같음)",
+  "env": "실행 환경 필드 (exec_env risk · sitecustomize · numpy 판)",
+  "synthetic_input_hash": "합성 fixture 파일 해시 (Windows ↔ Linux 로 쓴 파일 · σ 같음)",
+  "run_identity": "실행마다 새로 만드는 run_id · 시각 · 임시 case 이름",
+  "path_separator": "sha256 키의 경로 구분자 (\\ ↔ /)",
+  "float_string_ulp": "문자열로 저장한 실수의 마지막 자리 (1 ULP)",
+  "fp_noise": "상대 ≤ 1e-12",
+  "path": "합성 입력 파일 경로 (Windows 작업 폴더 ↔ Linux 임시 폴더)"
+ },
+ "unclassified_total": 0,
+ "json_files": [
+  {
+   "file": "evidence_g23/fetched_dependencies.json",
+   "n_diff": 0,
+   "by_class": {},
+   "max_rel_num": 0.0
+  },
+  {
+   "file": "evidence_g23/reference_network_eedada5d3.py.metadata.json",
+   "n_diff": 0,
+   "by_class": {},
+   "max_rel_num": 0.0
+  },
+  {
+   "file": "evidence_g23/test_run_metadata.final.json",
+   "n_diff": 0,
+   "by_class": {},
+   "max_rel_num": 0.0
+  },
+  {
+   "file": "evidence_g23/test_run_metadata.json",
+   "n_diff": 0,
+   "by_class": {},
+   "max_rel_num": 0.0
+  },
+  {
+   "file": "evidence_g4/acquisition_manifest.json",
+   "n_diff": 0,
+   "by_class": {},
+   "max_rel_num": 0.0
+  },
+  {
+   "file": "evidence_g4/acquisition_verified.json",
+   "n_diff": 0,
+   "by_class": {},
+   "max_rel_num": 0.0
+  },
+  {
+   "file": "evidence_g4/baseline_fixture.json",
+   "n_diff": 3,
+   "by_class": {
+    "float_string_ulp": 3
+   },
+   "max_rel_num": 0.0
+  },
+  {
+   "file": "evidence_g4/cli_metadata.json",
+   "n_diff": 0,
+   "by_class": {},
+   "max_rel_num": 0.0
+  },
+  {
+   "file": "evidence_g4/committed_194_g4_checks.json",
+   "n_diff": 0,
+   "by_class": {},
+   "max_rel_num": 0.0
+  },
+  {
+   "file": "evidence_g4/metadata.json",
+   "n_diff": 5,
+   "by_class": {
+    "env": 1,
+    "path_separator": 4
+   },
+   "max_rel_num": 0.0
+  },
+  {
+   "file": "evidence_g4/probe_results.json",
+   "n_diff": 0,
+   "by_class": {},
+   "max_rel_num": 0.0
+  },
+  {
+   "file": "evidence_g4/summary.json",
+   "n_diff": 0,
+   "by_class": {},
+   "max_rel_num": 0.0
+  },
+  {
+   "file": "evidence_g1/adversarial_results.json",
+   "n_diff": 8,
+   "by_class": {
+    "fp_noise": 8
+   },
+   "max_rel_num": 5.513461305252805e-16
+  },
+  {
+   "file": "evidence_g1/bare_unconverged.json",
+   "n_diff": 8,
+   "by_class": {
+    "cg_resid": 1,
+    "env": 2,
+    "synthetic_input_hash": 2,
+    "fp_noise": 1,
+    "path": 2
+   },
+   "max_rel_num": 2.730160430954593e-08
+  },
+  {
+   "file": "evidence_g1/bare_unconverged_solver_records.json",
+   "n_diff": 5,
+   "by_class": {
+    "cg_resid": 2,
+    "fp_noise": 3
+   },
+   "max_rel_num": 5.180881776237362e-08
+  },
+  {
+   "file": "evidence_g1/baselines.json",
+   "n_diff": 0,
+   "by_class": {},
+   "max_rel_num": 0.0
+  },
+  {
+   "file": "evidence_g1/main_unconverged_solver_records.json",
+   "n_diff": 6,
+   "by_class": {
+    "cg_resid": 3,
+    "fp_noise": 3
+   },
+   "max_rel_num": 5.180881776237362e-08
+  },
+  {
+   "file": "evidence_g1/normal.json",
+   "n_diff": 8,
+   "by_class": {
+    "cg_resid": 1,
+    "env": 2,
+    "synthetic_input_hash": 2,
+    "fp_noise": 1,
+    "path": 2
+   },
+   "max_rel_num": 2.730160430954593e-08
+  },
+  {
+   "file": "evidence_g1/normal_solver_records.json",
+   "n_diff": 6,
+   "by_class": {
+    "cg_resid": 3,
+    "fp_noise": 3
+   },
+   "max_rel_num": 5.180881776237362e-08
+  },
+  {
+   "file": "evidence_g1/wetted_unconverged.json",
+   "n_diff": 8,
+   "by_class": {
+    "cg_resid": 1,
+    "env": 2,
+    "synthetic_input_hash": 2,
+    "fp_noise": 1,
+    "path": 2
+   },
+   "max_rel_num": 2.730160430954593e-08
+  },
+  {
+   "file": "evidence_g1/wetted_unconverged_solver_records.json",
+   "n_diff": 5,
+   "by_class": {
+    "cg_resid": 2,
+    "fp_noise": 3
+   },
+   "max_rel_num": 5.180881776237362e-08
+  },
+  {
+   "file": "evidence_g56/actual_zero_results.json",
+   "n_diff": 9,
+   "by_class": {
+    "synthetic_input_hash": 2,
+    "run_identity": 7
+   },
+   "max_rel_num": 0.0
+  },
+  {
+   "file": "evidence_g56/baselines.json",
+   "n_diff": 0,
+   "by_class": {},
+   "max_rel_num": 0.0
+  },
+  {
+   "file": "evidence_g56/column_blobs.json",
+   "n_diff": 0,
+   "by_class": {},
+   "max_rel_num": 0.0
+  },
+  {
+   "file": "evidence_g56/contract_results.json",
+   "n_diff": 48,
+   "by_class": {
+    "synthetic_input_hash": 12,
+    "run_identity": 36
+   },
+   "max_rel_num": 0.0
+  }
+ ],
+ "stdout_checks": {
+  "evidence_g4/probe.stdout.txt ↔ probe_g4.ours.stdout.txt": "same (CR · seconds 제거 뒤)",
+  "evidence_g23/probe_lw_independent.final.stdout.txt ↔ ours": "same",
+  "evidence_g23/probe_network_independent ↔ ours": "old==new 원시 hex: Codex 18/18 True · 우리 18 True · 플랫폼 간 출력 값 최대 상대차 2.24e-11 (같은 플랫폼 안 구·신 비교는 양쪽 다 비트 동일) · not_percolating · independent_power = same"
+ },
+ "key_values_replay": [
+  {
+   "finding": "RGL-01",
+   "quantity": "보조 σ 정상 / wetted 반복 1 회 / bare 반복 1 회 (S/cm) · R_geom (Ω·cm²) · collector · check-arm",
+   "value": "0.0009487 / 0.007179 / 0.007179 · 0.0 / 3.8 / 0.0 · complete · complete · rc 0 · 0 (주 σ_e 그대로 True)"
+  },
+  {
+   "finding": "RGL-02",
+   "quantity": "실 비관통 망 → 정지 관문 · tau_flux",
+   "value": "생산자 sigma_full_status not_computed · 관문 failed · tau NOT_PERCOLATING · f 0.0"
+  },
+  {
+   "finding": "RGL-03",
+   "quantity": "build_handover stop_after contact / network",
+   "value": "True / False"
+  },
+  {
+   "finding": "RGL-04",
+   "quantity": "L9 변이 · 실 비관통: summary / active provenance / full_metrics",
+   "value": "failed / success / success · failed / success / success · 옛 세대 생존 False"
+  },
+  {
+   "finding": "RGL-05",
+   "quantity": "NaN % · NaN index · F1 h inf · aug −999 (근거 삭제) · 0 채움 평균 → 수용",
+   "value": "True · True · True · True · True (명시 0 + 평균 → False)"
+  },
+  {
+   "finding": "RGL-06",
+   "quantity": "SE 반경 NaN → status · vm_cv · AM_P ratio · SE mean / 진짜 무하중 → status",
+   "value": "OK · 0.0 · 0.0 · nan / FAILED"
+  },
+  {
+   "finding": "RGL-07",
+   "quantity": "깨끗한 입력 / 옛 factor 4 생존: 짝 σ₀ · grade τ",
+   "value": "3.0 · 2.449489742783178 / 12.0 · 4.898979485566356"
+  },
+  {
+   "finding": "RGL-08",
+   "quantity": "입력 삭제 · per-mode≠dual · 관통인데 전력 몫 None+내부 예외 → network",
+   "value": "done · done · done"
+  },
+  {
+   "finding": "RGL-09",
+   "quantity": "Spearman [1,1,2] vs [1,2,2] (참 0.5) · 전부 0 (참 미정의)",
+   "value": "1.0 · 0.9999999999999999"
+  },
+  {
+   "finding": "RGL-10 · Q4",
+   "quantity": "구·신 18 비교 원시 hex · 전력 몫 실제 / 해석 / 이상 전극 (+%)",
+   "value": "True (18) · 0.09167871335514417 / 0.0916787133551442 / 0.08181818181818182 (+12.05 %)"
+  },
+  {
+   "finding": "Q2 (RINT-03)",
+   "quantity": "독립 raster 옛/새 je 배수 · 새 = 직접 AM mask",
+   "value": "126.5602 · 120.9457 · True"
+  }
+ ],
+ "excluded_from_repo": [
+  {
+   "path": "codex_review_rint_g1_lhs_network_20261005.md",
+   "bytes": 56004,
+   "sha256": "593b37d0a189fd8555cf6e879b5b8aa53a3765d3c1d8f5743f28cfbf037d76ab",
+   "why": "판정문 — docs/reviews/codex_review_rint_g1_lhs_network_20261005.md 로 반입"
+  },
+  {
+   "path": "evidence_g1/bare_unconverged.json",
+   "bytes": 374658,
+   "sha256": "01f8cb04181f65be074907a096e25d43c85e5577ab3479ae8d213acb30b65c0b",
+   "why": "합성 payload JSON (≈ 375 KB · evidence_g1/probe_adversarial.py 가 재생성)"
+  },
+  {
+   "path": "evidence_g1/main_unconverged.json.failed",
+   "bytes": 374597,
+   "sha256": "c1c387eccfd8994f3863964ff3e3f58d24485555eec0f7708d5007cde8efb058",
+   "why": "합성 payload JSON (≈ 375 KB · evidence_g1/probe_adversarial.py 가 재생성)"
+  },
+  {
+   "path": "evidence_g1/normal.json",
+   "bytes": 374972,
+   "sha256": "356863e103632f63c8cad1547f5d346beb0deec828949b3875aeceb4f4dd0db3",
+   "why": "합성 payload JSON (≈ 375 KB · evidence_g1/probe_adversarial.py 가 재생성)"
+  },
+  {
+   "path": "evidence_g1/wetted_unconverged.json",
+   "bytes": 374971,
+   "sha256": "0ec2d144f792a686d37c49d64870a5ccfe3884dba8b8848395c847fdfacbab61",
+   "why": "합성 payload JSON (≈ 375 KB · evidence_g1/probe_adversarial.py 가 재생성)"
+  },
+  {
+   "path": "evidence_g23/reference_network_eedada5d3.py",
+   "bytes": 93390,
+   "sha256": "73071748a2645339cda513ad34daf63ec83aca0ae83a37a656648da28b31c0a0",
+   "why": "구식 망 모듈 사본 — git show eedada5d3:scripts/network_conductivity.py 와 blob 동일 (2e0c4a47…)"
+  },
+  {
+   "path": "inputs/request.md",
+   "bytes": 25629,
+   "sha256": "ce30e830bc5baa0f7aa283fc94970f4d5ef9d8855e97f1d1a5db4e4711d046e1",
+   "why": "우리 요청서 사본 (docs/reviews/codex_rint_g1_lhs_network_request_20261004.md 와 CR 제거 뒤 바이트 동일)"
+  }
+ ],
+ "excluded_source_snapshot_files": 223
+}

@@ -1,0 +1,41 @@
+{
+  "commit": "30c8205c5efb3873ae6fa856881fa184bd041d4d",
+  "cohorts": [
+    {
+      "cohort": "lhs",
+      "rows": 130,
+      "counters": {
+        "n_SE_matches_harvest": 130,
+        "g4_gate_pass": 130,
+        "nonpercolating": 24,
+        "force_total_equals_contacts": 130,
+        "explicit_zero_contact_pairs": 3
+      },
+      "max_errors": {
+        "frac_pct_abs_error": 0.004996359898939318,
+        "fracture_index_abs_error": 4.935064935064626e-05,
+        "F1_relative_error": 2.178081687703956e-16,
+        "A4_relative_error": 1.8874990180689866e-12
+      },
+      "failures": []
+    },
+    {
+      "cohort": "lhsx",
+      "rows": 64,
+      "counters": {
+        "g4_gate_pass": 64,
+        "nonpercolating": 0,
+        "force_total_equals_contacts": 64,
+        "explicit_zero_contact_pairs": 6
+      },
+      "max_errors": {
+        "frac_pct_abs_error": 0.004978165938864687,
+        "fracture_index_abs_error": 4.8484848484848034e-05,
+        "F1_relative_error": 2.0539004373289635e-16,
+        "A4_relative_error": 2.2096496364960295e-12
+      },
+      "failures": []
+    }
+  ],
+  "scope": "Committed metrics CSV consistency, not raw dump replay. lhs130 n_SE additionally checked against harvested JSON; lhsx64 n_SE from producer CSV. No whole-194 build_handover claim."
+}

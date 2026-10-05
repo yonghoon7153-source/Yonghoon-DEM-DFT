@@ -1,0 +1,43 @@
+Traceback (most recent call last):
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\rint_g1_lhs_network_review_20261005\source\webapp\test_stress_lw_labels.py", line 213, in <module>
+[Storage] NOT configured - SUPABASE_URL=False SUPABASE_KEY=False
+[Security] WARNING: auth OFF - local/private only. For public deploy set WEBAPP_REQUIRE_AUTH=1 + WEBAPP_AUTH_TOKEN.
+A  케이스 표
+  PASS  A1a 옛 세대 CSV + LW 키 → 새 줄 10 개 전부 · 각 한 번
+  PASS  A1b 값 = metrics (반올림 1 · 3 자리) — CV 120.7 · AM_P 2.737 · 벽 제외 AM_P 3.016
+  PASS  A1c 벽 비율 줄 = "AM_P 41.7 · AM_S 20.0 · SE 9.8"
+  PASS  A1d 상태 줄 = OK
+  PASS  A1e 순서 — 옛 네 줄 → LW 열 줄 (정규화 정렬 표 그대로)
+  PASS  A2 LW 키 없는 옛 케이스 → 값 줄 "—" (0 으로 안 채움)
+  PASS  A2b 상태 = NOT_COMPUTED (재분석 전 케이스 — 접촉 단계 재실행)
+  PASS  A3 FAILED → 값 줄 "—" · 상태 줄에 사유
+  PASS  A4 새 세대 CSV (LW 줄을 이미 씀) → 중복 없음
+  PASS  A5a 옛 네 줄 논문 라벨 = "stress/atom" · "50/50" · 대각 (diagonal) 표기
+  PASS  A5b 새 줄 논문 라벨 = "Love–Weber" (상태 · 벽 비율 줄 포함)
+  PASS  A5c 응력 머리 = 두 규약 표기 (stress/atom 50/50 · Love–Weber)
+  PASS  A5d 논문 라벨 적용 뒤에도 옛 값 그대로 (213.1 · 0.884)
+  PASS  A6 정렬 표 — σ_SE/σ_mean 뒤에 LW 줄 순서대로
+B  single.html 툴팁 · 별칭
+  PASS  B1 옛 툴팁 넷 — "50/50" · "대각" · "LHS-29" 표기
+  PASS  B2 새 줄마다 툴팁
+  PASS  B3 별칭 표 — 새 논문 라벨 → 원 라벨 (옛 줄 넷 + 새 줄 전부)
+  PASS  B4 옛 논문 라벨 (규약 표기 없던 것) 별칭 키 없음
+  PASS  B5 LW CV 툴팁 = 접촉점 (branch) · 전체 텐서 · 벽 접촉 · 등급 축은 옛 규약
+C  그룹 표
+  PASS  C1 그룹 표 LW 열 — Stress CV LW · σ_<상>/σ_mean LW · Stress CV LW (벽 제외)
+  PASS  C1b 옛 열 이름에 규약 표기 (50/50)
+  PASS  C2 낮을수록 좋음 = 열 이름과 같은 철자 (옛 · 새 CV)
+  PASS  C3 group.html 툴팁 — 새 열 · 옛 열 이름
+D  보고서
+  PASS  D1 보고서 상 비 키 = stress_ratio_<상> (옛 판은 없는 키 목록 [sigma_AM_P_ratio, …] 을 읽었다)
+  PASS  D2 보고서 — 옛 줄 이름표 50/50 · LW 줄 (stress_cv_lw)
+E  등급 엔진
+  PASS  E1 등급 축 값 불변 — LW 키를 더해도 같은 값 = 옛 stress_cv (213.1) · 전환은 등급값 보고 뒤
+  PASS  E2 등급 축 설명 — 50/50 분할 · LHS-29 한정어
+  PASS  E3 쉬운 툴팁 __sigma_vm_cv_pct — 옛 규약 · Love–Weber 전환 보류 표기
+F  그룹 그림
+    sys.exit(main())
+             ^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\rint_g1_lhs_network_review_20261005\source\webapp\test_stress_lw_labels.py", line 187, in main
+    import matplotlib
+ModuleNotFoundError: No module named 'matplotlib'

@@ -1069,7 +1069,7 @@
 ### J20-s ④a 구현 (10-04 · 시험 먼저 → 생산 → 웹앱 같은 묶음)
 
 - 생산: `network_conductivity.constriction_power_share(field)` = **같은 FULL 해**의 Σ I²R_c / Σ I²R_total (관통 간선만 · 가상 전극 연결 제외 ·
-  R_total = R_bulk + R_c) · `run_decomposition` 이 FULL 해를 **항상** 전류장과 함께 받는다 (해는 같다 — σ 비트 동일 = `test_network_boundary_rule` GOLD 8/8).
+  R_total = R_bulk + R_c) · `run_decomposition` 이 FULL 해를 **항상** 전류장과 함께 받는다 (해는 같다 — σ 비트 동일 = `test_network_boundary_rule` GOLD 8/8 [⚠ 10-05 Codex `RGL-10`: 8 = 합성 사슬 3 × 모드 2 의 단언 · 소수 8 자리 반올림 비교 — 실침대 8 개 · 원시 비트 동일이 아니다 · 원시 float.hex 18/18 은 Codex 별도 검사]).
   키 = 채널 · 모드 꼬리 (τ 명명 규약): `constriction_power_share_{ion,el,th}_{hertz,physics}` + `_status` (`computed` · `not_computed (…)` — 관통 없음 = None ·
   0 으로 안 채움) · 옛 `bulk_resistance_fraction` 은 값 · 키 그대로.
 - 웹앱 머지: hertz 세 키 = `network_conductivity.json` (hertzian 결과) → `NET_MERGE_KEYS` · physics 세 키 = dual 에서 **이름 그대로**

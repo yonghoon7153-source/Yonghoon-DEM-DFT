@@ -1,0 +1,235 @@
+  PASS  ① 행 수 = 40 + 8 + 8 (56)
+  PASS  ② 내부 블록의 모든 인자가 지정 범위 안
+  PASS  ③ d_AM_P ≥ d_AM_S 가 모든 행에서 성립 (범위 비중첩)
+  PASS  ④ ps=1 행은 d_AM_S 가 NaN (없는 상에 좌표를 안 준다)
+  PASS  ④b ps=0 행은 d_AM_P 가 NaN
+  PASS  ⑤ r_* = d_*/2 (LIGGGHTS 입력은 반경)
+  PASS  ⑥ (연속 모드) 각 인자가 n 개 층에 정확히 하나씩 — 이산 대응물은 ⑩b
+  PASS  ⑦ 같은 seed = 같은 설계 (재현 가능)
+  PASS  ⑧ 최대 |비대각 상관| < 0.30 (0.1937)
+  PASS  ⑨ 모든 크기·조성 값이 지정 눈금 위에 있다 (d 1 µm · SE 0.5 µm · AM 1 %)
+  PASS  ⑨b ps 가 0.1 눈금 → `ps_label` 이 반올림이 아니라 **정확**하다
+  PASS  ⑩ 중복 설계점 0 (0건)
+  PASS  ⑩b (제약 있음) 수준 점유 편차가 기대의 25 % 이내 {'d_am_p_um': 2, 'd_am_s_um': 0, 'ps_frac': 2, 'd_se_um': 1, 'am_pct': 1}
+  PASS  ⑩d 제약이 실제로 후보를 자른다 (8,126 / 8,910)
+  PASS  ⑩c 상관-인지 기준이 순수 maximin 보다 낫다 (0.143 < 0.312)
+  PASS  ⑫ 모든 행이 입자 100,000 이하 (최대 92,329)
+  PASS  ⑪ --continuous 경로 보존 (눈금 밖 값이 나온다)
+  PASS  ⑬ SE 퍼콜 **추정** 열 이름이 규약을 담는다 (`_est_meanfield`)
+  PASS  ⑬b finite_size_flag 에 `se_` 조각이 하나도 없다 (기하 ↔ 물리추정 분리)
+  PASS  ⑬c 두 열을 합치면 옛 `finite_size_flag` 가 정확히 복원된다 (무손실 분리)
+  PASS  ⑬d LHS_PERC_MEASURED 가 원자료와 일치한다 (n=127 · {'OK': [83, 1], 'BELOW_phic': [44, 24]})
+  PASS  ⑭ 채움 계수가 0.0 은 **측정으로**, ""·NaN 은 **결측으로** 센다 (1/3 = 1)
+  PASS  ⑭b require_descriptors 가 결측을 **거부**한다 (probe: 측정 열이 비어 있다 — phi_se 1/3.  결측을 0 으로 채우지 말…)
+  PASS  ⑭c 완전한 행은 통과시킨다 (거부 과잉이 아니다)
+  PASS  ⑮ 정상 건은 일곱 열이 전부 찬다
+  PASS  ⑮ 값이 왕복 가능한 정밀도로 쓰인다 (반올림 손실 없음)
+  PASS  ⑰ HND-04: 음수 porosity · φ 합 > 1 도 **원값 그대로** 나간다 (0 접기 · 빈칸 아님)
+  PASS  ⑰ HND-04: 계산 상태 OK 와 별도로 physical_target_status HOLD · 보류 코드 · phi_sum_gt_one 이 열로 나간다
+  PASS  ⑰ HND-04: 두께 µm · 벽 QC · 규약 ID · deck/contact/mesh sha · 덱 바닥 z 가 열에 있다
+  PASS  ⑰ HND-04 · J19: 기본 수확 디렉터리 = 20260925 판 — 그 JSON 에 handover_qc 가 **실제로** 있다 (0924 판은 없어 HND-04 열이 빈칸이었다)
+  PASS  ⑮a DESC-09: 수확에 없는 설계가 있으면 거부 — 거부: 조인이 전단사가 아니다 — 수확에 없는 설계 1건 ['zz'] · 설계에 없는 수확 1건 ['c2'].  부분 채움
+  PASS  ⑮a DESC-09: 설계에 없는 수확이 있으면 거부 — 거부: 조인이 전단사가 아니다 — 수확에 없는 설계 0건 [] · 설계에 없는 수확 1건 ['c2'].  부분 채움은 `D
+  PASS  ⑮b DESC-07①: porosity 가 φ 둘에서 안 나오면 거부 — 거부: c1: DESC-07 ① 항등식 위반 1.000e+00 > 1e-09 — porosity 가 φ 둘에서 유도되지 않
+  PASS  ⑮b DESC-07②: C_total 이 입자수 가중평균이 아니면 거부 — 거부: c1: DESC-07 ② 가중평균 항등식 위반 2.500e+00 — C_total 이 (N_P C_P + N_S C
+  PASS  ⑮c GAP2-05: status≠OK 인데 값이 있으면 거부 — 거부: c1.tortuosity_dijkstra_SE: status=NOT_PERCOLATING 인데 값이 있다 (1.5)
+  PASS  ⑮c status 가 OK 인데 값이 없으면 거부 — 거부: c1.tortuosity_dijkstra_SE: status 가 OK 인데 값이 없다
+  PASS  ⑮d 실패 칸은 빈 칸이고 사유가 옆에 붙는다 (0 이 아니다)
+  PASS  ⑮d 그 행의 다른 여섯 열은 그대로 찬다 (DESC-01: 한 타깃 실패로 행을 안 버린다)
+  PASS  ⑮e DESC-08: 291 코퍼스 경로가 코드에 없다 (AST · docstring/selftest 제외; 적중 [])
+  PASS  ⑮e 그 정적 검사가 장식이 아니다 (심은 참조를 잡는다)
+  PASS  ⑭d 동결 설계 CSV 채움 상태가 등록값과 일치 (130행 · 채움 [14, 100, 130])
+  PASS  ⑯a 행 수 보존 (2)
+  PASS  ⑯b τ 값 열이 인계표에 없다
+  PASS  ⑯c 대신 τ 진단 열이 있다
+  PASS  ⑯d ★ J20-k (B) mono_AM_P — coverage_AM_P 칸 = 전체 값 (status OK) · AM_S 칸 빈칸 (N_A_PHASE_ABSENT · 0 아님) · n_AM_P_measured = phase_counts.AM · n_AM_S_measured 빈칸 · cov_AM_P_n_valid = counts.AM · 보고 mono_rows
+  PASS  ⑯d1 bimodal 은 그대로 — 상별 값 둘 다 · n_AM_P/S_measured = phase_counts
+  PASS  ⑯d2 mono_AM_S 는 거울 — AM_S 칸에 값 · AM_P 칸 빈칸
+  PASS  ⑯d3 설계 block mono_AM_P 인데 수확 n_types 3 이면 거부 — 거부: c2: 설계 block 'mono_AM_P' ↔ 수확 n_types 3 가 어긋난다 — 설계 · 수확이 다른 침대거
+  PASS  ⑯d4 수확 n_types 2 인데 설계 block bimodal 이면 거부 — 거부: c2: 설계 block 'bimodal' ↔ 수확 n_types 2 가 어긋난다 — 설계 · 수확이 다른 침대거나 
+  PASS  ⑯d5 수확 n_types 2 인데 설계행에 block 이 없으면 거부 (설계 상을 모른다) — 거부: c2: 설계 block None ↔ 수확 n_types 2 가 어긋난다 — 설계 · 수확이 다른 침대거나 설계행에 
+  PASS  ⑯d6 mono 인데 수확 coverage_AM_S 상태가 N_A_PHASE_ABSENT 가 아니면 거부 (mono 모양이 아니다) — 거부: c2: mono 인데 수확 status.coverage_AM_S = 'OK' ≠ N_A_PHASE_ABSENT — 
+  PASS  ⑯d7 설계 block mono 인데 수확 JSON 에 n_types 가 없으면 거부 — 거부: c2: 설계 block mono_AM_P 인데 수확 JSON 에 n_types 가 없다 — 수확이 mono 인지 확
+  PASS  ⑯d8 mono 인데 coverage_AM_only ≠ coverage_AM_total 이면 거부 (단일 AM = 전체 항등식) — 거부: c2: mono 인데 coverage_AM_only 19.0 ≠ coverage_AM_total 20.0 — 단일 
+  PASS  ⑯d9 mono 인데 phase_counts 에 AM_P 가 있으면 거부 (수확기 mono 라벨은 AM 하나) — 거부: c2: mono 인데 phase_counts {'AM': 4, 'AM_P': 3, 'SE': 50} 가 수확기 mo
+  PASS  ⑯d10 설계 block 이 모르는 mono 라벨 (mono_AM) 이면 거부 — 거부: c2: 설계 block 'mono_AM' — 아는 mono 라벨은 ['mono_AM_P', 'mono_AM_S'] 
+  PASS  ⑯e 값 칸마다 _status 짝이 있다
+  PASS  ⑯f 실측 입자수 열이 있다
+  PASS  ⑯g 변이① DESC-07 항등식을 깨면 거부한다
+  PASS  ⑯h 변이② 수확 누락 시 부분 인계를 거부한다
+  PASS  ⑯j dict 모양(load_harvest 산출)으로도 동일
+  PASS  ⑯i 보류 열과 사유가 등록돼 있다
+  PASS  ⑱a J19 union 열 · 질량 보존 두께 · SE-rich 표지 (+ 통계 오차 · 쌍 렌즈 검산 · SE/고체 연속값) 가 인계표에 있다
+  PASS  ⑱b 병기 — 구 부피 합 열 (porosity_sphere_pct_RECORD_ONLY) 은 **원값 그대로** 남는다 (음수 −2.0 도 · 교체 아님)
+  PASS  ⑱c 질량 보존 두께 = 두께 × (1 − ε_sphere)/(1 − ε_union) (같은 고체를 union 공극률로 받을 때의 두께)
+  PASS  ⑱d SE-rich 표지 = SE/고체 ≥ 0.5 (0.62 → True · 0.25 → False) · 연속값도 함께
+  PASS  ⑱e 설계에 없는 union 행 (코호트의 perc) 은 인계표에 안 들어가고 보고에 남는다
+  PASS  ⑱e2 union 없이 부르면 옛 인계표 그대로 (union 열 없음 · 하위 호환)
+  PASS  ⑱f union 에 설계 케이스가 없으면 거부 (부분 병기 금지) — 거부: union 에 없는 설계행 1 건: ['q2'] — 부분 병기 금지 (J19)
+  PASS  ⑱g union 의 구 부피 합 porosity ≠ 수확 (다른 프레임 · 다른 수확의 union) 이면 거부 — 거부: q2: union 의 구 부피 합 20.5 ≠ 수확 20.0 — 다른 수확 · 다른 프레임의 union 이다
+  PASS  ⑱h union 두께 ≠ 수확 두께면 거부 — 거부: q2: union 두께 40.1 ≠ 수확 40.0 µm — 다른 프레임 (플래튼) 의 union 이다
+  PASS  ⑱i union 상별 입자 수 ≠ 수확이면 거부 — 거부: q2: union 입자 수 (SE 99 · AM 11) ≠ 수확 (SE 100 · AM 11) — 다른 침대다
+  PASS  ⑱j union status ≠ OK 면 거부 — 거부: q2: union status 'DELTA_MISMATCH' ≠ OK — 그 union 값을 붙이지 않는다
+  PASS  ⑱k 수확에 두께 (handover_qc) 가 없으면 union 을 붙이지 않는다 (09-24 판 수확 — 0925 판을 쓸 것) — 거부: q2: 수확에 두께 (handover_qc.thickness_wall_gap_um) 가 없다 — 09-24 판 수확
+  PASS  ⑱m J20-e 질량 보존 φ 두 열 = 구 부피 합 φ × (1 − ε_union)/(1 − ε_sphere) (q1: 0.5 · 0.52 × 0.935/1.02)
+  PASS  ⑱n 닫힘 — φ_SE + φ_AM + ε_union = 1 (1e-12 · q1 · q2)
+  PASS  ⑱o 적재량 보존 — φ(질량 보존) × 질량 보존 두께 = φ(구) × 판 간격 두께 (= 재료 부피 / L²) (1e-9 µm)
+  PASS  ⑱p 옛 φ (구 부피 합 ÷ 판 간격) 는 union 과 **안 닫힌다** — 잔차 = (ε_union − ε_sphere)/100 (q1 +0.085) · 그래서 새 열
+  PASS  ⑱q φ status ≠ OK 면 질량 보존 φ 도 빈칸 (0 이 아니다 · 계약 ②)
+  PASS  ⑱r 열 사전 — 질량 보존 φ 두 열: 출처 union · 뜻에 J20-e · 옛 phi_se 뜻에 인계용 열 안내
+  PASS  ⑱l 실물 130 (설계 CSV · 0925 수확 · union TSV) — 130 행 전부 병기 · union 최소 6.07 % > 0 · 질량 보존 비 1.015–1.114 (중앙 1.043) ≥ 1 · SE-rich 21 · 구 부피 합 음수 18
+  PASS  ⑱l2 실물 130 — 질량 보존 φ 닫힘 최대 3.3e-16 · SE/고체 ↔ union se_of_solid_vol (다른 코드 · 같은 덤프) 최대 차 1.7e-16 (≤ 1e-9)
+  PASS  ⑲a 벽 τ 새 열 — OK 행은 값 · 미관통 행은 **빈칸** + status (0 이 아니다) · 규약 문자열
+  PASS  ⑲b 옛 τ (solid_zrange) 는 여전히 보류 — tortuosity_dijkstra_SE 열이 없다 (LHS-08)
+  PASS  ⑲c 수확 세대가 섞이면 거부 (벽 τ 가 일부 JSON 에만 있다) — 거부: 벽 τ (tau_wall_detail) 가 1/2 수확에만 있다 — 수확 세대가 섞였다 (없는 행 ['q2'])
+  PASS  ⑲d 벽 τ 가 없는 옛 수확이면 그 열 없이 옛 인계표 그대로 (하위 호환)
+  PASS  ⑲e 벽 τ 규약 문자열이 다르면 거부 (다른 규약의 값을 같은 열에 넣지 않는다) — 거부: q2: 벽 τ 규약 'x' ≠ harvest_v3/wall_z0_plate/rSEmax/no_fallback/sam
+  PASS  ⑲f 웹앱 ✅ 열만 들어간다 (🔶 σ · 🔧 Physics · 식별자는 안 들어간다) · 이름은 코퍼스 그대로
+  PASS  ⑲g 이름 충돌 (phi_se) 은 수확 열이 정본 — 웹앱 값은 안 덮고 보고에 남긴다
+  PASS  ⑲h 같은 프레임 QC 열 — 웹앱 porosity − 수확 porosity (여기선 0) · 행 상태 (done · partial) · 실패 단계
+  PASS  ⑲i ★ 웹앱 porosity ≠ 수확 porosity (0.05 %p 넘게) → 거부 — 다른 프레임의 웹앱 행을 붙이지 않는다 — 거부: q2: 웹앱 porosity − 수확 porosity = +0.5000 %p (> 0.05) — 다른 프레임 · 다
+  PASS  ⑲j 배치가 거부 · 실패한 행은 웹앱 열이 **빈칸** + wa_status (0 이 아니다) · 보고에 셈
+  PASS  ⑲k 배치가 **시도하지 않은** 설계행이 있으면 거부 (배치 미완) — 거부: 웹앱 배치가 시도하지 않은 설계행 1 건: ['q2'] — 배치 미완 (재개로 채울 것)
+  PASS  ⑲l done 행에 porosity 가 없으면 거부 (같은 프레임을 확인할 수 없다) — 거부: q1: 웹앱 행에 porosity 가 없다 — 같은 프레임인지 확인할 수 없다
+  PASS  ⑲m 열 사전 — 모든 열에 출처 · 설명 · (웹앱 열은) 판정 · 이름 주의 표지
+  PASS  ⑲n 벽 τ 규약 문자열 — 생성기 = 수확기 (`lhs_descriptor_harvest.TAU_WALL_CONVENTION`) · 한쪽만 바뀌면 걸린다
+  PASS  ⑲o ⓒ CN 정의 — 분모 (전 입자 · 접촉 0 · 벽 입자 포함) 와 벽 효과 주의 · 파생 열 (AM–SE 전체 · 표면 가중) 표시
+  PASS  ⑲o ⓒ 접촉 개수 열은 **총량** 주의 — area_*_n 에 면적 (A_dem_geometric) 주의를 붙이지 않는다 · 면적 열은 그대로
+  PASS  ⑲p ⓓ 상별 벽 접촉 비율 새 열 — 값 · 없는 상 (2-type 의 AM_P · AM_S) 은 **빈칸** (0 이 아니다)
+  PASS  ⑲p ⓓ 수확 세대가 섞이면 거부 (wall_touch 가 일부 JSON 에만 있다) — 거부: 벽 접촉 비율 (wall_touch) 이 1/2 수확에만 있다 — 수확 세대가 섞였다 (없는 행 ['q2'])
+  PASS  ⑲p ⓓ 벽 비율이 없는 옛 수확이면 그 열 없이 (하위 호환) · 열 사전에 출처 harvest_v3 · 규칙 설명
+  PASS  ⑲q ★ webapp_groups=contact — 웹앱 열은 접촉 단계 ① 만 (se_se_cn · am_am_cn · AM_P_se_cn_mean · area_SE_SE_n) · porosity · coverage · percolation · A_binding · n_am_am_contacts 는 없다
+  PASS  ⑲r ★ 접촉 단계만 돈 배치 (stop_after=contact) 를 묶음 제한 없이 부르면 거부 — 뒤 단계 열이 빈칸 = N/A 로 읽힌다 — 거부: 웹앱 배치가 stop_after='contact' 로 돌았다 — webapp_groups=None 로는 싣지 않는다
+  PASS  ⑲s 모르는 묶음 이름은 거부 (⑤⑥⑦ 뒤 f1 · fracture · area 는 아는 묶음 — stress 로 · ④b 새 열은 아직 인계 묶음이 아니다) — 거부: webapp_groups 'stress' — 아는 묶음은 ('contact', 'percolation', 'f1',
+  PASS  ⑲t 같은 프레임 관문은 그대로 — 웹앱 porosity (접촉 단계 산출) − 수확 porosity 가 QC 열에 (여기선 0)
+  PASS  ⑲u load_webapp 이 배치의 stop_after 를 넘긴다 (묶음 관문의 근거)
+  PASS  ⑳a ★ J20-g — 같이 확인한 열만: 접촉 묶음 중 area_<쌍>_n (· J20-i se_se_cn · J20-j am_am_* · 7c AM_*_se_cn_* — 7c 부터 실린다 · mono 는 설계 상 칸)
+  PASS  ⑳b ★ J20-k (B) — mono (설계 mono_AM_P · 웹앱 이름 AM_S) 의 상별 쌍 값은 **설계 상 칸** (area_AM_P_SE_n) 으로 · 없는 상 칸 (area_AM_S_SE_n) 빈칸 · 총량 쌍 그대로 · 웹앱 이름을 wa_mono_phase_name_webapp 에 · 보고 (옮김 1 건 · 채움 2 · 빈칸 2 — 쌍 개수 + 7c AM–SE 평균)
+  PASS  ⑳c bimodal (n_types 3) 은 상별 쌍 값 그대로
+  PASS  ⑳d 판별 — wa_reviewed (area_<쌍>_n · se_se_cn(_std) · am_am_cn(_std) · am_am_n_contacts · 7c AM–SE CN · 고립 — _perc 는 ② 뒤 · _eff_area · _aug · am_am 면적은 ⑤⑦ 뒤 (J20-s) 검토됨 · AM_*_n_particles · path_hop_area 는 아님) · wa_phase_specific (AM_P/AM_S 이름이 든 열 · AM전체 · 소문자 am_ 은 아님)
+  PASS  ⑳e ★ 상별 열을 싣는데 수확 JSON 에 n_types 가 없으면 거부 (mono 인지 모른다 — 반지름 이름을 그대로 싣지 않는다) — 거부: q1: 설계 block mono_AM_P 인데 수확 JSON 에 n_types 가 없다 — 수확이 mono 인지 확
+  PASS  ⑳f 열 사전 — 상별 쌍 열의 뜻에 mono 설계 상 칸 규약 (J20-k (B)) · 검토 기록 (J20-g) · 총량 열에는 mono 규약 없음
+  PASS  ⑳g ★ J20-h — bimodal 의 빠진 쌍 개수 = 0 (측정된 0) · 있는 값은 그대로 · 보고에 셈
+  PASS  ⑳h ★ J20-k (B) mono — 웹앱 AM_S_AM_S 개수 (11) 가 설계 상 칸 area_AM_P_AM_P_n 으로 · 없는 상 칸 area_AM_S_AM_S_n 빈칸 · 총량 그대로
+  PASS  ⑳i 쌍의 상이 없으면 (phase_counts 0) 0 이 아니라 빈칸 (N/A)
+  PASS  ⑳j ★ 빠진 쌍을 채워야 하는데 수확 JSON 에 phase_counts 가 없으면 거부 (상이 있는지 모른다) — 거부: q2: 수확 JSON 에 phase_counts 가 없다 — area_AM_P_AM_P_n 의 빈칸이 접촉 0 인지
+  PASS  ⑳k 배치가 거부한 행 (REFUSED) 은 0 을 채우지 않는다 — 웹앱 열 전부 빈칸
+  PASS  ⑳l 열 사전 — 쌍 개수 열의 뜻에 0 채움 규약 (J20-h)
+  PASS  ⑳m ★ J20-i — se_se_cn · se_se_cn_std 가 실린다 (mono 포함 — SE–SE 는 상별 열이 아니다) · 항등식 검사 수를 보고
+  PASS  ⑳n ★ se_se_cn ≠ 2 × area_SE_SE_n / SE 수 이면 거부 (다른 접촉 집합 · 다른 프레임의 값을 한 표에 섞지 않는다) — 거부: q2: se_se_cn 16.5 ≠ 2 × area_SE_SE_n 800 / SE 100 = 16.0 — 같은 접촉
+  PASS  ⑳o ★ se_se_cn 을 싣는데 수확 JSON 에 phase_counts 가 없으면 거부 (SE 입자 수를 몰라 항등식을 못 본다) — 거부: q1: mono 인데 수확 JSON 에 phase_counts 가 없다 — 단일 AM 입자 수를 모른다 (J20-k
+  PASS  ⑳p 배치가 거부한 행 (REFUSED) 은 웹앱 값을 싣지 않으므로 항등식도 보지 않는다 (검사 1 건 = q1)
+  PASS  ⑳q 같은 함수의 다른 출력 (se_se_cn_perc · se_se_cn_eff_area · se_se_cn_aug) 은 census ✅ 여도 싣지 않는다 (② · ⑦ · ⑤ 차례)
+  PASS  ⑳r 열 사전 — se_se_cn · se_se_cn_std 의 뜻에 검토 기록 (J20-i) · 정의 (SE 전 입자) · 벽 주의는 그대로
+  PASS  ⑳s ★ J20-j — am_am_cn · am_am_cn_std · am_am_n_contacts 가 실린다 (mono 포함) · 항등식 검사 수를 보고
+  PASS  ⑳t ★ am_am_n_contacts ≠ 웹앱 원 행의 AM–AM 쌍 개수 합 (5 + 17 = 22) 이면 거부 (다른 접촉 집합) — 거부: q2: am_am_n_contacts 23 ≠ AM–AM 쌍 개수 합 22 — 같은 접촉 집합의 값이 아니다 (J2
+  PASS  ⑳u ★ am_am_cn ≠ 2 × am_am_n_contacts / AM 입자 수 (2 × 22 / 11 = 4.0) 이면 거부 — 거부: q2: am_am_cn 4.5 ≠ 2 × am_am_n_contacts 22 / AM 11 = 4.0 — 같은 접촉
+  PASS  ⑳v ★ am_am_cn 을 싣는데 수확 JSON 에 phase_counts 가 없으면 거부 (AM 입자 수를 몰라 항등식을 못 본다 · J20-i 관문 없이도) — 거부: q1: mono 인데 수확 JSON 에 phase_counts 가 없다 — 단일 AM 입자 수를 모른다 (J20-k
+  PASS  ⑳w 배치가 거부한 행 (REFUSED) 은 AM–AM 항등식도 보지 않는다 (검사 1 건 = q1)
+  PASS  ⑳x 같은 함수의 면적 열 (am_am_mean_area · am_am_total_area) 은 census ✅ 여도 싣지 않는다 (⑦ 차례) · 열 사전에 J20-j 검토 기록 · 접촉 수는 총량 주의 · CN 은 벽 주의
+  PASS  ⑳y 이름이 같은 mono (설계 mono_AM_S · 웹앱 AM_S) — AM_S 칸에 값 · AM_P 칸 빈칸 · 옮김 0 건
+  PASS  ⑳z ★ mono 인데 웹앱 행의 접촉 열에 AM_P · AM_S 두 이름 다 값이 있으면 거부 (다른 침대의 행 · 옮길 이름을 못 정한다) — 거부: q1: 설계 mono (mono_AM_P) 인데 웹앱 접촉 열에 AM_P · AM_S 두 이름 다 값이 있다 ['A
+  PASS  ⑳aa QC — mono 의 설계 상 칸 검산 = 웹앱 coverage_<웹앱 이름>_mean − 수확 전체 (0.0) · 없는 상 칸 빈칸 · bimodal 은 상별 그대로
+  PASS  ⑳ab J20-h 를 설계 상으로 — mono 의 설계 쌍 area_AM_P_AM_P_n 이 빠지면 0 (AM 이 있으므로) · 없는 상 쌍은 빈칸 · 0 채움 2 (q1 + q2)
+  PASS  ⑳ac 벽 접촉 비율 상별 — mono 의 설계 상 칸 (AM_P) = 수확 AM · 없는 상 (AM_S) 빈칸 · AM 열 그대로 · bimodal 그대로
+  PASS  ⑳ad 열 사전 — 상별 열마다 (수확 coverage · n_AM_*_measured · cov_*_n_valid · 웹앱 쌍 · QC) J20-k (B) 표지 · 총량 · 설계 열에는 없음 · wa_mono_phase_name_webapp 열이 있고 출처 webapp_batch
+  PASS  ⑳ae 보고 — 수확 쪽 (B) 채움 수 (mono_rows 1 · mono_harvest_filled = coverage 1 + n_AM 1 + cov_n_valid 1 = 3)
+  PASS  ⑳af ★ 설계 block mono 인데 웹앱 상별 열을 실을 때 수확 n_types 가 없으면 거부 (J20-f 관문 그대로) — 거부: q1: 설계 block mono_AM_P 인데 수확 JSON 에 n_types 가 없다 — 수확이 mono 인지 확
+  PASS  ㉑a ★ 7c — coverage 배치 (stop_after=coverage · 접촉 단계 포함) 를 contact 묶음으로 받고 16 열이 실린다 · 관문 검사 2 행
+  PASS  ㉑b 값 — bimodal 은 상별 그대로 · mono 는 설계 상 칸 (AM_P) 에 웹앱 AM_S 값 · 없는 상 칸 빈칸 · 전체 열 그대로
+  PASS  ㉑c ★ coverage 배치를 묶음 제한 없이 부르면 여전히 거부 (뒤 단계 열이 빈칸 = N/A 로 읽힌다) — 거부: 웹앱 배치가 stop_after='coverage' 로 돌았다 — webapp_groups=None 로는 싣지 않는
+  PASS  ㉑d ★ 고립 비율 — census 🔶 COND_cov 를 ✅ 로 승격 (LHS-23) · 열 사전에 옛 판정 병기 · 뜻 = SE 접촉 0–1 개 · coverage 문턱 아님
+  PASS  ㉑e ★ 7a 새 키 (census 밖) — 배치 머리에 있으면 ✅ (J20-k 7a) · 출처 webapp · 뜻 = AM 전 입자 분포 · 검토 기록 7c
+  PASS  ㉑f census 밖 키가 배치 머리에 없으면 열도 없다 (옛 배치의 빈칸이 측정된 N/A 로 읽히지 않게) · 있는 키는 그대로
+  PASS  ㉑g ★ G1 — 상별 평균 × 상 입자 수 ≠ area_<상>_SE_n (5.5 × 10 ≠ 50) 이면 거부 — 거부: q2: AM_S_se_cn_mean 5.5 × AM_S 10 ≠ area_AM_S_SE_n 50.0 — 같은 접촉 
+  PASS  ㉑h ★ G1 mono — 설계 상 칸으로 옮긴 평균 × AM 수 ≠ 옮긴 쌍 개수 (3.0 × 11 ≠ 40) 이면 거부 — 거부: q1: AM_P_se_cn_mean 3.0 × AM_P 11 ≠ area_AM_P_SE_n 40.0 — 같은 접촉 
+  PASS  ㉑i ★ G2 — 전체 평균 × AM 수 ≠ area_AM전체_SE_n (7.0 × 11 ≠ 80) 이면 거부 — 거부: q2: am_se_cn_mean 7.0 × AM 11 ≠ area_AM전체_SE_n 80.0 (7c G2)
+  PASS  ㉑j ★ G3 — 고립 개수: 전체 2 ≠ 상별 합 (AM_P 0 + AM_S 1) 이면 거부 — 거부: q2: 고립 개수 전체 2 ≠ 상별 합 1 (7c G3)
+  PASS  ㉑k ★ G3 — 고립 비율 × 입자 수 / 100 이 정수 개수가 아니면 거부 (25 % × 10 = 2.5) — 거부: q2: AM_S 고립 비율 × 입자 수 / 100 = 2.5 이 정수 개수가 아니다 (7c G3)
+  PASS  ㉑l ★ G4 — 전체 max ≠ 상별 max 의 최댓값 (9 ≠ 30) 이면 거부 — 거부: q2: am_se_cn_max 9.0 ≠ 상별 max 의 최댓값 30.0 (7c G4)
+  PASS  ㉑m ★ G5 — bimodal 전체 median 이 상별 median 사이 밖 (31 ∉ [5, 30]) 이면 거부 — 거부: q2: am_se_cn_median 31.0 — 상별 median {'AM_P': 30.0, 'AM_S': 5.0}
+  PASS  ㉑n ★ G5 mono — 전체 median ≠ 단일 상 median (4.5 ≠ 4.0) 이면 거부 — 거부: q1: am_se_cn_median 4.5 — 상별 median {'AM_P': 4.0} 과 같아야 (mono) (
+  PASS  ㉑o ★ G6 — 전체 std ≠ 합동 표준편차 (상별 N · 평균 · std) 이면 거부 — 거부: q2: am_se_cn_std 7.0 — 상별 (N · 평균 · std) 의 합동 표준편차와 다르다 (7c G6)
+  PASS  ㉑p ★ G6 mono — 전체 std ≠ 단일 상 std 이면 거부 — 거부: q1: am_se_cn_std 1.8 — 상별 (N · 평균 · std) 의 합동 표준편차와 다르다 (7c G6)
+  PASS  ㉑q ★ G7 — 표면 가중 ≠ Σ N r² CN / Σ N r² (설계 반경) 이면 거부 — 거부: q2: am_se_cn_surface_weighted 15.0 ≠ 14.615384615384615 (Σ N r² 
+  PASS  ㉑r ★ G7 — bimodal 인데 설계 반경이 없으면 거부 (표면 가중을 확인할 수 없다) — 거부: q2: bimodal 인데 설계 반경 r_AM_P_um · r_AM_S_um 이 없다 — 표면 가중을 확인할 수 없
+  PASS  ㉑s ★ 상이 있는데 상별 값이 비면 거부 (bimodal AM_S std 빈칸) — 거부: q2: AM_S 입자 10 개인데 AM_S_se_cn_std 가 빈칸 — 상이 있는데 값이 없다 (7c 상 있음)
+  PASS  ㉑t ★ 상이 없는데 (phase_counts AM_P 0) 상별 값이 있으면 거부 — 거부: q2: AM_P 가 없는 침대 (수확 phase_counts) 인데 AM_P_se_cn_mean = 30.0 — 다
+  PASS  ㉑u ★ 수확 JSON 에 phase_counts 가 없으면 거부 (상 입자 수를 몰라 관문을 못 본다 · bimodal 행 — mono 는 J20-k (B) 가 먼저 막는다) — 거부: q2: 수확 JSON 에 phase_counts 가 없다 — 상 입자 수를 몰라 AM–SE CN · 고립 관문을 볼
+  PASS  ㉑v 배치가 거부한 행 (REFUSED) 은 값을 싣지 않으므로 관문도 보지 않는다 (검사 1 행 = q1)
+  PASS  ㉑w 열 사전 — AM–SE CN · 고립 열에 검토 기록 (7c · 관문 G1–G7) · 상별 열은 mono 설계 상 칸 표지 · 전체 열은 아님
+  PASS  ㉒a ★ ② — contact,percolation 묶음: 퍼콜레이션 7 열 + ① 열 · 망 단계 electronic_active_fraction · 면적 se_se_cn_eff_area_perc 는 안 싣는다 · 관문 검사 2 행
+  PASS  ㉒b 값 — 관통 침대 (q1) 는 _perc 값 · 비관통 (q2) 은 percolation_pct 0.0 · _perc 빈칸 (N/A) · 나머지 그대로
+  PASS  ㉒c contact 묶음만이면 퍼콜레이션 열은 없다 (묶음 거르기)
+  PASS  ㉒d ★ LHS-20 — top_reachable · ionic_active 를 ✅ 로 승격 · 옛 판정 병기 · F3 한정어 (외톨이 · 문턱 10 · 0.0 = 미퍼콜 · 솔버 관통과 다름 · N/A)
+  PASS  ㉒e 모르는 묶음 이름이 섞이면 거부 (contact,stress — ⑤⑥⑦ 뒤 fracture 는 아는 묶음) — 거부: webapp_groups 'contact,stress' — 아는 묶음은 ('contact', 'percolation
+  PASS  ㉒f ★ P1 — 비관통 (percolation_pct 0) 인데 se_se_cn_perc 에 값이 있으면 거부 — 거부: q2: percolation_pct 0.0 인데 se_se_cn_perc = '4.0' — 관통 여부와 값 유무가 
+  PASS  ㉒g ★ P1 — 관통인데 se_se_cn_n_perc 가 비면 거부 — 거부: q1: percolation_pct 37.0 인데 se_se_cn_n_perc = '' — 관통 여부와 값 유무가 
+  PASS  ㉒h ★ P1 — 웹앱 관통 ↔ 수확기 벽 밴드 관통 (0 성분) 이 어긋나면 거부 (J20-b F8 독립 재현) — 거부: q1: 웹앱 percolation_pct 37.0 ↔ 수확기 벽 밴드 관통 성분 0 — 독립 재현이 어긋난다 (② 
+  PASS  ㉒i ★ P1 — 웹앱 비관통 ↔ 수확기 관통 (1 성분) 이 어긋나면 거부 — 거부: q2: 웹앱 percolation_pct 0.0 ↔ 수확기 벽 밴드 관통 성분 1 — 독립 재현이 어긋난다 (② P
+  PASS  ㉒j ★ P1 — 수확 JSON 에 벽 밴드 관통 진단이 없으면 거부 (독립 재현을 볼 수 없다) — 거부: q2: 수확 JSON 에 tau_detail.band_detail.wall_n_span_components 가 없다
+  PASS  ㉒k ★ P2 — 비율이 [0, 100] 밖이면 거부 (ionic_active_pct 101) — 거부: q2: ionic_active_pct 101.0 ∉ [0, 100] (② P2)
+  PASS  ㉒l ★ P2 — n_large_components > n_components 이면 거부 — 거부: q2: n_large_components 31.0 > n_components 30.0 (② P2)
+  PASS  ㉒m ★ P2 — top_reachable_pct < percolation_pct 이면 거부 (관통 SE 는 위 밴드에 닿는다) — 거부: q1: top_reachable_pct 30.0 < percolation_pct 37.0 — 관통 SE 는 위 밴드
+  PASS  ㉒n ★ P2 — 성분 수가 정수가 아니면 거부 — 거부: q2: n_components 30.5 이 0 이상 정수가 아니다 (② P2)
+  PASS  ㉒o ★ P3 — 관통 SE 개수 ≠ percolation_pct × N_SE / 100 (38 ≠ 37) 이면 거부 — 거부: q1: se_se_cn_n_perc 38.0 ≠ percolation_pct × N_SE / 100 = 37.0 (
+  PASS  ㉒p 배치가 거부한 행 (REFUSED) 은 값을 싣지 않으므로 관문도 보지 않는다 (검사 1 행)
+  PASS  ㉒q 열 사전 — 퍼콜레이션 열에 검토 기록 (J20-b ② · 관문 P1–P3) · 출처 webapp
+  PASS  ㉓a ★ 벽 τ — 관통 침대는 값 · 비관통은 빈칸 (N/A) · 관문 T1–T2 2 행 · T3 (↔ 퍼콜레이션) 2 행
+  PASS  ㉓b ★ 열 사전 — 벽 τ = 기하 최단경로 · 수송 τ 아님 (수송 굴곡도 = 망 단계 tau2 · τ 명명 규약 10-03 — 옛 "COMSOL/EIS 입력 τ 는 τ_Laplace,eff" 철회 TAU-01) · 비관통 N/A · 표본 200 쌍
+  PASS  ㉓c ★ 벽 접촉 비율 문구 = 수확기 규칙 (겹침 깊이 > 0 · 접선은 안 셈) — 옛 "≤ 0 · ≥ plate_z" 없음
+  PASS  ㉓d 관문 상수 = 수확기 (TAU_LO · TAU_HI · N_TAU_PAIRS) · 수확기 규칙이 접선 제외 · 한쪽만 바뀌면 걸린다
+  PASS  ㉓e ★ T1 — 상태 OK 인데 관통 성분 0 이면 거부 — 거부: q1: 벽 τ 관통 성분 0 ≠ 수확 벽 밴드 진단 2 — 같은 성분 · 같은 밴드가 아니다 (τ T1)
+  PASS  ㉓f ★ T1 — NOT_PERCOLATING 인데 관통 성분 1 이면 거부 — 거부: q2: 벽 τ 관통 성분 1 ≠ 수확 벽 밴드 진단 0 — 같은 성분 · 같은 밴드가 아니다 (τ T1)
+  PASS  ㉓g ★ T1 — 벽 τ 관통 성분 (3) ≠ 수확 벽 밴드 진단 (2) 이면 거부 — 거부: q1: 벽 τ 관통 성분 3 ≠ 수확 벽 밴드 진단 2 — 같은 성분 · 같은 밴드가 아니다 (τ T1)
+  PASS  ㉓h ★ T2 — OK 인데 τ 평균이 [1, 20) 밖 (25) 이면 거부 — 거부: q1: 벽 τ 평균 25.0 · 중앙값 1.4 이 [1, 20) 밖 (τ T2)
+  PASS  ㉓i ★ T2 — n_valid > n_sampled 이면 거부 — 거부: q1: 벽 τ 표본 수 n_sampled 150 · n_valid 180 · n_truncated 0 가 규칙 밖 
+  PASS  ㉓j ★ T2 — 잘린 수 = 경로 수 (남은 표본 0) 인데 OK 면 거부 — 거부: q1: 벽 τ 표본 수 n_sampled 200 · n_valid 200 · n_truncated 200 가 규칙 
+  PASS  ㉓k ★ T3 — 벽 τ 비관통인데 웹앱 percolation_pct > 0 이면 거부 (수확기 벽 밴드 진단도 0 이라 P1 이 먼저면 P1) — 거부: q2: 웹앱 percolation_pct 12.0 ↔ 수확기 벽 밴드 관통 성분 0 — 독립 재현이 어긋난다 (② 
+  PASS  ㉓l ★ n_span_components 가 정수가 아니면 거부 — 거부: q1: 벽 τ n_span_components 2.0 가 0 이상 정수가 아니다 (τ T1)
+  PASS  ㉔a ★ ① am_ionic_isolated_pct = 100 − ionic_active_pct (q1 · q2) · 활성 열 뒤 · 활성 열이 실리면 늘 (재실행 없음)
+  PASS  ㉔b ② 분해 키가 배치 머리에 없으면 (5번 배치 세대) 분해 열도 없다 · ① 은 그대로 (활성에서 유도)
+  PASS  ㉔c ★ ② 새 배치 — 분해 열 8 개 · mono (설계 AM_P · 웹앱 이름 AM_S) 는 설계 상 칸 · 없는 상 칸 빈칸 · 관문 D 2 행
+  PASS  ㉔d ★ 열 사전 — ① 경로 기준 고립 = 100 − ionic_active_pct · 고립 위험 (vulnerable) 과 다른 양 · ② 단절 · 무접촉 정의 · 새 키 판정 (v1.1 ②)
+  PASS  ㉔e ★ D1 — 활성 + 단절 + 무접촉 ≠ 100 이면 거부 — 거부: q2: 활성 + 단절 + 무접촉 = 109.0909090909091 ≠ 100 — 같은 세 집합이 아니다 (v1.1
+  PASS  ㉔f ★ D2 — 상별 활성 + 단절 + 무접촉 ≠ 100 이면 거부 (AM_S 40 + 50 + 0) — 거부: q2: AM_S 활성 + 단절 + 무접촉 = 90.0 ≠ 100 (v1.1 D2)
+  PASS  ㉔g ★ D3 — 비율 × 입자 수 / 100 이 정수 개수가 아니면 거부 (활성 45 % × 11 = 4.95) — 거부: q2: 전체 active 비율 45.0 × 입자 수 11 / 100 = 4.95 이 정수 개수가 아니다 (v1.1 
+  PASS  ㉔h ★ D4 — 상별 개수 합 ≠ 전체 개수 (AM_P 1 + AM_S 3 ≠ 활성 5) 이면 거부 — 거부: q2: active 개수 전체 5 ≠ 상별 합 4 (v1.1 D4)
+  PASS  ㉔i ★ D5 — 무접촉 개수 (2) > 고립 위험 개수 (1 — SE 접촉 0 ⊂ 0–1 개) 이면 거부 — 거부: q2: 전체 무접촉 2 개 > 고립 위험 1 개 — SE 접촉 0 은 0–1 개의 부분집합이다 (v1.1 D5)
+  PASS  ㉔j ★ 상 있음 — 상이 있는데 상별 분해가 비면 거부 (bimodal AM_P 단절 빈칸) — 거부: q2: AM_P 입자 1 개인데 AM_P_ionic_dead_pct 가 빈칸 — 상이 있는데 값이 없다 (v1.1 
+  PASS  ㉔k ★ D3 — 분해 키가 없는 옛 배치에서도 활성 비율 × AM 수 / 100 이 정수 개수가 아니면 거부 (①의 원천) — 거부: q2: 전체 active 비율 45.0 × 입자 수 11 / 100 = 4.95 이 정수 개수가 아니다 (v1.1 
+  PASS  ㉔l ★ ③ 가장 큰 SE 덩어리 — SE 비율 · 벽 간격 대비 z 폭 (= 기록 z 폭 × 전 입자 z 범위 / 벽 간격) · 전 입자 z 범위 대비 원값 · 관문 C 2 행
+  PASS  ㉔m ★ 열 사전 — ③ 분모 (벽 간격 · 전 입자 z 범위 — 바닥 아래로 샌 입자) · 가장 큰 = SE 수 기준 · 1 을 넘을 수 있음 · v1.1 ③ · 출처 harvest_v3
+  PASS  ㉔n ★ C1 — 덩어리 SE 비율 × SE 수 가 정수가 아니면 거부 (0.375 × 100) — 거부: q1: largest_comp_frac 0.375 × SE 100 = 37.5 이 정수 개수가 아니다 (v1.1 C
+  PASS  ㉔o ★ C1 — band SE 수 ≠ 수확 phase_counts SE 이면 거부 — 거부: q1: 덩어리 기록의 SE 수 99 ≠ 수확 phase_counts SE 100 — 다른 침대 · 다른 SE 집합이
+  PASS  ㉔p ★ C2 — 전 입자 z 범위 대비 z 폭 > 1 이면 거부 (덩어리 ⊂ 전 입자) — 거부: q1: largest_comp_z_span_frac 1.2 ∉ (0, 1] — 덩어리는 전 입자의 부분집합이다 (v
+  PASS  ㉔q ★ C3 — 벽 간격의 플래튼 ≠ 수확 plate_z_sim 이면 거부 (다른 판) — 거부: q1: 덩어리 기록의 벽 간격 (플래튼 39.0 · 바닥 0.0) ≠ 수확 plate_z_sim 40.0 · z_f
+  PASS  ㉔r ★ ③ 수확 세대 혼합 — 일부 행만 덩어리 기록이 있으면 거부 — 거부: 가장 큰 SE 덩어리 기록 (largest_comp_*) 이 1/2 수확에만 있다 — 수확 세대가 섞였다 (없는 행
+  PASS  ㉕a ★ ⑤⑥⑦ 묶음 — F1 4 · 힘 기반 파괴 12 · 면적 (쌍별 평균 · 총합 · eff_area · AM–AM) 열이 실린다
+  PASS  ㉕b ★ 명시 제외 — path_hop_area (LHS-32) · δ 판 · 상 쌍별 파괴 · physics 면적은 census ✅ 여도 안 실린다 · wa_excluded 가 사유를 준다
+  PASS  ㉕c 검토 목록 밖 경로 (wa_reviewed_only=False) 에서도 제외 열은 안 실린다 — 제외는 묶음 · 검토와 무관하게 먼저
+  PASS  ㉕d ★ mono (설계 AM_P · 웹앱 이름 AM_S) — 면적 상별 열은 설계 상 칸 · 없는 상 칸 빈칸 · AM전체 · SE–SE · F1 · 파괴 전체는 그대로
+  PASS  ㉕e ★ 접촉 0 쌍 (q2 AM_P–AM_P) — 개수 0 · 총합 0.0 (측정된 0) · 평균 빈칸 (N/A — 접촉 0 개에서 평균은 정의되지 않는다)
+  PASS  ㉕f 옛 배치 (접촉 0 쌍 키 없음) — 두 상이 다 있으면 개수 0 · 총합 0.0 으로 채운다 (J20-h 와 같은 규칙) · 평균은 빈칸
+  PASS  ㉕g 관문 보고 — ⑤ · ⑥ · ⑦ 2 행씩 · 제외 열 수
+  PASS  ㉕h ★ 열 사전 — F1 항등식 · 10 nm 출처 없는 상수 / 파괴 LHS-31 (마지막 프레임 · K_IC_P 0.3) · δ 판 금지 / 면적 A_dem_geometric · 총량 · 접촉 0 쌍 평균 N/A · eff_area 식 · J20-s
+  PASS  ㉕i ★ ⑤F1 — aug ≠ se_se_cn + 2 · n_extra / N_SE 이면 거부 (19.5) — 거부: q1: se_se_cn_aug 19.5 ≠ se_se_cn 18.0 + 2 × n_extra 50 / SE 100 
+  PASS  ㉕j ★ ⑤F1 — done 행에 aug 가 비면 거부 (F1 이 꺼진 배치를 N/A 로 싣지 않는다) — 거부: q1: se_se_cn 은 있는데 F1 열 (aug · n_extra · h_spread) 이 비었다 — F1 이 
+  PASS  ㉕k ★ ⑥R1 — 단계 개수 합 ≠ n_total_AM_AM_force 이면 거부 — 거부: q1: 힘 기반 단계 개수 합 12 ≠ n_total_AM_AM_force 11 (관문 ⑥R1 · J20-s)
+  PASS  ㉕l ★ ⑥R2 — 비율이 100 · n/N 에서 반올림 폭 (0.005) 을 넘으면 거부 (+0.02) — 거부: q1: frac_intact_force_pct 54.57 ≠ 100 × 6 / 11 = 54.5455 — 반올림 폭
+  PASS  ㉕m ⑥R2 — 반올림 안 한 값 (100 · 6/11 그대로) 도 받는다 · 기본 픽스처 = 웹앱처럼 둘째 자리 반올림 (㉕a 가 받는다)
+  PASS  ㉕n ★ ⑥R2 — fracture_index_force 가 (파편화 + 분쇄)/N 에서 반올림 폭 (5e-5) 을 넘으면 거부 — 거부: q1: fracture_index_force 0.0919 ≠ (파편화 + 분쇄) / N = 0.090909 — 반올
+  PASS  ㉕o ★ ⑥R3 — 힘 기반 전체 > am_am_n_contacts 이면 거부 (fn > 0 AM–AM 접촉 ⊂ 전 AM–AM 접촉) — 거부: q1: n_total_AM_AM_force 12 > am_am_n_contacts 11 — fn > 0 AM–AM 
+  PASS  ㉕p ★ ⑦A1 — 평균 × 개수 ≠ 총합 이면 거부 (SE–SE) — 거부: q1: area_SE_SE_mean 0.004 × 개수 900 ≠ area_SE_SE_total 3.7 — 같은 접
+  PASS  ㉕q ★ ⑦A1 — 접촉 0 쌍에 0 이 아닌 평균이 있으면 거부 — 거부: q2: area_AM_P_AM_P 개수 0 인데 평균 0.01 이 있다 — 접촉 0 개에서 평균은 정의되지 않는다 
+  PASS  ㉕r ★ ⑦A2 — AM전체–SE 총합 ≠ 상별 합 이면 거부 — 거부: q2: area_AM전체_SE_total 0.9 ≠ AM_P–SE + AM_S–SE 0.86 (관문 ⑦A2 · J2
+  PASS  ㉕s ★ ⑦A3 — am_am_total_area ≠ AM–AM 쌍 총합 이면 거부 — 거부: q2: am_am_total_area 0.7 ≠ AM–AM 쌍 총합 0.66 (관문 ⑦A3 · J20-s)
+  PASS  ㉕t ★ ⑦A3 — am_am_mean_area ≠ am_am_total_area / am_am_n_contacts 이면 거부 — 거부: q2: am_am_mean_area 0.031 ≠ am_am_total_area / am_am_n_contacts 
+  PASS  ㉕u ★ ⑦A4 — se_se_cn_eff_area ≠ 2 · SE–SE 총합 / (N_SE · 4π r_SE²) 이면 거부 — 거부: q1: se_se_cn_eff_area 0.03 ≠ 2 × area_SE_SE_total / (N_SE 100 · 
+  PASS  ㉕v ★ ⑦A4 — 설계에 r_SE_um 이 없으면 거부 (eff_area 를 잴 수 없다) — 거부: q1: se_se_cn_eff_area 를 잴 수 없다 — 설계 r_SE_um None · phase_counts 
+  PASS  ㉕w ★ ⑦A5 — 비관통 (percolation_pct 0) 인데 eff_area_perc 가 있으면 거부 — 거부: q2: se_se_cn_eff_area_perc '0.01' ↔ percolation_pct 0.0 — 빈칸 ⟺ 비
+  PASS  ㉕x ★ ⑦A5 — 관통인데 eff_area_perc 가 비면 거부 — 거부: q1: se_se_cn_eff_area_perc '' ↔ percolation_pct 37.0 — 빈칸 ⟺ 비관통이
+  PASS  ㉕y 접촉 단계 배치 (stop_after=contact) 도 f1 · fracture · area 를 받는다 (다 접촉 분석 단계 산출) · 그 묶음만 싣는다 (관문은 웹앱 원 행으로)
+  PASS  ㉕z 검토 기록 — 새 열 전부 1저자 검토 (J20-s) · 제외 열은 검토 목록에 없다
+
+lhs_design_dataset selftest: 233/233 PASS

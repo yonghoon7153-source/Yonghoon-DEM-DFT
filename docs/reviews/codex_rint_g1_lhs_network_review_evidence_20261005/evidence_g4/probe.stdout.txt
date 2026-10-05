@@ -1,0 +1,35 @@
+lhs_selftest {'exit': 0, 'seconds': 1.1943033998832107} ['lhs_design_dataset selftest: 233/233 PASS']
+labels {'exit': 0, 'seconds': 0.03234210005030036} ['13/13 PASS']
+baseline_all_groups: accepted=True 
+baseline_g4_groups: accepted=True 
+network_stage_contact_groups: accepted=False 웹앱 배치가 stop_after='network' 로 돌았다 — webapp_groups='f1,fracture,area' 로는 싣지 않는다 (그 배치가 다 낸 묶음만: --webapp-groups network 의 부분집합)
+fraction_pct_nan: accepted=True 
+fracture_index_nan: accepted=True 
+area_positive_count_nan_mean: accepted=True 
+area_nan_total: accepted=True 
+f1_h_infinity: accepted=True 
+f1_std_negative: accepted=True 
+f1_std_missing: accepted=True 
+f1_missing_cn: accepted=True 
+f1_missing_cn_corrupt_aug: accepted=True 
+fracture_missing_am_total: accepted=True 
+area_missing_percolation: accepted=True 
+area_missing_pp_corrupt_eap: accepted=True 
+area_missing_global_eff: accepted=True 
+area_perc_nan: accepted=True 
+area_perc_negative: accepted=True 
+area_missing_am_total: accepted=True 
+area_missing_am_mean: accepted=False q1: am_am_mean_area None ≠ am_am_total_area / am_am_n_contacts = 0.02 (관문 ⑦A3 · J20-s)
+missing_pair_count_positive_mean: accepted=True 
+zero_pair_all_keys_missing: accepted=True 
+explicit_zero_pair_mean_zero: accepted=True 
+explicit_zero_pair_mean_positive: accepted=False q2: area_AM_P_AM_P 개수 0 인데 평균 0.01 이 있다 — 접촉 0 개에서 평균은 정의되지 않는다 (관문 ⑦A1 · J20-s)
+pct_negative_inside_tolerance: accepted=True 
+fi_negative_inside_tolerance: accepted=True 
+pct_boundary_0.004999: accepted=True 
+pct_boundary_0.005: accepted=True 
+pct_boundary_0.005001: accepted=False q1: frac_intact_force_pct 54.55045554545455 ≠ 100 × 6 / 11 = 54.5455 — 반올림 폭 0.005 밖 (관문 ⑥R2 · J20-s)
+fi_boundary_4.999e-05: accepted=True 
+fi_boundary_5e-05: accepted=True 
+fi_boundary_5.001e-05: accepted=False q1: fracture_index_force 0.09095910090909091 ≠ (파편화 + 분쇄) / N = 0.090909 — 반올림 폭 5e-5 밖 (관문 ⑥R2 · J20-s)
+exclusion_even_unreviewed: accepted=True 

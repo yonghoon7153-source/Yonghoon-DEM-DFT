@@ -1,0 +1,18 @@
+{
+  "utc": "2026-10-05T00:05:43.015534+00:00",
+  "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "numpy": "2.3.5",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "sha256": {
+    "scripts\\lhs_design_dataset.py": "aa30b9155ee7f73912e1d946011ae1e9c9548db14c4173f9edef493f224c9203",
+    "webapp\\test_s567_labels.py": "58208b504c0d29c938daaaaefc144789082a0d87dd5607d2f4b182dfcb472e7a"
+  },
+  "selftest": {
+    "exit": 0,
+    "seconds": 1.1943033998832107
+  },
+  "labels": {
+    "exit": 0,
+    "seconds": 0.03234210005030036
+  }
+}

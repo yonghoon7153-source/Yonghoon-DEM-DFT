@@ -1,0 +1,225 @@
+{
+  "not_percolating": {
+    "sigma_full": null,
+    "sigma_full_mScm": null,
+    "sigma_full_status": "not_computed",
+    "percolating_fraction": 0.0,
+    "boundary_rule": "L0",
+    "constriction_power_share_ion_hertz": null,
+    "constriction_power_share_ion_hertz_status": "not_computed (no percolating FULL solution)"
+  },
+  "independent_power": {
+    "status": "computed",
+    "power_share_actual": 0.09167871335514417,
+    "power_share_independent": 0.0916787133551442,
+    "ideal_electrode_share": 0.08181818181818182,
+    "relative_to_ideal_percent": 12.051760767398445,
+    "physical_edge_power": 0.9094044479454131,
+    "virtual_electrode_power": 0.06007501223551508,
+    "source_power_at_unit_current": 0.9694794601809258,
+    "electrode_fraction_of_total": 0.061966255813510104
+  },
+  "old_new": {
+    "solve_function_ast_identical": true,
+    "checks": [
+      {
+        "fixture": "L0",
+        "contact_mode": "hertzian",
+        "solve_mode": "full",
+        "boundaries_identical": true,
+        "raw_output_hex_identical": true,
+        "output_hex": [
+          "0x1.47ff6ecf403c2p-6",
+          "0x1.0665f23f66968p-8"
+        ]
+      },
+      {
+        "fixture": "L0",
+        "contact_mode": "hertzian",
+        "solve_mode": "bulk_only",
+        "boundaries_identical": true,
+        "raw_output_hex_identical": true,
+        "output_hex": [
+          "0x1.91f93bd3096b4p-3",
+          "0x1.41942fdc07890p-5"
+        ]
+      },
+      {
+        "fixture": "L0",
+        "contact_mode": "hertzian",
+        "solve_mode": "constriction_only",
+        "boundaries_identical": true,
+        "raw_output_hex_identical": true,
+        "output_hex": [
+          "0x1.6d4086de4ca21p-6",
+          "0x1.24339f183d4e7p-8"
+        ]
+      },
+      {
+        "fixture": "L0",
+        "contact_mode": "physics",
+        "solve_mode": "full",
+        "boundaries_identical": true,
+        "raw_output_hex_identical": true,
+        "output_hex": [
+          "0x1.429e088a7d92bp-6",
+          "0x1.021806d531423p-8"
+        ]
+      },
+      {
+        "fixture": "L0",
+        "contact_mode": "physics",
+        "solve_mode": "bulk_only",
+        "boundaries_identical": true,
+        "raw_output_hex_identical": true,
+        "output_hex": [
+          "0x1.91f93bd3096b4p-3",
+          "0x1.41942fdc07890p-5"
+        ]
+      },
+      {
+        "fixture": "L0",
+        "contact_mode": "physics",
+        "solve_mode": "constriction_only",
+        "boundaries_identical": true,
+        "raw_output_hex_identical": true,
+        "output_hex": [
+          "0x1.6697a45fbee88p-6",
+          "0x1.1edfb6b2ff206p-8"
+        ]
+      },
+      {
+        "fixture": "L1",
+        "contact_mode": "hertzian",
+        "solve_mode": "full",
+        "boundaries_identical": true,
+        "raw_output_hex_identical": true,
+        "output_hex": [
+          "0x1.2480a8e570840p-9",
+          "0x1.d4010e3be739ap-11"
+        ]
+      },
+      {
+        "fixture": "L1",
+        "contact_mode": "hertzian",
+        "solve_mode": "bulk_only",
+        "boundaries_identical": true,
+        "raw_output_hex_identical": true,
+        "output_hex": [
+          "0x1.261742442b665p-6",
+          "0x1.d68b9d39df0a1p-8"
+        ]
+      },
+      {
+        "fixture": "L1",
+        "contact_mode": "hertzian",
+        "solve_mode": "constriction_only",
+        "boundaries_identical": true,
+        "raw_output_hex_identical": true,
+        "output_hex": [
+          "0x1.4e07ec397ce36p-9",
+          "0x1.0b3989c7971c5p-10"
+        ]
+      },
+      {
+        "fixture": "L1",
+        "contact_mode": "physics",
+        "solve_mode": "full",
+        "boundaries_identical": true,
+        "raw_output_hex_identical": true,
+        "output_hex": [
+          "0x1.1fd25f939af24p-9",
+          "0x1.cc83cc1f5e506p-11"
+        ]
+      },
+      {
+        "fixture": "L1",
+        "contact_mode": "physics",
+        "solve_mode": "bulk_only",
+        "boundaries_identical": true,
+        "raw_output_hex_identical": true,
+        "output_hex": [
+          "0x1.261742442b665p-6",
+          "0x1.d68b9d39df0a1p-8"
+        ]
+      },
+      {
+        "fixture": "L1",
+        "contact_mode": "physics",
+        "solve_mode": "constriction_only",
+        "boundaries_identical": true,
+        "raw_output_hex_identical": true,
+        "output_hex": [
+          "0x1.47f0c4c1d24b5p-9",
+          "0x1.065a370175091p-10"
+        ]
+      },
+      {
+        "fixture": "L2",
+        "contact_mode": "hertzian",
+        "solve_mode": "full",
+        "boundaries_identical": true,
+        "raw_output_hex_identical": true,
+        "output_hex": [
+          "0x1.76c80d30502b5p-6",
+          "0x1.76c80d30502b4p-6"
+        ]
+      },
+      {
+        "fixture": "L2",
+        "contact_mode": "hertzian",
+        "solve_mode": "bulk_only",
+        "boundaries_identical": true,
+        "raw_output_hex_identical": true,
+        "output_hex": [
+          "0x1.cb4f07461f12dp-3",
+          "0x1.cb4f07461f12dp-3"
+        ]
+      },
+      {
+        "fixture": "L2",
+        "contact_mode": "hertzian",
+        "solve_mode": "constriction_only",
+        "boundaries_identical": true,
+        "raw_output_hex_identical": true,
+        "output_hex": [
+          "0x1.a15975d324082p-6",
+          "0x1.a15975d324083p-6"
+        ]
+      },
+      {
+        "fixture": "L2",
+        "contact_mode": "physics",
+        "solve_mode": "full",
+        "boundaries_identical": true,
+        "raw_output_hex_identical": true,
+        "output_hex": [
+          "0x1.70a2301a881c2p-6",
+          "0x1.70a2301a881c3p-6"
+        ]
+      },
+      {
+        "fixture": "L2",
+        "contact_mode": "physics",
+        "solve_mode": "bulk_only",
+        "boundaries_identical": true,
+        "raw_output_hex_identical": true,
+        "output_hex": [
+          "0x1.cb4f07461f12dp-3",
+          "0x1.cb4f07461f12dp-3"
+        ]
+      },
+      {
+        "fixture": "L2",
+        "contact_mode": "physics",
+        "solve_mode": "constriction_only",
+        "boundaries_identical": true,
+        "raw_output_hex_identical": true,
+        "output_hex": [
+          "0x1.99bd669c1fbb0p-6",
+          "0x1.99bd669c1fbb1p-6"
+        ]
+      }
+    ]
+  }
+}

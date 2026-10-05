@@ -1,0 +1,63 @@
+A0 호출 자리 (AST): [('_res3', 2025), ('_res3w', 2309), ('_res3b', 2312), ('_res3i', 2418)]
+  PASS  A0 rint 를 받는 solve_sigma_z 호출이 정확히 넷 (주 · wetted · bare · 이온)
+A  실물 producer (OFF · 전자 ON · 전자+이온 ON)
+  PASS  A1 off: exit 0 · 산출물 있음
+  PASS  A2 off: 계면 계약 통과
+  PASS  A3 off: 네 솔브 영수증
+  PASS  A4 off: 전부 not_requested · model None
+      off: σ_e=0.001049433228717753 영수증 {'electronic_main': 'not_requested', 'electronic_wetted': 'not_requested', 'electronic_bare': 'not_requested', 'ionic': 'not_requested'}
+  PASS  A1 e_on: exit 0 · 산출물 있음
+  PASS  A2 e_on: 계면 계약 통과
+  PASS  A3 e_on: 네 솔브 영수증
+  PASS  A4 e_on: 주 · wetted · bare = applied (면 > 0) · 이온 = not_requested
+      e_on: σ_e=0.0010352120036449418 영수증 {'electronic_main': 'applied', 'electronic_wetted': 'applied', 'electronic_bare': 'applied', 'ionic': 'not_requested'}
+  PASS  A1 ei_on: exit 0 · 산출물 있음
+  PASS  A2 ei_on: 계면 계약 통과
+  PASS  A3 ei_on: 네 솔브 영수증
+  PASS  A4 ei_on: 이온 영수증이 요청 표를 받았다 (applied · absent_geometry · failed 중 하나)
+      ei_on: σ_e=0.0010352120036449418 영수증 {'electronic_main': 'applied', 'electronic_wetted': 'applied', 'electronic_bare': 'applied', 'ionic': 'failed'}
+B  AST 변이 — 호출 하나씩 rint= 삭제 → 게시 거부
+  PASS  B1 변이 _res3: exit 4 · 최종 파일 없음 · .failed 있음
+  PASS  B2 변이 _res3: 사유 STEP3_INTERFACE · electronic_main
+  PASS  B1 변이 _res3w: exit 4 · 최종 파일 없음 · .failed 있음
+  PASS  B2 변이 _res3w: 사유 STEP3_INTERFACE · electronic_wetted
+  PASS  B1 변이 _res3b: exit 4 · 최종 파일 없음 · .failed 있음
+  PASS  B2 변이 _res3b: 사유 STEP3_INTERFACE · electronic_bare
+  PASS  B1 변이 _res3i: exit 4 · 최종 파일 없음 · .failed 있음
+  PASS  B2 변이 _res3i: 사유 STEP3_INTERFACE · ionic
+C  CLI 모순 요청 — GPU 작업 전에 죽는다
+  PASS  C1 빈 --step3-rint-e: 거부 (exit ≠ 0 · 산출물 없음 · 격자 작업 전)
+  PASS  C1 반복 플래그 사이 같은 쌍: 거부 (exit ≠ 0 · 산출물 없음 · 격자 작업 전)
+  PASS  C1 --step3-rint-i + --no-ion: 거부 (exit ≠ 0 · 산출물 없음 · 격자 작업 전)
+  PASS  C1 --no-step3: 거부 (exit ≠ 0 · 산출물 없음 · 격자 작업 전)
+  PASS  C1 절연 상 쌍 (AM_S|SE 전자): 거부 (exit ≠ 0 · 산출물 없음 · 격자 작업 전)
+  PASS  C1 절연 상 쌍 (AM_S|SE 이온): 거부 (exit ≠ 0 · 산출물 없음 · 격자 작업 전)
+  PASS  C1 r-ON + --save-step4-grid: 거부 (exit ≠ 0 · 산출물 없음 · 격자 작업 전)
+D  소비자 — 영수증 변조를 check_arm 이 거부한다
+  PASS  D0 원본 ON 산출물은 check_arm 이 받아들인다
+  PASS  D1 wetted 영수증을 not_requested 로: check_arm 거부
+  PASS  D1 bare 영수증 표를 요청과 다르게: check_arm 거부
+  PASS  D1 model 을 None 으로 (표는 그대로): check_arm 거부
+  PASS  D1 영수증 통째로 삭제: check_arm 거부
+  PASS  D1 주 영수증 면 수를 0 으로 (쌍별 합과 모순): check_arm 거부
+F  G1-3 — 반응 솔브 r-ON 비활성 (RINT-05) · Joule bulk-only 범위 (RINT-04) · OFF ↔ r=0 비트 동일
+  PASS  F0 rxn_off: exit 0 · 산출물 있음
+  PASS  F0 rxn_on: exit 0 · 산출물 있음
+  PASS  F0 joule_on: exit 0 · 산출물 있음
+  PASS  F0 e_zero: exit 0 · 산출물 있음
+      rxn_off: {'n_bv_faces': None, 'active_am_pct': None, 'status': None}
+  PASS  F1 r 없음 → 반응 솔브가 r_int 사유로 꺼지지 않는다
+  PASS  F2 r-ON → 반응 솔브 비활성 · 사유 RINT-05 · 입자 jrxn 없음
+      joule_on: scope=bulk_only · 지도 밖 계면 몫=0.0133 · 분담 interface=0.0133
+  PASS  F3 Joule 요약 = bulk_only · 제외 = 계면 I²R · 판 결합 · 지도 밖 계면 몫 = 소산 분담의 interface (> 0)
+  PASS  F4 r = 0 표 → 영수증 zero_table · σ_e · n_dof · 입자 je 가 OFF 와 **비트 동일** (OFF/zero 회귀)
+E  레지스트리 — 실물 매니페스트 키 전수 분류 (RINT-20) · 파생 model (RINT-13)
+  PASS  E1 off: 분류 안 된 매니페스트 키 없음
+  PASS  E1 e_on: 분류 안 된 매니페스트 키 없음
+  PASS  E1 ei_on: 분류 안 된 매니페스트 키 없음
+  PASS  E1 rxn_on: 분류 안 된 매니페스트 키 없음
+  PASS  E1 joule_on: 분류 안 된 매니페스트 키 없음
+  PASS  E1 e_zero: 분류 안 된 매니페스트 키 없음
+  PASS  E2 interface_model 은 계면 표 두 축의 파생 (derived_from)
+
+49 PASS · 0 FAIL
