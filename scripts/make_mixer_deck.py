@@ -24,6 +24,8 @@ usage
   #   dt 는 같은 규칙으로 새 E 에서 · [--dt-factor 0.5 = dt 만 ½ · step ×2].  옵션 중립이면 덱은 옛것과 바이트 동일 (ST①)
   python3 scripts/make_mixer_deck.py --out <dir> --n-total 100000 --cgf 151.4 --arm LC --seed 32452843 --revolutions 2 \
           --stiffen-se 14 --hold-bo-pairwise [--dt-factor 0.5]        # → <dir>/in.mixer + deck_meta.json (봉인 가능한 메타)
+  # ★ 전 정밀도 덤프 (2026-10-05 · 강성 축 사전등록 §12-4 (다) · 확인 블록 덱용) — [--dump-full-precision] = `dump dmp` 바로 뒤
+  #   `dump_modify dmp format "%d %d %.17g …"` 한 줄 (기본 끔 = 덱 바이트 그대로 · ⚠ LIGGGHTS 옛 문법 · ibb 바이너리 실측 전)
 """
 import argparse
 import math
@@ -724,6 +726,33 @@ def run_steps(p, rpm, revolutions, settle_s=None, restitution=0.3, dt_factor=1.0
                 dt_c=p['dt'] if k == 1 else float(dt_txt))       # dt_c = 주석용 (기본은 옛 식 p['dt'] 그대로)
 
 
+#: ★ 전 정밀도 덤프 (2026-10-05 · 강성 축 사전등록 §12-4 (다)) — dump custom 열의 C 형식.  LIGGGHTS-PUBLIC 3.x (공개 소스 3d5c00f) 의
+#:   dump_custom.cpp 가 열마다 INT (id · type · mol → `static_cast<int>` + 형식) / DOUBLE 을 정한다 — 그 표에서 우리 dump 가 쓰는 열만 옮긴다.
+DUMP_INT_COLS = ('id', 'type', 'mol')
+DUMP_FLOAT_COLS = ('x', 'y', 'z', 'vx', 'vy', 'vz', 'fx', 'fy', 'fz', 'radius')
+DUMP_FLOAT_FMT = '%.17g'          # double 왕복 (17 유효숫자 = IEEE 754 binary64 를 정확히 되읽는 최소 자릿수)
+
+
+def dump_columns():
+    """생산 덱 `dump dmp` 의 열 (순서 그대로) — `mol` 은 섬유 (multisphere) 가 있을 때만 (없으면 LIGGGHTS 가 즉시 죽는다 — 리뷰 R-1)."""
+    _fib = any(t in FIBRE_TYPES for t in TYPES)
+    return ('id', 'type') + (('mol',) if _fib else ()) + ('x', 'y', 'z', 'vx', 'vy', 'vz', 'fx', 'fy', 'fz', 'radius')
+
+
+def dump_modify_format(cols):
+    """dump custom 열 이름 → `dump_modify <ID> format "<…>"` 의 형식 문자열 (따옴표 없이) — id · type · mol = `%d` · 나머지 `%.17g`.
+
+    LIGGGHTS-PUBLIC 3.x 는 LAMMPS **옛 문법**이다: 한 줄 전체의 형식 문자열 하나를 받아 (dump.cpp:571 `format_user`) 공백으로 잘라 열마다
+    하나씩 쓴다 (dump_custom.cpp:255–265 · 모자라면 `Dump_modify format string is too short`).  새 LAMMPS 의 `format line` · `format float`
+    키워드는 이 판에 없다.  ⚠ 공개 소스 (3d5c00f) 판독뿐 — **ibb 바이너리에서 실측하지 않았다** (확인 블록 덱 작업에서 run 0 한 번으로 본다).
+    모르는 열은 거부한다 (INT/DOUBLE 을 추정으로 정하지 않는다)."""
+    cols = list(cols)
+    bad = [c for c in cols if c not in DUMP_INT_COLS + DUMP_FLOAT_COLS]
+    if not cols or bad:
+        raise SystemExit(f'⛔ dump_modify format: 열 {cols!r} — 비었거나 모르는 열 {bad} (INT/DOUBLE 을 정할 수 없다)')
+    return ' '.join('%d' if c in DUMP_INT_COLS else DUMP_FLOAT_FMT for c in cols)
+
+
 def ced_for_deck(p, arm, hold_bo_pairwise=False):
     """덱의 CED 행렬 → (soft 행렬, 덱 행렬, 점착 있음?).
 
@@ -793,9 +822,10 @@ def plan_dt_soft(p):
 
 
 def deck_meta(p, rpm, revolutions, seed, arm, text, argv=None, settle_s=None, restitution=0.3,
-              hold_bo_pairwise=False, dt_factor=1.0):
+              hold_bo_pairwise=False, dt_factor=1.0, dump_full_precision=False):
     """경화 · dt 인자 덱의 **봉인 가능한 메타** (CLI 가 `deck_meta.json` 으로 쓴다) — 덱 sha256 · 생성기 sha256 · argv · 선택 옵션 ·
     상별 E · ν · dt (soft → 규칙 → 덱) · 시간 계획 (step · 물리 시각) · 쌍별 E* · CED · F₀ 표.
+    전 정밀도 덤프 (--dump-full-precision) 덱에만 `dump_modify_format` 키를 더한다 (끄면 키 집합 그대로).
 
     ⚠ 이 표는 **생성기 산술**이다 — 실행 덱의 독립 검산은 `scripts/mixer_deck_readback.py` (덱 텍스트만 읽는다) 가 맡는다.
     """
@@ -808,7 +838,7 @@ def deck_meta(p, rpm, revolutions, seed, arm, text, argv=None, settle_s=None, re
     t0 = (2 * st['steps_fill'] // st['dump_every']) * st['dump_every']
     dt_soft, by_soft = plan_dt_soft(p)
     raw = text.encode('utf-8')
-    return dict(
+    meta = dict(
         schema='mixer_deck_meta/1',
         registered='docs/reviews/mixer_highbo_stiffness_prereg_20260929.md §3 (강성 축) · §2 · §8-2 (DEV) — Codex 6 차 HBR6-02 · 7 차 §5',
         generator='scripts/make_mixer_deck.py',
@@ -830,10 +860,13 @@ def deck_meta(p, rpm, revolutions, seed, arm, text, argv=None, settle_s=None, re
         pairs=stiffness_rows(p['d'], M_soft, M_ced, E_PHASE, E_new),
         caveat=('F0 = B³/A² 보존 = 명목 소겹침 점착 힘 척도 (점착 지배 · 고립 접촉 근사) — SJKR 동역학 전체 불변이 아니다 '
                 '(U_sep ∝ E*^(−2/3) · 접촉시간 · 접선 강성 · 감쇠 · 이력 · 영률비 · 실제 SJKR 구 교차 면적 · 메시 area_ratio).'))
+    if dump_full_precision:                       # 켠 덱에만 (끄면 키 집합 그대로)
+        meta['dump_modify_format'] = dump_modify_format(dump_columns())
+    return meta
 
 
 def deck(p, rpm, revolutions, seed=32452843, arm='E1', settle_s=None, layered=None,
-         restitution=0.3, n_baffles=0, baffle_h=0.10, hold_bo_pairwise=False, dt_factor=1.0):
+         restitution=0.3, n_baffles=0, baffle_h=0.10, hold_bo_pairwise=False, dt_factor=1.0, dump_full_precision=False):
     #  ⚠⚠ LIGGGHTS 의 `fix insert/pack` 시드는 **소수여야 한다**.
     #    합성수를 주면 런이 `random.cpp:93` 에서 **죽는다** — 그런데 죽는 자리가
     #    셋업 뒤라 덤프 디렉터리는 이미 만들어져 있고, 배치로 돌리면 "덤프 0 개" 로만
@@ -974,6 +1007,15 @@ fix insB all insert/pack seed {seedB} distributiontemplate pddB &
     _E_line = ' '.join(f'{E_now[t]:.4g}' for t in TYPES) + f' {E_now[WALL]:.4g}'
     _nu_line = ' '.join(f'{PHASE_MECH[t][0]:.2f}' for t in TYPES) + f' {WALL_NU:.2f}'
     box = p['R'] * 1.15
+    #  ★ dump 열 · 전 정밀도 덤프 (2026-10-05 · 강성 축 사전등록 §12-4 (다)) — 끄면 (기본) 조각이 빈 문자열이라 덱이 바이트 그대로 (셀프테스트 DP①).
+    #    켜면 같은 dump 바로 뒤에 `dump_modify dmp format "…"` — 좌표 · 반경 (· 속도 · 힘) 이 %.17g (double 왕복) 로 찍힌다.
+    _dump_cols = dump_columns()
+    _dump_fmt = ('' if not dump_full_precision else
+                 '\n# ★ 전 정밀도 덤프 (생성기 --dump-full-precision · 강성 축 사전등록 §12-4 (다)) — '
+                 + ' · '.join(c for c in _dump_cols if c in DUMP_INT_COLS) + ' = %d · 나머지 %.17g (double 왕복).  기본 %g 6 유효숫자면 '
+                 '좌표 반폭 최대 5e-8 m\n'
+                 '#   LIGGGHTS-PUBLIC 3.x 옛 문법 (한 줄 형식 · 공개 소스 3d5c00f 판독) — ⚠ ibb 바이너리 실측 전 · 덤프 크기 ≈ 2 배\n'
+                 f'dump_modify dmp format "{dump_modify_format(_dump_cols)}"')
     return f"""# 믹싱 드럼 — 표면에너지 스윕  (생성: scripts/make_mixer_deck.py)
 # ⚠ 손으로 고치지 말 것 — 치수가 조성에서 유도된다.  조성을 바꾸면 생성기를 다시 돌린다.
 #
@@ -1066,7 +1108,7 @@ restart {restart_every} restart/a.bin restart/b.bin
 run 1
 # ⚠ `mol` 은 `fix multisphere` 가 있어야 할당된다 (LIGGGHTS-PUBLIC fix_multisphere.cpp:175; 없으면
 #   dump_custom.cpp:1058 "Dumping an atom property that isn't allocated" 로 **즉시 죽는다** — 자가 리뷰 R-1)
-dump dmp all custom {dump_every} post/mix_*.liggghts id type{' mol' if _fib else ''} x y z vx vy vz fx fy fz radius
+dump dmp all custom {dump_every} post/mix_*.liggghts {' '.join(_dump_cols)}{_dump_fmt}
 
 # ① 채우고 정착 — ⚠ KE 가 떨어진 뒤에 회전을 시작한다 (정착 전에 돌리면 지표가 뒤집힌다)
 #   정착 {2*steps_fill*st['dt_c']:.3f} s = 낙하 {2*p['R']*1e3:.1f} mm · e {restitution} 에서
@@ -1994,6 +2036,103 @@ def _selftest():
         return good
     chk('U⑦ SE ×20 경화 (--hold-bo-pairwise) 에서도 9 비영 항 F₀ 비 = 1 (상대 1e-12) · AM–AM · AM–벽 CED 는 soft 값 그대로 (E* 불변) '
         '⇒ 경화 덱에서도 9 원소가 LC 와 같은 배율 (U②)', _ok(_u7))
+
+    #  ══ DP — 전 정밀도 덤프 (2026-10-05 · 강성 축 사전등록 §12-4 (다) · 1저자 *"가,다 하고 나도 해당 방법으로 진행해보자"*) ═══════════
+    #  ★ 시험 먼저 — 옛 생성기에는 deck(dump_full_precision=…) · dump_modify_format 이 없다 (TypeError · NameError → DP① ~ DP⑥ FAIL).
+    #    덱의 `dump dmp all custom …` 에 dump_modify format 이 없어 좌표가 LIGGGHTS 기본 %g (6 유효숫자) 로 찍힌다 — 보조 판독기 (s1 · s2) 의
+    #    접촉 판정이 덤프 해상도에 갇힌다 (시험 운전 docs/data/mixer_contact_reader_refs_20261005/).  플래그를 켜면 그 dump 바로 뒤에
+    #    `dump_modify dmp format "<열마다 하나>"` (id · type · mol = %d · 나머지 %.17g = double 왕복).  ⛔ 기본 끔 = 덱 바이트 그대로.
+    _RUN_DECKS = {('LC', 2): '5405067f8360651b34cfdcdbb07e355132f6f9cdaa6053e70f62e2560c6924a2',    # v26 LC_ref_r2 (ibb dev-rot 실행 덱)
+                  ('LH', 2): '3125d2443004300f274cc8b16fa218a7d509c4b9352c125cdfaec726807605fd',    # v26 LH_ref_r2
+                  ('E0', 0): '78ad92356373e00ae8eeee666256e250571fad6acfba90c7d491ccc3d6954adb',   # v26 E0_ref_s32452843 (회전 0)
+                  ('LU212', 2): '8cb48a132d8a90c03da706f04dd426508a0d48418df6ac1a127ed42b9eadca8c',  # dev-u (ibb 실행 중)
+                  ('LU637', 2): '57872d5d4a1c716263b8b227dbdc68e48963caf1afbbe85406b66d02d42fa849'}
+    _p20 = plan(100000, cgf=151.4, stiffen_se=20.0)
+    _rp20 = resolve_rpm(_p20['R'], FR_ANCHOR, None, False)
+
+    def _run_deck(arm, rv, **kw):
+        """커밋 · 실행 덱과 같은 호출 (mixer_deck_diff.expected_deck = 생성기 CLI) — ×20 · hold · seed 32452843."""
+        return deck(_p20, _rp20, rv, arm=arm, settle_s=None, seed=32452843, n_baffles=0, baffle_h=0.10,
+                    hold_bo_pairwise=True, dt_factor=1.0, **kw)
+
+    def _dp1():
+        return all(_hs.sha256(_run_deck(a_, rv_).encode('utf-8')).hexdigest() == h_
+                   and _run_deck(a_, rv_, dump_full_precision=False) == _run_deck(a_, rv_)
+                   and 'dump_modify' not in _run_deck(a_, rv_) for (a_, rv_), h_ in _RUN_DECKS.items())
+    chk('DP① ★ 기본 끔 (플래그 없음 · dump_full_precision=False) = 커밋 · 실행 덱과 바이트 동일 — v26 LC_ref_r2 · LH_ref_r2 · E0_ref · '
+        'dev-u LU212 · LU637 (sha256 다섯) · dump_modify 줄 없음', _ok(_dp1))
+
+    def _fmt_line(t):
+        L = [l for l in t.split('\n') if l.startswith('dump_modify')]
+        m_ = _re.fullmatch(r'dump_modify dmp format "([^"]*)"', L[0]) if len(L) == 1 else None
+        return None if m_ is None else m_.group(1).split(' ')
+
+    def _dp2():
+        good = True
+        for a_, rv_ in (('LC', 2), ('E0', 0), ('LU637', 2)):
+            off, on = _run_deck(a_, rv_).split('\n'), _run_deck(a_, rv_, dump_full_precision=True).split('\n')
+            i_ = next(k for k, l in enumerate(off) if l.startswith('dump dmp '))
+            cols = off[i_].split()[6:]
+            ins = on[i_ + 1:i_ + 1 + (len(on) - len(off))]
+            toks = _fmt_line('\n'.join(on))
+            good &= (on[:i_ + 1] == off[:i_ + 1] and on[i_ + 1 + len(ins):] == off[i_ + 1:] and len(ins) >= 1
+                     and ins[-1].startswith('dump_modify dmp format ') and all(l.startswith('#') for l in ins[:-1])
+                     and cols == ['id', 'type', 'x', 'y', 'z', 'vx', 'vy', 'vz', 'fx', 'fy', 'fz', 'radius']
+                     and toks is not None and len(toks) == len(cols) == 12
+                     and toks == ['%d' if c_ in ('id', 'type') else '%.17g' for c_ in cols]
+                     and ' '.join(toks) == dump_modify_format(cols))
+        return good
+    chk('DP② ★ 켜면 (LC · E0 · LU637) `dump dmp` 바로 뒤에 주석 + `dump_modify dmp format "…"` 한 줄만 더해진다 (나머지 줄 그대로) · '
+        '형식 토큰 수 = dump 열 수 12 · id · type = %d · x y z vx vy vz fx fy fz radius = %.17g · dump_modify_format(열) 과 같다', _ok(_dp2))
+
+    def _dp3():
+        _saved = TYPES
+        try:
+            set_phases(ALL_TYPES)
+            t_ = deck(plan(8000), rpm=60, revolutions=5, dump_full_precision=True)
+        finally:
+            set_phases(_saved)
+        cols = next(l for l in t_.split('\n') if l.startswith('dump dmp ')).split()[6:]
+        toks = _fmt_line(t_)
+        return (cols[:3] == ['id', 'type', 'mol'] and toks is not None and len(toks) == len(cols) == 13
+                and toks[:3] == ['%d'] * 3 and set(toks[3:]) == {'%.17g'})
+    chk('DP③ 섬유 (5 상 · dump 에 mol 열) 이면 형식 13 토큰 · id · type · mol = %d (LIGGGHTS dump_custom INT 열) · 나머지 %.17g', _ok(_dp3))
+
+    def _dp4():
+        on = _run_deck('LC', 2, dump_full_precision=True)
+        off = _run_deck('LC', 2)
+        de_on = _re.findall(r'^dump\s+dmp\s+all\s+custom\s+(\d+)', on, _re.M)          # 판독기 deck_plan 의 정규식 그대로
+        ins = [l for l in on.split('\n') if l not in off.split('\n')]
+        return (de_on == _re.findall(r'^dump\s+dmp\s+all\s+custom\s+(\d+)', off, _re.M) and len(de_on) == 1
+                and all(not l.rstrip().endswith('&') and '$' not in l for l in ins)
+                and all('#' not in l and l.count('"') == 2 for l in ins if not l.startswith('#')))
+    chk('DP④ 판독기 deck_plan 정규식 (`^dump\\s+dmp\\s+all\\s+custom`) 은 그대로 한 줄 · 같은 덤프 간격 — 더한 줄은 `&` 로 끝나지 않고 $ 없음 · '
+        'dump_modify 줄에 # 없음 · 따옴표 한 쌍 (LIGGGHTS 입력 파서)', _ok(_dp4))
+
+    def _dp5():
+        me = os.path.abspath(__file__)
+        base = ['--n-total', '100000', '--cgf', '151.4', '--arm', 'LC', '--seed', '32452843', '--revolutions', '2',
+                '--stiffen-se', '20', '--hold-bo-pairwise']
+        with _tf.TemporaryDirectory() as td:
+            a = _sp.run([sys.executable, me, '--out', os.path.join(td, 'a')] + base + ['--dump-full-precision'],
+                        capture_output=True, text=True)
+            b = _sp.run([sys.executable, me, '--out', os.path.join(td, 'b')] + base, capture_output=True, text=True)
+            h = _sp.run([sys.executable, me, '--help'], capture_output=True, text=True)
+            dk_a = open(os.path.join(td, 'a', 'in.mixer'), encoding='utf-8').read()
+            dk_b = open(os.path.join(td, 'b', 'in.mixer'), encoding='utf-8').read()
+            ma = _js.load(open(os.path.join(td, 'a', 'deck_meta.json'), encoding='utf-8'))
+            mb = _js.load(open(os.path.join(td, 'b', 'deck_meta.json'), encoding='utf-8'))
+            fmt = dump_modify_format(['id', 'type', 'x', 'y', 'z', 'vx', 'vy', 'vz', 'fx', 'fy', 'fz', 'radius'])
+            return (a.returncode == 0 and b.returncode == 0 and h.returncode == 0 and '--dump-full-precision' in h.stdout
+                    and dk_a == _run_deck('LC', 2, dump_full_precision=True)
+                    and _hs.sha256(dk_b.encode('utf-8')).hexdigest() == _RUN_DECKS[('LC', 2)]
+                    and ma['dump_modify_format'] == fmt and ma['deck_sha256'] == _hs.sha256(dk_a.encode('utf-8')).hexdigest()
+                    and '--dump-full-precision' in ma['argv'] and 'dump_modify_format' not in mb)
+    chk('DP⑤ CLI --dump-full-precision → in.mixer = deck(…, True) · deck_meta.json 에 dump_modify_format · 덱 sha256 · argv — 플래그 없으면 '
+        '실행 덱 sha256 그대로 · meta 에 그 키 없음 · --help rc 0 (argparse % 이스케이프)', _ok(_dp5))
+    chk('DP⑥ dump_modify_format 은 모르는 열 (element · 빈 목록) 을 거부 — INT/DOUBLE 을 추정으로 정하지 않는다',
+        _ok(lambda: _raises(lambda: dump_modify_format(['id', 'type', 'element'])) and _raises(lambda: dump_modify_format([]))
+            and dump_modify_format(['id', 'type', 'x', 'radius']) == '%d %d %.17g %.17g'))
     print(f'\nmake_mixer_deck selftest: {ok}/{ok+len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0
@@ -2033,6 +2172,10 @@ if __name__ == '__main__':
     ap.add_argument('--dt-factor', type=float, default=1.0,
                     help='dt 만 ×X (X = 1/k — 예: 0.5 = DEV E0_ref@dt/2).  정착 · 회전 · 덤프 간격 step 은 정확히 k 배 = '
                          '물리 시간 · 덤프 시각 불변.  1/X 가 정수 아니면 거부')
+    ap.add_argument('--dump-full-precision', action='store_true',
+                    help='★ (다) dump dmp 바로 뒤에 dump_modify format 한 줄 — id · type (· mol) = %%d · 나머지 %%.17g (double 왕복 · 기본 %%g 는 '
+                         '6 유효숫자).  기본 끔 = 덱 바이트 그대로.  켜면 deck_meta.json 에 dump_modify_format.  ⚠ LIGGGHTS-PUBLIC 3.x 옛 문법 '
+                         '(공개 소스 판독) · ibb 바이너리 실측 전 · 덤프 크기 약 2 배 (강성 축 사전등록 §12-4 (다) · 확인 블록 덱용)')
     ap.add_argument('--selftest', action='store_true')
     a = ap.parse_args()
     if a.selftest:
@@ -2063,7 +2206,8 @@ if __name__ == '__main__':
         #  ★ 덱을 **먼저** 다 만든다 — 거부 (합성수 시드 · hold 없는 경화 · 1/X 비정수) 는 디렉터리 · 빈 in.mixer 를 남기기 전에
         _texts = {arm: deck(p, rpm, a.revolutions, arm=arm, settle_s=a.settle_s, seed=a.seed,
                             n_baffles=a.baffles, baffle_h=a.baffle_h,
-                            hold_bo_pairwise=a.hold_bo_pairwise, dt_factor=a.dt_factor) for arm in arms}
+                            hold_bo_pairwise=a.hold_bo_pairwise, dt_factor=a.dt_factor,
+                            dump_full_precision=a.dump_full_precision) for arm in arms}
         os.makedirs(os.path.join(a.out, 'data'), exist_ok=True)
         #  ★ 섬유 파일은 **섬유가 도는 경우에만** 쓴다 (생산 3 상에는 없다)
         _write_fibres(os.path.join(a.out, 'data'), p)
@@ -2079,7 +2223,8 @@ if __name__ == '__main__':
                 with open(os.path.join(d, 'deck_meta.json'), 'w', encoding='utf-8') as f:
                     _json.dump(deck_meta(p, rpm, a.revolutions, a.seed, arm, _texts[arm], argv=sys.argv[1:],
                                          settle_s=a.settle_s, hold_bo_pairwise=a.hold_bo_pairwise,
-                                         dt_factor=a.dt_factor), f, ensure_ascii=False, indent=1)
+                                         dt_factor=a.dt_factor, dump_full_precision=a.dump_full_precision),
+                               f, ensure_ascii=False, indent=1)
                     f.write('\n')
             if a.baffles:
                 import importlib.util as _iu
