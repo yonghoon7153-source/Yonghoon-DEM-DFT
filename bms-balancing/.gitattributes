@@ -93,3 +93,5 @@ reviews/r14_repros/codex63/comsol_bmin_r2_review_20261005/** -text
 reil_c6_20261005/** -text
 # 2026-10-05: REIL 부속 C 재검토 묶음 (게이트 차수 밖 · ANNEX_C_CONDITIONALLY_ACCEPTABLE_THREE_LOCAL_DOCUMENT_CORRECTIONS · C1-core 논문 쪽 수용 · RV2C-N1–N3 국소 문서 정정 · C2 종결 유지 · 실행 · 구현 · P0 · C6 수용 아님) — bytes 그대로
 reviews/prereview_reil_v2_annexC_20261005/** -text
+# 2026-10-05: REIL 부속 C 독립 교차검토 묶음 (게이트 차수 밖 · 다른 Codex 세션 · PRIOR_CONDITIONAL_DOCUMENT_VERDICT_SUPPORTED_CORRECTIONS_NOT_YET_VERIFIED · RV2C-N1–N3 타당 · 새 P1 없음 · 실행 · P0 · C6 수용 아님) — bytes 그대로
+reviews/prereview_reil_v2_annexC_crossreview_20261005/** -text
