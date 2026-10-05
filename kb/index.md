@@ -1,6 +1,6 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-10-04 · managed-files: 500
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-10-05 · managed-files: 500
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
@@ -563,4 +563,4 @@
 ## elements/ — 118개 (생성물/템플릿, 목록 생략)
 ## templates/ — 3개 (생성물/템플릿, 목록 생략)
 
-## litdb/ — digest 360개 (정본 목록: litdb/INDEX.md)
+## litdb/ — digest 362개 (정본 목록: litdb/INDEX.md)

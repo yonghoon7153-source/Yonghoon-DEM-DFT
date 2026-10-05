@@ -1,4 +1,4 @@
-<!-- digest 초판 2026-10-04 (논문 에이전트 · 심층판 · 대피 세션 브랜치 claude/evac-2026-10-02 — INDEX/comparison 반영과 커밋은 부모 세션이 한다).
+<!-- digest 초판 2026-10-05 (논문 에이전트 · 심층판 · 대피 세션 브랜치 claude/evac-2026-10-02 — INDEX/comparison 반영과 커밋은 부모 세션이 한다).
      ① 본문 그림 6장 전부 원본 크기 실독 (Fig. 1 은 옛 크롭 원본 크기 + 새 크롭 윗띠는 검수 시트 축소판). SI 8장 원본 크기
         (`Fig. S2`·`S8`·`S9`·`S10`·`S11`·`S26`·`S32`·`S33`) + SI 21장·표 11장은 검수 시트 축소판(≈440 px)으로만 봤다. SI p.6–7(위상장 식)은 쪽 렌더로 읽었다.
      ② 크롭 정정 (figures.json 에 사유): 본문 `Fig. 1`–`Fig. 5` 윗부분 18–21 pt 잘림 재크롭(Fig. 4 는 패널 a–f 가 통째로, Fig. 5 는 a–b 가 빠져 있었다) ·
@@ -12,7 +12,7 @@
 
 # Stress homogenization enabled by a layered composite electrolyte for high-performance all-solid-state lithium metal batteries — Yuan et al. (*Nat. Commun.* 2026, Article in Press)
 
-> slug `yuan2026_layered_composite_electrolyte_stress_homogenization_li_metal` · DOI `10.1038/s41467-026-78129-0` · type `exp (PEO-LiTFSI + 비정질 2D SiO₂ 나노시트 층상막 · 파우치 압력막 응력지도 · 나노압입/AFM/인장 · 전기화학 · XPS/⁷Li NMR/Raman/FTIR/EPR) + FEM (Ansys LS-DYNA 선형탄성) + 위상장 PFM (COMSOL 6.0) + DFT 보조 (DMol3 PBE 결합에너지 2개 + CDD 그림)` · PDF `litdb/inbox/Yuan 2026 - Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0).pdf` (본문 15 pp) + `… Sup) … SI.pdf` (SI 65 pp: 계산 방법 pp.2–9 · `Fig. S1`–`S40` · `Table S1`–`S12`) + `… Sup2 DFT structures ….zip` (구조 7 파일) + `… Sup3 data ….xlsx` (원자료 22 시트) · digested `2026-10-04` · status ✅ · 태그 **[외부·고분자 전해질]**
+> slug `yuan2026_layered_composite_electrolyte_stress_homogenization_li_metal` · DOI `10.1038/s41467-026-78129-0` · type `exp (PEO-LiTFSI + 비정질 2D SiO₂ 나노시트 층상막 · 파우치 압력막 응력지도 · 나노압입/AFM/인장 · 전기화학 · XPS/⁷Li NMR/Raman/FTIR/EPR) + FEM (Ansys LS-DYNA 선형탄성) + 위상장 PFM (COMSOL 6.0) + DFT 보조 (DMol3 PBE 결합에너지 2개 + CDD 그림)` · PDF `litdb/inbox/Yuan 2026 - Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0).pdf` (본문 15 pp) + `… Sup) … SI.pdf` (SI 65 pp: 계산 방법 pp.2–9 · `Fig. S1`–`S40` · `Table S1`–`S12`) + `… Sup2 DFT structures ….zip` (구조 7 파일) + `… Sup3 data ….xlsx` (원자료 22 시트) · digested `2026-10-05` · status ✅ · 태그 **[외부·고분자 전해질]**
 
 > elements: Li, Si, O, C, H, N, F, S
 > methods: DFT, elastic, ESW, XPS, Raman
@@ -25,7 +25,7 @@
 
 > **관련 digest**: 고분자 전해질 짝 `[Yu26Pol]` `yu2026_pvdf_mos2_anion_solvent_confinement` (MoS₂/DMF −4.59 eV) · `[Meng26LZF]` `meng2026_pvdf_li2zrf6_phase_ordering` (FSI⁻/LZF −5.21 eV) — **세 편 다 '화학결합 규모 흡착에너지 + 미선언 모형' 반례** · 공저자 S.-H. Bo = `[Xiao20Rev]` `xiao2020_interface_stability_ssb_review` 공저 · 탄성 앵커 `deng2016_elastic_superionic_electrolytes_dft` · 몬로–뉴먼 문턱 `[Jung26LGPS]` (comparison §C) · Li 금속 계면 `chaney2024_two_step_sei_growth_argyrodite_li_metal` · `luo2022_cryotem_li_dendrite_sulfide_interphase` · DEM 쪽(읽기만): `doux2020_stack_pressure_assb` · `hamann2026_llzo_bilayer_porosity_asr_dendrite_ccd` · `choi2026_elastomeric_li_metal_anode` · `tabakovic2026_mechanical_stress_eis_ica_drt_dfn` · `bucci2017_chemomech_failure_assb_cycling_czm`.
 
-> **본 digest 에서 실제로 본 그림 (2026-10-04)**: 본문 `Fig. 1`–`Fig. 6` **전부 원본 크기**(`Fig. 1` 은 옛 크롭을 원본 크기로 읽었고 새 크롭의 윗띠 — 패널 a 위쪽·b 머리·c — 는 검수 시트 축소판). SI **원본 크기 8장**: `Fig. S2` · `S8` · `S9` · `S10` · `S11` · `S26` · `S32` · `S33`. SI **축소판(≈440 px 검수 시트)으로만 21장**: `Fig. S1` · `S3` · `S4` · `S5` · `S6` · `S12` · `S13` · `S14` · `S15` · `S16` · `S17` · `S19` · `S20` · `S21` · `S22` · `S25` · `S27` · `S29` · `S31` · `S34` · `S36` (이 중 `S19`·`S27`·`S29`·`S31` 은 **인쇄 라벨만** 읽었다 — 곡선 판독값은 따지 않았다). 표 `Table S1`–`S11` 은 PDF 텍스트로 읽고 크롭은 축소판으로 행 정렬만 확인했다. **안 본 것**: `Fig. S7` · `S18` · `S23` · `S24` · `S28` · `S30` · `S35` · `S37`–`S40` · `Table S12` (안 잘랐다 — 숫자가 필요한 곳은 Sup3 원자료로 대신 쟀다).
+> **본 digest 에서 실제로 본 그림 (2026-10-05)**: 본문 `Fig. 1`–`Fig. 6` **전부 원본 크기**(`Fig. 1` 은 옛 크롭을 원본 크기로 읽었고 새 크롭의 윗띠 — 패널 a 위쪽·b 머리·c — 는 검수 시트 축소판). SI **원본 크기 8장**: `Fig. S2` · `S8` · `S9` · `S10` · `S11` · `S26` · `S32` · `S33`. SI **축소판(≈440 px 검수 시트)으로만 21장**: `Fig. S1` · `S3` · `S4` · `S5` · `S6` · `S12` · `S13` · `S14` · `S15` · `S16` · `S17` · `S19` · `S20` · `S21` · `S22` · `S25` · `S27` · `S29` · `S31` · `S34` · `S36` (이 중 `S19`·`S27`·`S29`·`S31` 은 **인쇄 라벨만** 읽었다 — 곡선 판독값은 따지 않았다). 표 `Table S1`–`S11` 은 PDF 텍스트로 읽고 크롭은 축소판으로 행 정렬만 확인했다. **안 본 것**: `Fig. S7` · `S18` · `S23` · `S24` · `S28` · `S30` · `S35` · `S37`–`S40` · `Table S12` (안 잘랐다 — 숫자가 필요한 곳은 Sup3 원자료로 대신 쟀다).
 > 그림에서만 읽은 값은 **`figure-read ≈`**, 논문에 없는 우리 계산은 **(우리 산수)**, Sup2/Sup3 를 다시 잰 값은 **(원자료 재계산)** 으로 표시했다. ⛔ 우리 σ·D·Ea 는 1저자 인용정책(2026-09-18)상 **우리 계 사이 상대차로만** 쓴다 — 이 논문의 σ·Ea 와 같은 줄에 숫자로 놓지 않는다.
 
 ---
