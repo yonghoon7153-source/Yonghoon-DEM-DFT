@@ -657,18 +657,23 @@ def make_kprobe(stage2_dir, out_dir, k=KPROBE_K, model=REP_NAME):
         src = f"{model}_G4_k9_{ep}"
         if src not in by or not os.path.isfile(os.path.join(src_q, src, "pw.in")):
             raise SystemExit(f"⛔ {src} 가 2단계 묶음에 없다 — 탐침을 만들지 않는다")
-        txt = open(os.path.join(src_q, src, "pw.in"), encoding="utf-8").read()
+        src_p = os.path.join(src_q, src, "pw.in")
+        if _sha(src_p) != by[src].get("pw_in_sha256"):
+            raise SystemExit(f"⛔ {src}/pw.in 해시가 그 묶음 jobs.json 과 다르다 (돌았던 입력이 아니다) — 만들지 않는다")
+        txt = open(src_p, encoding="utf-8").read()
         dst = f"{model}_K{k}_{ep}"
         n_k, n_p = txt.count(kline9), txt.count(f"prefix = '{src}'")
         if n_k != 1 or n_p != 1:
             raise SystemExit(f"⛔ {src}: K_POINTS·prefix 줄을 정확히 하나씩 못 찾았다 ({n_k}·{n_p}) — 만들지 않는다")
         out = txt.replace(kline9, f"\n  {k} {k} 1 0 0 0\n").replace(f"prefix = '{src}'", f"prefix = '{dst}'")
         os.makedirs(os.path.join(out_q, dst), exist_ok=True)
-        open(os.path.join(out_q, dst, "pw.in"), "w", encoding="utf-8").write(out)
+        dst_p = os.path.join(out_q, dst, "pw.in")
+        open(dst_p, "w", encoding="utf-8").write(out)
         e = dict(by[src]); e["dir"] = dst; e["kpts"] = [k, k, 1]
+        e["pw_in_sha256"] = _sha(dst_p)   # 러너 입력 점검이 이 칸을 파일 바이트와 대조한다 — 복사한 k9 값을 남기면 막힌다 (2026-10-05 실측)
         e["tags"] = {**{a: b for a, b in (e.get("tags") or {}).items() if a != "G4"}, "kprobe": f"k{k}_{ep}", "from": src}
         new.append(e)
-        src_sha[src] = hashlib.sha256(txt.encode()).hexdigest()
+        src_sha[src] = _sha(src_p)
     meta = {"schema": "agc_kprobe/v1", "what": f"k 사다리 탐침 — {model} 두 끝점 {k}×{k}×1 (나머지는 G4 k9 입력 그대로)",
             "decision": KPROBE_DECISION, "settings": jobs.get("settings"), "jobs": new, "source_pw_in_sha256": src_sha}
     json.dump(meta, open(os.path.join(out_q, "jobs.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
@@ -926,7 +931,8 @@ def _selftest():
         for ep in ("bound", "far"):
             nm = f"{REP_NAME}_G4_k9_{ep}"; os.makedirs(os.path.join(q, nm))
             open(os.path.join(q, nm, "pw.in"), "w").write(body(nm))
-            jl.append({"dir": nm, "kind": "scf", "calc": "scf", "kpts": [9, 9, 1], "tags": {"G4": f"k9_{ep}"}})
+            jl.append({"dir": nm, "kind": "scf", "calc": "scf", "kpts": [9, 9, 1], "tags": {"G4": f"k9_{ep}"},
+                       "pw_in_sha256": _sha(os.path.join(q, nm, "pw.in"))})
         json.dump({"settings": {"pp_sha256": {"C.UPF": "x"}}, "jobs": jl}, open(os.path.join(q, "jobs.json"), "w"))
         m = make_kprobe(os.path.join(td, "s2"), os.path.join(td, "kp"))
         o = open(os.path.join(td, "kp", "qe", f"{REP_NAME}_K12_bound", "pw.in")).read()
@@ -936,7 +942,25 @@ def _selftest():
         ck("k 탐침: jobs.json — 잡 둘 · kpts 12 · G4 태그 없음 · 출처 기록 · PP 해시 설정 승계",
            len(m["jobs"]) == 2 and all(j["kpts"] == [12, 12, 1] and "G4" not in j["tags"] and j["tags"]["from"].endswith(("bound", "far"))
                                        for j in m["jobs"]) and m["settings"] == {"pp_sha256": {"C.UPF": "x"}})
-        open(os.path.join(q, f"{REP_NAME}_G4_k9_far", "pw.in"), "w").write(body(f"{REP_NAME}_G4_k9_far").replace("  9 9 1 0 0 0", "  6 6 1 0 0 0"))
+        # 러너(run_sese_gpu.sh 입력 점검)와 같은 대조: 기록 해시 = 새 pw.in 파일 바이트 · 원본 해시는 출처 칸에만 (2026-10-05 kgy DRY_RUN 이 막은 버그)
+        kq = os.path.join(td, "kp", "qe")
+        ck("k 탐침: 잡 기록 pw_in_sha256 = 새 pw.in 파일 sha (러너 대조) · k9 값을 물려받지 않는다",
+           all(j["pw_in_sha256"] == _sha(os.path.join(kq, j["dir"], "pw.in")) for j in m["jobs"])
+           and not ({j["pw_in_sha256"] for j in m["jobs"]} & {j["pw_in_sha256"] for j in jl}),
+           [(j["dir"], j["pw_in_sha256"][:12]) for j in m["jobs"]])
+        ck("k 탐침: 출처 해시 = 원본 묶음 기록 해시", m["source_pw_in_sha256"] == {j["dir"]: j["pw_in_sha256"] for j in jl})
+        # ⛔ 원본 pw.in 이 기록 뒤 고쳐졌으면 (돌았던 입력이 아니면) 만들지 않는다 — k9·prefix 줄은 그대로 둬서 해시 가드만 걸리게 한다
+        fp = os.path.join(q, f"{REP_NAME}_G4_k9_far", "pw.in")
+        open(fp, "w").write(body(f"{REP_NAME}_G4_k9_far").replace("C 0 0 0\n", "C 0 0 0.1\n"))
+        try:
+            make_kprobe(os.path.join(td, "s2"), os.path.join(td, "kp1")); refused = False
+        except SystemExit:
+            refused = True
+        ck("⛔ k 탐침: 원본 pw.in 해시가 그 묶음 기록과 다르면 만들지 않는다 (k9·prefix 줄은 멀쩡)", refused)
+        # ⛔ 기록까지 맞춰도 k9 줄이 없으면 (다른 k) 만들지 않는다 — 해시 가드가 아니라 K_POINTS 가드가 막는지 본다
+        open(fp, "w").write(body(f"{REP_NAME}_G4_k9_far").replace("  9 9 1 0 0 0", "  6 6 1 0 0 0"))
+        jl[1]["pw_in_sha256"] = _sha(fp)
+        json.dump({"settings": {"pp_sha256": {"C.UPF": "x"}}, "jobs": jl}, open(os.path.join(q, "jobs.json"), "w"))
         try:
             make_kprobe(os.path.join(td, "s2"), os.path.join(td, "kp2")); refused = False
         except SystemExit:
