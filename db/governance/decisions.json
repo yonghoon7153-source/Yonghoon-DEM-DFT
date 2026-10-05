@@ -7219,7 +7219,7 @@
    "title": "소셀 유리 대조 계 — a-Li₃PS₄ 유리 120 원자 · 600 K 400 ps · 독립 담금질 5 시드 · A 와 같은 프로토콜·게이트 · 보고량 = 두 유리의 Li D 상대차 (절대값 아님 · 회신 CR 반영)",
    "statement": "회신 CQ Q-CQ-4 의 순서를 카드로 옮기고 회신 CR 로 규칙을 확정했다. B = a-Li₃PS₄ (Li₄₅P₁₅S₆₀ · A 와 같은 담금질 인자) · MD 는 A 의 v2 600 K 와 같은 설정 · A 는 다시 돌리지 않는다. 보고량: N_B/5 · **두 계 모두 R 집합 ≥ 4 일 때만** R = median D_A / median D_B 와 시드 부트스트랩 95 % (1 포함이면 결과 전 검출한계와 함께 '구분되지 않았다' — 기준 R₅₀ 1.20 · R₈₀ 1.25) · B 시드 산포 · N_eff. 골격 네 지표는 600 K 에서도 두 계 모두 게이트 (일시 변화 ≤ 5 / 런 · A 실측 기반) · B 탈락은 관측. c2 = 같은 조건의 1차 관측. 밀도는 기록 (−15 % 단서) · T₅₀ 차 ≥ 100 K 사전 문장.",
    "rationale": "인용 정책상 600 K 다섯 런은 상대차로만 쓸 수 있는데 비교 대상이 없다 — 같은 셀·같은 프로토콜의 대조 계가 붙어야 '유리 안의 LiCl 이 Li 수송에 무엇을 하는가' 가 성립한다 (회신 CQ). 650 K 는 Ea 목적이라 지금 급하지 않다.",
-   "decision_state": "proposed",
+   "decision_state": "active",
    "record_kind": "estimand_card",
    "results_seen": false,
    "card": "db/properties/lpscl_smallcell_glass_control_li3ps4_estimand_2026_10_05.json",
@@ -7246,7 +7246,7 @@
     "견적": "담금질 ≈ 15 + MD ≈ 40 ⇒ ≈ 55 GPU-h"
    },
    "proposed_by": "claude-session-2026-10-05 (evac)",
-   "status": "proposed",
+   "status": "active",
    "status_history": [
     {
      "at": "2026-10-05",
@@ -7259,8 +7259,22 @@
      "state": "proposed",
      "by": "외부 1저자 (회신 CR)",
      "note": "규칙 확정 — Q-CR-1~6 전건 + 덧붙임 둘 반영 (카드 `개정_회신_CR_2026_10_05`). 원장 active 전환(실행 승인)은 사용자 몫. 트랙 = li2s (사용자 ≠ 1저자)."
+    },
+    {
+     "at": "2026-10-05",
+     "state": "active",
+     "by": "사용자 (카드 저자)",
+     "note": "사용자 비준 — AskUserQuestion '비준 + 실행 준비 시작' (2026-10-05). 규칙은 외부 1저자 회신 CR 이 확정했고, 이 비준은 실행 승인이다 (판독 대조 모드·러너 작성 시작 · 원격 발사는 블록으로). 트랙 = li2s (사용자 ≠ 1저자 · 사용자 = 카드 저자)."
     }
-   ]
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-10-05T05:52:31Z",
+    "commit": "b8886c265ea3c209c7f5b19be445137f0a21a5f5",
+    "decision_digest": "sha256:1a0aa50cef9babb42725b368a268169e30c5d512b1ffad744c1e0860ef7ed32a"
+   }
   }
  ]
 }

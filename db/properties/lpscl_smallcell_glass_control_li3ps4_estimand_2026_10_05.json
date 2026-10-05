@@ -3,7 +3,7 @@
  "kind": "estimand",
  "record_kind": "estimand_card",
  "date": "2026-10-05",
- "status": "초안 개정 (회신 CR 반영 · 2026-10-05) — 결과 전 · 사용자 비준(실행 승인) 대기 · 결정 D-2026-10-05-lpscl-smallcell-glass-control-li3ps4 proposed",
+ "status": "ratified (2026-10-05 · 사용자 = 카드 저자 · 트랙 li2s — 규칙은 외부 1저자 회신 CR) — 결과 전 · 실행 준비 중 (판독 대조 모드 · 러너)",
  "citable": false,
  "results_seen": false,
  "results_seen_note": "B 계(a-Li₃PS₄ 유리)의 결과는 아직 없다 — 담금질도 안 했다. A 계(a-Li₄PS₄Cl 유리)의 600 K 다섯 런은 v2 에서 이미 판독됐다 (N 5/5 · 마감 `lpscl_smallcell_glass_md_v2_closed_2026_10_05.json`). ⛔ A 의 값으로 이 카드의 문턱·읽기 규칙을 정하지 않는다 — A 쪽 숫자는 이미 정해진 입력으로만 들어간다.",
@@ -409,6 +409,11 @@
    "at": "2026-10-05",
    "state": "draft_amended",
    "note": "회신 CR 반영 — R ≥ 4 시드 · 검출한계 결과 전 모의 · 골격 게이트 600 K · 일시 변화 문턱 5 (A 실측 기반) · c2 1차 관측 문장 · N_eff · 밀도 −15 % 단서 · T₅₀ 100 K 사전 문장 · 대조표. B 결과 없음."
+  },
+  {
+   "at": "2026-10-05",
+   "state": "ratified",
+   "note": "사용자 비준 (실행 승인) · 결정 active · decision_digest sha256:1a0aa50cef9babb4… · commit b8886c26"
   }
  ],
  "개정_회신_CR_2026_10_05": {
