@@ -1,0 +1,18 @@
+--- r1 consumer
++++ r2 consumer
+@@ -321,7 +321,8 @@
+     section=batch[opening[0].end():closing[0].start()]
+     mentions=[x for x in section.splitlines() if 'Number of degrees of freedom' in x]
+     need(len(mentions)==1,'TRANSIENT_DOF_READBACK_COUNT:'+str(len(mentions)))
+-    hit=re.search(pattern,mentions[0]);need(hit is not None,'TRANSIENT_DOF_READBACK_FORMAT')
++    # BMIN-R1-N1: the whole line must be one DOF statement (surrounding whitespace allowed); a second statement or any trailing text on that line is malformed.
++    hit=re.fullmatch(r'\s*'+pattern+r'\s*',mentions[0]);need(hit is not None,'TRANSIENT_DOF_READBACK_FORMAT')
+     solved,internal=int(hit.group(1)),int(hit.group(2));need(solved>0,'TRANSIENT_DOF_READBACK_VALUE')
+     want={'solved':c['expected_transient_dof']['solved'],'internal':c['expected_transient_dof']['internal']}
+     outside=[{'solved':int(a),'internal':int(b)} for a,b in re.findall(pattern,batch[:opening[0].end()]+'\n'+batch[closing[0].start():])]
+@@ -332,4 +333,4 @@
+             'transient_dof_difference':{'solved':solved-want['solved'],'internal':internal-want['internal']},
+             'review_note':None if same else 'Observed transient DOF differs from the extrapolated expectation (2045 + 242*640); state the cause in the result review. Not a gate.',
+             'dof_outside_transient_section':outside,
+-            'dof_policy':'I-3: exactly one well-formed DOF line inside the single Time-Dependent Solver section is required (missing, outside-only, ambiguous or malformed is incomplete); a difference from the extrapolated expectation is recorded, not a gate.'}
++            'dof_policy':'I-3: exactly one DOF line inside the single Time-Dependent Solver section is required and its whole content (surrounding whitespace allowed) must be one well-formed DOF statement (missing, outside-only, ambiguous - two lines or two statements on one line - or malformed, including trailing text, is incomplete); a difference from the extrapolated expectation is recorded, not a gate.'}

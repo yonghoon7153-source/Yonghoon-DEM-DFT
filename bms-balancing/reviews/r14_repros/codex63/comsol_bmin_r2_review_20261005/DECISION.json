@@ -1,0 +1,21 @@
+{
+  "subject": "COMSOL B-min R2 offline preparation",
+  "date": "2026-10-05",
+  "status": "PREPARATION_ACCEPTED_NOT_VALIDATED",
+  "commit": "939b544b8bb77dbf20a56520af9f74a82acd0a94",
+  "manifest_sha256": "4cdca2e6bf7d073f813d97be73825b8cd2043c2fc44e285f4a190bc6fb97cf25",
+  "closures": {"BMIN-R1-N1": "CLOSED_AT_STATIC_PREPARATION_LEVEL", "C1": "WORDING_AND_CLASSIFICATION_ACCEPTED", "Q3": "LIMITED_VALIDATION_PLAN_ACCEPTED_NOT_AUTHORIZED"},
+  "new_blocking_findings": [],
+  "normal480_raw_line_131": {"prefix_or_extra_text": false, "solved": 79485, "internal": 12, "bytes_with_CRLF": 73, "sha256": "c4a34ce5b98400c3b2b9eeebf6e5a7bf3b9451d313cd8fad2f7ad874a8fc55f6", "particle640_measurement": false},
+  "validation_plan": {"groups": 9, "unique_ids": 62, "inputs": 77, "python_ids": 39, "python_inputs": 42, "java_ids": 2, "java_inputs": 2, "powershell_ids": 21, "powershell_inputs": 33, "proposed_overall_seconds": 1660, "budget_sufficiency_measured": false},
+  "candidate_executed": false,
+  "candidate_imported_or_parsed_as_code": false,
+  "submitted_audit_executed": false,
+  "functional_validation_pass": false,
+  "validation_approved": false,
+  "native_approved": false,
+  "COMSOL_JVM_calls": 0,
+  "external_dispatch": false,
+  "preserved_states": {"candidate_approved": false, "candidate_usable": false, "overall_normal_gate": "INCOMPLETE", "effective_internal_policy": "UNVERIFIED"},
+  "next_action": "Seek separate user approval for the fixed R2 limited validation. Seal harness, engine identities, source extraction, fixtures, expected reasons, invocation and timing origin before the first test. Stop on first failure. Native fresh 0-150 s is a subsequent separate decision."
+}

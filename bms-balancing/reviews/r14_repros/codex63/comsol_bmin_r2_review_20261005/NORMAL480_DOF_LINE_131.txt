@@ -1,0 +1,1 @@
+Number of degrees of freedom solved for: 79485 (plus 12 internal DOFs).

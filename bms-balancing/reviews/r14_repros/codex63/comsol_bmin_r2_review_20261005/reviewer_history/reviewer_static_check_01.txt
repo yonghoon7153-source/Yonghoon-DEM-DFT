@@ -1,0 +1,159 @@
+"""Reviewer-owned byte/JSON/log/string audit. Never import or parse candidate code."""
+import difflib
+import hashlib
+import json
+import re
+import zipfile
+from collections import Counter
+from decimal import Decimal
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+ref = json.loads((HERE / 'REFERENCE_TEXT.json').read_bytes())
+prior = json.loads((HERE / 'PRIOR_R1_REFERENCE_TEXT.json').read_bytes())
+extra = json.loads((HERE / 'PRIOR_R1_ADDITIONAL_REFERENCE_TEXT.json').read_bytes())
+tree = json.loads((HERE / 'GIT_TREE.json').read_bytes())
+oldtree = json.loads((HERE.parent / 'comsol_bmin_r1_review_20261005/GIT_TREE.json').read_bytes())
+files = {r['path']: r for r in ref['files']}
+old = {r['path']: r for r in prior['files'] + extra['files']}
+base = 'bms-balancing/comsol_candidates/bmin_particle640_r2_20261005/'
+prev = 'bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/'
+
+def sha(raw): return hashlib.sha256(raw).hexdigest()
+def identity(raw): return {'bytes': len(raw), 'sha256': sha(raw)}
+def raw(name): return files[base + name]['content'].encode('utf-8')
+def oldraw(name): return old[prev + name]['content'].encode('utf-8')
+def obj(name): return json.loads(raw(name))
+def save(name, value):
+    (HERE / name).write_text(json.dumps(value, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+
+out = {'scope': 'Independent reviewer byte / JSON / source-text / archived log audit. No received candidate or audit tool imported, parsed as code, compiled or executed.', 'commit': ref['commit']}
+out['connector_blobs'] = []
+for path, record in files.items():
+    data = record['content'].encode('utf-8')
+    blob = hashlib.sha1(b'blob ' + str(len(data)).encode() + b'\0' + data).hexdigest()
+    assert blob == record['sha'], path
+    out['connector_blobs'].append({'path': path, **identity(data), 'git_blob': blob, 'match': True})
+
+manifest = obj('candidate/CODE_MANIFEST.json')
+msha = sha(raw('candidate/CODE_MANIFEST.json'))
+assert msha == '4cdca2e6bf7d073f813d97be73825b8cd2043c2fc44e285f4a190bc6fb97cf25'
+out['manifest'] = identity(raw('candidate/CODE_MANIFEST.json'))
+out['manifest_files'] = []
+for record in manifest['files']:
+    measured = identity(raw('candidate/' + record['file']))
+    assert measured == {'bytes': record['bytes'], 'sha256': record['sha256']}
+    out['manifest_files'].append({'file': record['file'], **measured, 'match': True})
+out['byte_identical_to_r1'] = {p: raw('candidate/' + p) == oldraw('candidate/' + p) for p in ['src/Bmin640Candidate.java', 'src/candidate_entry.py', 'PARENT_COMMAND.ps1', 'CONTRACT.json']}
+assert all(out['byte_identical_to_r1'].values())
+before = sha(oldraw('candidate/CODE_MANIFEST.json'))
+out['manifest_binding_only'] = {p: oldraw('candidate/' + p).replace(before.encode(), msha.encode()) == raw('candidate/' + p) for p in ['COMMAND_MAP.json', 'NATIVE_APPROVAL_FIELD_SPEC.json']}
+assert all(out['manifest_binding_only'].values())
+assert manifest['previous_manifest_sha256'] == before
+assert manifest['approved'] is manifest['usable'] is False
+
+new_consumer = raw('candidate/src/diagnostic_consumer.py')
+old_consumer = oldraw('candidate/src/diagnostic_consumer.py')
+assert new_consumer.count(b'\r\n') == new_consumer.count(b'\n')
+restored = new_consumer.decode('ascii').replace('\r\n', '\n')
+counts = []
+for change in reversed(obj('R2_LITERAL_CHANGES.json')['src/diagnostic_consumer.py']):
+    count = restored.count(change['after'])
+    assert count == change['count'] == 1
+    counts.append(count)
+    restored = restored.replace(change['after'], change['before'])
+assert restored.replace('\n', '\r\n').encode('ascii') == old_consumer
+out['reverse_reconstruction'] = {'exact_r1_bytes': True, 'literal_occurrences': counts}
+diff = ''.join(difflib.unified_diff(old_consumer.decode().splitlines(True), new_consumer.decode().splitlines(True), fromfile='r1 consumer', tofile='r2 consumer'))
+(HERE / 'CONSUMER_DIFF.txt').write_text(diff, encoding='utf-8', newline='')
+
+newtree = {x['path']: x for x in tree['tree']}
+oldentries = [x for x in oldtree['tree'] if x['type'] == 'blob' and x['path'].startswith(prev)]
+assert len(oldentries) == 17
+out['r1_full_tree_preservation'] = [{'path': e['path'], 'prior_blob': e['sha'], 'current_blob': newtree[e['path']]['sha'], 'same': e['sha'] == newtree[e['path']]['sha']} for e in oldentries]
+assert all(x['same'] for x in out['r1_full_tree_preservation'])
+v1 = json.loads((HERE / 'PRIOR_V1_REFERENCE_TEXT.json').read_bytes())
+v1prefix = 'bms-balancing/comsol_candidates/bmin_particle640_20261004/'
+v1selected = [r for r in v1['files'] if r['path'].startswith(v1prefix)]
+out['v1_selected_preservation'] = [{'path': r['path'], 'same': newtree[r['path']]['sha'] == r['sha']} for r in v1selected]
+assert all(x['same'] for x in out['v1_selected_preservation'])
+
+plan = obj('LIMITED_VALIDATION_PLAN.json')
+oldplan = json.loads(oldraw('LIMITED_VALIDATION_PLAN.json'))
+cases = {c['id']: c for g in plan['groups'] for c in g['cases']}
+oldcases = {c['id']: c for g in oldplan['groups'] for c in g['cases']}
+assert len(cases) == sum(len(g['cases']) for g in plan['groups']) == 62
+assert len(plan['groups']) == 9 and sum(c['inputs'] for c in cases.values()) == 77
+assert all(c['inputs'] == len(c.get('input_expectations', [])) for c in cases.values() if c['inputs'] > 1)
+kept = {i: (c['fixture'], c['expected']) == (cases[i]['fixture'], cases[i]['expected']) for i, c in oldcases.items() if i != 'PS01-16'}
+assert all(kept.values()) and len(kept) == 53
+newids = sorted(set(cases) - set(oldcases))
+assert set(newids) == {'PY03-11','PY03-12','PY03-13','PY03-14','PS01-18','PS01-19','PS01-20','PS01-21'}
+assert sum(cases[i]['inputs'] for i in newids) == 18
+by_engine = {}
+for prefix in ['PY', 'JV', 'PS']:
+    selected = [c for i, c in cases.items() if i.startswith(prefix)]
+    by_engine[prefix] = {'unique_ids': len(selected), 'inputs': sum(c['inputs'] for c in selected)}
+budget = plan['budget_seconds']
+assert sum(v for k, v in budget.items() if k != 'overall') == budget['overall'] == 1660
+assert plan['manifest_sha256'] == msha and plan['approved'] is plan['usable'] is False
+out['plan'] = {'groups': 9, 'unique_ids': len(cases), 'inputs': 77, 'by_engine': by_engine, 'new_ids': newids, 'new_inputs': 18, 'old_fixture_expectations_unchanged_except_PS01_16': True, 'budget_sum': 1660, 'sessions': plan['sessions'], 'harness_sha256': plan['harness_sha256'], 'harness_unbuilt': plan['harness_sha256'] is None, 'preseal_items': plan['preseal_before_first_test']}
+out['budget_rationale'] = {'old_python_inputs_inferred_from_explicit_fixture_variants': 36, 'old_ps_inputs_inferred_from_explicit_fixture_variants': 21, 'python_increment_proxy_seconds': 210 / 36 * 6, 'python_proposed_increment': 40, 'ps_increment_proxy_seconds': 150 / 21 * 12, 'ps_proposed_increment': 90, 'sufficiency_measured': False}
+literal = '0.001000000000000000000000001'
+out['precision_literal'] = {'text': literal, 'decimal_places': len(literal.partition('.')[2]), 'significant_digits': len(Decimal(literal).as_tuple().digits), 'strictly_above_limit': Decimal(literal) > Decimal('0.001'), 'in_exact_equality_ids': 'PS01-16' in plan['v2_section_8_required_items']['value exactly equal to a limit'], 'precision_group': plan['precision_mismatch_items'], 'target_engine_executed': False}
+assert not out['precision_literal']['in_exact_equality_ids']
+causes = {'PS01-12':'NATIVE_CHILD_RC','PS01-13':'TERMINATION_EVIDENCE_MISSING','PS01-14':'CONSUMER_NATIVE_LABEL_MISMATCH','PS01-18':'NATIVE_CHILD_RETURN_MISSING_OR_ERROR','PS01-19':'RESULT_IDENTITY','PS01-20':'TERMINATION_EVIDENCE_INVALID','PS01-21':'NATIVE_AXIS_NOT_EVALUATED'}
+parent = raw('candidate/PARENT_COMMAND.ps1').decode('ascii')
+out['planned_cause_coverage'] = [{'id': i, 'cause': reason, 'inputs': cases[i]['inputs'], 'source_and_plan_present': reason in parent and reason in cases[i]['expected']} for i, reason in causes.items()]
+assert all(c['source_and_plan_present'] for c in out['planned_cause_coverage'])
+
+# Archive data read only: CRC checked by ZipFile.read for the selected member.
+archive = Path('C:/Users/Administrator/Downloads/COMSOL63_NORMAL480_NATIVE_RESULT_20261001.zip')
+with archive.open('rb') as stream:
+    archive_sha = hashlib.file_digest(stream, 'sha256').hexdigest()
+assert archive_sha == 'e991ab4c918f6576b18d6225a86ed41759ab6ee726dd6543b9a9158e581cbc30'
+out['normal480_archive'] = {'path': str(archive), 'bytes': archive.stat().st_size, 'sha256': archive_sha}
+with zipfile.ZipFile(archive) as z:
+    assert z.namelist().count('run/batch.log') == 1
+    batchraw = z.read('run/batch.log')
+assert sha(batchraw) == '805e649493f6d793e0b780a3899c40132d2e15011742de047fecae16711fcfa8'
+batch = batchraw.decode('utf-8-sig')
+source_line = batchraw.splitlines(keepends=True)[130]
+line_text = source_line.decode('utf-8').rstrip('\r\n')
+expected_line = 'Number of degrees of freedom solved for: 79485 (plus 12 internal DOFs).'
+assert line_text == expected_line
+(HERE / 'NORMAL480_DOF_LINE_131.txt').write_bytes(source_line)
+opening = list(re.finditer(r'^<---- Time-Dependent Solver.*$', batch, re.M))
+closing = list(re.finditer(r'^----- Time-Dependent Solver.*-+>\s*$', batch, re.M))
+assert len(opening) == len(closing) == 1
+section = batch[opening[0].end():closing[0].start()]
+inside = [x for x in section.splitlines() if 'Number of degrees of freedom' in x]
+assert inside == [line_text]
+out['normal480_log_observation'] = {'member': 'run/batch.log', **identity(batchraw), 'line_number': 131, 'line_repr': repr(line_text), 'raw_line_including_ending': identity(source_line), 'line_ending': 'CRLF' if source_line.endswith(b'\r\n') else 'LF', 'prefix_or_suffix_other_than_whitespace': False, 'exactly_statement_no_padding': True, 'single_transient_section': True, 'transient_dof_mentions': inside, 'all_dof_mentions': [{'line': i+1,'text': x} for i,x in enumerate(batch.splitlines()) if 'Number of degrees of freedom' in x], 'future_particle640_dof_observed': False}
+
+# Reviewer-owned string model: no eval/exec, AST, import or function calls from the candidate.
+pattern = r'Number of degrees of freedom solved for: (\d+) \(plus (\d+) internal DOFs\)\.'
+assert "pattern=r'" + pattern + "'" in new_consumer.decode('ascii')
+assert "hit=re.fullmatch(r'\\s*'+pattern+r'\\s*',mentions[0])" in new_consumer.decode('ascii')
+old_audit = json.loads((HERE / 'PRIOR_R1_INDEPENDENT_STATIC_AUDIT.json').read_bytes())
+data_cases = [(r['id'], r['text']) for r in old_audit['static_string_cases']]
+normal = 'Number of degrees of freedom solved for: 156925 (plus 12 internal DOFs).'
+data_cases += [('whitespace', ' \t '+normal+'  \r\n'), ('trailing_text', normal+' (retry 1)'), ('raw_normal480', line_text), ('timestamp_prefix', '12:00:00 '+normal), ('identical_same_line', normal+' '+normal), ('identical_two_lines', normal+'\n'+normal), ('missing_all',''), ('negative_solved',normal.replace('156925','-1'))]
+def model(text):
+    mentions = [x for x in text.splitlines() if 'Number of degrees of freedom' in x]
+    if len(mentions) != 1: return {'reason': 'TRANSIENT_DOF_READBACK_COUNT:'+str(len(mentions))}
+    hit = re.fullmatch(r'\s*'+pattern+r'\s*', mentions[0])
+    if hit is None: return {'reason': 'TRANSIENT_DOF_READBACK_FORMAT'}
+    solved, internal = map(int, hit.groups())
+    if solved <= 0: return {'reason': 'TRANSIENT_DOF_READBACK_VALUE'}
+    return {'reason': 'ACCEPT_RECORD_ONLY', 'solved': solved, 'internal': internal}
+out['reviewer_string_model'] = {'scope': 'Data-only independent model, not candidate function execution or functional validation', 'cases': [{'id': name, 'text': text, **model(text)} for name, text in data_cases]}
+by_id = {r['id']: r for r in out['reviewer_string_model']['cases']}
+for name in ['two_same_line','valid_then_malformed_same_line','trailing_text','timestamp_prefix','identical_same_line','negative_solved']:
+    assert by_id[name]['reason'] == 'TRANSIENT_DOF_READBACK_FORMAT'
+assert by_id['raw_normal480']['solved'] == 79485
+assert by_id['whitespace']['solved'] == 156925
+assert by_id['zero']['reason'] == 'TRANSIENT_DOF_READBACK_VALUE'
+out['limitations'] = ['No candidate or submitted audit execution.', 'No functional verification or target PowerShell decimal behavior observed.', 'NORMAL480 raw log is prior particle320 evidence, not particle640 measurement.', 'Prepared harness, engine identity and actual fixture bindings remain to be sealed after separate user authorization.', 'No installation, settings changes, native run, process/Job test, source overwrite or external dispatch.']
+save('INDEPENDENT_STATIC_AUDIT.json', out)
+print(json.dumps({k:out[k] for k in ['manifest','reverse_reconstruction','byte_identical_to_r1','plan','budget_rationale','precision_literal','normal480_log_observation']}, ensure_ascii=False))

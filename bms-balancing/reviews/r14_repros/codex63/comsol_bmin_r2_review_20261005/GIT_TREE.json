@@ -1,0 +1,527 @@
+{
+  "sha": "939b544b8bb77dbf20a56520af9f74a82acd0a94",
+  "truncated": false,
+  "scope": "B-min r2, r1, v1 candidate subtrees and referenced request/spec",
+  "tree": [
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/BASELINE_IDENTITIES.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f92e3cc768cb10127988c33574bc81b7da53e48b",
+      "size": 4666,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/f92e3cc768cb10127988c33574bc81b7da53e48b"
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/CHANGE_BOUNDARIES.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fb8501a42f416c056508a765a842ea2085fbc193",
+      "size": 8809,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/fb8501a42f416c056508a765a842ea2085fbc193"
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/LIMITED_VALIDATION_PLAN.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "523fd5f9bcace0ded683a2c6c7f1a9ea237f6c23",
+      "size": 11665,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/523fd5f9bcace0ded683a2c6c7f1a9ea237f6c23"
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/LITERAL_CHANGE_MAP.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0c76d237388232d54b21b33b8712a630e69eaf32",
+      "size": 44708,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/0c76d237388232d54b21b33b8712a630e69eaf32"
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/NATIVE_BMIN640_APPROVAL_DRAFT_KO.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "78ce73e3fdc1c2300ab545544f1194b8a7b9a30e",
+      "size": 5965,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/78ce73e3fdc1c2300ab545544f1194b8a7b9a30e"
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/PREPARATION_KO.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "84c85b5ecc0cc7a574ccb18fdd522416fcf89c9a",
+      "size": 13379,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/84c85b5ecc0cc7a574ccb18fdd522416fcf89c9a"
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/RESOURCE_BUDGET_KO.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3126d8758c51958f6f3b77b7feba30244cd2c4a1",
+      "size": 3273,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/3126d8758c51958f6f3b77b7feba30244cd2c4a1"
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/STATIC_AUDIT.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ae2e818743acc9c07483f1e96cbfbf2c51b592a2",
+      "size": 15779,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/ae2e818743acc9c07483f1e96cbfbf2c51b592a2"
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/VALIDATION_REQUEST_KO.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ab0b7df53c5fe59482ebde7407647ed06f5a7bf5",
+      "size": 4910,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/ab0b7df53c5fe59482ebde7407647ed06f5a7bf5"
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/basis/source480/NORMAL480_CANDIDATE_8FILES.zip",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "084d638fa2a1e8cfac764dd81ccb908f9c813abe",
+      "size": 87811,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/084d638fa2a1e8cfac764dd81ccb908f9c813abe"
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/basis/source480/candidate/CODE_MANIFEST.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fcb179dd920b9a6a54f906e3b44db5b69d585c23",
+      "size": 1046,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/fcb179dd920b9a6a54f906e3b44db5b69d585c23"
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/basis/source480/candidate/COMMAND_MAP.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f34367b1f37c8a91eeae027ab572bb5d7ed12139",
+      "size": 6045,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/f34367b1f37c8a91eeae027ab572bb5d7ed12139"
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/basis/source480/candidate/CONTRACT.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f37c91cf46c4ecf0a30c7421195bd789b6f8632e",
+      "size": 125504,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/f37c91cf46c4ecf0a30c7421195bd789b6f8632e"
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/basis/source480/candidate/NATIVE_APPROVAL_FIELD_SPEC.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7b9ef8cab9dda80c87dfb7f3d70e745904c1f174",
+      "size": 4125,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/7b9ef8cab9dda80c87dfb7f3d70e745904c1f174"
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/basis/source480/candidate/PARENT_COMMAND.ps1",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fd1c096583a9edc012a6f7846400bd3c40b50ea7",
+      "size": 19213,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/fd1c096583a9edc012a6f7846400bd3c40b50ea7"
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/basis/source480/candidate/src/Normal480Candidate.java",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bed6441afcc841a9bdbe030d3d3a29f5acb97cce",
+      "size": 99959,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/bed6441afcc841a9bdbe030d3d3a29f5acb97cce"
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/basis/source480/candidate/src/candidate_entry.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9a61b5d0a2ec4347051217a582149de0bf1f442a",
+      "size": 13999,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/9a61b5d0a2ec4347051217a582149de0bf1f442a"
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/basis/source480/candidate/src/diagnostic_consumer.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3cac4a82013744c126584e8619a38f231f8c2388",
+      "size": 20369,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/3cac4a82013744c126584e8619a38f231f8c2388"
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/basis/source480/run/tables/axes_runtime_settings.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2f1b941ea6b46e0a5483a963d8236ce7be656620",
+      "size": 28190,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/2f1b941ea6b46e0a5483a963d8236ce7be656620"
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/candidate/CODE_MANIFEST.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "024ab9c97201d55caa618670dd0512e7abdae9a7",
+      "size": 1050,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/024ab9c97201d55caa618670dd0512e7abdae9a7"
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/candidate/COMMAND_MAP.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bab59a04d0a3aedbeb20750d839d5bc8e969855b",
+      "size": 6189,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/bab59a04d0a3aedbeb20750d839d5bc8e969855b"
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/candidate/CONTRACT.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6725293b4c6e80302ad29140ee15dc1801797230",
+      "size": 55179,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/6725293b4c6e80302ad29140ee15dc1801797230"
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/candidate/NATIVE_APPROVAL_FIELD_SPEC.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0e619520669e43aa5fe62205bc903b7ca5b258c3",
+      "size": 4346,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/0e619520669e43aa5fe62205bc903b7ca5b258c3"
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/candidate/PARENT_COMMAND.ps1",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "967e9684f2e77bccaa6e744758b1d7df947be38b",
+      "size": 19346,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/967e9684f2e77bccaa6e744758b1d7df947be38b"
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/candidate/src/Bmin640Candidate.java",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "20055a24bd7d1c219b875fd5d3a772ed3e573c47",
+      "size": 80813,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/20055a24bd7d1c219b875fd5d3a772ed3e573c47"
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/candidate/src/candidate_entry.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e1c4f047ccd5ec13d7467df565178981b3fb538c",
+      "size": 13995,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/e1c4f047ccd5ec13d7467df565178981b3fb538c"
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/candidate/src/diagnostic_consumer.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "43d4d98f5a5426ef7947e3fd787fc850ccf48c85",
+      "size": 24598,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/43d4d98f5a5426ef7947e3fd787fc850ccf48c85"
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/tools/build_candidate.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4c0e66347f3b5c499fcbd6ef011cae8f30b7b18f",
+      "size": 42423,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/4c0e66347f3b5c499fcbd6ef011cae8f30b7b18f"
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/tools/static_audit.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "65fd7878e72b51aa61be44db2af4e0201c936690",
+      "size": 20883,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/65fd7878e72b51aa61be44db2af4e0201c936690"
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/LIMITED_VALIDATION_PLAN.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fa1ebab4badca4783268c7866619d5205a38faad",
+      "size": 19218,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/fa1ebab4badca4783268c7866619d5205a38faad"
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/NATIVE_BMIN640_APPROVAL_DRAFT_KO.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c6f59d08d9ac51390ba66daf33fdb5cf2b5cc8b7",
+      "size": 6319,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/c6f59d08d9ac51390ba66daf33fdb5cf2b5cc8b7"
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/PREPARATION_KO.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5abba39602faf0e1aa4ef214691d64345fd1b786",
+      "size": 7318,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/5abba39602faf0e1aa4ef214691d64345fd1b786"
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/R1_CHANGE_BOUNDARIES.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e3bd135ee9afee4a09a7738e28d72d2a50e262db",
+      "size": 4988,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/e3bd135ee9afee4a09a7738e28d72d2a50e262db"
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/R1_LITERAL_CHANGES.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4fa2b4d61b237727d011d91a23bf9b28f32305be",
+      "size": 1640,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/4fa2b4d61b237727d011d91a23bf9b28f32305be"
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/STATIC_AUDIT.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b9475c7469b1262b1184ffd307c915c5586595f1",
+      "size": 6820,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/b9475c7469b1262b1184ffd307c915c5586595f1"
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/VALIDATION_REQUEST_KO.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bc7b9a37b79024f1b283a45063845f4de3111e4b",
+      "size": 4335,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/bc7b9a37b79024f1b283a45063845f4de3111e4b"
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/candidate/CODE_MANIFEST.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e222a6805fa8fa930d5e1c5afec875469830c2b0",
+      "size": 1050,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/e222a6805fa8fa930d5e1c5afec875469830c2b0"
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/candidate/COMMAND_MAP.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6c134235103e76439c8995dfb550c30e5a229134",
+      "size": 6189,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/6c134235103e76439c8995dfb550c30e5a229134"
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/candidate/CONTRACT.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9ac6604ab75fdb7b2a1c80d44cb30fc7f89cba42",
+      "size": 55211,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/9ac6604ab75fdb7b2a1c80d44cb30fc7f89cba42"
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/candidate/NATIVE_APPROVAL_FIELD_SPEC.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b49de01673bfde58a59e3f9559844e93b8ebed6e",
+      "size": 4346,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/b49de01673bfde58a59e3f9559844e93b8ebed6e"
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/candidate/PARENT_COMMAND.ps1",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "40f38a93d73cb0b76a47495887381baf201e6ce0",
+      "size": 24469,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/40f38a93d73cb0b76a47495887381baf201e6ce0"
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/candidate/src/Bmin640Candidate.java",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "20055a24bd7d1c219b875fd5d3a772ed3e573c47",
+      "size": 80813,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/20055a24bd7d1c219b875fd5d3a772ed3e573c47"
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/candidate/src/candidate_entry.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e1c4f047ccd5ec13d7467df565178981b3fb538c",
+      "size": 13995,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/e1c4f047ccd5ec13d7467df565178981b3fb538c"
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/candidate/src/diagnostic_consumer.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "724d2b242fd9618e6242965ae19fcc8f0a5dc819",
+      "size": 26065,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/724d2b242fd9618e6242965ae19fcc8f0a5dc819"
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/tools/build_candidate_r1.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5b9020472eccaab8b43e5275aa1684d3c7048f2f",
+      "size": 16201,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/5b9020472eccaab8b43e5275aa1684d3c7048f2f"
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/tools/static_audit_r1.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "48ba07451d3ec6aaf6fa5d5e6fb45efcc1aeaca8",
+      "size": 12275,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/48ba07451d3ec6aaf6fa5d5e6fb45efcc1aeaca8"
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r2_20261005/LIMITED_VALIDATION_PLAN.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "52e03318a1e12456b70fd42801364152095ee173",
+      "size": 32208,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/52e03318a1e12456b70fd42801364152095ee173"
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r2_20261005/NATIVE_BMIN640_APPROVAL_DRAFT_KO.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "dbea85ca8bdf22916db20c1f72d7572a9af35ea3",
+      "size": 6543,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/dbea85ca8bdf22916db20c1f72d7572a9af35ea3"
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r2_20261005/PREPARATION_KO.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "04ee771dd4d1c0467272da0930e9e54a852ec5b6",
+      "size": 9863,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/04ee771dd4d1c0467272da0930e9e54a852ec5b6"
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r2_20261005/R2_CHANGE_BOUNDARIES.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2424e137beb591fce00c03797a8bc61953a38fe8",
+      "size": 4021,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/2424e137beb591fce00c03797a8bc61953a38fe8"
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r2_20261005/R2_LITERAL_CHANGES.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c254f02160236430c6018b0df8ae0bed3a8cecc5",
+      "size": 1817,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/c254f02160236430c6018b0df8ae0bed3a8cecc5"
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r2_20261005/STATIC_AUDIT.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5dc4e8afc0a188b8a3fc1399ac083fc7ed50540b",
+      "size": 9481,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/5dc4e8afc0a188b8a3fc1399ac083fc7ed50540b"
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r2_20261005/VALIDATION_REQUEST_KO.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "229c2d82180e2bde85c6a6df13cdfdd6a0e6be61",
+      "size": 5894,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/229c2d82180e2bde85c6a6df13cdfdd6a0e6be61"
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r2_20261005/candidate/CODE_MANIFEST.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "826d860f8ad7c323a9dd1731570bbfc24cce68a2",
+      "size": 1050,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/826d860f8ad7c323a9dd1731570bbfc24cce68a2"
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r2_20261005/candidate/COMMAND_MAP.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6d42830adfc03b1b7f5bf6bb30ae0048bd7970c6",
+      "size": 6189,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/6d42830adfc03b1b7f5bf6bb30ae0048bd7970c6"
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r2_20261005/candidate/CONTRACT.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9ac6604ab75fdb7b2a1c80d44cb30fc7f89cba42",
+      "size": 55211,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/9ac6604ab75fdb7b2a1c80d44cb30fc7f89cba42"
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r2_20261005/candidate/NATIVE_APPROVAL_FIELD_SPEC.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "696cf1f9d2c9f29aa89d42f708fc7176274152cf",
+      "size": 4346,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/696cf1f9d2c9f29aa89d42f708fc7176274152cf"
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r2_20261005/candidate/PARENT_COMMAND.ps1",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "40f38a93d73cb0b76a47495887381baf201e6ce0",
+      "size": 24469,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/40f38a93d73cb0b76a47495887381baf201e6ce0"
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r2_20261005/candidate/src/Bmin640Candidate.java",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "20055a24bd7d1c219b875fd5d3a772ed3e573c47",
+      "size": 80813,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/20055a24bd7d1c219b875fd5d3a772ed3e573c47"
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r2_20261005/candidate/src/candidate_entry.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e1c4f047ccd5ec13d7467df565178981b3fb538c",
+      "size": 13995,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/e1c4f047ccd5ec13d7467df565178981b3fb538c"
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r2_20261005/candidate/src/diagnostic_consumer.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b33d8b6d7254c688c87366c9a33c4d969ddf4139",
+      "size": 26394,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/b33d8b6d7254c688c87366c9a33c4d969ddf4139"
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r2_20261005/tools/build_candidate_r2.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "15a33144f14fb8da1fad2c24dc86b195859b9906",
+      "size": 7865,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/15a33144f14fb8da1fad2c24dc86b195859b9906"
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r2_20261005/tools/static_audit_r2.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4c6a28ffff7ca832d4c3a2fedc64a579efbaee05",
+      "size": 17839,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/4c6a28ffff7ca832d4c3a2fedc64a579efbaee05"
+    },
+    {
+      "path": "bms-balancing/docs/COMSOL_BMIN_CANDIDATE_R2_REVIEW_REQUEST_20261005.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "89c02107243244c7fe3518551d37408403edf5e0",
+      "size": 6792,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/89c02107243244c7fe3518551d37408403edf5e0"
+    },
+    {
+      "path": "bms-balancing/docs/COMSOL_REBUILD_SPEC.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e7555caddf6f28c8921de51e3c789fdb00e85428",
+      "size": 434252,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/e7555caddf6f28c8921de51e3c789fdb00e85428"
+    }
+  ]
+}

@@ -1,0 +1,657 @@
+{
+  "scope": "Independent reviewer byte / JSON / source-text / archived log audit. No received candidate or audit tool imported, parsed as code, compiled or executed.",
+  "commit": "939b544b8bb77dbf20a56520af9f74a82acd0a94",
+  "connector_blobs": [
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r2_20261005/LIMITED_VALIDATION_PLAN.json",
+      "bytes": 32208,
+      "sha256": "8c58173f8fba69dcf8aac14c7854c3e39535dfffd7bb0aff63eeff5ca3abe4e5",
+      "git_blob": "52e03318a1e12456b70fd42801364152095ee173",
+      "match": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r2_20261005/NATIVE_BMIN640_APPROVAL_DRAFT_KO.md",
+      "bytes": 6543,
+      "sha256": "c0a5bcae4c9ee4f7486807813801459cb41f7517b8408e988998bf19318e8f9b",
+      "git_blob": "dbea85ca8bdf22916db20c1f72d7572a9af35ea3",
+      "match": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r2_20261005/PREPARATION_KO.md",
+      "bytes": 9863,
+      "sha256": "0ffd0ee8b36cfcacd9903fe72556c555463fe50e82642a67d7c5d146c15500a9",
+      "git_blob": "04ee771dd4d1c0467272da0930e9e54a852ec5b6",
+      "match": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r2_20261005/R2_CHANGE_BOUNDARIES.json",
+      "bytes": 4021,
+      "sha256": "c1c2018fb4fc256740e04d4e397078231ea6e4355f42d18c0ee8d2c5f574565c",
+      "git_blob": "2424e137beb591fce00c03797a8bc61953a38fe8",
+      "match": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r2_20261005/R2_LITERAL_CHANGES.json",
+      "bytes": 1817,
+      "sha256": "ba32b73ba8805826930783cc3cc66631f7d62a03df11f6b93cd50e583100e5f7",
+      "git_blob": "c254f02160236430c6018b0df8ae0bed3a8cecc5",
+      "match": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r2_20261005/STATIC_AUDIT.json",
+      "bytes": 9481,
+      "sha256": "70a3f8c21f01830a131887154154420ecc5634ab311530051424f089cc4cf3af",
+      "git_blob": "5dc4e8afc0a188b8a3fc1399ac083fc7ed50540b",
+      "match": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r2_20261005/VALIDATION_REQUEST_KO.md",
+      "bytes": 5894,
+      "sha256": "959110c79c0760476035757e09f9356e680d67327563cd27bad5e8cffcafde53",
+      "git_blob": "229c2d82180e2bde85c6a6df13cdfdd6a0e6be61",
+      "match": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r2_20261005/candidate/CODE_MANIFEST.json",
+      "bytes": 1050,
+      "sha256": "4cdca2e6bf7d073f813d97be73825b8cd2043c2fc44e285f4a190bc6fb97cf25",
+      "git_blob": "826d860f8ad7c323a9dd1731570bbfc24cce68a2",
+      "match": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r2_20261005/candidate/COMMAND_MAP.json",
+      "bytes": 6189,
+      "sha256": "a8bda4e6dc250ec8bb104dc7a0c67eb2e5b7ebb555e1b8fa4b02223ff8d32394",
+      "git_blob": "6d42830adfc03b1b7f5bf6bb30ae0048bd7970c6",
+      "match": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r2_20261005/candidate/CONTRACT.json",
+      "bytes": 55211,
+      "sha256": "98820a8447b8ed830447125567312c7033e77a141bab59e84f1a1b83b3b2ce42",
+      "git_blob": "9ac6604ab75fdb7b2a1c80d44cb30fc7f89cba42",
+      "match": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r2_20261005/candidate/NATIVE_APPROVAL_FIELD_SPEC.json",
+      "bytes": 4346,
+      "sha256": "61aa028fbcb851293beeab0e9cff716948d9df163f227d56a7eb093929bb0f7b",
+      "git_blob": "696cf1f9d2c9f29aa89d42f708fc7176274152cf",
+      "match": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r2_20261005/candidate/PARENT_COMMAND.ps1",
+      "bytes": 24469,
+      "sha256": "fda741a149fdb32cd42879d19e0510292f62f7fa9db2089242f8a89a0c91e783",
+      "git_blob": "40f38a93d73cb0b76a47495887381baf201e6ce0",
+      "match": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r2_20261005/candidate/src/Bmin640Candidate.java",
+      "bytes": 80813,
+      "sha256": "ef0ca60aeae1d9bd3790bbfe49a5732984c489cc7928b9692f102e061f5462ff",
+      "git_blob": "20055a24bd7d1c219b875fd5d3a772ed3e573c47",
+      "match": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r2_20261005/candidate/src/candidate_entry.py",
+      "bytes": 13995,
+      "sha256": "0a0d308101d54ce11af305033d77ede2e6f4a28c97ff15852a230b283c178fed",
+      "git_blob": "e1c4f047ccd5ec13d7467df565178981b3fb538c",
+      "match": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r2_20261005/candidate/src/diagnostic_consumer.py",
+      "bytes": 26394,
+      "sha256": "c3c8feb3680adde6ba1888ddc87e158e5b497245cc872ee5b1c99a09c812fc73",
+      "git_blob": "b33d8b6d7254c688c87366c9a33c4d969ddf4139",
+      "match": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r2_20261005/tools/build_candidate_r2.py",
+      "bytes": 7865,
+      "sha256": "2ab906d2950c864ecbeb46b00cb924ff64e62440e0ff29ccde58374038cfed76",
+      "git_blob": "15a33144f14fb8da1fad2c24dc86b195859b9906",
+      "match": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r2_20261005/tools/static_audit_r2.py",
+      "bytes": 17839,
+      "sha256": "93bbefdf68b006af97655442f56725aef58b3fb46ce16c804b10d441fdf35f7b",
+      "git_blob": "4c6a28ffff7ca832d4c3a2fedc64a579efbaee05",
+      "match": true
+    },
+    {
+      "path": "bms-balancing/docs/COMSOL_BMIN_CANDIDATE_R2_REVIEW_REQUEST_20261005.md",
+      "bytes": 6792,
+      "sha256": "083ddd9012ceb7bbaeb66cd6bd15d2ef47e2d945928348248f6494aa06bebad4",
+      "git_blob": "89c02107243244c7fe3518551d37408403edf5e0",
+      "match": true
+    },
+    {
+      "path": "bms-balancing/docs/COMSOL_REBUILD_SPEC.md",
+      "bytes": 434252,
+      "sha256": "3cf14c9286ccaf974c27b2c0b91bc3c2cdeefbf3f229c7aa7d5716337666961a",
+      "git_blob": "e7555caddf6f28c8921de51e3c789fdb00e85428",
+      "match": true
+    }
+  ],
+  "manifest": {
+    "bytes": 1050,
+    "sha256": "4cdca2e6bf7d073f813d97be73825b8cd2043c2fc44e285f4a190bc6fb97cf25"
+  },
+  "manifest_files": [
+    {
+      "file": "src/Bmin640Candidate.java",
+      "bytes": 80813,
+      "sha256": "ef0ca60aeae1d9bd3790bbfe49a5732984c489cc7928b9692f102e061f5462ff",
+      "match": true
+    },
+    {
+      "file": "src/diagnostic_consumer.py",
+      "bytes": 26394,
+      "sha256": "c3c8feb3680adde6ba1888ddc87e158e5b497245cc872ee5b1c99a09c812fc73",
+      "match": true
+    },
+    {
+      "file": "src/candidate_entry.py",
+      "bytes": 13995,
+      "sha256": "0a0d308101d54ce11af305033d77ede2e6f4a28c97ff15852a230b283c178fed",
+      "match": true
+    },
+    {
+      "file": "PARENT_COMMAND.ps1",
+      "bytes": 24469,
+      "sha256": "fda741a149fdb32cd42879d19e0510292f62f7fa9db2089242f8a89a0c91e783",
+      "match": true
+    },
+    {
+      "file": "CONTRACT.json",
+      "bytes": 55211,
+      "sha256": "98820a8447b8ed830447125567312c7033e77a141bab59e84f1a1b83b3b2ce42",
+      "match": true
+    }
+  ],
+  "byte_identical_to_r1": {
+    "src/Bmin640Candidate.java": true,
+    "src/candidate_entry.py": true,
+    "PARENT_COMMAND.ps1": true,
+    "CONTRACT.json": true
+  },
+  "manifest_binding_only": {
+    "COMMAND_MAP.json": true,
+    "NATIVE_APPROVAL_FIELD_SPEC.json": true
+  },
+  "reverse_reconstruction": {
+    "exact_r1_bytes": true,
+    "literal_occurrences": [
+      1,
+      1
+    ]
+  },
+  "r1_full_tree_preservation": [
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/LIMITED_VALIDATION_PLAN.json",
+      "prior_blob": "fa1ebab4badca4783268c7866619d5205a38faad",
+      "current_blob": "fa1ebab4badca4783268c7866619d5205a38faad",
+      "same": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/NATIVE_BMIN640_APPROVAL_DRAFT_KO.md",
+      "prior_blob": "c6f59d08d9ac51390ba66daf33fdb5cf2b5cc8b7",
+      "current_blob": "c6f59d08d9ac51390ba66daf33fdb5cf2b5cc8b7",
+      "same": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/PREPARATION_KO.md",
+      "prior_blob": "5abba39602faf0e1aa4ef214691d64345fd1b786",
+      "current_blob": "5abba39602faf0e1aa4ef214691d64345fd1b786",
+      "same": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/R1_CHANGE_BOUNDARIES.json",
+      "prior_blob": "e3bd135ee9afee4a09a7738e28d72d2a50e262db",
+      "current_blob": "e3bd135ee9afee4a09a7738e28d72d2a50e262db",
+      "same": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/R1_LITERAL_CHANGES.json",
+      "prior_blob": "4fa2b4d61b237727d011d91a23bf9b28f32305be",
+      "current_blob": "4fa2b4d61b237727d011d91a23bf9b28f32305be",
+      "same": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/STATIC_AUDIT.json",
+      "prior_blob": "b9475c7469b1262b1184ffd307c915c5586595f1",
+      "current_blob": "b9475c7469b1262b1184ffd307c915c5586595f1",
+      "same": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/VALIDATION_REQUEST_KO.md",
+      "prior_blob": "bc7b9a37b79024f1b283a45063845f4de3111e4b",
+      "current_blob": "bc7b9a37b79024f1b283a45063845f4de3111e4b",
+      "same": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/candidate/CODE_MANIFEST.json",
+      "prior_blob": "e222a6805fa8fa930d5e1c5afec875469830c2b0",
+      "current_blob": "e222a6805fa8fa930d5e1c5afec875469830c2b0",
+      "same": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/candidate/COMMAND_MAP.json",
+      "prior_blob": "6c134235103e76439c8995dfb550c30e5a229134",
+      "current_blob": "6c134235103e76439c8995dfb550c30e5a229134",
+      "same": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/candidate/CONTRACT.json",
+      "prior_blob": "9ac6604ab75fdb7b2a1c80d44cb30fc7f89cba42",
+      "current_blob": "9ac6604ab75fdb7b2a1c80d44cb30fc7f89cba42",
+      "same": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/candidate/NATIVE_APPROVAL_FIELD_SPEC.json",
+      "prior_blob": "b49de01673bfde58a59e3f9559844e93b8ebed6e",
+      "current_blob": "b49de01673bfde58a59e3f9559844e93b8ebed6e",
+      "same": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/candidate/PARENT_COMMAND.ps1",
+      "prior_blob": "40f38a93d73cb0b76a47495887381baf201e6ce0",
+      "current_blob": "40f38a93d73cb0b76a47495887381baf201e6ce0",
+      "same": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/candidate/src/Bmin640Candidate.java",
+      "prior_blob": "20055a24bd7d1c219b875fd5d3a772ed3e573c47",
+      "current_blob": "20055a24bd7d1c219b875fd5d3a772ed3e573c47",
+      "same": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/candidate/src/candidate_entry.py",
+      "prior_blob": "e1c4f047ccd5ec13d7467df565178981b3fb538c",
+      "current_blob": "e1c4f047ccd5ec13d7467df565178981b3fb538c",
+      "same": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/candidate/src/diagnostic_consumer.py",
+      "prior_blob": "724d2b242fd9618e6242965ae19fcc8f0a5dc819",
+      "current_blob": "724d2b242fd9618e6242965ae19fcc8f0a5dc819",
+      "same": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/tools/build_candidate_r1.py",
+      "prior_blob": "5b9020472eccaab8b43e5275aa1684d3c7048f2f",
+      "current_blob": "5b9020472eccaab8b43e5275aa1684d3c7048f2f",
+      "same": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_r1_20261005/tools/static_audit_r1.py",
+      "prior_blob": "48ba07451d3ec6aaf6fa5d5e6fb45efcc1aeaca8",
+      "current_blob": "48ba07451d3ec6aaf6fa5d5e6fb45efcc1aeaca8",
+      "same": true
+    }
+  ],
+  "v1_selected_preservation": [
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/BASELINE_IDENTITIES.json",
+      "same": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/CHANGE_BOUNDARIES.json",
+      "same": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/LIMITED_VALIDATION_PLAN.json",
+      "same": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/LITERAL_CHANGE_MAP.json",
+      "same": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/NATIVE_BMIN640_APPROVAL_DRAFT_KO.md",
+      "same": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/PREPARATION_KO.md",
+      "same": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/RESOURCE_BUDGET_KO.md",
+      "same": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/STATIC_AUDIT.json",
+      "same": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/VALIDATION_REQUEST_KO.md",
+      "same": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/basis/source480/candidate/CODE_MANIFEST.json",
+      "same": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/basis/source480/candidate/COMMAND_MAP.json",
+      "same": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/basis/source480/candidate/CONTRACT.json",
+      "same": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/basis/source480/candidate/NATIVE_APPROVAL_FIELD_SPEC.json",
+      "same": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/basis/source480/candidate/PARENT_COMMAND.ps1",
+      "same": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/basis/source480/candidate/src/Normal480Candidate.java",
+      "same": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/basis/source480/candidate/src/candidate_entry.py",
+      "same": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/basis/source480/candidate/src/diagnostic_consumer.py",
+      "same": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/basis/source480/run/tables/axes_runtime_settings.csv",
+      "same": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/candidate/CODE_MANIFEST.json",
+      "same": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/candidate/COMMAND_MAP.json",
+      "same": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/candidate/CONTRACT.json",
+      "same": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/candidate/NATIVE_APPROVAL_FIELD_SPEC.json",
+      "same": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/candidate/PARENT_COMMAND.ps1",
+      "same": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/candidate/src/Bmin640Candidate.java",
+      "same": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/candidate/src/candidate_entry.py",
+      "same": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/candidate/src/diagnostic_consumer.py",
+      "same": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/tools/build_candidate.py",
+      "same": true
+    },
+    {
+      "path": "bms-balancing/comsol_candidates/bmin_particle640_20261004/tools/static_audit.py",
+      "same": true
+    }
+  ],
+  "plan": {
+    "groups": 9,
+    "unique_ids": 62,
+    "inputs": 77,
+    "by_engine": {
+      "PY": {
+        "unique_ids": 39,
+        "inputs": 42
+      },
+      "JV": {
+        "unique_ids": 2,
+        "inputs": 2
+      },
+      "PS": {
+        "unique_ids": 21,
+        "inputs": 33
+      }
+    },
+    "new_ids": [
+      "PS01-18",
+      "PS01-19",
+      "PS01-20",
+      "PS01-21",
+      "PY03-11",
+      "PY03-12",
+      "PY03-13",
+      "PY03-14"
+    ],
+    "new_inputs": 18,
+    "old_fixture_expectations_unchanged_except_PS01_16": true,
+    "budget_sum": 1660,
+    "sessions": {
+      "python": {
+        "count": 1,
+        "seconds": 250
+      },
+      "java_compile": {
+        "count": 1,
+        "seconds": 90
+      },
+      "stub_jvm": {
+        "count": 1,
+        "seconds": 60
+      },
+      "windows_powershell_5_1": {
+        "count": 1,
+        "seconds": 240
+      }
+    },
+    "harness_sha256": null,
+    "harness_unbuilt": true,
+    "preseal_items": [
+      "Sealed sources: the r2 CODE_MANIFEST (five files; Java, entry, parent and CONTRACT byte-identical to r1). Any byte change means a new manifest and a new plan.",
+      "Harness: written only after separate authorization; its SHA-256, the extraction offsets of each production function taken from the sealed bytes, and every input file with its expected reason are fixed and shown to the user before the first test.",
+      "Engines: python.exe (CONTRACT.python hash), powershell.exe 5.1 (the hash in PARENT_COMMAND.ps1) and the Java helper compiler / JVM (candidates of the accepted normal-30 s COMMANDS.json) are identified before the first test; no other engine.",
+      "Final counts: 62 unique IDs (Python 39 + Java helper 2 + PowerShell 21) and 77 inputs; an ID is one plan entry, an input is one engine evaluation inside the single session of its engine (sessions are not per input).",
+      "Budget: the overall 1,660 s is a proposal; no count or budget increase without the user's approval."
+    ]
+  },
+  "budget_rationale": {
+    "old_python_inputs_inferred_from_explicit_fixture_variants": 36,
+    "old_ps_inputs_inferred_from_explicit_fixture_variants": 21,
+    "python_increment_proxy_seconds": 35.0,
+    "python_proposed_increment": 40,
+    "ps_increment_proxy_seconds": 85.71428571428572,
+    "ps_proposed_increment": 90,
+    "sufficiency_measured": false
+  },
+  "precision_literal": {
+    "text": "0.001000000000000000000000001",
+    "decimal_places": 27,
+    "significant_digits": 25,
+    "strictly_above_limit": true,
+    "in_exact_equality_ids": false,
+    "precision_group": {
+      "long decimal beyond the .NET decimal scale (28 places): parent / consumer disagreement -> INCOMPLETE (fail-closed; not an exact-equality case, not a precision guarantee)": [
+        "PS01-16"
+      ]
+    },
+    "target_engine_executed": false
+  },
+  "planned_cause_coverage": [
+    {
+      "id": "PS01-12",
+      "cause": "NATIVE_CHILD_RC",
+      "inputs": 1,
+      "source_and_plan_present": true
+    },
+    {
+      "id": "PS01-13",
+      "cause": "TERMINATION_EVIDENCE_MISSING",
+      "inputs": 2,
+      "source_and_plan_present": true
+    },
+    {
+      "id": "PS01-14",
+      "cause": "CONSUMER_NATIVE_LABEL_MISMATCH",
+      "inputs": 1,
+      "source_and_plan_present": true
+    },
+    {
+      "id": "PS01-18",
+      "cause": "NATIVE_CHILD_RETURN_MISSING_OR_ERROR",
+      "inputs": 5,
+      "source_and_plan_present": true
+    },
+    {
+      "id": "PS01-19",
+      "cause": "RESULT_IDENTITY",
+      "inputs": 2,
+      "source_and_plan_present": true
+    },
+    {
+      "id": "PS01-20",
+      "cause": "TERMINATION_EVIDENCE_INVALID",
+      "inputs": 4,
+      "source_and_plan_present": true
+    },
+    {
+      "id": "PS01-21",
+      "cause": "NATIVE_AXIS_NOT_EVALUATED",
+      "inputs": 1,
+      "source_and_plan_present": true
+    }
+  ],
+  "normal480_archive": {
+    "path": "C:\\Users\\Administrator\\Downloads\\COMSOL63_NORMAL480_NATIVE_RESULT_20261001.zip",
+    "bytes": 420748594,
+    "sha256": "e991ab4c918f6576b18d6225a86ed41759ab6ee726dd6543b9a9158e581cbc30"
+  },
+  "normal480_log_observation": {
+    "member": "run/batch.log",
+    "bytes": 886975,
+    "sha256": "805e649493f6d793e0b780a3899c40132d2e15011742de047fecae16711fcfa8",
+    "line_number": 131,
+    "line_repr": "'Number of degrees of freedom solved for: 79485 (plus 12 internal DOFs).'",
+    "raw_line_including_ending": {
+      "bytes": 73,
+      "sha256": "c4a34ce5b98400c3b2b9eeebf6e5a7bf3b9451d313cd8fad2f7ad874a8fc55f6"
+    },
+    "line_ending": "CRLF",
+    "prefix_or_suffix_other_than_whitespace": false,
+    "exactly_statement_no_padding": true,
+    "single_transient_section": true,
+    "transient_dof_mentions": [
+      "Number of degrees of freedom solved for: 79485 (plus 12 internal DOFs)."
+    ],
+    "all_dof_mentions": [
+      {
+        "line": 86,
+        "text": "Number of degrees of freedom solved for: 1202 (plus 12 internal DOFs)."
+      },
+      {
+        "line": 131,
+        "text": "Number of degrees of freedom solved for: 79485 (plus 12 internal DOFs)."
+      }
+    ],
+    "future_particle640_dof_observed": false
+  },
+  "reviewer_string_model": {
+    "scope": "Data-only independent model, not candidate function execution or functional validation",
+    "cases": [
+      {
+        "id": "valid",
+        "text": "Number of degrees of freedom solved for: 79485 (plus 12 internal DOFs).",
+        "reason": "ACCEPT_RECORD_ONLY",
+        "solved": 79485,
+        "internal": 12
+      },
+      {
+        "id": "two_lines",
+        "text": "Number of degrees of freedom solved for: 79485 (plus 12 internal DOFs).\nNumber of degrees of freedom solved for: 156925 (plus 12 internal DOFs).",
+        "reason": "TRANSIENT_DOF_READBACK_COUNT:2"
+      },
+      {
+        "id": "two_same_line",
+        "text": "Number of degrees of freedom solved for: 79485 (plus 12 internal DOFs). Number of degrees of freedom solved for: 156925 (plus 12 internal DOFs).",
+        "reason": "TRANSIENT_DOF_READBACK_FORMAT"
+      },
+      {
+        "id": "valid_then_malformed_same_line",
+        "text": "Number of degrees of freedom solved for: 79485 (plus 12 internal DOFs). Number of degrees of freedom solved for: ???",
+        "reason": "TRANSIENT_DOF_READBACK_FORMAT"
+      },
+      {
+        "id": "zero",
+        "text": "Number of degrees of freedom solved for: 0 (plus 12 internal DOFs).",
+        "reason": "TRANSIENT_DOF_READBACK_VALUE"
+      },
+      {
+        "id": "missing_internal",
+        "text": "Number of degrees of freedom solved for: 79485.",
+        "reason": "TRANSIENT_DOF_READBACK_FORMAT"
+      },
+      {
+        "id": "whitespace",
+        "text": " \t Number of degrees of freedom solved for: 156925 (plus 12 internal DOFs).  \r\n",
+        "reason": "ACCEPT_RECORD_ONLY",
+        "solved": 156925,
+        "internal": 12
+      },
+      {
+        "id": "trailing_text",
+        "text": "Number of degrees of freedom solved for: 156925 (plus 12 internal DOFs). (retry 1)",
+        "reason": "TRANSIENT_DOF_READBACK_FORMAT"
+      },
+      {
+        "id": "raw_normal480",
+        "text": "Number of degrees of freedom solved for: 79485 (plus 12 internal DOFs).",
+        "reason": "ACCEPT_RECORD_ONLY",
+        "solved": 79485,
+        "internal": 12
+      },
+      {
+        "id": "timestamp_prefix",
+        "text": "12:00:00 Number of degrees of freedom solved for: 156925 (plus 12 internal DOFs).",
+        "reason": "TRANSIENT_DOF_READBACK_FORMAT"
+      },
+      {
+        "id": "identical_same_line",
+        "text": "Number of degrees of freedom solved for: 156925 (plus 12 internal DOFs). Number of degrees of freedom solved for: 156925 (plus 12 internal DOFs).",
+        "reason": "TRANSIENT_DOF_READBACK_FORMAT"
+      },
+      {
+        "id": "identical_two_lines",
+        "text": "Number of degrees of freedom solved for: 156925 (plus 12 internal DOFs).\nNumber of degrees of freedom solved for: 156925 (plus 12 internal DOFs).",
+        "reason": "TRANSIENT_DOF_READBACK_COUNT:2"
+      },
+      {
+        "id": "missing_all",
+        "text": "",
+        "reason": "TRANSIENT_DOF_READBACK_COUNT:0"
+      },
+      {
+        "id": "negative_solved",
+        "text": "Number of degrees of freedom solved for: -1 (plus 12 internal DOFs).",
+        "reason": "TRANSIENT_DOF_READBACK_FORMAT"
+      }
+    ]
+  },
+  "limitations": [
+    "No candidate or submitted audit execution.",
+    "No functional verification or target PowerShell decimal behavior observed.",
+    "NORMAL480 raw log is prior particle320 evidence, not particle640 measurement.",
+    "Prepared harness, engine identity and actual fixture bindings remain to be sealed after separate user authorization.",
+    "No installation, settings changes, native run, process/Job test, source overwrite or external dispatch."
+  ]
+}
