@@ -1,0 +1,176 @@
+FFFFFFFFFFFF........                                                     [100%]
+=================================== FAILURES ===================================
+_____ test_explained_collision_outside_site_packages_is_recorded_not_fatal _____
+
+    def test_explained_collision_outside_site_packages_is_recorded_not_fatal():
+        """허용 목록의 한 건 — 위치 · 배포판 쌍 · 판 · RECORD sha · 방향이 모두 맞고, 해시 셋이 lock 에 값으로 남는다."""
+>       fatal, collisions = classify_record_mismatches([LICENSE_MM], INDEX, dists=DISTS)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: classify_record_mismatches() got an unexpected keyword argument 'dists'
+
+tests/test_reil_c6_profile.py:30: TypeError
+_____ test_without_dist_identity_even_the_known_license_collision_is_fatal _____
+
+    def test_without_dist_identity_even_the_known_license_collision_is_fatal():
+        """판 · RECORD 를 모르면 허용 목록과 대조할 수 없다 — fail-closed."""
+        fatal, collisions = classify_record_mismatches([LICENSE_MM], INDEX)
+>       assert fatal == [LICENSE_MM] and collisions == [], "판 · RECORD 없이 LICENSE 충돌을 통과시켰다"
+E       AssertionError: 판 · RECORD 없이 LICENSE 충돌을 통과시켰다
+E       assert ([] == [('about-time..., 'sha256=B')]
+E         
+E         Right contains one more item: ('about-time', '../../../LICENSE', 'sha256=A', 'sha256=B')
+E         Use -v to get more diff)
+
+tests/test_reil_c6_profile.py:43: AssertionError
+_ test_an_executable_outside_site_packages_is_fatal_even_when_another_record_matches_the_disk _
+
+    def test_an_executable_outside_site_packages_is_fatal_even_when_another_record_matches_the_disk():
+        """회신의 반례 그대로 — `../../../bin/tool` 을 두 배포판이 주장하고 디스크가 두 번째와 같다 (문서 조건 둘 다 만족)."""
+        index = {**INDEX, "about-time": {**INDEX["about-time"], "../../../bin/tool": "sha256=A"},
+                 "alive-progress": {**INDEX["alive-progress"], "../../../bin/tool": "sha256=B"}}
+        m = ("about-time", "../../../bin/tool", "sha256=A", "sha256=B")
+        for kw in ({}, {"dists": DISTS}):
+            fatal, collisions = classify_record_mismatches([m], index, **kw)
+>           assert fatal == [m] and collisions == [], f"실행 파일 충돌을 설명된 충돌로 통과시켰다 ({kw})"
+E           AssertionError: 실행 파일 충돌을 설명된 충돌로 통과시켰다 ({})
+E           assert ([] == [('about-time..., 'sha256=B')]
+E             
+E             Right contains one more item: ('about-time', '../../../bin/tool', 'sha256=A', 'sha256=B')
+E             Use -v to get more diff)
+
+tests/test_reil_c6_profile.py:53: AssertionError
+_ test_the_same_license_with_another_version_or_record_is_fatal[covered-version] _
+
+who = 'about-time', key = 'version', value = '4.2.2'
+
+    @pytest.mark.parametrize("who,key,value", [("about-time", "version", "4.2.2"), ("about-time", "record", "0" * 64),
+                                               ("alive-progress", "version", "3.3.1"), ("alive-progress", "record", "0" * 64)],
+                             ids=["covered-version", "covered-record", "owner-version", "owner-record"])
+    def test_the_same_license_with_another_version_or_record_is_fatal(who, key, value):
+        dists = {**DISTS, who: {**DISTS[who], key: value}}
+>       fatal, collisions = classify_record_mismatches([LICENSE_MM], INDEX, dists=dists)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: classify_record_mismatches() got an unexpected keyword argument 'dists'
+
+tests/test_reil_c6_profile.py:61: TypeError
+_ test_the_same_license_with_another_version_or_record_is_fatal[covered-record] _
+
+who = 'about-time', key = 'record'
+value = '0000000000000000000000000000000000000000000000000000000000000000'
+
+    @pytest.mark.parametrize("who,key,value", [("about-time", "version", "4.2.2"), ("about-time", "record", "0" * 64),
+                                               ("alive-progress", "version", "3.3.1"), ("alive-progress", "record", "0" * 64)],
+                             ids=["covered-version", "covered-record", "owner-version", "owner-record"])
+    def test_the_same_license_with_another_version_or_record_is_fatal(who, key, value):
+        dists = {**DISTS, who: {**DISTS[who], key: value}}
+>       fatal, collisions = classify_record_mismatches([LICENSE_MM], INDEX, dists=dists)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: classify_record_mismatches() got an unexpected keyword argument 'dists'
+
+tests/test_reil_c6_profile.py:61: TypeError
+_ test_the_same_license_with_another_version_or_record_is_fatal[owner-version] _
+
+who = 'alive-progress', key = 'version', value = '3.3.1'
+
+    @pytest.mark.parametrize("who,key,value", [("about-time", "version", "4.2.2"), ("about-time", "record", "0" * 64),
+                                               ("alive-progress", "version", "3.3.1"), ("alive-progress", "record", "0" * 64)],
+                             ids=["covered-version", "covered-record", "owner-version", "owner-record"])
+    def test_the_same_license_with_another_version_or_record_is_fatal(who, key, value):
+        dists = {**DISTS, who: {**DISTS[who], key: value}}
+>       fatal, collisions = classify_record_mismatches([LICENSE_MM], INDEX, dists=dists)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: classify_record_mismatches() got an unexpected keyword argument 'dists'
+
+tests/test_reil_c6_profile.py:61: TypeError
+_ test_the_same_license_with_another_version_or_record_is_fatal[owner-record] __
+
+who = 'alive-progress', key = 'record'
+value = '0000000000000000000000000000000000000000000000000000000000000000'
+
+    @pytest.mark.parametrize("who,key,value", [("about-time", "version", "4.2.2"), ("about-time", "record", "0" * 64),
+                                               ("alive-progress", "version", "3.3.1"), ("alive-progress", "record", "0" * 64)],
+                             ids=["covered-version", "covered-record", "owner-version", "owner-record"])
+    def test_the_same_license_with_another_version_or_record_is_fatal(who, key, value):
+        dists = {**DISTS, who: {**DISTS[who], key: value}}
+>       fatal, collisions = classify_record_mismatches([LICENSE_MM], INDEX, dists=dists)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: classify_record_mismatches() got an unexpected keyword argument 'dists'
+
+tests/test_reil_c6_profile.py:61: TypeError
+_____________________ test_the_reversed_direction_is_fatal _____________________
+
+    def test_the_reversed_direction_is_fatal():
+        """덮인 쪽 · 디스크 쪽이 뒤바뀐 설치 순서는 관측된 그 한 건이 아니다."""
+        index = {**INDEX, "about-time": {"../../../LICENSE": "sha256=B"}, "alive-progress": {"../../../LICENSE": "sha256=A"}}
+        m = ("alive-progress", "../../../LICENSE", "sha256=A", "sha256=B")
+>       fatal, collisions = classify_record_mismatches([m], index, dists=DISTS)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: classify_record_mismatches() got an unexpected keyword argument 'dists'
+
+tests/test_reil_c6_profile.py:69: TypeError
+____________ test_other_spellings_of_the_path_are_fatal[shallower] _____________
+
+rel = '../../LICENSE'
+
+    @pytest.mark.parametrize("rel", ["../../LICENSE", "../../../../LICENSE", "../../../LICENSE.txt"],
+                             ids=["shallower", "deeper", "suffix"])
+    def test_other_spellings_of_the_path_are_fatal(rel):
+        index = {**INDEX, "about-time": {rel: "sha256=A"}, "alive-progress": {rel: "sha256=B"}}
+        m = ("about-time", rel, "sha256=A", "sha256=B")
+>       fatal, collisions = classify_record_mismatches([m], index, dists=DISTS)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: classify_record_mismatches() got an unexpected keyword argument 'dists'
+
+tests/test_reil_c6_profile.py:78: TypeError
+______________ test_other_spellings_of_the_path_are_fatal[deeper] ______________
+
+rel = '../../../../LICENSE'
+
+    @pytest.mark.parametrize("rel", ["../../LICENSE", "../../../../LICENSE", "../../../LICENSE.txt"],
+                             ids=["shallower", "deeper", "suffix"])
+    def test_other_spellings_of_the_path_are_fatal(rel):
+        index = {**INDEX, "about-time": {rel: "sha256=A"}, "alive-progress": {rel: "sha256=B"}}
+        m = ("about-time", rel, "sha256=A", "sha256=B")
+>       fatal, collisions = classify_record_mismatches([m], index, dists=DISTS)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: classify_record_mismatches() got an unexpected keyword argument 'dists'
+
+tests/test_reil_c6_profile.py:78: TypeError
+______________ test_other_spellings_of_the_path_are_fatal[suffix] ______________
+
+rel = '../../../LICENSE.txt'
+
+    @pytest.mark.parametrize("rel", ["../../LICENSE", "../../../../LICENSE", "../../../LICENSE.txt"],
+                             ids=["shallower", "deeper", "suffix"])
+    def test_other_spellings_of_the_path_are_fatal(rel):
+        index = {**INDEX, "about-time": {rel: "sha256=A"}, "alive-progress": {rel: "sha256=B"}}
+        m = ("about-time", rel, "sha256=A", "sha256=B")
+>       fatal, collisions = classify_record_mismatches([m], index, dists=DISTS)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: classify_record_mismatches() got an unexpected keyword argument 'dists'
+
+tests/test_reil_c6_profile.py:78: TypeError
+________________________ test_a_third_claimant_is_fatal ________________________
+
+    def test_a_third_claimant_is_fatal():
+        """관측된 충돌은 두 배포판 사이였다 — 셋째 주장자가 있으면 그 한 건이 아니다."""
+        index = {**INDEX, "numpy": {**INDEX["numpy"], "../../../LICENSE": "sha256=C"}}
+>       fatal, collisions = classify_record_mismatches([LICENSE_MM], index, dists=DISTS)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: classify_record_mismatches() got an unexpected keyword argument 'dists'
+
+tests/test_reil_c6_profile.py:85: TypeError
+=========================== short test summary info ============================
+FAILED tests/test_reil_c6_profile.py::test_explained_collision_outside_site_packages_is_recorded_not_fatal
+FAILED tests/test_reil_c6_profile.py::test_without_dist_identity_even_the_known_license_collision_is_fatal
+FAILED tests/test_reil_c6_profile.py::test_an_executable_outside_site_packages_is_fatal_even_when_another_record_matches_the_disk
+FAILED tests/test_reil_c6_profile.py::test_the_same_license_with_another_version_or_record_is_fatal[covered-version]
+FAILED tests/test_reil_c6_profile.py::test_the_same_license_with_another_version_or_record_is_fatal[covered-record]
+FAILED tests/test_reil_c6_profile.py::test_the_same_license_with_another_version_or_record_is_fatal[owner-version]
+FAILED tests/test_reil_c6_profile.py::test_the_same_license_with_another_version_or_record_is_fatal[owner-record]
+FAILED tests/test_reil_c6_profile.py::test_the_reversed_direction_is_fatal - ...
+FAILED tests/test_reil_c6_profile.py::test_other_spellings_of_the_path_are_fatal[shallower]
+FAILED tests/test_reil_c6_profile.py::test_other_spellings_of_the_path_are_fatal[deeper]
+FAILED tests/test_reil_c6_profile.py::test_other_spellings_of_the_path_are_fatal[suffix]
+FAILED tests/test_reil_c6_profile.py::test_a_third_claimant_is_fatal - TypeEr...
+12 failed, 8 passed in 0.37s

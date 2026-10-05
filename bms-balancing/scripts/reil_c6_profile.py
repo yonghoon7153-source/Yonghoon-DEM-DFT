@@ -68,17 +68,44 @@ def record_index(paths, normalize) -> dict:
     return index
 
 
-def classify_record_mismatches(mismatches, index) -> tuple[list, list]:
-    """RECORD 불일치를 둘로 — '설명된 충돌' (site-packages 밖의 경로를 다른 배포판도 주장하고 디스크 바이트가 그쪽 RECORD 와 같다 = 설치
-    순서로 덮어쓴 것) 은 기록하고 통과, 그 밖은 전부 fatal (봉인 거부). 2026-10-05 첫 emit 의 about-time · alive_progress LICENSE 충돌에서."""
+#: ★ 2026-10-06 C6-N1 — '설명된 충돌' 의 **허용 목록** (정확 일치만 통과). 2026-10-05 첫 emit 에서 관측된 한 건 그대로: pymoo →
+#: alive-progress → about-time 의 두 wheel 이 venv 꼭대기 LICENSE 를 함께 주장하고 나중에 깔린 alive-progress 가 덮었다. 판 · RECORD 파일
+#: sha256 은 봉인 lock (`reil_c6_20261005/REIL_C6.lock.txt` 13 · 14 행). 예전 규칙 (`../` 로 시작 + 다른 RECORD 가 디스크와 같음) 은
+#: `../../../bin/tool` 같은 실행 파일 충돌도 통과시켰다 (Codex `prereview_reil_v2_annexD_c6_20261006` C6-N1). 새 충돌은 봉인 거부 → 사람
+#: 판단 → 이 목록 개정은 새 등록이다.
+EXPLAINED_COLLISIONS = (
+    {"path": "../../../LICENSE",
+     "covered": ("about-time", "4.2.1", "e5a630322aead38c00d7d20ca0050eb7cd2024eb035505a6ef7bab8e5329f0bd"),
+     "disk_owner": ("alive-progress", "3.3.0", "00c80da0799ae100798d538d9946e030259eae3b2b39cb70f99e7ff6ac7e9be8")},
+)
+
+
+def _ident(dists, name) -> tuple:
+    d = dists.get(name) or {}
+    return (name, d.get("version"), d.get("record"))
+
+
+def classify_record_mismatches(mismatches, index, dists=None) -> tuple[list, list]:
+    """RECORD 불일치를 둘로 — `EXPLAINED_COLLISIONS` 의 한 항목과 **정확히** 맞는 것 (경로 문자열 · 두 주장자만 · 덮인 쪽 · 디스크 쪽의 이름 ·
+    판 · RECORD 파일 sha256 · 방향 · 디스크 해시 = 디스크 쪽 RECORD 값) 만 기록하고 통과, 그 밖은 전부 fatal (봉인 거부). `dists` (=
+    `measure()["dists"]`) 가 없으면 판 · RECORD 를 대조할 수 없으므로 전부 fatal. 통과한 충돌은 해시 셋을 lock 에 값으로 남긴다."""
     fatal, collisions = [], []
     for name, rel, want, got in mismatches:
         others = sorted(n for n, rows in index.items() if n != name and rel in rows)
-        disk = [n for n in others if index[n][rel] == got]
-        if rel.startswith("../") and disk:
-            collisions.append({"path": rel, "dist": name, "claimed_by": sorted([name, *others]), "disk_matches": disk[0]})
-        else:
+        allowed = None
+        if dists is not None and len(others) == 1 and index[others[0]][rel] == got:
+            owner = others[0]
+            allowed = next((a for a in EXPLAINED_COLLISIONS
+                            if rel == a["path"] and _ident(dists, name) == a["covered"]
+                            and _ident(dists, owner) == a["disk_owner"]), None)
+        if allowed is None:
             fatal.append((name, rel, want, got))
+            continue
+        collisions.append({"path": rel, "dist": name, "claimed_by": sorted([name, owner]), "disk_matches": owner,
+                           "covered": {"version": allowed["covered"][1], "record_sha256": allowed["covered"][2], "expected": want},
+                           "disk_owner": {"version": allowed["disk_owner"][1], "record_sha256": allowed["disk_owner"][2],
+                                          "expected": index[owner][rel]},
+                           "disk": got})
     return fatal, collisions
 
 
@@ -88,7 +115,8 @@ def lock_text() -> str:
     spec.loader.exec_module(ep)
     paths = _site_packages()
     prof = ep.measure(paths=paths)
-    bad, collisions = classify_record_mismatches(prof["files"]["mismatches"], record_index(paths, ep.normalize))
+    bad, collisions = classify_record_mismatches(prof["files"]["mismatches"], record_index(paths, ep.normalize),
+                                               dists=prof["dists"])
     if bad or prof["shadowed"]:
         raise SystemExit(f"설치 파일 RECORD 불일치 (설명 안 됨) {bad} · 가려진 배포판 {prof['shadowed']} — 봉인하지 않는다")
     head = ["# REIL C6 lock — 버리는 venv 의 site-packages 만 (degradation-degeneracy/tools/env_profile.py measure() · 그 파일 sha256 "

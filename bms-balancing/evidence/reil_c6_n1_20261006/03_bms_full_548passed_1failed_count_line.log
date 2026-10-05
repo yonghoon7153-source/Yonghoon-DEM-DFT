@@ -1,0 +1,7 @@
+start 2026-10-05T18:09:09Z HEAD 10378b0ba45c6f514d80eb9d2b718a9002d7a96a dirty=3
+
+tests/test_r6_internal.py:235: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_r6_internal.py::test_i6d_04_working_state_test_count_matches_the_collection
+1 failed, 548 passed in 717.32s (0:11:57)
+rc=1 end 2026-10-05T18:21:08Z
