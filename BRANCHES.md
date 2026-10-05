@@ -350,5 +350,7 @@ git push -u origin claude/14-gate-code-review-9qkx05
 | 2026-10-05 | `degradation-degeneracy/.gitattributes` 규칙 `docs/22p_gap/gate91_review/** -text !eol` (91차 리뷰 패키지 보존 전) | `9838d6c09` | 밖 | 할 일 없음 |
 | 2026-10-05 | 원장 §140 — 91차 회신 접수 (`ACCEPTED` · G90-N1 · C1 종결 · 환경 프로필 C 기록 대조 라운드 종결 · 실행 GO 아님) · 패키지 보존 `d7f486b88` | 이 행이 든 커밋 | 밖 | 할 일 없음 (ff 로 그대로 들어간다) |
 | 2026-10-05 | `bms-balancing/.gitattributes` 규칙 — B-min 후보 r2 재검토 회신 묶음 `reviews/r14_repros/codex63/comsol_bmin_r2_review_20261005/** -text` (게이트 차수 밖 · 보존 `4ce80f3ef` · 접수 = COMSOL SPEC §56 · `PREPARATION_ACCEPTED_NOT_VALIDATED` · 한정 검증 · native 미승인) | `50a2c0f8b` | 밖 | 할 일 없음 |
+| 2026-10-05 | `bms-balancing/.gitattributes` 규칙 — REIL C6 봉인 디렉터리 `reil_c6_20261005/** -text` (게이트 차수 밖 · 승인 = REIL 상태 문서 §8-2 · `check` 가 바이트로 대조) | `d50eee2e3` | 밖 | 할 일 없음 |
+| 2026-10-05 | `bms-balancing/.gitattributes` 규칙 — REIL 부속 C 재검토 회신 묶음 `reviews/prereview_reil_v2_annexC_20261005/** -text` (게이트 차수 밖 · 보존 `2e5e74e81` · 접수 = REIL 상태 문서 §9 · `ANNEX_C_CONDITIONALLY_ACCEPTABLE_THREE_LOCAL_DOCUMENT_CORRECTIONS` · 정정 = 부속 D) | `bedb0addc` | 밖 | 할 일 없음 |
 
 ### 복귀 결과 (복귀 정리 커밋이 덧붙인다)

@@ -3531,3 +3531,9 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - [[near-optimal-set-width-measurement]]: 외부 대조 절 (ABC 허용오차 = `tol` · 사전이 폭을 자름 · Pareto 산포 ≠ 근최적 집합).
 - [[halfcell-window-parametrization-lineage]]: 비교표 Li 2026 행 · `MSE_end` = 컷오프 등식의 벌점판 메모.
 - index 불변 (새 컴파일 페이지 0 · raw 는 등록 안 함). 하지 않은 것: bms-balancing 문서 수정 (C1-core 와 어긋나거나 더할 점은 호출자 보고로만) · 새 개념 페이지 (기존 절로 충분).
+
+## [2026-10-05] update | isu-uconn-lfp-gr-emulated-degradation — REIL 부속 C 재검토 회신 (C1-core 논문 쪽 수용 · 국소 정정 셋 → 부속 D)
+- 출처: `bms-balancing/reviews/prereview_reil_v2_annexC_20261005/` (받은 바이트 · `ANNEX_C_CONDITIONALLY_ACCEPTABLE_THREE_LOCAL_DOCUMENT_CORRECTIONS`) · 반영 `bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2_ANNEX_D.md` · C1-core 기록 §8 · 상태 문서 §9.
+- [[isu-uconn-lfp-gr-emulated-degradation]]: 새 절 "부속 C 재검토 (2026-10-05)" (RV2C-N1 명목 대응 ≠ 출판 추정치 정규화 동일성 · RV2C-N2 CE 곱 ≠ Li 손실률 · RV2C-N3 P0 세 상태 규칙 · 밖 6 시트 = #12 · #13 · #14 · #17 · #18 · #19 · U-e 는 비특이적 가설로만) · "논문 digest" 절의 "크기 단서" 줄에 취소선 + 철회 표시.
+- raw digest (`raw/papers/li2026_half-cell-fitting-multiobjective-benchmark.md`) §8-4 · §9-2 · §16-1 의 "≈17 % 손실" 해석은 raw 불변이라 그대로 두고 정정 참조는 엔티티 새 절에 둔다.
+- 하지 않은 것: raw 수정 · 새 그림 판독 · 자료 개봉 · 맞춤 · E3b 등록 · 새 페이지 (기존 엔티티 절로 충분).
