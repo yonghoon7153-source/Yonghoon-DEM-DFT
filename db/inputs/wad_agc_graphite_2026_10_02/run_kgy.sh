@@ -28,8 +28,9 @@ RUN=${RUN:-$HOME/work/runs/wad_agc_graphite_2026_10_02}
 export PWX PSEUDO_DIR=${PSEUDO_DIR:-$HOME/work/pseudo}
 PY=${PY:-/home/kgy/apps/miniforge3/envs/uma/bin/python}
 export NP=1 START_MAX_MIB=${START_MAX_MIB:-12000} KILL_MIB=${KILL_MIB:-23000} HOST_START_MIB=${HOST_START_MIB:-8192} HOST_KILL_MIB=${HOST_KILL_MIB:-2048}
-export ALLOW_UMA_COEXIST=1 EXCEPTION_ID=${EXCEPTION_ID:-D-2026-10-02-wad-agc-graphite}
 STAGE=${STAGE:-all}
+[ "$STAGE" = kprobe ] && EXCEPTION_ID=${KPROBE_DECISION:-D-2026-10-05-wad-agc-kprobe12}   # 탐침은 자기 결정 — START 줄에도 그 값이 찍히게 (10-05 kgy 로그가 옛 ID 를 찍었다)
+export ALLOW_UMA_COEXIST=1 EXCEPTION_ID=${EXCEPTION_ID:-D-2026-10-02-wad-agc-graphite}
 mkdir -p "$RUN"; LOG=$RUN/run_kgy.log
 say() { echo "[$(date '+%F %T')] $*" | tee -a "$LOG"; }
 runner() { env -u LD_LIBRARY_PATH bash tools/wad/run_sese_gpu.sh "$@"; }   # conda 라이브러리가 pw.x 로 새지 않게 (V100 함정 ⑥)
@@ -69,7 +70,6 @@ if [ "$STAGE" = kprobe ]; then
   KP=$PKG/kprobe12/qe
   [ -f "$KP/jobs.json" ] || { say "⛔ 탐침 묶음 없음 ($KP) — 이 worktree 가 탐침을 담은 커밋인지 본다"; exit 1; }
   [ -d "$RUN/stage2_pkg/structures" ] && [ -d "$RUN/stage2" ] || { say "⛔ 2단계 묶음·출력이 RUN 에 없다 — 판독할 k6·k9 기준이 없다"; exit 1; }
-  export EXCEPTION_ID=${KPROBE_DECISION:-D-2026-10-05-wad-agc-kprobe12}
   say "⑤ k 사다리 탐침 (결정 $EXCEPTION_ID) — AGC_N3_top_fcc 두 끝점 12×12×1"
   runner "$KP" "$RUN/kprobe12"; rc=$?
   [ "${DRY_RUN:-0}" = 1 ] && { say "DRY_RUN — 탐침 점검만 하고 끝낸다 (rc=$rc)"; exit $rc; }
