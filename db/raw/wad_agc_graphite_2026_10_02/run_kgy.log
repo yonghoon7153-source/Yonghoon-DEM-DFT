@@ -1,0 +1,55 @@
+[2026-10-02 22:10:22] START @ 4d855c75c · 변경 0 · STAGE=all · RUN=/home/kgy/work/runs/wad_agc_graphite_2026_10_02 · PWX=/home/kgy/apps/qe-7.4.1-gpu/bin/pw.x · PSEUDO=/home/kgy/work/pseudo · 공존 근거 D-2026-10-02-wad-agc-graphite
+[2026-10-02 22:10:26] selftest: agc_graphite selftest: 47 통과 · 0 실패 ✅
+[2026-10-02 22:10:26] ① 1단계 — 기계 대조 2 (V2 입력 그대로) → 제약 이완 5
+   CTRL_V2_top_fcc_dft_bound             706 s · 완료 1 · 피크 3400 MiB
+   CTRL_V2_top_fcc_dft_far               521 s · 완료 1 · 피크 3146 MiB
+   AGC_N3_top_fcc_relax                37470 s · 완료 1 · 피크 13754 MiB
+   AGC_N3_top_hcp_relax                16565 s · 완료 1 · 피크 11265 MiB
+   AGC_N3_hollow_fcc_relax             16168 s · 완료 1 · 피크 5272 MiB
+   AGC_N3_s01_relax                    20548 s · 완료 1 · 피크 7835 MiB
+   AGC_N4_top_fcc_relax                35014 s · 완료 1 · 피크 9615 MiB
+[2026-10-04 09:27:26] ② 2단계 입력 생성 (이완 좌표 → 끝점 10 Å · far8 · E(d) · G3 · G4 · β 0.1 대체)
+2단계: OK 5 · INCOMPLETE 0 · 잡 31 (+ 대체 31) → /home/kgy/work/runs/wad_agc_graphite_2026_10_02/stage2_pkg/qe/jobs.json
+[2026-10-04 09:27:27] ③ 2단계 SCF
+   AGC_N3_top_fcc_dft_bound             3461 s · 완료 1 · 피크 7842 MiB
+   AGC_N3_top_fcc_dft_far               1947 s · 완료 1 · 피크 7840 MiB
+   AGC_N3_top_fcc_far8                  2412 s · 완료 1 · 피크 7840 MiB
+   AGC_N3_top_fcc_Ed_m03                4758 s · 완료 1 · 피크 7843 MiB
+   AGC_N3_top_fcc_Ed_p03                4150 s · 완료 1 · 피크 7842 MiB
+   AGC_N3_top_fcc_Ed_p06                2967 s · 완료 1 · 피크 7842 MiB
+   AGC_N3_top_fcc_Ed_p10                2841 s · 완료 1 · 피크 7842 MiB
+   AGC_N3_top_fcc_Ed_p15                5985 s · 완료 1 · 피크 7842 MiB
+   AGC_N3_top_fcc_Ed_p20                3640 s · 완료 1 · 피크 7842 MiB
+   AGC_N3_top_fcc_Ed_p30                2302 s · 완료 1 · 피크 7840 MiB
+   AGC_N3_top_fcc_Ed_p45                2711 s · 완료 1 · 피크 7842 MiB
+   AGC_N3_top_fcc_G3_c2_bound           3266 s · 완료 1 · 피크 8100 MiB
+   AGC_N3_top_fcc_G3_c2_far_i           2582 s · 완료 1 · 피크 8100 MiB
+   AGC_N3_top_fcc_G3_c2_far_ii          2246 s · 완료 1 · 피크 8100 MiB
+   AGC_N3_top_fcc_G4_e70_bound          4865 s · 완료 1 · 피크 9790 MiB
+   AGC_N3_top_fcc_G4_k9_bound           5109 s · 완료 1 · 피크 7845 MiB
+   AGC_N3_top_fcc_G4_s05_bound          5055 s · 완료 1 · 피크 7840 MiB
+   AGC_N3_top_fcc_G4_e70_far            2084 s · 완료 1 · 피크 9790 MiB
+   AGC_N3_top_fcc_G4_k9_far             4281 s · 완료 1 · 피크 7844 MiB
+   AGC_N3_top_fcc_G4_s05_far            1874 s · 완료 1 · 피크 7596 MiB
+   AGC_N3_top_hcp_dft_bound             3532 s · 완료 1 · 피크 7596 MiB
+   AGC_N3_top_hcp_dft_far               1736 s · 완료 1 · 피크 7596 MiB
+   AGC_N3_top_hcp_far8                  2204 s · 완료 1 · 피크 7590 MiB
+   AGC_N3_hollow_fcc_dft_bound          3547 s · 완료 1 · 피크 7596 MiB
+   AGC_N3_hollow_fcc_dft_far            1720 s · 완료 1 · 피크 7596 MiB
+   AGC_N3_hollow_fcc_far8               2530 s · 완료 1 · 피크 7594 MiB
+   AGC_N3_s01_dft_bound                 5888 s · 완료 1 · 피크 7595 MiB
+   AGC_N3_s01_dft_far                   1665 s · 완료 1 · 피크 7596 MiB
+   AGC_N3_s01_far8                      2809 s · 완료 1 · 피크 7594 MiB
+   AGC_N4_top_fcc_dft_bound             4806 s · 완료 1 · 피크 9380 MiB
+   AGC_N4_top_fcc_dft_far               2288 s · 완료 1 · 피크 9380 MiB
+[2026-10-05 13:35:27] ④ 집계 (ATM 제외)
+model                      d0        W   W_Eint    W_PBE     ΔD3   meV/C
+AGC_N3_top_fcc          3.224   0.5130   0.5155  -0.0778  0.5908    86.1
+AGC_N3_top_hcp          3.224   0.5129   0.5154  -0.0783  0.5912    86.1
+AGC_N3_hollow_fcc       3.224   0.5129   0.5154  -0.0783  0.5912    86.1
+AGC_N3_s01              3.224   0.5129   0.5154  -0.0784  0.5913    86.1
+AGC_N4_top_fcc          3.220   0.5142   0.5115  -0.0794  0.5936    86.3
+G1 기계 대조 PASS (ΔW 0.00000) · G3 PASS · G4 FAIL · 두께 PASS · 헤드라인 OK
+미완 잡 [] · 대체 []
+→ /home/kgy/work/runs/wad_agc_graphite_2026_10_02/collect_kgy.json
+[2026-10-05 13:35:28] ✅ 끝 — 회수 블록으로 /home/kgy/work/runs/wad_agc_graphite_2026_10_02 을 worktree 에 커밋한다 (tmp 제외)

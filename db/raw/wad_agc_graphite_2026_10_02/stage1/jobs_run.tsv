@@ -1,0 +1,8 @@
+job	rc	done	wall_s	peak_total_MiB	peak_self_MiB	killed	start	host_avail_min_MiB
+CTRL_V2_top_fcc_dft_bound	0	1	706	3400	—	0	2026-10-02 22:10:26	59509
+CTRL_V2_top_fcc_dft_far	0	1	521	3146	—	0	2026-10-02 22:22:12	59499
+AGC_N3_top_fcc_relax	0	1	37470	13754	—	0	2026-10-02 22:30:53	54255
+AGC_N3_top_hcp_relax	0	1	16565	11265	—	0	2026-10-03 08:55:28	57001
+AGC_N3_hollow_fcc_relax	0	1	16168	5272	—	0	2026-10-03 13:31:38	59193
+AGC_N3_s01_relax	0	1	20548	7835	—	0	2026-10-03 18:01:11	57340
+AGC_N4_top_fcc_relax	0	1	35014	9615	—	0	2026-10-03 23:43:44	57539

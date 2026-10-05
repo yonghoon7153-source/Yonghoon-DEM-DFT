@@ -1,0 +1,1029 @@
+{
+ "schema": "qe_input_set/v1",
+ "what": "WAD-AgC 2단계 대체 — β 0.1 (원 잡이 SCF 미수렴일 때만 · 한 번)",
+ "prereg": "db/properties/wad_agc_graphite_prereg_2026_10_02.json",
+ "settings": {
+  "pp": {
+   "Ag": "Ag_ONCV_PBE-1.0.oncvpsp.upf",
+   "C": "C.pbe-n-kjpaw_psl.1.0.0.UPF"
+  },
+  "pp_sha256": {
+   "Ag_ONCV_PBE-1.0.oncvpsp.upf": "0494aa5927b754b42d3e72535636f215b4658e9b437e639dbc09674c36c8059a",
+   "C.pbe-n-kjpaw_psl.1.0.0.UPF": "9900d1efd50b9848e31849f39094b33348486b400ee51e0f3922f716137cf3d7"
+  },
+  "pseudo_dir_note": "러너가 PSEUDO_DIR 로 바꾼다 (실행 폴더 복사본에서만)"
+ },
+ "jobs": [
+  {
+   "dir": "AGC_N3_top_fcc_dft_bound_b01",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "AGC_N3_top_fcc",
+   "nat": 36,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "mixing_beta": 0.1,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.84217,
+    "eopreg": 0.0287
+   },
+   "structure": "AGC_N3_top_fcc_dft_bound",
+   "tags": {
+    "structure": "AGC_N3_top_fcc_dft_bound",
+    "endpoint": "bound",
+    "d0_A": 3.2239,
+    "substitutes": "AGC_N3_top_fcc_dft_bound",
+    "rule": "원 잡이 SCF 미수렴일 때만 한 번 (카드 §4 · 결과 전) · 그래도 미수렴이면 INCOMPLETE"
+   },
+   "machine": "kgy RTX3090 24 GB (run_sese_gpu.sh · PWX·PSEUDO_DIR env · li2s v2 UMA 와 GPU 공유)",
+   "pw_in_sha256": "f9277b66646d824f4c653d4ab8b094aa81e8f7e6f80a7bc0464514b92845bbf5"
+  },
+  {
+   "dir": "AGC_N3_top_fcc_dft_far_b01",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "AGC_N3_top_fcc",
+   "nat": 36,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "mixing_beta": 0.1,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.84217,
+    "eopreg": 0.0287
+   },
+   "structure": "AGC_N3_top_fcc_dft_far",
+   "tags": {
+    "structure": "AGC_N3_top_fcc_dft_far",
+    "endpoint": "far",
+    "gap_A": 10.0,
+    "substitutes": "AGC_N3_top_fcc_dft_far",
+    "rule": "원 잡이 SCF 미수렴일 때만 한 번 (카드 §4 · 결과 전) · 그래도 미수렴이면 INCOMPLETE"
+   },
+   "machine": "kgy RTX3090 24 GB (run_sese_gpu.sh · PWX·PSEUDO_DIR env · li2s v2 UMA 와 GPU 공유)",
+   "pw_in_sha256": "c91fd18e3fd5757b29570a0373bd2c99663c0076bc45f30de8c9f6d234d0102a"
+  },
+  {
+   "dir": "AGC_N3_top_fcc_far8_b01",
+   "kind": "info",
+   "calc": "scf",
+   "model": "AGC_N3_top_fcc",
+   "nat": 36,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "mixing_beta": 0.1,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.84217,
+    "eopreg": 0.0287
+   },
+   "structure": "AGC_N3_top_fcc_far8",
+   "tags": {
+    "structure": "AGC_N3_top_fcc_far8",
+    "info": "직접 8 Å (같은 셀) — V2 8 Å 값과 비교",
+    "substitutes": "AGC_N3_top_fcc_far8",
+    "rule": "원 잡이 SCF 미수렴일 때만 한 번 (카드 §4 · 결과 전) · 그래도 미수렴이면 INCOMPLETE"
+   },
+   "machine": "kgy RTX3090 24 GB (run_sese_gpu.sh · PWX·PSEUDO_DIR env · li2s v2 UMA 와 GPU 공유)",
+   "pw_in_sha256": "b6efae91b52cd469470f0bb84462c2c2151d66eccb3282e9e919f137f079db61"
+  },
+  {
+   "dir": "AGC_N3_top_fcc_Ed_m03_b01",
+   "kind": "ed",
+   "calc": "scf",
+   "model": "AGC_N3_top_fcc",
+   "nat": 36,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "mixing_beta": 0.1,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.84217,
+    "eopreg": 0.0287
+   },
+   "structure": "AGC_N3_top_fcc_Ed_m03",
+   "tags": {
+    "structure": "AGC_N3_top_fcc_Ed_m03",
+    "E(d)": "d0-0.3",
+    "d_A": 2.9239,
+    "substitutes": "AGC_N3_top_fcc_Ed_m03",
+    "rule": "원 잡이 SCF 미수렴일 때만 한 번 (카드 §4 · 결과 전) · 그래도 미수렴이면 INCOMPLETE"
+   },
+   "machine": "kgy RTX3090 24 GB (run_sese_gpu.sh · PWX·PSEUDO_DIR env · li2s v2 UMA 와 GPU 공유)",
+   "pw_in_sha256": "10474dcc29a703d1acf5eddc4eab0bfcbad0130eba44a73028392da5137d1bc7"
+  },
+  {
+   "dir": "AGC_N3_top_fcc_Ed_p03_b01",
+   "kind": "ed",
+   "calc": "scf",
+   "model": "AGC_N3_top_fcc",
+   "nat": 36,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "mixing_beta": 0.1,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.84217,
+    "eopreg": 0.0287
+   },
+   "structure": "AGC_N3_top_fcc_Ed_p03",
+   "tags": {
+    "structure": "AGC_N3_top_fcc_Ed_p03",
+    "E(d)": "d0+0.3",
+    "d_A": 3.5239,
+    "substitutes": "AGC_N3_top_fcc_Ed_p03",
+    "rule": "원 잡이 SCF 미수렴일 때만 한 번 (카드 §4 · 결과 전) · 그래도 미수렴이면 INCOMPLETE"
+   },
+   "machine": "kgy RTX3090 24 GB (run_sese_gpu.sh · PWX·PSEUDO_DIR env · li2s v2 UMA 와 GPU 공유)",
+   "pw_in_sha256": "fc658a086315146364835300f06583a03527d379bbb546e7d2e5bfa42b1f303b"
+  },
+  {
+   "dir": "AGC_N3_top_fcc_Ed_p06_b01",
+   "kind": "ed",
+   "calc": "scf",
+   "model": "AGC_N3_top_fcc",
+   "nat": 36,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "mixing_beta": 0.1,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.84217,
+    "eopreg": 0.0287
+   },
+   "structure": "AGC_N3_top_fcc_Ed_p06",
+   "tags": {
+    "structure": "AGC_N3_top_fcc_Ed_p06",
+    "E(d)": "d0+0.6",
+    "d_A": 3.8239,
+    "substitutes": "AGC_N3_top_fcc_Ed_p06",
+    "rule": "원 잡이 SCF 미수렴일 때만 한 번 (카드 §4 · 결과 전) · 그래도 미수렴이면 INCOMPLETE"
+   },
+   "machine": "kgy RTX3090 24 GB (run_sese_gpu.sh · PWX·PSEUDO_DIR env · li2s v2 UMA 와 GPU 공유)",
+   "pw_in_sha256": "30842bcee10bdabb6954abfac90a8f6eb2fd937c678fff57013c4f758d56918e"
+  },
+  {
+   "dir": "AGC_N3_top_fcc_Ed_p10_b01",
+   "kind": "ed",
+   "calc": "scf",
+   "model": "AGC_N3_top_fcc",
+   "nat": 36,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "mixing_beta": 0.1,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.84217,
+    "eopreg": 0.0287
+   },
+   "structure": "AGC_N3_top_fcc_Ed_p10",
+   "tags": {
+    "structure": "AGC_N3_top_fcc_Ed_p10",
+    "E(d)": "d0+1.0",
+    "d_A": 4.2239,
+    "substitutes": "AGC_N3_top_fcc_Ed_p10",
+    "rule": "원 잡이 SCF 미수렴일 때만 한 번 (카드 §4 · 결과 전) · 그래도 미수렴이면 INCOMPLETE"
+   },
+   "machine": "kgy RTX3090 24 GB (run_sese_gpu.sh · PWX·PSEUDO_DIR env · li2s v2 UMA 와 GPU 공유)",
+   "pw_in_sha256": "839e6cb95e8b5bee228bce44798c73ac791183d0243d82d929518dbb6b5cd548"
+  },
+  {
+   "dir": "AGC_N3_top_fcc_Ed_p15_b01",
+   "kind": "ed",
+   "calc": "scf",
+   "model": "AGC_N3_top_fcc",
+   "nat": 36,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "mixing_beta": 0.1,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.84217,
+    "eopreg": 0.0287
+   },
+   "structure": "AGC_N3_top_fcc_Ed_p15",
+   "tags": {
+    "structure": "AGC_N3_top_fcc_Ed_p15",
+    "E(d)": "d0+1.5",
+    "d_A": 4.7239,
+    "substitutes": "AGC_N3_top_fcc_Ed_p15",
+    "rule": "원 잡이 SCF 미수렴일 때만 한 번 (카드 §4 · 결과 전) · 그래도 미수렴이면 INCOMPLETE"
+   },
+   "machine": "kgy RTX3090 24 GB (run_sese_gpu.sh · PWX·PSEUDO_DIR env · li2s v2 UMA 와 GPU 공유)",
+   "pw_in_sha256": "779063e65dffdc830a910fdafe1bbef378e33a1fcdd7ebe1909f5eeae366baec"
+  },
+  {
+   "dir": "AGC_N3_top_fcc_Ed_p20_b01",
+   "kind": "ed",
+   "calc": "scf",
+   "model": "AGC_N3_top_fcc",
+   "nat": 36,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "mixing_beta": 0.1,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.84217,
+    "eopreg": 0.0287
+   },
+   "structure": "AGC_N3_top_fcc_Ed_p20",
+   "tags": {
+    "structure": "AGC_N3_top_fcc_Ed_p20",
+    "E(d)": "d0+2.0",
+    "d_A": 5.2239,
+    "substitutes": "AGC_N3_top_fcc_Ed_p20",
+    "rule": "원 잡이 SCF 미수렴일 때만 한 번 (카드 §4 · 결과 전) · 그래도 미수렴이면 INCOMPLETE"
+   },
+   "machine": "kgy RTX3090 24 GB (run_sese_gpu.sh · PWX·PSEUDO_DIR env · li2s v2 UMA 와 GPU 공유)",
+   "pw_in_sha256": "9a581b90487d75451e0af5b39cf608184dec10f01c6b477e91ee286da3214029"
+  },
+  {
+   "dir": "AGC_N3_top_fcc_Ed_p30_b01",
+   "kind": "ed",
+   "calc": "scf",
+   "model": "AGC_N3_top_fcc",
+   "nat": 36,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "mixing_beta": 0.1,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.84217,
+    "eopreg": 0.0287
+   },
+   "structure": "AGC_N3_top_fcc_Ed_p30",
+   "tags": {
+    "structure": "AGC_N3_top_fcc_Ed_p30",
+    "E(d)": "d0+3.0",
+    "d_A": 6.2239,
+    "substitutes": "AGC_N3_top_fcc_Ed_p30",
+    "rule": "원 잡이 SCF 미수렴일 때만 한 번 (카드 §4 · 결과 전) · 그래도 미수렴이면 INCOMPLETE"
+   },
+   "machine": "kgy RTX3090 24 GB (run_sese_gpu.sh · PWX·PSEUDO_DIR env · li2s v2 UMA 와 GPU 공유)",
+   "pw_in_sha256": "f22879c525f49f0b24857cd3eb835445cd4000eeff3ccdad29a907172fd0c080"
+  },
+  {
+   "dir": "AGC_N3_top_fcc_Ed_p45_b01",
+   "kind": "ed",
+   "calc": "scf",
+   "model": "AGC_N3_top_fcc",
+   "nat": 36,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "mixing_beta": 0.1,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.84217,
+    "eopreg": 0.0287
+   },
+   "structure": "AGC_N3_top_fcc_Ed_p45",
+   "tags": {
+    "structure": "AGC_N3_top_fcc_Ed_p45",
+    "E(d)": "d0+4.5",
+    "d_A": 7.7239,
+    "substitutes": "AGC_N3_top_fcc_Ed_p45",
+    "rule": "원 잡이 SCF 미수렴일 때만 한 번 (카드 §4 · 결과 전) · 그래도 미수렴이면 INCOMPLETE"
+   },
+   "machine": "kgy RTX3090 24 GB (run_sese_gpu.sh · PWX·PSEUDO_DIR env · li2s v2 UMA 와 GPU 공유)",
+   "pw_in_sha256": "d3b93398a2c853bca41c6e0bacfcf3dabaa606330f99183bf2d278fe3f495878"
+  },
+  {
+   "dir": "AGC_N3_top_fcc_G3_c2_bound_b01",
+   "kind": "g3",
+   "calc": "scf",
+   "model": "AGC_N3_top_fcc",
+   "nat": 36,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "mixing_beta": 0.1,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.85074,
+    "eopreg": 0.02714
+   },
+   "structure": "AGC_N3_top_fcc_G3_c2_bound",
+   "tags": {
+    "structure": "AGC_N3_top_fcc_G3_c2_bound",
+    "G3": "G3_c2_bound",
+    "substitutes": "AGC_N3_top_fcc_G3_c2_bound",
+    "rule": "원 잡이 SCF 미수렴일 때만 한 번 (카드 §4 · 결과 전) · 그래도 미수렴이면 INCOMPLETE"
+   },
+   "machine": "kgy RTX3090 24 GB (run_sese_gpu.sh · PWX·PSEUDO_DIR env · li2s v2 UMA 와 GPU 공유)",
+   "pw_in_sha256": "3051c8255381ab6c46198e6e827a82862b28c2124c66d7cd47907a166e48e24d"
+  },
+  {
+   "dir": "AGC_N3_top_fcc_G3_c2_far_i_b01",
+   "kind": "g3",
+   "calc": "scf",
+   "model": "AGC_N3_top_fcc",
+   "nat": 36,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "mixing_beta": 0.1,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.85074,
+    "eopreg": 0.02714
+   },
+   "structure": "AGC_N3_top_fcc_G3_c2_far_i",
+   "tags": {
+    "structure": "AGC_N3_top_fcc_G3_c2_far_i",
+    "G3": "G3_c2_far_i",
+    "substitutes": "AGC_N3_top_fcc_G3_c2_far_i",
+    "rule": "원 잡이 SCF 미수렴일 때만 한 번 (카드 §4 · 결과 전) · 그래도 미수렴이면 INCOMPLETE"
+   },
+   "machine": "kgy RTX3090 24 GB (run_sese_gpu.sh · PWX·PSEUDO_DIR env · li2s v2 UMA 와 GPU 공유)",
+   "pw_in_sha256": "ffd7ce77343b84cee0e9f9d9f0698f370fab7cdc1426130147a30d67751abf34"
+  },
+  {
+   "dir": "AGC_N3_top_fcc_G3_c2_far_ii_b01",
+   "kind": "g3",
+   "calc": "scf",
+   "model": "AGC_N3_top_fcc",
+   "nat": 36,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "mixing_beta": 0.1,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.85074,
+    "eopreg": 0.02714
+   },
+   "structure": "AGC_N3_top_fcc_G3_c2_far_ii",
+   "tags": {
+    "structure": "AGC_N3_top_fcc_G3_c2_far_ii",
+    "G3": "G3_c2_far_ii",
+    "substitutes": "AGC_N3_top_fcc_G3_c2_far_ii",
+    "rule": "원 잡이 SCF 미수렴일 때만 한 번 (카드 §4 · 결과 전) · 그래도 미수렴이면 INCOMPLETE"
+   },
+   "machine": "kgy RTX3090 24 GB (run_sese_gpu.sh · PWX·PSEUDO_DIR env · li2s v2 UMA 와 GPU 공유)",
+   "pw_in_sha256": "6f7d6e049d77427f4fd21adb663927bc490f73402672034c6ef2b3a5ea4c5f08"
+  },
+  {
+   "dir": "AGC_N3_top_fcc_G4_e70_bound_b01",
+   "kind": "g4",
+   "calc": "scf",
+   "model": "AGC_N3_top_fcc",
+   "nat": 36,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 70.0,
+   "ecutrho": 700.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "mixing_beta": 0.1,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.84217,
+    "eopreg": 0.0287
+   },
+   "structure": "AGC_N3_top_fcc_dft_bound",
+   "tags": {
+    "structure": "AGC_N3_top_fcc_dft_bound",
+    "G4": "e70_bound",
+    "substitutes": "AGC_N3_top_fcc_G4_e70_bound",
+    "rule": "원 잡이 SCF 미수렴일 때만 한 번 (카드 §4 · 결과 전) · 그래도 미수렴이면 INCOMPLETE"
+   },
+   "machine": "kgy RTX3090 24 GB (run_sese_gpu.sh · PWX·PSEUDO_DIR env · li2s v2 UMA 와 GPU 공유)",
+   "pw_in_sha256": "9181b6886b2dee7e41306312b6a12ea48e7a04a7e8bb01c1df1ec439c0f66b58"
+  },
+  {
+   "dir": "AGC_N3_top_fcc_G4_k9_bound_b01",
+   "kind": "g4",
+   "calc": "scf",
+   "model": "AGC_N3_top_fcc",
+   "nat": 36,
+   "kpts": [
+    9,
+    9,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "mixing_beta": 0.1,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.84217,
+    "eopreg": 0.0287
+   },
+   "structure": "AGC_N3_top_fcc_dft_bound",
+   "tags": {
+    "structure": "AGC_N3_top_fcc_dft_bound",
+    "G4": "k9_bound",
+    "substitutes": "AGC_N3_top_fcc_G4_k9_bound",
+    "rule": "원 잡이 SCF 미수렴일 때만 한 번 (카드 §4 · 결과 전) · 그래도 미수렴이면 INCOMPLETE"
+   },
+   "machine": "kgy RTX3090 24 GB (run_sese_gpu.sh · PWX·PSEUDO_DIR env · li2s v2 UMA 와 GPU 공유)",
+   "pw_in_sha256": "11435b5e20b768b36e1102978ad28bae3b6884705401a7f3fd0b0b79ae686012"
+  },
+  {
+   "dir": "AGC_N3_top_fcc_G4_s05_bound_b01",
+   "kind": "g4",
+   "calc": "scf",
+   "model": "AGC_N3_top_fcc",
+   "nat": 36,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.005,
+   "mixing_beta": 0.1,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.84217,
+    "eopreg": 0.0287
+   },
+   "structure": "AGC_N3_top_fcc_dft_bound",
+   "tags": {
+    "structure": "AGC_N3_top_fcc_dft_bound",
+    "G4": "s05_bound",
+    "substitutes": "AGC_N3_top_fcc_G4_s05_bound",
+    "rule": "원 잡이 SCF 미수렴일 때만 한 번 (카드 §4 · 결과 전) · 그래도 미수렴이면 INCOMPLETE"
+   },
+   "machine": "kgy RTX3090 24 GB (run_sese_gpu.sh · PWX·PSEUDO_DIR env · li2s v2 UMA 와 GPU 공유)",
+   "pw_in_sha256": "637b5e57628324bff1144b7dcf2f927c1574db0a66e0c3859ab741e8b47e6b00"
+  },
+  {
+   "dir": "AGC_N3_top_fcc_G4_e70_far_b01",
+   "kind": "g4",
+   "calc": "scf",
+   "model": "AGC_N3_top_fcc",
+   "nat": 36,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 70.0,
+   "ecutrho": 700.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "mixing_beta": 0.1,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.84217,
+    "eopreg": 0.0287
+   },
+   "structure": "AGC_N3_top_fcc_dft_far",
+   "tags": {
+    "structure": "AGC_N3_top_fcc_dft_far",
+    "G4": "e70_far",
+    "substitutes": "AGC_N3_top_fcc_G4_e70_far",
+    "rule": "원 잡이 SCF 미수렴일 때만 한 번 (카드 §4 · 결과 전) · 그래도 미수렴이면 INCOMPLETE"
+   },
+   "machine": "kgy RTX3090 24 GB (run_sese_gpu.sh · PWX·PSEUDO_DIR env · li2s v2 UMA 와 GPU 공유)",
+   "pw_in_sha256": "17ed2bc4ff7690015433f62902a826eecfafb3efa9088be2aa592130c5c99714"
+  },
+  {
+   "dir": "AGC_N3_top_fcc_G4_k9_far_b01",
+   "kind": "g4",
+   "calc": "scf",
+   "model": "AGC_N3_top_fcc",
+   "nat": 36,
+   "kpts": [
+    9,
+    9,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "mixing_beta": 0.1,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.84217,
+    "eopreg": 0.0287
+   },
+   "structure": "AGC_N3_top_fcc_dft_far",
+   "tags": {
+    "structure": "AGC_N3_top_fcc_dft_far",
+    "G4": "k9_far",
+    "substitutes": "AGC_N3_top_fcc_G4_k9_far",
+    "rule": "원 잡이 SCF 미수렴일 때만 한 번 (카드 §4 · 결과 전) · 그래도 미수렴이면 INCOMPLETE"
+   },
+   "machine": "kgy RTX3090 24 GB (run_sese_gpu.sh · PWX·PSEUDO_DIR env · li2s v2 UMA 와 GPU 공유)",
+   "pw_in_sha256": "e430c859fd05ba3cefefb3b3f260fe634f4e6ba8962a3b78b31fb9b20636e54c"
+  },
+  {
+   "dir": "AGC_N3_top_fcc_G4_s05_far_b01",
+   "kind": "g4",
+   "calc": "scf",
+   "model": "AGC_N3_top_fcc",
+   "nat": 36,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.005,
+   "mixing_beta": 0.1,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.84217,
+    "eopreg": 0.0287
+   },
+   "structure": "AGC_N3_top_fcc_dft_far",
+   "tags": {
+    "structure": "AGC_N3_top_fcc_dft_far",
+    "G4": "s05_far",
+    "substitutes": "AGC_N3_top_fcc_G4_s05_far",
+    "rule": "원 잡이 SCF 미수렴일 때만 한 번 (카드 §4 · 결과 전) · 그래도 미수렴이면 INCOMPLETE"
+   },
+   "machine": "kgy RTX3090 24 GB (run_sese_gpu.sh · PWX·PSEUDO_DIR env · li2s v2 UMA 와 GPU 공유)",
+   "pw_in_sha256": "9ff47b971a68c25e507caf7f218128402d5e13b9e6bdb28b1f1d5683501b66f7"
+  },
+  {
+   "dir": "AGC_N3_top_hcp_dft_bound_b01",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "AGC_N3_top_hcp",
+   "nat": 36,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "mixing_beta": 0.1,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.84217,
+    "eopreg": 0.0287
+   },
+   "structure": "AGC_N3_top_hcp_dft_bound",
+   "tags": {
+    "structure": "AGC_N3_top_hcp_dft_bound",
+    "endpoint": "bound",
+    "d0_A": 3.2237,
+    "substitutes": "AGC_N3_top_hcp_dft_bound",
+    "rule": "원 잡이 SCF 미수렴일 때만 한 번 (카드 §4 · 결과 전) · 그래도 미수렴이면 INCOMPLETE"
+   },
+   "machine": "kgy RTX3090 24 GB (run_sese_gpu.sh · PWX·PSEUDO_DIR env · li2s v2 UMA 와 GPU 공유)",
+   "pw_in_sha256": "45215eb5f776b7db4c1fee12a12379bdcad2342d431cdd64e0491b787919707a"
+  },
+  {
+   "dir": "AGC_N3_top_hcp_dft_far_b01",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "AGC_N3_top_hcp",
+   "nat": 36,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "mixing_beta": 0.1,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.84217,
+    "eopreg": 0.0287
+   },
+   "structure": "AGC_N3_top_hcp_dft_far",
+   "tags": {
+    "structure": "AGC_N3_top_hcp_dft_far",
+    "endpoint": "far",
+    "gap_A": 10.0,
+    "substitutes": "AGC_N3_top_hcp_dft_far",
+    "rule": "원 잡이 SCF 미수렴일 때만 한 번 (카드 §4 · 결과 전) · 그래도 미수렴이면 INCOMPLETE"
+   },
+   "machine": "kgy RTX3090 24 GB (run_sese_gpu.sh · PWX·PSEUDO_DIR env · li2s v2 UMA 와 GPU 공유)",
+   "pw_in_sha256": "62d71f79ecce60c3c655a189144ec6c51b9d99f6ab65da105b96dfc3bda9da37"
+  },
+  {
+   "dir": "AGC_N3_top_hcp_far8_b01",
+   "kind": "info",
+   "calc": "scf",
+   "model": "AGC_N3_top_hcp",
+   "nat": 36,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "mixing_beta": 0.1,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.84217,
+    "eopreg": 0.0287
+   },
+   "structure": "AGC_N3_top_hcp_far8",
+   "tags": {
+    "structure": "AGC_N3_top_hcp_far8",
+    "info": "직접 8 Å (같은 셀) — V2 8 Å 값과 비교",
+    "substitutes": "AGC_N3_top_hcp_far8",
+    "rule": "원 잡이 SCF 미수렴일 때만 한 번 (카드 §4 · 결과 전) · 그래도 미수렴이면 INCOMPLETE"
+   },
+   "machine": "kgy RTX3090 24 GB (run_sese_gpu.sh · PWX·PSEUDO_DIR env · li2s v2 UMA 와 GPU 공유)",
+   "pw_in_sha256": "e99fd7967361b2d246e1abd626273a63eca50b95e171910a3e4c1cba6e6fa4bd"
+  },
+  {
+   "dir": "AGC_N3_hollow_fcc_dft_bound_b01",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "AGC_N3_hollow_fcc",
+   "nat": 36,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "mixing_beta": 0.1,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.84217,
+    "eopreg": 0.0287
+   },
+   "structure": "AGC_N3_hollow_fcc_dft_bound",
+   "tags": {
+    "structure": "AGC_N3_hollow_fcc_dft_bound",
+    "endpoint": "bound",
+    "d0_A": 3.2241,
+    "substitutes": "AGC_N3_hollow_fcc_dft_bound",
+    "rule": "원 잡이 SCF 미수렴일 때만 한 번 (카드 §4 · 결과 전) · 그래도 미수렴이면 INCOMPLETE"
+   },
+   "machine": "kgy RTX3090 24 GB (run_sese_gpu.sh · PWX·PSEUDO_DIR env · li2s v2 UMA 와 GPU 공유)",
+   "pw_in_sha256": "534230668aa1e7cc3be3943d475e8f1e16c270e7a28edc8aba11be2bcf9a32bb"
+  },
+  {
+   "dir": "AGC_N3_hollow_fcc_dft_far_b01",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "AGC_N3_hollow_fcc",
+   "nat": 36,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "mixing_beta": 0.1,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.84217,
+    "eopreg": 0.0287
+   },
+   "structure": "AGC_N3_hollow_fcc_dft_far",
+   "tags": {
+    "structure": "AGC_N3_hollow_fcc_dft_far",
+    "endpoint": "far",
+    "gap_A": 10.0,
+    "substitutes": "AGC_N3_hollow_fcc_dft_far",
+    "rule": "원 잡이 SCF 미수렴일 때만 한 번 (카드 §4 · 결과 전) · 그래도 미수렴이면 INCOMPLETE"
+   },
+   "machine": "kgy RTX3090 24 GB (run_sese_gpu.sh · PWX·PSEUDO_DIR env · li2s v2 UMA 와 GPU 공유)",
+   "pw_in_sha256": "cdfcc8148dc4c539286a8816be62aa0e73eb1d0c25dccdc5c56021fabb145913"
+  },
+  {
+   "dir": "AGC_N3_hollow_fcc_far8_b01",
+   "kind": "info",
+   "calc": "scf",
+   "model": "AGC_N3_hollow_fcc",
+   "nat": 36,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "mixing_beta": 0.1,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.84217,
+    "eopreg": 0.0287
+   },
+   "structure": "AGC_N3_hollow_fcc_far8",
+   "tags": {
+    "structure": "AGC_N3_hollow_fcc_far8",
+    "info": "직접 8 Å (같은 셀) — V2 8 Å 값과 비교",
+    "substitutes": "AGC_N3_hollow_fcc_far8",
+    "rule": "원 잡이 SCF 미수렴일 때만 한 번 (카드 §4 · 결과 전) · 그래도 미수렴이면 INCOMPLETE"
+   },
+   "machine": "kgy RTX3090 24 GB (run_sese_gpu.sh · PWX·PSEUDO_DIR env · li2s v2 UMA 와 GPU 공유)",
+   "pw_in_sha256": "b99b4267d93103f4baad5ea647178eb042f67b10d86e7326af5ae3b50089e2ce"
+  },
+  {
+   "dir": "AGC_N3_s01_dft_bound_b01",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "AGC_N3_s01",
+   "nat": 36,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "mixing_beta": 0.1,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.84217,
+    "eopreg": 0.0287
+   },
+   "structure": "AGC_N3_s01_dft_bound",
+   "tags": {
+    "structure": "AGC_N3_s01_dft_bound",
+    "endpoint": "bound",
+    "d0_A": 3.2236,
+    "substitutes": "AGC_N3_s01_dft_bound",
+    "rule": "원 잡이 SCF 미수렴일 때만 한 번 (카드 §4 · 결과 전) · 그래도 미수렴이면 INCOMPLETE"
+   },
+   "machine": "kgy RTX3090 24 GB (run_sese_gpu.sh · PWX·PSEUDO_DIR env · li2s v2 UMA 와 GPU 공유)",
+   "pw_in_sha256": "77a5a2a2194f3748ef067133ce4c13573b01549146bb7e9a10eba4cb5d73d2e3"
+  },
+  {
+   "dir": "AGC_N3_s01_dft_far_b01",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "AGC_N3_s01",
+   "nat": 36,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "mixing_beta": 0.1,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.84217,
+    "eopreg": 0.0287
+   },
+   "structure": "AGC_N3_s01_dft_far",
+   "tags": {
+    "structure": "AGC_N3_s01_dft_far",
+    "endpoint": "far",
+    "gap_A": 10.0,
+    "substitutes": "AGC_N3_s01_dft_far",
+    "rule": "원 잡이 SCF 미수렴일 때만 한 번 (카드 §4 · 결과 전) · 그래도 미수렴이면 INCOMPLETE"
+   },
+   "machine": "kgy RTX3090 24 GB (run_sese_gpu.sh · PWX·PSEUDO_DIR env · li2s v2 UMA 와 GPU 공유)",
+   "pw_in_sha256": "e7ed2173598ada50d162e4520cb70ccf907419bc8d4891b73a3a9546d4f28a28"
+  },
+  {
+   "dir": "AGC_N3_s01_far8_b01",
+   "kind": "info",
+   "calc": "scf",
+   "model": "AGC_N3_s01",
+   "nat": 36,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "mixing_beta": 0.1,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.84217,
+    "eopreg": 0.0287
+   },
+   "structure": "AGC_N3_s01_far8",
+   "tags": {
+    "structure": "AGC_N3_s01_far8",
+    "info": "직접 8 Å (같은 셀) — V2 8 Å 값과 비교",
+    "substitutes": "AGC_N3_s01_far8",
+    "rule": "원 잡이 SCF 미수렴일 때만 한 번 (카드 §4 · 결과 전) · 그래도 미수렴이면 INCOMPLETE"
+   },
+   "machine": "kgy RTX3090 24 GB (run_sese_gpu.sh · PWX·PSEUDO_DIR env · li2s v2 UMA 와 GPU 공유)",
+   "pw_in_sha256": "c54bbe6b39ac25a278917d8a6e18dcc3f970c051f21605482cf6754da9efe0be"
+  },
+  {
+   "dir": "AGC_N4_top_fcc_dft_bound_b01",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "AGC_N4_top_fcc",
+   "nat": 44,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "mixing_beta": 0.1,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.85606,
+    "eopreg": 0.02617
+   },
+   "structure": "AGC_N4_top_fcc_dft_bound",
+   "tags": {
+    "structure": "AGC_N4_top_fcc_dft_bound",
+    "endpoint": "bound",
+    "d0_A": 3.2203,
+    "substitutes": "AGC_N4_top_fcc_dft_bound",
+    "rule": "원 잡이 SCF 미수렴일 때만 한 번 (카드 §4 · 결과 전) · 그래도 미수렴이면 INCOMPLETE"
+   },
+   "machine": "kgy RTX3090 24 GB (run_sese_gpu.sh · PWX·PSEUDO_DIR env · li2s v2 UMA 와 GPU 공유)",
+   "pw_in_sha256": "68c31ca3f8da89579de9e48cac3dd19bc65d48c9943aab1e4af36d98b1a4eac9"
+  },
+  {
+   "dir": "AGC_N4_top_fcc_dft_far_b01",
+   "kind": "scf",
+   "calc": "scf",
+   "model": "AGC_N4_top_fcc",
+   "nat": 44,
+   "kpts": [
+    6,
+    6,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "mixing_beta": 0.1,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.85606,
+    "eopreg": 0.02617
+   },
+   "structure": "AGC_N4_top_fcc_dft_far",
+   "tags": {
+    "structure": "AGC_N4_top_fcc_dft_far",
+    "endpoint": "far",
+    "gap_A": 10.0,
+    "substitutes": "AGC_N4_top_fcc_dft_far",
+    "rule": "원 잡이 SCF 미수렴일 때만 한 번 (카드 §4 · 결과 전) · 그래도 미수렴이면 INCOMPLETE"
+   },
+   "machine": "kgy RTX3090 24 GB (run_sese_gpu.sh · PWX·PSEUDO_DIR env · li2s v2 UMA 와 GPU 공유)",
+   "pw_in_sha256": "7ce8604c69fbcded16608dbead60dc368c92efc2dc7f3e32ef72227c6260cc18"
+  }
+ ],
+ "stage2_manifest_sha256": "4ded4780d59029b1c1e2e7d8efee358e6eef58d0ef06db0c0f7591763c172352"
+}
