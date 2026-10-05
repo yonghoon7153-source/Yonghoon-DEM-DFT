@@ -1,0 +1,126 @@
+  PASS  A1 producer 자리(`mpm_metrics.step3`)를 읽는다
+  PASS  A2 평평한 자리도 읽는다
+  PASS  A3 ★★ 옛 오타 자리(`metrics.step3`)는 **읽지 않는다** — 관대하면 R3-CX-01 이 숨는다
+  PASS  A4 없으면 None (0 을 만들지 않는다)
+  PASS  B1 정상 증인
+  PASS  B2 cg_info=float 0.5 (옛 판은 int() 절삭으로 통과시켰다) → `type` 로 거부 (받은 것: 'type')
+  PASS  B2 cg_info=bool True (bool 은 int 의 하위형) → `type` 로 거부 (받은 것: 'type')
+  PASS  B2 cg_info=None → `blind` 로 거부 (받은 것: 'blind')
+  PASS  B3 unconverged 가 bool 이 아니면 거부
+  PASS  B4 resid=None → 거부
+  PASS  B4 resid=NaN → 거부
+  PASS  B4 resid=inf → 거부
+  PASS  B4 resid=음수 → 거부
+  PASS  B4 resid=문턱 초과 → 거부
+  PASS  B5 문턱 **경계값**은 통과
+  PASS  B6 ★ cg_info≠0 인데 unconverged=False (모순) → unconv
+  PASS  C1 정상 증인
+  PASS  C2 σ_e=None → `SIGMA_E|` 로 거부 (옛 producer validator 는 전부 통과시켰다)
+  PASS  C2 σ_e=NaN → `SIGMA_E|` 로 거부 (옛 producer validator 는 전부 통과시켰다)
+  PASS  C2 σ_e=inf → `SIGMA_E|` 로 거부 (옛 producer validator 는 전부 통과시켰다)
+  PASS  C2 σ_e=0 → `SIGMA_E|` 로 거부 (옛 producer validator 는 전부 통과시켰다)
+  PASS  C2 σ_e<0 → `SIGMA_E|` 로 거부 (옛 producer validator 는 전부 통과시켰다)
+  PASS  C2 dof=0 → `N_DOF|` 로 거부 (옛 producer validator 는 전부 통과시켰다)
+  PASS  C2 dof=None → `N_DOF|` 로 거부 (옛 producer validator 는 전부 통과시켰다)
+  PASS  C2 dof 가 float → `N_DOF|` 로 거부 (옛 producer validator 는 전부 통과시켰다)
+  PASS  C2 resid=None → `CONV|blind|` 로 거부 (옛 producer validator 는 전부 통과시켰다)
+  PASS  C2 resid=NaN (비유한) → `CONV|resid|` 로 거부 (옛 producer validator 는 전부 통과시켰다)
+  PASS  C2 resid 문턱 초과 → `CONV|resid|` 로 거부 (옛 producer validator 는 전부 통과시켰다)
+  PASS  C2 cg_info=99 → `CONV|unconv|` 로 거부 (옛 producer validator 는 전부 통과시켰다)
+  PASS  C2 cg_info=0.5 (float 절삭) → `CONV|type|` 로 거부 (옛 producer validator 는 전부 통과시켰다)
+  PASS  C2 unconverged=True → `CONV|unconv|` 로 거부 (옛 producer validator 는 전부 통과시켰다)
+  PASS  D1 자기 backend 를 읽는다
+  PASS  D2 ★★ 전자 backend 가 없으면 **ionic 의 gpu 를 빌려오지 않는다**
+  PASS  D3 dict backend 는 **실제로 쓴 것**(used)을 읽는다
+  PASS  D3b ★★ `requested` 만 있고 `used` 가 없으면 None — 요청은 사용의 증거가 아니다 (R4-CX-04: 옛 판은 requested 로 폴백해 위장을 통과시켰다)
+  PASS  D3c ★ `used=null` 도 None (JSON 왕복에서 흔한 모양)
+  PASS  D4 매니페스트가 없으면 None
+  PASS  E1 LEAN=2 는 전자만 필수
+  PASS  E2 기본은 다섯 전부
+  PASS  E3 ★ `component_plan` 이 있으면 그것이 정본 (소비자는 실행 인자를 모른다)
+  PASS  E4 ★ 계획 키 `collector` ↔ component 이름 `collector_geom` 불일치를 흡수한다
+  PASS  F1 픽스처가 **완비된 현행 규약**이다 (그래야 아래 시험이 뜻을 가진다)
+  PASS  F2 ★ 세대를 **규약 완비**로 관찰한다 (자기신고가 아니라)
+  PASS  F3 정상 증인 — 신고=관찰이면 통과
+  PASS  F4(1) ★★ 세대를 낮춰 증거 계약을 끄는 우회를 잡는다 (R5-CX-02)
+  PASS  F4(2) ★★ 세대를 낮춰 증거 계약을 끄는 우회를 잡는다 (R5-CX-02)
+  PASS  F5 ★ 정상 증인 — 진짜 옛 세대는 통과한다 (소급 과잉차단 없음)
+  PASS  G1 전량 계획에 pnm·collector 가 들어간다
+  PASS  G2 정상 증인 — 완비된 결과는 통과한다
+  PASS  G3 ★★ `step3.pore.pnm` 을 지우면 잡는다 (Codex 통과 변형)
+  PASS  G4 ★★ `step3.collector_geometric` 을 지우면 잡는다 (Codex 통과 변형)
+  PASS  G5 ★ PNM 이 **이유만** 담으면 `complete` 가 아니다
+  PASS  G6 ★ collector σ 가 0 이면 잡는다 (유한 양수여야 한다)
+  PASS  G7 ★★ 계약이 **등록 안 된** component 를 계획하면 HOLD (조용한 통과 금지)
+  PASS  G8 ★★ wetted **만** 미수렴 (Codex 반례 수치) → 잡는다 (EVID|collector_geom|conv|unconv| wetted_cg_info=1 wetted_unc)
+  PASS  G9 ★★ bare **만** 미수렴 → 잡는다 (R_geom 0 clip 뒤에 가려지던 쪽) (EVID|collector_geom|conv|unconv| bare_cg_info=1 bare_unconve)
+  PASS  G10 ★ 보조 잔차 **누락** → blind (모르는 것은 통과가 아니다)
+  PASS  G11 ★ wetted 3필드 **통째 누락** (옛 세대 모양) → blind
+  PASS  G12 ★ **상충** — cg_info 3 인데 unconverged False → 잡는다
+  PASS  G12b ★ **상충** — cg_info 0 인데 unconverged True → 잡는다
+  PASS  G13(nan) ★ 보조 잔차가 비유한 · 음수 · 문턱 위 → 잡는다 (플래그는 수렴이어도)
+  PASS  G13(inf) ★ 보조 잔차가 비유한 · 음수 · 문턱 위 → 잡는다 (플래그는 수렴이어도)
+  PASS  G13(-1e-09) ★ 보조 잔차가 비유한 · 음수 · 문턱 위 → 잡는다 (플래그는 수렴이어도)
+  PASS  G13(0.001) ★ 보조 잔차가 비유한 · 음수 · 문턱 위 → 잡는다 (플래그는 수렴이어도)
+  PASS  G14 ★ cg_info 가 bool → 잡는다 (주 솔브와 같은 타입 계약)
+  PASS  G15 정상 증인 — 문턱 **경계값** · 0 잔차는 통과 (과잉차단 없음)
+  PASS  H1 정상 증인 — 러너 선언과 결과가 같으면 통과
+  PASS  H2(vox_um) ★★ 러너 의도와 다른 결과를 **잡는다** (Codex 통과 변형)
+  PASS  H2(code_sha) ★★ 러너 의도와 다른 결과를 **잡는다** (Codex 통과 변형)
+  PASS  H2(sdcp_sphere_d_um) ★★ 러너 의도와 다른 결과를 **잡는다** (Codex 통과 변형)
+  PASS  H2(periodic_xy) ★★ 러너 의도와 다른 결과를 **잡는다** (Codex 통과 변형)
+  PASS  H2(sigma_vgcf_S_cm) ★★ 러너 의도와 다른 결과를 **잡는다** (Codex 통과 변형)
+  PASS  H2(fibre_stamp) ★★ 러너 의도와 다른 결과를 **잡는다** (Codex 통과 변형)
+  PASS  H3 ★ 선언한 축의 기록이 **없으면** HOLD (부재는 통과가 아니다)
+  PASS  H4 ★★ 영수증 일정 밖 origin 을 잡는다 (z-only 우회, R5-CX-04 와 두 겹)
+  PASS  H5 ★★ 설정이 다르면 영수증 digest 가 다르다 (캐시가 설정을 넘나들지 못한다)
+  PASS  H6 ★ 구 직경만 달라도 digest 가 갈린다 (`.30`/`.40` 이 같은 `_sph` 를 쓰던 구멍)
+  PASS  H7 digest 는 같은 입력에 안정하다
+  PASS  H8 ★ 영수증이 선언하지 않은 축은 자유다 (과잉차단 없음)
+  PASS  RCPT-sha-clean 갓 커밋한 트리는 clean
+  PASS  RCPT-sha-untracked ★★ scripts/ 밖 untracked 는 dirty 가 아니다 (kgy 상주 디렉터리가 생산 전체를 HOLD 시키던 정의 결함)
+  PASS  RCPT-sha-shadow ★ scripts/ 안 untracked 는 dirty (import shadowing 위험)
+  PASS  RCPT-sha-modified tracked 수정은 dirty
+  PASS  RCPT-nodigest ★★ `RECEIPT_AXES_NODIGEST` 에 축을 더해도 digest 는 **안 움직인다** — 이것이 그 목록의 존재 이유다 (움직이면 커밋된 코호트 디렉터리 이름이 어긋난다)
+  PASS  RCPT-axes ★★ 반대로 `RECEIPT_AXES` 에 더하면 digest 가 **반드시 움직인다** — 없는 키도 `rec.get(k)=None` 으로 해시 본문에 들어가기 때문이다.  ⇒ digest 는 런타임 캐시 키이지 내용 해시가 아니고, **옛 영수증의 digest 는 재계산으로 재현되지 않는 것이 정상**이다 (오염이 아니다)
+  PASS  RCPT-disjoint ★ 두 목록이 겹치지 않는다 (겹치면 NODIGEST 의 약속이 거짓이 된다)
+  PASS  IF-0 step3_sigma 의 INTERFACE_MODEL_VERSION 을 읽는다 (계약의 정본 출처)
+  PASS  IF-1 영수증 생산자: 면 > 0 = applied · 요청 없는 채널 = not_requested
+  PASS  IF-2 정상 증인 (전자 ON · 네 영수증)
+  PASS  IF-3 항 없음 · 옛 세대 (키 없음) = 통과
+  PASS  IF-3b 항 없음 + 영수증 전부 not_requested = 통과
+  PASS  IF-4 생산자: 요청이 있는데 솔브 기록 없음 → missing (not_requested 로 둔갑 금지)
+  PASS  IF-5 electronic_main 배선 삭제 (missing) → 거부
+  PASS  IF-6 electronic_main 요청 있는데 not_requested → 거부
+  PASS  IF-5 electronic_wetted 배선 삭제 (missing) → 거부
+  PASS  IF-6 electronic_wetted 요청 있는데 not_requested → 거부
+  PASS  IF-5 electronic_bare 배선 삭제 (missing) → 거부
+  PASS  IF-6 electronic_bare 요청 있는데 not_requested → 거부
+  PASS  IF-7 표는 있는데 model None → 거부 ("model 없으면 검사 생략" 금지)
+  PASS  IF-8 요청 없는데 model 만 있음 → 거부
+  PASS  IF-9 요청 없는 표가 적용됨 (applied_without_request) → 거부
+  PASS  IF-10 요청이 있는데 영수증 통째로 없음 → 거부
+  PASS  IF-11 솔브가 받은 표 ≠ 요청 → 거부
+  PASS  IF-12 주 영수증 unit → 거부
+  PASS  IF-12 주 영수증 model → 거부
+  PASS  IF-12 주 영수증 면 수 합 모순 → 거부
+  PASS  IF-12 주 영수증 표 밖 쌍 면 → 거부
+  PASS  IF-12 주 영수증 pid_used 비 bool → 거부
+  PASS  IF-12 주 영수증 pid 없이 같은 상 쌍 → 거부
+  PASS  IF-12 주 영수증 solved False 인데 applied → 거부
+  PASS  IF-13 --no-collector (계획 collector False) + wetted/bare disabled = 통과
+  PASS  IF-14 계획은 collector True 인데 disabled → 거부
+  PASS  IF-15 주 전자 솔브는 disabled 불가
+  PASS  IF-16 이온 솔브 실패 (사유) + 표 수신 = failed · 통과
+  PASS  IF-17 이온 표의 쌍이 격자에 없음 = absent_geometry · 통과
+  PASS  IF-18 실패한 솔브인데 계면 기록도 없음 (배선 삭제) = missing → 거부
+  PASS  IF-19 명시 r = 0 표 = zero_table (absent 와 구분) · 통과
+  PASS  IF-20 요청 표 모양 같은 상 비-AM → 거부
+  PASS  IF-20 요청 표 모양 모르는 상 → 거부
+  PASS  IF-20 요청 표 모양 역순 키 → 거부
+  PASS  IF-20 요청 표 모양 bool 값 → 거부
+  PASS  IF-20 요청 표 모양 음수 → 거부
+  PASS  IF-21 영수증 키 누락 → 거부
+  PASS  IF-22 모르는 상태 → 거부
+
+run_contract selftest: 124/124 PASS

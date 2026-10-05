@@ -1,0 +1,92 @@
+C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\rgl_reverify_20261005\source\scripts\analyze_contacts.py:67: RuntimeWarning: overflow encountered in square
+  fn = np.sqrt(df['fn_x'].values**2 + df['fn_y'].values**2 + df['fn_z'].values**2)
+  ✓ L0 dem_analysis_core.calc_love_weber_stress 가 있다 (④b)
+  ✓ L0b 정의 문자열 = love_weber_branch_full_tensor_v1
+  ✓ L1 상태 OK · 정의 문자열
+  ✓ L1 손풀이 σ_zz — 큰 입자 (x_c−x_1)·f/V_1 · 작은 입자 (x_c−x_2)·(−f)/V_2
+  ✓ L1b 압축 = 음수 (인장 양수 · LIGGGHTS c_strs 와 같은 부호)
+  ✓ L1c 50/50 대비 — 큰 입자 LW/옛 = 2(x_c−x_1)/(x_1−x_2) ≈ 2r_1/(r_1+r_2) (1.71) · 작은 입자 ≈ 0.29
+  ✓ L1d 요약 = 옛 정의와 같은 통계 (모집단 std/mean · 상 평균/전체 평균)
+  ✓ L2 비스듬한 접촉 — 전단 σ_xz ≠ 0 (대각만 보던 옛 VM 이 버리던 성분)
+  ✓ L2b VM = √(½Σ(σ_ii−σ_jj)² + 3Σσ_ij²) — 전체 텐서 (손값)
+  ✓ L2c 전체 텐서 VM > 대각 VM (전단 포함 확인)
+  ✓ L3 비대칭 b⊗f — VM 은 대칭부 (손값)
+  ✓ L3b 비대칭 진단 asym_frob_median > 0 (기록)
+  ✓ L4 주기 x 경계 쌍 (접촉점 상자 밖 · 안으로 감싼 두 표기) = 상자 가운데 같은 쌍
+  ✓ L4b 상자를 안 주면 경계 너머 접촉점이 입자 밖 → FAILED (조용히 틀린 값 대신 거부)
+  ✓ L5 c_strs 가 있으면 Σ V σ_LW (대각) = Σ c_strs — 상대 차 ≈ 0 기록
+  ✓ L5b 힘 부호가 뒤집힌 접촉 열 (id2 가 받는 힘으로 잘못 읽음) → FAILED virial_mismatch
+  ✓ L5c 프레임이 다른 원자 덤프 (c_strs 1.5 배) → FAILED virial_mismatch
+  ✓ L5d c_strs 없음 → OK 이되 virial 대조 = None (unavailable 로 기록 · 거부 아님)
+  ✓ L6 전체 힘 ≠ 법선 + 접선 (열 대응 어긋남) → FAILED force_columns
+  ✓ L7 접촉점이 입자 밖 (|x_c − x_i| > 1.01 r_i) → FAILED contact_point
+  ✓ L8 접촉점 열 없음 (옛 덤프 · 손 픽스처) → NOT_COMPUTED (missing …) · 값 없음 (0 으로 안 채움)
+  ✓ L8b NaN 값 → FAILED non_finite
+  ✓ L9 원자 덤프에 없는 id 의 접촉 → FAILED contact_ids (두 덤프 짝 불일치)
+  ✓ L9b 접촉 0 → NOT_COMPUTED (no_contacts)
+  ✓ L10 벽 표지 — 바닥 1 (AM_P) · 판 1 (SE) · 범위 = 바닥 zplane 0 + 판 mesh (x·y 주기 가정)
+  ✓ L10b 상별 벽 비율 — AM_P 1/1 · SE 1/4
+  ✓ L10c 무접촉 입자 1 — VM 0 으로 모집단에 포함 (옛 열과 같은 모집단)
+  ✓ L11 벽 제외 통계 = 벽 입자를 뺀 모집단의 CV · 상 비 (AM_P 는 전부 벽 → 비 없음)
+  ✓ L11b 판 높이가 추정값 (mesh 없음) → 판 표지 unavailable · 벽 제외 통계 None (바닥 표지는 그대로)
+  Loaded 1 contacts from contacts.csv
+  ✓ R1 ★ 고립 입자 반경 NaN (실 load_atoms_raw) → FAILED (invalid_input …) · 사유에 반경 — 옛 코드 OK · vm_cv 0 · 비 0
+  ✓ R1b 정상 통계 발행 안 함 — vm_cv None · type_stress 없음 · 텐서 없음 (NaN > 0 → "0" 분기 차단)
+  Loaded 1 contacts from contacts.csv
+  ✓ R2 ★ plate_z NaN · source mesh → FAILED (invalid_input: plate_z …) · 값 없음 — 옛 코드 OK · 판 접촉 0 · 벽 제외 요약
+  ✓ R2b plate_z None · inf · 0 · 음수 (mesh) → 전부 FAILED (invalid_input: plate_z …)
+  ✓ R2c 판 높이를 안 쓰는 경로 (source = estimated_center) 는 plate_z 를 검사하지 않는다 → OK · 판 표지 unavailable
+  Loaded 1 contacts from contacts.csv
+  ✓ R3 ★ F = 0 · Fn+Ft = (0, 0, −1) → FAILED (force_columns …) — 영 척도 분기 (척도 0 인데 잔차 > 0) · 옛 코드 오차 0 · OK
+  ✓ R3b 검사 기록 = 절대 잔차 1 · 상대 차 None (0 분모 — inf 를 JSON 에 안 쓴다) · zero_scale 표지
+  Loaded 1 contacts from contacts.csv
+  ✓ R4 ★ F = 0 ∧ c_strs = 0 → virial 검사 통과 (두 합 모두 정확히 0 · 상대 차 0 · zero_scale) — 옛 코드 inf · FAILED
+  ✓ R4b 무하중 → status UNDEFINED (zero_load …) · CV · 상 비 = 0/0 미정의 → 값 없음 (0 · OK 로 위장 안 함)
+  Loaded 1 contacts from contacts.csv
+  ✓ R4c c_strs 없는 무하중도 UNDEFINED (옛 코드: OK · vm_cv 0 · 비 0 = 거짓 0)
+  Loaded 2 contacts from contacts.csv
+  Loaded 2 contacts from contacts.csv
+  ✓ R5 전역 검사는 맞바꾼 접촉 힘을 못 잡는다 (둘 다 OK · virial 1e-15 미만 · AM_P 비 0.5 ↔ 1.5) — 이 한계를 기록으로 남긴다
+  ✓ R5b ★ 검사 범위 표기 — checks.virial_scope = 전역 대각 합 · 부호/척도 검사 · 프레임 대응 증명 아님
+  ✓ R5c ★ 이름 한정 — quantity = 입자 접촉력 기반 대칭 응력의 VM · kinetic · 벽 · couple 미포함 (전체 동적 응력 아님)
+  ✓ R5d ★ 덱 가정 미검증 표기 — 바닥 z = 0 · 평면 mesh 판 · x·y 주기 · 함수가 덱을 읽지 않는다
+  ✓ R5e 계약 표지 = love_weber_checks_v2 (입력 검증 · 영 척도 · UNDEFINED 이후 세대 — 옛 결과와 구별)
+  Loaded 1 contacts from contacts.csv
+  ✓ R6 ★ 주기 길이 NaN · inf · 0 · 음수 → FAILED (invalid_input: box …) — 옛 코드 NaN 은 OK · vm_cv 0
+  ✓ R6b 상자를 안 주면 (None) 검사하지 않는다 → OK (비주기 호출부 호환)
+  Loaded 1 contacts from contacts.csv
+  ✓ R7 고립 입자 position 무효 ((nan, 2.0, 8.0, 1.0)) → FAILED (invalid_input: …position…) · 값 없음
+  Loaded 1 contacts from contacts.csv
+  ✓ R7b 고립 입자 position 무효 ((8.0, 2.0, inf, 1.0)) → FAILED (invalid_input: …position…) · 값 없음
+  Loaded 1 contacts from contacts.csv
+  ✓ R8 고립 입자 radius 무효 ((8.0, 2.0, 8.0, 0.0)) → FAILED (invalid_input: …radius…) · 값 없음
+  Loaded 1 contacts from contacts.csv
+  ✓ R8b 고립 입자 radius 무효 ((8.0, 2.0, 8.0, -1.0)) → FAILED (invalid_input: …radius…) · 값 없음
+  Loaded 1 contacts from contacts.csv
+  ✓ R8c 접촉한 두 입자 반경 음수 → FAILED (invalid_input: radius) — 옛 코드는 |b|/r 가 음수라 접촉점 검사를 통과해 OK
+  Loaded 1 contacts from contacts.csv
+  ✓ R9 ★ 한 입자 c_strs NaN (반경 정상) → FAILED (invalid_input: c_strs …) — 옛 코드 virial unavailable · OK
+  Loaded 1 contacts from contacts.csv
+  ✓ R9b c_strs[2] 만 NaN → FAILED (invalid_input: c_strs …) — 옛 코드는 virial_mismatch 라는 틀린 사유
+  Loaded 1 contacts from contacts.csv
+  ✓ R10 ★ VM 넘침 (F 1e308) → FAILED (non_finite …) · 값 없음 — 옛 코드 OK · cv NaN
+  Loaded 1 contacts from contacts.csv
+  ✓ R11 ★ 전체 OK · 벽 제외 모집단 평균 VM 0 → vm_cv_nowall None · 상 비 None · nowall_status UNDEFINED — 옛 코드 0 · 0
+  Loaded 1 contacts from contacts.csv
+  ✓ R11b 모든 입자가 벽 접촉 → nowall_status NOT_COMPUTED (empty_population) · 벽 제외 값 없음
+  Loaded 3 contacts from contacts.csv
+  ✓ R12 정상 벽 침대 — status OK · nowall_status OK · wall.nowall_scope = 선별 모집단 · 결측 벽 힘 복원 아님
+  ✗ L12 real_14 대조  — FileNotFoundError(2, 'No such file or directory')
+  ✓ L13 CLI rc 0 · full_metrics.json
+  ✓ L13b 새 키 — stress_lw_status OK · 정의 · stress_cv_lw · stress_ratio_AM_P_lw · stress_ratio_SE_lw
+  ✓ L13c 벽 키 — 바닥 1 · 판 1 · AM_P 벽 비율 1.0 · SE 1/20 · 벽 제외 CV · SE 비 (AM_P 는 벽뿐 → 키 없음)
+  ✓ L13d 검사 기록 — virial 상대 차 < 1e-9 · 접촉점/반지름 최대 ≤ 1.01
+  ✓ L13e 케이스 표 (network_summary.csv) — 옛 줄 뒤에 Love–Weber 줄 · 벽 제외 · 벽 접촉 비율
+  ✓ L13f 옛 키 값 불변 — 접촉점 열 유무와 무관 (같은 c_strs → 같은 stress_cv · 비)
+  ✓ L13g 접촉점 열 없는 덤프 → stress_lw_status NOT_COMPUTED · LW 값 키 없음 · 표 줄 없음
+  ✓ L13h 원자 덤프 c_strs 와 접촉 덤프가 안 맞으면 (1.5 배) → FAILED 상태 · LW 값 없음 · 옛 키는 그대로
+  ✓ L13i ★ RGL-06 메타 키 — 계약 v2 · quantity (입자 접촉력 대칭 응력 VM) · 덱 가정 미검증 · virial 범위 (전역) · nowall_status OK
+  ✓ L13j 입력 출처 — LW 가 읽은 CSV 의 sha256 앞 16 자 (망 단계 network_provenance.json input_digests 와 같은 꼴) · TIMESTEP 은 CSV 에 없음 표기
+  ✓ L13k ★ 무하중 침대 (접촉 힘 0 · c_strs 0) → stress_lw_status UNDEFINED (zero_load …) · LW 값 키 없음 · 표 줄 없음 · 옛 키 그대로
+
+68/69 통과  — 실패: L12 real_14 대조

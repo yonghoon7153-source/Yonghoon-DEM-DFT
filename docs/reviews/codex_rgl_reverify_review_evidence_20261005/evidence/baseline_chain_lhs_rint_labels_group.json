@@ -1,0 +1,75 @@
+[
+  {
+    "name": "chain",
+    "args": [
+      "webapp/test_network_handover_chain.py"
+    ],
+    "rc": 0,
+    "seconds": 2.172,
+    "tail": [
+      "③ 실 배치 기록 (stop_after=network) → 실 인계 생성기",
+      "  PASS 실 배치에 관통 · 비관통 done 케이스가 있다 (106 · 24)",
+      "  PASS load_webapp 이 배치의 stop_after 를 넘긴다 ('network')",
+      "  PASS network 배치를 ⑤⑥⑦ 다섯 묶음으로 받는다 (옛 코드 = 거부 · RGL-03)",
+      "  PASS failed 로 바꾼 한 행 밖의 129/129 행 = 접촉 단계 판과 같은 값 (관통 · 정상 비관통 done 포함)",
+      "  PASS 수치 실패 행 = wa_status failed ('failed') · 웹앱 열 81 칸 빈칸 · 다른 값으로 바뀐 칸 0",
+      "",
+      "test_network_handover_chain: 10/10 PASS"
+    ]
+  },
+  {
+    "name": "lhs",
+    "args": [
+      "scripts/lhs_design_dataset.py",
+      "--selftest"
+    ],
+    "rc": 1,
+    "seconds": 1.516,
+    "tail": [
+      "  PASS  ㉗zc 합법 접촉 0 쌍 (세 키 모두 없음 · 평균 0 대입) 은 그대로 받는다 — 개수 0 · 총합 0.0 · 평균 빈칸  ",
+      "  PASS  ㉗zd 반올림 반폭 경계는 그대로 통과 (단계 % +0.004999 · +0.005 · 지수 +4.999e-5 · +5e-5 — round(·, 2) · round(·, 4) 의 반폭) · 범위 관문이 경계를 좁히지 않는다  ",
+      "  PASS  ㉗ze ★ 반폭 밖 단계 % (+0.005001) 는 거부 — 거부: q1: frac_intact_force_pct 54.55045554545455 ≠ 100 × 6 / 11 = 54.",
+      "  PASS  ㉗zf ★ 반폭 밖 지수 (+5.001e-5) 는 거부 — 거부: q1: fracture_index_force 0.09095910090909091 ≠ (파편화 + 분쇄) / N = ",
+      "  PASS  ㉗zg ★ 최종 레코드 관문 (0 채움 · 이름 옮김 · 0 대입 비움 뒤 내보내는 행을 다시 본다) — 정상은 통과 · 접촉 0 평균 · 접촉 0 총합 빈칸 · N/A 쌍의 총합 · NaN · AM–AM 접촉 0 의 평균 · 평균 × 개수 ≠ 총합 은 거부",
+      "  PASS  ㉗zh 열 사전 — AM–AM 접촉 0 = 평균 N/A · 총합 0 (측정된 0) · 쌍 0 채움은 세 키 모두 빈칸일 때만 (누락 → 0 채움 금지) · AM–AM 접촉 0 의 파괴 열 = N/A · ⑤⑥⑦ 검토 기록에 RGL-05 관문 순서 (원천 근거 → 유한 → 형/범위 → 식)",
+      "",
+      "lhs_design_dataset selftest: 276/277 PASS   FAILED: [\"㉖c 실데이터 64 (FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\\\\\Users\\\\\\\\Administrator\\\\\\\\Documents\\\\\\\\Codex\\\\\\\\2026-08-24\\\\\\\\claude-stoic-knuth-nobvq-x20\\\\\\\\rgl_reverify_20261005\\\\\\\\source\\\\\\\\docs\\\\\\\\data\\\\\\\\lhs_union_20260927\\\\\\\\lhsx64_union.tsv')\"]"
+    ]
+  },
+  {
+    "name": "rint_labels",
+    "args": [
+      "webapp/test_rint_scope_labels.py"
+    ],
+    "rc": 0,
+    "seconds": 0.828,
+    "tail": [
+      "  PASS  F10 je_delta 범례 = rGeomText · collectorGeomNote · jb 없음 가지가 collectorGeomNote 로 이유를 말한다",
+      "  PASS  F11 je 범례 = rGeomText · collectorGeomNote · 상세에 \"둘 다 수렴\" 문구",
+      "  PASS  F12 요약 칩 R_geom = rGeomText · 값 없으면 collector_geom 상태",
+      "  PASS  F13 CSV 요약에 collector_geom_status 행",
+      "  PASS  F14 비교 je_delta 캡션이 collectorGeomNote",
+      "  PASS  F15 mpm_lab 요약 · 케이스 카드 — R_geom 이 없으면 collector_geom 상태 (unconverged = 보조 솔브 미수렴 · RGL-01) 를 적는다",
+      "",
+      "31 PASS · 0 FAIL"
+    ]
+  },
+  {
+    "name": "group",
+    "args": [
+      "webapp/test_closed_param_groupview.py"
+    ],
+    "rc": 1,
+    "seconds": 1.156,
+    "tail": [
+      "  PASS  H1 접촉 0 (숫자) → 평균 None · 총합 0 · 개수 0 그대로",
+      "  PASS  H2 옛 케이스의 문자열 \"0\" 도 같은 규칙 (am_am_n_contacts 가 문자열이던 세대)",
+      "  PASS  H3 접촉 있음 → 평균 그대로",
+      "  PASS  H4 개수 키가 없으면 판단하지 않는다 (값 그대로 — 모르는 것을 지어내지 않는다)",
+      "  PASS  H5 그룹 표 라우트가 이 도우미를 부른다 (배선)",
+      "",
+      "36 PASS · 1 FAIL",
+      "  - section_f 예외 ModuleNotFoundError: No module named 'fracture_model'"
+    ]
+  }
+]

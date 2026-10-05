@@ -1,0 +1,30 @@
+{
+  "source_blobs_verified": 432,
+  "baseline_jobs": 18,
+  "baseline_nonzero_expected": {
+    "lw": "missing real14"
+  },
+  "actual_network_cases": 12,
+  "raw_hex_cases": 18,
+  "committed_summary_rows": 194,
+  "production_runs": 0,
+  "new_p1": 0,
+  "new_p2": 3,
+  "verdict": "HOLD",
+  "selected_network_evidence_dirs": [
+    "evidence/positive_kzzrd7ga",
+    "evidence/no_through_nfvrmrzw",
+    "evidence/legitimate_band_kp_rkab0",
+    "evidence/solver_failed_stop_07tcdy02",
+    "evidence/solver_failed_general_ufc4ku23",
+    "evidence/ratio_times4_liuo4b4_",
+    "evidence/band_ratio_missing_10zmgdjy",
+    "evidence/band_ratio_nan_ql15chpz",
+    "evidence/band_ratio_negative_u14ox7_s",
+    "evidence/band_fraction_above1_h_njwv4a",
+    "evidence/rejected_retry_preserves_generation_4fu6piwo",
+    "evidence/write_failure_after_stamp_hhrwnmpb"
+  ],
+  "selected_lw_csv_dir": "evidence/lw_parser_zw9qoyt3",
+  "exclusions": "Orphan development temp directories, caches and dependency installations; no evidence deletion."
+}

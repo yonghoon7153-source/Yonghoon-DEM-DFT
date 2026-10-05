@@ -1,0 +1,38 @@
+A · B  표지 함수 (node)
+  PASS  A0 node 실행
+  PASS  A1 Joule 없음 · step3 없음 = 빈 문자열
+  PASS  A2 옛 payload (scope 없음) = 범위 표지 없음 경고
+  PASS  A3 bulk-only · 지도 밖 계면 몫 95 % · 총 발열로 읽지 말 것
+  PASS  A4 r 없음 (계면 몫 0) 도 bulk-only 표지 · 판 결합 제외를 말한다
+  PASS  A5 payload 문자열 이스케이프
+  PASS  B1 정상 rxn · 없음 = 빈 문자열
+  PASS  B2 r-ON 으로 끈 반응 솔브 = 사유 · RINT-05 · 이스케이프
+C  배선
+  PASS  C1 Joule 필드 범례가 jouleScopeNote(s3)
+  PASS  C2 반응전류 단일 범례 — 데이터 없음 가지에서도 rxnScopeNote(s3) (끈 이유를 말한다)
+  PASS  C3 비교 반응전류 캡션이 rxnScopeNote
+D  RINT-18 상/계면
+  PASS  D1 "각 상의 전력손실 %" 문구가 없다
+  PASS  D2 손실 분담 막대 = "각 상/계면의 전력손실 %" (전자 · 이온)
+  PASS  D3 je 범례 손실 분담 = 상/계면
+E  RINT-17 단자 R_int
+  PASS  E1 STEP4 화면의 R_int 표지 (그림 제목 · 범례) 가 셀 단자 ASR 라고 말한다
+F  RGL-01 집전체 기하 (collector_geom) — 보조 솔브 수렴 표지
+  PASS  F0 뷰어 수렴 키 = 공용 계약 (run_contract.COMPONENT_RESULT collector_geom convs) 과 같은 글자 · 여섯
+  PASS  F1 node 실행
+  PASS  F2 집전체 기하 없음 · --no-collector · 정상 (수렴 3필드 + R_geom) = 빈 문자열
+  PASS  F3 unconverged = collector_geom 미수렴 · R_geom · jb 미게시 · RGL-01 · 사유 이스케이프
+  PASS  F4 failed = 실패 · 사유
+  PASS  F5 옛 payload (수렴 3필드 없음) = 수렴 확인 없이 게시된 R_geom 경고 · RGL-01
+  PASS  F6 상태 complete 인데 R_geom null = R_geom 없음 경고
+  PASS  F7 rGeomText — 수 = 지수 표기 · null = "—" (옛 범례의 Number(null) → "0.00e+0" 아님)
+  PASS  F8 평문 판 (캔버스) 에 태그 없음 · 같은 판정
+  PASS  F9 옛 R_geom 서식 (Number(cg.R_geom_ohm_cm2).toExponential) 이 뷰어 어디에도 없다
+  PASS  F10 je_delta 범례 = rGeomText · collectorGeomNote · jb 없음 가지가 collectorGeomNote 로 이유를 말한다
+  PASS  F11 je 범례 = rGeomText · collectorGeomNote · 상세에 "둘 다 수렴" 문구
+  PASS  F12 요약 칩 R_geom = rGeomText · 값 없으면 collector_geom 상태
+  PASS  F13 CSV 요약에 collector_geom_status 행
+  PASS  F14 비교 je_delta 캡션이 collectorGeomNote
+  PASS  F15 mpm_lab 요약 · 케이스 카드 — R_geom 이 없으면 collector_geom 상태 (unconverged = 보조 솔브 미수렴 · RGL-01) 를 적는다
+
+31 PASS · 0 FAIL

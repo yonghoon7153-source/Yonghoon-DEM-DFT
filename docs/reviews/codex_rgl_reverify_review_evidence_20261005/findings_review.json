@@ -1,0 +1,129 @@
+{
+  "schema": "independent_review/v1",
+  "commit": "bf4fb6aee0b388375ddf65694ac405e63e0e381c",
+  "verdict": "HOLD",
+  "new_p1": 0,
+  "new_p2": 3,
+  "production_changed": false,
+  "production_194_run": false,
+  "scope": "Prior review section 7 conditions 1-7; section 7-8 integration/resealing/batch excluded.",
+  "conditions": {
+    "1": "closed",
+    "2": "closed",
+    "3": "closed",
+    "4": "closed_in_original_failure_path",
+    "5": "partial",
+    "6": "partial",
+    "7": "closed"
+  },
+  "prior_findings": {
+    "RGL-01": "closed_in_reproduced_scope",
+    "RGL-02": "closed_in_reproduced_scope",
+    "RGL-03": "closed_in_reproduced_scope",
+    "RGL-04": "closed_in_reproduced_scope",
+    "RGL-05": "closed_in_reproduced_scope",
+    "RGL-06": "partial",
+    "RGL-07": "closed_in_reproduced_scope",
+    "RGL-08": "partial",
+    "RGL-09": "closed_in_reproduced_scope",
+    "RGL-10": "closed_in_reproduced_scope"
+  },
+  "findings": [
+    {
+      "id": "RGLR-01",
+      "severity": "P2",
+      "title": "BAND_FALLBACK masks malformed technical inputs",
+      "status": "open",
+      "locations": [
+        {
+          "file": "webapp/pipeline_service.py",
+          "line": 815
+        },
+        {
+          "file": "webapp/pipeline_service.py",
+          "line": 877
+        },
+        {
+          "file": "scripts/tau_flux.py",
+          "line": 192
+        }
+      ],
+      "evidence": "evidence/network_adversarial.json",
+      "reproduce": "python3 run_probes.py new_network",
+      "observed": "Actual CLI L1 output mutated coherently across all copies: sigma_full null/NaN/-1, or percolating_fraction=2, still stop=done and tau=BAND_FALLBACK.",
+      "scope_limit": "No claim these corrupt values occur in the real cohort.",
+      "release_condition": "Validate common finite/domain contracts before scientific fallback; preserve legitimate L1/L2 and nonpercolation positives."
+    },
+    {
+      "id": "RGLR-02",
+      "severity": "P2",
+      "title": "Dimensional and normalized conductivity disagree within accepted generation",
+      "status": "open",
+      "locations": [
+        {
+          "file": "webapp/pipeline_service.py",
+          "line": 818
+        },
+        {
+          "file": "scripts/tau_flux.py",
+          "line": 212
+        },
+        {
+          "file": "scripts/network_conductivity.py",
+          "line": 1259
+        }
+      ],
+      "evidence": "evidence/network_adversarial.json",
+      "reproduce": "python3 run_probes.py new_network",
+      "observed": {
+        "normalized_sigma_before": 0.00400388,
+        "normalized_sigma_after": 0.01601552,
+        "dimensional_sigma_mScm": 0.012012,
+        "tau2_before": 10.984918916215548,
+        "tau2_after": 2.746229729053887,
+        "grade_tau2_unchanged": 10.98458969786641,
+        "stop": "done"
+      },
+      "scope_limit": "Counterexample to acceptance certificate, not proof original solver arithmetic is wrong.",
+      "release_condition": "Check sigma_dim=1000*sigma0_Scm*sigma_ratio using actual storage-rounding bounds, both modes and both mutation directions."
+    },
+    {
+      "id": "RGLR-03",
+      "severity": "P2",
+      "title": "CSV parser turns present malformed c_strs into absent fields",
+      "status": "open",
+      "locations": [
+        {
+          "file": "scripts/analyze_contacts.py",
+          "line": 39
+        },
+        {
+          "file": "scripts/analyze_contacts.py",
+          "line": 50
+        },
+        {
+          "file": "scripts/dem_analysis_core.py",
+          "line": 1342
+        }
+      ],
+      "evidence": "evidence/lw_replay.json",
+      "reproduce": "python3 run_probes.py independent_lw",
+      "observed": "Finite wrong c_strs(0,0,-2.7) fails virial mismatch 2/3; c_strs(NaN,0,-2.7) through actual CSV parser returns LW OK with no-c_strs unavailable status.",
+      "scope_limit": "Independent check silently disabled; computed contact-force LW value need not itself be wrong. True all-fields-absent legacy input remains an allowed separate case.",
+      "release_condition": "Preserve raw source presence/parse errors; distinguish wholly absent, partial and invalid tuples at parser and function boundaries."
+    }
+  ],
+  "known_not_new": [
+    "WEB-03 general-path solve failure and publication exception window",
+    "LHS-33 legacy stress_cv invalid-to-zero",
+    "LW TIMESTEP/frame correspondence unverified"
+  ],
+  "limitations": [
+    "Windows small synthetic tests, not WSL integration",
+    "real14 fixture unavailable: LW 68/69 not requested 76/76",
+    "Full check_all not independently run",
+    "194 committed-summary rows checked; no new 194-case production",
+    "General Stage E numerical solver replaced by explicit stub only in general-helper counterexample"
+  ]
+}
+

@@ -1,0 +1,179 @@
+  PASS  ① 미수렴이 하나라도 있으면 HOLD (숫자를 내지 않는다)
+  PASS  ② 비 1.08 → h0
+  PASS  ③ 비 1.015 → h1 (1.015)
+  PASS  ④ 비 1.035 (중간대) → 둘 다 기각
+  PASS  ⑤ origin-위상 산포가 크면 판정 보류 (origin 을 늘리라고 말한다)
+  PASS  ⑥ 팔 수가 다르면 HOLD
+  PASS  ⑧ ★ 수렴 정보 없는 팔은 HOLD (옛 판은 통과시켰다): HOLD
+  PASS  ⑦ 문턱이 prereg 값과 같다 (코드가 사전등록이다)
+  PASS  ㉚a ★ 게이트는 **상대 %** 를 쓴다 — 상대 1.12 % < 1.17 라 통과 (절대 1.2096 %p 였다면 HOLD): h0
+  PASS  ㉚b ★ 절대 %p 는 파생 항등식 SE_abs = R · SE_rel 을 만족한다
+  PASS  ㉚c deprecated 별칭이 새 키와 같은 값이다 (옛 픽스처·비교기 호환)
+  PASS  ㉚d R < 1 이면 절대 %p 가 상대 % 보다 **작다** (CL-58 이온비가 유일한 보수 사례)
+  PASS  ⑨ 고정 인자가 팔마다 다르면 HOLD (HOLD)
+  PASS  ⑩ ★ 고정 인자가 매니페스트에 **없으면** HOLD (가짜 보증 재발 방지): HOLD
+  PASS  ⑪ 점 팔 × 구 팔 혼합은 HOLD (HOLD)
+  PASS  ⑫ σ-치환 진단 팔 × 생산 팔 혼합은 HOLD (HOLD)
+  PASS  ⑬ 옛 payload 의 없는 필드는 None 으로 **보존** (None)
+  PASS  ⑭ PTFE 스탬프 팔 × 생산 팔 혼합은 HOLD (HOLD)
+  PASS  ⑭b 옛 payload 의 없는 sigma_ptfe 는 None 으로 **보존** (None)
+  PASS  ⑮ ★ 도펀트 팔 × 생산 팔 혼합은 HOLD (HOLD)
+  PASS  ⑯ ★ σ_AM 이 다른 팔이 섞이면 HOLD (HOLD)
+  PASS  ⑰ ★ SE 압밀 물성이 다르면 HOLD (침대 세대 분리) (HOLD)
+  PASS  ⑱ ★★ 세대 혼합(옛 payload + 새 payload)은 HOLD (HOLD)
+  PASS  ⑲ 전부 옛 payload 면 판정은 계속된다 (h0)
+  PASS  ⑳ seed 가 다르면 기본은 HOLD (HOLD)
+  PASS  ⑳b --seed-ensemble 이면 seed 만 면제되고 판정이 난다 (h0)
+  PASS  ⑳c --seed-ensemble 이어도 σ_ion 이 다르면 HOLD (HOLD)
+  PASS  ㉑ ★ 첨가제 E 가 다른 침대 혼합은 HOLD (SDCP 23.6 vs 9.0) (HOLD)
+  PASS  ㉒ 기준선 — 기록 완비 파일 16개는 판정이 난다 (h0: 비 1.1200 ≥ 1.05 — 이득은 물리)
+  PASS  ㉒ **실제 JSON** 에서 `sigma_vgcf_S_cm` 키를 지우면 HOLD (HOLD: 규약 기록을 신뢰할 수 없는 팔 16개 — p2_SBE_sph_a0.json: 저장된 id 가 없다 (재계산 = unknown:sigma_vgc)
+  PASS  ㉒ **실제 JSON** 에서 `sigma_sdcp_S_cm` 키를 지우면 HOLD (HOLD: 규약 기록을 신뢰할 수 없는 팔 16개 — p2_SBE_sph_a0.json: 저장된 id 가 없다 (재계산 = unknown:sigma_sdc)
+  PASS  ㉒ **실제 JSON** 에서 `sdcp_sphere_d_um` 키를 지우면 HOLD (HOLD: 규약 기록을 신뢰할 수 없는 팔 16개 — p2_SBE_sph_a0.json: 저장된 id 가 없다 (재계산 = unknown:sdcp_sphe)
+  PASS  ㉒ **실제 JSON** 에서 `backend` 키를 지우면 HOLD (HOLD: component 증거 계약을 만족하지 않는 팔 16개 — p2_SBE_sph_a0.json: EVID|electronic|backend| 이 )
+  PASS  ㉒ **실제 JSON** 에서 `sdcp_yield_to_vgcf` 키를 지우면 HOLD (HOLD: 규약 기록을 신뢰할 수 없는 팔 16개 — p2_SBE_sph_a0.json: 저장된 id 가 없다 (재계산 = unknown:sdcp_yiel)
+  PASS  ㉒ **실제 JSON** 에서 `sigma_ptfe_S_cm` 키를 지우면 HOLD (HOLD: 규약 기록을 신뢰할 수 없는 팔 16개 — p2_SBE_sph_a0.json: 저장된 id 가 없다 (재계산 = unknown:sigma_ptf)
+  PASS  ㉓ `backend` 를 **component 정본**에서 읽는다 ({'electronic': 'gpu', 'thermal': 'gpu'})
+  PASS  ㉓ 음성 대조 — 기록이 없으면 None (게이트가 살아 있다)
+  PASS  ㉓ 그 None 이 HOLD 로 이어진다 (HOLD)
+  PASS  ㉔ ★ SBE electronic=gpu · DBE electronic=cpu (양쪽 last_solve=gpu) 는 HOLD (HOLD)
+  PASS  ㉕a origin 기록이 없으면 HOLD (HOLD)
+  PASS  ㉕b ★ 두 침대의 origin 집합이 다르면 HOLD (Codex: 옛 판은 h0) (HOLD)
+  PASS  ㉕c ★ 2팔뿐인데 8팔을 요구하면 HOLD (Codex: 옛 판은 판정했다) (HOLD)
+  PASS  ㉕d ★ 파일명 순서를 뒤집어도 쌍대응 SE 가 같다 (파일명 zip 폐기) (0.311 vs 0.311)
+  PASS  ㉕e ★ --require-ionic 인데 σ_ion 이 없으면 HOLD (HOLD)
+  PASS  ㉛a 봉인된 수렴 팔은 --require-ionic 을 통과한다 (h0)
+  PASS  ㉛b ★ σ_ion 은 있는데 **이온이 미수렴**이면 HOLD (옛 게이트는 통과시켰다): HOLD
+  PASS  ㉛c ★ 봉인 이전 세대(이온 수렴 정보 없음)는 HOLD — fail-open 금지: HOLD
+  PASS  ㉛d 음성 대조 — --require-ionic 없이는 이온 미수렴이 σ_e 판정을 막지 않는다 (h0)
+  PASS  ㉜a 봉인 통과 시 ok=True (h0)
+  PASS  ㉜b 봉인이 깨지면 ok=False (HOLD)
+  PASS  ㉜c ★★ 봉인 출력이 **판정도 비도 누설하지 않는다** (누설: [])
+  PASS  ㉜d 봉인이 깨진 이유는 싣는다 (데이터 상태는 답이 아니다)
+  PASS  ㉝a 같은 PTFE 규약이면 통과 (h0)
+  PASS  ㉝b ★★ σ_PTFE 는 같은데 **스탬프 규약이 다르면** HOLD (둘 다 σ=0 이라 옛 게이트는 통과시켰다): HOLD
+  PASS  ㉝c ★ 규약 기록이 **없는** 팔은 HOLD — 부재를 기본값으로 접지 않는다 (CDX-IJ-01 의 교훈): HOLD
+  PASS  ㉞a 부재 검사 루프가 _FIXED_FIELDS 를 쓴다 (인라인 튜플 아님)
+  PASS  ㉞b 팔간-차이 루프가 _FIXED_FIELDS 를 쓴다
+  PASS  ㉞c ★★ 모든 게이트 목록이 FIELD_CONTRACT 에서 파생된다 (인라인 튜플 없음)
+  PASS  ㉞d ★★ cross-dir 이 **세대·침대 인자까지** 본다 (옛 판은 _FIXED_FIELDS 만 봐서 σ_AM 을 바꿔도 measured 였다)
+  PASS  ㉞e ★ required 와 across_dir 은 **다른 축**이다 (세대 인자는 없어도 통과, 섞이면 HOLD — 회귀 ⑲ 가 그 계약이다)
+  PASS  ㉞f ★ 침대 인자는 팔-간 고정에서 **빠진다** (FA-06: SBE 에 SDCP 가 없는 것은 정상)
+  PASS  ㉞g ★★ FIELD_CONTRACT 가 옛 _GEN_FIELDS 를 **전부** 담는다 (누락: [])
+  PASS  ㊱a ★★ 요청↔적용 규약이 **다른** 팔이 있으면 HOLD (팔끼리는 같아도) HOLD/PROTOCOL_MISMATCH
+  PASS  ㊱b ★ 규약을 **확정할 수 없으면** HOLD (필드가 빠졌다) HOLD/PROTOCOL_UNKNOWN
+  PASS  ㊱c ★ 규약이 갈린 팔이 섞이면 HOLD (HOLD: 고정 인자 `vox` 가 팔마다 다르다 (['0.125', '0.15']) — prereg §5 는 그 외 )
+  PASS  ㊱h ★★ stored id 가 손으로 쓴 값 이면 HOLD — **팔끼리 같아도**.  문자열 일치는 규약 일치가 아니다 (HOLD/PROTOCOL_ID_STALE)
+  PASS  ㊱h ★★ stored id 가 쓰레기 이면 HOLD — **팔끼리 같아도**.  문자열 일치는 규약 일치가 아니다 (HOLD/PROTOCOL_ID_STALE)
+  PASS  ㊱i ★★ 축 키가 **없는** 옛 세대는 HOLD (stored 가 `p1-…` 라도) (HOLD/PROTOCOL_UNKNOWN)
+  PASS  ㊱d 음성 대조 — 규약이 일치하면 통과 (h0)
+  PASS  ㊱e ★ 규약 id 가 인자에 **반응한다** (vox 만 바꿔도 달라진다) p2-91f1bde vs p2-0926137
+  PASS  ㊱f ★ 같은 인자면 같은 id (결정론)
+  PASS  ㊱g ★★ 인자가 **빠지면** `unknown:` 을 낸다 (임의 기본값으로 채우지 않는다)
+  PASS  ㉟a ★★ `--seal-only --collect-only` 는 **거부**된다 (옛 판은 collect 가 먼저 돌아 exit 0 + raw 출력 + 봉인 미실행이었다): rc=1
+  PASS  ㉟b ★★ 봉인 모드 CLI stdout 에 **팔 표·σ 원값이 없다** (누설: []) rc=1
+  PASS  ㉟c 음성 대조 — collect 모드는 여전히 표를 찍는다 (과잉차단 아님)
+  PASS  ㉟d SE 초과가 HOLD 이고 코드가 붙는다 (SE_EXCEEDED)
+  PASS  ㉟e ★★ HOLD 사유에 **절대 %p 가 없다** — 상대와 나란히 내면 몫으로 R 이 복원된다
+  PASS  ㉟f ★★ `cg_info=30000` 인데 `unconverged=False` = **모순** → HOLD (옛 판은 h0): HOLD/IONIC_UNCONVERGED
+  PASS  ㉟g ★ 한쪽만 있는 쌍(반쪽)도 HOLD (옛 판은 h0): HOLD
+  PASS  ㉟h ★ residual 이 비유한이면 HOLD: HOLD
+  PASS  ㉟i 음성 대조 — 일관된 좋은 쌍은 통과 (h0)
+  PASS  ㊲a[--compare-dir] ★★ 모드 조합은 **거부**된다 — 초판은 배타 검사보다 위의 분기로 빠져 결과를 출력하고 exit 0 이었다 (rc=1)
+  PASS  ㊲a[--scan] ★★ 모드 조합은 **거부**된다 — 초판은 배타 검사보다 위의 분기로 빠져 결과를 출력하고 exit 0 이었다 (rc=1)
+  PASS  ㊲a[--compare-dir] ★★ 모드 조합은 **거부**된다 — 초판은 배타 검사보다 위의 분기로 빠져 결과를 출력하고 exit 0 이었다 (rc=1)
+  PASS  ㊲b[None] 이온 residual — 기대 HOLD, 실제 HOLD
+  PASS  ㊲b[1e100] 이온 residual — 기대 HOLD, 실제 HOLD
+  PASS  ㊲b[NaN] 이온 residual — 기대 HOLD, 실제 HOLD
+  PASS  ㊲b[음수] 이온 residual — 기대 HOLD, 실제 HOLD
+  PASS  ㊲b[1e-9] 이온 residual — 기대 h0, 실제 h0
+  PASS  ㊲b[문턱 1e-6] 이온 residual — 기대 h0, 실제 h0
+  PASS  ㊲b[문턱 초과 2e-6] 이온 residual — 기대 HOLD, 실제 HOLD
+  PASS  ㊲c ★ 판정기 문턱이 솔버 규약과 **같은 값**이다 (step3_sigma:590 = 1e-6)
+  PASS  ㉖a 침대별 digest 가 침대 안에서 일정하면 통과 (h0)
+  PASS  ㉖b ★ **한 침대 안에서** digest 가 갈리면 HOLD (HOLD)
+  PASS  ㉖b2 ★ 두 침대의 digest 가 **같으면** HOLD (같은 침대다) (HOLD)
+  PASS  ㉖c ★ code SHA 가 다르면 HOLD (HOLD)
+  PASS  ㉖d ★ --require-digest 인데 기록이 없으면 HOLD (옛 payload) (HOLD)
+  PASS  ㉖e ★ 커밋 안 된 코드(+dirty)로 돈 런은 HOLD (HOLD)
+  PASS  ㉗a 정상 증인 — 한 축만 다르면 measured (measured: 대조쌍 검증 통과 — `['sdcp_yield_to_vgcf']` 만 다르고 나머지 고정 인자와 침대 digest 는 짝마다 동일 (2 쌍))
+  PASS  ㉗a 감소율 산술이 맞다 (30.95238095238093)
+  PASS  ㉗b ★ 등록 밖 인자(σ_VGCF)가 다르면 HOLD — STEP 5 거짓 경보 재현 (HOLD)
+  PASS  ㉗c ★ 등록 축이 두 디렉터리에서 **같으면** HOLD (실험이 안 일어났다) (HOLD)
+  PASS  ㉗e ★★ 세대 인자(σ_AM)가 cross-dir 로 다르면 HOLD — 옛 판은 measured (HOLD)
+  PASS  ㉗f ★★ 침대 세대(additive_E_GPa, CL-56)가 cross-dir 로 다르면 HOLD (HOLD)
+  PASS  ㉗d ★ `input_digest` 가 다르면 HOLD (같은 침대가 아니다) (HOLD)
+  PASS  ㉗e ★ origin 집합이 다르면 HOLD (짝 없이 못 뺀다) (HOLD)
+  PASS  ㊳a 미수렴 팔이 A 에 있으면 HOLD (HOLD)
+  PASS  ㊳a ′ 사유가 **어느 디렉터리**인지 말한다
+  PASS  ㊳b 수렴 정보가 없으면 HOLD (blind) (HOLD)
+  PASS  ㊳b ′ 사유가 **어느 디렉터리**인지 말한다
+  PASS  ㊳c resid 가 문턱을 넘으면 HOLD (HOLD)
+  PASS  ㊳c ′ 사유가 **어느 디렉터리**인지 말한다
+  PASS  ㊳d ★ `unknown:` 규약이 B 에 있으면 HOLD (SELF-01 이 만든 상태) (HOLD/PROTOCOL_ID_STALE)
+  PASS  ㊳e ★★ `verdict` 가 validate_contract 를 부른다 (인라인 사본 아님, 4813B)
+  PASS  ㊳f ★★ `compare_dirs` 가 같은 validate_contract 를 부른다 (7736B)
+  PASS  ㊵a ★★ 계획한 `ionic` 이 disabled 면 HOLD — 옛 판은 기록만 하고 안 읽어 rc 0 이었다 (HOLD)
+  PASS  ㊵b ★ 계획이 ionic 을 **끄고** disabled 면 통과 (LEAN=2 생산 경로)
+  PASS  ㊵c ★★ PTFE 도장 + 관측 셀 0 이면 HOLD — 미스탬프와 구분되지 않는다 (HOLD)
+  PASS  ㊵d ★ 관측 셀이 있으면 통과 (과잉차단 아님)
+  PASS  ㊵e ★★ ptfe_cells_observed 키 삭제 → HOLD (HOLD/PTFE)
+  PASS  ㊵e ★★ ptfe_cells_observed 음수 → HOLD (HOLD/PTFE)
+  PASS  ㊵e ★★ ptfe_cells_observed float → HOLD (HOLD/TYPE)
+  PASS  ㊵e ★★ ptfe_cells_observed 문자열 → HOLD (HOLD/TYPE)
+  PASS  ㊶a ★★ 등록 축이 실제로 바뀌면 **파생 id 변화는 결과**다 → measured (measured: 대조쌍 검증 통과 — `['sdcp_yield_to_vgcf']` 만 다르고 나머지 고정 인자와 침대 dig)
+  PASS  ㊶b ★★ raw 축은 같은데 id 만 다르면 HOLD (HOLD)
+  PASS  ㊹a ★★ 규약 축은 **전부** `FIELD_CONTRACT` 에 있다 (누락: [])
+  PASS  ㊹b ★★ 분류 안 된 매니페스트 키는 **같아도** HOLD (HOLD)
+  PASS  ㊹c ★★ `periodic_xy` 가 등록 없이 두 디렉터리에서 다르면 HOLD (HOLD)
+  PASS  ㊹d ★★ 리더가 레지스트리 축을 자동으로 담는다 (H5 부류 재발 차단)
+  PASS  ㊹e ★★ 그림자 필드가 부모 없이 다르면 HOLD (HOLD)
+  PASS  ㊹f ★★ 계약된 축은 면제 목록에 **없다** (겹침: [])
+  PASS  ㊺a factorial 이 8점이고 {0, vox/2}^3 다
+  PASS  ㊺b 정상 증인 — factorial 픽스처는 통과한다
+  PASS  ㊺c ★★ z-only 8점을 **거부**한다 (HOLD/ORIGIN_SET) — 개수만 맞는 임의의 점은 위상 앙상블이 아니다 (R5-CX-04)
+  PASS  ㊺d ★★ 한 점만 factorial 밖이어도 거부 (ORIGIN_SET)
+  PASS  ㊺e ★★ factorial 위여도 **덜 차면** 전량 런은 거부 (None)
+  PASS  ㊺f ★ 정상 증인 — ARMS<8 진단 런은 부분집합이면 통과 (과잉차단 없음)
+  PASS  ㊻a 정상 증인 — receipt 없으면 판정이 난다 (h0)
+  PASS  ㊻b ★★ 기각 receipt 가 있으면 **판정하지 않는다** (HOLD/REJECTED_TREE)
+  PASS  ㊼a 정상 증인 — 표지가 없으면 판정이 난다
+  PASS  ㊼b ★★ 트리 표지만 있어도 거부 (DIAGNOSTIC_TREE)
+  PASS  ㊼c ★★ 트리 표지가 없어도 payload 표지로 거부 (DIAGNOSTIC_TREE)
+  PASS  ㊹g ★★ 합성 SE 구름(proxy) 팔은 HOLD (HOLD/SE_PROXY)
+  PASS  ㊹h 정상 증인 — `se_source=npy` 는 통과 (h0)
+  PASS  ㊷a ★★★ 레지스트리 41 필드의 **선언대로** 무는가 (위반: [])
+  PASS  ㊷b ★★ `across_dir` 선언 41 필드가 cross-dir 에서 정말 고정인가 (위반: [])
+  PASS  ㊼a ★★ OFF ↔ ON (등록 축 = 전자 계면 표) — 파생 `interface_model` 차이는 HOLD 사유가 아니다 (measured: 대조쌍 검증 통과 — `['interface_rint_e_ohm_cm2']` 만 다르고 나머지 고정 인자와 침대 digest 는 짝마다 동일 (2 쌍))
+  PASS  ㊼b 표는 같은데 모델만 다름 (등록 축은 다른 축) → HOLD (HOLD)
+  PASS  ㊼c ★★ 판정기: 계면 표는 있는데 네 솔브 영수증이 없는 팔 → HOLD/IFACE (HOLD/IFACE)
+  PASS  ㊼d 정상 증인 — 같은 팔에 영수증이 있으면 IFACE 로 막지 않는다 (None)
+  PASS  ㊽a 정상 증인 — collector 계획 · 보조 두 솔브 수렴이면 판정이 난다 (h0: 비 1.1200 ≥ 1.05 — 이득은 물리)
+  PASS  ㊽b ★★ 한 팔의 bare 만 미수렴 (cg_info 1 · resid 0.35) → HOLD/EVID (collector_geom) (HOLD/EVID)
+  PASS  ㊽b ★★ 한 팔의 wetted 만 미수렴 (cg_info 1 · resid 0.35) → HOLD/EVID (collector_geom) (HOLD/EVID)
+  PASS  ㊽b ★★ 한 팔의 wetted 잔차 누락 → HOLD/EVID (collector_geom) (HOLD/EVID)
+  PASS  ㊷d ★★★ 규약 축 26 개가 매니페스트에서 빠지면 **전부** HOLD (선언과 무관한 재계산 경로) — 위반: []
+  PASS  ㊷f ★★ 저장된 규약 id 가 **없으면** HOLD — `required` 플래그와 무관한 재계산 경로 (HOLD/PROTOCOL_ID_MISSING)
+  PASS  ㊷g ★ 그래도 `required` 플래그는 켜 둔다 (두 겹 유지 — 한 겹이 조용히 사라지지 않게).  이 시험이 플래그 뒤집기를 잡는 유일한 자리다
+  PASS  ㊷e ★★★ **레지스트리 전 축**이 `across_dir` 다 (아닌 것: []) — 선언을 뒤집으면 그 축이 cross-dir 비교에서 조용히 빠진다 (R5-CX-07: `backend` 가 바로 그 상태였다)
+  PASS  ㊷c ★★ `_GEN_FIELDS` 가 레지스트리 파생과 **같은 집합**이다 (차이: [])
+  PASS  ㊸a ★★ `periodic_xy="False"`(문자열) → **`TYPE`** 으로 HOLD (HOLD/TYPE)
+  PASS  ㊸b ★★ 계획에 키가 빠지면 **`PLAN`** 으로 HOLD (`plan_ok` 만 물 수 있다) (HOLD/PLAN)
+  PASS  ㊸c ★★ `ptfe_cells_observed` 키 부재 → **`PTFE`** 로 HOLD (타입 검사는 부재를 건너뛴다) (HOLD/PTFE)
+  PASS  ㊴a ★★ `periodic_xy` 이 규약 해시를 가른다 (섞이면 다른 실험이다)
+  PASS  ㊴a ★★ `plate_rule` 이 규약 해시를 가른다 (섞이면 다른 실험이다)
+  PASS  ㊴b ★ 두 축이 PROTOCOL_FIELDS 에 실제로 있다
+  PASS  ㊴c ★★ `PLATE_RULE_VERSION` 이 솔버에 있고 현행 규약을 가리킨다 ('p2-occupied-surface-first')
+  PASS  ㊳h ★★ `required` 인 필드는 전부 `required_since` 를 선언한다 (누락: [])
+  PASS  ㊳g ★ 계약 함수의 모든 반환이 (hold, info) 2-튜플이다 (n=30)
+  PASS  ㉘a `--scan` 이 결과 디렉터리만 찾는다 (1개)
+  PASS  ㉘b 팔 수를 보고한다 (2/2)
+  PASS  ㉘c ★ 빈/무관 디렉터리는 목록에 안 뜬다 (없는 경로를 고르게 두지 않는다)
+  PASS  ㉘d ★★ `--collect-only --out` 이 **파일을 실제로 만든다** (조용한 no-op 금지)
+  PASS  ㉙a ★ 정상 증인 — SBE 에 SDCP 항목이 없는 것은 **정상**이다 (h0)
+  PASS  ㉙b ★ 침대 **안에서** SDCP E 23.6↔9.0 이 섞이면 HOLD (CL-56 축 보존) (HOLD)
+  PASS  ㉙c ★ 두 침대의 **공통 상**(VGCF) 물성이 다르면 HOLD (세대 혼합) (HOLD)
+  PASS  ㉙d ★ 두 침대의 digest 가 **같으면** HOLD (같은 침대를 읽고 있다) (HOLD)
+  PASS  ㉖f 옛 팔(digest 전부 없음)은 기본 모드에서 통과 (진행 중 스윕을 안 죽인다)
+
+sdcp_gain_verdict selftest: 177/177 PASS

@@ -1,0 +1,24 @@
+[
+  {
+    "cohort": "130",
+    "rows": 130,
+    "contact_network_rows_identical": true,
+    "columns_identical": true,
+    "frac_pct_max_abs_error_pp": 0.004996359898939318,
+    "frac_index_max_abs_error": 4.935064935064626e-05,
+    "am_area_max_rel_error": 2.560380383699274e-16,
+    "pair_area_max_rel_error": 2.561396302612864e-16,
+    "pair_checks": 817
+  },
+  {
+    "cohort": "64",
+    "rows": 64,
+    "contact_network_rows_identical": true,
+    "columns_identical": true,
+    "frac_pct_max_abs_error_pp": 0.004978165938864687,
+    "frac_index_max_abs_error": 4.8484848484848034e-05,
+    "am_area_max_rel_error": 2.44215442903798e-16,
+    "pair_area_max_rel_error": 2.479274501375083e-16,
+    "pair_checks": 394
+  }
+]

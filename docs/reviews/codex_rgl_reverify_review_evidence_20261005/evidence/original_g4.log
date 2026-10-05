@@ -1,0 +1,35 @@
+lhs_selftest {'exit': 0, 'seconds': 2.434599199797958} ['lhs_design_dataset selftest: 277/277 PASS']
+labels {'exit': 0, 'seconds': 0.031081900000572205} ['13/13 PASS']
+baseline_all_groups: accepted=True 
+baseline_g4_groups: accepted=True 
+network_stage_contact_groups: accepted=True 
+fraction_pct_nan: accepted=False q1: frac_intact_force_pct 'nan' 이 유한한 수가 아니다 — 식 검사 (abs(…) > 여유) 를 우회하는 값 (관문 ⑥R2 유한 · RGL-05)
+fracture_index_nan: accepted=False q1: fracture_index_force 'nan' 이 유한한 수가 아니다 — 식 검사 (abs(…) > 여유) 를 우회하는 값 (관문 ⑥R2 유한 · RGL-05)
+area_positive_count_nan_mean: accepted=False q1: area_AM_S_AM_S_mean 'nan' 이 유한한 수가 아니다 — 식 검사 (abs(…) > 여유) 를 우회하는 값 (관문 ⑦A1 유한 · RGL-05)
+area_nan_total: accepted=False q1: area_AM_S_AM_S_total 'nan' 이 유한한 수가 아니다 — 식 검사 (abs(…) > 여유) 를 우회하는 값 (관문 ⑦A1 유한 · RGL-05)
+f1_h_infinity: accepted=False q1: se_se_cn_aug_h_spread_sim 'inf' 이 유한한 수가 아니다 — 식 검사 (abs(…) > 여유) 를 우회하는 값 (관문 ⑤F1 유한 · RGL-05)
+f1_std_negative: accepted=False q1: se_se_cn_aug_std '-1' — ≥ 0 (면적 · 면적 비 · CN · 표준편차) 밖 (관문 ⑤F1 범위 · RGL-05)
+f1_std_missing: accepted=False q1: se_se_cn_aug_std 가 빈칸 — se_se_cn 은 있는데 F1 열이 비었다 — F1 이 꺼진 배치 · 한 열만 빠진 행을 N/A 로 싣지 않는다 (관문 ⑤F1 필수 · RGL-05)
+f1_missing_cn: accepted=False q1: se_se_cn 가 빈칸 — F1 항등식의 원천 근거 (탄성 SE–SE CN · 같은 calc_se_se_cn 출력) — 근거 없이 식 검사를 건너뛰지 않는다 (관문 ⑤F1 필수 · RGL-05)
+f1_missing_cn_corrupt_aug: accepted=False q1: se_se_cn 가 빈칸 — F1 항등식의 원천 근거 (탄성 SE–SE CN · 같은 calc_se_se_cn 출력) — 근거 없이 식 검사를 건너뛰지 않는다 (관문 ⑤F1 필수 · RGL-05)
+fracture_missing_am_total: accepted=False q1: am_am_n_contacts 가 빈칸 — 힘 기반 파괴의 원천 근거 (AM–AM 접촉 수 — R3 상한 · 접촉 0 인지 가른다) — 근거 없이 R3 를 건너뛰지 않는다 (관문 ⑥R3 필수 · RGL-05)
+area_missing_percolation: accepted=False q1: percolation_pct 가 빈칸 — eff_area_perc 빈칸 ⟺ 비관통 의 원천 근거 (SE 관통 비율) — 근거 없이 A5 를 건너뛰지 않는다 (관문 ⑦A5 필수 · RGL-05)
+area_missing_pp_corrupt_eap: accepted=False q2: percolation_pct 가 빈칸 — eff_area_perc 빈칸 ⟺ 비관통 의 원천 근거 (SE 관통 비율) — 근거 없이 A5 를 건너뛰지 않는다 (관문 ⑦A5 필수 · RGL-05)
+area_missing_global_eff: accepted=False q1: se_se_cn_eff_area 가 빈칸 — ⑦ 면적 묶음의 SE 면적 피복 (calc_se_se_cn 은 늘 쓴다) — 근거 없이 A4 를 건너뛰지 않는다 (관문 ⑦A4 필수 · RGL-05)
+area_perc_nan: accepted=False q1: se_se_cn_eff_area_perc 'nan' 이 유한한 수가 아니다 — 식 검사 (abs(…) > 여유) 를 우회하는 값 (관문 ⑦A5 유한 · RGL-05)
+area_perc_negative: accepted=False q1: se_se_cn_eff_area_perc '-1' — ≥ 0 (면적 · 면적 비 · CN · 표준편차) 밖 (관문 ⑦A5 범위 · RGL-05)
+area_missing_am_total: accepted=False q1: am_am_total_area 가 빈칸 — calc_am_am_cn 은 AM 이 있으면 총합을 늘 쓴다 (평균만 남은 AM–AM = 기술적 결측) (관문 ⑦A3 필수 · RGL-05)
+area_missing_am_mean: accepted=False q1: AM–AM 접촉 11 개인데 am_am_mean_area 가 비었다 (관문 ⑦A3 필수 · RGL-05)
+missing_pair_count_positive_mean: accepted=False q2: area_AM_P_AM_P_n 가 빈칸인데 같은 쌍의 ['area_AM_P_AM_P_total', 'area_AM_P_AM_P_mean'] 에 값이 있다 — 개수 없이 0 으로 채우지 않는다 (누락 → 0 채움 금지 · 관문 ⑦A1 필수 · RGL-05)
+zero_pair_all_keys_missing: accepted=True 
+explicit_zero_pair_mean_zero: accepted=True 
+explicit_zero_pair_mean_positive: accepted=False q2: area_AM_P_AM_P 개수 0 인데 평균 0.01 이 있다 — 접촉 0 개에서 평균은 정의되지 않는다 (관문 ⑦A1 · J20-s)
+pct_negative_inside_tolerance: accepted=False q1: frac_pulverization_force_pct '-0.004' — [0, 100] (비율 %) 밖 (관문 ⑥R2 범위 · RGL-05)
+fi_negative_inside_tolerance: accepted=False q2: fracture_index_force '-0.00004' — [0, 1] (지수) 밖 (관문 ⑥R2 범위 · RGL-05)
+pct_boundary_0.004999: accepted=True 
+pct_boundary_0.005: accepted=True 
+pct_boundary_0.005001: accepted=False q1: frac_intact_force_pct 54.55045554545455 ≠ 100 × 6 / 11 = 54.5455 — 반올림 폭 0.005 밖 (관문 ⑥R2 · J20-s)
+fi_boundary_4.999e-05: accepted=True 
+fi_boundary_5e-05: accepted=True 
+fi_boundary_5.001e-05: accepted=False q1: fracture_index_force 0.09095910090909091 ≠ (파편화 + 분쇄) / N = 0.090909 — 반올림 폭 5e-5 밖 (관문 ⑥R2 · J20-s)
+exclusion_even_unreviewed: accepted=True 

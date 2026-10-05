@@ -1,0 +1,329 @@
+[
+  {
+    "name": "chain",
+    "args": [
+      "webapp/test_network_handover_chain.py"
+    ],
+    "rc": 1,
+    "seconds": 5.141,
+    "tail": [
+      "    sys.exit(main())",
+      "             ^^^^^^",
+      "  File \"C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rgl_reverify_20261005\\source\\webapp\\test_network_handover_chain.py\", line 113, in main",
+      "    hv = LDD.load_harvest(ROOT / 'docs/data/lhs_descriptors_cov_1e09f661d')",
+      "         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+      "  File \"C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rgl_reverify_20261005\\source\\scripts\\lhs_design_dataset.py\", line 614, in load_harvest",
+      "    raise FillRefusal(f'수확 디렉터리가 없다: {d}')",
+      "lhs_design_dataset.FillRefusal: 수확 디렉터리가 없다: C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rgl_reverify_20261005\\source\\docs\\data\\lhs_descriptors_cov_1e09f661d"
+    ]
+  },
+  {
+    "name": "pipeline",
+    "args": [
+      "webapp/test_pipeline_provenance.py"
+    ],
+    "rc": 0,
+    "seconds": 16.688,
+    "tail": [
+      "  [AM-AM] backfill 건너뜀 (retry): No module named 'backfill_am_metrics'",
+      "  [Network Retry] done  run_id=20261005T143606-fd7136b0  (rt16_clean)",
+      "  [AM-AM] backfill 건너뜀 (retry): No module named 'backfill_am_metrics'",
+      "  [Network Retry] done  run_id=20261005T143606-0358cd7f  (rt16_stale)",
+      "  PASS  T16b) ★ RGL-07 실 retry 라우트: 옛 60 °C 자료 위 기본 온도 재계산 → σ₀ · 온도 짝이 새 세대로 바뀐다 (σ₀ 3 · factor 1 · τ = 깨끗한 입력과 같다 — 옛: σ₀ 12 · τ 2×) {'깨끗한 입력': (200, 'done', 3.0, 3.314300785666022, 0.003, 1.0), '옛 60 °C 자료 (factor 4 · σ₀ 0.012 S/cm) 위 기본 온도 retry': (200, 'done', 3.0, 3.314300785666022, 0.003, 1.0)}",
+      "  PASS  T16c) ★ 두 모드 (σ₀, 온도) 짝이 다르면 승격하지 않는다 — 두 경로 failed · 활성 세대 없음 · full_metrics 그대로 · 후보 치움 {'정지 경로': ('failed', 'missing', True, True), '일반 경로 (Stage E 앞 승격 검사)': ('failed', 'missing', True, True)}",
+      "",
+      "test_pipeline_provenance: 250/250 PASS"
+    ]
+  },
+  {
+    "name": "tau_flux",
+    "args": [
+      "scripts/test_tau_flux.py"
+    ],
+    "rc": 0,
+    "seconds": 0.781,
+    "tail": [
+      "  PASS  J3 CLI → TSV (머리 = case + 열 · 두 행 · 수는 repr 로 되읽어 같은 값) · rc 0",
+      "  PASS  K1 솔버 결과 그대로 → 두 모드 OK · 띠 L0 · 폭 0.2 · 협착 · ψ · σ₀ 3.0 @ 25 °C · basis ok · tau2 = φ_망/σ_ratio (4 자리 φ 반올림 안)",
+      "  PASS  K2 같은 결과에서 띠 규칙만 지우면 (안 A 전 산출물) → NOT_COMPUTED (missing_input) — 옛 코퍼스를 짐작으로 채우지 않는다",
+      "  PASS  K3 위 띠에만 닿는 합성 → 솔버 관통 0 · 상태 valid_zero + 사유 no_through_path (RGL-02 — 옛 판 not_computed) · CF · constr 같은 상태 · σ None (F-12) · calc_percolation 0 % · 띠 L0 → NOT_PERCOLATING · f = 0 · tau2 빈칸 (두 모드)",
+      "  PASS  K4 관통인데 풀이 실패 (spsolve 예외) → 상태 not_computed + 사유 solve_failed · 관통 분율 > 0 · 전력 몫 사유 ≠ \"비관통\" · NOT_COMPUTED (solver_guard) (두 모드)",
+      "  PASS  K5 관통 침대의 σ 는 상태 · 사유 필드를 더해도 그대로 (computed · 사유 None)",
+      "",
+      "test_tau_flux: 37/37 PASS"
+    ]
+  },
+  {
+    "name": "tau_status",
+    "args": [
+      "webapp/test_tau_handover_status.py"
+    ],
+    "rc": 0,
+    "seconds": 1.235,
+    "tail": [
+      "  PASS  T7b 정렬 표: 비율 행 바로 뒤에 상태 · 띠 행 (그 순서)",
+      "  PASS  T7c 툴팁: 상태 행 = 다섯 상태 · 네 사유 · tau_flux · G5 값 유지 · 띠 행 = L0/L1/L2 · 4r_SE/L (TAU-24) · 안 A 전 산출물",
+      "  PASS  T7d 별칭 표 (PAPER_TO_ORIG) 가 두 논문 라벨 → 원 라벨",
+      "  PASS  T7e 망 상태 · 최근 시도 행: 논문 라벨 · 정렬 표 (σ_ionic 행 뒤) · 툴팁 (valid_zero · no_through_path · solve_failed · network_attempt · RGL-04) · 별칭",
+      "  PASS  T8 케이스 라우트가 transform 전에 _ion_handover 를 붙인다",
+      "  PASS  T8b 케이스 라우트가 transform 전에 _network_generation (활성 세대 · 최근 시도) 을 붙인다",
+      "",
+      "test_tau_handover_status: 27/27 PASS"
+    ]
+  },
+  {
+    "name": "network",
+    "args": [
+      "scripts/network_conductivity.py",
+      "--selftest"
+    ],
+    "rc": 0,
+    "seconds": 0.672,
+    "tail": [
+      "  PASS  #A2: 전자망 호출이 mode='electronic' 로 도달한다 (옛 판은 'ionic' 이었다): 'electronic'",
+      "  PASS  #A2: 기본 경로는 여전히 ionic (하위호환): 'ionic'",
+      "  PASS  #A2: mode 를 바꿔도 σ_e 가 **비트 단위 동일** (수치 중립): np.float64(0.212695) vs np.float64(0.212695)",
+      "  PASS  #BF: boundary_factor 가 경계 집합을 실제로 바꾼다 (6.0 → (7, 7) · 3.0 → (4, 4))",
+      "  PASS  #BF: 넓은 밴드가 더 많이 잡는다 (7 > 4)",
+      "  PASS  #BF: bottom∩top 겹침이 호출자까지 올라온다 (None 이면 조용한 실패): 0",
+      "  PASS  #BF: ⚠ 경계가 3 미만이면 폴백(15/85 %)이 factor 를 **덮는다** — 작은 망에서는 무효",
+      "NETWORK STATUS SELFTEST PASS (30/30)"
+    ]
+  },
+  {
+    "name": "receipts",
+    "args": [
+      "scripts/test_rint_receipts.py"
+    ],
+    "rc": 0,
+    "seconds": 37.796,
+    "tail": [
+      "  PASS  G8 off: wetted 3필드 통째 누락 → check_arm 거부 (collector_geom 수렴 증거)",
+      "  PASS  G8 off: 상충 (bare cg_info 3 인데 unconverged False) → check_arm 거부 (collector_geom 수렴 증거)",
+      "  PASS  G8 off: wetted 잔차 NaN → check_arm 거부 (collector_geom 수렴 증거)",
+      "  PASS  G8 off: bare 잔차 Inf → check_arm 거부 (collector_geom 수렴 증거)",
+      "  PASS  G8 off: wetted 잔차 문턱 위 (1e-3 · 플래그는 수렴) → check_arm 거부 (collector_geom 수렴 증거)",
+      "  PASS  G8 off: bare cg_info 가 bool (타입) → check_arm 거부 (collector_geom 수렴 증거)",
+      "",
+      "102 PASS · 0 FAIL"
+    ]
+  },
+  {
+    "name": "contract",
+    "args": [
+      "scripts/run_contract.py",
+      "--selftest"
+    ],
+    "rc": 0,
+    "seconds": 1.531,
+    "tail": [
+      "  PASS  IF-20 요청 표 모양 모르는 상 → 거부",
+      "  PASS  IF-20 요청 표 모양 역순 키 → 거부",
+      "  PASS  IF-20 요청 표 모양 bool 값 → 거부",
+      "  PASS  IF-20 요청 표 모양 음수 → 거부",
+      "  PASS  IF-21 영수증 키 누락 → 거부",
+      "  PASS  IF-22 모르는 상태 → 거부",
+      "",
+      "run_contract selftest: 124/124 PASS"
+    ]
+  },
+  {
+    "name": "spearman",
+    "args": [
+      "scripts/rint03_je_compare.py",
+      "--selftest"
+    ],
+    "rc": 0,
+    "seconds": 3.797,
+    "tail": [
+      "  PASS  T7 동률 반례 [1,1,2] vs [1,2,2] → 0.5 (평균 순위) · 상태 ok",
+      "  PASS  T8 정의 안 되는 입력 = 값 None + 상태 (상수 · 한쪽 상수 · n<2 · 비유한) — 숫자를 지어내지 않는다",
+      "  PASS  T9 동률 많은 표본 25 개에서 scipy.stats.spearmanr 와 1e-12 안 · 동률 없으면 옛 정의와 같은 값",
+      "    STEP3 solve: 10 dof, plate contacts 1/1 — CG running (CPU, 수 분 소요 가능)…",
+      "  PASS  T10 top 10 % 경계 동률 → 겹침 None · 상태 boundary_tie · 경계 동률 수 19 (old · new)",
+      "  PASS  T11 출력에 rank_ties (old · new 동률 값 수 · 묶음 수 · n_ranked) · spearman_status · 엄격 JSON",
+      "",
+      "14 PASS · 0 FAIL"
+    ]
+  },
+  {
+    "name": "lw",
+    "args": [
+      "scripts/test_love_weber_stress.py"
+    ],
+    "rc": 1,
+    "seconds": 6.359,
+    "tail": [
+      "  ✓ L13f 옛 키 값 불변 — 접촉점 열 유무와 무관 (같은 c_strs → 같은 stress_cv · 비)",
+      "  ✓ L13g 접촉점 열 없는 덤프 → stress_lw_status NOT_COMPUTED · LW 값 키 없음 · 표 줄 없음",
+      "  ✓ L13h 원자 덤프 c_strs 와 접촉 덤프가 안 맞으면 (1.5 배) → FAILED 상태 · LW 값 없음 · 옛 키는 그대로",
+      "  ✓ L13i ★ RGL-06 메타 키 — 계약 v2 · quantity (입자 접촉력 대칭 응력 VM) · 덱 가정 미검증 · virial 범위 (전역) · nowall_status OK",
+      "  ✓ L13j 입력 출처 — LW 가 읽은 CSV 의 sha256 앞 16 자 (망 단계 network_provenance.json input_digests 와 같은 꼴) · TIMESTEP 은 CSV 에 없음 표기",
+      "  ✓ L13k ★ 무하중 침대 (접촉 힘 0 · c_strs 0) → stress_lw_status UNDEFINED (zero_load …) · LW 값 키 없음 · 표 줄 없음 · 옛 키 그대로",
+      "",
+      "68/69 통과  — 실패: L12 real_14 대조"
+    ]
+  },
+  {
+    "name": "lhs",
+    "args": [
+      "scripts/lhs_design_dataset.py",
+      "--selftest"
+    ],
+    "rc": 1,
+    "seconds": 1.297,
+    "tail": [
+      "  PASS  ㉗zc 합법 접촉 0 쌍 (세 키 모두 없음 · 평균 0 대입) 은 그대로 받는다 — 개수 0 · 총합 0.0 · 평균 빈칸  ",
+      "  PASS  ㉗zd 반올림 반폭 경계는 그대로 통과 (단계 % +0.004999 · +0.005 · 지수 +4.999e-5 · +5e-5 — round(·, 2) · round(·, 4) 의 반폭) · 범위 관문이 경계를 좁히지 않는다  ",
+      "  PASS  ㉗ze ★ 반폭 밖 단계 % (+0.005001) 는 거부 — 거부: q1: frac_intact_force_pct 54.55045554545455 ≠ 100 × 6 / 11 = 54.",
+      "  PASS  ㉗zf ★ 반폭 밖 지수 (+5.001e-5) 는 거부 — 거부: q1: fracture_index_force 0.09095910090909091 ≠ (파편화 + 분쇄) / N = ",
+      "  PASS  ㉗zg ★ 최종 레코드 관문 (0 채움 · 이름 옮김 · 0 대입 비움 뒤 내보내는 행을 다시 본다) — 정상은 통과 · 접촉 0 평균 · 접촉 0 총합 빈칸 · N/A 쌍의 총합 · NaN · AM–AM 접촉 0 의 평균 · 평균 × 개수 ≠ 총합 은 거부",
+      "  PASS  ㉗zh 열 사전 — AM–AM 접촉 0 = 평균 N/A · 총합 0 (측정된 0) · 쌍 0 채움은 세 키 모두 빈칸일 때만 (누락 → 0 채움 금지) · AM–AM 접촉 0 의 파괴 열 = N/A · ⑤⑥⑦ 검토 기록에 RGL-05 관문 순서 (원천 근거 → 유한 → 형/범위 → 식)",
+      "",
+      "lhs_design_dataset selftest: 275/277 PASS   FAILED: ['㉖c 실데이터 130 (FillRefusal: 수확 디렉터리가 없다: C:\\\\Users\\\\Administrator\\\\Documents\\\\Codex\\\\2026-08-24\\\\claude-stoic-knuth-nobvq-x20\\\\rgl_reverify_20261005\\\\source\\\\docs\\\\data\\\\lhs_descriptors_cov_1e09f661d)', \"㉖c 실데이터 64 (FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\\\\\Users\\\\\\\\Administrator\\\\\\\\Documents\\\\\\\\Codex\\\\\\\\2026-08-24\\\\\\\\claude-stoic-knuth-nobvq-x20\\\\\\\\rgl_reverify_20261005\\\\\\\\source\\\\\\\\docs\\\\\\\\data\\\\\\\\lhsx_design_adapted_20260929.csv')\"]"
+    ]
+  },
+  {
+    "name": "boundary",
+    "args": [
+      "scripts/test_network_boundary_rule.py"
+    ],
+    "rc": 0,
+    "seconds": 0.688,
+    "tail": [
+      "  PASS  ④ `boundary_sets(atoms, ids, plate_z, factor)` → (bottom, top, rule, band_frac) — build_network 이 그 함수를 쓴다 (같은 집합)",
+      "  PASS  ⑤ L0 · L1 둘 다 3 개 미만 → L2 로 기록 (5 구 사슬 · 판 8)",
+      "  PASS  ⑥ 다분산 L0 — 띠 폭 = 2·bf·r_max / 판 = 2·2·1.5/20 = 0.3 (TAU-24 의 4r_SE/L 상한)",
+      "  PASS  ⑦ boundary_factor 3 → L0 · 띠 폭 2·3·1/20 = 0.3 (서명에만 있는 죽은 인자가 아니다)",
+      "  PASS  ⑧ 이온 (상위) · 전자 · 열 결과에 띠 규칙이 남는다 (boundary_rule · electronic_boundary_rule · thermal_boundary_rule)",
+      "  SKIP  ⑨ 원시 값 대조 — git 객체 eedada5d3:scripts/network_conductivity.py 를 못 읽었다 (얕은 클론?)",
+      "",
+      "test_network_boundary_rule: 8/8 PASS   SKIP: ['⑨ (git 객체 eedada5d3 없음)']"
+    ]
+  },
+  {
+    "name": "power",
+    "args": [
+      "scripts/test_constriction_power_share.py"
+    ],
+    "rc": 0,
+    "seconds": 0.672,
+    "tail": [
+      "  PASS  C3 전자 · 열 채널 꼬리 — _el_hertz · _th_hertz",
+      "  PASS  C4 관통 없음 → constriction_power_share_ion_hertz None · 상태 not_computed",
+      "  PASS  C4b 해 없음 (None) → (None, not_computed …)",
+      "  PASS  C5 _run_all_networks (hertzian) — ion · el · th 세 키 + 상태",
+      "  PASS  C6 pipeline_service.NET_MERGE_KEYS 에 hertz 세 키 + 상태",
+      "  PASS  C6b physics 꼬리 키는 이름 그대로 복사 (옛 _physics 덧붙이기 미러가 아니다 — 두 번 붙지 않게)",
+      "",
+      "17/17 PASS"
+    ]
+  },
+  {
+    "name": "verdict",
+    "args": [
+      "scripts/sdcp_gain_verdict.py",
+      "--selftest"
+    ],
+    "rc": 0,
+    "seconds": 4.156,
+    "tail": [
+      "  PASS  ㉘d ★★ `--collect-only --out` 이 **파일을 실제로 만든다** (조용한 no-op 금지)",
+      "  PASS  ㉙a ★ 정상 증인 — SBE 에 SDCP 항목이 없는 것은 **정상**이다 (h0)",
+      "  PASS  ㉙b ★ 침대 **안에서** SDCP E 23.6↔9.0 이 섞이면 HOLD (CL-56 축 보존) (HOLD)",
+      "  PASS  ㉙c ★ 두 침대의 **공통 상**(VGCF) 물성이 다르면 HOLD (세대 혼합) (HOLD)",
+      "  PASS  ㉙d ★ 두 침대의 digest 가 **같으면** HOLD (같은 침대를 읽고 있다) (HOLD)",
+      "  PASS  ㉖f 옛 팔(digest 전부 없음)은 기본 모드에서 통과 (진행 중 스윕을 안 죽인다)",
+      "",
+      "sdcp_gain_verdict selftest: 177/177 PASS"
+    ]
+  },
+  {
+    "name": "step3",
+    "args": [
+      "scripts/step3_sigma.py",
+      "--selftest-rint"
+    ],
+    "rc": 0,
+    "seconds": 0.594,
+    "tail": [
+      "  OK   ⓚ3 AM_S|AM_S r>0 · pid 없음 → 거부",
+      "  OK   ⓚ4 조기 반환 (degenerate_thin_bed) 에도 interface 기록 · solved False · 표 · 면 0 — {'sigma_eff': 0.0, 'n_dof': 360, 'n_floating_dropped': 0, 'cg_info': 0, 'resid': 0.0, 'unconverged': False, 'reason': 'degenerate_thin_bed', 'periodic_xy': False, 'interface': {'model': 'r1-phase-boundary-series', 'unit': 'ohm_cm2', 'table': {'AM_S|VGCF': 0.0001}, 'pid_used': False, 'n_faces_rint': 0, 'faces_by_pair': {}, 'solved': False}}",
+      "  OK   ⓚ4 r 없는 조기 반환 → interface None",
+      "  OK   ⓚ5 정상 해의 기록은 solved True",
+      "  OK   ⓛ1 joule_hotspot 결과에 scope = bulk_only — 'bulk_only'",
+      "  OK   ⓛ2 제외 항목 = 계면 I²R · 판 결합 간선 (지도 밖) — ['interface_I2R', 'plate_coupling']",
+      "  OK   ⓛ3 포함 항목 = bulk 셀 J²/σ — ['bulk_cell_J2_over_sigma']",
+      "STEP3 RINT SELFTEST PASS"
+    ]
+  },
+  {
+    "name": "lw_labels",
+    "args": [
+      "webapp/test_stress_lw_labels.py"
+    ],
+    "rc": 0,
+    "seconds": 2.64,
+    "tail": [
+      "  PASS  R4b 벽 제외 툴팁 넷 — 선별 모집단 · 결측 벽 힘 복원 아님",
+      "  PASS  R4c 상태 툴팁 — UNDEFINED · invalid_input · 전역 (프레임 대응 증명 아님) · 덱 가정 미검증 · 계약 v2",
+      "  PASS  R4d 벽 비율 툴팁 — 덱 가정 (바닥 z = 0 · 평면 mesh 판 · x·y 주기) 을 함수가 검증하지 않음",
+      "  PASS  R5a group.html — Stress CV LW 툴팁 = 입자 접촉력 · 대칭 · kinetic · couple 미포함 · (벽 제외) = 선별 모집단 · 복원 아님",
+      "  PASS  R5b 보고서 — LW 줄에 입자 접촉력 대칭 응력 VM 한정어 · 벽 제외 = 선별 모집단",
+      "  PASS  R5c 그룹 그림 범례 — LW 선 = particle-contact (full tensor 표기 없음)",
+      "",
+      "48/48 PASS"
+    ]
+  },
+  {
+    "name": "rint_labels",
+    "args": [
+      "webapp/test_rint_scope_labels.py"
+    ],
+    "rc": 1,
+    "seconds": 0.047,
+    "tail": [
+      "Traceback (most recent call last):",
+      "  File \"C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\rgl_reverify_20261005\\source\\webapp\\test_rint_scope_labels.py\", line 26, in <module>",
+      "    from test_closed_param_labels import js_fn, run_node   # noqa: E402",
+      "    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+      "ModuleNotFoundError: No module named 'test_closed_param_labels'"
+    ]
+  },
+  {
+    "name": "group",
+    "args": [
+      "webapp/test_closed_param_groupview.py"
+    ],
+    "rc": 1,
+    "seconds": 1.125,
+    "tail": [
+      "  PASS  H1 접촉 0 (숫자) → 평균 None · 총합 0 · 개수 0 그대로",
+      "  PASS  H2 옛 케이스의 문자열 \"0\" 도 같은 규칙 (am_am_n_contacts 가 문자열이던 세대)",
+      "  PASS  H3 접촉 있음 → 평균 그대로",
+      "  PASS  H4 개수 키가 없으면 판단하지 않는다 (값 그대로 — 모르는 것을 지어내지 않는다)",
+      "  PASS  H5 그룹 표 라우트가 이 도우미를 부른다 (배선)",
+      "",
+      "36 PASS · 1 FAIL",
+      "  - section_f 예외 ModuleNotFoundError: No module named 'viewer3d_data'"
+    ]
+  },
+  {
+    "name": "grade",
+    "args": [
+      "webapp/test_tau_grade_unify.py"
+    ],
+    "rc": 0,
+    "seconds": 1.922,
+    "tail": [
+      "  PASS  C2 physics σ 없음 → physics 행 빈칸 (Hertz 복사 없음)",
+      "  PASS  C3 Stage-E 행 = sigma_ionic_stage_e · 설명 \"재료 인자 포함\" · 옛 tau2 · f_ion · tau_Laplace_eff · sigma_ionic_eff 행 없음",
+      "  PASS  C4 σ₀ 행 = 짝 σ₀ (온도 런 ×4) · 그 σ₀ 로 f · tau2 (σ 와 같이 ×4 → f · tau2 불변)",
+      "  PASS  C5 README [B] — 모드별 행 (f_ion_hertz · tau2_ion_hertz · physics) · sigma_i_stageE 짝 아님 경고",
+      "R  regime DB",
+      "  PASS  R1 regime DB — tau2 도우미 경유 (tau2_from_metrics · 짝 σ₀) · 25 °C τ_Lap,eff = √(φ·3.0/σ_full,H) 그대로",
+      "",
+      "19 PASS · 0 FAIL"
+    ]
+  }
+]

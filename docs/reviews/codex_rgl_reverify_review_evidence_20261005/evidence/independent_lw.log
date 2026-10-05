@@ -1,0 +1,303 @@
+{
+  "normal": {
+    "status": "OK",
+    "vm_cv": 0.0,
+    "type_stress": {
+      "AM_P": {
+        "mean": 0.2148591731740587,
+        "ratio": 1.0
+      }
+    },
+    "checks": {
+      "force_decomp_rel": 0.0,
+      "force_decomp_abs": 0.0,
+      "force_decomp_zero_scale": false,
+      "branch_over_r_max": 0.8999999999999999,
+      "virial_total_rel": 1.2335811384723962e-16,
+      "virial_total_abs": 2.220446049250313e-16,
+      "virial_zero_scale": false,
+      "virial_status": "checked",
+      "virial_scope": "global_diagonal_sum — 전역 부호 · 척도 검사 (Σ_i V_i σ_LW,aa ↔ Σ_i c_strs,aa · 대각 셋) · 프레임 · 입자 · 상 배분의 대응 증명 아님 (같은 기하 두 dimer 의 접촉 힘을 맞바꿔도 통과)"
+    },
+    "nowall_status": "OK",
+    "contract": "love_weber_checks_v2"
+  },
+  "nan_plate": {
+    "status": "FAILED (invalid_input: plate_z = nan — plate_z_source=mesh 면 판 높이는 바닥 z = 0 위의 유한값)",
+    "vm_cv": null,
+    "type_stress": {},
+    "checks": {},
+    "nowall_status": null,
+    "contract": "love_weber_checks_v2"
+  },
+  "isolated_nan_radius": {
+    "status": "FAILED (invalid_input: bad_radius 1 (id 3) — 비유한 · 0 이하 · c_strs 결측 1 (id 3) / 3 입자 — 일부만 있으면 전역 virial 검사가 조용히 꺼진다)",
+    "vm_cv": null,
+    "type_stress": {},
+    "checks": {},
+    "nowall_status": null,
+    "contract": "love_weber_checks_v2"
+  },
+  "true_zero_load": {
+    "status": "UNDEFINED (zero_load: max|F| = 0 — 평균 σ_VM = 0 → CV · 상 비 = 0/0 미정의 · 0 으로 채우지 않음)",
+    "vm_cv": null,
+    "type_stress": {},
+    "checks": {
+      "force_decomp_rel": 0.0,
+      "force_decomp_abs": 0.0,
+      "force_decomp_zero_scale": true,
+      "branch_over_r_max": 0.8999999999999999,
+      "virial_total_rel": 0.0,
+      "virial_total_abs": 0.0,
+      "virial_zero_scale": true,
+      "virial_status": "checked",
+      "virial_scope": "global_diagonal_sum — 전역 부호 · 척도 검사 (Σ_i V_i σ_LW,aa ↔ Σ_i c_strs,aa · 대각 셋) · 프레임 · 입자 · 상 배분의 대응 증명 아님 (같은 기하 두 dimer 의 접촉 힘을 맞바꿔도 통과)"
+    },
+    "nowall_status": null,
+    "contract": "love_weber_checks_v2"
+  },
+  "false_zero_force": {
+    "status": "FAILED (force_columns: max|F| = 0 인데 max|F − (Fn+Ft)| = 1 — 영 척도 · 절대 잔차 > 0 · 상대 차 정의 안 됨)",
+    "vm_cv": null,
+    "type_stress": {},
+    "checks": {
+      "force_decomp_rel": null,
+      "force_decomp_abs": 1.0,
+      "force_decomp_zero_scale": true
+    },
+    "nowall_status": null,
+    "contract": "love_weber_checks_v2"
+  },
+  "two_dimers_correct": {
+    "status": "OK",
+    "vm_cv": 50.000000000000014,
+    "type_stress": {
+      "AM_P": {
+        "mean": 0.2148591731740587,
+        "ratio": 0.5
+      },
+      "SE": {
+        "mean": 0.6445775195221761,
+        "ratio": 1.5
+      }
+    },
+    "checks": {
+      "force_decomp_rel": 0.0,
+      "force_decomp_abs": 0.0,
+      "force_decomp_zero_scale": false,
+      "branch_over_r_max": 0.8999999999999999,
+      "virial_total_rel": 1.2335811384723962e-16,
+      "virial_total_abs": 8.881784197001252e-16,
+      "virial_zero_scale": false,
+      "virial_status": "checked",
+      "virial_scope": "global_diagonal_sum — 전역 부호 · 척도 검사 (Σ_i V_i σ_LW,aa ↔ Σ_i c_strs,aa · 대각 셋) · 프레임 · 입자 · 상 배분의 대응 증명 아님 (같은 기하 두 dimer 의 접촉 힘을 맞바꿔도 통과)"
+    },
+    "nowall_status": "OK",
+    "contract": "love_weber_checks_v2"
+  },
+  "two_dimers_swapped": {
+    "status": "OK",
+    "vm_cv": 49.99999999999999,
+    "type_stress": {
+      "AM_P": {
+        "mean": 0.6445775195221761,
+        "ratio": 1.4999999999999998
+      },
+      "SE": {
+        "mean": 0.2148591731740587,
+        "ratio": 0.49999999999999994
+      }
+    },
+    "checks": {
+      "force_decomp_rel": 0.0,
+      "force_decomp_abs": 0.0,
+      "force_decomp_zero_scale": false,
+      "branch_over_r_max": 0.8999999999999999,
+      "virial_total_rel": 1.2335811384723962e-16,
+      "virial_total_abs": 8.881784197001252e-16,
+      "virial_zero_scale": false,
+      "virial_status": "checked",
+      "virial_scope": "global_diagonal_sum — 전역 부호 · 척도 검사 (Σ_i V_i σ_LW,aa ↔ Σ_i c_strs,aa · 대각 셋) · 프레임 · 입자 · 상 배분의 대응 증명 아님 (같은 기하 두 dimer 의 접촉 힘을 맞바꿔도 통과)"
+    },
+    "nowall_status": "OK",
+    "contract": "love_weber_checks_v2"
+  },
+  "finite_cstr": {
+    "status": "OK",
+    "vm_cv": 0.0,
+    "type_stress": {
+      "AM_P": {
+        "mean": 0.2148591731740587,
+        "ratio": 1.0
+      }
+    },
+    "checks": {
+      "force_decomp_rel": 0.0,
+      "force_decomp_abs": 0.0,
+      "force_decomp_zero_scale": false,
+      "branch_over_r_max": 0.8999999999999999,
+      "virial_total_rel": 1.2335811384723962e-16,
+      "virial_total_abs": 2.220446049250313e-16,
+      "virial_zero_scale": false,
+      "virial_status": "checked",
+      "virial_scope": "global_diagonal_sum — 전역 부호 · 척도 검사 (Σ_i V_i σ_LW,aa ↔ Σ_i c_strs,aa · 대각 셋) · 프레임 · 입자 · 상 배분의 대응 증명 아님 (같은 기하 두 dimer 의 접촉 힘을 맞바꿔도 통과)"
+    },
+    "nowall_status": "OK",
+    "contract": "love_weber_checks_v2",
+    "parsed_cstr_present": [
+      true,
+      true
+    ]
+  },
+  "nan_cstr_first": {
+    "status": "OK",
+    "vm_cv": 0.0,
+    "type_stress": {
+      "AM_P": {
+        "mean": 0.2148591731740587,
+        "ratio": 1.0
+      }
+    },
+    "checks": {
+      "force_decomp_rel": 0.0,
+      "force_decomp_abs": 0.0,
+      "force_decomp_zero_scale": false,
+      "branch_over_r_max": 0.8999999999999999,
+      "virial_total_rel": null,
+      "virial_status": "unavailable (no c_strs in atom dump)",
+      "virial_scope": "global_diagonal_sum — 전역 부호 · 척도 검사 (Σ_i V_i σ_LW,aa ↔ Σ_i c_strs,aa · 대각 셋) · 프레임 · 입자 · 상 배분의 대응 증명 아님 (같은 기하 두 dimer 의 접촉 힘을 맞바꿔도 통과)"
+    },
+    "nowall_status": "OK",
+    "contract": "love_weber_checks_v2",
+    "parsed_cstr_present": [
+      false,
+      false
+    ]
+  },
+  "text_cstr_first": {
+    "status": "OK",
+    "vm_cv": 0.0,
+    "type_stress": {
+      "AM_P": {
+        "mean": 0.2148591731740587,
+        "ratio": 1.0
+      }
+    },
+    "checks": {
+      "force_decomp_rel": 0.0,
+      "force_decomp_abs": 0.0,
+      "force_decomp_zero_scale": false,
+      "branch_over_r_max": 0.8999999999999999,
+      "virial_total_rel": null,
+      "virial_status": "unavailable (no c_strs in atom dump)",
+      "virial_scope": "global_diagonal_sum — 전역 부호 · 척도 검사 (Σ_i V_i σ_LW,aa ↔ Σ_i c_strs,aa · 대각 셋) · 프레임 · 입자 · 상 배분의 대응 증명 아님 (같은 기하 두 dimer 의 접촉 힘을 맞바꿔도 통과)"
+    },
+    "nowall_status": "OK",
+    "contract": "love_weber_checks_v2",
+    "parsed_cstr_present": [
+      false,
+      false
+    ]
+  },
+  "inf_cstr_first": {
+    "status": "FAILED (invalid_input: non_finite c_strs 2 (id 1, 2))",
+    "vm_cv": null,
+    "type_stress": {},
+    "checks": {},
+    "nowall_status": null,
+    "contract": "love_weber_checks_v2",
+    "parsed_cstr_present": [
+      true,
+      true
+    ]
+  },
+  "finite_wrong_virial": {
+    "status": "FAILED (virial_mismatch: |Σ V σ_LW − Σ c_strs| / Σ|Σ c_strs| = 0.667 > 0.01 — 원자 · 접촉 덤프의 프레임 · 힘 부호 · 열 대응)",
+    "vm_cv": null,
+    "type_stress": {},
+    "checks": {
+      "force_decomp_rel": 0.0,
+      "force_decomp_abs": 0.0,
+      "force_decomp_zero_scale": false,
+      "branch_over_r_max": 0.8999999999999999,
+      "virial_total_rel": 0.6666666666666667,
+      "virial_total_abs": 3.6000000000000005,
+      "virial_zero_scale": false,
+      "virial_status": "checked",
+      "virial_scope": "global_diagonal_sum — 전역 부호 · 척도 검사 (Σ_i V_i σ_LW,aa ↔ Σ_i c_strs,aa · 대각 셋) · 프레임 · 입자 · 상 배분의 대응 증명 아님 (같은 기하 두 dimer 의 접촉 힘을 맞바꿔도 통과)"
+    },
+    "nowall_status": null,
+    "contract": "love_weber_checks_v2",
+    "parsed_cstr_present": [
+      true,
+      true
+    ]
+  },
+  "nan_hides_wrong_virial": {
+    "status": "OK",
+    "vm_cv": 0.0,
+    "type_stress": {
+      "AM_P": {
+        "mean": 0.2148591731740587,
+        "ratio": 1.0
+      }
+    },
+    "checks": {
+      "force_decomp_rel": 0.0,
+      "force_decomp_abs": 0.0,
+      "force_decomp_zero_scale": false,
+      "branch_over_r_max": 0.8999999999999999,
+      "virial_total_rel": null,
+      "virial_status": "unavailable (no c_strs in atom dump)",
+      "virial_scope": "global_diagonal_sum — 전역 부호 · 척도 검사 (Σ_i V_i σ_LW,aa ↔ Σ_i c_strs,aa · 대각 셋) · 프레임 · 입자 · 상 배분의 대응 증명 아님 (같은 기하 두 dimer 의 접촉 힘을 맞바꿔도 통과)"
+    },
+    "nowall_status": "OK",
+    "contract": "love_weber_checks_v2",
+    "parsed_cstr_present": [
+      false,
+      false
+    ]
+  },
+  "all_cstr_absent": {
+    "status": "OK",
+    "vm_cv": 0.0,
+    "type_stress": {
+      "AM_P": {
+        "mean": 0.2148591731740587,
+        "ratio": 1.0
+      }
+    },
+    "checks": {
+      "force_decomp_rel": 0.0,
+      "force_decomp_abs": 0.0,
+      "force_decomp_zero_scale": false,
+      "branch_over_r_max": 0.8999999999999999,
+      "virial_total_rel": null,
+      "virial_status": "unavailable (no c_strs in atom dump)",
+      "virial_scope": "global_diagonal_sum — 전역 부호 · 척도 검사 (Σ_i V_i σ_LW,aa ↔ Σ_i c_strs,aa · 대각 셋) · 프레임 · 입자 · 상 배분의 대응 증명 아님 (같은 기하 두 dimer 의 접촉 힘을 맞바꿔도 통과)"
+    },
+    "nowall_status": "OK",
+    "contract": "love_weber_checks_v2"
+  },
+  "partial_cstr_tuple": {
+    "status": "OK",
+    "vm_cv": 0.0,
+    "type_stress": {
+      "AM_P": {
+        "mean": 0.2148591731740587,
+        "ratio": 1.0
+      }
+    },
+    "checks": {
+      "force_decomp_rel": 0.0,
+      "force_decomp_abs": 0.0,
+      "force_decomp_zero_scale": false,
+      "branch_over_r_max": 0.8999999999999999,
+      "virial_total_rel": null,
+      "virial_status": "unavailable (no c_strs in atom dump)",
+      "virial_scope": "global_diagonal_sum — 전역 부호 · 척도 검사 (Σ_i V_i σ_LW,aa ↔ Σ_i c_strs,aa · 대각 셋) · 프레임 · 입자 · 상 배분의 대응 증명 아님 (같은 기하 두 dimer 의 접촉 힘을 맞바꿔도 통과)"
+    },
+    "nowall_status": "OK",
+    "contract": "love_weber_checks_v2"
+  }
+}
