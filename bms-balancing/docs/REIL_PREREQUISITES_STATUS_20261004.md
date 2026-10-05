@@ -50,3 +50,22 @@
   openpyxl · pymoo · 전이 의존성) · 부속 A §3-1 옵션 8 개의 대조 목록 · Sobol 배열 봉인 · 부속 B §2-5 환경 기록 항목 · 실행 기계
   후보 셋. 문서만 — 설치 · 버전 실측 · 옵션 introspection · 실행 0. 판 번호는 고르지 않았다.
 - **사용자에게 남은 것:** N1 의 입력 (논문 또는 저자 명세) 과 실행할 기계의 결정 (N2 초안 §4). C6 실행은 그 뒤 별도 승인.
+
+## §6 진행 (2026-10-05 · 덧붙임 — 위 §0–§5 는 그대로)
+
+- **실행 기계 결정 (N2 초안 §4):** 사용자 (2026-10-05) "이컨테이너에서 하고 논문 이름 자세하게 줘봐" → **이 클라우드 컨테이너.** N2 초안 §4 의 단점
+  칸에 따라: 세션이 끝나면 환경이 사라지므로 프로필 · 봉인 · 실행 기록은 저장소에 커밋한다 · 세션마다 컨테이너가 새로 서므로 실행하는 세션에서
+  프로필을 다시 대조한다 (PyBaMM 라운드의 C 기록 대조와 같은 방식) · 설치가 필요하면 버리는 venv (scratchpad) 안에서만 하고 그 범위는 C6 승인
+  문서에 적는다 (운영 환경 설치 없음) · 자료 반입은 공개 저장소의 git 읽기.
+- **확인 (2026-10-05):** 공개 저장소 `REIL-UConn/multi-objective-optimization-for-lithium-ion-battery-degradation-diagnostics` 의 끝 커밋은 2026-10-02
+  기록과 같은 `1188c371e5836df4a7e5f5acf336a34ffd4027e6` (2026-07-12 −04:00 · "Update README to include dataset link and citation"). 이 세션의 얕은
+  clone (저장소 밖 `/home/user/reil-uconn/…`) 에서 **README 만** 읽었다 — `LFP_Data.xlsx` · `results/*.pkl` · 노트북은 열지 않았다 (P0 전 · pickle 금지
+  그대로).
+- **N1 의 서지 (README 의 인용 원문 · BibTeX):** T. Li, Y. Zhang, B. Nowacki, S. Navidi, T. Schmitt, S. Hu, C. Hu, "Benchmarking half-cell model
+  fitting approaches for lithium-ion battery degradation diagnostics," *eTransportation*, vol. 29, p. 100593, 2026 · doi `10.1016/j.etran.2026.100593`
+  (BibTeX 저자: Tingkai Li · Yifan Zhang · Benjamin Nowacki · Sina Navidi · Thomas Schmitt · Shan Hu · Chao Hu). 자료: Zhang, Yifan; Li, Tingkai; Hu,
+  Shan; Hu, Chao, "ISU-UConn LFP/Graphite Emulated Degradation Dataset" (2026), *REIL Datasets* 6 — `https://digitalcommons.lib.uconn.edu/reil_datasets/6/`
+  (CC BY 4.0). 논문은 여전히 미열람 · 공개 여부 미확인 (§1 그대로).
+- **다음 (각각 사용자 결정 · 자동 시작 없음):** N1 — 사용자가 논문 (또는 저자 명세) 을 올리면 §3 N1 대로 한다. 논문 PDF 자체는 공개 저장소에 넣지
+  않고 (이 저장소의 관례 — 논문 원문은 커밋하지 않는다) sha256 과 ①②③ 세 항목의 원문 위치 (쪽 · 표 · 식 번호) 만 기록한다. C6 실행 (이 컨테이너에서
+  판 확인 · 프로필 봉인 · COBYQA 옵션 이름 대조) 은 별도 승인 — §2 의 순서상 N1 뒤가 기본이다.

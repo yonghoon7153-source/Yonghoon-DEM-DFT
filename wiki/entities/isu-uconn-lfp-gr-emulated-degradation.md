@@ -2,7 +2,7 @@
 title: ISU-UConn LFP/흑연 모사 열화 자료 + REIL 다목적 피팅 코드
 description: "전극 원판 지름 (LAM 모사) 과 리튬화 상태 (LLI 모사) 를 설계해 만든 LFP/흑연 11 셀의 반쪽 · 완전지 곡선 (CC BY 4.0) 과, 반쪽전지 곡선의 질량 배율 · 용량 오프셋을 GA/NSGA 로 맞추는 MIT 코드. 우리에게는 α·β 창 맞춤과 같은 계열의 방법을 실측 '설계 참값' 에 대 보는 외부 검증 후보"
 created: 2026-10-03
-updated: 2026-10-04
+updated: 2026-10-05
 type: entity
 tags: [degradation, tooling, research]
 sources: [raw/articles/2026-10-02-github-research-briefing.md, raw/repositories/2026-10-03-reil-uconn-moo-known-truth-table.md]
@@ -196,6 +196,11 @@ v2 의 Codex 재검토 판정은 `DESIGN_DIRECTION_ACCEPTED_DOCUMENT_REVISION_RE
   C1-core → C6 → P0 → 비용 측정 → 실행. 지금 필요한 입력은 논문 (또는 저자 명세) 하나 — 각 단계는 사용자 결정.
 - **2026-10-04 N2 (C6 준비) 초안** — `bms-balancing/docs/REIL_C6_ENV_PROFILE_DRAFT_20261004.md`: 실행 환경 프로필의 축 · 부속 A §3-1 옵션
   8 개의 대조 목록 · Sobol 배열 봉인 · 실행 기계 후보 셋 (결정은 사용자). 문서만 — 설치 · 버전 실측 · 실행 0 · 판 번호를 고르지 않았다.
+- **2026-10-05 실행 기계 결정 — 이 클라우드 컨테이너** (사용자 "이컨테이너에서 하고 논문 이름 자세하게 줘봐") — 프로필 · 봉인 · 실행 기록은
+  저장소로 · 실행하는 세션마다 다시 대조 · 설치는 버리는 venv 에서만 (범위는 C6 승인 문서에) · C6 실행은 별도 승인 · 기본 순서는 N1 (논문) 뒤.
+  기록 `bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md` §6.
+- **2026-10-05 서지 확인 (README 원문 · BibTeX)** — 저자 일곱: Tingkai Li · Yifan Zhang · Benjamin Nowacki · Sina Navidi · Thomas Schmitt · Shan Hu ·
+  Chao Hu · 제목 · 권 · 쪽 · doi 는 위 개요와 같다 · 끝 커밋 `1188c37` 그대로. README 만 읽었다 (xlsx · pkl · 노트북 열지 않음). 논문은 여전히 미열람.
 
 ## 이 위키와의 관계
 
