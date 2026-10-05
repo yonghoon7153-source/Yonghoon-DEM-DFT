@@ -843,3 +843,56 @@ def test_brief_closure_record_missing_is_dash_and_announced(client):
         seg = _brief_html(client)
     assert set(_CLOSED_SLOTS) <= set(br["unread"]), set(_CLOSED_SLOTS) - set(br["unread"])
     assert "—/—" in seg and "원 기록에서 못 읽은 값이 있다" in seg
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# 새 카드 v2 판독 (2026-10-04 · 규칙 적용 · 잠정 — 외부 1저자 확인 대기 · 편지 CQ)
+# ═══════════════════════════════════════════════════════════════════════════
+V2_RUNLOG = "lpscl_smallcell_glass_md_v2_runlog_2026_10_01.json"
+_V2_SLOTS = ("v2_600_n", "v2_550_n", "v2_near")
+
+
+def test_brief_carries_v2_as_provisional_and_numbers_come_from_the_runlog(client):
+    """양성 — v2 줄이 '잠정' 과 함께 화면에 있고, 통과 수·near-miss 는 v2 실행 기록에서 온다."""
+    br = D.li2s_brief()
+    assert not br["unread"], br["unread"]
+    rl = D._load_json(D.DB / "properties" / V2_RUNLOG)["✅_판독_결과_2026_10_04"]
+    assert br["values"]["v2_600_n"] == rl["600K_400ps_끝b256_앞b192"]["N"].split("/")[0]
+    assert br["values"]["v2_550_n"] == rl["550K_800ps_끝b512_앞b384"]["N"].split("/")[0]
+    assert br["values"]["v2_near"] == f'{rl["550K_800ps_끝b512_앞b384"]["seed1"][3]:.2f}'
+    import html as _html_mod
+    seg = _html_mod.unescape(_brief_html(client))
+    i = seg.find("새 설계 (10-04 판독 · 잠정)")
+    assert i >= 0, "v2 줄이 요약 절에 없다"
+    line = seg[i:i + 600]
+    assert "제1저자(외부)의 답을 기다린다" in line, "확정 주체(외부 1저자)를 안 밝혔다"
+    assert "값은 내지 않는다" in line, "수송 값을 안 낸다는 단서가 빠졌다"
+
+
+def test_brief_v2_numbers_follow_the_runlog(client):
+    """⛔음성 — v2 실행 기록을 바꾸면 요약 절이 따라 바뀐다 (요약이 v2 숫자를 품으면 잡힌다)."""
+    real = D._load_json
+
+    def fake(p):
+        d = real(p)
+        if d and Path(p).name == V2_RUNLOG:
+            d = _deep(d)
+            r = d["✅_판독_결과_2026_10_04"]
+            r["550K_800ps_끝b512_앞b384"]["N"] = "4/5 (시험)"
+            r["550K_800ps_끝b512_앞b384"]["seed1"][3] = 1.234
+        return d
+
+    with patch.object(D, "_load_json", side_effect=fake):
+        seg = _brief_html(client)
+    assert "550 K 4/5" in seg and "550 K 2/5" not in seg, "실행 기록을 바꿨는데 통과 수가 안 바뀐다"
+    assert "1.23σ" in seg and "1.85σ" not in seg, "실행 기록을 바꿨는데 near-miss 가 안 바뀐다"
+
+
+def test_brief_v2_runlog_missing_is_dash_and_announced(client):
+    """⛔음성 — v2 실행 기록이 없으면 그 자리는 `—` 이고 이름이 경고에 뜬다 (0 이 아니다)."""
+    real = D._load_json
+    with patch.object(D, "_load_json", side_effect=lambda p: None if Path(p).name == V2_RUNLOG else real(p)):
+        br = D.li2s_brief()
+        seg = _brief_html(client)
+    assert set(_V2_SLOTS) <= set(br["unread"]), set(_V2_SLOTS) - set(br["unread"])
+    assert "600 K —/5" in seg and "원 기록에서 못 읽은 값이 있다" in seg

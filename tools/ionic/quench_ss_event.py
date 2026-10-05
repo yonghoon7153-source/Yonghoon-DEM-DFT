@@ -401,6 +401,114 @@ def analyze(run_dir, mq, ss_cut=SS_CUT, stride=1, log=print, trace_S=None, censu
     return res
 
 
+#: 회신 CO (2026-10-04 · li2s v2 · 결과 전) 골격 게이트 숫자 — **외부 1저자 원문 그대로**
+#:   ① 프레임의 95 % 이상에서 이탈 P 0 개 · ② production 중 주인이 바뀐 S 0 개 · ③ S–S < 2.30 Å 0 개
+CO_GATE = {"P_frac_frames_changed_max": 0.05, "S_moved_max": 0, "SS_new_pairs_max": 0}
+
+
+def production_framework(run_dir, mq, ss_cut=SS_CUT, stride=1):
+    """생산 궤적(traj.xyz) 하나의 골격 세 지표 — 회신 CO Q-CO-4 게이트의 입력 (2026-10-04).
+
+    정의 (**잠정 해석 · 생산 첫 프레임 대비** — 게이트의 뜻이 '생산 중 골격이 움직였나' 라서):
+      ① 이탈 P = 그 프레임의 S 배위수(R_PS · 최소상)가 **첫 프레임의 자기 배위수와 다른** P.
+         지표 = 이탈 P 가 하나라도 있는 프레임 비율 (게이트 ≤ 5 % = '95 % 이상에서 0 개').
+      ② 소속 이동 = 첫 프레임 주인 P 집합 ≠ 마지막 프레임 주인 P 집합인 S — `s_census_summary` 의 '이동' 과 같은 정의
+         (담금질 48 S 전수 조사가 눈금이다). 일시 이탈 후 복귀는 transient 로 따로 센다. 게이트 0.
+      ③ 새 S–S = 첫 프레임에 없던 S–S < ss_cut 쌍이 어느 프레임에서든 생긴 것. 게이트 0.
+    **글자 그대로 읽은 값도 같이 낸다** (`literal`): ① 4 배위 아닌 P 가 있는 프레임 비율 (담금질 'P 이탈 프레임' 셈법) ·
+      ③ 첫 프레임 것까지 포함한 S–S < ss_cut 쌍 수. 담금질이 남긴 결함(seed5 의 PS₃ · S–S 2.03 Å)이 첫 프레임에 이미
+      있으면 두 읽기가 갈린다 — 어느 쪽이 게이트인지는 외부 1저자 확인 대상이다.
+
+    ⛔ 못 하는 것: 거리 컷 판정이다 (결합 차수 안 봄) · 저장 간격 사이 사건은 못 본다 · 판정을 확정하지 않는다
+      (게이트로 쓰는지 기록만 하는지는 카드 개정이 정한다) · 눈금(담금질 통계)은 1200 K 용융을 거친 다른 구간의 것이다.
+    """
+    from ase.io import iread
+    traj = pathlib.Path(run_dir) / "traj.xyz"
+    if not traj.exists():
+        raise FileNotFoundError(f"{traj} 가 없다 — 궤적 없이는 못 잰다")
+    n = 0
+    iP = iS = coord0 = own0 = pairs0 = own_prev = None
+    n_changed_frames = n_not4_frames = n_new_frames = max_changed = 0
+    P_changed_ever, changes, new_pairs, literal_pairs = set(), {}, {}, set()
+    for k, at in enumerate(iread(str(traj), index=":", format="extxyz")):
+        if k % stride:
+            continue
+        sym = np.asarray(at.get_chemical_symbols()); pos = at.get_positions(); cell = np.asarray(at.get_cell())
+        if iP is None:
+            iP = np.where(sym == "P")[0]; iS = np.where(sym == "S")[0]
+        DPS = mq.mic_dists(pos[iP], pos[iS], cell) if (len(iP) and len(iS)) else np.zeros((len(iP), len(iS)))
+        coord = (DPS <= mq.R_PS).sum(axis=1)
+        own = {int(iS[c]): tuple(int(iP[r]) for r in np.where(DPS[:, c] <= mq.R_PS)[0]) for c in range(len(iS))}
+        pairs = {}
+        if len(iS) >= 2:
+            DSS = mq.mic_dists(pos[iS], pos[iS], cell)
+            for x, y in zip(*np.where(np.triu(DSS < ss_cut, 1))):
+                pairs[(int(iS[x]), int(iS[y]))] = float(DSS[x, y])
+        if coord0 is None:
+            coord0, own0, pairs0 = coord.copy(), dict(own), dict(pairs)
+        ch = np.where(coord != coord0)[0]
+        if len(ch):
+            n_changed_frames += 1
+            P_changed_ever.update(int(iP[x]) for x in ch)
+        max_changed = max(max_changed, int(len(ch)))
+        if np.any(coord != 4):
+            n_not4_frames += 1
+        if own_prev is not None:
+            for sx, o in own.items():
+                if own_prev.get(sx) != o:
+                    changes[sx] = changes.get(sx, 0) + 1
+        own_prev = own
+        fresh = [q for q in pairs if q not in pairs0]
+        if fresh:
+            n_new_frames += 1
+            for q in fresh:
+                e = new_pairs.setdefault(q, {"S_pair": list(q), "first_frame": k, "min_d_A": pairs[q], "n_frames": 0})
+                e["min_d_A"] = min(e["min_d_A"], pairs[q]); e["n_frames"] += 1
+        literal_pairs.update(pairs)
+        n += 1
+    if n == 0:
+        raise ValueError(f"{traj} 에 프레임이 없다")
+    last = own_prev
+    moved = [{"S": sx, "from_P": list(own0[sx]), "to_P": list(last.get(sx, ())), "n_changes": changes.get(sx, 0)}
+             for sx in sorted(own0) if set(own0[sx]) != set(last.get(sx, ()))]
+    transient = [{"S": sx, "P": list(own0[sx]), "n_changes": c} for sx, c in sorted(changes.items())
+                 if set(own0[sx]) == set(last.get(sx, ()))]
+    frac_ch, frac_n4 = n_changed_frames / n, n_not4_frames / n
+    g = CO_GATE
+    crit = {"①_P": frac_ch <= g["P_frac_frames_changed_max"], "②_S": len(moved) <= g["S_moved_max"],
+            "③_SS": len(new_pairs) <= g["SS_new_pairs_max"]}
+    lit = {"①_P": frac_n4 <= g["P_frac_frames_changed_max"], "②_S": crit["②_S"],
+           "③_SS": len(literal_pairs) <= g["SS_new_pairs_max"]}
+    return {
+        "run_dir": str(run_dir), "n_frames": n, "stride": stride, "R_PS_A": mq.R_PS, "ss_cut_A": ss_cut,
+        "P": {"n_P": int(len(iP)), "n_not4_at_first_frame": int(np.sum(coord0 != 4)),
+              "frac_frames_any_P_changed_vs_first": round(frac_ch, 5),
+              "max_P_changed_in_a_frame": max_changed, "P_changed_ever": sorted(P_changed_ever)},
+        "S": {"n_S": int(len(iS)), "n_moved_first_ne_last": len(moved), "n_transient_only": len(transient),
+              "moved": moved[:20], "transient_only": transient[:20]},
+        "SS": {"pairs_lt_cut_at_first_frame": [[i, j, round(d, 4)] for (i, j), d in sorted(pairs0.items())],
+               "n_new_pairs": len(new_pairs), "frac_frames_with_new_pair": round(n_new_frames / n, 5),
+               "new_pairs": [{**v, "min_d_A": round(v["min_d_A"], 4)} for _, v in sorted(new_pairs.items())][:20]},
+        "literal": {"①_frac_frames_any_P_not4": round(frac_n4, 5),
+                    "③_n_SS_pairs_lt_cut_any_frame_incl_first": len(literal_pairs)},
+        "co_gate": {"thresholds": dict(g), "criteria_vs_first_frame": crit, "framework_moved": not all(crit.values()),
+                    "literal_criteria": lit, "literal_framework_moved": not all(lit.values()),
+                    "⚠": "첫 프레임 대비 = 잠정 해석 · literal = 글자 그대로 — 갈리면 둘 다 적는다 · 게이트로 쓰는지는 카드 개정이 정한다"},
+    }
+
+
+def production_summary(r):
+    g, P, S, SS = r["co_gate"], r["P"], r["S"], r["SS"]
+    yn = lambda b: "예" if b else "아니오"
+    return [f"골격 (생산 궤적 · 회신 CO 게이트 입력) · 프레임 {r['n_frames']} · R_PS {r['R_PS_A']} Å · S–S 컷 {r['ss_cut_A']} Å",
+            f" ① 이탈 P(첫 프레임 대비) 있는 프레임 {100 * P['frac_frames_any_P_changed_vs_first']:.2f} % (≤ 5 %) · 첫 프레임 4 배위 아닌 P "
+            f"{P['n_not4_at_first_frame']} · [글자 그대로: 4 배위 아닌 P 있는 프레임 {100 * r['literal']['①_frac_frames_any_P_not4']:.2f} %]",
+            f" ② S 소속 이동(첫 ≠ 끝) {S['n_moved_first_ne_last']} (= 0) · 일시 변화 {S['n_transient_only']}",
+            f" ③ 새 S–S < {r['ss_cut_A']} Å 쌍 {SS['n_new_pairs']} (= 0) · 첫 프레임에 이미 있던 쌍 {len(SS['pairs_lt_cut_at_first_frame'])} "
+            f"· [글자 그대로: 첫 프레임 포함 {r['literal']['③_n_SS_pairs_lt_cut_any_frame_incl_first']}]",
+            f" → 골격 이동 표시: 첫 프레임 대비 {yn(g['framework_moved'])} · 글자 그대로 {yn(g['literal_framework_moved'])}"]
+
+
 def _longest_gap(ds, cut):
     best = cur = 0
     for d in ds:
@@ -494,6 +602,34 @@ def _synthetic(tmpdir, event=True, thermo_rows=None):
             tset = 1200.0 if k < 3 else (300.0 if k >= 8 else 1200.0 - (k - 2) * 180.0)
             f.write(f"{k*1.0:.3f},{tset+3:.1f},{tset:.1f},1.6,1728,0,0,0\n")
     json.dump({"save_ps": 1.0}, open(run / "plan.json", "w"))
+    return run
+
+
+def _synthetic_production(tmpdir, case):
+    """PS₄ 두 개 + 자유 S 하나 + Li 2 · 14 Å 셀 · 40 프레임 · ±0.02 Å 떨림 (생산 궤적 흉내).
+    case: quiet · moved(30 프레임부터 S0 가 P0 를 떠남) · transient(10–11 프레임만 떠났다 복귀) ·
+          newSS(20 프레임부터 자유 S 가 S7 옆 2.05 Å) · seed5(처음부터 P1 이 PS₃ · 자유 S 가 S7 옆 = 담금질 결함)"""
+    from ase import Atoms
+    from ase.io import write
+    L = 14.0
+    v = np.array([[1, 1, 1], [1, -1, -1], [-1, 1, -1], [-1, -1, 1]], float) / math.sqrt(3) * 2.05
+    P = np.array([[4.0, 4.0, 4.0], [10.0, 10.0, 10.0]])
+    Li = np.array([[1.0, 12.0, 7.0], [12.0, 1.0, 7.0]])
+    rng = np.random.default_rng(0)
+    run = pathlib.Path(tmpdir); (run / "traj.xyz").unlink(missing_ok=True)
+    s7_out = P[1] + v[3] + v[3]                       # S7 바깥쪽 2.05 Å (P1 에서 4.1 Å — P 에 안 붙는다)
+    for k in range(40):
+        S = np.vstack([P[0] + v, P[1] + v])
+        free = np.array([7.0, 1.0, 12.0])
+        if (case == "moved" and k >= 30) or (case == "transient" and k in (10, 11)):
+            S[0] = np.array([4.0, 4.0, 0.5])         # P0 에서 3.5 Å · 어느 S 와도 2.30 Å 밖
+        if case == "seed5":
+            S[4] = np.array([13.0, 2.0, 6.0])        # P1 이 처음부터 PS₃
+        if (case == "newSS" and k >= 20) or case == "seed5":
+            free = s7_out
+        pos = np.vstack([P, S, free, Li]) + rng.normal(0, 0.02, (2 + 8 + 1 + 2, 3))
+        at = Atoms(["P"] * 2 + ["S"] * 8 + ["S"] + ["Li"] * 2, positions=pos, cell=np.eye(3) * L, pbc=True)
+        write(str(run / "traj.xyz"), at, format="extxyz", append=True)
     return run
 
 
@@ -640,6 +776,22 @@ def _selftest():
     i4 = s_census_summary({12: [(0, 0.0, 1200.0, "melt_hold", ())]}, 2)["identity"]
     ck(i4["n_P"] == 0 and i4["fraction_P_all_original_S_kept"] is None and i4["fraction_S_kept_original_owner"] is None,
        f"⛔음성: 프레임 0 에 주인이 아무도 없으면 분율을 **0 으로 그리지 않고 None** 이다 — {i4}")
+    # ── 생산 궤적 골격 세 지표 (회신 CO · 2026-10-04) ──
+    for case, want in (("quiet", (True, True, True, False, False)), ("moved", (False, False, True, True, True)),
+                       ("transient", (True, True, True, False, False)), ("newSS", (True, True, False, True, True)),
+                       ("seed5", (True, True, True, False, True))):
+        with tempfile.TemporaryDirectory() as td:
+            pr = production_framework(_synthetic_production(td, case), mq)
+            c = pr["co_gate"]["criteria_vs_first_frame"]
+            got = (c["①_P"], c["②_S"], c["③_SS"], pr["co_gate"]["framework_moved"], pr["co_gate"]["literal_framework_moved"])
+            ck(got == want, f"생산 골격 [{case}] ①②③·이동·글자그대로 = {want} — 실제 {got} · {pr['P']} · {pr['S']['n_moved_first_ne_last']} · {pr['SS']['n_new_pairs']}")
+            if case == "transient":
+                ck(pr["S"]["n_transient_only"] == 1 and abs(pr["P"]["frac_frames_any_P_changed_vs_first"] - 0.05) < 1e-9,
+                   "⛔음성: 2/40 프레임 일시 이탈 후 복귀 = 5 % (문턱 안) · 이동 아님 (transient 1)")
+            if case == "seed5":
+                ck(pr["P"]["n_not4_at_first_frame"] == 1 and len(pr["SS"]["pairs_lt_cut_at_first_frame"]) == 1
+                   and pr["literal"]["①_frac_frames_any_P_not4"] == 1.0,
+                   "⛔음성: 담금질이 남긴 PS₃ · S–S 는 첫 프레임 대비로는 이동 아님 · 글자 그대로는 걸린다 (두 읽기를 다 적는다)")
     print(f"{'✅' if not bad else '⛔'} quench_ss_event selftest {ok}/{ok + bad}")
     return 0 if not bad else 1
 
@@ -654,6 +806,9 @@ def main():
                     help="특정 S 원자(전역 index)의 내력 — 프레임별 P 이웃·이탈/재결합 (회신 CH · S54)")
     ap.add_argument("--s_census", action="store_true",
                     help="48 S 전수 소속-이동 조사 — PS₄ 보존율이 못 보는 '정체' 를 센다")
+    ap.add_argument("--production", action="store_true",
+                    help="생산 MD 궤적(traj.xyz 만 · thermo 없음)의 골격 세 지표 — 회신 CO 게이트 입력 "
+                         "(첫 프레임 대비 + 글자 그대로 둘 다 · 판정 아님)")
     ap.add_argument("--out")
     ap.add_argument("--tools_dir", help="melt_quench_uma.py 가 있는 폴더 (기본 = 이 파일 폴더)")
     ap.add_argument("--selftest", action="store_true")
@@ -663,6 +818,13 @@ def main():
     if not a.run_dir:
         ap.error("run_dir 이 필요하다")
     mq = _load_mq(a.tools_dir)
+    if a.production:
+        pr = production_framework(a.run_dir, mq, a.ss_cut, a.stride)
+        print("\n".join(production_summary(pr)))
+        if a.out:
+            pathlib.Path(a.out).write_text(json.dumps(pr, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+            print(f"-> {a.out}")
+        return 0
     res = analyze(a.run_dir, mq, a.ss_cut, a.stride, trace_S=a.trace_S, census=a.s_census)
     if a.table:
         print(f"{'frame':>6s} {'t_ps':>8s} {'T_set':>7s} {'seg':>10s} {'PS4':>6s} {'ssmin':>6s} {'pair':>10s} {'kind':>9s} {'d_onset':>7s}")

@@ -6196,7 +6196,7 @@
    "title": "소셀 유리 평형 MD v2 (잠정) — 550 K 800 ps · 600 K 400 ps · 같은 5 담금질 시드 · 기계–시드 교차 · 보고량은 온도별 게이트 통과 수 (절대값 아님)",
    "statement": "옛 카드(D-2026-09-21 · 갈래1 로 닫힘)의 재개가 아니라 마감 §5 가 말한 **새 카드**다. 같은 5 담금질 시드(relax 판 final.xyz · 값 판별)로 550 K 800 ps · 600 K 400 ps 새 난수(--seed 1000 + 시드) 10 런을 gabia·kgy 에 교차 배정해 돌리고, 온도별 C1·C2 통과 수 N₅₅₀/5 · N₆₀₀/5 와 시드 간 상대 산포를 보고한다. C2 = 주 MTO · σ 사다리 끝 · 2σ · 가까운 문턱 (회신 CD·CH·CL) · 사다리는 b_min 50 ps 에 닿는 데까지 늘린다 (800 ps 끝 b 512 · 8 블록 · 400 ps 는 256 · 하한 표기). 갈래: N₆₀₀ ≤ 2 닫음 · N₆₀₀ ≥ 3 · N₅₅₀ ≤ 2 → 550 K 위 설계는 새 결정 · 둘 다 ≥ 3 → 둘째 묶음은 외부 1저자 결정. ⛔ Ea·D·σ 절대값 · 상온 전도도 · 결정 비교는 이 카드 밖.",
    "rationale": "마감 기록의 출발 사실 (550 K 문턱 부근 · 600 K 명확 통과 · 초과분 · STO–MTO 폭 · 기계–시드 겹침) 과 회신 CN 의 '다음 설계자가 온도·길이를 어디서 손볼지' 에서 설계했다. 465 K 는 β 가 문턱에서 멀어 길이로 안 풀려 뺐다. 옛 σ 사다리(최대 3.2 ps 블록)는 회신 CD 의 b_min 50 ps 에 못 미쳤다 — 800 ps 에서는 닿는다. 트랙 li2s = 외부 1저자 — 사용자 결정은 실행 승인이라 이 결정은 proposed(잠정)이고, 외부 1저자 동의(편지 CO)가 오면 비준을 받는다. 회신이 규칙을 바꾸면 결과를 보기 전에 바꾼다.",
-   "decision_state": "proposed",
+   "decision_state": "active",
    "record_kind": "estimand_card",
    "results_seen": false,
    "card": "db/properties/lpscl_smallcell_glass_md_v2_estimand_2026_09_30.json",
@@ -6224,17 +6224,36 @@
     "견적": "gabia ≈ 65 h (550 K 800 ps × 2 · 600 K × 3 · 400 ps 실측 83 s/ps) + kgy ≈ 47 h (550 K × 3 · 600 K × 2 · ≈ 52 s/ps 추정) ≈ 112 GPU-h"
    },
    "proposed_by": "claude-session-2026-09-30",
-   "status": "proposed",
+   "status": "active",
    "status_history": [
     {
      "at": "2026-09-30",
      "state": "proposed",
      "by": "agent",
      "note": "사용자 '이거 gabia, kgy에서 더하자 ㅇㅇ · 아직 이온전도도 값 관련해서는 안 닫힌거잖아' → AskUserQuestion '잠정 카드로 바로 (Recommended)' · '옛 예외와 같은 조건 (Recommended)' · '550 K 800 ps + 600 K, 5시드 (Recommended)'. 트랙 li2s = 외부 1저자 → 잠정 (실행 승인 ≠ 규칙 동의) · 편지 CO."
+    },
+    {
+     "at": "2026-10-04",
+     "state": "proposed",
+     "by": "agent",
+     "note": "회신 CO 수령 (외부 1저자 · 결과 미열람 상태) — 방향 확인 + 판독 전 고칠 것 (σ 두 온도 하한 · 공통 b 256 열 · 끝 두 b 규칙 · near-miss · 보조 창 50–200 · 대조 계 후보 a-Li₃PS₄ 유리 · 골격 게이트 숫자) → 개정 D-2026-10-04-lpscl-smallcell-glass-md-v2-amend-co (proposed) 에 편입. 비준은 카드와 개정을 같이 받는다."
+    },
+    {
+     "at": "2026-10-04",
+     "state": "active",
+     "by": "사용자 (카드 저자)",
+     "note": "사용자 비준 — AskUserQuestion '비준 · 판독으로 (Recommended)' + 골격 범위 '기록만 · 게이트는 650 K부터 (Recommended)' (2026-10-04 · 카드 v2 + 개정 CO 함께). 규칙은 외부 1저자 회신 CO 에서 왔고, 이 비준은 원장의 active 전환과 판독 실행 승인이다. 골격 게이트 범위·정의(seed5) 해석은 잠정 — 판독 편지로 외부 1저자 확인. 트랙 = li2s (사용자 ≠ 1저자 · 사용자 = 카드 저자)."
     }
    ],
    "ratification": {
-    "state": "proposed"
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-10-04T05:24:04Z",
+    "commit": "a6e37f4dcebe25ad4cf2d1e80d5d48a8d6b213a1",
+    "decision_digest": "sha256:c71c09e50f2a8679fec9954939e6cfbcc33eeebac8465c015fd514ee563c5304",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "비준_근거": "사용자 2026-10-04 — AskUserQuestion '비준 · 판독으로 (Recommended)' · 골격 '기록만 · 게이트는 650 K부터 (Recommended)' (카드 v2 + 개정 CO 함께 · 트랙 li2s = 외부 1저자 — 비준은 기록·실행 승인)."
    }
   },
   {
@@ -6278,16 +6297,22 @@
     "D-2026-09-29-gabia-uma-coexist-elastic-li2s-main"
    ],
    "schema_version": 2,
-   "decision_state": "active",
+   "decision_state": "superseded",
    "results_seen": false,
    "proposed_by": "claude-session-2026-09-30",
-   "status": "active",
+   "status": "superseded",
    "status_history": [
     {
      "at": "2026-09-30",
      "state": "active",
      "by": "1저자(사용자)",
      "note": "사용자 '이거 gabia, kgy에서 더하자 ㅇㅇ' → 에이전트가 '공존 예외는 09-30 에 소멸했다 · 새 예외를 줄까' 를 물음 → AskUserQuestion 답 '옛 예외와 같은 조건 (Recommended)' (한 번에 한 런 · 합계 46,000 가드 · 탄성 메모리 오류면 우리 MD 만 kill · 옛 4 런 피크 43,391 MiB). 트랙 = gabia 운용(우리) → 1저자 = 사용자. li2s 외부 1저자에게는 기계 배정 사실만 편지 CO 에 싣는다."
+    },
+    {
+     "at": "2026-10-05",
+     "state": "superseded",
+     "by": "사용자 (gabia 운용)",
+     "note": "자기 조건('5 런이 끝나거나 탄성이 끝나면 소멸')대로 **10-03 16:56:59 소멸** — gabia 몫 5 런 끝 · 가드 발동 0 · 피크 GPU 합계 43,437 MiB (runlog ✅_완주_2026_10_03). 같은 slot 의 예외 (5) D-2026-10-05-gabia-uma-coexist-elastic-li2s-control 가 명시적으로 대체한다 — 원장 규칙 '충돌 해소는 명시적 supersedes 로만' (10-05 slot 겹침 검사가 잡음). 내용(statement 등)은 그대로다."
     }
    ],
    "ratification": {
@@ -6298,8 +6323,9 @@
     "commit": "89dea352c7b04063d6761bbfec62cff0cb186087",
     "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
     "근거_발화": "AskUserQuestion 답 (2026-09-30 · 이 세션): '옛 예외와 같은 조건 (Recommended)' — 앞선 발화 '이거 gabia, kgy에서 더하자 ㅇㅇ'",
-    "decision_digest": "sha256:e5334c560276a356357f14199900244dba4729f3fca5a9f3b744d4d27ad52564"
-   }
+    "decision_digest": "sha256:bb9ef2b377948a4637c9d630215e7c17bde8f1cff664bafa3e16af9548be7b66"
+   },
+   "superseded_by": "D-2026-10-05-gabia-uma-coexist-elastic-li2s-control"
   },
   {
    "id": "D-2026-10-01-wad-se-pairs-uma-prediction-to-dem",
@@ -6709,7 +6735,7 @@
    "title": "cascade D_rel v7 (초안) — 무도핑 H0 탐침이 v6 자격을 먼저 통과하는 가장 낮은 온도 T* (800 → 1000 K) 에서만 본 라운드",
    "statement": "v6(600 K · 방법상 무효)의 재개가 아니라 마감 §5 의 **새 카드**다. 바꾸는 것은 온도 하나(600 K → T*). 탐침: 무도핑 H0 만 · 800 K seed 1 → seed 2 → (불통과면) 1000 K seed 1 → seed 2 · 통과 = v6 와 같은 자격(aggregation_eligible · 카드 정의 곡선) ∧ 골격 경보 ok/framework_static · 두 시드 다 통과한 가장 낮은 온도 = T* · 둘 다 불통과면 열지 않는다. 그 외(셀 · 공통부피 · 처방 · 부모 10 · 시드 2 · 프로토콜 · 집계 · δ)는 v6 그대로. 탐침 출력에 D 값을 싣지 않는다.",
    "rationale": "v6 는 600 K · 200 ps 에서 Li MSD 가 2–100 ps 내내 휘어(H0 포함) 보고량이 정의되지 않았다. 같은 600 K 에서 런을 늘려도 판정 창의 휨은 그대로라, 직선 구간에 닿는 조건을 바꿔야 한다. 온도는 준비 구조를 그대로 쓰는 가장 싼 손잡이다(무질서 호스트는 준비부터 · 늦은 창은 4 배). P1/P2 비교는 탐침에서 보지 않으므로 손잡이 선택이 그 비교에 끌려가지 않는다.",
-   "decision_state": "proposed",
+   "decision_state": "active",
    "record_kind": "estimand_card",
    "results_seen": false,
    "card": "db/properties/cascade_estimand_card_v7_probe_2026_10_01.json",
@@ -6736,17 +6762,30 @@
     "견적": "v6 실측 ≈ 5.89 h/런 × 최대 4 런 ≈ 24 GPU-h"
    },
    "proposed_by": "claude-session-2026-10-01",
-   "status": "proposed",
+   "status": "active",
    "status_history": [
     {
      "at": "2026-10-01",
      "state": "proposed",
      "by": "agent",
      "note": "사용자 AskUserQuestion '탐침 카드부터 쓴다'. ⏳ 외부 리뷰 · 사용자 비준 · 탐침 실행 승인. 트랙 cascade = 사용자 1저자."
+    },
+    {
+     "at": "2026-10-03",
+     "state": "active",
+     "by": "사용자 (cascade · 1저자)",
+     "note": "AskUserQuestion '비준 (Recommended)'. 개정 CP (D-2026-10-03-cascade-v7-amend-cp) 와 함께 비준 — 카드 원문(200 ps · H0 만 탐침 · 4 런 30 GPU-h)이 개정과 충돌하면 **개정이 이긴다**. 외부 리뷰 = 회신 CP (NO-GO 초안 그대로 → 개정으로 이행). 탐침 실행 · 본 라운드 상한은 별도 승인. 트랙 cascade = 사용자 1저자 — 통지할 제3자 없음."
     }
    ],
    "ratification": {
-    "state": "proposed"
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-10-03T09:31:45Z",
+    "commit": "07e4577b0366ffe3b4eab9f84517ec14f985d364",
+    "decision_digest": "sha256:00a2693cf3c87f60421ec750a7d413467a8244b9bd3aaebdd39ebadc6c838c82",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "비준_근거": "사용자 2026-10-03 — AskUserQuestion '비준 (Recommended)' (cascade v7 카드 + 개정 CP 함께 · 탐침 실행은 별도 승인)."
    }
   },
   {
@@ -6820,6 +6859,814 @@
     "decision_digest": "sha256:083b3578ab3e6464d8484705fb6e860642e725a0c18ae27d2025d780140aab17",
     "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
     "비준_근거": "사용자 2026-10-02 — AskUserQuestion '비준 · 지금 발사 (Recommended)' (P1b 카드 · kgy 실행)."
+   }
+  },
+  {
+   "id": "D-2026-10-03-cascade-v7-amend-cp",
+   "schema_version": 2,
+   "kind": "estimand",
+   "scope": "cascade.d_rel_v7",
+   "slot": "cascade_d_rel_v7_amend_cp",
+   "applies_to": {
+    "systems": [
+     "lpscl*"
+    ],
+    "tasks": [
+     "transport_pilot"
+    ],
+    "methods": [
+     "uma-s-1p1-omat__langevin-nvt"
+    ],
+    "use_cases": [
+     "diagnostic"
+    ]
+   },
+   "title": "cascade D_rel v7 개정 CP — 회신 CP 이행: 판독기 온도 결속 · 생산 400 ps · 대표 부모 C 쌍 탐침(사다리 결속) · 탐침 시드 집계 제외 · 본 라운드 결속 + 골격 경보 거부권",
+   "statement": "카드 v7 (proposed) 을 회신 CP 대로 고친다. ① 판독기가 온도(msd·aimd·폴더·태그·사다리)·prod·dt·save·시간축 끝을 결속한다 (이행됨 · v6 경로 제외). ② 생산 200 → 400 ps — 자격 기준과 창은 그대로. ③ 각 사다리 온도에서 H0 시드 1·2 + 부모 C 의 P1/P2 × 탐침 시드 3·4 (계획 6 런) 가 전부 자격 통과여야 T* · 하나라도 불통과면 다음 사다리 온도 · 1000 K 도 탈락이면 열지 않는다 · 부모 교체 없음 · D 봉인. ④ 탐침 시드 3·4 런은 최종 집계에서 제외 — 본 라운드는 T* 에서 40 런 (시드 1·2) 새로. ⑤ 본 라운드 판정 = judge_eprime --card v7 (T* 는 탐침 산출물에서만 · 결속 + 골격 경보 거부권 · v6 §4 집계). ⑥ 허용 문구 = 회신 Q-CP-4 권장 문구 + 자격 통과 집합 조건부. 예산: 탐침 ≤ 12 런 ≈ 141 GPU-h (추정) · 본 라운드는 탐침 실측 단가 × 40 으로 첫 런 전 비준.",
+   "rationale": "회신 CP: 초안 그대로 실행 NO-GO (P0 3 · P1). 합성 브라운 null 로 200 ps 는 이상 확산도 런당 22 % 탈락(회신과 같음) · 같은 기준·같은 창에서 400 ps 는 ≈ 1 %, 800 ps 는 0 % — 기준을 풀지 않고 표집 잡음을 줄이는 쪽을 골랐다 (사용자 결정). H0 는 처방 셀의 충분조건이 아니라서 대표 쌍을 같은 온도에서 먼저 본다. 탐침 시드를 집계에서 빼야 착수 조건의 선택 효과가 집계에 안 들어간다. 골격 경보는 사각이 있어 거부권으로만 쓴다.",
+   "decision_state": "active",
+   "record_kind": "amendment",
+   "results_seen": false,
+   "card": "db/properties/cascade_estimand_card_v7_probe_amendment_cp_2026_10_03.json",
+   "record": "db/raw/cascade_v7_probe/",
+   "builds_on": [
+    "D-2026-10-01-cascade-v7-probe-card"
+   ],
+   "depends_on": [
+    "D-2026-10-01-cascade-d-rel-closed",
+    "D-2026-09-20-cascade-v6-10parents"
+   ],
+   "amends": [],
+   "review": "kb/reviews/codex_CP_reply_cascade_v7_probe_card_2026_10_03.md",
+   "evidence": [
+    "db/properties/cascade_estimand_card_v7_probe_amendment_cp_2026_10_03.json §2 (합성 null · 실제 MD 아님)",
+    "tools/doping/judge_eprime.py::protocol_binding_errors · select_probe_temperature · main_v7 (selftest 91 · 깨기 17/17)",
+    "kb/reviews/codex_CP_reply_cascade_v7_probe_card_2026_10_03.md"
+   ],
+   "reopen_criteria": [
+    "탐침 탈락(800 · 1000 K 둘 다 · 계획 6 런 기준) ⇒ v7 을 열지 않는다 — 사다리 확장 · 문턱 완화 · 부모 교체 · 생산 연장으로 가지 않는다 (새 카드)",
+    "T* 확정 ⇒ 본 라운드 상한(탐침 실측 단가 × 40)을 첫 런 전에 사용자가 비준",
+    "⛔ 이 카드 안에서 사다리 · 시드 · 자격 문턱 · 창 · δ · 생산 길이 · 대표 부모 변경 금지"
+   ],
+   "cost_cap": {
+    "machine": "kgy (점착 P1b 와 GPU 공유 여부는 실행 승인 때)",
+    "total_gpu_h": 141,
+    "⛔": "탐침 상한이다 (종전 30 GPU-h 대체). 넘으면 멈추고 보고한다. 본 라운드 상한은 탐침 뒤 따로 비준.",
+    "견적": "400 ps ≈ 11.8 GPU-h/런 (v6 5.89 × 2 · 추정) × 최대 12 런"
+   },
+   "proposed_by": "claude-session-2026-10-03 (대피 세션 claude/evac-2026-10-02)",
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-10-03",
+     "state": "proposed",
+     "by": "사용자 결정 4 (AskUserQuestion) + 에이전트 초안",
+     "note": "AskUserQuestion 답: '생산 400 ps 로 늘림 (Recommended)' · '다음 사다리 온도로 (Recommended)' · '제외 · 탐침 전용 시드 (Recommended)' · '결속 + 경보 거부권 (Recommended)'. 트랙 cascade = 사용자 1저자 (통지할 제3자 없음). 개정 전문은 비준 전 — 대표 부모 C 추첨 · 예산 · 문구를 포함한 전문을 사용자가 비준하면 active."
+    },
+    {
+     "at": "2026-10-03",
+     "state": "active",
+     "by": "사용자 (cascade · 1저자)",
+     "note": "AskUserQuestion '비준 (Recommended)'. 개정 전문 비준 (대표 부모 C 추첨 · 탐침 시드 3·4 · 예산 추정 · 허용 문구 포함). 탐침은 400 ps 러너 작성 · 실행 승인(kgy · 시점) 뒤. 본 라운드 상한(탐침 실측 단가 × 40)은 첫 런 전에 다시 비준. 트랙 cascade = 사용자 1저자 — 통지할 제3자 없음."
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-10-03T09:31:45Z",
+    "commit": "07e4577b0366ffe3b4eab9f84517ec14f985d364",
+    "decision_digest": "sha256:d7c93290f60d2125298fefc0c402574aad523d3ea92b6f1f03dda7cad7211fc6",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "비준_근거": "사용자 2026-10-03 — AskUserQuestion '비준 (Recommended)' (cascade v7 카드 + 개정 CP 함께 · 탐침 실행은 별도 승인)."
+   }
+  },
+  {
+   "id": "D-2026-10-04-lpscl-smallcell-glass-md-v2-amend-co",
+   "schema_version": 2,
+   "kind": "estimand",
+   "scope": "lpscl_smallcell.glass_md_v2",
+   "slot": "lpscl_smallcell_glass_md_v2_amend_co",
+   "applies_to": {
+    "systems": [
+     "lpscl_smallcell_glass"
+    ],
+    "tasks": [
+     "li2s_glass_md_v2_batch1_550K800ps_600K400ps"
+    ],
+    "methods": [
+     "uma_md_turbo"
+    ],
+    "use_cases": [
+     "internal"
+    ]
+   },
+   "title": "소셀 유리 MD v2 개정 CO (판독 전) — 회신 CO 규칙 편입: σ 두 온도 하한 · 공통 b 256 기록 열 · 끝 두 b 갈리면 경계 · near-miss σ 거리 다섯 · 보조 창 50–200 ps 기록 열 · 대조 계 후보 a-Li₃PS₄ 유리 · 골격 게이트 숫자 (범위·정의 잠정)",
+   "statement": "외부 1저자 회신 CO 대로 v2 카드 판독 규칙을 결과 전에 고친다. ① σ 는 550 K (끝 b 512 · 51.2 ps) 도 'b_min 에 닿았으나 여전히 하한' ② 두 온도 모두 b = 256 σ 로 낸 C2·N·갈래를 기록 열로 나란히 (주 판정은 각자의 끝값) ③ 사다리 끝 두 b 에서 '통과' 가 한쪽뿐이면 경계 (통과 선언에만) ④ 온도마다 다섯 런의 σ 거리 (끝 b · 앞 b · 공통 b) 를 전부 적는다 ⑤ N₅₅₀ ≥ 3 이면 마감에 '옛 런이 틀렸던 것이 아니라 당시 해상도로는 선언할 수 없었던 것' ⑥ 대조 계 후보 = 같은 protocol·셀의 a-Li₃PS₄ 유리 (기록만 · 실행은 둘째 묶음) ⑦ 골격 게이트 숫자 (① P 이탈 프레임 ≤ 5 % ② S 소속 이동 0 ③ S–S < 2.30 Å 0 · 어기면 D 보고에서 제외 · 개수는 센다) — 이 묶음은 기록 · 게이트는 둘째 묶음부터 (잠정) ⑧ 기계 효과 = 궤적 잡음 (기술 통계만) ⑨ 옛 550 K β 를 기술 비교로 ⑩ β_MTO(50–200 ps) 기록 전용 열. 판정 창 2–50 · 문턱 3/5 · 세 갈래 · C1·C2 는 그대로.",
+   "rationale": "회신 CO: 옛 σ 가 b_min 의 1/16 수준이었다는 발견 뒤, 800 ps 의 51.2 ps 블록도 창 길이에 겨우 닿아 인접 블록이 독립이 아니고 (σ 하한 → nσ 상한 → 통과 선언이 낙관적), 두 온도의 끝 b 가 달라 N₅₅₀·N₆₀₀ 이 다른 잣대로 재진다. 결과 전이라 지금 넣으면 사전등록이다. 범위·정의 해석 둘 (골격 게이트를 이 묶음에도 거는가 · seed5 의 담금질 결함을 어떻게 읽는가) 은 외부 1저자 확인 대상이라 잠정으로 적는다.",
+   "decision_state": "active",
+   "record_kind": "amendment",
+   "results_seen": false,
+   "card": "db/properties/lpscl_smallcell_glass_md_v2_amendment_co_2026_10_04.json",
+   "record": "db/raw/lpscl_glass_md_v2_2026_09_30/",
+   "depends_on": [
+    "D-2026-09-30-lpscl-smallcell-glass-md-v2"
+   ],
+   "amends": [
+    "D-2026-09-30-lpscl-smallcell-glass-md-v2"
+   ],
+   "evidence": [
+    "kb/reviews/li2s1a_CO_reply_li2s_glass_v2_card_2026_10_04.md",
+    "tools/ionic/msd_diffusive_check.py::c2_verdicts (common_b · two_end)",
+    "tools/ionic/quench_ss_event.py::production_framework",
+    "tools/ionic/glass_v2_readout.py"
+   ],
+   "review": "kb/reviews/li2s1a_CO_reply_li2s_glass_v2_card_2026_10_04.md",
+   "reopen_criteria": [
+    "갈래_v2-1 — N₆₀₀ ≤ 2 ⇒ 닫는다 (연장·온도 추가로 가지 않는다)",
+    "갈래_v2-2 — N₆₀₀ ≥ 3 · N₅₅₀ ≤ 2 ⇒ 550 K 위 설계(셋째 온도 · 골격 게이트)는 새 결정",
+    "갈래_v2-3 — N₆₀₀ ≥ 3 · N₅₅₀ ≥ 3 ⇒ 둘째 묶음(셋째 온도 또는 대조 계)은 외부 1저자 결정",
+    "⛔ 이 카드 안에서 prod 800 ps 초과 · 문턱 완화 · 점·시드 제외 · 풀링 · 옛 런 혼입 금지"
+   ],
+   "proposed_by": "claude-session-2026-10-04",
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-10-04",
+     "state": "proposed",
+     "by": "agent",
+     "note": "회신 CO 규칙 편입 · 판독 도구 결과 전 커밋 (selftest 217 · 42 · 20 · 깨기 12/12) · 트랙 li2s = 외부 1저자 → 사용자 비준은 기록·실행 승인 (외부 1저자 동의를 대신하지 않는다) · 골격 게이트 범위·정의는 잠정 (다음 편지)."
+    },
+    {
+     "at": "2026-10-04",
+     "state": "active",
+     "by": "사용자 (카드 저자)",
+     "note": "사용자 비준 — AskUserQuestion '비준 · 판독으로 (Recommended)' + 골격 범위 '기록만 · 게이트는 650 K부터 (Recommended)' (2026-10-04 · 카드 v2 + 개정 CO 함께). 규칙은 외부 1저자 회신 CO 에서 왔고, 이 비준은 원장의 active 전환과 판독 실행 승인이다. 골격 게이트 범위·정의(seed5) 해석은 잠정 — 판독 편지로 외부 1저자 확인. 트랙 = li2s (사용자 ≠ 1저자 · 사용자 = 카드 저자)."
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-10-04T05:24:04Z",
+    "commit": "a6e37f4dcebe25ad4cf2d1e80d5d48a8d6b213a1",
+    "decision_digest": "sha256:b64e496c6900f3fd6e70f7a53b1c2121c7f1326ffff7ca796d3681672037cadd",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "비준_근거": "사용자 2026-10-04 — AskUserQuestion '비준 · 판독으로 (Recommended)' · 골격 '기록만 · 게이트는 650 K부터 (Recommended)' (카드 v2 + 개정 CO 함께 · 트랙 li2s = 외부 1저자 — 비준은 기록·실행 승인)."
+   }
+  },
+  {
+   "id": "D-2026-10-05-md-observation-window",
+   "schema_version": 2,
+   "kind": "policy",
+   "scope": "reporting.md.no_event_claim",
+   "slot": "md_no_event_observation_window_line",
+   "applies_to": {
+    "methods": [
+     "aimd",
+     "mlip_md",
+     "classical_md",
+     "reaction_md"
+    ],
+    "use_cases": [
+     "internal",
+     "manuscript",
+     "review_prompt",
+     "literature_citation"
+    ]
+   },
+   "title": "짧은 MD 에서 '반응·분해·이탈 없음 · 안정' 을 쓸 때 관측창 한 줄을 같이 싣는다 — Ea_max ≈ kT·ln(ν₀·t·n)",
+   "statement": "MD(AIMD · MLIP-MD · 고전 MD · 반응 MD)에서 '반응·분해·이탈이 일어나지 않았다' · '안정하다' 를 쓸 때마다 — 우리 계산이든 문헌이든 — 관측창 한 줄을 붙인다: 그 궤적이 한 번이라도 볼 수 있었던 장벽의 상한 Ea_max ≈ kT·ln(ν₀·t) (ν₀ = 10¹³ s⁻¹ **가정** · T · t = 궤적 총 시간 명시 · 독립 반응 자리가 n 개면 + kT·ln n). '무반응' 은 'Ea ≳ Ea_max 인 반응은 이 창에서 못 본다' 이상의 뜻으로 쓰지 않는다 — 열역학적 안정이나 실제 셀 시간척(시간~일)의 무반응으로 읽지 않는다. 이 한 줄은 차수 검산이지 장벽 값이 아니다.",
+   "rationale": "Kim 2026 (Adv. Energy Mater. e71596 · Na‖Bi 합금 음극) 이 5 ps · 298 K AIMD 에서 TEGDME 분해가 안 보인 것을 '안정' 근거로 썼다 — 그 창은 Ea ≲ 0.10 eV 반응만 본다 (셀 시간척 3–30 h 는 ≈ 1.0–1.07 eV). 우리 T3 계획(UMA 반응 MD · 350 K · ≥ 20 ns)도 ≈ 0.37 eV 까지만 본다. D-2026-09-27-barrier-hop-count (장벽 → 홉 수) 의 거울상 (홉 수 = 1 → 볼 수 있는 장벽). litdb §J-58 · §H 관측창 행. 사용자 2026-10-05 — '권고대로 진행' (litdb kim2026 · yuan2026 브리핑의 결정 후보 1·2 에 대한 답). 트랙 = 우리 DFT 기준선 → 1저자 = 사용자 (통지할 제3자 없음).",
+   "decision_state": "active",
+   "record_kind": "policy",
+   "results_seen": false,
+   "results_seen_note": "보고 형식 규칙 — 특정 결과를 보고 고르지 않았다 (문헌 사례가 계기)",
+   "card": null,
+   "record": "litdb/papers/kim2026_electrolyte_interfacial_reactivity_alloying_anode_pulverization.md",
+   "depends_on": [
+    "D-2026-09-27-barrier-hop-count"
+   ],
+   "supersedes": [],
+   "evidence": [
+    "litdb/papers/kim2026_electrolyte_interfacial_reactivity_alloying_anode_pulverization.md",
+    "litdb/comparison_vs_ours.md"
+   ],
+   "method_ref": "tools/sei/collect_neb.py::observation_window (CLI --obs_window T_K t_s [n_sites] · selftest 8 · 깨기 3/3)",
+   "reopen_criteria": [
+    "전인자(phonon · harmonic TST)를 실제로 계산하면 ν₀ 가정을 그 값으로 바꾼다 (규칙 자체는 유지)",
+    "⛔ 그 밖의 이유로 이 한 줄을 빼지 않는다"
+   ],
+   "enforcement": "① MD 결과 기록·원고·리뷰 프롬프트·litdb digest 에서 '무반응/안정' 문장 옆에 Ea_max 한 줄 ② observation_window() 또는 --obs_window 로 낸다 ③ Ea_max 를 장벽 값·안정성 판정으로 인용하지 않는다",
+   "proposed_by": "claude-session-2026-10-05",
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-10-05",
+     "state": "active",
+     "note": "사용자 2026-10-05 — '권고대로 진행' (litdb kim2026 · yuan2026 브리핑의 결정 후보 1·2 에 대한 답). 트랙 = 우리 DFT 기준선 → 1저자 = 사용자 (통지할 제3자 없음)."
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-10-05T00:46:36Z",
+    "commit": "e3d72a1f1f73cf91d5bbab1539fb17e4a0e52f8f",
+    "decision_digest": "sha256:e70696422c478e83902db2b669f358314cf6d7d3d74a22a792ff69e9d9c12cb8",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "비준_근거": "사용자 2026-10-05 '권고대로 진행' (결정 후보 1·2 · 트랙 = 우리 DFT 기준선 · 사용자 1저자)."
+   }
+  },
+  {
+   "id": "D-2026-10-05-adsorption-site-coordination",
+   "schema_version": 2,
+   "kind": "policy",
+   "scope": "reporting.adsorption.binding_site",
+   "slot": "chemisorption_binding_site_coordination_check",
+   "applies_to": {
+    "methods": [
+     "dft_adsorption",
+     "binding_energy",
+     "literature_citation"
+    ],
+    "use_cases": [
+     "internal",
+     "manuscript",
+     "review_prompt",
+     "literature_citation"
+    ]
+   },
+   "title": "화학결합 규모(|E| ≳ 2 eV) 흡착·결합에너지는 공개 구조가 있으면 결합 자리 배위수부터 센다",
+   "statement": "분자 하나 기준 |E_ads| 또는 |E_b| ≳ 2 eV 인 흡착·결합에너지를 인용하거나 보고할 때, 구조(cif · xyz · POSCAR · xlsx 좌표 등)가 공개돼 있으면 먼저 결합 자리 원자의 배위수를 센다 (흡착 전 깨끗한 표면 · 흡착 뒤 둘 다 · 거리 컷 명시). 결합 자리가 저배위(단글링 본드 · 과환원 · 수산화 안 된 표면)면 그 값은 '그 결함 자리의 결합 포화 에너지' 로만 적고, 물질·표면 일반의 흡착 세기나 논문이 말한 기전(예: 산소공공 루이스산)의 근거로 쓰지 않는다. 구조가 없으면 '배위 미확인' 을 같이 적는다. 우리 흡착 계산도 같다 — 결과 기록에 결합 자리 배위수를 싣는다.",
+   "rationale": "Yuan 2026 (Nat. Commun. in press · PEO/2D SiO₂) Sup2 구조 감사: SiO₂–TFSI⁻ 3.11 eV 의 결합 자리 Si63 은 깨끗한 슬랩에서 O 하나뿐인 1-배위 Si (Si 48 개 중 28 개 저배위 · 수산화 없음) 이고 TFSI 의 O 와 Si–O 1.763 Å 로 결합 — 단글링 본드 포화 에너지였고 '산소공공 루이스산 효과' 와 연결되지 않았다. [Yu26Pol] · [Meng26LZF] 와 같은 실패 유형인데 구조가 공개돼 처음으로 직접 확인됐다 (litdb §J-57 · dataset_summary.csv 배위수 감사). 사용자 2026-10-05 — '권고대로 진행' (litdb kim2026 · yuan2026 브리핑의 결정 후보 1·2 에 대한 답). 트랙 = 우리 DFT 기준선 → 1저자 = 사용자 (통지할 제3자 없음).",
+   "decision_state": "active",
+   "record_kind": "policy",
+   "results_seen": false,
+   "results_seen_note": "보고 형식 규칙 — 특정 결과를 보고 고르지 않았다 (문헌 사례가 계기)",
+   "card": null,
+   "record": "litdb/papers/yuan2026_layered_composite_electrolyte_stress_homogenization_li_metal.md",
+   "depends_on": [],
+   "supersedes": [],
+   "evidence": [
+    "litdb/papers/yuan2026_layered_composite_electrolyte_stress_homogenization_li_metal.md",
+    "litdb/figures/yuan2026_layered_composite_electrolyte_stress_homogenization_li_metal/dataset_summary.csv",
+    "litdb/comparison_vs_ours.md"
+   ],
+   "method_ref": "거리 컷 이웃 세기 (ASE · pymatgen — 컷 명시) · 선례 litdb/figures/yuan2026_…/dataset_summary.csv 의 Sup2 배위수·접촉 거리 감사",
+   "reopen_criteria": [
+    "2 eV 문턱은 운영 기준이다 — 반례(정상 배위 자리에서 ≳ 2 eV 인 진짜 화학흡착 등)가 쌓이면 사용자 결정으로 조정한다",
+    "⛔ 그 밖의 이유로 이 검사를 빼지 않는다"
+   ],
+   "enforcement": "① litdb digest · 비교표에서 ≳ 2 eV 흡착값을 인용할 때 결합 자리 배위수 줄 (또는 '구조 비공개 · 배위 미확인') ② 우리 흡착 결과 기록에 결합 자리 배위수 필드 ③ 저배위 자리 값을 물질 일반 흡착 세기·기전 근거로 쓰지 않는다",
+   "proposed_by": "claude-session-2026-10-05",
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-10-05",
+     "state": "active",
+     "note": "사용자 2026-10-05 — '권고대로 진행' (litdb kim2026 · yuan2026 브리핑의 결정 후보 1·2 에 대한 답). 트랙 = 우리 DFT 기준선 → 1저자 = 사용자 (통지할 제3자 없음)."
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-10-05T00:46:36Z",
+    "commit": "e3d72a1f1f73cf91d5bbab1539fb17e4a0e52f8f",
+    "decision_digest": "sha256:4030140b6e87f1df7e60a32a7292027dd0c91c3348074e876f6af824045294a8",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "비준_근거": "사용자 2026-10-05 '권고대로 진행' (결정 후보 1·2 · 트랙 = 우리 DFT 기준선 · 사용자 1저자)."
+   }
+  },
+  {
+   "id": "D-2026-10-05-lpscl-smallcell-glass-md-v2-closed",
+   "schema_version": 2,
+   "kind": "closure",
+   "scope": null,
+   "slot": "lpscl_smallcell_glass_md_v2_closure",
+   "applies_to": {
+    "systems": [
+     "lpscl_amorphous"
+    ]
+   },
+   "title": "소셀 유리 평형 MD v2 카드 — 닫는다: 갈래 v2-2 (N₆₀₀ 5/5 · N₅₅₀ 2/5 · 경계 3 · 미통과 0) · 550 K 는 문턱 부근 · ⛔ 캠페인은 닫지 않는다 — 다음 = 대조 계 a-Li₃PS₄ 새 카드 (외부 1저자 회신 CQ 확정)",
+   "statement": "카드 D-2026-09-30-lpscl-smallcell-glass-md-v2 (+ 개정 CO) 의 첫 묶음 10 런을 **갈래 v2-2 로 닫는다** (카드 §4 · 규칙 적용 · 공통 b 256 으로도 같은 갈래). 허용 마감 문장(첫 절 카드 §1a · 그 뒤 회신 CQ 원문): *'600 K 에서는 재현됐으나 (N₆₀₀ ≥ 3/5), 550 K 는 800 ps 로도 과반이 게이트를 통과하지 못했다 (N₅₅₀ = 2/5 · 나머지 셋은 모두 경계이며 미통과는 없다). 이 프로토콜에서 게이트를 안정적으로 통과하는 온도는 600 K 이며, 550 K 는 문턱 부근이다.'* 같이 싣는 것: near-miss (550 K seed1 +1.85σ) · 공통 b 결과 · 옛 사다리 대조 (550 K 4/5) · 늦은 창 한 줄 (10 런 0.909–1.029 · 주 판정은 2–50 ps 로만) · D 시드 간 상대 산포 (IQR/중앙값 550 K 7.5 % · 600 K 3.5 % · max/min 1.22 · 1.26). p90² 는 측정 대기 (결과 전 형식 고정). **캠페인은 닫지 않는다** — 다음은 대조 계 a-Li₃PS₄ 유리 (같은 셀 크기 · 같은 protocol · 600 K 400 ps 5 런 · 같은 게이트 · D 상대차) 새 카드이고 650 K 와 Ea 는 그 뒤 별도 카드다. 허용·금지·기록 전부는 마감 기록.",
+   "rationale": "갈래 문턱과 닫힘 조건(카드 §4 · §7)이 결과 전에 박혀 있었고, 회신 CO 규칙도 결과 전(개정 CO)에 넣은 뒤 판독을 한 번 돌려 규칙을 기계적으로 적용했다. 외부 1저자: *'규칙 적용이 맞고, 공통 b로 내도 같은 갈래라 잣대 차이가 아니라는 확인까지 붙은 것이 결정적입니다.'* 보조 창(50–200 ps)이 구간 안으로 나왔으나 구제에 쓰지 않았다. 마감 문장 끝 절은 550 K 가 '확산영역이 아니다' 가 아니라 '선언 문턱을 과반이 넘지 못했다' 임을 흐리지 않게 좁혔다 (회신 CQ Q-CQ-1).",
+   "decision_state": "active",
+   "record_kind": "closure",
+   "results_seen": true,
+   "card": "db/properties/lpscl_smallcell_glass_md_v2_closed_2026_10_05.json",
+   "record": "db/properties/lpscl_smallcell_glass_md_v2_runlog_2026_10_01.json",
+   "amends": [
+    "D-2026-09-30-lpscl-smallcell-glass-md-v2"
+   ],
+   "depends_on": [
+    "D-2026-09-30-lpscl-smallcell-glass-md-v2",
+    "D-2026-10-04-lpscl-smallcell-glass-md-v2-amend-co"
+   ],
+   "review": "kb/reviews/li2s1a_CQ_reply_li2s_glass_v2_readout_2026_10_05.md",
+   "evidence": [
+    "kb/reviews/li2s1a_CQ_reply_li2s_glass_v2_readout_2026_10_05.md",
+    "db/properties/lpscl_smallcell_glass_md_v2_closed_2026_10_05.json",
+    "db/properties/lpscl_smallcell_glass_md_v2_runlog_2026_10_01.json"
+   ],
+   "reopen_criteria": [
+    "⛔ 이 카드는 재개 조건이 없다 (카드 §7 · 결과 전) — 갈래 뒤의 확장(셋째 온도 · 대조 계 · 셀 확대 · 더 긴 prod)은 전부 새 카드다.",
+    "다음 새 카드 = 대조 계 a-Li₃PS₄ (회신 CQ Q-CQ-4) — 결과 전 게이트 · 골격 규칙(Q-CQ-3 ③ 일시 변화 수 · 문턱 따로) · 도구 점검 목록(Q-CQ-5) · 외부 1저자 확인 뒤 실행."
+   ],
+   "enforcement": "① 마감 기록 §2 허용 서술 밖으로 쓰지 않는다 — 특히 카드 §1a 판 끝 절 '측정 가능 온도는 550 K 보다 위다' 와 '550 K 에서 확산하지 않는다 · 확산영역이 아니다' 금지 ② 절대 D · σ · Ea 를 싣지 않는다 — 대조 계가 붙기 전엔 상대차도 없다 ③ 늦은 창 β 로 구제·재판정하지 않고 해석도 붙이지 않는다 ④ p90² 는 기록만 (마감 기록 §4 결과 전 형식) ⑤ 화면 /li2s 반영은 복귀 머지 뒤 (대피 세션 규칙 · 사용자 10-05).",
+   "proposed_by": "claude-session-2026-10-05 (evac)",
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-10-05",
+     "state": "proposed",
+     "by": "외부 1저자 (회신 CQ)",
+     "note": "v2-2 확정 · 마감 문장 끝 절 좁힘 · 늦은 창 한 줄 · 골격 ③ 일시 변화 수 (문턱 따로) · 다음 = 대조 계 a-Li₃PS₄ 먼저 (캠페인은 닫지 않음) · p90² 따로 재기 · 산포 보고량. 판정은 외부 1저자가 확정했다 — 원장 active 전환(ratification)은 카드 저자(사용자) 몫. 트랙 = li2s (사용자 ≠ 1저자)."
+    },
+    {
+     "at": "2026-10-05",
+     "state": "active",
+     "by": "사용자 (카드 저자)",
+     "note": "사용자 비준 — AskUserQuestion '비준 (active)' (2026-10-05). 판정 자체는 외부 1저자 회신 CQ 가 확정했고, 이 비준은 원장의 active 전환이다. 트랙 = li2s (사용자 ≠ 1저자 · 사용자 = 카드 저자)."
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-10-05T02:17:14Z",
+    "commit": "629cb7904b6375689774813ef21c0c62479cc146",
+    "decision_digest": "sha256:7f84c73f7edc32ebd62217b2f91859dbec408615d6508ffd3aff8fbcb4d4ea1f"
+   }
+  },
+  {
+   "id": "D-2026-10-05-lpscl-smallcell-glass-control-li3ps4",
+   "schema_version": 2,
+   "kind": "estimand",
+   "scope": "lpscl_smallcell.glass_control_li3ps4",
+   "slot": "lpscl_smallcell_glass_control_li3ps4",
+   "applies_to": {
+    "systems": [
+     "lpscl_smallcell_glass",
+     "li3ps4_glass"
+    ],
+    "tasks": [
+     "li2s_glass_control_600K400ps"
+    ],
+    "methods": [
+     "uma_md_turbo",
+     "melt_quench_uma_npt"
+    ],
+    "use_cases": [
+     "internal"
+    ]
+   },
+   "title": "소셀 유리 대조 계 — a-Li₃PS₄ 유리 120 원자 · 600 K 400 ps · 독립 담금질 5 시드 · A 와 같은 프로토콜·게이트 · 보고량 = 두 유리의 Li D 상대차 (절대값 아님 · 회신 CR 반영)",
+   "statement": "회신 CQ Q-CQ-4 의 순서를 카드로 옮기고 회신 CR 로 규칙을 확정했다. B = a-Li₃PS₄ (Li₄₅P₁₅S₆₀ · A 와 같은 담금질 인자) · MD 는 A 의 v2 600 K 와 같은 설정 · A 는 다시 돌리지 않는다. 보고량: N_B/5 · **두 계 모두 R 집합 ≥ 4 일 때만** R = median D_A / median D_B 와 시드 부트스트랩 95 % (1 포함이면 결과 전 검출한계와 함께 '구분되지 않았다' — 기준 R₅₀ 1.20 · R₈₀ 1.25) · B 시드 산포 · N_eff. 골격 네 지표는 600 K 에서도 두 계 모두 게이트 (일시 변화 ≤ 5 / 런 · A 실측 기반) · B 탈락은 관측. c2 = 같은 조건의 1차 관측. 밀도는 기록 (−15 % 단서) · T₅₀ 차 ≥ 100 K 사전 문장.",
+   "rationale": "인용 정책상 600 K 다섯 런은 상대차로만 쓸 수 있는데 비교 대상이 없다 — 같은 셀·같은 프로토콜의 대조 계가 붙어야 '유리 안의 LiCl 이 Li 수송에 무엇을 하는가' 가 성립한다 (회신 CQ). 650 K 는 Ea 목적이라 지금 급하지 않다.",
+   "decision_state": "active",
+   "record_kind": "estimand_card",
+   "results_seen": false,
+   "card": "db/properties/lpscl_smallcell_glass_control_li3ps4_estimand_2026_10_05.json",
+   "depends_on": [
+    "D-2026-10-05-lpscl-smallcell-glass-md-v2-closed"
+   ],
+   "amends": [],
+   "evidence": [
+    "kb/reviews/li2s1a_CQ_reply_li2s_glass_v2_readout_2026_10_05.md",
+    "db/properties/lpscl_smallcell_glass_md_v2_closed_2026_10_05.json",
+    "db/properties/lpscl_smallcell_glass_md_v2_amendment_co_2026_10_04.json (골격 게이트 숫자)",
+    "kb/reviews/li2s1a_CR_reply_li2s_glass_control_card_2026_10_05.md"
+   ],
+   "reopen_criteria": [
+    "갈래_c1a/c1b — R 집합 두 계 모두 ≥ 4 ⇒ R 과 95 % 구간 (1 밖: 방향+R · 1 포함: 검출한계와 함께 구분되지 않음)",
+    "갈래_c1c — N_B ≥ 3 이지만 R 집합 < 4 ⇒ R 을 내지 않는다",
+    "갈래_c2 — N_B ≤ 2 ⇒ 같은 게이트·온도의 1차 관측 · 다음 = B 측정 가능 온도 (새 카드)",
+    "⛔ 이 카드 안에서 prod 400 ps 초과 · 문턱 완화 · 점·시드 제외 (골격 이동은 R 에서만 뺀다) · 풀링 · A 옛 런 혼입 · Tg 맞춘 둘째 런 금지"
+   ],
+   "cost_cap": {
+    "machine": "kgy (담금질 · cascade v7 와 공유) + gabia (탄성이 GPU 를 쓰면 새 공존 결정 필요)",
+    "total_gpu_h": 80,
+    "⛔": "넘으면 멈추고 보고한다. 상한을 올려 계속하지 않는다.",
+    "견적": "담금질 ≈ 15 + MD ≈ 40 ⇒ ≈ 55 GPU-h"
+   },
+   "proposed_by": "claude-session-2026-10-05 (evac)",
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-10-05",
+     "state": "proposed",
+     "by": "agent",
+     "note": "사용자 '둘 다' (AskUserQuestion — p90² 블록 먼저 · 기다리는 동안 대조 계 카드 초안). 방향은 외부 1저자 회신 CQ Q-CQ-4 · 세부 규칙은 초안 — 사용자 검토 → 편지 CR → 회신 → 결과 전 비준 → 실행. 트랙 = li2s (사용자 ≠ 1저자)."
+    },
+    {
+     "at": "2026-10-05",
+     "state": "proposed",
+     "by": "외부 1저자 (회신 CR)",
+     "note": "규칙 확정 — Q-CR-1~6 전건 + 덧붙임 둘 반영 (카드 `개정_회신_CR_2026_10_05`). 원장 active 전환(실행 승인)은 사용자 몫. 트랙 = li2s (사용자 ≠ 1저자)."
+    },
+    {
+     "at": "2026-10-05",
+     "state": "active",
+     "by": "사용자 (카드 저자)",
+     "note": "사용자 비준 — AskUserQuestion '비준 + 실행 준비 시작' (2026-10-05). 규칙은 외부 1저자 회신 CR 이 확정했고, 이 비준은 실행 승인이다 (판독 대조 모드·러너 작성 시작 · 원격 발사는 블록으로). 트랙 = li2s (사용자 ≠ 1저자 · 사용자 = 카드 저자)."
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-10-05T05:52:31Z",
+    "commit": "b8886c265ea3c209c7f5b19be445137f0a21a5f5",
+    "decision_digest": "sha256:1a0aa50cef9babb42725b368a268169e30c5d512b1ffad744c1e0860ef7ed32a"
+   }
+  },
+  {
+   "id": "D-2026-10-05-wad-agc-kprobe12",
+   "schema_version": 2,
+   "kind": "amendment",
+   "scope": "wad.agc_graphite",
+   "slot": "wad_agc_graphite_kprobe12",
+   "applies_to": {
+    "systems": [
+     "agc_graphite"
+    ],
+    "tasks": [
+     "wad_agc_kprobe12"
+    ],
+    "methods": [
+     "qe_gpu_pw_scf"
+    ],
+    "use_cases": [
+     "internal"
+    ]
+   },
+   "title": "P1b G4 k 축 FAIL 뒤 — 대표 두 끝점 k 12×12×1 탐침 (1저자 결정 (c)) · 판독 |W(12) − W(9)| ≤ 0.01 → 9×9×1 수렴 · 헤드라인 불변 · 다음 수는 1저자",
+   "statement": "카드 §4 '새 계산은 1저자 결정 없이는 없다' 에 따른 1저자(사용자) 결정. 대표 AGC_N3_top_fcc 의 두 끝점(dft bound · far)을 **k 12×12×1** 로 다시 SCF 한다 — 입력은 G4 k9 두 잡과 **K_POINTS · prefix 두 줄만** 다르다 (tools/wad/agc_graphite.py --kprobe_make · db/inputs/wad_agc_graphite_2026_10_02/kprobe12). 판독 (결과 전): |W(12) − W(9)| ≤ **0.01** J/m² (G4 와 같은 문턱 · 새 숫자 없음) → '9×9×1 에서 k 수렴' · 넘으면 '9×9×1 도 미수렴' · 잡이 OK 가 아니면 판독하지 않는다. 헤드라인(registry 평균 · G4 FAIL 라벨)은 이 탐침으로 바뀌지 않는다 — 다음 수는 결과를 보고 1저자가 정한다.",
+   "rationale": "registry 넷의 W 차가 1e-4 J/m² 라 k 수렴은 대표 하나로 본다. 9×9×1 자체가 수렴했는지 모르면 (b) 넷을 k9 로 다시 돌려도 '수렴 값' 이라 말할 수 없다 — 싼 탐침(2 잡) + 문턱 + 발동하면 할 일 (CLAUDE.md 마감 규율의 재개 규칙).",
+   "decision_state": "active",
+   "record_kind": "amendment",
+   "results_seen": true,
+   "card": "db/properties/wad_agc_graphite_prereg_2026_10_02.json",
+   "record": "db/properties/wad_agc_graphite_result_2026_10_05.json",
+   "amends": [
+    "D-2026-10-02-wad-agc-graphite"
+   ],
+   "depends_on": [
+    "D-2026-10-02-wad-agc-graphite"
+   ],
+   "evidence": [
+    "db/properties/wad_agc_graphite_result_2026_10_05.json (G4: e70 PASS · k9 FAIL −0.020 · s05 PASS)",
+    "db/inputs/wad_agc_graphite_2026_10_02/kprobe12/qe/jobs.json",
+    "tools/wad/agc_graphite.py (--kprobe_make · --kprobe_collect · selftest 54 · 깨기 2/2)"
+   ],
+   "reopen_criteria": [
+    "CONVERGED_AT_K9 → 1저자 결정: (a′) 라벨에 'k9 수렴 확인' 을 더해 닫기 · (b) 넷도 k9 · 헤드라인 교체는 새 결정",
+    "NOT_CONVERGED_AT_K9 → 1저자 결정: 한 단계 더 (15×15×1 · 같은 2 잡) · 또는 라벨로 닫기",
+    "INCOMPLETE → 판독 안 함 · 원인 확인 (재실행은 실행 복구)"
+   ],
+   "enforcement": "① 헤드라인을 이 탐침으로 바꾸지 않는다 ② W 값은 화면(webapp)에 싣지 않는다 ③ kgy GPU 공존 범위 = 이 2 잡 · 가드 START 12000 · KILL 23000 · HOST 8192/2048 MiB (카드 러너 그대로) · 같은 GPU 의 UMA (cascade v7 탐침 · li2s 대조 담금질) 는 건드리지 않는다 ④ 러너는 run_kgy.sh STAGE=kprobe (새 worktree · 러너 worktree ~/wt_agc_1002 는 안 옮긴다)",
+   "cost_cap": {
+    "machine": "kgy (GPU 공유)",
+    "jobs": 2,
+    "견적": "k9 실측 bound 5,109 s · far 4,281 s × k 점 약 1.5–2 배 ⇒ 4–6 h",
+    "상한_h": 12,
+    "⛔": "넘으면 멈추고 보고한다"
+   },
+   "proposed_by": "claude-session-2026-10-05 (evac)",
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-10-05",
+     "state": "proposed",
+     "by": "사용자 (1저자 · W_ad 트랙)",
+     "note": "AskUserQuestion '(c) 대표 k 사다리 탐침 먼저 (Recommended)' — 판독 문턱은 G4 와 같은 0.01 (카드 상수 재사용)."
+    },
+    {
+     "at": "2026-10-05",
+     "state": "active",
+     "by": "사용자 (1저자 · W_ad 트랙)",
+     "note": "비준 — AskUserQuestion '(c) 대표 k 사다리 탐침 먼저' 를 1저자 결정으로 받는다 · 탐침 묶음·도구를 담은 커밋에 지문 결속."
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-10-05T06:10:24Z",
+    "commit": "afa53812fd43af04e409836899aa2e0e35dbec8b",
+    "decision_digest": "sha256:5dc1925fbdd10cb5d51dd4e987f445233822a78ef9047e3c5969460bd7b30fc1"
+   }
+  },
+  {
+   "id": "D-2026-10-05-lpscl-smallcell-glass-control-cost",
+   "schema_version": 2,
+   "kind": "amendment",
+   "scope": "lpscl_smallcell.glass_control_li3ps4",
+   "slot": "lpscl_smallcell_glass_control_li3ps4_cost",
+   "applies_to": {
+    "systems": [
+     "lpscl_smallcell_glass",
+     "li3ps4_glass"
+    ],
+    "tasks": [
+     "li2s_glass_control_600K400ps"
+    ],
+    "methods": [
+     "uma_md_turbo",
+     "melt_quench_uma_npt"
+    ],
+    "use_cases": [
+     "internal"
+    ]
+   },
+   "title": "소셀 유리 대조 계 — 비용 개정 (회신 CS): 총상한 80 → 140 GPU-h · 상한 비교 = 점유 환산 (kgy 는 동시 GPU 잡 수 등분 · 과대평가 = 보수적 · 벽시계 병기 · gabia 는 nvidia-smi 표본) · 80 이 틀린 이유 기록 · MD 재견적 (v2 장부 19–23 GPU-h) · 멈춤은 실현 가능한 경로 · 넷에서 멈추면 다섯째를 마저 (결과와 무관 · 추가 ≤ 16.5 GPU-h)",
+   "statement": "카드 §6 의 비용 견적 ('담금질 5 × ≈ 3 h ≈ 15 GPU-h · 합 ≈ 55') 은 틀렸다 — **잰 적 없는 어림을 옮겼고 같은 캠페인의 실측 장부를 보지 않았다** (A 실측: 시드당 벽시계 28.7–47.0 h · 등분 점유 14.3–16.5 GPU-h). 회신 CS 대로 고친다: ① 상한 비교 = 점유 환산 — kgy 는 프로세스별 정보가 막혀 '같이 돈 GPU 잡 수 등분' 으로 세고 (B 는 120 원자 UMA 라 가벼워 등분은 우리 몫을 과대평가 = 상한 비교에 보수적), gabia 런은 nvidia-smi 표본 실측 · 벽시계 병기 · 장부에 기계별 측정 방식. ② 총상한 **140 GPU-h** (외부 1저자 수용 · 결과 전 비용 정정). MD 를 v2 600 K 장부로 다시 냈다: 벽시계 43.2 h · 등분 점유 19.2–23.1 ⇒ 최악 82.5 + 23.1 = 105.6 (여유 33 %) · MD 를 벽시계 전부로 세는 극단 125.7 (여유 11 %) — 상한에 닿아 멈추는 일은 **실현 가능한 경로**다. ③ 상한에 닿으면 그 시드가 끝난 자리에서 멈추고 보고한다. 그때 B 시드가 넷이면 (담금질이든 600 K MD 든) 다섯째 하나만 **결과와 무관하게** 마저 돌린다 · 추가분 ≤ 16.5 GPU-h (런 하나 · A 실측 최대) · 넘으면 멈추고 외부 1저자에게 보고. 회신 전 잠정 규칙 ('80 에서 시드 끝 멈춤') 은 이 결정의 비준으로 끝난다. 계산 조건 (인자 · 시드 · 온도 · 게이트 · 판독 규칙 · R 정의 · 갈래) 은 바꾸지 않는다.",
+   "rationale": "카드 규칙 '넘으면 멈추고 보고 · 상한을 올려 계속하지 않는다' — 넘기 전에 보고한다 (지금 쓴 몫 벽시계 ≈ 3.8 h). 같은 프로토콜·같은 시드 수가 R 의 조건이라 비용을 줄일 길이 없다 (담금질 속도·시드 수를 바꾸면 A 와 비교가 깨진다). 점유 환산으로는 공유 여부와 거의 무관하게 담금질 ≈ 70–80 이 든다. 트랙 = li2s — 상한·셈법 변경은 외부 1저자 동의 (편지 CS) 가 정한다. 회신 CS (외부 1저자) 가 셈법·상한을 정했고, 둘(상한 140/160 · 넷에서 멈출 때)은 카드 저자에게 넘겼다 — 사용자가 140 유지 · 다섯째를 마저를 골랐다 (R 이 '두 계 모두 통과 시드 ≥ 4' 라 B 넷이면 여유가 없다 · 다섯째 한 런이 그 위험보다 싸다).",
+   "decision_state": "active",
+   "record_kind": "amendment",
+   "results_seen": false,
+   "card": "db/properties/lpscl_smallcell_glass_control_li3ps4_estimand_2026_10_05.json",
+   "record": "db/properties/lpscl_smallcell_glass_control_li3ps4_amendment_cs_2026_10_05.json",
+   "amends": [
+    "D-2026-10-05-lpscl-smallcell-glass-control-li3ps4"
+   ],
+   "depends_on": [
+    "D-2026-10-05-lpscl-smallcell-glass-control-li3ps4"
+   ],
+   "evidence": [
+    "db/properties/lpscl_glass_control_li3ps4_runlog_2026_10_05.json (⚠_비용_견적_오류_2026_10_05 · seed1 melt 100 ps = 222.9 분)",
+    "db/properties/lpscl_smallcell_glass_md_gateA_erratum_2026_09_24.json (Q6_총상한_GPU_h_셈법.장부_h — A 시드당 벽시계 28.7–47.0 h)",
+    "db/properties/lpscl_smallcell_glass_md_cc_followup_2026_09_26.json (A2_Q6_장부_점유환산 — 시드당 14.3–16.5 GPU-h · 등분 가정)",
+    "db/properties/lpscl_smallcell_glass_md_amendment_cc_2026_09_26.json (8_Q6_셈법 — 점유 환산 · 등분 가정은 병기용)",
+    "kb/reviews/li2s1a_CS_reply_li2s_glass_control_cost_2026_10_05.md (회신 CS 원문)",
+    "db/properties/lpscl_smallcell_glass_control_li3ps4_amendment_cs_2026_10_05.json (개정 · MD 재견적 v2 장부 19.2–23.1 GPU-h)",
+    "kb/reviews/li2s1a_CS_prompt_li2s_glass_control_cost_2026_10_05.md (편지 CS · Q-CS-1~3)"
+   ],
+   "reopen_criteria": [
+    "추가분 (넷에서 멈춘 뒤 다섯째) 이 16.5 GPU-h 를 넘으면 멈추고 외부 1저자에게 보고 — 상한을 올려 계속하지 않는다",
+    "기계 배정이 바뀌면 (예: 담금질을 gabia 로) 장부의 측정 방식을 기계별로 다시 적는다 (gabia = nvidia-smi 표본) — 상한 140 은 그대로"
+   ],
+   "enforcement": "① 총상한 140 GPU-h (점유 환산 · 기계별 측정 방식 · 벽시계 병기) — 닿으면 그 시드 끝에서 멈추고 보고 (러너 bash 만 STOP · 돌던 python 은 그대로) ② 그때 B 시드가 넷이면 다섯째 하나만 결과와 무관하게 · 추가 ≤ 16.5 GPU-h ③ 시드마다 runlog 장부 (벽시계 · 같이 돈 GPU 잡 · 점유 · 측정 방식) ④ 계산 조건은 바꾸지 않는다",
+   "cost_cap": {
+    "total_gpu_h": 140,
+    "이전_total_gpu_h": 80,
+    "셈법": "점유 환산 — kgy 동시 GPU 잡 수 등분 (과대평가 = 보수적) · gabia nvidia-smi 표본 · 벽시계 병기",
+    "견적_정정": "담금질 ≈ 70–82.5 (A 실측 장부) + MD 19.2–23.1 (v2 장부 · 등분) ⇒ 최악 105.6 · MD 벽시계 극단 125.7",
+    "넷에서_멈출_때": "다섯째를 마저 — 결과와 무관 · 추가 ≤ 16.5 GPU-h",
+    "⛔": "넘으면 멈추고 보고한다. 상한을 올려 계속하지 않는다."
+   },
+   "proposed_by": "claude-session-2026-10-05 (evac)",
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-10-05",
+     "state": "proposed",
+     "by": "사용자 (카드 저자 · 실행 승인)",
+     "note": "AskUserQuestion '계속 + 편지 (Recommended)' — 담금질은 계속 · 편지 CS 로 외부 1저자 동의 요청. 트랙 = li2s (사용자 ≠ 1저자) — 상한·셈법은 회신이 정한다 (잠정)."
+    },
+    {
+     "at": "2026-10-05",
+     "state": "proposed",
+     "by": "외부 1저자 (회신 CS)",
+     "note": "규칙 확정 — Q-CS-1 kgy 등분으로 상한 비교 (과대평가 = 보수적 · 벽시계 병기 · gabia 실측) · Q-CS-2 140 수용 + 셋 (80 이 틀린 이유 · 여유 → 160 또는 멈춤 경로 명시 · MD 재견적) · Q-CS-3 수용 + 넷에서 멈출 때 규칙을 지금. 개정 기록 db/properties/lpscl_smallcell_glass_control_li3ps4_amendment_cs_2026_10_05.json. 카드 저자(사용자) 선택 둘 뒤 비준. 트랙 = li2s (사용자 ≠ 1저자)."
+    },
+    {
+     "at": "2026-10-05",
+     "state": "active",
+     "by": "사용자 (카드 저자)",
+     "note": "비준 — AskUserQuestion '140 유지 (Recommended)' · '다섯째를 마저 (Recommended)' (회신 CS 가 카드 저자에게 넘긴 둘). 규칙은 외부 1저자 회신 CS 가 정했고, 이 비준은 실행 승인이다. 트랙 = li2s (사용자 ≠ 1저자 · 사용자 = 카드 저자)."
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-10-05T11:10:07Z",
+    "commit": "a01f331cdca75e8e766fc040790b5d908878de60",
+    "decision_digest": "sha256:2f76951cfcb9bb168102f2cc41511b04405eece36cfb16532192723b12b8c57c"
+   }
+  },
+  {
+   "id": "D-2026-10-05-gabia-uma-coexist-elastic-li2s-control",
+   "kind": "policy",
+   "scope": "ops.gabia.gpu.concurrency",
+   "slot": "gabia_gpu_pwx_uma_coexist_exception",
+   "applies_to": {
+    "systems": [
+     "li3ps4_glass",
+     "modelc_2x_elastic"
+    ],
+    "tasks": [
+     "li2s_glass_control_quench_gabia_3seeds"
+    ],
+    "methods": [
+     "melt_quench_uma_npt",
+     "qe_gpu_relax"
+    ],
+    "use_cases": [
+     "internal"
+    ]
+   },
+   "title": "gabia GPU — 'pw.x ↔ UMA 동시 실행 금지' 의 범위 한정 예외 (5): li2s 대조 계 B 담금질 gabia 몫 3 시드 (seed3·4·5) 를 탄성 modelc_2x 옆에서 한 번에 하나씩 — 예외 (4) 와 같은 가드 + nvidia-smi 점유 표본",
+   "statement": "li2s 대조 계 (D-2026-10-05-lpscl-smallcell-glass-control-li3ps4) B = a-Li₃PS₄ 120 원자 담금질의 gabia 몫 **3 시드** (seed3·4·5 · A 담금질과 같은 시드–기계 대응 — A 는 seed1·2 kgy · seed3·4·5 gabia) 에 한해, 탄성 modelc_2x (GPU pw.x · 지금 strain_13_m · 41.4 GB) 가 도는 gabia A6000 에 UMA 담금질을 **한 번에 하나씩** 올려도 된다. 조건은 예외 (4) 와 같고 러너 db/inputs/lpscl_glass_control_li3ps4_2026_10_05/run_quench_kgy.sh (MACHINE=gabia · sha16 0605345893360435 · EXCEPTION_ID 기본값 = 이 결정) 가 기계로 건다: ① GPU 합계 > 46,000 MiB 면 우리 담금질 kill ② 우리 담금질 (PID 트리) > 3,500 MiB (시작 300 s 뒤부터) 면 kill ③ host MemAvailable < 8,192 MiB 면 kill ④ 탄성 작업방 (ELW) 최신 *.out 에 우리 시드 시작 뒤 GPU 메모리 오류가 새로 쓰이면 kill ⑤ 시작은 GPU 합계 ≤ 42,500 · host ≥ 12,288 MiB 일 때만 ⑥ ①–④ 가 한 번이라도 발동하면 **예외를 닫는다** (다음 시드를 안 띄움 · 자동 재시작 없음 · 종료 코드 6/7) ⑦ 탄성 pw.x·탄성 러너는 건드리지 않는다 ⑧ ELW 에 *.out 이 없으면 시작하지 않는다 (④ 가 말없이 무력해지는 것을 막는다). 더해서 회신 CS Q-CS-1 (gabia 는 실측) 대로 60 s 마다 `nvidia-smi pmon` 표본 (우리 PID 트리 sm % · 모든 잡 sm % 합) 을 logs/seed<S>_pmon.tsv 에 남긴다 — 장부의 점유 = Σ Δt × 우리/합 (합이 0 인 표본은 우리 몫 1 · 보수).",
+   "rationale": "gabia 운용 = 우리 트랙 → 결정 = 사용자 (li2s 과학 판정과 무관한 기계 배정 · 탄성 1저자 = 사용자). 사용자 10-05 'gabia에서 진행하자' — kgy 는 cascade v7 탐침 · P1b k12 와 나눠 써서 seed1 melt 100 ps 가 222.9 분이었다. 예외 (3)·(4) 는 9 런을 피크 GPU 합계 43,437 MiB (가드 46,000 안) · 우리 1,992–2,038 MiB 로 가드 발동 없이 끝냈다. 탄성은 13_m 뒤 12_p · 12_m 이 남아 (≈ 6 일) 끝날 때까지 기다리면 gabia 를 못 쓴다. 탄성 쪽 과학 조건은 D-2026-09-11-elastic-conv-threshold 2차 개정 그대로 (경합으로 탄성 잡이 비정상 종료하면 modelc_2x 를 처음부터). 시드–기계 대응은 A 담금질과 같게 (사용자 선택 · 결과 전) — 600 K MD 의 Q-CR-6 과 같은 논리.",
+   "record_kind": "scope_declaration",
+   "card": "db/properties/lpscl_smallcell_glass_control_li3ps4_estimand_2026_10_05.json",
+   "record": "db/inputs/lpscl_glass_control_li3ps4_2026_10_05/run_quench_kgy.sh",
+   "evidence": [
+    "D-2026-09-30-gabia-uma-coexist-elastic-li2s-v2 (예외 (4) · 5 런 · 가드 발동 0 · 피크 43,437 MiB · 10-03 소멸)",
+    "gabia 점검 10-05 20:14 (사용자 붙여넣기): GPU 41,392 / 49,140 MiB · pw.x strain_13_m.in 41,374 MiB · host 47 GB · fairchem ok",
+    "db/inputs/lpscl_glass_control_li3ps4_2026_10_05/run_quench_kgy.sh --SELFTEST 27 (공존 14 · 가짜 nvidia-smi · 음성 포함) · 일부러 깨기 8/8 (① ② WARM ③ ④ pipefail · el_mark · pmon · ELW 거부 · 시작 host)"
+   ],
+   "method_ref": "run_quench_kgy.sh MACHINE=gabia — TOTALCAP 46000 · OURCAP 3500 · WARM 300 s · HOSTFLOOR 8192 · START_MAX_MIB 42500 · SAMPLE 2 s · PMON_S 60 s · ELW /data/work/runs/elastic_modelc_2x (DRY_RUN 이 최신 *.out 을 찍는다) · SEEDS='3 4 5' · RUN /data/work/runs/lpscl_glass_control_li3ps4_2026_10_05",
+   "reopen_criteria": "가드 ①–④ 가 한 번이라도 발동하거나 공존 중 탄성 pw.x 가 비정상 종료하면 **예외를 닫고** 원 규칙 (동시 금지) 으로 돌아간다. 3 시드가 끝나거나 탄성이 끝나면 예외는 소멸한다. 다른 UMA 런 · 다른 GPU pw.x 잡 · 둘 이상 동시 · 600 K MD 로 **넘어가지 않는다** (600 K gabia 런은 새 결정).",
+   "enforcement": "러너가 조건 ①–⑤·⑧ 을 2 s 표본으로 건다. ⚠ 확률적 보호다 — 표본 간격보다 빠른 VRAM 급등은 못 막는다. ⚠ SM 을 나눠 써서 탄성 BFGS 스텝이 느려질 수 있다.",
+   "amends": [],
+   "amends_note": "CLAUDE.md §계산 자원 gabia 에 이 예외 줄을 더한다 (같은 커밋 · 규칙 본문은 그대로).",
+   "schema_version": 2,
+   "decision_state": "active",
+   "results_seen": false,
+   "proposed_by": "claude-session-2026-10-05 (evac)",
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-10-05",
+     "state": "proposed",
+     "by": "agent",
+     "note": "사용자 'gabia에서 진행하자' → gabia 점검 (탄성 13_m GPU 41.4 GB) → AskUserQuestion 두 답 'A 와 같게 (Recommended)' · '비준 (Recommended)' — 본문 확정 커밋 뒤 비준."
+    },
+    {
+     "at": "2026-10-05",
+     "state": "active",
+     "by": "사용자 (gabia 운용 · 탄성 1저자)",
+     "note": "비준 — AskUserQuestion '비준 (Recommended)' (예외 (4) 와 같은 조건 + nvidia-smi 점유 표본) · 시드–기계 대응 'A 와 같게 (Recommended)'. 트랙 = gabia 운용(우리) · li2s 외부 1저자에게는 기계 배정 사실을 다음 편지에 싣는다."
+    },
+    {
+     "at": "2026-10-05",
+     "state": "active",
+     "by": "agent (원장 구조 정정)",
+     "note": "supersedes 에 예외 (4) 를 더함 — 비준 직후 validate_canonical 의 slot 겹침 검사가 (4) 가 아직 active 로 남은 것을 잡았다 (4 는 10-03 소멸 · 원장 어휘에 '소멸' 이 없어 active 로 남아 있었다). 승인 내용(statement · 가드 · 범위)은 그대로 · 지문만 다시 냄 · 결속 커밋은 그대로 71e7e9f0."
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-10-05T11:31:04Z",
+    "commit": "71e7e9f0cdf89549cc50f918d2f06658fbfd03b9",
+    "decision_digest": "sha256:985c46f7592b81d3b82270e55e0985fdfe62dd1479fb52e1394683d035443cd0"
+   },
+   "supersedes": [
+    "D-2026-09-30-gabia-uma-coexist-elastic-li2s-v2"
+   ]
+  },
+  {
+   "id": "D-2026-10-05-wad-agc-graphite-closed",
+   "schema_version": 2,
+   "kind": "closure",
+   "scope": "wad.agc_graphite",
+   "slot": "wad_agc_graphite_closure",
+   "applies_to": {
+    "systems": [
+     "agc_graphite"
+    ],
+    "tasks": [
+     "wad_agc_graphite_closure"
+    ],
+    "methods": [
+     "qe_gpu_pw_scf"
+    ],
+    "use_cases": [
+     "internal"
+    ]
+   },
+   "title": "P1b Ag(111)|흑연 3층 W_sep 마감 — (a′) 라벨로 닫기: 헤드라인 0.513 J/m² (k6 · registry 평균) + 'G4 k FAIL · 9×9×1 에서 k 수렴 확인' (대표 k9 · k12 값 동반 · 새 계산 없음)",
+   "statement": "k12 탐침 판독 CONVERGED_AT_K9 (|W(12) − W(9)| ≤ 0.01 · 레포 재집계 = kgy 집계) 뒤, 결정 D-2026-10-05-wad-agc-kprobe12 의 재개 조건대로 1저자가 (a′) 를 골랐다: 헤드라인은 사전등록대로 registry 평균 (k 6×6×1) 0.513 J/m² 이고, 라벨에 'G4 k FAIL · 9×9×1 에서 k 수렴 확인' 과 대표 registry 의 k9 · k12 값을 붙인다 (k6 헤드라인은 k 수렴값보다 약 4–5 % 높다). 허용·금지 서술과 재개 조건은 마감 카드에서만 가져온다. 새 계산은 없다.",
+   "rationale": "registry 넷의 W 폭이 1e-4 J/m² 라 k 보정 폭은 registry 마다 거의 같다 — (b) 넷도 k9 (약 8 잡 · kgy 하루 · li2s 담금질과 GPU 경합) 는 정보가 적다. 헤드라인을 대표 k9 로 바꾸는 것 (결과 뒤 추정자 교체) 대신 사전등록 헤드라인 + 수렴값 라벨로 닫아 DEM 에 두 값을 같이 준다.",
+   "decision_state": "active",
+   "record_kind": "closure",
+   "results_seen": true,
+   "card": "db/properties/wad_agc_graphite_prereg_2026_10_02.json",
+   "record": "db/properties/wad_agc_graphite_closed_2026_10_05.json",
+   "depends_on": [
+    "D-2026-10-02-wad-agc-graphite",
+    "D-2026-10-05-wad-agc-kprobe12"
+   ],
+   "amends": [],
+   "evidence": [
+    "db/properties/wad_agc_graphite_result_2026_10_05.json (k12_탐침_결과_2026_10_05)",
+    "db/raw/wad_agc_graphite_2026_10_02/kprobe12_collect_repo_2026_10_05.json (= kprobe12_collect_kgy.json · SHA256SUMS 222)"
+   ],
+   "reopen_criteria": [
+    "① DEM 또는 1저자가 k 수렴된 registry 평균을 헤드라인으로 요구하면 → (b) 나머지 넷 (N3 registry 셋 + N4) 의 두 끝점을 9×9×1 로 (새 결정 · kgy 약 8 잡) — 그 결과로 헤드라인 교체 여부를 새 결정으로",
+    "② 모형 질문이 바뀌면 (비정합 셀 · 변형 없는 흑연 · 이완 포함 G_c · 다른 Ag 면 · 3체 헤드라인) → 새 카드 (이 마감의 재개가 아니다)"
+   ],
+   "enforcement": "① 헤드라인 0.513 은 §1 라벨과 함께만 ② W 값은 화면(webapp)·원장 로그·open_items 에 싣지 않는다 ③ 헤드라인 교체는 새 결정 (재개 조건 ①)",
+   "proposed_by": "claude-session-2026-10-05 (evac)",
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-10-05",
+     "state": "proposed",
+     "by": "agent",
+     "note": "k12 탐침 CONVERGED_AT_K9 → AskUserQuestion — 사용자 '(a′) 라벨로 닫기 (Recommended)'. 본문 확정 커밋 뒤 비준."
+    },
+    {
+     "at": "2026-10-05",
+     "state": "active",
+     "by": "사용자 (1저자 · W_ad 트랙)",
+     "note": "비준 — AskUserQuestion '(a′) 라벨로 닫기 (Recommended)' 를 1저자 결정으로 받는다 · 마감 카드·결과 기록을 담은 커밋에 지문 결속."
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-10-05T13:13:51Z",
+    "commit": "89c5ab62d33e7a44e20371e53d1a7493fbec3956",
+    "decision_digest": "sha256:853f8ada5621e35ad1a0b9b6cd7b7eed5d5871d5ccfdde8b536d000d232a55d6"
+   }
+  },
+  {
+   "id": "D-2026-10-05-wad-agc-graphite-k9-registry",
+   "schema_version": 2,
+   "kind": "amendment",
+   "scope": "wad.agc_graphite",
+   "slot": "wad_agc_graphite_k9set",
+   "applies_to": {
+    "systems": [
+     "agc_graphite"
+    ],
+    "tasks": [
+     "wad_agc_graphite_k9set"
+    ],
+    "methods": [
+     "qe_gpu_pw_scf"
+    ],
+    "use_cases": [
+     "internal"
+    ]
+   },
+   "title": "P1b 마감 재개 ① (b) — 나머지 넷 (N3 registry 셋 + N4) 두 끝점 9×9×1 · kgy 8 잡 · 판독 (결과 전): 10 잡 전부 OK → 헤드라인 = k9 registry 넷 평균 [min, max] (교체 기록은 새 마감 결정) · 하나라도 아니면 마감 (a′) 그대로 · 두께 |ΔW| ≤ 0.02 · registry 폭 > 0.01 라벨 · 상한 벽시계 30 h",
+   "statement": "마감 D-2026-10-05-wad-agc-graphite-closed 의 재개 조건 ① — 1저자(사용자)가 k 수렴된 registry 평균을 헤드라인으로 원한다. N3 registry 셋 (top_hcp · hollow_fcc · s01) 과 N4 (두께 점검) 의 두 끝점 (dft bound · far) 을 **k 9×9×1** 로 다시 SCF 한다 — 입력은 생산 (6×6×1) 입력과 **K_POINTS · prefix 두 줄만** 다르고, 대표 top_fcc 의 G4 k9 두 잡과 같은 변환이다 (tools/wad/agc_graphite.py --k9set_make 가 같은 변환을 대표에 걸어 G4 k9 입력이 바이트 그대로 나오는지 먼저 확인한다 · db/inputs/wad_agc_graphite_2026_10_02/k9set · 8 잡). 대표 top_fcc 의 9×9×1 은 이미 있는 G4 k9 두 잡을 쓴다 (다시 돌리지 않는다). 판독 (결과 전 · --k9set_collect): ① 헤드라인 = N3 registry 넷의 9×9×1 W 평균 [min, max] — 새 8 잡 + 대표 G4 k9 2 잡이 **전부 OK** 일 때만 교체 (REPLACE) · 하나라도 OK 가 아니면 (상한에 닿아 못 띄운 잡 · SCF 미수렴 포함) 마감 (a′) 그대로 (KEEP_A_PRIME · 부분 평균을 헤드라인으로 쓰지 않는다) ② 두께 (k9) |W(N4) − W(N3 top_fcc)| ≤ 0.02 J/m² (G5 와 같은 문턱) — 넘으면 라벨 ③ registry 폭 (k9) max − min > 0.01 J/m² (G4 문턱) 이면 라벨 (보고만) ④ 컷오프 (e70) · smearing (s05) 축은 k 6×6×1 대표에서 PASS — 9×9×1 에서 다시 보지 않는다 (라벨) ⑤ 넷 각각의 12×12×1 은 재지 않는다 — k 수렴은 대표의 k12 탐침으로 미루어 읽는다 (라벨). 마감 (a′) 은 이 결과가 나올 때까지 active 로 남고, 헤드라인 교체는 판독이 REPLACE 일 때 새 마감 결정이 그 마감을 대체하는 것으로만 한다.",
+   "rationale": "registry 넷의 k6 W 폭이 1e-4 J/m² 라 결과는 대표 k9 근처일 가능성이 높다 — 그래도 헤드라인을 추정 (대표 k9 를 넷에 옮겨 쓰기) 이 아니라 측정으로 박는다. kgy 자리 (어림 · 잰 것 아님): li2s 대조 담금질의 끝은 gabia 몫 (seed3·4·5 · 탄성 옆 한 번에 하나) 이 정하고 kgy seed1·2 는 그보다 하루 반쯤 일찍 끝날 어림이라, 8 잡이 kgy 담금질을 늦춰도 li2s 완료는 늦어지지 않는다.",
+   "decision_state": "active",
+   "record_kind": "amendment",
+   "results_seen": true,
+   "results_seen_note": "k6 넷 · 대표 k9 · k12 는 봤다 — 새 8 잡 결과 전에 판독 규칙을 박았다 (사용자에게 제시한 그대로)",
+   "card": "db/properties/wad_agc_graphite_prereg_2026_10_02.json",
+   "record": "db/properties/wad_agc_graphite_result_2026_10_05.json",
+   "amends": [],
+   "depends_on": [
+    "D-2026-10-02-wad-agc-graphite",
+    "D-2026-10-05-wad-agc-kprobe12",
+    "D-2026-10-05-wad-agc-graphite-closed"
+   ],
+   "evidence": [
+    "db/inputs/wad_agc_graphite_2026_10_02/k9set/qe/jobs.json (8 잡 · pw_in_sha256 = 파일 바이트 · 원본 해시 = 2단계 jobs.json)",
+    "tools/wad/agc_graphite.py (--k9set_make · --k9set_collect · selftest 71 · 깨기 8/8 · k12 탐침 묶음 리팩터 뒤 바이트 동일)",
+    "db/inputs/wad_agc_graphite_2026_10_02/run_kgy.sh STAGE=k9set (잡마다 상한 확인 · 잠금 rc 0 막음 · 컨테이너 음성 2 · 깨기 2/2)",
+    "db/raw/wad_agc_graphite_2026_10_02/stage2/jobs_run.tsv (대표 G4 k9 실측 bound 5,109 s · far 4,281 s)"
+   ],
+   "reopen_criteria": [
+    "REPLACE (10 잡 전부 OK) → 새 마감 결정 (D-2026-10-05-wad-agc-graphite-closed 를 대체 · 같은 slot) — 헤드라인 = k9 registry 넷 평균 [min, max] + k9 라벨 + 기존 모형·2체 라벨 · k6 헤드라인은 이력으로만",
+    "KEEP_A_PRIME (하나라도 OK 아님 · 상한 30 h 에 닿음 포함) → 마감 (a′) 그대로 · 원인 기록 · 다시 돌릴지 (β 0.1 대체 포함) 는 1저자 결정",
+    "두께 (k9) FAIL → 헤드라인 교체는 규칙대로 하되 '두께 (k9) FAIL' 라벨 · 4층 이상을 더 볼지는 1저자 결정"
+   ],
+   "enforcement": "① W 값은 화면(webapp)·원장 로그·open_items 에 싣지 않는다 (결과 기록·마감 카드에만) ② 판독 규칙은 결과 전 고정 — 결과를 보고 문턱·표본을 바꾸지 않는다 ③ kgy GPU 공존 범위 = 이 8 잡 · 한 번에 하나 · 가드 START 12000 · KILL 23000 · HOST 8192/2048 MiB (카드 러너 그대로) · 같은 GPU 의 UMA (cascade v7 탐침 · li2s 대조 담금질) 는 건드리지 않는다 ④ 러너 run_kgy.sh STAGE=k9set (새 worktree · 돌고 있는 러너 worktree 는 안 옮긴다) ⑤ li2s 대조 계 kgy 장부 (등분) 는 이 8 잡 구간을 동시 GPU 잡으로 센다",
+   "cost_cap": {
+    "machine": "kgy (GPU 공유 · cascade v7 탐침 + li2s 대조 담금질)",
+    "jobs": 8,
+    "견적": "대표 G4 k9 실측 (10-04) bound 5,109 s · far 4,281 s · N4 는 k6 에서 1.2–1.4 배 · 지금 공유로 1.3 배쯤 ⇒ 12–18 h (어림)",
+    "상한_h": 30,
+    "⛔": "넘으면 다음 잡을 띄우지 않는다 (도는 잡은 끝낸다) · 보고 — 상한을 올려 계속하지 않는다"
+   },
+   "proposed_by": "claude-session-2026-10-05 (evac)",
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-10-05",
+     "state": "proposed",
+     "by": "사용자 (1저자 · W_ad 트랙)",
+     "note": "사용자 '자리가 있다면 해보는게 낫지 않나? kgy에서' → AskUserQuestion '지금 kgy 에서 (Recommended)' — 판독 규칙은 그 질문 전에 제시한 그대로. 본문 확정 커밋 뒤 비준."
+    },
+    {
+     "at": "2026-10-05",
+     "state": "active",
+     "by": "사용자 (1저자 · W_ad 트랙)",
+     "note": "비준 — AskUserQuestion '지금 kgy 에서 (Recommended)' 를 1저자 결정으로 받는다 (판독 규칙은 그 전에 제시한 그대로) · 묶음·도구·러너를 담은 커밋에 지문 결속."
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-10-05T13:35:42Z",
+    "commit": "bb12faa25d85b3d170b6e614889efc2160116c7e",
+    "decision_digest": "sha256:d58473d92c28661efc3ab1022e8195416ce0ecb303857de2ef049d7d7c1722b1"
    }
   }
  ]

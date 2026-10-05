@@ -3,11 +3,11 @@ title: "CP 프롬프트 — cascade D_rel v7 탐침 카드 (초안): v6 방법�
 tags: [review, cascade, d_rel, eprime, estimand, card, v7, probe, gate, msd, codex, prompt, letter]
 letter: CP
 date: 2026-10-01
-updated: 2026-10-01
+updated: 2026-10-03
 track: cascade
 channel: codex
 kind: prompt
-status: 초안 (2026-10-01) — 사용자 검토 · 발송 대기
+status: 발송 완료 2026-10-03 (사용자 'codex 돌아왔다 cp 보내자' · 본문 그대로) · ✅ 회신 수령 2026-10-03 → `codex_CP_reply_cascade_v7_probe_card_2026_10_03.md` (NO-GO 초안 그대로 · 방향 조건부 GO · P0 3) · 이행·v7 개정 전 탐침 안 돌림
 confidence: medium
 verificationStatus: verified
 verifiedAt: 2026-10-01

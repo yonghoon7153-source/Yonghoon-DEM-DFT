@@ -82,6 +82,13 @@
   Γ = ν₀·exp(−Ea/kT) (ν₀ 10¹³ s⁻¹ **가정** · T 명시) · 평균 대기 1/Γ · 시간 창 t 가 있으면 N = Γ·t.
   "빠르다/느리다" 서술이 이 줄과 차수에서 모순이면 쓰지 않는다. 차수 검산이지 확산계수·전도도가 아니다.
   구현 `tools/sei/collect_neb.py::hop_check` (계기: li2026 JACS 의 0.97 eV → 243 s 동안 N ≈ 0.1).
+- **짧은 MD 에서 '반응·분해 없음 · 안정' 을 쓸 때는 관측창 한 줄을 같이 싣는다** (사용자 2026-10-05 · `D-2026-10-05-md-observation-window`):
+  Ea_max ≈ kT·ln(ν₀·t) (ν₀ 10¹³ s⁻¹ **가정** · T · 궤적 총 시간 t 명시 · 반응 자리 n 개면 + kT·ln n) — 그보다 높은 장벽의 반응은
+  그 궤적이 원래 못 본다 (5 ps·298 K ≈ 0.10 eV · 20 ns·350 K ≈ 0.37 eV · 셀 3 h ≈ 1.0 eV). 홉 수 검산의 거울상이다.
+  구현 `tools/sei/collect_neb.py::observation_window` · `--obs_window T t [n]` (계기: kim2026 Adv. Energy Mater. 5 ps AIMD '무반응').
+- **화학결합 규모(≳ 2 eV) 흡착·결합에너지는 공개 구조가 있으면 결합 자리 배위수부터 센다** (사용자 2026-10-05 · `D-2026-10-05-adsorption-site-coordination`):
+  저배위(단글링 본드 · 과환원 · 수산화 없음) 자리면 '그 자리의 결합 포화 에너지' 로만 쓰고 표면 일반 흡착 세기·기전 근거로 쓰지 않는다 ·
+  구조가 없으면 '배위 미확인' 을 같이 적는다 · 우리 흡착 결과 기록도 배위수를 싣는다 (계기: yuan2026 Nat. Commun. SiO₂–TFSI⁻ 3.11 eV = 1-배위 Si).
 - 평균류 지표(site mean-3p 등)는 **그림 표시 창과 동일한 창**(-8..0 eV)으로 계산·인용.
 - 슬랩 계산은 기하 승계(verified-carry: 마지막 ATOMIC_POSITIONS 스플라이스 + 검증) + local-TF/저β 믹싱.
 
@@ -145,9 +152,10 @@
     03:28 얼린 러너 `kill -9` → 새 러너 tmux `el_mc2x_1001` (`stopped` + .bfgs → restart · 새 출력에 *Atomic positions and unit cell read from directory* ·
     *initial density is read from file* · *Starting wfcs from file* 확인 · 첫 SCF 뒤 `number of bfgs steps = 20` — 19 에서 섰으니 이력 승계 ✓). 같은 정지가 다시 필요하면 **새 결정**을 받는다.
     ⚠ 새 출력의 `반복 N회` (watch) 는 **새 파일의 SCF 반복 수**라 이어서 도는지 알려 주지 않는다 — 위 세 줄과 첫 SCF 뒤 `number of bfgs steps` 로 가른다.
+  · ⭐ **2026-10-05 새 예외 (5) — 살아 있다** (`D-2026-10-05-gabia-uma-coexist-elastic-li2s-control` · 사용자 10-05 *"gabia에서 진행하자"* · 비준): li2s **대조 계 B 담금질 gabia 몫 3 시드만** (seed3·4·5 · A 담금질과 같은 시드–기계 대응 · 한 번에 하나) · 가드는 예외 (4) 와 같다 + 회신 CS 대로 `nvidia-smi pmon` 점유 표본 · 러너 `db/inputs/lpscl_glass_control_li3ps4_2026_10_05/run_quench_kgy.sh` `MACHINE=gabia` (`EXCEPTION_ID` 기본값 = 이 예외 · 탄성 작업방에 *.out 이 없으면 시작 거부). 3 시드가 끝나거나 탄성이 끝나면 소멸 · 600 K MD 로 넘어가지 않는다. 바로 아래 '1건' 줄은 옛 (4) 기록이다.
   · ⚠ **지금 살아 있는 예외는 1건 — 범위가 좁다** (`D-2026-09-30-gabia-uma-coexist-elastic-li2s-v2` · 사용자 09-30 *"옛 예외와 같은 조건"*):
     li2s 유리 MD **v2 카드(잠정) 첫 묶음의 gabia 몫 5 런만** (600 K seed2·4·5 · 400 ps · 550 K seed1·3 · 800 ps · `--seed` 1000 + 시드) ·
-    조건·가드·러너는 아래 옛 예외(3)와 **같다** (러너 `EXCEPTION_ID` 기본값 = v2). 5 런이 끝나거나 탄성이 끝나면 소멸한다.
+    조건·가드·러너는 아래 옛 예외(3)와 **같다** (러너 `EXCEPTION_ID` 기본값 = v2). 5 런이 끝나거나 탄성이 끝나면 소멸한다. ⏩ **10-03 16:56:59 소멸** (gabia 몫 5 런 끝 · 가드 발동 0) ⇒ **지금 살아 있는 공존 예외 0 건** — 원장 어휘에 '소멸' 이 없고 비준 다이제스트가 status_history 까지 덮어서 결정 항목은 **안 건드렸다** (`decision_state` active 로 남지만 효력 없음 · 소멸 기록 = `lpscl_smallcell_glass_md_v2_runlog_2026_10_01.json` `✅_완주_2026_10_03`). 새 공존은 새 결정.
     옛 예외(3)는 **2026-09-30 14:47:57 소멸**했고 (gabia 몫 4 런 끝 · 피크 GPU 합계 43,391 MiB) 새 예외가 명시적으로 **대체·재봉인**했다 —
     옛 ID 로는 러너가 결정 검사에서 멈춘다. 아래는 옛 예외(3)의 기록이다
     (`D-2026-09-29-gabia-uma-coexist-elastic-li2s-main` · 1저자 09-29 *"직렬로 하나씩"*):

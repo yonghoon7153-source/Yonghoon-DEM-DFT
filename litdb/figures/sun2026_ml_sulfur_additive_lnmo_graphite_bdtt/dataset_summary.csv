@@ -1,0 +1,111 @@
+# Derived summary for Sun et al. J. Phys. Chem. Lett. 2026 (DOI 10.1021/acs.jpclett.6c02511) SI dataset (xlsx: litdb/inbox/Sun 2026 - Sup1 ML dataset (JPCL 6c02511).xlsx; Sheet1; 1440 rows x 27 cols).
+# !! literature data and litdb-curator re-analysis of it (2026-10-03) — NOT Yonghoon-DEM-DFT campaign results. Control-calculation rows are unit-audit checks only (not a reported quantity; do not cite as property values).
+# Tools: openpyxl 3.1.5 / RDKit 2026.03 / scikit-learn 1.9.1 / PySCF 2.14 (B3LYP(G), 6-31+G(d,p), density fitting, gas phase). Digest: litdb/papers/sun2026_ml_sulfur_additive_lnmo_graphite_bdtt.md section 5.
+section,quantity,series,value,unit,method_note
+unit_audit,HOMO column min,all 1440,-9.5278,eV,"header says Hartree; values are eV (see factor check)"
+unit_audit,HOMO column p05,all 1440,-8.3455,eV,
+unit_audit,HOMO column median,all 1440,-7.1263,eV,
+unit_audit,HOMO column p95,all 1440,-6.1296,eV,
+unit_audit,HOMO column max,all 1440,-4.5906,eV,
+unit_audit,HOMO column mean,all 1440,-7.1478,eV,
+unit_audit,HOMO column sd (population),all 1440,0.6780,eV,
+unit_audit,HOMO rows equal to (5-decimal Hartree) x 27.2114,all 1440,1440,rows,"factors 27.211386 / 27.2116 / 27.211 / 27.21 give 0 rows; e.g. -8.5988024 = -0.31600 x 27.2114"
+unit_audit,LUMO column raw min,all 1440,-0.2973,raw,"header says Hartree; unit undetermined (see control rows)"
+unit_audit,LUMO column raw p05,all 1440,-0.16736,raw,
+unit_audit,LUMO column raw median,all 1440,-0.09302,raw,
+unit_audit,LUMO column raw p95,all 1440,-0.02965,raw,
+unit_audit,LUMO column raw max,all 1440,0.02835,raw,
+unit_audit,LUMO column raw mean,all 1440,-0.09529,raw,
+unit_audit,LUMO column raw sd (population),all 1440,0.04276,raw,"read as Hartree = 1.16 eV; read as eV = 0.043 eV"
+unit_audit,LUMO rows with <=5 decimals,all 1440,1440,rows,"5 dec 1287 / 4 dec 137 / 3 dec 14 / 2 dec 2 (Gaussian Hartree print format)"
+unit_audit,LUMO rows > 0,all 1440,28,rows,
+filter,elements present,all 1440,C H O S,-,"no other element"
+filter,S atoms per molecule,all 1440,2,count,"all 1440 rows have exactly 2 S (undisclosed filter)"
+filter,O atoms per molecule min,all 1440,4,count,"O distribution: 4:769 5:239 6:277 7:67 8:77 9:5 10:6"
+filter,O atoms per molecule max,all 1440,10,count,
+filter,C atoms per molecule range,all 1440,1-13,count,
+filter,molecular weight min,all 1440,144.2,g/mol,RDKit MolWt
+filter,molecular weight median,all 1440,258.3,g/mol,
+filter,molecular weight max,all 1440,298.5,g/mol,
+filter,heavy atoms range,all 1440,7-19,count,
+filter,Murcko scaffolds unique,all 1440,245,count,"acyclic 625 / benzene 237 / thiophene 85 / sulfolane 37"
+filter,cyclic sulfate esters (BDTT motif),all 1440,3,count,"SMARTS [#8;R][#16;R](=O)(=O)[#8;R]; any O-S(=O)(=O)-O motif: 97"
+filter,BDTD/BDTT/TDT/DTD/ES/PS/MMDS/sulfolane/DMSO/thiophene present,all 1440,0,count,"RDKit canonical SMILES match; MMDS (C2H4O6S2) and the 3 candidates satisfy S=2/O>=4 yet are absent => undisclosed subsample"
+charge,dianion rows (net -2),all 1440,52,rows,"formula column drops the charge in all 52; HOMO median -7.47 eV (same band as neutrals)"
+charge,charge-separated neutral rows,all 1440,3,rows,
+duplicates,identical-SMILES groups,all 1440,36,groups,"50 surplus rows; e.g. CC(CSSCC(C)C(=O)[O-])C(=O)[O-] x4 HOMO -6.58/-6.10/-6.63/-5.37 eV"
+duplicates,max HOMO spread within identical SMILES,all 1440,1.26,eV,
+collision,unique 23-descriptor vectors,all 1440,1079,count,
+collision,groups sharing a descriptor vector,all 1440,213,groups,
+collision,molecules in shared-vector groups,all 1440,574,rows,39.9 % of dataset
+collision,within-group HOMO range median,shared groups,0.246,eV,
+collision,within-group HOMO range max,shared groups,1.263,eV,"39 groups > 0.5 eV"
+collision,in-sample MAE floor of any descriptor-only model,all 1440,0.053,eV,group-mean predictor
+collision,test molecules with identical descriptor vector in train,random 85/15 x20 seeds,0.375,fraction,
+collision,test molecules with identical SMILES in train,random 85/15 x20 seeds,0.053,fraction,
+descriptor_recount,non-aromatic rows mismatching RDKit graph count (>=1 column),923 non-aromatic,342,rows,"37 %; neutral and no C=S: 253"
+descriptor_recount,Ring-S undercount,923 non-aromatic,130,rows,e.g. C1CSSC1(C(=O)O)C(=O)O sheet 1 vs RDKit 2
+descriptor_recount,C=S counted as C-S,923 non-aromatic,57,rows,convention (no C=S column)
+descriptor_recount,C-O undercount,923 non-aromatic,38,rows,e.g. C1OC(C(O1)CS(=O)(=O)O)CS(=O)(=O)O sheet 3 vs 4
+descriptor_recount,C=C undercount,923 non-aromatic,34,rows,
+descriptor_recount,carboxylate C=O undercount,923 non-aromatic,18,rows,C(=O)[O-] counted as C=O 0
+descriptor_recount,S-S undercount,923 non-aromatic,11,rows,e.g. CCS(=O)(=O)S(=O)(=O)O sheet 0 vs 1
+descriptor_recount,atom/coordination columns matching RDKit,all 1440,1437-1440,rows per column,
+descriptor_recount,aromatic rows matching (kekule / aromatic-excluded convention),517 aromatic,2 / 270,rows,aromatic bond convention undocumented
+reproduction,paper Table 1 GBR test R,paper,0.847,-,single random split
+reproduction,GBR test R (lr 0.05 depth 5 n 200),random 85/15 x20 seeds,0.877 +- 0.020,-,"range 0.831-0.905"
+reproduction,GBR test MAE,random 85/15 x20 seeds,0.243 +- 0.013,eV,"range 0.216-0.264 (paper 0.261)"
+reproduction,GBR test RMSE,random 85/15 x20 seeds,0.323 +- 0.030,eV,"range 0.279-0.385 (paper 0.385)"
+reproduction,GBR test MAPE,random 85/15 x20 seeds,3.46 +- 0.20,%,(paper 3.88)
+reproduction,GBR train R,random 85/15 x20 seeds,0.955,-,(paper 0.959)
+reproduction,GBR test R,group split by descriptor vector x5,0.860 +- 0.019,-,MAE 0.248 +- 0.004 eV
+reproduction,GBR test R,Murcko scaffold split (acyclic singletons) x5,0.844 +- 0.039,-,MAE 0.273 +- 0.023 eV
+reproduction,GBR test R,Murcko scaffold split (acyclic one bucket) x5,0.787 +- 0.044,-,MAE 0.299 +- 0.011 eV
+reproduction,linear regression test R (same 23 descriptors),random 85/15 x20 seeds,0.846 +- 0.021,-,MAE 0.277 +- 0.018 eV
+reproduction,linear regression on S=O count only test R,random 85/15 x20 seeds,0.659 +- 0.034,-,MAE 0.389 +- 0.024 eV
+reproduction,SVR test R (paper grid; 5-fold CV; raw features),random 85/15 x5 seeds,0.884 +- 0.013,-,"MAE 0.232 +- 0.008 eV; best C 10 gamma scale (paper SVR 0.823)"
+reproduction,SVR test R (standardized),random 85/15 x5 seeds,0.881 +- 0.018,-,MAE 0.234 +- 0.010 eV
+reproduction,mean HOMO by S=O count 0,dataset,-6.60,eV,n 424
+reproduction,mean HOMO by S=O count 1,dataset,-6.78,eV,n 28
+reproduction,mean HOMO by S=O count 2,dataset,-7.02,eV,n 379
+reproduction,mean HOMO by S=O count 3,dataset,-7.24,eV,n 46
+reproduction,mean HOMO by S=O count 4,dataset,-7.63,eV,n 546
+reproduction,mean HOMO by S=O count 6,dataset,-8.51,eV,n 17
+reproduction,GBR predicted HOMO BDTD,20 seeds,-8.06 +- 0.12,eV,"range -8.30 to -7.79; paper -7.97; RDKit graph descriptors"
+reproduction,GBR predicted HOMO BDTT,20 seeds,-8.93 +- 0.17,eV,"range -9.18 to -8.40; paper -8.78"
+reproduction,GBR predicted HOMO TDT,20 seeds,-8.69 +- 0.19,eV,"range -9.04 to -8.18; paper -8.70"
+control_calc,BDTT HOMO,MMFF geometry single point,-9.070,eV,paper Fig. S2 -8.91
+control_calc,BDTT LUMO,MMFF geometry single point,-1.045,eV,paper Fig. S2 -1.00
+control_calc,C(S(=O)O)S(=O)O HOMO / LUMO,MMFF single point,-7.086 / -1.016,eV,"dataset HOMO -7.244; LUMO raw -0.09378"
+control_calc,C(O)SS(=O)(=O)O HOMO / LUMO,MMFF single point,-7.771 / -1.829,eV,"dataset -8.032; -0.1644"
+control_calc,CS(=O)(=O)CS(=O)O HOMO / LUMO,MMFF single point,-7.724 / -1.185,eV,"dataset -7.554; -0.1036"
+control_calc,C1CS(=O)(=O)CS1(=O)=O HOMO / LUMO,MMFF single point,-8.758 / -0.587,eV,"dataset -8.189; -0.10482"
+control_calc,CS(=O)(=O)CS(=O)(=O)C HOMO / LUMO,MMFF single point,-8.552 / -0.440,eV,"dataset -7.787; -0.08315"
+control_calc,C(C(CS(=O)(=O)O)O)S HOMO / LUMO,MMFF single point,-6.817 / -0.719,eV,"dataset -6.819; -0.09606"
+control_calc,COS(=O)COS(=O)C HOMO / LUMO,MMFF single point,-6.803 / -0.701,eV,"dataset -6.649; -0.10975"
+control_calc,C1=CSC(=C1)COS(=O)(=O)O HOMO / LUMO,MMFF single point,-6.987 / -1.317,eV,"dataset -7.198; -0.12549"
+control_calc,C1=C(SC=C1S(=O)(=O)O)C=O HOMO / LUMO,MMFF single point,-7.814 / -2.860,eV,"dataset -7.856; -0.11439 (Hartree reading -3.11 eV matches within 0.25)"
+control_calc,C(S(=O)O)S(=O)O HOMO / LUMO,B3LYP/6-31G(d) relaxed then single point,-7.462 / -1.355,eV,geometry shift of LUMO -0.34 eV
+control_calc,C1=CSC(=C1)COS(=O)(=O)O HOMO / LUMO,B3LYP/6-31G(d) relaxed then single point,-7.081 / -1.444,eV,geometry shift of LUMO -0.13 eV
+control_calc,HOMO agreement with dataset (9 neutral rows),MMFF single points,MAE 0.259 / max 0.765 / r 0.887,eV,HOMO column = eV confirmed
+control_calc,LUMO dataset-minus-ours if dataset read as eV,9 neutral rows,+0.36 to +2.75,eV,
+control_calc,LUMO dataset-minus-ours if dataset read as Hartree,9 neutral rows,-0.25 to -2.64,eV,
+control_calc,LUMO Pearson r (ours vs dataset raw),9 neutral rows,0.535,-,LUMO column unit/level undetermined
+control_calc,C(CS(=O)[O-])S(=O)[O-] charge -2 gas HOMO / LUMO,MMFF single point,+2.626 / +6.729,eV,"dataset HOMO -8.231 => not a gas-phase dianion"
+control_calc,C(CS(=O)[O-])S(=O)[O-] charge 0 (2 e- removed) HOMO / LUMO,MMFF single point,-7.484 / -6.433,eV,
+figure_read,Fig. S7 SEI thickness on AG (control),authors dashed guides,7.3,nm,"pixel measurement; 10 nm bar = 274 px"
+figure_read,Fig. S7 SEI thickness on AG (BDTT),authors dashed guides,2.5,nm,
+figure_read,Fig. S8 CEI thickness on LNMO (control),authors dashed guides,9.4,nm,10 nm bar = 136 px
+figure_read,Fig. S8 CEI thickness on LNMO (BDTT),authors dashed guides,9.6,nm,
+figure_read,Fig. S3 LSV current at 1.95 V (control / BDTT),colour-mask digitization,4.6e-5 / 5.8e-5,A,BDTT ahead only in ~2.0-1.9 V
+figure_read,Fig. S3 LSV current at 1.6 V (control / BDTT),colour-mask digitization,1.9e-4 / 1.4e-4,A,control ahead from ~1.9 V down
+figure_read,Fig. S3 LSV current at 1.1 V (control / BDTT),colour-mask digitization,3.9e-4 / 3.1e-4,A,
+paper_arithmetic,45 C control retention from stated capacities,0.2328/0.9052,25.72,%,paper states 24.71 %
+paper_arithmetic,train + test sample count,paper text,1443,rows,dataset has 1440
+paper_arithmetic,Mn on graphite reduction,2284.1 -> 538.4 ppm,76.4,%,4.24-fold
+paper_arithmetic,MD box LiODFB / BDTT content,box composition,2.06 / 2.20,wt%,experiment 1 wt% each
+figure_read,Fig. 2b 45 C discharge capacity control at 300/350/400/450 cycles,colour-mask digitization (marker centre),0.72 / 0.68 / 0.61 / 0.49,Ah,"paper end point 0.2328 Ah at 500"
+figure_read,Fig. 2b 45 C discharge capacity BDTT at 300/350/400/450 cycles,colour-mask digitization (marker centre),0.85 / 0.84 / 0.82 / 0.80,Ah,"paper end point 0.7839 Ah at 500"
+figure_read,Fig. 2b retention at 300 cycles (control / BDTT),digitized / stated initial capacity,~80 / ~90,%,"vs 24.71 / 82.73 % at 500"
+duplicates,HOMO spread within identical SMILES (median / mean),36 groups,0.157 / 0.217,eV,"16 groups > 0.2 eV; label noise from undeclared conformer/stereo/state"
+collision,Pearson r S=O vs O1 descriptor,all 1440,0.81,-,"O vs O1 0.44; O vs S=O 0.42 (correlated features not clustered before SHAP)"

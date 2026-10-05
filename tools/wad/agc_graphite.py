@@ -636,6 +636,185 @@ def _w_to_dry(W, A):
     return W * A * A2_M2 / C4.RY_J
 
 
+# ───────────── k 사다리 탐침 (G4 k 축 FAIL 뒤 · 1저자 결정 2026-10-05) ─────────────
+#   결정 D-2026-10-05-wad-agc-kprobe12: 대표(REP_NAME) 두 끝점만 12×12×1 로 다시 — 9×9×1 자체가 수렴했는지 본다.
+#   ⛔ 못 하는 것: 헤드라인을 바꾸지 않는다 (판독만 · 다음 수는 1저자) · 다른 registry·N4 를 돌리지 않는다 ·
+#     12 가 수렴인지는 말하지 않는다 (9 → 12 의 차만 본다).
+KPROBE_K = 12                  # 9 다음의 3 의 배수 (그래핀 K 점 포함 · KPTS_G4 와 같은 규칙)
+KPROBE_DW = G4_DW              # 판독 문턱 = G4 와 같은 0.01 J/m² (새 숫자를 만들지 않는다)
+KPROBE_DECISION = "D-2026-10-05-wad-agc-kprobe12"
+
+
+def _k_swap(src_q, by, src, dst, k_from, k_to, out_q, tag):
+    """src 잡 pw.in 을 dst 로 복사하며 **K_POINTS 한 줄 · prefix 한 줄만** 바꾼다 (나머지는 바이트 그대로 · 결정적).
+    원본이 그 묶음 jobs.json 기록 해시와 다르면 (돌았던 입력이 아니면) · 두 줄을 정확히 하나씩 못 찾으면 만들지 않는다.
+    반환 (새 잡 기록, 원본 sha) — 새 기록의 pw_in_sha256 은 **새 파일 바이트** 다 (러너 입력 점검이 그걸 대조한다)."""
+    src_p = os.path.join(src_q, src, "pw.in")
+    if src not in by or not os.path.isfile(src_p):
+        raise SystemExit(f"⛔ {src} 가 2단계 묶음에 없다 — 만들지 않는다")
+    if _sha(src_p) != by[src].get("pw_in_sha256"):
+        raise SystemExit(f"⛔ {src}/pw.in 해시가 그 묶음 jobs.json 과 다르다 (돌았던 입력이 아니다) — 만들지 않는다")
+    txt = open(src_p, encoding="utf-8").read()
+    kl = lambda k: f"\n  {k} {k} 1 0 0 0\n"
+    n_k, n_p = txt.count(kl(k_from)), txt.count(f"prefix = '{src}'")
+    if n_k != 1 or n_p != 1:
+        raise SystemExit(f"⛔ {src}: K_POINTS({k_from})·prefix 줄을 정확히 하나씩 못 찾았다 ({n_k}·{n_p}) — 만들지 않는다")
+    out = txt.replace(kl(k_from), kl(k_to)).replace(f"prefix = '{src}'", f"prefix = '{dst}'")
+    os.makedirs(os.path.join(out_q, dst), exist_ok=True)
+    dst_p = os.path.join(out_q, dst, "pw.in")
+    open(dst_p, "w", encoding="utf-8").write(out)
+    e = dict(by[src]); e["dir"] = dst; e["kpts"] = [k_to, k_to, 1]
+    e["pw_in_sha256"] = _sha(dst_p)   # 러너 입력 점검이 이 칸을 파일 바이트와 대조한다 — 복사한 원본 값을 남기면 막힌다 (2026-10-05 실측)
+    e["tags"] = {**{a: b for a, b in (e.get("tags") or {}).items() if a != "G4"}, **tag, "from": src}
+    return e, _sha(src_p)
+
+
+def make_kprobe(stage2_dir, out_dir, k=KPROBE_K, model=REP_NAME):
+    """G4 k9 두 끝점 pw.in 을 복사하고 **K_POINTS 한 줄 · prefix 한 줄만** 바꾼다 (나머지는 바이트 그대로 · 결정적)."""
+    src_q = os.path.join(stage2_dir, "qe")
+    jobs = json.load(open(os.path.join(src_q, "jobs.json"), encoding="utf-8"))
+    by = {j["dir"]: j for j in jobs["jobs"]}
+    out_q = os.path.join(out_dir, "qe")
+    new, src_sha = [], {}
+    for ep in ("bound", "far"):
+        src = f"{model}_G4_k9_{ep}"
+        e, s = _k_swap(src_q, by, src, f"{model}_K{k}_{ep}", KPTS_G4[0], k, out_q, {"kprobe": f"k{k}_{ep}"})
+        new.append(e)
+        src_sha[src] = s
+    meta = {"schema": "agc_kprobe/v1", "what": f"k 사다리 탐침 — {model} 두 끝점 {k}×{k}×1 (나머지는 G4 k9 입력 그대로)",
+            "decision": KPROBE_DECISION, "settings": jobs.get("settings"), "jobs": new, "source_pw_in_sha256": src_sha}
+    json.dump(meta, open(os.path.join(out_q, "jobs.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+    return meta
+
+
+def kprobe_status(w9, wk):
+    """판독 규칙 (결정 · 결과 전): |W(k) − W(9)| ≤ KPROBE_DW → 9×9×1 에서 수렴으로 읽는다. 값이 없으면 판독하지 않는다 (0 아님)."""
+    if w9 is None or wk is None:
+        return "INCOMPLETE"
+    return "CONVERGED_AT_K9" if abs(wk - w9) <= KPROBE_DW else "NOT_CONVERGED_AT_K9"
+
+
+def collect_kprobe(stage2_dir, raw2, probe_dir, probe_raw, k=KPROBE_K, model=REP_NAME):
+    """대표의 k6 · k9 · k 탐침 W — 2단계 집계와 **같은 함수**(C4.read_job · C4._w · 같은 면적)로."""
+    A = C4.area_A2(os.path.join(stage2_dir, "structures", f"{model}_dft_bound.extxyz"))
+    rd = C4.read_job
+    w6 = C4._w(rd(raw2, stage2_dir, f"{model}_dft_bound"), rd(raw2, stage2_dir, f"{model}_dft_far"), A)
+    w9 = C4._w(rd(raw2, stage2_dir, f"{model}_G4_k9_bound"), rd(raw2, stage2_dir, f"{model}_G4_k9_far"), A)
+    jb, jf = rd(probe_raw, probe_dir, f"{model}_K{k}_bound"), rd(probe_raw, probe_dir, f"{model}_K{k}_far")
+    wk = C4._w(jb, jf, A)
+    st = kprobe_status(w9, wk)
+    return {"model": model, "k": k, "decision": KPROBE_DECISION, "A_A2": A, "W_k6_J_m2": w6, "W_k9_J_m2": w9,
+            f"W_k{k}_J_m2": wk, f"dW_k{k}_minus_k9_J_m2": (wk - w9) if st != "INCOMPLETE" else None,
+            "threshold_abs_dW": KPROBE_DW, "status": st, "jobs": {jb["job"]: jb.get("status"), jf["job"]: jf.get("status")},
+            "reading": {"CONVERGED_AT_K9": "9×9×1 에서 k 수렴으로 읽는다 — 헤드라인 처리는 1저자 결정",
+                        "NOT_CONVERGED_AT_K9": "9×9×1 도 k 미수렴 — 다음 (한 단계 더 · 라벨로 닫기) 은 1저자 결정",
+                        "INCOMPLETE": "탐침 잡이 OK 가 아니다 — 판독하지 않는다"}[st]}
+
+
+# ───────────── (b) 나머지 넷 9×9×1 (마감 재개 조건 ① · 1저자 결정 2026-10-05) ─────────────
+#   결정 D-2026-10-05-wad-agc-graphite-k9-registry: N3 registry 셋 (top_hcp · hollow_fcc · s01) + N4 의 두 끝점을 9×9×1 로 —
+#   입력은 생산 (k 6×6×1) 입력과 **K_POINTS · prefix 두 줄만** 다르다 = 대표 top_fcc 의 G4 k9 두 잡과 같은 변환 (make_k9set 이 대조한다).
+#   top_fcc 의 9×9×1 은 이미 있는 G4 k9 두 잡을 쓴다 (다시 돌리지 않는다).
+#   판독 규칙 (결과 전 · 결정에 박음):
+#     헤드라인 = N3 registry 넷의 9×9×1 W 평균 [min, max] — **8 잡 + top_fcc G4 k9 2 잡이 전부 OK 일 때만** 교체 (REPLACE) ·
+#       하나라도 OK 가 아니면 마감 (a′) 그대로 (KEEP_A_PRIME · 부분 평균을 헤드라인으로 쓰지 않는다)
+#     두께 (k9) |W(N4) − W(N3 top_fcc)| ≤ THICK_DW 0.02 (G5 와 같은 문턱) — 넘으면 라벨
+#     registry 폭 (k9) max − min > K9SET_SPREAD_DW 0.01 이면 라벨 (보고만 · 판정 아님)
+#     컷오프·smearing 축 (G4 e70 · s05) 은 k 6×6×1 대표에서 PASS — 9×9×1 에서 다시 보지 않는다 (라벨)
+#   ⛔ 못 하는 것: 헤드라인 교체를 스스로 기록하지 않는다 (판독만 · 교체는 새 마감 결정) · 12×12×1 은 대표 하나뿐이다
+#     (넷의 k9 가 수렴인지는 대표의 k12 탐침으로 미루어 읽는다 — 넷 각각을 재지 않는다) · e70 · s05 · G3 를 k9 에서 다시 재지 않는다 ·
+#     ATM (3체) 은 k 와 무관한 기하 항이라 다시 내지 않는다 (2단계 집계 --atm 의 열 그대로).
+K9SET_DECISION = "D-2026-10-05-wad-agc-graphite-k9-registry"
+K9SET_MODELS = tuple(model_name(N_C, r) for r in REGISTRIES if r != REP) + (THICK_NAME,)
+K9SET_SPREAD_DW = G4_DW        # registry 폭 라벨 문턱 = G4 와 같은 0.01 J/m² (새 숫자 없음 · 보고만)
+
+
+def k9_job(model, ep):
+    return f"{model}_K9_{ep}"
+
+
+def make_k9set(stage2_dir, out_dir, models=K9SET_MODELS):
+    """생산 (6×6×1) 두 끝점 pw.in → 9×9×1 (K_POINTS · prefix 두 줄만). 먼저 **같은 변환을 대표에 걸어 G4 k9 입력과 바이트가 같은지** 본다 —
+    다르면 (G4 k9 가 다른 방식으로 만들어졌으면) 넷의 k9 와 대표 k9 를 한 평균에 넣을 수 없으므로 만들지 않는다."""
+    import tempfile
+    src_q = os.path.join(stage2_dir, "qe")
+    jobs = json.load(open(os.path.join(src_q, "jobs.json"), encoding="utf-8"))
+    by = {j["dir"]: j for j in jobs["jobs"]}
+    k6, k9 = KPTS[0], KPTS_G4[0]
+    with tempfile.TemporaryDirectory() as td:
+        for ep in ("bound", "far"):
+            g4 = f"{REP_NAME}_G4_k9_{ep}"
+            e, _ = _k_swap(src_q, by, f"{REP_NAME}_dft_{ep}", g4, k6, k9, os.path.join(td, "eq"), {})
+            if g4 not in by or e["pw_in_sha256"] != by[g4].get("pw_in_sha256") or _sha(os.path.join(src_q, g4, "pw.in")) != e["pw_in_sha256"]:
+                raise SystemExit(f"⛔ 대표 {REP_NAME}_dft_{ep} 에 같은 변환을 걸어도 {g4} 입력이 안 나온다 — 넷의 k9 를 대표 k9 와 한 평균에 넣을 수 없다 · 만들지 않는다")
+        new, src_sha = [], {}
+        for model in models:
+            for ep in ("bound", "far"):
+                src = f"{model}_dft_{ep}"
+                e, s = _k_swap(src_q, by, src, k9_job(model, ep), k6, k9, os.path.join(td, "qe"), {"k9set": f"k9_{ep}"})
+                new.append(e)
+                src_sha[src] = s
+        out_q = os.path.join(out_dir, "qe")            # 전부 됐을 때만 내보낸다 (반쯤 만든 묶음을 남기지 않는다 · 바이트 복사라 기록 해시 그대로)
+        for e in new:
+            os.makedirs(os.path.join(out_q, e["dir"]), exist_ok=True)
+            shutil.copyfile(os.path.join(td, "qe", e["dir"], "pw.in"), os.path.join(out_q, e["dir"], "pw.in"))
+    meta = {"schema": "agc_k9set/v1", "what": f"(b) 나머지 넷 {k9}×{k9}×1 — {', '.join(models)} 두 끝점 (생산 입력과 K_POINTS · prefix 두 줄만 다름)",
+            "decision": K9SET_DECISION, "same_transform_as": f"{REP_NAME}_G4_k9_bound · _far (대표 k9 — 이 묶음에 안 넣고 2단계 출력을 쓴다 · 변환 동치 확인됨)",
+            "settings": jobs.get("settings"), "jobs": new, "source_pw_in_sha256": src_sha}
+    json.dump(meta, open(os.path.join(out_q, "jobs.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+    return meta
+
+
+def k9set_reading(rows, all_ok):
+    """판독 규칙 (결정 · 결과 전). rows = {모델: {"W_k9_J_m2": …}} · all_ok = 10 잡 (새 8 + 대표 G4 k9 2) 이 전부 OK.
+    값이 없으면 0 으로 읽지 않는다 — 평균·폭·두께 모두 None (INCOMPLETE)."""
+    n3 = [model_name(N_C, r) for r in REGISTRIES]
+    v = [(rows.get(n) or {}).get("W_k9_J_m2") for n in n3]
+    full = all_ok and None not in v
+    head = {"what": f"Ag(111)|흑연(0001) {N_C}층 · W_sep (끝점 {GAP:g} Å · PBE+D3(BJ) 2체) · registry 넷 평균 [min, max] · k {KPTS_G4[0]}×{KPTS_G4[1]}×1",
+            "n_registry": len(n3), "n_ok": sum(x is not None for x in v), "missing": [n for n, x in zip(n3, v) if x is None],
+            "mean_J_m2": (sum(v) / len(v)) if full else None, "range_J_m2": [min(v), max(v)] if full else None,
+            "status": "REPLACE" if full else "KEEP_A_PRIME"}
+    spread = (max(v) - min(v)) if full else None
+    sp = {"spread_J_m2": spread, "threshold_J_m2": K9SET_SPREAD_DW,
+          "status": "INCOMPLETE" if spread is None else ("LABEL" if spread > K9SET_SPREAD_DW else "OK")}
+    a, c = (rows.get(REP_NAME) or {}).get("W_k9_J_m2"), (rows.get(THICK_NAME) or {}).get("W_k9_J_m2")
+    dth = (c - a) if (a is not None and c is not None) else None
+    th = {"pair": f"{THICK_NAME} − {REP_NAME} (k9)", "dW_J_m2": dth, "threshold_abs_dW": THICK_DW,
+          "status": "INCOMPLETE" if dth is None else ("PASS" if abs(dth) <= THICK_DW else "FAIL")}
+    labels = [f"k {KPTS_G4[0]}×{KPTS_G4[1]}×1 (대표 {REP_NAME} 의 12×12×1 탐침으로 k 수렴 확인 — 넷 각각의 12×12×1 은 재지 않았다)",
+              "컷오프 (e70) · smearing (s05) 축은 k 6×6×1 대표에서 PASS — 9×9×1 에서 다시 보지 않음"]
+    if th["status"] != "PASS":
+        labels.append(f"두께 (k9) {th['status']}")
+    if sp["status"] != "OK":
+        labels.append(f"registry 폭 (k9) {sp['status']}" + (f" (> {K9SET_SPREAD_DW})" if sp["status"] == "LABEL" else ""))
+    return {"headline_k9": head, "spread_k9": sp, "thickness_k9": th, "labels_k9": labels,
+            "reading": {"REPLACE": "사전 규칙대로 헤드라인을 k9 registry 평균으로 교체한다 — 기록은 새 마감 결정 (이 도구는 판독만)",
+                        "KEEP_A_PRIME": "10 잡이 전부 OK 가 아니다 — 마감 (a′) 그대로 (부분 평균을 헤드라인으로 쓰지 않는다)"}[head["status"]]}
+
+
+def collect_k9set(stage2_dir, raw2, k9_dir, k9_raw):
+    """넷 + 대표의 k6 · k9 W — 2단계 집계와 **같은 함수**(C4.read_job · C4._w · 같은 면적)로. 대표 k9 = 2단계 G4 k9 두 잡."""
+    rd = C4.read_job
+    rows, jobs = {}, {}
+    for name in [model_name(N_C, r) for r in REGISTRIES] + [THICK_NAME]:
+        A = C4.area_A2(os.path.join(stage2_dir, "structures", f"{name}_dft_bound.extxyz"))
+        w6 = C4._w(rd(raw2, stage2_dir, f"{name}_dft_bound"), rd(raw2, stage2_dir, f"{name}_dft_far"), A)
+        if name == REP_NAME:
+            jb, jf, src = rd(raw2, stage2_dir, f"{name}_G4_k9_bound"), rd(raw2, stage2_dir, f"{name}_G4_k9_far"), "2단계 G4 k9 (기존 · 다시 안 돌림)"
+        else:
+            jb, jf, src = rd(k9_raw, k9_dir, k9_job(name, "bound")), rd(k9_raw, k9_dir, k9_job(name, "far")), "k9set (새로)"
+        w9 = C4._w(jb, jf, A)
+        jobs.update({jb["job"]: jb.get("status"), jf["job"]: jf.get("status")})
+        rows[name] = {"A_A2": A, "W_k6_J_m2": w6, "W_k9_J_m2": w9, "dW_k9_minus_k6_J_m2": (w9 - w6) if (w9 is not None and w6 is not None) else None,
+                      "k9_source": src, "jobs": {jb["job"]: jb.get("status"), jf["job"]: jf.get("status")}}
+    all_ok = len(jobs) == 2 * (len(K9SET_MODELS) + 1) and all(s == "OK" for s in jobs.values())
+    out = {"schema": "agc_k9set_collect/v1", "decision": K9SET_DECISION, "stage2": stage2_dir, "raw2": raw2, "k9_dir": k9_dir, "k9_raw": k9_raw,
+           "rows": rows, "jobs": jobs, "jobs_not_ok": sorted(j for j, s in jobs.items() if s != "OK"), "all_10_ok": all_ok}
+    out.update(k9set_reading(rows, all_ok))
+    return out
+
+
 def _selftest():
     import re
     import tempfile
@@ -854,6 +1033,158 @@ def _selftest():
         ck("카드 결속: code_binding 값 = 코드 상수 (전부)", mine == theirs, {k: (mine[k], theirs.get(k)) for k in mine if mine[k] != theirs.get(k)})
     else:
         ck("카드가 repo 에 있다", False, p)
+    # ⑦ k 사다리 탐침 (결정 D-2026-10-05-wad-agc-kprobe12)
+    with tempfile.TemporaryDirectory() as td:
+        q = os.path.join(td, "s2", "qe")
+        body = lambda nm: (f"&CONTROL\n  calculation = 'scf'\n  prefix = '{nm}'\n  outdir = './tmp'\n/\n"
+                           "K_POINTS automatic\n  9 9 1 0 0 0\nATOMIC_POSITIONS angstrom\nC 0 0 0\n")
+        jl = []
+        for ep in ("bound", "far"):
+            nm = f"{REP_NAME}_G4_k9_{ep}"; os.makedirs(os.path.join(q, nm))
+            open(os.path.join(q, nm, "pw.in"), "w").write(body(nm))
+            jl.append({"dir": nm, "kind": "scf", "calc": "scf", "kpts": [9, 9, 1], "tags": {"G4": f"k9_{ep}"},
+                       "pw_in_sha256": _sha(os.path.join(q, nm, "pw.in"))})
+        json.dump({"settings": {"pp_sha256": {"C.UPF": "x"}}, "jobs": jl}, open(os.path.join(q, "jobs.json"), "w"))
+        m = make_kprobe(os.path.join(td, "s2"), os.path.join(td, "kp"))
+        o = open(os.path.join(td, "kp", "qe", f"{REP_NAME}_K12_bound", "pw.in")).read()
+        diff = [(x, y) for x, y in zip(body(f"{REP_NAME}_G4_k9_bound").splitlines(), o.splitlines()) if x != y]
+        ck("k 탐침: 바뀐 줄은 정확히 둘 (prefix · K_POINTS) · 줄 수 같음",
+           len(diff) == 2 and len(o.splitlines()) == len(body("x").splitlines()) and "  12 12 1 0 0 0" in o, diff)
+        ck("k 탐침: jobs.json — 잡 둘 · kpts 12 · G4 태그 없음 · 출처 기록 · PP 해시 설정 승계",
+           len(m["jobs"]) == 2 and all(j["kpts"] == [12, 12, 1] and "G4" not in j["tags"] and j["tags"]["from"].endswith(("bound", "far"))
+                                       for j in m["jobs"]) and m["settings"] == {"pp_sha256": {"C.UPF": "x"}})
+        # 러너(run_sese_gpu.sh 입력 점검)와 같은 대조: 기록 해시 = 새 pw.in 파일 바이트 · 원본 해시는 출처 칸에만 (2026-10-05 kgy DRY_RUN 이 막은 버그)
+        kq = os.path.join(td, "kp", "qe")
+        ck("k 탐침: 잡 기록 pw_in_sha256 = 새 pw.in 파일 sha (러너 대조) · k9 값을 물려받지 않는다",
+           all(j["pw_in_sha256"] == _sha(os.path.join(kq, j["dir"], "pw.in")) for j in m["jobs"])
+           and not ({j["pw_in_sha256"] for j in m["jobs"]} & {j["pw_in_sha256"] for j in jl}),
+           [(j["dir"], j["pw_in_sha256"][:12]) for j in m["jobs"]])
+        ck("k 탐침: 출처 해시 = 원본 묶음 기록 해시", m["source_pw_in_sha256"] == {j["dir"]: j["pw_in_sha256"] for j in jl})
+        # ⛔ 원본 pw.in 이 기록 뒤 고쳐졌으면 (돌았던 입력이 아니면) 만들지 않는다 — k9·prefix 줄은 그대로 둬서 해시 가드만 걸리게 한다
+        fp = os.path.join(q, f"{REP_NAME}_G4_k9_far", "pw.in")
+        open(fp, "w").write(body(f"{REP_NAME}_G4_k9_far").replace("C 0 0 0\n", "C 0 0 0.1\n"))
+        try:
+            make_kprobe(os.path.join(td, "s2"), os.path.join(td, "kp1")); refused = False
+        except SystemExit:
+            refused = True
+        ck("⛔ k 탐침: 원본 pw.in 해시가 그 묶음 기록과 다르면 만들지 않는다 (k9·prefix 줄은 멀쩡)", refused)
+        # ⛔ 기록까지 맞춰도 k9 줄이 없으면 (다른 k) 만들지 않는다 — 해시 가드가 아니라 K_POINTS 가드가 막는지 본다
+        open(fp, "w").write(body(f"{REP_NAME}_G4_k9_far").replace("  9 9 1 0 0 0", "  6 6 1 0 0 0"))
+        jl[1]["pw_in_sha256"] = _sha(fp)
+        json.dump({"settings": {"pp_sha256": {"C.UPF": "x"}}, "jobs": jl}, open(os.path.join(q, "jobs.json"), "w"))
+        try:
+            make_kprobe(os.path.join(td, "s2"), os.path.join(td, "kp2")); refused = False
+        except SystemExit:
+            refused = True
+        ck("⛔ k 탐침: k9 줄이 없으면 (다른 k) 만들지 않는다", refused)
+    ck("k 탐침 판독: |Δ| 0.009 → 9×9×1 수렴", kprobe_status(0.500, 0.491) == "CONVERGED_AT_K9")
+    ck("⛔ k 탐침 판독: |Δ| 0.011 → 미수렴", kprobe_status(0.500, 0.489) == "NOT_CONVERGED_AT_K9")
+    ck("⛔ k 탐침 판독: 값이 없으면 INCOMPLETE (0 아님)", kprobe_status(0.5, None) == "INCOMPLETE" and kprobe_status(None, 0.5) == "INCOMPLETE")
+    ck("k 탐침 문턱 = G4 문턱 (새 숫자 없음)", KPROBE_DW == G4_DW == 0.01)
+    # ⑧ (b) k9 넷 (결정 D-2026-10-05-wad-agc-graphite-k9-registry)
+    with tempfile.TemporaryDirectory() as td:
+        q = os.path.join(td, "s2", "qe")
+        body = lambda nm, k: (f"&CONTROL\n  calculation = 'scf'\n  prefix = '{nm}'\n  outdir = './tmp'\n/\n"
+                              f"K_POINTS automatic\n  {k} {k} 1 0 0 0\nATOMIC_POSITIONS angstrom\nC 0 0 0\n")
+        jl = []
+        def put(nm, k, kind="scf", tags=None):   # G4 k9 = 그 생산 입력에서 k 줄 · prefix 만 바꾼 것 (실제 2단계 묶음과 같은 관계)
+            os.makedirs(os.path.join(q, nm), exist_ok=True)
+            open(os.path.join(q, nm, "pw.in"), "w").write(body(nm, k))
+            jl.append({"dir": nm, "kind": kind, "calc": "scf", "kpts": [k, k, 1], "tags": tags or {"structure": nm, "endpoint": nm.rsplit("_", 1)[1]},
+                       "pw_in_sha256": _sha(os.path.join(q, nm, "pw.in"))})
+        for m in [model_name(N_C, r) for r in REGISTRIES] + [THICK_NAME]:
+            for ep in ("bound", "far"):
+                put(f"{m}_dft_{ep}", 6)
+        for ep in ("bound", "far"):
+            put(f"{REP_NAME}_G4_k9_{ep}", 9, "g4", {"structure": f"{REP_NAME}_dft_{ep}", "G4": f"k9_{ep}"})
+        json.dump({"settings": {"pp_sha256": {"C.UPF": "x"}}, "jobs": jl}, open(os.path.join(q, "jobs.json"), "w"))
+        m = make_k9set(os.path.join(td, "s2"), os.path.join(td, "k9"))
+        kq = os.path.join(td, "k9", "qe")
+        names = [j["dir"] for j in m["jobs"]]
+        ck("k9 넷: 잡 8 · 대표 top_fcc 없음 · N4 포함 · 순서 (모델별 bound → far)",
+           len(names) == 8 and not any(n.startswith(REP_NAME + "_") for n in names) and names[-2:] == [k9_job(THICK_NAME, "bound"), k9_job(THICK_NAME, "far")]
+           and all(names[2 * i].endswith("_bound") and names[2 * i + 1].endswith("_far") for i in range(4)), names)
+        o = open(os.path.join(kq, k9_job(K9SET_MODELS[0], "bound"), "pw.in")).read()
+        src0 = open(os.path.join(q, f"{K9SET_MODELS[0]}_dft_bound", "pw.in")).read()
+        diff = [(x, y) for x, y in zip(src0.splitlines(), o.splitlines()) if x != y]
+        ck("k9 넷: 바뀐 줄은 정확히 둘 (prefix · K_POINTS 6→9) · 줄 수 같음",
+           len(diff) == 2 and len(o.splitlines()) == len(src0.splitlines()) and "  9 9 1 0 0 0" in o and "  6 6 1 0 0 0" not in o, diff)
+        ck("k9 넷: 기록 pw_in_sha256 = 새 파일 바이트 (러너 대조) · kpts 9 · 출처 · 원본 태그 승계 · PP 해시 설정 승계",
+           all(j["pw_in_sha256"] == _sha(os.path.join(kq, j["dir"], "pw.in")) and j["kpts"] == [9, 9, 1] and j["tags"]["from"].endswith(("_dft_bound", "_dft_far"))
+               and "structure" in j["tags"] and j["tags"]["k9set"] in ("k9_bound", "k9_far") for j in m["jobs"]) and m["settings"] == {"pp_sha256": {"C.UPF": "x"}})
+        # ⛔ 대표 G4 k9 가 같은 변환으로 안 나오면 (다른 방식 · 여기선 원자 한 줄) 넷을 만들지 않는다 — 기록 해시는 맞춰서 해시 가드가 아닌 동치 가드만 걸리게
+        gp = os.path.join(q, f"{REP_NAME}_G4_k9_far", "pw.in")
+        g_ok = open(gp).read()
+        open(gp, "w").write(g_ok.replace("ATOMIC_POSITIONS angstrom\n", "ATOMIC_POSITIONS angstrom\nC 0 0 9\n"))
+        jl2 = [dict(j, pw_in_sha256=_sha(gp)) if j["dir"] == f"{REP_NAME}_G4_k9_far" else j for j in jl]
+        json.dump({"settings": {"pp_sha256": {"C.UPF": "x"}}, "jobs": jl2}, open(os.path.join(q, "jobs.json"), "w"))
+        try:
+            make_k9set(os.path.join(td, "s2"), os.path.join(td, "k9b")); refused = False
+        except SystemExit:
+            refused = True
+        ck("⛔ k9 넷: 대표 생산 입력에 같은 변환을 걸어도 G4 k9 입력이 안 나오면 만들지 않는다 (한 평균에 못 넣는다)", refused and not os.path.isdir(os.path.join(td, "k9b")))
+        open(gp, "w").write(g_ok)
+        json.dump({"settings": {"pp_sha256": {"C.UPF": "x"}}, "jobs": jl}, open(os.path.join(q, "jobs.json"), "w"))
+        # ⛔ 넷 중 하나의 생산 입력이 기록 뒤 고쳐졌으면 만들지 않는다
+        fp = os.path.join(q, f"{THICK_NAME}_dft_far", "pw.in")
+        open(fp, "a").write("C 0 0 0.5\n")
+        try:
+            make_k9set(os.path.join(td, "s2"), os.path.join(td, "k9c")); refused = False
+        except SystemExit:
+            refused = True
+        ck("⛔ k9 넷: 생산 pw.in 해시가 그 묶음 기록과 다르면 만들지 않는다 · 반쯤 만든 묶음도 안 남긴다 (넷째 모델에서 걸려도)",
+           refused and not os.path.isdir(os.path.join(td, "k9c")))
+    # 판독 규칙 (합성 rows) — 값이 없으면 0 으로 읽지 않는다
+    n3 = [model_name(N_C, r) for r in REGISTRIES]
+    R = lambda ws, w4: {**{n: {"W_k9_J_m2": w} for n, w in zip(n3, ws)}, THICK_NAME: {"W_k9_J_m2": w4}}
+    r1 = k9set_reading(R([0.493, 0.492, 0.494, 0.4935], 0.495), True)
+    ck("k9 판독: 10 잡 OK → REPLACE · 평균 · [min, max] · 두께 PASS · 폭 OK · 라벨 둘 (k · e70/s05)",
+       r1["headline_k9"]["status"] == "REPLACE" and abs(r1["headline_k9"]["mean_J_m2"] - 0.493125) < TOL and r1["headline_k9"]["range_J_m2"] == [0.492, 0.494]
+       and r1["thickness_k9"]["status"] == "PASS" and r1["spread_k9"]["status"] == "OK" and len(r1["labels_k9"]) == 2, r1)
+    r2 = k9set_reading(R([0.493, 0.492, 0.494, 0.4935], 0.493 + 0.021), True)
+    r2m = k9set_reading(R([0.493, 0.492, 0.494, 0.4935], 0.493 - 0.021), True)
+    ck("⛔ k9 판독: 두께 |Δ| 0.021 > 0.02 → FAIL 라벨 (부호 양쪽 · 헤드라인은 REPLACE 그대로)",
+       all(x["thickness_k9"]["status"] == "FAIL" and x["headline_k9"]["status"] == "REPLACE" and any("두께" in y for y in x["labels_k9"]) for x in (r2, r2m)))
+    r3 = k9set_reading(R([0.493, 0.4815, 0.494, 0.4935], 0.495), True)
+    ck("⛔ k9 판독: registry 폭 0.0125 > 0.01 → LABEL (보고만 · 헤드라인 REPLACE)",
+       r3["spread_k9"]["status"] == "LABEL" and r3["headline_k9"]["status"] == "REPLACE" and any("registry 폭" in x for x in r3["labels_k9"]))
+    r4 = k9set_reading(R([0.493, 0.492, 0.494, 0.4935], 0.495), False)
+    ck("⛔ k9 판독: 잡 하나라도 OK 아님 → KEEP_A_PRIME · 평균 없음 (부분 평균 금지)",
+       r4["headline_k9"]["status"] == "KEEP_A_PRIME" and r4["headline_k9"]["mean_J_m2"] is None and r4["headline_k9"]["n_ok"] == 4)
+    r5 = k9set_reading(R([0.493, None, 0.494, 0.4935], None), True)
+    ck("⛔ k9 판독: 값 없음 → 평균·폭·두께 None (0 아님) · KEEP_A_PRIME",
+       r5["headline_k9"]["status"] == "KEEP_A_PRIME" and r5["headline_k9"]["mean_J_m2"] is None and r5["spread_k9"]["spread_J_m2"] is None
+       and r5["thickness_k9"]["status"] == "INCOMPLETE" and r5["headline_k9"]["missing"] == [n3[1]])
+    ck("k9 문턱 = 카드 상수 (폭 0.01 = G4 · 두께 0.02 = G5 · 새 숫자 없음) · 모델 넷 = 대표 아닌 N3 셋 + N4",
+       K9SET_SPREAD_DW == G4_DW == 0.01 and THICK_DW == 0.02 and len(K9SET_MODELS) == 4 and REP_NAME not in K9SET_MODELS and K9SET_MODELS[-1] == THICK_NAME)
+    # 판독 배선 (실제 경로) — repo 의 실제 2단계 묶음·출력 + 가짜 k9 출력 (새 묶음의 pw.in + 그 모델의 k6 pw.out) 으로 collect_k9set 을 돌린다.
+    #   맞으면: 넷의 W_k9 = 자기 W_k6 (가짜 출력이 k6 라서) · 대표 W_k9 = 2단계 G4 k9 값 (k12 탐침 기록과 같은 값 · k6 와 다름) · 10 잡 OK → REPLACE
+    s2p, r2 = os.path.join(REPO, "db/raw/wad_agc_graphite_2026_10_02/stage2_pkg"), os.path.join(REPO, "db/raw/wad_agc_graphite_2026_10_02/stage2")
+    kref = os.path.join(REPO, "db/raw/wad_agc_graphite_2026_10_02/kprobe12_collect_repo_2026_10_05.json")
+    if os.path.isdir(os.path.join(s2p, "qe")) and os.path.isdir(r2) and os.path.isfile(kref):
+        with tempfile.TemporaryDirectory() as td:
+            m = make_k9set(s2p, os.path.join(td, "pk"))
+            for j in m["jobs"]:
+                d = os.path.join(td, "raw", j["dir"]); os.makedirs(d)
+                shutil.copyfile(os.path.join(td, "pk", "qe", j["dir"], "pw.in"), os.path.join(d, "pw.in"))
+                shutil.copyfile(os.path.join(r2, j["tags"]["from"], "pw.out"), os.path.join(d, "pw.out"))
+            o = collect_k9set(s2p, r2, os.path.join(td, "pk"), os.path.join(td, "raw"))
+            w9ref = json.load(open(kref, encoding="utf-8"))["W_k9_J_m2"]
+            rw = o["rows"]
+            ck("k9 배선 (실제 경로): 넷의 W_k9 = 자기 k6 출력으로 낸 W_k6 (모델·끝점 짝이 맞다)",
+               all(rw[n]["W_k9_J_m2"] is not None and abs(rw[n]["W_k9_J_m2"] - rw[n]["W_k6_J_m2"]) < 1e-12 for n in K9SET_MODELS),
+               {n: (rw[n]["W_k9_J_m2"], rw[n]["W_k6_J_m2"]) for n in K9SET_MODELS})
+            ck("k9 배선 (실제 경로): 대표 W_k9 = 2단계 G4 k9 (k12 탐침 기록 값) · W_k6 와 다름 · 10 잡 OK → REPLACE",
+               rw[REP_NAME]["W_k9_J_m2"] is not None and abs(rw[REP_NAME]["W_k9_J_m2"] - w9ref) < 1e-9
+               and abs(rw[REP_NAME]["W_k9_J_m2"] - rw[REP_NAME]["W_k6_J_m2"]) > 1e-3
+               and o["all_10_ok"] and o["headline_k9"]["status"] == "REPLACE" and len(o["jobs"]) == 10, (rw[REP_NAME], w9ref, o["jobs_not_ok"]))
+            os.remove(os.path.join(td, "raw", k9_job(K9SET_MODELS[1], "far"), "pw.out"))
+            o2 = collect_k9set(s2p, r2, os.path.join(td, "pk"), os.path.join(td, "raw"))
+            ck("⛔ k9 배선 (실제 경로): 새 잡 하나가 없으면 KEEP_A_PRIME · 그 잡이 미완 목록에 · 그 registry W_k9 None (0 아님)",
+               o2["headline_k9"]["status"] == "KEEP_A_PRIME" and o2["jobs_not_ok"] == [k9_job(K9SET_MODELS[1], "far")]
+               and o2["rows"][K9SET_MODELS[1]]["W_k9_J_m2"] is None and o2["headline_k9"]["mean_J_m2"] is None, o2["jobs_not_ok"])
+    else:
+        ck("k9 배선 시험용 repo 원자료가 있다 (2단계 묶음 · 출력 · k12 기록)", False, s2p)
     print(f"agc_graphite selftest: {n_ok} 통과 · {n_bad} 실패 " + ("✅" if n_bad == 0 else "❌"))
     return n_bad == 0
 
@@ -876,7 +1207,37 @@ def main():
     ap.add_argument("--fallback_raw", default=None)
     ap.add_argument("--atm", action="store_true")
     ap.add_argument("--pseudo_dir", default="/data/work/pseudo")
+    ap.add_argument("--kprobe_make", action="store_true", help="k 사다리 탐침 묶음 (--stage2_dir <2단계 묶음> --out <탐침 폴더>)")
+    ap.add_argument("--kprobe_collect", action="store_true", help="탐침 판독 (--stage2_dir --raw2 --probe_dir --probe_raw [--out])")
+    ap.add_argument("--probe_dir", default=None)
+    ap.add_argument("--probe_raw", default=None)
+    ap.add_argument("--k9set_make", action="store_true", help="(b) 나머지 넷 9×9×1 묶음 (--stage2_dir <2단계 묶음> --out <k9set 폴더>)")
+    ap.add_argument("--k9set_collect", action="store_true", help="(b) 판독 (--stage2_dir --raw2 --k9_dir --k9_raw [--out])")
+    ap.add_argument("--k9_dir", default=None)
+    ap.add_argument("--k9_raw", default=None)
     a = ap.parse_args()
+    if a.kprobe_make:
+        m = make_kprobe(a.stage2_dir, a.out)
+        print(f"k 탐침 묶음: {[j['dir'] for j in m['jobs']]} → {a.out}/qe/jobs.json (결정 {m['decision']})")
+        return
+    if a.k9set_make:
+        m = make_k9set(a.stage2_dir, a.out)
+        print(f"k9 넷 묶음: {[j['dir'] for j in m['jobs']]} → {a.out}/qe/jobs.json (결정 {m['decision']})")
+        return
+    if a.k9set_collect:
+        o = collect_k9set(a.stage2_dir, a.raw2, a.k9_dir, a.k9_raw)
+        print(json.dumps(o, ensure_ascii=False, indent=1, default=float))
+        if a.out:
+            json.dump(o, open(a.out, "w", encoding="utf-8"), ensure_ascii=False, indent=1, default=float)
+            print(f"→ {a.out}")
+        return
+    if a.kprobe_collect:
+        o = collect_kprobe(a.stage2_dir, a.raw2, a.probe_dir, a.probe_raw)
+        print(json.dumps(o, ensure_ascii=False, indent=1, default=float))
+        if a.out:
+            json.dump(o, open(a.out, "w", encoding="utf-8"), ensure_ascii=False, indent=1, default=float)
+            print(f"→ {a.out}")
+        return
     if a.selftest:
         sys.exit(0 if _selftest() else 1)
     if a.registry_scan:

@@ -1,7 +1,7 @@
 {
  "schema": "adhesion_pipeline/1",
  "title": "점착 파이프라인 — DFT → DEM (→ COMSOL)",
- "updated": "2026-10-02",
+ "updated": "2026-10-05",
  "purpose": "Ag–C 인터레이어·SE 계면의 점착일(W)을 DFT 에서 재서 DEM(JKR 접촉)으로 넘기는 흐름을 **한 곳에 누적**한다. 새 사실은 `log` 에 한 줄씩 덧붙이고, 상태가 바뀌면 해당 항목만 고친다.",
  "⛔_이_원장이_하지_않는_것": [
   "판정 전 물리값(W·γ)은 싣지 않는다 — 결과는 판정이 끝난 뒤 기록 파일에 따로 남기고 여기서는 경로만 건다 (인용 방지).",
@@ -122,12 +122,13 @@
    "cell": "Ag(111) (√3×√3)R30° 4층 (12 Ag) + 흑연 2×2 ABA 3층 (24 C) · V2 와 같은 옆 셀 (+1.078 %) · 두께 점검 4층",
    "machine": "kgy RTX3090 (li2s v2 UMA 와 GPU 공유 · START 12000 · KILL 23000 MiB)",
    "state": "run",
-   "state_text": "카드 비준 (10-02 · 사용자) · kgy 발사 — 1단계 기계 대조 2 → 이완 5 → 2단계 SCF 31 · 속도는 첫 두 잡·첫 이완 실측으로 (7 일 넘으면 다시 물음)",
+   "state_text": "카드 비준 (10-02 · 사용자) · kgy 발사 — 1단계 기계 대조 2 → 이완 5 → 2단계 SCF 31 · 속도는 첫 두 잡·첫 이완 실측으로 (7 일 넘으면 다시 물음) · ⏩ 10-03 기계 대조 G1 **PASS** (CTRL 두 잡 kgy–V100 |ΔW| 1.0e-7 J/m² ≤ 0.002 · W 값은 화면에 안 싣는다 · kgy 가 V100 보다 bound 3.94× · far 3.72× 느림) · 첫 이완 AGC_N3_top_fcc 진행 (04:22 351 분 · BFGS 16) — 총 견적은 첫 이완 뒤 · ⏩ 10-03 16:29 이완 2/5 끝 (hollow_fcc 진행 177 분) · 총 견적 1.9–3.2 일 (7 일 안 · kgy 유지) · ⏩ 10-04 15:08 1단계 **7/7 끝** · 2단계 SCF **6/31** (개당 50–80 분 · 피크 7.8 GB · cascade v7 탐침과 GPU 공유) — 남은 25 ≈ 하루 (10-05 오후 · 어림) · ⏩ 10-05 13:35 2단계 **31/31 끝** · 회수 d2bfb55a (211 파일 · SHA256 일치) · 2단계 재생성 대조 ✅ · 레포 집계 = kgy 집계 (차이 0) · 게이트: G0 5/5 · G1 PASS · G3 PASS · **G4 FAIL (k 9×9×1 축 — 대표가 문턱의 두 배 움직임)** · 두께 PASS · ATM 열 계산 · 카드 규칙: 라벨을 값에 붙여 보고 · 새 계산은 1저자(사용자) 결정 — **결정 대기** · W 값은 결과 기록에만 (`db/properties/wad_agc_graphite_result_2026_10_05.json` · 화면에 안 싣는다) · ⏩ 1저자 결정 (c) — 대표 두 끝점 k 12×12×1 탐침 2 잡 (D-2026-10-05-wad-agc-kprobe12 · 판독 |ΔW(12−9)| ≤ 0.01 → 9×9×1 수렴 · 헤드라인 불변)",
    "records": [
     "db/properties/wad_agc_graphite_prereg_2026_10_02.json",
     "db/inputs/wad_agc_graphite_2026_10_02/stage1/qe/jobs.json",
     "db/inputs/wad_agc_graphite_2026_10_02/run_kgy.sh",
-    "tools/wad/agc_graphite.py"
+    "tools/wad/agc_graphite.py",
+    "db/properties/wad_agc_graphite_result_2026_10_05.json"
    ]
   },
   {
@@ -1508,6 +1509,66 @@
    "date": "2026-10-02",
    "stage": "dft",
    "text": "**P1b 카드 비준 → kgy 발사** (사용자 '비준 · 지금 발사') — kgy 점검: PP Ag·C 해시 기준과 같음 · pw.x qe-7.4.1-gpu (sha 256293a3 · V100 912d8c8f 와 다른 빌드 → 기계 대조가 뜻이 있다) · kgy 에서 selftest 47/0 · DRY_RUN rc 0 · RAM 58 GB · 디스크 304 GB. ⚠ GPU 에 출처 모를 잡 96 % (0.8 GB · kgy 는 프로세스 정보가 막혀 안 보인다) — 같이 돈다. 결정 D-2026-10-02-wad-agc-graphite active (digest sha256:083b3578ab3e6464…)."
+  },
+  {
+   "date": "2026-10-03",
+   "stage": "dft",
+   "text": "**P1b 기계 대조 G1 PASS** (kgy · 대피 세션 claude/evac-2026-10-02 · 사용자 붙여넣기 10-03) — CTRL 두 잡 (V2_top_fcc 2단계 입력 그대로 · bound 706 s · far 521 s · rc 0 · 피크 3.4 · 3.1 GB) 의 kgy–V100 |ΔW| **1.0e-7** J/m² (문턱 0.002) · ΔF bound −0.00027 · far −0.00014 meV (정보) ⇒ kgy pw.x (sha 256293a3) 와 V100 (912d8c8f) 이 같은 입력에서 같은 W — P1b 를 V2 · WAD-CC 와 같은 표에 놓는 조건 충족. 속도 V100 대비 bound 3.94× · far 3.72× 느림 (3090 FP64). 1단계 첫 이완 AGC_N3_top_fcc 진행 (10-03 04:22 · 351 분 · BFGS 16 · SCF 255 · 스텝당 ≈ 22 분) — 총 견적은 첫 이완이 끝난 뒤 (카드 §8 · 7 일 넘으면 V100 이전 질문)."
+  },
+  {
+   "date": "2026-10-03",
+   "stage": "dft",
+   "text": "**P1b 총 견적 (카드 §8 · 첫 이완 뒤 실측)** — kgy watch 10-03 16:29 (사용자 붙여넣기): 1단계 끝 4/7 (CTRL 2 + 이완 top_fcc 37,470 s · top_hcp 16,565 s · rc 0) · hollow_fcc 진행 (177 분 · BFGS 13) · GPU 5.3 GB (출처 모를 잡 사라짐 · 가드 23,000 안). 이완 실측 top_fcc 10.4 h · top_hcp 4.6 h (피크 13.8 · 11.3 GB) → 남은 1단계 12–31 h (hollow_fcc 잔여 · s01 · N4 ×1.3) + 2단계 31 × (CTRL 평균 10 분 × 3–5) = 16–26 h ⇒ 끝 10-04 저녁 ~ 10-06 새벽 · 발사부터 총 1.9–3.2 일 (7 일 안 → kgy 그대로 · V100 이전 질문 없음). ⚠ 2단계 G4 (ecut 70/700 · k 9×9×1) 잡은 ×3–5 어림 밖일 수 있다 — 2단계 첫 잡 실측으로 다시 본다."
+  },
+  {
+   "date": "2026-10-04",
+   "stage": "dft",
+   "text": "**P1b 1단계 7/7 끝 · 2단계 SCF 6/31** (kgy watch 10-04 15:08 · 사용자 붙여넣기 · 대피 세션) — 1단계 남은 셋 N3 hollow_fcc 16,168 s · N3 s01 20,548 s · N4 top_fcc 35,014 s (rc 0 · 피크 9.6 GB) → 러너가 2단계 입력 생성 → SCF 09:27 시작 · 6/31 끝 (개당 50–80 분 · 피크 7.8 GB) · Ed_p10 진행 · GPU 합계 6.7 GB (cascade v7 탐침과 공유). 남은 25 ≈ 하루 (10-05 오후 · 어림) → 회수 · 2단계 재생성 대조 · 집계 → 결과 기록 → DEM 회신. 판정 전 물리값은 싣지 않는다."
+  },
+  {
+   "date": "2026-10-04",
+   "stage": "dft",
+   "text": "⚠ **정정 — 10-03 의 P1b 줄 둘에 W 값을 적었었다** (log 70 · P1b state_text · 내 실수) — 기계 대조 CTRL 두 잡의 W 두 개(V2_top_fcc 와 같은 값)가 이 화면 · /todo · 대시보드에 떴다. 점착 W 는 화면에 싣지 않는다 (V2 결과 기록 '화면 게재는 1저자 별도' · 대피 세션 운영 규칙) → 값 두 개를 지우고 kgy–V100 |ΔW| 1.0e-7 (문턱 0.002) 만 남겼다. 판정(G1 PASS)은 그대로 · 값은 kgy 원출력과 P1b 결과 기록(만들 때)에만."
+  },
+  {
+   "date": "2026-10-05",
+   "stage": "dft",
+   "text": "P1b Ag(111)|흑연 3층 — 2단계 31/31 끝 (kgy 13:35) · 원자료 회수 d2bfb55a · 2단계 재생성 대조 ✅ · 레포 집계 = kgy 집계 · 게이트 G0·G1·G3·두께 PASS · **G4 FAIL (k 축)** → 카드대로 라벨 동반 · 새 계산은 1저자 결정 대기. W 값은 결과 기록에만 (화면에 안 싣는다)."
+  },
+  {
+   "date": "2026-10-05",
+   "stage": "dft",
+   "text": "P1b G4 k 축 FAIL → 1저자 결정 (c): 대표 두 끝점 k 12×12×1 탐침 2 잡 (D-2026-10-05-wad-agc-kprobe12) · 입력은 k9 와 두 줄만 다름 · 판독 문턱 0.01 (G4 와 같음) · 헤드라인 불변 · kgy 공존 (같은 가드)."
+  },
+  {
+   "date": "2026-10-05",
+   "stage": "dft",
+   "text": "P1b k 12×12×1 탐침 kgy 발사 (tmux agck12 · c704348b · 15:39 watch 에서 bound SCF 1 회째) · k 점 74 (k9 41 · k6 20 — 시간반전만 쓰는 격자 셈과 일치) · 첫 DRY_RUN 은 jobs.json 해시 칸 버그로 거부됐다 → 정정 9160143e (입력 불변). GPU 합계 7.9 / 24.6 GB (cascade v7 · li2s 대조 담금질과 공유)."
+  },
+  {
+   "date": "2026-10-05",
+   "stage": "dft",
+   "text": "V5 VASP 외주 **파일럿 2 잡 반송** (10-05 · 업체) — --check 파일럿 OK (VASP 5.4.4 · PBE_54 TITEL · 설정 되울림 · 첫 시도 수렴 · bound 10.4 h · far 4.9 h · peak 67.6 GB) · 반송 MANIFEST = 고정값 · 금지 파일 0 · **PP 등록부 봉인** a279d529… · 다음 = 업체에 나머지 16 잡 (파일럿 폴더 그대로) → 최종 --collect. W 는 최종 집계에서."
+  },
+  {
+   "date": "2026-10-05",
+   "stage": "dft",
+   "text": "P1b k12 탐침 끝 (kgy 21:30 · bound·far rc 0) · 회수 365a53ae · 판독 **CONVERGED_AT_K9** (사전 문턱 안 · 레포 재집계 = kgy 집계) · 다음 = 1저자 결정 (라벨로 닫기 / 넷도 k9). W 값은 결과 기록에만."
+  },
+  {
+   "date": "2026-10-05",
+   "stage": "dft",
+   "text": "P1b **마감** — 1저자 결정 (a′) 라벨로 닫기 (헤드라인은 사전등록 registry 평균 그대로 + 'G4 k FAIL · 9×9×1 에서 k 수렴 확인' 라벨 · 새 계산 없음) · 마감 카드 wad_agc_graphite_closed_2026_10_05.json · 결정 D-2026-10-05-wad-agc-graphite-closed. 다음 = DEM 회신 (라벨 동반). W 값은 결과 기록·마감 카드에만."
+  },
+  {
+   "date": "2026-10-05",
+   "stage": "dft",
+   "text": "P1b 마감 재개 ① **(b)** — 사용자 '지금 kgy 에서' · 나머지 넷 (N3 registry 셋 + N4) 두 끝점 9×9×1 · 8 잡 · 결정 D-2026-10-05-wad-agc-graphite-k9-registry · 판독 규칙 결과 전 고정 (10 잡 전부 OK → 헤드라인 교체는 새 마감 결정 · 아니면 (a′) 그대로) · 상한 벽시계 30 h · 마감 (a′) 은 결과까지 그대로. W 값은 결과 기록에만."
+  },
+  {
+   "date": "2026-10-05",
+   "stage": "dft",
+   "text": "P1b (b) k9 넷 kgy 발사 (tmux agck9 · 6adf297c · 22:48:11 · DRY_RUN 통과) · 첫 잡 AGC_N3_top_hcp_K9_bound k 점 41 (k6 20 · 시간반전 대칭만 · 예상 일치) · 8 잡 한 잡씩 · 상한 30 h. W 값은 결과 기록에만."
   }
  ],
  "related_decisions": [

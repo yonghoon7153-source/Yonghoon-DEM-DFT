@@ -1,0 +1,132 @@
+{
+ "schema": "campaign_runlog/v1",
+ "record_kind": "runlog",
+ "date": "2026-10-05",
+ "track": "li2s — ⛔ 외부 1저자 트랙 (규칙 = 회신 CQ · CR) · 사용자 = 카드 저자 · 실행",
+ "card": "db/properties/lpscl_smallcell_glass_control_li3ps4_estimand_2026_10_05.json (비준 · 봉인 — 고치지 않는다 · 실행 기록은 여기)",
+ "decision": "D-2026-10-05-lpscl-smallcell-glass-control-li3ps4 (active · 10-05)",
+ "results_seen": false,
+ "citable": false,
+ "코드": {
+  "담금질_러너": {
+   "path": "db/inputs/lpscl_glass_control_li3ps4_2026_10_05/run_quench_kgy.sh",
+   "sha16": "1c43f6617aa93b00",
+   "내용": "melt_quench_uma.py --system B --n_fu 15 --quench_rate 1e12 --melt_ps 100 --hold_ps 50 --dt_fs 2 --save_ps 1.0 --turbo (A 와 같은 일정) · 시드 1→5 한 번에 하나 · 끝난 시드마다 --seed_gate 입력",
+   "가드": "결정 active 확인 · uma env 절대경로 (fairchem) · 같은 잡 중복 (잡 고유 인자 + comm 필터) · GPU 사용 ≤ 20,000 MiB 일 때 시작 (최대 6 h 대기) · 끝난 시드는 건너뜀 · 결과 없이 폴더만 있는 시드는 멈춤 (흔적 보존) · 한 시드가 실패하면 뒤 시드를 안 돌림",
+   "selftest": "13 통과 (음성 6 · 실제 경로 dry_run 120 원자 · 중복 가드는 살아 있는 dummy 프로세스로 · repo 에서 PY=python3 · 파이프로 받아도 6 s)",
+   "일부러_깨기": "n_fu 15→50 → 2 실패 · partial→empty → 1 실패 (빨간불 확인)",
+   "개정_2026_10_05": {
+    "이전_sha16": "20a43ca5568d3d97 (kgy selftest·DRY_RUN 통과판 · 3bd839ac)",
+    "무엇": "중복 실행 가드 배선 — our_running 이 \"$TAG/B\" 로 찾았는데 그 문자열은 담금질 python 명령줄에 없다 (--out_root $RUN 만 있다 · \"$TAG/B\" 는 --seed_gate 호출에만) → 같은 잡이 돌아도 못 찾았다. selftest 가 이 함수를 안 봤다 (조용히 틀린 경로)",
+    "고침": "pgrep -f -- \"--out_root $RUN( |$)\" + comm python* · 시험 2 (양성: 같은 모양의 명령줄로 잠자는 python 의 PID 를 찾는다 · 음성: 게이트 호출 · 다른 RUN · python 아닌 프로세스는 안 센다)",
+    "일부러_깨기": "옛 패턴 → 양성 빨강 · python 거르기 제거 → 음성 빨강 · 끝 고정 제거 → 음성 빨강 (3/3) · ⚠ 첫 판 음성은 bash -c \"sleep 60\" 이 sleep 으로 exec 해서 인자가 사라져 아무것도 안 쟀다 — 명령 둘로 고쳐서 다시 깸",
+    "실제_피해": "없음 — 발사 전이다 (돌던 적 없음) · 시드 폴더 partial 가드가 뒤를 받치고 있었다",
+    "계산_조건": "불변 (ARGS · 시드 · 문턱 · RUN 같음)"
+   },
+   "개정_2026_10_05_gabia": {
+    "sha16": "0605345893360435",
+    "이전_sha16": "1c43f6617aa93b00 (kgy 에서 도는 판 · c704348b · 그 worktree 는 안 옮긴다)",
+    "더한_것": "MACHINE=gabia 공존 모드 (PY·RUN·START_MAX 기본값 · 공존 결정 active 검사 · 가드 ①–④ · 시작 조건 · ELW *.out 없으면 거부 · nvidia-smi pmon 점유 표본 · flock · 로그·장부 이름 기계별) — kgy 기본 동작은 그대로",
+    "selftest": "27 통과 (공존 14 · 가짜 nvidia-smi · 가짜 담금질 · 음성 포함 · repo 에서 PY=python3)",
+    "일부러_깨기": "8/8 빨강 — ④ 를 `tail | grep -q` 파이프로 되돌리면 2 MB 뒤의 오류를 놓친다 (pipefail 이 SIGPIPE 141 을 '못 찾음' 으로 읽음 · 실제 함정 · 그래서 프로세스 치환) · ② WARM · ① · ③ · el_mark · pmon 몫 · ELW 거부 · 시작 host",
+    "⚠_헛것_한_건": "시작 조건 음성 시험 (43000 > 42500) 이 처음엔 kgy 문턱 20000 때문에 통과하고 있었다 — 양성 시험이 빨개서 드러남 · 셋 다 START_MAX_MIB=42500 을 박음"
+   }
+  },
+  "담금질_도구": {
+   "path": "tools/ionic/melt_quench_uma.py",
+   "sha16": "47c7e0aab5d14fbd"
+  },
+  "판독_도구": {
+   "path": "tools/ionic/glass_v2_readout.py",
+   "sha16": "330b9ed7880c049e",
+   "현황": "R·검출한계 함수 있음 (회신 CR) · 대조 모드 (B 읽기 · N_eff · 골격 문턱 5 · p90² · T₅₀ · 대조표) 는 **600 K 결과 전에** 추가한다"
+  }
+ },
+ "계획": {
+  "①_담금질": "kgy · 시드 1–5 (A 선례 ≈ 3 h/시드 · cascade v7 탐침과 GPU 공유라 더 걸릴 수 있다) · RUN ~/work/runs/lpscl_glass_control_li3ps4_2026_10_05 · 새 worktree (러너 worktree 는 도는 동안 안 옮긴다)",
+  "②_회수_뒤_repo": "시드 게이트 판정 (A 원장 문턱 그대로 · Cl 해당 없음) · 밀도 이탈 (A 와 같은 결정상 부피가법 기준) · T₅₀ 스캔 (담금질 궤적 50 ps 창 · 같은 도구·문턱)",
+  "③_600K_MD": "A 600 K 와 같은 시드–기계 대응 (gabia 2·4·5 · kgy 1·3) · gabia 는 그때 탄성이 GPU 를 쓰면 새 공존 결정 · 러너는 v2 러너를 B 로 일반화 (결과 전 · 시험 포함)",
+  "④_판독": "대조표 커밋 → 판독 한 번 → 갈래 → 마감"
+ },
+ "⏭": "두 기계 감시 (kgy ~/w_kgy_1005.sh · gabia /root/w_li3ps4_g.sh) → kgy seed1·2 · gabia seed3·4·5 끝 (kgy 러너는 seed3 표시에서 종료 코드 3 = 설계) → 회수 → 시드 게이트 · 밀도 · T₅₀ · 장부 (kgy 등분 · gabia pmon)",
+ "발사_2026_10_05": {
+  "기계": "kgy (tmux li3ps4q · worktree ~/wt_li3ps4_1005 · c704348b)",
+  "START": "2026-10-05 15:35:59 · 변경 0 · 시드 1 2 3 4 5 · seed1 시작 GPU 3117 MiB (cascade v7 탐침만 있던 때)",
+  "같은_GPU": "cascade v7 탐침 (cv7probe) · P1b k12 탐침 (agck12) — 15:39 합계 7,945 / 24,576 MiB · 사용률 100 %",
+  "⛔": "러너 worktree 는 끝날 때까지 안 옮긴다"
+ },
+ "⚠_비용_견적_오류_2026_10_05": {
+  "실측": "seed1 melt 100 ps (5만 스텝) = 222.9 분 (19:21 watch) ⇒ 26.9 ps/h · kgy 3 잡 공유 (cascade v7 탐침 · P1b k12 pw.x · 이 담금질) · 사용률 100 %",
+  "어림": "seed1 1050 ps ≈ 33–39 h (P1b 가 10-05 밤 끝나면 2 잡 공유) ⇒ 10-07 새벽–아침 · 5 시드 차례로 ≈ 7–8 일 (cascade v7 이 계속 돌면)",
+  "카드_견적": "카드 §6 '담금질 5 × ≈ 3 h ≈ 15 GPU-h' — ⛔ 틀렸다. 출처는 A 카드 09-21 의 **잰 적 없는 어림** ('5 개 다시 담금질 +15 h' · lpscl_smallcell_glass_md_estimand_2026_09_21.json) 이다. 같은 캠페인의 **실측 장부**(gateA_erratum `Q6_총상한_GPU_h_셈법.장부_h` · cc_followup `A2_Q6_장부_점유환산`) 는 시드당 벽시계 28.7–47.0 h · 점유 환산(등분 가정) 14.3–16.5 GPU-h 였다 — 카드를 쓸 때 장부를 안 봤다 (카드 작성자 = 이 세션의 실수).",
+  "상한_영향": "총상한 80 GPU-h (카드 §6 · '넘으면 멈추고 보고 · 상한을 올려 계속하지 않는다'). A 셈법(개정 CC §8 · 점유 환산 · 등분 가정은 병기용)으로 담금질 ≈ 70–80 + 600 K MD ≤ 40 (카드 견적 · v2 벽시계 실측 기반이라 점유로는 더 작을 수 있다) ⇒ ≈ 90–120 GPU-h → **MD 전에 상한에 닿는다**. 벽시계로 세면 담금질 2–3 시드에서 넘는다. 지금 쓴 몫은 벽시계 ≈ 3.8 h.",
+  "셈법": "이 카드는 공유 GPU 셈법을 안 적었다 (A 는 개정 CC §8 로 점유 환산 · 점유분율은 nvidia-smi 표본 실측 우선 — kgy 는 프로세스별 정보가 막혀 있어 못 잰다).",
+  "상태": "보고 (10-05 19:21) → 편지 CS → 회신 CS (셈법 · 140 수용) → 사용자 비준 (140 유지 · 넷이면 다섯째를 마저) · 결정 D-2026-10-05-lpscl-smallcell-glass-control-cost **active** · 회신 전 잠정 규칙 ('80 에서 멈춤') 끝 · 개정 db/properties/lpscl_smallcell_glass_control_li3ps4_amendment_cs_2026_10_05.json",
+  "참고_밀도": "melt 끝 ρ 1.331 g/cm³ (순간값) — A(Li₄PS₄Cl 400 원자 판 · li2s_layer1_g2_raw/A_seed1) 같은 시점 1.330 · 판정 대상 아님 (기록만)",
+  "장부_시드별": {
+   "형식": "시드 끝마다: 벽시계 h (quench_kgy.tsv) · 같이 돈 GPU 잡 (구간별) · 점유 환산 GPU-h (등분 가정) · 누적",
+   "⛔": "미수집을 0 으로 읽지 않는다"
+  }
+ },
+ "기계_배정_2026_10_05": {
+  "규칙": "A 담금질과 같은 시드–기계 대응 — kgy seed1·2 · gabia seed3·4·5 (사용자 선택 'A 와 같게' · 결과 전 · 600 K MD 의 Q-CR-6 과 같은 논리)",
+  "kgy": "seed1 진행 중 (c704348b 러너 · 그대로) → seed2 → seed3 자리에서 멈춤 (B/seed3·4·5 에 표시 파일 — 러너가 'partial' 로 읽고 종료 코드 3 · 메시지 '중간에 멈춤?' 은 이 표시다)",
+  "gabia": "seed3·4·5 · 공존 예외 (5) D-2026-10-05-gabia-uma-coexist-elastic-li2s-control · 한 번에 하나 · RUN /data/work/runs/lpscl_glass_control_li3ps4_2026_10_05",
+  "장부_측정_방식": "kgy = 동시 GPU 잡 수 등분 (프로세스별 정보 막힘 · 과대평가 = 보수) · gabia = nvidia-smi pmon 표본 (우리/합 · 합 0 이면 1) · 둘 다 벽시계 병기 (회신 CS Q-CS-1)",
+  "다음_편지에_실을_것": "기계 배정 변경 (A 와 같은 대응) · gabia 점유 표본 정의 (우리/합 · 합 0 → 1)"
+ },
+ "발사_gabia_2026_10_05": {
+  "기계": "gabia (A6000 · tmux li3ps4g · worktree /data/work/wt_li3ps4_1005 · 17aced0b6) · MACHINE=gabia SEEDS='3 4 5' · 공존 예외 (5) D-2026-10-05-gabia-uma-coexist-elastic-li2s-control",
+  "발사_전_점검": "selftest 27 PASS (gabia python) · DRY_RUN: 세 시드 empty · 120 원자 · 셀 15.52 Å · GPU 41,392 MiB (≤ 42,500) · host 47,491 MiB · 탄성 최신 strain_13_m.out (20:45:29 · 1 분 전 — 가드 ④ 가 맞는 파일을 본다) · pmon 표본 '우리 0 · 합 99' (gabia 에서 실측 점유를 잴 수 있다)",
+  "START": "2026-10-05 20:48:40 · seed3 시작 · GPU 41,392 MiB · host 47,483 MiB · 공존 가드 켬",
+  "첫_watch_20_50": "GPU 합계 42,649 MiB (pw.x 41,374 + 우리 1,252 · 가드 ① 46,000) · pmon 표본 2 개 (우리 0 — 모델 올리는 중) · 탄성 strain_13_m.out 20:50:08 갱신",
+  "kgy_같은_시각": "seed1 [quench] 20000/450000 (312.4 분 · 시간당 ≈ 27 ps 그대로 — P1b far SCF 22 회째)",
+  "⛔": "러너 worktree 두 곳 (kgy ~/wt_li3ps4_1005 · gabia /data/work/wt_li3ps4_1005) 은 끝날 때까지 안 옮긴다"
+ },
+ "kgy_GPU_동시_잡_구간": {
+  "용도": "kgy 장부 (등분 가정 · 회신 CS Q-CS-1) 의 분모 — 구간마다 kgy GPU 에 떠 있던 잡 수. 시드 끝 장부에서 이 구간으로 나눈다.",
+  "구간": [
+   {
+    "from": "2026-10-05 15:35:59",
+    "to": "2026-10-05 15:36:08",
+    "잡": [
+     "cascade v7 탐침 (cv7probe)",
+     "li2s B seed1"
+    ],
+    "n": 2
+   },
+   {
+    "from": "2026-10-05 15:36:08",
+    "to": "2026-10-05 21:30:15",
+    "잡": [
+     "cascade v7 탐침 (cv7probe)",
+     "P1b k12 탐침 pw.x (agck12)",
+     "li2s B seed1"
+    ],
+    "n": 3,
+    "근거": "db/raw/wad_agc_graphite_2026_10_02/kprobe12/jobs_run.tsv (bound 시작 15:36:08 · far 18:56:52 + 9,203 s = 21:30:15)"
+   },
+   {
+    "from": "2026-10-05 21:30:15",
+    "to": "2026-10-05 22:48:11",
+    "잡": [
+     "cascade v7 탐침 (cv7probe)",
+     "li2s B seed1"
+    ],
+    "n": 2
+   },
+   {
+    "from": "2026-10-05 22:48:11",
+    "to": null,
+    "잡": [
+     "cascade v7 탐침 (cv7probe)",
+     "P1b (b) k9 넷 pw.x (agck9 · 8 잡 한 잡씩)",
+     "li2s B seed1"
+    ],
+    "n": 3,
+    "근거": "kgy run_kgy.log '⑥ (b) k9 넷 … 첫 시작 2026-10-05 22:48:11' (22:49 watch) — 첫 pw.x 의 정확한 시작은 회수 때 k9set/jobs_run.tsv start 칸으로 맞춘다 · 끝 = 그 단계 마지막 잡 끝"
+   }
+  ],
+  "⚠_등분의_방향": "등분은 B 담금질 (120 원자 · 가벼운 잡) 몫을 과대평가하는 쪽이다 (회신 CS) — 단 cascade v7 탐침이 런 사이에 쉬는 빈 구간은 kgy 에서 안 보인다 (tmux 는 살아 있고 프로세스별 GPU 정보는 막혀 있다). 빈 구간이 있으면 그 동안 분모를 하나 크게 세서 우리 몫을 과소평가한다 (보수 방향이 아님) — 시드 끝 장부에서 cv7 런의 시작·끝 기록과 맞춘다."
+ }
+}
