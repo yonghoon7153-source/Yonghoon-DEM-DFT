@@ -1097,13 +1097,17 @@ WA_DEFINE = {
     'fracture_index_force': ('Auerbach 힘 기반 파괴 지수 = (파편화 + 분쇄) 개수 / n_total_AM_AM_force (소수 넷째 자리 반올림) — AM–AM 접촉만 · '
                              '단계 = F/P_c 의 배수 1 · 3 · 11 · 32 (P_c = A K_IC² R_min / E*) · J20-s ⑥', CAVEAT_FRAC_AUERBACH),
     'n_total_AM_AM_force': ('힘 기반 분류에 들어간 AM–AM 접촉 수 (법선력 fn > 0) — ≤ am_am_n_contacts (관문 ⑥R3 · 10-01 실측 194/194 같음) · '
-                            'J20-s ⑥', CAVEAT_FRAC_AUERBACH + ' · ' + CAVEAT_COUNT),
+                            'AM–AM 접촉 0 인 침대는 파괴 열 전부 빈칸 (N/A — calc_fracture_stages 가 키를 안 쓴다 · 생성기가 am_am_n_contacts 0 으로 '
+                            '확인한 상태 · RGL-05) · J20-s ⑥', CAVEAT_FRAC_AUERBACH + ' · ' + CAVEAT_COUNT),
     'se_se_cn_eff_area': ('SE 표면 중 SE–SE 접촉이 덮은 비율 (무차원) = Σ A_contact (접촉 하나를 두 입자에 하나씩) / Σ 4πr² (SE 전 입자) = '
                           '2 × area_SE_SE_total / (N_SE · 4π r_SE²) (관문 ⑦A4 · SE 단분산 · 10-01 실측 상대차 ≤ 2.2e-12) · J20-s ⑦', CAVEAT_NAME),
     'se_se_cn_eff_area_perc': ('같은 비율 — 관통 SE 성분에 속한 SE 만 · 관통 없으면 빈칸 (N/A · percolation_pct 0 과 같은 집합 — 관문 ⑦A5) · J20-s ⑦',
                                CAVEAT_NAME),
-    'am_am_mean_area': ('AM–AM 접촉 하나의 평균 면적 (µm²) = am_am_total_area / am_am_n_contacts (관문 ⑦A3) · J20-s ⑦', CAVEAT_NAME),
-    'am_am_total_area': ('AM–AM 접촉 면적 총합 (µm²) = AM_P–AM_P + AM_P–AM_S + AM_S–AM_S 총합 (관문 ⑦A3) · J20-s ⑦', CAVEAT_AREA_TOTAL),
+    'am_am_mean_area': ('AM–AM 접촉 하나의 평균 면적 (µm²) = am_am_total_area / am_am_n_contacts (관문 ⑦A3) · AM–AM 접촉 0 이면 빈칸 '
+                        '(N/A — 접촉 0 개에서 평균은 정의되지 않는다 · calc_am_am_cn 의 0 대입은 비운다 · 쌍 평균과 같은 규칙 · RGL-05) · J20-s ⑦',
+                        CAVEAT_NAME),
+    'am_am_total_area': ('AM–AM 접촉 면적 총합 (µm²) = AM_P–AM_P + AM_P–AM_S + AM_S–AM_S 총합 (관문 ⑦A3) · AM–AM 접촉 0 이면 0 (측정된 0 · '
+                         'RGL-05) · J20-s ⑦', CAVEAT_AREA_TOTAL),
 }
 _STAT_KO = {'mean': '평균', 'std': '표준편차 (모집단)', 'median': '중앙값', 'max': '최댓값'}
 
@@ -1206,10 +1210,17 @@ WA_EXCLUDED = (
     (r'area_.+_physics', 'physics 면적 — coverage 인계는 기하면적만 (J20-m) · 접촉별 추정 면적 합에 표면 한도가 없다 (LHS-25)'),
 )
 WA_GROUPS = ('contact', 'percolation', 'f1', 'fracture', 'area')
-#: 7c — 웹앱 배치 단계 (`lhs_webapp_batch --stop-after`) → 그 배치가 **다 낸** 묶음.  coverage 단계는 접촉 단계를 포함한다 (접촉 분석 → 피복)
-#:   — 5번 배치 (`--stop-after coverage`) 를 contact 묶음으로 받는다.  묶음 제한 없이 (전체) 부르면 여전히 거부 (뒤 단계 열이 빈칸).
-#:   ② 퍼콜레이션도 접촉 분석 단계 산출이다 (위).
-WA_STAGE_GROUPS = {'contact': WA_GROUPS, 'coverage': WA_GROUPS}         # ⑤⑥⑦ 도 접촉 분석 단계 산출 (J20-s)
+#: 7c — 웹앱 배치 단계 (`lhs_webapp_batch --stop-after`) → 그 배치가 **다 낸** 묶음 (단계 역량).  coverage 단계는 접촉 단계를 포함한다 (접촉 분석 →
+#:   피복) — 5번 배치 (`--stop-after coverage`) 를 contact 묶음으로 받는다.  묶음 제한 없이 (전체) 부르면 여전히 거부 (뒤 단계 열이 빈칸).
+#:   ② 퍼콜레이션도 접촉 분석 단계 산출이다 (위).  ⑤⑥⑦ 도 접촉 분석 단계 산출 (J20-s).
+#:   ★ RGL-03 (Codex 10-05 · P1 · 1저자 비준 "권고대로") — network 단계를 명시한다.  옛 판은 contact · coverage 만 알아 `--stop-after network`
+#:   배치를 일률 거부했고, 안내는 유효 묶음 이름도 아닌 'network' 를 요구했다.  network 정지점 (webapp/app.py `PIPELINE_STOP_AFTER` ·
+#:   `_network_and_stage_e(stop_before_stage_e=True)`) = 접촉 분석 (required · causal — 실패하면 그 케이스는 failed) → 피복 (optional ·
+#:   `*_physics` · `*_physics_v2` · A_binding 키만 쓴다) → network solver → 머지 (`pipeline_service.NET_MERGE_KEYS` — σ · R · 협착 전력 몫 키만) →
+#:   망 정지 계약 · **Stage E 앞**.  뒤 단계가 다섯 묶음의 열을 다시 쓰지 않으므로 done · partial 행은 다섯 묶음을 다 낸다.
+#:   망 단계 고유 산출 (τ 인계 tau2 · f · ④a 협착 전력 몫 · electronic_active_fraction) 은 아직 인계 묶음이 아니다 (망 배치 · Codex 뒤).
+#:   생산 쪽 정지점 (배치 `--stop-after` choices · 웹앱 `PIPELINE_STOP_AFTER`) 이 늘면 여기에 역량을 적기 전까지 거부한다 (selftest ㉖i 가 동기를 본다).
+WA_STAGE_GROUPS = {'contact': WA_GROUPS, 'coverage': WA_GROUPS, 'network': WA_GROUPS}
 
 
 def wa_group_contact(col):
@@ -1284,17 +1295,23 @@ WA_REVIEWED = (
      '합 = 전체 · 무접촉 ≤ 고립 위험)'),
     (r'se_se_cn_aug(_std|_n_extra|_h_spread_sim)?',
      'calc_se_se_cn F1 (dem_analysis_core.py:303–) → analyze_contacts.py:438–441 — J20-s ⑤ 감사 · 1저자 비준 10-04 ("권고대로") · 한정어 (h 10 nm '
-     '출처 없는 모델 상수 · SE–SE 만 · 반올림 쌍) · 관문 ⑤F1 (aug = se_se_cn + 2 · n_extra / N_SE · 10-01 실측 130/130 · 64/64 상대차 ≤ 2.2e-16)'),
+     '출처 없는 모델 상수 · SE–SE 만 · 반올림 쌍) · 관문 ⑤F1 (aug = se_se_cn + 2 · n_extra / N_SE · 10-01 실측 130/130 · 64/64 상대차 ≤ 2.2e-16) · '
+     'RGL-05 (10-05): 관문 순서 = 원천 근거 (se_se_cn · 수확 N_SE) · F1 네 열 (std 포함) 필수 → 유한 → 형/범위 (CN · std ≥ 0 · n_extra 0 이상 정수 · '
+     'h > 0) → 식 · 최종 레코드 재검'),
     (r'fracture_index_force|n_total_AM_AM_force|frac_(intact|microcrack|multicrack|fragmentation|pulverization)_force_pct|'
      r'n_(intact|microcrack|multicrack|fragmentation|pulverization)_force_AM_AM',
      'calc_fracture_stages (dem_analysis_core.py:977–) · fracture_model.fracture_classify_force_sim — J20-s ⑥ 감사 (LHS-31) · 1저자 비준 10-04 · '
      '힘 기반 전체 집계만 (δ 판 · 상 쌍별 = WA_EXCLUDED) · 관문 ⑥R1–R3 (단계 개수 합 = 전체 · 비율 · 지수 = 반올림 폭 안 · 전체 ≤ am_am_n_contacts) · '
-     '10-01 실측 130/130 · 64/64 (전체 = am_am_n_contacts 194/194)'),
+     '10-01 실측 130/130 · 64/64 (전체 = am_am_n_contacts 194/194) · RGL-05 (10-05): 관문 순서 = 원천 근거 (am_am_n_contacts) · 단계 개수 · '
+     '(N > 0 이면) 비율 · 지수 필수 → 유한 → 형/범위 (개수 0 이상 정수 · 비율 [0, 100] · 지수 [0, 1] — 반올림 반폭은 식 잔차에만) → 식 · '
+     'AM–AM 접촉 0 = 파괴 키 없음 (확인한 상태) · 최종 레코드 재검'),
     (r'area_(AM_P|AM_S|SE|AM전체)_(AM_P|AM_S|SE)_(mean|total)|se_se_cn_eff_area(_perc)?|am_am_(mean|total)_area',
      'calc_interface_area (dem_analysis_core.py:191–) · calc_se_se_cn 면적 (:303–) · calc_am_am_cn (:443–) — J20-s ⑦ 감사 · 1저자 비준 10-04 · '
      'c_cpl[22] = 두 구 교차원 넓이의 정확식 (A_dem_geometric · 작은 δ 에서 Hertz πR*δ 의 ≈ 2 배 · L1-04) · 관문 ⑦A1–A5 (평균 × 개수 = 총합 · '
      '접촉 0 쌍 평균 N/A · AM전체 = 상별 합 · AM–AM 총합 = 쌍 합 · eff_area = 2 × SE–SE 총합 / (N_SE · 4π r_SE²) · eff_area_perc 빈칸 ⟺ 비관통) · '
-     '10-01 실측 130/130 · 64/64 · path_hop_area 제외 (LHS-32)'),
+     '10-01 실측 130/130 · 64/64 · path_hop_area 제외 (LHS-32) · RGL-05 (10-05): 관문 순서 = 원천 근거 (쌍 개수 · 상 유무 · am_am_n_contacts · '
+     'percolation_pct · 설계 r_SE · 수확 N_SE) → 유한 → 형/범위 (면적 · 면적 비 ≥ 0 · 개수 0 이상 정수) → 식 · 쌍 · AM–AM 의 개수 · 총합 · 평균을 '
+     '함께 정규화 (상 부재 = 세 키 빈칸 · 접촉 0 = 0 · 0 · 평균 N/A · 개수 없이 총합 · 평균만 = 거부) · 최종 레코드 재검'),
 )
 #: 7c (J20-k · 1저자 비준 10-01 *"ㄱㄱ 하자"*) — 09-19 census 판정을 **바꿔 싣는** 열 (열 사전에 옛 판정을 병기한다).  census 에 없는 키
 #:   (7a 새 키) 는 웹앱 배치 머리 (metrics_flat) 에 있을 때만 싣는다 — 옛 배치에 없는 키가 빈칸 = '측정된 N/A' 로 읽히지 않게.
@@ -1371,7 +1388,9 @@ MONO_PHASE_NOTE = MONO_DESIGN_NOTE          # (A) 시절 이름 — 호환
 WA_PAIR_COUNT = re.compile(r'area_(AM_P|AM_S|SE|AM전체)_(AM_P|AM_S|SE)_n')
 WA_PAIR_TOTAL = re.compile(r'area_(AM_P|AM_S|SE|AM전체)_(AM_P|AM_S|SE)_total')     # ⑦ — 접촉 0 쌍 총합 = 0 (J20-h 와 같은 규칙 · J20-s)
 PAIR_ZERO_NOTE = ('접촉 0 인 쌍 = 0 — 웹앱 `calc_interface_area` 는 접촉이 없는 쌍의 키를 만들지 않아 빈칸이 되므로, 두 상이 다 있는 침대 '
-                  '(수확 `phase_counts`) 에서 생성기가 0 으로 채운다 (J20-h) · mono 는 설계 상으로 판단 (J20-k (B)) · 상이 없으면 빈칸 (N/A)')
+                  '(수확 `phase_counts`) 에서 생성기가 0 으로 채운다 (J20-h) · mono 는 설계 상으로 판단 (J20-k (B)) · 상이 없으면 빈칸 (N/A) · '
+                  '0 으로 채우는 것은 그 쌍의 세 키 (개수 · 총합 · 평균) 가 웹앱 행에 모두 빈칸일 때만 — 개수 없이 총합 · 평균이 있으면 거부 '
+                  '(누락 → 0 채움 금지 · RGL-05)')
 
 
 def _phase_n(pc, ph):
@@ -1696,130 +1715,309 @@ def _wa_amse_gates(case, o, take, h, dp, drow):
 WA_FRAC_PCT_TOL = 0.005 + 1e-9          # calc_fracture_stages: round(100 n / N, 2) → 반폭 0.005
 WA_FRAC_FI_TOL = 5e-5 + 1e-12           # round((파편화 + 분쇄) / N, 4)
 WA_AREA_TOL = 1e-9                      # 같은 접촉 면적 합 (10-01 실측 ≤ 3e-14)
+#: ★ RGL-05 (Codex 10-05 · P2 · 1저자 비준 "권고대로") — ⑤⑥⑦ 관문 순서 = **선택 묶음의 원천 근거 열 요구 → 유한성 → 형/범위 → 식**.
+#:   옛 판은 식만 봤다: abs(NaN) > 여유 가 거짓이라 NaN 이 식 검사를 통과해 표에 남았고 (비율 · 지수 · 면적 평균 · 총합) · 양수 검사가 유한성을
+#:   대신했고 (h = inf) · 근거 열 (se_se_cn · am_am_n_contacts · percolation_pct · 쌍 개수) 이 비면 식을 **건너뛰었고** · 개수가 빠진 쌍을
+#:   검사 **뒤** 0 으로 채워 접촉 0 평균 N/A 규칙이 깨졌다 (Codex probe_g4 — 그 변이는 selftest ㉗ 로 옮겼다).
+#:   형/범위 = 열 정의 그대로 — 반올림 반폭 (WA_FRAC_*_TOL) 은 **식 잔차**에만 쓰고 범위를 넓히지 않는다 (round(·, 2) · round(·, 4) 는 [0, 100] ·
+#:   [0, 1] 밖으로 못 간다).  거부 문구 = '(관문 <그 값을 쓰는 식의 번호> 필수 | 유한 | 범위 · RGL-05)'.
+WA_KIND = {'count': (lambda x: x >= 0.0 and x == int(x), '0 이상 정수 (개수)'),
+           'pct': (lambda x: 0.0 <= x <= 100.0, '[0, 100] (비율 %)'),
+           'index': (lambda x: 0.0 <= x <= 1.0, '[0, 1] (지수)'),
+           'nonneg': (lambda x: x >= 0.0, '≥ 0 (면적 · 면적 비 · CN · 표준편차)'),
+           'pos': (lambda x: x > 0.0, '> 0 (F1 틈 문턱 h · 설계 반경 — 0 이하 = F1 이 꺼진 값 · 없는 반경)')}
+#: ⑤⑥⑦ 열 (+ 그 식의 원천 근거 열) 의 형/범위 — 열 사전 (WA_DEFINE) 의 정의 그대로.  단계별 개수 · 비율 · 쌍 열은 `wa_s567_kind` 가 이름으로 정한다.
+WA_S567_KIND = {'se_se_cn': 'nonneg', 'se_se_cn_aug': 'nonneg', 'se_se_cn_aug_std': 'nonneg', 'se_se_cn_aug_n_extra': 'count',
+                'se_se_cn_aug_h_spread_sim': 'pos', 'fracture_index_force': 'index', 'n_total_AM_AM_force': 'count',
+                'am_am_n_contacts': 'count', 'percolation_pct': 'pct', 'se_se_cn_eff_area': 'nonneg', 'se_se_cn_eff_area_perc': 'nonneg',
+                'am_am_mean_area': 'nonneg', 'am_am_total_area': 'nonneg'}
+#: ⑦ 쌍 (calc_interface_area — 두 상 이름을 정렬해 잇는다 · AM전체–SE = AM–SE 상별 합).  RGL-05 정규화는 이 일곱을 키가 없어도 **늘** 본다.
+WA_PAIR_ANY = re.compile(r'area_(AM_P|AM_S|SE|AM전체)_(AM_P|AM_S|SE)_(n|total|mean)')
+WA_PAIR_BASES = ('area_AM_P_AM_P', 'area_AM_P_AM_S', 'area_AM_S_AM_S', 'area_AM_P_SE', 'area_AM_S_SE', 'area_SE_SE', 'area_AM전체_SE')
+WA_AM_AM_BASES = ('area_AM_P_AM_P', 'area_AM_P_AM_S', 'area_AM_S_AM_S')
 
 
-def _fnum(x):
-    return None if x in (None, '') else float(x)
+def wa_s567_kind(col):
+    """RGL-05 — ⑤⑥⑦ (+ 원천 근거) 열의 형/범위 이름 (WA_KIND 의 키) · 모르는 열이면 None."""
+    if col in WA_S567_KIND:
+        return WA_S567_KIND[col]
+    m = re.fullmatch(r'(frac|n)_([a-z]+)_force_(pct|AM_AM)', col)
+    if m and m.group(2) in FRAC_STAGES:
+        return 'pct' if m.group(1) == 'frac' else 'count'
+    m = WA_PAIR_ANY.fullmatch(col)
+    if m:
+        return 'count' if m.group(3) == 'n' else 'nonneg'
+    return None
+
+
+def _wa_num(case, label, v, gate, kind=None, need=None):
+    """RGL-05 — 값 하나를 **식 앞에서** 읽는다: 빈칸 → None (need 가 있으면 거부 — 원천 근거 · 필수 열 누락) · 수가 아님 · 비유한 → 거부 ·
+    형/범위 (kind) 밖 → 거부.  abs(NaN) > 여유 가 거짓이라 식 검사가 NaN 을 통과시키던 길을 여기서 막는다."""
+    if v in (None, ''):
+        if need:
+            raise FillRefusal(f'{case}: {label} 가 빈칸 — {need} (관문 {gate} 필수 · RGL-05)')
+        return None
+    try:
+        x = float(v)
+    except (TypeError, ValueError):
+        raise FillRefusal(f'{case}: {label} {v!r} 이 수가 아니다 (관문 {gate} 유한 · RGL-05)') from None
+    if not math.isfinite(x):
+        raise FillRefusal(f'{case}: {label} {v!r} 이 유한한 수가 아니다 — 식 검사 (abs(…) > 여유) 를 우회하는 값 (관문 {gate} 유한 · RGL-05)')
+    if kind is not None and not WA_KIND[kind][0](x):
+        raise FillRefusal(f'{case}: {label} {v!r} — {WA_KIND[kind][1]} 밖 (관문 {gate} 범위 · RGL-05)')
+    return x
+
+
+def _wa_val(case, row, col, gate, kind=None, need=None):
+    """`_wa_num` 의 행 판 — kind 를 안 주면 열 정의 (`wa_s567_kind`) 를 쓴다."""
+    return _wa_num(case, col, row.get(col), gate, kind if kind is not None else wa_s567_kind(col), need)
+
+
+def _wa_need(case, row, cols, gate, why):
+    """RGL-05 — 원천 근거 · 필수 열이 값 검사 **전에** 다 있는가.  빈칸이 하나라도 있으면 거부 (식 검사를 건너뛰지 않는다)."""
+    miss = [c for c in cols if row.get(c) in (None, '')]
+    if miss:
+        raise FillRefusal(f'{case}: {", ".join(miss)} 가 빈칸 — {why} (관문 {gate} 필수 · RGL-05)')
+
+
+def _wa_src_col(c, dp, op, wname):
+    """J20-k (B) — 표의 열 c (설계 이름) 를 채울 웹앱 원 행의 열 → (src, absent).  mono: 설계에 없는 상이 낀 열은 absent (빈칸 · N/A) ·
+    웹앱 반지름 이름이 설계 상과 다르면 그 이름의 값 (`_phase_swap`).  bimodal 은 (c, False)."""
+    src, absent = c, False
+    if dp is not None and wa_phase_specific(c):
+        absent = any(t == op for t in WA_PHASE_TOKEN.findall(c))
+        if not absent and wname is not None and wname != dp:
+            src = _phase_swap(c, dp, wname)
+    return src, absent
 
 
 def _wa_f1_gates(case, wr, h):
-    """⑤F1 — se_se_cn_aug = se_se_cn + 2 × n_extra / N_SE (calc_se_se_cn: 근접쌍 하나가 두 입자에 하나씩 더해진다 · 같은 SE 집합의 평균)."""
-    cn, aug, nx, hs = (_fnum(wr.get(k)) for k in ('se_se_cn', 'se_se_cn_aug', 'se_se_cn_aug_n_extra', 'se_se_cn_aug_h_spread_sim'))
-    if cn is None:
-        return 0
-    if aug is None or nx is None or hs is None:
-        raise FillRefusal(f'{case}: se_se_cn 은 있는데 F1 열 (aug · n_extra · h_spread) 이 비었다 — F1 이 꺼진 배치를 N/A 로 싣지 않는다 (관문 ⑤F1 · J20-s)')
-    if not hs > 0:
-        raise FillRefusal(f'{case}: se_se_cn_aug_h_spread_sim {hs!r} ≤ 0 — F1 이 꺼진 값이다 (관문 ⑤F1 · J20-s)')
+    """⑤F1 — se_se_cn_aug = se_se_cn + 2 × n_extra / N_SE (calc_se_se_cn: 근접쌍 하나가 두 입자에 하나씩 더해진다 · 같은 SE 집합의 평균).
+    RGL-05 순서: 원천 근거 (탄성 se_se_cn · 수확 N_SE) · F1 네 열 (std 포함) 필수 → 유한 → 형/범위 → 식.  옛 판은 se_se_cn 이 비면 식을
+    건너뛰었고 (Codex: aug −999 가 표에 남았다) · h 의 양수 검사가 유한성을 대신했고 (inf 통과) · std 는 보지 않았다."""
     pc = h.get('phase_counts')
     if not isinstance(pc, dict):
-        raise FillRefusal(f'{case}: 수확 JSON 에 phase_counts 가 없다 — SE 입자 수를 몰라 F1 항등식을 잴 수 없다 (관문 ⑤F1 · J20-s)')
+        raise FillRefusal(f'{case}: 수확 JSON 에 phase_counts 가 없다 — SE 입자 수를 몰라 F1 항등식을 잴 수 없다 (관문 ⑤F1 필수 · J20-s)')
+    _wa_need(case, wr, ('se_se_cn',), '⑤F1', 'F1 항등식의 원천 근거 (탄성 SE–SE CN · 같은 calc_se_se_cn 출력) — 근거 없이 식 검사를 건너뛰지 않는다')
+    _wa_need(case, wr, WA_GROUP_F1_EXACT, '⑤F1', 'se_se_cn 은 있는데 F1 열이 비었다 — F1 이 꺼진 배치 · 한 열만 빠진 행을 N/A 로 싣지 않는다')
+    cn = _wa_val(case, wr, 'se_se_cn', '⑤F1')
+    aug, _sd, nx, _hs = (_wa_val(case, wr, k, '⑤F1') for k in WA_GROUP_F1_EXACT)     # std ≥ 0 · n_extra 0 이상 정수 · h > 0 (유한)
     n_se = _phase_n(pc, 'SE')
     exp = cn + 2.0 * nx / n_se if n_se > 0 else float('nan')
-    if not (n_se > 0 and nx >= 0 and nx == int(nx) and abs(aug - exp) <= WA_CN_IDENTITY_TOL * max(1.0, abs(exp))):
+    if not (n_se > 0 and abs(aug - exp) <= WA_CN_IDENTITY_TOL * max(1.0, abs(exp))):
         raise FillRefusal(f'{case}: se_se_cn_aug {aug!r} ≠ se_se_cn {cn!r} + 2 × n_extra {nx:g} / SE {n_se} = {exp!r} — 같은 접촉 집합의 '
                           'F1 이 아니다 (관문 ⑤F1 · J20-s)')
     return 1
 
 
 def _wa_frac_gates(case, wr):
-    """⑥R1–R3 — calc_fracture_stages: 단계 개수 합 = 전체 · 비율 = round(100 n / N, 2) · 지수 = round((파편화 + 분쇄) / N, 4) · 전체 ≤ AM–AM 접촉."""
-    n_t = _fnum(wr.get('n_total_AM_AM_force'))
-    amn = _fnum(wr.get('am_am_n_contacts'))
-    if n_t is None:
-        if amn is not None and amn > 0:
-            raise FillRefusal(f'{case}: AM–AM 접촉 {amn:g} 개인데 힘 기반 파괴 열이 없다 — 파괴 단계가 빠진 행 (관문 ⑥R1 · J20-s)')
-        return 0
-    ns = [_fnum(wr.get(f'n_{s}_force_AM_AM')) for s in FRAC_STAGES]
-    if any(n is None or n < 0 or n != int(n) for n in ns) or n_t != int(n_t):
-        raise FillRefusal(f'{case}: 힘 기반 단계 개수가 비었거나 정수가 아니다 {ns} · 전체 {n_t!r} (관문 ⑥R1 · J20-s)')
+    """⑥R1–R3 — calc_fracture_stages: 단계 개수 합 = 전체 · 비율 = round(100 n / N, 2) · 지수 = round((파편화 + 분쇄) / N, 4) · 전체 ≤ AM–AM 접촉.
+    RGL-05 순서: 원천 근거 (am_am_n_contacts — R3 상한 · 접촉 0 인지 가른다) → 필수 (단계 개수 · N > 0 이면 비율 · 지수) → 유한 → 형/범위 → 식.
+    AM–AM 접촉 0 (calc_fracture_stages 가 {} 를 낸다) = 파괴 키가 하나도 없어야 하는 **검증된 상태** → 1 (확인함) · 파괴 열은 빈칸 (N/A)."""
+    amn = _wa_val(case, wr, 'am_am_n_contacts', '⑥R3',
+                  need='힘 기반 파괴의 원천 근거 (AM–AM 접촉 수 — R3 상한 · 접촉 0 인지 가른다) — 근거 없이 R3 를 건너뛰지 않는다')
+    if wr.get('n_total_AM_AM_force') in (None, ''):
+        has = [k for k in WA_GROUP_FRAC_EXACT if wr.get(k) not in (None, '')]
+        if amn > 0:
+            raise FillRefusal(f'{case}: AM–AM 접촉 {amn:g} 개인데 힘 기반 파괴 열이 없다 — 파괴 단계가 빠진 행 (관문 ⑥R1 필수 · J20-s)')
+        if has:
+            raise FillRefusal(f'{case}: AM–AM 접촉 0 인데 파괴 키 {has[:3]} 만 있다 — calc_fracture_stages 는 접촉 0 이면 키를 하나도 안 쓴다 '
+                              '(상태 혼합 · 관문 ⑥R1 필수 · RGL-05)')
+        return 1                                                          # AM–AM 접촉 0 — 검증된 상태 (파괴 열 = N/A)
+    _wa_need(case, wr, tuple(f'n_{s}_force_AM_AM' for s in FRAC_STAGES), '⑥R1', '힘 기반 단계 개수가 비었다 — 단계 합 = 전체를 잴 수 없다')
+    n_t = _wa_val(case, wr, 'n_total_AM_AM_force', '⑥R1')
+    ns = [_wa_val(case, wr, f'n_{s}_force_AM_AM', '⑥R1') for s in FRAC_STAGES]
+    if n_t > 0:
+        _wa_need(case, wr, ('fracture_index_force',) + tuple(f'frac_{s}_force_pct' for s in FRAC_STAGES), '⑥R2',
+                 f'n_total_AM_AM_force {n_t:g} > 0 인데 비율 · 지수가 비었다')
+    fi = _wa_val(case, wr, 'fracture_index_force', '⑥R2')                 # [0, 1] — 반폭 안이어도 음수 · 1 초과는 범위 밖
+    fr = [_wa_val(case, wr, f'frac_{s}_force_pct', '⑥R2') for s in FRAC_STAGES]     # [0, 100]
     if sum(ns) != n_t:
         raise FillRefusal(f'{case}: 힘 기반 단계 개수 합 {sum(ns):g} ≠ n_total_AM_AM_force {n_t:g} (관문 ⑥R1 · J20-s)')
-    fi = _fnum(wr.get('fracture_index_force'))
-    fr = [_fnum(wr.get(f'frac_{s}_force_pct')) for s in FRAC_STAGES]
     if n_t > 0:
-        if fi is None or any(x is None for x in fr):
-            raise FillRefusal(f'{case}: n_total_AM_AM_force {n_t:g} > 0 인데 비율 · 지수가 비었다 (관문 ⑥R2 · J20-s)')
         for s, x, n in zip(FRAC_STAGES, fr, ns):
-            if abs(x - 100.0 * n / n_t) > WA_FRAC_PCT_TOL:
+            if not abs(x - 100.0 * n / n_t) <= WA_FRAC_PCT_TOL:
                 raise FillRefusal(f'{case}: frac_{s}_force_pct {x!r} ≠ 100 × {n:g} / {n_t:g} = {100.0 * n / n_t:.4f} — 반올림 폭 0.005 밖 '
                                   '(관문 ⑥R2 · J20-s)')
         e_fi = (ns[3] + ns[4]) / n_t
-        if abs(fi - e_fi) > WA_FRAC_FI_TOL:
+        if not abs(fi - e_fi) <= WA_FRAC_FI_TOL:
             raise FillRefusal(f'{case}: fracture_index_force {fi!r} ≠ (파편화 + 분쇄) / N = {e_fi:.6f} — 반올림 폭 5e-5 밖 (관문 ⑥R2 · J20-s)')
     elif fi is not None or any(x is not None for x in fr):
         raise FillRefusal(f'{case}: n_total_AM_AM_force 0 인데 비율 · 지수가 있다 (관문 ⑥R2 · J20-s)')
-    if amn is not None and n_t > amn:
+    if n_t > amn:
         raise FillRefusal(f'{case}: n_total_AM_AM_force {n_t:g} > am_am_n_contacts {amn:g} — fn > 0 AM–AM 접촉은 전 AM–AM 접촉의 부분집합 '
                           '(관문 ⑥R3 · J20-s)')
     return 1
 
 
-def _wa_area_prep(case, wr, rep):
-    """⑦A1 — 쌍마다 개수 > 0 이면 평균 × 개수 = 총합 · 개수 0 이면 총합 0 · 평균 없음 (calc_interface_area 의 AM전체–SE 평균 0 대입은 빈칸으로).
-    반환 = 접촉 0 쌍의 평균을 비운 행 **사본** (웹앱 원 행은 안 바꾼다)."""
+def _wa_raw_phase_n(pc, dp, wname):
+    """RGL-05 — 웹앱 **원 이름** 의 상 → 입자 수 (쌍 정규화용).  bimodal 은 수확 이름 = 웹앱 이름 · mono (설계 상 dp) 는 웹앱이 단일 AM 에
+    붙인 반지름 이름 (wname · 모르면 설계 상) 이 AM 전체이고 다른 이름은 0 (J20-k (B))."""
+    n = {'SE': _phase_n(pc, 'SE'), 'AM전체': _phase_n(pc, 'AM전체')}
+    if dp is None:
+        n.update(AM_P=_phase_n(pc, 'AM_P'), AM_S=_phase_n(pc, 'AM_S'))
+    else:
+        nm = wname or dp
+        n.update({ph: (n['AM전체'] if ph == nm else 0) for ph in ('AM_P', 'AM_S')})
+    return n
+
+
+def _wa_area_norm(case, wr, rn, rep):
+    """⑦A1 (+ A3) — RGL-05: 쌍마다 개수 · 총합 · 평균을 **함께** 읽어 한 상태로 정한 웹앱 원 행 **사본** (원 행은 안 바꾼다 · 웹앱 원 이름).
+    순서 = 원천 근거 (개수 · 상 유무) → 유한 → 형/범위 → 식.  옛 판 (`_wa_area_prep`) 은 값이 있는 개수만 봤고, 개수가 빠진 쌍은 검사 **뒤**
+    출력에서 0 으로 채워 '개수 0 · 평균 0.01' 이 표에 남았다 (Codex missing_pair_count_positive_mean).
+      상 부재 (rn 0)       — 세 키 모두 빈칸이어야 (값이 있으면 다른 침대 · 다른 상의 값 → 거부) · 빈칸 그대로 (N/A)
+      접촉 0               — 개수 0 · 총합 0 · 평균 빈칸 (calc_interface_area 의 AM전체–SE 평균 0 대입은 비운다 · 0 아닌 평균은 거부) ·
+                             세 키 모두 빈칸 (09-30 이전 웹앱 — 접촉 0 쌍의 키를 안 만들었다) 이면 0 · 0.0 · 빈칸 (J20-h)
+      접촉 있음 (개수 > 0)  — 총합 · 평균 필수 · 평균 × 개수 = 총합
+      기술적 결측           — 개수 없이 총합 · 평균만 있거나 (누락 → 0 채움 금지) · 개수만 있고 총합이 없으면 거부 (웹앱은 둘을 함께 쓴다)
+    AM–AM 묶음 (am_am_n_contacts · am_am_total_area · am_am_mean_area — calc_am_am_cn 은 AM 이 있으면 셋을 늘 쓴다) 도 같은 셋:
+      개수 = 원천 근거 · 접촉 0 이면 총합 0 · 평균 빈칸 (calc_am_am_cn 의 0 대입은 비운다).
+    rn = 웹앱 원 이름 상 → 입자 수 (`_wa_raw_phase_n`)."""
     out = dict(wr)
-    for k, v in wr.items():
-        if v in (None, '') or re.fullmatch(r'area_(.+)_n', k) is None:
+    bases = set(WA_PAIR_BASES) | {k[:k.rfind('_')] for k in wr if WA_PAIR_ANY.fullmatch(k)}
+    for b in sorted(bases):
+        p1, p2 = re.fullmatch(r'area_(AM_P|AM_S|SE|AM전체)_(AM_P|AM_S|SE)', b).groups()
+        kn, kt, km = b + '_n', b + '_total', b + '_mean'
+        has = [k for k in (kn, kt, km) if wr.get(k) not in (None, '')]
+        if not (rn.get(p1, 0) > 0 and rn.get(p2, 0) > 0):
+            if has:
+                raise FillRefusal(f'{case}: {b} — 상 ({p1 if rn.get(p1, 0) <= 0 else p2}) 이 없는 침대인데 {has} 에 값이 있다 — 다른 침대 · 다른 상의 '
+                                  '값이다 (관문 ⑦A1 상 없음 · RGL-05)')
+            continue                                                      # 상 부재 — N/A (빈칸 그대로)
+        if kn not in has:
+            if has:
+                raise FillRefusal(f'{case}: {kn} 가 빈칸인데 같은 쌍의 {has} 에 값이 있다 — 개수 없이 0 으로 채우지 않는다 (누락 → 0 채움 금지 · '
+                                  '관문 ⑦A1 필수 · RGL-05)')
+            out[kn], out[kt], out[km] = '0', '0.0', ''                    # 옛 웹앱의 접촉 0 쌍 (세 키 모두 없음) — 측정된 0 · 평균 N/A (J20-h)
             continue
-        b = k[:-2]
-        n = float(v)
-        tot, mean = _fnum(wr.get(b + '_total')), _fnum(wr.get(b + '_mean'))
+        _wa_need(case, wr, (kt,), '⑦A1', f'{kn} {wr.get(kn)!r} 은 있는데 총합이 없다 — 웹앱은 개수 · 총합을 함께 쓴다 (기술적 결측)')
+        n = _wa_val(case, wr, kn, '⑦A1')
+        tot = _wa_val(case, wr, kt, '⑦A1')
+        mean = _wa_val(case, wr, km, '⑦A1')
         if n > 0:
-            if tot is None or mean is None:
-                raise FillRefusal(f'{case}: {b} 개수 {n:g} > 0 인데 평균 · 총합이 비었다 (관문 ⑦A1 · J20-s)')
-            if abs(mean * n - tot) > WA_AREA_TOL * max(abs(tot), abs(mean * n), 1e-300):
+            if mean is None:
+                raise FillRefusal(f'{case}: {b} 개수 {n:g} > 0 인데 평균이 비었다 (관문 ⑦A1 필수 · J20-s · RGL-05)')
+            if not abs(mean * n - tot) <= WA_AREA_TOL * max(abs(tot), abs(mean * n), 1e-300):
                 raise FillRefusal(f'{case}: {b}_mean {mean!r} × 개수 {n:g} ≠ {b}_total {tot!r} — 같은 접촉의 값이 아니다 (관문 ⑦A1 · J20-s)')
         else:
-            if tot not in (None, 0.0):
+            if tot != 0.0:
                 raise FillRefusal(f'{case}: {b} 개수 0 인데 총합 {tot!r} ≠ 0 (관문 ⑦A1 · J20-s)')
             if mean is not None:
                 if mean != 0.0:
                     raise FillRefusal(f'{case}: {b} 개수 0 인데 평균 {mean!r} 이 있다 — 접촉 0 개에서 평균은 정의되지 않는다 (관문 ⑦A1 · J20-s)')
-                out[b + '_mean'] = ''
+                out[km] = ''
+                rep['wa_area_mean_blanked'] += 1
+    if rn.get('AM전체', 0) > 0:
+        amn = _wa_val(case, wr, 'am_am_n_contacts', '⑦A3', need='AM–AM 면적 (총합 · 평균) 의 원천 근거 (calc_am_am_cn 의 개수)')
+        _wa_need(case, wr, ('am_am_total_area',), '⑦A3', 'calc_am_am_cn 은 AM 이 있으면 총합을 늘 쓴다 (평균만 남은 AM–AM = 기술적 결측)')
+        aat = _wa_val(case, wr, 'am_am_total_area', '⑦A3')
+        aam = _wa_val(case, wr, 'am_am_mean_area', '⑦A3')
+        if amn > 0:
+            if aam is None:
+                raise FillRefusal(f'{case}: AM–AM 접촉 {amn:g} 개인데 am_am_mean_area 가 비었다 (관문 ⑦A3 필수 · RGL-05)')
+        else:
+            if aat != 0.0:
+                raise FillRefusal(f'{case}: AM–AM 접촉 0 인데 am_am_total_area {aat!r} ≠ 0 (관문 ⑦A3 · RGL-05)')
+            if aam is not None:
+                if aam != 0.0:
+                    raise FillRefusal(f'{case}: AM–AM 접촉 0 인데 am_am_mean_area {aam!r} 이 있다 — 접촉 0 개에서 평균은 정의되지 않는다 '
+                                      '(관문 ⑦A3 · RGL-05)')
+                out['am_am_mean_area'] = ''                               # calc_am_am_cn 의 0 대입 — N/A (쌍 평균과 같은 규칙)
                 rep['wa_area_mean_blanked'] += 1
     return out
 
 
-def _wa_area_gates(case, wr, h, drow, take):
-    """⑦A2–A5 — AM전체–SE = 상별 합 · AM–AM 총합 = 쌍 합 · 평균 = 총합 / 개수 · eff_area = 2 × SE–SE 총합 / (N_SE · 4π r_SE²) ·
-    eff_area_perc 빈칸 ⟺ 비관통 (percolation_pct 0)."""
-    tot = _fnum(wr.get('area_AM전체_SE_total'))
-    if tot is not None:
-        s_ = sum(x for x in (_fnum(wr.get(f'area_{p}_SE_total')) for p in ('AM_P', 'AM_S')) if x is not None)
-        if abs(tot - s_) > WA_AREA_TOL * max(abs(tot), abs(s_), 1e-300):
-            raise FillRefusal(f'{case}: area_AM전체_SE_total {tot!r} ≠ AM_P–SE + AM_S–SE {s_!r} (관문 ⑦A2 · J20-s)')
-        n_all = _fnum(wr.get('area_AM전체_SE_n'))
-        n_s = sum(x for x in (_fnum(wr.get(f'area_{p}_SE_n')) for p in ('AM_P', 'AM_S')) if x is not None)
-        if n_all is not None and n_all != n_s:
-            raise FillRefusal(f'{case}: area_AM전체_SE_n {n_all:g} ≠ AM_P–SE + AM_S–SE 개수 {n_s:g} (관문 ⑦A2 · J20-s)')
-    aat, aam, amn = (_fnum(wr.get(k)) for k in ('am_am_total_area', 'am_am_mean_area', 'am_am_n_contacts'))
-    if aat is not None:
-        s_ = sum((_fnum(wr.get(f'area_{p}_total')) or 0.0) for p in ('AM_P_AM_P', 'AM_P_AM_S', 'AM_S_AM_S'))
-        if abs(aat - s_) > WA_AREA_TOL * max(abs(aat), abs(s_), 1e-300):
-            raise FillRefusal(f'{case}: am_am_total_area {aat!r} ≠ AM–AM 쌍 총합 {s_!r} (관문 ⑦A3 · J20-s)')
-        if amn is not None and amn > 0:
+def _wa_area_gates(case, wn, h, drow, take, rn):
+    """⑦A2–A5 — `_wa_area_norm` 으로 정규화한 행에서 (쌍 · AM–AM 셋이 한 상태로 정해진 뒤): AM전체–SE = 상별 합 (총합 · 개수) ·
+    AM–AM 개수 = 쌍 개수 합 · 총합 = 쌍 총합 합 · 평균 = 총합 / 개수 · eff_area = 2 × SE–SE 총합 / (N_SE · 4π r_SE²) · eff_area_perc 빈칸 ⟺ 비관통.
+    RGL-05: A4 · A5 의 원천 근거 (설계 r_SE · 수확 N_SE · SE–SE 총합 · percolation_pct) 와 그 열을 먼저 요구한다 — 옛 판은 근거가 비면 식을 건너뛰었다."""
+    def num(k, g):
+        return _wa_val(case, wn, k, g, need='정규화 뒤에도 비었다 — 상이 있는 쌍은 개수 · 총합이 정해져 있어야 한다')
+    if rn.get('AM전체', 0) > 0 and rn.get('SE', 0) > 0:                   # A2
+        ph = [p for p in ('AM_P', 'AM_S') if rn.get(p, 0) > 0]
+        tot, n_all = num('area_AM전체_SE_total', '⑦A2'), num('area_AM전체_SE_n', '⑦A2')
+        s_t = sum(num(f'area_{p}_SE_total', '⑦A2') for p in ph)
+        s_n = sum(num(f'area_{p}_SE_n', '⑦A2') for p in ph)
+        if not abs(tot - s_t) <= WA_AREA_TOL * max(abs(tot), abs(s_t), 1e-300):
+            raise FillRefusal(f'{case}: area_AM전체_SE_total {tot!r} ≠ AM_P–SE + AM_S–SE {s_t!r} (관문 ⑦A2 · J20-s)')
+        if n_all != s_n:
+            raise FillRefusal(f'{case}: area_AM전체_SE_n {n_all:g} ≠ AM_P–SE + AM_S–SE 개수 {s_n:g} (관문 ⑦A2 · J20-s)')
+    if rn.get('AM전체', 0) > 0:                                            # A3
+        bases = [b for b in WA_AM_AM_BASES if all(rn.get(p, 0) > 0 for p in re.fullmatch(r'area_(AM_P|AM_S)_(AM_P|AM_S)', b).groups())]
+        amn, aat = num('am_am_n_contacts', '⑦A3'), num('am_am_total_area', '⑦A3')
+        aam = _wa_val(case, wn, 'am_am_mean_area', '⑦A3')
+        s_n = sum(num(b + '_n', '⑦A3') for b in bases)
+        s_t = sum(num(b + '_total', '⑦A3') for b in bases)
+        if amn != s_n:
+            raise FillRefusal(f'{case}: am_am_n_contacts {amn:g} ≠ AM–AM 쌍 개수 합 {s_n:g} — 같은 접촉 집합의 값이 아니다 (관문 ⑦A3 · J20-j · RGL-05)')
+        if not abs(aat - s_t) <= WA_AREA_TOL * max(abs(aat), abs(s_t), 1e-300):
+            raise FillRefusal(f'{case}: am_am_total_area {aat!r} ≠ AM–AM 쌍 총합 {s_t!r} (관문 ⑦A3 · J20-s)')
+        if amn > 0:
             e_m = aat / amn
-            if aam is None or abs(aam - e_m) > WA_AREA_TOL * max(abs(aam), abs(e_m), 1e-300):
+            if aam is None or not abs(aam - e_m) <= WA_AREA_TOL * max(abs(aam), abs(e_m), 1e-300):
                 raise FillRefusal(f'{case}: am_am_mean_area {aam!r} ≠ am_am_total_area / am_am_n_contacts = {e_m!r} (관문 ⑦A3 · J20-s)')
-    if 'se_se_cn_eff_area' in take:
-        ea, sst = _fnum(wr.get('se_se_cn_eff_area')), _fnum(wr.get('area_SE_SE_total'))
-        if ea is not None:
-            rse = _fnum(drow.get('r_SE_um'))
-            pc = h.get('phase_counts')
-            if rse is None or not rse > 0 or not isinstance(pc, dict) or sst is None:
-                raise FillRefusal(f'{case}: se_se_cn_eff_area 를 잴 수 없다 — 설계 r_SE_um {drow.get("r_SE_um")!r} · phase_counts · area_SE_SE_total 중 '
-                                  '없는 것이 있다 (관문 ⑦A4 · J20-s)')
-            n_se = _phase_n(pc, 'SE')
-            e_a = 2.0 * sst / (n_se * 4.0 * math.pi * rse * rse) if n_se > 0 else float('nan')
-            if not (n_se > 0 and abs(ea - e_a) <= WA_AREA_TOL * max(abs(e_a), 1e-300)):
-                raise FillRefusal(f'{case}: se_se_cn_eff_area {ea!r} ≠ 2 × area_SE_SE_total / (N_SE {n_se} · 4π r_SE²) = {e_a!r} '
-                                  '(관문 ⑦A4 · J20-s · SE 단분산 = 설계 d_se 하나)')
-    if 'se_se_cn_eff_area_perc' in take:
-        pp, eap = _fnum(wr.get('percolation_pct')), _fnum(wr.get('se_se_cn_eff_area_perc'))
-        if pp is not None and (eap is None) != (pp == 0.0):
-            raise FillRefusal(f'{case}: se_se_cn_eff_area_perc {wr.get("se_se_cn_eff_area_perc")!r} ↔ percolation_pct {pp!r} — 빈칸 ⟺ 비관통이어야 '
-                              '한다 (관문 ⑦A5 · J20-s)')
+    if 'se_se_cn_eff_area' in take:                                       # A4
+        ea = _wa_val(case, wn, 'se_se_cn_eff_area', '⑦A4',
+                     need='⑦ 면적 묶음의 SE 면적 피복 (calc_se_se_cn 은 늘 쓴다) — 근거 없이 A4 를 건너뛰지 않는다')
+        rse = _wa_num(case, '설계 r_SE_um', drow.get('r_SE_um'), '⑦A4', 'pos', need='eff_area 식의 원천 근거 (SE 단분산 반경 · 설계 d_se 하나)')
+        pc = h.get('phase_counts')
+        if not isinstance(pc, dict):
+            raise FillRefusal(f'{case}: 수확 JSON 에 phase_counts 가 없다 — SE 입자 수를 몰라 eff_area 식을 잴 수 없다 (관문 ⑦A4 필수 · RGL-05)')
+        n_se = _phase_n(pc, 'SE')
+        sst = _wa_val(case, wn, 'area_SE_SE_total', '⑦A4', need='eff_area 식의 원천 근거 (SE–SE 접촉 면적 총합)')
+        e_a = 2.0 * sst / (n_se * 4.0 * math.pi * rse * rse) if n_se > 0 else float('nan')
+        if not (n_se > 0 and abs(ea - e_a) <= WA_AREA_TOL * max(abs(e_a), 1e-300)):
+            raise FillRefusal(f'{case}: se_se_cn_eff_area {ea!r} ≠ 2 × area_SE_SE_total / (N_SE {n_se} · 4π r_SE²) = {e_a!r} '
+                              '(관문 ⑦A4 · J20-s · SE 단분산 = 설계 d_se 하나)')
+    if 'se_se_cn_eff_area_perc' in take:                                  # A5
+        pp = _wa_val(case, wn, 'percolation_pct', '⑦A5',
+                     need='eff_area_perc 빈칸 ⟺ 비관통 의 원천 근거 (SE 관통 비율) — 근거 없이 A5 를 건너뛰지 않는다')
+        eap = _wa_val(case, wn, 'se_se_cn_eff_area_perc', '⑦A5')
+        if pp > 0.0 and eap is None:
+            raise FillRefusal(f'{case}: 관통 침대 (percolation_pct {pp!r}) 인데 se_se_cn_eff_area_perc 가 빈칸 — 빈칸 ⟺ 비관통이어야 한다 '
+                              '(관문 ⑦A5 필수 · J20-s)')
+        if pp == 0.0 and eap is not None:
+            raise FillRefusal(f'{case}: 비관통 침대 (percolation_pct 0) 인데 se_se_cn_eff_area_perc {eap!r} 이 있다 — 빈칸 ⟺ 비관통이어야 한다 '
+                              '(관문 ⑦A5 · J20-s)')
+    return 1
+
+
+def _wa_s567_final(case, o, take, pair_n, amn=''):
+    """RGL-05 — 내보내는 행 (**최종 레코드**) 을 다시 본다: 0 채움 (J20-h) · mono 이름 옮김 · 접촉 0 평균 비움 **뒤** 의 값이 여전히 한 상태인가.
+      ⑤⑥⑦ · 원천 근거 열의 값 = 유한 · 형/범위 안 (빈칸 = N/A 는 아래 규칙이 본다)
+      쌍 (설계 이름) 마다 — 개수 빈칸 (상 부재 · N/A) 이면 총합 · 평균도 빈칸 · 개수 0 (접촉 0) 이면 총합 0 · 평균 빈칸 ·
+      개수 > 0 이면 실린 총합 · 평균에 값 · 평균 × 개수 = 총합.  AM–AM 묶음도 같은 규칙 (개수 = am_am_n_contacts).
+    pair_n = {설계 이름 쌍: 그 쌍의 개수 문자열 (표에 실렸으면 표의 값 · 아니면 정규화한 웹앱 원 행의 값)} · amn = am_am_n_contacts (같은 뜻).
+    정규화가 맞으면 쏘지 않는 이중 안전장치다 — 반환 1 (검사함) · 어긋나면 FillRefusal ('최종 레코드')."""
+    g = '최종 레코드'
+    for c in take:
+        if wa_s567_kind(c) is not None:
+            _wa_val(case, o, c, g)
+
+    def triple(label, n_s, tc, mc):
+        t_s = o.get(tc, '') if tc in take else None                      # None = 그 칸은 표에 없다 (볼 것이 없다)
+        m_s = o.get(mc, '') if mc in take else None
+        n = _wa_num(case, label, n_s, g, 'count')
+        t = _wa_num(case, tc, t_s, g, 'nonneg') if t_s is not None else None
+        m = _wa_num(case, mc, m_s, g, 'nonneg') if m_s is not None else None
+        if n is None:
+            if t_s or m_s:
+                raise FillRefusal(f'{case}: 최종 레코드 {label} 빈칸 (상 부재 · N/A) 인데 총합 · 평균에 값이 있다 (관문 {g} · RGL-05)')
+        elif n == 0:
+            if t_s is not None and t != 0.0:
+                raise FillRefusal(f'{case}: 최종 레코드 {label} 0 (접촉 0) 인데 {tc} {t_s!r} — 측정된 0 이어야 한다 (관문 {g} · RGL-05)')
+            if m_s:
+                raise FillRefusal(f'{case}: 최종 레코드 {label} 0 (접촉 0) 인데 {mc} {m_s!r} — 접촉 0 개에서 평균은 정의되지 않는다 (관문 {g} · RGL-05)')
+        else:
+            if (t_s is not None and t is None) or (m_s is not None and m is None):
+                raise FillRefusal(f'{case}: 최종 레코드 {label} {n:g} > 0 인데 실린 총합 · 평균이 비었다 (관문 {g} · RGL-05)')
+            if t is not None and m is not None and not abs(m * n - t) <= WA_AREA_TOL * max(abs(t), abs(m * n), 1e-300):
+                raise FillRefusal(f'{case}: 최종 레코드 {mc} {m!r} × {label} {n:g} ≠ {tc} {t!r} (관문 {g} · RGL-05)')
+    for b, n_s in sorted(pair_n.items()):
+        triple(f'{b}_n', n_s, b + '_total', b + '_mean')
+    if 'am_am_total_area' in take or 'am_am_mean_area' in take:
+        triple('am_am_n_contacts', amn, 'am_am_total_area', 'am_am_mean_area')
     return 1
 
 
@@ -1990,9 +2188,17 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp
     if wv is not None:
         #  묶음별 — 접촉 단계만 돈 배치는 그 묶음으로만 부른다 (뒤 단계 열이 빈칸 = 측정된 N/A 로 읽히지 않게)
         _sa = wv.get('stop_after')
-        if _sa and (_gs is None or any(g not in WA_STAGE_GROUPS.get(_sa, (_sa,)) for g in _gs)):
-            raise FillRefusal(f'웹앱 배치가 stop_after={_sa!r} 로 돌았다 — webapp_groups={webapp_groups!r} 로는 싣지 않는다 '
-                              f'(그 배치가 다 낸 묶음만: --webapp-groups {",".join(WA_STAGE_GROUPS.get(_sa, (_sa,)))} 의 부분집합)')
+        if _sa:
+            #  RGL-03 — 단계 역량 (WA_STAGE_GROUPS) 을 모르는 정지점은 거부한다.  옛 판은 모르는 이름을 그대로 묶음 목록으로 써서
+            #   "--webapp-groups network 의 부분집합" 처럼 유효 묶음도 아닌 이름을 요구했다.
+            _cap = WA_STAGE_GROUPS.get(_sa)
+            if _cap is None:
+                raise FillRefusal(f'웹앱 배치 stop_after={_sa!r} — 생성기가 단계 역량을 모르는 정지점이다 (아는 정지점: '
+                                  f'{", ".join(WA_STAGE_GROUPS)}) — 그 단계가 어떤 묶음을 다 내는지 WA_STAGE_GROUPS 에 적은 뒤에만 싣는다 (RGL-03)')
+            if _gs is None or any(g not in _cap for g in _gs):
+                raise FillRefusal(f'웹앱 배치가 stop_after={_sa!r} 로 돌았다 — webapp_groups={webapp_groups!r} 로는 싣지 않는다 '
+                                  f'(그 단계가 다 낸 묶음만: --webapp-groups 에 {", ".join(_cap)} 중에서 쉼표로 고른다 · 묶음 제한이 없으면 뒤 단계 열이 '
+                                  '빈칸 = 측정된 N/A 로 읽힌다 · RGL-03)')
         miss_w = [r[key] for r in rows if r[key] not in (wv.get('status') or {})]
         if miss_w:
             raise FillRefusal(f'웹앱 배치가 시도하지 않은 설계행 {len(miss_w)} 건: {miss_w[:5]} — 배치 미완 (재개로 채울 것)')
@@ -2024,7 +2230,7 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp
                    wa_unreviewed_dropped=n_census_ok - len(ok_cols), wa_pair_zero_filled=0,
                    wa_mono_renamed_cases=0, wa_mono_design_filled=0, wa_mono_absent_blanked=0,
                    wa_cn_identity_checked=0, wa_am_identity_checked=0, wa_amse_identity_checked=0, wa_perc_checked=0,
-                   wa_ionic_checked=0, wa_f1_checked=0, wa_frac_checked=0, wa_area_checked=0,
+                   wa_ionic_checked=0, wa_f1_checked=0, wa_frac_checked=0, wa_area_checked=0, wa_s567_final_checked=0,
                    wa_area_mean_blanked=0, wa_area_total_zero_filled=0, wa_excluded_dropped=_n_excl)
     for r in rows:
         h = hv[r[key]]
@@ -2112,22 +2318,44 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp
                 o['wa_mono_phase_name_webapp'] = wname or ''
                 if wname is not None and wname != dp:
                     rep['wa_mono_renamed_cases'] += 1
+            wr0, rn = wr, None                                            # wr0 = 웹앱 원 행 (정규화 전 — J20-h 부분 키 판정 · 0 채움 셈)
             if wr is not None and any(wa_group_area(c) for c in wa_take):
-                wr = _wa_area_prep(r[key], wr, rep)                         # ⑦A1 — 접촉 0 쌍 평균 = N/A (웹앱 원 행은 안 바꾼다 · J20-s)
+                #  ⑦A1 (+ A3) — RGL-05: 쌍 · AM–AM 의 개수 · 총합 · 평균을 함께 정규화한다 (상 부재 · 접촉 0 · 기술적 결측을 가른다 ·
+                #   접촉 0 평균 = N/A · 웹앱 원 행은 안 바꾼다 · J20-s).  옛 판은 값이 있는 개수만 보고 빠진 개수는 검사 뒤 출력에서 0 으로 채웠다.
+                pc_ = h.get('phase_counts')
+                if not isinstance(pc_, dict):
+                    raise FillRefusal(f'{r[key]}: 수확 JSON 에 phase_counts 가 없다 — 쌍마다 상 부재 · 접촉 0 을 가를 수 없어 ⑦ 면적을 실을 수 없다 '
+                                      '(관문 ⑦A1 필수 · RGL-05)')
+                rn = _wa_raw_phase_n(pc_, dp, wname)
+                wr = _wa_area_norm(r[key], wr, rn, rep)
+            #  ⑤⑥⑦ (J20-s · RGL-05) — 출력 **전에** 웹앱 원 행 (⑦ 은 정규화한 행) 으로 잰다: 원천 근거 → 유한 → 형/범위 → 식
+            #   (상 이름 옮기기와 무관한 항등식 · 같은 묶음의 짝 열이 표에 없어도 잰다 · 근거 열이 비면 건너뛰지 않고 거부)
+            if wr is not None and any(wa_group_f1(c) for c in wa_take):
+                rep['wa_f1_checked'] += _wa_f1_gates(r[key], wr, h)
+            if wr is not None and any(wa_group_frac(c) for c in wa_take):
+                rep['wa_frac_checked'] += _wa_frac_gates(r[key], wr)
+            if wr is not None and rn is not None:
+                rep['wa_area_checked'] += _wa_area_gates(r[key], wr, h, r, wa_take, rn)
             for c in wa_take:
-                src, absent = c, False
-                if dp is not None and wa_phase_specific(c):
-                    absent = any(t == op for t in WA_PHASE_TOKEN.findall(c))     # 설계에 없는 상이 낀 열 → 빈칸 (N/A)
-                    if not absent and wname is not None and wname != dp:
-                        src = _phase_swap(c, dp, wname)                          # 설계 이름 칸 ← 웹앱 이름의 값
+                src, absent = _wa_src_col(c, dp, op, wname)             # J20-k (B) — 설계에 없는 상 → 빈칸 (N/A) · 설계 이름 칸 ← 웹앱 이름의 값
                 v = None if (wr is None or absent) else wr.get(src)
                 if absent and wr is not None:
                     rep['wa_mono_absent_blanked'] += 1
                 elif dp is not None and wa_phase_specific(c) and v not in (None, ''):
                     rep['wa_mono_design_filled'] += 1
+                if (v not in (None, '') and wr is not wr0 and not absent and wr0.get(src) in (None, '')
+                        and (WA_PAIR_COUNT.fullmatch(c) or WA_PAIR_TOTAL.fullmatch(c))):
+                    rep['wa_pair_zero_filled' if c.endswith('_n') else 'wa_area_total_zero_filled'] += 1   # 정규화가 채운 옛 접촉 0 쌍 (J20-h)
                 _pm = ((WA_PAIR_COUNT.fullmatch(c) or WA_PAIR_TOTAL.fullmatch(c))
                        if (v in (None, '') and wr is not None and not absent) else None)
                 if _pm is not None:
+                    #  RGL-05 — 0 으로 채우는 것은 그 쌍의 세 키 (개수 · 총합 · 평균) 가 웹앱 원 행에 **모두** 빈칸일 때만 (누락 → 0 채움 금지 ·
+                    #   Codex: 개수만 빠지고 평균 0.01 인 쌍이 '개수 0 · 평균 0.01' 로 나갔다)
+                    _b = src[:src.rfind('_')]
+                    _part = [k for k in (_b + '_n', _b + '_total', _b + '_mean') if wr0.get(k) not in (None, '')]
+                    if _part:
+                        raise FillRefusal(f'{r[key]}: {src} 가 빈칸인데 같은 쌍의 {_part} 에 값이 있다 — 개수 · 총합 없이 0 으로 채우지 않는다 '
+                                          '(누락 → 0 채움 금지 · J20-h · RGL-05)')
                     #  J20-h — 웹앱 행이 있는데 쌍 키가 없다 = 접촉 0.  두 상이 다 있어야 0 (없으면 N/A 빈칸) · 상을 모르면 거부 ·
                     #   mono 는 설계 상으로 판단 (J20-k (B) — 설계 상 = 수확 AM)
                     pc = h.get('phase_counts')
@@ -2142,6 +2370,20 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp
                             v = '0.0'
                             rep['wa_area_total_zero_filled'] += 1
                 o[c] = '' if v is None else str(v)
+            #  RGL-05 — 최종 레코드: 0 채움 · 이름 옮김 · 접촉 0 평균 비움 **뒤** 내보내는 행을 다시 본다 (유한 · 형/범위 · 쌍 · AM–AM 의
+            #   개수 ↔ 총합 · 평균 상태) — 정규화가 맞으면 쏘지 않는 이중 안전장치 (표에 개수가 없으면 정규화한 웹앱 원 행의 개수로 본다)
+            if wr is not None and any(wa_s567_kind(c) is not None for c in wa_take):
+                pair_n = {}
+                for c in wa_take:
+                    if WA_PAIR_ANY.fullmatch(c):
+                        b_ = c[:c.rfind('_')]
+                        if b_ + '_n' in wa_take:
+                            pair_n[b_] = o.get(b_ + '_n', '')
+                        else:
+                            s_, ab_ = _wa_src_col(b_ + '_n', dp, op, wname)
+                            pair_n[b_] = '' if ab_ else (wr.get(s_) or '')
+                amn_ = o.get('am_am_n_contacts', '') if 'am_am_n_contacts' in wa_take else (wr.get('am_am_n_contacts') or '')
+                rep['wa_s567_final_checked'] += _wa_s567_final(r[key], o, wa_take, pair_n, amn_)
             #  J20-i — 표에 함께 실린 평균 SE–SE CN 과 SE–SE 접촉 수가 같은 접촉 집합에서 왔는가: se_se_cn = 2 × area_SE_SE_n / N_SE
             #   (calc_se_se_cn 은 SE 전 입자로 나눈 평균 · 접촉 하나가 두 입자에 하나씩).  SE 입자 수를 모르거나 어긋나면 거부한다.
             if ('se_se_cn' in wa_take and 'area_SE_SE_n' in wa_take
@@ -2182,13 +2424,7 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp
             #  ② — 퍼콜레이션 (P1 관통 일관 + 수확기 독립 재현 · P2 범위 · P3 관통 SE 개수)
             if wr is not None and any(wa_group_perc(c) for c in wa_take):
                 rep['wa_perc_checked'] += _wa_perc_gates(r[key], o, wa_take, h)
-            #  ⑤⑥⑦ (J20-s) — 관문은 웹앱 원 행으로 잰다 (상 이름 옮기기와 무관한 항등식 · 같은 묶음의 짝 열이 표에 없어도 잰다)
-            if wr is not None and any(wa_group_f1(c) for c in wa_take):
-                rep['wa_f1_checked'] += _wa_f1_gates(r[key], wr, h)
-            if wr is not None and any(wa_group_frac(c) for c in wa_take):
-                rep['wa_frac_checked'] += _wa_frac_gates(r[key], wr)
-            if wr is not None and any(wa_group_area(c) for c in wa_take):
-                rep['wa_area_checked'] += _wa_area_gates(r[key], wr, h, r, wa_take)
+            #  ⑤⑥⑦ (J20-s) 관문은 위 — 출력 전에 웹앱 원 행 (⑦ 은 정규화한 행) 으로 잰다 (RGL-05)
             #  v1.1 ① — 경로 기준 고립 = 100 − 활성 (유도) · 웹앱 v1.1 이 같은 이름을 내면 같아야 · ①② 관문 D1–D5
             if wa_iso_on:
                 a_ = o.get('ionic_active_pct', '')
@@ -3735,6 +3971,279 @@ def _selftest():
         and 'se_se_cn' not in _c11c and 'percolation_pct' not in _c11c)
     chk('㉕z 검토 기록 — 새 열 전부 1저자 검토 (J20-s) · 제외 열은 검토 목록에 없다',
         all(wa_reviewed(c) and 'J20-s' in (wa_review_note(c) or '') for c in _new11) and not any(wa_reviewed(c) for c in _excl11))
+    #  ═══ ㉖ RGL-03 (Codex 10-05 · P1 · 1저자 비준 "권고대로") — network 배치 → ⑤⑥⑦ 인계 ══════════════════════════════════════════════════
+    #   `lhs_webapp_batch --stop-after network` = 접촉 분석 (required · causal) → 피복 → network solver → 머지 (NET_MERGE_KEYS = σ · R · 전력 몫만) →
+    #   망 정지 계약 · Stage E 앞 (webapp/app.py PIPELINE_STOP_AFTER) — 다섯 묶음 (전부 접촉 분석 단계 산출) 을 다 낸다.  옛 판은 WA_STAGE_GROUPS 가
+    #   contact · coverage 만 알아 network 배치를 일률 거부했고, 안내는 유효 묶음 이름도 아닌 'network' 를 요구했다.
+    #   양성 대조 = **생산 경로 형식** (SELF-86 — mock 만 쓰다 놓친 결함): ① run_batch 가 쓰는 status (schema · stop_after · 케이스 rec) 를 실제
+    #   `lhs_webapp_batch.write_outputs` 로 쓰고 `load_webapp` 으로 읽는다 (metrics_flat 왕복 = 없는 키가 빈 문자열이 되는 생산 모양) ·
+    #   ② 실데이터 `d1ec42fba` (1저자 WSL 생산 status.json · 130 + 64) 의 stop_after 만 network 로 바꾼 배치 (run_batch 의 network rec = + network_run_id).
+    import lhs_webapp_batch as _LWB
+    _tdn = pathlib.Path(tempfile.mkdtemp(prefix='lhsdd_rgl03_'))
+    _rt26 = pathlib.Path(__file__).resolve().parent.parent
+
+    def _wbatch(stop, w=None, sub='b'):
+        """생산 배치 형식으로 쓰고 읽는다 — status = run_batch 의 키 (최상위 schema · stop_after · harvest_dir · cohort · runs · 케이스 rec) ·
+        metrics_flat = `lhs_webapp_batch.write_outputs` · census = load_webapp 이 읽는 TSV."""
+        w = w or _wa11()
+        d = _tdn / f'{sub}_{stop}'
+        st = dict(schema=_LWB.SCHEMA, cases={}, stop_after=stop, harvest_dir='harvest', cohort='cohort.tsv',
+                  runs=[dict(started='2026-10-05T00:00:00', git_sha='0' * 40, dirty=False)])
+        for q_, s_ in w['status'].items():
+            rec = dict(case=q_, when='2026-10-05T00:00:00', stop_after=stop, status=s_['status'],
+                       failed_stages=list(s_.get('failed_stages') or []), stages=[dict(step='Parse', rc=0, ok=True)],
+                       mode='bimodal', type_map='1:AM_P,2:AM_S,3:SE', sha={}, mesh_pick='exact', contact_scan={}, atom_frames=1,
+                       elapsed_s=1.0)
+            if stop == 'network':
+                rec['network_run_id'] = f'RUN-{q_}'                     # run_batch — 이번 실행의 망 세대 (망 정지 계약이 본 도장)
+            st['cases'][q_] = rec
+        _LWB.write_outputs(d, st, {q_: dict(r_, case=q_) for q_, r_ in w['rows'].items()})
+        with (d / 'census.tsv').open('w', encoding='utf-8', newline='') as fh:
+            cw_ = csv.writer(fh, delimiter='\t', lineterminator='\n')
+            cw_.writerow(['column', 'verdict', 'why'])
+            for k_, v_ in w['verdict'].items():
+                cw_.writerow([k_, v_, w['why'].get(k_, '')])
+        return load_webapp(d, d / 'census.tsv')
+
+    def _acc(fn):
+        """(결과, '') 또는 (None, 예외 문자열) — 받아야 하는 입력의 양성 대조용."""
+        try:
+            return fn(), ''
+        except Exception as e:                                            # noqa: BLE001
+            return None, f'{type(e).__name__}: {e}'
+
+    def _msg(fn):
+        """거부 문구 (FillRefusal) — 받으면 '' · 다른 예외면 'NOT_FILLREFUSAL …'."""
+        try:
+            fn()
+            return ''
+        except FillRefusal as e:
+            return str(e)
+        except Exception as e:                                            # noqa: BLE001
+            return f'NOT_FILLREFUSAL {type(e).__name__}: {e}'
+    try:
+        try:
+            _lwc, _lwn, _e26 = _wbatch('contact'), _wbatch('network'), ''
+        except Exception as e:                                            # noqa: BLE001
+            _lwc, _lwn, _e26 = {}, {}, f'{type(e).__name__}: {e}'
+        _res_c, _ec26 = _acc(lambda: build_handover(_dq11, _hq10(), webapp=_lwc, webapp_groups='f1,fracture,area'))
+        _res_n, _en26 = _acc(lambda: build_handover(_dq11, _hq10(), webapp=_lwn, webapp_groups='f1,fracture,area'))
+        _oc26, _cc26, _rc26 = _res_c or ([], [], {})
+        _on26, _cn26, _rn26 = _res_n or ([], [], {})
+        _er26 = _e26 or _ec26 or _en26
+        chk('㉖a ★ RGL-03 — network 배치 (생산 형식 · write_outputs → load_webapp) 를 f1,fracture,area 로 받는다 · 표 = 같은 배치의 contact 판과 같다 · '
+            '관문 ⑤ · ⑥ · ⑦ 2 행씩' + (f' — {_er26}' if _er26 else ''),
+            not _er26 and _lwn.get('stop_after') == 'network' and _on26 == _oc26 and _cn26 == _cc26
+            and all(_rn26.get(k_) == 2 for k_ in ('wa_f1_checked', 'wa_frac_checked', 'wa_area_checked'))
+            and all(c_ in _cn26 for c_ in ('se_se_cn_aug', 'fracture_index_force', 'area_SE_SE_mean')))
+        _res_cb, _ec26b = _acc(lambda: build_handover(_dq11, _hq10(), webapp=_lwc, webapp_groups=_G567))
+        _res_nb, _en26b = _acc(lambda: build_handover(_dq11, _hq10(), webapp=_lwn, webapp_groups=_G567))
+        _oc26b, _cc26b, _ = _res_cb or ([], [], {})
+        _on26b, _cn26b, _rn26b = _res_nb or ([], [], {})
+        chk('㉖b ★ network 배치를 다섯 묶음 전부로 (contact,percolation,f1,fracture,area) — 표 = contact 판 · 관문 ⑤ · ⑥ · ⑦ · ② · 7c 2 행씩'
+            + (f' — {_en26b or _ec26b}' if (_en26b or _ec26b) else ''),
+            not (_en26b or _ec26b) and _on26b == _oc26b and _cn26b == _cc26b
+            and all(_rn26b.get(k_) == 2 for k_ in ('wa_f1_checked', 'wa_frac_checked', 'wa_area_checked', 'wa_perc_checked',
+                                                    'wa_amse_identity_checked')))
+        for _lab26, _dsg, _hdir, _uni, _wdir, _n26 in (
+                ('130', DESCRIPTOR_FILL_EXPECTED['path'], 'docs/data/lhs_descriptors_cov_1e09f661d', DEFAULT_UNION_TSV,
+                 'docs/data/lhs_webapp_contact_d1ec42fba', 130),
+                ('64', 'docs/data/lhsx_design_adapted_20260929.csv', 'docs/data/lhsx_descriptors_cov_1e09f661d',
+                 'docs/data/lhs_union_20260927/lhsx64_union.tsv', 'docs/data/lhsx_webapp_contact_d1ec42fba', 64)):
+            try:
+                _src26 = _rt26 / _wdir
+                _st26 = json.loads((_src26 / 'status.json').read_text(encoding='utf-8'))
+                _st26['stop_after'] = 'network'
+                for _rec26 in _st26['cases'].values():
+                    _rec26.update(stop_after='network', network_run_id='RUN-RELABEL')
+                _dn26 = _tdn / f'real_{_lab26}'
+                _dn26.mkdir()
+                (_dn26 / 'status.json').write_text(json.dumps(_st26, ensure_ascii=False, indent=1) + '\n', encoding='utf-8')
+                shutil.copyfile(_src26 / 'metrics_flat.csv', _dn26 / 'metrics_flat.csv')
+                with (_rt26 / _dsg).open(encoding='utf-8-sig') as _fh:
+                    _rows26 = list(csv.DictReader(_fh))
+                _hv26, _uv26 = load_harvest(_rt26 / _hdir), load_union(_rt26 / _uni)
+                _oc, _cc, _rc = build_handover(_rows26, _hv26, union=_uv26, webapp=load_webapp(_src26), webapp_groups=_G567)
+                _resn, _er = _acc(lambda: build_handover(_rows26, _hv26, union=_uv26, webapp=load_webapp(_dn26), webapp_groups=_G567))
+                _on, _cn, _rn = _resn or ([], [], {})
+                #  replay_g4 (Codex 증거) 의 산술을 내보낸 표에서 — 단계 % · 지수의 최대 잔차 (반올림 반폭 안이어야)
+                _mp = _mf = 0.0
+                for _o in _oc:
+                    _nt = float(_o['n_total_AM_AM_force'])
+                    for _s in FRAC_STAGES:
+                        _mp = max(_mp, abs(float(_o[f'frac_{_s}_force_pct']) - 100.0 * float(_o[f'n_{_s}_force_AM_AM']) / _nt))
+                    _mf = max(_mf, abs(float(_o['fracture_index_force'])
+                                       - (float(_o['n_fragmentation_force_AM_AM']) + float(_o['n_pulverization_force_AM_AM'])) / _nt))
+                chk(f'㉖c ★ 실데이터 {_lab26} (d1ec42fba 생산 status · stop_after 만 network) — 다섯 묶음 {len(_on)}/{_n26} 행 · 표 = contact 판 · '
+                    f'관문 ⑤⑥⑦ {_rn.get("wa_f1_checked")} · {_rn.get("wa_frac_checked")} · {_rn.get("wa_area_checked")} 행 · '
+                    f'단계 % 최대 잔차 {_mp:.6f} %p (≤ 0.005) · 지수 {_mf:.3e} (≤ 5e-5)' + (f' — {_er}' if _er else ''),
+                    not _er and len(_on) == _n26 and _on == _oc and _cn == _cc
+                    and all(_rn.get(k_) == _n26 for k_ in ('wa_f1_checked', 'wa_frac_checked', 'wa_area_checked'))
+                    and _mp <= 0.005 and _mf <= 5e-5)
+            except Exception as e:                                        # noqa: BLE001
+                chk(f'㉖c 실데이터 {_lab26} ({type(e).__name__}: {e})', False)
+        _m26 = _msg(lambda: build_handover(_dq11, _hq10(), webapp=_lwn))
+        chk('㉖d ★ network 배치를 묶음 제한 없이 부르면 거부 (뒤 단계 열이 빈칸 = 측정된 N/A) — 안내는 유효한 묶음 이름 (contact · percolation · '
+            'f1 · fracture · area) · 정지점 이름 "network" 를 묶음처럼 요구하지 않는다 (옛 안내 "--webapp-groups network 의 부분집합")' + f' — {_m26[:80]}',
+            bool(_m26) and not _m26.startswith('NOT_') and all(g_ in _m26 for g_ in WA_GROUPS) and '--webapp-groups network' not in _m26)
+        _mb26 = _msg(lambda: build_handover(_dq11, _hq10(), webapp=dict(_lwn, stop_after='stage_e'), webapp_groups='f1'))
+        chk('㉖e ★ 모르는 정지점 (stage_e) 은 거부 — 안내 = 아는 정지점 (contact · coverage · network) · 모르는 이름을 묶음처럼 요구하지 않는다'
+            + f' — {_mb26[:80]}',
+            bool(_mb26) and not _mb26.startswith('NOT_') and all(s_ in _mb26 for s_ in ('contact', 'coverage', 'network'))
+            and '--webapp-groups stage_e' not in _mb26)
+        _neg('㉖f network 배치에 모르는 묶음 (stress) 이 섞이면 거부', lambda: build_handover(_dq11, _hq10(), webapp=_lwn, webapp_groups='f1,stress'))
+        WA_STAGE_GROUPS['_probe'] = ('contact',)                             # 역량이 다섯보다 좁은 (가상) 정지점 — 부분집합 관문이 살아 있나
+        try:
+            _neg('㉖g 단계 역량 밖 묶음은 거부 (가상 정지점 _probe = contact 만 · contact,f1)',
+                 lambda: build_handover(_dq11, _hq10(), webapp=dict(_lwn, stop_after='_probe'), webapp_groups='contact,f1'))
+            _res_p, _ep26 = _acc(lambda: build_handover(_dq11, _hq10(), webapp=dict(_lwn, stop_after='_probe'), webapp_groups='contact'))
+            _cp26 = (_res_p or ([], [], {}))[1]
+            chk('㉖h 단계 역량 안 묶음은 받는다 (_probe · contact)' + (f' — {_ep26}' if _ep26 else ''),
+                not _ep26 and 'se_se_cn' in _cp26 and 'se_se_cn_aug' not in _cp26)
+        finally:
+            WA_STAGE_GROUPS.pop('_probe', None)
+        try:
+            _sp26, _ap26 = set(), set()
+            for n_ in ast.walk(ast.parse(pathlib.Path(_LWB.__file__).read_text(encoding='utf-8'))):
+                if (isinstance(n_, ast.Call) and getattr(n_.func, 'attr', '') == 'add_argument' and n_.args
+                        and isinstance(n_.args[0], ast.Constant) and n_.args[0].value == '--stop-after'):
+                    for k_ in n_.keywords:
+                        if k_.arg == 'choices':
+                            _sp26.update(ast.literal_eval(k_.value))
+            for n_ in ast.parse((_rt26 / 'webapp' / 'app.py').read_text(encoding='utf-8')).body:
+                if isinstance(n_, ast.Assign) and any(getattr(t_, 'id', '') == 'PIPELINE_STOP_AFTER' for t_ in n_.targets):
+                    _ap26.update(s_ for s_ in ast.literal_eval(n_.value) if s_)
+            chk(f'㉖i ★ 정지점 동기 — 배치 --stop-after {sorted(_sp26)} · 웹앱 PIPELINE_STOP_AFTER {sorted(_ap26)} 가 전부 WA_STAGE_GROUPS 에 있다 '
+                '(생산 쪽에 정지점이 생기면 단계 역량을 적기 전까지 여기서 걸린다)',
+                bool(_sp26) and bool(_ap26) and _sp26 <= set(WA_STAGE_GROUPS) and _ap26 <= set(WA_STAGE_GROUPS))
+        except Exception as e:                                            # noqa: BLE001
+            chk(f'㉖i 정지점 동기 ({type(e).__name__}: {e})', False)
+    finally:
+        shutil.rmtree(_tdn, ignore_errors=True)
+    #  ═══ ㉗ RGL-05 (Codex 10-05 · P2 · 1저자 비준 "권고대로") — ⑤⑥⑦ 관문 순서 = 선택 묶음의 원천 근거 열 → 유한 → 형/범위 → 식 · 최종 레코드 재검 ═══
+    #   반례 = Codex probe_g4.py 의 accepted=True 변이를 우리 픽스처 (_wa11) 로 옮긴 것 — 하나씩 **그 관문** 이 거부해야 한다 (tag) ·
+    #   합법 (명시 접촉 0 + 평균 없음 · 평균 0 대입 · 세 키 모두 없는 옛 접촉 0 쌍 · 반올림 반폭 경계 0.005 / 5e-5 · AM–AM 접촉 0 침대) 은 통과 유지.
+    def _w11x(q='q1', drop=(), **kv):
+        w = _wa11()
+        for k_ in drop:
+            w['rows'][q].pop(k_, None)
+        w['rows'][q].update(kv)
+        return w
+    _neg7('㉗a ★ ⑥R2 유한 — frac_intact_force_pct NaN (abs(NaN) > 여유 가 거짓이라 식 검사를 우회해 NaN 이 표에 남던 길 · Codex fraction_pct_nan)',
+          lambda: _b11(w=_w11(frac_intact_force_pct='nan')), '⑥R2 유한')
+    _neg7('㉗b ★ ⑥R2 유한 — fracture_index_force NaN (Codex fracture_index_nan)', lambda: _b11(w=_w11(fracture_index_force='nan')), '⑥R2 유한')
+    _neg7('㉗c ★ ⑦A1 유한 — 접촉 있는 쌍의 평균 NaN (q1 AM_S–AM_S · Codex area_positive_count_nan_mean)',
+          lambda: _b11(w=_w11(area_AM_S_AM_S_mean='nan')), '⑦A1 유한')
+    _neg7('㉗d ★ ⑦A1 유한 — 쌍 총합 · AM–AM 총합 · 평균 NaN (Codex area_nan_total)',
+          lambda: _b11(w=_w11(area_AM_S_AM_S_total='nan', am_am_total_area='nan', am_am_mean_area='nan')), '⑦A1 유한')
+    _neg7('㉗e ★ ⑤F1 유한 — F1 h = inf (양수 검사가 유한성을 대신했다 · Codex f1_h_infinity)',
+          lambda: _b11(w=_w11(se_se_cn_aug_h_spread_sim='inf')), '⑤F1 유한')
+    _neg7('㉗f ★ ⑤F1 범위 — F1 표준편차 음수 (Codex f1_std_negative)', lambda: _b11(w=_w11(se_se_cn_aug_std='-1')), '⑤F1 범위')
+    _neg7('㉗g ★ ⑤F1 필수 — F1 표준편차만 빈칸 (F1 이 낸 행인데 한 열만 빠짐 = 기술적 결측 · Codex f1_std_missing)',
+          lambda: _b11(w=_w11x(drop=('se_se_cn_aug_std',))), '⑤F1 필수')
+    _neg7('㉗h ★ ⑤F1 필수 — f1 만 실을 때 원천 근거 se_se_cn 이 빠지면 거부 (식 검사를 건너뛰지 않는다 · Codex f1_missing_cn)',
+          lambda: _b11(w=_w11x(drop=('se_se_cn',)), groups='f1'), '⑤F1 필수')
+    _neg7('㉗i ★ ⑤F1 필수 — 근거 빠짐 + aug −999 (Codex f1_missing_cn_corrupt_aug · −999 가 표에 남던 것)',
+          lambda: _b11(w=_w11x(drop=('se_se_cn',), se_se_cn_aug='-999'), groups='f1'), '⑤F1 필수')
+    _neg7('㉗j ★ ⑤F1 유한 — n_extra NaN (옛 판은 int(NaN) 예외로 죽었다 — FillRefusal 이 아니었다)',
+          lambda: _b11(w=_w11(se_se_cn_aug_n_extra='nan')), '⑤F1 유한')
+    _neg7('㉗k ★ ⑤F1 범위 — n_extra 가 정수가 아니면 (50.5 — 개수 = 0 이상 정수)', lambda: _b11(w=_w11(se_se_cn_aug_n_extra='50.5')), '⑤F1 범위')
+    _neg7('㉗l ★ ⑥R3 필수 — fracture 만 실을 때 원천 근거 am_am_n_contacts 가 빠지면 거부 (R3 를 건너뛰지 않는다 · Codex fracture_missing_am_total)',
+          lambda: _b11(w=_w11x(drop=('am_am_n_contacts',)), groups='fracture'), '⑥R3 필수')
+    _neg7('㉗m ★ ⑥R1 유한 — 단계 개수 NaN (옛 판 int(NaN) 예외)', lambda: _b11(w=_w11(n_intact_force_AM_AM='nan')), '⑥R1 유한')
+    _neg7('㉗n ★ ⑥R2 범위 — 분쇄 비율 −0.004 (반올림 반폭 안이어도 [0, 100] 밖 · Codex pct_negative_inside_tolerance)',
+          lambda: _b11(w=_w11(frac_pulverization_force_pct='-0.004')), '⑥R2 범위')
+    _neg7('㉗o ★ ⑥R2 범위 — 지수 −0.00004 (전부 무손상 · 반폭 안이어도 [0, 1] 밖 · Codex fi_negative_inside_tolerance)',
+          lambda: _b11(w=_w11('q2', **dict(_frf([22, 0, 0, 0, 0]), fracture_index_force='-0.00004'))), '⑥R2 범위')
+    _neg7('㉗p ★ ⑦A5 필수 — area 만 실을 때 원천 근거 percolation_pct 가 빠지면 거부 (관통 침대 q1 · Codex area_missing_percolation)',
+          lambda: _b11(w=_w11x(drop=('percolation_pct',)), groups='area'), '⑦A5 필수')
+    _neg7('㉗q ★ ⑦A5 필수 — 비관통 침대 근거 빠짐 + eff_area_perc 0.4 (Codex area_missing_pp_corrupt_eap · 0.4 가 표에 남던 것)',
+          lambda: _b11(w=_w11x('q2', drop=('percolation_pct',), se_se_cn_eff_area_perc='0.4'), groups='area'), '⑦A5 필수')
+    _neg7('㉗r ★ ⑦A5 유한 — eff_area_perc NaN (Codex area_perc_nan)', lambda: _b11(w=_w11(se_se_cn_eff_area_perc='nan'), groups='area'), '⑦A5 유한')
+    _neg7('㉗s ★ ⑦A5 범위 — eff_area_perc −1 (Codex area_perc_negative)', lambda: _b11(w=_w11(se_se_cn_eff_area_perc='-1'), groups='area'), '⑦A5 범위')
+    _neg7('㉗t ★ ⑦A4 필수 — eff_area 가 빠지면 거부 (A4 를 건너뛰지 않는다 · Codex area_missing_global_eff)',
+          lambda: _b11(w=_w11x(drop=('se_se_cn_eff_area',)), groups='area'), '⑦A4 필수')
+    _neg7('㉗u ★ ⑦A3 필수 — am_am_total_area 가 빠지면 거부 (평균만 남은 AM–AM · Codex area_missing_am_total)',
+          lambda: _b11(w=_w11x(drop=('am_am_total_area',)), groups='area'), '⑦A3 필수')
+    _neg7('㉗v ★ ⑦A1 필수 — 접촉 0 쌍의 개수만 빠지고 평균 0.01 · 총합 0 (검사 전 누락 → 검사 뒤 0 채움 · Codex missing_pair_count_positive_mean)',
+          lambda: _b11(w=_w11x('q2', drop=('area_AM_P_AM_P_n',), area_AM_P_AM_P_mean='0.01')), '⑦A1 필수')
+    _neg7('㉗w ★ J20-h — 접촉 묶음만 실을 때도 개수 빈칸 + 같은 쌍 평균 0.01 이면 0 으로 채우지 않는다 (누락 → 0 채움 금지)',
+          lambda: _b11(w=_w11x('q2', drop=('area_AM_P_AM_P_n',), area_AM_P_AM_P_mean='0.01'), groups='contact'), 'J20-h')
+    _hq27 = _hq10()
+    _hq27['q2'] = dict(_hq27['q2'], phase_counts={'AM_P': 0, 'AM_S': 11, 'SE': 100})
+    _neg7('㉗x ★ ⑦A1 상 없음 — 상이 없는 쌍에 값 (bimodal 인데 수확 phase_counts AM_P 0 · 웹앱 행에 AM_P 쌍) — 다른 침대 · 다른 상의 값',
+          lambda: _b11(hv=_hq27, groups='area'), '⑦A1 상 없음')
+
+    def _w11z0(**kv):
+        """q2 = AM–AM 접촉 0 침대 — 쌍 개수 0 · 총합 0.0 · 평균 키 없음 (calc_interface_area) · am_am 평균 0 대입 (calc_am_am_cn) · 파괴 키 없음
+        (calc_fracture_stages 가 {} 를 낸다) · J20-j 항등식에 맞춘 am_am_cn 0."""
+        w = _wa11()
+        q = w['rows']['q2']
+        for k_ in [k for k in q if 'force' in k and k.startswith(('n_', 'frac_', 'fracture_index'))]:
+            q.pop(k_)
+        for p_ in ('AM_P_AM_S', 'AM_S_AM_S'):
+            q[f'area_{p_}_n'], q[f'area_{p_}_total'] = '0', '0.0'
+            q.pop(f'area_{p_}_mean', None)
+        q.update(am_am_n_contacts='0', am_am_cn='0.0', am_am_cn_std='0.0', am_am_total_area='0', am_am_mean_area='0')
+        q.update(kv)
+        return w
+    _res_z, _ez27 = _acc(lambda: _b11(w=_w11z0()))
+    _oz27, _cz27, _rz27 = _res_z or ([], [], {})
+    _pz27 = next((r_ for r_ in _oz27 if r_['case_id'] == 'q2'), {})
+    chk('㉗y ★ AM–AM 접촉 0 침대 — 통과 · am_am 평균 빈칸 (N/A — calc_am_am_cn 의 0 대입은 비운다) · 총합 0 (측정된 0) · 쌍 총합 0.0 · 쌍 평균 빈칸 · '
+        '파괴 열 빈칸 (N/A) · 파괴 관문은 그 상태를 확인한 행으로 센다 (2 행)' + (f' — {_ez27}' if _ez27 else ''),
+        not _ez27 and _pz27.get('am_am_mean_area') == '' and _pz27.get('am_am_total_area') == '0'
+        and _pz27.get('area_AM_S_AM_S_total') == '0.0' and _pz27.get('area_AM_S_AM_S_mean') == ''
+        and _pz27.get('n_total_AM_AM_force') == '' and _pz27.get('fracture_index_force') == '' and _rz27.get('wa_frac_checked') == 2)
+    _neg7('㉗z ★ ⑦A3 — AM–AM 접촉 0 인데 am_am_mean_area 0.01 이면 거부 (접촉 0 개에서 평균은 정의되지 않는다)',
+          lambda: _b11(w=_w11z0(am_am_mean_area='0.01')), '⑦A3')
+    _neg7('㉗za ★ ⑦A3 — AM–AM 접촉 0 인데 am_am_total_area 0.1 이면 거부', lambda: _b11(w=_w11z0(am_am_total_area='0.1')), '⑦A3')
+    _neg7('㉗zb ★ ⑥R1 필수 — AM–AM 접촉 0 인데 파괴 키 일부만 (분쇄 비율 0.0) 있으면 거부 (상태 혼합)',
+          lambda: _b11(w=_w11z0(frac_pulverization_force_pct='0.0')), '⑥R1 필수')
+    _pos27 = []
+    for _lab27, _fn27, _ok27 in (
+            ('세 키 모두 없는 옛 접촉 0 쌍', lambda: _b11(w=_w11x('q2', drop=('area_AM_P_AM_P_n', 'area_AM_P_AM_P_total', 'area_AM_P_AM_P_mean'))),
+             lambda o_: o_.get('area_AM_P_AM_P_n') == '0' and o_.get('area_AM_P_AM_P_total') == '0.0' and o_.get('area_AM_P_AM_P_mean') == ''),
+            ('명시 접촉 0 + 평균 0 대입', lambda: _b11(w=_w11('q2', area_AM_P_AM_P_mean='0')),
+             lambda o_: o_.get('area_AM_P_AM_P_n') == '0' and o_.get('area_AM_P_AM_P_total') == '0.0' and o_.get('area_AM_P_AM_P_mean') == '')):
+        _r27, _e27 = _acc(_fn27)
+        _q27 = next((r_ for r_ in (_r27 or ([],))[0] if r_['case_id'] == 'q2'), {})
+        if _e27 or not _ok27(_q27):
+            _pos27.append(f'{_lab27}: {_e27 or _q27.get("area_AM_P_AM_P_mean")}')
+    chk(f'㉗zc 합법 접촉 0 쌍 (세 키 모두 없음 · 평균 0 대입) 은 그대로 받는다 — 개수 0 · 총합 0.0 · 평균 빈칸  {_pos27 or ""}', not _pos27)
+    _p_ex27, _f_ex27 = 600 / 11, 1 / 11                                     # q1 단계 개수 [6, 3, 1, 1, 0] · N 11
+    _bad27 = [d_ for d_ in (0.004999, 0.005)
+              if _acc(lambda d_=d_: _b11(w=_w11(frac_intact_force_pct=repr(_p_ex27 + d_)), groups='fracture'))[1]]
+    _bad27 += [d_ for d_ in (4.999e-5, 5e-5)
+               if _acc(lambda d_=d_: _b11(w=_w11(fracture_index_force=repr(_f_ex27 + d_)), groups='fracture'))[1]]
+    chk(f'㉗zd 반올림 반폭 경계는 그대로 통과 (단계 % +0.004999 · +0.005 · 지수 +4.999e-5 · +5e-5 — round(·, 2) · round(·, 4) 의 반폭) · '
+        f'범위 관문이 경계를 좁히지 않는다  {_bad27 or ""}', not _bad27)
+    _neg7('㉗ze ★ 반폭 밖 단계 % (+0.005001) 는 거부', lambda: _b11(w=_w11(frac_intact_force_pct=repr(_p_ex27 + 0.005001)), groups='fracture'), '⑥R2')
+    _neg7('㉗zf ★ 반폭 밖 지수 (+5.001e-5) 는 거부', lambda: _b11(w=_w11(fracture_index_force=repr(_f_ex27 + 5.001e-5)), groups='fracture'), '⑥R2')
+
+    def _fin27(o_, pn_, amn_='11'):
+        """최종 레코드 관문 직접 — 정규화가 맞으면 쏘지 않는 이중 안전장치라 함수를 직접 부른다."""
+        _tk = ['area_AM_P_AM_P_total', 'area_AM_P_AM_P_mean', 'am_am_total_area', 'am_am_mean_area']
+        return _msg(lambda: globals()['_wa_s567_final']('q', o_, _tk, pn_, amn_))
+    _g27 = {'area_AM_P_AM_P_total': '0.0', 'area_AM_P_AM_P_mean': '', 'am_am_total_area': '0.22', 'am_am_mean_area': '0.02'}
+    _f27 = [_fin27(dict(_g27, area_AM_P_AM_P_mean='0.01'), {'area_AM_P_AM_P': '0'}),       # 접촉 0 인데 평균
+            _fin27(dict(_g27, area_AM_P_AM_P_total=''), {'area_AM_P_AM_P': '0'}),          # 접촉 0 인데 총합 빈칸 (측정된 0 이어야)
+            _fin27(dict(_g27, area_AM_P_AM_P_total='0.1'), {'area_AM_P_AM_P': ''}),        # 개수 빈칸 (상 부재 · N/A) 인데 총합
+            _fin27(dict(_g27, am_am_mean_area='nan'), {'area_AM_P_AM_P': '0'}),            # NaN
+            _fin27(_g27, {'area_AM_P_AM_P': '0'}, amn_='0'),                               # AM–AM 접촉 0 인데 평균 · 총합
+            _fin27(dict(_g27, am_am_mean_area='0.03'), {'area_AM_P_AM_P': '0'})]           # 평균 × 개수 ≠ 총합
+    _f27ok = _fin27(_g27, {'area_AM_P_AM_P': '0'})
+    chk('㉗zg ★ 최종 레코드 관문 (0 채움 · 이름 옮김 · 0 대입 비움 뒤 내보내는 행을 다시 본다) — 정상은 통과 · 접촉 0 평균 · 접촉 0 총합 빈칸 · '
+        'N/A 쌍의 총합 · NaN · AM–AM 접촉 0 의 평균 · 평균 × 개수 ≠ 총합 은 거부' + (f' — {_f27ok[:90]}' if _f27ok else ''),
+        not _f27ok and all(e_ and not e_.startswith('NOT_') and '최종 레코드' in e_ for e_ in _f27))
+    chk('㉗zh 열 사전 — AM–AM 접촉 0 = 평균 N/A · 총합 0 (측정된 0) · 쌍 0 채움은 세 키 모두 빈칸일 때만 (누락 → 0 채움 금지) · AM–AM 접촉 0 의 '
+        '파괴 열 = N/A · ⑤⑥⑦ 검토 기록에 RGL-05 관문 순서 (원천 근거 → 유한 → 형/범위 → 식)',
+        'N/A' in _g11('am_am_mean_area', 'meaning') and 'RGL-05' in _g11('am_am_mean_area', 'meaning')
+        and '측정된 0' in _g11('am_am_total_area', 'meaning')
+        and '세 키' in _g11('area_AM_P_AM_P_n', 'meaning') and '누락 → 0 채움 금지' in _g11('area_AM_P_AM_P_n', 'meaning')
+        and 'calc_fracture_stages 가 키를 안 쓴다' in _g11('n_total_AM_AM_force', 'meaning')
+        and all('RGL-05' in _g11(c_, 'meaning') and '원천 근거' in _g11(c_, 'meaning')
+                for c_ in ('se_se_cn_aug', 'fracture_index_force', 'area_SE_SE_mean')))
     print(f'\nlhs_design_dataset selftest: {ok}/{ok + len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0
@@ -3777,7 +4286,7 @@ if __name__ == '__main__':
     ap.add_argument('--webapp-groups', default=None, metavar='G[,G]',
                     help='(--export-handover --webapp) 웹앱 열을 이 묶음만 싣는다 (쉼표로 여럿) — contact = ① 접촉 위상 · percolation = ② '
                          '퍼콜레이션 · f1 = ⑤ F1 근접쌍 · fracture = ⑥ Auerbach 힘 기반 · area = ⑦ 접촉 면적 (전부 접촉 분석 단계 산출 · J20-s).  '
-                         '`lhs_webapp_batch --stop-after contact|coverage` 산출은 이것 없이는 거부된다')
+                         '`lhs_webapp_batch --stop-after contact|coverage|network` 산출은 이것 없이는 거부된다 (셋 다 다섯 묶음을 다 낸다 · RGL-03)')
     ap.add_argument('--census', default='', metavar='TSV',
                     help=f'(--webapp) 전수 판정 census (기본 {DEFAULT_CENSUS_TSV})')
     ap.add_argument('--selftest', action='store_true')
@@ -3865,6 +4374,10 @@ if __name__ == '__main__':
             print(f'   벽 τ 관문 T1–T2 확인 {_rep["tau_wall_checked"]} 행 · T3 (↔ 퍼콜레이션) {_rep["tau_perc_crosschecked"]} 행')
         if _rep.get('wa_ionic_checked'):
             print(f'   v1.1 ①② 이온 활성 · 경로 기준 고립 관문 D1–D5 확인 {_rep["wa_ionic_checked"]} 행')
+        if any(_rep.get(k) for k in ('wa_f1_checked', 'wa_frac_checked', 'wa_area_checked')):
+            print(f'   ⑤⑥⑦ 관문 (원천 근거 → 유한 → 형/범위 → 식 · RGL-05) — ⑤F1 {_rep["wa_f1_checked"]} · ⑥R1–R3 {_rep["wa_frac_checked"]} · '
+                  f'⑦A1–A5 {_rep["wa_area_checked"]} 행 · 최종 레코드 재검 {_rep["wa_s567_final_checked"]} 행 · 접촉 0 평균 비움 '
+                  f'{_rep["wa_area_mean_blanked"]} 칸')
         if 'se_cluster_checked' in _rep:
             print(f'   v1.1 ③ 가장 큰 SE 덩어리 관문 C1–C3 확인 {_rep["se_cluster_checked"]} 행')
         print(f'   J20-k (B) mono {_rep["mono_rows"]} 행 — 수확기 상별 칸 (coverage · n_AM_*_measured · cov_*_n_valid · 벽 접촉) 설계 상 칸 채움 '
