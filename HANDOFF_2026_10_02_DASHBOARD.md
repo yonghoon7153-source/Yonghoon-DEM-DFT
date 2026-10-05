@@ -176,3 +176,63 @@ git status --porcelain | wc -l     # 0
   고정 메시지를 붙이면 된다.
 - production 진입점 탐침은 pytest 안 (smoke namespace) 이나 `git archive` 사본에서만 (86차 G86-C1 — 운영 등록부 오염).
 - 백그라운드 명령이 실행 중일 때 커밋하지 않는다 (HEAD 를 고정하는 시험이 있다 — 2026-09-14 교훈).
+
+## §7 복귀 직전 상태 (2026-10-05 · 서브가 덧붙임 — 위 §0–§6 은 2026-10-02 판 그대로)
+
+다음 세션 (사용자가 다시 여는 원래 대시보드 = 본진 세션) 이 §3 의 복귀를 한다. 본진은 여전히 `e2f5697` 동결이고 서브는 그 위에
+덧붙이기만 했다 (이 절을 쓴 시점 서브 고유 커밋 163 · merge 0 — 이 절의 커밋과 그 뒤 커밋 수는 복귀 때 실측). **FF_OK 가 기대값이다.**
+
+### 7-1. 복귀 (§3 그대로 — 값만 지금 것)
+
+| 항목 | 값 |
+|---|---|
+| 본진 (동결) | `e2f5697192b2008d0a11b7334c2d3f3546a85809` |
+| 서브 | `claude/dashboard-standby-e2f56971` — HEAD 는 복귀 때 `git rev-parse origin/claude/dashboard-standby-e2f56971` |
+| 방법 | FF_OK · `git status --porcelain` 0 확인 → `git push origin <서브 HEAD SHA>:refs/heads/claude/14-gate-code-review-9qkx05` (체크아웃 · merge · rebase 없음 · 거부되면 멈추고 §3 의 ff 실패 절로) |
+| 정리 커밋 하나 (본진 이름 브랜치) | 루트 `CLAUDE.md` 의 임시 블록 (`> **★ 임시 (2026-10-02 대시보드 교체)` 로 시작하는 `>` 세 줄 + 바로 뒤 빈 줄) 만 삭제 → blob 이 **`632750b33d4d85b213a76f4912d7c193b2a0b611`** (= `e2f5697^:CLAUDE.md` · 2026-09-30 복귀 뒤와 같은 blob) 이어야 한다. `BRANCHES.md` 의 `### 복귀 결과 (복귀 정리 커밋이 덧붙인다)` 아래에 결과 표 (방식 · 복귀 SHA · FF_OK · 고유 커밋 수 · merge 0 · `git log origin/claude/dashboard-standby-e2f56971 ^origin/claude/14-gate-code-review-9qkx05` 빈 출력의 시각 · CLAUDE.md blob · 서브 처리) + 7-2 의 요약 + 7-3 의 이어 갈 것 |
+| 서브 | 지우지 않는다 · 복귀 뒤 새 커밋을 얹지 않는다 |
+| 하지 않는 것 | rebase · squash · force-push · 서브 삭제 · 임시 블록 밖의 `CLAUDE.md` 수정 · RUN_SCOPE 수정 · 이 카드 §0–§6 수정 |
+
+### 7-2. 대피 중 한 일 (2026-10-02 ~ 10-05 · `e2f5697..7efc9ac94` 163 커밋 · merge 0 — 복귀 표의 초안)
+
+영역별 수는 그 경로를 건드린 커밋 수라 서로 겹친다. 행 단위 기록은 `BRANCHES.md` 의 이번 절 "대피 중 누적" 표 (42 행 · 이 절을 쓴 시점).
+
+| 영역 | 커밋 | 내용 · 정본 |
+|---|---:|---|
+| 게이트 87–91 (`degradation-degeneracy`) | 61 | 원장 §128–§140 · 87 · 88 · 89 · 90 · 91차 회신 바이트 보존과 접수 · G87-N1 · G88-N1 · PyBaMM 환경 고정 라운드 (프로필 C lock · `tools/env_profile.py`) · G90-N1. **91차 `ACCEPTED` 로 종결 — 열린 게이트 라운드 없음** (`degradation-degeneracy/docs/GATE70_WORKING_STATE.md` "다음") |
+| RUN_SCOPE | 4 | `e462a3d19` (G87-N1) · `26c11d6fc` (G88-N1) · `e2160c2ef` (프로필 C) · `b08bb6944` (G90-N1) — 넷 다 게이트 판정을 받았다 (88 · 89 · 90 · 91차) |
+| COMSOL B-min | 20 (SPEC) | `bms-balancing/docs/COMSOL_REBUILD_SPEC.md` §40–§58 · 후보 r0–r2 꾸러미 · 검토 묶음 보존. §57 = r2 한정 검증 승인 (실행 주체 Codex · 결과 대기) · §58 = A0 닫음 |
+| REIL 외부 검증 | 15 (docs) · 보존 6 · 봉인 1 | 프로토콜 v2 · 부속 A · B · C · D · C1-core 기록 · C6 봉인 `bms-balancing/reil_c6_20261005/` · 상태 `bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md` §1–§11 |
+| 논문 (`wiki/raw/papers`) | 19 | assb 90–104호 · 세미나 논문 셋 · Li 2026 (REIL C1-core 원전) · ASSB 원장 `bms-balancing/docs/ASSB_WANTED_PAPERS.md` (15 커밋) |
+| 그 밖 | — | MSC 설계안 10 종 검토 + SPMe 사전 부호표 · ampworks entity + upstream issue 초안 (발송은 사용자) · 2026-10-02 · 10-05 GitHub 브리핑 · webapp 변경 0 · `.claude` 변경 0 |
+
+### 7-3. 본진에서 이어 갈 것 — 우선순위 (사용자 2026-10-05: "이 REIL 관련해서 codex에 물어보는 걸 우선으로")
+
+1. **REIL — Codex 묶음 요청 (최우선).** 발송은 사용자 (발송문은 저장소 밖 — 사용자가 가지고 있다). 한 발송문 안에 둘 + 참고 하나: 부속 D
+   재확인 (`bms-balancing/docs/REIL_V2_ANNEX_D_RECHECK_REQUEST_20261005.md`) · C6 결과 수용 (`bms-balancing/docs/REIL_C6_RESULT_REVIEW_REQUEST_20261005.md`)
+   · 참고 = 독립 교차검토 (`bms-balancing/reviews/prereview_reil_v2_annexC_crossreview_20261005/` · 상태 문서 §11). 고정 커밋은 발송문에 있다 —
+   fast-forward 복귀라 본진에서도 같은 SHA 다.
+   - 회신이 오면: `bms-balancing/.gitattributes` 에 `reviews/<새 묶음>/** -text` 를 **먼저** 커밋 → zip + 풀어 놓은 파일을 바이트 그대로
+     (`PACKAGE_MANIFEST` 대조 · 비밀정보 패턴 검사) → 상태 문서 새 절 (§12 부터) · 위키 엔티티 `isu-uconn-lfp-gr-emulated-degradation` 한 줄 +
+     `wiki/log.md`. 정정 요구가 있으면 새 부속 (E) 에만 — v2 · A · B · C · D 의 바이트는 그대로 (충돌하면 나중 부속 우선).
+   - **둘 다 수용되면** N3: P0 승인 요청 초안 (범위 · 예산 · 중단 조건 — 부속 A · B 의 P0 출력 + 부속 C §4 · 부속 D §3 의 19 시트 이름 대조 ·
+     cycle / 방향 판정표 · `max_q` · 사전 양립성) 을 사용자에게 올린다. **사용자 승인 전 P0 · 자료 개봉 0.**
+   - 경계 (그대로): REIL `LFP_Data.xlsx` · `results/*.pkl` (pickle 금지) · 노트북 열기 0 · 맞춤 · 비용 측정 · E3b 등록 0 · 설치는 버리는
+     venv 만 (C6 venv 는 이 컨테이너와 함께 사라졌다 — 같은 판 재구축은 그 단계의 승인 범위) · Sobol 시작점은 `rng=` 로만 (옛 `seed=` 는 같은
+     정수로 다른 배열 — 상태 문서 §10).
+2. **COMSOL B-min r2 한정 검증 결과 대기** (SPEC §57 · Codex 실행) — 오면 SPEC 새 절 (§59 부터) · 묶음 바이트 보존. native 150 s 는 검증 수용
+   뒤 별도 사용자 승인.
+3. **ampworks** — 사용자가 issue 1 · 2 를 게시하면 URL 을 `wiki/entities/ampworks.md` 에 기록.
+4. **게이트 루프** — 열린 라운드 없음 (원장 §140). 다음 작업은 사용자가 목적 · 범위를 정한 뒤 (`GATE70_WORKING_STATE.md` "다음" 의 후보).
+5. ASSB 다음 번호 105호 (사용자가 파일을 줄 때) · MSC · webapp 스냅샷 (마지막 2026-09-29) — 요청이 있을 때.
+
+### 7-4. 이번 대피의 운영 교훈 (덧붙임)
+
+- 안전 검사는 `cd` 뒤 상대 glob 의 `rm` 을 막는다 — 다른 도구 · 쪼개기로 우회하지 않는다. 지울 파일 목록과 이유를 사용자에게 보이고 승인을 받은
+  뒤 절대 경로로 (2026-10-05 C6).
+- 다른 에이전트 (논문 에이전트) 가 커밋하는 동안에는 `git --no-optional-locks status` · `git ls-remote` 로만 기다린다 (인덱스 · ref 잠금 충돌).
+- `bms-balancing/WORKING_STATE.md` 의 "# N passed 기대" 줄은 시험을 더한 커밋에서 같이 올린다 (`ba41260e9` 가 빠뜨려 `test_i6d_04` 가 빨갰다 →
+  `bdc6b1e72` 에서 538).
+- bms 전체 시험 (~13 분) 이 도는 동안 커밋하지 않는다 (git 상태를 읽는 시험이 있다).
+- 받은 회신 묶음의 스크립트는 전문을 읽고 표준 라이브러리 · 출력 경로만 쓰는 것을 확인한 뒤에만 돌린다 (교차검토 63/63 · 포장 스크립트는 안
+  돌림).
