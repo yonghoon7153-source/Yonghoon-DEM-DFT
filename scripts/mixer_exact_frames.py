@@ -48,7 +48,9 @@
 from __future__ import annotations
 
 import argparse
+import contextlib
 import hashlib
+import io
 import json
 import math
 import os
@@ -522,6 +524,8 @@ def _g6_check(g6, st, ids_s, typ_s, strs):
     raw = _raw_dump(g6)
     if raw['step'] != st or tuple(raw['cols']) != HP_COLS:
         raise Tech(f'{os.path.basename(g6)}: g6 step {raw["step"]} · 열 {raw["cols"]} ≠ hp step {st} · {list(HP_COLS)}')
+    if not raw['rows']:
+        raise Tech(f'{os.path.basename(g6)}: g6 원자 0 개 — 덤프가 비었다')
     cols = list(zip(*raw['rows']))
     gid = np.array([int(v) for v in cols[0]], dtype=np.int64)
     o = np.argsort(gid, kind='stable')
@@ -551,6 +555,8 @@ def _read_one(run, pm, fp, ref, hp, g6_map):
     st = raw['step']
     if tuple(raw['cols']) != HP_COLS:
         raise Tech(f'{nm}: 열 {raw["cols"]} ≠ {list(HP_COLS)} — 정확 덱의 hp dump 가 아니다')
+    if not raw['rows']:
+        raise Tech(f'{nm}: 원자 0 개 — 정확 덤프가 비었다')
     cols = dict(zip(HP_COLS, zip(*raw['rows'])))
     for c in ('id', 'type'):
         bad = [v for v in cols[c] if not re.fullmatch(r'-?\d+', v)]
@@ -1232,6 +1238,15 @@ def _selftest():                                            # noqa: C901
         chk('⑮ hp 가 %.17g 가 아니면 (dump_modify format 이 안 먹어 기본 %g 로 찍힘) TECH — 정확 값으로 읽지 않는다',
             lambda: tech([hp('a', fmt='g')], (), '%.17g'))
 
+        def _d15b():
+            try:
+                g0 = os.path.join(td, 'g6_empty', OUT_SUB, 'g6_450.liggghts')
+                _write_lig(g0, [], 450, 'g')
+                return tech([hp('a', at=[])], (), '원자 0') and tech([hp('a')], [g0], '원자 0')
+            finally:
+                hp('a')                                                           # 원상태
+        chk('⑮b 원자 0 개인 hp · g6 덤프 (형식 검사는 넘는다) → TECH (예외로 죽지 않는다)', _d15b)
+
         def _d16():
             hp('a')                                                                   # 원상태
             ck = os.path.join(S, 'restart', 'a.bin')
@@ -1302,6 +1317,35 @@ def _selftest():                                            # noqa: C901
             lambda: (re0['status'] == 'OK' and re0['mode'] == 't0_only' and re0['frames'][0]['bin'] is None
                      and re0['frames'][0]['in_bin1'] is False and re0['frames'][0]['step_minus_t0'] == 1
                      and re0['frames'][0]['g6']['status'] == 'NOT_GIVEN' and same(re0['frames'][0]['exact'], ex_o)))
+
+        def _d23b():
+            buf = io.StringIO()
+            with contextlib.redirect_stdout(buf):
+                for r_ in (res, re0, dict(run='x', status='TECH', reasons=['합성 사유'], mode=None)):
+                    report(r_)
+            t_ = buf.getvalue()
+            return t_.count('── step') == 4 and 'g6 대조 MATCH' in t_ and '회전 없음 (E0)' in t_ and '⚠ 합성 사유' in t_
+        chk('㉓b report (사람이 읽는 출력) 가 회전 런 (프레임 3 · g6 MATCH) · E0 · TECH 결과에서 예외 없이 돈다', _d23b)
+
+        def _d23c():
+            g_, out = globals(), os.path.join(td, 'main_read_e0.json')
+            rep = g_['report']
+
+            def boom(_r):
+                raise RuntimeError('report 결함 주입')
+            g_['report'] = boom
+            try:
+                main(['read', E, os.path.join(td, 'w_e0', OUT_SUB, 'hp_251.liggghts'), '--json', out])
+            except RuntimeError:
+                pass
+            finally:
+                g_['report'] = rep
+            if not os.path.isfile(out):
+                return False
+            with open(out, encoding='utf-8') as f:
+                j = json.load(f)
+            return j['schema'] == SCHEMA and j['result']['status'] == 'OK' and same(j['result']['frames'][0]['exact'], ex_o)
+        chk('㉓c main read 는 report 전에 결과 JSON 을 쓴다 — report 가 예외로 죽어도 (결함 주입) 엄격 JSON 이 남고 값 = 독립 산술', _d23c)
 
         #  ── ㉔ ~ ㉖ 도구 자신의 가드가 실제로 걸리는가 (결함 주입 — 판독기 frame_quantities 를 잠깐 바꾼다) ─────────────────────
         def inject(mod):
@@ -1401,9 +1445,9 @@ def main(argv=None):
         return 0
     if a.cmd == 'read':
         res = read_run(a.run_dir, a.hp, a.g6)
-        report(res)
-        with open(a.json, 'w', encoding='utf-8') as f:
+        with open(a.json, 'w', encoding='utf-8') as f:                    # 결과 먼저 — 사람이 읽는 출력 (report) 이 죽어도 JSON 은 남는다 (㉓c)
             f.write(R.dumps_strict(dict(schema=SCHEMA, registered=REGISTERED, argv=list(sys.argv), result=res)) + '\n')
+        report(res)
         print(f'→ {a.json}')
         return 0 if res['status'] == 'OK' else 1
     ap.error('deck · read · --selftest 중 하나')
