@@ -127,3 +127,38 @@
 - **다음 (회신이 적은 순서 · 각각 사용자 결정):** 문서 정정 확인 + **C6 결과의 별도 수용** → 그 뒤 P0 의 범위 · 예산 · 중단 조건을 사용자에게 따로
   요청 (N3). C5 비용 측정 = 맞춤 파일럿 · P0 뒤 별도 승인 · C4 실제 실행도 별도 승인.
 - **번호:** §8-2 의 "결과 절 (§9)" 은 §10 이 된다 — 이 회신이 C6 결과보다 먼저 왔다 (C6 은 진행 중 · §8-2 의 범위 그대로).
+
+## §10 C6 결과 — 판 · 환경 고정 (2026-10-05 · 덧붙임 — 위 §0–§9 는 그대로 · §8-2 의 "결과 절")
+
+- **어디:** 봉인 `bms-balancing/reil_c6_20261005/` (커밋 `cdec0e646` · 바이트 보존 규칙 `d50eee2e3`) · 스크립트 `scripts/reil_c6_profile.py` (emit /
+  check) · 변이 증명 `scripts/reil_c6_mutation_proof.py` · 규칙 테스트 `tests/test_reil_c6_profile.py` 9 (커밋 `bdc6b1e72`). **정본은 봉인 파일**이고
+  아래 숫자는 사본이다. 봉인의 `README.md` · `C6_RUN.log` 는 사람용 기록 (봉인 밖).
+- **범위 (§8-2 그대로):** 버리는 venv 하나 (스크래치패드 · python3 3.11.15) · REIL 자료 · 노트북 열기 0 · P0 0 · 맞춤 0 · 비용 측정 0 · max_q 에
+  기대는 배열 · label seed 배열 0 · 운영 환경 · 저장소 설치 0.
+- **(a) 판:** CPython 3.11.15 · Linux x86_64 · glibc 2.39 · numpy 2.4.6 · scipy 1.17.1 · pandas 3.0.5 · openpyxl 3.1.5 · matplotlib 3.11.2 (C lock 과
+  같게) · seaborn 0.13.2 · pymoo 0.6.2 (pip 가 고른 판) · 의존성까지 30 배포판. C lock 과 판이 다른 전이 의존성 셋 — six 1.17.0 · fonttools 4.66.1 ·
+  pyparsing 3.3.3 (C lock 1.16.0 · 4.66.0 · 3.1.1) — §8-2 가 의존성 판을 고정하지 않았으므로 기록만. BLAS / LAPACK: NumPy = scipy-openblas
+  0.3.31.188.0 (ILP64) · SciPy = scipy-openblas 0.3.30 (LP64).
+- **lock 의 RECORD 대조:** 설치 파일 verified 7187 · unhashed 5301 · 불일치 1 = **설명된 충돌** (pymoo → alive-progress 3.3.0 → about-time 4.2.1 의
+  두 wheel 이 venv 꼭대기 `../../../LICENSE` 를 함께 주장 · 디스크 = 나중에 깔린 alive-progress). 첫 emit 은 이 불일치로 멈췄고 (fail-closed), RED
+  테스트 뒤 규칙 하나만 좁게 풀었다 — site-packages 밖 경로이고 다른 배포판의 RECORD 가 디스크 바이트와 같을 때만 기록 후 통과.
+- **(b) COBYQA:** SciPy 1.17.1 안의 cobyqa 1.1.3. 부속 A §3-1 옵션 8 개 모두 `show_options` 에 문서화 · 합성 이차 함수 (REIL 자료 아님) 호출 성공 ·
+  경고 0 · 알 수 없는 옵션 경고 0 · `f_target = −∞` 수용 → `accepted`. 구현 파일 4 개 sha256 기록. **뜻 대조 (기록만 — 부속 A §3-1 의 값은 그대로 ·
+  바꾸면 새 등록):** `scale=True` 이고 상자가 유한하면 변수를 [−1, 1] 로 옮긴 공간에서 돌므로 `initial_tr_radius = 1.0` · `final_tr_radius = 1e-6`
+  도 그 공간의 반경이다 (원래 단위로는 좌표마다 × 상자 반폭 — A0 상자 0.25 · 0.3 · 0.2475 · 0.5 · 넓힌 상자 0.6 · 0.6 · 1.0 · 1.0). `final_tr_radius`
+  는 `minimize` 의 `tol` 을 덮어쓴다. 옵션 설명이 권하는 초기 반경은 "최대 예상 변화의 1/10 정도" 이고 1.0 은 스케일 공간 폭 2 의 절반이다.
+- **(c) Sobol:** seed 인자 이름 = `rng` (시그니처에 옛 `seed=None` 도 남아 있다). **같은 정수를 `seed=` 로 주면 다른 배열이 나온다 — 경고 없이**
+  (seed 0 · 1). `rng=<정수>` 는 `rng=np.random.default_rng(<정수>)` 와 같은 배열이다. → 시작점 배열은 봉인의 `call` 그대로 `rng=` 로만 만든다 —
+  부속 A §3-1 이 경고한 "판에 따라 seed 인자 이름과 생성 배열이 다를 수 있다" 의 이 판 실측이다. 배열 6 개 (단위 · A0 상자 · 넓힌 상자 × seed 0 · 1
+  · 64 × 4) 의 sha256 = **식별**이다. 정식 봉인은 부속 B §2-1 의 "맞춤 전 (P0 뒤 · 첫 지역 실행 전)" 에 같은 판에서 다시 만들어 대조한다.
+- **(d) check · 변이:** 빈 디렉터리에 emit → `check` OK · 사람용 기록 둘을 더한 뒤 다시 OK · `git archive` 로 꺼낸 커밋 바이트도 `check` OK ·
+  스크래치패드 미리보기와 바이트 동일 · 변이 증명 12/12 (사람용 기록만 더한 사본 rc 0 · 변이 11 rc 1 — 대부분 MANIFEST 까지 맞춘 일관된 위조).
+  `check` · `emit` 의 보강 셋은 RED 먼저 (MANIFEST 항목 삭제 · 여분 파일이 "check OK" 였다 · COBYQA 미수용인데 MANIFEST 를 썼다).
+- **시험:** `tests/test_reil_c6_profile.py` 9 passed. bms 전체 — 시험 파일을 더한 첫 실행은 537 passed + 1 failed (`test_i6d_04`: WORKING_STATE 의
+  기대 수 525 ↔ 수집 538 — `ba41260e9` 의 MSC 사전 선별 +4 가 기대 수를 올리지 않아 그 커밋부터 빨갰고 이번 +9) → `bdc6b1e72` 에서 538 로 고침.
+  봉인 커밋 `cdec0e646` 의 전체 재실행: **538 passed** (rc 0 · 755.9 s · 시작 = 끝 HEAD `cdec0e646` · 시작 때 미커밋 파일 0).
+- **경위:** 둘째 emit (이전 판 스크립트 — COBYQA 설명 첫 줄만 · 구현 해시 없음) 의 미커밋 산출 11 개는 첫 삭제 시도를 안전 검사가 막아 사용자
+  결정으로 남겼고, 사용자 "삭제 승인" 뒤 그 11 개만 절대 경로로 지웠다 (git 에 들어간 적 없음 · 8 개는 최종 봉인과 바이트 동일).
+- **다음 (각각 사용자 결정 · 자동 시작 없음):** C6 결과의 수용 요청 (Codex · 부속 C 회신의 다음 단계 3 — "별도 C6 결과 수용") · 부속 D 재확인
+  회신 (§9) · 그 둘 뒤 N3 (P0 의 범위 · 예산 · 중단 조건 요청). venv 는 컨테이너와 함께 사라진다 — 같은 판 venv 의 재구축과 정식 봉인 대조는 그
+  단계의 승인 범위다.

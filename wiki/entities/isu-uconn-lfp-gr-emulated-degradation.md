@@ -204,6 +204,10 @@ v2 의 Codex 재검토 판정은 `DESIGN_DIRECTION_ACCEPTED_DOCUMENT_REVISION_RE
 - **2026-10-05 C1-core (논문 쪽) 확보 — 논문 · 보충 자료 수신** — `bms-balancing/docs/REIL_C1_CORE_SPEC_20261005.md`: 분석 11 시트 = 논문
   Table 1 의 11 행 · 명목 = Table 1 의 모사값 (노트북 명목표 11 행과 일치) · LII 식 (14)–(16) · 맞춤 = 다섯 번째 cycle · #3 은 리튬을 흑연 쪽에 둔 설계
   (가설 (나) 확인) · 참값 불확실성 a–d (formation 손실 · 높은 N/P 의 LAM_NE · 공급사 용량 기준 · pre-formation) · step 대응 · 분석 밖 6 시트는 P0.
+- **2026-10-05 C6 시행 (이 컨테이너 · 스크래치패드의 버리는 venv)** — 봉인 `bms-balancing/reil_c6_20261005/` (lock · 프로필 · COBYQA 옵션 대조 ·
+  Sobol Phase A 배열 sha256 식별 · `check` · 변이 증명) · 결과 절 `bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md` §10 (판 · 수치의 정본은
+  봉인 파일). 부속 A §3-1 의 COBYQA 옵션 8 개는 문서화돼 있고 합성 함수로 전달이 확인됐다. **같은 정수의 옛 `seed=` 는 `rng=` 와 다른 Sobol 배열을
+  낸다 (경고 없음)** — 시작점은 `rng=` 로만 만든다. 결과의 수용은 Codex 에 별도로 청하고 P0 은 그 뒤다. 위 표의 C1-core · C6 행은 2026-10-04 시점이다.
 
 ## 논문 digest (2026-10-05) — 그림에서 보이는 것
 

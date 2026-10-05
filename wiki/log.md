@@ -3537,3 +3537,8 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - [[isu-uconn-lfp-gr-emulated-degradation]]: 새 절 "부속 C 재검토 (2026-10-05)" (RV2C-N1 명목 대응 ≠ 출판 추정치 정규화 동일성 · RV2C-N2 CE 곱 ≠ Li 손실률 · RV2C-N3 P0 세 상태 규칙 · 밖 6 시트 = #12 · #13 · #14 · #17 · #18 · #19 · U-e 는 비특이적 가설로만) · "논문 digest" 절의 "크기 단서" 줄에 취소선 + 철회 표시.
 - raw digest (`raw/papers/li2026_half-cell-fitting-multiobjective-benchmark.md`) §8-4 · §9-2 · §16-1 의 "≈17 % 손실" 해석은 raw 불변이라 그대로 두고 정정 참조는 엔티티 새 절에 둔다.
 - 하지 않은 것: raw 수정 · 새 그림 판독 · 자료 개봉 · 맞춤 · E3b 등록 · 새 페이지 (기존 엔티티 절로 충분).
+
+## [2026-10-05] update | isu-uconn-lfp-gr-emulated-degradation — REIL C6 시행 (판 · 환경 고정 봉인)
+- 출처: `bms-balancing/reil_c6_20261005/` (봉인 · `README.md`) · 상태 문서 `bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md` §10.
+- [[isu-uconn-lfp-gr-emulated-degradation]]: "부속 B 재검토" 절의 진행 목록에 C6 한 줄 (판 · COBYQA 옵션 대조 · Sobol 의 `rng=` ↔ 옛 `seed=` 차이 · 결과 수용은 별도 요청).
+- 하지 않은 것: REIL 자료 · 노트북 열기 · P0 · 맞춤 · 비용 측정 · 수치 복사 (정본은 봉인 파일).
