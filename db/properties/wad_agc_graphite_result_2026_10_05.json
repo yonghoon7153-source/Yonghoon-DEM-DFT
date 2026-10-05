@@ -216,6 +216,12 @@
   "묶음": "db/inputs/wad_agc_graphite_2026_10_02/k9set (8 잡 · 생산 입력과 K_POINTS · prefix 두 줄만 다름 · 대표 G4 k9 와 같은 변환 확인)",
   "러너": "run_kgy.sh STAGE=k9set (한 잡씩 · 상한 30 h · 잠금 rc 0 막음)",
   "판독": "tools/wad/agc_graphite.py --k9set_collect — REPLACE / KEEP_A_PRIME · 두께 (k9) · registry 폭 (k9) · 라벨",
-  "상태": "준비 — kgy 점검 (worktree · selftest · DRY_RUN) → 발사"
+  "상태": "진행 중 — kgy 발사 2026-10-05 22:48:11",
+  "발사": {
+   "기계": "kgy (tmux agck9 · worktree ~/wt_agck9_1005 · 6adf297c)",
+   "DRY_RUN": "22:48:07 통과 (결정 active · 입력 해시 · PP)",
+   "단계_시작": "2026-10-05 22:48:11 ($RUN/k9set/.t0 · 상한 30 h 의 기준)",
+   "첫_watch_22_49": "AGC_N3_top_hcp_K9_bound · k 점 41 (k6 20 · 시간반전 대칭만 · 예상 일치) · GPU 합계 8,358 / 24,576 MiB · 사용률 100 % (cascade v7 · li2s 담금질과 공유)"
+  }
  }
 }

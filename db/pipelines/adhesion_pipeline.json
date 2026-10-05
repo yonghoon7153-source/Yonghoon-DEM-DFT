@@ -1564,6 +1564,11 @@
    "date": "2026-10-05",
    "stage": "dft",
    "text": "P1b 마감 재개 ① **(b)** — 사용자 '지금 kgy 에서' · 나머지 넷 (N3 registry 셋 + N4) 두 끝점 9×9×1 · 8 잡 · 결정 D-2026-10-05-wad-agc-graphite-k9-registry · 판독 규칙 결과 전 고정 (10 잡 전부 OK → 헤드라인 교체는 새 마감 결정 · 아니면 (a′) 그대로) · 상한 벽시계 30 h · 마감 (a′) 은 결과까지 그대로. W 값은 결과 기록에만."
+  },
+  {
+   "date": "2026-10-05",
+   "stage": "dft",
+   "text": "P1b (b) k9 넷 kgy 발사 (tmux agck9 · 6adf297c · 22:48:11 · DRY_RUN 통과) · 첫 잡 AGC_N3_top_hcp_K9_bound k 점 41 (k6 20 · 시간반전 대칭만 · 예상 일치) · 8 잡 한 잡씩 · 상한 30 h. W 값은 결과 기록에만."
   }
  ],
  "related_decisions": [
