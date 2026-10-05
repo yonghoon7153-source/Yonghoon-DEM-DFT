@@ -3964,3 +3964,46 @@ gate INCOMPLETE · 실효 정책 UNVERIFIED · native 미승인 · 게이트 리
   읽는다. §50 · §51 의 "자료가 오면 보존 → 대응표 → 비교 가능 여부" 순서는 이 결정으로 멈춘다.
 - **영향 없음:** B-min (한정 공간 민감도) 은 §57 그대로 진행한다 · 게이트 리뷰와 무관 · RUN_SCOPE 0.
 - **다시 열기:** 자료가 다른 경로로 오거나 사용자가 다시 정하면 새 절로 연다 — 그때도 비교 구간 · 정렬 · 지표는 결과를 보기 전에 고정한다 (§42).
+
+## 59. B-min r2 한정 검증 retry3 — 수신 검토 회신 접수 · `IMPLEMENTED_OUTCOMES_ACCEPTED_PLAN_CLOSEOUT_CONDITIONAL` · 기록 보완 둘 대기 · native 미승인 (2026-10-06)
+
+> **추가 기록이다.** 사용자 (2026-10-06): "검토 완료했습니다. 77개 입력의 기능 결과는 수용하며, 계획 종결은 기록 보완 조건부입니다" + 묶음
+> `BMIN_R2_RETRY3_REVIEW_20261006.zip`. 대상 = §57 승인의 결과 묶음 `BMIN_R2_LIMITED_VALIDATION_RETRY3_RESULT_20261005.zip` (+ `BMIN_R2_RETRY3_NOTE_20261005.txt`)
+> — **이 저장소에는 아직 없다** (Codex 실행 → 사용자 → 수신 검토로 바로 갔다). REIL 과 섞지 않는다.
+
+### 59-1. 받은 바이트
+
+`bms-balancing/reviews/r14_repros/codex63/comsol_bmin_r2_retry3_review_20261006/` — zip (sha256 `cf0f205186a6841fbfd43228e8bf180cf0d558c6f92d9c1dee0b17cfe8f30cd4` ·
+14,199 B) + 풀어 놓은 7 파일 (zip 멤버와 바이트 동일 · `PACKAGE_MANIFEST.json` payload 6 의 크기 · sha256 일치 · 비밀정보 패턴 0 · 묶음의
+`inspect_archive.py` 는 보존만, 실행 안 함). 규칙 `4885a21a6` · 보존 `cd8cb8519`.
+
+### 59-2. 판정 (`DECISION.json` 요지 — 정본은 묶음)
+
+| 항목 | 판정 |
+|---|---|
+| 결과 묶음 식별 | ZIP 1,619,237 B · sha256 `ed0138b90cf2dc4e42f22ec18d8719ff56906780f74b4139850d604b096bb470` · payload 244 + manifest · 생산 CODE_MANIFEST `4cdca2e6…` (r2 그대로) · PRE_TEST_SEAL `c0145c2a…` |
+| 기능 결과 | **수용** — 고유 ID 62 · 입력 77 의 기대 결과 일치 (Python 42 · Java helper 2 · Windows PowerShell 5.1 33 · rc 0 · 한도 안) |
+| PY04-02 | 대체 증거 수용 — **고정 baseline identity 거부 (내용 파싱 전)** 에 한정. 실제 NORMAL240 교체 시험이라고 부르지 않는다 |
+| PY05-03 | 대체 증거 수용 — **RUNTIME_TLIST 거부** 에 한정 (runtime tlist 만 변조 · 정적 순서 근거). tlist · tables 동시 변조 실행이라고 부르지 않는다 |
+| PS01-16 | 외부 결과 (INCOMPLETE / INVALID / INCONCLUSIVE) **수용** · 원안의 "target engine 에서 내부 actual path 확인" **미충족** — TryParse 내부 분기 `UNOBSERVED` |
+| profile | 원 reader 성공 14 + 같은 바이트 재사용 39 (53 회 재파싱이 아니다) |
+| 계획 종결 | **조건부** — 아래 59-3 의 둘 |
+| 그 밖 | 생산 수정 · 전체 재시험 요구 없음 · 추가 시험 승인 아님 · **native 150 s 승인 아님** · 정상 gate INCOMPLETE 유지 · COMSOL 모델 실행 0 (Java helper 컴파일 / JVM 은 수행 — 다른 주장) |
+
+### 59-3. 남은 기록 보완 둘
+
+1. **BMIN-R3-C1 (P2 · 기록층)** — 결과 묶음의 `FINAL_INPUT_ACCOUNTING.json` 77 행이 `status=PASS` 와 함께 준비 단계 템플릿 값 `fixture_created=false` ·
+   `actual_call_bound=false` 를 그대로 담는다. 원본을 고치지 않고 **별도 `ACCOUNTING_CORRECTION.json`** — 원 ZIP · manifest sha256 과 각 (ID, input_index) 에
+   결속 · 두 필드는 준비 시점 값이라 최종 판정 권위 없음을 명시 · 엔진별 (Python / PowerShell / Java) 실제 입력 생성 방식과 harness / 결과 근거 · 일괄
+   true 덮어쓰기 금지. **필요한 것: 결과 묶음 원본** (이 저장소에 없다 — 사용자에게 요청).
+2. **PS01-16 범위 정리 — 승인권자 (사용자) 확인 필요.** (가) 외부 fail-closed 결과만 수용 대상으로 하고 내부 TryParse 분기는 `UNOBSERVED` 로 남긴다
+   (검토자 권고) · (나) 내부 분기 확인을 계속 필수로 두고 사전 봉인한 한정 관측 1 건을 따로 승인한다. 자동 probe · 재시험 없음.
+
+### 59-4. 다음
+
+두 보완이 수용되면 **같은 고정 실행본의 native 150 s 승인 요청 준비** (정확 source / manifest · 기준 NORMAL480 · run / cwd / argv · 정책 · 자원 · 시간 ·
+정리 · 보존 범위) 로 갈 수 있다 — 그것도 별도 사용자 승인이다. 그 전 native150 · 새 승인 / token / runtime · COMSOL 호출 0. 960 s 자동 연장 · 과거 suite
+반복 · 설정 완화 · 다른 solver / 물리 조건 추가 없음.
+
+이 절이 바꾸지 않는 것: §57 승인 문구 · r2 꾸러미 바이트 (`approved=false / usable=false` 원문 그대로) · 정상 gate INCOMPLETE · 과거 실패 / pending / 원복
+기록 · 게이트 리뷰 · REIL 과 무관 · RUN_SCOPE 0. 이 저장소 쪽 실행 0.
