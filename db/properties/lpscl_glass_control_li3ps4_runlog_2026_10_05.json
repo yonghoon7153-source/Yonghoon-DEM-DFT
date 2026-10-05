@@ -48,7 +48,7 @@
   "③_600K_MD": "A 600 K 와 같은 시드–기계 대응 (gabia 2·4·5 · kgy 1·3) · gabia 는 그때 탄성이 GPU 를 쓰면 새 공존 결정 · 러너는 v2 러너를 B 로 일반화 (결과 전 · 시험 포함)",
   "④_판독": "대조표 커밋 → 판독 한 번 → 갈래 → 마감"
  },
- "⏭": "kgy: B/seed3·4·5 표시 파일 (seed1·2 만) · gabia: worktree → selftest → DRY_RUN (MACHINE=gabia SEEDS='3 4 5') → tmux 발사 → 두 기계 감시 → 5 시드 끝 → 회수 → 시드 게이트 · 밀도 · T₅₀",
+ "⏭": "두 기계 감시 (kgy ~/w_kgy_1005.sh · gabia /root/w_li3ps4_g.sh) → kgy seed1·2 · gabia seed3·4·5 끝 (kgy 러너는 seed3 표시에서 종료 코드 3 = 설계) → 회수 → 시드 게이트 · 밀도 · T₅₀ · 장부 (kgy 등분 · gabia pmon)",
  "발사_2026_10_05": {
   "기계": "kgy (tmux li3ps4q · worktree ~/wt_li3ps4_1005 · c704348b)",
   "START": "2026-10-05 15:35:59 · 변경 0 · 시드 1 2 3 4 5 · seed1 시작 GPU 3117 MiB (cascade v7 탐침만 있던 때)",
@@ -74,5 +74,13 @@
   "gabia": "seed3·4·5 · 공존 예외 (5) D-2026-10-05-gabia-uma-coexist-elastic-li2s-control · 한 번에 하나 · RUN /data/work/runs/lpscl_glass_control_li3ps4_2026_10_05",
   "장부_측정_방식": "kgy = 동시 GPU 잡 수 등분 (프로세스별 정보 막힘 · 과대평가 = 보수) · gabia = nvidia-smi pmon 표본 (우리/합 · 합 0 이면 1) · 둘 다 벽시계 병기 (회신 CS Q-CS-1)",
   "다음_편지에_실을_것": "기계 배정 변경 (A 와 같은 대응) · gabia 점유 표본 정의 (우리/합 · 합 0 → 1)"
+ },
+ "발사_gabia_2026_10_05": {
+  "기계": "gabia (A6000 · tmux li3ps4g · worktree /data/work/wt_li3ps4_1005 · 17aced0b6) · MACHINE=gabia SEEDS='3 4 5' · 공존 예외 (5) D-2026-10-05-gabia-uma-coexist-elastic-li2s-control",
+  "발사_전_점검": "selftest 27 PASS (gabia python) · DRY_RUN: 세 시드 empty · 120 원자 · 셀 15.52 Å · GPU 41,392 MiB (≤ 42,500) · host 47,491 MiB · 탄성 최신 strain_13_m.out (20:45:29 · 1 분 전 — 가드 ④ 가 맞는 파일을 본다) · pmon 표본 '우리 0 · 합 99' (gabia 에서 실측 점유를 잴 수 있다)",
+  "START": "2026-10-05 20:48:40 · seed3 시작 · GPU 41,392 MiB · host 47,483 MiB · 공존 가드 켬",
+  "첫_watch_20_50": "GPU 합계 42,649 MiB (pw.x 41,374 + 우리 1,252 · 가드 ① 46,000) · pmon 표본 2 개 (우리 0 — 모델 올리는 중) · 탄성 strain_13_m.out 20:50:08 갱신",
+  "kgy_같은_시각": "seed1 [quench] 20000/450000 (312.4 분 · 시간당 ≈ 27 ps 그대로 — P1b far SCF 22 회째)",
+  "⛔": "러너 worktree 두 곳 (kgy ~/wt_li3ps4_1005 · gabia /data/work/wt_li3ps4_1005) 은 끝날 때까지 안 옮긴다"
  }
 }
