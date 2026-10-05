@@ -7394,7 +7394,9 @@
     "db/properties/lpscl_smallcell_glass_md_gateA_erratum_2026_09_24.json (Q6_총상한_GPU_h_셈법.장부_h — A 시드당 벽시계 28.7–47.0 h)",
     "db/properties/lpscl_smallcell_glass_md_cc_followup_2026_09_26.json (A2_Q6_장부_점유환산 — 시드당 14.3–16.5 GPU-h · 등분 가정)",
     "db/properties/lpscl_smallcell_glass_md_amendment_cc_2026_09_26.json (8_Q6_셈법 — 점유 환산 · 등분 가정은 병기용)",
-    "kb/reviews/li2s1a_CS_prompt_li2s_glass_control_cost_2026_10_05.md (편지 CS · Q-CS-1~3)"
+    "kb/reviews/li2s1a_CS_prompt_li2s_glass_control_cost_2026_10_05.md (편지 CS · Q-CS-1~3)",
+    "kb/reviews/li2s1a_CS_reply_li2s_glass_control_cost_2026_10_05.md (회신 CS 원문)",
+    "db/properties/lpscl_smallcell_glass_control_li3ps4_amendment_cs_2026_10_05.json (개정 · MD 재견적 v2 장부 19.2–23.1 GPU-h)"
    ],
    "reopen_criteria": [
     "회신 CS 가 셈법을 벽시계로 정하면 → 그 기준의 상한을 다시 내서 이 결정을 고친 판으로 (결과 전)",
@@ -7415,6 +7417,12 @@
      "state": "proposed",
      "by": "사용자 (카드 저자 · 실행 승인)",
      "note": "AskUserQuestion '계속 + 편지 (Recommended)' — 담금질은 계속 · 편지 CS 로 외부 1저자 동의 요청. 트랙 = li2s (사용자 ≠ 1저자) — 상한·셈법은 회신이 정한다 (잠정)."
+    },
+    {
+     "at": "2026-10-05",
+     "state": "proposed",
+     "by": "외부 1저자 (회신 CS)",
+     "note": "규칙 확정 — Q-CS-1 kgy 등분으로 상한 비교 (과대평가 = 보수적 · 벽시계 병기 · gabia 실측) · Q-CS-2 140 수용 + 셋 (80 이 틀린 이유 · 여유 → 160 또는 멈춤 경로 명시 · MD 재견적) · Q-CS-3 수용 + 넷에서 멈출 때 규칙을 지금. 개정 기록 db/properties/lpscl_smallcell_glass_control_li3ps4_amendment_cs_2026_10_05.json. 카드 저자(사용자) 선택 둘 뒤 비준. 트랙 = li2s (사용자 ≠ 1저자)."
     }
    ]
   }
