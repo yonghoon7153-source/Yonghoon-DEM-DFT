@@ -10,11 +10,19 @@
  "코드": {
   "담금질_러너": {
    "path": "db/inputs/lpscl_glass_control_li3ps4_2026_10_05/run_quench_kgy.sh",
-   "sha16": "20a43ca5568d3d97",
+   "sha16": "1c43f6617aa93b00",
    "내용": "melt_quench_uma.py --system B --n_fu 15 --quench_rate 1e12 --melt_ps 100 --hold_ps 50 --dt_fs 2 --save_ps 1.0 --turbo (A 와 같은 일정) · 시드 1→5 한 번에 하나 · 끝난 시드마다 --seed_gate 입력",
    "가드": "결정 active 확인 · uma env 절대경로 (fairchem) · 같은 잡 중복 (잡 고유 인자 + comm 필터) · GPU 사용 ≤ 20,000 MiB 일 때 시작 (최대 6 h 대기) · 끝난 시드는 건너뜀 · 결과 없이 폴더만 있는 시드는 멈춤 (흔적 보존) · 한 시드가 실패하면 뒤 시드를 안 돌림",
-   "selftest": "11 통과 (음성 5 · 실제 경로 dry_run 120 원자 포함 · repo 에서 PY=python3)",
-   "일부러_깨기": "n_fu 15→50 → 2 실패 · partial→empty → 1 실패 (빨간불 확인)"
+   "selftest": "13 통과 (음성 6 · 실제 경로 dry_run 120 원자 · 중복 가드는 살아 있는 dummy 프로세스로 · repo 에서 PY=python3 · 파이프로 받아도 6 s)",
+   "일부러_깨기": "n_fu 15→50 → 2 실패 · partial→empty → 1 실패 (빨간불 확인)",
+   "개정_2026_10_05": {
+    "이전_sha16": "20a43ca5568d3d97 (kgy selftest·DRY_RUN 통과판 · 3bd839ac)",
+    "무엇": "중복 실행 가드 배선 — our_running 이 \"$TAG/B\" 로 찾았는데 그 문자열은 담금질 python 명령줄에 없다 (--out_root $RUN 만 있다 · \"$TAG/B\" 는 --seed_gate 호출에만) → 같은 잡이 돌아도 못 찾았다. selftest 가 이 함수를 안 봤다 (조용히 틀린 경로)",
+    "고침": "pgrep -f -- \"--out_root $RUN( |$)\" + comm python* · 시험 2 (양성: 같은 모양의 명령줄로 잠자는 python 의 PID 를 찾는다 · 음성: 게이트 호출 · 다른 RUN · python 아닌 프로세스는 안 센다)",
+    "일부러_깨기": "옛 패턴 → 양성 빨강 · python 거르기 제거 → 음성 빨강 · 끝 고정 제거 → 음성 빨강 (3/3) · ⚠ 첫 판 음성은 bash -c \"sleep 60\" 이 sleep 으로 exec 해서 인자가 사라져 아무것도 안 쟀다 — 명령 둘로 고쳐서 다시 깸",
+    "실제_피해": "없음 — 발사 전이다 (돌던 적 없음) · 시드 폴더 partial 가드가 뒤를 받치고 있었다",
+    "계산_조건": "불변 (ARGS · 시드 · 문턱 · RUN 같음)"
+   }
   },
   "담금질_도구": {
    "path": "tools/ionic/melt_quench_uma.py",
@@ -32,5 +40,5 @@
   "③_600K_MD": "A 600 K 와 같은 시드–기계 대응 (gabia 2·4·5 · kgy 1·3) · gabia 는 그때 탄성이 GPU 를 쓰면 새 공존 결정 · 러너는 v2 러너를 B 로 일반화 (결과 전 · 시험 포함)",
   "④_판독": "대조표 커밋 → 판독 한 번 → 갈래 → 마감"
  },
- "⏭": "kgy 점검 블록 (새 worktree · selftest · DRY_RUN) → 출력 확인 → 발사 블록 (tmux)"
+ "⏭": "kgy 발사 블록 (두 worktree 를 새 커밋으로 · li2s selftest 13 → tmux li3ps4q · P1b DRY_RUN → tmux agck12) → 감시"
 }

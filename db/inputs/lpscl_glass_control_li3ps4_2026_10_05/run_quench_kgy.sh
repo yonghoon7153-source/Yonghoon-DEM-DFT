@@ -28,7 +28,7 @@ RUN=${RUN:-$HOME/work/runs/lpscl_glass_control_li3ps4_2026_10_05}
 SEEDS=${SEEDS:-"1 2 3 4 5"}
 START_MAX_MIB=${START_MAX_MIB:-20000}
 WAIT_MAX_S=${WAIT_MAX_S:-21600}
-TAG=lpscl_glass_control_li3ps4_2026_10_05           # 잡 고유 인자 — pgrep 은 이것으로만 (공용 이름 금지)
+TAG=lpscl_glass_control_li3ps4_2026_10_05           # 이 카드의 실행 이름 (RUN 기본 폴더) — 살아 있는 잡은 our_running 이 --out_root 로 찾는다
 ARGS=(--system B --n_fu 15 --quench_rate 1e12 --melt_ps 100 --hold_ps 50 --dt_fs 2 --save_ps 1.0 --turbo)
 N_ATOMS_EXPECTED=120
 
@@ -48,7 +48,9 @@ seed_state() {        # $1 = 시드 · done | partial | empty
   elif [ -e "$d" ] && [ -n "$(ls -A "$d" 2>/dev/null)" ]; then echo partial
   else echo empty; fi
 }
-our_running() { for x in $(pgrep -f "$TAG/B" 2>/dev/null); do case "$(cat /proc/$x/comm 2>/dev/null)" in python*) echo "$x";; esac; done | head -1; }
+# 담금질 python 의 명령줄에 실제로 있는 잡 고유 인자 = "--out_root $RUN" (끝 고정 · python 만). ⛔ 10-05 이전 판은 "$TAG/B" 로 찾았는데
+#   그 문자열은 담금질 명령줄에 없고 (--seed_gate 호출에만 있다) — 같은 잡이 돌아도 못 찾았다 (selftest 가 안 봤다).
+our_running() { for x in $(pgrep -f -- "--out_root $RUN( |\$)" 2>/dev/null); do case "$(cat /proc/$x/comm 2>/dev/null)" in python*) echo "$x";; esac; done | head -1; }
 dry_one() {           # $1 = 시드 · $2 = 출력 루트 (임시) → n_atoms 를 찍는다
   "$PY" tools/ionic/melt_quench_uma.py "${ARGS[@]}" --seed "$1" --out_root "$2" --dry_run 2>&1 | grep -E "원자|dry_run" | head -2
 }
@@ -66,6 +68,17 @@ if [ "${SELFTEST:-0}" = 1 ]; then
   ck "끝난 시드(result.json)는 done — 건너뛴다 (덮어쓰지 않는다)" "[ \$(seed_state 2) = done ]"
   ck "⛔음성 중간에 멈춘 시드 폴더는 partial — 멈춘다" "[ \$(seed_state 3) = partial ]"
   ck "빈 시드는 empty — 돈다" "[ \$(seed_state 1) = empty ]"
+  # 중복 가드 — 실제 담금질 호출과 같은 모양의 명령줄로 (python 은 잠만 잔다 · 시험 RUN 은 임시 폴더라 실제 잡과 안 겹친다)
+  # 출력은 /dev/null — 안 그러면 남은 sleep 이 호출부 파이프(| tail 등)를 60 초 붙잡는다
+  "$PY" -c "import time; time.sleep(60)" tools/ionic/melt_quench_uma.py "${ARGS[@]}" --seed 1 --out_root "$RUN" >/dev/null 2>&1 & P_OK=$!
+  "$PY" -c "import time; time.sleep(60)" tools/ionic/melt_quench_uma.py --seed_gate "$RUN/B/seed1" >/dev/null 2>&1 & P_GATE=$!
+  "$PY" -c "import time; time.sleep(60)" tools/ionic/melt_quench_uma.py "${ARGS[@]}" --seed 1 --out_root "${RUN}_other" >/dev/null 2>&1 & P_OTHER=$!
+  bash -c "sleep 60; :" x tools/ionic/melt_quench_uma.py --out_root "$RUN" >/dev/null 2>&1 & P_SH=$!   # 명령 둘 — 하나면 bash 가 sleep 으로 exec 해서 인자가 사라진다
+  sleep 1
+  ck "중복 가드: 같은 RUN 의 담금질 python 을 찾는다 (PID 일치)" "[ \"\$(our_running)\" = $P_OK ]"
+  kill $P_OK; wait $P_OK 2>/dev/null
+  ck "⛔음성 중복 가드: 게이트 호출 · 다른 RUN · python 이 아닌 프로세스는 잡이 아니다" "[ -z \"\$(our_running)\" ]"
+  pkill -P $P_SH 2>/dev/null; kill $P_GATE $P_OTHER $P_SH 2>/dev/null; wait $P_GATE $P_OTHER $P_SH 2>/dev/null   # bash 의 자식 sleep 은 부모 PID 로
   RUN=$RUN0
   ck "인자: --system B · --n_fu 15 · 1e12 · turbo (A 와 같은 일정)" "[[ \" ${ARGS[*]} \" == *' --system B --n_fu 15 --quench_rate 1e12 --melt_ps 100 --hold_ps 50 --dt_fs 2 --save_ps 1.0 --turbo '* ]]"
   out=$(dry_one 1 "$T/dry")
