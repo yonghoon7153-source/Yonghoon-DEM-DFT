@@ -72,6 +72,33 @@ def hop_check(ea_eV, T_K=300.0, nu0=NU0_ASSUMED, t_s=None):
     return out
 
 
+def observation_window(T_K, t_s, nu0=NU0_ASSUMED, n_sites=1):
+    """짧은 MD '무반응' 의 **관측창 한 줄** (사용자 2026-10-05 · D-2026-10-05-md-observation-window).
+
+    궤적 총 시간 t 동안 한 번이라도 볼 수 있었던 장벽의 상한 Ea_max ≈ kT·ln(ν₀·t·n) —
+    hop_check 의 N = Γ·t = 1 을 Ea 에 대해 푼 거울상이다 (독립 반응 자리가 n 개면 + kT·ln n).
+    용도: 'MD 에서 반응·분해·이탈이 안 보였다' 를 'Ea ≳ Ea_max 인 반응은 이 창에서 못 본다' 로 읽는다
+    (예: 5 ps · 298 K ≈ 0.10 eV · 20 ns · 350 K ≈ 0.37 eV · 3 h · 298 K ≈ 1.0 eV).
+    ⛔ 못 하는 것: 장벽 값이 아니다 · 열역학적 안정 판정이 아니다 · ν₀ 는 가정(10¹³ s⁻¹) · 경로 수·상관·
+      자유에너지 장벽의 엔트로피 항을 안 본다. ν₀·t·n ≤ 1 이면 장벽 0 인 반응도 한 번 기대되지 않으므로 0.
+    T·t·ν₀ 가 양수 유한이 아니거나 n < 1 이면 None (없는 값을 0 으로 그리지 않는다).
+    """
+    try:
+        T, t, nu, n = float(T_K), float(t_s), float(nu0), float(n_sites)
+    except (TypeError, ValueError):
+        return None
+    if not all(math.isfinite(x) for x in (T, t, nu, n)) or T <= 0 or t <= 0 or nu <= 0 or n < 1:
+        return None
+    x = nu * t * n
+    ea = KB_EV * T * math.log(x) if x > 1 else 0.0
+    site = f" · 반응 자리 {n:g}" if n > 1 else ""
+    return {"T_K": T, "t_s": t, "nu0_s-1_assumed": nu, "n_sites": n, "Ea_max_eV": ea,
+            "rule": "D-2026-10-05-md-observation-window",
+            "⚠": "관측창 — 장벽 값도 열역학적 안정 판정도 아니다 (ν₀ 가정)",
+            "line": f"관측창 (ν₀ {nu:.0e} s⁻¹ 가정 · {T:.0f} K · 궤적 {t:.3g} s{site}): "
+                    f"Ea ≳ {ea:.2f} eV 인 반응은 이 궤적에서 못 본다"}
+
+
 def _bni():
     """build_neb_inputs 를 지연 로드 — protocol_diff 는 진단에만 쓴다.
 
@@ -461,6 +488,28 @@ def selftest():
     chk(hop_check(0.3)["rule"] == "D-2026-09-27-barrier-hop-count" and "확산계수" in hop_check(0.3)["⚠"],
         "[홉] 결정 ID 와 '확산계수 아님' 경고가 결과에 붙는다")
 
+    # ── 관측창 (사용자 2026-10-05 · D-2026-10-05-md-observation-window) — 홉 수 검산의 거울상 ──────────
+    w1 = observation_window(298.0, 5e-12)
+    chk(w1 is not None and 0.09 < w1["Ea_max_eV"] < 0.11,
+        f"[관측창] kim2026 AIMD 5 ps · 298 K → Ea_max ≈ 0.10 eV — {w1 and w1['Ea_max_eV']}")
+    w2 = observation_window(350.0, 20e-9)
+    chk(w2 is not None and 0.36 < w2["Ea_max_eV"] < 0.38,
+        f"[관측창] 우리 T3 계획 20 ns · 350 K → ≈ 0.37 eV — {w2 and w2['Ea_max_eV']}")
+    w3 = observation_window(298.0, 3 * 3600)
+    chk(w3 is not None and 0.98 < w3["Ea_max_eV"] < 1.03, f"[관측창] 셀 3 h · 298 K → ≈ 1.0 eV — {w3 and w3['Ea_max_eV']}")
+    _hb = hop_check(w2["Ea_max_eV"], T_K=350.0, t_s=20e-9)
+    chk(_hb is not None and abs(_hb["N_hop"] - 1.0) < 1e-6,
+        "[관측창] 거울상 — Ea_max 를 hop_check 에 넣으면 같은 창에서 N = 1 이다")
+    wn = observation_window(298.0, 5e-12, n_sites=100)
+    chk(abs(wn["Ea_max_eV"] - w1["Ea_max_eV"] - KB_EV * 298.0 * math.log(100)) < 1e-12 and "반응 자리 100" in wn["line"],
+        "[관측창] 반응 자리 n 개면 + kT·ln n")
+    chk(observation_window(298.0, 1e-14)["Ea_max_eV"] == 0.0,
+        "[관측창] ν₀·t ≤ 1 이면 0 (음수 장벽을 쓰지 않는다)")
+    chk(all(observation_window(*a) is None for a in ((0, 1e-12), (-5, 1e-12), (300, 0), (300, -1), (300, float("nan")), ("x", 1), (300, 1e-12, 0), (300, 1e-12, 1e13, 0.5))),
+        "[관측창 음성] T·t·ν₀ 가 양수 유한이 아니거나 n < 1 이면 None")
+    chk(w1["rule"] == "D-2026-10-05-md-observation-window" and "장벽 값" in w1["⚠"] and "못 본다" in w1["line"],
+        "[관측창] 결정 ID · '장벽 값 아님' 경고 · 읽는 법이 결과에 붙는다")
+
     shutil.rmtree(td, ignore_errors=True)
     print("selftest " + ("PASS" if ok else "FAIL"))
     return 0 if ok else 1
@@ -485,10 +534,22 @@ def main():
                     help="홉 수 검산 온도 [K] (기본 300 · D-2026-09-27-barrier-hop-count)")
     ap.add_argument("--hop_time_s", type=float, default=None,
                     help="홉 수 검산 시간 창 [s] — 주면 N = Γ·t 를 같이 싣는다 (예: 방전 시간)")
+    ap.add_argument("--obs_window", nargs="+", type=float, metavar="X",
+                    help="관측창 한 줄만 찍고 끝 — T_K t_s [n_sites] (D-2026-10-05-md-observation-window)")
     ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args()
     if a.selftest:
         return selftest()
+    if a.obs_window:
+        if len(a.obs_window) not in (2, 3):
+            print("⛔ --obs_window T_K t_s [n_sites]")
+            return 2
+        w = observation_window(*a.obs_window)
+        if w is None:
+            print("⛔ 관측창을 낼 수 없다 — T·t 는 양수, n ≥ 1")
+            return 2
+        print(w["line"])
+        return 0
     roots, missing = split_roots(a.work)
     for m in missing:
         print(f"⚠ 루트 없음: {m}")

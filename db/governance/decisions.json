@@ -7007,6 +7007,130 @@
     "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
     "비준_근거": "사용자 2026-10-04 — AskUserQuestion '비준 · 판독으로 (Recommended)' · 골격 '기록만 · 게이트는 650 K부터 (Recommended)' (카드 v2 + 개정 CO 함께 · 트랙 li2s = 외부 1저자 — 비준은 기록·실행 승인)."
    }
+  },
+  {
+   "id": "D-2026-10-05-md-observation-window",
+   "schema_version": 2,
+   "kind": "policy",
+   "scope": "reporting.md.no_event_claim",
+   "slot": "md_no_event_observation_window_line",
+   "applies_to": {
+    "methods": [
+     "aimd",
+     "mlip_md",
+     "classical_md",
+     "reaction_md"
+    ],
+    "use_cases": [
+     "internal",
+     "manuscript",
+     "review_prompt",
+     "literature_citation"
+    ]
+   },
+   "title": "짧은 MD 에서 '반응·분해·이탈 없음 · 안정' 을 쓸 때 관측창 한 줄을 같이 싣는다 — Ea_max ≈ kT·ln(ν₀·t·n)",
+   "statement": "MD(AIMD · MLIP-MD · 고전 MD · 반응 MD)에서 '반응·분해·이탈이 일어나지 않았다' · '안정하다' 를 쓸 때마다 — 우리 계산이든 문헌이든 — 관측창 한 줄을 붙인다: 그 궤적이 한 번이라도 볼 수 있었던 장벽의 상한 Ea_max ≈ kT·ln(ν₀·t) (ν₀ = 10¹³ s⁻¹ **가정** · T · t = 궤적 총 시간 명시 · 독립 반응 자리가 n 개면 + kT·ln n). '무반응' 은 'Ea ≳ Ea_max 인 반응은 이 창에서 못 본다' 이상의 뜻으로 쓰지 않는다 — 열역학적 안정이나 실제 셀 시간척(시간~일)의 무반응으로 읽지 않는다. 이 한 줄은 차수 검산이지 장벽 값이 아니다.",
+   "rationale": "Kim 2026 (Adv. Energy Mater. e71596 · Na‖Bi 합금 음극) 이 5 ps · 298 K AIMD 에서 TEGDME 분해가 안 보인 것을 '안정' 근거로 썼다 — 그 창은 Ea ≲ 0.10 eV 반응만 본다 (셀 시간척 3–30 h 는 ≈ 1.0–1.07 eV). 우리 T3 계획(UMA 반응 MD · 350 K · ≥ 20 ns)도 ≈ 0.37 eV 까지만 본다. D-2026-09-27-barrier-hop-count (장벽 → 홉 수) 의 거울상 (홉 수 = 1 → 볼 수 있는 장벽). litdb §J-58 · §H 관측창 행. 사용자 2026-10-05 — '권고대로 진행' (litdb kim2026 · yuan2026 브리핑의 결정 후보 1·2 에 대한 답). 트랙 = 우리 DFT 기준선 → 1저자 = 사용자 (통지할 제3자 없음).",
+   "decision_state": "active",
+   "record_kind": "policy",
+   "results_seen": false,
+   "results_seen_note": "보고 형식 규칙 — 특정 결과를 보고 고르지 않았다 (문헌 사례가 계기)",
+   "card": null,
+   "record": "litdb/papers/kim2026_electrolyte_interfacial_reactivity_alloying_anode_pulverization.md",
+   "depends_on": [
+    "D-2026-09-27-barrier-hop-count"
+   ],
+   "supersedes": [],
+   "evidence": [
+    "litdb/papers/kim2026_electrolyte_interfacial_reactivity_alloying_anode_pulverization.md",
+    "litdb/comparison_vs_ours.md"
+   ],
+   "method_ref": "tools/sei/collect_neb.py::observation_window (CLI --obs_window T_K t_s [n_sites] · selftest 8 · 깨기 3/3)",
+   "reopen_criteria": [
+    "전인자(phonon · harmonic TST)를 실제로 계산하면 ν₀ 가정을 그 값으로 바꾼다 (규칙 자체는 유지)",
+    "⛔ 그 밖의 이유로 이 한 줄을 빼지 않는다"
+   ],
+   "enforcement": "① MD 결과 기록·원고·리뷰 프롬프트·litdb digest 에서 '무반응/안정' 문장 옆에 Ea_max 한 줄 ② observation_window() 또는 --obs_window 로 낸다 ③ Ea_max 를 장벽 값·안정성 판정으로 인용하지 않는다",
+   "proposed_by": "claude-session-2026-10-05",
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-10-05",
+     "state": "active",
+     "note": "사용자 2026-10-05 — '권고대로 진행' (litdb kim2026 · yuan2026 브리핑의 결정 후보 1·2 에 대한 답). 트랙 = 우리 DFT 기준선 → 1저자 = 사용자 (통지할 제3자 없음)."
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-10-05T00:46:36Z",
+    "commit": "e3d72a1f1f73cf91d5bbab1539fb17e4a0e52f8f",
+    "decision_digest": "sha256:e70696422c478e83902db2b669f358314cf6d7d3d74a22a792ff69e9d9c12cb8",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "비준_근거": "사용자 2026-10-05 '권고대로 진행' (결정 후보 1·2 · 트랙 = 우리 DFT 기준선 · 사용자 1저자)."
+   }
+  },
+  {
+   "id": "D-2026-10-05-adsorption-site-coordination",
+   "schema_version": 2,
+   "kind": "policy",
+   "scope": "reporting.adsorption.binding_site",
+   "slot": "chemisorption_binding_site_coordination_check",
+   "applies_to": {
+    "methods": [
+     "dft_adsorption",
+     "binding_energy",
+     "literature_citation"
+    ],
+    "use_cases": [
+     "internal",
+     "manuscript",
+     "review_prompt",
+     "literature_citation"
+    ]
+   },
+   "title": "화학결합 규모(|E| ≳ 2 eV) 흡착·결합에너지는 공개 구조가 있으면 결합 자리 배위수부터 센다",
+   "statement": "분자 하나 기준 |E_ads| 또는 |E_b| ≳ 2 eV 인 흡착·결합에너지를 인용하거나 보고할 때, 구조(cif · xyz · POSCAR · xlsx 좌표 등)가 공개돼 있으면 먼저 결합 자리 원자의 배위수를 센다 (흡착 전 깨끗한 표면 · 흡착 뒤 둘 다 · 거리 컷 명시). 결합 자리가 저배위(단글링 본드 · 과환원 · 수산화 안 된 표면)면 그 값은 '그 결함 자리의 결합 포화 에너지' 로만 적고, 물질·표면 일반의 흡착 세기나 논문이 말한 기전(예: 산소공공 루이스산)의 근거로 쓰지 않는다. 구조가 없으면 '배위 미확인' 을 같이 적는다. 우리 흡착 계산도 같다 — 결과 기록에 결합 자리 배위수를 싣는다.",
+   "rationale": "Yuan 2026 (Nat. Commun. in press · PEO/2D SiO₂) Sup2 구조 감사: SiO₂–TFSI⁻ 3.11 eV 의 결합 자리 Si63 은 깨끗한 슬랩에서 O 하나뿐인 1-배위 Si (Si 48 개 중 28 개 저배위 · 수산화 없음) 이고 TFSI 의 O 와 Si–O 1.763 Å 로 결합 — 단글링 본드 포화 에너지였고 '산소공공 루이스산 효과' 와 연결되지 않았다. [Yu26Pol] · [Meng26LZF] 와 같은 실패 유형인데 구조가 공개돼 처음으로 직접 확인됐다 (litdb §J-57 · dataset_summary.csv 배위수 감사). 사용자 2026-10-05 — '권고대로 진행' (litdb kim2026 · yuan2026 브리핑의 결정 후보 1·2 에 대한 답). 트랙 = 우리 DFT 기준선 → 1저자 = 사용자 (통지할 제3자 없음).",
+   "decision_state": "active",
+   "record_kind": "policy",
+   "results_seen": false,
+   "results_seen_note": "보고 형식 규칙 — 특정 결과를 보고 고르지 않았다 (문헌 사례가 계기)",
+   "card": null,
+   "record": "litdb/papers/yuan2026_layered_composite_electrolyte_stress_homogenization_li_metal.md",
+   "depends_on": [],
+   "supersedes": [],
+   "evidence": [
+    "litdb/papers/yuan2026_layered_composite_electrolyte_stress_homogenization_li_metal.md",
+    "litdb/figures/yuan2026_layered_composite_electrolyte_stress_homogenization_li_metal/dataset_summary.csv",
+    "litdb/comparison_vs_ours.md"
+   ],
+   "method_ref": "거리 컷 이웃 세기 (ASE · pymatgen — 컷 명시) · 선례 litdb/figures/yuan2026_…/dataset_summary.csv 의 Sup2 배위수·접촉 거리 감사",
+   "reopen_criteria": [
+    "2 eV 문턱은 운영 기준이다 — 반례(정상 배위 자리에서 ≳ 2 eV 인 진짜 화학흡착 등)가 쌓이면 사용자 결정으로 조정한다",
+    "⛔ 그 밖의 이유로 이 검사를 빼지 않는다"
+   ],
+   "enforcement": "① litdb digest · 비교표에서 ≳ 2 eV 흡착값을 인용할 때 결합 자리 배위수 줄 (또는 '구조 비공개 · 배위 미확인') ② 우리 흡착 결과 기록에 결합 자리 배위수 필드 ③ 저배위 자리 값을 물질 일반 흡착 세기·기전 근거로 쓰지 않는다",
+   "proposed_by": "claude-session-2026-10-05",
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-10-05",
+     "state": "active",
+     "note": "사용자 2026-10-05 — '권고대로 진행' (litdb kim2026 · yuan2026 브리핑의 결정 후보 1·2 에 대한 답). 트랙 = 우리 DFT 기준선 → 1저자 = 사용자 (통지할 제3자 없음)."
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-10-05T00:46:36Z",
+    "commit": "e3d72a1f1f73cf91d5bbab1539fb17e4a0e52f8f",
+    "decision_digest": "sha256:4030140b6e87f1df7e60a32a7292027dd0c91c3348074e876f6af824045294a8",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "비준_근거": "사용자 2026-10-05 '권고대로 진행' (결정 후보 1·2 · 트랙 = 우리 DFT 기준선 · 사용자 1저자)."
+   }
   }
  ]
 }
