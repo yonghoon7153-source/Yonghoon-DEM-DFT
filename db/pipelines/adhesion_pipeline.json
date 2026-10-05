@@ -1549,6 +1549,11 @@
    "date": "2026-10-05",
    "stage": "dft",
    "text": "V5 VASP 외주 **파일럿 2 잡 반송** (10-05 · 업체) — --check 파일럿 OK (VASP 5.4.4 · PBE_54 TITEL · 설정 되울림 · 첫 시도 수렴 · bound 10.4 h · far 4.9 h · peak 67.6 GB) · 반송 MANIFEST = 고정값 · 금지 파일 0 · **PP 등록부 봉인** a279d529… · 다음 = 업체에 나머지 16 잡 (파일럿 폴더 그대로) → 최종 --collect. W 는 최종 집계에서."
+  },
+  {
+   "date": "2026-10-05",
+   "stage": "dft",
+   "text": "P1b k12 탐침 끝 (kgy 21:30 · bound·far rc 0) · 회수 365a53ae · 판독 **CONVERGED_AT_K9** (사전 문턱 안 · 레포 재집계 = kgy 집계) · 다음 = 1저자 결정 (라벨로 닫기 / 넷도 k9). W 값은 결과 기록에만."
   }
  ],
  "related_decisions": [
