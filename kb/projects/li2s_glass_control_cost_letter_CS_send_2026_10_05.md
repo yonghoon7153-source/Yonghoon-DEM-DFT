@@ -1,31 +1,3 @@
----
-title: "CS 프롬프트 — li2s 소셀 유리 대조 계: 담금질 시작 · ⚠ 비용 견적 오류 정정 (시드당 3 h → 실측 ≈ 33–39 h 벽시계) · 총상한 80 GPU-h 를 MD 전에 넘는다 · 셈법·새 상한 140·그 사이 처리 확인 요청 셋 (외부 1저자에게)"
-tags: [review, li2s, lpscl_smallcell, glass, control-system, li3ps4, cost, gpu-hours, ledger, external-first-author, prompt, letter]
-letter: CS
-date: 2026-10-05
-updated: 2026-10-05
-track: li2s / lpscl_smallcell_glass
-channel: li2s1a
-kind: prompt
-status: 초안 (2026-10-05) — 사용자 검토 · 발송 대기
-confidence: medium
-verificationStatus: verified
-verifiedAt: 2026-10-05
-verifiedBy: self
-explored: false
-authoredBy: agent
-effort: medium
-claimType: mixed
-evidenceScope: multi-source-primary
----
-
-> **회신 CR** (`li2s1a_CR_reply_li2s_glass_control_card_2026_10_05.md`) 뒤의 편지다. 대조 계 카드는 회신대로 개정해 사용자가 비준했고 (`D-2026-10-05-lpscl-smallcell-glass-control-li3ps4` active), B 담금질을 10-05 15:35 kgy 에서 시작했다.
-> 트랙 = li2s (외부 1저자) → **사용자는 1저자가 아니다.** 요지는 **우리 쪽 비용 견적 오류**의 정정이다. 사용자 결정 (10-05 AskUserQuestion '계속 + 편지') 은 실행 승인이고, 상한·셈법은 이 편지의 회신이 정한다 → 결정 `D-2026-10-05-lpscl-smallcell-glass-control-cost` **proposed**.
-> 근거: runlog `db/properties/lpscl_glass_control_li3ps4_runlog_2026_10_05.json` (`⚠_비용_견적_오류_2026_10_05`) · A 실측 장부 `db/properties/lpscl_smallcell_glass_md_gateA_erratum_2026_09_24.json` (`Q6_총상한_GPU_h_셈법.장부_h`) · `db/properties/lpscl_smallcell_glass_md_cc_followup_2026_09_26.json` (`A2_Q6_장부_점유환산`) · A 셈법 `db/properties/lpscl_smallcell_glass_md_amendment_cc_2026_09_26.json` (`8_Q6_셈법`).
-> ⬇ 아래 **보내는 글**만 발송한다. 회신이 오면 `li2s1a_CS_reply_…` 로 원문 보존 → 결정 갱신 (사용자 비준 뒤 active).
-
----
-
 **[li2s 소셀 유리 MD] 대조 계 담금질 시작 · 비용 견적 정정 · 확인 요청 셋**
 
 회신 CR 감사합니다. 카드를 회신대로 고쳐 결과 전에 확정했고, B 담금질을 시작했습니다. 이번 편지는 저희 쪽 **비용 견적 오류**를 바로잡는 것이 요지입니다.
