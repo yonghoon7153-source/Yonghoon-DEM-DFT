@@ -2,7 +2,7 @@
 
 - 기준 판정: `docs/reviews/codex_review_rgl_reverify_20261005.md` (핀 `bf4fb6aee` · **HOLD** · 새 P1 없음 · §9 최소 잔여 해제조건 = RGLR-01 · 02 · 03).
 - 이번에 고친 것: §9 의 셋 + 판정문 Q1 · Q2 의 `WEB-03` (1저자 비준 = Q1 + Q2 최소) + Q7 의 `LHS-33` 좁은 amendment + Q5 의 194 인계 LW 제외.
-- 핀 = 이 요청서를 담은 커밋.  사이의 `a6f950227` (믹서 보조 판독기) 은 이 검토 범위 밖이다.
+- 핀 = `dbe0f076d7b948b8ebcfa85a02a391125b104fe2` (브랜치 `claude/sdcp-dem-manuscript-si-pqwtv8` · 수정 전부와 이 요청서를 담은 커밋 — 그 뒤 커밋은 이 줄에 SHA 를 적은 것과 믹서 작업뿐 · 망 · 입자 응력 코드 변경 없음).  사이의 `a6f950227` (믹서 보조 판독기) 은 이 검토 범위 밖이다.
 - 1저자 비준: *"비준이야"* (10-05 밤 · 수정안 1–4 전부 — `LHS-33` 은 제안문의 "무효 입력만 빈칸 · 사유" 안).
 
 ## 1. 패치 (오래된 순)
@@ -12,7 +12,7 @@
 | `af9e6b15f` | RGLR-03 · RGL-06 잔여 · LHS-33 | 파서 `load_atoms_raw` 가 c_strs 세 열의 **존재 · 파싱 실패를 보존** (세 열 전무 = unavailable 그대로 · 일부 열 · 빈칸/NaN · 문자열 · Inf · 반경 무효 = 그 입자 세 키 NaN + `c_strs_invalid` 사유 · 옛 파서는 일부 열이면 KeyError) · LW = 어느 키든 있음 ↔ 전부 완전을 따로 → `FAILED (invalid_input)` · 옛 σ_VM `calc_von_mises_stress` 계약 `v2-invalid-null` (정상 입력 = 정의 · 수 · 키 불변 + `stress_cv_status: computed` · 무효/미정의 = None + `stress_cv_status` (`unavailable_no_c_strs` · `invalid_input` · `undefined_zero_mean`) + `stress_cv_reason`) · 등급 `__sigma_vm_cv_pct` 가 상태를 따른다 · 그림 · CSV · 표 재생성 · 감사 · 웹앱 사례 · 그룹 · 보고 · 툴팁 같은 묶음 · 계약 상수 = `scripts/metrics_json.py` 한 곳 | `scripts/analyze_contacts.py` · `dem_analysis_core.py` · `metrics_json.py` · `grade_engine.py` · `generate_comparison_plots.py` · `rebuild_tables_from_metrics.py` · `lhs_stress_constriction_audit.py` · `test_love_weber_stress.py` · 웹앱 `app.py` · `single.html` · `group.html` · `test_stress_lw_labels.py` |
 | `9fe8ba0bf` | Q5 (LHS-29 · RGL-06) | 194 인계에서 LW 열 **명시 제외** — `WA_EXCLUDED` 패턴 `stress_lw_.+|stress_cv_lw(_nowall)?|stress_ratio_.+_lw(_nowall)?` · 사유 `frame_unverified` (parse_liggghts 가 TIMESTEP 을 버리고 atom · contact 를 따로 고른다) · CLI 가 `<인계>_excluded.tsv` 를 쓴다 · 옛 σ_VM 열은 패턴에 안 걸림 · 같은 입력 130 · 64 인계표 · 열 사전 **바이트 동일** (묶음 `contact,percolation` · 다섯 묶음 둘 다) | `scripts/lhs_design_dataset.py` |
 | `e03c0a84b` | RGLR-01 · 02 · RGL-08 잔여 · WEB-03 | 공용 기술 검사 `tau_flux.ion_record_problem` (정지 계약 ③ · τ 인계 소비자가 **같은 함수** · 띠 · 퍼콜 · 연속체 게이트 앞) · 두 σ 표현 항등식 `tau_flux.sigma_identity_tol` · 생산자: 관통인데 못 푼 채널 (이온 · 전자 · 열) = **failed** (`_channel_solve_failure` · 상태 필드만) → 게시 게이트가 일반 · 정지 경로 모두에서 막는다 · 승격 한 거래 `publish_network_candidate` (동기 예외 = 되돌림 · failed 반환) · 실패 어휘 하나 (network_attempt.json v2) · 웹앱 τ 상태 행 (기술적 실패 ↔ 과학적 HOLD) · "최근 재계산 실패" 행 | `scripts/tau_flux.py` · `network_conductivity.py` (상태 필드만) · 웹앱 `pipeline_service.py` · `app.py` · `single.html` · 시험 넷 |
-| (이 요청서 커밋) | 원장 · 탐침 재실행 기록 | RGLR-01 ~ 03 · RGL-06 · 08 · WEB-03 · LHS-33 → claimed_fixed · 탐침 재실행 기록 `docs/reviews/codex_rglr_fix_probe_rerun_20261005/` (전 · 후 JSON · 기록된 단언 · 실행기) | `docs/reviews/findings.json` · 위 폴더 · CLAUDE.md · 진행 기록 |
+| `dbe0f076d` (핀) | 원장 · 탐침 재실행 기록 | RGLR-01 ~ 03 · RGL-06 · 08 · WEB-03 · LHS-33 → claimed_fixed · 탐침 재실행 기록 `docs/reviews/codex_rglr_fix_probe_rerun_20261005/` (전 · 후 JSON · 기록된 단언 · 실행기) | `docs/reviews/findings.json` · 위 폴더 · CLAUDE.md · 진행 기록 |
 
 ## 2. 판정문 해제조건 · Q 대응
 
