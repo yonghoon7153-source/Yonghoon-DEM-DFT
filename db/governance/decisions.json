@@ -6297,16 +6297,22 @@
     "D-2026-09-29-gabia-uma-coexist-elastic-li2s-main"
    ],
    "schema_version": 2,
-   "decision_state": "active",
+   "decision_state": "superseded",
    "results_seen": false,
    "proposed_by": "claude-session-2026-09-30",
-   "status": "active",
+   "status": "superseded",
    "status_history": [
     {
      "at": "2026-09-30",
      "state": "active",
      "by": "1저자(사용자)",
      "note": "사용자 '이거 gabia, kgy에서 더하자 ㅇㅇ' → 에이전트가 '공존 예외는 09-30 에 소멸했다 · 새 예외를 줄까' 를 물음 → AskUserQuestion 답 '옛 예외와 같은 조건 (Recommended)' (한 번에 한 런 · 합계 46,000 가드 · 탄성 메모리 오류면 우리 MD 만 kill · 옛 4 런 피크 43,391 MiB). 트랙 = gabia 운용(우리) → 1저자 = 사용자. li2s 외부 1저자에게는 기계 배정 사실만 편지 CO 에 싣는다."
+    },
+    {
+     "at": "2026-10-05",
+     "state": "superseded",
+     "by": "사용자 (gabia 운용)",
+     "note": "자기 조건('5 런이 끝나거나 탄성이 끝나면 소멸')대로 **10-03 16:56:59 소멸** — gabia 몫 5 런 끝 · 가드 발동 0 · 피크 GPU 합계 43,437 MiB (runlog ✅_완주_2026_10_03). 같은 slot 의 예외 (5) D-2026-10-05-gabia-uma-coexist-elastic-li2s-control 가 명시적으로 대체한다 — 원장 규칙 '충돌 해소는 명시적 supersedes 로만' (10-05 slot 겹침 검사가 잡음). 내용(statement 등)은 그대로다."
     }
    ],
    "ratification": {
@@ -6317,8 +6323,9 @@
     "commit": "89dea352c7b04063d6761bbfec62cff0cb186087",
     "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
     "근거_발화": "AskUserQuestion 답 (2026-09-30 · 이 세션): '옛 예외와 같은 조건 (Recommended)' — 앞선 발화 '이거 gabia, kgy에서 더하자 ㅇㅇ'",
-    "decision_digest": "sha256:e5334c560276a356357f14199900244dba4729f3fca5a9f3b744d4d27ad52564"
-   }
+    "decision_digest": "sha256:bb9ef2b377948a4637c9d630215e7c17bde8f1cff664bafa3e16af9548be7b66"
+   },
+   "superseded_by": "D-2026-10-05-gabia-uma-coexist-elastic-li2s-control"
   },
   {
    "id": "D-2026-10-01-wad-se-pairs-uma-prediction-to-dem",
@@ -7496,6 +7503,12 @@
      "state": "active",
      "by": "사용자 (gabia 운용 · 탄성 1저자)",
      "note": "비준 — AskUserQuestion '비준 (Recommended)' (예외 (4) 와 같은 조건 + nvidia-smi 점유 표본) · 시드–기계 대응 'A 와 같게 (Recommended)'. 트랙 = gabia 운용(우리) · li2s 외부 1저자에게는 기계 배정 사실을 다음 편지에 싣는다."
+    },
+    {
+     "at": "2026-10-05",
+     "state": "active",
+     "by": "agent (원장 구조 정정)",
+     "note": "supersedes 에 예외 (4) 를 더함 — 비준 직후 validate_canonical 의 slot 겹침 검사가 (4) 가 아직 active 로 남은 것을 잡았다 (4 는 10-03 소멸 · 원장 어휘에 '소멸' 이 없어 active 로 남아 있었다). 승인 내용(statement · 가드 · 범위)은 그대로 · 지문만 다시 냄 · 결속 커밋은 그대로 71e7e9f0."
     }
    ],
    "ratification": {
@@ -7504,8 +7517,11 @@
     "actor_id": "yonghoon7153@gmail.com",
     "timestamp": "2026-10-05T11:31:04Z",
     "commit": "71e7e9f0cdf89549cc50f918d2f06658fbfd03b9",
-    "decision_digest": "sha256:14e092abcbc1d248bff0e6a5c84cdb63904145707663ac3b1cd5a807b25538de"
-   }
+    "decision_digest": "sha256:985c46f7592b81d3b82270e55e0985fdfe62dd1479fb52e1394683d035443cd0"
+   },
+   "supersedes": [
+    "D-2026-09-30-gabia-uma-coexist-elastic-li2s-v2"
+   ]
   }
  ]
 }
