@@ -881,8 +881,9 @@ PV2="$T/policy_v2_old.json"; PV2W="$T/policy_v2_widened.json"          # 옛 정
 python3 - "$HERE/launch_policy.json" "$PV2" "$PV2W" <<'PY'
 import json, sys
 p = json.load(open(sys.argv[1], encoding='utf-8'))
+late = ('dev-bo', 'dev-u')                      # ★ 10-05 — 리포 정책이 v4 (dev-u) 라 옛 v2 를 만들 때 dev-u 도 뺀다 (옛 v2 그대로)
 old = dict(p, schema='mixer_highbo_launch_policy/2', policy_id='TEST-v2-without-dev-bo',
-           allowed_stages=[s for s in p['allowed_stages'] if s != 'dev-bo'], stages={k: v for k, v in p['stages'].items() if k != 'dev-bo'})
+           allowed_stages=[s for s in p['allowed_stages'] if s not in late], stages={k: v for k, v in p['stages'].items() if k not in late})
 json.dump(old, open(sys.argv[2], 'w', encoding='utf-8'), ensure_ascii=False)
 json.dump(dict(p, schema='mixer_highbo_launch_policy/2', policy_id='TEST-v2-widened'), open(sys.argv[3], 'w', encoding='utf-8'), ensure_ascii=False)
 PY
@@ -955,5 +956,97 @@ PY
 )
 chk 'DB⑧ 단일 출처 — run_all.sh · resume_all.sh 의 강성 축 셀 정규식 팔 목록 = mixer_deck_diff.STIFF_ARMS (E0 · LC · LH · LHx10 · LHx30 · 한쪽만 바뀌면 여기서 걸린다)' \
     "[ \"\$rxa\" = OK ]"
+
+echo "── 개발 탐색 dev-u (2026-10-05 · 강성 축 사전등록 §12 v2.9 — LU212_ref_r2 · LU637_ref_r2 · 균일 γ 배율 · dev-bo 와 같은 관문) — DU ──"
+#  ★ 반례를 먼저 옮겼다 — 옛 런처: dev-u = usage rc 2 · 리포 정책 v3 (dev-u 없음) · run_all.sh / resume_all.sh 의 강성 축 셀 정규식이
+#    LU212 · LU637 을 몰라 LU212_* · LU637_* 를 **로컬로 띄우고 · 잇는다** (DB⑦ 와 같은 구멍 — 새 팔 이름마다 다시 생긴다).
+DU="$T/du"; fx 'for n in list(dd.DEV_E0) + list(dd.DEV_U): sg._fx_cell(A[0], n)' "$DU"
+stg "$DU" "$T/sdu" dev-e0; rc_du0=$?
+for n in E0_ref_s32452843 E0_ref_s49979687 E0_ref_s67867967 E0_ref2_s32452843 E0_ref_dthalf_s32452843; do runr2 "$DU/$n" SLURM_NTASKS=20; done
+fx 'for n in dd.DEV_E0: sg._fx_e0_done(A[0], n)
+rc, rec = sg._fx_e0_record(A[0], os.path.join(A[0], "dev_e0_diag_devu.json"))
+print("E0DIAG", rc, rec["verdict"])' "$DU" > "$T/e0diag_du.out" 2>&1
+stg "$DU" "$T/sdu" dev-u; rc_du1=$?
+stg "$DU" "$T/sdu" dev-u "$DU/none.json"; rc_du2=$?; du2="$SO"
+chk 'DU① dev-u: (dev-e0 8 제출 · E0 진단 PASS 뒤) 기록 인자 없음 → usage · 없는 기록 → preflight 거부 — sbatch 합계 8 그대로' \
+    "[ $rc_du0 -eq 0 ] && grep -q 'E0DIAG 0 PASS' '$T/e0diag_du.out' && [ $rc_du1 -eq 2 ] && [ $rc_du2 -ne 0 ] && grep -q 'E0 진단 기록' <<<\"\$du2\" && [ \$(nsb2 '$T/sdu') -eq 8 ]"
+PV3="$T/policy_v3_old.json"; PV3W="$T/policy_v3_widened.json"          # 옛 정책 v3 (dev-u 없음) · v3 스키마에 dev-u 를 끼운 정책
+python3 - "$HERE/launch_policy.json" "$PV3" "$PV3W" <<'PY'
+import json, sys
+p = json.load(open(sys.argv[1], encoding='utf-8'))
+old = dict(p, schema='mixer_highbo_launch_policy/3', policy_id='TEST-v3-without-dev-u',
+           allowed_stages=[s for s in p['allowed_stages'] if s != 'dev-u'], stages={k: v for k, v in p['stages'].items() if k != 'dev-u'})
+json.dump(old, open(sys.argv[2], 'w', encoding='utf-8'), ensure_ascii=False)
+json.dump(dict(p, schema='mixer_highbo_launch_policy/3', policy_id='TEST-v3-widened'), open(sys.argv[3], 'w', encoding='utf-8'), ensure_ascii=False)
+PY
+stg "$DU" "$T/sdu" dev-u "$DU/dev_e0_diag_devu.json" -- POLICY_FILE="$PV3"; rc_du3=$?; du3="$SO"
+stg "$DU" "$T/sdu" dev-u "$DU/dev_e0_diag_devu.json" -- POLICY_FILE="$PV3W"; rc_du4=$?; du4="$SO"
+chk 'DU② ★ 옛 정책 v3 (dev-u 없음) → dev-u 거부 · v3 스키마에 dev-u 를 끼운 정책 → 모양 아님 (v3 의 뜻을 넓히지 않는다 · dev-u = v4 전용) — 둘 다 sbatch 0' \
+    "[ $rc_du3 -ne 0 ] && grep -q \"stage 'dev-u'\" <<<\"\$du3\" && [ $rc_du4 -ne 0 ] && grep -q '모양이 아니다' <<<\"\$du4\" && [ \$(nsb2 '$T/sdu') -eq 8 ]"
+stg "$DU" "$T/sdu" dev-u "$DU/dev_e0_diag_devu.json" -- NP=10; rc_du5=$?; du5="$SO"
+chk 'DU③ E0 진단 PASS 여도 NP 가 다르면 (10 ≠ 기록 20) dev-u 거부 — 블록 NP 통일 (preflight 사유) · sbatch 합계 8' \
+    "[ $rc_du5 -ne 0 ] && grep -q '블록 NP 통일' <<<\"\$du5\" && [ \$(nsb2 '$T/sdu') -eq 8 ]"
+DU2="$T/du2"; fx 'for n in dd.DEV_U: sg._fx_cell(A[0], n)
+open(os.path.join(A[0], "LU212_ref_r2_s32452843", "in.mixer"), "w").write(dd.cell_expected_deck("LC_ref_r2_s32452843"))' "$DU2"
+stg "$DU2" "$T/sdu2" dev-u "$DU/dev_e0_diag_devu.json"; rc_du6=$?; du6="$SO"
+chk 'DU④ ★ LU212 폴더에 LC_ref_r2 덱 (비교 상대 — 배율 ×1) → 덱 코호트 관문 거부 · sbatch 0 · 봉인 0' \
+    "[ $rc_du6 -ne 0 ] && grep -q '덱 코호트 관문 실패' <<<\"\$du6\" && [ \$(nsb2 '$T/sdu2') -eq 0 ] && ! ls '$DU2'/*/launch_record.json >/dev/null 2>&1"
+stg "$DU" "$T/sdu" dev-u "$DU/dev_e0_diag_devu.json"; rc_du7=$?
+sdu=$(python3 - "$DU" "$ROOT" "$T/sdu" "$HERE/launch_policy.json" <<'PY' 2>&1
+import hashlib, json, os, sys
+out, root, sd, pol = sys.argv[1:]
+sys.path.insert(0, os.path.join(root, 'scripts'))
+import mixer_deck_diff as dd
+sha = lambda p: hashlib.sha256(open(p, 'rb').read()).hexdigest()
+rec = os.path.join(out, 'dev_e0_diag_devu.json')
+calls = [l.rstrip('\n').split('\t') for l in open(os.path.join(sd, 'calls'), encoding='utf-8')]
+bad = [] if ([os.path.basename(c[1]) for c in calls[8:]] == list(dd.DEV_U) and not any('--hold' in c[2] for c in calls)) else ['calls']
+for n in dd.DEV_U:
+    r = json.load(open(os.path.join(out, n, 'launch_record.json'), encoding='utf-8'))
+    rq, g, cl, pl, sl = r.get('requires') or [{}], r.get('gate_deckdiff') or {}, r.get('cell') or {}, r.get('policy') or {}, r.get('slurm') or {}
+    rn = open(os.path.join(out, n, 'run_lh.sbatch'), encoding='utf-8').read().split('\n')
+    ok = {'stage': r.get('stage') == 'dev-u',
+          'requires': len(rq) == 1 and rq[0].get('kind') == 'dev_e0_diag' and rq[0].get('path') == os.path.realpath(rec) and rq[0].get('sha256') == sha(rec),
+          'cell': cl.get('name') == n and cl.get('arm') == n.split('_')[0] and cl.get('level') == 'ref' and cl.get('revolutions') == 2,
+          'gate': g.get('argv') == ['--runs', os.path.realpath(out), '--cohort', 'dev-u']
+                  and g.get('expect_deck_sha256') == hashlib.sha256(dd.cell_expected_deck(n).encode()).hexdigest(),
+          'policy': pl.get('sha256') == sha(pol) and 'dev-u' in (pl.get('allowed_stages') or []) and pl.get('policy_id') == json.load(open(pol))['policy_id'],
+          'slurm': sl.get('np') == 20 and sl.get('time') == '3-00:00:00' and '#SBATCH -n 20' in rn and '#SBATCH --time=3-00:00:00' in rn,
+          'no_legacy': 'cohort' not in r and 'deviation' not in r and 'probe' not in r}
+    bad += [f'{n}:{k}' for k, v in ok.items() if not v]
+print('OK' if not bad else 'NG ' + ' '.join(bad))
+PY
+)
+chk 'DU⑤ ★ dev-u (기록 PASS · 같은 NP) → 두 런만 제출 (합계 10 · LU212 → LU637 순 · --hold 없음) · 봉인 stage dev-u · requires = E0 진단 기록 (절대경로 · sha256) · '\
+'셀 = 이름 · 덱 관문 --cohort dev-u · 기대 덱 sha256 · 리포 정책 (v4 · sha256 · id) · -n 20 · 3 일' \
+    "[ $rc_du7 -eq 0 ] && [ \$(nsb2 '$T/sdu') -eq 10 ] && [ \"\$sdu\" = OK ]"
+runr2 "$DU/LU212_ref_r2_s32452843" SLURM_NTASKS=20; rc_du8=$?
+echo ' ' >> "$DU/dev_e0_diag_devu.json"                                                         # 봉인 뒤 기록이 바뀐다
+runr2 "$DU/LU637_ref_r2_s32452843" SLURM_NTASKS=20; rc_du9=$?
+chk 'DU⑥ ★ 시작 직전 관문 — 기록 그대로면 LU212 시작 (LIGGGHTS 가짜) · 봉인 뒤 기록이 바뀌면 LU637 시작 대조가 막는다 (exit 3 · LIGGGHTS 0 · 거부 영수증)' \
+    "[ $rc_du8 -eq 0 ] && grep -q 'fake mpi build' '$DU/LU212_ref_r2_s32452843/log.lmp' && [ $rc_du9 -eq 3 ] && ! [ -e '$DU/LU637_ref_r2_s32452843/log.lmp' ] && ls '$DU/LU637_ref_r2_s32452843'/job_start.refused.*.json >/dev/null 2>&1"
+DU3="$T/du3"                                    # 이름만으로 꾸민다 (가드는 폴더 이름만 본다 — 옛 정규식의 구멍을 새 팔 이름으로 재현)
+for n in LU212_ref_r2_s32452843 LU637_ref_r2_s32452843; do mkdir -p "$DU3/$n"; cp "$R/proto.in" "$DU3/$n/in.mixer"; done
+ru=$(OUT="$DU3" LMP="$FAKE" MAXJ=4 bash "$HERE/run_all.sh" 2>&1)
+mkres LU212_ref_r2_s32452843 $((CK + THERMO)) 0
+rsu=$(OUT="$R" DRY=1 ONLY=LU212_ref_r2_s32452843 bash "$HERE/resume_all.sh" 2>&1)
+chk 'DU⑦ ★ run_all.sh 는 dev-u 셀 (LU212 · LU637) 을 로컬로 띄우지 않는다 · resume_all.sh 는 잇지 않는다 (옛 판: 정규식이 LU 를 몰라 둘 다 했다)' \
+    "! ls '$DU3'/*/pid >/dev/null 2>&1 && [ \$(grep -c '강성 축 셀 건너뜀' <<<\"\$ru\") -eq 2 ] && ! [ -f '$R/LU212_ref_r2_s32452843/in.resume' ] && grep -q '건너뜀: LU212_ref_r2_s32452843' <<<\"\$rsu\""
+rxu=$(python3 - "$HERE" "$ROOT" <<'PY' 2>&1
+import os, re, sys
+here, root = sys.argv[1:]
+sys.path.insert(0, os.path.join(root, 'scripts'))
+import mixer_deck_diff as dd
+bad = []
+for f in ('run_all.sh', 'resume_all.sh'):
+    m = re.search(r'\^\(npprobe\[1-9\]\[0-9\]\*_\)\?\(([A-Za-z0-9|]+)\)_\(soft\|ref\|ref2\)', open(os.path.join(here, f), encoding='utf-8').read())
+    arms = set(m.group(1).split('|')) if m else None
+    if arms != set(dd.STIFF_ARMS) or not {'LU212', 'LU637'} <= (arms or set()):
+        bad.append(f'{f}:{sorted(arms) if arms else None}')
+print('OK' if not bad else 'NG ' + ' '.join(bad))
+PY
+)
+chk 'DU⑧ 단일 출처 — run_all.sh · resume_all.sh 의 강성 축 셀 정규식 팔 목록 = mixer_deck_diff.STIFF_ARMS 이고 dev-u 팔 (LU212 · LU637) 을 담는다 (한쪽만 바뀌면 여기서 걸린다)' \
+    "[ \"\$rxu\" = OK ]"
 echo "test_launcher: $pass PASS / $fail FAIL"
 [ "$fail" -eq 0 ]

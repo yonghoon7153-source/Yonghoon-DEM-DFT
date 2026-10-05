@@ -1,0 +1,166 @@
+
+### python3 scripts/mixer_deck_diff.py docs/data/mixer_highbo_dev_decks_20260930_v26/decks/LC_ref_r2_s32452843/in.mixer docs/data/mixer_highbo_dev_decks_20261005_u/decks/LU212_ref_r2_s32452843/in.mixer --allow A   (기대 rc 1)
+── docs/data/mixer_highbo_dev_decks_20260930_v26/decks/LC_ref_r2_s32452843/in.mixer  →  docs/data/mixer_highbo_dev_decks_20261005_u/decks/LU212_ref_r2_s32452843/in.mixer  (허용목록 A) → FAIL
+   ≠ AM_P–AM_P            108795 →    1.08795e+06   ×10
+   ≠ AM_P–AM_S            108795 →    1.08795e+06   ×10
+   ≠ AM_P–SE             68738.8 →         687388   ×10
+   ≠ AM_P–WALL           59063.2 →         590632   ×10
+   ≠ AM_S–AM_S            142562 →    1.42562e+06   ×10
+   ≠ AM_S–SE             68738.8 →         687388   ×10
+   ≠ AM_S–WALL           77394.6 →         773946   ×10
+   ≠ SE–SE               77056.9 →         770569   ×10
+   ≠ SE–WALL             38616.2 →         386162   ×10
+     WALL–WALL                 0 →              0   ×1
+   ⛔ 허용목록 밖 CED 변화: [('AM_P', 'SE'), ('AM_P', 'WALL'), ('AM_S', 'SE'), ('AM_S', 'WALL'), ('SE', 'SE'), ('SE', 'WALL')]
+→ <재생성 임시 폴더>/dd_0.json
+
+0/1 PASS  ⛔ 짝짓기 근거 없음 — 발사 금지
+(rc 1)
+
+### python3 scripts/mixer_deck_diff.py docs/data/mixer_highbo_dev_decks_20260930_v26/decks/LC_ref_r2_s32452843/in.mixer docs/data/mixer_highbo_dev_decks_20261005_u/decks/LU637_ref_r2_s32452843/in.mixer --allow A   (기대 rc 1)
+── docs/data/mixer_highbo_dev_decks_20260930_v26/decks/LC_ref_r2_s32452843/in.mixer  →  docs/data/mixer_highbo_dev_decks_20261005_u/decks/LU637_ref_r2_s32452843/in.mixer  (허용목록 A) → FAIL
+   ≠ AM_P–AM_P            108795 →     1.5691e+06   ×14.42
+   ≠ AM_P–AM_S            108795 →     1.5691e+06   ×14.42
+   ≠ AM_P–SE             68738.8 →         991385   ×14.42
+   ≠ AM_P–WALL           59063.2 →         851838   ×14.42
+   ≠ AM_S–AM_S            142562 →     2.0561e+06   ×14.42
+   ≠ AM_S–SE             68738.8 →         991385   ×14.42
+   ≠ AM_S–WALL           77394.6 →    1.11622e+06   ×14.42
+   ≠ SE–SE               77056.9 →    1.11135e+06   ×14.42
+   ≠ SE–WALL             38616.2 →         556942   ×14.42
+     WALL–WALL                 0 →              0   ×1
+   ⛔ 허용목록 밖 CED 변화: [('AM_P', 'SE'), ('AM_P', 'WALL'), ('AM_S', 'SE'), ('AM_S', 'WALL'), ('SE', 'SE'), ('SE', 'WALL')]
+→ <재생성 임시 폴더>/dd_1.json
+
+0/1 PASS  ⛔ 짝짓기 근거 없음 — 발사 금지
+(rc 1)
+
+### python3 scripts/mixer_deck_diff.py docs/data/mixer_highbo_dev_decks_20260930_v26/decks/LC_ref_r2_s32452843/in.mixer docs/data/mixer_highbo_dev_decks_20261005_u/decks/LU212_ref_r2_s32452843/in.mixer --allow B   (기대 rc 1)
+── docs/data/mixer_highbo_dev_decks_20260930_v26/decks/LC_ref_r2_s32452843/in.mixer  →  docs/data/mixer_highbo_dev_decks_20261005_u/decks/LU212_ref_r2_s32452843/in.mixer  (허용목록 B) → FAIL
+   ≠ AM_P–AM_P            108795 →    1.08795e+06   ×10
+   ≠ AM_P–AM_S            108795 →    1.08795e+06   ×10
+   ≠ AM_P–SE             68738.8 →         687388   ×10
+   ≠ AM_P–WALL           59063.2 →         590632   ×10
+   ≠ AM_S–AM_S            142562 →    1.42562e+06   ×10
+   ≠ AM_S–SE             68738.8 →         687388   ×10
+   ≠ AM_S–WALL           77394.6 →         773946   ×10
+   ≠ SE–SE               77056.9 →         770569   ×10
+   ≠ SE–WALL             38616.2 →         386162   ×10
+     WALL–WALL                 0 →              0   ×1
+   ⛔ 허용목록 밖 CED 변화: [('AM_P', 'SE'), ('AM_S', 'SE'), ('SE', 'SE'), ('SE', 'WALL')]
+→ <재생성 임시 폴더>/dd_2.json
+
+0/1 PASS  ⛔ 짝짓기 근거 없음 — 발사 금지
+(rc 1)
+
+### python3 scripts/mixer_deck_diff.py docs/data/mixer_highbo_dev_decks_20260930_v26/decks/LC_ref_r2_s32452843/in.mixer docs/data/mixer_highbo_dev_decks_20261005_u/decks/LU637_ref_r2_s32452843/in.mixer --allow B   (기대 rc 1)
+── docs/data/mixer_highbo_dev_decks_20260930_v26/decks/LC_ref_r2_s32452843/in.mixer  →  docs/data/mixer_highbo_dev_decks_20261005_u/decks/LU637_ref_r2_s32452843/in.mixer  (허용목록 B) → FAIL
+   ≠ AM_P–AM_P            108795 →     1.5691e+06   ×14.42
+   ≠ AM_P–AM_S            108795 →     1.5691e+06   ×14.42
+   ≠ AM_P–SE             68738.8 →         991385   ×14.42
+   ≠ AM_P–WALL           59063.2 →         851838   ×14.42
+   ≠ AM_S–AM_S            142562 →     2.0561e+06   ×14.42
+   ≠ AM_S–SE             68738.8 →         991385   ×14.42
+   ≠ AM_S–WALL           77394.6 →    1.11622e+06   ×14.42
+   ≠ SE–SE               77056.9 →    1.11135e+06   ×14.42
+   ≠ SE–WALL             38616.2 →         556942   ×14.42
+     WALL–WALL                 0 →              0   ×1
+   ⛔ 허용목록 밖 CED 변화: [('AM_P', 'SE'), ('AM_S', 'SE'), ('SE', 'SE'), ('SE', 'WALL')]
+→ <재생성 임시 폴더>/dd_3.json
+
+0/1 PASS  ⛔ 짝짓기 근거 없음 — 발사 금지
+(rc 1)
+
+### python3 scripts/mixer_deck_diff.py docs/data/mixer_highbo_dev_decks_20260930_v26/decks/LC_ref_r2_s32452843/in.mixer docs/data/mixer_highbo_dev_decks_20261005_u/decks/LU212_ref_r2_s32452843/in.mixer --allow U --expect-deck <재생성 decks/LU212_ref_r2_s32452843>   (기대 rc 0)
+── docs/data/mixer_highbo_dev_decks_20260930_v26/decks/LC_ref_r2_s32452843/in.mixer  →  docs/data/mixer_highbo_dev_decks_20261005_u/decks/LU212_ref_r2_s32452843/in.mixer  (허용목록 U) → PASS
+   ≠ AM_P–AM_P            108795 →    1.08795e+06   ×10
+   ≠ AM_P–AM_S            108795 →    1.08795e+06   ×10
+   ≠ AM_P–SE             68738.8 →         687388   ×10
+   ≠ AM_P–WALL           59063.2 →         590632   ×10
+   ≠ AM_S–AM_S            142562 →    1.42562e+06   ×10
+   ≠ AM_S–SE             68738.8 →         687388   ×10
+   ≠ AM_S–WALL           77394.6 →         773946   ×10
+   ≠ SE–SE               77056.9 →         770569   ×10
+   ≠ SE–WALL             38616.2 →         386162   ×10
+     WALL–WALL                 0 →              0   ×1
+   공통 배율 ×10 (기하평균 · 퍼짐 0.00e+00 · 허용 2e-05)
+→ <재생성 임시 폴더>/dd_4.json
+
+1/1 PASS
+(rc 0)
+
+### python3 scripts/mixer_deck_diff.py docs/data/mixer_highbo_dev_decks_20260930_v26/decks/LC_ref_r2_s32452843/in.mixer docs/data/mixer_highbo_dev_decks_20261005_u/decks/LU637_ref_r2_s32452843/in.mixer --allow U --expect-deck <재생성 decks/LU637_ref_r2_s32452843>   (기대 rc 0)
+── docs/data/mixer_highbo_dev_decks_20260930_v26/decks/LC_ref_r2_s32452843/in.mixer  →  docs/data/mixer_highbo_dev_decks_20261005_u/decks/LU637_ref_r2_s32452843/in.mixer  (허용목록 U) → PASS
+   ≠ AM_P–AM_P            108795 →     1.5691e+06   ×14.42
+   ≠ AM_P–AM_S            108795 →     1.5691e+06   ×14.42
+   ≠ AM_P–SE             68738.8 →         991385   ×14.42
+   ≠ AM_P–WALL           59063.2 →         851838   ×14.42
+   ≠ AM_S–AM_S            142562 →     2.0561e+06   ×14.42
+   ≠ AM_S–SE             68738.8 →         991385   ×14.42
+   ≠ AM_S–WALL           77394.6 →    1.11622e+06   ×14.42
+   ≠ SE–SE               77056.9 →    1.11135e+06   ×14.42
+   ≠ SE–WALL             38616.2 →         556942   ×14.42
+     WALL–WALL                 0 →              0   ×1
+   공통 배율 ×14.42249 (기하평균 · 퍼짐 5.86e-06 · 허용 2e-05)
+→ <재생성 임시 폴더>/dd_5.json
+
+1/1 PASS
+(rc 0)
+
+### python3 scripts/mixer_deck_diff.py docs/data/mixer_highbo_dev_decks_20261005_u/decks/LU212_ref_r2_s32452843/in.mixer docs/data/mixer_highbo_dev_decks_20261005_u/decks/LU637_ref_r2_s32452843/in.mixer --allow U --expect-deck <재생성 decks/LU637_ref_r2_s32452843>   (기대 rc 0)
+── docs/data/mixer_highbo_dev_decks_20261005_u/decks/LU212_ref_r2_s32452843/in.mixer  →  docs/data/mixer_highbo_dev_decks_20261005_u/decks/LU637_ref_r2_s32452843/in.mixer  (허용목록 U) → PASS
+   ≠ AM_P–AM_P       1.08795e+06 →     1.5691e+06   ×1.442
+   ≠ AM_P–AM_S       1.08795e+06 →     1.5691e+06   ×1.442
+   ≠ AM_P–SE              687388 →         991385   ×1.442
+   ≠ AM_P–WALL            590632 →         851838   ×1.442
+   ≠ AM_S–AM_S       1.42562e+06 →     2.0561e+06   ×1.442
+   ≠ AM_S–SE              687388 →         991385   ×1.442
+   ≠ AM_S–WALL            773946 →    1.11622e+06   ×1.442
+   ≠ SE–SE                770569 →    1.11135e+06   ×1.442
+   ≠ SE–WALL              386162 →         556942   ×1.442
+     WALL–WALL                 0 →              0   ×1
+   공통 배율 ×1.442249 (기하평균 · 퍼짐 5.86e-06 · 허용 2e-05)
+→ <재생성 임시 폴더>/dd_6.json
+
+1/1 PASS
+(rc 0)
+
+### python3 scripts/mixer_deck_diff.py docs/data/mixer_highbo_dev_decks_20260930_v26/decks/LH_ref_r2_s32452843/in.mixer docs/data/mixer_highbo_dev_decks_20261005_u/decks/LU212_ref_r2_s32452843/in.mixer --allow U --expect-deck <재생성 decks/LU212_ref_r2_s32452843>   (기대 rc 1)
+── docs/data/mixer_highbo_dev_decks_20260930_v26/decks/LH_ref_r2_s32452843/in.mixer  →  docs/data/mixer_highbo_dev_decks_20261005_u/decks/LU212_ref_r2_s32452843/in.mixer  (허용목록 U) → FAIL
+   ≠ AM_P–AM_P       3.56348e+06 →    1.08795e+06   ×0.3053
+   ≠ AM_P–AM_S       2.71944e+06 →    1.08795e+06   ×0.4001
+   ≠ AM_P–SE             68738.8 →         687388   ×10
+   ≠ AM_P–WALL       1.93455e+06 →         590632   ×0.3053
+   ≠ AM_S–AM_S       2.71944e+06 →    1.42562e+06   ×0.5242
+   ≠ AM_S–SE             68738.8 →         687388   ×10
+   ≠ AM_S–WALL       1.47634e+06 →         773946   ×0.5242
+   ≠ SE–SE               77056.9 →         770569   ×10
+   ≠ SE–WALL             38616.2 →         386162   ×10
+     WALL–WALL                 0 →              0   ×1
+   공통 배율 ×1.672652 (기하평균 · 퍼짐 3.18e+01 · 허용 2e-05)
+   ⛔ 개입 방향 반대 (증가여야 한다): ['공통 배율 ×0.5242329 < 1 — U 는 같은 γ 세계를 키운다 (증가여야 한다)']
+   ⛔ U 규칙 위반 (배율 하나 · 0 은 0): ['배율이 하나가 아니다 — 퍼짐 31.8 > 허용 2e-05 (×0.3053055 … ×10 · 중앙값 ×0.5242329 에서 먼 쌍 AM_P–SE ×10, AM_S–SE ×10, SE–SE ×10, SE–WALL ×10)']
+→ <재생성 임시 폴더>/dd_7.json
+
+0/1 PASS  ⛔ 짝짓기 근거 없음 — 발사 금지
+(rc 1)
+
+### python3 scripts/mixer_deck_diff.py docs/data/mixer_highbo_dev_decks_20260930_v26/decks/LH_ref_r2_s32452843/in.mixer docs/data/mixer_highbo_dev_decks_20261005_u/decks/LU637_ref_r2_s32452843/in.mixer --allow U --expect-deck <재생성 decks/LU637_ref_r2_s32452843>   (기대 rc 1)
+── docs/data/mixer_highbo_dev_decks_20260930_v26/decks/LH_ref_r2_s32452843/in.mixer  →  docs/data/mixer_highbo_dev_decks_20261005_u/decks/LU637_ref_r2_s32452843/in.mixer  (허용목록 U) → FAIL
+   ≠ AM_P–AM_P       3.56348e+06 →     1.5691e+06   ×0.4403
+   ≠ AM_P–AM_S       2.71944e+06 →     1.5691e+06   ×0.577
+   ≠ AM_P–SE             68738.8 →         991385   ×14.42
+   ≠ AM_P–WALL       1.93455e+06 →         851838   ×0.4403
+   ≠ AM_S–AM_S       2.71944e+06 →     2.0561e+06   ×0.7561
+   ≠ AM_S–SE             68738.8 →         991385   ×14.42
+   ≠ AM_S–WALL       1.47634e+06 →    1.11622e+06   ×0.7561
+   ≠ SE–SE               77056.9 →    1.11135e+06   ×14.42
+   ≠ SE–WALL             38616.2 →         556942   ×14.42
+     WALL–WALL                 0 →              0   ×1
+   공통 배율 ×2.412381 (기하평균 · 퍼짐 3.18e+01 · 허용 2e-05)
+   ⛔ 개입 방향 반대 (증가여야 한다): ['공통 배율 ×0.7560748 < 1 — U 는 같은 γ 세계를 키운다 (증가여야 한다)']
+   ⛔ U 규칙 위반 (배율 하나 · 0 은 0): ['배율이 하나가 아니다 — 퍼짐 31.8 > 허용 2e-05 (×0.440328 … ×14.4225 · 중앙값 ×0.7560748 에서 먼 쌍 SE–WALL ×14.4225, AM_P–SE ×14.4225, AM_S–SE ×14.4225, SE–SE ×14.42246)']
+→ <재생성 임시 폴더>/dd_8.json
+
+0/1 PASS  ⛔ 짝짓기 근거 없음 — 발사 금지
+(rc 1)

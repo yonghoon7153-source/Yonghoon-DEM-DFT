@@ -29,11 +29,16 @@
      EB = E 와 B 를 **동시에**: LC (한 강성) → LH (다른 강성) 에서 B 다섯 쌍은 증가 · 나머지 쌍은 E 규칙.  B 는 그대로 같은 강성
           LC → LH 전용 (E 필드가 다르면 FAIL).  --expect-deck 를 주면 E · EB 는 새 덱이 재생성 덱과 **전 명령 토큰 동일**이어야 한다
           (필드 규칙의 물리 시간 허용 1e-3 보다 작은 step 변조까지 잡는다 — 셀프테스트 ㉜).
-  ⑤ (2026-09-30 · 강성 축 코드 선행조건 2 단계 piece 2) 강성 축 셀 이름 `<E0|LC|LH|LHx10|LHx30>_<soft|ref|ref2>[_dthalf][_r<N>]_s<seed>`
-     (DEV 증거 README §6 · LHx10 · LHx30 = 10-02 개발 탐색 dev-bo 팔 · §11) — parse_cell · cell_expected_deck (이름 → 생성 인자 → 바이트 동일 덱 · ㉟ · ㊸).
-     --runs 는 --ref-arm · --arm 에 **꼬리표** (예 LC_soft_r2 → LC_ref_r2) 를 받아 E · EB · B 를 적용하고 폴더마다 덱 전체를 재생성 덱과
-     바이트 대조한다 (옛 생성기 팔 이름 LC · LH 는 그대로 A · B 전용).  --cohort dev-e0 · dev-rot · dev-bo · confirm = 등록 코호트 (COHORTS ·
+  ⑤ (2026-09-30 · 강성 축 코드 선행조건 2 단계 piece 2) 강성 축 셀 이름 `<E0|LC|LH|LHx10|LHx30|LU212|LU637>_<soft|ref|ref2>[_dthalf][_r<N>]_s<seed>`
+     (DEV 증거 README §6 · LHx10 · LHx30 = 10-02 개발 탐색 dev-bo 팔 · §11 · LU212 · LU637 = 10-05 개발 탐색 dev-u 팔 · §12) — parse_cell ·
+     cell_expected_deck (이름 → 생성 인자 → 바이트 동일 덱 · ㉟ · ㊸ · U①).
+     --runs 는 --ref-arm · --arm 에 **꼬리표** (예 LC_soft_r2 → LC_ref_r2) 를 받아 E · EB · B · U 를 적용하고 폴더마다 덱 전체를 재생성 덱과
+     바이트 대조한다 (옛 생성기 팔 이름 LC · LH 는 그대로 A · B 전용).  --cohort dev-e0 · dev-rot · dev-bo · dev-u · confirm = 등록 코호트 (COHORTS ·
      cohort_pairs — 런처 launch_highbo.sh 의 새 단계가 읽는 단일 출처) 의 셀마다 재생성 바이트 동일 · deck_meta.json · 등록 쌍.
+  ⑥ (--allow U, 2026-10-05 — 강성 축 사전등록 §12 dev-u) U = **균일 γ 배율**: 같은 강성에서 CED **비영 원소 전부**가 한 공통 배율 r > 1 로
+     (0 은 정확히 0 · 퍼짐 max/min − 1 ≤ U_SPREAD_REL = 두 덱 %g 인쇄 반올림) 바뀌고 CED 밖 명령은 토큰까지 같다.  쌍 집합이 아니라 **배율 하나**를
+     허용하므로 SE–SE 한 원소만 바뀐 덱 · 배율이 둘인 덱 · 줄어든 덱 · 빈 비교는 FAIL — LC → LU212 · LU637 에서 B · A 는 FAIL (SE 낀 쌍이 목록 밖)
+     이고 U 만 PASS 한다 (셀프테스트 U③ · U④).
   ⚠ 이 도구는 덱만 본다 — 실행 바이너리 · 재개 이력 · 판독 규약은 사전등록의 발사 기록이 맡는다.
 
 usage
@@ -42,7 +47,8 @@ usage
   python3 scripts/mixer_deck_diff.py <LC_soft/in.mixer> <LC_ref/in.mixer> --allow E [--expect-deck <재생성 LC_ref 덱>]
   python3 scripts/mixer_deck_diff.py <LC_soft/in.mixer> <LH_ref/in.mixer> --allow EB
   python3 scripts/mixer_deck_diff.py --runs <runs> --ref-arm LC_soft_r8 --arm LC_ref_r8 --allow E --expect-seeds 15485863,86028121,104395301
-  python3 scripts/mixer_deck_diff.py --runs <runs> --cohort dev-e0 [--json out.json]           # dev-e0 · dev-rot · dev-bo · confirm
+  python3 scripts/mixer_deck_diff.py <LC_ref_r2/in.mixer> <LU212_ref_r2/in.mixer> --allow U [--expect-deck <재생성 LU212 덱>]
+  python3 scripts/mixer_deck_diff.py --runs <runs> --cohort dev-e0 [--json out.json]           # dev-e0 · dev-rot · dev-bo · dev-u · confirm
   python3 scripts/mixer_deck_diff.py --selftest
 """
 import argparse
@@ -72,6 +78,9 @@ E_RULE = dict(
     exact_rel=1e-12,         # dt 경로 (정수배)
 )
 _E_VAR = {'timestep': {1}, 'run': {1}, 'restart': {1}, 'dump': {4}}      # E 에서 달라도 되는 토큰 위치 (값은 규칙으로 따로 본다)
+#: U 규칙 허용오차 (2026-10-05 · dev-u) — 인쇄 형식에서 비교 **전에** 정한다.  CED 는 %g 6 유효숫자 ⇒ 원소 하나의 배율 오차 ≤ E_RULE['ced_rel'] (1e-5)
+#:   ⇒ 같은 참 배율인 두 원소의 배율은 max/min − 1 ≤ 2 × 1e-5.  그보다 크면 배율이 하나가 아니다.
+U_SPREAD_REL = 2.0 * E_RULE['ced_rel']
 
 
 def _dump_rule(n_run):
@@ -169,6 +178,8 @@ def diff_decks(text_ref, text_new, allow='B', expect=None, expect_text=None):
     """
     if allow in ('E', 'EB'):
         return _diff_decks_E(text_ref, text_new, allow, expect_text=expect_text)
+    if allow == 'U':
+        return _diff_decks_U(text_ref, text_new, expect=expect)
     a, b = parse_deck(text_ref), parse_deck(text_new)
     out = dict(allow=allow, non_ced_diffs=[], changed=[], outside=[], missing=[], wrong_direction=[], target_mismatch=[], table=[])
     if len(a['cmds']) != len(b['cmds']):
@@ -351,6 +362,91 @@ def _diff_decks_E(text_ref, text_new, allow, expect_text=None):
     return out
 
 
+def _diff_decks_U(text_ref, text_new, expect=None):
+    """U 판정 (2026-10-05 · 개발 탐색 dev-u · 강성 축 사전등록 §12) — **균일 γ 배율**.  반환 = diff_decks 와 같은 키 + u_rule · u_ratio · u_spread.
+
+    ① CED 밖 명령 (E · ν · timestep · run · 덤프 · 기하 · 시드 · 삽입) 은 토큰까지 같다 — B 와 같은 비교 (같은 강성).
+    ② CED 명령 머리 · 행렬 크기 같다 · **양쪽** 행렬 유한 · 비음수 · 대칭.
+    ③ CED **비영 원소 전부**가 한 공통 배율 r 로 바뀐다 — 원소 배율의 퍼짐 max/min − 1 ≤ U_SPREAD_REL (두 덱의 %g 인쇄 반올림 · 비교 전에 정함) ·
+       0 은 정확히 0 (벽–벽) · r > 1 (같은 γ 세계를 **키운다** — 줄어든 덱 = 방향 반대 · r = 1 = 빈 비교).
+    ④ `expect` = (n, 값) 을 주면 새 행렬이 그 목표와 1e-5 안에서 같다 (B 와 같은 목표 대조).
+    A · B 처럼 **쌍 집합**을 허용하는 목록이 아니라 **배율 하나**를 허용한다 — 한 원소만 바뀐 덱 (S 형) · 배율이 둘인 덱 · LH 사다리의 덱은 FAIL."""
+    a, b = parse_deck(text_ref), parse_deck(text_new)
+    out = dict(allow='U', non_ced_diffs=[], changed=[], outside=[], missing=[], wrong_direction=[], target_mismatch=[], table=[],
+               u_rule=[], u_ratio=None, u_spread=None)
+    ur = out['u_rule']
+    if len(a['cmds']) != len(b['cmds']):
+        out['non_ced_diffs'].append(f'명령 수 {len(a["cmds"])} ≠ {len(b["cmds"])}')
+    for i, (x, y) in enumerate(zip(a['cmds'], b['cmds'])):
+        if x != y:
+            out['non_ced_diffs'].append(f'#{i}: {" ".join(x)[:120]}  ⇄  {" ".join(y)[:120]}')
+    if a['names'] != b['names']:
+        out['non_ced_diffs'].append(f'타입 이름 {a["names"]} ≠ {b["names"]}')
+    if a['ced_head'] != b['ced_head']:
+        out['non_ced_diffs'].append(f'CED 명령 머리가 다르다: {" ".join(a["ced_head"])}  ⇄  {" ".join(b["ced_head"])}')
+    (na, va), (nb, vb) = a['ced'], b['ced']
+    if na != nb:
+        out['non_ced_diffs'].append(f'CED 행렬 크기 {na} ≠ {nb}')
+        out['verdict'] = 'FAIL'
+        return out
+    nm = [a['names'].get(k + 1, f't{k + 1}') for k in range(na)]
+    for lab, v_ in (('기준', va), ('새', vb)):
+        nbad = sum(not math.isfinite(x) for x in v_)
+        if nbad:
+            out['non_ced_diffs'].append(f'{lab} 덱 CED 에 비유한 값 {nbad} 개')
+        if any(math.isfinite(x) and x < 0 for x in v_):
+            out['non_ced_diffs'].append(f'{lab} 덱 CED 에 음수')
+        for i in range(na):
+            for j in range(i + 1, na):
+                p_, q_ = v_[i * na + j], v_[j * na + i]
+                if math.isfinite(p_) and math.isfinite(q_) and abs(p_ - q_) > REL_TOL * max(abs(p_), 1e-30):
+                    out['non_ced_diffs'].append(f'{lab} 덱 CED 비대칭 ({nm[i]},{nm[j]}): {p_:.6g} vs {q_:.6g}')
+    changed, ratios = set(), {}
+    for i in range(na):
+        for j in range(i, na):
+            x, y = va[i * na + j], vb[i * na + j]
+            pair, lab = tuple(sorted((nm[i], nm[j]))), f'{nm[i]}–{nm[j]}'
+            if (math.isfinite(x) and math.isfinite(y) and abs(y - x) > REL_TOL * max(abs(x), abs(y), 1e-30)) or (math.isfinite(x) != math.isfinite(y)):
+                changed.add(pair)
+            out['table'].append(dict(pair=lab, ref=x, new=y, ratio=(y / x) if x else (float('inf') if y else 1.0)))
+            if x == 0.0:
+                if y != 0.0:
+                    ur.append(f'{lab}: 0 → {y:g} (0 은 정확히 0 이어야 한다)')
+            elif math.isfinite(x) and x > 0.0 and math.isfinite(y) and y > 0.0:
+                ratios[lab] = y / x
+            else:
+                ur.append(f'{lab}: {x:g} → {y:g} (배율을 낼 수 없다 — 비유한 · 0 · 음수)')
+    out['changed'] = sorted(changed)
+    if ratios:
+        lo, hi = min(ratios.values()), max(ratios.values())
+        med = sorted(ratios.values())[len(ratios) // 2]
+        out['u_ratio'] = math.exp(sum(math.log(v) for v in ratios.values()) / len(ratios))      # 기하평균 (보고) · 판정 = 퍼짐 + 방향
+        out['u_spread'] = hi / lo - 1.0
+        if out['u_spread'] > U_SPREAD_REL:
+            far = sorted(ratios, key=lambda k_: -abs(math.log(ratios[k_] / med)))
+            far = [k_ for k_ in far if abs(ratios[k_] / med - 1.0) > U_SPREAD_REL] or far[:1]
+            ur.append(f'배율이 하나가 아니다 — 퍼짐 {out["u_spread"]:.3g} > 허용 {U_SPREAD_REL:.0e} (×{lo:.7g} … ×{hi:.7g} · 중앙값 ×{med:.7g} 에서 먼 쌍 '
+                      + ', '.join(f'{k_} ×{ratios[k_]:.7g}' for k_ in far[:4]) + ')')
+        if med < 1.0 - REL_TOL:
+            out['wrong_direction'].append(f'공통 배율 ×{med:.7g} < 1 — U 는 같은 γ 세계를 키운다 (증가여야 한다)')
+        elif med <= 1.0 + REL_TOL:
+            out['missing'].append(f'공통 배율 ×{med:.7g} = 1 — 개입 없음 (빈 비교)')
+    else:
+        ur.append('비영 CED 원소가 없다 — 배율을 낼 수 없다 (점착 0 팔 · 깨진 덱은 U 비교 대상 아님)')
+    if expect is not None:
+        ne, ve = expect
+        if ne != nb:
+            out['target_mismatch'].append(f'목표 행렬 크기 {ne} ≠ {nb}')
+        else:
+            for i in range(na):
+                for j in range(i, na):
+                    x, y = ve[i * na + j], vb[i * na + j]
+                    if not (math.isfinite(x) and math.isfinite(y)) or abs(y - x) > 1e-5 * max(abs(x), abs(y), 1e-30):
+                        out['target_mismatch'].append(f'{nm[i]}–{nm[j]}: 목표 {x:.6g} vs 새 {y:.6g}')
+    out['verdict'] = 'PASS' if not (out['non_ced_diffs'] or ur or out['missing'] or out['wrong_direction'] or out['target_mismatch']) else 'FAIL'
+    return out
+
+
 # ══ 시드 서명 (2026-09-28, Codex 3차 HBR3-07) ══════════════════════════════════════════════════════════════
 #  왜: 짝 비교는 짝 **안** 에서 같은지만 보고, --runs 의 n/N 은 **디렉터리 이름**만 셌다.  seed 32452843 의 LC/LH 한 쌍을
 #    예정 세 디렉터리 (s32452843 · s49979687 · s67867967) 에 복사하고 --expect-deck 까지 주어도 3/3 PASS · rc 0 이었다
@@ -427,7 +523,7 @@ def expected_deck(arm, seed, n_total=GEN_ARGS['n_total'], cgf=GEN_ARGS['cgf'], r
 
 # ══ 강성 축 셀 이름 · 등록 코호트 (2026-09-30 · 코드 선행조건 2 단계 piece 1 · 2) ══════════════════════════════════════════
 #  이름 규약 (docs/data/mixer_highbo_dev_decks_20260930/README.md §6) — `<팔>_<수준>[_dthalf][_r<바퀴>]_s<seed>`
-#    팔 E0 · LC · LH (+ 10-02 dev-bo 팔 LHx10 · LHx30 = 생성기 팔 이름 그대로) / 수준 soft (×1) · ref (×20 · v2.6) · ref2 (×40) / `_dthalf` = --dt-factor 0.5 /
+#    팔 E0 · LC · LH (+ 10-02 dev-bo 팔 LHx10 · LHx30 · 10-05 dev-u 팔 LU212 · LU637 = 생성기 팔 이름 그대로) / 수준 soft (×1) · ref (×20 · v2.6) · ref2 (×40) / `_dthalf` = --dt-factor 0.5 /
 #    `_r<N>` = --revolutions N
 #    (LC · LH 는 필수 · E0 는 금지 = 회전 0) / seed = 십진 (앞자리 0 없음).  이름 → 생성 인자는 build.sh 의 gen_cmd 와 같다:
 #    경화 (ref · ref2) 면 --stiffen-se F --hold-bo-pairwise · soft 는 강성 옵션 없음 (§3 "생성기 옵션 --stiffen-se 14 --hold-bo-pairwise").
@@ -438,7 +534,9 @@ STIFF_LEVELS = {'soft': 1.0, 'ref': 20.0, 'ref2': 40.0}           # 사전등록
 #:   ⚠ 한 벌이어야 한다: dem_scripts/mixer_20260921/run_all.sh · resume_all.sh 의 강성 축 셀 정규식이 같은 목록을 쓴다 (test_launcher.sh DB⑧ 가 대조) —
 #:   옛 판은 그 정규식이 E0 · LC · LH 만 알아 LHx10_* · LHx30_* 를 로컬로 띄우고 잇는 구멍이 있었다 (DB⑦ 재현).
 DEV_BO_ARMS = ('LHx10', 'LHx30')
-STIFF_ARMS = ('E0', 'LC', 'LH') + DEV_BO_ARMS
+#: ★ 2026-10-05 개발 탐색 dev-u 팔 둘 (사전등록 §12 v2.9 · LC 의 9 비영 CED 를 한 배율 ×10 · ×14.422496 로 = 균일 γ 배율) — 같은 한 벌 규칙 (DU⑧).
+DEV_U_ARMS = ('LU212', 'LU637')
+STIFF_ARMS = ('E0', 'LC', 'LH') + DEV_BO_ARMS + DEV_U_ARMS
 _TAG_PAT = r'(' + '|'.join(sorted(STIFF_ARMS, key=len, reverse=True)) + r')_(soft|ref|ref2)(_dthalf)?(?:_r([1-9][0-9]*))?'
 _TAG_RE = re.compile(_TAG_PAT)
 _CELL_RE = re.compile(_TAG_PAT + r'_s([1-9][0-9]*)')
@@ -495,6 +593,11 @@ DEV_ROT = ('LC_ref_r2_s32452843', 'LH_ref_r2_s32452843')
 #: ★ 개발 탐색 dev-bo (2026-10-02 · 사전등록 §11 v2.8 · 1저자 "ㄱㄱ") — DEV seed 1 의 2 바퀴 M 열람 뒤 정한 두 개발 팔 (같은 seed · ×20 · 2 바퀴 ·
 #:   같은 OUT).  비교 상대 = 이미 돈 DEV_ROT 의 LC_ref_r2 · S_R² 기준 = E0_ref_s32452843.  확인 블록 · 확인 seed 와 섞지 않는다 (cohort_guard).
 DEV_BO = tuple(f'{a_}_ref_r2_s32452843' for a_ in DEV_BO_ARMS)
+#: ★ 개발 탐색 dev-u (2026-10-05 · 사전등록 §12 v2.9 · 1저자 "ㅇㅇ 그러자" · 망 수정보다 낮은 우선순위) — dev-rot · dev-bo M 열람 뒤 정한 두 개발 팔
+#:   (같은 seed · ×20 · 2 바퀴 · 같은 OUT).  비교 상대 = 이미 돈 DEV_ROT 의 LC_ref_r2 · S_R² 기준 = E0_ref_s32452843.  확인 블록과 섞지 않는다 (cohort_guard).
+DEV_U = tuple(f'{a_}_ref_r2_s32452843' for a_ in DEV_U_ARMS)
+#: 개발 탐색 코호트 ↔ 그 코호트만 쓰는 팔 (cohort_guard 의 배타 규칙 — 개발 탐색 팔이 다른 단계 · 확인으로 새지 않게)
+EXCLUSIVE_ARMS = {'dev-bo': DEV_BO_ARMS, 'dev-u': DEV_U_ARMS}
 NP_PROBE = dict(base='E0_ref_s32452843', nps=(5, 10, 20), time='01:00:00')
 DEV_PROBES = tuple(f'npprobe{n_}_{NP_PROBE["base"]}' for n_ in NP_PROBE['nps'])
 CONFIRM_TAGS = ('LC_soft_r8', 'LH_soft_r8', 'LC_ref_r8', 'LH_ref_r8', 'E0_soft', 'E0_ref')
@@ -507,19 +610,25 @@ def confirm_block(seed):
 
 CONFIRM_FIRST = confirm_block(HOLDOUT_SEEDS[0])
 CONFIRM_REST = confirm_block(HOLDOUT_SEEDS[1]) + confirm_block(HOLDOUT_SEEDS[2])
-COHORTS = {'dev-e0': DEV_E0 + DEV_PROBES, 'dev-rot': DEV_ROT, 'dev-bo': DEV_BO, 'confirm': CONFIRM_FIRST + CONFIRM_REST}
+COHORTS = {'dev-e0': DEV_E0 + DEV_PROBES, 'dev-rot': DEV_ROT, 'dev-bo': DEV_BO, 'dev-u': DEV_U, 'confirm': CONFIRM_FIRST + CONFIRM_REST}
+#: DEV 코호트 (DEV seed · ref 만 · 확인 꼬리표 없음 — cohort_guard · 관문 _classify 가 같은 목록을 쓴다)
+DEV_COHORTS = ('dev-e0', 'dev-rot', 'dev-bo', 'dev-u')
 
 
 def cohort_pairs(cohort):
     """코호트 안의 등록 덱 계약 쌍 (허용목록, 기준, 새) — §3: 같은 E 의 LC↔LH = B · E 사이 (같은 팔) = E · soft LC → ref LH = EB (동시).
     dev-bo (10-02 · §11): 코호트 안 쌍 = LHx10 → LHx30 (B — AM–AM 셋 · AM–벽 둘만 증가 · 나머지 정확히 같다).  LC_ref_r2 · LH_ref_r2 대비 B 는
-    커밋 증거 (docs/data/mixer_highbo_dev_decks_20261002_bo/ deck_diff) — 그 둘은 dev-rot 코호트의 이미 돈 덱이라 여기서 다시 읽지 않는다."""
+    커밋 증거 (docs/data/mixer_highbo_dev_decks_20261002_bo/ deck_diff) — 그 둘은 dev-rot 코호트의 이미 돈 덱이라 여기서 다시 읽지 않는다.
+    dev-u (10-05 · §12): 코호트 안 쌍 = LU212 → LU637 (U — 9 비영 CED 가 한 배율 3^(1/3) · 나머지 토큰 동일).  LC_ref_r2 대비 U 는 커밋 증거
+    (docs/data/mixer_highbo_dev_decks_20261005_u/ deck_diff) — LC_ref_r2 는 dev-rot 의 이미 돈 덱이라 여기서 다시 읽지 않는다."""
     if cohort == 'dev-e0':
         return [('E', 'E0_ref_s32452843', 'E0_ref2_s32452843'), ('E', 'E0_ref_s32452843', 'E0_ref_dthalf_s32452843')]
     if cohort == 'dev-rot':
         return [('B', 'LC_ref_r2_s32452843', 'LH_ref_r2_s32452843')]
     if cohort == 'dev-bo':
         return [('B', DEV_BO[0], DEV_BO[1])]
+    if cohort == 'dev-u':
+        return [('U', DEV_U[0], DEV_U[1])]
     if cohort == 'confirm':
         out = []
         for s_ in HOLDOUT_SEEDS:
@@ -534,19 +643,22 @@ def cohort_pairs(cohort):
 def cohort_guard():
     """등록 코호트의 자기 검사 — DEV 는 DEV seed 만 (holdout 금지 · soft 없음 · 확인 꼬리표 없음) · 확인은 holdout 만 · 정확히 3 × 6 ·
     ref2/dthalf 없음 · 회전 8 바퀴.  하나라도 어긋나면 ValueError (런처가 발사 전에 부른다).
-    ★ 10-02 (dev-bo · §11): dev-bo 팔 (LHx10 · LHx30) 은 **dev-bo 코호트에만** · dev-bo 코호트는 그 팔만 (개발 탐색이 다른 단계 · 확인으로 새지 않게)."""
+    ★ 10-02 (dev-bo · §11): dev-bo 팔 (LHx10 · LHx30) 은 **dev-bo 코호트에만** · dev-bo 코호트는 그 팔만 (개발 탐색이 다른 단계 · 확인으로 새지 않게).
+    ★ 10-05 (dev-u · §12): 같은 배타 규칙을 dev-u 팔 (LU212 · LU637) 에도 — 표 EXCLUSIVE_ARMS 한 벌로 본다."""
     why = []
-    dev = COHORTS['dev-e0'] + COHORTS['dev-rot'] + COHORTS['dev-bo']
+    dev = tuple(n_ for k_ in DEV_COHORTS for n_ in COHORTS[k_])
+    sec = {'dev-bo': '§11', 'dev-u': '§12'}
     for k_, names_ in COHORTS.items():
         for n_ in names_:
             try:
                 arm_ = parse_run(n_)['arm']
             except ValueError:
                 continue                                        # 이름 문법 위반은 아래 코호트별 검사가 짚는다
-            if arm_ in DEV_BO_ARMS and k_ != 'dev-bo':
-                why.append(f'{k_} 코호트에 dev-bo 팔 셀 {n_} (dev-bo 팔은 dev-bo 코호트에만 — §11 개발 탐색 · 확인 팔 아님)')
-            if k_ == 'dev-bo' and arm_ not in DEV_BO_ARMS:
-                why.append(f'dev-bo 코호트에 dev-bo 팔이 아닌 셀 {n_} (dev-bo = {list(DEV_BO_ARMS)} 만)')
+            for ck_, arms_ in EXCLUSIVE_ARMS.items():
+                if arm_ in arms_ and k_ != ck_:
+                    why.append(f'{k_} 코호트에 {ck_} 팔 셀 {n_} ({ck_} 팔은 {ck_} 코호트에만 — {sec.get(ck_, "")} 개발 탐색 · 확인 팔 아님)')
+                if k_ == ck_ and arm_ not in arms_:
+                    why.append(f'{ck_} 코호트에 {ck_} 팔이 아닌 셀 {n_} ({ck_} = {list(arms_)} 만)')
     for n_ in dev:
         c_ = parse_run(n_)
         if c_['seed'] in HOLDOUT_SEEDS:
@@ -663,9 +775,10 @@ def check_cohort(runs, cohort):
                 r_ = diff_decks(texts[a_], texts[b_], allow, expect=parse_deck(exp[b_])['ced'])
         except ValueError as e_:
             r_ = dict(verdict='FAIL', non_ced_diffs=[str(e_)])
-        probs = [f'{k_}: {r_[k_][:4]}' for k_ in ('non_ced_diffs', 'outside', 'missing', 'wrong_direction', 'target_mismatch', 'e_rule')
+        probs = [f'{k_}: {r_[k_][:4]}' for k_ in ('non_ced_diffs', 'outside', 'missing', 'wrong_direction', 'target_mismatch', 'e_rule', 'u_rule')
                  if r_.get(k_)]
-        out['pairs'].append(dict(allow=allow, ref=a_, new=b_, verdict=r_['verdict'], e_case=r_.get('e_case'), problems=probs))
+        out['pairs'].append(dict(allow=allow, ref=a_, new=b_, verdict=r_['verdict'], e_case=r_.get('e_case'), problems=probs,
+                                 **({'u_ratio': r_.get('u_ratio')} if allow == 'U' else {})))
     ok_ = all(not v_['problems'] for v_ in out['dirs'].values()) and all(p_['verdict'] == 'PASS' for p_ in out['pairs'])
     out['verdict'] = 'PASS' if ok_ else 'FAIL'
     return out
@@ -680,6 +793,7 @@ def report_cohort(r):
                                    if not v_['problems'] else '⛔ ' + '; '.join(v_['problems'])[:220]))
     for p_ in r['pairs']:
         print(f'   {p_["allow"]:<2s} {p_["ref"]} → {p_["new"]}  {p_["verdict"]}' + (f'  ({p_["e_case"]})' if p_.get('e_case') else '')
+              + (f'  (공통 배율 ×{p_["u_ratio"]:.7g})' if p_.get('u_ratio') is not None else '')
               + ('' if not p_['problems'] else '  ⛔ ' + '; '.join(p_['problems'])[:220]))
 
 
@@ -818,9 +932,11 @@ def report(label, r):
               + (f'   (규칙 {row["rule"]:.6g})' if row.get('rule') is not None and row['rule'] != row['ref'] else ''))
     if r.get('e_case'):
         print(f'   경우: {r["e_case"]}')
+    if r.get('u_ratio') is not None:                         # U (2026-10-05 · dev-u)
+        print(f'   공통 배율 ×{r["u_ratio"]:.7g} (기하평균 · 퍼짐 {r["u_spread"]:.2e} · 허용 {U_SPREAD_REL:.0e})')
     for k, msg in (('non_ced_diffs', 'CED 밖 차이'), ('outside', '허용목록 밖 CED 변화'), ('missing', '개입 누락 (허용 쌍인데 안 바뀜)'),
                    ('wrong_direction', '개입 방향 반대 (증가여야 한다)'), ('target_mismatch', '목표 행렬과 불일치'),
-                   ('e_rule', 'E 규칙 위반')):
+                   ('e_rule', 'E 규칙 위반'), ('u_rule', 'U 규칙 위반 (배율 하나 · 0 은 0)')):
         if r.get(k):
             print(f'   ⛔ {msg}: {r[k][:8]}')
     for p_ in r.get('seed_problems') or ():                 # --runs 만 (2026-09-28, Codex 3차 HBR3-07)
@@ -1366,10 +1482,11 @@ def _selftest():
             return False
         return (all((lambda c_: (c_['arm'], c_['level'], c_['stiffen_se'], c_['hold_bo_pairwise'], c_['dt_factor'], c_['revolutions'],
                                  c_['seed']) == v_)(pc(k_)) for k_, v_ in good.items())
-                and all(rej(x_) for x_ in bad) and tuple(G['STIFF_ARMS']) == ('E0', 'LC', 'LH', 'LHx10', 'LHx30')
+                and all(rej(x_) for x_ in bad) and tuple(G['STIFF_ARMS'])[:5] == ('E0', 'LC', 'LH', 'LHx10', 'LHx30')
                 and tuple(G['DEV_BO_ARMS']) == ('LHx10', 'LHx30'))
+    #  ★ 10-05 — STIFF_ARMS 의 정확한 전체 목록 대조는 U② 로 옮겼다 (dev-u 팔 LU212 · LU637 이 뒤에 붙는다) · 여기서는 dev-bo 때의 앞 다섯을 본다.
     chk('㊹ 셀 이름 문법 확장 — 팔 LHx10 · LHx30 (회전 팔 · _r 필수) 을 받고 옛 팔 (E0 · LC · LH) 파싱은 그대로 · 모르는 배수 (LHx20 · LHx3) · '
-        '대문자 X · 구분자 어긋남 · seed 앞자리 0 거부 · 팔 목록 STIFF_ARMS = E0 · LC · LH · LHx10 · LHx30 (run_all · resume_all 정규식과 한 벌)',
+        '대문자 X · 구분자 어긋남 · seed 앞자리 0 거부 · 팔 목록 STIFF_ARMS 앞 다섯 = E0 · LC · LH · LHx10 · LHx30 (run_all · resume_all 정규식과 한 벌)',
         _ok(_t44))
 
     def _t45():
@@ -1430,13 +1547,178 @@ def _selftest():
         return all(hit) and len(hit) == len(cases)
     chk('㊻ 코호트 가드 확장 — dev-bo 팔 (LHx10 · LHx30) 은 dev-bo 코호트에만 · dev-bo 코호트는 그 팔 · DEV seed · ref 만: dev-bo 에 LC_ref_r2 · '
         'holdout seed · soft · dev-rot 에 LHx10 · 확인에 LHx10_ref_r8 → 거부 (ValueError · 문구가 원인을 짚는다)', _ok(_t46))
-    chk('㊼ 등록 코호트 = confirm · dev-bo · dev-e0 · dev-rot — 옛 셋은 그대로 (DEV_E0 + 프로브 · DEV_ROT · 확인 18 · 쌍) · dev-bo = LHx10_ref_r2 · '
+    #  ★ 10-05 — 코호트 이름 전체의 정확한 대조는 U⑦ 로 옮겼다 (dev-u 가 더해졌다) · 여기서는 dev-bo 때의 넷이 그대로 있는지 본다.
+    chk('㊼ 등록 코호트 ⊇ confirm · dev-bo · dev-e0 · dev-rot — 옛 셋은 그대로 (DEV_E0 + 프로브 · DEV_ROT · 확인 18 · 쌍) · dev-bo = LHx10_ref_r2 · '
         'LHx30_ref_r2 (seed 32452843) 정확히 · 쌍 = B (LHx10 → LHx30)',
-        _ok(lambda: sorted(G['COHORTS']) == ['confirm', 'dev-bo', 'dev-e0', 'dev-rot']
+        _ok(lambda: {'confirm', 'dev-bo', 'dev-e0', 'dev-rot'} <= set(G['COHORTS'])
             and G['COHORTS']['dev-e0'] == G['DEV_E0'] + G['DEV_PROBES'] and G['COHORTS']['dev-rot'] == ('LC_ref_r2_s32452843', 'LH_ref_r2_s32452843')
             and len(G['COHORTS']['confirm']) == 18 and G['COHORTS']['dev-bo'] == BO_CELLS == tuple(G['DEV_BO'])
             and G['cohort_pairs']('dev-rot') == [('B', 'LC_ref_r2_s32452843', 'LH_ref_r2_s32452843')]
             and G['cohort_pairs']('dev-bo') == [('B',) + BO_CELLS]))
+
+    # ══ U①~U⑦ 2026-10-05 — 개발 탐색 dev-u (강성 축 사전등록 docs/reviews/mixer_highbo_stiffness_prereg_20260929.md §12 · v2.9) · 허용목록 U
+    #    (균일 γ 배율 — CED 비영 원소 **전부**가 한 공통 배율 r > 1 · 0 은 정확히 0 · CED 밖 명령은 토큰까지 같다) · 코호트 dev-u.
+    #    ★ 반례를 먼저 옮겼다 — 옛 판: 셀 이름 문법이 LU212 · LU637 을 거부 · COHORTS 에 dev-u 없음 · --allow U 없음 (diff_decks 가 ALLOW['U'] 에서
+    #      KeyError · argparse choices) ⇒ U①~U⑦ 전부 FAIL.
+    U_EVD = os.path.normpath(os.path.join(_HERE, '..', 'docs', 'data', 'mixer_highbo_dev_decks_20261005_u'))
+    U_CELLS = ('LU212_ref_r2_s32452843', 'LU637_ref_r2_s32452843')
+    _lcr = open(os.path.join(EVD, 'decks', 'LC_ref_r2_s32452843', 'in.mixer'), encoding='utf-8').read()   # ibb dev-rot 에서 돈 덱 (비교 상대)
+    _lhr = open(os.path.join(EVD, 'decks', 'LH_ref_r2_s32452843', 'in.mixer'), encoding='utf-8').read()
+
+    def _udeck(arm, F=20.0):
+        """생성기 CLI 와 같은 덱 (2 바퀴 · seed 32452843 · F = 1 이면 soft · 아니면 ×F + hold) — 증거 폴더에 기대지 않는다."""
+        return G['expected_deck'](arm, 32452843, revolutions=2, stiffen_se=F, hold_bo_pairwise=(F != 1.0))
+
+    def _t_u1():
+        return all(G['cell_expected_deck'](n_) == open(os.path.join(U_EVD, 'decks', n_, 'in.mixer'), encoding='utf-8').read() for n_ in U_CELLS)
+    chk('U① ★ cell_expected_deck(LU212_ref_r2 · LU637_ref_r2 · seed 32452843) = 커밋된 dev-u 증거 덱 (바이트 동일 — build.sh 의 gen_cmd 와 같은 규칙)',
+        _ok(_t_u1))
+
+    def _t_u2():
+        pc = G['parse_cell']
+        good = {'LU212_ref_r2_s32452843': ('LU212', 'ref', 20.0, True, 1.0, 2, 32452843),
+                'LU637_ref_r2_s32452843': ('LU637', 'ref', 20.0, True, 1.0, 2, 32452843),
+                'LHx10_ref_r2_s32452843': ('LHx10', 'ref', 20.0, True, 1.0, 2, 32452843),
+                'LC_ref_r2_s32452843': ('LC', 'ref', 20.0, True, 1.0, 2, 32452843),
+                'E0_ref_s32452843': ('E0', 'ref', 20.0, True, 1.0, 0, 32452843)}
+        bad = ('LU212_ref_s32452843', 'LU850_ref_r2_s32452843', 'LU21_ref_r2_s32452843', 'LU2120_ref_r2_s32452843', 'lu212_ref_r2_s32452843',
+               'LU_ref_r2_s32452843', 'LU212ref_r2_s32452843', 'LU_212_ref_r2_s32452843', 'LU212_ref_r2_s032452843', 'LU637_hard_r2_s32452843')
+
+        def rej(x_):
+            try:
+                pc(x_)
+            except ValueError:
+                return True
+            return False
+        return (all((lambda c_: (c_['arm'], c_['level'], c_['stiffen_se'], c_['hold_bo_pairwise'], c_['dt_factor'], c_['revolutions'],
+                                 c_['seed']) == v_)(pc(k_)) for k_, v_ in good.items())
+                and all(rej(x_) for x_ in bad) and tuple(G['STIFF_ARMS']) == ('E0', 'LC', 'LH', 'LHx10', 'LHx30', 'LU212', 'LU637')
+                and tuple(G['DEV_U_ARMS']) == ('LU212', 'LU637'))
+    chk('U② 셀 이름 문법 확장 — 팔 LU212 · LU637 (회전 팔 · _r 필수) 을 받고 옛 팔 파싱은 그대로 · 모르는 수준 (LU850 · LU21 · LU2120) · 소문자 · '
+        '구분자 어긋남 · seed 앞자리 0 · 모르는 강성 거부 · 팔 목록 STIFF_ARMS = E0 · LC · LH · LHx10 · LHx30 · LU212 · LU637 (run_all · resume_all 정규식과 한 벌)',
+        _ok(_t_u2))
+
+    def _t_u3():
+        e2, e6 = _udeck('LU212'), _udeck('LU637')
+        r2, r6, r26 = diff_decks(_lcr, e2, 'U'), diff_decks(_lcr, e6, 'U'), diff_decks(e2, e6, 'U')
+        rs = diff_decks(_udeck('LC', 1.0), _udeck('LU212', 1.0), 'U')                          # soft 짝도 같은 규칙
+        sp = G['U_SPREAD_REL']
+        with _tf.TemporaryDirectory() as td_:
+            pa, pb = os.path.join(td_, 'a.mixer'), os.path.join(td_, 'b.mixer')
+            open(pa, 'w', encoding='utf-8').write(_lcr)
+            open(pb, 'w', encoding='utf-8').write(e2)
+            c2 = _cli([pa, pb, '--allow', 'U', '--expect-deck', pb])
+            for n_, t_ in (('LC_ref_r2_s32452843', _lcr), ('LU212_ref_r2_s32452843', e2)):
+                os.makedirs(os.path.join(td_, 'runs', n_))
+                open(os.path.join(td_, 'runs', n_, 'in.mixer'), 'w', encoding='utf-8').write(t_)
+            cr = _cli(['--runs', os.path.join(td_, 'runs'), '--ref-arm', 'LC_ref_r2', '--arm', 'LU212_ref_r2', '--allow', 'U', '--expect-seeds', '32452843'])
+        ok_ = (all(r_['verdict'] == 'PASS' for r_ in (r2, r6, r26, rs)) and len(r2['changed']) == len(r6['changed']) == 9
+               and abs(r2['u_ratio'] / 10.0 - 1.0) <= sp and abs(r6['u_ratio'] / 3000.0 ** (1.0 / 3.0) - 1.0) <= sp
+               and abs(r26['u_ratio'] / 3.0 ** (1.0 / 3.0) - 1.0) <= sp and max(r_['u_spread'] for r_ in (r2, r6, r26, rs)) <= sp
+               and c2[0] == 0 and '공통 배율' in c2[1] and cr[0] == 0 and '1/1 PASS' in cr[1])
+        if not ok_:
+            print(f'        {[(r_["verdict"], r_.get("u_ratio"), r_.get("u_spread"), r_.get("u_rule")) for r_ in (r2, r6, r26, rs)]} · rc {c2[0]} / {cr[0]}')
+        return ok_
+    chk('U③ ★ --allow U (균일 γ 배율) — LC_ref_r2 (ibb dev-rot 실행 덱) → LU212 · LU637 (×20 · 생성기 덱) · LU212 → LU637 · soft LC → LU212 = PASS · '
+        '바뀐 쌍 9 · 공통 배율 ×10 · ×14.422496 · ×3^(1/3) (퍼짐 ≤ 2e-5 = %g 인쇄 반올림 둘) · CLI 두 덱 rc 0 · --runs 새 꼬리표 U rc 0', _ok(_t_u3))
+
+    def _t_u4():
+        lu2 = _udeck('LU212')
+        c01 = _ced(_lcr, 0, 1)
+        bad = {'se_only': diff_decks(_lcr, _mutrow(_lcr, 2, 2, lambda v: f'{v * 10:.6g}', sym=True), 'U'),           # SE–SE 한 원소만 ×10
+               'E': diff_decks(_lcr, re.sub(r'(youngsModulus peratomtype \S+ \S+ )2e\+08', r'\g<1>2.2e+08', lu2, count=1), 'U'),   # 균일 ×10 + SE 영률
+               'two_ratios': diff_decks(_lcr, _mutrow(lu2, 0, 1, lambda v: f'{c01 * 11:.6g}', sym=True), 'U'),        # AM_P–AM_S 만 ×11
+               'as_B': diff_decks(_lcr, lu2, 'B'), 'as_A': diff_decks(_lcr, lu2, 'A'),                              # U 덱을 B · A 로
+               'same': diff_decks(_lcr, _lcr, 'U'),                                                                # 빈 비교
+               'down': diff_decks(lu2, _lcr, 'U'),                                                                 # 방향 반대 (×0.1)
+               'wallwall': diff_decks(_lcr, _mutrow(lu2, 3, 3, lambda v: '1'), 'U'),                               # 벽–벽 0 → 1
+               'dt': diff_decks(_lcr, re.sub(r'^timestep\s+(\S+)', lambda mm: f'timestep {float(mm.group(1)) * 1.01:.4g}', lu2,
+                                            count=1, flags=re.M), 'U'),                                           # 균일 ×10 + timestep
+               'vs_LH': diff_decks(_lhr, lu2, 'U'),                                                                # LH 사다리 위가 아니다
+               'nan': diff_decks(_lcr, _mutrow(lu2, 2, 2, lambda v: 'nan', sym=True), 'U'),
+               'target': diff_decks(_lcr, lu2, 'U', expect=parse_deck(_udeck('LU637'))['ced'])}                  # 목표 = LU637 인데 LU212 덱
+        ur = {k_: ' · '.join(r_.get('u_rule') or []) for k_, r_ in bad.items()}
+        why = dict(se_only='배율이 하나가 아니다' in ur['se_only'] and 'SE–SE' in ur['se_only'],
+                   E=any('youngsModulus' in x_ for x_ in bad['E']['non_ced_diffs']),
+                   two_ratios='배율이 하나가 아니다' in ur['two_ratios'] and 'AM_P–AM_S' in ur['two_ratios'],
+                   as_B=('SE', 'SE') in bad['as_B']['outside'], as_A=('SE', 'SE') in bad['as_A']['outside'] and ('AM_P', 'WALL') in bad['as_A']['outside'],
+                   same=bool(bad['same']['missing']), down=bool(bad['down']['wrong_direction']), wallwall='정확히 0' in ur['wallwall'],
+                   dt=any('timestep' in x_ for x_ in bad['dt']['non_ced_diffs']), vs_LH='배율이 하나가 아니다' in ur['vs_LH'],
+                   nan=any('비유한' in x_ for x_ in bad['nan']['non_ced_diffs']), target=bool(bad['target']['target_mismatch']))
+        ok_ = all(r_['verdict'] == 'FAIL' for r_ in bad.values()) and all(why.values())
+        if not ok_:
+            print('        ' + ' · '.join(f'{k_}:{bad[k_]["verdict"]}/{"✓" if why[k_] else "✗"}' for k_ in bad))
+        return ok_
+    chk('U④ ★ 반례 → FAIL (사유를 짚는다): SE–SE 한 원소만 ×10 · 균일 ×10 인데 SE 영률 다름 · 두 배율 (AM_P–AM_S 만 ×11) · U 덱을 --allow B · A 로 '
+        '(SE 낀 쌍이 허용목록 밖 = U 가 통과하는 가장 좁은 목록) · 같은 덱 (빈 비교) · 줄어든 덱 · 벽–벽 0 → 1 · 균일 ×10 인데 timestep 다름 · LH 덱 대비 · NaN · '
+        '목표 행렬 불일치', _ok(_t_u4))
+
+    def _t_u5():
+        if not os.path.isdir(os.path.join(U_EVD, 'decks')):
+            return False
+        with _tf.TemporaryDirectory() as td_:
+            o_ = os.path.join(td_, 'u')
+            for n_ in U_CELLS:
+                shutil.copytree(os.path.join(U_EVD, 'decks', n_), os.path.join(o_, n_))
+            r_ok = G['check_cohort'](o_, 'dev-u')
+            c_ok = _cli(['--runs', o_, '--cohort', 'dev-u'])
+            bad = {}
+            pa, pb = (os.path.join(o_, n_, 'in.mixer') for n_ in U_CELLS)
+            ka, kb = open(pa, encoding='utf-8').read(), open(pb, encoding='utf-8').read()
+            open(pa, 'w', encoding='utf-8').write(kb)                                  # (a) LU637 덱을 LU212 폴더에
+            bad['swap'] = G['check_cohort'](o_, 'dev-u')['verdict']
+            open(pa, 'w', encoding='utf-8').write(_lcr)                                # (b) LC_ref_r2 덱 (비교 상대) 을 LU212 폴더에
+            bad['lc_deck'] = G['check_cohort'](o_, 'dev-u')['verdict']
+            open(pa, 'w', encoding='utf-8').write(ka)
+            mp_ = os.path.join(o_, U_CELLS[1], 'deck_meta.json')                       # (c) 경화 셀인데 deck_meta 없음
+            km = open(mp_, encoding='utf-8').read()
+            os.remove(mp_)
+            bad['meta'] = G['check_cohort'](o_, 'dev-u')['verdict']
+            open(mp_, 'w', encoding='utf-8').write(km)
+            shutil.rmtree(os.path.join(o_, U_CELLS[1]))                               # (d) 셀 폴더 없음
+            bad['missing'] = G['check_cohort'](o_, 'dev-u')['verdict']
+            c_bad = _cli(['--runs', o_, '--cohort', 'dev-u'])
+            ok_ = (r_ok['verdict'] == 'PASS' and sorted(r_ok['dirs']) == sorted(U_CELLS)
+                   and [(p_['allow'], p_['ref'], p_['new'], p_['verdict']) for p_ in r_ok['pairs']] == [('U',) + U_CELLS + ('PASS',)]
+                   and c_ok[0] == 0 and all(v_ == 'FAIL' for v_ in bad.values()) and c_bad[0] == 1)
+            if not ok_:
+                print(f'        {r_ok["verdict"]} · {bad} · rc {c_ok[0]} / {c_bad[0]}')
+            return ok_
+    chk('U⑤ ★ --cohort dev-u (커밋 증거 덱 사본) → PASS (2 폴더 · U 쌍 하나 = LU212 → LU637 · 재생성 바이트 동일 · deck_meta) · 반례 → FAIL: '
+        '덱 바꿔치기 · LC_ref_r2 덱 · deck_meta 없음 · 셀 폴더 없음 (CLI rc 1)', _ok(_t_u5))
+
+    def _t_u6():
+        gd = G['cohort_guard']
+        gd()                                                     # 등록 코호트는 통과해야 한다
+        cases = [('dev-u', U_CELLS + ('LHx10_ref_r2_s32452843',), 'dev-u'),            # dev-bo 셀을 dev-u 에
+                 ('dev-bo', G['DEV_BO'] + (U_CELLS[0],), 'dev-u'),                     # dev-u 셀을 dev-bo 에
+                 ('dev-u', (U_CELLS[0], 'LU637_ref_r2_s15485863'), 'holdout'),          # holdout seed
+                 ('dev-u', (U_CELLS[0], 'LU637_soft_r2_s32452843'), 'soft'),            # soft 수준
+                 ('dev-rot', G['DEV_ROT'] + (U_CELLS[0],), 'dev-u'),                   # dev-u 팔을 dev-rot 에
+                 ('confirm', G['COHORTS']['confirm'][:-1] + ('LU212_ref_r8_s15485863',), '확인')]
+        hit = []
+        for k_, v_, need in cases:
+            saved = G['COHORTS'][k_]
+            try:
+                G['COHORTS'][k_] = v_
+                try:
+                    gd()
+                    hit.append(False)
+                except ValueError as e_:
+                    hit.append(need in str(e_))
+                    if need not in str(e_):
+                        print(f'        ({k_}: {str(e_)[:120]})')
+            finally:
+                G['COHORTS'][k_] = saved
+        gd()
+        return all(hit) and len(hit) == len(cases)
+    chk('U⑥ 코호트 가드 확장 — dev-u 팔 (LU212 · LU637) 은 dev-u 코호트에만 · dev-u 코호트는 그 팔 · DEV seed · ref 만: dev-u 에 LHx10_ref_r2 · dev-bo 에 '
+        'LU212 · holdout seed · soft · dev-rot 에 LU212 · 확인에 LU212_ref_r8 → 거부 (ValueError · 문구가 원인을 짚는다)', _ok(_t_u6))
+    chk('U⑦ 등록 코호트 = confirm · dev-bo · dev-e0 · dev-rot · dev-u — 옛 넷 그대로 · dev-u = LU212_ref_r2 · LU637_ref_r2 (seed 32452843) 정확히 · '
+        '쌍 = U (LU212 → LU637)',
+        _ok(lambda: sorted(G['COHORTS']) == ['confirm', 'dev-bo', 'dev-e0', 'dev-rot', 'dev-u']
+            and G['COHORTS']['dev-u'] == U_CELLS == tuple(G['DEV_U']) and G['cohort_pairs']('dev-u') == [('U',) + U_CELLS]
+            and G['cohort_pairs']('dev-bo') == [('B',) + tuple(G['DEV_BO'])]))
     print(f'\nmixer_deck_diff selftest: {ok}/{ok + len(fail)} PASS' + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0
 
@@ -1444,17 +1726,18 @@ def _selftest():
 def main():
     ap = argparse.ArgumentParser(description='믹서 실행 덱 두 벌의 CED 차이 = 허용목록인가 (Codex HB-03)')
     ap.add_argument('decks', nargs='*', help='<기준 덱> <새 덱>')
-    ap.add_argument('--allow', choices=sorted(ALLOW) + ['E', 'EB'], default='B',
+    ap.add_argument('--allow', choices=sorted(ALLOW) + ['E', 'EB', 'U'], default='B',
                     help='B = 같은 강성 LC→LH (다섯 쌍) · A = AM–AM 셋 · E = 같은 팔 · 다른 강성 (또는 dt 만 1/k) · '
-                         'EB = LC→LH 이면서 다른 강성 (E 와 B 동시).  E · EB 는 두 덱 모드 전용')
+                         'EB = LC→LH 이면서 다른 강성 (E 와 B 동시) · U = 같은 강성 · CED 비영 원소 전부 한 공통 배율 > 1 (균일 γ 배율 · dev-u).  '
+                         'E · EB 는 두 덱 모드 전용')
     ap.add_argument('--runs', help='runs 디렉터리 — <ref-arm>_s<시드>/in.mixer 와 <arm>_s<시드>/in.mixer 를 같은 시드끼리 '
                                    '+ 디렉터리마다 실제 시드 서명 = 생성기 기대 서명 · 시드 간 고유 (HBR3-07).  ★ --ref-arm · --arm 에 강성 축 '
                                    '꼬리표 (예 LC_soft_r2 · LH_ref_r2 · E0_ref) 를 주면 E · EB 도 받고 폴더마다 덱 전체를 재생성 덱과 바이트 대조한다')
     ap.add_argument('--ref-arm', default='LC', help='기준 팔 — 생성기 팔 이름 (LC) 또는 강성 축 꼬리표 (LC_soft_r8)')
     ap.add_argument('--arm', default='LH', help='새 팔 — 생성기 팔 이름 (LH) 또는 강성 축 꼬리표 (LH_ref_r8)')
     ap.add_argument('--cohort', choices=sorted(COHORTS), default=None,
-                    help='(--runs 와 함께) 등록 코호트 dev-e0 · dev-rot · dev-bo · confirm 의 덱 계약 — 셀마다 재생성 바이트 동일 · deck_meta · '
-                         '등록 쌍 (B · E · EB).  런처 launch_highbo.sh 의 새 단계 관문')
+                    help='(--runs 와 함께) 등록 코호트 dev-e0 · dev-rot · dev-bo · dev-u · confirm 의 덱 계약 — 셀마다 재생성 바이트 동일 · deck_meta · '
+                         '등록 쌍 (B · E · EB · U).  런처 launch_highbo.sh 의 새 단계 관문')
     ap.add_argument('--expect-seeds', default=None,
                     help='(--runs) 있어야 할 시드 목록 "a,b,c" — 기본 = 생성기 CAMPAIGN_SEEDS.  하나라도 빠지면 FAIL (n/N 을 기계가 센다) · '
                          '목록 밖 <arm>_s* · <ref-arm>_s* 디렉터리가 있어도 FAIL (예정 밖 — 짝 수에 넣지 않는다)')

@@ -15,6 +15,7 @@
 #     같은 seed **새 폴더** 한 번 재실행).  이어 붙이면 판정 도구 (정지 벽 계약 · 영수증) 가 재개 흔적으로 거부한다 — 그 전에 여기서 막는다.
 #   ★ 2026-10-02 — 팔 목록에 dev-bo 팔 LHx10 · LHx30 (사전등록 §11) 을 더했다 (옛 정규식은 그 이름을 몰라 이어 붙였다 · test_launcher.sh DB⑦) ·
 #     팔 목록 = scripts/mixer_deck_diff.STIFF_ARMS (DB⑧ 가 run_all.sh 와 함께 대조).
+#   ★ 2026-10-05 — dev-u 팔 LU212 · LU637 (사전등록 §12) 도 더했다 (옛 정규식은 LU212_* 를 이어 붙였다 · test_launcher.sh DU⑦ · DU⑧).
 set -euo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"; ROOT="$(cd "$HERE/../.." && pwd)"
 OUT="${OUT:-$HERE/runs}"
@@ -88,7 +89,7 @@ for d in "$OUT"/*_s*/; do
   d="${d%/}"; nm=$(basename "$d")
   [ -f "$d/in.mixer" ] || continue
   case "$nm" in *_old_*) continue;; esac
-  if [[ "$nm" =~ ^(npprobe[1-9][0-9]*_)?(E0|LC|LH|LHx10|LHx30)_(soft|ref|ref2)(_dthalf)?(_r[1-9][0-9]*)?_s[1-9][0-9]*$ ]]; then echo "· 강성 축 셀 — 재개 없음 (fresh 전용 · §8-1) — 건너뜀: $nm"; continue; fi
+  if [[ "$nm" =~ ^(npprobe[1-9][0-9]*_)?(E0|LC|LH|LHx10|LHx30|LU212|LU637)_(soft|ref|ref2)(_dthalf)?(_r[1-9][0-9]*)?_s[1-9][0-9]*$ ]]; then echo "· 강성 축 셀 — 재개 없음 (fresh 전용 · §8-1) — 건너뜀: $nm"; continue; fi
   [ -n "${ONLY:-}" ] && [ "$nm" != "$ONLY" ] && continue
   if [ -f "$d/pid" ] && kill -0 "$(cat "$d/pid")" 2>/dev/null; then echo "· 실행 중 — 건너뜀: $nm"; continue; fi
   [ -f "$d/log.lmp" ] || { echo "· 로그 없음 (아직 안 돈 런 — run_all.sh 소관): $nm"; continue; }

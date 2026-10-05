@@ -13,12 +13,14 @@
   E0   E0 팔 · 다른 강성: 위 + 두 덱 모두 **전 점착 0** (정확히)
   DT   같은 강성 · dt 만 1/k: E · ν · CED 정확히 같다 · dt 정확히 1/k (k = 2 등록) · 정착 · 회전 · 덤프 step 정확히 k 배 · 계획 t₀ 시각 같다
   B    같은 강성 · LC ↔ LH (OLD = LC · NEW = LH): 다섯 쌍 (AM–AM 셋 · AM–벽 둘) 만 증가 · 나머지 전부 **정확히** 같다 · 0 기준 비 N/A
+  U    (2026-10-05 · 개발 탐색 dev-u · 강성 축 사전등록 §12) 같은 강성 · LC → LU (OLD = LC · NEW = LU): **9 비영 항 전부 한 공통 배율**
+       (퍼짐 max/min − 1 ≤ u_spread_rel) · 배율 > 1 · 벽–벽 0 — 균일 γ 배율 (쌍 집합이 아니라 배율 하나를 허용)
   공통: 파싱 (필수 명령 · run 구조 [1, F, F, N]) · 타입 사전 (밀도 · 반지름 비 · 템플릿 시드 · 메시 타입) = 등록 · 대칭 · 벽–벽 0 ·
-        dt = Rayleigh 규칙을 **이 덱의** E · ν · 반지름 · 밀도로 다시 낸 값 (E · E0 · DT 옛 덱: 그대로 · B: 정확히 1/k) ·
+        dt = Rayleigh 규칙을 **이 덱의** E · ν · 반지름 · 밀도로 다시 낸 값 (E · E0 · DT 옛 덱: 그대로 · B · U: 정확히 1/k) ·
         허용 밖 명령은 토큰까지 같다 (주석은 **메타**로 따로 센다 — 판정 밖)
 
 허용오차 — 인쇄 형식에서 **비교 전에** 정한다 (결과를 보고 넓히지 않는다 · `TOL`)
-  CED `%g` = 6 유효숫자 → 한 값 ≤ 5e-6 · 두 값 배수 ≤ 1e-5 · F₀ ∝ CED³ → 비 ≤ 3e-5
+  CED `%g` = 6 유효숫자 → 한 값 ≤ 5e-6 · 두 값 배수 ≤ 1e-5 · F₀ ∝ CED³ → 비 ≤ 3e-5 · 같은 참 배율인 두 원소의 배율 퍼짐 ≤ 2e-5 (표 U)
   E · ν 는 **덱 값이 곧 시뮬레이션 값**이라 오차로 치지 않는다 (생성기가 4 유효숫자 밖 경화 배수를 거부 — ST⑧)
   dt `.4g` → 5e-4 (생성기는 반올림 **전** dt 로 step 을 센다) ⇒ 표 E 의 물리 시간 대조 = 2 × 5e-4 × T + 반올림 step
     ⚠ 한계: 그보다 작은 step 변조는 표 E 가 못 잡는다 — `mixer_deck_diff.py --allow E --expect-deck` (재생성 덱 · 전 명령 토큰 동일) 의 몫
@@ -27,6 +29,7 @@
 usage
   python3 scripts/mixer_deck_readback.py --table E  <LC_soft/in.mixer> <LC_ref/in.mixer> \\
                                          --table B  <LC_ref/in.mixer>  <LH_ref/in.mixer> --json out.json --md out.md
+  python3 scripts/mixer_deck_readback.py --table U  <LC_ref_r2/in.mixer> <LU212_ref_r2/in.mixer> --json out.json --md out.md
   python3 scripts/mixer_deck_readback.py --selftest
 """
 import argparse
@@ -39,8 +42,8 @@ import sys
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
 TOOL = 'scripts/mixer_deck_readback.py'
-TOOL_VERSION = 'mixer_deck_readback/1 (2026-09-30)'
-KINDS = ('E', 'E0', 'DT', 'B')
+TOOL_VERSION = 'mixer_deck_readback/2 (2026-10-05 · 표 U)'
+KINDS = ('E', 'E0', 'DT', 'B', 'U')
 
 #: ── 등록 상수 (사본 — 생성기를 import 하지 않는다) ─────────────────────────────────────────────────────────────
 #: 사전등록 docs/reviews/mixer_highbo_stiffness_prereg_20260929.md §3 · 모체 §2-2 · 생성기 TPL_SEED · D_REAL_UM · E_PHASE · PHASE_MECH
@@ -80,6 +83,7 @@ TOL = dict(
     codex_estar_rel=1e-9,                                     # Codex 산술 (9–10 자리) ↔ 덱 E 로 계산한 E* 배수
     dt_print_rel=0.5 * 10.0 ** (1 - DT_SIG),                  # 5e-4  — dt `.4g` (생성기는 반올림 전 dt 로 step 을 센다)
     exact_rel=1e-12,                                          # DT 표 · 정수배 · 같은 인쇄 토큰
+    u_spread_rel=2 * 2 * 0.5 * 10.0 ** (1 - CED_SIG),         # 2e-5  — 표 U: 같은 참 배율인 두 원소의 배율 퍼짐 (배율 하나 = 두 반올림 · 두 원소)
 )
 TOL_WHY = dict(
     ced_value_rel='CED 는 %g (6 유효숫자) 로 찍힌다 — 한 값의 반올림 상한 0.5×10^(1−6)',
@@ -90,6 +94,7 @@ TOL_WHY = dict(
     codex_estar_rel='Codex 7 차 §5 표는 9–10 자리로 적혀 있다',
     dt_print_rel='timestep 은 .4g — 생성기가 반올림 전 dt 로 step 을 세므로 두 덱의 물리 시간이 이만큼 어긋날 수 있다',
     exact_rel='DT 표 (dt 정확히 1/k · step 정확히 k 배) · 부동소수 비교 여유',
+    u_spread_rel='표 U — 원소 하나의 배율 오차 ≤ 두 반올림 (1e-5) ⇒ 같은 참 배율인 두 원소 배율의 max/min − 1 ≤ 2 × 1e-5',
 )
 DUMP_RULE = 'dump 간격 = max(1000, 회전 step // 200)'
 RAYLEIGH_RULE = 'dt = min_t 0.2·π·r_t·√(ρ_t/G_t)/(0.1631ν_t + 0.8766) · G = E/(2(1+ν)) (생성기 plan() 의 식 사본)'
@@ -296,7 +301,7 @@ def _var_positions(t, kind):
     if t[0] == 'fix' and len(t) > 5 and t[3] == 'property/global':
         if kind in ('E', 'E0') and t[4] == 'youngsModulus':
             return set(range(6, len(t)))
-        if kind in ('E', 'E0', 'B') and t[4] == 'cohesionEnergyDensity':
+        if kind in ('E', 'E0', 'B', 'U') and t[4] == 'cohesionEnergyDensity':
             return set(range(7, len(t)))
     return set()
 
@@ -365,11 +370,11 @@ def compare(kind, A, B):
             check(f'dt = Rayleigh 규칙 (이 덱의 E · ν · 반지름 · 밀도 · 상별 최소) — {X["label"]}',
                   abs(X['dt'] / rule - 1.0) <= TOL['rayleigh_rel'],
                   f"덱 {X['dt_txt']} vs 규칙 {rule:.6g} s ({by} 가 정함 · 비 {X['dt'] / rule:.6f} · 허용 ±{TOL['rayleigh_rel']:.2e})")
-        elif kind == 'B':
+        elif kind in ('B', 'U'):
             check(f'dt = Rayleigh 규칙의 정확히 1/k (k 정수 ≥ 1 · k = 1 이면 규칙 그대로) — {X["label"]}',
                   abs(X['dt'] * k_ / rule - 1.0) <= TOL['rayleigh_rel'],
                   f"덱 {X['dt_txt']} × {k_} vs 규칙 {rule:.6g} s ({by})")
-    if kind == 'B':
+    if kind in ('B', 'U'):
         T['k'] = rule_k[A['label']] if rule_k[A['label']] == rule_k[B['label']] else None
     ca, cb = collections.Counter(A['comments']), collections.Counter(B['comments'])
     only_a, only_b = ca - cb, cb - ca
@@ -379,7 +384,7 @@ def compare(kind, A, B):
     diffs = _cmd_diff(A, B, kind)
     allowed = {'E': 'SE 영률 · CED 값 · timestep · run · dump 간격 · restart 간격',
                'E0': 'SE 영률 · CED 값 · timestep · run · dump 간격 · restart 간격',
-               'DT': 'timestep · run · dump 간격 · restart 간격', 'B': 'CED 값'}[kind]
+               'DT': 'timestep · run · dump 간격 · restart 간격', 'B': 'CED 값', 'U': 'CED 값'}[kind]
     check(f'허용 밖 명령은 토큰까지 같다 (허용: {allowed})', not diffs, '; '.join(diffs[:4]) + (f' … 외 {len(diffs) - 4}' if len(diffs) > 4 else ''))
     FA, FB, NA, NB = A['runs'][1], B['runs'][1], A['runs'][3], B['runs'][3]
     DA, DB, dtA, dtB = A['dump_every'], B['dump_every'], A['dt'], B['dt']
@@ -466,6 +471,39 @@ def compare(kind, A, B):
             same = A['ced_tok'][key] == B['ced_tok'][key]
             T['rows'].append(dict(pair=f'{ti}–{tj}', types=f'{key[0]}-{key[1]}', CED_old=A['ced'][key], CED_new=B['ced'][key],
                                   ok=same, reason='' if same else '같아야 할 CED 가 다르다'))
+    elif kind == 'U':
+        #  ★ 2026-10-05 (dev-u · 강성 축 사전등록 §12) — 균일 γ 배율: 9 비영 항 전부 한 공통 배율 · > 1 · 벽–벽 0.  쌍마다의 판정 기준 = 배율의 **중앙값**
+        #    (한 원소만 바뀐 덱이면 그 원소만 짚는다) · 표 판정 = 퍼짐 (max/min − 1) + 방향.  배율 표시는 기하평균.
+        check('같은 강성 — E · ν 정확히 같다', A['E'] == B['E'] and A['nu'] == B['nu'])
+        rat = {}
+        for ti, tj in PAIRS:
+            key = (VA[ti]['type'], VA[tj]['type'])
+            o_, n_ = A['ced'][key], B['ced'][key]
+            if o_ > 0.0 and math.isfinite(n_) and n_ > 0.0:
+                rat[f'{ti}–{tj}'] = n_ / o_
+        med = sorted(rat.values())[len(rat) // 2] if rat else None
+        sp = (max(rat.values()) / min(rat.values()) - 1.0) if rat else None
+        T['u_ratio'] = math.exp(sum(math.log(v) for v in rat.values()) / len(rat)) if rat else None
+        T['u_median'], T['u_spread'] = med, sp
+        check('9 비영 항 전부 배율이 있다 (옛 · 새 CED 양수 · 유한 — 0 · 음수 · 비유한 없음)', len(rat) == len(PAIRS) - 1, f'{len(rat)} 항')
+        check(f"배율 하나 — 퍼짐 max/min − 1 ≤ {TOL['u_spread_rel']:.0e} (두 덱 CED %g 인쇄 반올림)",
+              sp is not None and sp <= TOL['u_spread_rel'],
+              f"퍼짐 {sp:.3g} · ×{min(rat.values()):.7g} … ×{max(rat.values()):.7g}" if rat else '배율 없음')
+        check('공통 배율 > 1 (같은 γ 세계를 키운다 — 줄어든 덱 · 빈 비교가 아니다)', med is not None and med > 1.0 + TOL['ced_mult_rel'],
+              f'중앙값 ×{med:.7g}' if med is not None else '배율 없음')
+        for ti, tj in PAIRS:
+            key = (VA[ti]['type'], VA[tj]['type'])
+            o_, n_ = A['ced'][key], B['ced'][key]
+            r_ = dict(pair=f'{ti}–{tj}', types=f'{key[0]}-{key[1]}', CED_old=o_, CED_new=n_, ratio=(n_ / o_) if o_ else None)
+            if ti == tj == 'WALL':
+                r_['ok'] = o_ == 0.0 and n_ == 0.0
+                r_['reason'] = '' if r_['ok'] else f'벽–벽 ≠ 0 ({o_:g} → {n_:g})'
+            elif f'{ti}–{tj}' not in rat:
+                r_['ok'], r_['reason'] = False, f'{o_:g} → {n_:g} (배율을 낼 수 없다 — 0 · 음수 · 비유한)'
+            else:
+                r_['ok'] = abs(rat[f'{ti}–{tj}'] / med - 1.0) <= TOL['u_spread_rel']
+                r_['reason'] = '' if r_['ok'] else f"배율 ×{rat[f'{ti}–{tj}']:.7g} ≠ 공통 (중앙값) ×{med:.7g} (허용 ±{TOL['u_spread_rel']:.0e})"
+            T['rows'].append(r_)
     else:                                                   # B
         check('같은 강성 — E · ν 정확히 같다', A['E'] == B['E'] and A['nu'] == B['nu'])
         for ti, tj in PAIRS:
@@ -534,7 +572,10 @@ def make_report(decks, tables, argv=None):
                 registered=dict(types={str(k): v for k, v in REG_TYPES.items()},
                                 template_seeds={str(k): v for k, v in REG_TPL_SEED.items()}, density=REG_DENSITY, d_um=REG_D_UM,
                                 E_fixed=REG_E_FIXED, E_SE_levels={f'{k:g}': v for k, v in REG_E_SE.items()}, nu=REG_NU,
-                                B_pairs=sorted(f'{a}–{b}' for a, b in B_PAIRS), dt_k=REG_DT_K, dump_rule=DUMP_RULE,
+                                B_pairs=sorted(f'{a}–{b}' for a, b in B_PAIRS),
+                                U_rule='9 비영 항 (AM–AM 셋 · AM–SE 둘 · SE–SE · AM–벽 둘 · SE–벽) 전부 한 공통 배율 (퍼짐 ≤ u_spread_rel) · '
+                                       '배율 > 1 · 벽–벽 0 · 같은 E · ν (2026-10-05 · dev-u · 강성 축 사전등록 §12)',
+                                dt_k=REG_DT_K, dump_rule=DUMP_RULE,
                                 restart_rule=RESTART_RULE, rayleigh_rule=RAYLEIGH_RULE,
                                 codex_section5={f'{F:g}': {f'{a}–{b}': list(v) for (a, b), v in c.items()} for F, c in CODEX.items()}),
                 decks={p: deck_summary(D) for p, D in decks.items()}, tables=tables,
@@ -578,6 +619,14 @@ def to_markdown(rep):
                          f"{_g(r_.get('F0_old'))} → {_g(r_.get('F0_new'))} | {_g(r_.get('F0_ratio'), '.9f')} | "
                          f"{('±' + format(r_['tol'], '.0e')) if r_.get('tol') else ('0 = 0' if r_['CED_old'] == 0 else '—')} | "
                          f"{r_.get('codex', 'N/A')} | {'PASS' if r_['ok'] else 'FAIL · ' + r_['reason']} |")
+        elif T['kind'] == 'U':
+            L += [f"공통 배율 ×{_g(T.get('u_ratio'), '.7g')} (기하평균 · 쌍 판정 기준 = 중앙값 ×{_g(T.get('u_median'), '.7g')}) · "
+                  f"퍼짐 {_g(T.get('u_spread'), '.3g')} (허용 {t['u_spread_rel']:.0e}) · k = {T.get('k')}", '',
+                  '| 쌍 | 타입 | 옛 CED (J/m³) | 새 CED (J/m³) | 배율 | 판정 |', '|---|---|---:|---:|---:|---|']
+            for r_ in T['rows']:
+                L.append(f"| {r_['pair']} | {r_['types']} | {_g(r_['CED_old'])} | {_g(r_['CED_new'])} | "
+                         f"{('×' + format(r_['ratio'], '.7g')) if r_.get('ratio') is not None else 'N/A (0)'} | "
+                         f"{'PASS' if r_['ok'] else 'FAIL · ' + r_['reason']} |")
         elif T['kind'] == 'DT':
             L += [f"k = {T.get('k')} (등록 {REG_DT_K})", '', '| 쌍 | 타입 | CED (ref) | CED (dt/2) | 판정 |', '|---|---|---:|---:|---|']
             for r_ in T['rows']:
@@ -838,14 +887,60 @@ def _selftest():
     _hits = [h for ln in _md.split('\n') for h in _cdr._RE_SHA.findall(ln) if not h.isdigit()]
     chk(f'㉑ markdown 에 백틱 안 순수 hex (check_doc_refs 의 커밋 SHA 패턴) 가 없다 — sha256 앞자리는 백틱 없이 · 발견 {len(_hits)}',
         not _hits and '| AM_P–SE |' in _md)
+
+    # ── 표 U (2026-10-05 · 개발 탐색 dev-u · 강성 축 사전등록 §12) — 같은 강성 · 9 비영 CED 가 한 공통 배율 (균일 γ 배율) ─────────────────────
+    #  ★ 반례를 먼저 옮겼다 — 옛 되읽기에는 표 U 가 없다 ('표 종류 ∈ KINDS' 검사 FAIL · CLI 거부) ⇒ U① ~ U③ 전부 FAIL.
+    P[20.0] = gen.plan(100000, cgf=151.4, stiffen_se=20.0)
+    for k_, (a_, F_) in {'LC_ref20': ('LC', 20.0), 'LH_ref20': ('LH', 20.0), 'LU212_ref20': ('LU212', 20.0), 'LU637_ref20': ('LU637', 20.0),
+                         'LU212_soft': ('LU212', 1.0)}.items():
+        D[k_] = mk(a_, F_, 2)
+    TU = [cmp_('U', 'LC_ref20', 'LU212_ref20'), cmp_('U', 'LC_ref20', 'LU637_ref20'), cmp_('U', 'LU212_ref20', 'LU637_ref20'),
+          cmp_('U', 'LC_soft', 'LU212_soft')]
+    chk('U① ★ 표 U (×20 · LC → LU212 · LU637 · LU212 → LU637 · soft LC → LU212) → PASS · 행 10 · 9 비영 항 전부 한 배율 (퍼짐 ≤ '
+        f"{TOL.get('u_spread_rel', float('nan')):.0e}) · 공통 배율 ×10 · ×14.422496 · ×3^(1/3) · 벽–벽 0 · 같은 E · ν · dt",
+        _ok(lambda: all(t_['verdict'] == 'PASS' and len(t_['rows']) == 10 for t_ in TU)
+            and all(abs(t_['u_ratio'] / w_ - 1.0) <= TOL['u_spread_rel'] for t_, w_ in zip(TU, (10.0, 3000.0 ** (1.0 / 3.0), 3.0 ** (1.0 / 3.0), 10.0)))
+            and all(t_['u_spread'] <= TOL['u_spread_rel'] for t_ in TU) and row(TU[0], 'WALL–WALL')['ok']))
+    se_only = set_ced(D['LC_ref20'], 3, 3, f'{get_ced(D["LC_ref20"], 3, 3) * 10:g}')                       # S 형 — SE–SE 한 원소만 ×10
+    e_chg = sub1(D['LU212_ref20'], r'(youngsModulus peratomtype \S+ \S+ )2e\+08', r'\g<1>2.2e+08')           # 균일 ×10 + SE 영률
+    two = set_ced(D['LU212_ref20'], 1, 2, f'{get_ced(D["LC_ref20"], 1, 2) * 11:g}')                           # AM_P–AM_S 만 ×11
+    wall = set_ced(D['LU212_ref20'], 4, 4, '1')                                                             # 벽–벽 0 → 1
+    TU2 = {'se_only': cmp_('U', 'LC_ref20', 'LC_ref20', tb=se_only), 'E': cmp_('U', 'LC_ref20', 'LU212_ref20', tb=e_chg),
+           'two': cmp_('U', 'LC_ref20', 'LU212_ref20', tb=two), 'wall': cmp_('U', 'LC_ref20', 'LU212_ref20', tb=wall),
+           'down': cmp_('U', 'LU212_ref20', 'LC_ref20'), 'same': cmp_('U', 'LC_ref20', 'LC_ref20'), 'lh': cmp_('U', 'LH_ref20', 'LU212_ref20'),
+           'as_B': cmp_('B', 'LC_ref20', 'LU212_ref20')}
+    _bad = lambda t_, w_: any(w_ in c_['check'] and not c_['ok'] for c_ in t_['checks'])               # noqa: E731
+    chk(f"U② ★ 반례 표 U → 전부 FAIL · 짚는 곳: SE–SE 한 원소만 ×10 (그 쌍만 {failed_pairs(TU2['se_only'])}) · 균일 ×10 + SE 영률 (영률) · "
+        f"AM_P–AM_S 만 ×11 ({failed_pairs(TU2['two'])}) · 벽–벽 1 · 줄어든 덱 (증가) · 같은 덱 (빈 비교) · LH → LU212 (배율 하나 아님) · "
+        "U 덱을 표 B 로 (SE 낀 쌍이 바뀌면 안 된다)",
+        _ok(lambda: all(t_['verdict'] == 'FAIL' for t_ in TU2.values())
+            and failed_pairs(TU2['se_only']) == ['SE–SE'] and _bad(TU2['se_only'], '배율 하나')
+            and _bad(TU2['E'], '영률') and failed_pairs(TU2['two']) == ['AM_P–AM_S'] and 'WALL–WALL' in failed_pairs(TU2['wall'])
+            and _bad(TU2['down'], '> 1') and _bad(TU2['same'], '> 1') and _bad(TU2['lh'], '배율 하나')
+            and sorted(failed_pairs(TU2['as_B'])) == ['AM_P–SE', 'AM_S–SE', 'SE–SE', 'SE–WALL']))
+    with tempfile.TemporaryDirectory() as td:
+        paths = {}
+        for k in ('LC_ref20', 'LU212_ref20'):
+            os.makedirs(os.path.join(td, k))
+            paths[k] = os.path.join(td, k, 'in.mixer')
+            open(paths[k], 'w', encoding='utf-8').write(D[k])
+        js, md = os.path.join(td, 'u.json'), os.path.join(td, 'u.md')
+        cu = subprocess.run([sys.executable, os.path.abspath(__file__), '--table', 'U', paths['LC_ref20'], paths['LU212_ref20'],
+                             '--json', js, '--md', md], capture_output=True, text=True)
+        repu = json.load(open(js, encoding='utf-8')) if os.path.exists(js) else {}
+        mdu = open(md, encoding='utf-8').read() if os.path.exists(md) else ''
+    chk('U③ CLI --table U: rc 0 · JSON 표 (kind U · 공통 배율 · 퍼짐 · 등록 규칙 사본) · markdown 의 표 U (쌍마다 배율 · 판정)',
+        _ok(lambda: cu.returncode == 0 and repu['verdict'] == 'PASS' and repu['tables'][0]['kind'] == 'U'
+            and abs(repu['tables'][0]['u_ratio'] / 10.0 - 1.0) <= TOL['u_spread_rel'] and 'U_rule' in repu['registered']
+            and '## 표 U' in mdu and '| SE–SE |' in mdu and '공통 배율' in mdu))
     print(f'\nmixer_deck_readback selftest: {ok}/{ok + len(fail)} PASS' + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0
 
 
 def main(argv=None):
-    ap = argparse.ArgumentParser(description='믹서 실행 덱 되읽기 — 덱 텍스트에서 E · ν · CED · dt · step 을 읽어 표 E · E0 · DT · B 를 독립 검산')
+    ap = argparse.ArgumentParser(description='믹서 실행 덱 되읽기 — 덱 텍스트에서 E · ν · CED · dt · step 을 읽어 표 E · E0 · DT · B · U 를 독립 검산')
     ap.add_argument('--table', nargs=3, action='append', metavar=('KIND', 'OLD', 'NEW'),
-                    help='KIND ∈ E · E0 · DT · B — OLD · NEW = in.mixer 경로 (B 는 LC 다음 LH).  여러 번 줄 수 있다')
+                    help='KIND ∈ E · E0 · DT · B · U — OLD · NEW = in.mixer 경로 (B 는 LC 다음 LH · U 는 LC 다음 LU).  여러 번 줄 수 있다')
     ap.add_argument('--json', help='JSON 보고 (도구 sha256 · 허용오차 · 등록 상수 · 덱 sha256 · 생성 명령 · 표 · 실패 항)')
     ap.add_argument('--md', help='사람이 읽는 표 (markdown)')
     ap.add_argument('--selftest', action='store_true')

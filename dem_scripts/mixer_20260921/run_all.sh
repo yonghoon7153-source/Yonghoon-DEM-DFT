@@ -33,11 +33,13 @@
 #   ONLY = 공백으로 가른 런 이름 목록 (비어 있으면 전부 = 옛 동작).  동시 상한은 그대로 **전 런** 을 센다.
 #   LH 가 아닌 런의 판정 · 발사는 한 글자도 안 바뀐다.
 # ★★ 2026-09-30 (강성 축 · 사전등록 docs/reviews/mixer_highbo_stiffness_prereg_20260929.md §8-1 · 코드 2 단계 piece 1) — **강성 축 셀**
-#   (`<E0|LC|LH|LHx10|LHx30>_<soft|ref|ref2>[_dthalf][_r<N>]_s<seed>`) · NP 프로브 (`npprobe<NP>_<셀>`) 는 이 런처가 **절대** 띄우지 않는다 (FORCE · ALLOW_LH ·
-#   ONLY 와 무관).  그 셀은 ibb SLURM 새 단계 (launch_highbo.sh dev-e0 · dev-rot · dev-bo · confirm-first · confirm-rest — 봉인 · 관문 · 같은 rank 수) 로만 뜬다.
+#   (`<E0|LC|LH|LHx10|LHx30|LU212|LU637>_<soft|ref|ref2>[_dthalf][_r<N>]_s<seed>`) · NP 프로브 (`npprobe<NP>_<셀>`) 는 이 런처가 **절대** 띄우지 않는다 (FORCE · ALLOW_LH ·
+#   ONLY 와 무관).  그 셀은 ibb SLURM 새 단계 (launch_highbo.sh dev-e0 · dev-rot · dev-bo · dev-u · confirm-first · confirm-rest — 봉인 · 관문 · 같은 rank 수) 로만 뜬다.
 #   옛 판은 LH_* 만 막아 E0_ref_s* · LC_ref_r2_s* 를 로컬 lmp_serial 로 띄울 수 있었다 (test_launcher.sh DV⑧).
 #   ★ 2026-10-02 — 팔 목록에 dev-bo 팔 LHx10 · LHx30 (사전등록 §11) 을 더했다.  옛 정규식은 그 이름을 몰라 LHx10_* 를 **로컬로 띄웠다**
 #     (LH_* 가드에도 안 걸린다 · test_launcher.sh DB⑦ 재현).  팔 목록 = scripts/mixer_deck_diff.STIFF_ARMS (DB⑧ 가 한 벌인지 대조).
+#   ★ 2026-10-05 — 팔 목록에 dev-u 팔 LU212 · LU637 (사전등록 §12) 을 더했다.  같은 구멍이 새 이름으로 다시 열려 있었다 — 옛 정규식은 LU212_* 를
+#     로컬로 띄웠다 (test_launcher.sh DU⑦ 재현 · DU⑧ 가 dev-u 팔을 담는지까지 대조).
 set -uo pipefail
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 OUT="${OUT:-$ROOT/dem_scripts/mixer_20260921/runs}"
@@ -65,8 +67,8 @@ n=0; dead=(); lh=()
 for d in "$OUT"/*_s*/; do
   d="${d%/}"; nm=$(basename "$d")
   [ -f "$d/in.mixer" ] || continue
-  if [[ "$nm" =~ ^(npprobe[1-9][0-9]*_)?(E0|LC|LH|LHx10|LHx30)_(soft|ref|ref2)(_dthalf)?(_r[1-9][0-9]*)?_s[1-9][0-9]*$ ]]; then
-    echo "· 강성 축 셀 건너뜀 (SLURM 새 단계 launch_highbo.sh dev-e0 · dev-rot · dev-bo · confirm-* 로만 — 봉인 · 관문 · fresh): $d"; continue
+  if [[ "$nm" =~ ^(npprobe[1-9][0-9]*_)?(E0|LC|LH|LHx10|LHx30|LU212|LU637)_(soft|ref|ref2)(_dthalf)?(_r[1-9][0-9]*)?_s[1-9][0-9]*$ ]]; then
+    echo "· 강성 축 셀 건너뜀 (SLURM 새 단계 launch_highbo.sh dev-e0 · dev-rot · dev-bo · dev-u · confirm-* 로만 — 봉인 · 관문 · fresh): $d"; continue
   fi
   #  ONLY — 목록 밖 런은 조용히 건너뛴다 (launch_highbo.sh 가 LH 를 한 개씩 부를 때 다른 런을 건드리지 않게)
   if [ -n "$ONLY" ]; then case " $ONLY " in *" $nm "*) ;; *) continue;; esac; fi

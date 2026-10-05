@@ -251,6 +251,11 @@ def _am_pairs(bo):
     return {('AM_P', 'AM_P'): bo, ('AM_P', 'AM_S'): bo, ('AM_S', 'AM_S'): bo}
 
 
+def _se_pairs(bo):
+    """SE 가 낀 세 쌍 (SE–SE · AM_P–SE · AM_S–SE) 의 Bo 덮어쓰기 — dev-u (균일 γ 배율) 용.  코팅 팔이면 AM 쌍은 SE–SE Bo 를 따라간다 (`_bo_phase`)."""
+    return {('SE', 'SE'): bo, ('AM_P', 'SE'): bo, ('AM_S', 'SE'): bo}
+
+
 ARMS = {
     'E0': dict(desc='음성 대조 — 점착 0.  지표가 0 을 내는가', bond=0.0),
     'E1': dict(desc='균일 Bo 0.212 (상별 CED 는 다르다 — 그래야 Bo 가 같다)',
@@ -309,6 +314,17 @@ ARMS = {
                   bond=1.0, layered=True, abs_base=BO_BASE, abs_mult=_am_pairs(384.0)),
     'LHx30': dict(desc='개발 탐색 dev-bo · AM–AM Bo_code 1152 (LH ×30 · 벽 CED 동반 = 공동 개입 B) — 10-02 개발 M 열람 뒤 정함 · 확인 팔 아님',
                   bond=1.0, layered=True, abs_base=BO_BASE, abs_mult=_am_pairs(1152.0)),
+    #  ★ 개발 탐색 dev-u (2026-10-05 · 강성 축 사전등록 `docs/reviews/mixer_highbo_stiffness_prereg_20260929.md` §12 v2.9 · 1저자 "ㅇㅇ 그러자" ·
+    #    망 수정보다 낮은 우선순위) — **LC 와 같은 규약** (abs_base 0.212 + coat AM→SE) 에 SE 낀 세 쌍 (SE–SE · AM_P–SE · AM_S–SE) 의 Bo 만 ×1000 · ×3000
+    #    (212.44 · 637.32).  코팅 상 (AM) 의 목표 Bo 는 SE–SE Bo 를 JKR 기하로 따라 오르고 (`_bo_phase`) 벽은 대각 ÷ 1.842 ⇒ CED **9 비영 원소 전부
+    #    같은 배율** ×10 · ×14.422496 (Bo 배수의 세제곱근 · 셀프테스트 U②) = 같은 γ 세계 (LC) 를 키운다 = "균일 γ 배율" (SE 만의 개입 아님 · 혼합쌍은
+    #    min 규칙 그대로).  dev-rot · dev-bo M 을 **본 뒤** 정한 개발 탐색 수준 — 확인 팔 아님 · 캠페인 목록에 넣지 않는다 (U④).
+    #    정적 평형 겹침 δ/r (CGF 151.4 · SE–SE): soft 0.402 · 0.837 % · ref ×20 0.055 · 0.114 % (U⑤).  ⚠ LU637 은 CGF 200 에서 SE–SE 1.007 % 로
+    #    천장 밖 = 생성기가 거부한다 (같은 Bo 면 parcel 이 클수록 겹침이 크다 · 셀프테스트 ㉙ 의 선언 목록 · U⑥) · X = 850 (×4000) 은 151.4 에서도 거부.
+    'LU212': dict(desc='개발 탐색 dev-u · 균일 γ 배율 — LC 의 9 비영 CED × 10 (SE 쪽 Bo_code 212.44 = 0.212 × 1000) — 10-02 · 10-03 개발 M 열람 뒤 정함 · 확인 팔 아님',
+                  bond=1.0, layered=True, abs_base=BO_BASE, coat={'AM_P': 'SE', 'AM_S': 'SE'}, abs_mult=_se_pairs(1000.0 * BO_BASE)),
+    'LU637': dict(desc='개발 탐색 dev-u · 균일 γ 배율 — LC 의 9 비영 CED × 14.422496 (SE 쪽 Bo_code 637.32 = 0.212 × 3000) — 10-02 · 10-03 개발 M 열람 뒤 정함 · 확인 팔 아님',
+                  bond=1.0, layered=True, abs_base=BO_BASE, coat={'AM_P': 'SE', 'AM_S': 'SE'}, abs_mult=_se_pairs(3000.0 * BO_BASE)),
 }
 #: 캠페인 런 목록 — (팔, 시드).  시드는 **소수** (덱이 합성수를 거부한다).
 CAMPAIGN_SEEDS = (32452843, 49979687, 67867967)
@@ -1339,8 +1355,13 @@ def _selftest():
     chk('㉘ ced_for_bond ↔ bond_for_ced 왕복',
         abs(bond_for_ced(ced_for_bond(7.0, 3e-4, .30, 2.0), 3e-4, .30, 2.0) - 7.0) < 1e-9)
     #  ★★ 천장 — **모든 팔이 겹침 천장 안**이어야 한다.  초판은 4/5 가 밖이었다.
+    #  ★ 2026-10-05 (dev-u · 강성 축 사전등록 §12) — δ/r ∝ CED² ∝ (Bo·r)^(2/3) 라 같은 절대 Bo 면 parcel 이 클수록 겹침이 크다.  LU637 (SE 쪽
+    #    Bo_code 637.32) 은 캠페인 CGF 151.4 에서 SE–SE 0.837 % 로 천장 안이지만 이 시험의 CGF 200 (dd) 에서는 1.007 % 로 밖 = 생성기가 거부한다
+    #    (의도 · fail-closed).  ⇒ 그런 팔은 **선언 목록** _CGF_BOUND 로만 뺀다 — U⑥ 이 '이 CGF 에서 거부 · 캠페인 CGF 에서 수용' 을 단언하고
+    #    (목록이 조용히 늘지 않게) · ㉙c 가 캠페인 CGF 의 천장을 **전 팔**로 본다.
+    _CGF_BOUND = ('LU637',)
     worst = []
-    for arm in sorted(ARMS):
+    for arm in sorted(set(ARMS) - set(_CGF_BOUND)):
         M = ced_matrix(arm, dd)
         for i, ti in enumerate(TYPES):
             small_r = dd[ti] / 2.0
@@ -1352,6 +1373,11 @@ def _selftest():
     #  ★ 변이 — 옛 사다리(CED 3e5 에 ×100)를 넣으면 이 검사가 **걸려야** 한다
     chk('㉙b 변이: 옛 사다리(CED 3e7)는 천장을 넘는다',
         overlap_for_ced(3e7, 3e-4, .30) > OVL_CEILING)
+    _pcd = plan(100000, cgf=151.4)['d']                 # 캠페인 조건 (gen_all.sh 기본 N_TOTAL · CGF)
+    _wc = max((overlap_for_ced(_Mc_[i][_j], _pcd[ti] / 2.0, PHASE_MECH[ti][0], E=E_PHASE[ti]), arm, ti + ('–WALL' if _j == len(TYPES) else ''))
+              for arm in sorted(ARMS) for _Mc_ in (ced_matrix(arm, _pcd),) for i, ti in enumerate(TYPES) for _j in (i, len(TYPES)))
+    chk(f'㉙c ★ 캠페인 CGF 151.4 에서는 **전 팔** (CGF 묶인 선언 팔 {list(_CGF_BOUND)} 포함) 이 겹침 천장 안 '
+        f'(최악 {_wc[1]}·{_wc[2]} {_wc[0]*100:.3f} %)', _wc[0] <= OVL_CEILING * (1 + 1e-9))
     #  ★ 상별 CED 가 실제로 다르다 (같은 Bo 를 만들려면 달라야 한다)
     chk(f'㉚ 같은 Bo 를 위해 상별 CED 가 다르다 '
         f'(AM_P {M1[0][0]:.3g} vs SE {M1[2][2]:.3g})',
@@ -1841,6 +1867,133 @@ def _selftest():
         return good
     chk('BO⑥ SE ×20 경화 (--hold-bo-pairwise) 에서도 9 비영 항 F₀ 비 = 1 (상대 1e-12) · AM–AM · AM–벽 CED 는 soft 값 그대로 (E* 불변) '
         '⇒ 덱의 AM–AM 점착 = 명목 Bo_code 정확히', _ok(_bo6))
+
+    #  ══ U — 개발 탐색 dev-u (2026-10-05 · 강성 축 사전등록 docs/reviews/mixer_highbo_stiffness_prereg_20260929.md §12 · v2.9) ══════════
+    #  ★ 반례를 먼저 옮겼다 — 옛 생성기에는 LU212 · LU637 팔이 없다 (KeyError · NameError → U① ~ U⑦ 전부 FAIL).
+    #    LC 와 **같은 규약** (abs_base 0.212 + coat AM→SE) 에 SE 낀 세 쌍 (SE–SE · AM_P–SE · AM_S–SE) 의 Bo 만 ×1000 · ×3000 — 코팅 상 (AM) 의
+    #    목표 Bo 는 SE–SE Bo 를 JKR 기하로 따라가고 벽은 대각 ÷ 1.842 ⇒ CED 9 비영 원소 전부 같은 배율 = **균일 γ 배율** (SE 만의 개입 아님 · 확인 팔 아님).
+    _UK = {'LU212': 1000.0, 'LU637': 3000.0}
+
+    def _u1():
+        good = all(ARMS[a_]['abs_mult'] == _se_pairs(k_ * BO_BASE) and ARMS[a_]['abs_base'] == BO_BASE == ARMS['LC']['abs_base']
+                   and ARMS[a_]['bond'] == ARMS['LC']['bond'] == 1.0 and ARMS[a_].get('layered') is True
+                   and ARMS[a_].get('coat') == ARMS['LC']['coat'] == {'AM_P': 'SE', 'AM_S': 'SE'}
+                   and set(ARMS[a_]) == set(ARMS['LC']) | {'abs_mult'} for a_, k_ in _UK.items())
+        for a_, k_ in _UK.items():
+            for c_ in ((100.0, 151.4, 200.0) if a_ not in _CGF_BOUND else (100.0, 151.4)):
+                dd_ = plan(8000, cgf=c_)['d']
+                good &= all(abs(_bo_t(a_, dd_, t_) / (k_ * _bo_t('LC', dd_, t_)) - 1.0) < 1e-12 for t_ in TYPES)
+        return good and abs(_bo_t('LU212', _pc['d'], 'SE') - 212.44) < 1e-9 and abs(_bo_t('LU637', _pc['d'], 'SE') - 637.32) < 1e-9
+    chk('U① ★ LU212 · LU637 = LC 규약 그대로 (abs_base · bond · 층상 · coat AM→SE · 다른 키 없음) + abs_mult = SE 낀 세 쌍 × 1000 · 3000 × BO_BASE — '
+        '동종 쌍 Bo_code (SE–SE 212.44 · 637.32 · 코팅 AM_P · AM_S 도) = LC × 1000 · × 3000 · CGF 100 · 151.4 (· 200 은 LU212 만) 에서 안 밀린다 (상대 1e-12)',
+        _ok(_u1))
+
+    def _u2():
+        dd_ = _pc['d']
+        p20 = plan(100000, cgf=151.4, stiffen_se=20.0)
+        MC = ced_matrix('LC', dd_)
+        good = True
+        for a_, k_ in _UK.items():
+            r_ = k_ ** (1.0 / 3.0)
+            MU = ced_matrix(a_, dd_)
+            for Ma, Mb in ((MC, MU), (hold_bo_pairwise_matrix(MC, _Esoft, p20['E']), hold_bo_pairwise_matrix(MU, _Esoft, p20['E']))):
+                for i in range(len(_NM)):
+                    for j in range(len(_NM)):
+                        if Ma[i][j] == 0.0:
+                            good &= Mb[i][j] == 0.0 and _NM[i] == _NM[j] == WALL
+                        else:
+                            good &= abs(Mb[i][j] / Ma[i][j] / r_ - 1.0) < 1e-12
+        M2, M6 = ced_matrix('LU212', dd_), ced_matrix('LU637', dd_)
+        return good and all(abs(M6[i][j] / M2[i][j] / 3.0 ** (1.0 / 3.0) - 1.0) < 1e-12
+                            for i in range(len(_NM)) for j in range(len(_NM)) if M2[i][j])
+    chk('U② ★ 균일 γ 배율 — LU212 · LU637 의 CED **9 비영 원소 전부** (AM–AM 셋 · AM–SE 둘 · SE–SE · AM–벽 둘 · SE–벽) = LC × 정확히 10 · 14.422496 '
+        '(Bo 배수 1000 · 3000 의 세제곱근 · 상대 1e-12) — soft 와 SE ×20 경화 (--hold-bo-pairwise) 둘 다 · 벽–벽 0 그대로 · LU637 / LU212 = 3^(1/3) (CGF 151.4)',
+        _ok(_u2))
+
+    def _u3():
+        p20 = plan(100000, cgf=151.4, stiffen_se=20.0)
+        lc = deck(p20, _rpmc, 2, seed=32452843, arm='LC', hold_bo_pairwise=True).split('\n')
+        mc0 = next(i for i, l in enumerate(lc) if l.startswith('fix mC '))
+        rows = set(range(mc0 + 1, mc0 + len(_NM) + 1))                  # 행렬 값 줄 (머리 줄 `fix mC …` 은 그대로여야 한다)
+        good = True
+        for a_ in _UK:
+            x = deck(p20, _rpmc, 2, seed=32452843, arm=a_, hold_bo_pairwise=True).split('\n')
+            diff = [i for i, (u, v) in enumerate(zip(lc, x)) if u != v]
+            good &= (len(x) == len(lc) and rows <= set(diff)
+                     and all(i in rows or (lc[i].lstrip().startswith('#') and x[i].lstrip().startswith('#')) for i in diff))
+        return good
+    chk('U③ ★ 경화 덱 (×20 · hold · 2 바퀴 · seed 32452843) — LU212 · LU637 덱 = LC 덱과 줄 수 같고 주석 밖 차이는 CED 행렬 값 줄뿐 · 그 넷이 전부 바뀐다 '
+        '(timestep · run · 삽입 · 기구 · 시드 그대로 · dt 는 SE 가 정한다 ⇒ 비용 = LC_ref_r2)', _ok(_u3))
+    chk('U④ dev-u 팔은 캠페인 · 고-Bo · 기준 목록 밖 (개발 탐색 전용 — 확인 팔 아님) · 층상 · 설명에 "dev-u" · "균일 γ 배율" · "확인 팔 아님" 표지',
+        _ok(lambda: all(all(x_ != a_ for x_, _ in CAMPAIGN + CAMPAIGN_HIGHBO) and all(x_ != a_ for x_, _, _ in REFERENCE)
+                        and ARMS[a_].get('layered') is True and 'dev-u' in ARMS[a_]['desc'] and '균일 γ 배율' in ARMS[a_]['desc']
+                        and '확인 팔 아님' in ARMS[a_]['desc'] for a_ in _UK)))
+
+    def _u5():
+        dd_ = _pc['d']
+        p20 = plan(100000, cgf=151.4, stiffen_se=20.0)
+        iS, nuS = _IX['SE'], PHASE_MECH['SE'][0]
+
+        def _vst(ced, ti, tj, E_):
+            """붙는 충돌 속도 상한 (mm/s) — 등록 §11-3 식 · 독립 산술: W = (1/5)π·CED·R*·δ_eq² (δ_eq = (B/A)² · A = (4/3)E*√R* · B = 2πR*·CED) ·
+            KE = ½m*v² ≤ W(1−e²)/e² (e = COR) ⇒ v = √(2W(1−e²)/(e²m*))."""
+            es = _f0x(1.0, ti, tj, dd_, E_)[1]
+            ri, rj = dd_[ti] / 2.0, dd_[tj] / 2.0
+            rs = ri * rj / (ri + rj)
+            W = 0.2 * math.pi * ced * rs * (2.0 * math.pi * rs * ced / ((4.0 / 3.0) * es * math.sqrt(rs))) ** 4
+            mi, mj = ((4.0 / 3.0) * math.pi * r_ ** 3 * DENS[PHASE_MECH[t_][1]] * 1000.0 for r_, t_ in ((ri, ti), (rj, tj)))
+            return math.sqrt(2.0 * W * (1.0 - COR ** 2) / (COR ** 2 * mi * mj / (mi + mj))) * 1e3
+        got, want = {}, {
+            'ovl_SE': {'LU212': (0.402, 0.055), 'LU637': (0.837, 0.114)},                       # SE–SE δ/r % (soft · ref)
+            'v_SE': {'LC': (0.16, 0.059), 'LU212': (50.7, 18.7), 'LU637': (126.6, 46.6)},       # SE–SE mm/s (soft · ref)
+            'v_PP': {'LU212': 1.1, 'LU637': 2.8, 'LH': 21.9},                                   # AM_P–AM_P mm/s (SE 경화 무관)
+            'v_PS': {'LU212': 8.6, 'LU637': 21.5}}                                              # AM_P–SE mm/s (ref)
+        for k_ in want:
+            got[k_] = {}
+        for a_ in ('LC', 'LH') + tuple(_UK):
+            Ms = ced_matrix(a_, dd_)
+            Mr = hold_bo_pairwise_matrix(Ms, _Esoft, p20['E'])
+            if a_ in want['ovl_SE']:
+                got['ovl_SE'][a_] = (round(overlap_for_ced(Ms[iS][iS], dd_['SE'] / 2.0, nuS, E=_Esoft['SE']) * 100, 3),
+                                     round(overlap_for_ced(Mr[iS][iS], dd_['SE'] / 2.0, nuS, E=p20['E']['SE']) * 100, 3))
+            if a_ in want['v_SE']:
+                nd = 3 if a_ == 'LC' else 1
+                got['v_SE'][a_] = (round(_vst(Ms[iS][iS], 'SE', 'SE', _Esoft), nd), round(_vst(Mr[iS][iS], 'SE', 'SE', p20['E']), nd))
+            if a_ in want['v_PP']:
+                got['v_PP'][a_] = round(_vst(Mr[_IX['AM_P']][_IX['AM_P']], 'AM_P', 'AM_P', p20['E']), 1)
+            if a_ in want['v_PS']:
+                got['v_PS'][a_] = round(_vst(Mr[_IX['AM_P']][iS], 'AM_P', 'SE', p20['E']), 1)
+        if got != want:
+            print(f'        등록 수치 {got}')
+        return got == want and max(max(v) for v in got['ovl_SE'].values()) < OVL_CEILING * 100
+    chk('U⑤ ★ 등록 문서 수치 = 실측 (사전등록 §12-3) — SE–SE 정적 평형 겹침 δ/r: soft 0.402 · 0.837 % · ref ×20 0.055 · 0.114 % · 붙는 충돌 속도 상한 '
+        '(§11-3 식 · e 0.3 · 덱 값): SE–SE soft 50.7 · 126.6 · ref 18.7 · 46.6 mm/s (LC 0.160 · 0.059) · AM_P–AM_P 1.1 · 2.8 (LH 21.9) · AM_P–SE ref 8.6 · 21.5 mm/s — '
+        '효과 예측 아님 · 충돌 최대 겹침의 상한 아님', _ok(_u5))
+
+    def _u6():
+        try:
+            ARMS['_u850'] = dict(ARMS['LU637'], abs_mult=_se_pairs(4000.0 * BO_BASE))      # X = 849.76 ≈ 850 (Bo ×4000)
+            m850 = _exit_msg(lambda: ced_matrix('_u850', _pc['d']))
+        finally:
+            ARMS.pop('_u850', None)
+        bound = all((_exit_msg(lambda: ced_matrix(a_, dd)) or '').startswith(f'⛔ 팔 {a_}: SE–SE 겹침')
+                    and _exit_msg(lambda: ced_matrix(a_, _pc['d'])) is None for a_ in _CGF_BOUND)
+        return (m850 is not None and 'SE–SE 겹침 1.014 %' in m850 and _CGF_BOUND == ('LU637',) and bound
+                and 'SE–SE 겹침 1.007 %' in (_exit_msg(lambda: ced_matrix('LU637', dd)) or '')
+                and _exit_msg(lambda: ced_matrix('LU212', dd)) is None)
+    chk('U⑥ ★ 생성기 천장 그대로 — X = 850 (Bo ×4000) 은 캠페인 CGF 151.4 에서 SE–SE 1.014 % 로 거부 · LU637 (×3000) 은 151.4 에서 수용 · CGF 200 (㉙ 의 dd) '
+        '에서 1.007 % 로 거부 = 선언 목록 _CGF_BOUND 정확히 · LU212 는 200 에서도 수용', _ok(_u6))
+
+    def _u7():
+        good = True
+        for a_ in _UK:
+            rr, Ms, Mn = _pair_ratios(a_, 20.0)
+            good &= (len(rr) == 9 and all(abs(v - 1.0) <= 1e-12 for v in rr.values())
+                     and all(Mn[_IX[x_]][_IX[y_]] == Ms[_IX[x_]][_IX[y_]]
+                             for x_, y_ in (('AM_P', 'AM_P'), ('AM_P', 'AM_S'), ('AM_S', 'AM_S'), ('AM_P', WALL), ('AM_S', WALL))))
+        return good
+    chk('U⑦ SE ×20 경화 (--hold-bo-pairwise) 에서도 9 비영 항 F₀ 비 = 1 (상대 1e-12) · AM–AM · AM–벽 CED 는 soft 값 그대로 (E* 불변) '
+        '⇒ 경화 덱에서도 9 원소가 LC 와 같은 배율 (U②)', _ok(_u7))
     print(f'\nmake_mixer_deck selftest: {ok}/{ok+len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0
