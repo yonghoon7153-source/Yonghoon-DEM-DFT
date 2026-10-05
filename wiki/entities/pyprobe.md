@@ -2,7 +2,7 @@
 title: PyProBE (OCV/DVA 피팅 도구)
 description: "Imperial College 의 배터리 데이터 처리 도구 — 전극 OCP 로 셀 OCV·ICA·DVA 를 맞춰 전극 용량과 리튬 재고를 추정한다. 우리에게는 경쟁 도구이자, 우리 degeneracy 질문을 적용할 '판정 대상' 후보"
 created: 2026-10-01
-updated: 2026-10-01
+updated: 2026-10-05
 type: entity
 tags: [degradation, tooling, research]
 sources: [raw/articles/2026-10-01-github-research-briefing.md, raw/repositories/2026-10-01-pyprobe-dma-on-synthetic-truth.md, raw/repositories/2026-10-01-pyprobe-shape-only-on-synthetic-truth.md]
@@ -79,6 +79,7 @@ evidenceScope: multi-source-mixed
 
 ## 관련
 - [[fitting-degeneracy]]
+- [[ampworks]] — 같은 계열의 다른 공개 도구 (2026-10-05 실측 · watch)
 - [[birkl-ocv-degradation-diagnostic]]
 - [[22p-physics-or-degeneracy]]
 - [[daily-github-briefing-triage]]

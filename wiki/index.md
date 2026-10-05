@@ -1,7 +1,7 @@
 # 위키 색인
 
 > 내용 목록. 모든 위키 페이지를 종류별로 한 줄 요약과 함께 싣는다.
-> 마지막 갱신: 2026-10-03 | 전체 페이지: 59
+> 마지막 갱신: 2026-10-05 | 전체 페이지: 60
 
 ## Entities (satellite 프로젝트)
 
@@ -11,6 +11,7 @@
 - [[pybamm]] — **의존성 entity** (`pybamm`): 합성 truth 엔진. 우리 경로(full DFN · composite 음극 · 기본 uniform submesh · LLI 자체 계산)와 릴리스별 영향 판정표 — 26.9.0.0 **실측 (10-01)**: ~~#5755 가 기본 x 격자 접합부에 닿아 합성 truth 최대 **2.7 mV** (방전 끝) · 균일 격자면 6e-8 V~~ 26.8 ↔ 26.9 환경 차이로 합성 truth 최대 **2.7 mV** (방전 끝 · #5755 단독 인과 미확정 · 균일 강제 시 열화 6e-8 V / pristine 0.36 mV — 10-03 정정) · 나머지 변경은 경로 밖 → ~~**requirements 상한 고정은 게이트 승인 후보** (RUN_SCOPE)~~ **Codex 사전 검토 (10-03): 목적별 프로필 고정 (C 검증 · B 정본 재생성 · D 생산 guard) 권고 · G87-N1 종결 뒤 별도 라운드** (RUN_SCOPE).
 - [[pyprobe]] — **외부 도구 entity**: 전극 OCP 로 셀 OCV·ICA·DVA 를 맞춰 전극 용량·리튬 재고를 추정 (Imperial). **실측 (10-01, 우리 합성 truth · 용량 참값 제공)**: 기본 시작점 · 전 범위면 LLI/LAM ±1–2 %p 복원 (LAM_PE 만 −27 % 상대) · 범위 자르기 → RMSE 하강 + 답 1–2 %p 이동 · 초기값 → RMSE 2–4 배 먼 골 · dVdQ target 불안정 · DE bounds 하드코딩. 형상만의 시험은 미착수.
 - [[pyimpspec]] — **외부 도구 entity** (EIS): KK 검사 · DRT · 피크 · 등가회로 (GPL-3.0-or-later · Python ≥3.12 → 운영 3.11 밖 · 분석 전용 별도 venv). **실측 (10-03, 합성 2-RC · 잡음 0)**: 피크 위치 · 넓이는 맞고 (넓이 λ 100 배에 2.5 % 안) **높이는 λ 따라 7 배** · 기본 피크 분석이 가짜 피크 둘 — 제안 실험 P1 · P2 (미착수).
+- [[ampworks]] — **외부 도구 entity** (dQdV · dVdQ · 전압 MAPE 로 창 4 + iR → LAM · LLI · BSD-3 · py ≥3.11): **watch (2026-10-05 실측)** — 우리 합성 truth 에서 점 추정은 비용 항 · 시작점에 민감 (dQdV 만 안정 · 기본값은 LLI 단독에서 국소 최소) · 보고 std 는 틀린 적합에서 과소 · Hessian 32 중 28 비양정치 · upstream 결함 둘 (LLI_std 변수 혼동 · x0 덮어쓰기) 초안 · 미발송.
 - [[isu-uconn-lfp-gr-emulated-degradation]] — **외부 데이터셋 + 코드 entity**: LFP/흑연 11 셀을 원판 지름 (LAM) · 리튬화 상태 (LLI) 로 **설계해 모사**한 곡선 (CC BY 4.0) + 질량 배율 · 오프셋 GA/NSGA 맞춤 (MIT). 설계 참값 (m_P · m_N · LII) 표가 노트북에 있다 — α·β 창 맞춤과 같은 4 변수 구조의 **실측 외부 검증 후보** (E1–E3 미착수 · LFP 평탄 고원 · 명목 참값 한계).
 
 ## Concepts (개념)

@@ -3482,3 +3482,13 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - 문서 `bms-balancing/docs/REIL_C6_ENV_PROFILE_DRAFT_20261004.md` · 선행 조건 문서 §5 덧붙임 · [[isu-uconn-lfp-gr-emulated-degradation]] 에 한 줄
 - 프로필 축 · 부속 A §3-1 옵션 8 개 대조 목록 · Sobol 배열 봉인 · 실행 기계 후보 셋 (이 컨테이너 · 사용자 Windows · 서버 — 결정은 사용자)
 - 하지 않은 것: 설치 · 버전 실측 · 옵션 introspection · 자료 개봉 · 실행 · 판 번호 선택
+
+## [2026-10-05] ingest | GitHub 연구 인사이트 (2026-10-05 전달분 · 항목 2) — ampworks: 1차 대조 → 판정 실험 A1–A3 → upstream 초안 (미발송)
+- raw 둘: `raw/articles/2026-10-05-github-research-briefing.md` (브리핑 원문 + 1차 대조 — 공개 저장소를 git 으로 직접 받아 읽은 원문 · 가지 검색 두 번) · `raw/repositories/2026-10-05-ampworks-on-synthetic-truth.md` (+ 결과 JSON 둘 · 바이트 그대로 · 스크립트 · 로그 · upstream 초안 원문)
+- 사용자 지시: "관련해서 github 인사이트 내용 왔어 확인해봐" (항목 2 만 받음) → "ㄱㄱ" (판정 실험 A1–A3 · upstream issue 는 초안만) → "1,2는 우리가 할 수 있는걸로 하자" (권고 순서 — 우리 몫은 기록까지 · 발송은 사용자)
+- 새 페이지 1: [[ampworks]] — 브리핑의 사실 주장 원문과 일치 · 변수 혼동 확인 (`_lam_lli.py:108` · v0.1.0 도) · **실측**: 점 추정은 비용 항 · 시작점에 민감 (dQdV 만 ≤ 0.70 %p · 기본값은 LLI 단독에서 국소 최소) · 108행의 크기 0.24–6.7 배 · 보고 std 는 틀린 적합에서 과소 · Hessian 28/32 비양정치 · **재현 중 새 결함** (`constrained_fit` 이 넘겨받은 x0 의 iR 을 제자리에서 덮어씀) · upstream 초안 셋 (issue 2 · discussion 1 · 미발송)
+- 갱신: [[22p-physics-or-degeneracy]] Status Log (Evidence 에는 넣지 않음 — 국소 최소) · [[fitting-degeneracy]] (pyprobe 옆 한 줄) · [[pyprobe]] 관련 · index 한 줄 + 머리 (59 → 60)
+- 우리 저장소 가지 검색: 로컬 원격 추적 가지 28 개 · 텍스트 · 코드 파일 — 없음 (28 가지 모두 · 첫 검색에서 시간 초과한 3 가지는 재시도에서 없음)
+- 격리: ampworks 는 저장소 밖 얕은 clone (읽기만 · 작업 트리 변경 0) + 스크래치패드의 버리는 venv · 운영 환경 · 저장소 설치 0 · RUN_SCOPE 0 바이트
+- 하지 않은 것: upstream issue · discussion · PR 발송 (사용자 몫 · 3 은 보류 권고 · PR 은 maintainer 가 원할 때) · #40 이후 issue 중복 검색 (이 세션 API 밖)
+- 모델 provenance: entity frontmatter 에 `model` · `effort` 를 두지 않았다 (저장소 산출물에 모델 식별자 금지)

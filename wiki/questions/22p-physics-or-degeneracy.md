@@ -2,7 +2,7 @@
 title: 22p 결과는 물리인가 fitting degeneracy 인가
 description: "Is the seminar 22p LLI/LAM decomposition (LAM_PE=LAM_NE=13%, LLI=17%) real physics or an artifact of non-identifiability"
 created: 2026-08-11
-updated: 2026-10-03
+updated: 2026-10-05
 type: research-question
 tags: [battery, degradation, research]
 sources: [raw/repositories/degradation-degeneracy-audit.md, raw/papers/schmitt2022_sic-ocp-shape-change-degradation-modes.md, raw/papers/2026-09-21-siwon-kim-si-gr-ica-lam-si-gitt-ocp.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/cui2024_electrode-utilization-formation-cycle-life.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/mohtat2019_electrode-soh-estimability-expansion.md, raw/papers/natterer2026_re-halfcell-anode-potential-aging.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/sun2025_dl-eis-degradation-mode-diagnostics.md, raw/papers/oney2025_dead-slow-overworked-graphite-operando-microxrd.md]
@@ -1109,6 +1109,12 @@ LAM_PE ≈ LAM_NE 는 물리가 아니라 **flat valley 방향에서 두 전극�
   `max_q` 에 따라 LLI-2 형 명목도 배제할 수 있다. 이 카드의 판정 틀 (근최적 집합이 참값을 포함하는가 · 얼마나 넓은가) 을 실측에
   얹을 때 **허용 영역이 정한 폭 · 배제를 자료의 축퇴로 읽지 않는** 규칙이 프로토콜 v2 (`bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2.md`) 에 들어갔다 — 실용
   선택에서 좁음 · 배제는 UNRESOLVED 이고 축퇴 지지는 양의 증거 (양립 증인 + 넓은 증인) 로만 선다. 확인적 맞춤은 논문 (C1) 뒤.
+- **[2026-10-05] GitHub 인사이트 (2026-10-05 전달분 · 항목 2) → 실측까지 (사용자 승인 "ㄱㄱ").** [[ampworks]] 를 우리 합성 truth
+  (noise 0 · 조건 4) 에 넣어 A1–A3. **Evidence 에는 넣지 않는다** — 틀린 답은 목적함수가 맞은 답의 2.8–4.9 배인 국소 최소라 이 카드가 묻는
+  축퇴 (같은 곡선을 똑같이 잘 맞추는 다른 답) 의 표본이 아니다. 이 카드에 닿는 것 둘: ① 보고 std (Hessian 대각) 가 틀린 적합에서 참 오차를
+  덮지 못한다 (기본값 · LLI 단독: LAM_NE 오차 7.8 %p ↔ std 0.014 %p) — [[np-lip-ocv-reparametrization]] 이 짚은 `sqrt(diag)` 관행의 실측 사례 ·
+  ② 적합 32 중 28 에서 SSR Hessian 이 양정치가 아니다 — 공분산이 성립하지 않는 자리에서 std 를 낸다. `[해석]` 전압만 맞추면 std 가 14–73 %p 로
+  넓다 — 전압 곡선만으로는 창이 흔들려도 목적함수가 거의 안 변하는 방향이 있다는 관측 (판정 아님).
 
 ### 이 카드가 속한 논지 (2026-09-03)
 
