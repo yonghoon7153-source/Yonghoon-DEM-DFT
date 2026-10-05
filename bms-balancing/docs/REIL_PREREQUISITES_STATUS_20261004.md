@@ -229,3 +229,13 @@
 - **다음 (각각 사용자 결정):** ① 보충을 Codex 에 보낼지 (발송문 초안은 사용자에게 따로 · 발송은 사용자) ② 보충 §1-3 의 허용 목록 구현 (RED 먼저 ·
   순수 함수 · 봉인 불변) 을 지금 할지 · 같은 판 재구축 단계 전까지 미룰지 ③ C6 수용 뒤 N3 (P0 범위 · 예산 · 중단 조건). 그 전 자료 개봉 · 재구축 ·
   설치 · 맞춤 · 비용 측정 0.
+
+## §14 C6-N1 허용 목록 구현 — 사용자 승인 기록 (2026-10-06 · 코드 변경 전 · 덧붙임 — 위 §0–§13 은 그대로)
+
+> 사용자 (2026-10-06): "권고 사항으로 해줘" — §13 "다음" ② 에서 권고한 쪽 = **허용 목록을 지금 구현하고 그 커밋으로 Codex 보충 요청을 보낸다**.
+
+- **범위:** `bms-balancing/scripts/reil_c6_profile.py` 의 `classify_record_mismatches` 를 보충 문서 §1-3 의 허용 목록 대조로 바꾸고 lock 의 `#@ collision`
+  줄에 해시 셋 (덮인 쪽 expected · 디스크 쪽 expected · 실제) 을 값으로 적는다 · `bms-balancing/tests/test_reil_c6_profile.py` 에 RED 먼저 · 기대 시험
+  수 (`bms-balancing/WORKING_STATE.md`) 를 같은 커밋에서 올린다.
+- **하지 않는 것:** 봉인 `reil_c6_20261005/` 10 파일 · README 수정 (새 lock 형식은 같은 판 재구축 단계의 새 emit 에서 새 식별로) · venv · 설치 · emit /
+  check 실행 · 변이 증명 실행 (venv 필요) · REIL 자료 개봉 · P0 · 맞춤 · `degradation-degeneracy/` (RUN_SCOPE) 수정.
