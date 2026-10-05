@@ -1,0 +1,36 @@
+{
+  "schema": 1,
+  "scope": "Recipient review artifacts only; not a native execution authorization",
+  "files": [
+    {
+      "file": "REVIEW_KO.md",
+      "bytes": 12299,
+      "sha256": "5ae9ad735e2bcdba26a2af86e6ff6a9b14942843ff8a99decac2ce2d7b0f17ee"
+    },
+    {
+      "file": "CLAUDE_REPLY_KO.md",
+      "bytes": 2827,
+      "sha256": "870c5b363bcf39d7b42d299576b78a6eb3fc0e1b646191ee26be995311029767"
+    },
+    {
+      "file": "DECISION.json",
+      "bytes": 1252,
+      "sha256": "183dd6fb2a82c7aed5b76b4958deaa19b7bfc4fb797c3f765612fd01c6a917ab"
+    },
+    {
+      "file": "ARCHIVE_VERIFICATION.json",
+      "bytes": 1112,
+      "sha256": "0de94201e2f1265dc18cda22267eff53731ffee354ee5933bf6d8be965a85ba1"
+    },
+    {
+      "file": "EVIDENCE_CROSSCHECK.json",
+      "bytes": 2704,
+      "sha256": "2b71d228600215d21c658e8b0bd6d414024fa0f96855fb46e43fe8d19d129793"
+    },
+    {
+      "file": "inspect_archive.py",
+      "bytes": 8897,
+      "sha256": "0a77a7f2098ee0b0599c17d311232036be2b26551c88025ee55ac5df3aa036e6"
+    }
+  ]
+}

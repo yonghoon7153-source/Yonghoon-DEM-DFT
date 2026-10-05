@@ -1,0 +1,54 @@
+{
+  "reviewer_tool_return": {
+    "chunk_id": "8c3221",
+    "wall_time_seconds": 0.1205242,
+    "exit_code": 0,
+    "original_token_count": 290,
+    "output": "{\r\n  \"scope\": \"Read-only archive/data comparisons; supplied code never imported or run\",\r\n  \"code_manifest_files\": 5,\r\n  \"source_before_after_equal\": true,\r\n  \"exact_extractions\": 42,\r\n  \"planned_inputs\": 77,\r\n  \"unique_ids\": 62,\r\n  \"accounted_inputs\": 77,\r\n  \"engines\": {\r\n    \"Python\": {\r\n      \"rc\": 0,\r\n      \"elapsed_s\": 154.1569999998901,\r\n      \"limit_s\": 250\r\n    },\r\n    \"Java_compile\": {\r\n      \"rc\": 0,\r\n      \"elapsed_s\": 1.1100000001024455,\r\n      \"limit_s\": 90\r\n    },\r\n    \"Java_stub\": {\r\n      \"rc\": 0,\r\n      \"elapsed_s\": 0.29600000008940697,\r\n      \"limit_s\": 60\r\n    },\r\n    \"PS51\": {\r\n      \"rc\": 0,\r\n      \"elapsed_s\": 8.578999999910593,\r\n      \"limit_s\": 240\r\n    }\r\n  },\r\n  \"profile_cache\": {\r\n    \"ORIGINAL_READER\": 14,\r\n    \"EXACT_BYTES_REUSE\": 39\r\n  },\r\n  \"preseal_sha256\": \"c0145c2a11f7539f0c9567d01618e0413f1a9e1ac0a54d83012bf0585db491bc\",\r\n  \"preseal_pins\": 1543,\r\n  \"preseal_after_record_count\": 1543,\r\n  \"preseal_members_directly_checked\": 148,\r\n  \"preseal_pins_not_packaged_or_not_resolved\": 1395,\r\n  \"final_accounting_stale_false_fields\": {\r\n    \"fixture_created\": 77,\r\n    \"actual_call_bound\": 77\r\n  },\r\n  \"errors\": []\r\n}\r\n"
+  },
+  "parsed": {
+    "scope": "Read-only archive/data comparisons; supplied code never imported or run",
+    "code_manifest_files": 5,
+    "source_before_after_equal": true,
+    "exact_extractions": 42,
+    "planned_inputs": 77,
+    "unique_ids": 62,
+    "accounted_inputs": 77,
+    "engines": {
+      "Python": {
+        "rc": 0,
+        "elapsed_s": 154.1569999998901,
+        "limit_s": 250
+      },
+      "Java_compile": {
+        "rc": 0,
+        "elapsed_s": 1.1100000001024455,
+        "limit_s": 90
+      },
+      "Java_stub": {
+        "rc": 0,
+        "elapsed_s": 0.29600000008940697,
+        "limit_s": 60
+      },
+      "PS51": {
+        "rc": 0,
+        "elapsed_s": 8.578999999910593,
+        "limit_s": 240
+      }
+    },
+    "profile_cache": {
+      "ORIGINAL_READER": 14,
+      "EXACT_BYTES_REUSE": 39
+    },
+    "preseal_sha256": "c0145c2a11f7539f0c9567d01618e0413f1a9e1ac0a54d83012bf0585db491bc",
+    "preseal_pins": 1543,
+    "preseal_after_record_count": 1543,
+    "preseal_members_directly_checked": 148,
+    "preseal_pins_not_packaged_or_not_resolved": 1395,
+    "final_accounting_stale_false_fields": {
+      "fixture_created": 77,
+      "actual_call_bound": 77
+    },
+    "errors": []
+  }
+}

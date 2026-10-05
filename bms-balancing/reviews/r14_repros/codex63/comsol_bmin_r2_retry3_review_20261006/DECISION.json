@@ -1,0 +1,25 @@
+{
+  "review_date": "2026-10-06",
+  "subject": "BMIN_R2_LIMITED_VALIDATION_RETRY3_RESULT_20261005",
+  "decision": "IMPLEMENTED_OUTCOMES_ACCEPTED_PLAN_CLOSEOUT_CONDITIONAL",
+  "input_archive_sha256": "ed0138b90cf2dc4e42f22ec18d8719ff56906780f74b4139850d604b096bb470",
+  "code_manifest_sha256": "4cdca2e6bf7d073f813d97be73825b8cd2043c2fc44e285f4a190bc6fb97cf25",
+  "accepted_inputs": 77,
+  "unique_ids": 62,
+  "PY04_02": "ACCEPTED_FOR_PREPARSE_BASELINE_IDENTITY_REJECTION_ONLY",
+  "PY05_03": "ACCEPTED_FOR_RUNTIME_TLIST_REJECTION_ONLY_WITH_STATIC_ORDERING_ARGUMENT",
+  "PS01_16": {
+    "external_verdict": "ACCEPTED_FAIL_CLOSED",
+    "TryParse_internal_branch": "UNOBSERVED",
+    "plan_closeout": "REQUIRES_EXPLICIT_SCOPE_DISPOSITION_OR_SEPARATELY_AUTHORIZED_NARROW_OBSERVATION"
+  },
+  "record_correction_required": "FINAL_INPUT_ACCOUNTING retains both pretest false flags in all 77 rows; add a source-bound correction without rewriting originals",
+  "profile_reader_successes": 14,
+  "profile_cache_reuses": 39,
+  "production_change_required_by_review": false,
+  "full_suite_rerun_recommended": false,
+  "additional_test_authorized": false,
+  "native150_approved": false,
+  "reviewer_provided_code_executions": 0,
+  "overall_normal_gate": "INCOMPLETE"
+}

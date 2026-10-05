@@ -1,0 +1,20 @@
+{
+  "reviewer_tool_return": {
+    "chunk_id": "10a77e",
+    "wall_time_seconds": 0.1582732,
+    "exit_code": 0,
+    "original_token_count": 109,
+    "output": "{\r\n  \"archive\": \"C:\\\\Users\\\\Administrator\\\\Downloads\\\\BMIN_R2_LIMITED_VALIDATION_RETRY3_RESULT_20261005.zip\",\r\n  \"bytes\": 1619237,\r\n  \"sha256\": \"ed0138b90cf2dc4e42f22ec18d8719ff56906780f74b4139850d604b096bb470\",\r\n  \"manifest_bytes\": 43200,\r\n  \"manifest_sha256\": \"97f51112bd6c4e0ae502e56db99eba5fb56026c7b7c79d0639661cf44727b91a\",\r\n  \"payload_count\": 244,\r\n  \"member_count\": 245,\r\n  \"uncompressed_bytes\": 13540954,\r\n  \"errors\": []\r\n}\r\n"
+  },
+  "parsed": {
+    "archive": "C:\\Users\\Administrator\\Downloads\\BMIN_R2_LIMITED_VALIDATION_RETRY3_RESULT_20261005.zip",
+    "bytes": 1619237,
+    "sha256": "ed0138b90cf2dc4e42f22ec18d8719ff56906780f74b4139850d604b096bb470",
+    "manifest_bytes": 43200,
+    "manifest_sha256": "97f51112bd6c4e0ae502e56db99eba5fb56026c7b7c79d0639661cf44727b91a",
+    "payload_count": 244,
+    "member_count": 245,
+    "uncompressed_bytes": 13540954,
+    "errors": []
+  }
+}
