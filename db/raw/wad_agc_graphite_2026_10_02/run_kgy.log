@@ -53,3 +53,35 @@ G1 기계 대조 PASS (ΔW 0.00000) · G3 PASS · G4 FAIL · 두께 PASS · 헤�
 미완 잡 [] · 대체 []
 → /home/kgy/work/runs/wad_agc_graphite_2026_10_02/collect_kgy.json
 [2026-10-05 13:35:28] ✅ 끝 — 회수 블록으로 /home/kgy/work/runs/wad_agc_graphite_2026_10_02 을 worktree 에 커밋한다 (tmp 제외)
+[2026-10-05 15:16:20] START @ 3bd839ac3 · 변경 0 · STAGE=kprobe · RUN=/home/kgy/work/runs/wad_agc_graphite_2026_10_02 · PWX=/home/kgy/apps/qe-7.4.1-gpu/bin/pw.x · PSEUDO=/home/kgy/work/pseudo · 공존 근거 D-2026-10-02-wad-agc-graphite
+[2026-10-05 15:16:24] selftest: agc_graphite selftest: 54 통과 · 0 실패 ✅
+[2026-10-05 15:16:24] ⑤ k 사다리 탐침 (결정 D-2026-10-05-wad-agc-kprobe12) — AGC_N3_top_fcc 두 끝점 12×12×1
+[2026-10-05 15:16:24] DRY_RUN — 탐침 점검만 하고 끝낸다 (rc=1)
+[2026-10-05 15:35:59] START @ c704348b0 · 변경 0 · STAGE=kprobe · RUN=/home/kgy/work/runs/wad_agc_graphite_2026_10_02 · PWX=/home/kgy/apps/qe-7.4.1-gpu/bin/pw.x · PSEUDO=/home/kgy/work/pseudo · 공존 근거 D-2026-10-05-wad-agc-kprobe12
+[2026-10-05 15:36:02] selftest: agc_graphite selftest: 57 통과 · 0 실패 ✅
+[2026-10-05 15:36:02] ⑤ k 사다리 탐침 (결정 D-2026-10-05-wad-agc-kprobe12) — AGC_N3_top_fcc 두 끝점 12×12×1
+[2026-10-05 15:36:03] DRY_RUN — 탐침 점검만 하고 끝낸다 (rc=0)
+[2026-10-05 15:36:03] START @ c704348b0 · 변경 0 · STAGE=kprobe · RUN=/home/kgy/work/runs/wad_agc_graphite_2026_10_02 · PWX=/home/kgy/apps/qe-7.4.1-gpu/bin/pw.x · PSEUDO=/home/kgy/work/pseudo · 공존 근거 D-2026-10-05-wad-agc-kprobe12
+[2026-10-05 15:36:07] selftest: agc_graphite selftest: 57 통과 · 0 실패 ✅
+[2026-10-05 15:36:07] ⑤ k 사다리 탐침 (결정 D-2026-10-05-wad-agc-kprobe12) — AGC_N3_top_fcc 두 끝점 12×12×1
+   AGC_N3_top_fcc_K12_bound            12042 s · 완료 1 · 피크 9771 MiB
+   AGC_N3_top_fcc_K12_far               9203 s · 완료 1 · 피크 9771 MiB
+{
+ "model": "AGC_N3_top_fcc",
+ "k": 12,
+ "decision": "D-2026-10-05-wad-agc-kprobe12",
+ "A_A2": 21.523194956359582,
+ "W_k6_J_m2": 0.5129835422617702,
+ "W_k9_J_m2": 0.492739261243266,
+ "W_k12_J_m2": 0.48778200314394266,
+ "dW_k12_minus_k9_J_m2": -0.004957258099323347,
+ "threshold_abs_dW": 0.01,
+ "status": "CONVERGED_AT_K9",
+ "jobs": {
+  "AGC_N3_top_fcc_K12_bound": "OK",
+  "AGC_N3_top_fcc_K12_far": "OK"
+ },
+ "reading": "9×9×1 에서 k 수렴으로 읽는다 — 헤드라인 처리는 1저자 결정"
+}
+→ /home/kgy/work/runs/wad_agc_graphite_2026_10_02/kprobe12_collect_kgy.json
+[2026-10-05 21:30:17] ✅ 탐침 끝 — 회수 블록으로 /home/kgy/work/runs/wad_agc_graphite_2026_10_02/kprobe12 · kprobe12_collect_kgy.json 을 커밋한다 (tmp 제외)
