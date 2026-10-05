@@ -115,7 +115,7 @@ CODE_FILES = (
     'scripts/analyze_contacts_bimodal.py', 'scripts/coverage_physics_vs_hertzian.py', 'scripts/parse_liggghts.py',
     'scripts/se_material.py', 'scripts/metrics_json.py', 'scripts/tau_flux.py', 'scripts/lhs_webapp_batch.py',
     'scripts/lhs_harvest_batch.py', 'scripts/lhs_descriptor_harvest.py', 'webapp/app.py', 'webapp/pipeline_service.py',
-    'webapp/export_master_csv.py', 'webapp/type_map_resolve.py')
+    'scripts/export_master_csv.py', 'scripts/type_map_resolve.py')
 LHS27_FILE = 'docs/figures/physics_regime/coverage_hertz_vs_physics_summary.csv'
 
 
@@ -385,6 +385,10 @@ def app_supports_network() -> bool:
 def preflight(args, plan, root: Path, budget_mb) -> dict:
     """CPU · 메모리 · 디스크 · git · 원자료 · 의존 — 경고 (warn) 와 중단 (stop) 을 나눠 돌려준다."""
     warn, stop = [], []
+    #  봉인 대상 코드가 디스크에 다 있어야 한다 — 없는 경로는 해시가 None 으로 조용히 빠진다 (10-05 · 두 경로가 webapp/ 로 잘못 적혀 있었다)
+    _miss = sorted(k for k, v in code_hashes().items() if v is None)
+    if _miss:
+        stop.append(f'봉인 대상 코드 파일이 없다: {_miss}')
     cpu = cpu_info()
     mi = meminfo()
     lanes = args.lanes

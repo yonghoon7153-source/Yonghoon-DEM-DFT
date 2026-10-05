@@ -1564,7 +1564,8 @@ _TAU_REASON = ('NOT_COMPUTED 의 사유 (사유 코드 = ":" 앞) — missing_in
                '온도 기록 없음) · invalid_input: 세부 (공용 기술 검사 tau_flux.ion_record_problem — 생산자 계약 위반: computed 인데 σ 두 표현이 유한 양수가 '
                '아니거나 서로 다름 (RGLR-02) · 관통 분율 (0, 1] 밖 · 증명된 비관통 조합이 아닌 valid_zero · 모르는 상태) · solver_guard (관통인데 σ 없음 — '
                '생산자 not_computed) · percolation_disagree (G2 — 솔버 관통 ≠ calc_percolation) · temperature_mismatch (G4 — σ₀ 와 σ_full 의 온도가 다르다 · '
-               '두 모드의 (σ₀, T) 가 다르다) · 다른 상태면 빈칸')
+               '두 모드의 (σ₀, T) 가 다르다) · generation_invalid: 세부 (10-05 RGLR2-02 — 케이스 폴더의 망 활성 세대가 확정되지 않음: '
+               'tau_flux.network_generation_problem — full_metrics ↔ 도장 불일치 · 되돌림 실패 · 중단된 게시 흔적 · 도장 손상 · 두 모드 모두) · 다른 상태면 빈칸')
 _TAU_PER_MODE = {
     'f_ion': ('★ 이온 유효 전도도 비 f = σ_eff/σ₀ ({m} 망 · 무차원 · 단위 1) = σ_ratio × L_gap/L_mc — σ_ratio = 솔버 FULL 해의 무차원 sigma_full '
               '(8 자리 · TAU-25) · L_gap = 판 간격 · L_mc = 질량 보존 두께 = **판 간격 해의 질량보존 두께 재척도 (해 아님)** · 문헌 ε/τ² (Tjaden) · '
@@ -4980,7 +4981,7 @@ def _selftest():
             and '실험 절대 대조 금지' in _g29(f'tau2_ion_{m_}', 'caveat') and 'τ_e' in _g29(f'tau2_ion_{m_}', 'caveat')
             for m_ in ('hertz', 'physics')) if (_d29t and _TF29 is not None) else False
         chk('㉙g ★ 열 사전 (τ 명명 규약) — tortuosity factor = tau2 에만 · tau = √tau2 COMSOL 입력 아님 · f_gap φ_mc 와 짝짓지 말 것 · f = 재척도 (해 아님) · '
-            'User defined (fl) · 상태 다섯 + 두 부류 · MBCB 값 유지 · 비관통 = ∞ · 사유 다섯 · G6 물리 타깃 HOLD · 1세대 · τ_e 아님', _gm)
+            'User defined (fl) · 상태 다섯 + 두 부류 · MBCB 값 유지 · 비관통 = ∞ · 사유 = tau_flux.REASONS 전부 (여섯) · G6 물리 타깃 HOLD · 1세대 · τ_e 아님', _gm)
         _cov29 = sorted(c_ for c_ in _tc29 if not (callable(_TD29) and _TD29(c_)))
         chk('㉙h ★ 열 사전 덮개 — tau_flux.column_names() 의 열마다 정의가 있다 (tau_flux 가 열을 늘리면 여기서 걸린다) · 빈 뜻 없음'
             + (f' — 정의 없는 열 {_cov29}' if _cov29 else ''),
