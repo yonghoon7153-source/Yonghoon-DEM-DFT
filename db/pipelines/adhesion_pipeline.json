@@ -1539,6 +1539,11 @@
    "date": "2026-10-05",
    "stage": "dft",
    "text": "P1b G4 k 축 FAIL → 1저자 결정 (c): 대표 두 끝점 k 12×12×1 탐침 2 잡 (D-2026-10-05-wad-agc-kprobe12) · 입력은 k9 와 두 줄만 다름 · 판독 문턱 0.01 (G4 와 같음) · 헤드라인 불변 · kgy 공존 (같은 가드)."
+  },
+  {
+   "date": "2026-10-05",
+   "stage": "dft",
+   "text": "P1b k 12×12×1 탐침 kgy 발사 (tmux agck12 · c704348b · 15:39 watch 에서 bound SCF 1 회째) · k 점 74 (k9 41 · k6 20 — 시간반전만 쓰는 격자 셈과 일치) · 첫 DRY_RUN 은 jobs.json 해시 칸 버그로 거부됐다 → 정정 9160143e (입력 불변). GPU 합계 7.9 / 24.6 GB (cascade v7 · li2s 대조 담금질과 공유)."
   }
  ],
  "related_decisions": [
