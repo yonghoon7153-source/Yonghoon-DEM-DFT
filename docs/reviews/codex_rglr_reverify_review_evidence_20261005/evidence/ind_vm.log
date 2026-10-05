@@ -1,0 +1,55 @@
+{
+  "negative_radicand_inputs": [
+    1073.1,
+    1073.1,
+    1073.1000001073098
+  ],
+  "negative_radicand": -4.656612873077393e-10,
+  "stable_radicand": 1.1515417990400524e-14,
+  "same_VM_second_input": [
+    0.0,
+    0.0,
+    1.0730991562013514e-07
+  ],
+  "exact_VM_both": 1.0730991562013514e-07,
+  "exact_CV_pct": 0.0,
+  "actual": {
+    "vm_cv": 100.0,
+    "vm_mean": 5.365495781006757e-08,
+    "type_stress": {
+      "AM_P": {
+        "mean": 5.365495781006757e-08,
+        "ratio": 1.0
+      }
+    },
+    "z_layer_cv": [],
+    "status": "computed",
+    "contract": "v2-invalid-null"
+  },
+  "numpy_input": {
+    "vm_cv": 100.0,
+    "vm_mean": 5.365495781006757e-08,
+    "type_stress": {
+      "AM_P": {
+        "mean": 5.365495781006757e-08,
+        "ratio": 1.0
+      }
+    },
+    "z_layer_cv": [],
+    "status": "computed",
+    "contract": "v2-invalid-null"
+  },
+  "positive_control": {
+    "vm_cv": 0.0,
+    "vm_mean": 1.0730991562013514e-07,
+    "type_stress": {
+      "AM_P": {
+        "mean": 1.0730991562013514e-07,
+        "ratio": 1.0
+      }
+    },
+    "z_layer_cv": [],
+    "status": "computed",
+    "contract": "v2-invalid-null"
+  }
+}

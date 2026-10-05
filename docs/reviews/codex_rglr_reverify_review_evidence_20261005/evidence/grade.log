@@ -1,0 +1,27 @@
+G  등급 엔진
+  PASS  G1 등급 τ = √(φ·σ₀/σ_full,H) (= 웹앱 τ 블록 Hertz 칸) — Stage-E · physics 를 고르지 않는다
+  PASS  G2 σ 와 짝 provenance 배수를 함께 ×4 → τ · τ_bulk · overhead 불변 (L4-04 · 공통 스케일 불변성)
+  PASS  G3 Stage-E 키만 있으면 τ · overhead 축 값 없음 (Stage-E 값에 τ 이름 없음 · 결정 6)
+  PASS  G4 overhead = √(σ_bulk_net/σ_full,H) — 같은 망 · 같은 모드 (FULL ÷ CF)
+  PASS  G5a τ 축 — "(Hertz)" · 짝 σ₀ · 내부 등급선 · "Stage E physics 우선" · "3.0 고정" 없음
+  PASS  G5b τ_bulk 축 — 짝 σ₀ · "3.0 고정" 없음 · Dijkstra 대체 열 아님 유지
+  PASS  G5c overhead 축 — "모델 내부 협착 비" · "원기둥 bulk" · Hertz · √저항비 · 물리 협착 배수 아님
+  PASS  G6 τ 세 축 계산부에 σ₀ 리터럴 3.0 없음 (한 도우미 경유)
+  PASS  G7 헤더 — "τ_Laplace,eff ≤ 2.5 — Tippens 2019, Famprikis 2019" 를 근거처럼 적지 않음 · 내부 등급선 (TAU-16)
+  PASS  G8 ASR · σ_ionic Stage E 축은 그대로 — Stage-E physics σ 우선 (τ 아님 · 범위 밖)
+W  웹앱
+[Storage] NOT configured - SUPABASE_URL=False SUPABASE_KEY=False
+[Security] WARNING: auth OFF - local/private only. For public deploy set WEBAPP_REQUIRE_AUTH=1 + WEBAPP_AUTH_TOKEN.
+  PASS  W1 웹앱 _sigma_grain_context = se_material.sigma_grain_context (온도 키 조합 여섯 · 값 · 경고 같음)
+  PASS  W2 τ 블록 tau2 = 같은 도우미 (tau2_value) · 값 = φ·σ₀/σ (H · P) 반올림 3 자리 그대로
+  PASS  W3 쉬운 툴팁 __tau_lap_eff — Hertz · 짝 σ₀ 언급
+C  COMSOL 2D 내보내기
+  PASS  C1 f_ion_<mode> = σ_mode/σ₀ · tau2_ion_<mode> = φ·σ₀/σ_mode · tau_ion_<mode> = √ · 단위 1
+  PASS  C2 physics σ 없음 → physics 행 빈칸 (Hertz 복사 없음)
+  PASS  C3 Stage-E 행 = sigma_ionic_stage_e · 설명 "재료 인자 포함" · 옛 tau2 · f_ion · tau_Laplace_eff · sigma_ionic_eff 행 없음
+  PASS  C4 σ₀ 행 = 짝 σ₀ (온도 런 ×4) · 그 σ₀ 로 f · tau2 (σ 와 같이 ×4 → f · tau2 불변)
+  PASS  C5 README [B] — 모드별 행 (f_ion_hertz · tau2_ion_hertz · physics) · sigma_i_stageE 짝 아님 경고
+R  regime DB
+  PASS  R1 regime DB — tau2 도우미 경유 (tau2_from_metrics · 짝 σ₀) · 25 °C τ_Lap,eff = √(φ·3.0/σ_full,H) 그대로
+
+19 PASS · 0 FAIL

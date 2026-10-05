@@ -1,0 +1,23 @@
+{
+  "schema": "network_attempt/v2",
+  "network_attempt_run_id": "20261005T195719-ae463df7",
+  "solver_status": "success",
+  "latest_attempt_status": "success",
+  "failure_kind": "",
+  "reason": "",
+  "stage": "",
+  "active_network_run_id": "20261005T195719-ae463df7",
+  "active_status": "success",
+  "previous_generation_kept": null,
+  "input_digests": {
+    "atoms.csv": "fd771e0e0c708193",
+    "contacts.csv": "3c0420691b2a1d1b"
+  },
+  "code_sha": "unknown",
+  "attempted_at": "2026-10-05T19:57:19",
+  "argv": {
+    "type_map": "1:SE",
+    "scale": 1,
+    "contact_mode": "both"
+  }
+}

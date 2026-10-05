@@ -1,0 +1,23 @@
+{
+  "schema": "network_attempt/v2",
+  "network_attempt_run_id": "20261005T195720-ce18438f",
+  "solver_status": "failed",
+  "latest_attempt_status": "failed",
+  "failure_kind": "publish_exception",
+  "reason": "full_metrics.json \uc4f0\uae30 \uc911 OSError: review injection: full_metrics write failure",
+  "stage": "Network publication (\uc2b9\uaca9 \u00b7 \uc2e4\ud328 \uc2dc \ub418\ub3cc\ub9bc)",
+  "active_network_run_id": null,
+  "active_status": "none",
+  "previous_generation_kept": false,
+  "input_digests": {
+    "atoms.csv": "d8965a296bef61a0",
+    "contacts.csv": "d8886e55a0205e3d"
+  },
+  "code_sha": "unknown",
+  "attempted_at": "2026-10-05T19:57:20",
+  "argv": {
+    "type_map": "1:SE",
+    "scale": 1,
+    "contact_mode": "both"
+  }
+}

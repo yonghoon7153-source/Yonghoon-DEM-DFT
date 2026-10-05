@@ -1,0 +1,239 @@
+[
+  {
+    "name": "tau",
+    "args": [
+      "scripts/test_tau_flux.py"
+    ],
+    "rc": 0,
+    "seconds": 3.188,
+    "tail": [
+      "  PASS  L4b 양성 대조 — 작은 σ (Hertz σ_dim ~1e-4 · 6 자리 반올림이 상대 0.4 %) · 60 °C σ₀ (Arrhenius) 는 생산자 그대로 OK (σ₀ 메타 = 그 온도의 값)",
+      "  PASS  L4c 경계 — 허용 = 5e-7 + 1000·σ₀·5e-9 + 부동소수 여유 (= 5.15e-07 mS/cm) · 0.999×허용 안 → 유효 · 1.001×허용 밖 → invalid_input",
+      "  PASS  L5 성질 시험 (2 만 표본 · σ_ratio 1e-6–1.5 · σ₀ 25 °C · −30–120 °C × Ea 띠) — 생산자 반올림 출력 19900 건 전부 통과 · 반올림 0 (100 건) 은 양수 규칙이 막음 · σ_ratio ×4 놓침 0 ",
+      "  PASS  L6 ★ 증명된 비관통 = RGL-02 조합만 (사유 no_through_path · σ 숫자 None · 관통 분율 0 · CF · constr · 이온 채널 valid_zero) — 한 키씩 어긋나면 invalid_input · τ 인계 NOT_COMPUTED (NOT_PERCOLATING 아님) ",
+      "  PASS  L7 상태 어휘 — 생산자 계약 밖 (None · 키 없음 · 모르는 문자열 · 채널 어휘 valid_null) → invalid_input · 생산자 신고 not_computed → solver_guard {'None': 'invalid_input', \"'garbage'\": 'invalid_input', \"'valid_null'\": 'invalid_input', \"'COMPUTED'\": 'invalid_input', '키 없음': 'invalid_input', 'not_computed': 'solver_guard'}",
+      "  PASS  L8 어휘 짝 — 공용 기술 검사의 비관통 사유 = 생산자 (network_conductivity.NO_THROUGH_REASON) · 사유 코드 invalid_input 은 REASONS 안",
+      "",
+      "test_tau_flux: 51/51 PASS"
+    ]
+  },
+  {
+    "name": "pipeline",
+    "args": [
+      "webapp/test_pipeline_provenance.py"
+    ],
+    "rc": 0,
+    "seconds": 19.297,
+    "tail": [
+      "  PASS  T19b) 게시의 마지막 쓰기 (최근 시도 success 기록) 가 실패해도 되돌린다 — failed · 옛 세대 6 파일 동일 (실패 기록 자체를 못 쓰면 그 사실은 단계 로그에만 남는다) (done → failed · None)",
+      "  PASS  T19c) ★ 첫 실행의 게시 중 예외 → failed · 활성 세대 없음 (도장 · 망 JSON 없음) · full_metrics 그대로 · 최근 시도 failed (publish_exception · active_status none · previous_generation_kept False) (failed · missing · None)",
+      "  PASS  T20a) ★ WEB-03 Q2 한 실패 어휘 — 솔버 실패 · 승격 전 검사 거부 · 게시 중 예외 셋 다: 활성 세대 6 파일 SHA-256 그대로 (★ 솔버 실패도 full_metrics 를 건드리지 않는다 — 옛: 활성 파일에 network_solver_status=failed 를 썼다) · 최근 시도 = latest_attempt_status failed (+ 옛 키 solver_status) · failure_kind · 활성 세대 id · active_status success · previous_generation_kept · 시도 id · 입력 digest · 단계 · 사유 ",
+      "  PASS  T20b) 웹앱 `_network_generation` = 같은 어휘 (active_status · latest_attempt_status · failure_kind · stale) — 소비자가 추측하지 않는다 ",
+      "  PASS  T20d) 케이스 목록 (`list_cases`) — network_solver_status 는 활성 세대 (success 그대로 · 실패 종류와 무관) · 최근 시도는 다른 이름의 칸 (network_latest_attempt_status · _failure_kind · network_stale_after_failed_attempt · network_active_status) ",
+      "  PASS  T20c) 실패 뒤 정상 재계산 → 활성 = 그 실행 · 최근 시도 success · stale False (done · success · False)",
+      "",
+      "test_pipeline_provenance: 265/265 PASS"
+    ]
+  },
+  {
+    "name": "tau_status",
+    "args": [
+      "webapp/test_tau_handover_status.py"
+    ],
+    "rc": 0,
+    "seconds": 1.266,
+    "tail": [
+      "  PASS  T7b 정렬 표: 비율 행 바로 뒤에 상태 · 띠 행 (그 순서)",
+      "  PASS  T7c 툴팁: 상태 행 = 다섯 상태 · 다섯 사유 (RGLR-01 invalid_input) · 두 부류 (기술적 실패 · 과학적 HOLD) · tau_flux · G5 값 유지 · 띠 행 = L0/L1/L2 · 4r_SE/L (TAU-24) · 안 A 전 산출물",
+      "  PASS  T7d 별칭 표 (PAPER_TO_ORIG) 가 두 논문 라벨 → 원 라벨",
+      "  PASS  T7e 망 상태 · 최근 시도 행: 논문 라벨 · 정렬 표 (σ_ionic 행 뒤) · 툴팁 (valid_zero · no_through_path · solve_failed · network_attempt · RGL-04) · 별칭",
+      "  PASS  T8 케이스 라우트가 transform 전에 _ion_handover 를 붙인다",
+      "  PASS  T8b 케이스 라우트가 transform 전에 _network_generation (활성 세대 · 최근 시도) 을 붙인다",
+      "",
+      "test_tau_handover_status: 32/32 PASS"
+    ]
+  },
+  {
+    "name": "chain",
+    "args": [
+      "webapp/test_network_handover_chain.py"
+    ],
+    "rc": 0,
+    "seconds": 2.718,
+    "tail": [
+      "③ 실 배치 기록 (stop_after=network) → 실 인계 생성기",
+      "  PASS 실 배치에 관통 · 비관통 done 케이스가 있다 (106 · 24)",
+      "  PASS load_webapp 이 배치의 stop_after 를 넘긴다 ('network')",
+      "  PASS network 배치를 ⑤⑥⑦ 다섯 묶음으로 받는다 (옛 코드 = 거부 · RGL-03)",
+      "  PASS failed 로 바꾼 한 행 밖의 129/129 행 = 접촉 단계 판과 같은 값 (관통 · 정상 비관통 done 포함)",
+      "  PASS 수치 실패 행 = wa_status failed ('failed') · 웹앱 열 81 칸 빈칸 · 다른 값으로 바뀐 칸 0",
+      "",
+      "test_network_handover_chain: 10/10 PASS"
+    ]
+  },
+  {
+    "name": "network",
+    "args": [
+      "scripts/network_conductivity.py",
+      "--selftest"
+    ],
+    "rc": 0,
+    "seconds": 0.657,
+    "tail": [
+      "  PASS  #A2: 전자망 호출이 mode='electronic' 로 도달한다 (옛 판은 'ionic' 이었다): 'electronic'",
+      "  PASS  #A2: 기본 경로는 여전히 ionic (하위호환): 'ionic'",
+      "  PASS  #A2: mode 를 바꿔도 σ_e 가 **비트 단위 동일** (수치 중립): np.float64(0.212695) vs np.float64(0.212695)",
+      "  PASS  #BF: boundary_factor 가 경계 집합을 실제로 바꾼다 (6.0 → (7, 7) · 3.0 → (4, 4))",
+      "  PASS  #BF: 넓은 밴드가 더 많이 잡는다 (7 > 4)",
+      "  PASS  #BF: bottom∩top 겹침이 호출자까지 올라온다 (None 이면 조용한 실패): 0",
+      "  PASS  #BF: ⚠ 경계가 3 미만이면 폴백(15/85 %)이 factor 를 **덮는다** — 작은 망에서는 무효",
+      "NETWORK STATUS SELFTEST PASS (30/30)"
+    ]
+  },
+  {
+    "name": "boundary",
+    "args": [
+      "scripts/test_network_boundary_rule.py"
+    ],
+    "rc": 0,
+    "seconds": 0.687,
+    "tail": [
+      "  PASS  ④ `boundary_sets(atoms, ids, plate_z, factor)` → (bottom, top, rule, band_frac) — build_network 이 그 함수를 쓴다 (같은 집합)",
+      "  PASS  ⑤ L0 · L1 둘 다 3 개 미만 → L2 로 기록 (5 구 사슬 · 판 8)",
+      "  PASS  ⑥ 다분산 L0 — 띠 폭 = 2·bf·r_max / 판 = 2·2·1.5/20 = 0.3 (TAU-24 의 4r_SE/L 상한)",
+      "  PASS  ⑦ boundary_factor 3 → L0 · 띠 폭 2·3·1/20 = 0.3 (서명에만 있는 죽은 인자가 아니다)",
+      "  PASS  ⑧ 이온 (상위) · 전자 · 열 결과에 띠 규칙이 남는다 (boundary_rule · electronic_boundary_rule · thermal_boundary_rule)",
+      "  SKIP  ⑨ 원시 값 대조 — git 객체 eedada5d3:scripts/network_conductivity.py 를 못 읽었다 (얕은 클론?)",
+      "",
+      "test_network_boundary_rule: 8/8 PASS   SKIP: ['⑨ (git 객체 eedada5d3 없음)']"
+    ]
+  },
+  {
+    "name": "lw",
+    "args": [
+      "scripts/test_love_weber_stress.py"
+    ],
+    "rc": 1,
+    "seconds": 11.484,
+    "tail": [
+      "  ✓ L13k ★ 무하중 침대 (접촉 힘 0 · c_strs 0) → stress_lw_status UNDEFINED (zero_load …) · LW 값 키 없음 · 표 줄 없음 · 옛 키 그대로",
+      "  ✓ L13l ★ LHS-33 무하중 침대 → stress_cv null · 상 비 null · z 층 null · stress_cv_status undefined_zero_mean · 계약 v2-invalid-null · 사유 (옛 판: stress_cv 0 · 비 0 = 거짓 최고 등급)",
+      "  ✓ L13m ★ LHS-33 케이스 표 (network_summary.csv) — 무하중이면 \"Stress CV(%)\" = \"—\" · 상 비 \"—\" · 상태 줄 (상태 — 사유)",
+      "  ✓ L13n 정상 침대 → stress_cv_status computed · 계약 표지 · 값은 숫자 (L13f = 옛 정의 그대로) · 표에 상태 줄 없음",
+      "  ✓ L13o ★ RGLR-03 CLI — 첫 c_strs 칸 NaN 침대 → stress_lw_status FAILED (invalid_input …) · LW 값 없음 · stress_cv null · stress_cv_status invalid_input (옛 판: LW OK virial unavailable · stress 키 없음)",
+      "  ✓ L13p ★ RGLR-03 CLI — 첫 c_strs 칸 문자열 침대 → stress_lw_status FAILED (invalid_input …) · stress_cv_status invalid_input",
+      "",
+      "108/109 통과  — 실패: L12 real_14 대조"
+    ]
+  },
+  {
+    "name": "lw_labels",
+    "args": [
+      "webapp/test_stress_lw_labels.py"
+    ],
+    "rc": 0,
+    "seconds": 1.219,
+    "tail": [
+      "  PASS  V3e group() 이 같은 도우미 (metrics_json.stress_cv_group_cells) 로 칸을 만든다",
+      "  PASS  V4a ★ 보고서 줄 도우미 — 무효면 \"—\" + 상태 — 사유 · LHS-33 · 정상 · 옛 세대면 None",
+      "  PASS  V4b serve_report 가 같은 도우미 (stress_cv_report_line) 를 부르고 섹션 조건이 무효 상태도 본다",
+      "  PASS  V5a 등급 쉬운 툴팁 — 무효 · 미정의는 등급 안 매김 (LHS-33)",
+      "  PASS  V5b 등급 축 설명 — LHS-33 · 무효 · 미정의 = 값 없음 (등급 안 매김)",
+      "  PASS  V5c group.html 툴팁 — \"— (사유)\" 칸 · LHS-33",
+      "",
+      "70/70 PASS"
+    ]
+  },
+  {
+    "name": "lhs",
+    "args": [
+      "scripts/lhs_design_dataset.py",
+      "--selftest"
+    ],
+    "rc": 0,
+    "seconds": 1.61,
+    "tail": [
+      "  PASS  ㉗zg ★ 최종 레코드 관문 (0 채움 · 이름 옮김 · 0 대입 비움 뒤 내보내는 행을 다시 본다) — 정상은 통과 · 접촉 0 평균 · 접촉 0 총합 빈칸 · N/A 쌍의 총합 · NaN · AM–AM 접촉 0 의 평균 · 평균 × 개수 ≠ 총합 은 거부",
+      "  PASS  ㉗zh 열 사전 — AM–AM 접촉 0 = 평균 N/A · 총합 0 (측정된 0) · 쌍 0 채움은 세 키 모두 빈칸일 때만 (누락 → 0 채움 금지) · AM–AM 접촉 0 의 파괴 열 = N/A · ⑤⑥⑦ 검토 기록에 RGL-05 관문 순서 (원천 근거 → 유한 → 형/범위 → 식)",
+      "  PASS  ㉘a ★ LW 열 전부 (stress_cv_lw · stress_ratio_<상>_lw · _nowall · stress_lw_* 메타 · 벽 표지) = 명시 제외 · 사유 frame_unverified (TIMESTEP · 파일 따로 선택 · 프레임 대응 미인증)",
+      "  PASS  ㉘b LW 제외 패턴은 옛 σ_VM 열 · 다른 열을 잡지 않는다 (stress_cv · stress_ratio_<상> · stress_z_layer_cv · stress_cv_status · se_se_cn)",
+      "  PASS  ㉘c ★ 최악 경로 (census ✅ · 묶음 제한 없음 · 검토 목록 밖) 에서도 LW 열은 안 실린다 · 제외 수에 센다 · 나머지 열 · 값은 LW 없는 배치와 같다",
+      "  PASS  ㉘d ★ 생성기가 쓰는 제외 노트 (<인계표>_excluded.tsv · 열 사전 옆) — LW 행 (패턴이 stress_cv_lw 를 잡는다 · 사유 frame_unverified) · 보류 열 (tortuosity_dijkstra_SE · LHS-08) · 다른 명시 제외 (LHS-32) 도 같은 표",
+      "",
+      "lhs_design_dataset selftest: 281/281 PASS"
+    ]
+  },
+  {
+    "name": "stress_audit",
+    "args": [
+      "scripts/lhs_stress_constriction_audit.py",
+      "--selftest"
+    ],
+    "rc": 0,
+    "seconds": 0.125,
+    "tail": [
+      "  PASS  S4 상 비 = 상 평균 / 전체 평균 (AM_P 2/(4/3) = 1.5 · SE 0.75)",
+      "  PASS  S4b 정상 입력 출력 키 그대로 (상태 키 없음 — 커밋된 감사 JSON 과 같은 꼴)",
+      "  PASS  S7 LHS-33 무하중 → stress_cv · 상 비 None · stress_cv_status undefined_zero_mean (옛 판 0.0)",
+      "  PASS  S7b LHS-33 비유한 σ → stress_cv None · stress_cv_status invalid_input (옛 판 0.0)",
+      "  PASS  S5 L2-08 반례: 비가중 협착 몫 45 % · 전력 가중 8.1818 %",
+      "  PASS  S6 원자 덤프에 프레임 둘 = 거부 (DESC-06)",
+      "",
+      "12 PASS · 0 FAIL"
+    ]
+  },
+  {
+    "name": "group",
+    "args": [
+      "webapp/test_closed_param_groupview.py"
+    ],
+    "rc": 0,
+    "seconds": 1.406,
+    "tail": [
+      "  PASS  H0 _group_am_am_mean_na 가 모듈 수준에 있다",
+      "  PASS  H1 접촉 0 (숫자) → 평균 None · 총합 0 · 개수 0 그대로",
+      "  PASS  H2 옛 케이스의 문자열 \"0\" 도 같은 규칙 (am_am_n_contacts 가 문자열이던 세대)",
+      "  PASS  H3 접촉 있음 → 평균 그대로",
+      "  PASS  H4 개수 키가 없으면 판단하지 않는다 (값 그대로 — 모르는 것을 지어내지 않는다)",
+      "  PASS  H5 그룹 표 라우트가 이 도우미를 부른다 (배선)",
+      "",
+      "44 PASS · 0 FAIL"
+    ]
+  },
+  {
+    "name": "grade",
+    "args": [
+      "webapp/test_tau_grade_unify.py"
+    ],
+    "rc": 0,
+    "seconds": 1.953,
+    "tail": [
+      "  PASS  C2 physics σ 없음 → physics 행 빈칸 (Hertz 복사 없음)",
+      "  PASS  C3 Stage-E 행 = sigma_ionic_stage_e · 설명 \"재료 인자 포함\" · 옛 tau2 · f_ion · tau_Laplace_eff · sigma_ionic_eff 행 없음",
+      "  PASS  C4 σ₀ 행 = 짝 σ₀ (온도 런 ×4) · 그 σ₀ 로 f · tau2 (σ 와 같이 ×4 → f · tau2 불변)",
+      "  PASS  C5 README [B] — 모드별 행 (f_ion_hertz · tau2_ion_hertz · physics) · sigma_i_stageE 짝 아님 경고",
+      "R  regime DB",
+      "  PASS  R1 regime DB — tau2 도우미 경유 (tau2_from_metrics · 짝 σ₀) · 25 °C τ_Lap,eff = √(φ·3.0/σ_full,H) 그대로",
+      "",
+      "19 PASS · 0 FAIL"
+    ]
+  },
+  {
+    "name": "receipts",
+    "args": [
+      "scripts/test_rint_receipts.py"
+    ],
+    "rc": 0,
+    "seconds": 36.094,
+    "tail": [
+      "  PASS  G8 off: wetted 3필드 통째 누락 → check_arm 거부 (collector_geom 수렴 증거)",
+      "  PASS  G8 off: 상충 (bare cg_info 3 인데 unconverged False) → check_arm 거부 (collector_geom 수렴 증거)",
+      "  PASS  G8 off: wetted 잔차 NaN → check_arm 거부 (collector_geom 수렴 증거)",
+      "  PASS  G8 off: bare 잔차 Inf → check_arm 거부 (collector_geom 수렴 증거)",
+      "  PASS  G8 off: wetted 잔차 문턱 위 (1e-3 · 플래그는 수렴) → check_arm 거부 (collector_geom 수렴 증거)",
+      "  PASS  G8 off: bare cg_info 가 bool (타입) → check_arm 거부 (collector_geom 수렴 증거)",
+      "",
+      "102 PASS · 0 FAIL"
+    ]
+  }
+]

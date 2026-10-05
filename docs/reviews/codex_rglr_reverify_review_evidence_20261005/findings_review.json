@@ -1,0 +1,43 @@
+{
+  "review": "RGLR third re-verification",
+  "commit": "dbe0f076d7b948b8ebcfa85a02a391125b104fe2",
+  "new_P1": 0,
+  "closed": ["RGLR-01", "RGLR-02", "RGLR-03"],
+  "limited_go": "Isolated WSL small integration tests only; no official publication, new production seal, 194-case run or ML handover authorized by this review.",
+  "production_verdict": "HOLD",
+  "repository_registry_modified": false,
+  "findings": [
+    {
+      "id": "RGLR2-01", "priority": "P2",
+      "title": "General publication bypasses the common ionic-record validator",
+      "discovery_scope": "Reproduces an explicitly disclosed omission; not a new P1 or reopening of fixed stop-path RGLR-01/02",
+      "file": "webapp/app.py", "line": 3346,
+      "reproduce": "python3 run_probes.py network",
+      "evidence_cases": ["general_ratio_times4", "general_band_ratio_missing"],
+      "evidence": "evidence/network_adversarial.json",
+      "impact": "Incoherent sigma representations or a missing ratio can be published as network success and sent toward Stage E; tau handover correctly rejects them.",
+      "limitation": "Coherent mutations after an actual network CLI run; Stage E is stubbed. No assertion of current unmutated solver producing the forged ratio."
+    },
+    {
+      "id": "RGLR2-02", "priority": "P2",
+      "title": "Failed rollback leaves mixed generations labeled previous_generation_kept=true",
+      "discovery_scope": "Additional synchronous rollback-failure boundary, distinct from acknowledged kill-9 non-atomicity",
+      "file": "webapp/pipeline_service.py", "line": 1175,
+      "reproduce": "python3 run_probes.py network",
+      "evidence_cases": ["rollback_destination_failure"],
+      "evidence": "evidence/network_adversarial.json",
+      "impact": "Old network sigma 0.012012 mS/cm and new full_metrics sigma 0.008755 mS/cm remain together while active_status=success and the UI claims prior values unchanged.",
+      "limitation": "Requires publication and rollback I/O failures; pipeline itself correctly returns failed. Ordinary one-fault rollback preserves all six files."
+    },
+    {
+      "id": "RGLR2-03", "priority": "P2",
+      "title": "Clamping a negative expanded VM radicand fabricates computed CV",
+      "discovery_scope": "Numerical answer to request Q4; known clamp behavior independently falsified for near-hydrostatic nonzero deviatoric stress",
+      "file": "scripts/dem_analysis_core.py", "line": 1217,
+      "reproduce": "python3 run_probes.py vm",
+      "evidence": "evidence/vm_boundary.json",
+      "impact": "Two exactly equal diagonal VM values yield CV=100% and computed, versus exact CV=0%.",
+      "limitation": "Near-hydrostatic boundary at very small absolute VM; incidence or effect size in the real 194 cases is not measured."
+    }
+  ]
+}

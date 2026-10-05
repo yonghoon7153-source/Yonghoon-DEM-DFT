@@ -1,0 +1,7 @@
+pattern	reason
+path_hop_area_.*	LHS-32 — 덩어리마다 고른 경로 30 개 (best · mean · worst 10) 의 평균 = 선별 표본 통계
+frac_[a-z]+_pct|fracture_index|n_[a-z]+_AM_AM|n_total_AM_AM	δ 판 파괴 분류 — 힘 기반 열과 나란히 인용 금지 (09-19 · LHS-31 ⑥) · 힘 기반 (Auerbach) 만 인계
+(frac|n)_[a-z]+(_force)?_(AM_P|AM_S)-(AM_P|AM_S)(_pct)?|n_total(_force)?_(AM_P|AM_S)-(AM_P|AM_S)	상 쌍별 파괴 분해 — 접촉 0 쌍에서도 비율 0 % (분모 max(n, 1)) 라 N/A 와 0 을 못 가르고, mono 상 이름 규약 (J20-k (B)) 을 이 열에 옮기는 관문이 없다 · 전체 집계만 인계
+area_.+_physics	physics 면적 — coverage 인계는 기하면적만 (J20-m) · 접촉별 추정 면적 합에 표면 한도가 없다 (LHS-25)
+stress_lw_.+|stress_cv_lw(_nowall)?|stress_ratio_.+_lw(_nowall)?	frame_unverified — Love–Weber (④b) 입자 응력: 원자 · 접촉 · mesh 덤프가 같은 프레임인지 인증되지 않았다 (parse_liggghts 가 원 덤프의 TIMESTEP 을 CSV 로 옮기지 않고 세 파일을 따로 고른다 · 전역 virial 1 % 는 부호 · 척도 검사일 뿐 프레임 · 입자 · 상 배분 대응 증명이 아니다 — Codex 10-05 재검증 Q5 · RGL-06).  194 건에 실으려면 원 덤프의 TIMESTEP · 고른 파일 · 타입 매핑 · 벽 기하 대응을 먼저 봉인한다 · 그때까지 '검증된 상별 실측 / 학습 타깃' 으로 인계하지 않는다
+tortuosity_dijkstra_SE	LHS-08 열림 — 130 중 14 만 값이 있고 `NOT_PERCOLATING` 이 규약 실패와 물리 미관통을 **한 값으로 접는다**.  재수확 뒤 공급.  ↪ J20 (09-28): 벽 규약 τ 를 **새 열** `tortuosity_SE_wall` 로 공급 — 이 옛 규약 열은 계속 보류.

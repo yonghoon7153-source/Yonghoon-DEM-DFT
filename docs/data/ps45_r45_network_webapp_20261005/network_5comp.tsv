@@ -1,0 +1,6 @@
+PC_SC	webapp_name	webapp_case_id	phi_SE	sigma_ion_hertz_mScm	sigma_ion_physics_mScm	sigma_e_hertz_mScm	sigma_e_physics_mScm	sigma_e_stageE_hertz_mScm	sigma_e_stageE_physics_mScm	kappa_hertz	kappa_physics	tau2_hertz	tau2_physics	AM_AM_contacts	SE_SE_CN	porosity_sphere_pct	thickness_um
+0:10	input_6mAh_real_1_D9	260925_000001_0bee25	0.284	0.1175	0.0695	4.77	3.85	4.766	3.854	8.428	7.261	7.243	12.254	8970	4.41	19.16	117.21
+3:7	input_6mAh_real_2_D9	260925_000448_bd85f9	0.291	0.146	0.0853	2.88	2.19	2.592	2.088	9.567	8.023	5.973	10.224	5794	4.8	17.16	114.36
+5:5	input_6mAh_real_3_D9	260925_000513_123978	0.296	0.1628	0.0955	1.94	1.42	1.514	1.221	10.103	8.387	5.45	9.295	3878	5.06	16.2	112.44
+7:3	input_6mAh_real_4_D9	260925_000559_082983	0.299	0.1786	0.1056	1.33	0.91	0.878	0.713	10.547	8.760	5.03	8.506	2208	5.38	14.95	111.05
+10:0	input_6mAh_real_5_D9	260922_222828_6e4ff6	0.295	0.1676	0.1062	1.30	1.06	0.610	0.547	10.924	8.954	5.286	8.343	733	5.57	15.82	112.6
