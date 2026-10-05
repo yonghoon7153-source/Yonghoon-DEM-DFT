@@ -1,0 +1,28 @@
+{
+  "scope": "Reviewer-owned static checks only; no submitted program or suite run.",
+  "attempts": [
+    {
+      "chunk_id": "5f5b9f",
+      "exit_code": 1,
+      "classification": "Reviewer reference inventory omission",
+      "detail": "tests/conftest.py was absent from prior text snapshot. Corrected check to compare fixed Git tree blob identities; submitted files unchanged."
+    },
+    {
+      "chunk_id": "889b1d",
+      "wall_time_seconds": 0.1959958,
+      "exit_code": 1,
+      "original_token_count": 182,
+      "output": "Traceback (most recent call last):\r\n  File \"C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate91_review_20261005\\reviewer_static_audit.py\", line 82, in <module>\r\n    d='\\n'.join(difflib.unified_diff(prev(path).splitlines(),get(path).splitlines(),fromfile='gate90/'+path,tofile='gate91/'+path,lineterm=''))+'\\n'\r\n                                     ^^^^^^^^^^\r\n  File \"C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\gate91_review_20261005\\reviewer_static_audit.py\", line 16, in prev\r\n    def prev(p): return old[P+p]['content']\r\n                        ~~~^^^^^\r\nKeyError: 'degradation-degeneracy/docs/22p_gap/mutation_replay.py'\r\n",
+      "classification": "Reviewer reference inventory omission",
+      "repair": "Fetched prior mutation_replay.py at GATE90 request commit; submitted files unchanged."
+    },
+    {
+      "chunk_id": "263ffa",
+      "wall_time_seconds": 0.1962683,
+      "exit_code": 0,
+      "original_token_count": 330,
+      "output": "{\"source_digest\": \"f0175fff71132003\", \"scope_files\": 60, \"log_hashes_verified\": 14, \"unchanged\": {\"requirements-validation-C.lock.txt\": true, \"requirements.txt\": true, \"scripts/smoke_e2e.sh\": true, \"docs/22p_gap/make_receipt.py\": true, \"docs/22p_gap/env_profile_B_v4.yaml\": true, \"src/io.py\": true, \"src/fitting.py\": true, \"run.sh\": true, \"tests/conftest.py\": true}, \"normalized_functions\": {\"normalize\": true, \"_verify_files\": true, \"_origin\": true, \"measure\": true, \"emit_lock\": true, \"parse_lock\": true, \"_mm\": true, \"compare\": true, \"_display\": true, \"compare_lock\": true, \"main\": true}, \"receipts\": [{\"leg\": \"paired_fixed5_v4\", \"history_exact_previous\": true, \"core_content_changes_only\": [\"validator_source_digest\"], \"core_sha_recorded_not_reserialized\": \"1e3ea7c806f8d53524d16e24c846755e0aa22dc3840f81fd0e5c114b3b1ac411\", \"anchor_present\": true, \"stamp_has_unmeasured_declaration\": true, \"validator_tree_dirty\": \"false\"}, {\"leg\": \"grid_fit_v5\", \"history_exact_previous\": true, \"core_content_changes_only\": [\"validator_source_digest\"], \"core_sha_recorded_not_reserialized\": \"23c78ed0c9cd7b89c495ef2ef3216829f812ac145957a64a50c768f679390d66\", \"anchor_present\": true, \"stamp_has_unmeasured_declaration\": true, \"validator_tree_dirty\": \"true\"}], \"replay\": {\"killed\": 412, \"survived\": 0, \"errors\": 0, \"declared\": 11}}\r\n",
+      "classification": "Final reviewer static data audit"
+    }
+  ]
+}

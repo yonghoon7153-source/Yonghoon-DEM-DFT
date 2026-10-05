@@ -1,0 +1,72 @@
+[
+  {
+    "file": "00_red_test_gate90_91_38failed_5passed.log",
+    "bytes": 69826,
+    "sha256": "ecececb2f5622c7c553b032b01888fa22c6d227601d5dd41d93b0d30abb856a0"
+  },
+  {
+    "file": "00b_kexpr_overlap_registry410_new_nodes5_overlap0.txt",
+    "bytes": 1262,
+    "sha256": "aa922d8f18669e4b08b0d4644289d66a3d42499c8f10978fb8d1cad26a9e0c9f"
+  },
+  {
+    "file": "01_green_test_gate90_91_43passed.log",
+    "bytes": 5558,
+    "sha256": "ca68c1dffcbcbfec519e607799127cb10edf1dbae59c22108bfa3a1c91f96f9d"
+  },
+  {
+    "file": "02_related_modules_10failed_stale_receipt_identity.log",
+    "bytes": 30701,
+    "sha256": "04f96905949f8f96195e008376d21087a7fa7ebf7a8c8508b4994b9b5f7b3269"
+  },
+  {
+    "file": "03_replay_g9_emit_expect_15killed_g90_witness_unchanged.log",
+    "bytes": 10096,
+    "sha256": "44932b9c6108f31d5bc5e127a7464a8722c04262c72cdc11505f79db3cf28613"
+  },
+  {
+    "file": "04_replay_g9_verify_15_rc0.log",
+    "bytes": 2114,
+    "sha256": "c4485a703e6ab0b59fae52cdd47f38c0447f892851edbc3cd243a31ea38e9a37"
+  },
+  {
+    "file": "06_make_receipt_7ff263197_rc0.log",
+    "bytes": 541,
+    "sha256": "d935c79df9a83a34a0c11bdf30ea59ecc2ef497556bbe1acbfa0b50e222097ec"
+  },
+  {
+    "file": "06b_make_receipt_check_core_identical_rc0.log",
+    "bytes": 508,
+    "sha256": "de32e700c9f305f8e56048388451969b3e72b3c9b2585b9cfa8e1aaf400f0ca4"
+  },
+  {
+    "file": "07_receipt_modules_after_regeneration_113passed.log",
+    "bytes": 1176,
+    "sha256": "50a831970c469d2611790dc4738156f69e262a988ad4ab355998f00cff56559d"
+  },
+  {
+    "file": "08_env_profile_json_f27006370_match.log",
+    "bytes": 998,
+    "sha256": "7680c439e2f7523d57da02b6fd7a1c68a531cfc3ad20e4682578a2b3fbe06cac"
+  },
+  {
+    "file": "10_full_pytest_f27006370_2182passed.log",
+    "bytes": 3646,
+    "sha256": "22ee5dd1ba546ae5d2d39efae2546c5f1ba299ae178c05d4c7604a8ad5e33013"
+  },
+  {
+    "file": "11_smoke_f27006370_rc0.log",
+    "bytes": 6599,
+    "sha256": "541ca7e35b0ee6a7ff836806a2ae6ce3f31cce63362ff1a946d2838acaa13550"
+  },
+  {
+    "file": "12_full_replay_f27006370_412_of_412_rc0.log",
+    "bytes": 53873,
+    "sha256": "b648960fce8799bbd0985fda5aec76d05a6e38791f25911e46fa7b7ded4ed6d3"
+  },
+  {
+    "file": "14_docs_lint_send_43056f78d_358passed.log",
+    "bytes": 1221,
+    "sha256": "89225ae711be3896e1a2a8bb9eb7207bbb10aeed7f6f67305e127f2a72544bb9"
+  }
+]

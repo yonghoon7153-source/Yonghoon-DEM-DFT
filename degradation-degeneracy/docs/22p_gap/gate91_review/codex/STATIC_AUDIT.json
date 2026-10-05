@@ -1,0 +1,716 @@
+{
+  "scope": "Read-only source text/hash/AST and submitted logs; no received code invocation, tests, smoke, mutation, restore, solver or installation.",
+  "files": [
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/GATE91_REQUEST.md",
+      "ref": "43056f78d845741b43357181fcfd64fc78a8ef0c",
+      "bytes": 14156,
+      "sha256": "e0d9ee2a69f2c7cb594c184450f9c274dbd0840dd2acf0a360c77b4e0a69594b",
+      "git_blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/PYBAMM_PIN_ROUND_SPEC.md",
+      "ref": "43056f78d845741b43357181fcfd64fc78a8ef0c",
+      "bytes": 33780,
+      "sha256": "aceea754e5be9e45a44d8a5145804df5e151955ed79e49bdf7f08556413dd4fc",
+      "git_blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/tools/env_profile.py",
+      "ref": "43056f78d845741b43357181fcfd64fc78a8ef0c",
+      "bytes": 22333,
+      "sha256": "83b0d8365d039d75050d087fe980ad7b64818686b699e5d06da1c0ad63148563",
+      "git_blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/gate91_evidence/README.md",
+      "ref": "85c9cbe1162b6e4b01390345ff1dfb768c5a61cb",
+      "bytes": 6567,
+      "sha256": "af1f844b7159f5075cc6e6a34e7f7822b737c916a1a45a532de40f0560f42cba",
+      "git_blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/tests/test_gate91_env_profile_scope.py",
+      "ref": "43056f78d845741b43357181fcfd64fc78a8ef0c",
+      "bytes": 6140,
+      "sha256": "9623496465798508205593a17e544d44ea82dcb11a43eb483007f24e485afb94",
+      "git_blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/tests/test_gate90_env_profile.py",
+      "ref": "43056f78d845741b43357181fcfd64fc78a8ef0c",
+      "bytes": 25918,
+      "sha256": "b07c56e909332d0cc88c326baf9227bf84d1e885bfe6ddb5cd073b3b3834b75a",
+      "git_blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/receipts/paired_fixed5_v4.validate.yaml",
+      "ref": "43056f78d845741b43357181fcfd64fc78a8ef0c",
+      "bytes": 4726,
+      "sha256": "83e71a40504f9a1e2e2d6718c79127ec576de215c058d8074e8d09d95407332e",
+      "git_blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/receipts/grid_fit_v5.validate.yaml",
+      "ref": "43056f78d845741b43357181fcfd64fc78a8ef0c",
+      "bytes": 4661,
+      "sha256": "acc206b2afe4510bd5ffff4f5ecff981255b54d15d94306821c0ad2516c49f76",
+      "git_blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/receipts/history/paired_fixed5_v4.validate.3f84c0db52d2b9ac.yaml",
+      "ref": "43056f78d845741b43357181fcfd64fc78a8ef0c",
+      "bytes": 4670,
+      "sha256": "0e3451a779d154378981fc36a25ba638856b2fc9c488dd799367c79ce131673d",
+      "git_blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/receipts/history/grid_fit_v5.validate.3f84c0db52d2b9ac.yaml",
+      "ref": "43056f78d845741b43357181fcfd64fc78a8ef0c",
+      "bytes": 4605,
+      "sha256": "a924e8c3317528f6676feaf60e508e1ebcc8be48f7c89ba8594bf5c8bfe3b01d",
+      "git_blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/LEG_PRESERVATION.yaml",
+      "ref": "43056f78d845741b43357181fcfd64fc78a8ef0c",
+      "bytes": 65166,
+      "sha256": "bcd221db7e61b42575d5f4ac25fd9f699486a631e90bba7daee033ad542b2953",
+      "git_blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/08_REVIEW_RESPONSE.md",
+      "ref": "43056f78d845741b43357181fcfd64fc78a8ef0c",
+      "bytes": 783790,
+      "sha256": "bfa663b57de96958e3a2e9074ce0079c70fe71ea33ffa580cb49272ce73a8509",
+      "git_blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/mutation_replay.py",
+      "ref": "43056f78d845741b43357181fcfd64fc78a8ef0c",
+      "bytes": 576295,
+      "sha256": "20ad5be3d9000f86e3217277322d1e2a26cc4f7a961250798dc82a7da42b3322",
+      "git_blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/gate91_evidence/00_red_test_gate90_91_38failed_5passed.log",
+      "ref": "85c9cbe1162b6e4b01390345ff1dfb768c5a61cb",
+      "bytes": 69826,
+      "sha256": "ecececb2f5622c7c553b032b01888fa22c6d227601d5dd41d93b0d30abb856a0",
+      "git_blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/gate91_evidence/00b_kexpr_overlap_registry410_new_nodes5_overlap0.txt",
+      "ref": "85c9cbe1162b6e4b01390345ff1dfb768c5a61cb",
+      "bytes": 1262,
+      "sha256": "aa922d8f18669e4b08b0d4644289d66a3d42499c8f10978fb8d1cad26a9e0c9f",
+      "git_blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/gate91_evidence/01_green_test_gate90_91_43passed.log",
+      "ref": "85c9cbe1162b6e4b01390345ff1dfb768c5a61cb",
+      "bytes": 5558,
+      "sha256": "ca68c1dffcbcbfec519e607799127cb10edf1dbae59c22108bfa3a1c91f96f9d",
+      "git_blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/gate91_evidence/02_related_modules_10failed_stale_receipt_identity.log",
+      "ref": "85c9cbe1162b6e4b01390345ff1dfb768c5a61cb",
+      "bytes": 30701,
+      "sha256": "04f96905949f8f96195e008376d21087a7fa7ebf7a8c8508b4994b9b5f7b3269",
+      "git_blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/gate91_evidence/03_replay_g9_emit_expect_15killed_g90_witness_unchanged.log",
+      "ref": "85c9cbe1162b6e4b01390345ff1dfb768c5a61cb",
+      "bytes": 10096,
+      "sha256": "44932b9c6108f31d5bc5e127a7464a8722c04262c72cdc11505f79db3cf28613",
+      "git_blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/gate91_evidence/04_replay_g9_verify_15_rc0.log",
+      "ref": "85c9cbe1162b6e4b01390345ff1dfb768c5a61cb",
+      "bytes": 2114,
+      "sha256": "c4485a703e6ab0b59fae52cdd47f38c0447f892851edbc3cd243a31ea38e9a37",
+      "git_blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/gate91_evidence/06_make_receipt_7ff263197_rc0.log",
+      "ref": "85c9cbe1162b6e4b01390345ff1dfb768c5a61cb",
+      "bytes": 541,
+      "sha256": "d935c79df9a83a34a0c11bdf30ea59ecc2ef497556bbe1acbfa0b50e222097ec",
+      "git_blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/gate91_evidence/06b_make_receipt_check_core_identical_rc0.log",
+      "ref": "85c9cbe1162b6e4b01390345ff1dfb768c5a61cb",
+      "bytes": 508,
+      "sha256": "de32e700c9f305f8e56048388451969b3e72b3c9b2585b9cfa8e1aaf400f0ca4",
+      "git_blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/gate91_evidence/07_receipt_modules_after_regeneration_113passed.log",
+      "ref": "85c9cbe1162b6e4b01390345ff1dfb768c5a61cb",
+      "bytes": 1176,
+      "sha256": "50a831970c469d2611790dc4738156f69e262a988ad4ab355998f00cff56559d",
+      "git_blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/gate91_evidence/08_env_profile_json_f27006370_match.log",
+      "ref": "85c9cbe1162b6e4b01390345ff1dfb768c5a61cb",
+      "bytes": 998,
+      "sha256": "7680c439e2f7523d57da02b6fd7a1c68a531cfc3ad20e4682578a2b3fbe06cac",
+      "git_blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/gate91_evidence/10_full_pytest_f27006370_2182passed.log",
+      "ref": "85c9cbe1162b6e4b01390345ff1dfb768c5a61cb",
+      "bytes": 3646,
+      "sha256": "22ee5dd1ba546ae5d2d39efae2546c5f1ba299ae178c05d4c7604a8ad5e33013",
+      "git_blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/gate91_evidence/11_smoke_f27006370_rc0.log",
+      "ref": "85c9cbe1162b6e4b01390345ff1dfb768c5a61cb",
+      "bytes": 6599,
+      "sha256": "541ca7e35b0ee6a7ff836806a2ae6ce3f31cce63362ff1a946d2838acaa13550",
+      "git_blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/gate91_evidence/12_full_replay_f27006370_412_of_412_rc0.log",
+      "ref": "85c9cbe1162b6e4b01390345ff1dfb768c5a61cb",
+      "bytes": 53873,
+      "sha256": "b648960fce8799bbd0985fda5aec76d05a6e38791f25911e46fa7b7ded4ed6d3",
+      "git_blob_match": true
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/gate91_evidence/14_docs_lint_send_43056f78d_358passed.log",
+      "ref": "85c9cbe1162b6e4b01390345ff1dfb768c5a61cb",
+      "bytes": 1221,
+      "sha256": "89225ae711be3896e1a2a8bb9eb7207bbb10aeed7f6f67305e127f2a72544bb9",
+      "git_blob_match": true
+    }
+  ],
+  "logs": [
+    {
+      "file": "00_red_test_gate90_91_38failed_5passed.log",
+      "bytes": 69826,
+      "sha256": "ecececb2f5622c7c553b032b01888fa22c6d227601d5dd41d93b0d30abb856a0",
+      "matches": true
+    },
+    {
+      "file": "00b_kexpr_overlap_registry410_new_nodes5_overlap0.txt",
+      "bytes": 1262,
+      "sha256": "aa922d8f18669e4b08b0d4644289d66a3d42499c8f10978fb8d1cad26a9e0c9f",
+      "matches": true
+    },
+    {
+      "file": "01_green_test_gate90_91_43passed.log",
+      "bytes": 5558,
+      "sha256": "ca68c1dffcbcbfec519e607799127cb10edf1dbae59c22108bfa3a1c91f96f9d",
+      "matches": true
+    },
+    {
+      "file": "02_related_modules_10failed_stale_receipt_identity.log",
+      "bytes": 30701,
+      "sha256": "04f96905949f8f96195e008376d21087a7fa7ebf7a8c8508b4994b9b5f7b3269",
+      "matches": true
+    },
+    {
+      "file": "03_replay_g9_emit_expect_15killed_g90_witness_unchanged.log",
+      "bytes": 10096,
+      "sha256": "44932b9c6108f31d5bc5e127a7464a8722c04262c72cdc11505f79db3cf28613",
+      "matches": true
+    },
+    {
+      "file": "04_replay_g9_verify_15_rc0.log",
+      "bytes": 2114,
+      "sha256": "c4485a703e6ab0b59fae52cdd47f38c0447f892851edbc3cd243a31ea38e9a37",
+      "matches": true
+    },
+    {
+      "file": "06_make_receipt_7ff263197_rc0.log",
+      "bytes": 541,
+      "sha256": "d935c79df9a83a34a0c11bdf30ea59ecc2ef497556bbe1acbfa0b50e222097ec",
+      "matches": true
+    },
+    {
+      "file": "06b_make_receipt_check_core_identical_rc0.log",
+      "bytes": 508,
+      "sha256": "de32e700c9f305f8e56048388451969b3e72b3c9b2585b9cfa8e1aaf400f0ca4",
+      "matches": true
+    },
+    {
+      "file": "07_receipt_modules_after_regeneration_113passed.log",
+      "bytes": 1176,
+      "sha256": "50a831970c469d2611790dc4738156f69e262a988ad4ab355998f00cff56559d",
+      "matches": true
+    },
+    {
+      "file": "08_env_profile_json_f27006370_match.log",
+      "bytes": 998,
+      "sha256": "7680c439e2f7523d57da02b6fd7a1c68a531cfc3ad20e4682578a2b3fbe06cac",
+      "matches": true
+    },
+    {
+      "file": "10_full_pytest_f27006370_2182passed.log",
+      "bytes": 3646,
+      "sha256": "22ee5dd1ba546ae5d2d39efae2546c5f1ba299ae178c05d4c7604a8ad5e33013",
+      "matches": true
+    },
+    {
+      "file": "11_smoke_f27006370_rc0.log",
+      "bytes": 6599,
+      "sha256": "541ca7e35b0ee6a7ff836806a2ae6ce3f31cce63362ff1a946d2838acaa13550",
+      "matches": true
+    },
+    {
+      "file": "12_full_replay_f27006370_412_of_412_rc0.log",
+      "bytes": 53873,
+      "sha256": "b648960fce8799bbd0985fda5aec76d05a6e38791f25911e46fa7b7ded4ed6d3",
+      "matches": true
+    },
+    {
+      "file": "14_docs_lint_send_43056f78d_358passed.log",
+      "bytes": 1221,
+      "sha256": "89225ae711be3896e1a2a8bb9eb7207bbb10aeed7f6f67305e127f2a72544bb9",
+      "matches": true
+    }
+  ],
+  "scope_changes": {
+    "production_diff": [
+      "degradation-degeneracy/tools/env_profile.py"
+    ],
+    "post_code_diff": [],
+    "supplement_diff": []
+  },
+  "source_digest": {
+    "files": [
+      {
+        "path": "degradation-degeneracy/configs/base.yaml",
+        "blob": "37a3a34cfc06f954c330298537633a03a1cc5620",
+        "sha256": "26fe6c7cc2a2d719815a6aed7db7350917747d352de0bd3d9f7823a8cdc6fc71"
+      },
+      {
+        "path": "degradation-degeneracy/configs/grid_22p.yaml",
+        "blob": "9fd6d492a933b2d521897dfc403738554f2ca64c",
+        "sha256": "e3718c62f6fc92e6f4e6381762c970293d2cef9a3dab4f6198e6855149be4b45"
+      },
+      {
+        "path": "degradation-degeneracy/configs/grid_22p_dense.yaml",
+        "blob": "0d0c9aab7a0dd5abb9edd7afb78ee48ed1fbadef",
+        "sha256": "142c5081d893f664d377499205e7ed39fc26089b4b8e7b6483e3ea8293d8fb63"
+      },
+      {
+        "path": "degradation-degeneracy/configs/grid_22p_fine.yaml",
+        "blob": "8371363cdafbff4920ab5a2ac90b9c6d07075875",
+        "sha256": "ed8c96053efebc8dcf0eba9ce73104cea4358749a706177b44e18630820e2650"
+      },
+      {
+        "path": "degradation-degeneracy/configs/grid_22p_seed.yaml",
+        "blob": "db355960391f6fe486f90c4a06b7b62688920d5a",
+        "sha256": "1fa2168e676fe89d05cb077d12c014705a8bcb57153371d8f572190cc0db960c"
+      },
+      {
+        "path": "degradation-degeneracy/configs/grid_coarse.yaml",
+        "blob": "7a7fba7b8a5136f5912c22d52c5965ff915a4859",
+        "sha256": "4a0b949dab492cf7e7a25333d7f499bdbe6668628fcfa1c4b1e8358e574b4082"
+      },
+      {
+        "path": "degradation-degeneracy/configs/grid_fine.yaml",
+        "blob": "fdd160112bd8d3ee1c517d33e05b7bb4231d5ff5",
+        "sha256": "15ea258a338081848f745c353763dc8ba8189657a3b51526f9f390e730626040"
+      },
+      {
+        "path": "degradation-degeneracy/configs/objectives.yaml",
+        "blob": "299c04276cd336e62f8615ed47d476736bd860af",
+        "sha256": "70ec9517eb4e711f682d854eb7a15950cf243a4ea43aa51613ced6c97f8673d4"
+      },
+      {
+        "path": "degradation-degeneracy/configs/objectives_optimized.yaml",
+        "blob": "30bd03ea7b72977c169b9c58e5573272a5429348",
+        "sha256": "ec9d48c4e3089d6b6d1e372125e9d87fa3512a552c414c4e69004a000f8b3ea6"
+      },
+      {
+        "path": "degradation-degeneracy/configs/sweep1d.yaml",
+        "blob": "a2efadfa629ff6fded6ec23c3f8ed031378f6fdc",
+        "sha256": "3ff4bcf922b9f52c6773a6f6e5ff028e6874f18f12a9c948861fe1ea7ad9e7e8"
+      },
+      {
+        "path": "degradation-degeneracy/requirements-gpu.txt",
+        "blob": "aa2882b2bcad47446775b3e2e77b517479cbfedd",
+        "sha256": "8e04e2ae6e8d3a93cc912be9b4825c33316fd949e5d592ac8f0634357b0478bb"
+      },
+      {
+        "path": "degradation-degeneracy/requirements-validation-C.lock.txt",
+        "blob": "25c4dde53989624e7900ab0248494c0152d85083",
+        "sha256": "d886f30ff675fef723fb9bcedd98297910fb1f8f1809370c18d8980dc5e63b39"
+      },
+      {
+        "path": "degradation-degeneracy/requirements.txt",
+        "blob": "8c53a77e4637766e76b2abf2f536b6656d69745b",
+        "sha256": "039ccbda773bda53cc3305404f3c549f1a34d96c1cb7253f9341c2b4d0db02c7"
+      },
+      {
+        "path": "degradation-degeneracy/run.sh",
+        "blob": "24bd1d5bf78673359624b1f210dcf61e3048ee72",
+        "sha256": "173286fe587fdd950866e35247832205c96f5edef55d490718a06f621da72163"
+      },
+      {
+        "path": "degradation-degeneracy/scripts/archive_results.sh",
+        "blob": "a01a88aaa2610602bf67ae07df9ec75864d66864",
+        "sha256": "033369ab2c39578cc2d3750fa5c459a2b04e72d8f07c447025caf22cff605e03"
+      },
+      {
+        "path": "degradation-degeneracy/scripts/bg.sh",
+        "blob": "cf25309bd031db0d01733b695e5eafd2c447040f",
+        "sha256": "699f4198ed7189cd4c5d9027a696b7b669b6aa299039fbaa0cd20088f5429536"
+      },
+      {
+        "path": "degradation-degeneracy/scripts/check_run.py",
+        "blob": "2e395bf8efc0d8eae3d6d793d21b267c6bf1ca9a",
+        "sha256": "5baaebee5b401ca40ee73360e487486f8bd22824c70e50a16efa8a6ade9f1ce6"
+      },
+      {
+        "path": "degradation-degeneracy/scripts/diagnose_objective.py",
+        "blob": "400217b57579e7accebdcd6e699c03f4655592e1",
+        "sha256": "87af8d00a9e0de263b9c944f0b43464f187b1b6906fdc656ca5b0ef0bf67ede5"
+      },
+      {
+        "path": "degradation-degeneracy/scripts/recompute_lli.py",
+        "blob": "459e23bdc3ef565a1063d26134d639d33d454eb7",
+        "sha256": "f2d96112237c697ba89864febc32b896ff7cf3112ecb1c179b7cdb140b364e8d"
+      },
+      {
+        "path": "degradation-degeneracy/scripts/setup_env.sh",
+        "blob": "af7e90fb53466eba11d6e98dd6ac5e104a24983c",
+        "sha256": "60b530f7aa475309e78ad291ba76ba5cadc3af769c95cee0fb876eaf500de7f0"
+      },
+      {
+        "path": "degradation-degeneracy/scripts/smoke_e2e.sh",
+        "blob": "38d49b8604f7818466d34021a1f4b6d3719afd44",
+        "sha256": "f2489308e2ad0ec726a8f691ab3556b68f51604475d16f8c15996c2d49a7877c"
+      },
+      {
+        "path": "degradation-degeneracy/scripts/verify_env.py",
+        "blob": "9b91fa4a52d9e78ae5e210470901b0955eb190b6",
+        "sha256": "18068c72c73394a5f74a82291ad3ee93fa432fc2d386d4983e8daac1b86fd6c0"
+      },
+      {
+        "path": "degradation-degeneracy/scripts/watch_fit.sh",
+        "blob": "075efeb0dba31377a7b25e95aa6cd5e777805a1d",
+        "sha256": "8a3d942ecb9cd224ba28281f031cc01155fd6d8be9e36dde8297d9793f1f4ea0"
+      },
+      {
+        "path": "degradation-degeneracy/scripts/watch_grid.sh",
+        "blob": "ecbe1fb6f8908efa4943b242c9c84263a3c49605",
+        "sha256": "b3d6b87e3a0724c95bc44a80f3d5d81eecb1f4b677dabac021b8f50b8565e796"
+      },
+      {
+        "path": "degradation-degeneracy/src/__init__.py",
+        "blob": "d639d01e2bd3b35bbc5df7dabe90e2a4540de2f2",
+        "sha256": "5165e2618734da76cdc2eaf8830456de2e62ffe4bd457b08ef36dfa209a2afba"
+      },
+      {
+        "path": "degradation-degeneracy/src/baseline.py",
+        "blob": "8c7c0a8664cb52b95c1fec2b8a56e52bb7af1edc",
+        "sha256": "ce2288e9ad9bdf924a67d4809b23cfc12853aac9090642b9c3cd9f3faf677a14"
+      },
+      {
+        "path": "degradation-degeneracy/src/config.py",
+        "blob": "71cd84003c0827558664f1cba6181e2e0748a7bd",
+        "sha256": "bb484b08796f11c8affc6bf8f4505d296c812fe206b104c994d120386bc94057"
+      },
+      {
+        "path": "degradation-degeneracy/src/curves.py",
+        "blob": "ac1a337e5cde52bf4fe572738c682b589e529a95",
+        "sha256": "161c21ca3813071969cfb5679ae701b95059235a0612dd5464694a96e31a11d1"
+      },
+      {
+        "path": "degradation-degeneracy/src/fitting.py",
+        "blob": "723a47489d6c7c811be6be285e4e6c70b607e62a",
+        "sha256": "b9a24eccd4be188eba1fd62b235d7a26d2c38adf5fd4820a03c4d12776ad2ec8"
+      },
+      {
+        "path": "degradation-degeneracy/src/grid.py",
+        "blob": "5702c0d061d980d44018fc2b746c04fc6423f827",
+        "sha256": "0b70f3f109ee79654c40535ea22c1f87f57feccde77ed45afaadcea6b9ef6f01"
+      },
+      {
+        "path": "degradation-degeneracy/src/halfcell.py",
+        "blob": "51b30edec0dd19edda4e6461bed6fc694d4f9a06",
+        "sha256": "75073523310d54c76df4fd1f4d30a1e9006b1ddb9cb963b5399a20c6c8ef5c25"
+      },
+      {
+        "path": "degradation-degeneracy/src/hessian.py",
+        "blob": "13895858d80a553b461444464bffe755186c317b",
+        "sha256": "eb0c6afee492ea0fec114d9a83a40be21148b348d5644565b8b3a09f4600f047"
+      },
+      {
+        "path": "degradation-degeneracy/src/inventory.py",
+        "blob": "ea33221fab0cd74868587e4b5e78fb2633931666",
+        "sha256": "ea8b5e2a1f8fa7c417610bc18d478e9842c65e9ade0cdb471bb7052b40237847"
+      },
+      {
+        "path": "degradation-degeneracy/src/io.py",
+        "blob": "9284a4370bc6afb52722fb60e78657016ea44111",
+        "sha256": "e8f9561b6492d5a54595f557e38762156fab9a014d857c6d3aee668f85e16a38"
+      },
+      {
+        "path": "degradation-degeneracy/src/model.py",
+        "blob": "50cb5d479841977948ada4ed0be09569fd5440a8",
+        "sha256": "ae5faf879011d376073eb843e6f09e5ffd246f1855143967b6c1ba87e6defe01"
+      },
+      {
+        "path": "degradation-degeneracy/src/modes.py",
+        "blob": "68b94790a58929b211fb21b3534b10b569fedafa",
+        "sha256": "3e5ba16720b6d9d3dd716e4f88d0a4d369787773675fd6061c6c85bebc287e46"
+      },
+      {
+        "path": "degradation-degeneracy/src/objective.py",
+        "blob": "d8b0f2771e4cd72d5a204a09d6fdd2260b0042f7",
+        "sha256": "b60e5e9b1be320e8d7aee04cec6813e3deabf0a86043170b093015b65eb02d2c"
+      },
+      {
+        "path": "degradation-degeneracy/src/protocol.py",
+        "blob": "350eb61d81b9d7bb512dc725d0f5448184be5825",
+        "sha256": "47ca32d35a483ff4923dfd0e51b81628e4dfe930d2e7430ea78adf14be6c6c84"
+      },
+      {
+        "path": "degradation-degeneracy/src/runner.py",
+        "blob": "aa0351e32595de255d1dc9924f9eac8a504ba27d",
+        "sha256": "d7938749a23624bd3ff18056fe3538a18f16996f12bb3e3d6835984386cb6a82"
+      },
+      {
+        "path": "degradation-degeneracy/src/scoring.py",
+        "blob": "434324c889c4febff1905cfec884272e07fe7d93",
+        "sha256": "69e69cb046f4b4aee2acf039faa9d69fc9ed032eab96093e54b0ca68b860a43d"
+      },
+      {
+        "path": "degradation-degeneracy/src/sweep.py",
+        "blob": "ac06f021dc0d9ed1f551c8cdcfc18d34f2693b75",
+        "sha256": "5db99fd0f77e03ef613cc8390d3cd4e320b80240abe7e579b314364425c42524"
+      },
+      {
+        "path": "degradation-degeneracy/src/weight_sweep.py",
+        "blob": "3bd1f1dc36f2000ce4b4ddfdd33d18e9eeb5c4e7",
+        "sha256": "b68077d76c12268f07fa638b53847d24f6c4d026793efc226b03a4cd73e413c1"
+      },
+      {
+        "path": "degradation-degeneracy/tools/analyze_22p_gap.py",
+        "blob": "315ebee3b225239ec0532c1b5589fff2039622fe",
+        "sha256": "b4f18bfa86eed8b5cf86507dd3f0dbd58a83edb2937e129452b3aef19039a164"
+      },
+      {
+        "path": "degradation-degeneracy/tools/archive_bundle.py",
+        "blob": "43db05edca3803a00cd9f75ec570ab880dfcb216",
+        "sha256": "5f7fc3c89dfe5dba5a6653c0f162c6615c1449808ba83f8e724683a0ed903d41"
+      },
+      {
+        "path": "degradation-degeneracy/tools/check_derived_fresh.py",
+        "blob": "c7094cc9f25a1849780e76fa209fcac97ff439e7",
+        "sha256": "8819cb2acd2d920189832b03cd41c90c61de0faeffb07ed186e6d8fdfce6aa53"
+      },
+      {
+        "path": "degradation-degeneracy/tools/check_sweep_consistency.py",
+        "blob": "f48826b6048e7cb3449f67dbe0c8e96e3b2d9475",
+        "sha256": "5c31f80c97460bf7c6bfed05aa59969ae1686a363d5246e9f1633651700c6f20"
+      },
+      {
+        "path": "degradation-degeneracy/tools/compare_cases.py",
+        "blob": "9e91a6198010335d0b4f7c684ef1e66ce0a0b4e8",
+        "sha256": "918271276a73dfc155692a2e5df4180cc1dae6272cd24c6b8d2525d92310225a"
+      },
+      {
+        "path": "degradation-degeneracy/tools/compare_objectives.py",
+        "blob": "6227d1b394a4e8b0519f9102444311fe829d26bf",
+        "sha256": "9b2b1bc22404568362202d8d67fa4d398a4864384242e54e6885a076d561e890"
+      },
+      {
+        "path": "degradation-degeneracy/tools/design_golden.yaml",
+        "blob": "280c1b904d54ff2152a71f025654f058916c69b5",
+        "sha256": "6dde9078c31f9f2ffa4bd6ef57b71a9f1fd8521b5cf3fd24998b2a26f5107b9b"
+      },
+      {
+        "path": "degradation-degeneracy/tools/design_wire.py",
+        "blob": "1f388c039d97384f8316afa975338e60c6d866c9",
+        "sha256": "4609706a54fa8a53665846761b6dbaa54eeb5a9012fd8aed65dbd27ab7f12f1f"
+      },
+      {
+        "path": "degradation-degeneracy/tools/diagnose_pini_transition.py",
+        "blob": "725b8b8ffaa380bed3f74a468e5b7a0e730815d3",
+        "sha256": "68234373abaffa97f8bc5debc68a81b2e7e3990e2334df7f579deacf8088f62b"
+      },
+      {
+        "path": "degradation-degeneracy/tools/env_profile.py",
+        "blob": "ea21b76f32050e07b9619ac6b8546a39d5c99b2a",
+        "sha256": "83b0d8365d039d75050d087fe980ad7b64818686b699e5d06da1c0ad63148563"
+      },
+      {
+        "path": "degradation-degeneracy/tools/gen_design_golden.py",
+        "blob": "907ba3ec7c028d4a969282215b870f5484b56a82",
+        "sha256": "5b3c96735948ab650833337b0830083418d2bed4f9fbd1d4188774e7f7040183"
+      },
+      {
+        "path": "degradation-degeneracy/tools/index_yaml.py",
+        "blob": "2bfed95fdc864ebe33a5ec0c826ddc1c1e837a64",
+        "sha256": "c199b7da2aa23dd4003143de2fcdc6cc65f06b81a3e06d4fd8cba1183c1cdb6e"
+      },
+      {
+        "path": "degradation-degeneracy/tools/interactive_ab.py",
+        "blob": "1b06e3c5e168f6f26bdabe52053219c7428e4a34",
+        "sha256": "fd6686c5d122317f902b0302e28cda8307240842fd39d2bd4d6e40ef93c5f402"
+      },
+      {
+        "path": "degradation-degeneracy/tools/make_results.py",
+        "blob": "6d53940881313130af6bf4c835e63346ccbe718a",
+        "sha256": "db6a3186f430b283cc7be1eec5f1c4a4f0af1ed6fb38f20c220e073450003e22"
+      },
+      {
+        "path": "degradation-degeneracy/tools/plot_grid_summary.py",
+        "blob": "3c51850d21f0c07093f71280599470b925ffdcf1",
+        "sha256": "7ec2076a57031dbeecf8ed98eb6c7e1a36b565d0354af53a7477b7c24557d400"
+      },
+      {
+        "path": "degradation-degeneracy/tools/plot_map.py",
+        "blob": "a0f57fe5ecac6b592078ac9453f9bff569b1e330",
+        "sha256": "421670597eb994bd689564c56e807af2b9c501bf6f8008e575213960ac8be06e"
+      },
+      {
+        "path": "degradation-degeneracy/tools/plot_sweep1d.py",
+        "blob": "d8e7acce385dddd410f72fca4b61aaf183d49a66",
+        "sha256": "df911d7cc60d38088bb1329733af16387b4fa55beb537e2f31b158754a42a89b"
+      },
+      {
+        "path": "degradation-degeneracy/tools/preserve.py",
+        "blob": "e8f3105b784fc8ff8e184b3e671a2d68d138ad9f",
+        "sha256": "e3469ffb5143444ec1d2b0855a6f4caba9de5add2b9a31cf7ec1f550dfa3d7ef"
+      }
+    ],
+    "count": 60,
+    "recomputed": "f0175fff71132003"
+  },
+  "unchanged": {
+    "requirements-validation-C.lock.txt": true,
+    "requirements.txt": true,
+    "scripts/smoke_e2e.sh": true,
+    "docs/22p_gap/make_receipt.py": true,
+    "docs/22p_gap/env_profile_B_v4.yaml": true,
+    "src/io.py": true,
+    "src/fitting.py": true,
+    "run.sh": true,
+    "tests/conftest.py": true
+  },
+  "functions_same_after_declared_normalization": {
+    "normalize": true,
+    "_verify_files": true,
+    "_origin": true,
+    "measure": true,
+    "emit_lock": true,
+    "parse_lock": true,
+    "_mm": true,
+    "compare": true,
+    "_display": true,
+    "compare_lock": true,
+    "main": true
+  },
+  "summary_review": "Source diff inspected manually: path-search wording, field renames and loaded-origin-unmeasured suffix; no branch/rc change.",
+  "scope_declaration": {
+    "constant": [
+      "loaded_module_origin"
+    ],
+    "result_initialized_before_lock_read": true,
+    "summary_narrowed": true,
+    "C1_sentence": true
+  },
+  "test90_nodes_unchanged": true,
+  "receipts": [
+    {
+      "leg": "paired_fixed5_v4",
+      "history_exact_previous": true,
+      "core_content_changes_only": [
+        "validator_source_digest"
+      ],
+      "core_sha_recorded_not_reserialized": "1e3ea7c806f8d53524d16e24c846755e0aa22dc3840f81fd0e5c114b3b1ac411",
+      "anchor_present": true,
+      "stamp_has_unmeasured_declaration": true,
+      "validator_tree_dirty": "false"
+    },
+    {
+      "leg": "grid_fit_v5",
+      "history_exact_previous": true,
+      "core_content_changes_only": [
+        "validator_source_digest"
+      ],
+      "core_sha_recorded_not_reserialized": "23c78ed0c9cd7b89c495ef2ef3216829f812ac145957a64a50c768f679390d66",
+      "anchor_present": true,
+      "stamp_has_unmeasured_declaration": true,
+      "validator_tree_dirty": "true"
+    }
+  ],
+  "replay_log_counts": {
+    "killed": 412,
+    "survived": 0,
+    "errors": 0,
+    "declared": 11
+  },
+  "submitted_profile_json": {
+    "counts": {
+      "dists_locked": 170,
+      "dists_measured": 170,
+      "files_unhashed": 10373,
+      "files_verified": 24804,
+      "path_origins_in_record": 9,
+      "shadowed_locked": 2,
+      "shadowed_measured": 2
+    },
+    "lock_path": "requirements-validation-C.lock.txt",
+    "lock_sha256": "d886f30ff675fef723fb9bcedd98297910fb1f8f1809370c18d8980dc5e63b39",
+    "mismatches": [],
+    "not_measured": [
+      "loaded_module_origin"
+    ],
+    "profile": "C",
+    "reason": "",
+    "status": "MATCH",
+    "unverifiable": {
+      "dists_without_record": [
+        "argcomplete",
+        "blinker",
+        "cryptography",
+        "dbus-python",
+        "distro",
+        "launchpadlib",
+        "lazr-restfulclient",
+        "lazr-uri",
+        "oauthlib",
+        "pip",
+        "pygobject",
+        "pyjwt",
+        "pyparsing",
+        "python-apt",
+        "pyyaml",
+        "setuptools",
+        "six",
+        "toml",
+        "wadllib",
+        "wheel",
+        "xmltodict",
+        "yq"
+      ],
+      "path_origins": [
+        "yaml"
+      ]
+    }
+  },
+  "raw_log_claim_checks": {
+    "pytest_2182": true,
+    "smoke_rc0": true,
+    "docs_lint_358": true
+  },
+  "limitations": [
+    "No submitted code executed. No remote live measurement. Log counts are submitted evidence, not reviewer reruns.",
+    "Receipt core hashes checked as recorded scalars and anchors; no YAML reserialization or restore.",
+    "Git comparisons are fixed endpoint comparisons, not a full intermediate commit execution audit."
+  ]
+}

@@ -1,0 +1,78 @@
+--- gate90/docs/22p_gap/mutation_replay.py
++++ gate91/docs/22p_gap/mutation_replay.py
+@@ -2337,9 +2337,10 @@
+      '    for n, rel, want, got in measured["files"]["mismatches"]:\n',
+      "    for n, rel, want, got in []:  # 변이: 설치 파일 재해시 대조의 불일치를 버린다\n",
+      "test_gate90 and e03 and (file_hash or file_missing)"),
+-    ("env-profile-checks-module-origin-g90", ENVP,                   # 사전 검토 Q5 — 실제 origin
+-     '    for module, seen in measured["origins"]["mismatches"]:\n',
+-     "    for module, seen in []:  # 변이: 주인 없는 origin 을 통과시킨다\n",
++    # 91차 §13-6: 원문 줄을 이름 변경 (`origins` → `path_origins`) 에 따라 옮겼다 — 치환의 뜻 · 이름 · -k 그대로.
++    ("env-profile-checks-module-origin-g90", ENVP,                   # 사전 검토 Q5 를 좁힌 꼴 — 경로 검색 origin 의 RECORD 소속
++     '    for module, seen in measured["path_origins"]["mismatches"]:\n',
++     "    for module, seen in []:  # 변이: 주인 없는 경로 검색 origin 을 통과시킨다\n",
+      "test_gate90 and e03 and origin_stray"),
+     ("env-profile-lock-grammar-is-closed-g90", ENVP,                 # §3-1 닫힌 문법
+      '            raise bad(no, f"모르는 줄 {line[:80]!r}")\n',
+@@ -2347,9 +2348,9 @@
+      "test_gate90 and e04 and garbage_line"),
+     ("env-profile-measurement-failure-is-unmeasured-g90", ENVP,      # §4-2 측정 실패 ≠ MATCH
+      '        res["reason"] = f"측정 실패: {exc!r}"\n',
+-     '        res.update(status="MATCH", mismatches=[], unverifiable={"dists_without_record": [], "origins": []}, '
++     '        res.update(status="MATCH", mismatches=[], unverifiable={"dists_without_record": [], "path_origins": []}, '
+      'counts={k: 0 for k in ("dists_locked", "dists_measured", "shadowed_locked", "shadowed_measured", '
+-     '"files_verified", "files_unhashed", "origins_verified")})  # 변이: 측정 예외 → 빈 결과 MATCH\n',
++     '"files_verified", "files_unhashed", "path_origins_in_record")})  # 변이: 측정 예외 → 빈 결과 MATCH\n',
+      "test_gate90 and e05"),
+     ("env-profile-cli-is-record-only-g90", ENVP,                     # §4-3 · D3 — rc 0 세 상태 모두
+      "    print(_summary(r))\n    return 0\n",
+@@ -2363,6 +2364,16 @@
+      '        "environment_profile_C": compare_lock(),\n',
+      "",
+      "test_gate90 and e10"),
++    # ── 91차 G90-N1 정정 (고정 표 `PYBAMM_PIN_ROUND_SPEC.md` §13-6 · 원장 §138) ──
++    #   origin 축은 **경로 검색** 범위다. 결과가 로드된 module origin 을 재지 않았다고 스스로 밝히는가 · 요약이 같은 뜻인가.
++    ("env-profile-declares-loaded-origin-unmeasured-g91", ENVP,      # §13-3 범위 선언 (세 상태 모두)
++     '           "not_measured": list(NOT_MEASURED)}\n',
++     '           "not_measured": []}  # 변이: 로드된 module origin 까지 쟀다고 주장한다\n',
++     "test_gate91 and s01"),
++    ("env-profile-summary-states-path-search-scope-g91", ENVP,       # §13-3 요약 줄
++     "             f\" · 경로 검색 origin 의 RECORD 소속 {c['path_origins_in_record']} (로드된 module origin 미측정)\"]\n",
++     "             f\" · origin 확인 {c['path_origins_in_record']}\"]  # 변이: 옛 요약 문구 (실제 origin 확인처럼 읽힌다)\n",
++     "test_gate91 and s03"),
+ ]
+ 
+ #: 여러 지점을 **함께** 되돌려야 관측되는 변이 (심층 방어라 하나만 지우면
+@@ -7359,6 +7370,32 @@
+                 "AssertionError: ['_주의', 'generated_at_utc', 'runtime', 'validator_commit', 'validator_tree_dirty']",
+         }
+     },
++    # ── 91차 G90-N1 정정 (고정 표 `PYBAMM_PIN_ROUND_SPEC.md` §13-6 · 관측: 2026-10-04 `-k g9 --emit-expect` ·
++    #   `gate91_evidence/03` · 2/2 사망 · 같은 관측에서 -g90 13 은 위 EXPECT 와 바이트 같은 증인) ──
++    "env-profile-declares-loaded-origin-unmeasured-g91": {
++        "fail": [
++            "tests/test_gate91_env_profile_scope.py::test_s01_every_result_declares_loaded_origin_unmeasured[MATCH]",
++            "tests/test_gate91_env_profile_scope.py::test_s01_every_result_declares_loaded_origin_unmeasured[MISMATCH]",
++            "tests/test_gate91_env_profile_scope.py::test_s01_every_result_declares_loaded_origin_unmeasured[UNMEASURED]",
++        ],
++        "witness": {
++            "tests/test_gate91_env_profile_scope.py::test_s01_every_result_declares_loaded_origin_unmeasured[MATCH]":
++                "AssertionError: not_measured []",
++            "tests/test_gate91_env_profile_scope.py::test_s01_every_result_declares_loaded_origin_unmeasured[MISMATCH]":
++                "AssertionError: not_measured []",
++            "tests/test_gate91_env_profile_scope.py::test_s01_every_result_declares_loaded_origin_unmeasured[UNMEASURED]":
++                "AssertionError: not_measured []",
++        }
++    },
++    "env-profile-summary-states-path-search-scope-g91": {
++        "fail": [
++            "tests/test_gate91_env_profile_scope.py::test_s03_summary_and_docstrings_state_the_path_search_scope",
++        ],
++        "witness": {
++            "tests/test_gate91_env_profile_scope.py::test_s03_summary_and_docstrings_state_the_path_search_scope":
++                "AssertionError: 요약에 옛 문구 'origin 확인' 이 남아 있다",
++        }
++    },
+ }
+ 
+ 

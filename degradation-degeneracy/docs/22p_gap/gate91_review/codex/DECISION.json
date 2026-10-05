@@ -1,0 +1,21 @@
+{
+  "review": "GATE91",
+  "date": "2026-10-05",
+  "status": "ACCEPTED",
+  "request_commit": "43056f78d845741b43357181fcfd64fc78a8ef0c",
+  "code_commit": "b08bb6944b03511c97c8deeb38e6a347bbb1f1fb",
+  "source_digest": "f0175fff71132003",
+  "evidence_supplement_commit": "85c9cbe1162b6e4b01390345ff1dfb768c5a61cb",
+  "closures": {"G90-N1": "CLOSED", "C1": "CLOSED", "profile_C_recording_round": "CLOSED"},
+  "new_blocking_findings": [],
+  "execution_go": false,
+  "loaded_module_origin_measured": false,
+  "D_guard_approved": false,
+  "implementation_authorized_by_review": false,
+  "independent_checks": {"run_scope_files": 60, "source_digest_matches": true, "evidence_log_hashes_matched": 14, "submitted_code_executed": false, "submitted_tests_rerun": false},
+  "submitted_final_results": {"pytest_passed": 2182, "pytest_xfailed": 1, "pytest_rc": 0, "smoke_rc": 0, "mutation_killed": 412, "mutation_survived": 0, "mutation_errors": 0, "mutation_declarations": 11, "send_head_docs_lint_passed": 358},
+  "submitted_results_provenance": "Read from fixed-commit preserved logs; not reviewer reruns or direct observation of remote execution.",
+  "receipt_scope": "Recorded core identifiers, ledger anchors, history bytes and unchanged content compared; no YAML reserialization, restore or rescoring.",
+  "grid_fit_v5_status": "DIAGNOSTIC_ONLY",
+  "next_step": "Record acceptance and close the profile C recording round; any new work requires separately scoped user authorization."
+}
