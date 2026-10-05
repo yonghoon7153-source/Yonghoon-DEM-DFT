@@ -20,6 +20,7 @@
 | `10_full_pytest_f27006370_2182passed.log` | 전체 `pytest tests/ -q -rfEx -p no:cacheprovider` — **2182 passed / 1 xfailed / rc 0** · 23:55:11Z → 00:52:41Z (0:57:27) · 시작 HEAD = 끝 HEAD · dirty 0 | clean `f27006370` |
 | `11_smoke_f27006370_rc0.log` | `./scripts/smoke_e2e.sh` — **rc 0** · 기록 단계 줄 MATCH (새 문구 "경로 검색 origin 의 RECORD 소속 9 (로드된 module origin 미측정)") · 00:52:42Z → 00:55:27Z (2:45) · 시작 HEAD = 끝 HEAD · dirty 0 | clean `f27006370` |
 | `12_full_replay_f27006370_412_of_412_rc0.log` | 등록부 전체 재생 (`-k` 없음 · 분리 프로세스 · 시간 상한 없음) — **scenario 423 (executable 412 · declared 11) · site 461 · ran 412 · 412/412 call 단계에서 선언한 이유로 물었다 · ★ 0 · rc 0** · 00:55:28Z → 03:30:08Z (2:34:40) · 시작 HEAD = 끝 HEAD · dirty 0 | clean `f27006370` |
+| `14_docs_lint_send_43056f78d_358passed.log` | **발송 뒤 덧붙임** — 발송 HEAD 의 `pytest tests/test_docs_lint.py` 원문 · **358 passed · rc 0** · 03:34:42Z → 04:00:40Z (25:56) · 시작 HEAD = 끝 HEAD · dirty 0 | `43056f78d` (발송 SHA) |
 
 ## 전체 sha256 · 크기 (바이트)
 
@@ -37,10 +38,11 @@ de32e700c9f305f8e56048388451969b3e72b3c9b2585b9cfa8e1aaf400f0ca4  508  06b_make_
 22ee5dd1ba546ae5d2d39efae2546c5f1ba299ae178c05d4c7604a8ad5e33013  3646  10_full_pytest_f27006370_2182passed.log
 541ca7e35b0ee6a7ff836806a2ae6ce3f31cce63362ff1a946d2838acaa13550  6599  11_smoke_f27006370_rc0.log
 b648960fce8799bbd0985fda5aec76d05a6e38791f25911e46fa7b7ded4ed6d3  53873  12_full_replay_f27006370_412_of_412_rc0.log
+89225ae711be3896e1a2a8bb9eb7207bbb10aeed7f6f67305e127f2a72544bb9  1221  14_docs_lint_send_43056f78d_358passed.log
 ```
 
 ## 없는 것 (그대로 적는다)
 
 - 번호 05 · 09 · 13 은 비워 두었다 — 05 (GREEN 뒤 재실행) 는 이번에 필요한 단계가 없었다 · 09 (재생성 뒤 영수증 모듈) 는 90차처럼 07 로
   앞당겼다 · 13 (고정 표 커밋의 docs-lint 보충) 은 이번에 돌리지 않았다.
-- 발송 HEAD 의 docs-lint 는 발송문에 적는다 (이 README 가 든 커밋보다 뒤라서). 발송 뒤 그 원문을 14 번으로 덧붙인다.
+- 발송 HEAD 의 docs-lint 는 발송문에 적는다 (이 README 가 든 커밋보다 뒤라서). 발송 뒤 그 원문을 14 번으로 덧붙인다. — 발송 뒤 덧붙임: 그 원문이 14 번이다 (README 표 · sha256 에 한 줄씩 더했다).
