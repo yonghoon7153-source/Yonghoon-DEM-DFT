@@ -343,5 +343,6 @@ git push -u origin claude/14-gate-code-review-9qkx05
 | 2026-10-05 | 원장 §137 — 90차 회신 접수 (`CONDITIONAL_ACCEPTANCE` · G90-N1 P2 · C1) · 패키지 보존 `a8ec8f9ed` | 이 행이 든 커밋 | 밖 | 할 일 없음 (ff 로 그대로 들어간다) |
 | 2026-10-05 | `bms-balancing/.gitattributes` 규칙 — B-min 후보 r1 재검토 회신 묶음 `reviews/r14_repros/codex63/comsol_bmin_r1_review_20261005/** -text` (게이트 차수 밖 · 보존 `b7397ed95` · 접수 = COMSOL SPEC §54) | `f0e384d79` | 밖 | 할 일 없음 |
 | 2026-10-05 | 원장 §138 — G90-N1 정정 착수 승인 기록 (선택지 B) · 고정 표 `degradation-degeneracy/docs/22p_gap/PYBAMM_PIN_ROUND_SPEC.md` §13 (코드 변경 전 · 이름 셋 · `not_measured` · 문구) | 이 행이 든 커밋 | 밖 | — |
+| 2026-10-05 | `bms-balancing/.gitattributes` 규칙 — B-min 후보 r2 꾸러미 `comsol_candidates/bmin_particle640_r2_20261005/** -text` (게이트 차수 밖 · 접수 = COMSOL SPEC §55 · 재검토 요청 `docs/COMSOL_BMIN_CANDIDATE_R2_REVIEW_REQUEST_20261005.md`) | `b4bb5325a` | 밖 | 할 일 없음 |
 
 ### 복귀 결과 (복귀 정리 커밋이 덧붙인다)

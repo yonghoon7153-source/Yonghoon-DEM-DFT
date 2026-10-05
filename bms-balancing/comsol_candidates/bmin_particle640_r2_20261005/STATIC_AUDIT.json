@@ -1,0 +1,284 @@
+{
+  "kind": "SOURCE_TEXT_JSON_HASH_DIFF_ONLY",
+  "candidate_manifest_sha256": "4cdca2e6bf7d073f813d97be73825b8cd2043c2fc44e285f4a190bc6fb97cf25",
+  "previous_manifest_sha256": "9dcb47f0ec3ec346b491d90c2836e3b30f54eb88fd5e4fbd216fc34782275cdb",
+  "checks_total": 38,
+  "checks_failed": 0,
+  "candidate_imports": 0,
+  "candidate_parse_compile_tests": 0,
+  "JVM_COMSOL_gate_calls": 0,
+  "native_compatibility": "UNTESTED",
+  "functional_status": "UNTESTED",
+  "reverse_reconstruction_r2_to_r1": {
+    "src/diagnostic_consumer.py": [
+      {
+        "op": "inverse_literals",
+        "entries": 2,
+        "occurrences": 2
+      }
+    ]
+  },
+  "static_string_model": {
+    "kind": "AUDIT_OWNED_REGEX_MODEL_NOT_CANDIDATE_EXECUTION",
+    "rule_r1": "re.search (first partial match)",
+    "rule_r2": "re.fullmatch with surrounding whitespace allowed",
+    "cases": [
+      {
+        "id": "valid",
+        "source": "re-review static_string_cases",
+        "r1_rule": "PASS solved 79485 internal 12",
+        "r2_rule": "PASS solved 79485 internal 12",
+        "expected_r2": "PASS solved 79485 internal 12",
+        "re_review_r1_prediction": "ACCEPTS_FIRST_MATCH"
+      },
+      {
+        "id": "two_lines",
+        "source": "re-review static_string_cases",
+        "r1_rule": "TRANSIENT_DOF_READBACK_COUNT:2",
+        "r2_rule": "TRANSIENT_DOF_READBACK_COUNT:2",
+        "expected_r2": "TRANSIENT_DOF_READBACK_COUNT:2",
+        "re_review_r1_prediction": "COUNT"
+      },
+      {
+        "id": "two_same_line",
+        "source": "re-review static_string_cases",
+        "r1_rule": "PASS solved 79485 internal 12",
+        "r2_rule": "TRANSIENT_DOF_READBACK_FORMAT",
+        "expected_r2": "TRANSIENT_DOF_READBACK_FORMAT",
+        "re_review_r1_prediction": "ACCEPTS_FIRST_MATCH"
+      },
+      {
+        "id": "valid_then_malformed_same_line",
+        "source": "re-review static_string_cases",
+        "r1_rule": "PASS solved 79485 internal 12",
+        "r2_rule": "TRANSIENT_DOF_READBACK_FORMAT",
+        "expected_r2": "TRANSIENT_DOF_READBACK_FORMAT",
+        "re_review_r1_prediction": "ACCEPTS_FIRST_MATCH"
+      },
+      {
+        "id": "zero",
+        "source": "re-review static_string_cases",
+        "r1_rule": "TRANSIENT_DOF_READBACK_VALUE",
+        "r2_rule": "TRANSIENT_DOF_READBACK_VALUE",
+        "expected_r2": "TRANSIENT_DOF_READBACK_VALUE",
+        "re_review_r1_prediction": "VALUE"
+      },
+      {
+        "id": "missing_internal",
+        "source": "re-review static_string_cases",
+        "r1_rule": "TRANSIENT_DOF_READBACK_FORMAT",
+        "r2_rule": "TRANSIENT_DOF_READBACK_FORMAT",
+        "expected_r2": "TRANSIENT_DOF_READBACK_FORMAT",
+        "re_review_r1_prediction": "FORMAT"
+      },
+      {
+        "id": "whitespace_padded",
+        "source": "r2 plan PY03-12 / PY03-13",
+        "r1_rule": "PASS solved 156925 internal 12",
+        "r2_rule": "PASS solved 156925 internal 12",
+        "expected_r2": "PASS solved 156925 internal 12"
+      },
+      {
+        "id": "trailing_text",
+        "source": "r2 plan PY03-12 / PY03-13",
+        "r1_rule": "PASS solved 156925 internal 12",
+        "r2_rule": "TRANSIENT_DOF_READBACK_FORMAT",
+        "expected_r2": "TRANSIENT_DOF_READBACK_FORMAT"
+      },
+      {
+        "id": "normal480_line_131",
+        "source": "re-review normal480_dof (batch.log line 131)",
+        "r1_rule": "PASS solved 79485 internal 12",
+        "r2_rule": "PASS solved 79485 internal 12",
+        "expected_r2": "PASS solved 79485 internal 12"
+      }
+    ]
+  },
+  "checks": [
+    {
+      "check": "r1 package = bytes at the reviewed commit 741dde19b",
+      "status": "STATIC_MATCH",
+      "detail": {
+        "files": 17,
+        "changed": []
+      }
+    },
+    {
+      "check": "r1 CODE_MANIFEST = 9dcb47f0…",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "r1 static audit re-run: 42 checks, 0 failed, rc 0 (it re-runs v1's 81: r1 -> v1 -> NORMAL480) and both STATIC_AUDIT.json unchanged",
+      "status": "STATIC_MATCH",
+      "detail": {
+        "stdout": "{\"checks\": 42, \"failed\": 0, \"manifest\": \"9dcb47f0ec3ec346b491d90c2836e3b30f54eb88fd5e4fbd216fc34782275cdb\"}",
+        "git_status": ""
+      }
+    },
+    {
+      "check": "build_candidate_r2.py --check reproduces candidate/ and R2_LITERAL_CHANGES.json",
+      "status": "STATIC_MATCH",
+      "detail": [
+        "manifest 4cdca2e6bf7d073f813d97be73825b8cd2043c2fc44e285f4a190bc6fb97cf25"
+      ]
+    },
+    {
+      "check": "src/Bmin640Candidate.java ASCII only",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "src/Bmin640Candidate.java byte-identical to r1",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "src/candidate_entry.py ASCII only",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "src/candidate_entry.py byte-identical to r1",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "PARENT_COMMAND.ps1 ASCII only",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "PARENT_COMMAND.ps1 byte-identical to r1",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "src/diagnostic_consumer.py ASCII only",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "src/diagnostic_consumer.py all CRLF",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "src/diagnostic_consumer.py: undoing only the declared r2 changes gives the exact r1 bytes",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "CONTRACT.json ASCII only",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "CONTRACT.json byte-identical to r1",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "consumer: every function except mesh_evidence byte-identical to r1",
+      "status": "STATIC_MATCH",
+      "detail": {
+        "identical": 20
+      }
+    },
+    {
+      "check": "consumer mesh_evidence: whole-line match once, no first-partial-match search left, three reason names kept",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "consumer mesh_evidence: record-only policy for a valid different value kept (same / difference / review_note / outside record)",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "r2 manifest: flags false, previous = r1, five files with exact bytes, only the consumer entry differs from r1",
+      "status": "STATIC_MATCH",
+      "detail": {
+        "differing_files": [
+          "src/diagnostic_consumer.py"
+        ]
+      }
+    },
+    {
+      "check": "COMMAND_MAP.json: r1 bytes with only the manifest SHA replaced",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "NATIVE_APPROVAL_FIELD_SPEC.json: r1 bytes with only the manifest SHA replaced",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "string model: the consumer source carries the model's five statements verbatim (pattern, mentions, count, whole-line match, value)",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "string model: the six re-review cases and three r2 cases give the expected reasons under the r2 rule",
+      "status": "STATIC_MATCH",
+      "detail": []
+    },
+    {
+      "check": "string model: under the r1 rule the two same-line cases took the first value (the re-review finding, reproduced)",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "validation plan: bound to the r2 manifest, approvals false, still a proposal",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "validation plan: 62 unique IDs (Python 39 + Java helper 2 + PowerShell 21) in 9 groups",
+      "status": "STATIC_MATCH",
+      "detail": {
+        "PY01": 4,
+        "PY02": 5,
+        "PY03": 14,
+        "PY04": 3,
+        "PY05": 7,
+        "PY06": 4,
+        "PY07": 2,
+        "JV01": 2,
+        "PS01": 21
+      }
+    },
+    {
+      "check": "validation plan: 77 inputs; every multi-input ID lists one expected reason per input",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "validation plan: the 54 r1 IDs are kept with r1 fixture / expected text except the declared C1 edit of PS01-16",
+      "status": "STATIC_MATCH",
+      "detail": []
+    },
+    {
+      "check": "validation plan: the r2 IDs are exactly PY03-11..14 and PS01-18..21",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "validation plan: PS01-16 = 30 decimal places / 28 significant digits, out of the exact-equality item, in precision_mismatch_items",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "validation plan: each of the seven native-axis cause names in the parent has its own PowerShell case",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "validation plan: the consumer DOF value path (solved 0) has its own Python case",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "validation plan: budget parts sum to the overall 1,660 s and the sessions match",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "validation plan: harness not written, preseal items listed",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "r2 documents name the r2 manifest SHA",
+      "status": "STATIC_MATCH",
+      "detail": []
+    },
+    {
+      "check": "r2 documents carry the SPEC section 44-2 sentence",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "r2 preparation / request state 30 decimal places and 28 significant digits, and 62 IDs / 77 inputs / 1,660 s",
+      "status": "STATIC_MATCH"
+    },
+    {
+      "check": "R2_CHANGE_BOUNDARIES c1_wording states 30 decimal places (28 significant digits)",
+      "status": "STATIC_MATCH"
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "from": "../bmin_particle640_r1_20261005/candidate (r1 · manifest 9dcb47f0ec3ec346b491d90c2836e3b30f54eb88fd5e4fbd216fc34782275cdb · reviewed at commit 741dde19b)",
+  "to": "candidate (r2)",
+  "src/diagnostic_consumer.py": [
+    {
+      "before": "    hit=re.search(pattern,mentions[0]);need(hit is not None,'TRANSIENT_DOF_READBACK_FORMAT')\n",
+      "after": "    # BMIN-R1-N1: the whole line must be one DOF statement (surrounding whitespace allowed); a second statement or any trailing text on that line is malformed.\n    hit=re.fullmatch(r'\\s*'+pattern+r'\\s*',mentions[0]);need(hit is not None,'TRANSIENT_DOF_READBACK_FORMAT')\n",
+      "count": 1,
+      "finding": "BMIN-R1-N1"
+    },
+    {
+      "before": "'dof_policy':'I-3: exactly one well-formed DOF line inside the single Time-Dependent Solver section is required (missing, outside-only, ambiguous or malformed is incomplete); a difference from the extrapolated expectation is recorded, not a gate.'}",
+      "after": "'dof_policy':'I-3: exactly one DOF line inside the single Time-Dependent Solver section is required and its whole content (surrounding whitespace allowed) must be one well-formed DOF statement (missing, outside-only, ambiguous - two lines or two statements on one line - or malformed, including trailing text, is incomplete); a difference from the extrapolated expectation is recorded, not a gate.'}",
+      "count": 1,
+      "finding": "BMIN-R1-N1"
+    }
+  ],
+  "unchanged_bytes": [
+    "src/Bmin640Candidate.java",
+    "src/candidate_entry.py",
+    "PARENT_COMMAND.ps1",
+    "CONTRACT.json"
+  ],
+  "binding_only": {
+    "CODE_MANIFEST.json": "previous_manifest_sha256 = r1 manifest; size / SHA-256 of the consumer",
+    "COMMAND_MAP.json": "manifest SHA only",
+    "NATIVE_APPROVAL_FIELD_SPEC.json": "manifest SHA only"
+  }
+}

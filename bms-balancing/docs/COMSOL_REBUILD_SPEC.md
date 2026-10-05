@@ -3833,3 +3833,24 @@ native 150 s 최대 1 회 = 다시 별도 승인. approved=false / usable=false 
 
 v1 · r1 후보 · 꾸러미 문서 · 요청문 바이트 그대로 (검토 대상 기록) · §52 의 모든 것 · 승인 플래그 전부 false · 정상 gate INCOMPLETE · 실효 정책
 UNVERIFIED · 960 s · 유한 σ · 다른 공간 축 미승인 · 게이트 리뷰 (`degradation-degeneracy`) 와 무관 · RUN_SCOPE 0.
+
+## 55. B-min 후보 r2 — 국소 보완 (BMIN-R1-N1 · C1 문구 · 검증안 보강) · 정적 대조 38/38 STATIC_MATCH · 재검토 요청 (검증 · native 미승인) (2026-10-05)
+
+> **추가 기록이다.** §54-3 의 보완 지시를 수행했다. v1 · r1 꾸러미는 덮어쓰지 않았고 (r1 = 검토 커밋 `741dde19b` 바이트 그대로), r2 는 새 꾸러미
+> `comsol_candidates/bmin_particle640_r2_20261005/` (규칙 `b4bb5325a`) 다. 게이트 리뷰 (`degradation-degeneracy` 91차 사슬) 와 섞지 않으려고 사슬이 도는 동안
+> 저장소 밖에서 만들고, 사슬이 끝난 뒤 넣었다.
+
+| 항목 | r2 |
+|---|---|
+| manifest | **`4cdca2e6bf7d073f813d97be73825b8cd2043c2fc44e285f4a190bc6fb97cf25`** (이전 = r1 `9dcb47f0…`) · run_id · root · 경로 · native 예산 r1 · v1 과 같다 |
+| BMIN-R1-N1 | consumer `mesh_evidence` 의 두 자리만 — DOF 줄 대조 `re.search(pattern, 줄)` → `re.fullmatch(r'\s*'+pattern+r'\s*', 줄)` (전체 줄 · 앞뒤 공백 허용 · 같은 줄 두 문장 / 정상 + 불완전 / 꼬리 문자 → `TRANSIENT_DOF_READBACK_FORMAT`) · `dof_policy` 문구. 줄 수 · 구간 표식 · solved > 0 · 구간 밖 기록 · 다른 유효값의 기록 전용 정책 그대로. consumer 26,065 → 26,394 B |
+| 그대로 (바이트 동일) | Java · entry · **부모** · CONTRACT · 물리 · 목록 · 좌표 · 기준 · 한도 · native 예산 |
+| C1 | PS01-16 = 소수점 아래 30 자리 · 유효숫자 28 자리 (r1 의 "31 significant digits" 정정 — 검증안 · `R2_CHANGE_BOUNDARIES.json`) · `value exactly equal to a limit` 에서 빼 `precision_mismatch_items` 로 · r1 PREPARATION 의 ".NET decimal 의 28 자리" = 소수 자리 (scale) 상한 |
+| 검증안 | 9 군 · 고유 ID **62** (Python 39 + Java helper 2 + PowerShell 21) · 입력 **77** · 예산 제안 **1,660 s** (r1: 54 · 59 · 1,530) — 새 ID PY03-11 · 12 · 13 (같은 줄 · 양성 대조: 공백 · NORMAL480 131행 원문) · PY03-14 (consumer solved 0) · PS01-18 · 19 · 20 · 21 (`GNativeAxis` 원인별 + `NATIVE_AXIS_NOT_EVALUATED`) · 여러 입력 ID 의 입력별 기대 이유 · 시험 전 봉인 항목 · 예산 증액은 사용자 승인 사항 |
+| 정적 대조 | `tools/static_audit_r2.py` 38 검사 전부 STATIC_MATCH · rc 0 (r1 감사 재실행 42/42 · rc 0 · r1 · v1 의 STATIC_AUDIT.json 바이트 불변) — r1 = 검토 커밋 바이트 · r1 감사 42 재실행 (그 안에서 v1 81 — r1 → v1 → NORMAL480) · r2 → r1 역재구성 (consumer 두 문자열) · 유지 함수 · 봉인 · 검증안 · 문서 결속 · **문자열 모형** (감사 도구의 정규식 · 소스 다섯 문장 글자 대조 · 재검토 여섯 사례 + r2 셋의 이유 · r1 규칙의 같은 줄 두 사례 = 첫 값 79485 재현 — 후보 실행 아님) |
+
+재검토 요청문 `docs/COMSOL_BMIN_CANDIDATE_R2_REVIEW_REQUEST_20261005.md` (검토 대상 = 이 절과 그 요청문이 든 커밋의 바이트 · Q1–Q3 · 자체 신고 a–e). 발송은
+사용자. 다음 (각각 별도 승인): 재검토 회신 → 변경부 검증 → native 150 s 최대 1 회 → 결과 수신 검토.
+
+이 절이 바꾸지 않는 것: v1 · r1 꾸러미 · 요청문 바이트 · §54 · 승인 플래그 전부 false · 정상 gate INCOMPLETE · 실효 정책 UNVERIFIED · 960 s · 유한 σ ·
+다른 공간 축 미승인 · 게이트 리뷰와 무관 · RUN_SCOPE 0. 컴파일 · 기능 시험 · COMSOL/JVM · native 없음.
