@@ -1,0 +1,84 @@
+{
+ "schema": "agc_kprobe/v1",
+ "what": "k 사다리 탐침 — AGC_N3_top_fcc 두 끝점 12×12×1 (나머지는 G4 k9 입력 그대로)",
+ "decision": "D-2026-10-05-wad-agc-kprobe12",
+ "settings": {
+  "pp": {
+   "Ag": "Ag_ONCV_PBE-1.0.oncvpsp.upf",
+   "C": "C.pbe-n-kjpaw_psl.1.0.0.UPF"
+  },
+  "pp_sha256": {
+   "Ag_ONCV_PBE-1.0.oncvpsp.upf": "0494aa5927b754b42d3e72535636f215b4658e9b437e639dbc09674c36c8059a",
+   "C.pbe-n-kjpaw_psl.1.0.0.UPF": "9900d1efd50b9848e31849f39094b33348486b400ee51e0f3922f716137cf3d7"
+  },
+  "pseudo_dir_note": "러너가 PSEUDO_DIR 로 바꾼다 (실행 폴더 복사본에서만)"
+ },
+ "jobs": [
+  {
+   "dir": "AGC_N3_top_fcc_K12_bound",
+   "kind": "g4",
+   "calc": "scf",
+   "model": "AGC_N3_top_fcc",
+   "nat": 36,
+   "kpts": [
+    12,
+    12,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "mixing_beta": 0.3,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.84217,
+    "eopreg": 0.0287
+   },
+   "structure": "AGC_N3_top_fcc_dft_bound",
+   "tags": {
+    "structure": "AGC_N3_top_fcc_dft_bound",
+    "kprobe": "k12_bound",
+    "from": "AGC_N3_top_fcc_G4_k9_bound"
+   },
+   "machine": "kgy RTX3090 24 GB (run_sese_gpu.sh · PWX·PSEUDO_DIR env · li2s v2 UMA 와 GPU 공유)",
+   "pw_in_sha256": "4e76129e170e5a4afcb2e05bea001a1bef1fd96b8869309dc95c4d932aafb55d"
+  },
+  {
+   "dir": "AGC_N3_top_fcc_K12_far",
+   "kind": "g4",
+   "calc": "scf",
+   "model": "AGC_N3_top_fcc",
+   "nat": 36,
+   "kpts": [
+    12,
+    12,
+    1
+   ],
+   "ecutwfc": 52.0,
+   "ecutrho": 520.0,
+   "smearing": "mv",
+   "degauss": 0.01,
+   "mixing_beta": 0.3,
+   "electron_maxstep": 200,
+   "d3": "PBE+D3(BJ) 2체",
+   "dip": {
+    "emaxpos": 0.84217,
+    "eopreg": 0.0287
+   },
+   "structure": "AGC_N3_top_fcc_dft_far",
+   "tags": {
+    "structure": "AGC_N3_top_fcc_dft_far",
+    "kprobe": "k12_far",
+    "from": "AGC_N3_top_fcc_G4_k9_far"
+   },
+   "machine": "kgy RTX3090 24 GB (run_sese_gpu.sh · PWX·PSEUDO_DIR env · li2s v2 UMA 와 GPU 공유)",
+   "pw_in_sha256": "e05251edf444ed224fb3691f6f76c6182fb12b45e6a4b8472e38739b89cb72b6"
+  }
+ ],
+ "source_pw_in_sha256": {
+  "AGC_N3_top_fcc_G4_k9_bound": "4e76129e170e5a4afcb2e05bea001a1bef1fd96b8869309dc95c4d932aafb55d",
+  "AGC_N3_top_fcc_G4_k9_far": "e05251edf444ed224fb3691f6f76c6182fb12b45e6a4b8472e38739b89cb72b6"
+ }
+}

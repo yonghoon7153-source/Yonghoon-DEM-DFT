@@ -62,6 +62,24 @@ if [ -n "${FALLBACK:-}" ]; then
   FB_RAW="$RUN/stage2_fb" collect; exit 0
 fi
 
+# ⑤ k 사다리 탐침 (G4 k 축 FAIL 뒤 · 1저자 결정 D-2026-10-05-wad-agc-kprobe12) — 대표 두 끝점 12×12×1 · 2 잡
+#   STAGE=kprobe PWX=… bash …/run_kgy.sh            (DRY_RUN=1 이면 러너 점검만 · 계산 안 함)
+#   공존 근거 = 그 결정 (원장에서 active 여야 러너가 시작한다 · 가드는 위 값 그대로). 판독은 집계 도구 --kprobe_collect.
+if [ "$STAGE" = kprobe ]; then
+  KP=$PKG/kprobe12/qe
+  [ -f "$KP/jobs.json" ] || { say "⛔ 탐침 묶음 없음 ($KP) — 이 worktree 가 탐침을 담은 커밋인지 본다"; exit 1; }
+  [ -d "$RUN/stage2_pkg/structures" ] && [ -d "$RUN/stage2" ] || { say "⛔ 2단계 묶음·출력이 RUN 에 없다 — 판독할 k6·k9 기준이 없다"; exit 1; }
+  export EXCEPTION_ID=${KPROBE_DECISION:-D-2026-10-05-wad-agc-kprobe12}
+  say "⑤ k 사다리 탐침 (결정 $EXCEPTION_ID) — AGC_N3_top_fcc 두 끝점 12×12×1"
+  runner "$KP" "$RUN/kprobe12"; rc=$?
+  [ "${DRY_RUN:-0}" = 1 ] && { say "DRY_RUN — 탐침 점검만 하고 끝낸다 (rc=$rc)"; exit $rc; }
+  tsv_show "$RUN/kprobe12/jobs_run.tsv"
+  [ $rc = 0 ] || { say "⛔ 탐침 러너 rc=$rc — 멈춘다 (그 잡 pw.out)"; exit 5; }
+  $PY tools/wad/agc_graphite.py --kprobe_collect --stage2_dir "$RUN/stage2_pkg" --raw2 "$RUN/stage2" --probe_dir "$PKG/kprobe12" \
+      --probe_raw "$RUN/kprobe12" --out "$RUN/kprobe12_collect_kgy.json" 2>&1 | grep -v "warnings.warn\|Skipping unhashable" | tee -a "$LOG"
+  say "✅ 탐침 끝 — 회수 블록으로 $RUN/kprobe12 · kprobe12_collect_kgy.json 을 커밋한다 (tmp 제외)"; exit 0
+fi
+
 if [ "$STAGE" = 1 ] || [ "$STAGE" = all ]; then
   say "① 1단계 — 기계 대조 2 (V2 입력 그대로) → 제약 이완 5"
   runner "$PKG/stage1/qe" "$RUN/stage1"; rc=$?

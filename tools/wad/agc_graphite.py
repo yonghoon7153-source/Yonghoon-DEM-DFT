@@ -636,6 +636,69 @@ def _w_to_dry(W, A):
     return W * A * A2_M2 / C4.RY_J
 
 
+# ───────────── k 사다리 탐침 (G4 k 축 FAIL 뒤 · 1저자 결정 2026-10-05) ─────────────
+#   결정 D-2026-10-05-wad-agc-kprobe12: 대표(REP_NAME) 두 끝점만 12×12×1 로 다시 — 9×9×1 자체가 수렴했는지 본다.
+#   ⛔ 못 하는 것: 헤드라인을 바꾸지 않는다 (판독만 · 다음 수는 1저자) · 다른 registry·N4 를 돌리지 않는다 ·
+#     12 가 수렴인지는 말하지 않는다 (9 → 12 의 차만 본다).
+KPROBE_K = 12                  # 9 다음의 3 의 배수 (그래핀 K 점 포함 · KPTS_G4 와 같은 규칙)
+KPROBE_DW = G4_DW              # 판독 문턱 = G4 와 같은 0.01 J/m² (새 숫자를 만들지 않는다)
+KPROBE_DECISION = "D-2026-10-05-wad-agc-kprobe12"
+
+
+def make_kprobe(stage2_dir, out_dir, k=KPROBE_K, model=REP_NAME):
+    """G4 k9 두 끝점 pw.in 을 복사하고 **K_POINTS 한 줄 · prefix 한 줄만** 바꾼다 (나머지는 바이트 그대로 · 결정적)."""
+    src_q = os.path.join(stage2_dir, "qe")
+    jobs = json.load(open(os.path.join(src_q, "jobs.json"), encoding="utf-8"))
+    by = {j["dir"]: j for j in jobs["jobs"]}
+    out_q = os.path.join(out_dir, "qe")
+    kline9 = f"\n  {KPTS_G4[0]} {KPTS_G4[1]} 1 0 0 0\n"
+    new, src_sha = [], {}
+    for ep in ("bound", "far"):
+        src = f"{model}_G4_k9_{ep}"
+        if src not in by or not os.path.isfile(os.path.join(src_q, src, "pw.in")):
+            raise SystemExit(f"⛔ {src} 가 2단계 묶음에 없다 — 탐침을 만들지 않는다")
+        txt = open(os.path.join(src_q, src, "pw.in"), encoding="utf-8").read()
+        dst = f"{model}_K{k}_{ep}"
+        n_k, n_p = txt.count(kline9), txt.count(f"prefix = '{src}'")
+        if n_k != 1 or n_p != 1:
+            raise SystemExit(f"⛔ {src}: K_POINTS·prefix 줄을 정확히 하나씩 못 찾았다 ({n_k}·{n_p}) — 만들지 않는다")
+        out = txt.replace(kline9, f"\n  {k} {k} 1 0 0 0\n").replace(f"prefix = '{src}'", f"prefix = '{dst}'")
+        os.makedirs(os.path.join(out_q, dst), exist_ok=True)
+        open(os.path.join(out_q, dst, "pw.in"), "w", encoding="utf-8").write(out)
+        e = dict(by[src]); e["dir"] = dst; e["kpts"] = [k, k, 1]
+        e["tags"] = {**{a: b for a, b in (e.get("tags") or {}).items() if a != "G4"}, "kprobe": f"k{k}_{ep}", "from": src}
+        new.append(e)
+        src_sha[src] = hashlib.sha256(txt.encode()).hexdigest()
+    meta = {"schema": "agc_kprobe/v1", "what": f"k 사다리 탐침 — {model} 두 끝점 {k}×{k}×1 (나머지는 G4 k9 입력 그대로)",
+            "decision": KPROBE_DECISION, "settings": jobs.get("settings"), "jobs": new, "source_pw_in_sha256": src_sha}
+    json.dump(meta, open(os.path.join(out_q, "jobs.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+    return meta
+
+
+def kprobe_status(w9, wk):
+    """판독 규칙 (결정 · 결과 전): |W(k) − W(9)| ≤ KPROBE_DW → 9×9×1 에서 수렴으로 읽는다. 값이 없으면 판독하지 않는다 (0 아님)."""
+    if w9 is None or wk is None:
+        return "INCOMPLETE"
+    return "CONVERGED_AT_K9" if abs(wk - w9) <= KPROBE_DW else "NOT_CONVERGED_AT_K9"
+
+
+def collect_kprobe(stage2_dir, raw2, probe_dir, probe_raw, k=KPROBE_K, model=REP_NAME):
+    """대표의 k6 · k9 · k 탐침 W — 2단계 집계와 **같은 함수**(C4.read_job · C4._w · 같은 면적)로."""
+    A = C4.area_A2(os.path.join(stage2_dir, "structures", f"{model}_dft_bound.extxyz"))
+    rd = C4.read_job
+    w6 = C4._w(rd(raw2, stage2_dir, f"{model}_dft_bound"), rd(raw2, stage2_dir, f"{model}_dft_far"), A)
+    w9 = C4._w(rd(raw2, stage2_dir, f"{model}_G4_k9_bound"), rd(raw2, stage2_dir, f"{model}_G4_k9_far"), A)
+    jb, jf = rd(probe_raw, probe_dir, f"{model}_K{k}_bound"), rd(probe_raw, probe_dir, f"{model}_K{k}_far")
+    wk = C4._w(jb, jf, A)
+    st = kprobe_status(w9, wk)
+    return {"model": model, "k": k, "decision": KPROBE_DECISION, "A_A2": A, "W_k6_J_m2": w6, "W_k9_J_m2": w9,
+            f"W_k{k}_J_m2": wk, f"dW_k{k}_minus_k9_J_m2": (wk - w9) if st != "INCOMPLETE" else None,
+            "threshold_abs_dW": KPROBE_DW, "status": st, "jobs": {jb["job"]: jb.get("status"), jf["job"]: jf.get("status")},
+            "reading": {"CONVERGED_AT_K9": "9×9×1 에서 k 수렴으로 읽는다 — 헤드라인 처리는 1저자 결정",
+                        "NOT_CONVERGED_AT_K9": "9×9×1 도 k 미수렴 — 다음 (한 단계 더 · 라벨로 닫기) 은 1저자 결정",
+                        "INCOMPLETE": "탐침 잡이 OK 가 아니다 — 판독하지 않는다"}[st]}
+
+
 def _selftest():
     import re
     import tempfile
@@ -854,6 +917,35 @@ def _selftest():
         ck("카드 결속: code_binding 값 = 코드 상수 (전부)", mine == theirs, {k: (mine[k], theirs.get(k)) for k in mine if mine[k] != theirs.get(k)})
     else:
         ck("카드가 repo 에 있다", False, p)
+    # ⑦ k 사다리 탐침 (결정 D-2026-10-05-wad-agc-kprobe12)
+    with tempfile.TemporaryDirectory() as td:
+        q = os.path.join(td, "s2", "qe")
+        body = lambda nm: (f"&CONTROL\n  calculation = 'scf'\n  prefix = '{nm}'\n  outdir = './tmp'\n/\n"
+                           "K_POINTS automatic\n  9 9 1 0 0 0\nATOMIC_POSITIONS angstrom\nC 0 0 0\n")
+        jl = []
+        for ep in ("bound", "far"):
+            nm = f"{REP_NAME}_G4_k9_{ep}"; os.makedirs(os.path.join(q, nm))
+            open(os.path.join(q, nm, "pw.in"), "w").write(body(nm))
+            jl.append({"dir": nm, "kind": "scf", "calc": "scf", "kpts": [9, 9, 1], "tags": {"G4": f"k9_{ep}"}})
+        json.dump({"settings": {"pp_sha256": {"C.UPF": "x"}}, "jobs": jl}, open(os.path.join(q, "jobs.json"), "w"))
+        m = make_kprobe(os.path.join(td, "s2"), os.path.join(td, "kp"))
+        o = open(os.path.join(td, "kp", "qe", f"{REP_NAME}_K12_bound", "pw.in")).read()
+        diff = [(x, y) for x, y in zip(body(f"{REP_NAME}_G4_k9_bound").splitlines(), o.splitlines()) if x != y]
+        ck("k 탐침: 바뀐 줄은 정확히 둘 (prefix · K_POINTS) · 줄 수 같음",
+           len(diff) == 2 and len(o.splitlines()) == len(body("x").splitlines()) and "  12 12 1 0 0 0" in o, diff)
+        ck("k 탐침: jobs.json — 잡 둘 · kpts 12 · G4 태그 없음 · 출처 기록 · PP 해시 설정 승계",
+           len(m["jobs"]) == 2 and all(j["kpts"] == [12, 12, 1] and "G4" not in j["tags"] and j["tags"]["from"].endswith(("bound", "far"))
+                                       for j in m["jobs"]) and m["settings"] == {"pp_sha256": {"C.UPF": "x"}})
+        open(os.path.join(q, f"{REP_NAME}_G4_k9_far", "pw.in"), "w").write(body(f"{REP_NAME}_G4_k9_far").replace("  9 9 1 0 0 0", "  6 6 1 0 0 0"))
+        try:
+            make_kprobe(os.path.join(td, "s2"), os.path.join(td, "kp2")); refused = False
+        except SystemExit:
+            refused = True
+        ck("⛔ k 탐침: k9 줄이 없으면 (다른 k) 만들지 않는다", refused)
+    ck("k 탐침 판독: |Δ| 0.009 → 9×9×1 수렴", kprobe_status(0.500, 0.491) == "CONVERGED_AT_K9")
+    ck("⛔ k 탐침 판독: |Δ| 0.011 → 미수렴", kprobe_status(0.500, 0.489) == "NOT_CONVERGED_AT_K9")
+    ck("⛔ k 탐침 판독: 값이 없으면 INCOMPLETE (0 아님)", kprobe_status(0.5, None) == "INCOMPLETE" and kprobe_status(None, 0.5) == "INCOMPLETE")
+    ck("k 탐침 문턱 = G4 문턱 (새 숫자 없음)", KPROBE_DW == G4_DW == 0.01)
     print(f"agc_graphite selftest: {n_ok} 통과 · {n_bad} 실패 " + ("✅" if n_bad == 0 else "❌"))
     return n_bad == 0
 
@@ -876,7 +968,22 @@ def main():
     ap.add_argument("--fallback_raw", default=None)
     ap.add_argument("--atm", action="store_true")
     ap.add_argument("--pseudo_dir", default="/data/work/pseudo")
+    ap.add_argument("--kprobe_make", action="store_true", help="k 사다리 탐침 묶음 (--stage2_dir <2단계 묶음> --out <탐침 폴더>)")
+    ap.add_argument("--kprobe_collect", action="store_true", help="탐침 판독 (--stage2_dir --raw2 --probe_dir --probe_raw [--out])")
+    ap.add_argument("--probe_dir", default=None)
+    ap.add_argument("--probe_raw", default=None)
     a = ap.parse_args()
+    if a.kprobe_make:
+        m = make_kprobe(a.stage2_dir, a.out)
+        print(f"k 탐침 묶음: {[j['dir'] for j in m['jobs']]} → {a.out}/qe/jobs.json (결정 {m['decision']})")
+        return
+    if a.kprobe_collect:
+        o = collect_kprobe(a.stage2_dir, a.raw2, a.probe_dir, a.probe_raw)
+        print(json.dumps(o, ensure_ascii=False, indent=1, default=float))
+        if a.out:
+            json.dump(o, open(a.out, "w", encoding="utf-8"), ensure_ascii=False, indent=1, default=float)
+            print(f"→ {a.out}")
+        return
     if a.selftest:
         sys.exit(0 if _selftest() else 1)
     if a.registry_scan:

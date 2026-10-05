@@ -4,7 +4,7 @@
  "date": "2026-10-05",
  "track": "W_ad (DEM 협업) — DFT 계산·카드는 우리 몫 → 1저자 = 사용자",
  "citable": "라벨 문장만 — 'G4 FAIL (k 축)' 라벨을 값에 붙인다 (카드 §4 '라벨'). DEM 입력값은 1저자(사용자) 결정 전이다. ⛔ 화면(webapp)에 W 값을 싣지 않는다.",
- "status": "결과 — G0 5/5 · G1 PASS · G3 PASS · **G4 FAIL (k 9×9×1 축)** · 두께 PASS · 헤드라인 OK (라벨 동반) · 1저자 결정 대기 (카드 §4 '새 계산은 1저자 결정 없이는 없다')",
+ "status": "결과 — G0 5/5 · G1 PASS · G3 PASS · **G4 FAIL (k 9×9×1 축)** · 두께 PASS · 헤드라인 OK (라벨 동반) · 1저자 결정 (c) — k 12×12×1 탐침 2 잡 (D-2026-10-05-wad-agc-kprobe12)",
  "card": "db/properties/wad_agc_graphite_prereg_2026_10_02.json (결정 D-2026-10-02-wad-agc-graphite · active)",
  "raw": {
   "dir": "db/raw/wad_agc_graphite_2026_10_02",
@@ -169,5 +169,10 @@
   "⚠": "결정 전에는 DEM 회신에 W 를 보내지 않는다"
  },
  "다음": "1저자 결정 → (a) 면 DEM 회신 초안 (라벨 동반) · (b)/(c) 면 새 결정 + kgy 블록",
- "results_seen": true
+ "results_seen": true,
+ "1저자_결정_2026_10_05": {
+  "선택": "(c) 대표 k 사다리 탐침 먼저 — 결정 D-2026-10-05-wad-agc-kprobe12",
+  "탐침": "AGC_N3_top_fcc 두 끝점 12×12×1 (입력은 G4 k9 와 두 줄만 다름) · kgy 2 잡 · 견적 4–6 h",
+  "판독_결과_전": "|W(12) − W(9)| ≤ 0.01 → 9×9×1 수렴 · 넘으면 미수렴 · 헤드라인은 안 바뀐다 · 다음 수는 1저자"
+ }
 }

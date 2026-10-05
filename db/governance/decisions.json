@@ -7275,6 +7275,69 @@
     "commit": "b8886c265ea3c209c7f5b19be445137f0a21a5f5",
     "decision_digest": "sha256:1a0aa50cef9babb42725b368a268169e30c5d512b1ffad744c1e0860ef7ed32a"
    }
+  },
+  {
+   "id": "D-2026-10-05-wad-agc-kprobe12",
+   "schema_version": 2,
+   "kind": "amendment",
+   "scope": "wad.agc_graphite",
+   "slot": "wad_agc_graphite_kprobe12",
+   "applies_to": {
+    "systems": [
+     "agc_graphite"
+    ],
+    "tasks": [
+     "wad_agc_kprobe12"
+    ],
+    "methods": [
+     "qe_gpu_pw_scf"
+    ],
+    "use_cases": [
+     "internal"
+    ]
+   },
+   "title": "P1b G4 k 축 FAIL 뒤 — 대표 두 끝점 k 12×12×1 탐침 (1저자 결정 (c)) · 판독 |W(12) − W(9)| ≤ 0.01 → 9×9×1 수렴 · 헤드라인 불변 · 다음 수는 1저자",
+   "statement": "카드 §4 '새 계산은 1저자 결정 없이는 없다' 에 따른 1저자(사용자) 결정. 대표 AGC_N3_top_fcc 의 두 끝점(dft bound · far)을 **k 12×12×1** 로 다시 SCF 한다 — 입력은 G4 k9 두 잡과 **K_POINTS · prefix 두 줄만** 다르다 (tools/wad/agc_graphite.py --kprobe_make · db/inputs/wad_agc_graphite_2026_10_02/kprobe12). 판독 (결과 전): |W(12) − W(9)| ≤ **0.01** J/m² (G4 와 같은 문턱 · 새 숫자 없음) → '9×9×1 에서 k 수렴' · 넘으면 '9×9×1 도 미수렴' · 잡이 OK 가 아니면 판독하지 않는다. 헤드라인(registry 평균 · G4 FAIL 라벨)은 이 탐침으로 바뀌지 않는다 — 다음 수는 결과를 보고 1저자가 정한다.",
+   "rationale": "registry 넷의 W 차가 1e-4 J/m² 라 k 수렴은 대표 하나로 본다. 9×9×1 자체가 수렴했는지 모르면 (b) 넷을 k9 로 다시 돌려도 '수렴 값' 이라 말할 수 없다 — 싼 탐침(2 잡) + 문턱 + 발동하면 할 일 (CLAUDE.md 마감 규율의 재개 규칙).",
+   "decision_state": "proposed",
+   "record_kind": "amendment",
+   "results_seen": true,
+   "card": "db/properties/wad_agc_graphite_prereg_2026_10_02.json",
+   "record": "db/properties/wad_agc_graphite_result_2026_10_05.json",
+   "amends": [
+    "D-2026-10-02-wad-agc-graphite"
+   ],
+   "depends_on": [
+    "D-2026-10-02-wad-agc-graphite"
+   ],
+   "evidence": [
+    "db/properties/wad_agc_graphite_result_2026_10_05.json (G4: e70 PASS · k9 FAIL −0.020 · s05 PASS)",
+    "db/inputs/wad_agc_graphite_2026_10_02/kprobe12/qe/jobs.json",
+    "tools/wad/agc_graphite.py (--kprobe_make · --kprobe_collect · selftest 54 · 깨기 2/2)"
+   ],
+   "reopen_criteria": [
+    "CONVERGED_AT_K9 → 1저자 결정: (a′) 라벨에 'k9 수렴 확인' 을 더해 닫기 · (b) 넷도 k9 · 헤드라인 교체는 새 결정",
+    "NOT_CONVERGED_AT_K9 → 1저자 결정: 한 단계 더 (15×15×1 · 같은 2 잡) · 또는 라벨로 닫기",
+    "INCOMPLETE → 판독 안 함 · 원인 확인 (재실행은 실행 복구)"
+   ],
+   "enforcement": "① 헤드라인을 이 탐침으로 바꾸지 않는다 ② W 값은 화면(webapp)에 싣지 않는다 ③ kgy GPU 공존 범위 = 이 2 잡 · 가드 START 12000 · KILL 23000 · HOST 8192/2048 MiB (카드 러너 그대로) · 같은 GPU 의 UMA (cascade v7 탐침 · li2s 대조 담금질) 는 건드리지 않는다 ④ 러너는 run_kgy.sh STAGE=kprobe (새 worktree · 러너 worktree ~/wt_agc_1002 는 안 옮긴다)",
+   "cost_cap": {
+    "machine": "kgy (GPU 공유)",
+    "jobs": 2,
+    "견적": "k9 실측 bound 5,109 s · far 4,281 s × k 점 약 1.5–2 배 ⇒ 4–6 h",
+    "상한_h": 12,
+    "⛔": "넘으면 멈추고 보고한다"
+   },
+   "proposed_by": "claude-session-2026-10-05 (evac)",
+   "status": "proposed",
+   "status_history": [
+    {
+     "at": "2026-10-05",
+     "state": "proposed",
+     "by": "사용자 (1저자 · W_ad 트랙)",
+     "note": "AskUserQuestion '(c) 대표 k 사다리 탐침 먼저 (Recommended)' — 판독 문턱은 G4 와 같은 0.01 (카드 상수 재사용)."
+    }
+   ]
   }
  ]
 }
