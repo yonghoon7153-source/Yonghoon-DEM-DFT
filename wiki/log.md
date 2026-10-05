@@ -3502,3 +3502,7 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - 출처: 사용자 (2026-10-05) "이컨테이너에서 하고 논문 이름 자세하게 줘봐" · 기록 `bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md` §6
 - 더한 것: 상태 두 줄 — 실행 기계 = 이 클라우드 컨테이너 (프로필 · 봉인 · 기록은 저장소로 · C6 실행은 별도 승인) · README 원문의 저자 일곱 (끝 커밋 `1188c37` 그대로)
 - 하지 않은 것: 논문 다운로드 · `LFP_Data.xlsx` · pkl · 노트북 열기 · 설치 · 버전 실측 · C6 실행 (별도 승인)
+
+## [2026-10-05] update | ampworks — upstream 알림: 사용자 "권고대로 진행" (발송은 사용자 · URL 대기)
+- 더한 것: upstream 알림 절에 결정 한 줄 — 중복 검색 뒤 issue 1 · 2 를 같은 날 따로 (사용자) · URL 을 받으면 덧붙임 · 3 · PR 보류 그대로
+- 하지 않은 것: upstream issue · discussion · PR 발송 (사용자 몫) · 중복 검색 (이 세션 API 밖)
