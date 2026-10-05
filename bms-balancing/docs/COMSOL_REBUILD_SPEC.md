@@ -3910,3 +3910,44 @@ usable=false · 전체 · 정상 gate INCOMPLETE · 실효 정책 UNVERIFIED · 
 이 절이 바꾸지 않는 것: v1 · r1 · r2 꾸러미 · 요청문 바이트 (검토 대상 기록) · §55 · 승인 플래그 전부 false · 정상 gate INCOMPLETE · 실효 정책
 UNVERIFIED · 960 s · 유한 σ · 다른 공간 축 미승인 · 게이트 리뷰 (`degradation-degeneracy` 91차 — 같은 날 따로 종결) 와 무관 · RUN_SCOPE 0. 컴파일 · 기능
 시험 · COMSOL/JVM · native 없음.
+
+## 57. 사용자 승인 — **B-min 후보 r2 변경부 한정 검증 1 건** (9 군 · 고유 ID 62 · 입력 77) · 실행 주체 Codex · native 미승인 (2026-10-05)
+
+> **추가 기록이다.** 사용자 답 (2026-10-05): "승인이고 comsol에 전달하면 되나" → 곧이어 "아니 codex" — §56-3 (가) 의 질문 (고정 r2 의 한정 검증 승인
+> 여부) 에 대한 답으로, **r2 꾸러미 `VALIDATION_REQUEST_KO.md` 의 "사용자 채택용 문구" 그대로의 승인**으로 받는다. 실행 주체는 **Codex** — 검증안
+> `executor` 칸 ("User decision (the normal 30 / 60 s changed-part validations were run by CX on the Windows machine)") 의 사용자 결정을 이 답이 채운다.
+> 전달은 사용자가 한다 (발송문은 저장소 밖 · 이 절이 든 커밋을 고정 대상으로 적는다). 이 승인은 native 150 s 의 승인이 아니다.
+
+### 57-1. 채택 문구 (r2 꾸러미 원문 그대로 — 고정 커밋 `939b544b8` 의 `VALIDATION_REQUEST_KO.md` 9–11 행)
+
+> 위 고정 B-min 후보 r2 (manifest `4cdca2e6…`) 의 변경부 9 군 · 고유 ID 62 · 입력 77 한정 오프라인 검증 1 건을 승인합니다. 실제 consumer → entry, Java
+> `checkShape` 추출 helper, Windows PowerShell 5.1 의 `GDecision` · `GNativeAxis` · `GFields` 를 검사하고 첫 실패를 보존한 뒤 중지하세요. COMSOL
+> 전체 모델 compile / JVM 모델 실행 / batch / solve · 실제 입력 · 정책 변경 · native 승인 생성은 포함하지 않습니다.
+
+### 57-2. 승인 범위
+
+| 포함 | 포함하지 않음 |
+|---|---|
+| 고정 커밋 `939b544b8` 의 r2 꾸러미 바이트 그대로 (manifest `4cdca2e6…` 다섯 파일) · `LIMITED_VALIDATION_PLAN.json` 의 9 군 · 고유 ID 62 · 입력 77 (Python 39 / 42 · Java helper 2 / 2 · Windows PowerShell 5.1 21 / 33) · 검증안의 세션 넷 (Python 1 / 250 s · Java compile 1 / 90 s · stub JVM 1 / 60 s · PowerShell 1 / 240 s) 과 전체 1,660 s 를 **상한**으로 · 첫 시험 전 봉인 (`preseal_before_first_test`) · 결과 / 미완의 보존 · 포장 | native (fresh 0 → 150 s) · COMSOL 전체 모델 compile / JVM 모델 실행 / batch / solve · 실제 입력 · 정책 변경 · 승인 파일 / release / runtime / token 생성 · `future_run` / `future_parent` / `future_authorizations` · 후보 바이트 변경 (바뀌면 새 manifest · 새 검증안) · 횟수 · 예산 증액 · 재시험 · 기존 111 / 78 / 1198 / 30 s 시험 · NORMAL480 · rtol30 의 반복 · 960 s · 유한 σ · 다른 공간 축 |
+
+### 57-3. 실행 조건 (검증안 · §56 검토자 조건을 모은 것 — 새로 더한 조건 없음)
+
+1. **봉인 먼저.** harness 는 이 승인 뒤에 쓰고, 첫 시험 전에 그 SHA-256 · 생산 함수마다 봉인 바이트에서의 추출 위치 · 엔진 식별 (python.exe =
+   `CONTRACT.python` 해시 · powershell.exe 5.1 = `PARENT_COMMAND.ps1` 의 해시 · Java helper compiler / JVM = 수용된 정상 30 s 검증 `COMMANDS.json` 의
+   후보) · 입력별 fixture · 기대 이유 · 호출 · 시간 원점을 고정해 사용자에게 보인다. 다른 엔진 · 권한 · ExecutionPolicy fallback 없음.
+2. **대상.** consumer → 실제 `candidate_entry` (native / process / gate 진입은 import 전에 inert adapter 로 막는다) · 봉인된 Java 에서 `checkShape` ·
+   `TIMES` 만 추출 · 봉인된 `PARENT_COMMAND.ps1` 에서 `GDecision` · `GNativeAxis` · `GFields` 를 그대로 추출 (새 `BInvoke` / native 프로세스 시험 없음) ·
+   PowerShell 판정을 Python 으로 흉내 내지 않는다 · fixture 는 시험 임시 위치에만.
+3. **판정.** 사례마다 기대 이유와 도달 함수를 대조한다 (임의 예외를 PASS 로 세지 않는다) · 여러 입력 ID 는 입력별 기대 이유 (`input_expectations`) ·
+   판정 문장은 §44-2 (같으면 허용 ≤ · 어느 하나라도 엄격히 크면 `EXCEEDS_LIMITS`) · PS01-16 은 정밀도 불일치 → INCOMPLETE 사례 (정확 등호 아님).
+4. **첫 실패 · 한도 초과에서 기록 · 중지** — 자동 수정 · 부분 재시험 · 추가 probe · 우회 없음 · 최초 오류 · 미실행 목록 · 시간을 보존한다.
+5. 끝나도 native 를 이어서 실행하지 않는다.
+
+### 57-4. 돌려받을 것 (검증안의 "보존 · 포장" · "미완 정리" 칸을 풀어 쓴 것)
+
+결과 묶음 하나 (자신을 뺀 payload 의 크기 · SHA manifest) — 57-3 의 1 봉인 기록 · 엔진별 세션의 원문 stdout / stderr / rc · 입력별 결과 표 (ID · 입력 ·
+기대 이유 · 관측 이유 · 도달 함수 · 판정 · 중복 0) · 세션별 시간과 한도 · (있다면) 첫 실패 기록과 미실행 목록 · 실행하지 않은 것. 묶음은 정상 30 ·
+60 s 때처럼 수신 검토를 거쳐 받고, 접수는 새 절로 한다. 그 결과를 수용한 뒤의 native 150 s 최대 1 회는 다시 별도 승인이다.
+
+이 절이 바꾸지 않는 것: v1 · r1 · r2 꾸러미 바이트 (검증안 JSON 의 `approved=false` · `status` 도 그대로 — 승인은 이 절이 기록한다) · §55 · §56 · 정상
+gate INCOMPLETE · 실효 정책 UNVERIFIED · native 미승인 · 게이트 리뷰와 무관 · RUN_SCOPE 0. 이 저장소 쪽 실행 0 (컴파일 · 시험 · COMSOL/JVM/PowerShell 없음).
