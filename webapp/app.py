@@ -719,6 +719,57 @@ def _ion_handover(results_dir, metrics):
     return _tf.ion_columns(dual, m, m.get('percolation_pct'))
 
 
+#  ★ 10-05 RGL-02 웹앱 짝 (J20-l) — 생산자 상태 valid_zero + no_through_path 의 화면 이름.  망 상태 행 · τ 인계 상태 행 (NOT_PERCOLATING) 이
+#    **같은 이름**을 쓴다 (한 사건 = 한 이름).
+ION_NET_NO_THROUGH_TEXT = '비관통 (관통 경로 없음)'
+#  ★ 10-05 RGL-02 · 04 웹앱 짝 — 망 상태 · 세대 두 행 (생산자 · 시도 기록의 이름 그대로).
+ION_NET_STATE_LABEL = 'σ_ionic 망 상태 (생산자 sigma_full_status)'
+NET_ATTEMPT_LABEL = '망 최근 시도 (network_attempt — 활성 세대와 다를 때)'
+
+
+def _ion_net_state_text(status, reason):
+    """생산자 이온 σ 상태 · 사유 (`network_conductivity._net_sigma_status`) → 화면 문구 (같은 이름 · 같은 정의 — 사유 코드는 괄호에 그대로)."""
+    if status == 'computed':
+        return '계산됨'
+    if status == 'valid_zero':
+        return ION_NET_NO_THROUGH_TEXT if reason == 'no_through_path' else f'0 (valid_zero · {reason or "사유 없음"})'
+    if status == 'not_computed':
+        return ('미계산 — 관통인데 풀지 못함 (solve_failed)' if reason == 'solve_failed'
+                else f'미계산 (not_computed · {reason or "사유 없음"})')
+    return '—' if status is None else str(status)
+
+
+def _network_generation(results_dir):
+    """망 세대 표시용 — 활성 세대 (`network_provenance.json` · 성공했을 때만 갱신) + 최근 시도 (`network_attempt.json` · 성공 · 실패 모두).
+    ★ 10-05 RGL-04: 승격 전 검사 (채널 · σ₀ 짝 · 망 정지 계약) 에 실패한 후보는 활성 세대를 차지하지 않는다 — 그 사실은 최근 시도에만 남는다.
+    → {'active_run_id', 'active_status', 'attempt': dict | None}"""
+    prov = _ps.read_network_provenance(results_dir)
+    return {'active_run_id': prov.get('network_run_id'), 'active_status': prov.get('solver_status'),
+            'attempt': _ps.read_network_attempt(results_dir)}
+
+
+def _network_state_rows(metrics):
+    """망 Solver 절의 두 행 (RGL-02 · 04 웹앱 짝).
+      ① 망 상태 — full_metrics 에 머지된 생산자 상태 · 사유 (hertz = sigma_full_status · physics = _physics 꼬리).  옛 세대 (상태 키 없음) = 행 없음.
+      ② 최근 시도 — 라우트가 붙인 `_network_generation` 에서 최근 시도가 failed 일 때만: 'failed — <사유> · 활성 세대 <id | 없음>'."""
+    rows = []
+    m = metrics if isinstance(metrics, dict) else {}
+    if m.get('sigma_full_status') is not None or m.get('sigma_full_status_physics') is not None:
+        rows.append([ION_NET_STATE_LABEL,
+                     _ion_net_state_text(m.get('sigma_full_status'), m.get('sigma_full_reason')),
+                     _ion_net_state_text(m.get('sigma_full_status_physics'), m.get('sigma_full_reason_physics')), ''])
+    gen = m.get('_network_generation')
+    att = (gen or {}).get('attempt') if isinstance(gen, dict) else None
+    if isinstance(att, dict) and att.get('solver_status') == 'failed':
+        why = str(att.get('reason') or att.get('stage') or '사유 없음').replace('\n', ' ').strip()
+        why = why if len(why) <= 240 else why[:237] + '…'
+        act = gen.get('active_run_id')
+        cell = (f"failed — {why} · 시도 {att.get('network_attempt_run_id') or '?'} · "
+                + (f'활성 세대 {act} (옛 세대 그대로)' if act else '활성 세대 없음 (첫 실행 실패 — 게시된 망 결과 없음)'))
+        rows.append([NET_ATTEMPT_LABEL, cell, cell, ''])
+    return rows
+
+
 def _ion_handover_rows(ih):
     """케이스 τ 블록 뒤 두 행 — [상태 (사유)] · [띠 규칙 · 띠 폭/판 간격].  ih = `_ion_handover` 결과 (None = 도우미 미계산)."""
     if not isinstance(ih, dict):
@@ -727,6 +778,8 @@ def _ion_handover_rows(ih):
     def _st(m):
         s = ih.get(f'ion_net_status_{m}') or '—'
         r = ih.get(f'ion_net_status_reason_{m}') or ''
+        if s == 'NOT_PERCOLATING':                 # ★ RGL-02 — 망 상태 행과 같은 이름 (생산자 valid_zero + no_through_path)
+            return f'{s} — {ION_NET_NO_THROUGH_TEXT}'
         return f'{s} ({r})' if r else s
 
     def _band(m):
@@ -2089,6 +2142,8 @@ def normalize_network_summary_layout(tables, metrics):
         'σ_brug/σ_grain (Bruggeman)',
         # Network Solver — combined Hertzian vs Physics
         'σ_ionic (mS/cm)',
+        'σ_ionic 망 상태 (생산자 sigma_full_status)',            # 10-05 RGL-02 — 증명된 비관통 · 관통인데 못 풂 · 계산됨
+        '망 최근 시도 (network_attempt — 활성 세대와 다를 때)',   # 10-05 RGL-04 — 승격 전 검사 실패 후보 (활성 아님)
         'R_brug (과대추정 배수)',
         'σ_ionic ratio (physics/Hertzian)',
         'Constriction 비율(%)',
@@ -2317,6 +2372,11 @@ _PAPER_LABEL_MAP = {
         'tau2 handover status — gates G1–G6 (τ judgment v2 §5-2 · scripts/tau_flux.py)',
     '띠 규칙 · 띠 폭/판 간격 (G1 · TAU-24)':
         'Boundary band rule · band width / plate gap (G1 · TAU-24)',
+    #  ★ 10-05 RGL-02 · 04 웹앱 짝 — ⚠ 바꾸면 single.html PAPER_TO_ORIG 역맵도 같이 (test_closed_param_labels T1)
+    'σ_ionic 망 상태 (생산자 sigma_full_status)':
+        'σ_ionic network state — producer sigma_full_status (valid_zero = proven no through path · not_computed = solve failed)',
+    '망 최근 시도 (network_attempt — 활성 세대와 다를 때)':
+        'Latest network attempt — failed candidate not promoted (network_attempt.json · active generation kept)',
     'AM Percolation (%)':          'AM percolation, top↔bottom (%)',
     'Electronic Active AM (%)':    'Current-collector-connected AM, f_AM^cc (%)',
     # Tier-1 corrections
@@ -2924,6 +2984,9 @@ def transform_network_summary_4col(tables, metrics, meta):
         #    τ 블록 조건 (σ > 0) 과 따로 둔다.  자리는 `_CANONICAL_ROW_ORDER` 가 비율 행 뒤로 잡는다.
         if '_ion_handover' in metrics and not _has_label(ION_HANDOVER_STATUS_LABEL):
             new_rows.extend(_ion_handover_rows(metrics.get('_ion_handover')))
+        # ── 망 상태 · 최근 시도 (10-05 RGL-02 · 04 웹앱 짝) — σ 가 없는 비관통 케이스도 보이게 τ 블록 조건과 따로 · 자리는 정렬 표가 잡는다
+        if not _has_label(ION_NET_STATE_LABEL) and not _has_label(NET_ATTEMPT_LABEL):
+            new_rows.extend(_network_state_rows(metrics))
 
         # AM Percolation (electronic)
         if (not _has_label('AM Percolation (%)')
@@ -3109,6 +3172,128 @@ def _refresh_post_network_warnings(met_data):
     return met_data
 
 
+def _network_projection(results_dir, run_id):
+    """망 세대 (legacy · dual JSON) → full_metrics 투영을 **메모리에서만** 만든다 — 쓰지 않는다 (승격 여부는 호출부가 정한다).
+
+    ★ 10-05 RGL-04 (Codex · 1저자 비준 "권고대로"): 옛 흐름은 머지를 **먼저 게시**하고 (full_metrics · success 도장 · 옛 stash 삭제)
+      새 필수 관문 (망 정지 계약) 을 그 **뒤에** 돌려, 관문이 실패해도 실패 후보가 활성 성공 세대로 남았다 (다른 소비자가 읽는 활성 결과 ·
+      성공 증서가 실패 후보로 바뀌었다).  이제 투영은 메모리에서 만들고, 호출부가 채널 판정 · σ₀ 짝 · 정지 계약까지 **전부 통과한 뒤
+      한 번에** 승격한다 (네 망 JSON + full_metrics + active provenance).  실패면 후보를 치우고 옛 세대를 되돌린다.
+
+    머지 규칙은 옛 판 그대로 — ★ RC5-03 (Codex 5회차): 옛 merge 는 **새 JSON 에 있는 키만** 덮어써서, 새 solver 가 thermal 을 못 내면
+      **옛 세대의 thermal 값이 새 network_run_id · 새 Stage E parent 아래 그대로 남았다** (실측: 111.125/222.25).  값과 도장이 다른 세대를
+      가리키는 것은 network/Stage E 세대 분리 작업 전체가 막으려던 바로 그 상태다 ⇒ network 소유 projection (`NET_MERGE_KEYS`) 을
+      **전부 걷어내고** 새 세대로만 채운다.  ⚠ 이것은 "thermal 누락 = network 실패" 판정과는 **별개**다 — 누락을 옛 값으로 메우지
+      않을 뿐이고, 누락된 키는 기록한다.
+    ★ 10-05 RGL-07: σ₀ · 온도 (`NET_SIGMA0_KEYS`) 도 소유 키다 — 옛 온도 factor 가 새 σ 밑에 남지 않는다 · 두 모드 짝 대조는
+      `network_sigma0_problem` (어긋나면 승격 거부).
+    ★ RC5-03 근본수정 · RC7-02: solver 가 채널 상태를 **항상** 남기므로 세 채널을 각각 판정해 기록하고 하나라도 fail 이면 실패다.
+      옛 세대 산출물은 상태 필드가 없어 'unknown' 인데, **소급 실패로 만들지 않는다**.
+
+    → dict(fm=투영 | None, chv={채널: (판정, 사유)}, failed=[실패 채널], dropped=[옛 값을 비운 키], pair='' | σ₀ 짝 사유, error='' | 예외)
+      fm None (error 없음) = 투영할 자리가 없다 (full_metrics.json 또는 legacy JSON 없음 — 옛 동작: 머지 생략).
+    """
+    out = {'fm': None, 'chv': {}, 'failed': [], 'dropped': [], 'pair': '', 'error': ''}
+    net_json = os.path.join(results_dir, 'network_conductivity.json')
+    fm_json = os.path.join(results_dir, 'full_metrics.json')
+    if not (os.path.exists(net_json) and os.path.exists(fm_json)):
+        return out
+    try:
+        with open(net_json) as _f:
+            net_data = json.load(_f)
+        with open(fm_json) as _f:
+            fm_data = json.load(_f)
+        _had_keys = {k for k in _NET_MERGE_KEYS if fm_data.get(k) is not None}
+        for k in _NET_MERGE_KEYS:
+            fm_data.pop(k, None)
+        for k in _NET_MERGE_KEYS:
+            if k in net_data and net_data[k] is not None:
+                fm_data[k] = net_data[k]
+        fm_data = _merge_dual_into_metrics(results_dir, fm_data)
+        _dropped = sorted(k for k in _had_keys if fm_data.get(k) is None)
+        if _dropped:
+            fm_data['network_projection_dropped'] = _dropped
+        else:
+            fm_data.pop('network_projection_dropped', None)
+        try:
+            with open(os.path.join(results_dir, 'network_conductivity_dual.json')) as _f:
+                _dual = json.load(_f)
+        except (OSError, ValueError):
+            _dual = None
+        _pair = _ps.network_sigma0_problem(_dual, net_data, fm_data)
+        _chv = {ch: _ps.channel_verdict(net_data, ch) for ch in _ps.NETWORK_CHANNELS}
+        for _ch, (_v, _why) in _chv.items():
+            fm_data[f'{_ch}_channel_verdict'] = _v
+            fm_data[f'{_ch}_channel_reason'] = _why
+        _failed_ch = [c for c, (v, _) in _chv.items() if v == 'fail']
+        fm_data = _refresh_post_network_warnings(fm_data)
+        fm_data['network_solver_status'] = (
+            (_failed_ch[0] + '_failed') if _failed_ch else 'success')
+        fm_data['failed_channels'] = _failed_ch or None
+        fm_data['network_run_id'] = run_id                     # 하위호환
+        fm_data['active_network_run_id'] = run_id              # RR2-01
+        fm_data['last_network_attempt_run_id'] = run_id
+        fm_data.pop('stale_after_failed_retry', None)
+        out.update(fm=fm_data, chv=_chv, failed=_failed_ch, dropped=_dropped, pair=_pair)
+    except Exception as _e:                                        # noqa: BLE001
+        out['error'] = f'{type(_e).__name__}: {_e}'
+    return out
+
+
+def _network_channel_stage(chv, failed):
+    """채널 판정을 **단계로** 올린다 (RC7-02 — ionic · electronic · thermal 같은 자격).  "퍼콜 미형성 (정상)" 과 "솔버 예외 (실패)" 가
+    상태로 구분되므로 실패만 실패로 본다 · 옛 세대 ('unknown') 는 소급 실패시키지 않는다."""
+    return _ps.StageOutcome(
+        step='Network channel verdict (ionic/electronic/thermal)',
+        stdout='; '.join(f'{c}={v} ({w})' for c, (v, w) in chv.items()),
+        stderr=('실패 채널: ' + ', '.join(failed)) if failed else '',
+        rc=(1 if failed else 0), ok=(not failed), required=True,
+        missing_outputs=[], stale_outputs=[], verify_failed=False)
+
+
+def _network_merge_log(log, proj):
+    """승격 (또는 보존 경로의 재투영) 뒤의 머지 로그 — 옛 값으로 메우지 않고 비운 키 · 키 수."""
+    _dropped = proj.get('dropped') or []
+    if _dropped:
+        log.append({'step': 'Network Merge', 'rc': 0, 'stderr': '',
+                    'stdout': f'⚠ 새 세대가 못 낸 채널 {len(_dropped)}개를 옛 값으로 '
+                              f'메우지 않고 비웠다: ' + ', '.join(_dropped[:8])})
+    log.append({'step': 'Network Merge', 'stdout': f'{len(_NET_MERGE_KEYS)} σ-keys',
+                'stderr': '', 'rc': 0})
+
+
+def _network_candidate_checks(results_dir, run_id, proj, stop_before_stage_e):
+    """★ 10-05 RGL-04 — 승격 **전** 후보 검사: 투영 → 채널 판정 → σ₀ · 온도 짝 (RGL-07) → (정지 경로면) 망 정지 계약 (RGL-02 · 08).
+    → (단계들, (실패 단계 이름 | '', 사유)).  통과한 단계도 기록한다 (정지 계약 통과 = 'ok').  하나라도 실패면 호출부가 후보를 버린다."""
+    _ss = []
+    if proj.get('error'):
+        _st = _ps.StageOutcome(step='Network projection (승격 전 투영)', stdout='',
+                               stderr='★ 투영 실패 (게시 전 차단): ' + proj['error'], rc=1, ok=False, required=True,
+                               missing_outputs=[], stale_outputs=[], verify_failed=True)
+        return [_st], (_st['step'], _st['stderr'])
+    if proj.get('fm') is not None:
+        _tst = _network_channel_stage(proj['chv'], proj['failed'])
+        _ss.append(_tst)
+        if proj['failed']:
+            return _ss, (_tst['step'], _tst['stderr'])
+    if proj.get('pair'):
+        _st = _ps.StageOutcome(step='Network σ₀ · 온도 짝 (승격 전 · RGL-07)', stdout='',
+                               stderr='★ ' + proj['pair'], rc=1, ok=False, required=True,
+                               missing_outputs=[], stale_outputs=[], verify_failed=True)
+        _ss.append(_st)
+        return _ss, (_st['step'], _st['stderr'])
+    if stop_before_stage_e:
+        _ok_stop, _why_stop = _ps.network_stop_verdict(results_dir, run_id, fm=proj.get('fm'))
+        _sst = _ps.StageOutcome(
+            step='Network stop contract (stop_after=network)', stdout=(_why_stop if _ok_stop else ''),
+            stderr=('' if _ok_stop else '★ 망 정지 계약 실패: ' + _why_stop), rc=(0 if _ok_stop else 1), ok=_ok_stop,
+            required=True, missing_outputs=[], stale_outputs=[], verify_failed=(not _ok_stop))
+        _ss.append(_sst)
+        if not _ok_stop:
+            return _ss, (_sst['step'], _sst['stderr'])
+    return _ss, ('', '')
+
+
 def _network_and_stage_e(results_dir, scripts, atoms_csv, contacts_csv, type_map, scale,
                          log, preserve_network=False, network_snapshot=None,
                          runner=None, stop_before_stage_e=False):
@@ -3122,13 +3307,17 @@ def _network_and_stage_e(results_dir, scripts, atoms_csv, contacts_csv, type_map
 
     여기서 고정하는 순서:
       preserve=True  → **solver 호출 0회**, 스냅샷을 먼저 복원 → 그 baseline 으로 Stage E.
-      preserve=False → 파일 lock 을 잡고 solver 1회 → provenance 도장 → 그것으로 Stage E.
+      preserve=False → 파일 lock 을 잡고 옛 산출물을 치운 **빈 자리**에 solver 1회 → 내용 검증 → 메모리 투영 → 채널 판정 → σ₀ 짝 →
+                       (stop_before_stage_e 면) 망 정지 계약 → **전부 통과해야 한 번에 승격** (provenance 도장 · 최근 시도 success ·
+                       full_metrics 쓰기 · 옛 stash 버림) → 그것으로 Stage E.
+                       ★ 10-05 RGL-04: 하나라도 실패하면 후보를 치우고 (`discard_network_candidate` — 첫 실행이면 빈 자리) 옛 세대
+                       (네 JSON · provenance) 를 되돌리고 full_metrics 는 쓰지 않는다 · 최근 시도 (`network_attempt.json`) 만 failed + 사유.
     어느 쪽이든 Stage E 는 **화면에 실제로 남을 baseline** 을 본다.
 
-    stop_before_stage_e=True (`run_pipeline(stop_after='network')`) — 머지 · 채널 판정까지 하고 **Stage E 앞**에서 멈춘다.
-      마지막 단계 = 망 정지 계약 (`_ps.network_stop_verdict` · required · 이번 실행 run_id) — 어기면 failed.
+    stop_before_stage_e=True (`run_pipeline(stop_after='network')`) — 승격 전 검사의 마지막이 망 정지 계약 (`_ps.network_stop_verdict` ·
+      required · 이번 실행 run_id · 후보 투영) — 어기면 failed 이고 활성 세대는 옛 것 그대로다.  Stage E 앞에서 멈춘다.
 
-    → (stages, network_run_id)
+    → (stages, network_run_id)  — 실패면 network_run_id = 되돌린 옛 활성 세대 (없으면 None)
     """
     stages = []
     attempt_failed = False
@@ -3142,12 +3331,38 @@ def _network_and_stage_e(results_dir, scripts, atoms_csv, contacts_csv, type_map
             stdout=f'restored {n} artefact(s); network_run_id={prov.get("network_run_id")}',
             stderr='', rc=0, ok=True, required=False, missing_outputs=[]))
         log.append(stages[-1])
+        # 보존 경로 — 새 후보가 없다 (승격할 것 없음).  복원한 옛 세대의 투영을 다시 쓴다 (옛 동작 그대로 · 실패는 기록만).
+        _proj = _network_projection(results_dir, prov.get('network_run_id'))
+        if _proj['error'] or _proj['pair']:
+            log.append({'step': 'Network Merge', 'stdout': '', 'rc': 1,
+                        'stderr': _proj['error'] or _proj['pair']})
+        if _proj['fm'] is not None:
+            _ps.atomic_write_json(fm_json, _proj['fm'])
+            _network_merge_log(log, _proj)
+            _tst = _network_channel_stage(_proj['chv'], _proj['failed'])
+            stages.append(_tst)
+            log.append(_tst)
+            _failed_ch = _proj['failed']
+            if _failed_ch:
+                return stages, prov.get('network_run_id')   # Stage E 를 돌리지 않는다
+        if stop_before_stage_e:
+            #  보존 (solver 미호출) 경로는 run_pipeline 이 미리 거부한다 — 여기 와도 이번 실행 run_id 가 없어 계약이 실패한다.
+            _ok_stop, _why_stop = _ps.network_stop_verdict(results_dir, None)
+            _sst = _ps.StageOutcome(
+                step='Network stop contract (stop_after=network)', stdout=(_why_stop if _ok_stop else ''),
+                stderr=('' if _ok_stop else '★ 망 정지 계약 실패: ' + _why_stop), rc=(0 if _ok_stop else 1), ok=_ok_stop,
+                required=True, missing_outputs=[], stale_outputs=[], verify_failed=(not _ok_stop))
+            stages.append(_sst)
+            log.append(_sst)
+            return stages, prov.get('network_run_id')
     else:
         inputs = {os.path.basename(p): _ps.file_digest(p) for p in (atoms_csv, contacts_csv)}
         run_id = _ps.new_run_id()
         cmd = [sys.executable, os.path.join(scripts, 'network_conductivity.py'),
                atoms_csv, contacts_csv, '-o', results_dir,
                '-t', type_map, '-s', str(scale), '--contact-mode', 'both']
+        _argv = {'type_map': type_map, 'scale': scale, 'contact_mode': 'both'}
+        _proj, _cand_stages, _reject, promoted = None, [], ('', ''), False
         # ★ CB-03: lock 을 못 잡으면 solver 를 **돌리지 않는다**.  옛 코드는 got=False 여도
         #   그대로 실행해(fail-open) OOM 방지라는 목적 자체가 무너졌다.
         try:
@@ -3167,7 +3382,7 @@ def _network_and_stage_e(results_dir, scripts, atoms_csv, contacts_csv, type_map
                 #   버렸고 thermal 판정은 그 뒤에 했다 → required 실패인데 active 는
                 #   success 이고 옛 완전 세대는 이미 사라진 상태가 실측됐다.
                 #   내용 검증을 verify 로 **게이트 안에** 넣는다: 실패하면 아래
-                #   restore_stash 가 옛 세대를 그대로 되살린다.  두 mode 를 각각 본다
+                #   discard_network_candidate 가 옛 세대를 그대로 되살린다.  두 mode 를 각각 본다
                 #   (legacy 하나만 보면 Physics 실패가 H 성공에 가린다).
                 _content_reason = ['']
 
@@ -3187,28 +3402,54 @@ def _network_and_stage_e(results_dir, scripts, atoms_csv, contacts_csv, type_map
                     st['stderr'] = ((st.get('stderr') or '') +
                                     '\n★ 내용 검증 실패 (게시 전 차단): ' + _content_reason[0])
                 if st.ok:
-                    _ps.drop_stash(_stash)
+                    # ★ 10-05 RGL-04 — 승격 **전**에 후보를 전부 검사한다 (투영 · 채널 · σ₀ 짝 · 정지 계약).  옛 흐름은 여기서 stash 를
+                    #   버리고 success 도장 · full_metrics 게시를 먼저 한 뒤 정지 계약을 돌렸다.
+                    _proj = _network_projection(results_dir, run_id)
+                    _cand_stages, _reject = _network_candidate_checks(results_dir, run_id, _proj, stop_before_stage_e)
+                    if not _reject[0]:
+                        # ── 승격 (한 번에) ──  ★ RR2-01: active 도장은 **성공했을 때만** 갱신한다.
+                        #   ★ RR3-05: attempt 는 '가장 최근 시도 (성공 · 실패 모두)' 이므로 성공에도 갱신한다.
+                        _ps.stamp_network_provenance(results_dir, run_id, inputs, 'success', argv=_argv)
+                        _ps.record_network_attempt(results_dir, run_id, 'success', argv=_argv)
+                        if _proj['fm'] is not None:
+                            _ps.atomic_write_json(fm_json, _proj['fm'])
+                        _ps.drop_stash(_stash)
+                        promoted = True
                 else:
-                    _ps.restore_stash(_stash, results_dir)      # 옛 성공 세대 복구
+                    _reject = (st.get('step', ''), (st.get('stderr') or '')[-300:])
+                if not promoted:
+                    # 후보를 치우고 옛 성공 세대 (네 JSON · provenance) 를 되돌린다 — 첫 실행이면 빈 자리 (활성 세대 없음).
+                    _ps.discard_network_candidate(results_dir, _stash)
+                    # 실패 시도는 **분리된 파일**에 남긴다 — active baseline ID 를 차지하면
+                    #   게시된 것은 옛 성공 세대인데 ID 는 실패 시도를 가리키는 모순이 된다.
+                    _ps.record_network_attempt(results_dir, run_id, 'failed',
+                                               reason=(f'{_reject[0]}: {_reject[1]}' if st.ok else _reject[1])[:2000],
+                                               argv=_argv, stage=_reject[0])
         except _ps.LockUnavailable as _lk:
             st = _ps.StageOutcome(step='Network Solver (LOCK 미획득 — 미실행)', stdout='',
                                   stderr=str(_lk), rc=1, ok=False, required=True,
                                   missing_outputs=['network lock'])
+            _ps.record_network_attempt(results_dir, run_id, 'failed', reason=str(_lk)[-300:],
+                                       argv=_argv, stage=st['step'])
         stages.append(st)
         log.append(st)
-        _argv = {'type_map': type_map, 'scale': scale, 'contact_mode': 'both'}
-        if st.ok:
-            # ★ RR2-01: active 도장은 **성공했을 때만** 갱신한다.
-            _ps.stamp_network_provenance(results_dir, run_id, inputs, 'success', argv=_argv)
-            # ★ RR3-05: attempt 는 '가장 최근 시도(성공/실패 모두)' 라고 적어놨으므로
-            #   성공에도 갱신한다 — 안 그러면 옛 실패가 영원히 '최근 시도' 로 남는다.
-            _ps.record_network_attempt(results_dir, run_id, 'success', argv=_argv)
+        for _s in _cand_stages:
+            stages.append(_s)
+            log.append(_s)
+        if promoted:
             prov = {'network_run_id': run_id}
+            if _proj['fm'] is not None:
+                _network_merge_log(log, _proj)
+            if stop_before_stage_e:
+                return stages, run_id                              # 정지 계약 통과 단계는 _cand_stages 에 있다
+        elif st.ok:
+            # 후보 거부 (투영 · 채널 · σ₀ 짝 · 정지 계약) — 활성 = 옛 세대 그대로 · full_metrics 는 쓰지 않았다 · 최근 시도만 failed.
+            prov = _ps.read_network_provenance(results_dir)
+            log.append({'step': 'Network Merge / Stage E', 'rc': 1, 'stdout': '',
+                        'stderr': f'승격 전 검사 실패 ({_reject[0]}) → 후보 폐기 · merge·Stage E 미실행 '
+                                  f'(게시본은 이전 세대 유지 — 첫 실행이면 활성 세대 없음)'})
+            return stages, prov.get('network_run_id')
         else:
-            # 실패 시도는 **분리된 파일**에 남긴다 — active baseline ID 를 차지하면
-            #   게시된 것은 옛 성공 세대인데 ID 는 실패 시도를 가리키는 모순이 된다.
-            _ps.record_network_attempt(results_dir, run_id, 'failed',
-                                       reason=(st.get('stderr') or '')[-300:], argv=_argv)
             prov = _ps.read_network_provenance(results_dir)     # 복구된 옛 세대(있으면)
             attempt_failed = True
 
@@ -3228,92 +3469,6 @@ def _network_and_stage_e(results_dir, scripts, atoms_csv, contacts_csv, type_map
             pass
         log.append({'step': 'Network Merge / Stage E', 'rc': 1, 'stdout': '',
                     'stderr': 'network 실패 → merge·Stage E 미실행 (게시본은 이전 세대 유지)'})
-        return stages, prov.get('network_run_id')
-
-    # ── baseline σ 를 full_metrics 로 머지 (이제 양 분기가 같은 목록을 쓴다) ──
-    try:
-        net_json = os.path.join(results_dir, 'network_conductivity.json')
-        if os.path.exists(net_json) and os.path.exists(fm_json):
-            with open(net_json) as _f:
-                net_data = json.load(_f)
-            with open(fm_json) as _f:
-                fm_data = json.load(_f)
-            # ★ RC5-03 (Codex 5회차): 옛 merge 는 **새 JSON 에 있는 키만** 덮어썼다.
-            #   그래서 새 solver 가 thermal 을 못 내면 **옛 세대의 thermal 값이 새
-            #   network_run_id·새 Stage E parent 아래 그대로 남았다** (실측: 111.125/222.25
-            #   가 새 ID 밑에서 살아남음).  값과 도장이 다른 세대를 가리키는 것은
-            #   network/Stage E 세대 분리 작업 전체가 막으려던 바로 그 상태다.
-            #   ⇒ merge 전에 **network 소유 projection 을 전부 걷어내고** 새 세대로만 채운다.
-            #   ⚠ 이것은 "thermal 누락 = network 실패" 판정과는 **별개**다.  그 판정은
-            #     채널이 필수인지에 대한 결정이 필요해 여기서 하지 않는다 — 다만 누락을
-            #     조용히 옛 값으로 메우는 것만은 확실히 막는다.  누락된 키는 기록한다.
-            _had_keys = {k for k in _NET_MERGE_KEYS if fm_data.get(k) is not None}
-            for k in _NET_MERGE_KEYS:
-                fm_data.pop(k, None)
-            for k in _NET_MERGE_KEYS:
-                if k in net_data and net_data[k] is not None:
-                    fm_data[k] = net_data[k]
-            fm_data = _merge_dual_into_metrics(results_dir, fm_data)
-            _dropped = sorted(k for k in _had_keys if fm_data.get(k) is None)
-            if _dropped:
-                fm_data['network_projection_dropped'] = _dropped
-                log.append({'step': 'Network Merge', 'rc': 0, 'stderr': '',
-                            'stdout': f'⚠ 새 세대가 못 낸 채널 {len(_dropped)}개를 옛 값으로 '
-                                      f'메우지 않고 비웠다: ' + ', '.join(_dropped[:8])})
-            else:
-                fm_data.pop('network_projection_dropped', None)
-            # ★ RC5-03 근본수정: 이제 solver 가 thermal 상태를 **항상** 남기므로
-            #   "퍼콜 안 해서 없다"(정상)와 "솔버가 죽어서 없다"(실패)를 구분할 수 있다.
-            #   옛 세대 산출물은 상태 필드가 없어 'unknown' 인데, **소급 실패로 만들지
-            #   않는다** — 재분석 없이 못 고치는 케이스가 무더기로 생긴다.
-            # ★ RC7-02 (Codex 7회차): 옛 코드는 thermal 하나만 판정해 기록했다 →
-            #   electronic solver 예외가 라벨조차 남기지 못하고 success 로 게시됐다.
-            #   세 채널을 각각 기록하고, **하나라도 fail 이면** 단계를 실패로 본다.
-            _chv = {ch: _ps.channel_verdict(net_data, ch) for ch in _ps.NETWORK_CHANNELS}
-            for _ch, (_v, _why) in _chv.items():
-                fm_data[f'{_ch}_channel_verdict'] = _v
-                fm_data[f'{_ch}_channel_reason'] = _why
-            _failed_ch = [c for c, (v, _) in _chv.items() if v == 'fail']
-            _tv, _treason = _chv['thermal']          # 하위호환 (옛 필드/로그 문구 유지)
-            fm_data = _refresh_post_network_warnings(fm_data)
-            fm_data['network_solver_status'] = (
-                (_failed_ch[0] + '_failed') if _failed_ch else 'success')
-            fm_data['failed_channels'] = _failed_ch or None
-            fm_data['network_run_id'] = prov.get('network_run_id')          # 하위호환
-            fm_data['active_network_run_id'] = prov.get('network_run_id')   # RR2-01
-            fm_data['last_network_attempt_run_id'] = prov.get('network_run_id')
-            fm_data.pop('stale_after_failed_retry', None)
-            _ps.atomic_write_json(fm_json, fm_data)
-            log.append({'step': 'Network Merge', 'stdout': f'{len(_NET_MERGE_KEYS)} σ-keys',
-                        'stderr': '', 'rc': 0})
-            # ★ 채널 판정을 **단계로** 올린다.  이제 solver 가 상태를 항상 남기므로
-            #   "퍼콜 미형성(정상)" 과 "솔버 예외(실패)" 가 구분된다 → 실패만 실패로 본다.
-            #   옛 세대('unknown')는 소급 실패시키지 않고 라벨만 남긴다.
-            #   ★ RC7-02: thermal 만이 아니라 ionic·electronic 도 같은 자격으로 본다.
-            _tst = _ps.StageOutcome(
-                step='Network channel verdict (ionic/electronic/thermal)',
-                stdout='; '.join(f'{c}={v} ({w})' for c, (v, w) in _chv.items()),
-                stderr=('실패 채널: ' + ', '.join(_failed_ch)) if _failed_ch else '',
-                rc=(1 if _failed_ch else 0), ok=(not _failed_ch), required=True,
-                missing_outputs=[], stale_outputs=[], verify_failed=False)
-            stages.append(_tst)
-            log.append(_tst)
-            if _failed_ch:
-                return stages, prov.get('network_run_id')   # Stage E 를 돌리지 않는다
-    except Exception as _e:                                        # noqa: BLE001
-        log.append({'step': 'Network Merge', 'stdout': '', 'stderr': str(_e), 'rc': 1})
-
-    # ── stop_after='network' (Codex 요청서 §5-2 · 1저자 10-05) — Stage E 앞에서 멈춘다 ──
-    #   τ 인계 (tau2 · f) 와 ④a 는 원 솔버 σ 로 계산한다 (Stage E = Cronau · 파괴 재료 인자 — τ 이름을 붙이지 않는다 · 결정 6).
-    #   계약은 **이번 실행의** run_id 로 본다 — 보존 (solver 미호출) 경로는 run_pipeline 이 미리 거부하고, 여기 와도 None 이라 실패한다.
-    if stop_before_stage_e:
-        _ok_stop, _why_stop = _ps.network_stop_verdict(results_dir, None if preserve_network else run_id)
-        _sst = _ps.StageOutcome(
-            step='Network stop contract (stop_after=network)', stdout=(_why_stop if _ok_stop else ''),
-            stderr=('' if _ok_stop else '★ 망 정지 계약 실패: ' + _why_stop), rc=(0 if _ok_stop else 1), ok=_ok_stop,
-            required=True, missing_outputs=[], stale_outputs=[], verify_failed=(not _ok_stop))
-        stages.append(_sst)
-        log.append(_sst)
         return stages, prov.get('network_run_id')
 
     # ── Stage E — 위에서 확정된 baseline 위에서만 돈다 ──
@@ -6830,6 +6985,8 @@ def _load_case_tables(results_dir, meta):
     # 4-column transform + section injection — shared helpers
     #  ★ 10-04 τ 결정 16 ② — 이온 인계 상태 (tau_flux) 를 표시용으로 붙인다 (계산은 도우미 · 값 행은 그대로).
     metrics['_ion_handover'] = _ion_handover(results_dir, metrics)
+    #  ★ 10-05 RGL-04 웹앱 짝 — 활성 세대 · 최근 시도 (승격 전 검사에 실패한 후보는 활성이 아니다 — 최근 시도에만 남는다).
+    metrics['_network_generation'] = _network_generation(results_dir)
     transform_network_summary_4col(tables, metrics, meta)
     inject_tier1_patch_rows(tables, metrics)
     inject_stage_e_rows(tables, metrics)

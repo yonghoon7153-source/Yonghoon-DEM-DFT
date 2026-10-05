@@ -1866,7 +1866,7 @@ const METRIC_TIPS = {
   'tau2 인계 상태 (게이트 G1–G6 · v2 §5-2)': {
     title: 'tau2 인계 상태 — 인계 열을 싣는가 (게이트 G1–G6)',
     formula: '도우미 scripts/tau_flux.py (τ 판정 v2 §5-1 열 · §5-2 게이트) — 웹앱은 표시만\nf_ion = σ_ratio·L_gap/L_mc (재척도 · 해 아님) · tau2 = φ_mc/f_ion (= φ_구합/σ_ratio · 위 tau2 행과 정의상 같은 수) · tau = √tau2',
-    desc: '상태 다섯: OK · NOT_PERCOLATING (관통 성분 없음 → f = 0 · tau2 빈칸 = ∞) · BAND_FALLBACK (G1 — 띠 규칙이 L0 가 아님 · 값 빈칸) · MODEL_BELOW_CONTINUUM_BOUND (G5 — T < 1 · 원기둥 bulk 모델 성질 · 값 유지) · NOT_COMPUTED (빈칸 + 사유).\n사유 넷: missing_input (망 결과 · 장부 · 띠 규칙 기록 · 온도 기록 없음) · percolation_disagree (G2 — 솔버 관통 ≠ calc_percolation) · solver_guard (관통인데 σ 없음 — 솔버 관문) · temperature_mismatch (G4 — σ₀ 와 σ_full 의 온도가 다름).\n⚠ 띠 규칙은 안 A (10-04) 뒤 망을 다시 푼 케이스에만 기록된다 — 그 전 케이스는 NOT_COMPUTED (missing_input) 이 정상이다 (짐작하지 않는다).',
+    desc: '상태 다섯: OK · NOT_PERCOLATING — 비관통 (관통 경로 없음) (관통 성분 없음 = 망 상태 행의 생산자 valid_zero + no_through_path · f = 0 · tau2 빈칸 = ∞) · BAND_FALLBACK (G1 — 띠 규칙이 L0 가 아님 · 값 빈칸) · MODEL_BELOW_CONTINUUM_BOUND (G5 — T < 1 · 원기둥 bulk 모델 성질 · 값 유지) · NOT_COMPUTED (빈칸 + 사유).\n사유 넷: missing_input (망 결과 · 장부 · 띠 규칙 기록 · 온도 기록 없음) · percolation_disagree (G2 — 솔버 관통 ≠ calc_percolation) · solver_guard (관통인데 σ 없음 — 솔버 관문) · temperature_mismatch (G4 — σ₀ 와 σ_full 의 온도가 다름).\n⚠ 띠 규칙은 안 A (10-04) 뒤 망을 다시 푼 케이스에만 기록된다 — 그 전 케이스는 NOT_COMPUTED (missing_input) 이 정상이다 (짐작하지 않는다).',
     meaning: '인계 열 (f_ion · tau2_ion · tau_ion) 은 이 상태가 OK 또는 MODEL_BELOW_CONTINUUM_BOUND 일 때만 값을 싣는다.  두 모드 모두 1세대 협착식 — ML 기술자 전용 · 실험 절대 대조 보류 (G6).'
   },
   '띠 규칙 · 띠 폭/판 간격 (G1 · TAU-24)': {
@@ -1874,6 +1874,18 @@ const METRIC_TIPS = {
     formula: 'L0 = 입자 자기 반지름 × 2 (양 끝 ≥ 3 개) · L1 = 판 높이의 15/85 % · L2 = 관측 z 범위의 15/85 %\n띠 폭/판 간격 = (바닥 띠 폭 + 위 띠 폭)/판 간격 — L0 이면 4r_SE/L (가장 큰 SE 반지름)',
     desc: '망 솔버가 1 V · 0 V 를 거는 바닥 · 위 띠를 고른 규칙.  옛 코드는 L0 → L1 → L2 폴백을 조용히 하고 남기지 않았다 (LHS-17 · TAU-14) — 안 A (10-04) 부터 결과에 남는다.  L1 폴백은 곧은 사슬에서 T 를 21–29 % 낮춘다 → 인계 G1 은 L0 만 통과.',
     meaning: 'L0 도 띠 노드를 등전위로 묶어 T 를 이 비 (4r_SE/L) 만큼까지 낮출 수 있다 (TAU-24 — 게이트가 아니라 한정어).  "기록 없음" = 안 A 전 산출물.'
+  },
+  'σ_ionic 망 상태 (생산자 sigma_full_status)': {
+    title: 'σ_ionic 망 상태 — 망 솔버 (network_conductivity) 가 낸 상태 · 사유',
+    formula: '상태 = sigma_full_status · 사유 = sigma_full_reason (H) · _physics 꼬리 (P)\n비관통 (관통 경로 없음) = valid_zero + no_through_path · 미계산 — 관통인데 풀지 못함 = not_computed + solve_failed · 계산됨 = computed',
+    desc: '망 σ 숫자 필드는 값이 없을 때 None (화면 "—") 이라, 그것이 물리적 0 (관통 성분 없음) 인지 풀이 실패인지 숫자로는 모른다 (F-12).  10-05 (RGL-02) 부터 솔버가 같은 그래프에서 바닥 띠 ↔ 위 띠를 잇는 성분이 없음을 확인한 경우에만 valid_zero + no_through_path 를 내고, 관통 성분이 있는데 σ 를 못 낸 경우 (예외 · σ_ratio > 1.5 · 경계 겹침 퇴화 등) 는 not_computed + solve_failed 로 남긴다.',
+    meaning: '비관통 (관통 경로 없음) = 이온 σ = 0 이 물리적으로 옳은 답 (τ 인계 상태 NOT_PERCOLATING · f = 0 · tau2 빈칸 = ∞).  미계산 (solve_failed) 은 실패다 — network 정지 계약 · τ 인계가 거부한다 (NOT_COMPUTED solver_guard).  이 행이 없으면 상태 기록 이전 세대.'
+  },
+  '망 최근 시도 (network_attempt — 활성 세대와 다를 때)': {
+    title: '망 최근 시도 — 실패해서 게시되지 않은 후보',
+    formula: '활성 세대 = network_provenance.json (승격했을 때만 갱신) · 최근 시도 = network_attempt.json (성공 · 실패 모두)\n행은 최근 시도가 failed 일 때만: failed — 사유 · 시도 id · 활성 세대 id (없으면 "활성 세대 없음")',
+    desc: '10-05 (RGL-04) 부터 망 산출물은 솔버 → 내용 검증 → 메모리 투영 → 채널 판정 → σ₀ 짝 → (stop_after=network 면) 망 정지 계약을 **전부 통과해야 한 번에 승격**된다 (네 망 JSON + full_metrics + provenance).  하나라도 실패하면 후보를 치우고 옛 성공 세대를 그대로 둔다 — 첫 실행이면 활성 세대가 없다.  그 사실은 최근 시도 기록에만 남는다.',
+    meaning: '이 행이 보이면 화면의 망 값은 최근 시도가 아니라 **활성 세대**의 것이다 (옛 세대 그대로 · 또는 값 없음).  사유의 ③④⑤⑥⑦⑧ 는 정지 계약 항목 (webapp/pipeline_service.network_stop_verdict).'
   },
   'Tortuosity median': {
     title: 'Tortuosity 중앙값',
@@ -2754,6 +2766,10 @@ const PAPER_TO_ORIG = {
       'tau2 인계 상태 (게이트 G1–G6 · v2 §5-2)',
   'Boundary band rule · band width / plate gap (G1 · TAU-24)':
       '띠 규칙 · 띠 폭/판 간격 (G1 · TAU-24)',
+  'σ_ionic network state — producer sigma_full_status (valid_zero = proven no through path · not_computed = solve failed)':
+      'σ_ionic 망 상태 (생산자 sigma_full_status)',
+  'Latest network attempt — failed candidate not promoted (network_attempt.json · active generation kept)':
+      '망 최근 시도 (network_attempt — 활성 세대와 다를 때)',
   'AM percolation, top↔bottom (%)': 'AM Percolation (%)',
   'Current-collector-connected AM, f_AM^cc (%)': 'Electronic Active AM (%)',
   'Coverage of AM, shape-corrected ⭐ (B3)': 'Coverage AM rough(%)   ⭐ [B3]',

@@ -103,7 +103,17 @@ NET_MERGE_KEYS = (
     'constriction_power_share_ion_physics', 'constriction_power_share_ion_physics_status',
     'constriction_power_share_el_physics', 'constriction_power_share_el_physics_status',
     'constriction_power_share_th_physics', 'constriction_power_share_th_physics_status',
+    #  ★ 10-05 RGL-02 — 생산자의 이온 σ 상태 · 사유 (증명된 비관통 = valid_zero + no_through_path · 관통인데 못 풂 = not_computed +
+    #    solve_failed).  hertz = legacy · physics = dual 미러 (`<key>_physics`).  세대마다 σ 와 함께 걷어내고 다시 채운다.
+    'sigma_full_status', 'sigma_full_reason', 'sigma_full_status_physics', 'sigma_full_reason_physics',
+    #  ★ 10-05 RGL-07 — 망 σ 와 **짝**인 σ₀ · 온도 (생산자가 모드마다 쓴다 · `NET_SIGMA0_KEYS`).  옛 목록은 이 둘을 소유하지 않아 새 σ 를
+    #    머지해도 옛 온도 factor 가 남았고, 공용 τ 도우미 (`tau_flux.tau2_from_metrics` · `se_material.sigma_grain_context`) 가 옛 σ₀ 와
+    #    새 σ 를 짝지었다 (재시도에서 τ 2×).  ⇒ σ 키와 **한 소유 단위**로 지우고 채운다 · 두 모드 짝은 `network_sigma0_problem` 이 대조한다.
+    'temperature_provenance', 'sigma_grain_S_cm',
 )
+
+#: ★ 10-05 RGL-07 — 망 σ 와 짝인 σ₀ · 온도 기록 (모드마다 같은 값이어야 한다 — full_metrics 에는 한 벌만 싣는다).
+NET_SIGMA0_KEYS = ('sigma_grain_S_cm', 'temperature_provenance')
 
 #: ★ 10-04 ④a — dual 파일의 physics 결과에서 **이름 그대로** 옮기는 키 (이미 `_physics` 꼬리가 있다 → 아래 미러처럼
 #:   `<key>_physics` 를 또 붙이지 않는다).  `_merge_dual_into_metrics` 와 스캐너 (`network_projection_preflight`) 가 같이 쓴다.
@@ -118,7 +128,35 @@ NET_PHYSICS_TAILED_KEYS = (
 NET_PHYSICS_MIRROR_KEYS = ('sigma_full', 'sigma_full_mScm',
                            'sigma_bulk_net', 'sigma_bulk_net_mScm',
                            'electronic_sigma_full_mScm', 'thermal_sigma_full_mScm',
-                           'R_brug_over_full', 'bulk_resistance_fraction')
+                           'R_brug_over_full', 'bulk_resistance_fraction',
+                           'sigma_full_status', 'sigma_full_reason')     # ★ 10-05 RGL-02 — 상태 · 사유도 physics 꼬리로
+
+
+def _canon(v):
+    """대조용 정규 JSON — NaN 도 같은 토큰 ('NaN') 이라 NaN ≠ NaN 으로 거짓 불일치가 나지 않는다 · 키 순서 무관."""
+    return json.dumps(v, sort_keys=True, default=str)
+
+
+def network_sigma0_problem(dual, legacy=None, fm=None):
+    """★ 10-05 RGL-07 — 망 σ 와 짝인 (σ₀, 온도) 기록의 정합 → '' (정합) | 사유.
+
+      · dual 의 두 모드 기록이 같아야 한다 (full_metrics 에는 한 벌만 싣고 τ 도우미가 두 모드에 같은 σ₀ 를 쓴다)
+      · legacy (= Hertz 사본 · full_metrics 머지 원천) 가 있으면 dual Hertz 와 같아야 한다
+      · fm 이 있으면 (머지 뒤 투영) 그 기록이 이번 세대의 것이어야 한다 — 옛 세대 짝이 남으면 거부
+    두 모드 모두 기록이 없으면 (옛 모양 산출물 · 시험 대역) 대조할 것이 없다 → '' (머지 쪽은 옛 값을 이미 걷어냈다)."""
+    recs = {m: dual.get(m) for m in ('hertzian', 'physics')} if isinstance(dual, dict) else {}
+    pairs = {m: tuple(r.get(k) for k in NET_SIGMA0_KEYS) for m, r in recs.items() if isinstance(r, dict)}
+    if not pairs or all(all(v is None for v in p) for p in pairs.values()):
+        return ''
+    if len({_canon(p) for p in pairs.values()}) > 1 or any(v is None for p in pairs.values() for v in p):
+        return 'σ₀ · 온도 짝: 두 모드 기록이 다르거나 일부가 없다 ' + '; '.join(
+            f'{m}=(σ₀ {p[0]!r}, T {(p[1] or {}).get("T_C") if isinstance(p[1], dict) else p[1]!r})' for m, p in pairs.items())
+    ref = pairs.get('hertzian') or next(iter(pairs.values()))
+    if isinstance(legacy, dict) and _canon(tuple(legacy.get(k) for k in NET_SIGMA0_KEYS)) != _canon(ref):
+        return 'σ₀ · 온도 짝: legacy (network_conductivity.json) 기록 ≠ dual Hertz'
+    if isinstance(fm, dict) and _canon(tuple(fm.get(k) for k in NET_SIGMA0_KEYS)) != _canon(ref):
+        return 'σ₀ · 온도 짝: full_metrics 의 기록이 이번 망 세대의 것이 아니다 (옛 세대 짝이 남았다 — RGL-07)'
+    return ''
 
 #: network 산출물의 세대를 식별하는 파일 (**게시된 active baseline** 을 가리킨다).
 PROVENANCE_FILE = 'network_provenance.json'
@@ -501,6 +539,20 @@ def drop_stash(stash_dir):
         shutil.rmtree(stash_dir, ignore_errors=True)
 
 
+def discard_network_candidate(results_dir, stash_dir):
+    """★ 10-05 RGL-04 — 승격하지 않은 network 후보를 **치우고** 옛 세대를 되돌린다 → 되돌린 개수.
+
+    `restore_stash` 는 이름이 겹치는 것만 덮어써서, **첫 실행** (stash 없음) 이면 후보의 네 JSON 이 그대로 남았다 — provenance 도장이
+    없으니 `read_network_provenance` 가 '도장 이전 세대' 로 읽고 `snapshot_network` 의 보존 자격까지 생긴다 (실패 후보가 활성처럼).
+    ⇒ 후보의 network 산출물 (`NETWORK_ARTIFACT_GLOBS`) 을 먼저 전부 걷어내고, stash (옛 네 JSON · 옛 provenance) 를 되돌린다.
+    첫 실행이면 빈 자리 = 활성 세대 없음."""
+    for pat in NETWORK_ARTIFACT_GLOBS:
+        for p in glob.glob(os.path.join(results_dir, pat)):
+            with contextlib.suppress(OSError):
+                (shutil.rmtree if os.path.isdir(p) else os.remove)(p)
+    return restore_stash(stash_dir, results_dir)
+
+
 def recover_stale_stashes(results_dir, max_age_s=6 * 3600):
     """부모가 죽어 남은 stash 를 **복구**한다 → (복구한 파일 수, 치운 stash 수).
 
@@ -650,11 +702,28 @@ def network_content_verdict(results_dir, modes=('hertzian', 'physics'), strict=T
 #:   τ 인계 (tau2 · f — `scripts/tau_flux.py`) 와 ④a 협착 전력 몫이 쓰는 망 산출물이 **이번 실행의 것으로 다 있는가**.
 #:   (dual 의 모드 키, 모드 꼬리, full_metrics 의 σ 키) — σ 키 = `tau_flux.METRIC_SIGMA_KEY` 와 같은 원 솔버 σ (Stage-E 아님).
 NETWORK_STOP_MODES = (('hertzian', 'hertz', 'sigma_full_mScm'), ('physics', 'physics', 'sigma_full_mScm_physics'))
-#: 생산자 `network_conductivity._sigma_status` 의 값 중 계약이 받는 것 — `not_computed` (풀지 못함) 는 거부한다
-#:   (그 경우 이온 채널 판정은 `valid_null` 로 통과하므로 채널 판정만으로는 '비관통' 과 '못 풂' 을 못 가른다).
+#: 생산자 `network_conductivity._net_sigma_status` 의 값 중 계약이 받는 것 — `not_computed` (관통인데 풀지 못함 · 미실행) 는 거부한다
+#:   (그 경우 이온 채널 판정은 옛 규약대로 `valid_null` 로 통과하므로 채널 판정만으로는 '비관통' 과 '못 풂' 을 못 가른다 — 상태로 가른다).
+#:   ★ 10-05 RGL-02: valid_zero 는 생산자가 **증명된 비관통** (같은 그래프의 bottom ↔ top 관통 성분 0) 에만 사유 `no_through_path` 와 함께 낸다.
 NETWORK_STOP_SIGMA_OK = ('computed', 'valid_zero')
 #: 생산자 `network_conductivity.BOUNDARY_RULES` 와 같아야 한다 (L1 · L2 = 기록된 폴백 — 막지 않는다 · tau_flux G1 이 표지).
 NETWORK_STOP_BOUNDARY_RULES = ('L0', 'L1', 'L2')
+#: ★ 10-05 RGL-02 — 생산자가 비관통을 증명했을 때만 내는 사유 (`network_conductivity.NO_THROUGH_REASON` 과 같은 값).
+NETWORK_NO_THROUGH_REASON = 'no_through_path'
+#: ★ 10-05 RGL-08 — 협착 전력 몫 None 의 **등록된 물리 사유** → 그 사유가 맞는 σ 상태.  여기 없는 사유 (내부 예외 · 관통인데 FULL 풀이 실패
+#:   · 빈 문자열 …) 는 거부한다 — 옛 계약 (요청서 §5-2④ "비지 않은 사유 상태면 통과") 은 기술적 결손과 과학적 null 을 못 갈랐다.
+#:   비관통 = 0/0 미정의 (0 % 가 아니다 · Codex Q4) · 생산자 `network_conductivity.CPS_NO_THROUGH_STATUS`.
+#:   ⚠ 생산자의 'not_computed (zero or non-finite dissipation)' 은 **등록하지 않는다** — 0 과 비유한 (수치 실패) 을 한 문자열에 묶었고,
+#:     관통 σ > 0 인 FULL 해에서 Σ I²R_total = 0 은 나올 수 없으며 비관통이면 생산자는 위 비관통 문자열을 낸다 (두 받는 상태 어디에도 맞지 않는다).
+#:     관통인데 FULL 풀이 실패 = `network_conductivity.CPS_SOLVE_FAILED_STATUS` (실패 · 거부).
+NETWORK_POWER_NULL_REASONS = {'not_computed (no percolating FULL solution)': 'valid_zero'}
+#: ★ 10-05 RGL-08 — 정지 계약이 받는 τ 인계 상태 (`tau_flux.STATUSES` 중 OK + 등록된 과학적 HOLD).  NOT_COMPUTED (입력 결손 · 솔버 관문 ·
+#:   온도 짝 · 관통 불일치) 는 **기술적 결손**이라 거부한다 — network 완료 = τ 인계 입력이 다 있고 서로 맞다는 증서.
+NETWORK_STOP_TAU_OK = ('OK', 'MODEL_BELOW_CONTINUUM_BOUND', 'BAND_FALLBACK', 'NOT_PERCOLATING')
+#: τ 인계가 게이트에 쓰는 망 레코드 키 (`tau_flux.ion_columns` · `_sigma0`) — 두 모드 다 **키가** 있어야 한다 (값 None 은 상태가 정한다).
+NETWORK_STOP_TAU_KEYS = ('sigma_full', 'percolating_fraction', 'boundary_rule', 'temperature_provenance', 'sigma_grain_S_cm')
+#: τ 인계가 읽는 장부 (full_metrics — 접촉 분석이 쓴다): L_gap · L_mc · φ_mc (양수) · calc_percolation (≥ 0).
+NETWORK_STOP_LEDGER_KEYS = ('thickness_um', 'thickness_mass_conserving_um', 'phi_se_mass_conserving', 'percolation_pct')
 
 
 def _stop_num(v):
@@ -662,22 +731,51 @@ def _stop_num(v):
     return isinstance(v, (int, float)) and not isinstance(v, bool) and math.isfinite(v)
 
 
-def network_stop_verdict(results_dir, run_id):
+def _scripts_import(name):
+    """scripts/ 모듈 지연 임포트 — pipeline_service 를 단독으로 불러도 (시험 · 스캐너) 정지 계약이 실 소비자 (tau_flux) 를 부른다."""
+    import importlib
+    sd = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'scripts')
+    if sd not in sys.path:
+        sys.path.insert(0, sd)
+    return importlib.import_module(name)
+
+
+def _read_json_or_none(path):
+    try:
+        with open(path, encoding='utf-8') as f:
+            return json.load(f)
+    except (OSError, ValueError):
+        return None
+
+
+def network_stop_verdict(results_dir, run_id, fm=None):
     """`stop_after='network'` 로 멈춘 결과 폴더 → (ok, reason).  fail-closed — 읽기 실패 · 키 없음 · 모순은 전부 False.
+
+    fm = 승격 **전** 후보의 full_metrics 투영 (10-05 RGL-04 — 아직 디스크에 쓰지 않은 것).  None 이면 디스크의 full_metrics.json.
+    정본 (canonical) = **dual** (`network_conductivity_dual.json` — 두 모드를 한 파일에 · τ 인계 도우미가 읽는 것).  모드 파일 · legacy 는
+    그 사본이어야 하고 full_metrics 는 그 투영이다 (값 일치는 복사 검산 · 세대 증거는 ② 도장 + stash 인과 계약이 진다).
 
       ① `network_content_verdict(strict=True)` — 네 JSON · 두 모드 · 세 채널
       ② full_metrics 의 `network_run_id` · `active_network_run_id` = 이번 실행 (`run_id`) · `network_solver_status` = success
-      ③ 두 모드 dual `sigma_full_status` ∈ `NETWORK_STOP_SIGMA_OK` — computed 면 full_metrics σ 가 dual 의 같은 값 (양수),
-         valid_zero (비관통) 면 둘 다 None (숫자 필드는 0 을 None 으로 접는 옛 규약 · F-12)
-      ④ 두 모드 `constriction_power_share_ion_<꼬리>` (+ `_status`) — full_metrics = dual (같은 세대) 이고
-         (값 0–1 · 'computed') 또는 (None · 비지 않은 사유 상태)
+      ③ 두 모드 dual `sigma_full_status` ∈ `NETWORK_STOP_SIGMA_OK` · full_metrics 상태 · 사유 = dual —
+         computed 면 full_metrics σ = dual (양수) · 관통 분율 > 0 · calc_percolation > 0 (RGL-02 관통 일치) ·
+         valid_zero 면 **증명된 비관통**만 (RGL-02): 사유 `no_through_path` · σ 숫자 필드 None (F-12) · 관통 분율 0 · CF · constr 도 valid_zero ·
+         이온 채널 valid_zero · 독립 calc_percolation 0
+      ④ 두 모드 `constriction_power_share_ion_<꼬리>` (+ `_status`) — full_metrics = dual · computed σ 면 (0–1 · 'computed') ·
+         valid_zero 면 (None · 등록된 물리 사유 `NETWORK_POWER_NULL_REASONS`) — 다른 사유 (내부 예외 · 풀이 실패) 는 거부 (RGL-08)
       ⑤ dual 두 모드 `boundary_rule` ∈ `NETWORK_STOP_BOUNDARY_RULES` · `boundary_band_frac` 유한 양수
+      ⑥ 파일 대조 (RGL-08) — 모드 파일 두 개 · legacy 가 dual 의 그 모드와 같다 (전 레코드 · NaN 안전)
+      ⑦ τ 인계 입력 (RGL-08) — 두 모드 `NETWORK_STOP_TAU_KEYS` 키 · 장부 `NETWORK_STOP_LEDGER_KEYS` 가 있고, **실 소비자**
+         `tau_flux.ion_columns` 의 두 모드 상태가 `NETWORK_STOP_TAU_OK` (OK · 등록된 과학적 HOLD) 이며 생산자 상태와 맞는다
+      ⑧ σ₀ · 온도 짝 (RGL-07) — 두 모드 · legacy · full_metrics 의 (σ₀, 온도) 가 이번 세대의 같은 값이고, 등급 · 웹앱 τ 가 쓰는 짝 σ₀
+         (`tau_flux.tau2_from_metrics` = `se_material.sigma_grain_context(full_metrics)`) = 인계 σ₀ (망 기록)
     """
     ok_c, why_c = network_content_verdict(results_dir, strict=True)
     bad = [] if ok_c else [f'① {why_c}']
     try:
-        with open(os.path.join(results_dir, 'full_metrics.json'), encoding='utf-8') as f:
-            fm = json.load(f)
+        if fm is None:
+            with open(os.path.join(results_dir, 'full_metrics.json'), encoding='utf-8') as f:
+                fm = json.load(f)
         with open(os.path.join(results_dir, 'network_conductivity_dual.json'), encoding='utf-8') as f:
             dual = json.load(f)
     except (OSError, ValueError) as e:
@@ -688,30 +786,102 @@ def network_stop_verdict(results_dir, run_id):
         bad.append(f'② 도장 network_run_id={fm.get("network_run_id")!r} · active={fm.get("active_network_run_id")!r} ≠ 이번 실행 {run_id!r}')
     if fm.get('network_solver_status') != 'success':
         bad.append(f'② network_solver_status={fm.get("network_solver_status")!r}')
+    # ⑥ 파일 대조 — 정본 = dual
+    files = {n: _read_json_or_none(os.path.join(results_dir, n))
+             for n in ('network_conductivity_hertzian.json', 'network_conductivity_physics.json', 'network_conductivity.json')}
+    for dkey, fname in (('hertzian', 'network_conductivity_hertzian.json'), ('physics', 'network_conductivity_physics.json'),
+                        ('hertzian', 'network_conductivity.json')):
+        if not isinstance(files[fname], dict) or not isinstance(dual.get(dkey), dict) or _canon(files[fname]) != _canon(dual[dkey]):
+            bad.append(f'⑥ {fname} ≠ dual[{dkey}] (정본 = dual · 모드 파일 · legacy 는 그 사본이어야 한다)')
+    #   ⑥b full_metrics 의 망 소유 키 (`NET_MERGE_KEYS` — σ · 상태 · 협착 몫 · σ₀ · 온도) = 이번 세대의 투영 (legacy · dual physics 미러 ·
+    #       꼬리 키) — 옛 세대 값이 새 도장 밑에 남지 않았다 (RC5-03 · RGL-07 의 일반형 · 복사 검산이지 독립 세대 증명은 아니다)
+    _leg = files['network_conductivity.json'] if isinstance(files['network_conductivity.json'], dict) else {}
+    _rP = dual.get('physics') if isinstance(dual.get('physics'), dict) else {}
+    _src = {k: _leg[k] for k in NET_MERGE_KEYS if _leg.get(k) is not None}
+    _src.update({f'{k}_physics': _rP[k] for k in NET_PHYSICS_MIRROR_KEYS if _rP.get(k) is not None})
+    _src.update({k: _rP[k] for k in NET_PHYSICS_TAILED_KEYS if _rP.get(k) is not None})
+    _stale = [k for k in NET_MERGE_KEYS if _canon(fm.get(k)) != _canon(_src.get(k))]
+    if _stale:
+        bad.append(f'⑥ full_metrics 의 망 소유 키가 이번 세대 투영과 다르다 (옛 세대 값 · 복사 어긋남): {_stale[:8]}')
+    # ⑦ 장부 (접촉 분석 — τ 인계의 L_gap · L_mc · φ_mc · calc_percolation)
+    pct = fm.get('percolation_pct')
+    led_bad = [k for k in NETWORK_STOP_LEDGER_KEYS
+               if not (_stop_num(fm.get(k)) and (fm.get(k) >= 0 if k == 'percolation_pct' else fm.get(k) > 0))]
+    if led_bad:
+        bad.append(f'⑦ τ 인계 장부 (full_metrics) 없음 · 비유한 · 범위 밖: {led_bad}')
     for dkey, tail, fkey in NETWORK_STOP_MODES:
         rec = dual.get(dkey)
         if not isinstance(rec, dict):
             bad.append(f'{dkey}: dual 레코드 없음')
             continue
+        miss = [k for k in NETWORK_STOP_TAU_KEYS if k not in rec]
+        if miss:
+            bad.append(f'⑦ {dkey}: τ 인계 입력 키 없음 {miss}')
+        sfx = '' if tail == 'hertz' else '_physics'
         st, sv, fv = rec.get('sigma_full_status'), rec.get('sigma_full_mScm'), fm.get(fkey)
+        rsn, pf = rec.get('sigma_full_reason'), rec.get('percolating_fraction')
         if st not in NETWORK_STOP_SIGMA_OK:
-            bad.append(f'③ {dkey}: sigma_full_status={st!r}')
-        elif st == 'computed' and not (_stop_num(sv) and sv > 0 and _stop_num(fv) and fv == sv):
-            bad.append(f'③ {dkey}: computed 인데 σ dual={sv!r} · full_metrics {fkey}={fv!r} (같은 세대의 양수여야)')
-        elif st == 'valid_zero' and not (sv is None and fv is None):
-            bad.append(f'③ {dkey}: valid_zero 인데 σ dual={sv!r} · full_metrics {fkey}={fv!r}')
+            bad.append(f'③ {dkey}: sigma_full_status={st!r} (사유 {rsn!r}) — 계산된 σ 와 증명된 비관통만 받는다')
+        elif fm.get('sigma_full_status' + sfx) != st or fm.get('sigma_full_reason' + sfx) != rsn:
+            bad.append(f'③ {dkey}: full_metrics 상태 ({fm.get("sigma_full_status" + sfx)!r}, {fm.get("sigma_full_reason" + sfx)!r}) '
+                       f'≠ dual ({st!r}, {rsn!r})')
+        elif st == 'computed':
+            if not (_stop_num(sv) and sv > 0 and _stop_num(fv) and fv == sv):
+                bad.append(f'③ {dkey}: computed 인데 σ dual={sv!r} · full_metrics {fkey}={fv!r} (같은 세대의 양수여야)')
+            elif not (_stop_num(pf) and pf > 0):
+                bad.append(f'③ {dkey}: computed 인데 관통 분율 {pf!r} (> 0 이어야)')
+            elif _stop_num(pct) and pct == 0:
+                bad.append(f'③ {dkey}: 솔버는 관통인데 독립 calc_percolation 0 % (관통 불일치)')
+        else:                                                  # valid_zero — 증명된 비관통만 (RGL-02)
+            why0 = []
+            if rsn != NETWORK_NO_THROUGH_REASON:
+                why0.append(f'사유 {rsn!r} ≠ {NETWORK_NO_THROUGH_REASON!r}')
+            if not (sv is None and fv is None and rec.get('sigma_full') is None):
+                why0.append(f'σ 숫자 필드가 None 이 아니다 (dual {sv!r} · full_metrics {fv!r} · σ_ratio {rec.get("sigma_full")!r})')
+            if not (_stop_num(pf) and pf == 0):
+                why0.append(f'관통 분율 {pf!r} (0 이어야)')
+            if not (rec.get('sigma_bulk_net_status') == rec.get('sigma_constr_net_status') == 'valid_zero'):
+                why0.append(f'CF · constr 상태 ({rec.get("sigma_bulk_net_status")!r}, {rec.get("sigma_constr_net_status")!r})')
+            if rec.get('ionic_status') != 'valid_zero':
+                why0.append(f'이온 채널 {rec.get("ionic_status")!r}')
+            if _stop_num(pct) and pct != 0:
+                why0.append(f'독립 calc_percolation {pct!r} % (0 이어야)')
+            if why0:
+                bad.append(f'③ {dkey}: valid_zero 인데 증명된 비관통이 아니다 — ' + ' · '.join(why0))
         ck = f'constriction_power_share_ion_{tail}'
         cv, cs = fm.get(ck), fm.get(ck + '_status')
         if cv != rec.get(ck) or cs != rec.get(ck + '_status'):
             bad.append(f'④ {ck}: full_metrics ({cv!r}, {cs!r}) ≠ dual ({rec.get(ck)!r}, {rec.get(ck + "_status")!r})')
-        elif cv is None:
-            if not (isinstance(cs, str) and cs.strip() and cs != 'computed'):
-                bad.append(f'④ {ck}: 값 없음 · 사유 상태 없음 ({cs!r})')
-        elif not (_stop_num(cv) and 0.0 <= cv <= 1.0 and cs == 'computed'):
-            bad.append(f'④ {ck}: 값 {cv!r} · 상태 {cs!r} (0–1 · computed 여야)')
+        elif st == 'computed' and not (_stop_num(cv) and 0.0 <= cv <= 1.0 and cs == 'computed'):
+            bad.append(f'④ {ck}: 관통 해인데 값 {cv!r} · 상태 {cs!r} (0–1 · computed 여야 — 내부 예외 · 풀이 실패는 거부)')
+        elif st == 'valid_zero' and not (cv is None and NETWORK_POWER_NULL_REASONS.get(cs) == 'valid_zero'):
+            bad.append(f'④ {ck}: 비관통인데 값 {cv!r} · 사유 {cs!r} — 등록된 물리 사유 {sorted(NETWORK_POWER_NULL_REASONS)} 만 받는다')
         br, bf = rec.get('boundary_rule'), rec.get('boundary_band_frac')
         if br not in NETWORK_STOP_BOUNDARY_RULES or not (_stop_num(bf) and bf > 0):
             bad.append(f'⑤ {dkey}: boundary_rule={br!r} · boundary_band_frac={bf!r}')
+    # ⑧ σ₀ · 온도 짝 (RGL-07)
+    p0 = network_sigma0_problem(dual, files.get('network_conductivity.json'), fm)
+    if p0:
+        bad.append('⑧ ' + p0)
+    # ⑦ τ 인계 — 실 소비자 (tau_flux) 가 이 후보로 무엇을 내는가 (계약 사본이 아니라 소비자 자신)
+    try:
+        tf = _scripts_import('tau_flux')
+        row = tf.ion_columns(dual, fm, pct)
+        for dkey, tail, _f in NETWORK_STOP_MODES:
+            s, r = row.get(f'ion_net_status_{tail}'), row.get(f'ion_net_status_reason_{tail}')
+            pst = (dual.get(dkey) or {}).get('sigma_full_status')
+            if s not in NETWORK_STOP_TAU_OK:
+                bad.append(f'⑦ τ 인계 {tail}: {s} ({r}) — 기술적 결손 (등록된 과학적 HOLD 아님)')
+            elif pst == 'valid_zero' and s not in ('NOT_PERCOLATING', 'BAND_FALLBACK'):
+                bad.append(f'⑦ τ 인계 {tail}: 생산자 비관통인데 τ 상태 {s}')
+            elif pst == 'computed' and s == 'NOT_PERCOLATING':
+                bad.append(f'⑦ τ 인계 {tail}: 생산자 관통인데 τ 상태 NOT_PERCOLATING')
+        s0_net = row.get('ion_sigma0_mScm')
+        s0_fm = tf.tau2_from_metrics(fm)[1]
+        if _stop_num(s0_net) and not (_stop_num(s0_fm) and abs(s0_fm - s0_net) <= 1e-9 * max(1.0, abs(s0_net))):
+            bad.append(f'⑧ 짝 σ₀: 등급 · 웹앱 τ 가 쓰는 σ₀ {s0_fm!r} mS/cm (full_metrics) ≠ 인계 σ₀ {s0_net!r} (망 기록)')
+    except Exception as e:                                     # noqa: BLE001 — 소비자를 못 부르면 증서를 못 낸다 (fail-closed)
+        bad.append(f'⑦ τ 인계 도우미 실패 ({type(e).__name__}: {e})')
     return (not bad), ('; '.join(bad) if bad else 'ok')
 
 
@@ -865,19 +1035,30 @@ def record_stage_e_attempt(results_dir, parent_run_id, reason='', restored=True)
     })
 
 
-def record_network_attempt(results_dir, run_id, status, reason='', argv=None):
+def record_network_attempt(results_dir, run_id, status, reason='', argv=None, stage=''):
     """**실패 시도**를 active provenance 와 **분리해** 기록한다 (RR2-01).
 
     옛 코드는 실패에도 `network_provenance.json` 을 새 run_id 로 덮어써서, 실패 시도의 ID 가
     `full_metrics.network_run_id` 와 `stage_e_parent_network_run_id` 까지 차지했다 —
     게시된 baseline 은 옛 성공 세대인데 ID 는 실패 시도를 가리키는 모순.
     이제 active 도장은 **성공했을 때만** 갱신하고, 시도는 이 별도 파일에 남긴다.
+    stage = 실패한 단계 이름 (10-05 RGL-04 — 솔버 · 채널 판정 · 망 정지 계약 · 승격 전 투영 중 어디서 막혔나 · 성공이면 '').
     """
     atomic_write_json(os.path.join(results_dir, ATTEMPT_FILE), {
         'network_attempt_run_id': run_id, 'solver_status': status,
-        'reason': reason, 'code_sha': code_sha(),
+        'reason': reason, 'stage': stage, 'code_sha': code_sha(),
         'attempted_at': time.strftime('%Y-%m-%dT%H:%M:%S'), 'argv': dict(argv or {}),
     })
+
+
+def read_network_attempt(results_dir):
+    """가장 최근 network 시도 기록 (`ATTEMPT_FILE`) → dict | None (없음 · 손상).  표시용 (웹앱 망 세대 행 · RGL-04)."""
+    try:
+        with open(os.path.join(results_dir, ATTEMPT_FILE), encoding='utf-8') as f:
+            d = json.load(f)
+        return d if isinstance(d, dict) else None
+    except (OSError, ValueError):
+        return None
 
 
 #: `os.replace` 재시도 (Windows).  대기시간 0.02·0.04·0.08·0.16·0.32 s = 총 0.62 s.

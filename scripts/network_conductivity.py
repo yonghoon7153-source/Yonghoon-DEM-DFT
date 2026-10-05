@@ -100,6 +100,8 @@ def _sigma_status(v):
 
     ⚠ 숫자 필드(`sigma_*`)는 하위호환을 위해 0 을 None 으로 내보내는 옛 규약을 유지한다.
       '0 인가 실패인가' 를 물을 때는 **이 상태 필드**를 볼 것.
+    ⚠ 10-05 RGL-02: 값만 보는 이 분류로는 망 σ 의 None 이 비관통인지 실패인지 모른다 (solve_network 는 둘 다 None) — 망 결과의
+      `sigma_*_status` 는 그래프의 관통 성분까지 보는 `_net_sigma_status` 가 정한다 (증명된 비관통만 valid_zero + no_through_path).
     """
     if v is None:
         return 'not_computed'
@@ -110,6 +112,36 @@ def _sigma_status(v):
     if f != f:                       # NaN
         return 'not_computed'
     return 'valid_zero' if f == 0.0 else 'computed'
+
+
+#: ★ 10-05 RGL-02 (Codex · 1저자 비준 "권고대로") — 망 σ 가 None 인 **두 사건을 생산자가 가른다**.
+#:   `solve_network` 는 관통 성분이 없어도 · 관통인데 풀이가 실패해도 똑같이 (None, None) 을 돌려준다 → 옛 판은 둘 다
+#:   'not_computed' 였고 (TAU-22 — docstring 의 "valid_zero = 퍼콜 경로 없음" 은 도달 불가였다) 새 network 정지 관문이 정상 비관통을
+#:   failed 로 막았다.  이제 **같은 그래프에서 bottom ↔ top 관통 성분이 없음을 확인한 경우에만** valid_zero + 이 사유를 낸다.
+#:   숫자 필드 (`sigma_*`) 는 F-12 대로 None 을 유지한다 (UI '—' · 코퍼스 불변).  관통 σ 는 비트 동일 (해는 그대로 · 상태 필드만).
+NO_THROUGH_REASON = 'no_through_path'        # 관통 성분 없음 = 물리적 0 (valid_zero) — conductivity · f 의 0
+SOLVE_FAILED_REASON = 'solve_failed'         # 관통 성분은 있는데 σ 를 못 냈다 (예외 · V_source ≤ 0 · Σg 상한 · σ_ratio>1.5 · 경계 겹침 퇴화)
+NON_FINITE_REASON = 'non_finite'             # 값이 NaN (수치 실패)
+#: 협착 전력 몫 (④a) 이 None 일 때의 상태 — 비관통 (0/0 미정의) 과 관통인데 FULL 풀이 실패를 가른다 (RGL-08: 등록된 물리 사유 ↔ 실패).
+CPS_NO_THROUGH_STATUS = 'not_computed (no percolating FULL solution)'      # 옛 문자열 그대로 = 비관통 (constriction_power_share(None))
+CPS_SOLVE_FAILED_STATUS = 'not_computed (FULL solve failed on a percolating network)'
+
+
+def _net_sigma_status(v, no_through):
+    """망 σ (FULL · CONTACT_FREE · CONSTRICTION_ONLY) 의 (상태, 사유) — 값 분류는 `_sigma_status` 를 재사용한다 (판정 중복 금지).
+
+      · 값 있음 → ('computed', None)  (실제 0 이면 ('valid_zero', 'zero_value'))
+      · None ∧ no_through (같은 그래프의 관통 성분 0) → ('valid_zero', NO_THROUGH_REASON)   ← 증명된 비관통
+      · None ∧ 관통 → ('not_computed', SOLVE_FAILED_REASON)  · NaN → ('not_computed', NON_FINITE_REASON)
+    no_through 는 `active_fractions(net)['perc_nodes']` 가 비었는가 (반올림 전 · solve_network 와 같은 그래프 · 같은 띠)."""
+    st = _sigma_status(v)
+    if st == 'computed':
+        return st, None
+    if st == 'valid_zero':
+        return st, 'zero_value'
+    if v is None and no_through:
+        return 'valid_zero', NO_THROUGH_REASON
+    return 'not_computed', (SOLVE_FAILED_REASON if v is None else NON_FINITE_REASON)
 
 def sigma_AM_relative(r_um, particle_type):
     """Relative σ_AM vs grain interior (crystallinity/GB factor; corpus-fit,
@@ -1149,6 +1181,16 @@ def run_decomposition(atoms_raw, contacts_raw, target_types, scale,
     print(f"  접촉별 R_bulk 비율의 비가중 평균: {bulk_frac:.1%} "
           f"(협착 쪽 {1-bulk_frac:.1%})  ⚠ 전력(I²R) 기여도가 아니다 — L2-08")
 
+    # Active fraction: percolating nodes / total nodes
+    #  ★ 2026-09-29 (J20-b · 자기리뷰 #3) — 셈을 `active_fractions()` 로 추출했다 (동작 중립).  감사기
+    #    `lhs_perc_audit` 가 **같은 함수**를 불러 정본과 대조한다 — 복사본이면 정본이 바뀌어도 초록이 된다.
+    #  ★ 10-05 RGL-02 — 풀이 **앞**에서 센다 (그래프 셈일 뿐 · 해 무관 · σ 비트 동일).  관통 성분이 비었다 = solve_network 가 쓰는 것과
+    #    같은 그래프 (간선이 있는 노드) · 같은 띠에서 bottom ↔ top 을 잇는 성분이 없다 = **증명된 비관통** (상태 valid_zero 의 유일한 근거).
+    _af = active_fractions(net)
+    active_fraction = _af['active_fraction']
+    perc_fraction = _af['percolating_fraction']
+    _no_through = not _af['perc_nodes']
+
     # === Run 1: FULL ===
     #  ★ 10-04 ④a — 전류장을 **항상** 받는다 (해는 같다 — 출력만 더한다 · σ 비트 동일 = test_network_boundary_rule GOLD).
     #    협착 전력 몫 Σ I²R_c / Σ I²R_total 은 이 해에서만 낸다 (다른 해를 섞지 않는다).
@@ -1157,6 +1199,10 @@ def run_decomposition(atoms_raw, contacts_raw, target_types, scale,
     if dump_raw_dir and _field and dump_tag:
         dump_network_raw(dump_raw_dir, atoms_raw, net, _field, tag=dump_tag)
     cps, cps_status = constriction_power_share(_field)
+    #  ★ 10-05 RGL-02 · 08 — 해가 없을 때 constriction_power_share(None) 는 늘 '비관통' 문자열을 낸다.  관통 성분이 **있는데** FULL 풀이가
+    #    실패한 경우는 비관통이 아니다 → 사유를 가른다 (정지 계약은 비관통 사유만 등록된 물리 사유로 받는다).
+    if _field is None and not _no_through:
+        cps_status = CPS_SOLVE_FAILED_STATUS
     #  키 = 채널 · 모드 꼬리 명시 (τ 명명 규약 — 새 코드부터) · 한 양 = 한 이름
     _cps_key = 'constriction_power_share_{}_{}'.format({'ionic': 'ion', 'electronic': 'el', 'thermal': 'th'}.get(_mode, _mode),
                                                        'physics' if contact_mode == 'physics' else 'hertz')
@@ -1180,12 +1226,10 @@ def run_decomposition(atoms_raw, contacts_raw, target_types, scale,
     # Analytical Bruggeman EMT: σ_eff/σ_bulk = φ^1.5 (spheres, n=3/2)
     sigma_bruggeman = phi_se ** 1.5 if phi_se > 0 else 0
 
-    # Active fraction: percolating nodes / total nodes
-    #  ★ 2026-09-29 (J20-b · 자기리뷰 #3) — 셈을 `active_fractions()` 로 추출했다 (동작 중립).  감사기
-    #    `lhs_perc_audit` 가 **같은 함수**를 불러 정본과 대조한다 — 복사본이면 정본이 바뀌어도 초록이 된다.
-    _af = active_fractions(net)
-    active_fraction = _af['active_fraction']
-    perc_fraction = _af['percolating_fraction']
+    #  (active / percolating 분율 = 위 `_af` — 풀이 앞에서 셌다 · RGL-02)
+    _sf_st, _sf_rs = _net_sigma_status(sigma_full, _no_through)
+    _cf_st, _cf_rs = _net_sigma_status(sigma_cf, _no_through)
+    _cn_st, _cn_rs = _net_sigma_status(sigma_constr_net, _no_through)
 
     # Results
     results = {
@@ -1223,9 +1267,14 @@ def run_decomposition(atoms_raw, contacts_raw, target_types, scale,
         #    않는다 (이 리포는 σ=0 퍼콜-없음 케이스를 UI 에서 '—' 로 보여주는 것을
         #    의도하고 있고, 바꾸면 코퍼스가 흔들린다).  대신 **상태 필드를 더해**
         #    valid_zero / computed 를 구별할 수 있게 한다 — 이 필드가 판정의 정본이다.
-        'sigma_full_status': _sigma_status(sigma_full),
-        'sigma_bulk_net_status': _sigma_status(sigma_cf),
-        'sigma_constr_net_status': _sigma_status(sigma_constr_net),
+        #  ★ 10-05 RGL-02 — None 의 두 뜻을 생산자가 가른다 (`_net_sigma_status`): 증명된 비관통 = valid_zero + 사유 no_through_path ·
+        #    관통인데 못 풂 = not_computed + 사유 solve_failed.  세 가지 (FULL · CF · CONSTR) 가 같은 그래프라 비관통이면 셋 다 valid_zero.
+        'sigma_full_status': _sf_st,
+        'sigma_bulk_net_status': _cf_st,
+        'sigma_constr_net_status': _cn_st,
+        'sigma_full_reason': _sf_rs,
+        'sigma_bulk_net_reason': _cf_rs,
+        'sigma_constr_net_reason': _cn_rs,
         'sigma_bruggeman': round(sigma_bruggeman, 8),
         'sigma_bruggeman_mScm': round(sigma_bruggeman * sigma_bulk * 1000, 6),
     }
@@ -1389,6 +1438,16 @@ def _run_all_networks(atoms_raw, contacts_raw, target_types, am_types, type_map,
         #    (SE 미퍼콜 — CLAUDE.md Tier2: 2mAh_real_16 · 8mAh_real_11)를 "실패 아님" 으로
         #    명시해야 상위 게이트가 그것을 실패로 오인하지 않는다.
         _ist, _irsn = status_for_value(results.get('sigma_full_mScm'), 'ionic')
+        #  ★ 10-05 RGL-02 — 채널 상태도 생산자 σ 상태와 맞춘다 (Codex: "관통 실패의 원인 · solver 관통 · 독립 calc_percolation · 채널
+        #    상태가 함께 맞아야").  증명된 비관통 = valid_zero (게이트에서 ok — 옛 valid_null 과 같은 판정 · 일반 경로 불변).
+        #    관통인데 못 푼 경우는 채널 판정을 옛 규약 (valid_null → ok) 그대로 두되 "미퍼콜" 이라고 **말하지 않는다** — 일반 경로의
+        #    채널 게이트를 바꾸면 Stage E 까지 막혀 범위를 넘는다.  정지 계약 (③) · τ 인계 (solver_guard) 는 이 경우를 거부한다.
+        if results.get('sigma_full_status') == 'valid_zero' and results.get('sigma_full_reason') == NO_THROUGH_REASON:
+            _ist, _irsn = 'valid_zero', ('관통 성분 없음 (no_through_path) — SE 망이 바닥 띠 ↔ 위 띠를 잇지 않는다 · σ_ion = 0 '
+                                         '(물리적으로 옳은 답 · 숫자 필드는 None)')
+        elif results.get('sigma_full_status') == 'not_computed' and _ist == 'valid_null':
+            _irsn = (f'관통 성분은 있는데 σ_ion 을 풀지 못했다 ({results.get("sigma_full_reason")}) — 미퍼콜이 아니다 · '
+                     '채널 판정은 옛 규약대로 통과 · 정지 계약 · τ 인계는 거부 (RGL-02)')
         results['ionic_status'] = _ist
         if _irsn:
             results['ionic_status_reason'] = _irsn
@@ -1500,6 +1559,13 @@ def _selftest_status():
         chk('8) 이 파일이 쓰는 상태가 전부 게이트에 알려져 있다 (unknown 0)',
             all(_ps.channel_verdict({'electronic_status': v}, 'electronic')[0] != 'unknown'
                 for v in CHANNEL_STATES if v != 'not_run'))
+        #  ★ 10-05 RGL-02 · 08 — 정지 계약이 받는 비관통 사유 · 전력 몫 사유가 이 생산자의 문자열과 같다 (갈라지면 정상 비관통이 다시 failed ·
+        #    또는 풀이 실패가 통과).  받는 것 = 비관통 하나 · 관통인데 FULL 풀이 실패는 받지 않는다.
+        chk('9) ★ RGL-02 비관통 사유 · 전력 몫 사유 어휘가 정지 계약 (pipeline_service) 과 같다',
+            getattr(_ps, 'NETWORK_NO_THROUGH_REASON', None) == NO_THROUGH_REASON
+            and set(getattr(_ps, 'NETWORK_POWER_NULL_REASONS', {})) == {CPS_NO_THROUGH_STATUS}
+            and CPS_SOLVE_FAILED_STATUS not in getattr(_ps, 'NETWORK_POWER_NULL_REASONS', {})
+            and constriction_power_share(None)[1] == CPS_NO_THROUGH_STATUS)
     except ImportError as e:
         chk(f'5-8) ⚠ webapp import 불가 → 어휘 대조 생략 ({e})', True)
 

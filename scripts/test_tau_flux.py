@@ -243,9 +243,12 @@ def main():
     chk('K2 같은 결과에서 띠 규칙만 지우면 (안 A 전 산출물) → NOT_COMPUTED (missing_input) — 옛 코퍼스를 짐작으로 채우지 않는다',
         tf.ion_columns(dk_old, led, 100.0)['ion_net_status_reason_hertz'] == 'missing_input')
 
-    # ── K3. G3 의 생산자 경로 (TAU-22 처방 그대로) — 위 띠에만 닿는 합성 침대: 바닥 L0 띠에 외톨이 SE 셋 (띠 규칙 L0 유지) +
-    #       위쪽 사슬 z 10..20 (바닥과 끊김).  솔버는 관통 0 · σ None · 상태 'not_computed' (= valid_zero 가 아니다 — 상태로는 비관통을
-    #       판별할 수 없다) · calc_percolation 도 0 % ⇒ 도우미는 NOT_PERCOLATING · f = 0.
+    # ── K3. G3 의 생산자 경로 — 위 띠에만 닿는 합성 침대: 바닥 L0 띠에 외톨이 SE 셋 (띠 규칙 L0 유지) + 위쪽 사슬 z 10..20 (바닥과 끊김).
+    #       솔버는 관통 0 · σ None · calc_percolation 도 0 % ⇒ 도우미는 NOT_PERCOLATING · f = 0.
+    #  ★ 10-05 RGL-02 (Codex · 1저자 비준 "권고대로") — 생산자 계약이 바뀌었다: 옛 판은 비관통에도 상태 'not_computed' 를 내서
+    #    (TAU-22 · 상태로는 비관통을 판별할 수 없었다) 새 network 정지 관문이 정상 비관통을 failed 로 막았다.  이제 생산자가 **같은
+    #    그래프에서 bottom ↔ top 관통 성분이 없음을 확인한 경우에만** 'valid_zero' + 사유 `no_through_path` 를 낸다 (숫자 필드는 F-12 대로
+    #    None · CF · constr 도 같은 상태).  도우미 G2/G3 은 여전히 상태가 아니라 percolating_fraction 으로 판정한다 (TAU-22 · C3).
     import dem_analysis_core as dac
     B = {i: {'type': 1, 'x': 3.0 * i, 'y': 0.0, 'z': float(z), 'radius': 1.0} for i, z in ((1, 0.0), (2, 1.0), (3, 2.0))}
     B.update({10 + k: {'type': 1, 'x': 0.0, 'y': 5.0, 'z': float(z), 'radius': 1.0} for k, z in enumerate(range(10, 21))})
@@ -255,12 +258,41 @@ def main():
               for cm in ('hertzian', 'physics')}
         cp = dac.calc_percolation(B, BC, [1], 20.0, box_x=10.0, box_y=10.0)
     k3 = tf.ion_columns(db, led, cp['percolation_pct'])
-    chk('K3 위 띠에만 닿는 합성 → 솔버 관통 0 · 상태 not_computed (valid_zero 아님 · TAU-22) · calc_percolation 0 % · 띠 L0 → '
-        'NOT_PERCOLATING · f = 0 · tau2 빈칸 (두 모드)',
-        db['hertzian']['percolating_fraction'] == 0 and db['hertzian']['sigma_full_status'] == 'not_computed'
+    chk('K3 위 띠에만 닿는 합성 → 솔버 관통 0 · 상태 valid_zero + 사유 no_through_path (RGL-02 — 옛 판 not_computed) · CF · constr 같은 상태 · '
+        'σ None (F-12) · calc_percolation 0 % · 띠 L0 → NOT_PERCOLATING · f = 0 · tau2 빈칸 (두 모드)',
+        all(db[m]['percolating_fraction'] == 0 and db[m]['sigma_full_status'] == 'valid_zero'
+            and db[m].get('sigma_full_reason') == 'no_through_path'
+            and db[m].get('sigma_bulk_net_status') == db[m].get('sigma_constr_net_status') == 'valid_zero'
+            and db[m]['sigma_full'] is None and db[m]['sigma_full_mScm'] is None for m in ('hertzian', 'physics'))
         and db['hertzian']['boundary_rule'] == 'L0' and cp['percolation_pct'] == 0
         and k3['ion_net_status_hertz'] == k3['ion_net_status_physics'] == 'NOT_PERCOLATING'
         and k3['f_ion_hertz'] == 0.0 and k3['tau2_ion_physics'] is None)
+
+    # ── K4. RGL-02 — 관통인데 풀지 못한 침대는 비관통이 아니다 (같은 관통 사슬 · 선형 풀이 예외 주입).  생산자는 'not_computed' + 사유
+    #       `solve_failed` (관통 분율 > 0) 를 내고, 협착 전력 몫의 사유도 '비관통' 문자열이 아니다 · 도우미는 NOT_COMPUTED (solver_guard).
+    _orig_spsolve = nc.spsolve
+
+    def _boom(*_a, **_k):
+        raise RuntimeError('주입: spsolve 실패 (수치 실패 시험)')
+    nc.spsolve = _boom
+    try:
+        with contextlib.redirect_stdout(io.StringIO()):
+            dfail = {cm: nc._run_all_networks(A, C, [1], [], {1: 'SE'}, 1.0, 20.0, 10.0, 10.0, None, contact_mode=cm)
+                     for cm in ('hertzian', 'physics')}
+    finally:
+        nc.spsolve = _orig_spsolve
+    k4 = tf.ion_columns(dfail, led, 100.0)
+    chk('K4 관통인데 풀이 실패 (spsolve 예외) → 상태 not_computed + 사유 solve_failed · 관통 분율 > 0 · 전력 몫 사유 ≠ "비관통" · '
+        'NOT_COMPUTED (solver_guard) (두 모드)',
+        all(dfail[m]['sigma_full_status'] == 'not_computed' and dfail[m].get('sigma_full_reason') == 'solve_failed'
+            and dfail[m]['percolating_fraction'] > 0
+            and dfail[m].get(f'constriction_power_share_ion_{t}_status') != 'not_computed (no percolating FULL solution)'
+            and str(dfail[m].get(f'constriction_power_share_ion_{t}_status', '')).startswith('not_computed')
+            for m, t in (('hertzian', 'hertz'), ('physics', 'physics')))
+        and k4['ion_net_status_hertz'] == k4['ion_net_status_physics'] == 'NOT_COMPUTED'
+        and k4['ion_net_status_reason_hertz'] == 'solver_guard')
+    chk('K5 관통 침대의 σ 는 상태 · 사유 필드를 더해도 그대로 (computed · 사유 None)',
+        all(dk[m]['sigma_full_status'] == 'computed' and dk[m].get('sigma_full_reason') is None for m in ('hertzian', 'physics')))
 
     print(f'\ntest_tau_flux: {_ok}/{_ok + len(_fail)} PASS' + (f'   FAILED: {_fail}' if _fail else ''))
     return 0 if not _fail else 1

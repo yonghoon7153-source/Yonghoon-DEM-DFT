@@ -10,6 +10,9 @@
   • rc=0 이어도 기대 산출물이 없으면 실패 (network CLI 는 파일 없이 exit 0 이 될 수 있다)
 
 subprocess 는 전부 **가짜 실행기**로 바꿔 센다 — 실제 solver 를 돌리지 않는다.
+  ★ 예외 (10-05 · Codex RGL-02 · 04 · 07 · 08 · SELF-86): T12 의 망 레코드와 T13–T16 은 **실 생산자** 출력이다 — 합성 침대를
+    network_conductivity CLI 코드 그대로 (같은 프로세스 runpy) 풀고, 실 정지 helper · 실 소비자 (tau_flux · grade_engine ·
+    /retry-network 라우트) 로 잇는다.  손 레코드는 Codex 의 정확한 수치 재현 (T16a) 에만 쓴다.
 
   python3 webapp/test_pipeline_provenance.py
 """
@@ -144,6 +147,529 @@ def _healthy_stage_e(**over):
     d.update({k: 'fixture-method' for k in ps.STAGE_E_STRING_KEYS})
     d.update(over)
     return d
+
+
+# ═══ T12–T16 공용 — **실 생산자** 침대 (Codex 10-05 RGL-02 · 04 · 07 · 08 · 원장 SELF-86) ═══════════════════════════════════
+#   SELF-86: 정지 계약을 손으로 만든 상태값 (valid_zero 를 직접 넣은 T12d) 으로만 시험해, 실 생산자가 비관통에 not_computed 를 내던
+#   모순 (RGL-02) 과 게시 뒤 관문 (RGL-04) 을 놓쳤다.  ⇒ 양성 대조는 실 생산자 (`network_conductivity` — CLI 코드 그대로 · 같은 프로세스)
+#   의 출력으로 만들고, 실패 경로는 표시 상태만이 아니라 다른 소비자가 읽는 활성 산출물 · provenance · full_metrics 까지 단언한다.
+_SCRIPTS_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'scripts')
+_NET_FOUR = ('network_conductivity.json', 'network_conductivity_hertzian.json',
+             'network_conductivity_physics.json', 'network_conductivity_dual.json')
+
+
+def _bed(name):
+    """합성 침대 → (atoms, contacts, plate_z, box).  Codex 판정문 RGL-02 · test_tau_flux K1 · K3 와 같은 모양 (반경 1 · 상자 10 · 척도 1).
+      through    — SE 21 개 사슬 z 0..20 (관통 · 띠 L0)
+      nonthrough — 바닥 L0 띠에 외톨이 SE 셋 + 위쪽 사슬 z 10..20 (바닥과 끊김 · 띠 L0) = **정상 비관통**
+      band_l1    — 반경 0.4 · z 0..40 간격 0.5 (바닥 L0 띠 2 개 < 3 → 띠 폴백 L1 = 등록된 과학적 HOLD BAND_FALLBACK)"""
+    if name == 'through':
+        A = {i: dict(type=1, x=0., y=0., z=float(z), radius=1.) for i, z in enumerate(range(21), 1)}
+        C = [dict(id1=i, id2=i + 1, contact_area=0.1, delta=0.05) for i in range(1, 21)]
+        return A, C, 20.0, 10.0
+    if name == 'nonthrough':
+        A = {i: dict(type=1, x=3.0 * i, y=0., z=z, radius=1.) for i, z in ((1, 0.), (2, 1.), (3, 2.))}
+        A.update({10 + k: dict(type=1, x=0., y=5., z=float(z), radius=1.) for k, z in enumerate(range(10, 21))})
+        C = [dict(id1=10 + k, id2=11 + k, contact_area=0.1, delta=0.05) for k in range(10)]
+        return A, C, 20.0, 10.0
+    if name == 'band_l1':
+        A = {i: dict(type=1, x=0., y=0., z=0.5 * k, radius=0.4) for i, k in enumerate(range(81), 1)}
+        C = [dict(id1=i, id2=i + 1, contact_area=0.1 * 0.16, delta=0.05 * 0.4) for i in range(1, 81)]
+        return A, C, 40.0, 10.0
+    raise ValueError(name)
+
+
+def _bed_ledger(name):
+    """그 침대의 접촉 분석 장부 — 독립 `calc_percolation` (접촉 분석이 full_metrics 에 쓰는 percolation_pct) · 판 간격 두께 ·
+    질량 보존 두께 (겹침 없는 사슬이라 판 간격과 같다) · φ_SE (구 부피 합 / 판 간격 상자 = 망 phi_se 의 반올림 전 값)."""
+    import contextlib
+    import io
+    import math
+    if _SCRIPTS_DIR not in sys.path:
+        sys.path.insert(0, _SCRIPTS_DIR)
+    import dem_analysis_core as _dac
+    A, C, plate, box = _bed(name)
+    with contextlib.redirect_stdout(io.StringIO()):
+        cp = _dac.calc_percolation(A, C, [1], plate, box_x=box, box_y=box)
+    phi = sum(4.0 / 3.0 * math.pi * a['radius'] ** 3 for a in A.values()) / (box * box * plate)
+    return {'phi_se': phi, 'thickness_um': plate, 'thickness_mass_conserving_um': plate,
+            'phi_se_mass_conserving': phi, 'percolation_pct': cp['percolation_pct'], 'porosity': 100.0 * (1.0 - phi)}
+
+
+def _producer_records(name):
+    """실 생산자 (`network_conductivity._run_all_networks` — CLI 가 모드 파일 · dual 에 쓰는 바로 그 dict) 두 모드 + 장부.
+    JSON 왕복 = 디스크에 쓰인 모양 그대로 (numpy 실수 → 실수)."""
+    import contextlib
+    import io
+    if _SCRIPTS_DIR not in sys.path:
+        sys.path.insert(0, _SCRIPTS_DIR)
+    import network_conductivity as _nc
+    A, C, plate, box = _bed(name)
+    with contextlib.redirect_stdout(io.StringIO()):
+        recs = {cm: _nc._run_all_networks(A, C, [1], [], {1: 'SE'}, 1, plate, box, box, None, contact_mode=cm)
+                for cm in ('hertzian', 'physics')}
+    return json.loads(json.dumps(recs)), _bed_ledger(name)
+
+
+def _write_bed(d, name):
+    """침대를 생산자 CLI 입력으로 쓴다 — atoms.csv · contacts.csv (`analyze_contacts.load_*_raw` 열) · mesh_info.json (판 높이) ·
+    input_params.json (상자).  → (atoms.csv, contacts.csv)."""
+    A, C, plate, box = _bed(name)
+    with open(os.path.join(d, 'atoms.csv'), 'w') as f:
+        f.write('id,type,x,y,z,radius\n' + ''.join(
+            f'{i},{a["type"]},{a["x"]!r},{a["y"]!r},{a["z"]!r},{a["radius"]!r}\n' for i, a in A.items()))
+    with open(os.path.join(d, 'contacts.csv'), 'w') as f:
+        f.write('id1,id2,fn_x,fn_y,fn_z,ft_x,ft_y,ft_z,contact_area,delta\n' + ''.join(
+            f'{c["id1"]},{c["id2"]},0,0,0,0,0,0,{c["contact_area"]!r},{c["delta"]!r}\n' for c in C))
+    with open(os.path.join(d, 'mesh_info.json'), 'w') as f:
+        json.dump({'plate_z': plate}, f)
+    with open(os.path.join(d, 'input_params.json'), 'w') as f:
+        json.dump({'box_x': box, 'box_y': box}, f)
+    return os.path.join(d, 'atoms.csv'), os.path.join(d, 'contacts.csv')
+
+
+class _CLIRunner:
+    """network_conductivity.py 를 **CLI 코드 그대로** 같은 프로세스에서 돈다 (runpy · argv = 받은 명령) — 파일 쓰기까지 실 생산자.
+
+    mutate(out_dir) = 생산자가 쓴 **뒤**의 계약 변이 (반례) · break_solver = scipy `spsolve` 예외 주입 (관통인데 풀지 못함 = 수치 실패) ·
+    delegate = 다른 스크립트 (Stage E 등) 대역.  produced = 생산자가 쓴 네 JSON (변이 전 · 거부된 후보는 디스크에서 치워지므로 여기서 본다)."""
+
+    def __init__(self, mutate=None, break_solver=False, delegate=None):
+        self.mutate, self.break_solver, self.delegate = mutate, break_solver, delegate
+        self.calls, self.produced = [], {}
+
+    def __call__(self, cmd, **kw):
+        import contextlib
+        import io
+        import runpy
+        import scipy.sparse.linalg as _spl
+        script = os.path.basename(str(cmd[1])) if len(cmd) > 1 else ''
+        if script != 'network_conductivity.py':
+            if self.delegate is None:
+                raise AssertionError(f'_CLIRunner: 대역 없는 명령 {cmd}')
+            return self.delegate(cmd, **kw)
+        self.calls.append(list(cmd))
+        argv0, orig, rc = sys.argv, _spl.spsolve, 0
+        out, err = io.StringIO(), io.StringIO()
+        try:
+            if self.break_solver:
+                def _boom(*_a, **_k):
+                    raise RuntimeError('주입: spsolve 실패 (수치 실패 시험)')
+                _spl.spsolve = _boom
+            sys.argv = [str(c) for c in cmd[1:]]
+            with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
+                runpy.run_path(str(cmd[1]), run_name='__main__')
+        except SystemExit as e:
+            rc = e.code if isinstance(e.code, int) else (0 if e.code is None else 1)
+        except Exception as e:                                       # noqa: BLE001
+            rc = 1
+            err.write(f'{type(e).__name__}: {e}')
+        finally:
+            sys.argv, _spl.spsolve = argv0, orig
+        o_dir = str(cmd[list(map(str, cmd)).index('-o') + 1])
+        self.produced = {n: json.load(open(os.path.join(o_dir, n))) for n in _NET_FOUR
+                         if os.path.exists(os.path.join(o_dir, n))}
+        if rc == 0 and self.mutate is not None:
+            self.mutate(o_dir)
+        return subprocess.CompletedProcess(cmd, rc, out.getvalue(), err.getvalue())
+
+
+def _edit_net_records(o_dir, fn, files=_NET_FOUR):
+    """생산자가 쓴 망 레코드 (모드 파일 · legacy · dual 의 두 모드) 를 fn(rec, 이름, 모드) 로 고쳐 다시 쓴다 — 계약 변이 도우미."""
+    for n in files:
+        p = os.path.join(o_dir, n)
+        if not os.path.exists(p):
+            continue
+        d = json.load(open(p))
+        if n == 'network_conductivity_dual.json':
+            for m in ('hertzian', 'physics'):
+                if isinstance(d.get(m), dict):
+                    fn(d[m], n, m)
+        else:
+            fn(d, n, 'physics' if 'physics' in n else 'hertzian')
+        with open(p, 'w') as f:
+            json.dump(d, f)
+
+
+def _fake_stage_e(cmd, **kw):
+    """Stage E 대역 — `--case-dir` (candidate) 의 full_metrics 에 건전한 11-키 레코드를 얹는다 (RC5-01 · RC6-01 스키마)."""
+    _c = list(map(str, cmd))
+    _t = _c[_c.index('--case-dir') + 1]
+    fm = os.path.join(_t, 'full_metrics.json')
+    d = json.load(open(fm)) if os.path.exists(fm) else {}
+    for _k, _v in _healthy_stage_e().items():
+        d.setdefault(_k, _v)
+    with open(fm, 'w') as f:
+        json.dump(d, f)
+    return subprocess.CompletedProcess(cmd, 0, 'fake stage e', '')
+
+
+def _t13_t16_network_stop_real(webapp):
+    """T13–T16 — Codex 10-05 (RGL-02 · 04 · 07 · 08) 반례를 **실 생산자 → 실 정지 helper (`_network_and_stage_e`) → 실 소비자
+    (`tau_flux` · `grade_engine` · 웹앱 retry 라우트)** 사슬로 옮긴 회귀.  손으로 만든 상태값은 Codex 의 정확한 수치 재현 (T16a) 에만 쓴다."""
+    import copy
+    if _SCRIPTS_DIR not in sys.path:
+        sys.path.insert(0, _SCRIPTS_DIR)
+    import tau_flux as _tf
+    import grade_engine as _ge
+
+    def _case(bed, fm_over=None):
+        d = tempfile.mkdtemp(prefix='t13_')
+        a, c = _write_bed(d, bed)
+        fm = dict(_bed_ledger(bed))
+        fm.update(fm_over or {})
+        with open(os.path.join(d, 'full_metrics.json'), 'w') as f:
+            json.dump(fm, f)
+        return d, a, c
+
+    def _run(d, a, c, runner, stop=True):
+        stages, rid = webapp._network_and_stage_e(d, _SCRIPTS_DIR, a, c, '1:SE', 1, [], runner=runner,
+                                                  stop_before_stage_e=stop)
+        st, failed = ps.summarize(stages)
+        return stages, rid, st, [s.get('step', '') for s in failed]
+
+    def _fm(d):
+        return json.load(open(os.path.join(d, 'full_metrics.json')))
+
+    def _attempt(d):
+        p = os.path.join(d, ps.ATTEMPT_FILE)
+        return json.load(open(p)) if os.path.exists(p) else {}
+
+    def _guard(label, fn):
+        """한 묶음이 예외로 죽어도 나머지를 센다 (옛 코드에서 실패 수를 세려고 — 예외 = 그 묶음 FAIL)."""
+        try:
+            fn()
+        except Exception as e:                                       # noqa: BLE001
+            import traceback
+            traceback.print_exc()
+            chk(f'{label} — 예외 없이 끝난다 ({type(e).__name__}: {e})', False)
+
+    STOP = 'Network stop contract'
+    CPS_NO_THROUGH = 'not_computed (no percolating FULL solution)'
+
+    # ── T13 (RGL-02) — 실 생산자로 관통 · 정상 비관통 · 수치 실패를 구별한다 (done · done · failed) ──────────────────────────
+    def t13():
+        d, a, c = _case('through')
+        _st, rid, st, failed = _run(d, a, c, _CLIRunner())
+        dual = json.load(open(os.path.join(d, 'network_conductivity_dual.json')))
+        tau, fm = _tf.case_row(d), _fm(d)
+        chk(f'T13a) 관통 (실 생산자) → done · 두 모드 computed · full_metrics σ = dual · τ 인계 OK ({st} {failed})',
+            st == 'done' and all(dual[m]['sigma_full_status'] == 'computed' for m in ('hertzian', 'physics'))
+            and fm.get('sigma_full_mScm') == dual['hertzian']['sigma_full_mScm']
+            and fm.get('sigma_full_mScm_physics') == dual['physics']['sigma_full_mScm']
+            and tau['ion_net_status_hertz'] == tau['ion_net_status_physics'] == 'OK')
+        shutil.rmtree(d, ignore_errors=True)
+
+        d, a, c = _case('nonthrough')
+        r = _CLIRunner()
+        _st, rid, st, failed = _run(d, a, c, r)
+        chk(f'T13b) ★ RGL-02 정상 비관통 (실 생산자 · calc_percolation 0 %) → done (옛: ③ not_computed 로 failed) ({st} {failed})',
+            st == 'done' and not failed)
+        pd = (r.produced.get('network_conductivity_dual.json') or {})
+        chk('T13c) ★ 생산자가 "증명된 비관통" 을 명시한다 — 두 모드 sigma_full_status valid_zero · sigma_full_reason no_through_path · '
+            'CF · constr 도 같은 상태 · 이온 채널 valid_zero · 숫자 필드는 None (F-12)',
+            all(isinstance(pd.get(m), dict) and pd[m].get('sigma_full_status') == 'valid_zero'
+                and pd[m].get('sigma_full_reason') == 'no_through_path'
+                and pd[m].get('sigma_bulk_net_status') == 'valid_zero' and pd[m].get('sigma_constr_net_status') == 'valid_zero'
+                and pd[m].get('ionic_status') == 'valid_zero'
+                and pd[m].get('sigma_full') is None and pd[m].get('sigma_full_mScm') is None
+                and pd[m].get('percolating_fraction') == 0.0 for m in ('hertzian', 'physics')))
+        chk('T13d) 비관통의 전력 몫 = None + "비관통" 사유 (0/0 미정의 — 0 % 가 아니다 · Codex Q4)',
+            all(pd[m].get(f'constriction_power_share_ion_{t}') is None
+                and pd[m].get(f'constriction_power_share_ion_{t}_status') == CPS_NO_THROUGH
+                for m, t in (('hertzian', 'hertz'), ('physics', 'physics'))) if pd else False)
+        tau, fm, prov = _tf.case_row(d), _fm(d), ps.read_network_provenance(d)
+        chk(f'T13e) ★ 같은 상태를 τ 인계가 NOT_PERCOLATING (f 0 · tau2 · tau 빈칸) 으로 소비 · full_metrics σ None · 상태 valid_zero 머지 · '
+            f'활성 세대 = 이번 실행 ({tau.get("ion_net_status_hertz")} · {fm.get("sigma_full_status")} · {prov.get("network_run_id") == rid})',
+            tau['ion_net_status_hertz'] == tau['ion_net_status_physics'] == 'NOT_PERCOLATING'
+            and tau['f_ion_hertz'] == 0.0 and tau['tau2_ion_physics'] is None and tau['tau_ion_hertz'] is None
+            and fm.get('sigma_full_mScm') is None and fm.get('sigma_full_mScm_physics') is None
+            and fm.get('sigma_full_status') == 'valid_zero' and fm.get('sigma_full_reason') == 'no_through_path'
+            and fm.get('sigma_full_status_physics') == 'valid_zero'
+            and prov.get('network_run_id') == rid and prov.get('solver_status') == 'success')
+        shutil.rmtree(d, ignore_errors=True)
+
+        d, a, c = _case('through')
+        fm0 = open(os.path.join(d, 'full_metrics.json')).read()
+        r = _CLIRunner(break_solver=True)
+        _st, rid, st, failed = _run(d, a, c, r)
+        chk(f'T13f) ★ 수치 실패 (관통인데 풀지 못함 · spsolve 예외 주입) → failed · 실패 단계 = 정지 계약 ({st} {failed})',
+            st == 'failed' and any(STOP in f for f in failed))
+        pd = (r.produced.get('network_conductivity_dual.json') or {})
+        chk('T13g) ★ 생산자는 수치 실패를 비관통과 가른다 — not_computed · 사유 solve_failed · 관통 분율 > 0 · 전력 몫 사유가 "비관통" 이 아니다',
+            all(isinstance(pd.get(m), dict) and pd[m].get('sigma_full_status') == 'not_computed'
+                and pd[m].get('sigma_full_reason') == 'solve_failed' and (pd[m].get('percolating_fraction') or 0) > 0
+                and str(pd[m].get(f'constriction_power_share_ion_{t}_status', '')).startswith('not_computed')
+                and pd[m].get(f'constriction_power_share_ion_{t}_status') != CPS_NO_THROUGH
+                for m, t in (('hertzian', 'hertz'), ('physics', 'physics'))))
+        row = _tf.ion_columns(pd, _bed_ledger('through'), _bed_ledger('through')['percolation_pct'])
+        chk('T13h) 같은 생산 결과를 τ 인계는 NOT_COMPUTED (solver_guard) 로 본다 (두 모드)',
+            row['ion_net_status_hertz'] == row['ion_net_status_physics'] == 'NOT_COMPUTED'
+            and row['ion_net_status_reason_physics'] == 'solver_guard')
+        prov, att = ps.read_network_provenance(d), _attempt(d)
+        chk(f'T13i) ★ 첫 실행 실패 → 활성 success 없음 · 망 JSON 없음 · full_metrics 그대로 · 최근 시도 failed '
+            f'({prov.get("provenance_state")} · {att.get("solver_status")})',
+            prov.get('provenance_state') == 'missing'
+            and not any(os.path.exists(os.path.join(d, n)) for n in _NET_FOUR)
+            and open(os.path.join(d, 'full_metrics.json')).read() == fm0
+            and att.get('solver_status') == 'failed' and rid is None)
+        shutil.rmtree(d, ignore_errors=True)
+    _guard('T13', t13)
+
+    # ── T14 (RGL-04) — 새 필수 관문 실패는 활성 세대를 차지하지 않는다 (승격 전에 모든 검사 · 한 번에 승격 · 실패면 옛 세대 보존) ──
+    def _l9(o_dir):
+        p = os.path.join(o_dir, 'network_conductivity_dual.json')
+        dd = json.load(open(p))
+        dd['physics']['boundary_rule'] = 'L9'
+        with open(p, 'w') as f:
+            json.dump(dd, f)
+
+    def t14():
+        d, a, c = _case('through')
+        _s1, rid1, st1, _f1 = _run(d, a, c, _CLIRunner())
+        fm1 = open(os.path.join(d, 'full_metrics.json')).read()
+        sha1 = {n: _sha(os.path.join(d, n)) for n in _NET_FOUR}
+        prov1 = ps.read_network_provenance(d)
+        _s2, rid2, st2, failed2 = _run(d, a, c, _CLIRunner(mutate=_l9))
+        prov2, att = ps.read_network_provenance(d), _attempt(d)
+        fm2 = _fm(d)
+        chk(f'T14a) 첫 실행 done · 정지 계약 변이 (physics boundary_rule L9) 재실행 → failed (실패 단계 = 정지 계약) ({st1} → {st2} {failed2})',
+            st1 == 'done' and st2 == 'failed' and any(STOP in f for f in failed2))
+        chk(f'T14b) ★ RGL-04 활성 provenance = 옛 성공 세대 그대로 ({prov2.get("network_run_id") == rid1} · {prov2.get("solver_status")})',
+            prov2.get('network_run_id') == rid1 == prov1.get('network_run_id') and prov2.get('solver_status') == 'success'
+            and rid2 == rid1)
+        chk('T14c) ★ full_metrics 가 바이트 그대로 — network_run_id · network_solver_status · σ 옛 값',
+            open(os.path.join(d, 'full_metrics.json')).read() == fm1 and fm2.get('network_run_id') == rid1
+            and fm2.get('network_solver_status') == json.loads(fm1).get('network_solver_status'))
+        chk('T14d) ★ 옛 네 망 JSON 이 바이트 그대로 복구 (실패 후보가 활성 자리에 남지 않는다)',
+            all(os.path.exists(os.path.join(d, n)) and _sha(os.path.join(d, n)) == sha1[n] for n in _NET_FOUR))
+        chk(f'T14e) ★ 최근 시도만 failed (이번 실행 id · 사유에 계약 위반이 적힌다) ({att.get("solver_status")} · {str(att.get("reason"))[:60]})',
+            att.get('solver_status') == 'failed' and att.get('network_attempt_run_id') not in (None, rid1)
+            and 'L9' in str(att.get('reason', '')))
+        shutil.rmtree(d, ignore_errors=True)
+
+        d, a, c = _case('through')
+        fm0 = open(os.path.join(d, 'full_metrics.json')).read()
+        _s, rid, st, failed = _run(d, a, c, _CLIRunner(mutate=_l9))
+        prov, att = ps.read_network_provenance(d), _attempt(d)
+        chk(f'T14f) ★ 첫 실행이 정지 계약에서 실패 → 활성 success 없음 · 망 JSON 없음 · full_metrics 그대로 · 최근 시도 failed '
+            f'({st} · {prov.get("provenance_state")} · {att.get("solver_status")})',
+            st == 'failed' and prov.get('provenance_state') == 'missing' and rid is None
+            and not any(os.path.exists(os.path.join(d, n)) for n in _NET_FOUR)
+            and open(os.path.join(d, 'full_metrics.json')).read() == fm0 and att.get('solver_status') == 'failed')
+        shutil.rmtree(d, ignore_errors=True)
+
+        d, a, c = _case('through')
+        _s, rid, st, failed = _run(d, a, c, _CLIRunner())
+        prov, att, fm = ps.read_network_provenance(d), _attempt(d), _fm(d)
+        chk(f'T14g) 정상 경로 done 그대로 — 활성 = 이번 실행 · full_metrics 도장 · 최근 시도 success ({st})',
+            st == 'done' and prov.get('network_run_id') == rid and fm.get('network_run_id') == rid
+            and fm.get('active_network_run_id') == rid and att.get('solver_status') == 'success'
+            and att.get('network_attempt_run_id') == rid)
+        shutil.rmtree(d, ignore_errors=True)
+    _guard('T14', t14)
+
+    # ── T15 (RGL-08) — 정지 계약의 입력 집합 · 파일 대조 · null 사유 (Codex probe_contracts 변이를 실 생산자 출력 위에) ──────────
+    def _drop_tau(rec, _n, _m):
+        for k in ('sigma_full', 'percolating_fraction', 'temperature_provenance', 'sigma_grain_S_cm'):
+            rec.pop(k, None)
+
+    def _power_excuse(rec, _n, _m):
+        for k in list(rec):
+            if k.startswith('constriction_power_share_ion_'):
+                rec[k] = 'internal_solver_exception' if k.endswith('_status') else None
+
+    def _permode99(rec, _n, _m):
+        rec['sigma_full_mScm'] = 99.0
+
+    def _legacy9(rec, _n, _m):
+        rec['sigma_full_mScm'] = 9.0
+
+    def t15():
+        bad = {
+            'missing_tau_inputs (σ_ratio · 관통 분율 · 온도 · σ₀ 삭제)': lambda o: _edit_net_records(o, _drop_tau),
+            'permode_vs_dual_disagree (physics 모드 파일 σ 99 ↔ dual 원값)':
+                lambda o: _edit_net_records(o, _permode99, files=('network_conductivity_physics.json',)),
+            'percolating_power_missing (관통인데 전력 몫 None · internal_solver_exception)': lambda o: _edit_net_records(o, _power_excuse),
+            'legacy_vs_dual (legacy σ 9 ↔ dual Hertz)': lambda o: _edit_net_records(o, _legacy9, files=('network_conductivity.json',)),
+        }
+        res = {}
+        for lbl, mut in bad.items():
+            d, a, c = _case('through')
+            _s, rid, st, failed = _run(d, a, c, _CLIRunner(mutate=mut))
+            res[lbl] = (st, any(STOP in f for f in failed), ps.read_network_provenance(d).get('provenance_state'))
+            shutil.rmtree(d, ignore_errors=True)
+        miss = {k: v for k, v in res.items() if v != ('failed', True, 'missing')}
+        chk(f'T15a) ★ RGL-08 계약 변이 {len(bad)} 종 → 전부 failed (정지 계약) · 활성 세대 없음 {miss or ""}',
+            not miss and len(res) == len(bad))
+        ok = {}
+        for lbl, bed, over, want in (('건전 (OK)', 'through', None, 'OK'),
+                                     ('띠 폴백 L1 (BAND_FALLBACK — 등록된 과학적 HOLD)', 'band_l1', None, 'BAND_FALLBACK'),
+                                     ('정상 비관통 (NOT_PERCOLATING — 등록된 과학적 HOLD)', 'nonthrough', None, 'NOT_PERCOLATING'),
+                                     ('연속체 하한 (MODEL_BELOW_CONTINUUM_BOUND — 값 유지 HOLD)', 'through',
+                                      {'phi_se_mass_conserving': 1e-4}, 'MODEL_BELOW_CONTINUUM_BOUND')):
+            d, a, c = _case(bed, over)
+            _s, rid, st, failed = _run(d, a, c, _CLIRunner())
+            row = _tf.case_row(d)
+            ok[lbl] = (st, row.get('ion_net_status_hertz'), row.get('ion_net_status_physics'), want)
+            shutil.rmtree(d, ignore_errors=True)
+        bad_ok = {k: v for k, v in ok.items() if not (v[0] == 'done' and v[1] == v[2] == v[3])}
+        chk(f'T15b) 양성 대조 (실 생산자): 건전 · 등록된 과학적 HOLD 셋은 막지 않는다 (done · τ 상태 그대로) {bad_ok or ""}',
+            not bad_ok and len(ok) == 4)
+
+        # T15c — 정상 비관통 (실 생산자 출력) 위 **한 키씩** 변이: valid_zero 를 받는 조건 (③ 사유 · 채널 · 독립 calc_percolation · ④ 등록 사유)
+        #         이 각각 문다 — 모든 not_computed 허용 · None→0 은 오답 (Codex RGL-02 최소 수정).
+        def _set(**kv):
+            def _f(rec, _n, _m):
+                rec.update({k.replace('TAIL', 'hertz' if _m == 'hertzian' else 'physics'): v for k, v in kv.items()})
+            return lambda o: _edit_net_records(o, _f)
+        nbad = {
+            '③ 사유가 no_through_path 가 아니다 (solve_failed)': (_set(sigma_full_reason='solve_failed'), None),
+            '③ 이온 채널이 valid_zero 가 아니다 (옛 valid_null)': (_set(ionic_status='valid_null'), None),
+            '③ CF 상태 not_computed (FULL 과 어긋남)': (_set(sigma_bulk_net_status='not_computed'), None),
+            '③ 독립 calc_percolation 50 % (솔버는 비관통)': (None, {'percolation_pct': 50.0}),
+            '④ 전력 몫 사유 = 관통인데 FULL 풀이 실패 (등록된 물리 사유 아님)':
+                (_set(constriction_power_share_ion_TAIL_status='not_computed (FULL solve failed on a percolating network)'), None),
+        }
+        nres = {}
+        for lbl, (mut, over) in nbad.items():
+            d, a, c = _case('nonthrough', over)
+            _s, rid, st, failed = _run(d, a, c, _CLIRunner(mutate=mut))
+            nres[lbl] = (st, any(STOP in f for f in failed))
+            shutil.rmtree(d, ignore_errors=True)
+        nmiss = {k: v for k, v in nres.items() if v != ('failed', True)}
+        chk(f'T15c) ★ RGL-02 비관통 상태를 받는 조건 {len(nbad)} 종 — 실 비관통 출력에 한 키씩 변이 → 전부 failed (정지 계약) {nmiss or ""}',
+            not nmiss and len(nres) == len(nbad))
+
+        # T15d — 승격된 건전 결과 위에서 계약 함수만: 디스크 full_metrics 그대로 → ok · 망 소유 키 하나를 옛 세대 값으로 (σ₀ 0.012 · 열 σ 777)
+        #         바꾸면 ⑥ (투영 ≠ 이번 세대) · ⑧ 로 거부 · 후보 투영 (fm=) 인자로도 같은 판정
+        d, a, c = _case('through')
+        _s, rid, st, failed = _run(d, a, c, _CLIRunner())
+        fmd = _fm(d)
+        v_ok = ps.network_stop_verdict(d, rid)
+        v_s0 = ps.network_stop_verdict(d, rid, fm=dict(fmd, sigma_grain_S_cm=0.012))
+        v_th = ps.network_stop_verdict(d, rid, fm=dict(fmd, thermal_sigma_full_mScm=777.0))
+        chk(f'T15d) ★ RGL-08 · 07 정지 계약 = 이번 세대 투영 대조 — 디스크 그대로 ok · σ₀ 옛 값 → ⑥ · ⑧ 거부 · 열 σ 옛 값 → ⑥ 거부 '
+            f'({v_ok[0]} · {v_s0[0]} · {v_th[0]})',
+            st == 'done' and v_ok[0] is True and v_s0[0] is False and '⑥' in v_s0[1] and '⑧' in v_s0[1]
+            and v_th[0] is False and 'thermal_sigma_full_mScm' in v_th[1])
+        shutil.rmtree(d, ignore_errors=True)
+    _guard('T15', t15)
+
+    # ── T16 (RGL-07) — σ 와 σ₀ · 온도는 한 소유 단위로 지우고 병합한다 (옛 온도 factor 생존 → τ 2× 금지) ─────────────────────
+    def _codex_record(mode):
+        tail = 'hertz' if mode == 'hertzian' else 'physics'
+        return dict(sigma_full=0.05, sigma_full_mScm=0.15, sigma_full_status='computed', sigma_bulk_net=0.1, sigma_bulk_net_mScm=0.3,
+                    percolating_fraction=1.0, sigma_grain_S_cm=0.003,
+                    temperature_provenance={'sigma_ion_T_factor': 1.0, 'T_C': None, 'T_ref_C': 25.0},
+                    phi_se=0.3, boundary_rule='L0', boundary_band_frac=0.08,
+                    ionic_status='computed', electronic_status='computed', thermal_status='computed',
+                    **{f'constriction_power_share_ion_{tail}': 0.5, f'constriction_power_share_ion_{tail}_status': 'computed'})
+
+    def t16():
+        # ⓐ Codex 수치 그대로 (probe_contracts — solver 파일 작성만 fixture · helper · merge · grade 는 실 함수)
+        got = {}
+        for lbl, seed in (('깨끗한 입력', None),
+                          ('옛 factor 4 생존 (60 °C 자료 → 기본 온도 재계산)',
+                           {'temperature_provenance': {'sigma_ion_T_factor': 4.0, 'T_C': 60.0}})):
+            d = tempfile.mkdtemp(prefix='t16_')
+            fm = {'phi_se': 0.3, 'thickness_um': 100.0, 'thickness_mass_conserving_um': 100.0, 'phi_se_mass_conserving': 0.3,
+                  'percolation_pct': 100.0}
+            fm.update(seed or {})
+            with open(os.path.join(d, 'full_metrics.json'), 'w') as f:
+                json.dump(fm, f)
+            H, P = _codex_record('hertzian'), _codex_record('physics')
+            arts = {'network_conductivity.json': copy.deepcopy(H), 'network_conductivity_hertzian.json': H,
+                    'network_conductivity_physics.json': P,
+                    'network_conductivity_dual.json': {'hertzian': copy.deepcopy(H), 'physics': copy.deepcopy(P)}}
+
+            def _fx(cmd, _d=d, _a=arts, **kw):
+                for _n, _v in _a.items():
+                    with open(os.path.join(_d, _n), 'w') as f:
+                        json.dump(_v, f)
+                return subprocess.CompletedProcess(cmd, 0, 'synthetic solver fixture', '')
+            stages, _rid = webapp._network_and_stage_e(d, _SCRIPTS_DIR, os.path.join(d, 'a.csv'), os.path.join(d, 'c.csv'),
+                                                       '1:AM,3:SE', 1000, [], runner=_fx, stop_before_stage_e=True)
+            fm2 = _fm(d)
+            got[lbl] = (ps.summarize(stages)[0], _tf.tau2_from_metrics(fm2)[1], _ge._derived_value('__tau_lap_eff', fm2),
+                        (fm2.get('temperature_provenance') or {}).get('sigma_ion_T_factor'))
+            shutil.rmtree(d, ignore_errors=True)
+        chk(f'T16a) ★ RGL-07 (Codex 수치): 깨끗한 입력 ↔ 옛 factor 4 생존 → 둘 다 done · 짝 σ₀ 3 · 등급 τ 2.449489742783178 '
+            f'(옛: 12 · 4.898979485566356) {got}',
+            all(v[0] == 'done' and v[1] == 3.0 and v[2] is not None and abs(v[2] - 2.449489742783178) < 1e-12 and v[3] == 1.0
+                for v in got.values()) and len(got) == 2)
+
+        # ⓑ 실 retry 라우트 (`/retry-network/<id>` — contact 를 다시 쓰지 않고 helper 를 부른다 · 망 = 실 CLI · Stage E = 대역)
+        import types as _types
+        tmp = tempfile.mkdtemp(prefix='t16r_')
+        prev_cfg = {k: webapp.app.config.get(k) for k in ('UPLOAD_FOLDER', 'RESULTS_FOLDER', 'SCRIPTS_FOLDER')}
+        prev_runner, prev_thr = ps._RUNNER, webapp.threading
+
+        class _SyncThread:
+            def __init__(self, target=None, daemon=None, **kw):
+                self._t = target
+
+            def start(self):
+                self._t()
+        out = {}
+        try:
+            webapp.app.config['UPLOAD_FOLDER'] = os.path.join(tmp, 'uploads')
+            webapp.app.config['RESULTS_FOLDER'] = os.path.join(tmp, 'results')
+            webapp.app.config['SCRIPTS_FOLDER'] = _SCRIPTS_DIR
+            webapp.threading = _types.SimpleNamespace(**{**vars(prev_thr), 'Thread': _SyncThread})
+            ps._RUNNER = _CLIRunner(delegate=_fake_stage_e)
+            client = webapp.app.test_client()
+            for lbl, seed in (('깨끗한 입력', None),
+                              ('옛 60 °C 자료 (factor 4 · σ₀ 0.012 S/cm) 위 기본 온도 retry',
+                               {'temperature_provenance': {'sigma_ion_T_factor': 4.0, 'T_C': 60.0}, 'sigma_grain_S_cm': 0.012})):
+                cid = 'rt16_' + ('clean' if seed is None else 'stale')
+                up, rd = os.path.join(tmp, 'uploads', cid), os.path.join(tmp, 'results', cid)
+                os.makedirs(up)
+                os.makedirs(rd)
+                with open(os.path.join(up, 'meta.json'), 'w') as f:
+                    json.dump({'name': cid, 'mode': 'standard', 'type_map': '1:SE', 'scale': 1, 'status': 'done'}, f)
+                _write_bed(rd, 'through')
+                fm = dict(_bed_ledger('through'))
+                fm.update(seed or {})
+                with open(os.path.join(rd, 'full_metrics.json'), 'w') as f:
+                    json.dump(fm, f)
+                resp = client.post(f'/retry-network/{cid}')
+                meta = json.load(open(os.path.join(up, 'meta.json')))
+                fm2 = _fm(rd)
+                out[lbl] = (resp.status_code, meta.get('pipeline_status'), _tf.tau2_from_metrics(fm2)[1],
+                            _ge._derived_value('__tau_lap_eff', fm2), fm2.get('sigma_grain_S_cm'),
+                            (fm2.get('temperature_provenance') or {}).get('sigma_ion_T_factor'))
+        finally:
+            ps._RUNNER, webapp.threading = prev_runner, prev_thr
+            for k, v in prev_cfg.items():
+                if v is None:
+                    webapp.app.config.pop(k, None)
+                else:
+                    webapp.app.config[k] = v
+            shutil.rmtree(tmp, ignore_errors=True)
+        vals = list(out.values())
+        chk(f'T16b) ★ RGL-07 실 retry 라우트: 옛 60 °C 자료 위 기본 온도 재계산 → σ₀ · 온도 짝이 새 세대로 바뀐다 (σ₀ 3 · factor 1 · '
+            f'τ = 깨끗한 입력과 같다 — 옛: σ₀ 12 · τ 2×) {out}',
+            len(vals) == 2 and all(v[0] == 200 and v[1] == 'done' and v[2] == 3.0 and v[4] == 0.003 and v[5] == 1.0 for v in vals)
+            and vals[0][3] is not None and vals[0][3] == vals[1][3])
+
+        # ⓒ 두 모드 짝 대조 — physics 모드만 다른 σ₀ (모드 파일 · dual 같이 = 파일은 서로 맞는다) → 정지 경로 failed · 일반 경로도 승격 안 함
+        def _p_s0(rec, _n, m):
+            if m == 'physics':
+                rec['sigma_grain_S_cm'] = 0.0045
+        res = {}
+        for lbl, stop in (('정지 경로', True), ('일반 경로 (Stage E 앞 승격 검사)', False)):
+            d, a, c = _case('through')
+            fm0 = open(os.path.join(d, 'full_metrics.json')).read()
+            r = _CLIRunner(mutate=lambda o: _edit_net_records(o, _p_s0), delegate=_fake_stage_e)
+            _s, rid, st, failed = _run(d, a, c, r, stop=stop)
+            res[lbl] = (st, ps.read_network_provenance(d).get('provenance_state'),
+                        open(os.path.join(d, 'full_metrics.json')).read() == fm0,
+                        not any(os.path.exists(os.path.join(d, n)) for n in _NET_FOUR))
+            shutil.rmtree(d, ignore_errors=True)
+        chk(f'T16c) ★ 두 모드 (σ₀, 온도) 짝이 다르면 승격하지 않는다 — 두 경로 failed · 활성 세대 없음 · full_metrics 그대로 · 후보 치움 {res}',
+            all(v == ('failed', 'missing', True, True) for v in res.values()) and len(res) == 2)
+    _guard('T16', t16)
 
 
 def main():
@@ -958,24 +1484,36 @@ def main():
         #   network_solver_status success ③ 두 모드 sigma_full_status ∈ {computed, valid_zero} · full_metrics σ = dual 의 같은 세대 값
         #   (valid_zero 면 둘 다 None) ④ 두 모드 constriction_power_share_ion_* = dual 과 같고 (0–1 · computed) 또는 (None · 사유 상태)
         #   ⑤ dual 두 모드 boundary_rule ∈ {L0, L1, L2} · boundary_band_frac 유한 양수.  하나라도 어기면 failed (done 금지).
-        def _net_rec(mode, **over):
-            _tail = 'hertz' if mode == 'hertzian' else 'physics'
-            _r = {'sigma_full': 0.05 if mode == 'hertzian' else 0.083, 'sigma_full_mScm': 0.15 if mode == 'hertzian' else 0.25,
-                  'sigma_full_status': 'computed',
-                  f'constriction_power_share_ion_{_tail}': 0.78 if mode == 'hertzian' else 0.55,
-                  f'constriction_power_share_ion_{_tail}_status': 'computed',
-                  'boundary_rule': 'L0', 'boundary_band_frac': 0.08, **_ALL_CH_OK}
+        #  ★ RGL-02 · 08 · SELF-86 (Codex 10-05): 망 레코드는 **실 생산자 출력** (`network_conductivity._run_all_networks` — CLI 가 파일로 쓰는
+        #    바로 그 dict · 합성 침대 셋) 이고, 접촉 분석 자리에는 그 침대의 장부 (판 간격 · 질량 보존 두께 · φ_mc · 독립 calc_percolation) 를
+        #    쓴다.  옛 판은 손으로 만든 레코드 (σ 0.15/0.25 · valid_zero 직접 기입) 라 실 생산자와 정지 계약의 모순을 못 봤다.
+        #    변이는 실 레코드 위에 한 키씩만 바꾼다.
+        _PROD12 = {_b: _producer_records(_b) for _b in ('through', 'nonthrough', 'band_l1')}
+
+        def _net_rec(mode, bed='through', **over):
+            _r = json.loads(json.dumps(_PROD12[bed][0][mode]))
             _r.update(over)
             return _r
 
-        def make_net_runner(contact_rc=0, net_rc=0, H=None, P=None, legacy=None):
-            """make_cov_runner + 실제 모양의 network 산출물 (모드별 JSON · legacy = Hertz 사본 · dual = {'hertzian', 'physics', ratio})."""
+        def make_net_runner(contact_rc=0, net_rc=0, H=None, P=None, legacy=None, ledger=None):
+            """make_cov_runner + 실 생산자 network 산출물 (모드별 JSON · legacy = Hertz 사본 · dual = {'hertzian', 'physics', ratio})
+            + 접촉 분석이 full_metrics 에 쓰는 장부 (기본 = 관통 침대)."""
             _base = make_cov_runner(contact_rc=contact_rc)
             _H = H if H is not None else _net_rec('hertzian')
             _P = P if P is not None else _net_rec('physics')
+            _L = ledger if ledger is not None else _PROD12['through'][1]
 
             def _r(cmd, **kw):
                 script = os.path.basename(str(cmd[1])) if len(cmd) > 1 else ''
+                if script in ('analyze_contacts.py', 'analyze_contacts_bimodal.py'):
+                    _cp = _base(cmd, **kw)
+                    _fmp = os.path.join(res_dir, 'full_metrics.json')
+                    if contact_rc == 0 and os.path.exists(_fmp):
+                        _d = json.load(open(_fmp))
+                        _d.update(_L)
+                        with open(_fmp, 'w') as _f:
+                            json.dump(_d, _f)
+                    return _cp
                 if script != 'network_conductivity.py':
                     return _base(cmd, **kw)
                 _base.calls.append(cmd)
@@ -1017,7 +1555,8 @@ def main():
                 and 'recompute_porosity_dual.py' not in _ss and 'advanced_analysis.py' not in _ss
                 and _os12.get('status') == 'done' and _os12.get('stopped_after') == 'network'
                 and bool(_os12.get('network_run_id')) and _os12.get('network_run_id') == _fm12.get('active_network_run_id')
-                and _fm12.get('sigma_full_mScm_physics') == 0.25 and 'sigma_full_mScm_stage_e' not in _fm12
+                and _fm12.get('sigma_full_mScm_physics') == _PROD12['through'][0]['physics']['sigma_full_mScm']
+                and 'sigma_full_mScm_stage_e' not in _fm12
                 and 'stage_e_status' not in _fm12)
             chk(f'T12b) ★ {_mode} 멈춘 실행의 명령 = 전체 실행의 앞부분 (인자까지 같다)',
                 len(_rs.calls) >= 4 and [list(map(str, c)) for c in _rs.calls]
@@ -1042,17 +1581,16 @@ def main():
         _miss12 = {k: v for k, v in _g12.items() if v != ('failed', 'network', False, True)}
         chk(f'T12c) ★ 망 정지 계약 변이 {len(_bad12)} 종 → 전부 failed (계약 단계 · Stage E 안 돎 · stopped_after) {_miss12 or ""}',
             not _miss12 and len(_g12) == len(_bad12))
-        _vz = dict(sigma_full=None, sigma_full_mScm=None, sigma_full_status='valid_zero', ionic_status='valid_null')
+        #  ★ SELF-86 — 옛 T12d 는 valid_zero 를 **손으로** 넣었다 (실 생산자는 비관통에 not_computed 를 냈다 = RGL-02).  이제 양성 대조는
+        #    실 생산자의 정상 비관통 · 띠 폴백 L1 침대 출력 그대로 (장부도 그 침대의 것 — calc_percolation 0 % · 100 %).
         _ok12 = {
-            'SE 비관통 (두 모드 valid_zero · σ None · 협착 몫 None + 사유)': dict(
-                H=_net_rec('hertzian', constriction_power_share_ion_hertz=None,
-                           constriction_power_share_ion_hertz_status='not_computed (no percolating FULL solution)', **_vz),
-                P=_net_rec('physics', constriction_power_share_ion_physics=None,
-                           constriction_power_share_ion_physics_status='not_computed (no percolating FULL solution)', **_vz)),
-            '띠 폴백 L1 (기록됨 — tau_flux G1 이 BAND_FALLBACK 으로 표지)': dict(H=_net_rec('hertzian', boundary_rule='L1', boundary_band_frac=0.3)),
+            'SE 정상 비관통 (실 생산자 — valid_zero · no_through_path · σ None · 협착 몫 None + 비관통 사유)': dict(
+                H=_net_rec('hertzian', 'nonthrough'), P=_net_rec('physics', 'nonthrough'), ledger=_PROD12['nonthrough'][1]),
+            '띠 폴백 L1 (실 생산자 — 기록됨 · tau_flux G1 이 BAND_FALLBACK 으로 표지)': dict(
+                H=_net_rec('hertzian', 'band_l1'), P=_net_rec('physics', 'band_l1'), ledger=_PROD12['band_l1'][1]),
         }
         _g12p = {_l: _run12(*_bi, 'network', **_rk)[1].get('status') for _l, _rk in _ok12.items()}
-        chk(f'T12d) 양성 대조: SE 비관통 (명시 상태) · 띠 폴백 L1 (기록) 은 done {_g12p}',
+        chk(f'T12d) 양성 대조 (실 생산자 출력): SE 정상 비관통 · 띠 폴백 L1 은 done {_g12p}',
             all(v == 'done' for v in _g12p.values()) and len(_g12p) == len(_ok12))
         _rp, _op, _ = _run12(*_bi, 'network', preserve=True)
         chk(f'T12e) ★ stop_after=network + preserve_network → ValueError (망을 새로 푸는 정지점 — solver 를 안 부르는 보존과 섞지 않는다) '
@@ -2112,6 +2650,9 @@ def main():
             chk('19) require=False 는 진단용으로 False 를 돌려준다', got3 is False)
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
+
+    # ══ T13–T16 (Codex 10-05 RGL-02 · 04 · 07 · 08 · SELF-86) — 실 생산자 → 실 정지 helper → 실 소비자 ══
+    _t13_t16_network_stop_real(webapp)
 
     print(f'\ntest_pipeline_provenance: {_ok}/{_ok + len(_fail)} PASS'
           + (f'   FAILED: {_fail}' if _fail else ''))
