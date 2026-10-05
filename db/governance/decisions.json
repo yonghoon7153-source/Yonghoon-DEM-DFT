@@ -7131,6 +7131,54 @@
     "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
     "비준_근거": "사용자 2026-10-05 '권고대로 진행' (결정 후보 1·2 · 트랙 = 우리 DFT 기준선 · 사용자 1저자)."
    }
+  },
+  {
+   "id": "D-2026-10-05-lpscl-smallcell-glass-md-v2-closed",
+   "schema_version": 2,
+   "kind": "closure",
+   "scope": null,
+   "slot": "lpscl_smallcell_glass_md_v2_closure",
+   "applies_to": {
+    "systems": [
+     "lpscl_amorphous"
+    ]
+   },
+   "title": "소셀 유리 평형 MD v2 카드 — 닫는다: 갈래 v2-2 (N₆₀₀ 5/5 · N₅₅₀ 2/5 · 경계 3 · 미통과 0) · 550 K 는 문턱 부근 · ⛔ 캠페인은 닫지 않는다 — 다음 = 대조 계 a-Li₃PS₄ 새 카드 (외부 1저자 회신 CQ 확정)",
+   "statement": "카드 D-2026-09-30-lpscl-smallcell-glass-md-v2 (+ 개정 CO) 의 첫 묶음 10 런을 **갈래 v2-2 로 닫는다** (카드 §4 · 규칙 적용 · 공통 b 256 으로도 같은 갈래). 허용 마감 문장(첫 절 카드 §1a · 그 뒤 회신 CQ 원문): *'600 K 에서는 재현됐으나 (N₆₀₀ ≥ 3/5), 550 K 는 800 ps 로도 과반이 게이트를 통과하지 못했다 (N₅₅₀ = 2/5 · 나머지 셋은 모두 경계이며 미통과는 없다). 이 프로토콜에서 게이트를 안정적으로 통과하는 온도는 600 K 이며, 550 K 는 문턱 부근이다.'* 같이 싣는 것: near-miss (550 K seed1 +1.85σ) · 공통 b 결과 · 옛 사다리 대조 (550 K 4/5) · 늦은 창 한 줄 (10 런 0.909–1.029 · 주 판정은 2–50 ps 로만) · D 시드 간 상대 산포 (IQR/중앙값 550 K 7.5 % · 600 K 3.5 % · max/min 1.22 · 1.26). p90² 는 측정 대기 (결과 전 형식 고정). **캠페인은 닫지 않는다** — 다음은 대조 계 a-Li₃PS₄ 유리 (같은 셀 크기 · 같은 protocol · 600 K 400 ps 5 런 · 같은 게이트 · D 상대차) 새 카드이고 650 K 와 Ea 는 그 뒤 별도 카드다. 허용·금지·기록 전부는 마감 기록.",
+   "rationale": "갈래 문턱과 닫힘 조건(카드 §4 · §7)이 결과 전에 박혀 있었고, 회신 CO 규칙도 결과 전(개정 CO)에 넣은 뒤 판독을 한 번 돌려 규칙을 기계적으로 적용했다. 외부 1저자: *'규칙 적용이 맞고, 공통 b로 내도 같은 갈래라 잣대 차이가 아니라는 확인까지 붙은 것이 결정적입니다.'* 보조 창(50–200 ps)이 구간 안으로 나왔으나 구제에 쓰지 않았다. 마감 문장 끝 절은 550 K 가 '확산영역이 아니다' 가 아니라 '선언 문턱을 과반이 넘지 못했다' 임을 흐리지 않게 좁혔다 (회신 CQ Q-CQ-1).",
+   "decision_state": "proposed",
+   "record_kind": "closure",
+   "results_seen": true,
+   "card": "db/properties/lpscl_smallcell_glass_md_v2_closed_2026_10_05.json",
+   "record": "db/properties/lpscl_smallcell_glass_md_v2_runlog_2026_10_01.json",
+   "amends": [
+    "D-2026-09-30-lpscl-smallcell-glass-md-v2"
+   ],
+   "depends_on": [
+    "D-2026-09-30-lpscl-smallcell-glass-md-v2",
+    "D-2026-10-04-lpscl-smallcell-glass-md-v2-amend-co"
+   ],
+   "review": "kb/reviews/li2s1a_CQ_reply_li2s_glass_v2_readout_2026_10_05.md",
+   "evidence": [
+    "kb/reviews/li2s1a_CQ_reply_li2s_glass_v2_readout_2026_10_05.md",
+    "db/properties/lpscl_smallcell_glass_md_v2_closed_2026_10_05.json",
+    "db/properties/lpscl_smallcell_glass_md_v2_runlog_2026_10_01.json"
+   ],
+   "reopen_criteria": [
+    "⛔ 이 카드는 재개 조건이 없다 (카드 §7 · 결과 전) — 갈래 뒤의 확장(셋째 온도 · 대조 계 · 셀 확대 · 더 긴 prod)은 전부 새 카드다.",
+    "다음 새 카드 = 대조 계 a-Li₃PS₄ (회신 CQ Q-CQ-4) — 결과 전 게이트 · 골격 규칙(Q-CQ-3 ③ 일시 변화 수 · 문턱 따로) · 도구 점검 목록(Q-CQ-5) · 외부 1저자 확인 뒤 실행."
+   ],
+   "enforcement": "① 마감 기록 §2 허용 서술 밖으로 쓰지 않는다 — 특히 카드 §1a 판 끝 절 '측정 가능 온도는 550 K 보다 위다' 와 '550 K 에서 확산하지 않는다 · 확산영역이 아니다' 금지 ② 절대 D · σ · Ea 를 싣지 않는다 — 대조 계가 붙기 전엔 상대차도 없다 ③ 늦은 창 β 로 구제·재판정하지 않고 해석도 붙이지 않는다 ④ p90² 는 기록만 (마감 기록 §4 결과 전 형식) ⑤ 화면 /li2s 반영은 복귀 머지 뒤 (대피 세션 규칙 · 사용자 10-05).",
+   "proposed_by": "claude-session-2026-10-05 (evac)",
+   "status": "proposed",
+   "status_history": [
+    {
+     "at": "2026-10-05",
+     "state": "proposed",
+     "by": "외부 1저자 (회신 CQ)",
+     "note": "v2-2 확정 · 마감 문장 끝 절 좁힘 · 늦은 창 한 줄 · 골격 ③ 일시 변화 수 (문턱 따로) · 다음 = 대조 계 a-Li₃PS₄ 먼저 (캠페인은 닫지 않음) · p90² 따로 재기 · 산포 보고량. 판정은 외부 1저자가 확정했다 — 원장 active 전환(ratification)은 카드 저자(사용자) 몫. 트랙 = li2s (사용자 ≠ 1저자)."
+    }
+   ]
   }
  ]
 }
