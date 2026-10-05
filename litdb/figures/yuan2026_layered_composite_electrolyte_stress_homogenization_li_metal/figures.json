@@ -158,7 +158,8 @@
    "h": 721,
    "dpi": 300,
    "src": "Yuan 2026 - Sup) Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0) SI.pdf",
-   "blank": 0.776
+   "blank": 0.776,
+   "viewed": "thumbnail only (contact sheet ~440 px, crop-bounds check)"
   },
   {
    "key": "fS2",
@@ -290,7 +291,7 @@
    "src": "Yuan 2026 - Sup) Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0) SI.pdf",
    "blank": 0.74,
    "manual_crop": "SI text layer has a broken font encoding (g→e, b→l, h→o, d→' ', e.g. 'Fieure'/'Talle'), so the tool's caption regex never fired on this page and the number was reported as a gap; caption text repaired by hand from the text layer (rendered PDF glyphs are intact); figure is a single embedded raster above the caption — clip = raster bbox + 3 pt, rendered at the raster's native 200 dpi (300 dpi would only upsample) (2026-10-04, litdb-curator)",
-   "viewed": "thumbnail only (contact sheet ~440 px, crop-bounds check)"
+   "viewed": true
   },
   {
    "key": "fS9",
@@ -334,7 +335,7 @@
    "src": "Yuan 2026 - Sup) Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0) SI.pdf",
    "blank": 0.693,
    "manual_crop": "SI text layer has a broken font encoding (g→e, b→l, h→o, d→' ', e.g. 'Fieure'/'Talle'), so the tool's caption regex never fired on this page and the number was reported as a gap; caption text repaired by hand from the text layer (rendered PDF glyphs are intact); figure is a single embedded raster above the caption — clip = raster bbox + 3 pt, rendered at the raster's native 200 dpi (300 dpi would only upsample) (2026-10-04, litdb-curator)",
-   "viewed": "thumbnail only (contact sheet ~440 px, crop-bounds check)"
+   "viewed": true
   },
   {
    "key": "fS11",
@@ -420,7 +421,8 @@
    "h": 927,
    "dpi": 300,
    "src": "Yuan 2026 - Sup) Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0) SI.pdf",
-   "blank": 0.349
+   "blank": 0.349,
+   "viewed": "thumbnail only (contact sheet ~440 px, crop-bounds check)"
   },
   {
    "key": "fS15",
@@ -440,7 +442,8 @@
    "h": 711,
    "dpi": 300,
    "src": "Yuan 2026 - Sup) Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0) SI.pdf",
-   "blank": 0.202
+   "blank": 0.202,
+   "viewed": "thumbnail only (contact sheet ~440 px, crop-bounds check)"
   },
   {
    "key": "fS16",
@@ -460,7 +463,8 @@
    "h": 618,
    "dpi": 300,
    "src": "Yuan 2026 - Sup) Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0) SI.pdf",
-   "blank": 0.313
+   "blank": 0.313,
+   "viewed": "thumbnail only (contact sheet ~440 px, crop-bounds check)"
   },
   {
    "key": "fS17",
@@ -480,7 +484,8 @@
    "h": 1058,
    "dpi": 300,
    "src": "Yuan 2026 - Sup) Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0) SI.pdf",
-   "blank": 0.972
+   "blank": 0.972,
+   "viewed": "thumbnail only (contact sheet ~440 px, crop-bounds check)"
   },
   {
    "key": "fS19",
@@ -566,7 +571,8 @@
    "h": 592,
    "dpi": 300,
    "src": "Yuan 2026 - Sup) Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0) SI.pdf",
-   "blank": 0.263
+   "blank": 0.263,
+   "viewed": "thumbnail only (contact sheet ~440 px, crop-bounds check)"
   },
   {
    "key": "fS25",
@@ -740,7 +746,8 @@
    "h": 1058,
    "dpi": 300,
    "src": "Yuan 2026 - Sup) Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0) SI.pdf",
-   "blank": 0.371
+   "blank": 0.371,
+   "viewed": "thumbnail only (contact sheet ~440 px, crop-bounds check)"
   },
   {
    "key": "fS36",

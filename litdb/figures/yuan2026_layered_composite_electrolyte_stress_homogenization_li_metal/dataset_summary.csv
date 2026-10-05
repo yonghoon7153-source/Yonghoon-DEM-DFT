@@ -33,11 +33,11 @@ sup2_structure,supplementary data 7_crystalline SiO2-TFSI.cif,C2F6N1O100S2Si48,1
 sup2_structure,supplementary data 1_TFSI-.xlsx,C2F6N1O4S2,15,atoms,"Cartesian 'Final Coordinates (Angstroms)' from Materials Studio, no cell (isolated molecule)"
 sup2_structure,supplementary data 2_PEO.xlsx,C14H30O8,52,atoms,"Cartesian 'Final Coordinates (Angstroms)' from Materials Studio, no cell (isolated molecule)"
 sup2_structure,supplementary data 3_PEO-TFSI-.xlsx,C16F6H30N1O12S2,67,atoms,"Cartesian 'Final Coordinates (Angstroms)' from Materials Studio, no cell (isolated molecule)"
-sup2_audit,closest TFSI-slab contact (5_amorphous SiO2-TFSI-),O133-Si63,1.763,A,our measurement on the deposited structure
-sup2_audit,2nd closest TFSI-slab contact (5_amorphous SiO2-TFSI-),O133-O115,2.74,A,
+sup2_audit,closest TFSI(O/N)-Si contact (5_amorphous SiO2-TFSI-),O133-Si63,1.763,A,our measurement on the deposited structure (= '1.76 A' label in Fig. 4h)
+sup2_audit,2nd TFSI(O/N)-Si contact (5_amorphous SiO2-TFSI-),O134-Si32,2.863,A,(= '2.86 A' label in Fig. 4h)
 sup2_audit,O neighbours (<2.3 A) of the binding Si in the clean slab (4_amorphous SiO2),Si63,1,count,amorphous: the TFSI O binds the single 1-coordinated Si of the slab
-sup2_audit,closest TFSI-slab contact (7_crystalline SiO2-TFSI),N147-Si71,1.819,A,our measurement on the deposited structure
-sup2_audit,2nd closest TFSI-slab contact (7_crystalline SiO2-TFSI),O151-O133,2.696,A,
+sup2_audit,closest TFSI(O/N)-Si contact (7_crystalline SiO2-TFSI),N147-Si71,1.819,A,our measurement on the deposited structure
+sup2_audit,2nd TFSI(O/N)-Si contact (7_crystalline SiO2-TFSI),O152-Si71,3.105,A,
 sup2_audit,O neighbours (<2.3 A) of the binding Si in the clean slab (6_crystalline SiO2),Si71,4,count,crystalline: TFSI N takes the place of a slab O (Si71-O99 1.817 A -> Si71-N 1.819 A)
 sup2_audit,S-O bond lengths in adsorbed TFSI (amorphous model),O133 is the Si-bound O,1.455/1.455/1.473/1.600,A,the Si-bound O stretches S-O by ~0.15 A = covalent Si-O-S bridge
 sup2_audit,O deficiency of the amorphous slab,Si48O78 vs Si48O96,18.75,% of O missing,SiO1.625; 28 of 48 Si under-coordinated
