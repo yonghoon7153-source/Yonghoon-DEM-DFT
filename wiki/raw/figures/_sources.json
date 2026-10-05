@@ -436,6 +436,14 @@
    "55d82036-21._The_critical_importance_of_stack_pressure_in_batteries.pdf"
   ]
  },
+ "li2026_half-cell-fitting-multiobjective-benchmark": {
+  "figures": 38,
+  "generated": "2026-10-05",
+  "pdfs": [
+   "833d58ef-21._Benchmarking_half-cell_model_fitting_approaches_for_lithium-ion_battery_degradation_diagnostics.pdf",
+   "e6ca5f39-21._Sup_Benchmarking_half-cell_model_fitting_approaches_for_lithium-ion_battery_degradation_diagnostics.pdf"
+  ]
+ },
  "li2026_safety-aware-bms-active-intelligence": {
   "figures": 6,
   "generated": "2026-09-22",

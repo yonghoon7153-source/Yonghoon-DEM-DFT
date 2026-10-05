@@ -3514,3 +3514,10 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - 출처: 사용자 업로드 논문 본문 (28 쪽 · sha256 `8ccf029c…`) · 보충 (10 쪽 · `5d25a800…`) — 저장소 밖 · 기록 `bms-balancing/docs/REIL_C1_CORE_SPEC_20261005.md`
 - 더한 것: entity 개요의 "미열람" → 열람 표시 · 상태 한 줄 (11 시트 ↔ Table 1 · 명목 정의 · 다섯 번째 cycle · 참값 불확실성 a–d · P0 에 넘긴 것)
 - 하지 않은 것: xlsx · pkl · 노트북 열기 · 맞춤 · E3b 등록 · 프로토콜 수정 (어긋나는 곳은 목록만)
+
+## [2026-10-05] ingest | Li, Zhang, Nowacki, Navidi, Schmitt, Hu, Hu 2026 — Benchmarking half-cell model fitting approaches for lithium-ion battery degradation diagnostics (eTransportation 29, 100593) — REIL C1-core 원전
+- raw: `raw/papers/li2026_half-cell-fitting-multiobjective-benchmark.md` (본문 sha256 봉인 `75828129…` · 원문 본문 `8ccf029c…` 28 쪽 · 보충 `5d25a800…` 10 쪽 — 호출자가 준 해시와 직접 재계산 일치 · PDF 미커밋) · 그림 `raw/figures/li2026_half-cell-fitting-multiobjective-benchmark/` (자동 24 + 수동 14 = 38 — 자동 잘림 넷 (Fig. 4 · S3 · S5 · S6) 보완 · 부록 Fig. A.1–A.8 은 크로퍼가 'Fig. A.x' 캡션을 못 잡아 수동 · S7 은 자동 제외 (`--why`: 그림 안 범례가 텍스트 블록) → 수동 · 표 넷은 같은 9 쪽 전체 렌더라 바이트 동일 — 다른 편 관례대로 두고 note 와 표 1 단독 수동 크롭) · `_sources.json` 이 편 항목만 추가.
+- 출처 · 지시: 사용자 업로드 (2026-10-05) · 호출자 "논문 에이전트 해줘" — 고치는 곳은 wiki/ 만 · REIL 자료 (xlsx · pkl · 노트북) 열지 않음 · 맞춤 · 계산 실행 0 · E3b 등록 0.
+- 본 그림: Fig. 1 · 3 · 4 · 5 · 6 · 7 · 8 · 9 · 10 · 12 · 13 · A.4 · A.8 · S1 · S2 · S3 · S5 · S6 · Table 1 (전체) · A.3 (판 열 확대 · 충전 끝 화소 판독) · 축소판으로 크롭만 확인: A.1 · A.2 · A.5 · A.6 · A.7 · S7 · 안 봄: Fig. 2 · 11 · 14 · S4. 화소 판독: Fig. 6 · 9 · A.3 · A.4 · A.8 (보정 방식 · 분해능은 digest 와 figures.json note).
+- 핵심 (digest §0-1 · 전부 `[도표]` 또는 `[재현]` · E3b 기준 아님): (a) Case 1 (MSE_QV) 에서 15 mm LFP 셀 여섯과 LAM_PE-1 의 m_PE − LII 0.00–0.04 — 설계 LLI 가 LAM_PE 로 읽힘 · (b) 맞춤 LII ≈ 5 번째 cycle 충전 용량 ÷ 3.10–3.16 mAh (열 셀) — 공개 코드 대수 (`LII·max_q = Q_end + d_N`) 로 설명 · (c) 추정값 일부가 공개 코드의 상자 끝 (0.5 · 0.6 · 1.1) · LAM_PE-1 은 부등식 아래 설계의 '거울' · (d) 15|12 셀 셋에 석출과 들어맞는 충전 끝 신호 (음의 dV/dQ ≈2.3–2.5 mAh) · (e) 본문 ↔ 그림 어긋남 (Fig. 6(g) 주장 · '최대 20 %' ↔ 0.28) · 보충 Fig. S5 중복 판 · 식 (7) 부호 규약.
+- 하지 않은 것: bms-balancing 문서 수정 (C1-core 와 어긋나거나 더할 점은 호출자 보고로만) · REIL 자료 개봉 · 맞춤 · E3b 등록 · 우리 연구 수치 복사 · 논문 PDF 커밋. 컴파일 페이지 갱신은 다음 커밋.
