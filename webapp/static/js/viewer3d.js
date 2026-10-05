@@ -106,6 +106,39 @@ function rxnScopeNote(s3) {
   return '<div style="margin-top:3px;color:#fbbf24;font-size:10.5px">⚠ 반응 솔브 꺼짐 — '
     + jeEscH(rx.reason || 'r_int ON (RINT-05)') + '</div>';
 }
+/* ★ 2026-10-05 (Codex RGL-01 · P1) — 집전체 기하 (component `collector_geom`) 는 보조 σ_e 솔브 둘 (wetted · bare) 의 차다.
+ * 둘 다 수렴해야 R_geom · jb 가 게시된다 (producer · check_arm · 판정기 공용 계약 = run_contract.COMPONENT_RESULT).
+ * 미수렴이면 R_geom = null · jb 없음 · 상태 unconverged (축퇴면 failed) — 화면이 그 이유를 말하고 null 을 0 으로 그리지
+ * 않는다 (옛 범례는 Number(null) = 0 → "0.00e+0" 을 그렸다).  보조 수렴 3필드가 없는 payload = R_geom 이 수렴 확인 없이
+ * 게시된 옛 세대.  ⚠ 키 이름은 producer 와 같은 글자 (시험이 강제). */
+const COLLECTOR_CONV_KEYS = ['wetted_cg_info', 'wetted_unconverged', 'wetted_cg_resid',
+                             'bare_cg_info', 'bare_unconverged', 'bare_cg_resid'];
+function rGeomText(s3) {
+  const v = ((s3 && s3.collector_geometric) || {}).R_geom_ohm_cm2;
+  return (v === null || v === undefined || v === '' || !isFinite(Number(v))) ? '—' : Number(v).toExponential(2);
+}
+function collectorGeomNote(s3, plain) {
+  if (!s3) return '';
+  const cg = s3.collector_geometric;
+  const comp = ((s3.manifest || {}).components || {}).collector_geom || {};
+  const st = comp.status;
+  if (!cg && (st === undefined || st === null || st === 'disabled')) return '';   // 집전체 기하를 안 돌렸다 (--no-collector 등)
+  let t;
+  if (st === 'unconverged') {
+    t = '⚠ 집전체 기하 (collector_geom) 미수렴 — 보조 솔브 (wetted · bare) 가 수렴 계약을 못 채워 R_geom · jb 미게시 (RGL-01)'
+      + (comp.reason ? ' · ' + comp.reason : '');
+  } else if (st === 'failed') {
+    t = '⚠ 집전체 기하 (collector_geom) 실패 — ' + (comp.reason || 'solve degenerate') + ' · R_geom 없음';
+  } else if (cg && !COLLECTOR_CONV_KEYS.every(k => Object.prototype.hasOwnProperty.call(cg, k))) {
+    t = '⚠ 옛 payload — 보조 솔브 (wetted · bare) 수렴 기록 없음 · R_geom 은 수렴 확인 없이 게시된 값 (RGL-01) · payload 재생성 권장';
+  } else if (cg && rGeomText(s3) === '—') {
+    t = '⚠ R_geom 없음 (collector_geom 상태 ' + (st || '기록 없음') + ')';
+  } else {
+    return '';
+  }
+  if (plain) return t;
+  return '<div style="margin-top:3px;color:#fbbf24;font-size:10.5px">' + jeEscH(t) + '</div>';
+}
 function rygColor(t) {
   // t ∈ [0,1] → red→yellow→green (for coverage low→high)
   if (t < 0.5) {
@@ -3714,7 +3747,11 @@ function applyViewMode(state, mode) {
       if (m.userData.particles.some(p => p.je !== undefined && p.jb !== undefined)) have = true;
     });
     if (!have) {
-      setLegend(state, '<i>이 payload엔 je/jb 쌍이 없어요 — 최신 <b>mpm_webapp_payload.py</b>로 재생성해 업로드하세요.</i>');
+      //  ★ RGL-01 — jb 가 없는 이유가 보조 솔브 미수렴 · 축퇴면 그것을 말한다 (재생성으로 안 생긴다)
+      const cgN = collectorGeomNote(s3);
+      setLegend(state, cgN && /collector_geom/.test(cgN)
+        ? '<i>이 payload엔 jb 가 없어요 — 집전체 기하가 완료되지 않았습니다.</i>' + cgN
+        : '<i>이 payload엔 je/jb 쌍이 없어요 — 최신 <b>mpm_webapp_payload.py</b>로 재생성해 업로드하세요.</i>');
       return;
     }
     const allJe = [];
@@ -3755,9 +3792,10 @@ function applyViewMode(state, mode) {
        <div style="margin:5px 0 2px 0;height:10px;border-radius:3px;background:linear-gradient(90deg,#3b4cc0,#dddddd,#b40426)"></div>
        <div style="display:flex;justify-content:space-between;font-size:10px;color:#9ca3af"><span>×${Math.pow(2, -R).toFixed(2)} 냉각</span><span>변화 없음</span><span>×${Math.pow(2, R).toFixed(1)} 가열</span></div>
        <div style="margin-top:3px;font-size:11.5px">냉각(&lt;×0.8) <b>${nCool}</b>개 · 가열(&gt;×1.2) <b>${nHot}</b>개</div>`
-      + (cg ? `<div style="margin-top:2px;color:#9ca3af;font-size:10.5px">바닥 접점 wetted ${cg.n_bottom_contacts.wetted} → bare ${cg.n_bottom_contacts.bare} · R_geom ${Number(cg.R_geom_ohm_cm2).toExponential(2)} Ω·cm²</div>` : '')
+      + (cg ? `<div style="margin-top:2px;color:#9ca3af;font-size:10.5px">바닥 접점 wetted ${(cg.n_bottom_contacts || {}).wetted} → bare ${(cg.n_bottom_contacts || {}).bare} · R_geom ${rGeomText(s3)} Ω·cm²</div>` : '')
       + `<div style="margin-top:2px;color:#9ca3af;font-size:10.5px">색 갈림은 집전체 근처에만 — 접점 상실의 국소 재분배 (그 외는 흰색이 정상)</div>`
-      + jeDefNote(s3));                                      // je · jb 둘 다 같은 per_particle_current (RINT-03)
+      + jeDefNote(s3)                                        // je · jb 둘 다 같은 per_particle_current (RINT-03)
+      + collectorGeomNote(s3));                              // R_geom · jb = 보조 두 솔브 수렴 뒤에만 (RGL-01)
     return;
   }
   if (mode === 'je') {
@@ -3820,14 +3858,16 @@ function applyViewMode(state, mode) {
     setLegend(state,
       `<b>전류밀도 (STEP3 · ${mode === 'je' ? 'wetted/primer' : 'bare'} 집전체${sel && mode === 'je' ? ' — ' + sel.name : ''})</b>`
       + (s3 ? `<div style="margin-top:3px">σ_e_eff <b style="font-size:13px">${Number(s3.sigma_e_eff_S_cm).toExponential(2)}</b> S/cm`
-          + (cg ? ` · R_geom <b>${Number(cg.R_geom_ohm_cm2).toExponential(2)}</b> Ω·cm²`
+          + (cg ? ` · R_geom <b>${rGeomText(s3)}</b> Ω·cm²`
                 : ` <span style="color:#9ca3af">(상대비교용 — σ표/vox 동일 세팅끼리)</span>`)
           + `</div>` : '')
       + (cg ? `<details style="margin-top:2px;font-size:11px;color:#cbd5e1"><summary style="cursor:pointer;color:#9ca3af">wetted/bare 상세</summary>
-          σ wetted ${Number(cg.wetted_sigma_S_cm).toExponential(2)} (접점 ${cg.n_bottom_contacts.wetted})
-          vs bare ${Number(cg.bare_sigma_S_cm).toExponential(2)} (${cg.n_bottom_contacts.bare}) S/cm<br>
+          σ wetted ${Number(cg.wetted_sigma_S_cm).toExponential(2)} (접점 ${(cg.n_bottom_contacts || {}).wetted})
+          vs bare ${Number(cg.bare_sigma_S_cm).toExponential(2)} (${(cg.n_bottom_contacts || {}).bare}) S/cm<br>
           R_geom = L(1/σ_bare − 1/σ_wetted) — 바닥 기하 접촉만의 계면저항 (모델 출력; 측정 R_int와의 갭 = 화학/열화 몫)<br>
+          보조 솔브 (wetted · bare) 가 <b>둘 다</b> 수렴해야 R_geom · jb 게시 — 아니면 위 σ 는 미수렴 해의 값 (RGL-01)<br>
           집전체 슬래브는 모식(두께 과장) · σ_e_eff는 상대비교용(σ표/vox 동일 세팅끼리)</details>` : '')
+      + collectorGeomNote(s3)
       + `<div style="margin:5px 0 2px 0;height:10px;border-radius:3px;background:linear-gradient(90deg,${stops.join(',')})"></div>
        <div style="display:flex;justify-content:space-between;font-size:10px;color:#9ca3af"><span>0</span><span>|J_z| (0–p99.8)</span><span>high</span></div>`
       + jeDefNote(s3)
@@ -5220,7 +5260,11 @@ function showMPMAnalysisSummary(state) {
       }
       return s;
     })()],
-    ['R_geom (기하 계면저항)', (s3.collector_geometric && s3.collector_geometric.R_geom_ohm_cm2 != null) ? Number(s3.collector_geometric.R_geom_ohm_cm2).toExponential(2) + ' Ω·cm²' : '—'],
+    ['R_geom (기하 계면저항)', rGeomText(s3) !== '—' ? rGeomText(s3) + ' Ω·cm²' : (() => {
+      //  ★ RGL-01 — 값이 없는 이유 (collector_geom 상태) 를 칩에 남긴다 (unconverged = 보조 솔브 미수렴)
+      const st = (((s3.manifest || {}).components || {}).collector_geom || {}).status;
+      return (st && st !== 'complete' && st !== 'disabled') ? '— (collector_geom ' + st + ')' : '—';
+    })()],
     ['porosity (공극률)', porosity != null ? Number(porosity).toFixed(2) + ' %' : '—'],
     ['thickness (두께)', thickness != null ? Number(thickness).toFixed(1) + ' µm' : '—'],
     ['N (AM 입자수)', String(mm.n_AM || AMs.length)],
@@ -5408,9 +5452,9 @@ function showMPMAnalysisSummary(state) {
   const gloss = [
     ['|J_z| , je', '전자 전류밀도(z방향) · STEP3 AM 입자별 상대값(자기 p99.8 정규화, 같은 payload 내 비교) · je=wetted/primer 집전체 기준'
       + (jeDefNote(s3, true) ? ' · ' + jeDefNote(s3, true) : '')],   // RINT-03 정의 표지 (평문 — 캔버스)
-    ['jb', 'bare 집전체(crown 접점만) 기준 |J_z| · je와의 차 = 바닥 접점 상실 시 전류 재분배'],
+    ['jb', 'bare 집전체(crown 접점만) 기준 |J_z| · je와의 차 = 바닥 접점 상실 시 전류 재분배 · 보조 두 솔브 수렴 뒤에만 (RGL-01)'],
     ['σ_e_eff / σ_ion_eff', '유효 전자 / 이온 전도도 (S/cm) · 전극 through-plane'],
-    ['R_geom', '모델 기하 계면저항 (Ω·cm²) = L·(1/σ_bare − 1/σ_wetted) · 측정 R_int − R_geom = 화학/열화 몫'],
+    ['R_geom', '모델 기하 계면저항 (Ω·cm²) = L·(1/σ_bare − 1/σ_wetted) · 측정 R_int − R_geom = 화학/열화 몫 · wetted·bare 둘 다 수렴해야 게시 (RGL-01)'],
     ['coverage', 'AM 입자 표면이 SE로 덮인 비율 (%)'],
     ['econn', '집전체에 전기 연결(1) / 고립(0) · 100% = 모든 AM이 외부회로 도달'],
     ['z / 손실분담', 'z = 두께방향(0 하단 집전체 ~ 상단 압축면) · 손실(발열)분담 = 각 상/계면의 전력손실 % (∝ J²·R · 계면 = 상이 아닌 상 경계 r_int 몫)'],
@@ -5448,6 +5492,8 @@ function showMPMAnalysisSummary(state) {
     row('scalar', 'sigma_e_eff_S_cm', s3.sigma_e_eff_S_cm);
     row('scalar', 'sigma_ion_eff_S_cm', s3.sigma_ion_eff_S_cm);
     row('scalar', 'R_geom_ohm_cm2', s3.collector_geometric && s3.collector_geometric.R_geom_ohm_cm2);
+    //  ★ RGL-01 — 집전체 기하 상태 (complete · unconverged · failed · disabled) — 빈 R_geom 칸의 이유를 내보낸다
+    row('scalar', 'collector_geom_status', (((s3.manifest || {}).components || {}).collector_geom || {}).status);
     row('scalar', 'porosity_pct', porosity);
     row('scalar', 'thickness_um', thickness);
     row('scalar', 'n_AM', mm.n_AM || AMs.length);
@@ -6334,7 +6380,7 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
     ['ion-분담 SDCP (%)', gsh(sA, 'ion_dissipation_share', 'SDCP'), gsh(sB, 'ion_dissipation_share', 'SDCP'),
      'SDCP의 이온 소산 분담 (σ_ion_SDCP = 0.001 S/cm 훅 — SE의 1/3).\n"SDCP는 이온 절연체가 아니다" 원칙의 정량 발현.\n⚠ 옛 "이온 +5.6%" 는 **철회** — 격자를 조이면 이온 이득은 **부호가 뒤집힌다**(+7.42 → −0.92 %, CL-24).'],
     ['R_geom (Ω·cm²)', (sA.collector_geometric || {}).R_geom_ohm_cm2, (sB.collector_geometric || {}).R_geom_ohm_cm2,
-     '집전체 기하 접촉저항 (모델 출력): 이중 솔브 R_geom = L·(1/σ_bare − 1/σ_wetted).\nbare = 바닥 실접촉 crown만 / wetted = 전면 접촉 가정.\n측정 R_int(Fig6e: SBE 110/DBE 46 Ω·cm²)와의 갭 = 화학/열화 몫 — 기하만으로는 µΩ급임을 보이는 축.'],
+     '집전체 기하 접촉저항 (모델 출력): 이중 솔브 R_geom = L·(1/σ_bare − 1/σ_wetted).\nbare = 바닥 실접촉 crown만 / wetted = 전면 접촉 가정.\n측정 R_int(Fig6e: SBE 110/DBE 46 Ω·cm²)와의 갭 = 화학/열화 몫 — 기하만으로는 µΩ급임을 보이는 축.\n보조 솔브 (wetted · bare) 가 둘 다 수렴해야 게시 — 미수렴 · 축퇴면 — (collector_geom 상태 unconverged · failed · RGL-01).'],
     ['porosity (%)', mmA.porosity_mpm_pct != null ? mmA.porosity_mpm_pct : mmA.porosity_settled_pct,
                      mmB.porosity_mpm_pct != null ? mmB.porosity_mpm_pct : mmB.porosity_settled_pct,
      'MPM 압밀 침대의 settled porosity (wallP 판독, 300 MPa hold).\nSBE 7.87 / DBE 7.39 = 레시피 효과(−0.5%p, PTFE 반감+SDCP 치밀화).\n⚠ 옛 "+52%를 설명하기엔…" 논증은 그 헤드라인이 **철회**돼 함께 내려간다 (CL-24) — porosity 로 σ_e 이득을 설명 못 한다는 **방향**만 유지.'],
@@ -7054,7 +7100,7 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
         const cg2 = s3x.collector_geometric || {};
         return 'Δ 재분배 log₂(jb/je) — 파랑=냉각·빨강=가열·흰=불변'
           + (cg2.n_bottom_contacts ? ` · 접점 ${cg2.n_bottom_contacts.wetted}→${cg2.n_bottom_contacts.bare}` : '')
-          + jeDefNote(s3x) + jeMm;
+          + jeDefNote(s3x) + jeMm + collectorGeomNote(s3x);  // jb 없음 · 옛 payload 의 이유 (RGL-01)
       };
       $('cmp-leg-a').innerHTML = cap(sA);
       $('cmp-leg-b').innerHTML = cap(sB);

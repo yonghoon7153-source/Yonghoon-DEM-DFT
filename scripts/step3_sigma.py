@@ -1141,7 +1141,9 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
           f'({"GPU" if GPU_SOLVE else "CPU"}, 수 분 소요 가능)…', flush=True)
     phi, info = _solve_cg(L, b)
     resid = float(np.linalg.norm(L @ phi - b) / max(np.linalg.norm(b), 1e-30))
-    unconv = bool(info) or resid > 1e-6                    # review F2: NEVER ship a silent bad σ
+    #  review F2: NEVER ship a silent bad σ.  ★ RGL-01 (Codex 10-05) — **비유한 잔차도 미수렴**이다.  옛 술어
+    #    `bool(info) or resid > 1e-6` 는 info 0 + resid NaN 을 놓쳤다 (NaN > 1e-6 = False → 경고 없음 · unconverged False).
+    unconv = bool(info) or not np.isfinite(resid) or resid > 1e-6
     if unconv:
         print(f'  ⚠ STEP3 CG not converged (info={info}, resid={resid:.1e}) — σ UNRELIABLE')
     # total current through the bottom plate: I = Σ g_b·(1 − φ)
@@ -2049,7 +2051,7 @@ def solve_reaction_current(sid, sig_e_of_sid, sig_i_of_sid, pid, n_am, vox, gct_
           f'({"GPU" if GPU_SOLVE else "CPU"})…', flush=True)
     phi, info = _solve_cg(L, b)
     resid = float(np.linalg.norm(L @ phi - b) / max(np.linalg.norm(b), 1e-30))
-    unconv = bool(info) or resid > 1e-6
+    unconv = bool(info) or not np.isfinite(resid) or resid > 1e-6   # ★ RGL-01 — 비유한 잔차 = 미수렴 (위 σ 솔브와 같은 술어)
     I_tot = float(np.sum(eb_g * (1.0 - phi[eb_nodes])))
     i_am = np.zeros(n_am, np.float64)
     I_bv = 0.0
@@ -2100,7 +2102,17 @@ def _selftest_rxn():
            and abs(rL['I_tot'] - rR['I_tot']) / max(abs(rL['I_tot']), 1e-30) < 1e-6)
     print(f"rxn mirror(lateral BV): I_L={rL['I_tot']:.6f} I_R={rR['I_tot']:.6f} "
           f"faces {rL['n_bv_faces']}/{rR['n_bv_faces']}  {'OK' if okM else 'FAIL'}")
-    ok = okI and okK and okU and okM
+    # ★ RGL-01 (Codex 10-05 g1_review) — 같은 술어 결함: info 0 + 비유한 잔차를 미수렴으로 적는가 (프로세스 안 주입).
+    global _solve_cg
+    _cg0 = _solve_cg
+    try:
+        _solve_cg = lambda L, b: (np.full(len(b), np.nan), 0)      # noqa: E731
+        rN = solve_reaction_current(sid, sig_e, sig_i, pid, 1, vox, gct, z_top_um=nz * vox, z_bot_um=0.0)
+    finally:
+        _solve_cg = _cg0
+    okN = rN['unconverged'] is True and not np.isfinite(rN['resid'])
+    print(f"rxn nonfinite-resid: info 0 + NaN 해 → unconverged={rN['unconverged']}  {'OK' if okN else 'FAIL'}")
+    ok = okI and okK and okU and okM and okN
     print('RXN SELFTEST', 'PASS' if ok else 'FAIL')
     return 0 if ok else 1
 
@@ -2150,6 +2162,36 @@ def _selftest():
     r = solve_sigma_z(sid, sig_tab, 0.5)
     e = abs(r['sigma_eff'] - 1.0 / 36.0) < 1e-6
     ok &= e; print(f"column:   σ_eff={r['sigma_eff']:.6f}  (expect {1/36:.6f})  {'OK' if e else 'FAIL'}")
+    # 5b) ★ RGL-01 (Codex 10-05 g1_review) — **비유한 잔차는 미수렴이다.**  옛 술어 `bool(info) or resid > 1e-6` 은
+    #     info 0 + resid NaN 을 놓쳤다 (NaN > 1e-6 = False → 경고 없음 · unconverged False).  CG 가 NaN 해를 info 0
+    #     으로 돌려주는 상황을 프로세스 안에서 주입한다 (과거 실침대 런에 NaN 이 있었다는 증거가 아니다).
+    #     전부 NaN · 한 성분만 NaN (σ 는 유한할 수도 있는 쪽) 둘 다 · 정상 해는 그대로 (대조).
+    global _solve_cg
+    import contextlib as _ctx
+    import io as _io
+    _cg0 = _solve_cg
+
+    def _one_nan(L, b):
+        _x = np.array(_cg0(L, b)[0], np.float64)
+        _x[-1] = np.nan
+        return _x, 0
+    sid = np.ones((4, 4, 6), np.int8)
+    for _lbl, _fake in (('all-NaN', lambda L, b: (np.full(len(b), np.nan), 0)), ('one-NaN', _one_nan)):
+        _buf = _io.StringIO()
+        try:
+            _solve_cg = _fake
+            with _ctx.redirect_stdout(_buf):
+                rN = solve_sigma_z(sid, sig_tab, 0.5)
+        finally:
+            _solve_cg = _cg0
+        e = (rN['unconverged'] is True and rN['cg_info'] == 0 and not np.isfinite(rN['resid'])
+             and 'STEP3 CG not converged' in _buf.getvalue())
+        ok &= e; print(f"nonfinite-resid ({_lbl}): info 0 · resid {rN['resid']} → unconverged={rN['unconverged']} · "
+                       f"경고 {'있음' if 'not converged' in _buf.getvalue() else '없음'}  {'OK' if e else 'FAIL'}")
+    rC = solve_sigma_z(sid, sig_tab, 0.5)
+    e = rC['unconverged'] is False and np.isfinite(rC['resid']) and abs(rC['sigma_eff'] - 1.0) < 1e-6
+    ok &= e; print(f"nonfinite-resid (대조): 정상 해 unconverged={rC['unconverged']} resid={rC['resid']:.1e}  "
+                   f"{'OK' if e else 'FAIL'}")
     # 6) SR-03 AMG — 기본 OFF 이고, 켜도 **같은 σ** 를 내며, 실제로 쓴 전처리가 도장된다.
     #    고대비(σ 1 : 1e4) 격자로 — 전처리가 갈릴 여지가 있는 조건에서 봐야 뜻이 있다.
     global AMG_SOLVE

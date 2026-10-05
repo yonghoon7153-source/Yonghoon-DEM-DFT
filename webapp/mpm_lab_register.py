@@ -31,6 +31,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import os
 import re
 import sys
@@ -113,6 +114,31 @@ def compute_trust(mm: dict) -> dict:
          present=bool(_po) and ('tau' in _po or 'resid' in _po),
          unconv=_has_unconverged(_po.get('trust')),
          resid=_po.get('resid'), plan_key='pore')
+    #  ★ RGL-01 (Codex 10-05) — 집전체 기하 (component `collector_geom`) = 보조 σ_e 솔브 둘 (wetted · bare) 의 차.  둘 다
+    #    수렴해야 R_geom · jb 가 결과다 (producer · check_arm · 판정기 공용 계약).  배지는 producer 와 **같은 이름**의 상태 ·
+    #    수렴 3필드를 읽는다.  3필드가 없는 옛 payload = 판단 근거 없음 → skip (warn 으로 소급하지 않는다).
+    _cg = s3.get('collector_geometric')
+    _cgs = (((s3.get('manifest') or {}).get('components') or {}).get('collector_geom') or {}).get('status')
+    if isinstance(_cg, dict) or _cgs in ('unconverged', 'failed'):
+        _cg = _cg if isinstance(_cg, dict) else {}
+        _cvk = ('wetted_cg_info', 'wetted_unconverged', 'wetted_cg_resid',
+                'bare_cg_info', 'bare_unconverged', 'bare_cg_resid')
+        _res = [_cg.get(k) for k in ('wetted_cg_resid', 'bare_cg_resid')]
+        if _cgs in ('unconverged', 'failed'):
+            _st, _dt = 'warn', f'collector_geom {_cgs} — R_geom · jb 미게시'
+        elif not all(k in _cg for k in _cvk):
+            _st, _dt = 'skip', '보조 솔브 수렴 3필드 없음 (RGL-01 이전 payload — 판단 근거 없음)'
+        else:
+            _bad = (any(_cg.get(k) is not False for k in ('wetted_unconverged', 'bare_unconverged'))
+                    or any(_cg.get(k) != 0 for k in ('wetted_cg_info', 'bare_cg_info'))
+                    or not all(isinstance(r, (int, float)) and not isinstance(r, bool)
+                               and math.isfinite(r) and 0 <= r <= 1e-6 for r in _res))
+            _st, _dt = ('warn' if _bad else 'ok'), 'wetted · bare 수렴 3필드'
+        badges.append({'key': 'collector_geom', 'label': '집전체 기하 R_geom (wetted·bare)', 'status': _st,
+                       'resid': max((r for r in _res if isinstance(r, (int, float))), default=None), 'detail': _dt})
+    else:
+        _add('collector_geom', '집전체 기하 R_geom (wetted·bare)', present=False, unconv=False,
+             plan_key='collector')
     _rx = s3.get('rxn') or {}
     _add('rxn', 'STEP4 반응분포',
          present=bool(_rx) and ('resid' in _rx or 'kcl_err' in _rx),
@@ -427,6 +453,30 @@ def _selftest() -> int:
     to = compute_trust(_mk(_old)['mpm_metrics'])
     assert to['overall'] == 'ok', to
     assert not any(b['key'] == 'sigma_ion' for b in to['badges']), to
+
+    # ★ RGL-01 (Codex 10-05) — 집전체 기하 배지 = 보조 솔브 (wetted · bare) 수렴 3필드 · collector_geom 상태 (producer 와 같은 이름)
+    _cgok = {'wetted_sigma_S_cm': 0.08, 'bare_sigma_S_cm': 0.05, 'R_geom_ohm_cm2': 1.2e-4,
+             'wetted_cg_info': 0, 'wetted_unconverged': False, 'wetted_cg_resid': 1e-9,
+             'bare_cg_info': 0, 'bare_unconverged': False, 'bare_cg_resid': 1e-9}
+    _man_c = dict(_man, component_plan=dict(_man['component_plan'], collector=True),
+                  components={'collector_geom': {'status': 'complete'}})
+
+    def _cgb(t):
+        return next((b for b in t['badges'] if b['key'] == 'collector_geom'), None)
+    tc = compute_trust(_mk(_man_c, collector_geometric=_cgok)['mpm_metrics'])
+    assert tc['overall'] == 'ok' and (_cgb(tc) or {}).get('status') == 'ok', tc
+    _man_u = dict(_man_c, components={'collector_geom': {'status': 'unconverged', 'reason': '보조 솔브 미수렴'}})
+    tu = compute_trust(_mk(_man_u, collector_geometric=dict(_cgok, R_geom_ohm_cm2=None, bare_cg_info=1,
+                                                             bare_unconverged=True, bare_cg_resid=0.35))['mpm_metrics'])
+    assert tu['overall'] == 'warn' and (_cgb(tu) or {}).get('status') == 'warn', tu      # allow-partial 게시본
+    tt = compute_trust(_mk(_man_c, collector_geometric=dict(_cgok, wetted_unconverged=True))['mpm_metrics'])
+    assert (_cgb(tt) or {}).get('status') == 'warn', tt                                     # 상태는 complete 인데 3필드 미수렴
+    tn = compute_trust(_mk(_man_c, collector_geometric=dict(_cgok, wetted_cg_resid=None))['mpm_metrics'])
+    assert (_cgb(tn) or {}).get('status') == 'warn', tn                                     # 키는 있는데 잔차 null (NaN 벨트) = 수렴 미확인
+    _cg_old = {k: v for k, v in _cgok.items() if 'cg_' not in k and 'unconverged' not in k}
+    tq = compute_trust(_mk(_man_c, collector_geometric=_cg_old)['mpm_metrics'])
+    assert (_cgb(tq) or {}).get('status') == 'skip' and tq['overall'] == 'ok', tq        # 옛 payload = 판단 근거 없음
+    assert (_cgb(tl) or {}).get('status') == 'skip', tl                                     # LEAN (--no-collector) = 계획 제외
 
     # register_local roundtrip (임시폴더)
     import tempfile

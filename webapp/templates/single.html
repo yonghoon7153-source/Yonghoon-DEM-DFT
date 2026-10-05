@@ -601,7 +601,12 @@ function fillMpmTable(m) {
     if (s3m.sigma_e_eff_S_cm != null) pairs.push(['σ_e_eff (STEP3 벌크)', sci(s3m.sigma_e_eff_S_cm) + ' S/cm']);
     if (s3m.sigma_ion_eff_S_cm != null) pairs.push(['σ_ion_eff (STEP3)', sci(s3m.sigma_ion_eff_S_cm) + ' S/cm']);
     const cg = s3m.collector_geometric || {};
+    //  ★ RGL-01 (Codex 10-05) — 보조 솔브 (wetted · bare) 둘 다 수렴해야 R_geom 게시.  없으면 collector_geom 상태를 적는다.
+    const cgc = ((s3m.manifest || {}).components || {}).collector_geom || {};
     if (cg.R_geom_ohm_cm2 != null) pairs.push(['R_geom (기하 계면)', sci(cg.R_geom_ohm_cm2) + ' Ω·cm²']);
+    else if (['unconverged', 'failed', 'missing', 'skipped'].includes(cgc.status))   // producer 어휘만 (innerHTML 로 들어간다)
+      pairs.push(['R_geom (기하 계면)', '— (collector_geom ' + cgc.status
+        + (cgc.status === 'unconverged' ? ' — 보조 솔브 미수렴 · RGL-01' : '') + ')']);
     const selC = (s3m.collector || {}).selected;
     if (selC && selC.sigma_apparent_S_cm != null)
       pairs.push(['σ_apparent (' + selC.name + ')', sci(selC.sigma_apparent_S_cm) + ' S/cm']);

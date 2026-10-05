@@ -270,8 +270,12 @@ function labBuildSummary(name, info, m) {
   if (s3s.sigma_e_eff_S_cm != null) {
     L.push(`STEP3 σ_e (벌크): ${s3s.sigma_e_eff_S_cm} S/cm` + (s3s.sigma_ion_eff_S_cm != null ? `   ·   σ_ion: ${s3s.sigma_ion_eff_S_cm} S/cm` : ''));
     const cg = s3s.collector_geometric || {};
+    //  ★ RGL-01 (Codex 10-05) — R_geom 은 보조 솔브 (wetted · bare) 가 둘 다 수렴했을 때만 게시된다.  없으면 이유 (collector_geom 상태) 를 적는다.
+    const cgc = ((s3s.manifest || {}).components || {}).collector_geom || {};
     if (cg.R_geom_ohm_cm2 != null)
       L.push(`R_geom(기하 계면, 모델출력): ${cg.R_geom_ohm_cm2} Ω·cm²  (접점 wetted ${cg.n_bottom_contacts && cg.n_bottom_contacts.wetted} / bare ${cg.n_bottom_contacts && cg.n_bottom_contacts.bare})`);
+    else if (cgc.status && cgc.status !== 'complete' && cgc.status !== 'disabled')
+      L.push(`R_geom(기하 계면): — (collector_geom ${cgc.status}${cgc.status === 'unconverged' ? ' — 보조 솔브 미수렴 · R_geom · jb 미게시 · RGL-01' : ''}${cgc.reason ? ' · ' + cgc.reason : ''})`);
   }
   L.push('');
   L.push('— 핵심 물성 —');

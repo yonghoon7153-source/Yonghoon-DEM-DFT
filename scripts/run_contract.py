@@ -25,7 +25,8 @@ import math
 #    주면 "자리를 못 찾아 조용히 통과" 와 구분되지 않는다 (R3-CX-01 이 그 상태였다).
 STEP3_PATHS = (('mpm_metrics', 'step3'), ('step3',))
 
-#: CG 수렴 문턱.  `step3_sigma.py` 의 `unconv = bool(info) or resid > 1e-6` 과 **같은 값**.
+#: CG 수렴 문턱.  `step3_sigma.py` 의 `unconv = bool(info) or not isfinite(resid) or resid > 1e-6` 과 **같은 값**
+#  (비유한 잔차 항은 RGL-01 · 10-05 — `conv_ok` 는 처음부터 비유한을 거부했다).
 CG_RESID_MAX = 1e-6
 
 #: 항상 필요한 component.  나머지는 run mode 가 정한다 (`required_components`).
@@ -717,16 +718,23 @@ COMPONENT_EVIDENCE = {
     'pore':           (('cg_info', 'unconverged', 'resid'), 'tau', 'pore'),
 }
 
-#: CG 수렴이 없는 component 의 **결과 계약** (R5-CX-05).  기하·위상 산출물이라 수렴이
-#  아니라 **무엇이 나왔는가**로 본다.  ⚠ 위치는 producer 안에 있다 — 몰랐던 것이 아니라
-#  안 적었던 것이다 (`mpm_webapp_payload.py:2162` · `:1765`).
+#: 결과 블록 계약 (R5-CX-05) — 위치가 전자 · 이온 · 열 · 기공과 다른 component.  **무엇이 나왔는가**를 본다.
+#  ⚠ 위치는 producer 안에 있다 — 몰랐던 것이 아니라 안 적었던 것이다 (`mpm_webapp_payload.py:2162` · `:1765`).
+#  ★★ 2026-10-05 (Codex RGL-01 · P1) — 옛 주석은 *"collector 에는 CG 가 없다"* 였다.  **틀렸다** — collector 기하는
+#    보조 σ_e 솔브 둘 (wetted · bare) 의 차다.  그 전제로 σ 부호만 봐서, 실물 producer 에서 wetted (또는 bare) 호출만
+#    CG_MAXITER=1 로 제한해 보조 σ 가 정상의 7.57 배가 돼도 producer 게시 · complete · check-arm rc 0 이었다.
+#    ⇒ `convs` = 보조 솔브마다 (cg_info, unconverged, resid) 키 — 주 솔브와 **같은** `conv_ok` conjunction 을 둘 다 채워야
+#      한다.  없으면 blind (옛 세대 payload 도 — 보조 솔브가 수렴했는지 모르는 R_geom 을 받지 않는다 · CDXR2-4 와 같은 결).
+#    ⚠ 이것은 **수렴 증거**다.  `interface_record_ok` 의 적용 영수증 (요청 표가 그 솔브에 걸렸나) 과 섞지 않는다.
 COMPONENT_RESULT = {
     'pnm': dict(path=('pore', 'pnm'), ints=('n_pores', 'n_throats'),
                 reason_means_incomplete=True),
     'collector_geom': dict(path=('collector_geometric',),
                            #  ⚠ `R_geom_ohm_cm2` 는 **정당하게 None** 일 수 있다
                            #    (bare/wetted 중 하나가 reason 을 냈을 때) ⇒ 요구하지 않는다.
-                           positives=('wetted_sigma_S_cm', 'bare_sigma_S_cm')),
+                           positives=('wetted_sigma_S_cm', 'bare_sigma_S_cm'),
+                           convs=(('wetted_cg_info', 'wetted_unconverged', 'wetted_cg_resid'),
+                                  ('bare_cg_info', 'bare_unconverged', 'bare_cg_resid'))),
 }
 
 
@@ -738,8 +746,8 @@ def component_evidence_ok(step3, required):
         · thermal/pore `resid=1e100` · `unconverged=True`  → producer None · final h0
         · 계획된 ionic 의 결과·CG·resid **전부 삭제**       → producer None · final h0
       계획했으면 그 축의 증거도 계획의 일부다.
-    ⚠ 증거 위치를 모르는 component(pnm·collector_geom)는 **status 로만** 본다 —
-      모르는 것을 지어내지 않는다.  그 대신 status 는 위에서 `complete` 를 요구한다.
+    ⚠ pnm · collector_geom 은 `COMPONENT_RESULT` 의 결과 블록 계약으로 본다 (R5-CX-05) — collector 는 보조 솔브
+      둘의 수렴 3필드까지 (RGL-01).  옛 주석 *"status 로만 본다"* 는 R5-CX-05 이후로 사실이 아니다.
     """
     s = step3 or {}
     _man = (s.get('manifest') or {})
@@ -762,7 +770,8 @@ def component_evidence_ok(step3, required):
         #    **둘 다 지워도** producer/check_arm/final = `None/None/h0` 였다.
         #    "증거 위치를 모른다" 는 것이 옛 주석의 이유였는데, 위치는 producer 안에 있다
         #    (`payload:2162` · `:1765`) — 몰랐던 것이 아니라 **안 적었던** 것이다.
-        #  ⚠ 이 둘은 CG 수렴이 없다 (기하·위상 결과) ⇒ 계약 모양이 다르다.
+        #  ⚠ 이 둘은 결과 위치 · 모양이 다르다 (pnm = 위상 결과 · CG 없음).  ⛔ 옛 문장 *"이 둘은 CG 수렴이 없다"* 는
+        #    collector 에 대해 거짓이었다 — 보조 σ_e 솔브 둘의 차다 (RGL-01) → `convs` 로 수렴까지 본다.
         _rspec = COMPONENT_RESULT.get(comp)
         if _rspec is not None:
             _blk = s
@@ -784,6 +793,13 @@ def component_evidence_ok(step3, required):
                 if isinstance(_v, bool) or not isinstance(_v, (int, float)) \
                         or not math.isfinite(_v) or _v <= 0:
                     return False, f'EVID|{comp}|result| {_kf}={_v!r} (유한한 양수여야 한다)'
+            #  ★ RGL-01 — 결과가 CG 솔브의 산물이면 그 솔브들이 **각각** 수렴했어야 한다 (한 쪽만 봐도 안 된다)
+            for (_ki, _ku, _kr) in _rspec.get('convs', ()):
+                _cok, _cwhy = conv_ok(_blk.get(_ki), _blk.get(_ku), _blk.get(_kr))
+                if not _cok:
+                    return False, (f'EVID|{comp}|conv|{_cwhy}| {_ki}={_blk.get(_ki)!r} '
+                                   f'{_ku}={_blk.get(_ku)!r} {_kr}={_blk.get(_kr)!r} — 이 결과를 만든 '
+                                   f'보조 솔브의 수렴이 확인되지 않는다 (적용 영수증은 수렴 증거가 아니다 · RGL-01)')
             continue
         spec = COMPONENT_EVIDENCE.get(comp)
         if spec is None:
@@ -1141,8 +1157,13 @@ def _selftest():
                             'unconverged': False, 'cg_resid': 1e-8},
                 'pore': {'tau': 3.1, 'cg_info': 0, 'unconverged': False, 'resid': 1e-8,
                          'pnm': {'n_pores': 1200, 'n_throats': 3400}},
+                #  ★ RGL-01 — 보조 두 솔브의 수렴 3필드 (producer 가 싣는 그 키 · 이름).
                 'collector_geometric': {'wetted_sigma_S_cm': 0.08,
-                                        'bare_sigma_S_cm': 0.05}}
+                                        'bare_sigma_S_cm': 0.05,
+                                        'wetted_cg_info': 0, 'wetted_unconverged': False,
+                                        'wetted_cg_resid': 1e-8,
+                                        'bare_cg_info': 0, 'bare_unconverged': False,
+                                        'bare_cg_resid': 1e-8}}
 
     _greq = required_components(plan={'electronic': True, 'ionic': True, 'thermal': True,
                                       'pore': True, 'collector': True})
@@ -1165,6 +1186,40 @@ def _selftest():
     #    없으면 그것은 통과가 아니라 HOLD 다 (이 구멍이 pnm·collector 를 열어 뒀다).
     chk(not component_evidence_ok(_g_full(), tuple(_greq) + ('brand_new_comp',))[0],
         'G7 ★★ 계약이 **등록 안 된** component 를 계획하면 HOLD (조용한 통과 금지)')
+    #  ── G8–G15: RGL-01 (Codex 10-05 · P1) — 보조 (wetted · bare) collector 솔브의 **수렴** ──────────────
+    #    옛 계약은 "collector 에는 CG 가 없다" 는 전제로 σ 부호만 봤다 → 실물 producer 에서 wetted (또는 bare)
+    #    호출만 CG_MAXITER=1 로 제한해 보조 σ 가 7.57 배가 돼도 complete · check-arm rc 0 이었다 (적용 영수증 ≠ 수렴).
+    #    둘 다 주 솔브와 **같은** conv_ok conjunction 을 채워야 한다.  각 변이는 한 쪽만 건드린다 (독립 실패).
+    def _g_cg(**over):
+        _gs = _g_full()
+        for _k, _v in over.items():
+            if _v == '__pop__':
+                _gs['collector_geometric'].pop(_k, None)
+            else:
+                _gs['collector_geometric'][_k] = _v
+        return component_evidence_ok(_gs, _greq)
+    _g8 = _g_cg(wetted_cg_info=1, wetted_unconverged=True, wetted_cg_resid=0.3464101615137754)
+    chk(not _g8[0] and str(_g8[1]).startswith('EVID|collector_geom|conv|') and 'wetted' in str(_g8[1]),
+        f'G8 ★★ wetted **만** 미수렴 (Codex 반례 수치) → 잡는다 ({str(_g8[1])[:60]})')
+    _g9 = _g_cg(bare_cg_info=1, bare_unconverged=True, bare_cg_resid=0.3464101615137754)
+    chk(not _g9[0] and str(_g9[1]).startswith('EVID|collector_geom|conv|') and 'bare' in str(_g9[1]),
+        f'G9 ★★ bare **만** 미수렴 → 잡는다 (R_geom 0 clip 뒤에 가려지던 쪽) ({str(_g9[1])[:60]})')
+    _g10 = _g_cg(bare_cg_resid='__pop__')
+    chk(not _g10[0] and '|blind|' in str(_g10[1]), 'G10 ★ 보조 잔차 **누락** → blind (모르는 것은 통과가 아니다)')
+    _g11 = _g_cg(wetted_cg_info='__pop__', wetted_unconverged='__pop__', wetted_cg_resid='__pop__')
+    chk(not _g11[0] and '|blind|' in str(_g11[1]), 'G11 ★ wetted 3필드 **통째 누락** (옛 세대 모양) → blind')
+    _g12 = _g_cg(bare_cg_info=3)
+    chk(not _g12[0] and '|unconv|' in str(_g12[1]), 'G12 ★ **상충** — cg_info 3 인데 unconverged False → 잡는다')
+    _g12b = _g_cg(wetted_unconverged=True)
+    chk(not _g12b[0] and '|unconv|' in str(_g12b[1]), 'G12b ★ **상충** — cg_info 0 인데 unconverged True → 잡는다')
+    for _bad in (float('nan'), float('inf'), -1e-9, 1e-3):
+        _g13 = _g_cg(wetted_cg_resid=_bad)
+        chk(not _g13[0] and '|resid|' in str(_g13[1]),
+            f'G13({_bad!r}) ★ 보조 잔차가 비유한 · 음수 · 문턱 위 → 잡는다 (플래그는 수렴이어도)')
+    _g14 = _g_cg(bare_cg_info=False)
+    chk(not _g14[0] and '|type|' in str(_g14[1]), 'G14 ★ cg_info 가 bool → 잡는다 (주 솔브와 같은 타입 계약)')
+    _g15 = _g_cg(wetted_cg_resid=CG_RESID_MAX, bare_cg_resid=0.0)
+    chk(_g15 == (True, None), 'G15 정상 증인 — 문턱 **경계값** · 0 잔차는 통과 (과잉차단 없음)')
 
     #  ── H: 런 영수증 (R5-CX-03, Codex 5차 실측) ────────────────────────────────────
     #    HEAD 가 `edec17a2`, 러너 기본 vox 0.15 인데 모든 팔에 `vox_um=0.20` ·

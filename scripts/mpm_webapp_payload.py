@@ -2314,8 +2314,18 @@ def main():
                                                rint=a._rint_e, pid=(pid3 if a._rint_e else None))
                     a._iface_rcpt['electronic_wetted'] = _RC.interface_receipt(_res3w, _s3.rint_table_record(a._rint_e))
                     a._iface_rcpt['electronic_bare'] = _RC.interface_receipt(_res3b, _s3.rint_table_record(a._rint_e))
+                    #  ★★ 2026-10-05 (Codex RGL-01 · P1) — **보조 두 솔브도 수렴해야 결과다.**  옛 판은 reason/σ 부호만
+                    #    보고 R_geom · jb · complete 를 냈다 → wetted (또는 bare) 호출만 CG_MAXITER=1 이면 보조 σ 가 정상의
+                    #    7.57 배인데 게시 · complete · check-arm rc 0 (wetted 변이 R_geom 0 → 3.8 Ω·cm² · bare 변이는 0 clip
+                    #    뒤에 가려지고 미수렴 φ 로 입자 jb).  주 솔브 · 판정기와 **같은** conjunction (`run_contract.conv_ok`)
+                    #    을 각각 걸고, 그 3필드를 결과 블록에 보존해 소비자 (check_arm · 판정기) 가 다시 본다.
+                    #  ⚠ 적용 영수증 (위 두 줄 · RINT-02) 은 **요청 표가 그 솔브에 걸렸다**는 증거일 뿐 수렴 증거가 아니다 —
+                    #    미수렴이어도 applied 로 남는다 (의미를 섞지 않는다).
+                    _cvw = _RC.conv_ok(_res3w.get('cg_info'), _res3w.get('unconverged'), _res3w.get('resid'))
+                    _cvb = _RC.conv_ok(_res3b.get('cg_info'), _res3b.get('unconverged'), _res3b.get('resid'))
+                    _aux_ok = bool(_cvw[0] and _cvb[0])
                     jb_am = None
-                    if 'phi' in _res3b:
+                    if _aux_ok and 'phi' in _res3b:                 # 미수렴 bare φ 로 jb 를 만들지 않는다 (RGL-01)
                         jb_am = np.nan_to_num(_s3.per_particle_current(_res3b, sid3, pid3, _sig3, len(r)),
                                               nan=0.0, posinf=0.0, neginf=0.0)
                     # R_geom = the interface resistance the GEOMETRY itself creates (bare contact
@@ -2331,7 +2341,9 @@ def main():
                     _sw = max(_swR, 1e-30); _sb = max(_sbR, 1e-30)
                     # 가드(#9 code-review): 축퇴/실패 solve(σ≤0 or reason)면 R_geom을 계산하지 말 것 —
                     # 1e-30 클램프가 _Lcm/σ ≈ 1e27 Ω·cm² 를 만들어 'MODEL OUTPUT'으로 뱉는 걸 막는다.
-                    if _res3b.get('reason') or _res3w.get('reason') or _swR <= 0.0 or _sbR <= 0.0:
+                    #  ★ RGL-01 — 보조 솔브 하나라도 수렴 계약을 못 채우면 R_geom 도 내지 않는다 (미수렴 σ 의 차는 결과가 아니다).
+                    if (not _aux_ok or _res3b.get('reason') or _res3w.get('reason')
+                            or _swR <= 0.0 or _sbR <= 0.0):
                         _rgeom = None
                     else:
                         _rgeom = max(0.0, _Lcm / _sb - _Lcm / _sw)
@@ -2340,6 +2352,14 @@ def main():
                         'wetted_sigma_S_cm': float(f'{_sw:.4g}'),
                         'bare_sigma_S_cm': float(f'{_sb:.4g}'),
                         'R_geom_ohm_cm2': (None if _rgeom is None else float(f'{_rgeom:.3g}')),
+                        #  ★ RGL-01 — 보조 두 솔브의 수렴 3필드 (솔버 원값 · 잔차는 저장 정밀도를 깎지 않는다).
+                        #    키 = `run_contract.COMPONENT_RESULT['collector_geom']['convs']` (공용 계약이 이 이름으로 읽는다).
+                        'wetted_cg_info': int(_res3w.get('cg_info', 0) or 0),
+                        'wetted_unconverged': bool(_res3w.get('unconverged', False)),
+                        'wetted_cg_resid': float(_res3w['resid']),
+                        'bare_cg_info': int(_res3b.get('cg_info', 0) or 0),
+                        'bare_unconverged': bool(_res3b.get('unconverged', False)),
+                        'bare_cg_resid': float(_res3b['resid']),
                         'n_bottom_contacts': {'wetted': (_res3w.get('n_plate_vox') or (None,))[0],
                                               'bare': (_res3b.get('n_plate_vox') or (None,))[0],
                                               'canonical_plate': (_res3.get('n_plate_vox') or (None,))[0]},
@@ -2356,12 +2376,28 @@ def main():
                     #  ⚠ 이것을 안 고치고 required 만 계획에서 파생시켰더니 규칙 J 의
                     #    plain·fibre 팔이 즉시 exit 3 이 됐다 — **생산 과잉차단 5번째**.
                     #    검사기를 느슨하게 하는 대신 **producer 의 기록 결손**을 고친다.
-                    _s3mark('collector_geom',
-                            'failed' if _rgeom is None else 'complete',
-                            None if _rgeom is not None else
-                            'solve degenerate (bare/wetted 중 하나가 비퍼콜)')
+                    #  ★ RGL-01 — 보조 솔브 미수렴 = `unconverged` (주 솔브와 같은 어휘 · 값을 쓰면 안 된다).  collector 는
+                    #    계획했으면 required 라 `_payload_reject_reason` 이 STEP3_REQUIRED_INCOMPLETE (exit 3 · 게시 안 함 ·
+                    #    `.failed` 진단본) 로 막는다 = 주 솔브 미수렴과 같은 강도.  `--allow-partial-step3` 로 연 게시본에서도
+                    #    R_geom · jb 는 없고 상태가 unconverged 다 (check_arm · 판정기가 거부).  수렴 실패가 먼저다 — 비유한
+                    #    해의 σ = 0 은 비퍼콜이 아니다 (reason 조기반환은 수렴 3필드가 0 · False · 0.0 이라 여기 안 걸린다).
+                    if not _aux_ok:
+                        _cgst = 'unconverged'
+                        _cgwhy = ('보조 솔브 미수렴 — '
+                                  + ' · '.join(f'{_nm}({_cv[1]} cg_info={_rx.get("cg_info")!r} '
+                                               f'resid={_rx.get("resid")!r})'
+                                               for _nm, _cv, _rx in (('wetted', _cvw, _res3w), ('bare', _cvb, _res3b))
+                                               if not _cv[0])
+                                  + ' — R_geom · jb 미게시 (RGL-01)')
+                        print(f'  ⚠ STEP3 collector: {_cgwhy}', flush=True)
+                    elif _rgeom is None:
+                        _cgst, _cgwhy = 'failed', 'solve degenerate (bare/wetted 중 하나가 비퍼콜)'
+                    else:
+                        _cgst, _cgwhy = 'complete', None
+                    _s3mark('collector_geom', _cgst, _cgwhy)
                     _cgm = step3['collector_geometric']
-                    _rgs = 'n/a (solve degenerate)' if _cgm['R_geom_ohm_cm2'] is None else f"{_cgm['R_geom_ohm_cm2']:.3g}"
+                    _rgs = ('n/a (보조 솔브 미수렴)' if not _aux_ok else
+                            'n/a (solve degenerate)' if _cgm['R_geom_ohm_cm2'] is None else f"{_cgm['R_geom_ohm_cm2']:.3g}")
                     #  ★ R4-CX-01 — wetted/bare σ 와 R_geom 도 결과-보유값이다.
                     #    접촉 **수**는 진단이므로 남긴다 (그것으로는 창을 못 옮긴다).
                     print(f"  STEP3 collector geometry (MODEL output): wetted "

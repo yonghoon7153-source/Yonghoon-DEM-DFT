@@ -2336,6 +2336,46 @@ def _selftest():
     _v47ok = verdict(mk(base, [v * 1.12 for v in base], _manifest=dict(_m47, interface_receipts=_rc47)))
     chk(f'㊼d 정상 증인 — 같은 팔에 영수증이 있으면 IFACE 로 막지 않는다 ({_v47ok.get("hold_code")})',
         _v47ok.get('hold_code') != 'IFACE')
+    #  ── ㊽ 2026-10-05 (Codex RGL-01 · P1) — 판정기가 **보조 collector 솔브의 수렴**을 공용 계약으로 소비한다 ─────
+    #    옛 계약은 collector 에 CG 가 없다는 전제로 σ 부호만 봤다 (wetted/bare 미수렴이어도 complete · PASS).
+    #    **실제 JSON** 16 개 (collect → _read 경로) · 계획 collector True · 정상 = 판정이 난다 · 한 팔의 bare (또는
+    #    wetted) 만 미수렴 / 3필드 누락이면 HOLD (EVID).  상태는 complete 그대로 — 상태가 아니라 **증거**가 막는다.
+    _man48 = _stamp_pid(dict(_man22, component_plan=dict(_man22['component_plan'], collector=True),
+                             components=dict(_comps(), collector_geom={'status': 'complete'})))
+
+    def _write48(_d, mut=None):
+        for _k, _vals in (('SBE', base), ('DBE', [v * 1.12 for v in base])):
+            for _i, _v in enumerate(_vals):
+                _m = dict(_man48, origin_shift_um=list(expected_origins(_man48.get('vox_um', 0.15))[_i % 8]))
+                _cg = {'wetted_sigma_S_cm': 0.08, 'bare_sigma_S_cm': 0.05, 'R_geom_ohm_cm2': 1.2e-4,
+                       'wetted_cg_info': 0, 'wetted_unconverged': False, 'wetted_cg_resid': 1e-8,
+                       'bare_cg_info': 0, 'bare_unconverged': False, 'bare_cg_resid': 1e-8}
+                if mut and _k == 'DBE' and _i == 3:
+                    for _kk, _vv in mut.items():
+                        if _vv == '__pop__':
+                            _cg.pop(_kk, None)
+                        else:
+                            _cg[_kk] = _vv
+                with open(os.path.join(_d, f'p2_{_k}_sph_a{_i}.json'), 'w', encoding='utf-8') as _f:
+                    json.dump({'mpm_metrics': {'step3': {
+                        'sigma_e_eff_S_cm': _v, 'cg_info': 0, 'cg_resid': 1e-8, 'unconverged': False,
+                        'collector_geometric': _cg, 'manifest': _m}}}, _f)
+    with _tf22.TemporaryDirectory() as _d48:
+        _write48(_d48)
+        _v48 = verdict(collect(_d48)[1])
+        chk(f'㊽a 정상 증인 — collector 계획 · 보조 두 솔브 수렴이면 판정이 난다 ({_v48["decision"]}: '
+            f'{(_v48.get("reason") or "")[:90]})', _v48['decision'] in ('h0', 'h1', 'BOTH_REJECTED'))
+    for _lbl, _mut in (('bare 만 미수렴 (cg_info 1 · resid 0.35)',
+                        {'bare_cg_info': 1, 'bare_unconverged': True, 'bare_cg_resid': 0.3464101615137754}),
+                       ('wetted 만 미수렴 (cg_info 1 · resid 0.35)',
+                        {'wetted_cg_info': 1, 'wetted_unconverged': True, 'wetted_cg_resid': 0.3464101615137754}),
+                       ('wetted 잔차 누락', {'wetted_cg_resid': '__pop__'})):
+        with _tf22.TemporaryDirectory() as _d48:
+            _write48(_d48, mut=_mut)
+            _v48b = verdict(collect(_d48)[1])
+        chk(f'㊽b ★★ 한 팔의 {_lbl} → HOLD/EVID (collector_geom) ({_v48b["decision"]}/{_v48b.get("hold_code")})',
+            _v48b['decision'] == 'HOLD' and _v48b.get('hold_code') == 'EVID'
+            and 'collector_geom' in (_v48b.get('reason') or ''))
     #  ★★★ ㊷d/e — **선언 자체를 뒤집는 mutant** 를 잡는다.  ⓐ~ⓓ 는 선언에서 시험을
     #    생성하므로, 선언을 뒤집으면 그 필드가 **시험 대상에서 빠져** 조용히 초록이 된다
     #    (Codex 실측: `required=True→False` · `across_dir=True→False` 둘 다 126/126 PASS).

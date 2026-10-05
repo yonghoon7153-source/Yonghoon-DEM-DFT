@@ -16,6 +16,14 @@ PTFE · SE 등도 센다) 다.  전류는 σ_e > 0 인 셀만 나르므로 `old_
 열 이름은 이미 낸 JSON (kgy 10-05) 과 맞추려고 그대로 둔다.  수렴 정보 (`cg_info` · `resid` · `unconverged`) 를 싣고, 소비자 계약
 (cg_info == 0 ∧ unconverged False ∧ 0 ≤ resid ≤ 1e-6) 을 못 채우면 상태 = `UNCONVERGED` (SELF-85 — 옛 판은 미수렴 해도 `OK`).
 
+순위 요약의 동률 규약 (RGL-09 · Codex 10-05 — 옛 판은 double argsort 라 동률에 서로 다른 순위를 줬다):
+  · `spearman_old_new` = 평균 동률 순위 (scipy `rankdata` average) 의 Pearson.  정의 안 되면 (상수 · n < 2 · 비유한) None 이고
+    `spearman_status` 가 이유를 말한다.  `rank_ties` = 순위에 든 입자 수 · old/new 동률 값 수 · 묶음 수 (앞으로 검산할 자료).
+  · `top10pct_overlap` = |상위 k 옛 ∩ 상위 k 새| / k (k = 입자 수의 10 % 반올림 · 최소 1).  k 번째 값과 같은 값이 컷 안팎에
+    걸치면 집합이 정해지지 않으므로 None · `top10pct_status = boundary_tie` · `top10pct_boundary_ties` = 그 값의 수.
+  ⚠ 10-05 kgy 세 JSON (`docs/data/rint03_je_20261005/`) 은 옛 판 출력이라 동률 수가 없다 — 그 Spearman · top 10 % 를 이 판으로
+    다시 계산할 수 없다 (입자 벡터 미보존).
+
   python3 scripts/rint03_je_compare.py --selftest
   python3 scripts/rint03_je_compare.py GRID.npz [GRID2.npz …] [--json OUT.json]
 """
@@ -55,11 +63,41 @@ def masked_mean(jz, pid, mask, n_am):
 
 
 def _spearman(a, b):
-    ra = np.argsort(np.argsort(a)).astype(float)
-    rb = np.argsort(np.argsort(b)).astype(float)
-    if ra.std() == 0 or rb.std() == 0:
-        return float('nan')
-    return float(np.corrcoef(ra, rb)[0, 1])
+    """Spearman → `(rho | None, 상태)`.  ★ RGL-09 (Codex 10-05) — **평균 동률 순위** (`scipy.stats.rankdata(method=
+    'average')`) 의 Pearson 이다.  옛 판은 double argsort 라 동률에 서로 다른 순위를 줬다 ([1,1,2] vs [1,2,2] → 1.0 ·
+    참 0.5) · 상수 벡터도 막지 못했다 (전부 0 → 0.9999999999999999 · 참 미정의).  입자 전류의 0 · 동률은 합법 입력이다.
+    상태: 'ok' · 'too_few' (n < 2) · 'nonfinite_input' · 'constant_input' (어느 한 쪽 순위가 상수 = 정의 안 됨 → 값 None)."""
+    from scipy.stats import rankdata
+    a, b = np.asarray(a, np.float64), np.asarray(b, np.float64)
+    if a.size != b.size:
+        raise ValueError(f'_spearman: 길이가 다르다 ({a.size} ≠ {b.size})')
+    if a.size < 2:
+        return None, 'too_few'
+    if not (np.isfinite(a).all() and np.isfinite(b).all()):
+        return None, 'nonfinite_input'
+    ra, rb = rankdata(a, method='average'), rankdata(b, method='average')
+    if np.all(ra == ra[0]) or np.all(rb == rb[0]):
+        return None, 'constant_input'
+    da, db = ra - ra.mean(), rb - rb.mean()
+    return float(np.sum(da * db) / np.sqrt(np.sum(da * da) * np.sum(db * db))), 'ok'
+
+
+def _tie_counts(v):
+    """→ (동률에 든 값의 수, 동률 묶음 수) — 정확히 같은 값 (float ==).  출력에 남겨 순위 요약을 검산할 수 있게 (RGL-09)."""
+    _, c = np.unique(np.asarray(v, np.float64), return_counts=True)
+    return int(c[c > 1].sum()), int((c > 1).sum())
+
+
+def _top_k(v, idx, k):
+    """상위 k 개 입자 집합 → `(집합 | None, 경계 동률 수)`.  ★ RGL-09 규약: k 번째 값과 같은 값이 컷 **안팎에 걸치면**
+    상위 k 집합이 정해지지 않는다 → None (정렬 알고리즘 · 입자 번호로 임의로 고르지 않는다) · 경계 동률 수 = k 번째
+    값과 같은 값의 수.  걸치지 않으면 집합은 유일하고 경계 동률 수 = 0."""
+    vv = np.asarray(v, np.float64)[idx]
+    order = np.argsort(-vv, kind='stable')
+    kth = vv[order[k - 1]]
+    if k < vv.size and vv[order[k]] == kth:
+        return None, int((vv == kth).sum())
+    return set(idx[order[:k]].tolist()), 0
 
 
 def compare(res, sid, pid, sigma_of_sid, n_am):
@@ -81,8 +119,17 @@ def compare(res, sid, pid, sigma_of_sid, n_am):
     contaminated[np.unique(pid[carbon_with_pid])] = True
     k = max(1, int(round(0.1 * int(has.sum()))))
     idx = np.where(has)[0]
-    top_new = set(idx[np.argsort(-je_new[idx])[:k]])
-    top_old = set(idx[np.argsort(-je_old[idx])[:k]])
+    #  ★ RGL-09 — 순위 요약은 동률 규약을 명시하고 (평균 순위 · top 10 % 경계 동률 = None) 동률 수를 남긴다.
+    rho, rho_st = _spearman(je_old[idx], je_new[idx])
+    if idx.size == 0:
+        top_new = top_old = None
+        b_new = b_old = 0
+    else:
+        top_new, b_new = _top_k(je_new, idx, k)
+        top_old, b_old = _top_k(je_old, idx, k)
+    top_st = ('too_few' if idx.size == 0 else
+              'boundary_tie' if (top_new is None or top_old is None) else 'ok')
+    t_old, t_new = _tie_counts(je_old[idx]), _tie_counts(je_new[idx])
     r_ok = ratio[np.isfinite(ratio)]
     old_mass_non_am = float(jz[carbon_with_pid].sum() / jz[m_old].sum()) if jz[m_old].sum() > 0 else float('nan')
     return {
@@ -94,8 +141,13 @@ def compare(res, sid, pid, sigma_of_sid, n_am):
                                'p90': round(float(np.percentile(r_ok, 90)), 6) if r_ok.size else None,
                                'max': round(float(r_ok.max()), 6) if r_ok.size else None,
                                'n_gt_1p1': int((r_ok > 1.1).sum()), 'n_gt_2': int((r_ok > 2.0).sum())},
-        'spearman_old_new': round(_spearman(je_old[idx], je_new[idx]), 6) if idx.size > 1 else None,
-        'top10pct_overlap': round(len(top_new & top_old) / k, 6),
+        'spearman_old_new': None if rho is None else round(rho, 6),
+        'spearman_status': rho_st,
+        'rank_ties': {'n_ranked': int(idx.size), 'old_tied_values': t_old[0], 'old_tie_groups': t_old[1],
+                      'new_tied_values': t_new[0], 'new_tie_groups': t_new[1]},
+        'top10pct_overlap': (round(len(top_new & top_old) / k, 6) if top_st == 'ok' else None),
+        'top10pct_status': top_st,
+        'top10pct_boundary_ties': {'old': b_old, 'new': b_new},
         'je_def_module': S3.PER_PARTICLE_CURRENT_DEF,
     }
 
@@ -189,6 +241,61 @@ def selftest():
             S3.CG_MAXITER = mi
         chk('T6 미수렴 해는 OK 가 아니다 (status UNCONVERGED · cg_info > 0 · unconverged True)',
             r6.get('status') == 'UNCONVERGED' and (r6.get('cg_info') or 0) > 0 and r6.get('unconverged') is True, r6)
+    # T7–T11 (RGL-09 · Codex 10-05) — Spearman 은 **평균 동률 순위** (rankdata average) 의 Pearson 이다.  옛 double argsort
+    #   는 동률에 서로 다른 순위를 줘 [1,1,2] vs [1,2,2] → 1.0 (참 0.5) · 상수 벡터 → 0.9999999999999999 (참 미정의).
+    #   입자 전류의 0 · 동률은 합법 입력이다 (판에 안 닿은 AM = je 0 정확히).
+    def _rho(r):
+        return r[0] if isinstance(r, tuple) else r       # 옛 판은 float 만 돌려준다 (그래도 값으로 판정)
+    r7 = _spearman(np.array([1.0, 1.0, 2.0]), np.array([1.0, 2.0, 2.0]))
+    chk('T7 동률 반례 [1,1,2] vs [1,2,2] → 0.5 (평균 순위) · 상태 ok',
+        _rho(r7) is not None and abs(_rho(r7) - 0.5) < 1e-12 and isinstance(r7, tuple) and r7[1] == 'ok', r7)
+    r8 = [_spearman(np.zeros(5), np.zeros(5)), _spearman(np.zeros(5), np.arange(5.0)),
+          _spearman(np.array([3.0]), np.array([1.0])), _spearman(np.array([1.0, np.nan, 2.0]), np.arange(3.0))]
+    chk('T8 정의 안 되는 입력 = 값 None + 상태 (상수 · 한쪽 상수 · n<2 · 비유한) — 숫자를 지어내지 않는다',
+        all(isinstance(x, tuple) and x[0] is None for x in r8)
+        and [x[1] for x in r8] == ['constant_input', 'constant_input', 'too_few', 'nonfinite_input'], r8)
+    from scipy.stats import spearmanr as _sr                # 검증된 함수 = 오라클 (동률 많은 정수 표본)
+    _rng = np.random.default_rng(7)
+    _d9 = []
+    for _ in range(25):
+        _n = int(_rng.integers(5, 60))
+        _a, _b = _rng.integers(0, 4, _n).astype(float), _rng.integers(0, 4, _n).astype(float)
+        if np.ptp(_a) == 0 or np.ptp(_b) == 0:
+            continue
+        _d9.append(abs(_rho(_spearman(_a, _b)) - float(_sr(_a, _b)[0])))
+    _a9 = _rng.normal(size=40); _b9 = _a9 + _rng.normal(scale=0.5, size=40)    # 동률 없는 표본 = 옛 정의와 같아야
+    _old9 = float(np.corrcoef(np.argsort(np.argsort(_a9)), np.argsort(np.argsort(_b9)))[0, 1])
+    chk(f'T9 동률 많은 표본 {len(_d9)} 개에서 scipy.stats.spearmanr 와 1e-12 안 · 동률 없으면 옛 정의와 같은 값',
+        len(_d9) >= 20 and max(_d9) < 1e-12 and abs(_rho(_spearman(_a9, _b9)) - _old9) < 1e-12, max(_d9 or [0]))
+    # T10 top 10 % 경계 동률 — 판에 닿은 기둥 입자 1 개 + 떠 있는 AM 19 개 (je 0 정확히) → k=2 번째 값 0 이 컷 안팎에
+    #   걸친다.  규약: 집합이 정해지지 않으면 겹침 None · 상태 boundary_tie · 경계 동률 수 (임의 tie-break 로 숫자를 안 낸다).
+    sid10 = np.zeros((12, 12, 10), np.int8)
+    pid10 = np.full(sid10.shape, -1, np.int32)
+    sid10[0, 0, :] = 1
+    pid10[0, 0, :] = 0
+    _pos = [(x, y) for x in (2, 4, 6, 8, 10) for y in (2, 4, 6, 8, 10)][:19]
+    for _i, (_x, _y) in enumerate(_pos, start=1):
+        sid10[_x, _y, 5] = 1
+        pid10[_x, _y, 5] = _i
+    sig10 = np.array([0.0, 1.0])
+    res10 = S3.solve_sigma_z(sid10, sig10, 0.5, return_field=True, **kw)
+    out10 = compare(res10, sid10, pid10, sig10, 20)
+    chk('T10 top 10 % 경계 동률 → 겹침 None · 상태 boundary_tie · 경계 동률 수 19 (old · new)',
+        out10.get('top10pct_overlap') is None and out10.get('top10pct_status') == 'boundary_tie'
+        and out10.get('top10pct_boundary_ties') == {'old': 19, 'new': 19}, {k: out10.get(k) for k in
+        ('top10pct_overlap', 'top10pct_status', 'top10pct_boundary_ties')})
+    # T11 출력 — 동률 수 · 상태를 남기고 (앞으로 검산 가능) · bare NaN 토큰 없이 엄격 JSON 으로 직렬화된다
+    _rt = out10.get('rank_ties') or {}
+    try:
+        json.dumps(out10, allow_nan=False)
+        _strict = True
+    except ValueError:
+        _strict = False
+    chk('T11 출력에 rank_ties (old · new 동률 값 수 · 묶음 수 · n_ranked) · spearman_status · 엄격 JSON',
+        _rt.get('n_ranked') == 20 and _rt.get('old_tied_values') == 19 and _rt.get('new_tied_values') == 19
+        and _rt.get('old_tie_groups') == 1 and _rt.get('new_tie_groups') == 1
+        and out10.get('spearman_status') == 'ok' and _strict
+        and out4.get('top10pct_status') == 'ok' and out4.get('top10pct_boundary_ties') == {'old': 0, 'new': 0}, _rt)
     print(f'\n{ok} PASS · {len(fails)} FAIL')
     return 0 if not fails else 1
 

@@ -57,3 +57,10 @@ nohup sh -c "python3 -u scripts/rint03_je_compare.py $G1 --json ~/rint03_je_vgcf
 
 ⚠ 한정어: vox 0.4 격자의 값 (탄소 셀 폭 = vox → 오염 크기는 격자 의존) · 재풀이 σ_e (JSON `sigma_e_eff_S_cm`) 는 검산값이지 인용값이 아니다 (CL-24) ·
 `n_carbon_cells_with_am_pid` 는 이름과 달리 AM 번호를 단 비-AM 셀 **전부** (PTFE 포함 · 전류는 도체만 나른다).
+
+⚠ 순위 열 (RGL-09 · Codex 10-05): Spearman · top 10 % 는 위 blob (double argsort — 동률에 서로 다른 순위 · 상수 벡터 무방비 ·
+top 10 % 경계 동률 규약 없음) 의 출력이다.  세 JSON 에 동률 수 · 입자 벡터가 없어 고친 판 (평균 동률 순위 · 정의 안 되면 None ·
+경계 동률이면 None — 같은 스크립트 이후 판) 으로 다시 셀 수 없다 ⇒ vgcf4 · vgcf1 의 0.270 · 0.954 · 14 % · 91 % 는 **잠정** (틀렸다는
+판정이 아니라 동률 전제를 확인할 자료가 없다는 뜻).  fig 는 옛 = 새 벡터 (비 전부 1) 라 Spearman 1 은 동률 처리와 무관하다
+(비상수 벡터 가정) · top 10 % 100 % 는 경계 동률이 없다는 전제 (있으면 고친 판은 None).
+AM 마스크 결함 · 수정의 타당성은 이 통계에 의존하지 않는다 (Codex Q2).
