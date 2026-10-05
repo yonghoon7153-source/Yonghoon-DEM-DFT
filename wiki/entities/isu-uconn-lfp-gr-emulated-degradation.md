@@ -2,7 +2,7 @@
 title: ISU-UConn LFP/흑연 모사 열화 자료 + REIL 다목적 피팅 코드
 description: "전극 원판 지름 (LAM 모사) 과 리튬화 상태 (LLI 모사) 를 설계해 만든 LFP/흑연 11 셀의 반쪽 · 완전지 곡선 (CC BY 4.0) 과, 반쪽전지 곡선의 질량 배율 · 용량 오프셋을 GA/NSGA 로 맞추는 MIT 코드. 우리에게는 α·β 창 맞춤과 같은 계열의 방법을 실측 '설계 참값' 에 대 보는 외부 검증 후보"
 created: 2026-10-03
-updated: 2026-10-05
+updated: 2026-10-06
 type: entity
 tags: [degradation, tooling, research]
 sources: [raw/articles/2026-10-02-github-research-briefing.md, raw/repositories/2026-10-03-reil-uconn-moo-known-truth-table.md, raw/papers/li2026_half-cell-fitting-multiobjective-benchmark.md]
@@ -245,6 +245,9 @@ C1-core 기록과 같은 원문을 다시 읽은 것이고 그 기록 · 프로�
 - **독립 교차검토 (다른 Codex 세션 · 2026-10-05):** 같은 판정을 지지 (`PRIOR_CONDITIONAL_DOCUMENT_VERDICT_SUPPORTED_CORRECTIONS_NOT_YET_VERIFIED` —
   N1–N3 타당 · 새 P1 없음 · 부속 D 는 보지 않음). 반례 산술 (N1 `z_F = 1` 이 `m_P = 1 · d_P = d_N` 없이도 · N2 같은 CE 곱에 다른 잔존율) · 9 조합
   종합표 · 독립 검사 63 (이 컨테이너에서 다시 돌려 63/63). 묶음 `bms-balancing/reviews/prereview_reil_v2_annexC_crossreview_20261005/` · 상태 문서 §11.
+- **부속 D 재확인 + C6 결과 검토 (2026-10-06):** (A) 부속 D 수용 — RV2C-N1–N3 **종결** (p3 의 PE 탈리튬 / NE 리튬화는 기대 방향의 근거 ·
+  실제 기준곡선 확인은 P0). (B) C6 봉인 식별 수용 · 전체 종결은 국소 보충 둘 (C6-N1 충돌 예외 범위 · C6-N2 실행 원문 미보존 · 옵션 전달 근거)
+  대기. 묶음 `bms-balancing/reviews/prereview_reil_v2_annexD_c6_20261006/` · 보충 `bms-balancing/docs/REIL_C6_SUPPLEMENT_20261006.md` · 상태 문서 §13.
 
 ## 이 위키와의 관계
 
