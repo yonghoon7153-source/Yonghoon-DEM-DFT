@@ -1,0 +1,83 @@
+{
+  "input_zip": {
+    "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\REIL_V2_ANNEX_C_REVIEW_20261005.zip",
+    "bytes": 91704,
+    "sha256": "1febb9a273296adb2c3bc2bcdbe5105f544b341052eee2acfe1eadb0c9bac075",
+    "entries": 8,
+    "payload_verified": true
+  },
+  "fixed_commit": "4ad68af441cf00981c1b7e27bd71f5a1858ff70e",
+  "documents": [
+    {
+      "path": "bms-balancing/docs/REIL_V2_ANNEX_C_REREVIEW_REQUEST_20261005.md",
+      "bytes": 6266,
+      "sha256": "03f1c33fede89eebfa344a7c0c3a91cb9983f90b162f6131fe098902a78e4153",
+      "git_blob": "016e313c05a3af054f0adabae7f1c5baa4434ac0"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2_ANNEX_C.md",
+      "bytes": 12624,
+      "sha256": "c208822160597fa58df42d5c393be93417957fe17e9a6d2f93cbfff6f567ad8b",
+      "git_blob": "f47c1fc2cad5b8e8c2e692f6ee5b93a12d8ae547"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C1_CORE_SPEC_20261005.md",
+      "bytes": 16214,
+      "sha256": "d45c516cc21ed68809bbd10f9745b527e59dc56b784f7581bb46f727d264f4a5",
+      "git_blob": "4c6d20ad4819ae95f37b9745316047b6c9cd055c"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2.md",
+      "bytes": 27795,
+      "sha256": "74ccb30ff3667efb4f3842a63c6ebf21296a1137bb1165682631f6b5c005fd60",
+      "git_blob": "872ca88b3b5c57aebf295bd0109e95a830b3ae13"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2_ANNEX_A.md",
+      "bytes": 37308,
+      "sha256": "94b0892a4e7fc7a4dc916fa785d1029f269d61dec3c8826d08f83aa9ffeedcca",
+      "git_blob": "9f49d6061cf3c9e69ed35e3b00e5e0addafd8fd3"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2_ANNEX_B.md",
+      "bytes": 17210,
+      "sha256": "fe2b39b222c84b61a39a14c05047ca7ca86cbb2872925c58eca400c7de673f95",
+      "git_blob": "b25f9c4eb56d0cfe609b47c5d8463e9f17fac53b"
+    },
+    {
+      "path": "wiki/raw/papers/li2026_half-cell-fitting-multiobjective-benchmark.md",
+      "bytes": 68589,
+      "sha256": "5d17da15a3370bc2bc240b8c52bdbe7709cd82c6d5e3c761da777fd4645731bc",
+      "git_blob": "407dc311383a0e90a9b62e205886462584052a3d"
+    },
+    {
+      "path": "bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md",
+      "bytes": 13517,
+      "sha256": "86e0b753de924e02167526347cf3e0f37501f051d98cdff2c406f5bd50464ebd",
+      "git_blob": "eb6379d69362705354ab6c158249a33bb5ee6a82"
+    }
+  ],
+  "pdfs": [
+    {
+      "label": "main",
+      "path": "C:\\Users\\Administrator\\Desktop\\읽어야되는 논문\\가형 논문\\21. Benchmarking half-cell model fitting approaches for lithium-ion battery degradation diagnostics.pdf",
+      "bytes": 6696708,
+      "sha256": "8ccf029c45a3be1b60f8994e36a5dd3b204cf65288b700175d4ad275cb3343c1",
+      "pages": 28
+    },
+    {
+      "label": "supplement",
+      "path": "C:\\Users\\Administrator\\Desktop\\읽어야되는 논문\\가형 논문\\21. Sup) Benchmarking half-cell model fitting approaches for lithium-ion battery degradation diagnostics.pdf",
+      "bytes": 5511025,
+      "sha256": "5d25a800f7e2c32fd849eed972f0ba0a23b36d0999bcb065186e6aab156460c9",
+      "pages": 10
+    }
+  ],
+  "operations": "Read ZIP and PDF, hash, extract snapshot text and PDF text only; no submitted code execution/data workbook access.",
+  "packages": {
+    "pypdf": true,
+    "fitz": false,
+    "pypdfium2": true,
+    "pdfplumber": true
+  }
+}

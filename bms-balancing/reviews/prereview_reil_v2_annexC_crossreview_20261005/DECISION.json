@@ -1,0 +1,27 @@
+{
+  "schema": "independent_review_crosscheck/v1",
+  "date": "2026-10-05",
+  "fixed_commit": "4ad68af441cf00981c1b7e27bd71f5a1858ff70e",
+  "input_zip_sha256": "1febb9a273296adb2c3bc2bcdbe5105f544b341052eee2acfe1eadb0c9bac075",
+  "verdict": "PRIOR_CONDITIONAL_DOCUMENT_VERDICT_SUPPORTED_CORRECTIONS_NOT_YET_VERIFIED",
+  "C1_paper_side": "ACCEPTED_WITH_LIMITS",
+  "C1_actual_workbook_selection": "NOT_OBSERVED",
+  "C2_prior_closure": "UNCHANGED_NO_FULL_REAUDIT",
+  "new_P1_found_in_scope": false,
+  "findings": [
+    {"id": "RV2C-N1", "severity": "P2", "review_validity": "CONFIRMED", "correction_status": "NOT_VERIFIED_ORIGINAL_TEXT_REMAINS"},
+    {"id": "RV2C-N2", "severity": "P2", "review_validity": "CONFIRMED", "correction_status": "NOT_VERIFIED_ORIGINAL_TEXT_REMAINS"},
+    {"id": "RV2C-N3", "severity": "P2", "review_validity": "CONFIRMED", "correction_status": "NOT_VERIFIED_ORIGINAL_TEXT_REMAINS"}
+  ],
+  "execution_authorized": false,
+  "P0_executed": false,
+  "C6_executed": false,
+  "fitting_executed": false,
+  "COMSOL_executed": false,
+  "workbooks_opened": false,
+  "submitted_programs_executed": false,
+  "E3b_registered": false,
+  "original_files_modified": false,
+  "external_send_performed": false,
+  "independent_document_and_synthetic_checks": {"count": 63, "all_pass": true, "is_REIL_functional_validation": false}
+}

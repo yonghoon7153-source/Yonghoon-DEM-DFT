@@ -1,0 +1,46 @@
+{
+  "fixed_commit": "4ad68af441cf00981c1b7e27bd71f5a1858ff70e",
+  "files": [
+    {
+      "path": "bms-balancing/docs/REIL_V2_ANNEX_C_REREVIEW_REQUEST_20261005.md",
+      "sha": "016e313c05a3af054f0adabae7f1c5baa4434ac0",
+      "error": false
+    },
+    {
+      "path": "bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2_ANNEX_C.md",
+      "sha": "f47c1fc2cad5b8e8c2e692f6ee5b93a12d8ae547",
+      "error": false
+    },
+    {
+      "path": "bms-balancing/docs/REIL_C1_CORE_SPEC_20261005.md",
+      "sha": "4c6d20ad4819ae95f37b9745316047b6c9cd055c",
+      "error": false
+    },
+    {
+      "path": "bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2.md",
+      "sha": "872ca88b3b5c57aebf295bd0109e95a830b3ae13",
+      "error": false
+    },
+    {
+      "path": "bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2_ANNEX_A.md",
+      "sha": "9f49d6061cf3c9e69ed35e3b00e5e0addafd8fd3",
+      "error": false
+    },
+    {
+      "path": "bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2_ANNEX_B.md",
+      "sha": "b25f9c4eb56d0cfe609b47c5d8463e9f17fac53b",
+      "error": false
+    },
+    {
+      "path": "wiki/raw/papers/li2026_half-cell-fitting-multiobjective-benchmark.md",
+      "sha": "407dc311383a0e90a9b62e205886462584052a3d",
+      "error": false
+    },
+    {
+      "path": "bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md",
+      "sha": "eb6379d69362705354ab6c158249a33bb5ee6a82",
+      "error": false
+    }
+  ],
+  "method": "Read-only GitHub connector file fetch at the exact full commit; compare with independently hashed snapshot bytes."
+}

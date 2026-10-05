@@ -1,0 +1,455 @@
+{
+  "scope": "Document identities, paper-table transcription, synthetic algebra and proposed state table only",
+  "fixed_commit": "4ad68af441cf00981c1b7e27bd71f5a1858ff70e",
+  "prior_comparison": {
+    "fixed_commit": "e64f587bcd2b26876fcd005bae52aa18311d5b9b",
+    "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\reil_v2_annex_b_review_20261004\\RECEIVED_SNAPSHOT.json",
+    "sha256": "4280672597a904a07348a4d035b422799c7a7ddf9d1121292b6a45b3dd41a2bf"
+  },
+  "checks": [
+    {
+      "name": "fixed_commit",
+      "passed": true
+    },
+    {
+      "name": "remote_inventory",
+      "passed": true
+    },
+    {
+      "name": "blob_and_saved_remote_identity:bms-balancing/docs/REIL_V2_ANNEX_C_REREVIEW_REQUEST_20261005.md",
+      "passed": true,
+      "blob": "016e313c05a3af054f0adabae7f1c5baa4434ac0",
+      "sha256": "03f1c33fede89eebfa344a7c0c3a91cb9983f90b162f6131fe098902a78e4153"
+    },
+    {
+      "name": "blob_and_saved_remote_identity:bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2_ANNEX_C.md",
+      "passed": true,
+      "blob": "f47c1fc2cad5b8e8c2e692f6ee5b93a12d8ae547",
+      "sha256": "c208822160597fa58df42d5c393be93417957fe17e9a6d2f93cbfff6f567ad8b"
+    },
+    {
+      "name": "blob_and_saved_remote_identity:bms-balancing/docs/REIL_C1_CORE_SPEC_20261005.md",
+      "passed": true,
+      "blob": "4c6d20ad4819ae95f37b9745316047b6c9cd055c",
+      "sha256": "d45c516cc21ed68809bbd10f9745b527e59dc56b784f7581bb46f727d264f4a5"
+    },
+    {
+      "name": "blob_and_saved_remote_identity:bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2.md",
+      "passed": true,
+      "blob": "872ca88b3b5c57aebf295bd0109e95a830b3ae13",
+      "sha256": "74ccb30ff3667efb4f3842a63c6ebf21296a1137bb1165682631f6b5c005fd60"
+    },
+    {
+      "name": "blob_and_saved_remote_identity:bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2_ANNEX_A.md",
+      "passed": true,
+      "blob": "9f49d6061cf3c9e69ed35e3b00e5e0addafd8fd3",
+      "sha256": "94b0892a4e7fc7a4dc916fa785d1029f269d61dec3c8826d08f83aa9ffeedcca"
+    },
+    {
+      "name": "blob_and_saved_remote_identity:bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2_ANNEX_B.md",
+      "passed": true,
+      "blob": "b25f9c4eb56d0cfe609b47c5d8463e9f17fac53b",
+      "sha256": "fe2b39b222c84b61a39a14c05047ca7ca86cbb2872925c58eca400c7de673f95"
+    },
+    {
+      "name": "blob_and_saved_remote_identity:wiki/raw/papers/li2026_half-cell-fitting-multiobjective-benchmark.md",
+      "passed": true,
+      "blob": "407dc311383a0e90a9b62e205886462584052a3d",
+      "sha256": "5d17da15a3370bc2bc240b8c52bdbe7709cd82c6d5e3c761da777fd4645731bc"
+    },
+    {
+      "name": "blob_and_saved_remote_identity:bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md",
+      "passed": true,
+      "blob": "eb6379d69362705354ab6c158249a33bb5ee6a82",
+      "sha256": "86e0b753de924e02167526347cf3e0f37501f051d98cdff2c406f5bd50464ebd"
+    },
+    {
+      "name": "prior_bytes_unchanged:REIL_EXTERNAL_VALIDATION_PROTOCOL_v2.md",
+      "passed": true
+    },
+    {
+      "name": "prior_bytes_unchanged:REIL_EXTERNAL_VALIDATION_PROTOCOL_v2_ANNEX_A.md",
+      "passed": true
+    },
+    {
+      "name": "prior_bytes_unchanged:REIL_EXTERNAL_VALIDATION_PROTOCOL_v2_ANNEX_B.md",
+      "passed": true
+    },
+    {
+      "name": "sheet_row_unique:1",
+      "passed": true
+    },
+    {
+      "name": "sheet_row_unique:2",
+      "passed": true
+    },
+    {
+      "name": "sheet_row_unique:3",
+      "passed": true
+    },
+    {
+      "name": "sheet_row_unique:4",
+      "passed": true
+    },
+    {
+      "name": "sheet_row_unique:5",
+      "passed": true
+    },
+    {
+      "name": "sheet_row_unique:6",
+      "passed": true
+    },
+    {
+      "name": "sheet_row_unique:7",
+      "passed": true
+    },
+    {
+      "name": "sheet_row_unique:8",
+      "passed": true
+    },
+    {
+      "name": "sheet_row_unique:9",
+      "passed": true
+    },
+    {
+      "name": "sheet_row_unique:10",
+      "passed": true
+    },
+    {
+      "name": "sheet_row_unique:11",
+      "passed": true
+    },
+    {
+      "name": "sheet_row_unique:12",
+      "passed": true
+    },
+    {
+      "name": "sheet_row_unique:13",
+      "passed": true
+    },
+    {
+      "name": "sheet_row_unique:14",
+      "passed": true
+    },
+    {
+      "name": "sheet_row_unique:15",
+      "passed": true
+    },
+    {
+      "name": "sheet_row_unique:16",
+      "passed": true
+    },
+    {
+      "name": "sheet_row_unique:17",
+      "passed": true
+    },
+    {
+      "name": "sheet_row_unique:18",
+      "passed": true
+    },
+    {
+      "name": "sheet_row_unique:19",
+      "passed": true
+    },
+    {
+      "name": "19_document_rows_not_workbook_observation",
+      "passed": true
+    },
+    {
+      "name": "sheet_partition",
+      "passed": true,
+      "outside": [
+        {
+          "index": 12,
+          "name": "12-LFP 16-Gr Full-cell @ C_20"
+        },
+        {
+          "index": 13,
+          "name": "12-LFP 16-Gr SOC-10"
+        },
+        {
+          "index": 14,
+          "name": "12-LFP Half-cell @ C_20"
+        },
+        {
+          "index": 17,
+          "name": "12-Graphite Half-cell @ C_30"
+        },
+        {
+          "index": 18,
+          "name": "Half cell after FM"
+        },
+        {
+          "index": 19,
+          "name": "12-14 12-15"
+        }
+      ]
+    },
+    {
+      "name": "N3_counterexample_prose_differs_from_table",
+      "passed": true,
+      "erroneous_inclusion": [
+        15
+      ],
+      "omission": [
+        14
+      ]
+    },
+    {
+      "name": "11_nominal_rows",
+      "passed": true
+    },
+    {
+      "name": "nominal_vs_paper_Table1:0",
+      "passed": true,
+      "expected": [
+        "1",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "name": "nominal_vs_paper_Table1:1",
+      "passed": true,
+      "expected": [
+        "1",
+        "1",
+        "9/10"
+      ]
+    },
+    {
+      "name": "nominal_vs_paper_Table1:2",
+      "passed": true,
+      "expected": [
+        "1",
+        "1",
+        "4/5"
+      ]
+    },
+    {
+      "name": "nominal_vs_paper_Table1:3",
+      "passed": true,
+      "expected": [
+        "16/25",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "name": "nominal_vs_paper_Table1:4",
+      "passed": true,
+      "expected": [
+        "1",
+        "14/25",
+        "1"
+      ]
+    },
+    {
+      "name": "nominal_vs_paper_Table1:5",
+      "passed": true,
+      "expected": [
+        "16/25",
+        "1",
+        "16/25"
+      ]
+    },
+    {
+      "name": "nominal_vs_paper_Table1:6",
+      "passed": true,
+      "expected": [
+        "16/25",
+        "1",
+        "29/50"
+      ]
+    },
+    {
+      "name": "nominal_vs_paper_Table1:7",
+      "passed": true,
+      "expected": [
+        "1",
+        "14/25",
+        "9/10"
+      ]
+    },
+    {
+      "name": "nominal_vs_paper_Table1:8",
+      "passed": true,
+      "expected": [
+        "1",
+        "14/25",
+        "4/5"
+      ]
+    },
+    {
+      "name": "nominal_vs_paper_Table1:9",
+      "passed": true,
+      "expected": [
+        "16/25",
+        "14/25",
+        "29/50"
+      ]
+    },
+    {
+      "name": "nominal_vs_paper_Table1:10",
+      "passed": true,
+      "expected": [
+        "16/25",
+        "14/25",
+        "51/100"
+      ]
+    },
+    {
+      "name": "case3_G_exclusion_even_tau_005",
+      "passed": true,
+      "max_mP": "0.69",
+      "min_z": "0.95",
+      "meaning": "Frozen nominal vs G only, not empirical inventory"
+    },
+    {
+      "name": "N1_unit_fresh_not_requires_unit_mP_zero_delta",
+      "passed": true,
+      "mP": 1.05,
+      "delta_mAh": 0.15,
+      "q_mAh": 3,
+      "z_fresh": 1.0
+    },
+    {
+      "name": "N1_nonunit_fresh_changes_coordinate",
+      "passed": true,
+      "z": 0.8,
+      "z_fresh": 0.95,
+      "relative_remaining": 0.8421052631578947,
+      "difference": 0.042105263157894736,
+      "kind": "Synthetic algebra; not a measured cell"
+    },
+    {
+      "name": "N1_zero_degeneracy",
+      "passed": true,
+      "note": "An individual zero does not prove global equality of coordinate systems"
+    },
+    {
+      "name": "N2_CE_product_not_inventory:10",
+      "passed": true,
+      "product": 0.6561,
+      "remaining": 0.96
+    },
+    {
+      "name": "N2_CE_product_not_inventory:20",
+      "passed": true,
+      "product": 0.6561,
+      "remaining": 0.92
+    },
+    {
+      "name": "N2_product_can_hold_under_extra_coupling",
+      "passed": true,
+      "required_extra_model": "Each cycle charges the entire current inventory and loses fraction 1-CE"
+    },
+    {
+      "name": "N3_proposed_combiner:match/match",
+      "passed": true
+    },
+    {
+      "name": "N3_proposed_combiner:match/mismatch",
+      "passed": true
+    },
+    {
+      "name": "N3_proposed_combiner:match/unknown",
+      "passed": true
+    },
+    {
+      "name": "N3_proposed_combiner:mismatch/match",
+      "passed": true
+    },
+    {
+      "name": "N3_proposed_combiner:mismatch/mismatch",
+      "passed": true
+    },
+    {
+      "name": "N3_proposed_combiner:mismatch/unknown",
+      "passed": true
+    },
+    {
+      "name": "N3_proposed_combiner:unknown/match",
+      "passed": true
+    },
+    {
+      "name": "N3_proposed_combiner:unknown/mismatch",
+      "passed": true
+    },
+    {
+      "name": "N3_proposed_combiner:unknown/unknown",
+      "passed": true
+    }
+  ],
+  "check_count": 63,
+  "all_pass": true,
+  "ce_example": {
+    "CE_each": 0.9,
+    "cycles": 4,
+    "initial_inventory_mAh_equivalent": 100,
+    "product": 0.6561,
+    "scenarios": [
+      {
+        "charge_each_mAh": 10.0,
+        "lost_mAh_equivalent": 4.0,
+        "remaining": 0.96
+      },
+      {
+        "charge_each_mAh": 20.0,
+        "lost_mAh_equivalent": 8.0,
+        "remaining": 0.92
+      }
+    ]
+  },
+  "proposed_P0_summary_truth_table": [
+    {
+      "cycle": "match",
+      "direction": "match",
+      "result": "match"
+    },
+    {
+      "cycle": "match",
+      "direction": "mismatch",
+      "result": "mismatch"
+    },
+    {
+      "cycle": "match",
+      "direction": "unknown",
+      "result": "unknown"
+    },
+    {
+      "cycle": "mismatch",
+      "direction": "match",
+      "result": "mismatch"
+    },
+    {
+      "cycle": "mismatch",
+      "direction": "mismatch",
+      "result": "mismatch"
+    },
+    {
+      "cycle": "mismatch",
+      "direction": "unknown",
+      "result": "mismatch"
+    },
+    {
+      "cycle": "unknown",
+      "direction": "match",
+      "result": "unknown"
+    },
+    {
+      "cycle": "unknown",
+      "direction": "mismatch",
+      "result": "mismatch"
+    },
+    {
+      "cycle": "unknown",
+      "direction": "unknown",
+      "result": "unknown"
+    }
+  ],
+  "scientific_claims_automatically_proved": false,
+  "workbooks_opened": false,
+  "provided_programs_executed": false,
+  "execution_authorized": false
+}
