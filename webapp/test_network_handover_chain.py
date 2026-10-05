@@ -63,7 +63,9 @@ def main():
     chk(f'관통 · 정상 비관통 · 수치 실패 = done · done · failed ({got})',
         got == {'through': 'done', 'nonthrough': 'done', 'solve_failed': 'failed'})
     _fs = runs['solve_failed'][2]
-    chk(f'수치 실패는 정지 계약 단계에서 걸린다 ({_fs})', any('Network stop contract' in s for s in _fs))
+    #  ★ 10-05 WEB-03 Q1 — 생산자가 관통 풀이 실패를 채널 상태 failed 로 신고 → 망 솔버 단계의 내용 검증이 정지 계약보다 먼저 막는다
+    #    (옛: 채널 valid_null 이라 정지 계약 ③ 에서 걸렸다 — ③ 은 두 번째 방어로 남는다).
+    chk(f'수치 실패는 망 솔버 단계 (채널 failed → 내용 검증 · WEB-03 Q1) 에서 걸린다 ({_fs})', any(s.startswith('Network Solver') for s in _fs))
     _d3 = runs['solve_failed'][0]
     _attp = os.path.join(_d3, ps.ATTEMPT_FILE)                     # 파일을 직접 읽는다 (옛 코드에서도 같은 시험이 돈다)
     _att = json.load(open(_attp)) if os.path.exists(_attp) else {}
@@ -71,10 +73,11 @@ def main():
     _left = sorted(n for n in os.listdir(_d3) if n.startswith('network_conductivity'))
     _fm3 = json.load(open(os.path.join(_d3, 'full_metrics.json')))
     chk(f"수치 실패 (첫 실행) → 활성 세대 없음 ({_prov.get('provenance_state')!r}) · 망 JSON 없음 {_left} · full_metrics = 장부 그대로 · "
-        f"최근 시도 failed ({_att.get('solver_status')!r} · 단계 {_att.get('stage')!r})",
+        f"최근 시도 failed ({_att.get('solver_status')!r} · 단계 {_att.get('stage')!r} · 종류 {_att.get('failure_kind')!r})",
         _prov.get('solver_status') != 'success' and _prov.get('provenance_state') == 'missing' and not _left
         and _fm3 == json.loads(json.dumps(TP._bed_ledger('through')))
-        and _att.get('solver_status') == 'failed' and 'Network stop contract' in str(_att.get('stage')))
+        and _att.get('solver_status') == 'failed' and str(_att.get('stage')).startswith('Network Solver')
+        and _att.get('failure_kind') == 'solver' and _att.get('active_status') == 'none')
 
     print('② 실 τ 소비자')
     tau = {k: tf.case_row(v[0]) for k, v in runs.items()}

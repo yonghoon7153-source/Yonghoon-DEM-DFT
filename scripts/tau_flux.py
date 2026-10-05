@@ -19,14 +19,19 @@
 게이트 (먼저 걸린 것 하나만 — 순서 = 아래 표):
 | 순서 | 게이트 | 실패 시 |
 |---|---|---|
-| 0 | 그 모드의 망 결과 · 장부 (L_gap · L_mc · φ_mc) · calc_percolation 값이 있다 | `NOT_COMPUTED` (`missing_input`) |
-| 1 | G1 띠 = 솔버 기록 `boundary_rule` 이 L0 (안 A · 기록 없는 옛 산출물은 짐작하지 않는다 → `missing_input`) | `BAND_FALLBACK` |
-| 2 | G2 솔버 관통 (`percolating_fraction > 0`) == calc_percolation (`percolation_pct > 0`) — `sigma_full_status` 로 판정하지 않는다 (`TAU-22`) | `NOT_COMPUTED` (`percolation_disagree`) |
+| 0 | 그 모드의 망 결과 · 장부 (L_gap · L_mc · φ_mc) · calc_percolation 값이 있다 · 띠 규칙 기록이 있다 (안 A · 기록 없는 옛 산출물은 짐작하지 않는다) | `NOT_COMPUTED` (`missing_input`) |
+| 0b | ★ 공용 기술 검사 `ion_record_problem` (10-05 RGLR-01 · 02) — 상태 ↔ 값 (computed = σ 두 표현 유한 양수 · 관통 분율 (0, 1] · 두 표현 항등식 · valid_zero = RGL-02 의 증명된 비관통 조합만 · 그 밖 = 생산자 계약 밖) | `NOT_COMPUTED` (`invalid_input: 세부` · 생산자 not_computed 신고면 `solver_guard`) |
+| 1 | G1 띠 = 솔버 기록 `boundary_rule` 이 L0 | `BAND_FALLBACK` |
+| 2 | G2 솔버 관통 (`percolating_fraction > 0`) == calc_percolation (`percolation_pct > 0`) — 판정은 관통 분율로 한다 (`TAU-22` · 상태 ↔ 값 정합은 0b 가 먼저 본다) | `NOT_COMPUTED` (`percolation_disagree`) |
 | 3 | G4 온도 짝 — 그 모드의 σ₀ · T 기록이 있다 (없으면 `missing_input`) · 두 모드의 (σ₀, T) 가 같다 · 호출자가 σ₀ 의 T 를 주장하면 망 T 와 같다 | `NOT_COMPUTED` (`temperature_mismatch`) |
 | 4 | G3 비관통 (G1 · G2 통과 + 관통 성분 없음) | `NOT_PERCOLATING` — f = 0 · tau2 · tau 빈칸 (= ∞) |
-| 5 | 관통인데 σ 가 없거나 0 · 음수 · 비유한 (솔버 관문 · 경계 겹침 퇴화) | `NOT_COMPUTED` (`solver_guard`) |
+| 5 | 관통인데 σ 가 없거나 0 · 음수 · 비유한 (0b 뒤에는 도달하지 않는 방어) | `NOT_COMPUTED` (`solver_guard`) |
 | 6 | G5 f > φ (T < 1) | `MODEL_BELOW_CONTINUUM_BOUND` — **값 유지** + 표지 (빈칸으로 거르면 코퍼스를 T ≥ 1 쪽으로 선별한다) |
 G6 (협착 세대) = 메타 `ion_net_constriction_<m>` · 두 모드 모두 **물리 타깃 (실험 절대 대조) HOLD** — 값은 싣는다.
+상태 부류 (10-05 RGLR-01): `NOT_COMPUTED` = **기술적 실패** (입력 결손 · 무효 · 솔버 관문 · 온도 짝 · 관통 불일치 — 값 없음) ↔ `BAND_FALLBACK` ·
+`NOT_PERCOLATING` · `MODEL_BELOW_CONTINUUM_BOUND` = **등록된 과학적 HOLD** (입력은 0b 를 통과한 유효값 · 규칙대로 빈칸 또는 표지).
+⚠ 옛 판은 0b 가 없어 L1/L2 레코드가 G1 에서 바로 BAND_FALLBACK 로 돌아갔다 — computed 인데 σ_ratio None · NaN · −1 · 관통 분율 2 가 '과학적 HOLD'
+로 통과했고 (RGLR-01), σ_ratio 만 ×4 인 레코드는 tau2 ÷4 로 OK 였다 (RGLR-02).
 
 ⚠ `ion_net_basis_check_<m>` 는 **메타**다 (게이트 아님): 망 φ (`phi_se`, 4 자리 · 판 간격 상자 · 구 부피 합) 가 장부의
 φ_mc·L_mc/L_gap (= φ_구합) 와 같은지 본다 — 어긋나면 망과 장부가 다른 판 높이 · 상자 · SE 집합을 썼다는 뜻이다.
@@ -45,11 +50,22 @@ import sys
 MODES = ('hertz', 'physics')
 DUAL_KEY = {'hertz': 'hertzian', 'physics': 'physics'}
 STATUSES = ('OK', 'NOT_PERCOLATING', 'BAND_FALLBACK', 'MODEL_BELOW_CONTINUUM_BOUND', 'NOT_COMPUTED')
-REASONS = ('solver_guard', 'missing_input', 'temperature_mismatch', 'percolation_disagree')
+#: 사유 **코드** — 사유 칸은 코드 그대로이거나 'invalid_input: 세부' (세부를 다는 것은 invalid_input 하나 · 코드는 `reason_code`).
+#:   ★ 10-05 RGLR-01: invalid_input = 공용 기술 검사 (`ion_record_problem`) 가 생산자 계약 위반으로 본 레코드.
+REASONS = ('solver_guard', 'missing_input', 'temperature_mismatch', 'percolation_disagree', 'invalid_input')
+INVALID_INPUT = 'invalid_input'
 CONSTRICTION = {'maxwell': 'maxwell_halfspace', 'mikic': 'mikic_psi_divide'}
 BAND_RULES = ('L0', 'L1', 'L2')
 PHI_TOL = 5e-5 + 1e-9          # 망 φ 는 4 자리 반올림 (network_conductivity `round(phi_se, 4)`) — 반폭 + 부동소수 여유
 SHARED = ('ion_sigma0_mScm', 'ion_sigma0_T_C', 'phi_basis', 'L_basis')
+#: 생산자 (`network_conductivity.NO_THROUGH_REASON`) 의 증명된 비관통 사유 — 같은 값이어야 한다 (test_tau_flux L8 이 대조한다 · 무거운 생산자를
+#:   이 도우미에서 임포트하지 않으려고 값을 둔다 — `pipeline_service.NETWORK_NO_THROUGH_REASON` 과 같은 방식).
+NO_THROUGH_REASON = 'no_through_path'
+
+
+def reason_code(reason):
+    """사유 칸 → 사유 코드 ('invalid_input: σ_ratio None' → 'invalid_input' · '' → '')."""
+    return str(reason or '').split(':', 1)[0].strip()
 
 
 def _num(v):
@@ -63,6 +79,88 @@ def _num(v):
 def _pos(v):
     v = _num(v)
     return v if v is not None and v > 0 else None
+
+
+#  ── 공용 기술 검사 (10-05 RGLR-01 · 02 · Codex 재검증 §2 · §3 · 1저자 비준) ─────────────────────────────────────────────────────
+#  network 정지 계약 (`webapp/pipeline_service.network_stop_verdict` ③) 과 τ 인계 소비자 (`ion_columns`) 가 **이 함수 하나**를 쓴다 (규율 ① —
+#  옛 판은 정지 계약이 σ_dim 양수 · 관통 분율 > 0 만, 소비자가 σ_ratio 만 따로 보아 둘이 서로 다른 입력을 받았다).  과학적 게이트 앞에서 돈다.
+#
+#  ★ RGLR-02 — 두 σ 표현 항등식의 허용 (생산자 `network_conductivity.run_decomposition` 의 저장 정밀도에서 유도 · 새 물리 허용오차가 아니다):
+#    생산자는 **같은 반올림 전 값** q* (FULL 해의 σ_eff/σ_bulk) 에서
+#        q    = round(q*, 8)                           (`sigma_full`)
+#        σ_d  = round(q* × s₀ × 1000, 6)  [mS/cm]       (`sigma_full_mScm` · s₀ = `sigma_grain_S_cm` [S/cm] = 간선 σ 그대로)
+#    를 쓴다.  ⇒  |σ_d − 1000·s₀·q| ≤ |σ_d − 1000·s₀·q*| + 1000·s₀·|q* − q| ≤ 5e-7 + 1000·s₀·5e-9  (각 반올림 반폭) + 부동소수 여유.
+#    부동소수 여유 = 16·ε·(|σ_d| + 1000·s₀·|q|) — 생산자 곱 (q*·s₀)·1000 의 두 번 반올림 · numpy `round` 의 (×10ⁿ · rint · ÷10ⁿ) 구현 오차
+#    (|x| 의 수 ε) · 소비자 쪽 곱 1000·s₀·q 의 반올림을 덮는다 (ε = 2.22e-16 · 16 배는 넉넉한 상한 — 경계 5e-7 의 1e-9 배 수준).
+#    s₀ 는 **반올림 없이** 실린다 (`results['sigma_grain_S_cm'] = sigma_bulk_ion` = se_material.sigma_grain_S_cm(T, Ea) 그대로 · JSON 은 float repr
+#    왕복이라 비트 동일) — 25 °C 상수 3e-3 이든 Arrhenius 변환값이든 σ_d 를 만든 바로 그 수다 ⇒ s₀ 반올림 항은 없다 (그 키를 낸 유일한 커밋
+#    d66fd1448 (07-28 온도 축) 부터 반올림 없음 · 그 전 세대는 키가 없어 검산 불가 = invalid_input · σ_d 의 6 자리 식은 04-24 반입 때부터 그대로 —
+#    `git log -S` 로 확인).  ⚠ 소비자의 σ₀ 메타 (`ion_sigma0_mScm` = round(s₀·1000, 10)) 와
+#    웹앱 짝 σ₀ (`se_material.sigma_grain_context` = 3.0 × factor) 는 이 검산에 쓰지 않는다 — 생산자가 곱한 s₀ 와 다른 반올림을 가진다.
+#    두 τ 를 늘 같게 강제하지 않는다 (8 · 6 자리 반올림 차 · 기준 변환은 오차가 아니다 — Codex §3).
+SIGMA_RATIO_ROUND_HALF = 5e-9      # σ_ratio = round(·, 8) 의 반폭
+SIGMA_DIM_ROUND_HALF = 5e-7        # σ_dim [mS/cm] = round(·, 6) 의 반폭
+_ID_FP = 16 * sys.float_info.epsilon
+
+
+def sigma_identity_tol(sigma0_S_cm, sigma_ratio, sigma_dim):
+    """두 σ 표현 항등식 |σ_dim − 1000·s₀·σ_ratio| 의 허용 [mS/cm] (위 유도 · 생산자 저장 정밀도)."""
+    s0, q, sd = abs(float(sigma0_S_cm)), abs(float(sigma_ratio)), abs(float(sigma_dim))
+    return SIGMA_DIM_ROUND_HALF + 1000.0 * s0 * SIGMA_RATIO_ROUND_HALF + _ID_FP * (sd + 1000.0 * s0 * q)
+
+
+def ion_record_problem(rec):
+    """망 레코드 (모드 하나 · dual 의 'hertzian' 또는 'physics') 의 **기술적 입력 유효성** → None (유효) | (사유 코드, 세부).
+
+      computed     σ_ratio (`sigma_full`) · σ_dim (`sigma_full_mScm`) 둘 다 유한 양수 · 관통 분율 (0, 1] · s₀ (`sigma_grain_S_cm`) 유한 양수 ·
+                   두 표현 항등식 (`sigma_identity_tol`)
+      valid_zero   RGL-02 의 증명된 비관통 조합만 — 사유 no_through_path · σ_ratio · σ_dim None (F-12) · 관통 분율 0 · CF · constr 상태 valid_zero ·
+                   이온 채널 valid_zero  (정지 계약 ③ 과 같은 조합 — 'zero_value' 같은 다른 valid_zero 는 받지 않는다)
+      not_computed 생산자가 "관통인데 풀지 못함" 을 신고했다 → ('solver_guard', 사유)  — 기술적 실패
+      그 밖        (None · 키 없음 · 모르는 문자열 · 채널 어휘) → ('invalid_input', …)
+    띠 규칙 (L0 · L1 · L2) 과 **무관하게** 같은 판정이다 — L1/L2 라는 이유로 무효값 검사를 건너뛰지 않는다 (RGLR-01).  과학적 HOLD (띠 폴백 ·
+    비관통 · 연속체 하한) 의 허용은 그대로 — 이 검사를 통과한 유효 입력에서만 그 게이트로 간다."""
+    if not isinstance(rec, dict):
+        return INVALID_INPUT, f'망 레코드가 객체가 아니다 ({type(rec).__name__})'
+    st = rec.get('sigma_full_status')
+    q, sd, pf = rec.get('sigma_full'), rec.get('sigma_full_mScm'), rec.get('percolating_fraction')
+    if st == 'computed':
+        why = []
+        if _pos(q) is None:
+            why.append(f'σ_ratio (sigma_full) {q!r} — 유한 양수여야')
+        if _pos(sd) is None:
+            why.append(f'σ_dim (sigma_full_mScm) {sd!r} — 유한 양수여야')
+        pfn = _num(pf)
+        if pfn is None or not (0.0 < pfn <= 1.0):
+            why.append(f'관통 분율 {pf!r} — (0, 1] 밖')
+        s0 = _pos(rec.get('sigma_grain_S_cm'))
+        if s0 is None:
+            why.append(f'σ₀ (sigma_grain_S_cm) {rec.get("sigma_grain_S_cm")!r} — 없거나 양수가 아니어서 두 표현 항등식을 검산할 수 없다')
+        if why:
+            return INVALID_INPUT, 'computed 인데 ' + ' · '.join(why)
+        d, tol = abs(sd - 1000.0 * s0 * q), sigma_identity_tol(s0, q, sd)
+        if not d <= tol:
+            return INVALID_INPUT, (f'두 σ 표현 불일치 (RGLR-02): σ_dim {sd!r} mS/cm ≠ 1000·σ₀·σ_ratio = {1000.0 * s0 * q!r} '
+                                   f'(|차| {d:.6g} > 허용 {tol:.6g} — 저장 정밀도 8 · 6 자리 반올림 밖)')
+        return None
+    if st == 'valid_zero':
+        why = []
+        if rec.get('sigma_full_reason') != NO_THROUGH_REASON:
+            why.append(f'사유 {rec.get("sigma_full_reason")!r} ≠ {NO_THROUGH_REASON!r}')
+        if q is not None or sd is not None:
+            why.append(f'σ 숫자 필드가 None 이 아니다 (σ_ratio {q!r} · σ_dim {sd!r})')
+        if _num(pf) != 0.0:
+            why.append(f'관통 분율 {pf!r} (0 이어야)')
+        if not (rec.get('sigma_bulk_net_status') == rec.get('sigma_constr_net_status') == 'valid_zero'):
+            why.append(f'CF · constr 상태 ({rec.get("sigma_bulk_net_status")!r}, {rec.get("sigma_constr_net_status")!r})')
+        if rec.get('ionic_status') != 'valid_zero':
+            why.append(f'이온 채널 {rec.get("ionic_status")!r}')
+        if why:
+            return INVALID_INPUT, 'valid_zero 인데 증명된 비관통 (RGL-02) 조합이 아니다 — ' + ' · '.join(why)
+        return None
+    if st == 'not_computed':
+        return 'solver_guard', f'생산자 not_computed ({rec.get("sigma_full_reason")!r}) — 관통인데 σ 를 못 냈다'
+    return INVALID_INPUT, f'sigma_full_status={st!r} — 생산자 계약 밖 (computed · valid_zero · not_computed 만)'
 
 
 #  ── 소비처 공용 tau2 (TAU-03 · 결정 6 · 1저자 비준 10-04 밤 *"권고대로"*) ────────────────────────────────────────────────
@@ -188,6 +286,11 @@ def ion_columns(dual, ledger, perc_pct, sigma0_T_claim=None):
             continue
         if rule not in BAND_RULES:                       # 띠 규칙 기록 없음 (안 A 전) — 짐작하지 않는다
             out.update(fail('NOT_COMPUTED', 'missing_input'))
+            continue
+        prob = ion_record_problem(res)                   # 0b 공용 기술 검사 (RGLR-01 · 02) — 과학적 게이트 (G1 · G3 · G5) 앞 · 띠와 무관
+        if prob is not None:
+            code, detail = prob
+            out.update(fail('NOT_COMPUTED', code if code != INVALID_INPUT else f'{code}: {detail}'))
             continue
         if rule != 'L0':                                 # G1
             out.update(fail('BAND_FALLBACK'))

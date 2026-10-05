@@ -162,10 +162,26 @@ def _bed(name):
     """합성 침대 → (atoms, contacts, plate_z, box).  Codex 판정문 RGL-02 · test_tau_flux K1 · K3 와 같은 모양 (반경 1 · 상자 10 · 척도 1).
       through    — SE 21 개 사슬 z 0..20 (관통 · 띠 L0)
       nonthrough — 바닥 L0 띠에 외톨이 SE 셋 + 위쪽 사슬 z 10..20 (바닥과 끊김 · 띠 L0) = **정상 비관통**
-      band_l1    — 반경 0.4 · z 0..40 간격 0.5 (바닥 L0 띠 2 개 < 3 → 띠 폴백 L1 = 등록된 과학적 HOLD BAND_FALLBACK)"""
-    if name == 'through':
+      band_l1    — 반경 0.4 · z 0..40 간격 0.5 (바닥 L0 띠 2 개 < 3 → 띠 폴백 L1 = 등록된 과학적 HOLD BAND_FALLBACK)
+      ── 10-05 RGLR-01 · 02 · WEB-03 (Codex 재검증) 양성 · 음성 대조 ──
+      band_l2      — 반경 0.4 · z 0..10 간격 0.5 · 판 40 (L1 의 위 띠 85 % 가 비어 → 관측 z 범위 띠 L2 = BAND_FALLBACK)
+      through_weak — through 와 같은 사슬 · 접촉 면적 1e-5 (Hertz σ_dim ~1e-4 mS/cm — 6 자리 반올림이 상대 0.4 % 인 작은 σ)
+      se_am        — SE 사슬 (type 1 · x 0) + AM 사슬 (type 2 · x 5) 둘 다 관통 → 이온 · 전자 · 열 세 채널이 다 요청된다 ('1:SE,2:AM_P')
+      se_am_broken — se_am 에서 AM 사슬 한 접촉을 끊음 (전자망 비관통 = 유효 null)"""
+    if name in ('through', 'through_weak'):
         A = {i: dict(type=1, x=0., y=0., z=float(z), radius=1.) for i, z in enumerate(range(21), 1)}
+        C = [dict(id1=i, id2=i + 1, contact_area=(0.1 if name == 'through' else 1e-5), delta=0.05) for i in range(1, 21)]
+        return A, C, 20.0, 10.0
+    if name == 'band_l2':
+        A = {i: dict(type=1, x=0., y=0., z=0.5 * k, radius=0.4) for i, k in enumerate(range(21), 1)}
+        C = [dict(id1=i, id2=i + 1, contact_area=0.1 * 0.16, delta=0.05 * 0.4) for i in range(1, 21)]
+        return A, C, 40.0, 10.0
+    if name in ('se_am', 'se_am_broken'):
+        A = {i: dict(type=1, x=0., y=0., z=float(z), radius=1.) for i, z in enumerate(range(21), 1)}
+        A.update({100 + k: dict(type=2, x=5., y=0., z=float(z), radius=1.) for k, z in enumerate(range(21))})
         C = [dict(id1=i, id2=i + 1, contact_area=0.1, delta=0.05) for i in range(1, 21)]
+        C += [dict(id1=100 + k, id2=101 + k, contact_area=0.1, delta=0.05) for k in range(20)
+              if not (name == 'se_am_broken' and k == 10)]
         return A, C, 20.0, 10.0
     if name == 'nonthrough':
         A = {i: dict(type=1, x=3.0 * i, y=0., z=z, radius=1.) for i, z in ((1, 0.), (2, 1.), (3, 2.))}
@@ -191,7 +207,8 @@ def _bed_ledger(name):
     A, C, plate, box = _bed(name)
     with contextlib.redirect_stdout(io.StringIO()):
         cp = _dac.calc_percolation(A, C, [1], plate, box_x=box, box_y=box)
-    phi = sum(4.0 / 3.0 * math.pi * a['radius'] ** 3 for a in A.values()) / (box * box * plate)
+    #  φ_SE = SE (type 1) 구만 — se_am 침대의 AM 사슬 (type 2) 은 빼고 센다 (SE 만인 옛 침대는 값이 같다)
+    phi = sum(4.0 / 3.0 * math.pi * a['radius'] ** 3 for a in A.values() if a['type'] == 1) / (box * box * plate)
     return {'phi_se': phi, 'thickness_um': plate, 'thickness_mass_conserving_um': plate,
             'phi_se_mass_conserving': phi, 'percolation_pct': cp['percolation_pct'], 'porosity': 100.0 * (1.0 - phi)}
 
@@ -232,10 +249,13 @@ class _CLIRunner:
     """network_conductivity.py 를 **CLI 코드 그대로** 같은 프로세스에서 돈다 (runpy · argv = 받은 명령) — 파일 쓰기까지 실 생산자.
 
     mutate(out_dir) = 생산자가 쓴 **뒤**의 계약 변이 (반례) · break_solver = scipy `spsolve` 예외 주입 (관통인데 풀지 못함 = 수치 실패) ·
-    delegate = 다른 스크립트 (Stage E 등) 대역.  produced = 생산자가 쓴 네 JSON (변이 전 · 거부된 후보는 디스크에서 치워지므로 여기서 본다)."""
+    delegate = 다른 스크립트 (Stage E 등) 대역.  produced = 생산자가 쓴 네 JSON (변이 전 · 거부된 후보는 디스크에서 치워지므로 여기서 본다).
+    ★ 10-05 WEB-03 · RGLR-02 (선택 인자 — 옛 호출 그대로): break_channel = 그 채널 ('ionic' · 'electronic' · 'thermal') 의 FULL 풀이에서만
+    spsolve 예외 (호출 사슬의 run_decomposition `_mode` 로 가린다 — 채널마다 관통 풀이 실패) · extra_argv = CLI 에 덧붙일 인자 (예: --temp-c 60)."""
 
-    def __init__(self, mutate=None, break_solver=False, delegate=None):
+    def __init__(self, mutate=None, break_solver=False, delegate=None, break_channel=None, extra_argv=None):
         self.mutate, self.break_solver, self.delegate = mutate, break_solver, delegate
+        self.break_channel, self.extra_argv = break_channel, list(extra_argv or [])
         self.calls, self.produced = [], {}
 
     def __call__(self, cmd, **kw):
@@ -256,7 +276,23 @@ class _CLIRunner:
                 def _boom(*_a, **_k):
                     raise RuntimeError('주입: spsolve 실패 (수치 실패 시험)')
                 _spl.spsolve = _boom
-            sys.argv = [str(c) for c in cmd[1:]]
+            elif self.break_channel:
+                _ch = self.break_channel
+
+                def _boom_ch(*_a, _o=orig, **_k):
+                    fr, smode, rmode = sys._getframe(1), None, None
+                    while fr is not None:
+                        if fr.f_code.co_name == 'solve_network' and smode is None:
+                            smode = fr.f_locals.get('mode')
+                        if fr.f_code.co_name == 'run_decomposition':
+                            rmode = fr.f_locals.get('_mode')
+                            break
+                        fr = fr.f_back
+                    if rmode == _ch and smode == 'full':
+                        raise RuntimeError(f'주입: {_ch} FULL spsolve 실패 (채널 하나만)')
+                    return _o(*_a, **_k)
+                _spl.spsolve = _boom_ch
+            sys.argv = [str(c) for c in cmd[1:]] + [str(x) for x in self.extra_argv]
             with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
                 runpy.run_path(str(cmd[1]), run_name='__main__')
         except SystemExit as e:
@@ -304,9 +340,10 @@ def _fake_stage_e(cmd, **kw):
     return subprocess.CompletedProcess(cmd, 0, 'fake stage e', '')
 
 
-def _t13_t16_network_stop_real(webapp):
+def _t13_t20_network_real(webapp):
     """T13–T16 — Codex 10-05 (RGL-02 · 04 · 07 · 08) 반례를 **실 생산자 → 실 정지 helper (`_network_and_stage_e`) → 실 소비자
-    (`tau_flux` · `grade_engine` · 웹앱 retry 라우트)** 사슬로 옮긴 회귀.  손으로 만든 상태값은 Codex 의 정확한 수치 재현 (T16a) 에만 쓴다."""
+    (`tau_flux` · `grade_engine` · 웹앱 retry 라우트)** 사슬로 옮긴 회귀.  손으로 만든 상태값은 Codex 의 정확한 수치 재현 (T16a) 에만 쓴다.
+    T17–T20 — Codex 10-05 재검증 (RGLR-01 · 02 · WEB-03 Q1 · Q2) 반례를 같은 사슬로 (SELF-86 — mock 만으로 정지 계약을 시험하지 않는다)."""
     import copy
     if _SCRIPTS_DIR not in sys.path:
         sys.path.insert(0, _SCRIPTS_DIR)
@@ -393,8 +430,12 @@ def _t13_t16_network_stop_real(webapp):
         fm0 = open(os.path.join(d, 'full_metrics.json')).read()
         r = _CLIRunner(break_solver=True)
         _st, rid, st, failed = _run(d, a, c, r)
-        chk(f'T13f) ★ 수치 실패 (관통인데 풀지 못함 · spsolve 예외 주입) → failed · 실패 단계 = 정지 계약 ({st} {failed})',
-            st == 'failed' and any(STOP in f for f in failed))
+        #  ★ 10-05 WEB-03 Q1 — 생산자가 관통 풀이 실패를 채널 상태 failed 로 신고한다 → 망 솔버 단계의 내용 검증 (network_content_verdict) 이
+        #    정지 계약보다 **먼저** 막는다 (옛: 채널 valid_null 이라 정지 계약 ③ 에서 걸렸다 · ③ 은 이제 두 번째 방어 — T12c '③ physics σ not_computed').
+        _sst = next((s_ for s_ in _st if str(s_.get('step', '')).startswith('Network Solver')), {})
+        chk(f'T13f) ★ 수치 실패 (관통인데 풀지 못함 · spsolve 예외 주입) → failed · 실패 단계 = 망 솔버 내용 검증 (이온 채널 failed · WEB-03 Q1) '
+            f'({st} {failed})',
+            st == 'failed' and any(f.startswith('Network Solver') for f in failed) and 'ionic=fail' in str(_sst.get('stderr', '')))
         pd = (r.produced.get('network_conductivity_dual.json') or {})
         chk('T13g) ★ 생산자는 수치 실패를 비관통과 가른다 — not_computed · 사유 solve_failed · 관통 분율 > 0 · 전력 몫 사유가 "비관통" 이 아니다',
             all(isinstance(pd.get(m), dict) and pd[m].get('sigma_full_status') == 'not_computed'
@@ -670,6 +711,302 @@ def _t13_t16_network_stop_real(webapp):
         chk(f'T16c) ★ 두 모드 (σ₀, 온도) 짝이 다르면 승격하지 않는다 — 두 경로 failed · 활성 세대 없음 · full_metrics 그대로 · 후보 치움 {res}',
             all(v == ('failed', 'missing', True, True) for v in res.values()) and len(res) == 2)
     _guard('T16', t16)
+
+    # ══ T17–T20 — Codex 10-05 재검증 (RGLR-01 · 02 · WEB-03 Q1 · Q2) ════════════════════════════════════════════════════════════
+    _SIX = (*_NET_FOUR, ps.PROVENANCE_FILE, 'full_metrics.json')
+    BOTH, PHYS, HERTZ = ('hertzian', 'physics'), ('physics',), ('hertzian',)
+
+    def _hashes6(d):
+        """활성 세대 6 파일 (네 망 JSON · provenance · full_metrics) 의 SHA-256 — 있는 것만."""
+        return {n: _sha(os.path.join(d, n)) for n in _SIX if os.path.exists(os.path.join(d, n))}
+
+    def _scoped(fn, modes):
+        """fn(rec) → `_edit_net_records` 의 (rec, 이름, 모드) 모양 — modes 의 레코드만 (모드 파일 · legacy · dual 이 서로 맞게 함께 바뀐다)."""
+        return lambda rec, _n, m: fn(rec) if m in modes else None
+
+    def _rc(reason):
+        return str(reason or '').split(':', 1)[0].strip()
+
+    def _tau_on(produced, fn, modes, bed):
+        """생산자가 쓴 dual (변이 전) 에 같은 변이를 얹어 τ 소비자 (`tau_flux.ion_columns`) 가 내는 상태 — 거부된 후보는 디스크에서 치워진다."""
+        pd = copy.deepcopy(produced.get('network_conductivity_dual.json') or {})
+        for m in modes:
+            if isinstance(pd.get(m), dict):
+                fn(pd[m])
+        led = _bed_ledger(bed)
+        return _tf.ion_columns(pd, led, led['percolation_pct'])
+
+    CODEX = {'σ_ratio None': lambda r: r.update(sigma_full=None), 'σ_ratio NaN': lambda r: r.update(sigma_full=float('nan')),
+             'σ_ratio −1': lambda r: r.update(sigma_full=-1), '관통 분율 2': lambda r: r.update(percolating_fraction=2)}
+
+    # ── T17 (RGLR-01 · 02) — 공용 기술 검사가 과학적 HOLD (띠 폴백) 앞에서 무효 입력을 막고, 두 σ 표현 항등식을 본다 · 정지 경로 ──
+    def t17():
+        res_ = {}
+        for lbl, fn in CODEX.items():
+            for scope, modes in (('두 모드', BOTH), ('physics 만', PHYS)):
+                d, a, c = _case('band_l1')
+                fm0 = open(os.path.join(d, 'full_metrics.json')).read()
+                r = _CLIRunner(mutate=lambda o, _e=_scoped(fn, modes): _edit_net_records(o, _e))
+                _s, rid, st, failed = _run(d, a, c, r)
+                row = _tau_on(r.produced, fn, modes, 'band_l1')
+                tau_ok = all((row[f'ion_net_status_{t}'] == 'NOT_COMPUTED' and _rc(row[f'ion_net_status_reason_{t}']) == 'invalid_input')
+                             if m in modes else row[f'ion_net_status_{t}'] == 'BAND_FALLBACK'
+                             for m, t in (('hertzian', 'hertz'), ('physics', 'physics')))
+                res_[f'{lbl} · {scope}'] = (st, any(STOP in f for f in failed), ps.read_network_provenance(d).get('provenance_state'),
+                                            not any(os.path.exists(os.path.join(d, n)) for n in _NET_FOUR),
+                                            open(os.path.join(d, 'full_metrics.json')).read() == fm0, tau_ok)
+                shutil.rmtree(d, ignore_errors=True)
+        miss = {k: v for k, v in res_.items() if v != ('failed', True, 'missing', True, True, True)}
+        chk(f'T17a) ★ RGLR-01 Codex 반례 (실 띠 L1 침대 · 네 JSON 의 같은 필드를 함께) σ_ratio None · NaN · −1 · 관통 분율 2 × (두 모드 · physics 만) → '
+            f'정지 failed (정지 계약 · 게시 전 · 활성 세대 없음 · full_metrics 그대로) · τ 소비자 NOT_COMPUTED (invalid_input) · 안 바꾼 모드는 '
+            f'BAND_FALLBACK (옛: done · BAND_FALLBACK) {miss or ""}', not miss and len(res_) == 8)
+
+        pos = {}
+        for lbl, bed, rk, want in (('관통 L0', 'through', {}, 'OK'), ('띠 폴백 L1', 'band_l1', {}, 'BAND_FALLBACK'),
+                                   ('띠 폴백 L2', 'band_l2', {}, 'BAND_FALLBACK'), ('정상 비관통', 'nonthrough', {}, 'NOT_PERCOLATING'),
+                                   ('작은 σ (약한 접촉)', 'through_weak', {}, 'OK'),
+                                   ('온도 변환 σ₀ (--temp-c 60)', 'through', {'extra_argv': ['--temp-c', '60']}, 'OK')):
+            d, a, c = _case(bed)
+            _s, rid, st, failed = _run(d, a, c, _CLIRunner(**rk))
+            row = _tf.case_row(d)
+            dp = os.path.join(d, 'network_conductivity_dual.json')
+            dl = json.load(open(dp)) if os.path.exists(dp) else {}
+            pos[lbl] = (st, row['ion_net_status_hertz'], row['ion_net_status_physics'], want,
+                        (dl.get('hertzian') or {}).get('boundary_rule'), (dl.get('hertzian') or {}).get('sigma_full_mScm'),
+                        row.get('ion_sigma0_mScm'), row.get('ion_sigma0_T_C'))
+            shutil.rmtree(d, ignore_errors=True)
+        bad = {k: v for k, v in pos.items() if not (v[0] == 'done' and v[1] == v[2] == v[3])}
+        chk(f'T17b) 양성 대조 (실 생산자 · 정지 경로): L0 · 띠 L1 · L2 · 정상 비관통 · 작은 σ · 온도 변환 σ₀ → done · τ 상태 그대로 '
+            f'(기술 검사 과잉차단 없음) {bad or ""}', not bad and len(pos) == 6)
+        chk(f'T17b2) 양성 대조의 조건이 실제로 섰다 — 띠 규칙 L1 · L2 · 작은 σ (Hertz σ_dim < 1e-3 mS/cm) · 60 °C σ₀ = 14.355 mS/cm '
+            f'({[(k, v[4], v[5], v[6], v[7]) for k, v in pos.items()]})',
+            pos['띠 폴백 L1'][4] == 'L1' and pos['띠 폴백 L2'][4] == 'L2'
+            and isinstance(pos['작은 σ (약한 접촉)'][5], float) and 0 < pos['작은 σ (약한 접촉)'][5] < 1e-3
+            and pos['온도 변환 σ₀ (--temp-c 60)'][7] == 60.0 and abs((pos['온도 변환 σ₀ (--temp-c 60)'][6] or 0) - 14.3553018744) < 1e-6)
+
+        t2 = {'σ_ratio ×4 · 두 모드 (Codex ratio_times4)': (lambda r: r.update(sigma_full=r['sigma_full'] * 4), BOTH),
+              'σ_ratio ×4 · physics 만': (lambda r: r.update(sigma_full=r['sigma_full'] * 4), PHYS),
+              'σ_dim ×4 · 두 모드': (lambda r: r.update(sigma_full_mScm=r['sigma_full_mScm'] * 4), BOTH),
+              'σ_dim ×4 · Hertz 만': (lambda r: r.update(sigma_full_mScm=r['sigma_full_mScm'] * 4), HERTZ)}
+        res2 = {}
+        for lbl, (fn, modes) in t2.items():
+            d, a, c = _case('through')
+            fm0 = open(os.path.join(d, 'full_metrics.json')).read()
+            r = _CLIRunner(mutate=lambda o, _e=_scoped(fn, modes): _edit_net_records(o, _e))
+            _s, rid, st, failed = _run(d, a, c, r)
+            row = _tau_on(r.produced, fn, modes, 'through')
+            tau_ok = all((row[f'ion_net_status_{t}'] == 'NOT_COMPUTED' and _rc(row[f'ion_net_status_reason_{t}']) == 'invalid_input'
+                          and row[f'tau2_ion_{t}'] is None) if m in modes else row[f'ion_net_status_{t}'] == 'OK'
+                         for m, t in (('hertzian', 'hertz'), ('physics', 'physics')))
+            res2[lbl] = (st, any(STOP in f for f in failed), ps.read_network_provenance(d).get('provenance_state'),
+                         open(os.path.join(d, 'full_metrics.json')).read() == fm0, tau_ok)
+            shutil.rmtree(d, ignore_errors=True)
+        miss2 = {k: v for k, v in res2.items() if v != ('failed', True, 'missing', True, True)}
+        chk(f'T17c) ★ RGLR-02 두 σ 표현 항등식 (실 L0 침대) — σ_ratio 만 · σ_dim 만 ×4 (두 모드 · 한 모드) → 정지 failed (게시 전) · τ 소비자 '
+            f'바뀐 모드만 NOT_COMPUTED (invalid_input · tau2 빈칸 — 옛: tau2 ÷4 로 done) {miss2 or ""}', not miss2 and len(res2) == 4)
+
+        d, a, c = _case('through')
+        _s1, rid1, st1, _f1 = _run(d, a, c, _CLIRunner())
+        h1 = _hashes6(d)
+        _s2, rid2, st2, f2 = _run(d, a, c, _CLIRunner(mutate=lambda o: _edit_net_records(
+            o, _scoped(lambda r: r.update(sigma_full=r['sigma_full'] * 4), BOTH))))
+        h2, att = _hashes6(d), _attempt(d)
+        chk(f'T17d) ★ 재시도: 정상 세대 → σ_ratio ×4 후보 → failed · 옛 세대 6 파일 SHA-256 동일 · 활성 id 그대로 · 최근 시도 failed '
+            f'(승격 전 검사 거부) ({st1} → {st2} · {len(h1)} 파일 · {att.get("failure_kind")!r})',
+            st1 == 'done' and st2 == 'failed' and len(h1) == 6 and h1 == h2 and rid2 == rid1
+            and att.get('latest_attempt_status') == 'failed' and att.get('failure_kind') == 'candidate_rejected')
+        shutil.rmtree(d, ignore_errors=True)
+    _guard('T17', t17)
+
+    # ── T18 (WEB-03 Q1) — 일반 경로 (Stage E 앞) 도 요청된 채널의 관통 풀이 실패를 거부한다 · 비관통 · 상 부재는 유효 null ──────────
+    def t18():
+        se_calls = []
+
+        def _spy_stage_e(cmd, **kw):
+            se_calls.append(list(map(str, cmd)))
+            return _fake_stage_e(cmd, **kw)
+        neg = {}
+        for lbl, bed, tm, rk, ch in (('이온 (관통 SE 망 FULL 풀이 실패)', 'through', '1:SE', {'break_channel': 'ionic'}, 'ionic'),
+                                     ('열 (전 접촉 망 FULL 풀이 실패)', 'through', '1:SE', {'break_channel': 'thermal'}, 'thermal'),
+                                     ('전자 (관통 AM 망 FULL 풀이 실패)', 'se_am', '1:SE,2:AM_P', {'break_channel': 'electronic'}, 'electronic'),
+                                     ('전 채널 (spsolve 전부 · Codex solver_failed_general)', 'through', '1:SE', {'break_solver': True}, 'ionic')):
+            d, a, c = _case(bed)
+            fm0 = open(os.path.join(d, 'full_metrics.json')).read()
+            n0 = len(se_calls)
+            stages, rid = webapp._network_and_stage_e(d, _SCRIPTS_DIR, a, c, tm, 1, [], runner=_CLIRunner(delegate=_spy_stage_e, **rk),
+                                                      stop_before_stage_e=False)
+            st, failed = ps.summarize(stages)
+            nst = next((s_ for s_ in stages if str(s_.get('step', '')).startswith('Network Solver')), {})
+            att = _attempt(d)
+            neg[lbl] = (st, len(se_calls) - n0, any(str(f.get('step', '')).startswith('Network Solver') for f in failed),
+                        f'{ch}=fail' in str(nst.get('stderr', '')), ps.read_network_provenance(d).get('provenance_state'),
+                        not any(os.path.exists(os.path.join(d, n)) for n in _NET_FOUR),
+                        open(os.path.join(d, 'full_metrics.json')).read() == fm0,
+                        att.get('latest_attempt_status'), att.get('failure_kind'), rid)
+            shutil.rmtree(d, ignore_errors=True)
+        miss = {k: v for k, v in neg.items() if v != ('failed', 0, True, True, 'missing', True, True, 'failed', 'solver', None)}
+        chk(f'T18a) ★ WEB-03 Q1 일반 경로: 요청된 채널 (이온 · 전자 · 열) 의 관통 풀이 실패 → network 단계 failed (채널 failed → 내용 검증) · '
+            f'Stage E 안 돎 · 필수 단계 success 없음 · 활성 세대 없음 · full_metrics 그대로 · 최근 시도 failed (솔버) (옛: done) {miss or ""}',
+            not miss and len(neg) == 4)
+        pos = {}
+        for lbl, bed, tm in (('SE 관통 · 전자 상 부재 (not_applicable)', 'through', '1:SE'), ('정상 비관통 (이온 valid_zero · 열 valid_null)', 'nonthrough', '1:SE'),
+                             ('AM 비관통 (전자 valid_null)', 'se_am_broken', '1:SE,2:AM_P'), ('SE · AM 관통 (세 채널 computed)', 'se_am', '1:SE,2:AM_P')):
+            d, a, c = _case(bed)
+            n0 = len(se_calls)
+            stages, rid = webapp._network_and_stage_e(d, _SCRIPTS_DIR, a, c, tm, 1, [], runner=_CLIRunner(delegate=_spy_stage_e),
+                                                      stop_before_stage_e=False)
+            st, failed = ps.summarize(stages)
+            leg = json.load(open(os.path.join(d, 'network_conductivity.json'))) if os.path.exists(os.path.join(d, 'network_conductivity.json')) else {}
+            pos[lbl] = (st, len(se_calls) - n0, leg.get('ionic_status'), leg.get('electronic_status'), leg.get('thermal_status'))
+            shutil.rmtree(d, ignore_errors=True)
+        badp = {k: v for k, v in pos.items() if not (v[0] == 'done' and v[1] == 1)}
+        chk(f'T18b) 양성 대조 (일반 경로): 비관통 · 상 부재는 유효 null → done · Stage E 1 회 {pos if badp else ""}', not badp and len(pos) == 4)
+    _guard('T18', t18)
+
+    # ── T19 (WEB-03 Q2a) — 게시 중 동기 예외 → 옛 세대 6 파일 그대로 (섞인 세대 없음) · 첫 실행이면 활성 세대 없음 · 최근 시도 failed ──────
+    def _inject(names):
+        orig = ps.atomic_write_json
+
+        def _f(path, *a, **k):
+            if os.path.basename(path) in names:
+                raise OSError(f'주입: {os.path.basename(path)} 쓰기 실패 (게시 중 예외 시험)')
+            return orig(path, *a, **k)
+        return orig, _f
+
+    def _run_inject(d, a, c, names, stop=True, runner=None):
+        orig, f = _inject(names)
+        ps.atomic_write_json = f
+        try:
+            stages, rid = webapp._network_and_stage_e(d, _SCRIPTS_DIR, a, c, '1:SE', 1, [], runner=runner or _CLIRunner(delegate=_fake_stage_e),
+                                                      stop_before_stage_e=stop)
+            st, failed = ps.summarize(stages)
+            return st, [s_.get('step', '') for s_ in failed], rid, None, stages
+        except Exception as e:                                       # noqa: BLE001 — 옛 코드: 예외가 그대로 올라왔다
+            return 'EXCEPTION', [], None, f'{type(e).__name__}: {e}', []
+        finally:
+            ps.atomic_write_json = orig
+
+    def t19():
+        PUB = 'Network publication'
+        res_ = {}
+        for lbl, names, stop in (('full_metrics 쓰기 실패 · 정지 경로 (Codex write_failure_after_stamp)', {'full_metrics.json'}, True),
+                                 ('full_metrics 쓰기 실패 · 일반 경로', {'full_metrics.json'}, False),
+                                 ('provenance 도장 쓰기 실패', {ps.PROVENANCE_FILE}, True)):
+            d, a, c = _case('through')
+            se_calls = []
+
+            def _spy(cmd, _c=se_calls, **kw):
+                _c.append(1)
+                return _fake_stage_e(cmd, **kw)
+            _s1, rid1, st1, _f1 = _run(d, a, c, _CLIRunner(delegate=_spy), stop=stop)
+            h1, n_se1 = _hashes6(d), len(se_calls)
+            st2, f2, rid2, err, _stg = _run_inject(d, a, c, names, stop=stop, runner=_CLIRunner(delegate=_spy))
+            h2, att = _hashes6(d), _attempt(d)
+            res_[lbl] = (st1, st2, err, len(h1) == 6 and h1 == h2, rid2 == rid1, any(f.startswith(PUB) for f in f2),
+                         len(se_calls) == n_se1, att.get('latest_attempt_status'), att.get('failure_kind'), 'OSError' in str(att.get('reason')),
+                         att.get('active_network_run_id') == rid1, att.get('previous_generation_kept'))
+            shutil.rmtree(d, ignore_errors=True)
+        miss = {k: v for k, v in res_.items()
+                if v != ('done', 'failed', None, True, True, True, True, 'failed', 'publish_exception', True, True, True)}
+        chk(f'T19a) ★ WEB-03 Q2 게시 중 동기 예외 (정상 세대 뒤 · full_metrics · provenance 쓰기에 OSError) → 예외로 새지 않고 failed · '
+            f'옛 세대 6 파일 SHA-256 동일 (섞인 세대 없음 — 옛: 새 provenance + 옛 full_metrics) · 활성 id 그대로 · Stage E 안 돎 · 최근 시도 failed '
+            f'(publish_exception · 예외 종류 · 활성 세대 유지) {miss or ""}', not miss and len(res_) == 3)
+
+        d, a, c = _case('through')
+        _s1, rid1, st1, _f1 = _run(d, a, c, _CLIRunner())
+        h1 = _hashes6(d)
+        st2, f2, rid2, err, _stg = _run_inject(d, a, c, {ps.ATTEMPT_FILE})
+        h2 = _hashes6(d)
+        chk(f'T19b) 게시의 마지막 쓰기 (최근 시도 success 기록) 가 실패해도 되돌린다 — failed · 옛 세대 6 파일 동일 (실패 기록 자체를 못 쓰면 그 사실은 '
+            f'단계 로그에만 남는다) ({st1} → {st2} · {err})',
+            st1 == 'done' and st2 == 'failed' and err is None and len(h1) == 6 and h1 == h2 and rid2 == rid1
+            and any(f.startswith(PUB) for f in f2))
+        shutil.rmtree(d, ignore_errors=True)
+
+        d, a, c = _case('through')
+        fm0 = open(os.path.join(d, 'full_metrics.json')).read()
+        st2, f2, rid2, err, _stg = _run_inject(d, a, c, {'full_metrics.json'})
+        prov, att = ps.read_network_provenance(d), _attempt(d)
+        chk(f'T19c) ★ 첫 실행의 게시 중 예외 → failed · 활성 세대 없음 (도장 · 망 JSON 없음) · full_metrics 그대로 · 최근 시도 failed '
+            f'(publish_exception · active_status none · previous_generation_kept False) ({st2} · {prov.get("provenance_state")} · {err})',
+            st2 == 'failed' and err is None and rid2 is None and prov.get('provenance_state') == 'missing'
+            and not any(os.path.exists(os.path.join(d, n)) for n in _NET_FOUR)
+            and open(os.path.join(d, 'full_metrics.json')).read() == fm0
+            and att.get('latest_attempt_status') == 'failed' and att.get('failure_kind') == 'publish_exception'
+            and att.get('active_status') == 'none' and att.get('previous_generation_kept') is False
+            and not [n for n in os.listdir(d) if n.startswith('.publish_backup_')])
+        shutil.rmtree(d, ignore_errors=True)
+    _guard('T19', t19)
+
+    # ── T20 (WEB-03 Q2b) — 한 실패 어휘: 활성 (마지막 유효) 세대 ↔ 최근 시도.  세 실패 종류가 같은 모양으로 남는다 ─────────────────────
+    def _listed(d):
+        """케이스 목록 (`list_cases`) 이 그 결과 폴더에 대해 싣는 망 상태 칸 — 임시 업로드 폴더 (meta.json 하나) 로 부른다."""
+        up, cid = tempfile.mkdtemp(prefix='t20u_'), os.path.basename(d)
+        os.makedirs(os.path.join(up, cid))
+        with open(os.path.join(up, cid, 'meta.json'), 'w') as f:
+            json.dump({'name': cid, 'mode': 'standard', 'status': 'done'}, f)
+        prev = {k: webapp.app.config.get(k) for k in ('UPLOAD_FOLDER', 'RESULTS_FOLDER')}
+        webapp.app.config['UPLOAD_FOLDER'], webapp.app.config['RESULTS_FOLDER'] = up, os.path.dirname(d)
+        try:
+            row = next((c for c in webapp.list_cases() if c.get('id') == cid), {})
+        finally:
+            for k, v in prev.items():
+                if v is None:
+                    webapp.app.config.pop(k, None)
+                else:
+                    webapp.app.config[k] = v
+            shutil.rmtree(up, ignore_errors=True)
+        return {k: row.get(k) for k in ('network_solver_status', 'network_active_status', 'network_latest_attempt_status',
+                                       'network_latest_attempt_failure_kind', 'network_stale_after_failed_attempt')}
+
+    def t20():
+        kinds = {'solver': dict(rk={'break_solver': True}), 'candidate_rejected': dict(rk={'mutate': _l9}),
+                 'publish_exception': dict(inject={'full_metrics.json'})}
+        res_, gens, lists = {}, {}, {}
+        for kind, spec in kinds.items():
+            d, a, c = _case('through')
+            _s1, rid1, st1, _f1 = _run(d, a, c, _CLIRunner())
+            h1 = _hashes6(d)
+            if spec.get('inject'):
+                st2, _f2, rid2, err, _stg = _run_inject(d, a, c, spec['inject'])
+            else:
+                _s2, rid2, st2, _f2 = _run(d, a, c, _CLIRunner(**spec['rk']))
+            h2, att = _hashes6(d), _attempt(d)
+            gen = webapp._network_generation(d)
+            gens[kind] = gen
+            lists[kind] = _listed(d)
+            res_[kind] = (st1, st2, len(h1) == 6 and h1 == h2, att.get('latest_attempt_status'), att.get('solver_status'),
+                          att.get('failure_kind'), att.get('active_network_run_id') == rid1, att.get('active_status'),
+                          att.get('previous_generation_kept'), att.get('network_attempt_run_id') not in (None, rid1),
+                          bool(att.get('input_digests')), bool(att.get('stage')), bool(att.get('reason')))
+            shutil.rmtree(d, ignore_errors=True)
+        miss = {k: v for k, v in res_.items()
+                if v != ('done', 'failed', True, 'failed', 'failed', k, True, 'success', True, True, True, True, True)}
+        chk(f'T20a) ★ WEB-03 Q2 한 실패 어휘 — 솔버 실패 · 승격 전 검사 거부 · 게시 중 예외 셋 다: 활성 세대 6 파일 SHA-256 그대로 (★ 솔버 실패도 '
+            f'full_metrics 를 건드리지 않는다 — 옛: 활성 파일에 network_solver_status=failed 를 썼다) · 최근 시도 = latest_attempt_status failed '
+            f'(+ 옛 키 solver_status) · failure_kind · 활성 세대 id · active_status success · previous_generation_kept · 시도 id · 입력 digest · 단계 · 사유 '
+            f'{miss or ""}', not miss and len(res_) == 3)
+        gbad = {k: (g.get('active_status'), g.get('latest_attempt_status'), g.get('failure_kind'), g.get('stale'))
+                for k, g in gens.items() if not (g.get('active_status') == 'success' and g.get('latest_attempt_status') == 'failed'
+                                                 and g.get('failure_kind') == k and g.get('stale') is True)}
+        chk(f'T20b) 웹앱 `_network_generation` = 같은 어휘 (active_status · latest_attempt_status · failure_kind · stale) — 소비자가 추측하지 않는다 '
+            f'{gbad or ""}', not gbad and len(gens) == 3)
+        lbad = {k: v for k, v in lists.items()
+                if v != {'network_solver_status': 'success', 'network_active_status': 'success', 'network_latest_attempt_status': 'failed',
+                         'network_latest_attempt_failure_kind': k, 'network_stale_after_failed_attempt': True}}
+        chk(f'T20d) 케이스 목록 (`list_cases`) — network_solver_status 는 활성 세대 (success 그대로 · 실패 종류와 무관) · 최근 시도는 다른 이름의 칸 '
+            f'(network_latest_attempt_status · _failure_kind · network_stale_after_failed_attempt · network_active_status) {lbad or ""}',
+            not lbad and len(lists) == 3)
+        d, a, c = _case('through')
+        _run(d, a, c, _CLIRunner())
+        _run(d, a, c, _CLIRunner(mutate=_l9))
+        _s3, rid3, st3, _f3 = _run(d, a, c, _CLIRunner())
+        g3, att3 = webapp._network_generation(d), _attempt(d)
+        chk(f'T20c) 실패 뒤 정상 재계산 → 활성 = 그 실행 · 최근 시도 success · stale False ({st3} · {g3.get("latest_attempt_status")} · {g3.get("stale")})',
+            st3 == 'done' and g3.get('active_run_id') == rid3 and g3.get('latest_attempt_status') == 'success' and g3.get('stale') is False
+            and att3.get('failure_kind') == '' and att3.get('active_network_run_id') == rid3)
+        shutil.rmtree(d, ignore_errors=True)
+    _guard('T20', t20)
 
 
 def main():
@@ -1604,6 +1941,36 @@ def main():
         _g12g = (_vg(res_dir, _og.get('network_run_id'))[0], _vg(res_dir, 'OTHER-RUN')[0], _vg(res_dir, None)[0]) if _vg else None
         chk(f'T12g) ★ ② 도장 계약: 같은 산출물이라도 이번 run_id 가 아니면 (다른 id · None) 거부 {_g12g}',
             _g12g == (True, False, False))
+        #  T12h (10-05 WEB-03 Q2a · 배치 짝) — run_pipeline(stop_after='network') 에서 승격 (게시) 중 full_metrics 쓰기가 예외 → 되돌린 뒤 status failed
+        #    (예외로 새지 않는다) · 배치 (`lhs_webapp_batch`) 상태식 `status or ('done' if success else 'failed')` = failed (실패 시도를 success 로 분류하지 않는다).
+        #    주입은 network solver 가 돈 **뒤**의 full_metrics 쓰기만 (접촉 · 피복 단계 쓰기는 그대로) = 게시의 그 쓰기.
+        shutil.rmtree(res_dir, ignore_errors=True)
+        _r12h, _armed12h = make_net_runner(), {'on': False}
+
+        def _arm12h(cmd, **kw):
+            _o = _r12h(cmd, **kw)
+            if len(cmd) > 1 and os.path.basename(str(cmd[1])) == 'network_conductivity.py':
+                _armed12h['on'] = True
+            return _o
+        _arm12h.calls = _r12h.calls
+        _aw12h0 = ps.atomic_write_json
+
+        def _aw12h(path, *a, **k):
+            if _armed12h['on'] and os.path.basename(path) == 'full_metrics.json':
+                raise OSError('주입: 게시 중 full_metrics 쓰기 실패 (배치 짝)')
+            return _aw12h0(path, *a, **k)
+        ps._RUNNER, ps.atomic_write_json = _arm12h, _aw12h
+        try:
+            _o12h, _e12h = webapp.run_pipeline('case1', *_bi, 1000, figures=False, auto_db=False, stop_after='network'), None
+        except Exception as _e:                                     # noqa: BLE001 — 옛 코드: 예외가 그대로 올라왔다
+            _o12h, _e12h = {}, f'{type(_e).__name__}: {_e}'
+        finally:
+            ps.atomic_write_json = _aw12h0
+        _b12h = _o12h.get('status') or ('done' if _o12h.get('success') else 'failed')
+        chk(f'T12h) ★ WEB-03 Q2 배치 짝: run_pipeline(stop_after=network) 의 게시 중 예외 → status failed (예외 없음) · 실패 단계 = 게시 · '
+            f'배치 상태식 = failed ({_o12h.get("status")!r} · {_b12h} · {_e12h})',
+            _e12h is None and _o12h.get('status') == 'failed' and _b12h == 'failed'
+            and any('Network publication' in str(x) for x in (_o12h.get('failed_stages') or [])))
     finally:
         ps._RUNNER = prev_runner
         for k, v in prev_env.items():
@@ -1690,6 +2057,7 @@ def main():
         res = os.path.join(tmp, 'r')
         _seed_case(res, sigma=1.0)                       # 옛 성공 세대 + OLDRUN 도장
         old_sha = _sha(os.path.join(res, 'network_conductivity.json'))
+        fm_before = open(os.path.join(res, 'full_metrics.json'), 'rb').read()
 
         class TouchOnly:
             """내용은 안 쓰고 **mtime 만** 앞으로 옮기는 runner (metadata-only touch)."""
@@ -1722,10 +2090,17 @@ def main():
             os.path.exists(os.path.join(res, ps.ATTEMPT_FILE))
             and json.load(open(os.path.join(res, ps.ATTEMPT_FILE)))
             .get('network_attempt_run_id') not in (None, 'OLDRUN-0001'))
-        fm = json.load(open(os.path.join(res, 'full_metrics.json')))
-        chk('P1c) ★ full_metrics 가 success 라고 쓰지 않는다',
-            fm.get('network_solver_status') == 'failed'
-            and fm.get('stale_after_failed_retry') is True)
+        #  ★ 10-05 WEB-03 Q2 (Codex 재검증 · 1저자 비준) — 한 실패 어휘로 바꿨다: 실패 시도는 활성 세대 (네 망 JSON · provenance · full_metrics) 를
+        #    **건드리지 않고** 최근 시도 (`network_attempt.json` — latest_attempt_status · failure_kind) 에만 남는다.  옛 P1c 는 솔버 실패에만
+        #    full_metrics 에 network_solver_status=failed · stale_after_failed_retry 를 썼고 (승격 전 검사 거부 · 게시 예외는 바이트 보존) 소비자가
+        #    실패 종류마다 다른 곳을 봐야 했다.  "full_metrics 가 이번 실패 시도를 success 라고 쓰지 않는다" 는 그대로 — 아예 쓰지 않는다.
+        att_p1 = json.load(open(os.path.join(res, ps.ATTEMPT_FILE)))
+        gen_p1 = webapp._network_generation(res)
+        chk('P1c) ★ full_metrics 가 이번 실패 시도를 success 라고 쓰지 않는다 — 바이트 그대로 (활성 세대) · 최근 시도 = failed (솔버) · 화면 어휘 stale',
+            open(os.path.join(res, 'full_metrics.json'), 'rb').read() == fm_before
+            and att_p1.get('latest_attempt_status') == 'failed' and att_p1.get('failure_kind') == 'solver'
+            and att_p1.get('active_network_run_id') == 'OLDRUN-0001'
+            and gen_p1.get('stale') is True and gen_p1.get('latest_attempt_status') == 'failed')
         chk('P3) ★ network 실패 후 Stage E 를 실행하지 않는다',
             'run_network_full_corrections.py' not in fr.calls)
     finally:
@@ -2651,8 +3026,8 @@ def main():
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
 
-    # ══ T13–T16 (Codex 10-05 RGL-02 · 04 · 07 · 08 · SELF-86) — 실 생산자 → 실 정지 helper → 실 소비자 ══
-    _t13_t16_network_stop_real(webapp)
+    # ══ T13–T20 (Codex 10-05 RGL-02 · 04 · 07 · 08 · 재검증 RGLR-01 · 02 · WEB-03 · SELF-86) — 실 생산자 → 실 정지 helper → 실 소비자 ══
+    _t13_t20_network_real(webapp)
 
     print(f'\ntest_pipeline_provenance: {_ok}/{_ok + len(_fail)} PASS'
           + (f'   FAILED: {_fail}' if _fail else ''))

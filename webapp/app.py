@@ -610,6 +610,17 @@ def list_cases():
                                 else m.get('porosity'))
             meta['porosity_union']        = m.get('porosity_union')
             meta['overlap_fraction_pct']  = m.get('overlap_fraction_pct')
+        #  ★ 10-05 WEB-03 Q2b — 한 실패 어휘: 위 network_solver_status 는 **활성 세대**의 투영 상태다 (실패 시도는 이제 full_metrics 를 건드리지
+        #    않는다).  최근 시도는 이름이 다른 칸으로 싣는다 — 소비자가 같은 이름을 두 뜻으로 추측하지 않게 (`_ps.network_status_view`).
+        if meta.get('has_results'):
+            try:
+                _nv = _ps.network_status_view(results_dir)
+                meta['network_active_status'] = _nv['active_status']
+                meta['network_latest_attempt_status'] = _nv['latest_attempt_status']
+                meta['network_latest_attempt_failure_kind'] = _nv['failure_kind']
+                meta['network_stale_after_failed_attempt'] = _nv['stale']
+            except Exception:                                          # noqa: BLE001 — 목록 표시용 (한 케이스가 목록을 깨지 않게)
+                pass
         cases.append(meta)
     return cases
 
@@ -725,6 +736,13 @@ ION_NET_NO_THROUGH_TEXT = '비관통 (관통 경로 없음)'
 #  ★ 10-05 RGL-02 · 04 웹앱 짝 — 망 상태 · 세대 두 행 (생산자 · 시도 기록의 이름 그대로).
 ION_NET_STATE_LABEL = 'σ_ionic 망 상태 (생산자 sigma_full_status)'
 NET_ATTEMPT_LABEL = '망 최근 시도 (network_attempt — 활성 세대와 다를 때)'
+#  ★ 10-05 WEB-03 Q2 웹앱 짝 (J20-l) — 최근 시도 행: 활성 세대가 있으면 "최근 재계산 실패 (사유)" · 실패 종류 (`_ps.NETWORK_FAILURE_KINDS`) 의 화면 이름
+NET_RECALC_FAILED_TEXT = '최근 재계산 실패'
+NET_FAILURE_KIND_TEXT = {'solver': '솔버 · 내용 검증 실패', 'lock': 'lock 미획득 (솔버 미실행)',
+                         'candidate_rejected': '승격 전 검사 거부', 'publish_exception': '게시 중 예외 (되돌림)'}
+#  ★ 10-05 RGLR-01 웹앱 짝 (J20-l) — τ 인계 상태의 두 부류 (도우미 `tau_flux` 의 상태 부류 · 같은 이름)
+ION_HANDOVER_TECH_TEXT = '기술적 실패'     # NOT_COMPUTED — 입력 결손 · 무효 · 솔버 관문 · 온도 짝 · 관통 불일치 (값 없음)
+ION_HANDOVER_HOLD_TEXT = '과학적 HOLD'     # BAND_FALLBACK · NOT_PERCOLATING · MODEL_BELOW_CONTINUUM_BOUND — 입력은 유효 · 등록된 규칙대로
 
 
 def _ion_net_state_text(status, reason):
@@ -742,10 +760,14 @@ def _ion_net_state_text(status, reason):
 def _network_generation(results_dir):
     """망 세대 표시용 — 활성 세대 (`network_provenance.json` · 성공했을 때만 갱신) + 최근 시도 (`network_attempt.json` · 성공 · 실패 모두).
     ★ 10-05 RGL-04: 승격 전 검사 (채널 · σ₀ 짝 · 망 정지 계약) 에 실패한 후보는 활성 세대를 차지하지 않는다 — 그 사실은 최근 시도에만 남는다.
-    → {'active_run_id', 'active_status', 'attempt': dict | None}"""
+    ★ 10-05 WEB-03 Q2b: 한 실패 어휘 (`_ps.network_status_view`) — active_status · latest_attempt_status · failure_kind · stale (최근 재계산이
+      실패했는데 활성 세대가 있다 = 화면 값은 이전 성공 세대).  솔버 실패 · 승격 전 검사 거부 · 게시 중 예외 셋 다 같은 이름으로 읽는다.
+    → {'active_run_id', 'active_status', 'attempt': dict | None, 'latest_attempt_status', 'failure_kind', 'stale'}"""
+    v = _ps.network_status_view(results_dir)
     prov = _ps.read_network_provenance(results_dir)
     return {'active_run_id': prov.get('network_run_id'), 'active_status': prov.get('solver_status'),
-            'attempt': _ps.read_network_attempt(results_dir)}
+            'attempt': _ps.read_network_attempt(results_dir),
+            'latest_attempt_status': v['latest_attempt_status'], 'failure_kind': v['failure_kind'], 'stale': v['stale']}
 
 
 def _network_state_rows(metrics):
@@ -760,12 +782,17 @@ def _network_state_rows(metrics):
                      _ion_net_state_text(m.get('sigma_full_status_physics'), m.get('sigma_full_reason_physics')), ''])
     gen = m.get('_network_generation')
     att = (gen or {}).get('attempt') if isinstance(gen, dict) else None
-    if isinstance(att, dict) and att.get('solver_status') == 'failed':
+    if isinstance(att, dict) and att.get('latest_attempt_status', att.get('solver_status')) == 'failed':
         why = str(att.get('reason') or att.get('stage') or '사유 없음').replace('\n', ' ').strip()
         why = why if len(why) <= 240 else why[:237] + '…'
         act = gen.get('active_run_id')
-        cell = (f"failed — {why} · 시도 {att.get('network_attempt_run_id') or '?'} · "
-                + (f'활성 세대 {act} (옛 세대 그대로)' if act else '활성 세대 없음 (첫 실행 실패 — 게시된 망 결과 없음)'))
+        _k = gen.get('failure_kind') or att.get('failure_kind') or 'solver'    # 시도 기록 v1 은 `_ps.network_status_view` 가 단계로 추정
+        kind = NET_FAILURE_KIND_TEXT.get(_k, str(_k))
+        #  ★ 10-05 WEB-03 Q2 (J20-l) — 활성 세대가 있으면 화면 값은 **이전 성공 세대** 의 것 + "최근 재계산 실패 (사유)" · 첫 실행이면 보일 값이 없다
+        cell = ((f"{NET_RECALC_FAILED_TEXT} ({why}) · {kind} · 시도 {att.get('network_attempt_run_id') or '?'} · "
+                 f'활성 세대 {act} 의 값 (이전 성공 세대 그대로)') if act else
+                (f"재계산 실패 ({why}) · {kind} · 시도 {att.get('network_attempt_run_id') or '?'} · "
+                 '활성 세대 없음 (첫 실행 실패 — 게시된 망 결과 없음)'))
         rows.append([NET_ATTEMPT_LABEL, cell, cell, ''])
     return rows
 
@@ -777,9 +804,17 @@ def _ion_handover_rows(ih):
 
     def _st(m):
         s = ih.get(f'ion_net_status_{m}') or '—'
-        r = ih.get(f'ion_net_status_reason_{m}') or ''
+        r = str(ih.get(f'ion_net_status_reason_{m}') or '')
+        r = r if len(r) <= 160 else r[:157] + '…'
+        #  ★ 10-05 RGLR-01 (J20-l) — 기술적 실패 (NOT_COMPUTED) ↔ 등록된 과학적 HOLD (입력 유효) 를 화면에서 가른다
         if s == 'NOT_PERCOLATING':                 # ★ RGL-02 — 망 상태 행과 같은 이름 (생산자 valid_zero + no_through_path)
-            return f'{s} — {ION_NET_NO_THROUGH_TEXT}'
+            return f'{s} — {ION_NET_NO_THROUGH_TEXT} · {ION_HANDOVER_HOLD_TEXT}'
+        if s == 'BAND_FALLBACK':
+            return f'{s} — {ION_HANDOVER_HOLD_TEXT} (입력 유효 · 띠 규칙 L0 아님 · 값 빈칸)'
+        if s == 'MODEL_BELOW_CONTINUUM_BOUND':
+            return f'{s} — {ION_HANDOVER_HOLD_TEXT} (입력 유효 · T < 1 · 값 유지)'
+        if s == 'NOT_COMPUTED':
+            return f'{s} ({r}) — {ION_HANDOVER_TECH_TEXT}' if r else f'{s} — {ION_HANDOVER_TECH_TEXT}'
         return f'{s} ({r})' if r else s
 
     def _band(m):
@@ -3251,7 +3286,10 @@ def _network_projection(results_dir, run_id):
         fm_data['failed_channels'] = _failed_ch or None
         fm_data['network_run_id'] = run_id                     # 하위호환
         fm_data['active_network_run_id'] = run_id              # RR2-01
-        fm_data['last_network_attempt_run_id'] = run_id
+        #  ★ 10-05 WEB-03 Q2b — 최근 시도는 활성 세대 (full_metrics) 의 필드가 아니다 → `network_attempt.json` 에만 (한 실패 어휘).  옛 판이 쓰던
+        #    last_network_attempt_run_id · stale_after_failed_retry 는 실패 시도 뒤 활성 파일 안에서 거짓이 되므로 (실패 시도는 이제 full_metrics 를
+        #    건드리지 않는다) 새 세대에서 걷어낸다.  읽는 소비자는 없었다 (grep) — 화면 · 목록은 `_ps.network_status_view`.
+        fm_data.pop('last_network_attempt_run_id', None)
         fm_data.pop('stale_after_failed_retry', None)
         out.update(fm=fm_data, chv=_chv, failed=_failed_ch, dropped=_dropped, pair=_pair)
     except Exception as _e:                                        # noqa: BLE001
@@ -3279,6 +3317,10 @@ def _network_merge_log(log, proj):
                               f'메우지 않고 비웠다: ' + ', '.join(_dropped[:8])})
     log.append({'step': 'Network Merge', 'stdout': f'{len(_NET_MERGE_KEYS)} σ-keys',
                 'stderr': '', 'rc': 0})
+
+
+#: ★ 10-05 WEB-03 Q2a — 승격 (게시) 단계 이름 (필수 · 실패면 되돌린 뒤 failed) — 정본은 pipeline_service (시도 기록 단계와 한 이름).
+NETWORK_PUBLISH_STEP = _ps.NETWORK_PUBLISH_STEP
 
 
 def _network_candidate_checks(results_dir, run_id, proj, stop_before_stage_e):
@@ -3331,6 +3373,10 @@ def _network_and_stage_e(results_dir, scripts, atoms_csv, contacts_csv, type_map
                        full_metrics 쓰기 · 옛 stash 버림) → 그것으로 Stage E.
                        ★ 10-05 RGL-04: 하나라도 실패하면 후보를 치우고 (`discard_network_candidate` — 첫 실행이면 빈 자리) 옛 세대
                        (네 JSON · provenance) 를 되돌리고 full_metrics 는 쓰지 않는다 · 최근 시도 (`network_attempt.json`) 만 failed + 사유.
+                       ★ 10-05 WEB-03 Q2: 승격 쓰기는 한 거래 (`_ps.publish_network_candidate`) — 도중 동기 예외면 되돌린 뒤 필수 단계
+                       'Network publication' failed (예외로 새지 않는다).  솔버 · lock 실패도 full_metrics 를 건드리지 않는다 (한 실패 어휘 —
+                       최근 시도의 failure_kind = solver · lock · candidate_rejected · publish_exception).
+                       ★ 10-05 WEB-03 Q1: 관통 풀이 실패 채널은 생산자가 failed 로 신고 → 내용 검증 (솔버 단계) 이 일반 · 정지 경로 모두에서 막는다.
     어느 쪽이든 Stage E 는 **화면에 실제로 남을 baseline** 을 본다.
 
     stop_before_stage_e=True (`run_pipeline(stop_after='network')`) — 승격 전 검사의 마지막이 망 정지 계약 (`_ps.network_stop_verdict` ·
@@ -3381,7 +3427,7 @@ def _network_and_stage_e(results_dir, scripts, atoms_csv, contacts_csv, type_map
                atoms_csv, contacts_csv, '-o', results_dir,
                '-t', type_map, '-s', str(scale), '--contact-mode', 'both']
         _argv = {'type_map': type_map, 'scale': scale, 'contact_mode': 'both'}
-        _proj, _cand_stages, _reject, promoted = None, [], ('', ''), False
+        _proj, _cand_stages, _reject, promoted, _rolled_back = None, [], ('', ''), False, False
         # ★ CB-03: lock 을 못 잡으면 solver 를 **돌리지 않는다**.  옛 코드는 got=False 여도
         #   그대로 실행해(fail-open) OOM 방지라는 목적 자체가 무너졌다.
         try:
@@ -3428,28 +3474,39 @@ def _network_and_stage_e(results_dir, scripts, atoms_csv, contacts_csv, type_map
                     if not _reject[0]:
                         # ── 승격 (한 번에) ──  ★ RR2-01: active 도장은 **성공했을 때만** 갱신한다.
                         #   ★ RR3-05: attempt 는 '가장 최근 시도 (성공 · 실패 모두)' 이므로 성공에도 갱신한다.
-                        _ps.stamp_network_provenance(results_dir, run_id, inputs, 'success', argv=_argv)
-                        _ps.record_network_attempt(results_dir, run_id, 'success', argv=_argv)
-                        if _proj['fm'] is not None:
-                            _ps.atomic_write_json(fm_json, _proj['fm'])
-                        _ps.drop_stash(_stash)
-                        promoted = True
+                        #   ★ 10-05 WEB-03 Q2a: 승격 쓰기 (도장 · full_metrics · 최근 시도) 를 한 거래로 — 도중 동기 예외면 full_metrics 를 사본에서
+                        #     되돌리고 (실패한 쓰기 함수를 다시 부르지 않는다) 후보를 치워 옛 세대를 복원한 뒤 failed (예외로 새지 않는다 ·
+                        #     옛 판: 새 provenance + 옛 full_metrics 의 섞인 세대가 남고 예외가 올라갔다).
+                        _ok_pub, _why_pub = _ps.publish_network_candidate(results_dir, _stash, run_id, fm=_proj['fm'],
+                                                                          inputs=inputs, argv=_argv)
+                        if _ok_pub:
+                            promoted = True
+                        else:
+                            _rolled_back = True                # 되돌림 · 시도 기록은 거래가 이미 했다 (두 번 치우면 되돌린 옛 세대를 지운다)
+                            _pst = _ps.StageOutcome(
+                                step=NETWORK_PUBLISH_STEP, stdout='',
+                                stderr=('★ 게시 중 예외 → 되돌림 (활성 = 옛 세대 그대로 · 첫 실행이면 활성 세대 없음): ' + _why_pub)[:2000],
+                                rc=1, ok=False, required=True, missing_outputs=[], stale_outputs=[], verify_failed=True)
+                            _cand_stages.append(_pst)
+                            _reject = (_pst['step'], _pst['stderr'])
                 else:
                     _reject = (st.get('step', ''), (st.get('stderr') or '')[-300:])
-                if not promoted:
+                if not promoted and not _rolled_back:
                     # 후보를 치우고 옛 성공 세대 (네 JSON · provenance) 를 되돌린다 — 첫 실행이면 빈 자리 (활성 세대 없음).
                     _ps.discard_network_candidate(results_dir, _stash)
                     # 실패 시도는 **분리된 파일**에 남긴다 — active baseline ID 를 차지하면
                     #   게시된 것은 옛 성공 세대인데 ID 는 실패 시도를 가리키는 모순이 된다.
+                    #   ★ 10-05 WEB-03 Q2b — 실패 종류를 이름으로 (솔버 · 승격 전 검사 거부) · 입력 id 와 함께 (한 실패 어휘).
                     _ps.record_network_attempt(results_dir, run_id, 'failed',
                                                reason=(f'{_reject[0]}: {_reject[1]}' if st.ok else _reject[1])[:2000],
-                                               argv=_argv, stage=_reject[0])
+                                               argv=_argv, stage=_reject[0],
+                                               failure_kind=('candidate_rejected' if st.ok else 'solver'), inputs=inputs)
         except _ps.LockUnavailable as _lk:
             st = _ps.StageOutcome(step='Network Solver (LOCK 미획득 — 미실행)', stdout='',
                                   stderr=str(_lk), rc=1, ok=False, required=True,
                                   missing_outputs=['network lock'])
             _ps.record_network_attempt(results_dir, run_id, 'failed', reason=str(_lk)[-300:],
-                                       argv=_argv, stage=st['step'])
+                                       argv=_argv, stage=st['step'], failure_kind='lock', inputs=inputs)
         stages.append(st)
         log.append(st)
         for _s in _cand_stages:
@@ -3462,11 +3519,11 @@ def _network_and_stage_e(results_dir, scripts, atoms_csv, contacts_csv, type_map
             if stop_before_stage_e:
                 return stages, run_id                              # 정지 계약 통과 단계는 _cand_stages 에 있다
         elif st.ok:
-            # 후보 거부 (투영 · 채널 · σ₀ 짝 · 정지 계약) — 활성 = 옛 세대 그대로 · full_metrics 는 쓰지 않았다 · 최근 시도만 failed.
+            # 후보 거부 (투영 · 채널 · σ₀ 짝 · 정지 계약) 또는 게시 중 예외 (되돌림) — 활성 = 옛 세대 그대로 · full_metrics 는 그대로 · 최근 시도만 failed.
             prov = _ps.read_network_provenance(results_dir)
             log.append({'step': 'Network Merge / Stage E', 'rc': 1, 'stdout': '',
-                        'stderr': f'승격 전 검사 실패 ({_reject[0]}) → 후보 폐기 · merge·Stage E 미실행 '
-                                  f'(게시본은 이전 세대 유지 — 첫 실행이면 활성 세대 없음)'})
+                        'stderr': f'{"게시 중 예외 → 되돌림" if _rolled_back else "승격 전 검사 실패"} ({_reject[0]}) → 후보 폐기 · '
+                                  f'merge·Stage E 미실행 (게시본은 이전 세대 유지 — 첫 실행이면 활성 세대 없음)'})
             return stages, prov.get('network_run_id')
         else:
             prov = _ps.read_network_provenance(results_dir)     # 복구된 옛 세대(있으면)
@@ -3475,19 +3532,14 @@ def _network_and_stage_e(results_dir, scripts, atoms_csv, contacts_csv, type_map
     # ★ RR2-01: network 필수 단계가 실패했으면 **merge 도 Stage E 도 하지 않는다**.
     #   옛 코드는 실패 후에도 옛 baseline 을 머지하고 full_metrics 에 success 를 쓴 뒤
     #   Stage E 까지 돌려, 실패 시도 ID 가 parent/active 로 기록됐다.
+    #   ★ 10-05 WEB-03 Q2b (Codex 재검증 Q2 · 1저자 비준) — 한 실패 어휘: 솔버 실패도 활성 세대 (full_metrics 포함) 를 **건드리지 않는다**.
+    #     옛 판은 여기서만 full_metrics 에 network_solver_status=failed · last_network_attempt_run_id · stale_after_failed_retry 를 써서, 같은 "최근 시도
+    #     실패" 가 솔버 실패면 full_metrics 에 · 승격 전 검사 거부면 시도 기록에만 남았다 (소비자가 종류마다 다른 곳을 추측).  이제 최근 시도는 늘
+    #     `network_attempt.json` (latest_attempt_status · failure_kind) 에 있고, 화면 · 목록은 `_ps.network_status_view` 로 읽는다.
     if attempt_failed:
-        try:
-            if os.path.exists(fm_json):
-                with open(fm_json) as _f:
-                    fm_data = json.load(_f)
-                fm_data['network_solver_status'] = 'failed'
-                fm_data['last_network_attempt_run_id'] = run_id
-                fm_data['stale_after_failed_retry'] = bool(prov.get('network_run_id'))
-                _ps.atomic_write_json(fm_json, fm_data)
-        except Exception:                                          # noqa: BLE001
-            pass
         log.append({'step': 'Network Merge / Stage E', 'rc': 1, 'stdout': '',
-                    'stderr': 'network 실패 → merge·Stage E 미실행 (게시본은 이전 세대 유지)'})
+                    'stderr': 'network 실패 → merge·Stage E 미실행 (게시본은 이전 세대 유지 · full_metrics 는 건드리지 않는다 — '
+                              '최근 시도 = network_attempt.json)'})
         return stages, prov.get('network_run_id')
 
     # ── Stage E — 위에서 확정된 baseline 위에서만 돈다 ──

@@ -757,10 +757,10 @@ def network_stop_verdict(results_dir, run_id, fm=None):
 
       ① `network_content_verdict(strict=True)` — 네 JSON · 두 모드 · 세 채널
       ② full_metrics 의 `network_run_id` · `active_network_run_id` = 이번 실행 (`run_id`) · `network_solver_status` = success
-      ③ 두 모드 dual `sigma_full_status` ∈ `NETWORK_STOP_SIGMA_OK` · full_metrics 상태 · 사유 = dual —
-         computed 면 full_metrics σ = dual (양수) · 관통 분율 > 0 · calc_percolation > 0 (RGL-02 관통 일치) ·
-         valid_zero 면 **증명된 비관통**만 (RGL-02): 사유 `no_through_path` · σ 숫자 필드 None (F-12) · 관통 분율 0 · CF · constr 도 valid_zero ·
-         이온 채널 valid_zero · 독립 calc_percolation 0
+      ③ ★ 10-05 RGLR-01 · 02 — 두 모드 dual 레코드의 **공용 기술 검사** (`tau_flux.ion_record_problem` — τ 인계 소비자와 같은 함수 · 띠 규칙과
+         무관 · 과학적 HOLD 앞): computed = σ 두 표현 유한 양수 · 관통 분율 (0, 1] · 두 표현 항등식 (저장 정밀도 경계) · valid_zero = RGL-02 의
+         증명된 비관통 조합 · not_computed · 그 밖 = 거부.  그 위에 이 계약만의 대조: full_metrics 상태 · 사유 = dual · computed 면 full_metrics σ = dual ·
+         calc_percolation > 0 (관통 일치) · valid_zero 면 full_metrics σ None · 독립 calc_percolation 0
       ④ 두 모드 `constriction_power_share_ion_<꼬리>` (+ `_status`) — full_metrics = dual · computed σ 면 (0–1 · 'computed') ·
          valid_zero 면 (None · 등록된 물리 사유 `NETWORK_POWER_NULL_REASONS`) — 다른 사유 (내부 예외 · 풀이 실패) 는 거부 (RGL-08)
       ⑤ dual 두 모드 `boundary_rule` ∈ `NETWORK_STOP_BOUNDARY_RULES` · `boundary_band_frac` 유한 양수
@@ -772,6 +772,10 @@ def network_stop_verdict(results_dir, run_id, fm=None):
     """
     ok_c, why_c = network_content_verdict(results_dir, strict=True)
     bad = [] if ok_c else [f'① {why_c}']
+    try:
+        tf = _scripts_import('tau_flux')                       # 공용 기술 검사 (③) · 실 소비자 (⑦) — 못 부르면 증서를 못 낸다 (fail-closed)
+    except Exception as e:                                     # noqa: BLE001
+        return False, '; '.join(bad + [f'τ 인계 도우미 (tau_flux) 를 못 불러왔다 ({type(e).__name__}: {e}) — 공용 기술 검사 불가'])
     try:
         if fm is None:
             with open(os.path.join(results_dir, 'full_metrics.json'), encoding='utf-8') as f:
@@ -819,35 +823,26 @@ def network_stop_verdict(results_dir, run_id, fm=None):
             bad.append(f'⑦ {dkey}: τ 인계 입력 키 없음 {miss}')
         sfx = '' if tail == 'hertz' else '_physics'
         st, sv, fv = rec.get('sigma_full_status'), rec.get('sigma_full_mScm'), fm.get(fkey)
-        rsn, pf = rec.get('sigma_full_reason'), rec.get('percolating_fraction')
-        if st not in NETWORK_STOP_SIGMA_OK:
-            bad.append(f'③ {dkey}: sigma_full_status={st!r} (사유 {rsn!r}) — 계산된 σ 와 증명된 비관통만 받는다')
+        rsn = rec.get('sigma_full_reason')
+        #  ③ 공용 기술 검사 (RGLR-01 · 02) — 상태 ↔ 값 · 관통 분율 · 두 σ 표현 항등식 · 증명된 비관통 조합.  τ 인계 소비자와 **같은 함수**다
+        #    (옛 판은 여기서 σ_dim 양수 · 관통 분율 > 0 만 보고 σ_ratio 는 소비자에 맡겼는데, 소비자는 L1/L2 에서 BAND_FALLBACK 로 먼저 돌아갔다).
+        prob = tf.ion_record_problem(rec)
+        if st not in NETWORK_STOP_SIGMA_OK or prob is not None:
+            bad.append(f'③ {dkey}: 기술적 입력 무효 — {prob[0] if prob else "invalid_input"}: '
+                       f'{prob[1] if prob else f"sigma_full_status={st!r} (사유 {rsn!r})"}')
         elif fm.get('sigma_full_status' + sfx) != st or fm.get('sigma_full_reason' + sfx) != rsn:
             bad.append(f'③ {dkey}: full_metrics 상태 ({fm.get("sigma_full_status" + sfx)!r}, {fm.get("sigma_full_reason" + sfx)!r}) '
                        f'≠ dual ({st!r}, {rsn!r})')
         elif st == 'computed':
-            if not (_stop_num(sv) and sv > 0 and _stop_num(fv) and fv == sv):
-                bad.append(f'③ {dkey}: computed 인데 σ dual={sv!r} · full_metrics {fkey}={fv!r} (같은 세대의 양수여야)')
-            elif not (_stop_num(pf) and pf > 0):
-                bad.append(f'③ {dkey}: computed 인데 관통 분율 {pf!r} (> 0 이어야)')
+            if not (_stop_num(fv) and fv == sv):
+                bad.append(f'③ {dkey}: computed 인데 full_metrics {fkey}={fv!r} ≠ dual σ {sv!r} (같은 세대의 값이어야)')
             elif _stop_num(pct) and pct == 0:
                 bad.append(f'③ {dkey}: 솔버는 관통인데 독립 calc_percolation 0 % (관통 불일치)')
-        else:                                                  # valid_zero — 증명된 비관통만 (RGL-02)
-            why0 = []
-            if rsn != NETWORK_NO_THROUGH_REASON:
-                why0.append(f'사유 {rsn!r} ≠ {NETWORK_NO_THROUGH_REASON!r}')
-            if not (sv is None and fv is None and rec.get('sigma_full') is None):
-                why0.append(f'σ 숫자 필드가 None 이 아니다 (dual {sv!r} · full_metrics {fv!r} · σ_ratio {rec.get("sigma_full")!r})')
-            if not (_stop_num(pf) and pf == 0):
-                why0.append(f'관통 분율 {pf!r} (0 이어야)')
-            if not (rec.get('sigma_bulk_net_status') == rec.get('sigma_constr_net_status') == 'valid_zero'):
-                why0.append(f'CF · constr 상태 ({rec.get("sigma_bulk_net_status")!r}, {rec.get("sigma_constr_net_status")!r})')
-            if rec.get('ionic_status') != 'valid_zero':
-                why0.append(f'이온 채널 {rec.get("ionic_status")!r}')
+        else:                                                  # valid_zero — 레코드 조합은 공용 검사가 봤다 · 여기는 full_metrics · 장부 대조
+            if fv is not None:
+                bad.append(f'③ {dkey}: valid_zero 인데 full_metrics {fkey}={fv!r} (None 이어야 — F-12)')
             if _stop_num(pct) and pct != 0:
-                why0.append(f'독립 calc_percolation {pct!r} % (0 이어야)')
-            if why0:
-                bad.append(f'③ {dkey}: valid_zero 인데 증명된 비관통이 아니다 — ' + ' · '.join(why0))
+                bad.append(f'③ {dkey}: valid_zero 인데 독립 calc_percolation {pct!r} % (0 이어야)')
         ck = f'constriction_power_share_ion_{tail}'
         cv, cs = fm.get(ck), fm.get(ck + '_status')
         if cv != rec.get(ck) or cs != rec.get(ck + '_status'):
@@ -863,9 +858,8 @@ def network_stop_verdict(results_dir, run_id, fm=None):
     p0 = network_sigma0_problem(dual, files.get('network_conductivity.json'), fm)
     if p0:
         bad.append('⑧ ' + p0)
-    # ⑦ τ 인계 — 실 소비자 (tau_flux) 가 이 후보로 무엇을 내는가 (계약 사본이 아니라 소비자 자신)
+    # ⑦ τ 인계 — 실 소비자 (tau_flux) 가 이 후보로 무엇을 내는가 (계약 사본이 아니라 소비자 자신 · 공용 기술 검사를 다시 거친다)
     try:
-        tf = _scripts_import('tau_flux')
         row = tf.ion_columns(dual, fm, pct)
         for dkey, tail, _f in NETWORK_STOP_MODES:
             s, r = row.get(f'ion_net_status_{tail}'), row.get(f'ion_net_status_reason_{tail}')
@@ -1035,7 +1029,32 @@ def record_stage_e_attempt(results_dir, parent_run_id, reason='', restored=True)
     })
 
 
-def record_network_attempt(results_dir, run_id, status, reason='', argv=None, stage=''):
+#: ★ 10-05 WEB-03 Q2 (Codex 재검증 Q2 · 1저자 비준) — **한 실패 어휘**: 활성 (마지막 유효) 세대 ↔ 최근 시도.
+#:   활성 세대 = 네 망 JSON + `network_provenance.json` + full_metrics (승격했을 때만 바뀐다 · 실패 시도는 바이트 하나 건드리지 않는다).
+#:   최근 시도 = `network_attempt.json` (성공 · 실패 모두) — 실패면 어느 종류 (`failure_kind`) · 어느 단계 · 왜 · 그 뒤에도 활성 세대가 무엇인가.
+#:   옛 판은 솔버 rc 실패만 full_metrics 에 network_solver_status=failed 를 쓰고 (승격 전 검사 거부는 바이트 보존) 소비자가 실패 종류마다 다른 곳을
+#:   봐야 했다.  소비자는 이 이름들 (`network_status_view`) 로 읽는다 — 추측하지 않는다.
+ATTEMPT_SCHEMA = 'network_attempt/v2'
+#: 실패 종류 — solver (lock 뒤 솔버 rc · 기대 산출물 · 내용 검증 = 채널 failed 포함) · lock (lock 미획득 = 솔버 미실행) ·
+#:   candidate_rejected (승격 전 검사: 투영 · 채널 판정 · σ₀ 짝 · 망 정지 계약) · publish_exception (승격 쓰기 중 동기 예외 → 되돌림).
+NETWORK_FAILURE_KINDS = ('solver', 'lock', 'candidate_rejected', 'publish_exception')
+
+
+def _active_generation(results_dir):
+    """지금 디스크의 활성 세대 → (run_id | None, 상태).  상태 = 도장의 solver_status ('success') · 도장 없는 옛 망 산출물 'legacy_unstamped' ·
+    망 산출물 없음 'none' · 도장 손상 'invalid'."""
+    prov = read_network_provenance(results_dir)
+    if prov.get('provenance_state') == 'invalid':
+        return None, 'invalid'
+    rid = prov.get('network_run_id')
+    if rid:
+        return rid, prov.get('solver_status') or 'unknown'
+    if os.path.exists(os.path.join(results_dir, NETWORK_BASELINE_REQUIRED)):
+        return None, 'legacy_unstamped'
+    return None, 'none'
+
+
+def record_network_attempt(results_dir, run_id, status, reason='', argv=None, stage='', failure_kind='', inputs=None):
     """**실패 시도**를 active provenance 와 **분리해** 기록한다 (RR2-01).
 
     옛 코드는 실패에도 `network_provenance.json` 을 새 run_id 로 덮어써서, 실패 시도의 ID 가
@@ -1043,10 +1062,24 @@ def record_network_attempt(results_dir, run_id, status, reason='', argv=None, st
     게시된 baseline 은 옛 성공 세대인데 ID 는 실패 시도를 가리키는 모순.
     이제 active 도장은 **성공했을 때만** 갱신하고, 시도는 이 별도 파일에 남긴다.
     stage = 실패한 단계 이름 (10-05 RGL-04 — 솔버 · 채널 판정 · 망 정지 계약 · 승격 전 투영 중 어디서 막혔나 · 성공이면 '').
+    ★ 10-05 WEB-03 Q2 — 스키마 v2 (옛 키 `network_attempt_run_id` · `solver_status` · `reason` · `stage` 는 그대로 — 옛 소비자 하위호환):
+      latest_attempt_status (= solver_status) · failure_kind (`NETWORK_FAILURE_KINDS` · 성공이면 '') · input_digests (입력 id) ·
+      active_network_run_id · active_status (**기록 시점** 활성 세대 — 승격이면 이번 실행 · 실패면 되돌린 옛 세대 · 없으면 None/'none') ·
+      previous_generation_kept (실패 시도 뒤에도 옛 활성 세대가 그대로 활성인가 · 성공이면 None).
+    호출자는 활성 세대를 확정한 **뒤** (승격 또는 되돌림 뒤) 부른다.
     """
+    act_id, act_st = _active_generation(results_dir)
+    failed = status != 'success'
     atomic_write_json(os.path.join(results_dir, ATTEMPT_FILE), {
+        'schema': ATTEMPT_SCHEMA,
         'network_attempt_run_id': run_id, 'solver_status': status,
-        'reason': reason, 'stage': stage, 'code_sha': code_sha(),
+        'latest_attempt_status': status,
+        'failure_kind': (failure_kind or 'solver') if failed else '',
+        'reason': reason, 'stage': stage,
+        'active_network_run_id': act_id, 'active_status': act_st,
+        'previous_generation_kept': (act_st not in ('none', 'invalid') and act_id != run_id) if failed else None,
+        'input_digests': dict(inputs or {}),
+        'code_sha': code_sha(),
         'attempted_at': time.strftime('%Y-%m-%dT%H:%M:%S'), 'argv': dict(argv or {}),
     })
 
@@ -1059,6 +1092,101 @@ def read_network_attempt(results_dir):
         return d if isinstance(d, dict) else None
     except (OSError, ValueError):
         return None
+
+
+def network_status_view(results_dir):
+    """★ 10-05 WEB-03 Q2 — 한 실패 어휘로 읽는다: 활성 (마지막 유효) 세대 ↔ 최근 시도.  소비자 (웹앱 케이스 페이지 · 목록) 는 이것만 보면 된다.
+
+    → {'active_network_run_id', 'active_status' ('success' · 'none' · 'legacy_unstamped' · 'invalid' · …),
+       'latest_attempt_run_id', 'latest_attempt_status' ('success' · 'failed' · None = 기록 없음), 'failure_kind', 'latest_attempt_stage',
+       'latest_attempt_reason', 'stale' (최근 시도가 failed 인데 활성 세대가 있다 = 화면 값은 이전 성공 세대 — '최근 재계산 실패')}
+    활성 쪽은 늘 디스크의 도장에서 다시 읽는다 (시도 기록의 사본을 믿지 않는다) · v1 시도 기록 (latest_attempt_status 없음) 은 solver_status 로 읽는다."""
+    act_id, act_st = _active_generation(results_dir)
+    att = read_network_attempt(results_dir) or {}
+    last = att.get('latest_attempt_status', att.get('solver_status'))
+    kind = att.get('failure_kind')
+    if last == 'failed' and not kind:                          # v1 기록 — 종류 칸이 없다 → 남긴 단계 이름으로 (표시용 · 옛 단계 이름 그대로)
+        st_ = str(att.get('stage') or '')
+        kind = ('lock' if 'LOCK' in st_ else
+                'candidate_rejected' if st_.startswith(('Network stop contract', 'Network channel verdict', 'Network σ₀',
+                                                         'Network projection')) else
+                'publish_exception' if st_.startswith('Network publication') else 'solver')
+    return {'active_network_run_id': act_id, 'active_status': act_st,
+            'latest_attempt_run_id': att.get('network_attempt_run_id'), 'latest_attempt_status': last,
+            'failure_kind': kind or '', 'latest_attempt_stage': att.get('stage') or '', 'latest_attempt_reason': att.get('reason') or '',
+            'stale': bool(last == 'failed' and act_st not in ('none', 'invalid'))}
+
+
+#: 승격 중 예외에 대비한 full_metrics 사본의 이름 앞머리 — results 안 (같은 파일시스템 = os.replace 원자성) · 점 접두 (어떤 산출물 glob 에도 안 걸린다).
+PUBLISH_BACKUP_PREFIX = '.publish_backup_'
+#: 승격 (게시) 단계 이름 — 웹앱 단계 로그 (`app.NETWORK_PUBLISH_STEP`) 와 최근 시도 기록의 stage 가 같은 이름이다.
+NETWORK_PUBLISH_STEP = 'Network publication (승격 · 실패 시 되돌림)'
+
+
+def publish_network_candidate(results_dir, stash_dir, run_id, fm=None, inputs=None, argv=None):
+    """★ 10-05 WEB-03 Q2a (Codex 재검증 Q2 · 1저자 비준) — 검사를 다 통과한 network 후보를 활성 세대로 **한 번에** 승격 → (ok, 사유).
+
+    순서: ① full_metrics 사본 (shutil.copy2 — 쓰기 함수를 거치지 않는다) → ② 활성 도장 (provenance) → ③ full_metrics (`atomic_write_json` —
+    실패할 수 있는 바로 그 쓰기) → ④ 최근 시도 success → ⑤ 옛 stash · 사본 버림 (= 확정).
+    ②–④ 어디서든 동기 예외가 나면 **되돌린다**:
+      · full_metrics 를 사본에서 `os.replace` 로 되돌린다 (방금 실패한 쓰기 함수를 다시 부르지 않는다)
+      · 후보 망 산출물 (네 JSON · 새 도장 · raw) 을 치우고 옛 세대를 stash 에서 되돌린다 (`discard_network_candidate` — 첫 실행이면 활성 세대 없음)
+      · 최근 시도에 failed + failure_kind publish_exception + 단계 · 예외 종류 · 입력 id 를 남긴다 (그 기록마저 못 쓰면 단계 로그에만 남는다)
+    → (False, 사유) — 호출자는 **필수 단계 실패**로 기록하고 Stage E 로 가지 않는다 (파이프라인은 failed · 예외로 새지 않는다).
+    왜 다시 던지지 않는가: 되돌린 뒤 디스크는 일관된 상태 (활성 = 옛 세대 · 또는 없음) 이고 실패의 전부가 단계 · 시도 기록에 있다.  예외로 올리면
+    run_pipeline 의 단계 로그 · 배치 (`lhs_webapp_batch` — 예외를 그 케이스 failed 로 받기는 한다) · 백그라운드 라우트가 각자 다르게 받아 같은 실패가
+    여러 이름이 된다 (한 실패 어휘 위반).  ⚠ BaseException (KeyboardInterrupt · SystemExit) 은 되돌린 뒤 **다시 던진다** (삼키지 않는다).
+    ⚠ 이것은 **동기 예외**의 되돌림이다 — 프로세스가 죽는 크래시 (kill -9 · 정전) 의 다중 파일 원자성은 아니다 (세대별 후보 디렉터리 + 단일 활성
+    포인터 · 복구 가능한 commit 프로토콜이 필요 — 미구현 · Codex Q2).  사본 (`PUBLISH_BACKUP_PREFIX`) 이 크래시 뒤 남을 수 있다 (활성 판정에 안 쓰인다).
+    """
+    fm_path = os.path.join(results_dir, 'full_metrics.json')
+    fm_existed = os.path.exists(fm_path)
+    bk, bk_ok, fm_touched, step = None, False, False, ''
+    try:
+        if fm is not None and fm_existed:
+            step = 'full_metrics 사본'
+            bk = os.path.join(results_dir, f'{PUBLISH_BACKUP_PREFIX}{re.sub(r"[^0-9A-Za-z_-]", "_", str(run_id))}_full_metrics.json')
+            shutil.copy2(fm_path, bk)
+            bk_ok = True                                       # 사본이 온전히 쓰였다 — 되돌림에 써도 된다
+        step = '활성 도장 (network_provenance.json)'
+        stamp_network_provenance(results_dir, run_id, inputs, 'success', argv=argv)
+        if fm is not None:
+            step = 'full_metrics.json'
+            fm_touched = True
+            atomic_write_json(fm_path, fm)
+        step = '최근 시도 success (network_attempt.json)'
+        record_network_attempt(results_dir, run_id, 'success', argv=argv, inputs=inputs)
+    except BaseException as e:                                 # noqa: BLE001 — 되돌림이 먼저 (KeyboardInterrupt 도 되돌린 뒤 다시 던진다)
+        why = f'{step} 쓰기 중 {type(e).__name__}: {e}'
+        rb = []
+        try:
+            if bk_ok:
+                _replace_retry(bk, fm_path)                    # 사본 → 제자리 (os.replace · atomic_write_json 을 다시 부르지 않는다)
+            else:
+                if bk is not None:                             # 사본 자체가 반쯤 쓰였다 — full_metrics 는 아직 안 건드렸다 (사본만 치운다)
+                    with contextlib.suppress(OSError):
+                        os.remove(bk)
+                if fm_touched and not fm_existed and os.path.exists(fm_path):
+                    os.remove(fm_path)                         # 없던 full_metrics 를 이번 승격이 만들었다 → 없던 상태로
+        except OSError as e2:
+            rb.append(f'full_metrics 되돌림 실패 ({type(e2).__name__}: {e2})')
+        try:
+            discard_network_candidate(results_dir, stash_dir)  # 후보 네 JSON · 새 도장을 치우고 옛 세대를 stash 에서 (첫 실행이면 활성 없음)
+        except OSError as e2:
+            rb.append(f'망 산출물 되돌림 실패 ({type(e2).__name__}: {e2})')
+        if rb:
+            why += ' · ⚠ ' + ' · '.join(rb)
+        with contextlib.suppress(Exception):
+            record_network_attempt(results_dir, run_id, 'failed', reason=why[:2000], argv=argv,
+                                   stage=NETWORK_PUBLISH_STEP, failure_kind='publish_exception', inputs=inputs)
+        if not isinstance(e, Exception):
+            raise
+        return False, why
+    drop_stash(stash_dir)                                      # 확정 — 옛 세대를 버린다 (여기부터는 되돌리지 않는다)
+    if bk is not None:
+        with contextlib.suppress(OSError):
+            os.remove(bk)
+    return True, ''
 
 
 #: `os.replace` 재시도 (Windows).  대기시간 0.02·0.04·0.08·0.16·0.32 s = 총 0.62 s.

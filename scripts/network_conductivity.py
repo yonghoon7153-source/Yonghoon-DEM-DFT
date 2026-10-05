@@ -1430,6 +1430,9 @@ def _run_all_networks(atoms_raw, contacts_raw, target_types, am_types, type_map,
             # 값이 실제로 0/None 이면 '계산됐고 답이 0' — 실패가 아니다 (thermal 과 같은 규약).
             el_status, el_reason = status_for_value(
                 results['electronic_sigma_full_mScm'], 'electronic')
+            #  ★ 10-05 WEB-03 Q1 — 단 None 의 원인이 "관통인데 풀지 못함" 이면 미퍼콜이 아니다 → failed (상태 필드만 · 해 · σ 불변)
+            if el_status == 'valid_null':
+                el_status, el_reason = _channel_solve_failure(results_el, 'electronic') or (el_status, el_reason)
         results['electronic_status'] = el_status
         if el_reason:
             results['electronic_status_reason'] = el_reason
@@ -1440,14 +1443,15 @@ def _run_all_networks(atoms_raw, contacts_raw, target_types, am_types, type_map,
         _ist, _irsn = status_for_value(results.get('sigma_full_mScm'), 'ionic')
         #  ★ 10-05 RGL-02 — 채널 상태도 생산자 σ 상태와 맞춘다 (Codex: "관통 실패의 원인 · solver 관통 · 독립 calc_percolation · 채널
         #    상태가 함께 맞아야").  증명된 비관통 = valid_zero (게이트에서 ok — 옛 valid_null 과 같은 판정 · 일반 경로 불변).
-        #    관통인데 못 푼 경우는 채널 판정을 옛 규약 (valid_null → ok) 그대로 두되 "미퍼콜" 이라고 **말하지 않는다** — 일반 경로의
-        #    채널 게이트를 바꾸면 Stage E 까지 막혀 범위를 넘는다.  정지 계약 (③) · τ 인계 (solver_guard) 는 이 경우를 거부한다.
+        #  ★ 10-05 WEB-03 Q1 (Codex 재검증 Q1 · 1저자 비준) — 관통인데 못 푼 경우는 이제 채널 상태 **failed** 다.  옛 판은 "일반 경로의 채널 게이트를
+        #    바꾸면 Stage E 까지 막혀 범위를 넘는다" 며 valid_null (ok) 로 두었고, 그래서 일반 경로가 관통 풀이 실패 망으로 Stage E 까지 가 done 이
+        #    됐다 (WEB-03).  지금은 그 차단이 요구다 — 게시 게이트 (`pipeline_service.network_content_verdict`) 가 일반 · 정지 경로 모두에서 막는다
+        #    (정지 계약 ③ · τ 인계 solver_guard 는 두 번째 방어).  전자 · 열 채널도 같은 규칙 (`_channel_solve_failure`).  해 · σ 숫자는 불변.
         if results.get('sigma_full_status') == 'valid_zero' and results.get('sigma_full_reason') == NO_THROUGH_REASON:
             _ist, _irsn = 'valid_zero', ('관통 성분 없음 (no_through_path) — SE 망이 바닥 띠 ↔ 위 띠를 잇지 않는다 · σ_ion = 0 '
                                          '(물리적으로 옳은 답 · 숫자 필드는 None)')
-        elif results.get('sigma_full_status') == 'not_computed' and _ist == 'valid_null':
-            _irsn = (f'관통 성분은 있는데 σ_ion 을 풀지 못했다 ({results.get("sigma_full_reason")}) — 미퍼콜이 아니다 · '
-                     '채널 판정은 옛 규약대로 통과 · 정지 계약 · τ 인계는 거부 (RGL-02)')
+        elif _ist == 'valid_null':
+            _ist, _irsn = _channel_solve_failure(results, 'ionic') or (_ist, _irsn)
         results['ionic_status'] = _ist
         if _irsn:
             results['ionic_status_reason'] = _irsn
@@ -1467,12 +1471,28 @@ def _run_all_networks(atoms_raw, contacts_raw, target_types, am_types, type_map,
             # 값이 실제로 0/None 이면 '계산됐고 답이 0' 이라는 뜻 — 실패가 아니다.
             if results['thermal_sigma_full_mScm'] is None:
                 th_status, th_reason = 'valid_null', '솔버가 κ 를 None 으로 반환 (열망 미퍼콜)'
+                #  ★ 10-05 WEB-03 Q1 — 단 관통인데 풀지 못한 None 은 미퍼콜이 아니다 → failed (상태 필드만)
+                th_status, th_reason = _channel_solve_failure(results_th, 'thermal') or (th_status, th_reason)
             elif results['thermal_sigma_full_mScm'] == 0:
                 th_status, th_reason = 'valid_zero', '솔버가 κ=0 을 반환 (열망 미퍼콜)'
         results['thermal_status'] = th_status
         if th_reason:
             results['thermal_status_reason'] = th_reason
     return results
+
+
+def _channel_solve_failure(res, chan):
+    """★ 10-05 WEB-03 Q1 (Codex 재검증 Q1 · 1저자 비준) — 그 채널의 FULL σ 가 None 인 원인이 "관통 성분은 있는데 풀지 못함" 인가.
+
+    res = 그 채널의 `run_decomposition` 결과 (이온 = 이온 중심 결과 · 전자 = results_el · 열 = results_th).  판정은 생산자 자신의 σ 상태
+    (`_net_sigma_status` — 같은 그래프의 관통 성분까지 본다) 를 그대로 쓴다 (판정 중복 금지): not_computed (solve_failed · non_finite) → ('failed', 사유) ·
+    그 밖 (computed · valid_zero = 증명된 비관통 · 결과 없음) → None (호출자가 값 기준 상태를 그대로 쓴다 — 비관통 · 상 부재는 유효 null).
+    ⚠ 상태 필드만 바꾼다 — 해 · σ 숫자 · 반올림은 그대로 (S3 수치 모듈 · 재봉인 대상)."""
+    if not isinstance(res, dict) or res.get('sigma_full_status') != 'not_computed':
+        return None
+    sym = {'ionic': 'σ_ion', 'electronic': 'σ_e', 'thermal': 'κ'}.get(chan, chan)
+    return 'failed', (f'관통 성분은 있는데 {sym} 을 풀지 못했다 ({res.get("sigma_full_reason")}) — 미퍼콜이 아니다 · '
+                      '수치 실패 = 게시 차단 (WEB-03 Q1 — 일반 · 정지 경로 모두)')
 
 
 #: ★ RC7-02 (Codex 7회차) 채널 상태 규약.  값이 **없는 것**과 **못 낸 것**을 구분한다.

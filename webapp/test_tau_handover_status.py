@@ -49,6 +49,11 @@ RATIO = 'τ_Lap,eff / τ_Dij (정의가 다른 두 τ 의 비)'
 NETSTATE = 'σ_ionic 망 상태 (생산자 sigma_full_status)'
 ATTEMPT = '망 최근 시도 (network_attempt — 활성 세대와 다를 때)'
 NOTHRU = '비관통 (관통 경로 없음)'
+#  ★ 10-05 RGLR-01 웹앱 짝 — τ 인계 상태의 두 부류 (NOT_COMPUTED = 기술적 실패 · BAND_FALLBACK · NOT_PERCOLATING · MODEL_BELOW… = 과학적 HOLD)
+TECH = '기술적 실패'
+HOLD = '과학적 HOLD'
+#  ★ 10-05 WEB-03 Q2 웹앱 짝 — 활성 세대가 있는데 최근 재계산이 실패하면 "이전 성공 값 + 최근 재계산 실패 (사유)"
+RECALC = '최근 재계산 실패'
 
 
 def producer_nonthrough():
@@ -74,11 +79,16 @@ def producer_nonthrough():
 
 
 def res(mode, **kw):
+    #  ★ 10-05 RGLR-01 · 02 — 생산자 레코드 모양 (상태 computed · σ 두 표현 σ_dim = round(σ_ratio × σ₀ × 1000, 6)) — 공용 기술 검사가 본다
     b = {'sigma_full': 0.05 if mode == 'hertzian' else 0.08, 'percolating_fraction': 0.9, 'boundary_rule': 'L0',
          'boundary_band_frac': 0.2, 'phi_se': 0.1995, 'resistance_model': 'maxwell' if mode == 'hertzian' else 'mikic',
-         'psi_placement': 'legacy_divide', 'sigma_grain_S_cm': 0.003,
+         'psi_placement': 'legacy_divide', 'sigma_grain_S_cm': 0.003, 'sigma_full_status': 'computed',
          'temperature_provenance': {'T_C': None, 'T_ref_C': 25.0, 'sigma_ion_T_factor': 1.0}}
     b.update(kw)
+    if 'sigma_full_mScm' not in kw:
+        q, s0 = b.get('sigma_full'), b.get('sigma_grain_S_cm')
+        b['sigma_full_mScm'] = (round(q * s0 * 1000, 6) if isinstance(q, float) and isinstance(s0, float) and q == q and q > 0
+                                else None)
     return b
 
 
@@ -152,8 +162,8 @@ def main():
         ih3 = webapp._ion_handover(case_dir(tmp, 'old', old), dict(MET))
         rows3 = render(dict(MET, _ion_handover=ih3), True)
         st3, bd3 = row(rows3, STATUS), row(rows3, BAND)
-        chk('T3 안 A 전 산출물 → 상태 "NOT_COMPUTED (missing_input)" · 띠 행 "기록 없음 …" (짐작하지 않는다)',
-            st3 is not None and st3[1] == st3[2] == 'NOT_COMPUTED (missing_input)'
+        chk('T3 안 A 전 산출물 → 상태 "NOT_COMPUTED (missing_input) — 기술적 실패" · 띠 행 "기록 없음 …" (짐작하지 않는다)',
+            st3 is not None and st3[1] == st3[2] == f'NOT_COMPUTED (missing_input) — {TECH}'
             and bd3 is not None and bd3[1].startswith('기록 없음'), repr((st3, bd3)))
 
         rows4 = render(dict(MET), True)
@@ -169,8 +179,30 @@ def main():
         ih6 = webapp._ion_handover(case_dir(tmp, 'nonperc', npd), m6)
         rows6 = render(dict(m6, _ion_handover=ih6), True)
         st6 = row(rows6, STATUS)
-        chk('T6 비관통 (실 생산자 · σ 없음 → τ 블록 없음) 이어도 상태 행 = "NOT_PERCOLATING — 비관통 (관통 경로 없음)" (H · P)',
-            st6 is not None and st6[1] == st6[2] == 'NOT_PERCOLATING — ' + NOTHRU and row(rows6, RATIO) is None, repr(st6))
+        chk('T6 비관통 (실 생산자 · σ 없음 → τ 블록 없음) 이어도 상태 행 = "NOT_PERCOLATING — 비관통 (관통 경로 없음) · 과학적 HOLD" (H · P)',
+            st6 is not None and st6[1] == st6[2] == f'NOT_PERCOLATING — {NOTHRU} · {HOLD}' and row(rows6, RATIO) is None, repr(st6))
+
+        # ── T11 (RGLR-01 웹앱 짝 · J20-l) — τ 인계 상태 행이 기술적 실패 (입력 결손 · 무효 · 솔버 관문) 와 과학적 HOLD (입력 유효 · 등록된 규칙) 를 가른다 ──
+        d11 = case_dir(tmp, 'band_bad', {'hertzian': res('hertzian', boundary_rule='L1', sigma_full=None, sigma_full_mScm=0.15),
+                                         'physics': res('physics', boundary_rule='L1')})
+        rows11 = render(dict(MET, _ion_handover=webapp._ion_handover(d11, dict(MET))), True)
+        s11 = row(rows11, STATUS)
+        chk('T11a ★ 띠 L1 인데 computed σ_ratio 없음 (RGLR-01) → Hertz "NOT_COMPUTED (invalid_input: …) — 기술적 실패" · 같은 침대 physics (입력 유효) '
+            '→ "BAND_FALLBACK — 과학적 HOLD …" (옛: 둘 다 BAND_FALLBACK)',
+            s11 is not None and str(s11[1]).startswith('NOT_COMPUTED (invalid_input') and str(s11[1]).endswith(f'— {TECH}')
+            and str(s11[2]).startswith('BAND_FALLBACK — ' + HOLD), repr(s11))
+        d11b = case_dir(tmp, 'mbcb', {'hertzian': res('hertzian', sigma_full=0.3), 'physics': res('physics', sigma_full=0.05)})
+        s11b = row(render(dict(MET, _ion_handover=webapp._ion_handover(d11b, dict(MET))), True), STATUS)
+        chk('T11b 연속체 하한 (G5 · 값 유지) → "MODEL_BELOW_CONTINUUM_BOUND — 과학적 HOLD …" · OK 는 "OK" 그대로',
+            s11b is not None and str(s11b[1]).startswith('MODEL_BELOW_CONTINUUM_BOUND — ' + HOLD) and s11b[2] == 'OK', repr(s11b))
+        d11c = case_dir(tmp, 'tamper', {'hertzian': res('hertzian', sigma_full=0.2), 'physics': res('physics')})   # σ_ratio 만 ×4 (σ_dim 은 0.05 의 짝)
+        _d11c = json.load(open(os.path.join(d11c, 'network_conductivity_dual.json')))
+        _d11c['hertzian']['sigma_full_mScm'] = round(0.05 * 0.003 * 1000, 6)
+        json.dump(_d11c, open(os.path.join(d11c, 'network_conductivity_dual.json'), 'w'))
+        s11c = row(render(dict(MET, _ion_handover=webapp._ion_handover(d11c, dict(MET))), True), STATUS)
+        chk('T11c ★ RGLR-02 두 σ 표현 불일치 (σ_ratio 만 ×4) → "NOT_COMPUTED (invalid_input: …) — 기술적 실패" (옛: OK · tau2 ÷4)',
+            s11c is not None and str(s11c[1]).startswith('NOT_COMPUTED (invalid_input') and TECH in str(s11c[1]) and s11c[2] == 'OK',
+            repr(s11c))
 
         # ── T9 (RGL-02 웹앱 짝 · J20-l) — 망 σ_ionic 상태 행: 생산자 상태 · 사유를 같은 이름으로 (valid_zero + no_through_path =
         #    "비관통 (관통 경로 없음)" · not_computed + solve_failed = 관통인데 풀지 못함 · computed = 계산됨) · 옛 세대 (상태 키 없음) 는 행 없음
@@ -192,18 +224,28 @@ def main():
 
         # ── T10 (RGL-04 웹앱 짝) — 망 세대 표시: 최근 시도가 실패면 (활성 세대는 옛 것 · 실패 후보는 게시 안 됨) 그 사실 · 사유 · 활성 세대
         gen_fail = {'active_run_id': 'RUN-OLD', 'active_status': 'success',
-                    'attempt': {'network_attempt_run_id': 'RUN-NEW', 'solver_status': 'failed',
+                    'attempt': {'network_attempt_run_id': 'RUN-NEW', 'solver_status': 'failed', 'latest_attempt_status': 'failed',
+                                'failure_kind': 'candidate_rejected',
                                 'reason': 'Network stop contract (stop_after=network): ★ 망 정지 계약 실패: ⑤ physics: boundary_rule=\'L9\''}}
         rows10 = render(dict(MET, _network_generation=gen_fail), True)
         a10 = row(rows10, ATTEMPT)
-        chk('T10a 최근 시도 failed → 행 "failed — <사유> · 활성 세대 RUN-OLD" (같은 이름 failed · 사유 그대로)',
-            a10 is not None and str(a10[1]).startswith('failed — ') and 'L9' in str(a10[1]) and 'RUN-OLD' in str(a10[1])
-            and a10[1] == a10[2], repr(a10))
+        #  ★ 10-05 WEB-03 Q2 — 활성 세대가 있는데 최근 시도가 실패 = 화면 값은 이전 성공 세대 + "최근 재계산 실패 (사유)" (옛 문구 "failed — 사유")
+        chk('T10a 최근 시도 failed (활성 세대 있음) → 행 "최근 재계산 실패 (<사유>) · <실패 종류> · … · 활성 세대 RUN-OLD …" (사유 그대로)',
+            a10 is not None and str(a10[1]).startswith(RECALC + ' (') and 'L9' in str(a10[1]) and 'RUN-OLD' in str(a10[1])
+            and '승격 전 검사 거부' in str(a10[1]) and a10[1] == a10[2], repr(a10))
         gen_first = {'active_run_id': None, 'active_status': 'unknown',
                      'attempt': {'network_attempt_run_id': 'RUN-NEW', 'solver_status': 'failed', 'reason': 'x'}}
         a10b = row(render(dict(MET, _network_generation=gen_first), True), ATTEMPT)
-        chk('T10b 첫 실행 실패 (활성 세대 없음) → "활성 세대 없음" 이라고 말한다', a10b is not None and '활성 세대 없음' in str(a10b[1]),
-            repr(a10b))
+        chk('T10b 첫 실행 실패 (활성 세대 없음) → "활성 세대 없음" 이라고 말한다 ("최근 재계산 실패" 가 아니다 — 보일 이전 값이 없다)',
+            a10b is not None and '활성 세대 없음' in str(a10b[1]) and not str(a10b[1]).startswith(RECALC), repr(a10b))
+        #  T10f (WEB-03 Q2) — 실패 종류 (failure_kind) 를 화면 이름으로: 솔버 · 승격 전 검사 거부 · 게시 중 예외 (되돌림) · lock
+        kinds10 = {'solver': '솔버', 'publish_exception': '게시 중 예외', 'lock': 'lock'}
+        got10 = {}
+        for k_, w_ in kinds10.items():
+            g_ = dict(gen_fail, attempt=dict(gen_fail['attempt'], failure_kind=k_, reason='OSError: 주입'))
+            c_ = row(render(dict(MET, _network_generation=g_), True), ATTEMPT)
+            got10[k_] = c_ is not None and w_ in str(c_[1]) and str(c_[1]).startswith(RECALC)
+        chk(f'T10f 최근 재계산 실패의 종류가 화면에 보인다 (솔버 · 게시 중 예외 · lock) {got10}', all(got10.values()))
         gen_ok = {'active_run_id': 'RUN-NEW', 'active_status': 'success',
                   'attempt': {'network_attempt_run_id': 'RUN-NEW', 'solver_status': 'success', 'reason': ''}}
         chk('T10c 최근 시도 = 활성 세대 (success) → 행 없음 · 키 없음 → 행 없음',
@@ -234,6 +276,17 @@ def main():
         chk('T10d _network_generation(폴더) = network_provenance (활성) + network_attempt (최근 시도) 를 읽는다 (도장 없음 = 활성 없음)',
             isinstance(g10, dict) and g10.get('active_run_id') is None
             and (g10.get('attempt') or {}).get('solver_status') == 'failed', repr(g10))
+        #  T10g (WEB-03 Q2b) — 옛 (v1) 시도 기록 (failure_kind · latest_attempt_status 없음) 은 남긴 단계 이름으로 종류를 읽는다 (전부 "솔버" 로 뭉치지 않는다)
+        g10g = {}
+        for stage_, want_ in (('Network stop contract (stop_after=network)', 'candidate_rejected'),
+                              ('Network Solver (LOCK 미획득 — 미실행)', 'lock'), ('Network Solver (both modes)', 'solver')):
+            dg = case_dir(tmp, 'v1_' + want_, None)
+            with open(os.path.join(dg, 'network_attempt.json'), 'w', encoding='utf-8') as fh:
+                json.dump({'network_attempt_run_id': 'RUN-V1', 'solver_status': 'failed', 'reason': 'x', 'stage': stage_}, fh)
+            gg = _gfn(dg) if _gfn else {}
+            g10g[want_] = (gg.get('latest_attempt_status'), gg.get('failure_kind'), gg.get('stale'))
+        chk(f'T10g 옛 v1 시도 기록 → latest_attempt_status failed · 종류 = 단계 이름에서 (거부 · lock · 솔버) · 활성 없음이라 stale False {g10g}',
+            all(v == ('failed', k, False) for k, v in g10g.items()))
 
         ihx = webapp._ion_handover(os.path.join(tmp, 'missing_case'), dict(MET))
         chk('T6b dual 파일 없는 케이스 → NOT_COMPUTED (missing_input) — 조용히 빠지지 않는다',
@@ -256,9 +309,11 @@ def main():
     tip_b = html.find(f"'{BAND}': {{")
     body_s = html[tip_s:html.find('\n  },', tip_s)] if tip_s >= 0 else ''
     body_b = html[tip_b:html.find('\n  },', tip_b)] if tip_b >= 0 else ''
-    chk('T7c 툴팁: 상태 행 = 다섯 상태 · 네 사유 · tau_flux · G5 값 유지 · 띠 행 = L0/L1/L2 · 4r_SE/L (TAU-24) · 안 A 전 산출물',
+    chk('T7c 툴팁: 상태 행 = 다섯 상태 · 다섯 사유 (RGLR-01 invalid_input) · 두 부류 (기술적 실패 · 과학적 HOLD) · tau_flux · G5 값 유지 · '
+        '띠 행 = L0/L1/L2 · 4r_SE/L (TAU-24) · 안 A 전 산출물',
         all(w in body_s for w in ('OK', 'NOT_PERCOLATING', 'BAND_FALLBACK', 'MODEL_BELOW_CONTINUUM_BOUND', 'NOT_COMPUTED',
-                                  'missing_input', 'percolation_disagree', 'solver_guard', 'temperature_mismatch', 'tau_flux'))
+                                  'missing_input', 'percolation_disagree', 'solver_guard', 'temperature_mismatch', 'tau_flux',
+                                  'invalid_input', TECH, HOLD, 'RGLR-01', 'RGLR-02'))
         and all(w in body_b for w in ('L0', 'L1', 'L2', '4r_SE/L', 'TAU-24')), (tip_s, tip_b))
     a = html.find('const PAPER_TO_ORIG = {')
     alias = html[a:html.find('};', a)] if a >= 0 else ''
@@ -273,7 +328,7 @@ def main():
         and all(w in html[html.find(f"'{NETSTATE}': {{"):html.find('\n  },', html.find(f"'{NETSTATE}': {{"))]
                 for w in ('valid_zero', 'no_through_path', 'solve_failed', NOTHRU))
         and all(w in html[html.find(f"'{ATTEMPT}': {{"):html.find('\n  },', html.find(f"'{ATTEMPT}': {{"))]
-                for w in ('network_attempt', 'failed', 'RGL-04'))
+                for w in ('network_attempt', 'failed', 'RGL-04', RECALC, 'failure_kind', 'publish_exception', 'WEB-03'))
         and f"'{PL.get(NETSTATE, '?')}'" in alias and f"'{PL.get(ATTEMPT, '?')}'" in alias)
 
     # ── T8 라우트 배선 ──

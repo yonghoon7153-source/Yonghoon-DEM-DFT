@@ -41,7 +41,27 @@ def res(mode, **kw):
             'contact_mode': mode, 'n_boundary_overlap': 0, 'sigma_full_status': 'computed', 'sigma_grain_S_cm': 0.003,
             'temperature_provenance': {'T_C': None, 'T_ref_C': 25.0, 'sigma_ion_T_factor': 1.0, 'T_dependence': 'NOT_MODELLED'}}
     base.update(kw)
+    #  ★ 10-05 RGLR-02 — 생산자 레코드는 σ 를 **두 표현**으로 싣는다 (σ_ratio 8 자리 · σ_dim = round(σ_ratio × σ₀[S/cm] × 1000, 6) mS/cm ·
+    #    network_conductivity.run_decomposition).  손 레코드도 그 짝을 갖춘다 (공용 기술 검사가 항등식을 본다) — 따로 주면 그 값을 쓴다.
+    if 'sigma_full_mScm' not in kw:
+        q, s0 = base.get('sigma_full'), base.get('sigma_grain_S_cm')
+        ok_ = all(isinstance(v, (int, float)) and not isinstance(v, bool) and math.isfinite(v) and v > 0 for v in (q, s0))
+        base['sigma_full_mScm'] = round(q * s0 * 1000, 6) if ok_ else None
     return base
+
+
+def npz(**kw):
+    """생산자 정상 비관통 레코드 모양 (RGL-02 — valid_zero + no_through_path · σ 숫자 None (F-12) · 관통 분율 0 · CF · constr · 이온 채널 valid_zero)."""
+    d = dict(percolating_fraction=0.0, sigma_full=None, sigma_full_mScm=None, sigma_full_status='valid_zero',
+             sigma_full_reason='no_through_path', sigma_bulk_net_status='valid_zero', sigma_constr_net_status='valid_zero',
+             ionic_status='valid_zero')
+    d.update(kw)
+    return d
+
+
+def _rc(reason):
+    """사유 칸 → 사유 코드 ('invalid_input: 세부' → 'invalid_input')."""
+    return str(reason or '').split(':', 1)[0].strip()
 
 
 def dual(h=None, p=None, drop=()):
@@ -87,10 +107,13 @@ def main():
         and o['phi_basis'] == 'mass_conserving' and o['L_basis'] == 'L_mc')
     chk('A5 띠 메타 = 솔버 기록 그대로 (규칙 L0 · 폭 0.06)',
         o['ion_net_band_rule_hertz'] == 'L0' and o['ion_net_band_frac_hertz'] == 0.06)
-    chk('A6 상태 값은 다섯 중 하나 · 사유는 넷 중 하나 — SOLVER_ANOMALY 를 쓰지 않는다 (v2 §5-1 · 물리 f3)',
+    #  ★ 10-05 RGLR-01 — 사유 코드에 invalid_input (공용 기술 검사 · 생산자 계약 위반 레코드) 이 더해졌다 → 다섯.  사유 칸은 코드 그대로이거나
+    #    'invalid_input: 세부' (세부를 다는 것은 invalid_input 하나) — 코드는 `reason_code` 로 읽는다.
+    chk('A6 상태 값은 다섯 중 하나 · 사유 코드는 다섯 중 하나 (RGLR-01 invalid_input 추가) — SOLVER_ANOMALY 를 쓰지 않는다 (v2 §5-1 · 물리 f3)',
         tuple(tf.STATUSES) == ('OK', 'NOT_PERCOLATING', 'BAND_FALLBACK', 'MODEL_BELOW_CONTINUUM_BOUND', 'NOT_COMPUTED')
-        and tuple(tf.REASONS) == ('solver_guard', 'missing_input', 'temperature_mismatch', 'percolation_disagree')
-        and 'SOLVER_ANOMALY' not in tf.STATUSES)
+        and tuple(tf.REASONS) == ('solver_guard', 'missing_input', 'temperature_mismatch', 'percolation_disagree', 'invalid_input')
+        and 'SOLVER_ANOMALY' not in tf.STATUSES
+        and getattr(tf, 'reason_code', lambda r: None)('invalid_input: σ_ratio None') == 'invalid_input')
 
     # ── B. G1 띠 ──
     b1 = tf.ion_columns(dual(h={'boundary_rule': 'L1'}), LEDGER, 92.0)
@@ -111,15 +134,21 @@ def main():
     c1 = tf.ion_columns(dual(), LEDGER, 0.0)
     chk('C1 G2 솔버 관통 > 0 인데 calc_percolation 0 → NOT_COMPUTED (percolation_disagree) · 빈칸',
         c1['ion_net_status_hertz'] == 'NOT_COMPUTED' and c1['ion_net_status_reason_hertz'] == 'percolation_disagree' and blank3(c1, 'hertz'))
-    c2 = tf.ion_columns(dual(h={'percolating_fraction': 0.0, 'sigma_full': None, 'sigma_full_status': 'not_computed'}), LEDGER, 12.0)
+    #  ★ 10-05 RGL-02 · RGLR-01 — 비관통 픽스처는 생산자 어휘 (valid_zero + no_through_path) 로 쓴다.  옛 픽스처 (not_computed · 관통 분율 0) 는
+    #    RGL-02 전 생산자 모양이라 이제 공용 기술 검사가 기술적 실패로 본다 (C3 · L7).
+    c2 = tf.ion_columns(dual(h=npz()), LEDGER, 12.0)
     chk('C2 G2 반대 (솔버 0 · calc_percolation 12 %) → NOT_COMPUTED (percolation_disagree)',
         c2['ion_net_status_hertz'] == 'NOT_COMPUTED' and c2['ion_net_status_reason_hertz'] == 'percolation_disagree')
-    chk('C3 G2 는 `sigma_full_status` 로 판정하지 않는다 — 관통 · 비관통 모두 상태 문자열과 무관 (TAU-22)',
-        tf.ion_columns(dual(h={'sigma_full_status': 'not_computed'}), LEDGER, 92.0)['ion_net_status_hertz'] == 'OK')
+    #  ★ 10-05 RGLR-01 — 옛 C3 ("G2 는 상태 문자열을 무시한다 · TAU-22 → 상태 not_computed 인데 σ 있음 = OK") 는 RGL-02 생산자 수정 전 규약이다
+    #    (그때는 상태가 비관통 · 실패를 못 갈랐다).  지금은 상태 ↔ 값이 생산자 계약이고, 모순 레코드 (not_computed 인데 σ 있음) 는 공용 기술
+    #    검사가 G1–G5 **앞**에서 기술적 실패로 막는다 (생산자가 not_computed 를 신고 = solver_guard).  G2 판정 자체는 여전히 관통 분율로 한다 (C1 · C2).
+    c3 = tf.ion_columns(dual(h={'sigma_full_status': 'not_computed'}), LEDGER, 92.0)
+    chk('C3 상태 ↔ 값 모순 (not_computed 인데 σ 있음 · 관통) → NOT_COMPUTED (solver_guard) — 옛 TAU-22 의 "상태 무시" 는 RGL-02 · RGLR-01 로 대체',
+        c3['ion_net_status_hertz'] == 'NOT_COMPUTED' and c3['ion_net_status_reason_hertz'] == 'solver_guard' and blank3(c3, 'hertz')
+        and c3['ion_net_status_physics'] == 'OK')
 
     # ── D. G3 비관통 ──
-    np_kw = {'percolating_fraction': 0.0, 'sigma_full': None, 'sigma_full_status': 'not_computed'}
-    d1 = tf.ion_columns(dual(h=np_kw, p=np_kw), LEDGER, 0.0)
+    d1 = tf.ion_columns(dual(h=npz(), p=npz()), LEDGER, 0.0)
     chk('D1 G3 비관통 (두 판정 모두 0) → NOT_PERCOLATING · f = 0 · f_gap = 0 · tau2 · tau 빈칸 (= ∞)',
         d1['ion_net_status_hertz'] == 'NOT_PERCOLATING' and d1['f_ion_hertz'] == 0.0 and d1['f_ion_hertz_gap'] == 0.0
         and d1['tau2_ion_hertz'] is None and d1['tau_ion_hertz'] is None and d1['ion_net_status_physics'] == 'NOT_PERCOLATING')
@@ -157,8 +186,10 @@ def main():
     g1 = tf.ion_columns(dual(h={'sigma_full': None, 'sigma_full_status': 'not_computed'}), LEDGER, 92.0)
     chk('G1 관통인데 σ 없음 (솔버 관문 · 경계 겹침 퇴화) → NOT_COMPUTED (solver_guard)',
         g1['ion_net_status_hertz'] == 'NOT_COMPUTED' and g1['ion_net_status_reason_hertz'] == 'solver_guard' and blank3(g1, 'hertz'))
-    g2 = [tf.ion_columns(dual(h={'sigma_full': v}), LEDGER, 92.0)['ion_net_status_reason_hertz'] for v in (0.0, -0.1, float('nan'), float('inf'))]
-    chk('G2 σ 가 0 · 음수 · NaN · inf → NOT_COMPUTED (solver_guard)', g2 == ['solver_guard'] * 4)
+    #  ★ 10-05 RGLR-01 — 상태 computed 인데 σ_ratio 가 0 · 음수 · NaN · inf = 생산자 계약 위반 (생산자는 그런 값을 computed 로 내지 않는다) →
+    #    공용 기술 검사 invalid_input (옛: L0 에서만 solver_guard 로 걸렸고 L1/L2 는 BAND_FALLBACK 로 가려졌다 — 띠와 무관하게 같은 판정).
+    g2 = [_rc(tf.ion_columns(dual(h={'sigma_full': v}), LEDGER, 92.0)['ion_net_status_reason_hertz']) for v in (0.0, -0.1, float('nan'), float('inf'))]
+    chk('G2 computed 인데 σ_ratio 가 0 · 음수 · NaN · inf → NOT_COMPUTED (invalid_input — RGLR-01 · 옛 solver_guard)', g2 == ['invalid_input'] * 4)
 
     # ── H. 입력 누락 ──
     h1 = tf.ion_columns(dual(), {'thickness_um': L_GAP, 'thickness_mass_conserving_um': None, 'phi_se_mass_conserving': PHI_MC}, 92.0)
@@ -293,6 +324,209 @@ def main():
         and k4['ion_net_status_reason_hertz'] == 'solver_guard')
     chk('K5 관통 침대의 σ 는 상태 · 사유 필드를 더해도 그대로 (computed · 사유 None)',
         all(dk[m]['sigma_full_status'] == 'computed' and dk[m].get('sigma_full_reason') is None for m in ('hertzian', 'physics')))
+
+    # ── K6 · K7 (10-05 WEB-03 Q1 · Codex 재검증 §5 Q1 · 1저자 비준) — 관통인데 풀지 못한 채널은 **생산자가** 채널 상태 failed 로 신고한다 ──
+    #    옛 판: 이온은 valid_null (= 미퍼콜의 정답과 같은 이름 · 사유 문구만 "미퍼콜이 아니다") · 전자 · 열은 아무 표지 없이 valid_null → 게시 게이트
+    #    (`pipeline_service.network_content_verdict`) 가 ok 로 읽어 일반 경로가 Stage E 까지 갔다.  비관통 · 상 부재는 그대로 유효 null.
+    MODES2 = (('hertzian', 'hertz'), ('physics', 'physics'))
+    chk('K6 ★ WEB-03 Q1 — 관통인데 풀지 못함 (spsolve 예외 · 전 채널) → 이온 · 열 채널 상태 failed + 사유 solve_failed (옛: valid_null) (두 모드)',
+        all(dfail[m].get('ionic_status') == 'failed' and 'solve_failed' in str(dfail[m].get('ionic_status_reason', ''))
+            and dfail[m].get('thermal_status') == 'failed' for m, _t in MODES2))
+
+    def _break_only(channel):
+        """`spsolve` 를 그 채널의 FULL 풀이에서만 실패시킨다 (호출 사슬의 run_decomposition `_mode` · solve_network `mode` 로 가린다)."""
+        orig = nc.spsolve
+
+        def _f(*a, **k):
+            fr, smode, rmode = sys._getframe(1), None, None
+            while fr is not None:
+                if fr.f_code.co_name == 'solve_network' and smode is None:
+                    smode = fr.f_locals.get('mode')
+                if fr.f_code.co_name == 'run_decomposition':
+                    rmode = fr.f_locals.get('_mode')
+                    break
+                fr = fr.f_back
+            if rmode == channel and smode == 'full':
+                raise RuntimeError(f'주입: {channel} FULL spsolve 실패 (채널 하나만)')
+            return orig(*a, **k)
+        return orig, _f
+
+    #  SE 사슬 (type 2 · x 0) + AM 사슬 (type 1 · x 5) — 둘 다 관통 · 전자망 = AM 사슬 (요청된 채널 셋 다 있다)
+    AM_A = {i: {'type': 2, 'x': 0.0, 'y': 0.0, 'z': float(z), 'radius': 1.0} for i, z in enumerate(range(21), 1)}
+    AM_A.update({100 + k: {'type': 1, 'x': 5.0, 'y': 0.0, 'z': float(z), 'radius': 1.0} for k, z in enumerate(range(21))})
+    AM_C = C + [{'id1': 100 + k, 'id2': 101 + k, 'contact_area': 0.1, 'delta': 0.05} for k in range(20)]
+    AM_TM = {1: 'AM_P', 2: 'SE'}
+
+    def _run_tm(A_, C_, tm, plate_=20.0, channel=None, temp_c=None):
+        orig = None
+        if channel:
+            orig, nc.spsolve = _break_only(channel)
+        try:
+            with contextlib.redirect_stdout(io.StringIO()):
+                r_ = {cm: nc._run_all_networks(A_, C_, [k for k, v in tm.items() if v == 'SE'], [k for k, v in tm.items() if 'AM' in v],
+                                               tm, 1.0, plate_, 10.0, 10.0, None, contact_mode=cm, temp_c=temp_c)
+                      for cm in ('hertzian', 'physics')}
+        finally:
+            if orig is not None:
+                nc.spsolve = orig
+        return json.loads(json.dumps(r_))                  # 디스크 모양 (JSON 왕복)
+    k7 = {'전자만 실패 (SE · AM 관통)': (_run_tm(AM_A, AM_C, AM_TM, channel='electronic'), ('computed', 'failed', 'computed')),
+          '열만 실패 (SE 관통)': (_run_tm(A, C, {1: 'SE'}, channel='thermal'), ('computed', 'not_applicable', 'failed')),
+          '이온만 실패 (SE 관통)': (_run_tm(A, C, {1: 'SE'}, channel='ionic'), ('failed', 'not_applicable', 'computed')),
+          '정상 (SE · AM 관통)': (_run_tm(AM_A, AM_C, AM_TM), ('computed', 'computed', 'computed')),
+          'AM 비관통 (사슬 끊김) — 유효 null': (_run_tm(AM_A, [c_ for c_ in AM_C if c_['id1'] != 110], AM_TM),
+                                         ('computed', 'valid_null', 'computed')),
+          'SE 정상 비관통 — 유효 null': (db, ('valid_zero', 'not_applicable', 'valid_null'))}
+    k7got = {lbl: tuple((r_[m].get('ionic_status'), r_[m].get('electronic_status'), r_[m].get('thermal_status')) for m, _t in MODES2)
+             for lbl, (r_, _w) in k7.items()}
+    k7bad = {lbl: k7got[lbl] for lbl, (_r, w) in k7.items() if k7got[lbl] != (w, w)}
+    chk(f'K7 ★ WEB-03 Q1 — 채널마다: 요청된 채널 (이온 · 전자 · 열) 의 관통 풀이 실패만 failed · 비관통 (valid_zero · valid_null) · 상 부재 '
+        f'(not_applicable) 는 유효 null 그대로 (두 모드) {k7bad or ""}', not k7bad)
+
+    # ── L. RGLR-01 · 02 (Codex 10-05 재검증 §2 · §3 · 1저자 비준) — 공용 기술 검사 `ion_record_problem` ──────────────────────────────
+    #    network 정지 계약 (`webapp/pipeline_service.network_stop_verdict` ③) 과 τ 인계 소비자 (`ion_columns`) 가 **같은 함수**를 쓴다 · 과학적
+    #    게이트 (G1 띠 폴백 · G3 비관통 · G5 연속체 하한) **앞**에서 돈다.  반례는 실 생산자 출력 위에 같은 필드를 두 모드 (또는 한 모드) 함께
+    #    바꾼다 — 파일 간 불일치가 아니라 같은 잘못된 레코드가 소비자에게 가는 경우 (Codex 와 같은 모양).
+    import copy
+    import random
+    import se_material as sem
+    prob_fn = getattr(tf, 'ion_record_problem', None)
+    tol_fn = getattr(tf, 'sigma_identity_tol', None)
+
+    def _prob(rec):
+        return prob_fn(rec) if prob_fn else ('NO_HELPER', '도우미 없음 (옛 코드)')
+
+    def _mut(d_, fn, modes=('hertzian', 'physics')):
+        d2 = copy.deepcopy(d_)
+        for m_ in modes:
+            fn(d2[m_])
+        return d2
+
+    def _led(A_, plate_):
+        phi_ = sum(4.0 / 3.0 * math.pi * a['radius'] ** 3 for a in A_.values()) / (10.0 * 10.0 * plate_)
+        return {'thickness_um': plate_, 'thickness_mass_conserving_um': plate_, 'phi_se_mass_conserving': phi_}
+
+    #  띠 폴백 L1 (test_pipeline_provenance band_l1 과 같은 침대) · L2 (관측 z 범위 0..10 · 판 40) · 약한 접촉 (작은 σ) · 60 °C (온도 변환 σ₀)
+    AB1 = {i: {'type': 1, 'x': 0.0, 'y': 0.0, 'z': 0.5 * k, 'radius': 0.4} for i, k in enumerate(range(81), 1)}
+    CB1 = [{'id1': i, 'id2': i + 1, 'contact_area': 0.1 * 0.16, 'delta': 0.05 * 0.4} for i in range(1, 81)]
+    AB2 = {i: {'type': 1, 'x': 0.0, 'y': 0.0, 'z': 0.5 * k, 'radius': 0.4} for i, k in enumerate(range(21), 1)}
+    CB2 = CB1[:20]
+    CW = [{'id1': i, 'id2': i + 1, 'contact_area': 1e-5, 'delta': 0.05} for i in range(1, 21)]
+    dB1, dB2 = _run_tm(AB1, CB1, {1: 'SE'}, plate_=40.0), _run_tm(AB2, CB2, {1: 'SE'}, plate_=40.0)
+    dW, dT = _run_tm(A, CW, {1: 'SE'}), _run_tm(A, C, {1: 'SE'}, temp_c=60.0)
+    lB1, lB2 = _led(AB1, 40.0), _led(AB2, 40.0)
+    ok_recs = {'관통 L0': dk, '정상 비관통': db, '띠 L1': dB1, '띠 L2': dB2, '작은 σ': dW, '온도 60 °C σ₀': dT}
+    l1 = {lbl: tuple(_prob(d_[m_]) for m_ in ('hertzian', 'physics')) for lbl, d_ in ok_recs.items()}
+    chk(f'L1 공용 기술 검사 `ion_record_problem` — 실 생산자 출력 (관통 · 비관통 · 띠 L1 · L2 · 작은 σ · 60 °C σ₀) 두 모드 전부 유효 (None) '
+        f'{ {k: v for k, v in l1.items() if v != (None, None)} or ""}',
+        prob_fn is not None and all(v == (None, None) for v in l1.values()))
+    chk('L1b 픽스처 조건이 섰다 — 띠 규칙 L1 · L2 · 작은 σ (Hertz σ_dim < 1e-3 mS/cm) · 60 °C σ₀ (Arrhenius · σ_grain_S_cm ≠ 0.003)',
+        all(dB1[m_]['boundary_rule'] == 'L1' and dB2[m_]['boundary_rule'] == 'L2' for m_ in ('hertzian', 'physics'))
+        and 0 < dW['hertzian']['sigma_full_mScm'] < 1e-3
+        and abs(dT['hertzian']['sigma_grain_S_cm'] - sem.sigma_grain_S_cm(60.0)) == 0 and dT['hertzian']['sigma_grain_S_cm'] != 0.003)
+
+    codex = {'σ_ratio None': lambda r: r.update(sigma_full=None), 'σ_ratio NaN': lambda r: r.update(sigma_full=float('nan')),
+             'σ_ratio −1': lambda r: r.update(sigma_full=-1), '관통 분율 2': lambda r: r.update(percolating_fraction=2)}
+    l2 = {}
+    for lbl, fn in codex.items():
+        ob = tf.ion_columns(_mut(dB1, fn), lB1, 100.0)
+        op = tf.ion_columns(_mut(dB1, fn, ('physics',)), lB1, 100.0)
+        l2[lbl] = (ob['ion_net_status_hertz'], _rc(ob['ion_net_status_reason_hertz']), ob['ion_net_status_physics'],
+                   _rc(ob['ion_net_status_reason_physics']), op['ion_net_status_hertz'], op['ion_net_status_physics'],
+                   _rc(op['ion_net_status_reason_physics']))
+    want2 = ('NOT_COMPUTED', 'invalid_input', 'NOT_COMPUTED', 'invalid_input', 'BAND_FALLBACK', 'NOT_COMPUTED', 'invalid_input')
+    chk(f'L2 ★ RGLR-01 Codex 반례 (실 띠 L1 침대 · 같은 필드를 두 모드 함께) σ_ratio None · NaN · −1 · 관통 분율 2 → NOT_COMPUTED (invalid_input) · '
+        f'physics 만 바꾸면 physics 만 (Hertz 는 BAND_FALLBACK 그대로) — 옛: 넷 다 BAND_FALLBACK {l2}',
+        all(v == want2 for v in l2.values()) and len(l2) == 4)
+    l2b = {lbl: (lambda o_: (o_['ion_net_status_hertz'], _rc(o_['ion_net_status_reason_hertz'])))(tf.ion_columns(_mut(dk, fn), led, 100.0))
+           for lbl, fn in codex.items()}
+    chk(f'L2b 같은 반례를 L0 침대에서도 → NOT_COMPUTED (invalid_input) — 띠와 무관한 한 판정 (옛: σ 반례 solver_guard · 관통 분율 2 = OK) {l2b}',
+        all(v == ('NOT_COMPUTED', 'invalid_input') for v in l2b.values()))
+
+    o1, o2 = tf.ion_columns(dB1, lB1, 100.0), tf.ion_columns(dB2, lB2, 100.0)
+    o3 = tf.ion_columns(dk, dict(led, phi_se_mass_conserving=1e-4), 100.0)
+    chk('L3 양성 대조 — 입력이 유효한 등록된 과학적 HOLD 는 그대로: 띠 L1 · L2 → BAND_FALLBACK · 연속체 하한 → MODEL_BELOW_CONTINUUM_BOUND (값 유지) · '
+        '정상 비관통 → NOT_PERCOLATING (K3) — 기술 검사가 과잉차단하지 않는다',
+        o1['ion_net_status_hertz'] == o1['ion_net_status_physics'] == 'BAND_FALLBACK' and o1['ion_net_band_rule_hertz'] == 'L1'
+        and o2['ion_net_status_hertz'] == o2['ion_net_status_physics'] == 'BAND_FALLBACK' and o2['ion_net_band_rule_physics'] == 'L2'
+        and o3['ion_net_status_hertz'] == o3['ion_net_status_physics'] == 'MODEL_BELOW_CONTINUUM_BOUND' and o3['tau2_ion_hertz'] is not None
+        and k3['ion_net_status_hertz'] == 'NOT_PERCOLATING')
+
+    t4 = {'σ_ratio ×4 · 두 모드 (Codex ratio_times4)': (lambda r: r.update(sigma_full=r['sigma_full'] * 4), ('hertzian', 'physics')),
+          'σ_ratio ×4 · physics 만': (lambda r: r.update(sigma_full=r['sigma_full'] * 4), ('physics',)),
+          'σ_dim ×4 · 두 모드': (lambda r: r.update(sigma_full_mScm=r['sigma_full_mScm'] * 4), ('hertzian', 'physics')),
+          'σ_dim ×4 · Hertz 만': (lambda r: r.update(sigma_full_mScm=r['sigma_full_mScm'] * 4), ('hertzian',))}
+    l4 = {}
+    for lbl, (fn, modes) in t4.items():
+        o_ = tf.ion_columns(_mut(dk, fn, modes), led, 100.0)
+        l4[lbl] = all((o_[f'ion_net_status_{t}'] == 'NOT_COMPUTED' and _rc(o_[f'ion_net_status_reason_{t}']) == 'invalid_input'
+                       and o_[f'tau2_ion_{t}'] is None) if m in modes else
+                      (o_[f'ion_net_status_{t}'] == 'OK' and o_[f'tau2_ion_{t}'] == k1[f'tau2_ion_{t}']) for m, t in MODES2)
+    chk(f'L4 ★ RGLR-02 두 σ 표현 항등식 (실 L0 침대) — σ_ratio 만 · σ_dim 만 ×4 (두 모드 · 한 모드) → 바뀐 모드만 NOT_COMPUTED (invalid_input) · '
+        f'tau2 빈칸 (옛: σ_ratio ×4 → tau2 ÷4 로 OK) · 안 바꾼 모드는 OK 그대로 {l4}', all(l4.values()) and len(l4) == 4)
+    ow, ot = tf.ion_columns(dW, led, 100.0), tf.ion_columns(dT, led, 100.0)
+    chk('L4b 양성 대조 — 작은 σ (Hertz σ_dim ~1e-4 · 6 자리 반올림이 상대 0.4 %) · 60 °C σ₀ (Arrhenius) 는 생산자 그대로 OK (σ₀ 메타 = 그 온도의 값)',
+        ow['ion_net_status_hertz'] == ow['ion_net_status_physics'] == 'OK'
+        and ot['ion_net_status_hertz'] == ot['ion_net_status_physics'] == 'OK' and ot['ion_sigma0_T_C'] == 60.0
+        and abs(ot['ion_sigma0_mScm'] - sem.sigma_grain_S_cm(60.0) * 1000) < 1e-9)
+    if tol_fn is not None:
+        rH = dk['hertzian']
+        cen = 1000.0 * rH['sigma_grain_S_cm'] * rH['sigma_full']
+        tol = tol_fn(rH['sigma_grain_S_cm'], rH['sigma_full'], rH['sigma_full_mScm'])
+        in_, out_ = dict(rH, sigma_full_mScm=cen + 0.999 * tol), dict(rH, sigma_full_mScm=cen + 1.001 * tol)
+        chk(f'L4c 경계 — 허용 = 5e-7 + 1000·σ₀·5e-9 + 부동소수 여유 (= {tol:.6g} mS/cm) · 0.999×허용 안 → 유효 · 1.001×허용 밖 → invalid_input',
+            abs(tol - (5e-7 + 1000.0 * rH['sigma_grain_S_cm'] * 5e-9)) < 1e-12 and _prob(in_) is None and _rc(_prob(out_)[0]) == 'invalid_input')
+    else:
+        chk('L4c 경계 — sigma_identity_tol 도우미 없음 (옛 코드)', False)
+
+    #  L5 성질 시험 — 생산자 반올림 그대로 (σ_ratio = round(·, 8) · σ_dim = round(σ_ratio_raw × σ₀ × 1000, 6) · numpy float64 · 파이썬 float 둘 다)
+    #     로 만든 레코드는 σ₀ 가 25 °C 상수든 Arrhenius 변환이든 전부 통과해야 한다 (경계가 생산자 정밀도보다 빡빡하면 정상 출력을 막는다).
+    import numpy as _np
+    rng = random.Random(20261005)
+    l5_bad, l5_n, l5_skip, l5_tamper_miss = [], 0, 0, 0
+    for i_ in range(20000):
+        q_true = 10 ** rng.uniform(-6.0, math.log10(1.5))
+        t_c = rng.choice([None, rng.uniform(-30.0, 120.0)])
+        ea = rng.choice([None, 0.29, 0.41, 0.46])
+        s0 = sem.sigma_grain_S_cm(t_c, ea)
+        q_raw = _np.float64(q_true) if i_ % 2 else q_true
+        q_st, sd_st = float(round(q_raw, 8)), float(round(q_raw * s0 * 1000, 6))
+        rec = {'sigma_full_status': 'computed', 'sigma_full': q_st, 'sigma_full_mScm': sd_st, 'percolating_fraction': 1.0,
+               'sigma_grain_S_cm': s0}
+        if q_st <= 0 or sd_st <= 0:                     # 반올림으로 0 이 된 σ — computed 인데 0 = 양수 규칙이 막는다 (항등식 시험 밖)
+            l5_skip += 1
+            if _prob(rec) is None:
+                l5_bad.append(('zero-pass', q_true, s0))
+            continue
+        l5_n += 1
+        p_ = _prob(rec)
+        if p_ is not None:
+            l5_bad.append((q_true, s0, q_st, sd_st, p_))
+        if sd_st > 1e-4 and _prob(dict(rec, sigma_full=q_st * 4)) is None:   # Codex 모양 ×4 는 σ_dim 이 반올림 바닥보다 클 때 늘 잡힌다
+            l5_tamper_miss += 1
+    chk(f'L5 성질 시험 (2 만 표본 · σ_ratio 1e-6–1.5 · σ₀ 25 °C · −30–120 °C × Ea 띠) — 생산자 반올림 출력 {l5_n} 건 전부 통과 · '
+        f'반올림 0 ({l5_skip} 건) 은 양수 규칙이 막음 · σ_ratio ×4 놓침 {l5_tamper_miss} {l5_bad[:2] or ""}',
+        prob_fn is not None and not l5_bad and l5_n > 19000 and l5_tamper_miss == 0)
+
+    vz = {'사유 solve_failed': {'sigma_full_reason': 'solve_failed'}, '사유 zero_value': {'sigma_full_reason': 'zero_value'},
+          'σ_ratio 0.0': {'sigma_full': 0.0}, 'σ_dim 0.0': {'sigma_full_mScm': 0.0}, '관통 분율 0.3': {'percolating_fraction': 0.3},
+          'CF 상태 not_computed': {'sigma_bulk_net_status': 'not_computed'}, 'constr 상태 없음': {'sigma_constr_net_status': None},
+          '이온 채널 valid_null': {'ionic_status': 'valid_null'}}
+    l6 = {}
+    for lbl, kv in vz.items():
+        rec = dict(db['hertzian'], **kv)
+        o_ = tf.ion_columns({'hertzian': rec, 'physics': db['physics']}, led, 0.0)
+        l6[lbl] = (_rc((_prob(rec) or ('',))[0]), o_['ion_net_status_hertz'], _rc(o_['ion_net_status_reason_hertz']))
+    chk(f'L6 ★ 증명된 비관통 = RGL-02 조합만 (사유 no_through_path · σ 숫자 None · 관통 분율 0 · CF · constr · 이온 채널 valid_zero) — 한 키씩 어긋나면 '
+        f'invalid_input · τ 인계 NOT_COMPUTED (NOT_PERCOLATING 아님) { {k: v for k, v in l6.items() if v != ("invalid_input", "NOT_COMPUTED", "invalid_input")} or ""}',
+        all(v == ('invalid_input', 'NOT_COMPUTED', 'invalid_input') for v in l6.values()) and len(l6) == len(vz))
+    st7 = {repr(s_): _rc((_prob(dict(dk['hertzian'], sigma_full_status=s_)) or ('',))[0]) for s_ in (None, 'garbage', 'valid_null', 'COMPUTED')}
+    st7['키 없음'] = _rc((_prob({k: v for k, v in dk['hertzian'].items() if k != 'sigma_full_status'}) or ('',))[0])
+    st7['not_computed'] = _rc((_prob(dfail['hertzian']) or ('',))[0])
+    chk(f'L7 상태 어휘 — 생산자 계약 밖 (None · 키 없음 · 모르는 문자열 · 채널 어휘 valid_null) → invalid_input · 생산자 신고 not_computed → solver_guard {st7}',
+        all(v == 'invalid_input' for k, v in st7.items() if k != 'not_computed') and st7['not_computed'] == 'solver_guard')
+    chk('L8 어휘 짝 — 공용 기술 검사의 비관통 사유 = 생산자 (network_conductivity.NO_THROUGH_REASON) · 사유 코드 invalid_input 은 REASONS 안',
+        getattr(tf, 'NO_THROUGH_REASON', None) == nc.NO_THROUGH_REASON and 'invalid_input' in tf.REASONS)
 
     print(f'\ntest_tau_flux: {_ok}/{_ok + len(_fail)} PASS' + (f'   FAILED: {_fail}' if _fail else ''))
     return 0 if not _fail else 1
