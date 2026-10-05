@@ -4007,3 +4007,23 @@ gate INCOMPLETE · 실효 정책 UNVERIFIED · native 미승인 · 게이트 리
 
 이 절이 바꾸지 않는 것: §57 승인 문구 · r2 꾸러미 바이트 (`approved=false / usable=false` 원문 그대로) · 정상 gate INCOMPLETE · 과거 실패 / pending / 원복
 기록 · 게이트 리뷰 · REIL 과 무관 · RUN_SCOPE 0. 이 저장소 쪽 실행 0.
+
+## 60. B-min r2 retry3 — 결과 묶음 원본 수령 · 집계 정정표 (BMIN-R3-C1) · PS01-16 범위는 승인권자 결정 대기 (2026-10-06)
+
+> **추가 기록이다.** 사용자가 §59-3 의 1 에 필요한 결과 묶음 원본을 올렸다. NOTE txt 는 받지 않았다.
+
+- **원본:** `bms-balancing/reviews/r14_repros/codex63/comsol_bmin_r2_retry3_result_20261005/BMIN_R2_LIMITED_VALIDATION_RETRY3_RESULT_20261005.zip` — 1,619,237 B ·
+  sha256 `ed0138b90cf2dc4e42f22ec18d8719ff56906780f74b4139850d604b096bb470` (§59 수신 검토의 값과 일치) · `PACKAGE_MANIFEST.json` `97f51112…` · payload 244 크기 ·
+  sha256 전부 일치 · 위험 경로 0 · 비밀정보 패턴 0. ZIP 그대로 보존 (풀지 않음) · 규칙 `1c5452dc7` · 보존 `6fc0549c5`. 안의 코드는 실행하지 않았다.
+- **정정표:** `bms-balancing/docs/BMIN_R2_RETRY3_ACCOUNTING_CORRECTION_20261006.json` (sha256 `16876bb01afe549f9f78ef1c5b32569a85f8e8e3dde0c1daef65bf56305c4414`) · 생성기 `bms-balancing/scripts/bmin_retry3_accounting_correction.py`
+  (표준 라이브러리 · ZIP 을 데이터로만 · 같은 입력 두 번 → 바이트 동일). 행 77 = Python 42 · Java 2 · PowerShell 33 · (ID, input_index) 마다:
+  원래 값 (`status PASS` · 두 boolean false) · 준비 단계 `INPUT_CASE_MAP.json` 의 같은 행 (`status NOT_RUN` · 두 boolean false — 복사의 출처) · 해석
+  ("준비 시점 값 · 최종 판정 권위 없음") · `superseded_by_evidence` = 엔진별 실제 입력 생성 방식 + fixture / 입력 결속 / 산출 / harness 판정 (stdout
+  줄 번호) / 엔진 반환의 ZIP 안 경로 + sha256. **두 값을 true 로 덮어쓰지 않았다.** 원 ZIP · 원 집계 불변.
+  - 생성기를 만들며 대조 규칙 둘을 바로잡았다 (둘 다 생성기가 fail-closed 로 멈춰 드러남): Python 의 `results/<ID>_<idx>.json` 은 실제 candidate_entry
+    산출이고 harness 판정 (= 집계의 observed) 은 stdout 줄이라 **다른 객체** → 따로 결속 · PS01-07 처럼 한 ID 에 입력이 둘인 경우 PS 결과를 ID 가 아니라
+    행 전체로 찾는다.
+  - 정정표의 `not_claimed`: PS01-16 내부 분기 · PY04-02 = 실제 NORMAL240 교체 · PY05-03 = 동시 변조 · 원 CSV 재검산 — 넷 다 주장하지 않는다.
+- **PS01-16 (§59-3 의 2):** 승인권자 (사용자) 결정 대기 — (가) 외부 fail-closed 결과만 수용 · 내부 TryParse 분기 `UNOBSERVED` (검토자 권고) /
+  (나) 내부 분기 확인 필수 유지 · 한정 관측 1 건 별도 승인.
+- 이 절이 바꾸지 않는 것: §57 · §59 · r2 꾸러미 바이트 · native 미승인 · 정상 gate INCOMPLETE · 게이트 · REIL 무관 · RUN_SCOPE 0. 실행 = 생성기 둘 (데이터 읽기만).

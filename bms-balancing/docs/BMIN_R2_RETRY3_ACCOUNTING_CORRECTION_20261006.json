@@ -1,0 +1,3939 @@
+{
+ "counts": {
+  "Java": 2,
+  "Python": 42,
+  "Windows": 33,
+  "rows": 77
+ },
+ "finding": "BMIN-R3-C1 (수신 검토 BMIN_R2_RETRY3_REVIEW_20261006 §5)",
+ "not_claimed": [
+  "PS01-16 의 TryParse 내부 분기 (UNOBSERVED — §59-3 의 2 · 승인권자 결정 대기)",
+  "PY04-02 = 실제 NORMAL240 교체 (baseline identity 거부에 한정한 대체 증거)",
+  "PY05-03 = tlist · tables 동시 변조 (RUNTIME_TLIST 거부에 한정한 대체 증거)",
+  "원 CSV 값의 독립 재검산 (대형 fixture 원 CSV 는 ZIP 에 없음)"
+ ],
+ "rows": [
+  {
+   "engine": "Python",
+   "final_accounting_row": 0,
+   "id": "PY01-01",
+   "input_index": 1,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/Python_RETURN.json",
+     "sha256": "911bb619587e234900b5cb76d93e796c2ae936ccb106c6acfa9a5adc92887b2c"
+    },
+    "entry_output": {
+     "path": "results/PY01-01_1.json",
+     "sha256": "f251bb363b4900cab32002d1d18ee43446f55d8524e4415e4470b87fd0e886da"
+    },
+    "fixture_files": [
+     {
+      "path": "fixtures/PY01-01_1/INPUT_EXPECTATION.json",
+      "sha256": "5aad85562b091cad7a2bb9bfc5e7560ac541317b87b8a7722363e8528c437885"
+     },
+     {
+      "path": "fixtures/PY01-01_1/contract_fixture.json",
+      "sha256": "464a26c389572c729cfb9f0ac66bc95d2d936f08266fa0f6f77eedffee7faa5e"
+     }
+    ],
+    "harness_verdict": {
+     "line": 1,
+     "path": "engine_returns/Python_stdout.txt",
+     "sha256": "9eb34b82a24a0273850cf1304c5faaebc14ac836e66fa20d332287b1f8be630e"
+    },
+    "input_generation": "Python harness 가 시험 임시 위치에 fixture 를 만들어 실제 consumer → candidate_entry 로 호출 (PREPARED_PYTHON_INPUTS.json 행 · fixture 파일 아래)",
+    "prepared_input_row": {
+     "file": {
+      "path": "PREPARED_PYTHON_INPUTS.json",
+      "sha256": "49720ef6cdd3b404d829e81748ed2fc9d5df63c14540e16cbe026ed3e86f6002"
+     },
+     "key": [
+      "PY01-01",
+      1
+     ]
+    }
+   }
+  },
+  {
+   "engine": "Python",
+   "final_accounting_row": 1,
+   "id": "PY01-02",
+   "input_index": 1,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/Python_RETURN.json",
+     "sha256": "911bb619587e234900b5cb76d93e796c2ae936ccb106c6acfa9a5adc92887b2c"
+    },
+    "entry_output": {
+     "path": "results/PY01-02_1.json",
+     "sha256": "e95244de1f3be09499cc8c56084f4872b75fe310c3a62f8504eceb71c517e261"
+    },
+    "fixture_files": [
+     {
+      "path": "fixtures/PY01-02_1/INPUT_EXPECTATION.json",
+      "sha256": "d1ba9c1add2cc507021d6d77b6001a16b058d0ade62da9f103214777cc52bfdc"
+     },
+     {
+      "path": "fixtures/PY01-02_1/contract_fixture.json",
+      "sha256": "540e001191331c2cd9863c466db51cb898373527954edf1a63b2a91c102ace56"
+     }
+    ],
+    "harness_verdict": {
+     "line": 2,
+     "path": "engine_returns/Python_stdout.txt",
+     "sha256": "9eb34b82a24a0273850cf1304c5faaebc14ac836e66fa20d332287b1f8be630e"
+    },
+    "input_generation": "Python harness 가 시험 임시 위치에 fixture 를 만들어 실제 consumer → candidate_entry 로 호출 (PREPARED_PYTHON_INPUTS.json 행 · fixture 파일 아래)",
+    "prepared_input_row": {
+     "file": {
+      "path": "PREPARED_PYTHON_INPUTS.json",
+      "sha256": "49720ef6cdd3b404d829e81748ed2fc9d5df63c14540e16cbe026ed3e86f6002"
+     },
+     "key": [
+      "PY01-02",
+      1
+     ]
+    }
+   }
+  },
+  {
+   "engine": "Python",
+   "final_accounting_row": 2,
+   "id": "PY01-03",
+   "input_index": 1,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/Python_RETURN.json",
+     "sha256": "911bb619587e234900b5cb76d93e796c2ae936ccb106c6acfa9a5adc92887b2c"
+    },
+    "entry_output": {
+     "path": "results/PY01-03_1.json",
+     "sha256": "54ce35411716074eb390e5a2a9c7c89751c2683d47f7eac62ffdfc48a72fecc8"
+    },
+    "fixture_files": [
+     {
+      "path": "fixtures/PY01-03_1/INPUT_EXPECTATION.json",
+      "sha256": "ba49d94147b1b8a434b976e3fd0d2c9561f53289c2c70a043ce7bd4cc92aecbb"
+     },
+     {
+      "path": "fixtures/PY01-03_1/contract_fixture.json",
+      "sha256": "5e6d1156803fc460b3a05da941e57604ced7125c12bba87bc677ec16adb9b7d3"
+     }
+    ],
+    "harness_verdict": {
+     "line": 3,
+     "path": "engine_returns/Python_stdout.txt",
+     "sha256": "9eb34b82a24a0273850cf1304c5faaebc14ac836e66fa20d332287b1f8be630e"
+    },
+    "input_generation": "Python harness 가 시험 임시 위치에 fixture 를 만들어 실제 consumer → candidate_entry 로 호출 (PREPARED_PYTHON_INPUTS.json 행 · fixture 파일 아래)",
+    "prepared_input_row": {
+     "file": {
+      "path": "PREPARED_PYTHON_INPUTS.json",
+      "sha256": "49720ef6cdd3b404d829e81748ed2fc9d5df63c14540e16cbe026ed3e86f6002"
+     },
+     "key": [
+      "PY01-03",
+      1
+     ]
+    }
+   }
+  },
+  {
+   "engine": "Python",
+   "final_accounting_row": 3,
+   "id": "PY01-04",
+   "input_index": 1,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/Python_RETURN.json",
+     "sha256": "911bb619587e234900b5cb76d93e796c2ae936ccb106c6acfa9a5adc92887b2c"
+    },
+    "entry_output": {
+     "path": "results/PY01-04_1.json",
+     "sha256": "7f18244670801e4ba6b8d35fc245acae01d66369c83e3d19dc68b521ffb4b4d4"
+    },
+    "fixture_files": [
+     {
+      "path": "fixtures/PY01-04_1/INPUT_EXPECTATION.json",
+      "sha256": "e9d60e16c7901f0359e2bbda9cef78de922f7eeeccbdd3256af34cb49b58ce47"
+     },
+     {
+      "path": "fixtures/PY01-04_1/contract_fixture.json",
+      "sha256": "bd367b95cb740c0b7e73617eef7b8d4229c4113c546f0ecbd5ab95cf8cbef759"
+     }
+    ],
+    "harness_verdict": {
+     "line": 4,
+     "path": "engine_returns/Python_stdout.txt",
+     "sha256": "9eb34b82a24a0273850cf1304c5faaebc14ac836e66fa20d332287b1f8be630e"
+    },
+    "input_generation": "Python harness 가 시험 임시 위치에 fixture 를 만들어 실제 consumer → candidate_entry 로 호출 (PREPARED_PYTHON_INPUTS.json 행 · fixture 파일 아래)",
+    "prepared_input_row": {
+     "file": {
+      "path": "PREPARED_PYTHON_INPUTS.json",
+      "sha256": "49720ef6cdd3b404d829e81748ed2fc9d5df63c14540e16cbe026ed3e86f6002"
+     },
+     "key": [
+      "PY01-04",
+      1
+     ]
+    }
+   }
+  },
+  {
+   "engine": "Python",
+   "final_accounting_row": 4,
+   "id": "PY02-01",
+   "input_index": 1,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/Python_RETURN.json",
+     "sha256": "911bb619587e234900b5cb76d93e796c2ae936ccb106c6acfa9a5adc92887b2c"
+    },
+    "entry_output": {
+     "path": "results/PY02-01_1.json",
+     "sha256": "347669162ff6600344779f82e56367e4d333db46fab35a5398d6349b85346ed4"
+    },
+    "fixture_files": [
+     {
+      "path": "fixtures/PY02-01_1/INPUT_EXPECTATION.json",
+      "sha256": "6b6f6bda51d83f7c6c4053173ad37183fcaa94f3311cfc447da4cce23f60ca50"
+     },
+     {
+      "path": "fixtures/PY02-01_1/contract_fixture.json",
+      "sha256": "a8ad2703bec250d5d8e9fb8ebae9de0bdfae9bacc4410bcdc9bfc28dc005b6d9"
+     }
+    ],
+    "harness_verdict": {
+     "line": 5,
+     "path": "engine_returns/Python_stdout.txt",
+     "sha256": "9eb34b82a24a0273850cf1304c5faaebc14ac836e66fa20d332287b1f8be630e"
+    },
+    "input_generation": "Python harness 가 시험 임시 위치에 fixture 를 만들어 실제 consumer → candidate_entry 로 호출 (PREPARED_PYTHON_INPUTS.json 행 · fixture 파일 아래)",
+    "prepared_input_row": {
+     "file": {
+      "path": "PREPARED_PYTHON_INPUTS.json",
+      "sha256": "49720ef6cdd3b404d829e81748ed2fc9d5df63c14540e16cbe026ed3e86f6002"
+     },
+     "key": [
+      "PY02-01",
+      1
+     ]
+    }
+   }
+  },
+  {
+   "engine": "Python",
+   "final_accounting_row": 5,
+   "id": "PY02-02",
+   "input_index": 1,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/Python_RETURN.json",
+     "sha256": "911bb619587e234900b5cb76d93e796c2ae936ccb106c6acfa9a5adc92887b2c"
+    },
+    "entry_output": {
+     "path": "results/PY02-02_1.json",
+     "sha256": "5f0ee8f995b4713d219697f9655f8ed32e42e73d2efcae64801ef4587c556ac9"
+    },
+    "fixture_files": [
+     {
+      "path": "fixtures/PY02-02_1/INPUT_EXPECTATION.json",
+      "sha256": "54db58809ebcbc3053fa55b0439fe9ccac09f5cc2b2aef5b42a0fca0572ab44f"
+     },
+     {
+      "path": "fixtures/PY02-02_1/contract_fixture.json",
+      "sha256": "5e49cfcae58b23a5d4f58fccca0540bd9f388874dc1f98f1db2b9886eb26fb2b"
+     }
+    ],
+    "harness_verdict": {
+     "line": 6,
+     "path": "engine_returns/Python_stdout.txt",
+     "sha256": "9eb34b82a24a0273850cf1304c5faaebc14ac836e66fa20d332287b1f8be630e"
+    },
+    "input_generation": "Python harness 가 시험 임시 위치에 fixture 를 만들어 실제 consumer → candidate_entry 로 호출 (PREPARED_PYTHON_INPUTS.json 행 · fixture 파일 아래)",
+    "prepared_input_row": {
+     "file": {
+      "path": "PREPARED_PYTHON_INPUTS.json",
+      "sha256": "49720ef6cdd3b404d829e81748ed2fc9d5df63c14540e16cbe026ed3e86f6002"
+     },
+     "key": [
+      "PY02-02",
+      1
+     ]
+    }
+   }
+  },
+  {
+   "engine": "Python",
+   "final_accounting_row": 6,
+   "id": "PY02-03",
+   "input_index": 1,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/Python_RETURN.json",
+     "sha256": "911bb619587e234900b5cb76d93e796c2ae936ccb106c6acfa9a5adc92887b2c"
+    },
+    "entry_output": {
+     "path": "results/PY02-03_1.json",
+     "sha256": "b1f73060005bb3644dca2c9c8561439d3f753ef2388b62d9cee2d539b66ef0ba"
+    },
+    "fixture_files": [
+     {
+      "path": "fixtures/PY02-03_1/INPUT_EXPECTATION.json",
+      "sha256": "5bfcd1873d3dee28f0765e3065ad6ce647567f41318552478f20550ad6cbd1bf"
+     },
+     {
+      "path": "fixtures/PY02-03_1/contract_fixture.json",
+      "sha256": "0f0ad21a1b4a4abd989dd2379ec4410831806a871bd7767319d3807f9139befd"
+     }
+    ],
+    "harness_verdict": {
+     "line": 7,
+     "path": "engine_returns/Python_stdout.txt",
+     "sha256": "9eb34b82a24a0273850cf1304c5faaebc14ac836e66fa20d332287b1f8be630e"
+    },
+    "input_generation": "Python harness 가 시험 임시 위치에 fixture 를 만들어 실제 consumer → candidate_entry 로 호출 (PREPARED_PYTHON_INPUTS.json 행 · fixture 파일 아래)",
+    "prepared_input_row": {
+     "file": {
+      "path": "PREPARED_PYTHON_INPUTS.json",
+      "sha256": "49720ef6cdd3b404d829e81748ed2fc9d5df63c14540e16cbe026ed3e86f6002"
+     },
+     "key": [
+      "PY02-03",
+      1
+     ]
+    }
+   }
+  },
+  {
+   "engine": "Python",
+   "final_accounting_row": 7,
+   "id": "PY02-04",
+   "input_index": 1,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/Python_RETURN.json",
+     "sha256": "911bb619587e234900b5cb76d93e796c2ae936ccb106c6acfa9a5adc92887b2c"
+    },
+    "entry_output": {
+     "path": "results/PY02-04_1.json",
+     "sha256": "92bf19e57bffa30f5d1a57e36ebc655a666e97806063da5501e24e0e46143c66"
+    },
+    "fixture_files": [
+     {
+      "path": "fixtures/PY02-04_1/INPUT_EXPECTATION.json",
+      "sha256": "b32ad96f2b800ff2a23fbc0d1847a4964a3f01583ec5bd28e3b471de2ef41d2e"
+     },
+     {
+      "path": "fixtures/PY02-04_1/contract_fixture.json",
+      "sha256": "33ba9dccf0848a3de9b85163f8f517a56ad727f01f1b84040c108967f771ce01"
+     }
+    ],
+    "harness_verdict": {
+     "line": 8,
+     "path": "engine_returns/Python_stdout.txt",
+     "sha256": "9eb34b82a24a0273850cf1304c5faaebc14ac836e66fa20d332287b1f8be630e"
+    },
+    "input_generation": "Python harness 가 시험 임시 위치에 fixture 를 만들어 실제 consumer → candidate_entry 로 호출 (PREPARED_PYTHON_INPUTS.json 행 · fixture 파일 아래)",
+    "prepared_input_row": {
+     "file": {
+      "path": "PREPARED_PYTHON_INPUTS.json",
+      "sha256": "49720ef6cdd3b404d829e81748ed2fc9d5df63c14540e16cbe026ed3e86f6002"
+     },
+     "key": [
+      "PY02-04",
+      1
+     ]
+    }
+   }
+  },
+  {
+   "engine": "Python",
+   "final_accounting_row": 8,
+   "id": "PY02-05",
+   "input_index": 1,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/Python_RETURN.json",
+     "sha256": "911bb619587e234900b5cb76d93e796c2ae936ccb106c6acfa9a5adc92887b2c"
+    },
+    "entry_output": {
+     "path": "results/PY02-05_1.json",
+     "sha256": "23b8ddb8d40033a8d609f6c21718507923a3977ada1f81c57cfb736e05b596ca"
+    },
+    "fixture_files": [
+     {
+      "path": "fixtures/PY02-05_1/INPUT_EXPECTATION.json",
+      "sha256": "19aa0ab605e1fb5ea74328eb119052abd916ead480b9952edf804f0cee185623"
+     },
+     {
+      "path": "fixtures/PY02-05_1/contract_fixture.json",
+      "sha256": "2301fba3e4d9f5a6fbda7a71be8c3df8b06daddf898fd5db242ef58901721557"
+     }
+    ],
+    "harness_verdict": {
+     "line": 9,
+     "path": "engine_returns/Python_stdout.txt",
+     "sha256": "9eb34b82a24a0273850cf1304c5faaebc14ac836e66fa20d332287b1f8be630e"
+    },
+    "input_generation": "Python harness 가 시험 임시 위치에 fixture 를 만들어 실제 consumer → candidate_entry 로 호출 (PREPARED_PYTHON_INPUTS.json 행 · fixture 파일 아래)",
+    "prepared_input_row": {
+     "file": {
+      "path": "PREPARED_PYTHON_INPUTS.json",
+      "sha256": "49720ef6cdd3b404d829e81748ed2fc9d5df63c14540e16cbe026ed3e86f6002"
+     },
+     "key": [
+      "PY02-05",
+      1
+     ]
+    }
+   }
+  },
+  {
+   "engine": "Python",
+   "final_accounting_row": 9,
+   "id": "PY03-01",
+   "input_index": 1,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/Python_RETURN.json",
+     "sha256": "911bb619587e234900b5cb76d93e796c2ae936ccb106c6acfa9a5adc92887b2c"
+    },
+    "entry_output": {
+     "path": "results/PY03-01_1.json",
+     "sha256": "a90b6c19b869253183bec1db17cb0f61142a9a11144a241d9540adf57c0b5039"
+    },
+    "fixture_files": [
+     {
+      "path": "fixtures/PY03-01_1/INPUT_EXPECTATION.json",
+      "sha256": "30c615f6c57883d678906b8f0bce4b17940523a88fbc9a1e8c9bc45f70548834"
+     },
+     {
+      "path": "fixtures/PY03-01_1/contract_fixture.json",
+      "sha256": "cb5c9d2f06f8edc9922427cadb73d907742a56f8fc5bc7776a84332e9313e6de"
+     }
+    ],
+    "harness_verdict": {
+     "line": 10,
+     "path": "engine_returns/Python_stdout.txt",
+     "sha256": "9eb34b82a24a0273850cf1304c5faaebc14ac836e66fa20d332287b1f8be630e"
+    },
+    "input_generation": "Python harness 가 시험 임시 위치에 fixture 를 만들어 실제 consumer → candidate_entry 로 호출 (PREPARED_PYTHON_INPUTS.json 행 · fixture 파일 아래)",
+    "prepared_input_row": {
+     "file": {
+      "path": "PREPARED_PYTHON_INPUTS.json",
+      "sha256": "49720ef6cdd3b404d829e81748ed2fc9d5df63c14540e16cbe026ed3e86f6002"
+     },
+     "key": [
+      "PY03-01",
+      1
+     ]
+    }
+   }
+  },
+  {
+   "engine": "Python",
+   "final_accounting_row": 10,
+   "id": "PY03-02",
+   "input_index": 1,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/Python_RETURN.json",
+     "sha256": "911bb619587e234900b5cb76d93e796c2ae936ccb106c6acfa9a5adc92887b2c"
+    },
+    "entry_output": {
+     "path": "results/PY03-02_1.json",
+     "sha256": "dca80bbba4fdf3e2e9114ce252555b8ae141a42656c136487014afc8f63221d0"
+    },
+    "fixture_files": [
+     {
+      "path": "fixtures/PY03-02_1/INPUT_EXPECTATION.json",
+      "sha256": "ecffacf807c142834fa355127a5d5ff38927165cee80b223dd549ade3aacf839"
+     },
+     {
+      "path": "fixtures/PY03-02_1/contract_fixture.json",
+      "sha256": "563aa2e1e7a26e0848934feb2c055b6911e4749da6c171107a68336095347685"
+     }
+    ],
+    "harness_verdict": {
+     "line": 11,
+     "path": "engine_returns/Python_stdout.txt",
+     "sha256": "9eb34b82a24a0273850cf1304c5faaebc14ac836e66fa20d332287b1f8be630e"
+    },
+    "input_generation": "Python harness 가 시험 임시 위치에 fixture 를 만들어 실제 consumer → candidate_entry 로 호출 (PREPARED_PYTHON_INPUTS.json 행 · fixture 파일 아래)",
+    "prepared_input_row": {
+     "file": {
+      "path": "PREPARED_PYTHON_INPUTS.json",
+      "sha256": "49720ef6cdd3b404d829e81748ed2fc9d5df63c14540e16cbe026ed3e86f6002"
+     },
+     "key": [
+      "PY03-02",
+      1
+     ]
+    }
+   }
+  },
+  {
+   "engine": "Python",
+   "final_accounting_row": 11,
+   "id": "PY03-03",
+   "input_index": 1,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/Python_RETURN.json",
+     "sha256": "911bb619587e234900b5cb76d93e796c2ae936ccb106c6acfa9a5adc92887b2c"
+    },
+    "entry_output": {
+     "path": "results/PY03-03_1.json",
+     "sha256": "6aec8fbe224debba5130465ca55b67e42554cb1df452f3b6e0a0784454502df5"
+    },
+    "fixture_files": [
+     {
+      "path": "fixtures/PY03-03_1/INPUT_EXPECTATION.json",
+      "sha256": "d201408e1941d279e79bf6c1a1d92dd2296bf70c55516fb3c64561bb3da6ac63"
+     },
+     {
+      "path": "fixtures/PY03-03_1/contract_fixture.json",
+      "sha256": "ca76715b37eb7a31705737f25c36d11c832977cb994efc581a452923f31986ea"
+     }
+    ],
+    "harness_verdict": {
+     "line": 12,
+     "path": "engine_returns/Python_stdout.txt",
+     "sha256": "9eb34b82a24a0273850cf1304c5faaebc14ac836e66fa20d332287b1f8be630e"
+    },
+    "input_generation": "Python harness 가 시험 임시 위치에 fixture 를 만들어 실제 consumer → candidate_entry 로 호출 (PREPARED_PYTHON_INPUTS.json 행 · fixture 파일 아래)",
+    "prepared_input_row": {
+     "file": {
+      "path": "PREPARED_PYTHON_INPUTS.json",
+      "sha256": "49720ef6cdd3b404d829e81748ed2fc9d5df63c14540e16cbe026ed3e86f6002"
+     },
+     "key": [
+      "PY03-03",
+      1
+     ]
+    }
+   }
+  },
+  {
+   "engine": "Python",
+   "final_accounting_row": 12,
+   "id": "PY03-04",
+   "input_index": 1,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/Python_RETURN.json",
+     "sha256": "911bb619587e234900b5cb76d93e796c2ae936ccb106c6acfa9a5adc92887b2c"
+    },
+    "entry_output": {
+     "path": "results/PY03-04_1.json",
+     "sha256": "4eb225dda496aa05c2d2cc57d5242168aa2e6dcd1ca24ce1e134b5a2f897b980"
+    },
+    "fixture_files": [
+     {
+      "path": "fixtures/PY03-04_1/INPUT_EXPECTATION.json",
+      "sha256": "ffaa42f75c7749c272b3816a6fd06b7b0040321ab3d13ba2b24fad21b54b047f"
+     },
+     {
+      "path": "fixtures/PY03-04_1/contract_fixture.json",
+      "sha256": "3feb0be5ac10a2a09e63b24f70172c06a3b0b24c6285e958273055ed21d6069f"
+     }
+    ],
+    "harness_verdict": {
+     "line": 13,
+     "path": "engine_returns/Python_stdout.txt",
+     "sha256": "9eb34b82a24a0273850cf1304c5faaebc14ac836e66fa20d332287b1f8be630e"
+    },
+    "input_generation": "Python harness 가 시험 임시 위치에 fixture 를 만들어 실제 consumer → candidate_entry 로 호출 (PREPARED_PYTHON_INPUTS.json 행 · fixture 파일 아래)",
+    "prepared_input_row": {
+     "file": {
+      "path": "PREPARED_PYTHON_INPUTS.json",
+      "sha256": "49720ef6cdd3b404d829e81748ed2fc9d5df63c14540e16cbe026ed3e86f6002"
+     },
+     "key": [
+      "PY03-04",
+      1
+     ]
+    }
+   }
+  },
+  {
+   "engine": "Python",
+   "final_accounting_row": 13,
+   "id": "PY03-05",
+   "input_index": 1,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/Python_RETURN.json",
+     "sha256": "911bb619587e234900b5cb76d93e796c2ae936ccb106c6acfa9a5adc92887b2c"
+    },
+    "entry_output": {
+     "path": "results/PY03-05_1.json",
+     "sha256": "1cb1c177ff99d45de10e0214f462c9d7652f248a24a0e14753496b2165c7632a"
+    },
+    "fixture_files": [
+     {
+      "path": "fixtures/PY03-05_1/INPUT_EXPECTATION.json",
+      "sha256": "8fbf12ef0487644bb50c1b9097a8412a8fd62014806d3a505f440c29b07a4ccf"
+     },
+     {
+      "path": "fixtures/PY03-05_1/contract_fixture.json",
+      "sha256": "f2b06c8aac60528826f8582b1e35fc83f2fe4c9ac96b9268c752c5aa15a3caa8"
+     }
+    ],
+    "harness_verdict": {
+     "line": 14,
+     "path": "engine_returns/Python_stdout.txt",
+     "sha256": "9eb34b82a24a0273850cf1304c5faaebc14ac836e66fa20d332287b1f8be630e"
+    },
+    "input_generation": "Python harness 가 시험 임시 위치에 fixture 를 만들어 실제 consumer → candidate_entry 로 호출 (PREPARED_PYTHON_INPUTS.json 행 · fixture 파일 아래)",
+    "prepared_input_row": {
+     "file": {
+      "path": "PREPARED_PYTHON_INPUTS.json",
+      "sha256": "49720ef6cdd3b404d829e81748ed2fc9d5df63c14540e16cbe026ed3e86f6002"
+     },
+     "key": [
+      "PY03-05",
+      1
+     ]
+    }
+   }
+  },
+  {
+   "engine": "Python",
+   "final_accounting_row": 14,
+   "id": "PY03-06",
+   "input_index": 1,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/Python_RETURN.json",
+     "sha256": "911bb619587e234900b5cb76d93e796c2ae936ccb106c6acfa9a5adc92887b2c"
+    },
+    "entry_output": {
+     "path": "results/PY03-06_1.json",
+     "sha256": "81aaa1f5a5af33af992f53217cc75c250acab5f0a823f81cb6eca69625de25bf"
+    },
+    "fixture_files": [
+     {
+      "path": "fixtures/PY03-06_1/INPUT_EXPECTATION.json",
+      "sha256": "486055715c556fc6822fb73b5762aacab2e87bb38d39d30c47000707503a8203"
+     },
+     {
+      "path": "fixtures/PY03-06_1/contract_fixture.json",
+      "sha256": "ce9844030a0eb38774fae2316653039ddc728d8f0ef4b2d199c1c8b7f81f40db"
+     }
+    ],
+    "harness_verdict": {
+     "line": 15,
+     "path": "engine_returns/Python_stdout.txt",
+     "sha256": "9eb34b82a24a0273850cf1304c5faaebc14ac836e66fa20d332287b1f8be630e"
+    },
+    "input_generation": "Python harness 가 시험 임시 위치에 fixture 를 만들어 실제 consumer → candidate_entry 로 호출 (PREPARED_PYTHON_INPUTS.json 행 · fixture 파일 아래)",
+    "prepared_input_row": {
+     "file": {
+      "path": "PREPARED_PYTHON_INPUTS.json",
+      "sha256": "49720ef6cdd3b404d829e81748ed2fc9d5df63c14540e16cbe026ed3e86f6002"
+     },
+     "key": [
+      "PY03-06",
+      1
+     ]
+    }
+   }
+  },
+  {
+   "engine": "Python",
+   "final_accounting_row": 15,
+   "id": "PY03-07",
+   "input_index": 1,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/Python_RETURN.json",
+     "sha256": "911bb619587e234900b5cb76d93e796c2ae936ccb106c6acfa9a5adc92887b2c"
+    },
+    "entry_output": {
+     "path": "results/PY03-07_1.json",
+     "sha256": "9fc5fe9f0abadae59ee4e23f0ed0d7e6df786b29ace78ad980808eddc58d7f88"
+    },
+    "fixture_files": [
+     {
+      "path": "fixtures/PY03-07_1/INPUT_EXPECTATION.json",
+      "sha256": "b070a9965118e18d7a486cba98b9d4d281e8089d47a9f9269cc4014480e28234"
+     },
+     {
+      "path": "fixtures/PY03-07_1/contract_fixture.json",
+      "sha256": "539e676d14bfac3f8e6615138e2cf5a600d7cbf2d3b0b174511b1c1dd29c7002"
+     }
+    ],
+    "harness_verdict": {
+     "line": 16,
+     "path": "engine_returns/Python_stdout.txt",
+     "sha256": "9eb34b82a24a0273850cf1304c5faaebc14ac836e66fa20d332287b1f8be630e"
+    },
+    "input_generation": "Python harness 가 시험 임시 위치에 fixture 를 만들어 실제 consumer → candidate_entry 로 호출 (PREPARED_PYTHON_INPUTS.json 행 · fixture 파일 아래)",
+    "prepared_input_row": {
+     "file": {
+      "path": "PREPARED_PYTHON_INPUTS.json",
+      "sha256": "49720ef6cdd3b404d829e81748ed2fc9d5df63c14540e16cbe026ed3e86f6002"
+     },
+     "key": [
+      "PY03-07",
+      1
+     ]
+    }
+   }
+  },
+  {
+   "engine": "Python",
+   "final_accounting_row": 16,
+   "id": "PY03-08",
+   "input_index": 1,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/Python_RETURN.json",
+     "sha256": "911bb619587e234900b5cb76d93e796c2ae936ccb106c6acfa9a5adc92887b2c"
+    },
+    "entry_output": {
+     "path": "results/PY03-08_1.json",
+     "sha256": "d76845834aaf2f3234fe1d4edf535b5c94cb8079bd32c35a1eb514bfebffc792"
+    },
+    "fixture_files": [
+     {
+      "path": "fixtures/PY03-08_1/INPUT_EXPECTATION.json",
+      "sha256": "72580a4c88a4eb3a043d97f06a08fdda2372b263de7a2eb76c1dbc54d8c05c22"
+     },
+     {
+      "path": "fixtures/PY03-08_1/contract_fixture.json",
+      "sha256": "baf8a8e63a9ce290bddde19e7825c06d27c94fcca6b8186bf54a5ee10b697520"
+     }
+    ],
+    "harness_verdict": {
+     "line": 17,
+     "path": "engine_returns/Python_stdout.txt",
+     "sha256": "9eb34b82a24a0273850cf1304c5faaebc14ac836e66fa20d332287b1f8be630e"
+    },
+    "input_generation": "Python harness 가 시험 임시 위치에 fixture 를 만들어 실제 consumer → candidate_entry 로 호출 (PREPARED_PYTHON_INPUTS.json 행 · fixture 파일 아래)",
+    "prepared_input_row": {
+     "file": {
+      "path": "PREPARED_PYTHON_INPUTS.json",
+      "sha256": "49720ef6cdd3b404d829e81748ed2fc9d5df63c14540e16cbe026ed3e86f6002"
+     },
+     "key": [
+      "PY03-08",
+      1
+     ]
+    }
+   }
+  },
+  {
+   "engine": "Python",
+   "final_accounting_row": 17,
+   "id": "PY03-09",
+   "input_index": 1,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/Python_RETURN.json",
+     "sha256": "911bb619587e234900b5cb76d93e796c2ae936ccb106c6acfa9a5adc92887b2c"
+    },
+    "entry_output": {
+     "path": "results/PY03-09_1.json",
+     "sha256": "7967605fec08c55c9ab7d5700ebb3e0c03ca637dd3c9adf71295a898b274ee07"
+    },
+    "fixture_files": [
+     {
+      "path": "fixtures/PY03-09_1/INPUT_EXPECTATION.json",
+      "sha256": "ecb632b750d9a1ff701e7d6fbf4855c6a6bd184e81060702f63ddfec03a74234"
+     },
+     {
+      "path": "fixtures/PY03-09_1/contract_fixture.json",
+      "sha256": "45e70029aabf44a512c9e44518123d096cb55b5ebca60e32ca60c790684b8172"
+     }
+    ],
+    "harness_verdict": {
+     "line": 18,
+     "path": "engine_returns/Python_stdout.txt",
+     "sha256": "9eb34b82a24a0273850cf1304c5faaebc14ac836e66fa20d332287b1f8be630e"
+    },
+    "input_generation": "Python harness 가 시험 임시 위치에 fixture 를 만들어 실제 consumer → candidate_entry 로 호출 (PREPARED_PYTHON_INPUTS.json 행 · fixture 파일 아래)",
+    "prepared_input_row": {
+     "file": {
+      "path": "PREPARED_PYTHON_INPUTS.json",
+      "sha256": "49720ef6cdd3b404d829e81748ed2fc9d5df63c14540e16cbe026ed3e86f6002"
+     },
+     "key": [
+      "PY03-09",
+      1
+     ]
+    }
+   }
+  },
+  {
+   "engine": "Python",
+   "final_accounting_row": 18,
+   "id": "PY03-10",
+   "input_index": 1,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/Python_RETURN.json",
+     "sha256": "911bb619587e234900b5cb76d93e796c2ae936ccb106c6acfa9a5adc92887b2c"
+    },
+    "entry_output": {
+     "path": "results/PY03-10_1.json",
+     "sha256": "51e9868363e72d88055c78f81b9d10bde3c507de2c7cd2351c2200814bf167cc"
+    },
+    "fixture_files": [
+     {
+      "path": "fixtures/PY03-10_1/INPUT_EXPECTATION.json",
+      "sha256": "f7dbaa1dc3fdb1bb97773531ef15c538865892c8f500240072416d48105ba82b"
+     },
+     {
+      "path": "fixtures/PY03-10_1/contract_fixture.json",
+      "sha256": "ac7a780bf2b035917dcdc23a159d5e351c58bcc310e9957f578d9ce7de6080fe"
+     }
+    ],
+    "harness_verdict": {
+     "line": 19,
+     "path": "engine_returns/Python_stdout.txt",
+     "sha256": "9eb34b82a24a0273850cf1304c5faaebc14ac836e66fa20d332287b1f8be630e"
+    },
+    "input_generation": "Python harness 가 시험 임시 위치에 fixture 를 만들어 실제 consumer → candidate_entry 로 호출 (PREPARED_PYTHON_INPUTS.json 행 · fixture 파일 아래)",
+    "prepared_input_row": {
+     "file": {
+      "path": "PREPARED_PYTHON_INPUTS.json",
+      "sha256": "49720ef6cdd3b404d829e81748ed2fc9d5df63c14540e16cbe026ed3e86f6002"
+     },
+     "key": [
+      "PY03-10",
+      1
+     ]
+    }
+   }
+  },
+  {
+   "engine": "Python",
+   "final_accounting_row": 19,
+   "id": "PY03-11",
+   "input_index": 1,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/Python_RETURN.json",
+     "sha256": "911bb619587e234900b5cb76d93e796c2ae936ccb106c6acfa9a5adc92887b2c"
+    },
+    "entry_output": {
+     "path": "results/PY03-11_1.json",
+     "sha256": "123a93555fa999855dc065978bbe0e9df2bf388517fc2a836cfc9c0963837567"
+    },
+    "fixture_files": [
+     {
+      "path": "fixtures/PY03-11_1/INPUT_EXPECTATION.json",
+      "sha256": "d39a0da1cf3641de13be57b114aba84fab57b9967c38f883b981e37b5dd7456e"
+     },
+     {
+      "path": "fixtures/PY03-11_1/contract_fixture.json",
+      "sha256": "d3c6ab39c1ef4bf615a0af29ac6344acf64f95c1ddbccff1b6432e223eccea8d"
+     }
+    ],
+    "harness_verdict": {
+     "line": 20,
+     "path": "engine_returns/Python_stdout.txt",
+     "sha256": "9eb34b82a24a0273850cf1304c5faaebc14ac836e66fa20d332287b1f8be630e"
+    },
+    "input_generation": "Python harness 가 시험 임시 위치에 fixture 를 만들어 실제 consumer → candidate_entry 로 호출 (PREPARED_PYTHON_INPUTS.json 행 · fixture 파일 아래)",
+    "prepared_input_row": {
+     "file": {
+      "path": "PREPARED_PYTHON_INPUTS.json",
+      "sha256": "49720ef6cdd3b404d829e81748ed2fc9d5df63c14540e16cbe026ed3e86f6002"
+     },
+     "key": [
+      "PY03-11",
+      1
+     ]
+    }
+   }
+  },
+  {
+   "engine": "Python",
+   "final_accounting_row": 20,
+   "id": "PY03-12",
+   "input_index": 1,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/Python_RETURN.json",
+     "sha256": "911bb619587e234900b5cb76d93e796c2ae936ccb106c6acfa9a5adc92887b2c"
+    },
+    "entry_output": {
+     "path": "results/PY03-12_1.json",
+     "sha256": "51160abefd1270298c45bc9e697031c87508c660abb618b1c6cff36108151819"
+    },
+    "fixture_files": [
+     {
+      "path": "fixtures/PY03-12_1/INPUT_EXPECTATION.json",
+      "sha256": "de9ad085bfe3ef8dc8a5daf4114998c2c8b05b5016f7f28a6a23f37d5d85d333"
+     },
+     {
+      "path": "fixtures/PY03-12_1/contract_fixture.json",
+      "sha256": "9f89710090502cd4d665b472c8442ad29e45fcaa0250991fd00b4462d60255fa"
+     }
+    ],
+    "harness_verdict": {
+     "line": 21,
+     "path": "engine_returns/Python_stdout.txt",
+     "sha256": "9eb34b82a24a0273850cf1304c5faaebc14ac836e66fa20d332287b1f8be630e"
+    },
+    "input_generation": "Python harness 가 시험 임시 위치에 fixture 를 만들어 실제 consumer → candidate_entry 로 호출 (PREPARED_PYTHON_INPUTS.json 행 · fixture 파일 아래)",
+    "prepared_input_row": {
+     "file": {
+      "path": "PREPARED_PYTHON_INPUTS.json",
+      "sha256": "49720ef6cdd3b404d829e81748ed2fc9d5df63c14540e16cbe026ed3e86f6002"
+     },
+     "key": [
+      "PY03-12",
+      1
+     ]
+    }
+   }
+  },
+  {
+   "engine": "Python",
+   "final_accounting_row": 21,
+   "id": "PY03-12",
+   "input_index": 2,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/Python_RETURN.json",
+     "sha256": "911bb619587e234900b5cb76d93e796c2ae936ccb106c6acfa9a5adc92887b2c"
+    },
+    "entry_output": {
+     "path": "results/PY03-12_2.json",
+     "sha256": "7df54957e2722f2a5ae5571444215e0fe8783f12de5f7a48bee3370fe5b18324"
+    },
+    "fixture_files": [
+     {
+      "path": "fixtures/PY03-12_2/INPUT_EXPECTATION.json",
+      "sha256": "5f3458824a9253968eeab8089a39059b0436a0170b49f20fe281e80aae75f2a6"
+     },
+     {
+      "path": "fixtures/PY03-12_2/contract_fixture.json",
+      "sha256": "3b7860e116375ad020115b072d743bd6a7098945306ebb0dbbbc1266c9ae9e8d"
+     }
+    ],
+    "harness_verdict": {
+     "line": 22,
+     "path": "engine_returns/Python_stdout.txt",
+     "sha256": "9eb34b82a24a0273850cf1304c5faaebc14ac836e66fa20d332287b1f8be630e"
+    },
+    "input_generation": "Python harness 가 시험 임시 위치에 fixture 를 만들어 실제 consumer → candidate_entry 로 호출 (PREPARED_PYTHON_INPUTS.json 행 · fixture 파일 아래)",
+    "prepared_input_row": {
+     "file": {
+      "path": "PREPARED_PYTHON_INPUTS.json",
+      "sha256": "49720ef6cdd3b404d829e81748ed2fc9d5df63c14540e16cbe026ed3e86f6002"
+     },
+     "key": [
+      "PY03-12",
+      2
+     ]
+    }
+   }
+  },
+  {
+   "engine": "Python",
+   "final_accounting_row": 22,
+   "id": "PY03-13",
+   "input_index": 1,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/Python_RETURN.json",
+     "sha256": "911bb619587e234900b5cb76d93e796c2ae936ccb106c6acfa9a5adc92887b2c"
+    },
+    "entry_output": {
+     "path": "results/PY03-13_1.json",
+     "sha256": "dc88ac488ea52974a6aff6bff27601cac593f85ac09675ca98cc77b94f73b4f7"
+    },
+    "fixture_files": [
+     {
+      "path": "fixtures/PY03-13_1/INPUT_EXPECTATION.json",
+      "sha256": "53779774925a40af186a13f33da9717c56194518842ee1c43abf2e4560a5bb36"
+     },
+     {
+      "path": "fixtures/PY03-13_1/contract_fixture.json",
+      "sha256": "2604eba7dc069a1b64b19e41f5ca0140b6e95306bab563772eb32745cfcf28dd"
+     }
+    ],
+    "harness_verdict": {
+     "line": 23,
+     "path": "engine_returns/Python_stdout.txt",
+     "sha256": "9eb34b82a24a0273850cf1304c5faaebc14ac836e66fa20d332287b1f8be630e"
+    },
+    "input_generation": "Python harness 가 시험 임시 위치에 fixture 를 만들어 실제 consumer → candidate_entry 로 호출 (PREPARED_PYTHON_INPUTS.json 행 · fixture 파일 아래)",
+    "prepared_input_row": {
+     "file": {
+      "path": "PREPARED_PYTHON_INPUTS.json",
+      "sha256": "49720ef6cdd3b404d829e81748ed2fc9d5df63c14540e16cbe026ed3e86f6002"
+     },
+     "key": [
+      "PY03-13",
+      1
+     ]
+    }
+   }
+  },
+  {
+   "engine": "Python",
+   "final_accounting_row": 23,
+   "id": "PY03-13",
+   "input_index": 2,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/Python_RETURN.json",
+     "sha256": "911bb619587e234900b5cb76d93e796c2ae936ccb106c6acfa9a5adc92887b2c"
+    },
+    "entry_output": {
+     "path": "results/PY03-13_2.json",
+     "sha256": "dd52021641d300eca5266a2f6df15ee0d193d4560b08253b9d7cb9073c51106f"
+    },
+    "fixture_files": [
+     {
+      "path": "fixtures/PY03-13_2/INPUT_EXPECTATION.json",
+      "sha256": "3a26af28b622f942067105a0d9d23cae64c13ba2ec8a7e2dabc91be3aa115e7c"
+     },
+     {
+      "path": "fixtures/PY03-13_2/contract_fixture.json",
+      "sha256": "71f9ed8547632d1aa0a6691f42f95270275e8677c467141e0391979b004ae01c"
+     }
+    ],
+    "harness_verdict": {
+     "line": 24,
+     "path": "engine_returns/Python_stdout.txt",
+     "sha256": "9eb34b82a24a0273850cf1304c5faaebc14ac836e66fa20d332287b1f8be630e"
+    },
+    "input_generation": "Python harness 가 시험 임시 위치에 fixture 를 만들어 실제 consumer → candidate_entry 로 호출 (PREPARED_PYTHON_INPUTS.json 행 · fixture 파일 아래)",
+    "prepared_input_row": {
+     "file": {
+      "path": "PREPARED_PYTHON_INPUTS.json",
+      "sha256": "49720ef6cdd3b404d829e81748ed2fc9d5df63c14540e16cbe026ed3e86f6002"
+     },
+     "key": [
+      "PY03-13",
+      2
+     ]
+    }
+   }
+  },
+  {
+   "engine": "Python",
+   "final_accounting_row": 24,
+   "id": "PY03-14",
+   "input_index": 1,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/Python_RETURN.json",
+     "sha256": "911bb619587e234900b5cb76d93e796c2ae936ccb106c6acfa9a5adc92887b2c"
+    },
+    "entry_output": {
+     "path": "results/PY03-14_1.json",
+     "sha256": "8731bc2d06aae2a2f27eed902e30a7c75ac63eb6b7071bec927b209b944e4e9f"
+    },
+    "fixture_files": [
+     {
+      "path": "fixtures/PY03-14_1/INPUT_EXPECTATION.json",
+      "sha256": "ad58f815e709344b58374ea5af6dee03cbd85261d3cfe026cdb14430cf8cf439"
+     },
+     {
+      "path": "fixtures/PY03-14_1/contract_fixture.json",
+      "sha256": "8d38c4a38ec773c4e1446384d5b1fc8aeb432f0e321cb4734a177fb252561dd6"
+     }
+    ],
+    "harness_verdict": {
+     "line": 25,
+     "path": "engine_returns/Python_stdout.txt",
+     "sha256": "9eb34b82a24a0273850cf1304c5faaebc14ac836e66fa20d332287b1f8be630e"
+    },
+    "input_generation": "Python harness 가 시험 임시 위치에 fixture 를 만들어 실제 consumer → candidate_entry 로 호출 (PREPARED_PYTHON_INPUTS.json 행 · fixture 파일 아래)",
+    "prepared_input_row": {
+     "file": {
+      "path": "PREPARED_PYTHON_INPUTS.json",
+      "sha256": "49720ef6cdd3b404d829e81748ed2fc9d5df63c14540e16cbe026ed3e86f6002"
+     },
+     "key": [
+      "PY03-14",
+      1
+     ]
+    }
+   }
+  },
+  {
+   "engine": "Python",
+   "final_accounting_row": 25,
+   "id": "PY04-01",
+   "input_index": 1,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/Python_RETURN.json",
+     "sha256": "911bb619587e234900b5cb76d93e796c2ae936ccb106c6acfa9a5adc92887b2c"
+    },
+    "entry_output": {
+     "path": "results/PY04-01_1.json",
+     "sha256": "823f5669d9dd492f6d443fea49c85bce5ebe61571c0d643224853d4644d7ed42"
+    },
+    "fixture_files": [
+     {
+      "path": "fixtures/PY04-01_1/INPUT_EXPECTATION.json",
+      "sha256": "d5bb86fad219e298ae7383fc7249dd5ef5cbb39fd2c43c2b9495d29497366665"
+     },
+     {
+      "path": "fixtures/PY04-01_1/contract_fixture.json",
+      "sha256": "d23439ef78a7394e095496c7ab3db9fc40d78b45da52b75221b8b516f1bd1214"
+     }
+    ],
+    "harness_verdict": {
+     "line": 26,
+     "path": "engine_returns/Python_stdout.txt",
+     "sha256": "9eb34b82a24a0273850cf1304c5faaebc14ac836e66fa20d332287b1f8be630e"
+    },
+    "input_generation": "Python harness 가 시험 임시 위치에 fixture 를 만들어 실제 consumer → candidate_entry 로 호출 (PREPARED_PYTHON_INPUTS.json 행 · fixture 파일 아래)",
+    "prepared_input_row": {
+     "file": {
+      "path": "PREPARED_PYTHON_INPUTS.json",
+      "sha256": "49720ef6cdd3b404d829e81748ed2fc9d5df63c14540e16cbe026ed3e86f6002"
+     },
+     "key": [
+      "PY04-01",
+      1
+     ]
+    }
+   }
+  },
+  {
+   "engine": "Python",
+   "final_accounting_row": 26,
+   "id": "PY04-02",
+   "input_index": 1,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/Python_RETURN.json",
+     "sha256": "911bb619587e234900b5cb76d93e796c2ae936ccb106c6acfa9a5adc92887b2c"
+    },
+    "entry_output": {
+     "path": "results/PY04-02_1.json",
+     "sha256": "ef5b567c752533b2a86b1de167351dd647d406e97fdeaefedc463559cce576c3"
+    },
+    "fixture_files": [
+     {
+      "path": "fixtures/PY04-02_1/INPUT_EXPECTATION.json",
+      "sha256": "0e738269403bd01238c6a63baf70aa28dfdf1039e2b7336b880615ad13669c06"
+     },
+     {
+      "path": "fixtures/PY04-02_1/contract_fixture.json",
+      "sha256": "8c6bf7d1e21c5d0ab35b09635af64d3acf9a81bc2176fde4b5a805d4104ff023"
+     }
+    ],
+    "harness_verdict": {
+     "line": 27,
+     "path": "engine_returns/Python_stdout.txt",
+     "sha256": "9eb34b82a24a0273850cf1304c5faaebc14ac836e66fa20d332287b1f8be630e"
+    },
+    "input_generation": "Python harness 가 시험 임시 위치에 fixture 를 만들어 실제 consumer → candidate_entry 로 호출 (PREPARED_PYTHON_INPUTS.json 행 · fixture 파일 아래)",
+    "prepared_input_row": {
+     "file": {
+      "path": "PREPARED_PYTHON_INPUTS.json",
+      "sha256": "49720ef6cdd3b404d829e81748ed2fc9d5df63c14540e16cbe026ed3e86f6002"
+     },
+     "key": [
+      "PY04-02",
+      1
+     ]
+    }
+   }
+  },
+  {
+   "engine": "Python",
+   "final_accounting_row": 27,
+   "id": "PY04-03",
+   "input_index": 1,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/Python_RETURN.json",
+     "sha256": "911bb619587e234900b5cb76d93e796c2ae936ccb106c6acfa9a5adc92887b2c"
+    },
+    "entry_output": {
+     "path": "results/PY04-03_1.json",
+     "sha256": "fe5ebcc09aec564f88d26a1202ca8c33a0f4f6699f2190c2d4525e23a26078fc"
+    },
+    "fixture_files": [
+     {
+      "path": "fixtures/PY04-03_1/INPUT_EXPECTATION.json",
+      "sha256": "604dbcddd5cc651fed4ed097fe67eddc980ccc0ae4afd79e5f7efa92b8e9d15e"
+     },
+     {
+      "path": "fixtures/PY04-03_1/contract_fixture.json",
+      "sha256": "9a77ddacc69038706bde8f940ac411eed2e267735b124076b85ed90fe49a8c88"
+     }
+    ],
+    "harness_verdict": {
+     "line": 28,
+     "path": "engine_returns/Python_stdout.txt",
+     "sha256": "9eb34b82a24a0273850cf1304c5faaebc14ac836e66fa20d332287b1f8be630e"
+    },
+    "input_generation": "Python harness 가 시험 임시 위치에 fixture 를 만들어 실제 consumer → candidate_entry 로 호출 (PREPARED_PYTHON_INPUTS.json 행 · fixture 파일 아래)",
+    "prepared_input_row": {
+     "file": {
+      "path": "PREPARED_PYTHON_INPUTS.json",
+      "sha256": "49720ef6cdd3b404d829e81748ed2fc9d5df63c14540e16cbe026ed3e86f6002"
+     },
+     "key": [
+      "PY04-03",
+      1
+     ]
+    }
+   }
+  },
+  {
+   "engine": "Python",
+   "final_accounting_row": 28,
+   "id": "PY05-01",
+   "input_index": 1,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/Python_RETURN.json",
+     "sha256": "911bb619587e234900b5cb76d93e796c2ae936ccb106c6acfa9a5adc92887b2c"
+    },
+    "entry_output": {
+     "path": "results/PY05-01_1.json",
+     "sha256": "9ebe2d6c6c7b218338e4a803fb651bb060b2ed8820c12dec32594c09c823fe86"
+    },
+    "fixture_files": [
+     {
+      "path": "fixtures/PY05-01_1/INPUT_EXPECTATION.json",
+      "sha256": "b79407a46f54c07807848a738c14c43c0456f1ee30d594c24a97133e73477769"
+     },
+     {
+      "path": "fixtures/PY05-01_1/contract_fixture.json",
+      "sha256": "377681573766af41e29334054a67778058c99701e243a04a44c371629e64f919"
+     }
+    ],
+    "harness_verdict": {
+     "line": 29,
+     "path": "engine_returns/Python_stdout.txt",
+     "sha256": "9eb34b82a24a0273850cf1304c5faaebc14ac836e66fa20d332287b1f8be630e"
+    },
+    "input_generation": "Python harness 가 시험 임시 위치에 fixture 를 만들어 실제 consumer → candidate_entry 로 호출 (PREPARED_PYTHON_INPUTS.json 행 · fixture 파일 아래)",
+    "prepared_input_row": {
+     "file": {
+      "path": "PREPARED_PYTHON_INPUTS.json",
+      "sha256": "49720ef6cdd3b404d829e81748ed2fc9d5df63c14540e16cbe026ed3e86f6002"
+     },
+     "key": [
+      "PY05-01",
+      1
+     ]
+    }
+   }
+  },
+  {
+   "engine": "Python",
+   "final_accounting_row": 29,
+   "id": "PY05-02",
+   "input_index": 1,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/Python_RETURN.json",
+     "sha256": "911bb619587e234900b5cb76d93e796c2ae936ccb106c6acfa9a5adc92887b2c"
+    },
+    "entry_output": {
+     "path": "results/PY05-02_1.json",
+     "sha256": "19fa899977bdbe9eca2a30c40c7d63b407c76c8d808fd27dbca0e0438460681a"
+    },
+    "fixture_files": [
+     {
+      "path": "fixtures/PY05-02_1/INPUT_EXPECTATION.json",
+      "sha256": "126bcfc5a73a03d333035f3e06c75657257a5052dd2cef3edfd9e6bc5397937c"
+     },
+     {
+      "path": "fixtures/PY05-02_1/contract_fixture.json",
+      "sha256": "b6f2444530196edc9cc211f83a9714abc4e336a447ee442f1be1b8dc599bc8d6"
+     }
+    ],
+    "harness_verdict": {
+     "line": 30,
+     "path": "engine_returns/Python_stdout.txt",
+     "sha256": "9eb34b82a24a0273850cf1304c5faaebc14ac836e66fa20d332287b1f8be630e"
+    },
+    "input_generation": "Python harness 가 시험 임시 위치에 fixture 를 만들어 실제 consumer → candidate_entry 로 호출 (PREPARED_PYTHON_INPUTS.json 행 · fixture 파일 아래)",
+    "prepared_input_row": {
+     "file": {
+      "path": "PREPARED_PYTHON_INPUTS.json",
+      "sha256": "49720ef6cdd3b404d829e81748ed2fc9d5df63c14540e16cbe026ed3e86f6002"
+     },
+     "key": [
+      "PY05-02",
+      1
+     ]
+    }
+   }
+  },
+  {
+   "engine": "Python",
+   "final_accounting_row": 30,
+   "id": "PY05-03",
+   "input_index": 1,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/Python_RETURN.json",
+     "sha256": "911bb619587e234900b5cb76d93e796c2ae936ccb106c6acfa9a5adc92887b2c"
+    },
+    "entry_output": {
+     "path": "results/PY05-03_1.json",
+     "sha256": "f5835cdad549c8258c46fe224860b05e8325b0101e706f44395ef58035737c11"
+    },
+    "fixture_files": [
+     {
+      "path": "fixtures/PY05-03_1/INPUT_EXPECTATION.json",
+      "sha256": "cf8c1127bfcd1effa4b30b6d1dbf9c05cf28fdce20194efc4b452ff776b627e5"
+     },
+     {
+      "path": "fixtures/PY05-03_1/contract_fixture.json",
+      "sha256": "1fba0a154c89df68cff5a28f47def32f35db040b612c47f42040018691f6b3bf"
+     }
+    ],
+    "harness_verdict": {
+     "line": 31,
+     "path": "engine_returns/Python_stdout.txt",
+     "sha256": "9eb34b82a24a0273850cf1304c5faaebc14ac836e66fa20d332287b1f8be630e"
+    },
+    "input_generation": "Python harness 가 시험 임시 위치에 fixture 를 만들어 실제 consumer → candidate_entry 로 호출 (PREPARED_PYTHON_INPUTS.json 행 · fixture 파일 아래)",
+    "prepared_input_row": {
+     "file": {
+      "path": "PREPARED_PYTHON_INPUTS.json",
+      "sha256": "49720ef6cdd3b404d829e81748ed2fc9d5df63c14540e16cbe026ed3e86f6002"
+     },
+     "key": [
+      "PY05-03",
+      1
+     ]
+    }
+   }
+  },
+  {
+   "engine": "Python",
+   "final_accounting_row": 31,
+   "id": "PY05-04",
+   "input_index": 1,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/Python_RETURN.json",
+     "sha256": "911bb619587e234900b5cb76d93e796c2ae936ccb106c6acfa9a5adc92887b2c"
+    },
+    "entry_output": {
+     "path": "results/PY05-04_1.json",
+     "sha256": "12f28b8997203b4615b03f507ff2a90634058992c23f0b06799c7c2e0f259763"
+    },
+    "fixture_files": [
+     {
+      "path": "fixtures/PY05-04_1/INPUT_EXPECTATION.json",
+      "sha256": "5b6dd9e90dd59551ab0cf6ec8efbc2e0dcfb9c51534a256b31ef3df202b81c25"
+     },
+     {
+      "path": "fixtures/PY05-04_1/contract_fixture.json",
+      "sha256": "25010806257a88f19cca3af9daaa33f4a1a8a950db7289a985eb8ce98066aa60"
+     }
+    ],
+    "harness_verdict": {
+     "line": 32,
+     "path": "engine_returns/Python_stdout.txt",
+     "sha256": "9eb34b82a24a0273850cf1304c5faaebc14ac836e66fa20d332287b1f8be630e"
+    },
+    "input_generation": "Python harness 가 시험 임시 위치에 fixture 를 만들어 실제 consumer → candidate_entry 로 호출 (PREPARED_PYTHON_INPUTS.json 행 · fixture 파일 아래)",
+    "prepared_input_row": {
+     "file": {
+      "path": "PREPARED_PYTHON_INPUTS.json",
+      "sha256": "49720ef6cdd3b404d829e81748ed2fc9d5df63c14540e16cbe026ed3e86f6002"
+     },
+     "key": [
+      "PY05-04",
+      1
+     ]
+    }
+   }
+  },
+  {
+   "engine": "Python",
+   "final_accounting_row": 32,
+   "id": "PY05-05",
+   "input_index": 1,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/Python_RETURN.json",
+     "sha256": "911bb619587e234900b5cb76d93e796c2ae936ccb106c6acfa9a5adc92887b2c"
+    },
+    "entry_output": {
+     "path": "results/PY05-05_1.json",
+     "sha256": "83d6b864db72990277e195ee3c6435a6c4f864a7dec877917620d582711be553"
+    },
+    "fixture_files": [
+     {
+      "path": "fixtures/PY05-05_1/INPUT_EXPECTATION.json",
+      "sha256": "87374975bc47f0292e9388475f184464ff19f342d178b7c6b555742635124129"
+     },
+     {
+      "path": "fixtures/PY05-05_1/contract_fixture.json",
+      "sha256": "aa5787a8b28ab6b606f8550cc0fb3e68c1544f23facade4c8b62b7a0f456ad10"
+     }
+    ],
+    "harness_verdict": {
+     "line": 33,
+     "path": "engine_returns/Python_stdout.txt",
+     "sha256": "9eb34b82a24a0273850cf1304c5faaebc14ac836e66fa20d332287b1f8be630e"
+    },
+    "input_generation": "Python harness 가 시험 임시 위치에 fixture 를 만들어 실제 consumer → candidate_entry 로 호출 (PREPARED_PYTHON_INPUTS.json 행 · fixture 파일 아래)",
+    "prepared_input_row": {
+     "file": {
+      "path": "PREPARED_PYTHON_INPUTS.json",
+      "sha256": "49720ef6cdd3b404d829e81748ed2fc9d5df63c14540e16cbe026ed3e86f6002"
+     },
+     "key": [
+      "PY05-05",
+      1
+     ]
+    }
+   }
+  },
+  {
+   "engine": "Python",
+   "final_accounting_row": 33,
+   "id": "PY05-06",
+   "input_index": 1,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/Python_RETURN.json",
+     "sha256": "911bb619587e234900b5cb76d93e796c2ae936ccb106c6acfa9a5adc92887b2c"
+    },
+    "entry_output": {
+     "path": "results/PY05-06_1.json",
+     "sha256": "af02b986e0279f94fe66cb87e1ec3ae47547dd0f14a2d345d27ea3501f4c2e4c"
+    },
+    "fixture_files": [
+     {
+      "path": "fixtures/PY05-06_1/INPUT_EXPECTATION.json",
+      "sha256": "dc5d792caa4d5aca7764a63e274d7af1213466f38820a4e57280308d597581bc"
+     },
+     {
+      "path": "fixtures/PY05-06_1/contract_fixture.json",
+      "sha256": "610c7858eacd3ca937b8c1512ff04a893bba32b0dc2450bbd60662fadc6218ec"
+     }
+    ],
+    "harness_verdict": {
+     "line": 34,
+     "path": "engine_returns/Python_stdout.txt",
+     "sha256": "9eb34b82a24a0273850cf1304c5faaebc14ac836e66fa20d332287b1f8be630e"
+    },
+    "input_generation": "Python harness 가 시험 임시 위치에 fixture 를 만들어 실제 consumer → candidate_entry 로 호출 (PREPARED_PYTHON_INPUTS.json 행 · fixture 파일 아래)",
+    "prepared_input_row": {
+     "file": {
+      "path": "PREPARED_PYTHON_INPUTS.json",
+      "sha256": "49720ef6cdd3b404d829e81748ed2fc9d5df63c14540e16cbe026ed3e86f6002"
+     },
+     "key": [
+      "PY05-06",
+      1
+     ]
+    }
+   }
+  },
+  {
+   "engine": "Python",
+   "final_accounting_row": 34,
+   "id": "PY05-06",
+   "input_index": 2,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/Python_RETURN.json",
+     "sha256": "911bb619587e234900b5cb76d93e796c2ae936ccb106c6acfa9a5adc92887b2c"
+    },
+    "entry_output": {
+     "path": "results/PY05-06_2.json",
+     "sha256": "e82d0cd0f082206f8eb755b0ef6f7548685324d5b5f2f219d76bcf004cbd06e0"
+    },
+    "fixture_files": [
+     {
+      "path": "fixtures/PY05-06_2/INPUT_EXPECTATION.json",
+      "sha256": "6459cbe8ba481696cc708e3772f30d9bbc6e9f266ee04598d9b4e72a7ca866b1"
+     },
+     {
+      "path": "fixtures/PY05-06_2/contract_fixture.json",
+      "sha256": "ed8f34278277281f032e6e2d0e79e4a12a726447327f085836da81e746b7fd33"
+     }
+    ],
+    "harness_verdict": {
+     "line": 35,
+     "path": "engine_returns/Python_stdout.txt",
+     "sha256": "9eb34b82a24a0273850cf1304c5faaebc14ac836e66fa20d332287b1f8be630e"
+    },
+    "input_generation": "Python harness 가 시험 임시 위치에 fixture 를 만들어 실제 consumer → candidate_entry 로 호출 (PREPARED_PYTHON_INPUTS.json 행 · fixture 파일 아래)",
+    "prepared_input_row": {
+     "file": {
+      "path": "PREPARED_PYTHON_INPUTS.json",
+      "sha256": "49720ef6cdd3b404d829e81748ed2fc9d5df63c14540e16cbe026ed3e86f6002"
+     },
+     "key": [
+      "PY05-06",
+      2
+     ]
+    }
+   }
+  },
+  {
+   "engine": "Python",
+   "final_accounting_row": 35,
+   "id": "PY05-07",
+   "input_index": 1,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/Python_RETURN.json",
+     "sha256": "911bb619587e234900b5cb76d93e796c2ae936ccb106c6acfa9a5adc92887b2c"
+    },
+    "entry_output": {
+     "path": "results/PY05-07_1.json",
+     "sha256": "7674d1d0d885faec4f42f0d555b41591c754fdcb1926c68f09ee97f5a4e807e5"
+    },
+    "fixture_files": [
+     {
+      "path": "fixtures/PY05-07_1/INPUT_EXPECTATION.json",
+      "sha256": "148e5bf721141b0fac77218dced9ed19a4ed52a9526840ac73adb61be1526834"
+     },
+     {
+      "path": "fixtures/PY05-07_1/contract_fixture.json",
+      "sha256": "41a58c7192805651b04f4021f122e88d9222a3e401c1a1cd797d495825ea5add"
+     }
+    ],
+    "harness_verdict": {
+     "line": 36,
+     "path": "engine_returns/Python_stdout.txt",
+     "sha256": "9eb34b82a24a0273850cf1304c5faaebc14ac836e66fa20d332287b1f8be630e"
+    },
+    "input_generation": "Python harness 가 시험 임시 위치에 fixture 를 만들어 실제 consumer → candidate_entry 로 호출 (PREPARED_PYTHON_INPUTS.json 행 · fixture 파일 아래)",
+    "prepared_input_row": {
+     "file": {
+      "path": "PREPARED_PYTHON_INPUTS.json",
+      "sha256": "49720ef6cdd3b404d829e81748ed2fc9d5df63c14540e16cbe026ed3e86f6002"
+     },
+     "key": [
+      "PY05-07",
+      1
+     ]
+    }
+   }
+  },
+  {
+   "engine": "Python",
+   "final_accounting_row": 36,
+   "id": "PY06-01",
+   "input_index": 1,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/Python_RETURN.json",
+     "sha256": "911bb619587e234900b5cb76d93e796c2ae936ccb106c6acfa9a5adc92887b2c"
+    },
+    "entry_output": {
+     "path": "results/PY06-01_1.json",
+     "sha256": "dd0d184ec5a994382d7da358743998fa33d7465ebd826c2cd6c580e185f2b910"
+    },
+    "fixture_files": [
+     {
+      "path": "fixtures/PY06-01_1/INPUT_EXPECTATION.json",
+      "sha256": "053ff076580c27aebd9f9e543feeafc1889644afddb1455580c3f365fd7ce4cb"
+     },
+     {
+      "path": "fixtures/PY06-01_1/contract_fixture.json",
+      "sha256": "eab358f0fc29287c21c6e1101ada150fa66c66842fbd0939532d2e67287354fb"
+     }
+    ],
+    "harness_verdict": {
+     "line": 37,
+     "path": "engine_returns/Python_stdout.txt",
+     "sha256": "9eb34b82a24a0273850cf1304c5faaebc14ac836e66fa20d332287b1f8be630e"
+    },
+    "input_generation": "Python harness 가 시험 임시 위치에 fixture 를 만들어 실제 consumer → candidate_entry 로 호출 (PREPARED_PYTHON_INPUTS.json 행 · fixture 파일 아래)",
+    "prepared_input_row": {
+     "file": {
+      "path": "PREPARED_PYTHON_INPUTS.json",
+      "sha256": "49720ef6cdd3b404d829e81748ed2fc9d5df63c14540e16cbe026ed3e86f6002"
+     },
+     "key": [
+      "PY06-01",
+      1
+     ]
+    }
+   }
+  },
+  {
+   "engine": "Python",
+   "final_accounting_row": 37,
+   "id": "PY06-02",
+   "input_index": 1,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/Python_RETURN.json",
+     "sha256": "911bb619587e234900b5cb76d93e796c2ae936ccb106c6acfa9a5adc92887b2c"
+    },
+    "entry_output": {
+     "path": "results/PY06-02_1.json",
+     "sha256": "14396b553afbd756d93d5335ffa2c32e8c448b1c5461cce9f70fd9ad0eee7d2f"
+    },
+    "fixture_files": [
+     {
+      "path": "fixtures/PY06-02_1/INPUT_EXPECTATION.json",
+      "sha256": "3ea2d8a1f2f22cbb19dc1f3facb06c41c0ae10b03e2a755527d4796440ccedce"
+     },
+     {
+      "path": "fixtures/PY06-02_1/contract_fixture.json",
+      "sha256": "13f87f4b6128b879310dd91baafed861fa325094f915ab9faa93964be36e3d51"
+     }
+    ],
+    "harness_verdict": {
+     "line": 38,
+     "path": "engine_returns/Python_stdout.txt",
+     "sha256": "9eb34b82a24a0273850cf1304c5faaebc14ac836e66fa20d332287b1f8be630e"
+    },
+    "input_generation": "Python harness 가 시험 임시 위치에 fixture 를 만들어 실제 consumer → candidate_entry 로 호출 (PREPARED_PYTHON_INPUTS.json 행 · fixture 파일 아래)",
+    "prepared_input_row": {
+     "file": {
+      "path": "PREPARED_PYTHON_INPUTS.json",
+      "sha256": "49720ef6cdd3b404d829e81748ed2fc9d5df63c14540e16cbe026ed3e86f6002"
+     },
+     "key": [
+      "PY06-02",
+      1
+     ]
+    }
+   }
+  },
+  {
+   "engine": "Python",
+   "final_accounting_row": 38,
+   "id": "PY06-03",
+   "input_index": 1,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/Python_RETURN.json",
+     "sha256": "911bb619587e234900b5cb76d93e796c2ae936ccb106c6acfa9a5adc92887b2c"
+    },
+    "entry_output": {
+     "path": "results/PY06-03_1.json",
+     "sha256": "ca6fd108e3978299a7a57c14b950c263641798148a6063e4b6d7cdddb542aa46"
+    },
+    "fixture_files": [
+     {
+      "path": "fixtures/PY06-03_1/INPUT_EXPECTATION.json",
+      "sha256": "51531bde7a9bec50cc502330771dda283c7910f9c16f82a08a182232d4f8906f"
+     },
+     {
+      "path": "fixtures/PY06-03_1/contract_fixture.json",
+      "sha256": "db40569fe8e374a28cd38ca6ec2a64e3857a0ae2c76ae4ef2256949378ea6086"
+     }
+    ],
+    "harness_verdict": {
+     "line": 39,
+     "path": "engine_returns/Python_stdout.txt",
+     "sha256": "9eb34b82a24a0273850cf1304c5faaebc14ac836e66fa20d332287b1f8be630e"
+    },
+    "input_generation": "Python harness 가 시험 임시 위치에 fixture 를 만들어 실제 consumer → candidate_entry 로 호출 (PREPARED_PYTHON_INPUTS.json 행 · fixture 파일 아래)",
+    "prepared_input_row": {
+     "file": {
+      "path": "PREPARED_PYTHON_INPUTS.json",
+      "sha256": "49720ef6cdd3b404d829e81748ed2fc9d5df63c14540e16cbe026ed3e86f6002"
+     },
+     "key": [
+      "PY06-03",
+      1
+     ]
+    }
+   }
+  },
+  {
+   "engine": "Python",
+   "final_accounting_row": 39,
+   "id": "PY06-04",
+   "input_index": 1,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/Python_RETURN.json",
+     "sha256": "911bb619587e234900b5cb76d93e796c2ae936ccb106c6acfa9a5adc92887b2c"
+    },
+    "entry_output": {
+     "path": "results/PY06-04_1.json",
+     "sha256": "5bf58cb880cb96584420be19cb099cf563d245577b62a53b7bd55e8cd1152f36"
+    },
+    "fixture_files": [
+     {
+      "path": "fixtures/PY06-04_1/INPUT_EXPECTATION.json",
+      "sha256": "9c24353cc085bc9979173a6d83ce6c31240f5c98bb64c5d2140647218b517b78"
+     },
+     {
+      "path": "fixtures/PY06-04_1/contract_fixture.json",
+      "sha256": "fa3ae5b29edf9b400b6a30f33ff63da627778f0497223878c214c9d9a2496c6d"
+     }
+    ],
+    "harness_verdict": {
+     "line": 40,
+     "path": "engine_returns/Python_stdout.txt",
+     "sha256": "9eb34b82a24a0273850cf1304c5faaebc14ac836e66fa20d332287b1f8be630e"
+    },
+    "input_generation": "Python harness 가 시험 임시 위치에 fixture 를 만들어 실제 consumer → candidate_entry 로 호출 (PREPARED_PYTHON_INPUTS.json 행 · fixture 파일 아래)",
+    "prepared_input_row": {
+     "file": {
+      "path": "PREPARED_PYTHON_INPUTS.json",
+      "sha256": "49720ef6cdd3b404d829e81748ed2fc9d5df63c14540e16cbe026ed3e86f6002"
+     },
+     "key": [
+      "PY06-04",
+      1
+     ]
+    }
+   }
+  },
+  {
+   "engine": "Python",
+   "final_accounting_row": 40,
+   "id": "PY07-01",
+   "input_index": 1,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/Python_RETURN.json",
+     "sha256": "911bb619587e234900b5cb76d93e796c2ae936ccb106c6acfa9a5adc92887b2c"
+    },
+    "entry_output": {
+     "path": "results/PY07-01_1.json",
+     "sha256": "0ff36779c2f91a4f8d3f64b168c49f91c5b406283fcb13ed7b30f18d373bfdc1"
+    },
+    "fixture_files": [
+     {
+      "path": "fixtures/PY07-01_1/INPUT_EXPECTATION.json",
+      "sha256": "50fa67df712b3db5afab3fa4c6bc26401fdb4c2296a6863b074044de471a32e8"
+     },
+     {
+      "path": "fixtures/PY07-01_1/contract_fixture.json",
+      "sha256": "9b83b3bfd6ad7089f329544f9a28c32d3c64068802fa7d38674dd8df12c9f2d1"
+     }
+    ],
+    "harness_verdict": {
+     "line": 41,
+     "path": "engine_returns/Python_stdout.txt",
+     "sha256": "9eb34b82a24a0273850cf1304c5faaebc14ac836e66fa20d332287b1f8be630e"
+    },
+    "input_generation": "Python harness 가 시험 임시 위치에 fixture 를 만들어 실제 consumer → candidate_entry 로 호출 (PREPARED_PYTHON_INPUTS.json 행 · fixture 파일 아래)",
+    "prepared_input_row": {
+     "file": {
+      "path": "PREPARED_PYTHON_INPUTS.json",
+      "sha256": "49720ef6cdd3b404d829e81748ed2fc9d5df63c14540e16cbe026ed3e86f6002"
+     },
+     "key": [
+      "PY07-01",
+      1
+     ]
+    }
+   }
+  },
+  {
+   "engine": "Python",
+   "final_accounting_row": 41,
+   "id": "PY07-02",
+   "input_index": 1,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/Python_RETURN.json",
+     "sha256": "911bb619587e234900b5cb76d93e796c2ae936ccb106c6acfa9a5adc92887b2c"
+    },
+    "entry_output": {
+     "path": "results/PY07-02_1.json",
+     "sha256": "0375a9f2d1c98e76130a595de8a8a8c7c0336ac750f3d06aa8269bf3dd849336"
+    },
+    "fixture_files": [
+     {
+      "path": "fixtures/PY07-02_1/INPUT_EXPECTATION.json",
+      "sha256": "69eb9d0540a833dc31032c758f46ac5adcd554134f4edcbc90669b5445f27c0c"
+     },
+     {
+      "path": "fixtures/PY07-02_1/contract_fixture.json",
+      "sha256": "bdbb384ef98354d9a29143931ac6c9c9c763efa6df7c72416c445f00bd1d43e6"
+     }
+    ],
+    "harness_verdict": {
+     "line": 42,
+     "path": "engine_returns/Python_stdout.txt",
+     "sha256": "9eb34b82a24a0273850cf1304c5faaebc14ac836e66fa20d332287b1f8be630e"
+    },
+    "input_generation": "Python harness 가 시험 임시 위치에 fixture 를 만들어 실제 consumer → candidate_entry 로 호출 (PREPARED_PYTHON_INPUTS.json 행 · fixture 파일 아래)",
+    "prepared_input_row": {
+     "file": {
+      "path": "PREPARED_PYTHON_INPUTS.json",
+      "sha256": "49720ef6cdd3b404d829e81748ed2fc9d5df63c14540e16cbe026ed3e86f6002"
+     },
+     "key": [
+      "PY07-02",
+      1
+     ]
+    }
+   }
+  },
+  {
+   "engine": "Java helper (exact checkShape and TIMES extracted; no COMSOL jars, no model)",
+   "final_accounting_row": 42,
+   "id": "JV01-01",
+   "input_index": 1,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/Java_stub_RETURN.json",
+     "sha256": "670b6c6d4fc602660914bf26230a1ecbd963ac4931b0bd288e440cd4868ecf46"
+    },
+    "extracted": [
+     {
+      "path": "extracted/checkShape.java.txt",
+      "sha256": "08626dfb5928e81ea74e4f1a83b38dfaf628d96557bfe80976ca82a86692ada7"
+     },
+     {
+      "path": "extracted/TIMES.java.txt",
+      "sha256": "13f26992b33371263a7f691dc30de6a7bdc613947ddfbb55455b4bbcfd9bd810"
+     }
+    ],
+    "harness": {
+     "path": "harness/ShapeHarness.java",
+     "sha256": "089782418cbd9ddffe29c270ae1d7622a320e86c5884a38e1f29afb664828a44"
+    },
+    "harness_verdict": {
+     "line": 1,
+     "path": "engine_returns/Java_stub_stdout.txt",
+     "sha256": "5a8fc44effec5fb40de987939151a8ee07ef86274e7918d29f5711ae39065830"
+    },
+    "input_generation": "harness/ShapeHarness.java 가 봉인 Java 에서 추출한 checkShape · TIMES 를 호출 (COMSOL jar · 모델 없음)"
+   }
+  },
+  {
+   "engine": "Java helper (exact checkShape and TIMES extracted; no COMSOL jars, no model)",
+   "final_accounting_row": 43,
+   "id": "JV01-02",
+   "input_index": 1,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/Java_stub_RETURN.json",
+     "sha256": "670b6c6d4fc602660914bf26230a1ecbd963ac4931b0bd288e440cd4868ecf46"
+    },
+    "extracted": [
+     {
+      "path": "extracted/checkShape.java.txt",
+      "sha256": "08626dfb5928e81ea74e4f1a83b38dfaf628d96557bfe80976ca82a86692ada7"
+     },
+     {
+      "path": "extracted/TIMES.java.txt",
+      "sha256": "13f26992b33371263a7f691dc30de6a7bdc613947ddfbb55455b4bbcfd9bd810"
+     }
+    ],
+    "harness": {
+     "path": "harness/ShapeHarness.java",
+     "sha256": "089782418cbd9ddffe29c270ae1d7622a320e86c5884a38e1f29afb664828a44"
+    },
+    "harness_verdict": {
+     "line": 2,
+     "path": "engine_returns/Java_stub_stdout.txt",
+     "sha256": "5a8fc44effec5fb40de987939151a8ee07ef86274e7918d29f5711ae39065830"
+    },
+    "input_generation": "harness/ShapeHarness.java 가 봉인 Java 에서 추출한 checkShape · TIMES 를 호출 (COMSOL jar · 모델 없음)"
+   }
+  },
+  {
+   "engine": "Windows PowerShell 5.1 (actual GDecision and GFields extracted from the sealed PARENT_COMMAND.ps1)",
+   "final_accounting_row": 44,
+   "id": "PS01-01",
+   "input_index": 1,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/PS51_RETURN.json",
+     "sha256": "e66c700b28640b737db6a71f4cfe07432b9750df9e28e94c3e4557d980eeb7b9"
+    },
+    "harness_verdict": {
+     "line": 1,
+     "path": "engine_returns/PS51_stdout.txt",
+     "sha256": "92b09de470f131b69423bb9f4dddc1d2b59387e7f39f799048bae859973b55d4"
+    },
+    "input_binding_row": {
+     "file": {
+      "path": "PS_INPUT_BINDINGS.json",
+      "sha256": "4c8306642d2ab2b9fda89530f5f4425bf90b1e86852ff35119c51b7b396e7853"
+     },
+     "key": [
+      "PS01-01",
+      1
+     ]
+    },
+    "input_generation": "PS_INPUT_BINDINGS.json 의 입력 결속 (Python 이 만든 결과 JSON · 자식 반환 기록) 을 봉인 PARENT_COMMAND.ps1 에서 추출한 GDecision / GNativeAxis / GFields 에 넣어 Windows PowerShell 5.1 로 호출",
+    "result": {
+     "file": {
+      "path": "results/PS_RESULTS.json",
+      "sha256": "c351d3cdbacf1bc1d18e34ae4fe55e488fff32806f724e91aaad6c44526ad317"
+     },
+     "results_index": 0
+    }
+   }
+  },
+  {
+   "engine": "Windows PowerShell 5.1 (actual GDecision and GFields extracted from the sealed PARENT_COMMAND.ps1)",
+   "final_accounting_row": 45,
+   "id": "PS01-02",
+   "input_index": 1,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/PS51_RETURN.json",
+     "sha256": "e66c700b28640b737db6a71f4cfe07432b9750df9e28e94c3e4557d980eeb7b9"
+    },
+    "harness_verdict": {
+     "line": 2,
+     "path": "engine_returns/PS51_stdout.txt",
+     "sha256": "92b09de470f131b69423bb9f4dddc1d2b59387e7f39f799048bae859973b55d4"
+    },
+    "input_binding_row": {
+     "file": {
+      "path": "PS_INPUT_BINDINGS.json",
+      "sha256": "4c8306642d2ab2b9fda89530f5f4425bf90b1e86852ff35119c51b7b396e7853"
+     },
+     "key": [
+      "PS01-02",
+      1
+     ]
+    },
+    "input_generation": "PS_INPUT_BINDINGS.json 의 입력 결속 (Python 이 만든 결과 JSON · 자식 반환 기록) 을 봉인 PARENT_COMMAND.ps1 에서 추출한 GDecision / GNativeAxis / GFields 에 넣어 Windows PowerShell 5.1 로 호출",
+    "result": {
+     "file": {
+      "path": "results/PS_RESULTS.json",
+      "sha256": "c351d3cdbacf1bc1d18e34ae4fe55e488fff32806f724e91aaad6c44526ad317"
+     },
+     "results_index": 1
+    }
+   }
+  },
+  {
+   "engine": "Windows PowerShell 5.1 (actual GDecision and GFields extracted from the sealed PARENT_COMMAND.ps1)",
+   "final_accounting_row": 46,
+   "id": "PS01-03",
+   "input_index": 1,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/PS51_RETURN.json",
+     "sha256": "e66c700b28640b737db6a71f4cfe07432b9750df9e28e94c3e4557d980eeb7b9"
+    },
+    "harness_verdict": {
+     "line": 3,
+     "path": "engine_returns/PS51_stdout.txt",
+     "sha256": "92b09de470f131b69423bb9f4dddc1d2b59387e7f39f799048bae859973b55d4"
+    },
+    "input_binding_row": {
+     "file": {
+      "path": "PS_INPUT_BINDINGS.json",
+      "sha256": "4c8306642d2ab2b9fda89530f5f4425bf90b1e86852ff35119c51b7b396e7853"
+     },
+     "key": [
+      "PS01-03",
+      1
+     ]
+    },
+    "input_generation": "PS_INPUT_BINDINGS.json 의 입력 결속 (Python 이 만든 결과 JSON · 자식 반환 기록) 을 봉인 PARENT_COMMAND.ps1 에서 추출한 GDecision / GNativeAxis / GFields 에 넣어 Windows PowerShell 5.1 로 호출",
+    "result": {
+     "file": {
+      "path": "results/PS_RESULTS.json",
+      "sha256": "c351d3cdbacf1bc1d18e34ae4fe55e488fff32806f724e91aaad6c44526ad317"
+     },
+     "results_index": 2
+    }
+   }
+  },
+  {
+   "engine": "Windows PowerShell 5.1 (actual GDecision and GFields extracted from the sealed PARENT_COMMAND.ps1)",
+   "final_accounting_row": 47,
+   "id": "PS01-04",
+   "input_index": 1,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/PS51_RETURN.json",
+     "sha256": "e66c700b28640b737db6a71f4cfe07432b9750df9e28e94c3e4557d980eeb7b9"
+    },
+    "harness_verdict": {
+     "line": 4,
+     "path": "engine_returns/PS51_stdout.txt",
+     "sha256": "92b09de470f131b69423bb9f4dddc1d2b59387e7f39f799048bae859973b55d4"
+    },
+    "input_binding_row": {
+     "file": {
+      "path": "PS_INPUT_BINDINGS.json",
+      "sha256": "4c8306642d2ab2b9fda89530f5f4425bf90b1e86852ff35119c51b7b396e7853"
+     },
+     "key": [
+      "PS01-04",
+      1
+     ]
+    },
+    "input_generation": "PS_INPUT_BINDINGS.json 의 입력 결속 (Python 이 만든 결과 JSON · 자식 반환 기록) 을 봉인 PARENT_COMMAND.ps1 에서 추출한 GDecision / GNativeAxis / GFields 에 넣어 Windows PowerShell 5.1 로 호출",
+    "result": {
+     "file": {
+      "path": "results/PS_RESULTS.json",
+      "sha256": "c351d3cdbacf1bc1d18e34ae4fe55e488fff32806f724e91aaad6c44526ad317"
+     },
+     "results_index": 3
+    }
+   }
+  },
+  {
+   "engine": "Windows PowerShell 5.1 (actual GDecision and GFields extracted from the sealed PARENT_COMMAND.ps1)",
+   "final_accounting_row": 48,
+   "id": "PS01-05",
+   "input_index": 1,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/PS51_RETURN.json",
+     "sha256": "e66c700b28640b737db6a71f4cfe07432b9750df9e28e94c3e4557d980eeb7b9"
+    },
+    "harness_verdict": {
+     "line": 5,
+     "path": "engine_returns/PS51_stdout.txt",
+     "sha256": "92b09de470f131b69423bb9f4dddc1d2b59387e7f39f799048bae859973b55d4"
+    },
+    "input_binding_row": {
+     "file": {
+      "path": "PS_INPUT_BINDINGS.json",
+      "sha256": "4c8306642d2ab2b9fda89530f5f4425bf90b1e86852ff35119c51b7b396e7853"
+     },
+     "key": [
+      "PS01-05",
+      1
+     ]
+    },
+    "input_generation": "PS_INPUT_BINDINGS.json 의 입력 결속 (Python 이 만든 결과 JSON · 자식 반환 기록) 을 봉인 PARENT_COMMAND.ps1 에서 추출한 GDecision / GNativeAxis / GFields 에 넣어 Windows PowerShell 5.1 로 호출",
+    "result": {
+     "file": {
+      "path": "results/PS_RESULTS.json",
+      "sha256": "c351d3cdbacf1bc1d18e34ae4fe55e488fff32806f724e91aaad6c44526ad317"
+     },
+     "results_index": 4
+    }
+   }
+  },
+  {
+   "engine": "Windows PowerShell 5.1 (actual GDecision and GFields extracted from the sealed PARENT_COMMAND.ps1)",
+   "final_accounting_row": 49,
+   "id": "PS01-06",
+   "input_index": 1,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/PS51_RETURN.json",
+     "sha256": "e66c700b28640b737db6a71f4cfe07432b9750df9e28e94c3e4557d980eeb7b9"
+    },
+    "harness_verdict": {
+     "line": 6,
+     "path": "engine_returns/PS51_stdout.txt",
+     "sha256": "92b09de470f131b69423bb9f4dddc1d2b59387e7f39f799048bae859973b55d4"
+    },
+    "input_binding_row": {
+     "file": {
+      "path": "PS_INPUT_BINDINGS.json",
+      "sha256": "4c8306642d2ab2b9fda89530f5f4425bf90b1e86852ff35119c51b7b396e7853"
+     },
+     "key": [
+      "PS01-06",
+      1
+     ]
+    },
+    "input_generation": "PS_INPUT_BINDINGS.json 의 입력 결속 (Python 이 만든 결과 JSON · 자식 반환 기록) 을 봉인 PARENT_COMMAND.ps1 에서 추출한 GDecision / GNativeAxis / GFields 에 넣어 Windows PowerShell 5.1 로 호출",
+    "result": {
+     "file": {
+      "path": "results/PS_RESULTS.json",
+      "sha256": "c351d3cdbacf1bc1d18e34ae4fe55e488fff32806f724e91aaad6c44526ad317"
+     },
+     "results_index": 5
+    }
+   }
+  },
+  {
+   "engine": "Windows PowerShell 5.1 (actual GDecision and GFields extracted from the sealed PARENT_COMMAND.ps1)",
+   "final_accounting_row": 50,
+   "id": "PS01-07",
+   "input_index": 1,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/PS51_RETURN.json",
+     "sha256": "e66c700b28640b737db6a71f4cfe07432b9750df9e28e94c3e4557d980eeb7b9"
+    },
+    "harness_verdict": {
+     "line": 7,
+     "path": "engine_returns/PS51_stdout.txt",
+     "sha256": "92b09de470f131b69423bb9f4dddc1d2b59387e7f39f799048bae859973b55d4"
+    },
+    "input_binding_row": {
+     "file": {
+      "path": "PS_INPUT_BINDINGS.json",
+      "sha256": "4c8306642d2ab2b9fda89530f5f4425bf90b1e86852ff35119c51b7b396e7853"
+     },
+     "key": [
+      "PS01-07",
+      1
+     ]
+    },
+    "input_generation": "PS_INPUT_BINDINGS.json 의 입력 결속 (Python 이 만든 결과 JSON · 자식 반환 기록) 을 봉인 PARENT_COMMAND.ps1 에서 추출한 GDecision / GNativeAxis / GFields 에 넣어 Windows PowerShell 5.1 로 호출",
+    "result": {
+     "file": {
+      "path": "results/PS_RESULTS.json",
+      "sha256": "c351d3cdbacf1bc1d18e34ae4fe55e488fff32806f724e91aaad6c44526ad317"
+     },
+     "results_index": 6
+    }
+   }
+  },
+  {
+   "engine": "Windows PowerShell 5.1 (actual GDecision and GFields extracted from the sealed PARENT_COMMAND.ps1)",
+   "final_accounting_row": 51,
+   "id": "PS01-07",
+   "input_index": 2,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/PS51_RETURN.json",
+     "sha256": "e66c700b28640b737db6a71f4cfe07432b9750df9e28e94c3e4557d980eeb7b9"
+    },
+    "harness_verdict": {
+     "line": 8,
+     "path": "engine_returns/PS51_stdout.txt",
+     "sha256": "92b09de470f131b69423bb9f4dddc1d2b59387e7f39f799048bae859973b55d4"
+    },
+    "input_binding_row": {
+     "file": {
+      "path": "PS_INPUT_BINDINGS.json",
+      "sha256": "4c8306642d2ab2b9fda89530f5f4425bf90b1e86852ff35119c51b7b396e7853"
+     },
+     "key": [
+      "PS01-07",
+      2
+     ]
+    },
+    "input_generation": "PS_INPUT_BINDINGS.json 의 입력 결속 (Python 이 만든 결과 JSON · 자식 반환 기록) 을 봉인 PARENT_COMMAND.ps1 에서 추출한 GDecision / GNativeAxis / GFields 에 넣어 Windows PowerShell 5.1 로 호출",
+    "result": {
+     "file": {
+      "path": "results/PS_RESULTS.json",
+      "sha256": "c351d3cdbacf1bc1d18e34ae4fe55e488fff32806f724e91aaad6c44526ad317"
+     },
+     "results_index": 7
+    }
+   }
+  },
+  {
+   "engine": "Windows PowerShell 5.1 (actual GDecision and GFields extracted from the sealed PARENT_COMMAND.ps1)",
+   "final_accounting_row": 52,
+   "id": "PS01-08",
+   "input_index": 1,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/PS51_RETURN.json",
+     "sha256": "e66c700b28640b737db6a71f4cfe07432b9750df9e28e94c3e4557d980eeb7b9"
+    },
+    "harness_verdict": {
+     "line": 9,
+     "path": "engine_returns/PS51_stdout.txt",
+     "sha256": "92b09de470f131b69423bb9f4dddc1d2b59387e7f39f799048bae859973b55d4"
+    },
+    "input_binding_row": {
+     "file": {
+      "path": "PS_INPUT_BINDINGS.json",
+      "sha256": "4c8306642d2ab2b9fda89530f5f4425bf90b1e86852ff35119c51b7b396e7853"
+     },
+     "key": [
+      "PS01-08",
+      1
+     ]
+    },
+    "input_generation": "PS_INPUT_BINDINGS.json 의 입력 결속 (Python 이 만든 결과 JSON · 자식 반환 기록) 을 봉인 PARENT_COMMAND.ps1 에서 추출한 GDecision / GNativeAxis / GFields 에 넣어 Windows PowerShell 5.1 로 호출",
+    "result": {
+     "file": {
+      "path": "results/PS_RESULTS.json",
+      "sha256": "c351d3cdbacf1bc1d18e34ae4fe55e488fff32806f724e91aaad6c44526ad317"
+     },
+     "results_index": 8
+    }
+   }
+  },
+  {
+   "engine": "Windows PowerShell 5.1 (actual GDecision and GFields extracted from the sealed PARENT_COMMAND.ps1)",
+   "final_accounting_row": 53,
+   "id": "PS01-08",
+   "input_index": 2,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/PS51_RETURN.json",
+     "sha256": "e66c700b28640b737db6a71f4cfe07432b9750df9e28e94c3e4557d980eeb7b9"
+    },
+    "harness_verdict": {
+     "line": 10,
+     "path": "engine_returns/PS51_stdout.txt",
+     "sha256": "92b09de470f131b69423bb9f4dddc1d2b59387e7f39f799048bae859973b55d4"
+    },
+    "input_binding_row": {
+     "file": {
+      "path": "PS_INPUT_BINDINGS.json",
+      "sha256": "4c8306642d2ab2b9fda89530f5f4425bf90b1e86852ff35119c51b7b396e7853"
+     },
+     "key": [
+      "PS01-08",
+      2
+     ]
+    },
+    "input_generation": "PS_INPUT_BINDINGS.json 의 입력 결속 (Python 이 만든 결과 JSON · 자식 반환 기록) 을 봉인 PARENT_COMMAND.ps1 에서 추출한 GDecision / GNativeAxis / GFields 에 넣어 Windows PowerShell 5.1 로 호출",
+    "result": {
+     "file": {
+      "path": "results/PS_RESULTS.json",
+      "sha256": "c351d3cdbacf1bc1d18e34ae4fe55e488fff32806f724e91aaad6c44526ad317"
+     },
+     "results_index": 9
+    }
+   }
+  },
+  {
+   "engine": "Windows PowerShell 5.1 (actual GDecision and GFields extracted from the sealed PARENT_COMMAND.ps1)",
+   "final_accounting_row": 54,
+   "id": "PS01-09",
+   "input_index": 1,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/PS51_RETURN.json",
+     "sha256": "e66c700b28640b737db6a71f4cfe07432b9750df9e28e94c3e4557d980eeb7b9"
+    },
+    "harness_verdict": {
+     "line": 11,
+     "path": "engine_returns/PS51_stdout.txt",
+     "sha256": "92b09de470f131b69423bb9f4dddc1d2b59387e7f39f799048bae859973b55d4"
+    },
+    "input_binding_row": {
+     "file": {
+      "path": "PS_INPUT_BINDINGS.json",
+      "sha256": "4c8306642d2ab2b9fda89530f5f4425bf90b1e86852ff35119c51b7b396e7853"
+     },
+     "key": [
+      "PS01-09",
+      1
+     ]
+    },
+    "input_generation": "PS_INPUT_BINDINGS.json 의 입력 결속 (Python 이 만든 결과 JSON · 자식 반환 기록) 을 봉인 PARENT_COMMAND.ps1 에서 추출한 GDecision / GNativeAxis / GFields 에 넣어 Windows PowerShell 5.1 로 호출",
+    "result": {
+     "file": {
+      "path": "results/PS_RESULTS.json",
+      "sha256": "c351d3cdbacf1bc1d18e34ae4fe55e488fff32806f724e91aaad6c44526ad317"
+     },
+     "results_index": 10
+    }
+   }
+  },
+  {
+   "engine": "Windows PowerShell 5.1 (actual GDecision and GFields extracted from the sealed PARENT_COMMAND.ps1)",
+   "final_accounting_row": 55,
+   "id": "PS01-10",
+   "input_index": 1,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/PS51_RETURN.json",
+     "sha256": "e66c700b28640b737db6a71f4cfe07432b9750df9e28e94c3e4557d980eeb7b9"
+    },
+    "harness_verdict": {
+     "line": 12,
+     "path": "engine_returns/PS51_stdout.txt",
+     "sha256": "92b09de470f131b69423bb9f4dddc1d2b59387e7f39f799048bae859973b55d4"
+    },
+    "input_binding_row": {
+     "file": {
+      "path": "PS_INPUT_BINDINGS.json",
+      "sha256": "4c8306642d2ab2b9fda89530f5f4425bf90b1e86852ff35119c51b7b396e7853"
+     },
+     "key": [
+      "PS01-10",
+      1
+     ]
+    },
+    "input_generation": "PS_INPUT_BINDINGS.json 의 입력 결속 (Python 이 만든 결과 JSON · 자식 반환 기록) 을 봉인 PARENT_COMMAND.ps1 에서 추출한 GDecision / GNativeAxis / GFields 에 넣어 Windows PowerShell 5.1 로 호출",
+    "result": {
+     "file": {
+      "path": "results/PS_RESULTS.json",
+      "sha256": "c351d3cdbacf1bc1d18e34ae4fe55e488fff32806f724e91aaad6c44526ad317"
+     },
+     "results_index": 11
+    }
+   }
+  },
+  {
+   "engine": "Windows PowerShell 5.1 (actual GDecision and GFields extracted from the sealed PARENT_COMMAND.ps1)",
+   "final_accounting_row": 56,
+   "id": "PS01-11",
+   "input_index": 1,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/PS51_RETURN.json",
+     "sha256": "e66c700b28640b737db6a71f4cfe07432b9750df9e28e94c3e4557d980eeb7b9"
+    },
+    "harness_verdict": {
+     "line": 13,
+     "path": "engine_returns/PS51_stdout.txt",
+     "sha256": "92b09de470f131b69423bb9f4dddc1d2b59387e7f39f799048bae859973b55d4"
+    },
+    "input_binding_row": {
+     "file": {
+      "path": "PS_INPUT_BINDINGS.json",
+      "sha256": "4c8306642d2ab2b9fda89530f5f4425bf90b1e86852ff35119c51b7b396e7853"
+     },
+     "key": [
+      "PS01-11",
+      1
+     ]
+    },
+    "input_generation": "PS_INPUT_BINDINGS.json 의 입력 결속 (Python 이 만든 결과 JSON · 자식 반환 기록) 을 봉인 PARENT_COMMAND.ps1 에서 추출한 GDecision / GNativeAxis / GFields 에 넣어 Windows PowerShell 5.1 로 호출",
+    "result": {
+     "file": {
+      "path": "results/PS_RESULTS.json",
+      "sha256": "c351d3cdbacf1bc1d18e34ae4fe55e488fff32806f724e91aaad6c44526ad317"
+     },
+     "results_index": 12
+    }
+   }
+  },
+  {
+   "engine": "Windows PowerShell 5.1 (actual GDecision and GFields extracted from the sealed PARENT_COMMAND.ps1)",
+   "final_accounting_row": 57,
+   "id": "PS01-12",
+   "input_index": 1,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/PS51_RETURN.json",
+     "sha256": "e66c700b28640b737db6a71f4cfe07432b9750df9e28e94c3e4557d980eeb7b9"
+    },
+    "harness_verdict": {
+     "line": 14,
+     "path": "engine_returns/PS51_stdout.txt",
+     "sha256": "92b09de470f131b69423bb9f4dddc1d2b59387e7f39f799048bae859973b55d4"
+    },
+    "input_binding_row": {
+     "file": {
+      "path": "PS_INPUT_BINDINGS.json",
+      "sha256": "4c8306642d2ab2b9fda89530f5f4425bf90b1e86852ff35119c51b7b396e7853"
+     },
+     "key": [
+      "PS01-12",
+      1
+     ]
+    },
+    "input_generation": "PS_INPUT_BINDINGS.json 의 입력 결속 (Python 이 만든 결과 JSON · 자식 반환 기록) 을 봉인 PARENT_COMMAND.ps1 에서 추출한 GDecision / GNativeAxis / GFields 에 넣어 Windows PowerShell 5.1 로 호출",
+    "result": {
+     "file": {
+      "path": "results/PS_RESULTS.json",
+      "sha256": "c351d3cdbacf1bc1d18e34ae4fe55e488fff32806f724e91aaad6c44526ad317"
+     },
+     "results_index": 13
+    }
+   }
+  },
+  {
+   "engine": "Windows PowerShell 5.1 (actual GDecision and GFields extracted from the sealed PARENT_COMMAND.ps1)",
+   "final_accounting_row": 58,
+   "id": "PS01-13",
+   "input_index": 1,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/PS51_RETURN.json",
+     "sha256": "e66c700b28640b737db6a71f4cfe07432b9750df9e28e94c3e4557d980eeb7b9"
+    },
+    "harness_verdict": {
+     "line": 15,
+     "path": "engine_returns/PS51_stdout.txt",
+     "sha256": "92b09de470f131b69423bb9f4dddc1d2b59387e7f39f799048bae859973b55d4"
+    },
+    "input_binding_row": {
+     "file": {
+      "path": "PS_INPUT_BINDINGS.json",
+      "sha256": "4c8306642d2ab2b9fda89530f5f4425bf90b1e86852ff35119c51b7b396e7853"
+     },
+     "key": [
+      "PS01-13",
+      1
+     ]
+    },
+    "input_generation": "PS_INPUT_BINDINGS.json 의 입력 결속 (Python 이 만든 결과 JSON · 자식 반환 기록) 을 봉인 PARENT_COMMAND.ps1 에서 추출한 GDecision / GNativeAxis / GFields 에 넣어 Windows PowerShell 5.1 로 호출",
+    "result": {
+     "file": {
+      "path": "results/PS_RESULTS.json",
+      "sha256": "c351d3cdbacf1bc1d18e34ae4fe55e488fff32806f724e91aaad6c44526ad317"
+     },
+     "results_index": 14
+    }
+   }
+  },
+  {
+   "engine": "Windows PowerShell 5.1 (actual GDecision and GFields extracted from the sealed PARENT_COMMAND.ps1)",
+   "final_accounting_row": 59,
+   "id": "PS01-13",
+   "input_index": 2,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/PS51_RETURN.json",
+     "sha256": "e66c700b28640b737db6a71f4cfe07432b9750df9e28e94c3e4557d980eeb7b9"
+    },
+    "harness_verdict": {
+     "line": 16,
+     "path": "engine_returns/PS51_stdout.txt",
+     "sha256": "92b09de470f131b69423bb9f4dddc1d2b59387e7f39f799048bae859973b55d4"
+    },
+    "input_binding_row": {
+     "file": {
+      "path": "PS_INPUT_BINDINGS.json",
+      "sha256": "4c8306642d2ab2b9fda89530f5f4425bf90b1e86852ff35119c51b7b396e7853"
+     },
+     "key": [
+      "PS01-13",
+      2
+     ]
+    },
+    "input_generation": "PS_INPUT_BINDINGS.json 의 입력 결속 (Python 이 만든 결과 JSON · 자식 반환 기록) 을 봉인 PARENT_COMMAND.ps1 에서 추출한 GDecision / GNativeAxis / GFields 에 넣어 Windows PowerShell 5.1 로 호출",
+    "result": {
+     "file": {
+      "path": "results/PS_RESULTS.json",
+      "sha256": "c351d3cdbacf1bc1d18e34ae4fe55e488fff32806f724e91aaad6c44526ad317"
+     },
+     "results_index": 15
+    }
+   }
+  },
+  {
+   "engine": "Windows PowerShell 5.1 (actual GDecision and GFields extracted from the sealed PARENT_COMMAND.ps1)",
+   "final_accounting_row": 60,
+   "id": "PS01-14",
+   "input_index": 1,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/PS51_RETURN.json",
+     "sha256": "e66c700b28640b737db6a71f4cfe07432b9750df9e28e94c3e4557d980eeb7b9"
+    },
+    "harness_verdict": {
+     "line": 17,
+     "path": "engine_returns/PS51_stdout.txt",
+     "sha256": "92b09de470f131b69423bb9f4dddc1d2b59387e7f39f799048bae859973b55d4"
+    },
+    "input_binding_row": {
+     "file": {
+      "path": "PS_INPUT_BINDINGS.json",
+      "sha256": "4c8306642d2ab2b9fda89530f5f4425bf90b1e86852ff35119c51b7b396e7853"
+     },
+     "key": [
+      "PS01-14",
+      1
+     ]
+    },
+    "input_generation": "PS_INPUT_BINDINGS.json 의 입력 결속 (Python 이 만든 결과 JSON · 자식 반환 기록) 을 봉인 PARENT_COMMAND.ps1 에서 추출한 GDecision / GNativeAxis / GFields 에 넣어 Windows PowerShell 5.1 로 호출",
+    "result": {
+     "file": {
+      "path": "results/PS_RESULTS.json",
+      "sha256": "c351d3cdbacf1bc1d18e34ae4fe55e488fff32806f724e91aaad6c44526ad317"
+     },
+     "results_index": 16
+    }
+   }
+  },
+  {
+   "engine": "Windows PowerShell 5.1 (actual GDecision and GFields extracted from the sealed PARENT_COMMAND.ps1)",
+   "final_accounting_row": 61,
+   "id": "PS01-15",
+   "input_index": 1,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/PS51_RETURN.json",
+     "sha256": "e66c700b28640b737db6a71f4cfe07432b9750df9e28e94c3e4557d980eeb7b9"
+    },
+    "harness_verdict": {
+     "line": 18,
+     "path": "engine_returns/PS51_stdout.txt",
+     "sha256": "92b09de470f131b69423bb9f4dddc1d2b59387e7f39f799048bae859973b55d4"
+    },
+    "input_binding_row": {
+     "file": {
+      "path": "PS_INPUT_BINDINGS.json",
+      "sha256": "4c8306642d2ab2b9fda89530f5f4425bf90b1e86852ff35119c51b7b396e7853"
+     },
+     "key": [
+      "PS01-15",
+      1
+     ]
+    },
+    "input_generation": "PS_INPUT_BINDINGS.json 의 입력 결속 (Python 이 만든 결과 JSON · 자식 반환 기록) 을 봉인 PARENT_COMMAND.ps1 에서 추출한 GDecision / GNativeAxis / GFields 에 넣어 Windows PowerShell 5.1 로 호출",
+    "result": {
+     "file": {
+      "path": "results/PS_RESULTS.json",
+      "sha256": "c351d3cdbacf1bc1d18e34ae4fe55e488fff32806f724e91aaad6c44526ad317"
+     },
+     "results_index": 17
+    }
+   }
+  },
+  {
+   "engine": "Windows PowerShell 5.1 (actual GDecision and GFields extracted from the sealed PARENT_COMMAND.ps1)",
+   "final_accounting_row": 62,
+   "id": "PS01-16",
+   "input_index": 1,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/PS51_RETURN.json",
+     "sha256": "e66c700b28640b737db6a71f4cfe07432b9750df9e28e94c3e4557d980eeb7b9"
+    },
+    "harness_verdict": {
+     "line": 19,
+     "path": "engine_returns/PS51_stdout.txt",
+     "sha256": "92b09de470f131b69423bb9f4dddc1d2b59387e7f39f799048bae859973b55d4"
+    },
+    "input_binding_row": {
+     "file": {
+      "path": "PS_INPUT_BINDINGS.json",
+      "sha256": "4c8306642d2ab2b9fda89530f5f4425bf90b1e86852ff35119c51b7b396e7853"
+     },
+     "key": [
+      "PS01-16",
+      1
+     ]
+    },
+    "input_generation": "PS_INPUT_BINDINGS.json 의 입력 결속 (Python 이 만든 결과 JSON · 자식 반환 기록) 을 봉인 PARENT_COMMAND.ps1 에서 추출한 GDecision / GNativeAxis / GFields 에 넣어 Windows PowerShell 5.1 로 호출",
+    "result": {
+     "file": {
+      "path": "results/PS_RESULTS.json",
+      "sha256": "c351d3cdbacf1bc1d18e34ae4fe55e488fff32806f724e91aaad6c44526ad317"
+     },
+     "results_index": 18
+    }
+   }
+  },
+  {
+   "engine": "Windows PowerShell 5.1 (actual GDecision and GFields extracted from the sealed PARENT_COMMAND.ps1)",
+   "final_accounting_row": 63,
+   "id": "PS01-17",
+   "input_index": 1,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/PS51_RETURN.json",
+     "sha256": "e66c700b28640b737db6a71f4cfe07432b9750df9e28e94c3e4557d980eeb7b9"
+    },
+    "harness_verdict": {
+     "line": 20,
+     "path": "engine_returns/PS51_stdout.txt",
+     "sha256": "92b09de470f131b69423bb9f4dddc1d2b59387e7f39f799048bae859973b55d4"
+    },
+    "input_binding_row": {
+     "file": {
+      "path": "PS_INPUT_BINDINGS.json",
+      "sha256": "4c8306642d2ab2b9fda89530f5f4425bf90b1e86852ff35119c51b7b396e7853"
+     },
+     "key": [
+      "PS01-17",
+      1
+     ]
+    },
+    "input_generation": "PS_INPUT_BINDINGS.json 의 입력 결속 (Python 이 만든 결과 JSON · 자식 반환 기록) 을 봉인 PARENT_COMMAND.ps1 에서 추출한 GDecision / GNativeAxis / GFields 에 넣어 Windows PowerShell 5.1 로 호출",
+    "result": {
+     "file": {
+      "path": "results/PS_RESULTS.json",
+      "sha256": "c351d3cdbacf1bc1d18e34ae4fe55e488fff32806f724e91aaad6c44526ad317"
+     },
+     "results_index": 19
+    }
+   }
+  },
+  {
+   "engine": "Windows PowerShell 5.1 (actual GDecision and GFields extracted from the sealed PARENT_COMMAND.ps1)",
+   "final_accounting_row": 64,
+   "id": "PS01-17",
+   "input_index": 2,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/PS51_RETURN.json",
+     "sha256": "e66c700b28640b737db6a71f4cfe07432b9750df9e28e94c3e4557d980eeb7b9"
+    },
+    "harness_verdict": {
+     "line": 21,
+     "path": "engine_returns/PS51_stdout.txt",
+     "sha256": "92b09de470f131b69423bb9f4dddc1d2b59387e7f39f799048bae859973b55d4"
+    },
+    "input_binding_row": {
+     "file": {
+      "path": "PS_INPUT_BINDINGS.json",
+      "sha256": "4c8306642d2ab2b9fda89530f5f4425bf90b1e86852ff35119c51b7b396e7853"
+     },
+     "key": [
+      "PS01-17",
+      2
+     ]
+    },
+    "input_generation": "PS_INPUT_BINDINGS.json 의 입력 결속 (Python 이 만든 결과 JSON · 자식 반환 기록) 을 봉인 PARENT_COMMAND.ps1 에서 추출한 GDecision / GNativeAxis / GFields 에 넣어 Windows PowerShell 5.1 로 호출",
+    "result": {
+     "file": {
+      "path": "results/PS_RESULTS.json",
+      "sha256": "c351d3cdbacf1bc1d18e34ae4fe55e488fff32806f724e91aaad6c44526ad317"
+     },
+     "results_index": 20
+    }
+   }
+  },
+  {
+   "engine": "Windows PowerShell 5.1 (actual GDecision and GFields extracted from the sealed PARENT_COMMAND.ps1)",
+   "final_accounting_row": 65,
+   "id": "PS01-18",
+   "input_index": 1,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/PS51_RETURN.json",
+     "sha256": "e66c700b28640b737db6a71f4cfe07432b9750df9e28e94c3e4557d980eeb7b9"
+    },
+    "harness_verdict": {
+     "line": 22,
+     "path": "engine_returns/PS51_stdout.txt",
+     "sha256": "92b09de470f131b69423bb9f4dddc1d2b59387e7f39f799048bae859973b55d4"
+    },
+    "input_binding_row": {
+     "file": {
+      "path": "PS_INPUT_BINDINGS.json",
+      "sha256": "4c8306642d2ab2b9fda89530f5f4425bf90b1e86852ff35119c51b7b396e7853"
+     },
+     "key": [
+      "PS01-18",
+      1
+     ]
+    },
+    "input_generation": "PS_INPUT_BINDINGS.json 의 입력 결속 (Python 이 만든 결과 JSON · 자식 반환 기록) 을 봉인 PARENT_COMMAND.ps1 에서 추출한 GDecision / GNativeAxis / GFields 에 넣어 Windows PowerShell 5.1 로 호출",
+    "result": {
+     "file": {
+      "path": "results/PS_RESULTS.json",
+      "sha256": "c351d3cdbacf1bc1d18e34ae4fe55e488fff32806f724e91aaad6c44526ad317"
+     },
+     "results_index": 21
+    }
+   }
+  },
+  {
+   "engine": "Windows PowerShell 5.1 (actual GDecision and GFields extracted from the sealed PARENT_COMMAND.ps1)",
+   "final_accounting_row": 66,
+   "id": "PS01-18",
+   "input_index": 2,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/PS51_RETURN.json",
+     "sha256": "e66c700b28640b737db6a71f4cfe07432b9750df9e28e94c3e4557d980eeb7b9"
+    },
+    "harness_verdict": {
+     "line": 23,
+     "path": "engine_returns/PS51_stdout.txt",
+     "sha256": "92b09de470f131b69423bb9f4dddc1d2b59387e7f39f799048bae859973b55d4"
+    },
+    "input_binding_row": {
+     "file": {
+      "path": "PS_INPUT_BINDINGS.json",
+      "sha256": "4c8306642d2ab2b9fda89530f5f4425bf90b1e86852ff35119c51b7b396e7853"
+     },
+     "key": [
+      "PS01-18",
+      2
+     ]
+    },
+    "input_generation": "PS_INPUT_BINDINGS.json 의 입력 결속 (Python 이 만든 결과 JSON · 자식 반환 기록) 을 봉인 PARENT_COMMAND.ps1 에서 추출한 GDecision / GNativeAxis / GFields 에 넣어 Windows PowerShell 5.1 로 호출",
+    "result": {
+     "file": {
+      "path": "results/PS_RESULTS.json",
+      "sha256": "c351d3cdbacf1bc1d18e34ae4fe55e488fff32806f724e91aaad6c44526ad317"
+     },
+     "results_index": 22
+    }
+   }
+  },
+  {
+   "engine": "Windows PowerShell 5.1 (actual GDecision and GFields extracted from the sealed PARENT_COMMAND.ps1)",
+   "final_accounting_row": 67,
+   "id": "PS01-18",
+   "input_index": 3,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/PS51_RETURN.json",
+     "sha256": "e66c700b28640b737db6a71f4cfe07432b9750df9e28e94c3e4557d980eeb7b9"
+    },
+    "harness_verdict": {
+     "line": 24,
+     "path": "engine_returns/PS51_stdout.txt",
+     "sha256": "92b09de470f131b69423bb9f4dddc1d2b59387e7f39f799048bae859973b55d4"
+    },
+    "input_binding_row": {
+     "file": {
+      "path": "PS_INPUT_BINDINGS.json",
+      "sha256": "4c8306642d2ab2b9fda89530f5f4425bf90b1e86852ff35119c51b7b396e7853"
+     },
+     "key": [
+      "PS01-18",
+      3
+     ]
+    },
+    "input_generation": "PS_INPUT_BINDINGS.json 의 입력 결속 (Python 이 만든 결과 JSON · 자식 반환 기록) 을 봉인 PARENT_COMMAND.ps1 에서 추출한 GDecision / GNativeAxis / GFields 에 넣어 Windows PowerShell 5.1 로 호출",
+    "result": {
+     "file": {
+      "path": "results/PS_RESULTS.json",
+      "sha256": "c351d3cdbacf1bc1d18e34ae4fe55e488fff32806f724e91aaad6c44526ad317"
+     },
+     "results_index": 23
+    }
+   }
+  },
+  {
+   "engine": "Windows PowerShell 5.1 (actual GDecision and GFields extracted from the sealed PARENT_COMMAND.ps1)",
+   "final_accounting_row": 68,
+   "id": "PS01-18",
+   "input_index": 4,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/PS51_RETURN.json",
+     "sha256": "e66c700b28640b737db6a71f4cfe07432b9750df9e28e94c3e4557d980eeb7b9"
+    },
+    "harness_verdict": {
+     "line": 25,
+     "path": "engine_returns/PS51_stdout.txt",
+     "sha256": "92b09de470f131b69423bb9f4dddc1d2b59387e7f39f799048bae859973b55d4"
+    },
+    "input_binding_row": {
+     "file": {
+      "path": "PS_INPUT_BINDINGS.json",
+      "sha256": "4c8306642d2ab2b9fda89530f5f4425bf90b1e86852ff35119c51b7b396e7853"
+     },
+     "key": [
+      "PS01-18",
+      4
+     ]
+    },
+    "input_generation": "PS_INPUT_BINDINGS.json 의 입력 결속 (Python 이 만든 결과 JSON · 자식 반환 기록) 을 봉인 PARENT_COMMAND.ps1 에서 추출한 GDecision / GNativeAxis / GFields 에 넣어 Windows PowerShell 5.1 로 호출",
+    "result": {
+     "file": {
+      "path": "results/PS_RESULTS.json",
+      "sha256": "c351d3cdbacf1bc1d18e34ae4fe55e488fff32806f724e91aaad6c44526ad317"
+     },
+     "results_index": 24
+    }
+   }
+  },
+  {
+   "engine": "Windows PowerShell 5.1 (actual GDecision and GFields extracted from the sealed PARENT_COMMAND.ps1)",
+   "final_accounting_row": 69,
+   "id": "PS01-18",
+   "input_index": 5,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/PS51_RETURN.json",
+     "sha256": "e66c700b28640b737db6a71f4cfe07432b9750df9e28e94c3e4557d980eeb7b9"
+    },
+    "harness_verdict": {
+     "line": 26,
+     "path": "engine_returns/PS51_stdout.txt",
+     "sha256": "92b09de470f131b69423bb9f4dddc1d2b59387e7f39f799048bae859973b55d4"
+    },
+    "input_binding_row": {
+     "file": {
+      "path": "PS_INPUT_BINDINGS.json",
+      "sha256": "4c8306642d2ab2b9fda89530f5f4425bf90b1e86852ff35119c51b7b396e7853"
+     },
+     "key": [
+      "PS01-18",
+      5
+     ]
+    },
+    "input_generation": "PS_INPUT_BINDINGS.json 의 입력 결속 (Python 이 만든 결과 JSON · 자식 반환 기록) 을 봉인 PARENT_COMMAND.ps1 에서 추출한 GDecision / GNativeAxis / GFields 에 넣어 Windows PowerShell 5.1 로 호출",
+    "result": {
+     "file": {
+      "path": "results/PS_RESULTS.json",
+      "sha256": "c351d3cdbacf1bc1d18e34ae4fe55e488fff32806f724e91aaad6c44526ad317"
+     },
+     "results_index": 25
+    }
+   }
+  },
+  {
+   "engine": "Windows PowerShell 5.1 (actual GDecision and GFields extracted from the sealed PARENT_COMMAND.ps1)",
+   "final_accounting_row": 70,
+   "id": "PS01-19",
+   "input_index": 1,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/PS51_RETURN.json",
+     "sha256": "e66c700b28640b737db6a71f4cfe07432b9750df9e28e94c3e4557d980eeb7b9"
+    },
+    "harness_verdict": {
+     "line": 27,
+     "path": "engine_returns/PS51_stdout.txt",
+     "sha256": "92b09de470f131b69423bb9f4dddc1d2b59387e7f39f799048bae859973b55d4"
+    },
+    "input_binding_row": {
+     "file": {
+      "path": "PS_INPUT_BINDINGS.json",
+      "sha256": "4c8306642d2ab2b9fda89530f5f4425bf90b1e86852ff35119c51b7b396e7853"
+     },
+     "key": [
+      "PS01-19",
+      1
+     ]
+    },
+    "input_generation": "PS_INPUT_BINDINGS.json 의 입력 결속 (Python 이 만든 결과 JSON · 자식 반환 기록) 을 봉인 PARENT_COMMAND.ps1 에서 추출한 GDecision / GNativeAxis / GFields 에 넣어 Windows PowerShell 5.1 로 호출",
+    "result": {
+     "file": {
+      "path": "results/PS_RESULTS.json",
+      "sha256": "c351d3cdbacf1bc1d18e34ae4fe55e488fff32806f724e91aaad6c44526ad317"
+     },
+     "results_index": 26
+    }
+   }
+  },
+  {
+   "engine": "Windows PowerShell 5.1 (actual GDecision and GFields extracted from the sealed PARENT_COMMAND.ps1)",
+   "final_accounting_row": 71,
+   "id": "PS01-19",
+   "input_index": 2,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/PS51_RETURN.json",
+     "sha256": "e66c700b28640b737db6a71f4cfe07432b9750df9e28e94c3e4557d980eeb7b9"
+    },
+    "harness_verdict": {
+     "line": 28,
+     "path": "engine_returns/PS51_stdout.txt",
+     "sha256": "92b09de470f131b69423bb9f4dddc1d2b59387e7f39f799048bae859973b55d4"
+    },
+    "input_binding_row": {
+     "file": {
+      "path": "PS_INPUT_BINDINGS.json",
+      "sha256": "4c8306642d2ab2b9fda89530f5f4425bf90b1e86852ff35119c51b7b396e7853"
+     },
+     "key": [
+      "PS01-19",
+      2
+     ]
+    },
+    "input_generation": "PS_INPUT_BINDINGS.json 의 입력 결속 (Python 이 만든 결과 JSON · 자식 반환 기록) 을 봉인 PARENT_COMMAND.ps1 에서 추출한 GDecision / GNativeAxis / GFields 에 넣어 Windows PowerShell 5.1 로 호출",
+    "result": {
+     "file": {
+      "path": "results/PS_RESULTS.json",
+      "sha256": "c351d3cdbacf1bc1d18e34ae4fe55e488fff32806f724e91aaad6c44526ad317"
+     },
+     "results_index": 27
+    }
+   }
+  },
+  {
+   "engine": "Windows PowerShell 5.1 (actual GDecision and GFields extracted from the sealed PARENT_COMMAND.ps1)",
+   "final_accounting_row": 72,
+   "id": "PS01-20",
+   "input_index": 1,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/PS51_RETURN.json",
+     "sha256": "e66c700b28640b737db6a71f4cfe07432b9750df9e28e94c3e4557d980eeb7b9"
+    },
+    "harness_verdict": {
+     "line": 29,
+     "path": "engine_returns/PS51_stdout.txt",
+     "sha256": "92b09de470f131b69423bb9f4dddc1d2b59387e7f39f799048bae859973b55d4"
+    },
+    "input_binding_row": {
+     "file": {
+      "path": "PS_INPUT_BINDINGS.json",
+      "sha256": "4c8306642d2ab2b9fda89530f5f4425bf90b1e86852ff35119c51b7b396e7853"
+     },
+     "key": [
+      "PS01-20",
+      1
+     ]
+    },
+    "input_generation": "PS_INPUT_BINDINGS.json 의 입력 결속 (Python 이 만든 결과 JSON · 자식 반환 기록) 을 봉인 PARENT_COMMAND.ps1 에서 추출한 GDecision / GNativeAxis / GFields 에 넣어 Windows PowerShell 5.1 로 호출",
+    "result": {
+     "file": {
+      "path": "results/PS_RESULTS.json",
+      "sha256": "c351d3cdbacf1bc1d18e34ae4fe55e488fff32806f724e91aaad6c44526ad317"
+     },
+     "results_index": 28
+    }
+   }
+  },
+  {
+   "engine": "Windows PowerShell 5.1 (actual GDecision and GFields extracted from the sealed PARENT_COMMAND.ps1)",
+   "final_accounting_row": 73,
+   "id": "PS01-20",
+   "input_index": 2,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/PS51_RETURN.json",
+     "sha256": "e66c700b28640b737db6a71f4cfe07432b9750df9e28e94c3e4557d980eeb7b9"
+    },
+    "harness_verdict": {
+     "line": 30,
+     "path": "engine_returns/PS51_stdout.txt",
+     "sha256": "92b09de470f131b69423bb9f4dddc1d2b59387e7f39f799048bae859973b55d4"
+    },
+    "input_binding_row": {
+     "file": {
+      "path": "PS_INPUT_BINDINGS.json",
+      "sha256": "4c8306642d2ab2b9fda89530f5f4425bf90b1e86852ff35119c51b7b396e7853"
+     },
+     "key": [
+      "PS01-20",
+      2
+     ]
+    },
+    "input_generation": "PS_INPUT_BINDINGS.json 의 입력 결속 (Python 이 만든 결과 JSON · 자식 반환 기록) 을 봉인 PARENT_COMMAND.ps1 에서 추출한 GDecision / GNativeAxis / GFields 에 넣어 Windows PowerShell 5.1 로 호출",
+    "result": {
+     "file": {
+      "path": "results/PS_RESULTS.json",
+      "sha256": "c351d3cdbacf1bc1d18e34ae4fe55e488fff32806f724e91aaad6c44526ad317"
+     },
+     "results_index": 29
+    }
+   }
+  },
+  {
+   "engine": "Windows PowerShell 5.1 (actual GDecision and GFields extracted from the sealed PARENT_COMMAND.ps1)",
+   "final_accounting_row": 74,
+   "id": "PS01-20",
+   "input_index": 3,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/PS51_RETURN.json",
+     "sha256": "e66c700b28640b737db6a71f4cfe07432b9750df9e28e94c3e4557d980eeb7b9"
+    },
+    "harness_verdict": {
+     "line": 31,
+     "path": "engine_returns/PS51_stdout.txt",
+     "sha256": "92b09de470f131b69423bb9f4dddc1d2b59387e7f39f799048bae859973b55d4"
+    },
+    "input_binding_row": {
+     "file": {
+      "path": "PS_INPUT_BINDINGS.json",
+      "sha256": "4c8306642d2ab2b9fda89530f5f4425bf90b1e86852ff35119c51b7b396e7853"
+     },
+     "key": [
+      "PS01-20",
+      3
+     ]
+    },
+    "input_generation": "PS_INPUT_BINDINGS.json 의 입력 결속 (Python 이 만든 결과 JSON · 자식 반환 기록) 을 봉인 PARENT_COMMAND.ps1 에서 추출한 GDecision / GNativeAxis / GFields 에 넣어 Windows PowerShell 5.1 로 호출",
+    "result": {
+     "file": {
+      "path": "results/PS_RESULTS.json",
+      "sha256": "c351d3cdbacf1bc1d18e34ae4fe55e488fff32806f724e91aaad6c44526ad317"
+     },
+     "results_index": 30
+    }
+   }
+  },
+  {
+   "engine": "Windows PowerShell 5.1 (actual GDecision and GFields extracted from the sealed PARENT_COMMAND.ps1)",
+   "final_accounting_row": 75,
+   "id": "PS01-20",
+   "input_index": 4,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/PS51_RETURN.json",
+     "sha256": "e66c700b28640b737db6a71f4cfe07432b9750df9e28e94c3e4557d980eeb7b9"
+    },
+    "harness_verdict": {
+     "line": 32,
+     "path": "engine_returns/PS51_stdout.txt",
+     "sha256": "92b09de470f131b69423bb9f4dddc1d2b59387e7f39f799048bae859973b55d4"
+    },
+    "input_binding_row": {
+     "file": {
+      "path": "PS_INPUT_BINDINGS.json",
+      "sha256": "4c8306642d2ab2b9fda89530f5f4425bf90b1e86852ff35119c51b7b396e7853"
+     },
+     "key": [
+      "PS01-20",
+      4
+     ]
+    },
+    "input_generation": "PS_INPUT_BINDINGS.json 의 입력 결속 (Python 이 만든 결과 JSON · 자식 반환 기록) 을 봉인 PARENT_COMMAND.ps1 에서 추출한 GDecision / GNativeAxis / GFields 에 넣어 Windows PowerShell 5.1 로 호출",
+    "result": {
+     "file": {
+      "path": "results/PS_RESULTS.json",
+      "sha256": "c351d3cdbacf1bc1d18e34ae4fe55e488fff32806f724e91aaad6c44526ad317"
+     },
+     "results_index": 31
+    }
+   }
+  },
+  {
+   "engine": "Windows PowerShell 5.1 (actual GDecision and GFields extracted from the sealed PARENT_COMMAND.ps1)",
+   "final_accounting_row": 76,
+   "id": "PS01-21",
+   "input_index": 1,
+   "interpretation": "두 boolean 은 준비 단계 (status NOT_RUN) 템플릿 값이 최종 집계에 복사된 것 — 최종 판정 권위 없음. 최종 근거는 superseded_by_evidence",
+   "original": {
+    "actual_call_bound": false,
+    "fixture_created": false,
+    "status": "PASS"
+   },
+   "pretest_template": {
+    "actual_call_bound": false,
+    "file": "INPUT_CASE_MAP.json",
+    "fixture_created": false,
+    "status": "NOT_RUN"
+   },
+   "superseded_by_evidence": {
+    "engine_return": {
+     "path": "engine_returns/PS51_RETURN.json",
+     "sha256": "e66c700b28640b737db6a71f4cfe07432b9750df9e28e94c3e4557d980eeb7b9"
+    },
+    "harness_verdict": {
+     "line": 33,
+     "path": "engine_returns/PS51_stdout.txt",
+     "sha256": "92b09de470f131b69423bb9f4dddc1d2b59387e7f39f799048bae859973b55d4"
+    },
+    "input_binding_row": {
+     "file": {
+      "path": "PS_INPUT_BINDINGS.json",
+      "sha256": "4c8306642d2ab2b9fda89530f5f4425bf90b1e86852ff35119c51b7b396e7853"
+     },
+     "key": [
+      "PS01-21",
+      1
+     ]
+    },
+    "input_generation": "PS_INPUT_BINDINGS.json 의 입력 결속 (Python 이 만든 결과 JSON · 자식 반환 기록) 을 봉인 PARENT_COMMAND.ps1 에서 추출한 GDecision / GNativeAxis / GFields 에 넣어 Windows PowerShell 5.1 로 호출",
+    "result": {
+     "file": {
+      "path": "results/PS_RESULTS.json",
+      "sha256": "c351d3cdbacf1bc1d18e34ae4fe55e488fff32806f724e91aaad6c44526ad317"
+     },
+     "results_index": 32
+    }
+   }
+  }
+ ],
+ "rule": "원 ZIP · 원 집계는 고치지 않는다 · 두 값을 true 로 덮어쓰지 않는다 · 행마다 실제 근거를 경로 + sha256 / 줄로 결속한다",
+ "schema": "bmin-r2-retry3-accounting-correction/v1",
+ "source": {
+  "corrected_file": {
+   "path": "FINAL_INPUT_ACCOUNTING.json",
+   "sha256": "b115b1227905bfdec880cad98495ecc64d840f2a45b39fb9eaeccddff9aa44af"
+  },
+  "manifest_sha256": "97f51112bd6c4e0ae502e56db99eba5fb56026c7b7c79d0639661cf44727b91a",
+  "pretest_file": {
+   "path": "INPUT_CASE_MAP.json",
+   "sha256": "e5fa711680fa1e2e3e0679c883e0bbd03174833aa9397fde7a333c263e8c13ae"
+  },
+  "zip": "BMIN_R2_LIMITED_VALIDATION_RETRY3_RESULT_20261005.zip",
+  "zip_sha256": "ed0138b90cf2dc4e42f22ec18d8719ff56906780f74b4139850d604b096bb470"
+ }
+}
