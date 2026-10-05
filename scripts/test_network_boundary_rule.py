@@ -9,18 +9,46 @@
   그 기록 없이는 판정할 수 없다.
 ★ 동작 중립 — 띠 선택을 함수 `boundary_sets` 로 옮기고 규칙 · 띠 폭을 **기록만** 더한다.  세 픽스처 × 두 면적 모드의
   σ · 경계 수 · 관통 분율을 **추출 전 코드로 뜬 기준값** (아래 GOLD — 2026-10-04 HEAD `eedada5d3` 의 network_conductivity) 과
-  비트 단위로 대조한다.  기준값이 바뀌면 이 시험이 먼저 빨갛게 된다.
+  대조한다 (①).  ⚠ GOLD 는 생산자 출력 = **소수 8 자리로 반올림된** 값 (`round(σ, 8)`) 의 일치다 — 원시 비트 동일이 아니다.
+  원시 값은 ⑨ 가 본다: 추출 전 모듈 (`git show eedada5d3:…`) 과 지금 모듈의 `solve_network` 원시 출력 (G · σ) 을
+  세 픽스처 × 두 면적 모드 × 세 풀이 모드 = 18 비교의 float.hex 로 대조한다 (같은 플랫폼 안 · git 객체가 없으면 SKIP).
+★ 범위 (10-05 Codex `RGL-10` · 자기 결함 `SELF-87`) — 옛 표기 "GOLD 8/8 · 8 침대 비트 동일" 은 틀렸다: 8 은 이 파일의
+  **단언 수** (①–⑧) 이고 침대가 아니라 **합성 사슬 픽스처 3 종 × 면적 모드 2** 다.  실침대 · 전 코퍼스 · 물리 정확도로
+  확대하지 않는다 (수치 모듈 hash 가 바뀌었으니 재봉인 의무도 그대로).
 ★ 봉인 — network_conductivity.py 는 S3 수치 모듈 (`seal_s3_prerun.NUMERIC_MODULES`) 이다.  봉인은 수정 금지가 아니라
   **재봉인 강제**다 (`run_s3_psi.verify_code_bundle`) — S3 를 돌리기 전에 다시 봉인한다 (결정 16 · 1저자 "재봉인은 나중").
 """
 import contextlib
+import importlib.util
 import io
 import os
+import subprocess
 import sys
+import tempfile
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
-_ok, _fail = 0, []
+_ok, _fail, _skip = 0, [], []
+OLD_REF = 'eedada5d3'          # 추출 전 network_conductivity (2026-10-04 HEAD) — GOLD 를 뜬 판
+
+
+def _load_old_module():
+    """git 에서 추출 전 모듈을 읽어 별도 이름으로 싣는다 — 없으면 None (SKIP)."""
+    root = os.path.dirname(HERE)
+    try:
+        src = subprocess.run(['git', '-C', root, 'show', f'{OLD_REF}:scripts/network_conductivity.py'],
+                             capture_output=True, check=True, timeout=60).stdout
+    except (OSError, subprocess.SubprocessError):
+        return None
+    d = tempfile.mkdtemp(prefix='nc_old_')
+    path = os.path.join(d, f'network_conductivity_{OLD_REF}.py')
+    with open(path, 'wb') as fh:
+        fh.write(src)
+    spec = importlib.util.spec_from_file_location(f'network_conductivity_{OLD_REF}', path)
+    mod = importlib.util.module_from_spec(spec)
+    with contextlib.redirect_stdout(io.StringIO()):
+        spec.loader.exec_module(mod)
+    return mod
 
 
 def chk(name, cond):
@@ -136,7 +164,34 @@ def main():
         and ra.get('thermal_boundary_rule') == 'L0'
         and isinstance(ra.get('electronic_boundary_band_frac'), float) and isinstance(ra.get('thermal_boundary_band_frac'), float))
 
-    print(f'\ntest_network_boundary_rule: {_ok}/{_ok + len(_fail)} PASS' + (f'   FAILED: {_fail}' if _fail else ''))
+    # ── ⑨ 원시 값 — 추출 전 모듈과 solve_network 원시 출력 float.hex 대조 (RGL-10) ──
+    old = _load_old_module()
+    if old is None:
+        _skip.append('⑨ (git 객체 eedada5d3 없음)')
+        print('  SKIP  ⑨ 원시 값 대조 — git 객체 eedada5d3:scripts/network_conductivity.py 를 못 읽었다 (얕은 클론?)')
+    else:
+        same, n = [], 0
+        for name, ((A, C), pz, _rule, _frac) in FIX.items():
+            for cm in ('hertzian', 'physics'):
+                args = (A, C, [1], 1.0, pz, 10.0, 10.0, 2.0)
+                kw = dict(type_map={1: 'SE'}, contact_mode=cm, mode='ionic')
+                with contextlib.redirect_stdout(io.StringIO()):
+                    n0 = old.build_network(*args, **kw)
+                    n1 = nc.build_network(*args, **kw)
+                for sm in ('full', 'bulk_only', 'constriction_only'):
+                    with contextlib.redirect_stdout(io.StringIO()):
+                        z0 = old.solve_network(n0, mode=sm)[:2]
+                        z1 = nc.solve_network(n1, mode=sm)[:2]
+                    n += 1
+                    same.append(n0['bottom'] == n1['bottom'] and n0['top'] == n1['top']
+                                and all((x is None and y is None) or (x is not None and y is not None
+                                                                     and float(x).hex() == float(y).hex())
+                                        for x, y in zip(z0, z1)))
+        chk(f'⑨ 원시 값 — 추출 전 모듈 (eedada5d3) 과 solve_network 원시 출력 (G · σ) float.hex 동일 · 같은 경계 집합 '
+            f'({sum(same)}/{n} = 픽스처 3 × 면적 모드 2 × 풀이 모드 3)', n == 18 and all(same))
+
+    tail = f'   SKIP: {_skip}' if _skip else ''
+    print(f'\ntest_network_boundary_rule: {_ok}/{_ok + len(_fail)} PASS' + (f'   FAILED: {_fail}' if _fail else '') + tail)
     return 0 if not _fail else 1
 
 

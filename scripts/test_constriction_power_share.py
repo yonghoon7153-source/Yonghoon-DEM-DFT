@@ -4,8 +4,11 @@
 
 옛 `bulk_resistance_fraction` = 간선마다 R_bulk/(R_bulk+R_c) 를 내고 **비가중 평균** (전류 없는 간선 · 비관통 덩어리 포함) — 이름표만
 고쳤다 (L2-08).  새 열 = **같은 FULL 해**의 Σ I²R_c / Σ I²R_total (관통 간선 · 가상 전극 연결 제외) — 키는 채널 · 모드 꼬리를 명시
-(τ 명명 규약): `constriction_power_share_{ion,el,th}_{hertz,physics}` + `_status`.  σ 값은 비트 동일 (해에 출력만 더한다 —
-`test_network_boundary_rule.py` 의 GOLD 가 같이 지킨다).  network_conductivity.py = S3 수치 모듈 → S3 전 재봉인 (결정 16).
+(τ 명명 규약): `constriction_power_share_{ion,el,th}_{hertz,physics}` + `_status`.  σ 값은 그대로 (해에 출력만 더한다 —
+`test_network_boundary_rule.py` 의 ① GOLD (8 자리 반올림 값) · ⑨ 원시 float.hex 대조가 같이 지킨다).  network_conductivity.py =
+S3 수치 모듈 → S3 전 재봉인 (결정 16).
+⚠ 범위 (10-05 Codex Q4) — 전극 소산을 분자 · 분모에서 빼는 것 ≠ 전극 조건에 무관.  유한 전극이 물리 간선의 전류 배분을 바꿀 수
+있다 (C1d · 이상 전극 극한 대비 +12.05 %) ⇒ 몫은 **FULL boundary 조건부** 추정량이다.
 
   python3 scripts/test_constriction_power_share.py
 """
@@ -71,8 +74,27 @@ def main():
         st == 'computed' and share is not None and abs(share - 18.0 / 220.0) < 1e-9, f'{share} · {st}')
     uw = 1.0 - sum(e['R_bulk'] / e['R_total'] for e in net['edges']) / len(net['edges'])
     chk('C1b 같은 망의 옛 통계 (1 − 비가중 평균 bulk 비) = 0.45 → 5.5 배 차 (L2-08 그대로)', abs(uw - 0.45) < 1e-12 and abs(uw / share - 5.5) < 1e-6)
-    chk('C1c 가상 전극 연결은 세지 않는다 — 몫은 경계 전도도 크기와 무관 (경로 비만)',
+    chk('C1c 가상 전극 연결은 세지 않는다 — 전력 몫의 분자 · 분모 = 물리 간선 4 개만 (전극 소산 제외)',
         len(field['edge_records']) == 4)
+
+    # ── C1d 전극 소산 제외 ≠ 전극 조건 무관 (10-05 Codex Q4 · RGL-10 같은 묶음) ─────────────────────────────
+    #    C1 처럼 두 경로가 같은 양 끝 노드 (b · t) 를 공유하면 유한 전극이 배분을 안 바꾼다.  양 끝이 서로 다른 물리 노드면
+    #    전극 저항 2/g_b 가 두 경로에 직렬로 더해져 전류 배분이 바뀐다 — 몫은 **FULL boundary 조건부**다.
+    #    g_b = max(100·Σg / n_전극, 10·g_max, 1e-6) (solve_network 의 가상 전극 규칙) · Σg = 1/10 + 1/1 · n_전극 = 4.
+    nodes = {i: {} for i in range(4)}
+    net_d = {'nodes': nodes, 'edges': [edge(0, 2, 1.0, 9.0), edge(1, 3, 1.0, 0.0)], 'bottom': {0, 1}, 'top': {2, 3},
+             'scale': 1.0, 'plate_z': 1.0, 'box_x': 10.0, 'box_y': 10.0}
+    _G, _sr, fd = quiet(nc.solve_network, net_d, mode='full', return_field=True)
+    share_d, st_d = nc.constriction_power_share(fd)
+    gb = max(100.0 * (0.1 + 1.0) / 4, 10.0 * 1.0, 1e-6)
+    ra, rb = 10.0 + 2.0 / gb, 1.0 + 2.0 / gb
+    ia, ib = (1 / ra) / (1 / ra + 1 / rb), (1 / rb) / (1 / ra + 1 / rb)
+    want_d = ia ** 2 * 9.0 / (ia ** 2 * 10.0 + ib ** 2 * 1.0)
+    ideal = 9.0 / 110.0                                      # 이상 전극 (g_b → ∞) 극한
+    chk('C1d 양 끝이 다른 두 경로 — 몫 = 유한 전극 해석값 0.0916787 (이상 전극 9/110 = 0.0818182 보다 +12.05 %) · '
+        '전극 소산은 빠지지만 몫은 전극 조건에 의존한다',
+        st_d == 'computed' and share_d is not None and abs(share_d - want_d) <= 1e-12 * want_d
+        and abs(share_d / ideal - 1.0 - 0.1205) < 5e-4, f'{share_d} · {want_d} · {st_d}')
 
     # ── C2 · C3 run_decomposition 결과 키 (채널 · 모드 꼬리) ─────────────────────────────────────────────
     A, C = chain(range(21), 1.0)
