@@ -18,6 +18,13 @@
   E  등급 엔진 — stress_cv 축 값은 stress_cv 만 본다 (LW 키를 넣어도 같은 값) · 설명에 규약 한정어
   F  그룹 그림 — LW 값 없는 케이스는 0 으로 그리지 않는다 · 두 규약 같이 (옛 = 점선)
   G  표 재생성 (rebuild_tables_from_metrics) — LW 키 있으면 줄 · 없으면 줄 없음
+  R  RGL-06 (Codex 10-05 · 1저자 비준 "권고대로") — 이름 한정 · 상태 (같은 묶음 · J20-l)
+     R1 상태 UNDEFINED (무하중 — CV · 비 0/0) → 값 줄 '—' · 상태 줄에 사유 (0 으로 안 채움)
+     R2 상태 OK 인데 계약 v2 표지 없음 (10-05 이전 · 입력 검증 전 세대) → 상태 줄에 '입력 검증 전' · 재분석 권장 (값은 그대로)
+     R3 논문 라벨 — LW 줄 = 입자 접촉력 기반 대칭 응력 (kinetic · 벽 · couple 미포함) · 벽 제외 = 선별 모집단 (벽 힘 복원 아님) ·
+        상태 = 전역 virial 부호/척도 (프레임 대응 증명 아님) · 'full tensor' 표기 없음 (전체 동적 응력으로 읽히지 않게)
+     R4 single.html 툴팁 — LW CV · 벽 제외 · 상태 줄의 한정어 · 덱 가정 미검증 · UNDEFINED · invalid_input
+     R5 group.html 툴팁 · 보고서 · 그룹 그림 범례 — 같은 한정어
 
   python3 webapp/test_stress_lw_labels.py
 """
@@ -59,6 +66,7 @@ NEW = [LW_CV, LW_R['AM_P'], LW_R['AM_S'], LW_R['SE'], LW_CVN, LW_RN['AM_P'], LW_
 
 MET_LW = {'stress_cv': 213.1, 'stress_ratio_AM_P': 0.884, 'stress_ratio_AM_S': 1.085, 'stress_ratio_SE': 0.999,
           'stress_lw_status': 'OK', 'stress_lw_definition': 'love_weber_branch_full_tensor_v1',
+          'stress_lw_contract': 'love_weber_checks_v2',
           'stress_cv_lw': 120.7, 'stress_ratio_AM_P_lw': 2.737, 'stress_ratio_AM_S_lw': 2.341, 'stress_ratio_SE_lw': 0.981,
           'stress_cv_lw_nowall': 122.9, 'stress_ratio_AM_P_lw_nowall': 3.016, 'stress_ratio_AM_S_lw_nowall': 2.446,
           'stress_ratio_SE_lw_nowall': 0.982, 'stress_lw_wall_frac_AM_P': 0.417, 'stress_lw_wall_frac_AM_S': 0.200,
@@ -149,8 +157,8 @@ def main():
         "'von-Mises stress ratio, ⟨σ_VM⟩_AM_P / ⟨σ_VM⟩_all'" not in html
         and "'Particle-stress coefficient of variation, CV(σ_VM) (%)'" not in html)
     i1 = html.find(f"'{LW_CV}': {{")
-    chk('B5 LW CV 툴팁 = 접촉점 (branch) · 전체 텐서 · 벽 접촉 · 등급 축은 옛 규약', i1 >= 0 and all(
-        w_ in html[i1:i1 + 1600] for w_ in ('접촉점', '전체 텐서', '벽', '등급')), html[i1:i1 + 300] if i1 >= 0 else '')
+    chk('B5 LW CV 툴팁 = 접촉점 (branch) · 9 성분 텐서 (대각만 아님 — RGL-06 뒤 "전체 텐서" 대신) · 벽 접촉 · 등급 축은 옛 규약',
+        i1 >= 0 and all(w_ in html[i1:i1 + 1800] for w_ in ('접촉점', '9 성분', '벽', '등급')), html[i1:i1 + 300] if i1 >= 0 else '')
 
     print('C  그룹 표')
     gk = {lab_: key for lab_, _u, key, _g in webapp.GROUP_DISPLAY_KEYS}
@@ -204,6 +212,67 @@ def main():
     chk('G1 LW 키 있으면 줄 (CV · 비 · 벽 제외)', LW_CV in labs and LW_R['AM_P'] in labs and LW_CVN in labs, repr(labs))
     rows0 = RB.network_summary(dict(MET_OLD))
     chk('G2 LW 키 없으면 줄 없음 (만들지 않는다)', not any('Love–Weber' in r['지표'] for r in rows0))
+
+    print('R  RGL-06 이름 한정 · 상태')
+    m_u = dict(MET_OLD, stress_lw_status='UNDEFINED (zero_load: max|F| = 0 — 평균 σ_VM = 0 → CV · 상 비 = 0/0 미정의 · 0 으로 채우지 않음)',
+               stress_lw_contract='love_weber_checks_v2')
+    raw_u, _ = render(m_u)
+    st_u = row(raw_u, LW_ST)
+    chk('R1 상태 UNDEFINED (무하중) → 값 줄 "—" · 상태 줄에 UNDEFINED · zero_load (0 으로 안 채움)',
+        st_u is not None and 'UNDEFINED' in str(st_u[1]) and 'zero_load' in str(st_u[1])
+        and all((row(raw_u, n) or [0, 0])[1] == '—' for n in NEW if n not in (LW_ST,)), repr(st_u))
+    m_v1 = {k: v for k, v in MET_LW.items() if k != 'stress_lw_contract'}
+    raw_v1, _ = render(m_v1)
+    st_v1 = row(raw_v1, LW_ST)
+    chk('R2 OK 인데 계약 v2 표지 없음 (10-05 이전 세대) → 상태 줄 "OK" 로 시작 · "입력 검증 전" · RGL-06 · 재분석 (값 줄은 그대로)',
+        st_v1 is not None and str(st_v1[1]).startswith('OK') and '입력 검증 전' in str(st_v1[1]) and 'RGL-06' in str(st_v1[1])
+        and '재분석' in str(st_v1[1]) and num((row(raw_v1, LW_CV) or [None, None])[1]) == 120.7, repr(st_v1))
+    chk('R2b 계약 v2 표지가 있으면 상태 줄 = "OK" 그대로 (경고 없음)', st is not None and str(st[1]) == 'OK', repr(st))
+    m_nw = {k: v for k, v in MET_LW.items() if '_nowall' not in k}
+    m_nw['stress_lw_nowall_status'] = 'UNDEFINED (zero_mean_vm: 벽 안 닿은 입자의 평균 σ_VM = 0 → CV · 상 비 = 0/0 미정의)'
+    raw_nw, _ = render(m_nw)
+    st_nw = row(raw_nw, LW_ST)
+    chk('R2c 전체 OK · 벽 제외 모집단 UNDEFINED → 벽 제외 값 줄 "—" · 상태 줄에 "벽 제외: UNDEFINED" (빈칸의 이유)',
+        st_nw is not None and str(st_nw[1]).startswith('OK') and '벽 제외' in str(st_nw[1]) and 'UNDEFINED' in str(st_nw[1])
+        and (row(raw_nw, LW_CVN) or [0, 0])[1] == '—' and num((row(raw_nw, LW_CV) or [None, None])[1]) == 120.7, repr(st_nw))
+    plw = [PL.get(k, '') for k in (LW_CV, LW_R['AM_P'], LW_R['AM_S'], LW_R['SE'])]
+    chk('R3a 논문 라벨 — LW CV · 상 비 = particle-contact (입자 접촉력) · CV 는 symmetric · kinetic · couple 미포함 표기',
+        all('particle-contact' in p for p in plw) and 'symmetric' in plw[0] and 'kinetic' in plw[0] and 'couple' in plw[0], repr(plw))
+    pnw = [PL.get(k, '') for k in (LW_CVN, LW_RN['AM_P'], LW_RN['AM_S'], LW_RN['SE'])]
+    chk('R3b 논문 라벨 — 벽 제외 줄 = selected population (선별 모집단)', all('selected population' in p for p in pnw)
+        and 'not restored' in pnw[0], repr(pnw))
+    chk('R3c 논문 라벨 — 상태 줄 = global virial · not a frame-correspondence proof · 벽 비율 줄 = deck geometry not verified',
+        'global' in PL.get(LW_ST, '') and 'not a frame' in PL.get(LW_ST, '') and 'not verified' in PL.get(LW_WALL, ''),
+        repr((PL.get(LW_ST), PL.get(LW_WALL))))
+    chk('R3d "full tensor" 표기 없음 (전체 동적 응력으로 읽히지 않게) · 응력 머리 = particle-contact-force',
+        not any('full tensor' in PL.get(k, '') for k in NEW) and 'particle-contact' in PS.get('── 응력 ──', ''),
+        repr([PL.get(k) for k in NEW if 'full tensor' in PL.get(k, '')]))
+
+    def _tip(label, span=1800):
+        i = html.find(f"'{label}': {{")
+        return html[i:i + span] if i >= 0 else ''
+    t_cv = _tip(LW_CV)
+    t_cv = t_cv[:t_cv.find('\n  },') + 1] if '\n  },' in t_cv else t_cv
+    chk('R4a LW CV 툴팁 — 입자 접촉력 기반 대칭 응력의 VM · kinetic · couple · 전체 동적 응력 아님 · 9 성분 · 전역 virial (프레임 대응 증명 아님)',
+        all(w_ in t_cv for w_ in ('입자 접촉력', '대칭', 'kinetic', 'couple', '전체 동적 응력 아님', '9 성분', '전역', '프레임')), t_cv[:300])
+    t_nw = [_tip(n) for n in (LW_CVN, LW_RN['AM_P'], LW_RN['AM_S'], LW_RN['SE'])]
+    chk('R4b 벽 제외 툴팁 넷 — 선별 모집단 · 결측 벽 힘 복원 아님', all('선별 모집단' in t and '복원' in t for t in t_nw), repr([t[:120] for t in t_nw]))
+    t_st = _tip(LW_ST)
+    chk('R4c 상태 툴팁 — UNDEFINED · invalid_input · 전역 (프레임 대응 증명 아님) · 덱 가정 미검증 · 계약 v2',
+        all(w_ in t_st for w_ in ('UNDEFINED', 'invalid_input', '전역', '프레임', '덱', '검증', 'love_weber_checks_v2')), t_st[:300])
+    t_wl = _tip(LW_WALL)
+    chk('R4d 벽 비율 툴팁 — 덱 가정 (바닥 z = 0 · 평면 mesh 판 · x·y 주기) 을 함수가 검증하지 않음',
+        all(w_ in t_wl for w_ in ('z = 0', 'mesh', '주기', '검증')), t_wl[:300])
+    gi = ghtml.find("'Stress CV LW':")
+    g_cv = ghtml[gi:ghtml.find('\n', gi)] if gi >= 0 else ''
+    gj = ghtml.find("'Stress CV LW (벽 제외)':")
+    g_nw = ghtml[gj:ghtml.find('\n', gj)] if gj >= 0 else ''
+    chk('R5a group.html — Stress CV LW 툴팁 = 입자 접촉력 · 대칭 · kinetic · couple 미포함 · (벽 제외) = 선별 모집단 · 복원 아님',
+        all(w_ in g_cv for w_ in ('입자 접촉력', '대칭', 'kinetic', 'couple')) and '선별 모집단' in g_nw and '복원' in g_nw, repr((g_cv[:200], g_nw[:200])))
+    chk('R5b 보고서 — LW 줄에 입자 접촉력 대칭 응력 VM 한정어 · 벽 제외 = 선별 모집단', '입자 접촉력' in blk and '선별 모집단' in blk, blk[:400])
+    labs_f = ax.get_legend_handles_labels()[1]
+    chk('R5c 그룹 그림 범례 — LW 선 = particle-contact (full tensor 표기 없음)', any('particle-contact' in l for l in labs_f)
+        and not any('full tensor' in l for l in labs_f), repr(labs_f))
 
     print(f'\n{_ok}/{_ok + len(_fail)} PASS' + ('' if not _fail else '  — FAIL: ' + ' · '.join(_fail)))
     return 1 if _fail else 0

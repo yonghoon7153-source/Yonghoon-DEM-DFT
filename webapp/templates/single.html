@@ -1942,14 +1942,14 @@ const METRIC_TIPS = {
     meaning: '상 비교는 Love–Weber 줄로 보세요.'
   },
   'Stress CV — Love–Weber (%)': {
-    title: 'Stress CV — Love–Weber (접촉점 · 전체 텐서 · ④b)',
-    formula: 'σ_i = (1/V_i) Σ_c (x_c − x_i) ⊗ f_c   (x_c = 접촉점 · f_c = 접촉 c 가 입자 i 에 주는 힘 · V_i = 4/3 π r_i³)\nσ_VM = √(½[(σxx−σyy)² + (σyy−σzz)² + (σzz−σxx)²] + 3(σxy² + σyz² + σzx²))  (대칭부)\nCV = 표준편차 / 평균 × 100 (모든 입자 · 접촉 없는 입자 = 0 — 옛 줄과 같은 통계)',
-    desc: '접촉 덤프의 힘 · 접촉점으로 계산한 입자 평균 응력 (Love–Weber) 의 Von Mises 변동계수입니다. 접촉 virial 을 입자 중심 → 접촉점 거리로 나누므로 크기가 다른 쌍에서도 편향이 없습니다. 검사: F = Fn + Ft · 접촉점이 입자 안 · 전체 virial 이 c_strs 합과 같음 (두 덤프의 프레임 · 힘 부호).',
-    meaning: '벽 · 판 접촉 힘은 접촉 덤프에도 stress/atom 에도 없어 벽에 닿은 입자의 응력은 불완전합니다 → "벽 접촉 제외" 줄을 같이 보세요. 등급 축은 아직 옛 규약 (50/50) — 전환은 바뀌는 등급값 보고 뒤.'
+    title: 'Stress CV — Love–Weber (입자 접촉력 기반 대칭 응력의 VM · ④b)',
+    formula: 'σ_i = (1/V_i) Σ_c (x_c − x_i) ⊗ f_c   (x_c = 접촉점 · f_c = 접촉 c 가 입자 i 에 주는 힘 · V_i = 4/3 π r_i³)\nσ_VM = √(½[(σxx−σyy)² + (σyy−σzz)² + (σzz−σxx)²] + 3(σxy² + σyz² + σzx²))  (9 성분 텐서의 대칭부)\nCV = 표준편차 / 평균 × 100 (모든 입자 · 접촉 없는 입자 = 0 — 옛 줄과 같은 통계)',
+    desc: '접촉 덤프의 힘 · 접촉점으로 계산한 입자 평균 응력 (Love–Weber) 의 Von Mises 변동계수입니다 — 이름 그대로 "입자 접촉력 기반 대칭 응력의 VM" 입니다: kinetic · 벽 · couple 항은 없습니다 (전체 동적 응력 아님 · RGL-06). 9 성분 텐서를 다 쓰고 (옛 줄은 대각만) 접촉 virial 을 입자 중심 → 접촉점 거리로 나누므로 크기가 다른 쌍에서도 편향이 없습니다. 검사: 입력 (위치 · 반경 · 주기 길이 · 판 높이) · F = Fn + Ft · 접촉점이 입자 안 · 전체 virial 이 c_strs 합과 같음 — 이것은 전역 부호 · 척도 검사이지 두 덤프의 프레임 · 입자 배분 대응 증명이 아닙니다.',
+    meaning: '벽 · 판 접촉 힘은 접촉 덤프에도 stress/atom 에도 없어 벽에 닿은 입자의 응력은 불완전합니다 → "벽 접촉 제외" 줄 (선별 모집단) 을 같이 보세요. 등급 축은 아직 옛 규약 (50/50) — 전환은 바뀌는 등급값 보고 뒤.'
   },
   'σ_AM_P/σ_mean — Love–Weber': {
     title: 'σ_AM_P / σ_mean — Love–Weber',
-    formula: '평균(AM_P의 σ_VM) / 평균(전체 σ_VM) — Love–Weber σ_VM (접촉점 · 전체 텐서)',
+    formula: '평균(AM_P의 σ_VM) / 평균(전체 σ_VM) — Love–Weber σ_VM (입자 접촉력 · 9 성분 텐서의 대칭부)',
     desc: '대입경 활물질의 평균 응력 / 전체 평균. >1 = 대립자가 하중 기둥 역할 (real_14 2.74).',
     meaning: 'AM_P 는 바닥 · 판에 닿은 비율이 크다 (real_14 42 %) → 벽 접촉 제외 줄과 같이 보세요.'
   },
@@ -1966,40 +1966,40 @@ const METRIC_TIPS = {
     meaning: '1 보다 크면 SE 에 평균 이상 하중.'
   },
   'Stress CV — Love–Weber · 벽 접촉 제외 (%)': {
-    title: 'Stress CV — Love–Weber · 벽 접촉 제외',
+    title: 'Stress CV — Love–Weber · 벽 접촉 제외 (선별 모집단)',
     formula: '같은 정의 · 모집단만 다름: 바닥 (z − r < 0 · zplane 0) 또는 판 (z + r > 판 높이 · mesh) 에 닿은 입자 제외',
-    desc: '벽 힘이 빠진 입자를 뺀 Love–Weber CV 입니다. 판 높이가 mesh 가 아니면 (추정값) 계산하지 않습니다 (빈칸). 옆면은 x·y 주기로 가정합니다 (LHS 침대 boundary p p f).',
+    desc: '벽 힘이 빠진 입자를 뺀 Love–Weber CV 입니다 — 선별 모집단의 통계이지 결측 벽 힘을 복원한 값이 아닙니다 (RGL-06). 판 높이가 mesh 가 아니면 (추정값) 계산하지 않습니다 (빈칸). 벽 안 닿은 입자의 평균 σ_VM 이 0 이거나 그런 입자가 없으면 빈칸 (0 으로 안 채움). 옆면은 x·y 주기로 가정합니다 (LHS 침대 boundary p p f · 함수가 덱을 검증하지 않음).',
     meaning: '벽 포함 줄과 차이가 크면 벽 접촉 입자의 몫이 크다는 뜻입니다.'
   },
   'σ_AM_P/σ_mean — Love–Weber · 벽 접촉 제외': {
-    title: 'σ_AM_P / σ_mean — Love–Weber · 벽 접촉 제외',
+    title: 'σ_AM_P / σ_mean — Love–Weber · 벽 접촉 제외 (선별 모집단)',
     formula: '평균(벽 안 닿은 AM_P 의 σ_VM) / 평균(벽 안 닿은 전체 σ_VM)',
-    desc: '벽 · 판 접촉 입자를 뺀 상 비 (Love–Weber).',
+    desc: '벽 · 판 접촉 입자를 뺀 상 비 (Love–Weber) — 선별 모집단의 비이지 결측 벽 힘을 복원한 값이 아닙니다.',
     meaning: '상 전부가 벽에 닿으면 빈칸.'
   },
   'σ_AM_S/σ_mean — Love–Weber · 벽 접촉 제외': {
-    title: 'σ_AM_S / σ_mean — Love–Weber · 벽 접촉 제외',
+    title: 'σ_AM_S / σ_mean — Love–Weber · 벽 접촉 제외 (선별 모집단)',
     formula: '평균(벽 안 닿은 AM_S 의 σ_VM) / 평균(벽 안 닿은 전체 σ_VM)',
-    desc: '벽 · 판 접촉 입자를 뺀 상 비 (Love–Weber).',
+    desc: '벽 · 판 접촉 입자를 뺀 상 비 (Love–Weber) — 선별 모집단의 비이지 결측 벽 힘을 복원한 값이 아닙니다.',
     meaning: '상 전부가 벽에 닿으면 빈칸.'
   },
   'σ_SE/σ_mean — Love–Weber · 벽 접촉 제외': {
-    title: 'σ_SE / σ_mean — Love–Weber · 벽 접촉 제외',
+    title: 'σ_SE / σ_mean — Love–Weber · 벽 접촉 제외 (선별 모집단)',
     formula: '평균(벽 안 닿은 SE 의 σ_VM) / 평균(벽 안 닿은 전체 σ_VM)',
-    desc: '벽 · 판 접촉 입자를 뺀 상 비 (Love–Weber).',
+    desc: '벽 · 판 접촉 입자를 뺀 상 비 (Love–Weber) — 선별 모집단의 비이지 결측 벽 힘을 복원한 값이 아닙니다.',
     meaning: '상 전부가 벽에 닿으면 빈칸.'
   },
   '벽 접촉 입자 (%) — 바닥 · 판': {
     title: '벽 접촉 입자 비율 (상별 · 바닥 + 판)',
     formula: '상별 (z − r < 0 또는 z + r > 판 높이) 입자 수 / 그 상 입자 수 × 100',
-    desc: '바닥 (zplane 0) · 판 (mesh) 에 닿은 입자의 비율입니다. 이 입자들의 벽 힘은 두 응력 규약 모두에 없습니다 (fix wall/gran 은 virial 이 없고 접촉 덤프에도 없음).',
+    desc: '바닥 (zplane 0) · 판 (mesh) 에 닿은 입자의 비율입니다. 이 입자들의 벽 힘은 두 응력 규약 모두에 없습니다 (fix wall/gran 은 virial 이 없고 접촉 덤프에도 없음). 덱 가정 (바닥 = 평면 z = 0 · 판 = 평면 mesh · 옆면 x·y 주기) 을 함수가 검증하지 않습니다 — 덱을 읽지 않습니다 (옛 벽-RVE 케이스의 옆벽 입자는 표지 밖).',
     meaning: '큰 입자 (AM_P) 일수록 벽에 닿기 쉽습니다 — 이 비율이 크면 그 상의 응력 비는 벽 접촉 제외 줄로 읽으세요.'
   },
   'Love–Weber 상태 (④b · LHS-29)': {
     title: 'Love–Weber 응력 계산 상태',
-    formula: 'OK · NOT_COMPUTED (사유) · FAILED (사유)',
-    desc: '검사: 접촉 덤프 열 (힘 · 접촉점) · 유한값 · 원자 id 짝 · F = Fn + Ft · 접촉점이 입자 안 (≤ 1.01 r) · 전체 virial Σ V σ_LW = Σ c_strs (상대 차 ≤ 1 %). 실패하면 값을 0 으로 채우지 않고 빈칸 + 사유입니다.',
-    meaning: '"재분석 전 케이스" 는 2026-10-04 이전에 분석된 케이스 — 접촉 단계만 다시 돌리면 값이 생깁니다.'
+    formula: 'OK · NOT_COMPUTED (사유) · FAILED (사유 · invalid_input = 입력 무효) · UNDEFINED (사유 · zero_load = 무하중)',
+    desc: '입력 검증 (계산 전): 전 입자 위치 유한 · 반경 · 부피 유한 양수 · 주기 길이 유한 양수 · mesh 판이면 판 높이 유한 양수 · c_strs 는 전 입자에 있거나 전부 없음 → 실패 = FAILED (invalid_input: 사유). 검사: 접촉 덤프 열 (힘 · 접촉점) · 유한값 · 원자 id 짝 · F = Fn + Ft · 접촉점이 입자 안 (≤ 1.01 r) · 전체 virial Σ V σ_LW = Σ c_strs (상대 차 ≤ 1 %) — 대각 셋의 전역 합이라 부호 · 척도 검사일 뿐 두 덤프의 프레임 · 입자 · 상 배분 대응 증명이 아닙니다. 힘 · virial 의 기준이 0 이면 잔차도 정확히 0 이어야 통과합니다. 평균 σ_VM 이 0 (무하중) 이면 CV · 상 비가 0/0 이라 UNDEFINED. 실패 · 미정의면 값을 0 으로 채우지 않고 빈칸 + 사유입니다. 덱 가정 (바닥 z = 0 · 평면 mesh 판 · x·y 주기) 은 검증하지 않습니다.',
+    meaning: '"재분석 전 케이스" 는 2026-10-04 이전에 분석된 케이스 — 접촉 단계만 다시 돌리면 값이 생깁니다. "입력 검증 전 세대" 는 계약 표지 (love_weber_checks_v2) 없이 OK 로 저장된 10-04 판 결과 — 값은 보이지만 재분석을 권합니다.'
   },
   'Ionic Isolated AM(%)': {
     title: 'Ionic Isolated AM (경로 기준 고립 AM 비율 · v1.1)',
@@ -2702,16 +2702,16 @@ const PAPER_TO_ORIG = {
   '⟨σ_VM⟩_AM_P / ⟨σ_VM⟩_all — stress/atom 50/50 split, diagonal only (size-biased)': 'σ_AM_P/σ_mean',
   '⟨σ_VM⟩_AM_S / ⟨σ_VM⟩_all — stress/atom 50/50 split, diagonal only (size-biased)': 'σ_AM_S/σ_mean',
   '⟨σ_VM⟩_SE / ⟨σ_VM⟩_all — stress/atom 50/50 split, diagonal only (size-biased)': 'σ_SE/σ_mean',
-  'Particle-stress CV(σ_VM) — Love–Weber (contact-point branch vectors, full tensor) (%)': 'Stress CV — Love–Weber (%)',
-  '⟨σ_VM⟩_AM_P / ⟨σ_VM⟩_all — Love–Weber': 'σ_AM_P/σ_mean — Love–Weber',
-  '⟨σ_VM⟩_AM_S / ⟨σ_VM⟩_all — Love–Weber': 'σ_AM_S/σ_mean — Love–Weber',
-  '⟨σ_VM⟩_SE / ⟨σ_VM⟩_all — Love–Weber': 'σ_SE/σ_mean — Love–Weber',
-  'Particle-stress CV(σ_VM) — Love–Weber, wall-contact particles excluded (%)': 'Stress CV — Love–Weber · 벽 접촉 제외 (%)',
-  '⟨σ_VM⟩_AM_P / ⟨σ_VM⟩_all — Love–Weber, wall-contact particles excluded': 'σ_AM_P/σ_mean — Love–Weber · 벽 접촉 제외',
-  '⟨σ_VM⟩_AM_S / ⟨σ_VM⟩_all — Love–Weber, wall-contact particles excluded': 'σ_AM_S/σ_mean — Love–Weber · 벽 접촉 제외',
-  '⟨σ_VM⟩_SE / ⟨σ_VM⟩_all — Love–Weber, wall-contact particles excluded': 'σ_SE/σ_mean — Love–Weber · 벽 접촉 제외',
-  'Wall-contact particles per phase (%) — floor · platen (wall forces absent from both conventions; Love–Weber flag)': '벽 접촉 입자 (%) — 바닥 · 판',
-  'Love–Weber stress status (checks: columns · F = Fn + Ft · contact point · total virial vs c_strs)': 'Love–Weber 상태 (④b · LHS-29)',
+  'Particle-stress CV(σ_VM) — Love–Weber symmetric particle-contact-force stress (no kinetic · wall · couple terms) (%)': 'Stress CV — Love–Weber (%)',
+  '⟨σ_VM⟩_AM_P / ⟨σ_VM⟩_all — Love–Weber (particle-contact forces only)': 'σ_AM_P/σ_mean — Love–Weber',
+  '⟨σ_VM⟩_AM_S / ⟨σ_VM⟩_all — Love–Weber (particle-contact forces only)': 'σ_AM_S/σ_mean — Love–Weber',
+  '⟨σ_VM⟩_SE / ⟨σ_VM⟩_all — Love–Weber (particle-contact forces only)': 'σ_SE/σ_mean — Love–Weber',
+  'Particle-stress CV(σ_VM) — Love–Weber, selected population: wall-contact particles excluded (wall forces not restored) (%)': 'Stress CV — Love–Weber · 벽 접촉 제외 (%)',
+  '⟨σ_VM⟩_AM_P / ⟨σ_VM⟩_all — Love–Weber, selected population: wall-contact particles excluded': 'σ_AM_P/σ_mean — Love–Weber · 벽 접촉 제외',
+  '⟨σ_VM⟩_AM_S / ⟨σ_VM⟩_all — Love–Weber, selected population: wall-contact particles excluded': 'σ_AM_S/σ_mean — Love–Weber · 벽 접촉 제외',
+  '⟨σ_VM⟩_SE / ⟨σ_VM⟩_all — Love–Weber, selected population: wall-contact particles excluded': 'σ_SE/σ_mean — Love–Weber · 벽 접촉 제외',
+  'Wall-contact particles per phase (%) — floor · platen (wall forces absent from both conventions; deck geometry assumed, not verified)': '벽 접촉 입자 (%) — 바닥 · 판',
+  'Love–Weber stress status (input checks · F = Fn + Ft · contact point · global virial sign/scale vs c_strs — not a frame-correspondence proof)': 'Love–Weber 상태 (④b · LHS-29)',
   'SE clusters, n≥10 / all (isolated SE count as clusters)': 'SE Cluster 수',
   'SE percolation, top↔bottom (%)': 'SE Percolation(%)',
   'Separator-side SE connectivity, f_SE^sep (%)': 'Top Reachable(%)',

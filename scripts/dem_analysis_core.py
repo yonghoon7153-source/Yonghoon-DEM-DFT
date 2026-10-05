@@ -1230,37 +1230,105 @@ def calc_von_mises_stress(atoms_raw, type_map, scale, plate_z, n_layers=10):
 #  위 `calc_von_mises_stress` 의 입력 (LIGGGHTS `compute stress/atom` ÷ 부피) 은 입자 접촉 virial 0.5 · (x_i − x_j) ⊗ F 를 두 입자에
 #  **똑같이** 나눈다 (공개 소스 `pair_gran_base.h` → `Pair::ev_tally_xyz` 의 0.5) — 크기가 다른 쌍에서 큰 입자의 응력이 작게 · 작은 입자가
 #  크게 잡힌다 (real_14 `stress_ratio_AM_P` 0.884 ↔ 3.2 · 대소가 뒤집힌다).  옛 열은 그대로 두고 (이름표만 정정) 새 열을 낸다.
+#  ★ RGL-06 (Codex 10-05 · P2 · 1저자 비준 "권고대로") — 입력 기하 · 영 분모 · 영 척도가 거짓 OK / 거짓 0 / 거짓 FAILED 를 냈다
+#    (고립 입자 반경 NaN → OK · vm_cv 0 · 상 비 0 · plate_z NaN 도 OK · F = 0 인데 Fn+Ft ≠ 0 → OK · 진짜 무하중 → virial ∞ · FAILED).
+#    계약 v2 = 계산 전 입력 검증 · 비유한 텐서/VM/요약 = FAILED · 평균 VM 0 = UNDEFINED (0 으로 위장 안 함) · 힘 분해 · virial 의 영 척도
+#    분기 (절대 + 상대) · 메타 (이름 한정 · 덱 가정 미검증 · 전역 virial 의 증명 범위).  정의식 (LW_DEFINITION) 과 정상 입력 값은 그대로.
 LW_DEFINITION = 'love_weber_branch_full_tensor_v1'
+LW_CONTRACT = 'love_weber_checks_v2'     # v1 = 10-04 판 (입력 검증 · 영 척도 분기 · UNDEFINED 없음) — 소비자는 v2 표지로 옛 결과와 가른다
+LW_QUANTITY = ('입자 접촉력 기반 대칭 응력의 VM (Love–Weber · 입자 중심 → 접촉점 branch ⊗ 접촉력 · 9 성분 텐서의 대칭부) — '
+               'kinetic · 벽 · couple 항 미포함 (전체 동적 응력 아님)')
 LW_WALL_SCOPE = 'floor_zplane0+mesh_plate (x·y periodic assumed)'
+LW_NOWALL_SCOPE = '선별 모집단 — 바닥 · 판 접촉 입자를 뺀 통계 (결측 벽 힘을 복원한 값 아님)'
+LW_DECK_ASSUMPTIONS = ('바닥 = 평면 z = 0 · 판 = plate_z 의 평면 mesh · 옆면 = x·y 주기 — 함수가 덱을 읽지 않아 검증하지 않음 '
+                       '(옛 벽-RVE 케이스의 옆벽 입자는 벽 표지 밖)')
+LW_VIRIAL_SCOPE = ('global_diagonal_sum — 전역 부호 · 척도 검사 (Σ_i V_i σ_LW,aa ↔ Σ_i c_strs,aa · 대각 셋) · '
+                   '프레임 · 입자 · 상 배분의 대응 증명 아님 (같은 기하 두 dimer 의 접촉 힘을 맞바꿔도 통과)')
 LW_TOL_FORCE_DECOMP = 1e-3     # max|F − (Fn + Ft)| / max|F| — 열 대응 (c_cpl 번호) 검사 · real_14 실측 1.4e-6 (덤프 %g 6 자리)
 LW_TOL_BRANCH_OVER_R = 1.01    # max |x_c − x_i| / r_i — 접촉점이 입자 안 · real_14 실측 1.00014
-LW_TOL_VIRIAL = 1e-2           # |Σ V σ_LW,aa − Σ c_strs,aa| / Σ_a |Σ c_strs,aa| — 두 덤프 짝 · real_14 실측 5e-5 (허용 200 배)
+LW_TOL_VIRIAL = 1e-2           # |Σ V σ_LW,aa − Σ c_strs,aa| / Σ_a |Σ c_strs,aa| — 전역 부호 · 척도 · real_14 실측 5e-5 (허용 200 배)
+#  절대 + 상대 오차 규약 (RGL-06 ③): 통과 ⇔ |잔차| ≤ atol + rtol · 척도.  atol = 0 — 덤프에는 단위 없는 절대 바닥이 없다 (힘 · virial 단위가
+#  침대 축척을 따른다).  ⇒ 척도 = 0 (영 척도) 이면 잔차도 **정확히** 0 이어야 통과 · 그때 상대 차는 0/0 = 정의 안 됨 → None (inf 를 JSON 에 안 쓴다).
 _LW_NEED = ('fx', 'fy', 'fz', 'cp_x', 'cp_y', 'cp_z', 'fn_x', 'fn_y', 'fn_z', 'ft_x', 'ft_y', 'ft_z')
+_LW_CSTR = ('sigma_xx', 'sigma_yy', 'sigma_zz')
+
+
+def _lw_finite_real(x):
+    """유한 실수면 float · 아니면 None (None · bool · 문자열 · NaN · ±inf 거부)."""
+    if isinstance(x, (bool, np.bool_)) or not isinstance(x, (int, float, np.integer, np.floating)):
+        return None
+    x = float(x)
+    return x if np.isfinite(x) else None
+
+
+def _lw_invalid_inputs(ids, pos, rad, vol, has_cs, cs, box_x, box_y, plate_z, plate_z_source):
+    """계산 전 입력 검증 (RGL-06 ①) — 사유 목록 (빈 목록 = 통과).  접촉 없는 입자도 모집단 · 벽 표지에 들어가므로 전 입자를 본다."""
+    why = []
+
+    def _ids(mask):
+        k = np.flatnonzero(mask)
+        return f"{k.size} (id {', '.join(str(ids[j]) for j in k[:5])}{' …' if k.size > 5 else ''})"
+    m = ~np.isfinite(pos).all(1)
+    if m.any():
+        why.append('non_finite_position ' + _ids(m))
+    m = ~(np.isfinite(rad) & (rad > 0))
+    if m.any():
+        why.append('bad_radius ' + _ids(m) + ' — 비유한 · 0 이하')
+    else:
+        m = ~(np.isfinite(vol) & (vol > 0))                # 반경은 정상인데 4/3 π r³ 가 넘치거나 0 으로 내려간 경우
+        if m.any():
+            why.append('bad_volume ' + _ids(m) + ' — 4/3 π r³ 넘침 · 0')
+    for nm, L in (('box_x', box_x), ('box_y', box_y)):
+        if L is not None and not ((_lw_finite_real(L) or 0.0) > 0):
+            why.append(f'{nm} = {L!r} — 주기 길이는 유한 양수 (안 쓰면 None)')
+    if plate_z_source == 'mesh' and not ((_lw_finite_real(plate_z) or 0.0) > 0):
+        why.append(f'plate_z = {plate_z!r} — plate_z_source=mesh 면 판 높이는 바닥 z = 0 위의 유한값')
+    if has_cs.any() and not has_cs.all():
+        why.append(f'c_strs 결측 {_ids(~has_cs)} / {has_cs.size} 입자 — 일부만 있으면 전역 virial 검사가 조용히 꺼진다')
+    elif cs is not None:
+        m = ~np.isfinite(cs).all(1)
+        if m.any():
+            why.append('non_finite c_strs ' + _ids(m))
+    return why
 
 
 def calc_love_weber_stress(atoms_raw, contacts_raw, type_map, plate_z, box_x=None, box_y=None,
                            plate_z_source='mesh', return_arrays=False):
-    """Love–Weber 입자 평균 응력 — 접촉 덤프 (힘 · 접촉점) 로, 전체 텐서.
+    """Love–Weber 입자 평균 응력 — 접촉 덤프 (힘 · 접촉점) 로, 9 성분 텐서.
 
+    양 (RGL-06 이름 한정): **입자 접촉력 기반 대칭 응력의 VM** — kinetic · 벽 · couple 항은 없다 (전체 동적 응력 아님 · LW_QUANTITY).
     σ_i = (1/V_i) Σ_c (x_c − x_i) ⊗ f_c^(i)     V_i = 4/3 π r_i³ · f_c^(i) = 접촉 c 가 입자 i 에 주는 힘
       (덤프 `fx·fy·fz` = id1 이 받는 힘 → id2 는 −f) · 인장 양수 = LIGGGHTS c_strs 와 같은 부호 · x·y 최소영상
     VM = √(½[(σxx−σyy)² + (σyy−σzz)² + (σzz−σxx)²] + 3(σxy² + σyz² + σzx²))  — 대칭부 (입자 하나의 b⊗f 는 비대칭일 수 있다 →
-      비대칭 크기 ‖σ − σᵀ‖/‖σ‖ 의 중앙값을 기록)
+      비대칭 크기 ‖σ − σᵀ‖/‖σ‖ 의 중앙값을 기록 · 중앙값이 작아도 모든 입자의 회전평형 · couple 부재를 증명하지 않는다)
     요약 통계는 옛 열과 같은 정의 (모든 입자 · 접촉 없는 입자 = 0 · 모집단 std/mean × 100 · 상 평균 / 전체 평균) — 규약만 다르다.
 
     벽: 바닥 (zplane 0) · 판 (mesh) 접촉은 접촉 덤프에도 stress/atom 에도 없다 → 벽에 닿은 입자 (z − r < 0 · z + r > plate_z) 의 응력은
-      불완전.  표지 수 · 상별 비율 + 벽 제외 통계 (`_nowall`).  판 높이가 mesh 가 아니면 판 표지 · 벽 제외 통계 = None (바닥 표지는 낸다).
-      옆면은 x·y 주기로 가정 (LHS 침대 `boundary p p f` — 덱을 읽지 않는다 · 옛 벽-RVE 케이스의 옆벽 입자는 표지에 안 잡힌다).
+      불완전.  표지 수 · 상별 비율 + 벽 제외 통계 (`_nowall`) = **선별 모집단** (결측 벽 힘을 복원한 값 아님 · LW_NOWALL_SCOPE).
+      판 높이가 mesh 가 아니면 판 표지 · 벽 제외 통계 = None (바닥 표지는 낸다).  덱 가정 (바닥 z = 0 · 평면 mesh 판 · 옆면 x·y 주기 ·
+      LHS 침대 `boundary p p f`) 은 **검증하지 않는다** — 덱을 읽지 않는다 (LW_DECK_ASSUMPTIONS · 옛 벽-RVE 케이스의 옆벽 입자는 표지 밖).
+    입력 검증 (계산 전 · RGL-06 ①): 전 입자 위치 유한 · 반경 · 부피 유한 양수 · 주는 주기 길이 유한 양수 · mesh 판이면 plate_z 유한 양수 ·
+      c_strs 는 전 입자에 있거나 전부 없고 있으면 유한.  실패 = FAILED (invalid_input: 사유) · 값 없음.
     검사 (실패 = 값 없이 상태 — 0 으로 채우지 않는다): 열 · 유한값 · 원자 id 짝 · F = Fn + Ft · 접촉점이 두 입자 안 ·
-      c_strs 가 있으면 전체 virial Σ V σ_LW = Σ c_strs (접촉점과 무관한 정확식 → 두 덤프의 프레임 · 힘 부호 · 열 대응).
+      c_strs 가 있으면 전체 virial Σ V σ_LW = Σ c_strs (접촉점과 무관한 정확식 · 대각 셋의 **전역 합**) — 전역 부호 · 척도 검사이지
+      프레임 · 입자 · 상 배분의 대응 증명이 아니다 (LW_VIRIAL_SCOPE).  새 LW 와 옛 c_strs 를 입자별로 같게 강제하지 않는다 (배분 규약이
+      다르다 · real_14 에서 접촉 덤프로 다시 만든 50/50 virial 조차 입자별로는 c_strs 와 어긋난다 — 상대 잔차 중앙 2.6e-4 · p99 0.61 ·
+      최대 17.8 · 10-05 실측 · 원인 미확인 (Codex 는 출력 compute 의 힘 재계산을 지적) · 전역 합은 5.0e-5).
+      힘 분해 · virial 은 절대 + 상대 규약 (atol = 0) — 척도 0 이면 잔차도 정확히 0 이어야 통과 · 상대 차 None.
+    비유한 텐서 · VM · 요약 = FAILED (non_finite …).  평균 VM 0 = **UNDEFINED** (zero_load: max|F| = 0 · zero_mean_vm: 전 입자 정수압) —
+      CV · 상 비 = 0/0 미정의 → 값 없음 (0 · OK 로 위장하지 않는다).  벽 제외 모집단도 같은 규칙 (nowall_status).
 
-    반환 dict: status ('OK' | 'NOT_COMPUTED (…)' | 'FAILED (…)') · definition · vm_cv · type_stress{상: mean · ratio} ·
-      vm_cv_nowall · type_stress_nowall · wall{scope · plate_flag · n_floor · n_plate · by_type{상: n · n_floor · n_plate · frac_wall}} ·
-      n_particles · n_contacts · n_no_contact · asym_frob_median · checks{force_decomp_rel · branch_over_r_max · virial_total_rel ·
-      virial_status}.  return_arrays=True 면 ids · tensor (n,3,3) · arrays_vm (시험 · 감사용 — 저장하지 않는다).
+    반환 dict: status ('OK' | 'NOT_COMPUTED (…)' | 'FAILED (…)' | 'UNDEFINED (…)') · definition · contract · quantity ·
+      assumptions_unverified · vm_cv · type_stress{상: mean · ratio} · vm_cv_nowall · type_stress_nowall · nowall_status ·
+      wall{scope · nowall_scope · plate_flag · n_floor · n_plate · by_type{상: n · n_floor · n_plate · frac_wall · frac_floor}} ·
+      n_particles · n_contacts · n_no_contact · asym_frob_median · checks{force_decomp_rel · force_decomp_abs · force_decomp_zero_scale ·
+      branch_over_r_max · virial_total_rel · virial_total_abs · virial_zero_scale · virial_status · virial_scope}.
+      return_arrays=True 면 (OK 일 때만) ids · tensor (n,3,3) · arrays_vm (시험 · 감사용 — 저장하지 않는다).
+      입력 출처 (CSV 해시 · TIMESTEP) 는 호출부가 'provenance' 로 붙인다 (analyze_contacts.main).
     """
-    out = {'status': None, 'definition': LW_DEFINITION, 'vm_cv': None, 'type_stress': {},
-           'vm_cv_nowall': None, 'type_stress_nowall': None, 'wall': {}, 'checks': {}}
+    out = {'status': None, 'definition': LW_DEFINITION, 'contract': LW_CONTRACT, 'quantity': LW_QUANTITY,
+           'assumptions_unverified': LW_DECK_ASSUMPTIONS, 'vm_cv': None, 'type_stress': {},
+           'vm_cv_nowall': None, 'type_stress_nowall': None, 'nowall_status': None, 'wall': {}, 'checks': {}}
     if not contacts_raw:
         out['status'] = 'NOT_COMPUTED (no_contacts)'
         return out
@@ -1271,18 +1339,35 @@ def calc_love_weber_stress(atoms_raw, contacts_raw, type_map, plate_z, box_x=Non
     ids = list(atoms_raw.keys())
     row = {aid: k for k, aid in enumerate(ids)}
     n = len(ids)
-    pos = np.array([[atoms_raw[a]['x'], atoms_raw[a]['y'], atoms_raw[a]['z']] for a in ids], dtype=float)
-    rad = np.array([atoms_raw[a]['radius'] for a in ids], dtype=float)
-    vol = (4.0 / 3.0) * np.pi * rad ** 3
+    has_cs = np.array([all(k in atoms_raw[a] for k in _LW_CSTR) for a in ids], dtype=bool)
+    try:
+        pos = np.array([[atoms_raw[a]['x'], atoms_raw[a]['y'], atoms_raw[a]['z']] for a in ids], dtype=float).reshape(n, 3)
+        rad = np.array([atoms_raw[a]['radius'] for a in ids], dtype=float)
+        cs = (np.array([[atoms_raw[a][k] for k in _LW_CSTR] for a in ids], dtype=float).reshape(n, 3)
+              if n and has_cs.all() else None)
+    except (TypeError, ValueError) as e:                  # 숫자가 아닌 값 (None · 문자열) — 파서 밖 호출부
+        out['status'] = f'FAILED (invalid_input: 원자 값을 숫자로 못 읽음 — {e})'
+        return out
+    with np.errstate(over='ignore', under='ignore', invalid='ignore'):
+        vol = (4.0 / 3.0) * np.pi * rad ** 3
     names = np.array([type_map.get(atoms_raw[a]['type'], '') for a in ids], dtype=object)
+    out['n_particles'], out['n_contacts'] = n, len(contacts_raw)
+    #  RGL-06 ① 계산 전 입력 검증 — 옛 판은 접촉 열만 유한 검사해 고립 입자 반경 NaN · plate_z NaN · 주기 길이 NaN 이 그대로 지나갔다
+    why = _lw_invalid_inputs(ids, pos, rad, vol, has_cs, cs, box_x, box_y, plate_z, plate_z_source)
+    if why:
+        out['status'] = 'FAILED (invalid_input: ' + ' · '.join(why) + ')'
+        return out
     i1 = np.array([row.get(c['id1'], -1) for c in contacts_raw])
     i2 = np.array([row.get(c['id2'], -1) for c in contacts_raw])
     bad = int(((i1 < 0) | (i2 < 0)).sum())
-    out['n_particles'], out['n_contacts'] = n, len(contacts_raw)
     if bad:
         out['status'] = f'FAILED (contact_ids_not_in_atoms: {bad})'
         return out
-    col = {k: np.array([c[k] for c in contacts_raw], dtype=float) for k in _LW_NEED}
+    try:
+        col = {k: np.array([c[k] for c in contacts_raw], dtype=float) for k in _LW_NEED}
+    except (TypeError, ValueError) as e:
+        out['status'] = f'FAILED (invalid_input: 접촉 값을 숫자로 못 읽음 — {e})'
+        return out
     F = np.stack([col['fx'], col['fy'], col['fz']], 1)
     cp = np.stack([col['cp_x'], col['cp_y'], col['cp_z']], 1)
     Fnt = np.stack([col['fn_x'] + col['ft_x'], col['fn_y'] + col['ft_y'], col['fn_z'] + col['ft_z']], 1)
@@ -1290,52 +1375,86 @@ def calc_love_weber_stress(atoms_raw, contacts_raw, type_map, plate_z, box_x=Non
     if nonfin:
         out['status'] = f'FAILED (non_finite contact values: {nonfin})'
         return out
-    fmax = float(np.max(np.abs(F)))
-    fdec = float(np.max(np.abs(F - Fnt)) / fmax) if fmax > 0 else 0.0
-    out['checks']['force_decomp_rel'] = fdec
-    if fdec > LW_TOL_FORCE_DECOMP:
-        out['status'] = f'FAILED (force_columns: max|F − (Fn+Ft)|/max|F| = {fdec:.3g} > {LW_TOL_FORCE_DECOMP:g})'
+    #  RGL-06 ③ 영 척도 분기 — 옛 판은 max|F| = 0 이면 오차를 0 으로 적어 F = 0 · Fn+Ft = (0, 0, −1) 을 OK 로 통과시켰다
+    with np.errstate(over='ignore', invalid='ignore'):
+        fmax = float(np.max(np.abs(F)))
+        fabs = float(np.max(np.abs(F - Fnt)))
+    if not (np.isfinite(fmax) and np.isfinite(fabs)):
+        out['status'] = 'FAILED (non_finite contact values: |F − (Fn+Ft)| 넘침)'
+        return out
+    if fmax > 0:
+        fdec = fabs / fmax
+        f_ok = fdec <= LW_TOL_FORCE_DECOMP
+    else:                                                 # 척도 0 — Fn+Ft 도 정확히 0 이어야 (상대 차 = 0/0 → None)
+        fdec = 0.0 if fabs == 0 else None
+        f_ok = fabs == 0
+    out['checks'].update(force_decomp_rel=fdec, force_decomp_abs=fabs, force_decomp_zero_scale=bool(fmax == 0))
+    if not f_ok:
+        out['status'] = (f'FAILED (force_columns: max|F − (Fn+Ft)|/max|F| = {fdec:.3g} > {LW_TOL_FORCE_DECOMP:g})' if fmax > 0 else
+                         f'FAILED (force_columns: max|F| = 0 인데 max|F − (Fn+Ft)| = {fabs:.3g} — 영 척도 · 절대 잔차 > 0 · 상대 차 정의 안 됨)')
         return out
 
     def _mi(d):
         d = d.copy()
         for ax, L in ((0, box_x), (1, box_y)):
-            if L:
+            if L is not None:                             # 검증을 지난 유한 양수만 온다 (옛 판 `if L:` 은 NaN · inf 를 통과시켰다)
                 d[:, ax] -= L * np.round(d[:, ax] / L)
         return d
     b1, b2 = _mi(cp - pos[i1]), _mi(cp - pos[i2])
-    bor = float(max(np.max(np.linalg.norm(b1, axis=1) / rad[i1]), np.max(np.linalg.norm(b2, axis=1) / rad[i2])))
+    with np.errstate(over='ignore', invalid='ignore'):
+        bor = float(max(np.max(np.linalg.norm(b1, axis=1) / rad[i1]), np.max(np.linalg.norm(b2, axis=1) / rad[i2])))
     out['checks']['branch_over_r_max'] = bor
-    if bor > LW_TOL_BRANCH_OVER_R:
+    if not bor <= LW_TOL_BRANCH_OVER_R:                   # NaN 도 실패 쪽 (옛 판 `bor > tol` 은 NaN 을 통과시켰다)
         out['status'] = f'FAILED (contact_point off particle: max |x_c − x_i|/r_i = {bor:.4g} > {LW_TOL_BRANCH_OVER_R:g})'
         return out
     T = np.zeros((n, 3, 3))
-    np.add.at(T, i1, b1[:, :, None] * F[:, None, :])
-    np.add.at(T, i2, b2[:, :, None] * (-F)[:, None, :])
-    # 전체 virial 대조 — Σ_i T_i,aa = Σ_c (x_id2 − x_id1)_a F_a (접촉점이 지워진다) = LIGGGHTS Σ c_strs (같은 부호)
-    if n and all(('sigma_xx' in atoms_raw[a] and 'sigma_yy' in atoms_raw[a] and 'sigma_zz' in atoms_raw[a]) for a in ids):
-        cs = np.array([[atoms_raw[a]['sigma_xx'], atoms_raw[a]['sigma_yy'], atoms_raw[a]['sigma_zz']] for a in ids], dtype=float)
-        tot_c = (cs * vol[:, None]).sum(0)
-        tot_lw = np.array([T[:, 0, 0].sum(), T[:, 1, 1].sum(), T[:, 2, 2].sum()])
-        den = float(np.abs(tot_c).sum())
-        vrel = float(np.max(np.abs(tot_lw - tot_c)) / den) if den > 0 else float('inf')
-        out['checks']['virial_total_rel'] = vrel
-        out['checks']['virial_status'] = 'checked'
-        if not vrel <= LW_TOL_VIRIAL:
-            out['status'] = (f'FAILED (virial_mismatch: |Σ V σ_LW − Σ c_strs| / Σ|Σ c_strs| = {vrel:.3g} > {LW_TOL_VIRIAL:g} — '
-                             '원자 · 접촉 덤프의 프레임 · 힘 부호 · 열 대응)')
+    with np.errstate(over='ignore', invalid='ignore'):
+        np.add.at(T, i1, b1[:, :, None] * F[:, None, :])
+        np.add.at(T, i2, b2[:, :, None] * (-F)[:, None, :])
+    nbad = int((~np.isfinite(T.reshape(n, 9))).any(1).sum())
+    if nbad:                                              # RGL-06 ② 비유한 텐서 → 정상 통계 발행 금지
+        out['status'] = f'FAILED (non_finite tensor: {nbad} 입자 — Σ b ⊗ f 넘침)'
+        return out
+    # 전체 virial 대조 — Σ_i T_i,aa = Σ_c (x_id2 − x_id1)_a F_a (접촉점이 지워진다) = LIGGGHTS Σ c_strs (같은 부호).
+    #   ⚠ 대각 셋의 **전역 합** 하나 = 전역 부호 · 척도 검사 (LW_VIRIAL_SCOPE) — 입자 · 상 배분이 맞는지는 증명하지 않는다.
+    if cs is not None:
+        with np.errstate(over='ignore', invalid='ignore'):
+            tot_c = (cs * vol[:, None]).sum(0)
+            tot_lw = np.array([T[:, 0, 0].sum(), T[:, 1, 1].sum(), T[:, 2, 2].sum()])
+            den = float(np.abs(tot_c).sum())
+            vabs = float(np.max(np.abs(tot_lw - tot_c)))
+        if not (np.isfinite(den) and np.isfinite(vabs)):
+            out['status'] = 'FAILED (non_finite virial sum: Σ c_strs · Σ V σ_LW 넘침)'
+            return out
+        if den > 0:
+            vrel = vabs / den
+            v_ok = vrel <= LW_TOL_VIRIAL
+        else:                                             # RGL-06 ③ 영 척도 — 옛 판은 무조건 inf → 진짜 무하중 (F = 0 ∧ c_strs = 0) 을 FAILED 로
+            vrel = 0.0 if vabs == 0 else None
+            v_ok = vabs == 0
+        out['checks'].update(virial_total_rel=vrel, virial_total_abs=vabs, virial_zero_scale=bool(den == 0),
+                             virial_status='checked', virial_scope=LW_VIRIAL_SCOPE)
+        if not v_ok:
+            out['status'] = ((f'FAILED (virial_mismatch: |Σ V σ_LW − Σ c_strs| / Σ|Σ c_strs| = {vrel:.3g} > {LW_TOL_VIRIAL:g} — '
+                              '원자 · 접촉 덤프의 프레임 · 힘 부호 · 열 대응)') if den > 0 else
+                             (f'FAILED (virial_mismatch: Σ c_strs = 0 인데 max|Σ V σ_LW| = {vabs:.3g} — 영 척도 · '
+                              '원자 덤프가 무하중 프레임 · 힘 부호 · 열 대응)'))
             return out
     else:
-        out['checks']['virial_total_rel'] = None
-        out['checks']['virial_status'] = 'unavailable (no c_strs in atom dump)'
-    sig = T / vol[:, None, None]
-    s = 0.5 * (sig + np.transpose(sig, (0, 2, 1)))
-    sxx, syy, szz = s[:, 0, 0], s[:, 1, 1], s[:, 2, 2]
-    sxy, syz, szx = s[:, 0, 1], s[:, 1, 2], s[:, 2, 0]
-    vm = np.sqrt(np.maximum(0.5 * ((sxx - syy) ** 2 + (syy - szz) ** 2 + (szz - sxx) ** 2)
-                            + 3.0 * (sxy ** 2 + syz ** 2 + szx ** 2), 0.0))
-    fro = np.linalg.norm(sig.reshape(n, 9), axis=1)
-    asym = np.linalg.norm((sig - np.transpose(sig, (0, 2, 1))).reshape(n, 9), axis=1)
+        out['checks'].update(virial_total_rel=None, virial_status='unavailable (no c_strs in atom dump)', virial_scope=LW_VIRIAL_SCOPE)
+    with np.errstate(over='ignore', invalid='ignore'):
+        sig = T / vol[:, None, None]
+        s = 0.5 * (sig + np.transpose(sig, (0, 2, 1)))
+        sxx, syy, szz = s[:, 0, 0], s[:, 1, 1], s[:, 2, 2]
+        sxy, syz, szx = s[:, 0, 1], s[:, 1, 2], s[:, 2, 0]
+        vm = np.sqrt(np.maximum(0.5 * ((sxx - syy) ** 2 + (syy - szz) ** 2 + (szz - sxx) ** 2)
+                                + 3.0 * (sxy ** 2 + syz ** 2 + szx ** 2), 0.0))
+        fro = np.linalg.norm(sig.reshape(n, 9), axis=1)
+        asym = np.linalg.norm((sig - np.transpose(sig, (0, 2, 1))).reshape(n, 9), axis=1)
+    fin = np.isfinite(sig.reshape(n, 9)).all(1) & np.isfinite(vm) & np.isfinite(fro) & np.isfinite(asym)
+    if not fin.all():                                     # RGL-06 ② — 옛 판은 mean inf/NaN 을 `mean > 0` 분기로 넘겨 cv NaN · 0 을 OK 로 냈다
+        out['status'] = f'FAILED (non_finite stress/VM: {int((~fin).sum())} 입자 — 텐서 ÷ 부피 · VM 넘침)'
+        return out
     nz = fro > 0
     out['asym_frob_median'] = float(np.median(asym[nz] / fro[nz])) if nz.any() else None
     deg = np.bincount(np.r_[i1, i2], minlength=n)
@@ -1343,22 +1462,30 @@ def calc_love_weber_stress(atoms_raw, contacts_raw, type_map, plate_z, box_x=Non
     phases = sorted({v for v in type_map.values()})
 
     def _summ(mask):
+        """(상태, cv, {상: mean · ratio}) — 'ok' · 'empty' (모집단 0) · 'zero' (평균 VM 0 → CV · 비 = 0/0) · 'non_finite' (합 넘침).
+        옛 판은 `mean > 0` 이 아니면 cv · 비를 0 으로 채웠다 (NaN > 0 이 False 라 NaN 도 0 으로) — 이제 값 없이 상태만."""
         v = vm[mask]
         if v.size == 0:
-            return None, {}
-        mean = float(v.mean())
-        cv = float(v.std() / mean * 100) if mean > 0 else 0.0
+            return 'empty', None, None
+        with np.errstate(over='ignore', invalid='ignore'):
+            mean = float(v.mean())
+            std = v.std()
+        if not (np.isfinite(mean) and np.isfinite(std)):
+            return 'non_finite', None, None
+        if not mean > 0:                                  # vm ≥ 0 · 유한 (위 관문) ⇒ 여기는 mean == 0 뿐
+            return 'zero', None, None
+        cv = float(std / mean * 100)
         ts = {}
         for nm in phases:
             m = mask & (names == nm)
             if m.any():
                 tmean = float(vm[m].mean())
-                ts[nm] = {'mean': tmean, 'ratio': (tmean / mean) if mean > 0 else 0.0}
-        return cv, ts
-    allm = np.ones(n, dtype=bool)
-    out['vm_cv'], out['type_stress'] = _summ(allm)
+                if not np.isfinite(tmean):
+                    return 'non_finite', None, None
+                ts[nm] = {'mean': tmean, 'ratio': tmean / mean}
+        return 'ok', cv, ts
     floor = (pos[:, 2] - rad) < 0.0
-    plate_ok = plate_z_source == 'mesh' and plate_z is not None
+    plate_ok = plate_z_source == 'mesh'                   # mesh 면 plate_z 는 검증을 지난 유한 양수
     plate = ((pos[:, 2] + rad) > plate_z) if plate_ok else np.zeros(n, dtype=bool)
     wall = floor | plate
     by_type = {}
@@ -1370,11 +1497,31 @@ def calc_love_weber_stress(atoms_raw, contacts_raw, type_map, plate_z, box_x=Non
                            'n_plate': int((plate & m).sum()) if plate_ok else None,
                            'frac_wall': float((wall & m).sum() / k) if plate_ok else None,
                            'frac_floor': float((floor & m).sum() / k)}
-    out['wall'] = {'scope': LW_WALL_SCOPE,
+    out['wall'] = {'scope': LW_WALL_SCOPE, 'nowall_scope': LW_NOWALL_SCOPE,
                    'plate_flag': 'mesh' if plate_ok else f'unavailable (plate_z_source={plate_z_source})',
                    'n_floor': int(floor.sum()), 'n_plate': int(plate.sum()) if plate_ok else None, 'by_type': by_type}
+    st_all, cv_all, ts_all = _summ(np.ones(n, dtype=bool))
+    if st_all != 'ok':                                    # 정상 통계 없이 상태만 (RGL-06 ② · ④)
+        out['status'] = {
+            'zero': ('UNDEFINED (zero_load: max|F| = 0 — 평균 σ_VM = 0 → CV · 상 비 = 0/0 미정의 · 0 으로 채우지 않음)' if fmax == 0 else
+                     'UNDEFINED (zero_mean_vm: max|F| > 0 인데 평균 σ_VM = 0 (전 입자 정수압 · 영 텐서) → CV · 상 비 = 0/0 미정의 · '
+                     '0 으로 채우지 않음)'),
+            'non_finite': 'FAILED (non_finite summary: σ_VM 평균 · 표준편차 넘침)',
+            'empty': 'NOT_COMPUTED (no_particles)'}[st_all]
+        return out
+    out['vm_cv'], out['type_stress'] = cv_all, ts_all
     if plate_ok:
-        out['vm_cv_nowall'], out['type_stress_nowall'] = _summ(~wall)
+        st_nw, cv_nw, ts_nw = _summ(~wall)
+        if st_nw == 'ok':
+            out['vm_cv_nowall'], out['type_stress_nowall'] = cv_nw, ts_nw
+            out['nowall_status'] = 'OK'
+        else:
+            out['nowall_status'] = {
+                'empty': 'NOT_COMPUTED (empty_population: 모든 입자가 바닥 · 판 접촉)',
+                'zero': 'UNDEFINED (zero_mean_vm: 벽 안 닿은 입자의 평균 σ_VM = 0 → CV · 상 비 = 0/0 미정의)',
+                'non_finite': 'FAILED (non_finite summary: 벽 제외 σ_VM 평균 넘침)'}[st_nw]
+    else:
+        out['nowall_status'] = f'NOT_COMPUTED (plate_unavailable: plate_z_source={plate_z_source})'
     out['status'] = 'OK'
     if return_arrays:
         out['ids'], out['tensor'], out['arrays_vm'] = ids, sig, vm
@@ -1510,7 +1657,8 @@ def run_full_analysis(atoms_raw, contacts_raw, type_map, scale, results_dir, box
         _w = stress_lw['wall']
         print(f"  Stress (Love–Weber): CV {stress_lw['vm_cv']:.1f}% · "
               + ' · '.join(f"{tn} {sv['ratio']:.2f}" for tn, sv in stress_lw['type_stress'].items())
-              + f" · 벽 접촉 바닥 {_w['n_floor']} · 판 {_w['n_plate'] if _w['n_plate'] is not None else 'N/A'}")
+              + f" · 벽 접촉 바닥 {_w['n_floor']} · 판 {_w['n_plate'] if _w['n_plate'] is not None else 'N/A'}"
+              + ('' if stress_lw.get('nowall_status') == 'OK' else f" · 벽 제외 {stress_lw.get('nowall_status')}"))
     else:
         print(f"  Stress (Love–Weber): {stress_lw['status']}")
 

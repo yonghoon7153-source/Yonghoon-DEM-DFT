@@ -666,15 +666,17 @@ def plot_coverage(all_data, names, ax=None):
 
 
 def plot_stress_cv(all_data, names, ax=None):
-    """두 규약을 같이 — 실선 = Love–Weber (stress_cv_lw · ④b 10-04) · 점선 = 옛 열 (stress_cv = LIGGGHTS stress/atom 50/50 분할 ·
-    대각 · LHS-29).  값이 없는 케이스는 그리지 않는다 (_metric_points — 0 으로 채우지 않는다 · 재분석 전 케이스에는 LW 가 없다)."""
+    """두 규약을 같이 — 실선 = Love–Weber (stress_cv_lw · ④b 10-04 · 입자 접촉력 기반 대칭 응력의 VM — kinetic · 벽 · couple 미포함 ·
+    RGL-06 이름 한정) · 점선 = 옛 열 (stress_cv = LIGGGHTS stress/atom 50/50 분할 · 대각 · LHS-29).
+    값이 없는 케이스는 그리지 않는다 (_metric_points — 0 으로 채우지 않는다 · 재분석 전 · 무하중 UNDEFINED 케이스에는 LW 가 없다)."""
     standalone = ax is None
     if standalone:
         fig, ax = plt.subplots(figsize=FIG_SINGLE)
     allv = []
     for key, sty, lab in (("stress_cv", dict(color=GRAY, linestyle="--", marker="s", markerfacecolor="white"),
                            "stress/atom 50/50 split (old · diagonal)"),
-                          ("stress_cv_lw", dict(color=BLACK, linestyle="-", marker="s"), "Love–Weber (full tensor)")):
+                          ("stress_cv_lw", dict(color=BLACK, linestyle="-", marker="s"),
+                           "Love–Weber (particle-contact sym. stress)")):
         pts = _metric_points(all_data, key)
         if pts:
             xs, ys = zip(*pts)

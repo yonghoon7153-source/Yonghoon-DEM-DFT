@@ -1041,6 +1041,8 @@
   접촉 없는 입자 = 0 · 모집단 std/mean · 상 평균/전체 평균) — **규약만** 다르다.
 - 검사 (실패 = 값 키 없이 `stress_lw_status` 에 사유 · 0 으로 안 채움): 열 · 유한값 · 원자 id 짝 · max|F − (Fn+Ft)|/max|F| ≤ 1e-3 · 접촉점 ≤ 1.01 r ·
   c_strs 가 있으면 **전체 virial Σ V σ_LW = Σ c_strs** (접촉점이 지워지는 정확식 → 두 덤프의 프레임 · 힘 부호 · 열 대응) ≤ 1 % (실측 5.0e-5 · 200 배 여유).
+  ⛔ **한정 10-05 (RGL-06 · Codex Q3)**: 이 검사는 대각 셋의 **전역 합** = 전역 부호 · 척도 검사이지 프레임 · 입자 · 상 배분의 대응 증명이 **아니다**
+  (같은 기하 AM_P · SE dimer 의 접촉 힘을 맞바꿔도 오차 1.2e-16 · OK 인데 상 비 0.5 ↔ 1.5) — 출력 `checks.virial_scope` 에 표기 · 계약 `love_weber_checks_v2`.
 - 벽: 바닥 (z − r < 0 · zplane 0) · 판 (z + r > plate_z · mesh 일 때만 — 추정값이면 판 표지 · 벽 제외 통계 = 없음) · 옆면 = x·y 주기 가정 (덱을 읽지 않는다 ·
   옛 벽-RVE 케이스의 옆벽 입자는 표지 밖 — 한정어).
 - 새 키: `stress_lw_status` · `_definition` · `stress_cv_lw` · `stress_ratio_<상>_lw` · `stress_cv_lw_nowall` · `stress_ratio_<상>_lw_nowall` ·

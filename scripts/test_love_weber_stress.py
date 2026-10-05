@@ -10,6 +10,12 @@
   python3 scripts/test_love_weber_stress.py
 
 기대값은 손으로 (또는 독립 구현 `lhs_stress_constriction_audit.per_particle_virials` 로) 셈한다 — 생산 함수를 다시 부르지 않는다.
+
+R 묶음 = 원장 RGL-06 (Codex 10-05 · P2) 반례 — 입력 기하 (위치 · 반경 · 부피 · 주기 길이 · 판 높이 · c_strs) 검증 · 비유한 텐서/VM ·
+영 분모 (평균 VM 0 = 무하중 → UNDEFINED · 0 으로 위장 금지) · 힘 분해 · virial 의 영 척도 분기 · 전역 virial 검사의 증명 범위 (프레임
+대응 증명 아님) · 이름 한정 (입자 접촉력 기반 대칭 응력의 VM · 벽 제외 = 선별 모집단 · 덱 가정 미검증).  반례 입력은 **실제
+`analyze_contacts.load_atoms_raw` · `load_contacts_raw` 로 읽은 CSV** 다 (손으로 만든 결과 dict 아님 · 기하 = Codex
+`probe_lw_independent.py` 그대로: 반경 1 · 중심 간격 1.8 dimer · 접촉점 = 가운데).
 """
 import json
 import math
@@ -74,6 +80,224 @@ def lw(atoms, contacts, tm, plate_z=1.0, src='mesh', box=(None, None), arrays=Fa
     import dem_analysis_core as D
     return D.calc_love_weber_stress(atoms, contacts, tm, plate_z, box_x=box[0], box_y=box[1],
                                     plate_z_source=src, return_arrays=arrays)
+
+
+# ── RGL-06 반례 입력 — CSV 로 써서 실제 파서 (analyze_contacts.load_atoms_raw · load_contacts_raw) 로 읽는다 ──────────
+#   Codex 증거 `evidence_g23/atoms_nan_radius.csv` 의 바이트 그대로 (고립 SE 하나의 반경만 NaN · AM_P dimer 는 정상).
+CODEX_NAN_RADIUS_CSV = ('id,type,x,y,z,radius,c_strs[1],c_strs[2],c_strs[3]\n'
+                        '1,1,2,2,2,1,0,0,-0.9\n'
+                        '2,1,2,2,3.8,1,0,0,-0.9\n'
+                        '3,2,8,2,8,nan,0,0,0\n')
+CODEX_EVIDENCE = os.path.join(ROOT, 'docs', 'reviews', 'codex_rint_g1_lhs_network_review_evidence_20261005', 'evidence_g23')
+
+
+def _fmt(v):
+    return repr(float(v)) if isinstance(v, float) else str(v)
+
+
+def write_atoms_csv(path, rows, cstr=True):
+    """rows = (id, type, x, y, z, r[, (c1, c2, c3)]) — parse_liggghts 가 쓰는 atoms.csv 꼴 (c_strs = 응력 × 부피 · LIGGGHTS 단위)."""
+    with open(path, 'w') as fh:
+        fh.write('id,type,x,y,z,radius' + (',c_strs[1],c_strs[2],c_strs[3]' if cstr else '') + '\n')
+        for r in rows:
+            vals = list(r[:6]) + (list(r[6]) if cstr else [])
+            fh.write(','.join(_fmt(v) for v in vals) + '\n')
+
+
+def crow(i, j, f, cp, fn=None, ft=None):
+    """접촉 행 — f = id1 이 받는 전체 힘 · fn 기본 = f · ft 기본 = f − fn (따로 주면 F ≠ Fn + Ft 인 깨진 열을 만들 수 있다)."""
+    fn = f if fn is None else fn
+    ft = tuple(f[k] - fn[k] for k in range(3)) if ft is None else ft
+    return (i, j, f, fn, ft, cp)
+
+
+def write_contacts_csv(path, rows):
+    """rows = crow(…) — load_contacts_raw 가 읽는 열 (fx·fy·fz · cp_* 포함 = c_cpl 26 열 덤프의 CSV)."""
+    with open(path, 'w') as fh:
+        fh.write('id1,id2,fn_x,fn_y,fn_z,ft_x,ft_y,ft_z,contact_area,delta,fx,fy,fz,cp_x,cp_y,cp_z\n')
+        for i, j, f, fn, ft, cp in rows:
+            fh.write(','.join(_fmt(v) for v in [i, j, *fn, *ft, 1e-8, 1e-6, *f, *cp]) + '\n')
+
+
+def load_pair(tmp, name, atoms, contacts, cstr=True):
+    """atoms = 행 목록 또는 CSV 문자열 그대로 → (atoms_raw, contacts_raw) — 웹앱 접촉 단계와 같은 파서."""
+    import analyze_contacts as AC
+    d = os.path.join(tmp, name)
+    os.makedirs(d, exist_ok=True)
+    ap, cpth = os.path.join(d, 'atoms.csv'), os.path.join(d, 'contacts.csv')
+    if isinstance(atoms, str):
+        with open(ap, 'w') as fh:
+            fh.write(atoms)
+    else:
+        write_atoms_csv(ap, atoms, cstr=cstr)
+    write_contacts_csv(cpth, contacts)
+    a, _ = AC.load_atoms_raw(ap)
+    c, _ = AC.load_contacts_raw(cpth)
+    return a, c
+
+
+def dimer_atoms(i0, t, x, force, z0=2.0, r=1.0, cstr=True):
+    """Codex dimer — 반경 r · 중심 간격 1.8 r · c_strs = 50/50 손값 (−0.9 · 힘 · r) — 아래 입자가 id i0."""
+    c = (0.0, 0.0, -0.9 * force * r) if cstr else None
+    return [(i0, t, x, 2.0, z0, r) + ((c,) if cstr else ()), (i0 + 1, t, x, 2.0, z0 + 1.8 * r, r) + ((c,) if cstr else ())]
+
+
+def dimer_contact(i0, x, force, z0=2.0, r=1.0, **kw):
+    """id1 = 아래 입자 (z0) 가 위 입자에게 아래로 밀린다 (F = (0, 0, −force)) · 접촉점 = 가운데."""
+    return crow(i0, i0 + 1, (0.0, 0.0, -force), (x, 2.0, z0 + 0.9 * r), **kw)
+
+
+def rgl06(D):
+    """원장 RGL-06 (Codex 10-05 · P2) — 옛 코드는 아래 반례에서 거짓 OK · 거짓 0 · 거짓 FAILED 를 낸다."""
+    TM = {1: 'AM_P', 2: 'SE'}
+    st = lambda r: str(r.get('status', ''))           # noqa: E731
+    nostats = lambda r: r.get('vm_cv') is None and not r.get('type_stress') and 'tensor' not in r   # noqa: E731
+    tmp = tempfile.mkdtemp(prefix='lw_rgl06_')
+    try:
+        # R0 반례 입력이 Codex 증거 CSV 와 같은 바이트인지 (증거 묶음이 리포에 있을 때)
+        ev = os.path.join(CODEX_EVIDENCE, 'atoms_nan_radius.csv')
+        if os.path.exists(ev):
+            with open(ev, encoding='utf-8') as fh:
+                same_bytes = fh.read().replace('\r\n', '\n') == CODEX_NAN_RADIUS_CSV
+            chk('R0 반례 CSV = Codex 증거 evidence_g23/atoms_nan_radius.csv 와 같은 내용', same_bytes)
+
+        # R1 ★ 고립 SE 반경 NaN — 옛 코드: status OK · vm_cv 0 · AM_P mean 0.2149 인데 ratio 0 · SE mean NaN 인데 ratio 0
+        a, c = load_pair(tmp, 'r1', CODEX_NAN_RADIUS_CSV, [dimer_contact(1, 2.0, 1.0)])
+        res = lw(a, c, TM, plate_z=20.0, arrays=True)
+        chk('R1 ★ 고립 입자 반경 NaN (실 load_atoms_raw) → FAILED (invalid_input …) · 사유에 반경 — 옛 코드 OK · vm_cv 0 · 비 0',
+            st(res).startswith('FAILED (invalid_input') and 'radius' in st(res), st(res))
+        chk('R1b 정상 통계 발행 안 함 — vm_cv None · type_stress 없음 · 텐서 없음 (NaN > 0 → "0" 분기 차단)', nostats(res),
+            f"vm_cv {res.get('vm_cv')} · {res.get('type_stress')}")
+
+        # R2 판 높이 — mesh 판이면 plate_z 는 유한 · 바닥 (z = 0) 위여야 한다 (옛 코드: NaN 이면 판 접촉 0 · 벽 제외 통계를 만들고 OK)
+        a, c = load_pair(tmp, 'r2', dimer_atoms(1, 1, 2.0, 1.0), [dimer_contact(1, 2.0, 1.0)])
+        res = lw(a, c, TM, plate_z=float('nan'), src='mesh')
+        chk('R2 ★ plate_z NaN · source mesh → FAILED (invalid_input: plate_z …) · 값 없음 — 옛 코드 OK · 판 접촉 0 · 벽 제외 요약',
+            st(res).startswith('FAILED (invalid_input') and 'plate_z' in st(res) and nostats(res)
+            and res.get('vm_cv_nowall') is None, st(res))
+        bad_pz = {pz: st(lw(a, c, TM, plate_z=pz, src='mesh')) for pz in (None, float('inf'), 0.0, -1.0)}
+        chk('R2b plate_z None · inf · 0 · 음수 (mesh) → 전부 FAILED (invalid_input: plate_z …)',
+            all(s.startswith('FAILED (invalid_input') and 'plate_z' in s for s in bad_pz.values()), str(bad_pz))
+        res = lw(a, c, TM, plate_z=float('nan'), src='estimated_center')
+        chk('R2c 판 높이를 안 쓰는 경로 (source = estimated_center) 는 plate_z 를 검사하지 않는다 → OK · 판 표지 unavailable',
+            st(res) == 'OK' and 'unavailable' in str(res.get('wall', {}).get('plate_flag')), st(res))
+
+        # R3 ★ 힘 분해의 영 척도 — F = 0 인데 Fn + Ft = (0, 0, −1): 옛 코드 오차 0 · OK
+        a, c = load_pair(tmp, 'r3', dimer_atoms(1, 1, 2.0, 1.0, cstr=False),
+                         [crow(1, 2, (0.0, 0.0, 0.0), (2.0, 2.0, 2.9), fn=(0.0, 0.0, -1.0), ft=(0.0, 0.0, 0.0))], cstr=False)
+        res = lw(a, c, TM, plate_z=20.0)
+        ck = res.get('checks', {})
+        chk('R3 ★ F = 0 · Fn+Ft = (0, 0, −1) → FAILED (force_columns …) — 영 척도 분기 (척도 0 인데 잔차 > 0) · 옛 코드 오차 0 · OK',
+            st(res).startswith('FAILED (force_columns') and nostats(res), st(res))
+        chk('R3b 검사 기록 = 절대 잔차 1 · 상대 차 None (0 분모 — inf 를 JSON 에 안 쓴다) · zero_scale 표지',
+            close(ck.get('force_decomp_abs'), 1.0) and ck.get('force_decomp_rel') is None and ck.get('force_decomp_zero_scale') is True, str(ck))
+
+        # R4 ★ 진짜 무하중 — F = 0 ∧ c_strs = 0: 옛 코드 virial 오차 ∞ · FAILED (거짓 실패)
+        a, c = load_pair(tmp, 'r4', dimer_atoms(1, 1, 2.0, 0.0), [dimer_contact(1, 2.0, 0.0)])
+        res = lw(a, c, TM, plate_z=20.0)
+        ck = res.get('checks', {})
+        chk('R4 ★ F = 0 ∧ c_strs = 0 → virial 검사 통과 (두 합 모두 정확히 0 · 상대 차 0 · zero_scale) — 옛 코드 inf · FAILED',
+            ck.get('virial_status') == 'checked' and ck.get('virial_total_rel') == 0.0 and ck.get('virial_zero_scale') is True, str(ck))
+        chk('R4b 무하중 → status UNDEFINED (zero_load …) · CV · 상 비 = 0/0 미정의 → 값 없음 (0 · OK 로 위장 안 함)',
+            st(res).startswith('UNDEFINED (zero_load') and nostats(res), st(res))
+        a, c = load_pair(tmp, 'r4c', dimer_atoms(1, 1, 2.0, 0.0, cstr=False), [dimer_contact(1, 2.0, 0.0)], cstr=False)
+        res = lw(a, c, TM, plate_z=20.0)
+        chk('R4c c_strs 없는 무하중도 UNDEFINED (옛 코드: OK · vm_cv 0 · 비 0 = 거짓 0)', st(res).startswith('UNDEFINED (zero_load')
+            and nostats(res) and res.get('checks', {}).get('virial_total_rel') is None, st(res))
+
+        # R5 전역 virial 1 % 검사의 증명 범위 (Q3) — 같은 기하 AM_P · SE dimer 의 접촉 힘 1 · 3 을 맞바꿔도 합은 같다
+        atoms = dimer_atoms(1, 1, 2.0, 1.0) + dimer_atoms(3, 2, 7.0, 3.0)
+        a, c = load_pair(tmp, 'r5ok', atoms, [dimer_contact(1, 2.0, 1.0), dimer_contact(3, 7.0, 3.0)])
+        good = lw(a, c, TM, plate_z=20.0)
+        a, c = load_pair(tmp, 'r5sw', atoms, [dimer_contact(1, 2.0, 3.0), dimer_contact(3, 7.0, 1.0)])
+        bad = lw(a, c, TM, plate_z=20.0)
+        chk('R5 전역 검사는 맞바꾼 접촉 힘을 못 잡는다 (둘 다 OK · virial 1e-15 미만 · AM_P 비 0.5 ↔ 1.5) — 이 한계를 기록으로 남긴다',
+            st(good) == 'OK' and st(bad) == 'OK' and bad['checks']['virial_total_rel'] < 1e-15
+            and close(good['type_stress']['AM_P']['ratio'], 0.5) and close(bad['type_stress']['AM_P']['ratio'], 1.5),
+            f"{st(good)} · {st(bad)}")
+        vs = str(bad.get('checks', {}).get('virial_scope', ''))
+        chk('R5b ★ 검사 범위 표기 — checks.virial_scope = 전역 대각 합 · 부호/척도 검사 · 프레임 대응 증명 아님',
+            'global' in vs and '전역' in vs and '프레임' in vs and '아님' in vs, vs)
+        q = str(bad.get('quantity', ''))
+        chk('R5c ★ 이름 한정 — quantity = 입자 접촉력 기반 대칭 응력의 VM · kinetic · 벽 · couple 미포함 (전체 동적 응력 아님)',
+            '입자 접촉력' in q and '대칭' in q and 'kinetic' in q and 'couple' in q and '아님' in q, q)
+        au = str(bad.get('assumptions_unverified', ''))
+        chk('R5d ★ 덱 가정 미검증 표기 — 바닥 z = 0 · 평면 mesh 판 · x·y 주기 · 함수가 덱을 읽지 않는다',
+            'z = 0' in au and 'mesh' in au and '주기' in au and '검증' in au, au)
+        chk('R5e 계약 표지 = love_weber_checks_v2 (입력 검증 · 영 척도 · UNDEFINED 이후 세대 — 옛 결과와 구별)',
+            bad.get('contract') == 'love_weber_checks_v2', str(bad.get('contract')))
+
+        # R6 주기 길이 — 주는 값은 유한 양수여야 한다 (옛 코드: NaN · inf 는 `if L:` 를 통과해 가지가 NaN → c_strs 없으면 OK · vm_cv 0)
+        a, c = load_pair(tmp, 'r6', dimer_atoms(1, 1, 2.0, 1.0, cstr=False), [dimer_contact(1, 2.0, 1.0)], cstr=False)
+        bad_box = {repr(b): st(lw(a, c, TM, plate_z=20.0, box=b)) for b in
+                   ((float('nan'), 5.0), (5.0, float('inf')), (0.0, 5.0), (-5.0, 5.0))}
+        chk('R6 ★ 주기 길이 NaN · inf · 0 · 음수 → FAILED (invalid_input: box …) — 옛 코드 NaN 은 OK · vm_cv 0',
+            all(s.startswith('FAILED (invalid_input') and 'box_' in s for s in bad_box.values()), str(bad_box))
+        chk('R6b 상자를 안 주면 (None) 검사하지 않는다 → OK (비주기 호출부 호환)', st(lw(a, c, TM, plate_z=20.0, box=(None, None))) == 'OK')
+
+        # R7 · R8 원자 위치 · 반경 — 접촉 없는 입자도 모집단 · 벽 표지에 들어간다
+        base = dimer_atoms(1, 1, 2.0, 1.0, cstr=False)
+        for tag, extra, word in (('R7', (3, 2, float('nan'), 2.0, 8.0, 1.0), 'position'),
+                                 ('R7b', (3, 2, 8.0, 2.0, float('inf'), 1.0), 'position'),
+                                 ('R8', (3, 2, 8.0, 2.0, 8.0, 0.0), 'radius'),
+                                 ('R8b', (3, 2, 8.0, 2.0, 8.0, -1.0), 'radius')):
+            a, c = load_pair(tmp, tag, base + [extra], [dimer_contact(1, 2.0, 1.0)], cstr=False)
+            res = lw(a, c, TM, plate_z=20.0)
+            chk(f'{tag} 고립 입자 {word} 무효 ({extra[2:6]}) → FAILED (invalid_input: …{word}…) · 값 없음',
+                st(res).startswith('FAILED (invalid_input') and word in st(res) and nostats(res), st(res))
+        a, c = load_pair(tmp, 'r8c', [(1, 1, 2.0, 2.0, 2.0, -1.0), (2, 1, 2.0, 2.0, 3.8, -1.0)],
+                         [dimer_contact(1, 2.0, 1.0)], cstr=False)
+        res = lw(a, c, TM, plate_z=20.0)
+        chk('R8c 접촉한 두 입자 반경 음수 → FAILED (invalid_input: radius) — 옛 코드는 |b|/r 가 음수라 접촉점 검사를 통과해 OK',
+            st(res).startswith('FAILED (invalid_input') and 'radius' in st(res), st(res))
+
+        # R9 c_strs 일부 결측 · 비유한 — 옛 코드: 한 입자의 c_strs 결측이 전 입자 virial 검사를 조용히 끈다 ("no c_strs" 로 위장)
+        a, c = load_pair(tmp, 'r9', dimer_atoms(1, 1, 2.0, 1.0) + [(3, 2, 8.0, 2.0, 8.0, 1.0, (float('nan'), 0.0, 0.0))],
+                         [dimer_contact(1, 2.0, 1.0)])
+        res = lw(a, c, TM, plate_z=20.0)
+        chk('R9 ★ 한 입자 c_strs NaN (반경 정상) → FAILED (invalid_input: c_strs …) — 옛 코드 virial unavailable · OK',
+            st(res).startswith('FAILED (invalid_input') and 'c_strs' in st(res) and nostats(res), st(res))
+        a, c = load_pair(tmp, 'r9b', [(1, 1, 2.0, 2.0, 2.0, 1.0, (0.0, float('nan'), -0.9)), (2, 1, 2.0, 2.0, 3.8, 1.0, (0.0, 0.0, -0.9))],
+                         [dimer_contact(1, 2.0, 1.0)])
+        res = lw(a, c, TM, plate_z=20.0)
+        chk('R9b c_strs[2] 만 NaN → FAILED (invalid_input: c_strs …) — 옛 코드는 virial_mismatch 라는 틀린 사유',
+            st(res).startswith('FAILED (invalid_input') and 'c_strs' in st(res), st(res))
+
+        # R10 비유한 텐서/VM — 유한 입력이라도 넘침 (VM² overflow) 이면 정상 통계를 내지 않는다 (옛 코드: mean inf → cv NaN · OK)
+        a, c = load_pair(tmp, 'r10', dimer_atoms(1, 1, 2.0, 1.0, cstr=False), [dimer_contact(1, 2.0, 1e308)], cstr=False)
+        res = lw(a, c, TM, plate_z=20.0)
+        chk('R10 ★ VM 넘침 (F 1e308) → FAILED (non_finite …) · 값 없음 — 옛 코드 OK · cv NaN', st(res).startswith('FAILED (non_finite')
+            and nostats(res), st(res))
+
+        # R11 벽 제외 모집단의 영 분모 — 전체는 하중이 있는데 벽 안 닿은 입자는 전부 VM 0 (옛 코드: vm_cv_nowall 0 · 비 0 = 거짓 0)
+        atoms = [(1, 1, 2.0, 2.0, 0.9, 1.0), (2, 1, 3.8, 2.0, 0.9, 1.0), (3, 2, 8.0, 8.0, 5.0, 1.0)]   # 1 · 2 = 바닥 접촉 · 3 = 고립
+        a, c = load_pair(tmp, 'r11', atoms, [crow(1, 2, (-1.0, 0.0, 0.0), (2.9, 2.0, 0.9))], cstr=False)
+        res = lw(a, c, TM, plate_z=20.0)
+        chk('R11 ★ 전체 OK · 벽 제외 모집단 평균 VM 0 → vm_cv_nowall None · 상 비 None · nowall_status UNDEFINED — 옛 코드 0 · 0',
+            st(res) == 'OK' and res.get('vm_cv_nowall') is None and res.get('type_stress_nowall') is None
+            and str(res.get('nowall_status', '')).startswith('UNDEFINED'), f"{st(res)} · {res.get('vm_cv_nowall')} · {res.get('nowall_status')}")
+        a, c = load_pair(tmp, 'r11b', atoms[:2], [crow(1, 2, (-1.0, 0.0, 0.0), (2.9, 2.0, 0.9))], cstr=False)
+        res = lw(a, c, TM, plate_z=20.0)
+        chk('R11b 모든 입자가 벽 접촉 → nowall_status NOT_COMPUTED (empty_population) · 벽 제외 값 없음',
+            st(res) == 'OK' and res.get('vm_cv_nowall') is None and 'empty_population' in str(res.get('nowall_status')), str(res.get('nowall_status')))
+
+        # R12 정상 침대의 메타 — 벽 제외 = 선별 모집단 (결측 벽 힘 복원 아님) · nowall_status OK
+        rP, rS = 0.006, 0.001
+        zP = rP - 1e-5
+        zS = [zP + rP + rS - 1e-5]
+        zS += [zS[0] + 2 * rS - 1e-5, zS[0] + 4 * rS - 2e-5]
+        pz = zS[2] + rS - 2e-5
+        atoms = [(1, 1, 0.02, 0.02, zP, rP)] + [(2 + k, 2, 0.02, 0.02, zS[k], rS) for k in range(3)] + [(5, 2, 0.03, 0.03, 0.01, rS)]
+        zz, rr_ = [zP] + zS, [rP, rS, rS, rS]
+        cs = [crow(k + 1, k + 2, (0.0, 0.0, -1e-3 * (4 - k)), (0.02, 0.02, zz[k] + rr_[k] - 0.5e-5)) for k in range(3)]
+        a, c = load_pair(tmp, 'r12', atoms, cs, cstr=False)
+        res = lw(a, c, TM, plate_z=pz)
+        ns = str(res.get('wall', {}).get('nowall_scope', ''))
+        chk('R12 정상 벽 침대 — status OK · nowall_status OK · wall.nowall_scope = 선별 모집단 · 결측 벽 힘 복원 아님',
+            st(res) == 'OK' and res.get('nowall_status') == 'OK' and '선별 모집단' in ns and '복원' in ns and '아님' in ns,
+            f"{st(res)} · {res.get('nowall_status')} · {ns}")
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
 
 
 def main():
@@ -287,6 +511,9 @@ def main():
         and 'unavailable' in str(res.get('wall', {}).get('plate_flag')) and res.get('wall', {}).get('n_floor') == 1,
         str(res.get('wall')))
 
+    # ── R RGL-06 반례 (Codex 10-05) — 입력 검증 · 영 분모 · 영 척도 · 검사 범위 · 이름 한정 ─────────────────────
+    rgl06(D)
+
     # ── L12 real_14 기준 상태 — 독립 구현 (lhs_stress_constriction_audit) 과 입자마다 대조 ─────────
     try:
         import lhs_stress_constriction_audit as AU
@@ -328,6 +555,16 @@ def main():
                 wb = res['wall']
                 chk('L12e 벽 표지 — 바닥 2214 · 판 1104 (z − r < 0 · z + r > plate_z · 실측)', wb.get('n_floor') == 2214 and wb.get('n_plate') == 1104,
                     f"{wb.get('n_floor')} · {wb.get('n_plate')}")
+                rn = res.get('type_stress_nowall') or {}
+                chk('L12f ★ RGL-06 수정 뒤에도 real_14 값 그대로 — cv 120.7 · AM_P 2.737 · AM_S 2.341 · SE 0.981 · 벽 제외 cv 122.9 · AM_P 3.016',
+                    round(res['vm_cv'], 1) == 120.7 and round(r['AM_P']['ratio'], 3) == 2.737 and round(r['AM_S']['ratio'], 3) == 2.341
+                    and round(r['SE']['ratio'], 3) == 0.981 and round(res.get('vm_cv_nowall') or -1, 1) == 122.9
+                    and round((rn.get('AM_P') or {}).get('ratio', -1), 3) == 3.016,
+                    f"cv {res['vm_cv']} · {r} · nowall {res.get('vm_cv_nowall')} · {rn}")
+                chk('L12g real_14 메타 — 계약 v2 · nowall_status OK · 검사 범위 = 전역 (프레임 대응 증명 아님) · 영 척도 아님',
+                    res.get('contract') == 'love_weber_checks_v2' and res.get('nowall_status') == 'OK'
+                    and '전역' in str(res['checks'].get('virial_scope')) and res['checks'].get('virial_zero_scale') is False
+                    and res['checks'].get('force_decomp_zero_scale') is False, f"{res.get('contract')} · {res.get('nowall_status')} · {res['checks']}")
                 rs_ = ', '.join('%s %.3f' % (k, v['ratio']) for k, v in r.items())
                 rn_ = ', '.join('%s %.3f' % (k, v['ratio']) for k, v in (res['type_stress_nowall'] or {}).items())
                 wf_ = ', '.join('%s %.3f' % (k, v['frac_wall']) for k, v in wb['by_type'].items())
@@ -341,7 +578,7 @@ def main():
     # ── L13 생산 CLI (analyze_contacts.py = 웹앱 cmd) — 새 키 · 표 · 옛 키 불변 ──────────────────
     tmp = tempfile.mkdtemp(prefix='lw_cli_')
     try:
-        def bed(name, with_lw=True, cstr_scale=1.0):
+        def bed(name, with_lw=True, cstr_scale=1.0, fz=-2e-3):
             dd_ = os.path.join(tmp, name)
             out = os.path.join(dd_, 'out')
             os.makedirs(out)
@@ -354,7 +591,7 @@ def main():
             rows_c, cstr = [], {a[0]: [0.0, 0.0, 0.0] for a in atoms_}
             for k in range(len(atoms_) - 1):
                 lo, hi = atoms_[k], atoms_[k + 1]
-                fzz = -2e-3
+                fzz = fz
                 cpz_ = lo[4] + lo[5] - 0.5 * (lo[5] + hi[5] - (hi[4] - lo[4]))
                 rows_c.append((lo[0], hi[0], fzz, cpz_))
                 wv = -0.5 * (lo[4] - hi[4]) * fzz * cstr_scale
@@ -415,6 +652,30 @@ def main():
         chk('L13h 원자 덤프 c_strs 와 접촉 덤프가 안 맞으면 (1.5 배) → FAILED 상태 · LW 값 없음 · 옛 키는 그대로',
             pr2.returncode == 0 and str(met2.get('stress_lw_status', '')).startswith('FAILED') and 'stress_cv_lw' not in met2
             and isinstance(met2.get('stress_cv'), (int, float)), str(met2.get('stress_lw_status')))
+        # RGL-06 — 메타 키 · 입력 출처 · 무하중 상태가 CLI (웹앱 접촉 단계) 를 지나 full_metrics.json 에 그대로 남는다
+        import hashlib
+
+        def _dg(path):
+            with open(path, 'rb') as fh:
+                return hashlib.sha256(fh.read()).hexdigest()[:16]
+        chk('L13i ★ RGL-06 메타 키 — 계약 v2 · quantity (입자 접촉력 대칭 응력 VM) · 덱 가정 미검증 · virial 범위 (전역) · nowall_status OK',
+            met.get('stress_lw_contract') == 'love_weber_checks_v2' and '입자 접촉력' in str(met.get('stress_lw_quantity'))
+            and '검증' in str(met.get('stress_lw_assumptions_unverified')) and '전역' in str(met.get('stress_lw_check_virial_scope'))
+            and met.get('stress_lw_nowall_status') == 'OK' and '선별 모집단' in str(met.get('stress_lw_nowall_scope')),
+            str({k: v for k, v in met.items() if k.startswith('stress_lw_') and 'frac' not in k}))
+        dd_lw = os.path.join(tmp, 'lw')
+        chk('L13j 입력 출처 — LW 가 읽은 CSV 의 sha256 앞 16 자 (망 단계 network_provenance.json input_digests 와 같은 꼴) · '
+            'TIMESTEP 은 CSV 에 없음 표기',
+            met.get('stress_lw_input_digest_atoms') == _dg(os.path.join(dd_lw, 'atoms.csv'))
+            and met.get('stress_lw_input_digest_contacts') == _dg(os.path.join(dd_lw, 'contacts.csv'))
+            and 'unavailable' in str(met.get('stress_lw_timestep')),
+            str({k: met.get(k) for k in ('stress_lw_input_digest_atoms', 'stress_lw_input_digest_contacts', 'stress_lw_timestep')}))
+        pr3, met3, summ3 = bed('zero', fz=0.0)
+        chk('L13k ★ 무하중 침대 (접촉 힘 0 · c_strs 0) → stress_lw_status UNDEFINED (zero_load …) · LW 값 키 없음 · 표 줄 없음 · 옛 키 그대로',
+            pr3.returncode == 0 and str(met3.get('stress_lw_status', '')).startswith('UNDEFINED (zero_load') and 'stress_cv_lw' not in met3
+            and not any(k.startswith('stress_ratio_') and k.endswith('_lw') for k in met3)
+            and 'Stress CV — Love–Weber (%)' not in summ3 and 'stress_cv' in met3,
+            f"rc {pr3.returncode} · {met3.get('stress_lw_status')} · {(pr3.stderr or '')[-300:]}")
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
 

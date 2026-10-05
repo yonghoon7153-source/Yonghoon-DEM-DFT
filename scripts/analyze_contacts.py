@@ -7,6 +7,7 @@ Usage:
     python analyze_contacts.py results/atoms.csv results/contacts.csv -o ./results -t "1:AM,2:SE" -s 1000
 """
 import argparse
+import hashlib
 import os
 import sys
 import json
@@ -18,6 +19,18 @@ sys.path.insert(0, os.path.dirname(__file__))
 from dem_analysis_core import run_full_analysis
 import type_map_resolve as _tmr
 from metrics_json import json_default as _json_default   # numpy → 파이썬 숫자 (옛 default=str 은 '412' 문자열 — LHS-24 (a))
+
+
+def _file_digest(path, chunk=1 << 20):
+    """입력 파일 sha256 앞 16 자 — webapp/pipeline_service.file_digest 와 같은 꼴 (scripts 는 webapp 을 import 하지 않는다)."""
+    h = hashlib.sha256()
+    try:
+        with open(path, 'rb') as f:
+            for b in iter(lambda: f.read(chunk), b''):
+                h.update(b)
+        return h.hexdigest()[:16]
+    except OSError:
+        return ''
 
 
 def load_atoms_raw(csv_path):
@@ -490,12 +503,22 @@ def save_results(results, atoms_raw, contacts_raw, df_atom, df_contact,
             metrics[f'stress_ratio_{tn}'] = sv['ratio']
         metrics['stress_z_layer_cv'] = stress['z_layer_cv']
     # ④b Love–Weber (J20-s · 1저자 비준 10-04) — 새 키만 더한다.  상태가 OK 가 아니면 값 키를 쓰지 않는다 (0 으로 안 채움).
+    #   RGL-06 (10-05): 상태는 OK · NOT_COMPUTED · FAILED · UNDEFINED (평균 VM 0 = 무하중 — CV · 비 미정의) — OK 일 때만 값 키.
+    #   메타 (계약 · 양의 이름 한정 · 덱 가정 미검증 · 입력 출처) 는 상태와 무관하게 남긴다 — 소비자가 계약 v2 로 옛 결과와 가른다.
     stress_lw = results.get('stress_lw')
     if stress_lw:
         metrics['stress_lw_status'] = stress_lw['status']
         metrics['stress_lw_definition'] = stress_lw['definition']
+        for mk in ('contract', 'quantity', 'assumptions_unverified'):
+            if stress_lw.get(mk) is not None:
+                metrics[f'stress_lw_{mk}'] = stress_lw[mk]
         for ck, cv_ in (stress_lw.get('checks') or {}).items():
             metrics[f'stress_lw_check_{ck}'] = cv_
+        _pv = stress_lw.get('provenance') or {}
+        if _pv:
+            metrics['stress_lw_input_digest_atoms'] = _pv.get('atoms_csv_digest')
+            metrics['stress_lw_input_digest_contacts'] = _pv.get('contacts_csv_digest')
+            metrics['stress_lw_timestep'] = _pv.get('timestep')
         if stress_lw['status'] == 'OK':
             metrics['stress_cv_lw'] = stress_lw['vm_cv']
             for tn, sv in stress_lw['type_stress'].items():
@@ -504,8 +527,12 @@ def save_results(results, atoms_raw, contacts_raw, df_atom, df_contact,
                 metrics['stress_cv_lw_nowall'] = stress_lw['vm_cv_nowall']
                 for tn, sv in (stress_lw.get('type_stress_nowall') or {}).items():
                     metrics[f'stress_ratio_{tn}_lw_nowall'] = sv['ratio']
+            if stress_lw.get('nowall_status') is not None:
+                metrics['stress_lw_nowall_status'] = stress_lw['nowall_status']
             _w = stress_lw['wall']
             metrics['stress_lw_wall_scope'] = _w['scope']
+            if _w.get('nowall_scope') is not None:
+                metrics['stress_lw_nowall_scope'] = _w['nowall_scope']
             metrics['stress_lw_plate_flag'] = _w['plate_flag']
             metrics['stress_lw_n_wall_floor'] = _w['n_floor']
             if _w['n_plate'] is not None:
@@ -960,6 +987,13 @@ def main():
 
     print("\n=== Full Analysis ===")
     results = run_full_analysis(atoms_raw, contacts_raw, type_map, args.scale, args.output)
+    #  RGL-06 ⑤ — Love–Weber 입력 출처: 이 단계가 실제로 읽은 CSV 의 sha256 앞 16 자 (망 단계 network_provenance.json 의
+    #  input_digests 와 같은 꼴 → 두 단계가 같은 입력을 읽었는지 맞댈 수 있다).  원 덤프의 TIMESTEP 은 parse_liggghts 가 CSV 로
+    #  옮기며 버린다 → 기록할 수 없다 (원자 · 접촉 덤프가 같은 프레임인지는 여전히 확인되지 않는다 · 전역 virial 은 부호 · 척도만 본다).
+    if isinstance(results.get('stress_lw'), dict):
+        results['stress_lw']['provenance'] = {
+            'atoms_csv_digest': _file_digest(args.atoms_csv), 'contacts_csv_digest': _file_digest(args.contacts_csv),
+            'timestep': 'unavailable (원 덤프 TIMESTEP 은 parse_liggghts 가 CSV 로 옮기며 버린다 — 두 덤프의 같은 프레임 미확인)'}
 
     print("\nSaving...")
     save_results(results, atoms_raw, contacts_raw, df_atom, df_contact,

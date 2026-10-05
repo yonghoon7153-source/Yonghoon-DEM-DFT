@@ -1978,6 +1978,13 @@ def normalize_network_summary_layout(tables, metrics):
                 _fr.append(f'{p} {100 * x:.1f}')
         _lw_rows.append(('벽 접촉 입자 (%) — 바닥 · 판', ' · '.join(_fr) if _fr else '—'))
         _st = metrics.get('stress_lw_status') if metrics else None
+        #  RGL-06 (10-05) — 계약 v2 표지 (stress_lw_contract) 가 없는 OK = 입력 검증 전 세대 (10-04 판): 반경 NaN · 판 높이 NaN ·
+        #  무하중이 거짓 OK · 거짓 0 일 수 있었다 → 값은 그대로 보여 주되 상태 줄이 말한다.  UNDEFINED (무하중) 는 사유 그대로.
+        if _st == 'OK' and not metrics.get('stress_lw_contract'):
+            _st = 'OK — 입력 검증 전 세대 (계약 v1 · RGL-06 이전 — 입력 무효 · 무하중이 거짓 OK 일 수 있었다) · 재분석 권장'
+        _nws = metrics.get('stress_lw_nowall_status') if metrics else None
+        if _lw_ok and _nws and _nws != 'OK':              # 벽 제외 줄이 '—' 인 이유 (선별 모집단 비었음 · 평균 VM 0 · mesh 판 없음)
+            _st = f'{_st} · 벽 제외: {_nws}'
         _lw_rows.append(('Love–Weber 상태 (④b · LHS-29)',
                          str(_st) if _st else 'NOT_COMPUTED (재분석 전 케이스 — 접촉 단계 재실행 필요)'))
         _anchor = next((a for a in ('σ_SE/σ_mean', 'σ_AM_S/σ_mean', 'σ_AM_P/σ_mean', 'Stress CV(%)', '── 응력 ──')
@@ -2215,7 +2222,8 @@ _PAPER_SECTION_MAP = {
     '── AM-AM 접촉 역학 ──':
         '── AM-AM 접촉 역학 (AM-AM contact mechanics) ──',
     '── 응력 ──':
-        '── 응력 분포 (Particle stress — von Mises · two conventions: LIGGGHTS stress/atom 50/50 split vs Love–Weber) ──',
+        '── 응력 분포 (Particle stress — von Mises · two conventions: LIGGGHTS stress/atom 50/50 split vs '
+        'Love–Weber particle-contact-force symmetric stress) ──',
     '── Stage E (literature-grounded σ_grain corrections) ──':
         '── Stage E · σ_grain 보정 (Stage E — σ_grain corrections; model assumptions, not literature values) ──',
     '── Cell-level ASR (Ohm slab: R = L_cathode / σ) ──':
@@ -2346,26 +2354,30 @@ _PAPER_LABEL_MAP = {
         '⟨σ_VM⟩_AM_S / ⟨σ_VM⟩_all — stress/atom 50/50 split, diagonal only (size-biased)',
     'σ_SE/σ_mean':
         '⟨σ_VM⟩_SE / ⟨σ_VM⟩_all — stress/atom 50/50 split, diagonal only (size-biased)',
+    #  RGL-06 (10-05 · Codex Q3) — 이름 한정: 입자 접촉력 기반 대칭 응력의 VM (kinetic · 벽 · couple 미포함 — 전체 동적 응력 아님) ·
+    #  벽 제외 = 선별 모집단 (결측 벽 힘 복원 아님) · 전역 virial = 부호/척도 검사 (프레임 대응 증명 아님).  옛 'full tensor' 표기는 뺐다.
     'Stress CV — Love–Weber (%)':
-        'Particle-stress CV(σ_VM) — Love–Weber (contact-point branch vectors, full tensor) (%)',
+        'Particle-stress CV(σ_VM) — Love–Weber symmetric particle-contact-force stress (no kinetic · wall · couple terms) (%)',
     'σ_AM_P/σ_mean — Love–Weber':
-        '⟨σ_VM⟩_AM_P / ⟨σ_VM⟩_all — Love–Weber',
+        '⟨σ_VM⟩_AM_P / ⟨σ_VM⟩_all — Love–Weber (particle-contact forces only)',
     'σ_AM_S/σ_mean — Love–Weber':
-        '⟨σ_VM⟩_AM_S / ⟨σ_VM⟩_all — Love–Weber',
+        '⟨σ_VM⟩_AM_S / ⟨σ_VM⟩_all — Love–Weber (particle-contact forces only)',
     'σ_SE/σ_mean — Love–Weber':
-        '⟨σ_VM⟩_SE / ⟨σ_VM⟩_all — Love–Weber',
+        '⟨σ_VM⟩_SE / ⟨σ_VM⟩_all — Love–Weber (particle-contact forces only)',
     'Stress CV — Love–Weber · 벽 접촉 제외 (%)':
-        'Particle-stress CV(σ_VM) — Love–Weber, wall-contact particles excluded (%)',
+        'Particle-stress CV(σ_VM) — Love–Weber, selected population: wall-contact particles excluded (wall forces not restored) (%)',
     'σ_AM_P/σ_mean — Love–Weber · 벽 접촉 제외':
-        '⟨σ_VM⟩_AM_P / ⟨σ_VM⟩_all — Love–Weber, wall-contact particles excluded',
+        '⟨σ_VM⟩_AM_P / ⟨σ_VM⟩_all — Love–Weber, selected population: wall-contact particles excluded',
     'σ_AM_S/σ_mean — Love–Weber · 벽 접촉 제외':
-        '⟨σ_VM⟩_AM_S / ⟨σ_VM⟩_all — Love–Weber, wall-contact particles excluded',
+        '⟨σ_VM⟩_AM_S / ⟨σ_VM⟩_all — Love–Weber, selected population: wall-contact particles excluded',
     'σ_SE/σ_mean — Love–Weber · 벽 접촉 제외':
-        '⟨σ_VM⟩_SE / ⟨σ_VM⟩_all — Love–Weber, wall-contact particles excluded',
+        '⟨σ_VM⟩_SE / ⟨σ_VM⟩_all — Love–Weber, selected population: wall-contact particles excluded',
     '벽 접촉 입자 (%) — 바닥 · 판':
-        'Wall-contact particles per phase (%) — floor · platen (wall forces absent from both conventions; Love–Weber flag)',
+        'Wall-contact particles per phase (%) — floor · platen (wall forces absent from both conventions; '
+        'deck geometry assumed, not verified)',
     'Love–Weber 상태 (④b · LHS-29)':
-        'Love–Weber stress status (checks: columns · F = Fn + Ft · contact point · total virial vs c_strs)',
+        'Love–Weber stress status (input checks · F = Fn + Ft · contact point · global virial sign/scale vs c_strs — '
+        'not a frame-correspondence proof)',
     # Stage E (already paper-style; tightened wording only)
     'σ_ionic — SE size factor':
         'σ_ionic correction — SE-size factor (model assumption)',
@@ -9661,9 +9673,11 @@ def serve_report(case_id):
                 if isinstance(val, (int, float)) and not isinstance(val, bool):
                     L.append(f'- **σ_{ph}/σ_mean (50/50 분할)**: {val:.3f}')
         if metrics.get('stress_lw_status') == 'OK' and isinstance(metrics.get('stress_cv_lw'), (int, float)):
-            #  ④b Love–Weber (접촉점 · 전체 텐서 · J20-s 10-04) — 벽 · 판 접촉 입자의 벽 힘은 두 규약 다 없다
-            L.append(f'- **Stress CV (Love–Weber)**: {metrics["stress_cv_lw"]:.1f}%'
-                     + (f' · 벽 접촉 제외 {metrics["stress_cv_lw_nowall"]:.1f}%'
+            #  ④b Love–Weber (접촉점 · 9 성분 텐서의 대칭부 · J20-s 10-04) — 벽 · 판 접촉 입자의 벽 힘은 두 규약 다 없다.
+            #  RGL-06 이름 한정: 입자 접촉력 기반 대칭 응력의 VM (kinetic · 벽 · couple 미포함) · 벽 제외 = 선별 모집단 (결측 벽 힘 복원 아님)
+            L.append(f'- **Stress CV (Love–Weber · 입자 접촉력 기반 대칭 응력의 VM — kinetic · 벽 · couple 미포함)**: '
+                     f'{metrics["stress_cv_lw"]:.1f}%'
+                     + (f' · 벽 접촉 제외 (선별 모집단 — 결측 벽 힘 복원 아님) {metrics["stress_cv_lw_nowall"]:.1f}%'
                         if isinstance(metrics.get('stress_cv_lw_nowall'), (int, float)) else ''))
             for ph in ('AM_P', 'AM_S', 'SE'):
                 val = metrics.get(f'stress_ratio_{ph}_lw')
@@ -9673,6 +9687,8 @@ def serve_report(case_id):
                     L.append(f'- **σ_{ph}/σ_mean (Love–Weber)**: {val:.3f}'
                              + (f' · 벽 접촉 제외 {vn:.3f}' if isinstance(vn, (int, float)) else '')
                              + (f' · 벽 접촉 입자 {100 * wf:.1f}%' if isinstance(wf, (int, float)) else ''))
+            if not metrics.get('stress_lw_contract'):
+                L.append('- ⚠ Love–Weber 값은 입력 검증 전 세대 (계약 v1 · RGL-06 이전) — 재분석 권장')
         elif metrics.get('stress_lw_status'):
             L.append(f'- **Stress (Love–Weber)**: {metrics["stress_lw_status"]}')
         L.append('')
