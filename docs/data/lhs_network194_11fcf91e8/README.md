@@ -7,3 +7,4 @@
 - 이 폴더 = 1저자 증거 tar (`net194_11fcf91e8_evidence.tar.gz` · sha256 `f61c940cfc1823242d85f6533cec0721025fcf6a20dcdcd9ea574a81250627ae`) 그대로 — manifest · runs · progress · merged (merge_report · status · metrics_flat · parallel_cases) · cases/*/worker.json · log.txt.  케이스 결과 원본 (`--work/results/<case>`) 은 WSL 에만 있다 (τ 인계 원천 · 보존).
 - `smoke_postfix/` = 고친 코드 (`11fcf91e8`) WSL 소형 시험 원본 보고서 · 요약 · 로그 · 대조 · 케이스 기록 (`net_smoke_11fcf91e8_report.tgz` · sha256 `0c77bc225a6f3142e7fd6537d197038c704ad57ab696709c6f80cd0b3cdfab43` 에서 작업 폴더 · 임시 파일 제외) — 26/26 PASS · rc 0.
 - ⚠ 배포 (ML 인계) = Codex 재검증 GO 뒤 (4차 = HOLD · RGLR3-01 · 02 · 03).  이 배치는 retry 경로를 타지 않았다 (RGLR3-01 의 우회 경로 밖).
+- `overview_20261005/` = 값 미리보기 (그림 6 패널 · 케이스 값 · 코호트 요약 · 재현 스크립트 — `merged/*/metrics_flat.csv` 만 읽는다 · 수송 tortuosity 표기 · Codex 5차 §6 자료).

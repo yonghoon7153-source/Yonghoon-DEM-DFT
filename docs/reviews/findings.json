@@ -7999,32 +7999,47 @@
     {
       "id": "RGLR3-01",
       "severity": "P2",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 10-05 밤 4차 재검증 (핀 11fcf91e8 · 456 blob 검증 · 실 망 CLI · 실 helper · 합성 침대 · Windows 11 Python 3.12.14 NumPy 2.5.3)",
       "opened_in": "docs/reviews/codex_review_rglr2_reverify_20261005.md",
       "title": "194 실행기 retry 가 같은 HEAD 의 dirty 코드 변경을 막지 않는다 — 발사 봉인 우회 (code_changed_since_launch 는 기록만 · merge 거부 조건 아님 · 워커는 git sha 만)",
-      "note": "자리: scripts/run_network_194_parallel.py cmd_retry · _run_and_merge · merge.  재현 (실 cmd_retry → _run_and_merge → merge · OS 잠금 · 환경 · 워커만 대역): retry_rc 0 · code_changed_during_run [] · mixed_generation [] · code_changed_since_launch [network_conductivity.py].  무너지는 결론: \"같은 HEAD · manifest · merge 성공 = 모든 케이스가 발사 봉인 코드\".  해제: retry 가 발사 지문 대조 · dirty 거부 · 시도별 코드 지문 · 음성 / 양성 대조.  ★ 실제 10-05 밤 194 배치 (net194_11fcf91e8) = run 한 번 · retry 0 · 194 done · 시도 1/케이스 · code_changed_during_run [] · merge code_changed_since_launch [] · manifest 19 지문 = 등록 표 19/19 (1저자 증거 tar · 반입 예정) ⇒ 이 배치는 retry 경로를 안 탔다"
+      "note": "자리: scripts/run_network_194_parallel.py cmd_retry · _run_and_merge · merge.  재현 (실 cmd_retry → _run_and_merge → merge · OS 잠금 · 환경 · 워커만 대역): retry_rc 0 · code_changed_during_run [] · mixed_generation [] · code_changed_since_launch [network_conductivity.py].  무너지는 결론: \"같은 HEAD · manifest · merge 성공 = 모든 케이스가 발사 봉인 코드\".  해제: retry 가 발사 지문 대조 · dirty 거부 · 시도별 코드 지문 · 음성 / 양성 대조.  ★ 실제 10-05 밤 194 배치 (net194_11fcf91e8) = run 한 번 · retry 0 · 194 done · 시도 1/케이스 · code_changed_during_run [] · merge code_changed_since_launch [] · manifest 19 지문 = 등록 표 19/19 (1저자 증거 tar · 반입 예정) ⇒ 이 배치는 retry 경로를 안 탔다  · ✅ 10-05 밤 수정 0c48297f9 (1저자 비준 \"비준이얌\" A) — retry 시작 관문: 워커 체크아웃 (manifest repo_root) 의 HEAD · 19 봉인 해시 · dirty 를 발사 봉인과 대조 · 같은 HEAD 의 코드 변경 · 빠진 해시 · 다른 HEAD · dirty = rc 2 (아무것도 안 돌리고 안 쓴다) · --allow-mixed-generation (코드 · HEAD) · --allow-dirty (트리만 · 코드 변경은 못 넘긴다) 은 manifest.retries · runs · 시도 기록에 남는다 · 시도마다 봉인 기록 (띄우기 직전 · 거둔 직후 지문 · git · dirty · 이 시도가 쓴 기록 sha · 워커 runs 항목) · 실행 중 지문이 봉인과 달라지면 새 케이스를 멈추고 자동 merge 생략 rc 2 · 판정 하나 (case_seal) 를 merge · audit · retry 가 공용 — UNSEALED 가 있으면 merge 거부 rc 2 (넘김 = rc 1 + 기록) · 옛 형식 기록 = 첫 run 의 유일한 시도 · 깨끗한 사전 점검 · run_001 code_changed_during_run [] · 워커 runs 1 건 (발사 sha · dirty false) 일 때만 SEALED_LEGACY · 옛 retry = UNSEALED · retry 는 봉인 안 된 케이스만 다시 돈다 · 봉인 19 파일 불변 (실행기는 봉인 밖)",
+      "claimed_fixed_sha": "0c48297f9",
+      "evidence_tests": [
+        "scripts/run_network_194_parallel.py --selftest (28/28 → 51/51 · 반례 22 먼저 = 옛 코드에서 22 실패: ⑳a 같은 HEAD 에서 봉인 파일을 고친 retry 가 돈다 · ㉑c 워커 dirty 기록 배치가 merge rc 0 · ㉓e Codex 시나리오 (retry rc 0 · 워커 호출) · 옛 형식 연결 반례 둘 (LAUNCH_ERROR 단독 시도 · run id 다른 시도) · ㉖ 봉인은 워커 체크아웃에서 잰다)",
+        "scripts/run_network_194_parallel.py audit (읽기 전용 · 케이스마다 SEALED · SEALED_DIRTY_ALLOWED · SEALED_LEGACY · UNSEALED · NO_RECORD · rc 0 = 전부 봉인) — Codex new_probes.py 실행기 부분 무변경 실행: 첫 merge rc 0 SEALED_LEGACY · retry rc 2 · 워커 미호출 · run_002 없음"
+      ]
     },
     {
       "id": "RGLR3-02",
       "severity": "P2",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 10-05 밤 4차 재검증 (핀 11fcf91e8 · 456 blob 검증 · 실 망 CLI · 실 helper · 합성 침대 · Windows 11 Python 3.12.14 NumPy 2.5.3)",
       "opened_in": "docs/reviews/codex_review_rglr2_reverify_20261005.md",
       "title": "τ 인계 로더 (lhs_design_dataset load_tau_results) 의 P3 가 σ_ratio · 상태 두 키만 묶어 dual 의 경계 규칙 · σ₀ 다른 사본을 수용한다 — 동일 세대 증명 아님",
-      "note": "자리: scripts/lhs_design_dataset.py TAU_DUAL_PROJ · P3 · tau_flux.py:334.  재현 (실 생산본 · dual 만 변조 · 입력 · 도장 · run id · full_metrics · metrics_flat 그대로): 두 모드 boundary_rule L0→L1 = 수용 (BAND_FALLBACK · f · τ² 빈칸) · 두 모드 σ₀ ×2 + σ_dim 다시 계산 = 수용 (OK · σ₀ 6.0 mS/cm) — 기존 network_stop_verdict 는 둘 다 거부.  해제: 인계 때 정지 계약 전 사본 · 투영 · σ₀ 대조 재호출 (또는 게시 시 결과 지문) · 정상 L0 · L1 · L2 · 비관통 보존 · 모든 파일 일관 변경은 게시 시 해시 없이는 못 잡는다 (한계 명시)"
+      "note": "자리: scripts/lhs_design_dataset.py TAU_DUAL_PROJ · P3 · tau_flux.py:334.  재현 (실 생산본 · dual 만 변조 · 입력 · 도장 · run id · full_metrics · metrics_flat 그대로): 두 모드 boundary_rule L0→L1 = 수용 (BAND_FALLBACK · f · τ² 빈칸) · 두 모드 σ₀ ×2 + σ_dim 다시 계산 = 수용 (OK · σ₀ 6.0 mS/cm) — 기존 network_stop_verdict 는 둘 다 거부.  해제: 인계 때 정지 계약 전 사본 · 투영 · σ₀ 대조 재호출 (또는 게시 시 결과 지문) · 정상 L0 · L1 · L2 · 비관통 보존 · 모든 파일 일관 변경은 게시 시 해시 없이는 못 잡는다 (한계 명시)  · ✅ 10-05 밤 수정 74ef3c8a7 (1저자 비준 \"비준이얌\" B) — load_tau_results 가 P0–P3 뒤 done · partial 케이스마다 P4: 배치가 done 을 준 같은 함수 pipeline_service.network_stop_verdict (사본 dual · 모드 파일 둘 · legacy · full_metrics 투영 · σ₀/T 짝 · 띠 규칙 · τ 상태) 재호출 + tau_flux.network_generation_problem + 읽기 안정 (네 망 JSON · 도장 · 시도 파일 · full_metrics · 입력 둘의 file_digest 앞뒤) · P4 실패 = FillRefusal (인계 전체 정지 · P0–P3 와 같다) · 인계표에 NOT_COMPUTED 는 없다 · 출처 부록 열 둘 (same_generation_checks = P0_records;P1_run_id;P2_input_digest;P3_batch_tie;P4_stop_contract;P4_generation;P4_read_stable · same_generation_basis = current_files_no_publish_hash) · 원천 스키마 lhs_tau_net/v2 · Codex 4차 탐침 두 변조 (dual-only 경계 L0→L1 · dual-only σ₀×2 + σ_dim 재계산) 수용 → 거부 · 정상 L0 · 비관통 · L1 · L2 칸 그대로 · 한계: 모든 사본을 일관되게 바꾼 변조는 게시 때 해시 없이는 못 잡는다 (봉인 코드 변경 = amendment 필요) · 봉인 19 파일 불변 (pipeline_service.py 60e0f978… = 등록)",
+      "claimed_fixed_sha": "74ef3c8a7",
+      "evidence_tests": [
+        "scripts/lhs_design_dataset.py --selftest (312/312 → 326/326 · 새 반례 15 = 옛 로더에서 311/326 · c19 Codex dual 경계 · c20 Codex dual σ₀ · c21 모드 파일만 · c22 legacy 만 · c23 full_metrics σ₀ 만 · c24 세대 무효 폴더 · c25 검사 목록 없는 레코드 · g2 열 사전 · i2 출처 부록 · j 툴팁 · 양성 L0 · 비관통 · L1 · L2)",
+        "webapp/test_network_handover_chain.py (12/12 → 19/19 · 옛 로더 17/19 · ④c = Codex 탐침 그대로 · 실 CLI 생산자 폴더)",
+        "scripts/test_tau_flux.py (55/55 그대로) · webapp/test_tau_handover_status.py (37/37) · webapp/test_tau_labels.py (43/43)"
+      ]
     },
     {
       "id": "RGLR3-03",
       "severity": "P3",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 10-05 밤 4차 재검증 (핀 11fcf91e8 · 456 blob 검증 · 실 망 CLI · 실 helper · 합성 침대 · Windows 11 Python 3.12.14 NumPy 2.5.3)",
       "opened_in": "docs/reviews/codex_review_rglr2_reverify_20261005.md",
       "title": "194 실행기가 출력하는 후속 인계 명령에 tau 묶음 · --tau-results 가 없다 (수동 case join 안내가 남음)",
-      "note": "자리: scripts/run_network_194_parallel.py HANDOVER_GROUPS · print_followups.  1저자에게는 tau 포함 명령을 따로 줬다 (10-05 밤).  해제: 출력 명령 수정 + 출처 부록 · 사전 포장 · 실행 증거."
+      "note": "자리: scripts/run_network_194_parallel.py HANDOVER_GROUPS · print_followups.  1저자에게는 tau 포함 명령을 따로 줬다 (10-05 밤).  해제: 출력 명령 수정 + 출처 부록 · 사전 포장 · 실행 증거.  · ✅ 10-05 밤 수정 0c48297f9 (1저자 비준 \"비준이얌\" C) — print_followups = ⓪ 봉인 감사 (audit → seal_audit.tsv) · ① τ 진단 표 (진단 전용) · ② 생성기 한 번 (tau + --tau-results) · ③ 묶음에 인계표 · _columns · _tau_provenance · _excluded · seal_audit.tsv · ③b (선택) τ 원천 canonical 파일 · 한계: 출력 명령으로 실제 τ 28 열을 만드는 왕복은 실행기 selftest 안에서 못 한다 (생성기 selftest ㉙i 가 CLI 왕복을 본다) — 실제 실행 증거 = WSL 인계 v1.2 재생성 기록",
+      "claimed_fixed_sha": "0c48297f9",
+      "evidence_tests": [
+        "scripts/run_network_194_parallel.py --selftest (출력 명령 문자열 = --webapp-groups contact,percolation,f1,fracture,area,tau --tau-results <ROOT>/merged/<c>/results · HANDOVER_GROUPS = 생성기 WA_STAGE_GROUPS[network] · 출력 플래그 = 생성기 파서에 있다 · --tau-results 폴더가 케이스마다 있다 · 수동 join 문구 없음)"
+      ]
     },
     {
       "id": "SELF-89",
