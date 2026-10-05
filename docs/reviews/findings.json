@@ -7607,133 +7607,206 @@
   {
    "id": "RGL-01",
    "severity": "P1",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "codex 10-05 (RINT G1 · LHS 망 판정 · 핀 30c8205c5 · 합성 fixture 에 실 함수 · 실 producer · 실 helper 호출 · Windows 11 Python 3.12.14 NumPy 2.3.5 · 우리 트리 Linux 재현 결정값 차이 0)",
    "opened_in": "docs/reviews/codex_review_rint_g1_lhs_network_20261005.md",
    "title": "보조 (wetted · bare) collector CG 가 미수렴이어도 producer 게시 · collector complete · check-arm rc 0 — 적용 영수증 (RINT-02) 은 수렴 증명이 아니다",
-   "note": "자리: scripts/mpm_webapp_payload.py:2309 · 2313 · 2318 · 2334 · 2359 · scripts/run_contract.py:765 · 802 · scripts/step3_sigma.py:1176.  재현 (실 payload producer · 작은 raster · wetted 또는 bare 호출 동안만 CG_MAXITER=1 · 즉시 원복): 보조 σ 0.0009487 → 0.007179 S/cm (7.57×) · CG info 1 · resid 0.346 · 게시 · complete · check-arm rc 0 · wetted 변이 R_geom 0 → 3.8 Ω·cm² · bare 변이 = 0 clip 뒤에 가려지고 미수렴 φ 로 입자 jb 생성 · 주 σ_e · resid 그대로 · 전자 세 영수증 applied · 3,816 면 · main 만 미수렴이면 producer rc 3 (정상 차단).  원인: collector 분기가 reason/σ 부호로만 R_geom 을 만들고 공용 component 검사가 \"collector 에는 CG 가 없다\" 는 전제로 conv_ok 를 건너뛴다.  범위: r_int OFF 에도 있는 collector 경로 결함 (same-sid 법칙의 새 오류 아님).  g1_review: 현 STEP3 경고 술어도 info=0 + NaN residual 을 놓친다 (프로세스 내 주입 반례 · 과거 런 NaN 증거 아님).  최소 수정: wetted · bare 각각 cg_info · 유한 resid · unconverged 보존 → 둘 다 수렴해야 R_geom · jb · complete 게시 · producer 와 공용 소비자 증거 검사 둘 다 · 회귀 = 두 보조 솔브 독립 실패 · 누락/상충 tuple · 비유한 resid · 정상 main 대조 (§7-1).  무너짐: 네 솔브 영수증 = 결과 전체 수치 유효성 증서.  유지: RINT-02 처방 (요청 누락 · 잘못된 표) · 주 솔브 미수렴 차단 · AM 소유권 수정.  등재 2026-10-05 = Codex RINT G1 · LHS 망 판정 반입 (1저자 전달).  ⛔ 판정 = HOLD (194 건 망 배치 · 인계 · 새 봉인 생성 승인 아님 · G3 전력 몫 · 경계 추출만 한정 GO) · 수정은 1저자 비준 뒤 반례 먼저 (규율 ②) · 코드 → 웹앱 → 게이트 → 커밋 한 묶음 (J20-l) · 봉인 = 수정 → 통합 게이트 → 저자 승인 별도 amendment (09-17 cutoff · frozen inventory 를 옮기지 않는다 · Q8).",
-   "evidence_tests": []
+   "note": "자리: scripts/mpm_webapp_payload.py:2309 · 2313 · 2318 · 2334 · 2359 · scripts/run_contract.py:765 · 802 · scripts/step3_sigma.py:1176.  재현 (실 payload producer · 작은 raster · wetted 또는 bare 호출 동안만 CG_MAXITER=1 · 즉시 원복): 보조 σ 0.0009487 → 0.007179 S/cm (7.57×) · CG info 1 · resid 0.346 · 게시 · complete · check-arm rc 0 · wetted 변이 R_geom 0 → 3.8 Ω·cm² · bare 변이 = 0 clip 뒤에 가려지고 미수렴 φ 로 입자 jb 생성 · 주 σ_e · resid 그대로 · 전자 세 영수증 applied · 3,816 면 · main 만 미수렴이면 producer rc 3 (정상 차단).  원인: collector 분기가 reason/σ 부호로만 R_geom 을 만들고 공용 component 검사가 \"collector 에는 CG 가 없다\" 는 전제로 conv_ok 를 건너뛴다.  범위: r_int OFF 에도 있는 collector 경로 결함 (same-sid 법칙의 새 오류 아님).  g1_review: 현 STEP3 경고 술어도 info=0 + NaN residual 을 놓친다 (프로세스 내 주입 반례 · 과거 런 NaN 증거 아님).  최소 수정: wetted · bare 각각 cg_info · 유한 resid · unconverged 보존 → 둘 다 수렴해야 R_geom · jb · complete 게시 · producer 와 공용 소비자 증거 검사 둘 다 · 회귀 = 두 보조 솔브 독립 실패 · 누락/상충 tuple · 비유한 resid · 정상 main 대조 (§7-1).  무너짐: 네 솔브 영수증 = 결과 전체 수치 유효성 증서.  유지: RINT-02 처방 (요청 누락 · 잘못된 표) · 주 솔브 미수렴 차단 · AM 소유권 수정.  등재 2026-10-05 = Codex RINT G1 · LHS 망 판정 반입 (1저자 전달).  ⛔ 판정 = HOLD (194 건 망 배치 · 인계 · 새 봉인 생성 승인 아님 · G3 전력 몫 · 경계 추출만 한정 GO) · 수정은 1저자 비준 뒤 반례 먼저 (규율 ②) · 코드 → 웹앱 → 게이트 → 커밋 한 묶음 (J20-l) · 봉인 = 수정 → 통합 게이트 → 저자 승인 별도 amendment (09-17 cutoff · frozen inventory 를 옮기지 않는다 · Q8).  ★ 10-05 수정 1d9af09d0 (1저자 비준 · 반례 먼저): Codex 탐침 재실행 (우리 트리 · 결함 단언을 기록으로 바꾼 사본 · scratchpad rgl_after) — probe_adversarial: wetted · bare 미수렴 = rc 0 · 게시 · R_geom 3.8 / 0.0 · check-arm 0 → rc 3 · 미게시 (진단본 .failed) · 정상 rc 0 · R_geom 0.0 그대로.  보조 두 솔브 각각 run_contract.conv_ok · 수렴 3필드 보존 · 공용 component 계약 (producer · check_arm · 판정기) · 옛 schema 3 payload 중 collector 계획분 = 거부 (커밋된 docs/data 매니페스트에는 없음)  재검증 요청 = docs/reviews/codex_rgl_reverify_request_20261005.md.",
+   "evidence_tests": [
+    "scripts/test_rint_receipts.py (G 절 · 실물 producer + 보조 솔브 한 호출만 CG 제한 · 102/102 · 옛 63 PASS 29 FAIL)",
+    "scripts/run_contract.py --selftest (G8–G15 · 124/124)",
+    "scripts/sdcp_gain_verdict.py --selftest (㊽ · 177/177)",
+    "scripts/step3_sigma.py --selftest · --selftest-rxn (info 0 + 비유한 잔차 = 미수렴)",
+    "webapp/test_rint_scope_labels.py (F0–F15 · 31/31)"
+   ],
+   "claimed_fixed_sha": "1d9af09d0"
   },
   {
    "id": "RGL-02",
    "severity": "P1",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "codex 10-05 (RINT G1 · LHS 망 판정 · 핀 30c8205c5 · 합성 fixture 에 실 함수 · 실 producer · 실 helper 호출 · Windows 11 Python 3.12.14 NumPy 2.3.5 · 우리 트리 Linux 재현 결정값 차이 0)",
    "opened_in": "docs/reviews/codex_review_rint_g1_lhs_network_20261005.md",
    "title": "정상 비관통 침대를 수치 생산자는 sigma_full_status = not_computed 로 내고 새 network 정지 관문 ③ 은 not_computed 를 거부 → 정상 비관통이 failed (test_tau_flux K3 는 not_computed 를 기대 · T12d 양성 대조는 valid_zero mock)",
-   "note": "자리: scripts/network_conductivity.py:94 · 589 · 1226 · webapp/pipeline_service.py:655 · 696.  재현 (실 망 함수 · 14 노드 · 10 간선 · 끊긴 SE 합성망): 두 모드 sigma_full None · not_computed · percolating_fraction 0 · calc_percolation 0 · L0 · 전력 몫 None (\"no percolating FULL solution\") → 실 _network_and_stage_e 정지 helper = 앞 관문 통과 · ③ 두 모드 not_computed 로 failed · 같은 결과에 tau_flux = NOT_PERCOLATING · f 0 · τ² 빈칸 (basis_check mismatch:0.2707 = 통합 fixture 장부 — τ 장부 정상 인증으로 읽지 않음).  두 시험군이 각각 초록인데 생산 상태 계약은 모순 (SELF-86).  무너짐: \"not_computed 를 거부하면 못 푼 침대만 failed\".  유지: 못 푼 침대를 완료 처리하지 않는 정책 · 비관통 전력 몫 None.  규모 한정: 130 행 요약표의 비관통 24 를 새 배치 실패 수로 단정하지 않음.  최소 수정: 수치 생산자가 \"증명된 no-through\" 상태 · 사유를 명시 → 정지 계약 · tau 계약이 같은 상태 소비 · 관통 실패 원인 · solver 관통 · 독립 calc_percolation · 채널 상태가 함께 맞을 때만 · conductivity/f 의 물리적 0 과 I²R 몫 0/0 미정의 분리 · 모든 not_computed 허용 또는 None→0 은 오답.  해결 증거: 실 producer → stop gate → tau 로 관통 · 정상 비관통 · 수치 실패 구별 (§7-2 — valid_zero 를 손으로 넣은 fixture 만으로 닫지 않음).  등재 2026-10-05 = Codex RINT G1 · LHS 망 판정 반입 (1저자 전달).  ⛔ 판정 = HOLD (194 건 망 배치 · 인계 · 새 봉인 생성 승인 아님 · G3 전력 몫 · 경계 추출만 한정 GO) · 수정은 1저자 비준 뒤 반례 먼저 (규율 ②) · 코드 → 웹앱 → 게이트 → 커밋 한 묶음 (J20-l) · 봉인 = 수정 → 통합 게이트 → 저자 승인 별도 amendment (09-17 cutoff · frozen inventory 를 옮기지 않는다 · Q8).",
-   "evidence_tests": []
+   "note": "자리: scripts/network_conductivity.py:94 · 589 · 1226 · webapp/pipeline_service.py:655 · 696.  재현 (실 망 함수 · 14 노드 · 10 간선 · 끊긴 SE 합성망): 두 모드 sigma_full None · not_computed · percolating_fraction 0 · calc_percolation 0 · L0 · 전력 몫 None (\"no percolating FULL solution\") → 실 _network_and_stage_e 정지 helper = 앞 관문 통과 · ③ 두 모드 not_computed 로 failed · 같은 결과에 tau_flux = NOT_PERCOLATING · f 0 · τ² 빈칸 (basis_check mismatch:0.2707 = 통합 fixture 장부 — τ 장부 정상 인증으로 읽지 않음).  두 시험군이 각각 초록인데 생산 상태 계약은 모순 (SELF-86).  무너짐: \"not_computed 를 거부하면 못 푼 침대만 failed\".  유지: 못 푼 침대를 완료 처리하지 않는 정책 · 비관통 전력 몫 None.  규모 한정: 130 행 요약표의 비관통 24 를 새 배치 실패 수로 단정하지 않음.  최소 수정: 수치 생산자가 \"증명된 no-through\" 상태 · 사유를 명시 → 정지 계약 · tau 계약이 같은 상태 소비 · 관통 실패 원인 · solver 관통 · 독립 calc_percolation · 채널 상태가 함께 맞을 때만 · conductivity/f 의 물리적 0 과 I²R 몫 0/0 미정의 분리 · 모든 not_computed 허용 또는 None→0 은 오답.  해결 증거: 실 producer → stop gate → tau 로 관통 · 정상 비관통 · 수치 실패 구별 (§7-2 — valid_zero 를 손으로 넣은 fixture 만으로 닫지 않음).  등재 2026-10-05 = Codex RINT G1 · LHS 망 판정 반입 (1저자 전달).  ⛔ 판정 = HOLD (194 건 망 배치 · 인계 · 새 봉인 생성 승인 아님 · G3 전력 몫 · 경계 추출만 한정 GO) · 수정은 1저자 비준 뒤 반례 먼저 (규율 ②) · 코드 → 웹앱 → 게이트 → 커밋 한 묶음 (J20-l) · 봉인 = 수정 → 통합 게이트 → 저자 승인 별도 amendment (09-17 cutoff · frozen inventory 를 옮기지 않는다 · Q8).  ★ 10-05 수정 ef5e8dcfb (1저자 비준 · 반례 먼저): Codex 탐침 재실행 (우리 트리 · 결함 단언을 기록으로 바꾼 사본 · scratchpad rgl_after) — probe_actual_zero 생산자 not_computed → valid_zero (+ sigma_full_reason no_through_path) · 정지 failed → done · τ NOT_PERCOLATING · f 0.  비관통 증명 = FULL 풀이 앞 active_fractions (같은 그래프 · 같은 띠) · 관통인데 못 풂 = not_computed + solve_failed (전력 몫 사유 문자열 분리) · 관통 침대 σ 비트 동일  재검증 요청 = docs/reviews/codex_rgl_reverify_request_20261005.md.",
+   "evidence_tests": [
+    "webapp/test_pipeline_provenance.py (T12d · T13a–i 실 CLI · 250/250)",
+    "scripts/test_tau_flux.py (K3–K5 · 37/37 · 옛 35/37)",
+    "scripts/network_conductivity.py --selftest (9 어휘 대조 · 30/30)",
+    "webapp/test_network_handover_chain.py (10/10 · 옛 코드 5/8)"
+   ],
+   "claimed_fixed_sha": "ef5e8dcfb"
   },
   {
    "id": "RGL-03",
    "severity": "P1",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "codex 10-05 (RINT G1 · LHS 망 판정 · 핀 30c8205c5 · 합성 fixture 에 실 함수 · 실 producer · 실 helper 호출 · Windows 11 Python 3.12.14 NumPy 2.3.5 · 우리 트리 Linux 재현 결정값 차이 0)",
    "opened_in": "docs/reviews/codex_review_rint_g1_lhs_network_20261005.md",
    "title": "network 단계 배치를 ⑤⑥⑦ 인계 생성기가 받지 않는다 — WA_STAGE_GROUPS 가 contact · coverage 만 알아 stop_after = network 면 build_handover FillRefusal (요구 메시지의 \"network\" 는 유효 WA_GROUPS 이름도 아님)",
-   "note": "자리: scripts/lhs_design_dataset.py:1212 · 1993.  재현 (실 build_handover · selftest fixture): stop_after=contact · groups=f1,fracture,area 성공 → stop_after 만 network 로 바꾸면 거부.  P1 사유 = 새로 요청한 배치 → 인계 기능 전체의 일률 차단 (기존 contact 인계의 계산 오류 · 194 행 수치 오염 아님 — g4 작업 노트는 P2 로 적었고 루트 판정문이 P1 로 정본).  최소 수정: network 가 보장하는 기존 묶음의 단계 역량 명시 + network 배치 status 를 실 build_handover 에 넘기는 양성 통합 시험 · contact/coverage/network 부분집합 · 금지 묶음 음성 대조 유지 (§7-3).  등재 2026-10-05 = Codex RINT G1 · LHS 망 판정 반입 (1저자 전달).  ⛔ 판정 = HOLD (194 건 망 배치 · 인계 · 새 봉인 생성 승인 아님 · G3 전력 몫 · 경계 추출만 한정 GO) · 수정은 1저자 비준 뒤 반례 먼저 (규율 ②) · 코드 → 웹앱 → 게이트 → 커밋 한 묶음 (J20-l) · 봉인 = 수정 → 통합 게이트 → 저자 승인 별도 amendment (09-17 cutoff · frozen inventory 를 옮기지 않는다 · Q8).",
-   "evidence_tests": []
+   "note": "자리: scripts/lhs_design_dataset.py:1212 · 1993.  재현 (실 build_handover · selftest fixture): stop_after=contact · groups=f1,fracture,area 성공 → stop_after 만 network 로 바꾸면 거부.  P1 사유 = 새로 요청한 배치 → 인계 기능 전체의 일률 차단 (기존 contact 인계의 계산 오류 · 194 행 수치 오염 아님 — g4 작업 노트는 P2 로 적었고 루트 판정문이 P1 로 정본).  최소 수정: network 가 보장하는 기존 묶음의 단계 역량 명시 + network 배치 status 를 실 build_handover 에 넘기는 양성 통합 시험 · contact/coverage/network 부분집합 · 금지 묶음 음성 대조 유지 (§7-3).  등재 2026-10-05 = Codex RINT G1 · LHS 망 판정 반입 (1저자 전달).  ⛔ 판정 = HOLD (194 건 망 배치 · 인계 · 새 봉인 생성 승인 아님 · G3 전력 몫 · 경계 추출만 한정 GO) · 수정은 1저자 비준 뒤 반례 먼저 (규율 ②) · 코드 → 웹앱 → 게이트 → 커밋 한 묶음 (J20-l) · 봉인 = 수정 → 통합 게이트 → 저자 승인 별도 amendment (09-17 cutoff · frozen inventory 를 옮기지 않는다 · Q8).  ★ 10-05 수정 b162009f8 (1저자 비준 · 반례 먼저): Codex 탐침 재실행 (우리 트리 · 결함 단언을 기록으로 바꾼 사본 · scratchpad rgl_after) — probe_g4 network_stage_contact_groups 거부 → 수용 · 커밋된 lhs/lhsx_handover_20261001.csv 재생성 바이트 동일 (에이전트 보고) · 실데이터 130/130 · 64/64 (㉖c)  재검증 요청 = docs/reviews/codex_rgl_reverify_request_20261005.md.",
+   "evidence_tests": [
+    "scripts/lhs_design_dataset.py --selftest (㉖a–i · 277/277 · 옛 241/277)",
+    "webapp/test_network_handover_chain.py (실 생산자 → 정지 → τ → 배치 기록 → build_handover · 10/10 · 옛 코드 5/8)"
+   ],
+   "claimed_fixed_sha": "b162009f8"
   },
   {
    "id": "RGL-04",
    "severity": "P1",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "codex 10-05 (RINT G1 · LHS 망 판정 · 핀 30c8205c5 · 합성 fixture 에 실 함수 · 실 producer · 실 helper 호출 · Windows 11 Python 3.12.14 NumPy 2.3.5 · 우리 트리 Linux 재현 결정값 차이 0)",
    "opened_in": "docs/reviews/codex_review_rint_g1_lhs_network_20261005.md",
    "title": "새 필수 정지 관문 (network_stop_verdict) 이 게시 뒤에 돈다 — 실패해도 실패 후보가 활성 성공 세대로 남는다 (옛 stash 삭제 · success stamp · full_metrics 게시 → 그 뒤 관문 · 복구 없음)",
-   "note": "자리: webapp/app.py:3178 · 3190 · 3238 · 3298.  재현: 계약 변이 physics boundary_rule = L9 → summary failed 인데 active provenance success/valid · full_metrics network_solver_status success · 옛 세대 marker 사라짐 · 정상 생산 경로의 예 = RGL-02 의 실 비관통 결과로도 같은 게시 상태.  \"실패인데 done\" 반례가 아니다 — 배치 앞문은 빨갛지만 다른 소비자가 읽는 활성 결과 · 성공 증서가 실패 후보로 바뀐다.  최소 수정: 임시 후보의 파일 · 머지 결과 · 채널 상태 · 새 정지 계약까지 다 검사한 뒤 한 번에 승격 · rollback = 네 망 JSON + full_metrics + provenance · 실패 시 옛 성공 세대 보존 + 최신 attempt 만 failed · 첫 실행 실패면 활성 success 없음 (§7-4) · batch status 만 바꾸는 것은 부족.  등재 2026-10-05 = Codex RINT G1 · LHS 망 판정 반입 (1저자 전달).  ⛔ 판정 = HOLD (194 건 망 배치 · 인계 · 새 봉인 생성 승인 아님 · G3 전력 몫 · 경계 추출만 한정 GO) · 수정은 1저자 비준 뒤 반례 먼저 (규율 ②) · 코드 → 웹앱 → 게이트 → 커밋 한 묶음 (J20-l) · 봉인 = 수정 → 통합 게이트 → 저자 승인 별도 amendment (09-17 cutoff · frozen inventory 를 옮기지 않는다 · Q8).",
-   "evidence_tests": []
+   "note": "자리: webapp/app.py:3178 · 3190 · 3238 · 3298.  재현: 계약 변이 physics boundary_rule = L9 → summary failed 인데 active provenance success/valid · full_metrics network_solver_status success · 옛 세대 marker 사라짐 · 정상 생산 경로의 예 = RGL-02 의 실 비관통 결과로도 같은 게시 상태.  \"실패인데 done\" 반례가 아니다 — 배치 앞문은 빨갛지만 다른 소비자가 읽는 활성 결과 · 성공 증서가 실패 후보로 바뀐다.  최소 수정: 임시 후보의 파일 · 머지 결과 · 채널 상태 · 새 정지 계약까지 다 검사한 뒤 한 번에 승격 · rollback = 네 망 JSON + full_metrics + provenance · 실패 시 옛 성공 세대 보존 + 최신 attempt 만 failed · 첫 실행 실패면 활성 success 없음 (§7-4) · batch status 만 바꾸는 것은 부족.  등재 2026-10-05 = Codex RINT G1 · LHS 망 판정 반입 (1저자 전달).  ⛔ 판정 = HOLD (194 건 망 배치 · 인계 · 새 봉인 생성 승인 아님 · G3 전력 몫 · 경계 추출만 한정 GO) · 수정은 1저자 비준 뒤 반례 먼저 (규율 ②) · 코드 → 웹앱 → 게이트 → 커밋 한 묶음 (J20-l) · 봉인 = 수정 → 통합 게이트 → 저자 승인 별도 amendment (09-17 cutoff · frozen inventory 를 옮기지 않는다 · Q8).  ★ 10-05 수정 ef5e8dcfb (1저자 비준 · 반례 먼저): Codex 탐침 재실행 (우리 트리 · 결함 단언을 기록으로 바꾼 사본 · scratchpad rgl_after) — probe_contracts 실패 네 경우 옛 세대 생존 False → True · 정상 done 그대로.  순서 = 솔버 → 내용 → 투영 → 채널 → σ₀ 짝 → 정지 계약 → 한 번에 승격 · 실패면 후보 치움 + 옛 네 JSON · provenance 되돌림 · full_metrics 그대로 · 최근 시도만 failed + 단계  재검증 요청 = docs/reviews/codex_rgl_reverify_request_20261005.md.",
+   "evidence_tests": [
+    "webapp/test_pipeline_provenance.py (T14a–g · T13i · 250/250)",
+    "webapp/test_network_handover_chain.py (첫 실행 실패 = 활성 세대 없음 · 망 JSON 없음 · 최근 시도 failed)"
+   ],
+   "claimed_fixed_sha": "ef5e8dcfb"
   },
   {
    "id": "RGL-05",
    "severity": "P2",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "codex 10-05 (RINT G1 · LHS 망 판정 · 핀 30c8205c5 · 합성 fixture 에 실 함수 · 실 producer · 실 helper 호출 · Windows 11 Python 3.12.14 NumPy 2.3.5 · 우리 트리 Linux 재현 결정값 차이 0)",
    "opened_in": "docs/reviews/codex_review_rint_g1_lhs_network_20261005.md",
    "title": "⑤⑥⑦ 인계 관문이 NaN · inf · 범위 밖 값 · 필수 근거 누락 · \"누락 → 0 채움\" 을 통과시킨다 — checked 표시 ≠ 완비 · 유한 · 정합 인계 증서",
-   "note": "자리: scripts/lhs_design_dataset.py:1701 · 1708 · 1744 · 1752 · 1762 · 1819 · 2130.  재현 (실 build_handover · 최종 출력까지): fracture %/index · 양수 접촉 면적 mean/total NaN → NaN 출력 (abs(NaN) > tol 은 False) · eff_area_perc −1 출력 · pulverization −0.004 % / index −0.00004 허용 · F1 h_spread inf 허용 · se_se_cn 삭제 + aug −999 → −999 출력 · checked 1/2 · 비관통 행 percolation_pct 삭제 + eff_area_perc 0.4 → 0.4 출력 · AM_P–AM_P count 만 삭제 · total 0 · mean 0.01 → 최종 count 0 · mean 0.01 (검사 전 누락 → 검사 후 0 채움 순서 빈틈 — 명시 0 이면 정상 거부) · am_am_n_contacts 누락 → R3 생략 · eff_area 자체 누락 → A4 생략.  한 ID 아래 여러 경로 — NaN 하나 막았다고 닫지 않는다.  유지: 정상 입력의 식 · 반올림 반폭 (0.005 %p · 5e-5 경계 실측) · path_hop_area · 상쌍별 파괴 · physics 면적 명시 제외 (Q6 · WA_EXCLUDED 우선 10 음성 대조).  최소 수정: 선택 묶음의 원천 근거 열 먼저 요구 → 유한성 → 형/범위 (개수 비음수 정수 · % [0,100] · index [0,1] · 면적 비음수) → 식 순서 · count/mean/total 함께 정규화한 최종 레코드도 검증 · 상 부재 · 접촉 0 · 비관통 · 기술적 결측을 다른 상태로 (§7-5).  기존 194 행에 NaN 이 있다는 주장 아님 (194 행 산술 검산 = 130/130 · 64/64 통과 · 판정문 §4).  등재 2026-10-05 = Codex RINT G1 · LHS 망 판정 반입 (1저자 전달).  ⛔ 판정 = HOLD (194 건 망 배치 · 인계 · 새 봉인 생성 승인 아님 · G3 전력 몫 · 경계 추출만 한정 GO) · 수정은 1저자 비준 뒤 반례 먼저 (규율 ②) · 코드 → 웹앱 → 게이트 → 커밋 한 묶음 (J20-l) · 봉인 = 수정 → 통합 게이트 → 저자 승인 별도 amendment (09-17 cutoff · frozen inventory 를 옮기지 않는다 · Q8).",
-   "evidence_tests": []
+   "note": "자리: scripts/lhs_design_dataset.py:1701 · 1708 · 1744 · 1752 · 1762 · 1819 · 2130.  재현 (실 build_handover · 최종 출력까지): fracture %/index · 양수 접촉 면적 mean/total NaN → NaN 출력 (abs(NaN) > tol 은 False) · eff_area_perc −1 출력 · pulverization −0.004 % / index −0.00004 허용 · F1 h_spread inf 허용 · se_se_cn 삭제 + aug −999 → −999 출력 · checked 1/2 · 비관통 행 percolation_pct 삭제 + eff_area_perc 0.4 → 0.4 출력 · AM_P–AM_P count 만 삭제 · total 0 · mean 0.01 → 최종 count 0 · mean 0.01 (검사 전 누락 → 검사 후 0 채움 순서 빈틈 — 명시 0 이면 정상 거부) · am_am_n_contacts 누락 → R3 생략 · eff_area 자체 누락 → A4 생략.  한 ID 아래 여러 경로 — NaN 하나 막았다고 닫지 않는다.  유지: 정상 입력의 식 · 반올림 반폭 (0.005 %p · 5e-5 경계 실측) · path_hop_area · 상쌍별 파괴 · physics 면적 명시 제외 (Q6 · WA_EXCLUDED 우선 10 음성 대조).  최소 수정: 선택 묶음의 원천 근거 열 먼저 요구 → 유한성 → 형/범위 (개수 비음수 정수 · % [0,100] · index [0,1] · 면적 비음수) → 식 순서 · count/mean/total 함께 정규화한 최종 레코드도 검증 · 상 부재 · 접촉 0 · 비관통 · 기술적 결측을 다른 상태로 (§7-5).  기존 194 행에 NaN 이 있다는 주장 아님 (194 행 산술 검산 = 130/130 · 64/64 통과 · 판정문 §4).  등재 2026-10-05 = Codex RINT G1 · LHS 망 판정 반입 (1저자 전달).  ⛔ 판정 = HOLD (194 건 망 배치 · 인계 · 새 봉인 생성 승인 아님 · G3 전력 몫 · 경계 추출만 한정 GO) · 수정은 1저자 비준 뒤 반례 먼저 (규율 ②) · 코드 → 웹앱 → 게이트 → 커밋 한 묶음 (J20-l) · 봉인 = 수정 → 통합 게이트 → 저자 승인 별도 amendment (09-17 cutoff · frozen inventory 를 옮기지 않는다 · Q8).  ★ 10-05 수정 b162009f8 (1저자 비준 · 반례 먼저): Codex 탐침 재실행 (우리 트리 · 결함 단언을 기록으로 바꾼 사본 · scratchpad rgl_after) — probe_g4 결함 변이 19 종 수용 → 전부 거부 (관문 태그 확인) · 의도된 수용 (0 쌍 세 키 빈칸 · 명시 0 평균 0 · 반올림 반폭 경계 · 기준선) 그대로.  ⚠ replay_g4.py 는 지운 사설 함수 _wa_area_prep 를 부른다 → _wa_area_norm(case, wr, rn, rep) (rn = _wa_raw_phase_n(phase_counts, 설계 상, 웹앱 이름))  재검증 요청 = docs/reviews/codex_rgl_reverify_request_20261005.md.",
+   "evidence_tests": [
+    "scripts/lhs_design_dataset.py --selftest (㉗ · Codex 변이 19 + 추가 반례 · 277/277)"
+   ],
+   "claimed_fixed_sha": "b162009f8"
   },
   {
    "id": "RGL-06",
    "severity": "P2",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "codex 10-05 (RINT G1 · LHS 망 판정 · 핀 30c8205c5 · 합성 fixture 에 실 함수 · 실 producer · 실 helper 호출 · Windows 11 Python 3.12.14 NumPy 2.3.5 · 우리 트리 Linux 재현 결정값 차이 0)",
    "opened_in": "docs/reviews/codex_review_rint_g1_lhs_network_20261005.md",
    "title": "Love–Weber 입자 응력 (calc_love_weber_stress) 이 원자 위치 · 반경 · 부피 · 판 높이를 검증하지 않고 영 분모를 \"0\" 으로 넘겨 거짓 OK / 거짓 FAILED 를 낸다",
-   "note": "자리: scripts/dem_analysis_core.py:1274 · 1289 · 1293 · 1320 · 1349 · 1361.  재현 (실 analyze_contacts.load_atoms_raw + 실 LW 함수 · 세 입자): 고립 SE 반경 NaN → status OK · vm_cv 0 · AM_P mean 0.2149 인데 ratio 0 · SE mean NaN 인데 ratio 0 · plate_z NaN/mesh 도 OK (판 접촉 0 · nowall 요약) · F=0 · Fn+Ft=(0,0,−1) 인데 힘 분해 오차 0 · OK · 반대로 진짜 F=0 ∧ c_strs=0 은 virial 오차 ∞ · FAILED.  Q3 한정 (같은 묶음): 전체 diagonal virial 1 % 는 전역 부호/척도 검사 — 프레임 대응 증명 아님 (AM_P · SE dimer 힘 1 · 3 을 맞바꿔도 오차 1.23e-16 · OK · ratio 0.5↔1.5) · 이름은 \"입자 접촉력 기반 대칭 응력의 VM\" 으로 한정 (kinetic · wall · couple 포함 전체 동적 응력 아님) · wall 입자 제외 = 결측 벽 힘 복원이 아니라 선별 모집단 · 덱 가정 (바닥 z=0 · 평면 mesh 판 · xy periodic) 을 함수가 검증하지 않음 · atom/contact timestep · 원본 hash 보존 · 새 LW 와 옛 c_strs 를 입자별로 같게 강제하지 말 것.  유지: branch tensor · 부호 · 대칭부 VM 의 정의 (접촉 응력 지표).  최소 수정: 계산 전 유한 위치 · 양수 유한 반경/부피 · periodic 길이 · 판 높이 검증 · 비유한 tensor/VM 에서 정상 통계 발행 금지 · 힘 · virial 검사 = 영 척도 분기 포함 절대 + 상대 오차 · 진짜 무하중의 CV/ratio 미정의 = 별도 상태 (§7-5).  real_14 CV 120.7 % · AM_P 2.737 은 Codex 미재생산 (real14 gz 미취득 · test_love_weber_stress 37/38).  등재 2026-10-05 = Codex RINT G1 · LHS 망 판정 반입 (1저자 전달).  ⛔ 판정 = HOLD (194 건 망 배치 · 인계 · 새 봉인 생성 승인 아님 · G3 전력 몫 · 경계 추출만 한정 GO) · 수정은 1저자 비준 뒤 반례 먼저 (규율 ②) · 코드 → 웹앱 → 게이트 → 커밋 한 묶음 (J20-l) · 봉인 = 수정 → 통합 게이트 → 저자 승인 별도 amendment (09-17 cutoff · frozen inventory 를 옮기지 않는다 · Q8).",
-   "evidence_tests": []
+   "note": "자리: scripts/dem_analysis_core.py:1274 · 1289 · 1293 · 1320 · 1349 · 1361.  재현 (실 analyze_contacts.load_atoms_raw + 실 LW 함수 · 세 입자): 고립 SE 반경 NaN → status OK · vm_cv 0 · AM_P mean 0.2149 인데 ratio 0 · SE mean NaN 인데 ratio 0 · plate_z NaN/mesh 도 OK (판 접촉 0 · nowall 요약) · F=0 · Fn+Ft=(0,0,−1) 인데 힘 분해 오차 0 · OK · 반대로 진짜 F=0 ∧ c_strs=0 은 virial 오차 ∞ · FAILED.  Q3 한정 (같은 묶음): 전체 diagonal virial 1 % 는 전역 부호/척도 검사 — 프레임 대응 증명 아님 (AM_P · SE dimer 힘 1 · 3 을 맞바꿔도 오차 1.23e-16 · OK · ratio 0.5↔1.5) · 이름은 \"입자 접촉력 기반 대칭 응력의 VM\" 으로 한정 (kinetic · wall · couple 포함 전체 동적 응력 아님) · wall 입자 제외 = 결측 벽 힘 복원이 아니라 선별 모집단 · 덱 가정 (바닥 z=0 · 평면 mesh 판 · xy periodic) 을 함수가 검증하지 않음 · atom/contact timestep · 원본 hash 보존 · 새 LW 와 옛 c_strs 를 입자별로 같게 강제하지 말 것.  유지: branch tensor · 부호 · 대칭부 VM 의 정의 (접촉 응력 지표).  최소 수정: 계산 전 유한 위치 · 양수 유한 반경/부피 · periodic 길이 · 판 높이 검증 · 비유한 tensor/VM 에서 정상 통계 발행 금지 · 힘 · virial 검사 = 영 척도 분기 포함 절대 + 상대 오차 · 진짜 무하중의 CV/ratio 미정의 = 별도 상태 (§7-5).  real_14 CV 120.7 % · AM_P 2.737 은 Codex 미재생산 (real14 gz 미취득 · test_love_weber_stress 37/38).  등재 2026-10-05 = Codex RINT G1 · LHS 망 판정 반입 (1저자 전달).  ⛔ 판정 = HOLD (194 건 망 배치 · 인계 · 새 봉인 생성 승인 아님 · G3 전력 몫 · 경계 추출만 한정 GO) · 수정은 1저자 비준 뒤 반례 먼저 (규율 ②) · 코드 → 웹앱 → 게이트 → 커밋 한 묶음 (J20-l) · 봉인 = 수정 → 통합 게이트 → 저자 승인 별도 amendment (09-17 cutoff · frozen inventory 를 옮기지 않는다 · Q8).  ★ 10-05 수정 a8e53b2a0 (1저자 비준 · 반례 먼저): Codex 탐침 재실행 (우리 트리 · 결함 단언을 기록으로 바꾼 사본 · scratchpad rgl_after) — probe_lw_independent: 반경 NaN OK · CV 0 → FAILED (invalid_input: bad_radius · c_strs 부분 결측) · F=0 ∧ Fn+Ft≠0 OK → FAILED (force_columns 영 척도) · F=0 ∧ c_strs=0 FAILED (virial inf) → UNDEFINED (zero_load) · plate_z NaN OK → FAILED (invalid_input) · 맞바꾼 접촉력 OK 그대로 (virial_scope = 프레임 대응 증명 아님 표기).  정상 입력 값 비트 동일 (real_14 + 합성 5).  남은 한정: TIMESTEP 미기록 (파서가 버린다 · 원자 · 접촉 덤프 프레임 대응 미확인) · 입자별 c_strs 대조는 관문 불가 (real_14 상대 잔차 중앙 2.6e-4 · p99 0.61) · UNDEFINED (zero_mean_vm) 분기 미시험  재검증 요청 = docs/reviews/codex_rgl_reverify_request_20261005.md.",
+   "evidence_tests": [
+    "scripts/test_love_weber_stress.py (R0–R12 · 76/76 · 옛 47/76)",
+    "webapp/test_stress_lw_labels.py (R 묶음 · 48/48 · 옛 34/48)",
+    "scripts/analyze_contacts.py --selftest (25/25)"
+   ],
+   "claimed_fixed_sha": "a8e53b2a0"
   },
   {
    "id": "RGL-07",
    "severity": "P2",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "codex 10-05 (RINT G1 · LHS 망 판정 · 핀 30c8205c5 · 합성 fixture 에 실 함수 · 실 producer · 실 helper 호출 · Windows 11 Python 3.12.14 NumPy 2.3.5 · 우리 트리 Linux 재현 결정값 차이 0)",
    "opened_in": "docs/reviews/codex_review_rint_g1_lhs_network_20261005.md",
    "title": "망 σ 만 새로 병합하고 baseline 온도 factor (temperature_provenance · sigma_grain_S_cm) 가 남아 공용 τ 도우미가 옛 σ₀ 와 새 σ 를 짝짓는다 — 재시도 경로에서 τ 2× (σ₀ 3 → 12 · τ 2.449 → 4.899)",
-   "note": "자리: webapp/pipeline_service.py:83 (NET_MERGE_KEYS) · webapp/app.py:3238 · 6390 · scripts/se_material.py:251 · scripts/tau_flux.py:94.  재현 (실 helper · merge · grade): 새 raw dual 25 °C · σ₀ 3 · σ 0.15 · φ 0.3 · 기존 full_metrics 에 factor 4 만 남김 → grade 짝 σ₀ 12 · τ² 24 · τ 4.899 (raw dual 기준 τ 2.449 그대로) · network stop done.  경로: retry_network 는 contact 를 다시 쓰지 않고 이 helper 를 부르며 생성 명령에 --temp-c 가 없어 새 망은 기본 온도 → 온도 자료 → 기본 온도 재시도가 의미 있는 경로 · factor 4 는 정량화용 입력 (코퍼스 관측값 아님).  범위: 깨끗한 신규 LHS 194 는 contact 분석이 full_metrics 를 다시 써 해당 근거 없음 · 식 자체는 맞다 (Q9 — 짝진 입력의 등급/COMSOL 식 · getter 통일은 닫힘).  최소 수정: baseline σ · σ₀ · 온도 · 모드 · 세대를 한 소유 단위로 지우고 병합 · 두 모드 짝 대조 · 온도 → 기본 온도 retry 와 정상 신규 입력을 실 helper 로 시험 (§7-6) · 상수 3 강제 · 온도 보정 제거로 조용하게 만들기는 해결 아님.  ⚠ TAU-03 의 \"짝 σ₀\" 일반 배포 경로 보증이 여기서 열린다.  등재 2026-10-05 = Codex RINT G1 · LHS 망 판정 반입 (1저자 전달).  ⛔ 판정 = HOLD (194 건 망 배치 · 인계 · 새 봉인 생성 승인 아님 · G3 전력 몫 · 경계 추출만 한정 GO) · 수정은 1저자 비준 뒤 반례 먼저 (규율 ②) · 코드 → 웹앱 → 게이트 → 커밋 한 묶음 (J20-l) · 봉인 = 수정 → 통합 게이트 → 저자 승인 별도 amendment (09-17 cutoff · frozen inventory 를 옮기지 않는다 · Q8).",
-   "evidence_tests": []
+   "note": "자리: webapp/pipeline_service.py:83 (NET_MERGE_KEYS) · webapp/app.py:3238 · 6390 · scripts/se_material.py:251 · scripts/tau_flux.py:94.  재현 (실 helper · merge · grade): 새 raw dual 25 °C · σ₀ 3 · σ 0.15 · φ 0.3 · 기존 full_metrics 에 factor 4 만 남김 → grade 짝 σ₀ 12 · τ² 24 · τ 4.899 (raw dual 기준 τ 2.449 그대로) · network stop done.  경로: retry_network 는 contact 를 다시 쓰지 않고 이 helper 를 부르며 생성 명령에 --temp-c 가 없어 새 망은 기본 온도 → 온도 자료 → 기본 온도 재시도가 의미 있는 경로 · factor 4 는 정량화용 입력 (코퍼스 관측값 아님).  범위: 깨끗한 신규 LHS 194 는 contact 분석이 full_metrics 를 다시 써 해당 근거 없음 · 식 자체는 맞다 (Q9 — 짝진 입력의 등급/COMSOL 식 · getter 통일은 닫힘).  최소 수정: baseline σ · σ₀ · 온도 · 모드 · 세대를 한 소유 단위로 지우고 병합 · 두 모드 짝 대조 · 온도 → 기본 온도 retry 와 정상 신규 입력을 실 helper 로 시험 (§7-6) · 상수 3 강제 · 온도 보정 제거로 조용하게 만들기는 해결 아님.  ⚠ TAU-03 의 \"짝 σ₀\" 일반 배포 경로 보증이 여기서 열린다.  등재 2026-10-05 = Codex RINT G1 · LHS 망 판정 반입 (1저자 전달).  ⛔ 판정 = HOLD (194 건 망 배치 · 인계 · 새 봉인 생성 승인 아님 · G3 전력 몫 · 경계 추출만 한정 GO) · 수정은 1저자 비준 뒤 반례 먼저 (규율 ②) · 코드 → 웹앱 → 게이트 → 커밋 한 묶음 (J20-l) · 봉인 = 수정 → 통합 게이트 → 저자 승인 별도 amendment (09-17 cutoff · frozen inventory 를 옮기지 않는다 · Q8).  ★ 10-05 수정 ef5e8dcfb (1저자 비준 · 반례 먼저): Codex 탐침 재실행 (우리 트리 · 결함 단언을 기록으로 바꾼 사본 · scratchpad rgl_after) — probe_contracts stale_temperature_factor4: σ₀ 12 · τ 4.898979485566356 → σ₀ 3.0 · τ 2.449489742783178.  NET_MERGE_KEYS 에 temperature_provenance · sigma_grain_S_cm · sigma_full_status/_reason (+physics) — σ 와 한 단위 · network_sigma0_problem (두 모드 · legacy · full_metrics)  재검증 요청 = docs/reviews/codex_rgl_reverify_request_20261005.md.",
+   "evidence_tests": [
+    "webapp/test_pipeline_provenance.py (T16a Codex 수치 · T16b 실 /retry-network · T16c 두 모드 짝 불일치)"
+   ],
+   "claimed_fixed_sha": "ef5e8dcfb"
   },
   {
    "id": "RGL-08",
    "severity": "P2",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "codex 10-05 (RINT G1 · LHS 망 판정 · 핀 30c8205c5 · 합성 fixture 에 실 함수 · 실 producer · 실 helper 호출 · Windows 11 Python 3.12.14 NumPy 2.3.5 · 우리 트리 Linux 재현 결정값 차이 0)",
    "opened_in": "docs/reviews/codex_review_rint_g1_lhs_network_20261005.md",
    "title": "network 완료 계약 (network_stop_verdict ①–⑤) 이 τ 인계에 필요한 입력 집합 · per-mode ↔ dual 파일 대조 · null 사유의 종류를 보지 않는다 (요청서 §5-2④ \"비지 않은 사유\" 명세 자체의 부족)",
-   "note": "자리: webapp/pipeline_service.py:629 · 696 · 707 · scripts/tau_flux.py:141 · 185 · 198 · 208.  재현 (실 helper · solver-output fixture): ① 망 레코드에서 무차원 sigma_full · percolating_fraction · temperature_provenance · sigma_grain_S_cm 삭제 (차원 σ 유지) → network done · tau_flux 두 모드 NOT_COMPUTED/missing_input ② 별도 physics JSON σ 99 ↔ dual physics 0.15 → done · full_metrics 는 dual 복사 0.15 · ③ 양수 σ · 관통인데 전력 몫 None · 사유 internal_solver_exception → done.  정상 solver 가 99 를 만든다는 증거가 아니라 계약의 누락/불일치 내성 반례 · full_metrics ↔ dual 값 일치는 복사 검산 (독립 동일 세대 증명 아님).  유지: BAND_FALLBACK · NOT_PERCOLATING · 연속체 하한 진단 등 등록된 과학적 HOLD 는 허용 가능 — 기술적 입력 결손 · 내부 예외를 같은 \"사유 있음\" 으로 받지 않는다.  최소 수정: τ 에 필요한 장부 · solver 입력 의존 집합 요구 · 상태별 값 · percolation · 전력 사유 조합 검사 · 물리적 null 과 내부 예외 구별 · legacy/Hertz/per-mode/dual 공통 필드 승격 전 대조 · canonical source 명시 (기존 lock · stash · digest · run_id 유지 위에) (§7-6).  등재 2026-10-05 = Codex RINT G1 · LHS 망 판정 반입 (1저자 전달).  ⛔ 판정 = HOLD (194 건 망 배치 · 인계 · 새 봉인 생성 승인 아님 · G3 전력 몫 · 경계 추출만 한정 GO) · 수정은 1저자 비준 뒤 반례 먼저 (규율 ②) · 코드 → 웹앱 → 게이트 → 커밋 한 묶음 (J20-l) · 봉인 = 수정 → 통합 게이트 → 저자 승인 별도 amendment (09-17 cutoff · frozen inventory 를 옮기지 않는다 · Q8).",
-   "evidence_tests": []
+   "note": "자리: webapp/pipeline_service.py:629 · 696 · 707 · scripts/tau_flux.py:141 · 185 · 198 · 208.  재현 (실 helper · solver-output fixture): ① 망 레코드에서 무차원 sigma_full · percolating_fraction · temperature_provenance · sigma_grain_S_cm 삭제 (차원 σ 유지) → network done · tau_flux 두 모드 NOT_COMPUTED/missing_input ② 별도 physics JSON σ 99 ↔ dual physics 0.15 → done · full_metrics 는 dual 복사 0.15 · ③ 양수 σ · 관통인데 전력 몫 None · 사유 internal_solver_exception → done.  정상 solver 가 99 를 만든다는 증거가 아니라 계약의 누락/불일치 내성 반례 · full_metrics ↔ dual 값 일치는 복사 검산 (독립 동일 세대 증명 아님).  유지: BAND_FALLBACK · NOT_PERCOLATING · 연속체 하한 진단 등 등록된 과학적 HOLD 는 허용 가능 — 기술적 입력 결손 · 내부 예외를 같은 \"사유 있음\" 으로 받지 않는다.  최소 수정: τ 에 필요한 장부 · solver 입력 의존 집합 요구 · 상태별 값 · percolation · 전력 사유 조합 검사 · 물리적 null 과 내부 예외 구별 · legacy/Hertz/per-mode/dual 공통 필드 승격 전 대조 · canonical source 명시 (기존 lock · stash · digest · run_id 유지 위에) (§7-6).  등재 2026-10-05 = Codex RINT G1 · LHS 망 판정 반입 (1저자 전달).  ⛔ 판정 = HOLD (194 건 망 배치 · 인계 · 새 봉인 생성 승인 아님 · G3 전력 몫 · 경계 추출만 한정 GO) · 수정은 1저자 비준 뒤 반례 먼저 (규율 ②) · 코드 → 웹앱 → 게이트 → 커밋 한 묶음 (J20-l) · 봉인 = 수정 → 통합 게이트 → 저자 승인 별도 amendment (09-17 cutoff · frozen inventory 를 옮기지 않는다 · Q8).  ★ 10-05 수정 ef5e8dcfb (1저자 비준 · 반례 먼저): Codex 탐침 재실행 (우리 트리 · 결함 단언을 기록으로 바꾼 사본 · scratchpad rgl_after) — probe_contracts missing_tau_inputs · permode_vs_dual_disagree · percolating_power_missing: done → failed (옛 세대 생존).  정본 = dual · ⑥ 모드 파일 · legacy 전 레코드 대조 · full_metrics 망 소유 키 = 이번 세대 투영 · ⑦ τ 입력 5 키 · 장부 4 키 · 실 tau_flux 상태 · ④ 전력 몫 None = 등록된 사유만 · ⑧ σ₀ 짝  재검증 요청 = docs/reviews/codex_rgl_reverify_request_20261005.md.",
+   "evidence_tests": [
+    "webapp/test_pipeline_provenance.py (T15a 변이 4 · T15b 등록된 과학적 HOLD · T15c 실 비관통 한 키씩 · T15d σ₀ 옛 값)"
+   ],
+   "claimed_fixed_sha": "ef5e8dcfb"
   },
   {
    "id": "RGL-09",
    "severity": "P2",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "codex 10-05 (RINT G1 · LHS 망 판정 · 핀 30c8205c5 · 합성 fixture 에 실 함수 · 실 producer · 실 helper 호출 · Windows 11 Python 3.12.14 NumPy 2.3.5 · 우리 트리 Linux 재현 결정값 차이 0)",
    "opened_in": "docs/reviews/codex_review_rint_g1_lhs_network_20261005.md",
    "title": "rint03_je_compare.py 의 Spearman 이 동률에 평균 순위를 주지 않고 (double argsort) 상수 벡터도 막지 않는다 — [1,1,2] vs [1,2,2] → 1.0 (참 0.5) · 전부 0 → 0.9999999999999999 (참 미정의)",
-   "note": "자리: scripts/rint03_je_compare.py:57 · 97.  현행 selftest 9/9 는 그대로 통과 (동률 반례 밖).  입자 전류의 0 · 동률은 합법 입력 → \"순위 유지\" 증거를 과대평가할 수 있다.  과거 세 JSON 에 전체 벡터 · 동률 수가 없어 보고값 0.270 / 0.954 가 틀렸다고 확정하지 않는다 (인용하려면 동률 검산 자료를 남긴다).  AM 마스크 결함 · 수정의 타당성은 이 통계에 의존하지 않는다 (Q2).  최소 수정: 평균 동률 순위 (또는 검증된 Spearman) · 상수 입력 = null + 상태 · top 10 % 경계 동률 규약 (§7-7).  등재 2026-10-05 = Codex RINT G1 · LHS 망 판정 반입 (1저자 전달).  ⛔ 판정 = HOLD (194 건 망 배치 · 인계 · 새 봉인 생성 승인 아님 · G3 전력 몫 · 경계 추출만 한정 GO) · 수정은 1저자 비준 뒤 반례 먼저 (규율 ②) · 코드 → 웹앱 → 게이트 → 커밋 한 묶음 (J20-l) · 봉인 = 수정 → 통합 게이트 → 저자 승인 별도 amendment (09-17 cutoff · frozen inventory 를 옮기지 않는다 · Q8).",
-   "evidence_tests": []
+   "note": "자리: scripts/rint03_je_compare.py:57 · 97.  현행 selftest 9/9 는 그대로 통과 (동률 반례 밖).  입자 전류의 0 · 동률은 합법 입력 → \"순위 유지\" 증거를 과대평가할 수 있다.  과거 세 JSON 에 전체 벡터 · 동률 수가 없어 보고값 0.270 / 0.954 가 틀렸다고 확정하지 않는다 (인용하려면 동률 검산 자료를 남긴다).  AM 마스크 결함 · 수정의 타당성은 이 통계에 의존하지 않는다 (Q2).  최소 수정: 평균 동률 순위 (또는 검증된 Spearman) · 상수 입력 = null + 상태 · top 10 % 경계 동률 규약 (§7-7).  등재 2026-10-05 = Codex RINT G1 · LHS 망 판정 반입 (1저자 전달).  ⛔ 판정 = HOLD (194 건 망 배치 · 인계 · 새 봉인 생성 승인 아님 · G3 전력 몫 · 경계 추출만 한정 GO) · 수정은 1저자 비준 뒤 반례 먼저 (규율 ②) · 코드 → 웹앱 → 게이트 → 커밋 한 묶음 (J20-l) · 봉인 = 수정 → 통합 게이트 → 저자 승인 별도 amendment (09-17 cutoff · frozen inventory 를 옮기지 않는다 · Q8).  ★ 10-05 수정 1d9af09d0 (1저자 비준 · 반례 먼저): Codex 탐침 재실행 (우리 트리 · 결함 단언을 기록으로 바꾼 사본 · scratchpad rgl_after) — Spearman [1,1,2]↔[1,2,2] 1.0 → (0.5, ok) · 전부 0 0.9999999999999999 → (None, constant_input) · top 10 % 경계 동률 = None + boundary_tie.  10-05 kgy 세 JSON 은 옛 판 출력 그대로 (README 잠정 표지 · 입자 벡터 미보존이라 재계산 불가)  재검증 요청 = docs/reviews/codex_rgl_reverify_request_20261005.md.",
+   "evidence_tests": [
+    "scripts/rint03_je_compare.py --selftest (T7–T11 · scipy spearmanr 오라클 · 14/14 · 옛 9/14)"
+   ],
+   "claimed_fixed_sha": "1d9af09d0"
   },
   {
    "id": "RGL-10",
    "severity": "P3",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "codex 10-05 (RINT G1 · LHS 망 판정 · 핀 30c8205c5 · 합성 fixture 에 실 함수 · 실 producer · 실 helper 호출 · Windows 11 Python 3.12.14 NumPy 2.3.5 · 우리 트리 Linux 재현 결정값 차이 0)",
    "opened_in": "docs/reviews/codex_review_rint_g1_lhs_network_20261005.md",
    "title": "\"GOLD 8/8 · σ 비트 동일\" 은 시험이 주는 증거보다 강한 서술 — 8 = 단언 8 개 (합성 사슬 3 × 모드 2 · 소수 8 자리 반올림 비교) · 실침대 8 개 · 원시 bitwise 동일 아님",
-   "note": "자리: scripts/test_network_boundary_rule.py:53 · 88 · 서술 = docs/reviews/codex_rint_g1_lhs_network_request_20261004.md:103 · Q5 (:177) · docs/reviews/lhs_handover_judgments_20260924.md:1072 · progress 10-04 줄.  Codex 별도 검사: 구식 eedada5d3 (blob 2e0c4a47…) 과 solve_network AST 같음 · L0/L1/L2 × Hertz/Physics × FULL/bulk-only/constriction-only 18 비교의 원시 float.hex 일치 · FULL field 경로 포함 ⇒ 시험 범위에서 추출 중립성 지지 (전 코퍼스 · 물리 정확도로 확대 금지 · 수치 모듈 hash 변경 → 재봉인 의무 그대로 · Q5).  같은 §7-7 항목: test_constriction_power_share C1c 표지 \"몫은 경계 전도도 크기와 무관\" → FULL boundary 조건부로 (Q4: 유한 전극에서 0.09168 vs 이상 전극 0.08182 = +12.05 % — 전극 소산 제외 ≠ 전극 조건 무관 · 새 전력 몫 식의 오류는 아님) · L0 band_frac (r_max 기반) = 상한형 진단.  최소 조치: \"합성 3 종 · 2 모드 · 단언 8 개\" 로 시험 설명 고침 + 원시 값 비교 회귀 · 194 실침대 동일 수치를 새로 만들어 쓰지 말 것.  SELF-87.  등재 2026-10-05 = Codex RINT G1 · LHS 망 판정 반입 (1저자 전달).  ⛔ 판정 = HOLD (194 건 망 배치 · 인계 · 새 봉인 생성 승인 아님 · G3 전력 몫 · 경계 추출만 한정 GO) · 수정은 1저자 비준 뒤 반례 먼저 (규율 ②) · 코드 → 웹앱 → 게이트 → 커밋 한 묶음 (J20-l) · 봉인 = 수정 → 통합 게이트 → 저자 승인 별도 amendment (09-17 cutoff · frozen inventory 를 옮기지 않는다 · Q8).",
-   "evidence_tests": []
+   "note": "자리: scripts/test_network_boundary_rule.py:53 · 88 · 서술 = docs/reviews/codex_rint_g1_lhs_network_request_20261004.md:103 · Q5 (:177) · docs/reviews/lhs_handover_judgments_20260924.md:1072 · progress 10-04 줄.  Codex 별도 검사: 구식 eedada5d3 (blob 2e0c4a47…) 과 solve_network AST 같음 · L0/L1/L2 × Hertz/Physics × FULL/bulk-only/constriction-only 18 비교의 원시 float.hex 일치 · FULL field 경로 포함 ⇒ 시험 범위에서 추출 중립성 지지 (전 코퍼스 · 물리 정확도로 확대 금지 · 수치 모듈 hash 변경 → 재봉인 의무 그대로 · Q5).  같은 §7-7 항목: test_constriction_power_share C1c 표지 \"몫은 경계 전도도 크기와 무관\" → FULL boundary 조건부로 (Q4: 유한 전극에서 0.09168 vs 이상 전극 0.08182 = +12.05 % — 전극 소산 제외 ≠ 전극 조건 무관 · 새 전력 몫 식의 오류는 아님) · L0 band_frac (r_max 기반) = 상한형 진단.  최소 조치: \"합성 3 종 · 2 모드 · 단언 8 개\" 로 시험 설명 고침 + 원시 값 비교 회귀 · 194 실침대 동일 수치를 새로 만들어 쓰지 말 것.  SELF-87.  등재 2026-10-05 = Codex RINT G1 · LHS 망 판정 반입 (1저자 전달).  ⛔ 판정 = HOLD (194 건 망 배치 · 인계 · 새 봉인 생성 승인 아님 · G3 전력 몫 · 경계 추출만 한정 GO) · 수정은 1저자 비준 뒤 반례 먼저 (규율 ②) · 코드 → 웹앱 → 게이트 → 커밋 한 묶음 (J20-l) · 봉인 = 수정 → 통합 게이트 → 저자 승인 별도 amendment (09-17 cutoff · frozen inventory 를 옮기지 않는다 · Q8).  ★ 10-05 수정 159063be1 (1저자 비준 · 반례 먼저): \"GOLD 8\" = 단언 8 (합성 사슬 3 × 모드 2 · 소수 8 자리 반올림) 로 정정 · 원시 bitwise 비교 ⑨ 추가 · 요청서 머리 배너 (a32b62452) · 판정 문서 J20 표지  재검증 요청 = docs/reviews/codex_rgl_reverify_request_20261005.md.",
+   "evidence_tests": [
+    "scripts/test_network_boundary_rule.py (⑨ 원시 float.hex 18/18 · 9/9)",
+    "scripts/test_constriction_power_share.py (C1c 문구 · C1d 전극 의존 반례 · 17/17)"
+   ],
+   "claimed_fixed_sha": "159063be1"
   },
   {
    "id": "SELF-86",
    "severity": "P2",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "claude (10-05 · Codex RINT G1 · LHS 망 판정의 RGL-02 · 03 · 04 를 읽고 자기 과정 결함으로 분류)",
    "opened_in": "docs/reviews/codex_review_rint_g1_lhs_network_20261005.md",
    "title": "stop_after=\"network\" 정지 계약을 손으로 만든 fixture · mock 으로만 시험했다 — 실 생산자 (network_conductivity) → 정지 관문 → 소비자 (tau_flux · build_handover) 사슬을 한 번도 돌리지 않아 P1 셋 (RGL-02 · 03 · 04) 이 227/227 · 35/35 · 233/233 초록 아래 살아 있었다",
-   "note": "실례: ① T12d 양성 대조에 valid_zero 를 직접 넣었다 — 실 생산자는 비관통에 not_computed 를 내고 같은 리포의 test_tau_flux K3 가 그것을 기대한다 (두 시험이 서로 모순인 채 각각 초록) ② build_handover 에 network 단계 status 를 넘기는 시험이 없었다 ③ 관문 실패 경로를 표시 상태 (failed 단계) 로만 단언하고 다른 소비자가 읽는 활성 세대 · provenance · full_metrics 를 보지 않았다 (관문이 게시 뒤).  같은 부류: SELF-82 · 84 (공허 PASS) · 규율 ⑤ (후보를 고르는 코드가 사각지대).  재발 방지 규칙 (수정 묶음에서 적용): 새 계약 · 관문의 양성 대조는 손 fixture 가 아니라 실 생산 함수의 출력으로 만들고, 실패 경로 시험은 표시 상태만이 아니라 다른 소비자가 읽는 활성 산출물 · provenance 까지 단언한다.  처방 = RGL-02 · 03 · 04 수정 묶음의 통합 회귀 (판정문 §7-2 · 3 · 4).",
-   "evidence_tests": []
+   "note": "실례: ① T12d 양성 대조에 valid_zero 를 직접 넣었다 — 실 생산자는 비관통에 not_computed 를 내고 같은 리포의 test_tau_flux K3 가 그것을 기대한다 (두 시험이 서로 모순인 채 각각 초록) ② build_handover 에 network 단계 status 를 넘기는 시험이 없었다 ③ 관문 실패 경로를 표시 상태 (failed 단계) 로만 단언하고 다른 소비자가 읽는 활성 세대 · provenance · full_metrics 를 보지 않았다 (관문이 게시 뒤).  같은 부류: SELF-82 · 84 (공허 PASS) · 규율 ⑤ (후보를 고르는 코드가 사각지대).  재발 방지 규칙 (수정 묶음에서 적용): 새 계약 · 관문의 양성 대조는 손 fixture 가 아니라 실 생산 함수의 출력으로 만들고, 실패 경로 시험은 표시 상태만이 아니라 다른 소비자가 읽는 활성 산출물 · provenance 까지 단언한다.  처방 = RGL-02 · 03 · 04 수정 묶음의 통합 회귀 (판정문 §7-2 · 3 · 4).  ★ 10-05 처방 적용: 정지 계약 · 인계 소비를 실 생산자 사슬로 시험 (T13–T16 · 끝-끝 사슬 시험 · check_all · CI 배선) — 양성 대조에 손으로 상태값을 넣지 않는다.  재검증 요청 = docs/reviews/codex_rgl_reverify_request_20261005.md.",
+   "evidence_tests": [
+    "webapp/test_pipeline_provenance.py (T12 망 레코드 · T13–T16 = 실 생산자 출력 · 손 fixture 는 T16a Codex 수치 재현뿐)",
+    "webapp/test_network_handover_chain.py (실 생산자 → 정지 helper → τ → 배치 기록 → build_handover · 옛 코드 5/8 = RGL-02 · 03 · 04)"
+   ],
+   "claimed_fixed_sha": "ef5e8dcfb"
   },
   {
    "id": "SELF-87",
    "severity": "P3",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "claude (10-05 · Codex 판정의 RGL-10 · RGL-09 · Q4 를 읽고)",
    "opened_in": "docs/reviews/codex_review_rint_g1_lhs_network_20261005.md",
    "title": "시험이 주는 것보다 강하게 적었다 — \"GOLD 8 침대 · σ 비트 동일\" (= 단언 8 · 반올림 비교) · C1c \"몫은 경계 전도도 크기와 무관\" (유한 전극 +12 %) · RINT-03 Spearman 0.270 / 0.954 를 동률 검산 없이 순위 증거로",
-   "note": "자리: docs/reviews/codex_rint_g1_lhs_network_request_20261004.md:103 · :177 · §1-2 표 · docs/reviews/lhs_handover_judgments_20260924.md:1072 · progress 10-04 줄 · scripts/test_constriction_power_share.py C1c 표지.  처방 = RGL-10 (문구 · 원시 값 회귀) · RGL-09 (동률 · 상수 처리) 로 함께 닫는다 — 따로 할 일 없음.  규칙: 시험 개수를 침대 수 · 데이터 범위로 옮겨 쓰지 않는다 · 순위 통계는 동률 수와 함께 적는다.",
+   "note": "자리: docs/reviews/codex_rint_g1_lhs_network_request_20261004.md:103 · :177 · §1-2 표 · docs/reviews/lhs_handover_judgments_20260924.md:1072 · progress 10-04 줄 · scripts/test_constriction_power_share.py C1c 표지.  처방 = RGL-10 (문구 · 원시 값 회귀) · RGL-09 (동률 · 상수 처리) 로 함께 닫는다 — 따로 할 일 없음.  규칙: 시험 개수를 침대 수 · 데이터 범위로 옮겨 쓰지 않는다 · 순위 통계는 동률 수와 함께 적는다.  ★ 10-05: GOLD 8 = 단언 8 · C1c \"전극 영향 없음\" 철회 (159063be1) · Spearman 동률 규약 + RINT-03 세 값 잠정 표지 (1d9af09d0) · 요청서 머리 배너 (a32b62452).",
+   "evidence_tests": [
+    "scripts/test_network_boundary_rule.py (⑨)",
+    "scripts/test_constriction_power_share.py (C1c · C1d)",
+    "scripts/rint03_je_compare.py --selftest (T7–T11)"
+   ],
+   "claimed_fixed_sha": "1d9af09d0"
+  },
+  {
+   "id": "LHS-33",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "claude (10-05 · RGL-06 수정 중 같은 결함을 옛 열에서 발견 — 수정 에이전트 보고)",
+   "opened_in": "docs/reviews/codex_rgl_reverify_request_20261005.md",
+   "title": "옛 σ_VM 열 (`stress_cv` · LIGGGHTS stress/atom 50/50 · LHS-29) 의 무효 입력이 0 — `calc_von_mises_stress` 가 평균 0 이면 CV 0 (`mean > 0 else 0`) · c_strs 결측을 0 으로 읽는다 (`a.get(\"sigma_xx\", 0)`) → 등급 축 \"기계적 안정성\" (낮을수록 좋음) 에서 거짓 최고 등급",
+   "note": "자리: scripts/dem_analysis_core.py calc_von_mises_stress.  새 LW 열 (RGL-06) 은 같은 경우를 FAILED / UNDEFINED 로 막았다.  옛 열은 LHS-29 결정 (값 · 키 불변) 때문에 손대지 않았다 — 무효 입력을 빈칸으로 바꾸는 것은 정상 값을 바꾸지 않는다 (⬜ 1저자 결정).",
+   "evidence_tests": []
+  },
+  {
+   "id": "WEB-03",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "claude (10-05 · RGL-02 · 04 수정 범위 밖으로 남긴 것 — 수정 에이전트 보고)",
+   "opened_in": "docs/reviews/codex_rgl_reverify_request_20261005.md",
+   "title": "일반 경로 (Stage E 까지) 의 망 채널 판정이 \"관통인데 풀지 못한\" 이온 (not_computed · solve_failed) 을 통과시킨다 — 정지 계약 · τ 인계만 거부 · 전자 · 열 채널은 같은 경우에도 valid_null",
+   "note": "같이 남긴 것: ① 실패 처리 두 갈래 — 솔버 단계 실패 = 옛 RR2-01/P1c (full_metrics 에 failed 표지) ↔ 후보 거부 = full_metrics 바이트 그대로 ② 전력 몫 \"zero or non-finite dissipation\" 사유는 0 과 수치 실패를 한 문자열에 묶어 등록하지 않았다 (관통 σ > 0 에서 ΣI²R = 0 은 불가 → 거부 쪽) ③ 솔버가 쓴 뒤 승격 전 크래시 = stash 복구가 옛 provenance 와 후보 JSON 을 짝지을 수 있다 (원래 있던 창 · 조금 길어짐).  Codex 재검증 요청 질문.",
    "evidence_tests": []
   }
  ]

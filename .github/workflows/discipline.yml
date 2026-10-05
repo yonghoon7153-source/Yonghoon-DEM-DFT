@@ -190,6 +190,10 @@ jobs:
       - name: 웹앱 — 파이프라인 provenance
         run: python webapp/test_pipeline_provenance.py
 
+      # ★ 2026-10-05 (Codex RGL · SELF-86) — 망 정지 사슬 끝-끝: 실 생산자 → 정지 helper → τ → 배치 기록 → build_handover
+      - name: 웹앱 — 망 정지 → 인계 사슬
+        run: python webapp/test_network_handover_chain.py
+
       - name: 웹앱 — 예측기 UI · σ_grain
         run: python webapp/test_predictor_ui_and_sigma_grain.py
 

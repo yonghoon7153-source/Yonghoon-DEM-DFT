@@ -150,8 +150,34 @@ def section_g():
                     G.OUTPUT_DIR = old
 
 
+def section_h():
+    """[H] 10-05 RGL-05 (인계와 같은 정의 · J20-l) — AM–AM 접촉 0 이면 평균 면적은 정의되지 않는다.
+    `calc_am_am_cn` 은 접촉 0 에 평균 0 을 넣는다 → 인계표는 빈칸 (N/A) 인데 그룹 표는 0 을 보였다 (총합 0 · 개수 0 은 측정된 0 그대로)."""
+    print('[H] 그룹 표 AM–AM 평균 면적 — 접촉 0 = 빈칸 (인계표와 같은 규칙)')
+    import inspect
+    import app as A
+    fn = getattr(A, '_group_am_am_mean_na', None)
+    if not chk('H0 _group_am_am_mean_na 가 모듈 수준에 있다', callable(fn)):
+        return
+    m0 = {'am_am_n_contacts': 0, 'am_am_mean_area': 0.0, 'am_am_total_area': 0.0}
+    fn(m0)
+    chk('H1 접촉 0 (숫자) → 평균 None · 총합 0 · 개수 0 그대로', m0 == {'am_am_n_contacts': 0, 'am_am_mean_area': None,
+                                                                   'am_am_total_area': 0.0}, str(m0))
+    m1 = {'am_am_n_contacts': '0', 'am_am_mean_area': '0.0'}
+    fn(m1)
+    chk('H2 옛 케이스의 문자열 "0" 도 같은 규칙 (am_am_n_contacts 가 문자열이던 세대)', m1['am_am_mean_area'] is None, str(m1))
+    m2 = {'am_am_n_contacts': 12, 'am_am_mean_area': 0.031}
+    fn(m2)
+    chk('H3 접촉 있음 → 평균 그대로', m2['am_am_mean_area'] == 0.031, str(m2))
+    m3 = {'am_am_mean_area': 0.0}
+    fn(m3)
+    chk('H4 개수 키가 없으면 판단하지 않는다 (값 그대로 — 모르는 것을 지어내지 않는다)', m3['am_am_mean_area'] == 0.0, str(m3))
+    src = inspect.getsource(A.group)
+    chk('H5 그룹 표 라우트가 이 도우미를 부른다 (배선)', '_group_am_am_mean_na(metrics)' in src)
+
+
 def main():
-    for fn in (section_e, section_f, section_g):
+    for fn in (section_e, section_f, section_g, section_h):
         try:
             fn()
         except Exception as e:  # 한 절의 예외가 다른 절을 가리지 않게

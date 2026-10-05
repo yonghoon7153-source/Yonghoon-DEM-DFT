@@ -1420,7 +1420,7 @@ const COL_TIPS = {
   'SE-SE CN std': '수식: σ(CN_i) — 모집단 σ (np.std · ddof 0) · 모든 SE\n\nSE–SE 배위수 분포의 폭.  같은 접촉 정의 (입자–입자만 · 벽 안 셈).\n그룹 강조 (최고값): 낮을수록 좋음 (좁은 분포) — 웹앱 ②-b.',
   'φ_AM': '수식: φ_AM = 1 − φ_SE − ε_sphere/100 = Σ_AM(4/3·π·r³) / (L_x·L_y·판 간격)\n\n구 부피 합 규약 (겹친 부피 이중계상 · union 과 안 닫힘).\n인계표의 φ 는 (라) 질량 보존 열 (phi_*_mass_conserving · J20-e).\nτ 가 없어도 나온다 (웹앱 ②-a · DESC-01).',
   'AM-AM CN': '수식: CN_i = AM_i 의 AM 이웃 수, CN = mean(CN_i) (모든 AM — 접촉 0 포함)\n\n접촉 = 입자–입자 덤프의 AM–AM 행 (벽 제외).  인계표 AM–AM CN 세 열 중 하나 (J20-j).\n전자 전도 경로의 다양성.',
-  'AM-AM Mean Area': '수식: mean(c_cpl[22]) over AM–AM 접촉 (μm²)\n\nAM–AM 개별 접촉의 평균 기하 교차 원판 면적 (Hertz 계열 · AREA-08 legacy).\n= A_dem_geometric (c_cpl[22] = 두 구 교차원 넓이의 정확식 · 작은 δ 에서 Hertz πR*δ 의 ≈ 2 배 · L1-04).',
+  'AM-AM Mean Area': '수식: mean(c_cpl[22]) over AM–AM 접촉 (μm²)\n\nAM–AM 개별 접촉의 평균 기하 교차 원판 면적 (Hertz 계열 · AREA-08 legacy).\nAM–AM 접촉 0 이면 빈칸 (0/0 · 인계표와 같은 규칙 · RGL-05).\n= A_dem_geometric (c_cpl[22] = 두 구 교차원 넓이의 정확식 · 작은 δ 에서 Hertz πR*δ 의 ≈ 2 배 · L1-04).',
   'AM-AM N contacts': '수식: Σ_i CN_i / 2 = AM–AM 접촉 덤프 행 수 (쌍마다 한 번 · 벽 제외)\n\n인계표 AM–AM CN 세 열 중 하나 (J20-j).\n⚠ 지금 full_metrics.json 에 문자열로 저장돼 숫자 비교 · 그림에서 빠질 수 있다 (웹앱 ② 에서 정수로).',
   'SE Cluster': '전체 SE를 접촉 그래프로 연결했을 때 분리된 덩어리 수.\n이상적으로는 1개의 거대 클러스터가 전극을 관통해야 함.\n많으면 네트워크가 분절된 것.',
   'Large(≥10)': 'SE 10개 이상으로 구성된 유의미한 클러스터 수.\n작은 클러스터(2~9개)는 이온 전도에 기여 못함.\n이상적: Large = 1~2개.',

@@ -7097,6 +7097,19 @@ def single(case_id):
 # (label, unit, key, category).  카테고리 순서는 σ_ionic/σ_e 생산 폼의 입력 순서를 따른다:
 #   조성 → 구조 → SE 계면 (이온) → AM 계면 (전자, Stage 15) → 전송 (Stage E, 세 채널) → 접촉역학 → 응력.
 #   전송 칸은 Stage E 값 (phantom 거름) — 생산 적합의 타깃.
+def _group_am_am_mean_na(metrics):
+    """★ 10-05 RGL-05 (인계표와 같은 정의 · J20-l) — AM–AM 접촉 0 이면 평균 면적은 정의되지 않는다 (0/0).
+    `calc_am_am_cn` 은 접촉 0 에 평균 0 을 넣는다 → 인계표 `am_am_mean_area` 는 빈칸 (N/A) 인데 그룹 표는 0 을 보였다.
+    개수 0 · 총합 0 은 측정된 0 그대로 둔다 · 개수 키가 없으면 판단하지 않는다 · 옛 세대의 문자열 개수 ('0') 도 같은 규칙."""
+    try:
+        n = float(metrics.get('am_am_n_contacts'))
+    except (TypeError, ValueError):
+        return metrics
+    if n == 0.0:
+        metrics['am_am_mean_area'] = None
+    return metrics
+
+
 GROUP_DISPLAY_KEYS = [
     ('P:S', '', 'ps_ratio', '조성/구조'),
     ('φ_AM', '', 'phi_am', '조성/구조'),
@@ -7248,6 +7261,7 @@ def group():
             # v1.1 ① — 경로 기준 고립 (옛 세대는 키가 없다 → 100 − 활성 · 분해 두 열은 비워 둔다 = 측정 안 함)
             if metrics.get('am_ionic_isolated_pct') is None and isinstance(metrics.get('ionic_active_pct'), (int, float)):
                 metrics['am_ionic_isolated_pct'] = 100.0 - metrics['ionic_active_pct']
+            _group_am_am_mean_na(metrics)
 
             # Derived: constriction percentage (1 − 접촉별 비가중 평균 · L2-08)
             bf = metrics.get('bulk_resistance_fraction')
