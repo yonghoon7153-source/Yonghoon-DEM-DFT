@@ -40,6 +40,7 @@
 | τ_e | (리포에 없음) | — | electrode tortuosity factor (Nguyen 2020) — 우리 tau2 와 다른 양 |
 
 - **'tortuosity factor' 는 τ² (= tau2) 에만 쓴다.**  √ 값 (τ_Lap,eff · tau) 에 쓰지 않는다.
+- ★ **표기 (1저자 10-05 밤 — *"comsol이랑 우리 자료에선 τ²이라 표현하지말고 그냥 수송 tortuosity"*)**: 보고 · 덱 · 그림 · COMSOL 자료에서 tau2 의 이름 = **수송 tortuosity** (영문 transport tortuosity) — 정의 한 줄 병기 (φ_SE·σ₀/σ_eff · **제곱근 아님** = 문헌의 tortuosity factor) · 짝 = 기하학적 tortuosity (τ_geo) · √ 값에는 이 이름을 쓰지 않는다 · 키 (`tau2_*`) 는 그대로 · 적용 = 10-06 덱 (`docs/report_20261006/build_deck.py`) · ⬜ 웹앱 · 열 사전 · COMSOL 2D 내보내기 표시 이름 (`webapp/test_tau_labels.py` J1–J4 가 지키는 문구) = 비준 뒤 같은 묶음 (J20-l).
 - 인계 열 "T" 의 키는 **`tau2`** — 우리 문서에서 T = 두께 · 온도, κ = 열전도도와 겹친다.
 - 키에 **방법 · 이산화 · 가지**를 넣는다 (`flux`/`geo` · `net`/`vox` · `full`/`cf`).  전자 채널 꼬리표는 `_el_` (`_e_` 는 Nguyen τ_e 와 충돌).
 - **협착 배수 = τ_FULL / τ_CF** (같은 망 · 가지만 다름).  ⚠ CF 의 bulk 저항이 원기둥 단면 πr² 라 T 기준 1.2–1.4× 과대 — "모형 내부 협착비" 로 부른다.  웹앱 "Constriction overhead" (τ_Lap,eff / τ_Dij) 는 **정의가 다른 둘을 섞은 비** — 협착 배수로 부르지 않는다.

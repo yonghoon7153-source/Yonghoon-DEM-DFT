@@ -1290,8 +1290,8 @@ def edit_6b(sw, frame_src, d, legend_src, foot_src):
         (2, 2): f'{{σ|e}} {d["e_h"]["0:10"]:.2f} → {d["e_h"]["10:0"]:.2f} mS/cm (PC 비율이 클수록 낮아짐)',
         (3, 1): '벌크 + 입계 + 접촉 (constriction) — 접촉마다 직렬',
         (3, 2): '접촉 저항을 빼면 {σ|ion} 약 4 배 (모델 내부 비 · Hertz)',
-        (4, 0): 'Tortuosity factor ({τ|^2})',
-        (4, 1): '{τ|^2} = {φ|SE} · {σ|0} / {σ|ion} ({σ|0} = 고체전해질 펠릿 3.0 mS/cm)',
+        (4, 0): '수송 tortuosity',          # 1저자 10-05 밤: τ² 라 쓰지 않는다 (값 = φ_SE·σ₀/σ_ion · 제곱근 아님)
+        (4, 1): '{φ|SE} · {σ|0} / {σ|ion} ({σ|0} = 고체전해질 펠릿 3.0 mS/cm)',
         (4, 2): f'{fmt(d["t2"]["0:10"], 2)} (0:10) → {fmt(d["t2"]["7:3"], 2)} (7:3 최소)',
     }
     for (r, c), spec in content.items():
@@ -1415,7 +1415,8 @@ def set_notes_text(notes, paragraphs):
 NOTES_6A = [
     '접촉망 해석 = 입자 = 노드 · 접촉 = 저항 · Kirchhoff 로 푼다.  접촉 저항 = 벌크 + 접촉 (협착, R_c = 1/(2σa)) + 입계 '
     '— 접촉마다 직렬.',
-    '이 해석에서 나오는 수송 지표 = 유효 전도도 σ 와 Tortuosity factor τ² = φ_SE·σ₀/σ_ion (다음 장) — 3 장의 Tortuosity '
+    '이 해석에서 나오는 수송 지표 = 유효 전도도 σ 와 수송 tortuosity = φ_SE·σ₀/σ_ion (다음 장 · 제곱근 아님 = 문헌의 tortuosity '
+    'factor) — 3 장의 Tortuosity '
     '(기하학적 · SE 접촉망 최단 경로) 와 다른 양이다.',
 ]
 
@@ -1430,10 +1431,11 @@ def notes_6b(d):
         'Physics = Tabor · 부피 · 기하 상한 보정 (5 장 Coverage 와 같은 정의).',
         f'σ_contact-free / σ_full (이온 · Hertz) = {cf} (0:10 → 10:0) — 같은 망에서 접촉 저항 항만 뺀 모델 내부 비 '
         '(실험 대비 오차가 아니다).',
-        'Tortuosity factor τ² = φ_SE·σ₀/σ_ion (σ₀ = 3.0 mS/cm 펠릿값) — 3 장의 Tortuosity (기하학적) 와 다른 양.',
+        '수송 tortuosity = φ_SE·σ₀/σ_ion (σ₀ = 3.0 mS/cm 펠릿값 · 제곱근 아님 = 문헌의 tortuosity factor) — 3 장의 Tortuosity '
+        '(기하학적) 와 다른 양.',
         f'"7:3 최대 · 최소" 는 Hertz 기준이다 — Physics 로는 σ_ion 이 7:3 ({fmt(ip["7:3"], 4)}) · 10:0 '
         f'({fmt(ip["10:0"], 4)}) 같은 수준, σ_e 는 7:3 ({ep["7:3"]:.2f}) 이 10:0 ({ep["10:0"]:.2f}) 보다 낮고, '
-        f'τ² 최소는 {d["t2_p_min"]} ({fmt(d["t2_p"][d["t2_p_min"]], 2)}).',
+        f'수송 tortuosity 최소는 {d["t2_p_min"]} ({fmt(d["t2_p"][d["t2_p_min"]], 2)}).',
         '조성당 전극 1 개 (시드 반복 없음) — 7:3 과 10:0 의 차이가 전극 간 산포보다 큰지는 미확인.  σ 는 접촉망 모델 값 '
         '(실험 앵커 아님).  그래프 = PowerPoint 차트 (오른쪽 클릭 → 데이터 편집).',
     ]
