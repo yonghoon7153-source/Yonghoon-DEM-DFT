@@ -100,6 +100,8 @@ pristine + 조건 4 (LLI 단독 10 % · LAM_NE 단독 10 % · 혼합 10/10/10 ·
 
 **2026-10-05 사용자: "권고대로 진행"** — 위 순서 그대로: 사용자가 중복 검색 (`LLI_std` · `xn1_std` · `asarray`) 뒤 1 · 2 를 같은 날 따로
 올리고, URL 을 받으면 이 절에 덧붙인다. 아직 URL 없음 · 3 (Discussion) 과 PR 은 보류 그대로 · 이 저장소 쪽 발송 0.
+**2026-10-05 중복 검색 (사용자 확인):** upstream Issues 에서 `is:issue LLI_std` · `is:issue xn1_std` · `is:issue asarray` 세 검색 모두 결과 없음
+→ 같은 내용의 issue 는 없는 것으로 보고 1 · 2 를 올린다 (사용자).
 
 ## 이 위키와의 관계
 

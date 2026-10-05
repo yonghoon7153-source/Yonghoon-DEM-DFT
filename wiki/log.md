@@ -3506,3 +3506,6 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 ## [2026-10-05] update | ampworks — upstream 알림: 사용자 "권고대로 진행" (발송은 사용자 · URL 대기)
 - 더한 것: upstream 알림 절에 결정 한 줄 — 중복 검색 뒤 issue 1 · 2 를 같은 날 따로 (사용자) · URL 을 받으면 덧붙임 · 3 · PR 보류 그대로
 - 하지 않은 것: upstream issue · discussion · PR 발송 (사용자 몫) · 중복 검색 (이 세션 API 밖)
+
+## [2026-10-05] update | ampworks — 중복 검색 결과 없음 (사용자 확인)
+- 더한 것: upstream 알림 절에 한 줄 — `LLI_std` · `xn1_std` · `asarray` 의 issue 검색 셋 모두 결과 없음 (사용자 2026-10-05 "3개다 나한테 안떠") → 1 · 2 발송은 사용자
