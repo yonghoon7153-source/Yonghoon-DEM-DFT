@@ -7,10 +7,13 @@
      `lhs_webapp_batch.write_outputs` 로 network 배치 (stop_after=network) 를 쓴 뒤 `load_webapp` → `build_handover` (⑤⑥⑦ 다섯 묶음):
      done 두 행 = 접촉 단계 판과 같은 값 · failed 행 = wa_status failed · 웹앱 열 빈칸 · 인계 거부 없음 (RGL-03).
   ⚠ ③ 의 행 값은 접촉 단계 생산본이다 — 합성 침대는 정지 **상태**만 넘긴다 (③ 은 다섯 census 묶음만 — 망 단계 고유 열은 ④).
-  ④ (v1.2 망 τ 묶음) ① 의 실 생산자 폴더를 배치 `--work/results/<case>` 모양으로 놓고 `load_tau_results` (출처 관문 P0–P3 — run id · 도장 ·
-     입력 digest · metrics_flat 과 같은 세대) → `build_handover(webapp_groups='tau')`: 관통 OK · 비관통 NOT_PERCOLATING · 수치 실패 행 τ 빈칸 ·
+  ④ (v1.2 망 τ 묶음) ① 의 실 생산자 폴더를 배치 `--work/results/<case>` 모양으로 놓고 `load_tau_results` (출처 관문 P0–P4 — run id · 도장 ·
+     입력 digest · metrics_flat 과 같은 세대 · 망 정지 계약 재검사) → `build_handover(webapp_groups='tau')`: 관통 OK · 비관통 NOT_PERCOLATING · 수치 실패 행 τ 빈칸 ·
      배치 뒤 다시 돌린 폴더 (새 run id) 는 거부.  ⚠ ④ 의 행은 실 배치 케이스 이름 + 합성 침대의 τ — 출처 관문 · 값 규칙 시험이지 그 케이스의 값이 아니다.
-     옛 코드: ① 의 정상 비관통이 failed (RGL-02) · ③ 은 network 배치를 거부 (RGL-03) · ④ 는 묶음 tau · 로더가 없다."""
+  ④c (10-05 RGLR3-02 · Codex 4차 재검증 probes/new_probes.py) — 같은 실 생산자 폴더에서 **dual 만** 바꾼 두 반례 (두 모드 띠 규칙 L0 → L1 · σ₀ ×2 와
+     σ_dim 6 자리 재계산) 는 인계 때 망 정지 계약 재검사 (τ P4) 가 거부 · 기존 셋 (입력 바이트 P2 · σ_ratio ×4 P3 · run id P1) 그대로 · 정상 L0 · 비관통 ·
+     띠 L1 · L2 는 옛 판과 같은 칸으로 받는다.
+     옛 코드: ① 의 정상 비관통이 failed (RGL-02) · ③ 은 network 배치를 거부 (RGL-03) · ④ 는 묶음 tau · 로더가 없다 · ④c 의 dual 반례 둘을 받았다 (RGLR3-02)."""
 import csv
 import json
 import os
@@ -140,7 +143,7 @@ def main():
             chk(f"수치 실패 행 = wa_status failed ({rf.get('wa_status')!r}) · 웹앱 열 {len(cleared)} 칸 빈칸 · 다른 값으로 바뀐 칸 0",
                 rf.get('wa_status') == 'failed' and len(cleared) > 20 and not bad and set(c_n) == set(c_c), str(bad[:5]))
 
-        print('④ 실 생산자 폴더 → 망 τ 원천 (load_tau_results · 출처 관문 P0–P3) → 인계 생성기 묶음 tau (v1.2)')
+        print('④ 실 생산자 폴더 → 망 τ 원천 (load_tau_results · 출처 관문 P0–P4) → 인계 생성기 묶음 tau (v1.2)')
         #  배치 기록 = 이번 실행의 run id · metrics_flat 행 = 실 배치 접촉 단계 행 + 폴더 full_metrics 의 τ 대조 키 (row_for 처럼 **있는** 키만 —
         #   합성 침대의 porosity 로 같은 프레임 QC 를 덮지 않는다 · 묶음 tau 만 부르니 ① ② 관문은 돌지 않는다)
         tie = tuple(ps.NETWORK_STOP_LEDGER_KEYS) + tuple(getattr(LDD, 'TAU_TIE_EXTRA', ()))
@@ -188,6 +191,86 @@ def main():
             shutil.rmtree(d5[0], ignore_errors=True)
         chk('④b 배치 뒤 다시 돌린 폴더 (실 생산자 새 run id) 로는 τ 를 싣지 않는다 — FillRefusal τ P1 (낡은 세대)',
             err5.startswith('FillRefusal') and 'τ P1' in err5, err5[:200])
+
+        print('④c Codex 4차 재검증 RGLR3-02 (probes/new_probes.py 그대로) — 실 생산자 폴더에서 dual 만 바꾼 반례 · 정상 L0 · L1 · L2 · 비관통 보존')
+        #  입력 · 도장 · run id · full_metrics · 배치 metrics_flat · 모드 파일 · legacy 는 그대로 두고 **dual 만** 바꾼다 (Codex 표 두 줄).  옛 로더 (P0–P3) 는
+        #   dual 의 σ_ratio · 상태 두 키만 full_metrics 와 맞대어 띠 규칙 L1 (BAND_FALLBACK) · σ₀ ×2 (σ₀ 6.0 mS/cm) 를 받았다.  인계 때 망 정지 계약
+        #   (pipeline_service.network_stop_verdict — 전 사본 · 투영 · σ₀ 짝) 을 다시 부르면 거부된다 (τ P4).  기존 반례 셋 (P1 · P2 · P3) 은 그대로.
+        runs.update({'band_l1': _run_bed(app, 'band_l1'), 'band_l2': _run_bed(app, 'band_l2')})
+        chk(f"④c 실 생산자 침대 띠 L1 · L2 = done · done ({runs['band_l1'][1]} · {runs['band_l2'][1]})",
+            runs['band_l1'][1] == runs['band_l2'][1] == 'done')
+
+        def _tau_batch(tag, cases):
+            """{케이스: 실 생산자 폴더} → (results 루트, load_webapp) — 배치 기록 = 그 폴더의 run id · metrics_flat 행 = full_metrics 스칼라 (row_for 처럼)."""
+            root = tdir / f'tau_{tag}'
+            res_ = root / 'results'
+            res_.mkdir(parents=True)
+            stx = json.loads(json.dumps(st0))
+            stx.update(stop_after='network', cases={})
+            rowsx = {}
+            for c, d_ in cases.items():
+                shutil.copytree(d_, res_ / c)
+                fm_ = json.loads((res_ / c / 'full_metrics.json').read_text(encoding='utf-8'))
+                stx['cases'][c] = dict(case=c, stop_after='network', status='done', failed_stages=[], network_run_id=fm_['network_run_id'])
+                rowsx[c] = dict({k: v for k, v in fm_.items() if not isinstance(v, (dict, list))}, case=c)
+            LWB.write_outputs(root / 'batch', stx, rowsx)
+            return res_, LDD.load_webapp(root / 'batch')
+
+        def _try_load(res_, lw_):
+            try:
+                return LDD.load_tau_results(res_, lw_), ''
+            except Exception as e:                                        # noqa: BLE001
+                return None, f'{type(e).__name__}: {e}'
+
+        pos = {'L0_through': runs['through'][0], 'nonthrough': runs['nonthrough'][0], 'L1': runs['band_l1'][0], 'L2': runs['band_l2'][0]}
+        res_p, lw_p = _tau_batch('pos', pos)
+        tv_p, err_p = _try_load(res_p, lw_p)
+        want_p = {c: {cc: tf._cell(v) for cc, v in tf.case_row(str(d_)).items() if cc in tcols} for c, d_ in pos.items()}
+        got_p = {c: (tv_p or {}).get('cases', {}).get(c, {}).get('cells') for c in pos}
+        _st_p = {c: ((got_p[c] or {}).get('ion_net_status_hertz'), (got_p[c] or {}).get('ion_net_band_rule_hertz')) for c in pos}
+        chk(f'④c 정상 L0 · 비관통 · 띠 L1 · L2 = 받는다 · 칸 = tau_flux.case_row 그대로 (옛 판과 같다 · "L1 을 모두 거부" 하지 않는다) {_st_p}',
+            not err_p and all(got_p[c] == want_p[c] for c in pos)
+            and _st_p == {'L0_through': ('OK', 'L0'), 'nonthrough': ('NOT_PERCOLATING', 'L0'), 'L1': ('BAND_FALLBACK', 'L1'),
+                          'L2': ('BAND_FALLBACK', 'L2')}, err_p[:200])
+
+        def _dual_band(du):
+            for m in ('hertzian', 'physics'):
+                du[m]['boundary_rule'] = 'L1'
+
+        def _dual_sigma0(du):
+            for m in ('hertzian', 'physics'):
+                du[m]['sigma_grain_S_cm'] *= 2
+                du[m]['sigma_full_mScm'] = round(1000 * du[m]['sigma_grain_S_cm'] * du[m]['sigma_full'], 6)
+
+        def _neg(key, label, tag, edit):
+            res_, lw_ = _tau_batch(key, {'lhs00_000': runs['through'][0]})
+            cd = res_ / 'lhs00_000'
+            edit(cd)
+            tv_, err_ = _try_load(res_, lw_)
+            cells = (tv_ or {}).get('cases', {}).get('lhs00_000', {}).get('cells') or {}
+            chk(f'④c {label} → 거부 ({tag})', err_.startswith('FillRefusal') and tag in err_,
+                (err_ or f"받았다: {cells.get('ion_net_status_hertz')} · σ₀ {cells.get('ion_sigma0_mScm')} · 띠 {cells.get('ion_net_band_rule_hertz')}")[:240])
+
+        def _edit_json(name, fn):
+            def _e(cd):
+                p = cd / name
+                x = json.loads(p.read_text(encoding='utf-8'))
+                fn(x)
+                p.write_text(json.dumps(x, ensure_ascii=False, indent=2), encoding='utf-8')
+            return _e
+
+        def _atoms_append(cd):
+            with (cd / 'atoms.csv').open('a', encoding='utf-8') as fh:
+                fh.write('\n')
+        _neg('dual_band', 'dual 만 두 모드 띠 규칙 L0 → L1 (Codex dual_band_only — 옛: BAND_FALLBACK 로 수용)', 'τ P4 — 망 정지 계약 재검사',
+             _edit_json('network_conductivity_dual.json', _dual_band))
+        _neg('dual_sigma0', 'dual 만 두 모드 σ₀ ×2 · σ_dim 6 자리 재계산 (Codex dual_sigma0_only — 옛: OK · σ₀ 6.0 으로 수용)', 'τ P4 — 망 정지 계약 재검사',
+             _edit_json('network_conductivity_dual.json', _dual_sigma0))
+        _neg('atom_input', 'atom 입력 바이트 변경 (Codex atom_input_mutation)', 'τ P2', _atoms_append)
+        _neg('dual_ratio', 'dual σ_ratio 만 ×4 (Codex dual_sigma_ratio_only)', 'τ P3',
+             _edit_json('network_conductivity_dual.json', lambda du: du['hertzian'].update(sigma_full=du['hertzian']['sigma_full'] * 4)))
+        _neg('run_id', 'full_metrics run id 변경 (Codex run_id_mismatch)', 'τ P1',
+             _edit_json('full_metrics.json', lambda fm: fm.update(network_run_id='other')))
     finally:
         shutil.rmtree(tdir, ignore_errors=True)
         for v in runs.values():

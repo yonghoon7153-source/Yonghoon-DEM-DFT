@@ -1534,8 +1534,15 @@ def load_webapp(dir_path, census_path=None):
 #  ★ τ 명명 규약 (CLAUDE.md ★★ τ 블록 · 정본 `docs/reviews/tau_conventions_judgment_v2_20261003.md` §5-1 열 · §5-2 게이트 · §5-3 한정어).
 #    열 이름 · 순서 · 값 · 직렬화 = **tau_flux 그대로** (`column_names` · `case_row` · `_cell`) — 생성기는 τ 를 계산하지 않는다 (규율 ① —
 #    다시 짜면 게이트 G1–G6 · 공용 기술 검사 · 모드 꼬리가 두 벌이 된다).  여기는 열 사전의 **뜻**과 원천의 **출처 관문**만 둔다.
-TAU_NET_SCHEMA = 'lhs_tau_net/v1'
+#: v2 (10-05 RGLR3-02) — 출처 관문 P4 (인계 때 망 정지 계약 재검사 · 활성 세대 · 읽기 안정) · 케이스마다 같은 세대 검사 기록.  v1 (P0–P3) 원천은 받지 않는다.
+TAU_NET_SCHEMA = 'lhs_tau_net/v2'
 TAU_NET_SOURCE = 'tau_flux'
+#: ★ 10-05 RGLR3-02 (Codex 4차 재검증 §3 · §8-2) — 인계 때 케이스마다 다시 도는 같은 세대 검사 (이 순서 · 출처 부록 same_generation_checks 에 그대로).
+#:   하나라도 실패하면 생성기가 거부한다 (P0–P3 과 같은 규칙 — 그 케이스 τ 를 빈칸 + 사유로 싣지 않는다) ⇒ 출처 부록에 행이 있다 = 이 검사를 다 통과했다.
+TAU_SAME_GEN_CHECKS = ('P0_records', 'P1_run_id', 'P2_input_digest', 'P3_batch_tie', 'P4_stop_contract', 'P4_generation', 'P4_read_stable')
+#: 대조의 기준 — **지금 파일끼리** (배치 기록 status.json · metrics_flat 과 폴더의 모든 사본) · 게시 시점 해시가 없다 ⇒ 모든 사본 (dual · 모드 파일 ·
+#:   legacy · full_metrics · 도장) 을 함께 일관되게 바꾼 편집은 못 잡는다 (Codex RGLR3-02 §8-2 마지막 항 — 잡으려면 게시 때 결과 해시를 배치 기록에 묶어야 한다).
+TAU_SAME_GEN_BASIS = 'current_files_no_publish_hash'
 TAU_NET_MODES = ('hertz', 'physics')
 TAU_NET_VERDICT = ('✅ 싣는다 (망 τ 묶음 · v1.2 — Codex 10-05 3차 재검증 §3 Q5 · §6-5 · LW 제외) · ⚠ G6 (협착 세대) — 두 모드 모두 물리 타깃 '
                    '(실험 절대 대조) HOLD · 값은 싣는다 (ML 기술자 전용)')
@@ -1548,7 +1555,10 @@ CAVEAT_TAU_NET = ('1세대 협착식 (hertz = 반공간 Maxwell R_c = 1/(2σa) �
                   '면적 + ψ < 1e-4 절벽) — ML 기술자 전용 · **실험 절대 대조 금지** (G6 HOLD — 순수 SE 게이트 · S3 판정 전) · z 한 축 (Tjaden 식 21 τ_C 와 '
                   '직접 비교 금지) · 형상 · CBD 차단 없음 · σ₀ 펠릿값 위 Holm 접촉 저항 = 부분 이중계상 (방향 tau2↑) · 띠 끝 단락 → tau2 하향 ≤ 4r_SE/L '
                   '(ion_net_band_frac_<모드>) · φ = 전 SE (비관통 · 고립 포함 — dead 부피가 tau2 를 키운다) → 1차 수송량은 f · τ_e (Nguyen Eq 2 · '
-                  'electrode) 아님')
+                  'electrode) 아님 · 출처 관문 (인계 때 케이스마다 다시 돈다 · 출처 부록 <인계표>_tau_provenance.tsv 의 same_generation_checks — P0 기록 · '
+                  'P1 run id · P2 입력 digest · P3 배치 metrics_flat 대조 · P4 망 정지 계약 재검사 (전 사본 · 투영 · σ₀ 짝) · 활성 세대 · 읽기 안정) = '
+                  '배치 기록과 지금 파일끼리의 대조 — ⚠ 게시 시점 해시가 없어 모든 사본을 함께 일관되게 바꾼 편집은 못 잡는다 '
+                  '(same_generation_basis = current_files_no_publish_hash · Codex RGLR3-02 §8-2)')
 CAVEAT_TAU_NET_T2 = ('flux 기반 · 관통 (두 평행 띠 Dirichlet) conventional tortuosity factor (Nguyen Eq 1) — electrode tortuosity factor τ_e '
                      '(Nguyen Eq 2) 가 아니다 · 차단 대칭셀 EIS-TLM 의 τ (Landesfeind Eq 13 형) 와 한정어 없이 비교하지 않는다 · 문헌 tau2 와 맞댈 때 '
                      'Minnmann 은 순수 SE 펠릿 τ² ≡ 1 기준 (σ₀ 1.6 mS/cm @25 °C) — 우리 tau2 는 간선 재료 σ₀ 기준 · ' + CAVEAT_TAU_NET)
@@ -1559,13 +1569,17 @@ _TAU_STATUS = ('이온 망 인계 상태 (tau_flux 게이트 G1–G6 · v2 §5-2
                '값 빈칸) · NOT_COMPUTED (빈칸 + 사유 열).  부류 (RGLR-01): NOT_COMPUTED = **기술적 실패** (입력 결손 · 무효 · 솔버 관문 · 온도 짝 · '
                '관통 불일치 — 값 없음) ↔ BAND_FALLBACK · NOT_PERCOLATING · MODEL_BELOW_CONTINUUM_BOUND = 등록된 **과학적 HOLD** (입력 유효 · 규칙대로 '
                '빈칸 또는 표지) · G6 = 두 모드 모두 물리 타깃 HOLD (값은 싣는다) · 이 칸이 빈칸 = 웹앱 배치 행이 done · partial 이 아니다 (wa_status · '
-               'tau_flux 를 부르지 않았다)')
+               'tau_flux 를 부르지 않았다) · ★ 인계표에는 NOT_COMPUTED 가 실리지 않는다 (10-05 RGLR3-02) — done · partial 행의 폴더가 기술적 결손이면 그 배치의 '
+               '망 정지 계약이 done 을 줄 수 없는 상태 (배치 뒤 폴더가 바뀌었다) 이므로 생성기가 인계 때 τ P4 (망 정지 계약 재검사) 에서 거부한다 — 기술적 결손을 '
+               '"같은 세대 검증 통과" 행으로 싣지 않는다 (NOT_COMPUTED 는 tau_flux CLI · 웹앱 케이스 페이지의 어휘) · 실린 행 = 출처 부록의 같은 세대 검사 '
+               '(P0–P4) 를 다 통과한 케이스')
 _TAU_REASON = ('NOT_COMPUTED 의 사유 (사유 코드 = ":" 앞) — missing_input (망 결과 · 장부 L_gap · L_mc · φ_mc · calc_percolation · 띠 규칙 기록 · '
                '온도 기록 없음) · invalid_input: 세부 (공용 기술 검사 tau_flux.ion_record_problem — 생산자 계약 위반: computed 인데 σ 두 표현이 유한 양수가 '
                '아니거나 서로 다름 (RGLR-02) · 관통 분율 (0, 1] 밖 · 증명된 비관통 조합이 아닌 valid_zero · 모르는 상태) · solver_guard (관통인데 σ 없음 — '
                '생산자 not_computed) · percolation_disagree (G2 — 솔버 관통 ≠ calc_percolation) · temperature_mismatch (G4 — σ₀ 와 σ_full 의 온도가 다르다 · '
                '두 모드의 (σ₀, T) 가 다르다) · generation_invalid: 세부 (10-05 RGLR2-02 — 케이스 폴더의 망 활성 세대가 확정되지 않음: '
-               'tau_flux.network_generation_problem — full_metrics ↔ 도장 불일치 · 되돌림 실패 · 중단된 게시 흔적 · 도장 손상 · 두 모드 모두) · 다른 상태면 빈칸')
+               'tau_flux.network_generation_problem — full_metrics ↔ 도장 불일치 · 되돌림 실패 · 중단된 게시 흔적 · 도장 손상 · 두 모드 모두) · 다른 상태면 빈칸 · '
+               '인계표 (network 배치 done · partial 행) 에서는 늘 빈칸 — NOT_COMPUTED 행은 생성기가 τ P4 에서 거부한다 (10-05 RGLR3-02)')
 _TAU_PER_MODE = {
     'f_ion': ('★ 이온 유효 전도도 비 f = σ_eff/σ₀ ({m} 망 · 무차원 · 단위 1) = σ_ratio × L_gap/L_mc — σ_ratio = 솔버 FULL 해의 무차원 sigma_full '
               '(8 자리 · TAU-25) · L_gap = 판 간격 · L_mc = 질량 보존 두께 = **판 간격 해의 질량보존 두께 재척도 (해 아님)** · 문헌 ε/τ² (Tjaden) · '
@@ -1649,6 +1663,15 @@ def _tau_canon(v):
     return json.dumps(v, sort_keys=True, default=str)
 
 
+def _tau_read_names(ps):
+    """P4 읽기 안정이 검사 앞뒤로 해시하는 파일 (`pipeline_service.file_digest` — 없음 · 못 읽음 = '') — 정지 계약 · 세대 검사 · tau_flux.case_row ·
+    P2 가 읽는 것 전부.  이름은 웹앱 정의 그대로 (`NETWORK_ARTIFACT_GLOBS` 의 고정 이름 = 네 망 JSON + 도장 · `ATTEMPT_FILE`) + full_metrics + 입력 둘
+    (사본 금지 — 규율 ①)."""
+    names = [g for g in ps.NETWORK_ARTIFACT_GLOBS if '*' not in g] + ['full_metrics.json', ps.ATTEMPT_FILE, *TAU_INPUT_FILES]
+    return tuple(dict.fromkeys(names))
+
+
+
 def load_tau_results(results_dir, webapp):
     """망 τ 원천 (v1.2) — network 정지 배치 (`lhs_webapp_batch --stop-after network`) 의 케이스 폴더 묶음 (`<--work>/results`) → `build_handover(tau=…)`.
 
@@ -1662,10 +1685,23 @@ def load_tau_results(results_dir, webapp):
       P1 run id — 배치 기록 network_run_id (비지 않은 문자열) = full_metrics network_run_id = active_network_run_id = 도장 network_run_id ·
          도장 solver_status success · full_metrics network_solver_status success  (다르면 낡은 세대 — 배치 뒤 다시 돌린 폴더 · 다른 배치의 폴더)
       P2 입력 digest — 도장 input_digests (atoms.csv · contacts.csv) = 지금 폴더 파일의 `pipeline_service.file_digest`
-      P3 같은 세대 — full_metrics 의 τ 장부 (NETWORK_STOP_LEDGER_KEYS) · 도장 · 망 σ 투영 (TAU_TIE_EXTRA) = 배치 metrics_flat 칸 (row_for 직렬화) ·
-         dual σ_ratio · 상태 = full_metrics 투영 (TAU_DUAL_PROJ) · `tau_flux.case_row` 가 읽은 값 = 관문을 본 바이트로 낸 `ion_columns`
-    반환 {'schema', 'source', 'batch_source', 'columns', 'tau_flux_sha256', 'cases': {case: {'network_run_id', 'input_digests', 'dual_sha256',
-         'full_metrics_sha256', 'cells' (tau_flux 직렬화 `_cell`)}}}.  어긋나면 FillRefusal ('τ 정지점' · 'τ P0'–'τ P3')."""
+      P3 같은 세대 (배치 기록) — full_metrics 의 τ 장부 (NETWORK_STOP_LEDGER_KEYS) · 도장 · 망 σ 투영 (TAU_TIE_EXTRA) = 배치 metrics_flat 칸
+         (row_for 직렬화) · dual σ_ratio · 상태 = full_metrics 투영 (TAU_DUAL_PROJ)
+      P4 같은 세대 (인계 때 재검사 · 10-05 RGLR3-02 — Codex 4차 재검증 §3 · §8-2 최소 해제 "기존 정지 계약의 전 사본 · 투영 · σ₀ 대조를 인계 때 다시 호출"):
+         P4_stop_contract — 배치가 done 을 준 **바로 그 함수** `pipeline_service.network_stop_verdict` (①–⑧ — 전 사본 (dual · 모드 파일 둘 · legacy) ·
+            full_metrics 망 투영 (NET_MERGE_KEYS) · σ₀ · 온도 짝 (두 모드 · legacy · full_metrics · 등급 짝 σ₀) · 띠 규칙 필드 · 공용 기술 검사 · τ 소비자 상태
+            = OK · 등록된 과학적 HOLD 만) 를 지금 폴더에 다시 부른다 (fm = 관문이 본 바이트 · 사본 아님 — 규율 ①).  ⚠ P3 은 dual 의 두 키만 보아 dual 만
+            바꾼 띠 규칙 L0 → L1 (BAND_FALLBACK 로) · σ₀ ×2 (σ₀ 6.0 mS/cm 로) 를 받았다 (Codex 실 CLI 생산본 반례).  기술적 결손 폴더 (tau_flux 라면
+            NOT_COMPUTED) 도 여기서 거부된다 — 그 배치의 계약이 done 을 줄 수 없는 상태이므로 "같은 세대 검증 통과" 행으로 싣지 않는다.
+         P4_generation — `tau_flux.network_generation_problem` (case_row 가 쓰는 같은 함수 — 도장 손상 · 중단된 게시 흔적 · 되돌림 실패 기록)
+         P4_read_stable — 검사 앞뒤로 같은 바이트 (`_tau_read_names` 해시) · `tau_flux.case_row` 가 읽은 값 = 관문을 본 바이트로 낸 `ion_columns`.
+            ⚠ 이것은 **같은 실행 안의 읽기 일관성**이다 (같은 파일을 두 번 읽어 비교) — 배치 때 바이트와의 대조가 아니다 (Codex RGLR3-02).
+    ⚠ 한계 (`TAU_SAME_GEN_BASIS`): 모든 대조는 배치 기록과 **지금 파일끼리**다 — 게시 시점 해시가 없어 모든 사본 (dual · 모드 파일 · legacy · full_metrics ·
+      도장) 을 함께 일관되게 바꾼 편집은 못 잡는다.  출처 부록의 dual · full_metrics sha256 은 **인계 때 읽은** 바이트다 (배치 때 바이트가 같았다는 증명 아님).
+    반환 {'schema', 'source', 'batch_source', 'columns', 'tau_flux_sha256', 'same_generation_checks', 'same_generation_basis',
+         'cases': {case: {'network_run_id', 'input_digests', 'dual_sha256', 'full_metrics_sha256', 'same_generation_checks' (다 통과한 검사 —
+         TAU_SAME_GEN_CHECKS), 'same_generation_basis', 'cells' (tau_flux 직렬화 `_cell`)}}}.
+    어긋나면 FillRefusal ('τ 정지점' · 'τ P0'–'τ P4') — 한 케이스라도 실패하면 거부 (그 케이스 τ 를 빈칸 + 사유로 싣지 않는다 · P0–P3 과 같은 규칙)."""
     wv = webapp if isinstance(webapp, dict) else {}
     if wv.get('stop_after') != 'network':
         raise FillRefusal(f'τ 정지점 — 웹앱 배치 stop_after={wv.get("stop_after")!r} ≠ network — 망 τ 는 `lhs_webapp_batch --stop-after network` 배치의 '
@@ -1677,6 +1713,7 @@ def load_tau_results(results_dir, webapp):
     cols = list(tf.column_names())
     flat = wv.get('rows') or {}
     tie = tuple(ps.NETWORK_STOP_LEDGER_KEYS) + TAU_TIE_EXTRA
+    read_names = _tau_read_names(ps)
     out = {}
     for case, rec in sorted((wv.get('status') or {}).items()):
         rec = rec or {}
@@ -1686,6 +1723,7 @@ def load_tau_results(results_dir, webapp):
         if not isinstance(rid, str) or not rid:
             raise FillRefusal(f'{case}: τ P1 — 배치 기록 (status.json) 에 network_run_id 가 없다 ({rid!r}) — 폴더의 망 세대를 대조할 수 없다')
         cd = root / case
+        snap0 = {n: ps.file_digest(str(cd / n)) for n in read_names}  # P4 읽기 안정 — 검사 **전** 지문 (아래 모든 읽기 · 검사가 이 바이트를 본다)
         raw = {}
         for n in ('network_conductivity_dual.json', 'full_metrics.json'):
             try:
@@ -1696,6 +1734,7 @@ def load_tau_results(results_dir, webapp):
         dual, fm = raw['network_conductivity_dual.json'][1], raw['full_metrics.json'][1]
         if not isinstance(dual, dict) or not isinstance(fm, dict):
             raise FillRefusal(f'{case}: τ P0 — dual · full_metrics 가 객체가 아니다')
+        dual_sha, fm_sha = (hashlib.sha256(raw[n][0]).hexdigest() for n in ('network_conductivity_dual.json', 'full_metrics.json'))
         prov = ps.read_network_provenance(str(cd))
         if prov.get('provenance_state') == 'missing':
             raise FillRefusal(f'{case}: τ P0 — 망 도장 ({ps.PROVENANCE_FILE}) 이 없다 — 어느 세대인지 대조할 수 없다')
@@ -1729,20 +1768,41 @@ def load_tau_results(results_dir, webapp):
             dv = dual.get(dk).get(rk) if isinstance(dual.get(dk), dict) else None
             if _tau_canon(dv) != _tau_canon(fm.get(fk)):
                 raise FillRefusal(f'{case}: τ P3 — dual[{dk}].{rk}={dv!r} ≠ full_metrics {fk}={fm.get(fk)!r} — dual 이 도장 세대의 망 결과가 아니다')
+        #  P4_stop_contract — 배치가 done 을 준 같은 계약을 지금 폴더에 다시 (전 사본 · 투영 · σ₀ 짝 · 띠 규칙 필드 · τ 소비자 상태 — 사본 아님 · 규율 ①)
+        try:
+            ok4, why4 = ps.network_stop_verdict(str(cd), rid, fm=fm)
+        except Exception as e:                                       # noqa: BLE001 — 판정을 못 내면 통과로 치지 않는다 (fail-closed)
+            ok4, why4 = False, f'정지 계약 판정 중 예외 ({type(e).__name__}: {e})'
+        if not ok4:
+            raise FillRefusal(f'{case}: τ P4 — 망 정지 계약 재검사 실패 (인계 때 · 배치가 done 을 준 같은 계약 pipeline_service.network_stop_verdict ①–⑧): '
+                              f'{str(why4)[:700]} — 그 계약을 통과한 세대의 폴더가 아니다 (배치 뒤 사본 · 투영 · σ₀ · 띠 규칙이 바뀌었거나 기술적 결손) · '
+                              '이 케이스 τ 를 싣지 않는다 (NOT_COMPUTED 로도 싣지 않는다 — "같은 세대 검증 통과" 로 보이지 않게)')
+        #  P4_generation — case_row 가 쓰는 같은 세대 검사 (옛 판은 이 경우를 아래 읽기 대조의 "읽는 사이 바뀌었다" 로 잘못 불렀다)
+        gp = tf.network_generation_problem(str(cd), fm=fm)
+        if gp:
+            raise FillRefusal(f'{case}: τ P4 — 활성 세대 무효 (tau_flux.network_generation_problem): {gp[:500]} — 값 인용 금지 · 재계산 필요')
+        #  P4_read_stable — 같은 실행 안의 읽기 일관성 (같은 파일을 다시 읽어 맞댄다 · 배치 때 바이트와의 대조가 아니다 — 그 한계는 TAU_SAME_GEN_BASIS)
         row = tf.case_row(str(cd))                                   # tau_flux 자신 (웹앱 `_ion_handover` 와 같은 입력)
         chk_ = tf.ion_columns(dual, fm, fm.get('percolation_pct'))
-        if row.get('case') != case or _tau_canon({c: row.get(c) for c in cols}) != _tau_canon({c: chk_.get(c) for c in cols}):
-            raise FillRefusal(f'{case}: τ P3 — tau_flux.case_row 가 읽은 값 ≠ 관문을 본 바이트로 낸 값 (읽는 사이 폴더가 바뀌었다)')
+        moved = sorted(n for n in read_names if ps.file_digest(str(cd / n)) != snap0[n])     # 검사 **뒤** 지문 — 앞과 같아야
+        if moved or row.get('case') != case or _tau_canon({c: row.get(c) for c in cols}) != _tau_canon({c: chk_.get(c) for c in cols}):
+            raise FillRefusal(f'{case}: τ P4 — 읽기 안정 실패: 검사 앞뒤로 바뀐 파일 {moved} · tau_flux.case_row 가 읽은 값 ≠ 관문을 본 바이트로 낸 값 '
+                              '(읽는 사이 폴더가 바뀌었다)')
         out[case] = {'network_run_id': rid, 'input_digests': {n: dig.get(n) for n in TAU_INPUT_FILES},
-                     'dual_sha256': hashlib.sha256(raw['network_conductivity_dual.json'][0]).hexdigest(),
-                     'full_metrics_sha256': hashlib.sha256(raw['full_metrics.json'][0]).hexdigest(),
+                     'dual_sha256': dual_sha, 'full_metrics_sha256': fm_sha,
+                     'same_generation_checks': list(TAU_SAME_GEN_CHECKS), 'same_generation_basis': TAU_SAME_GEN_BASIS,
                      'cells': {c: tf._cell(row.get(c)) for c in cols}}      # tau_flux 자신의 직렬화 (TSV 와 같은 칸)
     return {'schema': TAU_NET_SCHEMA, 'source': str(root), 'batch_source': wv.get('source'), 'columns': cols,
-            'tau_flux_sha256': hashlib.sha256(pathlib.Path(tf.__file__).read_bytes()).hexdigest(), 'cases': out}
+            'tau_flux_sha256': hashlib.sha256(pathlib.Path(tf.__file__).read_bytes()).hexdigest(),
+            'same_generation_checks': list(TAU_SAME_GEN_CHECKS), 'same_generation_basis': TAU_SAME_GEN_BASIS, 'cases': out}
 
 
+#: 출처 부록 열 — ★ 10-05 RGLR3-02: same_generation_checks = 이 케이스에서 **돌았고 통과한** 같은 세대 검사 (TAU_SAME_GEN_CHECKS · ';' 로 잇기 —
+#:   하나라도 실패하면 생성기가 거부해 행이 없다) · same_generation_basis = 대조 기준 (current_files_no_publish_hash — 배치 기록과 지금 파일끼리 · 게시 시점
+#:   해시 없음 ⇒ 모든 사본을 함께 일관되게 바꾼 편집은 못 잡는다).  dual · full_metrics sha256 = **인계 때 읽은** 바이트 (P4 읽기 안정으로 검사가 본 바이트와
+#:   같다 · 배치 때 바이트가 같았다는 증명은 아니다).  옛 열 순서 · 값은 그대로 (끝에 두 열).
 TAU_PROVENANCE_COLS = ('case', 'network_run_id', 'atoms_csv_digest', 'contacts_csv_digest', 'dual_sha256', 'full_metrics_sha256',
-                       'tau_flux_py_sha256', 'results_dir')
+                       'tau_flux_py_sha256', 'results_dir', 'same_generation_checks', 'same_generation_basis')
 
 
 def _tau_src_label(path):
@@ -1760,14 +1820,21 @@ def _tau_src_label(path):
 
 
 def write_tau_provenance(path, tau):
-    """망 τ 출처 부록 TSV — 인계표 CLI 가 `<인계표>_tau_provenance.tsv` 로 쓴다 (τ 칸이 어느 망 세대 · 어느 파일에서 왔는가)."""
+    """망 τ 출처 부록 TSV — 인계표 CLI 가 `<인계표>_tau_provenance.tsv` 로 쓴다 (τ 칸이 어느 망 세대 · 어느 파일에서 왔는가 · 어느 검사를 통과했나).
+    ★ 10-05 RGLR3-02 — 같은 세대 검사 (P0–P4) 를 다 통과한 기록만 적는다: 표지가 모자란 기록 (옛 v1 원천 · 손으로 만든 dict) 이 하나라도 있으면 거부한다
+    (출처 부록의 행 = "검증 통과" 로 읽힌다 — 검사가 안 돈 케이스를 그렇게 적지 않는다)."""
     src = _tau_src_label(tau['source'])
+    bad = sorted(c for c, r in (tau.get('cases') or {}).items() if list((r or {}).get('same_generation_checks') or []) != list(TAU_SAME_GEN_CHECKS))
+    if bad:
+        raise FillRefusal(f'τ P4 — 같은 세대 검사 (P0–P4) 를 다 통과한 기록이 아니다 {bad[:5]} — 출처 부록에 "검증됨" 으로 적지 않는다 '
+                          '(load_tau_results v2 로 다시 읽을 것)')
     with pathlib.Path(path).open('w', encoding='utf-8', newline='') as fh:
         w = csv.writer(fh, delimiter='\t', lineterminator='\n')
         w.writerow(TAU_PROVENANCE_COLS)
         for case, r in sorted(tau['cases'].items()):
             w.writerow([case, r['network_run_id'], r['input_digests'].get('atoms.csv') or '', r['input_digests'].get('contacts.csv') or '',
-                        r['dual_sha256'], r['full_metrics_sha256'], tau['tau_flux_sha256'], src])
+                        r['dual_sha256'], r['full_metrics_sha256'], tau['tau_flux_sha256'], src,
+                        ';'.join(r['same_generation_checks']), r.get('same_generation_basis') or TAU_SAME_GEN_BASIS])
 
 
 def _frac_caveat(col):
@@ -2406,7 +2473,8 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp
     webapp (J20, 선택): `load_webapp` 산출.  설계행 **전부**를 배치가 시도했어야 하고, done · partial 행은 웹앱 porosity = 수확 porosity
     (WA_SAME_FRAME_TOL_PCT) 여야 한다.  ✅ 열만 · 이름 충돌이면 기존 열이 정본 (report['wa_collisions']).  거부 · 실패 행은 빈칸 + wa_status.
     tau (v1.2 망 τ 묶음, 선택): `load_tau_results` 산출.  webapp_groups 에 'tau' 가 있을 때만 받는다 (둘 중 하나만이면 거부) · network 정지 배치만 ·
-    배치 done · partial 케이스 집합 = τ 원천 케이스 집합 · run id 같아야.  τ 열 (tau_flux.column_names()) 은 표 **끝**에 붙는다 — 묶음을 안 부르면
+    배치 done · partial 케이스 집합 = τ 원천 케이스 집합 · run id 같아야 · 케이스마다 같은 세대 검사 (P0–P4 · 10-05 RGLR3-02) 를 다 통과한 기록.
+    τ 열 (tau_flux.column_names()) 은 표 **끝**에 붙는다 — 묶음을 안 부르면
     표 · 열 사전은 옛 그대로 (selftest ㉙f).  done · partial 이 아닌 행은 τ 칸 전부 빈칸 (wa_status 가 사유).
     반환 (out_rows, cols, report).  계약 위반이면 `FillRefusal`.
     """
@@ -2495,7 +2563,7 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp
         wa_coll = [c for c in ok_cols if c in have]
         wa_iso_on = 'ionic_active_pct' in wa_take                   # v1.1 ① — 활성 열이 실리면 경로 기준 고립 (유도) 도 싣는다
         cols += [n for n, _w in WA_ROW_COLS] + wa_take + ([n for n, _w in WA_DERIVED] if wa_iso_on else []) + [n for n, _a, _b, _w in WA_QC]
-    #  ★ v1.2 망 τ 묶음 — 원천 (`load_tau_results`) 이 이 배치로 읽혔는가 (정지점 · 케이스 집합 · run id) · τ 열은 표 끝 (옛 열 순서 불변)
+    #  ★ v1.2 망 τ 묶음 — 원천 (`load_tau_results`) 이 이 배치로 읽혔는가 (정지점 · 케이스 집합 · run id · 같은 세대 검사 P0–P4) · τ 열은 표 끝 (옛 열 순서 불변)
     tau_cols = []
     if tau_on:
         if wv is None or tau is None:
@@ -2524,6 +2592,11 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp
             if (tau['cases'][c] or {}).get('network_run_id') != (wv['status'][c] or {}).get('network_run_id'):
                 raise FillRefusal(f'{c}: τ P1 — τ 기록의 network_run_id {(tau["cases"][c] or {}).get("network_run_id")!r} ≠ 배치 기록 '
                                   f'{(wv["status"][c] or {}).get("network_run_id")!r} — 다른 배치로 읽은 τ 원천이다')
+            #  ★ 10-05 RGLR3-02 — 인계 때 같은 세대 검사 (P0–P4 · 망 정지 계약 재검사 포함) 를 다 통과한 기록만 싣는다 (검사가 안 돈 τ 를 "검증 통과" 행으로 싣지 않는다)
+            _sg = list((tau['cases'][c] or {}).get('same_generation_checks') or [])
+            if _sg != list(TAU_SAME_GEN_CHECKS):
+                raise FillRefusal(f'{c}: τ P4 — τ 기록의 같은 세대 검사 {_sg} ≠ {list(TAU_SAME_GEN_CHECKS)} — 인계 때 검사 (P0–P4) 를 다 통과한 원천이 아니다 '
+                                  '(load_tau_results 로 다시 읽을 것)')
         cols += tau_cols
     out, rep = [], {'n': 0, 'blank_by_status': collections.Counter(),
                     'held_back': dict(HANDOVER_HELD_BACK), 'mono_rows': 0, 'mono_harvest_filled': 0}
@@ -4647,9 +4720,10 @@ def _selftest():
         import pipeline_service as _PS29
         import tau_flux as _TF29
         import network_conductivity as _NC29
+        import network_projection_preflight as _NPP29                      # 웹앱 망 투영의 읽기 전용 재현 (app._network_projection 과 같은 규칙)
         _e29 = ''
     except Exception as e:                                                # noqa: BLE001
-        _PS29 = _TF29 = _NC29 = None
+        _PS29 = _TF29 = _NC29 = _NPP29 = None
         _e29 = f'{type(e).__name__}: {e}'
     _LT29 = globals().get('load_tau_results')
     _TD29 = globals().get('tau_net_define')
@@ -4683,12 +4757,17 @@ def _selftest():
         _BC29 = [{'id1': 10 + k, 'id2': 11 + k, 'contact_area': 0.1, 'delta': 0.05} for k in range(10)]            # 위 띠에만 닿는 비관통
         _L1A = {i: {'type': 1, 'x': 0.0, 'y': 0.0, 'z': 0.5 * k, 'radius': 0.4} for i, k in enumerate(range(81), 1)}    # 띠 폴백 L1 · 판 40
         _L1C = [{'id1': i, 'id2': i + 1, 'contact_area': 0.1 * 0.16, 'delta': 0.05 * 0.4} for i in range(1, 81)]
+        #  띠 폴백 L2 (test_pipeline_provenance 의 band_l2 와 같은 침대 — z 0..10 · 판 40 · L1 의 위 띠가 비어 관측 z 범위 띠)
+        _L2A = {i: {'type': 1, 'x': 0.0, 'y': 0.0, 'z': 0.5 * k, 'radius': 0.4} for i, k in enumerate(range(21), 1)}
+        _L2C = [{'id1': i, 'id2': i + 1, 'contact_area': 0.1 * 0.16, 'delta': 0.05 * 0.4} for i in range(1, 21)]
         _nok, _nnp, _nl1, _n60 = (_net29(_A29, _C29, 20.0), _net29(_B29, _BC29, 20.0), _net29(_L1A, _L1C, 40.0),
                                   _net29(_A29, _C29, 20.0, temp_c=60.0))
+        _nl2 = _net29(_L2A, _L2C, 40.0)
         _lok, _lnp = _led29(_A29, 20.0, eps_u=0.97), _led29(_B29, 20.0, eps_u=0.97)
         _VAR29 = {'OK': (_nok, _lok, 37.0),
                   'MBCB': (_nok, dict(_lok, thickness_mass_conserving_um=20.0, phi_se_mass_conserving=1e-4), 37.0),
                   'BAND': (_nl1, _led29(_L1A, 40.0), 37.0),
+                  'BAND2': (_nl2, _led29(_L2A, 40.0), 37.0),
                   'NC_PERC': (_nnp, _lnp, 37.0),                                   # 솔버 비관통 ↔ calc_percolation 37 % (G2)
                   'NC_INVALID': (_mut29(_nok, 'physics', lambda r_: r_.update(sigma_full_mScm=r_['sigma_full_mScm'] * 4)), _lok, 37.0),
                   'NC_MISSING': (_mut29(_nok, 'both', lambda r_: r_.pop('boundary_rule')), _lok, 37.0),     # 안 A 전 산출물
@@ -4699,7 +4778,11 @@ def _selftest():
         _e29 = _e29 or f'픽스처 {type(e).__name__}: {e}'
 
     def _case29(res, q, var, rid, prov_rid=None, prov_status='success'):
-        """케이스 폴더 = 웹앱 결과 폴더 모양 — atoms/contacts.csv · 실 도장 · full_metrics (장부 + 도장 + 망 투영) · dual."""
+        """케이스 폴더 = 웹앱 결과 폴더 모양 — atoms/contacts.csv · 실 도장 · 망 JSON 넷 · full_metrics (장부 + 망 투영 + 도장).
+        ★ 10-05 RGLR3-02 — 망 JSON 은 생산자 CLI (`network_conductivity.py --contact-mode both`) 처럼 넷 다 쓴다: dual + 모드 파일 둘 (= dual 의 그 모드) +
+        legacy (= Hertz 사본).  full_metrics 의 망 투영 = 웹앱 머지 규칙 그대로 (`network_projection_preflight.simulate_merge` — `NET_MERGE_KEYS` 를
+        legacy 에서 · physics 미러 · 꼬리 키 · None 값은 키를 안 쓴다 = 실 생산자 폴더 실측: 비관통이면 sigma_full 키 없음).  옛 픽스처는 dual 과 σ 네 키만
+        써서, 인계 때 망 정지 계약 (전 사본 · 투영 · σ₀ 짝) 을 다시 돌리면 정상 폴더도 통과할 수 없었다 (그 계약을 통과한 배치 폴더 모양이 아니다)."""
         du_, le_, pp_ = _VAR29[var]
         d = res / q
         d.mkdir(parents=True, exist_ok=True)
@@ -4708,12 +4791,14 @@ def _selftest():
         inputs = {n_: _PS29.file_digest(str(d / n_)) for n_ in ('atoms.csv', 'contacts.csv')}
         _PS29.stamp_network_provenance(str(d), prov_rid or rid, inputs, prov_status,
                                        argv={'type_map': '1:SE', 'scale': 1, 'contact_mode': 'both'})
-        fm = dict(le_, percolation_pct=pp_, network_run_id=rid, active_network_run_id=rid, network_solver_status='success')
-        #  망 투영 — 생산자 머지 (`_merge_dual_into_metrics`) 처럼 None 값은 키 자체를 안 쓴다 (실 생산자 폴더 실측: 비관통이면 sigma_full 키 없음)
-        fm.update({k_: v_ for k_, v_ in (('sigma_full', du_['hertzian'].get('sigma_full')), ('sigma_full_status', du_['hertzian'].get('sigma_full_status')),
-                                         ('sigma_full_physics', du_['physics'].get('sigma_full')),
-                                         ('sigma_full_status_physics', du_['physics'].get('sigma_full_status'))) if v_ is not None})
         (d / 'network_conductivity_dual.json').write_text(json.dumps(du_), encoding='utf-8')
+        for n_, m_ in (('network_conductivity_hertzian.json', 'hertzian'), ('network_conductivity_physics.json', 'physics'),
+                       ('network_conductivity.json', 'hertzian')):
+            (d / n_).write_text(json.dumps(du_[m_]), encoding='utf-8')
+        fm = dict(le_, percolation_pct=pp_)                                  # 투영 전 = 접촉 분석 장부
+        (d / 'full_metrics.json').write_text(json.dumps(fm), encoding='utf-8')
+        fm.update(_NPP29.simulate_merge(str(d))[1])
+        fm.update(network_run_id=rid, active_network_run_id=rid, network_solver_status='success')
         (d / 'full_metrics.json').write_text(json.dumps(fm), encoding='utf-8')
         return fm
 
@@ -4791,10 +4876,11 @@ def _selftest():
             if st == 'NOT_PERCOLATING':                                       # f = 0 (물리적 0) · tau2 · tau 빈칸 (= ∞)
                 return f_ == '0.0' and fg == '0.0' and t2 == '' and t_ == ''
             return f_ == fg == t2 == t_ == ''                                 # BAND_FALLBACK · NOT_COMPUTED — 빈칸 (0 이 아니다)
+        #  ★ 10-05 RGLR3-02 — 정지 계약을 통과한 배치 폴더 모양 (모든 사본이 서로 맞는) 의 상태 넷 (L0 · 연속체 하한 · 띠 L1 · 띠 L2) 은 옛 판과 같은 칸으로
+        #    싣는다 (비관통은 ㉙a q2 · ㉙k — q1 의 웹앱 행은 관통 침대 값이라 비관통 폴더를 얹으면 ⑦A5 가 먼저 막는다).  옛 판의 NOT_COMPUTED 다섯 (기술적 결손) 은
+        #    아래 ㉙b2 — done 배치 행으로는 거부한다 (τ P4).
         _EXP29 = {'OK': (('OK', ''), ('OK', '')), 'MBCB': (('MODEL_BELOW_CONTINUUM_BOUND', ''),) * 2,
-                  'BAND': (('BAND_FALLBACK', ''),) * 2, 'NC_PERC': (('NOT_COMPUTED', 'percolation_disagree'),) * 2,
-                  'NC_INVALID': (('OK', ''), ('NOT_COMPUTED', 'invalid_input')), 'NC_MISSING': (('NOT_COMPUTED', 'missing_input'),) * 2,
-                  'NC_TEMP': (('NOT_COMPUTED', 'temperature_mismatch'),) * 2, 'NC_SOLVER': (('NOT_COMPUTED', 'solver_guard'), ('OK', ''))}
+                  'BAND': (('BAND_FALLBACK', ''),) * 2, 'BAND2': (('BAND_FALLBACK', ''),) * 2}
         _bad29b = {}
         for _v29, _x29 in _EXP29.items():
             try:
@@ -4808,10 +4894,23 @@ def _selftest():
                     _bad29b[_v29] = (_got, _same, _sem)
             except Exception as e:                                        # noqa: BLE001
                 _bad29b[_v29] = f'{type(e).__name__}: {str(e)[:120]}'
-        chk(f'㉙b ★ 상태별 = tau_flux 정의 그대로 (두 모드 · 실 생산자 레코드 변이 8) — OK · MODEL_BELOW_CONTINUUM_BOUND (값 유지 + 표지 · tau2 < 1) · '
-            f'NOT_PERCOLATING (f 0.0 · tau2 · tau 빈칸 = ∞) · BAND_FALLBACK (빈칸 · 사유 없음) · NOT_COMPUTED (빈칸 + 사유: percolation_disagree · '
-            f'invalid_input · missing_input · temperature_mismatch · solver_guard) · 셀 = tau_flux 직렬화 {_bad29b or ""}',
-            not _e29 and not _bad29b and len(_EXP29) == 8)
+        chk(f'㉙b ★ 상태별 = tau_flux 정의 그대로 (두 모드 · 실 생산자 레코드 · 정지 계약을 통과한 폴더 모양 넷) — OK · MODEL_BELOW_CONTINUUM_BOUND '
+            f'(값 유지 + 표지 · tau2 < 1) · BAND_FALLBACK 띠 L1 · L2 (빈칸 · 사유 없음 — L1 · L2 를 거부하지 않는다) · 셀 = tau_flux 직렬화 (옛 판과 같다 · '
+            f'비관통 NOT_PERCOLATING 은 ㉙a · ㉙k) {_bad29b or ""}',
+            not _e29 and not _bad29b and len(_EXP29) == 4)
+
+        #  ★ 10-05 RGLR3-02 (Codex 4차 재검증 §3 · 최소 해제 "기술적 입력 결함을 NOT_COMPUTED 로 내보내는 것 ↔ done 배치의 같은 세대 검증 통과를
+        #    구별") — 기술적 결손 (모든 사본이 서로 맞아도) 인 폴더는 그 배치의 망 정지 계약이 done 을 줄 수 없다 (③ · ⑤ · ⑦ · ⑧).  배치가 done ·
+        #    partial 로 적은 케이스의 폴더가 그 모양이면 배치 뒤 폴더가 바뀐 것이다 → 거부 (τ P4).  옛 판은 NOT_COMPUTED + 사유로 싣고 출처 부록에
+        #    다른 행과 같은 모양으로 적었다 (검증한 것처럼).
+        def _ldv29(sub, **kw):
+            lw_, res_, _ = _sc29(sub, **kw)
+            return _ld29(res_, lw_)
+        for _v29, _rs29 in (('NC_PERC', 'percolation_disagree'), ('NC_INVALID', 'invalid_input'), ('NC_MISSING', 'missing_input'),
+                            ('NC_TEMP', 'temperature_mismatch'), ('NC_SOLVER', 'solver_guard')):
+            _neg7(f'㉙b2 ★ done 배치 행인데 폴더가 기술적 결손 ({_v29} — tau_flux 라면 NOT_COMPUTED {_rs29}) — 인계 때 망 정지 계약 재검사가 거부 '
+                  '(NOT_COMPUTED 를 "같은 세대 검증 통과" 로 싣지 않는다)',
+                  lambda _v=_v29: _ldv29(f'b2_{_v}', q1=_v), 'τ P4 — 망 정지 계약 재검사')
 
         _neg7('㉙c1 ★ τ 묶음은 contact 배치에 실을 수 없다 (단계 역량 — WA_STAGE_GROUPS)',
               lambda: _bh29(_bat29('c1a', {}, stop='contact'), None), "stop_after='contact'")
@@ -4881,8 +4980,10 @@ def _selftest():
         _neg7('㉙c16 ★ τ 기록 없음 — dual 파일이 없으면 거부', _c4('nodual'), 'τ P0')
         #  ㉙k — 배치 전부가 비관통이면 생산자가 σ 키를 안 써서 metrics_flat 에 sigma_full 열 자체가 없다 (row_for 는 있는 키만 편다 · 머리 = 행 키의
         #   합집합).  열 없음 = 빈칸 (None) 으로 읽어야 한다 — 옛 판은 "열 없음" 을 거부해 정상 배치를 막았다 (실 생산자 폴더 대조에서 찾음).
+        #   ★ 10-05 RGLR3-02 — 두 케이스 모두 정상 비관통 (NPERC — 정지 계약을 통과한 폴더 모양).  옛 판의 q1 = NC_PERC (솔버 비관통 ↔ calc_percolation
+        #   37 % · tau_flux 라면 NOT_COMPUTED) 는 그 배치의 정지 계약이 done 을 줄 수 없는 폴더라 이제 τ P4 가 거부한다 (㉙b2) — 이 시험의 뜻 (σ 열 없음) 은 같다.
         try:
-            _lwk, _rsk, _fmk = _sc29('k', q1='NC_PERC', q2='NPERC')
+            _lwk, _rsk, _fmk = _sc29('k', q1='NPERC', q2='NPERC')
             _tvk = _ld29(_rsk, _lwk)
             _ek = '' if 'sigma_full' not in next(iter(_lwk['rows'].values())) else 'metrics_flat 에 sigma_full 열이 있다 (픽스처가 조건을 못 세웠다)'
         except Exception as e:                                            # noqa: BLE001
@@ -4892,6 +4993,52 @@ def _selftest():
             not _ek and sorted((_tvk.get('cases') or {})) == ['q1', 'q2'] and not any('sigma_full' in f_ for f_ in _fmk.values()))
         _neg7('㉙c17 ★ τ 원천을 줬는데 묶음에 tau 가 없으면 거부 (조용히 버리지 않는다)', lambda: _bh29(_lw29, _tv29, groups=_G567), 'τ 묶음')
         _neg7('㉙c18 ★ 묶음에 tau 가 있는데 τ 원천 (--tau-results) 이 없으면 거부', lambda: _bh29(_lw29, None), 'τ 묶음')
+
+        def _c5(kind):
+            """★ 10-05 RGLR3-02 (Codex 4차 재검증 §3 · probes/new_probes.py) — 정상 폴더 (정지 계약을 통과한 모양) 에서 **한 사본만** 바꾼다.
+            입력 · 도장 · run id · 배치 status.json · metrics_flat 은 그대로.  옛 로더 (P0–P3) 는 dual 의 σ_ratio · 상태 두 키만 full_metrics 와 맞대어
+            dual 의 띠 규칙 · σ₀ 와 다른 사본 (모드 파일 · legacy · full_metrics 투영의 σ₀) 을 보지 않았다 → 받았다."""
+            def fn():
+                lw_, res_, _ = _sc29(f'c5_{kind}')
+                d_ = res_ / 'q1'
+
+                def _ed(name, f_):
+                    p_ = d_ / name
+                    x_ = json.loads(p_.read_text(encoding='utf-8'))
+                    f_(x_)
+                    p_.write_text(json.dumps(x_), encoding='utf-8')
+
+                def _s0(x_):                                                   # Codex 반례 ② — σ₀ ×2 · σ_dim 을 같은 σ_ratio 에서 6 자리로 다시 (레코드 자체는 항등식 성립)
+                    for m_ in ('hertzian', 'physics'):
+                        x_[m_]['sigma_grain_S_cm'] *= 2
+                        x_[m_]['sigma_full_mScm'] = round(1000 * x_[m_]['sigma_grain_S_cm'] * x_[m_]['sigma_full'], 6)
+                if kind == 'dual_band':                                            # Codex 반례 ① — dual 두 모드 띠 규칙 L0 → L1 (옛: BAND_FALLBACK 로 수용)
+                    _ed('network_conductivity_dual.json', lambda x_: [x_[m_].update(boundary_rule='L1') for m_ in ('hertzian', 'physics')])
+                elif kind == 'dual_sigma0':                                        # Codex 반례 ② (옛: OK · σ₀ 6.0 mS/cm 로 수용)
+                    _ed('network_conductivity_dual.json', _s0)
+                elif kind == 'mode_file':                                          # 모드 파일 (physics) 만 — 띠 규칙 L1
+                    _ed('network_conductivity_physics.json', lambda x_: x_.update(boundary_rule='L1'))
+                elif kind == 'legacy':                                             # legacy (Hertz 사본 · full_metrics 투영 원천) 만 — σ₀ ×2
+                    _ed('network_conductivity.json', lambda x_: x_.update(sigma_grain_S_cm=x_['sigma_grain_S_cm'] * 2))
+                elif kind == 'fm_sigma0':                                          # full_metrics 투영의 σ₀ 만 ×2 (P3 대조 키 밖 · 배치 metrics_flat 은 옛 값)
+                    _ed('full_metrics.json', lambda x_: x_.update(sigma_grain_S_cm=x_['sigma_grain_S_cm'] * 2))
+                elif kind == 'generation':                                         # 배치 뒤 재계산의 되돌림 실패 기록 (활성 무효 · 파일의 run id 는 그대로)
+                    _PS29.record_network_attempt(str(d_), 'RUN-q1-retry', 'failed', failure_kind='rollback_failed',
+                                                 active_problem='주입: 되돌림 실패 (selftest ㉙c24)')
+                return _ld29(res_, lw_)
+            return fn
+        _neg7('㉙c19 ★ RGLR3-02 Codex 반례 ① — dual 만 두 모드 띠 규칙 L0 → L1 (다른 사본 · 투영 · 입력 · 도장 그대로) 이면 거부 (BAND_FALLBACK 로 싣지 않는다)',
+              _c5('dual_band'), 'τ P4 — 망 정지 계약 재검사')
+        _neg7('㉙c20 ★ RGLR3-02 Codex 반례 ② — dual 만 두 모드 σ₀ ×2 (σ_dim 을 같은 σ_ratio 에서 6 자리로 다시 — 레코드는 자기 항등식 성립) 이면 거부 '
+              '(σ₀ 6.0 mS/cm 로 싣지 않는다)', _c5('dual_sigma0'), 'τ P4 — 망 정지 계약 재검사')
+        _neg7('㉙c21 ★ 모드 파일 (network_conductivity_physics.json) 만 띠 규칙이 바뀌었으면 거부 (모드 파일 = dual 의 사본)', _c5('mode_file'), 'τ P4 — 망 정지 계약 재검사')
+        _neg7('㉙c22 ★ legacy (network_conductivity.json — Hertz 사본 · full_metrics 투영 원천) 만 σ₀ 가 바뀌었으면 거부', _c5('legacy'), 'τ P4 — 망 정지 계약 재검사')
+        _neg7('㉙c23 ★ full_metrics 투영의 σ₀ 만 바뀌었으면 거부 (P3 대조 키 밖 · 등급 · 웹앱 τ 가 쓰는 짝 σ₀ — 정지 계약 ⑥b · ⑧)', _c5('fm_sigma0'), 'τ P4 — 망 정지 계약 재검사')
+        _neg7('㉙c24 ★ 배치 뒤 재계산이 되돌림 실패 기록을 남긴 폴더 (활성 세대 무효 · run id 는 그대로) — 세대 무효로 거부 (옛 판: "읽는 사이 바뀌었다" 로 오분류)',
+              _c5('generation'), 'τ P4 — 활성 세대 무효')
+        _neg7('㉙c25 ★ 표 만들 때 — τ 기록에 같은 세대 검사 (P0–P4) 표지가 다 없으면 거부 (검사를 다 통과한 원천만 "검증됨" 으로 싣는다)',
+              lambda: _bh29(_lw29, dict(_tv29, cases=dict(_tv29['cases'], q1={k_: v_ for k_, v_ in _tv29['cases']['q1'].items()
+                                                                               if k_ != 'same_generation_checks'}))), 'τ P4 — τ 기록의 같은 세대 검사')
         chk('㉙d ★ 단계 역량 — tau 는 network 에만 (contact · coverage 배치는 τ 묶음을 실을 수 없다) · 다섯 census 묶음은 세 단계 모두',
             'tau' in WA_STAGE_GROUPS.get('network', ()) and 'tau' not in WA_STAGE_GROUPS.get('contact', ())
             and 'tau' not in WA_STAGE_GROUPS.get('coverage', ()) and all(g_ in WA_STAGE_GROUPS[s_] for g_ in WA_GROUPS for s_ in WA_STAGE_GROUPS))
@@ -4982,6 +5129,15 @@ def _selftest():
             for m_ in ('hertz', 'physics')) if (_d29t and _TF29 is not None) else False
         chk('㉙g ★ 열 사전 (τ 명명 규약) — tortuosity factor = tau2 에만 · tau = √tau2 COMSOL 입력 아님 · f_gap φ_mc 와 짝짓지 말 것 · f = 재척도 (해 아님) · '
             'User defined (fl) · 상태 다섯 + 두 부류 · MBCB 값 유지 · 비관통 = ∞ · 사유 = tau_flux.REASONS 전부 (여섯) · G6 물리 타깃 HOLD · 1세대 · τ_e 아님', _gm)
+        #  ★ 10-05 RGLR3-02 (Codex 4차 재검증 §3 · §8-2) — 열 사전이 ① 인계표의 NOT_COMPUTED 와 "같은 세대 검증 통과" 를 가르고 (done 배치 행의 기술적 결손 =
+        #    생성기 거부 τ P4) ② 남는 한계 (지금 파일끼리 대조 — 게시 시점 해시가 없어 모든 사본을 함께 일관되게 바꾼 편집은 못 잡는다) 를 적는가.
+        _gs29 = all(
+            all(k_ in _g29(f'ion_net_status_{m_}', 'meaning') for k_ in ('τ P4', '인계표에는 NOT_COMPUTED 가 실리지 않는다'))
+            and all(k_ in _g29(c_, 'caveat') for c_ in (f'tau2_ion_{m_}', f'f_ion_{m_}', f'ion_net_status_{m_}')
+                    for k_ in ('same_generation_checks', '게시 시점 해시', '모든 사본을 함께 일관되게 바꾼 편집은 못 잡는다'))
+            for m_ in ('hertz', 'physics')) if _d29t else False
+        chk('㉙g2 ★ RGLR3-02 열 사전 — 인계표 τ 상태: done 배치 행의 기술적 결손 (NOT_COMPUTED) 은 싣지 않고 생성기가 거부 (τ P4) · 한정어: 출처 관문 = 지금 파일끼리 '
+            '(same_generation_checks) · 게시 시점 해시 없음 → 모든 사본을 함께 일관되게 바꾼 편집은 못 잡는다', _gs29)
         _cov29 = sorted(c_ for c_ in _tc29 if not (callable(_TD29) and _TD29(c_)))
         chk('㉙h ★ 열 사전 덮개 — tau_flux.column_names() 의 열마다 정의가 있다 (tau_flux 가 열을 늘리면 여기서 걸린다) · 빈 뜻 없음'
             + (f' — 정의 없는 열 {_cov29}' if _cov29 else ''),
@@ -5019,6 +5175,16 @@ def _selftest():
             and sorted((r_.get('case'), r_.get('network_run_id')) for r_ in _pcli) == [('q1', 'RUN-q1'), ('q2', 'RUN-q2')]
             and all(len(r_.get('dual_sha256', '')) == 64 and len(r_.get('full_metrics_sha256', '')) == 64 and r_.get('atoms_csv_digest')
                     for r_ in _pcli))
+        #  ★ 10-05 RGLR3-02 — 출처 부록이 케이스마다 **어느 검사가 돌았고 통과했나** (same_generation_checks — P4 망 정지 계약 재검사 · 활성 세대 · 읽기 안정
+        #    포함) 와 그 대조의 기준 (same_generation_basis — 지금 파일끼리 · 게시 시점 해시 없음) 을 적는가.  함수 경로의 τ 기록과 같은 목록.
+        _SG29 = globals().get('TAU_SAME_GEN_CHECKS')
+        chk('㉙i2 ★ RGLR3-02 출처 부록 — 케이스마다 same_generation_checks (P0 기록 · P1 run id · P2 입력 digest · P3 배치 대조 · P4 망 정지 계약 재검사 · '
+            'P4 활성 세대 · P4 읽기 안정 — 다 통과한 케이스만 행이 있다) · same_generation_basis = 지금 파일끼리 (게시 시점 해시 없음) · 함수 경로 τ 기록과 같다',
+            not _ei and bool(_pcli) and bool(_SG29)
+            and all(r_.get('same_generation_checks') == ';'.join(_SG29) for r_ in _pcli)
+            and all(k_ in ';'.join(_SG29) for k_ in ('P0_', 'P1_', 'P2_', 'P3_', 'P4_stop_contract', 'P4_generation', 'P4_read_stable'))
+            and all(r_.get('same_generation_basis') == 'current_files_no_publish_hash' for r_ in _pcli)
+            and all(list((_tv29 or {}).get('cases', {}).get(q_, {}).get('same_generation_checks') or []) == list(_SG29) for q_ in ('q1', 'q2')))
         #  (j) J20-l 웹앱 짝 — 케이스 페이지 τ 인계 상태 툴팁 (같은 tau_flux 상태를 보여 준다) 의 값 규칙이 인계표와 같은가.  옛 문구는 "OK · MBCB 일 때만
         #   값" 이라 NOT_PERCOLATING 의 f_ion 0 (물리적 0 — 인계표에는 0.0 이 실린다) 과 어긋났다.
         try:
@@ -5029,8 +5195,10 @@ def _selftest():
         except OSError as e:
             _mt29 = f'ERR {e}'
         chk('㉙j ★ J20-l 웹앱 짝 — 케이스 페이지 τ 인계 상태 툴팁의 값 규칙 = 인계표 (tau_flux): OK · MODEL_BELOW_CONTINUUM_BOUND 값 (T < 1 이어도 유지) · '
-            'NOT_PERCOLATING f_ion 0 · tau2 · tau 빈칸 (= ∞) · 그 밖 빈칸 (0 아님) · LHS 인계표 v1.2 망 τ 묶음에 같은 열 · 같은 규칙',
-            all(k_ in _mt29 for k_ in ('MODEL_BELOW_CONTINUUM_BOUND', 'NOT_PERCOLATING', 'f_ion 0', '= ∞', '0 아님', '인계표 v1.2', 'f_ion_gap'))
+            'NOT_PERCOLATING f_ion 0 · tau2 · tau 빈칸 (= ∞) · 그 밖 빈칸 (0 아님) · LHS 인계표 v1.2 망 τ 묶음에 같은 열 · 같은 규칙 · '
+            '★ RGLR3-02 — 인계표 행은 인계 때 같은 세대 검사 (τ P4 · 망 정지 계약 재검사) 를 통과한 케이스뿐 · NOT_COMPUTED 는 인계표에 안 실린다',
+            all(k_ in _mt29 for k_ in ('MODEL_BELOW_CONTINUUM_BOUND', 'NOT_PERCOLATING', 'f_ion 0', '= ∞', '0 아님', '인계표 v1.2', 'f_ion_gap',
+                                        'τ P4', '인계표에는 NOT_COMPUTED 가 실리지 않는다'))
             and '일 때만 값을 싣는다' not in _mt29)
     finally:
         shutil.rmtree(_td29, ignore_errors=True)
@@ -5081,8 +5249,10 @@ if __name__ == '__main__':
     ap.add_argument('--tau-results', default='', metavar='DIR',
                     help='(--export-handover --webapp, 묶음 tau) 망 τ 원천 = network 정지 배치의 케이스 폴더 묶음 (`lhs_webapp_batch --work` 아래 '
                          'results/ — 케이스마다 network_conductivity_dual.json · full_metrics.json · network_provenance.json · atoms/contacts.csv).  '
-                         '배치 done · partial 케이스마다 출처 관문 P0–P3 (기록 · run id = 배치 status.json · 입력 digest · metrics_flat 과 같은 세대) 뒤 '
-                         'tau_flux.case_row 로 싣는다 · 출처 부록 <인계표>_tau_provenance.tsv')
+                         '배치 done · partial 케이스마다 출처 관문 P0–P4 (기록 · run id = 배치 status.json · 입력 digest · metrics_flat 과 같은 세대 · '
+                         '망 정지 계약 재검사 (전 사본 · 투영 · σ₀ 짝 · 띠 규칙 — 10-05 RGLR3-02) · 활성 세대 · 읽기 안정) 뒤 tau_flux.case_row 로 싣는다 · '
+                         '한 케이스라도 실패하면 거부 · 출처 부록 <인계표>_tau_provenance.tsv (same_generation_checks · same_generation_basis — 지금 파일끼리 · '
+                         '게시 시점 해시 없음)')
     ap.add_argument('--census', default='', metavar='TSV',
                     help=f'(--webapp) 전수 판정 census (기본 {DEFAULT_CENSUS_TSV})')
     ap.add_argument('--selftest', action='store_true')
@@ -5138,7 +5308,7 @@ if __name__ == '__main__':
             _wp = pathlib.Path(a.webapp)
             _wv = load_webapp(_wp if _wp.is_absolute() else _root / _wp, a.census or None)
         _tv = None
-        if a.tau_results:                               # v1.2 망 τ — 원천을 배치 기록으로 대조한 뒤 tau_flux 로 (관문 P0–P3)
+        if a.tau_results:                               # v1.2 망 τ — 원천을 배치 기록으로 대조한 뒤 tau_flux 로 (관문 P0–P4)
             _tp = pathlib.Path(a.tau_results).expanduser()
             _tv = load_tau_results(_tp if _tp.is_absolute() else _root / _tp, _wv)
         _out, _cols, _rep = build_handover(_rows, _harv, union=_uv, webapp=_wv, webapp_groups=a.webapp_groups, tau=_tv)
@@ -5164,9 +5334,11 @@ if __name__ == '__main__':
         if _tv is not None:                             # v1.2 망 τ 출처 부록 — τ 칸이 어느 망 세대 · 어느 파일에서 왔는가
             _dp4 = _op.with_name(_op.stem + '_tau_provenance.tsv')
             write_tau_provenance(_dp4, _tv)
-            print(f'   v1.2 망 τ (tau_flux {_rep["tau_flux_sha256"][:12]}…) — 원천 {_rep["tau_source"]} · 출처 관문 P0–P3 {_rep["tau_checked"]} 행 · '
+            print(f'   v1.2 망 τ (tau_flux {_rep["tau_flux_sha256"][:12]}…) — 원천 {_rep["tau_source"]} · 출처 관문 P0–P4 {_rep["tau_checked"]} 행 · '
                   f'빈칸 행 (배치 done · partial 아님) {_rep["tau_blank_rows"]} · 상태 {dict(sorted(_rep["tau_status"].items()))} · 출처 부록 {_dp4.name}')
             print('   ⚠ 망 τ = ML 기술자 전용 · G6 — 두 모드 모두 물리 타깃 (실험 절대 대조) HOLD · tau = √tau2 는 COMSOL 입력 아님 (열 사전)')
+            print(f'   ⚠ 출처 관문 = 배치 기록과 지금 파일끼리 ({TAU_SAME_GEN_BASIS}) — 게시 시점 해시가 없어 모든 사본을 함께 일관되게 바꾼 편집은 못 잡는다 '
+                  '(RGLR3-02 · 출처 부록 same_generation_checks)')
         if 'tau_wall_status' in _rep:
             print(f'   J20 벽 τ: {dict(_rep["tau_wall_status"])}')
         if _wv is not None:
