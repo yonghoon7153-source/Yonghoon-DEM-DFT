@@ -1544,6 +1544,11 @@
    "date": "2026-10-05",
    "stage": "dft",
    "text": "P1b k 12×12×1 탐침 kgy 발사 (tmux agck12 · c704348b · 15:39 watch 에서 bound SCF 1 회째) · k 점 74 (k9 41 · k6 20 — 시간반전만 쓰는 격자 셈과 일치) · 첫 DRY_RUN 은 jobs.json 해시 칸 버그로 거부됐다 → 정정 9160143e (입력 불변). GPU 합계 7.9 / 24.6 GB (cascade v7 · li2s 대조 담금질과 공유)."
+  },
+  {
+   "date": "2026-10-05",
+   "stage": "dft",
+   "text": "V5 VASP 외주 **파일럿 2 잡 반송** (10-05 · 업체) — --check 파일럿 OK (VASP 5.4.4 · PBE_54 TITEL · 설정 되울림 · 첫 시도 수렴 · bound 10.4 h · far 4.9 h · peak 67.6 GB) · 반송 MANIFEST = 고정값 · 금지 파일 0 · **PP 등록부 봉인** a279d529… · 다음 = 업체에 나머지 16 잡 (파일럿 폴더 그대로) → 최종 --collect. W 는 최종 집계에서."
   }
  ],
  "related_decisions": [

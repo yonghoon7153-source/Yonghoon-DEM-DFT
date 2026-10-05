@@ -1,0 +1,50 @@
+{
+ "schema": "aprime_v5_pp_registry/v3",
+ "pp_set": "PBE_54",
+ "titel": {
+  "Li_sv": "PAW_PBE Li_sv 10Sep2004",
+  "P": "PAW_PBE P 06Sep2000",
+  "S": "PAW_PBE S 06Sep2000",
+  "Cl": "PAW_PBE Cl 06Sep2000",
+  "Ag": "PAW_PBE Ag 02Apr2005"
+ },
+ "species_sha256": {
+  "Li_sv": "7e51fe1804c037e1dccc81a9c376d94d693a7559600c847f4b41960edb8ab895",
+  "P": "df60c54a93efe35c9e85ae94c010c75e9f6960a95d5595d7cdba4096d109af88",
+  "S": "0fc7481fb0695f01bdc6462160264c5c84044ae9ec85a907d398b887a2bc3132",
+  "Cl": "9f1b6e6ed4247ac726a768b330d26d7667cc3c95a39ff49c1d064c2d9dcce931",
+  "Ag": "6550cfa3543261e132c169e1b98a529204624d72be14e2da2e0242bcb74a174d"
+ },
+ "assembled_sha256": {
+  "Li_sv,P,S,Cl,Ag": "abbd2ba9196a363a7f32419402e3bd8ff3a6a7690f39a8daac6e403d3dd65fa5"
+ },
+ "vasp_version": "vasp.5.4.4.18Apr17-6-g9f103f2a35 (build Aug 19 2022 11:57:46) complex",
+ "from_pilot": {
+  "V5_s_outer_A_bound": "20261004T110427-23876-7545",
+  "V5_s_outer_A_far": "20261004T212734-23876-6151"
+ },
+ "from_pilot_sha256": {
+  "V5_s_outer_A_bound": {
+   "attempt.json": "e7a7cea8a265ffa86ff9001150da94c342b2b0efdc6531b4e593d8685aff2465",
+   "OUTCAR": "04329578e7b7cfdb7aa52e17629d518d8794accf4267de96fc277eb78adf6bf0"
+  },
+  "V5_s_outer_A_far": {
+   "attempt.json": "72b6a10c4a971450a578a4418465ebcfdaa86f5401f7d122871337fcccdc46a3",
+   "OUTCAR": "bdb9f7aae2a233430af5568c9bac2bd55d1d87d0d9172f67670362d0140912fb"
+  }
+ },
+ "package_manifest_sha256": "8118bbc023d6699cd7cd1b6e6afd32872e0699af70b412e15b89365e556ee2f1",
+ "pilot_settings_sources": {
+  "V5_s_outer_A_bound": {
+   "DIPOL": [
+    "min pos cut 421/480"
+   ]
+  },
+  "V5_s_outer_A_far": {
+   "DIPOL": [
+    "min pos cut 421/480"
+   ]
+  }
+ },
+ "⛔": "이 등록부를 봉인(커밋·해시 기록)한 뒤 나머지 16 잡을 받는다 — 이후 모든 잡이 같아야 한다 · 최종 집계는 이 파일과 그 sha 가 필수"
+}

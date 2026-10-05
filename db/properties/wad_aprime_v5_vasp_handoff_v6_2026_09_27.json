@@ -41,5 +41,18 @@
    "⑤_업체_도구": "Linux/GNU 가 아니면 계산 전 `PACK_ONLY=1 bash run_all.sh` smoke (README 7) — 업체 환경 모름"
   },
   "지위": "실행·인용 승인 아님 — GO 는 기술 검토다. 결과는 반송 뒤 게이트(G3/G4/G5)로 읽는다"
+ },
+ "파일럿_반송_2026_10_05": {
+  "받음": "2026-10-05 21:23 KST · 업체 담당 (건엽) 카톡 · zip 안 V5_vasp_return.tgz + .sha256 — sha256 16c691d0a2d645f288da002aff29fbc5bc8fadc7da3badb4dc5b0dd0dffe2a23 (sha256sum -c OK) · 보관 db/raw/wad_aprime_v5_vasp_2026_09_27/pilot_return_2026_10_05/",
+  "업체_환경": "VASP 5.4.4.18Apr17-6-g9f103f2a35 (build Aug 19 2022 · complex · 경로 5.4.4+vtst+vaspsol+beef — LSOL 없음이라 VASPsol 영향 없음) · PBE_54 (vasp_pp54/potpaw_PBE) · 1 노드 64 코어 (Xeon Gold 6530 ×2 · 503 GB) · SGE · 성능 태그 NCORE 4 · KPAR 2",
+  "잡별": {
+   "V5_s_outer_A_bound": "rc 0 · 수렴 · 전자 스텝 118 · 벽시계 37,385 s (10.4 h) · peak node RSS 67.6 GB",
+   "V5_s_outer_A_far": "rc 0 · 수렴 · 전자 스텝 64 · 벽시계 17,707 s (4.9 h) · peak node RSS 67.6 GB"
+  },
+  "check": "--check (등록부 없이): 파일럿 2 잡 OK · 나머지 16 MISSING (예상 · 종료 3) · 반송 MANIFEST = 고정값 8118bbc0… · 금지 파일 0 · 반송 INCAR 는 패키지 원본 + 성능 태그 두 줄 (NCORE 4 · KPAR 2 — 허용 목록) · KPOINTS·POSCAR 바이트 같음 · TITEL 다섯 종 기대값 그대로 · 설정 되울림 (NIONS 200 · NELECT 1452 · ENCUT 520 · ISMEAR 1 · SIGMA 0.14 인쇄 · D3 넷 · LDIPOL · IDIPOL 3 · cut 위치 421/480) 통과 · 재시도 없음 (첫 시도)",
+  "seal_pp": "db/raw/wad_aprime_v5_vasp_2026_09_27/pp_registry_2026_10_05.json · sha256 a279d529d9be6e75274b3ca772f32e92df526cd01f4e62ef1afecb5a38e1d4d1 (schema aprime_v5_pp_registry/v3 · from_pilot run_id 20261004T110427-23876-7545 · 20261004T212734-23876-6151) · 등록부로 다시 --check → 파일럿 2 OK · 등록부 검증됨",
+  "W": "파일럿 단계 W 는 내지 않았다 (README · 개정 3: 파일럿 W 를 보고 설정을 바꾸지 않는다 — 최종 --collect 에서 등록부·UMA 와 함께)",
+  "다음": "업체에 16 잡 지시 (같은 패키지 폴더 · 파일럿 두 폴더 그대로 · 같은 빌드·POTCAR_DIR·성능 태그 · 러너 하나씩 차례로) → 최종 반송 → --collect --pp_registry …2026_10_05.json --pp_registry_sha256 a279d529… --uma uma.json",
+  "견적_16_잡": "파일럿 벽시계 기준 어림 ≈ 140 h (한 노드 · li_outer 0.85× · G3 1.06× · G4 e70 ≈ 1.5× · G4 k1 ≈ 1.75× · G4 s05 ≈ 1.2× · 전자 스텝 수가 가장 큰 불확실) · peak RSS 최대 ≈ 120 GB (G4 k1) — 503 GB 노드에 들어간다"
  }
 }
