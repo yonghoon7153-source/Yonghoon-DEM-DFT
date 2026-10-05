@@ -7589,6 +7589,71 @@
     "commit": "89c5ab62d33e7a44e20371e53d1a7493fbec3956",
     "decision_digest": "sha256:853f8ada5621e35ad1a0b9b6cd7b7eed5d5871d5ccfdde8b536d000d232a55d6"
    }
+  },
+  {
+   "id": "D-2026-10-05-wad-agc-graphite-k9-registry",
+   "schema_version": 2,
+   "kind": "amendment",
+   "scope": "wad.agc_graphite",
+   "slot": "wad_agc_graphite_k9set",
+   "applies_to": {
+    "systems": [
+     "agc_graphite"
+    ],
+    "tasks": [
+     "wad_agc_graphite_k9set"
+    ],
+    "methods": [
+     "qe_gpu_pw_scf"
+    ],
+    "use_cases": [
+     "internal"
+    ]
+   },
+   "title": "P1b 마감 재개 ① (b) — 나머지 넷 (N3 registry 셋 + N4) 두 끝점 9×9×1 · kgy 8 잡 · 판독 (결과 전): 10 잡 전부 OK → 헤드라인 = k9 registry 넷 평균 [min, max] (교체 기록은 새 마감 결정) · 하나라도 아니면 마감 (a′) 그대로 · 두께 |ΔW| ≤ 0.02 · registry 폭 > 0.01 라벨 · 상한 벽시계 30 h",
+   "statement": "마감 D-2026-10-05-wad-agc-graphite-closed 의 재개 조건 ① — 1저자(사용자)가 k 수렴된 registry 평균을 헤드라인으로 원한다. N3 registry 셋 (top_hcp · hollow_fcc · s01) 과 N4 (두께 점검) 의 두 끝점 (dft bound · far) 을 **k 9×9×1** 로 다시 SCF 한다 — 입력은 생산 (6×6×1) 입력과 **K_POINTS · prefix 두 줄만** 다르고, 대표 top_fcc 의 G4 k9 두 잡과 같은 변환이다 (tools/wad/agc_graphite.py --k9set_make 가 같은 변환을 대표에 걸어 G4 k9 입력이 바이트 그대로 나오는지 먼저 확인한다 · db/inputs/wad_agc_graphite_2026_10_02/k9set · 8 잡). 대표 top_fcc 의 9×9×1 은 이미 있는 G4 k9 두 잡을 쓴다 (다시 돌리지 않는다). 판독 (결과 전 · --k9set_collect): ① 헤드라인 = N3 registry 넷의 9×9×1 W 평균 [min, max] — 새 8 잡 + 대표 G4 k9 2 잡이 **전부 OK** 일 때만 교체 (REPLACE) · 하나라도 OK 가 아니면 (상한에 닿아 못 띄운 잡 · SCF 미수렴 포함) 마감 (a′) 그대로 (KEEP_A_PRIME · 부분 평균을 헤드라인으로 쓰지 않는다) ② 두께 (k9) |W(N4) − W(N3 top_fcc)| ≤ 0.02 J/m² (G5 와 같은 문턱) — 넘으면 라벨 ③ registry 폭 (k9) max − min > 0.01 J/m² (G4 문턱) 이면 라벨 (보고만) ④ 컷오프 (e70) · smearing (s05) 축은 k 6×6×1 대표에서 PASS — 9×9×1 에서 다시 보지 않는다 (라벨) ⑤ 넷 각각의 12×12×1 은 재지 않는다 — k 수렴은 대표의 k12 탐침으로 미루어 읽는다 (라벨). 마감 (a′) 은 이 결과가 나올 때까지 active 로 남고, 헤드라인 교체는 판독이 REPLACE 일 때 새 마감 결정이 그 마감을 대체하는 것으로만 한다.",
+   "rationale": "registry 넷의 k6 W 폭이 1e-4 J/m² 라 결과는 대표 k9 근처일 가능성이 높다 — 그래도 헤드라인을 추정 (대표 k9 를 넷에 옮겨 쓰기) 이 아니라 측정으로 박는다. kgy 자리 (어림 · 잰 것 아님): li2s 대조 담금질의 끝은 gabia 몫 (seed3·4·5 · 탄성 옆 한 번에 하나) 이 정하고 kgy seed1·2 는 그보다 하루 반쯤 일찍 끝날 어림이라, 8 잡이 kgy 담금질을 늦춰도 li2s 완료는 늦어지지 않는다.",
+   "decision_state": "proposed",
+   "record_kind": "amendment",
+   "results_seen": true,
+   "results_seen_note": "k6 넷 · 대표 k9 · k12 는 봤다 — 새 8 잡 결과 전에 판독 규칙을 박았다 (사용자에게 제시한 그대로)",
+   "card": "db/properties/wad_agc_graphite_prereg_2026_10_02.json",
+   "record": "db/properties/wad_agc_graphite_result_2026_10_05.json",
+   "amends": [],
+   "depends_on": [
+    "D-2026-10-02-wad-agc-graphite",
+    "D-2026-10-05-wad-agc-kprobe12",
+    "D-2026-10-05-wad-agc-graphite-closed"
+   ],
+   "evidence": [
+    "db/inputs/wad_agc_graphite_2026_10_02/k9set/qe/jobs.json (8 잡 · pw_in_sha256 = 파일 바이트 · 원본 해시 = 2단계 jobs.json)",
+    "tools/wad/agc_graphite.py (--k9set_make · --k9set_collect · selftest 71 · 깨기 8/8 · k12 탐침 묶음 리팩터 뒤 바이트 동일)",
+    "db/inputs/wad_agc_graphite_2026_10_02/run_kgy.sh STAGE=k9set (잡마다 상한 확인 · 잠금 rc 0 막음 · 컨테이너 음성 2 · 깨기 2/2)",
+    "db/raw/wad_agc_graphite_2026_10_02/stage2/jobs_run.tsv (대표 G4 k9 실측 bound 5,109 s · far 4,281 s)"
+   ],
+   "reopen_criteria": [
+    "REPLACE (10 잡 전부 OK) → 새 마감 결정 (D-2026-10-05-wad-agc-graphite-closed 를 대체 · 같은 slot) — 헤드라인 = k9 registry 넷 평균 [min, max] + k9 라벨 + 기존 모형·2체 라벨 · k6 헤드라인은 이력으로만",
+    "KEEP_A_PRIME (하나라도 OK 아님 · 상한 30 h 에 닿음 포함) → 마감 (a′) 그대로 · 원인 기록 · 다시 돌릴지 (β 0.1 대체 포함) 는 1저자 결정",
+    "두께 (k9) FAIL → 헤드라인 교체는 규칙대로 하되 '두께 (k9) FAIL' 라벨 · 4층 이상을 더 볼지는 1저자 결정"
+   ],
+   "enforcement": "① W 값은 화면(webapp)·원장 로그·open_items 에 싣지 않는다 (결과 기록·마감 카드에만) ② 판독 규칙은 결과 전 고정 — 결과를 보고 문턱·표본을 바꾸지 않는다 ③ kgy GPU 공존 범위 = 이 8 잡 · 한 번에 하나 · 가드 START 12000 · KILL 23000 · HOST 8192/2048 MiB (카드 러너 그대로) · 같은 GPU 의 UMA (cascade v7 탐침 · li2s 대조 담금질) 는 건드리지 않는다 ④ 러너 run_kgy.sh STAGE=k9set (새 worktree · 돌고 있는 러너 worktree 는 안 옮긴다) ⑤ li2s 대조 계 kgy 장부 (등분) 는 이 8 잡 구간을 동시 GPU 잡으로 센다",
+   "cost_cap": {
+    "machine": "kgy (GPU 공유 · cascade v7 탐침 + li2s 대조 담금질)",
+    "jobs": 8,
+    "견적": "대표 G4 k9 실측 (10-04) bound 5,109 s · far 4,281 s · N4 는 k6 에서 1.2–1.4 배 · 지금 공유로 1.3 배쯤 ⇒ 12–18 h (어림)",
+    "상한_h": 30,
+    "⛔": "넘으면 다음 잡을 띄우지 않는다 (도는 잡은 끝낸다) · 보고 — 상한을 올려 계속하지 않는다"
+   },
+   "proposed_by": "claude-session-2026-10-05 (evac)",
+   "status": "proposed",
+   "status_history": [
+    {
+     "at": "2026-10-05",
+     "state": "proposed",
+     "by": "사용자 (1저자 · W_ad 트랙)",
+     "note": "사용자 '자리가 있다면 해보는게 낫지 않나? kgy에서' → AskUserQuestion '지금 kgy 에서 (Recommended)' — 판독 규칙은 그 질문 전에 제시한 그대로. 본문 확정 커밋 뒤 비준."
+    }
+   ]
   }
  ]
 }

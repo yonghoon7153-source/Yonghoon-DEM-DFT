@@ -168,7 +168,7 @@
   ],
   "⚠": "결정 전에는 DEM 회신에 W 를 보내지 않는다"
  },
- "다음": "마감 (a′) → DEM 회신 초안 (라벨 동반 · 대표 k9 · k12 값 같이)",
+ "다음": "(b) k9 넷 (kgy 8 잡) → 판독 → REPLACE 면 새 마감 결정 / 아니면 (a′) 그대로 → DEM 회신 (라벨 동반)",
  "results_seen": true,
  "1저자_결정_2026_10_05": {
   "선택": "(c) 대표 k 사다리 탐침 먼저 — 결정 D-2026-10-05-wad-agc-kprobe12",
@@ -210,5 +210,12 @@
   "선택": "(a′) 라벨로 닫기 — 헤드라인 0.513 (k6) 그대로 + 'G4 k FAIL · 9×9×1 에서 k 수렴 확인' 라벨 (대표 k9 · k12 값 동반)",
   "마감": "db/properties/wad_agc_graphite_closed_2026_10_05.json · 결정 D-2026-10-05-wad-agc-graphite-closed",
   "새_계산": "없음"
+ },
+ "b_k9_넷_2026_10_05": {
+  "결정": "D-2026-10-05-wad-agc-graphite-k9-registry (마감 재개 조건 ① · 사용자 '지금 kgy 에서')",
+  "묶음": "db/inputs/wad_agc_graphite_2026_10_02/k9set (8 잡 · 생산 입력과 K_POINTS · prefix 두 줄만 다름 · 대표 G4 k9 와 같은 변환 확인)",
+  "러너": "run_kgy.sh STAGE=k9set (한 잡씩 · 상한 30 h · 잠금 rc 0 막음)",
+  "판독": "tools/wad/agc_graphite.py --k9set_collect — REPLACE / KEEP_A_PRIME · 두께 (k9) · registry 폭 (k9) · 라벨",
+  "상태": "준비 — kgy 점검 (worktree · selftest · DRY_RUN) → 발사"
  }
 }
