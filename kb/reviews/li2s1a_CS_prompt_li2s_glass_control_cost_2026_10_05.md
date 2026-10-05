@@ -7,7 +7,7 @@ updated: 2026-10-05
 track: li2s / lpscl_smallcell_glass
 channel: li2s1a
 kind: prompt
-status: 초안 (2026-10-05) — 사용자 검토 · 발송 대기
+status: 발송됨 (사용자 · 2026-10-05 · 발송판 `kb/projects/li2s_glass_control_cost_letter_CS_send_2026_10_05.md` = 보내는 글 그대로) — 회신 CS 대기
 confidence: medium
 verificationStatus: verified
 verifiedAt: 2026-10-05
