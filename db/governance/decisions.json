@@ -7480,18 +7480,32 @@
    "amends": [],
    "amends_note": "CLAUDE.md §계산 자원 gabia 에 이 예외 줄을 더한다 (같은 커밋 · 규칙 본문은 그대로).",
    "schema_version": 2,
-   "decision_state": "proposed",
+   "decision_state": "active",
    "results_seen": false,
    "proposed_by": "claude-session-2026-10-05 (evac)",
-   "status": "proposed",
+   "status": "active",
    "status_history": [
     {
      "at": "2026-10-05",
      "state": "proposed",
      "by": "agent",
      "note": "사용자 'gabia에서 진행하자' → gabia 점검 (탄성 13_m GPU 41.4 GB) → AskUserQuestion 두 답 'A 와 같게 (Recommended)' · '비준 (Recommended)' — 본문 확정 커밋 뒤 비준."
+    },
+    {
+     "at": "2026-10-05",
+     "state": "active",
+     "by": "사용자 (gabia 운용 · 탄성 1저자)",
+     "note": "비준 — AskUserQuestion '비준 (Recommended)' (예외 (4) 와 같은 조건 + nvidia-smi 점유 표본) · 시드–기계 대응 'A 와 같게 (Recommended)'. 트랙 = gabia 운용(우리) · li2s 외부 1저자에게는 기계 배정 사실을 다음 편지에 싣는다."
     }
-   ]
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-10-05T11:31:04Z",
+    "commit": "71e7e9f0cdf89549cc50f918d2f06658fbfd03b9",
+    "decision_digest": "sha256:14e092abcbc1d248bff0e6a5c84cdb63904145707663ac3b1cd5a807b25538de"
+   }
   }
  ]
 }
