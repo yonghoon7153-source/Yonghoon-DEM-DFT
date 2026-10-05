@@ -1,17 +1,19 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-10-05 · managed-files: 506
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-10-05 · managed-files: 508
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
-## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 302건)
+## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 304건)
 - 2026-10-05 · `kb/reviews/li2s1a_CQ_reply_li2s_glass_v2_readout_2026_10_05.md` — 회신 CQ — 외부 1저자 (li2s 소셀 유리 MD v2 판독): 갈래 v2-2 확정 · 마감 문장 끝 절 좁힘 (550 K = 문턱 부근 · 미통과 0) · 늦은 창 한 줄 (10 런 0.909–1.029) · 골격 ③ 일시 변화 수도 게이트 (문턱 따로) · 다음 = 대조 계 a-Li₃PS₄ 먼저 (여기서 닫지 않는다) · p90² 따로 재서 넣기 · 수령 (2026-10-05 · 사용자 붙여넣기) — 회신 원문 · 고…
 - 2026-10-05 · `kb/reviews/li2s1a_CR_prompt_li2s_glass_control_card_2026_10_05.md` — CR 프롬프트 — li2s 소셀 유리 MD: 회신 CQ 이행 보고 · 해설 문장 검산 셋 · 대조 계 a-Li₃PS₄ 유리 카드 초안 (600 K 400 ps · 5 담금질 시드 · D 상대차) · 확인 요청 여섯 (외부 1저자에게) · 초안 (2026-10-05) — 사용자 검토 · 발송 대기 (p90²…
 - 2026-10-05 · `kb/reviews/li2s1a_CR_reply_li2s_glass_control_card_2026_10_05.md` — 회신 CR — 외부 1저자 (li2s 소셀 유리 대조 계 카드): 검산 셋 수용 (1.49 eV⁻¹ · 산포 문장은 IQR 에만) · Q-CR-1~6 전건 · R 은 두 계 모두 통과 시드 ≥ 4 · 1 포함 문장에 검출한계 (결과 전 모의) · 골격 게이트 600 K 에서도 · 일시 변화 문턱은 A 실측에서 (예 5) · c2 = 1차 관측 · N_eff 열 · 밀도 −15 % 단서 · Tg 100 K 사전 문장 · 대조표 항목 · 수령 (2026-10-05 · 사용자 붙여넣기) — 회신 원문 · 고…
 - 2026-10-05 · `kb/reviews/li2s1a_CS_prompt_li2s_glass_control_cost_2026_10_05.md` — CS 프롬프트 — li2s 소셀 유리 대조 계: 담금질 시작 · ⚠ 비용 견적 오류 정정 (시드당 3 h → 실측 ≈ 33–39 h 벽시계) · 총상한 80 GPU-h 를 MD 전에 넘는다 · 셈법·새 상한 140·그 사이 처리 확인 요청 셋 (외부 1저자에게) · 발송됨 (사용자 · 2026-10-05 · 발송판 `kb/projec…
 - 2026-10-05 · `kb/reviews/li2s1a_CS_reply_li2s_glass_control_cost_2026_10_05.md` — 회신 CS — 외부 1저자 (li2s 소셀 유리 대조 계 비용): Q-CS-1 kgy 는 등분 가정으로 상한 비교 (과대평가 방향 = 보수적 · 벽시계 병기 · gabia 는 nvidia-smi 실측 · 기계별 방식 명시) · Q-CS-2 140 수용 + 셋 (80 이 틀린 이유 기록 · 다음 카드 비용 항목에 실측 장부 대조 필수 · 여유 14 % 얇음 → 160 또는 멈춤 경로 명시 · MD 40 을 v2 장부에서 다시) · Q-CS-3 그 처리로 됨 + 넷에서 멈출 때 규칙을 지금 박을 것 · 덧붙임 R 은 B 실제 산포 쪽 검출한계로 읽기 · 수령 (2026-10-05 · 사용자 붙여넣기) — 회신 원문 · 고…
+- 2026-10-05 · `kb/projects/handoff_2026_10_05_return_to_origin.md` — origin 복귀·통합 카드 — claude/evac-2026-10-02 → claude/friendly-meitner-lldvar (2026-10-05 · no-ff) · 발송 대기 — 사용자가 §0 프롬프트를 origin 세션에 붙여 넣는다
+- 2026-10-05 · `kb/projects/merge_request_2026_10_05.md` — 머지 요청 (최종) — 대피 브랜치 claude/evac-2026-10-02 → claude/friendly-meitner-lldvar (2026-10-05) · 최종 — 10-05 밤 실측 (no-ff · 가상 병합 텍스트 충돌 …
 - 2026-10-04 · `kb/reviews/li2s1a_CO_prompt_li2s_glass_v2_card_2026_09_30.md` — CO 프롬프트 — li2s 소셀 유리 MD v2 카드 (잠정): 550 K 800 ps · 600 K 400 ps · 같은 5 시드 · 기계–시드 교차 · σ 사다리를 b_min 에 닿게 · 확인 요청 여섯 (외부 1저자에게) · 초안 (2026-09-30) · 10-03 실행 상태 덧붙임 (10 …
 - 2026-10-04 · `kb/reviews/li2s1a_CO_reply_li2s_glass_v2_card_2026_10_04.md` — 회신 CO — 외부 1저자 (li2s 소셀 유리 MD v2 카드): Q-CO-1~6 · 800 ps σ 도 여전히 하한 · 두 온도 공통 b = 256 열 · 끝 두 b 판정 갈리면 경계 · near-miss σ 거리 다섯 · 대조 계 후보 a-Li₃PS₄ 유리 · 골격 게이트 숫자를 지금 · 보조 창 50–200 ps 기록 열 · 수령 (2026-10-04 · 사용자 붙여넣기) — 회신 원문 · 고…
 - 2026-10-04 · `kb/reviews/li2s1a_CQ_prompt_li2s_glass_v2_readout_2026_10_04.md` — CQ 프롬프트 — li2s 소셀 유리 MD v2 판독: 회신 CO 규칙을 결과 전에 넣고 한 번 판독 · 갈래 v2-2 (규칙 적용) · near-miss · 보조 창 · 골격 기록 · 확인 요청 다섯 (외부 1저자에게) · 초안 (2026-10-04) — 사용자 검토 · 발송 대기
@@ -25,8 +27,6 @@
 - 2026-09-30 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
 - 2026-09-30 · `kb/reviews/codex_CM_prompt_cei_nd_handoff_2026_09_30.md` — 리뷰 CM 프롬프트 — CEI (Nd 계면) 외부 송부 전 리뷰: 정본 페이지 · 송부판 · 인계 카드 · 1저자 읽기 지침서 · AI 프롬프트 · 발송됨 (사용자 · 2026-09-30 · 인계 zip 첨부) · ✅…
 - 2026-09-30 · `kb/reviews/codex_CM_reply_cei_nd_handoff_2026_09_30.md` — 회신 CM — CEI (Nd 계면) 외부 인계본 리뷰: NO-GO (P0 7 · P1 6) — 수치·무결성은 대체로 맞음 · 요약·교육 문구가 계산 범위를 넘음 · Fig. 2 재현 명령이 이력 파일을 덮음 · 수령 (2026-09-30 · 사용자 붙여넣기) — 회신 원문 · 고…
-- 2026-09-30 · `kb/reviews/li2s1a_CN_prompt_li2s_main_readout_2026_09_30.md` — CN 프롬프트 — li2s 소셀 유리 MD: CL 채움판 (600 K 파일럿 · 본 런 착수) + 본 런 판독 (C1 11/11 · C2 465 K 0/5 · 550 K 1/5) · 갈래1 확인 요청 · C2 미통과 원인 · 다섯 시드 전수 (Q-CL-3·4) (외부 1저자에게) · 발송됨 (사용자 · 2026-09-30 · 초안 그대로) · ✅ 회신…
-- 2026-09-30 · `kb/reviews/li2s1a_CN_reply_li2s_main_readout_2026_09_30.md` — 회신 CN — 외부 1저자 (li2s 소셀 유리 MD): 갈래1 확정 · 마지막 문장 좁힘 · 주 표기 1/15 · Ea 적합 단위 질문 닫기 · P–S–S 문구 확정 · (가)(나) 채택 (다) 기각 · 마감 전 덧붙일 것 둘 (550 K 문턱 부근 · STO–MTO 폭) · 수령 (2026-09-30 · 사용자 붙여넣기) — 회신 원문 · 고…
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -420,7 +420,7 @@
 - `kb/reports/weekly_2026_09_27.md` — 주간 정리 2026-09-21 ~ 09-27 (주간보고 초안)  (2026-09-28 · 완료 (2026-09-28 · 다음 주 문서는 새 파일))
 - `kb/reports/weekly_2026_10_04.md` — 주간 정리 2026-09-28 ~ 10-04 (주간보고 초안)  (2026-10-04 · 초안 (2026-10-04 · 도는 계산은 10-04 17:59 실측…)
 
-## projects/ (42)
+## projects/ (44)
 - `kb/projects/HANDOFF_2026_08_31_session.md` — 인수인계 — 2026-08-31 세션 (외주 C-12 AR→AV · 폴라론 S0 · nscf 사고)  (2026-09-03 · 활성)
 - `kb/projects/MULTI_CATEGORY_BATCH_PLAN_v22.md` — Multi-Category Multi-Compound Batch Plan — Paper #2 (v4.5.18)
 - `kb/projects/MUST_READ_digital_twin_north_star.md` — 🚨🚨🚨 MUST READ — AI 계산 스크리닝 플랫폼 North Star (구: Digital Twin)
@@ -440,6 +440,7 @@
 - `kb/projects/handoff_2026_09_28_evacuation.md` — 대피 인계 — 2026-09-28 (friendly 세션 컨텍스트 소진 → 서브 브랜치 임시 작업)  (2026-09-28 · 진행)
 - `kb/projects/handoff_2026_09_29_return_to_origin.md` — origin 복귀·통합 카드 — claude/evac-2026-09-28 → claude/friendly-meitner-lldvar (2026-09-29)  (2026-09-29 · 발송 대기 — 사용자가 §0 프롬프트를 origin 세션에 붙여 넣는다)
 - `kb/projects/handoff_2026_10_02_evacuation.md` — 대피 인계 — 2026-10-02 (friendly 세션 토큰 소진 → 서브 대시보드 세션 · 머지 때 충돌 0 설계)  (2026-10-02 · 진행)
+- `kb/projects/handoff_2026_10_05_return_to_origin.md` — origin 복귀·통합 카드 — claude/evac-2026-10-02 → claude/friendly-meitner-lldvar (2026-10-05 · no-ff)  (2026-10-05 · 발송 대기 — 사용자가 §0 프롬프트를 origin 세션에 붙여 넣는다)
 - `kb/projects/handoff_cei_2026_09_30.md` — CEI (Nd 계면) 인계 카드 — 실험 쪽 1저자에게 작업 양도 (2026-09-30)  (2026-09-30 · 발송 대기 — 외부 리뷰 회신 CM(NO-GO) 이행판 · 사용자가 …)
 - `kb/projects/li2s_glass_control_cost_letter_CS_send_2026_10_05.md` — li2s_glass_control_cost_letter_CS_send_2026_10_05
 - `kb/projects/li2s_glass_external_first_author_followup_pilot800_2026_09_27.md` — li2s 소셀 유리 MD — 파일럿 400 K · 800 ps 결과 후속 보고 (외부 1저자에게) · C2·C1 미통과 → '이 프로토콜로 400 K 는 측정되지 않는다' · 본 15런 400 K 처리 결정 요청  (2026-09-27 · 흡수됨 (미발송) — 회신 CD 가 먼저 와서 통합 편지 CH `kb…)
@@ -448,6 +449,7 @@
 - `kb/projects/li2s_glass_external_first_author_report_send_2026_09_26.md` — li2s_glass_external_first_author_report_send_2026_09_26
 - `kb/projects/li_neb_anode_free.md` — Li Adatom Diffusion on Anode-Free SSB Interphases  (2026-06-01 · setup)
 - `kb/projects/merge_request_2026_09_28.md` — 머지 요청 (최종) — 대피 브랜치 claude/evac-2026-09-28 → claude/friendly-meitner-lldvar  (2026-09-29 · 최종 — 09-29 01:4x KST 실측 (fast-forward …)
+- `kb/projects/merge_request_2026_10_05.md` — 머지 요청 (최종) — 대피 브랜치 claude/evac-2026-10-02 → claude/friendly-meitner-lldvar (2026-10-05)  (2026-10-05 · 최종 — 10-05 밤 실측 (no-ff · 가상 병합 텍스트 충돌 …)
 - `kb/projects/ml_opportunities_from_lab_ppt_2026_07.md` — 랩 ML 파이프라인(TabPFN)과 우리 캠페인의 접점 — 2026-07-28
 - `kb/projects/mlip_next_campaigns_2026_07.md` — MLIP(UMA) 차기 캠페인 후보 제안서 — cascade 확장 7건  (2026-07-27 · proposal)
 - `kb/projects/restart_runbook_2026_09_07.md` — 재기동 절차서 — 2026-09-07 재부팅 (gabia · desktop)  (2026-09-07 · 진행)
