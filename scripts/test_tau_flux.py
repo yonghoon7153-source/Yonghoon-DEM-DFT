@@ -108,12 +108,17 @@ def main():
     chk('A5 띠 메타 = 솔버 기록 그대로 (규칙 L0 · 폭 0.06)',
         o['ion_net_band_rule_hertz'] == 'L0' and o['ion_net_band_frac_hertz'] == 0.06)
     #  ★ 10-05 RGLR-01 — 사유 코드에 invalid_input (공용 기술 검사 · 생산자 계약 위반 레코드) 이 더해졌다 → 다섯.  사유 칸은 코드 그대로이거나
-    #    'invalid_input: 세부' (세부를 다는 것은 invalid_input 하나) — 코드는 `reason_code` 로 읽는다.
-    chk('A6 상태 값은 다섯 중 하나 · 사유 코드는 다섯 중 하나 (RGLR-01 invalid_input 추가) — SOLVER_ANOMALY 를 쓰지 않는다 (v2 §5-1 · 물리 f3)',
+    #    'invalid_input: 세부' — 코드는 `reason_code` 로 읽는다.
+    #  ★ 10-05 RGLR2-02 (Codex 3차 재검증) — generation_invalid (케이스 폴더의 망 활성 세대가 확정되지 않음 · 읽는 쪽 fail-closed) → 여섯.
+    #    세부를 다는 코드 = invalid_input · generation_invalid.
+    chk('A6 상태 값은 다섯 중 하나 · 사유 코드는 여섯 중 하나 (RGLR-01 invalid_input · RGLR2-02 generation_invalid 추가) — SOLVER_ANOMALY 를 '
+        '쓰지 않는다 (v2 §5-1 · 물리 f3)',
         tuple(tf.STATUSES) == ('OK', 'NOT_PERCOLATING', 'BAND_FALLBACK', 'MODEL_BELOW_CONTINUUM_BOUND', 'NOT_COMPUTED')
-        and tuple(tf.REASONS) == ('solver_guard', 'missing_input', 'temperature_mismatch', 'percolation_disagree', 'invalid_input')
+        and tuple(tf.REASONS) == ('solver_guard', 'missing_input', 'temperature_mismatch', 'percolation_disagree', 'invalid_input',
+                                  'generation_invalid')
         and 'SOLVER_ANOMALY' not in tf.STATUSES
-        and getattr(tf, 'reason_code', lambda r: None)('invalid_input: σ_ratio None') == 'invalid_input')
+        and getattr(tf, 'reason_code', lambda r: None)('invalid_input: σ_ratio None') == 'invalid_input'
+        and getattr(tf, 'reason_code', lambda r: None)('generation_invalid: 도장 ≠ full_metrics') == 'generation_invalid')
 
     # ── B. G1 띠 ──
     b1 = tf.ion_columns(dual(h={'boundary_rule': 'L1'}), LEDGER, 92.0)
@@ -527,6 +532,75 @@ def main():
         all(v == 'invalid_input' for k, v in st7.items() if k != 'not_computed') and st7['not_computed'] == 'solver_guard')
     chk('L8 어휘 짝 — 공용 기술 검사의 비관통 사유 = 생산자 (network_conductivity.NO_THROUGH_REASON) · 사유 코드 invalid_input 은 REASONS 안',
         getattr(tf, 'NO_THROUGH_REASON', None) == nc.NO_THROUGH_REASON and 'invalid_input' in tf.REASONS)
+
+    # ── M. 세대 일관성 (10-05 RGLR2-02 · Codex 3차 재검증 §2 · Q2) — 케이스 폴더의 망 활성 세대가 **확정되지 않았으면** τ 인계를 싣지 않는다 ──
+    #    (읽는 쪽 fail-closed · 최근 시도 기록을 못 썼어도 디스크만 보고 가른다).  확정 안 됨 = full_metrics 가 주장하는 망 세대 ≠ 도장 (도장 없음 포함) ·
+    #    full_metrics 의 두 id 가 서로 다름 · 도장 손상 · 최근 시도가 활성을 무효로 남김 (되돌림 실패) · 중단된 게시 흔적 (.publish_backup_* ·
+    #    .stage_stash_net_*).  full_metrics 가 망 세대를 주장하지 않으면 (접촉 분석만 · 도장 이전 옛 세대) 대조할 것이 없다 — 막지 않는다.
+    gen_fn = getattr(tf, 'network_generation_problem', None)
+    tmpm = tempfile.mkdtemp(prefix='tauflux_gen_')
+
+    def _mk(name, fm_over=None, prov=None, attempt=None, extra=()):
+        c_ = os.path.join(tmpm, name)
+        os.makedirs(c_)
+        json.dump(dual(), open(os.path.join(c_, 'network_conductivity_dual.json'), 'w'))
+        json.dump(dict(LEDGER, percolation_pct=92.0, **(fm_over or {})), open(os.path.join(c_, 'full_metrics.json'), 'w'))
+        if prov is not None:
+            with open(os.path.join(c_, 'network_provenance.json'), 'w') as f_:
+                f_.write(prov if isinstance(prov, str) else json.dumps(prov))
+        if attempt is not None:
+            json.dump(attempt, open(os.path.join(c_, 'network_attempt.json'), 'w'))
+        for n_ in extra:
+            if n_.endswith('/'):
+                os.makedirs(os.path.join(c_, n_.rstrip('/')))
+            else:
+                open(os.path.join(c_, n_), 'w').write('{}')
+        return c_
+    P1 = {'network_run_id': 'R1', 'solver_status': 'success'}
+    FM1 = {'network_run_id': 'R1', 'active_network_run_id': 'R1'}
+    A_OK = {'latest_attempt_status': 'success', 'solver_status': 'success', 'network_attempt_run_id': 'R1', 'active_status': 'success'}
+    good = {'세대 일치 (full_metrics R1 = 도장 R1 · 최근 시도 success)': _mk('g_ok', FM1, P1, A_OK),
+            '접촉 분석만 다시 쓴 full_metrics (망 id 없음) + 도장 R1': _mk('g_contact', None, P1),
+            '도장 이전 옛 세대 (도장 · id 없음)': _mk('g_legacy'),
+            '최근 재계산 실패 · 되돌림 성공 (publish_exception · 활성 유지)': _mk('g_pubexc', FM1, P1, dict(
+                A_OK, latest_attempt_status='failed', solver_status='failed', network_attempt_run_id='R2',
+                failure_kind='publish_exception', previous_generation_kept=True)),
+            '다른 단계의 stash (접촉 분석 · 망 아님)': _mk('g_cstash', FM1, P1, A_OK, extra=('.stage_stash_ContactAnalysis_x/',))}
+    bad = {'full_metrics R2 ≠ 도장 R1 (Codex rollback_destination_failure 의 디스크)': _mk(
+               'b_mismatch', {'network_run_id': 'R2', 'active_network_run_id': 'R2'}, P1, A_OK),
+           'full_metrics 의 두 id 가 다르다 (R1 · R2)': _mk('b_twoids', {'network_run_id': 'R1', 'active_network_run_id': 'R2'}, P1),
+           'full_metrics 가 R1 을 주장하는데 도장 없음 (첫 실행 되돌림 실패)': _mk('b_noprov', FM1),
+           '도장 손상 (읽을 수 없음)': _mk('b_provbad', None, '{망가진 JSON'),
+           '최근 시도 = 되돌림 실패 (rollback_failed · 활성 무효)': _mk('b_rbfail', FM1, P1, dict(
+               A_OK, latest_attempt_status='failed', failure_kind='rollback_failed', active_status='invalid',
+               previous_generation_kept=False, active_problem='full_metrics 되돌림 실패')),
+           '중단된 게시의 사본 (.publish_backup_*)': _mk('b_backup', FM1, P1, A_OK, extra=('.publish_backup_R2_full_metrics.json',)),
+           '중단된 망 풀이의 stash (.stage_stash_net_*)': _mk('b_stash', FM1, P1, A_OK, extra=('.stage_stash_net__x/',))}
+    rg = {k: tf.case_row(v) for k, v in good.items()}
+    rb = {k: tf.case_row(v) for k, v in bad.items()}
+    gbad = {k: (r['ion_net_status_hertz'], r['ion_net_status_physics'], (gen_fn(good[k]) if gen_fn else '?'))
+            for k, r in rg.items() if not (r['ion_net_status_hertz'] == r['ion_net_status_physics'] == 'OK'
+                                           and r['tau2_ion_hertz'] == o['tau2_ion_hertz'] and gen_fn and gen_fn(good[k]) == '')}
+    chk(f'M1 양성 대조 — 세대 일치 · 접촉 분석만 · 도장 이전 · 되돌림 성공한 재계산 실패 · 다른 단계 stash → τ 인계 그대로 (OK · 같은 tau2) · '
+        f'세대 문제 없음 {gbad or ""}', not gbad and len(rg) == 5)
+    bbad = {k: (r['ion_net_status_hertz'], r['ion_net_status_reason_hertz'][:40])
+            for k, r in rb.items() if not (r['ion_net_status_hertz'] == r['ion_net_status_physics'] == 'NOT_COMPUTED'
+                                           and tf.reason_code(r['ion_net_status_reason_hertz']) == 'generation_invalid'
+                                           and tf.reason_code(r['ion_net_status_reason_physics']) == 'generation_invalid'
+                                           and all(r[f'{c}_ion_{m}'] is None for c in ('f', 'tau2', 'tau') for m in ('hertz', 'physics'))
+                                           and gen_fn and gen_fn(bad[k]))}
+    chk(f'M2 ★ RGLR2-02 세대가 확정되지 않은 폴더 {len(bad)} 종 → 두 모드 NOT_COMPUTED (generation_invalid: 세부) · f · tau2 · tau 빈칸 '
+        f'(옛: OK — dual 만 읽어 옛 세대 τ 를 실었다) {bbad or ""}', not bbad and len(rb) == 7)
+    _gb = gen_fn(bad['full_metrics R2 ≠ 도장 R1 (Codex rollback_destination_failure 의 디스크)']) if gen_fn else ''
+    chk(f'M3 세대 문제 사유 = 무엇이 어긋났는지 (두 id) — {_gb[:90]!r}', 'R2' in _gb and 'R1' in _gb)
+    M_ = {'phi_se': 0.30, 'sigma_full_mScm': 0.12, 'sigma_bulk_net_mScm': 0.5}
+    chk('M4 ★ 등급 τ getter (tau2_from_metrics) — 읽는 쪽이 세대 무효 표지를 단 metrics → tau2 None (hertz · bulk) · 표지 없으면 값 그대로',
+        tf.tau2_from_metrics(dict(M_, network_generation_problem='full_metrics ↔ 도장 불일치'))[0] is None
+        and tf.tau2_from_metrics(dict(M_, network_generation_problem='x'), 'bulk')[0] is None
+        and tf.tau2_from_metrics(M_)[0] is not None and tf.tau2_from_metrics(M_, 'bulk')[0] is not None
+        and getattr(tf, 'GENERATION_PROBLEM_KEY', None) == 'network_generation_problem')
+    import shutil
+    shutil.rmtree(tmpm, ignore_errors=True)
 
     print(f'\ntest_tau_flux: {_ok}/{_ok + len(_fail)} PASS' + (f'   FAILED: {_fail}' if _fail else ''))
     return 0 if not _fail else 1

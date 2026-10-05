@@ -15,6 +15,7 @@
      G6 τ 세 축 계산부에 σ₀ 리터럴 3.0 이 없다 (한 도우미 경유)
      G7 헤더 문턱 출처 — "τ_Laplace,eff ≤ 2.5 — Tippens 2019, Famprikis 2019" 를 근거처럼 적지 않는다 (내부 등급선 · TAU-16)
      G8 ASR 축 · σ_ionic Stage E 축은 그대로 (Stage-E physics σ 우선 — τ 아님 · 범위 밖)
+     G9 (10-05 RGLR2-02) 망 활성 세대 무효 표지 (`network_generation_problem`) 를 단 metrics → τ 세 축 값 없음 (읽는 쪽 fail-closed)
   W  웹앱
      W1 `_sigma_grain_context` = se_material.sigma_grain_context (온도 키 조합 여섯 — 값 · 경고 같음)
      W2 τ 블록 tau2 = 같은 도우미 (`tau_flux.tau2_value`) — 값 비트 동일
@@ -132,6 +133,13 @@ asr = GE._derived_value('__asr_ionic_Ohm_cm2', dict(BASE))
 ax_s = axis('sigma_full_mScm_stage_e_physics')
 chk('G8 ASR · σ_ionic Stage E 축은 그대로 — Stage-E physics σ 우선 (τ 아님 · 범위 밖)',
     asr is not None and abs(asr - 80.0 * 0.1 / 0.20) < 1e-12 and ax_s is not None, f'{asr}')
+#  ★ 10-05 RGLR2-02 (Codex 3차 재검증) — 읽는 쪽이 망 활성 세대가 확정되지 않았다는 표지 (`network_generation_problem` — full_metrics ↔ 도장
+#    불일치 · 되돌림 실패 · 중단된 게시 흔적) 를 단 metrics 는 τ 세 축을 내지 않는다 (CSV 문자열 변환에 표지가 사라지지 않는다).
+_gp = {'network_generation_problem': 'full_metrics R2 ≠ 도장 R1'}
+_g9 = [GE._derived_value(k, dict(BASE, **_gp)) for k in ('__tau_lap_eff', '__tau_lap_bulk', '__constriction_overhead')]
+_g9b = [GE._derived_value(k, dict(BASE)) for k in ('__tau_lap_eff', '__tau_lap_bulk', '__constriction_overhead')]
+chk('G9 ★ RGLR2-02 세대 무효 표지 → 등급 τ · τ_bulk · overhead 축 값 없음 (같은 metrics 표지 없으면 값 그대로)',
+    all(v is None for v in _g9) and all(v is not None for v in _g9b), repr((_g9, _g9b)))
 
 # ── W  웹앱 ───────────────────────────────────────────────────────────────────
 print('W  웹앱')

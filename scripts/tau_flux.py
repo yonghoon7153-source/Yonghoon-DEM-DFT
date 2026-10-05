@@ -19,6 +19,7 @@
 게이트 (먼저 걸린 것 하나만 — 순서 = 아래 표):
 | 순서 | 게이트 | 실패 시 |
 |---|---|---|
+| (폴더) | ★ 세대 (10-05 RGLR2-02) — 케이스 폴더 (`case_row` · 웹앱 `_ion_handover`) 의 망 활성 세대가 확정되지 않음 (`network_generation_problem`: full_metrics ↔ 도장 불일치 · 되돌림 실패 기록 · 중단된 게시 흔적 · 도장 손상) — 아래 게이트 결과를 덮는다 | `NOT_COMPUTED` (`generation_invalid: 세부` · 두 모드 · 값 빈칸) |
 | 0 | 그 모드의 망 결과 · 장부 (L_gap · L_mc · φ_mc) · calc_percolation 값이 있다 · 띠 규칙 기록이 있다 (안 A · 기록 없는 옛 산출물은 짐작하지 않는다) | `NOT_COMPUTED` (`missing_input`) |
 | 0b | ★ 공용 기술 검사 `ion_record_problem` (10-05 RGLR-01 · 02) — 상태 ↔ 값 (computed = σ 두 표현 유한 양수 · 관통 분율 (0, 1] · 두 표현 항등식 · valid_zero = RGL-02 의 증명된 비관통 조합만 · 그 밖 = 생산자 계약 밖) | `NOT_COMPUTED` (`invalid_input: 세부` · 생산자 not_computed 신고면 `solver_guard`) |
 | 1 | G1 띠 = 솔버 기록 `boundary_rule` 이 L0 | `BAND_FALLBACK` |
@@ -28,7 +29,7 @@
 | 5 | 관통인데 σ 가 없거나 0 · 음수 · 비유한 (0b 뒤에는 도달하지 않는 방어) | `NOT_COMPUTED` (`solver_guard`) |
 | 6 | G5 f > φ (T < 1) | `MODEL_BELOW_CONTINUUM_BOUND` — **값 유지** + 표지 (빈칸으로 거르면 코퍼스를 T ≥ 1 쪽으로 선별한다) |
 G6 (협착 세대) = 메타 `ion_net_constriction_<m>` · 두 모드 모두 **물리 타깃 (실험 절대 대조) HOLD** — 값은 싣는다.
-상태 부류 (10-05 RGLR-01): `NOT_COMPUTED` = **기술적 실패** (입력 결손 · 무효 · 솔버 관문 · 온도 짝 · 관통 불일치 — 값 없음) ↔ `BAND_FALLBACK` ·
+상태 부류 (10-05 RGLR-01): `NOT_COMPUTED` = **기술적 실패** (입력 결손 · 무효 · 솔버 관문 · 온도 짝 · 관통 불일치 · 세대 무효 (RGLR2-02) — 값 없음) ↔ `BAND_FALLBACK` ·
 `NOT_PERCOLATING` · `MODEL_BELOW_CONTINUUM_BOUND` = **등록된 과학적 HOLD** (입력은 0b 를 통과한 유효값 · 규칙대로 빈칸 또는 표지).
 ⚠ 옛 판은 0b 가 없어 L1/L2 레코드가 G1 에서 바로 BAND_FALLBACK 로 돌아갔다 — computed 인데 σ_ratio None · NaN · −1 · 관통 분율 2 가 '과학적 HOLD'
 로 통과했고 (RGLR-01), σ_ratio 만 ×4 인 레코드는 tau2 ÷4 로 OK 였다 (RGLR-02).
@@ -50,10 +51,13 @@ import sys
 MODES = ('hertz', 'physics')
 DUAL_KEY = {'hertz': 'hertzian', 'physics': 'physics'}
 STATUSES = ('OK', 'NOT_PERCOLATING', 'BAND_FALLBACK', 'MODEL_BELOW_CONTINUUM_BOUND', 'NOT_COMPUTED')
-#: 사유 **코드** — 사유 칸은 코드 그대로이거나 'invalid_input: 세부' (세부를 다는 것은 invalid_input 하나 · 코드는 `reason_code`).
+#: 사유 **코드** — 사유 칸은 코드 그대로이거나 '코드: 세부' (세부를 다는 코드 = invalid_input · generation_invalid · 코드는 `reason_code`).
 #:   ★ 10-05 RGLR-01: invalid_input = 공용 기술 검사 (`ion_record_problem`) 가 생산자 계약 위반으로 본 레코드.
-REASONS = ('solver_guard', 'missing_input', 'temperature_mismatch', 'percolation_disagree', 'invalid_input')
+#:   ★ 10-05 RGLR2-02 (Codex 3차 재검증): generation_invalid = 케이스 폴더의 망 활성 세대가 **확정되지 않았다** (`network_generation_problem` —
+#:     full_metrics ↔ 도장 불일치 · 되돌림 실패 기록 · 중단된 게시 흔적 · 도장 손상) — 읽는 쪽 fail-closed (기술적 실패 부류 · 재실행 필요).
+REASONS = ('solver_guard', 'missing_input', 'temperature_mismatch', 'percolation_disagree', 'invalid_input', 'generation_invalid')
 INVALID_INPUT = 'invalid_input'
+GENERATION_INVALID = 'generation_invalid'
 CONSTRICTION = {'maxwell': 'maxwell_halfspace', 'mikic': 'mikic_psi_divide'}
 BAND_RULES = ('L0', 'L1', 'L2')
 PHI_TOL = 5e-5 + 1e-9          # 망 φ 는 4 자리 반올림 (network_conductivity `round(phi_se, 4)`) — 반폭 + 부동소수 여유
@@ -163,6 +167,105 @@ def ion_record_problem(rec):
     return INVALID_INPUT, f'sigma_full_status={st!r} — 생산자 계약 밖 (computed · valid_zero · not_computed 만)'
 
 
+#  ── 망 활성 세대의 확정 여부 (10-05 RGLR2-02 · Codex 3차 재검증 §2 · Q2 ③ · 1저자 비준 범위) ─────────────────────────────────────────
+#  케이스 폴더 (웹앱 results) 의 망 값은 여러 파일 (네 망 JSON · network_provenance.json · full_metrics.json) 에 나뉘어 있다.  게시 (승격) 는 동기
+#  예외를 되돌리지만 **되돌림 자체가 실패**하거나 프로세스가 중간에 죽으면 파일들이 서로 다른 세대를 가리킬 수 있다 (Codex rollback_destination_failure:
+#  망 JSON · 도장 = 옛 세대 · full_metrics = 새 세대).  그런 폴더의 값을 "이전 세대 그대로" 로 읽으면 안 된다 — 읽는 쪽 (케이스 페이지 · τ 인계 ·
+#  등급 τ) 이 **디스크만 보고** 가른다 (최근 시도 기록을 못 썼어도).  이 도우미가 정본이고 `webapp/pipeline_service` 가 같은 함수를 부른다.
+#  파일 이름 · 접두사는 `webapp/pipeline_service` 와 같은 값이어야 한다 (test_pipeline_provenance T23a 가 대조한다 — 무거운 웹앱 모듈을 여기서
+#  임포트하지 않으려고 값을 둔다 · NO_THROUGH_REASON 과 같은 방식).
+PROVENANCE_FILE = 'network_provenance.json'       # 활성 세대 도장 (승격했을 때만 갱신)
+ATTEMPT_FILE = 'network_attempt.json'             # 최근 시도 (성공 · 실패 모두)
+PUBLISH_BACKUP_PREFIX = '.publish_backup_'        # 승격 중 full_metrics 사본 — 되돌림이 끝나면 사라진다 (남으면 = 중단 · 되돌림 실패)
+NETWORK_STASH_PREFIX = '.stage_stash_net_'        # 풀이 전 옛 망 산출물을 치워 둔 곳 — 승격 · 폐기로 사라진다 (남으면 = 진행 중 · 중단)
+#: 읽는 쪽이 metrics 에 다는 표지 — 값이 있으면 그 metrics 의 망 값은 확정되지 않은 세대의 것 (등급 τ getter `tau2_from_metrics` 가 본다).
+GENERATION_PROBLEM_KEY = 'network_generation_problem'
+
+
+def generation_leftovers(case_dir):
+    """중단된 게시 · 풀이의 흔적 (맨 위의 `PUBLISH_BACKUP_PREFIX` 파일 · `NETWORK_STASH_PREFIX` 디렉터리) → 이름 목록 (정렬).
+    폴더를 못 읽으면 [] (폴더 자체가 없는 경우 — 다른 검사가 입력 결손으로 답한다)."""
+    try:
+        names = os.listdir(case_dir)
+    except OSError:
+        return []
+    return sorted(n for n in names if n.startswith(PUBLISH_BACKUP_PREFIX) or n.startswith(NETWORK_STASH_PREFIX))
+
+
+def network_generation_problem(case_dir, fm=None):
+    """케이스 폴더의 망 활성 세대가 **확정되었는가** (읽는 쪽 fail-closed) → '' (확정 · 또는 대조할 것 없음) | 사유 (무효 — 값 인용 금지 · 재실행 필요).
+
+      ① 도장 손상 — `network_provenance.json` 이 있는데 못 읽는다 (RV-06 과 같은 규약: 검증 불가 = 무효)
+      ② 중단된 게시 · 풀이의 흔적 (`generation_leftovers`) — 진행 중이거나 중단됐다 (자동으로 유효 세대로 재사용하지 않는다 · Codex Q2 ③)
+      ③ full_metrics ↔ 도장 — full_metrics 가 주장하는 망 세대 (`network_run_id` · `active_network_run_id`) 가 서로 다르거나, 도장의 run id 와
+         다르다 (도장 없음 포함).  full_metrics 를 못 읽으면 무효.  full_metrics 가 망 세대를 주장하지 않으면 (접촉 분석만 다시 쓴 판 ·
+         도장 이전 옛 세대) 대조할 것이 없다 — 막지 않는다 (그 판에는 망 소유 값이 없다).
+      ④ 최근 시도 기록이 활성을 무효로 남겼다 (`failure_kind` rollback_failed · interrupted_publish · `active_status` invalid) — 성공한 다음
+         승격이 덮을 때까지 유지된다 (재실행 필요).  기록을 못 읽으면 무효.
+    fm = 이미 읽은 full_metrics (dict) — None 이면 폴더에서 읽는다."""
+    probs = []
+    pp = os.path.join(case_dir, PROVENANCE_FILE)
+    prov_id, prov_ok = None, True
+    if os.path.exists(pp):
+        try:
+            with open(pp, encoding='utf-8') as fh:
+                prov = json.load(fh)
+            if not isinstance(prov, dict):
+                raise ValueError('객체가 아니다')
+            prov_id = prov.get('network_run_id')
+        except (OSError, ValueError) as e:
+            prov_ok = False
+            probs.append(f'도장 ({PROVENANCE_FILE}) 손상 ({type(e).__name__}) — 활성 세대를 확인할 수 없다')
+    left = generation_leftovers(case_dir)
+    if left:
+        probs.append(f'중단된 게시 · 풀이 흔적 {left[:4]}{" …" if len(left) > 4 else ""} — 진행 중이거나 중단됐다 (재실행 필요)')
+    if fm is None:
+        fp = os.path.join(case_dir, 'full_metrics.json')
+        if os.path.exists(fp):
+            try:
+                with open(fp, encoding='utf-8') as fh:
+                    fm = json.load(fh)
+            except (OSError, ValueError) as e:
+                fm = None
+                probs.append(f'full_metrics.json 손상 ({type(e).__name__}) — 망 세대를 대조할 수 없다')
+    if isinstance(fm, dict):
+        ids = {k: fm.get(k) for k in ('network_run_id', 'active_network_run_id') if fm.get(k) is not None}
+        if len(set(ids.values())) > 1:
+            probs.append(f'full_metrics 의 두 망 세대 id 가 다르다 {ids}')
+        elif ids and prov_ok:
+            fid = next(iter(ids.values()))
+            if fid != prov_id:
+                probs.append(f'full_metrics 의 망 세대 {fid!r} ≠ 도장 {prov_id!r} — 파일들이 서로 다른 세대를 가리킨다 (되돌림 실패 · 중단된 게시)')
+    ap = os.path.join(case_dir, ATTEMPT_FILE)
+    if os.path.exists(ap):
+        try:
+            with open(ap, encoding='utf-8') as fh:
+                att = json.load(fh)
+            if not isinstance(att, dict):
+                raise ValueError('객체가 아니다')
+        except (OSError, ValueError) as e:
+            att = None
+            probs.append(f'최근 시도 기록 ({ATTEMPT_FILE}) 손상 ({type(e).__name__}) — 활성 세대가 유효한지 확인할 수 없다')
+        if isinstance(att, dict) and (att.get('failure_kind') in ('rollback_failed', 'interrupted_publish')
+                                      or att.get('active_status') == 'invalid'):
+            probs.append(f'최근 시도 {att.get("network_attempt_run_id")!r} 가 활성 세대를 무효로 남겼다 ({att.get("failure_kind") or "invalid"}: '
+                         f'{str(att.get("active_problem") or att.get("reason") or "")[:160]}) — 성공한 재계산 전까지 무효')
+    return '; '.join(probs)
+
+
+def generation_override(row, prob):
+    """τ 인계 행 (`ion_columns` · `case_row`) 에 세대 무효를 덮는다 — 두 모드 NOT_COMPUTED (generation_invalid: 사유) · f · tau2 · tau · σ₀ 메타 빈칸.
+    prob 가 비면 그대로 돌려준다."""
+    if not prob or not isinstance(row, dict):
+        return row
+    for m in MODES:
+        row.update(_blank(m))
+        row[f'ion_net_status_{m}'] = 'NOT_COMPUTED'
+        row[f'ion_net_status_reason_{m}'] = f'{GENERATION_INVALID}: {prob}'
+    row['ion_sigma0_mScm'] = row['ion_sigma0_T_C'] = None
+    return row
+
+
 #  ── 소비처 공용 tau2 (TAU-03 · 결정 6 · 1저자 비준 10-04 밤 *"권고대로"*) ────────────────────────────────────────────────
 #  웹앱 τ 블록 · 등급 τ · overhead 축 · COMSOL 2D 내보내기 · regime DB 가 **이 두 함수**를 쓴다 (옛 다섯 변형 — 등급 · 내보내기는
 #  Stage-E physics σ + 3.0 고정이었다).  인계 열 (`ion_columns`) 은 솔버 무차원 σ_ratio (8 자리) 로 따로 계산한다 (`TAU-25`) —
@@ -190,6 +293,8 @@ def tau2_from_metrics(metrics, mode='hertz'):
         raise ValueError(f'mode={mode!r} — hertz · physics · bulk 만')
     m = metrics if isinstance(metrics, dict) else {}
     sigma0 = _sem.sigma_grain_context(m)[0]
+    if m.get(GENERATION_PROBLEM_KEY):                    # ★ 10-05 RGLR2-02 — 읽는 쪽이 세대 무효로 표지한 metrics → τ 없음 (값 인용 금지)
+        return None, sigma0
     key = 'sigma_bulk_net_mScm' if mode == 'bulk' else METRIC_SIGMA_KEY[mode]
     return tau2_value(m.get('phi_se'), sigma0, m.get(key)), sigma0
 
@@ -328,12 +433,14 @@ def _load(path):
 
 
 def case_row(case_dir, sigma0_T_claim=None):
-    """케이스 폴더 → {'case': 이름, …열}.  파일이 없으면 그 사실이 상태로 남는다 (행을 빼지 않는다)."""
+    """케이스 폴더 → {'case': 이름, …열}.  파일이 없으면 그 사실이 상태로 남는다 (행을 빼지 않는다).
+    ★ 10-05 RGLR2-02 — 폴더의 망 활성 세대가 확정되지 않았으면 (`network_generation_problem`) 두 모드 NOT_COMPUTED (generation_invalid) ·
+    값 빈칸 — dual 만 읽어 옛 세대 τ 를 싣지 않는다."""
     dual = _load(os.path.join(case_dir, 'network_conductivity_dual.json'))
     fm = _load(os.path.join(case_dir, 'full_metrics.json')) or {}
     row = {'case': os.path.basename(os.path.normpath(case_dir))}
     row.update(ion_columns(dual, fm, fm.get('percolation_pct'), sigma0_T_claim=sigma0_T_claim))
-    return row
+    return generation_override(row, network_generation_problem(case_dir))
 
 
 def _cell(v):

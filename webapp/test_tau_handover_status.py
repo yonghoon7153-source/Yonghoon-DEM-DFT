@@ -16,6 +16,8 @@
   T9 (10-05 RGL-02 웹앱 짝) 망 σ_ionic 상태 행 — 생산자 상태 · 사유를 같은 이름으로 (valid_zero + no_through_path = "비관통 (관통 경로 없음)" ·
      not_computed + solve_failed = "미계산 — 관통인데 풀지 못함" · computed = "계산됨") · 옛 세대는 행 없음
   T10 (10-05 RGL-04 웹앱 짝) 망 최근 시도 행 — 최근 시도가 failed 면 사유 · 활성 세대 (없으면 "활성 세대 없음") · 성공이면 행 없음 · 전체 체인 뒤 순서
+  T10h–j · T7f · T8c (10-05 RGLR2-02 웹앱 짝) 망 활성 세대가 확정되지 않으면 (되돌림 실패 · full_metrics ↔ 도장 불일치 · 중단된 게시) "이전 성공 세대
+     그대로" 라 하지 않는다 — 무효 행 (사유 · 인용 금지 · 재실행 필요) · 라벨 · 정렬 · 툴팁 · 별칭 · 케이스 라우트 가드 배선
 
   python3 webapp/test_tau_handover_status.py
 """
@@ -54,6 +56,9 @@ TECH = '기술적 실패'
 HOLD = '과학적 HOLD'
 #  ★ 10-05 WEB-03 Q2 웹앱 짝 — 활성 세대가 있는데 최근 재계산이 실패하면 "이전 성공 값 + 최근 재계산 실패 (사유)"
 RECALC = '최근 재계산 실패'
+#  ★ 10-05 RGLR2-02 웹앱 짝 (Codex 3차 재검증) — 망 활성 세대가 확정되지 않았을 때 (full_metrics ↔ 도장 불일치 · 되돌림 실패 · 중단된 게시)
+#    따로 서는 행.  정의 = `scripts/tau_flux.network_generation_problem` (읽는 쪽 fail-closed) — 옛 코드에는 이 행이 없다.
+GENINV = '망 활성 세대 무효 (full_metrics ↔ 도장 · 되돌림 실패 · 중단된 게시)'
 
 
 def producer_nonthrough():
@@ -251,6 +256,29 @@ def main():
         chk('T10c 최근 시도 = 활성 세대 (success) → 행 없음 · 키 없음 → 행 없음',
             row(render(dict(MET, _network_generation=gen_ok), True), ATTEMPT) is None
             and row(render(dict(MET), True), ATTEMPT) is None)
+        #  ★ T10h–j (10-05 RGLR2-02 · Codex 3차 재검증) — 되돌림이 실패했거나 디스크의 세대가 섞이면 (full_metrics ↔ 도장 불일치) 화면은
+        #    "이전 성공 세대 그대로" 라 하지 않는다 — 값 무효 · 되돌림 실패 · 재실행 필요.  최근 시도 기록을 못 썼어도 (기록 = 옛 success) 무효 행이 선다.
+        gen_inv = {'active_run_id': 'RUN-OLD', 'active_status': 'invalid',
+                   'active_problem': "full_metrics 의 망 세대 'RUN-NEW' ≠ 도장 'RUN-OLD'",
+                   'attempt': dict(gen_fail['attempt'], failure_kind='rollback_failed', active_status='invalid',
+                                   previous_generation_kept=False,
+                                   reason='최근 시도 success 쓰기 중 OSError: 주입 · ⚠ full_metrics 되돌림 실패 (PermissionError: 주입)')}
+        rows10h = render(dict(MET, sigma_full_status='computed', sigma_full_status_physics='computed', _network_generation=gen_inv), True)
+        a10h, g10h, s10h = row(rows10h, ATTEMPT), row(rows10h, GENINV), row(rows10h, NETSTATE)
+        chk('T10h ★ RGLR2-02 되돌림 실패 · 세대 불일치 → 최근 시도 행이 "이전 성공 세대 그대로" 라 하지 않는다 (되돌림 실패 · 무효) · 무효 행 '
+            '(사유 · 인용 금지 · 재실행 필요) · 망 상태 행도 "계산됨" 이라 하지 않는다 (옛: "활성 세대 RUN-OLD 의 값 (이전 성공 세대 그대로)")',
+            a10h is not None and '이전 성공 세대 그대로' not in str(a10h[1]) and '되돌림 실패' in str(a10h[1]) and '무효' in str(a10h[1])
+            and g10h is not None and 'RUN-NEW' in str(g10h[1]) and '인용 금지' in str(g10h[1]) and '재실행' in str(g10h[1])
+            and g10h[1] == g10h[2] and (s10h is None or '계산됨' not in str(s10h[1])), repr((a10h, g10h, s10h)))
+        gen_inv2 = dict(gen_inv, attempt=gen_ok['attempt'])
+        rows10i = render(dict(MET, _network_generation=gen_inv2), True)
+        chk('T10i ★ 최근 시도 기록이 success 그대로 (실패 기록을 못 씀) 여도 세대가 무효면 무효 행이 선다 (최근 시도 행은 없음)',
+            row(rows10i, ATTEMPT) is None and row(rows10i, GENINV) is not None, repr(rows10i[-3:]))
+        rows10j = render(dict(MET, network_generation_problem='중단된 게시 흔적 .publish_backup_X'), True)
+        chk('T10j 케이스 페이지 가드의 표지 (network_generation_problem) 만 있어도 무효 행 · 세대 유효 (gen_fail · 표지 없음) 면 무효 행 없음 (보통 화면 그대로)',
+            row(rows10j, GENINV) is not None and '.publish_backup_X' in str(row(rows10j, GENINV)[1])
+            and row(render(dict(MET, _network_generation=gen_fail), True), GENINV) is None
+            and row(render(dict(MET), True), GENINV) is None)
         #  T10e — 케이스 라우트와 같은 전체 체인 (transform → tier1 → Stage E → ASR → 정규화 → 논문 라벨) 뒤에도 두 행이 살아 있고 그 순서
         tbl10 = {'network_summary': {'columns': ['지표', '값'], 'data': [
             ['Porosity(%)', 15.0], ['── Network Solver (Hertzian DEM-native) ──', ''], ['σ_ionic (mS/cm)', None],
@@ -331,12 +359,29 @@ def main():
                 for w in ('network_attempt', 'failed', 'RGL-04', RECALC, 'failure_kind', 'publish_exception', 'WEB-03'))
         and f"'{PL.get(NETSTATE, '?')}'" in alias and f"'{PL.get(ATTEMPT, '?')}'" in alias)
 
+    # ── T7f (10-05 RGLR2-02 웹앱 짝) — 망 활성 세대 무효 행 · 실패 종류 rollback_failed · interrupted_publish · τ 인계 사유 generation_invalid ──
+    def _tip(label):
+        i_ = html.find(f"'{label}': {{")
+        return html[i_:html.find('\n  },', i_)] if i_ >= 0 else ''
+    chk('T7f ★ RGLR2-02 망 활성 세대 무효 행: 라벨 상수 · 논문 라벨 · 정렬 표 (최근 시도 행 뒤) · 툴팁 (rollback_failed · interrupted_publish · '
+        'full_metrics ↔ provenance · 중단 · 재실행 · 인용 금지 · RGLR2-02) · 별칭 · 최근 시도 툴팁에 rollback_failed · τ 인계 상태 툴팁에 '
+        'generation_invalid · 실패 종류 화면 이름',
+        getattr(webapp, 'NET_GEN_INVALID_LABEL', None) == GENINV and GENINV in PL and GENINV in canon
+        and canon.index(ATTEMPT) < canon.index(GENINV)
+        and all(w in _tip(GENINV) for w in ('rollback_failed', 'interrupted_publish', 'provenance', '중단', '재실행', '인용 금지', 'RGLR2-02'))
+        and f"'{PL.get(GENINV, '?')}'" in alias and f"'{GENINV}'" in alias
+        and 'rollback_failed' in _tip(ATTEMPT) and 'generation_invalid' in body_s
+        and {'rollback_failed', 'interrupted_publish'} <= set(getattr(webapp, 'NET_FAILURE_KIND_TEXT', {})))
+
     # ── T8 라우트 배선 ──
     i_set = src.find("metrics['_ion_handover'] = _ion_handover(results_dir, metrics)")
     i_tr = src.find('    transform_network_summary_4col(tables, metrics, meta)')
     chk('T8 케이스 라우트가 transform 전에 _ion_handover 를 붙인다', 0 <= i_set < i_tr, (i_set, i_tr))
     i_gen = src.find("metrics['_network_generation'] = _network_generation(results_dir)")
     chk('T8b 케이스 라우트가 transform 전에 _network_generation (활성 세대 · 최근 시도) 을 붙인다', 0 <= i_gen < i_tr, (i_gen, i_tr))
+    i_grd = src.find('    _network_generation_guard(results_dir, metrics)')
+    chk('T8c ★ RGLR2-02 케이스 라우트가 _ion_handover · 표 변환 전에 망 세대 가드 (확정되지 않은 세대의 망 값 = None) 를 건다',
+        0 <= i_grd < i_set < i_tr, (i_grd, i_set))
 
     print(f'\ntest_tau_handover_status: {_ok}/{_ok + len(_fail)} PASS' + (f'   FAILED: {_fail}' if _fail else ''))
     return 0 if not _fail else 1

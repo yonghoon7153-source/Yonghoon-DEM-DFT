@@ -785,17 +785,22 @@ def _sigma_e_effective(metrics: dict) -> float | None:
 
 
 #: τ 축이 도우미에 넘기는 키 — φ · 모드별 σ · 짝 σ₀ 판정에 쓰는 온도 키 (`se_material.sigma_grain_context`).
+#:   ★ 10-05 RGLR2-02 — 읽는 쪽이 단 망 세대 무효 표지 (`tau_flux.GENERATION_PROBLEM_KEY` — 문자열 사유) 도 넘긴다 (도우미가 τ 를 내지 않는다).
 _TAU_AXIS_KEYS = ('phi_se', 'sigma_full_mScm', 'sigma_full_mScm_physics', 'sigma_bulk_net_mScm',
-                  'temperature_provenance', 'stage_e_temperature_provenance', 'sigma_grain_S_cm')
+                  'temperature_provenance', 'stage_e_temperature_provenance', 'sigma_grain_S_cm',
+                  'network_generation_problem')
 
 
 def _tau_axis(metrics: dict, mode: str) -> float | None:
     """√tau2 (mode = hertz · physics · bulk) — 웹앱 τ 블록과 같은 도우미 (`tau_flux.tau2_from_metrics` · TAU-03).
-    CSV 에서 온 문자열 값도 옛 축처럼 받는다 (숫자로 바뀌는 것만)."""
+    CSV 에서 온 문자열 값도 옛 축처럼 받는다 (숫자로 바뀌는 것만 — 세대 무효 표지는 사유 문자열 그대로)."""
     import tau_flux as _tf
     m = {}
     for k in _TAU_AXIS_KEYS:
         v = metrics.get(k)
+        if k == _tf.GENERATION_PROBLEM_KEY:
+            m[k] = v
+            continue
         if isinstance(v, str):
             try:
                 v = float(v)

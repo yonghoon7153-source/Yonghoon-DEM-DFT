@@ -315,6 +315,10 @@ class LockUnavailable(RuntimeError):
     """network lock 을 못 잡았다 — solver 를 **실행하지 않는다** (CB-03)."""
 
 
+class NetworkRecoveryFailed(RuntimeError):
+    """★ 10-05 RGLR2-02 — 중단된 게시 흔적의 격리 (`quarantine_network_leftovers`) 가 실패했다 — solver 를 **실행하지 않는다** (흔적 그대로 · 읽는 쪽 무효)."""
+
+
 @contextlib.contextmanager
 def network_lock(timeout=None, lock_dir=None, require=True):
     """network solver 직렬화 — **프로세스를 가로질러** 동작하는 파일 lock.
@@ -411,6 +415,9 @@ def snapshot_network(results_dir, case_id=''):
         return None                       # ★ RV-06: 검증 불가 → fail-closed (legacy 아님)
     if prov.get('network_run_id') and prov.get('solver_status') != 'success':
         return None                       # 실패한 세대는 보존하지 않는다 → solver 재실행
+    if network_generation_problem(results_dir):
+        return None                       # ★ 10-05 RGLR2-02 · Codex Q2 ③ — 확정되지 않은 세대 (full_metrics ↔ 도장 불일치 · 되돌림 실패 ·
+        #                                   중단된 게시 흔적) 는 보존 (재사용) 하지 않는다 → solver 재실행 (사유는 호출부가 남긴다)
     items = []
     for pat in NETWORK_ARTIFACT_GLOBS:
         items += glob.glob(os.path.join(results_dir, pat))
@@ -483,6 +490,12 @@ def read_network_provenance(results_dir):
 #:   같은 파일시스템이라 move 가 atomic rename 이 되고, 부모가 죽어도 케이스 옆에
 #:   남아 복구할 수 있다 (/tmp 에 두면 copy+delete + 재부팅 시 소실).
 STAGE_STASH_PREFIX = '.stage_stash_'
+#: ★ 10-05 RGLR2-02 — **망** stash 의 앞머리 (`stash_network` 의 tag 'net_…').  남아 있으면 망 풀이 · 게시가 진행 중이거나 중단된 것이다 —
+#:   자동 복구 (`recover_stale_stashes`) 로 되살리지 않고 읽는 쪽이 무효로 본다 (`tau_flux.NETWORK_STASH_PREFIX` 와 같은 값 · T23a).
+NETWORK_STASH_PREFIX = STAGE_STASH_PREFIX + 'net_'
+#: ★ 10-05 RGLR2-02 · Codex Q2 ③ — 중단된 게시의 흔적 (망 stash · full_metrics 사본) 을 다음 망 실행이 **격리**하는 곳 (복구 자료 보존 · 재사용 안 함).
+#:   `.network_recovery/<run_id>/` + `recovery_note.json` (왜).  점 접두 — 어떤 산출물 glob · 흔적 검사에도 안 걸린다.
+NETWORK_RECOVERY_DIR = '.network_recovery'
 
 
 def stash_outputs(results_dir, patterns, tag=''):
@@ -561,6 +574,10 @@ def recover_stale_stashes(results_dir, max_age_s=6 * 3600):
         · results_dir 에 그 이름이 **없으면** → 이번 실행이 못 만든 것 → 되돌린다
         · 이미 **있으면** → 더 새 세대가 자리를 잡았다 → stash 쪽을 버린다
       (restore_stash 는 무조건 덮어쓰므로 크래시 복구에는 쓸 수 없다.)
+    ★ 10-05 RGLR2-02 · Codex Q2 ③ — **망 stash (`NETWORK_STASH_PREFIX`) 는 건너뛴다.**  이름이 없을 때만 옛 파일을 되돌리는 규칙은 원자성 증명이
+      아니다 — 중단된 망 게시 · 풀이 뒤에는 옛 네 JSON · 도장과 (일부 남은) 후보 · 새 full_metrics 가 섞여 **조용히 유효 세대로 재사용**된다.
+      망 흔적은 그대로 두고 (복구 자료) 읽는 쪽이 무효 · 재실행 필요로 보며 (`network_generation_problem`), 다음 망 실행이 격리하고 왜를 남긴다
+      (`quarantine_network_leftovers`).  접촉 등 다른 단계의 stash 는 옛 규칙 그대로.
     """
     restored = swept = 0
     try:
@@ -568,7 +585,7 @@ def recover_stale_stashes(results_dir, max_age_s=6 * 3600):
     except OSError:
         return 0, 0
     for name in names:
-        if not name.startswith(STAGE_STASH_PREFIX):
+        if not name.startswith(STAGE_STASH_PREFIX) or name.startswith(NETWORK_STASH_PREFIX):
             continue
         p = os.path.join(results_dir, name)
         try:
@@ -879,6 +896,38 @@ def network_stop_verdict(results_dir, run_id, fm=None):
     return (not bad), ('; '.join(bad) if bad else 'ok')
 
 
+#: ★ 10-05 RGLR2-01 (Codex 3차 재검증 §2 · Q1) — 일반 · 정지 경로 **공통**의 승격 전 기술 검사 단계 이름 (웹앱 단계 로그 · 최근 시도 stage).
+NETWORK_RECORD_CHECK_STEP = 'Network ionic record check (승격 전 공용 기술 검사 · RGLR2-01)'
+#: 검사하는 레코드 = 소비자가 읽는 사본 전부 — dual 두 모드 (τ 인계 · physics 투영) · legacy (full_metrics Hertz 투영) · 모드 파일 둘.
+_RECORD_CHECK_SOURCES = (('network_conductivity_dual.json', 'hertzian'), ('network_conductivity_dual.json', 'physics'),
+                         ('network_conductivity.json', None), ('network_conductivity_hertzian.json', None),
+                         ('network_conductivity_physics.json', None))
+
+
+def network_record_verdict(results_dir):
+    """★ 10-05 RGLR2-01 — 후보 망 레코드의 **기술적 입력 유효성** (일반 · 정지 경로 공통 · 승격 전) → (ok, 사유).
+
+    정지 계약 ③ · τ 인계 소비자와 **같은 함수** (`tau_flux.ion_record_problem`) 를 두 모드 · 소비자가 읽는 사본 전부에 부른다: computed = σ 두 표현
+    유한 양수 · 관통 분율 (0, 1] · σ₀ · 두 표현 항등식 (저장 정밀도) / valid_zero = 증명된 비관통 조합 / not_computed · 그 밖 = 거부.
+    ⚠ 정지 계약의 **과학적 HOLD 조건은 옮기지 않는다** — 띠 폴백 L1 · L2 · 정상 비관통 (valid_zero) · 연속체 하한 · 온도 변환 σ₀ 는 통과한다 (그 판정은
+    τ 인계 소비자 · 정지 계약의 몫).  옛 판은 일반 경로 (Stage E 앞 승격) 가 이 검사를 건너뛰어 σ_ratio 만 ×4 · 띠 L1 의 σ_ratio None 이 done 으로
+    게시됐다 (Codex general_ratio_times4 · general_band_ratio_missing).  읽기 실패 · 레코드 없음 · 도우미를 못 부름 = 거부 (fail-closed)."""
+    try:
+        tf = _scripts_import('tau_flux')
+    except Exception as e:                                     # noqa: BLE001
+        return False, f'τ 인계 도우미 (tau_flux) 를 못 불러왔다 ({type(e).__name__}: {e}) — 공용 기술 검사 불가'
+    bad, files = [], {}
+    for fname, mode in _RECORD_CHECK_SOURCES:
+        if fname not in files:
+            files[fname] = _read_json_or_none(os.path.join(results_dir, fname))
+        doc = files[fname]
+        rec = doc.get(mode) if (mode and isinstance(doc, dict)) else doc
+        prob = tf.ion_record_problem(rec)
+        if prob is not None:
+            bad.append(f'{fname}{f"[{mode}]" if mode else ""}: {prob[0]}: {prob[1]}')
+    return (not bad), ('; '.join(bad) if bad else 'ok')
+
+
 #: ★ RC6-07 (Codex 6회차, Windows 실측): 자식 프로세스의 출력 인코딩을 계약하지 않으면
 #:   **Windows 기본 CP949 에서 solver 가 첫 non-ASCII 로그에 죽는다**.
 #:     UnicodeEncodeError: 'cp949' codec can't encode character '\u2014'
@@ -1036,8 +1085,21 @@ def record_stage_e_attempt(results_dir, parent_run_id, reason='', restored=True)
 #:   봐야 했다.  소비자는 이 이름들 (`network_status_view`) 로 읽는다 — 추측하지 않는다.
 ATTEMPT_SCHEMA = 'network_attempt/v2'
 #: 실패 종류 — solver (lock 뒤 솔버 rc · 기대 산출물 · 내용 검증 = 채널 failed 포함) · lock (lock 미획득 = 솔버 미실행) ·
-#:   candidate_rejected (승격 전 검사: 투영 · 채널 판정 · σ₀ 짝 · 망 정지 계약) · publish_exception (승격 쓰기 중 동기 예외 → 되돌림).
-NETWORK_FAILURE_KINDS = ('solver', 'lock', 'candidate_rejected', 'publish_exception')
+#:   candidate_rejected (승격 전 검사: 투영 · 채널 판정 · σ₀ 짝 · 망 정지 계약 · 공용 기술 검사 RGLR2-01) · publish_exception (승격 쓰기 중 동기
+#:   예외 → 되돌림 · 검산 통과) · ★ 10-05 RGLR2-02: rollback_failed (그 되돌림 **자체**가 실패하거나 검산이 승격 전 디스크와 다르다 → 활성 무효 ·
+#:   값 인용 금지 · 재실행 필요) · interrupted_publish (중단된 게시 흔적을 다음 실행이 격리 — 그 실행이 승격에 성공할 때까지 활성 무효).
+NETWORK_FAILURE_KINDS = ('solver', 'lock', 'candidate_rejected', 'publish_exception', 'rollback_failed', 'interrupted_publish')
+
+
+def network_generation_problem(results_dir, fm=None):
+    """★ 10-05 RGLR2-02 (Codex 3차 재검증 §2 · Q2) — 그 폴더의 망 활성 세대가 **확정되었는가** (읽는 쪽 fail-closed) → '' | 사유.
+    정본 = `tau_flux.network_generation_problem` (τ 인계 CLI 와 같은 함수 — 도장 손상 · 중단된 게시 흔적 · full_metrics ↔ 도장 불일치 ·
+    활성을 무효로 남긴 최근 시도).  최근 시도 기록을 못 썼어도 디스크만 보고 가른다.  도우미를 못 부르면 확인 불가 = 무효."""
+    try:
+        tf = _scripts_import('tau_flux')
+    except Exception as e:                                     # noqa: BLE001
+        return f'세대 검사 도우미 (tau_flux) 를 못 불러왔다 ({type(e).__name__}) — 활성 세대를 확인할 수 없다'
+    return tf.network_generation_problem(results_dir, fm=fm)
 
 
 def _active_generation(results_dir):
@@ -1054,7 +1116,8 @@ def _active_generation(results_dir):
     return None, 'none'
 
 
-def record_network_attempt(results_dir, run_id, status, reason='', argv=None, stage='', failure_kind='', inputs=None):
+def record_network_attempt(results_dir, run_id, status, reason='', argv=None, stage='', failure_kind='', inputs=None,
+                           active_problem=''):
     """**실패 시도**를 active provenance 와 **분리해** 기록한다 (RR2-01).
 
     옛 코드는 실패에도 `network_provenance.json` 을 새 run_id 로 덮어써서, 실패 시도의 ID 가
@@ -1067,10 +1130,19 @@ def record_network_attempt(results_dir, run_id, status, reason='', argv=None, st
       active_network_run_id · active_status (**기록 시점** 활성 세대 — 승격이면 이번 실행 · 실패면 되돌린 옛 세대 · 없으면 None/'none') ·
       previous_generation_kept (실패 시도 뒤에도 옛 활성 세대가 그대로 활성인가 · 성공이면 None).
     호출자는 활성 세대를 확정한 **뒤** (승격 또는 되돌림 뒤) 부른다.
+    ★ 10-05 RGLR2-02 (Codex 3차 재검증) — 실패 기록의 활성 판정을 도장 하나로 하지 않는다: active_problem (호출자가 아는 무효 사유 — 되돌림 실패 ·
+      격리) 이 있거나 디스크가 확정되지 않은 세대면 (`network_generation_problem` — full_metrics ↔ 도장 불일치 · 중단된 게시 흔적 · 앞선 무효 기록)
+      active_status = 'invalid' · previous_generation_kept = False · active_problem = 사유.  옛 판은 provenance 만 읽어, full_metrics 되돌림이
+      실패해 새 세대가 남았는데도 kept=True · active success 라고 썼다 (Codex rollback_destination_failure).  성공 기록은 그대로 (방금 승격한 세대).
     """
     act_id, act_st = _active_generation(results_dir)
     failed = status != 'success'
-    atomic_write_json(os.path.join(results_dir, ATTEMPT_FILE), {
+    prob = ''
+    if failed:
+        prob = active_problem or network_generation_problem(results_dir)
+        if prob:
+            act_st = 'invalid'
+    rec = {
         'schema': ATTEMPT_SCHEMA,
         'network_attempt_run_id': run_id, 'solver_status': status,
         'latest_attempt_status': status,
@@ -1081,7 +1153,10 @@ def record_network_attempt(results_dir, run_id, status, reason='', argv=None, st
         'input_digests': dict(inputs or {}),
         'code_sha': code_sha(),
         'attempted_at': time.strftime('%Y-%m-%dT%H:%M:%S'), 'argv': dict(argv or {}),
-    })
+    }
+    if prob:
+        rec['active_problem'] = str(prob)[:1000]
+    atomic_write_json(os.path.join(results_dir, ATTEMPT_FILE), rec)
 
 
 def read_network_attempt(results_dir):
@@ -1100,8 +1175,14 @@ def network_status_view(results_dir):
     → {'active_network_run_id', 'active_status' ('success' · 'none' · 'legacy_unstamped' · 'invalid' · …),
        'latest_attempt_run_id', 'latest_attempt_status' ('success' · 'failed' · None = 기록 없음), 'failure_kind', 'latest_attempt_stage',
        'latest_attempt_reason', 'stale' (최근 시도가 failed 인데 활성 세대가 있다 = 화면 값은 이전 성공 세대 — '최근 재계산 실패')}
-    활성 쪽은 늘 디스크의 도장에서 다시 읽는다 (시도 기록의 사본을 믿지 않는다) · v1 시도 기록 (latest_attempt_status 없음) 은 solver_status 로 읽는다."""
+    활성 쪽은 늘 디스크의 도장에서 다시 읽는다 (시도 기록의 사본을 믿지 않는다) · v1 시도 기록 (latest_attempt_status 없음) 은 solver_status 로 읽는다.
+    ★ 10-05 RGLR2-02 — 도장만으로 활성을 말하지 않는다: 디스크가 확정되지 않은 세대면 (`network_generation_problem` — full_metrics ↔ 도장 불일치 ·
+      되돌림 실패 · 중단된 게시 흔적 · 도장 손상 — 최근 시도 기록을 못 썼어도) active_status 'invalid' · active_problem = 사유 · stale False
+      (화면 값을 "이전 성공 세대" 라고 하지 않는다)."""
     act_id, act_st = _active_generation(results_dir)
+    prob = network_generation_problem(results_dir)
+    if prob:
+        act_st = 'invalid'
     att = read_network_attempt(results_dir) or {}
     last = att.get('latest_attempt_status', att.get('solver_status'))
     kind = att.get('failure_kind')
@@ -1111,10 +1192,53 @@ def network_status_view(results_dir):
                 'candidate_rejected' if st_.startswith(('Network stop contract', 'Network channel verdict', 'Network σ₀',
                                                          'Network projection')) else
                 'publish_exception' if st_.startswith('Network publication') else 'solver')
-    return {'active_network_run_id': act_id, 'active_status': act_st,
+    return {'active_network_run_id': act_id, 'active_status': act_st, 'active_problem': prob,
             'latest_attempt_run_id': att.get('network_attempt_run_id'), 'latest_attempt_status': last,
             'failure_kind': kind or '', 'latest_attempt_stage': att.get('stage') or '', 'latest_attempt_reason': att.get('reason') or '',
             'stale': bool(last == 'failed' and act_st not in ('none', 'invalid'))}
+
+
+#: ★ 10-05 RGLR2-02 · Codex Q2 ③ — 회수 규약 단계 이름 (웹앱 단계 로그 · 최근 시도 stage).
+NETWORK_RECOVERY_STEP = 'Network recovery (중단된 게시 흔적 격리 · RGLR2-02)'
+
+
+def quarantine_network_leftovers(results_dir, run_id, argv=None, inputs=None):
+    """★ 10-05 RGLR2-02 · Codex Q2 ③ 회수 규약 — 새 망 실행이 lock 안 · stash **전**에 부른다 → 격리한 흔적 이름 목록 ([] = 흔적 없음).
+
+    중단된 게시 · 풀이의 흔적 (`tau_flux.generation_leftovers` — `.publish_backup_*` 사본 · `.stage_stash_net_*`) 이 있으면 그 폴더의 활성 세대는
+    **확정되지 않은** 것이다 (`recover_stale_stashes` 의 "이름이 없을 때만 되돌림" 은 원자성 증명이 아니다).  그래서 되살려 재사용하지 않는다:
+      ① 그 시점의 판정 (`network_generation_problem` — 흔적 · 세대 불일치 · 손상) 으로 최근 시도에 failed · failure_kind interrupted_publish ·
+         active invalid (재실행 필요) 를 **먼저** 기록한다 — 이번 실행이 승격에 성공해야 덮이고, 실패하면 그 실패 기록이 무효를 이어받는다
+         (옛 세대를 조용히 유효로 되살리지 않는다).  기록을 못 쓰면 아무것도 옮기지 않고 올린다 (흔적이 남아 읽는 쪽은 계속 무효).
+      ② 흔적을 `.network_recovery/<run_id>/` 로 옮겨 **복구 자료로 보존**한다 (지우지 않는다).
+      ③ 왜 (사유 · 흔적 이름 · 그 시점 도장) 를 그 안의 `recovery_note.json` 에 남긴다.
+    ⚠ 옮기기 · 기록 실패 (OSError 등) 는 호출자에게 올린다 — 호출자는 솔버를 돌리지 않고 망 단계를 실패로 기록한다."""
+    tf = _scripts_import('tau_flux')
+    names = tf.generation_leftovers(results_dir)
+    if not names:
+        return []
+    why = network_generation_problem(results_dir) or f'중단된 게시 · 풀이 흔적 {names}'
+    prov = read_network_provenance(results_dir)
+    sub = re.sub(r'[^0-9A-Za-z_-]', '_', str(run_id))
+    record_network_attempt(results_dir, run_id, 'failed',
+                           reason=(f'중단된 게시 흔적 {names} 을 재사용하지 않고 {NETWORK_RECOVERY_DIR}/{sub}/ 로 격리 — 이 실행이 승격에 성공해야 '
+                                   f'활성 세대가 다시 유효 ({why})')[:2000],
+                           argv=argv, stage=NETWORK_RECOVERY_STEP, failure_kind='interrupted_publish', inputs=inputs,
+                           active_problem=why)
+    dst = os.path.join(results_dir, NETWORK_RECOVERY_DIR, sub)
+    os.makedirs(dst, exist_ok=True)
+    moved = []
+    for n in names:
+        shutil.move(os.path.join(results_dir, n), os.path.join(dst, n))
+        moved.append(n)
+    atomic_write_json(os.path.join(dst, 'recovery_note.json'), {
+        'schema': 'network_recovery/v1', 'quarantined_by_run_id': run_id,
+        'quarantined_at': time.strftime('%Y-%m-%dT%H:%M:%S'), 'leftovers': moved, 'reason': why,
+        'provenance_at_quarantine': {k: prov.get(k) for k in ('network_run_id', 'solver_status', 'provenance_state')},
+        'rule': ('중단된 게시 · 풀이 흔적은 유효 세대로 재사용하지 않는다 — 복구 자료로 보존 · 활성 세대는 이 실행 (또는 다음 실행) 이 승격에 '
+                 '성공할 때까지 무효 (RGLR2-02 · Codex 3차 재검증 Q2 ③)'),
+    })
+    return moved
 
 
 #: 승격 중 예외에 대비한 full_metrics 사본의 이름 앞머리 — results 안 (같은 파일시스템 = os.replace 원자성) · 점 접두 (어떤 산출물 glob 에도 안 걸린다).
@@ -1123,8 +1247,55 @@ PUBLISH_BACKUP_PREFIX = '.publish_backup_'
 NETWORK_PUBLISH_STEP = 'Network publication (승격 · 실패 시 되돌림)'
 
 
+def _content_digest(path):
+    """되돌림 검산용 내용 해시 — 파일 = sha256 · 디렉터리 = (상대 경로 · 파일 해시) 정렬 목록의 sha256 · 없으면 None (메타데이터는 보지 않는다)."""
+    if not os.path.exists(path):
+        return None
+    h = hashlib.sha256()
+    if os.path.isdir(path):
+        for root, dirs, files in os.walk(path):
+            dirs.sort()
+            for fn in sorted(files):
+                p = os.path.join(root, fn)
+                h.update(os.path.relpath(p, path).encode('utf-8') + b'\0' + str(_content_digest(p)).encode() + b'\n')
+        return 'dir:' + h.hexdigest()
+    with open(path, 'rb') as f:
+        for b in iter(lambda: f.read(1 << 20), b''):
+            h.update(b)
+    return h.hexdigest()
+
+
+def _rollback_target(results_dir, stash_dir, fm_path):
+    """승격 **전**의 디스크 = 되돌림이 만들어야 하는 상태 → {'fm': full_metrics 해시 | None, 'net': {망 산출물 이름: 해시}}.
+    옛 망 산출물은 이 시점에 stash 안에 있다 (`stash_network` 가 `NETWORK_ARTIFACT_GLOBS` 전부를 옮겼다 · 첫 실행이면 없음 = {})."""
+    net = {}
+    if stash_dir and os.path.isdir(stash_dir):
+        net = {n: _content_digest(os.path.join(stash_dir, n)) for n in os.listdir(stash_dir)}
+    return {'fm': _content_digest(fm_path), 'net': net}
+
+
+def _rollback_check(results_dir, target, fm_path):
+    """★ 10-05 RGLR2-02 — 되돌림의 **실제 결과**를 승격 전 디스크와 대조 → 문제 목록 ([] = 승격 전과 같다).  내용 해시로 본다 (예외가 안 났다는
+    사실만으로 복원됐다고 하지 않는다 — Codex rollback_destination_failure)."""
+    if target is None:
+        return ['승격 전 디스크를 재지 못해 되돌림을 검산할 수 없다']
+    try:
+        fm_now = _content_digest(fm_path)
+        net_now = {os.path.basename(p): _content_digest(p)
+                   for pat in NETWORK_ARTIFACT_GLOBS for p in glob.glob(os.path.join(results_dir, pat))}
+    except OSError as e:
+        return [f'되돌림 검산 중 읽기 실패 ({type(e).__name__}: {e})']
+    probs = []
+    if fm_now != target['fm']:
+        probs.append('full_metrics 가 승격 전과 다르다 (되돌림 결과 불일치)')
+    if net_now != target['net']:
+        diff = sorted(n for n in set(net_now) | set(target['net']) if net_now.get(n) != target['net'].get(n))
+        probs.append(f'망 산출물이 승격 전 세대와 다르다 ({diff[:6]})')
+    return probs
+
+
 def publish_network_candidate(results_dir, stash_dir, run_id, fm=None, inputs=None, argv=None):
-    """★ 10-05 WEB-03 Q2a (Codex 재검증 Q2 · 1저자 비준) — 검사를 다 통과한 network 후보를 활성 세대로 **한 번에** 승격 → (ok, 사유).
+    """★ 10-05 WEB-03 Q2a (Codex 재검증 Q2 · 1저자 비준) — 검사를 다 통과한 network 후보를 활성 세대로 **한 번에** 승격 → (ok, 사유, 실패 종류).
 
     순서: ① full_metrics 사본 (shutil.copy2 — 쓰기 함수를 거치지 않는다) → ② 활성 도장 (provenance) → ③ full_metrics (`atomic_write_json` —
     실패할 수 있는 바로 그 쓰기) → ④ 최근 시도 success → ⑤ 옛 stash · 사본 버림 (= 확정).
@@ -1132,16 +1303,27 @@ def publish_network_candidate(results_dir, stash_dir, run_id, fm=None, inputs=No
       · full_metrics 를 사본에서 `os.replace` 로 되돌린다 (방금 실패한 쓰기 함수를 다시 부르지 않는다)
       · 후보 망 산출물 (네 JSON · 새 도장 · raw) 을 치우고 옛 세대를 stash 에서 되돌린다 (`discard_network_candidate` — 첫 실행이면 활성 세대 없음)
       · 최근 시도에 failed + failure_kind publish_exception + 단계 · 예외 종류 · 입력 id 를 남긴다 (그 기록마저 못 쓰면 단계 로그에만 남는다)
-    → (False, 사유) — 호출자는 **필수 단계 실패**로 기록하고 Stage E 로 가지 않는다 (파이프라인은 failed · 예외로 새지 않는다).
+    → (False, 사유, 'publish_exception' | 'rollback_failed') — 호출자는 **필수 단계 실패**로 기록하고 Stage E 로 가지 않는다 (파이프라인은 failed ·
+    예외로 새지 않는다) · 성공이면 (True, '', '').
     왜 다시 던지지 않는가: 되돌린 뒤 디스크는 일관된 상태 (활성 = 옛 세대 · 또는 없음) 이고 실패의 전부가 단계 · 시도 기록에 있다.  예외로 올리면
     run_pipeline 의 단계 로그 · 배치 (`lhs_webapp_batch` — 예외를 그 케이스 failed 로 받기는 한다) · 백그라운드 라우트가 각자 다르게 받아 같은 실패가
     여러 이름이 된다 (한 실패 어휘 위반).  ⚠ BaseException (KeyboardInterrupt · SystemExit) 은 되돌린 뒤 **다시 던진다** (삼키지 않는다).
     ⚠ 이것은 **동기 예외**의 되돌림이다 — 프로세스가 죽는 크래시 (kill -9 · 정전) 의 다중 파일 원자성은 아니다 (세대별 후보 디렉터리 + 단일 활성
-    포인터 · 복구 가능한 commit 프로토콜이 필요 — 미구현 · Codex Q2).  사본 (`PUBLISH_BACKUP_PREFIX`) 이 크래시 뒤 남을 수 있다 (활성 판정에 안 쓰인다).
+    포인터 · 복구 가능한 commit 프로토콜이 필요 — 미구현 · Codex Q2).  크래시 뒤 남은 사본 (`PUBLISH_BACKUP_PREFIX`) · 망 stash 는 **흔적**이다 —
+    읽는 쪽이 그 폴더를 무효로 보고 (`network_generation_problem`) 다음 망 실행이 격리한다 (`quarantine_network_leftovers` · RGLR2-02 · Q2 ③).
+    ★ 10-05 RGLR2-02 (Codex 3차 재검증) — 되돌림의 **결과를 검산**한다 (`_rollback_check` — 승격 전에 잰 full_metrics · 옛 망 산출물 내용 해시와
+      대조).  되돌림 단계가 실패했거나 결과가 승격 전과 다르면 실패 종류 'rollback_failed' — 최근 시도에 active invalid · previous_generation_kept
+      False · active_problem 을 남기고 (실패 기록마저 못 쓰면 읽는 쪽이 full_metrics ↔ 도장 불일치 · 남은 사본으로 가른다) 사본은 복구 자료로 둔다.
+      옛 판은 되돌림 실패를 사유 문자열에만 적고 kept=True · active success 를 기록해 화면이 "이전 성공 세대 그대로" 라고 했다.
+      검산을 통과해야 'publish_exception' (활성 = 옛 세대 · 또는 첫 실행이면 없음).
     """
     fm_path = os.path.join(results_dir, 'full_metrics.json')
     fm_existed = os.path.exists(fm_path)
     bk, bk_ok, fm_touched, step = None, False, False, ''
+    try:
+        target = _rollback_target(results_dir, stash_dir, fm_path)   # 되돌림 검산 기준 — 승격 쓰기 **전**에 잰다
+    except OSError:
+        target = None                                          # 못 재면 되돌림을 증명할 수 없다 → 실패 시 rollback_failed (fail-closed)
     try:
         if fm is not None and fm_existed:
             step = 'full_metrics 사본'
@@ -1174,19 +1356,25 @@ def publish_network_candidate(results_dir, stash_dir, run_id, fm=None, inputs=No
             discard_network_candidate(results_dir, stash_dir)  # 후보 네 JSON · 새 도장을 치우고 옛 세대를 stash 에서 (첫 실행이면 활성 없음)
         except OSError as e2:
             rb.append(f'망 산출물 되돌림 실패 ({type(e2).__name__}: {e2})')
+        if not rb:
+            rb = _rollback_check(results_dir, target, fm_path)  # ★ RGLR2-02 — 되돌림 결과 검산 (예외가 없었다는 것만으로 복원을 주장하지 않는다)
+        kind = 'rollback_failed' if rb else 'publish_exception'
         if rb:
-            why += ' · ⚠ ' + ' · '.join(rb)
+            left = [n for n in (os.path.basename(bk) if bk else '',) if n and os.path.exists(os.path.join(results_dir, n))]
+            why += (' · ⚠ ' + ' · '.join(rb) + ' → 활성 세대 무효 (되돌림 실패 — 값 인용 금지 · 재실행 필요'
+                    + (f' · 복구 자료 {left}' if left else '') + ')')
         with contextlib.suppress(Exception):
             record_network_attempt(results_dir, run_id, 'failed', reason=why[:2000], argv=argv,
-                                   stage=NETWORK_PUBLISH_STEP, failure_kind='publish_exception', inputs=inputs)
+                                   stage=NETWORK_PUBLISH_STEP, failure_kind=kind, inputs=inputs,
+                                   active_problem=(why[:1000] if rb else ''))
         if not isinstance(e, Exception):
             raise
-        return False, why
+        return False, why, kind
     drop_stash(stash_dir)                                      # 확정 — 옛 세대를 버린다 (여기부터는 되돌리지 않는다)
     if bk is not None:
         with contextlib.suppress(OSError):
             os.remove(bk)
-    return True, ''
+    return True, '', ''
 
 
 #: `os.replace` 재시도 (Windows).  대기시간 0.02·0.04·0.08·0.16·0.32 s = 총 0.62 s.
