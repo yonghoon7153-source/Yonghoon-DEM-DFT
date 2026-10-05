@@ -31,6 +31,9 @@
      V2 정렬 표 · 논문 라벨 · single.html 툴팁 · 별칭 (PAPER_TO_ORIG)
      V3 그룹 표 — '— (짧은 사유)' 칸 (None 이 'None' 으로 보이지 않게) · 최고값 후보 아님 · group() 이 같은 도우미를 부른다
      V4 보고서 — 무효면 '—' + 사유 줄 · V5 등급 쉬운 툴팁 · 축 설명 · group.html 툴팁 · single.html 옛 줄 툴팁에 LHS-33
+  W  RGLR2-03 (Codex 3차 재검증 10-05 · Q4 · 1저자 비준 "권고대로" = 안정식 · 혼합 · 같은 묶음 · J20-l) — 옛 σ_VM 의 계산 설명 (전개식
+     근호가 오차 한도 안이면 ½Σ(σ_ii − σ_jj)² 로 다시 셈 · 계약 v3-invalid-null-stable-vm · 출처 키 stress_cv_vm_stable_n) 이
+     single.html · group.html 툴팁에 · 상태 툴팁의 계약 표지 = 현재 세대 (이전 세대 v2-invalid-null 병기)
 
   python3 webapp/test_stress_lw_labels.py
 """
@@ -316,9 +319,12 @@ def main():
         and '50/50' in PL.get(SROW, '') and 'not 0' in PL.get(SROW, ''), PL.get(SROW))
     t_s = _tip(SROW)
     t_s = t_s[:t_s.find('\n  },') + 1] if '\n  },' in t_s else t_s
-    chk('V2c single.html 툴팁 — 상태 넷 (computed · unavailable_no_c_strs · invalid_input · undefined_zero_mean) · 0 으로 안 채움 · 등급 안 매김 · '
-        'v2-invalid-null', all(w_ in t_s for w_ in ('computed', 'unavailable_no_c_strs', 'invalid_input', 'undefined_zero_mean',
-                                                   '0 으로', '등급', 'v2-invalid-null', 'LHS-33')), t_s[:300])
+    import metrics_json as MJ
+    chk(f'V2c single.html 툴팁 — 상태 넷 (computed · unavailable_no_c_strs · invalid_input · undefined_zero_mean) · 0 으로 안 채움 · 등급 안 매김 · '
+        f'계약 = 현재 세대 {MJ.STRESS_CV_CONTRACT} (이전 세대 v2-invalid-null 병기)',
+        all(w_ in t_s for w_ in ('computed', 'unavailable_no_c_strs', 'invalid_input', 'undefined_zero_mean',
+                                 '0 으로', '등급', MJ.STRESS_CV_CONTRACT, 'v2-invalid-null', 'LHS-33'))
+        and MJ.STRESS_CV_CONTRACT == 'v3-invalid-null-stable-vm', t_s[:300])
     chk('V2d 별칭 — 상태 줄 논문 라벨 → 원 라벨', SROW in PL and f"'{PL[SROW]}': '{SROW}'" in html)
     t_old = _tip('Stress CV(%)')
     chk('V2e 옛 줄 툴팁에 LHS-33 — 무효 · 미정의면 "—" (0 아님)', 'LHS-33' in t_old[:t_old.find('\n  },')] and '—' in t_old[:t_old.find('\n  },')])
@@ -355,6 +361,15 @@ def main():
     gs = ghtml.find("'Stress CV (50/50)':")
     g50 = ghtml[gs:ghtml.find('\n', gs)] if gs >= 0 else ''
     chk('V5c group.html 툴팁 — "— (사유)" 칸 · LHS-33', 'LHS-33' in g50 and '— (' in g50, g50[:200])
+
+    print('W  RGLR2-03 옛 σ_VM 의 수치 분해 · 안정식 (계산 설명 · 같은 묶음)')
+    t_cv0 = _tip('Stress CV(%)', 4000)
+    t_cv0 = t_cv0[:t_cv0.find('\n  },') + 1] if '\n  },' in t_cv0 else t_cv0
+    chk('W1 ★ single.html 옛 줄 툴팁 — 전개식 근호가 오차 한도 안 (거의 정수압) 이면 같은 양의 소거 없는 꼴 ½[(σ_xx−σ_yy)² + …] 로 다시 셈 · '
+        '그 밖은 옛 식 값 그대로 · 출처 키 stress_cv_vm_stable_n · RGLR2-03',
+        all(w_ in t_cv0 for w_ in ('½[(σ_xx − σ_yy)²', '정수압', '그대로', 'stress_cv_vm_stable_n', 'RGLR2-03')), t_cv0[:600])
+    chk('W2 group.html 옛 열 툴팁 — 거의 정수압 입자 = ½Σ(σ_ii − σ_jj)² 로 다시 셈 (RGLR2-03)',
+        '½Σ(σ_ii − σ_jj)²' in g50 and 'RGLR2-03' in g50, g50[:400])
 
     print(f'\n{_ok}/{_ok + len(_fail)} PASS' + ('' if not _fail else '  — FAIL: ' + ' · '.join(_fail)))
     return 1 if _fail else 0

@@ -24,14 +24,21 @@ S 묶음 = 원장 LHS-33 (좁은 개정 · 1저자 비준 10-05 · Codex 재검�
 `stress_z_layer_cv`) 의 무효 · 미정의 입력이 0 (거짓 최고 등급) 이던 것 → None + 상태 (computed · unavailable_no_c_strs ·
 invalid_input · undefined_zero_mean) + 계약 표지 v2-invalid-null.  정상 입력은 옛 함수 (아래 `_old_*` — 옛 판 그대로 옮긴 대조용) 와
 정의 · 수치 · 키가 비트 동일.  소비자 (등급 · 표 재생성 · 그룹 그림 · 내보내기 · CLI) 가 상태를 따른다.
+V 묶음 = RGLR2-03 (Codex 3차 재검증 10-05 · P2 · Q4 · 1저자 비준 "권고대로" = 안정식 · 혼합) — 거의 정수압 입자에서 전개식 근호가
+부호까지 잃어 (Codex 반례: 정확 1.15e-14 ↔ 계산 −4.66e-10) v2 의 0 clamp 가 정확히 같은 두 VM 의 CV 를 100 % 로 지어냈다 → 근호가 엄밀 오차
+상한의 2^20 배 안이면 (분해 안 됨) 같은 양의 소거 없는 꼴 ½Σ(σ_i − σ_j)² 로 다시 센다 · 분해된 입자는 옛 식 값 그대로 (비트 동일) · 계약
+v3-invalid-null-stable-vm.  기대값 = 입력 float 를 유리수 (fractions.Fraction) 로 정확히 바꾼 불변량의 제곱근 (decimal 60 자리) — 생산 함수 미사용.
 """
+import decimal
 import json
 import math
 import os
+import random
 import shutil
 import subprocess
 import sys
 import tempfile
+from fractions import Fraction
 
 import numpy as np
 
@@ -219,6 +226,72 @@ def _same_vm(new, old):
     """정상 입력 대조 — 옛 네 키 (vm_cv · vm_mean · type_stress · z_layer_cv) 가 정확히 같다 (float == · 키 순서 무관)."""
     return (isinstance(new, dict) and isinstance(old, dict)
             and all(new.get(k) == old.get(k) for k in ('vm_cv', 'vm_mean', 'type_stress', 'z_layer_cv')))
+
+
+# ── RGLR2-03 (옛 σ_VM 근호의 수치 분해) — 시험이 독립으로 다시 적는 규칙 · 정확 산술 ─────────────────────────────────────
+VM_CONTRACT = 'v3-invalid-null-stable-vm'      # 옛 σ_VM 열 계약 — v2 (LHS-33 · 음수 근호 0 clamp) 의 다음 세대 (안정식 혼합)
+_VM_EPS = 2.0 ** -52                            # binary64 ε (= sys.float_info.epsilon)
+_VM_C, _VM_ABS, _VM_K = 16, 2.0 ** -1071, 2 ** 20   # 엄밀 상한 B = 16·ε·Ŝ + 2^-1071 · 분해됨 ⇔ 근호 > 2^20·B (dem_analysis_core ★ RGLR2-03 유도)
+
+
+def _rad_old(t):
+    """옛 전개식 근호 그대로 (생산 · v2 와 같은 연산 · 같은 순서)."""
+    x, y, z = t
+    return x**2 + y**2 + z**2 - x*y - y*z - x*z
+
+
+def _sq_sum(t):
+    x, y, z = t
+    return x**2 + y**2 + z**2
+
+
+def _rad_exact(t):
+    """입력 float 그대로를 유리수로 — 정확한 불변량 ½[(σxx−σyy)² + (σyy−σzz)² + (σzz−σxx)²] (Fraction)."""
+    x, y, z = (Fraction(float(v)) for v in t)
+    return ((x - y) ** 2 + (y - z) ** 2 + (z - x) ** 2) / 2
+
+
+def _vm_exact(t):
+    """정확 VM = √(정확 불변량) — decimal 60 자리 (생산 함수를 부르지 않는다)."""
+    r = _rad_exact(t)
+    with decimal.localcontext() as ctx:
+        ctx.prec = 60
+        return (decimal.Decimal(r.numerator) / decimal.Decimal(r.denominator)).sqrt()
+
+
+def _ulps(x, ex):
+    """|x − 정확| / ulp(x) — 정확이 0 이면 x 도 0 일 때만 0."""
+    try:
+        x = float(x)
+    except (TypeError, ValueError):
+        return math.inf
+    if not math.isfinite(x):
+        return math.inf
+    if ex == 0:
+        return 0.0 if x == 0 else math.inf
+    with decimal.localcontext() as ctx:
+        ctx.prec = 60
+        return float(abs(decimal.Decimal(x) - ex) / decimal.Decimal(math.ulp(x)))
+
+
+def _v2_vm(t):
+    """v2 (LHS-33 · af9e6b15f) 의 한 입자 규칙 그대로 — 근호 음수면 0 clamp · 양의 쓰레기는 그대로 (반례 확인 전용)."""
+    v = _rad_old(t)
+    return np.sqrt(v) if not v < 0 else np.float64(0.0)
+
+
+def _cv_pct(vms):
+    """생산과 같은 통계 — 모집단 std / mean × 100."""
+    a = np.array(vms, dtype=float)
+    return float(np.std(a)) / float(np.mean(a)) * 100 if float(np.mean(a)) > 0 else float('nan')
+
+
+def _vm_rule_stable(t):
+    """판정 규칙을 시험이 독립으로 — 유한 · 영 텐서 아님 · 근호 ≤ 2^20 · (16 ε Ŝ + 2^-1071) 이면 안정식."""
+    v = _rad_old(t)
+    if v != v or v in (math.inf, -math.inf) or all(float(c) == 0.0 for c in t):
+        return False
+    return not v > _VM_K * (_VM_C * _VM_EPS * _sq_sum(t) + _VM_ABS)
 
 
 def dimer_atoms(i0, t, x, force, z0=2.0, r=1.0, cstr=True):
@@ -489,10 +562,10 @@ def lhs33(D):
         return {'type': t, 'x': 0.0, 'y': 0.0, 'z': z, 'radius': 1e-3, 'sigma_xx': s[0], 'sigma_yy': s[1], 'sigma_zz': s[2]}
     bad = lambda r: (isinstance(r, dict) and r.get('vm_cv', 0) is None and r.get('z_layer_cv', 0) is None      # noqa: E731
                      and all(v.get('ratio', 0) is None for v in (r.get('type_stress') or {}).values()))
-    gen = lambda r: isinstance(r, dict) and r.get('contract') == 'v2-invalid-null'                              # noqa: E731
+    gen = lambda r: isinstance(r, dict) and r.get('contract') == VM_CONTRACT                                    # noqa: E731
     #  S1 c_strs 전무 — 옛 판: None (그래서 analyze_contacts 가 키를 안 썼고 소비자 `_get(…, 0)` 이 0 으로 읽었다)
     r = vm({1: {'type': 1, 'x': 0.0, 'y': 0.0, 'z': 0.1, 'radius': 1e-3}, 2: {'type': 3, 'x': 0.0, 'y': 0.0, 'z': 0.2, 'radius': 1e-3}})
-    chk('S1 ★ c_strs 전무 → status unavailable_no_c_strs · vm_cv · 상 비 · z 층 None · 계약 v2-invalid-null (옛 판 None — 소비자가 0 으로 읽었다)',
+    chk(f'S1 ★ c_strs 전무 → status unavailable_no_c_strs · vm_cv · 상 비 · z 층 None · 계약 {VM_CONTRACT} (옛 판 None — 소비자가 0 으로 읽었다)',
         bad(r) and r.get('status') == 'unavailable_no_c_strs' and gen(r), repr(r)[:300])
     #  S2 한 입자 NaN — 옛 판: 평균 NaN → `NaN > 0` False → CV 0 · 비 0 (거짓 최고 등급)
     r = vm({1: sat(1, 0.1, (1.0, 0.0, 0.0)), 2: sat(3, 0.2, (float('nan'), 0.0, 0.0)), 3: sat(3, 0.3, (2.0, 0.0, 0.0))})
@@ -525,9 +598,11 @@ def lhs33(D):
                  'radius': rr, 'sigma_xx': np.float64(cs_[0]) / v_, 'sigma_yy': np.float64(cs_[1]) / v_, 'sigma_zz': np.float64(cs_[2]) / v_}
     at[91] = dict(at[3], sigma_xx=np.float64(0.0), sigma_yy=np.float64(0.0), sigma_zz=np.float64(0.0))   # 접촉 없는 입자 (c_strs 0)
     r_new, r_old = vm(at, pz=0.03), _old_von_mises(at, TM, 1000.0, 0.03)
-    chk('S6 ★ 정상 침대 (3 상 91 입자 · 무접촉 하나) — vm_cv · vm_mean · 상 mean/ratio · z 층 전부 옛 함수와 비트 동일 · status computed · 계약 표지',
-        _same_vm(r_new, r_old) and r_new.get('status') == 'computed' and gen(r_new) and len(r_old['z_layer_cv']) >= 5,
-        f"{repr(r_new)[:200]} vs {repr(r_old)[:200]}")
+    chk('S6 ★ 정상 침대 (3 상 91 입자 · 무접촉 하나) — vm_cv · vm_mean · 상 mean/ratio · z 층 전부 옛 함수와 비트 동일 · status computed · 계약 표지 · '
+        '안정식으로 다시 센 입자 0 (RGLR2-03 — 무접촉 영 텐서도 옛 값 0 그대로)',
+        _same_vm(r_new, r_old) and r_new.get('status') == 'computed' and gen(r_new) and len(r_old['z_layer_cv']) >= 5
+        and r_new.get('vm_stable_recomputed_n') == 0,
+        f"{repr(r_new)[:200]} vs {repr(r_old)[:200]} · 다시 셈 {r_new.get('vm_stable_recomputed_n')}")
     #  S7 정수압 한 입자 — 근호 안이 반올림으로 음수가 되는 값 (해석적으로 0) · 옛 판: 그 입자 NaN → 평균 NaN → CV 0
     xh = next(v for v in (1.0 + 0.0731 * k for k in range(1, 500)) if v ** 2 + v ** 2 + v ** 2 - v * v - v * v - v * v < 0)
     r = vm({1: sat(1, 0.1, (xh, xh, xh)), 2: sat(3, 0.2, (1.0, 0.0, 0.0)), 3: sat(3, 0.3, (2.0, 0.0, 0.0))})
@@ -574,9 +649,11 @@ def lhs33(D):
     chk('S10b 정상 — 옛 줄 그대로 (Stress CV 213.1 · σ_SE 0.999) · 상태 줄 없음', d_.get('Stress CV(%)') == 213.1
         and d_.get('σ_SE/σ_mean') == 0.999 and ROW not in d_, repr(d_)[:300])
     import metrics_json as MJ
-    chk('S10c 상태 줄 이름 · 계약 표지 = metrics_json 한 곳 (analyze_contacts · 표 재생성 · 웹앱이 같은 상수)',
-        getattr(MJ, 'STRESS_CV_STATUS_ROW', None) == ROW and getattr(MJ, 'STRESS_CV_CONTRACT', None) == 'v2-invalid-null'
-        and getattr(D, 'STRESS_CV_CONTRACT', None) == 'v2-invalid-null')
+    chk(f'S10c 상태 줄 이름 · 계약 표지 = metrics_json 한 곳 (analyze_contacts · 표 재생성 · 웹앱이 같은 상수) · 현재 세대 {VM_CONTRACT} · '
+        '이전 세대 v2-invalid-null 도 알려진 세대 (저장된 결과 그대로 읽는다)',
+        getattr(MJ, 'STRESS_CV_STATUS_ROW', None) == ROW and getattr(MJ, 'STRESS_CV_CONTRACT', None) == VM_CONTRACT
+        and getattr(D, 'STRESS_CV_CONTRACT', None) == VM_CONTRACT
+        and tuple(getattr(MJ, 'STRESS_CV_CONTRACTS', ())) == ('v2-invalid-null', VM_CONTRACT))
 
     #  S11 그룹 그림 · 내보내기 · 잔차 상관 — None 을 0 으로 바꾸지 않는다
     import matplotlib
@@ -595,6 +672,200 @@ def lhs33(D):
     chk('S11c 내보내기 칸 — 무효면 빈칸 (0 아님) + 상태 열에 사유 · 정상은 값',
         callable(ex) and cells.get('stress_cv') == '' and 'invalid_input' in str(cells.get('status'))
         and ex(m_ok).get('stress_cv') == 213.1 and ex(m_ok).get('status') == 'computed', repr(cells))
+
+
+def rglr2_03(D):
+    """원장 RGLR2-03 (Codex 3차 재검증 10-05 · P2 · Q4 · 1저자 비준 "권고대로" = 안정식 · 혼합) — 옛 σ_VM 전개식 근호
+    σxx² + σyy² + σzz² − σxx·σyy − σyy·σzz − σxx·σzz 가 거의 정수압에서 부호까지 잃고 (정확 1.15e-14 ↔ 계산 −4.66e-10), v2 의 0 clamp ·
+    양의 쓰레기가 그대로 computed 통계가 되던 것.  기대값 = 입력 float 의 정확한 유리수 불변량 (생산 함수 미사용)."""
+    TM = {1: 'AM_P', 2: 'AM_S', 3: 'SE'}
+    cvf = getattr(D, 'calc_von_mises_stress')
+
+    def sat(t, z, s):
+        return {'type': t, 'x': 0.0, 'y': 0.0, 'z': z, 'radius': 1e-3, 'sigma_xx': s[0], 'sigma_yy': s[1], 'sigma_zz': s[2]}
+
+    def run(atoms, pz=1.0):
+        try:
+            return cvf(atoms, TM, 1000.0, pz)
+        except Exception as e:                            # noqa: BLE001
+            return {'status': f'EXC {type(e).__name__}: {e}'}
+
+    def m_(r, ph):
+        return ((r.get('type_stress') or {}).get(ph) or {}).get('mean')
+
+    # ── V1 Codex 반례 그대로 (판정문 §2 · evidence/vm_boundary.json) — 두 입자의 정확 VM 이 같다 (정확 CV 0 %) ──────────
+    BAD = (1073.1, 1073.1, 1073.1000001073098)
+    d = BAD[2] - BAD[0]                                   # Sterbenz — 정확한 차 (1.0730991562013514e-07)
+    GOOD = (0.0, 0.0, d)                                  # 같은 정수압 성분을 뺀 쌍둥이
+    pre = (Fraction(BAD[2]) - Fraction(BAD[0]) == Fraction(d) and _rad_exact(BAD) == _rad_exact(GOOD) == Fraction(d) ** 2
+           and _rad_old(BAD) == -4.656612873077393e-10 and d == 1.0730991562013514e-07)
+    chk('V0 (전제) Codex 반례 재현 — 전개식 근호 −4.656612873077393e-10 · 정확 불변량 둘 다 d² (d = 1.0730991562013514e-07 · 차가 정확)',
+        pre, repr((_rad_old(BAD), float(_rad_exact(BAD)), d)))
+    chk('V0b (반례 확인) v2 판 규칙 (음수 근호 → 0 clamp) 은 같은 두 입자에서 CV 100.0 을 냈다',
+        _cv_pct([_v2_vm(BAD), _v2_vm(GOOD)]) == 100.0, repr(_cv_pct([_v2_vm(BAD), _v2_vm(GOOD)])))
+    for kind, conv in (('파이썬 float', float), ('numpy float64 (파서의 형)', np.float64)):
+        r = run({1: sat(1, 0.1, tuple(map(conv, BAD))), 2: sat(3, 0.2, tuple(map(conv, GOOD)))})
+        chk(f'V1 ★ Codex 반례 ({kind}) → computed · vm_cv 0.0 (정확) · 두 상 평균 = 정확 VM |d| (비트) · 다시 센 입자 1 · 계약 {VM_CONTRACT} '
+            '(v2 판: vm_cv 100.0)',
+            r.get('status') == 'computed' and r.get('vm_cv') == 0.0 and m_(r, 'AM_P') == abs(d) and m_(r, 'SE') == abs(d)
+            and r.get('vm_stable_recomputed_n') == 1 and r.get('contract') == VM_CONTRACT,
+            repr({k: r.get(k) for k in ('status', 'vm_cv', 'vm_mean', 'type_stress', 'vm_stable_recomputed_n', 'contract')})[:400])
+    r = run({1: sat(1, 0.1, GOOD), 2: sat(3, 0.2, GOOD)})
+    chk('V1b 양성 대조 (Codex) — 쌍둥이 둘 → computed · vm_cv 0.0 · 다시 센 입자 0 (정수압 성분 없는 입력은 옛 식 그대로)',
+        r.get('status') == 'computed' and r.get('vm_cv') == 0.0 and r.get('vm_stable_recomputed_n') == 0, repr(r)[:300])
+
+    # ── V2 양의 쓰레기 (음수만이 아니다) — 정확한 정수압 σxx = σyy = σzz 인데 전개식 근호 > 0 ───────────────────────────
+    XP = next(v for v in (1.0 + 0.0731 * k for k in range(1, 500)) if _rad_old((v, v, v)) > 0)       # 1.1462 → +4.44e-16
+    XN = next(v for v in (1.0 + 0.0731 * k for k in range(1, 500)) if _rad_old((v, v, v)) < 0)       # 1.0731 (S7) → −4.44e-16
+    v2_hyd = [_v2_vm((XP, XP, XP))] * 3
+    r = run({k: sat(1 + k % 3, 0.1 * k, (XP, XP, XP)) for k in range(1, 4)})
+    chk(f'V2 ★ 정확한 정수압 침대 (σ = {XP!r} 셋 — 전개식 근호 {_rad_old((XP, XP, XP)):.3g} = 양의 쓰레기 · 정확 0) → VM 0 → '
+        f'undefined_zero_mean · 다시 센 입자 3 (v2 판: VM {float(v2_hyd[0]):.3g} 셋 → computed CV {_cv_pct(v2_hyd)} = 정수압이 정상 0 으로 둔갑)',
+        r.get('status') == 'undefined_zero_mean' and r.get('vm_cv', 0) is None and r.get('vm_stable_recomputed_n') == 3,
+        repr(r)[:300])
+    r = run({1: sat(1, 0.1, (XP, XP, XP)), 2: sat(3, 0.2, (XN, XN, XN))})
+    chk(f'V2b ★ 양의 쓰레기 정수압 + 음수 근호 정수압 → 둘 다 VM 0 → undefined_zero_mean (v2 판: '
+        f'{float(_v2_vm((XP, XP, XP))):.3g} ↔ 0 → computed CV {_cv_pct([_v2_vm((XP, XP, XP)), _v2_vm((XN, XN, XN))])})',
+        r.get('status') == 'undefined_zero_mean' and r.get('vm_stable_recomputed_n') == 2, repr(r)[:300])
+    r = run({1: sat(1, 0.1, (XP, XP, XP)), 2: sat(3, 0.2, (1.0, 0.0, 0.0)), 3: sat(3, 0.3, (2.0, 0.0, 0.0))})
+    chk('V2c 양의 쓰레기 정수압이 섞인 정상 침대 → computed · CV = 손값 √(2/3)·100 (정수압 입자 VM 정확히 0 · v2 판은 2.1e-8 이 섞였다)',
+        r.get('status') == 'computed' and close(r.get('vm_cv'), math.sqrt(2.0 / 3.0) * 100, rel=1e-12) and m_(r, 'AM_P') == 0.0
+        and r.get('vm_stable_recomputed_n') == 1, repr(r)[:300])
+    dvm = getattr(D, 'diag_von_mises', None)
+    chk('V2d 한 입자 도우미 diag_von_mises — 정확한 정수압 (양의 쓰레기 · 음수 근호) → (0.0, 다시 셈) · 영 텐서 → (0.0, 옛 값 그대로)',
+        callable(dvm) and dvm(XP, XP, XP) == (0.0, True) and dvm(XN, XN, XN) == (0.0, True) and dvm(0.0, 0.0, 0.0) == (0.0, False)
+        and dvm(np.float64(XP), np.float64(XP), np.float64(XP)) == (0.0, True),
+        repr([dvm(XP, XP, XP), dvm(XN, XN, XN), dvm(0.0, 0.0, 0.0)]) if callable(dvm) else '도우미 없음')
+
+    # ── V3 거의 정수압의 양의 쓰레기 — 근호가 양수인데 정확값의 400 배 (부호만 보는 검사로는 못 잡는다) ──────────────────
+    BP = next((p, p, p * (1 + f)) for p in (1000.0 * (1.0 + 0.0731 * k) for k in range(1, 500))
+              for f in (1e-8, 2e-8, 5e-8, 1e-9, 1e-10) if _rad_old((p, p, p * (1 + f))) > 0
+              and Fraction(_rad_old((p, p, p * (1 + f)))) > 100 * _rad_exact((p, p, p * (1 + f))))
+    dP = BP[2] - BP[0]
+    GP = (0.0, 0.0, dP)
+    pre3 = _rad_exact(BP) == _rad_exact(GP) == Fraction(dP) ** 2
+    v2_cv3 = _cv_pct([_v2_vm(BP), _v2_vm(GP)])
+    for kind, conv in (('파이썬 float', float), ('numpy float64', np.float64)):
+        r = run({1: sat(1, 0.1, tuple(map(conv, BP))), 2: sat(3, 0.2, tuple(map(conv, GP)))})
+        chk(f'V3 ★ 거의 정수압 · 양의 쓰레기 ({kind} · σ = {BP!r} · 근호 {_rad_old(BP):.3g} ↔ 정확 {float(_rad_exact(BP)):.3g}) + 쌍둥이 → '
+            f'computed · vm_cv 0.0 · 두 평균 = |d| · 다시 센 입자 1 (v2 판: CV {v2_cv3:.1f} %)',
+            pre3 and r.get('status') == 'computed' and r.get('vm_cv') == 0.0 and m_(r, 'AM_P') == abs(dP) and m_(r, 'SE') == abs(dP)
+            and r.get('vm_stable_recomputed_n') == 1, repr(r)[:300])
+
+    # ── V4 거의 정수압 fuzz — 편차/압력 1e-12 … 1e-6 (로그 균일) · |p| 1e-2 … 1e8 · ± · 파이썬 float / numpy float64 ───────────
+    rng = random.Random(20261005)
+    worst_u, fail1, failp, viol, n_tot, v2_bad, v2_max = 0.0, [], [], [], 0, 0, 0.0
+    worst_b = 0.0
+    for i in range(600):
+        conv = float if i % 2 == 0 else np.float64
+        p = 10.0 ** rng.uniform(-2, 8) * rng.choice((-1.0, 1.0))
+        dl = 10.0 ** rng.uniform(-12, -6)
+        t = tuple(conv(p * (1.0 + dl * rng.uniform(-1.0, 1.0))) for _ in range(3))
+        ex = _vm_exact(t)
+        n_tot += 1
+        r = run({1: sat(1, 0.5, t)})
+        if ex == 0:                                       # 반올림으로 셋이 같아진 표본 — 정확 VM 0 → 미정의
+            if not (r.get('status') == 'undefined_zero_mean'):
+                fail1.append((t, r.get('status')))
+        else:
+            u = _ulps(r.get('vm_mean'), ex) if r.get('status') == 'computed' else math.inf
+            worst_u = max(worst_u, u)
+            if not (r.get('status') == 'computed' and u <= 4 and r.get('vm_stable_recomputed_n') == 1):
+                fail1.append((t, r.get('status'), r.get('vm_mean'), str(ex)[:20], u, r.get('vm_stable_recomputed_n')))
+            tw = (conv(0.0), conv(t[1] - t[0]), conv(t[2] - t[0]))   # 오프셋 없는 쌍둥이 — 차 셋이 같다 (Sterbenz · 정확)
+            if _rad_exact(tw) != _rad_exact(t):
+                failp.append((t, '쌍둥이 전제 깨짐'))
+            else:
+                r2 = run({1: sat(1, 0.1, t), 2: sat(3, 0.2, tw)})
+                if not (r2.get('status') == 'computed' and r2.get('vm_cv') is not None and r2['vm_cv'] <= 1e-11):
+                    failp.append((t, r2.get('status'), r2.get('vm_cv')))
+                cv2 = _cv_pct([_v2_vm(t), _v2_vm(tw)])
+                v2_max = max(v2_max, cv2 if cv2 == cv2 else 0.0)
+                v2_bad += (not cv2 <= 1e-11)
+        e_abs = abs(Fraction(float(_rad_old(t))) - _rad_exact(t))           # 유도한 엄밀 상한 B 가 실제 오차를 덮는가
+        b = _VM_C * _VM_EPS * float(_sq_sum(t)) + _VM_ABS
+        worst_b = max(worst_b, float(e_abs) / (_VM_EPS * float(_sq_sum(t))))
+        if e_abs > Fraction(b):
+            viol.append(t)
+    chk(f'V4 ★ 거의 정수압 fuzz {n_tot} 표본 (편차/압력 1e-12…1e-6 · |p| 1e-2…1e8 · ± · float/np.float64 반반) — 1-입자 침대 vm_mean = '
+        f'정확 불변량의 √ 와 ≤ 4 ulp (실측 최대 {worst_u:.2f} ulp) · computed · 다시 센 입자 1',
+        not fail1, repr(fail1[:3])[:400])
+    chk(f'V4b ★ 같은 fuzz — 오프셋 없는 쌍둥이 (0 · σyy−σxx · σzz−σxx: 정확 불변량 같음) 와 한 침대 → vm_cv ≤ 1e-11 % '
+        f'(v2 판: {v2_bad}/{n_tot} 가 넘고 최대 {v2_max:.3g} %)',
+        not failp, repr(failp[:3])[:400])
+    chk(f'V4c 유도한 엄밀 상한 B = 16 ε Ŝ + 2^-1071 이 fuzz 전부에서 |전개식 근호 − 정확 불변량| 을 덮는다 (실측 최대 {worst_b:.2f} ε·Ŝ · 최악 유도 7.0001 ε·S)',
+        not viol, repr(viol[:3]))
+
+    # ── V5 판정 규칙 · 남긴 값 — 일반 응력 (부호 섞임 · 크기 섞임) + 편차/압력 1e-5 … 1e-1 ───────────────────────────
+    rng = random.Random(20261006)
+    mism, keep_bad, stab_bad, n_keep, n_stab, worst_rel, worst_su = [], [], [], 0, 0, 0.0, 0.0
+    real_range_recomputed = []
+    for i in range(1200):
+        conv = float if i % 2 == 0 else np.float64
+        if i % 3 == 0:
+            t = tuple(conv(rng.gauss(0.0, 1.0) * 10.0 ** rng.uniform(-3, 8)) for _ in range(3))
+        else:
+            p = 10.0 ** rng.uniform(-2, 8) * rng.choice((-1.0, 1.0))
+            dl = 10.0 ** rng.uniform(-5, -1)
+            t = tuple(conv(p * (1.0 + dl * rng.uniform(-1.0, 1.0))) for _ in range(3))
+        want = _vm_rule_stable(t)
+        r = run({1: sat(1, 0.5, t)})
+        got = r.get('vm_stable_recomputed_n')
+        if got != (1 if want else 0):
+            mism.append((t, want, got))
+            continue
+        ex = _vm_exact(t)
+        R = _rad_exact(t)
+        if R >= Fraction(1, 10 ** 8) * Fraction(float(_sq_sum(t))) and want:        # 정확 R/S ≥ 1e-8 (실 침대 범위) 인데 다시 셈
+            real_range_recomputed.append(t)
+        if want:
+            n_stab += 1
+            u = _ulps(r.get('vm_mean'), ex)
+            worst_su = max(worst_su, u)
+            if not u <= 4:
+                stab_bad.append((t, u))
+        else:
+            n_keep += 1
+            old = np.sqrt(_rad_old(t))
+            rel = float(abs(decimal.Decimal(float(r.get('vm_mean'))) - ex) / ex) if ex else 0.0
+            worst_rel = max(worst_rel, rel)
+            if not (r.get('vm_mean') == float(old) and rel < 1.0 / (_VM_K - 1) + 2 * _VM_EPS):
+                keep_bad.append((t, r.get('vm_mean'), float(old), rel))
+    chk(f'V5 ★ 판정 = 유도한 규칙 (근호 ≤ 2^20·(16 ε Ŝ + 2^-1071) 일 때만 안정식 · 영 텐서 · NaN 제외) — 1,200 표본 (일반 400 · 편차/압력 '
+        f'1e-5…1e-1 800) 의 다시 센 입자 수가 전부 규칙과 같다 (남김 {n_keep} · 다시 셈 {n_stab})',
+        not mism, repr(mism[:3])[:400])
+    chk(f'V5b ★ 남긴 값 = 옛 식 np.sqrt(근호) 비트 동일 · 정확 VM 대비 상대 오차 < 1/(2^20 − 1) (엄밀 한도 · 실측 최대 {worst_rel:.2g})',
+        not keep_bad and n_keep > 300, repr(keep_bad[:3])[:400])
+    chk(f'V5c 다시 센 값 ≤ 4 ulp (실측 최대 {worst_su:.2f}) · 정확 R/S ≥ 1e-8 (편차/압력 ≳ 1.4e-4 — real_14 최소 R/S 6.3e-5) 인 입자는 하나도 '
+        '다시 세지 않는다 (옛 값 그대로)',
+        not stab_bad and not real_range_recomputed and n_stab > 0, repr((stab_bad[:2], real_range_recomputed[:2]))[:400])
+
+    # ── V6 binary64 보다 거친 입력 (numpy float32) — 그 형의 ε 로 상한을 잡는다 (판정이 엄밀한 범위) ─────────────────────
+    t32 = (np.float32(1073.1), np.float32(1073.1), np.float32(1073.1) * np.float32(1.0000001))
+    if callable(dvm):
+        v32, st32 = dvm(*t32)
+        ex32 = _vm_exact(t32)
+        rel32 = float(abs(decimal.Decimal(float(v32)) - ex32) / ex32) if ex32 else float(v32)
+        chk('V6 numpy float32 거의 정수압 → 그 형의 ε 로 판정 → 안정식 (다시 셈) · 정확 대비 ≤ 4·2^-24',
+            st32 is True and rel32 <= 4 * 2.0 ** -24, repr((v32, st32, rel32)))
+    else:
+        chk('V6 numpy float32 거의 정수압 → 그 형의 ε 로 판정', False, '도우미 diag_von_mises 없음')
+
+    # ── V7 무효 · 미정의 처리 그대로 (LHS-33) + 다시 센 수 필드 ─────────────────────────────────────────────────────
+    r_none = run({1: {'type': 1, 'x': 0.0, 'y': 0.0, 'z': 0.1, 'radius': 1e-3}, 2: {'type': 3, 'x': 0.0, 'y': 0.0, 'z': 0.2, 'radius': 1e-3}})
+    r_nan = run({1: sat(1, 0.1, (1.0, 0.0, 0.0)), 2: sat(3, 0.2, (float('nan'), 0.0, 0.0))})
+    r_zero = run({k: sat(1 + k % 3, 0.1 * k, (0.0, 0.0, 0.0)) for k in range(1, 7)})
+    r_hyd = run({k: sat(1 + k % 3, 0.1 * k, (-2.0 * k, -2.0 * k, -2.0 * k)) for k in range(1, 7)})
+    r_ovf = run({1: sat(1, 0.1, (1e200, -1e200, 0.0)), 2: sat(3, 0.2, (1.0, 0.0, 0.0))})
+    chk('V7 ★ LHS-33 무효 · 미정의 그대로 — c_strs 없음 · NaN = 상태 그대로 · 다시 센 수 None (계산 전) · 무하중 (영 텐서) undefined · 다시 셈 0 · '
+        '전 입자 정확한 정수압 undefined · 다시 셈 6 · σ² 넘침 invalid_input · 다시 셈 0',
+        r_none.get('status') == 'unavailable_no_c_strs' and r_none.get('vm_stable_recomputed_n', 0) is None
+        and r_nan.get('status') == 'invalid_input' and r_nan.get('vm_stable_recomputed_n', 0) is None
+        and r_zero.get('status') == 'undefined_zero_mean' and r_zero.get('vm_stable_recomputed_n') == 0
+        and r_hyd.get('status') == 'undefined_zero_mean' and r_hyd.get('vm_stable_recomputed_n') == 6
+        and r_ovf.get('status') == 'invalid_input' and r_ovf.get('vm_stable_recomputed_n') == 0
+        and all(x.get('contract') == VM_CONTRACT for x in (r_none, r_nan, r_zero, r_hyd, r_ovf)),
+        repr([(x.get('status'), x.get('vm_stable_recomputed_n'), x.get('contract')) for x in (r_none, r_nan, r_zero, r_hyd, r_ovf)]))
 
 
 def main():
@@ -820,6 +1091,11 @@ def main():
         lhs33(D)
     except Exception as e:                                # noqa: BLE001
         chk('S 묶음 (LHS-33) 실행', False, f'{type(e).__name__}: {e}'[:300])
+    # ── V RGLR2-03 (Codex 3차 재검증 10-05 · Q4) — 옛 σ_VM 근호의 수치 분해 · 분해 안 된 입자만 안정식 · 정확 불변량 대조 ──────
+    try:
+        rglr2_03(D)
+    except Exception as e:                                # noqa: BLE001
+        chk('V 묶음 (RGLR2-03) 실행', False, f'{type(e).__name__}: {e}'[:300])
 
     # ── L12 real_14 기준 상태 — 독립 구현 (lhs_stress_constriction_audit) 과 입자마다 대조 ─────────
     try:
@@ -839,10 +1115,19 @@ def main():
                 f"{len(old_atoms)} vs {len(atoms_raw)}")
             vm_new = D.calc_von_mises_stress(atoms_raw, tm14, 1000.0, pzr)
             vm_old = _old_von_mises(old_atoms, tm14, 1000.0, pzr)
-            chk('L12q ★ real_14 — 새 σ_VM (stress_cv · 상 비 · z 층) = 옛 함수 비트 동일 · status computed (stress_cv 213.1 · AM_P 0.884)',
+            chk('L12q ★ real_14 — 새 σ_VM (stress_cv · 상 비 · z 층) = 옛 함수 비트 동일 · status computed (stress_cv 213.1 · AM_P 0.884) · '
+                '안정식으로 다시 센 입자 0 (RGLR2-03 — 33,289 입자 전부 옛 식 값 그대로)',
                 _same_vm(vm_new, vm_old) and (vm_new or {}).get('status') == 'computed'
-                and round(vm_old['vm_cv'], 1) == 213.1 and round(vm_old['type_stress']['AM_P']['ratio'], 3) == 0.884,
-                f"{(vm_new or {}).get('status')} · {None if vm_old is None else (vm_old['vm_cv'], vm_old['type_stress'])}")
+                and round(vm_old['vm_cv'], 1) == 213.1 and round(vm_old['type_stress']['AM_P']['ratio'], 3) == 0.884
+                and (vm_new or {}).get('vm_stable_recomputed_n') == 0,
+                f"{(vm_new or {}).get('status')} · 다시 셈 {(vm_new or {}).get('vm_stable_recomputed_n')} · "
+                f"{None if vm_old is None else (vm_old['vm_cv'], vm_old['type_stress'])}")
+            #  RGLR2-03 — real_14 의 입자마다 정확 R/S (유리수) 최소값: 판정 경계 (≈ 2^-28 = 3.7e-9) 와의 거리
+            _rs = min(float(_rad_exact((a_['sigma_xx'], a_['sigma_yy'], a_['sigma_zz'])))
+                      / float(_sq_sum((a_['sigma_xx'], a_['sigma_yy'], a_['sigma_zz']))) for a_ in atoms_raw.values()
+                      if _sq_sum((a_['sigma_xx'], a_['sigma_yy'], a_['sigma_zz'])) > 0)
+            chk(f'L12r real_14 — 입자마다 정확 근호/Σσ² 의 최소 {_rs:.3g} (판정 경계 2^-28 ≈ 3.7e-9 의 {_rs / 2.0 ** -28:,.0f} 배 — 거의 정수압 입자 없음)',
+                _rs > 1e3 * 2.0 ** -28, f'{_rs}')
             res = D.calc_love_weber_stress(atoms_raw, contacts_raw, tm14, pzr, box_x=0.05, box_y=0.05,
                                            plate_z_source='mesh', return_arrays=True)
             chk('L12 real_14 — 상태 OK (검사 셋 통과: 힘 분해 · 접촉점 · virial)', res.get('status') == 'OK',
@@ -896,7 +1181,7 @@ def main():
     # ── L13 생산 CLI (analyze_contacts.py = 웹앱 cmd) — 새 키 · 표 · 옛 키 불변 ──────────────────
     tmp = tempfile.mkdtemp(prefix='lw_cli_')
     try:
-        def bed(name, with_lw=True, cstr_scale=1.0, fz=-2e-3, first_tok=None):
+        def bed(name, with_lw=True, cstr_scale=1.0, fz=-2e-3, first_tok=None, cstr_override=None):
             dd_ = os.path.join(tmp, name)
             out = os.path.join(dd_, 'out')
             os.makedirs(out)
@@ -915,6 +1200,8 @@ def main():
                 wv = -0.5 * (lo[4] - hi[4]) * fzz * cstr_scale
                 cstr[lo[0]][2] += wv
                 cstr[hi[0]][2] += wv
+            for k_, v_ in (cstr_override or {}).items():          # RGLR2-03 — 한 입자의 c_strs 를 거의 정수압으로 (LW virial 대조는 깨진다)
+                cstr[k_] = list(v_)
             with open(os.path.join(dd_, 'atoms.csv'), 'w') as fh:
                 fh.write('id,type,x,y,z,radius,c_strs[1],c_strs[2],c_strs[3]\n')
                 for a in atoms_:
@@ -997,20 +1284,32 @@ def main():
             f"rc {pr3.returncode} · {met3.get('stress_lw_status')} · {(pr3.stderr or '')[-300:]}")
         # LHS-33 — 옛 σ_VM 열의 상태 계약이 CLI (웹앱 접촉 단계) 를 지나 full_metrics.json · network_summary.csv 에 남는다
         lines3 = {r[0]: (r[1] if len(r) > 1 else '') for r in csv.reader(io.StringIO(summ3)) if r}
-        chk('L13l ★ LHS-33 무하중 침대 → stress_cv null · 상 비 null · z 층 null · stress_cv_status undefined_zero_mean · 계약 v2-invalid-null · '
-            '사유 (옛 판: stress_cv 0 · 비 0 = 거짓 최고 등급)',
+        chk(f'L13l ★ LHS-33 무하중 침대 → stress_cv null · 상 비 null · z 층 null · stress_cv_status undefined_zero_mean · 계약 {VM_CONTRACT} · '
+            '사유 · 다시 센 입자 0 (영 텐서) (옛 판: stress_cv 0 · 비 0 = 거짓 최고 등급)',
             'stress_cv' in met3 and met3['stress_cv'] is None and met3.get('stress_ratio_AM_P', 0) is None
             and met3.get('stress_ratio_SE', 0) is None and met3.get('stress_z_layer_cv', 0) is None
-            and met3.get('stress_cv_status') == 'undefined_zero_mean' and met3.get('stress_cv_contract') == 'v2-invalid-null'
-            and bool(met3.get('stress_cv_reason')),
-            str({k: met3.get(k) for k in ('stress_cv', 'stress_ratio_AM_P', 'stress_cv_status', 'stress_cv_contract', 'stress_cv_reason')}))
+            and met3.get('stress_cv_status') == 'undefined_zero_mean' and met3.get('stress_cv_contract') == VM_CONTRACT
+            and bool(met3.get('stress_cv_reason')) and met3.get('stress_cv_vm_stable_n') == 0,
+            str({k: met3.get(k) for k in ('stress_cv', 'stress_ratio_AM_P', 'stress_cv_status', 'stress_cv_contract', 'stress_cv_reason',
+                                          'stress_cv_vm_stable_n')}))
         chk('L13m ★ LHS-33 케이스 표 (network_summary.csv) — 무하중이면 "Stress CV(%)" = "—" · 상 비 "—" · 상태 줄 (상태 — 사유)',
             lines3.get('Stress CV(%)') == '—' and lines3.get('σ_SE/σ_mean') == '—'
             and 'undefined_zero_mean' in lines3.get('Stress CV 상태 (50/50 · LHS-33)', ''), repr(lines3)[:400])
-        chk('L13n 정상 침대 → stress_cv_status computed · 계약 표지 · 값은 숫자 (L13f = 옛 정의 그대로) · 표에 상태 줄 없음',
-            met.get('stress_cv_status') == 'computed' and met.get('stress_cv_contract') == 'v2-invalid-null'
-            and isinstance(met.get('stress_cv'), float) and 'Stress CV 상태 (50/50 · LHS-33)' not in summ,
-            str({k: met.get(k) for k in ('stress_cv', 'stress_cv_status', 'stress_cv_contract')}))
+        chk('L13n 정상 침대 → stress_cv_status computed · 계약 표지 · 값은 숫자 (L13f = 옛 정의 그대로) · 표에 상태 줄 없음 · '
+            'stress_cv_vm_stable_n 0 (RGLR2-03 출처 — 안정식으로 다시 센 입자 없음)',
+            met.get('stress_cv_status') == 'computed' and met.get('stress_cv_contract') == VM_CONTRACT
+            and isinstance(met.get('stress_cv'), float) and 'Stress CV 상태 (50/50 · LHS-33)' not in summ
+            and met.get('stress_cv_vm_stable_n') == 0,
+            str({k: met.get(k) for k in ('stress_cv', 'stress_cv_status', 'stress_cv_contract', 'stress_cv_vm_stable_n')}))
+        #  RGLR2-03 — 거의 정수압 입자 하나 (c_strs = (q, q, q·(1 + 1e-10))) 가 CLI (웹앱 접촉 단계) 를 지나 full_metrics 에 출처로 남는다
+        qh = -1.2e-5
+        prh, meth, _ = bed('nearhyd', cstr_override={1: (qh, qh, qh * (1.0 + 1e-10))})
+        chk('L13q ★ RGLR2-03 CLI — 거의 정수압 입자 하나 (c_strs q · q · q(1+1e-10)) → stress_cv_status computed · stress_cv_vm_stable_n 1 · '
+            f'계약 {VM_CONTRACT} (나머지 20 입자 = 옛 식 그대로)',
+            prh.returncode == 0 and meth.get('stress_cv_status') == 'computed' and meth.get('stress_cv_vm_stable_n') == 1
+            and meth.get('stress_cv_contract') == VM_CONTRACT and isinstance(meth.get('stress_cv'), float),
+            f"rc {prh.returncode} · {({k: meth.get(k) for k in ('stress_cv', 'stress_cv_status', 'stress_cv_vm_stable_n', 'stress_cv_contract')})} · "
+            f"{(prh.stderr or '')[-300:]}")
         pr4, met4, summ4 = bed('nanfirst', first_tok='nan')
         chk('L13o ★ RGLR-03 CLI — 첫 c_strs 칸 NaN 침대 → stress_lw_status FAILED (invalid_input …) · LW 값 없음 · stress_cv null · '
             'stress_cv_status invalid_input (옛 판: LW OK virial unavailable · stress 키 없음)',

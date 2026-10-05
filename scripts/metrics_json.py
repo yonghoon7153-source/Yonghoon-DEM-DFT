@@ -10,9 +10,13 @@ numpy 정수 (`am_am_n_contacts` — `sum(np.array) // 2`) 가 **문자열** ('4
 2026-10-05 (원장 LHS-33 · 좁은 개정 · 1저자 비준 · Codex 재검증 Q7) — 옛 σ_VM 열 (`stress_cv` · `stress_ratio_<상>` ·
 `stress_z_layer_cv`) 의 **상태 계약** 도 여기 한 곳에 둔다 (생산자 dem_analysis_core · analyze_contacts · 표 재생성 · 등급 · 그룹 그림 ·
 웹앱이 같은 상수 · 같은 읽기를 쓴다).  옛 판은 무효 · 미정의 입력을 0 으로 저장했다 (등급 축 '기계적 안정성' 의 거짓 최고 등급).
-  · 새 세대 (`stress_cv_contract` = v2-invalid-null): 정상 = 옛 정의 · 수치 · 키 그대로 + `stress_cv_status` = computed ·
+  · LHS-33 세대 (`stress_cv_contract` = v2-invalid-null · 10-05 af9e6b15f): 정상 = 옛 정의 · 수치 · 키 그대로 + `stress_cv_status` = computed ·
     무효/미정의 = 값 None (null) + `stress_cv_status` (unavailable_no_c_strs · invalid_input · undefined_zero_mean) + `stress_cv_reason`.
   · 옛 세대 (상태 키 없음): 저장된 숫자를 그대로 읽는다 — 역사 파일은 바꾸지 않는다 (그 안의 0 이 거짓 0 인지는 구별할 수 없다).
+  · v3-invalid-null-stable-vm (2026-10-05 · RGLR2-03 · Codex 3차 재검증 Q4 · 1저자 비준 "권고대로" = 안정식 · 혼합): 상태 규약 (위) 은 v2 와
+    같고, 거의 정수압 입자 (전개식 근호가 엄밀 오차 상한의 2^20 배 안) 만 같은 양의 ½Σ(σ_ii − σ_jj)² 로 다시 센다 (v2 는 음수 근호를 0 으로
+    clamp · 양의 쓰레기를 그대로 √ — 정확히 같은 두 VM 의 CV 100 %).  분해된 입자의 값은 v2 와 비트 동일 · 다시 센 입자 수 =
+    `stress_cv_vm_stable_n`.  소비자는 상태만 본다 — v2 로 저장된 결과도 그대로 읽는다 (STRESS_CV_CONTRACTS = 알려진 세대).
 
   python3 scripts/metrics_json.py --selftest
 """
@@ -54,7 +58,10 @@ def metric_number(v):
 
 
 # ── LHS-33 옛 σ_VM 열 상태 계약 (좁은 개정 · 1저자 비준 10-05 · Codex 재검증 Q7) ─────────────────────────────────────────
-STRESS_CV_CONTRACT = 'v2-invalid-null'
+#: 현재 세대 — v2 상태 규약 + 거의 정수압 입자의 안정식 (RGLR2-03 · dem_analysis_core.diag_von_mises).  세대 이름만 바뀌고 상태 · 키는 같다.
+STRESS_CV_CONTRACT = 'v3-invalid-null-stable-vm'
+#: 알려진 세대 (오래된 것부터) — v2-invalid-null = 10-05 af9e6b15f (음수 근호 0 clamp) · 저장된 v2 결과는 그대로 읽는다 (소비자는 상태를 본다)
+STRESS_CV_CONTRACTS = ('v2-invalid-null', STRESS_CV_CONTRACT)
 STRESS_CV_COMPUTED = 'computed'
 STRESS_CV_STATUSES = (STRESS_CV_COMPUTED, 'unavailable_no_c_strs', 'invalid_input', 'undefined_zero_mean')
 #: 표 칸의 짧은 사유 ('— (…)') — 그룹 표 · 내보내기.  긴 사유는 full_metrics 의 stress_cv_reason (생산자가 쓴다).

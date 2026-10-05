@@ -1157,6 +1157,63 @@ def calc_effective_conductivity(atoms, perc_result, porosity, tortuosity_result,
 
 # ─── Von Mises Stress Analysis ─────────────────────────────────────────────
 
+# ── 옛 σ_VM (대각) 근호의 수치 분해 — RGLR2-03 (Codex 3차 재검증 10-05 · P2 · Q4) · 1저자 비준 "권고대로" (안정식 · 혼합) ─────────────────
+#  옛 식 vm_sq = σxx² + σyy² + σzz² − σxx·σyy − σyy·σzz − σxx·σzz 는 거의 정수압 (σxx ≈ σyy ≈ σzz) 에서 큰 수끼리 빼므로 근호의 부호까지
+#  잃는다 (Codex 반례: 정확 1.15e-14 ↔ 계산 −4.66e-10 → v2 의 0 clamp 가 정확히 같은 두 VM 의 CV 를 100 % 로 지어냈다 · 양의 쓰레기는 그대로
+#  √ 됐다).  같은 양의 소거 없는 꼴 VM² = ½[(σxx−σyy)² + (σyy−σzz)² + (σzz−σxx)²] (항상 ≥ 0) 으로 **분해되지 않은 입자만** 다시 센다 —
+#  분해된 입자는 옛 식 값 그대로 (연산 · 순서 · 비트 동일).
+#
+#  엄밀 오차 상한 (연산 수에서 · IEEE-754 binary64 · 가장 가까운 짝수 반올림 · u = 2^-53 · ε = 2u = 2^-52 = sys.float_info.epsilon):
+#    a, b, c = σxx, σyy, σzz (입력 그대로) · R = 정확한 근호 = ½Σ(차)² ≥ 0 · S = a² + b² + c².
+#    CPython · NumPy 스칼라는 왼쪽부터 한 연산씩 반올림한다 (FMA 축약 없음): 제곱 셋 (`**2` = libm pow — 오차 ≤ 1 ulp ≤ 2u 로 가정 ·
+#    정확 반올림이면 u) · 곱 셋 (≤ u) · 덧뺄셈 다섯 (≤ u).  항마다 자기 반올림 1 번 + 지나는 덧뺄셈 k 번 (a² · b²: 5 · c²: 4 · ab: 3 · bc: 2 ·
+#    ac: 1) ⇒ |vm_sq − R| ≤ [(1+2u)(1+u)^5 − 1] · (a² + b² + c² + |ab| + |bc| + |ac|) ≤ 7.0001u · 2S = 7.0001·ε·S
+#    (|ab| ≤ (a² + b²)/2 → 교차항 합 ≤ S).  아래넘침 (부정규 곱 · 제곱 — 부정규 덧셈은 정확) 은 절대 오차 ≤ 3·2^-1074 + 3·2^-1075 →
+#    덧뺄셈 다섯을 지나도 < 2^-1071.  계산한 Ŝ (같은 제곱 셋 · 덧셈 둘) ≥ S(1 − 4.0001u) 이므로
+#        B = 16·ε·Ŝ + 2^-1071   ≥ 2.28 × (최악 오차)  — 엄밀 상한 (16·ε = 2^-48 · 2^20 배도 2 의 거듭제곱 → 곱이 정확).
+#  분해 판정 (정밀도 목표 · K = 2^20): vm_sq > K·B 일 때만 옛 식 값을 남긴다 ⇒ R ≥ vm_sq − B > (K − 1)·B ⇒ 남긴 근호의 상대 오차 < 1/(K − 1)
+#    ≈ 9.5e-7 (VM 도 같은 한도 + √ 반올림 u) — 표시 정밀도 (CV 0.1 % · 비 0.001) 보다 1,000 배 이상 작다.
+#    vm_sq ≤ K·B (≈ 2^-28·S · 편차/압력 ≲ 8.6e-5) 이면 안정식으로 다시 센다 — 음수 근호 · 양의 쓰레기 · 정확한 정수압 (차 셋이 0 → 정확히 0)
+#    이 모두 여기로 온다.  그 영역은 세 성분이 서로 상대 2e-4 안이라 (같은 부호) 차 셋이 Sterbenz 로 정확하고, 안정식 오차 ≤ 2.5u (≤ 2.5 ulp).
+#    ⚠ K = 1 이면 순수 부호 판정 (vm_sq ≤ B) 이 된다 — 상한 바로 위에서 남긴 근호의 상대 오차가 최대 7/9 라 쓰지 않는다 (실측: 시험 V4 의
+#    거의 정수압 fuzz 600 표본 중 98 이 4 ulp 초과 · 정확히 같은 VM 쌍 (경계 바로 위) 의 CV 1.7 % — 같은 결함의 작은 판).
+#  예외: 영 텐서 (세 성분 0 — 접촉 없는 입자) 는 모든 연산이 정확 (오차 0) → 옛 값 0 그대로 (다시 센 입자로 세지 않는다).
+#    NaN · ±∞ 근호는 옛 경로 그대로 (뒤 관문이 invalid_input).  입력이 binary64 보다 거친 numpy 형 (float32 · float16) 이면 그 형의 ε 를 쓴다.
+#    정확도 서술은 아래넘침이 없을 때 (|σ| · |σ_i − σ_j| ≳ 1.5e-154 sim Pa) — 판정 (B) 은 절대 항으로 그 밖에서도 엄밀하다.
+#  regression 범위: 값이 바뀌는 입자 = 근호가 K·B 안인 입자뿐 (real_14 33,289 입자 · 시험 합성 91 입자 = 0 — 최소 R/S 6.3e-5 ≫ 3.7e-9).
+VM_ERR_BOUND_C = 16                  # B = 16·ε·Ŝ + 2^-1071 (연산 수 최악 7.0001·ε·S 의 2.28 배)
+VM_ERR_BOUND_ABS = 2.0 ** -1071      # 아래넘침 절대 항
+VM_RESOLVE_K = 2 ** 20               # 분해됨 ⇔ vm_sq > K·B (남긴 값의 상대 오차 < 1/(K − 1))
+_VM_EPS64 = float(np.finfo(np.float64).eps)
+_VM_INF = float('inf')
+
+
+def _vm_work_eps(*vals):
+    """반올림 단위 ε 의 상한 — binary64 (파이썬 float · numpy float64 · 정수) 는 2^-52 · 더 거친 numpy 형 (float32 · float16) 은 그 형의 ε."""
+    e = _VM_EPS64
+    for v in vals:
+        if isinstance(v, np.floating) and not isinstance(v, np.float64):
+            e = max(e, float(np.finfo(type(v)).eps))
+    return e
+
+
+def diag_von_mises(sxx, syy, szz):
+    """옛 σ_VM 한 입자 (대각 세 성분 · sim Pa) → (VM, 안정식으로 다시 셌는가).  위 ★ RGLR2-03 — 근호가 엄밀 오차 상한 B 의 2^20 배를
+    넘으면 (분해됨) 옛 식 값 그대로 (비트 동일) · 아니면 ½[(σxx−σyy)² + (σyy−σzz)² + (σzz−σxx)²] (≥ 0 · 정확한 정수압 = 0)."""
+    try:
+        vm_sq = sxx**2 + syy**2 + szz**2 - sxx*syy - syy*szz - sxx*szz      # 옛 식 그대로 (연산 · 순서 비트 동일)
+    except OverflowError:                         # 파이썬 float 의 ** 는 넘치면 예외 (numpy 는 inf → 뒤 관문에서 거부)
+        return np.sqrt(float('nan')), False
+    if (vm_sq != vm_sq or vm_sq == _VM_INF or vm_sq == -_VM_INF        # NaN · ±∞ → 옛 경로 (σ_VM 넘침 = invalid_input)
+            or (sxx == 0 and syy == 0 and szz == 0)):                   # 영 텐서 — 모든 연산이 정확 (오차 0) → 옛 값 0 그대로
+        return np.sqrt(vm_sq), False
+    s_hat = sxx**2 + syy**2 + szz**2              # 위 근호의 앞 세 항과 같은 연산 (유한 — 넘쳤다면 vm_sq 가 이미 ∞ · NaN)
+    if vm_sq > VM_RESOLVE_K * (VM_ERR_BOUND_C * _vm_work_eps(sxx, syy, szz) * s_hat + VM_ERR_BOUND_ABS):
+        return np.sqrt(vm_sq), False              # 분해됨 — 옛 식 값 그대로
+    dxy, dyz, dzx = sxx - syy, syy - szz, szz - sxx
+    return np.sqrt(0.5 * (dxy * dxy + dyz * dyz + dzx * dzx)), True
+
+
 def calc_von_mises_stress(atoms_raw, type_map, scale, plate_z, n_layers=10):
     """
     Simplified Von Mises from diagonal stress components.
@@ -1175,19 +1232,22 @@ def calc_von_mises_stress(atoms_raw, type_map, scale, plate_z, n_layers=10):
                                (파서 사유 c_strs_invalid — RGLR-03) · σ_VM 넘침
         undefined_zero_mean    평균 σ_VM = 0 (무하중 · 전 입자 정수압) → CV · 상 비 = 0/0 (옛 판 `mean > 0 else 0` = 0)
       옛 판의 결함: 평균이 NaN 이면 `NaN > 0` 이 False 라 CV 0 → 등급 축 '기계적 안정성' (낮을수록 좋음) 의 거짓 최고 등급.
-      근호 안이 반올림으로 음수인 입자 (σxx ≈ σyy ≈ σzz · 해석적으로 ½Σ(σi − σj)² ≥ 0) 는 VM 0 — 옛 판은 그 한 입자가 NaN 이 되어 같은
-        거짓 0 을 냈다.  근호 안 ≥ 0 인 입자 (= 옛 판이 유한값을 낸 입력) 의 값은 그대로.
+    ★ RGLR2-03 (Codex 3차 재검증 10-05 · Q4 · 1저자 비준 "권고대로" = 안정식 · 혼합 · 계약 v3-invalid-null-stable-vm):
+      입자마다 `diag_von_mises` — 전개식 근호가 엄밀 오차 상한 B = 16·ε·Σσ_ii² + 2^-1071 의 2^20 배를 넘으면 (분해됨) 옛 식 값 그대로
+      (비트 동일) · 아니면 (거의 정수압 — 음수 근호 · 양의 쓰레기 · 정확한 정수압) 같은 양의 ½Σ(σ_ii − σ_jj)² 로 다시 센다 (유도는 위 ★).
+      v2 (10-05 af9e6b15f) 는 음수 근호를 VM 0 으로 clamp 해 정확히 같은 두 VM 의 CV 를 100 % 로 냈다 (Codex 반례) — 그 clamp 는 없앴다.
+      다시 센 입자 수 = `vm_stable_recomputed_n` (계산 전 무효면 None) — 0 이면 모든 값이 옛 식 그대로.
     """
     keys = ('sigma_xx', 'sigma_yy', 'sigma_zz')
     atoms = list(atoms_raw.items())
 
-    def _blank(status, reason, means=None, mean_all=None):
+    def _blank(status, reason, means=None, mean_all=None, n_stable=None):
         ts = {}
         for t_name in set(type_map.values()):
             if any(type_map.get(a['type']) == t_name for _aid, a in atoms):
                 ts[t_name] = {'mean': (means or {}).get(t_name), 'ratio': None}
         return {'vm_cv': None, 'vm_mean': mean_all, 'type_stress': ts, 'z_layer_cv': None,
-                'status': status, 'reason': reason, 'contract': STRESS_CV_CONTRACT}
+                'status': status, 'reason': reason, 'contract': STRESS_CV_CONTRACT, 'vm_stable_recomputed_n': n_stable}
 
     def _ids(bad):
         return f"{len(bad)} / {len(atoms)} 입자 (id {', '.join(str(x) for x in bad[:5])}{' …' if len(bad) > 5 else ''})"
@@ -1205,25 +1265,22 @@ def calc_von_mises_stress(atoms_raw, type_map, scale, plate_z, n_layers=10):
         return _blank('invalid_input', f'c_strs 비유한 · 숫자 아님 {_ids(nonfin)}'
                       + (f' · 파서: {notes[0]}' + (f' (외 {len(notes) - 1} 입자)' if len(notes) > 1 else '') if notes else ''))
 
-    # Compute Von Mises for each atom (sim units, relative only) — 옛 식 그대로 (근호 안 반올림 음수만 0 · 위 ★)
+    # Compute Von Mises for each atom (sim units, relative only) — 분해된 근호는 옛 식 그대로 · 아니면 안정식 (위 ★ RGLR2-03)
     vm_data = {}
+    n_stable = 0
     with np.errstate(over='ignore', invalid='ignore'):
         for aid, a in atoms:
-            sxx, syy, szz = a['sigma_xx'], a['sigma_yy'], a['sigma_zz']
-            try:
-                vm_sq = sxx**2 + syy**2 + szz**2 - sxx*syy - syy*szz - sxx*szz
-            except OverflowError:                         # 파이썬 float 의 ** 는 넘치면 예외 (numpy 는 inf → 아래에서 거부)
-                vm_sq = float('nan')
-            vm_data[aid] = np.sqrt(vm_sq) if not vm_sq < 0 else np.float64(0.0)
+            vm_data[aid], stable = diag_von_mises(a['sigma_xx'], a['sigma_yy'], a['sigma_zz'])
+            n_stable += bool(stable)
 
     all_vm = np.array(list(vm_data.values()))
     if not np.isfinite(all_vm).all():
         return _blank('invalid_input', f'σ_VM 넘침 {_ids([aid for aid, v in vm_data.items() if not np.isfinite(v)])} — '
-                                       '정상 통계를 내지 않는다')
+                                       '정상 통계를 내지 않는다', n_stable=n_stable)
     vm_mean = float(np.mean(all_vm))
     vm_std = float(np.std(all_vm))
     if not (np.isfinite(vm_mean) and np.isfinite(vm_std)):
-        return _blank('invalid_input', 'σ_VM 평균 · 표준편차 넘침 — 정상 통계를 내지 않는다')
+        return _blank('invalid_input', 'σ_VM 평균 · 표준편차 넘침 — 정상 통계를 내지 않는다', n_stable=n_stable)
     if not vm_mean > 0:                                   # vm ≥ 0 · 유한 (위 관문) ⇒ 여기는 평균 0 뿐 → CV · 상 비 = 0/0
         means = {}
         for t_name in set(type_map.values()):
@@ -1231,7 +1288,7 @@ def calc_von_mises_stress(atoms_raw, type_map, scale, plate_z, n_layers=10):
             if t_vm:
                 means[t_name] = float(np.mean(t_vm))
         return _blank('undefined_zero_mean', '평균 σ_VM = 0 (무하중 · 전 입자 정수압) → CV · 상 비 = 0/0 미정의 · 0 으로 채우지 않음',
-                      means, vm_mean)
+                      means, vm_mean, n_stable=n_stable)
     vm_cv = (vm_std / vm_mean * 100)
 
     # Type-specific mean (for ratio calculation)
@@ -1275,6 +1332,7 @@ def calc_von_mises_stress(atoms_raw, type_map, scale, plate_z, n_layers=10):
         'z_layer_cv': z_layer_cv,
         'status': STRESS_CV_COMPUTED,                     # LHS-33 — 새 세대 표지 (옛 네 키의 값 · 정의는 그대로)
         'contract': STRESS_CV_CONTRACT,
+        'vm_stable_recomputed_n': n_stable,               # RGLR2-03 — 안정식으로 다시 센 입자 수 (0 = 전부 옛 식 값 그대로)
     }
 
 

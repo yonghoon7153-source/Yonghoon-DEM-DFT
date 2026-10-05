@@ -555,7 +555,8 @@ def save_results(results, atoms_raw, contacts_raw, df_atom, df_contact,
     # Stress (relative) — 옛 키 = LIGGGHTS stress/atom (접촉 virial 50/50 분할) · 대각 성분 (값 · 키 불변 · LHS-29)
     #   ★ LHS-33 (좁은 개정 · 1저자 비준 10-05 · Codex Q7) — 정상 입력은 정의 · 수치 · 키 그대로.  무효 · 미정의 (c_strs 없음 · 입력 무효 ·
     #   평균 VM 0) 는 같은 키에 None (null) — 옛 판은 0 (거짓 최고 등급) 이거나 키를 빼 소비자의 `get(…, 0)` 이 0 으로 읽었다.
-    #   stress_cv_status · stress_cv_contract (v2-invalid-null · 옛 세대와 가른다) · stress_cv_reason 은 상태와 무관하게 남긴다.
+    #   stress_cv_status · stress_cv_contract (metrics_json.STRESS_CV_CONTRACT · 옛 세대와 가른다) · stress_cv_reason 은 상태와 무관하게 남긴다.
+    #   RGLR2-03 (10-05) — stress_cv_vm_stable_n = 거의 정수압이라 안정식 ½Σ(σ_ii − σ_jj)² 로 다시 센 입자 수 (계산 전 무효면 키 없음).
     stress = results.get('stress')
     if stress:
         metrics['stress_cv'] = stress['vm_cv']
@@ -567,6 +568,8 @@ def save_results(results, atoms_raw, contacts_raw, df_atom, df_contact,
             metrics['stress_cv_contract'] = stress.get('contract')
             if stress.get('reason'):
                 metrics['stress_cv_reason'] = stress['reason']
+            if stress.get('vm_stable_recomputed_n') is not None:   # RGLR2-03 — 거의 정수압이라 안정식으로 다시 센 입자 수 (출처 · 0 = 전부 옛 식)
+                metrics['stress_cv_vm_stable_n'] = stress['vm_stable_recomputed_n']
     # ④b Love–Weber (J20-s · 1저자 비준 10-04) — 새 키만 더한다.  상태가 OK 가 아니면 값 키를 쓰지 않는다 (0 으로 안 채움).
     #   RGL-06 (10-05): 상태는 OK · NOT_COMPUTED · FAILED · UNDEFINED (평균 VM 0 = 무하중 — CV · 비 미정의) — OK 일 때만 값 키.
     #   메타 (계약 · 양의 이름 한정 · 덱 가정 미검증 · 입력 출처) 는 상태와 무관하게 남긴다 — 소비자가 계약 v2 로 옛 결과와 가른다.

@@ -98,10 +98,19 @@ def per_particle_virials(pos, i1, i2, F, cp, box_len):
 def webapp_stress_summary(stress, typ, type_names):
     """`calc_von_mises_stress` 와 같은 정의 — 대각 성분 VM · CV (%) · 상 평균 / 전체 평균.
     LHS-33 (좁은 개정 · 10-05) 계약도 같게: 비유한 σ · VM → stress_cv · 상 비 None + stress_cv_status invalid_input · 평균 VM 0 (0/0) →
-    None + undefined_zero_mean (옛 판 0.0 = 거짓 최고 등급).  정상 입력의 출력 키 · 값은 그대로 (상태 키 없음 — 커밋된 감사 JSON 과 같은 꼴)."""
+    None + undefined_zero_mean (옛 판 0.0 = 거짓 최고 등급).  정상 입력의 출력 키 · 값은 그대로 (상태 키 없음 — 커밋된 감사 JSON 과 같은 꼴).
+    RGLR2-03 (10-05 · 생산 `dem_analysis_core.diag_von_mises` 와 같은 판정 · 상수 공유): 전개식 근호가 엄밀 오차 상한
+    B = 16·ε·Σσ_ii² + 2^-1071 의 2^20 배 안 (거의 정수압) 이면 ½Σ(σ_ii − σ_jj)² 로 — 옛 판의 np.maximum(…, 0) clamp 는 없앴다
+    (정확히 같은 두 VM 의 CV 100 %).  분해된 근호 · 영 텐서의 값은 그대로."""
+    from dem_analysis_core import VM_ERR_BOUND_ABS, VM_ERR_BOUND_C, VM_RESOLVE_K
     sxx, syy, szz = stress[:, 0], stress[:, 1], stress[:, 2]
+    eps = (max(2.0 ** -52, float(np.finfo(stress.dtype).eps)) if np.issubdtype(stress.dtype, np.floating) else 2.0 ** -52)
     with np.errstate(over='ignore', invalid='ignore'):
-        vm = np.sqrt(np.maximum(sxx ** 2 + syy ** 2 + szz ** 2 - sxx * syy - syy * szz - sxx * szz, 0.0))
+        vm_sq = sxx ** 2 + syy ** 2 + szz ** 2 - sxx * syy - syy * szz - sxx * szz
+        thr = VM_RESOLVE_K * (VM_ERR_BOUND_C * eps * (sxx ** 2 + syy ** 2 + szz ** 2) + VM_ERR_BOUND_ABS)
+        unres = np.isfinite(vm_sq) & ~((sxx == 0) & (syy == 0) & (szz == 0)) & ~(vm_sq > thr)
+        stab = 0.5 * ((sxx - syy) ** 2 + (syy - szz) ** 2 + (szz - sxx) ** 2)
+        vm = np.sqrt(np.where(unres, stab, vm_sq))
     mean = float(vm.mean())
     std = float(vm.std())
     status = (None if (np.isfinite(vm).all() and np.isfinite(mean) and np.isfinite(std) and mean > 0) else
@@ -280,6 +289,17 @@ def selftest():
     sn = webapp_stress_summary(np.array([[1.0, 0, 0], [np.nan, 0, 0], [2.0, 0, 0]]), np.array([3, 3, 1]), {1: 'AM_P', 3: 'SE'})
     chk('S7b LHS-33 비유한 σ → stress_cv None · stress_cv_status invalid_input (옛 판 0.0)',
         sn.get('stress_cv', 0) is None and sn.get('stress_cv_status') == 'invalid_input', sn)
+    # S8 RGLR2-03 (Codex 3차 재검증 10-05 · Q4) — 생산과 같은 판정: 거의 정수압 입자의 전개식 근호 (−4.66e-10 · 정확 1.15e-14) 를
+    #    0 으로 clamp 하지 않고 안정식으로 — 정확히 같은 두 VM (Codex 반례: 같은 정수압 성분을 뺀 쌍둥이) 의 CV = 0 (옛 판 100)
+    d8 = 1073.1000001073098 - 1073.1
+    s8 = webapp_stress_summary(np.array([[1073.1, 1073.1, 1073.1000001073098], [0.0, 0.0, d8]]), np.array([1, 3]), {1: 'AM_P', 3: 'SE'})
+    chk('S8 RGLR2-03 거의 정수압 (Codex 반례) + 쌍둥이 → stress_cv 0.0 · 상 비 1.0 · 상태 키 없음 (옛 판 np.maximum clamp: 100.0)',
+        s8.get('stress_cv') == 0.0 and s8.get('stress_ratio_AM_P') == 1.0 and s8.get('stress_ratio_SE') == 1.0
+        and 'stress_cv_status' not in s8, s8)
+    xp = 1.1461999999999999                                   # 정확한 정수압인데 전개식 근호 +4.44e-16 (양의 쓰레기)
+    s8b = webapp_stress_summary(np.array([[xp, xp, xp], [xp, xp, xp]]), np.array([1, 3]), {1: 'AM_P', 3: 'SE'})
+    chk('S8b RGLR2-03 정확한 정수압 (전개식 근호 = 양의 쓰레기) 만 → VM 0 → undefined_zero_mean (옛 판: VM 2.1e-8 → CV 0.0 정상 값)',
+        s8b.get('stress_cv', 0) is None and s8b.get('stress_cv_status') == 'undefined_zero_mean', s8b)
 
     # S5 L2-08 반례 그대로 — 병렬 두 경로 × 직렬 두 간선 · R_bulk = 1 · A 경로 R_c = 9 · B 경로 R_c = 0 · 전압 1
     #     A: 간선 R = 10 둘 직렬 → I = 1/20 · B: R = 1 둘 → I = 1/2
