@@ -1559,6 +1559,11 @@
    "date": "2026-10-05",
    "stage": "dft",
    "text": "P1b **마감** — 1저자 결정 (a′) 라벨로 닫기 (헤드라인은 사전등록 registry 평균 그대로 + 'G4 k FAIL · 9×9×1 에서 k 수렴 확인' 라벨 · 새 계산 없음) · 마감 카드 wad_agc_graphite_closed_2026_10_05.json · 결정 D-2026-10-05-wad-agc-graphite-closed. 다음 = DEM 회신 (라벨 동반). W 값은 결과 기록·마감 카드에만."
+  },
+  {
+   "date": "2026-10-05",
+   "stage": "dft",
+   "text": "P1b 마감 재개 ① **(b)** — 사용자 '지금 kgy 에서' · 나머지 넷 (N3 registry 셋 + N4) 두 끝점 9×9×1 · 8 잡 · 결정 D-2026-10-05-wad-agc-graphite-k9-registry · 판독 규칙 결과 전 고정 (10 잡 전부 OK → 헤드라인 교체는 새 마감 결정 · 아니면 (a′) 그대로) · 상한 벽시계 30 h · 마감 (a′) 은 결과까지 그대로. W 값은 결과 기록에만."
   }
  ],
  "related_decisions": [
