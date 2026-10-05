@@ -3509,3 +3509,8 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 
 ## [2026-10-05] update | ampworks — 중복 검색 결과 없음 (사용자 확인)
 - 더한 것: upstream 알림 절에 한 줄 — `LLI_std` · `xn1_std` · `asarray` 의 issue 검색 셋 모두 결과 없음 (사용자 2026-10-05 "3개다 나한테 안떠") → 1 · 2 발송은 사용자
+
+## [2026-10-05] update | isu-uconn-lfp-gr-emulated-degradation — REIL N1: C1-core (논문 쪽) 확보
+- 출처: 사용자 업로드 논문 본문 (28 쪽 · sha256 `8ccf029c…`) · 보충 (10 쪽 · `5d25a800…`) — 저장소 밖 · 기록 `bms-balancing/docs/REIL_C1_CORE_SPEC_20261005.md`
+- 더한 것: entity 개요의 "미열람" → 열람 표시 · 상태 한 줄 (11 시트 ↔ Table 1 · 명목 정의 · 다섯 번째 cycle · 참값 불확실성 a–d · P0 에 넘긴 것)
+- 하지 않은 것: xlsx · pkl · 노트북 열기 · 맞춤 · E3b 등록 · 프로토콜 수정 (어긋나는 곳은 목록만)

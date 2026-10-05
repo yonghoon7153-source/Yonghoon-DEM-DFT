@@ -19,7 +19,7 @@ evidenceScope: multi-source-mixed
 
 - 코드 (MIT · "Copyright (c) 2026 REIL-UConn"): `https://github.com/REIL-UConn/Multi-Objective-Optimization-for-Lithium-Ion-Battery-Degradation-Diagnostics`
   · 끝 커밋 `1188c37` (2026-07-13 UTC). 파일은 노트북 1 · `util_LFP.py` · `LFP_Data.xlsx` (19 시트) · `results/` (pdf · pkl). 자동 시험 · 잠금 파일 없음.
-- 논문 (README 인용 — **미열람**): T. Li 외, "Benchmarking half-cell model fitting approaches for lithium-ion battery degradation
+- 논문 (README 인용 · **2026-10-05 열람** — C1-core 기록 `bms-balancing/docs/REIL_C1_CORE_SPEC_20261005.md`): T. Li 외, "Benchmarking half-cell model fitting approaches for lithium-ion battery degradation
   diagnostics", *eTransportation* 29, 100593 (2026) · doi `10.1016/j.etran.2026.100593`.
 - 자료 (README 인용 — 자료 페이지 미열람): "ISU-UConn LFP/Graphite Emulated Degradation Dataset", *REIL Datasets* 6 (2026, CC BY 4.0).
   저장소 안 `LFP_Data.xlsx` 가 그 자료와 같은지는 대조하지 않았다.
@@ -201,6 +201,9 @@ v2 의 Codex 재검토 판정은 `DESIGN_DIRECTION_ACCEPTED_DOCUMENT_REVISION_RE
   기록 `bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md` §6.
 - **2026-10-05 서지 확인 (README 원문 · BibTeX)** — 저자 일곱: Tingkai Li · Yifan Zhang · Benjamin Nowacki · Sina Navidi · Thomas Schmitt · Shan Hu ·
   Chao Hu · 제목 · 권 · 쪽 · doi 는 위 개요와 같다 · 끝 커밋 `1188c37` 그대로. README 만 읽었다 (xlsx · pkl · 노트북 열지 않음). 논문은 여전히 미열람.
+- **2026-10-05 C1-core (논문 쪽) 확보 — 논문 · 보충 자료 수신** — `bms-balancing/docs/REIL_C1_CORE_SPEC_20261005.md`: 분석 11 시트 = 논문
+  Table 1 의 11 행 · 명목 = Table 1 의 모사값 (노트북 명목표 11 행과 일치) · LII 식 (14)–(16) · 맞춤 = 다섯 번째 cycle · #3 은 리튬을 흑연 쪽에 둔 설계
+  (가설 (나) 확인) · 참값 불확실성 a–d (formation 손실 · 높은 N/P 의 LAM_NE · 공급사 용량 기준 · pre-formation) · step 대응 · 분석 밖 6 시트는 P0.
 
 ## 이 위키와의 관계
 
