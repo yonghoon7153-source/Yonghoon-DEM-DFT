@@ -347,5 +347,7 @@ git push -u origin claude/14-gate-code-review-9qkx05
 | 2026-10-05 | `degradation-degeneracy/.gitattributes` 규칙 `docs/22p_gap/gate91_evidence/** -text !eol` | `4b32db749` | 밖 | 할 일 없음 |
 | 2026-10-05 | **RUN_SCOPE — 91차 GREEN** (`tools/env_profile.py` 이름 셋 · `not_measured` · 문구 — 판정 논리 불변 · source_digest `3f84c0db52d2b9ac` → `f0175fff71132003`) | `b08bb6944` | **안** | 91차 판정 대상 — ff 복귀라 SHA 그대로 유효 · 영수증 재생성 `f27006370` 와 한 짝 |
 | 2026-10-05 | 원장 §139 — 91차 요청 (`GATE91_REQUEST.md`) · 게이트 요청 발송 대기 (발송문은 사용자 전달) | 이 행이 든 커밋 | 밖 | 91차 회신은 서브 또는 복귀 뒤 본진에서 받는다 |
+| 2026-10-05 | `degradation-degeneracy/.gitattributes` 규칙 `docs/22p_gap/gate91_review/** -text !eol` (91차 리뷰 패키지 보존 전) | `9838d6c09` | 밖 | 할 일 없음 |
+| 2026-10-05 | 원장 §140 — 91차 회신 접수 (`ACCEPTED` · G90-N1 · C1 종결 · 환경 프로필 C 기록 대조 라운드 종결 · 실행 GO 아님) · 패키지 보존 `d7f486b88` | 이 행이 든 커밋 | 밖 | 할 일 없음 (ff 로 그대로 들어간다) |
 
 ### 복귀 결과 (복귀 정리 커밋이 덧붙인다)

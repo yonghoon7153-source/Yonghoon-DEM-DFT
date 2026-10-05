@@ -9237,3 +9237,49 @@ history `7ff263197` → 재생성 `f27006370` (paired 35 · grid 34 · stamp 에
 
 **요청:** `docs/22p_gap/GATE91_REQUEST.md` · 증거 `docs/22p_gap/gate91_evidence/` (README 전체 sha256). **아님:** 실행 GO · 실제로 로드된 module origin 의
 측정 (선택지 C) · D guard · C 의 fail-closed · 설치 · lock 재생성 · 새 연구 leg · 운영 v6 계획 · 세대표 · p_ini · class · 투영 게시.
+
+## §140 91차 회신 접수 — `ACCEPTED` · **G90-N1 · C1 종결 · 환경 프로필 C 기록 대조 라운드 종결** · 새 차단 0 · 실행 GO 아님
+
+**패키지:** `docs/22p_gap/gate91_review/` (`GATE91_REVIEW_20261005.zip` 2,516,415 B · SHA-256
+`2d1f018b681f84104d2b0bd80a841a45030ed38a62c8d25074ec787a9b967eee` · codex/ payload 23 + manifest · 전부 manifest 일치 · CRLF 는 검토자 원문
+여섯 (`STATIC_AUDIT.json` · `SOURCE_DIFF.txt` · `TEST90_DIFF.txt` · `MUTATION_DIFF.txt` · 영수증 diff 둘) 에만 있고 그대로 보존 · 경로 · 대소문자 ·
+링크 이상 없음 · 규칙 `9838d6c09` → 보존 `d7f486b88` · index blob = 바이트 25/25). 검토자 행위: 제출 소스 import · 실행 · pytest · smoke · 변이
+재생 · 영수증 재생성 · 복원 · 재채점 · 설치 · COMSOL / JVM / PyBaMM **0** — 원문 · diff · 해시 · AST · 제출 로그의 정적 대조만 (`DECISION.json`
+`independent_checks`). 대상: 요청 `43056f78d` · 코드 `b08bb6944` (직전 판정 코드 `e2160c2ef`) · RUN_SCOPE 60 파일로 source_digest
+`f0175fff71132003` 독립 재계산 일치 · 발송 뒤 보충 `85c9cbe11` (증거 14 — 발송 HEAD docs-lint 원문) 까지 읽음.
+
+| 항목 | 판정 |
+|---|---|
+| **G90-N1 (P2)** | **종결** — `path_origins_in_record` · `path_origins` · 축 `path_origin` 의 이름 · docstring · CLI 요약 · 영수증 stamp 가 "PathFinder 경로 검색 결과의 RECORD 소속" 으로 일치 · `not_measured: [loaded_module_origin]` 이 MATCH / MISMATCH / UNMEASURED 모두에 남는다 (`compare_lock` 이 lock 을 읽기 전에 결과를 초기화) · `not_measured` 는 측정값이 아니라 **도구 범위 선언**이라 UNMEASURED 에 남겨도 측정하지 않은 값을 만든 것이 아니다. s02 는 실제 로드 origin 과 검색 결과가 다를 수 있다는 **범위 회귀**로 수용 (loaded-origin 일치의 양성 증명으로 읽지 않는다). §137 최소 종결 조건 충족 · 고정 표 §13-4 · §138 · 요청문의 유효 정정은 과거 기록을 고쳐 쓰지 않고 덧붙인 것으로 수용 |
+| **C1** | **종결** — C 의 일치 여부는 실행 gate 가 아니다 · 측정 기능을 요구하는 e06 / e08 은 지원 환경에서 UNMEASURED 를 시험 실패로 본다 · smoke / run.sh / 영수증의 기록 전용 의미와 충돌 없음. "모든 환경에서 pytest 가 무조건 통과한다" 는 주장으로 읽지 않는다 |
+| 한정 변경 | **수용** — 코드 변경 전 고정 표 커밋 `69b35f65d` 와 요청 HEAD 의 `PYBAMM_PIN_ROUND_SPEC.md` 가 blob `48b4aa86c473…` 로 같다 (이름 따라가기 · 변이 원문 갱신은 사전 고정 범위 안) · RUN_SCOPE 변경 `tools/env_profile.py` 한 파일 (+30 −17) · 코드 → 요청 HEAD → 보충 커밋의 RUN_SCOPE 차이 0 · 이름 변경 · docstring · 범위 선언을 명시 정규화한 AST 대조에서 11 함수 구조 같음 (프로그램 동치의 형식 증명은 아니다 — 판정 조건 · rc · lock 문법 · 실행 연결 불변의 근거) · blob 불변: lock · `requirements.txt` · `scripts/smoke_e2e.sh` · `make_receipt.py` · `env_profile_B_v4.yaml` · `src/io.py` · `src/fitting.py` · `run.sh` · `tests/conftest.py` |
+| 회귀 · 변이 · 로그 | 제출 원문 근거로 **수용** (검토자 재실행 아님) — 로그 14 개 크기 · SHA 일치 · RED 38 failed / 5 passed (닫힌 키 변경 · 새 범위 시험 — 38 개의 새 수치 결함으로 세지 않는다) · GREEN 43 passed · 관련 모듈 첫 577 passed / 10 failed (낡은 영수증 validator 식별) 보존 → 영수증 갱신 뒤 113 passed · `-g91` 둘의 EXPECT 등록 전 emit-expect 반환과 뒤의 15/15 rc 0 구분 · `-g90` 13 의 증인 · 기대 불변 · 전체 pytest 2182 passed / 1 xfailed / rc 0 · smoke rc 0 · 전체 재생 412 검출 / 생존 0 / 실행오류 0 / 선언 11 (scenario 423 과 실제 실행 412 를 혼동하지 않음) · 발송 HEAD docs-lint 358 / rc 0 (보충 커밋의 원문 — 제출자 요약만 남은 상태가 아니다) · 기존 xfail (저장소 밖 입력 staging) 은 선언 항목 그대로 |
+| 영수증 | **수용** — 두 leg history = 직전 현행 영수증 바이트 동일 · core 내용 변경은 `validator_source_digest` 뿐 (core_sha256 · 원장 앵커가 대응) · paired_fixed5_v4 35 검사 / core `1e3ea7c806f8…` · grid_fit_v5 34 / `23c78ed0c9cd…` · stamp `environment_profile_C` 의 새 이름 · `not_measured` · lock SHA-256 `d886f30ff675…` 유지 · MATCH 는 170 배포판 · 경로 검색 origin 의 RECORD 소속 9 · 확인 불가 yaml · loaded_module_origin 미측정의 범위로 수용 |
+| 자체 신고 a–h | 종결을 막지 않음 — a 의 기존 시험 변경은 사전 고정된 이름 따라가기 · b 의 s02 는 범위 반례 · c 의 선언 / 측정 구분과 d 의 덧붙인 정정 타당 · e 가 C1 을 닫음 · f / g lock 불변 · 내부 이름 정합 · h 코드 식별 대조 (고정 커밋 간 비교이며 중간 커밋 실행 이력의 전수 감사는 아니다) |
+| **라운드** | **환경 프로필 C 기록 대조 라운드 종결** — 같은 종결을 위한 반복 전체 시험은 요구하지 않음 |
+| 실행 GO · 범위 밖 | 미승인 (`DECISION.json` `execution_go` · `D_guard_approved` · `implementation_authorized_by_review` 전부 false) — 실제 loaded-origin 측정 · producer 실행 환경과의 동일성 보증 · D guard · C fail-closed · 설치 / lock 재생성 · 새 연구 leg · 운영 v6 계획 · 세대표 · p_ini · class · 투영 · COMSOL 실행은 별도 사용자 승인 대상 · `grid_fit_v5` 진단 전용 지위 유지 |
+
+**검토자가 적은 한계 · 사실:** 이 검토는 원문 · diff · hash · AST · 제출 로그의 정적 대조이고, 위 시험 수치는 제출자의 보존 로그에서 확인한
+값이다 (검토자 재실행 · 원격 실행의 직접 관측 아님 — `submitted_results_provenance`). 영수증은 기록된 core 식별 · 원장 앵커 · history 바이트 ·
+불변 영역을 대조했다 — YAML 재직렬화 core 해시 재생성 · 복원 · 재채점 없음. paired 의 `validator_tree_dirty: false` / grid 의 `true` 를 그대로
+보존한다 — 순차 영수증 작성의 기존 한계를 숨기거나 둘 다 clean 으로 읽지 않는다. 검토자 자체 점검 중 로컬 참조 목록에 없던
+`tests/conftest.py` 와 이전 `mutation_replay.py` 를 찾다가 KeyError 가 두 번 났다 — 고정 트리 blob 대조와 직전 고정 커밋 원문으로 보완했고
+최종 정적 대조는 rc 0 (검토자 쪽 참조 목록 누락 · 제출 코드 · 시험 실패가 아니다 · `REVIEWER_TOOL_RETURNS.json`).
+
+**우리 확인 (접수 때):**
+- `DECISION.json` 의 요청 · 코드 · 보충 커밋과 직전 판정 코드 · 고정 표 커밋 (`REVIEW_KO.md` §1 · §3) 은 이 저장소의 전체 SHA 와 같다
+  (`43056f78d845…` · `b08bb6944b03…` · `85c9cbe1162b…` · `e2160c2ef276…` · `69b35f65dda2…`).
+- `docs/22p_gap/PYBAMM_PIN_ROUND_SPEC.md` 의 blob 은 `69b35f65d` · `43056f78d` · 보존 커밋 `d7f486b88` 에서 모두
+  `48b4aa86c4739b39f39ea326a10c7bd66b67ba3f` 다.
+- RUN_SCOPE 는 `b08bb6944` 에서 `src/ tools/ configs/ scripts/ run.sh` 57 파일 + `requirements*.txt` 3 = 60 (검토자 수와 같다). `43056f78d` →
+  `d7f486b88` 의 RUN_SCOPE 차이 0 · 이 접수 커밋도 RUN_SCOPE 0 → 수용된 코드 identity (`f0175fff71132003`) 가 지금 HEAD 의 것이다.
+- `EXPECTED_LOG_HASHES.json` 14 항목 = `gate91_evidence/` 의 README 밖 파일 14 개와 같은 집합 · 크기 · sha256 모두 일치.
+- 영수증 core 둘은 각 leg 파일 (`receipts/paired_fixed5_v4.validate.yaml` ↔ `1e3ea7c8…` · `receipts/grid_fit_v5.validate.yaml` ↔ `23c78ed0…`) 과
+  `LEG_PRESERVATION.yaml` 에 있다 · stamp `validator_tree_dirty` 는 paired `false` · grid `true` (§137 의 순차 작성 설명 그대로).
+- `requirements-validation-C.lock.txt` 의 SHA-256 은 `d886f30ff675fef723fb9bcedd98297910fb1f8f1809370c18d8980dc5e63b39` 로 검토자 값과 같다.
+
+**다음:** 91차로 환경 프로필 C 기록 대조 라운드가 닫혔다 — 지금 열린 게이트 라운드는 없다. 이 회신은 새 작업의 승인이 아니다. 열려 있는 후보는
+모두 사용자 결정이며 자동으로 시작하지 않는다: (1) 실제로 로드된 module origin 의 측정 · D guard (새 생산 guard) · C 의 fail-closed — 목적 ·
+범위를 정한 별도 승인 라운드 (2) grid 영수증 stamp `validator_tree_dirty` 의 순서 개선 (§137 의 개선 후보 · 이번에 바꾸지 않음) (3) 실행 GO ·
+새 연구 leg · 운영 v6 계획 · 세대표 · p_ini · class · 투영 게시 · 설치 / lock 재생성. 같은 날 따로 온 B-min r2 재검토 회신은 이 게이트 라운드와
+섞지 않는다 (게이트 차수 밖 · COMSOL SPEC 쪽에서 따로 접수). 이미 수용한 부분과 과거 원문 · 실패 기록은 다시 열거나 고치지 않는다.
