@@ -1,0 +1,69 @@
+{
+ "schema": "campaign_closure/v1",
+ "record_kind": "closure",
+ "closed": true,
+ "date": "2026-10-05",
+ "system": "Ag(111)|흑연(0001) 3층 · 2×2 정합 셀 (흑연 +1.078 % 변형 · Ag 격자) · PBE+D3(BJ) 2체 · 고정기하 W_sep (끝점 10 Å) · registry 넷 · QE (kgy) · 생산 k 6×6×1 · G4 k 탐침 9×9×1 · 12×12×1 (대표 AGC_N3_top_fcc)",
+ "track": "W_ad (점착) — 1저자 = 사용자 (결정이 그 자리에서 난다 · 통지할 제3자 없음 · DEM 은 값을 받는 쪽)",
+ "citable": "라벨 문장만 (§2) — 값에 §1 라벨을 붙인다 · ⛔ 화면(webapp)에 W 값을 싣지 않는다",
+ "results_seen": true,
+ "제목": "P1b Ag(111)|흑연 3층 W_sep 마감 — 1저자 결정 (a′) 라벨로 닫기: 헤드라인 0.513 J/m² (k6 · registry 평균) + 'G4 k FAIL · 9×9×1 에서 k 수렴 확인' 라벨",
+ "닫는_범위": "사전등록 카드 db/properties/wad_agc_graphite_prereg_2026_10_02.json (결정 D-2026-10-02-wad-agc-graphite) 의 1단계 (기계 대조 · 이완) · 2단계 (SCF 31) · G4 k 탐침 (결정 D-2026-10-05-wad-agc-kprobe12 · 2 잡). ⛔ 점착 트랙 전체 (P1 LPSCl|Ag · P2 · V5 VASP 외주) 는 닫지 않는다.",
+ "1_확정": {
+  "헤드라인": {
+   "what": "Ag(111)|흑연(0001) 3층 · W_sep (끝점 10 Å · PBE+D3(BJ) 2체) · registry 평균 [min, max]",
+   "mean_J_m2": 0.51292,
+   "range_J_m2": [
+    0.5129,
+    0.51298
+   ],
+   "n_registry": 4,
+   "k": "6×6×1 (생산)"
+  },
+  "라벨": [
+   "이상 Ag(111) · 이상 흑연 기저면 · 2×2 정합 셀 (비정합 아님) · 흑연 +1.078 % 변형 (Ag 격자) · ABA 한 방향",
+   "PBE+D3(BJ) 2체 조건부 (ATM 은 별도 열) · DFT 국소 이완 d₀ 의 고정기하 분리일",
+   "G4 FAIL (k 축 · 생산 6×6×1) · 9×9×1 에서 k 수렴 확인 — 대표 k9 0.493 · k12 0.488 J/m² (|k12 − k9| 0.005 ≤ 0.01) · k6 헤드라인은 k 수렴값보다 약 0.020–0.025 J/m² (4–5 %) 높다"
+  ],
+  "k_수렴_대표_AGC_N3_top_fcc": {
+   "W_k6_J_m2": 0.512984,
+   "W_k9_J_m2": 0.492739,
+   "W_k12_J_m2": 0.487782,
+   "k9_minus_k6": -0.020244,
+   "k12_minus_k9": -0.004957,
+   "판독": "CONVERGED_AT_K9 (사전 문턱 |ΔW| ≤ 0.01 · 레포 재집계 = kgy 집계)"
+  },
+  "ATM": "3체(ATM) 는 별도 열 (같은 D3 모형에서 약 −0.115 J/m²) — 헤드라인은 2체"
+ },
+ "2_허용_서술_이대로만": [
+  "「Ag(111)|흑연(0001) 3층 · 2×2 정합 셀 (흑연 +1.08 % 변형) · PBE+D3(BJ) 2체 · 고정기하 W_sep (끝점 10 Å) 은 registry 넷 평균 0.513 J/m² [0.5129, 0.5130] 이다 (k 6×6×1). 대표 registry 의 k 점 수렴 시험에서 9×9×1 이 −0.020 J/m² 움직였고 (G4 FAIL), 12×12×1 은 9×9×1 과 0.005 J/m² 차이로 수렴이 확인됐다 — k 수렴값 (대표) 은 0.493 (9×9×1) · 0.488 J/m² (12×12×1) 로, 헤드라인보다 4–5 % 작다.」",
+  "「3체(ATM) 보정을 같은 D3 모형에서 더하면 W 가 약 −0.115 J/m² 줄어든다 — 헤드라인은 2체다.」",
+  "「흑연 3층은 같은 옆 셀의 그래핀 1층 (V2) 보다 W 가 약 0.064 J/m² 크다 (두께 4층과는 0.001 차 · G5 PASS).」"
+ ],
+ "3_⛔_금지_서술": [
+  "⛔ §1 라벨 없이 0.513 을 인용하는 것",
+  "⛔ k6 헤드라인을 'k 수렴값' 이라고 부르는 것 — 수렴은 9×9×1 에서 확인됐다 (k6 는 아니다)",
+  "⛔ 대표 한 registry 의 k9·k12 값을 'registry 평균' 헤드라인으로 바꿔 쓰는 것 (마감 결정 = (a′) · 바꾸려면 새 결정 · §5 ①)",
+  "⛔ ATM 포함 값을 헤드라인으로",
+  "⛔ webapp 화면에 W 값을 싣는 것"
+ ],
+ "4_기록_남길_것": "원자료 db/raw/wad_agc_graphite_2026_10_02/ (SHA256SUMS 222 파일) · 집계 collect_kgy.json · collect_repo_atm_2026_10_05.json · kprobe12_collect_kgy.json · kprobe12_collect_repo_2026_10_05.json · 결과 기록 db/properties/wad_agc_graphite_result_2026_10_05.json",
+ "5_재개_조건": [
+  "① DEM 또는 1저자가 k 수렴된 registry 평균을 헤드라인으로 요구하면 → (b) 나머지 넷 (N3 registry 셋 + N4) 의 두 끝점을 9×9×1 로 (새 결정 · kgy 약 8 잡) — 그 결과로 헤드라인 교체 여부를 새 결정으로",
+  "② 모형 질문이 바뀌면 (비정합 셀 · 변형 없는 흑연 · 이완 포함 G_c · 다른 Ag 면 · 3체 헤드라인) → 새 카드 (이 마감의 재개가 아니다)"
+ ],
+ "8_비준": "✅ 1저자(사용자) 결정 2026-10-05 — AskUserQuestion '(a′) 라벨로 닫기 (Recommended)' · 결정 D-2026-10-05-wad-agc-graphite-closed active",
+ "출처": [
+  "db/properties/wad_agc_graphite_prereg_2026_10_02.json",
+  "db/properties/wad_agc_graphite_result_2026_10_05.json",
+  "db/raw/wad_agc_graphite_2026_10_02/kprobe12_collect_repo_2026_10_05.json",
+  "결정 D-2026-10-02-wad-agc-graphite · D-2026-10-05-wad-agc-kprobe12"
+ ],
+ "status_history": [
+  {
+   "at": "2026-10-05",
+   "state": "closed",
+   "note": "k12 탐침 CONVERGED_AT_K9 → 결정 재개 조건대로 1저자 결정 — (a′) 라벨에 'k9 수렴 확인' 을 더해 닫기 (새 계산 없음)."
+  }
+ ]
+}
