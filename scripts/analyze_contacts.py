@@ -19,6 +19,7 @@ sys.path.insert(0, os.path.dirname(__file__))
 from dem_analysis_core import run_full_analysis
 import type_map_resolve as _tmr
 from metrics_json import json_default as _json_default   # numpy → 파이썬 숫자 (옛 default=str 은 '412' 문자열 — LHS-24 (a))
+from metrics_json import STRESS_CV_COMPUTED, STRESS_CV_STATUS_ROW   # LHS-33 옛 σ_VM 열 상태 계약 (표 상태 줄 철자 한 곳)
 
 
 def _file_digest(path, chunk=1 << 20):
@@ -33,26 +34,76 @@ def _file_digest(path, chunk=1 << 20):
         return ''
 
 
+_CSTR_COLS = ('c_strs[1]', 'c_strs[2]', 'c_strs[3]')
+_SIGMA_KEYS = ('sigma_xx', 'sigma_yy', 'sigma_zz')
+
+
+def _cstr_issues(raw, num, present):
+    """RGLR-03 — c_strs 원 열 (강제 변환 **전** raw · 뒤 num) 에서 행마다 손상 사유 목록 (빈 목록 = 세 성분이 다 있고 유한).
+    열 일부만 있으면 모든 행에 그 사유 · 칸이 비었거나 NaN · 숫자로 못 읽음 (문자열) · 비유한 (±inf · 넘침) 을 칸마다 가른다."""
+    why = [[] for _ in range(len(num))]
+    absent = [c for c in _CSTR_COLS if c not in present]
+    if absent:
+        msg = 'c_strs 열 일부만 (' + ' · '.join(absent) + ' 없음)'
+        for w in why:
+            w.append(msg)
+    for c in present:
+        r = raw[c]
+        v = num[c].to_numpy(dtype=float)
+        blank = r.isna().to_numpy()
+        bad = (~blank) & np.isnan(v)                       # 칸은 있는데 숫자로 못 읽음 (pd.to_numeric coerce → NaN)
+        inf = (~blank) & (~bad) & ~np.isfinite(v)
+        for k in np.flatnonzero(blank):
+            why[k].append(f'{c} 빈칸 · NaN')
+        for k in np.flatnonzero(bad):
+            why[k].append(f'{c} 숫자 아님 ({str(r.iloc[k])[:24]!r})')
+        for k in np.flatnonzero(inf):
+            why[k].append(f'{c} 비유한 ({float(v[k])!r})')
+    return why
+
+
 def load_atoms_raw(csv_path):
+    """atoms.csv → ({id: 입자 dict}, df).  df 는 옛 판 그대로 (모든 열 pd.to_numeric(coerce)).
+
+    c_strs (LIGGGHTS compute stress/atom) → sigma_xx·yy·zz = c_strs ÷ (4/3 π r³) (sim 단위 · 정상 행은 옛 판과 비트 동일).
+    ★ RGLR-03 (Codex 10-05 재검증 · P2 · 1저자 비준) — 옛 판은 강제 변환 뒤 첫 성분이 NaN (문자열 → NaN 포함) 이면 세 sigma 키를 모두
+      안 써서 "손상" 을 "c_strs 없음" 으로 바꿨다 → Love–Weber 전역 virial 검사가 꺼졌다 (틀린 virial −2.7 도 OK).  이제:
+        · 세 원천 열이 **전부** 헤더에 없을 때만 미제공 (sigma 키 없음 — 옛 입력 호환)
+        · 열 일부만 · 칸 비유한 · 파싱 실패 · 반경 (부피) 무효 = 그 입자의 sigma 키를 **NaN 으로** 남기고 (못 쓰는 성분만 NaN ·
+          쓸 수 있는 성분은 c_strs ÷ 부피) 사유를 `c_strs_invalid` 에 적는다 → 소비자 (calc_love_weber_stress · calc_von_mises_stress)
+          가 "있는데 무효" 로 거부한다 (invalid_input).  정상 행 dict 에는 새 키가 없다.
+    """
     df = pd.read_csv(csv_path)
+    present = [c for c in _CSTR_COLS if c in df.columns]
+    raw = {c: df[c].copy() for c in present}                  # 강제 변환 전 원 칸 (빈칸 ↔ 파싱 실패를 가른다)
     for col in df.columns:
         df[col] = pd.to_numeric(df[col], errors='coerce')
     df['id'] = df['id'].astype(int)
     df['type'] = df['type'].astype(int)
+    issues = _cstr_issues(raw, df, present) if present else None
     atoms = {}
-    for _, row in df.iterrows():
+    for i, (_, row) in enumerate(df.iterrows()):
         atom = {
             'type': int(row['type']),
             'x': row['x'], 'y': row['y'], 'z': row['z'],
             'radius': row['radius'],
         }
         # Add stress if available (sim units)
-        if 'c_strs[1]' in row and not pd.isna(row['c_strs[1]']):
+        if present:
             vol = (4.0 / 3.0) * np.pi * row['radius']**3
-            if vol > 0:
+            ok_vol = bool(np.isfinite(vol) and vol > 0)
+            if ok_vol and not issues[i]:
                 atom['sigma_xx'] = row['c_strs[1]'] / vol
                 atom['sigma_yy'] = row['c_strs[2]'] / vol
                 atom['sigma_zz'] = row['c_strs[3]'] / vol
+            else:                                             # 있는데 무효 — 키는 남기고 NaN (0 으로 채우지 않는다) + 사유
+                for k, c in zip(_SIGMA_KEYS, _CSTR_COLS):
+                    v = row[c] if c in present else np.nan
+                    atom[k] = (v / vol) if (ok_vol and np.isfinite(v)) else np.nan
+                why = list(issues[i])
+                if not ok_vol:
+                    why.append(f'반경 {row["radius"]!r} → 부피 무효 (σ = c_strs ÷ 부피 불가)')
+                atom['c_strs_invalid'] = ' · '.join(why)
         atoms[int(row['id'])] = atom
     return atoms, df
 
@@ -339,15 +390,21 @@ def save_results(results, atoms_raw, contacts_raw, df_atom, df_contact,
     # ── 응력 ──
     #  옛 줄 (Stress CV(%) · σ_<상>/σ_mean) = LIGGGHTS stress/atom (접촉 virial 50/50 분할) · 대각 성분 — 이름표는 웹앱이 정정한다 (LHS-29).
     #  ④b (J20-s · 10-04) Love–Weber 줄은 그 뒤에 — 상태가 OK 일 때만 (실패 · 열 없음 = 줄 없음 · 웹앱이 '—' + 상태로 채운다).
+    #  ★ LHS-33 (좁은 개정 · 10-05) — 옛 네 줄이 무효 · 미정의 (status ≠ computed) 면 값 '—' + 상태 줄 (상태 — 사유) · 0 으로 안 채움.
     stress = results.get('stress')
     stress_lw = results.get('stress_lw') or {}
     if stress or stress_lw.get('status') == 'OK':
         rows.append({'지표': '── 응력 ──', '값': ''})
     if stress:
-        rows.append({'지표': 'Stress CV(%)', '값': round(stress['vm_cv'], 1)})
+        _scv = stress.get('vm_cv')
+        rows.append({'지표': 'Stress CV(%)', '값': round(_scv, 1) if _scv is not None else '—'})
         for tn in ['AM_P', 'AM_S', 'SE']:
             if tn in stress['type_stress']:
-                rows.append({'지표': f'σ_{tn}/σ_mean', '값': round(stress['type_stress'][tn]['ratio'], 3)})
+                _sr = stress['type_stress'][tn]['ratio']
+                rows.append({'지표': f'σ_{tn}/σ_mean', '값': round(_sr, 3) if _sr is not None else '—'})
+        if stress.get('status') not in (None, STRESS_CV_COMPUTED):
+            rows.append({'지표': STRESS_CV_STATUS_ROW,
+                         '값': f"{stress['status']} — {stress.get('reason')}" if stress.get('reason') else stress['status']})
     if stress_lw.get('status') == 'OK':
         rows.append({'지표': 'Stress CV — Love–Weber (%)', '값': round(stress_lw['vm_cv'], 1)})
         for tn in ['AM_P', 'AM_S', 'SE']:
@@ -496,12 +553,20 @@ def save_results(results, atoms_raw, contacts_raw, df_atom, df_contact,
         metrics[f'coverage_{lbl}_mean'] = v['mean']
         metrics[f'coverage_{lbl}_std'] = v['std']
     # Stress (relative) — 옛 키 = LIGGGHTS stress/atom (접촉 virial 50/50 분할) · 대각 성분 (값 · 키 불변 · LHS-29)
+    #   ★ LHS-33 (좁은 개정 · 1저자 비준 10-05 · Codex Q7) — 정상 입력은 정의 · 수치 · 키 그대로.  무효 · 미정의 (c_strs 없음 · 입력 무효 ·
+    #   평균 VM 0) 는 같은 키에 None (null) — 옛 판은 0 (거짓 최고 등급) 이거나 키를 빼 소비자의 `get(…, 0)` 이 0 으로 읽었다.
+    #   stress_cv_status · stress_cv_contract (v2-invalid-null · 옛 세대와 가른다) · stress_cv_reason 은 상태와 무관하게 남긴다.
     stress = results.get('stress')
     if stress:
         metrics['stress_cv'] = stress['vm_cv']
         for tn, sv in stress['type_stress'].items():
             metrics[f'stress_ratio_{tn}'] = sv['ratio']
         metrics['stress_z_layer_cv'] = stress['z_layer_cv']
+        if stress.get('status') is not None:
+            metrics['stress_cv_status'] = stress['status']
+            metrics['stress_cv_contract'] = stress.get('contract')
+            if stress.get('reason'):
+                metrics['stress_cv_reason'] = stress['reason']
     # ④b Love–Weber (J20-s · 1저자 비준 10-04) — 새 키만 더한다.  상태가 OK 가 아니면 값 키를 쓰지 않는다 (0 으로 안 채움).
     #   RGL-06 (10-05): 상태는 OK · NOT_COMPUTED · FAILED · UNDEFINED (평균 VM 0 = 무하중 — CV · 비 미정의) — OK 일 때만 값 키.
     #   메타 (계약 · 양의 이름 한정 · 덱 가정 미검증 · 입력 출처) 는 상태와 무관하게 남긴다 — 소비자가 계약 v2 로 옛 결과와 가른다.

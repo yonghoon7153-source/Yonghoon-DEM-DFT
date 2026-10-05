@@ -96,15 +96,23 @@ def per_particle_virials(pos, i1, i2, F, cp, box_len):
 
 
 def webapp_stress_summary(stress, typ, type_names):
-    """`calc_von_mises_stress` 와 같은 정의 — 대각 성분 VM · CV (%) · 상 평균 / 전체 평균."""
+    """`calc_von_mises_stress` 와 같은 정의 — 대각 성분 VM · CV (%) · 상 평균 / 전체 평균.
+    LHS-33 (좁은 개정 · 10-05) 계약도 같게: 비유한 σ · VM → stress_cv · 상 비 None + stress_cv_status invalid_input · 평균 VM 0 (0/0) →
+    None + undefined_zero_mean (옛 판 0.0 = 거짓 최고 등급).  정상 입력의 출력 키 · 값은 그대로 (상태 키 없음 — 커밋된 감사 JSON 과 같은 꼴)."""
     sxx, syy, szz = stress[:, 0], stress[:, 1], stress[:, 2]
-    vm = np.sqrt(np.maximum(sxx ** 2 + syy ** 2 + szz ** 2 - sxx * syy - syy * szz - sxx * szz, 0.0))
+    with np.errstate(over='ignore', invalid='ignore'):
+        vm = np.sqrt(np.maximum(sxx ** 2 + syy ** 2 + szz ** 2 - sxx * syy - syy * szz - sxx * szz, 0.0))
     mean = float(vm.mean())
-    out = {'stress_cv': float(vm.std() / mean * 100) if mean > 0 else 0.0}
+    std = float(vm.std())
+    status = (None if (np.isfinite(vm).all() and np.isfinite(mean) and np.isfinite(std) and mean > 0) else
+              'invalid_input' if not (np.isfinite(vm).all() and np.isfinite(mean) and np.isfinite(std)) else 'undefined_zero_mean')
+    out = {'stress_cv': float(std / mean * 100) if status is None else None}
     for t, nm in type_names.items():
         m = typ == t
         if m.any():
-            out[f'stress_ratio_{nm}'] = float(vm[m].mean() / mean) if mean > 0 else 0.0
+            out[f'stress_ratio_{nm}'] = float(vm[m].mean() / mean) if status is None else None
+    if status is not None:
+        out['stress_cv_status'] = status
     return out
 
 
@@ -263,6 +271,15 @@ def selftest():
     sm = webapp_stress_summary(st, np.array([3, 3, 1]), {1: 'AM_P', 3: 'SE'})
     chk('S4 상 비 = 상 평균 / 전체 평균 (AM_P 2/(4/3) = 1.5 · SE 0.75)',
         abs(sm['stress_ratio_AM_P'] - 1.5) < 1e-12 and abs(sm['stress_ratio_SE'] - 0.75) < 1e-12, sm)
+    chk('S4b 정상 입력 출력 키 그대로 (상태 키 없음 — 커밋된 감사 JSON 과 같은 꼴)', set(sm) == {'stress_cv', 'stress_ratio_AM_P', 'stress_ratio_SE'}, sm)
+    # S7 LHS-33 계약 (생산 calc_von_mises_stress 와 같게) — 평균 VM 0 (무하중) = 0/0 → None + 상태 (옛 판 0.0 = 거짓 최고 등급) · 비유한 → invalid_input
+    sz = webapp_stress_summary(np.zeros((3, 3)), np.array([3, 3, 1]), {1: 'AM_P', 3: 'SE'})
+    chk('S7 LHS-33 무하중 → stress_cv · 상 비 None · stress_cv_status undefined_zero_mean (옛 판 0.0)',
+        sz.get('stress_cv', 0) is None and sz.get('stress_ratio_AM_P', 0) is None and sz.get('stress_ratio_SE', 0) is None
+        and sz.get('stress_cv_status') == 'undefined_zero_mean', sz)
+    sn = webapp_stress_summary(np.array([[1.0, 0, 0], [np.nan, 0, 0], [2.0, 0, 0]]), np.array([3, 3, 1]), {1: 'AM_P', 3: 'SE'})
+    chk('S7b LHS-33 비유한 σ → stress_cv None · stress_cv_status invalid_input (옛 판 0.0)',
+        sn.get('stress_cv', 0) is None and sn.get('stress_cv_status') == 'invalid_input', sn)
 
     # S5 L2-08 반례 그대로 — 병렬 두 경로 × 직렬 두 간선 · R_bulk = 1 · A 경로 R_c = 9 · B 경로 R_c = 0 · 전압 1
     #     A: 간선 R = 10 둘 직렬 → I = 1/20 · B: R = 1 둘 → I = 1/2

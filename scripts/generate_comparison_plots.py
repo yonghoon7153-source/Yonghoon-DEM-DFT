@@ -28,6 +28,7 @@ if _THIS_DIR not in sys.path:
     sys.path.insert(0, _THIS_DIR)
 import se_material  # single source of truth for σ_grain (SE_SG) + its temperature convention
 from metrics_json import metric_number  # 옛 full_metrics 의 숫자 문자열 ('412') 도 숫자로 (LHS-24 (a))
+from metrics_json import stress_metric_value, stress_cv_status, stress_cv_reason, STRESS_CV_COMPUTED  # LHS-33 옛 σ_VM 열 상태
 
 
 def _register_cjk_fallback():
@@ -452,6 +453,35 @@ def _metric_points(all_data, key):
     return pts
 
 
+def _stress_points(all_data, key):
+    """옛 σ_VM 열 (stress_cv · stress_ratio_<상>) 의 [(케이스 번호, 값)] — LHS-33 상태를 따른다: stress_cv_status 가 computed 가
+    아니면 (무효 · 미정의) 그 케이스는 빠진다 (저장된 0 도) · 옛 세대 (상태 키 없음) 는 숫자 그대로.  _metric_points 와 같은 꼴."""
+    pts = []
+    for i, d in enumerate(all_data):
+        v = stress_metric_value(d, key)
+        if v is not None:
+            pts.append((i, v))
+    return pts
+
+
+def _stress_cv_feature(d):
+    """잔차 상관용 stress_cv — LHS-33: 무효 · 미정의 · 없음 = NaN (옛 판 `_get(d, 'stress_cv', 0)` 의 0 이 상관에 섞였다)."""
+    v = stress_metric_value(d, 'stress_cv')
+    return float('nan') if v is None else v
+
+
+def _stress_export_cells(d):
+    """그룹 내보내기 CSV 의 옛 σ_VM 칸 — LHS-33: 무효 · 미정의 · 키 없음 = 빈칸 (옛 판 `_get` = 0.0) · status = stress_cv_status
+    (옛 세대 = 빈칸) · reason = '상태 — 사유' (computed · 옛 세대 = 빈칸)."""
+    out = {}
+    for k in ('stress_cv', 'stress_ratio_AM_P', 'stress_ratio_AM_S', 'stress_ratio_SE'):
+        v = stress_metric_value(d, k)
+        out[k] = '' if v is None else v
+    out['status'] = stress_cv_status(d) or ''
+    out['reason'] = stress_cv_reason(d) or ''
+    return out
+
+
 def _plot_metric_line(all_data, names, key, ylabel, title, ax=None):
     standalone = ax is None
     if standalone:
@@ -668,7 +698,8 @@ def plot_coverage(all_data, names, ax=None):
 def plot_stress_cv(all_data, names, ax=None):
     """두 규약을 같이 — 실선 = Love–Weber (stress_cv_lw · ④b 10-04 · 입자 접촉력 기반 대칭 응력의 VM — kinetic · 벽 · couple 미포함 ·
     RGL-06 이름 한정) · 점선 = 옛 열 (stress_cv = LIGGGHTS stress/atom 50/50 분할 · 대각 · LHS-29).
-    값이 없는 케이스는 그리지 않는다 (_metric_points — 0 으로 채우지 않는다 · 재분석 전 · 무하중 UNDEFINED 케이스에는 LW 가 없다)."""
+    값이 없는 케이스는 그리지 않는다 (_metric_points — 0 으로 채우지 않는다 · 재분석 전 · 무하중 UNDEFINED 케이스에는 LW 가 없다).
+    옛 열은 LHS-33 상태를 따른다 (_stress_points — stress_cv_status ≠ computed 면 저장된 0 도 안 그린다)."""
     standalone = ax is None
     if standalone:
         fig, ax = plt.subplots(figsize=FIG_SINGLE)
@@ -677,7 +708,7 @@ def plot_stress_cv(all_data, names, ax=None):
                            "stress/atom 50/50 split (old · diagonal)"),
                           ("stress_cv_lw", dict(color=BLACK, linestyle="-", marker="s"),
                            "Love–Weber (particle-contact sym. stress)")):
-        pts = _metric_points(all_data, key)
+        pts = (_stress_points if key == "stress_cv" else _metric_points)(all_data, key)
         if pts:
             xs, ys = zip(*pts)
             ax.plot(xs, ys, markersize=9, linewidth=1.5, zorder=3, label=lab, **sty)
@@ -707,7 +738,7 @@ def plot_stress_ratio(all_data, names, ax=None):
 
     for tk in type_keys:
         for suffix, ls, mfc, lab in (('', '--', 'white', f'{tk} (50/50 old)'), ('_lw', '-', colors[tk], f'{tk} Love–Weber')):
-            pts = _metric_points(all_data, f"stress_ratio_{tk}{suffix}")
+            pts = (_stress_points if not suffix else _metric_points)(all_data, f"stress_ratio_{tk}{suffix}")   # 옛 열 = LHS-33 상태
             if pts:
                 xs, ys = zip(*pts)
                 ax.plot(xs, ys, marker=markers[tk], markersize=8, color=colors[tk], linestyle=ls,
@@ -730,6 +761,8 @@ def plot_stress_z_layer(all_data, names, ax=None):
 
     colors_cycle = [BLUE, RED, GREEN, '#FF8C00', BLACK, '#9467BD']
     for i, d in enumerate(all_data):
+        if stress_cv_status(d) not in (None, STRESS_CV_COMPUTED):       # LHS-33 — 무효 · 미정의 (z 층 None) 는 안 그린다
+            continue
         z_data = d.get('stress_z_layer_cv', [])
         if z_data:
             zs = [layer['z_mid_um'] for layer in z_data]
@@ -1692,7 +1725,8 @@ def plot_ionic_scaling_fit(data_list, names, outdir):
     am_am_cn_std = np.array([_get(data_list[i], "am_am_cn_std", 0) for i in valid_idx], dtype=float)
 
     # ── MECHANICAL STRESS / FORCE ──
-    stress_cv = np.array([_get(data_list[i], "stress_cv", 0) for i in valid_idx], dtype=float)
+    #   LHS-33 — 무효 · 미정의 stress_cv 는 NaN (옛 판 `_get(…, 0)` 은 0 으로 상관에 섞었다) → 아래 상관에서 그 케이스를 뺀다
+    stress_cv = np.array([_stress_cv_feature(data_list[i]) for i in valid_idx], dtype=float)
     stress_z = np.array([_get(data_list[i], "stress_z_layer_cv", 0) for i in valid_idx], dtype=float)
 
     # ── R_BULK CYLINDRICAL-APPROXIMATION PROXY ──
@@ -1730,7 +1764,11 @@ def plot_ionic_scaling_fit(data_list, names, outdir):
              'log(se_se_area)':     np.log(np.maximum(se_se_area, 1e-10))}
     print("  residual(log) correlations:")
     for nm, v in feats.items():
-        c = np.corrcoef(log_res, v)[0, 1] if np.std(v) > 0 else 0.0
+        _m = np.isfinite(v) & np.isfinite(log_res)          # LHS-33 — 무효 stress_cv (NaN) 케이스는 그 특징의 상관에서만 뺀다
+        if _m.all():
+            c = np.corrcoef(log_res, v)[0, 1] if np.std(v) > 0 else 0.0
+        else:
+            c = np.corrcoef(log_res[_m], v[_m])[0, 1] if (_m.sum() > 2 and np.std(v[_m]) > 0) else 0.0
         flag = " ⚠" if abs(c) > 0.3 else ""
         print(f"    {nm:12s} r = {c:+.3f}{flag}")
     print()
@@ -7445,19 +7483,22 @@ def main():
             ('Coverage AM_P std', lambda d: _resolve_coverage(d)[1]),
             ('Coverage AM_S(%)', lambda d: _resolve_coverage(d)[2]),
             ('Coverage AM_S std', lambda d: _resolve_coverage(d)[3])],
+        #  LHS-33 — 옛 σ_VM 칸은 상태를 따른다: 무효 · 미정의 · 키 없음 = 빈칸 (옛 판 `_get` = 0.0) · 상태 열에 '상태 — 사유'
         'stress_cv': [('Case', None),
-            ('Stress CV(%) [stress/atom 50/50 · diag]', lambda d: _get(d, 'stress_cv')),
+            ('Stress CV(%) [stress/atom 50/50 · diag]', lambda d: _stress_export_cells(d)['stress_cv']),
+            ('Stress CV status [50/50 · LHS-33]', lambda d: _stress_export_cells(d)['reason'] or _stress_export_cells(d)['status']),
             ('Stress CV(%) [Love–Weber]', lambda d: d.get('stress_cv_lw', '')),
             ('Stress CV(%) [Love–Weber · no wall]', lambda d: d.get('stress_cv_lw_nowall', ''))],
         'stress_ratio': [('Case', None),
-            ('σ_AM_P/σ_mean [50/50]', lambda d: _get(d, 'stress_ratio_AM_P')),
-            ('σ_AM_S/σ_mean [50/50]', lambda d: _get(d, 'stress_ratio_AM_S')),
-            ('σ_SE/σ_mean [50/50]', lambda d: _get(d, 'stress_ratio_SE')),
+            ('σ_AM_P/σ_mean [50/50]', lambda d: _stress_export_cells(d)['stress_ratio_AM_P']),
+            ('σ_AM_S/σ_mean [50/50]', lambda d: _stress_export_cells(d)['stress_ratio_AM_S']),
+            ('σ_SE/σ_mean [50/50]', lambda d: _stress_export_cells(d)['stress_ratio_SE']),
             ('σ_AM_P/σ_mean [LW]', lambda d: d.get('stress_ratio_AM_P_lw', '')),
             ('σ_AM_S/σ_mean [LW]', lambda d: d.get('stress_ratio_AM_S_lw', '')),
             ('σ_SE/σ_mean [LW]', lambda d: d.get('stress_ratio_SE_lw', ''))],
         'stress_z_layer': [('Case', None),
-            ('Z_data', lambda d: str(d.get('stress_z_layer_cv', [])))],
+            ('Z_data', lambda d: (str(d.get('stress_z_layer_cv') or [])
+                                  if stress_cv_status(d) in (None, STRESS_CV_COMPUTED) else ''))],
     }
 
     import csv

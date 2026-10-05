@@ -36,6 +36,7 @@ import sys
 
 import press_units
 import statistics as _stat
+from metrics_json import stress_metric_value, stress_cv_reason, STRESS_CV_CONTRACT   # LHS-33 옛 σ_VM 열 상태 계약 (한 곳)
 
 #  ★★ L4-09 — 비용량 상수를 **한 자리**에 둔다.  옛 코드는 175 를 네 군데 리터럴로 적고
 #    설명 문자열에는 **190 계열**을 적어 두었다 (85:15 을 162 라고 썼지만 실제 반환은
@@ -337,7 +338,9 @@ AXES: list[dict[str, Any]] = [
      'direction': 'lower', 'thresholds': [100, 130, 160, 200, 250, 320],
      'formula': '100 × stress_cv  (CV = σ(stress) / ⟨stress⟩) — stress_cv = LIGGGHTS stress/atom (접촉 virial 50/50 분할) · 대각 성분',
      'meaning': '응력 분포 불균일도 — hotspot 식별.  ⚠ 입력 규약 결함 (LHS-29 · 크기가 다른 쌍에서 큰 입자 과소 · 작은 입자 과대) — '
-                'Love–Weber 열 (stress_cv_lw · ④b 10-04) 로 바꾸는 것은 바뀌는 등급값 보고 뒤 (②b TAU-03 과 같은 절차).  지금 값 = 옛 규약.',
+                'Love–Weber 열 (stress_cv_lw · ④b 10-04) 로 바꾸는 것은 바뀌는 등급값 보고 뒤 (②b TAU-03 과 같은 절차).  지금 값 = 옛 규약.  '
+                '★ LHS-33 (좁은 개정 · 10-05): 무효 · 미정의 입력 (c_strs 없음 · 입력 무효 · 평균 σ_VM 0 = 0/0 · stress_cv_status ≠ computed) 은 '
+                '값 없음 → 이 축은 등급을 매기지 않는다 (옛 판의 저장된 0 = 거짓 최고 등급 · 계약 ' + STRESS_CV_CONTRACT + ').',
      'weight': 0.3},
 
     # ── 9. 전도도 (Absolute conductivity) ──
@@ -906,12 +909,10 @@ def _derived_value(key: str, metrics: dict) -> float | None:
     if key == '__sigma_vm_cv_pct':
         # stress_cv 는 case에 따라 fraction(0-3) 또는 percentage(50-300)로
         # 저장됨 — analyze_contacts.py vintage에 따라 다름.  자동 감지:
-        cv = metrics.get('stress_cv')
-        if cv is None:
-            return None
-        try:
-            v = float(cv)
-        except (TypeError, ValueError):
+        #  ★ LHS-33 (좁은 개정 · 10-05) — 상태 계약을 따른다: stress_cv_status 가 computed 가 아니면 (무효 · 미정의) 값 없음 →
+        #    이 축은 등급을 매기지 않는다 (저장된 0 을 최고 등급으로 읽지 않는다).  옛 세대 (상태 키 없음) 는 저장된 숫자 그대로.
+        v = stress_metric_value(metrics, 'stress_cv')
+        if v is None:
             return None
         # ≥ 5 면 이미 percentage (CV stress 5 fraction은 불가능하므로 안전)
         return v if v >= 5 else v * 100
@@ -1473,6 +1474,9 @@ def _grade_axis_core(axis: dict, metrics: dict,
         'fallback_note': note,
     }
     if value is None:
+        if axis.get('key') == '__sigma_vm_cv_pct' and stress_cv_reason(metrics):     # LHS-33 — 빈 축의 이유 (no data 대신)
+            out['basis'] = (f'등급 안 매김 — stress_cv 무효 · 미정의 ({stress_cv_reason(metrics)}) · 0 으로 읽지 않음 '
+                            f'(LHS-33 · 계약 {STRESS_CV_CONTRACT})')
         return out
 
     direction = axis.get('direction')

@@ -25,6 +25,12 @@
         상태 = 전역 virial 부호/척도 (프레임 대응 증명 아님) · 'full tensor' 표기 없음 (전체 동적 응력으로 읽히지 않게)
      R4 single.html 툴팁 — LW CV · 벽 제외 · 상태 줄의 한정어 · 덱 가정 미검증 · UNDEFINED · invalid_input
      R5 group.html 툴팁 · 보고서 · 그룹 그림 범례 — 같은 한정어
+  V  LHS-33 (좁은 개정 · 1저자 비준 10-05 · Codex 재검증 Q7 · 같은 묶음 · J20-l) — 옛 σ_VM 네 열이 무효 · 미정의
+     (stress_cv_status ≠ computed) 면 '—' + 사유 (0 · None 으로 안 보임) · 옛 세대 (상태 키 없음) · 정상은 그대로
+     V1 케이스 표 — 값 줄 '—' · 상태 줄 (상태 — 사유) · 정상 · 옛 세대는 옛 줄 그대로 · 상태 줄 없음
+     V2 정렬 표 · 논문 라벨 · single.html 툴팁 · 별칭 (PAPER_TO_ORIG)
+     V3 그룹 표 — '— (짧은 사유)' 칸 (None 이 'None' 으로 보이지 않게) · 최고값 후보 아님 · group() 이 같은 도우미를 부른다
+     V4 보고서 — 무효면 '—' + 사유 줄 · V5 등급 쉬운 툴팁 · 축 설명 · group.html 툴팁 · single.html 옛 줄 툴팁에 LHS-33
 
   python3 webapp/test_stress_lw_labels.py
 """
@@ -273,6 +279,82 @@ def main():
     labs_f = ax.get_legend_handles_labels()[1]
     chk('R5c 그룹 그림 범례 — LW 선 = particle-contact (full tensor 표기 없음)', any('particle-contact' in l for l in labs_f)
         and not any('full tensor' in l for l in labs_f), repr(labs_f))
+
+    print('V  LHS-33 옛 σ_VM 열 상태 (무효 · 미정의 = "—" + 사유)')
+    SROW = 'Stress CV 상태 (50/50 · LHS-33)'
+    m_bad = dict(MET_LW, stress_cv=None, stress_ratio_AM_P=None, stress_ratio_AM_S=None, stress_ratio_SE=None,
+                 stress_cv_status='invalid_input', stress_cv_contract='v2-invalid-null',
+                 stress_cv_reason='c_strs 비유한 · 숫자 아님 2 / 2 입자 (id 1, 2)')
+    raw_b, paper_b = render(m_bad)
+    vals_b = {n: row(raw_b, n) for n in OLD}
+    chk('V1a ★ 무효 → 옛 네 값 줄 "—" (두 칸 모두 · None · 0 아님)',
+        all(r is not None and r[1] == '—' and r[2] == '—' for r in vals_b.values()), repr(vals_b))
+    sb = row(raw_b, SROW)
+    chk('V1b ★ 상태 줄 = 상태 — 사유 (invalid_input · c_strs 비유한) · Δ 칸 빈칸 · 한 번만',
+        sb is not None and 'invalid_input' in str(sb[1]) and 'c_strs 비유한' in str(sb[1]) and sb[3] == ''
+        and [str(r[0]).strip() for r in raw_b if r].count(SROW) == 1, repr(sb))
+    lab_b = [str(r[0]).strip() for r in raw_b if r]
+    chk('V1c 상태 줄 자리 = 옛 네 줄 뒤 · LW 줄 앞 (정렬 표)', SROW in lab_b and lab_b.index('σ_SE/σ_mean') < lab_b.index(SROW) < lab_b.index(LW_CV),
+        repr(lab_b[lab_b.index('Stress CV(%)') - 1:lab_b.index('Stress CV(%)') + 8] if 'Stress CV(%)' in lab_b else lab_b))
+    m_u = {k: v for k, v in m_bad.items() if k not in ('stress_ratio_AM_P', 'stress_ratio_AM_S', 'stress_ratio_SE')}
+    m_u.update(stress_cv_status='unavailable_no_c_strs', stress_cv_reason='c_strs 열 없음')
+    raw_u2, _ = render(m_u)
+    chk('V1d c_strs 없음 (unavailable_no_c_strs) → 값 줄 "—" · 상태 줄에 unavailable_no_c_strs',
+        (row(raw_u2, 'Stress CV(%)') or [0, 0])[1] == '—' and 'unavailable_no_c_strs' in str((row(raw_u2, SROW) or ['', ''])[1]))
+    m_ok = dict(MET_LW, stress_cv_status='computed', stress_cv_contract='v2-invalid-null')
+    raw_o, _ = render(m_ok)
+    chk('V1e 정상 (computed) → 옛 값 그대로 (213.1 · 0.884) · 상태 줄 없음', num((row(raw_o, 'Stress CV(%)') or [0, 0])[1]) == 213.1
+        and num((row(raw_o, 'σ_AM_P/σ_mean') or [0, 0])[1]) == 0.884 and row(raw_o, SROW) is None)
+    chk('V1f 옛 세대 (상태 키 없음) → 옛 값 그대로 · 상태 줄 없음 (역사 파일 불변)', row(raw, SROW) is None
+        and num((row(raw, 'Stress CV(%)') or [0, 0])[1]) == 213.1)
+    m_z = dict(MET_LW, stress_cv=0.0, stress_cv_status='undefined_zero_mean', stress_cv_reason='평균 σ_VM = 0')
+    raw_z, _ = render(m_z)
+    chk('V1g 상태가 미정의인데 저장된 0 → "—" (상태를 따른다 · 0 을 보이지 않는다)', (row(raw_z, 'Stress CV(%)') or [0, 0])[1] == '—')
+    chk('V2a 정렬 표에 상태 줄 (σ_SE/σ_mean 뒤 · LW 앞)', f"'{SROW}'" in canon
+        and canon.find("'σ_SE/σ_mean'") < canon.find(f"'{SROW}'") < canon.find(f"'{LW_CV}'"))
+    chk('V2b 논문 라벨 — 상태 줄 = stress/atom 50/50 · invalid/undefined → blank (not 0) · LHS-33', 'LHS-33' in PL.get(SROW, '')
+        and '50/50' in PL.get(SROW, '') and 'not 0' in PL.get(SROW, ''), PL.get(SROW))
+    t_s = _tip(SROW)
+    t_s = t_s[:t_s.find('\n  },') + 1] if '\n  },' in t_s else t_s
+    chk('V2c single.html 툴팁 — 상태 넷 (computed · unavailable_no_c_strs · invalid_input · undefined_zero_mean) · 0 으로 안 채움 · 등급 안 매김 · '
+        'v2-invalid-null', all(w_ in t_s for w_ in ('computed', 'unavailable_no_c_strs', 'invalid_input', 'undefined_zero_mean',
+                                                   '0 으로', '등급', 'v2-invalid-null', 'LHS-33')), t_s[:300])
+    chk('V2d 별칭 — 상태 줄 논문 라벨 → 원 라벨', SROW in PL and f"'{PL[SROW]}': '{SROW}'" in html)
+    t_old = _tip('Stress CV(%)')
+    chk('V2e 옛 줄 툴팁에 LHS-33 — 무효 · 미정의면 "—" (0 아님)', 'LHS-33' in t_old[:t_old.find('\n  },')] and '—' in t_old[:t_old.find('\n  },')])
+    import metrics_json as MJ
+    gc = getattr(MJ, 'stress_cv_group_cells', None)
+    g_bad = gc(dict(m_bad)) if callable(gc) else {}
+    chk('V3a ★ 그룹 칸 도우미 — 무효면 옛 네 열 = "— (입력 무효)" (None 이 "None" 으로 보이지 않게 · 0 아님)',
+        callable(gc) and all(g_bad.get(k) == '— (입력 무효)' for k in ('stress_cv', 'stress_ratio_AM_P', 'stress_ratio_AM_S', 'stress_ratio_SE')),
+        repr({k: g_bad.get(k) for k in ('stress_cv', 'stress_ratio_SE')}))
+    g_ok = gc(dict(m_ok)) if callable(gc) else {}
+    g_old = gc(dict(MET_OLD)) if callable(gc) else {}
+    chk('V3b 정상 · 옛 세대 → 값 그대로 (213.1)', g_ok.get('stress_cv') == 213.1 and g_old.get('stress_cv') == 213.1)
+    g_u = gc(dict(m_u)) if callable(gc) else {}
+    chk('V3c c_strs 없음 · 상 비 키 없음 → stress_cv = "— (c_strs 없음)" · 없는 상 비 키는 만들지 않는다',
+        g_u.get('stress_cv') == '— (c_strs 없음)' and 'stress_ratio_AM_P' not in g_u, repr(g_u.get('stress_cv')))
+    lab_cv = next(l for l, _u, k, _g in webapp.GROUP_DISPLAY_KEYS if k == 'stress_cv')
+    mk = webapp._group_best_marks([{lab_cv: '— (입력 무효)'}, {lab_cv: '150.0'}, {lab_cv: '120.0'}], [(lab_cv, '(%)', 'stress_cv')])
+    chk('V3d "— (사유)" 칸은 최고값 후보 아님 (낮을수록 좋음 → 120 강조)', (lab_cv, 2) in mk and (lab_cv, 0) not in mk, repr(sorted(mk)))
+    gi0 = src.find('def group():')
+    chk('V3e group() 이 같은 도우미 (metrics_json.stress_cv_group_cells) 로 칸을 만든다', gi0 >= 0
+        and 'stress_cv_group_cells' in src[gi0:src.find('\ndef ', gi0 + 10)])
+    rl = getattr(MJ, 'stress_cv_report_line', None)
+    line_b = rl(dict(m_bad)) if callable(rl) else None
+    chk('V4a ★ 보고서 줄 도우미 — 무효면 "—" + 상태 — 사유 · LHS-33 · 정상 · 옛 세대면 None',
+        callable(rl) and line_b and '—' in line_b and 'invalid_input' in line_b and 'LHS-33' in line_b
+        and rl(dict(m_ok)) is None and rl(dict(MET_OLD)) is None, repr(line_b))
+    si0 = src.find('def serve_report(')
+    chk('V4b serve_report 가 같은 도우미 (stress_cv_report_line) 를 부르고 섹션 조건이 무효 상태도 본다', si0 >= 0
+        and 'stress_cv_report_line' in src[si0:src.find('\ndef ', si0 + 10)] and "stress_cv_status" in src[si0:src.find('\ndef ', si0 + 10)])
+    es = src[src.find("'__sigma_vm_cv_pct':"):src.find("'__sigma_vm_cv_pct':") + 700]
+    chk('V5a 등급 쉬운 툴팁 — 무효 · 미정의는 등급 안 매김 (LHS-33)', 'LHS-33' in es and '등급' in es, es[:300])
+    gax = next(ax_ for ax_ in G.AXES if ax_.get('key') == '__sigma_vm_cv_pct')
+    chk('V5b 등급 축 설명 — LHS-33 · 무효 · 미정의 = 값 없음 (등급 안 매김)', 'LHS-33' in gax.get('meaning', ''), gax.get('meaning'))
+    gs = ghtml.find("'Stress CV (50/50)':")
+    g50 = ghtml[gs:ghtml.find('\n', gs)] if gs >= 0 else ''
+    chk('V5c group.html 툴팁 — "— (사유)" 칸 · LHS-33', 'LHS-33' in g50 and '— (' in g50, g50[:200])
 
     print(f'\n{_ok}/{_ok + len(_fail)} PASS' + ('' if not _fail else '  — FAIL: ' + ' · '.join(_fail)))
     return 1 if _fail else 0

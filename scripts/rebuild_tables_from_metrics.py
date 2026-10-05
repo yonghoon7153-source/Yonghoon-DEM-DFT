@@ -33,8 +33,12 @@ import argparse
 import csv
 import json
 import os
+import sys
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
+if _HERE not in sys.path:
+    sys.path.insert(0, _HERE)
+from metrics_json import STRESS_CV_STATUS_ROW, stress_cv_reason   # noqa: E402  LHS-33 옛 σ_VM 열 상태 계약 (한 곳)
 
 
 def _data_root():
@@ -218,10 +222,12 @@ _NET = [
     ('MPM n_grid', ('mpm.n_grid',), 0),
     ('── 응력 ──', None, None),
     #  옛 네 줄 = LIGGGHTS stress/atom (접촉 virial 50/50 분할) · 대각 성분 (LHS-29 — 이름표는 웹앱이 정정)
+    #  LHS-33 (10-05) — 무효 · 미정의면 값이 None 이라 줄이 안 생기고 (0 으로 안 채움) 대신 상태 줄 (상태 — 사유) 이 선다 · 정상 · 옛 세대는 상태 줄 없음
     ('Stress CV(%)', ('stress_cv',), 1),
     ('σ_AM_P/σ_mean', ('stress_ratio_AM_P',), 3),
     ('σ_AM_S/σ_mean', ('stress_ratio_AM_S',), 3),
     ('σ_SE/σ_mean', ('stress_ratio_SE',), 3),
+    (STRESS_CV_STATUS_ROW, stress_cv_reason, None),
     #  ④b Love–Weber (J20-s · 10-04) — 키가 있을 때만 (analyze_contacts 가 상태 OK 일 때만 쓴다) · 표 이름 = analyze_contacts 와 같은 철자
     ('Stress CV — Love–Weber (%)', ('stress_cv_lw',), 1),
     ('σ_AM_P/σ_mean — Love–Weber', ('stress_ratio_AM_P_lw',), 3),
@@ -240,7 +246,7 @@ def network_summary(m):
         if keys is None:
             pending = label                     # 섹션 머리글은 **내용이 생길 때만** 넣는다
             continue
-        v = _g(m, *keys)
+        v = keys(m) if callable(keys) else _g(m, *keys)       # 호출 가능 = 유도 줄 (LHS-33 상태 줄 — 없으면 None → 줄 없음)
         if v is None:
             continue
         if pending:

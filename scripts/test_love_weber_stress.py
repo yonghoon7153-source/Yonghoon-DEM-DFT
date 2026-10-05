@@ -16,6 +16,14 @@ R 묶음 = 원장 RGL-06 (Codex 10-05 · P2) 반례 — 입력 기하 (위치 ·
 대응 증명 아님) · 이름 한정 (입자 접촉력 기반 대칭 응력의 VM · 벽 제외 = 선별 모집단 · 덱 가정 미검증).  반례 입력은 **실제
 `analyze_contacts.load_atoms_raw` · `load_contacts_raw` 로 읽은 CSV** 다 (손으로 만든 결과 dict 아님 · 기하 = Codex
 `probe_lw_independent.py` 그대로: 반경 1 · 중심 간격 1.8 dimer · 접촉점 = 가운데).
+
+P 묶음 = 원장 RGLR-03 (Codex 10-05 재검증 · P2) — 존재하지만 손상된 c_strs (NaN · 문자열 · 일부 열) 가 파서에서 "없음" 으로 바뀌어
+LW 전역 virial 검사가 꺼지던 것.  디스크의 실제 CSV → 실제 `load_atoms_raw` → `calc_love_weber_stress` (Codex `lw_replay.py` dimer
+그대로: 반경 1 · 중심 간격 1.8 · 힘 1 · 참 z virial −0.9) · 직접 dict 의 "세 키 중 일부만" (any-present ↔ all-complete).
+S 묶음 = 원장 LHS-33 (좁은 개정 · 1저자 비준 10-05 · Codex 재검증 Q7) — 옛 σ_VM 열 (`stress_cv` · `stress_ratio_<상>` ·
+`stress_z_layer_cv`) 의 무효 · 미정의 입력이 0 (거짓 최고 등급) 이던 것 → None + 상태 (computed · unavailable_no_c_strs ·
+invalid_input · undefined_zero_mean) + 계약 표지 v2-invalid-null.  정상 입력은 옛 함수 (아래 `_old_*` — 옛 판 그대로 옮긴 대조용) 와
+정의 · 수치 · 키가 비트 동일.  소비자 (등급 · 표 재생성 · 그룹 그림 · 내보내기 · CLI) 가 상태를 따른다.
 """
 import json
 import math
@@ -134,6 +142,83 @@ def load_pair(tmp, name, atoms, contacts, cstr=True):
     a, _ = AC.load_atoms_raw(ap)
     c, _ = AC.load_contacts_raw(cpth)
     return a, c
+
+
+# ── 옛 판 그대로 (대조용 · 10-05 fde4a812c 의 analyze_contacts.load_atoms_raw · dem_analysis_core.calc_von_mises_stress) ─────────
+#   정상 입력에서 새 판이 이 둘과 dict 내용 · 수치가 **비트 동일**해야 한다 (RGLR-03 · LHS-33 계약 — 정상 입력 불변).
+def _old_load_atoms_raw(csv_path):
+    import pandas as pd
+    df = pd.read_csv(csv_path)
+    for col in df.columns:
+        df[col] = pd.to_numeric(df[col], errors='coerce')
+    df['id'] = df['id'].astype(int)
+    df['type'] = df['type'].astype(int)
+    atoms = {}
+    for _, row in df.iterrows():
+        atom = {
+            'type': int(row['type']),
+            'x': row['x'], 'y': row['y'], 'z': row['z'],
+            'radius': row['radius'],
+        }
+        if 'c_strs[1]' in row and not pd.isna(row['c_strs[1]']):
+            vol = (4.0 / 3.0) * np.pi * row['radius']**3
+            if vol > 0:
+                atom['sigma_xx'] = row['c_strs[1]'] / vol
+                atom['sigma_yy'] = row['c_strs[2]'] / vol
+                atom['sigma_zz'] = row['c_strs[3]'] / vol
+        atoms[int(row['id'])] = atom
+    return atoms, df
+
+
+def _old_von_mises(atoms_raw, type_map, scale, plate_z, n_layers=10):
+    sample = next(iter(atoms_raw.values()))
+    if 'sigma_xx' not in sample:
+        return None
+    vm_data = {}
+    for aid, a in atoms_raw.items():
+        sxx = a.get('sigma_xx', 0)
+        syy = a.get('sigma_yy', 0)
+        szz = a.get('sigma_zz', 0)
+        vm = np.sqrt(sxx**2 + syy**2 + szz**2 - sxx*syy - syy*szz - sxx*szz)
+        vm_data[aid] = vm
+    all_vm = np.array(list(vm_data.values()))
+    vm_mean = float(np.mean(all_vm))
+    vm_std = float(np.std(all_vm))
+    vm_cv = (vm_std / vm_mean * 100) if vm_mean > 0 else 0
+    type_stress = {}
+    for t_name in set(type_map.values()):
+        t_ids = [aid for aid, a in atoms_raw.items() if type_map.get(a['type']) == t_name]
+        if t_ids:
+            t_vm = np.array([vm_data[aid] for aid in t_ids])
+            type_stress[t_name] = {
+                'mean': float(np.mean(t_vm)),
+                'ratio': float(np.mean(t_vm) / vm_mean) if vm_mean > 0 else 0,
+            }
+    z_layer_cv = []
+    z_min, z_max = 0.0, plate_z
+    layer_edges = np.linspace(z_min, z_max, n_layers + 1)
+    atom_ids = list(atoms_raw.keys())
+    atom_z = np.array([atoms_raw[aid]['z'] for aid in atom_ids])
+    atom_vm = np.array([vm_data[aid] for aid in atom_ids])
+    for i in range(n_layers):
+        mask = (atom_z >= layer_edges[i]) & (atom_z < layer_edges[i+1])
+        if mask.sum() > 1:
+            layer_vm = atom_vm[mask]
+            layer_mean = np.mean(layer_vm)
+            layer_cv = (np.std(layer_vm) / layer_mean * 100) if layer_mean > 0 else 0
+            z_mid = (layer_edges[i] + layer_edges[i+1]) / 2 * scale
+            z_layer_cv.append({
+                'z_mid_um': float(z_mid),
+                'cv': float(layer_cv),
+                'mean_normalized': float(layer_mean / vm_mean) if vm_mean > 0 else 0,
+            })
+    return {'vm_cv': vm_cv, 'vm_mean': vm_mean, 'type_stress': type_stress, 'z_layer_cv': z_layer_cv}
+
+
+def _same_vm(new, old):
+    """정상 입력 대조 — 옛 네 키 (vm_cv · vm_mean · type_stress · z_layer_cv) 가 정확히 같다 (float == · 키 순서 무관)."""
+    return (isinstance(new, dict) and isinstance(old, dict)
+            and all(new.get(k) == old.get(k) for k in ('vm_cv', 'vm_mean', 'type_stress', 'z_layer_cv')))
 
 
 def dimer_atoms(i0, t, x, force, z0=2.0, r=1.0, cstr=True):
@@ -298,6 +383,218 @@ def rgl06(D):
             f"{st(res)} · {res.get('nowall_status')} · {ns}")
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
+
+
+def rglr03(D):
+    """원장 RGLR-03 (Codex 10-05 재검증 · P2) — 옛 파서는 c_strs 첫 성분이 NaN (문자열 → coerce NaN 포함) 이면 세 sigma 키를 모두 안 써서
+    "손상" 을 "c_strs 없음" 으로 바꿨다 → LW 가 virial unavailable 로 OK (틀린 virial −2.7 도 통과).  함수도 has_cs = all(세 키) 라
+    "아무 키 없음" ↔ "불완전 튜플" 을 못 갈랐다.  ⇒ 세 원천 열이 **전부** 없을 때만 미제공 (OK · unavailable — 옛 입력 호환) ·
+    일부 열 · 비유한 · 파싱 실패 · 일부 키 = FAILED (invalid_input …)."""
+    import analyze_contacts as AC
+    TM = {1: 'AM_P', 2: 'SE'}
+    st = lambda r: str(r.get('status', ''))           # noqa: E731
+    FULL = ('c_strs[1]', 'c_strs[2]', 'c_strs[3]')
+    tmp = tempfile.mkdtemp(prefix='lw_rglr03_')
+
+    def csv_txt(head, first, zz=-0.9, second='0'):
+        """Codex dimer atoms.csv — head = 있는 c_strs 열 (빈 튜플 = 열 전무) · first = c_strs[1] 칸의 글자 그대로."""
+        val = {'c_strs[1]': first, 'c_strs[2]': second, 'c_strs[3]': repr(zz)}
+        rows = [f'{i},1,2,2,{z!r},1' + ''.join(',' + val[c] for c in head) for i, z in ((1, 2.0), (2, 3.8))]
+        return ','.join(('id', 'type', 'x', 'y', 'z', 'radius') + tuple(head)) + '\n' + '\n'.join(rows) + '\n'
+
+    def run(name, head=FULL, first='0', zz=-0.9, second='0'):
+        try:
+            a, c = load_pair(tmp, name, csv_txt(head, first, zz, second), [dimer_contact(1, 2.0, 1.0)])
+            return a, lw(a, c, TM, plate_z=20.0)
+        except Exception as e:                            # noqa: BLE001 — 옛 파서는 일부 열 덤프에서 KeyError 로 죽었다
+            return {}, {'status': f'EXC {type(e).__name__}: {e}'}
+    try:
+        a, r = run('p1')
+        ck = r.get('checks', {})
+        chk('P1 정상 (0, 0, −0.9) 실 CSV → 실 파서 → OK · virial 검사됨 · 상대 잔차 ≈ 1e-16',
+            st(r) == 'OK' and ck.get('virial_status') == 'checked' and isinstance(ck.get('virial_total_rel'), float)
+            and ck['virial_total_rel'] < 1e-12, f"{st(r)} · {ck}")
+        V = (4.0 / 3.0) * np.pi * 1.0 ** 3
+        chk('P1b 정상 행 dict 는 옛 꼴 그대로 — 키 8 개 (type · x · y · z · radius · sigma 셋) · sigma_zz = −0.9 ÷ (4/3 π r³) 비트 동일',
+            all(set(x) == {'type', 'x', 'y', 'z', 'radius', 'sigma_xx', 'sigma_yy', 'sigma_zz'} for x in a.values())
+            and all(x['sigma_zz'] == -0.9 / V and x['sigma_xx'] == 0.0 for x in a.values()), repr(a)[:300])
+        a, r = run('p2', head=())
+        chk('P2 c_strs 세 열 전무 (옛 덱 · 손 픽스처) → OK · virial unavailable (옛 입력 호환 — 거부 아님) · sigma 키 없음',
+            st(r) == 'OK' and 'unavailable' in str(r.get('checks', {}).get('virial_status'))
+            and not any(k.startswith('sigma_') for x in a.values() for k in x), f"{st(r)} · {r.get('checks')}")
+        a, r = run('p3', head=('c_strs[1]', 'c_strs[3]'))
+        chk('P3 ★ 열 일부만 (c_strs[2] 없음) → FAILED (invalid_input …) — 옛 파서는 KeyError 로 죽었다',
+            st(r).startswith('FAILED (invalid_input') and 'c_strs' in st(r), st(r))
+        a, r = run('p3b', head=('c_strs[2]', 'c_strs[3]'))
+        chk('P3b ★ 첫 열만 없음 (c_strs[2] · [3] 만) → FAILED (invalid_input …) — 옛 파서는 조용히 "c_strs 없음" · OK',
+            st(r).startswith('FAILED (invalid_input') and 'c_strs' in st(r), st(r))
+        a, r = run('p4', first='nan')
+        chk('P4 ★ 첫 열 NaN → FAILED (invalid_input …) — 옛 코드 OK · virial unavailable',
+            st(r).startswith('FAILED (invalid_input') and 'c_strs' in st(r), st(r))
+        chk('P4b 파서가 존재를 보존 — 세 sigma 키가 있고 sigma_xx 는 NaN · 손상 사유 (c_strs[1]) 를 입자에 남긴다',
+            bool(a) and all(all(k in x for k in ('sigma_xx', 'sigma_yy', 'sigma_zz')) and x['sigma_xx'] != x['sigma_xx']
+                            and 'c_strs[1]' in str(x.get('c_strs_invalid', '')) for x in a.values()), repr(a)[:300])
+        a, r = run('p5', first='invalid')
+        chk('P5 ★ 첫 열 문자열 → FAILED (invalid_input …) · 사유에 파싱 실패 열 (c_strs[1]) — 옛 코드 OK',
+            st(r).startswith('FAILED (invalid_input') and 'c_strs[1]' in st(r), st(r))
+        a, r = run('p6', first='inf')
+        chk('P6 첫 열 Inf → FAILED (invalid_input …) (옛 코드도 FAILED — 같은 범주 유지)',
+            st(r).startswith('FAILED (invalid_input') and 'c_strs' in st(r), st(r))
+        a, r = run('p7', zz=-2.7)
+        chk('P7 유한한 틀린 virial (−2.7) → FAILED (virial_mismatch …) · 상대 0.667', st(r).startswith('FAILED (virial_mismatch')
+            and close(r.get('checks', {}).get('virial_total_rel'), 2.0 / 3.0, rel=1e-9), f"{st(r)} · {r.get('checks')}")
+        a, r = run('p8', first='nan', zz=-2.7)
+        chk('P8 ★ NaN 한 칸이 틀린 virial 을 숨기지 않는다 (NaN, 0, −2.7) → FAILED (invalid_input …) — 옛 코드 OK',
+            st(r).startswith('FAILED (invalid_input'), st(r))
+        a, r = run('p8b', second='')
+        chk('P8b 한 칸 빈칸 (c_strs[2] 비움) → FAILED (invalid_input …)', st(r).startswith('FAILED (invalid_input'), st(r))
+        c = [contact(1, 2, (0.0, 0.0, -1.0), (2.0, 2.0, 2.9))]
+        a = {1: atom(1, 2.0, 2.0, 2.0, 1.0, (0.0, 0.0, -0.9)), 2: atom(1, 2.0, 2.0, 3.8, 1.0, (0.0, 0.0, -0.9))}
+        for x in a.values():
+            x.pop('sigma_xx')
+        r = lw(a, c, TM, plate_z=20.0)
+        chk('P9 ★ 직접 dict — 모든 입자에서 sigma_xx 만 없음 (나머지 둘 있음) → FAILED (invalid_input: c_strs …) — 옛 코드 unavailable · OK',
+            st(r).startswith('FAILED (invalid_input') and 'c_strs' in st(r), st(r))
+        a = {1: atom(1, 2.0, 2.0, 2.0, 1.0), 2: atom(1, 2.0, 2.0, 3.8, 1.0)}
+        r = lw(a, c, TM, plate_z=20.0)
+        chk('P9b 직접 dict — 세 키 모두 전무 → OK · unavailable (옛 호환)', st(r) == 'OK'
+            and 'unavailable' in str(r.get('checks', {}).get('virial_status')), st(r))
+        rad_nan = 'id,type,x,y,z,radius,c_strs[1],c_strs[2],c_strs[3]\n1,1,2,2,2.0,1,0,0,-0.9\n2,1,2,2,3.8,nan,0,0,-0.9\n'
+        a2, _ = AC.load_atoms_raw(os.path.join(tmp, 'p1', 'atoms.csv'))
+        p = os.path.join(tmp, 'p10.csv')
+        with open(p, 'w') as fh:
+            fh.write(rad_nan)
+        a10, _ = AC.load_atoms_raw(p)
+        chk('P10 c_strs 는 있는데 반경 NaN → 그 입자는 sigma 키를 NaN 으로 남긴다 (옛 파서는 키를 빼 "c_strs 없음" 과 섞었다) · 사유 기록',
+            all(k in a10[2] for k in ('sigma_xx', 'sigma_yy', 'sigma_zz')) and a10[2]['sigma_zz'] != a10[2]['sigma_zz']
+            and str(a10[2].get('c_strs_invalid', '')) != '' and a10[1] == a2[1], repr(a10)[:300])
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+
+
+def lhs33(D):
+    """원장 LHS-33 (좁은 개정 · 1저자 비준 10-05 · Codex 재검증 Q7) — 옛 σ_VM 열의 무효 · 미정의 입력이 0 (`mean > 0 else 0` ·
+    `a.get(…, 0)` · NaN 하나가 평균을 NaN 으로 → `NaN > 0` 이 False → CV 0) → 등급 축 '기계적 안정성' (낮을수록 좋음) 거짓 최고 등급.
+    정상 입력 = 정의 · 수치 · 키 그대로 (옛 함수 `_old_von_mises` 와 비트 동일) · 균일한 양의 VM 이면 0.0 (정상 0) 그대로."""
+    TM = {1: 'AM_P', 2: 'AM_S', 3: 'SE'}
+    cvf = getattr(D, 'calc_von_mises_stress')
+
+    def vm(atoms, pz=1.0):
+        try:
+            return cvf(atoms, TM, 1000.0, pz)
+        except Exception as e:                            # noqa: BLE001 — 옛 판은 빈 입력에서 StopIteration
+            return {'status': f'EXC {type(e).__name__}: {e}'}
+
+    def sat(t, z, s):
+        return {'type': t, 'x': 0.0, 'y': 0.0, 'z': z, 'radius': 1e-3, 'sigma_xx': s[0], 'sigma_yy': s[1], 'sigma_zz': s[2]}
+    bad = lambda r: (isinstance(r, dict) and r.get('vm_cv', 0) is None and r.get('z_layer_cv', 0) is None      # noqa: E731
+                     and all(v.get('ratio', 0) is None for v in (r.get('type_stress') or {}).values()))
+    gen = lambda r: isinstance(r, dict) and r.get('contract') == 'v2-invalid-null'                              # noqa: E731
+    #  S1 c_strs 전무 — 옛 판: None (그래서 analyze_contacts 가 키를 안 썼고 소비자 `_get(…, 0)` 이 0 으로 읽었다)
+    r = vm({1: {'type': 1, 'x': 0.0, 'y': 0.0, 'z': 0.1, 'radius': 1e-3}, 2: {'type': 3, 'x': 0.0, 'y': 0.0, 'z': 0.2, 'radius': 1e-3}})
+    chk('S1 ★ c_strs 전무 → status unavailable_no_c_strs · vm_cv · 상 비 · z 층 None · 계약 v2-invalid-null (옛 판 None — 소비자가 0 으로 읽었다)',
+        bad(r) and r.get('status') == 'unavailable_no_c_strs' and gen(r), repr(r)[:300])
+    #  S2 한 입자 NaN — 옛 판: 평균 NaN → `NaN > 0` False → CV 0 · 비 0 (거짓 최고 등급)
+    r = vm({1: sat(1, 0.1, (1.0, 0.0, 0.0)), 2: sat(3, 0.2, (float('nan'), 0.0, 0.0)), 3: sat(3, 0.3, (2.0, 0.0, 0.0))})
+    chk('S2 ★ 한 입자 sigma NaN → status invalid_input · 값 None (옛 판 CV 0 · 비 0)', bad(r) and r.get('status') == 'invalid_input'
+        and gen(r) and r.get('reason'), repr(r)[:300])
+    #  S3 무하중 — 0/0
+    r = vm({k: sat(1 + k % 3, 0.1 * k, (0.0, 0.0, 0.0)) for k in range(1, 7)})
+    chk('S3 ★ 무하중 (σ 전부 0) → status undefined_zero_mean · CV · 상 비 · z 층 None (옛 판 0 · 0 = 거짓 0)',
+        bad(r) and r.get('status') == 'undefined_zero_mean' and gen(r) and r.get('reason'), repr(r)[:300])
+    r = vm({k: sat(1 + k % 3, 0.1 * k, (-2.0 * k, -2.0 * k, -2.0 * k)) for k in range(1, 7)})
+    chk('S3b 전 입자 정수압 (σxx = σyy = σzz ≠ 0) → VM 0 → undefined_zero_mean (옛 판: 근호 안 반올림 음수 → NaN → CV 0)',
+        bad(r) and r.get('status') == 'undefined_zero_mean', repr(r)[:300])
+    #  S4 한 입자만 sigma 키 없음 — 옛 판: `a.get(…, 0)` → 0 으로 읽어 정상 값처럼 계산
+    r = vm({1: sat(1, 0.1, (1.0, 0.0, 0.0)), 2: {'type': 3, 'x': 0.0, 'y': 0.0, 'z': 0.2, 'radius': 1e-3}, 3: sat(3, 0.3, (2.0, 0.0, 0.0))})
+    chk('S4 ★ 한 입자만 c_strs 결측 → invalid_input · 값 None (옛 판: 0 으로 읽어 CV 를 냈다)', bad(r) and r.get('status') == 'invalid_input', repr(r)[:300])
+    #  S5 정상 0 — 균일한 양의 VM
+    r = vm({k: sat(1 + k % 3, 0.1 * k, (3.0, 1.0, 1.0)) for k in range(1, 7)})
+    chk('S5 균일한 양의 VM (모든 입자 같은 σ) → vm_cv 0.0 · status computed (정상 0 은 그대로 0)',
+        isinstance(r, dict) and r.get('vm_cv') == 0.0 and r.get('status') == 'computed' and gen(r)
+        and all(v.get('ratio') == 1.0 for v in r.get('type_stress', {}).values()), repr(r)[:300])
+    #  S6 정상 침대 (현실적 소형 · 3 상 · 같은 시드) — 옛 함수와 비트 동일 + 상태 표지
+    rng = np.random.RandomState(20261005)
+    at = {}
+    for k in range(1, 91):
+        t = 1 + k % 3
+        rr = (6e-3, 2e-3, 5e-4)[t - 1]
+        cs_ = rng.normal(-1.0, 0.6, 3) * 10.0 ** rng.uniform(-6, -3)
+        v_ = (4.0 / 3.0) * np.pi * rr ** 3
+        at[k] = {'type': t, 'x': float(rng.uniform(0, 0.05)), 'y': float(rng.uniform(0, 0.05)), 'z': float(rng.uniform(0, 0.03)),
+                 'radius': rr, 'sigma_xx': np.float64(cs_[0]) / v_, 'sigma_yy': np.float64(cs_[1]) / v_, 'sigma_zz': np.float64(cs_[2]) / v_}
+    at[91] = dict(at[3], sigma_xx=np.float64(0.0), sigma_yy=np.float64(0.0), sigma_zz=np.float64(0.0))   # 접촉 없는 입자 (c_strs 0)
+    r_new, r_old = vm(at, pz=0.03), _old_von_mises(at, TM, 1000.0, 0.03)
+    chk('S6 ★ 정상 침대 (3 상 91 입자 · 무접촉 하나) — vm_cv · vm_mean · 상 mean/ratio · z 층 전부 옛 함수와 비트 동일 · status computed · 계약 표지',
+        _same_vm(r_new, r_old) and r_new.get('status') == 'computed' and gen(r_new) and len(r_old['z_layer_cv']) >= 5,
+        f"{repr(r_new)[:200]} vs {repr(r_old)[:200]}")
+    #  S7 정수압 한 입자 — 근호 안이 반올림으로 음수가 되는 값 (해석적으로 0) · 옛 판: 그 입자 NaN → 평균 NaN → CV 0
+    xh = next(v for v in (1.0 + 0.0731 * k for k in range(1, 500)) if v ** 2 + v ** 2 + v ** 2 - v * v - v * v - v * v < 0)
+    r = vm({1: sat(1, 0.1, (xh, xh, xh)), 2: sat(3, 0.2, (1.0, 0.0, 0.0)), 3: sat(3, 0.3, (2.0, 0.0, 0.0))})
+    chk(f'S7 ★ 정수압 입자 (σ = {xh:.4f} 셋 — 근호 안 반올림 음수) 가 섞인 정상 침대 → computed · CV = 손값 √(2/3)·100 (그 입자 VM 0) — '
+        '옛 판 NaN → CV 0 (거짓 최고 등급)', isinstance(r, dict) and r.get('status') == 'computed'
+        and close(r.get('vm_cv'), math.sqrt(2.0 / 3.0) * 100, rel=1e-12), repr(r)[:300])
+    chk('S7b (반례 확인) 옛 판은 같은 입력에서 CV 0 을 냈다',
+        _old_von_mises({1: sat(1, 0.1, (xh, xh, xh)), 2: sat(3, 0.2, (1.0, 0.0, 0.0)), 3: sat(3, 0.3, (2.0, 0.0, 0.0))},
+                       TM, 1000.0, 1.0)['vm_cv'] == 0)
+    r = vm({})
+    chk('S8 원자 0 → invalid_input · 값 None (옛 판 StopIteration 예외)', isinstance(r, dict) and r.get('status') == 'invalid_input'
+        and r.get('vm_cv', 0) is None, repr(r)[:200])
+    r = vm({1: sat(1, 0.1, (1e200, -1e200, 0.0)), 2: sat(3, 0.2, (1.0, 0.0, 0.0))})
+    chk('S8b σ² 넘침 (1e200) → invalid_input · 값 None (넘친 평균을 정상 통계로 내지 않는다)', bad(r) and r.get('status') == 'invalid_input', repr(r)[:200])
+
+    #  S9 등급 소비자 — 무효 · 미정의는 등급 안 매김 (최고 등급 아님) · 정상 · 옛 세대는 그대로
+    import grade_engine as G
+    lab = next(ax['label'] for ax in G.AXES if ax.get('key') == '__sigma_vm_cv_pct')
+    m_bad = {'stress_cv': None, 'stress_cv_status': 'invalid_input', 'stress_cv_reason': 'c_strs 비유한 1 / 2 입자',
+             'stress_cv_contract': 'v2-invalid-null'}
+    m_zero = {'stress_cv': 0.0, 'stress_cv_status': 'undefined_zero_mean', 'stress_cv_contract': 'v2-invalid-null'}
+    m_ok = {'stress_cv': 213.1, 'stress_cv_status': 'computed', 'stress_cv_contract': 'v2-invalid-null'}
+    v_bad, v_zero = G.axis_values(dict(m_bad)).get(lab), G.axis_values(dict(m_zero)).get(lab)
+    v_ok, v_old = G.axis_values(dict(m_ok)).get(lab), G.axis_values({'stress_cv': 213.1}).get(lab)
+    chk('S9 ★ 등급 축 값 — 무효 None · 상태가 미정의인데 저장된 0 도 None (최고 등급 아님) · 정상 213.1 · 옛 세대 (상태 키 없음) 213.1',
+        v_bad is None and v_zero is None and v_ok == 213.1 and v_old == 213.1, repr((v_bad, v_zero, v_ok, v_old)))
+    row = next((a_ for a_ in G.build_overall_grade(dict(m_bad))['axes'] if a_['label'] == lab), {})
+    chk('S9b 등급 행 — 점수 없음 · 등급 "—" · basis 에 사유 (LHS-33 · 0 으로 읽지 않음)',
+        row.get('score') is None and row.get('grade') == '—' and 'LHS-33' in str(row.get('basis')) and 'invalid_input' in str(row.get('basis')),
+        repr(row)[:300])
+    row = next((a_ for a_ in G.build_overall_grade(dict(m_ok))['axes'] if a_['label'] == lab), {})
+    chk('S9c 정상 → 점수 있음 (값 213.1 그대로)', row.get('value') == 213.1 and row.get('score') is not None, repr(row)[:200])
+
+    #  S10 표 재생성 (rebuild_tables_from_metrics) — 무효면 0 줄 없이 상태 줄 (사유) · 정상은 옛 줄 그대로
+    import rebuild_tables_from_metrics as RB
+    ROW = 'Stress CV 상태 (50/50 · LHS-33)'
+    rows = RB.network_summary(dict(m_bad, stress_ratio_SE=None, stress_ratio_AM_P=None))
+    d_ = {x['지표']: x['값'] for x in (rows or [])}
+    chk('S10 ★ 표 재생성 — 무효면 상태 줄 (상태 · 사유) · "Stress CV(%)" 숫자 줄 없음 (0 으로 안 채움)',
+        ROW in d_ and 'invalid_input' in str(d_[ROW]) and 'c_strs 비유한' in str(d_[ROW]) and 'Stress CV(%)' not in d_
+        and '── 응력 ──' in d_, repr(d_)[:300])
+    rows = RB.network_summary(dict(m_ok, stress_ratio_SE=0.999))
+    d_ = {x['지표']: x['값'] for x in (rows or [])}
+    chk('S10b 정상 — 옛 줄 그대로 (Stress CV 213.1 · σ_SE 0.999) · 상태 줄 없음', d_.get('Stress CV(%)') == 213.1
+        and d_.get('σ_SE/σ_mean') == 0.999 and ROW not in d_, repr(d_)[:300])
+    import metrics_json as MJ
+    chk('S10c 상태 줄 이름 · 계약 표지 = metrics_json 한 곳 (analyze_contacts · 표 재생성 · 웹앱이 같은 상수)',
+        getattr(MJ, 'STRESS_CV_STATUS_ROW', None) == ROW and getattr(MJ, 'STRESS_CV_CONTRACT', None) == 'v2-invalid-null'
+        and getattr(D, 'STRESS_CV_CONTRACT', None) == 'v2-invalid-null')
+
+    #  S11 그룹 그림 · 내보내기 · 잔차 상관 — None 을 0 으로 바꾸지 않는다
+    import matplotlib
+    matplotlib.use('Agg')
+    import generate_comparison_plots as GP
+    data = [dict(m_ok), dict(m_bad), dict(m_zero), {'stress_cv': 150.0}]
+    ax = GP.plot_stress_cv(data, ['a', 'b', 'c', 'd'], ax=matplotlib.pyplot.subplots()[1])
+    old_line = [list(l.get_xdata()) for l in ax.get_lines() if l.get_linestyle() in ('--', 'dashed')]
+    chk('S11 Stress CV 그림 (옛 규약 선) — 무효 · 미정의 케이스는 점이 없다 (저장된 0 도 상태를 따른다) · 정상 · 옛 세대만',
+        old_line and sorted(old_line[0]) == [0, 3], repr(old_line))
+    fx = getattr(GP, '_stress_cv_feature', None)
+    chk('S11b 잔차 상관 특징 — 무효 · 미정의 = NaN (옛 판 `_get(d, "stress_cv", 0)` = 0) · 정상 = 값',
+        callable(fx) and fx(m_bad) != fx(m_bad) and fx(m_zero) != fx(m_zero) and fx(m_ok) == 213.1 and fx({}) != fx({}))
+    ex = getattr(GP, '_stress_export_cells', None)
+    cells = ex(m_bad) if callable(ex) else {}
+    chk('S11c 내보내기 칸 — 무효면 빈칸 (0 아님) + 상태 열에 사유 · 정상은 값',
+        callable(ex) and cells.get('stress_cv') == '' and 'invalid_input' in str(cells.get('status'))
+        and ex(m_ok).get('stress_cv') == 213.1 and ex(m_ok).get('status') == 'computed', repr(cells))
 
 
 def main():
@@ -513,6 +810,16 @@ def main():
 
     # ── R RGL-06 반례 (Codex 10-05) — 입력 검증 · 영 분모 · 영 척도 · 검사 범위 · 이름 한정 ─────────────────────
     rgl06(D)
+    # ── P RGLR-03 (Codex 10-05 재검증) — 실 CSV → 실 파서 → LW: 미제공 · 일부 열 · NaN · 문자열 · Inf · 일부 키 ─────────────
+    try:
+        rglr03(D)
+    except Exception as e:                                # noqa: BLE001
+        chk('P 묶음 (RGLR-03) 실행', False, f'{type(e).__name__}: {e}'[:300])
+    # ── S LHS-33 (좁은 개정 · 1저자 비준 10-05) — 옛 σ_VM 열: 무효 · 미정의 = None + 상태 · 정상 = 옛 함수와 비트 동일 · 소비자 ────
+    try:
+        lhs33(D)
+    except Exception as e:                                # noqa: BLE001
+        chk('S 묶음 (LHS-33) 실행', False, f'{type(e).__name__}: {e}'[:300])
 
     # ── L12 real_14 기준 상태 — 독립 구현 (lhs_stress_constriction_audit) 과 입자마다 대조 ─────────
     try:
@@ -525,6 +832,17 @@ def main():
             contacts_raw, _ = AC.load_contacts_raw(os.path.join(tmp, 'contacts.csv'))
             pzr = json.load(open(os.path.join(tmp, 'mesh_info.json')))['plate_z']
             tm14 = {1: 'AM_P', 2: 'AM_S', 3: 'SE'}
+            #  RGLR-03 · LHS-33 — 정상 입력 (real_14 · 32,832 + 457 입자) 에서 새 파서 · 새 σ_VM 이 옛 판과 dict 내용 · 수치 비트 동일
+            old_atoms, _ = _old_load_atoms_raw(os.path.join(tmp, 'atoms.csv'))
+            chk('L12p ★ real_14 — 새 파서 dict = 옛 파서 dict (입자마다 키 · 값 비트 동일 · 손상 사유 키 없음)',
+                len(old_atoms) == len(atoms_raw) and all(atoms_raw[k] == old_atoms[k] for k in old_atoms),
+                f"{len(old_atoms)} vs {len(atoms_raw)}")
+            vm_new = D.calc_von_mises_stress(atoms_raw, tm14, 1000.0, pzr)
+            vm_old = _old_von_mises(old_atoms, tm14, 1000.0, pzr)
+            chk('L12q ★ real_14 — 새 σ_VM (stress_cv · 상 비 · z 층) = 옛 함수 비트 동일 · status computed (stress_cv 213.1 · AM_P 0.884)',
+                _same_vm(vm_new, vm_old) and (vm_new or {}).get('status') == 'computed'
+                and round(vm_old['vm_cv'], 1) == 213.1 and round(vm_old['type_stress']['AM_P']['ratio'], 3) == 0.884,
+                f"{(vm_new or {}).get('status')} · {None if vm_old is None else (vm_old['vm_cv'], vm_old['type_stress'])}")
             res = D.calc_love_weber_stress(atoms_raw, contacts_raw, tm14, pzr, box_x=0.05, box_y=0.05,
                                            plate_z_source='mesh', return_arrays=True)
             chk('L12 real_14 — 상태 OK (검사 셋 통과: 힘 분해 · 접촉점 · virial)', res.get('status') == 'OK',
@@ -578,7 +896,7 @@ def main():
     # ── L13 생산 CLI (analyze_contacts.py = 웹앱 cmd) — 새 키 · 표 · 옛 키 불변 ──────────────────
     tmp = tempfile.mkdtemp(prefix='lw_cli_')
     try:
-        def bed(name, with_lw=True, cstr_scale=1.0, fz=-2e-3):
+        def bed(name, with_lw=True, cstr_scale=1.0, fz=-2e-3, first_tok=None):
             dd_ = os.path.join(tmp, name)
             out = os.path.join(dd_, 'out')
             os.makedirs(out)
@@ -601,7 +919,8 @@ def main():
                 fh.write('id,type,x,y,z,radius,c_strs[1],c_strs[2],c_strs[3]\n')
                 for a in atoms_:
                     s = cstr[a[0]]
-                    fh.write(f'{a[0]},{a[1]},{a[2]!r},{a[3]!r},{a[4]!r},{a[5]!r},{s[0]!r},{s[1]!r},{s[2]!r}\n')
+                    c1 = repr(s[0]) if first_tok is None else first_tok        # RGLR-03 — 첫 c_strs 칸을 손상 (NaN · 문자열)
+                    fh.write(f'{a[0]},{a[1]},{a[2]!r},{a[3]!r},{a[4]!r},{a[5]!r},{c1},{s[1]!r},{s[2]!r}\n')
             with open(os.path.join(dd_, 'contacts.csv'), 'w') as fh:
                 head = 'id1,id2,fn_x,fn_y,fn_z,ft_x,ft_y,ft_z,contact_area,delta'
                 fh.write(head + (',fx,fy,fz,cp_x,cp_y,cp_z\n' if with_lw else '\n'))
@@ -676,6 +995,33 @@ def main():
             and not any(k.startswith('stress_ratio_') and k.endswith('_lw') for k in met3)
             and 'Stress CV — Love–Weber (%)' not in summ3 and 'stress_cv' in met3,
             f"rc {pr3.returncode} · {met3.get('stress_lw_status')} · {(pr3.stderr or '')[-300:]}")
+        # LHS-33 — 옛 σ_VM 열의 상태 계약이 CLI (웹앱 접촉 단계) 를 지나 full_metrics.json · network_summary.csv 에 남는다
+        lines3 = {r[0]: (r[1] if len(r) > 1 else '') for r in csv.reader(io.StringIO(summ3)) if r}
+        chk('L13l ★ LHS-33 무하중 침대 → stress_cv null · 상 비 null · z 층 null · stress_cv_status undefined_zero_mean · 계약 v2-invalid-null · '
+            '사유 (옛 판: stress_cv 0 · 비 0 = 거짓 최고 등급)',
+            'stress_cv' in met3 and met3['stress_cv'] is None and met3.get('stress_ratio_AM_P', 0) is None
+            and met3.get('stress_ratio_SE', 0) is None and met3.get('stress_z_layer_cv', 0) is None
+            and met3.get('stress_cv_status') == 'undefined_zero_mean' and met3.get('stress_cv_contract') == 'v2-invalid-null'
+            and bool(met3.get('stress_cv_reason')),
+            str({k: met3.get(k) for k in ('stress_cv', 'stress_ratio_AM_P', 'stress_cv_status', 'stress_cv_contract', 'stress_cv_reason')}))
+        chk('L13m ★ LHS-33 케이스 표 (network_summary.csv) — 무하중이면 "Stress CV(%)" = "—" · 상 비 "—" · 상태 줄 (상태 — 사유)',
+            lines3.get('Stress CV(%)') == '—' and lines3.get('σ_SE/σ_mean') == '—'
+            and 'undefined_zero_mean' in lines3.get('Stress CV 상태 (50/50 · LHS-33)', ''), repr(lines3)[:400])
+        chk('L13n 정상 침대 → stress_cv_status computed · 계약 표지 · 값은 숫자 (L13f = 옛 정의 그대로) · 표에 상태 줄 없음',
+            met.get('stress_cv_status') == 'computed' and met.get('stress_cv_contract') == 'v2-invalid-null'
+            and isinstance(met.get('stress_cv'), float) and 'Stress CV 상태 (50/50 · LHS-33)' not in summ,
+            str({k: met.get(k) for k in ('stress_cv', 'stress_cv_status', 'stress_cv_contract')}))
+        pr4, met4, summ4 = bed('nanfirst', first_tok='nan')
+        chk('L13o ★ RGLR-03 CLI — 첫 c_strs 칸 NaN 침대 → stress_lw_status FAILED (invalid_input …) · LW 값 없음 · stress_cv null · '
+            'stress_cv_status invalid_input (옛 판: LW OK virial unavailable · stress 키 없음)',
+            pr4.returncode == 0 and str(met4.get('stress_lw_status', '')).startswith('FAILED (invalid_input') and 'stress_cv_lw' not in met4
+            and 'stress_cv' in met4 and met4['stress_cv'] is None and met4.get('stress_cv_status') == 'invalid_input',
+            f"rc {pr4.returncode} · {met4.get('stress_lw_status')} · {met4.get('stress_cv_status')} · {(pr4.stderr or '')[-300:]}")
+        pr5, met5, summ5 = bed('textfirst', first_tok='invalid')
+        chk('L13p ★ RGLR-03 CLI — 첫 c_strs 칸 문자열 침대 → stress_lw_status FAILED (invalid_input …) · stress_cv_status invalid_input',
+            pr5.returncode == 0 and str(met5.get('stress_lw_status', '')).startswith('FAILED (invalid_input')
+            and met5.get('stress_cv_status') == 'invalid_input' and met5.get('stress_cv', 0) is None,
+            f"rc {pr5.returncode} · {met5.get('stress_lw_status')} · {met5.get('stress_cv_status')} · {(pr5.stderr or '')[-300:]}")
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
 

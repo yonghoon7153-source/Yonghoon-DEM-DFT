@@ -1985,6 +1985,22 @@ def normalize_network_summary_layout(tables, metrics):
     for label in ('σ_AM_P/σ_mean', 'σ_AM_S/σ_mean', 'σ_SE/σ_mean'):
         if _find_row(label) is None:
             _insert_after('Stress CV(%)', [label, '—', '—', '0%'])
+    #  ★ LHS-33 (좁은 개정 · 1저자 비준 10-05 · Codex Q7 · J20-l) — 옛 네 줄이 무효 · 미정의 (stress_cv_status ≠ computed) 면 값 '—' +
+    #    상태 줄 (상태 — 사유) · None · 0 으로 보이지 않게.  옛 세대 (상태 키 없음) · computed 는 그대로.  철자 · 사유 = metrics_json 한 곳.
+    from metrics_json import stress_cv_reason as _scv_reason, STRESS_CV_STATUS_ROW as _SCV_ROW
+    _scv = _scv_reason(metrics) if metrics else None
+    if _scv is not None and (_find_row('Stress CV(%)') is not None or _insert_after('── 응력 ──', ['Stress CV(%)', '—', '—', ''])):
+        for _lab in ('σ_SE/σ_mean', 'σ_AM_S/σ_mean', 'σ_AM_P/σ_mean', 'Stress CV(%)'):
+            _j = _find_row(_lab)
+            if _j is None:
+                _insert_after('Stress CV(%)', [_lab, '—', '—', ''])
+            else:
+                data[_j] = [data[_j][0], '—', '—', '']
+        _j = _find_row(_SCV_ROW)
+        if _j is None:
+            _insert_after('σ_SE/σ_mean', [_SCV_ROW, _scv, _scv, ''])
+        else:
+            data[_j] = [data[_j][0], _scv, _scv, '']
 
     # ④a (J20-s · 1저자 비준 10-04 · LHS-30) — 협착 두 행.  두 경로 (Step 4 · 4b) 가 다 지나는 여기서 한 번만.
     #   ① 옛 행 'Constriction 비율(%)' (조회 키 그대로 · 값 정의 그대로 = 1 − 접촉별 R_bulk/R_total 비가중 평균 · L2-08):
@@ -2179,6 +2195,7 @@ def normalize_network_summary_layout(tables, metrics):
         # 응력 — 옛 네 줄 (stress/atom 50/50 · 대각) → ④b Love–Weber (10-04)
         'Stress CV(%)',
         'σ_AM_P/σ_mean', 'σ_AM_S/σ_mean', 'σ_SE/σ_mean',
+        'Stress CV 상태 (50/50 · LHS-33)',      # 10-05 LHS-33 — 옛 네 줄이 무효 · 미정의일 때만 (상태 — 사유)
         'Stress CV — Love–Weber (%)',
         'σ_AM_P/σ_mean — Love–Weber', 'σ_AM_S/σ_mean — Love–Weber', 'σ_SE/σ_mean — Love–Weber',
         'Stress CV — Love–Weber · 벽 접촉 제외 (%)',
@@ -2414,6 +2431,8 @@ _PAPER_LABEL_MAP = {
         '⟨σ_VM⟩_AM_S / ⟨σ_VM⟩_all — stress/atom 50/50 split, diagonal only (size-biased)',
     'σ_SE/σ_mean':
         '⟨σ_VM⟩_SE / ⟨σ_VM⟩_all — stress/atom 50/50 split, diagonal only (size-biased)',
+    'Stress CV 상태 (50/50 · LHS-33)':
+        'Particle-stress CV status — stress/atom 50/50 (LHS-33: invalid/undefined input → blank, not 0; not graded)',
     #  RGL-06 (10-05 · Codex Q3) — 이름 한정: 입자 접촉력 기반 대칭 응력의 VM (kinetic · 벽 · couple 미포함 — 전체 동적 응력 아님) ·
     #  벽 제외 = 선별 모집단 (결측 벽 힘 복원 아님) · 전역 virial = 부호/척도 검사 (프레임 대응 증명 아님).  옛 'full tensor' 표기는 뺐다.
     'Stress CV — Love–Weber (%)':
@@ -7262,6 +7281,8 @@ def group():
             if metrics.get('am_ionic_isolated_pct') is None and isinstance(metrics.get('ionic_active_pct'), (int, float)):
                 metrics['am_ionic_isolated_pct'] = 100.0 - metrics['ionic_active_pct']
             _group_am_am_mean_na(metrics)
+            from metrics_json import stress_cv_group_cells as _scv_cells   # LHS-33 — 옛 σ_VM 네 열 무효 · 미정의 = '— (사유)' (None · 0 아님)
+            _scv_cells(metrics)
 
             # Derived: constriction percentage (1 − 접촉별 비가중 평균 · L2-08)
             bf = metrics.get('bulk_resistance_fraction')
@@ -9822,7 +9843,9 @@ def serve_report(case_id):
 
     sigma_el = metrics.get('electronic_sigma_full_mScm')
     sigma_th = metrics.get('thermal_sigma_full_mScm')
-    if sigma_el is not None or sigma_th is not None or metrics.get('stress_cv'):
+    from metrics_json import stress_cv_report_line as _scv_line   # LHS-33 — 옛 σ_VM 무효 · 미정의 = '—' + 사유 (0 아님)
+    _scv_rl = _scv_line(metrics)
+    if sigma_el is not None or sigma_th is not None or metrics.get('stress_cv') or metrics.get('stress_cv_status') not in (None, 'computed'):
         L.append('### Electronic / Thermal / Mechanical\n')
         if sigma_el is not None:
             L.append(f'- **σ_electronic**: {sigma_el:.2f} mS/cm')
@@ -9843,6 +9866,8 @@ def serve_report(case_id):
                 val = metrics.get(f'stress_ratio_{ph}')
                 if isinstance(val, (int, float)) and not isinstance(val, bool):
                     L.append(f'- **σ_{ph}/σ_mean (50/50 분할)**: {val:.3f}')
+        elif _scv_rl:
+            L.append(_scv_rl)
         if metrics.get('stress_lw_status') == 'OK' and isinstance(metrics.get('stress_cv_lw'), (int, float)):
             #  ④b Love–Weber (접촉점 · 9 성분 텐서의 대칭부 · J20-s 10-04) — 벽 · 판 접촉 입자의 벽 힘은 두 규약 다 없다.
             #  RGL-06 이름 한정: 입자 접촉력 기반 대칭 응력의 VM (kinetic · 벽 · couple 미포함) · 벽 제외 = 선별 모집단 (결측 벽 힘 복원 아님)
@@ -9995,7 +10020,9 @@ _GRADE_PLAIN = {
         '벽 · 판에 닿은 입자는 빠져 있어요 (LHS-31).',
     '__sigma_vm_cv_pct': '입자들이 받는 힘(응력)이 얼마나 들쭉날쭉한지예요. 작을수록 골고루 눌린 거고, '
         '크면 특정 입자에 힘이 몰리는 "핫스팟"이 있다는 뜻입니다. ⚠ 지금 이 축은 옛 규약 (LIGGGHTS stress/atom 50/50 분할 · '
-        '대각) 의 값이에요 — 크기가 다른 입자에서 편향이 있어 (LHS-29) Love–Weber 값으로 바꿀 예정이고, 바뀌는 등급값을 먼저 보고한 뒤에 바꿉니다.',
+        '대각) 의 값이에요 — 크기가 다른 입자에서 편향이 있어 (LHS-29) Love–Weber 값으로 바꿀 예정이고, 바뀌는 등급값을 먼저 보고한 뒤에 바꿉니다. '
+        '응력 자료가 없거나 망가졌거나 (c_strs 없음 · 입력 무효) 하중이 0 이라 계산이 안 되는 케이스는 0 이 아니라 빈칸이고, 이 축은 등급을 '
+        '매기지 않아요 (LHS-33 — 예전에는 0 으로 저장돼 최고 등급으로 보였습니다).',
     'sigma_full_mScm_stage_e_physics': '이 전극의 이온 전도도 — 이온이 얼마나 잘 흐르는지를 나타내는 가장 '
         '중요한 값이에요(높을수록 좋음). 배터리 성능 1순위 지표입니다.',
     'thermal_sigma_full_mScm_stage_e_physics': '열을 얼마나 잘 퍼뜨리는지(냉각 능력)예요. 고체전지에서 '

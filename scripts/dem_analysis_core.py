@@ -15,6 +15,7 @@ import json
 import os
 from collections import defaultdict
 import networkx as nx
+from metrics_json import STRESS_CV_CONTRACT, STRESS_CV_COMPUTED   # LHS-33 옛 σ_VM 열 상태 계약 (한 곳 · 같은 디렉터리)
 
 
 # ─── Shape factor (B3 patch) ──────────────────────────────────────────────
@@ -1164,25 +1165,74 @@ def calc_von_mises_stress(atoms_raw, type_map, scale, plate_z, n_layers=10):
     atoms_raw must have 'sigma_xx', 'sigma_yy', 'sigma_zz' keys (sim Pa).
     Returns: overall CV, type ratios, z-layer CV profile.
     Note: absolute values are not reliable (effective E used), only relative comparison.
-    """
-    # Check if stress data available
-    sample = next(iter(atoms_raw.values()))
-    if 'sigma_xx' not in sample:
-        return None
 
-    # Compute Von Mises for each atom (sim units, relative only)
+    ★ LHS-33 (좁은 개정 · 1저자 비준 10-05 · Codex 재검증 Q7 · 계약 STRESS_CV_CONTRACT = v2-invalid-null):
+      정상 입력 = 정의 · 수치 · 키 그대로 (옛 판과 비트 동일) + status 'computed' · contract.  균일한 양의 VM (모든 입자 같은 σ) 의
+        CV 0.0 은 정상 0 이다.
+      무효 · 미정의 입력 = vm_cv · 상 ratio · z_layer_cv = None + status + reason (0 으로 채우지 않는다):
+        unavailable_no_c_strs  어느 입자에도 sigma 키가 없다 (c_strs 세 열 전무 — 옛 판은 None 을 돌려 소비자가 0 으로 읽었다)
+        invalid_input          원자 0 (옛 판 StopIteration) · 일부 입자만 sigma 키 (옛 판 `a.get(…, 0)` = 0) · 비유한 · 숫자 아님
+                               (파서 사유 c_strs_invalid — RGLR-03) · σ_VM 넘침
+        undefined_zero_mean    평균 σ_VM = 0 (무하중 · 전 입자 정수압) → CV · 상 비 = 0/0 (옛 판 `mean > 0 else 0` = 0)
+      옛 판의 결함: 평균이 NaN 이면 `NaN > 0` 이 False 라 CV 0 → 등급 축 '기계적 안정성' (낮을수록 좋음) 의 거짓 최고 등급.
+      근호 안이 반올림으로 음수인 입자 (σxx ≈ σyy ≈ σzz · 해석적으로 ½Σ(σi − σj)² ≥ 0) 는 VM 0 — 옛 판은 그 한 입자가 NaN 이 되어 같은
+        거짓 0 을 냈다.  근호 안 ≥ 0 인 입자 (= 옛 판이 유한값을 낸 입력) 의 값은 그대로.
+    """
+    keys = ('sigma_xx', 'sigma_yy', 'sigma_zz')
+    atoms = list(atoms_raw.items())
+
+    def _blank(status, reason, means=None, mean_all=None):
+        ts = {}
+        for t_name in set(type_map.values()):
+            if any(type_map.get(a['type']) == t_name for _aid, a in atoms):
+                ts[t_name] = {'mean': (means or {}).get(t_name), 'ratio': None}
+        return {'vm_cv': None, 'vm_mean': mean_all, 'type_stress': ts, 'z_layer_cv': None,
+                'status': status, 'reason': reason, 'contract': STRESS_CV_CONTRACT}
+
+    def _ids(bad):
+        return f"{len(bad)} / {len(atoms)} 입자 (id {', '.join(str(x) for x in bad[:5])}{' …' if len(bad) > 5 else ''})"
+
+    if not atoms:
+        return _blank('invalid_input', '원자 0 개 — 평균 · CV 가 정의되지 않는다')
+    if not any(k in a for _aid, a in atoms for k in keys):
+        return _blank('unavailable_no_c_strs', 'c_strs 열 없음 — 원자 덤프 (atoms.csv) 에 c_strs[1–3] 세 열이 다 없다 (옛 덱 · 손 픽스처)')
+    incomplete = [aid for aid, a in atoms if not all(k in a for k in keys)]
+    if incomplete:
+        return _blank('invalid_input', f'c_strs 결측 · 불완전 {_ids(incomplete)} — 세 성분이 전 입자에 다 있어야 한다 (옛 판은 0 으로 읽었다)')
+    nonfin = [aid for aid, a in atoms if any(_lw_finite_real(a[k]) is None for k in keys)]
+    if nonfin:
+        notes = [a['c_strs_invalid'] for _aid, a in atoms if a.get('c_strs_invalid')]
+        return _blank('invalid_input', f'c_strs 비유한 · 숫자 아님 {_ids(nonfin)}'
+                      + (f' · 파서: {notes[0]}' + (f' (외 {len(notes) - 1} 입자)' if len(notes) > 1 else '') if notes else ''))
+
+    # Compute Von Mises for each atom (sim units, relative only) — 옛 식 그대로 (근호 안 반올림 음수만 0 · 위 ★)
     vm_data = {}
-    for aid, a in atoms_raw.items():
-        sxx = a.get('sigma_xx', 0)
-        syy = a.get('sigma_yy', 0)
-        szz = a.get('sigma_zz', 0)
-        vm = np.sqrt(sxx**2 + syy**2 + szz**2 - sxx*syy - syy*szz - sxx*szz)
-        vm_data[aid] = vm
+    with np.errstate(over='ignore', invalid='ignore'):
+        for aid, a in atoms:
+            sxx, syy, szz = a['sigma_xx'], a['sigma_yy'], a['sigma_zz']
+            try:
+                vm_sq = sxx**2 + syy**2 + szz**2 - sxx*syy - syy*szz - sxx*szz
+            except OverflowError:                         # 파이썬 float 의 ** 는 넘치면 예외 (numpy 는 inf → 아래에서 거부)
+                vm_sq = float('nan')
+            vm_data[aid] = np.sqrt(vm_sq) if not vm_sq < 0 else np.float64(0.0)
 
     all_vm = np.array(list(vm_data.values()))
+    if not np.isfinite(all_vm).all():
+        return _blank('invalid_input', f'σ_VM 넘침 {_ids([aid for aid, v in vm_data.items() if not np.isfinite(v)])} — '
+                                       '정상 통계를 내지 않는다')
     vm_mean = float(np.mean(all_vm))
     vm_std = float(np.std(all_vm))
-    vm_cv = (vm_std / vm_mean * 100) if vm_mean > 0 else 0
+    if not (np.isfinite(vm_mean) and np.isfinite(vm_std)):
+        return _blank('invalid_input', 'σ_VM 평균 · 표준편차 넘침 — 정상 통계를 내지 않는다')
+    if not vm_mean > 0:                                   # vm ≥ 0 · 유한 (위 관문) ⇒ 여기는 평균 0 뿐 → CV · 상 비 = 0/0
+        means = {}
+        for t_name in set(type_map.values()):
+            t_vm = [vm_data[aid] for aid, a in atoms if type_map.get(a['type']) == t_name]
+            if t_vm:
+                means[t_name] = float(np.mean(t_vm))
+        return _blank('undefined_zero_mean', '평균 σ_VM = 0 (무하중 · 전 입자 정수압) → CV · 상 비 = 0/0 미정의 · 0 으로 채우지 않음',
+                      means, vm_mean)
+    vm_cv = (vm_std / vm_mean * 100)
 
     # Type-specific mean (for ratio calculation)
     type_stress = {}
@@ -1223,6 +1273,8 @@ def calc_von_mises_stress(atoms_raw, type_map, scale, plate_z, n_layers=10):
         'vm_mean': vm_mean,
         'type_stress': type_stress,
         'z_layer_cv': z_layer_cv,
+        'status': STRESS_CV_COMPUTED,                     # LHS-33 — 새 세대 표지 (옛 네 키의 값 · 정의는 그대로)
+        'contract': STRESS_CV_CONTRACT,
     }
 
 
@@ -1261,9 +1313,13 @@ def _lw_finite_real(x):
     return x if np.isfinite(x) else None
 
 
-def _lw_invalid_inputs(ids, pos, rad, vol, has_cs, cs, box_x, box_y, plate_z, plate_z_source):
-    """계산 전 입력 검증 (RGL-06 ①) — 사유 목록 (빈 목록 = 통과).  접촉 없는 입자도 모집단 · 벽 표지에 들어가므로 전 입자를 본다."""
+def _lw_invalid_inputs(ids, pos, rad, vol, has_cs, cs, box_x, box_y, plate_z, plate_z_source, any_cs=None, cs_notes=()):
+    """계산 전 입력 검증 (RGL-06 ①) — 사유 목록 (빈 목록 = 통과).  접촉 없는 입자도 모집단 · 벽 표지에 들어가므로 전 입자를 본다.
+    RGLR-03 — c_strs 는 any-present (any_cs: 입자마다 세 키 중 하나라도) ↔ all-complete (has_cs: 세 키 다) 를 따로 본다: 어느 입자에도
+    키가 없을 때만 미제공 · 하나라도 있는데 전 입자의 세 키가 다 있지 않으면 결측 (옛 판은 has_cs 만 봐서 전 입자가 sigma_xx 하나씩만
+    빠지면 "c_strs 없음" 으로 통과했다).  cs_notes = 파서가 남긴 손상 사유 [(id, 사유)] (analyze_contacts.load_atoms_raw)."""
     why = []
+    any_cs = has_cs if any_cs is None else any_cs
 
     def _ids(mask):
         k = np.flatnonzero(mask)
@@ -1283,12 +1339,16 @@ def _lw_invalid_inputs(ids, pos, rad, vol, has_cs, cs, box_x, box_y, plate_z, pl
             why.append(f'{nm} = {L!r} — 주기 길이는 유한 양수 (안 쓰면 None)')
     if plate_z_source == 'mesh' and not ((_lw_finite_real(plate_z) or 0.0) > 0):
         why.append(f'plate_z = {plate_z!r} — plate_z_source=mesh 면 판 높이는 바닥 z = 0 위의 유한값')
-    if has_cs.any() and not has_cs.all():
-        why.append(f'c_strs 결측 {_ids(~has_cs)} / {has_cs.size} 입자 — 일부만 있으면 전역 virial 검사가 조용히 꺼진다')
+    if any_cs.any() and not has_cs.all():
+        why.append(f'c_strs 결측 {_ids(~has_cs)} / {has_cs.size} 입자 — 세 성분 (sigma_xx · yy · zz) 은 전 입자에 다 있거나 전부 없어야 '
+                   '한다 (일부만 있으면 전역 virial 검사가 조용히 꺼진다 · RGLR-03)')
     elif cs is not None:
         m = ~np.isfinite(cs).all(1)
         if m.any():
             why.append('non_finite c_strs ' + _ids(m))
+    if cs_notes:
+        why.append(f"파서 c_strs 손상 {len(cs_notes)} 입자 (id {', '.join(str(a) for a, _n in cs_notes[:5])}"
+                   f"{' …' if len(cs_notes) > 5 else ''}) — {cs_notes[0][1]}")
     return why
 
 
@@ -1309,6 +1369,9 @@ def calc_love_weber_stress(atoms_raw, contacts_raw, type_map, plate_z, box_x=Non
       LHS 침대 `boundary p p f`) 은 **검증하지 않는다** — 덱을 읽지 않는다 (LW_DECK_ASSUMPTIONS · 옛 벽-RVE 케이스의 옆벽 입자는 표지 밖).
     입력 검증 (계산 전 · RGL-06 ①): 전 입자 위치 유한 · 반경 · 부피 유한 양수 · 주는 주기 길이 유한 양수 · mesh 판이면 plate_z 유한 양수 ·
       c_strs 는 전 입자에 있거나 전부 없고 있으면 유한.  실패 = FAILED (invalid_input: 사유) · 값 없음.
+      ★ RGLR-03 (Codex 10-05 재검증) — "전부 없음" = 어느 입자에도 세 키 중 **하나도** 없을 때만 (any-present ↔ all-complete 를 따로 ·
+      세 키 중 일부만 있는 입자도 결측).  파서 (load_atoms_raw) 는 손상 칸 (NaN · 문자열 · 일부 열) 을 키를 뺀 "없음" 이 아니라 NaN 으로
+      남기고 사유 (c_strs_invalid) 를 적는다 → 여기서 non_finite c_strs + 파서 사유로 거부 (전역 virial 검사가 꺼지지 않는다).
     검사 (실패 = 값 없이 상태 — 0 으로 채우지 않는다): 열 · 유한값 · 원자 id 짝 · F = Fn + Ft · 접촉점이 두 입자 안 ·
       c_strs 가 있으면 전체 virial Σ V σ_LW = Σ c_strs (접촉점과 무관한 정확식 · 대각 셋의 **전역 합**) — 전역 부호 · 척도 검사이지
       프레임 · 입자 · 상 배분의 대응 증명이 아니다 (LW_VIRIAL_SCOPE).  새 LW 와 옛 c_strs 를 입자별로 같게 강제하지 않는다 (배분 규약이
@@ -1340,6 +1403,8 @@ def calc_love_weber_stress(atoms_raw, contacts_raw, type_map, plate_z, box_x=Non
     row = {aid: k for k, aid in enumerate(ids)}
     n = len(ids)
     has_cs = np.array([all(k in atoms_raw[a] for k in _LW_CSTR) for a in ids], dtype=bool)
+    any_cs = np.array([any(k in atoms_raw[a] for k in _LW_CSTR) for a in ids], dtype=bool)        # RGLR-03 any-present
+    cs_notes = [(a, atoms_raw[a]['c_strs_invalid']) for a in ids if atoms_raw[a].get('c_strs_invalid')]
     try:
         pos = np.array([[atoms_raw[a]['x'], atoms_raw[a]['y'], atoms_raw[a]['z']] for a in ids], dtype=float).reshape(n, 3)
         rad = np.array([atoms_raw[a]['radius'] for a in ids], dtype=float)
@@ -1353,7 +1418,7 @@ def calc_love_weber_stress(atoms_raw, contacts_raw, type_map, plate_z, box_x=Non
     names = np.array([type_map.get(atoms_raw[a]['type'], '') for a in ids], dtype=object)
     out['n_particles'], out['n_contacts'] = n, len(contacts_raw)
     #  RGL-06 ① 계산 전 입력 검증 — 옛 판은 접촉 열만 유한 검사해 고립 입자 반경 NaN · plate_z NaN · 주기 길이 NaN 이 그대로 지나갔다
-    why = _lw_invalid_inputs(ids, pos, rad, vol, has_cs, cs, box_x, box_y, plate_z, plate_z_source)
+    why = _lw_invalid_inputs(ids, pos, rad, vol, has_cs, cs, box_x, box_y, plate_z, plate_z_source, any_cs=any_cs, cs_notes=cs_notes)
     if why:
         out['status'] = 'FAILED (invalid_input: ' + ' · '.join(why) + ')'
         return out
@@ -1644,12 +1709,14 @@ def run_full_analysis(atoms_raw, contacts_raw, type_map, scale, results_dir, box
 
     # 8. Von Mises Stress (relative)
     stress = calc_von_mises_stress(atoms_raw, type_map, scale, plate_z)
-    if stress:
+    if stress and stress.get('status') == STRESS_CV_COMPUTED:
         print(f"  Stress CV: {stress['vm_cv']:.1f}%")
         for tn, sv in stress['type_stress'].items():
             print(f"    {tn}: σ/σ_mean = {sv['ratio']:.2f}")
-    else:
+    elif stress and stress.get('status') == 'unavailable_no_c_strs':
         print("  Stress: N/A (no stress data)")
+    else:                                                 # LHS-33 — 무효 · 미정의 = 값 없음 (0 으로 안 채움)
+        print(f"  Stress: — ({(stress or {}).get('status')} — {(stress or {}).get('reason')})")
     # 8b. Love–Weber 입자 응력 (④b · 접촉 덤프의 힘 · 접촉점 · 전체 텐서) — 옛 열 (위 · stress/atom 50/50 분할) 과 따로 둔다
     stress_lw = calc_love_weber_stress(atoms_raw, contacts_raw, type_map, plate_z, box_x=box_x, box_y=box_y,
                                        plate_z_source=pz_source)
