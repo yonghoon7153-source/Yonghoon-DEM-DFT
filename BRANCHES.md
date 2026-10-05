@@ -355,3 +355,28 @@ git push -u origin claude/14-gate-code-review-9qkx05
 | 2026-10-05 | `bms-balancing/.gitattributes` 규칙 — REIL 부속 C 독립 교차검토 묶음 `reviews/prereview_reil_v2_annexC_crossreview_20261005/** -text` (게이트 차수 밖 · 다른 Codex 세션 · 보존 `f63e5ba4b` · 접수 = REIL 상태 문서 §11 · `PRIOR_CONDITIONAL_DOCUMENT_VERDICT_SUPPORTED_CORRECTIONS_NOT_YET_VERIFIED`) | `60ca5eb60` | 밖 | 할 일 없음 |
 
 ### 복귀 결과 (복귀 정리 커밋이 덧붙인다)
+
+| 항목 | 값 |
+|---|---|
+| 방식 | 원격 fast-forward push `git push origin 17e03fa2c149babb760550151955f1c54cd045c3:refs/heads/claude/14-gate-code-review-9qkx05` — 체크아웃 · 병합 · 재작성 없음. 이어서 이 정리 커밋 1 개 (CLAUDE.md 임시 세 줄 삭제 · 이 절) |
+| 복귀 SHA | 본진 `e2f5697192b2008d0a11b7334c2d3f3546a85809` → **`17e03fa2c149babb760550151955f1c54cd045c3`** (서브 HEAD · 2026-10-05 끝 기준 — 그 뒤 서브 커밋 0 실측) |
+| 사전 검사 | FF_OK · 서브 고유 커밋 164 · merge 0 · 본진 고유 커밋 0 (`git log $S..$M` 빈 출력) · 로컬 전용 커밋 0 · 작업 트리 0 |
+| 고유 커밋 0 | `git log origin/claude/dashboard-standby-e2f56971 ^origin/claude/14-gate-code-review-9qkx05` 빈 출력 (0 줄) 2026-10-05T17:13:16Z |
+| CLAUDE.md | 임시 세 줄 + 빈 줄 삭제 뒤 blob `632750b33d4d85b213a76f4912d7c193b2a0b611` = `e2f5697^:CLAUDE.md` (2026-09-30 복귀 뒤와 같은 blob) |
+| 서브 | 지우지 않는다 · 새 커밋을 얹지 않는다 (`claude/bms-alpha-beta-verify` · `claude/gate80-standby-9a26dd5f` 와 같은 처리) |
+| source_digest | 복귀 뒤 본진 `f0175fff71132003` (= 91차 판정 대상 `b08bb6944` 의 RUN_SCOPE · 이 정리 커밋은 RUN_SCOPE 밖) |
+| 실행자 | 본진 Claude Code 세션 (클라우드 컨테이너 · 2026-10-02 대피 카드를 쓴 세션) · 2026-10-05 · clean 한 본진 checkout 에서 두 파일만 |
+
+**대피 중 한 일 요약** (2026-10-02 ~ 10-05 · 164 커밋 · merge 0 · "대피 중 누적" 표 42 행 · 경로별 수는 `git log --format=%h e2f5697..17e03fa2c -- <경로> | wc -l` 실측이라 서로 겹친다):
+
+| 영역 | 커밋 | 내용 · 정본 |
+|---|---:|---|
+| 게이트 87–91 (`degradation-degeneracy/`) | 61 | 원장 §128–§140 · 87 · 88 · 89 · 90 · 91차 회신 바이트 보존과 접수 · G87-N1 · G88-N1 · PyBaMM 환경 고정 라운드 (프로필 C lock · `tools/env_profile.py`) · G90-N1. **91차 `ACCEPTED` 로 종결 — 열린 게이트 라운드 없음** (`degradation-degeneracy/docs/GATE70_WORKING_STATE.md` "다음") |
+| RUN_SCOPE | 4 | `e462a3d19` (G87-N1 · `864edfb73b9695a1` → `7dd546baaee9e823`) · `26c11d6fc` (G88-N1 · → `803e2b7781cbc9cd`) · `e2160c2ef` (프로필 C · → `3f84c0db52d2b9ac`) · `b08bb6944` (G90-N1 · → `f0175fff71132003`) — 넷 다 게이트 판정을 받았다 (88 · 89 · 90 · 91차) · 영수증 재생성이 각각 한 짝 |
+| COMSOL B-min | 20 (`COMSOL_REBUILD_SPEC.md`) | §40–§58 · 후보 r0–r2 꾸러미 · 검토 묶음 보존. §57 = r2 한정 검증 승인 (실행 주체 Codex · 결과 대기) · §58 = A0 닫음 |
+| REIL 외부 검증 | 13 (문서) · 6 (검토 묶음 보존) · 1 (C6 봉인) | 프로토콜 v2 · 부속 A · B · C · D · C1-core 기록 · 요청문 둘 · C6 봉인 `bms-balancing/reil_c6_20261005/` · 상태 `bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md` §1–§11 |
+| 논문 (`wiki/raw/papers`) | 19 | assb 90–104호 · 세미나 논문 셋 · Li 2026 (REIL C1-core 원전) · ASSB 원장 `bms-balancing/docs/ASSB_WANTED_PAPERS.md` 15 커밋 |
+| `wiki/` 전체 | 37 | 위 논문 digest · 엔티티 · 브리핑 (2026-10-02 · 10-05) · MSC 설계안 검토 · ampworks entity |
+| webapp · `.claude` | 0 · 0 | 변경 없음 |
+
+**본진에서 이어 갈 것 (`HANDOFF_2026_10_02_DASHBOARD.md` §7-3 · 사용자 2026-10-05 "REIL 관련 Codex 우선"):** ① REIL Codex 묶음 요청 — (A) 부속 D 재확인 + (B) C6 결과 수용 + 참고 교차검토 · 고정 커밋 `17e03fa2c` (ff 라 본진에서도 같은 SHA) · 발송은 사용자 · 회신은 `bms-balancing/.gitattributes` 보존 규칙 먼저 → 바이트 보존 → 상태 문서 §12 부터 · 둘 다 수용되면 P0 승인 요청 초안 (사용자 승인 전 P0 · 자료 개봉 0) ② COMSOL B-min r2 한정 검증 결과 (SPEC §57 · Codex 실행) → SPEC §59 부터 ③ ampworks issue URL 기록 ④ 게이트 루프 열린 라운드 없음 (원장 §140) ⑤ ASSB 105호 · MSC · webapp — 요청이 있을 때.
