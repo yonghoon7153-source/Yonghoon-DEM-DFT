@@ -6,10 +6,19 @@
 *"낱낱이 정리해서 이종기술 관련 원장에"*) 를 넣으면서 회의 키 (8 자리 날짜) 로 고르게 했다 — 키는 등록부
 (`app.HETERO_TRANSCRIPTS`) 에 있는 것만 받는다 (모르는 키 = 404 · 조용히 다른 회의를 보이지 않는다).
 
+⑨–⑬ (10-05) — `/hetero` 가 **이종기술 논지 정본** (`docs/hetero_thesis.md` · 1저자 비준 10-05 *"이거 비준이고"*) 의
+비준 블록 (`<!-- THESIS:BEGIN ratified=<날짜> -->` … `<!-- THESIS:END -->`) 과 비준 날짜를 **그 파일에서 읽어** 띄우는가.  고정 문장은 한 곳에만 있다 —
+템플릿 · 코드에 베껴 두면 정본을 고쳐도 화면이 옛 문장을 계속 보인다 (규율 ④ — 요약층은 강제되지 않으면 낡는다).
+표지가 없거나 둘 이상이면 **읽지 못했다고 적는다** (조용히 비우거나 옛 문장을 보이지 않는다).
+
   python3 webapp/test_hetero_transcript_page.py
 """
+import html as _html
 import os
+import re
 import sys
+import tempfile
+from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
@@ -55,6 +64,56 @@ def main():
     h = r.get_data(as_text=True)
     chk('⑧ /hetero 에 두 회의 링크', r.status_code == 200 and '/hetero/transcript?m=20260918' in h
         and '/hetero/transcript?m=20261002' in h)
+
+    # ── ⑨–⑬ 논지 정본 (10-05) ──────────────────────────────────────────────
+    thesis_md = Path(__file__).resolve().parent.parent / 'docs' / 'hetero_thesis.md'
+    src = thesis_md.read_text(encoding='utf-8')
+    blocks = re.findall(r'<!-- THESIS:BEGIN ratified=(\d{4}-\d{2}-\d{2}) -->\n(.*?)\n<!-- THESIS:END -->', src, re.S)
+    date = blocks[0][0] if blocks else ''
+    first = next((ln for ln in (blocks[0][1].splitlines() if blocks else []) if ln.strip()), '')
+    sentence = first.strip().strip('*').strip()          # **"…"** → "…"  (시험이 정본에서 직접 뽑는다)
+
+    def _text(page):
+        return re.sub(r'\s+', ' ', _html.unescape(re.sub(r'<[^>]+>', ' ', page)))
+
+    r = c.get('/hetero')
+    h = r.get_data(as_text=True)
+    ht = _text(h)
+    chk('⑨ /hetero 에 비준 블록의 고정 문장 그대로 (정본 파일에서 뽑아 대조)',
+        len(blocks) == 1 and len(sentence) > 40 and sentence in ht)
+    chk('⑩ 하지 않는 말 · 예측 P1 · P2 · P3 이 함께 (비준 셋)',
+        '하지 않는 말' in ht and all(f'P{i}.' in ht for i in (1, 2, 3)))
+    chk(f'⑪ 정본 경로 docs/hetero_thesis.md · 비준 날짜 = 정본 표지의 날짜 ({date or "없음"})',
+        bool(date) and 'docs/hetero_thesis.md' in ht and f'비준 {date}' in ht)
+
+    probe = '혼합 응집(특히 SE–SE)이 줄어 분산이 좋아지고'
+    tpl = (Path(__file__).resolve().parent / 'templates' / 'hetero.html').read_text(encoding='utf-8')
+    code = Path(webapp.__file__).read_text(encoding='utf-8')
+    chk('⑫ 고정 문장을 템플릿 · 코드에 베끼지 않는다 (정본 한 곳)',
+        probe in src and probe not in tpl and probe not in code)
+
+    orig = getattr(webapp, 'HETERO_THESIS_MD', None)
+    bad = []
+    with tempfile.TemporaryDirectory() as td:
+        cases = {
+            'no_marker': re.sub(r'<!-- THESIS:(BEGIN[^>]*|END) -->', '', src),
+            'no_date': src.replace(f'<!-- THESIS:BEGIN ratified={date} -->', '<!-- THESIS:BEGIN -->'),
+            'two_blocks': src + f'\n<!-- THESIS:BEGIN ratified={date} -->\n**"딴 문장"**\n<!-- THESIS:END -->\n',
+            'empty_block': re.sub(r'(<!-- THESIS:BEGIN[^>]*-->\n).*?(\n<!-- THESIS:END -->)', r'\1 \2', src, flags=re.S),
+            'missing_file': None,
+        }
+        for name, body in cases.items():
+            fp = Path(td) / f'{name}.md'
+            if body is not None:
+                fp.write_text(body, encoding='utf-8')
+            webapp.HETERO_THESIS_MD = fp
+            try:
+                t2 = _text(c.get('/hetero').get_data(as_text=True))
+            finally:
+                webapp.HETERO_THESIS_MD = orig
+            if '논지 정본을 읽지 못했다' not in t2 or sentence in t2:
+                bad.append(name)
+    chk(f'⑬ 표지 없음 · 날짜 없음 · 둘 · 빈 블록 · 파일 없음 → "논지 정본을 읽지 못했다" (옛 문장 안 보임) {bad or ""}', not bad)
 
     print(f'\ntest_hetero_transcript_page: {_ok}/{_ok + len(_fail)} PASS' + (f'   FAILED: {_fail}' if _fail else ''))
     return 0 if not _fail else 1

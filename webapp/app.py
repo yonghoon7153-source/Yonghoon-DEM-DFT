@@ -4596,11 +4596,52 @@ def _hetero_inventory():
     }
 
 
+#: 이종기술 논지 정본 — 1저자 비준 10-05 (*"이거 비준이고"* · *"중간에 이게 흔들리면 전체가 흔들려버리니까"*).
+#:   화면은 이 파일의 **비준 블록** (`<!-- THESIS:BEGIN ratified=<날짜> -->` … `<!-- THESIS:END -->`) 만 읽는다.
+#:   ⛔ 고정 문장 · 비준 날짜를 템플릿 · 코드에 베끼지 않는다 — 정본을 고쳐도 화면이 옛 문장을 보이게 된다 (규율 ④).
+HETERO_THESIS_MD = Path(__file__).resolve().parent.parent / 'docs' / 'hetero_thesis.md'
+_THESIS_BLOCK = re.compile(r'<!-- THESIS:BEGIN ratified=(\d{4}-\d{2}-\d{2}) -->\r?\n(.*?)\r?\n<!-- THESIS:END -->', re.S)
+_THESIS_ANY_BEGIN = re.compile(r'<!-- THESIS:BEGIN\b')
+
+
+def _hetero_thesis():
+    """논지 정본의 비준 블록 → {'ok', 'html', 'date', 'error', 'redacted'}.
+
+    fail-closed — 파일 없음 · 표지 없음 · 날짜 없는 표지 · 표지 둘 이상 · 빈 블록이면 `ok=False` 와 **무엇이 깨졌는지**를
+    낸다 (조용히 비우거나 옛 문장을 보이지 않는다).  `/worklog` · `/mixer` 와 같은 관문: markdown 변환 **전에** redact.
+    """
+    out = {'ok': False, 'html': '', 'date': '', 'error': '', 'redacted': False}
+    try:
+        src = HETERO_THESIS_MD.read_text(encoding='utf-8')
+    except OSError as e:
+        out['error'] = f'{HETERO_THESIS_MD.name} 을 읽지 못했다 ({type(e).__name__})'
+        return out
+    hits = _THESIS_BLOCK.findall(src)
+    n_begin = len(_THESIS_ANY_BEGIN.findall(src))
+    if len(hits) != 1 or n_begin != 1:
+        out['error'] = (f'비준 블록 표지가 {len(hits)} 쌍 (BEGIN 표지 {n_begin} 개) — '
+                        '날짜가 붙은 표지 (ratified=YYYY-MM-DD) 가 정확히 한 쌍이어야 한다')
+        return out
+    date, raw = hits[0]
+    block = ledger_view.redact(raw).strip()
+    if not block:
+        out['error'] = '비준 블록이 비어 있다'
+        return out
+    out['redacted'] = block != raw.strip()
+    try:
+        import markdown
+        out['html'] = markdown.markdown(block)
+    except ImportError:
+        out['html'] = '<pre>' + block.replace('&', '&amp;').replace('<', '&lt;') + '</pre>'
+    out.update(ok=True, date=date)
+    return out
+
+
 @app.route('/hetero')
 def hetero_page():
-    """이종기술 — 소립 SC-NCM 실험 라인의 프로젝트 면 (읽기 전용)."""
+    """이종기술 — 소립 SC-NCM 실험 라인의 프로젝트 면 (읽기 전용) · 맨 위 = 논지 정본의 비준 블록."""
     return render_template('hetero.html', active='hetero',
-                           inv=_hetero_inventory(), lv=_page_lv('hetero'))
+                           inv=_hetero_inventory(), thesis=_hetero_thesis(), lv=_page_lv('hetero'))
 
 
 _HT_DATA = Path(__file__).resolve().parent.parent / 'docs' / 'data'
