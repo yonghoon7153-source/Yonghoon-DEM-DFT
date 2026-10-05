@@ -1,0 +1,53 @@
+{
+  "kind": "REVIEWER_DELIVERY_MANIFEST",
+  "source_commit": "17e03fa2c149babb760550151955f1c54cd045c3",
+  "payload_count": 9,
+  "files": [
+    {
+      "path": "CLAUDE_REPLY_KO.md",
+      "bytes": 3275,
+      "sha256": "8291a5dee56c9251836a84b5e15ba7f3344fd02504b15eac3024ccdfd9d74e02"
+    },
+    {
+      "path": "DECISION.json",
+      "bytes": 1573,
+      "sha256": "01699c334c63f37df4cb85823d95c8233c1f5cabd4c3e0e80fd3d202d4d2f5b5"
+    },
+    {
+      "path": "PRIOR_BASIS.json",
+      "bytes": 17587,
+      "sha256": "d573eef5648aa7ad87c5b341ffff8b18a1678d4430edc659b23e29d19fcb88f2"
+    },
+    {
+      "path": "RECEIVED_SNAPSHOT.json",
+      "bytes": 146671,
+      "sha256": "1cdc6a29e02240238e9dbc30164ee2487c81a0e9a95efef4e4965dc32ac94095"
+    },
+    {
+      "path": "REVIEW_CHECKS.json",
+      "bytes": 18896,
+      "sha256": "d02b6f0f2985fda9f9dfe0ca0f3d60fecb4fe22da1c930458d560ef52ec8858f"
+    },
+    {
+      "path": "REVIEW_KO.md",
+      "bytes": 14865,
+      "sha256": "f39991b2393dc8c2c37328d15383fcb54e7c18cbd2474aead6193f37234f3f8f"
+    },
+    {
+      "path": "reviewer_seal_checks.py",
+      "bytes": 4199,
+      "sha256": "527815856d6582f1a0c41c9e12b98739ab174d7ec9a6198111e2ebbc082f3373"
+    },
+    {
+      "path": "REVIEWER_VERIFICATION_RETURN.json",
+      "bytes": 21855,
+      "sha256": "cad2b0fdeb3d00c86fa8c676789c85100618e166b366e02656bc34763b47a525"
+    },
+    {
+      "path": "TREE_SELECTION.json",
+      "bytes": 9025,
+      "sha256": "46faccd0b9795698e655f9c2371afd250e3f83b8002d98357ad7c0ff39859568"
+    }
+  ]
+}
+

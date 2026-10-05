@@ -1,0 +1,34 @@
+{
+  "review_date": "2026-10-06",
+  "fixed_commit": "17e03fa2c149babb760550151955f1c54cd045c3",
+  "repository": "yonghoon7153-source/Yonghoon-DEM-DFT",
+  "A": {
+    "status": "ANNEX_D_ACCEPTED_RV2C_N1_N2_N3_CLOSED",
+    "prior_C2_document_acceptance": "MAINTAINED",
+    "C1_core_paper_side": "MAINTAINED",
+    "actual_sheet_cycle_direction_binding": "NOT_OPENED_PENDING_P0"
+  },
+  "B": {
+    "status": "C6_SEALED_ARTIFACT_IDENTITY_ACCEPTED_FULL_CLOSEOUT_PENDING_TWO_LOCAL_SUPPLEMENTS",
+    "manifest_sha256": "e4adba0fed22e51de37d98067a623e2e3e9575cc9e1ea039a3a88363e2378e9f",
+    "payload_hashes_verified": 10,
+    "npy_files_and_raw_payload_hashes_verified": 6,
+    "C6_RUN_log_in_fixed_tree": false,
+    "submitted_test_counts_9_12_538": "REPORTED_NOT_RAW_LOG_VERIFIED",
+    "findings": [
+      {"id": "C6-N1", "priority": "P2", "scope": "Documented collision exception broader than fixed LICENSE observation; no provided-code execution reproduction claimed."},
+      {"id": "C6-N2", "priority": "P2", "scope": "Missing raw validation logs and insufficient independent evidence of all-eight explicit option forwarding under no-code-opening scope."}
+    ]
+  },
+  "reviewer_byte_document_checks": {"passed": 88, "failed": 0, "not_a_C6_suite": true},
+  "provided_code_opened": false,
+  "provided_code_executed": false,
+  "REIL_observations_opened": false,
+  "environment_rebuilt": false,
+  "COMSOL_executed": false,
+  "P0_authorized": false,
+  "implementation_authorized": false,
+  "test_or_install_authorized": false,
+  "fit_authorized": false,
+  "E3b_registered": false
+}
