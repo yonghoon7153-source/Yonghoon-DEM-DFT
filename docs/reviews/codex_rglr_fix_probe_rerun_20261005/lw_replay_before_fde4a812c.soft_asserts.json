@@ -1,0 +1,50 @@
+[
+ {
+  "line": 41,
+  "src": "results['normal']['status']=='OK'",
+  "held": true,
+  "error": null
+ },
+ {
+  "line": 42,
+  "src": "results['nan_plate']['status'].startswith('FAILED')",
+  "held": true,
+  "error": null
+ },
+ {
+  "line": 43,
+  "src": "results['isolated_nan_radius']['status'].startswith('FAILED')",
+  "held": true,
+  "error": null
+ },
+ {
+  "line": 44,
+  "src": "results['true_zero_load']['status'].startswith('UNDEFINED')",
+  "held": true,
+  "error": null
+ },
+ {
+  "line": 45,
+  "src": "results['false_zero_force']['status'].startswith('FAILED')",
+  "held": true,
+  "error": null
+ },
+ {
+  "line": 46,
+  "src": "results['nan_cstr_first']['status']=='OK' and results['nan_cstr_first']['parsed_cstr_present']==[False,False]",
+  "held": true,
+  "error": null
+ },
+ {
+  "line": 47,
+  "src": "results['inf_cstr_first']['status'].startswith('FAILED')",
+  "held": true,
+  "error": null
+ },
+ {
+  "line": 48,
+  "src": "results['finite_wrong_virial']['status'].startswith('FAILED') and results['nan_hides_wrong_virial']['status']=='OK'",
+  "held": true,
+  "error": null
+ }
+]

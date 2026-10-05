@@ -1,0 +1,44 @@
+[
+ {
+  "line": 71,
+  "src": "not any('harness_error' in x for x in results)",
+  "held": true,
+  "error": null
+ },
+ {
+  "line": 72,
+  "src": "by['positive']['status']=='done' and by['no_through']['status']=='done'",
+  "held": true,
+  "error": null
+ },
+ {
+  "line": 73,
+  "src": "by['solver_failed_stop']['status']=='failed'",
+  "held": true,
+  "error": null
+ },
+ {
+  "line": 74,
+  "src": "by['rejected_retry_preserves_generation']['previous_generation_identical'] is True",
+  "held": true,
+  "error": null
+ },
+ {
+  "line": 75,
+  "src": "by['ratio_times4']['tau']['tau2_ion_hertz']==by['positive']['tau']['tau2_ion_hertz']/4",
+  "held": true,
+  "error": null
+ },
+ {
+  "line": 76,
+  "src": "by['band_ratio_nan']['status']=='done' and by['band_ratio_negative']['status']=='done'",
+  "held": true,
+  "error": null
+ },
+ {
+  "line": 77,
+  "src": "by['write_failure_after_stamp']['status']=='EXCEPTION'",
+  "held": true,
+  "error": null
+ }
+]
