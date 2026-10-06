@@ -1,0 +1,6 @@
+sandbox: /tmp/mutation_replay__5f5b2a2/degradation-degeneracy
+
+물었다        provider-edges-sha-has-one-definition-g92 node 1 · -k test_g92_k07
+
+scenario_total 1 · scenario_executable 1 · scenario_declared 0 · site_total 1 · site_executable 1 · site_declared 0 · ran 1
+실행한 변이 1건이 전부 기대 node 를 call 단계에서 물었다

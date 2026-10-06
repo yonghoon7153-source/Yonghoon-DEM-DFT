@@ -1,0 +1,23 @@
+sandbox: /tmp/mutation_replay_pg2_4e5n/degradation-degeneracy
+
+★ 안 물었다    claim-seals-the-run-spec       node 2 · -k claim_seals_the_exact_run_spec or test_g92_k10_c8_another
+
+=== 관측한 EXPECT (그대로 붙여 넣어라) ===
+{
+    "claim-seals-the-run-spec": {
+        "fail": [
+            "tests/test_gate92_stage4_linkage.py::test_g92_k10_c8_another_self_consistent_plan_is_not_the_approved_run_spec",
+            "tests/test_preserve.py::test_the_claim_seals_the_exact_run_spec"
+        ],
+        "witness": {
+            "tests/test_gate92_stage4_linkage.py::test_g92_k10_c8_another_self_consistent_plan_is_not_the_approved_run_spec": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_preserve.py::test_the_claim_seals_the_exact_run_spec": "Failed: DID NOT RAISE PreserveError"
+        }
+    }
+}
+
+scenario_total 1 · scenario_executable 1 · scenario_declared 0 · site_total 1 · site_executable 1 · site_declared 0 · ran 1
+
+=== 문제 ===
+claim-seals-the-run-spec: 실패 집합이 선언과 다르다 — 더 빨개짐 ['tests/test_gate92_stage4_linkage.py::test_g92_k10_c8_another_self_consistent_plan_is_not_the_approved_run_spec'] · 안 빨개짐 []
+claim-seals-the-run-spec: tests/test_gate92_stage4_linkage.py::test_g92_k10_c8_another_self_consistent_plan_is_not_the_approved_run_spec 의 증인이 선언되지 않았다

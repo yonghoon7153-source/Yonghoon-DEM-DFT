@@ -1,0 +1,143 @@
+start head 3ec8aadb13e4ee4eb9e3434fbd28e503a7c03a34 dirty 0 utc 2026-10-06T15:09:42Z
+
+[1m── 환경 프로필 C 대조 (기록 전용 · 원장 §135) ──[0m
+환경 프로필 C 대조: MISMATCH · lock requirements-validation-C.lock.txt (sha256 d886f30ff675fef7…) · 배포판 lock 170 / 측정 174 · 가려진 2 / 3 · 설치 파일 일치 24918 (해시 없음 10456) · 경로 검색 origin 의 RECORD 소속 9 (로드된 module origin 미측정)
+  · 확인 불가 — RECORD 없는 배포판 21: argcomplete, cryptography, dbus-python, distro, launchpadlib, lazr-restfulclient, lazr-uri, oauthlib, pip, pygobject, pyjwt, pyparsing, python-apt, pyyaml, setuptools, six, toml, wadllib, wheel, xmltodict, yq
+  · 확인 불가 — 경로 검색 origin: yaml
+  ✗ dist_extra flask locked=None measured=3.1.3
+  ✗ dist_extra itsdangerous locked=None measured=2.2.0
+  ✗ dist_extra markdown locked=None measured=3.10.3
+  ✗ dist_extra werkzeug locked=None measured=3.1.8
+  ✗ dist_record blinker locked=none measured=dc82b32b2026557c17e24d3e48a6e379a3d5660e81983aa026998afe775a32a4
+  ✗ dist_record debugpy locked=93bb7a80876cc2c5b1a03a327ba26a34a51ee2ca0e65114725f0e82534f3207b measured=a0018709f48a14ac29ba157023a6de58fd705aed306baa4d61b3d0821ff8d1c9
+  ✗ dist_record fonttools locked=5284752e0fa2c97798d4ac3bb89d559011cfbbfdf98ae1857a38f190f8c8e5af measured=a27d20f5a6f885a67af62a2a03d0787f8def85840d9bfd3b80f35ee88c3e74d7
+  ✗ dist_record jupyter-server locked=1c069281d9330882ff1902936e44a6857db9f251e9f8725d5367fd3eaf9a6bc7 measured=e3c8431b4269bbbd0f24ad2c83e771bf8e56dbdfb8a9cb2007062b569ee5c6df
+  ✗ dist_record jupyterlab locked=b81e81c8ebabe7774411a6486d64c692fd8bad63b619b41f4bd2d8f37d0da16c measured=f3f26b1588efd1bb62fd7ad3c12a0c9851c54d3f98a28b1fb15c56a572d133d4
+  ✗ dist_record jupyterlab-server locked=9c2e9022df5d98d52d645361ee52054c1dc3e10ea9ba4513085ec40beb97718c measured=99e4a0667b0b92789c40e1e7451336d8e11b6f525414df3d0aacbc089368c6e7
+  ✗ dist_record nest-asyncio2 locked=896d485c5d1fb04e0352d65ba7f410095f923b0dd672adff6815b77e4905bc0d measured=04847daff2aff192295361598b4b5fa068adaa168e069c3ffa0d5e57b7f10b1e
+  ✗ dist_record notebook locked=821c9ec3f1811ad7d842d384de9cd8de73284955504d3cf37e6f4a7751a6b9a4 measured=0ea3ce48cdae99b8fcb5c843158c8479a1abcdf924b0ab2ed9ef7d6b2e4598d3
+  ✗ dist_record numpy locked=c3dd00f045ea91bf972a08daad232f99a627186b0799af0379317a9edcc9fa86 measured=641c07465e54880064a7ac478d33ea28ec0f3384e618f7ef734586bfabf75d5e
+  ✗ dist_record platformdirs locked=867c96df4a8756503ffd5b673b0e886d50c6a12442d9db05e27996dc9e2f88e0 measured=a8297e12b158ea591f74e78b7d6094e08401a9c18a85f9e969f84f870bce0181
+  ✗ dist_record posthog locked=b027a054757dc3d609caae2352224277a64f1752666177aa86eedc918dfcd0a5 measured=3df9778cf8962564afac9830714158997b0f665d1a22beee497e9155f84bb8af
+  ✗ dist_record pygments locked=41a99838b974f5e6cf39a8e387a449418e6762c666427e3c24152760aa6e2f4c measured=511b09ac3a4e667e2275c3316de174dbee67e859e5a1488c185a0667641221d0
+  ✗ dist_record pytest locked=7a423734645a175fcbf3fecb9703a3a9fd6756bdcda1ce7438bd1968b82261c9 measured=b13e2dde47d82b9fec29174e309b45a0c4b093da06fcea57e89ffdb3a61b3efb
+  ✗ dist_record soupsieve locked=0f498c090ee8e116e1132a9f61b81ce2c50ff022042c5a192d82644270ec8d18 measured=c7281305e942fabb7a9dfa02af2030d68b3c46e0dac6f36e66134fb41150c060
+  ✗ dist_record tornado locked=a8fec524feae3f0d25a7d110637a7360bdec3e6256cf496b26258eb5d31b7e7d measured=27cef96e0b3874c6c859d13cc45a1e69fd8ace9df8cefff33f7a9cd5db679070
+  ✗ dist_record wcwidth locked=f8c196e49b91ee8f74db1ae1b8ba04ec64661e0de2cf94d35ac9596dfb6b8215 measured=cb87e4ad19184953c3eade5642dbec7df3b8641c96b2ed84115bba57a2cb8d03
+  ✗ dist_version blinker locked=1.7.0 measured=1.9.0
+  ✗ dist_version debugpy locked=1.8.22 measured=1.8.21
+  ✗ dist_version fonttools locked=4.66.0 measured=4.65.0
+  ✗ dist_version jupyter-server locked=2.21.1 measured=2.21.0
+  ✗ dist_version jupyterlab locked=4.6.4 measured=4.6.3
+  ✗ dist_version jupyterlab-server locked=2.28.1 measured=2.28.0
+  ✗ dist_version nest-asyncio2 locked=1.7.3 measured=1.7.2
+  ✗ dist_version notebook locked=7.6.3 measured=7.6.2
+  ✗ dist_version platformdirs locked=4.12.0 measured=4.11.8
+  ✗ dist_version posthog locked=7.60.1 measured=7.53.0
+  ✗ dist_version soupsieve locked=2.10 measured=2.9.2
+  ✗ dist_version tornado locked=6.5.10 measured=6.5.8
+  ✗ dist_version wcwidth locked=0.9.1 measured=0.8.3
+  ✗ shadowed blinker==1.7.0 locked=None measured=none
+  (기록 전용 — 불일치여도 아무것도 막지 않는다 · 원장 §135)
+
+[1m── 0. 완방상태 준비 — solver recipe 봉인·거부 (F82b) ──[0m
+2026-10-06 15:09:55,722 WARNING __main__:   vs 원본 하드코딩 ne_primary: 36.7 -> 36.6 (차이 0.1%) — 하드코딩은 사용하지 않음
+2026-10-06 15:09:55,722 WARNING __main__:   vs 원본 하드코딩 ne_secondary: 3446.3 -> 3446.1 (차이 0.0%) — 하드코딩은 사용하지 않음
+2026-10-06 15:09:55,722 WARNING __main__:   vs 원본 하드코딩 pe: 58439.9 -> 58439.9 (차이 0.0%) — 하드코딩은 사용하지 않음
+   ✅ baseline --force (재계산 + baseline_hash·solver 봉인)
+   ✅ 다른 solver 로 계산된 캐시 거부 (F82b)
+
+[1m── 1. PyBaMM 합성 격자 (producer artifact) ──[0m
+· 실행 전 gate 면제 — 모든 경로가 smoke namespace 안이다 (정규 격리)
+grid:   0%|          | 0/6 [00:00<?, ?cond/s]grid: 100%|██████████| 6/6 [00:11<00:00,  1.85s/cond]grid: 100%|██████████| 6/6 [00:11<00:00,  1.85s/cond]
+{
+  "n_ok": 6,
+  "n_failed": 2,
+  "n_curves_total": 6,
+  "elapsed_s": 11.148545105999801,
+  "out_dir": "results/_smoke/curves"
+}
+   ✅ 곡선 생성
+   ✅ curves_manifest.yaml (F70 producer 기록)
+   ✅ producer 독립 검증 (F74): 통과 (실패라벨 재검 포함)
+   ✅ 다른 config 의 resume 혼합 차단 (F74)
+
+[1m── 2. half-cell 캐시 없음 → 안내하며 멈추는가 (F63) ──[0m
+   ✅ 안내와 함께 중단 (조용한 캐시 생성 없음)
+
+[1m── 3. half-cell 기준 준비 (봉인 가능한 별도 단계) ──[0m
+   ✅ 캐시 + recipe meta 생성
+   ✅ recipe meta 사이드카 (F64)
+   ✅ halfcell --verify (재생성 대조)
+   ✅ stale meta → validator 거부 (['runtime_identity', '코드_identity'])
+2026-10-06 15:10:42,540 WARNING __main__: half-cell 캐시가 다른 runtime 에서 계산됨 (차이 ['pybamm']) — 미스로 취급해 재계산: /home/user/Yonghoon-DEM-DFT/degradation-degeneracy/.cache/halfcell/a8e262f7d6aa4beb_ocp_b5009f515fb8.json
+   ✅ stale 캐시 → 미스로 재계산되어 meta 갱신 (12차 발견 4 자기치유)
+   ✅ --force --verify (운영 명령)
+
+[1m── 4. 같은 곡선을 두 기준으로 fitting ──[0m
+   ✅ Case 2 (grid 기준)
+   ✅ Case 1 (half-cell 기준)
+
+[1m── 5. provenance — 두 산출물 모두 인용 가능한가 ──[0m
+   ✅ results/_smoke/grid_fit: 통과
+   ✅ results/_smoke/halfcell_fit: 통과
+
+[1m── 6. 공정 paired 실행 — 33p/34p 쌍 (F66/F81) ──[0m
+   ✅ 6조건 × 2목적함수, 조건별 (index,source) 집합 동일, 전부 3 restart·유한
+   ✅ paired 채점
+   ✅ paired 목적함수 비교
+   ✅ paired 보고서 생성 (n_restarts=3, pairwise 메타 키 포함)
+
+[1m── 7. 채점 · 비교 · 보고서 ──[0m
+   ✅ 채점
+   ✅ 목적함수 비교
+   ✅ 기준 곡선 비교
+   ✅ weight sweep (run.sh wrapper, w∈{0,1})
+   ✅ sweep 기록: tol·method·adaptive·digest 봉인, optimized 는 run 디렉터리에
+   ✅ sweep 끝점 ↔ 본 실행 일치 (check_sweep_consistency)
+   ✅ 인용 금지 배너 없음 — 전 구간 provenance 통과
+   ✅ 파생 변조 → 재계산 렌더 + stale 배너 (F77)
+
+[1m── 7b. 같은 논리 실행의 resume → 보고서 갱신 (62차 순서 e2e) ──[0m
+   ✅ resume (production 진입점)
+   ✅ completed journal 이 하나 — run_sig 가 resume 에서 안 바뀜 (62차 P0-5)
+   ✅ resume 뒤 lock 정리 (62차 P0-3)
+   ✅ resume 뒤 봉인이 2 member 를 정확히 담고 승격 판정을 지난다 (62차 P0-1)
+   ✅ resume 뒤 보고서 갱신 — 배너 없음
+
+[1m── 8. Hessian — 분리배치 곡선 해석 · 채점 산출물 불변 ──[0m
+   ✅ 분리배치 Hessian (봉인 _inputs 곡선 자동 해석, 18차 A)
+   ✅ Hessian 이 degeneracy_summary.yaml 을 건드리지 않음 (18차 B)
+   ✅ Hessian sidecar 기록
+   ✅ score → hessian → report 순서에 stale 없음 (18차 C)
+
+[1m── 8b. 굳은 기록 scan — handle 경로 · staging 경로 · 없는 임시 경로 (62차 γ′) ──[0m
+   ✅ 굳은 기록 58개: handle 경로·staging 경로·없는 경로 없음 (62차 γ′)
+
+[1m── 9. 보관 → 격리 복원 → 검증 → 재채점 ──[0m
+   ✅ bundle (halfcell)
+   ✅ bundle (grid + nested sweep)
+   ✅ check
+   ✅ check (nested)
+   ✅ 격리 root 복원
+   ✅ 격리 복원 (grid+sweep)
+   ✅ 격리 복원 검증[results/_smoke/halfcell_fit]: 통과
+   ✅ 격리 복원 검증[results/_smoke/grid_fit]: 통과
+   ✅ 격리 복원 검증[results/_smoke/grid_fit/wsweep]: 통과
+   ✅ 복원본 재채점: 정본 확인, digest df3e90b03bca
+   ✅ 없는 보관 대상 → nonzero 종료 (F89)
+   ✅ 보관 음성 테스트가 tracked artifacts/ 를 건드리지 않음
+   ✅ archive wrapper 정상 승격
+   ✅ artifact_index: 승격분만·kind·64자리·봉인 곡선 digest 일치 (12차 발견 5)
+   ✅ 실패한 재보관이 기존 묶음을 보존 (11차 발견 6)
+   ✅ 계획 index 일관 · 계획 밖 다리는 거부 (46차 P0-11)
+   ✅ run.sh 에 실행 전 gate 가 배선돼 있다 (46차 P0-11)
+   ✅ smoke namespace 밖 · 계획에 없는 다리는 실행 전에 거부된다 (46차 P0-11)
+
+[1m✅ pipeline smoke 통과[0m
+[33m⚠ 실행 전 계획 gate 는 배선됐다 (46차 P0-11). 남은 것은 실물
+   provider 어댑터 — 지금 보존 회귀는 hermetic fake 로만 돈다.
+   새 leg 를 돌리려면 `LEG_PRESERVATION.yaml` 의 `planned:` 에 먼저
+   적고, 실물 보관 경로는 사람이 따로 확인할 것.[0m
+rc=0
+end head 3ec8aadb13e4ee4eb9e3434fbd28e503a7c03a34 dirty 0 utc 2026-10-06T15:13:26Z

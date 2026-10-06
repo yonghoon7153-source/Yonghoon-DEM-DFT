@@ -1,0 +1,176 @@
+head 4aedc78f1 dirty 1
+
+[conftest] 시험 authority: /tmp/dd-test-authority-30tjzcoj/docs/22p_gap/LEG_PRESERVATION.yaml (운영 원장의 바이트 복사본 — 70차 E6)
+
+[conftest] 이 checkout 을 처음 보았다 — 얼린 cohort 17개의 좌표를 시험 authority 에 봉인했다: ['g10_2026_09_01', 'g11_2026_09_02', 'g12_2026_09_03', 'g13_2026_09_07', 'g14_2026_09_08', 'g15_2026_09_08', 'g16_2026_09_09', 'g17_2026_09_14', 'g1_2026_08_20', 'g2_2026_08_25', 'g3_2026_08_28', 'g4_2026_08_28', 'g5_2026_08_29', 'g6_2026_09_01', 'g7_2026_09_01', 'g8_2026_09_01', 'g9_2026_09_01']
+..............................FFF.FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF. [ 52%]
+....F.............................................................       [100%]
+=================================== FAILURES ===================================
+E   AssertionError: stage3 위조가 stage3_schema 를 통과했다: 통과
+    assert 'stage3_schema' in []
+/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:276: AssertionError: stage3 위조가 stage3_schema 를 통과했다: 통과
+E   AssertionError: stage3 위조가 stage3_schema 를 통과했다: 통과
+    assert 'stage3_schema' in []
+/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:276: AssertionError: stage3 위조가 stage3_schema 를 통과했다: 통과
+E   AssertionError: stage3 위조가 stage3_schema 를 통과했다: 통과
+    assert 'stage3_schema' in []
+/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:276: AssertionError: stage3 위조가 stage3_schema 를 통과했다: 통과
+E   AssertionError: 이유에 'dict' 가 없다: 실패 — sig_version 6 인데 run_spec.stage3 필수 키가 없다: ['planned_id', 'planned_envelope', 'pairing_design_sha256', 'parameter_order_sha256', 'bank_version', 'exact_bounds_sha256', 'candidate_mode', 'budget_by_objective', 'warm_provider_map', 'provider_edges_sha256', 'roster_sha256', 'arm', 'stage', 'pairing_design', 'base_config_closure_sha256', 'base_config_closure_keys']
+    assert 'dict' in "실패 — sig_version 6 인데 run_spec.stage3 필수 키가 없다: ['planned_id', 'planned_envelope', 'pairing_design_sha256', 'paramete..._sha256', 'roster_sha256', 'arm', 'stage', 'pairing_design', 'base_config_closure_sha256', 'base_config_closure_keys']"
+/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:277: AssertionError: 이유에 'dict' 가 없다: 실패 — sig_version 6 인데 run_spec.stage3 필수 키가 없다: ['planned_id', 'planned_envelope', 'pairing_design_sha256', 'parameter_order_sha256', 'bank_version', 'exact_bounds_sha256', 'candidate_mode', 'budget_by_objective', 'warm_provider_map', 'provider_edges_sha256', 'roster_sha256', 'arm', 'stage', 'pairing_design', 'base_config_closure_sha256', 'base_config_closure_keys']
+E   AssertionError: 이유에 'dict' 가 없다: 실패 — sig_version 6 인데 run_spec.stage3 필수 키가 없다: ['planned_id', 'planned_envelope', 'pairing_design_sha256', 'parameter_order_sha256', 'bank_version', 'exact_bounds_sha256', 'candidate_mode', 'budget_by_objective', 'warm_provider_map', 'provider_edges_sha256', 'roster_sha256', 'arm', 'stage', 'pairing_design', 'base_config_closure_sha256', 'base_config_closure_keys']
+    assert 'dict' in "실패 — sig_version 6 인데 run_spec.stage3 필수 키가 없다: ['planned_id', 'planned_envelope', 'pairing_design_sha256', 'paramete..._sha256', 'roster_sha256', 'arm', 'stage', 'pairing_design', 'base_config_closure_sha256', 'base_config_closure_keys']"
+/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:277: AssertionError: 이유에 'dict' 가 없다: 실패 — sig_version 6 인데 run_spec.stage3 필수 키가 없다: ['planned_id', 'planned_envelope', 'pairing_design_sha256', 'parameter_order_sha256', 'bank_version', 'exact_bounds_sha256', 'candidate_mode', 'budget_by_objective', 'warm_provider_map', 'provider_edges_sha256', 'roster_sha256', 'arm', 'stage', 'pairing_design', 'base_config_closure_sha256', 'base_config_closure_keys']
+E   AssertionError: 이유에 'dict' 가 없다: 실패 — sig_version 6 인데 run_spec.stage3 필수 키가 없다: ['planned_id', 'planned_envelope', 'pairing_design_sha256', 'parameter_order_sha256', 'bank_version', 'exact_bounds_sha256', 'candidate_mode', 'budget_by_objective', 'warm_provider_map', 'provider_edges_sha256', 'roster_sha256', 'arm', 'stage', 'pairing_design', 'base_config_closure_sha256', 'base_config_closure_keys']
+    assert 'dict' in "실패 — sig_version 6 인데 run_spec.stage3 필수 키가 없다: ['planned_id', 'planned_envelope', 'pairing_design_sha256', 'paramete..._sha256', 'roster_sha256', 'arm', 'stage', 'pairing_design', 'base_config_closure_sha256', 'base_config_closure_keys']"
+/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:277: AssertionError: 이유에 'dict' 가 없다: 실패 — sig_version 6 인데 run_spec.stage3 필수 키가 없다: ['planned_id', 'planned_envelope', 'pairing_design_sha256', 'parameter_order_sha256', 'bank_version', 'exact_bounds_sha256', 'candidate_mode', 'budget_by_objective', 'warm_provider_map', 'provider_edges_sha256', 'roster_sha256', 'arm', 'stage', 'pairing_design', 'base_config_closure_sha256', 'base_config_closure_keys']
+E   AssertionError: stage3 위조가 stage3_schema 를 통과했다: 통과
+    assert 'stage3_schema' in []
+/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:276: AssertionError: stage3 위조가 stage3_schema 를 통과했다: 통과
+E   AssertionError: stage3 위조가 stage3_schema 를 통과했다: 통과
+    assert 'stage3_schema' in []
+/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:276: AssertionError: stage3 위조가 stage3_schema 를 통과했다: 통과
+E   AssertionError: stage3 위조가 stage3_schema 를 통과했다: 통과
+    assert 'stage3_schema' in []
+/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:276: AssertionError: stage3 위조가 stage3_schema 를 통과했다: 통과
+E   AssertionError: stage3 위조가 stage3_schema 를 통과했다: 통과
+    assert 'stage3_schema' in ['base_config_결속']
+/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:276: AssertionError: stage3 위조가 stage3_schema 를 통과했다: 통과
+E   AssertionError: stage3 위조가 stage3_schema 를 통과했다: 통과
+    assert 'stage3_schema' in ['후보_재유도']
+/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:276: AssertionError: stage3 위조가 stage3_schema 를 통과했다: 통과
+E   AssertionError: candidate_map 위조가 통과했다: 통과
+    assert 'candidate_map' in []
+/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:343: AssertionError: candidate_map 위조가 통과했다: 통과
+E   AssertionError: candidate_map 위조가 통과했다: 통과
+    assert 'candidate_map' in []
+/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:343: AssertionError: candidate_map 위조가 통과했다: 통과
+E   AssertionError: candidate_map 위조가 통과했다: 통과
+    assert 'candidate_map' in []
+/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:343: AssertionError: candidate_map 위조가 통과했다: 통과
+E   AssertionError: 이유에 'schema' 가 없다: 실패 — candidate_map.json 이 없거나 record 의 candidate_map_sha256 와 다르다
+    assert 'schema' in '실패 — candidate_map.json 이 없거나 record 의 candidate_map_sha256 와 다르다'
+/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:345: AssertionError: 이유에 'schema' 가 없다: 실패 — candidate_map.json 이 없거나 record 의 candidate_map_sha256 와 다르다
+E   AssertionError: 이유에 'entries' 가 없다: 실패 — candidate_map.json 이 없거나 record 의 candidate_map_sha256 와 다르다
+    assert 'entries' in '실패 — candidate_map.json 이 없거나 record 의 candidate_map_sha256 와 다르다'
+/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:345: AssertionError: 이유에 'entries' 가 없다: 실패 — candidate_map.json 이 없거나 record 의 candidate_map_sha256 와 다르다
+E   AttributeError: 'list' object has no attribute 'get'
+/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/src/io.py:1929: AttributeError: 'list' object has no attribute 'get'
+E   AttributeError: 'NoneType' object has no attribute 'get'
+/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/src/io.py:1929: AttributeError: 'NoneType' object has no attribute 'get'
+E   AttributeError: 'str' object has no attribute 'get'
+/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/src/io.py:1929: AttributeError: 'str' object has no attribute 'get'
+E   AssertionError: candidate_map 위조가 통과했다: 통과
+    assert 'candidate_map' in []
+/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:343: AssertionError: candidate_map 위조가 통과했다: 통과
+E   AssertionError: candidate_map 위조가 통과했다: 통과
+    assert 'candidate_map' in []
+/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:343: AssertionError: candidate_map 위조가 통과했다: 통과
+E   AssertionError: candidate_map 위조가 통과했다: 통과
+    assert 'candidate_map' in []
+/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:343: AssertionError: candidate_map 위조가 통과했다: 통과
+E   AssertionError: candidate_map 위조가 통과했다: 통과
+    assert 'candidate_map' in ['후보_재유도']
+/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:343: AssertionError: candidate_map 위조가 통과했다: 통과
+E   AttributeError: 'int' object has no attribute 'get'
+/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/src/io.py:1715: AttributeError: 'int' object has no attribute 'get'
+E   AssertionError: candidate_map 위조가 통과했다: 통과
+    assert 'candidate_map' in []
+/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:343: AssertionError: candidate_map 위조가 통과했다: 통과
+E   AssertionError: candidate_map 위조가 통과했다: 통과
+    assert 'candidate_map' in ['후보_재유도']
+/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:343: AssertionError: candidate_map 위조가 통과했다: 통과
+E   tools.design_wire.WireError: unit row 길이 (0, 8, 4) ≠ bounds 길이 (4,)
+/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tools/design_wire.py:675: tools.design_wire.WireError: unit row 길이 (0, 8, 4) ≠ bounds 길이 (4,)
+E   AssertionError: candidate_map 위조가 통과했다: 통과
+    assert 'candidate_map' in ['후보_재유도']
+/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:343: AssertionError: candidate_map 위조가 통과했다: 통과
+E   AssertionError: candidate_map 위조가 통과했다: 통과
+    assert 'candidate_map' in ['candidate_ids_결속', '후보_재유도']
+/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:343: AssertionError: candidate_map 위조가 통과했다: 통과
+E   AssertionError: candidate_map 위조가 통과했다: 통과
+    assert 'candidate_map' in ['후보_재유도']
+/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:343: AssertionError: candidate_map 위조가 통과했다: 통과
+E   AssertionError: 유효하지 않은 계획 envelope 로 후보 재유도를 불렀다
+    assert [1] == []
+      
+      Left contains one more item: 1
+      Use -v to get more diff
+/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:356: AssertionError: 유효하지 않은 계획 envelope 로 후보 재유도를 불렀다
+E   AssertionError: 자기일관 위조가 stage3_축_유도 를 통과했다: 검사 없음 · fail=[]
+    assert 'stage3_축_유도' in []
+/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:99: AssertionError: 자기일관 위조가 stage3_축_유도 를 통과했다: 검사 없음 · fail=[]
+E   AssertionError: 자기일관 위조가 stage3_축_유도 를 통과했다: 검사 없음 · fail=[]
+    assert 'stage3_축_유도' in []
+/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:99: AssertionError: 자기일관 위조가 stage3_축_유도 를 통과했다: 검사 없음 · fail=[]
+E   AssertionError: 자기일관 위조가 stage3_축_유도 를 통과했다: 검사 없음 · fail=[]
+    assert 'stage3_축_유도' in []
+/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:99: AssertionError: 자기일관 위조가 stage3_축_유도 를 통과했다: 검사 없음 · fail=[]
+E   AssertionError: 자기일관 위조가 stage3_축_유도 를 통과했다: 검사 없음 · fail=[]
+    assert 'stage3_축_유도' in []
+/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:99: AssertionError: 자기일관 위조가 stage3_축_유도 를 통과했다: 검사 없음 · fail=[]
+E   AssertionError: 자기일관 위조가 stage3_축_유도 를 통과했다: 검사 없음 · fail=[]
+    assert 'stage3_축_유도' in []
+/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:99: AssertionError: 자기일관 위조가 stage3_축_유도 를 통과했다: 검사 없음 · fail=[]
+E   AssertionError: 자기일관 위조가 stage3_축_유도 를 통과했다: 검사 없음 · fail=[]
+    assert 'stage3_축_유도' in []
+/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:99: AssertionError: 자기일관 위조가 stage3_축_유도 를 통과했다: 검사 없음 · fail=[]
+E   AssertionError: 자기일관 위조가 stage3_축_유도 를 통과했다: 검사 없음 · fail=[]
+    assert 'stage3_축_유도' in []
+/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:99: AssertionError: 자기일관 위조가 stage3_축_유도 를 통과했다: 검사 없음 · fail=[]
+E   AssertionError: 자기일관 위조가 stage3_축_유도 를 통과했다: 검사 없음 · fail=[]
+    assert 'stage3_축_유도' in []
+/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:99: AssertionError: 자기일관 위조가 stage3_축_유도 를 통과했다: 검사 없음 · fail=[]
+E   AssertionError: 자기일관 위조가 stage3_축_유도 를 통과했다: 검사 없음 · fail=[]
+    assert 'stage3_축_유도' in []
+/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:99: AssertionError: 자기일관 위조가 stage3_축_유도 를 통과했다: 검사 없음 · fail=[]
+E   AssertionError: writer 의 edge sha 6efe170bdab4487c ≠ 승인 축 (canonical digest) b084e85661ae634c
+    assert '6efe170bdab4...a637b6f4a5633' == 'b084e85661ae...2fbfa25c253e4'
+      
+      - b084e85661ae634c8c0d64d0f36f7fcf63453e1c4e7b7a1e6fb2fbfa25c253e4
+      + 6efe170bdab4487c42bd22ebb533c23542bbb581f461e8ac15aa637b6f4a5633
+/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:422: AssertionError: writer 의 edge sha 6efe170bdab4487c ≠ 승인 축 (canonical digest) b084e85661ae634c
+=========================== short test summary info ============================
+FAILED tests/test_gate92_stage4_linkage.py::test_g92_k03_run_spec_stage3_is_closed_and_typed[old_pairing_design_id]
+FAILED tests/test_gate92_stage4_linkage.py::test_g92_k03_run_spec_stage3_is_closed_and_typed[old_inference_status]
+FAILED tests/test_gate92_stage4_linkage.py::test_g92_k03_run_spec_stage3_is_closed_and_typed[third_key]
+FAILED tests/test_gate92_stage4_linkage.py::test_g92_k03_run_spec_stage3_is_closed_and_typed[container_list]
+FAILED tests/test_gate92_stage4_linkage.py::test_g92_k03_run_spec_stage3_is_closed_and_typed[container_null]
+FAILED tests/test_gate92_stage4_linkage.py::test_g92_k03_run_spec_stage3_is_closed_and_typed[container_str]
+FAILED tests/test_gate92_stage4_linkage.py::test_g92_k03_run_spec_stage3_is_closed_and_typed[type_arm_int]
+FAILED tests/test_gate92_stage4_linkage.py::test_g92_k03_run_spec_stage3_is_closed_and_typed[type_budget_list]
+FAILED tests/test_gate92_stage4_linkage.py::test_g92_k03_run_spec_stage3_is_closed_and_typed[type_bank_version_null]
+FAILED tests/test_gate92_stage4_linkage.py::test_g92_k03_run_spec_stage3_is_closed_and_typed[type_closure_keys_str]
+FAILED tests/test_gate92_stage4_linkage.py::test_g92_k03_run_spec_stage3_is_closed_and_typed[type_pairing_sha_int]
+FAILED tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[top_old_pairing_design_id]
+FAILED tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[top_old_inference_status]
+FAILED tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[top_third_key]
+FAILED tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[top_missing_schema]
+FAILED tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[top_entries_not_list]
+FAILED tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[container_list]
+FAILED tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[container_null]
+FAILED tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[container_str]
+FAILED tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_old_pairing_design_id]
+FAILED tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_old_inference_status]
+FAILED tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_third_key]
+FAILED tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_missing_x0]
+FAILED tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_not_dict]
+FAILED tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_i_bool]
+FAILED tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_i_str]
+FAILED tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_bank_index_bool]
+FAILED tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_bank_index_on_base]
+FAILED tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_candidate_id_int]
+FAILED tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_x0_int]
+FAILED tests/test_gate92_stage4_linkage.py::test_g92_k04_env_a_failed_planned_envelope_is_not_passed_to_the_rederivation
+FAILED tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[parameter_order_sha256]
+FAILED tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[roster_sha256]
+FAILED tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[provider_edges_sha256]
+FAILED tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[arm]
+FAILED tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[stage]
+FAILED tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[candidate_mode]
+FAILED tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[bank_version]
+FAILED tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[budget_by_objective]
+FAILED tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[warm_provider_map]
+FAILED tests/test_gate92_stage4_linkage.py::test_g92_k07_the_run_spec_edge_sha_of_a_warm_plan_is_the_approved_axis_value
+41 failed, 97 passed in 31.65s
+rc=1
