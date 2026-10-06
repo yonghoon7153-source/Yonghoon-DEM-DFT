@@ -5,6 +5,15 @@
 - 1저자 (10-06 밤): 새 194 = Codex GO 뒤 (병렬 안 함) · v1.3 = GO 뒤 한 번에 · v1.3 = 최종판 · 고친 것 셋 (G2RR-01 · 02 · 03) 비준 *"권고대로"*.
 - 앞 등록 (형식 · 운영 부분의 원본): `docs/reviews/lhs_network_batch_registration_20261005.md` (19 파일 봉인 · 194 v1.2 배치 `11fcf91e8`).
 - 이 문서는 **배치 전에** 커밋한다.  결과를 본 뒤 고치지 않는다 (고치면 §9 덧붙임 + 사유).
+- ★★ **10-07 재등록** (Codex 세대 2 재검증 2 = HOLD · `docs/reviews/codex_review_gen2_network_reverify2_20261007.md` · G2RR2-01 ~ 05 수정 · 1저자 *"해결해놔"* =
+  판정문의 최소 수정 그대로) — **결과 0 건에서** 다시 등록한다 (사전 점검 · 시범 · 194 모두 아직 · §0 3 항 *"고친 뒤 이 문서를 새로 등록"*).
+  바뀐 것: §3 코드 신원 (29 → 32 파일 · `code_fp e8b2496b…`) · §3b 실행 형식 v3 (필수 선언 · 역사 형식 = 등록 + `--historical`) ·
+  §1 · §5 다시 읽기 등록 집합 (`--expect-set pilot3` · `production194`) · §1 시범 import 관측 (`--observe-imports`) · §7 S3 봉인 목록.
+  그대로인 것: §2 (194 ID · 코호트 · 원자료 지문 · 09-17 cutoff) · §5 판정 순서 · §6 인계 경로.
+  ⛔ 옛 지문 `f3f54951…` (29 파일 · 재검증 2 핀 `9d25757dc` 의 값) · `b313e61a…` (29 파일 · 이 문서 10-07 05:2x 판 — app.py 갱신 뒤) 은 **역사** — 승인값으로 다시 쓰지 않는다 (판정문 §10-2).
+  ⛔ 이 재등록은 발사 GO 가 아니다 (판정문 §10-4 *"이번 회신을 자동 또는 조건부 발사 GO 로 읽지 않는다"*) — 재검증 3 · WSL 사전 점검 증거 · 1저자 발사 승인 뒤.
+  ⚠ v1.3 화면 패치 (`docs/reviews/lhs_release_v13_display_deferred_20261007.patch` — `webapp/app.py` 를 바꾼다 = 봉인 파일) 는 **발사 뒤에만** 적용한다
+  (발사 전에 적용하면 봉인 지문이 바뀌어 이 등록의 배치가 아니다 · 10-07 이 커밋 트리에서 `git apply --check` 통과).
 
 ## 0. 순서
 
@@ -46,7 +55,7 @@ $PY scripts/g2_network_reread.py --selftest 2>&1 | tail -3
 $PY scripts/run_network_194_parallel.py --selftest 2>&1 | tail -2
 
 # ── 2. 봉인 대조 (194 전체 · --dry-run = 아무것도 안 쓴다) — §3 · §2 표와 같아야 ──
-$PY scripts/run_network_194_parallel.py run --root ~/net194_g2_drycheck_$T --dry-run 2>&1 | grep -E "코드 |기대 망 세대|전이 의존|입력 지문|원자료 · 메시 문제|⛔"
+$PY scripts/run_network_194_parallel.py run --root ~/net194_g2_drycheck_$T --dry-run 2>&1 | grep -E "코드 |기대 망 세대|전이 의존|지연 import|입력 지문|원자료 · 메시 문제|⛔"
 
 # ── 3. 실덤프 — 생산 → 후보 검사 → 게시 (real14 · case15 · LHS 셋 · 망 정지 · 격리 ROOT) ──
 SM=~/g2pre_smoke_${S}_$T
@@ -57,10 +66,10 @@ $PY scripts/g2_network_reread.py --smoke-root "$SM" --json "$SM/reread.json" 2>&
 
 # ── 5. 새 러너 시범 — LHS 셋을 실제 194 실행기로 (발사 봉인 · 기대 세대 · merge · 감사 · 인계 출처 관문) ──
 PL=~/g2pre_pilot_${S}_$T
-$PY scripts/run_network_194_parallel.py run --root "$PL" -j 3 --case lhs00_055 --case lhs00_128 --case lhsx_007 2>&1 | tail -20; echo "pilot rc=${PIPESTATUS[0]}"
-$PY scripts/run_network_194_parallel.py audit --root "$PL" --tsv "$PL/seal_audit.tsv" --json "$PL/seal_audit.json" 2>&1 | tail -6; echo "audit rc=${PIPESTATUS[0]}"
-$PY scripts/g2_network_reread.py --launcher-root "$PL" --json "$PL/reread.json" 2>&1 | tail -12; echo "reread rc=${PIPESTATUS[0]}"
-grep -o '"expected_network_generation": "[^"]*"' "$PL/manifest.json" | head -2
+$PY scripts/run_network_194_parallel.py run --root "$PL" -j 3 --observe-imports --case lhs00_055 --case lhs00_128 --case lhsx_007 2>&1 | tail -20; echo "pilot rc=${PIPESTATUS[0]}"
+$PY scripts/run_network_194_parallel.py audit --root "$PL" --tsv "$PL/seal_audit.tsv" --json "$PL/seal_audit.json" 2>&1 | grep -v '^  lhs' | tail -12; echo "audit rc=${PIPESTATUS[0]}"
+$PY scripts/g2_network_reread.py --launcher-root "$PL" --expect-set pilot3 --json "$PL/reread.json" 2>&1 | tail -14; echo "reread rc=${PIPESTATUS[0]}"
+grep -oE '"(expected_network_generation|launch_format)": "[^"]*"' "$PL/manifest.json" | sort | uniq -c
 
 # ── 6. 묶음 (보고서 · 판정 JSON 만 — 케이스 결과 원본은 빼고) ──
 cd ~ && tar czf ~/g2pre_${S}_$T.tar.gz "$(basename "$SM")/smoke_report.json" "$(basename "$SM")/smoke_summary.txt" "$(basename "$SM")/reread.json" \
@@ -74,12 +83,12 @@ cd ~ && tar czf ~/g2pre_${S}_$T.tar.gz "$(basename "$SM")/smoke_report.json" "$(
 
 | 단계 | 기대 |
 |---|---|
-| 1 | `g2_network_reread` ✓ 전부 통과 · 실행기 ✓ 전부 통과 (이 컨테이너 실측 9/9 · 68/68) |
-| 2 | 코드 줄의 `code_fp b313e61ab551566257dca8b7ceeeaf7ea6412898b6b0bad3974f408b537c9086 (CODE_FILES 29)` · 기대 망 세대 `'g2'` · 세대 계약 문제 0 · 모드 `['hertz', 'physics', 'hertz_h12']` · 전이 의존 닫힘 27 ⊆ 29 ✓ · 입력 지문 케이스 194 · `ids_sha256 a04282d7…` · `raw_sha256_table_sha256 da7c93f9…` (§2) · 원자료 sha 결손 0 · 원자료 · 메시 문제 0 건 · ⛔ 줄 없음 |
+| 1 | `g2_network_reread` ✓ 전부 통과 · 실행기 ✓ 전부 통과 (10-07 재등록 컨테이너 실측 15/15 · 82/82 — 실행기 selftest 는 실제 파이프라인 import 관측 ㉟d · ㉟e 를 돌려 ~1.5 분) |
+| 2 | 코드 줄의 `code_fp e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71 (CODE_FILES 32)` (10-07 재등록 — 앞 판 `b313e61a…` · `f3f54951…` (29) 는 역사) · 기대 망 세대 `'g2'` · 세대 계약 문제 0 · 모드 `['hertz', 'physics', 'hertz_h12']` · 전이 의존 닫힘 30 ⊆ 32 ✓ · 지연 import 분류 90 · 분류 밖 0 ✓ · 입력 지문 케이스 194 · `ids_sha256 a04282d7…` · `raw_sha256_table_sha256 da7c93f9…` (§2) · 원자료 sha 결손 0 · 원자료 · 메시 문제 0 건 · ⛔ 줄 없음 |
 | 3 | `smoke rc=0` — A: real14_network · case15_network = done · 원자료 sha256 = README 표 · 망 정지 계약 통과 · run id 일치 / B: lhs00_055 · lhsx_007 = 두 모드 computed · τ ≠ NOT_COMPUTED · lhs00_128 = 두 모드 valid_zero · τ NOT_PERCOLATING / C: 음성 대조 넷 PASS (RGLR2 수정 뒤 동작 · §9-1 컨테이너 스모크 selftest 의 C 판정 참조) |
 | 4 | `reread rc=0` — 다섯 케이스 세대 `'g2'` · K1–K7 · H1 ✓ / **real14 · case15**: τ 세 모드 = OK 또는 등록된 과학적 HOLD (NOT_COMPUTED · NOT_PERCOLATING 아님) · physics 협착-only = `not_computed` (`zero_resistance_requires_contraction` — Codex 직접 풀이: 관통 Rc=0 간선 real14 2,628 · case15 312) · hertz · hertz_h12 협착-only 와 세 모드 CF = 숫자 (증서 결합 통과 — Codex 직접 풀이에서 H0 · H12 clamp · floor 0) / **lhs00_128**: τ 세 모드 NOT_PERCOLATING · 모드 셋 × 가지 셋 valid_zero (숫자 없음 · 증서가 해를 주장하지 않음) / **lhs00_055 · lhsx_007**: 협착-only · CF 상태는 미리 정하지 않는다 (physics · H12 의 R_c = 0 간선 수 · CF `model_over_conduction` 여부는 침대마다 — 화면 그대로 보고) |
 | 4 참고 | σ_ratio (화면 `σ_ratio`) 참고값 = Codex 직접 build/solve (`docs/reviews/codex_gen2_network_reverify_evidence_20261006/probes/real_beds.py`) 의 8 자리 반올림 — real14 hertz 0.02102106 · physics 0.03164009 · hertz_h12 0.02494138 / case15 0.00032635 · 0.00036225 · 0.00034587.  **판정 기준 아님** (파이프라인 = 덱 상자 · 메시 판 높이 · 같은 c_cpl[22] · c_cpl[23] — 다르면 그대로 보고) |
-| 5 | `pilot rc=0` (세 케이스 done · merge rc 0) · `audit rc=0` (SEALED 3 · 레코드 세대 `{'g2': 3}` · 입력 지문 = 발사 기록 ✓) · `reread rc=0` (M0 `'g2'` · M1 · M2 · H1 lhs · lhsx ✓ · 세 케이스 K1–K7 ✓) · manifest `"expected_network_generation": "g2"` 두 줄 (값 · 봉인 사본) |
+| 5 | `pilot rc=0` (세 케이스 done · merge rc 0) · `audit rc=0` (실행 형식 자격 current · SEALED 3 · 레코드 세대 `{'g2': 3}` · 입력 지문 = 발사 기록 ✓ · 실제 import 관측 = 리포 모듈 ⊆ 봉인 CODE_FILES 32 ✓) · `reread rc=0` (M0 `'g2'` · M-plan · M-reg · M1 · M2 · M3 기대 3 = 읽음 3 · 같음 · H1 lhs · lhsx ✓ · 세 케이스 K1–K7 ✓ · JSON `expected_set` `pilot3` · `set_equal` true) · manifest 줄 넷 = `"expected_network_generation": "g2"` 2 (값 · 봉인 사본) · `"launch_format": "network_parallel_launch/v3"` 2 (값 · 봉인 사본) |
 
 ## 2. 대상 · 입력 봉인 (판정 §7-3 "194 ID · cohort · 원 dump 의 해시")
 
@@ -97,9 +106,17 @@ cd ~ && tar czf ~/g2pre_${S}_$T.tar.gz "$(basename "$SM")/smoke_report.json" "$(
 
 ## 3. 코드 신원 (봉인)
 
+- ★★ **10-07 재등록 (G2RR2-03 · 판정문 §4)** — 봉인 29 → **32 파일**: + `scripts/fracture_model.py` (`dem_analysis_core` 의 지연 import — 파괴 모델 상수 ·
+  Codex dependency_gap: 그 사본의 K_IC 0.3 → 30 이면 multicrack 100 → 0 인데 옛 29 파일 봉인은 통과) · + `scripts/lhs_union_webapp.py` (`dem_analysis_core` 지연 import —
+  τ 의 L_mc · φ_mc 를 내는 정확 union · 우리가 같은 부류로 찾음) · + `scripts/ml_design_structure.py` (`structure_predictor` 모듈 수준 `_restricted()` 안의 import —
+  app 을 읽을 때마다 돈다 · 실제 import 관측이 찾음).  바뀐 봉인 파일 둘 = `scripts/tau_flux.py` · `webapp/pipeline_service.py` (G2RR2-04 · 05 `5dde71dcc`).
+  ⇒ **`code_fp e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71`** (런처 `code_fp(code_hashes())` · 이 컨테이너 194 dry-run 이 같은 값).
+  정적 닫힘 30 ⊆ 32 (닫힘 밖 둘 = S3 수치 모듈 그대로) · 지연 import 분류 (`lazy_import_census`) 90 · 분류 밖 0 (경로 밖 사유 `DEP_LAZY_OFFPATH` 21) ·
+  실제 import 관측 (selftest ㉟d — 합성 se_am 을 실제 `run_pipeline(stop_after='network')` 로 · 단계 하위 프로세스 포함) 리포 모듈 22 ⊆ 32.
+  ⚠ 관측 22 는 합성 침대의 표준 경로다 — 실침대 경로는 §1 시범의 `--observe-imports` 가 본다 · 리터럴이 아닌 동적 import 는 정적 분류가 못 본다 (관측이 메운다).
 - ⚠ **10-07 05:2x 갱신** — 요청서 핀 `2802c649e` 뒤 `webapp/app.py` 가 한 번 더 바뀌었다 (atom + 판 메시만 올린 케이스의 porosity — atoms-only 경로만 · 망 정지 경로 · 생산 · 게시 · 인계 코드 무변경 · 시험 `webapp/test_atoms_only_porosity.py` 41/41 · `test_pipeline_provenance` 284/284) ⇒ 봉인 지문 `f3f54951…` → `b313e61ab551…` (아래 값 갱신 · 런처 `code_fp(code_hashes())` 로 다시 계산 · 29 파일 중 `webapp/app.py` 한 줄만 바뀜).  발사는 이 지문의 커밋으로.
 
-- 발사 커밋 = 아래 29 파일 sha256 (= 봉인 지문 `code_fp b313e61ab551566257dca8b7ceeeaf7ea6412898b6b0bad3974f408b537c9086`) 과 같은 코드를 담은 커밋 — 이 문서를 담은 커밋 또는
+- 발사 커밋 = 아래 **32 파일** sha256 (= 봉인 지문 `code_fp e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71` · 10-07 재등록 — 앞 판의 29 파일 `b313e61a…` 는 역사) 과 같은 코드를 담은 커밋 — 이 문서를 담은 커밋 또는
   그 뒤 **문서 · 원장만** 바뀐 커밋.  1저자가 발사 직후 §9 에 `git rev-parse HEAD` · manifest `seal.code_fp` · `expected_network_generation` 을 적는다 (지문이 이 값과 다르면 이 봉인의 배치가 아니다 ·
   추적 파일이 바뀐 트리는 실행기가 거부한다).
 - ★ 전이 의존 (판정 §7-3): 10-05 판 19 파일에 **워커의 망 정지 경로가 실제로 import 하는 리포 모듈 10** 을 더해 29 (`CODE_FILES`).  정적 닫힘 (`code_dependency_closure` — 시작점 =
@@ -122,12 +139,12 @@ cd ~ && tar czf ~/g2pre_${S}_$T.tar.gz "$(basename "$SM")/smoke_report.json" "$(
 | `scripts/parse_liggghts.py` | `4fe3f1f32ebc4168978c7278b7a1d37b072d64fbf00e97d0933351337d223425` | 같음 |
 | `scripts/se_material.py` | `767a6a383d4581274b07ee79146a53fbe118f1f6eb0acb9ec0a5af21c9c9930c` | 같음 |
 | `scripts/metrics_json.py` | `baa671f895dd6103cf95c25647ee45877d98306f00ab15cd3968fbe4354a7702` | 같음 |
-| `scripts/tau_flux.py` | `6bc4037cc38cc5719e762e0b148c46c1f0bece5eb1058a940c726a77fc7252f3` | 바뀜 |
+| `scripts/tau_flux.py` | `eb9388ec8bd2d40b1c63365ae72b6850e9fc51fd9ce0780df4e557424a1440fb` | 바뀜 (10-07 재등록: + G2RR2-04 · 05 `5dde71dcc` — 앞 판 `6bc4037c…` 대비도 바뀜) |
 | `scripts/lhs_webapp_batch.py` | `b9d0199cc1bd23cd1ed5405a283081c2c3a31bc6ce256670c8a9b63d177b5668` | 같음 |
 | `scripts/lhs_harvest_batch.py` | `4d798c631ac893ca32018fde58145bc5c8a2e3e2a6423da61cb87bd13599148e` | 같음 |
 | `scripts/lhs_descriptor_harvest.py` | `96fa643e309aab46b2a5cbd59e2276ee16b99107a9a7514e5d9fdcaf5c2d8d9e` | 바뀜 (`cc4210080` — LHSC-08 · 분류 불변) |
 | `webapp/app.py` | `bd4c25e507e3c7a2b8e35f9b4602f22ab17d8e56fb6f8980021d33323994826b` | 바뀜 (G2RR-01 `e1dab4265` · G2RR-02 `f3f720985` · 3D 뷰어 라우트 `761e32645` · `92839aeb7` 포함) |
-| `webapp/pipeline_service.py` | `2414fb217e4c93f2f89c9ce56e5dc96f0af6107716da828c9202bc208d9225d5` | 바뀜 (G2RR-01 `e1dab4265` · G2RR-02 `f3f720985` 포함) |
+| `webapp/pipeline_service.py` | `33a700300e8c650ca953e96b7faaea3010245b63e6d2035d4b73b4a61e1c7843` | 바뀜 (G2RR-01 `e1dab4265` · G2RR-02 `f3f720985` 포함 · 10-07 재등록: + G2RR2-04 `5dde71dcc` — 앞 판 `2414fb21…` 대비도 바뀜) |
 | `scripts/export_master_csv.py` | `2899dc2410ad8840dadf41993511c225d60f29f77edfdb2fac6703b25ccf767b` | 같음 |
 | `scripts/type_map_resolve.py` | `4a289c6412e4b8e1bc0fba573cb287966dfa00a053399097b587f1e14726bfe5` | 같음 |
 | `scripts/lens_geometry.py` | `891ac67f8b6c1b4c7978b5e806800ae74f5c8791928d6ece19a29e5f3b212b77` | 새로 봉인 (σ — 위 ⚠) |
@@ -140,8 +157,11 @@ cd ~ && tar czf ~/g2pre_${S}_$T.tar.gz "$(basename "$SM")/smoke_report.json" "$(
 | `webapp/security.py` | `6f9e98d8748bdd420e73f1db19df50ede1c5f9ce7fb60a25cdea582583de770f` | 새로 봉인 (app 모듈 수준) |
 | `webapp/storage_sync.py` | `352314ffb1908998f51c1ec25289846b3644e736d2d8df5e145c41646edf811a` | 새로 봉인 (app 모듈 수준) |
 | `webapp/structure_predictor.py` | `e468d6dfe18db338a6d6afc7ec10fb867464b80a02d17d475ee4ee8068392064` | 새로 봉인 (app 모듈 수준) |
+| `scripts/fracture_model.py` | `3cd8dabb3ebaea3950f53951f776fceabc82f9431633587fc7bd85a8dd9d8170` | 새로 봉인 (10-07 재등록 · G2RR2-03 — dem_analysis_core 지연 import · 파괴 상수) |
+| `scripts/lhs_union_webapp.py` | `3f06e9d36060a366d79e1abb76b5fe07e23b51d63666f51ba3afeabf64211408` | 새로 봉인 (10-07 재등록 · G2RR2-03 — dem_analysis_core 지연 import · τ 의 L_mc · φ_mc) |
+| `scripts/ml_design_structure.py` | `35378c5eedae36a75074279066db1db81617c02c334b5d0e4c7f19a76d0bf628` | 새로 봉인 (10-07 재등록 · G2RR2-03 — structure_predictor 모듈 수준 `_restricted()` 안 · 실제 import 관측이 찾음) |
 
-- 10-05 봉인 19 중 같음 11 · 바뀜 8 · 새로 봉인 10.  바뀐 8 파일을 건드린 커밋 (`11fcf91e8` 뒤 · 이 커밋에서 셈) = `50de4e806` · `a0a24c538` · `69c2adec9` · `5c2669538` · `05c60ae2d` ·
+- 10-05 봉인 19 중 같음 11 · 바뀜 8 · 새로 봉인 10 (10-07 재등록: 새로 봉인 13 = 32 파일).  바뀐 8 파일을 건드린 커밋 (`11fcf91e8` 뒤 · 이 커밋에서 셈) = `50de4e806` · `a0a24c538` · `69c2adec9` · `5c2669538` · `05c60ae2d` ·
   `05977e94a` · `5627a74a6` · `e1dab4265` · `f3f720985` · `761e32645` · `92839aeb7` · `cc4210080` (파일별 귀속은 파일마다 git log 로 — 표에는 확인한 것만 적었다).  ⚠ `webapp/app.py` 는 망과 무관한 화면 라우트만 바꿔도 지문이 바뀐다 — 발사 뒤 그 체크아웃에서 app.py 를 고치지 않는다 (retry 가 거부한다).
 - ★ 기대 망 세대 (G2RR-01 · 판정 §2 "새 배치 manifest 의 기대 세대와도 교차 대조"): manifest `expected_network_generation` (+ `seal` 안 사본) = 실행기가 **봉인 코드에서 유도한 값**
   (`derive_generation` — 생산자 `network_conductivity._run_all_networks` 를 망 CLI 와 같은 기본값 (hertzian · physics) 으로 21 구 사슬에 한 번 → 같은 체크아웃의 `tau_flux.network_generation_contract`).
@@ -150,7 +170,23 @@ cd ~ && tar czf ~/g2pre_${S}_$T.tar.gz "$(basename "$SM")/smoke_report.json" "$(
   `--tau-batch-manifest <ROOT>/manifest.json` = 케이스마다 레코드 세대 = 선언 (없으면 거부).
 - 인계 단계 코드 (워커가 돌리지 않는다 — 봉인 판정 밖 · manifest `handover_code_hashes` 에 기록 · 후속 명령이 대조): `scripts/lhs_design_dataset.py`
   `a678994861a179a2c694c4dc093fc67a3a0fa64a90bd99a1eb236417a8a2af7a` · `scripts/g2_network_reread.py` — 이 커밋의 바이트 (값은 §9 에 manifest 에서 옮긴다).
+  10-07 재등록: `scripts/lhs_design_dataset.py` `27c9c1a8a680945c5ba60e6717e1d77438a489549a62eb24bddb65223c0a8b29` (`5dde71dcc` — selftest 기대 표지 한 줄 · 값 경로 무변경) ·
+  `scripts/g2_network_reread.py` `23a949dfe6aa09d277e0626c2c3a6db3e199de8a42872b375b4e75ae828c467b` (`5dde71dcc` K7 · `17ba65f4e` 등록 집합).
   ⚠ v1.3 의 새 열 · 표 (CLAUDE.md 10-06 밤 목록 — ML 표 · f 타깃 안내 · 재적합 · τ 표시 이름 · `se_isolated_pct`) 가 생성기를 바꾸면 이 지문이 바뀐다 → 그 커밋을 §9 에 적는다.
+
+## 3b. 실행 형식 v3 (10-07 재등록 · G2RR2-01 · 02 · 판정문 §2 · §3)
+
+- 새 실행 (`run`) 의 manifest = `launch_format: network_parallel_launch/v3` · `seal.schema: launch_seal/v3`.  필수 선언 = 기대 망 세대 (`expected_network_generation` =
+  봉인 사본 = `'g2'` · `generation_probe`) · `input_digest` (n · `ids_sha256` = 계획 큐에서 다시 계산 · 원자료 표 지문 · 결손 0 · 코호트 TSV 지문) · `code_hashes` = CODE_FILES ·
+  봉인 지문 · 전이 닫힘 · 인계 코드 지문 · git sha · 계획 꼴.  하나라도 없거나 null 이면 실행 형식 자격 invalid — run (쓰기 전 자기 대조) · retry · audit · merge 가
+  같은 함수 (`launch_eligibility`) 로 거부한다.  지운 선언을 옛 형식으로 추론하지 않는다.
+- 역사 형식 = `HISTORICAL_LAUNCHES` 등록 (10-05 net194 · `11fcf91e8` · 19 파일 `3bc0a116…` · 키 집합 · 봉인 없음) 과 정확히 같을 때만 — `audit --historical` ·
+  `merge --historical` 에서만 읽는다 · retry 는 거부.  ⚠ 같은 JSON 안의 사본끼리 대조는 누락 검사이지 독립 증거가 아니다 (판정문 §2 의 한정 그대로).
+- 다시 읽기 (`g2_network_reread --launcher-root`) = 등록 집합 필수 — `--expect-set production194` (ids_sha256 `a04282d7…` · lhs 130 · lhsx 64 · 커밋된 수확 폴더에서 열거해
+  지문 대조) · `pilot3` (lhs00_055 · lhs00_128 · lhsx_007) · 또는 `--expect-case 코호트:케이스`.  루프 전 계획 꼴 · 루프 밖 집합 대조 · 판정 JSON v2 (`expected_set` ·
+  `expected_n` · `read_n` · `set_equal` · `missing` · `extra`).  v1.3 생성기는 production194 전부 (기대 = 읽음 = 194 · 같음) 인 기록만 받는다 (G2RR2-02).
+- 시범 import 관측 (`run --observe-imports`) — 워커 · 단계 하위 프로세스가 읽은 리포 모듈을 남기고 audit 가 봉인 ⊇ 관측을 본다 (값에 닿지 않는다).
+  §1 시범에서 켠다 — 194 본 실행에서 켤지는 발사 승인 때 1저자가 정한다.
 
 ## 4. 계산 · 발사 (Codex GO 뒤)
 
@@ -161,15 +197,16 @@ cd ~ && tar czf ~/g2pre_${S}_$T.tar.gz "$(basename "$SM")/smoke_report.json" "$(
 ```bash
 cd ~/dem-audit && git fetch origin claude/stoic-knuth-NObVQ && git checkout --detach <발사 커밋>
 PY=$(ls ~/Yonghoon-DEM-DFT/venv/bin/python ~/Yonghoon-DEM-DFT/.venv/bin/python3 2>/dev/null | head -1); R=~/net194_$(git rev-parse --short HEAD)
-$PY scripts/run_network_194_parallel.py run --root "$R" --dry-run 2>&1 | grep -E "코드 |기대 망 세대|전이 의존|입력 지문|원자료 · 메시 문제|⛔"   # §2 · §3 값과 같아야
+$PY scripts/run_network_194_parallel.py run --root "$R" --dry-run 2>&1 | grep -E "코드 |기대 망 세대|전이 의존|지연 import|입력 지문|원자료 · 메시 문제|⛔"   # §2 · §3 값과 같아야
 $PY scripts/run_network_194_parallel.py run --root "$R" 2>&1 | tee ~/net194_run_$(date +%m%d_%H%M).log | tail -40
 ```
 
 ## 5. 판정 · 관문 (결과 전 등록)
 
 1. 케이스마다 `done` / `failed` (+ `failure_kind`) — failed 는 빈칸 + 사유로 싣고 고르지 않는다 (재실행은 봉인 코드 그대로 `retry` 만).
-2. `audit` rc 0 = 기록 전부 SEALED · 레코드 세대 전부 `g2` · 입력 지문 = 발사 기록.  rc 1 이면 인계하지 않는다.
-3. `g2_network_reread.py --launcher-root` rc 0 (M0–M2 · 케이스마다 K1–K7 · 코호트마다 H1) — 판정 §7 끝 "전체 상태 · ID · 증서와 값의 다시 읽기".  rc 1 이면 인계하지 않는다.
+2. `audit` rc 0 = 실행 형식 자격 current · 기록 전부 SEALED · 레코드 세대 전부 `g2` · 입력 지문 = 발사 기록.  rc 1 · 2 이면 인계하지 않는다.
+3. `g2_network_reread.py --launcher-root <ROOT> --expect-set production194` rc 0 (M0 · M-plan · M-reg · M1 · M2 · M3 기대 194 = 읽음 194 · 같음 · 케이스마다 K1–K7 ·
+   코호트마다 H1) — 판정 §7 끝 "전체 상태 · ID · 증서와 값의 다시 읽기" · 재검증 2 §3 (0 건 · 일부 코호트 PASS 배제).  rc 1 · 2 이면 인계하지 않는다.
 4. τ 관문 (`tau_flux`) 진단 표 그대로 — 상태 표지 (NOT_PERCOLATING · NOT_COMPUTED · BAND_FALLBACK · MODEL_BELOW_CONTINUUM_BOUND) 유지.
 5. 인계 생성기 관문 (⑤F1 · ⑥R1–R3 · ⑦A1–A5 · τ 출처 P0–P4 · `--tau-batch-manifest` 기대 세대 교차 대조).
 6. 계약 상수 (판정 §7-3 "H0/Physics/H12 기대 조합 · 스키마 · 증서 문턱 · 실패 정책") 는 봉인 파일 안에 있다 — 코드 봉인이 고정하고 정지 계약 ⑨ (게시) · 인계 P4 · 다시 읽기 K2 가 같은 함수로 적용한다:
@@ -183,7 +220,8 @@ $PY scripts/run_network_194_parallel.py run --root "$R" 2>&1 | tee ~/net194_run_
 
 ## 6. 인계 v1.3 (§5 통과 뒤 · 1저자 승인 뒤)
 
-- 실행기 merge 가 찍는 후속 명령 (`print_followups`) 그대로 — 이번 판은 기대 세대가 선언된 manifest 이면 ⓪b 다시 읽기 · 생성기 `--tau-batch-manifest <ROOT>/manifest.json` · 이름 `_handover_v13_` 을 찍는다.
+- 실행기 merge 가 찍는 후속 명령 (`print_followups`) 그대로 — 이번 판은 기대 세대가 선언된 manifest 이면 ⓪b 다시 읽기 (계획 = 등록 집합이면 `--expect-set production194` ·
+  아니면 `--expect-case` 하나씩) · 생성기 `--tau-batch-manifest <ROOT>/manifest.json` · 이름 `_handover_v13_` 을 찍는다.
   ⚠ 찍힌 명령의 `python3` 는 배치 venv (`$PY`) 로 바꿔 쓴다 (10-06 기록: 시스템 python3 = numpy 없음).
 - 다시 읽기 검산기 `reread_v12.py` 는 v1.2 전용 (C4 공통 칸 · C8 등록 큐 — G2RR-03 수정) — v1.3 용 검산은 별도 (이 등록 밖 · 자동 배포 관문 아님).
 
@@ -191,7 +229,11 @@ $PY scripts/run_network_194_parallel.py run --root "$R" 2>&1 | tee ~/net194_run_
 
 - S3 봉인 = 별도 갱신 의무 (판정 §7-3): `network_conductivity.py` sha256 이 `61f00fef…` → `da9ecfef…` (`f3f720985`) · S3 의 `seal_s3_prerun.NUMERIC_MODULES` 넷에는
   `lens_geometry.py` 가 없다 (위 §3 ⚠ 와 같은 구멍) — S3 재봉인 때 넣을지 = 1저자.
+  → **10-07 보완 (`2d247a66f` · 재검증 2 §10 *"넣을지 말지를 취향으로 남겨 둘 수 없다"* · 1저자 *"해결해놔"*)**: `NUMERIC_MODULES` 6 (+ `lens_geometry.py` · `se_material.py`) =
+  소비자 (`run_s3_psi`) 수치 경로의 정적 닫힘 (`numeric_dependency_problems`) · 봉인 발행 · 소비 둘 다 대조 · 옛 네 모듈 봉인 = 소비 거부 · 실제 import 관측 (selftest ⑮d) 이
+  경로 밖 주장을 확인.  코호트 cutoff · baseline 선별 · 봉인 창 무변경 — 새 S3 봉인은 창 (09-17 23:59 KST) 이 닫혀 저자 결정 없이는 못 낸다 ⇒ **S3 실행 = 별도 HOLD** (194 와 순서 독립 · 판정문 §10).
 - 옛 ROOT (19 파일 봉인 · 기대 세대 선언 없음) 는 이 실행기로 retry 하면 봉인이 달라 거부된다 — 그 ROOT 의 커밋 실행기로.  감사 (`audit`) 는 그대로 읽는다 (세대 대조 없이 · 표지만).
+  → 10-07 G2RR2-01 뒤: 옛 ROOT = 역사 형식 (§3b) — `audit --historical` · `merge --historical` 로만 읽는다 (기본 audit = rc 2 · retry = 거부).
 - G2RR-02 이전 세대 2 웹앱 케이스 (`05977e94a` – `70a6d91a4` 코드로 계산) = 증서 결합 키가 없어 숫자 게시 가지에서 거부 → 망 재계산 전 τ NOT_COMPUTED (194 배치와 무관).
 
 ## 8. 이탈 기록
@@ -203,5 +245,6 @@ $PY scripts/run_network_194_parallel.py run --root "$R" 2>&1 | tee ~/net194_run_
 - 9-1 컨테이너 (이 커밋 · 2026-10-07): 실행기 selftest 68/68 · `g2_network_reread --selftest` 9/9 · `wsl_network_smoke --selftest` 11/11 (커밋 뒤 깨끗한 트리 · 합성 침대 실제
   파이프라인 · 음성 대조 C1 · C1b · C2 · C3 = PASS · 참조 침대 두기 real14 · case15 sha256 = README) · 194 dry-run (이 컨테이너 · 원자료 없음 = `--allow-missing-raw`) 의 기대 세대 `'g2'` ·
   닫힘 27 ⊆ 29 ✓ 줄 확인 · 입력 지문 · code_fp = 같은 함수 (`plan_input_digest` · `code_fp`) 를 실제 194 계획에 불러 §2 · §3 값과 같음 확인.
+- 9-1b 컨테이너 (10-07 재등록 · 코드 커밋 `5dde71dcc` · `3b2d1b91e` · `17ba65f4e` · `2d247a66f`): 실행기 selftest 82/82 · `g2_network_reread --selftest` 15/15 · `wsl_network_smoke --selftest` 11/11 (커밋 뒤 깨끗한 트리) · `test_lhs_release_v13` 80/80 · 194 dry-run (이 컨테이너 · `--allow-missing-raw` — 원자료 · 메시 문제 582 건 = 원덤프 없음 · WSL 기대 0) = `code_fp e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71` (CODE_FILES 32) · 기대 세대 `'g2'` · 계약 문제 0 · 모드 `['hertz', 'physics', 'hertz_h12']` · 닫힘 30 ⊆ 32 ✓ · 지연 import 90 · 분류 밖 0 ✓ · 입력 지문 194 · `a04282d7…` · `da7c93f9…` (§2 같음).  ⚠ WSL 원형 실행 아님.
 - 9-2 사전 점검 (§1 · WSL): ⬜
 - 9-3 발사: 커밋 ⬜ · manifest `seal.code_fp` ⬜ · `expected_network_generation` ⬜ · `input_digest.raw_sha256_table_sha256` ⬜

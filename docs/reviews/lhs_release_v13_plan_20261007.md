@@ -52,7 +52,7 @@
 ```
 R=~/net194_<발사 sha>; cd ~/dem-audit                       # 발사 체크아웃 (retry 가 거부하지 않게 그대로 둔다)
 $PY scripts/run_network_194_parallel.py audit --root "$R" --tsv "$R/seal_audit.tsv" --json "$R/seal_audit.json"      # ⓪ rc 0 이어야
-$PY scripts/g2_network_reread.py --launcher-root "$R" --json "$R/reread.json"                                     # ⓪b rc 0 이어야
+$PY scripts/g2_network_reread.py --launcher-root "$R" --expect-set production194 --json "$R/reread.json"           # ⓪b rc 0 이어야 (10-07 G2RR2-02 — 등록 집합 필수 · 생성기가 집합 = 194 를 요구)
 $PY scripts/lhs_pressure_record.py --cohort docs/data/area_s2_cohort.tsv --harvest-dir docs/data/lhs_descriptors_cov_1e09f661d \
     --out "$R/pressure/lhs_pressure_record.tsv"                                                                  # ②a (--root-from · --root-to 는 실행기 출력 그대로)
 $PY scripts/lhs_pressure_record.py --cohort docs/data/lhsx_descriptors_20260925/_cohort.tsv --harvest-dir docs/data/lhsx_descriptors_cov_1e09f661d \
