@@ -212,6 +212,9 @@ run 'rint_receipts (요청 ↔ 적용 영수증 · AST 변이 4)' python3 script
 #    + 쓴 규칙 · 띠 폭 기록 (LHS-17 · TAU-14) · 이온 인계 열 도우미 `tau_flux` (v2 §5 · 게이트 G1–G6 · 생산자 ↔ 소비자 계약).
 run 'network boundary_rule (안 A · 동작 중립)' python3 scripts/test_network_boundary_rule.py
 run 'tau_flux (이온 인계 열 · 게이트 G1–G6)' python3 scripts/test_tau_flux.py
+#  ★ 2026-10-06 (Codex 5차 RGLR4-01 · 02) — 194 인계 v1.2 다시 읽기 검산기 (검산 도구 · 자동 배포 관문 아님): 복사본 변조 (공통 칸 한 칸 · 열 탈락 ·
+#    감사표 누락 + 중복 · record sha · 상태 · 코호트 · 출처 부록 중복) 가 비영 종료 · 원본 PASS 유지 · 세대별 허용 목록.
+run 'reread_v12 (RGLR4-01 · 02 반례 · 원본 PASS)' python3 scripts/test_reread_v12.py
 #  ★ 2026-10-06 (`L2-01` 세대 2 · 1저자 개정 — 계약 개정 노트) — ψ 배치 기본값 = 곱셈 · legacy 는 명시 인자로만 · 2 구 접촉 식 (세 채널 ×
 #    s ≈ 0.2 · 0.5 · 0.9) · 단조 · Hertz 비트 동일 · tau_flux 협착 라벨 = ψ 배치 · 세 채널 결과의 세대 표기.
 run 'psi default switch (L2-01 세대 2)' python3 scripts/test_psi_default_switch.py
