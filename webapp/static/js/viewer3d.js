@@ -1132,6 +1132,7 @@ function buildControls(container, isMPM) {
       </optgroup>
       <optgroup label="Percolation (Phase A5/A6)">
         <option value="se_diagnostics">SE Network Diagnostics</option>
+        <option value="tau_paths">Tortuosity 후보 경로 (여럿 · τ 색)</option>
       </optgroup>
       <optgroup label="기공 (pore)">
         <option value="dem_pore">기공 (빈 공간 · 격자 추정)</option>
@@ -1154,11 +1155,13 @@ function buildControls(container, isMPM) {
         <span id="path-total" style="font-size:11px;color:#7c8194">/ -</span>
       </div>
       <div id="cluster-info" style="font-size:11px;color:#e4e6f0;margin-top:3px;line-height:1.5"></div>
+      <button id="path-all" style="margin-top:3px;font-size:11px" title="화면에서 고른 클러스터의 저장된 후보 경로 (최대 30) 를 한 번에 — View Mode 'Tortuosity 후보 경로 (여럿)' 로 바꾼다">▦ 이 클러스터의 모든 후보 경로</button>
     </div>
     <hr>
     <label><input type="checkbox" id="force-chain-toggle"> <span style="font-size:12px">Force Chain</span></label>
     <hr>
     <button data-action="pathOnly">Path Only View</button>
+    <button data-action="tauPathsView" title="저장된 후보 경로 여럿을 τ 색으로 그린 창 — PNG 다운로드 (투명 · 4×) · 컬러바 PNG (따로) · 컬러바 넣기 선택.  범위 · τ 작은 N 은 View Mode 'Tortuosity 후보 경로 (여럿)' 범례에서 고른다">All Paths View</button>
     <button data-action="amCloseup">AM Close-up</button>
     <button data-action="amContactCloseup" title="AM 하나 + 닿은 SE · AM 과 표면 접촉 cap (노랑 = SE · 회색 = AM–AM) — PC (AM_P) · SC (AM_S) 고르기 · 상대 입자 끄면 cap 만 (Coverage 확대) · 4× 투명 PNG">AM 접촉 · Coverage 확대</button>
     <button data-action="resetView">Reset</button>
@@ -1260,6 +1263,7 @@ export function initElectrodeViewer(containerId, dataUrl) {
     data: null, meshes: {}, percolationOn: false, pathGroup: null,
     selectedComponent: null, infoEl: null,
     renderer, camera, scene: null,                           // st4 애니메이션 프레임 export용 핸들
+    controls,                                                // All Paths View 창이 지금 화면의 시점 (target) 을 이어받는다
   };
 
   /* controls panel — MPM payloads get the minimal panel.  Both the per-case route
@@ -1391,6 +1395,9 @@ export function initElectrodeViewer(containerId, dataUrl) {
         showPercCluster(state.percIdx, pi);
       }
     });
+    // ▦ 이 클러스터의 모든 후보 경로 — 화면에서 고른 클러스터 (highlightCluster 가 적은 번호) 로 View Mode 'tau_paths' (10-07)
+    const allBtn = ctrlDiv.querySelector('#path-all');
+    if (allBtn) allBtn.addEventListener('click', () => tauPathsShowCluster(state, state.currentClusterIdx));
 
     animate();
   }).catch(err => {
@@ -2326,6 +2333,7 @@ function applyViewMode(state, mode) {
     state.stressChainGroup = null;
   }
   _teardownDemPore(state);                                  // DEM 기공 칸 묶음 · 입자 흐림 되돌리기 (dem_pore)
+  _teardownTauPaths(state);                                 // 후보 경로 관 묶음 · 입자 흐림 · 한 경로 관 되돌리기 (tau_paths)
 
   /* default: restore base colours + opacities */
   if (!mode || mode === 'default') {
@@ -2372,6 +2380,9 @@ function applyViewMode(state, mode) {
   }
 
   if (mode === 'net_current') { applyNetCurrentMode(state); return; }   // ⚡ 전류 흐름 — 망 해 간선 전류 (비동기 fetch · 자기 범례)
+
+  // Tortuosity 후보 경로 여럿 — se_clusters.json 의 저장 경로를 τ 색 관으로 한 번에 (10-07 · 자기 범례 · 그림 창)
+  if (mode === 'tau_paths') { renderTauPaths(state); return; }
 
   if (mode === 'brittle') {
     dimAll();
@@ -5886,6 +5897,475 @@ function _demPoreWireControls(state) {
   }
 }
 
+/* ── Tortuosity 후보 경로 여럿 — View Mode "tau_paths" + 그림 창 "All Paths View" (2026-10-07) ─────────────────────────
+ * 1저자 보고 그림 (긴급) — 옛 판은 저장된 경로를 하나씩만 그렸다 (Percolating Path < > · Path Only View).
+ * 입력 = se_clusters.json (scripts/analyze_contacts.py) 의 관통 클러스터마다 저장된 후보 경로 `paths[]` (최대 30 · τ 낮은 10 · 평균 근처 10 ·
+ *   높은 10 — 바닥 · 판 띠 SE 쌍의 최단 경로 · `ids` = SE id 차례 · `tortuosity` = 경로 길이 ÷ 양 끝 z 거리 (x·y 주기 최소상 홉 길이)).
+ *   ⇒ τ 는 표의 τ_Dij (calc_tortuosity · 무작위 짝 최대 200 쌍 평균) 와 **같은 정의의 경로별 값** (기하 τ) — 수송 tortuosity 아님 ·
+ *   LHS 인계 tortuosity_SE_wall (벽 기준) 과 다른 정의.  값은 다시 계산하지 않는다 (저장값 그대로 · 시험이 식을 대조한다).
+ * 그림: 관 = InstancedMesh 원기둥 (홉) + 구 (이음매) · 색 = 한 색상 (파랑) 순차 램프 — 밝음 → 어두움 = τ 작음 → 큼 (dataviz 기준 팔레트
+ *   sequential blue 단계 250…700 · 밝은 바탕에서 가장 밝은 칸도 보이게 250 부터) · 가장 작은 τ 경로 = 금색 (COL.PATH · 한 경로 보기와 같은
+ *   색) · 1.8 배 굵게.  주기 경계를 넘는 홉 = 양쪽 면에 반 토막씩 (최소상 변위의 절반 — 상자를 가로지르는 긴 관 없음).  SE · AM 흐리게 ·
+ *   판 메시 · 한 경로 관 (Percolating Path) 숨김 — 모드를 떠나면 되돌린다.
+ * PNG: 메인 Screenshot (화면 그대로 · 범례 빠짐) · 범례 "컬러바 ⬇" (따로 · 논문용 6×) · 그림 창 (투명 · 4× · 컬러바 넣기 = 선택 · 기본 끔 —
+ *   랩 원칙: 범례 · 주석은 그림 밖에 둔다 · docs/report_making_principles.md §2).  시험 = webapp/test_tau_paths_view.py */
+// 색 램프 (0xRRGGBB · 밝음 → 어두움) — 한 줄 상수 (시험이 잘라 쓴다 · 줄 끝 주석 금지)
+const TAUP_RAMP = [0x86b6ef, 0x6da7ec, 0x5598e7, 0x3987e5, 0x2a78d6, 0x256abf, 0x1c5cab, 0x184f95, 0x104281, 0x0d366b];
+// τ 작은 N 고르기 (0 = 경로 전부)
+const TAUP_TOPS = [0, 5, 10, 20];
+const TAUP_DEF_TXT = 'τ = 이 경로 하나의 기하 τ = SE 중심을 잇는 길이 ÷ 양 끝 z 거리 (x·y 주기 최소상 · 끝 = 바닥 · 판 띠의 SE) — 표의 τ_Dij 와 같은 정의 · 수송 tortuosity 아님 · LHS 인계 tortuosity_SE_wall (벽 기준) 과 다른 정의';
+const TAUP_SAMPLE_TXT = '후보 = se_clusters.json 에 저장된 표본 — 관통 클러스터마다 바닥 · 판 띠 SE 쌍의 최단 경로 최대 30 개 (낮은 τ 10 · 평균 근처 10 · 높은 τ 10) · τ 분포의 대표 표본이 아니다 (표의 τ_Dij = 무작위 짝 최대 200 쌍의 평균)';
+const TAUP_DEFAULT_OPT = { scope: 'all', top: 0, seOpacity: 0.08, amOpacity: 0.12, width: 1, ends: false };
+
+/* 저장 경로 고르기 — opt.scope = 'all' | 클러스터 번호 (clusters 배열 index · 문자열) · opt.top = 0 (전부) | N (τ 작은 N · 고른 범위 전체에서).
+ * 관통 클러스터 (percolating) 의 paths (없으면 옛 형식 path 하나) 만 · id 2 개 미만 · τ 숫자 아님은 빼고 센다 (nSkipped).
+ * 반환 {paths (τ 오름차순 · 같으면 먼저 나온 것 — 안정), lo, hi, best (= paths[0] · 금색), nAvail, nSkipped, nClusters,
+ *        percClusters [{ci, size, n}] (범위 고르기 목록 — 범위와 무관하게 전부)} */
+function tauPathsCollect(clusters, opt) {
+  opt = opt || {};
+  const scope = opt.scope == null ? 'all' : String(opt.scope);
+  const out = [], perc = [];
+  let nSkipped = 0;
+  (clusters || []).forEach((c, ci) => {
+    if (!c || !c.percolating) return;
+    const ps = Array.isArray(c.paths) ? c.paths : (c.path ? [c.path] : []);
+    const ok = [];
+    ps.forEach((p, pi) => {
+      const tau = Number(p && p.tortuosity);
+      if (!p || !Array.isArray(p.ids) || p.ids.length < 2 || p.tortuosity == null || !Number.isFinite(tau)) { nSkipped++; return; }
+      ok.push({ ci, pi, tau, ids: p.ids, category: p.category || '', path_length: p.path_length, z_distance: p.z_distance });
+    });
+    if (!ok.length) return;
+    perc.push({ ci, size: c.size != null ? c.size : (Array.isArray(c.ids) ? c.ids.length : 0), n: ok.length });
+    if (scope === 'all' || scope === String(ci)) ok.forEach(p => out.push(p));
+  });
+  const sorted = out.map((p, k) => [p, k]).sort((a, b) => (a[0].tau - b[0].tau) || (a[1] - b[1])).map(x => x[0]);
+  const top = Math.max(0, Math.round(Number(opt.top) || 0));
+  const sel = top > 0 ? sorted.slice(0, top) : sorted;
+  return { paths: sel, lo: sel.length ? sel[0].tau : null, hi: sel.length ? sel[sel.length - 1].tau : null,
+           best: sel.length ? sel[0] : null, nAvail: out.length, nSkipped,
+           nClusters: new Set(sel.map(p => p.ci)).size, percClusters: perc };
+}
+
+/* 색 축 t = (τ − 최소)/(최대 − 최소) · [0, 1] 로 자른다 · 범위가 한 점이면 0.5 */
+function tauPathT(tau, lo, hi) {
+  const span = hi - lo;
+  if (!(span > 1e-12)) return 0.5;
+  return Math.max(0, Math.min(1, (tau - lo) / span));
+}
+
+/* t ∈ [0, 1] → 0xRRGGBB — TAUP_RAMP 칸 사이 sRGB 선형 보간 (모든 칸에서 R · G · B 가 줄어든다 = 휘도 단조 감소) · NaN = 밝은 끝 */
+function tauPathColor(t) {
+  t = Math.max(0, Math.min(1, Number(t) || 0));
+  const n = TAUP_RAMP.length - 1, x = t * n, i = Math.min(n - 1, Math.floor(x)), f = x - i;
+  const a = TAUP_RAMP[i], b = TAUP_RAMP[i + 1];
+  const ch = s => Math.round(((a >> s) & 255) * (1 - f) + ((b >> s) & 255) * f);
+  return (ch(16) << 16) | (ch(8) << 8) | ch(0);
+}
+
+/* 경로 하나 → 그릴 조각 (data µm [x, y, z]).  홉 = 최소상 변위 (x · y 주기 · z 비주기 — analyze_contacts 의 홉 길이와 같다).
+ * unwrap = false: 넘는 홉 (최소상 변위 ≠ 단순 차) 은 a → a + d/2 · b − d/2 → b 두 반 토막 (상자를 가로지르는 긴 관 없음).
+ * unwrap = true : 한 조각 — 첫 SE 자리에서 최소상 변위를 이어 붙인다 (Path Only View 와 같은 펼침).
+ * 입자 목록에 없는 id 에서 끊는다 (점 하나만 남은 조각은 버림).
+ * 반환 {pieces, nHops, nWrap, nMissing, lengthUm (= Σ 최소상 홉 길이 = path_length), dzUm (= |z_끝 − z_처음| = z_distance)} */
+function tauPathPieces(ids, idIndex, box, unwrap) {
+  box = box || {};
+  const Lx = Number(box.x_max) - (Number(box.x_min) || 0), Ly = Number(box.y_max) - (Number(box.y_min) || 0);
+  const mi = (d, L) => (L > 0 ? d - L * Math.round(d / L) : d);
+  const pieces = [];
+  let cur = null, prevRaw = null, prevDraw = null, first = null, last = null;
+  let nHops = 0, nWrap = 0, nMissing = 0, len = 0;
+  for (const id of (ids || [])) {
+    const p = idIndex ? idIndex[id] : null;
+    const x = p ? Number(p.x) : NaN, y = p ? Number(p.y) : NaN, z = p ? Number(p.z) : NaN;
+    if (!(Number.isFinite(x) && Number.isFinite(y) && Number.isFinite(z))) {
+      nMissing++;
+      if (cur && cur.length >= 2) pieces.push(cur);
+      cur = null; prevRaw = null; prevDraw = null;
+      continue;
+    }
+    const raw = [x, y, z];
+    if (first === null) first = raw;
+    last = raw;
+    if (!prevRaw) { cur = [raw.slice()]; prevRaw = raw; prevDraw = raw.slice(); continue; }
+    const dxr = x - prevRaw[0], dyr = y - prevRaw[1];
+    const d = [mi(dxr, Lx), mi(dyr, Ly), z - prevRaw[2]];
+    const wrapped = Math.abs(d[0] - dxr) > 1e-9 || Math.abs(d[1] - dyr) > 1e-9;
+    nHops++;
+    len += Math.hypot(d[0], d[1], d[2]);
+    if (unwrap) {
+      const q = [prevDraw[0] + d[0], prevDraw[1] + d[1], prevDraw[2] + d[2]];
+      cur.push(q);
+      prevDraw = q;
+      if (wrapped) nWrap++;
+    } else if (wrapped) {
+      nWrap++;
+      cur.push([prevRaw[0] + d[0] / 2, prevRaw[1] + d[1] / 2, prevRaw[2] + d[2] / 2]);
+      pieces.push(cur);
+      cur = [[x - d[0] / 2, y - d[1] / 2, z - d[2] / 2], raw.slice()];
+      prevDraw = raw.slice();
+    } else {
+      cur.push(raw.slice());
+      prevDraw = raw.slice();
+    }
+    prevRaw = raw;
+  }
+  if (cur && cur.length >= 2) pieces.push(cur);
+  return { pieces, nHops, nWrap, nMissing, lengthUm: len, dzUm: (first && last) ? Math.abs(last[2] - first[2]) : NaN };
+}
+
+/* 컬러바 눈금 — 끝 = 실제 최소 · 최대 (소수 둘째) · 안쪽 = 1·2·5 간격 (끝에서 0.15 이상 · 서로 0.15 이상) · 모두 5 개 이하 (7–8 개는 많다 —
+ * report_making_principles §2) · 안쪽 라벨은 꼬리 0 없이 (1.50 → 1.5) */
+function tauPathsTicks(lo, hi) {
+  const f2 = v => Number(v).toFixed(2);
+  if (!(Number.isFinite(lo) && Number.isFinite(hi))) return [];
+  if (!(hi - lo > 1e-9)) return [{ p: 0.5, label: f2(lo) }];
+  const span = hi - lo, raw = span / 3;
+  const mag = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / mag;
+  const step = (m <= 1 ? 1 : m <= 2 ? 2 : m <= 5 ? 5 : 10) * mag;
+  const dec = Math.max(0, -Math.floor(Math.log10(step) + 1e-9));
+  const out = [{ p: 0, label: f2(lo) }];
+  let lastP = 0;
+  for (let k = Math.ceil(lo / step - 1e-9); k * step < hi - 1e-9; k++) {
+    const v = k * step, p = (v - lo) / span;
+    if (p >= 0.15 && p <= 0.85 && p - lastP >= 0.15) {
+      let s = v.toFixed(dec);
+      if (s.indexOf('.') >= 0) s = s.replace(/0+$/, '').replace(/\.$/, '');
+      out.push({ p, label: s });
+      lastP = p;
+    }
+  }
+  out.push({ p: 1, label: f2(hi) });
+  return out;
+}
+
+/* 논문용 컬러바 스펙 (그림 글자 = 영문) — 색 함수 = 관 색 (exportColorbarPNG · tauPathsCompositePNG 가 같은 사상) */
+function tauPathsColorbarSpec(col) {
+  const n = (col && col.paths) ? col.paths.length : 0;
+  return {
+    colorFn: tauPathColor,
+    title: 'Geometric tortuosity τ of candidate SE paths (path length / Δz)',
+    short: 'Geometric τ (path length / Δz)',
+    ticks: tauPathsTicks(col ? col.lo : NaN, col ? col.hi : NaN),
+    sub: 'Per-path value with the same definition as τ_Dij in the case table (SE centres, x·y periodic minimum image) — not the transport tortuosity.  '
+       + n + ' stored candidate paths; gold = lowest τ.',
+  };
+}
+
+/* PNG 파일 이름 — tau_paths_n<경로 수>_tau<최소>-<최대>.png */
+function tauPathsPngName(col) {
+  const f2 = v => Number(v).toFixed(2);
+  return 'tau_paths_n' + ((col && col.paths) ? col.paths.length : 0) + '_tau' + f2(col && col.lo) + '-' + f2(col && col.hi) + '.png';
+}
+
+/* 범례 — 조작 (범위 · τ 작은 N) · 수 · τ 범위 · 램프 · 금색 · 정의 · 표본 · 주기 반 토막 · 경고 · 막대 (SE · AM 불투명도 · 관 굵기) ·
+ * 끝점 · 컬러바 ⬇ · 그림 창 · Screenshot 안내.  st = buildTauPathsGroup 의 st (없으면 그리기 전) */
+function tauPathsLegendHtml(col, st, opt) {
+  opt = Object.assign({}, TAUP_DEFAULT_OPT, opt || {});
+  const css = 'background:#16192e;color:#e4e6f0;border:1px solid #2a2d3e;border-radius:4px;padding:1px 2px;font-size:11px';
+  const sel = (id, cur, opts) => '<select id="' + id + '" style="' + css + '">'
+    + opts.map(o => '<option value="' + o[0] + '"' + (String(o[0]) === String(cur) ? ' selected' : '') + '>' + o[1] + '</option>').join('')
+    + '</select>';
+  const f2 = v => Number(v).toFixed(2);
+  const L = ['<b>Tortuosity 후보 경로 (여럿)</b>'];
+  const scopes = [['all', '모든 관통 클러스터']].concat((col.percClusters || []).map(c =>
+    [String(c.ci), '클러스터 #' + c.ci + ' (' + c.size + ' SE · ' + c.n + ' 경로)']));
+  L.push('<div style="display:flex;flex-wrap:wrap;gap:3px;align-items:center;margin:3px 0">' + sel('taup-scope', opt.scope, scopes)
+    + sel('taup-top', opt.top, TAUP_TOPS.map(n => [n, n ? 'τ 작은 ' + n + ' 개' : '경로 전부'])) + '</div>');
+  if (!col.paths || !col.paths.length) {
+    L.push('<i style="color:#fbbf24">저장된 후보 경로 없음 — 이 범위에 관통 클러스터가 없거나 se_clusters.json 에 경로가 없다 '
+      + '(접촉 분석 단계 산출물 · atom 만 올린 케이스에는 없다)</i>');
+    return L.join('<br>');
+  }
+  const b = col.best;
+  L.push('<b>경로 ' + col.paths.length + ' 개</b> (저장된 ' + col.nAvail + ' 개 중) · 관통 클러스터 ' + col.nClusters + ' 개 · τ '
+    + f2(col.lo) + ' – ' + f2(col.hi));
+  const grad = TAUP_RAMP.map(h => '#' + h.toString(16).padStart(6, '0')).join(', ');
+  L.push('<span style="display:flex;align-items:center;gap:4px;margin:2px 0"><span>' + f2(col.lo) + '</span>'
+    + '<span style="flex:1;height:9px;border-radius:2px;background:linear-gradient(to right, ' + grad + ')"></span>'
+    + '<span>' + f2(col.hi) + '</span></span>');
+  L.push('<span style="color:#ffd700">━</span> 금색 · 굵게 = 가장 작은 τ (' + f2(b.tau) + ' · 클러스터 #' + b.ci + ') · 나머지 = τ 색 '
+    + '(밝음 → 어두움 = τ 작음 → 큼)');
+  L.push('<span style="color:#9ca3af">' + TAUP_DEF_TXT + '</span>');
+  L.push('<span style="color:#9ca3af">' + TAUP_SAMPLE_TXT + '</span>');
+  if (st && st.nWrap) L.push('주기 경계를 넘는 홉 ' + st.nWrap + ' 개 = 양쪽 면에 반 토막씩 (상자를 가로지르는 긴 관 없음 · 그림 창의 "주기 펼침" = 경로마다 이어 그림)');
+  if (st && st.nMissing) L.push('<span style="color:#fbbf24">⚠ 모르는 id ' + st.nMissing + ' 개 (입자 목록에 없음) — 그 자리에서 관을 끊었다</span>');
+  if (col.nSkipped) L.push('<span style="color:#fbbf24">⚠ 쓸 수 없는 저장 경로 ' + col.nSkipped + ' 개 (id 2 개 미만 · τ 없음) 는 뺐다</span>');
+  const pct = v => Math.round(Math.max(0, Math.min(1, Number(v))) * 100);
+  L.push('<label style="display:block;margin-top:3px;font-size:11.5px">SE 불투명도 <span id="taup-se-op-val">' + f2(opt.seOpacity) + '</span></label>'
+    + '<input type="range" id="taup-se-op" min="0" max="100" step="1" value="' + pct(opt.seOpacity) + '">'
+    + '<label style="display:block;font-size:11.5px">AM 불투명도 (0 = 숨김) <span id="taup-am-op-val">' + f2(opt.amOpacity) + '</span></label>'
+    + '<input type="range" id="taup-am-op" min="0" max="100" step="1" value="' + pct(opt.amOpacity) + '">'
+    + '<label style="display:block;font-size:11.5px">관 굵기 <span id="taup-width-val">' + Number(opt.width).toFixed(1) + '×</span></label>'
+    + '<input type="range" id="taup-width" min="50" max="300" step="10" value="' + Math.round(Number(opt.width) * 100) + '" style="accent-color:#ffd700">'
+    + '<label style="display:block;font-size:11.5px"><input type="checkbox" id="taup-ends"' + (opt.ends ? ' checked' : '')
+    + '> 끝점 (바닥 = 청록 · 위 = 빨강)</label>');
+  L.push('<button id="taup-cbar" class="data-modal-btn" title="이 그림의 τ 색 눈금을 논문용 6× PNG 로 (그림과 따로 — 슬라이드에서 편집 가능)">컬러바 ⬇</button> '
+    + '<button id="taup-modal" class="data-modal-btn" title="경로만 그린 창 — PNG 다운로드 (투명 · 4×) · 컬러바 넣기 선택">🖼 그림 창 (PNG)</button>');
+  L.push('<span style="color:#9ca3af;font-size:10.5px">Screenshot = 화면 그대로 PNG (범례 · 컬러바는 안 들어간다) — 컬러바는 "컬러바 ⬇" 로 따로 · '
+    + '"🖼 그림 창" = 경로를 그린 창에서 PNG (컬러바 넣기 선택) · 판 메시 · 한 경로 관 (Percolating Path) 은 이 보기에서 숨김</span>');
+  return L.join('<br>');
+}
+
+/* 관 굵기 기준 — 상자 x · y 중 긴 쪽 × 0.0045 (50 µm 상자 → 0.225 µm) */
+function tauPathsBaseRadius(box) {
+  box = box || {};
+  const Lx = Number(box.x_max) - (Number(box.x_min) || 0), Ly = Number(box.y_max) - (Number(box.y_min) || 0);
+  const L = Math.max(Lx > 0 ? Lx : 0, Ly > 0 ? Ly : 0);
+  return L > 0 ? 0.0045 * L : 0.2;
+}
+
+/* 관 묶음 짓기 (메인 · 그림 창 공용) — col = tauPathsCollect 결과 · o = {width, ends, unwrap, radius}.
+ * 원기둥 = 홉 (조각의 이웃 점) · 구 = 이음매 (조각의 점) · 금색 경로 (col.best) 는 따로 (굵게 · 빛남) · 끝점 = 청록 (바닥) · 빨강 (위).
+ * 각 InstancedMesh userData.kind ('seg' · 'joint' · 'segBest' · 'jointBest' · 'ends') · instPath (인스턴스 → col.paths 번호).
+ * 반환 {group, st: {nSeg, nSegBest, nWrap, nMissing, r0, rBest}} */
+function buildTauPathsGroup(col, idIndex, box, o) {
+  o = o || {};
+  const r0 = (o.radius > 0 ? o.radius : tauPathsBaseRadius(box)) * (o.width > 0 ? o.width : 1), rBest = 1.8 * r0;
+  const lists = { seg: [], joint: [], segBest: [], jointBest: [], ends: [] };
+  let nWrap = 0, nMissing = 0;
+  (col.paths || []).forEach((p, k) => {
+    const isBest = p === col.best;
+    const pc = tauPathPieces(p.ids, idIndex, box, !!o.unwrap);
+    nWrap += pc.nWrap; nMissing += pc.nMissing;
+    const color = isBest ? COL.PATH : tauPathColor(tauPathT(p.tau, col.lo, col.hi));
+    const S = isBest ? lists.segBest : lists.seg, J = isBest ? lists.jointBest : lists.joint;
+    pc.pieces.forEach(piece => {
+      for (let i = 0; i + 1 < piece.length; i++) S.push({ a: piece[i], b: piece[i + 1], color, k });
+      piece.forEach(q => J.push({ a: q, color, k }));
+    });
+    if (o.ends && pc.pieces.length) {
+      const lp = pc.pieces[pc.pieces.length - 1];
+      lists.ends.push({ a: pc.pieces[0][0], color: 0x22d3ee, k }, { a: lp[lp.length - 1], color: 0xf87171, k });
+    }
+  });
+  const group = new THREE.Group();
+  group.userData.isTauPaths = true;
+  const up = new THREE.Vector3(0, 1, 0), A = new THREE.Vector3(), B = new THREE.Vector3(), d = new THREE.Vector3();
+  const mid = new THREE.Vector3(), sc = new THREE.Vector3(), m4 = new THREE.Matrix4(), col3 = new THREE.Color();
+  const qI = new THREE.Quaternion(), q = new THREE.Quaternion();
+  const mat = (best) => new THREE.MeshPhongMaterial(best
+    ? { color: 0xffffff, emissive: COL.PATH, emissiveIntensity: 0.25, shininess: 40 }
+    : { color: 0xffffff, shininess: 30 });
+  const mk = (kind, list, cyl, r, best) => {
+    if (!list.length) return;
+    const geo = cyl ? new THREE.CylinderGeometry(1, 1, 1, 10, 1, false) : new THREE.SphereGeometry(1, 12, 8);
+    const im = new THREE.InstancedMesh(geo, mat(best), list.length);
+    list.forEach((e, i) => {
+      A.set(e.a[0], e.a[2], e.a[1]);                          // data (x, y, z) → THREE (x, z, y) — 입자 구와 같은 규약
+      if (cyl) {
+        B.set(e.b[0], e.b[2], e.b[1]);
+        d.subVectors(B, A);
+        const len = d.length();
+        if (len > 0) d.divideScalar(len); else d.copy(up);
+        q.setFromUnitVectors(up, d);
+        mid.addVectors(A, B).multiplyScalar(0.5);
+        sc.set(r, Math.max(len, 1e-6), r);
+        m4.compose(mid, q, sc);
+      } else {
+        sc.set(r, r, r);
+        m4.compose(A, qI, sc);
+      }
+      im.setMatrixAt(i, m4);
+      im.setColorAt(i, col3.setHex(e.color));
+    });
+    im.instanceMatrix.needsUpdate = true;
+    if (im.instanceColor) im.instanceColor.needsUpdate = true;
+    im.frustumCulled = false;                                  // 인스턴스가 상자 전체에 퍼진다 — 기본 경계구로 잘리지 않게
+    im.renderOrder = best ? 4 : 3;
+    im.userData.kind = kind;
+    im.userData.instPath = list.map(e => e.k);
+    group.add(im);
+  };
+  mk('seg', lists.seg, true, r0, false);
+  mk('joint', lists.joint, false, r0, false);
+  mk('segBest', lists.segBest, true, rBest, true);
+  mk('jointBest', lists.jointBest, false, rBest, true);
+  mk('ends', lists.ends, false, 2.2 * r0, false);
+  return { group, st: { nSeg: lists.seg.length + lists.segBest.length, nSegBest: lists.segBest.length, nWrap, nMissing, r0, rBest } };
+}
+
+/* 입자 흐리게 — 처음 재질 값을 한 번 적어 두고 (되돌리기용 · 그때 본래 색으로 다시 칠함) SE · AM (그 밖 이름 = AM 쪽) 불투명도.
+ * 깊이 쓰기 끔 = 뒤의 관이 비친다 · 불투명도 0 = 숨김 (체크박스로 숨긴 상은 그대로 숨김). */
+function _tauPathsFade(state, seOpa, amOpa) {
+  ['AM_P', 'AM_S', 'SE', 'OTHER'].forEach(t => {
+    const m = state.meshes && state.meshes[t];
+    if (!m || !m.material) return;
+    const mat = m.material;
+    if (!mat.userData) mat.userData = {};
+    if (!mat.userData._tauPathsSaved) {
+      mat.userData._tauPathsSaved = { opacity: mat.opacity, transparent: mat.transparent, depthWrite: mat.depthWrite, visible: m.visible };
+      if (m.userData && m.userData.particles && m.setColorAt) {          // 앞 모드의 색이 남지 않게 — 상별 본래 색 (atom 만 = 회색)
+        const base = new THREE.Color(m.userData.baseColor != null ? m.userData.baseColor : 0xffffff);
+        m.userData.particles.forEach((_, i) => m.setColorAt(i, base));
+        if (m.instanceColor) m.instanceColor.needsUpdate = true;
+      }
+    }
+    const o = Math.max(0, Math.min(1, Number(t === 'SE' ? seOpa : amOpa) || 0));
+    mat.opacity = o;
+    mat.transparent = o < 1;
+    mat.depthWrite = o >= 1;
+    mat.needsUpdate = true;
+    const cb = (typeof document !== 'undefined' && document.querySelector)
+      ? document.querySelector(`.viewer-controls input[data-layer="${t}"]`) : null;
+    m.visible = o > 0 && (cb ? cb.checked : true);
+  });
+}
+
+/* 걷기 — 관 묶음 제거 (GPU 자원 해제) · keepFade 가 아니면 입자 재질 · 보임을 처음 값으로 · 한 경로 관 다시 보이게 */
+function _teardownTauPaths(state, keepFade) {
+  const g = state.tauPathsGroup;
+  if (g) {
+    if (state.scene) state.scene.remove(g);
+    g.traverse(o => {
+      if (o.isInstancedMesh && o.dispose) o.dispose();
+      if (o.geometry && o.geometry.dispose) o.geometry.dispose();
+      if (o.material && o.material.dispose) o.material.dispose();
+    });
+    state.tauPathsGroup = null;
+  }
+  if (keepFade) return;
+  if (state.pathGroup) state.pathGroup.visible = true;
+  ['AM_P', 'AM_S', 'SE', 'OTHER'].forEach(t => {
+    const m = state.meshes && state.meshes[t];
+    const sv = m && m.material && m.material.userData && m.material.userData._tauPathsSaved;
+    if (!sv) return;
+    m.material.opacity = sv.opacity;
+    m.material.transparent = sv.transparent;
+    m.material.depthWrite = sv.depthWrite;
+    m.material.needsUpdate = true;
+    m.visible = sv.visible;
+    delete m.material.userData._tauPathsSaved;
+  });
+}
+
+/* 옵션 객체 — 객체 하나를 계속 쓴다 (범례 듣개가 붙잡은 객체 = 그리기 · 그림 창이 읽는 객체) · 빠진 키만 기본값으로 채운다.
+ * ⚠ 새 객체로 바꾸면 범례를 다시 쓰지 않는 갱신 (굵기 · 끝점) 이 옛 객체를 고치고 그리기는 새 객체를 읽어 조작이 먹지 않는다 (시험 R10). */
+function tauPathsOpt(state) {
+  const opt = state._tauPathsOpt || (state._tauPathsOpt = {});
+  Object.keys(TAUP_DEFAULT_OPT).forEach(k => { if (opt[k] === undefined) opt[k] = TAUP_DEFAULT_OPT[k]; });
+  return opt;
+}
+
+/* 그리기 — 고르기 (없는 클러스터 번호면 모든 관통 클러스터) · 관 묶음 · 입자 흐림 · 판 · 한 경로 관 숨김 · 범례 · 조작 · 단면 판.
+ * keepLegend = 범례를 다시 쓰지 않는다 (관 굵기 막대를 끄는 동안 막대 요소가 바뀌면 손에서 빠진다 · 끝점 — 범례 내용은 그대로) */
+function renderTauPaths(state, keepLegend) {
+  const opt = tauPathsOpt(state);
+  _teardownTauPaths(state, true);
+  const data = state.data || {};
+  const clusters = ((data.clusters || {}).clusters) || [];
+  let col = tauPathsCollect(clusters, opt);
+  if (opt.scope !== 'all' && !(col.percClusters || []).some(c => String(c.ci) === String(opt.scope))) {
+    opt.scope = 'all';
+    col = tauPathsCollect(clusters, opt);
+  }
+  if (state.meshes && state.meshes.MESH) state.meshes.MESH.visible = false;   // 판 메시 숨김 (다음 모드에서 체크박스대로)
+  if (state.pathGroup) state.pathGroup.visible = false;                     // 한 경로 관 (금색) 과 섞이지 않게
+  _tauPathsFade(state, opt.seOpacity, opt.amOpacity);
+  let st = null;
+  if (col.paths.length) {
+    const built = buildTauPathsGroup(col, state.idIndex || {}, data.box || {}, { width: opt.width, ends: opt.ends, unwrap: false });
+    st = built.st;
+    state.tauPathsGroup = built.group;
+    if (state.scene) state.scene.add(built.group);
+  }
+  state._tauPathsLast = { col, st };
+  if (!keepLegend) {
+    setLegend(state, tauPathsLegendHtml(col, st, opt));
+    _tauPathsWire(state);
+  }
+  if (state.applyClip) state.applyClip();                    // 단면 뷰 (Y-슬라이스) — 새 관 재질에도
+}
+
+/* 범례 조작 — 범위 · N · 굵기 · 끝점 = 다시 그림 · 불투명도 = 재질만 · 컬러바 ⬇ · 그림 창.  다른 모드에서는 아무것도 안 한다. */
+function _tauPathsWire(state) {
+  const opt = tauPathsOpt(state);
+  const el = id => document.getElementById(id);
+  const on = (id, ev, fn) => { const x = el(id); if (x) x.addEventListener(ev, () => { if (state.viewMode === 'tau_paths') fn(x); }); };
+  on('taup-scope', 'change', x => { opt.scope = String(x.value || 'all'); renderTauPaths(state); });
+  on('taup-top', 'change', x => { opt.top = Math.max(0, Math.round(Number(x.value) || 0)); renderTauPaths(state); });
+  on('taup-se-op', 'input', x => {
+    opt.seOpacity = Math.max(0, Math.min(1, Number(x.value) / 100));
+    const v = el('taup-se-op-val'); if (v) v.textContent = opt.seOpacity.toFixed(2);
+    _tauPathsFade(state, opt.seOpacity, opt.amOpacity);
+  });
+  on('taup-am-op', 'input', x => {
+    opt.amOpacity = Math.max(0, Math.min(1, Number(x.value) / 100));
+    const v = el('taup-am-op-val'); if (v) v.textContent = opt.amOpacity.toFixed(2);
+    _tauPathsFade(state, opt.seOpacity, opt.amOpacity);
+  });
+  on('taup-width', 'input', x => {
+    opt.width = Math.max(0.5, Math.min(3, Number(x.value) / 100));
+    const v = el('taup-width-val'); if (v) v.textContent = opt.width.toFixed(1) + '×';
+    renderTauPaths(state, true);                              // 관만 다시 — 범례 (끄는 막대) 는 그대로
+  });
+  on('taup-ends', 'change', x => { opt.ends = !!x.checked; renderTauPaths(state, true); });
+  on('taup-cbar', 'click', () => {
+    const l = state._tauPathsLast;
+    if (l && l.col && l.col.paths.length) exportColorbarPNG(tauPathsColorbarSpec(l.col), 'colorbar_tau_paths.png');
+  });
+  on('taup-modal', 'click', () => showTauPathsView(state));
+}
+
+/* Percolating Path 조작의 "▦ 이 클러스터의 모든 후보 경로" — 화면에서 고른 클러스터 (없으면 모든 관통 클러스터) 로 View Mode 를 바꾼다 */
+function tauPathsShowCluster(state, ci) {
+  tauPathsOpt(state).scope = Number.isInteger(ci) ? String(ci) : 'all';
+  const sel = document.getElementById('view-mode');
+  if (sel) {
+    sel.value = 'tau_paths';
+    sel.dispatchEvent(new Event('change'));
+  } else {
+    applyViewMode(state, 'tau_paths');
+  }
+}
+
+/* 컬러바 넣은 PNG — 찍은 그림 (투명) 을 그대로 두고 오른쪽에 세로 막대 (위 = 큰 τ · 어둡게) · 눈금 · 짧은 영문 제목.
+ * 글꼴 = 다른 뷰어 컬러바와 같은 Arial (exportColorbarPNG).  반환 Promise<dataURL> */
+function tauPathsCompositePNG(imgUrl, spec) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      try {
+        const W = img.width, H = img.height, S = Math.max(1, H / 520);
+        const gap = 26 * S, barW = 20 * S, labW = 64 * S, titleW = 34 * S, padR = 14 * S;
+        const cv = document.createElement('canvas');
+        cv.width = Math.round(W + gap + barW + labW + titleW + padR);
+        cv.height = H;
+        const cx = cv.getContext('2d');
+        cx.drawImage(img, 0, 0);
+        const x0 = Math.round(W + gap), y0 = Math.round(0.17 * H), y1 = Math.round(0.83 * H), bh = y1 - y0;
+        for (let j = 0; j < bh; j++) {
+          const t = 1 - j / Math.max(1, bh - 1);
+          cx.fillStyle = '#' + spec.colorFn(t).toString(16).padStart(6, '0');
+          cx.fillRect(x0, y0 + j, barW, 1.5);
+        }
+        cx.strokeStyle = '#111111';
+        cx.lineWidth = 1.2 * S;
+        cx.strokeRect(x0, y0, barW, bh);
+        cx.fillStyle = '#111111';
+        cx.font = (15 * S) + 'px Arial';
+        cx.textAlign = 'left';
+        cx.textBaseline = 'middle';
+        (spec.ticks || []).forEach(tk => {
+          const y = y1 - Math.max(0, Math.min(1, tk.p)) * bh;
+          cx.beginPath(); cx.moveTo(x0 + barW, y); cx.lineTo(x0 + barW + 6 * S, y); cx.stroke();
+          cx.fillText(String(tk.label), x0 + barW + 9 * S, y);
+        });
+        cx.save();
+        cx.translate(x0 + barW + labW + titleW * 0.5, (y0 + y1) / 2);
+        cx.rotate(-Math.PI / 2);
+        cx.textAlign = 'center';
+        cx.font = '600 ' + (15 * S) + 'px Arial';
+        cx.fillText(spec.short || spec.title || 'τ', 0, 0);
+        cx.restore();
+        resolve(cv.toDataURL('image/png'));
+      } catch (e) { reject(e); }
+    };
+    img.onerror = () => reject(new Error('PNG 를 다시 읽지 못했다'));
+    img.src = imgUrl;
+  });
+}
+
 /* ── 반응 ↔ 기계(SE 소성변형·접촉) 공간 상관 팝업 ────────────────
  * Server-rendered figure (scripts/mech_reaction_correlation.py via
  * /mpm-lab/mech-reaction/<pid>.png).  OBSERVATIONAL: the model has NO
@@ -6589,7 +7069,9 @@ function exportColorbarPNG(spec, fname) {
   const bx = 10 * S2, by = titleH + 8 * S2, bw = innerW, bh = 25 * S2;
   for (let i = 0; i < bw; i++) {
     const t = i / (bw - 1);
-    const hx = sp.map === 'coolwarm' ? coolwarmColor(t) : jetColor(sp.gamma ? Math.pow(t, sp.gamma) : t);
+    //  sp.colorFn (t → 0xRRGGBB) 가 있으면 그 사상 (예: Tortuosity 후보 경로의 한 색상 램프 · 10-07) — 없으면 옛 그대로 (coolwarm · jet)
+    const hx = typeof sp.colorFn === 'function' ? sp.colorFn(t)
+      : (sp.map === 'coolwarm' ? coolwarmColor(t) : jetColor(sp.gamma ? Math.pow(t, sp.gamma) : t));
     cx.fillStyle = '#' + hx.toString(16).padStart(6, '0');
     cx.fillRect(bx + i, by, 1.5, bh);
   }
@@ -8069,6 +8551,8 @@ function wireControls(ctrlDiv, renderer, camera, controls, scene, state) {
         saveWithDialog(dataUrl, 'electrode_3d.png', btn, 'Screenshot');
       } else if (action === 'pathOnly') {
         showPathOnlyView(renderer, scene, camera, state);
+      } else if (action === 'tauPathsView') {
+        showTauPathsView(state);
       } else if (action === 'amCloseup') {
         showAMCloseupView(state);
       } else if (action === 'amContactCloseup') {
@@ -8351,6 +8835,195 @@ function showPathOnlyView(renderer, scene, camera, state) {
     r2.dispose();
     overlay.remove();
   });
+}
+
+/* ── All Paths View — Tortuosity 후보 경로 여럿을 그린 그림 창 (2026-10-07) ─────────────────────────────────────
+ * 범위 · τ 작은 N · SE / AM 불투명도 · 관 굵기 · 끝점 = 메인 View Mode "Tortuosity 후보 경로 (여럿)" 의 지금 값 (없으면 기본) ·
+ * 시점 = 메인 화면의 시점 (있으면).  창 조작: SE · AM 맥락 · 상자 · 바닥 격자 · 주기 펼침 · 끝점 · 컬러바 넣기.
+ * PNG 다운로드 = 투명 · 4× · 축 글자만 숨김 (상자 · 격자는 켬이면 남는다 — Path Only View 와 같다) · 컬러바 넣기 = 기본 끔
+ * (랩 원칙: 범례 · 주석은 그림 밖 — docs/report_making_principles.md §2) · 컬러바 PNG = 따로 (exportColorbarPNG). */
+function showTauPathsView(state) {
+  const opt = tauPathsOpt(state);
+  const data = state.data || {};
+  const clusters = ((data.clusters || {}).clusters) || [];
+  let col = tauPathsCollect(clusters, opt);
+  if (!col.paths.length && opt.scope !== 'all') {
+    opt.scope = 'all';
+    col = tauPathsCollect(clusters, opt);
+  }
+  if (!col.paths.length) {
+    alert('저장된 후보 경로가 없습니다 — 관통 클러스터와 se_clusters.json 의 경로 (접촉 분석 단계 산출물) 가 필요합니다.');
+    return;
+  }
+  const box = data.box || {};
+  const f2 = v => Number(v).toFixed(2);
+  const pct = v => Math.round(Math.max(0, Math.min(1, Number(v))) * 100);
+  const b = col.best;
+  const overlay = document.createElement('div');
+  overlay.className = 'path-modal-overlay';
+  overlay.innerHTML = `
+    <div class="path-modal" style="width:780px;max-width:94vw">
+      <button class="path-modal-close">&times;</button>
+      <div style="font-size:14px;font-weight:bold;margin-bottom:8px;text-align:center">Tortuosity 후보 경로 — ${col.paths.length} 개 (τ 색)</div>
+      <div id="taup-viewer-container" style="width:100%;height:520px;border-radius:8px;overflow:hidden;background:#f5f5f5;position:relative"></div>
+      <div class="path-modal-info" style="text-align:center;margin-top:8px">
+        경로 ${col.paths.length} 개 · 관통 클러스터 ${col.nClusters} 개 · τ ${f2(col.lo)} – ${f2(col.hi)} ·
+        <span style="color:#b8860b">금색</span> = 가장 작은 τ (${f2(b.tau)} · 클러스터 #${b.ci}) · 나머지 = 밝음 → 어두움 = τ 작음 → 큼
+      </div>
+      <div class="path-modal-tau-note" style="text-align:center;margin-top:3px;font-size:11px;color:#666">${TAUP_DEF_TXT}</div>
+      <div style="text-align:center;margin-top:2px;font-size:11px;color:#666">${TAUP_SAMPLE_TXT}</div>
+      <div class="path-modal-context" style="display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px;margin-top:8px;font-size:12.5px;color:#444">
+        <label style="display:inline-flex;align-items:center;gap:4px"><input type="checkbox" id="taup-m-se" checked> SE context</label>
+        <input type="range" id="taup-m-se-op" min="0" max="100" value="${pct(opt.seOpacity)}" style="width:70px">
+        <span id="taup-m-se-op-val" style="display:inline-block;width:30px">${f2(opt.seOpacity)}</span>
+        <label style="display:inline-flex;align-items:center;gap:4px"><input type="checkbox" id="taup-m-am"${opt.amOpacity > 0 ? ' checked' : ''}> AM</label>
+        <input type="range" id="taup-m-am-op" min="0" max="100" value="${pct(opt.amOpacity)}" style="width:70px">
+        <span id="taup-m-am-op-val" style="display:inline-block;width:30px">${f2(opt.amOpacity)}</span>
+        <label style="display:inline-flex;align-items:center;gap:4px"><input type="checkbox" id="taup-m-frame" checked> 상자 · 바닥 격자</label>
+        <label style="display:inline-flex;align-items:center;gap:4px" title="끔 = 주기 경계를 넘는 홉은 양쪽 면에 반 토막 (상자 안 · 메인 화면과 같다) · 켬 = 경로마다 첫 SE 자리에서 이어 그림 (상자 밖으로 나갈 수 있다)"><input type="checkbox" id="taup-m-unwrap"> 주기 펼침</label>
+        <label style="display:inline-flex;align-items:center;gap:4px"><input type="checkbox" id="taup-m-ends"${opt.ends ? ' checked' : ''}> 끝점</label>
+        <label style="display:inline-flex;align-items:center;gap:4px" title="기본 끔 — 랩 원칙 (docs/report_making_principles.md §2): 범례 · 주석은 그림 밖에 두고 편집 가능하게.  컬러바는 '컬러바 PNG' 로 따로 받아 슬라이드에서 붙인다.  켜면 그림 오른쪽에 세로 컬러바를 넣은 한 장"><input type="checkbox" id="taup-m-cbar-in"> 컬러바 넣기</label>
+      </div>
+      <div style="text-align:center;margin-top:3px;font-size:10.5px;color:#888">범례는 그림 밖 (랩 원칙) — 기본 PNG = 경로 그림만 (투명 · 4×) · 컬러바 PNG 따로 · '컬러바 넣기' 를 켜면 한 장으로</div>
+      <div class="path-modal-actions">
+        <button id="taup-png-btn">PNG 다운로드</button>
+        <button id="taup-cbar-btn">컬러바 PNG</button>
+        <button class="taup-close">닫기</button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+
+  const container = document.getElementById('taup-viewer-container');
+  const r2 = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true, alpha: true });
+  r2.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  r2.setSize(container.clientWidth, container.clientHeight);
+  r2.setClearColor(0xf5f5f5, 1);
+  container.appendChild(r2.domElement);
+  const s2 = new THREE.Scene();
+  const c2 = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.1, 10000);
+  const ctrl2 = new OrbitControls(c2, r2.domElement);
+  ctrl2.enableDamping = true;
+  ctrl2.dampingFactor = 0.12;
+  s2.add(new THREE.AmbientLight(0xffffff, 0.55));
+  const dl = new THREE.DirectionalLight(0xffffff, 0.8);
+  dl.position.set(1, 1.5, 1);
+  s2.add(dl);
+
+  // 상자 · 바닥 격자 (Path Only View 와 같다 — PNG 에 남는다 · 체크박스로 끔)
+  const bw = box.x_max - box.x_min, bh = box.z_max - box.z_min, bd = box.y_max - box.y_min;
+  const cx = (box.x_min + box.x_max) / 2, cy = (box.z_min + box.z_max) / 2, cz = (box.y_min + box.y_max) / 2;
+  const bbLine = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(bw, bh, bd)),
+                                        new THREE.LineBasicMaterial({ color: 0x999999 }));
+  bbLine.position.set(cx, cy, cz);
+  bbLine.userData.isBbox = true;
+  s2.add(bbLine);
+  const grid = new THREE.GridHelper(Math.max(bw, bd) * 1.2, 20, 0xcccccc, 0xe0e0e0);
+  grid.position.set(cx, box.z_min, cz);
+  grid.userData.isGrid = true;
+  s2.add(grid);
+
+  // 맥락 입자 — SE (본래 색 · 흐리게) · AM (상별 색 · 흐리게).  관보다 먼저 (renderOrder −1)
+  const seCtx = createInstancedSpheres(state.seParticles || [], 12, COL.SE, opt.seOpacity, true);
+  if (seCtx) { seCtx.userData.isSEContext = true; seCtx.renderOrder = -1; seCtx.visible = opt.seOpacity > 0; s2.add(seCtx); }
+  const amCtx = [];
+  [[state.amPParticles, COL.AM_P], [state.amSParticles, COL.AM_S]].forEach(([ps, c]) => {
+    const m = createInstancedSpheres(ps || [], 16, c, Math.max(0.01, opt.amOpacity), true);
+    if (!m) return;
+    m.userData.isAMContext = true;
+    m.renderOrder = -1;
+    m.visible = opt.amOpacity > 0;
+    s2.add(m);
+    amCtx.push(m);
+  });
+
+  // 관 — 메인과 같은 묶음 (주기 펼침 · 끝점을 바꾸면 다시 짓는다)
+  const el = id => document.getElementById(id);
+  let pathsGroup = null;
+  const rebuild = () => {
+    if (pathsGroup) {
+      s2.remove(pathsGroup);
+      pathsGroup.traverse(o => {
+        if (o.isInstancedMesh && o.dispose) o.dispose();
+        if (o.geometry && o.geometry.dispose) o.geometry.dispose();
+        if (o.material && o.material.dispose) o.material.dispose();
+      });
+    }
+    const uw = el('taup-m-unwrap'), en = el('taup-m-ends');
+    pathsGroup = buildTauPathsGroup(col, state.idIndex || {}, box,
+      { width: opt.width, ends: en ? !!en.checked : !!opt.ends, unwrap: !!(uw && uw.checked) }).group;
+    s2.add(pathsGroup);
+  };
+  rebuild();
+  addAxisLabels(s2, box);
+
+  // 시점 — 메인 화면의 시점 (있으면) · 없으면 Path Only View 와 같은 기본
+  const maxDim = Math.max(bw, bh, bd) || 50;
+  if (state.camera && state.controls && state.camera.position && state.controls.target) {
+    c2.position.copy(state.camera.position);
+    ctrl2.target.copy(state.controls.target);
+  } else {
+    c2.position.set(cx + maxDim * 1.2, cy + maxDim * 0.8, cz + maxDim * 1.2);
+    ctrl2.target.set(cx, cy, cz);
+  }
+  ctrl2.update();
+
+  // 조작
+  const on = (id, ev, fn) => { const x = el(id); if (x) x.addEventListener(ev, () => fn(x)); };
+  // 보임 = 체크박스 켬 ∧ 불투명도 > 0 (막대를 0 에서 올려도 · 체크박스를 다시 켜도 같은 규칙)
+  const seOn = () => { const c = el('taup-m-se'), r = el('taup-m-se-op');
+    if (seCtx) seCtx.visible = (!c || !!c.checked) && (r ? Number(r.value) > 0 : opt.seOpacity > 0); };
+  const amOn = () => { const c = el('taup-m-am'), r = el('taup-m-am-op');
+    amCtx.forEach(m => { m.visible = (!c || !!c.checked) && (r ? Number(r.value) > 0 : opt.amOpacity > 0); }); };
+  on('taup-m-se', 'change', () => seOn());
+  on('taup-m-se-op', 'input', x => {
+    const o = Math.max(0, Math.min(1, Number(x.value) / 100));
+    if (seCtx) { seCtx.material.opacity = o; seCtx.material.needsUpdate = true; }
+    const v = el('taup-m-se-op-val'); if (v) v.textContent = o.toFixed(2);
+    seOn();
+  });
+  on('taup-m-am', 'change', () => amOn());
+  on('taup-m-am-op', 'input', x => {
+    const o = Math.max(0, Math.min(1, Number(x.value) / 100));
+    amCtx.forEach(m => { m.material.opacity = Math.max(0.01, o); m.material.needsUpdate = true; });
+    const v = el('taup-m-am-op-val'); if (v) v.textContent = o.toFixed(2);
+    amOn();
+  });
+  on('taup-m-frame', 'change', x => { bbLine.visible = !!x.checked; grid.visible = !!x.checked; });
+  on('taup-m-unwrap', 'change', () => rebuild());
+  on('taup-m-ends', 'change', () => rebuild());
+
+  // PNG 다운로드 — 축 글자만 숨기고 투명 배경 4× (Path Only View 와 같은 절차) · 컬러바 넣기면 합성본
+  const pngBtn = el('taup-png-btn');
+  if (pngBtn) pngBtn.addEventListener('click', async () => {
+    const hidden = [];
+    s2.traverse(o => { if (o.userData && o.userData.isAxisLabel && o.visible) { o.visible = false; hidden.push(o); } });
+    const prevBg = s2.background;
+    const prevClear = new THREE.Color();
+    r2.getClearColor(prevClear);
+    const prevAlpha = r2.getClearAlpha();
+    s2.background = null;
+    r2.setClearColor(0x000000, 0);
+    let url;
+    try {
+      url = captureHighRes(r2, s2, c2, 4);
+    } finally {
+      s2.background = prevBg;
+      r2.setClearColor(prevClear, prevAlpha);
+      hidden.forEach(o => { o.visible = true; });
+      r2.render(s2, c2);
+    }
+    const cbIn = el('taup-m-cbar-in');
+    if (cbIn && cbIn.checked) url = await tauPathsCompositePNG(url, tauPathsColorbarSpec(col));
+    await saveWithDialog(url, tauPathsPngName(col), pngBtn, 'PNG 다운로드');
+  });
+  on('taup-cbar-btn', 'click', () => exportColorbarPNG(tauPathsColorbarSpec(col), 'colorbar_tau_paths.png'));
+
+  let animId;
+  const anim = () => { animId = requestAnimationFrame(anim); ctrl2.update(); r2.render(s2, c2); };
+  anim();
+  const close = () => { cancelAnimationFrame(animId); r2.dispose(); overlay.remove(); };
+  overlay.onclick = (e) => { if (e.target === overlay) close(); };
+  [overlay.querySelector('.path-modal-close'), overlay.querySelector('.taup-close')].forEach(x => { if (x) x.addEventListener('click', close); });
 }
 
 /* ── AM Close-up View ───────────────────────────────────────
