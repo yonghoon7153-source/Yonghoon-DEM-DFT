@@ -1,0 +1,194 @@
+{
+  "tool_return": {
+    "chunk_id": "936877",
+    "wall_time_seconds": 0.0901846,
+    "exit_code": 0,
+    "original_token_count": 1405,
+    "output": "{\r\n  \"scope\": \"Data/blob/substring comparisons only; not supplied tests or optimizer execution\",\r\n  \"passed\": 32,\r\n  \"failed\": 0,\r\n  \"checks\": [\r\n    {\r\n      \"id\": \"seal_directory_exact_set_unchanged\",\r\n      \"pass\": true,\r\n      \"detail\": [\r\n        \"bms-balancing/reil_c6_20261005/COBYQA_OPTIONS.json\",\r\n        \"bms-balancing/reil_c6_20261005/MANIFEST.json\",\r\n        \"bms-balancing/reil_c6_20261005/PROFILE.json\",\r\n        \"bms-balancing/reil_c6_20261005/README.md\",\r\n        \"bms-balancing/reil_c6_20261005/REIL_C6.lock.txt\",\r\n        \"bms-balancing/reil_c6_20261005/SOBOL_PHASE_A.json\",\r\n        \"bms-balancing/reil_c6_20261005/sobol_A0_their_box_seed0.npy\",\r\n        \"bms-balancing/reil_c6_20261005/sobol_A0_their_box_seed1.npy\",\r\n        \"bms-balancing/reil_c6_20261005/sobol_A1_A2_wide_box_seed0.npy\",\r\n        \"bms-balancing/reil_c6_20261005/sobol_A1_A2_wide_box_seed1.npy\",\r\n        \"bms-balancing/reil_c6_20261005/sobol_unit_seed0.npy\",\r\n        \"bms-balancing/reil_c6_20261005/sobol_unit_seed1.npy\"\r\n      ]\r\n    },\r\n    {\r\n      \"id\": \"seal_blob_unchanged:bms-balancing/reil_c6_20261005/COBYQA_OPTIONS.json\",\r\n      \"pass\": true,\r\n      \"detail\": null\r\n    },\r\n    {\r\n      \"id\": \"seal_blob_unchanged:bms-balancing/reil_c6_20261005/MANIFEST.json\",\r\n      \"pass\": true,\r\n      \"detail\": null\r\n    },\r\n    {\r\n      \"id\": \"seal_blob_unchanged:bms-balancing/reil_c6_20261005/PROFILE.json\",\r\n      \"pass\": true,\r\n      \"detail\": null\r\n    },\r\n    {\r\n      \"id\": \"seal_blob_unchanged:bms-balancing/reil_c6_20261005/README.md\",\r\n      \"pass\": true,\r\n      \"detail\": null\r\n    },\r\n    {\r\n      \"id\": \"seal_blob_unchanged:bms-balancing/reil_c6_20261005/REIL_C6.lock.txt\",\r\n      \"pass\": true,\r\n      \"detail\": null\r\n    },\r\n    {\r\n      \"id\": \"seal_blob_unchanged:bms-balancing/reil_c6_20261005/SOBOL_PHASE_A.json\",\r\n      \"pass\": true,\r\n      \"detail\": null\r\n    },\r\n    {\r\n      \"id\": \"seal_blob_unchanged:bms-balancing/reil_c6_20261005/sobol_A0_their_box_seed0.npy\",\r\n      \"pass\": true,\r\n      \"detail\": null\r\n    },\r\n    {\r\n      \"id\": \"seal_blob_unchanged:bms-balancing/reil_c6_20261005/sobol_A0_their_box_seed1.npy\",\r\n      \"pass\": true,\r\n      \"detail\": null\r\n    },\r\n    {\r\n      \"id\": \"seal_blob_unchanged:bms-balancing/reil_c6_20261005/sobol_A1_A2_wide_box_seed0.npy\",\r\n      \"pass\": true,\r\n      \"detail\": null\r\n    },\r\n    {\r\n      \"id\": \"seal_blob_unchanged:bms-balancing/reil_c6_20261005/sobol_A1_A2_wide_box_seed1.npy\",\r\n      \"pass\": true,\r\n      \"detail\": null\r\n    },\r\n    {\r\n      \"id\": \"seal_blob_unchanged:bms-balancing/reil_c6_20261005/sobol_unit_seed0.npy\",\r\n      \"pass\": true,\r\n      \"detail\": null\r\n    },\r\n    {\r\n      \"id\": \"seal_blob_unchanged:bms-balancing/reil_c6_20261005/sobol_unit_seed1.npy\",\r\n      \"pass\": true,\r\n      \"detail\": null\r\n    },\r\n    {\r\n      \"id\": \"full_text_git_blob:bms-balancing/docs/REIL_C6_SUPPLEMENT_20261006.md\",\r\n      \"pass\": true,\r\n      \"detail\": null\r\n    },\r\n    {\r\n      \"id\": \"excerpt_origin_metadata:bms-balancing/scripts/reil_c6_profile.py[61, 131]\",\r\n      \"pass\": true,\r\n      \"detail\": null\r\n    },\r\n    {\r\n      \"id\": \"excerpt_origin_metadata:bms-balancing/tests/test_reil_c6_profile.py[1, 105]\",\r\n      \"pass\": true,\r\n      \"detail\": null\r\n    },\r\n    {\r\n      \"id\": \"excerpt_origin_metadata:bms-balancing/scripts/reil_c6_profile.py[32, 33]\",\r\n      \"pass\": true,\r\n      \"detail\": null\r\n    },\r\n    {\r\n      \"id\": \"excerpt_origin_metadata:bms-balancing/scripts/reil_c6_profile.py[121, 154]\",\r\n      \"pass\": true,\r\n      \"detail\": null\r\n    },\r\n    {\r\n      \"id\": \"full_text_git_blob:bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md\",\r\n      \"pass\": true,\r\n      \"detail\": null\r\n    },\r\n    {\r\n      \"id\": \"full_text_git_blob:bms-balancing/reil_c6_20261005/MANIFEST.json\",\r\n      \"pass\": true,\r\n      \"detail\": null\r\n    },\r\n    {\r\n      \"id\": \"full_text_git_blob:bms-balancing/evidence/reil_c6_n1_20261006/01_red_12failed_8passed.log\",\r\n      \"pass\": true,\r\n      \"detail\": null\r\n    },\r\n    {\r\n      \"id\": \"full_text_git_blob:bms-balancing/evidence/reil_c6_n1_20261006/02_green_20passed.log\",\r\n      \"pass\": true,\r\n      \"detail\": null\r\n    },\r\n    {\r\n      \"id\": \"full_text_git_blob:bms-balancing/evidence/reil_c6_n1_20261006/03_bms_full_548passed_1failed_count_line.log\",\r\n      \"pass\": true,\r\n      \"detail\": null\r\n    },\r\n    {\r\n      \"id\": \"manifest_sha256_unchanged\",\r\n      \"pass\": true,\r\n      \"detail\": null\r\n    },\r\n    {\r\n      \"id\": \"manifest_payload_count\",\r\n      \"pass\": true,\r\n      \"detail\": null\r\n    },\r\n    {\r\n      \"id\": \"allowlist_record_pin_in_historical_lock:e5a630322aead38c00d7d20ca0050eb7cd2024eb035505a6ef7bab8e5329f0bd\",\r\n      \"pass\": true,\r\n      \"detail\": null\r\n    },\r\n    {\r\n      \"id\": \"allowlist_record_pin_in_historical_lock:00c80da0799ae100798d538d9946e030259eae3b2b39cb70f99e7ff6ac7e9be8\",\r\n      \"pass\": true,\r\n      \"detail\": null\r\n    },\r\n    {\r\n      \"id\": \"red_summary\",\r\n      \"pass\": true,\r\n      \"detail\": null\r\n    },\r\n    {\r\n      \"id\": \"red_typeerror_count\",\r\n      \"pass\": true,\r\n      \"detail\": null\r\n    },\r\n    {\r\n      \"id\": \"red_assertion_count\",\r\n      \"pass\": true,\r\n      \"detail\": 2\r\n    },\r\n    {\r\n      \"id\": \"green_summary\",\r\n      \"pass\": true,\r\n      \"detail\": null\r\n    },\r\n    {\r\n      \"id\": \"full_run_failure_preserved\",\r\n      \"pass\": true,\r\n      \"detail\": null\r\n    }\r\n  ],\r\n  \"limitations\": [\r\n    \"Code was fetched as allowed excerpts; its full byte hash was not independently recomputed.\",\r\n    \"Full-run log is a short retained excerpt, not the complete pytest output.\",\r\n    \"No new environment emit/check or mutation tests ran in this review.\"\r\n  ]\r\n}\r\n"
+  },
+  "checks": {
+    "scope": "Data/blob/substring comparisons only; not supplied tests or optimizer execution",
+    "passed": 32,
+    "failed": 0,
+    "checks": [
+      {
+        "id": "seal_directory_exact_set_unchanged",
+        "pass": true,
+        "detail": [
+          "bms-balancing/reil_c6_20261005/COBYQA_OPTIONS.json",
+          "bms-balancing/reil_c6_20261005/MANIFEST.json",
+          "bms-balancing/reil_c6_20261005/PROFILE.json",
+          "bms-balancing/reil_c6_20261005/README.md",
+          "bms-balancing/reil_c6_20261005/REIL_C6.lock.txt",
+          "bms-balancing/reil_c6_20261005/SOBOL_PHASE_A.json",
+          "bms-balancing/reil_c6_20261005/sobol_A0_their_box_seed0.npy",
+          "bms-balancing/reil_c6_20261005/sobol_A0_their_box_seed1.npy",
+          "bms-balancing/reil_c6_20261005/sobol_A1_A2_wide_box_seed0.npy",
+          "bms-balancing/reil_c6_20261005/sobol_A1_A2_wide_box_seed1.npy",
+          "bms-balancing/reil_c6_20261005/sobol_unit_seed0.npy",
+          "bms-balancing/reil_c6_20261005/sobol_unit_seed1.npy"
+        ]
+      },
+      {
+        "id": "seal_blob_unchanged:bms-balancing/reil_c6_20261005/COBYQA_OPTIONS.json",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "seal_blob_unchanged:bms-balancing/reil_c6_20261005/MANIFEST.json",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "seal_blob_unchanged:bms-balancing/reil_c6_20261005/PROFILE.json",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "seal_blob_unchanged:bms-balancing/reil_c6_20261005/README.md",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "seal_blob_unchanged:bms-balancing/reil_c6_20261005/REIL_C6.lock.txt",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "seal_blob_unchanged:bms-balancing/reil_c6_20261005/SOBOL_PHASE_A.json",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "seal_blob_unchanged:bms-balancing/reil_c6_20261005/sobol_A0_their_box_seed0.npy",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "seal_blob_unchanged:bms-balancing/reil_c6_20261005/sobol_A0_their_box_seed1.npy",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "seal_blob_unchanged:bms-balancing/reil_c6_20261005/sobol_A1_A2_wide_box_seed0.npy",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "seal_blob_unchanged:bms-balancing/reil_c6_20261005/sobol_A1_A2_wide_box_seed1.npy",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "seal_blob_unchanged:bms-balancing/reil_c6_20261005/sobol_unit_seed0.npy",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "seal_blob_unchanged:bms-balancing/reil_c6_20261005/sobol_unit_seed1.npy",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "full_text_git_blob:bms-balancing/docs/REIL_C6_SUPPLEMENT_20261006.md",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "excerpt_origin_metadata:bms-balancing/scripts/reil_c6_profile.py[61, 131]",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "excerpt_origin_metadata:bms-balancing/tests/test_reil_c6_profile.py[1, 105]",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "excerpt_origin_metadata:bms-balancing/scripts/reil_c6_profile.py[32, 33]",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "excerpt_origin_metadata:bms-balancing/scripts/reil_c6_profile.py[121, 154]",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "full_text_git_blob:bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "full_text_git_blob:bms-balancing/reil_c6_20261005/MANIFEST.json",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "full_text_git_blob:bms-balancing/evidence/reil_c6_n1_20261006/01_red_12failed_8passed.log",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "full_text_git_blob:bms-balancing/evidence/reil_c6_n1_20261006/02_green_20passed.log",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "full_text_git_blob:bms-balancing/evidence/reil_c6_n1_20261006/03_bms_full_548passed_1failed_count_line.log",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "manifest_sha256_unchanged",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "manifest_payload_count",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "allowlist_record_pin_in_historical_lock:e5a630322aead38c00d7d20ca0050eb7cd2024eb035505a6ef7bab8e5329f0bd",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "allowlist_record_pin_in_historical_lock:00c80da0799ae100798d538d9946e030259eae3b2b39cb70f99e7ff6ac7e9be8",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "red_summary",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "red_typeerror_count",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "red_assertion_count",
+        "pass": true,
+        "detail": 2
+      },
+      {
+        "id": "green_summary",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "full_run_failure_preserved",
+        "pass": true,
+        "detail": null
+      }
+    ],
+    "limitations": [
+      "Code was fetched as allowed excerpts; its full byte hash was not independently recomputed.",
+      "Full-run log is a short retained excerpt, not the complete pytest output.",
+      "No new environment emit/check or mutation tests ran in this review."
+    ]
+  }
+}

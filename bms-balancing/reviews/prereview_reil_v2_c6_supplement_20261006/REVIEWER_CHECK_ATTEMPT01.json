@@ -1,0 +1,12 @@
+{
+  "scope": "Reviewer data comparison script, not a submitted C6 test",
+  "observed_tool_chunk": "198aba",
+  "tool_exit_code": 0,
+  "passed": 31,
+  "failed": 1,
+  "failed_check": "red_assertion_count",
+  "cause": "Reviewer substring counter assumed exactly seven spaces after E; the second pytest AssertionError line has more indentation.",
+  "correction": "Match E followed by variable whitespace at line start; submitted log unchanged.",
+  "first_script_preserved": "reviewer_checks_attempt01.py",
+  "record_type": "Reviewer summary of the observed first return, not a raw stdout transcript"
+}

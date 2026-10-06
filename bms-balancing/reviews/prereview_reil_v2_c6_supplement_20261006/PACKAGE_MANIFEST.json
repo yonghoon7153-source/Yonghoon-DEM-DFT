@@ -1,0 +1,56 @@
+{
+  "schema": 1,
+  "scope": "C6 supplement review only; no execution authorization",
+  "files": [
+    {
+      "file": "CLAUDE_REPLY_KO.md",
+      "bytes": 2388,
+      "sha256": "1791febb5c7e3300f12a7dde9c346a6b9e4b04435690738eeb3fd36bdac1717e"
+    },
+    {
+      "file": "DECISION.json",
+      "bytes": 1206,
+      "sha256": "e6d37541ce2096587b643ebe443fcab4b769e0fa07c1a5b7c19d37e531161d21"
+    },
+    {
+      "file": "PRIOR_SNAPSHOT.json",
+      "bytes": 146671,
+      "sha256": "1cdc6a29e02240238e9dbc30164ee2487c81a0e9a95efef4e4965dc32ac94095"
+    },
+    {
+      "file": "PRIOR_TREE.json",
+      "bytes": 9025,
+      "sha256": "46faccd0b9795698e655f9c2371afd250e3f83b8002d98357ad7c0ff39859568"
+    },
+    {
+      "file": "RECEIVED_SNAPSHOT.json",
+      "bytes": 80166,
+      "sha256": "926c15f9cae48d39e0b3dac354af375a7703220284b85d0365ffe83a82e93891"
+    },
+    {
+      "file": "REVIEW_CHECKS.json",
+      "bytes": 12260,
+      "sha256": "7a5bbe7445669dfd298cc806da60971ed93083acd40576ff66357144f0b6cd2e"
+    },
+    {
+      "file": "REVIEW_KO.md",
+      "bytes": 9445,
+      "sha256": "b55594b4015ef077f7bd790304905c32810f3ed8586c768a598b011247a056d0"
+    },
+    {
+      "file": "REVIEWER_CHECK_ATTEMPT01.json",
+      "bytes": 597,
+      "sha256": "4f937cc63340241e07ca9c0a6ca4b53bf30d587b19c29436f54762cb36c94218"
+    },
+    {
+      "file": "reviewer_checks_attempt01.py",
+      "bytes": 3690,
+      "sha256": "05a67981f8f3849870b69083623660cf7918a0dfe4fdbc7ea2f75b03b86c22d3"
+    },
+    {
+      "file": "reviewer_checks.py",
+      "bytes": 3691,
+      "sha256": "4cd436bbd3978f6942cd49e593a1b09e194aac0bc8831c6ad22399fc89bf691b"
+    }
+  ]
+}
