@@ -1,0 +1,191 @@
+{
+ "slug": "asheruddin2025_phantom-lam-lli-ir-hysteresis-dma",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-06",
+ "sources": [
+  "a3621943-2512.19773v1.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 5,
+   "file": "fig_1.png",
+   "caption": "Figure 1: LG M50T resistance evolution during discharge. Instantaneous resistance versus SoC and throughput. Marker color encodes total resistance (𝑚Ω); larger markers at high SoC and late life highlight the SoC-dependent growth. SoH at each RPT is shown above the columns.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.3,
+    49.3,
+    294.7,
+    200.9
+   ],
+   "w": 1041,
+   "h": 632,
+   "dpi": 300,
+   "src": "a3621943-2512.19773v1.pdf",
+   "blank": 0.889
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 6,
+   "file": "fig_2.png",
+   "caption": "Figure 2: Low-rate signatures before/after IR correction. (a) V–Q: IR correction lifts the curve (blue: first cycle; red: last; dashed = original pOCV, solid = pOCV+IR). (b) dV/dQ–Q: small shape changes; slight spread compaction. (c) dQ/dV–V: consistent right-shifts of peaks/valleys with conserved area (capacity).",
+   "rotated_deg": 0,
+   "bbox": [
+    45.3,
+    49.3,
+    550.1,
+    273.0
+   ],
+   "w": 2105,
+   "h": 933,
+   "dpi": 300,
+   "src": "a3621943-2512.19773v1.pdf",
+   "blank": 0.91
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "Figure 3: Resistance map (P45B). Instantaneous resistance at ≈30, 50, 70 % SoC across RPTs (SoH ≈1.00, 0.98, 0.96, 0.93). Points cluster narrowly around 23–26 𝑚Ω with minimal aging drift, substantially below LG M50T at comparable SoH.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.3,
+    326.3,
+    294.7,
+    475.6
+   ],
+   "w": 1041,
+   "h": 623,
+   "dpi": 300,
+   "src": "a3621943-2512.19773v1.pdf",
+   "blank": 0.94
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Figure 4: (a) Low-rate pOCV overlays. Charge (dashed) and discharge (solid) for first and last RPT. The charge trace begins above 2.5 V (non-zero initial SoC) due to relaxation; a common lower-voltage limit is used for fair branch comparison. Separation is smallest near mid-SoC and larger toward both ends. (b) Hysteresis distribution by SoC. Absolute area between branches integrated in 5 %-SoC windows. Low-SoC contracts, high-SoC grows slightly, and the total over the common window increases marginally.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.3,
+    53.8,
+    550.1,
+    233.6
+   ],
+   "w": 2105,
+   "h": 750,
+   "dpi": 300,
+   "src": "a3621943-2512.19773v1.pdf",
+   "blank": 0.819
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Figure 5: Impact of resistance on DMA-emergence of phantom LAM (LG M50T, 25 °C, discharge pOCV).Panels show absolute mode values (left axis; Original dashed, IR-corrected solid) and the relative error of the uncorrected estimate with respect to the corrected one (bars, right axis); throughput capacity (Ah) is on the x-axis. (a) SoH; (b) 𝐿𝐴𝑀𝑃𝐸; (c) 𝐿𝐿𝐼; (d) 𝐿𝐴𝑀𝑁𝐸; (e) 𝐿𝐴𝑀𝐺𝑟; (f) 𝐿𝐴𝑀𝑆𝑖",
+   "rotated_deg": 0,
+   "bbox": [
+    45.3,
+    292.6,
+    550.1,
+    542.1
+   ],
+   "w": 2105,
+   "h": 1040,
+   "dpi": 300,
+   "src": "a3621943-2512.19773v1.pdf",
+   "blank": 0.752
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 9,
+   "file": "fig_6.png",
+   "caption": "Figure 6: Voltage-window bias in DMA (Molicel P45B, 25 °C, discharge pOCV). Six panels compare 2.5–4.2 V (solid) and 3.0–4.2 V (dashed): (a) SoH, (b) 𝑄𝑃𝐸, (c) 𝑄𝐿𝐼, (d) 𝑄𝑁𝐸, (e) 𝑄𝐺𝑟, (f) 𝑄𝑆𝑖. Bars (right axes) show absolute differences in percentage points, (3.0–4.2) - (2.5–4.2).",
+   "rotated_deg": 0,
+   "bbox": [
+    45.3,
+    49.3,
+    550.1,
+    311.9
+   ],
+   "w": 2105,
+   "h": 1095,
+   "dpi": 300,
+   "src": "a3621943-2512.19773v1.pdf",
+   "blank": 0.713
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 9,
+   "file": "fig_7.png",
+   "caption": "Figure 7: Charge–discharge hysteresis bias in DMA on a common 3.0–4.2 V window (Molicel P45B, 25 °C). Blue solid lines: discharge; orange dashed lines: charge. Grey bars (right axes) show Discharge - Charge in percentage points for each metric. Panels: (a) SoH, (b) LAM𝑃𝐸, (c) 𝐿𝐿𝐼, (d) LAM𝑁𝐸(total), (e) LAM𝑁𝐸,𝐺𝑟, (f) LAM𝑁𝐸,𝑆𝑖.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.3,
+    357.2,
+    550.1,
+    621.3
+   ],
+   "w": 2105,
+   "h": 1101,
+   "dpi": 300,
+   "src": "a3621943-2512.19773v1.pdf",
+   "blank": 0.731
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 11,
+   "file": "fig_8.png",
+   "caption": "Figure 8: Mechanistic insights into the impact of resistance and hysteresis on DMA",
+   "rotated_deg": 0,
+   "bbox": [
+    45.3,
+    49.3,
+    550.0,
+    238.6
+   ],
+   "w": 2104,
+   "h": 790,
+   "dpi": 300,
+   "src": "a3621943-2512.19773v1.pdf",
+   "blank": 0.832
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 11,
+   "file": "fig_9.png",
+   "caption": "Figure 9: Current partition between Gr and Si in the NE during charge and discharge",
+   "rotated_deg": 0,
+   "bbox": [
+    300.6,
+    272.1,
+    550.0,
+    429.8
+   ],
+   "w": 1040,
+   "h": 658,
+   "dpi": 300,
+   "src": "a3621943-2512.19773v1.pdf",
+   "blank": 0.903
+  }
+ ]
+}
