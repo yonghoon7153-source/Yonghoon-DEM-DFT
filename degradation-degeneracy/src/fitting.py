@@ -1436,7 +1436,7 @@ def _prepare_stage3(stage3: dict, tasks: list, df, objectives: dict, bounds: dic
       심층 방어로 남긴다. `preflight` 는 그 결과 (closure hex64 · 키) 로 run_spec.stage3 에 싣는다."""
     from src.grid import Condition
     from tools import design_wire as DW
-    from tools.preserve import check_planned_envelope
+    from tools.preserve import check_planned_envelope, digest
     if not isinstance(stage3, dict) or set(stage3) != {"planned", "design", "provider_runs"}:
         raise ValueError("stage3 는 {planned, design, provider_runs} 를 가진 dict 여야 한다")
     planned = stage3["planned"]
@@ -1542,7 +1542,8 @@ def _prepare_stage3(stage3: dict, tasks: list, df, objectives: dict, bounds: dic
                   "bank_version": env["bank"]["version"], "exact_bounds_sha256": eb,
                   "candidate_mode": st["candidate_mode"], "budget_by_objective": st["budget_by_objective"],
                   "warm_provider_map": st["warm_provider_map"],
-                  "provider_edges_sha256": hashlib.sha256(json.dumps(env["provider_edges"], sort_keys=True).encode()).hexdigest(),
+                  # ★ 92차 G92-N3 (k07) — 승인 축 (`stage3_axis_from_envelope`) 과 같은 canonical digest 하나 (json.dumps 식 삭제)
+                  "provider_edges_sha256": digest(env["provider_edges"]),
                   "roster_sha256": r_sha, "arm": st["arm"], "stage": st["stage"],
                   # ★ 84차 G84-N1 — validator 가 봉인 스냅샷에서 closure 를 다시 만들 재료 (키) 와 실행이 잰 hex64
                   **(preflight or {})}
