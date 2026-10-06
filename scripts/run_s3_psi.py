@@ -18,6 +18,8 @@
   · `--limit` 를 `--diagnostic` 없이 줬다, 또는 음수다 (`AREA5-02`)
   · 봉인이 **시험용 시각 주입**으로 만들어졌다 (`test_only`) (`AREA5-09`)
   · 봉인 당시의 **수치 코드**·**등록부 파일**과 지금이 다르다 (`AREA5-03`)
+  · 봉인의 수치 모듈 목록이 이 러너의 **실제 수치 경로** (정적 닫힘 — `seal_s3_prerun.numeric_dependency_problems`) 를 다 덮지 않는다
+    (10-07 Codex 세대 2 재검증 2 §10 — 옛 네 모듈 봉인 = `lens_geometry` · `se_material` 누락 → 거부)
   · 케이스의 원자료 지문·본문 step·덱 사상·기하가 봉인과 다르다 (`AREA5-03`)
 
 rc=3 (판정을 발행하지 않는다 — 결과를 쓰지 않는다):
@@ -248,7 +250,7 @@ def verify_code_bundle(seal: dict) -> str:
     ⚠ 봉인기·러너 자신은 대상이 아니다 (`AREA5-09` 의 Codex 정정: 결과를 보지 않은 상태의
       검사기 수리는 구별 가능하고, 그것까지 막으면 알려진 결함을 그대로 실행하게 된다).
     """
-    from seal_s3_prerun import NUMERIC_MODULES, code_bundle, verify_bundle_against_tree
+    from seal_s3_prerun import NUMERIC_MODULES, code_bundle, numeric_dependency_problems, verify_bundle_against_tree
     want = seal.get('code_bundle')
     if not want:
         return ('봉인에 `code_bundle` 이 없다 — 어떤 코드가 baseline 을 냈는지 복원할 수 없다 '
@@ -258,6 +260,9 @@ def verify_code_bundle(seal: dict) -> str:
            f'{(got["modules"].get(m) or "—")[:12]}'
            for m in NUMERIC_MODULES
            if (want.get('modules') or {}).get(m) != got['modules'].get(m)]
+    #  ★ 10-07 (Codex 세대 2 재검증 2 §10) — 봉인 목록이 **이 소비자의 실제 수치 경로**를 다 덮는가.  옛 판은 목록 넷만 대조해서
+    #    `lens_geometry` · `se_material` 이 바뀌어도 통과했다 (목록 밖 = 검사 밖).  정적 닫힘 ⊆ 목록이 아니면 거부.
+    bad += numeric_dependency_problems()['problems']
     if got['numeric_modules_dirty']:
         bad.append(f"지금 작업트리가 수치 모듈을 고치고 있다: {got['numeric_modules_dirty']}")
     #  ⚠ 옛 판은 `want.get('git_sha') and …` 라 **빈 git_sha 면 대조를 통째로 건너뛰었다**
@@ -990,6 +995,34 @@ def _selftest() -> int:
                         '--cases-root', td]
             chk('⑨g ★ 리포에 **없는 커밋**을 가리키면 거부 (UNVERIFIABLE 은 통과가 아니다)',
                 main() == 2)
+            #   ── ★★ ⑨h–⑨k 10-07 (Codex 세대 2 재검증 2 §10) — 봉인 목록 = 이 소비자의 실제 수치 경로 ──
+            #     옛 네 모듈 목록은 `lens_geometry` · `se_material` 을 빠뜨렸고 소비 검사도 그 넷만 대조했다 (목록 밖 = 검사 밖).
+            import seal_s3_prerun as _SP
+            _old4 = ('network_conductivity.py', 'plastic_coverage.py', 'audit_constriction_deleted.py',
+                     'extract_se_network_diagnostics.py')
+            _b4 = json.loads(json.dumps(_cur))
+            _b4['modules'] = {m: v for m, v in _b4['modules'].items() if m in _old4}
+            _w4 = verify_code_bundle({'code_bundle': _b4, 'generation_git_sha': _b4.get('git_sha')})
+            _p = _consumable(tdp, code_bundle=_b4)
+            sys.argv = ['run_s3_psi.py', '--seal', str(_p), '--rho', '1.0', '--diagnostic',
+                        '--cases-root', td]
+            chk('⑨h ★★ 옛 네 모듈 봉인 (lens_geometry · se_material 없음) 은 바이트가 그 커밋과 같아도 **소비 거부**',
+                main() == 2 and 'lens_geometry.py' in _w4 and 'se_material.py' in _w4, _w4[:200])
+            for _tag, _mm in (('⑨i', 'lens_geometry.py'), ('⑨j', 'se_material.py')):
+                _bm = json.loads(json.dumps(_cur))
+                _bm['modules'][_mm] = '0' * 64
+                _wm = verify_code_bundle({'code_bundle': _bm, 'generation_git_sha': _bm.get('git_sha')})
+                _p = _consumable(tdp, code_bundle=_bm)
+                sys.argv = ['run_s3_psi.py', '--seal', str(_p), '--rho', '1.0', '--diagnostic',
+                            '--cases-root', td]
+                chk(f'{_tag} ★★ {_mm} 지문만 다르면 거부 — 소비 검사 범위에 들어왔다 (봉인 ≠ 지금)',
+                    main() == 2 and f'{_mm}: 봉인 000000000000' in _wm, _wm[:200])
+            _ndp = getattr(_SP, 'numeric_dependency_problems', None)
+            _dep = _ndp() if _ndp else {}
+            chk('⑨k ★ 이 소비자의 수치 경로 정적 닫힘 = 봉인 목록 (문제 0 · lens_geometry · se_material 포함)',
+                bool(_dep) and not _dep.get('problems') and set(_dep.get('files') or ()) == set(_SP.NUMERIC_MODULES)
+                and {'lens_geometry.py', 'se_material.py'} <= set(_dep.get('files') or ()),
+                str(_dep.get('problems') or _dep.get('files'))[:200])
             #   판별력 — 위 셋이 "언제나 rc=2" 라서 통과한 것이 아니다.
             _p = _consumable(tdp)
             sys.argv = ['run_s3_psi.py', '--seal', str(_p), '--rho', '1.0', '--diagnostic',

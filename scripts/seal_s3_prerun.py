@@ -96,8 +96,123 @@ def git_sha() -> str:
 #:   ⚠ 여기에 **봉인기·러너 자신은 넣지 않는다.**  Codex(`AREA5-09`)가 정정한 대로 *"결과를 보지
 #:     않은 상태의 수정"* 은 구별 가능하고, 검사기 수리가 봉인을 무효화하면 알려진 결함을 그대로
 #:     실행할 이유가 되어 버린다.  넣는 것은 **σ 를 바꿀 수 있는 것**뿐이다.
+#:   ★★ 10-07 (Codex 세대 2 재검증 2 §10 — *"실제 수치 의존인 lens_geometry 를 포함한 봉인 보완 · 네 모듈 목록과 소비 검사 범위를 맞춰야 한다"*):
+#:     옛 네 개는 소비자 (`run_s3_psi`) 의 수치 경로가 실제로 읽는 모듈을 다 덮지 않았다 —
+#:     `lens_geometry.py` (`plastic_coverage` 모듈 수준 import · physics 면적의 원판 floor) · `se_material.py` (`network_conductivity` 모듈 수준 import ·
+#:     σ_bulk 기본값과 온도 규약).  이제 목록 = 소비자 import 에서 시작한 정적 닫힘 (`numeric_dependency_problems`) 과 **같아야** 하고,
+#:     봉인 발행 (`build_seal`) · 소비 (`run_s3_psi.verify_code_bundle`) · 두 selftest 가 그 일치를 강제한다 (새 import 가 생기면 거부).
+#:   ⛔ 이 보완은 **코드 신원 목록만** 바꾼다 — 코호트 cutoff · baseline 선별 · 봉인 창 (`SEAL_NOT_BEFORE` · `SEAL_DEADLINE`) 은 그대로다.
+#:     옛 네 모듈 봉인은 이제 소비에서 거부된다 (`verify_bundle_against_tree` — 등록 집합과 다르다).  새 봉인은 창이 닫혀 있어 저자 결정 없이는 못 낸다.
 NUMERIC_MODULES = ('network_conductivity.py', 'plastic_coverage.py',
-                   'audit_constriction_deleted.py', 'extract_se_network_diagnostics.py')
+                   'audit_constriction_deleted.py', 'extract_se_network_diagnostics.py',
+                   'lens_geometry.py', 'se_material.py')
+
+#: 소비자 — 이 파일의 리포 import (모듈 수준 · 함수 안) 가 수치 닫힘의 **시작점**이다 (봉인기 자신 제외).
+NUMERIC_CONSUMER = 'run_s3_psi.py'
+NUMERIC_TOOLS = ('run_s3_psi.py', 'seal_s3_prerun.py')     # 봉인 · 소비 도구 (AREA5-09 — 수치 모듈이 아니다)
+
+#: 수치 모듈 **안의 조건부 import** (함수 본문 · `if __name__ == '__main__'`) 중 S3 수치 경로 **밖**인 리포 모듈과 그 사유.
+#:   분류 밖 새 조건부 import 는 문제로 낸다 (사람이 경로를 판정할 때까지 봉인을 믿지 않는다 — 194 실행기 `DEP_LAZY_OFFPATH` 와 같은 규칙).
+#:   경로 밖이라는 주장은 selftest ⑮ 의 실제 import 관측이 확인한다 (소비자 `run_case` 를 합성 원자료에 돌려 읽힌 리포 모듈 ⊆ NUMERIC_MODULES).
+NUMERIC_OFFPATH = {
+    ('network_conductivity.py', 'pipeline_service'): '_selftest_status 안 — 상위 게이트 어휘 대조 (자체 시험 전용)',
+    ('network_conductivity.py', 'analyze_contacts'): "if __name__ == '__main__' 안 — CLI 의 atoms.csv 로더 (S3 는 audit_constriction_deleted 의 로더를 쓴다)",
+    ('extract_se_network_diagnostics.py', 'viewer3d_data'): 'analyze_case 안 — SE 망 진단 표 (S3 case_networks 는 load_case · load_contacts · '
+                                                             'estimate_plate_z 만 부른다)',
+}
+
+
+def numeric_dependency_problems(root=None) -> dict:
+    """★ 10-07 — S3 수치 경로의 정적 닫힘과 봉인 목록의 일치 → dict(files, entry, outside, unclassified, errors, problems).
+
+    시작점 = 소비자 (`NUMERIC_CONSUMER`) 의 리포 import (어느 깊이든 · 봉인 · 소비 도구 제외).  닫힘 = 모듈 수준 import (if · try · with · class 본문 포함 ·
+    함수 본문 · `if __name__ == '__main__'` 제외) + 모듈 수준 호출 안의 `'<이름>.py'` (`_load(…, SCRIPTS / 'x.py')` 로더) 를 리포 모듈 (scripts · webapp) 로 따라간 것.
+    outside = 닫힘 - NUMERIC_MODULES (봉인 밖 수치 의존) · unclassified = 닫힘 모듈 안의 조건부 import 중 NUMERIC_MODULES 도 `NUMERIC_OFFPATH` 도 아닌 리포 모듈.
+    problems = 사람이 읽는 거부 사유 목록 (비면 일치).  이름 = scripts 안이면 파일명 · webapp 이면 'webapp/<파일>'."""
+    import ast
+    r = Path(root) if root is not None else ROOT
+
+    def resolve(name):
+        top = name.split('.')[0]
+        if (r / 'scripts' / f'{top}.py').is_file():
+            return f'{top}.py'
+        if (r / 'webapp' / f'{top}.py').is_file():
+            return f'webapp/{top}.py'
+        return None
+
+    def path_of(nm):
+        return r / nm if nm.startswith('webapp/') else r / 'scripts' / nm
+
+    def is_main_guard(s):
+        t = getattr(s, 'test', None)
+        return (isinstance(s, ast.If) and isinstance(t, ast.Compare) and isinstance(t.left, ast.Name) and t.left.id == '__name__'
+                and len(t.comparators) == 1 and isinstance(t.comparators[0], ast.Constant) and t.comparators[0].value == '__main__')
+
+    def imports_in(node):
+        out = set()
+        for n in ast.walk(node):
+            if isinstance(n, ast.Import):
+                out.update(a.name for a in n.names)
+            elif isinstance(n, ast.ImportFrom) and n.module and n.level == 0:
+                out.add(n.module)
+            elif isinstance(n, ast.Call):
+                for c in ast.walk(n):
+                    if isinstance(c, ast.Constant) and isinstance(c.value, str) and c.value.endswith('.py'):
+                        out.add(c.value.replace('\\', '/').rsplit('/', 1)[-1][:-3])
+        return out
+
+    def split(p):
+        """→ (모듈 수준 이름, 조건부 이름) — 조건부 = 함수 본문 · __main__ 블록."""
+        top, cond = set(), set()
+
+        def visit(stmts):
+            for s in stmts:
+                if isinstance(s, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                    cond.update(imports_in(s))
+                elif is_main_guard(s):
+                    cond.update(imports_in(s))
+                elif isinstance(s, ast.ClassDef):
+                    visit(s.body)
+                elif isinstance(s, (ast.If, ast.Try, ast.With, ast.For, ast.While)):
+                    for fld in ('body', 'orelse', 'finalbody'):
+                        visit(getattr(s, fld, None) or [])
+                    for h in getattr(s, 'handlers', None) or []:
+                        visit(h.body)
+                else:
+                    top.update(imports_in(s))
+        visit(ast.parse(p.read_text(encoding='utf-8')).body)
+        return top, cond
+
+    errors, entry = [], []
+    try:
+        ct, cc = split(r / 'scripts' / NUMERIC_CONSUMER)
+        entry = sorted({q for q in map(resolve, ct | cc) if q and q not in NUMERIC_TOOLS})
+    except (OSError, SyntaxError, ValueError, UnicodeDecodeError) as e:
+        errors.append(f'{NUMERIC_CONSUMER}: {type(e).__name__}: {e}')
+    if not entry and not errors:
+        errors.append(f'{NUMERIC_CONSUMER} 에서 수치 import 를 못 찾았다 — 시작점이 비면 닫힘이 공허하다')
+    seen, cond_of, todo = set(), {}, list(entry)
+    while todo:
+        nm = todo.pop()
+        if nm in seen:
+            continue
+        try:
+            top, cond = split(path_of(nm))
+        except (OSError, SyntaxError, ValueError, UnicodeDecodeError) as e:
+            errors.append(f'{nm}: {type(e).__name__}: {e}')
+            continue
+        seen.add(nm)
+        cond_of[nm] = cond
+        todo += [q for q in map(resolve, top) if q and q not in seen and q not in NUMERIC_TOOLS]
+    outside = sorted(seen - set(NUMERIC_MODULES))
+    unclassified = sorted({(nm, q) for nm, cond in cond_of.items() for q in map(resolve, cond)
+                           if q and q not in NUMERIC_MODULES and q not in NUMERIC_TOOLS
+                           and (nm, q[:-3].replace('webapp/', '')) not in NUMERIC_OFFPATH})
+    problems = ([f'수치 닫힘 해석 오류 {errors}'] if errors else []) \
+        + ([f'봉인 밖 수치 의존 {outside} — NUMERIC_MODULES 에 넣거나 import 를 빼야 한다 (소비자 범위 ≠ 봉인 목록)'] if outside else []) \
+        + ([f'분류 밖 조건부 import {unclassified} — 경로 위면 NUMERIC_MODULES · 밖이면 NUMERIC_OFFPATH 에 사유와 함께'] if unclassified else [])
+    return dict(files=sorted(seen), entry=entry, outside=outside, unclassified=[list(x) for x in unclassified], errors=errors,
+                problems=problems)
 
 
 def code_bundle() -> dict:
@@ -341,6 +456,9 @@ def build_seal(per_channel: dict, cohort: dict, env: dict, tsv: Path, design: Pa
     _cb = code_bundle()
     if (_why := verify_bundle_against_tree(_cb)):
         raise ValueError(f'봉인 거부 — 코드 신원을 git 에서 재현할 수 없다: {_why}')
+    #  ★ 10-07 — 봉인 목록이 소비자의 실제 수치 경로를 다 덮지 않으면 봉인하지 않는다 (Codex 세대 2 재검증 2 §10).
+    if (_dep := numeric_dependency_problems()['problems']):
+        raise ValueError('봉인 거부 — 수치 모듈 목록 ≠ 소비자 수치 경로: ' + '; '.join(_dep))
     out = {
         'contract': 'docs/area_contract_20260913.md §5-v4 A·B',
         'sealed_utc': _dt.datetime.now(_dt.timezone.utc).isoformat(timespec='seconds'),
@@ -986,6 +1104,75 @@ def _selftest() -> int:
                  '--now', '2026-09-17T20:00:00+09:00'])
     chk('⑭e ★★ 동결 **뒤에** 원자료가 바뀌면 봉인이 안 나간다 (rc=3)',
         _rcm == 3 and not (td / 'drift_seal.json').exists(), f'rc={_rcm}')
+
+    #  ── ⑮ ★★ 10-07 (Codex 세대 2 재검증 2 §10) — 봉인 목록 = 소비자 (`run_s3_psi`) 의 실제 수치 경로 ──
+    #    옛 네 모듈 목록은 `lens_geometry` (plastic_coverage 모듈 수준) · `se_material` (network_conductivity 모듈 수준) 을 빠뜨려,
+    #    그 파일이 바뀌어도 봉인 · 소비 검사가 못 봤다.  ⇒ 정적 닫힘 · 변이 · 실제 import 관측으로 일치를 고정한다.
+    _ndp = globals().get('numeric_dependency_problems')
+    _tools = globals().get('NUMERIC_TOOLS') or ('run_s3_psi.py', 'seal_s3_prerun.py')
+    _dep = _ndp() if _ndp else {}
+    chk('⑮ ★★ 소비자 수치 경로의 정적 닫힘 = 봉인 목록 (lens_geometry · se_material 포함 · 봉인 밖 0 · 분류 밖 0)',
+        bool(_dep) and not _dep.get('problems') and set(_dep.get('files') or ()) == set(NUMERIC_MODULES)
+        and {'lens_geometry.py', 'se_material.py'} <= set(NUMERIC_MODULES), str(_dep.get('problems') or _dep.get('files'))[:200])
+    _old4 = ('network_conductivity.py', 'plastic_coverage.py', 'audit_constriction_deleted.py', 'extract_se_network_diagnostics.py')
+    _g = globals()
+    _keep = _g.get('NUMERIC_MODULES')
+    try:
+        _g['NUMERIC_MODULES'] = _old4
+        _dep4 = _ndp() if _ndp else {}
+    finally:
+        _g['NUMERIC_MODULES'] = _keep
+    chk('⑮b ★ 옛 네 모듈 목록이면 닫힘이 봉인 밖 둘 (lens_geometry · se_material) 을 낸다 (판별력 — 검사가 공허하지 않다)',
+        _dep4.get('outside') == ['lens_geometry.py', 'se_material.py'], str(_dep4.get('outside')))
+    #    변이 — 사본 트리에서 수치 모듈에 새 리포 import 를 넣으면 잡힌다 (모듈 수준 = 봉인 밖 · 함수 안 = 분류 밖)
+    _mt = td / 'dep_mut'
+    for _m in set(NUMERIC_MODULES) | set(_tools) | {'coating_presets.py', 'viewer3d_data.py', 'lens_geometry.py', 'se_material.py'}:
+        (_mt / 'scripts').mkdir(parents=True, exist_ok=True)
+        (_mt / 'scripts' / _m).write_bytes((SCRIPTS / _m).read_bytes())
+    (_mt / 'webapp').mkdir(exist_ok=True)
+    (_mt / 'webapp' / 'pipeline_service.py').write_text('# selftest 자리표시\n', encoding='utf-8')
+    _lg = _mt / 'scripts' / 'lens_geometry.py'
+    _lg0 = _lg.read_text(encoding='utf-8')
+    _lg.write_text('import coating_presets  # selftest — 새 수치 의존\n' + _lg0, encoding='utf-8')
+    _dm1 = _ndp(_mt) if _ndp else {}
+    _lg.write_text(_lg0, encoding='utf-8')
+    _es = _mt / 'scripts' / 'extract_se_network_diagnostics.py'
+    _es.write_text(_es.read_text(encoding='utf-8') + '\n\ndef _selftest_mut():\n    import coating_presets  # selftest — 분류 밖 지연 import\n',
+                   encoding='utf-8')
+    _dm2 = _ndp(_mt) if _ndp else {}
+    chk('⑮c ★ 변이 — lens_geometry 사본에 모듈 수준 `import coating_presets` → 봉인 밖 · extract 사본 함수 안 import → 분류 밖 (둘 다 문제)',
+        'coating_presets.py' in (_dm1.get('outside') or []) and bool(_dm1.get('problems'))
+        and ['extract_se_network_diagnostics.py', 'coating_presets.py'] in (_dm2.get('unclassified') or []) and bool(_dm2.get('problems')),
+        str((_dm1.get('outside'), _dm2.get('unclassified')))[:200])
+    #    실제 import 관측 — 소비자 `run_case` (봉인 없이 · 두 팔 · 세 채널) 를 ⑪ 의 합성 원자료에 돌린 별도 프로세스 (`-I` · 환경 경로 무시) 가
+    #    읽은 리포 모듈 ⊆ 봉인 목록 ∪ 봉인 · 소비 도구.  `NUMERIC_OFFPATH` 의 "경로 밖" 주장 (viewer3d_data 등) 도 여기서 확인된다.
+    _obs_code = (
+        'import json, os, sys\n'
+        'root = os.path.abspath(sys.argv[1]); sys.path.insert(0, os.path.join(root, "scripts"))\n'
+        'from pathlib import Path\n'
+        'import run_s3_psi as R\n'
+        'import network_conductivity as nc\n'
+        'from audit_constriction_deleted import case_networks\n'
+        'res, prov = R.run_case(Path(sys.argv[2]), sys.argv[3], ("ionic", "electronic", "thermal"), case_networks, nc.solve_network)\n'
+        'pre = os.path.join(root, "")\n'
+        'files = sorted({os.path.relpath(os.path.abspath(m.__file__), root).replace(os.sep, "/") for m in list(sys.modules.values())\n'
+        '                if isinstance(getattr(m, "__file__", None), str) and os.path.abspath(m.__file__).startswith(pre)})\n'
+        'print("S3OBS " + json.dumps(dict(files=files, status={c: r["status"] for c, r in res.items()},\n'
+        '                                  sigma_old={c: r["sigma_old"] for c, r in res.items()})))\n')
+    try:
+        _po = subprocess.run([sys.executable, '-I', '-B', '-c', _obs_code, str(ROOT), str(_cs), str(_cs)],
+                             capture_output=True, text=True, timeout=600, cwd=str(td))
+        _ln = next((x for x in reversed(_po.stdout.splitlines()) if x.startswith('S3OBS ')), '')
+        _obs = json.loads(_ln[len('S3OBS '):]) if _ln else {'err': (_po.stderr or _po.stdout)[-400:]}
+    except Exception as e:                                  # noqa: BLE001
+        _obs = {'err': f'{type(e).__name__}: {e}'}
+    _seen = {f.split('/', 1)[1] if f.startswith('scripts/') else f for f in (_obs.get('files') or [])}
+    _allow = set(NUMERIC_MODULES) | set(_tools)
+    chk('⑮d ★★ 실제 import 관측 — 소비자 run_case (합성 원자료 · 세 채널 · 두 팔) 가 읽은 리포 모듈 ⊆ 봉인 목록 ∪ 봉인 · 소비 도구 · '
+        'lens_geometry · se_material 이 실제로 읽혔다 · viewer3d_data 는 안 읽혔다 · 세 채널 σ_old 양수',
+        bool(_seen) and _seen <= _allow and {'lens_geometry.py', 'se_material.py'} <= _seen and 'viewer3d_data.py' not in _seen
+        and all((v or 0) > 0 for v in (_obs.get('sigma_old') or {}).values()) and len(_obs.get('sigma_old') or {}) == 3,
+        str({'밖': sorted(_seen - _allow), '관측': sorted(_seen), 'status': _obs.get('status'), 'err': _obs.get('err')})[:300])
 
     # ④ 봉인 문서 — 세기만 하고 숫자를 만들지 않는다
     per = {'ion': {'a': IN_DOMAIN, 'b': 'OLD_NONE', 'c': 'PENDING_BASELINE', 'd': IN_DOMAIN}}
