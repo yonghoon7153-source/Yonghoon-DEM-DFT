@@ -1,0 +1,1272 @@
+{
+  "scopes": [
+    {
+      "ref": "b08bb6944b03511c97c8deeb38e6a347bbb1f1fb",
+      "entries": [
+        {
+          "path": "degradation-degeneracy/configs/base.yaml",
+          "sha": "37a3a34cfc06f954c330298537633a03a1cc5620",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/configs/grid_22p.yaml",
+          "sha": "9fd6d492a933b2d521897dfc403738554f2ca64c",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/configs/grid_22p_dense.yaml",
+          "sha": "0d0c9aab7a0dd5abb9edd7afb78ee48ed1fbadef",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/configs/grid_22p_fine.yaml",
+          "sha": "8371363cdafbff4920ab5a2ac90b9c6d07075875",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/configs/grid_22p_seed.yaml",
+          "sha": "db355960391f6fe486f90c4a06b7b62688920d5a",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/configs/grid_coarse.yaml",
+          "sha": "7a7fba7b8a5136f5912c22d52c5965ff915a4859",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/configs/grid_fine.yaml",
+          "sha": "fdd160112bd8d3ee1c517d33e05b7bb4231d5ff5",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/configs/objectives.yaml",
+          "sha": "299c04276cd336e62f8615ed47d476736bd860af",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/configs/objectives_optimized.yaml",
+          "sha": "30bd03ea7b72977c169b9c58e5573272a5429348",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/configs/sweep1d.yaml",
+          "sha": "a2efadfa629ff6fded6ec23c3f8ed031378f6fdc",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/requirements-gpu.txt",
+          "sha": "aa2882b2bcad47446775b3e2e77b517479cbfedd",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/requirements-validation-C.lock.txt",
+          "sha": "25c4dde53989624e7900ab0248494c0152d85083",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/requirements.txt",
+          "sha": "8c53a77e4637766e76b2abf2f536b6656d69745b",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/run.sh",
+          "sha": "24bd1d5bf78673359624b1f210dcf61e3048ee72",
+          "mode": "100755"
+        },
+        {
+          "path": "degradation-degeneracy/scripts/archive_results.sh",
+          "sha": "a01a88aaa2610602bf67ae07df9ec75864d66864",
+          "mode": "100755"
+        },
+        {
+          "path": "degradation-degeneracy/scripts/bg.sh",
+          "sha": "cf25309bd031db0d01733b695e5eafd2c447040f",
+          "mode": "100755"
+        },
+        {
+          "path": "degradation-degeneracy/scripts/check_run.py",
+          "sha": "2e395bf8efc0d8eae3d6d793d21b267c6bf1ca9a",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/scripts/diagnose_objective.py",
+          "sha": "400217b57579e7accebdcd6e699c03f4655592e1",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/scripts/recompute_lli.py",
+          "sha": "459e23bdc3ef565a1063d26134d639d33d454eb7",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/scripts/setup_env.sh",
+          "sha": "af7e90fb53466eba11d6e98dd6ac5e104a24983c",
+          "mode": "100755"
+        },
+        {
+          "path": "degradation-degeneracy/scripts/smoke_e2e.sh",
+          "sha": "38d49b8604f7818466d34021a1f4b6d3719afd44",
+          "mode": "100755"
+        },
+        {
+          "path": "degradation-degeneracy/scripts/verify_env.py",
+          "sha": "9b91fa4a52d9e78ae5e210470901b0955eb190b6",
+          "mode": "100755"
+        },
+        {
+          "path": "degradation-degeneracy/scripts/watch_fit.sh",
+          "sha": "075efeb0dba31377a7b25e95aa6cd5e777805a1d",
+          "mode": "100755"
+        },
+        {
+          "path": "degradation-degeneracy/scripts/watch_grid.sh",
+          "sha": "ecbe1fb6f8908efa4943b242c9c84263a3c49605",
+          "mode": "100755"
+        },
+        {
+          "path": "degradation-degeneracy/src/__init__.py",
+          "sha": "d639d01e2bd3b35bbc5df7dabe90e2a4540de2f2",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/baseline.py",
+          "sha": "8c7c0a8664cb52b95c1fec2b8a56e52bb7af1edc",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/config.py",
+          "sha": "71cd84003c0827558664f1cba6181e2e0748a7bd",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/curves.py",
+          "sha": "ac1a337e5cde52bf4fe572738c682b589e529a95",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/fitting.py",
+          "sha": "723a47489d6c7c811be6be285e4e6c70b607e62a",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/grid.py",
+          "sha": "5702c0d061d980d44018fc2b746c04fc6423f827",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/halfcell.py",
+          "sha": "51b30edec0dd19edda4e6461bed6fc694d4f9a06",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/hessian.py",
+          "sha": "13895858d80a553b461444464bffe755186c317b",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/inventory.py",
+          "sha": "ea33221fab0cd74868587e4b5e78fb2633931666",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/io.py",
+          "sha": "9284a4370bc6afb52722fb60e78657016ea44111",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/model.py",
+          "sha": "50cb5d479841977948ada4ed0be09569fd5440a8",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/modes.py",
+          "sha": "68b94790a58929b211fb21b3534b10b569fedafa",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/objective.py",
+          "sha": "d8b0f2771e4cd72d5a204a09d6fdd2260b0042f7",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/protocol.py",
+          "sha": "350eb61d81b9d7bb512dc725d0f5448184be5825",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/runner.py",
+          "sha": "aa0351e32595de255d1dc9924f9eac8a504ba27d",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/scoring.py",
+          "sha": "434324c889c4febff1905cfec884272e07fe7d93",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/sweep.py",
+          "sha": "ac06f021dc0d9ed1f551c8cdcfc18d34f2693b75",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/weight_sweep.py",
+          "sha": "3bd1f1dc36f2000ce4b4ddfdd33d18e9eeb5c4e7",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/analyze_22p_gap.py",
+          "sha": "315ebee3b225239ec0532c1b5589fff2039622fe",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/archive_bundle.py",
+          "sha": "43db05edca3803a00cd9f75ec570ab880dfcb216",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/check_derived_fresh.py",
+          "sha": "c7094cc9f25a1849780e76fa209fcac97ff439e7",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/check_sweep_consistency.py",
+          "sha": "f48826b6048e7cb3449f67dbe0c8e96e3b2d9475",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/compare_cases.py",
+          "sha": "9e91a6198010335d0b4f7c684ef1e66ce0a0b4e8",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/compare_objectives.py",
+          "sha": "6227d1b394a4e8b0519f9102444311fe829d26bf",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/design_golden.yaml",
+          "sha": "280c1b904d54ff2152a71f025654f058916c69b5",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/design_wire.py",
+          "sha": "1f388c039d97384f8316afa975338e60c6d866c9",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/diagnose_pini_transition.py",
+          "sha": "725b8b8ffaa380bed3f74a468e5b7a0e730815d3",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/env_profile.py",
+          "sha": "ea21b76f32050e07b9619ac6b8546a39d5c99b2a",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/gen_design_golden.py",
+          "sha": "907ba3ec7c028d4a969282215b870f5484b56a82",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/index_yaml.py",
+          "sha": "2bfed95fdc864ebe33a5ec0c826ddc1c1e837a64",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/interactive_ab.py",
+          "sha": "1b06e3c5e168f6f26bdabe52053219c7428e4a34",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/make_results.py",
+          "sha": "6d53940881313130af6bf4c835e63346ccbe718a",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/plot_grid_summary.py",
+          "sha": "3c51850d21f0c07093f71280599470b925ffdcf1",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/plot_map.py",
+          "sha": "a0f57fe5ecac6b592078ac9453f9bff569b1e330",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/plot_sweep1d.py",
+          "sha": "d8e7acce385dddd410f72fca4b61aaf183d49a66",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/preserve.py",
+          "sha": "e8f3105b784fc8ff8e184b3e671a2d68d138ad9f",
+          "mode": "100644"
+        }
+      ]
+    },
+    {
+      "ref": "d7a97aa57",
+      "entries": [
+        {
+          "path": "degradation-degeneracy/configs/base.yaml",
+          "sha": "37a3a34cfc06f954c330298537633a03a1cc5620",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/configs/grid_22p.yaml",
+          "sha": "9fd6d492a933b2d521897dfc403738554f2ca64c",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/configs/grid_22p_dense.yaml",
+          "sha": "0d0c9aab7a0dd5abb9edd7afb78ee48ed1fbadef",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/configs/grid_22p_fine.yaml",
+          "sha": "8371363cdafbff4920ab5a2ac90b9c6d07075875",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/configs/grid_22p_seed.yaml",
+          "sha": "db355960391f6fe486f90c4a06b7b62688920d5a",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/configs/grid_coarse.yaml",
+          "sha": "7a7fba7b8a5136f5912c22d52c5965ff915a4859",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/configs/grid_fine.yaml",
+          "sha": "fdd160112bd8d3ee1c517d33e05b7bb4231d5ff5",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/configs/objectives.yaml",
+          "sha": "299c04276cd336e62f8615ed47d476736bd860af",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/configs/objectives_optimized.yaml",
+          "sha": "30bd03ea7b72977c169b9c58e5573272a5429348",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/configs/sweep1d.yaml",
+          "sha": "a2efadfa629ff6fded6ec23c3f8ed031378f6fdc",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/requirements-gpu.txt",
+          "sha": "aa2882b2bcad47446775b3e2e77b517479cbfedd",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/requirements-validation-C.lock.txt",
+          "sha": "25c4dde53989624e7900ab0248494c0152d85083",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/requirements.txt",
+          "sha": "8c53a77e4637766e76b2abf2f536b6656d69745b",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/run.sh",
+          "sha": "24bd1d5bf78673359624b1f210dcf61e3048ee72",
+          "mode": "100755"
+        },
+        {
+          "path": "degradation-degeneracy/scripts/archive_results.sh",
+          "sha": "a01a88aaa2610602bf67ae07df9ec75864d66864",
+          "mode": "100755"
+        },
+        {
+          "path": "degradation-degeneracy/scripts/bg.sh",
+          "sha": "cf25309bd031db0d01733b695e5eafd2c447040f",
+          "mode": "100755"
+        },
+        {
+          "path": "degradation-degeneracy/scripts/check_run.py",
+          "sha": "2e395bf8efc0d8eae3d6d793d21b267c6bf1ca9a",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/scripts/diagnose_objective.py",
+          "sha": "400217b57579e7accebdcd6e699c03f4655592e1",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/scripts/recompute_lli.py",
+          "sha": "459e23bdc3ef565a1063d26134d639d33d454eb7",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/scripts/setup_env.sh",
+          "sha": "af7e90fb53466eba11d6e98dd6ac5e104a24983c",
+          "mode": "100755"
+        },
+        {
+          "path": "degradation-degeneracy/scripts/smoke_e2e.sh",
+          "sha": "38d49b8604f7818466d34021a1f4b6d3719afd44",
+          "mode": "100755"
+        },
+        {
+          "path": "degradation-degeneracy/scripts/verify_env.py",
+          "sha": "9b91fa4a52d9e78ae5e210470901b0955eb190b6",
+          "mode": "100755"
+        },
+        {
+          "path": "degradation-degeneracy/scripts/watch_fit.sh",
+          "sha": "075efeb0dba31377a7b25e95aa6cd5e777805a1d",
+          "mode": "100755"
+        },
+        {
+          "path": "degradation-degeneracy/scripts/watch_grid.sh",
+          "sha": "ecbe1fb6f8908efa4943b242c9c84263a3c49605",
+          "mode": "100755"
+        },
+        {
+          "path": "degradation-degeneracy/src/__init__.py",
+          "sha": "d639d01e2bd3b35bbc5df7dabe90e2a4540de2f2",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/baseline.py",
+          "sha": "8c7c0a8664cb52b95c1fec2b8a56e52bb7af1edc",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/config.py",
+          "sha": "71cd84003c0827558664f1cba6181e2e0748a7bd",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/curves.py",
+          "sha": "ac1a337e5cde52bf4fe572738c682b589e529a95",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/fitting.py",
+          "sha": "4e3346b2bc779f9336506370aa595cafff43a230",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/grid.py",
+          "sha": "5702c0d061d980d44018fc2b746c04fc6423f827",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/halfcell.py",
+          "sha": "51b30edec0dd19edda4e6461bed6fc694d4f9a06",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/hessian.py",
+          "sha": "13895858d80a553b461444464bffe755186c317b",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/inventory.py",
+          "sha": "ea33221fab0cd74868587e4b5e78fb2633931666",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/io.py",
+          "sha": "e0c56c78531a81e0426e0e7492b49d22a5af0d68",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/model.py",
+          "sha": "50cb5d479841977948ada4ed0be09569fd5440a8",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/modes.py",
+          "sha": "68b94790a58929b211fb21b3534b10b569fedafa",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/objective.py",
+          "sha": "d8b0f2771e4cd72d5a204a09d6fdd2260b0042f7",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/protocol.py",
+          "sha": "350eb61d81b9d7bb512dc725d0f5448184be5825",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/runner.py",
+          "sha": "aa0351e32595de255d1dc9924f9eac8a504ba27d",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/scoring.py",
+          "sha": "434324c889c4febff1905cfec884272e07fe7d93",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/sweep.py",
+          "sha": "ac06f021dc0d9ed1f551c8cdcfc18d34f2693b75",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/weight_sweep.py",
+          "sha": "3bd1f1dc36f2000ce4b4ddfdd33d18e9eeb5c4e7",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/analyze_22p_gap.py",
+          "sha": "315ebee3b225239ec0532c1b5589fff2039622fe",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/archive_bundle.py",
+          "sha": "43db05edca3803a00cd9f75ec570ab880dfcb216",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/check_derived_fresh.py",
+          "sha": "c7094cc9f25a1849780e76fa209fcac97ff439e7",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/check_sweep_consistency.py",
+          "sha": "f48826b6048e7cb3449f67dbe0c8e96e3b2d9475",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/compare_cases.py",
+          "sha": "9e91a6198010335d0b4f7c684ef1e66ce0a0b4e8",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/compare_objectives.py",
+          "sha": "6227d1b394a4e8b0519f9102444311fe829d26bf",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/design_golden.yaml",
+          "sha": "280c1b904d54ff2152a71f025654f058916c69b5",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/design_wire.py",
+          "sha": "1f388c039d97384f8316afa975338e60c6d866c9",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/diagnose_pini_transition.py",
+          "sha": "725b8b8ffaa380bed3f74a468e5b7a0e730815d3",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/env_profile.py",
+          "sha": "ea21b76f32050e07b9619ac6b8546a39d5c99b2a",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/gen_design_golden.py",
+          "sha": "907ba3ec7c028d4a969282215b870f5484b56a82",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/index_yaml.py",
+          "sha": "2bfed95fdc864ebe33a5ec0c826ddc1c1e837a64",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/interactive_ab.py",
+          "sha": "1b06e3c5e168f6f26bdabe52053219c7428e4a34",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/make_results.py",
+          "sha": "6d53940881313130af6bf4c835e63346ccbe718a",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/plot_grid_summary.py",
+          "sha": "3c51850d21f0c07093f71280599470b925ffdcf1",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/plot_map.py",
+          "sha": "a0f57fe5ecac6b592078ac9453f9bff569b1e330",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/plot_sweep1d.py",
+          "sha": "d8e7acce385dddd410f72fca4b61aaf183d49a66",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/preserve.py",
+          "sha": "e8f3105b784fc8ff8e184b3e671a2d68d138ad9f",
+          "mode": "100644"
+        }
+      ]
+    },
+    {
+      "ref": "3ec8aadb1",
+      "entries": [
+        {
+          "path": "degradation-degeneracy/configs/base.yaml",
+          "sha": "37a3a34cfc06f954c330298537633a03a1cc5620",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/configs/grid_22p.yaml",
+          "sha": "9fd6d492a933b2d521897dfc403738554f2ca64c",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/configs/grid_22p_dense.yaml",
+          "sha": "0d0c9aab7a0dd5abb9edd7afb78ee48ed1fbadef",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/configs/grid_22p_fine.yaml",
+          "sha": "8371363cdafbff4920ab5a2ac90b9c6d07075875",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/configs/grid_22p_seed.yaml",
+          "sha": "db355960391f6fe486f90c4a06b7b62688920d5a",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/configs/grid_coarse.yaml",
+          "sha": "7a7fba7b8a5136f5912c22d52c5965ff915a4859",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/configs/grid_fine.yaml",
+          "sha": "fdd160112bd8d3ee1c517d33e05b7bb4231d5ff5",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/configs/objectives.yaml",
+          "sha": "299c04276cd336e62f8615ed47d476736bd860af",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/configs/objectives_optimized.yaml",
+          "sha": "30bd03ea7b72977c169b9c58e5573272a5429348",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/configs/sweep1d.yaml",
+          "sha": "a2efadfa629ff6fded6ec23c3f8ed031378f6fdc",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/requirements-gpu.txt",
+          "sha": "aa2882b2bcad47446775b3e2e77b517479cbfedd",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/requirements-validation-C.lock.txt",
+          "sha": "25c4dde53989624e7900ab0248494c0152d85083",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/requirements.txt",
+          "sha": "8c53a77e4637766e76b2abf2f536b6656d69745b",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/run.sh",
+          "sha": "24bd1d5bf78673359624b1f210dcf61e3048ee72",
+          "mode": "100755"
+        },
+        {
+          "path": "degradation-degeneracy/scripts/archive_results.sh",
+          "sha": "a01a88aaa2610602bf67ae07df9ec75864d66864",
+          "mode": "100755"
+        },
+        {
+          "path": "degradation-degeneracy/scripts/bg.sh",
+          "sha": "cf25309bd031db0d01733b695e5eafd2c447040f",
+          "mode": "100755"
+        },
+        {
+          "path": "degradation-degeneracy/scripts/check_run.py",
+          "sha": "2e395bf8efc0d8eae3d6d793d21b267c6bf1ca9a",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/scripts/diagnose_objective.py",
+          "sha": "400217b57579e7accebdcd6e699c03f4655592e1",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/scripts/recompute_lli.py",
+          "sha": "459e23bdc3ef565a1063d26134d639d33d454eb7",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/scripts/setup_env.sh",
+          "sha": "af7e90fb53466eba11d6e98dd6ac5e104a24983c",
+          "mode": "100755"
+        },
+        {
+          "path": "degradation-degeneracy/scripts/smoke_e2e.sh",
+          "sha": "38d49b8604f7818466d34021a1f4b6d3719afd44",
+          "mode": "100755"
+        },
+        {
+          "path": "degradation-degeneracy/scripts/verify_env.py",
+          "sha": "9b91fa4a52d9e78ae5e210470901b0955eb190b6",
+          "mode": "100755"
+        },
+        {
+          "path": "degradation-degeneracy/scripts/watch_fit.sh",
+          "sha": "075efeb0dba31377a7b25e95aa6cd5e777805a1d",
+          "mode": "100755"
+        },
+        {
+          "path": "degradation-degeneracy/scripts/watch_grid.sh",
+          "sha": "ecbe1fb6f8908efa4943b242c9c84263a3c49605",
+          "mode": "100755"
+        },
+        {
+          "path": "degradation-degeneracy/src/__init__.py",
+          "sha": "d639d01e2bd3b35bbc5df7dabe90e2a4540de2f2",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/baseline.py",
+          "sha": "8c7c0a8664cb52b95c1fec2b8a56e52bb7af1edc",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/config.py",
+          "sha": "71cd84003c0827558664f1cba6181e2e0748a7bd",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/curves.py",
+          "sha": "ac1a337e5cde52bf4fe572738c682b589e529a95",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/fitting.py",
+          "sha": "4e3346b2bc779f9336506370aa595cafff43a230",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/grid.py",
+          "sha": "5702c0d061d980d44018fc2b746c04fc6423f827",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/halfcell.py",
+          "sha": "51b30edec0dd19edda4e6461bed6fc694d4f9a06",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/hessian.py",
+          "sha": "13895858d80a553b461444464bffe755186c317b",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/inventory.py",
+          "sha": "ea33221fab0cd74868587e4b5e78fb2633931666",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/io.py",
+          "sha": "e0c56c78531a81e0426e0e7492b49d22a5af0d68",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/model.py",
+          "sha": "50cb5d479841977948ada4ed0be09569fd5440a8",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/modes.py",
+          "sha": "68b94790a58929b211fb21b3534b10b569fedafa",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/objective.py",
+          "sha": "d8b0f2771e4cd72d5a204a09d6fdd2260b0042f7",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/protocol.py",
+          "sha": "350eb61d81b9d7bb512dc725d0f5448184be5825",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/runner.py",
+          "sha": "aa0351e32595de255d1dc9924f9eac8a504ba27d",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/scoring.py",
+          "sha": "434324c889c4febff1905cfec884272e07fe7d93",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/sweep.py",
+          "sha": "ac06f021dc0d9ed1f551c8cdcfc18d34f2693b75",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/weight_sweep.py",
+          "sha": "3bd1f1dc36f2000ce4b4ddfdd33d18e9eeb5c4e7",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/analyze_22p_gap.py",
+          "sha": "315ebee3b225239ec0532c1b5589fff2039622fe",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/archive_bundle.py",
+          "sha": "43db05edca3803a00cd9f75ec570ab880dfcb216",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/check_derived_fresh.py",
+          "sha": "c7094cc9f25a1849780e76fa209fcac97ff439e7",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/check_sweep_consistency.py",
+          "sha": "f48826b6048e7cb3449f67dbe0c8e96e3b2d9475",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/compare_cases.py",
+          "sha": "9e91a6198010335d0b4f7c684ef1e66ce0a0b4e8",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/compare_objectives.py",
+          "sha": "6227d1b394a4e8b0519f9102444311fe829d26bf",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/design_golden.yaml",
+          "sha": "280c1b904d54ff2152a71f025654f058916c69b5",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/design_wire.py",
+          "sha": "1f388c039d97384f8316afa975338e60c6d866c9",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/diagnose_pini_transition.py",
+          "sha": "725b8b8ffaa380bed3f74a468e5b7a0e730815d3",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/env_profile.py",
+          "sha": "ea21b76f32050e07b9619ac6b8546a39d5c99b2a",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/gen_design_golden.py",
+          "sha": "907ba3ec7c028d4a969282215b870f5484b56a82",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/index_yaml.py",
+          "sha": "2bfed95fdc864ebe33a5ec0c826ddc1c1e837a64",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/interactive_ab.py",
+          "sha": "1b06e3c5e168f6f26bdabe52053219c7428e4a34",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/make_results.py",
+          "sha": "6d53940881313130af6bf4c835e63346ccbe718a",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/plot_grid_summary.py",
+          "sha": "3c51850d21f0c07093f71280599470b925ffdcf1",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/plot_map.py",
+          "sha": "a0f57fe5ecac6b592078ac9453f9bff569b1e330",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/plot_sweep1d.py",
+          "sha": "d8e7acce385dddd410f72fca4b61aaf183d49a66",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/preserve.py",
+          "sha": "e8f3105b784fc8ff8e184b3e671a2d68d138ad9f",
+          "mode": "100644"
+        }
+      ]
+    },
+    {
+      "ref": "0e3c244ea79db1b17f09a8f8043d808ab51ff43c",
+      "entries": [
+        {
+          "path": "degradation-degeneracy/configs/base.yaml",
+          "sha": "37a3a34cfc06f954c330298537633a03a1cc5620",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/configs/grid_22p.yaml",
+          "sha": "9fd6d492a933b2d521897dfc403738554f2ca64c",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/configs/grid_22p_dense.yaml",
+          "sha": "0d0c9aab7a0dd5abb9edd7afb78ee48ed1fbadef",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/configs/grid_22p_fine.yaml",
+          "sha": "8371363cdafbff4920ab5a2ac90b9c6d07075875",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/configs/grid_22p_seed.yaml",
+          "sha": "db355960391f6fe486f90c4a06b7b62688920d5a",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/configs/grid_coarse.yaml",
+          "sha": "7a7fba7b8a5136f5912c22d52c5965ff915a4859",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/configs/grid_fine.yaml",
+          "sha": "fdd160112bd8d3ee1c517d33e05b7bb4231d5ff5",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/configs/objectives.yaml",
+          "sha": "299c04276cd336e62f8615ed47d476736bd860af",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/configs/objectives_optimized.yaml",
+          "sha": "30bd03ea7b72977c169b9c58e5573272a5429348",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/configs/sweep1d.yaml",
+          "sha": "a2efadfa629ff6fded6ec23c3f8ed031378f6fdc",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/requirements-gpu.txt",
+          "sha": "aa2882b2bcad47446775b3e2e77b517479cbfedd",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/requirements-validation-C.lock.txt",
+          "sha": "25c4dde53989624e7900ab0248494c0152d85083",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/requirements.txt",
+          "sha": "8c53a77e4637766e76b2abf2f536b6656d69745b",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/run.sh",
+          "sha": "24bd1d5bf78673359624b1f210dcf61e3048ee72",
+          "mode": "100755"
+        },
+        {
+          "path": "degradation-degeneracy/scripts/archive_results.sh",
+          "sha": "a01a88aaa2610602bf67ae07df9ec75864d66864",
+          "mode": "100755"
+        },
+        {
+          "path": "degradation-degeneracy/scripts/bg.sh",
+          "sha": "cf25309bd031db0d01733b695e5eafd2c447040f",
+          "mode": "100755"
+        },
+        {
+          "path": "degradation-degeneracy/scripts/check_run.py",
+          "sha": "2e395bf8efc0d8eae3d6d793d21b267c6bf1ca9a",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/scripts/diagnose_objective.py",
+          "sha": "400217b57579e7accebdcd6e699c03f4655592e1",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/scripts/recompute_lli.py",
+          "sha": "459e23bdc3ef565a1063d26134d639d33d454eb7",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/scripts/setup_env.sh",
+          "sha": "af7e90fb53466eba11d6e98dd6ac5e104a24983c",
+          "mode": "100755"
+        },
+        {
+          "path": "degradation-degeneracy/scripts/smoke_e2e.sh",
+          "sha": "38d49b8604f7818466d34021a1f4b6d3719afd44",
+          "mode": "100755"
+        },
+        {
+          "path": "degradation-degeneracy/scripts/verify_env.py",
+          "sha": "9b91fa4a52d9e78ae5e210470901b0955eb190b6",
+          "mode": "100755"
+        },
+        {
+          "path": "degradation-degeneracy/scripts/watch_fit.sh",
+          "sha": "075efeb0dba31377a7b25e95aa6cd5e777805a1d",
+          "mode": "100755"
+        },
+        {
+          "path": "degradation-degeneracy/scripts/watch_grid.sh",
+          "sha": "ecbe1fb6f8908efa4943b242c9c84263a3c49605",
+          "mode": "100755"
+        },
+        {
+          "path": "degradation-degeneracy/src/__init__.py",
+          "sha": "d639d01e2bd3b35bbc5df7dabe90e2a4540de2f2",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/baseline.py",
+          "sha": "8c7c0a8664cb52b95c1fec2b8a56e52bb7af1edc",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/config.py",
+          "sha": "71cd84003c0827558664f1cba6181e2e0748a7bd",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/curves.py",
+          "sha": "ac1a337e5cde52bf4fe572738c682b589e529a95",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/fitting.py",
+          "sha": "4e3346b2bc779f9336506370aa595cafff43a230",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/grid.py",
+          "sha": "5702c0d061d980d44018fc2b746c04fc6423f827",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/halfcell.py",
+          "sha": "51b30edec0dd19edda4e6461bed6fc694d4f9a06",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/hessian.py",
+          "sha": "13895858d80a553b461444464bffe755186c317b",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/inventory.py",
+          "sha": "ea33221fab0cd74868587e4b5e78fb2633931666",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/io.py",
+          "sha": "e0c56c78531a81e0426e0e7492b49d22a5af0d68",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/model.py",
+          "sha": "50cb5d479841977948ada4ed0be09569fd5440a8",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/modes.py",
+          "sha": "68b94790a58929b211fb21b3534b10b569fedafa",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/objective.py",
+          "sha": "d8b0f2771e4cd72d5a204a09d6fdd2260b0042f7",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/protocol.py",
+          "sha": "350eb61d81b9d7bb512dc725d0f5448184be5825",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/runner.py",
+          "sha": "aa0351e32595de255d1dc9924f9eac8a504ba27d",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/scoring.py",
+          "sha": "434324c889c4febff1905cfec884272e07fe7d93",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/sweep.py",
+          "sha": "ac06f021dc0d9ed1f551c8cdcfc18d34f2693b75",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/src/weight_sweep.py",
+          "sha": "3bd1f1dc36f2000ce4b4ddfdd33d18e9eeb5c4e7",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/analyze_22p_gap.py",
+          "sha": "315ebee3b225239ec0532c1b5589fff2039622fe",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/archive_bundle.py",
+          "sha": "43db05edca3803a00cd9f75ec570ab880dfcb216",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/check_derived_fresh.py",
+          "sha": "c7094cc9f25a1849780e76fa209fcac97ff439e7",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/check_sweep_consistency.py",
+          "sha": "f48826b6048e7cb3449f67dbe0c8e96e3b2d9475",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/compare_cases.py",
+          "sha": "9e91a6198010335d0b4f7c684ef1e66ce0a0b4e8",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/compare_objectives.py",
+          "sha": "6227d1b394a4e8b0519f9102444311fe829d26bf",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/design_golden.yaml",
+          "sha": "280c1b904d54ff2152a71f025654f058916c69b5",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/design_wire.py",
+          "sha": "1f388c039d97384f8316afa975338e60c6d866c9",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/diagnose_pini_transition.py",
+          "sha": "725b8b8ffaa380bed3f74a468e5b7a0e730815d3",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/env_profile.py",
+          "sha": "ea21b76f32050e07b9619ac6b8546a39d5c99b2a",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/gen_design_golden.py",
+          "sha": "907ba3ec7c028d4a969282215b870f5484b56a82",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/index_yaml.py",
+          "sha": "2bfed95fdc864ebe33a5ec0c826ddc1c1e837a64",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/interactive_ab.py",
+          "sha": "1b06e3c5e168f6f26bdabe52053219c7428e4a34",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/make_results.py",
+          "sha": "6d53940881313130af6bf4c835e63346ccbe718a",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/plot_grid_summary.py",
+          "sha": "3c51850d21f0c07093f71280599470b925ffdcf1",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/plot_map.py",
+          "sha": "a0f57fe5ecac6b592078ac9453f9bff569b1e330",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/plot_sweep1d.py",
+          "sha": "d8e7acce385dddd410f72fca4b61aaf183d49a66",
+          "mode": "100644"
+        },
+        {
+          "path": "degradation-degeneracy/tools/preserve.py",
+          "sha": "e8f3105b784fc8ff8e184b3e671a2d68d138ad9f",
+          "mode": "100644"
+        }
+      ]
+    }
+  ],
+  "diffs": [
+    {
+      "base": "b08bb6944b03511c97c8deeb38e6a347bbb1f1fb",
+      "head": "d7a97aa57",
+      "changes": [
+        {
+          "path": "degradation-degeneracy/src/fitting.py",
+          "old": {
+            "path": "degradation-degeneracy/src/fitting.py",
+            "sha": "723a47489d6c7c811be6be285e4e6c70b607e62a",
+            "mode": "100644"
+          },
+          "new": {
+            "path": "degradation-degeneracy/src/fitting.py",
+            "sha": "4e3346b2bc779f9336506370aa595cafff43a230",
+            "mode": "100644"
+          }
+        },
+        {
+          "path": "degradation-degeneracy/src/io.py",
+          "old": {
+            "path": "degradation-degeneracy/src/io.py",
+            "sha": "9284a4370bc6afb52722fb60e78657016ea44111",
+            "mode": "100644"
+          },
+          "new": {
+            "path": "degradation-degeneracy/src/io.py",
+            "sha": "e0c56c78531a81e0426e0e7492b49d22a5af0d68",
+            "mode": "100644"
+          }
+        }
+      ],
+      "deleted": []
+    },
+    {
+      "base": "d7a97aa57",
+      "head": "3ec8aadb1",
+      "changes": [],
+      "deleted": []
+    },
+    {
+      "base": "3ec8aadb1",
+      "head": "0e3c244ea79db1b17f09a8f8043d808ab51ff43c",
+      "changes": [],
+      "deleted": []
+    }
+  ],
+  "truncated": false
+}

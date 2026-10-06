@@ -1,0 +1,77 @@
+{
+  "request_head": "0e3c244ea79db1b17f09a8f8043d808ab51ff43c",
+  "code": "d7a97aa57ea926916d56c985ee4bc2bed96fa81a",
+  "validation_head": "3ec8aadb13e4ee4eb9e3434fbd28e503a7c03a34",
+  "ref_sources": [
+    {
+      "name": "REQUEST.md.txt",
+      "git_blob": "6496a3abf1e6c436fcba83f2547aece0e616a49c",
+      "source_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/0e3c244ea79db1b17f09a8f8043d808ab51ff43c/degradation-degeneracy/docs/22p_gap/GATE93_REQUEST.md"
+    },
+    {
+      "name": "STAGE3_IMPL_ROUND1_SPEC.md.txt",
+      "git_blob": "699192d472792cc99022343224c6ab582a93b52e",
+      "source_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/9cc97ec0f/degradation-degeneracy/docs/22p_gap/STAGE3_IMPL_ROUND1_SPEC.md"
+    },
+    {
+      "name": "GATE92_EVIDENCE_MATRIX.md.txt",
+      "git_blob": "285368043c0e6304a0ba152e5e242ef60cef0e44",
+      "source_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/9cc97ec0f/degradation-degeneracy/docs/22p_gap/GATE92_EVIDENCE_MATRIX.md"
+    },
+    {
+      "name": "src__io.py.txt",
+      "git_blob": "e0c56c78531a81e0426e0e7492b49d22a5af0d68",
+      "source_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/3ec8aadb1/degradation-degeneracy/src/io.py"
+    },
+    {
+      "name": "src__fitting.py.txt",
+      "git_blob": "4e3346b2bc779f9336506370aa595cafff43a230",
+      "source_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/3ec8aadb1/degradation-degeneracy/src/fitting.py"
+    },
+    {
+      "name": "tools__preserve.py.txt",
+      "git_blob": "e8f3105b784fc8ff8e184b3e671a2d68d138ad9f",
+      "source_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/0e3c244ea79db1b17f09a8f8043d808ab51ff43c/degradation-degeneracy/tools/preserve.py"
+    },
+    {
+      "name": "tools__design_wire.py.txt",
+      "git_blob": "1f388c039d97384f8316afa975338e60c6d866c9",
+      "source_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/0e3c244ea79db1b17f09a8f8043d808ab51ff43c/degradation-degeneracy/tools/design_wire.py"
+    },
+    {
+      "name": "tests__test_gate92_stage4_linkage.py.txt",
+      "git_blob": "49d64dedcf7a752e2ac4104acbc1e22251e46742",
+      "source_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/3ec8aadb1/degradation-degeneracy/tests/test_gate92_stage4_linkage.py"
+    },
+    {
+      "name": "docs__22p_gap__mutation_replay.py.txt",
+      "git_blob": "aaaa522b5e0884164da9e32a8b33d4ad4d176a95",
+      "source_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/0e3c244ea79db1b17f09a8f8043d808ab51ff43c/degradation-degeneracy/docs/22p_gap/mutation_replay.py"
+    },
+    {
+      "name": "paired_fixed5_v4.current.yaml.txt",
+      "git_blob": "656329a8f24d0e2dfed01828b2ce018d6a7ab496",
+      "source_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/0e3c244ea79db1b17f09a8f8043d808ab51ff43c/degradation-degeneracy/docs/22p_gap/receipts/paired_fixed5_v4.validate.yaml"
+    },
+    {
+      "name": "paired_fixed5_v4.history.yaml.txt",
+      "git_blob": "0e729cddb365a501bbc550f4a1fb45a668b4d4a4",
+      "source_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/0e3c244ea79db1b17f09a8f8043d808ab51ff43c/degradation-degeneracy/docs/22p_gap/receipts/history/paired_fixed5_v4.validate.f0175fff71132003.yaml"
+    },
+    {
+      "name": "grid_fit_v5.current.yaml.txt",
+      "git_blob": "2889e80daa34a5d3d666ae214eab611ba35b0d74",
+      "source_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/0e3c244ea79db1b17f09a8f8043d808ab51ff43c/degradation-degeneracy/docs/22p_gap/receipts/grid_fit_v5.validate.yaml"
+    },
+    {
+      "name": "grid_fit_v5.history.yaml.txt",
+      "git_blob": "3516e71eb31a0483f3a56a7873ffebaf25e06797",
+      "source_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/0e3c244ea79db1b17f09a8f8043d808ab51ff43c/degradation-degeneracy/docs/22p_gap/receipts/history/grid_fit_v5.validate.f0175fff71132003.yaml"
+    },
+    {
+      "name": "LEG_PRESERVATION.yaml.txt",
+      "git_blob": "fb62d88a3ffab8df1416485459068a06eb8b2df3",
+      "source_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/0e3c244ea79db1b17f09a8f8043d808ab51ff43c/degradation-degeneracy/docs/22p_gap/LEG_PRESERVATION.yaml"
+    }
+  ]
+}

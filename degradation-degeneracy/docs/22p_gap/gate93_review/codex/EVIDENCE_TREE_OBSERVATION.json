@@ -1,0 +1,22 @@
+{
+  "ref": "0e3c244ea79db1b17f09a8f8043d808ab51ff43c",
+  "truncated": false,
+  "entries": [
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/gate93_evidence",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "7cf349572960f1ddb0a30147329a16b4ddeef219",
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/trees/7cf349572960f1ddb0a30147329a16b4ddeef219"
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/gate93_evidence/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bb1ecca7538eee9538d6f16d31e0b640ce4f3864",
+      "size": 2253,
+      "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/bb1ecca7538eee9538d6f16d31e0b640ce4f3864"
+    }
+  ],
+  "interpretation": "Only README is committed at this fixed ref; requested execution logs are not present."
+}

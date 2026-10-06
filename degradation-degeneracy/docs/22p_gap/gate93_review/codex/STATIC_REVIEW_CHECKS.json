@@ -1,0 +1,37 @@
+{
+  "reviewer_executed_tests": 0,
+  "received_code_imports": 0,
+  "comsol_calls": 0,
+  "static_test_count": 138,
+  "parametrization_counts": {
+    "k00": 1,
+    "k01": 1,
+    "k02": 28,
+    "k03": 12,
+    "k04": 19,
+    "k04_env": 1,
+    "k05": 9,
+    "k06": 5,
+    "k07": 1,
+    "k08": 8,
+    "k09_C1": 10,
+    "k09_C2": 9,
+    "k09_C4": 2,
+    "k09_C11": 12,
+    "k10_C5": 5,
+    "k10_C8": 2,
+    "k11": 5,
+    "k12": 8
+  },
+  "request_blob_pinned": true,
+  "spec16_blob_matches_before_code": true,
+  "matrix_blob_matches_before_code": true,
+  "scope_two_files_only": true,
+  "code_to_validation_to_request_scope_equal": true,
+  "raw_logs_at_requested_evidence_dir": "README_ONLY",
+  "reported_execution_counts_not_independently_confirmed": true,
+  "findings": [
+    "G93-N1",
+    "G93-N2"
+  ]
+}

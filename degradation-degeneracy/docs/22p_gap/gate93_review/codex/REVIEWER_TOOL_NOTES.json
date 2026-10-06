@@ -1,0 +1,14 @@
+{
+  "review_kind": "Read-only source and evidence review",
+  "no_received_code_import_or_execution": true,
+  "read_write_scope": "Remote GitHub read-only plus new local review artifacts",
+  "diagnostic_only_failure": {
+    "command": "Bundled Python import yaml availability check",
+    "error": "ModuleNotFoundError",
+    "production_or_received_program": false,
+    "installation_performed": false,
+    "followup": "No YAML engine used. Receipt core comparison used exact text slices excluding the two named identity lines."
+  },
+  "source_reconstruction": "UTF-8 text stored with original LF bytes; all 14 references match Git blob SHA1",
+  "no_test_results_generated": true
+}

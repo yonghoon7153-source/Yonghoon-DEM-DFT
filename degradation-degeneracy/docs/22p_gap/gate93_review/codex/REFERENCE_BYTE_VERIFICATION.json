@@ -1,0 +1,100 @@
+[
+  {
+    "file": "REQUEST.md.txt",
+    "bytes": 10916,
+    "git_blob": "6496a3abf1e6c436fcba83f2547aece0e616a49c",
+    "git_blob_match": true,
+    "sha256": "e0536f0866e561bd6a76956abd770051eae444971039a088ae5e29edc5576ddd"
+  },
+  {
+    "file": "STAGE3_IMPL_ROUND1_SPEC.md.txt",
+    "bytes": 77785,
+    "git_blob": "699192d472792cc99022343224c6ab582a93b52e",
+    "git_blob_match": true,
+    "sha256": "2bc207bac2bd776c2c54799d11f01cb99324a148573ef1e12f1d5b7ac2d473cd"
+  },
+  {
+    "file": "GATE92_EVIDENCE_MATRIX.md.txt",
+    "bytes": 47503,
+    "git_blob": "285368043c0e6304a0ba152e5e242ef60cef0e44",
+    "git_blob_match": true,
+    "sha256": "03bcba6db59c7f7156de8e5ab872ae0ee2526c3a78bbf7d3ab106946ca502944"
+  },
+  {
+    "file": "src__io.py.txt",
+    "bytes": 146783,
+    "git_blob": "e0c56c78531a81e0426e0e7492b49d22a5af0d68",
+    "git_blob_match": true,
+    "sha256": "cde0be140cabc8dcaac5b86c37830a0f4e8bd1adcb5c931ed14bcddfcb0c9419"
+  },
+  {
+    "file": "src__fitting.py.txt",
+    "bytes": 150085,
+    "git_blob": "4e3346b2bc779f9336506370aa595cafff43a230",
+    "git_blob_match": true,
+    "sha256": "6ddfdab15ba47fedf6093406b94df058ffbbc028a0034dfac1b17462edbc054e"
+  },
+  {
+    "file": "tools__preserve.py.txt",
+    "bytes": 529220,
+    "git_blob": "e8f3105b784fc8ff8e184b3e671a2d68d138ad9f",
+    "git_blob_match": true,
+    "sha256": "e3469ffb5143444ec1d2b0855a6f4caba9de5add2b9a31cf7ec1f550dfa3d7ef"
+  },
+  {
+    "file": "tools__design_wire.py.txt",
+    "bytes": 46973,
+    "git_blob": "1f388c039d97384f8316afa975338e60c6d866c9",
+    "git_blob_match": true,
+    "sha256": "4609706a54fa8a53665846761b6dbaa54eeb5a9012fd8aed65dbd27ab7f12f1f"
+  },
+  {
+    "file": "tests__test_gate92_stage4_linkage.py.txt",
+    "bytes": 43429,
+    "git_blob": "49d64dedcf7a752e2ac4104acbc1e22251e46742",
+    "git_blob_match": true,
+    "sha256": "4bb83f1a02d21f1d4c6dd060edbda15c6005c778e4553235e7ec49686cfde492"
+  },
+  {
+    "file": "docs__22p_gap__mutation_replay.py.txt",
+    "bytes": 598768,
+    "git_blob": "aaaa522b5e0884164da9e32a8b33d4ad4d176a95",
+    "git_blob_match": true,
+    "sha256": "ef373db4f4fd8de2046d2b1f6b2e98f995b95dd7a50e095c0d24a38e3e5797ba"
+  },
+  {
+    "file": "paired_fixed5_v4.current.yaml.txt",
+    "bytes": 9661,
+    "git_blob": "656329a8f24d0e2dfed01828b2ce018d6a7ab496",
+    "git_blob_match": true,
+    "sha256": "23451e594dc7ab7e36ef0ad2636abb77837174f50971f2d473bf84a1d38f91f4"
+  },
+  {
+    "file": "paired_fixed5_v4.history.yaml.txt",
+    "bytes": 4726,
+    "git_blob": "0e729cddb365a501bbc550f4a1fb45a668b4d4a4",
+    "git_blob_match": true,
+    "sha256": "83e71a40504f9a1e2e2d6718c79127ec576de215c058d8074e8d09d95407332e"
+  },
+  {
+    "file": "grid_fit_v5.current.yaml.txt",
+    "bytes": 9596,
+    "git_blob": "2889e80daa34a5d3d666ae214eab611ba35b0d74",
+    "git_blob_match": true,
+    "sha256": "20d4c3385e7cf85690591362a550848951c4d36a2281f16b8bce2b3f8e45a062"
+  },
+  {
+    "file": "grid_fit_v5.history.yaml.txt",
+    "bytes": 4661,
+    "git_blob": "3516e71eb31a0483f3a56a7873ffebaf25e06797",
+    "git_blob_match": true,
+    "sha256": "acc206b2afe4510bd5ffff4f5ecff981255b54d15d94306821c0ad2516c49f76"
+  },
+  {
+    "file": "LEG_PRESERVATION.yaml.txt",
+    "bytes": 65166,
+    "git_blob": "fb62d88a3ffab8df1416485459068a06eb8b2df3",
+    "git_blob_match": true,
+    "sha256": "6ccf5b48a11772382abf68580620ea1336c3990f01eb0a19797db577bef013db"
+  }
+]

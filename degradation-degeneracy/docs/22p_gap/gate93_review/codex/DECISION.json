@@ -1,0 +1,50 @@
+{
+  "status": "CHANGES_REQUESTED",
+  "request_head": "0e3c244ea79db1b17f09a8f8043d808ab51ff43c",
+  "code_commit": "d7a97aa57ea926916d56c985ee4bc2bed96fa81a",
+  "source_digest_reported": "c7f48918ff971e91",
+  "scope": "Stage 4 bundle 6 limited offline implementation, spec16 only",
+  "findings": [
+    {
+      "id": "G93-N1",
+      "priority": "P2",
+      "kind": "code",
+      "status": "OPEN",
+      "path": "degradation-degeneracy/src/io.py",
+      "line": 2021,
+      "title": "A valid v3 envelope bypasses the v6 rederivation guard",
+      "basis": "Static source trace, not executed",
+      "minimal_action": "Gate rederivation on supported v4 structure; retain legacy reader and planned_id-only independent checks."
+    },
+    {
+      "id": "G93-N2",
+      "priority": "P2",
+      "kind": "evidence",
+      "status": "OPEN",
+      "title": "Raw evidence logs are absent from the fixed Git tree",
+      "minimal_action": "Supply retained original files; no rerun requested."
+    }
+  ],
+  "accepted_static": [
+    "G92-N3 copied nine-key comparison",
+    "canonical provider edge digest",
+    "closed s3/map keys and immediate value types except N1 boundary",
+    "scope and fixed-table blob identities",
+    "receipt history and field preservation"
+  ],
+  "reported_unverified_execution": [
+    "138 new tests PASS",
+    "2320 passed,1 xfailed",
+    "smoke rc0",
+    "421/421 mutation replay",
+    "start=end HEAD, dirty0 run logs"
+  ],
+  "reviewer_execution": {
+    "repository_imports": 0,
+    "tests": 0,
+    "comsol": 0,
+    "analysis_programs": 0
+  },
+  "execution_go": false,
+  "bundle6_closed": false
+}

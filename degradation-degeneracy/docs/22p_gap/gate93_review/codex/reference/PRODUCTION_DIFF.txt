@@ -1,0 +1,149 @@
+@@ -1436,7 +1436,7 @@ def _prepare_stage3(stage3: dict, tasks: list, df, objectives: dict, bounds: dic
+       심층 방어로 남긴다. `preflight` 는 그 결과 (closure hex64 · 키) 로 run_spec.stage3 에 싣는다."""
+     from src.grid import Condition
+     from tools import design_wire as DW
+-    from tools.preserve import check_planned_envelope
++    from tools.preserve import check_planned_envelope, digest
+     if not isinstance(stage3, dict) or set(stage3) != {"planned", "design", "provider_runs"}:
+         raise ValueError("stage3 는 {planned, design, provider_runs} 를 가진 dict 여야 한다")
+     planned = stage3["planned"]
+@@ -1542,7 +1542,8 @@ def _prepare_stage3(stage3: dict, tasks: list, df, objectives: dict, bounds: dic
+                   "bank_version": env["bank"]["version"], "exact_bounds_sha256": eb,
+                   "candidate_mode": st["candidate_mode"], "budget_by_objective": st["budget_by_objective"],
+                   "warm_provider_map": st["warm_provider_map"],
+-                  "provider_edges_sha256": hashlib.sha256(json.dumps(env["provider_edges"], sort_keys=True).encode()).hexdigest(),
++                  # ★ 92차 G92-N3 (k07) — 승인 축 (`stage3_axis_from_envelope`) 과 같은 canonical digest 하나 (json.dumps 식 삭제)
++                  "provider_edges_sha256": digest(env["provider_edges"]),
+                   "roster_sha256": r_sha, "arm": st["arm"], "stage": st["stage"],
+                   # ★ 84차 G84-N1 — validator 가 봉인 스냅샷에서 closure 를 다시 만들 재료 (키) 와 실행이 잰 hex64
+                   **(preflight or {})}
+@@ -1866,23 +1866,55 @@ def _stage3_checks(run_dir, spec0: dict) -> dict:
+     `execution_record.json` ↔ 계획 대조(`check_execution_record`) · `candidate_map.json` sha ↔ record ·
+     fits 행의 candidate_id 집합 == map 의 집합 · optimizer 정책(adaptive=False · unit_cube_bank/v1).
+     """
+-    from tools.preserve import check_execution_record, check_planned_envelope, digest
++    from tools.preserve import (PreserveError, check_execution_record, check_planned_envelope, digest,
++                                stage3_axis_from_envelope)
+     run_dir = Path(run_dir)
+     out: dict[str, tuple[bool, str]] = {}
+     s3 = spec0.get("stage3")
+-    missing = [k for k in _STAGE3_SPEC_KEYS if not isinstance(s3, dict) or k not in s3]
+-    out["stage3_schema"] = (not missing, f"sig_version 6 인데 run_spec.stage3 필수 키가 없다: {missing or 'stage3 블록 없음'}")
++    # ★ 92차 G92-N2 (k03) — 누락만 보던 검사를 **닫힌 키 집합 + 자료형** 으로 (고정 표 §16-3 · bool 은 int 로 받지 않음 · 변환 없음 ·
++    #   허용 null 없음). 실패하면 여기서 끝 — 그 stage3 로 아래 재유도 · 대조를 부르지 않는다.
++    s3_types = {k: str for k in _STAGE3_SPEC_KEYS}
++    s3_types.update(planned_envelope=dict, pairing_design=dict, budget_by_objective=dict, warm_provider_map=dict,
++                    base_config_closure_keys=list)
++    if not isinstance(s3, dict):
++        s3_bad = [f"run_spec.stage3 가 dict 가 아니다: {type(s3).__name__}"]
++    else:
++        s3_bad = []
++        missing = [k for k in _STAGE3_SPEC_KEYS if k not in s3]
++        extra = sorted(str(k) for k in s3 if k not in s3_types)
++        if missing or extra:
++            s3_bad.append(f"run_spec.stage3 키 집합이 닫혀 있지 않다 — 누락 {missing} · 추가 {extra}")
++        s3_bad += [f"run_spec.stage3.{k} 의 자료형이 {t.__name__} 가 아니다: {type(s3[k]).__name__}"
++                   for k, t in s3_types.items() if k in s3 and type(s3[k]) is not t]
++    out["stage3_schema"] = (not s3_bad, "sig_version 6 인데 run_spec.stage3 가 계약과 다르다: " + "; ".join(s3_bad[:4]))
+     opt = spec0.get("optimizer") or {}
+     out["stage3_optimizer"] = (opt.get("adaptive") is False and opt.get("seed_scheme") == "unit_cube_bank/v1",
+                                f"v6 optimizer 정책이 아니다: adaptive={opt.get('adaptive')!r} seed_scheme={opt.get('seed_scheme')!r}")
+-    if missing:
++    if s3_bad:
+         return out
+     env = s3["planned_envelope"]
+     ebad = check_planned_envelope(env)
+     out["stage3_planned_envelope"] = (not ebad and isinstance(env, dict) and env.get("schema") == "planned-leg/v4"
+                                       and digest(env) == s3["planned_id"],
+                                       "planned_envelope 가 유효한 planned-leg/v4 가 아니거나 planned_id 와 다르다: "
+                                       + "; ".join(ebad[:2]))
++    # ★ 92차 G92-N3 (k05) — 사본 9 키를 지우지 않고 envelope 와 대조한다: helper 투영 6 (`stage3_axis_from_envelope` 의 같은 이름 값) ·
++    #   env 직접 3. 기존 독립 재계산 키 (planned_id · pairing_design_sha256 · exact_bounds_sha256 · base_config_closure_* ·
++    #   planned_envelope) 는 여기서 비교하지 않는다 — 각자의 기존 위치가 재계산으로 잰다 (§16-2 b′).
++    ax_bad: list = []
++    try:
++        ax = stage3_axis_from_envelope(env)
++    except PreserveError as e:
++        ax_bad.append(f"planned_envelope 에서 stage3 축을 유도할 수 없다: {e}")
++    else:
++        st0 = env["stages"][0]
++        want = {k: ax[k] for k in ("parameter_order_sha256", "roster_sha256", "provider_edges_sha256", "arm", "stage",
++                                   "candidate_mode")}
++        want.update(bank_version=env["bank"]["version"], budget_by_objective=st0["budget_by_objective"],
++                    warm_provider_map=st0["warm_provider_map"])
++        ax_bad += [f"{k}: run_spec.stage3 {str(s3[k])[:24]!r} ≠ envelope 유도 {str(v)[:24]!r}"
++                   for k, v in want.items() if s3[k] != v]
++    out["stage3_축_유도"] = (not ax_bad, "run_spec.stage3 사본이 planned_envelope 에서 유도한 값과 다르다: " + "; ".join(ax_bad[:4]))
+     rec_p = run_dir / "execution_record.json"
+     rec = None
+     if rec_p.is_file():
+@@ -1923,15 +1955,49 @@ def _stage3_checks(run_dir, spec0: dict) -> dict:
+     ids_map: set = set()
+     ents: list = []
+     ok_map = False
++    # ★ 92차 G92-N2 (k04) — 최상위 {schema, entries} · 항목 7 키 닫힘 + 자료형 (고정 표 §16-3). 구조화된 이유 (키 이름 · 항목 위치) 로
++    #   실패하고, 실패한 map 은 아래 재유도에 넘기지 않는다 (`AttributeError` · numpy 색인으로 떨어지지 않게).
++    cm_bad: list = []
+     try:
+         cm = json.loads(cm_p.read_text(encoding="utf-8"))
+-        ents = (cm.get("entries") if isinstance(cm, dict) else None) or []
+-        ok_map = isinstance(cm.get("entries"), list) and cm.get("schema") == "candidate-map/v1" \
+-            and digest(ents) == (rec.get("realized") or {}).get("candidate_map_sha256")
+-        ids_map = {m.get("candidate_id") for m in ents if isinstance(m, dict)}
+-    except (ValueError, OSError):
+-        ok_map = False
+-    out["candidate_map"] = (bool(ok_map), "candidate_map.json 이 없거나 record 의 candidate_map_sha256 와 다르다")
++    except (ValueError, OSError) as e:
++        cm = None
++        cm_bad.append(f"candidate_map.json 을 읽지 못한다: {type(e).__name__}")
++    if not cm_bad and not isinstance(cm, dict):
++        cm_bad.append(f"candidate_map.json 최상위가 dict 가 아니다: {type(cm).__name__}")
++    elif not cm_bad:
++        top = {"schema", "entries"}
++        if set(cm) != top:
++            cm_bad.append(f"candidate_map 최상위 키 집합이 닫혀 있지 않다 — 누락 {sorted(top - set(cm))} · "
++                          f"추가 {sorted(str(k) for k in set(cm) - top)}")
++        if cm.get("schema") != "candidate-map/v1":
++            cm_bad.append(f"candidate_map schema {cm.get('schema')!r} ≠ 'candidate-map/v1'")
++        if not isinstance(cm.get("entries"), list):
++            cm_bad.append(f"candidate_map entries 가 list 가 아니다: {type(cm.get('entries')).__name__}")
++        else:
++            ent_keys = {"cond_id", "objective", "i", "source", "candidate_id", "bank_index", "x0_sha256"}
++            for n, m in enumerate(cm["entries"]):
++                if not isinstance(m, dict):
++                    cm_bad.append(f"entries[{n}]: dict 가 아니다: {type(m).__name__}")
++                    continue
++                if set(m) != ent_keys:
++                    cm_bad.append(f"entries[{n}]: 키 집합이 닫혀 있지 않다 — 누락 {sorted(ent_keys - set(m))} · "
++                                  f"추가 {sorted(str(k) for k in set(m) - ent_keys)}")
++                    continue
++                cm_bad += [f"entries[{n}].{k}: 자료형이 str 가 아니다: {type(m[k]).__name__}"
++                           for k in ("cond_id", "objective", "source", "candidate_id", "x0_sha256") if type(m[k]) is not str]
++                if type(m["i"]) is not int:
++                    cm_bad.append(f"entries[{n}].i: 자료형이 int 가 아니다: {type(m['i']).__name__}")
++                bi = m["bank_index"]
++                if not (type(bi) is int if m["source"] == "random" else bi is None):
++                    cm_bad.append(f"entries[{n}].bank_index: source {m['source']!r} 에 {bi!r} ({type(bi).__name__}) — "
++                                  "bank 출처 (random) 는 int · 그 밖은 null")
++    if not cm_bad:
++        ents = cm["entries"]
++        ok_map = digest(ents) == (rec.get("realized") or {}).get("candidate_map_sha256")
++        ids_map = {m["candidate_id"] for m in ents}
++    out["candidate_map"] = (bool(ok_map), "candidate_map.json 이 계약과 다르다: " + "; ".join(cm_bad[:3]) if cm_bad
++                            else "candidate_map.json 이 없거나 record 의 candidate_map_sha256 와 다르다")
+     fp = run_dir / "fits.parquet"
+     ids_rows: set = set()
+     if fp.is_file():
+@@ -1952,6 +2018,12 @@ def _stage3_checks(run_dir, spec0: dict) -> dict:
+             fits_df = pd.read_parquet(fp)
+         except Exception:  # noqa: BLE001 — 읽기 실패는 별도 검사가 보고한다
+             fits_df = None
++    if ebad:
++        # ★ 92차 G92-N2 — 유효하지 않은 계획 envelope 로 재유도 · 재계산을 부르지 않는다 (실패로 남긴다 · 통과 아님)
++        why = "planned_envelope 가 유효하지 않아 다시 유도 · 재계산하지 않는다: " + "; ".join(ebad[:2])
++        for k in ("후보_재유도", "실현_재계산", "restart_예산_완주", "관측_roster_재구성"):
++            out[k] = (False, why)
++        return out
+     if fits_df is None or not ok_map or not isinstance(ents, list):
+         out["후보_재유도"] = (False, "fits 또는 candidate_map 을 읽지 못해 후보를 다시 유도할 수 없다")
+         out["실현_재계산"] = (False, "fits 또는 candidate_map 을 읽지 못해 실현 count 를 다시 셀 수 없다")
