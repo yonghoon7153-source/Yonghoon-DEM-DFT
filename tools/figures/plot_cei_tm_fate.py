@@ -28,6 +28,7 @@ CEI 실험 쪽 1저자가 원고를 두 주장으로 닫으려 한다 — ① TM
   python3 tools/figures/plot_cei_tm_fate.py              # PNG + Origin CSV
   python3 tools/figures/plot_cei_tm_fate.py --nd         # Nd₂O₃@LPSCl1.6 판 + 4.3 V 농도 판 (2026-10-06)
   python3 tools/figures/plot_cei_tm_fate.py --simple     # 한 장 요약 (4.3 V · 양극 셋 · Nd 없음 / x 0.02 / x 0.10)
+  python3 tools/figures/plot_cei_tm_fate.py --ncm        # NMC811 만 · 금속별(Ni·Co·Mn) 인산염 % 표 그림
   python3 tools/figures/plot_cei_tm_fate.py --selftest   # 음성 경로 포함
 
 --nd 모드 (2026-10-06 · 사용자 "Nd₂O₃@LPSCl1.6 버전으로도" · "얼마나 줄어드는지")
@@ -204,6 +205,19 @@ def _selftest():
         except ValueError:
             caught = True
         check("⛔음성 --nd: 라벨이 Nd 없는 조성을 가리키면 멈춘다", caught)
+    # ── --ncm ──
+    nt = ncm_table()
+    check("--ncm: Mn 은 모든 전압·두 조성에서 100 % 인산염 · Co 는 0 %",
+          all(abs(nt[(sp, v)]["Mn"]["phosphate"] - 1) < 1e-3 and nt[(sp, v)]["Co"]["phosphate"] < 1e-9
+              for sp, _ in NCM_CASES for v in VOLTS))
+    check("--ncm: 세 금속 합 = TM 전체 몫 (보호율 원장 tm_phosphate_share_control 4.3 V 와 일치)",
+          abs(0.8 * nt[("liMatch002", 4.3)]["Ni"]["phosphate"]
+              + 0.1 * nt[("liMatch002", 4.3)]["Mn"]["phosphate"] - pr[("NMC811", 4.3, 0.02)]["ctrl"]) < 2e-3)
+    try:
+        metal_fate("1 LiNi0.8Co0.1Mn0.1O2 -> 0.5 NiS2 + 0.1 CoS2"); caught = False
+    except ValueError:
+        caught = True
+    check("⛔음성 --ncm: 금속 장부가 안 맞는 반응식(Ni 0.3 · Mn 0.1 증발)을 잡는다", caught)
     print("selftest PASS" if ok else "selftest FAIL")
     return 0 if ok else 1
 
@@ -412,6 +426,130 @@ OUT_SIMPLE_PNG = REPO / "db/properties/cei_figs/cei_tm_fate_simple_4p3V.png"
 OUT_SIMPLE_CSV = REPO / "db/properties/cei_figs/cei_tm_fate_simple_4p3V.csv"
 
 
+FULL_JSONL = REPO / "db/properties/cei_protection_full.jsonl"
+OUT_NCM_PNG = REPO / "db/properties/cei_figs/cei_tm_fate_nmc811_by_metal.png"
+OUT_NCM_CSV = REPO / "db/properties/cei_figs/cei_tm_fate_nmc811_by_metal.csv"
+NCM_CASES = [("liMatch002", "No Nd"), ("ndP002", "Nd$_2$O$_3$ (x = 0.02)")]
+METALS = ["Ni", "Co", "Mn"]
+
+
+def metal_fate(rxn, metals=METALS):
+    """반응식 하나 → 금속별 {phosphate, sulfide, other} 몫 (그 금속의 좌변 양 기준).
+    한 산물에 금속이 둘이면(Co(NiS2)2) **각자 따로** 센다. 좌변에 그 금속이 없으면 None."""
+    sys.path.insert(0, str(REPO / "tools/oxidation"))
+    import re as _re
+    import interface_reactivity_v2 as IR
+    lhs, rhs = rxn.split("->", 1)
+    term = _re.compile(r"^\s*([0-9]*\.?[0-9]+)?\s*([A-Za-z0-9().]+)\s*$")
+    tot = {m: 0.0 for m in metals}
+    for t in lhs.split("+"):
+        mm = term.match(t)
+        if mm:
+            n = float(mm.group(1)) if mm.group(1) else 1.0
+            c = IR.parse_formula(mm.group(2))
+            for m in metals:
+                tot[m] += n * c.get(m, 0.0)
+    bins = {m: {"phosphate": 0.0, "sulfide": 0.0, "other": 0.0} for m in metals}
+    phases = {m: [] for m in metals}
+    for t in rhs.split("+"):
+        mm = term.match(t)
+        if not mm:
+            continue
+        n = float(mm.group(1)) if mm.group(1) else 1.0
+        f = mm.group(2); c = IR.parse_formula(f)
+        k = "phosphate" if c.get("P", 0) > 0 else "sulfide" if c.get("S", 0) > 0 else "other"
+        for m in metals:
+            if c.get(m, 0) > 0:
+                bins[m][k] += n * c[m]
+                if k == "phosphate":
+                    phases[m].append(f)
+    out = {}
+    for m in metals:
+        if tot[m] <= 0:
+            out[m] = None
+            continue
+        sh = {k: v / tot[m] for k, v in bins[m].items()}
+        if abs(sum(sh.values()) - 1.0) > 0.01:
+            raise ValueError(f"{m} 장부가 안 맞는다 ({sum(sh.values()):.4f}): {rxn}")
+        out[m] = dict(sh, phases=phases[m])
+    return out
+
+
+def ncm_table(path=FULL_JSONL):
+    t = {}
+    for l in open(path):
+        d = json.loads(l)
+        if d["cathode"] != "NMC811" or d["species"] not in dict(NCM_CASES):
+            continue
+        for V, r in d["by_voltage"].items():
+            t[(d["species"], float(V))] = metal_fate(r["reaction"])
+    return t
+
+
+def main_ncm():
+    """NMC811 만 (2026-10-06 · 사용자 "ncm만 해봐" · 앞 그림들이 이해가 안 된다는 말 뒤).
+    금속별 인산염 % 를 숫자 표로 — Mn 은 늘 인산염 · Co 는 늘 황화물 · Ni 만 갈린다."""
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    from matplotlib.colors import LinearSegmentedColormap
+    sys.path.insert(0, str(REPO / "tools/figures"))
+    from house_style import INK, MUT, ELEM, apply_axes
+    t = ncm_table()
+    rows_lab, mat, rows_csv = [], [], []
+    for m in METALS:
+        for sp, lab in NCM_CASES:
+            rows_lab.append((m, lab))
+            line = []
+            for v in VOLTS:
+                f = t.get((sp, v), {}).get(m)
+                line.append(None if f is None else 100 * f["phosphate"])
+                rows_csv.append({"metal": m, "case": "no Nd (Li-matched control)" if sp == "liMatch002" else "Nd2O3@LPSCl1.6 x=0.02",
+                                 "voltage_V": v,
+                                 "to_phosphate_pct": "" if f is None else round(100 * f["phosphate"], 2),
+                                 "to_sulfide_pct": "" if f is None else round(100 * f["sulfide"], 2),
+                                 "to_other_pct": "" if f is None else round(100 * f["other"], 2),
+                                 "phosphate_phase": "" if f is None else " ".join(f["phases"])})
+            mat.append(line)
+    cmap = LinearSegmentedColormap.from_list("w2p", ["#ffffff", ELEM["P"]])
+    fig, ax = plt.subplots(figsize=(8.6, 4.6))
+    import numpy as np
+    arr = np.array([[np.nan if x is None else x for x in r] for r in mat])
+    ax.imshow(arr, cmap=cmap, vmin=0, vmax=100, aspect="auto")
+    for i, r in enumerate(mat):
+        for j, x in enumerate(r):
+            if x is None:
+                ax.text(j, i, "n/a", ha="center", va="center", fontsize=9, color=MUT); continue
+            ax.text(j, i, f"{x:.0f}%", ha="center", va="center", fontsize=11,
+                    fontweight="bold" if rows_lab[i][0] == "Ni" else "normal",
+                    color="white" if x > 55 else INK)
+    ax.set_xticks(range(len(VOLTS)), [f"{v:g} V" for v in VOLTS], fontsize=10)
+    ax.set_yticks(range(len(rows_lab)), [f"{m}  |  {lab}" for m, lab in rows_lab], fontsize=10)
+    for y in (1.5, 3.5):
+        ax.axhline(y, color=INK, lw=1.2)
+    ax.set_xticks(np.arange(-0.5, len(VOLTS)), minor=True)
+    ax.set_yticks(np.arange(-0.5, len(rows_lab)), minor=True)
+    ax.grid(which="minor", color="white", lw=1.5); ax.tick_params(which="minor", length=0)
+    ax.tick_params(colors=INK, length=0)
+    for sp_ in ax.spines.values():
+        sp_.set_visible(False)
+    ax.set_title("NMC811 | electrolyte: how much of each metal becomes a phosphate",
+                 fontsize=11.5, color=INK, pad=10)
+    fig.text(0.5, -0.02,
+             "Numbers: share of that metal (Ni, Co or Mn from NMC811) that ends up as a metal phosphate in the most favorable "
+             "NMC811 | electrolyte reaction.\nThe rest becomes metal sulfide (NiS$_2$, Ni$_3$S$_4$, CoS$_2$); at 3.5 V part of Ni "
+             "becomes NiCl$_2$. Mn: LiMnPO$_4$, Mn(PO$_3$)$_2$, MnP$_4$O$_{11}$. Ni: Ni(PO$_3$)$_2$, NiP$_4$O$_{11}$.\n"
+             "No Nd = Li-matched Nd-free control (Li$_{5.44}$P$_{0.98}$S$_{4.37}$O$_{0.03}$Cl$_{1.6}$). "
+             "0 K grand-potential hull (MP GGA/GGA+U); a product channel, not a degradation rate.",
+             ha="center", va="top", fontsize=8.0, color=MUT)
+    fig.tight_layout()
+    fig.savefig(OUT_NCM_PNG, dpi=300, bbox_inches="tight"); plt.close(fig)
+    with OUT_NCM_CSV.open("w", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=list(rows_csv[0])); w.writeheader(); w.writerows(rows_csv)
+    print(f"→ {OUT_NCM_PNG.relative_to(REPO)}\n→ {OUT_NCM_CSV.relative_to(REPO)}")
+    return 0
+
+
 def main_simple():
     """한 장 요약 (2026-10-06 · 사용자 "그림이 전혀 이해가 안돼").
     4.3 V · LiCoO2 · LiNiO2 · NMC811 에서 '양극 금속 중 인산염이 되는 몫' 막대 셋:
@@ -469,6 +607,8 @@ def main_simple():
 
 
 if __name__ == "__main__":
+    if "--ncm" in sys.argv:
+        raise SystemExit(main_ncm())
     if "--simple" in sys.argv:
         raise SystemExit(main_simple())
     if "--selftest" in sys.argv:
