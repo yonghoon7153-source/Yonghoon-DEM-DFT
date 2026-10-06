@@ -431,3 +431,13 @@ rc 0 → **옛 봉인 대조 (§2-4) 에서 허용 밖 차이** → 정지. 원�
 - 부록: `docs/REIL_C5_PILOT_APPROVAL_REQUEST_v2_ADDENDUM_20261006.md` — A1 계산 없는 환경 식별 (`lock_text` · `profile` · COBYQA 구현 파일 재해시 · 실제 interpreter · full check `NOT_RUN`) · 측정 단계는
   그 뒤 A0 seed 0 · 1 배열만 · A2 행 상태 4 + 전체 `RECORD_INCOMPLETE` · A3 시험의 텍스트 입력 식별 · A4 3,600 s = 명령 시간 합 · timeout · pytest 경로 · 증거 폴더 충돌 · A5 새 구현 승인 문구.
 - 다음: 사용자의 A5 구현 승인 (승인 전 구현 · 시험 0).
+
+## §28 C5 구현 승인 (2026-10-06 · 사용자 · 코드 변경 전 기록)
+
+- 사용자 원문 (2026-10-06 채팅): "reil c5 도 최종 승인이야 / 하자 없음 들어가자".
+- 해석 (기록): 부록 `REIL_C5_PILOT_APPROVAL_REQUEST_v2_ADDENDUM_20261006.md` A5 의 **구현 승인**. 범위 · 한도는 v2 §5 + 부록 A1–A4 다.
+  - 할 일: 두 파일 · RED 1 · GREEN ≤ 3 · 무자료 한정 시험 1 · 합성 건조 실행 1 · 계산 없는 환경 식별. 명령 시간 합 ≤ 3,600 s.
+  - 하지 않음: full C6 check · REIL 자료 · 정식 Sobol · 환경 재구축 · bms 전체 시험.
+  - **비용 측정 (v2 §10 (2)) 은 포함하지 않는다** — 구현 결과 보고 뒤 따로 승인.
+- 시작 상태: 증거 폴더 `evidence/reil_c5_impl_20261006/` 부재 · 지정 venv `…/scratchpad/reil_p0/venv` 있음 (실제 `/usr/bin/python3.11` 기반 venv · scipy 1.17.1 · numpy 2.4.6) ·
+  pytest 경로 `…/scratchpad/reil_p0/pytest_t` 있음.
