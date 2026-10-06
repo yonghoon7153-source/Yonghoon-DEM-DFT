@@ -105,3 +105,7 @@ reviews/r14_repros/codex63/comsol_bmin_r2_retry3_review_20261006/** -text
 reviews/r14_repros/codex63/comsol_bmin_r2_retry3_result_20261005/** -text
 # 2026-10-06: REIL C6 보충 검토 회신 묶음 (게이트 차수 밖 · C6_PREREQUISITE_REVIEW_ACCEPTED_N1_N2_CLOSED_WITH_EVIDENCE_LIMITS · C6 사전 준비 종결 · P0 · 설치 · 실행 승인 아님) — bytes 그대로
 reviews/prereview_reil_v2_c6_supplement_20261006/** -text
+# 2026-10-06: REIL P0 — C6 같은 판 재구축 환경의 새 봉인 (현재 checker 로 emit · check 가 바이트로 대조) — bytes 그대로
+reil_c6_rebuild_20261006/** -text
+# 2026-10-06: REIL P0 실행 원문 (명령 · stdout / stderr · rc · 결과 JSON · 옛 봉인 대조 · 변이 증명) — *.log 는 git add -f (C6-N2 교훈) · bytes 그대로
+evidence/reil_p0_20261006/** -text
