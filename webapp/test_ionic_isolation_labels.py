@@ -7,7 +7,8 @@
 인계표 v1.1 이 `am_ionic_isolated_pct` (= 100 − ionic_active_pct) 와 그 분해 (`ionic_dead_pct` = SE 는 닿았지만 그 SE 가 위 띠
 (분리막 쪽) 로 안 이어짐 · `ionic_no_se_pct` = SE 접촉 0) 를 싣는 날, 웹앱도 **같은 이름 · 같은 정의 · 같은 한정어**로 보여 준다.
 두 "고립" 을 섞지 않는 것이 요점이다 — `am_vulnerable_pct` 는 고립 **위험** (SE 접촉 0–1 개 · 접촉 개수) 이고, 경로 기준 고립은
-이온이 실제로 못 가는 AM 이다 (접촉이 둘 이상인데 고립일 수도, 하나뿐인데 활성일 수도 있다).
+상단 2r 경계 띠와 SE 접촉 그래프로 연결되지 않은 AM 이다 (접촉이 둘 이상인데 고립일 수도, 하나뿐인데 활성일 수도 있다) — 그래프 구조 지표이지
+실제 이온 도달 · 이온 전류가 아니다 (LREL-05 · [L] 절).
 
   [W] 웹앱 — 영문 라벨 · 역방향 라벨 맵 · 케이스 툴팁 · 표 순서 · 옛 케이스 보정 (분해 키가 없던 세대) · 그룹 비교 · MD 보고서 · 쉬운 설명
   [B] 표 재구성기 (rebuild_tables_from_metrics) — 같은 줄 · 같은 키
@@ -133,6 +134,36 @@ def section_w():
         '100 −' in plain and '고립 위험' in plain, plain)
 
 
+def section_l():
+    """LREL-05 (Codex 배포 v1.1 최종 리뷰 반례 band_not_wall · 1저자 비준 10-06) — 이온 활성 · 경로 고립 · 분해는 **그래프 구조 지표**다.
+    인계 열 사전 (`scripts/lhs_design_dataset.IONIC_GRAPH_NOTE`) 과 같은 한정어를 웹앱 툴팁 · 배지 · 쉬운 설명이 단다 (J20-l) —
+    "이온이 실제로 닿을 수 없는" · "실제로 도달할 수 있는" · "전기화학적으로 죽은" 같은 실제 도달 단정을 쓰지 않는다."""
+    print('[L] LREL-05 — 이온 활성 · 경로 고립 = 상단 2r 경계 띠 · SE 접촉 그래프 지표 (인계 열 사전과 같은 한정어)')
+    import app as A
+    html = open(os.path.join(HERE, 'templates', 'single.html'), encoding='utf-8').read()
+    tips = {k: _tip_block(html, k) or '' for k in ('Ionic Active AM(%)', PARENT, DEAD, NOSE)}
+    need = ('2r', '그래프', '이온 전류', '계산하지 않')
+    lack = {k: [w for w in need if w not in b] for k, b in tips.items() if any(w not in b for w in need)}
+    over_w = ('실제로 닿을 수 없는', '실제로 도달', '전기화학적으로 "죽은', '전기화학적으로 dead')
+    over = {k: [w for w in over_w if w in b] for k, b in tips.items() if any(w in b for w in over_w)}
+    chk('L1 케이스 툴팁 넷 (활성 · 경로 고립 · 단절 · 무접촉) — 상단 2r 경계 띠 · SE 접촉 그래프 지표 · 실제 분리막 접촉 · 계면 저항 · 이온 전류는 '
+        '계산하지 않는다 · 실제 도달 단정 없음', not lack and not over, f'빠진 말 {lack} · 단정 {over}')
+    badge = next((ln for ln in html.splitlines() if 'metrics.ionic_active_pct is defined' in ln and 'title=' in ln), '')
+    chk('L2 배지 (Ionic Active) title — 그래프 지표 한정어 · "전기화학적으로 dead" 단정 없음',
+        bool(badge) and '그래프' in badge and 'dead' not in badge, badge[:200])
+    plain = getattr(A, '_GRADE_PLAIN', {}).get('ionic_active_pct', '')
+    chk('L3 쉬운 설명 (ionic_active_pct) — "실제로 도달할 수 있는" 대신 그래프 연결 지표 · 이온 전류는 계산하지 않는다 · 100 − 이 값 · 고립 위험과 다른 양 (W12 유지)',
+        '실제로 도달' not in plain and '그래프' in plain and '이온 전류' in plain and '100 −' in plain and '고립 위험' in plain, plain)
+    try:
+        sys.path.insert(0, SCRIPTS)
+        import lhs_design_dataset as LDD
+        note = getattr(LDD, 'IONIC_GRAPH_NOTE', '')
+    except Exception as e:  # noqa: BLE001
+        note = f'ERR {type(e).__name__}: {e}'
+    chk('L4 인계 열 사전 쪽 한정어 (IONIC_GRAPH_NOTE) 가 있고 같은 말 (상단 2r 경계 띠 · SE 접촉 그래프 · 이온 전류 계산 안 함) — 웹앱과 생성기가 같은 정의',
+        all(w in note for w in ('2r', '그래프', '이온 전류', '계산하지 않')), note[:200])
+
+
 def section_b():
     print('[B] 표 재구성기 — 같은 줄 · 같은 키')
     import rebuild_tables_from_metrics as RB
@@ -145,7 +176,7 @@ def section_b():
 
 
 def main():
-    for fn in (section_w, section_b):
+    for fn in (section_w, section_l, section_b):
         try:
             fn()
         except Exception as e:  # 한 절의 예외가 다른 절을 가리지 않게

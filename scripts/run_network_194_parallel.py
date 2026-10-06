@@ -1160,7 +1160,8 @@ def print_merge_summary(root: Path, report: dict, man: dict, out=print):
 
 
 def print_followups(root: Path, man: dict, out=print):
-    """후속 명령 — ⓪ 봉인 감사 · ① τ 진단 표 · ② 인계 생성기 한 번 (τ 묶음 + --tau-results · RGLR3-03) · ③ 포장."""
+    """후속 명령 — ⓪ 봉인 감사 · ① τ 진단 표 · ②a 완료 압력 기록 (DESC-06) · ② 인계 생성기 한 번 (τ 묶음 + --tau-results · RGLR3-03 ·
+    --pressure-record) · ③ 포장."""
     q = shlex.quote
     sha = ((man.get('git') or {}).get('short')) or 'SHA'
     d = time.strftime('%Y%m%d')
@@ -1172,13 +1173,20 @@ def print_followups(root: Path, man: dict, out=print):
     same = (code_hashes() or {}).get(tf) == (man.get('code_hashes') or {}).get(tf)
     out(f'# 인계 생성기 · τ 관문은 이 체크아웃의 것을 쓴다 — {tf} 지문 = 발사 봉인 '
         + ('✓ 같다' if same else '✗ 다르다 (τ 관문이 봉인 밖 코드 — 발사 체크아웃에서 돌릴 것)'))
-    out(f'mkdir -p {q(str(root / "tau"))} {q(str(root / "handover"))}')
+    out(f'mkdir -p {q(str(root / "tau"))} {q(str(root / "handover"))} {q(str(root / "pressure"))}')
     out('# ⓪ 봉인 감사 (RGLR3-01) — 케이스마다 어느 코드로 계산됐나 (시도별 지문 · 옛 형식은 첫 run 규칙).  UNSEALED 가 있으면 인계하지 않는다 (retry)')
     out(f'python3 scripts/run_network_194_parallel.py audit --root {q(str(root))} --tsv {q(str(root / "seal_audit.tsv"))}')
     out('# ① τ 관문 진단 표 — 모든 케이스 폴더 (실패 케이스도 NOT_COMPUTED 행).  진단 전용: 인계표에 손으로 잇지 않는다 (인계 τ = ② 의 --tau-results 경로)')
     for n in names:
         out(f'python3 scripts/tau_flux.py {q(str(root / "merged" / n / "results"))}/* '
             f'--tsv {q(str(root / "tau" / f"{n}_tau_flux.tsv"))} --json {q(str(root / "tau" / f"{n}_tau_flux.json"))}')
+    out('# ②a 완료 압력 기록 (DESC-06 · 10-06) — 침대마다 LIGGGHTS 로그의 압밀 루프 판정 줄 (마지막 줄 current ≥ 목표) · 덱 sha = 수확 raw.deck.')
+    out('#    로그가 덱 폴더의 log* 가 아니면 --log-glob 으로 (rc 1 = OK 아닌 침대가 있다 — 그 침대가 있으면 ② 생성기가 거부한다)')
+    rmap = (f' --root-from {q(man.get("root_from"))} --root-to {q(man.get("root_to") or "")}' if man.get('root_from') else '')
+    for n in names:
+        c = by[n]
+        out(f'python3 scripts/lhs_pressure_record.py --cohort {q(c["cohort"])} --harvest-dir {q(c["harvest_dir"])}{rmap} '
+            f'--out {q(str(root / "pressure" / f"{n}_pressure_record.tsv"))}')
     out(f'# ② 인계 v1.2 — 생성기 한 번 (망 배치 묶음 {HANDOVER_GROUPS} · RGL-03 · RGLR3-03).  τ 열 (f · f_gap · tau2 · tau · 상태 · 사유 · 메타) 은')
     out('#    --tau-results 의 출처 관문 P0–P3 (배치 status.json run id · 입력 digest · metrics_flat 세대) 를 지난 값만 표 끝에 싣는다 ·')
     out('#    열 사전 <표>_columns.tsv · τ 출처 부록 <표>_tau_provenance.tsv · 제외 노트 <표>_excluded.tsv (LW ④b = frame_unverified 명시 제외).')
@@ -1187,12 +1195,13 @@ def print_followups(root: Path, man: dict, out=print):
         extra = (f' --design {q(c["design"])}' if c.get('design') else '')
         out(f'python3 scripts/lhs_design_dataset.py --export-handover {q(str(root / "handover" / f"{n}_handover_v12_{d}.csv"))}'
             f'{extra} --harvest {q(c["harvest_dir"])} --union {q(c.get("union") or "")} '
-            f'--webapp {q(str(root / "merged" / n))} --webapp-groups {HANDOVER_GROUPS} --tau-results {q(str(root / "merged" / n / "results"))}')
+            f'--webapp {q(str(root / "merged" / n))} --webapp-groups {HANDOVER_GROUPS} --tau-results {q(str(root / "merged" / n / "results"))} '
+            f'--pressure-record {q(str(root / "pressure" / f"{n}_pressure_record.tsv"))}')
     hand = ' '.join(f'handover/{n}_handover_v12_{d}{suf}' for n in names
                     for suf in ('.csv', '_columns.tsv', '_tau_provenance.tsv', '_excluded.tsv'))
     out('# ③ 보낼 묶음 — 인계표 · 열 사전 · τ 출처 부록 · 제외 노트 · 봉인 감사 · manifest · 실행 · 시도 기록 (케이스 결과 원본 · 작업 폴더는 빼고)')
     out(f'(cd {q(str(root))} && tar czf ~/net194_{sha}_{d}.tar.gz manifest.json runs progress.tsv seal_audit.tsv merged/merge_report.json '
-        f'merged/*/status.json merged/*/metrics_flat.csv merged/*/parallel_cases.tsv tau {hand} cases/*/worker.json cases/*/log.txt)')
+        f'merged/*/status.json merged/*/metrics_flat.csv merged/*/parallel_cases.tsv tau pressure {hand} cases/*/worker.json cases/*/log.txt)')
     out('# ③b (선택 · 받는 쪽 독립 재검증용) τ 원천 canonical 파일 — 출처 부록의 sha256 을 다시 잴 수 있게 (dual · full_metrics · 망 도장)')
     out(f'(cd {q(str(root))} && tar czf ~/net194_{sha}_{d}_tau_sources.tar.gz cases/*/work/results/*/network_conductivity_dual.json '
         'cases/*/work/results/*/full_metrics.json cases/*/work/results/*/network_provenance.json)')
@@ -2219,12 +2228,19 @@ def _selftest() -> int:
                    for n in ('lhs', 'lhsx')}
             want = {n: (f' --harvest {Q(str(_abs(COHORT_SPECS[n]["harvest"])))} --union {Q(COHORT_SPECS[n]["union"])} '
                         f'--webapp {Q(str(Rf / "merged" / n))} --webapp-groups contact,percolation,f1,fracture,area,tau '
-                        f'--tau-results {Q(str(Rf / "merged" / n / "results"))}') for n in ('lhs', 'lhsx')}
+                        f'--tau-results {Q(str(Rf / "merged" / n / "results"))} '
+                        f'--pressure-record {Q(str(Rf / "pressure" / f"{n}_pressure_record.tsv"))}') for n in ('lhs', 'lhsx')}
             chk('㉕ ★ RGLR3-03 — 인계 명령 = --webapp <ROOT>/merged/<코호트> --webapp-groups contact,percolation,f1,fracture,area,tau '
                 '--tau-results <ROOT>/merged/<코호트>/results · 수확 = 절대 경로 · union = lhs130 / lhsx64 · lhsx 만 --design · 손 case 잇기 안내 없음',
                 all(gen[n].endswith(want[n]) for n in gen)
                 and ' --design docs/data/lhsx_design_adapted_20260929.csv --harvest ' in gen['lhsx'] and '--design' not in gen['lhs']
                 and 'case 열로 잇기' not in txt and '아직 생성기 묶음이 아니다' not in txt, repr(gen))
+            prs_ = {n: next((l_ for l_ in ln_ if l_.startswith('python3 scripts/lhs_pressure_record.py') and f'{n}_pressure_record.tsv' in l_), '')
+                    for n in ('lhs', 'lhsx')}
+            chk('㉕ ★ DESC-06 — 완료 압력 기록 명령 (코호트 · 수확 = 인계 명령과 같은 수확 · 산출 = 생성기 --pressure-record 가 읽는 그 파일) · 생성기 명령에 --pressure-record',
+                all(f'--cohort {Q(str(_abs(COHORT_SPECS[n]["cohort"])))}' in prs_[n] and f'--harvest-dir {Q(str(_abs(COHORT_SPECS[n]["harvest"])))}' in prs_[n]
+                    and prs_[n].endswith(f'--out {Q(str(Rf / "pressure" / f"{n}_pressure_record.tsv"))}') and '--pressure-record' in gen[n]
+                    for n in prs_), repr(prs_))
             tar_ = next((l_ for l_ in ln_ if 'tar czf' in l_ and '_tau_sources' not in l_), '')
 
             def _need(dd):

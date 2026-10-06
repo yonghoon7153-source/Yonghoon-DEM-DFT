@@ -808,7 +808,8 @@ HANDOVER_EXTRA = (
     #  ── 적격성 (HND-04) — 숫자 산출 성공과 물리/ML 용도 허용을 분리 ──
     ('calculation_status',   ('handover_qc', 'calculation_status'),         '계산 상태 (명목 규약값)'),
     ('physical_target_status', ('handover_qc', 'physical_target_status'),   'OK | HOLD — 물리적 전극 구조 타깃으로 쓸 수 있는가 (HND-04 — 계산 상태와 분리) · HOLD = hold_reason_codes 가 하나라도 있다 · '
-                                                                            '값은 그대로 계산됐다 (calculation_status OK) · 배포 v1.1 부터 함께 싣는다 — 거를지는 쓰는 쪽이 정한다'),
+                                                                            '값은 그대로 계산됐다 (calculation_status (정본 인계표 열) OK) · 배포 v1.1 부터 함께 싣는다 — 거를지는 쓰는 쪽이 정한다 · '
+                                                                            '정합 규칙 = 생성기 eligibility_problems (LREL-02 — 세 열이 다 있고 HOLD ⟺ 코드 ≥ 1 · BOUNDARY_CENTER_OUT ⟺ boundary_state ≠ INSIDE)'),
     ('hold_reason_codes',    ('handover_qc', 'hold_reason_codes'),          'BOUNDARY_CENTER_OUT = 중심이 바닥 · 플래튼 평면 밖인 입자 ≥ 1 (정상 압입과 구분 · HND-03) · '
                                                                             'NEGATIVE_POROSITY = 구 부피 합 porosity < 0 (= 구 부피 합 φ_SE + φ_AM > 1 · 겹침이 큰 침대 · HND-04 · LHS-15) — '
                                                                             '배포 porosity (정확 union) 는 이 경우에도 양수다 · 여러 개면 | 로 잇는다'),
@@ -921,7 +922,11 @@ PHI_MC_CLOSURE_TOL = 1e-9
 SE_SHARE_TOL = 1e-9
 HANDOVER_UNION = (
     ('porosity_union_exact_pct',        'mc_void_pct',
-     '★ 겹침 보정 porosity (정확 union — 상자 [0,Lx)×[0,Ly)×[0,plate_z) 무작위 점 · 세 입자 이상 겹침까지) — 물리 porosity 열 (J19)'),
+     '★ 겹침 보정 porosity (정확 union — 상자 [0,Lx)×[0,Ly)×[0,plate_z) 무작위 점 · 세 입자 이상 겹침까지) — 물리 porosity 열 (J19) · '
+     '"정확" = 합집합 정의 (쌍 렌즈 근사 아님) 이지 MC 오차 0 이 아니다 — 1σ = porosity_union_exact_se_pct (정본 인계표 열) (10-06 실측 130: '
+     '0.012–0.023 %p · 64: 0.011–0.015 %p) · 마지막 자리를 측정 정밀도로 인용하지 않는다 (LREL-06) · ⚠ 규약 한정 (J20-c ⓒ — 기록된 한정어 · '
+     '규약 선택은 1저자 결정 대기): union 은 겹친 부피를 한 번만 세어 소성 압축의 고체를 과소계상하는 상한 규약이다 (CLAUDE.md E_SE 절 · '
+     '재료 보존 쪽은 구 부피 합 ε_sphere) — 짝 = thickness_mass_conserving_um · phi_*_mass_conserving (같은 장부)'),
     ('porosity_union_exact_se_pct',     'mc_void_se_pct',         '위 값의 통계 오차 (1σ, %p)'),
     ('porosity_union_pair_clipped_pct', 'eps_union_pair_clipped', '검산 — 웹앱 쌍 렌즈 union − 벽 밖 부피 (세 입자 겹침 무시 · 상한)'),
     ('union_pair_upper_bound_ok',       'pair_upper_bound_ok',
@@ -935,7 +940,7 @@ HANDOVER_UNION_DERIVED = (
      'union 과 DEM 간격 두께를 둘 다 실제 값으로 받을 수 없다)'),
     ('se_rich', f'SE / 고체 ≥ {SE_RICH_MIN} (구 부피 합이 겹침 이중계상으로 퇴화하는 영역 — 문턱은 도구 선택, 연속값 옆 열)'),
     ('phi_se_mass_conserving',
-     '★ 인계용 SE 부피분율 (J20-e (라) · 1저자 09-29 밤) — 질량 보존 φ = phi_se × (1 − ε_union)/(1 − ε_sphere) '
+     '★ 인계용 SE 부피분율 (J20-e (라) · 1저자 09-29 밤) — 질량 보존 φ = phi_se (정본 인계표 열) × (1 − ε_union)/(1 − ε_sphere) '
      '= SE 구 부피 / (L² · thickness_mass_conserving_um) = (1 − porosity_union_exact_pct/100) × se_of_solid_vol.  '
      '인계 두께 · union porosity 와 **같은 장부**: φ_SE + φ_AM + ε_union = 1 (정확) · φ × 인계 두께 = 레시피 적재량.  '
      '유도량 (두께 · 레시피로 정해짐 — 독립 측정 아님) · union 과 같은 상한 규약의 짝 (소성으로 밀려난 재료를 빈틈이 아니라 두께로 보낸다)'),
@@ -948,14 +953,20 @@ HANDOVER_UNION_DERIVED = (
 #:   HANDOVER_HELD_BACK 그대로 (LHS-08).  값 칸은 status OK 일 때만 (계약 ②) — 미관통을 0 이나 큰 수로 채우지 않는다.
 #:   규약 문자열은 수확기 `lhs_descriptor_harvest.TAU_WALL_CONVENTION` 과 같아야 한다 (selftest ⑲n 이 둘을 맞댄다).
 TAU_WALL_CONVENTION = 'harvest_v3/wall_z0_plate/rSEmax/no_fallback/same_component'
+#: ★ 10-06 (v1.2 README §4 정정 → 생성기) — 벽 τ 뜻의 끝 = 수송 tortuosity 가 **어디 있는가**.  옛 문구 "· 이 표에 없음" 은 망 τ 묶음을 실은 v1.2 에서
+#:   거짓이었다 (tau2_ion_hertz 가 바로 그 양).  column_dictionary 가 표의 열에 따라 둘 중 하나를 tortuosity_SE_wall 뜻 끝에 붙인다.
+TAU_WALL_TRANSPORT_IN = ('수송 tortuosity 는 이 표의 tau2_ion_hertz — 수송 tortuosity factor T = φ_SE,mc/f_ion_hertz (제곱근 아님 · Hertz 기본 지표 · '
+                         '√T = tau_ion_hertz) · 다른 모드 = tau2_ion_<모드> (정본 인계표 열) — 이 열 (기하학적) 과 다른 양이고 최소 조성도 다를 수 있다')
+TAU_WALL_TRANSPORT_OUT = ('수송 tortuosity (망 단계 tau2 = φ_SE·σ₀/σ_full · 수송 tortuosity factor · 제곱근 아님) 는 망 τ 묶음 (--webapp-groups …,tau · '
+                          '--tau-results) 을 실은 인계표의 tau2_ion_<모드> 열 — 이 표에는 없다')
 HANDOVER_TAU_WALL = (
     ('tortuosity_SE_wall',        'tau_mean',
      '★ SE τ (벽 규약 · **기하 최단경로**) — 바닥 벽 (z = 0) 밴드와 플래튼 밴드 (밴드 두께 = r_SE,max · 입자 표면 기준) 를 **같은 SE 성분 '
      '안에서** 잇는 쌍의 SE 중심 경로 최단 길이 (Dijkstra · 가중 = 중심 거리 · x·y 주기) / 두 끝 중심의 z 거리 · 무작위 200 쌍 (seed 42 · '
      '쌍 평균이라 쌍이 많은 큰 성분 쪽으로 가중) · [1, 20) 절단 평균.  접촉 = 원자 좌표 기하 (d ≤ r_i + r_j) — 덤프 접촉과 같은 집합 (J20-a '
      '130/130).  status OK 일 때만 값 · 비관통은 빈칸 (N/A · 0 이 아니다).  ⚠ **수송 τ 가 아니다** — 협착 · 단면 병목을 보지 않아 1 근처에 '
-     '모인다 (LHS 1.29–4.15 · lhsx 1.26–1.60) · 수송 굴곡도는 망 단계의 tau2 = φ_SE·σ₀/σ_full (tortuosity factor · τ_Laplace,eff = √tau2 · 이 표에 없음 · τ 명명 규약 10-03 · TAU-01) · '
-     '관문 T1–T3 (10-01)'),
+     '모인다 (LHS 1.29–4.15 · lhsx 1.26–1.60) · 기하학적 tortuosity — 망 단계의 수송 tortuosity (tau2 = φ_SE·σ₀/σ_full) 와 다른 양 '
+     '(τ 명명 규약 10-03 · TAU-01) · 관문 T1–T3 (10-01)'),
     ('tortuosity_SE_wall_median', 'tau_median',     '같은 표본의 중앙값 (status OK 일 때만) · 같은 한정어 (기하 최단경로 · 수송 τ 아님)'),
     ('tortuosity_SE_wall_status', 'status',
      'OK · NOT_PERCOLATING (벽 밴드 둘을 잇는 SE 성분이 없다 = 미관통 — 퍼콜레이션 percolation_pct 0 과 같은 집합 · 관문 T3) · '
@@ -979,7 +990,7 @@ HANDOVER_SE_CLUSTER = (
      '★ 그 덩어리의 두께 방향 폭 / 벽 간격 (v1.1 ③) — 폭 = 덩어리 SE 의 max(z + r) − min(z − r) (입자 표면 기준) · 벽 간격 = 플래튼 plate_z − '
      '바닥 z 0 · 수확 기록값으로 정확히 환산 (= 수확 원값 × 전 입자 z 범위 / 벽 간격 · 재실행 없음) · 표면이 벽 · 플래튼과 겹쳐 1 을 넘을 수 '
      '있다 (관통 침대 LHS 1.01–1.05 · lhsx 1.02–1.06) · 비관통 침대 0.11–0.96 · ⚠ SE 수로 **가장 큰** 덩어리의 폭 — 가장 멀리 뻗은 덩어리가 '
-     '아닐 수 있다 · 관문 C3 (플래튼 = 수확 plate_z_sim · 바닥 = z_floor_sim)'),
+     '아닐 수 있다 · 관문 C3 (플래튼 = 수확 plate_z_sim (정본 인계표 열) · 바닥 = z_floor_sim)'),
     ('se_largest_comp_env_span_frac',
      '참고 (내부) — 수확기 원값 largest_comp_z_span_frac: 같은 폭 / **전 입자 (AM 포함) z 범위** max(z + r) − min(z − r) · ⚠ 분모가 바닥 '
      '아래로 샌 입자 · 벽과 겹친 입자에 끌려 벽 간격보다 3–20 % 크다 (LHS 중앙 7 %) → 침대마다 다르게 작아진다 · 인계는 '
@@ -1067,6 +1078,27 @@ DEFAULT_CENSUS_TSV = 'docs/data/case_master_column_census_20260919.tsv'
 #:   ⇒ 0.05 %p 는 "같은 프레임인가" 의 판별선이지 물리 허용오차가 아니다.
 WA_SAME_FRAME_TOL_PCT = 0.05
 WA_OK_STATUS = ('done', 'partial')      # partial = 선택 단계만 실패 (예: Stage E) — 필수 단계는 성공
+#: ★ DESC-06 (Codex 배포 v1.1 최종 리뷰 raw_sha_mismatch · 1저자 비준 10-06) — 최종 join 도 원자료 sha 넷을 다시 맞댄다.  배치 (`lhs_webapp_batch.stage_case`)
+#:   는 시작 때 수확 raw sha 와 대조하고 status 의 rec['sha'] 에 남기지만, 옛 생성기는 그 기록을 안 읽어 status 의 atom sha 를 바꿔도 통과했다.
+#:   키 = `lhs_webapp_batch.RAW_KEYS` 와 같아야 한다 (selftest ㉜i — 사본은 시험이 지킨다).
+WA_RAW_KEYS = ('atom', 'contact', 'mesh', 'deck')
+
+
+def _wa_raw_sha_problem(rec, h):
+    """배치 status 케이스 기록 rec['sha'] ↔ 수확 raw.<k>.sha256 (WA_RAW_KEYS 전부) → '' 또는 사유."""
+    sha, raw = rec.get('sha'), (h.get('raw') or {})
+    if not isinstance(sha, dict) or not sha:
+        return '배치 status 에 원자료 sha 기록이 없다 — 같은 원자료로 돈 배치인지 모른다'
+    bad = []
+    for k in WA_RAW_KEYS:
+        want, got = (raw.get(k) or {}).get('sha256'), sha.get(k)
+        if not want:
+            bad.append(f'수확 raw.{k}.sha256 없음')
+        elif not got:
+            bad.append(f'배치 sha.{k} 없음')
+        elif got != want:
+            bad.append(f'{k}: 배치 {str(got)[:12]}… ≠ 수확 {str(want)[:12]}…')
+    return ' · '.join(bad)
 WA_ROW_COLS = (
     ('wa_status',        '웹앱 배치 상태 — done · partial (선택 단계 실패) · failed · REFUSED (같은 프레임 · type_map 관문 거부) — '
                          'done · partial 이 아니면 웹앱 열은 빈칸'),
@@ -1086,6 +1118,13 @@ WA_QC = (
 #: 넘길 때 **이름을 고쳐 설명**해야 하는 열 (L1-04) — 코퍼스 이름은 frozen 이라 열 이름은 안 바꾼다.
 CAVEAT_NAME = ('A_dem_geometric — LIGGGHTS 기하 교차 원판 π(rδ − δ²/4) 이지 Hertz 탄성 πR*δ 가 아니다 '
                '(같은 반경 비 = 2 − δ/2r ≈ 1.99배) · L1-04')
+#: ★ J20-m 인계 한정어 ②–⑥ (1저자 비준 10-01 · "다음 인계표 재생성 때 열 사전 · 인계 README 에 붙일 것" — 판정 문서 그대로 옮김 · ① 은 CAVEAT_NAME)
+CAVEAT_COVERAGE_J20M = ('인계 한정어 (J20-m ②–⑥): ② SE-rich 과압축 영역 (구 부피 합 ε_sphere < 0: lhsx 60/64 · LHS 18/130) 의 절대값 '
+                        '③ AM 90–95 wt% 침대의 SE 바닥 몰림 (추정 — 바닥 접촉 AM 피복 / 내부 1.4–6.3 배 · SE 바닥 · 플래튼 접촉 수 비와 ρ +0.81 · '
+                        '원자 z 분포는 직접 안 봄) ④ porosity 와 공선 (LHS ρ −0.985) · AM wt% 와 ρ −0.94 ⑤ AM_P 소표본 (n_P ≤ 10: LHS 12 · '
+                        'lhsx 9 침대 — n_AM_P_measured · cov_AM_P_n_valid (정본 인계표 열)) ⑥ 옛 코퍼스와 섞을 때 치밀도 보정 필요 (같은 SE/고체 '
+                        '0.3–0.5 에서 LHS 가 25–47 % 높음 — 더 치밀 · 생산 조성 근처 21.0 % 는 옛 18–22 % 와 같다)')
+CAVEAT_COVERAGE = CAVEAT_NAME + ' · ' + CAVEAT_COVERAGE_J20M
 CAVEAT_FRAC_DELTA = 'δ-based 파괴 분류 — force-based 열 (_force_) 과 같은 표에 나란히 인용 금지 (분류 규칙이 다르다) · force-based 권장'
 CAVEAT_FRAC_FORCE = 'force-based 파괴 분류 (Auerbach — 권장) · δ-based 열과 같은 표에 나란히 인용 금지'
 HANDOVER_VALUE_MEANING = {
@@ -1094,7 +1133,9 @@ HANDOVER_VALUE_MEANING = {
     'phi_am': 'AM 부피분율 — 같은 규약 · ⚠ 내부 기록 · 인계용은 phi_am_mass_conserving (J20-e)',
     'coverage_AM_P_hertz_pct': 'AM_P 표면 피복률 (%) — 접촉 면적 c_cpl[22] 합 / 표면적, 입자 평균 · 이름의 hertz 는 물려받은 오해 (A_dem_geometric · L1-04)',
     'coverage_AM_S_hertz_pct': 'AM_S 표면 피복률 (%) — 같은 채널',
-    'coverage_AM_total_hertz_pct': 'AM 전체 피복률 (%) — 위 둘에서 유도 (독립 타깃 아님)',
+    'coverage_AM_total_hertz_pct': ('AM 전체 피복률 (%) = (N_P·C_P + N_S·C_S)/(N_P + N_S) — N = 피복 유효 입자 수 cov_AM_P_n_valid (정본 인계표 열) · '
+                                    'cov_AM_S_n_valid (정본 인계표 열) · mono = 단일 AM 값 · 상별 값의 유도량 (독립 타깃 아님 · 생성기 관문 DESC-07 ② 1e-9) · 설계 → 구조 예측에서 '
+                                    '실측 N 을 X 로 몰래 쓰면 누설 (DESC-07)'),
     'porosity_sphere_pct_RECORD_ONLY': 'ε_sphere 공극률 (%) — 1 − phi_se − phi_am (기록 전용 · 물리 공극률은 porosity_union_exact_pct)',
 }
 
@@ -1111,9 +1152,13 @@ CAVEAT_DERIVED_SW = ('파생 — 상별 반경이 한 값이면 (N_P r_P² CN_P 
                      'AM_P 가 지배 → 벽 효과가 크다')
 CAVEAT_PERC = ('경계 = 바닥 벽 z 0 · 플래튼 plate_z 기준 2·r 밴드 (L0) — LHS 130/130 폴백 0 (J20-b 감사) · 폴백 (L1 · L2) 이 나면 같은 이름이 다른 '
                '정의가 되는데 기록이 없다 (LHS-17 · 생산 코드에서 열림) · 두께 < 4r 이면 두 밴드 겹침 인공물 (LHS-18 · LHS 기하상 0) · '
-               '수확기 벽 밴드 관통 (tau_wall_n_span_components > 0) 과 같은 집합 (관문 P1)')
+               '수확기 벽 밴드 관통 (tau_wall_n_span_components (정본 인계표 열) > 0) 과 같은 집합 (관문 P1)')
 CAVEAT_COUNT = ('총량 (개수) — 두께 · 입자 수에 비례한다 · 특징으로 쓰려면 입자당 · 부피당으로 나눌 것 · 면적이 아니다 '
                 '(A_dem_geometric 주의는 해당 없음)')
+#: ★ LREL-05 (Codex 배포 v1.1 최종 리뷰 반례 band_not_wall · 판정문 권고 문안 — README v1.1 개정판 §4 와 같은 말) — 이온 활성 · 경로 기준 고립 · 분해 열은
+#:   **그래프 구조 지표**다.  위 평면 접촉 SE 0 개인데 위 띠 SE 와 닿은 AM 이 active 100 % 로 나오는 반례가 있다 — "이온이 닿는다 / 못 닿는다" 로 쓰지 않는다.
+IONIC_GRAPH_NOTE = ('그래프 지표 (LREL-05): 등록된 상단 2r 경계 띠 (분리막 쪽) 와 SE 접촉 그래프로 연결됐는지만 본다 — 실제 분리막 접촉 · 계면 저항 · '
+                    '이온 전류는 계산하지 않는다 (위 띠에 앉았지만 위 평면에 닿지 않은 SE 도 도달로 센다)')
 #: ⑤⑥⑦ 한정어 (J20-s · 열 사전 문구 — 정본 = 판정 J20-s 표)
 CAVEAT_F1 = ('h = 10 nm (H_SPREAD_REAL_M · 확대 배율 반영) 는 **출처 없는 모델 상수** ("2 × h_film_min") — 감도 기술자로만 · SE–SE 만 · '
              '반올림 쌍 (덤프 %g · 접촉 감사 v2 의 114 쌍 / 130 침대) 이 탄성 CN 과 겹쳐 셀 수 있음 (무시 가능 수준) · ' + CAVEAT_WALL)
@@ -1133,7 +1178,7 @@ WA_DEFINE = {
     'am_am_n_contacts': ('AM–AM 접촉 개수', CAVEAT_COUNT),
     #  7c (J20-k · 1저자 비준 10-01) — 고립 비율 · 전체 AM–SE 분포 (7a 새 키)
     'am_vulnerable_pct': ('AM 고립 **위험** 비율 (%) (취약 AM) — SE 접촉이 0–1 개인 AM 의 비율, AM 전 입자 (AM_P + AM_S) · 접촉 개수 기준 '
-                          '(coverage 문턱이 아니다 — 09-19 census 의 COND_cov 는 오분류 · LHS-23) · ⚠ 경로 기준 고립 (이온이 못 가는 AM) 이 아니다 — '
+                          '(coverage 문턱이 아니다 — 09-19 census 의 COND_cov 는 오분류 · LHS-23) · ⚠ 경로 기준 고립 (그래프 지표 · LREL-05) 이 아니다 — '
                           '그것은 100 − ionic_active_pct (1저자 10-01 질문)', CAVEAT_WALL),
     'am_se_cn_std': ('z_AM-SE 의 입자간 표준편차 (모집단) — AM 전 입자 (접촉 0 · 벽 입자 포함) · mono = 단일 상 값 (J20-k 7a)', CAVEAT_WALL),
     'am_se_cn_median': ('z_AM-SE 의 중앙값 — AM 전 입자 (짝수 개면 가운데 둘의 평균 · np.median) · mono = 단일 상 값 (J20-k 7a)', CAVEAT_WALL),
@@ -1147,12 +1192,12 @@ WA_DEFINE = {
     'n_large_components': ('크기 ≥ 10 인 SE 성분 수 — 문턱 10 은 출처 없는 코드 상수 (LHS-19)', CAVEAT_COUNT),
     'ionic_active_pct': ('이온 활성 AM 비율 (%) — 위 밴드 (분리막 쪽) 에 닿는 SE 성분 (top-reachable) 의 SE 와 접촉한 AM / 전 AM (calc_ionic_active_am) · '
                          '**100 − 이 값 = 경로 기준 고립 AM** (SE 무접촉 + 닿은 SE 가 위로 안 이어짐) · 접촉 유무만 '
-                         '본다 (coverage 무관 — LHS-20) · 외톨이 SE 가 위 밴드에 있으면 그것도 센다 (LHS-19)', CAVEAT_PERC),
+                         '본다 (coverage 무관 — LHS-20) · 외톨이 SE 가 위 밴드에 있으면 그것도 센다 (LHS-19) · ' + IONIC_GRAPH_NOTE, CAVEAT_PERC),
     #  v1.1 ② (1저자 비준 10-01) — 경로 기준 고립 (= 100 − ionic_active_pct) 의 분해
     'ionic_dead_pct': ('경로 기준 고립 중 **단절** 비율 (%) (v1.1 ②) — SE 와 닿았지만 닿은 SE 가 전부 위 밴드 (분리막 쪽) 로 안 이어지는 AM / 전 AM '
-                       '(calc_ionic_active_am 의 dead) · SE 망이 끊긴 문제 (접촉을 늘려도 안 풀린다)', CAVEAT_PERC),
+                       '(calc_ionic_active_am 의 dead) · SE 망이 끊긴 문제 (접촉을 늘려도 안 풀린다) · ' + IONIC_GRAPH_NOTE, CAVEAT_PERC),
     'ionic_no_se_pct': ('경로 기준 고립 중 **무접촉** 비율 (%) (v1.1 ②) — SE 접촉 0 인 AM / 전 AM (calc_ionic_active_am 의 no_se) · 고립 위험 '
-                        '(SE 접촉 0–1 개) 의 부분집합 (관문 D5) · 계면 형성 문제', CAVEAT_WALL),
+                        '(SE 접촉 0–1 개) 의 부분집합 (관문 D5) · 계면 형성 문제 · ' + IONIC_GRAPH_NOTE, CAVEAT_WALL),
     'se_se_cn_perc': ('관통 SE 성분에 속한 SE 만의 평균 SE–SE CN — 관통 성분이 없으면 빈칸 (N/A · 키 자체가 없다 · LHS-19)', CAVEAT_WALL),
     'se_se_cn_n_perc': ('관통 SE 성분에 속한 SE 개수 — = percolation_pct × N_SE / 100 (생성기 관문 P3) · 관통 없으면 빈칸 (N/A)', CAVEAT_COUNT),
     'A_binding_AM_SE_n_contacts': ('Physics 모듈 (coverage_physics_vs_hertzian) 이 센 AM–SE 접촉 개수 — area_AM전체_SE_n 과 같은 '
@@ -1202,7 +1247,8 @@ def wa_define(col):
     if m:
         ph, s_ = m.groups()
         ko = {'active': '이온 활성 (위 밴드에 닿는 SE 와 접촉)', 'dead': '단절 (SE 와 닿았지만 위 밴드로 안 이어짐)', 'no_se': '무접촉 (SE 접촉 0)'}[s_]
-        return (f'{ph} 의 {ko} 비율 (%) (v1.1 ②) — {ph} 전 입자 기준 · 활성 + 단절 + 무접촉 = 100 (관문 D2) · 상이 없으면 빈칸 (N/A)',
+        return (f'{ph} 의 {ko} 비율 (%) (v1.1 ②) — {ph} 전 입자 기준 · 활성 + 단절 + 무접촉 = 100 (관문 D2) · 상이 없으면 빈칸 (N/A) · '
+                + IONIC_GRAPH_NOTE,
                 CAVEAT_PERC if s_ != 'no_se' else CAVEAT_WALL)
     m = re.fullmatch(r'area_(.+)_n', col)
     if m:
@@ -1252,11 +1298,11 @@ WA_IONIC_PHASE_RE = re.compile(r'(AM_P|AM_S)_ionic_(active|dead|no_se)_pct')
 #: v1.1 ① (1저자 비준 10-01) — 생성기가 **유도**하는 웹앱 열 (재실행 없음).  웹앱 v1.1 도 같은 이름 · 같은 식으로 낸다 — 있으면 같아야 (D1).
 WA_DERIVED = (
     ('am_ionic_isolated_pct',
-     '★ 경로 기준 고립 AM 비율 (%) (v1.1 ① · 1저자 비준 10-01) = 100 − ionic_active_pct — 이온이 분리막 쪽 (위 밴드) 에서 닿을 수 없는 AM: '
+     '★ 경로 기준 고립 AM 비율 (%) (v1.1 ① · 1저자 비준 10-01) = 100 − ionic_active_pct — 등록된 상단 2r 경계 띠 (분리막 쪽) 와 SE 접촉 그래프로 연결되지 않은 AM: '
      'SE 무접촉 + 닿은 SE 가 top-reachable 이 아님 (calc_ionic_active_am · 접촉 그래프 · coverage 무관) · ⚠ 고립 위험 (am_vulnerable_pct · '
      'SE 접촉 0–1 개 · 접촉 개수) 과 다른 양 — 접촉이 둘 이상이어도 그 SE 가 끊긴 덩어리면 고립, 하나뿐이어도 이어져 있으면 활성 (예: lhs00_083 '
      '고립 위험 0.1 % · 경로 고립 89 %) · 분해 = ionic_dead_pct + ionic_no_se_pct (v1.1 ② 배치부터) · 생성기가 ionic_active_pct 에서 유도 · '
-     '관문 v1.1 D1–D5'),
+     '관문 v1.1 D0–D5 · ' + IONIC_GRAPH_NOTE),
 )
 #: 비율 합 = 100 의 부동소수 여유 (%p) — 물리 허용치가 아니다 (개수 / N × 100 의 반올림만)
 WA_PCT_SUM_TOL = 1e-7
@@ -1482,7 +1528,7 @@ WA_PHASE_TOKEN = re.compile(r'(?<![A-Za-z0-9])AM_[PS](?![A-Za-z0-9])')     # 이
 MONO_BLOCKS = {'mono_AM_P': 'AM_P', 'mono_AM_S': 'AM_S'}
 MONO_DESIGN_NOTE = ('mono (2-type) 침대: 설계 상 칸 = 단일 AM 값 (전체 열과 중복 · J20-k (B)) — 설계 block 의 상 (mono_AM_P → AM_P · '
                     'mono_AM_S → AM_S) 칸에 싣고 설계에 없는 상의 칸은 빈칸 (N/A · 0 아님) · 웹앱 반지름 이름이 설계와 다르면 설계 이름 칸으로 '
-                    '옮겼다 (웹앱 이름 = wa_mono_phase_name_webapp 열)')
+                    '옮겼다 (웹앱 이름 = wa_mono_phase_name_webapp (정본 인계표 열))')
 MONO_PHASE_NOTE = MONO_DESIGN_NOTE          # (A) 시절 이름 — 호환
 
 
@@ -1649,7 +1695,7 @@ CAVEAT_TAU_NET = ('세대 (행마다 ion_net_constriction · ion_net_psi · ion_
                   '순수 SE 게이트 · 결정 4) · CF (CONTACT_FREE · 협착 0) 가지의 T_CF ≈ 4/z (원기둥 bulk · z = SE–SE 배위수 · 구 조각이면 6/z) = 모형 과전도 — '
                   '상한이 아니다 (q > 1.5 면 값 유지 + 상태 model_over_conduction · 진단 열만) · z 한 축 (Tjaden 식 21 τ_C 와 '
                   '직접 비교 금지) · 형상 · CBD 차단 없음 · σ₀ 펠릿값 위 Holm 접촉 저항 = 부분 이중계상 (방향 tau2↑) · 띠 끝 단락 → tau2 하향 ≤ 4r_SE/L '
-                  '(ion_net_band_frac_<모드>) · φ = 전 SE (비관통 · 고립 포함 — dead 부피가 tau2 를 키운다) → 1차 수송량은 f · τ_e (Nguyen Eq 2 · '
+                  '(상한 · ion_net_band_frac_<모드> (정본 인계표 열) · 보정한 tau2 는 내지 않는다 — TAU-24) · φ = 전 SE (비관통 · 고립 포함 — dead 부피가 tau2 를 키운다) → 1차 수송량은 f · τ_e (Nguyen Eq 2 · '
                   'electrode) 아님 · 출처 관문 (인계 때 케이스마다 다시 돈다 · 출처 부록 <인계표>_tau_provenance.tsv 의 same_generation_checks — P0 기록 · '
                   'P1 run id · P2 입력 digest · P3 배치 metrics_flat 대조 · P4 망 정지 계약 재검사 (전 사본 · 투영 · σ₀ 짝) · 활성 세대 · 읽기 안정) = '
                   '배치 기록과 지금 파일끼리의 대조 — ⚠ 게시 시점 해시가 없어 모든 사본을 함께 일관되게 바꾼 편집은 못 잡는다 '
@@ -1663,7 +1709,7 @@ _TAU_STATUS = ('이온 망 인계 상태 (tau_flux 게이트 G1–G6 · v2 §5-2
                '전극으로 읽지 말 것 (ionic_active_pct 는 유한) · 문턱 근처 관통 여부는 상자 크기의 실현값) · BAND_FALLBACK (G1 — 솔버 띠 규칙이 L0 아님 · '
                '값 빈칸) · NOT_COMPUTED (빈칸 + 사유 열).  부류 (RGLR-01): NOT_COMPUTED = **기술적 실패** (입력 결손 · 무효 · 솔버 관문 · 온도 짝 · '
                '관통 불일치 — 값 없음) ↔ BAND_FALLBACK · NOT_PERCOLATING · MODEL_BELOW_CONTINUUM_BOUND = 등록된 **과학적 HOLD** (입력 유효 · 규칙대로 '
-               '빈칸 또는 표지) · G6 = 두 모드 모두 물리 타깃 HOLD (값은 싣는다) · 이 칸이 빈칸 = 웹앱 배치 행이 done · partial 이 아니다 (wa_status · '
+               '빈칸 또는 표지) · G6 = 두 모드 모두 물리 타깃 HOLD (값은 싣는다) · 이 칸이 빈칸 = 웹앱 배치 행이 done · partial 이 아니다 (wa_status (정본 인계표 열) · '
                'tau_flux 를 부르지 않았다) · ★ 인계표에는 NOT_COMPUTED 가 실리지 않는다 (10-05 RGLR3-02) — done · partial 행의 폴더가 기술적 결손이면 그 배치의 '
                '망 정지 계약이 done 을 줄 수 없는 상태 (배치 뒤 폴더가 바뀌었다) 이므로 생성기가 인계 때 τ P4 (망 정지 계약 재검사) 에서 거부한다 — 기술적 결손을 '
                '"같은 세대 검증 통과" 행으로 싣지 않는다 (NOT_COMPUTED 는 tau_flux CLI · 웹앱 케이스 페이지의 어휘) · 실린 행 = 출처 부록의 같은 세대 검사 '
@@ -1679,8 +1725,8 @@ _TAU_PER_MODE = {
     'f_ion': ('★ 이온 유효 전도도 비 f = σ_eff/σ₀ ({m} 망 · 무차원 · 단위 1) = σ_ratio × L_gap/L_mc — σ_ratio = 솔버 FULL 해의 무차원 sigma_full '
               '(8 자리 · TAU-25) · L_gap = 판 간격 · L_mc = 질량 보존 두께 = **판 간격 해의 질량보존 두께 재척도 (해 아님)** · 문헌 ε/τ² (Tjaden) · '
               'COMSOL f_e (= 1/N_M) · σ₀ 수치에 무관 · COMSOL 에 넣을 때는 Porous Electrode 보정 User defined (fl) 칸 (같은 틀 L_mc · φ_mc — 10-04 D1 · '
-              '앱 예제 Homogenizing a Heterogeneous Electrode Model 식 (1) f_eff = ε/τ) · 판 간격 틀 f_ion_{m}_gap 과 섞지 않는다 · ⚠ 웹앱 COMSOL 2D '
-              '내보내기의 같은 이름 f_ion_{m} 은 판 간격 틀 (σ_full/σ₀ · L_cat · phiSE) = 이 표의 f_ion_{m}_gap 과 같은 양 (반올림 차 ≤ 0.11 % · '
+              '앱 예제 Homogenizing a Heterogeneous Electrode Model 식 (1) f_eff = ε/τ) · 판 간격 틀 f_ion_{m}_gap (정본 인계표 열) 과 섞지 않는다 · ⚠ 웹앱 COMSOL 2D '
+              '내보내기의 같은 이름 f_ion_{m} 은 판 간격 틀 (σ_full/σ₀ · L_cat · phiSE) = f_ion_{m}_gap (정본 인계표 열) 과 같은 양 (반올림 차 ≤ 0.11 % · '
               'TAU-25) · 값 = 상태 OK · MODEL_BELOW_CONTINUUM_BOUND · NOT_PERCOLATING 이면 0.0 (관통 성분 없음 — 물리적 0) · 그 밖 빈칸 (0 이 아니다)'),
     'f_ion_gap': ('(메타) 판 간격 기준으로 풀린 f = σ_ratio 그대로 ({m} 망 · 무차원) — **φ_mc 와 짝짓지 말 것** (tau2 를 L_gap/L_mc 배 낮춘다) · '
                   '짝은 φ_구합 (판 간격 상자 · 구 부피 합) · 값 규칙은 f_ion_{m} 와 같다'),
@@ -1710,8 +1756,12 @@ _TAU_PER_MODE = {
                      'sphere_segment (hertz_h12 민감도: 중심 ↔ 접촉 평면 구 조각 h_i²/(σ·V_i)) · 빈칸 = 레코드 없음'),
     'ion_net_band_rule': ('솔버 경계 띠 규칙 ({m} · 안 A 10-04) — L0 (입자 자기 반지름 2 배 · 양 끝 ≥ 3) · L1 · L2 (폴백 — G1 → BAND_FALLBACK) · 빈칸 = '
                           '기록 없는 옛 산출물 (NOT_COMPUTED missing_input)'),
-    'ion_net_band_frac': ('띠 폭 / 판 간격 ({m} · 무차원) — 띠 끝 단락에 의한 tau2 하향의 상한 (≤ 4r_SE/L · TAU-24) · L0 자체도 tau2 를 낮춘다 '
-                          '(중앙 6 % · 최대 17 %)'),
+    'ion_net_band_frac': ('띠 분율 ({m} · 무차원 · 기술 열) = (바닥 띠 폭 + 위 띠 폭) / 판 간격 L_gap (솔버 boundary_band_frac · '
+                          'network_conductivity.boundary_sets) — L0 = 2 × 2·r_max / L_gap = 4r_SE/L (가장 큰 SE 반지름 · 입자 띠 2r) · L1 = 0.30 '
+                          '(15/85 %) · L2 = 관측 z 범위 기준 · 띠 노드를 같은 전위로 묶어 tau2 를 이 비만큼까지 낮출 수 있다 (상한 · TAU-24 — '
+                          '게이트가 아니라 한정어) · 보정한 T 는 내지 않는다 (L_eff 보정판 = 런 전 등록 · 1저자 결정 대기) · 기준 길이 = 판 간격 '
+                          'L_gap (L_mc 아님) · v1.2 실측 (10-06 · 194 행 · 띠 규칙 L0 194/194 · 두 모드 같은 값) LHS 0.050–0.135 (중앙 0.082) · '
+                          'LHSx 0.060–0.157 (중앙 0.096) — 옛 사전의 측정 전 상한 추정값은 철회 (이 실측으로 교체)'),
     'ion_net_basis_check': ('(메타 · 게이트 아님 · {m}) 망 φ (phi_se · 4 자리 · 판 간격 상자 · 구 부피 합) ↔ 장부 φ_mc·L_mc/L_gap (= φ_구합) — ok · '
                             'mismatch:<차> (망과 장부가 다른 판 높이 · 상자 · SE 집합) · unchecked (값 없음) · 게이트로 쓰려면 새 규칙으로 등록 (1저자)'),
 }
@@ -1738,11 +1788,20 @@ def tau_net_define(col):
     base = 'f_ion_gap' if m_.group(3) else m_.group(1)
     mode = m_.group(2)
     text = _TAU_PER_MODE[base].format(m=mode, area=_TAU_AREA[mode])
+    if mode in TAU_NET_HERTZ_AREA_MODES and base != 'ion_net_area_mode':   # ★ 10-06 — hertz 면적의 정체를 값 열마다 (면적 모드 열에는 이미 전문)
+        text += ' · ' + TAU_HERTZ_AREA_NOTE
     if mode == TAU_NET_H12:                          # ★ 10-06 — 민감도 열은 뜻 앞에 표지 (기본 학습 열 아님)
         text = '[H12 민감도 · 부록 전용] ' + text
         if base in ('ion_net_status', 'ion_net_status_reason'):
             text += TAU_H12_GEN1_NOTE
     return text, (CAVEAT_TAU_NET_T2 if base == 'tau2_ion' else CAVEAT_TAU_NET)
+
+
+#: ★ 10-06 (1저자 비준 "A·B 코드" · L1-04) — hertz 모드 (hertz · hertz_h12) 의 면적 = LIGGGHTS c_cpl[22] 기하 교차 원판 (탄성 Hertz 아님) — 값 열마다 적는다
+#:   (옛 사전은 ion_net_area_mode_<모드> 한 열에만 적어 그 열이 없는 배포 표에서는 "Hertz 접촉망" 이 탄성 Hertz 면적으로 읽혔다).
+TAU_NET_HERTZ_AREA_MODES = ('hertz', 'hertz_h12')
+TAU_HERTZ_AREA_NOTE = ('hertz 면적 = LIGGGHTS c_cpl[22] 기하 교차 원판 π(rδ − δ²/4) — 탄성 Hertz πR*δ 의 ≈ 2 배 (같은 반지름 2 − δ/2r) · '
+                       '"Hertz" 는 이름만 (L1-04 · A_dem_geometric)')
 
 
 #: H12 상태 · 사유 칸의 세대 1 예외 — 표기 없는 옛 폴더 (2026-10-06 저녁 전 생산자) 에는 H12 레코드가 없다 (망 정지 계약 ⑨ 는 세대 2 Hertz 레코드에만
@@ -1964,6 +2023,70 @@ def write_tau_provenance(path, tau):
                         ';'.join(r['same_generation_checks']), r.get('same_generation_basis') or TAU_SAME_GEN_BASIS])
 
 
+#  ═══ 완료 압력 (DESC-06 잔여 · 1저자 비준 10-06 "A·B 코드") ═══════════════════════════════════════════════════════════════════════════════
+#  원천 = `scripts/lhs_pressure_record.py` (LIGGGHTS 로그의 압밀 루프 판정 줄 — 마지막 줄 current ≥ target 일 때만 루프가 빠져나온다).  생성기는 기록을
+#  **관문**으로 읽는다: 설계 케이스마다 기록 · 스키마 · 상태 OK · reached True · 목표 = 설계 상수 PRESSURE_MPA · 마지막 판정 줄 ≥ 목표 · 덱 sha = 수확 raw.deck ·
+#  로그 sha — 하나라도 어긋나면 그 인계표를 만들지 않는다.  ⚠ 마지막 프레임 응력은 증거가 아니다 (판 고정 뒤 이완 — 목표보다 낮은 것이 정상).
+PRESS_SCHEMA = 'lhs_pressure_record/v1'
+PRESS_TOL_MPA = 1e-6
+HANDOVER_PRESS = (
+    ('press_target_mpa', 'target_mpa',
+     '압밀 목표압 (MPa) = 덱 target_press × 1000 (press_units) — 생성기 관문: 설계 상수 pressure_MPa (300) 와 같아야 (DESC-06)'),
+    ('press_last_loop_mpa', 'last_press_mpa',
+     '압밀 루프의 마지막 판정 줄 (LIGGGHTS 로그 "Current Pressure: … (Target: …)") 의 판 압력 (MPa) — 덱의 루프는 이 값 ≥ 목표일 때만 빠져나온다 · '
+     '⚠ 최종 프레임의 응력이 아니다 (목표에 닿으면 판을 고정하고 이완 — 마지막 프레임 응력은 목표보다 낮은 것이 정상) · 생성기 관문 ≥ 목표 (DESC-06)'),
+    ('press_reached', 'reached', 'True = 압밀 루프가 목표에 닿아 빠져나왔다 (생성기는 True 만 싣는다 — 아니면 인계표를 만들지 않는다 · DESC-06)'),
+    ('press_log_sha256', 'log_sha256', '판정 줄을 읽은 LIGGGHTS 로그의 sha256 (출처 추적 · scripts/lhs_pressure_record.py)'),
+)
+
+
+def load_pressure_record(path):
+    """압력 기록 TSV (`scripts/lhs_pressure_record.py` 산출) → dict(case → 행).  스키마 · 같은 case 두 행이면 거부 (DESC-06)."""
+    p = pathlib.Path(path)
+    if not p.is_file():
+        raise FillRefusal(f'압력 기록 {p} 이 없다 (DESC-06)')
+    out = {}
+    with p.open(encoding='utf-8', newline='') as fh:
+        for r in csv.DictReader(fh, delimiter='\t'):
+            c = r.get('case')
+            if not c:
+                raise FillRefusal(f'압력 기록 {p.name}: case 가 빈 행이 있다 (DESC-06)')
+            if c in out:
+                raise FillRefusal(f'압력 기록 {p.name}: 같은 case 가 둘 이상 — {c} (DESC-06)')
+            if r.get('schema') != PRESS_SCHEMA:
+                raise FillRefusal(f'압력 기록 {p.name}: {c} 의 schema {r.get("schema")!r} ≠ {PRESS_SCHEMA} (DESC-06)')
+            out[c] = r
+    if not out:
+        raise FillRefusal(f'압력 기록 {p} 에 행이 없다 (DESC-06)')
+    return out
+
+
+def _press_problem(case, rec, h):
+    """한 침대의 압력 기록 ↔ 수확 → '' (통과) 또는 사유."""
+    if not isinstance(rec, dict):
+        return '압력 기록에 이 케이스가 없다'
+    if rec.get('status') != 'OK':
+        return f'상태 {rec.get("status")!r} ({rec.get("why")}) — 목표압 도달이 기록되지 않았다'
+    if rec.get('reached') != 'True':
+        return f'상태 OK 인데 reached {rec.get("reached")!r} — 기록이 모순이다'
+    try:
+        tgt, last = float(rec.get('target_mpa')), float(rec.get('last_press_mpa'))
+    except (TypeError, ValueError):
+        return f'목표 {rec.get("target_mpa")!r} · 마지막 판정 줄 {rec.get("last_press_mpa")!r} 가 숫자가 아니다'
+    if not (math.isfinite(tgt) and math.isfinite(last)):
+        return f'목표 {tgt!r} · 마지막 {last!r} 가 유한하지 않다'
+    if abs(tgt - PRESSURE_MPA) > PRESS_TOL_MPA:
+        return f'목표 {tgt!r} MPa ≠ 설계 상수 {PRESSURE_MPA} MPa — 다른 덱 · 다른 코호트의 기록'
+    if last < tgt - PRESS_TOL_MPA:
+        return f'마지막 판정 줄 {last!r} MPa < 목표 {tgt!r} MPa 인데 reached True — 기록이 모순이다'
+    want = ((h.get('raw') or {}).get('deck') or {}).get('sha256')
+    if not want or rec.get('deck_sha256') != want:
+        return f'덱 sha {str(rec.get("deck_sha256"))[:12]}… ≠ 수확 raw.deck {str(want)[:12]}… — 이 수확의 덱이 아니다'
+    if not re.fullmatch(r'[0-9a-f]{64}', str(rec.get('log_sha256') or '')):
+        return f'로그 sha256 {rec.get("log_sha256")!r} 가 없다 — 출처를 댈 수 없다'
+    return ''
+
+
 def _frac_caveat(col):
     c = col.lower()
     if not any(k in c for k in ('frac_', 'fracture_index', 'fragmentation', 'pulverization', 'microcrack', 'multicrack', 'intact')):
@@ -1971,25 +2094,96 @@ def _frac_caveat(col):
     return CAVEAT_FRAC_FORCE if 'force' in c else CAVEAT_FRAC_DELTA
 
 
-def column_dictionary(cols, webapp=None):
-    """인계표 열 사전 — 열마다 출처 · 판정 · 뜻 · 주의.  빈 뜻은 없다 (selftest ⑲m)."""
+#: ★ LREL-06 (Codex 배포 v1.1 최종 리뷰 10-01 §3 · 1저자 비준 10-06) — 설계 열의 정의 (분모 · 단위 · 추정 ↔ 측정).  옛 사전은 설계 열 전부에 한 줄
+#:   ("LHS 설계 열 (… build() 가 만든 설계인자 · 추정치)") 만 적어 am_pct 의 질량 % 분모 · ps_frac 의 AM 안 몫 · 확장 설계의 원천을 못 읽었고, 확장 (64) 사전도
+#:   130 설계 파일을 가리켰다.  정의 원천 = `build()` (130) · `scripts/lhsx_design_adapter.py` (64 — 같은 이름으로 접는다) — README v1.1 개정판 §2 · §4 와 같은 말.
+DESIGN_DEFINE = {
+    'case_id': '설계 ID (키 · 한 행 = 침대 하나) — 특징으로 쓰지 않는다',
+    'block': '설계 블록 — bimodal (AM_P + AM_S) · mono_AM_P · mono_AM_S (AM 한 상 · 없는 상의 지름 칸은 빈칸 · 상별 측정 칸의 mono 규약 = J20-k (B))',
+    'd_am_p_um': '대립 AM (AM_P) 지름 (µm · 설계 입력 — 덱은 반지름 r_AM_P_um = d/2) · 그 상이 없는 mono 행은 빈칸',
+    'd_am_s_um': '소립 AM (AM_S) 지름 (µm · 설계 입력) · 그 상이 없는 mono 행은 빈칸',
+    'd_se_um': 'SE 지름 (µm · 설계 입력 · 단분산)',
+    'ps_frac': ('**AM 중 AM_P 질량 몫** (0–1) = w_AM_P / (w_AM_P + w_AM_S) — AM_P · AM_S 밀도가 같아 AM 안 부피 몫과 같다 · **개수 몫 아님** · '
+                'mono_AM_P = 1 · mono_AM_S = 0'),
+    'ps_label': 'P:S 표기 (ps_frac 의 10 분율 정수 눈금) — ps_frac 의 재표현 (독립 정보 아님)',
+    'am_pct': ('**고체 중 AM 질량 %** = 100 · (w_AM_P + w_AM_S) / (w_AM_P + w_AM_S + w_SE) — SE 질량 % = 100 − am_pct · **부피 % 아님** '
+               '(부피 몫 = phi_se_mass_conserving · phi_am_mass_conserving · se_of_solid_vol)'),
+    'rve_um': '측면 상자 한 변 (µm · x = y · x·y 주기 경계) — 코호트 상수 50',
+    'loading_mAh_cm2': '면용량 (mAh/cm² · 130 설계 상수 2.0 — 두께 추정의 입력) · 확장 (lhsx) 설계에는 없다 (volfrac 기반)',
+    'pressure_MPa': ('압밀 목표압 (MPa · 설계 상수 300 = 덱 target_press) · ⚠ **도달 여부는 이 열이 말하지 않는다** (DESC-06 — 압밀 루프 기록 열 '
+                     'press_* 가 있는 표에서만 생성기가 확인한다)'),
+    'e_se_gpa': 'DEM SE 유효 탄성계수 (GPa · 설계 상수 1.35 — 18 배 연화 규약 · 물성 아님)',
+    'thickness_est_um': '두께 **추정** (µm · 면용량 · 조성 · EPS_TYPICAL 에서 계산 — 측정 아님 · LHS-09) · 측정 = thickness_wall_gap_um · thickness_mass_conserving_um',
+    'phi_am_est': 'AM 부피분율 **추정** (EPS_TYPICAL 가정 — 측정 아님) · 측정 = phi_am_mass_conserving',
+    'phi_se_est': 'SE 부피분율 **추정** (같은 가정 — 측정 아님) · 측정 = phi_se_mass_conserving',
+    'se_percolation': ('SE 퍼콜 **평균장 추정** (옛 이름 = se_percolation_est_meanfield · phi_se_est 와 φc 0.195 비교) — 측정 아님 · 선별기이지 필터가 '
+                       '아니다 (정밀도 54.5 % · LHS-01) · 측정 = percolation_pct'),
+    'se_percolation_est_meanfield': ('SE 퍼콜 **평균장 추정** (phi_se_est 와 φc 0.195 비교) — 측정 아님 · 선별기이지 필터가 아니다 (정밀도 54.5 % · LHS-01) · '
+                                     '측정 = percolation_pct'),
+    'd_am_max_um': '가장 큰 AM 지름 (µm · max(d_am_p_um, d_am_s_um))',
+    'sv_inv_um': 'Sauter 류 설계 추정 (µm · 추정 φ 기반) — 측정 아님',
+    'r_AM_P_um': 'AM_P 반지름 (µm · = d_am_p_um / 2 · 덱 입력)',
+    'r_AM_S_um': 'AM_S 반지름 (µm · = d_am_s_um / 2 · 덱 입력)',
+    'r_SE_um': 'SE 반지름 (µm · = d_se_um / 2 · 덱 입력)',
+    'size_ratio_P_over_S': 'd_am_p_um / d_am_s_um (설계 크기비 · mono 빈칸) — 지름 열의 재표현',
+    'size_ratio_AM_over_SE': 'd_am_max_um (정본 인계표 열) / d_se_um (설계 크기비) — 지름 열의 재표현',
+    'n_am_p_est': ('AM_P 입자 수 **설계 추정** — 측정 아님 · 측정 = n_AM_P_measured (설계 → 구조 예측에서 측정 N 을 X 로 쓰면 누설 · DESC-07)'),
+    'n_am_s_est': 'AM_S 입자 수 **설계 추정** — 측정 아님 · 측정 = n_AM_S_measured',
+    'n_se_est': 'SE 입자 수 **설계 추정** — 측정 아님 · 측정 = n_SE_measured',
+    'n_total_est': '전체 입자 수 **설계 추정** (입자 수 상한 100,000 관문의 근거) — 측정 아님',
+    'rve_min_um': 'AM_P 30 알을 담는 최소 측면 상자 (µm · 설계 추정)',
+    'rve_recommended_um': '권장 측면 상자 (µm · 설계 추정 — 예산 결정은 사람이 한다)',
+    'rve_over_d_am_max': 'rve_um / d_am_max_um (정본 인계표 열) (측면 유한크기 지표 · 설계값)',
+    'thick_over_d_am_max': '추정 두께 / d_am_max_um (정본 인계표 열) (두께 방향 유한크기 · **추정**)',
+    'finite_size_flag': '유한크기 라벨 (거부 아님) — lateral · thin · n_am_p_low · n_am_p_CRIT (기하 · 설계 추정)',
+    'se_perc_est_flag': 'SE 퍼콜 **추정** 플래그 (기하 플래그와 분리 — LHS-01)',
+    #  ── 확장 (lhsx) 설계 원본 열 — scripts/lhsx_design_adapter.py 가 lhs_ext_design 의 열 이름에 lhsx_ 를 붙여 그대로 옮겼다
+    'lhsx_stratum': '확장 설계 층 번호 (lhs_ext_design 층화 — 층마다 LHS 8 점)',
+    'lhsx_ntype': '덱 입자 type 수 (3 = bimodal · 2 = mono)',
+    'lhsx_kind': '확장 설계 종류 (bimodal · mono_AM_P · mono_AM_S — block 과 같은 뜻)',
+    'lhsx_pdd_SE': 'SE 질량분율 (덱 particledistribution/discrete) — am_pct = 100 · (1 − 이 값)',
+    'lhsx_w_AM_P': 'AM_P 질량분율 (덱 · 셋의 합 = 1) — ps_frac = w_AM_P / (w_AM_P + w_AM_S)',
+    'lhsx_w_AM_S': 'AM_S 질량분율 (덱 · 셋의 합 = 1)',
+    'lhsx_rSE_lo_um': 'SE 반지름 하한 (µm · 입자 수 상한을 지키려고 올린 값 · lhs_ext_design)',
+    'lhsx_rSE_truncated': '1 = SE 반지름을 하한으로 눌렀다 (입자 수 상한 · lhs_ext_design) · 0 = 그대로',
+    'lhsx_volfrac': '삽입 부피분율 (덱 volfrac — 확장 설계는 면용량 대신 이 값으로 두께가 정해진다)',
+    'lhsx_phi_AM_solid': 'AM 의 고체 중 부피 몫 (설계 — 질량분율과 밀도에서 · lhs_ext_design.phi_am_of_pdd_se · 측정 아님)',
+    'lhsx_lhs_cell': 'LHS 칸 좌표 (층 안 4 축 [pdd_SE · volfrac · rP 분위 · rSE 분위] 의 칸 번호)',
+    'lhsx_seed': '덱 난수 seed',
+}
+
+
+def design_define(col, design_source=None):
+    """설계 열의 뜻 — DESIGN_DEFINE (없으면 일반 문구) + 이 표의 설계 원천.  확장 원본 열 (lhsx_*) 은 어댑터 경유를 적는다."""
+    src = design_source or '설계 CSV'
+    base = DESIGN_DEFINE.get(col) or f'설계 열 (`{col}` — 생성 코드: 130 = build() · 64 = scripts/lhsx_design_adapter.py)'
+    tail = (f'원천 = {src} (확장 설계 docs/data/lhs_ext_design_v2_20260829.csv 를 scripts/lhsx_design_adapter.py 가 옮긴 열)' if col.startswith('lhsx_')
+            else f'원천 = {src}')
+    return f'{base} · {tail}'
+
+
+def column_dictionary(cols, webapp=None, design_source=None):
+    """인계표 열 사전 — 열마다 출처 · 판정 · 뜻 · 주의.  빈 뜻은 없다 (selftest ⑲m).
+    design_source = 이 표의 설계 CSV (경로 문자열 · CLI 가 --design 으로 넘긴다 — 확장 64 의 사전이 130 설계 파일을 가리키지 않게 · LREL-06)."""
     extra = {n: w for n, _p, w in HANDOVER_EXTRA}
     union = {n: w for n, _c, w in HANDOVER_UNION}
     union.update({n: w for n, w in HANDOVER_UNION_DERIVED})
-    tauw = {n: w for n, _k, w in HANDOVER_TAU_WALL}
+    _tref = TAU_WALL_TRANSPORT_IN if any(c.startswith('tau2_ion_') for c in cols) else TAU_WALL_TRANSPORT_OUT
+    tauw = {n: (w + ' · ' + _tref if n == 'tortuosity_SE_wall' else w) for n, _k, w in HANDOVER_TAU_WALL}
     tauw.update({n: w for n, _p, _s, w in HANDOVER_WALL_TOUCH})
     tauw.update({n: w for n, w in HANDOVER_SE_CLUSTER})                          # v1.1 ③
     derived = dict(WA_DERIVED)                                                   # v1.1 ①
     warow = dict(WA_ROW_COLS)
     qc = {n: w for n, _a, _b, w in WA_QC}
     wverd, wwhy = wa_verdicts(webapp) if webapp is not None else ({}, {})      # 7c — 판정 바꿔 싣기 (LHS-23 · 7a) 를 표와 같게
+    _press_mean = {n: w for n, _k, w in HANDOVER_PRESS}
     out = []
     for c in cols:
         d = {'column': c, 'source': '', 'verdict': '', 'meaning': '', 'caveat': ''}
         if c in HANDOVER_VALUE_MEANING:
             d.update(source='harvest', meaning=HANDOVER_VALUE_MEANING[c])
             if c.startswith('coverage_'):
-                d['caveat'] = CAVEAT_NAME
+                d['caveat'] = CAVEAT_COVERAGE                                      # ① CAVEAT_NAME + J20-m ②–⑥
         elif c.endswith('_status') and c[:-7] in HANDOVER_VALUE_MEANING:
             d.update(source='harvest', meaning=f'{c[:-7]} 의 상태 — OK 가 아니면 값 칸은 빈칸 (0 이 아니다)')
         elif c in extra:
@@ -2004,6 +2198,8 @@ def column_dictionary(cols, webapp=None):
             d.update(source='webapp_batch', meaning=warow[c])
         elif c in qc:
             d.update(source='qc', meaning=qc[c])
+        elif c in _press_mean:                       # DESC-06 — 완료 압력 기록 (lhs_pressure_record)
+            d.update(source='pressure_log', meaning=_press_mean[c])
         elif tau_net_define(c) is not None:          # v1.2 망 τ (tau_flux 열 · τ 명명 규약) — 이름이 정확히 τ 꼴일 때만 (옛 열은 안 잡는다)
             _tm, _tc = tau_net_define(c)
             d.update(source=TAU_NET_SOURCE, verdict=tau_net_verdict(c), meaning=_tm, caveat=_tc)
@@ -2021,7 +2217,7 @@ def column_dictionary(cols, webapp=None):
             d.update(source='webapp', verdict=v, meaning=meaning)
             d['caveat'] = dfn[1] if dfn else (CAVEAT_NAME if '이름 주의' in v else _frac_caveat(c))
         else:
-            d.update(source='design', meaning='LHS 설계 열 (docs/data/lhs_design_20260818.csv — `build()` 가 만든 설계인자 · 추정치)')
+            d.update(source='design', meaning=design_define(c, design_source))
         if wa_phase_specific(c) and d['source'] != 'design':      # J20-k (B) — 상별 열 전부 (수확 · 웹앱 · QC) 에 mono 규약 표지
             d['meaning'] += ' · ' + MONO_DESIGN_NOTE
         out.append(d)
@@ -2632,7 +2828,7 @@ def _wa_ionic_gates(case, o, take, h, dp):
     return 1
 
 
-def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp_groups=None, wa_reviewed_only=True, tau=None):
+def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp_groups=None, wa_reviewed_only=True, tau=None, pressure=None):
     """설계행 + 수확 (+ union) (+ 웹앱) (+ 망 τ) → 인계용 행 리스트.  **순수 함수**(파일을 안 쓴다) 라 시험 가능하다.
 
     union (J19, 선택): `load_union` 산출 dict 또는 행 목록.  주면 설계 케이스 **전부**에 짝이 있어야 하고 (부분 병기 금지),
@@ -2645,6 +2841,9 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp
     배치 done · partial 케이스 집합 = τ 원천 케이스 집합 · run id 같아야 · 케이스마다 같은 세대 검사 (P0–P4 · 10-05 RGLR3-02) 를 다 통과한 기록.
     τ 열 (tau_flux.column_names()) 은 표 **끝**에 붙는다 — 묶음을 안 부르면
     표 · 열 사전은 옛 그대로 (selftest ㉙f).  done · partial 이 아닌 행은 τ 칸 전부 빈칸 (wa_status 가 사유).
+    pressure (DESC-06, 선택): `load_pressure_record` 산출.  주면 설계 케이스마다 기록이 OK · reached True · 목표 300 · 덱 sha = 수확 raw.deck 이어야 하고
+    press_* 열 (HANDOVER_PRESS) 이 표 **끝**에 붙는다.  CLI 는 --pressure-record 또는 --pressure-unverified (명시 승인) 를 요구한다.
+    webapp 행 (done · partial) 은 배치 status 의 원자료 sha 넷 (atom · contact · mesh · deck) = 수확 raw sha 여야 한다 (DESC-06 — 최종 join).
     반환 (out_rows, cols, report).  계약 위반이면 `FillRefusal`.
     """
     #  ⚠ `load_harvest` 는 **dict(case → h)** 를 준다.  초판은 list 만 받아서
@@ -2785,9 +2984,13 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp
         if _mix:
             raise FillRefusal(f'τ 세대 — {_mix} — 같은 세대 배치끼리 인계한다 (10-06 세대 2 · 1저자 비준)')
         cols += tau_cols
+    if pressure is not None:                                          # DESC-06 — 완료 압력 기록 (표 끝 · 옛 열 순서 불변)
+        if not isinstance(pressure, dict):
+            raise FillRefusal('압력 기록은 load_pressure_record 산출 (dict case → 행) 이어야 한다 (DESC-06)')
+        cols += [n for n, _k, _w in HANDOVER_PRESS]
     out, rep = [], {'n': 0, 'blank_by_status': collections.Counter(),
                     'held_back': dict(HANDOVER_HELD_BACK), 'mono_rows': 0, 'mono_harvest_filled': 0,
-                    'eligibility_checked': 0, 'eligibility_on': elig_on}
+                    'eligibility_checked': 0, 'eligibility_on': elig_on, 'desc07_cov_checked': 0}
     if uv is not None:
         rep['union_extra'] = sorted(set(uv) - {r[key] for r in rows})
         rep['se_share_checked'] = 0
@@ -2803,10 +3006,12 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp
                    wa_mono_renamed_cases=0, wa_mono_design_filled=0, wa_mono_absent_blanked=0,
                    wa_cn_identity_checked=0, wa_am_identity_checked=0, wa_amse_identity_checked=0, wa_perc_checked=0,
                    wa_ionic_checked=0, wa_f1_checked=0, wa_frac_checked=0, wa_area_checked=0, wa_s567_final_checked=0,
-                   wa_area_mean_blanked=0, wa_area_total_zero_filled=0, wa_excluded_dropped=_n_excl)
+                   wa_area_mean_blanked=0, wa_area_total_zero_filled=0, wa_excluded_dropped=_n_excl, wa_raw_sha_checked=0)
     if tau_on:
         rep.update(tau_checked=0, tau_blank_rows=0, tau_status=collections.Counter(), tau_source=tau.get('source'),
                    tau_flux_sha256=tau.get('tau_flux_sha256'))
+    rep['pressure_checked'] = 0
+    rep['pressure_on'] = pressure is not None
     for r in rows:
         h = hv[r[key]]
         o = {c: r.get(c, '') for c in design_cols}
@@ -2837,6 +3042,17 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp
                  - 100.0 * (1.0 - float(h['phi_se']) - float(h['phi_am'])))
         if e1 > DESC07_TOL['porosity']:
             raise FillRefusal(f"{r[key]}: DESC-07 항등식 위반 {e1:.3e}")
+        #  ★ DESC-07 ② (Codex 배포 v1.1 최종 리뷰 coverage_total_plus_1) — 전체 피복 = 피복 유효 입자 수 가중평균 을 **내보내는 표 위에서도** 잰다
+        #    (옛 판은 fill_descriptors 에서만 재고 인계표에서는 안 재 전체만 +1 %p 바꿔도 통과했다 · mono 는 _mono_design_phase 가 AM_only = 전체 를 본다)
+        if all(h.get(c_) is not None for c_ in ('coverage_AM_P_hertz_pct', 'coverage_AM_S_hertz_pct', 'coverage_AM_total_hertz_pct')):
+            try:
+                _e2 = _desc07_check(h)[1]
+            except (KeyError, TypeError, ValueError) as e:
+                raise FillRefusal(f'{r[key]}: DESC-07 ② — 상별 피복이 둘 다 있는데 피복 유효 입자 수 (coverage_detail.counts) 를 못 읽었다 '
+                                  f'({type(e).__name__}) — 전체 피복의 가중평균을 확인할 수 없다')
+            if _e2 is not None and _e2 > DESC07_TOL['coverage_total']:
+                raise FillRefusal(f'{r[key]}: DESC-07 ② 가중평균 항등식 위반 {_e2:.3e} — coverage_AM_total 이 (N_P C_P + N_S C_S)/(N_P + N_S) 가 아니다')
+            rep['desc07_cov_checked'] += 1
         if elig_on:                                                   # ★ LREL-02 — 적격성 표지가 다 있고 수확기 규칙대로 정합한가
             _ep = eligibility_problems(h['handover_qc'], porosity_pct=h.get('porosity_sphere_pct_RECORD_ONLY'))
             if _ep:
@@ -2875,6 +3091,11 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp
             rep['wa_status_counts'][s] += 1
             o['wa_status'] = s
             o['wa_failed_stages'] = '|'.join(str(x) for x in (rec.get('failed_stages') or []))
+            if s in WA_OK_STATUS:                                    # ★ DESC-06 — 최종 join: 배치가 읽은 원자료 = 수확이 읽은 원자료 (sha 넷)
+                _rs = _wa_raw_sha_problem(rec, h)
+                if _rs:
+                    raise FillRefusal(f'{r[key]}: 원자료 sha — {_rs} (DESC-06 — 웹앱 열과 수확 열이 같은 침대 · 같은 프레임이어야 한 행에 둔다)')
+                rep['wa_raw_sha_checked'] += 1
             wr = (wv.get('rows') or {}).get(r[key]) if s in WA_OK_STATUS else None
             if s in WA_OK_STATUS and wr is None:
                 raise FillRefusal(f'{r[key]}: 배치 상태 {s} 인데 metrics_flat 행이 없다')
@@ -3062,6 +3283,14 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp
                 raise FillRefusal(f'{r[key]}: 벽 τ 상태 {o.get("tortuosity_SE_wall_status")} ↔ 웹앱 percolation_pct {o["percolation_pct"]} — '
                                   '관통 판정이 어긋난다 (τ T3)')
             rep['tau_perc_crosschecked'] += 1
+        if pressure is not None:                                      # ★ DESC-06 — 완료 압력 (기록이 없거나 · 도달 아님 · 다른 덱이면 거부)
+            _pr = pressure.get(r[key])
+            _pp = _press_problem(r[key], _pr, h)
+            if _pp:
+                raise FillRefusal(f'{r[key]}: 완료 압력 — {_pp} (DESC-06)')
+            for name, k_, _w in HANDOVER_PRESS:
+                o[name] = str(_pr.get(k_) or '')
+            rep['pressure_checked'] += 1
         out.append(o)
         rep['n'] += 1
     return out, cols, rep
@@ -3242,6 +3471,9 @@ def _selftest():
         _passed = False
     chk('⑭c 완전한 행은 통과시킨다 (거부 과잉이 아니다)', _passed)
     #  ⑮ `LHS-02` 병합 — **거부가 실재하는가** (거부 로직은 안 쏘면 장식이다)
+    #  ★ 10-06 (DESC-06 최종 join) — 원자료 sha 넷 (atom · contact · mesh · deck) — 수확 raw · 웹앱 배치 status 가 같은 값을 들고 다닌다 (생산 모양)
+    _RAW_SHA = {'atom': 'a' * 64, 'contact': 'b' * 64, 'mesh': 'e' * 64, 'deck': 'f' * 64}
+
     def _h(case, **kw):
         """최소 수확 fixture — 기본은 전부 OK 인 정상 건."""
         b = dict(case=case, timestep=100, phi_se=0.2, phi_am=0.3,
@@ -3252,7 +3484,7 @@ def _selftest():
                  status=dict(phi='OK', porosity='OK', coverage_AM_P='OK',
                              coverage_AM_S='OK', coverage_AM_total='OK', tortuosity='OK'),
                  coverage_detail=dict(counts={'AM_P': {'n_valid': 1}, 'AM_S': {'n_valid': 3}}),
-                 raw=dict(atom=dict(sha256='a' * 64), contact=dict(sha256='b' * 64)),
+                 raw={k_: dict(sha256=v_) for k_, v_ in _RAW_SHA.items()},
                  _file=case + '.json', _sha256='c' * 64)
         b.update(kw)
         return b
@@ -3396,7 +3628,8 @@ def _selftest():
             'coverage_AM_P_hertz_pct': (None if mono else 11.0),
             'coverage_AM_S_hertz_pct': (None if mono else 22.0),
             'coverage_AM_only_hertz_pct': (20.0 if mono else None),
-            'coverage_AM_total_hertz_pct': 20.0,
+            #  ★ 10-06 (DESC-07 ② 관문) — bimodal 전체 = (5·11 + 9·22)/14 (피복 유효 입자 수 가중) · 옛 20.0 은 항등식과 모순이었다 · mono = AM_only
+            'coverage_AM_total_hertz_pct': (20.0 if mono else (5 * 11.0 + 9 * 22.0) / 14),
             'tortuosity_dijkstra_SE': (1.5 if tau_ok else None),
             'status': {'phi': 'OK', 'porosity': 'OK',
                        'coverage_AM_P': ('N_A_PHASE_ABSENT' if mono else 'OK'),
@@ -3646,7 +3879,8 @@ def _selftest():
         r1.update(q1 or {})
         r2.update(q2 or {})
         return {'verdict': dict(_vd), 'why': dict(_why),
-                'status': {'q1': {'status': st1, 'failed_stages': []}, 'q2': {'status': st2, 'failed_stages': ['Stage E']}},
+                'status': {'q1': {'status': st1, 'failed_stages': [], 'sha': dict(_RAW_SHA)},
+                           'q2': {'status': st2, 'failed_stages': ['Stage E'], 'sha': dict(_RAW_SHA)}},
                 'rows': {'q1': r1, 'q2': r2}}
     try:
         _oa, _ca, _ra = build_handover(_dq, _hqs, webapp=_wa(st2='partial'), wa_reviewed_only=False)   # 옛 기제 (census ✅ 선별) 시험
@@ -4600,7 +4834,7 @@ def _selftest():
         for q_, s_ in w['status'].items():
             rec = dict(case=q_, when='2026-10-05T00:00:00', stop_after=stop, status=s_['status'],
                        failed_stages=list(s_.get('failed_stages') or []), stages=[dict(step='Parse', rc=0, ok=True)],
-                       mode='bimodal', type_map='1:AM_P,2:AM_S,3:SE', sha={}, mesh_pick='exact', contact_scan={}, atom_frames=1,
+                       mode='bimodal', type_map='1:AM_P,2:AM_S,3:SE', sha=dict(s_.get('sha') or {}), mesh_pick='exact', contact_scan={}, atom_frames=1,
                        elapsed_s=1.0)
             if stop == 'network':
                 rec['network_run_id'] = f'RUN-{q_}'                     # run_batch — 이번 실행의 망 세대 (망 정지 계약이 본 도장)
@@ -5018,7 +5252,7 @@ def _selftest():
         for q_, s_ in w['status'].items():
             rec = dict(case=q_, when='2026-10-05T00:00:00', stop_after=stop, status=(st or {}).get(q_, s_['status']),
                        failed_stages=[], stages=[dict(step='Parse', rc=0, ok=True)], mode='bimodal', type_map='1:AM_P,2:AM_S,3:SE',
-                       sha={}, mesh_pick='exact', contact_scan={}, atom_frames=1, elapsed_s=1.0)
+                       sha=dict(s_.get('sha') or {}), mesh_pick='exact', contact_scan={}, atom_frames=1, elapsed_s=1.0)
             if stop == 'network':
                 v_ = (rid or {}).get(q_, f'RUN-{q_}')
                 if v_ is not None:
@@ -5286,7 +5520,11 @@ def _selftest():
             + (f' — {_ef}' if _ef else ''),
             not _ef and not _e29a and bool(_c29n) and _c29 == _c29n + _tc29
             and [{k_: r_.get(k_) for k_ in _c29n} for r_ in _o29] == [{k_: r_.get(k_) for k_ in _c29n} for r_ in _o29n]
-            and all(_d29t[c_] == _d29n[c_] for c_ in _c29n)
+            and all(_d29t[c_] == _d29n[c_] for c_ in _c29n if c_ != 'tortuosity_SE_wall')
+            #  ★ 10-06 — 벽 τ 뜻의 끝 (수송 tortuosity 가 어디 있나) 만 표의 열에 따라 다르다 (τ 판 = 이 표의 tau2_ion_hertz · 옛 판 = 이 표에는 없다)
+            and ('tortuosity_SE_wall' not in _c29n
+                 or _d29t['tortuosity_SE_wall']['meaning'].replace(TAU_WALL_TRANSPORT_IN, '')
+                 == _d29n['tortuosity_SE_wall']['meaning'].replace(TAU_WALL_TRANSPORT_OUT, ''))
             and not any(t_ in _d29n for t_ in _tc29))
         for _lab29, _dsg, _hdir, _uni, _wdir, _gold in (
                 ('130', DESCRIPTOR_FILL_EXPECTED['path'], 'docs/data/lhs_descriptors_cov_1e09f661d', DEFAULT_UNION_TSV,
@@ -5363,7 +5601,7 @@ def _selftest():
             _bdir = _td29 / 'a' / 'batch'
             _cmd = [sys.executable, str(pathlib.Path(__file__).resolve()), '--export-handover', str(_cd / 'h.csv'), '--design', str(_cd / 'design.csv'),
                     '--harvest', str(_cd / 'harvest'), '--union', '', '--webapp', str(_bdir), '--census', str(_bdir / 'census.tsv'),
-                    '--webapp-groups', _G29, '--tau-results', str(_res29)]
+                    '--webapp-groups', _G29, '--tau-results', str(_res29), '--pressure-unverified']
             _pr = _sp29.run(_cmd, capture_output=True, text=True, timeout=300)
             with (_cd / 'h.csv').open(encoding='utf-8') as _fh:
                 _hcli = list(csv.DictReader(_fh))
@@ -5564,6 +5802,119 @@ def _selftest():
     _h30v['handover_qc'] = dict(_h30v['handover_qc'], V_SE_full_um3=0.6)
     _neg7('㉚o ★ LREL-04 — 수확 부피 감사 V_SE/(V_SE + V_AM) 가 union SE/고체와 어긋나면 (φ 비와는 같아도) 거부',
           lambda: build_handover(_dq30, dict(_h30ok, q2=_h30v), union=_u30), 'LREL-04')
+    #  ═══ ㉛ 열 사전 문구 (LREL-05 · 06 · TAU-24 · J20-m ②–⑥ · J20-c ⓒ union 규약 한정어 · τ 명명 규약 — 1저자 비준 10-06 "A·B 코드") ═══════════════
+    #   v1.2 README (docs/data/lhs_release_20261006_v12/README.md) 가 정정판으로 적은 문구를 생성기 사전에 옮긴다 (다음 생성부터 TSV 도 같은 문구).
+    def _chk31(name, cond, info=''):
+        chk(name + ('' if cond else f' — {str(info)[:300]}'), cond)
+
+    def _cd31(cols, **kw):
+        try:
+            return {d['column']: d for d in column_dictionary(cols, **kw)}
+        except TypeError as e:                                             # 옛 서명 (design_source 없음)
+            return {'_err': {'meaning': f'TypeError: {e}', 'caveat': '', 'source': ''}}
+    _d31 = _cd31(['case_id', 'block', 'am_pct', 'ps_frac', 'pressure_MPa', 'n_am_p_est', 'thickness_est_um', 'lhsx_pdd_SE', 'lhsx_volfrac'],
+                 design_source='docs/data/lhsx_design_adapted_20260929.csv')
+    _g31 = lambda c, k='meaning': (_d31.get(c) or {}).get(k, '')                 # noqa: E731
+    _chk31('㉛a ★ LREL-06 — 설계 열 정의: am_pct = 고체 중 AM 질량 % (부피 % 아님) · ps_frac = AM 중 AM_P 질량 몫 (개수 몫 아님) · 출처 = 이 표의 설계 CSV '
+        '(확장 = lhsx_design_adapter) · pressure_MPa 는 도달 여부를 말하지 않는다 (DESC-06) · n_*_est = 추정 (실측 아님)',
+        '고체 중 AM 질량 %' in _g31('am_pct') and '부피 % 아님' in _g31('am_pct') and 'AM 중 AM_P 질량 몫' in _g31('ps_frac')
+        and '개수 몫 아님' in _g31('ps_frac') and 'lhsx_design_adapted_20260929.csv' in _g31('am_pct') and _g31('am_pct', 'source') == 'design'
+        and 'DESC-06' in _g31('pressure_MPa') and '추정' in _g31('n_am_p_est') and '측정 아님' in _g31('thickness_est_um')
+        and 'lhsx_design_adapter' in _g31('lhsx_pdd_SE') and 'am_pct' in _g31('lhsx_pdd_SE') and 'volfrac' in _g31('lhsx_volfrac'),
+        repr({c: _g31(c)[:60] for c in ('am_pct', 'ps_frac', 'lhsx_pdd_SE')}))
+    _dm31 = {d['column']: d for d in column_dictionary(_c10, webapp=_wa10())} if _c10 else {}
+    _io31 = ('ionic_active_pct', 'am_ionic_isolated_pct', 'ionic_dead_pct', 'ionic_no_se_pct', 'AM_P_ionic_active_pct', 'AM_S_ionic_dead_pct')
+    _bad31 = [c for c in _io31 if not ('그래프' in _dm31.get(c, {}).get('meaning', '') and '이온 전류' in _dm31.get(c, {}).get('meaning', ''))
+              or any(w in _dm31.get(c, {}).get('meaning', '') for w in ('닿을 수 없는', '실제로 닿', '실제로 도달'))]
+    _chk31('㉛b ★ LREL-05 — 이온 활성 · 경로 고립 · 분해 열의 뜻 = 상단 2r 경계 띠 · SE 접촉 그래프 지표 (실제 분리막 접촉 · 계면 저항 · 이온 전류는 계산하지 '
+        '않는다) — "이온이 닿을 수 없는" 같은 실제 도달 단정 없음', bool(_dm31) and not _bad31, repr(_bad31))
+    _du31 = _cd31(['porosity_union_exact_pct', 'porosity_union_exact_se_pct', 'phi_se_mass_conserving'])
+    _um31 = (_du31.get('porosity_union_exact_pct') or {}).get('meaning', '')
+    _chk31('㉛c ★ LREL-06 · J20-c ⓒ — 정확 union = 합집합 정의 (쌍 렌즈 아님) 이지 MC 오차 0 이 아니다 (1σ 열 · 130 0.012–0.023 · 64 0.011–0.015 %p · 마지막 자리 인용 금지) · '
+        '규약 한정어 = 소성 압축 고체 과소계상 상한 규약 (기록된 문구 · 저자 결정 대기)',
+        'MC' in _um31 and '0.012–0.023' in _um31 and '0.011–0.015' in _um31 and '마지막 자리' in _um31 and '상한 규약' in _um31
+        and 'J20-c' in _um31 and '과소계상' in _um31, _um31[:200])
+    _dtw31 = _cd31(['tortuosity_SE_wall', 'tau2_ion_hertz', 'f_ion_hertz'])
+    _dtn31 = _cd31(['tortuosity_SE_wall'])
+    _tw31, _tn31 = ((_dtw31.get('tortuosity_SE_wall') or {}).get('meaning', ''), (_dtn31.get('tortuosity_SE_wall') or {}).get('meaning', ''))
+    _chk31('㉛d ★ tortuosity_SE_wall — 기하학적 tortuosity · 수송 τ 아님 유지 · 망 τ 열이 있는 표에서는 "이 표에 없음" 대신 tau2_ion_hertz (수송 tortuosity factor T · '
+        '제곱근 아님) 를 가리킨다 · 망 τ 가 없는 표에서는 그 표에 없다고 적는다',
+        '기하학적 tortuosity' in _tw31 and '수송 τ 가 아니다' in _tw31 and '이 표에 없음' not in _tw31 and 'tau2_ion_hertz' in _tw31
+        and '수송 tortuosity factor' in _tw31 and '제곱근 아님' in _tw31 and '이 표에는 없다' in _tn31 and 'tau2_ion_hertz' not in _tn31,
+        f'{_tw31[-260:]} || {_tn31[-160:]}')
+    _th31 = [(c, (tau_net_define(c) or ('', ''))[0]) for c in ('f_ion_hertz', 'tau2_ion_hertz', 'tau_ion_hertz', 'ion_net_status_hertz', 'tau2_ion_hertz_h12')]
+    _chk31('㉛e ★ hertz 모드 열의 뜻에 면적 = LIGGGHTS c_cpl[22] 기하 교차 원판 (탄성 Hertz πR*δ 의 ≈ 2 배 · 이름만 Hertz · L1-04)',
+        all('c_cpl[22]' in m_ and '≈ 2 배' in m_ for _c, m_ in _th31) and 'c_cpl[22]' not in (tau_net_define('tau2_ion_physics') or ('',))[0],
+        repr([(c, m_[:40]) for c, m_ in _th31 if 'c_cpl[22]' not in m_]))
+    _bf31 = (tau_net_define('ion_net_band_frac_hertz') or ('', ''))[0]
+    _chk31('㉛f ★ TAU-24 — 띠 분율 열 = (바닥 띠 폭 + 위 띠 폭) / 판 간격 L_gap · L0 = 4r_SE/L (가장 큰 SE 반지름) · tau2 하향의 상한 · 보정한 T 는 내지 않는다 '
+        '(1저자 결정 대기) · 실측 범위 (옛 추정 "중앙 6 % · 최대 17 %" 대신)',
+        '바닥 띠 폭 + 위 띠 폭' in _bf31 and '판 간격' in _bf31 and '4r_SE/L' in _bf31 and '상한' in _bf31 and '보정한 T 는 내지 않는다' in _bf31
+        and '0.050–0.135' in _bf31 and '0.060–0.157' in _bf31 and '중앙 6 %' not in _bf31, _bf31[:200])
+    _dcv31 = _cd31(['coverage_AM_P_hertz_pct', 'coverage_AM_S_hertz_pct', 'coverage_AM_total_hertz_pct'])
+    _cv31 = (_dcv31.get('coverage_AM_P_hertz_pct') or {}).get('caveat', '')
+    _chk31('㉛g ★ J20-m 인계 한정어 ②–⑥ — coverage 열 주의에 SE-rich 과압축 절대값 · AM 90–95 wt% SE 바닥 몰림 (추정) · porosity 공선 · AM_P 소표본 · 옛 코퍼스 치밀도',
+        all(w in _cv31 for w in ('A_dem_geometric', 'J20-m', 'SE-rich', '바닥 몰림', '추정', '공선', '소표본', '옛 코퍼스'))
+        and (_dcv31.get('coverage_AM_total_hertz_pct') or {}).get('caveat', '') == _cv31, _cv31[:160])
+    #  ㉛h — 실데이터: v1.2 인계표 열로 사전을 다시 만들면 배포 v1.2 주 표에 없는 정본 인계표 열 참조가 전부 표지 '(정본 인계표 열)' 를 단다 (배포 빌더 ml_v1 ③)
+    try:
+        import lhs_release_build as _LRB31
+        _bh31 = pathlib.Path(__file__).resolve().parent.parent / 'docs' / 'data' / 'lhs_network194_11fcf91e8'
+        _rl31 = pathlib.Path(__file__).resolve().parent.parent / 'docs' / 'data' / 'lhs_release_20261006_v12'
+        _dg31 = {}
+        for _coh in ('lhs', 'lhsx'):
+            with (_bh31 / 'handover_v12_20261006' / f'{_coh}_handover_v12_20261006.csv').open(encoding='utf-8', newline='') as _fh:
+                _hc31 = next(csv.reader(_fh))
+            with (_rl31 / f'{_coh}_release_20261006_v12.csv').open(encoding='utf-8', newline='') as _fh:
+                _rc31 = next(csv.reader(_fh))
+            _rows31 = [[d['column'], d['source'], d['verdict'], d['meaning'], d['caveat']]
+                       for d in column_dictionary(_hc31, webapp=load_webapp(_bh31 / 'merged' / _coh)) if d['column'] in _rc31]
+            _dg31[_coh] = _LRB31.dangling_refs(_rc31, _hc31, _rows31)
+        _chk31('㉛h ★ 실데이터 — v1.2 인계표 열로 다시 만든 사전: 배포 v1.2 주 표 (lhs · lhsx) 에 없는 정본 인계표 열 참조 = 전부 표지 (배포 프로필 ③ 문제 0)',
+            all(v == [] for v in _dg31.values()), repr({k: sorted({r for _, r in v})[:10] for k, v in _dg31.items()}))
+    except Exception as e:                                                # noqa: BLE001
+        _chk31(f'㉛h 실데이터 사전 참조 표지 ({type(e).__name__}: {e})', False)
+    #  ═══ ㉜ DESC-06 최종 join (원자료 sha) · DESC-07 ② 전체 피복 가중평균 (Codex 배포 v1.1 최종 리뷰 raw_sha_mismatch · coverage_total_plus_1 — 반례 먼저) ═══
+    def _wa32(**st):
+        w_ = _wa()
+        for q_, kv_ in st.items():
+            w_['status'][q_].update(kv_)
+        return w_
+    try:
+        _r32 = build_handover(_dq28, _hq28, webapp=_wa(), wa_reviewed_only=False)[2]
+        _e32 = ''
+    except Exception as e:                                                # noqa: BLE001
+        _r32, _e32 = {}, f'{type(e).__name__}: {e}'
+    chk('㉜a ★ DESC-06 — 웹앱 배치 status 의 원자료 sha 넷 = 수확 raw sha 이면 통과 · 보고에 대조 행 수 2' + (f' — {_e32}' if _e32 else ''),
+        not _e32 and _r32.get('wa_raw_sha_checked') == 2)
+    _neg7('㉜b ★ DESC-06 — 접촉 단계 status 의 atom sha 를 바꾸면 거부 (Codex raw_sha_mismatch — 옛 최종 join 은 통과)',
+          lambda: build_handover(_dq28, _hq28, webapp=_wa32(q1={'sha': dict(_RAW_SHA, atom='9' * 64)}), wa_reviewed_only=False), 'DESC-06')
+    _neg7('㉜c ★ DESC-06 — done 행 status 에 sha 가 없으면 거부 (같은 원자료인지 모른다)',
+          lambda: build_handover(_dq28, _hq28, webapp=_wa32(q2={'sha': {}}), wa_reviewed_only=False), 'DESC-06')
+    _h32 = dict(_hq28, q1=dict(_hq28['q1'], raw={k_: v_ for k_, v_ in _hq28['q1']['raw'].items() if k_ != 'mesh'}))
+    _neg7('㉜d ★ DESC-06 — 수확 raw 에 mesh sha 가 없으면 거부', lambda: build_handover(_dq28, _h32, webapp=_wa(), wa_reviewed_only=False), 'DESC-06')
+    try:
+        _r32e = build_handover(_dq28, _hq28, webapp=_wa32(q2={'status': 'REFUSED', 'sha': {}}), wa_reviewed_only=False)[2]
+        _e32e = ''
+    except Exception as e:                                                # noqa: BLE001
+        _r32e, _e32e = {}, f'{type(e).__name__}: {e}'
+    chk('㉜e 배치가 거부한 행 (REFUSED · sha 없음) 은 웹앱 값을 싣지 않으므로 sha 도 보지 않는다 (대조 1 행)' + (f' — {_e32e}' if _e32e else ''),
+        not _e32e and _r32e.get('wa_raw_sha_checked') == 1)
+    _h32f = dict(_hq28, q2=dict(_hq28['q2'], coverage_AM_total_hertz_pct=_hq28['q2']['coverage_AM_total_hertz_pct'] + 1.0))
+    _neg7('㉜f ★ DESC-07 ② — 전체 피복률만 +1 %p (상별 값 · 개수 그대로 — Codex coverage_total_plus_1) 이면 거부 (옛 인계 생성기는 통과)',
+          lambda: build_handover(_dq28, _h32f), 'DESC-07')
+    _h32g = dict(_hq28, q2={k_: v_ for k_, v_ in _hq28['q2'].items() if k_ != 'coverage_detail'})
+    _neg7('㉜g ★ DESC-07 ② — 상별 피복이 둘 다 있는데 피복 유효 입자 수 (coverage_detail.counts) 가 없으면 거부', lambda: build_handover(_dq28, _h32g),
+          'DESC-07')
+    try:
+        import lhs_webapp_batch as _LWB32
+        _same32 = tuple(_LWB32.RAW_KEYS) == tuple(WA_RAW_KEYS)
+    except Exception as e:                                                # noqa: BLE001
+        _same32 = False
+    chk('㉜i 원자료 키 = lhs_webapp_batch.RAW_KEYS (배치가 status 에 남기는 sha 키와 같다 — 한쪽만 바뀌면 걸린다)', _same32)
+    _dc32 = {d['column']: d for d in column_dictionary(['coverage_AM_total_hertz_pct'])}
+    chk('㉜h 열 사전 — coverage_AM_total = (N_P·C_P + N_S·C_S)/(N_P + N_S) · 피복 유효 입자 수 가중 · 관문 DESC-07 ② · 실측 N 누설 주의',
+        all(w in (_dc32.get('coverage_AM_total_hertz_pct') or {}).get('meaning', '') for w in ('N_P', 'DESC-07', 'cov_AM_P_n_valid', '누설')))
     print(f'\nlhs_design_dataset selftest: {ok}/{ok + len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0
@@ -5615,6 +5966,11 @@ if __name__ == '__main__':
                          '망 정지 계약 재검사 (전 사본 · 투영 · σ₀ 짝 · 띠 규칙 — 10-05 RGLR3-02) · 활성 세대 · 읽기 안정) 뒤 tau_flux.case_row 로 싣는다 · '
                          '한 케이스라도 실패하면 거부 · 출처 부록 <인계표>_tau_provenance.tsv (same_generation_checks · same_generation_basis — 지금 파일끼리 · '
                          '게시 시점 해시 없음)')
+    ap.add_argument('--pressure-record', default='', metavar='TSV',
+                    help='(--export-handover) 완료 압력 기록 (scripts/lhs_pressure_record.py 산출 · DESC-06) — 설계 케이스마다 압밀 루프가 목표 (300 MPa) 에 '
+                         '닿아 빠져나왔는가 · 덱 sha = 수확 raw.deck · 아니면 인계표를 만들지 않는다 · press_* 열을 표 끝에 싣는다')
+    ap.add_argument('--pressure-unverified', action='store_true',
+                    help='(--export-handover) 완료 압력 기록 없이 만든다는 **명시 승인** — 출력에 "완료 압력 미검사" 경고 · press_* 열 없음 (DESC-06 — 둘 다 없으면 거부)')
     ap.add_argument('--census', default='', metavar='TSV',
                     help=f'(--webapp) 전수 판정 census (기본 {DEFAULT_CENSUS_TSV})')
     ap.add_argument('--selftest', action='store_true')
@@ -5652,6 +6008,12 @@ if __name__ == '__main__':
         raise SystemExit(1 if _miss else 0)
 
     if a.export_handover:
+        #  ★ DESC-06 — 완료 압력: 기록 (--pressure-record) 또는 미검사 명시 승인 (--pressure-unverified) 중 정확히 하나 (조용히 넘기지 않는다)
+        if bool(a.pressure_record) == bool(a.pressure_unverified):
+            print('⛔ --export-handover 에는 --pressure-record <TSV> (scripts/lhs_pressure_record.py — 압밀 루프 목표 도달 기록) 또는 '
+                  '--pressure-unverified (기록 없이 만든다는 명시 승인) 중 정확히 하나가 필요하다 (DESC-06 — 완료 압력을 조용히 미검사로 넘기지 않는다)',
+                  file=sys.stderr)
+            raise SystemExit(2)
         _root = pathlib.Path(__file__).resolve().parent.parent
         _dp = pathlib.Path(a.design or DESCRIPTOR_FILL_EXPECTED['path'])
         if not _dp.is_absolute():
@@ -5673,7 +6035,11 @@ if __name__ == '__main__':
         if a.tau_results:                               # v1.2 망 τ — 원천을 배치 기록으로 대조한 뒤 tau_flux 로 (관문 P0–P4)
             _tp = pathlib.Path(a.tau_results).expanduser()
             _tv = load_tau_results(_tp if _tp.is_absolute() else _root / _tp, _wv)
-        _out, _cols, _rep = build_handover(_rows, _harv, union=_uv, webapp=_wv, webapp_groups=a.webapp_groups, tau=_tv)
+        _pv = None
+        if a.pressure_record:                           # DESC-06 — 완료 압력 기록 (관문)
+            _pp_ = pathlib.Path(a.pressure_record).expanduser()
+            _pv = load_pressure_record(_pp_ if _pp_.is_absolute() else _root / _pp_)
+        _out, _cols, _rep = build_handover(_rows, _harv, union=_uv, webapp=_wv, webapp_groups=a.webapp_groups, tau=_tv, pressure=_pv)
         _op = pathlib.Path(a.export_handover)
         if not _op.is_absolute():
             _op = _root / _op
@@ -5687,12 +6053,17 @@ if __name__ == '__main__':
         with _dp2.open('w', encoding='utf-8', newline='') as _fh:
             _w = csv.DictWriter(_fh, ['column', 'source', 'verdict', 'meaning', 'caveat'], delimiter='\t', lineterminator='\n')
             _w.writeheader()
-            for _d in column_dictionary(_cols, webapp=_wv):
+            for _d in column_dictionary(_cols, webapp=_wv, design_source=_tau_src_label(_dp)):
                 _w.writerow(_d)
         #  제외 노트 — 명시 제외 열 (LW frame_unverified · LHS-32 · δ 판 · 상 쌍별 · physics 면적) · 보류 열의 사유 (열 사전은 표의 열만)
         _dp3 = _op.with_name(_op.stem + '_excluded.tsv')
         write_exclusion_notes(_dp3)
         print(f'→ {_op}   {_rep["n"]}행 × {len(_cols)}열   (열 사전 {_dp2.name} · 제외 노트 {_dp3.name})')
+        if _pv is not None:
+            print(f'   완료 압력 (DESC-06) — 기록 {a.pressure_record} · 목표 {PRESSURE_MPA} MPa 도달 확인 {_rep["pressure_checked"]} 행 (press_* 열)')
+        else:
+            print('   ⚠ 완료 압력 미검사 (DESC-06 · --pressure-unverified 명시 승인) — 이 인계표는 300 MPa 도달을 기계로 확인하지 않았다 '
+                  '(scripts/lhs_pressure_record.py 기록으로 다시 만들 것)')
         if _tv is not None:                             # v1.2 망 τ 출처 부록 — τ 칸이 어느 망 세대 · 어느 파일에서 왔는가
             _dp4 = _op.with_name(_op.stem + '_tau_provenance.tsv')
             write_tau_provenance(_dp4, _tv)

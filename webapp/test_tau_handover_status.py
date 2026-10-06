@@ -343,6 +343,13 @@ def main():
                                   'missing_input', 'percolation_disagree', 'solver_guard', 'temperature_mismatch', 'tau_flux',
                                   'invalid_input', TECH, HOLD, 'RGLR-01', 'RGLR-02'))
         and all(w in body_b for w in ('L0', 'L1', 'L2', '4r_SE/L', 'TAU-24')), (tip_s, tip_b))
+    #  ★ 10-06 (TAU-24 · J20-l) — 인계 열 사전 (ion_net_band_frac_<모드>) 과 같은 한정어: 상한 · 보정한 T 는 내지 않는다 (1저자 결정 대기) · 기준 = 판 간격 (L_mc 아님)
+    sys.path.insert(0, os.path.join(ROOT, 'scripts'))
+    import lhs_design_dataset as _LDDb
+    dict_b = (_LDDb.tau_net_define('ion_net_band_frac_hertz') or ('', ''))[0]
+    chk('T7c2 ★ 띠 행 툴팁 = 인계 열 사전 띠 분율과 같은 한정어 — (바닥 띠 폭 + 위 띠 폭)/판 간격 · 상한 · 보정한 T 는 내지 않는다 · 기준 길이 판 간격 (L_mc 아님)',
+        all(w in body_b and w in dict_b for w in ('바닥 띠 폭 + 위 띠 폭', '상한', '보정한 T 는 내지 않는다', 'L_mc 아님')),
+        ([w for w in ('바닥 띠 폭 + 위 띠 폭', '상한', '보정한 T 는 내지 않는다', 'L_mc 아님') if w not in body_b], dict_b[:120]))
     a = html.find('const PAPER_TO_ORIG = {')
     alias = html[a:html.find('};', a)] if a >= 0 else ''
     chk('T7d 별칭 표 (PAPER_TO_ORIG) 가 두 논문 라벨 → 원 라벨', f"'{PL.get(STATUS, '?')}'" in alias and f"'{STATUS}'" in alias

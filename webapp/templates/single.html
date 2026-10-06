@@ -24,7 +24,7 @@
           {% if metrics.thickness_mass_conserving_um is defined and metrics.thickness_mass_conserving_um is not none %}<span class="badge" title="질량 보존 두께 = 판 간격 × (1 − ε_sphere)/(1 − ε_정확) — DEM 에서 겹친 부피는 사라지므로, 정확 union 을 실제 공극률로 받으면서 재료 부피를 보존하면 두께가 이만큼이어야 한다 (인계표 thickness_mass_conserving_um 과 같은 식 · J20-e (라)).  판 간격 (두께 배지) 과 다른 양.">두께 질량 보존: {{ "%.2f"|format(metrics.thickness_mass_conserving_um) }} μm</span>{% endif %}
           {% if metrics.thickness_um is defined %}{% set _pzs = metrics.plate_z_source if metrics.plate_z_source is defined else none %}{% if _pzs == 'estimated_center' %}<span class="badge badge-warning" title="판 간격 추정 — mesh_info.json 이 없어 판 z 를 최고 입자 중심 z 로 대체했다 (그 입자 반지름만큼 얇게 나오고 퍼콜레이션 윗면도 이 값을 쓴다 · plate_z_source = estimated_center).  실측 단위 μm.">두께 ⚠ 추정 (판 간격): {{ "%.1f"|format(metrics.thickness_um) }}μm</span>{% else %}<span class="badge" title="두께 = 판 간격 = 판 z − 바닥 z (0) — 가압이 끝난 프레임의 플래튼 위치 (dem_analysis_core.get_plate_z · 입자 윗면 포락선이 아니다).  출처: {{ 'mesh_info.json 판 메시 (plate_z_source = mesh)' if _pzs == 'mesh' else '미기록 (옛 분석)' }}.  인계표의 질량 보존 두께 (thickness_mass_conserving_um) 와 다른 양.  실측 단위 μm.">두께 (판 간격): {{ "%.1f"|format(metrics.thickness_um) }}μm</span>{% endif %}{% endif %}
           {% if metrics.percolation_pct is defined %}<span class="badge" title="SE Percolation: 전극 상↔하단을 연결하는 SE 클러스터에 속한 SE 비율(%). 100%에 가까울수록 이온 전도 네트워크가 끊김 없이 형성됨.">Percolation: {{ "%.1f"|format(metrics.percolation_pct) }}%</span>{% endif %}
-          {% if metrics.ionic_active_pct is defined %}<span class="badge badge-{{ 'standard' if metrics.ionic_active_pct >= 95 else 'bimodal' }}" title="Ionic Active AM 비율: 상단까지 도달 가능한 SE 클러스터와 접촉하는 AM 입자의 비율(%). 이온 공급이 닿지 않으면 그 AM은 전기화학적으로 dead.">Ionic Active: {{ "%.1f"|format(metrics.ionic_active_pct) }}%</span>{% endif %}
+          {% if metrics.ionic_active_pct is defined %}<span class="badge badge-{{ 'standard' if metrics.ionic_active_pct >= 95 else 'bimodal' }}" title="Ionic Active AM 비율: 상단 (분리막 쪽) 2r 경계 띠까지 SE 접촉 그래프로 이어진 SE 클러스터와 접촉하는 AM 입자의 비율(%). 그래프 연결 지표 — 실제 분리막 접촉 · 계면 저항 · 이온 전류는 계산하지 않는다 (LREL-05).">Ionic Active: {{ "%.1f"|format(metrics.ionic_active_pct) }}%</span>{% endif %}
           {% if metrics.e_se_eff_gpa is defined %}<span class="badge" title="E_SE_eff (Effective Young's modulus of SE phase): 이 case의 DEM 시뮬레이션에서 SE 입자에 사용된 영률. 순수 SE를 300 MPa로 압축했을 때 실험 porosity 10% endpoint를 맞추도록 calibrate된 값 (predict_porosity_honest.py 참조). 괄호 안 24 GPa는 황화물 유리(75Li₂S·25P₂S₅) 문헌값(Sakuda 2013)이다 — LPSCl 직접 측정값이 아니다(LPSCl DFT ≈ 22 GPa). 참고 상수. cold-press pellet의 grain boundary + 잔존 porosity로 실효 강성이 벌크의 ~5.6%까지 떨어진 물리적 사실을 반영.">E_SE: {{ "%.2f"|format(metrics.e_se_eff_gpa) }} GPa <span style="opacity:0.7">(bulk LPSCl: 24 GPa)</span></span>{% endif %}
         {% endif %}
         {% if metrics.warnings is defined and metrics.warnings %}
@@ -1885,7 +1885,7 @@ const METRIC_TIPS = {
     title: '경계 띠 규칙 · 띠 폭 / 판 간격',
     formula: 'L0 = 입자 자기 반지름 × 2 (양 끝 ≥ 3 개) · L1 = 판 높이의 15/85 % · L2 = 관측 z 범위의 15/85 %\n띠 폭/판 간격 = (바닥 띠 폭 + 위 띠 폭)/판 간격 — L0 이면 4r_SE/L (가장 큰 SE 반지름)',
     desc: '망 솔버가 1 V · 0 V 를 거는 바닥 · 위 띠를 고른 규칙.  옛 코드는 L0 → L1 → L2 폴백을 조용히 하고 남기지 않았다 (LHS-17 · TAU-14) — 안 A (10-04) 부터 결과에 남는다.  L1 폴백은 곧은 사슬에서 T 를 21–29 % 낮춘다 → 인계 G1 은 L0 만 통과.',
-    meaning: 'L0 도 띠 노드를 등전위로 묶어 T 를 이 비 (4r_SE/L) 만큼까지 낮출 수 있다 (TAU-24 — 게이트가 아니라 한정어).  "기록 없음" = 안 A 전 산출물.'
+    meaning: 'L0 도 띠 노드를 등전위로 묶어 T 를 이 비 (4r_SE/L) 만큼까지 낮출 수 있다 (상한 · TAU-24 — 게이트가 아니라 한정어) · 보정한 T 는 내지 않는다 (L_eff 보정판 = 런 전 등록 · 1저자 결정 대기) · 기준 길이 = 판 간격 (L_mc 아님) — LHS 인계 열 ion_net_band_frac_<모드> 와 같은 정의 (v1.2 실측 LHS 0.050–0.135 · LHSx 0.060–0.157).  "기록 없음" = 안 A 전 산출물.'
   },
   'σ_ionic 망 상태 (생산자 sigma_full_status)': {
     title: 'σ_ionic 망 상태 — 망 솔버 (network_conductivity) 가 낸 상태 · 사유',
@@ -1944,8 +1944,8 @@ const METRIC_TIPS = {
   'Ionic Active AM(%)': {
     title: 'Ionic Active AM (이온 활성 AM 비율)',
     formula: 'Ionic Active = (상단 도달 SE와 접촉한 AM 수 / 전체 AM 수) × 100',
-    desc: 'SE pellet(상단)까지 연결된 SE 네트워크와 접촉하고 있는 활물질(AM) 입자의 비율입니다. 닿았는지만 본다 — coverage (덮인 넓이) 와 무관 (LHS-20) · 위 띠의 외톨이 SE 와 닿아도 센다 (LHS-19).',
-    meaning: '리튬이온을 공급받을 수 있는 AM의 비율입니다. 100%이면 모든 AM이 이온경로에 연결되어 용량을 100% 활용할 수 있습니다. 이 값이 낮으면 일부 AM이 전기화학적으로 "죽은(dead)" 상태가 됩니다.'
+    desc: '상단 (SE pellet · 분리막 쪽) 2r 경계 띠까지 SE 접촉 그래프로 이어진 SE 네트워크와 접촉하고 있는 활물질(AM) 입자의 비율입니다. 닿았는지만 본다 — coverage (덮인 넓이) 와 무관 (LHS-20) · 위 띠의 외톨이 SE 와 닿아도 센다 (LHS-19) · 위 띠에 앉았지만 위 평면에 닿지 않은 SE 도 도달로 센다.',
+    meaning: '그래프 연결 지표 (LREL-05 · 인계 열 사전과 같은 한정어) — 이온 경로가 SE 접촉 그래프로 이어졌는지만 보는 구조 지표입니다. 실제 분리막 접촉 · 계면 저항 · 이온 전류는 계산하지 않으므로 "용량을 100 % 쓴다 / 그 AM 은 죽었다" 로 바로 읽지 않습니다. 이 값이 낮으면 SE 망에서 위 띠로 이어지지 않는 AM 이 많다는 뜻입니다.'
   },
   'Stress CV(%)': {
     title: 'Stress CV — LIGGGHTS stress/atom (50/50 분할 · 대각 성분) — 옛 규약 (LHS-29)',
@@ -2040,19 +2040,19 @@ const METRIC_TIPS = {
   'Ionic Isolated AM(%)': {
     title: 'Ionic Isolated AM (경로 기준 고립 AM 비율 · v1.1)',
     formula: 'Ionic Isolated = 100 − Ionic Active = 단절 + 무접촉\n(단절 = SE 는 닿았지만 그 SE 가 위 띠로 안 이어짐 · 무접촉 = SE 접촉 0)',
-    desc: '이온이 분리막 쪽 (위 띠) 에서 실제로 닿을 수 없는 활물질 비율 — 경로 기준 고립입니다 (calc_ionic_active_am · 접촉 그래프). 닿았는지만 본다 — coverage (덮인 넓이) 와 무관.',
+    desc: '등록된 상단 (분리막 쪽) 2r 경계 띠와 SE 접촉 그래프로 연결되지 않은 활물질 비율 — 경로 기준 고립입니다 (calc_ionic_active_am · 접촉 그래프). 닿았는지만 본다 — coverage (덮인 넓이) 와 무관. 그래프 지표 (LREL-05): 실제 분리막 접촉 · 계면 저항 · 이온 전류는 계산하지 않는다.',
     meaning: '⚠ 고립 위험 (AM Vulnerable · SE 접촉 0–1 개) 과 다른 양이다: 접촉이 둘 이상이어도 그 SE 가 끊긴 덩어리면 고립이고, 하나뿐이어도 이어져 있으면 활성이다. SE 망이 끊긴 침대에서 크게 벌어진다 (인계 v1.1 ① · 1저자 비준 10-01).'
   },
   '  ├ Isolated: SE not linked(%)': {
     title: '고립 — 단절 (SE 는 닿았지만 분리막 쪽으로 안 이어짐)',
     formula: '단절 = (SE 와 닿았지만 닿은 SE 가 전부 top-reachable 이 아닌 AM 수 / 전체 AM 수) × 100',
-    desc: 'SE 와 닿았지만 그 SE 들이 위 띠 (분리막 쪽) 로 이어진 덩어리에 속하지 않는 AM 의 비율 (인계 v1.1 ② · calc_ionic_active_am 의 dead).',
+    desc: 'SE 와 닿았지만 그 SE 들이 위 띠 (분리막 쪽 · 상단 2r 경계 띠) 로 이어진 덩어리에 속하지 않는 AM 의 비율 (인계 v1.1 ② · calc_ionic_active_am 의 dead). 그래프 지표 (LREL-05): 실제 분리막 접촉 · 계면 저항 · 이온 전류는 계산하지 않는다.',
     meaning: 'SE 망의 연결 문제 — SE 가 끊긴 섬에 갇힌 AM. 접촉을 늘리는 것만으로는 안 풀린다.'
   },
   '  └ Isolated: no SE contact(%)': {
     title: '고립 — 무접촉 (SE 접촉 0)',
     formula: '무접촉 = (SE 접촉 0 인 AM 수 / 전체 AM 수) × 100',
-    desc: 'SE 접촉 0 인 AM 의 비율 (인계 v1.1 ② · calc_ionic_active_am 의 no_se) — 고립 위험 (접촉 0–1 개) 의 부분집합.',
+    desc: 'SE 접촉 0 인 AM 의 비율 (인계 v1.1 ② · calc_ionic_active_am 의 no_se) — 고립 위험 (접촉 0–1 개) 의 부분집합. 경로 기준 고립 (상단 2r 경계 띠 · SE 접촉 그래프 지표 · LREL-05) 의 한 갈래 — 실제 분리막 접촉 · 계면 저항 · 이온 전류는 계산하지 않는다.',
     meaning: 'SE 와 전혀 안 닿은 AM — 계면 형성 문제. 단절과 원인이 다르다.'
   },
   'AM Vulnerable(%)': {

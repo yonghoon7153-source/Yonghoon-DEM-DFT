@@ -12,7 +12,8 @@
 # 사용 (이 브랜치를 pull 한 리포 루트에서)
 #   ONE=lhs00_000 bash scripts/run_lhs_fill_wsl.sh     # ★ 먼저 한 건 — 실제로 도는지 · 한 건에 몇 분인지
 #   bash scripts/run_lhs_fill_wsl.sh                   # 전 건 (재개 안전 — 끝난 케이스는 건너뛴다)
-#   환경: D (날짜 꼬리, 기본 오늘) · WORK (기본 ~/lhs_webapp_work) · ROOT_FROM/ROOT_TO (코호트 경로 치환, 기본 없음)
+#   환경: D (날짜 꼬리, 기본 오늘) · WORK (기본 ~/lhs_webapp_work) · ROOT_FROM/ROOT_TO (코호트 경로 치환, 기본 없음) ·
+#         PRESS (완료 압력 기록 TSV — scripts/lhs_pressure_record.py 산출 · DESC-06.  없으면 인계표는 '완료 압력 미검사' 명시 승인으로 만든다)
 # ══════════════════════════════════════════════════════════════════════════════
 set -uo pipefail
 cd "$(dirname "$0")/.." || exit 2
@@ -92,8 +93,10 @@ if [ -n "$ONE" ]; then
 fi
 
 echo "══ [4/5] 인계표 재생성 → docs/data/lhs_handover_$D.csv"
-python3 scripts/lhs_design_dataset.py --export-handover "docs/data/lhs_handover_$D.csv" --harvest "$HARV" --webapp "$WAPP" \
-    || { echo '⛔ 인계표 생성 거부 — 위 사유를 보고할 것 (같은 프레임 · 배치 미완 · 수확 세대)'; exit 1; }
+#  DESC-06 (10-06) — 생성기는 완료 압력 기록 (--pressure-record) 또는 미검사 명시 승인 (--pressure-unverified) 중 하나를 요구한다
+if [ -n "${PRESS:-}" ]; then PFLAG=(--pressure-record "$PRESS"); else PFLAG=(--pressure-unverified); echo '  ⚠ PRESS 없음 — 완료 압력 미검사로 만든다 (DESC-06)'; fi
+python3 scripts/lhs_design_dataset.py --export-handover "docs/data/lhs_handover_$D.csv" --harvest "$HARV" --webapp "$WAPP" "${PFLAG[@]}" \
+    || { echo '⛔ 인계표 생성 거부 — 위 사유를 보고할 것 (같은 프레임 · 배치 미완 · 수확 세대 · 완료 압력)'; exit 1; }
 
 echo "══ [5/5] 묶음 → $HOME/lhs_fill_$D.tar.gz"
 tar czf "$HOME/lhs_fill_$D.tar.gz" "$HARV" "$WAPP" "docs/data/lhs_handover_$D.csv" "docs/data/lhs_handover_${D}_columns.tsv"
