@@ -62,7 +62,7 @@ import sys
 
 #: ★ 10-06 세대 2 (C1-3 · 1저자 비준) — 세 번째 모드 `hertz_h12` = Hertz 이온 **민감도** 레코드 (ψ 곱 협착 + 구 조각 bulk · 같은 망 · 같은 전극).
 #:   생산자 (`network_conductivity._run_all_networks` hertzian) 가 Hertz 레코드 **안** `hertz_h12` 로 싣는다 (모드 파일 · legacy · dual 이 같은 사본) →
-#:   `mode_record` 가 거기서 읽는다.  **기본 학습 열이 아니다** (배포 = 민감도 부록 · 행마다 [H0, H12] 괄호) — 주 값은 hertz (H0) 그대로.
+#:   `mode_record` 가 거기서 읽는다.  **기본 학습 열이 아니다** (배포 = 민감도 부록 · 행마다 H0 와 짝인 두 규약의 시나리오 — 구간 · 괄호 아님 · Codex G2R-04) — 주 값은 hertz (H0) 그대로.
 MODES = ('hertz', 'physics', 'hertz_h12')
 DUAL_KEY = {'hertz': 'hertzian', 'physics': 'physics'}
 H12_MODE = 'hertz_h12'
@@ -428,7 +428,7 @@ G2_CHANNEL_LABELS = ('electrode_model', 'bulk_model', 'area_rule', 'area_rule_ph
 #:   (test_gen2_role_contract K1 · K2 가 그 차로 대조).  ψ 는 **값** multiply 가 표지다 (legacy_divide 는 09-15 깃발부터 옛 세대에도 있다).
 _G2_MARKER_BASE = ('electrode_model', 'bulk_model', 'area_rule', 'area_rule_physics', 'hertz_constriction', 'sensitivity_mode', H12_MODE,
                    'area_binding_counts_physics', 'n_area_physics_unavailable', 'n_clamp_zero', 'n_floor_only', 'h_film_nm', 'h_film_status',
-                   'solve_method_full')
+                   'solve_method_full', 'solve_certificate_full', 'solve_certificate_bulk_net', 'solve_certificate_constr_net')
 _G2_CHANNEL_MARKERS = ('electrode_model', 'bulk_model', 'area_rule', 'area_rule_physics', 'area_binding_counts_physics', 'n_clamp_zero',
                        'n_floor_only', 'psi_placement')
 G2_MARKER_KEYS = _G2_MARKER_BASE + tuple(p + k for p in CHANNEL_PREFIXES for k in _G2_CHANNEL_MARKERS)
@@ -453,6 +453,13 @@ def g2_markers(rec):
     return out
 
 
+def _cert_problem(cert):
+    """수치 증서 → None | 사유 (★ 10-06 밤 G2R-03 통합).  판정 = 생산자 모듈의 `certificate_problem` (허용치 = 그 모듈 상수 · 한 곳) —
+    무거운 생산자를 τ 모듈 임포트 때 끌어오지 않으려고 부를 때만 임포트한다."""
+    import network_conductivity as _nc
+    return _nc.certificate_problem(cert)
+
+
 def _g2_mode_problems(m, rec):
     """세대 2 한 모드 레코드 → 어긋남 목록 (부분 결손 · 모르는 값 · 다른 역할의 값).  생산자 실패 레코드 (sigma_full_status not_computed — H12 풀이
     예외 가지는 표기 일부만 싣는다) 는 **있는** 표기만 대조한다 — 그 모드는 공용 기술 검사가 solver_guard 로 막아 값이 실리지 않는다."""
@@ -472,6 +479,13 @@ def _g2_mode_problems(m, rec):
         for k in G2_CHANNEL_LABELS:
             if p + k in rec and rec.get(p + k) != want.get(k):
                 bad.append(f'{p}{k}={rec.get(p + k)!r} ≠ {want.get(k)!r}')
+    #  ★ 10-06 밤 (G2R-03 · Codex 세대 2 §4 · §8) — 게시되는 FULL σ 는 수치 증서가 있고 통과해야 한다 (전류 보존 · 내부 잔차 · 방법).
+    #    증서 없음 = 부분 결손 · 깨진 증서 = 그 해를 믿을 근거가 없다.  값이 게시되는 레코드 (sigma_full_status computed) 에만 요구한다 —
+    #    비관통 (valid_zero · no_through) · 생산자 실패 (not_computed) 는 게시할 해가 없다 (값 ↔ 상태 일관은 ion_record_problem 이 본다).
+    if rec.get('sigma_full_status') == 'computed':
+        _cp = _cert_problem(rec.get('solve_certificate_full'))
+        if _cp is not None:
+            bad.append(f'solve_certificate_full: {_cp}')
     return bad
 
 

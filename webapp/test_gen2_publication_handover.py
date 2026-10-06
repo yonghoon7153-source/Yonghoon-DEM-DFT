@@ -44,7 +44,7 @@ NET_FILES = (('network_conductivity_dual.json', None), ('network_conductivity.js
              ('network_conductivity_hertzian.json', 'hertzian'), ('network_conductivity_physics.json', 'physics'))
 G2_ONLY = ('electrode_model', 'bulk_model', 'area_rule', 'area_rule_physics', 'hertz_constriction', 'sensitivity_mode', 'hertz_h12',
            'area_binding_counts_physics', 'n_area_physics_unavailable', 'n_clamp_zero', 'n_floor_only', 'h_film_nm', 'h_film_status',
-           'solve_method_full')
+           'solve_method_full', 'solve_certificate_full', 'solve_certificate_bulk_net', 'solve_certificate_constr_net')
 G2_CHANNEL = ('electrode_model', 'bulk_model', 'area_rule', 'area_rule_physics', 'area_binding_counts_physics', 'n_clamp_zero', 'n_floor_only',
               'psi_placement')
 STAMP_G2_KEYS = ('psi_placement_physics', 'electrode_model', 'area_rule_physics', 'hertz_h12')

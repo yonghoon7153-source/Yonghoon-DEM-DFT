@@ -82,6 +82,11 @@ def _g2_net_records(rec_h, rec_p):
     def _lab(rec, mode):
         out = {k: v for k, v in rec.items() if k != _tf.H12_MODE}
         out.update({k: v for k, v in _tf.G2_MODE_CONTRACT[mode] if v is not None})
+        #  ★ 10-06 밤 (G2R-03 통합) — 계약이 게시되는 FULL σ 에 통과하는 수치 증서를 요구한다 → 가짜 레코드도 자기일관 증서를 단다
+        #    (전류 보존 0 · 내부 잔차 0 · 직접해 — 값 · 상태는 그대로).  증서 반례 = test_gen2_role_contract X2–X5.
+        if out.get('sigma_full_status') == 'computed':
+            out['solve_certificate_full'] = {'status': 'computed', 'reason': None, 'method': 'spsolve', 'I_bottom': 1.0, 'I_top': -1.0,
+                                             'conservation_rel': 0.0, 'residual_rel': 0.0}
         return out
     h = _lab(rec_h, 'hertz')
     h[_tf.H12_MODE] = _lab(rec_h, _tf.H12_MODE)

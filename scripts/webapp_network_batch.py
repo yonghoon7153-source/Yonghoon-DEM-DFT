@@ -87,7 +87,8 @@ NET_KEYS = (
     # 이온 — SE–SE 망
     'sigma_full_mScm', 'sigma_full_status', 'sigma_full_reason',
     'sigma_bulk_net_mScm', 'sigma_bulk_net_status', 'sigma_bulk_net_reason',
-    'sigma_constr_net_mScm', 'R_brug_over_full', 'percolating_fraction', 'active_fraction',
+    'sigma_constr_net_mScm', 'sigma_constr_net_status', 'sigma_constr_net_reason',   # ★ 10-06 밤 GEN2-01 — R_c = 0 이면 not_computed + 사유
+    'R_brug_over_full', 'percolating_fraction', 'active_fraction',
     'ionic_status', 'ionic_status_reason', 'phi_se', 'boundary_rule', 'boundary_band_frac',
     'n_nodes', 'n_edges', 'resistance_model', 'psi_placement',
     # ★ 10-06 저녁 세대 2 표기 (1저자 비준) — 전극 · bulk · 면적 규칙 (모드 · physics) · Hertz 협착 짝 · ψ floor 계수 (clamp = 원판 상한 R_c 0 ·

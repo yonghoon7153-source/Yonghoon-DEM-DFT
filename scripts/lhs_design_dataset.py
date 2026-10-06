@@ -1673,7 +1673,9 @@ TAU_NET_VERDICT = ('✅ 싣는다 (망 τ 묶음 · v1.2 — Codex 10-05 3차 �
                    '(실험 절대 대조) HOLD · 값은 싣는다 (ML 기술자 전용)')
 #: H12 열 = 민감도 부록 전용 (기본 학습 열 아님 · 배포는 `lhs_release_build --appendix` 로만 — 주 배포 표에 넣으면 거부).
 TAU_NET_VERDICT_H12 = ('⚠ 민감도 부록 전용 (H12 = Hertz ψ 곱 협착 + 구 조각 bulk · 10-06 1저자 비준 C1-3) — **기본 학습 열에 넣지 않는다** · '
-                       '행마다 [H0 (hertz 열), H12 (이 열)] 괄호로 읽는다 · 배포 = 부록 (lhs_release_build --appendix) · G6 물리 타깃 HOLD 그대로')
+                       '행마다 H0 (hertz 열) 와 짝인 **두 규약 (협착 · bulk 를 함께 바꾼) 의 쌍대응 시나리오** — 오차막대 · 상하한 · 신뢰구간이 아니다 '
+                       '(구 사슬 z = 2 · s = 0.45 에서 FV 기준 전도도가 H0 · H12 둘 다보다 크다 — Codex G2R-04) · 배포 = 부록 '
+                       '(lhs_release_build --appendix) · G6 물리 타깃 HOLD 그대로')
 _TAU_AREA = {'hertz': ('hertz = LIGGGHTS c_cpl[22] 기하 교차 원판 π(rδ − δ²/4) (같은 반지름 r · 겹침 δ — 탄성 πR*δ 의 (2 − δ/2r) 배 · '
                        '"Hertz" 는 이름만 · L1-04) · 협착 maxwell_halfspace · bulk 원기둥 반 d (H0 · 세대 1 과 같은 간선)'),
              'physics': ('physics = 행의 ion_net_area_rule_physics — physics_g2 (2026-10-06 저녁 세대 2 · plastic_coverage.film_area_g2: '
@@ -5720,7 +5722,7 @@ def _selftest():
             d2 = json.loads(json.dumps(d_))
             gone = ('electrode_model', 'area_rule', 'area_rule_physics', 'bulk_model', 'hertz_constriction', 'hertz_h12', 'psi_placement',
                     'area_binding_counts_physics', 'n_area_physics_unavailable', 'n_clamp_zero', 'n_floor_only', 'h_film_nm', 'h_film_status',
-                    'solve_method_full')
+                    'solve_method_full', 'solve_certificate_full', 'solve_certificate_bulk_net', 'solve_certificate_constr_net')
             for m_ in ('hertzian', 'physics'):
                 for k_ in list(d2[m_]):
                     if k_ in gone or any(k_ == f'{ch_}_{g_}' for ch_ in ('electronic', 'thermal') for g_ in gone):

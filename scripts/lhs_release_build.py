@@ -34,7 +34,7 @@ import sys
 import tempfile
 
 KEY = 'case_id'
-#: ★ 10-06 저녁 세대 2 (1저자 비준 C1-3) — 부록 전용 열 = 기본 학습 열 아님 (H12 민감도 = 행마다 [H0, H12] 괄호로 읽는 부록).
+#: ★ 10-06 저녁 세대 2 (1저자 비준 C1-3) — 부록 전용 열 = 기본 학습 열 아님 (H12 민감도 = 행마다 H0 와 짝인 **두 규약의 쌍대응 시나리오** · 오차막대 · 상하한 · 신뢰구간 아님 — Codex G2R-04).
 #:   잡는 길 둘: 이름 꼴 (`*_hertz_h12` · `f_ion_hertz_h12_gap`) 또는 인계표 열 사전 판정에 '부록 전용' (생성기 `TAU_NET_VERDICT_H12`).
 #:   주 배포 표에 넣으면 거부 — `--appendix` 로 만든 부록 파일에만 싣는다.  옛 배포 (v1 · v1.1 · v1.2 · Physics 부록) 에는 해당 열이 없다 (selftest ⑬).
 APPENDIX_ONLY_RE = re.compile(r'.+_hertz_h12(_gap)?')

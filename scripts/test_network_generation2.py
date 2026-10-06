@@ -249,7 +249,7 @@ def main():
         #    세대 2 부분 결손으로 거부한다 (test_gen2_role_contract R7).  표지 목록 = 실 생산자 ↔ 역사 레코드 키 차 (test_gen2_role_contract K1 오라클과 같다).
         gone = ('electrode_model', 'area_rule', 'area_rule_physics', 'bulk_model', 'hertz_constriction', 'sensitivity_mode', 'hertz_h12',
                 'area_binding_counts_physics', 'n_area_physics_unavailable', 'n_clamp_zero', 'n_floor_only', 'h_film_nm', 'h_film_status',
-                'solve_method_full')
+                'solve_method_full', 'solve_certificate_full', 'solve_certificate_bulk_net', 'solve_certificate_constr_net')
         gone_ch = ('electrode_model', 'bulk_model', 'area_rule', 'area_rule_physics', 'area_binding_counts_physics', 'n_clamp_zero', 'n_floor_only',
                    'psi_placement')
         for m in ('hertzian', 'physics'):

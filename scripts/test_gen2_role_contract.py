@@ -36,7 +36,7 @@ ARCHIVE = os.path.join(ROOT, 'docs', 'data', 'lhs_network194_11fcf91e8', 'handov
 HANDOVER_V12 = os.path.join(ROOT, 'docs', 'data', 'lhs_network194_11fcf91e8', 'handover_v12_20261006')
 
 #  세대 2 표지 키 — 독립 오라클 (실 생산자 출력 ↔ 194 역사 레코드의 키 차 · 10-06 밤 실측 · 시험이 도우미 상수를 베끼지 않는다)
-G2_ONLY = ('electrode_model', 'bulk_model', 'area_rule', 'area_rule_physics', 'hertz_constriction', 'sensitivity_mode', 'hertz_h12',
+G2_ONLY = ('solve_certificate_full', 'solve_certificate_bulk_net', 'solve_certificate_constr_net', 'electrode_model', 'bulk_model', 'area_rule', 'area_rule_physics', 'hertz_constriction', 'sensitivity_mode', 'hertz_h12',
            'area_binding_counts_physics', 'n_area_physics_unavailable', 'n_clamp_zero', 'n_floor_only', 'h_film_nm', 'h_film_status',
            'solve_method_full')
 G2_CHANNEL = ('electrode_model', 'bulk_model', 'area_rule', 'area_rule_physics', 'area_binding_counts_physics', 'n_clamp_zero', 'n_floor_only',
@@ -404,6 +404,38 @@ def main():
 
     if hist.get('_tmp'):
         shutil.rmtree(hist['_tmp'], ignore_errors=True)
+    #  ★ 10-06 밤 통합 (G2R-03 증서 → 계약) — 세대 2 레코드의 계산된 FULL σ 는 수치 증서 (solve_certificate_full) 가 있고 통과해야 한다.
+    #    게시 관문 ⑨ · 인계 재독이 같은 계약을 부르므로 여기서 거부되면 둘 다 막힌다 (반례 먼저 — 옛 계약은 증서를 안 봤다).
+    def _cert_case(fn):
+        d2 = copy.deepcopy(base)
+        fn(d2)
+        return con_of(d2)
+
+    def _probs_text(c):
+        return ' | '.join(f'{m}:{k}:{s}' for m, k, s in c.get('problems', []))
+    _okb = con_of(base)
+    _hcert = (base.get('hertzian') or {}).get('solve_certificate_full')
+    chk('X1 실 생산자 세 모드 레코드에 FULL 증서가 있고 (증서 문제 없음) 계약 g2 · 문제 없음',
+        isinstance(_hcert, dict) and nc.certificate_problem(_hcert) is None and _okb.get('generation') == 'g2' and not _okb.get('problems'),
+        (_hcert if not isinstance(_hcert, dict) else nc.certificate_problem(_hcert), _okb))
+    _c2 = _cert_case(lambda d: d['hertzian'].pop('solve_certificate_full', None))
+    chk('X2 ★ 주 Hertz FULL 증서 삭제 → 세대 invalid (부분 결손 — 증서도 세대 2 필수 필드)',
+        _c2.get('generation') == 'invalid' and 'solve_certificate_full' in _probs_text(_c2), _c2)
+
+    def _break(d):
+        c = d['physics']['solve_certificate_full']
+        c['I_top'] = -0.5 * float(c['I_bottom'])
+        c['conservation_rel'] = abs(float(c['I_bottom']) + float(c['I_top'])) / max(abs(float(c['I_bottom'])), abs(float(c['I_top'])))
+    _c3 = _cert_case(_break)
+    chk('X3 ★ physics 증서의 전류 보존 실패 (기록값은 자기일관) → invalid · 사유에 보존',
+        _c3.get('generation') == 'invalid' and '보존' in _probs_text(_c3), _c3)
+    _c4 = _cert_case(lambda d: d['hertzian']['hertz_h12'].pop('solve_certificate_full', None))
+    chk('X4 ★ H12 레코드 증서 삭제 → invalid', _c4.get('generation') == 'invalid' and 'hertz_h12' in _probs_text(_c4), _c4)
+    _c5 = _cert_case(lambda d: d['hertzian']['solve_certificate_full'].update(method='cg+ilu'))
+    chk('X5 ★ 지운 방법 (cg+ilu · SPD 아닌 전처리 CG) 의 증서 → invalid', _c5.get('generation') == 'invalid', _c5)
+    _c6 = con_of(strip_g2(base))
+    chk('X6 표지 · 증서를 다 뺀 역사 모양 → inferred_legacy (증서 키도 세대 2 표지)', _c6.get('generation') == 'inferred_legacy', _c6)
+
     print(f'\ntest_gen2_role_contract: {_ok}/{_ok + len(_fail)} PASS' + (f'   FAILED: {_fail}' if _fail else ''))
     return 0 if not _fail else 1
 
