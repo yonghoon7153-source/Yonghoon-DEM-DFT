@@ -218,6 +218,9 @@ run 'tau_flux (이온 인계 열 · 게이트 G1–G6)' python3 scripts/test_tau
 run 'reread_v12 (RGLR4-01 · 02 반례 · 원본 PASS)' python3 scripts/test_reread_v12.py
 #  ★ 2026-10-06 (DESC-06 잔여) — 완료 압력 기록 (LIGGGHTS 로그 압밀 루프 판정 줄) + 인계 생성기 관문 · CLI 명시 승인 (--pressure-record | --pressure-unverified)
 run 'lhs_pressure_record (DESC-06 완료 압력 · 생성기 관문)' python3 scripts/test_lhs_pressure_record.py
+#  ★ 2026-10-06 밤 (이종기술 2-1 장 7:3 압축 곡선 · x = step) — 로그 thermo + 판 메시 → step 별 압력 · 판 높이.  재시작 잇기
+#    (r2 판 재부양 거부) · run 경계 설정 줄 버림 · 판정 줄 ↔ thermo 압력 · 메시 등속 하강 반례 (변이 둘 = 빨강 확인)
+run 'compaction_curve (로그 잇기 · 설정 줄 · 판 재부양 반례)' python3 scripts/test_compaction_curve.py
 #  ★ 2026-10-06 (`L2-01` 세대 2 · 1저자 개정 — 계약 개정 노트) — ψ 배치 기본값 = 곱셈 · legacy 는 명시 인자로만 · 2 구 접촉 식 (세 채널 ×
 #    s ≈ 0.2 · 0.5 · 0.9) · 단조 · Hertz 비트 동일 · tau_flux 협착 라벨 = ψ 배치 · 세 채널 결과의 세대 표기.
 run 'psi default switch (L2-01 세대 2)' python3 scripts/test_psi_default_switch.py
