@@ -914,6 +914,9 @@ def network_stop_verdict(results_dir, run_id, fm=None, legacy_ok=False):
          · 같은 그래프 (관통 분율 · 띠 규칙 · 띠 폭 · σ 상태 부류) · τ 인계 상태 ∈ OK · 등록된 과학적 HOLD (소비자 자신).  옛 판은 중첩 H12 메타만 보고
          주 Hertz 가 H0 인지 안 봐 H12 를 주 자리에 둔 후보가 done 이었고 (G2R-01) · 주 Hertz 전극이 dirichlet_exact 가 아니면 무엇이든 옛 레코드로 보고
          조기 반환했다 (G2R-02).
+         ★ 10-06 밤 G2RR-02 — 같은 계약이 수치 증서의 결합 (가지 · 채널 · 역할 · 전극 · ΔV · 봉인된 기하 · 발행 σ_ratio · σ_dim 재구성 · 숫자를 싣는
+         CF · 협착-only 진단 · 해 없는 가지의 거짓 수렴 금지) 까지 본다 (`tau_flux.certificate_binding_problems` · 사유 종류 'cert').  옛 판은 CF · H12
+         증서를 주 FULL 자리에 둔 후보 · 숫자만 바꾼 후보가 done 이었다 (Codex probes/acceptance.py).
     """
     ok_c, why_c = network_content_verdict(results_dir, strict=True)
     bad = [] if ok_c else [f'① {why_c}']
@@ -1039,6 +1042,10 @@ def _generation_contract_lines(con, tf):
             out.append(f'{head}: {what} — 세대 계약 (G2R-01 · 02): {det}')
         elif kind == 'legacy_role':
             out.append(f'{head}: 세대 2 표기가 없는데 옛 세대 역할 표기도 아니다 — 세대 계약 (G2R-02): {det}')
+        elif kind == 'cert':
+            #  ★ 10-06 밤 G2RR-02 (Codex 세대 2 재검증 §3 · §7-2) — 수치 증서가 그 가지 · 역할 · 채널 · 봉인된 기하 · 발행 σ 와 묶이지 않는다
+            #    (CF → FULL · H12 → H0 · 기하 인자 · 숫자만 · 숫자를 싣는 CF · 협착-only 의 증서 결손 · 실패 · 결합 키 없는 옛 증서) — 판정 = tau_flux 같은 함수
+            out.append(f'{head}: 수치 증서 · 결합 (G2R-03 · G2RR-02 — 가지 · 역할 · 발행값): {det}')
         else:
             out.append(f'{head}: {det} — 세대 계약 (G2R-02)')
     return out

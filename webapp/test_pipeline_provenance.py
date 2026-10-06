@@ -21,6 +21,8 @@ subprocess 는 전부 **가짜 실행기**로 바꿔 센다 — 실제 solver �
   ★ 10-06 밤 (Codex G2R-01 · 02 · 1저자 비준) — 승격 전 공용 세대 계약이 현행 생산물에 세대 2 표기 전부 (모드마다 H0 · physics + H12 민감도) 를
     요구한다 → 가짜 망 레코드 (`_write_fake_net` · T16a) 도 `_g2_net_records` 로 생산자 세대 2 모양을 갖춘다 (값 · 상태는 그대로).
     역할 · 닫힌 열거 · 부분 결손 반례 = test_gen2_publication_handover (실 생산자 사슬).
+  ★ 10-06 밤 G2RR-02 — 같은 계약이 숫자를 싣는 가지마다 결합 증서 (가지 · 채널 · 역할 · 전극 · ΔV · 기하 · G→q · 발행값 재구성) 를 요구한다 →
+    `_g2_net_records` 의 가짜 증서도 생산자 모양의 자기일관 결합 증서 (fixture-drift — 옛 결합 없는 가짜 증서는 17 실패 · 고친 뒤 284/284).
 
   python3 webapp/test_pipeline_provenance.py
 """
@@ -84,9 +86,20 @@ def _g2_net_records(rec_h, rec_p):
         out.update({k: v for k, v in _tf.G2_MODE_CONTRACT[mode] if v is not None})
         #  ★ 10-06 밤 (G2R-03 통합) — 계약이 게시되는 FULL σ 에 통과하는 수치 증서를 요구한다 → 가짜 레코드도 자기일관 증서를 단다
         #    (전류 보존 0 · 내부 잔차 0 · 직접해 — 값 · 상태는 그대로).  증서 반례 = test_gen2_role_contract X2–X5.
-        if out.get('sigma_full_status') == 'computed':
-            out['solve_certificate_full'] = {'status': 'computed', 'reason': None, 'method': 'spsolve', 'I_bottom': 1.0, 'I_top': -1.0,
-                                             'conservation_rel': 0.0, 'residual_rel': 0.0}
+        #  ★ 10-06 밤 G2RR-02 (fixture-drift — RGLR2-01 · RC7-02 와 같은 규약) — 계약이 숫자를 싣는 가지마다 **결합** 증서 (가지 · 채널 · 역할 · 전극 ·
+        #    ΔV · 봉인 기하 · G→q · σ₀ · 발행값 재구성) 를 요구한다 → 가짜 레코드도 생산자 모양의 자기일관 결합 증서를 단다: 기하 (판 1 · 상자 1 · 척도 1 →
+        #    G→q 1) · I_bottom = σ_ratio (ΔV 1 → 재구성 = 발행값) · I_top = −I_bottom · 보존 0 · 잔차 0 · 직접해 · 숫자를 싣는 CF · 협착-only 에도 (상태가
+        #    없으면 computed — 생산자는 늘 싣는다).  값 · FULL 상태는 그대로.  결합 반례 = test_gen2_role_contract Y · test_gen2_publication_handover ⑤.
+        for branch, qk, _dk, sk, _rk, ck in _tf.CERT_BRANCH_KEYS:
+            q = out.get(qk)
+            if q is None or (branch == 'full' and out.get('sigma_full_status') != 'computed'):
+                continue
+            out.setdefault(sk, 'computed')
+            out[ck] = {'status': out[sk], 'reason': None, 'method': 'spsolve', 'I_bottom': float(q), 'I_top': -float(q),
+                       'conservation_rel': 0.0, 'residual_rel': 0.0, 'electrode_model': out.get('electrode_model'),
+                       'branch': branch, 'channel': 'ionic', 'role': _tf.CERT_ROLE[mode], 'contact_mode': out.get('contact_mode'),
+                       'delta_V': 1.0, 'geometry': {'plate_z': 1.0, 'box_x': 1.0, 'box_y': 1.0, 'scale': 1}, 'g_to_q': 1.0,
+                       'sigma_bulk_S_cm': out.get('sigma_grain_S_cm')}
         return out
     h = _lab(rec_h, 'hertz')
     h[_tf.H12_MODE] = _lab(rec_h, _tf.H12_MODE)

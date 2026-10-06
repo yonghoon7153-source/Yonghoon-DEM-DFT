@@ -17,6 +17,9 @@ Hertz 레코드 안 `hertz_h12` 에서 읽는다 · **기본 학습 열 아님**
 그 밖 = `invalid` (레코드 있는 모드 전부 NOT_COMPUTED invalid_input).  여러 폴더를 한 표로 낼 때 행마다 계약 먼저 (`row_generation_problems`) ·
 그다음 세대 섞임 (`generation_mixing_problem` · CLI rc 2) — 같은 결함만 모인 코호트도 거부한다.  웹앱 망 정지 계약 ⑨ · 공용 기록 검사 · 인계 생성기 ·
 배포 빌더가 같은 함수를 부른다.
+★ 10-06 밤 G2RR-02 (Codex 세대 2 재검증 §3 · §7-2 · 1저자 비준) — 세대 2 계약이 수치 증서의 **결합**까지 본다 (`certificate_binding_problems` · 종류 'cert'):
+가지 · 채널 · 역할 · 전극 · ΔV · 봉인된 기하 (G→q) 대조 + 발행 σ_ratio · σ_dim 을 증서의 I_bottom/ΔV × T/A 로 저장 반올림 반폭 안에 재구성 · 숫자를 싣는
+CF · 협착-only 진단도 같은 검사 · 해 없는 가지는 증서를 요구하지 않는다 (상태 ↔ 증서가 해를 주장하지 않는가만) — 정책 표 `CERT_BRANCH_POLICY`.
 
 | 열 | 식 |
 |---|---|
@@ -401,8 +404,9 @@ def generation_meta(res, m, legacy=False):
 #  규칙 (닫힌 열거): 세대 2 표지 (`G2_MARKER_KEYS` · ψ multiply) 가 레코드 어디에든 하나라도 있으면 세대 2 — 모드마다 `G2_MODE_CONTRACT` 표기 **전부**
 #  필수 · 값은 표와 같아야 하고 (주 Hertz = H0 · H12 = ψ 곱 + 구 조각 · physics = ψ 곱 + physics_g2) 세대 2 Hertz 는 H12 레코드도 필수 (생산자가 늘
 #  함께 낸다).  표지가 하나도 없으면 옛 세대 **추론** (`inferred_legacy`) — `LEGACY_MODE_CONTRACT` (194 v1.2 배치 원천의 실제 모양) 와 맞아야 한다.
-#  그 밖 = `invalid` (레코드 있는 모드 전부 NOT_COMPUTED invalid_input).  ⚠ 표기 (메타) 계약이다 — 숫자만 바꿔 끼운 레코드 (표기 그대로) 는 재계산 없이
-#  못 잡는다 (TAU_SAME_GEN_BASIS 한계와 같은 부류).
+#  그 밖 = `invalid` (레코드 있는 모드 전부 NOT_COMPUTED invalid_input).  ⚠ 표기 계약 + ★ 10-06 밤 G2RR-02 수치 증서 결합 (`certificate_binding_problems`
+#  — 숫자를 싣는 가지마다 그 가지 증서의 I_bottom/ΔV × 봉인 기하로 발행 σ 를 재구성) — 숫자만 바꿔 끼운 레코드는 이제 잡힌다 · 증서 · 숫자 · 기하를
+#  한 실행의 모든 증서에 걸쳐 일관되게 바꾼 전면 위조는 재계산 없이 못 잡는다 (TAU_SAME_GEN_BASIS 한계와 같은 부류).
 NET_GEN_G2 = 'g2'
 NET_GEN_LEGACY = 'inferred_legacy'            # 세대 2 표지가 하나도 없는 역사 레코드 — 옛 기본값으로 **추론**했다는 표지
 NET_GEN_BAD = 'invalid'                       # 세대 계약 위반 (사유 = 그 행의 상태 칸 · `generation_contract_text`)
@@ -453,11 +457,195 @@ def g2_markers(rec):
     return out
 
 
+def _nc_mod():
+    """생산자 모듈 (network_conductivity) — 무거운 생산자를 τ 모듈 임포트 때 끌어오지 않으려고 부를 때만 임포트한다."""
+    import network_conductivity as _nc
+    return _nc
+
+
 def _cert_problem(cert):
     """수치 증서 → None | 사유 (★ 10-06 밤 G2R-03 통합).  판정 = 생산자 모듈의 `certificate_problem` (허용치 = 그 모듈 상수 · 한 곳) —
     무거운 생산자를 τ 모듈 임포트 때 끌어오지 않으려고 부를 때만 임포트한다."""
-    import network_conductivity as _nc
-    return _nc.certificate_problem(cert)
+    return _nc_mod().certificate_problem(cert)
+
+
+#  ── ★ 10-06 밤 G2RR-02 — 증서 ↔ 가지 · 역할 · 발행값 결합 (Codex 세대 2 재검증 `docs/reviews/codex_review_gen2_network_reverify_20261006.md` §3 · §7-2 ·
+#     1저자 비준 "권고대로") ─────────────────────────────────────────────────────────────────────────────────────────────────────────────
+#  옛 계약 (G2R-03 통합) 은 `solve_certificate_full` 이라는 **자리**에 있는 증서의 내부 일관성 (보존 · 잔차 · 방법) 만 봤다 → 같은 실행의 CF 증서 ·
+#  H12 FULL 증서를 주 Hertz FULL 자리에 복사해도 게시 · τ OK (Codex probes/acceptance.py · 우리 트리 재현 db74ea98 — tau2 10.98080510469845x 그대로).
+#  이제 생산자가 증서마다 싣는 결합 정보 (`network_conductivity.CERT_BINDING_FIELDS`) 를 자리 · 부모 레코드 · 발행 σ 와 대조한다 (값 = 생산자 상수와
+#  같은 문자열 — 무거운 생산자를 이 도우미에서 임포트하지 않으려고 둔다 · test_network_solve_certificate G1 이 실 출력과 대조):
+#    ① 결합 — 가지 = 자리 (full · bulk_only · constriction_only) · 채널 = ionic · 역할 = 모드 (hertz → H0 · hertz_h12 → H12 · physics → physics) ·
+#       contact_mode · 전극 = 그 자리의 세대 2 표 값 (부모 표기는 역할 계약이 같은 표로 본다 → 받는 레코드에서 증서 = 부모 · 사유를 겹치지 않는다) ·
+#       증서 상태 = 그 가지 상태 · ΔV = 1 (정확 Dirichlet 바닥 1 · 위 0)
+#    ② 기하 — geometry {plate_z, box_x, box_y, scale} 유한 양수 · g_to_q = (plate_z·scale)/(box_x·box_y·scale²) (상대 1e-12) · 한 실행의 모든 증서
+#       (모드 셋 · 가지 셋 · 채널 사본) 가 같은 기하 = 봉인된 기하 (`_cert_geometry_problems`)
+#    ③ 재구성 — q = (I_bottom/ΔV)·T/A (생산자 σ 환산과 같은 식 · 같은 순서) 가 저장 σ_ratio 의 반올림 반폭 (5e-9 + 16ε) 안 · 1000·σ₀·q 가 저장
+#       σ_dim 의 저장 정밀도 허용 (`sigma_identity_tol` — 6 자리 반폭 5e-7 + 8 자리 반폭 몫 + 16ε) 안 · σ₀ = FULL 은 부모 sigma_grain_S_cm (두 표현
+#       항등식과 같은 σ₀) · CF · 협착-only 는 그 증서의 sigma_bulk_S_cm (그 가지 mS/cm 열의 σ) — 증서 σ_bulk ↔ 부모 σ₀ 짝은 정지 계약 ⑧ 의 몫
+#       (RGL-07 · RGLR3-02 · 여기서 보지 않는다 — 거부 지점을 옮기지 않는다)
+#    ④ 수치 증서 — `network_conductivity.certificate_problem` (보존 · 잔차 · 방법 · 허용치 1e-6)
+#  정책 (`CERT_BRANCH_POLICY` · 봉인 — 새 194 전 고정 · 결과를 보고 옮기지 않는다):
+#    · FULL — 게시 (computed) 면 ①–④ 필수 (τ 의 수치 의존).
+#    · CF (bulk_only) · 협착-only (constriction_only) 진단 — **숫자를 싣는** 가지 (값 있음 · 상태 computed · model_over_conduction) 면 ①–④ 필수 ·
+#      model_over_conduction 은 모형 해석 표지이지 수치 증서 면제가 아니다 (Codex Q4).
+#    · 숫자 없는 가지 (비관통 valid_zero · 0 저항 수축 미구현 · 증서 실패 · 경계 겹침 = not_computed) — **없는 수렴 증서를 요구하지 않는다**: 상태가
+#      있으면 이유를 말해야 하고 (valid_zero · not_computed) · 증서가 있으면 해를 주장하지 않아야 (status computed · I_bottom 없음) · 생산자 사유
+#      (경계 겹침 · 증서 실패 · 0 저항) 는 증서 사유와 같아야 한다 — 해 없는 가지를 거짓 수렴으로 채우지 않는다.
+#    · 어긋남 = 레코드 계약 위반 (세대 invalid · 그 실행의 모드 전부 NOT_COMPUTED · 게시 거부 · 인계 거부).  생산자는 증서를 못 넘은 가지에 숫자를
+#      싣지 않는다 (그 가지만 NOT_COMPUTED + 사유 · FULL 유지 — 정직한 개별 풀이 실패는 위 "숫자 없는 가지" 로 통과) → 숫자가 실렸는데 결합 증서가
+#      없거나 맞지 않으면 개별 풀이 실패가 아니라 레코드 조립 · 편집 모순이다 (Codex §6 의 "모드 정체성 모순" 부류 — 그 레코드의 다른 숫자도 믿을 근거가 없다).
+#    · 전자 · 열 채널 증서 — 결합 정보는 기록 · 봉인된 기하 대조에만 쓴다 (이번 τ 인계에 안 쓰는 채널 — 이 수용 검사 밖 · "웹앱 σ 전체 인증" 이 아니다).
+#    · 옛 기록 — 결합 키가 없는 세대 2 증서 (G2RR-02 이전 생산자 · 05977e94a – 70a6d91a4) 는 숫자를 싣는 가지에서 거부 (재계산 필요 · 결합 키를 지워
+#      옛 증서로 위장할 수 없다 — 지운 것과 옛 것을 구별할 수 없으므로) · 세대 2 표지가 하나도 없는 역사 레코드 (194 v1.2 원천 = inferred_legacy) 는
+#      증서가 없어 이 검사 대상이 아니다 (상태 · 값 그대로).
+#    · 공용 기술 검사 (`ion_record_problem`) 를 못 넘은 레코드는 결합을 보지 않는다 — 모든 소비처 (정지 계약 ③ · 승격 전 기록 검사 · τ 0b · 인계 P4
+#      재검사) 가 그 검사로 먼저 거부한다 (사유를 겹치지 않는다 · 인계 재검사의 "망 정지 계약 재검사" 사유가 그대로 남는다).
+#  ⚠ 한계 — 증서 · 숫자 · 기하를 한 실행의 모든 증서에 걸쳐 일관되게 바꾼 전면 위조는 재계산 없이 못 잡는다 (Codex: "일관된 전면 위조를 탐지한다는 보증 아님").
+CERT_DELTA_V = 1.0
+CERT_ION_CHANNEL = 'ionic'
+CERT_ROLE = {'hertz': 'H0', H12_MODE: 'H12', 'physics': 'physics'}
+CERT_BINDING_KEYS = ('branch', 'channel', 'role', 'contact_mode', 'delta_V', 'geometry', 'g_to_q', 'sigma_bulk_S_cm')
+CERT_GEOMETRY_KEYS = ('plate_z', 'box_x', 'box_y', 'scale')
+#: 가지 → (σ_ratio 키, σ_dim 키, 상태 키, 사유 키, 증서 키) — 생산자 run_decomposition 의 결과 키.
+CERT_BRANCH_KEYS = (('full', 'sigma_full', 'sigma_full_mScm', 'sigma_full_status', 'sigma_full_reason', 'solve_certificate_full'),
+                    ('bulk_only', 'sigma_bulk_net', 'sigma_bulk_net_mScm', 'sigma_bulk_net_status', 'sigma_bulk_net_reason',
+                     'solve_certificate_bulk_net'),
+                    ('constriction_only', 'sigma_constr_net', 'sigma_constr_net_mScm', 'sigma_constr_net_status', 'sigma_constr_net_reason',
+                     'solve_certificate_constr_net'))
+CERT_PUBLISHED_STATES = ('computed', 'model_over_conduction')
+CERT_UNPUBLISHED_STATES = ('valid_zero', 'not_computed')
+CERT_BRANCH_POLICY = {'full': 'required_when_computed', 'bulk_only': 'required_when_published', 'constriction_only': 'required_when_published'}
+CERT_G2Q_REL_TOL = 1e-12
+
+
+def _cert_geometry(cert):
+    """증서 → (T, A, '') | (None, None, 사유) — T = plate_z·scale · A = box_x·box_y·scale² (생산자 σ 환산과 같은 식) · g_to_q 대조."""
+    g = cert.get('geometry')
+    if not isinstance(g, dict):
+        return None, None, f'기하 (geometry) 없음 · 객체 아님 ({type(g).__name__})'
+    bad = [k for k in CERT_GEOMETRY_KEYS if _pos(g.get(k)) is None]
+    if bad:
+        return None, None, f'기하 {bad} 결손 · 비유한 · 양수 아님'
+    T = g['plate_z'] * g['scale']
+    A = g['box_x'] * g['box_y'] * g['scale'] ** 2
+    want, g2q = T / A, _pos(cert.get('g_to_q'))
+    if g2q is None or not abs(g2q - want) <= CERT_G2Q_REL_TOL * want:
+        return None, None, (f'G→q 인자 g_to_q {cert.get("g_to_q")!r} ≠ 기하에서 다시 잰 (plate_z·scale)/(box_x·box_y·scale²) = {want!r} '
+                            '(기하 인자 변이)')
+    return T, A, ''
+
+
+def _cert_published_problem(m, branch, rec, q, sd, st, cert):
+    """숫자를 싣는 가지 → None | 사유 (정책 ①–④)."""
+    if st not in CERT_PUBLISHED_STATES:
+        return f'숫자 (σ_ratio {q!r} · σ_dim {sd!r}) 가 실렸는데 상태 {st!r} — 숫자를 싣는 가지는 computed · model_over_conduction 이어야'
+    if not isinstance(cert, dict):
+        return f'증서 없음 ({type(cert).__name__}) — 발행 σ 를 뒷받침할 그 가지의 풀이 증서가 없다'
+    miss = [k for k in CERT_BINDING_KEYS if k not in cert]
+    if len(miss) == len(CERT_BINDING_KEYS):
+        return ('결합 정보 없음 — G2RR-02 이전 세대 2 증서 (가지 · 채널 · 역할 · ΔV · 기하 · G→q 없음) · 발행값과 대조할 수 없다 (재계산 필요)')
+    if miss:
+        return f'결합 정보 부분 결손 {miss}'
+    p = _cert_problem(cert)
+    if p is not None:
+        return p
+    bad = []
+    if cert.get('branch') != branch:
+        bad.append(f'가지 {cert.get("branch")!r} ≠ 자리 {branch!r} (다른 가지의 증서)')
+    if cert.get('channel') != CERT_ION_CHANNEL:
+        bad.append(f'채널 {cert.get("channel")!r} ≠ {CERT_ION_CHANNEL!r} (다른 물리 채널의 증서)')
+    if cert.get('role') != CERT_ROLE[m]:
+        bad.append(f'역할 {cert.get("role")!r} ≠ {CERT_ROLE[m]!r} ({ROLE_NAME.get(m, m)} 자리 — 다른 역할의 증서)')
+    #  전극 · contact_mode = 그 자리의 세대 2 표 값 — 부모 표기는 역할 계약 (`_g2_mode_problems`) 이 같은 표로 본다 → 받는 레코드에서는 증서 = 부모 ·
+    #  부모만 어긋난 레코드에 사유를 겹치지 않는다 (정지 계약 ⑨ · τ 사유 한 줄)
+    want_cm = dict(G2_MODE_CONTRACT[m]).get('contact_mode')
+    if cert.get('contact_mode') != want_cm:
+        bad.append(f'contact_mode {cert.get("contact_mode")!r} ≠ {want_cm!r} (부모 · 자리)')
+    if cert.get('electrode_model') != ELECTRODE_G2:
+        bad.append(f'전극 {cert.get("electrode_model")!r} ≠ {ELECTRODE_G2!r} (부모 · 자리)')
+    if cert.get('status') != st:
+        bad.append(f'증서 상태 {cert.get("status")!r} ≠ 그 가지 상태 {st!r}')
+    dv = _num(cert.get('delta_V'))
+    if dv != CERT_DELTA_V:
+        bad.append(f'ΔV {cert.get("delta_V")!r} ≠ {CERT_DELTA_V!r} (정확 Dirichlet — 바닥 띠 1 · 위 띠 0)')
+    T, A, gwhy = _cert_geometry(cert)
+    if gwhy:
+        bad.append(gwhy)
+    if T is not None and dv is not None and dv > 0:                 # 재구성 — 결합 어긋남과 함께 보인다 (무엇이 어긋났는지 한 번에)
+        q_rec = (float(cert['I_bottom']) / dv) * T / A
+        qn, sdn = _num(q), _num(sd)
+        if qn is None or not abs(qn - q_rec) <= SIGMA_RATIO_ROUND_HALF + _ID_FP * abs(q_rec):
+            bad.append(f'발행 σ_ratio {q!r} ≠ 증서 재구성 I_bottom/ΔV × T/A = {q_rec!r} (저장 반올림 반폭 {SIGMA_RATIO_ROUND_HALF:g} 밖)')
+        #  차원 σ — FULL = 부모 σ₀ (공용 기술 검사의 두 표현 항등식과 같은 σ₀ · 같은 허용) · CF · 협착-only = 그 증서의 sigma_bulk_S_cm (그 가지의 mS/cm
+        #  열을 만든 σ).  증서 σ_bulk ↔ 부모 σ₀ 의 짝은 여기서 보지 않는다 — σ₀ · 온도 짝은 정지 계약 ⑧ (RGL-07 · RGLR3-02) 의 몫 (거부 지점을 옮기지 않는다)
+        s_key = 'sigma_grain_S_cm (부모)' if branch == 'full' else 'sigma_bulk_S_cm (증서)'
+        s_ref = _pos(rec.get('sigma_grain_S_cm')) if branch == 'full' else _pos(cert.get('sigma_bulk_S_cm'))
+        if s_ref is None or sdn is None:
+            bad.append(f'차원 σ {sd!r} · σ₀ {s_key} 결손 — 증서에서 재구성할 수 없다')
+        else:
+            d_rec = 1000.0 * s_ref * q_rec
+            tol = sigma_identity_tol(s_ref, q_rec, sdn)
+            if not abs(sdn - d_rec) <= tol:
+                bad.append(f'발행 σ_dim {sdn!r} mS/cm ≠ 증서 재구성 1000·σ₀·q = {d_rec!r} (σ₀ = {s_key} · 저장 정밀도 허용 {tol:.3g} 밖)')
+    return ' · '.join(bad) if bad else None
+
+
+def _cert_unpublished_problem(branch, st, rsn, cert):
+    """숫자 없는 가지 → None | 사유 — 없는 수렴 증서를 요구하지 않는다 · 상태 ↔ 증서가 해를 주장하지 않는가만."""
+    if st is not None and st not in CERT_UNPUBLISHED_STATES:
+        return f'숫자 없음 ↔ 상태 {st!r} (사유 {rsn!r}) — 해가 없는 가지는 valid_zero · not_computed 로 이유를 말해야 한다'
+    if cert is None:
+        return None
+    if not isinstance(cert, dict):
+        return f'증서 자리가 객체가 아니다 ({type(cert).__name__})'
+    if cert.get('status') in CERT_PUBLISHED_STATES or _num(cert.get('I_bottom')) is not None:
+        return (f'숫자 없는 가지 ({st} · {rsn}) 인데 증서가 해를 주장한다 (status {cert.get("status")!r} · I_bottom {cert.get("I_bottom")!r}) — '
+                '해 없는 가지를 거짓 수렴 증서로 채우지 않는다')
+    if 'branch' in cert and cert.get('branch') != branch:
+        return f'가지 {cert.get("branch")!r} ≠ 자리 {branch!r} (다른 가지의 증서)'
+    if rsn in _nc_mod().NOT_COMPUTED_SOLVE_REASONS and cert.get('reason') != rsn:
+        return f'숫자 없음의 사유 {rsn!r} ≠ 증서 사유 {cert.get("reason")!r}'
+    return None
+
+
+def certificate_binding_problems(m, rec):
+    """★ 10-06 밤 G2RR-02 — 세대 2 레코드 한 모드 (hertz · hertz_h12 · physics) → 증서 결합 어긋남 목록 ([] = 통과 · 정책 = 위 절 · CERT_BRANCH_POLICY).
+    공용 기술 검사 (`ion_record_problem`) 를 못 넘은 레코드는 [] — 모든 소비처가 그 검사로 먼저 거부한다."""
+    if not isinstance(rec, dict) or m not in CERT_ROLE or ion_record_problem(rec) is not None:
+        return []
+    out = []
+    for branch, qk, dk, sk, rk, ck in CERT_BRANCH_KEYS:
+        q, sd, st, cert = rec.get(qk), rec.get(dk), rec.get(sk), rec.get(ck)
+        if st in CERT_PUBLISHED_STATES or q is not None or sd is not None:
+            why = _cert_published_problem(m, branch, rec, q, sd, st, cert)
+        else:
+            why = _cert_unpublished_problem(branch, st, rec.get(rk), cert)
+        if why:
+            out.append(f'{ck}: {why}')
+    return out
+
+
+def _cert_geometry_problems(recs):
+    """한 실행 (dual 의 모드 레코드 · 채널 사본 · H12) 의 모든 증서가 같은 기하 (geometry · g_to_q) 를 싣는가 — 봉인된 기하 → [(모드, 사유)]."""
+    seen = {}
+    for m in MODES:
+        rec = recs.get(m)
+        if not isinstance(rec, dict):
+            continue
+        for pre in ('',) + CHANNEL_PREFIXES:
+            for *_k, ck in CERT_BRANCH_KEYS:
+                c = rec.get(pre + ck)
+                if isinstance(c, dict) and ('geometry' in c or 'g_to_q' in c):
+                    key = json.dumps([c.get('geometry'), c.get('g_to_q')], sort_keys=True, default=str)
+                    seen.setdefault(key, []).append((m, pre + ck))
+    if len(seen) <= 1:
+        return []
+    groups = sorted(seen.items(), key=lambda kv: -len(kv[1]))
+    ref_key, ref_where = groups[0]
+    return [(where[0][0], f'봉인된 기하 불일치 — {[f"{m_}.{k_}" for m_, k_ in where][:4]} 의 기하 · G→q {key} ≠ 같은 실행의 다른 증서 '
+                          f'{len(ref_where)} 개 (예: {ref_where[0][0]}.{ref_where[0][1]}) 의 {ref_key} — 한 실행의 증서는 한 기하로 풀렸다')
+            for key, where in groups[1:]]
 
 
 def _g2_mode_problems(m, rec):
@@ -479,13 +667,8 @@ def _g2_mode_problems(m, rec):
         for k in G2_CHANNEL_LABELS:
             if p + k in rec and rec.get(p + k) != want.get(k):
                 bad.append(f'{p}{k}={rec.get(p + k)!r} ≠ {want.get(k)!r}')
-    #  ★ 10-06 밤 (G2R-03 · Codex 세대 2 §4 · §8) — 게시되는 FULL σ 는 수치 증서가 있고 통과해야 한다 (전류 보존 · 내부 잔차 · 방법).
-    #    증서 없음 = 부분 결손 · 깨진 증서 = 그 해를 믿을 근거가 없다.  값이 게시되는 레코드 (sigma_full_status computed) 에만 요구한다 —
-    #    비관통 (valid_zero · no_through) · 생산자 실패 (not_computed) 는 게시할 해가 없다 (값 ↔ 상태 일관은 ion_record_problem 이 본다).
-    if rec.get('sigma_full_status') == 'computed':
-        _cp = _cert_problem(rec.get('solve_certificate_full'))
-        if _cp is not None:
-            bad.append(f'solve_certificate_full: {_cp}')
+    #  (10-06 밤 G2R-03 의 FULL 수치 증서 검사는 ★ G2RR-02 에서 `certificate_binding_problems` 로 옮겼다 — 같은 수치 검사 + 가지 · 역할 · 발행값 결합 ·
+    #   숫자를 싣는 CF · 협착-only 진단 · 종류 'cert' 로 따로 보고한다.)
     return bad
 
 
@@ -499,7 +682,8 @@ def network_generation_contract(dual):
 
       → {'generation': 'g2' | 'inferred_legacy' | 'invalid' | '' (모드 레코드가 하나도 없음),
          'problems': [(모드, 종류, 세부)] — 종류 = 'role' (세대 2 표와 어긋남 · 부분 결손 · 모르는 값) · 'missing_h12' (세대 2 Hertz 에 H12 없음) ·
-                     'not_object' (H12 자리가 객체가 아님) · 'legacy_role' (옛 세대 표와 어긋남),
+                     'not_object' (H12 자리가 객체가 아님) · 'legacy_role' (옛 세대 표와 어긋남) ·
+                     ★ 'cert' (10-06 밤 G2RR-02 — 수치 증서 · 결합: `certificate_binding_problems` · 봉인된 기하 `_cert_geometry_problems`),
          'markers': {모드: [세대 2 표지]}}"""
     d = dual if isinstance(dual, dict) else {}
     recs = {m: mode_record(d, m) for m in MODES}
@@ -514,6 +698,12 @@ def network_generation_contract(dual):
             bad = _g2_mode_problems(m, recs[m])
             if bad:
                 probs.append((m, 'role', ' · '.join(bad)))
+            #  ★ 10-06 밤 G2RR-02 — 수치 증서 · 결합 (가지 · 채널 · 역할 · 전극 · ΔV · 기하 · 발행값 재구성 · 숫자를 싣는 진단 · 해 없는 가지)
+            cb = certificate_binding_problems(m, recs[m])
+            if cb:
+                probs.append((m, 'cert', ' · '.join(cb)))
+        for m, det in _cert_geometry_problems(recs):                     # ★ G2RR-02 — 한 실행의 증서 = 한 기하 (봉인된 기하)
+            probs.append((m, 'cert', det))
         if recs['hertz'] is not None and recs[H12_MODE] is None:
             if H12_MODE in rh:
                 probs.append((H12_MODE, 'not_object', f'H12 자리 (hertzian.{H12_MODE}) 가 객체가 아니다 ({type(rh.get(H12_MODE)).__name__})'))
@@ -538,6 +728,8 @@ def generation_contract_text(con):
             out.append(f'{m}: {ROLE_NAME.get(m, m)} 역할 표기가 아니다 — {det}')
         elif kind == 'legacy_role':
             out.append(f'{m}: 세대 2 표기가 없는데 옛 세대 역할 표기도 아니다 — {det}')
+        elif kind == 'cert':                                           # ★ 10-06 밤 G2RR-02
+            out.append(f'{m}: 수치 증서 · 결합 (G2R-03 · G2RR-02 — 가지 · 역할 · 발행값) — {det}')
         else:
             out.append(f'{m}: {det}')
     return '; '.join(out)

@@ -14,7 +14,11 @@
   P  양성 대조 — 실 생산자 세 모드 = 세대 2 · 진짜 역사 레코드 (194 v1.2 배치 원천 `net194_tau_sources_20261006.tar.gz`) = inferred_legacy ·
      v1.2 인계표 τ 칸 그대로 재현 · 생산자 실패 레코드 모양 (H12 풀이 예외) 은 세대 위반이 아니라 그 모드 solver_guard
   K  세대 2 표지 키 — 실 생산자 레코드에 있고 · 역사 레코드 194 에는 하나도 없다 (옛 세대 추론 자격의 근거)
-⚠ 범위 — 표기 (메타) 계약이다.  숫자만 바꿔 끼운 레코드 (표기는 그대로) 는 재계산 없이 못 잡는다 (TAU_SAME_GEN_BASIS 한계와 같은 부류).
+  Y  ★ G2RR-02 (Codex 세대 2 재검증 §3 · §7-2 · 10-06 밤) — 증서 ↔ 가지 · 채널 · 역할 · 전극 · ΔV · 기하 (G→q) · 발행값 결합: CF → FULL · H12 → H0 ·
+     채널 바꿔치기 · 기하 인자 · 위장 CF (재구성은 맞춘 것) · 숫자만 · 실린 CF · 협착-only 진단 숫자의 증서 결손 · 보존 실패 · 결합 키 없는 증서 → invalid ·
+     양성 = 정상 · GEN2-01 협착-only 미계산 · 진짜 비관통 · CF 모형 과전도 (표지는 증서 면제가 아니다)
+⚠ 범위 — 표기 계약 + 증서 결합.  숫자만 바꾼 레코드는 이제 증서 재구성이 잡는다 (Y) · 증서 · 숫자 · 기하를 한 실행의 모든 증서에 걸쳐 일관되게
+  바꾼 전면 위조는 재계산 없이 못 잡는다 (TAU_SAME_GEN_BASIS 한계와 같은 부류).
 """
 import contextlib
 import copy
@@ -435,6 +439,171 @@ def main():
     chk('X5 ★ 지운 방법 (cg+ilu · SPD 아닌 전처리 CG) 의 증서 → invalid', _c5.get('generation') == 'invalid', _c5)
     _c6 = con_of(strip_g2(base))
     chk('X6 표지 · 증서를 다 뺀 역사 모양 → inferred_legacy (증서 키도 세대 2 표지)', _c6.get('generation') == 'inferred_legacy', _c6)
+
+    #  ══ Y. ★ G2RR-02 — 증서 ↔ 가지 · 역할 · 발행값 결합 (Codex 세대 2 재검증 §3 · §7-2 · probes/acceptance.py 변이를 실 생산자 레코드 위에 · 1저자 비준) ══
+    #     옛 계약 (G2R-03 통합) 은 `solve_certificate_full` **자리**의 증서 내부 일관성 (보존 · 잔차 · 방법) 만 봤다 → 같은 실행의 CF 증서 · H12 FULL 증서 ·
+    #     전자 채널 증서를 주 Hertz FULL 자리에 복사해도 g2 · τ OK (우리 트리 재현 db74ea98).  기하 인자만 바꾼 증서 · 숫자만 바꾼 레코드 (두 표현
+    #     항등식은 맞춤) · 실린 CF 숫자의 증서 삭제 · 보존 실패도 통과했다.  이제 증서의 가지 · 채널 · 역할 · 전극 · ΔV · 기하 (G→q) 를 자리 · 부모와
+    #     대조하고 q = I_bottom/ΔV × T/A 를 저장 σ_ratio · σ_dim 의 반올림 반폭 안으로 재구성해야 한다.  양성: 정상 · GEN2-01 협착-only 미계산 ·
+    #     진짜 비관통 · CF 모형 과전도 (표지는 증서 면제가 아니다).  옛 기록 정책: 결합 키 없는 세대 2 증서 = 거부 · 역사 194 (표지 없음) = inferred_legacy 그대로.
+    MODES3 = ('hertz', 'physics', 'hertz_h12')
+    CERTK = ('solve_certificate_full', 'solve_certificate_bulk_net', 'solve_certificate_constr_net')
+    BIND = ('branch', 'channel', 'role', 'contact_mode', 'delta_V', 'geometry', 'g_to_q', 'sigma_bulk_S_cm')   # 독립 오라클 (생산자 상수를 베끼지 않는다)
+
+    def _all_certs(du):
+        for dk in ('hertzian', 'physics'):
+            r = du.get(dk) or {}
+            for rr in (r, r.get('hertz_h12')):
+                if not isinstance(rr, dict):
+                    continue
+                for k in list(rr):
+                    if k.endswith(CERTK) and isinstance(rr[k], dict):
+                        yield rr[k]
+
+    def _bed_produce(A_, C_, tm, am, box=10.0):
+        return json.loads(json.dumps({cm: quiet(nc._run_all_networks, A_, C_, [1], am, tm, 1.0, 20.0, box, box, None, contact_mode=cm)
+                                      for cm in ('hertzian', 'physics')}))
+
+    def _geo(c):
+        """증서의 기하 — 없으면 (고치기 전 생산자) 이 침대의 기하를 넣고 돌려준다 (변이가 옛 코드에서도 적용돼 실패로 보이게)."""
+        return c.setdefault('geometry', {'plate_z': 20.0, 'box_x': 10.0, 'box_y': 10.0, 'scale': 1.0})
+
+    def _g2q_x2(c):
+        c['g_to_q'] = (c.get('g_to_q') or 0.2) * 2
+
+    def _plate_x2(c):
+        _geo(c)['plate_z'] *= 2
+
+    def _y_cf_disguised(d):
+        """CF 증서를 가지 표기 'full' 로 바꾸고 기하 (판 높이) 를 발행 q 에 맞춰 재척도 — 증서 하나 안은 자기일관 (g_to_q = T/A · 재구성 = 발행 q) ·
+        같은 실행의 다른 증서들과 기하가 다르다 (봉인된 기하 대조만 잡는다)."""
+        r = d['hertzian']
+        c = copy.deepcopy(r['solve_certificate_bulk_net'])
+        g = _geo(c)
+        a_ = g['box_x'] * g['box_y'] * g['scale'] ** 2
+        g['plate_z'] = r['sigma_full'] / c['I_bottom'] * a_ / g['scale']
+        c['g_to_q'] = (g['plate_z'] * g['scale']) / a_
+        c['branch'] = 'full'
+        r['solve_certificate_full'] = c
+
+    def _y_all_geom(d):
+        for c in _all_certs(d):
+            _plate_x2(c)
+            _g2q_x2(c)
+
+    def _y_numbers(d):
+        for dk in ('hertzian', 'physics'):
+            r = d[dk]
+            r['sigma_full'] = round(r['sigma_full'] * 1.25, 8)
+            r['sigma_full_mScm'] = round(r['sigma_full'] * r['sigma_grain_S_cm'] * 1000, 6)      # 두 표현 항등식은 맞춘다 (공용 기술 검사 통과)
+
+    def _y_cf_numbers(d):
+        r = d['hertzian']
+        r['sigma_bulk_net'] = round(r['sigma_bulk_net'] * 2, 8)
+        r['sigma_bulk_net_mScm'] = round(r['sigma_bulk_net'] * r['sigma_grain_S_cm'] * 1000, 6)
+
+    def _y_unbound(d):
+        for c in _all_certs(d):
+            for k in BIND:
+                c.pop(k, None)
+
+    def _hz(d):
+        return d['hertzian']
+    YMUT = {
+        'CF → FULL (Codex full_cert_from_cf)': lambda d: _hz(d).update(solve_certificate_full=copy.deepcopy(_hz(d)['solve_certificate_bulk_net'])),
+        'H12 → H0 (Codex full_cert_from_h12)': lambda d: _hz(d).update(solve_certificate_full=copy.deepcopy(_hz(d)['hertz_h12']['solve_certificate_full'])),
+        'H0 → H12 자리': lambda d: _hz(d)['hertz_h12'].update(solve_certificate_full=copy.deepcopy(_hz(d)['solve_certificate_full'])),
+        'H0 → physics 자리': lambda d: d['physics'].update(solve_certificate_full=copy.deepcopy(_hz(d)['solve_certificate_full'])),
+        '전자 채널 FULL → 이온 FULL 자리': lambda d: _hz(d).update(solve_certificate_full=copy.deepcopy(_hz(d)['electronic_solve_certificate_full'])),
+        '기하 인자 g_to_q ×2': lambda d: _g2q_x2(_hz(d)['solve_certificate_full']),
+        '기하 판 높이 ×2 (g_to_q 그대로)': lambda d: _plate_x2(_hz(d)['solve_certificate_full']),
+        '기하 판 높이 · g_to_q 함께 ×2 (증서 안 자기일관)': lambda d: (_plate_x2(_hz(d)['solve_certificate_full']),
+                                                         _g2q_x2(_hz(d)['solve_certificate_full'])),
+        'CF 증서 위장 (가지 full · 기하 재척도 — 재구성 맞음)': _y_cf_disguised,
+        '모든 증서 기하 ×2 (한 실행 안 일관)': _y_all_geom,
+        'ΔV 2': lambda d: _hz(d)['solve_certificate_full'].update(delta_V=2.0),
+        '숫자만 ×1.25 (σ_ratio · σ_dim 항등식 맞춤 · 두 모드)': _y_numbers,
+        'CF 숫자만 ×2 (σ_ratio · σ_dim 맞춤)': _y_cf_numbers,
+        'CF 증서 보존 실패 (Codex cf_bad_conservation)': lambda d: _hz(d)['solve_certificate_bulk_net'].update(I_top=0.0, conservation_rel=1.0),
+        'CF 증서 삭제 (Codex missing_cf_cert)': lambda d: _hz(d).pop('solve_certificate_bulk_net'),
+        '협착-only 증서 삭제 (숫자 실림 · Codex missing_constr_cert)': lambda d: _hz(d).pop('solve_certificate_constr_net'),
+        'CF 숫자 실림 ↔ 상태 not_computed': lambda d: _hz(d).update(sigma_bulk_net_status='not_computed'),
+        '결합 키 없는 증서 (G2RR-02 이전 세대 2 증서 모양)': _y_unbound,
+    }
+
+    def sY():
+        c0, o0 = con_of(base), cols(base)
+        hc = base['hertzian'].get('solve_certificate_full') or {}
+        chk('Y0 양성 — 실 생산자 레코드 (세 모드 · 이온 · 전자 · 열) = g2 · 문제 없음 · 세 모드 OK · 주 FULL 증서에 결합 키 (가지 · 채널 · 역할 · 전극 · ΔV · '
+            '기하 · G→q · σ₀) 가 있다',
+            c0.get('generation') == 'g2' and not c0.get('problems') and all(o0.get(f'ion_net_status_{m}') == 'OK' for m in MODES3)
+            and all(k in hc for k in BIND), (c0.get('problems'), sorted(set(BIND) - set(hc))))
+        got = {}
+        for lab, fn in YMUT.items():
+            d2 = copy.deepcopy(base)
+            fn(d2)
+            c, o = con_of(d2), cols(d2)
+            got[lab] = (c.get('generation'), tuple((o.get(f'ion_net_status_{m}'), _rc(o.get(f'ion_net_status_reason_{m}'))) for m in MODES3),
+                        o.get('tau2_ion_hertz'), _probs_text(c))
+        want = ('invalid', (('NOT_COMPUTED', 'invalid_input'),) * 3, None)
+        bad = {k: (v[0], v[1], v[2], v[3][:160]) for k, v in got.items() if v[:3] != want}
+        chk(f'Y1 ★ 증서 결합 변이 {len(YMUT)} 종 (CF → FULL · H12 → H0 · 채널 · 기하 인자 · ΔV · 숫자만 · CF 진단 증서 · 결합 키 없음) → 세대 invalid · 세 모드 '
+            f'NOT_COMPUTED (invalid_input) · 주 tau2 빈칸 (옛: CF → FULL · H12 → H0 · 기하 · 숫자만 · CF 진단 넷 = g2 · OK) {bad or ""}',
+            not bad and len(got) == len(YMUT))
+        why = {k: v[3] for k, v in got.items()}
+        chk('Y2 ★ 사유가 무엇을 어겼는지 말한다 — CF → FULL = 가지 · H12 → H0 = 역할 · 전자 → 이온 = 채널 · 위장 CF = 기하 · 숫자만 = 재구성 · '
+            '결합 키 없음 = G2RR-02 이전 증서',
+            '가지' in why['CF → FULL (Codex full_cert_from_cf)'] and '역할' in why['H12 → H0 (Codex full_cert_from_h12)']
+            and '채널' in why['전자 채널 FULL → 이온 FULL 자리'] and '기하' in why['CF 증서 위장 (가지 full · 기하 재척도 — 재구성 맞음)']
+            and '재구성' in why['숫자만 ×1.25 (σ_ratio · σ_dim 항등식 맞춤 · 두 모드)']
+            and 'G2RR-02 이전' in why['결합 키 없는 증서 (G2RR-02 이전 세대 2 증서 모양)'],
+            {k: v[:200] for k, v in why.items()})
+        #  양성 대조 셋 — 해 없는 가지는 증서를 요구하지 않는다 (숫자 없음 ↔ 상태 일치만) · 모형 과전도 표지는 증서 면제가 아니다
+        Acl = {i: {'type': 1, 'x': 0.0, 'y': 0.0, 'z': float(z), 'radius': 1.0} for i, z in enumerate(range(21), 1)}
+        Ccl = [{'id1': i, 'id2': i + 1, 'contact_area': (math.pi * 1.02 ** 2 if i == 10 else 0.1), 'delta': 0.05} for i in range(1, 21)]
+        dcl = _bed_produce(Acl, Ccl, {1: 'SE'}, [])
+        ccl, ocl = con_of(dcl), cols(dcl)
+        pcl = dcl['physics']
+        chk('Y3 ★ 양성 GEN2-01 — 협착-only R_c = 0 (physics · H12) = NOT_COMPUTED zero_resistance_requires_contraction · 그 증서는 해를 주장하지 않는다 · '
+            '세대 g2 · 문제 없음 · 세 모드 OK (FULL 유지 — 없는 수렴 증서를 요구하지 않는다)',
+            ccl.get('generation') == 'g2' and not ccl.get('problems') and all(ocl.get(f'ion_net_status_{m}') == 'OK' for m in MODES3)
+            and pcl.get('sigma_constr_net') is None and pcl.get('sigma_constr_net_reason') == 'zero_resistance_requires_contraction'
+            and (pcl.get('solve_certificate_constr_net') or {}).get('status') == 'not_computed'
+            and (pcl.get('solve_certificate_constr_net') or {}).get('I_bottom') is None,
+            (ccl.get('problems'), {m: ocl.get(f'ion_net_status_{m}') for m in MODES3}))
+        dfake = copy.deepcopy(dcl)
+        _fc = copy.deepcopy(dfake['physics']['solve_certificate_full'])
+        _fc['branch'] = 'constriction_only'
+        dfake['physics']['solve_certificate_constr_net'] = _fc
+        cfk = con_of(dfake)
+        chk('Y4 ★ 해 없는 협착-only 자리에 수렴 증서 (FULL 증서를 가지만 바꿔) → invalid (거짓 수렴으로 채우지 않는다)',
+            cfk.get('generation') == 'invalid' and 'solve_certificate_constr_net' in _probs_text(cfk), _probs_text(cfk)[:300])
+        Ant = {i: {'type': 1, 'x': 3.0 * i, 'y': 0.0, 'z': z, 'radius': 1.0} for i, z in ((1, 0.0), (2, 1.0), (3, 2.0))}
+        Ant.update({10 + k: {'type': 1, 'x': 0.0, 'y': 5.0, 'z': float(z), 'radius': 1.0} for k, z in enumerate(range(10, 21))})
+        Cnt = [{'id1': 10 + k, 'id2': 11 + k, 'contact_area': 0.1, 'delta': 0.05} for k in range(10)]
+        dnt = _bed_produce(Ant, Cnt, {1: 'SE'}, [])
+        phi_nt = sum(4.0 / 3.0 * math.pi * a['radius'] ** 3 for a in Ant.values()) / (10.0 * 10.0 * 20.0)
+        ont = tf.ion_columns(dnt, {'thickness_um': 20.0, 'thickness_mass_conserving_um': 20.0, 'phi_se_mass_conserving': phi_nt}, 0.0)
+        cnt = con_of(dnt)
+        chk('Y5 ★ 양성 진짜 비관통 — 세 가지 모두 숫자 없음 · valid_zero (no_through_path) · 증서는 해를 주장하지 않는다 → g2 · 문제 없음 · 세 모드 NOT_PERCOLATING',
+            cnt.get('generation') == 'g2' and not cnt.get('problems') and all(ont.get(f'ion_net_status_{m}') == 'NOT_PERCOLATING' for m in MODES3)
+            and all((dnt['hertzian'].get(k) or {}).get('I_bottom') is None for k in CERTK),
+            (cnt.get('problems'), {m: ont.get(f'ion_net_status_{m}') for m in MODES3}))
+        dmo = _bed_produce(Acl, [dict(c, contact_area=0.1) for c in Ccl], {1: 'SE'}, [], box=1.0)
+        cmo = con_of(dmo)
+        hmo = dmo['hertzian']
+        dmo_b = copy.deepcopy(dmo)
+        dmo_b['hertzian']['solve_certificate_bulk_net'].update(I_top=0.0, conservation_rel=1.0)
+        cmo_b = con_of(dmo_b)
+        chk('Y6 ★ CF 모형 과전도 (상자 1 × 1 · q > 1.5 · model_over_conduction) — 그 CF 숫자도 결합 증서 검사를 통과해야 한다: 정상 = g2 · 문제 없음 · '
+            '같은 증서의 보존을 깨면 invalid (표지는 증서 면제가 아니다)',
+            hmo.get('sigma_bulk_net_status') == 'model_over_conduction' and cmo.get('generation') == 'g2' and not cmo.get('problems')
+            and cmo_b.get('generation') == 'invalid' and 'solve_certificate_bulk_net' in _probs_text(cmo_b),
+            (hmo.get('sigma_bulk_net_status'), cmo.get('problems'), _probs_text(cmo_b)[:200]))
+        chk('Y7 옛 기록 정책 — 표지 · 증서를 다 뺀 역사 모양은 inferred_legacy 그대로 (결합 검사 대상 아님 · 역사 194 = P2) · 결합 키만 없는 세대 2 증서는 '
+            'invalid (Y1) — 결합 키를 지워 옛 증서로 위장할 수 없다',
+            con_of(strip_g2(base)).get('generation') == 'inferred_legacy' and got['결합 키 없는 증서 (G2RR-02 이전 세대 2 증서 모양)'][0] == 'invalid')
+    _guard('Y', sY)
 
     #  ★ 10-06 밤 G2R-04 — [H0, H12] 는 두 규약의 쌍대응 시나리오 (오차막대 · 상하한 · 신뢰구간 아님) · ±5 % 는 시험한 기하 한정
     import lhs_design_dataset as _ldd

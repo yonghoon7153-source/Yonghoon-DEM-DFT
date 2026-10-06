@@ -18,7 +18,11 @@ Codex `probes/publication.py` · `probes/handover.py` 를 **실 생산자 사슬
      (세대 키 없는 8 키 = 194 v1.2 모양) = inferred_legacy 로 통과 (H12 = missing_input) · 거울: 세대 2 표기 레코드 + 세대 키 없는 옛 도장 (역사 폴더에
      표기만 덧붙인 모양) = 거부.  ★ 10-06 밤 G2RR-01 — 도장 값 대조 (unknown · null · legacy · 부분 결손 · 역사 스키마 밖) 반례는 test_gen2_stamp_record.
   ④ 표 만들 때 — 원천이 다른 길로 들어와 두 행이 **같은 결함** (주 Hertz 칸 = H12 표기) 이면 `build_handover` 거부 (행마다 먼저 · 옛: 동질이라 통과).
-⚠ 범위 — 표기 (메타) 계약.  숫자만 바꾼 레코드 · 모든 사본과 도장을 함께 일관되게 바꾼 편집은 못 잡는다 (TAU_SAME_GEN_BASIS 한계).
+  ⑤ ★ G2RR-02 (Codex 세대 2 재검증 §3 · §7-2 · probes/acceptance.py · 10-06 밤) — 증서 ↔ 가지 · 역할 · 발행값 결합: 실 생산자 CLI 의 네 망 JSON 에
+     CF → FULL · H12 → H0 · 기하 인자 ×2 · 위장 CF (가지 · 기하를 맞춘 것) · 숫자만 · CF 보존 실패 · CF · 협착-only 증서 삭제 · 결합 키 없음 → 정지 경로 ·
+     일반 경로 failed (⑨ · 공용 기록 검사) · 강제 폴더 → τ 소비자 NOT_COMPUTED · 인계 τ P4 거부.  양성 = 진짜 비관통 · GEN2-01 협착-only 미계산 (done ·
+     τ 상태 그대로 · 인계 통과).  옛 코드: CF → FULL · H12 → H0 · 기하 · 숫자만 · CF 진단 넷이 done · τ OK.
+⚠ 범위 — 표기 계약 + 증서 결합 (⑤).  모든 사본 · 도장 · 증서 · 기하를 함께 일관되게 바꾼 전면 위조는 못 잡는다 (TAU_SAME_GEN_BASIS 한계).
 """
 import copy
 import csv
@@ -91,6 +95,55 @@ def strip_g2(du):
         r['psi_placement'] = 'legacy_divide'
 
 
+#: ★ 10-06 밤 G2RR-02 (Codex 세대 2 재검증 §3 · probes/acceptance.py) — 증서 ↔ 가지 · 역할 · 발행값 결합 변이 (네 사본에 같이 · σ · 모델 표기는 그대로)
+CERT_LABELS = ('full_cert_from_cf', 'full_cert_from_h12', 'full_cert_g2q_x2', 'full_cert_cf_disguised', 'numbers_only',
+               'cf_bad_conservation', 'missing_cf_cert', 'missing_constr_cert', 'certs_unbound')
+CERT_KEYS = ('solve_certificate_full', 'solve_certificate_bulk_net', 'solve_certificate_constr_net')
+CERT_BIND = ('branch', 'channel', 'role', 'contact_mode', 'delta_V', 'geometry', 'g_to_q', 'sigma_bulk_S_cm')    # 독립 오라클
+
+
+def _geo(c):
+    """증서의 기하 — 없으면 (고치기 전 생산자) 이 침대 (판 20 · 상자 10 · 척도 1) 의 기하를 넣는다 (옛 코드에서도 변이가 적용돼 실패로 보이게)."""
+    return c.setdefault('geometry', {'plate_z': 20.0, 'box_x': 10.0, 'box_y': 10.0, 'scale': 1})
+
+
+def cchange(du, label):
+    """G2RR-02 변이 — du = {'hertzian': …, 'physics': …} (둘 중 하나만 있어도 된다 · 사본마다 같은 결과)."""
+    rh, rp = du.get('hertzian'), du.get('physics')
+    if label == 'full_cert_from_cf' and rh:
+        rh['solve_certificate_full'] = copy.deepcopy(rh['solve_certificate_bulk_net'])
+    elif label == 'full_cert_from_h12' and rh:
+        rh['solve_certificate_full'] = copy.deepcopy(rh['hertz_h12']['solve_certificate_full'])
+    elif label == 'full_cert_g2q_x2' and rh:
+        c = rh['solve_certificate_full']
+        c['g_to_q'] = (c.get('g_to_q') or 0.2) * 2
+    elif label == 'full_cert_cf_disguised' and rh:          # CF 증서 · 가지 'full' · 판 높이를 발행 q 에 맞춰 재척도 (증서 하나 안은 자기일관 · 재구성도 맞다)
+        c = copy.deepcopy(rh['solve_certificate_bulk_net'])
+        g = _geo(c)
+        a_ = g['box_x'] * g['box_y'] * g['scale'] ** 2
+        g['plate_z'] = rh['sigma_full'] / c['I_bottom'] * a_ / g['scale']
+        c['g_to_q'] = (g['plate_z'] * g['scale']) / a_
+        c['branch'] = 'full'
+        rh['solve_certificate_full'] = c
+    elif label == 'numbers_only':                           # 숫자만 ×1.25 — σ_ratio · σ_dim 두 표현 항등식은 맞춘다 (공용 기술 검사 통과)
+        for r in (rh, rp):
+            if r:
+                r['sigma_full'] = round(r['sigma_full'] * 1.25, 8)
+                r['sigma_full_mScm'] = round(r['sigma_full'] * r['sigma_grain_S_cm'] * 1000, 6)
+    elif label == 'cf_bad_conservation' and rh:
+        rh['solve_certificate_bulk_net'].update(I_top=0.0, conservation_rel=1.0)
+    elif label == 'missing_cf_cert' and rh:
+        rh.pop('solve_certificate_bulk_net', None)
+    elif label == 'missing_constr_cert' and rh:
+        rh.pop('solve_certificate_constr_net', None)
+    elif label == 'certs_unbound':                          # G2RR-02 이전 세대 2 증서 모양 (결합 키 없음) — 옛 기록 정책
+        for r in (rh, (rh or {}).get('hertz_h12'), rp):
+            for k, v in (r or {}).items():
+                if k.endswith(CERT_KEYS) and isinstance(v, dict):
+                    for b in CERT_BIND:
+                        v.pop(b, None)
+
+
 def mut(d, label):
     """Codex `mut` 그대로 — 네 망 JSON (dual · legacy · 모드 파일 둘) 에 같은 변이 (사본끼리 일관)."""
     for name, key in NET_FILES:
@@ -99,6 +152,8 @@ def mut(d, label):
         wrapped = obj if key is None else {key: obj}
         if label == 'legacy_shape':
             strip_g2(wrapped)
+        elif label in CERT_LABELS:
+            cchange(wrapped, label)
         else:
             change(wrapped, label)
         p.write_text(json.dumps(obj), encoding='utf-8')
@@ -108,11 +163,24 @@ def _why(stages):
     return ' | '.join(str(s.get('stderr') or '') for s in stages if not s.get('ok'))
 
 
-def _publish(app, label, stop=True):
-    d = tempfile.mkdtemp(prefix=f'g2ph_{label}_')
+def _write_clamp_bed(d):
+    """GEN2-01 침대 — through 사슬 (21 구 · 판 20 · 상자 10) 에서 가운데 접촉 (10–11) 의 c_cpl[22] 만 π(1.02 r)² (원판 > π r_min²) → physics g2 · H12 의
+    협착-only 관통 간선 R_c = 0 = NOT_COMPUTED zero_resistance_requires_contraction (FULL · CF 는 그대로).  장부는 through 와 같다 (원자 · 접촉 쌍이 같다)."""
+    import math
     a, c = TP._write_bed(d, 'through')
+    _A, C, _plate, _box = TP._bed('through')
+    with open(c, 'w') as f:
+        f.write('id1,id2,fn_x,fn_y,fn_z,ft_x,ft_y,ft_z,contact_area,delta\n' + ''.join(
+            f'{r["id1"]},{r["id2"]},0,0,0,0,0,0,{(math.pi * 1.02 ** 2 if r["id1"] == 10 else r["contact_area"])!r},{r["delta"]!r}\n'
+            for r in C))
+    return a, c
+
+
+def _publish(app, label, stop=True, bed='through'):
+    d = tempfile.mkdtemp(prefix=f'g2ph_{label}_')
+    a, c = _write_clamp_bed(d) if bed == 'clamp' else TP._write_bed(d, bed)
     with open(os.path.join(d, 'full_metrics.json'), 'w') as f:
-        json.dump(TP._bed_ledger('through'), f)
+        json.dump(TP._bed_ledger('through' if bed == 'clamp' else bed), f)
     runner = TP._CLIRunner(mutate=(None if label == 'baseline' else (lambda p, _l=label: mut(p, _l))), delegate=TP._fake_stage_e)
     stages, rid = app._network_and_stage_e(d, str(SCRIPTS), a, c, '1:SE', 1, [], runner=runner, stop_before_stage_e=stop)
     st, failed = ps.summarize(stages)
@@ -285,6 +353,65 @@ def main():
                 e5.startswith('FillRefusal') and 'τ 세대' in e5, e5[:300])
         else:
             chk('④b (④a 실패로 건너뜀)', False)
+
+        print('⑤ ★ G2RR-02 — 증서 ↔ 가지 · 역할 · 발행값 결합 (실 생산자 → 정지 계약 · 일반 경로 → τ 소비자 → 인계 · Codex probes/acceptance.py)')
+        MODES3 = ('hertz', 'physics', 'hertz_h12')
+        pub5 = {}
+        for lab in CERT_LABELS:
+            d, st, f, rid = _publish(app, lab)
+            made.append(d)
+            prov = ps.read_network_provenance(d)
+            left = sorted(n for n in os.listdir(d) if n.startswith('network_conductivity'))
+            att = json.load(open(os.path.join(d, ps.ATTEMPT_FILE))) if os.path.exists(os.path.join(d, ps.ATTEMPT_FILE)) else {}
+            pub5[lab] = (st, prov.get('provenance_state'), bool(left), att.get('failure_kind'), _why(f))
+        bad5 = {k: v[:4] for k, v in pub5.items() if v[:4] != ('failed', 'missing', False, 'candidate_rejected')}
+        chk(f'⑤a ★ 정지 경로 — 증서 결합 변이 {len(CERT_LABELS)} 종 (CF → FULL · H12 → H0 · 기하 인자 · 위장 CF · 숫자만 · CF 보존 실패 · CF · 협착-only 증서 '
+            f'삭제 · 결합 키 없음) → failed · 활성 세대 없음 · 망 JSON 안 남음 · candidate_rejected (옛: 아홉 다 done · Codex 표 넷 재현) {bad5 or ""}',
+            not bad5 and len(pub5) == len(CERT_LABELS))
+        why5 = {k: v[4] for k, v in pub5.items()}
+        chk('⑤a2 거부 사유 = 정지 계약 ⑨ 의 수치 증서 · 결합 (G2RR-02) — 사유가 보인다',
+            all('⑨' in w and 'G2RR-02' in w for w in why5.values()), {k: v[:200] for k, v in why5.items()})
+        gen5 = {}
+        for lab in ('full_cert_from_cf', 'full_cert_from_h12', 'numbers_only'):
+            d, st, f, rid = _publish(app, lab, stop=False)
+            made.append(d)
+            gen5[lab] = (st, any(ps.NETWORK_RECORD_CHECK_STEP in str(s.get('step')) for s in f), _why(f)[:160])
+        chk(f'⑤b ★ 일반 경로 (Stage E 앞 승격) — CF → FULL · H12 → H0 · 숫자만 = failed (승격 전 공용 기록 검사) {gen5}',
+            all(v[:2] == ('failed', True) for v in gen5.values()) and len(gen5) == 3)
+        f5 = {lab: _force(app, b_d, b_rid, lab, tmp / f'forced5_{lab}') for lab in CERT_LABELS}
+        rows5 = {lab: tf.case_row(str(p)) for lab, p in f5.items()}
+        bad_r5 = {lab: (tuple((r.get(f'ion_net_status_{m}'), tf.reason_code(r.get(f'ion_net_status_reason_{m}'))) for m in MODES3), r.get(GEN_COL),
+                        r.get('tau2_ion_hertz'))
+                  for lab, r in rows5.items()
+                  if not (all(r.get(f'ion_net_status_{m}') == 'NOT_COMPUTED' and tf.reason_code(r.get(f'ion_net_status_reason_{m}')) == 'invalid_input'
+                              for m in MODES3) and r.get(GEN_COL) == 'invalid' and r.get('tau2_ion_hertz') is None)}
+        chk(f'⑤c ★ τ 소비자 (tau_flux.case_row) — 디스크에 강제로 남긴 변이 폴더 {len(f5)} (복사 · 투영 · 도장) → 세 모드 NOT_COMPUTED (invalid_input) · '
+            f'세대 invalid · 주 tau2 빈칸 (옛: CF → FULL 이 tau2 10.98 OK) {bad_r5 or ""}', not bad_r5 and len(rows5) == len(CERT_LABELS))
+        hv5 = {}
+        for lab, p in f5.items():
+            _tv5, e5_ = _load(f'g2rr_{lab}', {'lhs00_000': p})
+            hv5[lab] = e5_
+        bad_h5 = {k: (v[:160] or '통과') for k, v in hv5.items() if not (v.startswith('FillRefusal') and 'τ P4' in v and 'G2RR-02' in v)}
+        chk(f'⑤d ★ 인계 (load_tau_results) — 같은 강제 폴더 {len(hv5)} → 전부 거부 (τ P4 세대 계약 · 수치 증서 · 결합 G2RR-02 · 옛: 통과) {bad_h5 or ""}',
+            not bad_h5 and len(hv5) == len(CERT_LABELS))
+        pos5, dpos = {}, {}
+        for lab, bed in (('비관통', 'nonthrough'), ('GEN2-01', 'clamp')):
+            d, st, f, rid = _publish(app, 'baseline', bed=bed)
+            made.append(d)
+            dpos[lab] = d
+            row = tf.case_row(d)
+            tvp, ep = _load(f'pos5_{bed}', {'lhs00_000': d})
+            cp = ((tvp or {}).get('cases') or {}).get('lhs00_000', {}).get('cells') or {}
+            pos5[lab] = (st, tuple(row.get(f'ion_net_status_{m}') for m in MODES3), row.get(GEN_COL), ep[:200],
+                         tuple(cp.get(f'ion_net_status_{m}') for m in MODES3))
+        du_cl = json.load(open(os.path.join(dpos['GEN2-01'], 'network_conductivity_dual.json'))) if pos5['GEN2-01'][0] == 'done' else {}
+        zr = {k: (r or {}).get('sigma_constr_net_reason') for k, r in (('physics', du_cl.get('physics')),
+                                                                         ('hertz_h12', (du_cl.get('hertzian') or {}).get('hertz_h12')))}
+        chk('⑤e ★ 양성 — 진짜 비관통 = done · τ 세 모드 NOT_PERCOLATING · 인계 통과 / GEN2-01 (physics · H12 협착-only NOT_COMPUTED zero_resistance · 숫자 없음) = '
+            f'done · τ 세 모드 OK · 인계 통과 — 해 없는 가지에 수렴 증서를 요구하지 않는다 {pos5} {zr}',
+            pos5['비관통'] == ('done', ('NOT_PERCOLATING',) * 3, 'g2', '', ('NOT_PERCOLATING',) * 3)
+            and pos5['GEN2-01'] == ('done', ('OK',) * 3, 'g2', '', ('OK',) * 3)
+            and set(zr.values()) == {'zero_resistance_requires_contraction'})
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
         for d in made:

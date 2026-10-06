@@ -20,6 +20,9 @@
      H12 레코드 · CLI 가 쓰는 네 JSON (모드 둘 · dual · legacy) · real_14 기준 덤프 (커밋) 의 실침대 증서 · 순수 도우미 `certificate_problem`.
   B  정상 망 = 오늘과 같은 값 — 첫 단이 증서를 통과하면 해를 건드리지 않는다: 큰 망 (자유 노드 32,368 · CG) · 작은 망 · 21 구 사슬 세 가지 ·
      H12 · real_14 를 고치기 전 모듈 (git a0a24c538) 과 float.hex 로 대조 (git 객체가 없으면 SKIP).
+  G  ★ G2RR-02 (Codex 세대 2 재검증 §3 · §7-2 · 10-06 밤) — 증서마다 결합 정보 (가지 · 채널 · 역할 · contact_mode · ΔV · 풀이 기하 · G→q · σ₀) ·
+     계산된 가지의 발행값 = round(I_bottom/ΔV × T/A, 8) · σ_dim 비트 재구성 · 해 없는 가지 (비관통 · GEN2-01) 의 증서는 해를 주장하지 않는다 ·
+     결합 전 모듈 (git 05977e94a) 과 결과 전체가 결합 키만 빼면 비트 동일 (실 생산자 10 실행 + 격자 둘 — 고치기 전 모듈에서 G1 · G2 · G3 빨갛다).
 ⚠ 범위 — 수치 증서 (해가 그 선형계의 해인가 · 전극 전류가 보존되는가) 의 시험이다.  모델의 물리 정확도 · 띠 규칙 · 194 배포값으로 확대하지 않는다.
 """
 import contextlib
@@ -37,6 +40,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 sys.path.insert(0, HERE)
 OLD_REF = 'a0a24c538'          # 고치기 전 network_conductivity (세대 2 망 · 증서 없음) — 정상 망 비트 동일 대조의 기준
+PRE_BIND_REF = '05977e94a'     # ★ G2RR-02 결합 정보 전 network_conductivity (증서 있음 · 결합 없음 · 10-06 밤 HEAD 70a6d91a4 의 그 파일) — G4 비트 동일 기준
 CONS_MAX = RES_MAX = 1e-6      # 동결 oracle — 등록 허용치 (모듈 상수를 import 하지 않고 같은 값인지 대조한다)
 CONS_FAILED = 'current_conservation_failed'
 ZERO_R = 'zero_resistance_requires_contraction'
@@ -131,18 +135,18 @@ def patched(mod, **fns):
                 setattr(mod, k, v)
 
 
-def _load_old_module():
-    """git 의 고치기 전 모듈을 별도 이름으로 싣는다 — 없으면 None (SKIP)."""
+def _load_old_module(ref=OLD_REF):
+    """git 의 고치기 전 모듈 (ref) 을 별도 이름으로 싣는다 — 없으면 None (SKIP)."""
     try:
-        src = subprocess.run(['git', '-C', ROOT, 'show', f'{OLD_REF}:scripts/network_conductivity.py'],
+        src = subprocess.run(['git', '-C', ROOT, 'show', f'{ref}:scripts/network_conductivity.py'],
                              capture_output=True, check=True, timeout=60).stdout
     except (OSError, subprocess.SubprocessError):
         return None
     d = tempfile.mkdtemp(prefix='nc_cert_old_')
-    path = os.path.join(d, f'network_conductivity_{OLD_REF}.py')
+    path = os.path.join(d, f'network_conductivity_{ref}.py')
     with open(path, 'wb') as fh:
         fh.write(src)
-    spec = importlib.util.spec_from_file_location(f'network_conductivity_{OLD_REF}', path)
+    spec = importlib.util.spec_from_file_location(f'network_conductivity_{ref}', path)
     mod = importlib.util.module_from_spec(spec)
     with contextlib.redirect_stdout(io.StringIO()):
         spec.loader.exec_module(mod)
@@ -565,6 +569,128 @@ def main():
         else:
             skip('B3', 'git 객체 없음')
     _guard('B', sB)
+
+    # ══ G. ★ G2RR-02 — 증서의 결합 정보 (가지 · 채널 · 역할 · ΔV · 기하 · G→q · σ₀) · 발행값 재구성 · σ 비트 동일 ═══════════════════════════
+    #    (Codex 세대 2 재검증 §3 · §7-2 · 1저자 비준 10-06 밤) — 옛 증서는 자기 안의 전류 · 잔차 · 방법만 실어, 어느 가지 · 역할 · 채널의 해인지 ·
+    #    어느 기하로 σ 가 됐는지 몰랐다 (CF · H12 증서를 FULL 자리에 붙여도 구분 불가).  기록만 더한다 — σ · 상태 · 증서 수치는 결합 전 모듈과 비트 동일.
+    def sG():
+        BIND = ('branch', 'channel', 'role', 'contact_mode', 'delta_V', 'geometry', 'g_to_q', 'sigma_bulk_S_cm')   # 독립 오라클
+        SLOT = (('full', 'full'), ('bulk_net', 'bulk_only'), ('constr_net', 'constriction_only'))
+        GEO = {'plate_z': 20.0, 'box_x': 10.0, 'box_y': 10.0, 'scale': 1.0}
+        A, C = se_am_bed()
+        tm = {1: 'SE', 2: 'AM_P'}
+        rr = {cm: json.loads(json.dumps(quiet(nc._run_all_networks, A, C, [1], [2], tm, 1.0, 20.0, 10.0, 10.0, None, contact_mode=cm)))
+              for cm in ('hertzian', 'physics')}
+        s_ion = rr['hertzian'].get('sigma_grain_S_cm')
+        recs = [('hertzian', '', rr['hertzian'], 'H0', 'ionic', s_ion), ('hertzian', 'electronic_', rr['hertzian'], 'H0', 'electronic', 0.05),
+                ('hertzian', 'thermal_', rr['hertzian'], 'H0', 'thermal', 0.007),
+                ('hertz_h12', '', rr['hertzian'].get('hertz_h12') or {}, 'H12', 'ionic', s_ion),
+                ('physics', '', rr['physics'], 'physics', 'ionic', s_ion), ('physics', 'electronic_', rr['physics'], 'physics', 'electronic', 0.05),
+                ('physics', 'thermal_', rr['physics'], 'physics', 'thermal', 0.007)]
+        bad, n = [], 0
+        for name, pre, rec, role, ch, s0 in recs:
+            for tail, br in SLOT:
+                c = rec.get(f'{pre}solve_certificate_{tail}')
+                n += 1
+                want = {'branch': br, 'channel': ch, 'role': role, 'contact_mode': ('physics' if name == 'physics' else 'hertzian'),
+                        'delta_V': 1.0, 'geometry': GEO, 'g_to_q': 20.0 / 100.0, 'sigma_bulk_S_cm': s0}
+                got = {k: (c or {}).get(k) for k in BIND}
+                if got != want:
+                    bad.append((name, pre or 'ion', tail, {k: (got[k], want[k]) for k in BIND if got[k] != want[k]}))
+        chk(f'G1 ★ 결합 정보 — 이온 · 전자 · 열 × H0 · H12 · physics × 세 가지 ({n} 증서) 가 가지 (solve_network mode) · 채널 · 역할 · contact_mode · ΔV 1 · '
+            f'풀이 기하 (판 20 · 상자 10 · 척도 1) · G→q = T/A 0.2 · σ₀ (이온 sigma_grain_S_cm · 전자 0.05 · 열 0.007) 를 싣는다 (옛: 없음)',
+            not bad and n == 21 and s_ion == 0.003, repr(bad[:2]))
+        badq, nq = [], 0
+        QK = {'full': ('sigma_full', 'sigma_full_mScm'), 'bulk_net': ('sigma_bulk_net', 'sigma_bulk_net_mScm'),
+              'constr_net': ('sigma_constr_net', 'sigma_constr_net_mScm')}
+        for name, pre, rec, role, ch, s0 in recs:
+            for tail, _br in SLOT:
+                if pre and tail != 'full':
+                    continue                                        # 채널 결과는 FULL σ 만 이온 레코드에 올린다 (electronic_sigma_full · thermal_sigma_full)
+                qk, dk = QK[tail]
+                q, sd = rec.get(pre + qk), rec.get(pre + dk)
+                c = rec.get(f'{pre}solve_certificate_{tail}') or {}
+                if q is None:
+                    continue
+                g = c.get('geometry') or {}
+                try:
+                    q_rec = c['I_bottom'] / c['delta_V'] * (g['plate_z'] * g['scale']) / (g['box_x'] * g['box_y'] * g['scale'] ** 2)
+                except (KeyError, TypeError, ZeroDivisionError) as e:
+                    badq.append((name, pre, tail, f'{type(e).__name__}'))
+                    continue
+                nq += 1
+                if not (round(q_rec, 8) == q and round(q_rec * s0 * 1000, 6) == sd):
+                    badq.append((name, pre, tail, hexf(q), hexf(round(q_rec, 8)), sd, round(q_rec * s0 * 1000, 6)))
+        chk(f'G2 ★ 발행값 재구성 — 계산된 가지마다 round(I_bottom/ΔV × (판·척도)/(상자²·척도²), 8) = 저장 σ_ratio · round(q × σ₀ × 1000, 6) = 저장 σ_dim '
+            f'(비트 동일 · {nq} 개 — 이온 세 모드 × 세 가지 + 전자 · 열 FULL)', not badq and nq >= 13, repr(badq[:2]))
+        Ant = {i: {'type': 1, 'x': 3.0 * i, 'y': 0.0, 'z': z, 'radius': 1.0} for i, z in ((1, 0.0), (2, 1.0), (3, 2.0))}
+        Ant.update({10 + k: {'type': 1, 'x': 0.0, 'y': 5.0, 'z': float(z), 'radius': 1.0} for k, z in enumerate(range(10, 21))})
+        Cnt = [{'id1': 10 + k, 'id2': 11 + k, 'contact_area': 0.1, 'delta': 0.05} for k in range(10)]
+        rnt = json.loads(json.dumps(quiet(nc._run_all_networks, Ant, Cnt, [1], [], {1: 'SE'}, 1.0, 20.0, 10.0, 10.0, None, contact_mode='hertzian')))
+        Acl, Ccl = chain(clamp_at=10)
+        rcl = json.loads(json.dumps(quiet(nc._run_all_networks, Acl, Ccl, [1], [], {1: 'SE'}, 1.0, 20.0, 10.0, 10.0, None, contact_mode='physics')))
+        ns = []
+        for lab, c, st_ in [(f'비관통 {t}', rnt.get(f'solve_certificate_{t}'), 'no_through') for t, _b in SLOT] + \
+                           [('GEN2-01 physics constr', rcl.get('solve_certificate_constr_net'), 'not_computed')]:
+            ok_ = (isinstance(c, dict) and c.get('status') == st_ and c.get('I_bottom') is None and all(k in c for k in BIND)
+                   and c.get('geometry') == GEO)
+            if not ok_:
+                ns.append((lab, {k: (c or {}).get(k) for k in ('status', 'I_bottom', 'branch', 'geometry')}))
+        chk('G3 ★ 해 없는 가지 (진짜 비관통 세 가지 · GEN2-01 협착-only) — 증서는 결합 정보를 들되 해를 주장하지 않는다 (status no_through · not_computed · '
+            'I_bottom 없음 — 거짓 수렴으로 채우지 않는다)',
+            not ns and rnt.get('sigma_full_status') == 'valid_zero' and rcl.get('sigma_constr_net_reason') == ZERO_R, repr(ns[:2]))
+        #  σ 비트 동일 — 결합 정보 전 모듈 (git) 과 결과 전체를 증서 결합 키만 빼고 대조 (JSON = float repr 왕복 = 비트 대조)
+        pre_bind = _load_old_module(PRE_BIND_REF)
+        if pre_bind is None:
+            skip('G4', f'git 객체 없음 ({PRE_BIND_REF})')
+            return
+
+        def strip_bind(obj):
+            o = json.loads(json.dumps(obj))
+
+            def walk(x):
+                if isinstance(x, dict):
+                    for k, v in list(x.items()):
+                        if isinstance(v, dict) and k.endswith(('solve_certificate_full', 'solve_certificate_bulk_net', 'solve_certificate_constr_net')):
+                            for b in BIND:
+                                v.pop(b, None)
+                        walk(v)
+                elif isinstance(x, list):
+                    for v in x:
+                        walk(v)
+            walk(o)
+            return json.dumps(o, sort_keys=True)
+        Abx, Cbx = chain()
+        cases = {'SE + AM (hertz · physics · H12 · 전자 · 열)': (A, C, [1], [2], tm, 10.0),
+                 'GEN2-01 사슬 (협착-only R_c = 0)': (Acl, Ccl, [1], [], {1: 'SE'}, 10.0),
+                 '진짜 비관통': (Ant, Cnt, [1], [], {1: 'SE'}, 10.0),
+                 'CF 모형 과전도 (상자 1 × 1)': (Abx, Cbx, [1], [], {1: 'SE'}, 1.0)}
+        diff, nb = [], 0
+        for lab, (A_, C_, se_, am_, tm_, box_) in cases.items():
+            for cm in ('hertzian', 'physics'):
+                new_ = quiet(nc._run_all_networks, A_, C_, se_, am_, tm_, 1.0, 20.0, box_, box_, None, contact_mode=cm)
+                old_ = quiet(pre_bind._run_all_networks, A_, C_, se_, am_, tm_, 1.0, 20.0, box_, box_, None, contact_mode=cm)
+                nb += 1
+                if strip_bind(new_) != strip_bind(old_):
+                    diff.append((lab, cm))
+        Ar, Cr, tmr, pzr, boxr = load_real14()
+        for cm in ('hertzian', 'physics'):
+            new_ = quiet(nc.run_decomposition, Ar, Cr, [3], 1000.0, pzr, boxr, boxr, type_map=tmr, contact_mode=cm, mode='ionic')
+            old_ = quiet(pre_bind.run_decomposition, Ar, Cr, [3], 1000.0, pzr, boxr, boxr, type_map=tmr, contact_mode=cm, mode='ionic')
+            nb += 1
+            if strip_bind(new_) != strip_bind(old_):
+                diff.append(('real_14', cm))
+        gl = []
+        for largs in ((34, 34, 30, 7, 0.5, 2.0), (3, 3, 6, 20261006, 0.2, 5.0)):
+            ln, lo = lattice(*largs), lattice(*largs)                 # 같은 씨앗 = 같은 망 (B3 와 같은 만듦새)
+            gn, go = quiet(nc.solve_network, ln), quiet(pre_bind.solve_network, lo)
+            i_n = {k: v for k, v in ln['solve_info']['full'].items() if k not in BIND}
+            gl.append(hexf(gn[0]) == hexf(go[0]) and hexf(gn[1]) == hexf(go[1]) and json.dumps(i_n, sort_keys=True, default=str)
+                      == json.dumps(lo['solve_info']['full'], sort_keys=True, default=str))
+        chk(f'G4 ★ σ 비트 동일 — 결합 전 모듈 ({PRE_BIND_REF}) 과 결과 전체 (σ · σ_dim · 상태 · 사유 · 비율 · 전력 몫 · 증서 수치 · 단 기록) 가 결합 키만 빼면 같다: '
+            f'실 생산자 {nb} 실행 (SE + AM · GEN2-01 · 비관통 · CF 과전도 · real_14 이온 두 모드) + 큰 격자 cg · 작은 격자 spsolve 의 G · q · solve_info',
+            not diff and nb == 10 and all(gl) and len(gl) == 2, repr((diff, gl)))
+    _guard('G', sG)
 
     print(f'\ntest_network_solve_certificate: {_ok}/{_ok + len(_fail)} PASS' + (f' · SKIP {len(_skip)}' if _skip else '')
           + (f'   FAILED: {_fail}' if _fail else ''))

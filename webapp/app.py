@@ -715,12 +715,15 @@ ION_HANDOVER_STATUS_LABEL = 'tau2 인계 상태 (게이트 G1–G6 · v2 §5-2)'
 ION_HANDOVER_BAND_LABEL = '띠 규칙 · 띠 폭/판 간격 (G1 · TAU-24)'
 #  ★ 10-06 밤 (G2R-01 · 02 웹앱 짝 · J20-l) — 망 세대 행: 도우미 세대 칸 (`tau_flux` ion_net_generation — 공용 세대 계약 `network_generation_contract`) 을
 #    같은 이름으로 (g2 · inferred_legacy (옛 세대 **추론**) · invalid (세대 계약 위반)) — 옛 세대 추론이 화면에서 보인다.
+#  ★ 10-06 밤 G2RR-02 웹앱 짝 (J20-l) — 같은 계약이 수치 증서 결합 (가지 · 역할 · 채널 · 봉인 기하 · 발행값 재구성) 까지 본다 → 값 문구 · 툴팁 (single.html)
+#    한정어를 맞췄다 (숫자만 바꾼 레코드는 이제 잡힌다 · 전면 위조 · 전자 · 열 채널은 밖).  라벨은 그대로 (논문 라벨 · 역맵 · test_tau_handover_status T12c).
 ION_HANDOVER_GEN_LABEL = '망 세대 (세대 계약 · G2R-01 · 02)'
 ION_HANDOVER_GEN_TEXT = {
-    'g2': 'g2 — 세대 2 계약 통과 (주 Hertz = H0 Maxwell + 원기둥 · physics = ψ 곱 + physics_g2 · H12 민감도 · 전극 dirichlet_exact)',
+    'g2': ('g2 — 세대 2 계약 통과 (주 Hertz = H0 Maxwell + 원기둥 · physics = ψ 곱 + physics_g2 · H12 민감도 · 전극 dirichlet_exact · '
+           '수치 증서 결합 — 가지 · 역할 · 발행값 재구성 · G2RR-02)'),
     'inferred_legacy': ('inferred_legacy — 세대 2 표기가 하나도 없는 옛 산출물 (옛 세대로 추론: virtual_source_legacy · physics_g1 · 원기둥 · '
                         'ψ 분모 — 레코드에 적힌 값이 아니다)'),
-    'invalid': 'invalid — 세대 계약 위반 (값 인용 금지 · 사유 = 위 상태 칸) — 기술적 실패',
+    'invalid': 'invalid — 세대 계약 위반 (역할 · 표기 · 수치 증서 결합 — 값 인용 금지 · 사유 = 위 상태 칸) — 기술적 실패',
     '': '— (망 레코드 없음)',
 }
 #  ★ 10-06 밤 (G2RR-01 웹앱 짝 · J20-l) — 망 세대 행에 도장 ↔ 레코드 대조가 어긋날 때만 붙는 표지 (판정 = 인계 생성기 P4 와 같은 함수

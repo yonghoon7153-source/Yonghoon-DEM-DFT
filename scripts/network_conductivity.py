@@ -22,6 +22,7 @@ Three decomposition runs:
 전극 (세대 2 · 2026-10-06 · L2-05): 바닥 띠 V = 1 · 위 띠 V = 0 **정확 Dirichlet** — G = 바닥 띠에서 나가는 전류 (가상 전원 · 싱크 g_b 없음).
 수치 증서 (10-06 밤 · G2R-03): 풀이마다 I_bottom · I_top · 보존 잔차 · 내부 잔차 · 방법을 싣고 허용치 (1e-6) 를 넘는 해는 사다리로 다시 풀거나
   내지 않는다 (current_conservation_failed) · 협착-only 의 R_c = 0 간선은 풀지 않는다 (GEN2-01 · zero_resistance_requires_contraction).
+  ★ G2RR-02 (10-06 밤): 증서마다 결합 정보 (가지 · 채널 · 역할 · ΔV · 기하 · G→q · σ_bulk — CERT_BINDING_FIELDS) — 수용 검사 = tau_flux (기록만 · σ 비트 동일).
 Physics 면적 (세대 2): `plastic_coverage.film_area_g2` (규칙 B · µm · 쌍별 E* · 정확 lens) — 세대 1 은 명시 `area_rule='physics_g1'`.
 Hertz 기본 = H0 (Maxwell 협착 + 원기둥 반 d bulk · 세대 1 과 같은 간선) · H12 (ψ 곱 + 구 조각 bulk) = 짝 인자로만 · 이온 민감도 레코드.
 
@@ -117,15 +118,25 @@ BOUNDARY_OVERLAP_REASON = 'boundary_overlap'   # B ∩ T ≠ ∅ — 한 노드�
 #       반례 (O(1)) 보다 백만 배 아래.  (case15 physics g2 협착-only 3.6e-7 – 1.3e-6 은 R_c = 0 간선을 지운 다른 회로다 — 아래 GEN2-01 로 풀지 않는다.)
 #     내부 잔차 1e-6 — CG 종료 기준 (rtol 1e-10 · ‖b‖ 상대) 보다 4 자리 느슨 · 직접해는 ~1e-15 → 해가 아닌 해 (전처리 잔차로 멈춘 Krylov ·
 #       수치적으로 특이한 직접해) 만 거른다.  ⚠ 이것만으로는 위 반례를 못 잡는다 (1.7e-12) — 주 기준은 보존이다.
+#     ⚠ (Codex 세대 2 재검증 §4 Q3) 1e-6 은 보존 · 내부 잔차의 **수용 문턱**이다 — 임의 망에서 σ 상대오차가 1e-6 이하라는 보증이 아니다 (내부 잔차의
+#       분모 ‖b‖ 를 큰 항이 지배하면 작은 물리 전류의 오차를 가릴 수 있고 · 조건수 · 전극 선택 · 모델 오차는 별개다).
 DIRICHLET_CONSERVATION_REL_MAX = 1e-6
 DIRICHLET_RESIDUAL_REL_MAX = 1e-6
-#  사다리 — 첫 단이 증서를 넘으면 해를 건드리지 않는다 (오늘과 비트 동일).  증서 실패 · 첫 단 CG 미수렴 때만 다음 단:
-#     작은 망 (자유 ≤ 30,000): spsolve → cg+jacobi → gmres+ilu   (첫 단 spsolve **예외** = solve_failed 그대로 · 사다리 아님)
+#  사다리 — 첫 단이 증서를 넘으면 해를 건드리지 않는다 (오늘과 비트 동일).  다음 단으로 가는 것은 셋뿐 — 첫 단 CG 미수렴 · 증서 실패 (보존 · 내부
+#  잔차) · 0 < G ≤ 1.1·Σg 밖:
+#     작은 망 (자유 ≤ 30,000): spsolve → cg+jacobi → gmres+ilu
 #     큰 망  (자유 > 30,000): cg → spsolve_fallback (자유 ≤ DIRICHLET_FALLBACK_DIRECT_MAX_FREE 일 때만) → cg+jacobi → gmres+ilu
+#     ★ 10-06 밤 (Codex 세대 2 재검증 §4 Q3 — "실패면 모두 다음 사다리" 는 코드와 다르다) — **첫 단 (spsolve · cg 둘 다) 의 예외는 사다리를 타지
+#       않는다**: 그 가지 = solve_failed (값 없음) 로 끝낸다 (solve_network 의 예외 처리 · 실패 주입 시험 test_network_solve_certificate K ·
+#       test_network_handover_chain 의 break_solver 가 이 자리를 쓴다).  의도 = 첫 단 예외는 입력 퇴화 · 실행 환경 (메모리 · 라이브러리) 문제이지
+#       수치 오차가 아니어서 다른 방법의 해로 덮지 않는다 — 안전한 거부 (false-green 아님).  가용성 한계 = 일시적 자원 실패도 그 가지는 값 없음 →
+#       재실행해야 한다.  사다리 **안** (둘째 단부터) 의 예외는 기록하고 (attempts · outcome exception) 다음 단으로 간다.
+#     ⚠ DIRICHLET_FALLBACK_DIRECT_MAX_FREE 는 직접해를 **시도할** 크기 상한이지 메모리 보증이 아니다 — 실행 환경의 자원 실패 (MemoryError 등) 는 그 단의
+#       예외로 기록되고 다음 단 · 끝까지 증서를 낸 단이 없으면 값을 내지 않는다 (current_conservation_failed · solve_failed — 숫자 없이 남긴다).
 #     cg+jacobi = 대각 (SPD) 전처리 CG · gmres+ilu = ILU 전처리 GMRES — ILU 는 SPD 가 보장되지 않아 CG 에 넣지 않는다 (옛 'cg+ilu' 폐기 ·
 #     SciPy cg 의 M 은 SPD 여야 한다) · 두 Krylov 단은 잔차 보정 (A·δ = r 을 다시 푼다 — 매 회 종료 기준이 그때 잔차 상대라 큰 RHS 성분에 묻힌
 #     작은 성분도 풀린다) · 모든 단이 증서를 못 넘으면 값을 내지 않는다 (NOT_COMPUTED + CURRENT_CONSERVATION_FAILED_REASON).
-DIRICHLET_FALLBACK_DIRECT_MAX_FREE = 250000   # 사다리 직접해 상한 — 실침대 case15 이온 망 (자유 55,912) 직접해 2.3 s · < 1 GB (실측) · 현 캠페인 침대 ≤ 114,609 입자
+DIRICHLET_FALLBACK_DIRECT_MAX_FREE = 250000   # 사다리 직접해 시도 상한 (메모리 보증 아님 — 위 ⚠) — 실침대 case15 이온 망 (자유 55,912) 직접해 2.3 s · < 1 GB (실측) · 현 캠페인 침대 ≤ 114,609 입자
 DIRICHLET_REFINE_PASSES = 4                   # Krylov 단의 잔차 보정 횟수 상한
 DIRICHLET_KRYLOV_MAXITER = 20000              # 사다리 Krylov 단의 반복 상한 (첫 단 CG 와 같은 값 · GMRES 는 restart 50 × 400 회)
 DIRICHLET_METHODS = ('none_free', 'spsolve', 'cg', 'spsolve_fallback', 'cg+jacobi', 'gmres+ilu')
@@ -781,12 +792,36 @@ def build_network(atoms_raw, contacts_raw, target_types, scale,
 
 _TINY = sys.float_info.min        # 보존 · 내부 잔차 분모의 바닥 (두 전류 · ‖b‖ 가 모두 0 일 때 0/0 을 피한다)
 #: ★ 10-06 밤 G2R-03 — 결과 레코드에 싣는 증서 키 (solve_info 와 같은 이름 · 같은 모양) · 단 기록 키.
+#:   ★ 10-06 밤 G2RR-02 — 뒤의 넷 (branch · delta_V · geometry · g_to_q) = 결합 정보 중 풀이가 아는 것 (아래 CERT_BINDING_FIELDS 절).
 SOLVE_CERTIFICATE_FIELDS = ('electrode_model', 'status', 'reason', 'method', 'n_free', 'n_fixed', 'n_floating', 'n_zero_resistance',
-                            'I_bottom', 'I_top', 'conservation_rel', 'residual_rel', 'conservation_rel_max', 'residual_rel_max', 'attempts')
+                            'I_bottom', 'I_top', 'conservation_rel', 'residual_rel', 'conservation_rel_max', 'residual_rel_max', 'attempts',
+                            'branch', 'delta_V', 'geometry', 'g_to_q')
 SOLVE_ATTEMPT_FIELDS = ('method', 'outcome', 'krylov_info', 'refine_passes', 'I_bottom', 'I_top', 'conservation_rel', 'residual_rel',
                         'error')
 #: 결과 레코드의 가지별 증서 키 (σ 키 꼬리와 같다 — full · bulk_net (CONTACT_FREE) · constr_net (CONSTRICTION_ONLY)).
 SOLVE_CERTIFICATE_KEYS = ('solve_certificate_full', 'solve_certificate_bulk_net', 'solve_certificate_constr_net')
+#  ★ 10-06 밤 G2RR-02 (Codex 세대 2 재검증 §3 · §7-2 · 1저자 비준 *"권고대로"*) — 증서 ↔ 가지 · 역할 · 발행값 결합.
+#     옛 증서는 자기 안의 전류 보존 · 잔차 · 방법만 말했다 (`certificate_problem`) → 같은 실행의 CF 증서 · H12 FULL 증서를 주 Hertz FULL 자리에 붙여도
+#     게시 · τ 가 통과했다 (Codex probes/acceptance.py — CF 증서 I_bottom = FULL 의 9.80 배 · H12 1.28 배 · 발행 q 0.00400538 그대로 · τ OK).
+#     이제 증서마다 결합 정보를 싣는다 (기록만 — 해 · σ · 상태 · 증서 수치는 비트 동일 · test_network_solve_certificate G4):
+#       branch          — solve_network mode (full · bulk_only · constriction_only) = 그 증서가 푼 가지
+#       channel         — run_decomposition 의 망 (ionic · electronic · thermal)
+#       role            — H0 · H12 (Hertz 짝 팔 — HERTZ_ARMS) · physics (contact_mode physics)
+#       contact_mode    — hertzian · physics
+#       delta_V         — V(바닥 띠) − V(위 띠) = 1 (정확 Dirichlet 전극 · G = I_bottom/ΔV)
+#       geometry        — 그 풀이가 σ 환산에 쓴 기하 {plate_z, box_x, box_y, scale} (봉인된 기하 — 한 실행의 모든 증서가 같다)
+#       g_to_q          — G → 무차원 σ_ratio 변환 인자 = T_um / A_um2 = (plate_z·scale) / (box_x·box_y·scale²)
+#       sigma_bulk_S_cm — 그 망의 mS/cm 열을 만든 σ (이온 = sigma_grain_S_cm · 전자 SIGMA_AM_ELECTRONIC · 열 K_SE_THERMAL)
+#     발행값 연결: σ_ratio = round(I_bottom/ΔV × T/A, 8) · σ_dim = round(σ_ratio* × σ_bulk × 1000, 6) (★ 같은 식 · 같은 순서 — 소비자가 저장 반올림
+#     반폭 안으로 재구성한다).  수용 검사 = `tau_flux.certificate_binding_problems` (게시 ⑨ · 승격 전 기록 검사 · τ 소비자 · 인계가 같은 함수 ·
+#     가지별 정책 `tau_flux.CERT_BRANCH_POLICY` — 숫자를 싣는 CF · 협착-only 진단도 같은 검사 · 해 없는 가지는 증서를 요구하지 않는다).
+CERT_DELTA_V = 1.0
+CERT_BRANCHES = ('full', 'bulk_only', 'constriction_only')
+CERT_CHANNELS = ('ionic', 'electronic', 'thermal')
+CERT_ROLE_PHYSICS = 'physics'
+CERT_ROLES = ('H0', 'H12', CERT_ROLE_PHYSICS)
+CERT_GEOMETRY_FIELDS = ('plate_z', 'box_x', 'box_y', 'scale')
+CERT_BINDING_FIELDS = ('branch', 'channel', 'role', 'contact_mode', 'delta_V', 'geometry', 'g_to_q', 'sigma_bulk_S_cm')
 
 
 def _cert_num(v):
@@ -808,13 +843,19 @@ def _json_val(v):
     return str(v)
 
 
-def solve_certificate(info):
-    """`network_data['solve_info'][mode]` → 결과 레코드에 싣는 증서 (dict · JSON 안전) | None.  같은 키라 `certificate_problem` 이 그대로 읽는다."""
+def solve_certificate(info, binding=None):
+    """`network_data['solve_info'][mode]` → 결과 레코드에 싣는 증서 (dict · JSON 안전) | None.  같은 키라 `certificate_problem` 이 그대로 읽는다.
+    ★ 10-06 밤 G2RR-02 — binding = run_decomposition 이 아는 결합 정보 (channel · role · contact_mode · sigma_bulk_S_cm) — 풀이가 아는 넷 (branch ·
+    delta_V · geometry · g_to_q) 은 solve_info 에서 온다 (CERT_BINDING_FIELDS 절)."""
     if not isinstance(info, dict):
         return None
-    out = {k: _json_val(info.get(k)) for k in SOLVE_CERTIFICATE_FIELDS if k != 'attempts'}
+    out = {k: _json_val(info.get(k)) for k in SOLVE_CERTIFICATE_FIELDS if k not in ('attempts', 'geometry')}
+    _geo = info.get('geometry')
+    out['geometry'] = {k: _json_val(_geo.get(k)) for k in CERT_GEOMETRY_FIELDS} if isinstance(_geo, dict) else None
     out['attempts'] = [{k: _json_val(a.get(k)) for k in SOLVE_ATTEMPT_FIELDS}
                        for a in (info.get('attempts') or []) if isinstance(a, dict)]
+    if isinstance(binding, dict):
+        out.update({k: _json_val(v) for k, v in binding.items()})
     return out
 
 
@@ -876,12 +917,16 @@ def solve_network(network_data, mode='full', return_field=False):
         를 넘어야 채택한다.  첫 단이 넘으면 해 그대로 (오늘과 비트 동일).  못 넘으면 (또는 첫 단 CG 미수렴) 사다리: 큰 망 = 직접해 (spsolve_fallback ·
         자유 ≤ DIRICHLET_FALLBACK_DIRECT_MAX_FREE) → cg+jacobi → gmres+ilu · 작은 망 = cg+jacobi → gmres+ilu (Krylov 단은 잔차 보정).  어느 단도
         증서를 못 넘으면 (None, None) · 상태 not_computed · 사유 `current_conservation_failed` (해를 낸 단이 없으면 solve_failed).
-        첫 단 예외 (spsolve · cg) = solve_failed 그대로 (사다리 아님 — 실패 주입 시험이 그 자리를 쓴다).
+        ★ 첫 단 예외 (spsolve · cg **둘 다**) = solve_failed 그대로 — 사다리를 타지 않는다 (Codex 재검증 Q3 · 의도 = 입력 퇴화 · 실행 환경 문제를
+        다른 방법의 해로 덮지 않는 안전한 거부 · 가용성 한계 = 일시적 자원 실패도 값 없음 → 재실행 · 모듈 머리 사다리 절).  둘째 단부터의 예외는
+        기록하고 다음 단 · 직접해 상한 250,000 은 메모리 보증이 아니다 (자원 실패 = 그 단 예외 · 끝까지 못 넘으면 값 없음).
       · 어느 고정 노드와도 (R > 0 간선으로) 이어지지 않은 자유 노드 = 떠 있는 섬 — 풀이에서 빼고 V = 0 (전류 0 · solve_info n_floating)
       · 가드: 열 = 병렬 상한 · 단상 σ_ratio > 1.5 = **FULL 만** 거부 (★ C1-5 — CF · 협착-only 의 q > 1.5 = 모형 과전도: 값 유지 + 상태
         model_over_conduction)
     기록: network_data['solve_info'][mode] = {electrode_model, status, reason, method, n_free, n_fixed, n_floating, n_zero_resistance,
           I_bottom, I_top, conservation_rel, residual_rel, conservation_rel_max, residual_rel_max, attempts} — 증서 판정 = `certificate_problem`.
+          ★ 10-06 밤 G2RR-02 — + branch (= mode) · delta_V (1) · geometry {plate_z, box_x, box_y, scale} · g_to_q (T_um/A_um2) — 풀이 앞에서 싣는다
+          (해 무관 · 결합 정보 절 CERT_BINDING_FIELDS).
 
     Returns:
         G_eff: effective conductance (normalized, ρ=1)
@@ -901,6 +946,14 @@ def solve_network(network_data, mode='full', return_field=False):
             'conservation_rel': None, 'residual_rel': None,                                    # ★ G2R-03 증서 (채택한 해)
             'conservation_rel_max': DIRICHLET_CONSERVATION_REL_MAX, 'residual_rel_max': DIRICHLET_RESIDUAL_REL_MAX,
             'attempts': []}
+    #  ★ 10-06 밤 G2RR-02 — 결합 정보 (가지 · ΔV · 기하 · G→q) 를 풀이 **앞**에서 싣는다 — 해 · σ 와 무관 (비관통 · 거부 가지의 증서도 같은 결합을 든다).
+    #    g_to_q = 아래 σ 환산의 T_um / A_um2 와 같은 식 — 그 줄 (sigma_ratio = G_eff * T_um / A_um2) 은 건드리지 않는다 (σ 비트 동일).
+    try:
+        _g2q = (plate_z * scale) / (box_x * box_y * scale**2)
+    except (TypeError, ZeroDivisionError, OverflowError):
+        _g2q = None
+    info.update(branch=mode, delta_V=CERT_DELTA_V, g_to_q=_g2q,
+                geometry={'plate_z': plate_z, 'box_x': box_x, 'box_y': box_y, 'scale': scale})
     if isinstance(network_data, dict):
         network_data.setdefault('solve_info', {})[mode] = info
 
@@ -1115,7 +1168,9 @@ def solve_network(network_data, mode='full', return_field=False):
                     att.update(krylov_info=k_info, refine_passes=n_pass)
             except Exception as e:                                         # noqa: BLE001 — 단의 실패를 기록하고 다음 단
                 att.update(outcome='exception', error=f'{type(e).__name__}: {e}'[:200])
-                if k == 0:                                                 # 첫 단 예외 = 풀이 실패 (오늘과 같다 · 사다리 아님)
+                #  첫 단 (spsolve · cg 둘 다) 예외 = 풀이 실패 (오늘과 같다 · 사다리 아님) — ★ Codex 재검증 Q3: 의도된 안전한 거부 (입력 퇴화 · 실행 환경
+                #  문제를 다른 방법의 해로 덮지 않는다) · 가용성 한계 = 일시적 자원 실패도 그 가지 값 없음 (재실행) — 모듈 머리 사다리 절
+                if k == 0:
                     print(f"  Network solve failed: {e}")
                     info['method'] = name
                     return _none('solve_failed', SOLVE_FAILED_REASON)
@@ -1168,10 +1223,13 @@ def solve_network(network_data, mode='full', return_field=False):
 
     # Output-level sanity check: σ_eff cannot exceed σ_bulk for a porous
     # composite (sigma_ratio = σ_eff/σ_bulk should be ≤ 1 for any
-    # microstructure containing void/insulator phases). Values > 1.5
-    # indicate the solver mis-converged to a non-physical state for this
-    # topology — even when G/Σg appears valid, the absolute σ_ratio
-    # being > 1 violates a different physical bound. Reject.
+    # microstructure containing void/insulator phases). A FULL value > 1.5
+    # is outside the admissible range of this single-phase model output —
+    # even when G/Σg appears valid, σ_ratio > 1 violates a different bound —
+    # so the FULL value is withheld (over_conduction_guard).  ★ 10-06 밤 (Codex
+    # 세대 2 재검증 §6) — this is a GUARD on the model output, NOT a proof that
+    # the solver mis-converged: numerical convergence is certified separately
+    # by the solve certificate above (G2R-03 · current conservation · residual).
     # The σ_eff ≤ σ_bulk bound (and so the sigma_ratio>1.5 reject) is a
     # SINGLE-PHASE statement: it holds for the ionic (SE-only) and electronic
     # (AM-only) networks, where every grain shares one σ_bulk and void can only
@@ -1185,6 +1243,9 @@ def solve_network(network_data, mode='full', return_field=False):
     # bound satisfied — yet sigma_ratio=10.3 was nuking κ to None.)
     #  ★ 10-06 C1-5 — 단상 σ_ratio > 1.5 거부는 **FULL 에만**.  CONTACT_FREE · CONSTRICTION_ONLY 가지는 간선별 bulk (원기둥 T_CF ≈ 4/z) 의 모형
     #    과전도로 1.5 를 넘을 수 있다 (LHSx CF 29 행 · q = −0.222 + 0.233·φ·CN) — 풀이 실패가 아니다 → 값 유지 + 상태 model_over_conduction.
+    #  ★ 10-06 밤 (Codex 세대 2 재검증 §6 · Q4) — CF 가 말할 수 있는 것은 **같은 양의 간선 회로에서 R_c 를 뺐을 때 FULL 보다 높아지는 모형 내부
+    #    관계**뿐이다 — 물리 침대의 참 σ 상한이 아니다 (CF 의 bulk 자체가 원기둥 모형이라 T 기준 과대).  model_over_conduction 은 모형 **해석** 표지이지
+    #    수치 증서 면제가 아니다 — CF · 협착-only 숫자를 싣는 레코드도 가지별 증서 결합 검사를 받는다 (tau_flux.CERT_BRANCH_POLICY · G2RR-02).
     is_thermal = network_data.get('is_thermal', False)
     if is_thermal:
         reject = G_eff > sum_g_check * 1.1
@@ -1489,6 +1550,9 @@ def run_decomposition(atoms_raw, contacts_raw, target_types, scale,
     _cf_st, _cf_rs = _net_sigma_status(sigma_cf, _no_through, _si.get('bulk_only'))
     _cn_st, _cn_rs = _net_sigma_status(sigma_constr_net, _no_through, _si.get('constriction_only'))
     _h12 = (net.get('hertz_arm') == 'H12')
+    #  ★ 10-06 밤 G2RR-02 — 증서 결합 정보 중 이 함수가 아는 것 (채널 · 역할 · contact_mode · mS/cm 열의 σ) — 가지 · ΔV · 기하 · G→q 는 solve_info 에서
+    _cert_bind = {'channel': _mode, 'role': (CERT_ROLE_PHYSICS if contact_mode == 'physics' else net.get('hertz_arm')),
+                  'contact_mode': contact_mode, 'sigma_bulk_S_cm': sigma_bulk}
 
     # Results
     results = {
@@ -1513,9 +1577,11 @@ def run_decomposition(atoms_raw, contacts_raw, target_types, scale,
         'solve_method_full': (_si.get('full') or {}).get('method'),
         #  ★ 10-06 밤 G2R-03 — 가지마다 수치 증서 (I_bottom · I_top · 보존 잔차 · 내부 잔차 · 방법 · 허용치 · 단 기록 · 0 저항 간선 수) ·
         #    solve_info 와 같은 모양 (JSON 안전) — 게시 · 인계 관문이 `certificate_problem(rec['solve_certificate_full'])` 로 계산된 σ 마다 본다.
-        'solve_certificate_full': solve_certificate(_si.get('full')),
-        'solve_certificate_bulk_net': solve_certificate(_si.get('bulk_only')),
-        'solve_certificate_constr_net': solve_certificate(_si.get('constriction_only')),
+        #  ★ 10-06 밤 G2RR-02 — + 결합 정보 (가지 · 채널 · 역할 · contact_mode · ΔV · 기하 · G→q · σ_bulk — CERT_BINDING_FIELDS) · 수용 검사 =
+        #    `tau_flux.certificate_binding_problems` (자리 · 부모 · 발행 σ 와 대조 · 재구성)
+        'solve_certificate_full': solve_certificate(_si.get('full'), _cert_bind),
+        'solve_certificate_bulk_net': solve_certificate(_si.get('bulk_only'), _cert_bind),
+        'solve_certificate_constr_net': solve_certificate(_si.get('constriction_only'), _cert_bind),
         'n_nodes': n_nodes,
         'n_edges': n_edges,
         'n_bottom': n_bottom,
@@ -1584,13 +1650,14 @@ def run_decomposition(atoms_raw, contacts_raw, target_types, scale,
     if sigma_full:
         print(f"  {'FULL (explicit-contact)':22s} {sigma_full:10.6f} {sigma_full*sigma_bulk*1000:10.4f}")
     if sigma_cf:
-        print(f"  {'CONTACT_FREE (upper)':22s} {sigma_cf:10.6f} {sigma_cf*sigma_bulk*1000:10.4f}")
+        #  ★ 10-06 밤 (Codex 세대 2 재검증 §6) — 옛 'CONTACT_FREE (upper)' 표지 정정: CF = R_c = 0 가지 (같은 회로의 모형 내부 관계) · 상한 아님
+        print(f"  {'CONTACT_FREE (R_c=0)':22s} {sigma_cf:10.6f} {sigma_cf*sigma_bulk*1000:10.4f}")
     if sigma_constr_net:
         print(f"  {'CONSTRICTION_ONLY':22s} {sigma_constr_net:10.6f} {sigma_constr_net*sigma_bulk*1000:10.4f}")
     print(f"  {'Bruggeman (φ^1.5)':22s} {sigma_bruggeman:10.6f} {sigma_bruggeman*sigma_bulk*1000:10.4f}")
     print(f"")
     if sigma_cf and sigma_full:
-        print(f"  Contact-free overestimation: {sigma_cf/sigma_full:.2f}×")
+        print(f"  CF/FULL (모형 내부 협착비 · 상한 비 아님): {sigma_cf/sigma_full:.2f}×")
     if sigma_bruggeman > 0 and sigma_full:
         print(f"  Bruggeman EMT overestimation: {sigma_bruggeman/sigma_full:.2f}×")
 

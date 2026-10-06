@@ -1811,9 +1811,11 @@ _TAU_SHARED = {
                            'Maxwell 협착 + 원기둥 bulk · H12 = ψ 곱 협착 + 구 조각 bulk · physics = ψ 곱 + physics_g2 + 원기둥 · 셋 다 전극 dirichlet_exact · '
                            '표기 전부 필수 · 세대 2 Hertz 는 H12 필수) · inferred_legacy = 세대 2 표지가 **하나도 없는** 역사 레코드를 옛 세대로 **추론** '
                            '(표기 칸의 virtual_source_legacy · physics_g1 · cylinder_half_d · ψ 분모는 이력 사실로 채운 값이지 레코드에 적힌 값이 아니다 · '
-                           '도장이 세대 2 게시를 말하면 추론하지 않는다) · invalid = 세대 계약 위반 (H12 를 주 Hertz 자리에 · 모르는 값 · 부분 결손 — 그 행 '
-                           'NOT_COMPUTED invalid_input · 인계표에는 실리지 않는다) · 빈칸 = 망 레코드 없음 · ⚠ 표기 (메타) 계약 — 숫자만 바꿔 끼운 레코드는 '
-                           '재계산 없이 못 잡는다 · 한 인계표 = 한 세대 (행마다 계약 먼저 · 그다음 섞임)'),
+                           '도장이 세대 2 게시를 말하면 추론하지 않는다) · invalid = 세대 계약 위반 (H12 를 주 Hertz 자리에 · 모르는 값 · 부분 결손 · '
+                           '수치 증서 결합 실패 (G2RR-02 — 다른 가지 · 역할 · 채널의 증서 · 기하 인자 · 발행값 ≠ 증서 재구성) — 그 행 '
+                           'NOT_COMPUTED invalid_input · 인계표에는 실리지 않는다) · 빈칸 = 망 레코드 없음 · ⚠ 표기 계약 + 증서 결합 — 숫자만 바꿔 끼운 '
+                           '레코드는 증서 재구성이 잡는다 · 증서 · 숫자 · 기하를 함께 일관되게 바꾼 전면 위조는 재계산 없이 못 잡는다 · 한 인계표 = 한 세대 '
+                           '(행마다 계약 먼저 · 그다음 섞임)'),
 }
 _TAU_COL_RE = re.compile(r'(f_ion|tau2_ion|tau_ion|ion_net_status_reason|ion_net_status|ion_net_area_mode|ion_net_constriction|ion_net_psi|'
                          r'ion_net_area_rule|ion_net_electrode|ion_net_bulk|'
