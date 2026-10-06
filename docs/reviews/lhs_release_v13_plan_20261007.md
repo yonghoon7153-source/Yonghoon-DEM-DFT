@@ -15,7 +15,7 @@
 | 발사 봉인 대조 (등록 §3 · §5 — 이 커밋 안에서 추가) | 배치 manifest `code_hashes` ↔ 빌드 체크아웃 (다르면 거부 · `--allow-seal-diff` 명시 승인 · 철자 정규화 · 기록) · `handover_code_hashes` 다름 = 경고 · ⓪b 다시 읽기 기록 `reread.json` 실패 = 거부 — 관문 넣기 전 판 63/77 (V0 · V16a–m 14 실패) → 77/77 | 같은 시험 V16 |
 | 새 열 `se_isolated_pct` | 인계 생성기 유도 묶음 `se_isolation` (명시 opt-in · 옛 인계표 바이트 불변 · 단계 역량 표 · 실행기 ㉕ 짝 불변) · 관문 S0–S2 · 열 사전 — selftest 시험 먼저 378/385 → 385/385 | `scripts/lhs_design_dataset.py` selftest ㉝a–g |
 | τ 표시 이름 | 열 사전 (tau2 = 수송 tortuosity · 제곱근 아님 · √ 값은 그 이름 아님 · 벽 τ 사전의 "이 표에 없음" 정정) · COMSOL 2D 내보내기 · 5 조성 러너 README — 기준 43/46 → 46/46 | `webapp/test_tau_labels.py` K6–K8 |
-| 웹앱 화면 (J20-l) | 고립 전해질 (케이스 표 줄 · 영문 라벨 · 툴팁 · 그룹 비교 열 · MD 보고서 · 쉬운 설명 · 표 재구성기) + τ 표시 이름 (논문 라벨 · 툴팁 · 별칭 · 쉬운 설명) — 기준 2/20 → 20/20 (기준의 2 = 줄을 안 만드는 경우 · 옛 라벨끼리의 별칭 — 저절로 참) | `webapp/test_v13_webapp_display.py` (app.py · single.html 을 읽는 시험은 이 파일에만 — §7) |
+| 웹앱 화면 (J20-l) | 고립 전해질 (케이스 표 줄 · 영문 라벨 · 툴팁 · 그룹 비교 열 · MD 보고서 · 쉬운 설명 · 표 재구성기) + τ 표시 이름 (논문 라벨 · 툴팁 · 별칭 · 쉬운 설명) — 기준 2/20 → 20/20 (기준의 2 = 줄을 안 만드는 경우 · 옛 라벨끼리의 별칭 — 저절로 참) | 화면 시험 `test_v13_webapp_display` (패치 안 · 발사 뒤 추가) (app.py · single.html 을 읽는 시험은 이 파일에만 — §7) |
 | 기준 커밋 | `beffa8a67` (세대 2 실행 등록 · 봉인 지문 갱신판 · 새 실행기 · 다시 읽기 도구 포함) 위로 다시 얹음 — 실행기 selftest · `g2_network_reread --selftest` · `test_reread_v12` · 압력 기록 시험 · 같은 날 들어온 웹앱 시험 (atoms-only porosity · τ 후보 경로 보기) 그대로 통과 | — |
 | DRY RUN | 커밋된 v1.2 인계표 (세대 1) 로 경로만 — 스크래치에서 · 리포 산출 없음 | §4 |
 
@@ -170,7 +170,7 @@ python3 scripts/lhs_release_build.py --v13-check --dry-run --handover-dir docs/d
   (나머지 28 파일은 등록 값 그대로 · 이 컨테이너에서 실행기와 같은 식 `code_fp` 로 계산 — 그 사이 다른 봉인 파일이 바뀌면 들일 때 실행기 `--dry-run` 으로 다시 잰다).
   ⇒ 통째로 발사 **전에** 가지에 들이면 1저자 사전 점검 (등록 §1 단계 2 — 봉인 지문이 §3 값과 같아야) 과 등록 봉인이 어긋난다.
 - 인계 단계 코드는 봉인 밖이다 — `scripts/lhs_design_dataset.py` 지문 `a678994861a1…` (등록 §3) → `a4b40dcd10c1…` (이 커밋) 은 등록이 예상한 변화다 (§3 ⚠ "그 커밋을 §9 에 적는다").
-- 그래서 화면 쪽만 따로 들일 수 있게 묶었다 — **{`webapp/app.py` · `webapp/templates/single.html` · `webapp/test_v13_webapp_display.py` · `scripts/check_all.sh` 의
+- 그래서 화면 쪽만 따로 들일 수 있게 묶었다 — **{`webapp/app.py` · `webapp/templates/single.html` · 화면 시험 `test_v13_webapp_display` (패치 안 · 발사 뒤 추가) · `scripts/check_all.sh` 의
   `webapp: v13_webapp_display` 한 줄}**.  이 넷을 빼고 들여도 나머지 시험은 초록이다 (컨테이너 실측 — app.py · single.html 을 기준 판으로 둔 채
   `test_lhs_release_v13` 77/77 · 생성기 selftest 385/385 · `lhs_release_build --selftest` 31/31 · `test_tau_labels` 46/46 · `webapp_network_batch --selftest` · 그 밖 웹앱 시험 넷 통과 ·
   화면 시험만 4/20).
@@ -190,6 +190,6 @@ python3 scripts/lhs_release_build.py --v13-check --dry-run --handover-dir docs/d
 
 - Q1 H12 부록 = v1.3 에 넣지 않는다 · Q2 압력 기록 = 194 전부 (`--pressure-unverified` 쓰지 않음) · **Q3 재적합 = 위 두 형태 (지수 고정 ½ · 2 / 자유) 를 세대 2 값을 보기 전에 이 문서로 등록** ·
   Q4 README 전달 문구 = Codex GO 판정 문구 그대로 (`--transfer-text`) · Q5 ML 표 = 넓은 표 + `<열>__blank` · Q6 = (a) 화면 부분은 발사 뒤.
-- 반입 (메인 세션): 생성기 · 시험 · 계획서는 지금 반입 — 화면 네 항목 (`webapp/app.py` · `webapp/templates/single.html` · `webapp/test_v13_webapp_display.py` ·
-  `scripts/check_all.sh` 의 `run 'webapp: v13_webapp_display' python3 webapp/test_v13_webapp_display.py` 한 줄) 은 봉인 파일 `app.py` 를 바꾸므로 **194 발사 뒤**
+- 반입 (메인 세션): 생성기 · 시험 · 계획서는 지금 반입 — 화면 네 항목 (`webapp/app.py` · `webapp/templates/single.html` · 화면 시험 `test_v13_webapp_display` (패치 안 · 발사 뒤 추가) ·
+  `scripts/check_all.sh` 의 `run 'webapp: v13_webapp_display' python3 test_v13_webapp_display (패치 안 · 발사 뒤 추가)` 한 줄) 은 봉인 파일 `app.py` 를 바꾸므로 **194 발사 뒤**
   `git apply docs/reviews/lhs_release_v13_display_deferred_20261007.patch` + 그 check_all 한 줄로 넣는다 (패치 = 원 커밋 10aa3ba69 의 세 파일 diff 그대로).
