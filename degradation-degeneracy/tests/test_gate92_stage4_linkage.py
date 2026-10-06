@@ -419,8 +419,8 @@ def test_g92_k07_the_run_spec_edge_sha_of_a_warm_plan_is_the_approved_axis_value
     assert env["provider_edges"], "warm 계획이 아니다 — 빈 edge 는 두 정의가 우연히 같다"
     want = PV.stage3_axis_from_envelope(env)["provider_edges_sha256"]
     assert want == PV.digest(env["provider_edges"])
-    assert s3["provider_edges_sha256"] == want, \
-        f"writer 의 edge sha {s3['provider_edges_sha256'][:16]} ≠ 승인 축 (canonical digest) {want[:16]}"
+    # 메시지에 digest 를 넣지 않는다 — provider fits 바이트가 실행마다 달라 변이 증인이 결정적이지 않다 (G67-T1-b)
+    assert s3["provider_edges_sha256"] == want, "writer 의 edge sha 가 승인 축 (canonical digest · stage3_axis_from_envelope) 과 다르다"
 
 
 # ═════════════════════════════════════════════════════════════════════════════
