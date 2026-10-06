@@ -20,6 +20,8 @@ Three decomposition runs:
 σ_eff/σ_bulk = G_eff × L / A  (Ohm's law, dimensionless)
 
 전극 (세대 2 · 2026-10-06 · L2-05): 바닥 띠 V = 1 · 위 띠 V = 0 **정확 Dirichlet** — G = 바닥 띠에서 나가는 전류 (가상 전원 · 싱크 g_b 없음).
+수치 증서 (10-06 밤 · G2R-03): 풀이마다 I_bottom · I_top · 보존 잔차 · 내부 잔차 · 방법을 싣고 허용치 (1e-6) 를 넘는 해는 사다리로 다시 풀거나
+  내지 않는다 (current_conservation_failed) · 협착-only 의 R_c = 0 간선은 풀지 않는다 (GEN2-01 · zero_resistance_requires_contraction).
 Physics 면적 (세대 2): `plastic_coverage.film_area_g2` (규칙 B · µm · 쌍별 E* · 정확 lens) — 세대 1 은 명시 `area_rule='physics_g1'`.
 Hertz 기본 = H0 (Maxwell 협착 + 원기둥 반 d bulk · 세대 1 과 같은 간선) · H12 (ψ 곱 + 구 조각 bulk) = 짝 인자로만 · 이온 민감도 레코드.
 
@@ -36,7 +38,8 @@ import json
 import os
 import sys
 from scipy import sparse
-from scipy.sparse.linalg import spsolve, cg
+#  ★ 10-06 밤 G2R-03 — 사다리 단 (gmres · spilu · LinearOperator) 도 모듈 이름으로 부른다 (measure_rho · 시험이 cg · spsolve 를 이 자리에서 바꿔 끼운다)
+from scipy.sparse.linalg import spsolve, cg, gmres, spilu, LinearOperator
 
 # Plastic-physics contact-area model (used when contact_mode='physics')
 # See docs: scripts/plastic_coverage.py → film_area_from_overlap()
@@ -102,6 +105,38 @@ DIRICHLET_DIRECT_MAX_FREE = 30000          # 자유 노드가 이보다 많으�
 #                                            solve_network 의 문턱 줄은 글자 그대로 30000 (measure_rho 치환 앵커 · 셀프테스트가 같은 값인지 본다)
 DIRICHLET_CG_RTOL = 1e-10
 BOUNDARY_OVERLAP_REASON = 'boundary_overlap'   # B ∩ T ≠ ∅ — 한 노드에 V = 1 과 0 을 동시에 강제할 수 없다 (풀지 않는다)
+#  ★ 10-06 밤 수치 증서 (`G2R-03` · Codex 세대 2 판정 §4 · §8 · 1저자 비준) — 정확 Dirichlet 풀이마다 증서를 싣는다 (solve_info · 결과
+#     `solve_certificate_<가지>`): I_bottom · I_top (양 전극 띠 전류) · conservation_rel = |I_b + I_t| / max(|I_b|, |I_t|, tiny) ·
+#     residual_rel = ‖L_ff·x − b‖ / max(‖b‖, tiny) (풀린 자유 노드 계) · method (채택한 단) · attempts (단마다 결과).
+#     ⚠ CG 종료 (info 0) · 유한 해 · G ≤ 1.1·Σg 는 증서가 아니다 — 큰 막다른 간선이 ‖b‖ 를 지배하면 rtol·‖b‖ 가 관통 전류의 오차를 묶지 못한다
+#       (Codex 반례: B 에만 붙은 10^14 S 막다른 간선 · 자유 노드 30,002 → cg · G 30,001 = 참값 15,000.5 의 +100 % · I_top −3e-10 · 내부 잔차 1.7e-12 로 통과).
+#       보존은 KCL 의 귀결이다 (1ᵀL = 0 → I_b + I_t = −Σ_free (L_ff·x − b)) — 그 반례에서 1.0.
+#  허용치 — 새 배치 전에 고정 (결과를 보고 옮기지 않는다):
+#     보존 1e-6 — 실침대 실측 (Codex 재계산 + 이 리포 재측정 · 두 기계): real_14 (spsolve · 자유 28,231) 게시 가지 ≤ 1.4e-13 · case15 (cg ·
+#       자유 55,912) FULL ≤ 6.4e-9 · CF ≤ 1.1e-10 · 협착-only (R_c = 0 간선 없는 H0 · H12) ≤ 5.9e-9 → 게시되는 값의 최댓값보다 150 배 이상 위 ·
+#       반례 (O(1)) 보다 백만 배 아래.  (case15 physics g2 협착-only 3.6e-7 – 1.3e-6 은 R_c = 0 간선을 지운 다른 회로다 — 아래 GEN2-01 로 풀지 않는다.)
+#     내부 잔차 1e-6 — CG 종료 기준 (rtol 1e-10 · ‖b‖ 상대) 보다 4 자리 느슨 · 직접해는 ~1e-15 → 해가 아닌 해 (전처리 잔차로 멈춘 Krylov ·
+#       수치적으로 특이한 직접해) 만 거른다.  ⚠ 이것만으로는 위 반례를 못 잡는다 (1.7e-12) — 주 기준은 보존이다.
+DIRICHLET_CONSERVATION_REL_MAX = 1e-6
+DIRICHLET_RESIDUAL_REL_MAX = 1e-6
+#  사다리 — 첫 단이 증서를 넘으면 해를 건드리지 않는다 (오늘과 비트 동일).  증서 실패 · 첫 단 CG 미수렴 때만 다음 단:
+#     작은 망 (자유 ≤ 30,000): spsolve → cg+jacobi → gmres+ilu   (첫 단 spsolve **예외** = solve_failed 그대로 · 사다리 아님)
+#     큰 망  (자유 > 30,000): cg → spsolve_fallback (자유 ≤ DIRICHLET_FALLBACK_DIRECT_MAX_FREE 일 때만) → cg+jacobi → gmres+ilu
+#     cg+jacobi = 대각 (SPD) 전처리 CG · gmres+ilu = ILU 전처리 GMRES — ILU 는 SPD 가 보장되지 않아 CG 에 넣지 않는다 (옛 'cg+ilu' 폐기 ·
+#     SciPy cg 의 M 은 SPD 여야 한다) · 두 Krylov 단은 잔차 보정 (A·δ = r 을 다시 푼다 — 매 회 종료 기준이 그때 잔차 상대라 큰 RHS 성분에 묻힌
+#     작은 성분도 풀린다) · 모든 단이 증서를 못 넘으면 값을 내지 않는다 (NOT_COMPUTED + CURRENT_CONSERVATION_FAILED_REASON).
+DIRICHLET_FALLBACK_DIRECT_MAX_FREE = 250000   # 사다리 직접해 상한 — 실침대 case15 이온 망 (자유 55,912) 직접해 2.3 s · < 1 GB (실측) · 현 캠페인 침대 ≤ 114,609 입자
+DIRICHLET_REFINE_PASSES = 4                   # Krylov 단의 잔차 보정 횟수 상한
+DIRICHLET_KRYLOV_MAXITER = 20000              # 사다리 Krylov 단의 반복 상한 (첫 단 CG 와 같은 값 · GMRES 는 restart 50 × 400 회)
+DIRICHLET_METHODS = ('none_free', 'spsolve', 'cg', 'spsolve_fallback', 'cg+jacobi', 'gmres+ilu')
+CURRENT_CONSERVATION_FAILED_REASON = 'current_conservation_failed'
+#  ★ 10-06 밤 GEN2-01 (Codex §7 Q3 · 1저자 비준) — 협착-only 가지의 관통 간선에 R_c = 0 (ψ floor · clamp — 소성 원판이 r_min 에 닿음) 이 있으면
+#     그 간선은 단락인데 옛 판은 L 에서 빼서 개방으로 풀었다 = 다른 회로 (Codex 반례: 0.1 S computed ↔ 단락 수축 1.1 S).  정확한 값은 R_c = 0
+#     성분을 수축해야 하고 (B · T 를 함께 품으면 무한 conductance) 작은 ε 저항 치환은 새 수치 매개변수라 쓰지 않는다 → 그 가지만 NOT_COMPUTED +
+#     이 사유 · FULL (R_bulk > 0) · CF (1e-12 floor) 는 그대로.
+ZERO_RESISTANCE_REASON = 'zero_resistance_requires_contraction'
+#: 망 σ 가 None 일 때 solve_info 사유를 그대로 상태 사유로 올리는 것 (그 밖 = solve_failed) — `_net_sigma_status`.
+NOT_COMPUTED_SOLVE_REASONS = (BOUNDARY_OVERLAP_REASON, CURRENT_CONSERVATION_FAILED_REASON, ZERO_RESISTANCE_REASON)
 #  ③ Hertz 가지 (C1-3) — 기본 H0 = Maxwell 협착 1/(2σa) + 원기둥 반 d bulk (세대 1 과 같은 간선 · 주 값).  H12 = ψ 곱셈 협착 + 구 조각 bulk 를
 #     **짝으로만** (ψ 단독 H1 = 모든 기하에서 과전도 +6…+50 % · 기각 · bulk 단독도 받지 않는다) — 이온 민감도 레코드 (`hertz_h12`) 로만 쓴다.
 HERTZ_CONSTRICTION_MAXWELL = 'maxwell'
@@ -164,6 +199,8 @@ def _sigma_status(v):
 #:   숫자 필드 (`sigma_*`) 는 F-12 대로 None 을 유지한다 (UI '—' · 코퍼스 불변).  관통 σ 는 비트 동일 (해는 그대로 · 상태 필드만).
 NO_THROUGH_REASON = 'no_through_path'        # 관통 성분 없음 = 물리적 0 (valid_zero) — conductivity · f 의 0
 SOLVE_FAILED_REASON = 'solve_failed'         # 관통 성분은 있는데 σ 를 못 냈다 (예외 · V_source ≤ 0 · Σg 상한 · σ_ratio>1.5 · 경계 겹침 퇴화)
+#                                              ★ 10-06 밤 — 증서 실패 (current_conservation_failed) · 협착-only 의 R_c = 0 (zero_resistance_requires_contraction) ·
+#                                              경계 겹침은 따로 이름을 가진다 (`NOT_COMPUTED_SOLVE_REASONS` — 상태는 셋 다 not_computed)
 NON_FINITE_REASON = 'non_finite'             # 값이 NaN (수치 실패)
 #: 협착 전력 몫 (④a) 이 None 일 때의 상태 — 비관통 (0/0 미정의) 과 관통인데 FULL 풀이 실패를 가른다 (RGL-08: 등록된 물리 사유 ↔ 실패).
 CPS_NO_THROUGH_STATUS = 'not_computed (no percolating FULL solution)'      # 옛 문자열 그대로 = 비관통 (constriction_power_share(None))
@@ -177,6 +214,8 @@ def _net_sigma_status(v, no_through, solve_info=None):
         ★ 10-06 C1-5: 솔버가 그 풀이를 모형 과전도로 표지했으면 (CF · 협착-only 의 q > 1.5) → ('model_over_conduction', 'q_gt_1p5') · 값 유지
       · None ∧ no_through (같은 그래프의 관통 성분 0) → ('valid_zero', NO_THROUGH_REASON)   ← 증명된 비관통
       · None ∧ 경계 겹침 (★ 10-06 L2-05 — 솔버 사유 boundary_overlap) → ('not_computed', BOUNDARY_OVERLAP_REASON)
+      · None ∧ ★ 10-06 밤 — 증서 실패 (G2R-03 · current_conservation_failed) · 협착-only 의 R_c = 0 (GEN2-01 ·
+        zero_resistance_requires_contraction) → ('not_computed', 그 사유)   (`NOT_COMPUTED_SOLVE_REASONS`)
       · None ∧ 관통 → ('not_computed', SOLVE_FAILED_REASON)  · NaN → ('not_computed', NON_FINITE_REASON)
     no_through 는 `active_fractions(net)['perc_nodes']` 가 비었는가 (반올림 전 · solve_network 와 같은 그래프 · 같은 띠).
     solve_info = 그 풀이의 `net['solve_info'][mode]` (solve_network 가 남긴다 · 없으면 옛 규칙)."""
@@ -191,8 +230,8 @@ def _net_sigma_status(v, no_through, solve_info=None):
         return st, 'zero_value'
     if v is None and no_through:
         return 'valid_zero', NO_THROUGH_REASON
-    if v is None and info.get('reason') == BOUNDARY_OVERLAP_REASON:      # ★ 10-06 L2-05 — B ∩ T ≠ ∅ (정확 Dirichlet 이 풀 수 없다)
-        return 'not_computed', BOUNDARY_OVERLAP_REASON
+    if v is None and info.get('reason') in NOT_COMPUTED_SOLVE_REASONS:     # 경계 겹침 · 증서 실패 · 협착-only 의 R_c = 0
+        return 'not_computed', info['reason']
     return 'not_computed', (SOLVE_FAILED_REASON if v is None else NON_FINITE_REASON)
 
 def sigma_AM_relative(r_um, particle_type):
@@ -740,6 +779,82 @@ def build_network(atoms_raw, contacts_raw, target_types, scale,
     }
 
 
+_TINY = sys.float_info.min        # 보존 · 내부 잔차 분모의 바닥 (두 전류 · ‖b‖ 가 모두 0 일 때 0/0 을 피한다)
+#: ★ 10-06 밤 G2R-03 — 결과 레코드에 싣는 증서 키 (solve_info 와 같은 이름 · 같은 모양) · 단 기록 키.
+SOLVE_CERTIFICATE_FIELDS = ('electrode_model', 'status', 'reason', 'method', 'n_free', 'n_fixed', 'n_floating', 'n_zero_resistance',
+                            'I_bottom', 'I_top', 'conservation_rel', 'residual_rel', 'conservation_rel_max', 'residual_rel_max', 'attempts')
+SOLVE_ATTEMPT_FIELDS = ('method', 'outcome', 'krylov_info', 'refine_passes', 'I_bottom', 'I_top', 'conservation_rel', 'residual_rel',
+                        'error')
+#: 결과 레코드의 가지별 증서 키 (σ 키 꼬리와 같다 — full · bulk_net (CONTACT_FREE) · constr_net (CONSTRICTION_ONLY)).
+SOLVE_CERTIFICATE_KEYS = ('solve_certificate_full', 'solve_certificate_bulk_net', 'solve_certificate_constr_net')
+
+
+def _cert_num(v):
+    """유한 실수 → float · 그 밖 (None · bool · 문자열 · NaN · ±inf) → None."""
+    if isinstance(v, bool) or not isinstance(v, (int, float, np.integer, np.floating)):
+        return None
+    f = float(v)
+    return f if np.isfinite(f) else None
+
+
+def _json_val(v):
+    """증서 값의 JSON 안전형 — numpy 수 → 파이썬 수 · 비유한 실수 → None (표준 JSON 에 NaN · Infinity 를 쓰지 않는다) · 문자열 그대로."""
+    if v is None or isinstance(v, (bool, str)):
+        return v
+    if isinstance(v, (int, np.integer)):
+        return int(v)
+    if isinstance(v, (float, np.floating)):
+        return _cert_num(v)
+    return str(v)
+
+
+def solve_certificate(info):
+    """`network_data['solve_info'][mode]` → 결과 레코드에 싣는 증서 (dict · JSON 안전) | None.  같은 키라 `certificate_problem` 이 그대로 읽는다."""
+    if not isinstance(info, dict):
+        return None
+    out = {k: _json_val(info.get(k)) for k in SOLVE_CERTIFICATE_FIELDS if k != 'attempts'}
+    out['attempts'] = [{k: _json_val(a.get(k)) for k in SOLVE_ATTEMPT_FIELDS}
+                       for a in (info.get('attempts') or []) if isinstance(a, dict)]
+    return out
+
+
+def certificate_problem(cert):
+    """수치 증서 → None (게시할 수 있는 해) | 사유 (문자열).  ★ 10-06 밤 G2R-03 — 순수 함수 (기록만 본다 · 풀이 · 파일 · 전역 상태 없음).
+
+    cert = `solve_network` 의 `network_data['solve_info'][mode]` 또는 결과 레코드의 `solve_certificate_<가지>` (같은 모양).
+    통과 = 값이 게시되는 풀이만: status ∈ ('computed', 'model_over_conduction') · method ∈ DIRICHLET_METHODS · I_bottom 유한 양수 (= G · ΔV 1) ·
+      I_top 유한 · 보존 잔차를 두 전류에서 **다시 재서** 기록값과 같고 ≤ DIRICHLET_CONSERVATION_REL_MAX · residual_rel 유한 · 0 이상 ·
+      ≤ DIRICHLET_RESIDUAL_REL_MAX.
+    허용치는 기록된 값이 아니라 이 모듈의 상수다 (정책은 코드가 정한다).  비관통 · 경계 겹침 · 0 저항 · 증서 실패 같은 비게시 상태는 사유를 돌려준다 —
+    게시 관문 · 인계 재독이 **계산된 σ 마다** 부르는 자리 (그 배선은 이 함수 밖)."""
+    if not isinstance(cert, dict):
+        return f'증서 없음 ({type(cert).__name__})'
+    st = cert.get('status')
+    if st not in ('computed', MODEL_OVER_CONDUCTION):
+        return f'풀이 상태 {st!r} (사유 {cert.get("reason")!r}) — 게시할 해가 없다'
+    m = cert.get('method')
+    if m not in DIRICHLET_METHODS:
+        return f'모르는 풀이 방법 {m!r} (DIRICHLET_METHODS 밖)'
+    ib, it = _cert_num(cert.get('I_bottom')), _cert_num(cert.get('I_top'))
+    if ib is None or it is None:
+        return f'전극 전류 결손 · 비유한 (I_bottom {cert.get("I_bottom")!r} · I_top {cert.get("I_top")!r})'
+    if not ib > 0:
+        return f'I_bottom {ib!r} ≤ 0 — G (ΔV 1) 가 양수가 아니다'
+    cons = abs(ib + it) / max(abs(ib), abs(it), _TINY)
+    rec = _cert_num(cert.get('conservation_rel'))
+    if rec is None or abs(rec - cons) > 1e-12 + 1e-9 * cons:
+        return f'보존 잔차 기록 {cert.get("conservation_rel")!r} ≠ 두 전류에서 다시 잰 {cons!r}'
+    if cons > DIRICHLET_CONSERVATION_REL_MAX:
+        return (f'전류 보존 실패 — |I_b + I_t| / max = {cons:.3g} > {DIRICHLET_CONSERVATION_REL_MAX:g} '
+                f'(I_bottom {ib!r} · I_top {it!r})')
+    res = _cert_num(cert.get('residual_rel'))
+    if res is None or res < 0:
+        return f'내부 잔차 결손 · 비유한 · 음수 ({cert.get("residual_rel")!r})'
+    if res > DIRICHLET_RESIDUAL_REL_MAX:
+        return f'내부 잔차 {res:.3g} > {DIRICHLET_RESIDUAL_REL_MAX:g} — 해가 그 선형계를 풀지 않았다'
+    return None
+
+
 def solve_network(network_data, mode='full', return_field=False):
     """
     Solve resistor network for effective conductance.
@@ -754,12 +869,19 @@ def solve_network(network_data, mode='full', return_field=False):
       자유 노드만 푼다 (L_ff·x = −L_fB·1) · G = Σ_{b∈B} (L·V)_b (ΔV = 1).  옛 가상 전원 · 싱크 g_b = max(100·Σg/n_el, 10·g_max, 1e-6) 는 지웠다 —
       g_b 가 **모든 간선**에서 나와 전류 0 인 막다른 가지가 σ 를 바꿨다 (Codex 반례 +4.0 %).  세대 1 σ 재현 = git 이력의 옛 모듈.
       · B ∩ T ≠ ∅ → (None, None) · 사유 `boundary_overlap` (한 노드에 1 과 0 을 동시에 강제할 수 없다)
-      · 자유 노드 ≤ DIRICHLET_DIRECT_MAX_FREE (30,000) → spsolve · 그 위 → CG (rtol 1e-10 · atol 0 · SciPy < 1.12 는 tol) → 실패하면 ILU 전처리
-        CG → 그래도 실패하면 직접해 (spsolve_fallback)
+      · ★ 10-06 밤 GEN2-01 — 협착-only 에서 관통 간선에 R_c = 0 이 있으면 (None, None) · 사유 `zero_resistance_requires_contraction` (지우면 단락이
+        개방이 된다 · 그 가지만 · FULL · CF 는 그대로)
+      · 자유 노드 ≤ DIRICHLET_DIRECT_MAX_FREE (30,000) → spsolve · 그 위 → CG (rtol 1e-10 · atol 0 · SciPy < 1.12 는 tol)
+      · ★ 10-06 밤 G2R-03 — 해마다 **수치 증서** (보존 잔차 ≤ DIRICHLET_CONSERVATION_REL_MAX · 내부 잔차 ≤ DIRICHLET_RESIDUAL_REL_MAX · 0 < G ≤ 1.1·Σg)
+        를 넘어야 채택한다.  첫 단이 넘으면 해 그대로 (오늘과 비트 동일).  못 넘으면 (또는 첫 단 CG 미수렴) 사다리: 큰 망 = 직접해 (spsolve_fallback ·
+        자유 ≤ DIRICHLET_FALLBACK_DIRECT_MAX_FREE) → cg+jacobi → gmres+ilu · 작은 망 = cg+jacobi → gmres+ilu (Krylov 단은 잔차 보정).  어느 단도
+        증서를 못 넘으면 (None, None) · 상태 not_computed · 사유 `current_conservation_failed` (해를 낸 단이 없으면 solve_failed).
+        첫 단 예외 (spsolve · cg) = solve_failed 그대로 (사다리 아님 — 실패 주입 시험이 그 자리를 쓴다).
       · 어느 고정 노드와도 (R > 0 간선으로) 이어지지 않은 자유 노드 = 떠 있는 섬 — 풀이에서 빼고 V = 0 (전류 0 · solve_info n_floating)
-      · 가드 (그대로): G ≤ 1.1·Σg (위반 = 수치 실패 · 직접해였으면 CG 로 다시) · 열 = 병렬 상한 · 단상 σ_ratio > 1.5 = **FULL 만** 거부
-        (★ C1-5 — CF · 협착-only 의 q > 1.5 = 모형 과전도: 값 유지 + 상태 model_over_conduction)
-    기록: network_data['solve_info'][mode] = {electrode_model, status, reason, method, n_free, n_fixed, n_floating, I_bottom, I_top}.
+      · 가드: 열 = 병렬 상한 · 단상 σ_ratio > 1.5 = **FULL 만** 거부 (★ C1-5 — CF · 협착-only 의 q > 1.5 = 모형 과전도: 값 유지 + 상태
+        model_over_conduction)
+    기록: network_data['solve_info'][mode] = {electrode_model, status, reason, method, n_free, n_fixed, n_floating, n_zero_resistance,
+          I_bottom, I_top, conservation_rel, residual_rel, conservation_rel_max, residual_rel_max, attempts} — 증서 판정 = `certificate_problem`.
 
     Returns:
         G_eff: effective conductance (normalized, ρ=1)
@@ -775,7 +897,10 @@ def solve_network(network_data, mode='full', return_field=False):
     box_x = network_data['box_x']
     box_y = network_data['box_y']
     info = {'electrode_model': ELECTRODE_DIRICHLET, 'status': None, 'reason': None, 'method': None,
-            'n_free': None, 'n_fixed': None, 'n_floating': 0, 'I_bottom': None, 'I_top': None}
+            'n_free': None, 'n_fixed': None, 'n_floating': 0, 'n_zero_resistance': None, 'I_bottom': None, 'I_top': None,
+            'conservation_rel': None, 'residual_rel': None,                                    # ★ G2R-03 증서 (채택한 해)
+            'conservation_rel_max': DIRICHLET_CONSERVATION_REL_MAX, 'residual_rel_max': DIRICHLET_RESIDUAL_REL_MAX,
+            'attempts': []}
     if isinstance(network_data, dict):
         network_data.setdefault('solve_info', {})[mode] = info
 
@@ -836,6 +961,16 @@ def solve_network(network_data, mode='full', return_field=False):
             return e['R_constriction']
         return e['R_total']
 
+    #  ★ 10-06 밤 GEN2-01 — 협착-only 가지의 관통 간선에 R_c = 0 (ψ floor · clamp) 이 있으면 풀지 않는다.  아래 조립은 R ≤ 0 간선을 L 에서 빼므로
+    #    단락이 개방이 된다 = 다른 회로 (`ZERO_RESISTANCE_REASON` 의 주석).  관통 밖 간선은 G 에 무관하다 (세지 않는다).
+    if mode == 'constriction_only':
+        n_zero = sum(1 for e in perc_edges if _edge_R(e) <= 0)
+        info['n_zero_resistance'] = int(n_zero)
+        if n_zero:
+            print(f"  ⚠ 협착-only: 관통 간선 {n_zero} 개가 R_c = 0 (ψ floor · clamp) — 빼면 단락이 개방이 된다 · 수축 전에는 값 없음 "
+                  f"({ZERO_RESISTANCE_REASON})")
+            return _none('not_computed', ZERO_RESISTANCE_REASON)
+
     # Node index mapping (percolating only) — 가상 전원 · 싱크 없음 (L2-05)
     all_ids = list(perc_nodes)
     id_to_idx = {nid: i for i, nid in enumerate(all_ids)}
@@ -881,47 +1016,16 @@ def solve_network(network_data, mode='full', return_field=False):
         except TypeError:                                   # SciPy < 1.12 — rtol 키워드가 없다 (tol 이 상대 허용오차)
             return cg(A, b, tol=DIRICHLET_CG_RTOL, atol=0.0, **kw)
 
+    def _gmres(A, b, M):
+        kw = {'restart': 50, 'maxiter': max(1, DIRICHLET_KRYLOV_MAXITER // 50), 'M': M}
+        try:
+            return gmres(A, b, rtol=DIRICHLET_CG_RTOL, atol=0.0, **kw)
+        except TypeError:                                   # SciPy < 1.12 — rtol 키워드가 없다 (tol 이 상대 허용오차)
+            return gmres(A, b, tol=DIRICHLET_CG_RTOL, atol=0.0, **kw)
+
     def _direct(A, b):
         x_ = spsolve(A.tocsc(), b)
         return np.atleast_1d(np.asarray(x_, dtype=float))
-
-    solve_method = None
-    try:
-        if n_nodes == 0:
-            solve_method = 'none_free'
-        else:
-            L_ff = L[free][:, free].tocsr()
-            rhs = -(L[free][:, fx] @ V[fx])
-            if n_nodes > 30000:
-                print(f"  Large network: {n_nodes} free nodes — CG (rtol {DIRICHLET_CG_RTOL:g}) first...")
-                x, cg_info = _cg(L_ff, rhs)
-                if cg_info == 0 and np.all(np.isfinite(x)):
-                    solve_method = 'cg'
-                else:
-                    print(f"  CG didn't converge (info={cg_info}). Trying ILU-preconditioned CG...")
-                    try:
-                        from scipy.sparse.linalg import spilu, LinearOperator
-                        ilu = spilu(L_ff.tocsc(), drop_tol=1e-4, fill_factor=10)
-                        M = LinearOperator(L_ff.shape, ilu.solve)
-                        x, cg_info = _cg(L_ff, rhs, M=M, maxiter=5000)
-                        if cg_info == 0 and np.all(np.isfinite(x)):
-                            solve_method = 'cg+ilu'
-                        else:
-                            raise RuntimeError(f"ILU-CG failed (info={cg_info})")
-                    except Exception as ilu_err:
-                        print(f"  ILU-CG failed: {ilu_err}. Falling back to direct spsolve...")
-                        x = _direct(L_ff, rhs)
-                        solve_method = 'spsolve_fallback'
-            else:
-                x = _direct(L_ff, rhs)
-                solve_method = 'spsolve'
-            V[free] = x
-    except Exception as e:
-        print(f"  Network solve failed: {e}")
-        return _none('solve_failed', SOLVE_FAILED_REASON)
-    info['method'] = solve_method
-    if solve_method:
-        print(f"  Solve: {solve_method}")
 
     bot_idx = np.array(sorted(id_to_idx[b] for b in perc_bottom), dtype=int)
     top_idx = np.array(sorted(id_to_idx[t] for t in perc_top), dtype=int)
@@ -930,31 +1034,124 @@ def solve_network(network_data, mode='full', return_field=False):
         """(바닥 띠에서 나가는 전류, 위 띠로 나가는 전류) — (L·V) 를 띠마다 더한다 (보존이면 둘의 합 = 0)."""
         Iv = L @ Vv
         return float(Iv[bot_idx].sum()), float(Iv[top_idx].sum())
-    I_bot, I_top = _currents(V)
-    G_eff = I_bot                                    # ΔV = 1 (바닥 1 · 위 0)
-    if not (np.isfinite(G_eff) and G_eff > 0):
-        print(f"  ⚠ G_eff={G_eff!r} — 유한 양수가 아니다 (수치 실패)")
-        return _none('solve_failed', SOLVE_FAILED_REASON)
 
-    # ── Sanity check (그대로): G_eff ≤ Σg (모든 간선을 병렬로 둔 상한) — 위반은 직접해 수치 실패.  직접해였으면 CG 로 한 번 더.
-    if G_eff > sum_g_check * 1.1 and solve_method == 'spsolve':
-        try:
-            x, cg_info = _cg(L[free][:, free].tocsr(), -(L[free][:, fx] @ V[fx]))
-            if cg_info == 0 and np.all(np.isfinite(x)):
-                V2 = V.copy()
-                V2[free] = x
-                ib2, it2 = _currents(V2)
-                if 0 < ib2 <= sum_g_check * 1.1:
-                    V, I_bot, I_top, G_eff, solve_method = V2, ib2, it2, ib2, 'cg_after_spsolve'
-                    info['method'] = solve_method
-        except Exception as cg_err:                                       # noqa: BLE001
-            if os.environ.get('NETWORK_DEBUG'):
-                print(f"  ✗ CG retry failed: {cg_err}")
-    if G_eff > sum_g_check * 1.1:
-        if os.environ.get('NETWORK_DEBUG'):
-            print(f"  ⚠ G_eff={G_eff:.3e} > 1.1·Σg={sum_g_check:.3e} — returning None (수치 실패)")
+    L_ff = rhs = None
+    if n_nodes > 0:
+        L_ff = L[free][:, free].tocsr()
+        rhs = -(L[free][:, fx] @ V[fx])
+    rhs_norm = float(np.linalg.norm(rhs)) if rhs is not None else 0.0
+
+    #  ── ★ 10-06 밤 G2R-03 — 증서 · 사다리 (식 · 허용치 = 모듈 머리 DIRICHLET_CONSERVATION_REL_MAX 절) ──
+    def _assess(x_):
+        """자유 노드 해 x (자유 노드가 없으면 None) → (V, I_bot, I_top, 보존 잔차, 내부 잔차) — 단마다 같은 식."""
+        Vv = V.copy()
+        res = 0.0
+        if x_ is not None:
+            Vv[free] = x_
+            res = float(np.linalg.norm(L_ff @ x_ - rhs)) / max(rhs_norm, _TINY)
+        ib, it = _currents(Vv)
+        return Vv, ib, it, abs(ib + it) / max(abs(ib), abs(it), _TINY), res
+
+    def _certified(a_):
+        cons_, res_ = a_[3], a_[4]
+        return bool(np.isfinite(cons_) and cons_ <= DIRICHLET_CONSERVATION_REL_MAX
+                    and np.isfinite(res_) and res_ <= DIRICHLET_RESIDUAL_REL_MAX)
+
+    def _krylov(name):
+        """사다리 Krylov 단 — 잔차 보정: x = 0 에서 A·δ = r (r = b − A·x) 를 그때 잔차 상대 기준으로 풀어 더한다 (증서를 넘으면 멈춘다).
+        cg+jacobi = 대각 (SPD) 전처리 CG · gmres+ilu = ILU 전처리 GMRES (ILU 는 SPD 보장이 없어 CG 에 넣지 않는다).
+        → (x, 마지막 Krylov info, 보정 횟수) — info ≠ 0 이면 그 회의 δ 는 더하지 않는다 (호출자가 미수렴으로 본다)."""
+        if name == 'cg+jacobi':
+            d = L_ff.diagonal()
+            if not (np.all(np.isfinite(d)) and np.all(d > 0)):
+                raise ValueError('Jacobi 전처리 — 대각이 유한 양수가 아니다')
+            Mj = sparse.diags(1.0 / d)
+
+            def step(r_):
+                return _cg(L_ff, r_, M=Mj, maxiter=DIRICHLET_KRYLOV_MAXITER)
+        else:
+            ilu = spilu(L_ff.tocsc(), drop_tol=1e-4, fill_factor=10)
+            Mi = LinearOperator(L_ff.shape, ilu.solve)
+
+            def step(r_):
+                return _gmres(L_ff, r_, Mi)
+        x_ = np.zeros(L_ff.shape[0])
+        kinfo, passes = 0, 0
+        for passes in range(1, DIRICHLET_REFINE_PASSES + 1):
+            dx, kinfo = step(rhs - L_ff @ x_)
+            kinfo = int(kinfo)
+            if kinfo != 0 or not np.all(np.isfinite(dx)):
+                break
+            x_ = x_ + dx
+            if _certified(_assess(x_)):
+                break
+        return x_, kinfo, passes
+
+    if n_nodes == 0:
+        rungs = ['none_free']
+    else:
+        if n_nodes > 30000:
+            print(f"  Large network: {n_nodes} free nodes — CG (rtol {DIRICHLET_CG_RTOL:g}) first...")
+            rungs = (['cg'] + (['spsolve_fallback'] if n_nodes <= DIRICHLET_FALLBACK_DIRECT_MAX_FREE else [])
+                     + ['cg+jacobi', 'gmres+ilu'])
+        else:
+            rungs = ['spsolve', 'cg+jacobi', 'gmres+ilu']
+    attempts = info['attempts']
+    adopted = None
+    for k, name in enumerate(rungs):
+        att = dict.fromkeys(SOLVE_ATTEMPT_FIELDS)
+        att['method'] = name
+        attempts.append(att)
+        x = None
+        if name != 'none_free':
+            try:
+                if name in ('spsolve', 'spsolve_fallback'):
+                    x = _direct(L_ff, rhs)
+                elif name == 'cg':
+                    x, cg_info = _cg(L_ff, rhs)
+                    att['krylov_info'] = int(cg_info)
+                else:
+                    x, k_info, n_pass = _krylov(name)
+                    att.update(krylov_info=k_info, refine_passes=n_pass)
+            except Exception as e:                                         # noqa: BLE001 — 단의 실패를 기록하고 다음 단
+                att.update(outcome='exception', error=f'{type(e).__name__}: {e}'[:200])
+                if k == 0:                                                 # 첫 단 예외 = 풀이 실패 (오늘과 같다 · 사다리 아님)
+                    print(f"  Network solve failed: {e}")
+                    info['method'] = name
+                    return _none('solve_failed', SOLVE_FAILED_REASON)
+                print(f"  ⚠ 사다리 {name}: 예외 {type(e).__name__}: {e} — 다음 단")
+                continue
+            if att['krylov_info'] not in (None, 0) or not np.all(np.isfinite(x)):
+                att['outcome'] = 'not_converged'
+                print(f"  ⚠ {name}: 수렴하지 않았다 (info={att['krylov_info']}) — 다음 단")
+                continue
+        a = _assess(x)
+        Vv, ib, it, cons, res = a
+        att.update(I_bottom=ib, I_top=it, conservation_rel=cons, residual_rel=res)
+        if not _certified(a):
+            att['outcome'] = 'certificate_failed'
+            print(f"  ⚠ {name}: 증서 실패 — 보존 잔차 {cons:.3g} · 내부 잔차 {res:.3g} (허용 {DIRICHLET_CONSERVATION_REL_MAX:g} · "
+                  f"{DIRICHLET_RESIDUAL_REL_MAX:g}) · I_bottom {ib!r} · I_top {it!r} — 다음 단")
+            continue
+        if not (np.isfinite(ib) and 0 < ib <= sum_g_check * 1.1):        # G ≤ 0 · G > 1.1·Σg (모든 간선 병렬 상한) = 수치 실패
+            att['outcome'] = 'parallel_bound'
+            print(f"  ⚠ {name}: G_eff={ib!r} — 0 < G ≤ 1.1·Σg={sum_g_check:.3e} 밖 (수치 실패) — 다음 단")
+            continue
+        att['outcome'] = 'pass'
+        adopted = (name, Vv, ib, it, cons, res)
+        break
+    if adopted is None:
+        info['method'] = attempts[-1]['method'] if attempts else None
+        if any(a_['outcome'] == 'certificate_failed' for a_ in attempts):
+            print(f"  ⚠ 풀이 증서 실패 — 단 {[a_['method'] for a_ in attempts]} 모두 보존 · 내부 잔차 허용치를 못 넘었다 → 값 없음 "
+                  f"({CURRENT_CONSERVATION_FAILED_REASON})")
+            return _none('not_computed', CURRENT_CONSERVATION_FAILED_REASON)
+        print(f"  Network solve failed: 증서를 낼 해가 없다 {[(a_['method'], a_['outcome']) for a_ in attempts]}")
         return _none('solve_failed', SOLVE_FAILED_REASON)
-    info.update(I_bottom=I_bot, I_top=I_top)
+    solve_method, V, I_bot, I_top, cons, res = adopted
+    info.update(method=solve_method, I_bottom=I_bot, I_top=I_top, conservation_rel=cons, residual_rel=res)
+    print(f"  Solve: {solve_method}")
+    G_eff = I_bot                                    # ΔV = 1 (바닥 1 · 위 0)
 
     if os.environ.get('NETWORK_DEBUG'):
         print(f"  DEBUG[{mode}]: G_eff={G_eff:.4e}  Σg={sum_g_check:.4e}  G/Σg={G_eff/sum_g_check:.4f}  "
@@ -1314,6 +1511,11 @@ def run_decomposition(atoms_raw, contacts_raw, target_types, scale,
         'h_film_nm': (round(_H_FILM_MIN * 1e9, 12) if (area_rule == AREA_RULE_G2 and _H_FILM_MIN is not None) else None),
         'h_film_status': (_H_FILM_STATUS if area_rule == AREA_RULE_G2 else None),
         'solve_method_full': (_si.get('full') or {}).get('method'),
+        #  ★ 10-06 밤 G2R-03 — 가지마다 수치 증서 (I_bottom · I_top · 보존 잔차 · 내부 잔차 · 방법 · 허용치 · 단 기록 · 0 저항 간선 수) ·
+        #    solve_info 와 같은 모양 (JSON 안전) — 게시 · 인계 관문이 `certificate_problem(rec['solve_certificate_full'])` 로 계산된 σ 마다 본다.
+        'solve_certificate_full': solve_certificate(_si.get('full')),
+        'solve_certificate_bulk_net': solve_certificate(_si.get('bulk_only')),
+        'solve_certificate_constr_net': solve_certificate(_si.get('constriction_only')),
         'n_nodes': n_nodes,
         'n_edges': n_edges,
         'n_bottom': n_bottom,
@@ -1513,6 +1715,8 @@ def _run_all_networks(atoms_raw, contacts_raw, target_types, am_types, type_map,
             results['electronic_psi_placement']      = results_el.get('psi_placement')        # ★ 10-06 L2-01 세대 표기 (채널마다)
             for _k in GEN2_CHANNEL_KEYS:                                                           # ★ 10-06 세대 2 표기 (채널마다)
                 results['electronic_' + _k] = results_el.get(_k)
+            for _k in SOLVE_CERTIFICATE_KEYS:                                                      # ★ 10-06 밤 G2R-03 수치 증서 (가지마다)
+                results['electronic_' + _k] = results_el.get(_k)
             # ★ 10-04 ④a — 전자 채널 협착 전력 몫 (꼬리 이름 그대로 — 이온 중심 결과에 싣는다)
             for _k, _v in results_el.items():
                 if _k.startswith('constriction_power_share_el_'):
@@ -1556,6 +1760,8 @@ def _run_all_networks(atoms_raw, contacts_raw, target_types, am_types, type_map,
             results['thermal_boundary_band_frac'] = results_th.get('boundary_band_frac')
             results['thermal_psi_placement']      = results_th.get('psi_placement')           # ★ 10-06 L2-01 세대 표기 (채널마다)
             for _k in GEN2_CHANNEL_KEYS:                                                           # ★ 10-06 세대 2 표기 (채널마다)
+                results['thermal_' + _k] = results_th.get(_k)
+            for _k in SOLVE_CERTIFICATE_KEYS:                                                      # ★ 10-06 밤 G2R-03 수치 증서 (가지마다)
                 results['thermal_' + _k] = results_th.get(_k)
             # ★ 10-04 ④a — 열 채널 협착 전력 몫 (꼬리 이름 그대로)
             for _k, _v in results_th.items():

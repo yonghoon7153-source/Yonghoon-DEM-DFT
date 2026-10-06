@@ -231,6 +231,11 @@ run 'network generation 2 (CF 표지 · H12 · 세대 표기)' python3 scripts/t
 #    닫힌 표 · 부분 결손 거부 · 옛 세대 추론 = 세대 2 표지가 하나도 없을 때만 inferred_legacy) · 행마다 먼저 (같은 결함 코호트 거부) · 진짜 역사 레코드 194
 #    (v1.2 배치 원천) = inferred_legacy · v1.2 표 τ 칸 재현 (옛 코드 5/24).
 run 'gen2 role contract (G2R-01 · 02 — 역할 · 닫힌 열거 · 옛 세대 추론)' python3 scripts/test_gen2_role_contract.py
+#  ★ 2026-10-06 밤 (Codex 세대 2 판정 G2R-03 · GEN2-01 · 1저자 비준) — 정확 Dirichlet 풀이마다 수치 증서 (I_bottom · I_top · 보존 잔차 ≤ 1e-6 ·
+#    내부 잔차 ≤ 1e-6 · 방법 · 단 기록) · 증서 실패면 사다리 (직접해 → Jacobi CG → ILU GMRES · 잔차 보정) 또는 NOT_COMPUTED
+#    (current_conservation_failed) · 협착-only 의 R_c = 0 = 그 가지만 NOT_COMPUTED (zero_resistance_requires_contraction) · 레코드 직렬화
+#    (세 채널 · H12 · CLI 네 JSON · real_14) · 정상 망 = 고치기 전 모듈 (git a0a24c538) 과 비트 동일.
+run 'network solve certificate (G2R-03 · GEN2-01)' python3 scripts/test_network_solve_certificate.py
 #  ★ 2026-10-06 밤 (3단계 · C2-⑥ 1저자 비준 · LHS-25 · LHSC-08 · LHS-27) — Physics 피복 = 합집합 cap (`*_physics_union` 새 키 · 해석해 ·
 #    생산자 빈칸 계약 · real_14 51.522 → 43.218 = 설계 원형 AM 457 개 1e-13 안 · case15 = 빈칸 (c_cpl[22] < 0) · 원형 ×0.87 재현) ·
 #    벽 근접 접선 수 (분류 불변 · 자릿수는 파일마다 · STL 따로) · 피복 CLI 가 실행 위치 추적 파일을 안 덮는다 (--summary-out 명시만).
