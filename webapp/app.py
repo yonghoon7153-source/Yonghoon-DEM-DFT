@@ -3191,6 +3191,9 @@ def _merge_dual_into_metrics(results_dir, met_data):
     }
     # Stamp the Physics resistance model + timestamp so every caller (batch,
     # per-case retry, archive reanalyze) propagates the same state to the UI.
+    #  ★ 10-06 (`L2-01` 세대 2 · 1저자 개정) — 저항 모델 이름 ('mikic') 만으로는 ψ 배치 세대 (세대 1 분모 · 세대 2 곱셈) 를 못 가른다.
+    #    세대 표기 = `psi_placement_physics` — 위 미러 루프가 dual physics 의 `psi_placement` 에서 채운다 (솔버 출력 그대로 · 망 소유 키라
+    #    세대마다 걷어내고 다시 채운다 = 옛 표기가 새 σ 밑에 남지 않는다).  활성 도장 (network_provenance.json) 에도 같은 이름으로 남는다.
     phys_model = rP.get('resistance_model')
     if phys_model:
         met_data['physics_resistance_model'] = phys_model

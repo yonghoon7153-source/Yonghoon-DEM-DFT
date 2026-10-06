@@ -202,6 +202,7 @@ run 'webapp: constriction_power'  python3 webapp/test_constriction_power_labels.
 run 'webapp: s567_labels'         python3 webapp/test_s567_labels.py   # 10-04 ⑤⑥⑦ — F1 툴팁 (10 nm 출처 없음) · 경로 면적 선별 표본 (LHS-32) · 파괴 LHS-31 · eff_area 식 · A_dem_geometric
 run 'webapp: tau_grade_unify'     python3 webapp/test_tau_grade_unify.py   # 10-04 ②b TAU-03 — 등급 τ · overhead = Hertz 원 솔버 σ + 짝 σ₀ (한 도우미) · COMSOL 2D 두 모드 행 · regime DB · L4-04
 run 'webapp: network_handover_chain' python3 webapp/test_network_handover_chain.py  # 10-05 RGL · SELF-86 — 실 생산자 → 정지 helper → τ → 배치 기록 (stop_after=network) → build_handover 끝-끝 (옛 코드 5/8 = RGL-02 · 03 · 04)
+run 'webapp: psi_generation_stamp' python3 webapp/test_psi_generation_stamp.py  # 10-06 L2-01 세대 2 — full_metrics · 도장 psi_placement_physics (솔버 출력) · 망 소유 키 · 정지 계약 ⑥b · 옛 세대 재투영 · τ 협착 라벨
 run 'webapp: hetero_transcript'   python3 webapp/test_hetero_transcript_page.py   # 10-05 이종기술 회의록 — 회의 둘 (09-18 · 10-02) 고르기 · 회의 종합 · 등록부 밖 키 404 · /hetero 논지 정본 비준 블록 (docs/hetero_thesis.md 에서 읽음 · fail-closed)
 #  ★ 2026-10-03 (Codex r_int 1단계 RINT-02 · 13 · 14 · 20) — ① 계면 요청 ↔ 네 솔브 적용 영수증을 **실물 producer** 로.
 #    `solve_sigma_z(..., rint=)` 호출 넷을 AST 로 찾아 하나씩 `rint=` 를 지우면 게시가 거부돼야 한다 (주 솔브만 보던
@@ -211,6 +212,9 @@ run 'rint_receipts (요청 ↔ 적용 영수증 · AST 변이 4)' python3 script
 #    + 쓴 규칙 · 띠 폭 기록 (LHS-17 · TAU-14) · 이온 인계 열 도우미 `tau_flux` (v2 §5 · 게이트 G1–G6 · 생산자 ↔ 소비자 계약).
 run 'network boundary_rule (안 A · 동작 중립)' python3 scripts/test_network_boundary_rule.py
 run 'tau_flux (이온 인계 열 · 게이트 G1–G6)' python3 scripts/test_tau_flux.py
+#  ★ 2026-10-06 (`L2-01` 세대 2 · 1저자 개정 — 계약 개정 노트) — ψ 배치 기본값 = 곱셈 · legacy 는 명시 인자로만 · 2 구 접촉 식 (세 채널 ×
+#    s ≈ 0.2 · 0.5 · 0.9) · 단조 · Hertz 비트 동일 · tau_flux 협착 라벨 = ψ 배치 · 세 채널 결과의 세대 표기.
+run 'psi default switch (L2-01 세대 2)' python3 scripts/test_psi_default_switch.py
 #  ★ 2026-10-04 (J20-s ④b · 1저자 비준 *"권고대로"* · 원장 LHS-29) — Love–Weber 입자 응력 새 열 (접촉점 · 전체 텐서 · 벽 접촉 표지 ·
 #    검사 = 열 · F = Fn + Ft · 접촉점 · 전체 virial ↔ c_strs) · real_14 독립 구현 대조 · 생산 CLI 끝단 (옛 키 불변).
 run 'love_weber_stress (④b · LHS-29)' python3 scripts/test_love_weber_stress.py

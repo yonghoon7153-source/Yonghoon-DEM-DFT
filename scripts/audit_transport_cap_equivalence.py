@@ -221,19 +221,21 @@ def _frozen_key(mode, t1, t2, r1, r2, d) -> str:
     return f'{mode}|{t1}-{t2}|{r1!r}/{r2!r}|{d!r}'
 
 
-def _frozen_matrix(nc_mod):
-    """동결 격자 위의 **기본값 경로** 관측 → `{키: {필드: 값}}`.
+def _frozen_matrix(nc_mod, psi_placement=None):
+    """동결 격자 위의 **legacy 팔** 관측 → `{키: {필드: 값}}`.
 
-    ⚠ `psi_placement` 를 **넘기지 않는다** — 기본값(legacy) 경로를 재는 것이 목적이고,
-      깃발이 없던 옛 소스로도 같은 함수가 돌아야 한다.
+    `psi_placement=None` = 인자를 **넘기지 않는다** — 깃발이 없던 도입 전 소스 (`2d9ce3e87`) 는 그 인자를 모른다
+      (그 소스의 기본 = legacy 그 자체).  ★ 10-06 (`L2-01` 세대 2) — 지금 솔버의 기본은 곱셈이므로 지금 모듈은
+      호출부가 **명시 `PSI_DIVIDE`** 를 넘긴다 (세대 1 = legacy 팔이 도입 전과 비트 동일인지가 ⑦f 의 물음).
     """
     out = {}
+    kw = {} if psi_placement is None else {'psi_placement': psi_placement}
     for mode in FROZEN_MODES:
         for (t1, t2) in FROZEN_PAIRS:
             for (r1, r2) in FROZEN_RADII:
                 for d in FROZEN_DELTAS:
                     e = real_solver_edges(nc_mod, r1_um=r1, r2_um=r2, delta_um=d,
-                                          t1=t1, t2=t2, mode=mode)[0]
+                                          t1=t1, t2=t2, mode=mode, **kw)[0]
                     out[_frozen_key(mode, t1, t2, r1, r2, d)] = {
                         k: e.get(k) for k in BASELINE_FIELDS}
     return out
@@ -285,7 +287,7 @@ def _load_baseline():
 
 
 def _bitwise_vs_baseline(pc_mod):
-    """기본값(legacy)이 **도입 전 소스**와 비트 동일한지 — 동결 격자 전체에서.
+    """legacy 팔 (명시 `PSI_DIVIDE` · 세대 1 — 10-06 전의 기본) 이 **도입 전 소스**와 비트 동일한지 — 동결 격자 전체에서.
 
     세 갈래로 답한다:
       · `n_bad`      봉인된 기대값과 다른 (키, 필드) 수
@@ -297,7 +299,8 @@ def _bitwise_vs_baseline(pc_mod):
     if exp is None:
         return dict(n_cmp=0, n_bad=0, worst=0.0, n_nonzero_rc=0, n_cross=0,
                     cross_src='', why=meta)
-    cur = _frozen_matrix(_load_nc('_nc_cur_bit', pc_mod))
+    _cur_mod = _load_nc('_nc_cur_bit', pc_mod)
+    cur = _frozen_matrix(_cur_mod, psi_placement=_cur_mod.PSI_DIVIDE)     # ★ 10-06 — 기본은 곱셈 (세대 2) · legacy 는 명시로만
     n_cmp = n_bad = n_nonzero_rc = 0
     worst = 0.0
     missing = sorted(set(exp) ^ set(cur))
@@ -815,7 +818,8 @@ def _selftest() -> int:
     #   ★★ **2026-09-15 — 전환이 소스 문자열 치환에서 `psi_placement` 깃발로 옮겨졌다.**
     #      왜: 치환판으로는 **실제 런을 돌릴 수 없다** (감사 프로세스 안에서만 존재한다).
     #      S3 는 코호트 130 × 3 채널을 두 팔로 돌려야 하므로 생산 솔버에 인자가 있어야 한다.
-    #      ⛔ 기본값은 `legacy_divide` 로 **비트 동일**이다 (아래 ⑦f 가 고정한다).
+    #      ★ 10-06 (1저자 개정 · 계약 개정 노트) — 기본값 = 곱셈 (세대 2).  legacy 는 **명시 `PSI_DIVIDE`** 로만 남고
+    #        그 팔이 도입 전 코드와 **비트 동일**이다 (아래 ⑦f 가 고정한다).  아래 ⑦–⑦i 는 처음부터 두 팔을 명시로 부른다.
     S3_MUL = ('                    R_constriction = psi / '
               '(sigma_rel_contact * k_weight * 2 * a_eff)')
     S3_DIV = ('                    R_constriction = 1.0 / '
@@ -873,14 +877,14 @@ def _selftest() -> int:
         _cz_old['R_constriction'] == 0.0 and _cz_s3['R_constriction'] == 0.0
         and _a_eff_cz == 0.5,
         f"Rc {_cz_old['R_constriction']!r} / {_cz_s3['R_constriction']!r} · a_eff = r_min = {_a_eff_cz!r}")
-    #   ★ ⑦f — **기본값이 도입 전 코드와 비트 동일**하다.  깃발을 넣은 것이 세대 1 의 σ 를
-    #     조용히 움직였다면 봉인 전에 이미 오염된 것이다.
+    #   ★ ⑦f — **legacy 팔 (명시 `PSI_DIVIDE`) 이 도입 전 코드와 비트 동일**하다.  깃발을 넣은 것이 세대 1 의 σ 를
+    #     조용히 움직였다면 봉인 전에 이미 오염된 것이다.  (10-06 전에는 그 팔이 기본값이었다 — 이제 기본은 곱셈 · 세대 2.)
     #     ⛔⛔ **기준을 `HEAD` 에서 고정 커밋으로 옮겼다** (`AREA5-05`, 2026-09-15).  옛 판은
     #       working 을 `git show HEAD:` 와 댔는데 **커밋하면 둘이 같아진다** = 기준이 함께
     #       이동한다.  이제 깃발 도입 **직전 커밋**(내용 SHA256 까지 확인)과 그것으로 만든
     #       **봉인된 기대값 파일**을 기준으로 삼고, 기준을 못 읽으면 **실패**한다.
     _bl = _bitwise_vs_baseline(_pc)
-    chk('⑦f ★ 기본값(legacy_divide)은 **도입 전 고정 SHA** 와 비트 동일 — 기준이 HEAD 와 함께 '
+    chk('⑦f ★ legacy 팔 (명시 PSI_DIVIDE · 세대 1 — 10-06 전의 기본) 은 **도입 전 고정 SHA** 와 비트 동일 — 기준이 HEAD 와 함께 '
         '움직이지 않는다 (AREA5-05)',
         _bl['n_bad'] == 0 and _bl['n_cmp'] >= 5000 and _bl['n_nonzero_rc'] >= 20
         and _bl['n_cross'] == 0 and _bl['cross_src'] != '',
@@ -983,9 +987,14 @@ def _selftest() -> int:
 
     # ⑥ ★ P2-R2-06 — **실제 솔버**로 대조한다 (감사의 ψ 재구현이 아니라 build_network 자신).
     #    cap 2π→π 를 plastic 에 물린 솔버와 원판 솔버가 같은 Rc·R_total 을 내야 한다.
+    #    ★ 10-06 — 대조 조건 (Codex · 그때 생산 기본 = legacy) 을 그대로 지키려고 legacy 팔을 **명시**한다 (기본은 곱셈 · 세대 2).
+    #      이 픽스처 (δ .2) 는 clamp 경계라 ψ = 0 → 두 배치 모두 R_c = 0 (⑦e) — 값은 배치와 무관하고 정의만 고정한다.
     pc_base = _load('_pc_s6b'); pc_s2 = _load('_pc_s6s', [(CAP_LINE, CAP_LINE_S2)])
-    e0 = real_solver_edges(_load_nc('_nc_base', pc_base))[0]
-    e1 = real_solver_edges(_load_nc('_nc_s2', pc_s2))[0]
+
+    def _legacy_edge(nc_mod):
+        return real_solver_edges(nc_mod, psi_placement=nc_mod.PSI_DIVIDE)[0]
+    e0 = _legacy_edge(_load_nc('_nc_base', pc_base))
+    e1 = _legacy_edge(_load_nc('_nc_s2', pc_s2))
     chk('⑥ 실제 build_network: cap 전환 전후 Rc·R_total 동일 (Codex 대조 조건 r .5/6 · δ .2 · A .04)',
         e0['R_constriction'] == e1['R_constriction'] and e0['R_total'] == e1['R_total'],
         f"Rc {e0['R_constriction']!r} → {e1['R_constriction']!r} · R_total {e0['R_total']!r} → {e1['R_total']!r}")
@@ -996,8 +1005,8 @@ def _selftest() -> int:
     # ⑥c 판별력 — 솔버 호출부(Rc=0 분기)를 변이시키면 **이 대조가** 반드시 빨간불이 된다.
     #     Codex: 옛 감사는 이 변이에도 n_bad=0 이었다 (감사가 ψ 를 다시 구현했으므로).
     mut = [('                R_constriction = 0.0\n', '                R_constriction = R_Maxwell\n')]
-    m0 = real_solver_edges(_load_nc('_nc_mb', pc_base, mut))[0]
-    m1 = real_solver_edges(_load_nc('_nc_ms', pc_s2, mut))[0]
+    m0 = _legacy_edge(_load_nc('_nc_mb', pc_base, mut))
+    m1 = _legacy_edge(_load_nc('_nc_ms', pc_s2, mut))
     chk('⑥c 판별력: 솔버의 Rc=0 분기를 R_Maxwell 로 바꾸면 cap 전환이 **실제로** 값을 움직인다 '
         '(Codex: Rc 0.7071 → 1.0)',
         m0['R_constriction'] != m1['R_constriction'],

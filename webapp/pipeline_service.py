@@ -110,6 +110,10 @@ NET_MERGE_KEYS = (
     #    머지해도 옛 온도 factor 가 남았고, 공용 τ 도우미 (`tau_flux.tau2_from_metrics` · `se_material.sigma_grain_context`) 가 옛 σ₀ 와
     #    새 σ 를 짝지었다 (재시도에서 τ 2×).  ⇒ σ 키와 **한 소유 단위**로 지우고 채운다 · 두 모드 짝은 `network_sigma0_problem` 이 대조한다.
     'temperature_provenance', 'sigma_grain_S_cm',
+    #  ★ 10-06 (`L2-01` 세대 2 · 1저자 개정 — 계약 개정 노트) — Physics σ 의 ψ 배치 세대 표기 (multiply = 세대 2 · legacy_divide = 세대 1 ·
+    #    없음 = 09-15 깃발 전 산출물).  dual physics 의 `psi_placement` 미러 (NET_PHYSICS_MIRROR_KEYS) 로 채우고 σ 와 한 소유 단위로 지운다 —
+    #    옛 세대 표기가 새 σ 밑에 남거나 (그 반대로) 새 표기가 옛 σ 위에 붙지 않게 (RC5-03).
+    'psi_placement_physics',
 )
 
 #: ★ 10-05 RGL-07 — 망 σ 와 짝인 σ₀ · 온도 기록 (모드마다 같은 값이어야 한다 — full_metrics 에는 한 벌만 싣는다).
@@ -129,7 +133,8 @@ NET_PHYSICS_MIRROR_KEYS = ('sigma_full', 'sigma_full_mScm',
                            'sigma_bulk_net', 'sigma_bulk_net_mScm',
                            'electronic_sigma_full_mScm', 'thermal_sigma_full_mScm',
                            'R_brug_over_full', 'bulk_resistance_fraction',
-                           'sigma_full_status', 'sigma_full_reason')     # ★ 10-05 RGL-02 — 상태 · 사유도 physics 꼬리로
+                           'sigma_full_status', 'sigma_full_reason',     # ★ 10-05 RGL-02 — 상태 · 사유도 physics 꼬리로
+                           'psi_placement')                              # ★ 10-06 L2-01 — ψ 배치 세대 표기 → psi_placement_physics
 
 
 def _canon(v):
@@ -456,6 +461,9 @@ def stamp_network_provenance(results_dir, run_id, inputs=None, solver_status='su
     ★ CB-07 (Codex): 결과를 **실제로 바꾸는** 인자가 빠져 있었다 — `type_map`, `scale`,
       `contact_mode`.  code_sha 와 입력 digest 만으로는 같은 결과를 재현할 수 없다.
       argv 로 받아 함께 남긴다.
+    ★ 10-06 (`L2-01` 세대 2 · 1저자 개정) — Physics σ 를 바꾸는 ψ 배치는 argv 가 아니라 **솔버 기본값**이 정한다 (CLI 깃발 없음) ⇒
+      솔버가 이번 산출물에 실제로 남긴 값 (dual physics `psi_placement`) 을 `psi_placement_physics` 로 도장에 남긴다 (모듈 기본값을
+      베끼지 않는다 · 기록 없음 = None — 09-15 깃발 전 산출물 · dual 없음 · 못 읽음).
     """
     prov = {'network_run_id': run_id, 'code_sha': code_sha(),
             'stamped_at': time.strftime('%Y-%m-%dT%H:%M:%S'),
@@ -463,9 +471,19 @@ def stamp_network_provenance(results_dir, run_id, inputs=None, solver_status='su
             'solver': 'network_conductivity.py',
             'argv': dict(argv or {}),
             'units_contract': 'sim_to_real_v1',
-            'input_digests': inputs or {}}
+            'input_digests': inputs or {},
+            'psi_placement_physics': solver_psi_placement(results_dir)}
     atomic_write_json(os.path.join(results_dir, PROVENANCE_FILE), prov)
     return prov
+
+
+def solver_psi_placement(results_dir, mode='physics'):
+    """★ 10-06 (`L2-01` 세대 2) — 그 폴더 망 산출물의 ψ 배치 (솔버가 dual 의 그 모드 결과에 남긴 `psi_placement`) → 문자열 | None.
+    None = 기록 없음 (09-15 깃발 전 산출물) · dual 없음 · 못 읽음 — 짐작하지 않는다."""
+    d = _read_json_or_none(os.path.join(results_dir, 'network_conductivity_dual.json'))
+    rec = d.get(mode) if isinstance(d, dict) else None
+    v = rec.get('psi_placement') if isinstance(rec, dict) else None
+    return v if isinstance(v, str) and v else None
 
 
 def read_network_provenance(results_dir):

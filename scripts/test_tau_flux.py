@@ -263,11 +263,14 @@ def main():
     led = {'thickness_um': 20.0, 'thickness_mass_conserving_um': 20.0 * (1 - eps_s) / (1 - eps_u),
            'phi_se_mass_conserving': (1 - eps_u) * 1.0}
     k1 = tf.ion_columns(dk, led, 100.0)
-    chk('K1 솔버 결과 그대로 → 두 모드 OK · 띠 L0 · 폭 0.2 · 협착 · ψ · σ₀ 3.0 @ 25 °C · basis ok · tau2 = φ_망/σ_ratio (4 자리 φ 반올림 안)',
+    #  ★ 10-06 (L2-01 세대 2 · 1저자 개정) — 생산자 기본 = ψ 곱셈 → physics 협착 라벨 mikic_psi_multiply · ψ multiply (옛: mikic_psi_divide ·
+    #    legacy_divide).  세대 1 라벨은 명시 legacy 레코드 (A4 손 레코드 · test_psi_default_switch ⑤) 가 지킨다.
+    chk('K1 솔버 결과 그대로 → 두 모드 OK · 띠 L0 · 폭 0.2 · 협착 (physics = mikic_psi_multiply · 세대 2) · ψ multiply · σ₀ 3.0 @ 25 °C · '
+        'basis ok · tau2 = φ_망/σ_ratio (4 자리 φ 반올림 안)',
         k1['ion_net_status_hertz'] == k1['ion_net_status_physics'] == 'OK'
         and k1['ion_net_band_rule_hertz'] == 'L0' and abs(k1['ion_net_band_frac_physics'] - 0.2) < 1e-12
-        and k1['ion_net_constriction_hertz'] == 'maxwell_halfspace' and k1['ion_net_constriction_physics'] == 'mikic_psi_divide'
-        and k1['ion_net_psi_physics'] == 'legacy_divide' and k1['ion_sigma0_mScm'] == 3.0 and k1['ion_sigma0_T_C'] == 25.0
+        and k1['ion_net_constriction_hertz'] == 'maxwell_halfspace' and k1['ion_net_constriction_physics'] == 'mikic_psi_multiply'
+        and k1['ion_net_psi_physics'] == 'multiply' and k1['ion_sigma0_mScm'] == 3.0 and k1['ion_sigma0_T_C'] == 25.0
         and k1['ion_net_basis_check_hertz'] == k1['ion_net_basis_check_physics'] == 'ok'
         and abs(k1['tau2_ion_hertz'] - dk['hertzian']['phi_se'] / dk['hertzian']['sigma_full']) <= 5e-5 / dk['hertzian']['sigma_full'] + 1e-12
         and k1['f_ion_hertz_gap'] == dk['hertzian']['sigma_full'])

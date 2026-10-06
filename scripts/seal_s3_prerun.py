@@ -580,9 +580,12 @@ def main(argv=None) -> int:
             #    `case_networks` 는 **디렉터리**를 받으므로 부모를 넘긴다 — 파일을 그대로
             #    넘기면 후보 경로가 한 칸 어긋나 "덱을 못 찾았다" 가 된다.
             _dk = (row.get('deck') or '').strip()
+            #  ★ 10-06 (`L2-01` 세대 2 · 계약 개정 노트) — 솔버 기본이 곱셈으로 바뀌었다.  봉인의 σ_old 는 **세대 1 (legacy) 기준**이다
+            #    (계약 §D-3 · 러너 `run_s3_psi.run_case` 의 old 팔도 명시 PSI_DIVIDE) ⇒ 기본값에 기대지 않고 명시한다.
             nets, prov = _S0.case_networks(cdir, contact_mode='physics',
                                            channels=tuple(channels),
-                                           deck_dir=(str(Path(_dk).parent) if _dk else None))
+                                           deck_dir=(str(Path(_dk).parent) if _dk else None),
+                                           psi_placement=_S0._NC.PSI_DIVIDE)
         except Exception as e:
             #  ⛔ **기술 실패는 `ERROR` 다** — 물리 상태(`NO_NETWORK`)로 둔갑시키지 않는다.
             for ch in per_channel:

@@ -1549,10 +1549,16 @@ TAU_NET_VERDICT = ('✅ 싣는다 (망 τ 묶음 · v1.2 — Codex 10-05 3차 �
 _TAU_AREA = {'hertz': ('hertz = LIGGGHTS c_cpl[22] 기하 교차 원판 π(rδ − δ²/4) (같은 반지름 r · 겹침 δ — 탄성 πR*δ 의 (2 − δ/2r) 배 · '
                        '"Hertz" 는 이름만 · L1-04) · 협착 maxwell_halfspace'),
              'physics': ('physics = v1 Tabor · 부피 · 기하 cap 면적 (plastic_coverage — 접촉별 **상한값** · 표면 한도 없음 · LHS-25) · '
-                         '협착 mikic_psi_divide (ψ 분모 · 절벽)')}
+                         '협착 = 그 행의 ion_net_constriction_physics (세대 2 mikic_psi_multiply = ψ 곱셈 · 2026-10-06 기본 · '
+                         '세대 1 mikic_psi_divide = ψ 분모 · 절벽 · legacy_divide = 2026-10-06 전 산출물)')}
 #: 한정어 (v2 §5-3) — 'tortuosity factor' 라는 이름은 tau2 열에만 쓴다 (규약) → 일반 한정어에는 그 낱말을 넣지 않는다.
-CAVEAT_TAU_NET = ('1세대 협착식 (hertz = 반공간 Maxwell R_c = 1/(2σa) — a/r_SE 0.30–0.44 에서 R_c 1.7–2.4 배 과대 · physics = ψ 분모 + 접촉별 상한값 '
-                  '면적 + ψ < 1e-4 절벽) — ML 기술자 전용 · **실험 절대 대조 금지** (G6 HOLD — 순수 SE 게이트 · S3 판정 전) · z 한 축 (Tjaden 식 21 τ_C 와 '
+#:   ★ 10-06 (`L2-01` 세대 2 · 1저자 개정) — physics 협착식의 세대가 둘이 됐다.  열 사전은 행 값을 보지 않으므로 (column_dictionary(cols)) 두 세대를
+#:   다 적고, 행의 세대는 그 행의 ion_net_psi_physics · ion_net_constriction_physics 칸이 정한다 (세대가 다른 행을 표기 없이 섞지 않는다).
+CAVEAT_TAU_NET = ('협착식 세대 (행마다 ion_net_constriction_<모드> · ion_net_psi_<모드> — 세대가 다른 행을 표기 없이 섞지 않는다): hertz = 1세대 반공간 '
+                  'Maxwell R_c = 1/(2σa) — a/r_SE 0.30–0.44 에서 R_c 1.7–2.4 배 과대 · physics = 접촉별 상한값 면적 + ψ 배치 — 세대 2 (multiply · '
+                  '2026-10-06 기본 · 독립 기준해 AREA-09 STEP 4) R_c = ψ/(2σa) · 세대 1 (legacy_divide · 2026-10-06 전 산출물) R_c = 1/(2σaψ) + '
+                  'ψ < 1e-4 절벽 · 두 세대 모두 ψ ≤ 1e-4 → R_c = 0 (floor 동결) — ML 기술자 전용 · **실험 절대 대조 금지** (G6 HOLD — 순수 SE 게이트 · '
+                  '결정 4) · z 한 축 (Tjaden 식 21 τ_C 와 '
                   '직접 비교 금지) · 형상 · CBD 차단 없음 · σ₀ 펠릿값 위 Holm 접촉 저항 = 부분 이중계상 (방향 tau2↑) · 띠 끝 단락 → tau2 하향 ≤ 4r_SE/L '
                   '(ion_net_band_frac_<모드>) · φ = 전 SE (비관통 · 고립 포함 — dead 부피가 tau2 를 키운다) → 1차 수송량은 f · τ_e (Nguyen Eq 2 · '
                   'electrode) 아님 · 출처 관문 (인계 때 케이스마다 다시 돈다 · 출처 부록 <인계표>_tau_provenance.tsv 의 same_generation_checks — P0 기록 · '
@@ -1600,9 +1606,12 @@ _TAU_PER_MODE = {
     'ion_net_status': '{m} ' + _TAU_STATUS,
     'ion_net_status_reason': '{m} ' + _TAU_REASON,
     'ion_net_area_mode': '면적 모드 (값 = {m}) — {area}',
-    'ion_net_constriction': ('협착식 (G6 세대 메타 · {m}) — maxwell_halfspace (hertz: R_c = 1/(2σa) · ψ 없음) · mikic_psi_divide (physics: ψ 분모 L2-01 · '
-                             'ψ < 1e-4 → R_c = 0 절벽) · 두 모드 모두 1세대 · "unknown:<이름>" = 모르는 저항 모델'),
-    'ion_net_psi': 'ψ 배치 ({m}) — physics 에만 의미 (legacy_divide · L2-01) · hertz 는 빈칸',
+    'ion_net_constriction': ('협착식 (G6 세대 메타 · {m}) — maxwell_halfspace (hertz: R_c = 1/(2σa) · ψ 없음 · 1세대) · mikic_psi_multiply (physics '
+                             '세대 2: R_c = ψ/(2σa) · ψ 곱셈 · 2026-10-06 기본 · L2-01 · 독립 기준해 AREA-09 STEP 4) · mikic_psi_divide (physics 세대 1: '
+                             'R_c = 1/(2σaψ) · ψ 분모 · legacy_divide · ψ < 1e-4 → R_c = 0 절벽 — 2026-10-06 전 산출물) · 두 세대 모두 ψ ≤ 1e-4 → R_c = 0 '
+                             '(floor 동결) · 세대가 다른 행을 표기 없이 섞지 않는다 · "unknown:<이름>" = 모르는 저항 모델 · "unknown:mikic/<값>" = 모르는 ψ 배치'),
+    'ion_net_psi': ('ψ 배치 ({m} · 세대 표기 · L2-01) — physics 에만 의미: multiply = 세대 2 (ψ 곱셈 · 2026-10-06 기본) · legacy_divide = 세대 1 '
+                    '(ψ 분모 · 2026-10-06 전 산출물) · 빈칸 = hertz (ψ 없음) 또는 ψ 기록이 없는 옛 산출물 (09-15 깃발 전 = 세대 1)'),
     'ion_net_band_rule': ('솔버 경계 띠 규칙 ({m} · 안 A 10-04) — L0 (입자 자기 반지름 2 배 · 양 끝 ≥ 3) · L1 · L2 (폴백 — G1 → BAND_FALLBACK) · 빈칸 = '
                           '기록 없는 옛 산출물 (NOT_COMPUTED missing_input)'),
     'ion_net_band_frac': ('띠 폭 / 판 간격 ({m} · 무차원) — 띠 끝 단락에 의한 tau2 하향의 상한 (≤ 4r_SE/L · TAU-24) · L0 자체도 tau2 를 낮춘다 '

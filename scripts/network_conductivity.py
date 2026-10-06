@@ -58,19 +58,20 @@ SIGMA_AM_ELECTRONIC = 0.05  # S/cm (50 mS/cm, NCM811 grain interior, discharged)
 #: build_network 가 **실제로** 받은 mode (코드리뷰 A2 재현·회귀용).  None = 아직 안 불림.
 LAST_BUILD_MODE = None
 
-# ── 협착저항의 ψ 배치 (`L2-01` · 계약 `docs/area_contract_20260913.md` §C·§⑥) ──────────
-#   `PSI_DIVIDE`   = 현행 `R_c = 1/(2σaψ)`   ← 기본값 (세대 1 = 지금까지의 모든 σ)
-#   `PSI_MULTIPLY` = S3   `R_c = ψ/(2σa)`    ← 독립 기준해가 고른 배치
+# ── 협착저항의 ψ 배치 (`L2-01` · 계약 `docs/area_contract_20260913.md` §C·§⑥ · 개정 2026-10-06) ──────────
+#   `PSI_MULTIPLY` = `R_c = ψ/(2σa)`    ← ★ 세대 2 기본 = 곱셈 (1저자 개정 2026-10-06)
+#   `PSI_DIVIDE`   = `R_c = 1/(2σaψ)`   ← 세대 1 (`legacy_divide` · 10-06 전의 모든 Physics σ) — **명시 인자로만** (옛 값 재현용)
 #   비 = `(1−s)^−3` (s = a_eff/r_min) 이고 `s=0.9` 에서 1,620배.
-#   ⛔ **기본값을 여기서 바꾸지 말 것** — 계약 §D-3 이 baseline 봉인을 S3 런 **앞**에 두고
-#     그 봉인은 2026-09-17 23:59 KST 창 안에서만 허용된다.  전환은 봉인·런·판정 뒤,
-#     그 순서를 `scripts/run_s3_psi.py` 가 기계적으로 강제한다 (봉인 없으면 거부).
-#   ⚠ 이것을 바꾸면 σ 가 움직인다 = `case_master.csv` 의 모든 σ 와 스케일링법칙 적합이
-#     같은 타깃 위에 있지 않게 된다.  세대 표기 없이 섞지 말 것.
+#   근거 = 결과와 무관한 독립 기준해 (축대칭 flux-tube 유한체적 `scripts/constriction_reference.py` · AREA-09 STEP 4 —
+#     곱셈이 10 점 모두에서 우위).  계약 봉인 창 (2026-09-17 23:59 KST) 을 지나 S3 봉인 · 런이 없어 등록 경로 (봉인 → 런 → 판정)
+#     대신 **개정**으로 바꿨다 (`docs/area_contract_20260913.md` 개정 노트 · S3 h0/h1 판정은 하지 않는다).
+#   ⚠ 세대 표기 = 망 · 결과의 `psi_placement` (이온 · 전자 · 열 세 채널) — 세대 1 · 2 의 σ 를 표기 없이 섞지 말 것
+#     (`case_master.csv` · 스케일링법칙 적합의 Physics 타깃은 세대 1 위에 있다 · 재적합은 별건 — 계약 §3).
+#   ⚠ Hertz 가지는 ψ 를 쓰지 않는다 — 배치와 무관하게 비트 동일.
 PSI_DIVIDE = 'legacy_divide'
 PSI_MULTIPLY = 'multiply'
 PSI_PLACEMENTS = (PSI_DIVIDE, PSI_MULTIPLY)
-PSI_PLACEMENT_DEFAULT = PSI_DIVIDE
+PSI_PLACEMENT_DEFAULT = PSI_MULTIPLY
 
 # ───────────────────────────────────────────────────────────────────────
 # Grain-boundary (crystallinity) correction for NCM σ_AM — "Trevisanello-spirit"
@@ -495,17 +496,18 @@ def build_network(atoms_raw, contacts_raw, target_types, scale,
                     #     곱셈 우위는 10점 **각각에서** 유지된다.
                     #   ★ 이 줄 **위 :392 의 주석이 처음부터 곱셈식을 적고 있었다** — 코드가
                     #     자기 주석과 어긋난 것이고, 비는 `(1−s)^−3`, `s=0.9` 에서 1,620배다.
-                    #   ⛔ **아직 기본값이 아니다** — 계약 §D-3 이 baseline 봉인을 S3 런 **앞**에
-                    #     두고 그 봉인은 2026-09-17 전에 금지다.  기본값 전환은 봉인·런·판정
-                    #     뒤에만 한다 (`scripts/run_s3_psi.py` 가 봉인 없으면 거부한다).
+                    #   ★ **세대 2 기본** (1저자 개정 2026-10-06 · 근거 = 위 독립 기준해 · 계약 봉인 창 09-17 을
+                    #     지나 등록 경로 대신 개정 — `docs/area_contract_20260913.md` 개정 노트).  아래 legacy 분모는
+                    #     명시 `PSI_DIVIDE` 로만 (세대 1 · 옛 값 재현용).
                     R_constriction = psi / (sigma_rel_contact * k_weight * 2 * a_eff)
                 else:
                     R_constriction = 1.0 / (sigma_rel_contact * k_weight * 2 * a_eff * psi)
             else:
                 # Full contact limit: spreading vanishes, R_bulk carries it.
-                #  ⚠ legacy 배치에서 이것은 극한이 아니라 **절벽**이다 (`L2-01`):
+                #  ⚠ 세대 1 (명시 `PSI_DIVIDE`) 에서 이것은 극한이 아니라 **절벽**이다 (`L2-01`):
                 #    전환점 s* = 0.99784556531 에서 R 이 5010.76059484 → 0 으로 떨어진다.
-                #    곱셈 배치에서는 `ψ→0` 이라 이 분기가 연속의 끝점이 된다.
+                #  ★ 세대 2 기본 (곱셈) 은 그 급락을 1/ψ*² ≈ 1e8 배 줄이지만 **작은 불연속은 남는다** — 좌극한이
+                #    ψ_floor·R_Maxwell > 0 이고 그 다음이 0 이다 (동결된 유한 floor 1e-4 · AREA5-07 · 감사 ⑦h).
                 #    ⛔ floor 자체는 계약 §C 가 **동결**했다 — 곱셈판에서도 건드리지 않는다
                 #      (0 → 양수 복원은 **별도 축**이다).
                 R_constriction = 0.0
@@ -1236,7 +1238,8 @@ def run_decomposition(atoms_raw, contacts_raw, target_types, scale,
         'contact_mode': contact_mode,
         'resistance_model': ('mikic' if contact_mode == 'physics'
                              else 'maxwell'),
-        #  ★ `L2-01`/S3 세대 표기.  `legacy_divide` = 지금까지의 모든 σ.
+        #  ★ `L2-01` 세대 표기 — `multiply` = 세대 2 (10-06 기본) · `legacy_divide` = 세대 1 (10-06 전의 모든 Physics σ ·
+        #    명시 인자로만).  Hertz 결과에도 실리지만 Hertz 는 ψ 를 안 쓴다 (값 무관 · 표기만).
         'psi_placement': psi_placement,
         'n_nodes': n_nodes,
         'n_edges': n_edges,
@@ -1322,9 +1325,13 @@ def run_decomposition(atoms_raw, contacts_raw, target_types, scale,
 def _run_all_networks(atoms_raw, contacts_raw, target_types, am_types, type_map,
                        scale, plate_z, box_x, box_y, output_dir,
                        contact_mode='hertzian', dump_raw_dir=None,
-                       temp_c=None, ea_ion_ev=None):
+                       temp_c=None, ea_ion_ev=None, psi_placement=PSI_PLACEMENT_DEFAULT):
     """Run ionic + electronic + thermal decomposition under a fixed contact_mode.
     Returns the merged ionic-centric results dict.
+
+    ★ 10-06 (`L2-01` 세대 2) — `psi_placement` 를 세 채널에 같이 넘기고 세 채널 결과에 세대를 싣는다
+      (이온 = `psi_placement` · 전자 = `electronic_psi_placement` · 열 = `thermal_psi_placement`).
+      기본 = 곱셈 (세대 2) · 세대 1 은 명시 `PSI_DIVIDE` 로만.  CLI 깃발은 두지 않는다 (계약 개정 노트).
     """
     tag_ionic = f"{contact_mode}_ionic"
     tag_el    = f"{contact_mode}_electronic"
@@ -1344,7 +1351,8 @@ def _run_all_networks(atoms_raw, contacts_raw, target_types, am_types, type_map,
                                 plate_z, box_x, box_y, sigma_bulk=sigma_bulk_ion,
                                 results_dir=output_dir, type_map=type_map,
                                 contact_mode=contact_mode,
-                                dump_raw_dir=dump_raw_dir, dump_tag=tag_ionic)
+                                dump_raw_dir=dump_raw_dir, dump_tag=tag_ionic,
+                                psi_placement=psi_placement)
 
     results_el = None
     #: ★ RC7-02 (Codex 7회차): 여기가 **RC5-03 이 thermal 에 대해 고친 결함이 그대로 남아
@@ -1369,7 +1377,8 @@ def _run_all_networks(atoms_raw, contacts_raw, target_types, am_types, type_map,
                                            type_map=type_map,
                                            contact_mode=contact_mode,
                                            dump_raw_dir=dump_raw_dir, dump_tag=tag_el,
-                                           mode='electronic')   # ★ A2: 라벨을 사실로
+                                           mode='electronic',   # ★ A2: 라벨을 사실로
+                                           psi_placement=psi_placement)
             el_status = 'computed' if results_el else 'no_result'
             if not results_el:
                 el_reason = 'run_decomposition returned no result (AM 망 미퍼콜 — 물리적으로 옳은 답)'
@@ -1396,7 +1405,7 @@ def _run_all_networks(atoms_raw, contacts_raw, target_types, am_types, type_map,
                                        type_map=type_map,
                                        contact_mode=contact_mode,
                                        dump_raw_dir=dump_raw_dir, dump_tag=tag_th,
-                                       is_thermal=True)
+                                       is_thermal=True, psi_placement=psi_placement)
         th_status = 'computed' if results_th else 'no_result'
         if not results_th:
             th_reason = 'run_decomposition returned no result (열망 미형성 가능)'
@@ -1423,6 +1432,7 @@ def _run_all_networks(atoms_raw, contacts_raw, target_types, am_types, type_map,
             results['electronic_percolating_fraction'] = results_el.get('percolating_fraction')
             results['electronic_boundary_rule']      = results_el.get('boundary_rule')        # ★ 10-04 안 A
             results['electronic_boundary_band_frac'] = results_el.get('boundary_band_frac')
+            results['electronic_psi_placement']      = results_el.get('psi_placement')        # ★ 10-06 L2-01 세대 표기 (채널마다)
             # ★ 10-04 ④a — 전자 채널 협착 전력 몫 (꼬리 이름 그대로 — 이온 중심 결과에 싣는다)
             for _k, _v in results_el.items():
                 if _k.startswith('constriction_power_share_el_'):
@@ -1464,6 +1474,7 @@ def _run_all_networks(atoms_raw, contacts_raw, target_types, am_types, type_map,
             results['thermal_bulk_frac']       = results_th.get('bulk_resistance_fraction')
             results['thermal_boundary_rule']      = results_th.get('boundary_rule')           # ★ 10-04 안 A
             results['thermal_boundary_band_frac'] = results_th.get('boundary_band_frac')
+            results['thermal_psi_placement']      = results_th.get('psi_placement')           # ★ 10-06 L2-01 세대 표기 (채널마다)
             # ★ 10-04 ④a — 열 채널 협착 전력 몫 (꼬리 이름 그대로)
             for _k, _v in results_th.items():
                 if _k.startswith('constriction_power_share_th_'):

@@ -260,8 +260,10 @@ def measure_case(case_dir: Path, deck_dir, channels, permute=True):
         tt = pick(type_map)
         if not tt:
             raise ValueError(f'채널 {ch}: target_types 비었다')
+        #  ★ 10-06 (`L2-01` 세대 2) — ρ 는 S3 봉인의 세대 1 (legacy) 망 위에서 등록됐다 → 기본 (곱셈) 에 기대지 않고 명시한다.
         net = _S0._NC.build_network(atoms, contacts, tt, scale, plate_z, box_x=box, box_y=box,
-                                    mode=mode, type_map=type_map, contact_mode='physics')
+                                    mode=mode, type_map=type_map, contact_mode='physics',
+                                    psi_placement=_S0._NC.PSI_DIVIDE)
         if net is None:
             rows.append({'case': case_dir.name, 'channel': ch, 'status': 'NO_NETWORK'}); continue
         r = solve_pair(_S0._NC, net)
@@ -504,8 +506,9 @@ def _selftest() -> int:
                 rows.append({'id1': i, 'id2': idx[nb], 'contact_area': 0.0, 'delta': 0.1 * R})
     tm = {3: 'SE'}
     pz = _S0._SED.estimate_plate_z(atoms)
+    #  ★ 10-06 — 등록된 실측값 (⑪e Δ = 7.22e-12 %) 은 legacy 망이다 → 기본 (곱셈 · 세대 2) 이 아니라 명시 PSI_DIVIDE.
     net = nc.build_network(atoms, rows, {3}, sc, pz, box_x=4 * pitch, box_y=4 * pitch, mode='ionic', type_map=tm,
-                           contact_mode='physics')
+                           contact_mode='physics', psi_placement=nc.PSI_DIVIDE)
     r = solve_pair(nc, net)
     chk('① 작은 망은 직접해 경로 — path=spsolve, Δ=0 (허용오차 없음)',
         r['path_A'] == 'spsolve' and r['path_B'] == 'spsolve' and r['sigma_A'] == r['sigma_B'] and r['kwarg'] == '',
@@ -513,7 +516,7 @@ def _selftest() -> int:
     #  ② CG 경로를 **강제** (격리 메모리에서 문턱 30000 → 0): 래퍼가 kwarg·info 를 기록하고 조임이 실제로 들어간다
     nc2 = _load('_nc_cg', SCRIPTS / 'network_conductivity.py', [('if n_nodes > 30000:', 'if n_nodes > 0:')])
     net2 = nc2.build_network(atoms, rows, {3}, sc, pz, box_x=4 * pitch, box_y=4 * pitch, mode='ionic', type_map=tm,
-                             contact_mode='physics')
+                             contact_mode='physics', psi_placement=nc2.PSI_DIVIDE)
     r2 = solve_pair(nc2, net2)
     chk('② CG 강제 경로: path 가 cg 계열, kwarg 기록 (scipy 1.17 은 tol→TypeError→atol)',
         r2['path_A'].startswith('cg') and r2['kwarg'] in ('tol', 'atol'),

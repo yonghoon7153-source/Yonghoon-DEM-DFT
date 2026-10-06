@@ -37,8 +37,9 @@ G6 (협착 세대) = 메타 `ion_net_constriction_<m>` · 두 모드 모두 **�
 ⚠ `ion_net_basis_check_<m>` 는 **메타**다 (게이트 아님): 망 φ (`phi_se`, 4 자리 · 판 간격 상자 · 구 부피 합) 가 장부의
 φ_mc·L_mc/L_gap (= φ_구합) 와 같은지 본다 — 어긋나면 망과 장부가 다른 판 높이 · 상자 · SE 집합을 썼다는 뜻이다.
 게이트로 쓰려면 새 규칙으로 등록한다 (v2 §5-2 G5 의 "새 규칙" 규약 · 1저자).
-⚠ 한정어는 열 사전 (v2 §5-3) 이 정본이다 — 1세대 협착식 · ML 기술자 전용 · 실험 절대 대조 금지 · τ_e (Nguyen Eq 2) 아님 ·
-'COMSOL 입력' 은 GUI Equation 확인 전 쓰지 않는다.
+⚠ 한정어는 열 사전 (v2 §5-3) 이 정본이다 — 협착 세대 (hertz = 1세대 반공간 Maxwell · physics = 10-06 부터 세대 2 ψ 곱셈 ·
+그 전 산출물은 세대 1 ψ 분모 — 행마다 `ion_net_constriction_<m>` · `ion_net_psi_<m>`) · ML 기술자 전용 · 실험 절대 대조 금지 ·
+τ_e (Nguyen Eq 2) 아님 · 'COMSOL 입력' 은 GUI Equation 확인 전 쓰지 않는다.
 """
 from __future__ import annotations
 
@@ -58,7 +59,14 @@ STATUSES = ('OK', 'NOT_PERCOLATING', 'BAND_FALLBACK', 'MODEL_BELOW_CONTINUUM_BOU
 REASONS = ('solver_guard', 'missing_input', 'temperature_mismatch', 'percolation_disagree', 'invalid_input', 'generation_invalid')
 INVALID_INPUT = 'invalid_input'
 GENERATION_INVALID = 'generation_invalid'
-CONSTRICTION = {'maxwell': 'maxwell_halfspace', 'mikic': 'mikic_psi_divide'}
+#: 협착식 라벨 (G6 세대 메타 `ion_net_constriction_<m>`) — 저항 모델 **과 결과의 ψ 배치**로 정한다 (`constriction_label`).
+#:   ★ 10-06 (`L2-01` 세대 2 · 1저자 개정) — physics 기본이 ψ 곱셈이 됐다.  resistance_model 만 보면 세대 1 · 2 가 같은 'mikic' 이라
+#:   라벨이 세대를 거짓으로 말한다 ⇒ physics (mikic) 는 결과의 `psi_placement` 를 따른다 (값 = network_conductivity.PSI_* 와 같은 문자열 ·
+#:   무거운 생산자를 이 도우미에서 임포트하지 않으려고 값을 둔다 — test_psi_default_switch ⑤ 가 대조한다).
+#:   ψ 기록이 없는 mikic = 2026-09-15 깃발 도입 전 산출물 = 세대 1 — 그 전 코드는 처음 반입 (04-24) 부터 늘 분모였고 깃발 도입은 비트 동일이었다
+#:   (감사 audit_transport_cap_equivalence ⑦f) ⇒ 짐작이 아니라 이력 사실이다.  모르는 ψ 값 = 'unknown:mikic/<값>'.
+CONSTRICTION = {'maxwell': 'maxwell_halfspace', 'mikic': 'mikic_psi_divide'}      # mikic = ψ 기록 없는 결과 (세대 1) 의 라벨
+PSI_CONSTRICTION = {'legacy_divide': 'mikic_psi_divide', 'multiply': 'mikic_psi_multiply'}
 BAND_RULES = ('L0', 'L1', 'L2')
 PHI_TOL = 5e-5 + 1e-9          # 망 φ 는 4 자리 반올림 (network_conductivity `round(phi_se, 4)`) — 반폭 + 부동소수 여유
 SHARED = ('ion_sigma0_mScm', 'ion_sigma0_T_C', 'phi_basis', 'L_basis')
@@ -70,6 +78,21 @@ NO_THROUGH_REASON = 'no_through_path'
 def reason_code(reason):
     """사유 칸 → 사유 코드 ('invalid_input: σ_ratio None' → 'invalid_input' · '' → '')."""
     return str(reason or '').split(':', 1)[0].strip()
+
+
+def constriction_label(res):
+    """망 결과 한 모드 → 협착식 라벨 (G6 세대 메타).  hertz (maxwell) = maxwell_halfspace · physics (mikic) = 결과의 ψ 배치
+    (multiply → mikic_psi_multiply · legacy_divide → mikic_psi_divide · 기록 없음 → mikic_psi_divide (09-15 전 = 세대 1) ·
+    모르는 값 → unknown:mikic/<값>) · 모르는 저항 모델 → unknown:<이름> · 결과 없음 → ''."""
+    rm = (res or {}).get('resistance_model')
+    if rm is None:
+        return ''
+    if rm == 'mikic':
+        psi = (res or {}).get('psi_placement')
+        if psi is None:
+            return CONSTRICTION['mikic']
+        return PSI_CONSTRICTION.get(psi, f'unknown:mikic/{psi}')
+    return CONSTRICTION.get(rm, f'unknown:{rm}')
 
 
 def _num(v):
@@ -365,10 +388,9 @@ def ion_columns(dual, ledger, perc_pct, sigma0_T_claim=None):
         res = dual.get(DUAL_KEY[m])
         res = res if isinstance(res, dict) else None
         o = _blank(m)
-        rm = (res or {}).get('resistance_model')
         rule = (res or {}).get('boundary_rule')
         o.update({f'ion_net_area_mode_{m}': m,
-                  f'ion_net_constriction_{m}': CONSTRICTION.get(rm, '' if rm is None else f'unknown:{rm}'),
+                  f'ion_net_constriction_{m}': constriction_label(res),          # ★ 10-06 — ψ 배치까지 본다 (세대 2 = mikic_psi_multiply)
                   f'ion_net_psi_{m}': ((res or {}).get('psi_placement') or '') if m == 'physics' else '',
                   f'ion_net_band_rule_{m}': rule if rule in BAND_RULES else '',
                   f'ion_net_band_frac_{m}': _num((res or {}).get('boundary_band_frac')),

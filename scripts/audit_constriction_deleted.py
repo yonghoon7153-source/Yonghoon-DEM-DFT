@@ -342,8 +342,8 @@ def case_networks(case_dir, contact_mode='physics',
         if not tt:
             raise ValueError(f'채널 {ch}: type_map 에서 고른 target_types 가 비었다.  '
                              f'type_map={prov["type_map"]} · 원자 type 분포={prov["type_hist"]}')
-        #  `psi_placement=None` = 솔버 기본값 (인자를 넘기지 않는다) — 기존 호출자는
-        #  바뀌는 것이 없다.  S3 러너만 두 팔을 명시로 지정한다 (`L2-01`).
+        #  `psi_placement=None` = 솔버 기본값 (인자를 넘기지 않는다).  ★ 10-06 (`L2-01` 세대 2 · 계약 개정 노트) — 기본이
+        #  곱셈이 됐다 ⇒ 세대 1 (legacy) 기준을 재는 호출자 (S0 census `audit_case` · S3 봉인 · S3 러너 old 팔) 는 PSI_DIVIDE 를 명시한다.
         _pk = {} if psi_placement is None else {'psi_placement': psi_placement}
         net = _NC.build_network(atoms, contacts, tt, scale, plate_z,
                                box_x=box, box_y=box, mode=mode, type_map=type_map,
@@ -365,8 +365,11 @@ def audit_case(case_dir, contact_mode='physics', channels=('ionic', 'electronic'
     """
     #  ★★ 2026-09-15 (`R4-01`) — 로드·덱 사상·경계·망 생성은 **`case_networks` 하나**로 모았다.
     #    봉인 도구가 이 일을 따로 다시 쓰고 있었고 그 사본이 세 군데 어긋나 있었다 (헤더 참조).
+    #  ★ 10-06 — S0 census 의 정의는 세대 1 (legacy) 망 위에 있다 → 명시 PSI_DIVIDE (기본 = 곱셈 · 세대 2).
+    #    ψ ≤ 1e-4 → R_c = 0 분기는 두 배치가 같아 삭제 수는 배치와 무관하다 — 정의만 고정한다.
     nets, prov = case_networks(case_dir, contact_mode=contact_mode,
-                               channels=tuple(channels), deck_dir=deck_dir)
+                               channels=tuple(channels), deck_dir=deck_dir,
+                               psi_placement=_NC.PSI_DIVIDE)
     type_map, type_hist = prov['type_map'], prov['type_hist']
     row = {'case': prov['case'], 'contact_mode': contact_mode, 'source': prov['source'],
            'atom_step': prov['atom_step'], 'contact_step': prov['contact_step'],

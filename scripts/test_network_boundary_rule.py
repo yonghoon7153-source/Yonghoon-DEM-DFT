@@ -17,6 +17,9 @@
   확대하지 않는다 (수치 모듈 hash 가 바뀌었으니 재봉인 의무도 그대로).
 ★ 봉인 — network_conductivity.py 는 S3 수치 모듈 (`seal_s3_prerun.NUMERIC_MODULES`) 이다.  봉인은 수정 금지가 아니라
   **재봉인 강제**다 (`run_s3_psi.verify_code_bundle`) — S3 를 돌리기 전에 다시 봉인한다 (결정 16 · 1저자 "재봉인은 나중").
+★ 10-06 ψ 배치 기본값 전환 (`L2-01` 세대 2 · 1저자 개정 — 계약 개정 노트) — GOLD 를 뜬 판 (eedada5d3) 의 기본은 legacy 였다.
+  ⇒ ① 의 physics 행 · ⑨ 는 이제 **명시 `PSI_DIVIDE`** (세대 1) 로 옛 기준값을 지킨다 (Hertz 행은 ψ 를 안 써 기본 그대로).
+  새 기본 (곱셈) 의 physics 행은 `GOLD_G2` 가 지킨다 — 10-06 코드로 뜬 값 (손으로 치지 않았다 · 같은 run 호출에 psi_placement=multiply).
 """
 import contextlib
 import importlib.util
@@ -98,6 +101,21 @@ GOLD = {
                             sigma_constr_net=0.02500854, percolating_fraction=1.0, active_fraction=1.0, phi_se=0.0088,
                             sigma_full_status='computed'),
 }
+#  ⚠ 위 GOLD 의 physics 행 = 세대 1 (legacy_divide · 뜬 판의 기본) — 10-06 부터는 **명시 PSI_DIVIDE** 로만 재현된다.
+
+#  ★ 10-06 세대 2 기본 (ψ 곱셈) 의 physics 행 — 같은 run 호출에 psi_placement=multiply 로 코드가 낸 값 (손으로 치지 않았다).
+#    CF (sigma_bulk_net) · 경계 · 관통 · φ 는 ψ 와 무관해 GOLD 와 같고, FULL · CONSTR 만 오른다 (활성 간선 R_c 가 ψ² 배 · 계약 §C 방향).
+GOLD_G2 = {
+    ('L0', 'physics'): dict(n_bottom=3, n_top=3, n_boundary_overlap=0, sigma_full=0.00955206, sigma_bulk_net=0.03925523,
+                            sigma_constr_net=0.01262385, percolating_fraction=1.0, active_fraction=1.0, phi_se=0.044,
+                            sigma_full_status='computed'),
+    ('L1', 'physics'): dict(n_bottom=13, n_top=13, n_boundary_overlap=0, sigma_full=0.00205866, sigma_bulk_net=0.00717995,
+                            sigma_constr_net=0.0028862, percolating_fraction=1.0, active_fraction=1.0, phi_se=0.0054,
+                            sigma_full_status='computed'),
+    ('L2', 'physics'): dict(n_bottom=4, n_top=4, n_boundary_overlap=0, sigma_full=0.05457255, sigma_bulk_net=0.22427183,
+                            sigma_constr_net=0.07212221, percolating_fraction=1.0, active_fraction=1.0, phi_se=0.0088,
+                            sigma_full_status='computed'),
+}
 
 
 def run(nc, A, C, pz, cm, **kw):
@@ -109,14 +127,21 @@ def main():
     import network_conductivity as nc
 
     # ── ① 동작 중립 (기준값과 비트 동일) ──
-    neutral, rules, fracs = [], [], []
+    #  ★ 10-06 — physics 행은 명시 PSI_DIVIDE (세대 1 = GOLD 를 뜬 판의 기본) 로 대조한다 · Hertz 행은 기본 그대로 (ψ 무관).
+    neutral, rules, fracs, g2 = [], [], [], []
     for name, ((A, C), pz, rule, frac) in FIX.items():
         for cm in ('hertzian', 'physics'):
-            r = run(nc, A, C, pz, cm)
+            r = run(nc, A, C, pz, cm, **({'psi_placement': nc.PSI_DIVIDE} if cm == 'physics' else {}))
             neutral.append(all(r.get(k) == v for k, v in GOLD[(name, cm)].items()))
             rules.append(r.get('boundary_rule') == rule)
             fracs.append(isinstance(r.get('boundary_band_frac'), float) and abs(r['boundary_band_frac'] - frac) < 1e-12)
-    chk('① 동작 중립 — 세 픽스처 × 두 면적 모드의 σ · 경계 수 · 관통 분율 · 상태가 추출 전 기준값과 같다', all(neutral))
+            if cm == 'physics':
+                r2 = run(nc, A, C, pz, cm)                       # 기본 = 세대 2 (곱셈)
+                g2.append(all(r2.get(k) == v for k, v in GOLD_G2[(name, cm)].items()) and r2.get('psi_placement') == 'multiply')
+    chk('① 동작 중립 — 세 픽스처 × 두 면적 모드의 σ · 경계 수 · 관통 분율 · 상태가 추출 전 기준값과 같다 '
+        '(physics = 명시 PSI_DIVIDE · 세대 1)', all(neutral))
+    chk('①b ★ 세대 2 기본 (ψ 곱셈 · 10-06) 의 physics 행 = GOLD_G2 (세 픽스처 · psi_placement 기록 multiply)',
+        len(g2) == 3 and all(g2))
     chk('② 결과에 쓰인 띠 규칙 `boundary_rule` 이 남는다 — L0 · L1 · L2 픽스처가 각각 그 이름 (두 면적 모드)', all(rules))
     chk('③ `boundary_band_frac` = (바닥 띠 문턱 + (판 − 위 띠 문턱)) / 판 — L0 0.2 (= 2·bf·r_max/판) · L1 0.3 · L2 0.86', all(fracs))
 
@@ -176,8 +201,8 @@ def main():
                 args = (A, C, [1], 1.0, pz, 10.0, 10.0, 2.0)
                 kw = dict(type_map={1: 'SE'}, contact_mode=cm, mode='ionic')
                 with contextlib.redirect_stdout(io.StringIO()):
-                    n0 = old.build_network(*args, **kw)
-                    n1 = nc.build_network(*args, **kw)
+                    n0 = old.build_network(*args, **kw)                                  # 옛 판 기본 = legacy
+                    n1 = nc.build_network(*args, psi_placement=nc.PSI_DIVIDE, **kw)      # ★ 10-06 — 세대 1 은 명시로만
                 for sm in ('full', 'bulk_only', 'constriction_only'):
                     with contextlib.redirect_stdout(io.StringIO()):
                         z0 = old.solve_network(n0, mode=sm)[:2]
@@ -187,8 +212,8 @@ def main():
                                 and all((x is None and y is None) or (x is not None and y is not None
                                                                      and float(x).hex() == float(y).hex())
                                         for x, y in zip(z0, z1)))
-        chk(f'⑨ 원시 값 — 추출 전 모듈 (eedada5d3) 과 solve_network 원시 출력 (G · σ) float.hex 동일 · 같은 경계 집합 '
-            f'({sum(same)}/{n} = 픽스처 3 × 면적 모드 2 × 풀이 모드 3)', n == 18 and all(same))
+        chk(f'⑨ 원시 값 — 추출 전 모듈 (eedada5d3 · 기본 legacy) 과 지금 모듈의 명시 PSI_DIVIDE (세대 1) solve_network 원시 출력 '
+            f'(G · σ) float.hex 동일 · 같은 경계 집합 ({sum(same)}/{n} = 픽스처 3 × 면적 모드 2 × 풀이 모드 3)', n == 18 and all(same))
 
     tail = f'   SKIP: {_skip}' if _skip else ''
     print(f'\ntest_network_boundary_rule: {_ok}/{_ok + len(_fail)} PASS' + (f'   FAILED: {_fail}' if _fail else '') + tail)
