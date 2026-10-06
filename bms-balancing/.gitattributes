@@ -109,3 +109,5 @@ reviews/prereview_reil_v2_c6_supplement_20261006/** -text
 reil_c6_rebuild_20261006/** -text
 # 2026-10-06: REIL P0 실행 원문 (명령 · stdout / stderr · rc · 결과 JSON · 옛 봉인 대조 · 변이 증명) — *.log 는 git add -f (C6-N2 교훈) · bytes 그대로
 evidence/reil_p0_20261006/** -text
+# 2026-10-06: B-min r2 retry3 보충 검토 회신 묶음 (게이트 차수 밖 · LIMITED_VALIDATION_CLOSED_WITH_DOCUMENTED_SCOPE · BMIN-R3-C1 수용 · PS01-16 외부 결과 범위 · native 150 s 승인 아님) — bytes 그대로
+reviews/r14_repros/codex63/comsol_bmin_r2_retry3_supplement_review_20261006/** -text
