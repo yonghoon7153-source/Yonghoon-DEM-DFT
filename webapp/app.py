@@ -723,6 +723,34 @@ ION_HANDOVER_GEN_TEXT = {
     'invalid': 'invalid — 세대 계약 위반 (값 인용 금지 · 사유 = 위 상태 칸) — 기술적 실패',
     '': '— (망 레코드 없음)',
 }
+#  ★ 10-06 밤 (G2RR-01 웹앱 짝 · J20-l) — 망 세대 행에 도장 ↔ 레코드 대조가 어긋날 때만 붙는 표지 (판정 = 인계 생성기 P4 와 같은 함수
+#    `_ps.provenance_generation_problem` — g2 = 도장 네 세대 값 = 레코드에서 유도한 기대값 · inferred_legacy = 확인된 역사 도장 스키마).  일치하면
+#    아무것도 붙지 않는다 (보통 화면 그대로) · 값 · 상태 칸은 바꾸지 않는다 (표시 — 그 폴더를 인계할 수 없다는 표지).
+ION_HANDOVER_STAMP_BAD = '⚠ 도장 ↔ 레코드 불일치 — 인계 거부 (G2RR-01)'
+
+
+def _ion_handover_stamp(results_dir, ih):
+    """케이스 폴더의 활성 도장 ↔ 망 레코드 세대 대조 → '' (일치 · 대조할 세대가 아님 · 도우미 결과 없음 · 읽을 도장 없음) | 표지 문구
+    (`ION_HANDOVER_STAMP_BAD`: 첫 사유).  세대 = 도우미 세대 칸 (`ion_net_generation` — 같은 dual 의 공용 세대 계약) · 대조 =
+    `_ps.provenance_generation_problem` (인계 P4 와 같은 함수).  도장이 없거나 (도장 이전 옛 케이스 — 인계는 P0 이 거부) 못 읽으면 (망 활성 세대 무효
+    행 — RGLR2-02 — 이 답한다) 여기서는 붙이지 않는다 (읽은 도장이 레코드와 어긋날 때만)."""
+    gen = ih.get('ion_net_generation') if isinstance(ih, dict) else None
+    if gen not in (_ps.NETWORK_GEN_G2, _ps.NETWORK_GEN_LEGACY) or not results_dir:
+        return ''
+    prov = _ps.read_network_provenance(results_dir)
+    if prov.get('provenance_state') != 'valid':
+        return ''
+    try:
+        with open(os.path.join(results_dir, 'network_conductivity_dual.json'), encoding='utf-8') as _fh:
+            dual = json.load(_fh)
+    except (OSError, ValueError, TypeError):
+        return ''                                        # 세대 칸이 있는데 dual 을 못 읽음 — 세대 행 자체가 답한다 (여기서 짐작하지 않는다)
+    probs = _ps.provenance_generation_problem(prov, dual, gen)
+    if not probs:
+        return ''
+    why = str(probs[0]).replace('\n', ' ')
+    why = why if len(why) <= 200 else why[:197] + '…'
+    return f'{ION_HANDOVER_STAMP_BAD}: {why}' + (f' 외 {len(probs) - 1}' if len(probs) > 1 else '')
 
 
 def _ion_handover(results_dir, metrics):
@@ -870,8 +898,9 @@ def _network_state_rows(metrics):
     return rows
 
 
-def _ion_handover_rows(ih):
-    """케이스 τ 블록 뒤 세 행 — [상태 (사유)] · [띠 규칙 · 띠 폭/판 간격] · [망 세대 (세대 계약)].  ih = `_ion_handover` 결과 (None = 도우미 미계산)."""
+def _ion_handover_rows(ih, stamp=''):
+    """케이스 τ 블록 뒤 세 행 — [상태 (사유)] · [띠 규칙 · 띠 폭/판 간격] · [망 세대 (세대 계약)].  ih = `_ion_handover` 결과 (None = 도우미 미계산).
+    stamp = `_ion_handover_stamp` 결과 (★ 10-06 밤 G2RR-01 — 도장 ↔ 레코드가 어긋날 때만 비지 않는다 · 세대 행 끝에 붙인다)."""
     if not isinstance(ih, dict):
         return [_same_row(ION_HANDOVER_STATUS_LABEL, '미계산 (도우미 결과 없음)')]
 
@@ -899,6 +928,8 @@ def _ion_handover_rows(ih):
     #  ★ 10-06 밤 (G2R-01 · 02) — 세대는 케이스 하나에 하나 (세 모드 공통) → H · P 같은 값
     g = ih.get('ion_net_generation')
     gtxt = '미계산 (세대 칸 없는 도우미 결과)' if g is None else ION_HANDOVER_GEN_TEXT.get(str(g), f'{g} — 모르는 세대 값 (기술적 실패)')
+    if stamp:
+        gtxt = f'{gtxt} · {stamp}'
     return [[ION_HANDOVER_STATUS_LABEL, _st('hertz'), _st('physics'), ''],
             [ION_HANDOVER_BAND_LABEL, _band('hertz'), _band('physics'), ''],
             [ION_HANDOVER_GEN_LABEL, gtxt, gtxt, '']]
@@ -3191,7 +3222,7 @@ def transform_network_summary_4col(tables, metrics, meta):
         # ── τ 인계 상태 (τ 결정 16 ② · scripts/tau_flux.py) — 라우트가 `_ion_handover` 를 붙였을 때만 · 비관통 케이스도 상태가 보이게
         #    τ 블록 조건 (σ > 0) 과 따로 둔다.  자리는 `_CANONICAL_ROW_ORDER` 가 비율 행 뒤로 잡는다.
         if '_ion_handover' in metrics and not _has_label(ION_HANDOVER_STATUS_LABEL):
-            new_rows.extend(_ion_handover_rows(metrics.get('_ion_handover')))
+            new_rows.extend(_ion_handover_rows(metrics.get('_ion_handover'), metrics.get('_ion_handover_stamp') or ''))
         # ── 망 상태 · 최근 시도 (10-05 RGL-02 · 04 웹앱 짝) — σ 가 없는 비관통 케이스도 보이게 τ 블록 조건과 따로 · 자리는 정렬 표가 잡는다
         if (not _has_label(ION_NET_STATE_LABEL) and not _has_label(NET_ATTEMPT_LABEL)
                 and not _has_label(NET_GEN_INVALID_LABEL)):           # ★ RGLR2-02 — 세대 무효 행도 같은 묶음
@@ -7279,6 +7310,8 @@ def _load_case_tables(results_dir, meta):
     # 4-column transform + section injection — shared helpers
     #  ★ 10-04 τ 결정 16 ② — 이온 인계 상태 (tau_flux) 를 표시용으로 붙인다 (계산은 도우미 · 값 행은 그대로).
     metrics['_ion_handover'] = _ion_handover(results_dir, metrics)
+    #  ★ 10-06 밤 (G2RR-01 웹앱 짝 · J20-l) — 도장 ↔ 레코드 세대 대조 (인계 P4 와 같은 함수 · 어긋날 때만 세대 행에 표지)
+    metrics['_ion_handover_stamp'] = _ion_handover_stamp(results_dir, metrics['_ion_handover'])
     #  ★ 10-05 RGL-04 웹앱 짝 — 활성 세대 · 최근 시도 (승격 전 검사에 실패한 후보는 활성이 아니다 — 최근 시도에만 남는다).
     metrics['_network_generation'] = _network_generation(results_dir)
     transform_network_summary_4col(tables, metrics, meta)

@@ -204,6 +204,7 @@ run 'webapp: tau_grade_unify'     python3 webapp/test_tau_grade_unify.py   # 10-
 run 'webapp: network_handover_chain' python3 webapp/test_network_handover_chain.py  # 10-05 RGL · SELF-86 — 실 생산자 → 정지 helper → τ → 배치 기록 (stop_after=network) → build_handover 끝-끝 (옛 코드 5/8 = RGL-02 · 03 · 04)
 run 'webapp: psi_generation_stamp' python3 webapp/test_psi_generation_stamp.py  # 10-06 L2-01 세대 2 — full_metrics · 도장 psi_placement_physics (솔버 출력) · 망 소유 키 · 정지 계약 ⑥b · 옛 세대 재투영 · τ 협착 라벨
 run 'webapp: gen2_publication_handover' python3 webapp/test_gen2_publication_handover.py  # 10-06 밤 G2R-01 · 02 — Codex 게시 · 인계 반례 (H12 주 자리 · ψ/전극 오타 · 부분 결손 · 표지 없는 후보) 를 실 생산자 사슬로: 정지 · 일반 경로 게시 전 거부 · 강제 폴더 인계 거부 · 같은 결함 코호트 · 옛 세대 추론 자격 (도장) · build_handover (옛 코드 2/11)
+run 'webapp: gen2_stamp_record' python3 webapp/test_gen2_stamp_record.py  # 10-06 밤 G2RR-01 — 도장 ↔ 레코드 세대 대조 (실 생산자 → 게시 → 인계): Codex 도장 변이 (unknown · null · legacy · one_null_legacy_shape) · 키 하나씩 결손 · null · unknown · legacy · 타입 → τ P4 거부 · 역사 경로 = 확인된 역사 도장 스키마 (194 v1.2 실측 194/194) · 배치 manifest 기대 세대 · 웹앱 망 세대 행 (옛 코드 6/23)
 run 'webapp: hetero_transcript'   python3 webapp/test_hetero_transcript_page.py   # 10-05 이종기술 회의록 — 회의 둘 (09-18 · 10-02) 고르기 · 회의 종합 · 등록부 밖 키 404 · /hetero 논지 정본 비준 블록 (docs/hetero_thesis.md 에서 읽음 · fail-closed)
 #  ★ 2026-10-03 (Codex r_int 1단계 RINT-02 · 13 · 14 · 20) — ① 계면 요청 ↔ 네 솔브 적용 영수증을 **실물 producer** 로.
 #    `solve_sigma_z(..., rint=)` 호출 넷을 AST 로 찾아 하나씩 `rint=` 를 지우면 게시가 거부돼야 한다 (주 솔브만 보던

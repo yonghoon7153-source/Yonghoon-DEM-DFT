@@ -14,8 +14,9 @@ Codex `probes/publication.py` · `probes/handover.py` 를 **실 생산자 사슬
      full_metrics → 도장 다시 찍기 = 옛 게시가 남겼을 모양) 를 배치 기록과 함께 `lhs_design_dataset.load_tau_results` 로:
      단독 넷 · [baseline, h12_as_primary] · [baseline, bad_psi] · [bad_psi, bad_psi] (같은 결함 코호트) 전부 거부 (τ P4 세대 계약) ·
      같은 절차로 만든 변이 없는 폴더 = 통과 (강제 절차가 P0–P3 를 깨지 않는다는 대조).  옛 코드: 일곱 다 통과.
-  ③ 옛 세대 추론 자격 — 표지를 전부 뺀 레코드 + 세대 2 를 말하는 도장 (게시 뒤 표기만 지운 폴더) = 거부 · 같은 레코드 + 세대 2 를 말하지 않는
-     도장 = inferred_legacy 로 통과 (H12 = missing_input) · 거울: 세대 2 표기 레코드 + 세대 키 없는 옛 도장 (역사 폴더에 표기만 덧붙인 모양) = 거부.
+  ③ 옛 세대 추론 자격 — 표지를 전부 뺀 레코드 + 세대 2 를 말하는 도장 (게시 뒤 표기만 지운 폴더) = 거부 · 같은 레코드 + 확인된 역사 도장 스키마
+     (세대 키 없는 8 키 = 194 v1.2 모양) = inferred_legacy 로 통과 (H12 = missing_input) · 거울: 세대 2 표기 레코드 + 세대 키 없는 옛 도장 (역사 폴더에
+     표기만 덧붙인 모양) = 거부.  ★ 10-06 밤 G2RR-01 — 도장 값 대조 (unknown · null · legacy · 부분 결손 · 역사 스키마 밖) 반례는 test_gen2_stamp_record.
   ④ 표 만들 때 — 원천이 다른 길로 들어와 두 행이 **같은 결함** (주 Hertz 칸 = H12 표기) 이면 `build_handover` 거부 (행마다 먼저 · 옛: 동질이라 통과).
 ⚠ 범위 — 표기 (메타) 계약.  숫자만 바꾼 레코드 · 모든 사본과 도장을 함께 일관되게 바꾼 편집은 못 잡는다 (TAU_SAME_GEN_BASIS 한계).
 """

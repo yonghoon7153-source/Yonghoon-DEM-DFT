@@ -155,27 +155,76 @@ NETWORK_ELECTRODE_G2 = 'dirichlet_exact'
 NETWORK_H12_META = (('hertz_constriction', 'mikic_psi_multiply'), ('bulk_model', 'sphere_segment'), ('resistance_model', 'mikic'),
                     ('psi_placement', 'multiply'), ('sensitivity_mode', 'hertz_h12'))
 #: 활성 세대 도장 (`stamp_network_provenance`) 이 솔버 출력에서 읽어 남기는 세대 표기 키 (10-06 · 50de4e806 · a0a24c538 부터).  194 v1.2 배치 도장에는
-#:   하나도 없다 (그 전 코드).  인계 때 옛 세대 추론 자격 (`provenance_claims_generation2`) 의 근거.
+#:   하나도 없다 (그 전 코드).  인계 때 도장 ↔ 레코드 세대 대조 (`provenance_generation_problem` · G2RR-01) 의 대상.
 PROVENANCE_GENERATION_KEYS = ('psi_placement_physics', 'electrode_model', 'area_rule_physics', 'hertz_h12')
+#: ★ 10-06 밤 (G2RR-01 · Codex 세대 2 재검증 §2) — 세대 2 게시 도장의 네 값 = 현행 게시자가 세대 2 레코드에서 유도하는 값 (생산자 상수와 같은 문자열 —
+#:   무거운 생산자를 임포트하지 않으려고 둔다 · test_gen2_stamp_record A1 · A2 가 실 생산자 게시 도장 · 생산자 상수와 대조).
+NETWORK_GENERATION2_STAMP = (('psi_placement_physics', 'multiply'), ('electrode_model', NETWORK_ELECTRODE_G2),
+                             ('area_rule_physics', 'physics_g2'), ('hertz_h12', True))
+#: ★ G2RR-01 — 확인된 역사 도장 스키마 = 194 v1.2 배치 (`11fcf91e8` · 세대 2 이전 게시자) 도장의 실측 모양 (194/194 같은 8 키 · 세대 키 없음) + 고정 값 ·
+#:   argv 모양 (그 게시자는 늘 contact_mode both).  옛 세대 추론 (inferred_legacy) 인계는 도장이 이것과 **정확히** 같을 때만 — "세대 2 를 말하지 않음" 만으로는
+#:   역사성을 증명하지 않는다 (옛 판: 역사 모양 레코드 + electrode_model=null 도장이 통과).  `provenance_state` 는 읽는 쪽 (`read_network_provenance`) 이
+#:   붙이는 표지라 대조에서 뺀다.
+NETWORK_HISTORICAL_STAMP_KEYS = ('network_run_id', 'code_sha', 'stamped_at', 'solver_status', 'solver', 'argv', 'units_contract', 'input_digests')
+NETWORK_HISTORICAL_STAMP_FIXED = (('solver', 'network_conductivity.py'), ('units_contract', 'sim_to_real_v1'))
+NETWORK_HISTORICAL_ARGV_KEYS = ('type_map', 'scale', 'contact_mode')
+#: 세대 계약 판정 이름 (`tau_flux.NET_GEN_G2` · `NET_GEN_LEGACY` 와 같은 값 — test_gen2_stamp_record 가 대조).
+NETWORK_GEN_G2, NETWORK_GEN_LEGACY = 'g2', 'inferred_legacy'
 
 
-def provenance_claims_generation2(prov):
-    """★ 10-06 밤 (G2R-02) — 활성 세대 도장이 **세대 2 산출물을 게시했다**고 말하는가 → 사유 문장 ('' = 말하지 않는다).
-    도장은 게시 때 솔버 출력 (dual) 에서 읽은 표기다 — 전극 dirichlet_exact · H12 레코드 있음 · physics 면적 physics_g2 · ψ multiply 중 하나라도면
-    그 폴더는 세대 2 게시다 ⇒ 지금 레코드에 세대 2 표지가 없으면 (게시 뒤 표기만 지움) 옛 세대로 **추론하지 않는다** (인계 거부).
-    키가 없거나 값이 None · False 면 말하지 않는다 (194 v1.2 도장 = 키 없음 · 시험 도장 = 망 JSON 을 쓰기 전에 찍어 None)."""
-    p = prov if isinstance(prov, dict) else {}
-    why = [f'{k}={p.get(k)!r}' for k, want in (('electrode_model', NETWORK_ELECTRODE_G2), ('hertz_h12', True),
-                                                ('area_rule_physics', 'physics_g2'), ('psi_placement_physics', 'multiply'))
-           if p.get(k) == want]
-    return ('도장이 세대 2 게시를 말한다 (' + ' · '.join(why) + ')') if why else ''
+def _record_label(dual, mode, key):
+    """dual 의 한 모드 레코드에 솔버가 남긴 표기 문자열 → 문자열 | None (기록 없음 · 객체 아님 · 빈 값 — 짐작하지 않는다)."""
+    rec = dual.get(mode) if isinstance(dual, dict) else None
+    v = rec.get(key) if isinstance(rec, dict) else None
+    return v if isinstance(v, str) and v else None
 
 
-def provenance_predates_generation2(prov):
-    """★ 10-06 밤 (G2R-02 거울) — 활성 세대 도장이 세대 2 **이전 코드**가 찍은 것인가 (세대 표기 키 `PROVENANCE_GENERATION_KEYS` 가 하나도 없다 =
-    194 v1.2 배치 도장 모양).  세대 2 레코드는 세대 2 코드만 낼 수 있고 그 코드의 게시는 늘 그 키를 찍는다 ⇒ 세대 2 표기 레코드 + 이 도장 = 역사 폴더에
-    표기만 덧붙인 모양 (인계 거부).  도장이 객체가 아니면 False (다른 관문 — P0 · P1 — 이 답한다)."""
-    return isinstance(prov, dict) and not any(k in prov for k in PROVENANCE_GENERATION_KEYS)
+def generation_stamp_values(dual):
+    """★ 10-06 밤 (G2RR-01) — 게시자가 활성 도장에 쓰는 네 세대 값을 **레코드 (dual) 에서** 유도한다 → {키: 값} (`PROVENANCE_GENERATION_KEYS` 순서).
+    게시 (`stamp_network_provenance`) 와 인계 대조 (`provenance_generation_problem` 의 기대값) 가 이 한 함수를 쓴다 (사본 금지 — 규율 ①):
+    ψ = physics `psi_placement` · 전극 = Hertz `electrode_model` · physics 면적 = physics `area_rule` (비지 않은 문자열만 · 아니면 None) ·
+    hertz_h12 = Hertz 레코드 안 H12 민감도 레코드가 객체로 있는가 (bool)."""
+    return {'psi_placement_physics': _record_label(dual, 'physics', 'psi_placement'),
+            'electrode_model': _record_label(dual, 'hertzian', 'electrode_model'),
+            'area_rule_physics': _record_label(dual, 'physics', 'area_rule'),
+            'hertz_h12': network_h12_record(dual) is not None}
+
+
+def provenance_generation_problem(prov, dual, generation):
+    """★ 10-06 밤 (G2RR-01 · Codex 세대 2 재검증 §2 최소 수정 · 1저자 비준) — 활성 도장 ↔ 레코드의 세대 대조 → [] (일치) | [문제].
+    인계 재검사 (`lhs_design_dataset.load_tau_results` P4_model_generation) 와 웹앱 망 세대 행 (`app._ion_handover_stamp`) 이 같은 함수를 쓴다.
+    generation = 그 레코드의 세대 계약 판정 (`tau_flux.network_generation_contract` 의 'generation').
+      · g2 — 도장의 네 세대 키 (`PROVENANCE_GENERATION_KEYS`) 가 **전부** 있고, 값 = 레코드에서 유도한 기대값 (`generation_stamp_values` — 게시자와 같은
+        함수 · JSON 정규형 = 타입까지) 이며, 그 기대값이 세대 2 값 (`NETWORK_GENERATION2_STAMP`) 이다 ⇒ 필수 키의 null · unknown · 명시 legacy · 부분 결손 ·
+        레코드와 모순 = 거부.  옛 판 (`provenance_claims_generation2` · `provenance_predates_generation2`) 은 g2 값과 같은 항목이 하나라도 있는지 · 키가
+        하나라도 있는지만 보아 unknown · null · legacy 값 도장을 g2 로 인계했다.
+      · inferred_legacy — 도장이 확인된 역사 도장 스키마 (`NETWORK_HISTORICAL_STAMP_*` — 194 v1.2 실측) 와 정확히 같다 (키 집합 · 고정 값 · argv 모양).
+      · 그 밖 ('' 레코드 없음 · invalid · 모르는 값) — 대조할 세대가 아니다 (fail-closed).
+    ⚠ 한계 — 도장 · 레코드 · 모든 사본을 함께 일관되게 바꾼 편집은 못 잡는다 (게시 시점 해시 없음 — TAU_SAME_GEN_BASIS)."""
+    p = prov if isinstance(prov, dict) else None
+    if p is None:
+        return [f'도장이 객체가 아니다 ({type(prov).__name__})']
+    if generation == NETWORK_GEN_G2:
+        want, g2 = generation_stamp_values(dual), dict(NETWORK_GENERATION2_STAMP)
+        out = []
+        for k in PROVENANCE_GENERATION_KEYS:
+            if _canon(want[k]) != _canon(g2[k]):
+                out.append(f'레코드에서 유도한 {k}={want[k]!r} ≠ 세대 2 값 {g2[k]!r} (세대 2 게시 레코드 모양이 아니다)')
+            elif k not in p:
+                out.append(f'도장에 {k} 없음 (부분 결손)')
+            elif _canon(p[k]) != _canon(want[k]):
+                out.append(f'도장 {k}={p[k]!r} ≠ 레코드에서 유도한 {want[k]!r}')
+        return out
+    if generation == NETWORK_GEN_LEGACY:
+        keys = {k for k in p if k != 'provenance_state'}
+        extra, miss = sorted(keys - set(NETWORK_HISTORICAL_STAMP_KEYS)), sorted(set(NETWORK_HISTORICAL_STAMP_KEYS) - keys)
+        out = [f'확인된 역사 도장 스키마 (194 v1.2 · 8 키) 가 아니다 — 남는 키 {extra} · 없는 키 {miss}'] if (extra or miss) else []
+        out += [f'도장 {k}={p.get(k)!r} ≠ 역사 도장 {v!r}' for k, v in NETWORK_HISTORICAL_STAMP_FIXED if k in p and p.get(k) != v]
+        argv = p.get('argv')
+        if 'argv' in p and not (isinstance(argv, dict) and sorted(argv) == sorted(NETWORK_HISTORICAL_ARGV_KEYS) and argv.get('contact_mode') == 'both'):
+            out.append(f'도장 argv={argv!r} — 역사 도장 모양 (type_map · scale · contact_mode both) 이 아니다')
+        return out
+    return [f'세대 {generation!r} — 도장을 대조할 세대가 아니다 ({NETWORK_GEN_G2} · {NETWORK_GEN_LEGACY} 만)']
 
 
 def network_h12_record(dual):
@@ -517,12 +566,11 @@ def stamp_network_provenance(results_dir, run_id, inputs=None, solver_status='su
             'solver': 'network_conductivity.py',
             'argv': dict(argv or {}),
             'units_contract': 'sim_to_real_v1',
-            'input_digests': inputs or {},
-            'psi_placement_physics': solver_psi_placement(results_dir),
-            #  ★ 10-06 저녁 세대 2 — 같은 규약 (솔버 출력에서 읽는다 · 모듈 기본값을 베끼지 않는다 · 기록 없음 = None)
-            'electrode_model': solver_record_value(results_dir, 'hertzian', 'electrode_model'),
-            'area_rule_physics': solver_record_value(results_dir, 'physics', 'area_rule'),
-            'hertz_h12': network_h12_record(_read_json_or_none(os.path.join(results_dir, 'network_conductivity_dual.json'))) is not None}
+            'input_digests': inputs or {}}
+    #  ★ 10-06 · 10-06 저녁 세대 2 — 세대 표기 네 값 (psi_placement_physics · electrode_model · area_rule_physics · hertz_h12) 은 솔버 출력 (dual) 에서
+    #    읽는다 (모듈 기본값을 베끼지 않는다 · 기록 없음 = None) · ★ 10-06 밤 (G2RR-01) — 유도는 한 함수 (`generation_stamp_values`) — 인계 대조가 같은
+    #    함수로 기대값을 만든다 (사본 금지 · 키 · 순서 · 값은 옛 판 그대로)
+    prov.update(generation_stamp_values(_read_json_or_none(os.path.join(results_dir, 'network_conductivity_dual.json'))))
     atomic_write_json(os.path.join(results_dir, PROVENANCE_FILE), prov)
     return prov
 
@@ -535,10 +583,7 @@ def solver_psi_placement(results_dir, mode='physics'):
 
 def solver_record_value(results_dir, mode, key):
     """그 폴더 dual 의 한 모드 레코드에 솔버가 남긴 표기 문자열 → 문자열 | None (기록 없음 · dual 없음 · 못 읽음 — 짐작하지 않는다)."""
-    d = _read_json_or_none(os.path.join(results_dir, 'network_conductivity_dual.json'))
-    rec = d.get(mode) if isinstance(d, dict) else None
-    v = rec.get(key) if isinstance(rec, dict) else None
-    return v if isinstance(v, str) and v else None
+    return _record_label(_read_json_or_none(os.path.join(results_dir, 'network_conductivity_dual.json')), mode, key)
 
 
 def read_network_provenance(results_dir):
@@ -843,8 +888,8 @@ def network_stop_verdict(results_dir, run_id, fm=None, legacy_ok=False):
 
     fm = 승격 **전** 후보의 full_metrics 투영 (10-05 RGL-04 — 아직 디스크에 쓰지 않은 것).  None 이면 디스크의 full_metrics.json.
     legacy_ok = ★ 10-06 밤 (G2R-02) — 세대 2 표지가 하나도 없는 레코드를 옛 세대로 **추론**해 받을 것인가.  게시 (후보 = 현행 생산물) 는 늘 False —
-      현행 생산자는 세대 2 표기를 전부 싣는다.  인계 재검사 (`lhs_design_dataset.load_tau_results` P4) 만 역사 폴더 (도장이 세대 2 게시를 말하지 않는다 ·
-      `provenance_claims_generation2`) 에 True 를 준다.
+      현행 생산자는 세대 2 표기를 전부 싣는다.  인계 재검사 (`lhs_design_dataset.load_tau_results` P4) 만 역사 폴더 (도장이 확인된 역사 도장 스키마 —
+      `provenance_generation_problem` · 10-06 밤 G2RR-01) 에 True 를 준다.
     정본 (canonical) = **dual** (`network_conductivity_dual.json` — 두 모드를 한 파일에 · τ 인계 도우미가 읽는 것).  모드 파일 · legacy 는
     그 사본이어야 하고 full_metrics 는 그 투영이다 (값 일치는 복사 검산 · 세대 증거는 ② 도장 + stash 인과 계약이 진다).
 

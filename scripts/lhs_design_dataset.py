@@ -1659,13 +1659,35 @@ TAU_NET_SOURCE = 'tau_flux'
 #: ★ 10-05 RGLR3-02 (Codex 4차 재검증 §3 · §8-2) — 인계 때 케이스마다 다시 도는 같은 세대 검사 (이 순서 · 출처 부록 same_generation_checks 에 그대로).
 #:   하나라도 실패하면 생성기가 거부한다 (P0–P3 과 같은 규칙 — 그 케이스 τ 를 빈칸 + 사유로 싣지 않는다) ⇒ 출처 부록에 행이 있다 = 이 검사를 다 통과했다.
 #:   ★ 10-06 밤 (G2R-01 · 02) — P4_model_generation = 공용 세대 계약 (tau_flux.network_generation_contract — 모드마다 허용 모델 조합 · 닫힌 열거 ·
-#:   부분 결손 거부) + 옛 세대 추론 자격 (도장이 세대 2 게시를 말하면 표지 없는 레코드를 옛 세대로 읽지 않는다 — pipeline_service.provenance_claims_generation2 ·
-#:   거울: 세대 2 레코드가 세대 2 이전 도장 아래면 거부 — provenance_predates_generation2).
+#:   부분 결손 거부) + ★ 10-06 밤 (G2RR-01) 도장 ↔ 레코드 세대 대조 (pipeline_service.provenance_generation_problem — g2 = 도장 네 세대 값이 전부 있고 =
+#:   레코드에서 유도한 기대값 = 세대 2 값 · inferred_legacy = 도장이 확인된 역사 도장 스키마 (194 v1.2) 일 때만) + 배치 manifest 기대 세대 (주면 ·
+#:   tau_manifest_expected_generation).  옛 판은 도장의 키 존재 · g2 값 하나만 보았다 (provenance_claims_generation2 · provenance_predates_generation2 — 삭제).
 TAU_SAME_GEN_CHECKS = ('P0_records', 'P1_run_id', 'P2_input_digest', 'P3_batch_tie', 'P4_model_generation', 'P4_stop_contract', 'P4_generation',
                        'P4_read_stable')
 #: 대조의 기준 — **지금 파일끼리** (배치 기록 status.json · metrics_flat 과 폴더의 모든 사본) · 게시 시점 해시가 없다 ⇒ 모든 사본 (dual · 모드 파일 ·
 #:   legacy · full_metrics · 도장) 을 함께 일관되게 바꾼 편집은 못 잡는다 (Codex RGLR3-02 §8-2 마지막 항 — 잡으려면 게시 때 결과 해시를 배치 기록에 묶어야 한다).
 TAU_SAME_GEN_BASIS = 'current_files_no_publish_hash'
+#: ★ 10-06 밤 (G2RR-01 · Codex 세대 2 재검증 §2 "새 배치 manifest 의 기대 세대와도 교차 대조") — 배치 manifest 가 선언하는 기대 망 세대의 키 · 허용 값
+#:   (= tau_flux.NET_GEN_G2 · NET_GEN_LEGACY — test_gen2_stamp_record 가 대조).  선언은 새 194 실행 봉인 (판정문 §7-3) 이 쓴다 — 194 v1.2 런처 manifest
+#:   (network_parallel_launcher/v1) 에는 없다 (그 배치는 manifest 대조 없이 확인된 역사 도장 스키마로만 읽는다).
+TAU_MANIFEST_GENERATION_KEY = 'expected_network_generation'
+TAU_EXPECTED_GENERATIONS = ('g2', 'inferred_legacy')
+
+
+def tau_manifest_expected_generation(manifest):
+    """배치 manifest (dict · JSON 경로) → 기대 망 세대 ('g2' | 'inferred_legacy') — `load_tau_results(expected_generation=)` · CLI `--tau-batch-manifest`.
+    못 읽음 · 객체 아님 · 선언 (`TAU_MANIFEST_GENERATION_KEY`) 없음 · 모르는 값 = FillRefusal (교차 대조를 약속했는데 못 하면 통과로 치지 않는다)."""
+    m = manifest
+    if not isinstance(m, dict):
+        try:
+            m = json.loads(pathlib.Path(manifest).read_text(encoding='utf-8'))
+        except (OSError, ValueError, TypeError) as e:
+            raise FillRefusal(f'τ 기대 세대 — 배치 manifest {str(manifest)!r} 를 못 읽었다 ({type(e).__name__}) — 기대 세대 교차 대조를 할 수 없다') from None
+    v = m.get(TAU_MANIFEST_GENERATION_KEY) if isinstance(m, dict) else None
+    if v not in TAU_EXPECTED_GENERATIONS:
+        raise FillRefusal(f'τ 기대 세대 — 배치 manifest 의 {TAU_MANIFEST_GENERATION_KEY}={v!r} ∉ {list(TAU_EXPECTED_GENERATIONS)} — 기대 세대를 선언하지 '
+                          '않은 (또는 모르는 값의) manifest 로는 교차 대조를 할 수 없다 (선언 = 새 194 실행 봉인 · 판정문 §7-3)')
+    return v
 #: ★ 10-06 저녁 세대 2 (1저자 비준) — 모드 셋째 hertz_h12 (Hertz 이온 민감도 · tau_flux.MODES 와 같아야 한다 — selftest ㉙m).
 TAU_NET_MODES = ('hertz', 'physics', 'hertz_h12')
 TAU_NET_H12 = 'hertz_h12'
@@ -1875,7 +1897,7 @@ def _tau_read_names(ps):
 
 
 
-def load_tau_results(results_dir, webapp):
+def load_tau_results(results_dir, webapp, expected_generation=None):
     """망 τ 원천 (v1.2) — network 정지 배치 (`lhs_webapp_batch --stop-after network`) 의 케이스 폴더 묶음 (`<--work>/results`) → `build_handover(tau=…)`.
 
     ★ 왜 케이스 폴더에서 tau_flux 를 직접 부르나 (검증 가능한 쪽):  τ 를 낼 입력 (dual 레코드 두 모드) 은 metrics_flat 에 없고, tau_flux CLI 의
@@ -1893,9 +1915,13 @@ def load_tau_results(results_dir, webapp):
       P4 같은 세대 (인계 때 재검사 · 10-05 RGLR3-02 — Codex 4차 재검증 §3 · §8-2 최소 해제 "기존 정지 계약의 전 사본 · 투영 · σ₀ 대조를 인계 때 다시 호출"):
          P4_model_generation — ★ 10-06 밤 (G2R-01 · 02 · 1저자 비준) 공용 세대 계약 `tau_flux.network_generation_contract` (망 정지 계약 ⑨ · τ 인계 소비자 ·
             배포 빌더와 같은 함수): 모드마다 허용 모델 조합 (주 Hertz = H0 · H12 · physics) · 닫힌 열거 · 세대 2 표기 전부 필수 · 옛 세대 추론은 표지가 하나도
-            없는 레코드 **이고** 도장이 세대 2 게시를 말하지 않을 때만 (`pipeline_service.provenance_claims_generation2` — 게시 뒤 표기만 지운 폴더 거부) —
-            그때만 정지 계약을 legacy_ok 로 다시 부른다 (194 v1.2 같은 역사 배치) · 거울: 세대 2 레코드인데 도장이 세대 2 이전 코드의 것 (세대 키 없음 ·
-            `provenance_predates_generation2`) 이면 거부 (역사 폴더에 표기만 덧붙인 모양).  옛 판은 H12 를 주 Hertz 자리에 둔 폴더 · ψ 오타 · 부분 결손을 받았다.
+            없는 레코드만.  옛 판은 H12 를 주 Hertz 자리에 둔 폴더 · ψ 오타 · 부분 결손을 받았다.
+            ★ 10-06 밤 (G2RR-01 · Codex 세대 2 재검증 §2) 도장 ↔ 레코드 세대 대조 (`pipeline_service.provenance_generation_problem` — 웹앱 망 세대 행과 같은
+            함수): g2 = 도장의 네 세대 값 (psi_placement_physics · electrode_model · area_rule_physics · hertz_h12) 이 전부 있고 = 레코드에서 유도한 기대값
+            (`generation_stamp_values` — 게시자와 같은 함수 · 타입까지) = 세대 2 값 (null · unknown · 명시 legacy · 부분 결손 · 모순 = 거부) · inferred_legacy =
+            도장이 확인된 역사 도장 스키마 (194 v1.2 실측 8 키 · 세대 키 없음) 일 때만 — 그때만 정지 계약을 legacy_ok 로 다시 부른다 (194 v1.2 같은 역사 배치) ·
+            expected_generation (배치 manifest 의 기대 세대 — `tau_manifest_expected_generation`) 을 주면 케이스마다 레코드 세대 = 그 값 (다르면 거부).
+            옛 판은 도장의 키 존재 · g2 값 하나만 보아 unknown · null · legacy 도장을 g2 로 · null 한 키 남긴 역사 모양 도장을 inferred_legacy 로 받았다.
          P4_stop_contract — 배치가 done 을 준 **바로 그 함수** `pipeline_service.network_stop_verdict` (①–⑨ — 전 사본 (dual · 모드 파일 둘 · legacy) ·
             full_metrics 망 투영 (NET_MERGE_KEYS) · σ₀ · 온도 짝 (두 모드 · legacy · full_metrics · 등급 짝 σ₀) · 띠 규칙 필드 · 공용 기술 검사 · τ 소비자 상태
             = OK · 등록된 과학적 HOLD 만) 를 지금 폴더에 다시 부른다 (fm = 관문이 본 바이트 · 사본 아님 — 규율 ①).  ⚠ P3 은 dual 의 두 키만 보아 dual 만
@@ -1907,9 +1933,14 @@ def load_tau_results(results_dir, webapp):
     ⚠ 한계 (`TAU_SAME_GEN_BASIS`): 모든 대조는 배치 기록과 **지금 파일끼리**다 — 게시 시점 해시가 없어 모든 사본 (dual · 모드 파일 · legacy · full_metrics ·
       도장) 을 함께 일관되게 바꾼 편집은 못 잡는다.  출처 부록의 dual · full_metrics sha256 은 **인계 때 읽은** 바이트다 (배치 때 바이트가 같았다는 증명 아님).
     반환 {'schema', 'source', 'batch_source', 'columns', 'tau_flux_sha256', 'same_generation_checks', 'same_generation_basis',
+         'expected_generation' (배치 manifest 기대 세대 — 대조했으면 그 값 · 안 했으면 None),
          'cases': {case: {'network_run_id', 'input_digests', 'dual_sha256', 'full_metrics_sha256', 'same_generation_checks' (다 통과한 검사 —
          TAU_SAME_GEN_CHECKS), 'same_generation_basis', 'cells' (tau_flux 직렬화 `_cell`)}}}.
-    어긋나면 FillRefusal ('τ 정지점' · 'τ P0'–'τ P4') — 한 케이스라도 실패하면 거부 (그 케이스 τ 를 빈칸 + 사유로 싣지 않는다 · P0–P3 과 같은 규칙)."""
+    어긋나면 FillRefusal ('τ 정지점' · 'τ 기대 세대' · 'τ P0'–'τ P4') — 한 케이스라도 실패하면 거부 (그 케이스 τ 를 빈칸 + 사유로 싣지 않는다 · P0–P3 과
+    같은 규칙)."""
+    if expected_generation is not None and expected_generation not in TAU_EXPECTED_GENERATIONS:
+        raise FillRefusal(f'τ 기대 세대 — expected_generation={expected_generation!r} ∉ {list(TAU_EXPECTED_GENERATIONS)} (배치 manifest 선언 · 닫힌 열거 · '
+                          '대조를 약속했는데 못 하면 통과로 치지 않는다)')
     wv = webapp if isinstance(webapp, dict) else {}
     if wv.get('stop_after') != 'network':
         raise FillRefusal(f'τ 정지점 — 웹앱 배치 stop_after={wv.get("stop_after")!r} ≠ network — 망 τ 는 `lhs_webapp_batch --stop-after network` 배치의 '
@@ -1976,19 +2007,24 @@ def load_tau_results(results_dir, webapp):
             dv = dual.get(dk).get(rk) if isinstance(dual.get(dk), dict) else None
             if _tau_canon(dv) != _tau_canon(fm.get(fk)):
                 raise FillRefusal(f'{case}: τ P3 — dual[{dk}].{rk}={dv!r} ≠ full_metrics {fk}={fm.get(fk)!r} — dual 이 도장 세대의 망 결과가 아니다')
-        #  P4_model_generation — ★ 10-06 밤 (G2R-01 · 02) 공용 세대 계약 (tau_flux 의 같은 함수 · 사본 없음) + 옛 세대 추론 자격 (도장)
+        #  P4_model_generation — ★ 10-06 밤 (G2R-01 · 02) 공용 세대 계약 (tau_flux 의 같은 함수 · 사본 없음) + ★ (G2RR-01) 배치 manifest 기대 세대 +
+        #   도장 ↔ 레코드 세대 대조 (pipeline_service 의 같은 함수 — 웹앱 망 세대 행도 이것을 부른다)
         con = tf.network_generation_contract(dual)
         if con.get('problems'):
             raise FillRefusal(f'{case}: τ P4 — 세대 계약 위반 (G2R-01 · 02 · tau_flux.network_generation_contract): '
                               f'{tf.generation_contract_text(con)[:600]} — 역할 · 표기가 확정되지 않은 망의 τ 를 싣지 않는다 (주 Hertz = H0 · H12 · physics 표)')
-        claim = ps.provenance_claims_generation2(prov)
-        if con.get('generation') == tf.NET_GEN_LEGACY and claim:
-            raise FillRefusal(f'{case}: τ P4 — 세대 계약: 세대 2 표기가 하나도 없는 레코드인데 {claim} — 게시 뒤 표기만 지운 폴더다 · 옛 세대로 추론하지 '
-                              '않는다 (G2R-02 · 옛 세대 추론 = 역사 폴더만)')
-        if con.get('generation') == tf.NET_GEN_G2 and ps.provenance_predates_generation2(prov):
-            raise FillRefusal(f'{case}: τ P4 — 세대 계약: 세대 2 표기 레코드인데 도장 ({ps.PROVENANCE_FILE}) 이 세대 2 이전 코드의 것 (세대 표기 키 '
-                              f'{list(ps.PROVENANCE_GENERATION_KEYS)} 가 하나도 없다) — 역사 폴더에 표기만 덧붙인 모양 · 세대 2 로 싣지 않는다 (G2R-02 거울)')
-        legacy_ok = con.get('generation') == tf.NET_GEN_LEGACY
+        gen = con.get('generation')
+        if expected_generation is not None and gen != expected_generation:
+            raise FillRefusal(f'{case}: τ P4 — 배치 기대 세대 (manifest {TAU_MANIFEST_GENERATION_KEY}) {expected_generation!r} ≠ 레코드 세대 {gen!r} '
+                              '(G2RR-01 · 배치 manifest 교차 대조) — 이 배치가 선언한 세대의 폴더가 아니다')
+        sp = ps.provenance_generation_problem(prov, dual, gen)
+        if sp:
+            raise FillRefusal(f'{case}: τ P4 — 세대 도장 대조 (G2RR-01 · pipeline_service.provenance_generation_problem): 레코드 세대 {gen!r} · '
+                              f'{" · ".join(sp)[:600]} — 도장 ({ps.PROVENANCE_FILE}) ↔ 레코드가 한 세대를 가리키지 않는다 · '
+                              + ('세대 2 로 싣지 않는다 (g2 = 도장 네 세대 값 = 레코드에서 유도한 기대값)' if gen == tf.NET_GEN_G2 else
+                                 '옛 세대로 추론하지 않는다 (inferred_legacy = 확인된 역사 도장 스키마 · 194 v1.2 만)' if gen == tf.NET_GEN_LEGACY else
+                                 '세대를 대조할 수 없다'))
+        legacy_ok = gen == tf.NET_GEN_LEGACY
         #  P4_stop_contract — 배치가 done 을 준 같은 계약을 지금 폴더에 다시 (전 사본 · 투영 · σ₀ 짝 · 띠 규칙 필드 · τ 소비자 상태 · 세대 계약 ⑨ — 사본 아님 ·
         #   규율 ①).  옛 세대 추론은 위 자격을 통과한 역사 폴더에만 (legacy_ok — 게시 때는 늘 False)
         try:
@@ -2021,7 +2057,8 @@ def load_tau_results(results_dir, webapp):
         raise FillRefusal(f'τ 세대 — {_mix} — 한 배치의 폴더들이 같은 망 세대가 아니다 (같은 세대로 다시 계산할 것)')
     return {'schema': TAU_NET_SCHEMA, 'source': str(root), 'batch_source': wv.get('source'), 'columns': cols,
             'tau_flux_sha256': hashlib.sha256(pathlib.Path(tf.__file__).read_bytes()).hexdigest(),
-            'same_generation_checks': list(TAU_SAME_GEN_CHECKS), 'same_generation_basis': TAU_SAME_GEN_BASIS, 'cases': out}
+            'same_generation_checks': list(TAU_SAME_GEN_CHECKS), 'same_generation_basis': TAU_SAME_GEN_BASIS,
+            'expected_generation': expected_generation, 'cases': out}
 
 
 #: 출처 부록 열 — ★ 10-05 RGLR3-02: same_generation_checks = 이 케이스에서 **돌았고 통과한** 같은 세대 검사 (TAU_SAME_GEN_CHECKS · ';' 로 잇기 —
@@ -5264,19 +5301,26 @@ def _selftest():
         ★ 10-05 RGLR3-02 — 망 JSON 은 생산자 CLI (`network_conductivity.py --contact-mode both`) 처럼 넷 다 쓴다: dual + 모드 파일 둘 (= dual 의 그 모드) +
         legacy (= Hertz 사본).  full_metrics 의 망 투영 = 웹앱 머지 규칙 그대로 (`network_projection_preflight.simulate_merge` — `NET_MERGE_KEYS` 를
         legacy 에서 · physics 미러 · 꼬리 키 · None 값은 키를 안 쓴다 = 실 생산자 폴더 실측: 비관통이면 sigma_full 키 없음).  옛 픽스처는 dual 과 σ 네 키만
-        써서, 인계 때 망 정지 계약 (전 사본 · 투영 · σ₀ 짝) 을 다시 돌리면 정상 폴더도 통과할 수 없었다 (그 계약을 통과한 배치 폴더 모양이 아니다)."""
+        써서, 인계 때 망 정지 계약 (전 사본 · 투영 · σ₀ 짝) 을 다시 돌리면 정상 폴더도 통과할 수 없었다 (그 계약을 통과한 배치 폴더 모양이 아니다).
+        ★ 10-06 밤 (G2RR-01) — 도장은 망 JSON 을 쓴 **뒤** 찍는다 (실 게시자 순서 — `publish_network_candidate` 는 솔버 출력이 있는 폴더에 찍고 네 세대 값을
+        그 dual 에서 유도한다).  옛 픽스처는 JSON 앞에서 찍어 세대 2 레코드 위 도장의 네 세대 값이 None · False 였다 (= Codex all_null 모양 — 새 인계 대조가
+        거부한다).  옛 세대 변이 (`_G1` — 10-06 저녁 전 생산자) 는 그 시절 게시자의 도장 모양 (세대 키 없음 = 194 v1.2 · 확인된 역사 도장 스키마)."""
         du_, le_, pp_ = _VAR29[var]
         d = res / q
         d.mkdir(parents=True, exist_ok=True)
         (d / 'atoms.csv').write_text(f'id,type,x,y,z,radius\n1,1,0.0,0.0,0.0,1.0\n# {q} {var}\n', encoding='utf-8')
         (d / 'contacts.csv').write_text(f'id1,id2\n# {q} {var}\n', encoding='utf-8')
         inputs = {n_: _PS29.file_digest(str(d / n_)) for n_ in ('atoms.csv', 'contacts.csv')}
-        _PS29.stamp_network_provenance(str(d), prov_rid or rid, inputs, prov_status,
-                                       argv={'type_map': '1:SE', 'scale': 1, 'contact_mode': 'both'})
         (d / 'network_conductivity_dual.json').write_text(json.dumps(du_), encoding='utf-8')
         for n_, m_ in (('network_conductivity_hertzian.json', 'hertzian'), ('network_conductivity_physics.json', 'physics'),
                        ('network_conductivity.json', 'hertzian')):
             (d / n_).write_text(json.dumps(du_[m_]), encoding='utf-8')
+        _pv29 = _PS29.stamp_network_provenance(str(d), prov_rid or rid, inputs, prov_status,
+                                               argv={'type_map': '1:SE', 'scale': 1, 'contact_mode': 'both'})
+        if var.endswith('_G1'):
+            for k_ in _PS29.PROVENANCE_GENERATION_KEYS:
+                _pv29.pop(k_, None)
+            (d / _PS29.PROVENANCE_FILE).write_text(json.dumps(_pv29), encoding='utf-8')
         fm = dict(le_, percolation_pct=pp_)                                  # 투영 전 = 접촉 분석 장부
         (d / 'full_metrics.json').write_text(json.dumps(fm), encoding='utf-8')
         fm.update(_NPP29.simulate_merge(str(d))[1])
@@ -5671,6 +5715,34 @@ def _selftest():
             and all(k_ in ';'.join(_SG29) for k_ in ('P0_', 'P1_', 'P2_', 'P3_', 'P4_stop_contract', 'P4_generation', 'P4_read_stable'))
             and all(r_.get('same_generation_basis') == 'current_files_no_publish_hash' for r_ in _pcli)
             and all(list((_tv29 or {}).get('cases', {}).get(q_, {}).get('same_generation_checks') or []) == list(_SG29) for q_ in ('q1', 'q2')))
+        #  ★ 10-06 밤 (G2RR-01) — CLI --tau-batch-manifest 가 배선됐는가 (manifest 의 기대 세대 → load_tau_results 교차 대조).  같은 픽스처 (q1 · q2 = 세대 2):
+        #   g2 선언 = ㉙i 와 같은 표 · inferred_legacy 선언 = 거부 (τ P4 배치 기대 세대) · 선언 없는 manifest = 거부 (τ 기대 세대) · --tau-results 없이 = rc 2.
+        try:
+            _mf29 = {}
+            for _lab, _decl in (('g2', {'expected_network_generation': 'g2'}), ('leg', {'expected_network_generation': 'inferred_legacy'}),
+                                ('none', {'schema': 'network_parallel_launcher/v1'})):
+                _mpth = _cd / f'manifest_{_lab}.json'
+                _mpth.write_text(json.dumps(_decl), encoding='utf-8')
+                _outm = _cd / f'hm_{_lab}.csv'
+                _cmdm = list(_cmd)
+                _cmdm[_cmdm.index('--export-handover') + 1] = str(_outm)
+                _pm = _sp29.run(_cmdm + ['--tau-batch-manifest', str(_mpth)], capture_output=True, text=True, timeout=300)
+                _mf29[_lab] = (_pm.returncode, _pm.stderr[-600:], _outm.read_text(encoding='utf-8') if _outm.exists() else None)
+            _cmdn = list(_cmd)
+            _ix = _cmdn.index('--tau-results')
+            del _cmdn[_ix:_ix + 2]
+            _cmdn[_cmdn.index('--export-handover') + 1] = str(_cd / 'hm_notau.csv')
+            _pn29 = _sp29.run(_cmdn + ['--tau-batch-manifest', str(_cd / 'manifest_g2.json')], capture_output=True, text=True, timeout=300)
+            _eim = ''
+        except Exception as e:                                            # noqa: BLE001
+            _mf29, _pn29, _eim = {}, None, f'{type(e).__name__}: {e}'
+        _okm29 = (not _eim and _mf29['g2'][0] == 0 and _mf29['g2'][2] == (_cd / 'h.csv').read_text(encoding='utf-8')
+                  and _mf29['leg'][0] != 0 and 'τ P4 — 배치 기대 세대' in _mf29['leg'][1] and _mf29['leg'][2] is None
+                  and _mf29['none'][0] != 0 and 'τ 기대 세대' in _mf29['none'][1] and _mf29['none'][2] is None and _pn29.returncode == 2)
+        chk('㉙i3 ★ G2RR-01 CLI --tau-batch-manifest — 기대 세대 g2 선언 = ㉙i 와 같은 표 (rc 0) · inferred_legacy 선언 = 거부 (τ P4 배치 기대 세대 · 표 안 씀) · '
+            '선언 없는 manifest = 거부 (τ 기대 세대) · --tau-results 없이 = rc 2'
+            + ('' if _okm29 else f' — {_eim or {k_: (v_[0], v_[1][-160:]) for k_, v_ in _mf29.items()}} · rc(무 원천) {getattr(_pn29, "returncode", None)}'),
+            _okm29)
         #  (j) J20-l 웹앱 짝 — 케이스 페이지 τ 인계 상태 툴팁 (같은 tau_flux 상태를 보여 준다) 의 값 규칙이 인계표와 같은가.  옛 문구는 "OK · MBCB 일 때만
         #   값" 이라 NOT_PERCOLATING 의 f_ion 0 (물리적 0 — 인계표에는 0.0 이 실린다) 과 어긋났다.
         try:
@@ -6008,6 +6080,10 @@ if __name__ == '__main__':
                          '망 정지 계약 재검사 (전 사본 · 투영 · σ₀ 짝 · 띠 규칙 — 10-05 RGLR3-02) · 활성 세대 · 읽기 안정) 뒤 tau_flux.case_row 로 싣는다 · '
                          '한 케이스라도 실패하면 거부 · 출처 부록 <인계표>_tau_provenance.tsv (same_generation_checks · same_generation_basis — 지금 파일끼리 · '
                          '게시 시점 해시 없음)')
+    ap.add_argument('--tau-batch-manifest', default='', metavar='JSON',
+                    help='(--tau-results) 배치 manifest — 선언한 기대 망 세대 (expected_network_generation: g2 · inferred_legacy — 새 194 실행 봉인이 쓴다) 를 '
+                         '케이스마다 레코드 세대와 교차 대조 (다르면 · 선언이 없거나 모르는 값이면 거부 · G2RR-01).  주지 않으면 이 대조만 하지 않는다 '
+                         '(194 v1.2 런처 manifest 에는 선언이 없다)')
     ap.add_argument('--pressure-record', default='', metavar='TSV',
                     help='(--export-handover) 완료 압력 기록 (scripts/lhs_pressure_record.py 산출 · DESC-06) — 설계 케이스마다 압밀 루프가 목표 (300 MPa) 에 '
                          '닿아 빠져나왔는가 · 덱 sha = 수확 raw.deck · 아니면 인계표를 만들지 않는다 · press_* 열을 표 끝에 싣는다')
@@ -6074,9 +6150,16 @@ if __name__ == '__main__':
             _wp = pathlib.Path(a.webapp)
             _wv = load_webapp(_wp if _wp.is_absolute() else _root / _wp, a.census or None)
         _tv = None
+        if a.tau_batch_manifest and not a.tau_results:
+            print('⛔ --tau-batch-manifest 는 --tau-results (망 τ 원천) 와 함께만 쓴다 — 기대 세대를 대조할 원천이 없다 (G2RR-01)', file=sys.stderr)
+            raise SystemExit(2)
         if a.tau_results:                               # v1.2 망 τ — 원천을 배치 기록으로 대조한 뒤 tau_flux 로 (관문 P0–P4)
             _tp = pathlib.Path(a.tau_results).expanduser()
-            _tv = load_tau_results(_tp if _tp.is_absolute() else _root / _tp, _wv)
+            _te = None
+            if a.tau_batch_manifest:                    # ★ G2RR-01 — 배치 manifest 의 기대 세대 (케이스마다 레코드 세대와 교차 대조)
+                _mp = pathlib.Path(a.tau_batch_manifest).expanduser()
+                _te = tau_manifest_expected_generation(_mp if _mp.is_absolute() else _root / _mp)
+            _tv = load_tau_results(_tp if _tp.is_absolute() else _root / _tp, _wv, expected_generation=_te)
         _pv = None
         if a.pressure_record:                           # DESC-06 — 완료 압력 기록 (관문)
             _pp_ = pathlib.Path(a.pressure_record).expanduser()
@@ -6114,6 +6197,9 @@ if __name__ == '__main__':
             print('   ⚠ 망 τ = ML 기술자 전용 · G6 — 두 모드 모두 물리 타깃 (실험 절대 대조) HOLD · tau = √tau2 는 COMSOL 입력 아님 (열 사전)')
             print(f'   ⚠ 출처 관문 = 배치 기록과 지금 파일끼리 ({TAU_SAME_GEN_BASIS}) — 게시 시점 해시가 없어 모든 사본을 함께 일관되게 바꾼 편집은 못 잡는다 '
                   '(RGLR3-02 · 출처 부록 same_generation_checks)')
+            print('   세대 도장 대조 (G2RR-01) — 케이스마다 도장 네 세대 값 = 레코드에서 유도한 기대값 (g2) · 확인된 역사 도장 스키마 (inferred_legacy) · '
+                  + (f'배치 manifest 기대 세대 {_tv["expected_generation"]!r} 교차 대조' if _tv.get('expected_generation')
+                     else '배치 manifest 기대 세대 대조 안 함 (--tau-batch-manifest 없음)'))
         if 'tau_wall_status' in _rep:
             print(f'   J20 벽 τ: {dict(_rep["tau_wall_status"])}')
         if _wv is not None:
