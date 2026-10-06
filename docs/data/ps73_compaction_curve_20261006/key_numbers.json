@@ -1,0 +1,68 @@
+{
+ "phase_bounds": {
+  "1": 1,
+  "2": 200002,
+  "3": 400002,
+  "4": 3125000
+ },
+ "thickness_first_um": 138.30200000000002,
+ "thickness_last_um": 111.05199999999999,
+ "max_pressure_mpa": 300.95234,
+ "last_pressure_mpa": 165.34203,
+ "first_step_pressure_ge_mpa": {
+  "0.1": 977000,
+  "1": 1077000,
+  "10": 1473000,
+  "100": 1898000,
+  "300": 3121000
+ },
+ "relax_first": [
+  3126000,
+  204.63746
+ ],
+ "relax_min": [
+  3129000,
+  123.76698999999999
+ ],
+ "n_pressure_rows": 3274,
+ "n_mesh": 605,
+ "n_judge_lines": 543,
+ "plate_speed_um_per_1000step": 0.01,
+ "splices": [
+  {
+   "restart_step": 1450000,
+   "segment": "output_ps_7_3_r45_r3_198258.out",
+   "p_before_mpa": 8.6268085,
+   "p_after_max_first_mpa": 8.786925900000002
+  },
+  {
+   "restart_step": 1650000,
+   "segment": "output_ps_7_3_r45_r6_198529.out",
+   "p_before_mpa": 47.110525,
+   "p_after_max_first_mpa": 48.362019
+  },
+  {
+   "restart_step": 2400000,
+   "segment": "output_ps_7_3_r45_r7_216115.out",
+   "p_before_mpa": 182.42619,
+   "p_after_max_first_mpa": 183.18515
+  },
+  {
+   "restart_step": 2650000,
+   "segment": "output_ps_7_3_r45_r8_220537.out",
+   "p_before_mpa": 220.463,
+   "p_after_max_first_mpa": 221.18308000000002
+  }
+ ],
+ "slide_schematic": {
+  "tau_step": 15000,
+  "start": [
+   3125000,
+   300.95234
+  ],
+  "end_value_mpa": 165.34203,
+  "value_at_last_step_mpa": 165.5146,
+  "n_points": 3274,
+  "note": "relaxation segment is schematic (figure only); only end_value_mpa is computed"
+ }
+}

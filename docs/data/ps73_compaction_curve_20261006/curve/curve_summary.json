@@ -1,0 +1,200 @@
+{
+ "schema": "compaction_curve/v1",
+ "status": "OK",
+ "why": [],
+ "checks": {
+  "C1": {
+   "ok": true,
+   "detail": [
+    "짧은 run (설정 줄 + 끝 줄 ≤ 2) 의 압력 열 없는 줄 1 — 재시작 덱의 zmax `run 1` 등 · 압력 곡선 밖"
+   ]
+  },
+  "C2": {
+   "ok": true,
+   "detail": [
+    "output_ps_7_3_r45_r3_198258.out: read_restart 명령 줄 없음 (화면 출력) — 체크포인트 파일 step 대조 못 함 · 첫 thermo step 1450000 를 재시작 step 으로",
+    "output_ps_7_3_r45_r6_198529.out: read_restart 명령 줄 없음 (화면 출력) — 체크포인트 파일 step 대조 못 함 · 첫 thermo step 1650000 를 재시작 step 으로",
+    "output_ps_7_3_r45_r7_216115.out: read_restart 명령 줄 없음 (화면 출력) — 체크포인트 파일 step 대조 못 함 · 첫 thermo step 2400000 를 재시작 step 으로",
+    "output_ps_7_3_r45_r8_220537.out: read_restart 명령 줄 없음 (화면 출력) — 체크포인트 파일 step 대조 못 함 · 첫 thermo step 2650000 를 재시작 step 으로"
+   ]
+  },
+  "C3": {
+   "ok": true,
+   "detail": [
+    "output_ps_7_3_r45_181338.out PLATE HEIGHT 0.138301829402714 = mesh_205000 (판 고정 구간)",
+    "output_ps_7_3_r45_r3_198258.out PLATE HEIGHT 0.127802 = mesh_1450000 · mesh_1455000 보간",
+    "output_ps_7_3_r45_r6_198529.out: PLATE HEIGHT 줄 없음 — 판 높이 대조 못 함 (압력 붕괴 검사 · C5 메시 검사로만 본다)",
+    "output_ps_7_3_r45_r7_216115.out: PLATE HEIGHT 줄 없음 — 판 높이 대조 못 함 (압력 붕괴 검사 · C5 메시 검사로만 본다)",
+    "output_ps_7_3_r45_r8_220537.out: PLATE HEIGHT 줄 없음 — 판 높이 대조 못 함 (압력 붕괴 검사 · C5 메시 검사로만 본다)"
+   ]
+  },
+  "C4": {
+   "ok": true,
+   "detail": []
+  },
+  "C5": {
+   "ok": true,
+   "detail": [
+    "압축 단계 메시 545 장 · 직선 최대 잔차 5.55e-17 덱 m"
+   ]
+  },
+  "C6": {
+   "ok": true,
+   "detail": []
+  }
+ },
+ "segments": [
+  {
+   "label": "output_ps_7_3_r45_181338.out",
+   "path": "raw/ps73_logs.tgz:home/yonghoon/dem_test/ps45/logs/output_ps_7_3_r45_181338.out",
+   "sha256": "5b61118eaafbc1643a16315bd44fa7397daa17e3cded3562f96256b2883d0f33",
+   "size": 297974,
+   "first_step": 0,
+   "last_step": 1470002,
+   "read_restart": [],
+   "kept_after": null,
+   "kept_through": 1450000,
+   "n_blocks": 219,
+   "n_incomplete_blocks": 1,
+   "n_other_lines_in_blocks": 25,
+   "n_rows_kept": 1663
+  },
+  {
+   "label": "output_ps_7_3_r45_r3_198258.out",
+   "path": "raw/ps73_logs.tgz:home/yonghoon/dem_test/ps45/logs/output_ps_7_3_r45_r3_198258.out",
+   "sha256": "37e720b4b95b1c0c88666d05d90db727aaed9fef2a9fe5dd0ff94393ba0a6900",
+   "size": 65367,
+   "first_step": 1450000,
+   "last_step": 1696000,
+   "read_restart": [],
+   "kept_after": 1450000,
+   "kept_through": 1650000,
+   "n_blocks": 52,
+   "n_incomplete_blocks": 1,
+   "n_other_lines_in_blocks": 1,
+   "n_rows_kept": 240
+  },
+  {
+   "label": "output_ps_7_3_r45_r6_198529.out",
+   "path": "raw/ps73_logs.tgz:home/yonghoon/dem_test/ps45/logs/output_ps_7_3_r45_r6_198529.out",
+   "sha256": "a4960e3c7a123bbab48ae47a404e6ed61d5ef935dd15e718b0f9b7e683798e41",
+   "size": 187818,
+   "first_step": 1650000,
+   "last_step": 2421000,
+   "read_restart": [],
+   "kept_after": 1650000,
+   "kept_through": 2400000,
+   "n_blocks": 155,
+   "n_incomplete_blocks": 1,
+   "n_other_lines_in_blocks": 1,
+   "n_rows_kept": 750
+  },
+  {
+   "label": "output_ps_7_3_r45_r7_216115.out",
+   "path": "raw/ps73_logs.tgz:home/yonghoon/dem_test/ps45/logs/output_ps_7_3_r45_r7_216115.out",
+   "sha256": "3e41a11bca13793ac40f305f406e0814982f65f4290ff7fd4acc73e465e3d336",
+   "size": 72733,
+   "first_step": 2400000,
+   "last_step": 2690000,
+   "read_restart": [],
+   "kept_after": 2400000,
+   "kept_through": 2650000,
+   "n_blocks": 59,
+   "n_incomplete_blocks": 1,
+   "n_other_lines_in_blocks": 1,
+   "n_rows_kept": 250
+  },
+  {
+   "label": "output_ps_7_3_r45_r8_220537.out",
+   "path": "raw/ps73_logs.tgz:home/yonghoon/dem_test/ps45/logs/output_ps_7_3_r45_r8_220537.out",
+   "sha256": "35e28690eb9b45c989d7526205a1b168b23041cd1cce6afb12a020deb5096c49",
+   "size": 127049,
+   "first_step": 2650000,
+   "last_step": 3225000,
+   "read_restart": [],
+   "kept_after": 2650000,
+   "kept_through": null,
+   "n_blocks": 96,
+   "n_incomplete_blocks": 0,
+   "n_other_lines_in_blocks": 0,
+   "n_rows_kept": 575
+  }
+ ],
+ "n_setup_lines_dropped": 581,
+ "phase_bounds": {
+  "1": {
+   "step": 1,
+   "name": "SETTLING",
+   "source": "marker",
+   "segment": "output_ps_7_3_r45_181338.out"
+  },
+  "2": {
+   "step": 200002,
+   "name": "STABILIZE",
+   "source": "marker",
+   "segment": "output_ps_7_3_r45_181338.out"
+  },
+  "3": {
+   "step": 400002,
+   "name": "COMPRESSION (Speed 0.01)",
+   "source": "marker",
+   "segment": "output_ps_7_3_r45_181338.out"
+  },
+  "4": {
+   "step": 3125000,
+   "name": "RELAXATION",
+   "source": "marker",
+   "segment": "output_ps_7_3_r45_r8_220537.out"
+  }
+ },
+ "splices": [
+  {
+   "restart_step": 1450000,
+   "segment": "output_ps_7_3_r45_r3_198258.out",
+   "p_before_mpa": 8.6268085,
+   "p_after_max_first_mpa": 8.786925900000002
+  },
+  {
+   "restart_step": 1650000,
+   "segment": "output_ps_7_3_r45_r6_198529.out",
+   "p_before_mpa": 47.110525,
+   "p_after_max_first_mpa": 48.362019
+  },
+  {
+   "restart_step": 2400000,
+   "segment": "output_ps_7_3_r45_r7_216115.out",
+   "p_before_mpa": 182.42619,
+   "p_after_max_first_mpa": 183.18515
+  },
+  {
+   "restart_step": 2650000,
+   "segment": "output_ps_7_3_r45_r8_220537.out",
+   "p_before_mpa": 220.463,
+   "p_after_max_first_mpa": 221.18308000000002
+  }
+ ],
+ "target_mpa": 300.0,
+ "reached": true,
+ "loop_exit_step": 3125000,
+ "n_judge_lines": 543,
+ "mesh": {
+  "dir": "raw/ps73_curve_1.tgz:post_ps_7_3_r45",
+  "n": 605,
+  "first_step": 205000,
+  "last_step": 3225000,
+  "digest": "448a29d3378a9299f8fd00886bb46d66898e87b73a5378edb6a6a60e5085baf0"
+ },
+ "plate_speed_um_per_1000step": 0.01,
+ "floor_zplane_deck": 0.0,
+ "floor_source": "assumed 0 (로그에 wall/gran zplane 없음)",
+ "units": {
+  "pressure_mpa": "thermo 압력 열 (덱) × 1000 (press_units.SIM_TO_MPA)",
+  "thickness_um": "(판 메시 z − zplane) (덱 m) × 1000 (lhs_descriptor_harvest.SIM_TO_UM) — 판 위치",
+  "x": "step (thermo step · 메시 파일 이름)"
+ },
+ "n_pressure_rows": 3274,
+ "max_pressure_mpa": 300.95234,
+ "last_pressure_mpa": 165.34203,
+ "thickness_first_um": 138.30200000000002,
+ "thickness_last_um": 111.05199999999999
+}
