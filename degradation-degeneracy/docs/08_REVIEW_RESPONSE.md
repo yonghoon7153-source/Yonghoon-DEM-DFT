@@ -9283,3 +9283,20 @@ history `7ff263197` → 재생성 `f27006370` (paired 35 · grid 34 · stamp 에
 범위를 정한 별도 승인 라운드 (2) grid 영수증 stamp `validator_tree_dirty` 의 순서 개선 (§137 의 개선 후보 · 이번에 바꾸지 않음) (3) 실행 GO ·
 새 연구 leg · 운영 v6 계획 · 세대표 · p_ini · class · 투영 게시 · 설치 / lock 재생성. 같은 날 따로 온 B-min r2 재검토 회신은 이 게이트 라운드와
 섞지 않는다 (게이트 차수 밖 · COMSOL SPEC 쪽에서 따로 접수). 이미 수용한 부분과 과거 원문 · 실패 기록은 다시 열거나 고치지 않는다.
+
+## §141 단계 4 (묶음 6) 착수 — 사용자 지시 · 범위 조사만 (2026-10-06 · 코드 변경 0 · RUN_SCOPE 0 · 실행 GO 아님)
+
+**사용자 원문 (2026-10-06):** "게이트도 같이 진행" — 직전 보고의 "[게이트] 단계 4 를 시작할지" 에 대한 답. 단계 4 = `GATE78_REQUEST.md` §3.2 의
+"묶음 6: 신규 writer 의 구 필드 (`pairing_design_id` · `inference_status`) 제거 + consumer 별 per-key linkage 음성 변이 · v5 / v6_prep read-only
+dispatch · 과거 봉인 유지" (의존: 단계 3).
+
+**한 것:** 읽기 전용 범위 조사 → `docs/22p_gap/STAGE4_SCOPE_RESEARCH_20261006.md` (사실 · 관찰 · 제안을 나눠 적음 · 제안은 미승인). 요지 (사본 ·
+정본은 그 문서와 코드 좌표):
+- 두 구 필드는 `src/ tools/ scripts/ configs/ run.sh tests/ docs/22p_gap/*.py` 와 산출 디렉터리 어디에도 **없다** (`git log -S` 로도 코드에 들어간 적 없음) →
+  "제거" 할 코드가 없고, 실제 일은 **부재를 닫힌 키 검사 · 음성 시험으로 고정**하는 것이다.
+- 【관찰 · 시험 미확인】 `run_spec.stage3` 은 빠진 키만 보는 열린 집합이고 16 키 중 7 개만 계획과 대조한다 (`src/io.py:1873`) · `candidate_map.json`
+  도 열린 집합 (`src/io.py:1927–1931`) · `provider_edges_sha256` 의 정의가 둘 (`src/fitting.py:1545` ↔ `tools/preserve.py:6656` — edge 가 있으면 값이 다름).
+- 단계 3 은 리뷰 승인 범위가 모두 닫혔으나 "단계 3 전체 완료" 판정 문장은 없다 (83차 "전체 완료는 아님" · 89차는 라운드 2b 종결까지).
+
+**다음:** 사용자 결정 Q1–Q9 (조사 문서 §6) → 시작 전 고정 표 (조사 문서 §5 의 안 · `STAGE3_IMPL_ROUND1_SPEC.md` §16 후보) → 범위 확인 요청 (92차 · 제안) →
+구현은 그 뒤 별도 승인. 실행 GO · 새 연구 leg · floor · pilot 은 이 단계 밖.
