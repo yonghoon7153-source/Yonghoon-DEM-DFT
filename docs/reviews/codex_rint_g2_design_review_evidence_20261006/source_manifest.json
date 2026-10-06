@@ -1,0 +1,37 @@
+{
+  "pin": "c859b9d08b98edf41d3fdc47e3ba202875c8ab97",
+  "files": [
+    {
+      "path": "docs/reviews/contact_resistance_pipeline_draft_v2_20261006.md",
+      "git_blob": "1992522fd152d387daba84fe2b7200ae6e07985c"
+    },
+    {
+      "path": "docs/reviews/contact_resistance_pipeline_draft_20261002.md",
+      "git_blob": "a77ad9a925e8d8cb47e9a46a31d3a8560649bb81"
+    },
+    {
+      "path": "docs/reviews/codex_review_rint_g1_lhs_network_20261005.md",
+      "git_blob": "01bf8dbdff76aa794d562e6330b9d2ccf9b93912"
+    },
+    {
+      "path": "docs/reviews/codex_review_rgl_reverify_20261005.md",
+      "git_blob": "50f081a8d373449268ac34f4c9bdc6f9be610c72"
+    },
+    {
+      "path": "scripts/step3_sigma.py",
+      "git_blob": "4b33c7a4526f2d55dfbdefa3257e36619a9e4136"
+    },
+    {
+      "path": "scripts/lens_geometry.py",
+      "git_blob": "53a20c31554740957c21a0fa52362df0b000cc97"
+    },
+    {
+      "path": "scripts/se_material.py",
+      "git_blob": "506caca0f8744ee89836a026685f0730ef478f94"
+    },
+    {
+      "path": "docs/reviews/codex_rint_g2_request_20261006.md",
+      "git_blob": "7a99b6c0ab6b4cf3a23913f1c3eba9c621313b5f"
+    }
+  ]
+}
