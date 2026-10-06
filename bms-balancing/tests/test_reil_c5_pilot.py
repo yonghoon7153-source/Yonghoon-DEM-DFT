@@ -105,10 +105,13 @@ def _orch(fake, runs, n_workers=2, **kw):
 
 # ======================================================================== (1) 정확 잔차 · 증인 · 종료
 def test_01_exact_residuals_are_rationals_and_the_tolerance_is_inclusive():
-    r = pl.exact_residuals([0.6, 0.5, 0.1001, 0.1])
+    r = pl.exact_residuals([0.75, 0.5, 0.1001, 0.1])
     assert isinstance(r["box"], Fraction) and isinstance(r["g"], Fraction)
     assert r["box"] == 0
-    assert pl.witness(solver_error=False, reeval_error=False, jv=0.1, x=[0.6, 0.5, 0.1001, 0.1]) == "valid"
+    assert pl.witness(solver_error=False, reeval_error=False, jv=0.1, x=[0.75, 0.5, 0.1001, 0.1]) == "valid"
+    # 상자 경계는 십진 문자열의 정확 유리수 — float 0.6 은 3/5 보다 2.2e-17 작아 '경계 밖 · 허용치 안' 이다
+    assert 0 < pl.exact_residuals([0.6, 0.5, 0.1001, 0.1])["box"] <= pl.TOL
+    assert pl.feasibility_class([0.6, 0.5, 0.1001, 0.1]) == "within_tol"
     assert pl.witness(solver_error=False, reeval_error=False, jv=0.1, x=[1.1 + 5e-11, 0.8, 0.2, 0.1]) == "valid"
     assert pl.witness(solver_error=False, reeval_error=False, jv=0.1, x=[1.1 + 2e-10, 0.8, 0.2, 0.1]) == "invalid:INFEASIBLE_RETURN"
     assert pl.witness(solver_error=False, reeval_error=False, jv=0.1, x=[0.9, 0.8, 0.2, 0.2 - 1e-4 + 2e-10]) \
