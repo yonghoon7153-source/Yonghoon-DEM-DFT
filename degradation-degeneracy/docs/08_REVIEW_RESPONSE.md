@@ -9371,3 +9371,30 @@ codex/ 11 · manifest 10 / 10 일치 · 비밀 패턴 0) · 규칙 `8a010cf2f` �
 - 요청문 `docs/22p_gap/GATE93_REQUEST.md` — 판정 대상 코드 `d7a97aa57` (`source_digest` `c7f48918ff971e91`) · §16 대응표 · RED 41 / GREEN · 변이 `-g92` 9 + `-k` 확장 2 ·
   영수증 35 / 34 · 자체 신고 6 (앵커 누락 · §13.1 밖 계약 줄 인용 2 · k07 증인 · 차단 범위 · 환경 · 이월).
 - 다음: 사용자 발송 → 93차 회신 보존 · 접수.
+
+## §148 93차 회신 접수 — 수정 후 재검토 (G93-N1 코드 · G93-N2 원 로그) · N2 보충 · N1 승인 대기 (2026-10-06)
+
+- 보존: `docs/22p_gap/gate93_review/` — zip 526,320 B · sha256 `9a4b3afcba675efcaca05b65a7d785f933fc233386a530e3fd144c42f5c5ad81` · 압축 해제 29 ·
+  manifest 28 / 28 · 비밀 패턴 0 · 동봉 자료 실행 0. 규칙 `095c31ac5` → 보존 `93e8943ac`.
+- 판정 (`DECISION.json` 사본): `CHANGES_REQUESTED` · `execution_go: false` · `bundle6_closed: false`.
+  - 정적 수용: G92-N3 사본 9 키 대조 · provider edge canonical digest 통일 · 닫힌 s3 / map 키와 직접 값 자료형 (N1 경계 제외) · scope · 고정 표 blob identity ·
+    두 leg 영수증 history 바이트 보존과 필드 보존.
+  - 제출자 보고로 구분 (원문 보충 전 미수용): 138 신규 시험 PASS · 2320 passed / 1 xfailed · smoke rc 0 · 421 / 421 · 시작 = 끝 HEAD · dirty 0.
+  - stamp 의 C MISMATCH 34 · grid dirty = true 는 기록 그대로 인정하되 정본 환경 일치로 승격하지 않는다.
+- **G93-N2 (증거 · 처리 완료 — 재실행 0):** 회신 관측이 맞다 — 요청 커밋 `0e3c244ea` 의 `gate93_evidence/` 에는 README 만 있다 (`*.log` gitignore → `2ab61069b` 의
+  `git add` 가 조용히 건너뜀). 원 로그 14 는 요청 뒤 `e0e9f213d` 에 `-f` 로 들어갔고, 당시 스크래치 원본과 14 / 14 sha256 동일. 검토자 첨부용 묶음
+  `docs/22p_gap/gate93_n2_supplement/` (zip 128,409 B · `b76e663d…f7c6` · manifest 11,913 B · `b2ee0d56…7620` · 파일별 크기 · 전체 SHA · 당시 수정 시각 ·
+  로그 자체의 rc / HEAD / dirty 발췌).
+- **G93-N1 (코드 · P2 · 사용자 승인 대기 — 코드 변경 0):** `src/io.py` `_stage3_checks` — 공통 reader `check_planned_envelope` (`:1896`) 는 유효한
+  planned-leg/v3 에 `ebad = []` 를 준다. v6 schema 검사 (`stage3_planned_envelope`) 와 축 유도 (`stage3_축_유도`) 는 실패하지만 차단 분기 `:2021` 은 `ebad` 만
+  보므로 정상 map / fits 가 있으면 `:2033` 재유도로 넘어가고, 설계 SHA 를 맞춘 경우 `:1686` 의 v4 전용 `parameter_order_sha256` 접근에서 `KeyError` 로 빠진다
+  (정적 경로 · 회신 재현 아님 · k04_env philox 사례는 이 경로를 닫지 않음).
+  - 제안 범위 (회신 권고 그대로 · 최소): 역사 reader `check_planned_envelope` 는 바꾸지 않는다. v6 경계 `:2021` 의 차단 조건을
+    `ebad` → `ebad 또는 env.schema ≠ "planned-leg/v4" 또는 stage3_axis_from_envelope 예외` 로 넓힌다 (같은 4 키 실패 · 조기 반환).
+    **planned_id 단독 불일치**는 지금처럼 차단하지 않는다 (`stage3_planned_envelope` 실패만 · 재유도 진행 — 기존 의미 유지). 정상 v4 경로 불변.
+  - 시험: 실제 `validate_provenance` 로 sig6 + 유효 v3 envelope 음성 (구조화된 실패 · 재유도 호출 0 · KeyError 0) RED 먼저 → GREEN · 정상 v4 와
+    planned_id 단독 불일치의 기존 의미 고정 시험. 변이 1–2 (`-g93`) · 영수증 history + 1 회 · 전체 회귀 → smoke → 등록부 재생 (깨끗한 HEAD · 순차) → GATE94.
+  - RUN_SCOPE 변경 (`src/io.py`) 이라 `source_digest` 가 바뀌고 영수증 재생성이 따른다. 전체 검증 (pytest 약 78 분 · 재생 약 3.5 시간) 은 진행 중인
+    논문 후속 P2 (사본 · 4 코어) 가 끝난 뒤 CPU 독점으로 돈다.
+- 이월 (회신 그대로): 39 위치 변이 · C8 재개 · C7 envelope ↔ 원장 결속 · 제외 세 객체 (run_spec 최상위 · solution map header · 원장 항목).
+  **묶음 6 전체 종결 · 실행 GO · 새 연구 leg 승인 아님.**
