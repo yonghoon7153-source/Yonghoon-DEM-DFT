@@ -193,6 +193,7 @@ run 'webapp: temp_pressure'       python3 webapp/test_temp_pressure_wiring.py
 run 'webapp: ledger_view'         python3 webapp/test_ledger_view.py
 run 'webapp: meta_json_robust'    python3 webapp/test_meta_json_robust.py   # 09-26 깨진 meta.json → / 500 회귀
 run 'webapp: atoms_only_viewer'   python3 webapp/test_atoms_only_viewer.py  # 10-02 atom 만 올린 케이스 결과 페이지 500 · atom+mesh 3D 판 (WEB-01)
+run 'webapp: dem_pore_path_view'  python3 webapp/test_dem_pore_path_view.py  # 10-07 DEM 3D — 기공 (빈 공간 · 격자 추정) 보기 · Path Only View 가 화면의 경로를 연다 (옛 판: 늘 0 번 클러스터)
 run 'webapp: je_definition_label' python3 webapp/test_je_definition_label.py  # 10-03 RINT-03 — 입자별 je·jb 정의 표지 (옛 payload = 옛 정의 경고 · A/B 불일치)
 run 'webapp: rint_scope_labels'   python3 webapp/test_rint_scope_labels.py  # 10-03 RINT-04 · 05 · 17 · 18 — Joule bulk-only · 반응 솔브 r-ON 꺼짐 · 상/계면 · 단자 R_int
 run 'webapp: tau_labels'          python3 webapp/test_tau_labels.py         # 10-04 τ 2단계 ① TAU-01 · 02 · 21 — √ 행 COMSOL/EIS 표기 제거 · tau2 행 · physics 빈칸 · 정오표

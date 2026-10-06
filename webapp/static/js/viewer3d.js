@@ -1132,6 +1132,9 @@ function buildControls(container, isMPM) {
       <optgroup label="Percolation (Phase A5/A6)">
         <option value="se_diagnostics">SE Network Diagnostics</option>
       </optgroup>
+      <optgroup label="기공 (pore)">
+        <option value="dem_pore">기공 (빈 공간 · 격자 추정)</option>
+      </optgroup>
     </select>
     <div id="view-mode-legend" style="font-size:11px;color:#9ca3af;line-height:1.4;margin-top:3px;max-height:340px;overflow-y:auto;overflow-x:hidden;padding-right:2px"></div>
     <hr>
@@ -1768,12 +1771,16 @@ function highlightCluster(idx, scene, state, infoEl, pathIdx) {
 
   const clusterList = ((state.data.clusters || {}).clusters) || [];
   if (idx < 0 || idx >= clusterList.length) {
+    state.currentClusterIdx = null;                     // 선택 없음 — Path Only View 가 옛 선택을 열지 않게
     if (infoEl) infoEl.innerHTML = '';
     return;
   }
 
   const cluster = clusterList[idx];
   const allPaths = cluster.paths || (cluster.path ? [cluster.path] : []);
+  // ★ 10-07 — Path Only View 가 화면의 클러스터를 연다.  옛 판은 이 번호를 아무도 쓰지 않아 팝업이 늘 0 번
+  //   클러스터 (같은 번호의 다른 경로) 를 열었다 (webapp/test_dem_pore_path_view.py P1 · P2).
+  state.currentClusterIdx = idx;
   state.currentClusterPaths = allPaths;
   state.currentPathIdx = pathIdx || 0;
 
@@ -2312,6 +2319,7 @@ function applyViewMode(state, mode) {
     });
     state.stressChainGroup = null;
   }
+  _teardownDemPore(state);                                  // DEM 기공 칸 묶음 · 입자 흐림 되돌리기 (dem_pore)
 
   /* default: restore base colours + opacities */
   if (!mode || mode === 'default') {
@@ -3022,6 +3030,12 @@ function applyViewMode(state, mode) {
       `<b>🔬 2D 단면 morphology</b>
        <div style="margin-top:4px">3D를 <b>클릭</b>하면 그 지점의 x-y 단면을 초미세 복셀로 재구성 (좌:상 AM/SE/void, 우:SE 그레인색). 드래그=회전.</div>
        <span style="color:#9ca3af;font-size:11px">SE 물질점 ${mpts.length.toLocaleString()} · 창 16µm · 슬랩 ±1.5µm</span>`);
+    return;
+  }
+
+  // DEM 기공 (빈 공간 · 격자 추정) — 구 사이 빈 칸을 격자로 잡아 그린다 (표시용 · 보고 porosity 는 표의 값)
+  if (mode === 'dem_pore') {
+    renderDemPore(state);
     return;
   }
 
@@ -5161,6 +5175,388 @@ function renderSeStatsCardPNG(state, corpusRows) {
 function setLegend(state, html) {
   const el = document.getElementById('view-mode-legend');
   if (el) el.innerHTML = html;
+}
+
+/* ── DEM 기공 (빈 공간 · 격자 추정) — View Mode "dem_pore" (2026-10-07) ──────────────────────────
+ * 1저자 *"3D webapp 업데이트 해야되는 부분 있음 추가해봐"* — 보고 슬라이드용 DEM 기공 3D 그림.
+ * 정의: 영역 = 상자 x·y (주기) × z [바닥 0, 판 z].  격자 칸 중심이 어느 구 안에도 없으면 빈 칸.
+ *   = 케이스 표의 "ε_union 정확 (MC)" (lhs_union_webapp.coverage) 와 같은 정의를 무작위 점 대신 칸 중심으로 잰 것 —
+ *     겹친 부피는 한 번 (합집합) · 바닥 아래 · 판 위로 나간 부피는 고체로 세지 않는다.  판 메시가 없으면 입자 윗면 최댓값
+ *     (판 위치 아님 — 범례에 적는다).
+ *   ⚠ 표시용 격자 추정 — 보고 porosity 는 표의 값.  계산 · 판정 코드는 건드리지 않는다 (웹앱 표시만 · J20-l).
+ * 속도: 칸 점유 배열 (Uint8Array) 이 곧 공간 해시 — 구마다 자기 경계 상자 안 칸만 본다 (쌍 비교 없음).
+ *   real_14 (33,289 입자) 보통 격자 (≈10⁶ 칸) 는 node 에서 1 초 안 (webapp/test_dem_pore_path_view.py D16).
+ */
+const DEM_PORE_COL = 0x38bdf8;                     // MPM "기공만 (pore — XCT처럼)" 과 같은 하늘색
+const DEM_PORE_MAX_INSTANCES = 1500000;            // 칸 표시 상한 — 넘으면 고르게 솎고 범례에 적는다
+const DEM_PORE_PRESETS = {                         // 격자 = 칸 수 목표 (상자 부피 / 목표 = 칸 부피) — 두꺼운 침대도 칸 수가 같은 급
+  coarse: { label: '거침', target: 250000 },
+  normal: { label: '보통', target: 1000000 },
+  fine:   { label: '고움', target: 2500000 },
+};
+
+/* 빈 칸 격자 — 순수 함수 (node 시험).  particles = [{x, y, z, r}] (µm) · box = {x_min, x_max, y_min, y_max} ·
+ * zTop = 영역 윗면 (판) · nx = x 방향 칸 수 (y · z 는 같은 칸 크기에 가장 가까운 정수 → 영역을 칸으로 정확히 나눈다).
+ * opts.periodicXY (기본 true = DEM 덱 boundary p p f · 상자 밖 입자 부분은 반대쪽 면) · opts.zFloor (기본 0) ·
+ * opts.centres = false 면 빈 칸 중심 배열을 만들지 않는다.
+ * 반환: {nx, ny, nz, hx, hy, hz, x0, y0, z0, zTop, periodicXY, nTotal, nVoid, voidFraction, centres (Float32Array · µm x, y, z), nParticlesUsed} */
+function computeVoidVoxels(particles, box, zTop, nx, opts) {
+  opts = opts || {};
+  const periodic = opts.periodicXY !== false;
+  const x0 = Number(box.x_min) || 0, y0 = Number(box.y_min) || 0;
+  const z0 = opts.zFloor != null ? Number(opts.zFloor) : 0;
+  const Lx = Number(box.x_max) - x0, Ly = Number(box.y_max) - y0, Lz = Number(zTop) - z0;
+  if (!(Lx > 0 && Ly > 0 && Lz > 0)) throw new Error(`computeVoidVoxels: 빈 영역 (Lx ${Lx} · Ly ${Ly} · Lz ${Lz})`);
+  nx = Math.max(1, Math.round(nx));
+  const hx = Lx / nx;
+  const ny = Math.max(1, Math.round(Ly / hx)), hy = Ly / ny;
+  const nz = Math.max(1, Math.round(Lz / hx)), hz = Lz / nz;
+  const nxy = nx * ny, nTotal = nxy * nz;
+  const occ = new Uint8Array(nTotal);
+  const ix = new Int32Array(nx), dx2 = new Float64Array(nx);
+  const jy = new Int32Array(ny), dy2 = new Float64Array(ny);
+  const kz = new Int32Array(nz), dz2 = new Float64Array(nz);
+  // 한 축: 중심 c 에서 r 안에 든 칸 중심의 (칸 번호, 거리²) 목록 → 개수.  주기 축은 번호를 감고 거리는 그 상 (image) 기준.
+  const axis = (c, r, r2, a0, L, h, n, per, idx, d2) => {
+    let m = 0;
+    if (per && 2 * r + h >= L) {                   // 상자만 한 구 — 모든 칸 · 최소 영상 거리 (같은 칸을 두 번 보지 않는다)
+      for (let i = 0; i < n; i++) {
+        let d = a0 + (i + 0.5) * h - c;
+        d -= L * Math.round(d / L);
+        const q = d * d;
+        if (q < r2) { idx[m] = i; d2[m] = q; m++; }
+      }
+      return m;
+    }
+    let i0 = Math.ceil((c - r - a0) / h - 0.5), i1 = Math.floor((c + r - a0) / h - 0.5);
+    if (!per) { if (i0 < 0) i0 = 0; if (i1 > n - 1) i1 = n - 1; }
+    for (let i = i0; i <= i1; i++) {
+      const d = a0 + (i + 0.5) * h - c, q = d * d;
+      if (q < r2) { idx[m] = per ? ((i % n) + n) % n : i; d2[m] = q; m++; }
+    }
+    return m;
+  };
+  let nUsed = 0;
+  const N = (particles || []).length;
+  for (let p = 0; p < N; p++) {
+    const P = particles[p];
+    const r = Number(P.r), cx = Number(P.x), cy = Number(P.y), cz = Number(P.z);
+    if (!(r > 0) || !Number.isFinite(cx) || !Number.isFinite(cy) || !Number.isFinite(cz)) continue;
+    if (cz + r <= z0 || cz - r >= z0 + Lz) continue;              // 전체가 바닥 아래 · 판 위
+    const r2 = r * r;
+    const mz = axis(cz, r, r2, z0, Lz, hz, nz, false, kz, dz2); if (!mz) continue;
+    const my = axis(cy, r, r2, y0, Ly, hy, ny, periodic, jy, dy2); if (!my) continue;
+    const mx = axis(cx, r, r2, x0, Lx, hx, nx, periodic, ix, dx2); if (!mx) continue;
+    nUsed++;
+    for (let c = 0; c < mz; c++) {
+      const remZ = r2 - dz2[c], baseZ = kz[c] * nxy;
+      for (let b = 0; b < my; b++) {
+        const rem = remZ - dy2[b];
+        if (rem <= 0) continue;
+        const base = baseZ + jy[b] * nx;
+        for (let a = 0; a < mx; a++) if (dx2[a] < rem) occ[base + ix[a]] = 1;
+      }
+    }
+  }
+  let nSolid = 0;
+  for (let q = 0; q < nTotal; q++) nSolid += occ[q];
+  const nVoid = nTotal - nSolid;
+  let centres = null;
+  if (opts.centres !== false) {
+    centres = new Float32Array(3 * nVoid);
+    let w = 0;
+    for (let k = 0; k < nz; k++) {
+      const zc = z0 + (k + 0.5) * hz;
+      for (let j = 0; j < ny; j++) {
+        const yc = y0 + (j + 0.5) * hy, base = k * nxy + j * nx;
+        for (let i = 0; i < nx; i++) {
+          if (occ[base + i]) continue;
+          centres[w++] = x0 + (i + 0.5) * hx; centres[w++] = yc; centres[w++] = zc;
+        }
+      }
+    }
+  }
+  return { nx, ny, nz, hx, hy, hz, x0, y0, z0, zTop: z0 + Lz, periodicXY: periodic,
+           nTotal, nVoid, voidFraction: nVoid / nTotal, centres, nParticlesUsed: nUsed };
+}
+
+/* 영역 윗면 — 판 메시 (payload mesh_triangles = mesh_info 의 판 · µm) 꼭짓점 z 평균.  없거나 바닥 아래면 입자 윗면 최댓값
+ * (max z + r — 판 위치가 아니다 · 범례에 적는다).  반환 {zTop, source: 'mesh' | 'particle_top' | 'none'} */
+function demPoreDomainTop(data) {
+  const tris = (data && data.mesh_triangles) || [];
+  let n = 0, s = 0, lo = Infinity, hi = -Infinity;
+  for (const t of tris) {
+    for (const v of (t || [])) {
+      const z = Number(v && v[2]);
+      if (!Number.isFinite(z)) continue;
+      s += z; n++;
+      if (z < lo) lo = z;
+      if (z > hi) hi = z;
+    }
+  }
+  if (n && s / n > 0) return { zTop: s / n, source: 'mesh', zMin: lo, zMax: hi };
+  let top = -Infinity;
+  for (const p of ((data && data.particles) || [])) {
+    const v = Number(p.z) + Number(p.r);
+    if (Number.isFinite(v) && v > top) top = v;
+  }
+  return (Number.isFinite(top) && top > 0) ? { zTop: top, source: 'particle_top' } : { zTop: null, source: 'none' };
+}
+
+/* 격자 선택 → x 방향 칸 수 (칸 부피 = 영역 부피 / 목표 칸 수) */
+function demPoreGridNx(box, zTop, preset) {
+  const Lx = Number(box.x_max) - (Number(box.x_min) || 0), Ly = Number(box.y_max) - (Number(box.y_min) || 0);
+  const tgt = (DEM_PORE_PRESETS[preset] || DEM_PORE_PRESETS.normal).target;
+  const h = Math.cbrt(Lx * Ly * Number(zTop) / tgt);
+  return Math.max(8, Math.min(600, Math.round(Lx / h)));
+}
+
+/* 범례 — 표시용 추정이라는 것 · 격자 빈 칸 비율 · 격자 크기 · 영역 · 정의 · 조작 (격자 · 기공 / 입자 불투명도 · 단면 판 두께) */
+function demPoreLegendHTML(res, dom, ui) {
+  ui = ui || {};
+  const n = v => Number(v).toLocaleString('en-US');
+  const pct = (100 * res.voidFraction).toFixed(1);
+  const zt = Number(dom.zTop).toFixed(2);
+  const src = dom.source === 'mesh'
+    ? `판 z = 판 메시 (mesh_info)`
+    : `<span style="color:#fbbf24">⚠ 판 메시 없음 → 입자 윗면 최댓값 (max z + r · 판 위치 아님)</span>`;
+  const ph = ui.presetH || {};
+  const opts = Object.keys(DEM_PORE_PRESETS).map(k => `<option value="${k}"${k === (ui.preset || 'normal') ? ' selected' : ''}>`
+    + `${DEM_PORE_PRESETS[k].label}${ph[k] ? ` (칸 ${ph[k].toFixed(2)} µm)` : ''}</option>`).join('');
+  const op = ui.poreOpacity != null ? ui.poreOpacity : 0.08, pop = ui.particleOpacity != null ? ui.particleOpacity : 0.15;
+  const sl = Math.max(1, Math.round(ui.slabLayers || 1));
+  return `<b>기공 (빈 공간 · 격자 추정)</b>
+     <div style="margin-top:4px"><span style="color:#38bdf8">■</span> 빈 칸 ${n(res.nVoid)} / ${n(res.nTotal)} · 격자 빈 칸 비율 <b>${pct} %</b></div>
+     <div style="margin-top:2px;color:#fbbf24">격자 추정 · 표시용 — 보고 porosity 는 표의 값</div>
+     <div style="margin-top:3px;color:#9ca3af;font-size:11px">격자 ${res.nx}×${res.ny}×${res.nz} · 칸 ${Number(res.hx).toFixed(2)} µm`
+       + `${ui.ms != null ? ` · 계산 ${n(ui.ms)} ms` : ''}</div>
+     <div id="dem-pore-status" style="margin-top:3px;color:#cbd5e1;font-size:11px"></div>
+     <div style="margin-top:3px;color:#9ca3af;font-size:11px">영역 = 상자 x·y (주기 — 상자 밖으로 나간 입자 부분은 반대쪽 면에) × z [0, ${zt} µm] · ${src}</div>
+     <div style="margin-top:3px;color:#9ca3af;font-size:11px">정의: 칸 중심이 어느 구 안에도 없으면 빈 칸 — 겹친 부피는 한 번 (합집합) ·
+       바닥 아래 · 판 위로 나간 부피는 세지 않는다.  판 메시가 있으면 표의 ε_union 정확 (MC) 과 같은 정의 (무작위 점 대신 칸 중심) ·
+       표의 ε_sphere (구 부피 합 · 생산 규약) 와 다른 양.</div>
+     <div style="margin-top:3px;color:#9ca3af;font-size:11px">단면 뷰 (Y-슬라이스) 를 켜면 그 자리의 빈 칸 층만 불투명으로 그린다 (기공 단면 · XCT 슬라이스처럼 —
+       입자 단면과 함께) · 끄면 모든 빈 칸을 반투명 안개로.</div>
+     <div style="margin-top:6px;display:flex;gap:6px;align-items:center;font-size:11.5px">격자
+       <select id="dem-pore-grid" style="background:#16192e;color:#e4e6f0;border:1px solid #2a2d3e;border-radius:4px;font-size:11.5px">${opts}</select></div>
+     <label style="display:block;margin-top:4px;font-size:11.5px">기공 불투명도 (단면 뷰 꺼짐) <span id="dem-pore-op-val">${op.toFixed(2)}</span></label>
+     <input type="range" id="dem-pore-op" min="1" max="100" step="1" value="${Math.round(op * 100)}" style="accent-color:#38bdf8">
+     <label style="display:block;margin-top:2px;font-size:11.5px">단면 판 두께 (단면 뷰 켬) <span id="dem-pore-slab-val">${sl} 층</span></label>
+     <input type="range" id="dem-pore-slab" min="1" max="12" step="1" value="${sl}" style="accent-color:#38bdf8">
+     <label style="display:block;margin-top:2px;font-size:11.5px">입자 불투명도 (3D · 단면 따로) <span id="dem-pore-pop-val">${pop.toFixed(2)}</span></label>
+     <input type="range" id="dem-pore-pop" min="0" max="100" step="5" value="${Math.round(pop * 100)}">
+     <div style="margin-top:4px;color:#9ca3af;font-size:10.5px">입자 숨김 = 위 AM_P · AM_S · SE 체크박스 · 판 메시는 이 보기에서 숨김 · Screenshot = PNG</div>`;
+}
+
+/* 표시 줄 — 지금 무엇을 그리는가 (단면 판 · 칸 층 수 · 불투명 / 모든 빈 칸 · 반투명 · 솎음) */
+function demPoreStatusHTML(res, info) {
+  info = info || {};
+  const n = v => Number(v).toLocaleString('en-US');
+  if (info.section) {
+    const L = Math.max(1, Math.round(info.layers || 1));
+    return `표시: 단면 y = ${Number(info.cut).toFixed(2)} µm 의 빈 칸 ${L} 층 (${(L * res.hy).toFixed(2)} µm) · ${n(info.shown)} 칸 · 불투명`;
+  }
+  const thin = (info.stride || 1) > 1
+    ? ` · <span style="color:#fbbf24">${info.stride} 칸마다 1 개 (표시 상한 ${n(DEM_PORE_MAX_INSTANCES)} · 비율은 전체 칸)</span>` : '';
+  return `표시: 모든 빈 칸 ${n(info.shown)} · 반투명 ${Number(info.opacity != null ? info.opacity : 0.08).toFixed(2)}${thin}`;
+}
+
+/* 입자 흐리게 — 처음 재질 값을 한 번 적어 두고 (되돌리기용) 불투명도 · 투명 · 깊이 쓰기 (끔 = 뒤의 기공이 비친다) 를 바꾼다.
+ * repaint = 상별 본래 색으로 다시 칠한다 (앞 모드의 색이 남지 않게). */
+function _demPoreFade(state, opacity, repaint) {
+  ['AM_P', 'AM_S', 'SE', 'OTHER'].forEach(t => {
+    const m = state.meshes && state.meshes[t];
+    if (!m || !m.material) return;
+    const mat = m.material;
+    if (!mat.userData) mat.userData = {};
+    if (!mat.userData._demPoreSaved) mat.userData._demPoreSaved = { opacity: mat.opacity, transparent: mat.transparent, depthWrite: mat.depthWrite };
+    if (repaint && m.userData && m.userData.particles && m.setColorAt) {
+      const base = new THREE.Color(m.userData.baseColor != null ? m.userData.baseColor : 0xffffff);
+      m.userData.particles.forEach((_, i) => m.setColorAt(i, base));
+      if (m.instanceColor) m.instanceColor.needsUpdate = true;
+    }
+    mat.opacity = opacity;
+    mat.transparent = opacity < 1;
+    mat.depthWrite = opacity >= 1;
+    mat.needsUpdate = true;
+  });
+}
+
+/* 걷기 — 칸 묶음 제거 (GPU 자원 해제) · keepFade 가 아니면 입자 재질을 처음 값으로 */
+function _teardownDemPore(state, keepFade) {
+  const g = state.demPoreGroup;
+  if (g) {
+    if (state.scene) state.scene.remove(g);
+    if (g.geometry) g.geometry.dispose();
+    if (g.material) g.material.dispose();
+    if (g.dispose) g.dispose();
+    state.demPoreGroup = null;
+  }
+  if (keepFade) return;
+  ['AM_P', 'AM_S', 'SE', 'OTHER'].forEach(t => {
+    const m = state.meshes && state.meshes[t];
+    const sv = m && m.material && m.material.userData && m.material.userData._demPoreSaved;
+    if (!sv) return;
+    m.material.opacity = sv.opacity;
+    m.material.transparent = sv.transparent;
+    m.material.depthWrite = sv.depthWrite;
+    m.material.needsUpdate = true;
+    delete m.material.userData._demPoreSaved;
+  });
+}
+
+/* 그리기 — 격자 (격자 · 판 z 별로 한 번만 계산 · 캐시) · 범례 · 조작 · 칸 묶음. */
+function renderDemPore(state) {
+  const data = state.data || {};
+  const box = data.box || {};
+  // 입자 불투명도는 보기마다 따로 — 3D 안개 = 흐리게 (기공이 비친다) · 단면 = 불투명 (AM · SE · 기공 3 상 단면)
+  const ui = state.demPore || (state.demPore = { preset: 'normal', poreOpacity: 0.08, particleOpacity: 0.15,
+                                                 particleOpacitySection: 1, slabLayers: 1 });
+  if (state.meshes && state.meshes.MESH) state.meshes.MESH.visible = false;   // 판 메시 숨김 (MPM pore 와 같다 · 다음 모드에서 체크박스대로)
+  _demPoreFade(state, ui.particleOpacity, true);
+  const dom = demPoreDomainTop(data);
+  if (dom.zTop == null) {
+    _teardownDemPore(state, true);
+    state._demPoreRes = null;
+    setLegend(state, '<b>기공 (빈 공간 · 격자 추정)</b><div style="margin-top:4px"><i>판 메시도 입자도 없어 영역을 정할 수 없다.</i></div>');
+    return;
+  }
+  const nx = demPoreGridNx(box, dom.zTop, ui.preset);
+  const key = `${ui.preset}|${nx}|${dom.zTop}`;
+  state._demPoreCache = state._demPoreCache || {};
+  let res = state._demPoreCache[key];
+  if (!res) {
+    const now = () => (typeof performance !== 'undefined' ? performance.now() : Date.now());
+    const t0 = now();
+    res = computeVoidVoxels(data.particles || [], box, dom.zTop, nx, { periodicXY: true, zFloor: 0 });
+    res.ms = Math.round(now() - t0);
+    state._demPoreCache[key] = res;
+  }
+  state._demPoreRes = res;
+  const presetH = {};
+  Object.keys(DEM_PORE_PRESETS).forEach(k => {
+    presetH[k] = (Number(box.x_max) - (Number(box.x_min) || 0)) / demPoreGridNx(box, dom.zTop, k);
+  });
+  setLegend(state, demPoreLegendHTML(res, dom, { preset: ui.preset, ms: res.ms, presetH, slabLayers: ui.slabLayers,
+                                                 poreOpacity: ui.poreOpacity, particleOpacity: ui.particleOpacity }));
+  _demPoreWireControls(state);
+  _demPoreBuildMesh(state);
+}
+
+/* 단면 뷰 판의 data y (Y-슬라이스 · scene 법선 −Z · constant = 자르는 자리) — 꺼져 있으면 null */
+function _demPoreCutY(state) {
+  const pl = state.clipPlanes && state.clipPlanes[0];
+  if (!pl || !Number.isFinite(pl.constant)) return null;
+  if (pl.normal && Math.abs(pl.normal.z + 1) > 1e-9) return null;
+  return pl.constant;
+}
+
+/* 칸 묶음 짓기 — 단면 뷰가 켜져 있으면 그 자리 (data y = cut) 의 빈 칸 n 층만 불투명 (판을 품은 층 — 판이 칸 면에 걸리면
+ * 그 아래 층 — 과 그 뒤 n − 1 층 · 칸 번호로 고른다 → 판이 그 층을 자르면 기공 단면이 또렷하다), 꺼져 있으면 모든 빈 칸을
+ * 반투명 안개로 (시선 하나에 칸 ~20 겹 — 불투명도가 크면 통째로 덮인다).  단색 (MeshBasic) · 새 재질에 단면 판을 다시 건다. */
+function _demPoreBuildMesh(state) {
+  const res = state._demPoreRes;
+  if (!res) return null;
+  const ui = state.demPore;
+  _teardownDemPore(state, true);                    // 옛 칸 묶음 — 입자 흐림은 그대로
+  const C = res.centres;
+  const cut = _demPoreCutY(state);
+  const L = Math.max(1, Math.round(ui.slabLayers || 1));
+  let pick = null, stride = 1, shown;
+  if (cut != null) {
+    // 칸 번호로 고른다 — 실수 창 [cut − ½h, cut + ½h) 는 판이 칸 면에 걸리면 (기본 50 % · ny 짝수) Float32 중심의 반올림에 따라
+    // 0 층이나 2 층이 됐다.  kc = 자르는 자리를 품은 층 (면에 걸리면 그 아래 = 판 쪽에 온전히 남는 층) · j = 칸 중심의 층 번호.
+    const kc = Math.max(0, Math.min(res.ny - 1, Math.ceil((cut - res.y0) / res.hy - 1e-9) - 1)), k0 = kc - (L - 1);
+    pick = [];
+    for (let q = 0; q < res.nVoid; q++) {
+      const j = Math.round((C[3 * q + 1] - res.y0) / res.hy - 0.5);
+      if (j >= k0 && j <= kc) pick.push(q);
+    }
+    shown = pick.length;
+  } else {
+    stride = Math.max(1, Math.ceil(res.nVoid / DEM_PORE_MAX_INSTANCES));
+    shown = Math.ceil(res.nVoid / stride);
+  }
+  const opa = cut != null ? 1 : ui.poreOpacity;
+  const opaque = opa >= 0.99;
+  const mesh = new THREE.InstancedMesh(
+    new THREE.BoxGeometry(res.hx, res.hz, res.hy),                // three 축: x · data z (위) · data y
+    new THREE.MeshBasicMaterial({ color: DEM_PORE_COL, transparent: !opaque, opacity: opa, depthWrite: opaque }),
+    shown);
+  const A = mesh.instanceMatrix.array;
+  for (let w = 0; w < shown; w++) {
+    const q = pick ? pick[w] : w * stride, o = 16 * w;
+    A[o] = 1; A[o + 5] = 1; A[o + 10] = 1; A[o + 15] = 1;          // 단위 크기 · 회전 없음
+    A[o + 12] = C[3 * q]; A[o + 13] = C[3 * q + 2]; A[o + 14] = C[3 * q + 1];   // µm (x, y, z) → three (x, z, y)
+  }
+  mesh.instanceMatrix.needsUpdate = true;
+  mesh.frustumCulled = false;                       // 인스턴스 경계구 없이도 늘 그린다
+  mesh.renderOrder = 2;
+  mesh.userData.isDemPore = true;                   // 장식 (isDecoration) 이 아니다 → Screenshot PNG 에 들어간다
+  mesh.userData.statusInfo = { section: cut != null, cut, layers: L, shown, stride, opacity: opa };
+  state.demPoreGroup = mesh;
+  if (state.scene) state.scene.add(mesh);
+  const pop = cut != null ? ui.particleOpacitySection : ui.particleOpacity;          // 보기마다 따로 (조작 막대도 따라간다)
+  _demPoreFade(state, pop, false);
+  const popEl = document.getElementById('dem-pore-pop'), popV = document.getElementById('dem-pore-pop-val');
+  if (popEl) popEl.value = String(Math.round(pop * 100));
+  if (popV) popV.textContent = pop.toFixed(2);
+  const st = document.getElementById('dem-pore-status');
+  if (st) st.innerHTML = demPoreStatusHTML(res, mesh.userData.statusInfo);
+  if (state.applyClip) state.applyClip();           // 단면 뷰 (Y-슬라이스) — 새 칸 재질에도
+  return mesh;
+}
+
+/* 조작 — 격자 (다시 계산 · 캐시) · 기공 불투명도 · 단면 판 두께 · 입자 불투명도 · 단면 뷰 (켜기 · 위치) 를 따라 칸 묶음 다시 짓기 */
+function _demPoreWireControls(state) {
+  const ui = state.demPore;
+  const sel = document.getElementById('dem-pore-grid');
+  if (sel) sel.addEventListener('change', () => {
+    ui.preset = sel.value;
+    setLegend(state, '<b>기공 (빈 공간 · 격자 추정)</b><div style="margin-top:4px;color:#9ca3af">격자 계산 중…</div>');
+    setTimeout(() => { if (state.viewMode === 'dem_pore') renderDemPore(state); }, 30);
+  });
+  const op = document.getElementById('dem-pore-op'), opv = document.getElementById('dem-pore-op-val');
+  if (op) op.addEventListener('input', () => {
+    ui.poreOpacity = Math.max(0.01, Math.min(1, Number(op.value) / 100));
+    if (opv) opv.textContent = ui.poreOpacity.toFixed(2);
+    const g = state.demPoreGroup, info = g && g.userData.statusInfo;
+    if (state.viewMode !== 'dem_pore' || !info || info.section) return;          // 단면 판은 늘 불투명
+    const opaque = ui.poreOpacity >= 0.99;            // 재질만 바꾼다 (칸 묶음은 그대로)
+    g.material.opacity = ui.poreOpacity;
+    g.material.transparent = !opaque;
+    g.material.depthWrite = opaque;
+    g.material.needsUpdate = true;
+    info.opacity = ui.poreOpacity;
+    const st = document.getElementById('dem-pore-status');
+    if (st && state._demPoreRes) st.innerHTML = demPoreStatusHTML(state._demPoreRes, info);
+  });
+  const sl = document.getElementById('dem-pore-slab'), slv = document.getElementById('dem-pore-slab-val');
+  if (sl) sl.addEventListener('input', () => {
+    ui.slabLayers = Math.max(1, Math.min(12, Math.round(Number(sl.value) || 1)));
+    if (slv) slv.textContent = `${ui.slabLayers} 층`;
+    if (state.viewMode === 'dem_pore' && _demPoreCutY(state) != null) _demPoreBuildMesh(state);
+  });
+  const pop = document.getElementById('dem-pore-pop'), popv = document.getElementById('dem-pore-pop-val');
+  if (pop) pop.addEventListener('input', () => {
+    const v = Math.max(0, Math.min(1, Number(pop.value) / 100));
+    if (_demPoreCutY(state) != null) ui.particleOpacitySection = v; else ui.particleOpacity = v;     // 지금 보기의 값
+    if (popv) popv.textContent = v.toFixed(2);
+    _demPoreFade(state, v, false);
+  });
+  // 단면 뷰 조작은 범례 밖 (늘 있는 요소) — 듣개는 한 번만.  wireControls 의 applyClip 이 먼저 돌아 state.clipPlanes 가 새 값이다.
+  if (!state._demPoreClipHooked) {
+    const onClip = () => {
+      if (state.viewMode !== 'dem_pore' || !state._demPoreRes) return;
+      const info = state.demPoreGroup && state.demPoreGroup.userData.statusInfo;
+      if (_demPoreCutY(state) == null && info && !info.section) return;            // 단면 꺼진 채 막대만 — 모든 칸 묶음 그대로
+      _demPoreBuildMesh(state);
+    };
+    const cOn = document.getElementById('clip-on'), cPos = document.getElementById('clip-pos');
+    if (cOn) cOn.addEventListener('change', onClip);
+    if (cPos) cPos.addEventListener('input', onClip);
+    state._demPoreClipHooked = true;
+  }
 }
 
 /* ── 반응 ↔ 기계(SE 소성변형·접촉) 공간 상관 팝업 ────────────────
@@ -7392,8 +7788,12 @@ function showPathOnlyView(renderer, scene, camera, state) {
   }
 
   const clusters = ((state.data.clusters || {}).clusters) || [];
-  const cidx = state.currentClusterIdx || 0;
-  const cluster = clusters[cidx];
+  const cidx = state.currentClusterIdx;                // highlightCluster 가 적은 화면의 선택 (옛 판: `|| 0` = 늘 0 번)
+  const cluster = Number.isInteger(cidx) ? clusters[cidx] : null;
+  if (!cluster) {
+    alert('먼저 Percolating Path를 선택하세요.');
+    return;
+  }
   const pathIdx = state.currentPathIdx || 0;
   const allPaths = cluster ? (cluster.paths || (cluster.path ? [cluster.path] : [])) : [];
   const pathData = allPaths[pathIdx];
@@ -7437,6 +7837,10 @@ function showPathOnlyView(renderer, scene, camera, state) {
       <div id="path-viewer-container" style="width:100%;height:500px;border-radius:8px;overflow:hidden;background:#f5f5f5"></div>
       <div class="path-modal-info" style="text-align:center;margin-top:10px">
         Cluster #${cidx} | ${cluster.size} SE | τ = ${pathData.tortuosity} | Path: ${pathData.path_length} μm | Z: ${pathData.z_distance} μm
+      </div>
+      <div class="path-modal-tau-note" style="text-align:center;margin-top:3px;font-size:11px;color:#666">
+        τ = 이 경로 하나의 기하 τ (SE 중심을 잇는 길이 ÷ 양 끝 z 거리 · 끝 = 바닥 · 판 띠의 SE — 표의 τ_Dij 와 같은 정의) ·
+        수송 tortuosity 아님 · LHS 인계 tortuosity_SE_wall (벽 기준) 과 다른 정의
       </div>
       <div class="path-modal-context" style="display:flex;justify-content:center;align-items:center;gap:12px;margin-top:8px;font-size:13px;color:#444">
         <label style="display:inline-flex;align-items:center;gap:4px;cursor:pointer">
