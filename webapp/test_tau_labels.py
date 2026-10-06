@@ -286,6 +286,25 @@ chk('J4 판정 v2 · CLAUDE.md τ 블록에 근거 (Homogenizing … 식 (1) f_e
     all(k in _J for k in ('Homogenizing a Heterogeneous Electrode Model', 'f_eff = ε/τ', 'User defined', 'McMullin'))
     and all(k in _C for k in ('Homogenizing a Heterogeneous Electrode Model', 'User defined')), 'docs 확인')
 
+# ── K  v1.3 표시 이름 — 수송 tortuosity (1저자 10-05 밤 *"τ² 이라 표현하지 말고 그냥 수송 tortuosity"* · 10-06 밤 비준 = v1.3 인계 묶음 · J20-l) ──
+#   키 (tau2_* · 원 라벨) 는 그대로 — COMSOL 2D 설명 · LHS 열 사전 · 5 조성 러너가 같은 이름을 쓴다 · √ 값에는 그 이름을 쓰지 않는다 (√T).
+#   웹앱 화면 (app.py 논문 라벨 · single.html 툴팁 · 쉬운 설명) 쪽 K1–K5 는 webapp/test_v13_webapp_display.py [K] — app.py 가 세대 2 발사 봉인 파일이라
+#   화면 변경과 그 시험을 한 파일에 모았다 (docs/reviews/lhs_release_v13_plan_20261007.md §7).
+print('K  v1.3 표시 이름 (수송 tortuosity) — 웹앱 밖 (화면 쪽 K1–K5 = test_v13_webapp_display.py)')
+chk('K6 COMSOL 2D 내보내기 — tau2 행 설명 = 수송 tortuosity (제곱근 아님) · √ 행 설명에 그 이름 없음 · README 블록 tau2 줄',
+    t2r is not None and '수송 tortuosity' in str(t2r.get('source', '')) and '제곱근 아님' in str(t2r.get('source', ''))
+    and t2p is not None and '수송 tortuosity' in str(t2p.get('source', ''))
+    and sqr is not None and '수송 tortuosity' not in str(sqr.get('source', '')) and 'tau2_ion_hertz   = 수송 tortuosity' in _rb,
+    repr((t2r, sqr)))
+_tmL = (LDD.tau_net_define('tau2_ion_hertz') or ('', ''))[0]
+_smL = (LDD.tau_net_define('tau_ion_hertz') or ('', ''))[0]
+chk('K7 LHS 열 사전 (생성기) — tau2_ion_<모드> 뜻 = 수송 tortuosity (제곱근 아님) · tau_ion 은 √T (그 이름 아님) · 벽 τ 사전에 "이 표에 없음" 없음 (τ 열이 있는 표)',
+    _tmL.startswith('★ 수송 tortuosity') and '제곱근 아님' in _tmL and '√T' in _smL and '수송 tortuosity factor' not in _smL
+    and '이 표에 없음' not in LDD.TAU_WALL_TRANSPORT_IN and 'tau2_ion_hertz' in LDD.TAU_WALL_TRANSPORT_IN, _tmL[:120])
+_WNB = _read('scripts/webapp_network_batch.py')
+chk('K8 5 조성 망 러너 README 열 설명 — tau2 = 수송 tortuosity (제곱근 아님) · tau = √T',
+    'tau2 = 수송 tortuosity' in _WNB and '√T' in _WNB)
+
 print(f'\n{_ok} PASS · {len(_fail)} FAIL')
 if _fail:
     for n in _fail:

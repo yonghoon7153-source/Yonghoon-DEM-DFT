@@ -165,6 +165,7 @@ _NET = [
     ('SE Cluster 수', ('n_components',), 0),
     ('SE Percolation(%)', ('percolation_pct',), 1),
     ('Top Reachable(%)', ('top_reachable_pct',), 1),
+    ('SE Isolated(%)', ('se_isolated_pct',), 1),                     # v1.3 고립 전해질 = 100 − Top Reachable (키 없는 옛 세대는 app.py 가 유도)
     ('── 이온경로: 경로 효율 ──', None, None),
     ('Tortuosity mean', ('tortuosity_mean',), 2),
     ('Tortuosity median', ('tortuosity_median',), 2),

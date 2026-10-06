@@ -158,8 +158,9 @@ COLUMN_NOTES = {
     'phi_se': '접촉 분석 φ_SE (full_metrics) — 웹앱 τ 블록 tau2 의 φ',
     'phi_se_mass_conserving': 'φ_SE,mc (질량 보존 두께 기준) — τ 인계 열 (tau2_ion_<m>) 의 φ',
     'sigma_grain_S_cm': 'σ₀ = 이온 간선 재료 σ (S/cm · 두 모드 같은 값일 때만 — 25 °C 3.0e-3 = 펠릿값 · CL-91)',
-    'f_ion_<m> · tau2_ion_<m> · tau_ion_<m> · ion_net_*': 'τ 인계 열 (tau_flux.ion_columns · τ 판정 v2 §5).  tau2 = tortuosity factor = '
-                                                         'φ_mc / f_mc · tau = √tau2 (COMSOL 입력 아님) · 상태 게이트 G1–G6 = ion_net_status_<m>',
+    'f_ion_<m> · tau2_ion_<m> · tau_ion_<m> · ion_net_*': 'τ 인계 열 (tau_flux.ion_columns · τ 판정 v2 §5).  tau2 = 수송 tortuosity T '
+                                                         '(tortuosity factor · 제곱근 아님 · v1.3 표시 이름) = φ_mc / f_mc · tau = √tau2 = √T '
+                                                         '(COMSOL 입력 아님 · 그 이름 아님) · 상태 게이트 G1–G6 = ion_net_status_<m>',
     'webapp_tau2_ion_<m>': '웹앱 케이스 τ 블록의 tau2 행 (tau_flux.tau2_from_metrics — 게시된 full_metrics σ 6 자리 · φ_se · 짝 σ₀) — '
                            '인계 tau2 와 같은 양 · 반올림 경로만 다름 (TAU-25 ≤ 0.11 %) · 상태 게이트 없음 · 게시값만',
     'constriction_power_share_<ch>_<m>': '협착 저항 전력 몫 Σ I²R_c / Σ I²R_total (같은 FULL 해 · 관통 간선 · ④a) · _status = 사유',

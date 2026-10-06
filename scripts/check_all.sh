@@ -224,6 +224,7 @@ run 'tau_flux (이온 인계 열 · 게이트 G1–G6)' python3 scripts/test_tau
 #  ★ 2026-10-06 (Codex 5차 RGLR4-01 · 02) — 194 인계 v1.2 다시 읽기 검산기 (검산 도구 · 자동 배포 관문 아님): 복사본 변조 (공통 칸 한 칸 · 열 탈락 ·
 #    감사표 누락 + 중복 · record sha · 상태 · 코호트 · 출처 부록 중복) 가 비영 종료 · 원본 PASS 유지 · 세대별 허용 목록.
 run 'reread_v12 (RGLR4-01 · 02 반례 · 원본 PASS)' python3 scripts/test_reread_v12.py
+run 'lhs_release v1.3 (빈칸 뜻 · ML 표 · 재적합 · 세대 g2 · τ 다시 읽기 · 발사 봉인 대조 · DRY RUN)' python3 scripts/test_lhs_release_v13.py   # 10-07 생성기 미리 준비 (옛 코드 1/77)
 #  ★ 2026-10-06 (DESC-06 잔여) — 완료 압력 기록 (LIGGGHTS 로그 압밀 루프 판정 줄) + 인계 생성기 관문 · CLI 명시 승인 (--pressure-record | --pressure-unverified)
 run 'lhs_pressure_record (DESC-06 완료 압력 · 생성기 관문)' python3 scripts/test_lhs_pressure_record.py
 #  ★ 2026-10-06 밤 (이종기술 2-1 장 7:3 압축 곡선 · x = step) — 로그 thermo + 판 메시 → step 별 압력 · 판 높이.  재시작 잇기

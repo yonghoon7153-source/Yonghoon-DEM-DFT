@@ -1304,6 +1304,18 @@ WA_DERIVED = (
      '고립 위험 0.1 % · 경로 고립 89 %) · 분해 = ionic_dead_pct + ionic_no_se_pct (v1.1 ② 배치부터) · 생성기가 ionic_active_pct 에서 유도 · '
      '관문 v1.1 D0–D5 · ' + IONIC_GRAPH_NOTE),
 )
+#: ★ v1.3 (1저자 비준 10-06 밤 — CLAUDE.md LHS 줄 "새 열 se_isolated_pct = 100 − top_reachable_pct") — 고립 전해질 · 유도 묶음 se_isolation 일 때만
+#:   (WA_SE_ISO_GROUP · 명시 opt-in).  AM 경로 고립 (WA_DERIVED) 과 **같은 규칙** (같은 접촉 그래프 · 같은 상단 2r 띠 · calc_percolation 의 위 밴드 성분) ·
+#:   재실행 없음 · 관문 S0 (percolation 묶음 필요) · S1 (= 100 − top · 웹앱이 같은 이름을 내면 같아야) · S2 (≤ 100 − percolation_pct).
+WA_DERIVED_SE_ISO = (
+    ('se_isolated_pct',
+     '★ 고립 전해질 비율 (%) (v1.3 · 1저자 비준 10-06) = 100 − top_reachable_pct — 등록된 상단 2r 경계 띠 (분리막 쪽) 와 SE 접촉 그래프로 이어지지 않은 '
+     'SE / 전 SE (calc_percolation 의 위 밴드 성분 밖 · 접촉 그래프 · coverage 무관) · AM 경로 고립 (am_ionic_isolated_pct = 100 − ionic_active_pct) 과 '
+     '같은 규칙 · 생성기가 top_reachable_pct 에서 유도 (재실행 없음) · ⚠ 한정: 분리막 쪽 띠에 앉은 외톨이 SE (접촉 0 · LHS-19) 를 연결로 세어 고립을 '
+     '약간 적게 잡는다 · 값이 큰 행은 비관통 침대 (percolation_pct = 0) 에 몰린다 → 관통 여부를 먼저 분류할 것 (관통 침대에서는 0 근처) · '
+     '관문 S1 (= 100 − top_reachable_pct) · S2 (≤ 100 − percolation_pct — 관통 SE 는 위 띠에 닿는다) · ' + IONIC_GRAPH_NOTE),
+)
+SE_ISO_VERDICT = '✅ 쓴다 (유도 · v1.3 — 1저자 비준 10-06 밤)'
 #: 비율 합 = 100 의 부동소수 여유 (%p) — 물리 허용치가 아니다 (개수 / N × 100 의 반올림만)
 WA_PCT_SUM_TOL = 1e-7
 #: ⑤⑥⑦ (J20-s · 1저자 비준 10-04 *"권고대로"*) — **접촉 분석 단계**가 full_metrics 에 쓰는 열 · 새 계산 없음 (10-01 d1ec42fba 배치 값).
@@ -1353,7 +1365,13 @@ WA_GROUPS = ('contact', 'percolation', 'f1', 'fracture', 'area')
 #:   에서 **tau_flux 자신** (`case_row`) 이 낸 이온 망 인계 열 (v2 §5-1 · 모드 꼬리 · `tau_flux.column_names()` — 10-06 밤부터 50 열: 모드 셋 × 15 + 공통 5 (σ₀ · T · φ · L 기준 · 세대 칸)) 을 싣는다.  census 열이 아니라
 #:   (metrics_flat 에 dual 레코드가 없다) 별도 원천 (`load_tau_results` · CLI `--tau-results`) 이 필요하다 — 묶음만 부르거나 원천만 주면 거부.
 WA_TAU_GROUP = 'tau'
-WA_ALL_GROUPS = WA_GROUPS + (WA_TAU_GROUP,)
+#: ★ v1.3 (1저자 비준 10-06 밤 · 10-07 "v1.3 생성기 미리 준비") — **유도 묶음** se_isolation: 고립 전해질 se_isolated_pct = 100 − top_reachable_pct
+#:   (② 퍼콜레이션 묶음에서 유도 · 재실행 없음 · `WA_DERIVED_SE_ISO`).  명시 opt-in 이다 — 옛 인계표 (contact,percolation · v1.2) 를 같은 인자로 다시
+#:   만들면 바이트가 그대로여야 한다 (selftest ㉙f2).  단계 역량 표 (WA_STAGE_GROUPS) 에는 넣지 않는다: 어느 정지점이든 percolation 과 함께면 낼 수
+#:   있고, 그 표의 network 칸은 194 실행기 (`run_network_194_parallel.HANDOVER_GROUPS` · 그 selftest ㉕) 의 짝이다 (실행기가 찍는 v1.2 명령 그대로).
+WA_SE_ISO_GROUP = 'se_isolation'
+WA_DERIVED_GROUPS = (WA_SE_ISO_GROUP,)
+WA_ALL_GROUPS = WA_GROUPS + (WA_TAU_GROUP,) + WA_DERIVED_GROUPS
 WA_STAGE_GROUPS = {'contact': WA_GROUPS, 'coverage': WA_GROUPS, 'network': WA_GROUPS + (WA_TAU_GROUP,)}
 
 
@@ -1761,14 +1779,17 @@ _TAU_PER_MODE = {
               'TAU-25) · 값 = 상태 OK · MODEL_BELOW_CONTINUUM_BOUND · NOT_PERCOLATING 이면 0.0 (관통 성분 없음 — 물리적 0) · 그 밖 빈칸 (0 이 아니다)'),
     'f_ion_gap': ('(메타) 판 간격 기준으로 풀린 f = σ_ratio 그대로 ({m} 망 · 무차원) — **φ_mc 와 짝짓지 말 것** (tau2 를 L_gap/L_mc 배 낮춘다) · '
                   '짝은 φ_구합 (판 간격 상자 · 구 부피 합) · 값 규칙은 f_ion_{m} 와 같다'),
-    'tau2_ion': ('★ tortuosity factor tau2 = φ_SE,mc / f_ion_{m} ({m} 망 · 무차원 · 단위 1) = φ_구합·σ₀/σ_full — 현행 웹앱 케이스 페이지 tau2 와 '
+    'tau2_ion': ('★ 수송 tortuosity (표시 이름 · 1저자 10-05 밤 · v1.3 — 키 tau2 그대로) = 수송 tortuosity factor T = tortuosity factor tau2 = '
+                 'φ_SE,mc / f_ion_{m} ({m} 망 · 무차원 · 단위 1 · **제곱근 아님**) = φ_구합·σ₀/σ_full — 짝 = 기하학적 tortuosity (tortuosity_SE_wall · '
+                 '최단경로 길이비 · 다른 양) · 현행 웹앱 케이스 페이지 tau2 와 '
                  '정의상 같은 수 (웹앱은 mS/cm σ (6 자리) 로 계산해 최대 0.11 % 다를 수 있다 · TAU-25) · 문헌 tortuosity factor (Tjaden κ = τ² = '
                  'Landesfeind τ = COMSOL τ_F = TauFactor τ) 와 같은 정의식 — 물리 기준 상태는 다르다 (간선 재료 σ₀ 기준) · COMSOL Tortuosity 칸의 꼴 '
                  '= tau2 (√ 아님 · 종 수송 Eq 6-6 · 배터리 인터페이스는 강하게 시사 — GUI Equation 확인 전에는 "COMSOL 입력" 이라 쓰지 않는다) · '
                  '접촉망 모델 tau2 (Holm 협착 포함 · 원기둥 bulk · z 관통) · 값 = 상태 OK · MODEL_BELOW_CONTINUUM_BOUND (tau2 < 1 이어도 값 유지) · '
                  'NOT_PERCOLATING 이면 빈칸 (= ∞ — 관통 경로 없음) · 그 밖 빈칸 (0 이 아니다)'),
-    'tau_ion': ('τ = √tau2 ({m} 망 · 무차원 · τ² 관례의 τ = Minnmann √τ² · Tjaden 식 3 flux τ · 웹앱 τ_Lap,eff) — **COMSOL 입력 아님** (COMSOL 칸에는 '
-                'tau2 또는 f) · 값 규칙은 tau2_ion_{m} 와 같다'),
+    'tau_ion': ('τ = √tau2 = √T ({m} 망 · 무차원 · 유도량 · τ² 관례의 τ = Minnmann √τ² · Tjaden 식 3 flux τ · 웹앱 τ_Lap,eff) — **COMSOL 입력 아님** '
+                '(COMSOL 칸에는 tau2 또는 f) · "수송 tortuosity" 는 tau2 의 이름이다 — 이 √ 값에는 쓰지 않는다 (τ 명명 규약 · v1.3) · '
+                'Dijkstra 경로 길이비 (tortuosity_SE_wall) 의 뜻도 아니다 · 값 규칙은 tau2_ion_{m} 와 같다'),
     'ion_net_status': '{m} ' + _TAU_STATUS,
     'ion_net_status_reason': '{m} ' + _TAU_REASON,
     'ion_net_area_mode': '면적 모드 (값 = {m}) — {area}',
@@ -1835,6 +1856,8 @@ def tau_net_define(col):
     text = _TAU_PER_MODE[base].format(m=mode, area=_TAU_AREA[mode])
     if mode in TAU_NET_HERTZ_AREA_MODES and base != 'ion_net_area_mode':   # ★ 10-06 — hertz 면적의 정체를 값 열마다 (면적 모드 열에는 이미 전문)
         text += ' · ' + TAU_HERTZ_AREA_NOTE
+    if base == 'f_ion' and mode in TAU_F_TARGET_NOTE:                 # ★ v1.3 #2 — ML 타깃 안내 (주 = Hertz f · Physics = opt-in 부록)
+        text += ' · ' + TAU_F_TARGET_NOTE[mode]
     if mode == TAU_NET_H12:                          # ★ 10-06 — 민감도 열은 뜻 앞에 표지 (기본 학습 열 아님)
         text = '[H12 민감도 · 부록 전용] ' + text
         if base in ('ion_net_status', 'ion_net_status_reason'):
@@ -1847,6 +1870,15 @@ def tau_net_define(col):
 TAU_NET_HERTZ_AREA_MODES = ('hertz', 'hertz_h12')
 TAU_HERTZ_AREA_NOTE = ('hertz 면적 = LIGGGHTS c_cpl[22] 기하 교차 원판 π(rδ − δ²/4) — 탄성 Hertz πR*δ 의 ≈ 2 배 (같은 반지름 2 − δ/2r) · '
                        '"Hertz" 는 이름만 (L1-04 · A_dem_geometric)')
+
+
+#: ★ v1.3 #2 (1저자 10-06 밤 "f 타깃 안내") — f 열의 ML 쓰임 (주 = Hertz · Physics = opt-in 부록 · H12 = 민감도 부록 — 뜻 앞 표지가 이미 있다).
+#:   T (tau2) · √T 는 비관통에서 ∞ (빈칸) 라 회귀 타깃으로 바로 쓰면 비관통 행을 버리거나 임의 값으로 채우게 된다 — f 는 유한 (비관통 = 0.0).
+TAU_F_TARGET_NOTE = {
+    'hertz': ('★ ML 1차 타깃 (v1.3 #2) — 유한 · 비관통 행 = 0.0 (물리적 0 · 결측 아님) · 먼저 관통 분류 (ion_net_status_hertz = NOT_PERCOLATING ↔ 관통) · '
+              'tau2 · tau 는 비관통에서 ∞ (빈칸) 라 타깃으로 쓰지 않는다 · T = φ_SE,mc/f 항등식이라 f 를 예측하면서 tau2 · tau 를 특징으로 넣지 않는다'),
+    'physics': 'opt-in 부록 (기본 학습 열 아님 · Codex QV3 — 면적과 협착식이 함께 다른 규약의 결합 민감도)',
+}
 
 
 #: H12 상태 · 사유 칸의 세대 1 예외 — 표기 없는 옛 폴더 (2026-10-06 저녁 전 생산자) 에는 H12 레코드가 없다 (망 정지 계약 ⑨ 는 세대 2 Hertz 레코드에만
@@ -2254,6 +2286,7 @@ def column_dictionary(cols, webapp=None, design_source=None):
     tauw.update({n: w for n, _p, _s, w in HANDOVER_WALL_TOUCH})
     tauw.update({n: w for n, w in HANDOVER_SE_CLUSTER})                          # v1.1 ③
     derived = dict(WA_DERIVED)                                                   # v1.1 ①
+    derived_se = dict(WA_DERIVED_SE_ISO)                                         # v1.3 고립 전해질
     warow = dict(WA_ROW_COLS)
     qc = {n: w for n, _a, _b, w in WA_QC}
     wverd, wwhy = wa_verdicts(webapp) if webapp is not None else ({}, {})      # 7c — 판정 바꿔 싣기 (LHS-23 · 7a) 를 표와 같게
@@ -2275,6 +2308,8 @@ def column_dictionary(cols, webapp=None, design_source=None):
             d.update(source='harvest_v3', meaning=tauw[c])
         elif c in derived:
             d.update(source='webapp_derived', verdict='✅ 쓴다 (유도 · v1.1 ①)', meaning=derived[c], caveat=CAVEAT_PERC)
+        elif c in derived_se:
+            d.update(source='webapp_derived', verdict=SE_ISO_VERDICT, meaning=derived_se[c], caveat=CAVEAT_PERC)
         elif c in warow:
             d.update(source='webapp_batch', meaning=warow[c])
         elif c in qc:
@@ -2839,6 +2874,36 @@ def _wa_perc_gates(case, o, take, h):
     return 1
 
 
+def _se_iso_gates(case, o):
+    """v1.3 고립 전해질 관문 (fail-closed) — 표에 실린 se_isolated_pct 가 같은 행의 top_reachable_pct · percolation_pct 와 한 SE 그래프의 값인가.
+
+      S1 = 100 − top_reachable_pct (부동소수 여유 WA_PCT_SUM_TOL) · 값이 빈칸이면 top_reachable_pct 도 빈칸이어야
+      S2 ≤ 100 − percolation_pct (관통 SE 는 위 띠에 닿는다 — ② P2 의 top ≥ percolation 과 같은 사실의 이중 안전장치) · 유한 [0, 100]
+    반환 1 (검사함) · 0 (두 칸 다 빈칸 — 배치가 이 행의 웹앱 값을 싣지 않았다).  어긋나면 `FillRefusal` (메시지에 'v1.3 S<n>')."""
+    def num(c):
+        v = o.get(c, '')
+        if v in (None, ''):
+            return None
+        try:
+            x = float(v)
+        except (TypeError, ValueError):
+            raise FillRefusal(f'{case}: {c} = {v!r} 가 숫자가 아니다 (v1.3 S1)')
+        if not math.isfinite(x):
+            raise FillRefusal(f'{case}: {c} = {v!r} 가 유한하지 않다 (v1.3 S1)')
+        return x
+    iso, top, perc = num('se_isolated_pct'), num('top_reachable_pct'), num('percolation_pct')
+    if iso is None and top is None:
+        return 0
+    if iso is None or top is None or abs(iso - (100.0 - top)) > WA_PCT_SUM_TOL:
+        raise FillRefusal(f'{case}: se_isolated_pct {o.get("se_isolated_pct")!r} ≠ 100 − top_reachable_pct {o.get("top_reachable_pct")!r} — '
+                          '같은 SE 그래프의 값이 아니다 (v1.3 S1)')
+    if not 0.0 <= iso <= 100.0:
+        raise FillRefusal(f'{case}: se_isolated_pct {iso!r} ∉ [0, 100] (v1.3 S2)')
+    if perc is not None and iso > 100.0 - perc + WA_PCT_SUM_TOL:
+        raise FillRefusal(f'{case}: se_isolated_pct {iso!r} > 100 − percolation_pct {perc!r} — 관통 SE 가 위 띠에 안 닿는다는 뜻이다 (v1.3 S2)')
+    return 1
+
+
 def _wa_ionic_gates(case, o, take, h, dp):
     """v1.1 ①② 관문 (fail-closed) — 이온 활성 · 경로 기준 고립 · 분해가 calc_ionic_active_am 의 **세 집합 하나**에서 나왔는가.
 
@@ -2990,8 +3055,13 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp
     _gs = wa_groups_norm(webapp_groups)
     if _gs is not None and (not _gs or any(g not in WA_ALL_GROUPS for g in _gs)):
         raise FillRefusal(f'webapp_groups {webapp_groups!r} — 아는 묶음은 {WA_ALL_GROUPS} 뿐이다 (① 접촉 위상 = contact · ② = percolation · '
-                          f'⑤ F1 = f1 · ⑥ Auerbach 힘 기반 = fracture · ⑦ 면적 = area · 망 τ = tau (network 배치 + --tau-results))')
+                          f'⑤ F1 = f1 · ⑥ Auerbach 힘 기반 = fracture · ⑦ 면적 = area · 망 τ = tau (network 배치 + --tau-results) · '
+                          f'고립 전해질 (② 에서 유도 · v1.3) = se_isolation)')
     tau_on = _gs is not None and WA_TAU_GROUP in _gs
+    se_iso_on = _gs is not None and WA_SE_ISO_GROUP in _gs                # ★ v1.3 유도 묶음 (명시 opt-in)
+    if se_iso_on and ('percolation' not in _gs or webapp is None):
+        raise FillRefusal(f'webapp_groups {webapp_groups!r} — se_isolation 묶음은 percolation 묶음과 함께만 부른다 (고립 전해질 = 100 − top_reachable_pct · '
+                          'top_reachable_pct 를 싣지 않는 표에서 유도하지 않는다 · 웹앱 배치 --webapp 필요) (v1.3 S0)')
     if tau is not None and not tau_on:
         raise FillRefusal(f'τ 묶음 — 망 τ 원천 (--tau-results) 을 줬는데 webapp_groups={webapp_groups!r} 에 tau 가 없다 — 조용히 버리지 않는다 '
                           '(…,tau 로 부를 것)')
@@ -3005,7 +3075,7 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp
             if _cap is None:
                 raise FillRefusal(f'웹앱 배치 stop_after={_sa!r} — 생성기가 단계 역량을 모르는 정지점이다 (아는 정지점: '
                                   f'{", ".join(WA_STAGE_GROUPS)}) — 그 단계가 어떤 묶음을 다 내는지 WA_STAGE_GROUPS 에 적은 뒤에만 싣는다 (RGL-03)')
-            if _gs is None or any(g not in _cap for g in _gs):
+            if _gs is None or any(g not in _cap for g in _gs if g not in WA_DERIVED_GROUPS):     # 유도 묶음 (v1.3) 은 단계 역량 표 밖
                 raise FillRefusal(f'웹앱 배치가 stop_after={_sa!r} 로 돌았다 — webapp_groups={webapp_groups!r} 로는 싣지 않는다 '
                                   f'(그 단계가 다 낸 묶음만: --webapp-groups 에 {", ".join(_cap)} 중에서 쉼표로 고른다 · 묶음 제한이 없으면 뒤 단계 열이 '
                                   '빈칸 = 측정된 N/A 로 읽힌다 · RGL-03)')
@@ -3024,7 +3094,11 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp
         wa_take = [c for c in ok_cols if c not in have and c not in {n for n, _w in WA_ROW_COLS}]
         wa_coll = [c for c in ok_cols if c in have]
         wa_iso_on = 'ionic_active_pct' in wa_take                   # v1.1 ① — 활성 열이 실리면 경로 기준 고립 (유도) 도 싣는다
-        cols += [n for n, _w in WA_ROW_COLS] + wa_take + ([n for n, _w in WA_DERIVED] if wa_iso_on else []) + [n for n, _a, _b, _w in WA_QC]
+        if se_iso_on and 'top_reachable_pct' not in wa_take:         # ★ v1.3 S0 — 묶음은 불렀는데 위 밴드 도달 열이 표에 없다 (검토 · census 판정에서 빠졌다)
+            raise FillRefusal('se_isolation 묶음은 percolation 묶음과 함께만 부른다 — 이 배치의 웹앱 열에 top_reachable_pct 가 실리지 않았다 '
+                              '(유도할 원천이 없다) (v1.3 S0)')
+        cols += ([n for n, _w in WA_ROW_COLS] + wa_take + ([n for n, _w in WA_DERIVED] if wa_iso_on else [])
+                 + ([n for n, _w in WA_DERIVED_SE_ISO] if se_iso_on else []) + [n for n, _a, _b, _w in WA_QC])
     #  ★ v1.2 망 τ 묶음 — 원천 (`load_tau_results`) 이 이 배치로 읽혔는가 (정지점 · 케이스 집합 · run id · 같은 세대 검사 P0–P4) · τ 열은 표 끝 (옛 열 순서 불변)
     tau_cols = []
     if tau_on:
@@ -3088,7 +3162,8 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp
                    wa_mono_renamed_cases=0, wa_mono_design_filled=0, wa_mono_absent_blanked=0,
                    wa_cn_identity_checked=0, wa_am_identity_checked=0, wa_amse_identity_checked=0, wa_perc_checked=0,
                    wa_ionic_checked=0, wa_f1_checked=0, wa_frac_checked=0, wa_area_checked=0, wa_s567_final_checked=0,
-                   wa_area_mean_blanked=0, wa_area_total_zero_filled=0, wa_excluded_dropped=_n_excl, wa_raw_sha_checked=0)
+                   wa_area_mean_blanked=0, wa_area_total_zero_filled=0, wa_excluded_dropped=_n_excl, wa_raw_sha_checked=0,
+                   wa_se_iso_checked=0)
     if tau_on:
         rep.update(tau_checked=0, tau_blank_rows=0, tau_status=collections.Counter(), tau_source=tau.get('source'),
                    tau_flux_sha256=tau.get('tau_flux_sha256'))
@@ -3318,6 +3393,14 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp
                     raise FillRefusal(f'{r[key]}: 웹앱 am_ionic_isolated_pct {w_iso} ≠ 100 − ionic_active_pct {a_} (v1.1 D1)')
                 if wr is not None:
                     rep['wa_ionic_checked'] += _wa_ionic_gates(r[key], o, wa_take, h, dp)
+            #  ★ v1.3 — 고립 전해질 = 100 − top_reachable_pct (유도 묶음 se_isolation · AM 경로 고립과 같은 규칙) · 웹앱이 같은 이름을 내면 같아야 (S1) · S2
+            if se_iso_on:
+                t_ = o.get('top_reachable_pct', '')
+                o['se_isolated_pct'] = repr(100.0 - float(t_)) if t_ not in ('', None) else ''
+                w_si = wr.get('se_isolated_pct') if wr is not None else None
+                if w_si not in (None, '') and (t_ in ('', None) or abs(float(w_si) - (100.0 - float(t_))) > WA_PCT_SUM_TOL):
+                    raise FillRefusal(f'{r[key]}: 웹앱 se_isolated_pct {w_si} ≠ 100 − top_reachable_pct {t_!r} (v1.3 S1)')
+                rep['wa_se_iso_checked'] += _se_iso_gates(r[key], o)
             for name, wcol, hcol, _w in WA_QC:
                 o[name] = ''
             if wr is not None:
@@ -6032,6 +6115,82 @@ def _selftest():
     _dc32 = {d['column']: d for d in column_dictionary(['coverage_AM_total_hertz_pct'])}
     chk('㉜h 열 사전 — coverage_AM_total = (N_P·C_P + N_S·C_S)/(N_P + N_S) · 피복 유효 입자 수 가중 · 관문 DESC-07 ② · 실측 N 누설 주의',
         all(w in (_dc32.get('coverage_AM_total_hertz_pct') or {}).get('meaning', '') for w in ('N_P', 'DESC-07', 'cov_AM_P_n_valid', '누설')))
+    #  ═══ ㉝ v1.3 최종판 (1저자 비준 10-06 밤 · 10-07 "v1.3 생성기를 Codex 판정과 동시에 미리 준비") — 반례 먼저 ═══════════════════════════════════
+    #   ① 고립 전해질 se_isolated_pct = 100 − top_reachable_pct — AM 경로 고립 (am_ionic_isolated_pct = 100 − ionic_active_pct) 과 같은 규칙 · 재실행 없음 ·
+    #      묶음 se_isolation (명시 opt-in — 옛 인계표 바이트 불변 = ㉙f2) · 관문 S1 (= 100 − top · 웹앱이 같은 이름을 내면 같아야) · S2 (≤ 100 − percolation) ·
+    #      열 사전 한정어 (분리막 쪽 띠의 외톨이 SE 를 연결로 세어 약간 적게 잡는다 · 비관통에 몰린다 → 관통 분류 먼저)
+    #   ② τ 표시 이름 (1저자 10-05 밤 "그냥 수송 tortuosity" · 10-06 밤 비준 = v1.3 묶음 · J20-l) — 키 tau2_* 그대로 · tau2 의 이름 = 수송 tortuosity
+    #      (정의 · 제곱근 아님 병기) · √ 값 (tau) 에는 그 이름을 쓰지 않는다 · f_ion_hertz = ML 1차 타깃 안내 (#2)
+    def _b33(w=None, groups='contact,percolation,se_isolation'):
+        return build_handover(_dq7, _hq10(), webapp=w or _wa10(), webapp_groups=groups)
+    try:
+        _o33, _c33, _r33 = _b33()
+        _e33 = ''
+    except Exception as e:                                                # noqa: BLE001
+        _o33, _c33, _r33, _e33 = [], [], {}, f'{type(e).__name__}: {e}'
+    _m33 = next((r for r in _o33 if r['case_id'] == 'q1'), {})
+    _p33 = next((r for r in _o33 if r['case_id'] == 'q2'), {})
+    chk('㉝a ★ v1.3 se_isolated_pct = 100 − top_reachable_pct (q1 40 → 60 · q2 15 → 85) · am_ionic_isolated_pct 바로 뒤 · 관문 S1 · S2 2 행'
+        + (f' — {_e33}' if _e33 else ''),
+        not _e33 and _m33.get('se_isolated_pct') == repr(100.0 - 40.0) and _p33.get('se_isolated_pct') == repr(100.0 - 15.0)
+        and 'se_isolated_pct' in _c33 and _c33.index('se_isolated_pct') == _c33.index('am_ionic_isolated_pct') + 1
+        and _r33.get('wa_se_iso_checked') == 2)
+    try:
+        _c33n = _b33(groups='contact,percolation')[1]
+    except Exception as e:                                                # noqa: BLE001
+        _c33n = [f'ERR {type(e).__name__}: {e}']
+    chk('㉝b 묶음 se_isolation 을 안 부르면 열이 없다 (옛 인계표 바이트 불변 — ㉙f2 가 실데이터로 지킨다) · ① 경로 고립은 그대로',
+        'se_isolated_pct' not in _c33n and 'am_ionic_isolated_pct' in _c33n)
+    _neg7('㉝c se_isolation 묶음을 percolation 없이 부르면 거부 (top_reachable_pct 를 싣지 않는 표에서 유도하지 않는다)',
+          lambda: _b33(groups='contact,se_isolation'), 'S0')
+    _w33 = _wa10()
+    _w33['rows']['q1']['se_isolated_pct'] = '59.0'
+    _neg7('㉝d ★ S1 — 웹앱이 같은 이름 (se_isolated_pct) 을 내면 100 − top_reachable_pct 와 같아야 (59.0 ≠ 60)', lambda: _b33(w=_w33), 'S1')
+    try:
+        _se_iso_gates('qx', {'top_reachable_pct': '30.0', 'percolation_pct': '37.0', 'se_isolated_pct': repr(70.0)})
+        _s2 = ''
+    except FillRefusal as e:
+        _s2 = str(e)
+    except Exception as e:                                                # noqa: BLE001
+        _s2 = f'ERR {type(e).__name__}: {e}'
+    chk('㉝d2 ★ S2 — se_isolated_pct > 100 − percolation_pct (관통 SE 가 위 띠에 안 닿는다는 뜻) 이면 거부 (② P2 와 같은 사실의 이중 안전장치)'
+        + ('' if ('S2' in _s2 and not _s2.startswith('ERR')) else f' — {_s2[:160]}'),
+        'S2' in _s2 and not _s2.startswith('ERR'))
+    _dm33 = {d['column']: d for d in column_dictionary(_c33, webapp=_wa10())} if _c33 else {}
+    _g33 = lambda c, k: (_dm33.get(c) or {}).get(k, '')                   # noqa: E731
+    chk('㉝e ★ 열 사전 — 고립 전해질 = 100 − top_reachable_pct · AM 경로 고립과 같은 규칙 · 외톨이 SE 한정 · 비관통에 몰림 → 관통 분류 먼저 · 유도 (v1.3)',
+        _g33('se_isolated_pct', 'source') == 'webapp_derived' and 'v1.3' in _g33('se_isolated_pct', 'verdict')
+        and all(w in _g33('se_isolated_pct', 'meaning') for w in ('고립 전해질', '100 − top_reachable_pct', 'am_ionic_isolated_pct', '외톨이',
+                                                                  '비관통', '관통 여부를 먼저'))
+        and _g33('se_isolated_pct', 'caveat') == CAVEAT_PERC)
+    try:
+        _caps33 = (WA_SE_ISO_GROUP in WA_ALL_GROUPS and WA_SE_ISO_GROUP in WA_DERIVED_GROUPS
+                   and all(WA_SE_ISO_GROUP not in v_ for v_ in WA_STAGE_GROUPS.values())
+                   and WA_STAGE_GROUPS['network'] == WA_GROUPS + (WA_TAU_GROUP,))
+        _o33s = {}
+        for _sa33 in ('contact', 'coverage', 'network'):                 # 어느 정지점 배치든 percolation 과 함께면 낸다 (단계 역량 표 밖 · 유도 묶음)
+            _w33s = _wa10()
+            _w33s['stop_after'] = _sa33
+            _g33s = 'contact,percolation,se_isolation' + (',tau' if _sa33 == 'network' else '')
+            try:
+                build_handover(_dq7, _hq10(), webapp=_w33s, webapp_groups=_g33s)
+                _o33s[_sa33] = 'ok'
+            except FillRefusal as e:
+                _o33s[_sa33] = str(e)[:90]
+        _caps33 = _caps33 and _o33s.get('contact') == 'ok' and _o33s.get('coverage') == 'ok' and 'τ' in str(_o33s.get('network'))
+    except NameError:
+        _caps33, _o33s = False, {}
+    chk('㉝f 묶음 se_isolation = 유도 묶음 (단계 역량 표 WA_STAGE_GROUPS 밖 — 실행기 run_network_194_parallel ㉕ 의 network 짝 그대로) · contact · coverage '
+        '정지 배치에서 percolation 과 함께면 받는다 · network 는 τ 원천 관문까지 간다 (묶음 거부가 아니다)'
+        + ('' if _caps33 else f' — {_o33s}'), _caps33)
+    _tm33 = {m_: (tau_net_define(f'tau2_ion_{m_}') or ('', ''))[0] for m_ in TAU_NET_MODES}
+    _sm33 = {m_: (tau_net_define(f'tau_ion_{m_}') or ('', ''))[0] for m_ in TAU_NET_MODES}
+    _fm33 = {m_: (tau_net_define(f'f_ion_{m_}') or ('', ''))[0] for m_ in TAU_NET_MODES}
+    chk('㉝g ★ τ 표시 이름 — tau2 = 수송 tortuosity (제곱근 아님 · tortuosity factor 병기 · 키 tau2 그대로) · √ 값 (tau) 은 그 이름이 아니다 (√T) · '
+        'f_ion_hertz = ML 1차 타깃 안내 (#2) · physics · H12 의 f 는 1차 타깃이 아니다',
+        all('수송 tortuosity' in _tm33[m_] and '제곱근 아님' in _tm33[m_] and 'tortuosity factor' in _tm33[m_] for m_ in TAU_NET_MODES)
+        and all('√T' in _sm33[m_] and '수송 tortuosity factor' not in _sm33[m_] for m_ in TAU_NET_MODES)
+        and 'ML 1차 타깃' in _fm33['hertz'] and 'ML 1차 타깃' not in _fm33['physics'] and 'ML 1차 타깃' not in _fm33['hertz_h12'])
     print(f'\nlhs_design_dataset selftest: {ok}/{ok + len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0
@@ -6074,7 +6233,8 @@ if __name__ == '__main__':
     ap.add_argument('--webapp-groups', default=None, metavar='G[,G]',
                     help='(--export-handover --webapp) 웹앱 열을 이 묶음만 싣는다 (쉼표로 여럿) — contact = ① 접촉 위상 · percolation = ② '
                          '퍼콜레이션 · f1 = ⑤ F1 근접쌍 · fracture = ⑥ Auerbach 힘 기반 · area = ⑦ 접촉 면적 (전부 접촉 분석 단계 산출 · J20-s) · '
-                         'tau = 망 τ (v1.2 — 이온 망 인계 열 f · tau2 · tau · 상태 · 메타 · tau_flux · network 배치 + --tau-results 필요).  '
+                         'tau = 망 τ (v1.2 — 이온 망 인계 열 f · tau2 · tau · 상태 · 메타 · tau_flux · network 배치 + --tau-results 필요) · '
+                         'se_isolation = 고립 전해질 se_isolated_pct = 100 − top_reachable_pct (v1.3 유도 묶음 · percolation 과 함께만 · 명시 opt-in).  '
                          '`lhs_webapp_batch --stop-after contact|coverage|network` 산출은 이것 없이는 거부된다 (셋 다 다섯 묶음을 다 낸다 · RGL-03)')
     ap.add_argument('--tau-results', default='', metavar='DIR',
                     help='(--export-handover --webapp, 묶음 tau) 망 τ 원천 = network 정지 배치의 케이스 폴더 묶음 (`lhs_webapp_batch --work` 아래 '

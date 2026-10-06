@@ -20,16 +20,30 @@
   # ML 배포 프로필 (LREL-02 · 03 — 만들기 · 대조 둘 다) — 키 유일 · 기대 ID 집합 (설계 CSV case_id) · 적격성 세 열 · 열 사전 참조 표지
   python3 scripts/lhs_release_build.py --check --profile ml_v1 --expect-ids docs/data/lhs_design_20260818.csv --handover … --release …
   python3 scripts/lhs_release_build.py --selftest
+  # ★ 배포 v1.3 최종판 (10-07 미리 준비 · 실제 자료는 Codex 세대 2 GO + 새 194 배치 뒤에만) — 명령 전문 = docs/reviews/lhs_release_v13_plan_20261007.md
+  python3 scripts/lhs_release_build.py --v13 --batch-root <배치 뿌리> --codex-verdict <GO 판정문> --out-dir <배포 폴더>   # 단계 A + B + 대조
+  #   발사 봉인 (manifest code_hashes) 과 다른 봉인 파일이 있으면 거부 — 값과 무관한 변경 (웹앱 화면 문구) 만 [--allow-seal-diff <파일>] 로 명시 승인
+  python3 scripts/lhs_release_build.py --v13 --dry-run --handover-dir <세대 1 인계표 폴더> --out-dir <리포 밖 스크래치>   # 경로만 (DRYRUN_)
+  python3 scripts/lhs_release_build.py --v13-check --release-dir <배포 폴더> --handover-dir <인계표 폴더> [--dry-run]
+  시험: scripts/test_lhs_release_v13.py
 
 키 (case_id) 는 늘 유일해야 한다 (인계표 · 배포 둘 다 — LREL-03).  프로필은 부분집합 충실성 위에 **용도 계약**을 더한다 (범용 부분집합 도구에
 모든 용도의 열을 강제하지 않는다 — Codex 배포 v1.1 최종 리뷰 LHSREL-02 해제 조건).
 """
 import argparse
+import collections
 import csv
+import datetime
+import functools
+import glob
+import hashlib
 import io
+import json
+import math
 import os
 import re
 import shutil
+import subprocess
 import sys
 import tempfile
 
@@ -571,6 +585,1478 @@ def _selftest():
     return 0 if all(ok) else 1
 
 
+# ═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+#  배포 v1.3 — 최종판 (1저자 10-06 밤 *"v1.3 에 최종이라고 하고 확실하게 넘겨주자"* · 10-07 *"v1.3 생성기를 Codex 판정과 동시에 미리 준비"*)
+#    = 세대 2 망 값 + #1 ML 표 (빈칸 뜻대로) · #2 f 타깃 · 관통 분류 안내 · #5 porosity–σ–CN 재적합 · τ 표시 이름 (수송 tortuosity) · se_isolated_pct
+#  ⛔ 실제 v1.3 자료는 Codex 세대 2 GO + 새 194 배치 (봉인 manifest `expected_network_generation = g2`) 뒤에만 만든다 — 그 전에는 --dry-run
+#    (DRYRUN_ 표지 · docs/data 밖) 로 경로만 돈다.  명령 = `docs/reviews/lhs_release_v13_plan_20261007.md`.
+#  구조: 단계 A (`stage_handovers_v13` — 배치 뿌리에서 인계표 생성기 CLI 를 --tau-batch-manifest 와 함께 · 세대 2 아닌 · 섞인 배치는 생성기
+#    `load_tau_results` 가 거부) → 단계 B (`build_v13` — 인계표 → 세대 관문 · τ 다시 읽기 (`load_tau_results` 같은 배치 기대 세대 · 칸 대조) ·
+#    배포 표 (열 부분집합 · `build` · 프로필 ml_v1) · 빈칸 뜻 · ML 표 · 재적합 · README · 빌드 manifest → `check_v13` 통과 뒤에만 폴더를 세운다).
+# ═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+V13_DATASETS = ('lhs', 'lhsx')
+V13_GENERATION = 'g2'
+V13_DRY_PREFIX = 'DRYRUN_'
+V13_DRY_BANNER = 'DRY RUN — not a release'
+#: 인계표 생성기 입력 (v1.2 WSL 실행 기록 `docs/data/lhs_network194_11fcf91e8/handover_v12_20261006/wsl_run_20261006.md` 와 같은 짝 ·
+#:   194 실행기 COHORT_SPECS 와 같은 원천 — 배치 manifest plan.cohorts 와 `v13_manifest_inputs_problems` 가 대조한다).
+V13_INPUTS = {
+    'lhs': {'design': '', 'expect_ids': 'docs/data/lhs_design_20260818.csv', 'harvest': 'docs/data/lhs_descriptors_cov_1e09f661d',
+            'union': 'docs/data/lhs_union_20260927/lhs130_union.tsv', 'n': 130},
+    'lhsx': {'design': 'docs/data/lhsx_design_adapted_20260929.csv', 'expect_ids': 'docs/data/lhsx_design_adapted_20260929.csv',
+             'harvest': 'docs/data/lhsx_descriptors_cov_1e09f661d', 'union': 'docs/data/lhs_union_20260927/lhsx64_union.tsv', 'n': 64},
+}
+#: 생성기 묶음 — v1.2 다섯 + 망 τ + 유도 묶음 se_isolation (고립 전해질 · 생성기 `WA_SE_ISO_GROUP`)
+V13_WEBAPP_GROUPS = 'contact,percolation,f1,fracture,area,tau,se_isolation'
+#: 열 명세의 바탕 = 커밋된 v1.2 배포 열 사전 첫 열 (값 · 순서 그대로 이어받는다 — v1.1 → v1.2 와 같은 방식)
+V13_BASE_FROM = {ds: f'docs/data/lhs_release_20261006_v12/{ds}_release_20261006_v12_columns.tsv' for ds in V13_DATASETS}
+V13_PHYSICS_BASE_FROM = {ds: f'docs/data/lhs_release_20261006_v12/{ds}_release_20261006_v12_physics_columns.tsv' for ds in V13_DATASETS}
+#: v1.3 주 표에 더하는 열 — 새 열 se_isolated_pct · 세대 2 출처 (세대 칸 + 주 Hertz 의 역할 표기 넷) · 완료 압력 셋 (DESC-06)
+V13_MAIN_ADD = ('se_isolated_pct', 'ion_net_generation', 'ion_net_constriction_hertz', 'ion_net_area_rule_hertz', 'ion_net_electrode_hertz',
+                'ion_net_bulk_hertz')
+V13_PRESS_ADD = ('press_target_mpa', 'press_last_loop_mpa', 'press_reached')
+V13_PHYSICS_ADD = ('ion_net_generation', 'ion_net_constriction_physics', 'ion_net_psi_physics', 'ion_net_area_rule_physics',
+                   'ion_net_electrode_physics', 'ion_net_bulk_physics')
+#: H12 민감도 부록 (선택 · --h12-appendix — 1저자 결정 대기 · 기본 학습 열 아님 · 부록 전용 판정)
+V13_H12_COLUMNS = ('case_id', 'f_ion_hertz_h12', 'tau2_ion_hertz_h12', 'tau_ion_hertz_h12', 'ion_net_status_hertz_h12',
+                   'ion_net_status_reason_hertz_h12', 'ion_net_generation', 'ion_net_constriction_hertz_h12', 'ion_net_psi_hertz_h12',
+                   'ion_net_bulk_hertz_h12', 'ion_sigma0_mScm', 'ion_sigma0_T_C', 'phi_basis', 'L_basis')
+
+#: ★ #1 빈칸 뜻 — 닫힌 어휘 (v1.1 README §3-1 · v1.2 §3-1 · Codex 5차 QV2).  배포 CSV 의 빈칸은 뜻이 여럿이다 — ML 표는 빈칸이 있는 열마다 바로 뒤에
+#:   `<열>__blank` (코드) 를 붙인다.  규칙 (`v13_blank_reason`) 에 없는 빈칸 · 빈칸이어야 할 칸의 값은 만들기 거부 (추측으로 코드를 달지 않는다).
+V13_BLANK_CODES = {
+    'NA_PHASE_ABSENT': '그 상 (AM_P · AM_S) 이 없는 mono 침대 — 정의되지 않음 (0 이 아니다 · 설계 block 이 정한다)',
+    'NA_ZERO_CONTACTS': '그 쌍 · AM–AM 접촉 0 개 — 평균 · 파괴 단계가 정의되지 않음 (개수 · 총합은 측정된 0 으로 값이 있다)',
+    'NA_NOT_PERCOLATING': '관통 SE 성분 없음 (percolation_pct = 0) — 관통 성분 기준 양 (se_se_cn_perc · _n_perc · _eff_area_perc · 기하학적 tortuosity) '
+                          '이 정의되지 않음',
+    'INF_NOT_PERCOLATING': '관통 이온 경로 없음 (ion_net_status = NOT_PERCOLATING) — 수송 tortuosity T · √T = 물리적 무한대의 저장 표현 '
+                           '(같은 행 f = 0.0 은 값으로 실려 있다) · 기술적 결측이 아니다',
+    'NOT_COMPUTED': '기술적 실패 (ion_net_status = NOT_COMPUTED · 사유 = ion_net_status_reason) — 값 없음 · 무한대로 읽지 않는다',
+    'HOLD_BAND_FALLBACK': '등록된 과학적 HOLD (솔버 띠 규칙이 L0 아님 · BAND_FALLBACK) — 값 없음',
+    'EMPTY_NO_REASON': '텍스트 칸의 빈칸 = 사유 없음 (빈 집합) — hold_reason_codes (적격성 OK 행) · ion_net_status_reason (NOT_COMPUTED 가 아닌 행)',
+}
+V13_ML_SUFFIX = '__blank'
+V13_ML_CLASS = 'ion_percolates_hertz'
+_V13_PHASE_TOKEN = re.compile(r'(?<![A-Za-z0-9])AM_([PS])(?![A-Za-z0-9])')
+_V13_PHASE_SPECIAL = {'d_am_p_um': {'AM_P'}, 'd_am_s_um': {'AM_S'}, 'size_ratio_P_over_S': {'AM_P', 'AM_S'}}
+_V13_BLOCK_PHASES = {'bimodal': {'AM_P', 'AM_S'}, 'mono_AM_P': {'AM_P'}, 'mono_AM_S': {'AM_S'}}
+_V13_NONPERC_COLS = ('se_se_cn_perc', 'se_se_cn_n_perc', 'se_se_cn_eff_area_perc', 'tortuosity_SE_wall', 'tortuosity_SE_wall_median')
+_V13_FRAC_RE = re.compile(r'fracture_index_force|n_total_AM_AM_force|frac_[a-z]+_force_pct|n_[a-z]+_force_AM_AM')
+_V13_TAU_VALUE_RE = re.compile(r'(f_ion|tau2_ion|tau_ion)_(hertz_h12|hertz|physics)')
+_V13_TAU_REASON_RE = re.compile(r'ion_net_status_reason_(hertz_h12|hertz|physics)')
+_V13_VALUE_STATUSES = ('OK', 'MODEL_BELOW_CONTINUUM_BOUND')
+
+#: ML 열 역할 (닫힌 표 — v1.1 README §2 · v1.2 §2 · Codex 5차 QV2 · QV3).  여기 없는 열은 v1.2 주 표 열 목록 (Y) 이거나 거부.
+V13_ROLE_FIXED = {
+    'case_id': 'ID', 'dataset': 'DATASET', V13_ML_CLASS: 'Y_CLASS',
+    'am_pct': 'X', 'ps_frac': 'X', 'd_am_p_um': 'X', 'd_am_s_um': 'X', 'd_se_um': 'X',
+    'block': 'X_DERIVED', 'ps_label': 'X_DERIVED', 'r_AM_P_um': 'X_DERIVED', 'r_AM_S_um': 'X_DERIVED', 'r_SE_um': 'X_DERIVED',
+    'size_ratio_P_over_S': 'X_DERIVED', 'size_ratio_AM_over_SE': 'X_DERIVED',
+    'loading_mAh_cm2': 'CONST', 'pressure_MPa': 'CONST', 'e_se_gpa': 'CONST', 'rve_um': 'CONST',
+    'ion_sigma0_mScm': 'CONST', 'ion_sigma0_T_C': 'CONST', 'phi_basis': 'CONST', 'L_basis': 'CONST', 'ion_net_generation': 'CONST',
+    'ion_net_constriction_hertz': 'CONST', 'ion_net_area_rule_hertz': 'CONST', 'ion_net_electrode_hertz': 'CONST', 'ion_net_bulk_hertz': 'CONST',
+    'press_target_mpa': 'CONST', 'press_reached': 'CONST', 'press_last_loop_mpa': 'DIAG',
+    'physical_target_status': 'FLAG', 'hold_reason_codes': 'FLAG', 'boundary_state': 'FLAG',
+    'ion_net_status_hertz': 'STATUS', 'ion_net_status_reason_hertz': 'STATUS',
+    'n_AM_P_measured': 'RESULT_COUNT', 'n_AM_S_measured': 'RESULT_COUNT', 'n_SE_measured': 'RESULT_COUNT',
+    'f_ion_hertz': 'Y_TARGET', 'tau2_ion_hertz': 'Y_IDENTITY', 'tau_ion_hertz': 'Y_IDENTITY', 'se_isolated_pct': 'Y',
+}
+V13_ROLE_MEANING = {
+    'ID': '키 — 특징 금지',
+    'DATASET': '데이터셋 표지 (lhs = 130 · lhsx = 64 · 전부 SE-rich — 분포가 다르다 · 섞을 때 함께 둔다)',
+    'X': '자유 설계 노브 — 설계 → 구조 예측의 입력',
+    'X_DERIVED': '설계의 재표현 — 같은 정보 (넣어도 독립 정보가 늘지 않는다)',
+    'CONST': '194 행 상수 (규약 · 세대 · 목표압) — 특징 · 타깃 금지',
+    'DIAG': '진단 기록 — 특징 · 타깃 아님',
+    'FLAG': '적격성 표지 — 특징 금지 (물리 타깃 적격성 · HOLD 포함/제외 민감도 구분)',
+    'STATUS': '수송 지표 상태 — 값과 반드시 같이 읽는다 (특징 아님 · Codex 5차 QV2)',
+    'RESULT_COUNT': '실측 입자 수 (시뮬레이션 결과) — 설계 → 구조 예측의 X 로 쓰면 누설',
+    'Y': '구조 결과 — 타깃 후보 (항등식으로 묶인 열은 한 묶음에서 하나만 독립)',
+    'Y_TARGET': '이온 수송 1차 타깃 (#2 — f · 유한 · 비관통 = 0.0)',
+    'Y_IDENTITY': '항등식 유도 (T = φ_SE,mc/f · √T) — f 와 같이 타깃 · 특징으로 쓰지 않는다',
+    'Y_CLASS': '관통 분류 타깃 (#2 — 1 = 관통 · 0 = 비관통)',
+    'BLANK_CODE': '바로 왼쪽 열의 빈칸 뜻 (코드 · 값이 있으면 빈칸) — 결측 표지로만',
+}
+
+#: #5 재적합 — 등록식 (σ_ionic T1 의 porosity · CN 부분 · CLAUDE.md "σ_ionic form FINALIZED") 의 동결 상수는 생산 코드에서 읽는다 (사본 금지)
+REFIT_SCHEMA = 'lhs_v13_refit_porosity_sigma_cn/v1'
+REFIT_FIT_STATUSES = ('OK', 'MODEL_BELOW_CONTINUUM_BOUND')
+REFIT_SKIP_STATUSES = ('NOT_PERCOLATING', 'NOT_COMPUTED', 'BAND_FALLBACK')
+REFIT_NEEDS = ('ion_net_status_hertz', 'f_ion_hertz', 'phi_se_mass_conserving', 'porosity_union_exact_pct', 'se_se_cn', 'ps_frac',
+               'r_AM_S_um', 'r_AM_P_um')
+REFIT_MIN_ROWS = 5
+REFIT_ROW_COLS = ('dataset', 'case_id', 'ion_net_status_hertz', 'included', 'excluded_reason', 'porosity_union_exact_pct',
+                  'phi_se_mass_conserving', 'se_se_cn', 'f_ion_hertz', 'g_phys', 'phi_c_eff', 'phi_eff', 'x_collapse', 'ln_f',
+                  'ln_f_locked', 'resid_locked', 'ln_f_free', 'resid_free')
+REFIT_STEM = 'lhs_v13_refit_porosity_sigma_cn'
+V13_MANIFEST_SCHEMA = 'lhs_release_v13_build/v1'
+V13_MANIFEST_NAME = 'v13_build_manifest.json'
+_V13_FLOAT_RTOL = 1e-9
+
+
+def _ldd():
+    here = os.path.dirname(os.path.abspath(__file__))
+    if here not in sys.path:
+        sys.path.insert(0, here)
+    import lhs_design_dataset as LDD                                     # noqa: E402 — 열 사전 · 관문 · τ 원천의 정본
+    return LDD
+
+
+def _tf():
+    here = os.path.dirname(os.path.abspath(__file__))
+    if here not in sys.path:
+        sys.path.insert(0, here)
+    import tau_flux as TF                                                # noqa: E402 — 세대 계약의 정본
+    return TF
+
+
+def _gcp():
+    """σ_ionic 등록식의 동결 상수 · 크기 게이트 (generate_comparison_plots — 생산 코드 · 사본 금지).  matplotlib 을 끌어오므로 재적합 때만."""
+    here = os.path.dirname(os.path.abspath(__file__))
+    if here not in sys.path:
+        sys.path.insert(0, here)
+    import generate_comparison_plots as G                                # noqa: E402
+    return G
+
+
+def _sha256(path):
+    h = hashlib.sha256()
+    with open(path, 'rb') as f:
+        for b in iter(lambda: f.read(1 << 20), b''):
+            h.update(b)
+    return h.hexdigest()
+
+
+def _v13_num(v):
+    if v in (None, ''):
+        return None
+    try:
+        x = float(v)
+    except (TypeError, ValueError):
+        return None
+    return x if math.isfinite(x) else None
+
+
+def _v13_rel(path):
+    """리포 안이면 상대 경로 · 아니면 이름만 (사용자 홈 경로를 산출에 새기지 않는다)."""
+    p = os.path.abspath(path)
+    try:
+        r = os.path.relpath(p, REPO)
+    except ValueError:
+        return os.path.basename(p)
+    return os.path.basename(p) if r.startswith('..') else r
+
+
+@functools.lru_cache(maxsize=None)
+def _v13_tsv_cols(rel):
+    _, rows = _read_tsv(os.path.join(REPO, rel))
+    return tuple(r[0] for r in rows)
+
+
+def v13_columns(dataset, kind='main', press=True):
+    """v1.3 열 명세 — main = v1.2 주 표 열 (순서 그대로) + V13_MAIN_ADD + (완료 압력 V13_PRESS_ADD) · physics = v1.2 부록 + 세대 2 표기 ·
+    h12 = 민감도 부록 (선택).  H12 · physics 값 열은 주 표에 들어가지 않는다."""
+    if dataset not in V13_DATASETS:
+        raise ReleaseError(f'모르는 데이터셋 {dataset!r} (아는 것: {V13_DATASETS})')
+    if kind == 'main':
+        cols = list(_v13_tsv_cols(V13_BASE_FROM[dataset])) + list(V13_MAIN_ADD) + (list(V13_PRESS_ADD) if press else [])
+    elif kind == 'physics':
+        cols = list(_v13_tsv_cols(V13_PHYSICS_BASE_FROM[dataset])) + list(V13_PHYSICS_ADD)
+    elif kind == 'h12':
+        cols = list(V13_H12_COLUMNS)
+    else:
+        raise ReleaseError(f'모르는 표 종류 {kind!r} (main · physics · h12)')
+    if len(set(cols)) != len(cols) or cols[0] != KEY:
+        raise ReleaseError(f'{dataset} {kind} 열 명세 — 중복이 있거나 첫 열이 {KEY} 가 아니다')
+    return cols
+
+
+@functools.lru_cache(maxsize=None)
+def _v13_y_set():
+    s = set()
+    for ds in V13_DATASETS:
+        s.update(_v13_tsv_cols(V13_BASE_FROM[ds]))
+    return frozenset(c for c in s if c not in V13_ROLE_FIXED)
+
+
+def v13_role(col):
+    """ML 열 역할 (닫힌 표) — 모르는 열은 ReleaseError (기본 역할로 흘리지 않는다)."""
+    if col.endswith(V13_ML_SUFFIX):
+        v13_role(col[:-len(V13_ML_SUFFIX)])
+        return 'BLANK_CODE'
+    if col in V13_ROLE_FIXED:
+        return V13_ROLE_FIXED[col]
+    if col in _v13_y_set():
+        return 'Y'
+    raise ReleaseError(f'열 {col!r} 의 ML 역할을 모른다 — V13_ROLE_FIXED 또는 v1.2 주 표 열 목록에 있어야 한다 (기본 역할로 흘리지 않는다)')
+
+
+def _v13_phases(col):
+    if col in _V13_PHASE_SPECIAL:
+        return _V13_PHASE_SPECIAL[col]
+    return {'AM_' + m for m in _V13_PHASE_TOKEN.findall(col)}
+
+
+def v13_blank_reason(row, col):
+    """그 행 · 그 열의 칸이 **빈칸이어야 하는** 뜻 (V13_BLANK_CODES 의 코드) · 값이어야 하면 None.  규칙은 같은 행의 설계 block · 개수 · 상태가 정한다."""
+    ph = _v13_phases(col)
+    if ph:
+        have = _V13_BLOCK_PHASES.get(row.get('block'))
+        if have is None:
+            raise ReleaseError(f'{row.get(KEY)}: 설계 block {row.get("block")!r} 을 모른다 — 상 부재를 가를 수 없다')
+        if ph - have:
+            return 'NA_PHASE_ABSENT'
+    m = re.fullmatch(r'(area_.+)_mean', col)
+    if m and _v13_num(row.get(m.group(1) + '_n')) == 0:
+        return 'NA_ZERO_CONTACTS'
+    if (col == 'am_am_mean_area' or _V13_FRAC_RE.fullmatch(col)) and _v13_num(row.get('am_am_n_contacts')) == 0:
+        return 'NA_ZERO_CONTACTS'
+    if col in _V13_NONPERC_COLS and _v13_num(row.get('percolation_pct')) == 0:
+        return 'NA_NOT_PERCOLATING'
+    m = _V13_TAU_VALUE_RE.fullmatch(col)
+    if m:
+        st = row.get(f'ion_net_status_{m.group(2)}', '')
+        if st == 'NOT_PERCOLATING':
+            return None if m.group(1) == 'f_ion' else 'INF_NOT_PERCOLATING'
+        if st == 'NOT_COMPUTED':
+            return 'NOT_COMPUTED'
+        if st == 'BAND_FALLBACK':
+            return 'HOLD_BAND_FALLBACK'
+        return None
+    m = _V13_TAU_REASON_RE.fullmatch(col)
+    if m:
+        return None if row.get(f'ion_net_status_{m.group(1)}') == 'NOT_COMPUTED' else 'EMPTY_NO_REASON'
+    if col == 'hold_reason_codes':
+        return 'EMPTY_NO_REASON' if row.get('physical_target_status') == 'OK' else None
+    return None
+
+
+def v13_blank_problems(rows, cols):
+    """빈칸 일관성 (양방향) — 문제 목록 ([] = 통과): 규칙에 없는 빈칸 · 빈칸이어야 할 칸의 값 · 상태 ↔ f 모순 (NOT_PERCOLATING 이면 f = 0 ·
+    OK · MBCB 이면 f > 0)."""
+    probs = []
+    for r in rows:
+        case = r.get(KEY, '?')
+        for c in cols:
+            if c == KEY:
+                continue
+            try:
+                want = v13_blank_reason(r, c)
+            except ReleaseError as e:
+                probs.append(str(e))
+                continue
+            v = r.get(c, '')
+            if want is None and v == '':
+                probs.append(f'{case} · {c}: 설명 안 되는 빈칸 (빈칸 뜻 규칙에 없다 — 추측으로 코드를 달지 않는다)')
+            elif want is not None and v != '':
+                probs.append(f'{case} · {c}: 값 {v!r} 이 있는데 빈칸 ({want}) 이어야 한다')
+        for c in cols:
+            m = _V13_TAU_VALUE_RE.fullmatch(c)
+            if not m or m.group(1) != 'f_ion' or r.get(c, '') == '':
+                continue
+            st, fv = r.get(f'ion_net_status_{m.group(2)}', ''), _v13_num(r.get(c))
+            if st == 'NOT_PERCOLATING' and fv != 0.0:
+                probs.append(f'{case} · {c}: 상태 NOT_PERCOLATING 인데 f = {r.get(c)!r} (0.0 이어야 — 물리적 0)')
+            elif st in _V13_VALUE_STATUSES and not (fv is not None and fv > 0.0):
+                probs.append(f'{case} · {c}: 상태 {st} 인데 f = {r.get(c)!r} (유한 양수여야)')
+    return probs
+
+
+def _v13_class(r):
+    """관통 분류 (#2) — ('1' | '0' | '', 코드).  percolation_pct 가 있으면 관통 판정과 같아야 (tau_flux G2)."""
+    st = r.get('ion_net_status_hertz', '')
+    if st in _V13_VALUE_STATUSES:
+        v, code = '1', ''
+    elif st == 'NOT_PERCOLATING':
+        v, code = '0', ''
+    elif st == 'NOT_COMPUTED':
+        v, code = '', 'NOT_COMPUTED'
+    elif st == 'BAND_FALLBACK':
+        v, code = '', 'HOLD_BAND_FALLBACK'
+    else:
+        raise ReleaseError(f'{r.get(KEY)}: ion_net_status_hertz {st!r} — 모르는 상태 (관통 분류를 정할 수 없다)')
+    pp = _v13_num(r.get('percolation_pct'))
+    if v and pp is not None and (pp > 0.0) != (v == '1'):
+        raise ReleaseError(f'{r.get(KEY)}: 관통 분류 {v} ↔ percolation_pct {pp!r} 모순 (tau_flux G2 — 솔버 관통 = 그래프 관통)')
+    return v, code
+
+
+def v13_ml_table(by_ds):
+    """#1 ML 표 — {데이터셋: (배포 열, 배포 행)} → ({데이터셋: (ML 열, ML 행)}, ML 열 사전 행 [dataset 키 포함]).
+    값 칸은 배포 그대로 (채우지 않는다) · 빈칸이 있는 열 (두 데이터셋 합집합) 뒤에 `<열>__blank` (코드 · 값이 있으면 빈칸) · 둘째 열 dataset ·
+    끝 열 ion_percolates_hertz (관통 분류).  빈칸 뜻을 정할 수 없는 칸이 하나라도 있으면 거부."""
+    for ds, (cols, rows) in by_ds.items():
+        p = v13_blank_problems(rows, cols)
+        if p:
+            raise ReleaseError(f'{ds}: 빈칸 뜻을 정할 수 없는 칸 {len(p)} — ML 표를 만들지 않는다: ' + ' | '.join(p[:4]))
+        for c in cols:
+            v13_role(c)
+    blank_cols = {c for _ds, (cols, rows) in by_ds.items() for c in cols if c != KEY and any(r.get(c, '') == '' for r in rows)}
+    tables = {}
+    for ds, (cols, rows) in by_ds.items():
+        mcols = [KEY, 'dataset']
+        for c in cols:
+            if c == KEY:
+                continue
+            mcols.append(c)
+            if c in blank_cols:
+                mcols.append(c + V13_ML_SUFFIX)
+        mcols.append(V13_ML_CLASS)
+        out = []
+        for r in rows:
+            o = {KEY: r[KEY], 'dataset': ds}
+            for c in cols:
+                if c == KEY:
+                    continue
+                o[c] = r.get(c, '')
+                if c in blank_cols:
+                    o[c + V13_ML_SUFFIX] = (v13_blank_reason(r, c) or '') if o[c] == '' else ''
+            o[V13_ML_CLASS], code = _v13_class(r)
+            if code:
+                o[V13_ML_CLASS + V13_ML_SUFFIX] = code
+            out.append(o)
+        tables[ds] = (mcols, out)
+    if any(V13_ML_CLASS + V13_ML_SUFFIX in o for _mc, out in tables.values() for o in out):
+        for ds, (mc, out) in tables.items():
+            mc.append(V13_ML_CLASS + V13_ML_SUFFIX)
+            for o in out:
+                o.setdefault(V13_ML_CLASS + V13_ML_SUFFIX, '')
+    drows = []
+    for ds, (mc, out) in tables.items():
+        for c in mc:
+            role = v13_role(c)
+            src = c[:-len(V13_ML_SUFFIX)] if c.endswith(V13_ML_SUFFIX) else c
+            cc = c if c.endswith(V13_ML_SUFFIX) else c + V13_ML_SUFFIX
+            cnt = collections.Counter(o.get(cc) for o in out if o.get(cc)) if cc in mc else collections.Counter()
+            if role == 'BLANK_CODE':
+                meaning = f'{src} 의 빈칸 뜻 (값이 있으면 빈칸) — 코드: ' + ' · '.join(f'{k} = {V13_BLANK_CODES[k]}' for k in sorted(cnt))
+            elif c == KEY:
+                meaning = '설계 ID (키)'
+            elif c == 'dataset':
+                meaning = V13_ROLE_MEANING['DATASET']
+            elif c == V13_ML_CLASS:
+                meaning = ('관통 분류 (#2) — 1 = 관통 (ion_net_status_hertz OK · MODEL_BELOW_CONTINUUM_BOUND) · 0 = 비관통 (NOT_PERCOLATING — f = 0 · '
+                           'T = ∞) · 빈칸 = 기술 실패 · HOLD (코드 열) · percolation_pct > 0 과 같은 판정 (관문)')
+            else:
+                meaning = f'배포 열 사전 (같은 이름) · 역할 = {V13_ROLE_MEANING[role]}'
+            drows.append({'dataset': ds, 'column': c, 'role': role, 'source_column': src,
+                          'blank_codes': ' · '.join(f'{k}:{n}' for k, n in sorted(cnt.items())), 'meaning': meaning})
+    return tables, drows
+
+
+def v13_ml_decode(mcols, mrows):
+    """ML 표 → (배포 열, 배포 행) — dataset · 코드 열 · 관통 분류 열을 뺀다 (되읽기 검산)."""
+    cols = [c for c in mcols if c != 'dataset' and not c.endswith(V13_ML_SUFFIX) and c != V13_ML_CLASS]
+    return cols, [{c: r.get(c, '') for c in cols} for r in mrows]
+
+
+def v13_se_isolated_problems(rows):
+    """se_isolated_pct = 100 − top_reachable_pct · ≤ 100 − percolation_pct (생성기 관문 S1 · S2 를 그대로 다시 부른다 — 사본 금지)."""
+    LDD = _ldd()
+    probs = []
+    for r in rows:
+        if 'se_isolated_pct' not in r:
+            probs.append(f'{r.get(KEY)}: se_isolated_pct 열이 없다')
+            continue
+        try:
+            n = LDD._se_iso_gates(r.get(KEY), r)
+        except LDD.FillRefusal as e:
+            probs.append(str(e))
+            continue
+        if n == 0:
+            probs.append(f'{r.get(KEY)}: se_isolated_pct · top_reachable_pct 가 둘 다 빈칸 — 배포 행은 값이 있어야 한다')
+    return probs
+
+
+def v13_generation_problems(rows, dry_run=False):
+    """인계표 행의 망 세대 → (세대, 문제).  행마다 공용 세대 계약 (tau_flux.row_generation_problems) → 섞임 (generation_mixing_problem) →
+    v1.3 = g2 만 (dry-run 이면 세대를 기록만 하고 통과 · 섞임 · 계약 위반은 dry-run 이어도 문제)."""
+    TF = _tf()
+    probs, gens = [], set()
+    for r in rows:
+        g, pp = TF.row_generation_problems(r)
+        if pp:
+            probs.append(f'{r.get(KEY)}: 세대 계약 위반 ({g or "?"}) — {pp[0]}' + (f' 외 {len(pp) - 1}' if len(pp) > 1 else ''))
+        elif not g:
+            probs.append(f'{r.get(KEY)}: τ 표기가 없다 (망 레코드 없음) — 배포 행은 망 세대가 정해져야 한다')
+        gens.add(g)
+    if not probs:
+        mix = TF.generation_mixing_problem([dict(r, case=r.get(KEY)) for r in rows])
+        if mix:
+            probs.append(mix)
+    gens.discard('')
+    gen = next(iter(gens)) if len(gens) == 1 else ('mixed' if gens else '')
+    if not probs and gen != V13_GENERATION and not dry_run:
+        probs.append(f'망 세대 {gen!r} — v1.3 (최종판) 은 세대 2 ({V13_GENERATION}) 값만 싣는다 (세대 1 원천은 --dry-run 으로만)')
+    return gen, probs
+
+
+def v13_manifest_generation(manifest):
+    """배치 manifest 의 기대 세대 (생성기 `tau_manifest_expected_generation` — 같은 함수) = g2 여야 한다."""
+    LDD = _ldd()
+    try:
+        g = LDD.tau_manifest_expected_generation(manifest)
+    except LDD.FillRefusal as e:
+        raise ReleaseError(f'배치 manifest — {e}') from None
+    if g != V13_GENERATION:
+        raise ReleaseError(f'배치 manifest 기대 세대 {g!r} ≠ {V13_GENERATION} — v1.3 (최종판) 은 세대 2 배치만 싣는다')
+    return g
+
+
+def v13_manifest_inputs_problems(manifest):
+    """배치 manifest plan.cohorts (수확 · union · 설계) ↔ V13_INPUTS — 다른 원천으로 돈 배치를 v1.3 입력과 섞지 않는다."""
+    try:
+        m = manifest if isinstance(manifest, dict) else json.load(open(manifest, encoding='utf-8'))
+    except (OSError, ValueError) as e:
+        return [f'배치 manifest 를 못 읽었다 ({type(e).__name__})']
+    co = {c.get('name'): c for c in ((m.get('plan') or {}).get('cohorts') or []) if isinstance(c, dict)}
+    probs = []
+    for ds in V13_DATASETS:
+        c, inp = co.get(ds), V13_INPUTS[ds]
+        if c is None:
+            probs.append(f'manifest plan.cohorts 에 {ds} 가 없다')
+            continue
+        if os.path.basename(str(c.get('harvest_dir') or '').rstrip('/')) != os.path.basename(inp['harvest']):
+            probs.append(f'{ds}: 배치 수확 {c.get("harvest_dir")!r} ≠ v1.3 입력 {inp["harvest"]}')
+        if (c.get('union') or '') != inp['union']:
+            probs.append(f'{ds}: 배치 union {c.get("union")!r} ≠ {inp["union"]}')
+        if (c.get('design') or '') != inp['design']:
+            probs.append(f'{ds}: 배치 설계 {c.get("design")!r} ≠ {inp["design"]!r}')
+    return probs
+
+
+#: ⓪ 봉인 감사 · ⓪b 게시 다시 읽기 기록 — 194 실행기 후속 명령이 배치 뿌리에 쓰는 이름 (세대 2 등록 `lhs_network_batch_registration_20261007_g2.md` §5-2 · §5-3).
+#:   빌드는 내용을 해석하지 않고 sha256 을 남긴다 — 다시 읽기 기록만 실패 표지 (n_fail · expected_generation) 를 읽어 실패면 거부한다.
+V13_BATCH_GATE_FILES = ('seal_audit.json', 'reread.json')
+
+
+def _sha256_or_none(path):
+    try:
+        return _sha256(path)
+    except OSError:
+        return None
+
+
+def _v13_git(*args):
+    """이 체크아웃 (REPO) 의 git 출력 한 덩이 — git 이 없거나 실패하면 None (기록만 · 판정에 쓰지 않는다)."""
+    try:
+        r = subprocess.run(['git', '-C', REPO, *args], capture_output=True, text=True, timeout=60)
+    except (OSError, subprocess.SubprocessError):
+        return None
+    return r.stdout.strip() if r.returncode == 0 else None
+
+
+def v13_seal_drift(manifest):
+    """배치 manifest 의 발사 봉인 코드 지문 (`code_hashes` — 194 실행기가 워커 체크아웃에서 잰 값 · 10-05 판부터 있는 키) ↔ 이 체크아웃의 같은 파일.
+
+    인계 생성기 (단계 A) 의 τ 출처 관문 P4 · 배포 때 τ 다시 읽기는 **이 체크아웃의** tau_flux · pipeline_service 를 부른다 — 봉인 파일이 발사 때와
+    다르면 배치와 다른 코드로 τ 를 읽는다.  반환 dict:
+      sealed (봉인 파일 수) · sealed_changed (지금 지문 ≠ 기록 · 파일이 없거나 · 리포 밖 경로 (절대 · ..) · 빈 기록 = 다름 · 정렬) ·
+      handover · handover_changed (`handover_code_hashes` — 10-07 실행기부터 · 없으면 None = 모름) · git_head · git_dirty_tracked (기록만).
+    code_hashes 가 없거나 비었으면 ReleaseError (194 실행기 manifest 가 아니다 — 무엇과 대조할지 모른다)."""
+    try:
+        m = manifest if isinstance(manifest, dict) else json.load(open(manifest, encoding='utf-8'))
+    except (OSError, ValueError) as e:
+        raise ReleaseError(f'배치 manifest 를 못 읽었다 ({type(e).__name__})') from None
+    ch = m.get('code_hashes')
+    if not isinstance(ch, dict) or not ch:
+        raise ReleaseError('배치 manifest 에 발사 봉인 코드 지문 (code_hashes) 이 없다 — 194 실행기 manifest 가 아니다 (무엇과 대조할지 모른다)')
+
+    def changed(d):
+        out = []
+        for rel, h in d.items():
+            r = str(rel)
+            if os.path.isabs(r) or '..' in r.replace('\\', '/').split('/') or not h or _sha256_or_none(os.path.join(REPO, r)) != h:
+                out.append(r)
+        return sorted(out)
+    hh = m.get('handover_code_hashes')
+    dirty = _v13_git('status', '--porcelain', '--untracked-files=no')
+    return {'sealed': len(ch), 'sealed_changed': changed(ch),
+            'handover': len(hh) if isinstance(hh, dict) else None,
+            'handover_changed': changed(hh) if isinstance(hh, dict) else None,
+            'git_head': _v13_git('rev-parse', 'HEAD'),
+            'git_dirty_tracked': (len([ln for ln in dirty.splitlines() if ln.strip()]) if dirty is not None else None)}
+
+
+def v13_seal_gate(manifest, allow_seal_diff=None):
+    """발사 봉인 관문 — 봉인 파일이 다르면 거부 (값과 무관한 변경 = --allow-seal-diff <파일> 명시 승인 · 기록).  반환 (code_identity dict, 경고 목록).
+    인계 도구 (handover_code_hashes) 다름 = 경고 (등록 §3 ⚠ — v1.3 생성기 변경은 예상된 일 · 그 커밋을 등록 §9 에 적는다) · 쓰이지 않은 승인 = 경고."""
+    d = v13_seal_drift(manifest)
+    #  승인 철자 정규화 ('./webapp/app.py' · 'webapp\\app.py' = manifest 키 'webapp/app.py') — 리포 밖 · 절대 경로는 그대로 (어떤 키와도 안 맞는다)
+    allow = sorted({os.path.normpath(str(x).replace('\\', '/')).replace(os.sep, '/') for x in (allow_seal_diff or ()) if str(x).strip()})
+    bad = [f for f in d['sealed_changed'] if f not in allow]
+    if bad:
+        raise ReleaseError(f'발사 봉인 파일 {len(bad)} 이 이 체크아웃과 다르다 {bad[:6]} — 인계 생성기 τ 출처 관문 (P4) · 배포 τ 다시 읽기가 배치와 다른 코드로 돈다.  '
+                           '발사 체크아웃 (봉인 파일이 같은 커밋) 에서 만들거나, 값과 무관한 변경 (예: 웹앱 화면 문구) 이면 --allow-seal-diff <파일> 로 명시 승인 '
+                           '(README · 빌드 manifest 에 기록)')
+    warns = []
+    unused = [f for f in allow if f not in d['sealed_changed']]
+    if unused:
+        warns.append(f'--allow-seal-diff {unused} — 발사 기록과 같은 파일 (또는 봉인 밖 파일) 이라 쓰이지 않은 승인')
+    if d['handover_changed']:
+        warns.append(f'인계 생성기 · 다시 읽기 도구 지문 ≠ 발사 기록 (handover_code_hashes) {d["handover_changed"]} — v1.3 생성기 변경 '
+                     f'(세대 2 등록 §3 ⚠ "그 커밋을 §9 에 적는다") · 이 빌드 git HEAD = {d["git_head"]}')
+    elif d['handover_changed'] is None:
+        warns.append('배치 manifest 에 handover_code_hashes 가 없다 — 인계 도구 지문 대조 못 함 (10-07 전 실행기)')
+    if d['git_dirty_tracked']:
+        warns.append(f'이 체크아웃에 커밋 안 된 추적 파일 변경 {d["git_dirty_tracked"]} 줄 — 빌드 코드 신원 = git HEAD + 빌드 manifest code 지문')
+    return dict(d, allowed=[f for f in allow if f in d['sealed_changed']]), warns
+
+
+def v13_batch_gate_files(batch_root):
+    """배치 뿌리의 ⓪ 봉인 감사 · ⓪b 다시 읽기 기록 (V13_BATCH_GATE_FILES) — 없으면 None · 있으면 sha256 (+ 다시 읽기는 n_fail · expected_generation).
+    해석하지 않는다 (스키마는 다른 도구의 것) — 다시 읽기의 실패 표지 둘만 읽는다."""
+    out = {}
+    for name in V13_BATCH_GATE_FILES:
+        p = os.path.join(batch_root, name)
+        if not os.path.isfile(p):
+            out[name] = None
+            continue
+        d = {'sha256': _sha256(p)}
+        if name == 'reread.json':
+            try:
+                j = json.load(open(p, encoding='utf-8'))
+            except (OSError, ValueError):
+                j = None
+            d['n_fail'] = j.get('n_fail') if isinstance(j, dict) else None
+            d['expected_generation'] = j.get('expected_generation') if isinstance(j, dict) else None
+        out[name] = d
+    return out
+
+
+def v13_batch_gate_check(batch_root):
+    """⓪b 다시 읽기 기록이 실패를 적었으면 거부 (등록 §5-3 "rc 1 이면 인계하지 않는다") · 없거나 못 읽으면 경고.  반환 (기록 dict, 경고 목록)."""
+    gf = v13_batch_gate_files(batch_root)
+    warns = []
+    rr = gf.get('reread.json')
+    if rr is not None:
+        nf, eg = rr.get('n_fail'), rr.get('expected_generation')
+        if isinstance(nf, bool) or not isinstance(nf, int) or eg is None:
+            warns.append(f'⓪b 다시 읽기 기록 reread.json 의 n_fail · expected_generation 을 못 읽었다 ({nf!r} · {eg!r}) — 사람이 rc 0 을 확인할 것')
+        elif nf != 0 or eg != V13_GENERATION:
+            raise ReleaseError(f'⓪b 다시 읽기 기록 {os.path.join(batch_root, "reread.json")} = n_fail {nf} · 기대 세대 {eg!r} — 세대 2 등록 §5-3 '
+                               '(rc 0 · g2 가 아니면 인계하지 않는다)')
+    for name, d in gf.items():
+        if d is None:
+            warns.append(f'배치 뿌리에 {name} 이 없다 — 세대 2 등록 §5 의 ⓪ 봉인 감사 · ⓪b 다시 읽기 (rc 0) 를 먼저 · 이 빌드는 그 기록을 보지 못했다')
+    return gf, warns
+
+
+def v13_handover_argv(dataset, batch_root, handover_csv, pressure=None, python=None):
+    """단계 A — 인계표 생성기 CLI (리포 루트에서 돈다): 망 τ 원천 + 배치 manifest 기대 세대 (`--tau-batch-manifest` → 생성기
+    `load_tau_results(expected_generation=)` — 세대 2 아닌 · 섞인 배치는 거기서 거부) · v1.3 묶음 (se_isolation 포함) · 완료 압력."""
+    inp = V13_INPUTS[dataset]
+    a = [python or sys.executable, os.path.join(REPO, 'scripts', 'lhs_design_dataset.py'), '--export-handover', handover_csv]
+    if inp['design']:
+        a += ['--design', inp['design']]
+    a += ['--harvest', inp['harvest'], '--union', inp['union'],
+          '--webapp', os.path.join(batch_root, 'merged', dataset), '--webapp-groups', V13_WEBAPP_GROUPS,
+          '--tau-results', os.path.join(batch_root, 'merged', dataset, 'results'),
+          '--tau-batch-manifest', os.path.join(batch_root, 'manifest.json')]
+    a += ['--pressure-record', pressure] if pressure else ['--pressure-unverified']
+    return a
+
+
+def stage_handovers_v13(batch_root, handover_out, date, pressure=None, pressure_unverified=False, python=None, allow_seal_diff=None):
+    """단계 A — 배치 뿌리 → 인계표 둘 (`<ds>_handover_v13_<date>.csv` + 열 사전 · 제외 노트 · τ 출처 부록).  manifest = g2 · 원천 대조 ·
+    발사 봉인 대조 (`v13_seal_gate`) · ⓪b 다시 읽기 기록 (`v13_batch_gate_check`) 먼저 — 생성기를 부르기 전에 거부한다."""
+    man = os.path.join(batch_root, 'manifest.json')
+    v13_manifest_generation(man)
+    mp = v13_manifest_inputs_problems(man)
+    if mp:
+        raise ReleaseError('배치 manifest ↔ v1.3 입력 — ' + ' | '.join(mp))
+    _ci, w1 = v13_seal_gate(man, allow_seal_diff)
+    _gf, w2 = v13_batch_gate_check(batch_root)
+    for w in w1 + w2:
+        print('  ⚠ 단계 A', w)
+    if os.path.exists(handover_out) and os.listdir(handover_out):
+        raise ReleaseError(f'인계표 산출 폴더 {handover_out} 가 비어 있지 않다 — 새 폴더에 만든다 (덮어쓰지 않는다)')
+    os.makedirs(handover_out, exist_ok=True)
+    for ds in V13_DATASETS:
+        pr = (pressure or {}).get(ds)
+        if pr is None and not pressure_unverified:
+            cand = os.path.join(batch_root, 'pressure', f'{ds}_pressure_record.tsv')
+            if not os.path.isfile(cand):
+                raise ReleaseError(f'{ds}: 완료 압력 기록이 없다 ({cand}) — scripts/lhs_pressure_record.py 로 만들거나 --pressure-unverified (명시 승인 · DESC-06)')
+            pr = cand
+        argv = v13_handover_argv(ds, batch_root, os.path.join(handover_out, f'{ds}_handover_v13_{date}.csv'),
+                                 pressure=None if pressure_unverified else pr, python=python)
+        r = subprocess.run(argv, cwd=REPO, capture_output=True, text=True)
+        if r.returncode != 0:
+            raise ReleaseError(f'{ds}: 인계표 생성기 rc {r.returncode} — ' + ' / '.join((r.stderr or r.stdout or '').strip().splitlines()[-4:]))
+        print(f'  ✓ 단계 A {ds}: ' + ((r.stdout or '').strip().splitlines() or [''])[0])
+    return handover_out
+
+
+def v13_reread_tau(dataset, batch_root, handover_rows, expected_generation):
+    """τ 다시 읽기 — 생성기 `load_tau_results` (출처 관문 P0–P4 · 배치 manifest 기대 세대) 를 배포 때 한 번 더 부르고 인계표 τ 칸과 맞댄다.
+    문제 목록 ([] = 같다).  load_tau_results 의 거부는 문제로 전파한다 (삼키지 않는다)."""
+    LDD, TF = _ldd(), _tf()
+    try:
+        wv = LDD.load_webapp(os.path.join(batch_root, 'merged', dataset))
+        res = LDD.load_tau_results(os.path.join(batch_root, 'merged', dataset, 'results'), wv, expected_generation=expected_generation)
+    except LDD.FillRefusal as e:
+        return [f'{dataset}: τ 다시 읽기 거부 — {e}']
+    cases = (res or {}).get('cases') or {}
+    ok_st = tuple(getattr(LDD, 'WA_OK_STATUS', ('done', 'partial')))
+    hk = {r.get(KEY): r for r in handover_rows if r.get('wa_status', 'done') in ok_st}
+    probs = []
+    if set(cases) != set(hk):
+        probs.append(f'{dataset}: τ 다시 읽기 케이스 집합 ≠ 인계표 — 다시 읽음에만 {sorted(set(cases) - set(hk))[:5]} · '
+                     f'인계표에만 {sorted(set(hk) - set(cases))[:5]}')
+    for c in sorted(set(cases) & set(hk)):
+        cells = (cases[c] or {}).get('cells') or {}
+        for col in TF.column_names():
+            if col not in hk[c]:
+                probs.append(f'{dataset} · {c}: 인계표에 τ 열 {col} 이 없다')
+            elif str(cells.get(col, '')) != str(hk[c][col]):
+                probs.append(f'{dataset} · {c} · {col}: 인계표 {hk[c][col]!r} ≠ 다시 읽음 {cells.get(col)!r}')
+    return probs
+
+
+# ── #5 porosity–σ–CN 재적합 ─────────────────────────────────────────────────────────────────────────────────────────────────────────
+def _refit_consts():
+    G = _gcp()
+    return {'phi_c_P': float(G.SE_PHI_C_P), 'phi_c_S': float(G.SE_PHI_C_S), 'delta': float(G.SE_SAT_DELTA), 'r_cut_um': 3.5,
+            'gate_exponent': 2.0, 'locked_alpha': 0.5, 'locked_beta': float(G.SE_CN_EXP),
+            'source': ('scripts/generate_comparison_plots.py — SE_PHI_C_P · SE_PHI_C_S · SE_SAT_DELTA · SE_CN_EXP · _sat_g_smooth (σ_ionic T1 등록식 '
+                       '동결값 · CLAUDE.md "σ_ionic form FINALIZED" — φ_eff^½ · CN²)')}
+
+
+def _refit_gate(p, r_s, r_p):
+    """크기 게이트 g = min(3.5 / r_AM_eff, 1)^2 · r_AM_eff = (1 − p)·r_AM_S + p·r_AM_P (생산 `_sat_g_smooth` 그대로)."""
+    if r_s is None and r_p is None:
+        raise ReleaseError('재적합 — r_AM_S · r_AM_P 가 둘 다 없다 (크기 게이트를 정할 수 없다 · 라벨 게이트로 바꾸지 않는다)')
+    return float(_gcp()._sat_g_smooth(p, r_s, r_p))
+
+
+def _refit_phi_eff(phi, g):
+    """φ_eff = √[(φ − φc_eff)² + (δ·g)²] · φc_eff = (1 − g)·φc_P + g·φc_S (생산 `_sat_baselog` 와 같은 식 · 같은 상수)."""
+    c = _refit_consts()
+    phic = (1.0 - g) * c['phi_c_P'] + g * c['phi_c_S']
+    return math.sqrt((phi - phic) ** 2 + (c['delta'] * g) ** 2 + 1e-12)
+
+
+def _refit_gate_selfcheck():
+    """생산 게이트가 기록한 상수 (r_cut 3.5 · 지수 2) 와 같은가 — 바뀌었으면 요약의 상수 표가 거짓이 된다."""
+    a, b = _refit_gate(1.0, None, 7.0), _refit_gate(0.0, 1.0, None)
+    if abs(a - 0.25) > 1e-12 or abs(b - 1.0) > 1e-12:
+        raise ReleaseError(f'재적합 — 생산 크기 게이트가 기록 상수 (r_cut 3.5 · 지수 2) 와 다르다 (g(7 µm) = {a!r}) — _refit_consts 를 먼저 고칠 것')
+
+
+def _refit_ols(X, y):
+    import numpy as np
+    XtX_inv = np.linalg.inv(X.T @ X)
+    b = XtX_inv @ (X.T @ y)
+    e = y - X @ b
+    h = np.einsum('ij,jk,ik->i', X, XtX_inv, X)
+    n, k = X.shape
+    s2 = float((e ** 2).sum()) / (n - k) if n > k else float('nan')
+    se = np.sqrt(np.diag(XtX_inv) * s2)
+    return b, e, h, se
+
+
+def _refit_stats(y, e, h, ds_of):
+    import numpy as np
+    sst = float(((y - y.mean()) ** 2).sum())
+    sse = float((e ** 2).sum())
+    loo = e / (1.0 - h)
+    out = {'r2': 1.0 - sse / sst if sst > 0 else float('nan'),
+           'loocv_r2': 1.0 - float((loo ** 2).sum()) / sst if sst > 0 else float('nan'),
+           'resid_sd': float(np.sqrt(sse / len(y))), 'by_dataset': {}}
+    for ds in sorted(set(ds_of)):
+        m = np.array([d == ds for d in ds_of])
+        yd, ed = y[m], e[m]
+        sd = float(((yd - yd.mean()) ** 2).sum())
+        out['by_dataset'][ds] = {'n': int(m.sum()), 'bias': float(ed.mean()), 'resid_sd': float(np.sqrt((ed ** 2).mean())),
+                                 'r2': (1.0 - float((ed ** 2).sum()) / sd) if (m.sum() >= 2 and sd > 0) else None}
+    return out
+
+
+def refit_porosity_sigma_cn(rows, dry_run=False):
+    """#5 porosity–σ–CN 재적합 — 아무 인계표 · 배포 표의 행 (dataset 열 필요) → {'summary', 'rows'}.
+
+    대상 = ln f_ion_hertz (f = σ_eff/σ₀ · L_mc 기준 · Hertz) · 관통 행만 (상태 OK · MODEL_BELOW_CONTINUUM_BOUND — 값 유지 행을 사후에 빼지 않는다) ·
+    비관통 · 기술 실패 · HOLD 행은 적합 밖 (사유 표 · 행은 남긴다 — 분류 가지).
+    φ_eff = σ_ionic 등록식의 SAT-blend 관통 거리 (φ = phi_se_mass_conserving · 동결 φc_P 0.200 · φc_S 0.195 · δ 0.040 · 크기 게이트 — 생산 코드에서 읽는다).
+      locked: ln f = a + ½·ln φ_eff + 2·ln CN_SE-SE   (등록식 지수 그대로 · 자유 매개변수 a 하나)
+      free:   ln f = a + α·ln φ_eff + β·ln CN_SE-SE   (지수 다시 적합)
+    porosity 는 φ_SE,mc = (1 − ε_union)·(SE/고체) 로 들어온다 (설계 → 구조 ML 이 내는 ε · CN 을 f 로 잇는 근사).  f_p · coverage · τ 항은 넣지 않는다
+    (τ 는 f 의 항등식 — 누설).  LOOCV = 해석적 hat 행렬.  결정적 (같은 입력 = 같은 JSON)."""
+    import numpy as np
+    rows = list(rows)
+    if not rows:
+        raise ReleaseError('재적합 — 행이 없다')
+    miss = [c for c in (KEY, 'dataset') + REFIT_NEEDS if any(c not in r for r in rows)]
+    if miss:
+        raise ReleaseError(f'재적합 입력 열이 없다: {miss}')
+    _refit_gate_selfcheck()
+    c0 = _refit_consts()
+    out_rows, X, ds_of, excl = [], [], [], collections.Counter()
+    for r in rows:
+        st = r.get('ion_net_status_hertz', '')
+        o = {k: '' for k in REFIT_ROW_COLS}
+        o.update({k: r.get(k, '') for k in ('dataset', 'case_id', 'ion_net_status_hertz', 'porosity_union_exact_pct', 'phi_se_mass_conserving',
+                                              'se_se_cn', 'f_ion_hertz')})
+        if st in REFIT_SKIP_STATUSES:
+            o.update(included='0', excluded_reason=st)
+            excl[st] += 1
+            out_rows.append(o)
+            continue
+        if st not in REFIT_FIT_STATUSES:
+            raise ReleaseError(f'{r.get(KEY)}: 재적합 — 모르는 상태 {st!r}')
+        f, phi, cn, p = (_v13_num(r.get(k)) for k in ('f_ion_hertz', 'phi_se_mass_conserving', 'se_se_cn', 'ps_frac'))
+        if f is None or f <= 0 or phi is None or phi <= 0 or cn is None or cn <= 0 or p is None:
+            raise ReleaseError(f'{r.get(KEY)}: 재적합 — 관통 행인데 f · φ_SE,mc · CN · ps_frac 가 유한 양수가 아니다 ({f!r} · {phi!r} · {cn!r} · {p!r})')
+        g = _refit_gate(p, _v13_num(r.get('r_AM_S_um')), _v13_num(r.get('r_AM_P_um')))
+        pe = _refit_phi_eff(phi, g)
+        o.update(included='1', g_phys=repr(g), phi_c_eff=repr((1.0 - g) * c0['phi_c_P'] + g * c0['phi_c_S']), phi_eff=repr(pe),
+                 x_collapse=repr(math.sqrt(pe) * cn ** 2), ln_f=repr(math.log(f)))
+        X.append((math.log(pe), math.log(cn), math.log(f)))
+        ds_of.append(str(r.get('dataset')))
+        out_rows.append(o)
+    n = len(X)
+    if n < REFIT_MIN_ROWS:
+        raise ReleaseError(f'재적합 — 관통 행 {n} < {REFIT_MIN_ROWS} (적합하지 않는다)')
+    A = np.array(X, dtype=float)
+    lpe, lcn, y = A[:, 0], A[:, 1], A[:, 2]
+    yl = y - c0['locked_alpha'] * lpe - c0['locked_beta'] * lcn
+    a_l = float(yl.mean())
+    e_l = yl - a_l
+    st_l = _refit_stats(y, e_l, np.full(n, 1.0 / n), ds_of)
+    st_l.update(params={'a': a_l, 'alpha': c0['locked_alpha'], 'beta': c0['locked_beta']},
+                se={'a': float(np.sqrt(float((e_l ** 2).sum()) / (n - 1) / n))}, n_free=1)
+    Xf = np.column_stack([np.ones(n), lpe, lcn])
+    b, e_f, h_f, se_f = _refit_ols(Xf, y)
+    st_f = _refit_stats(y, e_f, h_f, ds_of)
+    st_f.update(params={'a': float(b[0]), 'alpha': float(b[1]), 'beta': float(b[2])},
+                se={'a': float(se_f[0]), 'alpha': float(se_f[1]), 'beta': float(se_f[2])}, n_free=3)
+    j = 0
+    for o in out_rows:
+        if o['included'] != '1':
+            continue
+        o.update(ln_f_locked=repr(float(y[j] - e_l[j])), resid_locked=repr(float(e_l[j])), ln_f_free=repr(float(y[j] - e_f[j])),
+                 resid_free=repr(float(e_f[j])))
+        j += 1
+    summary = {
+        'schema': REFIT_SCHEMA, 'dry_run': bool(dry_run),
+        'target': 'ln f_ion_hertz (f = σ_eff/σ₀ · 무차원 · L_mc 기준 · Hertz 망) — 관통 행만 (상태 OK · MODEL_BELOW_CONTINUUM_BOUND)',
+        'forms': {'locked': 'ln f = a + 0.5·ln φ_eff + 2·ln CN_SE-SE  (σ_ionic T1 등록식 지수 · 자유 매개변수 a)',
+                  'free': 'ln f = a + α·ln φ_eff + β·ln CN_SE-SE  (지수 다시 적합)'},
+        'phi_eff': ('φ_eff = √[(φ_SE,mc − φc_eff)² + (δ·g)²] · φc_eff = (1 − g)·φc_P + g·φc_S · g = min(r_cut / r_AM_eff, 1)^2 · '
+                    'r_AM_eff = (1 − p)·r_AM_S + p·r_AM_P (p = ps_frac · mono 는 있는 상만) · φ_SE,mc = phi_se_mass_conserving'),
+        'cn': 'CN_SE-SE = se_se_cn (SE 1 개당 SE 접촉 수 · 전 SE 평균 · 벽 입자 포함)',
+        'porosity': 'porosity_union_exact_pct 는 φ_SE,mc = (1 − ε/100)·se_of_solid_vol 로 들어온다 (그림 가로축 · 행 표에 병기)',
+        'constants': c0, 'fit_statuses': list(REFIT_FIT_STATUSES), 'n_total': len(rows), 'n_fit': n,
+        'excluded': dict(sorted(excl.items())), 'n_fit_by_dataset': dict(sorted(collections.Counter(ds_of).items())),
+        'fits': {'locked': st_l, 'free': st_f},
+        'caveats': ['모델 내부 관계 — 고정 접촉망 · 면적 · 협착 · 경계 규약에서 계산한 f 의 근사식 · 실험 절대값 · 실물 순위 · COMSOL 물성 아님',
+                    '지수 (α · β) 는 이 코퍼스 · 이 규약의 적합값 — 물리 상수로 인용하지 않는다',
+                    'f_p (관통 분율) · coverage · τ 항을 넣지 않았다 — τ 는 f 의 항등식 (누설) · 관통 여부는 분류 가지 (ion_percolates_hertz)',
+                    '두 데이터셋 (130 · 64 SE-rich) 은 분포가 다르다 — by_dataset 편향 · R² 를 따로 본다',
+                    'LOOCV = 해석적 hat 행렬 (OLS) — 변수 선택 · φc 재선정은 하지 않았다 (동결값)']}
+    return {'summary': summary, 'rows': out_rows}
+
+
+def refit_from_csv(path_by_ds, dry_run=False):
+    """#5 — 아무 인계표 · 배포 CSV ({데이터셋: 경로}) 에서 재적합 (요약에 입력 파일 sha256)."""
+    rows = []
+    for ds, p in path_by_ds.items():
+        h, rr = _read_csv(p)
+        for r in rr:
+            d = dict(zip(h, r))
+            d['dataset'] = ds
+            rows.append(d)
+    fit = refit_porosity_sigma_cn(rows, dry_run=dry_run)
+    fit['summary']['inputs'] = {ds: {'file': os.path.basename(p), 'sha256': _sha256(p)} for ds, p in path_by_ds.items()}
+    return fit
+
+
+def _v13_close(a, b, path='$'):
+    """재현 비교 (부동소수 상대 1e-9) — 다른 첫 자리의 경로 · 같으면 ''."""
+    if isinstance(a, dict) and isinstance(b, dict):
+        if set(a) != set(b):
+            return f'{path}: 키 {sorted(set(a) ^ set(b))[:4]}'
+        for k in sorted(a):
+            d = _v13_close(a[k], b[k], f'{path}.{k}')
+            if d:
+                return d
+        return ''
+    if isinstance(a, list) and isinstance(b, list):
+        if len(a) != len(b):
+            return f'{path}: 길이 {len(a)} ≠ {len(b)}'
+        for i, (x, y) in enumerate(zip(a, b)):
+            d = _v13_close(x, y, f'{path}[{i}]')
+            if d:
+                return d
+        return ''
+    if isinstance(a, bool) or isinstance(b, bool) or a is None or b is None or isinstance(a, str) or isinstance(b, str):
+        return '' if a == b else f'{path}: {a!r} ≠ {b!r}'
+    if isinstance(a, (int, float)) and isinstance(b, (int, float)):
+        if (isinstance(a, float) and math.isnan(a)) and (isinstance(b, float) and math.isnan(b)):
+            return ''
+        return '' if math.isclose(a, b, rel_tol=_V13_FLOAT_RTOL, abs_tol=1e-12) else f'{path}: {a!r} ≠ {b!r}'
+    return '' if a == b else f'{path}: {a!r} ≠ {b!r}'
+
+
+def _v13_rows_close(ra, rb):
+    """재적합 행 표 비교 — 숫자 칸은 상대 1e-9 · 나머지는 글자 그대로."""
+    if len(ra) != len(rb):
+        return f'행 수 {len(ra)} ≠ {len(rb)}'
+    for i, (x, y) in enumerate(zip(ra, rb)):
+        for k in REFIT_ROW_COLS:
+            a, b = x.get(k, ''), y.get(k, '')
+            if a == b:
+                continue
+            fa, fb = _v13_num(a), _v13_num(b)
+            if fa is None or fb is None or not math.isclose(fa, fb, rel_tol=_V13_FLOAT_RTOL, abs_tol=1e-12):
+                return f'{x.get("case_id")} · {k}: {a!r} ≠ {b!r}'
+    return ''
+
+
+def _v13_write_csv(path, head, rows, bom=False):
+    with open(path, 'w', encoding='utf-8-sig' if bom else 'utf-8', newline='') as f:
+        w = csv.writer(f, lineterminator='\n')
+        w.writerow(head)
+        for r in rows:
+            w.writerow([r.get(c, '') for c in head] if isinstance(r, dict) else r)
+
+
+def _v13_write_refit(fit, stage, prefix, dry_run):
+    """재적합 산출 — 행 CSV · 요약 JSON · Origin 워크시트 셋 (1 줄 Long Name · 2 줄 Units · utf-8-sig · LF) + GUIDE · 미리보기 png · svg."""
+    s = fit['summary']
+    _v13_write_csv(os.path.join(stage, f'{prefix}{REFIT_STEM}_rows.csv'), list(REFIT_ROW_COLS), fit['rows'])
+    with open(os.path.join(stage, f'{prefix}{REFIT_STEM}_summary.json'), 'w', encoding='utf-8', newline='') as f:
+        f.write(json.dumps(s, ensure_ascii=False, indent=1, sort_keys=True) + '\n')
+    od, pd = os.path.join(stage, 'origin'), os.path.join(stage, 'previews')
+    os.makedirs(od, exist_ok=True)
+    os.makedirs(pd, exist_ok=True)
+    lab = {'lhs': 'LHS', 'lhsx': 'LHSx'}
+    rows = fit['rows']
+    inc = [r for r in rows if r['included'] == '1']
+
+    def lnf_free(r):
+        return float(r['ln_f_free'])                                    # 행 표의 예측 그대로 (식을 다시 쓰지 않는다)
+    _v13_write_csv(os.path.join(od, f'{prefix}v13_refit_porosity_f.csv'), ['Dataset', 'Case', 'Porosity', 'f', 'SE–SE CN', 'Percolating'],
+                   [['', '', '%', '1', '1', '1 = yes'] ] + [[lab.get(r['dataset'], r['dataset']), r['case_id'], r['porosity_union_exact_pct'],
+                                                             r['f_ion_hertz'], r['se_se_cn'], '1' if r['included'] == '1' else '0'] for r in rows],
+                   bom=True)
+    _v13_write_csv(os.path.join(od, f'{prefix}v13_refit_collapse.csv'),
+                   ['Dataset', 'Case', 'φ_eff^0.5·CN^2', 'f', 'f (locked fit)'],
+                   [['', '', '1', '1', '1']] + [[lab.get(r['dataset'], r['dataset']), r['case_id'], r['x_collapse'], r['f_ion_hertz'],
+                                                 repr(math.exp(float(r['ln_f_locked'])))] for r in inc], bom=True)
+    _v13_write_csv(os.path.join(od, f'{prefix}v13_refit_parity.csv'), ['Dataset', 'Case', 'f (DEM network)', 'f (free fit)', 'f (locked fit)'],
+                   [['', '', '1', '1', '1']] + [[lab.get(r['dataset'], r['dataset']), r['case_id'], r['f_ion_hertz'], repr(math.exp(lnf_free(r))),
+                                                 repr(math.exp(float(r['ln_f_locked'])))] for r in inc], bom=True)
+    with open(os.path.join(od, f'{prefix}GUIDE.md'), 'w', encoding='utf-8', newline='') as f:
+        f.write((f'> ⚠ {V13_DRY_BANNER}\n\n' if dry_run else '')
+                + '# Origin 가이드 — v1.3 porosity–σ–CN 재적합 (#5)\n\n'
+                '- 가져오기: CSV 를 Origin 에 끌어 놓기 → Header Lines: **Long Name = 1 줄 · Units = 2 줄** · Data Start = 3 줄 (utf-8 · BOM).\n'
+                f'- `{prefix}v13_refit_porosity_f.csv` — 가로 Porosity (%) · 세로 f (log) · 색 = SE–SE CN · 모양 = Dataset · Percolating = 0 행은 f = 0 '
+                '(로그 축에 못 그린다 — 따로 표시하거나 뺀다 · 지우지 않는다).\n'
+                f'- `{prefix}v13_refit_collapse.csv` — 가로 φ_eff^0.5·CN^2 · 세로 f (log–log) · 등록식 (locked) 선 = f (locked fit) 열.\n'
+                f'- `{prefix}v13_refit_parity.csv` — 가로 f (DEM network) · 세로 f (free fit) · 1:1 선 (log–log).\n'
+                '- 서식 = 랩 BML 표준 (`docs/report_making_principles.md` — 레이어 12 × 9 cm · Aptos · 테두리) · 미리보기 `../previews/` 는 Liberation Sans.\n'
+                '- 식 · 상수 · 한정어 = 요약 JSON (`../' + f'{prefix}{REFIT_STEM}_summary.json`) — 모델 내부 관계 · 지수를 물리 상수로 인용하지 않는다.\n')
+    _v13_refit_figure(fit, pd, prefix, dry_run)
+
+
+def _v13_refit_figure(fit, pd, prefix, dry_run):
+    """미리보기 (세 패널 · 한 패널 한 축) — (a) f vs porosity (색 = CN · 단일 색상 순차) (b) 붕괴 f vs φ_eff^½·CN² + 등록식 선 (c) 대각 (free)."""
+    import matplotlib
+    matplotlib.use('Agg')
+    import matplotlib.pyplot as plt
+    from matplotlib.colors import LinearSegmentedColormap
+    rows, s = fit['rows'], fit['summary']
+    inc = [r for r in rows if r['included'] == '1']
+    exc = [r for r in rows if r['included'] != '1']
+    GRAY, C1, C2 = '#404040', '#2a78d6', '#eb6834'
+    color = {'lhs': C1, 'lhsx': C2}
+    mark = {'lhs': 'o', 'lhsx': 's'}
+    name = {'lhs': 'LHS (130)', 'lhsx': 'LHSx, SE-rich (64)'}
+    cmap = LinearSegmentedColormap.from_list('cn_blue', ['#bcd5f2', '#2a78d6', '#0d2f5c'])
+    fr, lk = s['fits']['free'], s['fits']['locked']
+    with plt.rc_context({'font.family': ['Liberation Sans', 'DejaVu Sans'], 'font.size': 10, 'axes.edgecolor': GRAY, 'axes.labelcolor': GRAY,
+                         'xtick.color': GRAY, 'ytick.color': GRAY, 'xtick.direction': 'out', 'ytick.direction': 'out', 'axes.linewidth': 1.0,
+                         'svg.fonttype': 'none', 'svg.hashsalt': 'lhs_v13_refit'}):
+        fig, axs = plt.subplots(1, 3, figsize=(14.0, 4.6))
+        a1, a2, a3 = axs
+        cns = [float(r['se_se_cn']) for r in inc]
+        vmin, vmax = (min(cns), max(cns)) if cns else (0.0, 1.0)
+        for ds in ('lhs', 'lhsx'):
+            R = [r for r in inc if r['dataset'] == ds]
+            if R:
+                sc = a1.scatter([float(r['porosity_union_exact_pct']) for r in R], [float(r['f_ion_hertz']) for r in R],
+                                c=[float(r['se_se_cn']) for r in R], cmap=cmap, vmin=vmin, vmax=vmax, marker=mark[ds], s=22,
+                                edgecolors='white', linewidths=0.4, label=name[ds])
+        np_ = [r for r in exc if r['excluded_reason'] == 'NOT_PERCOLATING']
+        fl = min((float(r['f_ion_hertz']) for r in inc), default=1e-3) / 3.0
+        if np_:
+            a1.scatter([float(r['porosity_union_exact_pct']) for r in np_], [fl] * len(np_), marker='x', s=22, color='#8a8986', linewidths=1.0,
+                       label=f'No ion through path ({len(np_)}, f = 0, drawn at floor)')
+        a1.set_yscale('log')
+        a1.set_xlabel('Porosity, union (%)')
+        a1.set_ylabel('f = σ_eff / σ₀ (Hertz)')
+        if inc:
+            cb = fig.colorbar(sc, ax=a1, pad=0.02)
+            cb.set_label('SE–SE CN')
+        from matplotlib.lines import Line2D                              # 범례 표지 = 모양만 (색은 CN 막대가 말한다)
+        hl = [Line2D([], [], ls='', marker=mark[ds], color='#8a8986', markersize=5, label=name[ds]) for ds in ('lhs', 'lhsx')]
+        if np_:
+            hl.append(Line2D([], [], ls='', marker='x', color='#8a8986', markersize=5, label=f'No ion through path ({len(np_)}, f = 0, at floor)'))
+        a1.legend(handles=hl, frameon=False, fontsize=8, loc='lower left', bbox_to_anchor=(0.0, 0.10))   # 바닥 표지 줄 위 · 빈 왼쪽 아래
+        for ds in ('lhs', 'lhsx'):
+            R = [r for r in inc if r['dataset'] == ds]
+            if R:
+                a2.scatter([float(r['x_collapse']) for r in R], [float(r['f_ion_hertz']) for r in R], marker=mark[ds], s=18, facecolors='none',
+                           edgecolors=color[ds], linewidths=1.0, label=name[ds])
+        xs = sorted(float(r['x_collapse']) for r in inc)
+        if xs:
+            a2.plot([xs[0], xs[-1]], [math.exp(lk['params']['a']) * xs[0], math.exp(lk['params']['a']) * xs[-1]], color=GRAY, lw=1.2, ls='--',
+                    label=f'locked: f = e^a·φ_eff^0.5·CN² (R² {lk["r2"]:.3f})')
+        a2.set_xscale('log')
+        a2.set_yscale('log')
+        a2.set_xlabel('φ_eff^0.5 · CN²')
+        a2.set_ylabel('f')
+        a2.legend(frameon=False, fontsize=8, loc='upper left')
+        for ds in ('lhs', 'lhsx'):
+            R = [r for r in inc if r['dataset'] == ds]
+            if R:
+                a3.scatter([float(r['f_ion_hertz']) for r in R], [math.exp(float(r['ln_f_free'])) for r in R], marker=mark[ds], s=18,
+                           facecolors='none', edgecolors=color[ds], linewidths=1.0, label=name[ds])
+        fv = [float(r['f_ion_hertz']) for r in inc] + [math.exp(float(r['ln_f_free'])) for r in inc]
+        if fv:
+            lo, hi = min(fv) / 1.3, max(fv) * 1.3
+            a3.plot([lo, hi], [lo, hi], color=GRAY, lw=1.0, ls='-', label='1:1')
+        p = fr['params']
+        a3.set_xscale('log')
+        a3.set_yscale('log')
+        a3.set_xlabel('f (DEM network)')
+        a3.set_ylabel(f'f (free fit: α {p["alpha"]:.3f} · β {p["beta"]:.3f})')
+        a3.legend(frameon=False, fontsize=8, loc='upper left',
+                  title=f'R² {fr["r2"]:.3f} · LOOCV {fr["loocv_r2"]:.3f} · n {s["n_fit"]}', title_fontsize=8)
+        for ax, t in zip(axs, 'abc'):
+            ax.text(-0.14, 1.03, f'({t})', transform=ax.transAxes, fontsize=11, fontweight='bold', color=GRAY, va='bottom')
+        foot = ('Network model descriptor (fixed contact network · Hertz) — not an experimental value · exponents are corpus fits, not physical constants · '
+                'φ_eff = SAT-blend distance from the frozen σ_ionic thresholds')
+        if dry_run:
+            foot = f'{V13_DRY_BANNER} (generation-1 input) · ' + foot
+        fig.text(0.5, 0.005, foot, ha='center', va='bottom', fontsize=7.5, color='#666666')
+        fig.tight_layout(rect=(0, 0.05, 1, 1), w_pad=2.0)
+        fig.savefig(os.path.join(pd, f'{prefix}v13_refit_porosity_sigma_cn.png'), dpi=200, metadata={'Software': None})
+        fig.savefig(os.path.join(pd, f'{prefix}v13_refit_porosity_sigma_cn.svg'), metadata={'Date': None})
+        plt.close(fig)
+
+
+# ── 빌드 · 대조 ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+def _v13_handover(handover_dir, ds):
+    """인계표 폴더에서 `<ds>_handover_*.csv` 정확히 하나 + 열 사전 · τ 출처 부록."""
+    c = sorted(glob.glob(os.path.join(handover_dir, f'{ds}_handover_*.csv')))
+    if len(c) != 1:
+        raise ReleaseError(f'{handover_dir}: {ds}_handover_*.csv 가 {len(c)} 개 — 정확히 하나여야 한다 {[os.path.basename(x) for x in c]}')
+    stem = c[0][:-4]
+    for suf in ('_columns.tsv', '_tau_provenance.tsv'):
+        if not os.path.isfile(stem + suf):
+            raise ReleaseError(f'{os.path.basename(stem)}{suf} 가 없다 — 인계표 묶음이 아니다')
+    return c[0]
+
+
+def _v13_prefix(dry_run):
+    return V13_DRY_PREFIX if dry_run else ''
+
+
+def _v13_out_guard(out_dir, dry_run):
+    a = os.path.abspath(out_dir)
+    if dry_run and (a + os.sep).startswith(REPO + os.sep):
+        raise ReleaseError(f'dry-run 산출을 리포 안 ({_v13_rel(a)}) 에 쓰지 않는다 — docs/data 의 배포 폴더와 섞이거나 커밋되지 않게 · 리포 밖 스크래치에')
+    if os.path.exists(a) and (not os.path.isdir(a) or os.listdir(a)):
+        raise ReleaseError(f'산출 폴더 {a} 가 이미 있고 비어 있지 않다 — 새 폴더에 만든다 (덮어쓰지 않는다)')
+    return a
+
+
+def _v13_status_counts(rows, col):
+    return dict(sorted(collections.Counter(r.get(col, '') for r in rows).items()))
+
+
+def _v13_iso_stats(rows):
+    """고립 열이 비관통에 몰리는가 — (관통 · 비관통) × (am_ionic_isolated_pct · se_isolated_pct) 평균 · 최대."""
+    out = {}
+    for col in ('am_ionic_isolated_pct', 'se_isolated_pct'):
+        for lab, sel in (('perc', lambda r: r.get('ion_net_status_hertz') in _V13_VALUE_STATUSES),
+                         ('nonperc', lambda r: r.get('ion_net_status_hertz') == 'NOT_PERCOLATING')):
+            v = [_v13_num(r.get(col)) for r in rows if sel(r) and col in r]
+            v = [x for x in v if x is not None]
+            out[f'{col}:{lab}'] = (len(v), (sum(v) / len(v)) if v else None, max(v) if v else None)
+    return out
+
+
+def build_v13(*, out_dir, handover_dir, batch_root=None, date=None, dry_run=False, codex_verdict=None, h12_appendix=False,
+              pressure_unverified=False, transfer_text=None, allow_seal_diff=None):
+    """단계 B — 인계표 (둘) → v1.3 배포 묶음 (out_dir).  실제 (dry_run False): Codex 판정문 · 배치 뿌리 (manifest g2 · 원천 대조 · 발사 봉인 대조 ·
+    ⓪b 다시 읽기 기록 · τ 다시 읽기) · 인계표 세대 g2 · 완료 압력 열 (없으면 --pressure-unverified 명시 승인) 필수.  봉인 파일이 발사 때와 다르면 거부 —
+    값과 무관한 변경이면 allow_seal_diff (--allow-seal-diff) 로 명시 승인 · 기록.  dry-run: 세대 1 원천 허용 · 빠진 v1.3 열은 기록하고 뺀다 ·
+    파일 이름 DRYRUN_ · README 첫 줄 "DRY RUN — not a release" · 리포 안 (docs/data 포함) 거부.  임시 폴더에 다 만들고 `check_v13` 통과 뒤에만 out_dir 로 옮긴다
+    (거부 · 실패면 산출 폴더가 남지 않는다).  transfer_text = Codex GO 판정문의 전달 문안 파일 (있으면 README "외부 검토" 에 그대로 · sha256 기록 —
+    README 를 만든 뒤 손으로 고치면 빌드 manifest 의 sha256 이 어긋난다).  반환 = 보고 dict."""
+    date = date or datetime.date.today().strftime('%Y%m%d')
+    tt = None
+    if transfer_text:
+        if not os.path.isfile(transfer_text):
+            raise ReleaseError(f'전달 문안 파일 {transfer_text!r} 이 없다')
+        tt = {'file': _v13_rel(transfer_text), 'sha256': _sha256(transfer_text), 'text': open(transfer_text, encoding='utf-8').read().strip()}
+    if not re.fullmatch(r'\d{8}', str(date)):
+        raise ReleaseError(f'날짜 {date!r} — YYYYMMDD')
+    out_abs = _v13_out_guard(out_dir, dry_run)
+    pre = _v13_prefix(dry_run)
+    warnings = []
+    man_info = code_identity = gate_files = None
+    if not dry_run:
+        if not codex_verdict or not os.path.isfile(codex_verdict):
+            raise ReleaseError(f'Codex 세대 2 판정문 (GO) 이 없다 ({codex_verdict!r}) — v1.3 은 GO 뒤에만 만든다 (--codex-verdict)')
+        if not batch_root:
+            raise ReleaseError('--batch-root (배치 뿌리 — τ 다시 읽기 · manifest 기대 세대) 가 없다 — 실제 v1.3 은 load_tau_results 로 다시 읽은 뒤에만 만든다')
+        mpath = os.path.join(batch_root, 'manifest.json')
+        g_man = v13_manifest_generation(mpath)
+        mp = v13_manifest_inputs_problems(mpath)
+        if mp:
+            raise ReleaseError('배치 manifest ↔ v1.3 입력 — ' + ' | '.join(mp))
+        man_info = {'path': _v13_rel(mpath), 'sha256': _sha256(mpath), 'expected_network_generation': g_man}
+        code_identity, w_seal = v13_seal_gate(mpath, allow_seal_diff)          # 발사 봉인 ↔ 이 체크아웃 (세대 2 등록 §3)
+        gate_files, w_gate = v13_batch_gate_check(batch_root)                   # ⓪ 감사 · ⓪b 다시 읽기 기록 (등록 §5-2 · §5-3)
+        warnings += w_seal + w_gate
+    elif allow_seal_diff:
+        raise ReleaseError('--allow-seal-diff 는 실제 v1.3 (배치 뿌리 · 발사 봉인 대조) 에만 쓴다 — dry-run 은 봉인 대조를 하지 않는다')
+    LDD = _ldd()
+    hand, hrows, gens, missing = {}, {}, {}, {}
+    for ds in V13_DATASETS:
+        hp = _v13_handover(handover_dir, ds)
+        head, rows = _read_csv(hp)
+        drows = [dict(zip(head, r)) for r in rows]
+        hand[ds], hrows[ds] = (hp, head), drows
+        g, gp = v13_generation_problems(drows, dry_run=dry_run)
+        if gp:
+            raise ReleaseError(f'{ds}: 세대 관문 {len(gp)} — ' + ' | '.join(gp[:3]))
+        gens[ds] = g
+        bad = [r.get(KEY) for r in drows if 'wa_status' in r and r['wa_status'] not in LDD.WA_OK_STATUS]
+        if bad:
+            raise ReleaseError(f'{ds}: 웹앱 배치 done · partial 이 아닌 행 {bad[:5]} — 최종판은 194/194 완주 배치만')
+        with open(hp[:-4] + '_tau_provenance.tsv', encoding='utf-8', newline='') as f:
+            prov = {r['case']: r for r in csv.DictReader(f, delimiter='\t')}
+        if set(prov) != {r[KEY] for r in drows}:
+            raise ReleaseError(f'{ds}: τ 출처 부록 케이스 ≠ 인계표 케이스')
+        stale = sorted(c for c, r in prov.items() if r.get('same_generation_checks') != ';'.join(LDD.TAU_SAME_GEN_CHECKS))
+        if stale:
+            msg = (f'{ds}: τ 출처 부록 same_generation_checks 가 지금 목록 ({len(LDD.TAU_SAME_GEN_CHECKS)} 검사) 과 다른 케이스 {len(stale)} '
+                   f'(예 {stale[0]}) — 옛 생성기로 만든 인계표')
+            if not dry_run:
+                raise ReleaseError(msg)
+            warnings.append(msg)
+        if 'se_isolated_pct' in head:
+            sp = v13_se_isolated_problems(drows)
+            if sp:
+                raise ReleaseError(f'{ds}: se_isolated_pct 항등식 {len(sp)} — ' + ' | '.join(sp[:3]))
+    tau_reread = 'not_performed (dry run — 세대 1 원천 · τ 원천 폴더 없음)'
+    if not dry_run:
+        rp = []
+        for ds in V13_DATASETS:
+            rp += v13_reread_tau(ds, batch_root, hrows[ds], V13_GENERATION)
+        if rp:
+            raise ReleaseError(f'τ 다시 읽기 문제 {len(rp)} (load_tau_results · 배치 manifest 기대 세대 g2) — ' + ' | '.join(rp[:4]))
+        tau_reread = 'performed'
+    stage = out_abs + f'.partial-{os.getpid()}'
+    if os.path.exists(stage):
+        shutil.rmtree(stage)
+    os.makedirs(stage)
+    try:
+        specs = {}
+        press_ok = all(c in hand[ds][1] for ds in V13_DATASETS for c in V13_PRESS_ADD)
+        if not press_ok and not dry_run and not pressure_unverified:
+            raise ReleaseError('인계표에 완료 압력 열 (press_*) 이 없다 — --pressure-record 로 만든 인계표이거나 --pressure-unverified (명시 승인 · DESC-06)')
+        for ds in V13_DATASETS:
+            head = hand[ds][1]
+            #  완료 압력 열: 실제 + 명시 승인 (--pressure-unverified) 이면 명세에서 뺀다 (README · manifest 에 미검사 표지) · dry-run 은 빠진 열로 기록
+            kinds = [('main', v13_columns(ds, 'main', press=(press_ok or dry_run))), ('physics', v13_columns(ds, 'physics'))]
+            if h12_appendix:
+                kinds.append(('h12', v13_columns(ds, 'h12')))
+            for kind, cols in kinds:
+                mc = [c for c in cols if c not in head]
+                if mc:
+                    if not dry_run:
+                        raise ReleaseError(f'{ds} {kind}: 인계표에 없는 v1.3 열 {mc} — 지금 생성기 (v1.3 묶음 · 세대 2 배치) 로 만든 인계표가 아니다')
+                    missing.setdefault(ds, [])
+                    missing[ds] += [c for c in mc if c not in missing[ds]]
+                    cols = [c for c in cols if c in head]
+                if kind == 'h12' and not any(_V13_TAU_VALUE_RE.fullmatch(c) for c in cols):
+                    warnings.append(f'{ds}: H12 열이 인계표에 없어 H12 부록을 만들지 않았다')
+                    continue
+                specs[(ds, kind)] = cols
+            if not press_ok:
+                warnings.append('완료 압력 미검사 (DESC-06) — press_* 열 없음' + (' (dry run)' if dry_run else ' (--pressure-unverified 명시 승인)'))
+        files = {}
+        for (ds, kind), cols in specs.items():
+            hp = hand[ds][0]
+            suf = {'main': '', 'physics': '_physics', 'h12': '_h12'}[kind]
+            prefix = os.path.join(stage, f'{pre}{ds}_release_{date}_v13{suf}')
+            expect = os.path.join(REPO, V13_INPUTS[ds]['expect_ids'])
+            if kind == 'main' and dry_run:
+                build(hp, cols, prefix)
+                for p_ in profile_problems('ml_v1', prefix, hp, expect):
+                    if '열 사전이' in p_ or '사전 참조' in p_:
+                        warnings.append(f'{ds}: {p_} (세대 1 인계표 사전 문구 — 지금 생성기는 표지를 단다)')
+                    else:
+                        raise ReleaseError(f'{ds} 프로필 ml_v1 — {p_}')
+            else:
+                build(hp, cols, prefix, appendix=(kind != 'main'), profile='ml_v1', expect_ids=expect)
+            bp = v13_blank_problems(hrows[ds], cols)
+            if bp:
+                raise ReleaseError(f'{ds} {kind}: 빈칸 뜻 문제 {len(bp)} — ' + ' | '.join(bp[:3]))
+        rel_main = {ds: os.path.join(stage, f'{pre}{ds}_release_{date}_v13.csv') for ds in V13_DATASETS}
+        by_ds = {}
+        for ds in V13_DATASETS:
+            h, rr = _read_csv(rel_main[ds])
+            by_ds[ds] = (h, [dict(zip(h, r)) for r in rr])
+        tables, drows = v13_ml_table(by_ds)
+        for ds, (mc, mr) in tables.items():
+            mp_ = os.path.join(stage, f'{pre}{ds}_mltable_{date}_v13')
+            _v13_write_csv(mp_ + '.csv', mc, mr)
+            with open(mp_ + '_columns.tsv', 'w', encoding='utf-8', newline='') as f:
+                w = csv.writer(f, delimiter='\t', lineterminator='\n')
+                w.writerow(['column', 'role', 'source_column', 'blank_codes', 'meaning'])
+                for d in drows:
+                    if d['dataset'] == ds:
+                        w.writerow([d['column'], d['role'], d['source_column'], d['blank_codes'], d['meaning']])
+        fit = refit_from_csv(rel_main, dry_run=dry_run)
+        _v13_write_refit(fit, stage, pre, dry_run)
+        ctx = {'date': date, 'dry_run': dry_run, 'gens': gens, 'missing': missing, 'warnings': warnings, 'hand': hand, 'hrows': hrows,
+               'by_ds': by_ds, 'tables': tables, 'fit': fit, 'codex_verdict': _v13_rel(codex_verdict) if codex_verdict else None,
+               'manifest': man_info, 'tau_reread': tau_reread, 'press_ok': press_ok, 'specs': specs, 'stage': stage, 'pre': pre,
+               'h12': any(k[1] == 'h12' for k in specs), 'transfer': tt, 'code_identity': code_identity, 'gate_files': gate_files}
+        with open(os.path.join(stage, f'{pre}README.md'), 'w', encoding='utf-8', newline='') as f:
+            f.write(_v13_readme(ctx))
+        for root, _dirs, fs in os.walk(stage):
+            for n in sorted(fs):
+                p_ = os.path.join(root, n)
+                files[os.path.relpath(p_, stage).replace(os.sep, '/')] = _sha256(p_)
+        import numpy
+        import matplotlib
+        man = {'schema': V13_MANIFEST_SCHEMA, 'dry_run': bool(dry_run), 'date': date, 'generation': gens, 'tau_reread': tau_reread,
+               'codex_verdict': ctx['codex_verdict'], 'batch_manifest': man_info, 'pressure_verified': bool(press_ok),
+               'missing_columns': missing, 'warnings': warnings, 'h12_appendix': ctx['h12'],
+               'transfer_text': ({k: v for k, v in tt.items() if k != 'text'} if tt else None),
+               'code_identity': code_identity, 'batch_gate_files': gate_files,
+               'handover': {ds: {'file': _v13_rel(hand[ds][0]), 'sha256': _sha256(hand[ds][0]), 'rows': len(hrows[ds]), 'cols': len(hand[ds][1])}
+                            for ds in V13_DATASETS},
+               'code': {n: _sha256(os.path.join(REPO, 'scripts', n)) for n in ('lhs_release_build.py', 'lhs_design_dataset.py', 'tau_flux.py',
+                                                                                 'generate_comparison_plots.py')},
+               'python': sys.version.split()[0], 'numpy': numpy.__version__, 'matplotlib': matplotlib.__version__,
+               'files': dict(sorted(files.items()))}
+        with open(os.path.join(stage, f'{pre}{V13_MANIFEST_NAME}'), 'w', encoding='utf-8', newline='') as f:
+            f.write(json.dumps(man, ensure_ascii=False, indent=1, sort_keys=True) + '\n')
+        cp = check_v13(stage, handover_dir, dry_run=dry_run)
+        if cp:
+            raise ReleaseError(f'만든 묶음 대조 실패 {len(cp)} — ' + ' | '.join(cp[:4]))
+        if os.path.isdir(out_abs):
+            os.rmdir(out_abs)
+        os.rename(stage, out_abs)
+    except BaseException:
+        shutil.rmtree(stage, ignore_errors=True)
+        raise
+    return {'out_dir': out_abs, 'dry_run': dry_run, 'generation': gens, 'missing_columns': missing, 'warnings': warnings,
+            'tau_reread': tau_reread, 'n_files': len(files)}
+
+
+def check_v13(release_dir, handover_dir, dry_run=False):
+    """v1.3 묶음 대조 — 문제 목록 ([] = 통과).  빌드 manifest 의 파일 sha256 · 배포 ⊆ 인계표 (주 = 프로필 ml_v1 · 부록 = appendix) · 빈칸 일관성 ·
+    ML 표 = 배포에서 다시 만든 표 (글자 그대로) · se_isolated 항등식 · 세대 (실제 = g2) · 재적합 재현 (상대 1e-9) · README 표지."""
+    pre = _v13_prefix(dry_run)
+    probs = []
+    mpath = os.path.join(release_dir, f'{pre}{V13_MANIFEST_NAME}')
+    try:
+        man = json.load(open(mpath, encoding='utf-8'))
+    except (OSError, ValueError) as e:
+        return [f'빌드 manifest {os.path.basename(mpath)} 를 못 읽었다 ({type(e).__name__})']
+    if bool(man.get('dry_run')) != bool(dry_run):
+        probs.append(f'빌드 manifest dry_run {man.get("dry_run")!r} ≠ 대조 모드 {dry_run!r}')
+    date = man.get('date')
+    for rel, sha in (man.get('files') or {}).items():
+        p = os.path.join(release_dir, rel)
+        if not os.path.isfile(p):
+            probs.append(f'파일 없음: {rel}')
+        elif _sha256(p) != sha:
+            probs.append(f'sha256 다름: {rel}')
+    LDD = _ldd()
+    by_ds = {}
+    for ds in V13_DATASETS:
+        try:
+            hp = _v13_handover(handover_dir, ds)
+        except ReleaseError as e:
+            probs.append(str(e))
+            continue
+        hh, hr = _read_csv(hp)
+        hrows = [dict(zip(hh, r)) for r in hr]
+        g, gp = v13_generation_problems(hrows, dry_run=dry_run)
+        probs += [f'{ds}: {p}' for p in gp]
+        if (man.get('generation') or {}).get(ds) != g:
+            probs.append(f'{ds}: 빌드 manifest 세대 {(man.get("generation") or {}).get(ds)!r} ≠ 인계표 {g!r}')
+        expect = os.path.join(REPO, V13_INPUTS[ds]['expect_ids'])
+        for suf, appx in (('', False), ('_physics', True), ('_h12', True)):
+            prefix = os.path.join(release_dir, f'{pre}{ds}_release_{date}_v13{suf}')
+            if not os.path.isfile(prefix + '.csv'):
+                if suf != '_h12':
+                    probs.append(f'{ds}: 배포 파일 없음 {os.path.basename(prefix)}.csv')
+                continue
+            pp = check(hp, prefix, appendix=appx, profile=None if (dry_run and not appx) else 'ml_v1', expect_ids=expect)
+            probs += [f'{ds}{suf}: {p}' for p in pp]
+            if dry_run and not appx:
+                probs += [f'{ds}: {p}' for p in profile_problems('ml_v1', prefix, hp, expect) if not ('열 사전이' in p or '사전 참조' in p)]
+            rh, rr = _read_csv(prefix + '.csv')
+            rrows = [dict(zip(rh, r)) for r in rr]
+            hk = {r[KEY]: r for r in hrows}
+            probs += [f'{ds}{suf}: {p}' for p in v13_blank_problems([hk.get(r[KEY], r) for r in rrows], rh)]
+            if suf == '':
+                by_ds[ds] = (rh, rrows)
+                if 'se_isolated_pct' in rh:
+                    probs += [f'{ds}: {p}' for p in v13_se_isolated_problems(rrows)]
+                elif not dry_run:
+                    probs.append(f'{ds}: 주 표에 se_isolated_pct 가 없다')
+    if len(by_ds) == len(V13_DATASETS):
+        try:
+            tables, drows = v13_ml_table(by_ds)
+        except ReleaseError as e:
+            probs.append(f'ML 표를 다시 만들 수 없다 — {e}')
+            tables = {}
+        for ds, (mc, mr) in tables.items():
+            mp = os.path.join(release_dir, f'{pre}{ds}_mltable_{date}_v13.csv')
+            buf = io.StringIO()
+            w = csv.writer(buf, lineterminator='\n')
+            w.writerow(mc)
+            for r in mr:
+                w.writerow([r.get(c, '') for c in mc])
+            try:
+                got = open(mp, encoding='utf-8', newline='').read()
+            except OSError:
+                probs.append(f'{ds}: ML 표 없음')
+                continue
+            if got != buf.getvalue():
+                probs.append(f'{ds}: ML 표 ≠ 배포에서 다시 만든 표 (빈칸 코드 · 값 · 열)')
+            dec_cols, dec_rows = v13_ml_decode(mc, [dict(zip(mc, row)) for row in list(csv.reader(io.StringIO(got)))[1:]])
+            if dec_cols != by_ds[ds][0] or [[r[c] for c in dec_cols] for r in dec_rows] != [[r.get(c, '') for c in dec_cols] for r in by_ds[ds][1]]:
+                probs.append(f'{ds}: ML 표 되읽기 ≠ 배포 열 · 값')
+        try:
+            fit = refit_from_csv({ds: os.path.join(release_dir, f'{pre}{ds}_release_{date}_v13.csv') for ds in V13_DATASETS}, dry_run=dry_run)
+            sp = os.path.join(release_dir, f'{pre}{REFIT_STEM}_summary.json')
+            d = _v13_close(json.load(open(sp, encoding='utf-8')), json.loads(json.dumps(fit['summary'], ensure_ascii=False, sort_keys=True)))
+            if d:
+                probs.append(f'재적합 요약 ≠ 다시 적합한 값 (refit) — {d}')
+            rp = os.path.join(release_dir, f'{pre}{REFIT_STEM}_rows.csv')
+            rh_, rr_ = _read_csv(rp)
+            d2 = _v13_rows_close([dict(zip(rh_, r)) for r in rr_], fit['rows'])
+            if d2:
+                probs.append(f'재적합 행 표 ≠ 다시 적합한 값 (refit) — {d2}')
+        except (ReleaseError, OSError, ValueError) as e:
+            probs.append(f'재적합 재현 실패 (refit) — {type(e).__name__}: {e}')
+    rd = os.path.join(release_dir, f'{pre}README.md')
+    if not os.path.isfile(rd):
+        probs.append(f'README 없음 ({pre}README.md)')
+    else:
+        first = (open(rd, encoding='utf-8').read().splitlines() or [''])[0]
+        if dry_run and V13_DRY_BANNER not in first:
+            probs.append('dry-run README 첫 줄에 "DRY RUN — not a release" 표지가 없다')
+        if not dry_run and 'DRY RUN' in open(rd, encoding='utf-8').read():
+            probs.append('실제 배포 README 에 DRY RUN 표지가 있다')
+    if not dry_run:
+        if man.get('tau_reread') != 'performed':
+            probs.append(f'τ 다시 읽기 {man.get("tau_reread")!r} — 실제 배포는 load_tau_results 로 다시 읽어야 한다')
+        if not man.get('codex_verdict'):
+            probs.append('빌드 manifest 에 Codex 판정문이 없다')
+        ci = man.get('code_identity')
+        if not isinstance(ci, dict) or not isinstance(ci.get('sealed_changed'), list) or not ci.get('sealed'):
+            probs.append('빌드 manifest 에 발사 봉인 대조 (code_identity) 가 없다 — 실제 배포는 배치 manifest code_hashes 와 대조한 뒤에만')
+        else:
+            un = [f for f in ci['sealed_changed'] if f not in (ci.get('allowed') or [])]
+            if un:
+                probs.append(f'발사 봉인과 다른 파일 {un} 이 명시 승인 (--allow-seal-diff) 목록에 없다')
+        rr = (man.get('batch_gate_files') or {}).get('reread.json')
+        if isinstance(rr, dict) and isinstance(rr.get('n_fail'), int) and (rr['n_fail'] != 0 or rr.get('expected_generation') != V13_GENERATION):
+            probs.append(f'⓪b 다시 읽기 기록 n_fail {rr["n_fail"]} · 기대 세대 {rr.get("expected_generation")!r} — 인계하지 않는다 (등록 §5-3)')
+    return probs
+
+
+def _v13_fmt(x, nd=3):
+    return '—' if x is None else (f'{x:.{nd}f}' if isinstance(x, float) else str(x))
+
+
+def _v13_readme(ctx):
+    """v1.3 README — 수 · 파일 · sha256 은 산출에서 센다 (손으로 적지 않는다).  1저자가 보내기 전에 읽고 고친다 (판정문 문안이 다르면 판정문 우선)."""
+    d, dry, pre, st = ctx['date'], ctx['dry_run'], ctx['pre'], ctx['stage']
+    fit = ctx['fit']['summary']
+    fr, lk = fit['fits']['free'], fit['fits']['locked']
+    gen_txt = ' · '.join(f'{ds} = `{ctx["gens"][ds]}`' for ds in V13_DATASETS)
+    L = []
+    if dry:
+        L += [f'> ⚠ {V13_DRY_BANNER} — 세대 1 원천 (커밋된 v1.2 인계표) 으로 v1.3 생성기 경로만 돌린 것.  수영 님께 보내지 않는다 · 값 인용 금지.', '']
+    L += [f'# LHS 구조 디스크립터 — 배포 v1.3 최종판 ({d} · 접촉망 세대 {ctx["gens"].get("lhs")})', '',
+          '> 수영 님 ML 용 구조 디스크립터 + 접촉망 수송 지표 — **v1.3 = 최종판** (1저자 10-06 밤 *"v1.3 에 최종이라고 하고 확실하게 넘겨주자"*).',
+          '> v1.2 (`docs/data/lhs_release_20261006_v12/`) 의 열 · 값 규약을 이어받고 더한 것: **세대 2 망 값** · **ML 표 (빈칸 뜻 코드 · #1)** · '
+          '**f 타깃 + 관통 분류 안내 (#2)** · **porosity–σ–CN 재적합 (#5)** · 표시 이름 **수송 tortuosity** · 새 열 **`se_isolated_pct`**.',
+          f'> 정본 인계표 = {" · ".join("`" + _v13_rel(ctx["hand"][ds][0]) + "`" for ds in V13_DATASETS)} · 재현 명령 = §10.', '',
+          '## 외부 검토 — 먼저 읽을 것', '']
+    if dry:
+        L += ['- (dry run) Codex 판정 · 배치 manifest · τ 다시 읽기 없음 — 이 묶음은 생성기 시험 산출이다.']
+    else:
+        mi = ctx['manifest'] or {}
+        if ctx.get('transfer'):
+            L += [f'> **전달 문단 (판정문 그대로 · `{ctx["transfer"]["file"]}` · sha256 `{ctx["transfer"]["sha256"]}`)**:', '>']
+            L += [('> ' + ln) if ln.strip() else '>' for ln in ctx['transfer']['text'].splitlines()]
+            L += ['']
+        L += [f'- Codex 세대 2 판정문 (GO): `{ctx["codex_verdict"]}` — 이 배포는 GO 뒤에만 만든다.  판정문의 전달 문안이 이 README 와 다르면 **판정문이 우선**이다.',
+              f'- 배치 manifest: `{mi.get("path")}` (sha256 `{mi.get("sha256")}` · expected_network_generation = `{mi.get("expected_network_generation")}`) · '
+              f'τ 다시 읽기 (생성기 `load_tau_results` · 같은 기대 세대 · 인계표 τ 칸 대조) = **{ctx["tau_reread"]}**.']
+        ci, gf = ctx.get('code_identity') or {}, ctx.get('gate_files') or {}
+        hc = ci.get('handover_changed')
+        L += [f'- 코드 신원 (세대 2 등록 §3): 발사 봉인 (배치 manifest `code_hashes`) {ci.get("sealed")} 파일 — '
+              + ('이 빌드 체크아웃과 **같다**' if not ci.get('sealed_changed') else
+                 f'다른 파일 {ci.get("sealed_changed")} = **명시 승인 `--allow-seal-diff`** (값과 무관한 변경이라는 판단 — 1저자)')
+              + ' · 인계 생성기 · 다시 읽기 도구 (`handover_code_hashes`) '
+              + ('기록 없음 (대조 못 함)' if hc is None else ('= 발사 기록' if not hc else f'**≠ 발사 기록** {hc} (v1.3 생성기 변경 — 등록 §9 에 이 커밋)'))
+              + f' · 빌드 git HEAD `{ci.get("git_head")}` · 커밋 안 된 추적 파일 변경 {ci.get("git_dirty_tracked")} 줄.',
+              '- 배치 관문 기록 (등록 §5): ' + ' · '.join(
+                  f'`{n}` ' + ('**없음**' if gf.get(n) is None else f'sha256 `{gf[n]["sha256"]}`'
+                                + (f' (n_fail {gf[n].get("n_fail")} · 기대 세대 `{gf[n].get("expected_generation")}`)' if n == 'reread.json' else ''))
+                  for n in V13_BATCH_GATE_FILES) + ' — 빌드는 다시 읽기의 실패 표지만 읽는다 (내용 판정은 그 도구의 rc).']
+    L += [f'- 완료 압력 (DESC-06): ' + ('`press_*` 열 — 압밀 루프가 목표 300 MPa 에서 빠져나온 기록 (마지막 프레임 응력이 아니다)' if ctx['press_ok']
+                                      else '**미검사** (press_* 열 없음)'),
+          '- 5차 판정 (`docs/reviews/codex_review_rglr3_reverify_20261006.md` §6 · §7) 의 사용 조건은 그대로다: 모델 내부 ML 기술자 · 기본 = Hertz · '
+          'Physics = opt-in 부록 · 상태 열 필수 · 실험 절대값 타깃 · 실물 순위 · COMSOL 물성 대입 금지 · T ≥ 1 이나 상태 OK 도 물리 정확도 인증이 아니다.', '',
+          '## 0. 바뀐 것 (v1.2 → v1.3)', '', '| 무엇 | 내용 |', '|---|---|',
+          (f'| 망 세대 | {gen_txt} — Physics = ψ 곱셈 · 면적 physics_g2 · 정확 Dirichlet 전극 '
+           '(세대 2 · 1저자 비준 10-06 저녁) · Hertz (H0) 간선은 세대 1 과 같고 전극만 바뀌었다 (σ 상대 ~1e-5) |')
+          if all(g == V13_GENERATION for g in ctx['gens'].values()) else
+          (f'| 망 세대 | {gen_txt} — **세대 2 가 아니다** (dry run · 세대 1 원천 — 실제 v1.3 은 세대 2 배치 값만 싣는다 · 생성기가 거부) |'),
+          '| 새 열 | `se_isolated_pct` (고립 전해질 · §5) · 세대 2 출처 `ion_net_generation` · `ion_net_constriction_hertz` · `ion_net_area_rule_hertz` · '
+          '`ion_net_electrode_hertz` · `ion_net_bulk_hertz` (194 행 상수 — 출처 표지)' + (' · 완료 압력 `press_target_mpa` · `press_last_loop_mpa` · `press_reached`'
+                                                                                       if ctx['press_ok'] else '') + ' |',
+          f'| ML 표 (#1) | `{pre}<ds>_mltable_{d}_v13.csv` — 배포 열 + 빈칸 코드 열 (`<열>__blank`) + `dataset` + 관통 분류 `{V13_ML_CLASS}` (§2 · §3) |',
+          f'| 재적합 (#5) | `{pre}{REFIT_STEM}_*` + `origin/` + `previews/` (§6) |',
+          '| 표시 이름 | `tau2_ion_*` = **수송 tortuosity** (제곱근 아님) — 열 사전 · 웹앱 · COMSOL 2D 내보내기 같은 이름 (§4) |']
+    if ctx['missing']:
+        L += [f'| (dry run) 빠진 v1.3 열 | ' + ' · '.join(f'{ds}: {", ".join(v)}' for ds, v in ctx['missing'].items()) + ' — 세대 1 인계표에 없다 |']
+    L += ['', '## 1. 파일', '', '| 파일 | 행 × 열 | sha256 |', '|---|---|---|']
+    for root, _dirs, fs in sorted(os.walk(st)):
+        for n in sorted(fs):
+            if n in (f'{pre}README.md', f'{pre}{V13_MANIFEST_NAME}'):     # 자기 자신 · manifest 는 아래 한 줄 (쓰는 중인 파일의 해시를 적지 않는다)
+                continue
+            p = os.path.join(root, n)
+            rel = os.path.relpath(p, st).replace(os.sep, '/')
+            if n.endswith('.csv'):
+                with open(p, encoding='utf-8-sig', newline='') as f:
+                    rr = list(csv.reader(f))
+                shape = f'{len(rr) - 1} × {len(rr[0]) if rr else 0}'
+            else:
+                shape = '—'
+            L.append(f'| `{rel}` | {shape} | `{_sha256(p)}` |')
+    L += [f'| `{pre}README.md` · `{pre}{V13_MANIFEST_NAME}` | — | (빌드 manifest 가 모든 파일의 sha256 을 적는다) |', '',
+          '한 행 = 한 침대 (300 MPa 압밀 뒤 한 프레임) · `case_id` 키 · 행 순서 = v1.2 와 같다.  두 데이터셋을 합칠 때는 `dataset` 표지를 둔다 (ML 표에는 있다).', '',
+          '## 2. 빈칸 뜻 (#1 — ML 표)', '',
+          '배포 CSV 의 빈칸은 뜻이 여럿이다 — **0 으로 채우지도, 한꺼번에 버리지도 않는다.**  ML 표는 배포 값 칸을 그대로 두고 (채우지 않았다 · 되읽기 검산), '
+          '빈칸이 있는 열마다 바로 뒤에 `<열>__blank` (코드 · 값이 있는 칸은 빈칸) 를 붙였다.  코드 규칙은 같은 행의 설계 `block` · 접촉 개수 · 상태 열이 정하고, '
+          '규칙에 없는 빈칸이나 빈칸이어야 할 칸의 값이 하나라도 있으면 생성기가 만들기를 거부한다.', '',
+          '| 코드 | 뜻 | 130 | 64 |', '|---|---|---|---|']
+    cnt = {ds: collections.Counter(v for o in ctx['tables'][ds][1] for k, v in o.items() if k.endswith(V13_ML_SUFFIX) and v) for ds in ctx['tables']}
+    for k, v in V13_BLANK_CODES.items():
+        L.append(f'| `{k}` | {v} | {cnt.get("lhs", {}).get(k, 0)} | {cnt.get("lhsx", {}).get(k, 0)} |')
+    L += ['', '- 쓰는 법: `NA_*` = 결측 표지 (그 특징을 못 쓰는 행 — 0 대입 금지 · 모델이 결측을 못 받으면 표지 열과 함께) · `INF_NOT_PERCOLATING` = T · √T 의 '
+          '무한대 (회귀 타깃으로 쓰지 말고 §3 의 분류 가지로) · `NOT_COMPUTED` · `HOLD_BAND_FALLBACK` = 그 칸만 제외 사유 (무한대 아님) · `EMPTY_NO_REASON` = 빈 집합.',
+          f'- 열 역할 = ML 열 사전 (`{pre}<ds>_mltable_{d}_v13_columns.tsv` 의 role) — ' + ' · '.join(f'`{k}` {v}' for k, v in V13_ROLE_MEANING.items()) + '.', '',
+          '## 3. 타깃 — `f_ion_hertz` 와 관통 분류 (#2)', '']
+    for ds in V13_DATASETS:
+        sc = _v13_status_counts(ctx['by_ds'][ds][1], 'ion_net_status_hertz')
+        L.append(f'- {ds} 상태 (`ion_net_status_hertz`): ' + ' · '.join(f'{k} {v}' for k, v in sc.items()))
+    L += ['- **이온 수송 타깃은 `f_ion_hertz`** (= σ_eff/σ₀ · 무차원 · 유한 — 비관통 행 = **0.0 = 물리적 0**, 결측이 아니다).  `tau2_ion_hertz` (수송 tortuosity T) · '
+          '`tau_ion_hertz` (√T) 는 비관통에서 ∞ (빈칸) 라 그대로는 회귀 타깃이 아니다 · T = φ_SE,mc / f 항등식이라 **f 를 예측하면서 T · √T 를 특징으로 넣지 않는다**.',
+          f'- **2 단계 (권장)**: ① 관통 분류 `{V13_ML_CLASS}` (ML 표 · 1 = 관통 · 0 = 비관통 · `percolation_pct > 0` 과 같은 판정) → ② 관통 행에서 f (또는 폴드 안에서 고른 '
+          '변환 log f) 회귀.  예측 f = P(관통) × E[f | 관통] 로 묶을 수 있다 (hurdle).  비관통 행을 지우면 전도 가능한 하위집합만 남는다 — 지우지 않는다.',
+          '- 고립 열은 비관통 침대에 몰린다 → **관통 여부를 먼저 분류**한다 (평균 · 최대, 관통 / 비관통):']
+    for ds in V13_DATASETS:
+        s = _v13_iso_stats(ctx['by_ds'][ds][1])
+        parts = []
+        for col in ('am_ionic_isolated_pct', 'se_isolated_pct'):
+            a, b = s.get(f'{col}:perc'), s.get(f'{col}:nonperc')
+            if a and a[0]:
+                parts.append(f'`{col}` 관통 {_v13_fmt(a[1], 1)} · 최대 {_v13_fmt(a[2], 1)} / 비관통 {_v13_fmt(b[1], 1) if b[0] else "—"} · '
+                             f'최대 {_v13_fmt(b[2], 1) if b[0] else "—"} (n {a[0]} · {b[0]})')
+        L.append(f'  - {ds}: ' + (' · '.join(parts) if parts else '(열 없음)'))
+    L += ['- 다른 모드 — Physics 부록 = opt-in (기본 학습 열 아님 · 면적과 협착식이 함께 다른 규약의 결합 민감도 · Codex QV3) · H12 = 민감도 부록 '
+          + ('(이 묶음에 있다 · 부록 전용)' if ctx['h12'] else '(이 묶음에 없다)') + '.', '',
+          '## 4. 표시 이름 — 수송 tortuosity (τ 명명 규약)', '', '| 열 | 이름 · 뜻 |', '|---|---|',
+          '| `tau2_ion_<모드>` | **수송 tortuosity** T = φ_SE,mc / f (**제곱근 아님** = 문헌의 tortuosity factor · Tjaden κ = τ² · Landesfeind τ · COMSOL τ_F) · 키는 tau2 그대로 |',
+          '| `tau_ion_<모드>` | √T (유도량) — "수송 tortuosity" 라 부르지 않는다 · Dijkstra 경로 길이비의 뜻도 아니다 · COMSOL 입력 아님 |',
+          '| `f_ion_<모드>` | f = σ_eff/σ₀ (무차원) — 판 간격 해를 질량보존 두께로 재척도한 값 (L_mc 에서 다시 푼 해가 아니다) |',
+          '| `tortuosity_SE_wall` | **기하학적 tortuosity** — 경계 띠 SE 중심 쌍의 최단경로 / 그 쌍의 z 간격 (수송 τ 아님 · 수송 쪽 짝 = `tau2_ion_hertz`) |', '',
+          '## 5. 새 열 `se_isolated_pct` (고립 전해질)', '',
+          '- = **100 − `top_reachable_pct`** — 등록된 상단 2r 경계 띠 (분리막 쪽) 와 SE 접촉 그래프로 이어지지 않은 SE 의 비율 (%).  AM 경로 고립 '
+          '(`am_ionic_isolated_pct` = 100 − `ionic_active_pct`) 과 같은 규칙 · 생성기가 유도 (재실행 없음) · 관문 S1 (= 100 − top) · S2 (≤ 100 − `percolation_pct`).',
+          '- 한정: 분리막 쪽 띠에 앉은 외톨이 SE (접촉 0) 를 연결로 세어 고립을 **약간 적게** 잡는다 · 큰 값은 비관통 침대에 몰린다 (§3) → 관통 분류 먼저.',
+          '- 그래프 지표다 — 실제 분리막 접촉 · 계면 저항 · 이온 전류를 계산하지 않는다.', '',
+          '## 6. porosity–σ–CN 재적합 (#5)', '',
+          f'- 대상: {fit["target"]} · n = {fit["n_fit"]} (' + ' · '.join(f'{k} {v}' for k, v in fit['n_fit_by_dataset'].items()) + ') · 적합 밖: '
+          + (' · '.join(f'{k} {v}' for k, v in fit['excluded'].items()) or '없음') + ' (행은 표에 남긴다).',
+          f'- φ_eff: {fit["phi_eff"]}.  상수 = σ_ionic T1 등록식 동결값 (φc_P {fit["constants"]["phi_c_P"]} · φc_S {fit["constants"]["phi_c_S"]} · '
+          f'δ {fit["constants"]["delta"]} · r_cut {fit["constants"]["r_cut_um"]} µm · 게이트 지수 {fit["constants"]["gate_exponent"]}) — 생산 코드에서 읽었다.', '',
+          '| 식 | a | α | β | R² | LOOCV R² | 잔차 sd (ln) | 편향 130 | 편향 64 |', '|---|---|---|---|---|---|---|---|---|']
+    for nm, fx in (('locked (½ · 2)', lk), ('free', fr)):
+        p, se = fx['params'], fx['se']
+        bd = fx['by_dataset']
+        L.append(f'| {nm} | {_v13_fmt(p["a"], 3)} ± {_v13_fmt(se.get("a"), 3)} | {_v13_fmt(p["alpha"], 3)}'
+                 + (f' ± {_v13_fmt(se.get("alpha"), 3)}' if 'alpha' in se else '') + f' | {_v13_fmt(p["beta"], 3)}'
+                 + (f' ± {_v13_fmt(se.get("beta"), 3)}' if 'beta' in se else '')
+                 + f' | {_v13_fmt(fx["r2"], 3)} | {_v13_fmt(fx["loocv_r2"], 3)} | {_v13_fmt(fx["resid_sd"], 3)} | '
+                 f'{_v13_fmt((bd.get("lhs") or {}).get("bias"), 3)} | {_v13_fmt((bd.get("lhsx") or {}).get("bias"), 3)} |')
+    L += ['', f'- 파일: `{pre}{REFIT_STEM}_rows.csv` (행마다 φ_eff · 예측 · 잔차) · `{pre}{REFIT_STEM}_summary.json` · Origin 워크시트 `origin/` (1 줄 Long Name · '
+          f'2 줄 Units · GUIDE) · 미리보기 `previews/{pre}v13_refit_porosity_sigma_cn.png` · `.svg`.',
+          '- 한정: ' + ' · '.join(fit['caveats']) + '.', '',
+          '## 7. Physics 부록 (opt-in) · H12', '']
+    for ds in V13_DATASETS:
+        sc = _v13_status_counts(ctx['hrows'][ds], 'ion_net_status_physics')
+        L.append(f'- {ds} Physics 상태: ' + ' · '.join(f'{k} {v}' for k, v in sc.items()))
+    L += ['- 기본 학습 열에 자동 포함하지 않는다 · `MODEL_BELOW_CONTINUUM_BOUND` 행은 값 유지 + 표지 — 그 행만 지우고 나머지 Physics 의 타당성을 주장하지 않는다 (Codex QV3).',
+          '- 세대 2 Physics = ψ 곱셈 + 면적 physics_g2 + 정확 Dirichlet (출처 표지 열 — 부록에 있다) · Hertz 와 Physics 의 차이를 "소성 접촉 면적만의 민감도" 로 읽지 않는다.', '',
+          '## 8. 규약 (v1.2 README §3 · §4 그대로 — 요지)', '',
+          '- 상태 열 (`ion_net_status_hertz`) 을 값과 같이 읽는다 · 숫자 열만 골라 dropna / 0 채움 하는 학습 코드는 충분하지 않다 (Codex QV2).',
+          '- 항등식 묶음에서 하나만 독립 타깃: ε + φ_SE,mc + φ_AM,mc = 1 · T = φ_SE,mc/f · √T · `se_isolated_pct` = 100 − `top_reachable_pct` · `am_ionic_isolated_pct` = 100 − '
+          '`ionic_active_pct` · 이온 분할 셋 = 100 · 파괴 · 면적 · F1 항등식 (v1.2 §3-2).',
+          '- 총량 열 (`area_*_total` · `n_*` · 개수) 은 정규화해서 쓴다 · CN · 비율 열에는 벽 효과가 섞여 있다 (`wall_touch_frac_*`).',
+          '- σ basis — `f_ion_hertz` × σ₀ (3.0 mS/cm) 는 L_mc 재척도 σ 다 (웹앱 화면 · 보고 덱의 판 간격 해와 무표지 혼용 금지 · Codex QV5).',
+          '- 적격성 HOLD (`physical_target_status`) 는 그대로 — 행을 지우지 않는다 · 에뮬레이터 (HOLD 포함) ↔ 물리 타깃 후보 (HOLD 불허) 를 구분해 보고한다.',
+          '- 변수 선택 · 스케일링 · 변환 · 초매개변수는 학습 폴드 안에서 (중첩 CV) · 130 ↔ 64 이동 성능을 무작위 CV 와 따로 보고한다.', '',
+          '## 9. AI 도구에 붙여 넣을 프롬프트', '', '```',
+          f'너는 고체전지 복합 양극 DEM 시뮬레이션 데이터로 ML 을 하는 조수다.  데이터 = {pre}lhs_mltable_{d}_v13.csv (130 행) · {pre}lhsx_mltable_{d}_v13.csv',
+          '(64 행, 전부 SE-rich — 분포가 달라 dataset 표지를 둔다).  한 행 = 300 MPa 로 압밀한 전극 침대 하나.  열 역할은 *_mltable_*_columns.tsv 의',
+          'role 열 · 뜻은 배포 *_columns.tsv 와 README (README 가 정정판).  *_physics.csv 는 부록이다 — 요청받기 전에는 쓰지 마라.',
+          '1) X = role X 다섯 (am_pct · ps_frac · d_am_p_um · d_am_s_um · d_se_um).  X_DERIVED 는 같은 정보 · CONST · FLAG · ID · STATUS 는 특징이 아니다.',
+          '   RESULT_COUNT (실측 입자 수) · 두께 · CN 같은 결과를 설계 → 구조 예측의 X 로 쓰면 누설이다.',
+          '2) 빈칸은 <열>__blank 코드가 뜻을 정한다.  0 으로 채우지 마라.  NA_* = 결측 표지 · INF_NOT_PERCOLATING = 무한대 (관통 경로 없음) ·',
+          '   NOT_COMPUTED · HOLD_BAND_FALLBACK = 그 칸만 제외 · EMPTY_NO_REASON = 빈 집합.',
+          f'3) 이온 수송 타깃 = f_ion_hertz (유한 · 비관통 0.0).  먼저 {V13_ML_CLASS} (1 관통 · 0 비관통) 를 분류하고 관통 행에서 f (또는 폴드 안에서',
+          '   고른 log f) 를 회귀하라.  tau2_ion_hertz (수송 tortuosity T) · tau_ion_hertz (√T) 는 role Y_IDENTITY — f 와 항등식 (T = φ_SE,mc/f) 이라',
+          '   f 를 예측하면서 특징으로 넣지 마라.  tortuosity_SE_wall 은 기하학적 tortuosity (다른 양) 다.',
+          '4) 항등식 열을 독립 타깃처럼 세지 마라 (README §8).  총량 열은 정규화하라.  se_isolated_pct · am_ionic_isolated_pct 는 비관통에 몰린다.',
+          '5) physical_target_status = HOLD 행은 지우지 말고 에뮬레이터 (HOLD 포함) 와 물리 타깃 후보 (HOLD 불허) 를 구분해 보고하라.',
+          '6) 값은 고정 접촉망 · 면적 · 협착 · 경계 규약의 모델 기술자다 — 실험값 · 실물 순위 · COMSOL 물성으로 바꾸어 쓰지 마라.',
+          f'7) {REFIT_STEM}_summary.json 의 식은 이 코퍼스의 근사 관계다 — 지수를 물리 상수로 인용하지 마라.',
+          '8) 변수 선택 · 스케일링 · 초매개변수는 학습 폴드 안에서 (중첩 CV) · 130 과 64 의 이동 성능을 따로 · 불확실성을 함께 보고하라.', '```', '',
+          '## 10. 재현', '',
+          '- 생성기: `scripts/lhs_release_build.py --v13` (단계 A = 인계표 생성기 `scripts/lhs_design_dataset.py --export-handover … --webapp-groups '
+          f'{V13_WEBAPP_GROUPS} --tau-results … --tau-batch-manifest …` · 단계 B = 이 묶음 · 대조 `--v13-check`) — 명령 전문 = '
+          '`docs/reviews/lhs_release_v13_plan_20261007.md`.',
+          f'- 빌드 manifest `{pre}{V13_MANIFEST_NAME}` = 인계표 sha256 · 코드 sha256 · 파일 sha256 · 코드 신원 (발사 봉인 대조 · 명시 승인 · git HEAD) · '
+          '배치 관문 기록 (⓪ 감사 · ⓪b 다시 읽기 sha256) · 경고.']
+    if ctx['warnings']:
+        L += ['', '### 경고 (빌드가 기록)', ''] + [f'- {w}' for w in ctx['warnings']]
+    return '\n'.join(L) + '\n'
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description='LHS 배포 표 = 인계표 열 부분집합 (만들기 · 대조)')
     ap.add_argument('--handover', help='정본 인계표 CSV (옆에 _columns.tsv)')
@@ -584,11 +2070,71 @@ def main(argv=None):
     ap.add_argument('--profile', choices=PROFILES, default=None,
                     help='ML 배포 프로필 (LREL-02 · 03) — 키 유일 · 기대 ID 집합 · 적격성 세 열 · 열 사전 참조 표지 (부록은 키 · ID 만)')
     ap.add_argument('--expect-ids', default=None, help='(--profile) 기대 ID — 설계 CSV (case_id 열) 또는 한 줄 한 ID')
+    #  ── v1.3 최종판 (docs/reviews/lhs_release_v13_plan_20261007.md) ──
+    ap.add_argument('--v13', action='store_true',
+                    help='배포 v1.3 만들기 — 실제: --batch-root (단계 A 인계표 생성 + τ 다시 읽기) · --codex-verdict · --out-dir / '
+                         'dry-run: --dry-run --handover-dir (세대 1 원천 허용 · DRYRUN_ 표지 · docs/data 밖)')
+    ap.add_argument('--v13-check', action='store_true', help='배포 v1.3 묶음 대조 (--release-dir · --handover-dir · dry-run 묶음이면 --dry-run)')
+    ap.add_argument('--batch-root', default=None, help='(--v13) 새 194 배치 뿌리 (manifest.json · merged/<ds>/results · pressure/)')
+    ap.add_argument('--handover-dir', default=None, help='(--v13 · --v13-check) 인계표 폴더 (<ds>_handover_*.csv 하나씩 + 열 사전 · τ 출처 부록)')
+    ap.add_argument('--handover-out', default=None, help='(--v13 단계 A) 인계표 산출 폴더 (기본 <batch-root>/handover_v13_<date>)')
+    ap.add_argument('--out-dir', default=None, help='(--v13) 배포 묶음 폴더 (새 폴더 · 실제 = docs/data/lhs_release_<date>_v13)')
+    ap.add_argument('--release-dir', default=None, help='(--v13-check) 대조할 배포 묶음 폴더')
+    ap.add_argument('--date', default=None, help='(--v13) 파일 이름 날짜 YYYYMMDD (기본 오늘)')
+    ap.add_argument('--dry-run', action='store_true', help='(--v13 · --v13-check) DRY RUN — 세대 1 원천 허용 · 파일 이름 DRYRUN_ · 배포 아님')
+    ap.add_argument('--codex-verdict', default=None, help='(--v13 실제) Codex 세대 2 GO 판정문 경로 (README · 빌드 manifest 에 적는다)')
+    ap.add_argument('--pressure-record', action='append', default=[], metavar='DS=TSV',
+                    help='(--v13 단계 A) 완료 압력 기록 (기본 <batch-root>/pressure/<ds>_pressure_record.tsv)')
+    ap.add_argument('--pressure-unverified', action='store_true', help='(--v13) 완료 압력 기록 없이 만든다는 명시 승인 (DESC-06 · README 에 미검사 표지)')
+    ap.add_argument('--h12-appendix', action='store_true', help='(--v13) H12 민감도 부록도 만든다 (부록 전용 · 기본 학습 열 아님 — 1저자 결정)')
+    ap.add_argument('--transfer-text', default=None,
+                    help='(--v13) Codex GO 판정문의 전달 문안 (텍스트 파일) — README 외부 검토 절에 그대로 · sha256 기록 (README 를 손으로 고치지 않는다)')
+    ap.add_argument('--allow-seal-diff', action='append', default=[], metavar='FILE',
+                    help='(--v13 실제) 발사 봉인 (배치 manifest code_hashes) 과 다른 파일 하나를 명시 승인 (값과 무관한 변경 — 예: 웹앱 화면 문구 · '
+                         '여러 번 · README · 빌드 manifest 에 기록).  없으면 봉인 파일이 다를 때 거부한다')
     ap.add_argument('--selftest', action='store_true')
     a = ap.parse_args(argv)
     if a.selftest:
         return _selftest()
     try:
+        if a.v13_check:
+            if not (a.release_dir and a.handover_dir):
+                ap.error('--v13-check 에는 --release-dir 와 --handover-dir 가 필요하다')
+            probs = check_v13(a.release_dir, a.handover_dir, dry_run=a.dry_run)
+            for p in probs:
+                print('⛔', p)
+            print(('✓ v1.3 묶음 대조 통과' + (f' ({V13_DRY_BANNER})' if a.dry_run else '')) if not probs else f'✗ 문제 {len(probs)}')
+            return 0 if not probs else 3
+        if a.v13:
+            if not a.out_dir:
+                ap.error('--v13 에는 --out-dir 가 필요하다')
+            date = a.date or datetime.date.today().strftime('%Y%m%d')
+            hdir = a.handover_dir
+            if a.dry_run:
+                if not hdir:
+                    ap.error('--v13 --dry-run 에는 --handover-dir 가 필요하다 (세대 1 원천 = 커밋된 v1.2 인계표 폴더)')
+            elif not hdir:
+                if not a.batch_root:
+                    raise ReleaseError('--v13 (실제) 에는 --batch-root 가 필요하다 (단계 A 인계표 생성 · τ 다시 읽기)')
+                if not a.codex_verdict or not os.path.isfile(a.codex_verdict):
+                    raise ReleaseError(f'Codex 세대 2 판정문 (GO) 이 없다 ({a.codex_verdict!r}) — 단계 A 전에 멈춘다')
+                pr = {}
+                for kv in a.pressure_record:
+                    k, _, v = kv.partition('=')
+                    if k not in V13_DATASETS or not v:
+                        raise ReleaseError(f'--pressure-record {kv!r} — DS=TSV (DS = {V13_DATASETS})')
+                    pr[k] = v
+                hdir = a.handover_out or os.path.join(a.batch_root, f'handover_v13_{date}')
+                stage_handovers_v13(a.batch_root, hdir, date, pressure=pr, pressure_unverified=a.pressure_unverified,
+                                    allow_seal_diff=a.allow_seal_diff)
+            rep = build_v13(out_dir=a.out_dir, handover_dir=hdir, batch_root=a.batch_root, date=date, dry_run=a.dry_run,
+                            codex_verdict=a.codex_verdict, h12_appendix=a.h12_appendix, pressure_unverified=a.pressure_unverified,
+                            transfer_text=a.transfer_text, allow_seal_diff=a.allow_seal_diff)
+            for w in rep['warnings']:
+                print('⚠', w)
+            print(f'✓ v1.3 {"DRY RUN 묶음" if a.dry_run else "배포 묶음"} {rep["out_dir"]} — 파일 {rep["n_files"]} · 세대 {rep["generation"]} · '
+                  f'τ 다시 읽기 {rep["tau_reread"]} · 대조 통과 (check_v13)' + (f' · 빠진 v1.3 열 {rep["missing_columns"]}' if rep['missing_columns'] else ''))
+            return 0
         if a.check:
             if not (a.handover and a.release):
                 ap.error('--check 에는 --handover 와 --release 가 필요하다')

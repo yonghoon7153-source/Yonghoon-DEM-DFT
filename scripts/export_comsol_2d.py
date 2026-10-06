@@ -123,9 +123,10 @@ def numerical_parameters(case_dir: Path, slice_data: dict) -> list[dict]:
         ('f_ion_physics',   by_mode['physics']['f'],                  '1',
          'f_ion_physics', '★ f = σ_i_physics/σ_grain = φ/tau2 — User defined (fl) 칸 · physics 면적 (접촉별 상한 · LHS-25)'),
         ('tau2_ion_hertz',  by_mode['hertz']['tau2'],                 '1',
-         'tau2_ion_hertz', '★ tortuosity factor = φ·σ_grain/σ_i_hertz (COMSOL 종 수송 τ_F 꼴 · 배터리 노드는 GUI Equation 확인 뒤 · σ₀ 칸 = sigma_grain)'),
+         'tau2_ion_hertz', '★ 수송 tortuosity T (tortuosity factor · 제곱근 아님 · v1.3 표시 이름) = φ·σ_grain/σ_i_hertz (COMSOL 종 수송 τ_F 꼴 · '
+                           '배터리 노드는 GUI Equation 확인 뒤 · σ₀ 칸 = sigma_grain)'),
         ('tau2_ion_physics', by_mode['physics']['tau2'],              '1',
-         'tau2_ion_physics', '★ tortuosity factor = φ·σ_grain/σ_i_physics (physics 면적 · 같은 주의)'),
+         'tau2_ion_physics', '★ 수송 tortuosity T (tortuosity factor · 제곱근 아님) = φ·σ_grain/σ_i_physics (physics 면적 · 같은 주의)'),
         ('tau_ion_hertz',   by_mode['hertz']['tau'],                  '1',
          '—', '√tau2 (τ² 관례의 τ · Hertz) — 입력 칸 값 아님 (tau2 행을 쓴다)'),
         ('tau_ion_physics', by_mode['physics']['tau'],                '1',
@@ -690,10 +691,10 @@ COMSOL 모델은 (A) DOMAIN, (B) MATERIAL(수치), (C) BOUNDARY 로 구성.
     f_ion_physics    = sigma_i_physics/σ_grain = φ/tau2_ion_physics
                (COMSOL 앱 예제 Homogenizing a Heterogeneous Electrode Model 6.4 와 같은 방식 — τ 관례 무관 ·
                 같은 틀: 두께 L_cat · εl = phiSE · σ₀ = sigma_grain)
-    tau2_ion_hertz   = tortuosity factor = φ·sigma_grain/sigma_i_hertz   ← 검산: σ_i = φ·σ_grain/tau2
+    tau2_ion_hertz   = 수송 tortuosity T (tortuosity factor · 제곱근 아님) = φ·sigma_grain/sigma_i_hertz   ← 검산: σ_i = φ·σ_grain/tau2
     tau2_ion_physics = φ·sigma_grain/sigma_i_physics
                (COMSOL 종 수송 τ_F 꼴 · 배터리 Porous Electrode 노드는 GUI Equation 보기로 확인 뒤 · σ₀ 칸 = sigma_grain)
-    tau_ion_<mode>   = √tau2 (참고 · 입력 칸 값 아님)
+    tau_ion_<mode>   = √tau2 = √T (참고 · 입력 칸 값 아님 · "수송 tortuosity" 이름은 tau2 에만)
     sigma_i_stageE   = Stage-E physics σ — 재료 인자 포함 (Cronau(r_SE) · 파괴).
                ⚠ f · tau2 와 짝이 아니다 — f_ion_<mode> · tau2_ion_<mode> 와 함께 넣지 말 것
                  (재료 인자를 두 번 넣거나 면적 모드를 섞는다).  옛 판의 sigma_i 행이 이 값이었다.
