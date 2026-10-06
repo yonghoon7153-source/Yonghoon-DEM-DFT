@@ -1136,6 +1136,9 @@ function buildControls(container, isMPM) {
       <optgroup label="기공 (pore)">
         <option value="dem_pore">기공 (빈 공간 · 격자 추정)</option>
       </optgroup>
+      <optgroup label="전류 (접촉망 해)">
+        <option value="net_current">⚡ 전류 흐름 (망 해 · 상위 간선)</option>
+      </optgroup>
     </select>
     <div id="view-mode-legend" style="font-size:11px;color:#9ca3af;line-height:1.4;margin-top:3px;max-height:340px;overflow-y:auto;overflow-x:hidden;padding-right:2px"></div>
     <hr>
@@ -2207,6 +2210,7 @@ function applyViewMode(state, mode) {
   /* Tear down view-mode overlays (Brittle Hotspots cap patches,
    * Cluster Coloring split-mesh) before reapplying any mode — stale
    * geometry left around confuses every other mode. */
+  netCurrentTeardown(state);                       // ⚡ 전류 흐름 원기둥 · 늦게 오는 응답 무효 (mode 'net_current')
   if (state.brittleGlowGroup && state.scene) {
     state.scene.remove(state.brittleGlowGroup);
     state.brittleGlowGroup.traverse(obj => {
@@ -2366,6 +2370,8 @@ function applyViewMode(state, mode) {
       if (m && m.instanceColor) m.instanceColor.needsUpdate = true;
     });
   }
+
+  if (mode === 'net_current') { applyNetCurrentMode(state); return; }   // ⚡ 전류 흐름 — 망 해 간선 전류 (비동기 fetch · 자기 범례)
 
   if (mode === 'brittle') {
     dimAll();
@@ -5177,6 +5183,320 @@ function renderSeStatsCardPNG(state, corpusRows) {
                  + 'Bars: where this case sits among percolating cases.',
                  30, H - 18);
   return cvs.toDataURL('image/png');
+}
+
+/* ── ⚡ 전류 흐름 — 망 해의 간선 전류 (DEM view mode 'net_current') ────────────────────────────────
+ * 1저자 요청 *"전류가 보이게"* (보고 슬라이드 그림).  자료 = `/network-current` (scripts/network_current.py 가 읽는 케이스 폴더
+ * network_raw_dump/ — 같은 망 풀이의 1 V 프로브 FULL 해.  웹앱 망 단계는 간선 전류를 남기지 않아 케이스마다 한 번 `dump` 로 만든다).
+ * 간선 = 접촉 하나 (SE–SE = 이온 · AM–AM = 전자).  상위 N 개 (|I| 내림차순) 를 굵기 · 색 = log₁₀(|I_간선| / I_전체) 원기둥으로 그린다
+ * (InstancedMesh 하나 — 20000 간선도 한 번에).  주기 경계를 넘는 간선은 상자를 가로지르는 직선이 되므로 그리지 않고 센다 (Stress Chain 과
+ * 같은 반폭 규칙 · 서버 표지 w 와 같은 답).  색 사상 = jetColor(t) (감마 없음) = 컬러바 ⬇ 의 사상.
+ * 모델의 접촉망 풀이 (Kirchhoff · 접촉마다 Holm 협착) — 측정 전류도 충방전 방향도 아니다. */
+const NETCUR_TOPS = [500, 1000, 2000, 5000, 10000, 20000];
+const NETCUR_CHANNELS = {
+  ionic: '이온 (SE–SE 접촉망)',
+  electronic: '전자 (AM–AM 접촉망)',
+};
+const NETCUR_MODES = {
+  hertzian: 'Hertz FULL (R_bulk + R_c · 주 값)',
+  physics: 'Physics FULL (면적 + 협착 결합 민감도 · 기본 아님)',
+};
+
+/* '/results/<id>/3d-data' · '/archive/results/<folder>/3d-data' → 같은 자리의 '/network-current?…' (질의문은 버린다) */
+function netCurrentUrl(dataUrl, opt) {
+  const base = String(dataUrl || '').split('?')[0].replace(/\/3d-data$/, '/network-current');
+  return base + '?channel=' + encodeURIComponent(opt.channel) + '&mode=' + encodeURIComponent(opt.mode)
+    + '&top=' + Math.max(1, Math.round(+opt.top || 5000));
+}
+
+/* 주기 경계를 넘는 간선 — a · b = data 좌표 [x, y, z] (µm) · 반폭 = 상자 x · y 의 절반.  z 는 주기가 아니다 (판 · 바닥). */
+function netCurrentWrap(a, b, halfX, halfY) {
+  return Math.abs(a[0] - b[0]) > halfX || Math.abs(a[1] - b[1]) > halfY;
+}
+
+/* log10(|I|/I_전체) 의 [최소, 최대] — 0 전류는 버린다 · 하나도 없으면 null */
+function netCurrentLogRange(edges) {
+  let lo = Infinity, hi = -Infinity;
+  (edges || []).forEach(e => {
+    if (e && e.s > 0) { const l = Math.log10(e.s); if (l < lo) lo = l; if (l > hi) hi = l; }
+  });
+  return isFinite(lo) ? [lo, hi] : null;
+}
+
+/* 색 · 굵기 축 t ∈ [0, 1] = (log10 s − lo) / (hi − lo) — 범위 밖은 자른다 · 범위가 한 점이면 1 */
+function netCurrentT(s, lo, hi) {
+  if (!(s > 0)) return 0;
+  const span = hi - lo;
+  if (!(span > 1e-9)) return 1;
+  return Math.max(0, Math.min(1, (Math.log10(s) - lo) / span));
+}
+
+/* 몫 → 'x %' (≥ 10 % 소수 1 자리 · 1–10 % 소수 1 자리 · < 1 % 유효 2 자리 · 꼬리 0 없음) */
+function netCurrentPct(v) {
+  const p = +v * 100;
+  if (!isFinite(p)) return '—';
+  let s;
+  if (p >= 99.95) s = '100';
+  else if (p >= 1) s = p.toFixed(1);
+  else s = p.toPrecision(2);
+  if (s.indexOf('.') >= 0 && s.indexOf('e') < 0) s = s.replace(/0+$/, '').replace(/\.$/, '');
+  return s + ' %';
+}
+
+/* 컬러바 눈금 (exportColorbarPNG 의 ticks) — 양 끝 (실제 최소 · 최대) + 안쪽 1 · 2 · 5 × 10^k (많으면 10^k 만).
+ * 라벨이 겹치지 않게: 안쪽 눈금은 끝에서 0.14 이상 · 서로 0.12 이상 (막대 폭 비) — real14 상위 10000 (0.16–1.4 %) 에서
+ * 0.2 % 가 0.16 % 끝 라벨에 붙었다 (미리보기 실측). */
+function netCurrentTicks(lo, hi) {
+  if (!(isFinite(lo) && isFinite(hi))) return [];
+  if (!(hi - lo > 1e-9)) return [{ p: 0.5, label: netCurrentPct(Math.pow(10, hi)) }];
+  const span = hi - lo;
+  let cand = [];
+  for (let k = Math.floor(lo) - 1; k <= Math.ceil(hi) + 1; k++) {
+    [1, 2, 5].forEach(m => {
+      const l = Math.log10(m) + k;
+      if (l > lo + 1e-9 && l < hi - 1e-9) cand.push({ l: l, m: m });
+    });
+  }
+  if (cand.length > 6) cand = cand.filter(c => c.m === 1);
+  const out = [{ p: 0, label: netCurrentPct(Math.pow(10, lo)) }];
+  let last = 0;
+  cand.forEach(c => {
+    const p = (c.l - lo) / span;
+    if (p >= 0.14 && p <= 0.86 && p - last >= 0.12) {
+      out.push({ p: p, label: netCurrentPct(Math.pow(10, c.l)) });
+      last = p;
+    }
+  });
+  out.push({ p: 1, label: netCurrentPct(Math.pow(10, hi)) });
+  return out;
+}
+
+/* 논문용 컬러바 스펙 (그림 글자 = 영문) — 튜브 색과 같은 jet · 감마 없음 */
+function netCurrentColorbarSpec(pay, opt, lo, hi) {
+  const ch = { ionic: 'ionic (SE–SE contacts)', electronic: 'electronic (AM–AM contacts)' }[pay.channel] || String(pay.channel);
+  const md = pay.mode === 'physics' ? 'Physics FULL (sensitivity)' : 'Hertz FULL';
+  return {
+    map: 'jet',
+    title: 'Contact current |I| / I_total — ' + ch + ' · ' + md + ' · 1 V probe · top ' + (pay.n_returned || 0) + ' contacts',
+    ticks: netCurrentTicks(lo, hi),
+    sub: 'Model contact-network solve (Kirchhoff · Holm constriction per contact) — not a measured current.  Log colour scale.',
+  };
+}
+
+/* 범례 위 조작 — 채널 · 상위 N · 접촉 면적 모드 */
+function netCurrentControlsHtml(opt) {
+  const css = 'background:#16192e;color:#e4e6f0;border:1px solid #2a2d3e;border-radius:4px;padding:1px 2px;font-size:11px';
+  const sel = (id, cur, opts) => '<select id="' + id + '" style="' + css + '">'
+    + opts.map(o => '<option value="' + o[0] + '"' + (String(o[0]) === String(cur) ? ' selected' : '') + '>' + o[1] + '</option>').join('')
+    + '</select>';
+  return '<div style="display:flex;flex-wrap:wrap;gap:3px;align-items:center;margin:3px 0">'
+    + sel('netcur-channel', opt.channel, [['ionic', '이온 (SE–SE)'], ['electronic', '전자 (AM–AM)']])
+    + sel('netcur-top', opt.top, NETCUR_TOPS.map(n => [n, '상위 ' + n]))
+    + sel('netcur-mode', opt.mode, [['hertzian', 'Hertz (주)'], ['physics', 'Physics (민감도)']])
+    + '</div>';
+}
+
+/* 범례 — 채널 · 모드 · 몫 · 생략 · 검산 · 게시 σ · 세대 · 한정어.  서버 문자열은 이스케이프 (jeEscH). */
+function netCurrentLegendHtml(pay, opt, st) {
+  const z = pay.zcut || null;
+  const n = pay.n_returned || 0;
+  const pct = netCurrentPct;
+  const esc = jeEscH;
+  const L = [];
+  L.push('<b>⚡ 전류 흐름 — 접촉망 해 (상위 간선)</b>');
+  L.push(netCurrentControlsHtml(opt));
+  L.push('채널: ' + (NETCUR_CHANNELS[pay.channel] || esc(pay.channel)) + ' · ' + (NETCUR_MODES[pay.mode] || esc(pay.mode)));
+  if (z && isFinite(z.share_mean)) {
+    L.push('<b>1 V 프로브 해 · 상위 ' + n + ' 간선 = 전체 전류의 ' + pct(z.share_mean) + '</b> '
+      + '<span style="color:#9ca3af">(z-단면 ' + z.planes + ' 개 평균 · 최소 ' + pct(z.share_min) + ' · 최대 ' + pct(z.share_max) + ')</span>');
+  } else {
+    L.push('<b>1 V 프로브 해 · 상위 ' + n + ' 간선</b> <span style="color:#9ca3af">(z-단면 몫 계산 불가 — 간선 |I| 합의 '
+      + pct(pay.sum_abs_share) + ')</span>');
+  }
+  L.push('색 · 굵기 = log₁₀(|I_간선| / I_전체) — ' + pct(Math.pow(10, st.lo)) + ' … ' + pct(Math.pow(10, st.hi)) + ' (jet · 접촉 하나가 나르는 몫)');
+  let drawn = '그린 간선 ' + st.nDrawn + ' / 관통 간선 ' + pay.n_perc_edges;
+  if (st.nWrapSkipped) {
+    drawn += ' · 주기 경계를 넘는 ' + st.nWrapSkipped + ' 간선은 그리지 않음';
+    if (z && isFinite(z.drawn_share_mean)) drawn += ' (그 몫 ' + pct(Math.max(0, z.share_mean - z.drawn_share_mean)) + 'p)';
+  }
+  L.push(drawn);
+  L.push('소산 (Σ I²R) 몫 ' + pct(pay.power_share) + ' · 0 전류 간선 ' + (pay.n_zero_current || 0) + ' 개 (띠 안 등) 제외');
+  const dev = z ? z.identity_max_dev : NaN, tel = pay.power_identity_rel;
+  const okChk = isFinite(dev) && dev < 1e-6 && isFinite(tel) && tel < 1e-6;
+  L.push('검산 — 단면 전류 보존 ' + (isFinite(dev) ? dev.toExponential(1) : '—') + ' · Tellegen Σ I²R = I_전체 '
+    + (isFinite(tel) ? tel.toExponential(1) : '—') + (okChk ? ' ✓' : ' <span style="color:#f87171">⚠</span>'));
+  const sc = pay.sigma_check || {};
+  if (sc.match === true) L.push('게시 σ 와 같은 해 ✓ <span style="color:#9ca3af">(σ/σ₀ ' + esc(sc.published) + ')</span>');
+  else if (sc.match === false) L.push('<span style="color:#f87171">⚠ 게시 σ 와 다른 해 — 게시 ' + esc(sc.published) + ' · 덤프 '
+    + esc(sc.dump) + ' → 웹앱 망 단계를 다시 돌린 뒤 덤프를 다시 만들 것</span>');
+  else L.push('<span style="color:#fbbf24">⚠ 게시 σ 없음 — 대조 불가</span>');
+  const g = pay.generation || {};
+  if (g.match === false && g.dump_network_run_id !== g.active_network_run_id) {
+    L.push('<span style="color:#f87171">⚠ 덤프 세대 ' + esc(g.dump_network_run_id) + ' ≠ 활성 망 세대 ' + esc(g.active_network_run_id)
+      + ' — 그림에 쓰지 말고 덤프를 다시 만들 것</span>');
+  } else if (g.match !== true && !g.problem) {
+    L.push('<span style="color:#fbbf24">⚠ ' + esc(g.note || '덤프 세대 미확인') + '</span>');
+  }
+  if (g.problem) {
+    L.push('<span style="color:#f87171">⚠ 활성 망 세대 무효 — ' + esc(g.problem) + ' (웹앱 망 단계를 다시 돌린 뒤 덤프를 다시)</span>');
+  }
+  if (pay.dump && pay.dump.published_match === 'differs') {
+    L.push('<span style="color:#fbbf24">⚠ 덤프를 만들 때 게시 JSON 과 값이 달랐다 (코드 세대 차이) — manifest.json 참조</span>');
+  }
+  L.push('<i style="color:#9ca3af">모델의 접촉망 풀이 (Kirchhoff · 접촉마다 Holm 협착 · R_total = R_bulk + R_c) — 측정 전류도 충방전 방향도 아니다.  '
+    + '바닥 띠 1 V → 위 띠 0 V (정확 Dirichlet) 프로브 해.</i>');
+  L.push('<button id="netcur-cbar" class="data-modal-btn" title="이 그림의 색 눈금 (|I|/I_전체 · log) 을 논문용 6× PNG 로">컬러바 ⬇</button>'
+    + '<label style="font-size:11px"><input type="checkbox" id="netcur-arrows"' + (opt.arrows ? ' checked' : '')
+    + '> 방향 화살표 (전위 강하 · a → b)</label>');
+  return L.join('<br>');
+}
+
+/* 자료가 없을 때 — 사유 + 만드는 명령 (code · 복사용) */
+function netCurrentErrorHtml(err, opt) {
+  const e = err || {};
+  let h = '<b>⚡ 전류 흐름 — 접촉망 해</b>' + (opt ? netCurrentControlsHtml(opt) : '<br>')
+    + '<span style="color:#fbbf24">' + jeEscH(e.message || e.error || '자료를 못 받았다') + '</span>';
+  if (e.how_to) {
+    h += '<div style="margin-top:4px">한 번 실행 (웹앱이 도는 기계의 터미널 · 그대로 붙여 넣기):</div>'
+      + '<code style="display:block;white-space:pre-wrap;word-break:break-all;font-size:10px;background:#0b1020;color:#e4e6f0;'
+      + 'padding:4px;border-radius:4px;user-select:all">' + jeEscH(e.how_to) + '</code>';
+  }
+  h += '<button id="netcur-retry" class="data-modal-btn" title="덤프를 만든 뒤 — 새로고침 없이 다시 읽는다">↻ 다시 불러오기</button>';
+  return h;
+}
+
+function netCurrentDispose(state) {
+  if (state.netCurrentGroup && state.scene) {
+    state.scene.remove(state.netCurrentGroup);
+    state.netCurrentGroup.traverse(o => {
+      if (o.isInstancedMesh && o.dispose) o.dispose();
+      if (o.geometry) o.geometry.dispose();
+      if (o.material) o.material.dispose();
+    });
+  }
+  state.netCurrentGroup = null;
+}
+
+/* 모드를 바꿀 때마다 (applyViewMode 머리) — 그림을 치우고 토큰을 올려 늦게 오는 응답을 무효로 */
+function netCurrentTeardown(state) {
+  state._netCurToken = (state._netCurToken || 0) + 1;
+  netCurrentDispose(state);
+}
+
+function netCurrentWireLegend(state, pay) {
+  const el = document.getElementById('view-mode-legend');
+  if (!el) return;
+  const opt = state._netCurOpt;
+  const on = (id, ev, fn) => { const x = el.querySelector('#' + id); if (x) x.addEventListener(ev, fn); };
+  on('netcur-channel', 'change', ev => { opt.channel = ev.target.value; applyNetCurrentMode(state); });
+  on('netcur-top', 'change', ev => { opt.top = +ev.target.value; applyNetCurrentMode(state); });
+  on('netcur-mode', 'change', ev => { opt.mode = ev.target.value; applyNetCurrentMode(state); });
+  on('netcur-arrows', 'change', ev => { opt.arrows = ev.target.checked; if (pay) renderNetCurrent(state, pay); });
+  on('netcur-retry', 'click', () => applyNetCurrentMode(state));          // 오류는 캐시하지 않는다 — 다시 fetch
+  on('netcur-cbar', 'click', () => {
+    const l = state._netCurLast;
+    if (l) exportColorbarPNG(netCurrentColorbarSpec(l.pay, opt, l.st.lo, l.st.hi),
+                             'colorbar_net_current_' + l.pay.channel + '_' + l.pay.mode + '.png');
+  });
+}
+
+function applyNetCurrentMode(state) {
+  const opt = state._netCurOpt || (state._netCurOpt = { channel: 'ionic', mode: 'hertzian', top: 5000, arrows: false });   // top = 경로 기본 (TOP_DEFAULT)
+  netCurrentTeardown(state);
+  const tok = state._netCurToken;
+  const ionic = opt.channel === 'ionic';
+  ['AM_P', 'AM_S', 'SE'].forEach(t => {                    // 입자 = 기본색 · 흐리게 (고른 채널의 망 입자를 조금 진하게) — 체크박스로 숨길 수 있다
+    const m = state.meshes && state.meshes[t];
+    if (!m) return;
+    const base = new THREE.Color(COL[t]);
+    m.userData.particles.forEach((_, i) => m.setColorAt(i, base));
+    if (m.instanceColor) m.instanceColor.needsUpdate = true;
+    m.material.opacity = (t === 'SE') ? (ionic ? 0.10 : 0.05) : (ionic ? 0.22 : 0.16);
+    m.material.transparent = true;
+  });
+  setLegend(state, '<b>⚡ 전류 흐름 — 접촉망 해</b><br><i style="color:#9ca3af">간선 전류 불러오는 중…</i>');
+  const url = netCurrentUrl(state.dataUrl, opt);
+  const cache = state._netCurCache || (state._netCurCache = {});
+  const got = cache[url]
+    ? Promise.resolve({ ok: true, body: cache[url] })
+    : fetch(url).then(r => r.json().then(b => ({ ok: r.ok, body: b }),
+                                          () => ({ ok: false, body: { error: 'bad_response', message: 'HTTP ' + r.status } })))
+        .catch(e => ({ ok: false, body: { error: 'fetch_failed', message: String(e) } }));
+  got.then(res => {
+    if (tok !== state._netCurToken || state.viewMode !== 'net_current') return;   // 늦은 응답 — 그 사이 모드 · 옵션이 바뀌었다
+    if (!res.ok || !res.body || res.body.ok !== true) {
+      setLegend(state, netCurrentErrorHtml(res.body, opt));
+      netCurrentWireLegend(state, null);
+      return;
+    }
+    cache[url] = res.body;
+    renderNetCurrent(state, res.body);
+  });
+}
+
+function renderNetCurrent(state, pay) {
+  netCurrentDispose(state);
+  const opt = state._netCurOpt || {};
+  const edges = pay.edges || [];
+  const box = pay.box || {};
+  const hx = (+box.x > 0 ? +box.x : Infinity) / 2, hy = (+box.y > 0 ? +box.y : Infinity) / 2;
+  const rng = netCurrentLogRange(edges) || [-1, 0];
+  const lo = rng[0], hi = rng[1];
+  const draw = edges.filter(e => !netCurrentWrap(e.a, e.b, hx, hy));
+  const radii = [];
+  edges.forEach(e => { if (e.ra > 0) radii.push(e.ra); if (e.rb > 0) radii.push(e.rb); });
+  radii.sort((u, v) => u - v);
+  const rRef = radii.length ? radii[Math.floor(radii.length / 2)] : 1;      // 망 입자 반경 중앙값 (이온 = SE · 전자 = AM)
+  const rMin = 0.10 * rRef, rMax = 0.50 * rRef;
+  const group = new THREE.Group();
+  if (draw.length) {
+    const tubes = new THREE.InstancedMesh(new THREE.CylinderGeometry(1, 1, 1, 12, 1, false),
+                                          new THREE.MeshLambertMaterial({ color: 0xffffff }), draw.length);
+    const cones = opt.arrows ? new THREE.InstancedMesh(new THREE.ConeGeometry(1, 1, 12),
+                                                       new THREE.MeshLambertMaterial({ color: 0xffffff }), draw.length) : null;
+    const up = new THREE.Vector3(0, 1, 0), A = new THREE.Vector3(), B = new THREE.Vector3(), d = new THREE.Vector3();
+    const q = new THREE.Quaternion(), m4 = new THREE.Matrix4(), sc = new THREE.Vector3(), mid = new THREE.Vector3();
+    const col = new THREE.Color();
+    draw.forEach((e, i) => {
+      A.set(e.a[0], e.a[2], e.a[1]);                          // data (x, y, z) → THREE (x, z, y) — 입자 구와 같은 규약
+      B.set(e.b[0], e.b[2], e.b[1]);
+      d.subVectors(B, A);
+      const len = d.length();
+      const t = netCurrentT(e.s, lo, hi), r = rMin + (rMax - rMin) * t;
+      if (len > 0) d.divideScalar(len); else d.copy(up);
+      q.setFromUnitVectors(up, d);
+      mid.addVectors(A, B).multiplyScalar(0.5);
+      sc.set(r, Math.max(len, 1e-6), r);
+      m4.compose(mid, q, sc);
+      tubes.setMatrixAt(i, m4);
+      col.setHex(jetColor(t));
+      tubes.setColorAt(i, col);
+      if (cones) {                                             // 화살표 = 흐름 방향 a → b (높은 전위 → 낮은 전위)
+        const h = Math.min(4.5 * r, 0.45 * len), w = 2.2 * r;
+        mid.copy(A).addScaledVector(d, 0.58 * len);
+        sc.set(w, Math.max(h, 1e-6), w);
+        m4.compose(mid, q, sc);
+        cones.setMatrixAt(i, m4);
+        cones.setColorAt(i, col);
+      }
+    });
+    [tubes, cones].forEach(m => {
+      if (!m) return;
+      m.instanceMatrix.needsUpdate = true;
+      if (m.instanceColor) m.instanceColor.needsUpdate = true;
+      m.frustumCulled = false;                                // 인스턴스가 상자 전체에 퍼진다 — 기본 경계구로 잘리지 않게
+      group.add(m);
+    });
+  }
+  if (state.scene) {
+    state.scene.add(group);
+    state.netCurrentGroup = group;
+  }
+  if (state.applyClip) state.applyClip();                     // 단면 뷰 — 새 재질에도 자르기 평면
+  const st = { nDrawn: draw.length, nWrapSkipped: edges.length - draw.length, lo: lo, hi: hi };
+  state._netCurLast = { pay: pay, st: st };
+  setLegend(state, netCurrentLegendHtml(pay, opt, st));
+  netCurrentWireLegend(state, pay);
 }
 
 function setLegend(state, html) {

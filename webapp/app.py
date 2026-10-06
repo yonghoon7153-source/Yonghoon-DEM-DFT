@@ -9485,6 +9485,34 @@ def serve_am_contacts(case_id):
     return _am_contacts_response(get_results_dir(case_id), meta, extra_dirs=(get_case_dir(case_id),))
 
 
+def _network_current_response(results_dir, meta_path):
+    """⚡ 전류 흐름 (DEM 3D 뷰어 'net_current') 자료 — 망 FULL 해의 간선 전류 상위 N (`scripts/network_current.current_payload`).
+
+    자료 = 케이스 폴더 `network_raw_dump/` — 웹앱 망 단계는 간선 전류를 남기지 않는다 (`--dump-raw-dir` 를 넘기지 않는다 · 망 단계 ·
+    게시 계약 그대로).  한 번 `python3 scripts/network_current.py dump <결과 폴더>` 로 만든다 (같은 argv · 옆 폴더 · 게시 파일 무변경).
+    없으면 404 + 그 명령 · 잘못된 인자 400.  좌표 배율 = 3d-data 와 같은 meta.json scale."""
+    meta = {}
+    try:
+        with open(meta_path, encoding='utf-8') as f:
+            meta = json.load(f) or {}
+    except (OSError, ValueError):
+        meta = {}
+    _scripts_dir = os.path.join(os.path.dirname(__file__), '..', 'scripts')
+    if _scripts_dir not in sys.path:
+        sys.path.insert(0, _scripts_dir)
+    import network_current as _ncur
+    st, body = _ncur.current_payload(results_dir, channel=request.args.get('channel', 'ionic'),
+                                     mode=request.args.get('mode', 'hertzian'), top=request.args.get('top'),
+                                     scale=(meta.get('scale', 1000) if isinstance(meta, dict) else 1000) or 1000)
+    return jsonify(body), st
+
+
+@app.route('/results/<case_id>/network-current')
+def serve_network_current(case_id):
+    """⚡ 전류 흐름 — 망 해의 간선 전류 (상위 N · on-demand · force-chains 와 같은 방식)."""
+    return _network_current_response(get_results_dir(case_id), os.path.join(get_case_dir(case_id), 'meta.json'))
+
+
 @app.route('/porosity-corpus.csv')
 def porosity_corpus_csv():
     """Walk EVERY uploaded case, read its JSONs, and stream one row per case
@@ -11804,6 +11832,15 @@ def serve_archive_am_contacts(folder):
         except (OSError, ValueError):
             meta = {}
     return _am_contacts_response(target, meta)
+
+
+@app.route('/archive/results/<path:folder>/network-current')
+def serve_archive_network_current(folder):
+    """⚡ 전류 흐름 — 보관 케이스 (결과 · meta.json 이 한 폴더)."""
+    target = _safe_path(folder)
+    if not target:
+        return jsonify({'ok': False, 'error': 'not_found', 'message': 'archive folder not found'}), 404
+    return _network_current_response(target, os.path.join(target, 'meta.json'))
 
 
 @app.route('/archive/results/<path:folder>/brittle-z-csv')
