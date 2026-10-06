@@ -9192,7 +9192,7 @@ def serve_3d_data(case_id):
                 try:
                     with open(cache_path) as _cf:
                         cached = json.load(_cf)
-                    if cached.get('_contacts_mtime') == contacts_mtime and cached.get('_schema') == 11:
+                    if cached.get('_contacts_mtime') == contacts_mtime and cached.get('_schema') == 12:   # 12 = 입자별 배위수 (10-06)
                         # Restore every cached key except metadata.  Some
                         # int-keyed dicts (stress_max, dr_max, se_engagement,
                         # particle_max_fpc, particle_n_brittle) need their
@@ -9264,6 +9264,9 @@ def serve_3d_data(case_id):
                     aux['particle_worst_pair_type'] = agg.get('particle_worst_pair_type', {})
                     aux['am_p_skeleton']            = agg.get('am_p_skeleton', [])
                     aux['stress_chain_segments']    = agg.get('stress_chain_segments', [])
+                    # 입자별 배위수 + 상별 요약 (3D 뷰어 '배위수' 보기 · 10-06 · 스키마 12)
+                    for _k in ('cn_se_se', 'cn_am_se', 'cn_am_am', 'cn_summary'):
+                        aux[_k] = agg.get(_k, {})
 
                     # Phase A5+A6 — SE network diagnostics (re-stream contacts;
                     # NetworkX-based, ~1-2 s for typical 60k SE-SE contacts).
@@ -9292,7 +9295,7 @@ def serve_3d_data(case_id):
                     # Write cache so subsequent page loads are instant.
                     try:
                         cache_blob = dict(aux)
-                        cache_blob['_contacts_mtime'] = contacts_mtime; cache_blob['_schema'] = 11
+                        cache_blob['_contacts_mtime'] = contacts_mtime; cache_blob['_schema'] = 12
                         with open(cache_path, 'w') as _cf:
                             json.dump(cache_blob, _cf, default=str)
                         print(f'  [3d-data aux] cache WROTE → '
@@ -9417,6 +9420,69 @@ def serve_force_chains(case_id):
         with open(fc_path) as f:
             return jsonify(json.load(f))
     return jsonify([])
+
+
+def _am_contacts_response(data_dir, meta, extra_dirs=()):
+    """3D 뷰어 'AM 접촉 확대' (2026-10-06 · 1저자 보고 슬라이드) — `?am_id=` AM 하나의 접촉 행 (contacts.csv) · 상대 입자 ·
+    cap 면적.  live · archive 경로가 같이 부른다 (계산 = scripts/viewer3d_data.am_contact_closeup — 생산 함수 재사용).
+    상자 = input_params.json box_x · box_y (data_dir → extra_dirs) — 없으면 그리기만 뷰어와 같은 0.05 기본, 보고 규칙 합집합은 빈칸."""
+    raw = (request.args.get('am_id') or '').strip()
+    try:
+        am_id = int(raw)
+    except ValueError:
+        return jsonify({'error': f'am_id (정수) 가 필요하다 (받은 값 {raw!r})'}), 400
+    atoms_csv = os.path.join(data_dir, 'atoms.csv')
+    contacts_csv = os.path.join(data_dir, 'contacts.csv')
+    if not os.path.exists(atoms_csv):
+        return jsonify({'error': 'atoms.csv 가 없다'}), 404
+    if not os.path.exists(contacts_csv):
+        return jsonify({'error': 'contacts.csv 가 없다 — 접촉 덤프 없는 케이스 (atoms-only) 는 AM 접촉 확대를 그릴 수 없다'}), 404
+    type_map = {}
+    for item in _type_map_resolve.map_str_from_meta(meta, 'am-contacts')[0].split(','):
+        k, _, v = item.partition(':')
+        try:
+            type_map[int(k)] = v.strip()
+        except ValueError:
+            continue
+    from viewer3d_data import load_am_contact_index, am_contact_closeup
+    from coverage_physics_vs_hertzian import read_box_xy
+    box, why = None, None
+    for d in (data_dir,) + tuple(extra_dirs):
+        box, why = read_box_xy(d)
+        if box:
+            break
+    fm = {}
+    fm_path = os.path.join(data_dir, 'full_metrics.json')
+    if os.path.exists(fm_path):
+        try:
+            with open(fm_path) as f:
+                fm = json.load(f) or {}
+        except (OSError, ValueError):
+            fm = {}
+    try:
+        idx = load_am_contact_index(atoms_csv, contacts_csv, type_map)
+    except (OSError, ValueError) as e:
+        return jsonify({'error': f'atoms.csv · contacts.csv 를 못 읽었다 — {type(e).__name__}: {e}'}), 400
+    try:
+        payload, code = am_contact_closeup(idx, type_map, am_id, scale=meta.get('scale', 1000), box_xy=box,
+                                           box_source=('input_params' if box else 'default_0.05'), box_reason=why,
+                                           full_metrics=fm)
+    except Exception as e:                                         # noqa: BLE001 — 모달이 사유를 띄운다 (HTML 500 대신 JSON)
+        import traceback
+        traceback.print_exc()
+        return jsonify({'error': f'AM 접촉 확대 계산 실패 — {type(e).__name__}: {e}'}), 500
+    return jsonify(payload), code
+
+
+@app.route('/results/<case_id>/am-contacts')
+def serve_am_contacts(case_id):
+    """AM 하나의 접촉 (3D 뷰어 'AM 접촉 확대' 모달) — `_am_contacts_response` (archive 경로와 같은 계산)."""
+    meta_file = os.path.join(get_case_dir(case_id), 'meta.json')
+    if not os.path.exists(meta_file):
+        return jsonify({'error': 'Case not found'}), 404
+    with open(meta_file) as f:
+        meta = json.load(f)
+    return _am_contacts_response(get_results_dir(case_id), meta, extra_dirs=(get_case_dir(case_id),))
 
 
 @app.route('/porosity-corpus.csv')
@@ -11562,7 +11628,7 @@ def serve_archive_3d_data(folder):
                 try:
                     with open(cache_path) as _cf:
                         cached = json.load(_cf)
-                    if cached.get('_contacts_mtime') == contacts_mtime and cached.get('_schema') == 11:
+                    if cached.get('_contacts_mtime') == contacts_mtime and cached.get('_schema') == 12:   # 12 = 입자별 배위수 (10-06)
                         for k in ('stress_max', 'dr_max', 'brittle_pairs',
                                    'se_stress_pairs', 'am_se_stress_pairs',
                                    'se_states', 'tabor_stats', 'all_se_ids_count',
@@ -11574,6 +11640,9 @@ def serve_archive_3d_data(folder):
                                                in cached[k].items()}
                                 else:
                                     aux[k] = cached[k]
+                        for k in ('cn_se_se', 'cn_am_se', 'cn_am_am', 'cn_summary'):   # 배위수 (live 경로는 전 키 복원)
+                            if k in cached:
+                                aux[k] = cached[k]
                         cache_valid = True
                         print(f'  [3d-data aux/archive] cache HIT')
                 except (OSError, ValueError, KeyError) as _ce:
@@ -11618,6 +11687,9 @@ def serve_archive_3d_data(folder):
                     aux['particle_worst_pair_type'] = agg.get('particle_worst_pair_type', {})
                     aux['am_p_skeleton']            = agg.get('am_p_skeleton', [])
                     aux['stress_chain_segments']    = agg.get('stress_chain_segments', [])
+                    # 입자별 배위수 + 상별 요약 (3D 뷰어 '배위수' 보기 · 10-06 · 스키마 12)
+                    for _k in ('cn_se_se', 'cn_am_se', 'cn_am_am', 'cn_summary'):
+                        aux[_k] = agg.get(_k, {})
                     # Phase A5+A6 — SE network diagnostics
                     try:
                         _plate_z_sim = box.get('z_max', 0) / max(scale, 1)
@@ -11637,7 +11709,7 @@ def serve_archive_3d_data(folder):
                         print(f'  [3d-data aux/archive] SE diag failed: {_ediag}')
                     try:
                         cache_blob = dict(aux)
-                        cache_blob['_contacts_mtime'] = contacts_mtime; cache_blob['_schema'] = 11
+                        cache_blob['_contacts_mtime'] = contacts_mtime; cache_blob['_schema'] = 12
                         with open(cache_path, 'w') as _cf:
                             json.dump(cache_blob, _cf, default=str)
                         print(f'  [3d-data aux/archive] cache WROTE')
@@ -11715,6 +11787,23 @@ def serve_archive_force_chains(folder):
         with open(fc_path) as f:
             return jsonify(json.load(f))
     return jsonify([])
+
+
+@app.route('/archive/results/<path:folder>/am-contacts')
+def serve_archive_am_contacts(folder):
+    """AM 하나의 접촉 (3D 뷰어 'AM 접촉 확대' 모달 · archive) — live 경로와 같은 `_am_contacts_response`."""
+    target = _safe_path(folder)
+    if not target or not os.path.isdir(target):
+        return jsonify({'error': 'Not found'}), 404
+    meta = {}
+    meta_file = os.path.join(target, 'meta.json')
+    if os.path.exists(meta_file):
+        try:
+            with open(meta_file) as f:
+                meta = json.load(f) or {}
+        except (OSError, ValueError):
+            meta = {}
+    return _am_contacts_response(target, meta)
 
 
 @app.route('/archive/results/<path:folder>/brittle-z-csv')

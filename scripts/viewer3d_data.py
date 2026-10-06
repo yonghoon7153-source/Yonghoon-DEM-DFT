@@ -56,6 +56,55 @@ DR_SE_YIELD   = 0.0011    # elastic-plastic transition (yield onset)
 _REGIME_RANK = {'elastic': 1, 'yield': 2, 'plastic': 3}
 
 
+#: 입자별 배위수 (CN) 의 접촉 정의 — 3D 뷰어 '배위수' 보기 · AM 접촉 확대의 범례에 그대로 실린다 (2026-10-06 · 1저자 보고 슬라이드).
+CN_CONTACT_RULE = (
+    '접촉 = contacts.csv 행 하나 (입자–입자 덤프 · δ · 면적으로 거르지 않는다 · 두 id 가 원자 표에 있어야 한다 · 같은 행이 두 번이면 두 번) '
+    '= dem_analysis_core.calc_se_se_cn · calc_am_isolation_risk · calc_am_am_cn 과 같은 집합 · 평균 = 그 상의 모든 입자 (접촉 0 포함) '
+    '= full_metrics se_se_cn · {상}_se_cn_mean · am_se_cn_mean · am_am_cn · 벽 · 플래튼 접촉은 덤프에 없다')
+
+
+def _cn_stats(vals: list) -> dict:
+    """정수 CN 목록 → 평균 · 모집단 표준편차 · 중앙값 · 최소 · 최대 · 0 개수 (np.mean · np.std · np.median 과 같은 정의).
+    평균 = 정수 합 ÷ n (정확한 정수 합의 올바른 반올림 — np.mean 과 비트 같음)."""
+    n = len(vals)
+    if not n:
+        return {'n': 0, 'mean': None, 'std': None, 'median': None, 'min': None, 'max': None, 'n_zero': 0}
+    s = sorted(vals)
+    mean = sum(vals) / n
+    return {'n': n, 'mean': mean, 'std': math.sqrt(sum((v - mean) ** 2 for v in vals) / n),
+            'median': (s[(n - 1) // 2] + s[n // 2]) / 2, 'min': s[0], 'max': s[-1],
+            'n_zero': sum(1 for v in vals if v == 0)}
+
+
+def cn_summary(atoms_by_id: dict, type_map: dict, cn_se_se: dict, cn_am_se: dict, cn_am_am: dict,
+               n_rows: dict) -> dict:
+    """상별 CN 요약 — AM 상마다 AM–SE (활물질 주위 SE) · AM–AM, SE 는 SE–SE.  모든 입자 (접촉 0 포함) 위의 통계."""
+    by_lbl: dict = defaultdict(list)
+    for aid, a in atoms_by_id.items():
+        by_lbl[type_map.get(int(a.get('type', -1)), '?')].append(int(aid))
+    phases: dict = {}
+    all_am: list = []
+    for lbl in sorted(by_lbl):
+        ids = by_lbl[lbl]
+        if lbl == 'SE':
+            st = _cn_stats([cn_se_se.get(i, 0) for i in ids])
+            phases[lbl] = {'kind': 'SE', 'n': st['n'], 'se_se_mean': st['mean'], 'se_se_std': st['std'],
+                           'se_se_median': st['median'], 'se_se_min': st['min'], 'se_se_max': st['max'],
+                           'se_se_n_zero': st['n_zero']}
+        elif 'AM' in lbl:
+            all_am += ids
+            st = _cn_stats([cn_am_se.get(i, 0) for i in ids])
+            aa = _cn_stats([cn_am_am.get(i, 0) for i in ids])
+            phases[lbl] = {'kind': 'AM', 'n': st['n'], 'am_se_mean': st['mean'], 'am_se_std': st['std'],
+                           'am_se_median': st['median'], 'am_se_min': st['min'], 'am_se_max': st['max'],
+                           'am_se_n_zero': st['n_zero'], 'am_am_mean': aa['mean'], 'am_am_std': aa['std']}
+    st_all = _cn_stats([cn_am_se.get(i, 0) for i in all_am])
+    aa_all = _cn_stats([cn_am_am.get(i, 0) for i in all_am])
+    return {'rule': CN_CONTACT_RULE, 'phases': phases,
+            'am_se_mean_all': st_all['mean'], 'am_am_mean_all': aa_all['mean'], 'n_am_all': st_all['n'],
+            'n_rows': dict(n_rows)}
+
+
 def _classify_dr(dr: float) -> str:
     """Return one of 'elastic' / 'yield' / 'plastic' for an SE-touching
     contact.  A particle with no recorded contact is treated as 'idle'
@@ -153,6 +202,14 @@ def aggregate_particle_metrics(contacts: Iterable[dict],
     # frontend can compute idle = all_SE - (any-regime SE)).
     se_with_contact: set[int] = set()
 
+    # ── 입자별 배위수 (CN · 2026-10-06 · 3D 뷰어 '배위수' 보기 · AM 접촉 확대) ─────────────────
+    # 행 하나 = 접촉 하나 — δ · 면적 거르기 **앞**에서 센다 (CN_CONTACT_RULE · dem_analysis_core 의 CN 함수와 같은 집합).
+    # 0 인 입자는 항목이 없다 (= 측정된 0 · 요약 평균은 원자 표 전체 위).
+    cn_se_se: dict[int, int] = defaultdict(int)
+    cn_am_se: dict[int, int] = defaultdict(int)
+    cn_am_am: dict[int, int] = defaultdict(int)
+    cn_rows = {'se_se': 0, 'am_se': 0, 'am_am': 0, 'other': 0, 'unknown_id': 0}
+
     pressure_conv = scale / 1.0e6     # sim Pa → real MPa (calibrated to scale)
 
     def _bump_state(d: dict[int, int], sid: int, regime: str) -> None:
@@ -163,9 +220,11 @@ def aggregate_particle_metrics(contacts: Iterable[dict],
     for c in contacts:
         i1 = int(c.get('id1', -1)); i2 = int(c.get('id2', -1))
         if i1 < 0 or i2 < 0:
+            cn_rows['unknown_id'] += 1
             continue
         a1 = atoms_by_id.get(i1); a2 = atoms_by_id.get(i2)
         if a1 is None or a2 is None:
+            cn_rows['unknown_id'] += 1
             continue
 
         delta = float(c.get('delta', 0) or 0)
@@ -197,6 +256,16 @@ def aggregate_particle_metrics(contacts: Iterable[dict],
         t2 = type_map.get(int(a2.get('type', -1)), '?')
         is_am1 = 'AM' in t1; is_am2 = 'AM' in t2
         is_se1 = t1 == 'SE'; is_se2 = t2 == 'SE'
+
+        # CN — 아래의 δ/R 거르기 (dr <= 0 → continue) 앞에서 센다
+        if is_se1 and is_se2:
+            cn_se_se[i1] += 1; cn_se_se[i2] += 1; cn_rows['se_se'] += 1
+        elif is_am1 and is_am2:
+            cn_am_am[i1] += 1; cn_am_am[i2] += 1; cn_rows['am_am'] += 1
+        elif (is_am1 and is_se2) or (is_am2 and is_se1):
+            cn_am_se[i1 if is_am1 else i2] += 1; cn_rows['am_se'] += 1
+        else:
+            cn_rows['other'] += 1
 
         if is_am1 and is_am2:
             ct = '-'.join(sorted([t1, t2]))
@@ -457,6 +526,11 @@ def aggregate_particle_metrics(contacts: Iterable[dict],
         # score only, so flattening saves ~50 MB JSON for the
         # particulate corpus.
         'se_engagement': se_engagement,
+        # 입자별 배위수 (0 이면 항목 없음) + 상별 요약 — 3D 뷰어 '배위수' 보기 (2026-10-06 · 캐시 스키마 12)
+        'cn_se_se': {int(k): int(v) for k, v in cn_se_se.items()},
+        'cn_am_se': {int(k): int(v) for k, v in cn_am_se.items()},
+        'cn_am_am': {int(k): int(v) for k, v in cn_am_am.items()},
+        'cn_summary': cn_summary(atoms_by_id, type_map, cn_se_se, cn_am_se, cn_am_am, cn_rows),
     }
 
 
@@ -771,3 +845,208 @@ def build_coverage_map(coverage_per_am_csv_path) -> dict[int, float]:
     except Exception:
         pass
     return out
+
+
+# ── AM 접촉 확대 — 3D 뷰어 모달 (2026-10-06 · 1저자 보고 슬라이드 "Coverage 확대" · "활물질 주위 SE") ─────────
+#  /results/<id>/am-contacts · /archive/results/<folder>/am-contacts 가 부른다 (app.py).  계산은 새로 짜지 않는다:
+#  면적 = contacts.csv 의 c_cpl[22] 그대로 · 세대 2 면적 = plastic_coverage.film_area_g2 (생산 합집합 피복과 같은 인자) ·
+#  합집합 = plastic_coverage.union_cap_coverage · 보고 규칙 합집합 = coverage_physics_vs_hertzian.union_coverage_bed 를 이 AM 의
+#  행만으로 부른 값 (AM 하나의 cap 은 그 AM 의 접촉으로만 정해지므로 침대 전체 값과 같다 — webapp/test_viewer_am_contacts.py Q2).
+
+#: 경로가 contacts.csv 에서 읽는 열 (있는 것만 · 접촉점 cp_* 는 덤프에 contactPoint 가 있을 때만).
+AM_CLOSEUP_CONTACT_COLS = ('id1', 'id2', 'delta', 'contact_area', 'cp_x', 'cp_y', 'cp_z')
+#: cap 규칙 — 그림 · 범례 · 합집합이 같은 식을 쓴다 (viewer3d.js capHalfAngle · plastic_coverage.union_cap_coverage).
+AM_CLOSEUP_CAP_RULE = ('접촉 하나 = AM 구면 위 cap 하나 — 중심 = AM → 상대 중심 방향 (x · y 주기 최소영상) · 넓이 A → '
+                       'cos θ = 1 − A/(2πR²) (A ≥ 2πR² 은 반구로 자름) · SE 접촉 = 노란 cap · AM–AM 접촉 = 회색 cap')
+
+_AM_INDEX_CACHE: dict = {}
+
+
+def _fin(x):
+    """유한한 실수 → float · 아니면 None (JSON 에 NaN 을 싣지 않는다 — 브라우저 JSON.parse 가 깨진다)."""
+    try:
+        v = float(x)
+    except (TypeError, ValueError):
+        return None
+    return v if math.isfinite(v) else None
+
+
+def _file_sig(path):
+    import os
+    st = os.stat(path)
+    return (os.path.realpath(path), st.st_mtime_ns, st.st_size)
+
+
+def load_am_contact_index(atoms_csv, contacts_csv, type_map: dict) -> dict:
+    """atoms.csv 배열 + contacts.csv 에서 **AM 이 낀 행만** — 한 칸 캐시 (두 파일의 경로 · mtime · 크기 · type_map).
+    다음 · 이전 AM 으로 넘길 때 contacts.csv 를 다시 읽지 않는다 (AM 이 안 낀 SE–SE 행은 버린다)."""
+    import pandas as pd
+    key = (_file_sig(atoms_csv), _file_sig(contacts_csv), tuple(sorted((int(k), str(v)) for k, v in type_map.items())))
+    hit = _AM_INDEX_CACHE.get(key)
+    if hit is not None:
+        return hit
+    adf = pd.read_csv(atoms_csv)
+    miss_a = [c for c in ('id', 'type', 'x', 'y', 'z', 'radius') if c not in adf.columns]
+    if miss_a:
+        raise ValueError(f'atoms.csv 에 {miss_a} 열이 없다')
+    adf = adf[['id', 'type', 'x', 'y', 'z', 'radius']].apply(pd.to_numeric, errors='coerce')
+    adf = adf[adf['id'].notna()].reset_index(drop=True)
+    ids = adf['id'].astype('int64').to_numpy()
+    types = adf['type'].fillna(-1).astype('int64').to_numpy()
+    cdf = pd.read_csv(contacts_csv, usecols=lambda c: c in AM_CLOSEUP_CONTACT_COLS, low_memory=False)
+    cdf = cdf.apply(pd.to_numeric, errors='coerce')
+    missing = [c for c in ('id1', 'id2', 'delta', 'contact_area') if c not in cdf.columns]
+    am_ids = sorted({int(a) for a, t in zip(ids, types) if 'AM' in str(type_map.get(int(t), ''))})
+    if missing:
+        rows = cdf.iloc[0:0]
+    else:
+        rows = cdf[cdf['id1'].isin(am_ids) | cdf['id2'].isin(am_ids)].reset_index(drop=True)
+    idx = {'atoms_df': adf, 'ids': ids, 'types': types, 'rad': adf['radius'].to_numpy(dtype=float),
+           'xyz': adf[['x', 'y', 'z']].to_numpy(dtype=float), 'pos': {int(a): k for k, a in enumerate(ids)},
+           'rows': rows, 'missing_cols': missing, 'n_rows_total': int(len(cdf)),
+           'has_cp': all(c in cdf.columns for c in ('cp_x', 'cp_y', 'cp_z'))}
+    _AM_INDEX_CACHE.clear()
+    _AM_INDEX_CACHE[key] = idx
+    return idx
+
+
+def am_contact_closeup(idx: dict, type_map: dict, am_id: int, *, scale=1000.0, box_xy=None,
+                       box_source: str = 'input_params', box_reason: str | None = None, full_metrics: dict | None = None):
+    """AM 하나의 접촉 (3D 뷰어 'AM 접촉 확대') → `(payload, http status)`.
+
+    payload (길이 µm = 덤프 × scale · 넓이 µm² = 덤프 × scale² — /3d-data 의 입자 좌표와 같은 단위):
+      am {id · type · r · x · y · z} · contacts [상대 id · 상 · 쌍 (AM_SE · AM_AM · OTHER) · 반경 · 중심 (AM 옆 최소영상 자리) ·
+      wrapped (주기 영상으로 옮겼나) · area_um2 (c_cpl[22]) · area_g2_um2 (세대 2 표면 면적 · 생산 합집합과 같은 인자) · delta_um ·
+      cp (접촉점 · AM 옆으로 최소영상) · geom_ok (|d| = r1 + r2 − δ · 생산과 같은 허용폭)] · n_se (= 이 AM 의 AM–SE CN) · n_am ·
+      n_other · n_wrapped · n_dir_inconsistent · n_unknown_id · n_self · n_g2_rejected ·
+      cap_sum_pct {hertz · g2} (= Σ A_SE ÷ 4πR² × 100 — 겹친 cap 을 두 번 센다 · 그림 설명용) ·
+      union_pct {hertz: c_cpl[22] cap 합집합 (= 기본 그림의 노란 면적) · g2: 보고 규칙 (⑥ Physics 합집합 · 이 AM)} ·
+      reported {케이스 표 침대 평균 — full_metrics coverage_<상>_mean_physics_union · 상태 · Hertz 계열 합-클립} ·
+      box_um · box_source ('input_params' | 'default_0.05' — 그리기만 뷰어와 같은 0.05 기본으로 · 보고 규칙 합집합은 생산처럼 빈칸).
+    오류: am_id 가 원자 표에 없음 404 · AM 이 아님 · scale · 열 없음 400."""
+    import numpy as np
+    from plastic_coverage import film_area_g2, union_cap_coverage, fibonacci_sphere, UNION_FIB_N
+    from coverage_physics_vs_hertzian import (union_coverage_bed, UNION_DIST_TOL_REL, UNION_DIST_TOL_BOX,
+                                              UNION_LENGTH_SCALE_UM)
+    s = _fin(scale)
+    if not (s and s > 0):
+        return {'error': f'scale={scale!r} 가 유한 양수가 아니다'}, 400
+    if idx.get('missing_cols'):
+        return {'error': f'contacts.csv 에 {idx["missing_cols"]} 열이 없다 — 접촉 면적 · δ 없이 cap 을 그릴 수 없다'}, 400
+    am_id = int(am_id)
+    k_am = idx['pos'].get(am_id)
+    if k_am is None:
+        return {'error': f'id {am_id} 가 atoms.csv 에 없다'}, 404
+    lbl = type_map.get(int(idx['types'][k_am]), f'T{int(idx["types"][k_am])}')
+    if 'AM' not in str(lbl):
+        return {'error': f'id {am_id} 는 {lbl} — AM 이 아니다 (AM 접촉 확대는 AM 입자만)'}, 400
+    R, p_am = float(idx['rad'][k_am]), idx['xyz'][k_am]
+    if not (math.isfinite(R) and R > 0 and np.isfinite(p_am).all()):
+        return {'error': f'id {am_id} 의 반경 · 좌표가 유한하지 않다 (r={R!r})'}, 400
+    Lx, Ly = (float(box_xy[0]), float(box_xy[1])) if box_xy else (0.05, 0.05)
+    tol_box = UNION_DIST_TOL_BOX * max(Lx, Ly)
+    rows = idx['rows']
+    sel = rows[(rows['id1'] == am_id) | (rows['id2'] == am_id)]
+    cnt = dict(n_se=0, n_am=0, n_other=0, n_wrapped=0, n_dir_inconsistent=0, n_unknown_id=0, n_self=0, n_g2_rejected=0)
+    contacts, partner_k = [], set()
+    se_d, se_a, se_g, am_d, am_a = [], [], [], [], []
+    has_cp = idx.get('has_cp')
+    for row in sel.itertuples(index=False):
+        i1, i2 = int(row.id1), int(row.id2)
+        if i1 == i2:
+            cnt['n_self'] += 1
+            continue
+        pid = i2 if i1 == am_id else i1
+        k = idx['pos'].get(pid)
+        if k is None:
+            cnt['n_unknown_id'] += 1
+            continue
+        plbl = type_map.get(int(idx['types'][k]), f'T{int(idx["types"][k])}')
+        pair = 'AM_SE' if plbl == 'SE' else ('AM_AM' if 'AM' in str(plbl) else 'OTHER')
+        raw = idx['xyz'][k] - p_am
+        v = raw.copy()
+        v[0] -= Lx * round(v[0] / Lx)                     # 최소영상 (생산 union_coverage_bed 와 같은 식)
+        v[1] -= Ly * round(v[1] / Ly)
+        wrapped = bool(v[0] != raw[0] or v[1] != raw[1])
+        rp, dl, ca = float(idx['rad'][k]), float(row.delta), float(row.contact_area)
+        err = abs(float(np.linalg.norm(v)) - (R + rp - dl))
+        geom_ok = bool(math.isfinite(err) and err <= UNION_DIST_TOL_REL * (R + rp) + tol_box)
+        cnt['n_dir_inconsistent'] += int(not geom_ok)
+        cnt['n_wrapped'] += int(wrapped)
+        a_g2 = None
+        if pair != 'OTHER':
+            try:
+                a_g2, _b = film_area_g2(dl * s, R * s, rp * s, pair=pair, ligg_area=ca * s * s,
+                                        length_scale=UNION_LENGTH_SCALE_UM, consumer='surface')
+            except (ValueError, TypeError):
+                cnt['n_g2_rejected'] += 1
+        cp = None
+        if has_cp:
+            w = np.array([row.cp_x, row.cp_y, row.cp_z], dtype=float) - p_am
+            if np.isfinite(w).all():
+                w[0] -= Lx * round(w[0] / Lx)
+                w[1] -= Ly * round(w[1] / Ly)
+                cp = [_fin((p_am[j] + w[j]) * s) for j in range(3)]
+        q = (p_am + v) * s
+        contacts.append({'partner_id': pid, 'partner_type': plbl, 'pair': pair, 'partner_r': _fin(rp * s),
+                         'x': _fin(q[0]), 'y': _fin(q[1]), 'z': _fin(q[2]), 'wrapped': wrapped,
+                         'area_um2': _fin(ca * s * s), 'area_g2_um2': _fin(a_g2), 'delta_um': _fin(dl * s),
+                         'cp': cp, 'geom_ok': geom_ok})
+        partner_k.add(k)
+        if pair == 'AM_SE':
+            cnt['n_se'] += 1
+            se_d.append(v)
+            se_a.append(ca * s * s)
+            se_g.append(a_g2)
+        elif pair == 'AM_AM':
+            cnt['n_am'] += 1
+            am_d.append(v)
+            am_a.append(ca * s * s)
+        else:
+            cnt['n_other'] += 1
+    Rum = R * s
+    surf = 4.0 * math.pi * Rum * Rum
+
+    #  그림 합집합 (c_cpl[22] cap = 기본 그림의 노란 면적) — 생산 함수 그대로 · 방향 검사 실패가 있으면 생산처럼 빈칸
+    hz = {'value': None, 'status': 'ok'}
+    if cnt['n_dir_inconsistent']:
+        hz['status'] = (f'blank: {cnt["n_dir_inconsistent"]} 접촉의 방향 검사 실패 (최소영상 거리 ≠ r1 + r2 − δ — '
+                        '상자 · 프레임 어긋남)')
+    else:
+        try:
+            cov, info = union_cap_coverage(Rum, se_d, se_a, am_d, am_a, points=fibonacci_sphere(UNION_FIB_N))
+            if cov is None:
+                hz['status'] = f'blank: {info.get("reason")}'
+            else:
+                hz['value'] = float(cov)
+        except (ValueError, TypeError) as e:
+            hz['status'] = f'blank: {type(e).__name__}: {e}'
+    #  보고 규칙 합집합 (⑥ Physics · 세대 2) — 생산 union_coverage_bed 를 이 AM 의 행만으로.  상자는 input_params.json 이 있을 때만
+    #  (생산처럼 0.05 기본값으로 떨어지지 않는다 — 없으면 빈칸 + 사유).
+    sub_atoms = idx['atoms_df'].iloc[[k_am] + sorted(partner_k)]
+    sub_rows = sel[['id1', 'id2', 'delta', 'contact_area']]
+    try:
+        ukeys, uper = union_coverage_bed(sub_atoms, sub_rows, type_map, scale=s,
+                                         box_xy=((Lx, Ly) if box_xy else None), box_reason=box_reason)
+        ust = ukeys.get('coverage_status_physics_union')
+        g2 = {'value': _fin(uper.get(am_id)) if ust == 'ok' else None, 'status': ust}
+    except Exception as e:                                         # noqa: BLE001 — 사유로 남긴다 (경로는 그림을 계속 준다)
+        g2 = {'value': None, 'status': f'blank: 합집합 계산 오류 — {type(e).__name__}: {e}'}
+    fm = full_metrics or {}
+    payload = {
+        'am': {'id': am_id, 'type': lbl, 'r': _fin(Rum), 'x': _fin(p_am[0] * s), 'y': _fin(p_am[1] * s),
+               'z': _fin(p_am[2] * s)},
+        'contacts': contacts, **cnt,
+        'cap_sum_pct': {'hertz': _fin(sum(se_a) / surf * 100.0),
+                        'g2': (_fin(sum(se_g) / surf * 100.0) if all(a is not None for a in se_g) else None)},
+        'union_pct': {'hertz': hz, 'g2': g2},
+        'reported': {'label': lbl, 'union_mean_pct': _fin(fm.get(f'coverage_{lbl}_mean_physics_union')),
+                     'union_status': fm.get('coverage_status_physics_union'),
+                     'hertz_mean_pct': _fin(fm.get(f'coverage_{lbl}_mean'))},
+        'box_um': [Lx * s, Ly * s], 'box_source': box_source, 'box_reason': box_reason, 'scale': s,
+        'n_fib': int(UNION_FIB_N),
+        'rules': {'cn': CN_CONTACT_RULE, 'cap': AM_CLOSEUP_CAP_RULE,
+                  'area_hertz': 'c_cpl[22] = LIGGGHTS 기하 교차 원판 (Hertz 계열 — 이름만 Hertz · L1-04)',
+                  'area_g2': '세대 2 표면 면적 film_area_g2(consumer=surface) = 케이스 표 Physics 합집합 피복의 cap (⑥ · LHS-25)'},
+    }
+    return payload, 200

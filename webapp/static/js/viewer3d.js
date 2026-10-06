@@ -1123,6 +1123,7 @@ function buildControls(container, isMPM) {
       <option value="stress">Stress Concentration</option>
       <option value="stress_brittle">Stress + Brittle (overlay)</option>
       <option value="coverage">Coverage Heat (AM)</option>
+      <option value="cn">배위수 (활물질 주위 SE · SE–SE)</option>
       <option value="se_engagement">SE engagement & pore risk</option>
       <optgroup label="Fracture (Phase A)">
         <option value="worst_fpc">Worst F/P_c per particle</option>
@@ -1156,6 +1157,7 @@ function buildControls(container, isMPM) {
     <hr>
     <button data-action="pathOnly">Path Only View</button>
     <button data-action="amCloseup">AM Close-up</button>
+    <button data-action="amContactCloseup" title="AM 하나 + 닿은 SE · AM 과 표면 접촉 cap (노랑 = SE · 회색 = AM–AM) — PC (AM_P) · SC (AM_S) 고르기 · 상대 입자 끄면 cap 만 (Coverage 확대) · 4× 투명 PNG">AM 접촉 · Coverage 확대</button>
     <button data-action="resetView">Reset</button>
     <button data-action="screenshot">Screenshot</button>
     <label style="font-size:12px" title="Screenshot PNG 배경 — 켜짐 = 투명 (슬라이드 · 논문 위에 겹치기) · 꺼짐 = 뷰어 배경색"><input type="checkbox" id="shot-transparent" checked> 투명 배경 PNG</label>`;
@@ -2907,6 +2909,11 @@ function applyViewMode(state, mode) {
     if (covBtn && state.isMPM) covBtn.style.display = 'none';   // Z-profile hub is DEM-only
     else if (covBtn) covBtn.addEventListener('click',
       () => showZProfileDataHub(state, 'coverage'));
+    return;
+  }
+
+  if (mode === 'cn') {           // 배위수 — AM = 활물질 주위 SE (AM–SE CN) · SE = SE–SE CN (10-06 · applyCnView)
+    applyCnView(state);
     return;
   }
 
@@ -7744,6 +7751,8 @@ function wireControls(ctrlDiv, renderer, camera, controls, scene, state) {
         showPathOnlyView(renderer, scene, camera, state);
       } else if (action === 'amCloseup') {
         showAMCloseupView(state);
+      } else if (action === 'amContactCloseup') {
+        showAMContactCloseup(state);
       } else if (action === 'analysisSummary') {
         showMPMAnalysisSummary(state);
       } else if (action === 'mechReaction') {
@@ -8264,6 +8273,436 @@ function showAMCloseupView(state) {
   overlay.querySelector('.path-modal-close').addEventListener('click', close);
   document.getElementById('amcu-close').addEventListener('click', close);
   overlay.onclick = (e) => { if (e.target === overlay) close(); };
+}
+
+
+/* ══ 배위수 (CN) 보기 · AM 접촉 확대 — 2026-10-06 (1저자 · 보고 슬라이드 "활물질 주위 SE 배위수" · "Coverage 확대") ══
+ * 자료 = /3d-data aux.cn_se_se · cn_am_se · cn_am_am (입자별 · 0 이면 항목 없음) · aux.cn_summary (상별 평균 — 케이스 표 배위수와
+ *   같은 접촉 집합: contacts.csv 행 하나 = 접촉 하나 · scripts/viewer3d_data.CN_CONTACT_RULE) · /am-contacts?am_id= (AM 하나의 접촉 행 ·
+ *   scripts/viewer3d_data.am_contact_closeup — 면적 · 합집합 = 생산 함수 그대로).
+ * PC = AM_P (다결정 · 큰 입자) · SC = AM_S (단결정 · 작은 입자).  보기 전용 — 판정 · 계산을 바꾸지 않는다 (J20-l).
+ * ⚠ 이 묶음의 정규식 · 안쪽 템플릿 글자에는 따옴표를 쓰지 않는다 (시험이 함수를 잘라 node 로 돌린다 — jeEscH 와 같은 이유). */
+
+/* 구면 cap 반각 θ (rad) — cap 넓이 A = 2πR²(1 − cos θ) ⇒ cos θ = 1 − A/(2πR²).  A ≥ 2πR² 은 반구 (90°) 로 자른다
+ * (생산 plastic_coverage.union_cap_coverage 와 같은 규칙) · 음수 · 비유한 · R ≤ 0 = cap 없음 (0). */
+function capHalfAngle(area, radius) {
+  const A = Number(area), R = Number(radius);
+  if (!(A > 0) || !(R > 0) || !Number.isFinite(A) || !Number.isFinite(R)) return 0;
+  return Math.acos(1 - Math.min(A / (2 * Math.PI * R * R), 1));
+}
+
+/* 상 이름표 — AM_P = PC (다결정) · AM_S = SC (단결정) · 그 밖은 그대로 (꺾쇠 · 따옴표는 뺀다). */
+function cnPhaseLabel(name) {
+  const s = String(name == null ? '' : name).replace(/[<>&\u0022\u0027]/g, '');
+  return s === 'AM_P' ? 'AM_P (PC)' : s === 'AM_S' ? 'AM_S (SC)' : s;
+}
+
+/* CN 숫자 — 10 이상은 소수 첫째 · 아래는 둘째 자리 · 값 없으면 — (0 으로 채우지 않는다). */
+function cnFmt(v) {
+  if (v === null || v === undefined || !Number.isFinite(+v)) return '—';
+  return Math.abs(+v) >= 10 ? (+v).toFixed(1) : (+v).toFixed(2);
+}
+
+/* 이산 색 구간 — 폭 = (최대 − 최소)/k 를 깔끔한 정수 (1 · 2 · 5 × 10ⁿ) 로 올림 · 시작 = 최솟값 이하의 폭 배수. */
+function cnNiceBins(values, k) {
+  const v = (values || []).filter(x => Number.isFinite(x));
+  if (!v.length) return { start: 0, step: 1, n: 1, openTop: false };
+  let lo = Infinity, hi = -Infinity;
+  for (const x of v) { if (x < lo) lo = x; if (x > hi) hi = x; }
+  const raw = Math.max((hi - lo) / Math.max(k || 1, 1), 1);
+  let step = 1;
+  for (let e = 1; e < 1e12; e *= 10) {
+    const c = [1, 2, 5].map(m => m * e).find(s => s >= raw);
+    if (c) { step = c; break; }
+  }
+  const start = Math.floor(lo / step) * step;
+  return { start, step, n: Math.floor((hi - start) / step) + 1, openTop: false };
+}
+
+function cnBinIndex(v, b) {
+  if (!b || !(b.step > 0)) return 0;
+  return Math.max(0, Math.min(b.n - 1, Math.floor((v - b.start) / b.step)));
+}
+
+/* 구간 색 — AM = YlOrRd · SE = YlGnBu (ColorBrewer 순차 · 한 그림에서 상이 섞이지 않게 두 계열 · 가장 옅은 끝은 흰 바탕이라 버린다) ·
+ * i < 0 = 접촉 0 (고립 — 보라). */
+function cnClassColor(i, n, kind) {
+  if (i < 0) return 0xc026d3;
+  const P = kind === 'SE'
+    ? [[0, 0xff, 0xff, 0xcc], [0.25, 0xa1, 0xda, 0xb4], [0.5, 0x41, 0xb6, 0xc4], [0.75, 0x2c, 0x7f, 0xb8], [1, 0x25, 0x34, 0x94]]
+    : [[0, 0xff, 0xff, 0xb2], [0.25, 0xfe, 0xcc, 0x5c], [0.5, 0xfd, 0x8d, 0x3c], [0.75, 0xf0, 0x3b, 0x20], [1, 0xbd, 0x00, 0x26]];
+  const t = 0.18 + 0.82 * (n > 1 ? i / (n - 1) : 1);
+  for (let k = 0; k < P.length - 1; k++) {
+    const a = P[k], b = P[k + 1];
+    if (t <= b[0] + 1e-12) {
+      const u = (t - a[0]) / (b[0] - a[0]);
+      const ch = j => Math.round(a[j] + (b[j] - a[j]) * u);
+      return (ch(1) << 16) | (ch(2) << 8) | ch(3);
+    }
+  }
+  const l = P[P.length - 1];
+  return (l[1] << 16) | (l[2] << 8) | l[3];
+}
+
+/* 배위수 보기 범례 — 상마다 평균 ± 표준편차 (n) · 이산 구간 · 접촉 정의. */
+function cnLegendHtml(sm, bins) {
+  const ph = (sm && sm.phases) || {};
+  const sw = hex => '<span style="display:inline-block;width:11px;height:11px;border-radius:2px;margin-right:3px;'
+    + 'vertical-align:-1px;background:#' + (hex >>> 0).toString(16).padStart(6, '0') + '"></span>';
+  const names = Object.keys(ph).sort((a, b) => ((ph[a].kind === 'SE') - (ph[b].kind === 'SE')) || a.localeCompare(b));
+  let html = '<b>배위수 (CN) — 활물질 주위 SE · SE–SE</b>';
+  for (const name of names) {
+    const p = ph[name] || {};
+    const se = p.kind === 'SE';
+    const kind = se ? 'SE' : 'AM';
+    const mean = se ? p.se_se_mean : p.am_se_mean, sd = se ? p.se_se_std : p.am_se_std;
+    const n0 = (se ? p.se_se_n_zero : p.am_se_n_zero) || 0;
+    const b = bins && bins[name];
+    let chips = n0 ? '<span style="white-space:nowrap;margin-right:6px">' + sw(cnClassColor(-1, 1, kind)) + '0</span>' : '';
+    if (b) {
+      for (let i = 0; i < b.n; i++) {
+        const lo = b.start + i * b.step;
+        const lab = (b.openTop && i === b.n - 1) ? '≥' + lo : (b.step === 1 ? String(lo) : lo + '–' + (lo + b.step - 1));
+        chips += '<span style="white-space:nowrap;margin-right:6px">' + sw(cnClassColor(i, b.n, kind)) + lab + '</span>';
+      }
+    }
+    html += '<div style="margin-top:5px"><b>' + cnPhaseLabel(name) + '</b> · ' + (se ? 'SE–SE CN' : '활물질 주위 SE (AM–SE CN)')
+      + ' 평균 <b>' + cnFmt(mean) + '</b> ± ' + cnFmt(sd) + ' (n = ' + p.n + ')' + (n0 ? ' · 접촉 0 = ' + n0 + ' 개' : '') + '</div>'
+      + (chips ? '<div style="font-size:10.5px;line-height:1.7">' + chips + '</div>' : '');
+  }
+  html += '<div style="color:#9ca3af;font-size:10.5px;margin-top:6px;line-height:1.45">'
+    + 'AM 전체 AM–SE CN 평균 ' + cnFmt(sm && sm.am_se_mean_all) + ' · AM–AM CN 평균 ' + cnFmt(sm && sm.am_am_mean_all)
+    + ' (n = ' + (sm && sm.n_am_all) + ')<br>'
+    + '접촉 = contacts.csv 행 하나 (δ · 면적으로 거르지 않는다) — 케이스 표 배위수 (SE-SE CN mean · AM_P-SE CN mean · AM_S-SE CN mean) 와 '
+    + '같은 접촉 집합 · 평균은 접촉 0 인 입자 포함 · 벽 · 플래튼 접촉은 덤프에 없다<br>'
+    + '색 = 상마다 따로 정한 구간 (PC · SC 의 AM–SE CN 은 자릿수가 다르다) · 보라 = 접촉 0<br>'
+    + '한 상만 찍으려면 위 AM_P · AM_S · SE 체크박스로 나머지를 끄고 Screenshot (투명 PNG)</div>';
+  return html;
+}
+
+/* View Mode 'cn' — AM 은 AM–SE CN (활물질 주위 SE) · SE 는 SE–SE CN 으로 칠한다 (applyViewMode 의 공통 정리 뒤에 탄다). */
+function applyCnView(state) {
+  const aux = (state.data && state.data.aux) || {};
+  const sm = aux.cn_summary;
+  if (!sm || !sm.phases) {
+    setLegend(state, '<i>배위수 자료가 없어요 — 접촉 덤프가 없는 케이스 (atoms-only) 이거나 옛 캐시예요.  '
+      + '옛 캐시면 페이지를 새로 열면 다시 계산합니다 (3D 데이터 캐시 스키마 12).</i>');
+    return;
+  }
+  const mAM = aux.cn_am_se || {}, mSE = aux.cn_se_se || {};
+  const cnOf = (m, id) => { const v = m[id]; return v === undefined ? 0 : +v; };
+  const col = new THREE.Color();
+  const bins = {};
+  ['AM_P', 'AM_S'].forEach(t => {
+    const m = state.meshes[t]; if (!m) return;
+    const parts = m.userData.particles;
+    const vals = parts.map(p => cnOf(mAM, p.id));
+    const b = cnNiceBins(vals.filter(v => v > 0), 6);
+    bins[t] = b;
+    parts.forEach((p, i) => m.setColorAt(i, col.setHex(cnClassColor(vals[i] > 0 ? cnBinIndex(vals[i], b) : -1, b.n, 'AM'))));
+    m.material.opacity = 1.0;
+    m.material.transparent = false;
+    if (m.instanceColor) m.instanceColor.needsUpdate = true;
+  });
+  const se = state.meshes.SE;
+  if (se) {
+    const b = { start: 1, step: 1, n: 8, openTop: true };      // SE–SE CN = 0 · 1 … 7 · ≥ 8
+    bins.SE = b;
+    se.userData.particles.forEach((p, i) => {
+      const v = cnOf(mSE, p.id);
+      se.setColorAt(i, col.setHex(cnClassColor(v > 0 ? cnBinIndex(v, b) : -1, b.n, 'SE')));
+    });
+    se.material.opacity = OPA.SE;
+    se.material.transparent = true;
+    if (se.instanceColor) se.instanceColor.needsUpdate = true;
+  }
+  setLegend(state, cnLegendHtml(sm, bins));
+}
+
+/* AM 접촉 확대 후보 순서 — center = 상자 중심에 가까운 순 (옛 AM Close-up 과 같다) · typical = AM–SE CN 이 그 상 평균에 가까운 순. */
+function amCloseupOrder(particles, box, cnMap, mode) {
+  const cx = (box.x_min + box.x_max) / 2, cy = (box.y_min + box.y_max) / 2, cz = (box.z_min + box.z_max) / 2;
+  const d2 = p => (p.x - cx) ** 2 + (p.y - cy) ** 2 + (p.z - cz) ** 2;
+  const arr = (particles || []).slice();
+  if (mode === 'typical' && cnMap) {
+    const cn = p => { const v = cnMap[p.id]; return v === undefined ? 0 : +v; };
+    const mean = arr.reduce((s, p) => s + cn(p), 0) / Math.max(arr.length, 1);
+    return arr.sort((a, b) => (Math.abs(cn(a) - mean) - Math.abs(cn(b) - mean)) || (d2(a) - d2(b)));
+  }
+  return arr.sort((a, b) => (d2(a) - d2(b)) || ((b.r || 0) - (a.r || 0)));
+}
+
+/* AM 접촉 확대 범례 — SE 수 (= 이 AM 의 AM–SE CN) · 그림 노란 면적 (cap 합집합) · cap 단순 합 (겹침 두 번) · 보고 coverage. */
+function amContactLegendHtml(r, rule) {
+  const esc = v => String(v == null ? '' : v).replace(/[&<>\u0022\u0027]/g, ch => '&#' + ch.charCodeAt(0) + ';');
+  const pct = v => (v === null || v === undefined || !Number.isFinite(+v)) ? '—' : (+v).toFixed(1) + ' %';
+  const why = u => (u && u.status && u.status !== 'ok') ? ' <span style="color:#b45309">(' + esc(u.status) + ')</span>' : '';
+  r = r || {};
+  const am = r.am || {}, g2 = rule === 'g2';
+  const U = (r.union_pct || {})[g2 ? 'g2' : 'hertz'] || {};
+  const S = (r.cap_sum_pct || {})[g2 ? 'g2' : 'hertz'];
+  const Ug2 = (r.union_pct || {}).g2 || {};
+  const rep = r.reported || {};
+  const nw = r.n_wrapped || 0, nbad = r.n_dir_inconsistent || 0;
+  return '<div><b>' + cnPhaseLabel(am.type) + '</b> id ' + esc(am.id) + ' · R '
+    + (Number.isFinite(+am.r) ? (+am.r).toFixed(2) : '—') + ' µm · SE 접촉 <b>' + r.n_se
+    + '</b> 개 (= 이 AM 의 AM–SE CN · 노란 cap) · AM–AM 접촉 ' + r.n_am + ' 개 (회색 cap)'
+    + (nw ? ' · 주기 경계 너머 상대 ' + nw + ' 개는 AM 옆 영상 (최소영상) 자리에 그림' : '')
+    + (nbad ? ' · <span style="color:#b91c1c">⚠ 방향 검사 실패 ' + nbad + ' 접촉</span>' : '') + '</div>'
+    + '<div>cap 넓이 = ' + (g2 ? 'Physics 세대 2 표면 면적 (film_area_g2 · 보고 규칙과 같은 cap)'
+      : 'c_cpl[22] (LIGGGHTS 기하 교차 원판 · Hertz 계열 기하면적 — 이름만 Hertz)') + '</div>'
+    + '<div>그림 노란 면적 = cap 합집합 <b>' + pct(U.value) + '</b> (겹침 한 번 · AM–AM 이 가린 표면은 분자 · 분모에서 뺀다)'
+    + why(U) + (g2 && U.value != null ? ' = 보고 규칙 (이 AM)' : '') + '</div>'
+    + '<div style="color:#555">cap 단순 합 ÷ AM 표면 (4πR²) = ' + pct(S)
+    + ' — 접촉별 cap 넓이의 합 (그림 설명용 · 겹친 cap 을 두 번 셀 수 있다 · 보고 coverage 아님)</div>'
+    + '<div>보고 coverage (케이스 표 · ⑥ Physics 합집합): 이 AM ' + pct(Ug2.value) + why(Ug2) + ' · 침대 평균 '
+    + cnPhaseLabel(rep.label) + ' ' + pct(rep.union_mean_pct)
+    + (rep.hertz_mean_pct != null ? ' · Hertz 계열 합-클립 (침대 평균) ' + pct(rep.hertz_mean_pct) : '') + '</div>'
+    + '<div style="color:#777;font-size:11.5px">cap 각: cos θ = 1 − A/(2πR²) (A ≥ 2πR² 은 반구로 자름) · 중심 = AM → 상대 중심 방향 '
+    + '(x · y 주기 최소영상)'
+    + (r.box_source && r.box_source !== 'input_params'
+      ? ' · ⚠ 상자 = 0.05 기본 (input_params.json 없음 — 보고 규칙 합집합은 빈칸)' : '') + '</div>';
+}
+
+/* ── AM 접촉 확대 모달 — AM 하나 + 닿은 SE · AM + 표면 접촉 cap (노랑 = SE · 회색 = AM–AM).  상대 입자를 끄면 cap 만
+ *    (슬라이드 "Coverage 확대") · 켜면 "활물질 주위" · PC (AM_P) · SC (AM_S) 고르기 · 4× 투명 PNG (옛 AM Close-up 과 같은 내보내기). */
+function showAMContactCloseup(state) {
+  if (state.data && state.data.atoms_only) {
+    alert('접촉 덤프가 없는 케이스 (atoms-only) 예요 — AM 접촉 확대는 contacts.csv 가 있어야 그립니다.');
+    return;
+  }
+  const lists = { AM_P: state.amPParticles || [], AM_S: state.amSParticles || [] };
+  if (!lists.AM_P.length && !lists.AM_S.length) { alert('AM particles not loaded.'); return; }
+  const aux = (state.data && state.data.aux) || {};
+  const cnMap = aux.cn_am_se || null;
+  const box = state.data.box;
+  const urlBase = (state.dataUrl || '').replace('/3d-data', '/am-contacts');
+  const esc = v => String(v == null ? '' : v).replace(/[&<>\u0022\u0027]/g, ch => '&#' + ch.charCodeAt(0) + ';');
+  let phase = lists.AM_P.length ? 'AM_P' : 'AM_S';
+  let ranked = [], candIdx = 0, curResp = null, lastAmId = null, animId = 0, closed = false;
+  const cache = new Map();                             // am_id → 응답 (cap 규칙 · 상대 보기 토글은 다시 받지 않는다)
+
+  const overlay = document.createElement('div');
+  overlay.className = 'path-modal-overlay';
+  overlay.innerHTML = `
+    <div class="path-modal" style="width:820px;max-width:94vw">
+      <button class="path-modal-close">&times;</button>
+      <div style="font-size:14px;font-weight:bold;margin-bottom:8px;text-align:center">
+        AM 접촉 확대 — 활물질 주위 SE · Coverage cap
+      </div>
+      <div id="amcc-container" style="width:100%;height:520px;border-radius:8px;overflow:hidden;background:#f5f5f5;position:relative"></div>
+      <div id="amcc-info" style="margin-top:8px;font-size:12.5px;color:#333;line-height:1.55"></div>
+      <div style="display:flex;justify-content:center;align-items:center;gap:10px;margin-top:8px;font-size:13px;color:#444;flex-wrap:wrap">
+        <select id="amcc-phase" title="PC = AM_P (다결정 · 큰 입자) · SC = AM_S (단결정 · 작은 입자)">
+          <option value="AM_P">AM_P (PC) — 다결정 · 큰 입자</option>
+          <option value="AM_S">AM_S (SC) — 단결정 · 작은 입자</option>
+        </select>
+        <select id="amcc-order" title="후보 순서">
+          <option value="center">상자 중심에 가까운 순</option>
+          <option value="typical">AM–SE CN 이 상 평균에 가까운 순</option>
+        </select>
+        <button id="amcc-prev" style="padding:2px 8px">◀ Prev</button>
+        <span id="amcc-pos" style="min-width:70px;text-align:center"></span>
+        <button id="amcc-next" style="padding:2px 8px">Next ▶</button>
+        <label style="display:inline-flex;align-items:center;gap:4px">id <input type="number" id="amcc-id" style="width:72px"></label>
+        <button id="amcc-goto" style="padding:2px 8px">가기</button>
+      </div>
+      <div style="display:flex;justify-content:center;align-items:center;gap:14px;margin-top:6px;font-size:13px;color:#444;flex-wrap:wrap">
+        <label><input type="checkbox" id="amcc-partners" checked> 상대 입자 보기 (활물질 주위) — 끄면 cap 만 (Coverage 확대)</label>
+        <label>cap 넓이 <select id="amcc-rule">
+          <option value="hertz">c_cpl[22] 기하면적 (Hertz 계열)</option>
+          <option value="g2">Physics 세대 2 (보고 합집합과 같은 cap)</option>
+        </select></label>
+      </div>
+      <div class="path-modal-actions">
+        <button id="amcc-screenshot">PNG 다운로드 (4× · 투명)</button>
+        <button id="amcc-close">닫기</button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+  const $ = id => overlay.querySelector('#' + id);
+  const container = $('amcc-container'), info = $('amcc-info'), posEl = $('amcc-pos');
+  const phaseSel = $('amcc-phase'), orderSel = $('amcc-order'), ruleSel = $('amcc-rule'), partnersCb = $('amcc-partners');
+  phaseSel.value = phase;
+  ['AM_P', 'AM_S'].forEach(t => { if (!lists[t].length) phaseSel.querySelector('option[value=' + t + ']').disabled = true; });
+  if (!cnMap) orderSel.querySelector('option[value=typical]').disabled = true;
+
+  const r3 = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true, alpha: true });
+  r3.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  r3.setSize(container.clientWidth, container.clientHeight);
+  r3.setClearColor(0xf5f5f5, 1);
+  container.appendChild(r3.domElement);
+  const s3 = new THREE.Scene();
+  const c3 = new THREE.PerspectiveCamera(40, container.clientWidth / container.clientHeight, 0.01, 10000);
+  const ctrl3 = new OrbitControls(c3, r3.domElement);
+  ctrl3.enableDamping = true;
+  ctrl3.dampingFactor = 0.12;
+  s3.add(new THREE.AmbientLight(0xffffff, 0.8));
+  const head = new THREE.DirectionalLight(0xffffff, 1.2);       // 카메라를 따라가는 빛 — 어느 쪽에서 봐도 cap 이 밝다
+  s3.add(head);
+  s3.add(head.target);
+
+  let objs = [];
+  const add = o => { if (o) { s3.add(o); objs.push(o); } };
+  function clearScene() {
+    objs.forEach(o => {
+      s3.remove(o);
+      o.traverse(x => {
+        if (x.geometry) x.geometry.dispose();
+        if (x.material) x.material.dispose();
+        if (x.isInstancedMesh && x.dispose) x.dispose();
+      });
+    });
+    objs = [];
+  }
+  function rerank(keepId) {
+    ranked = amCloseupOrder(lists[phase], box, cnMap, orderSel.value);
+    candIdx = 0;
+    if (keepId != null) { const k = ranked.findIndex(p => p.id === keepId); if (k >= 0) candIdx = k; }
+  }
+
+  function draw(resp) {
+    clearScene();
+    curResp = resp;
+    const am = resp.am, R = am.r, rule = ruleSel.value;
+    const isP = am.type === 'AM_P';
+    const body = new THREE.Mesh(new THREE.SphereGeometry(R, 72, 48),
+      new THREE.MeshPhongMaterial({ color: isP ? 0x4a4a4a : 0xa8a8a8, shininess: 30 }));
+    body.position.set(am.x, am.z, am.y);                         // Z-up: data (x, y, z) → three (x, z, y)
+    add(body);
+    const seMat = new THREE.MeshPhongMaterial({ color: 0xfacc15, shininess: 20, side: THREE.DoubleSide,
+      polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 });
+    const amMat = new THREE.MeshPhongMaterial({ color: isP ? 0xd4d4d4 : 0x525252, shininess: 20, side: THREE.DoubleSide,
+      polygonOffset: true, polygonOffsetFactor: -3, polygonOffsetUnits: -3 });
+    const caps = new THREE.Group();
+    const up = new THREE.Vector3(0, 1, 0);
+    for (const c of resp.contacts || []) {
+      const isSE = c.pair === 'AM_SE', isAM = c.pair === 'AM_AM';
+      if (!isSE && !isAM) continue;
+      const th = capHalfAngle(rule === 'g2' ? c.area_g2_um2 : c.area_um2, R);
+      if (!(th > 0)) continue;
+      const g = new THREE.SphereGeometry(R * (isSE ? 1.004 : 1.008), 40,
+        Math.max(3, Math.ceil(18 * th / (Math.PI / 2))), 0, Math.PI * 2, 0, th);
+      const m = new THREE.Mesh(g, isSE ? seMat : amMat);
+      m.position.set(am.x, am.z, am.y);
+      m.quaternion.setFromUnitVectors(up, new THREE.Vector3(c.x - am.x, c.z - am.z, c.y - am.y).normalize());
+      caps.add(m);
+    }
+    add(caps);
+    if (partnersCb.checked) {
+      const se = [], amp = [];
+      for (const c of resp.contacts || []) {
+        const q = { id: c.partner_id, type: c.partner_type, x: c.x, y: c.y, z: c.z, r: c.partner_r };
+        if (c.pair === 'AM_SE') se.push(q); else amp.push(q);
+      }
+      if (se.length) add(createInstancedSpheres(se, 20, COL.SE, 0.85, true));
+      // 닿은 AM = 반투명 회색 — 큰 이웃 AM (PC 옆의 PC · SC 옆의 PC) 이 가운데 AM 을 가리지 않게
+      if (amp.length) add(createInstancedSpheres(amp, 28, 0x9ca3af, 0.3, true));
+    }
+    if (lastAmId !== am.id) {                                      // 새 AM — 보는 방향은 지키고 중심 · 거리만 맞춘다
+      const dir = lastAmId == null ? new THREE.Vector3(1, 0.55, 1).normalize()
+        : c3.position.clone().sub(ctrl3.target).normalize();
+      const rSE = (resp.contacts || []).reduce((mx, c) => (c.pair === 'AM_SE' ? Math.max(mx, c.partner_r || 0) : mx), 0);
+      ctrl3.target.set(am.x, am.z, am.y);
+      c3.position.copy(ctrl3.target).addScaledVector(dir, (R + 2 * rSE) * 3.0);
+      ctrl3.update();
+      lastAmId = am.id;
+    }
+    info.innerHTML = amContactLegendHtml(resp, rule);
+  }
+
+  async function build() {
+    const p = ranked[candIdx];
+    if (!p) { info.innerHTML = '이 상에 AM 이 없어요.'; return; }
+    posEl.textContent = (candIdx + 1) + ' / ' + ranked.length;
+    $('amcc-id').value = p.id;
+    let resp = cache.get(p.id);
+    if (!resp) {
+      info.innerHTML = 'id ' + esc(p.id) + ' 접촉 불러오는 중…';
+      try {
+        const res = await fetch(urlBase + '?am_id=' + encodeURIComponent(p.id));
+        const j = await res.json();
+        if (!res.ok) throw new Error(j && j.error ? j.error : 'HTTP ' + res.status);
+        resp = j;
+        cache.set(p.id, j);
+      } catch (e) {
+        if (!closed && ranked[candIdx] === p) {
+          info.innerHTML = '<span style="color:#b91c1c">불러오기 실패 — ' + esc(e && e.message ? e.message : e) + '</span>';
+        }
+        return;
+      }
+    }
+    if (closed || ranked[candIdx] !== p) return;                  // 그 사이 다른 AM 으로 넘어갔거나 닫았다
+    draw(resp);
+  }
+
+  $('amcc-prev').addEventListener('click', () => {
+    if (!ranked.length) return;
+    candIdx = (candIdx - 1 + ranked.length) % ranked.length;
+    build();
+  });
+  $('amcc-next').addEventListener('click', () => {
+    if (!ranked.length) return;
+    candIdx = (candIdx + 1) % ranked.length;
+    build();
+  });
+  phaseSel.addEventListener('change', () => { phase = phaseSel.value; rerank(); build(); });
+  orderSel.addEventListener('change', () => { rerank(); build(); });
+  $('amcc-goto').addEventListener('click', () => {
+    const id = parseInt($('amcc-id').value, 10);
+    const t = lists.AM_P.some(p => p.id === id) ? 'AM_P' : lists.AM_S.some(p => p.id === id) ? 'AM_S' : null;
+    if (!t) {
+      info.innerHTML = '<span style="color:#b91c1c">id ' + esc($('amcc-id').value) + ' 는 AM_P · AM_S 목록에 없어요</span>';
+      return;
+    }
+    phase = t;
+    phaseSel.value = t;
+    rerank(id);
+    build();
+  });
+  ruleSel.addEventListener('change', () => { if (curResp) draw(curResp); });
+  partnersCb.addEventListener('change', () => { if (curResp) draw(curResp); });
+
+  // PNG — 4× · 투명 배경 (지우기 알파 0 · scene.background 없음) · 옛 AM Close-up 과 같은 내보내기
+  $('amcc-screenshot').addEventListener('click', async () => {
+    if (!curResp) return;
+    const prevBg = s3.background;
+    const prevClear = new THREE.Color();
+    r3.getClearColor(prevClear);
+    const prevAlpha = r3.getClearAlpha();
+    s3.background = null;
+    r3.setClearColor(0x000000, 0);
+    const dataUrl = captureHighRes(r3, s3, c3, 4);
+    s3.background = prevBg;
+    r3.setClearColor(prevClear, prevAlpha);
+    r3.render(s3, c3);
+    const a = curResp.am;
+    await saveWithDialog(dataUrl, 'am_contact_' + a.type + '_id' + a.id + '_' + (partnersCb.checked ? 'partners' : 'caps')
+      + '_' + ruleSel.value + '.png', $('amcc-screenshot'), 'PNG 다운로드 (4× · 투명)');
+  });
+
+  function animLoop() {
+    if (closed) return;
+    animId = requestAnimationFrame(animLoop);
+    ctrl3.update();
+    head.position.copy(c3.position);
+    head.target.position.copy(ctrl3.target);
+    r3.render(s3, c3);
+  }
+  function close() {
+    closed = true;
+    cancelAnimationFrame(animId);
+    clearScene();
+    ctrl3.dispose();
+    r3.dispose();
+    overlay.remove();
+  }
+  overlay.querySelector('.path-modal-close').addEventListener('click', close);
+  $('amcc-close').addEventListener('click', close);
+  overlay.onclick = (e) => { if (e.target === overlay) close(); };
+  rerank();
+  animLoop();
+  build();
 }
 
 
