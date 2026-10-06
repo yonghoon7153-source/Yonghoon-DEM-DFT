@@ -113,3 +113,5 @@ evidence/reil_p0_20261006/** -text
 reviews/r14_repros/codex63/comsol_bmin_r2_retry3_supplement_review_20261006/** -text
 # 2026-10-06: REIL P0 결과 수신 검토 회신 묶음 (게이트 차수 밖 · C3 P0 출력 한정 수용 · 실행 기록 완결 미완 · §22 신고 · C5 실행 승인 아님) — bytes 그대로
 reviews/prereview_reil_v2_p0_result_20261006/** -text
+# 2026-10-06: B-min r2 native 150 s 1 단계 승인안 검토 회신 묶음 (게이트 차수 밖 · 문구 두 곳 정정 조건부 수용 · N150-N1 · N2 · 사전 관측 · native 실행 승인 아님) — bytes 그대로
+reviews/r14_repros/codex63/comsol_bmin_r2_native150_approval_review_20261006/** -text
