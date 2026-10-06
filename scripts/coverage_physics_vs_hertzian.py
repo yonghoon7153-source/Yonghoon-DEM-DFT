@@ -42,6 +42,21 @@ v2 는 `plastic_coverage.film_area_physics_v2` 로 접촉마다 다시 계산해
   `n_contacts_unknown_id_physics_v2` · `n_contact_failures_physics_v2` · `coverage_status_physics_v2` ·
   `rule_physics_v2` · `h_film_sim_physics_v2`.
 
+★★ ⑥ **합집합 cap 피복** — legacy · v2 옆에 **나란히** (2026-10-06, 1저자 비준 C2-⑥ *"권고대로"* · 원장 LHS-25) ★★
+legacy Physics 피복 (`coverage_*_mean_physics`) = AM 마다 접촉 면적 **합** ÷ (4πr² − ΣA(AM–AM)) → 100 % 클립 — 표면 한도가 없어 SE 가 많은
+침대에서 포화한다 (LHS-25).  새 규칙 (`union_coverage_bed` · AM 하나 = `plastic_coverage.union_cap_coverage`): SE 접촉 하나 = AM 구면 위
+cap 하나 (넓이 = 세대 2 표면 소비자 면적 `film_area_g2(consumer='surface')` · µm · 방향 = x · y 최소영상) · cap 합집합 (겹침 한 번) ∩ AM–AM 이
+가리지 않은 표면 ÷ 가리지 않은 표면 · Fibonacci 점 N 6000.  상자 = `input_params.json` box_x · box_y (없으면 빈칸 — 0.05 기본값 없음) · 접촉마다
+최소영상 거리 = r1 + r2 − δ 로 상자를 확인한다.  legacy · v2 키 · 값 · CSV · 반환값은 그대로 (`--selftest` ① 핀 — union 키는 핀 밖).
+새 키 (한 침대): `coverage_<AM 상>_{mean,std}_physics_union` · `coverage_AM_mean_physics_union` (legacy 와 같은 입자 수 가중) ·
+  `coverage_status_physics_union` ('ok' · 'blank: 사유') · `coverage_rule_physics_union` (= 'union_caps_g2_surface') ·
+  `coverage_n_fib_physics_union` (= N) · `coverage_diag_physics_union` (개수 · 첫 실패 · 상자 · 거리 오차 — 빈칸에도).
+실침대: real_14 합-클립 51.522 → 합집합 43.218 % (×0.839 · 설계 원형과 AM 457 개 전부 1e-13 안) · case15 = 빈칸 (c_cpl[22] < 0 두 접촉 —
+SE 가 AM 안에 통째로 · v2 와 같은 사유 · `scripts/test_union_coverage.py`).
+
+★ LHS-27 — 요약 CSV 는 `--summary-out PATH` 를 줄 때만 쓴다.  옛 코드는 실행 위치 기준 `docs/figures/physics_regime/…summary.csv`
+(리포에서는 추적 파일) 를 매번 덮어써 파이프라인 · 배치의 dirty 를 켰다 (5번 193/194).
+
 ★ 데이터 폴더 — `<case_id>` 로 부르면 **`WEBAPP_RESULTS_FOLDER` · `_ARCHIVE_FOLDER` · `_UPLOAD_FOLDER`** (와 webapp/.env) 를
 따른다 (`run_network_full_corrections.py` 와 같은 규약).  옛 코드는 스크립트 옆 `webapp/` 만 봐서, 코드와 데이터가
 갈린 배치 (`run_dem_webapp.sh` worktree · `lhs_webapp_batch.py`) 에서 이 단계가 "[skip]" 을 찍고 **rc 0 으로 아무것도
@@ -66,6 +81,7 @@ Per case outputs:
 Usage:
   python3 scripts/coverage_physics_vs_hertzian.py <case_id>
   python3 scripts/coverage_physics_vs_hertzian.py --all
+  python3 scripts/coverage_physics_vs_hertzian.py --all --summary-out /tmp/coverage_summary.csv   # 요약 CSV (명시할 때만 · LHS-27)
 """
 from __future__ import annotations
 import math
@@ -79,6 +95,8 @@ SCRIPTS_DIR = Path(__file__).parent
 sys.path.insert(0, str(SCRIPTS_DIR))
 from plastic_coverage import film_area_from_overlap  # noqa: E402
 from plastic_coverage import film_area_physics_v2, PHYSICS_V2_RULE, H_FILM_MIN  # noqa: E402
+from plastic_coverage import (film_area_g2, union_cap_coverage, fibonacci_sphere,  # noqa: E402
+                              AREA_RULE_G2, UNION_COVERAGE_RULE, UNION_FIB_N)
 from dem_analysis_core import SHAPE_FACTOR  # noqa: E402
 
 WEBAPP = Path(__file__).parent.parent / 'webapp'
@@ -378,6 +396,235 @@ class _PhysicsV2Book:
         return out
 
 
+# ─────────────────────── ⑥ 합집합 cap 피복 (C2-⑥ · 1저자 비준 10-06 · LHS-25) ───────────────────────
+#: 방향 검사 허용폭 (덤프 단위): |d_최소영상 − (r1 + r2 − δ)| ≤ REL·(r1 + r2) + BOX·max(L_x, L_y).  실측 (10-06 · 커밋 덤프):
+#:   real_14 AM 이 낀 31,959 행 최대 1.29e-7 (상자 0.05) · case15 28,385 행 최대 1.18e-7 (상자 0.1) — 허용 (≈ 7e-6) 의 1/50 안 ·
+#:   상자를 0.1 % 만 틀려도 주기 쌍 수천 행이 넘는다 (real_14 2,421 · case15 1,596) = 상자 출처 (input_params.json · 덱 region) 를 자료로 확인한다.
+UNION_DIST_TOL_REL = 1e-3
+UNION_DIST_TOL_BOX = 1e-5
+#: µm 단위 (1 m = 1e6 µm) — 망 솔버 `G2_LENGTH_SCALE_UM` 과 같은 규약 (µm = 덤프 × scale · DESC-03: 5 nm 막을 같은 단위로).
+UNION_LENGTH_SCALE_UM = 1.0e6
+#: 값 키 꼬리 · 진단 키 — 이 스크립트가 `*_physics_union` 을 통째로 소유한다 (옛 세대는 걷고 새로 쓴다).
+UNION_SUFFIX = '_physics_union'
+UNION_RULE_TEXT = (
+    'AM 마다 SE 접촉 하나 = AM 구면 위 cap 하나 (중심 = AM → SE 중심 방향 · x · y 주기 최소영상 · 넓이 = 세대 2 표면 소비자 면적 '
+    'film_area_g2(pair AM_SE, consumer surface) = max(c_cpl[22] 원판, min(Tabor · 정확 lens/5 nm · 2π r_min²)) · µm) · '
+    '피복 = SE cap 합집합 (겹침 한 번) ∩ 가리지 않은 표면 ÷ 가리지 않은 표면 × 100 · 가린 표면 = AM–AM cap 합집합 (넓이 = c_cpl[22] 원판 · '
+    'film_area_g2 AM_AM) · Fibonacci 점 N (결정적) · 반구 넘는 cap 은 반구로 자르고 센다 · 접촉 0 인 AM = 측정된 0 · '
+    '상 = 입자 평균 · 전체 = 입자 수 가중 (legacy 와 같은 가중) · 무효 입력 · 방향 검사 실패 · 분모 무효 AM 이 하나라도 있으면 침대 빈칸 + 사유 '
+    '(LHSC-01 (a) 와 같은 계약)')
+
+
+def read_box_xy(case_dir: Path):
+    """주기 상자 x · y 길이 (덤프 단위) — `input_params.json` 의 box_x · box_y (덱 region 에서 parse_liggghts 가 적은 값 · 웹앱 다른 주기
+    계산과 같은 출처).  → ((bx, by), None) 또는 (None, 사유).  ⚠ 0.05 기본값으로 떨어지지 않는다 — 없으면 합집합 피복이 빈칸이다
+    (이 상자가 맞는지는 `union_coverage_bed` 가 접촉마다 최소영상 거리 = r1 + r2 − δ 로 다시 확인한다)."""
+    p = Path(case_dir) / 'input_params.json'
+    if not p.exists():
+        return None, 'input_params.json 이 없다 — 주기 상자 box_x · box_y 를 모른다'
+    try:
+        ip = json.load(open(p))
+        bx, by = ip.get('box_x'), ip.get('box_y')
+    except Exception as e:                                      # noqa: BLE001 — 사유로 남긴다
+        return None, f'input_params.json 을 못 읽었다 ({type(e).__name__}: {e})'
+    ok = all(isinstance(v, (int, float)) and not isinstance(v, bool) and math.isfinite(float(v)) and float(v) > 0
+             for v in (bx, by))
+    if not ok:
+        return None, f'input_params.json 의 box_x · box_y 가 유한 양수가 아니다 ({bx!r} · {by!r})'
+    return (float(bx), float(by)), None
+
+
+def _union_blank_keys(by_lbl_present, reasons, diag, n_points):
+    out = {f'coverage_{lbl}_{s}{UNION_SUFFIX}': None for lbl in by_lbl_present for s in ('mean', 'std')}
+    if by_lbl_present:
+        out[f'coverage_AM_mean{UNION_SUFFIX}'] = None
+    out[f'coverage_status{UNION_SUFFIX}'] = 'blank: ' + ' · '.join(reasons)
+    out[f'coverage_rule{UNION_SUFFIX}'] = UNION_COVERAGE_RULE
+    out[f'coverage_n_fib{UNION_SUFFIX}'] = int(n_points)
+    out[f'coverage_diag{UNION_SUFFIX}'] = diag
+    return out
+
+
+def union_coverage_bed(atoms_df, contacts_df, type_map: dict, *, scale, box_xy, n_points: int = UNION_FIB_N,
+                       box_reason: str | None = None):
+    """침대 하나의 **합집합 cap 피복** (C2-⑥) → `(keys, per_am)` — keys 는 full_metrics 에 실을 `*_physics_union` 키 ·
+    per_am = {AM id: 피복률 (%) 또는 None}.  규칙 = `UNION_RULE_TEXT` (AM 하나의 계산은 `plastic_coverage.union_cap_coverage`).
+
+    legacy (`coverage_*_mean_physics` = 접촉 면적 합 ÷ 자유 표면 → 100 % 클립) · physics v2 와 **따로** 센다 — 그 키들은 건드리지 않는다.
+    빈칸 (값 키 None + `coverage_status_physics_union = 'blank: 사유'`) 이 되는 것 — 하나라도 있으면 침대 전체:
+      상자 (box_xy) 없음 · scale 이 유한 양수가 아님 · 열 없음 · AM 이 낀 접촉의 δ · c_cpl[22] · 반경 · 좌표가 비유한 · 방향 길이 0 ·
+      최소영상 거리 ≠ r1 + r2 − δ (허용 `UNION_DIST_TOL_*` — 상자가 틀렸거나 프레임이 섞였다) · film_area_g2 가 접촉을 거부 (예: c_cpl[22] < 0 =
+      통째로 포함된 쌍의 생산자 값 — 원판으로 바꿔 넣지 않는다) · AM 반경이 유한 양수가 아님 · 가리지 않은 표면 표본 0 (분모 무효).
+    진단 (`coverage_diag_physics_union`) 은 빈칸에도 싣는다.  AM 이 없는 침대 = ok · 피복 값 키 없음 (적용 대상 없음).
+    중복 접촉 행은 같은 cap 을 한 번 더 놓을 뿐이라 합집합 값이 바뀌지 않는다.
+    """
+    reasons, first = [], None
+    try:
+        s = float(scale)
+    except (TypeError, ValueError):
+        s = float('nan')
+    am_types = {t for t, v in type_map.items() if 'AM' in str(v)}
+    se_types = {t for t, v in type_map.items() if v == 'SE'}
+    diag = dict(n_am=None, n_am_no_se_contact=None, n_free_surface_empty=0, n_radius_invalid=0, n_caps_am_se=0, n_caps_am_am=0,
+                n_caps_clipped_hemisphere=0, n_contacts_unknown_id=0, n_contact_failures=0, n_dir_inconsistent=0,
+                dist_err_max_sim=None,
+                dist_tol_rule=f'|d_최소영상 − (r1 + r2 − δ)| ≤ {UNION_DIST_TOL_REL:g}·(r1 + r2) + {UNION_DIST_TOL_BOX:g}·max(L_x, L_y)',
+                box_xy_sim=(list(box_xy) if box_xy is not None else None), scale=(s if math.isfinite(s) else None),
+                area_rule=AREA_RULE_G2, area_consumer='surface', first_failure=None, rule_text=UNION_RULE_TEXT)
+    need_a = ('id', 'type', 'radius', 'x', 'y', 'z')
+    need_c = ('id1', 'id2', 'delta', 'contact_area')
+    miss_a = [c for c in need_a if c not in atoms_df.columns]
+    miss_c = [c for c in need_c if c not in contacts_df.columns]
+    if miss_a:
+        reasons.append(f'atoms.csv 에 {miss_a} 열이 없다')
+    if miss_c:
+        reasons.append(f'contacts.csv 에 {miss_c} 열이 없다')
+    if not (math.isfinite(s) and s > 0):
+        reasons.append(f'scale={scale!r} 가 유한 양수가 아니다 — µm 로 옮길 수 없다')
+    if box_xy is None:
+        reasons.append(f'주기 상자 box 를 모른다 ({box_reason or "box_xy 없음"}) — 최소영상 방향을 만들 수 없다 (0.05 기본값으로 떨어지지 않는다)')
+    lbl_present = []
+    if not miss_a:
+        _t = atoms_df['type'].to_numpy()
+        lbl_present = sorted({type_map.get(int(t), f'T{int(t)}') for t in _t if int(t) in am_types})
+        diag['n_am'] = int(sum(1 for t in _t if int(t) in am_types))
+    if reasons:
+        return _union_blank_keys(lbl_present, reasons, diag, n_points), {}
+
+    ids = atoms_df['id'].astype(int).to_numpy()
+    types = atoms_df['type'].astype(int).to_numpy()
+    rad = pd.to_numeric(atoms_df['radius'], errors='coerce').to_numpy(dtype=float)
+    xyz = np.column_stack([pd.to_numeric(atoms_df[c], errors='coerce').to_numpy(dtype=float) for c in ('x', 'y', 'z')])
+    pos = {int(a): k for k, a in enumerate(ids)}
+    is_am = np.asarray([int(t) in am_types for t in types], dtype=bool)
+    is_se = np.asarray([int(t) in se_types for t in types], dtype=bool)
+    am_idx = np.flatnonzero(is_am)
+    diag['n_am'] = int(len(am_idx))
+    bx, by = box_xy
+    tol_box = UNION_DIST_TOL_BOX * max(bx, by)
+
+    c1 = pd.to_numeric(contacts_df['id1'], errors='coerce').to_numpy(dtype=float)
+    c2 = pd.to_numeric(contacts_df['id2'], errors='coerce').to_numpy(dtype=float)
+    dl_all = pd.to_numeric(contacts_df['delta'], errors='coerce').to_numpy(dtype=float)
+    ca_all = pd.to_numeric(contacts_df['contact_area'], errors='coerce').to_numpy(dtype=float)
+    se_caps = defaultdict(list)            # AM 행 번호 → [(방향, 넓이 µm²)]
+    am_caps = defaultdict(list)
+    err_max = 0.0
+
+    first_dir = None
+
+    def fail(i1, i2, why):
+        nonlocal first
+        diag['n_contact_failures'] += 1
+        if first is None:
+            first = f'{i1}–{i2}: {why}'
+
+    for r_ in range(len(c1)):
+        a_, b_ = c1[r_], c2[r_]
+        if not (math.isfinite(a_) and math.isfinite(b_)) or a_ != int(a_) or b_ != int(b_):
+            fail(a_, b_, 'id 가 정수가 아니다')
+            continue
+        i1, i2 = int(a_), int(b_)
+        k1, k2 = pos.get(i1), pos.get(i2)
+        if k1 is None or k2 is None:
+            diag['n_contacts_unknown_id'] += 1          # legacy 와 같은 모집단 (둘 다 건너뛴다) — 세어 둔다
+            continue
+        am1, am2 = is_am[k1], is_am[k2]
+        if am1 and am2:
+            pair = 'AM_AM'
+        elif (am1 and is_se[k2]) or (am2 and is_se[k1]):
+            pair = 'AM_SE'
+        else:
+            continue                                    # SE–SE · 그 밖의 상 — 피복과 무관
+        dl, ca, r1, r2 = dl_all[r_], ca_all[r_], rad[k1], rad[k2]
+        p1, p2 = xyz[k1], xyz[k2]
+        if not all(math.isfinite(v) for v in (dl, ca, r1, r2)) or not (np.isfinite(p1).all() and np.isfinite(p2).all()):
+            fail(i1, i2, f'비유한 입력 (δ {float(dl)!r} · c_cpl[22] {float(ca)!r} · r {float(r1)!r}, {float(r2)!r})')
+            continue
+        v = p2 - p1
+        v[0] -= bx * round(v[0] / bx)
+        v[1] -= by * round(v[1] / by)
+        d_mi = float(np.linalg.norm(v))
+        if not (d_mi > 0):
+            fail(i1, i2, '두 중심이 겹친다 — 방향을 정할 수 없다')
+            continue
+        err = abs(d_mi - (r1 + r2 - dl))
+        err_max = max(err_max, err)
+        if err > UNION_DIST_TOL_REL * (r1 + r2) + tol_box:
+            diag['n_dir_inconsistent'] += 1
+            if first_dir is None:
+                first_dir = (f'{i1}–{i2}: 최소영상 거리 {d_mi:.6g} ≠ r1 + r2 − δ = {r1 + r2 - dl:.6g} (상자 {bx:g} × {by:g}) — '
+                             '방향을 믿을 수 없다')
+            continue
+        try:
+            A, _b = film_area_g2(dl * s, r1 * s, r2 * s, pair=pair, ligg_area=ca * s * s,
+                                 length_scale=UNION_LENGTH_SCALE_UM, consumer='surface')
+        except (ValueError, TypeError) as e:
+            fail(i1, i2, f'{type(e).__name__}: {e}')
+            continue
+        n_ = v / d_mi
+        if pair == 'AM_AM':
+            am_caps[k1].append((n_, A))
+            am_caps[k2].append((-n_, A))
+            diag['n_caps_am_am'] += 2
+        elif am1:
+            se_caps[k1].append((n_, A))
+            diag['n_caps_am_se'] += 1
+        else:
+            se_caps[k2].append((-n_, A))
+            diag['n_caps_am_se'] += 1
+    diag['dist_err_max_sim'] = float(err_max)
+
+    U = fibonacci_sphere(n_points)
+    per_am, by_lbl = {}, defaultdict(list)
+    n_no_se = 0
+    first_r = first_free = None
+    for k in am_idx:
+        aid, lbl = int(ids[k]), type_map.get(int(types[k]), f'T{int(types[k])}')
+        R = rad[k] * s
+        if not (math.isfinite(R) and R > 0):
+            diag['n_radius_invalid'] += 1
+            first_r = first_r or f'id {aid}: r={float(rad[k])!r}'
+            per_am[aid] = None
+            continue
+        sc, ac = se_caps.get(k, []), am_caps.get(k, [])
+        n_no_se += int(not sc)
+        cov, info = union_cap_coverage(R, [d for d, _ in sc], [a for _, a in sc], [d for d, _ in ac], [a for _, a in ac], points=U)
+        diag['n_caps_clipped_hemisphere'] += info['n_caps_clipped_hemisphere']
+        per_am[aid] = cov
+        if cov is None:
+            diag['n_free_surface_empty'] += 1
+            first_free = first_free or f'id {aid} (AM–AM cap {len(ac)} 개)'
+            continue
+        by_lbl[lbl].append(cov)
+    diag['n_am_no_se_contact'] = int(n_no_se)
+    diag['first_failure'] = first or first_dir
+    if diag['n_contact_failures']:
+        reasons.append(f'{diag["n_contact_failures"]} 접촉을 거부했다 (비유한 입력 · film_area_g2 정의역 밖) — 첫 사례 {first}')
+    if diag['n_dir_inconsistent']:
+        reasons.append(f'{diag["n_dir_inconsistent"]} 접촉의 방향 검사 실패 (최소영상 거리 ≠ r1 + r2 − δ — 상자 · 프레임 어긋남) — '
+                       f'첫 사례 {first_dir}')
+    if diag['n_radius_invalid']:
+        reasons.append(f'AM {diag["n_radius_invalid"]} 개의 반경이 유한 양수가 아니다 (첫 사례 {first_r})')
+    if diag['n_free_surface_empty']:
+        reasons.append(f'AM {diag["n_free_surface_empty"]} 개의 가리지 않은 표면 표본 0 = 분모 무효 (첫 사례 {first_free})')
+    if reasons:
+        return _union_blank_keys(lbl_present, reasons, diag, n_points), per_am
+    out = {}
+    for lbl in sorted(by_lbl):
+        arr = by_lbl[lbl]
+        out[f'coverage_{lbl}_mean{UNION_SUFFIX}'] = round(float(np.mean(arr)), 3)
+        out[f'coverage_{lbl}_std{UNION_SUFFIX}'] = round(float(np.std(arr)), 3)
+    all_v = [v for arr in by_lbl.values() for v in arr]
+    if all_v:                                            # legacy 와 같은 가중: AM 입자 수 가중 평균
+        out[f'coverage_AM_mean{UNION_SUFFIX}'] = round(float(np.mean(all_v)), 3)
+    out[f'coverage_status{UNION_SUFFIX}'] = 'ok'
+    out[f'coverage_rule{UNION_SUFFIX}'] = UNION_COVERAGE_RULE
+    out[f'coverage_n_fib{UNION_SUFFIX}'] = int(n_points)
+    out[f'coverage_diag{UNION_SUFFIX}'] = diag
+    return out, per_am
+
+
 def compute_case(cid: str, case_dir: Path, type_map: dict, scale: float = 1000.0,
                  write_csv: bool = True, update_metrics: bool = True,
                  verbose: bool = False) -> dict:
@@ -609,6 +856,16 @@ def compute_case(cid: str, case_dir: Path, type_map: dict, scale: float = 1000.0
                    'n_contact_failures_physics_v2': v2.n_fail, 'n_contacts_unknown_id_physics_v2': v2.n_unknown_id,
                    'am_denominator_physics_v2': None, 'rule_physics_v2': PHYSICS_V2_RULE}
 
+    # ⑥ 합집합 cap 피복 (C2-⑥ · LHS-25) — legacy · v2 와 **따로** (그 장부를 안 건드린다 · 내부 오류는 사유로 남긴다)
+    try:
+        _box, _box_why = read_box_xy(case_dir)
+        union_keys, _union_per_am = union_coverage_bed(atoms_df, contacts_df, type_map, scale=scale, box_xy=_box,
+                                                       box_reason=_box_why)
+    except Exception as e:                       # noqa: BLE001 — 사유를 status 에 남긴다 (값 키는 싣지 않는다)
+        union_keys = {f'coverage_status{UNION_SUFFIX}': f'blank: 합집합 집계 내부 오류 — {type(e).__name__}: {e}',
+                      f'coverage_rule{UNION_SUFFIX}': UNION_COVERAGE_RULE, f'coverage_n_fib{UNION_SUFFIX}': UNION_FIB_N,
+                      f'coverage_diag{UNION_SUFFIX}': None}
+
     # Update full_metrics.json
     if update_metrics:
         fm_path = case_dir / 'full_metrics.json'
@@ -679,6 +936,10 @@ def compute_case(cid: str, case_dir: Path, type_map: dict, scale: float = 1000.0
                 for _k in [k for k in m if k.endswith('_physics_v2')]:
                     del m[_k]
                 m.update(v2_keys)
+                # ── ⑥ 합집합 cap 피복 — 새 키로.  옛 union 세대는 통째로 걷는다 (이 스크립트가 *_physics_union 을 소유한다) ──
+                for _k in [k for k in m if k.endswith(UNION_SUFFIX)]:
+                    del m[_k]
+                m.update(union_keys)
                 with open(fm_path, 'w') as f:
                     json.dump(m, f, indent=2, default=str)
                 if verbose:
@@ -687,6 +948,8 @@ def compute_case(cid: str, case_dir: Path, type_map: dict, scale: float = 1000.0
                           f'AM-SE total {m.get("area_AM전체_SE_total_physics_v2")} µm² · '
                           f'cap_conflict {m.get("cap_conflict_n_physics_v2")}/{m.get("n_cap_branch_physics_v2")} '
                           f'(cap 가지) · 거부 {m.get("n_contact_failures_physics_v2")}')
+                    print(f'    physics_union (합집합 cap · 세대 2 표면 면적): {m.get("coverage_status_physics_union")} · '
+                          f'AM {m.get("coverage_AM_mean_physics_union")} % (legacy 합-클립 {m.get("coverage_AM_mean_physics")} %)')
                     print(f'    AM-SE total: H={total_am_se_h*area_conv:,.1f}  '
                           f'P={total_am_se_p*area_conv:,.1f}  '
                           f'Δ={(total_am_se_p/total_am_se_h-1)*100 if total_am_se_h else 0:+.1f}%')
@@ -815,10 +1078,11 @@ def _selftest_fixture(case_dir: Path, *, variant: str = 'base') -> tuple:
 
 
 def _legacy_digests(case_dir: Path, summary) -> dict:
-    """legacy 산출의 sha256 셋 — v2 키 (`*_physics_v2`) 를 뺀 full_metrics · per-AM CSV · 반환값."""
+    """legacy 산출의 sha256 셋 — 새 세대 키 (v2 `*_physics_v2` · ⑥ 합집합 `*_physics_union`) 를 뺀 full_metrics · per-AM CSV · 반환값.
+    (⑥ 은 v2 처럼 legacy 옆에 새 키로만 선다 — 핀이 지키는 것은 legacy 키 · 값 · 순서다.)"""
     import hashlib
     fm = json.loads((case_dir / 'full_metrics.json').read_text())
-    leg = {k: v for k, v in fm.items() if not k.endswith('_physics_v2')}
+    leg = {k: v for k, v in fm.items() if not k.endswith('_physics_v2') and not k.endswith(UNION_SUFFIX)}
     csv_txt = (case_dir / 'coverage_per_am.csv').read_text().replace('\r\n', '\n')
     return {'full_metrics': hashlib.sha256(json.dumps(leg, indent=2, default=str).encode()).hexdigest(),
             'per_am_csv': hashlib.sha256(csv_txt.encode()).hexdigest(),
@@ -1080,6 +1344,10 @@ def main():
                          'folders not under webapp/results or webapp/archive/<cid>).')
     ap.add_argument('--selftest', action='store_true',
                     help='physics v2 병기 회귀 (legacy 바이트 동일 · DESC-03 · L1-01 · 분모 장부 · 데이터 폴더)')
+    #  ★ LHS-27 (09-30 5번 193/194 dirty) — 옛 코드는 요약 CSV 를 **실행 위치 기준** docs/figures/physics_regime/ (리포에서는 추적 파일) 에
+    #    매번 덮어써 리포 루트에서 도는 파이프라인 · 배치의 dirty 를 켰다.  이제 요약 파일은 이 인자를 줄 때만 쓴다 (기본 = 화면 출력만).
+    ap.add_argument('--summary-out', default=None, metavar='PATH',
+                    help='여러 케이스 요약 CSV 를 쓸 경로 (명시할 때만 · 기본은 파일을 쓰지 않는다 — LHS-27)')
     args = ap.parse_args()
     if args.selftest:
         sys.exit(_selftest())
@@ -1133,11 +1401,13 @@ def main():
             })
 
     if summary_rows:
-        out_dir = Path('docs/figures/physics_regime')
-        out_dir.mkdir(parents=True, exist_ok=True)
-        out_csv = out_dir / 'coverage_hertz_vs_physics_summary.csv'
-        pd.DataFrame(summary_rows).to_csv(out_csv, index=False)
-        print(f'\n→ {out_csv}  ({len(summary_rows)} rows)')
+        if args.summary_out:                                  # LHS-27 — 명시한 경로에만 (실행 위치 기준 추적 파일을 덮지 않는다)
+            out_csv = Path(args.summary_out)
+            out_csv.parent.mkdir(parents=True, exist_ok=True)
+            pd.DataFrame(summary_rows).to_csv(out_csv, index=False)
+            print(f'\n→ {out_csv}  ({len(summary_rows)} rows)')
+        else:
+            print(f'\n(요약 CSV 를 쓰지 않았다 — 필요하면 --summary-out PATH · {len(summary_rows)} 행 · LHS-27)')
 
         # Quick stats
         df = pd.DataFrame(summary_rows)

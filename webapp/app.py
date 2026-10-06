@@ -2419,9 +2419,11 @@ _PAPER_LABEL_MAP = {
         'Binding regime share — AM-SE (Hertz / LIGGGHTS / Tabor / Volume / Geom)',
     'Binding % — Total (H/L/T/V/G)':
         'Binding regime share — All contacts (Hertz / LIGGGHTS / Tabor / Volume / Geom)',
-    'Coverage AM_P(%)':            'Coverage of AM_P by SE, cov_AM_P (%)',
-    'Coverage AM_S(%)':            'Coverage of AM_S by SE, cov_AM_S (%)',
-    'Coverage AM(%)':              'Coverage of AM by SE, cov_AM (%)',
+    #  ★ 10-06 (C2-⑥ · LHS-25 · J20-l) — Physics 열 = 합집합 cap 피복 (coverage_*_mean_physics_union) · 옛 합-클립은 바로 아래 legacy 줄
+    #    (inject_physics_union_coverage_rows) · ⚠ 라벨을 바꾸면 single.html PAPER_TO_ORIG 도 같이 (test_closed_param_labels T1)
+    'Coverage AM_P(%)':            'Coverage of AM_P by SE, cov_AM_P (%) · Physics 열 = 합집합 cap (겹침 한 번 · AM–AM 가림 제외 · 세대 2 면적)',
+    'Coverage AM_S(%)':            'Coverage of AM_S by SE, cov_AM_S (%) · Physics 열 = 합집합 cap (겹침 한 번 · AM–AM 가림 제외 · 세대 2 면적)',
+    'Coverage AM(%)':              'Coverage of AM by SE, cov_AM (%) · Physics 열 = 합집합 cap (겹침 한 번 · AM–AM 가림 제외 · 세대 2 면적)',
     # Connectivity
     'SE-SE CN mean':               'SE-SE coordination number ⟨z_SE-SE⟩',
     'SE-SE CN std':                'SE-SE coordination number σ(z_SE-SE)',
@@ -2667,6 +2669,69 @@ def inject_dual_porosity_rows(tables, metrics):
             for k, nr in enumerate(ins):
                 data.insert(i + 1 + k, nr)
             break
+
+
+#: ⑥ 합집합 cap 피복 (C2-⑥ · 1저자 비준 10-06 · LHS-25 · J20-l) — 케이스 망 요약의 Coverage 행 (원 라벨 · 합집합 키 · legacy 키).
+#:   생산자 = scripts/coverage_physics_vs_hertzian.union_coverage_bed (값은 셋째 자리 · 표는 첫째 자리).
+_UNION_COVERAGE_ROWS = (
+    ('Coverage AM_P(%)', 'coverage_AM_P_mean_physics_union', ('coverage_AM_P_mean_physics', 'am_p_se_coverage_physics_pct')),
+    ('Coverage AM_S(%)', 'coverage_AM_S_mean_physics_union', ('coverage_AM_S_mean_physics', 'am_s_se_coverage_physics_pct')),
+    ('Coverage AM(%)', 'coverage_AM_mean_physics_union', ('coverage_AM_mean_physics', 'am_se_coverage_physics_pct')),
+)
+UNION_LEGACY_ROW_LABEL = '└ Physics legacy 합-클립 — 접촉 면적 합 ÷ 자유 표면 · 100 % 포화 (LHS-25) (%)'
+UNION_STATUS_ROW_LABEL = '⚠ Physics 합집합 상태 — 빈칸 사유 (값 없음 · 0 아님)'
+
+
+def _union_num(v):
+    """유한 실수만 (bool · 문자열 숫자 아님 · None · NaN → None)."""
+    import math as _m
+    if isinstance(v, bool) or not isinstance(v, (int, float)):
+        return None
+    return float(v) if _m.isfinite(float(v)) else None
+
+
+def inject_physics_union_coverage_rows(tables, metrics):
+    """⑥ 합집합 cap 피복 — 케이스 망 요약의 Coverage 행 (AM_P · AM_S · mono AM) 의 **Physics 열 = 합집합 값**
+    (`coverage_<상>_mean_physics_union` · 겹침 한 번 · AM–AM 가림 제외 · 세대 2 표면 면적 · 행 이름이 그 정의를 적는다 — _PAPER_LABEL_MAP) ·
+    바로 아래 **legacy 합-클립** 줄 (옛 Physics v1 값 = 접촉 면적 합 ÷ 자유 표면 · 100 % 포화 · LHS-25 · 등급 축이 아직 이 값) ·
+    합집합 키가 없는 옛 케이스 = '—' (0 · legacy · Hertz 복사 아님 — 재분석하면 채워진다) · 빈칸 침대 = '—' + 상태 줄 (사유) 하나.
+    Δ 열 = Hertz 열 ↔ 합집합 (반올림 전 값 · 옛 cov_map 과 같은 규칙).  apply_paper_labels 뒤에 부른다 (행 순서가 안 움직이게)."""
+    if 'network_summary' not in tables:
+        return
+    data = tables['network_summary'].get('data')
+    if not isinstance(data, list):
+        return
+    metrics = metrics or {}
+    ncol = len(tables['network_summary'].get('columns') or []) or 4
+    st = metrics.get('coverage_status_physics_union')
+    blank = isinstance(st, str) and st.startswith('blank')
+    last = None
+    for orig, ukey, lkeys in _UNION_COVERAGE_ROWS:
+        names = {orig, _PAPER_LABEL_MAP.get(orig, orig)}
+        idx = next((i for i, r in enumerate(data) if isinstance(r, list) and r and isinstance(r[0], str)
+                    and r[0].strip() in names), None)
+        if idx is None:
+            continue
+        row = data[idx]
+        while len(row) < ncol:
+            row.append('')
+        u = _union_num(metrics.get(ukey))
+        try:
+            h = float(row[1])
+        except (TypeError, ValueError):
+            h = None
+        if ncol >= 3:
+            row[2] = f'{u:.1f}' if u is not None else '—'
+        if ncol >= 4:
+            row[3] = _pct_delta(h, u) if (u is not None and h is not None) else ''
+        leg = next((x for x in (_union_num(metrics.get(k)) for k in lkeys) if x is not None), None)
+        prefix = row[0][: len(row[0]) - len(row[0].lstrip())]
+        nr = [prefix + '  ' + UNION_LEGACY_ROW_LABEL, '—', (f'{leg:.1f}' if leg is not None else '—'), '']
+        data.insert(idx + 1, nr[:ncol] + [''] * (ncol - len(nr)))
+        last = idx + 1
+    if blank and last is not None:
+        sr = ['  ' + UNION_STATUS_ROW_LABEL, '—', st, '']
+        data.insert(last + 1, sr[:ncol] + [''] * (ncol - len(sr)))
 
 
 def inject_physics_v2_rows(tables, metrics):
@@ -4456,12 +4521,17 @@ def _generate_ai_analysis(all_metrics, case_names, title, notes):
         ('Ionic Active AM(%)', 'ionic_active_pct'),
         ('Coverage AM_P Hertz-family(%)', 'coverage_AM_P_mean'),
         ('Coverage AM_S Hertz-family(%)', 'coverage_AM_S_mean'),
+        #  ⑥ 10-06 (C2-⑥ · LHS-25) — Physics = 합집합 cap (겹침 한 번 · AM–AM 가림 제외 · 세대 2 면적) · 옛 합-클립 (100 % 포화) 이 아니다
+        ('Coverage AM_P Physics union-of-caps g2(%)', 'coverage_AM_P_mean_physics_union'),
+        ('Coverage AM_S Physics union-of-caps g2(%)', 'coverage_AM_S_mean_physics_union'),
     ]
     rows = []
     for i, name in enumerate(case_names):
         row = {'Case': name}
         for label, key in display_keys:
             val = all_metrics[i].get(key, '-')
+            if val is None:                                  # 빈칸 (None) 을 'None' 으로 보이지 않게 — 없는 키와 같은 '-'
+                val = '-'
             if isinstance(val, float):
                 val = round(val, 2)
             row[label] = val
@@ -7200,6 +7270,7 @@ def _load_case_tables(results_dir, meta):
     normalize_network_summary_layout(tables, metrics)
     apply_paper_labels(tables)
     inject_dual_porosity_rows(tables, metrics)
+    inject_physics_union_coverage_rows(tables, metrics)      # ⑥ 합집합 cap 피복 (C2-⑥ · LHS-25) — Physics 열 · legacy 줄
     inject_physics_v2_rows(tables, metrics)
     # ── Phantom σ_e / κ suppression (v7 — unconditional, AFTER label rename) ──
     # v6 placed inside normalize's Hertz+Phys merge if-block, which doesn't
@@ -7303,6 +7374,23 @@ def single(case_id):
 # (label, unit, key, category).  카테고리 순서는 σ_ionic/σ_e 생산 폼의 입력 순서를 따른다:
 #   조성 → 구조 → SE 계면 (이온) → AM 계면 (전자, Stage 15) → 전송 (Stage E, 세 채널) → 접촉역학 → 응력.
 #   전송 칸은 Stage E 값 (phantom 거름) — 생산 적합의 타깃.
+def _group_union_coverage_cells(metrics):
+    """⑥ 합집합 cap 피복의 그룹 표 칸 (C2-⑥ · J20-l) — mono 케이스 (상 이름 AM) 의 `coverage_AM_mean_physics_union` 을 P:S 로 P 또는 S 열에
+    (Hertz 'Coverage P/S' 와 같은 규칙 · 상별 키가 이미 있으면 그대로) · 빈칸 침대 (status 'blank: …') 의 값 칸 = '— (빈칸)' (None 이 'None' 으로
+    보이지 않게 · 문자열이라 최고값 후보 아님) · 키가 없는 옛 케이스는 건드리지 않는다 (표에 '-')."""
+    st = metrics.get('coverage_status_physics_union')
+    if isinstance(st, str) and st.startswith('blank'):
+        for k in ('coverage_AM_P_mean_physics_union', 'coverage_AM_S_mean_physics_union', 'coverage_AM_mean_physics_union'):
+            if k in metrics and metrics[k] is None:
+                metrics[k] = '— (빈칸)'
+        return metrics
+    agg = _union_num(metrics.get('coverage_AM_mean_physics_union'))
+    if agg is not None and 'coverage_AM_P_mean_physics_union' not in metrics and 'coverage_AM_S_mean_physics_union' not in metrics:
+        side = 'P' if metrics.get('ps_ratio', '') in ('P only', '10:0') else 'S'
+        metrics[f'coverage_AM_{side}_mean_physics_union'] = agg
+    return metrics
+
+
 def _group_am_am_mean_na(metrics):
     """★ 10-05 RGL-05 (인계표와 같은 정의 · J20-l) — AM–AM 접촉 0 이면 평균 면적은 정의되지 않는다 (0/0).
     `calc_am_am_cn` 은 접촉 0 에 평균 0 을 넣는다 → 인계표 `am_am_mean_area` 는 빈칸 (N/A) 인데 그룹 표는 0 을 보였다.
@@ -7334,6 +7422,8 @@ GROUP_DISPLAY_KEYS = [
     ('SE-SE Total', '(μm²)', 'area_SE_SE_total', 'SE 네트워크'),
     ('Coverage P', '(%)', 'coverage_AM_P_mean', 'SE 네트워크'),
     ('Coverage S', '(%)', 'coverage_AM_S_mean', 'SE 네트워크'),
+    ('Coverage P (Physics 합집합)', '(%)', 'coverage_AM_P_mean_physics_union', 'SE 네트워크'),   # ⑥ C2-⑥ · LHS-25 (10-06)
+    ('Coverage S (Physics 합집합)', '(%)', 'coverage_AM_S_mean_physics_union', 'SE 네트워크'),
     ('Percolation', '(%)', 'percolation_pct', 'SE 네트워크'),
     ('Tortuosity', '', 'tortuosity_mean', 'SE 네트워크'),
     ('Tortuosity all-SE', '', 'tortuosity_all_mean', 'SE 네트워크'),   # 기하 τ 전체판 (10-02 · calc_tortuosity_all)
@@ -7468,6 +7558,7 @@ def group():
             if metrics.get('am_ionic_isolated_pct') is None and isinstance(metrics.get('ionic_active_pct'), (int, float)):
                 metrics['am_ionic_isolated_pct'] = 100.0 - metrics['ionic_active_pct']
             _group_am_am_mean_na(metrics)
+            _group_union_coverage_cells(metrics)                    # ⑥ 합집합 칸 (mono 매핑 · 빈칸 표지 · J20-l)
             from metrics_json import stress_cv_group_cells as _scv_cells   # LHS-33 — 옛 σ_VM 네 열 무효 · 미정의 = '— (사유)' (None · 0 아님)
             _scv_cells(metrics)
 
@@ -7951,11 +8042,16 @@ def group_report():
         ('Tortuosity', 'tortuosity_mean'),
         ('Tortuosity all-SE (geometric)', 'tortuosity_all_mean'),
         ('Ionic Active(%)', 'ionic_active_pct'),
+        #  ⑥ 10-06 (C2-⑥ · LHS-25) — Physics 피복 = 합집합 cap (세대 2 면적) · 옛 합-클립 아님
+        ('Coverage AM_P Physics union-of-caps g2(%)', 'coverage_AM_P_mean_physics_union'),
+        ('Coverage AM_S Physics union-of-caps g2(%)', 'coverage_AM_S_mean_physics_union'),
     ]
     for i, name in enumerate(case_names):
         row = {'Case': name}
         for label, key in display_keys:
             val = all_metrics[i].get(key, '-')
+            if val is None:                                  # 빈칸 (None) 을 'None' 으로 보이지 않게 — 없는 키와 같은 '-'
+                val = '-'
             if isinstance(val, float):
                 val = round(val, 2)
             row[label] = val
@@ -10179,10 +10275,13 @@ _GRADE_PLAIN = {
         '넓을수록 한 번에 더 많이 흘러서 좋습니다.',
     'coverage_AM_P_mean_physics': '큰 활물질 입자(AM_P) 표면 중 고체전해질이 닿아있는 비율이에요. '
         '많이 닿아야 그 부분에서 이온을 주고받습니다. 60% 이상 권장. '
-        '다만 접촉마다 추정한 면적을 표면 한도 없이 더한 값이라, SE 가 많은 전극에서는 100 % 에 붙어(포화) 서로 구분이 안 돼요.',
+        '다만 접촉마다 추정한 면적을 표면 한도 없이 더한 값이라, SE 가 많은 전극에서는 100 % 에 붙어(포화) 서로 구분이 안 돼요. '
+        '케이스 표의 Physics 열은 이제 겹친 곳을 한 번만 세는 합집합 값이고 이 옛 값은 그 아래 legacy 줄에 있어요 — '
+        '이 등급 축은 아직 옛 합-클립 값을 씁니다 (LHS-25 · 축을 바꿀지는 따로 정한다).',
     'coverage_AM_S_mean_physics': '작은 활물질 입자(AM_S) 표면이 고체전해질에 덮인 비율이에요. '
         '작은 입자는 더 고르게 덮일수록 좋습니다. '
-        '다만 SE 가 많은 전극에서는 100 % 에 붙어(포화) 서로 구분이 안 돼요.',
+        '다만 SE 가 많은 전극에서는 100 % 에 붙어(포화) 서로 구분이 안 돼요. '
+        '케이스 표의 Physics 열은 이제 합집합 값이고 이 등급 축은 아직 옛 합-클립 값을 씁니다 (LHS-25).',
     'coverage_AM_mean_physics_rough': '입자 모양 인자(다결정 1.40 · 단결정 1.10 — 가정값)로 표면적을 키워 다시 계산한 전체 덮임 '
         '비율이에요. 활물질이 이온과 만나는 면적이 얼마나 되는지를 봅니다.',
     'am_se_cn_mean': '활물질 입자 하나가 평균 몇 개의 고체전해질과 닿아있는지예요. 많을수록 이온 공급 '

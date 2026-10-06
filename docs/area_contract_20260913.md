@@ -1056,3 +1056,30 @@ clamp · `ψ ≤ 1e-4` 의 `Rc = 0` · `b = r_min` · 재료 계수 · 면적 ·
 `scripts/lhs_design_dataset.py` 는 아직 `--webapp-groups contact` 만 알아서 `stop_after=coverage` 배치 폴더를
 **거부**한다 (fail-closed) — coverage 묶음 (legacy Physics + `*_physics_v2` 열 · 열 사전) 은 별건이다.
 회귀: `scripts/plastic_coverage.py --selftest` ⑪–⑱ · `scripts/coverage_physics_vs_hertzian.py --selftest`.
+
+### ⑥ Physics 피복 = 합집합 cap (2026-10-06 밤 · 1저자 비준 C2-⑥ *"권고대로"* · 원장 LHS-25)
+
+legacy Physics 피복 (`coverage_*_mean_physics` = 접촉 면적 **합** ÷ (4πr² − ΣA(AM–AM)) → 100 % 클립) 은 **그대로** 두고, 새 키
+(`*_physics_union`) 로 나란히 선다 — v2 와 같은 병기 규약 (`coverage_physics_vs_hertzian.py --selftest` ① 의 legacy 핀은 union 키를 빼고 잰다).
+
+**규칙** (`plastic_coverage.union_cap_coverage` · 침대 = `coverage_physics_vs_hertzian.union_coverage_bed` · `UNION_COVERAGE_RULE = 'union_caps_g2_surface'`):
+- SE 접촉 하나 = AM 구면 위 **cap 하나** — 중심 = AM → SE 중심 방향 (x · y 주기 최소영상) · 넓이 = 세대 2 **표면 소비자** 면적
+  `film_area_g2(pair='AM_SE', consumer='surface')` (µm · 상한 2π r_min²) → cosθ = 1 − A/(2πR²).
+- 피복 = SE cap **합집합** (겹친 곳은 한 번) ∩ 가리지 않은 표면 ÷ 가리지 않은 표면 × 100 · 가린 표면 = AM–AM cap 합집합 (넓이 = c_cpl[22] 원판 ·
+  `film_area_g2(pair='AM_AM')`) · Fibonacci 점 N = 6000 (결정적 · `coverage_n_fib_physics_union`) · 반구 넘는 cap 은 반구로 자르고 센다.
+- 상 = 입자 평균 · 전체 = 입자 수 가중 (legacy 와 같은 가중) · SE 접촉 0 인 AM = **측정된 0**.
+- 상자 = `input_params.json` box_x · box_y (0.05 기본값 **없음** — 없으면 빈칸) · 접촉마다 |d_최소영상 − (r1 + r2 − δ)| ≤ 1e-3·(r1 + r2) + 1e-5·max(L)
+  로 상자 · 프레임을 확인한다 (real_14 최대 1.29e-7 · 상자 0.1 % 오차 = 주기 쌍 2,421 행이 넘는다).
+- **빈칸 + 사유** (`coverage_status_physics_union = 'blank: …'` · 값 키 None · 진단 `coverage_diag_physics_union` 은 빈칸에도) — 상자 없음 ·
+  접촉 하나라도 비유한 입력 · 방향 검사 실패 · `film_area_g2` 거부 (예: **c_cpl[22] < 0** = 통째로 포함된 쌍의 생산자 값 — 원판으로 바꿔 넣지 않는다) ·
+  AM 반경 무효 · 가리지 않은 표면 표본 0 (분모 무효 — LHSC-01 (a) 와 같은 계약).
+
+**실측 (커밋 덤프 · parse_liggghts → compute_case)**: real_14 합-클립 51.522 → 합집합 **43.218 %** (AM_P 48.286 → 39.718 · AM_S 51.798 → 43.518 ·
+×0.839) — 설계 원형 (C2 cov_union2.py · N 6000) 과 AM 457 개 전부 |Δ| ≤ 1.4e-14 · N 24000 은 43.225.  case15 = **빈칸** (c_cpl[22] < 0 두 접촉 ·
+첫 사례 31–29241 = 반경 0.5 µm SE 가 6 µm AM 안에 통째로 · v2 와 같은 사유) — 원형의 ×0.87 (18.324 → 15.984) 은 그 두 행을 원판 π r_SE² 로
+**바꿔 넣은** 값이다 (재현 · `scripts/test_union_coverage.py` R7).
+
+**닫히지 않은 것**: 등급 축 (`coverage_AM_*_mean_physics`) · σ_ionic T1 의 면적 선택 · 망 Physics 채널은 이 절이 바꾸지 않는다 (LHS-25 ② ·
+1저자 *"코드를 아직 안 뜯어봤으니까"*) · 인계 디스크립터는 J20-m 그대로 (기하면적만 — 합집합 값도 인계 열 아님) · 포함 쌍 (c_cpl[22] < 0) 을
+빈칸 대신 다른 규칙으로 셀지는 결정 대상 · 코퍼스 규모는 재수확 (W-contact) 전 미측정.  웹앱 = Coverage 행 Physics 열 = 합집합 · 바로 아래
+legacy 합-클립 줄 · 옛 케이스 '—' (`webapp/test_coverage_union_display.py`).

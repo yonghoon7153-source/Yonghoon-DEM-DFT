@@ -221,8 +221,13 @@ run 'psi default switch (L2-01 세대 2)' python3 scripts/test_psi_default_switc
 run 'physics area g2 (C2 ①–⑤ · L1-01/02/03)' python3 scripts/test_physics_area_g2.py
 run 'network dirichlet (L2-05 · D1–D7)' python3 scripts/test_network_dirichlet.py
 run 'network generation 2 (CF 표지 · H12 · 세대 표기)' python3 scripts/test_network_generation2.py
-#  ★ 2026-10-06 밤 (3단계 · LHSC-08) — 벽 접촉 판정의 근접 접선 수 (분류 불변 · 자릿수는 파일마다 토큰에서 · STL 따로 · 상 · 벽별).
+#  ★ 2026-10-06 밤 (3단계 · C2-⑥ 1저자 비준 · LHS-25 · LHSC-08 · LHS-27) — Physics 피복 = 합집합 cap (`*_physics_union` 새 키 · 해석해 ·
+#    생산자 빈칸 계약 · real_14 51.522 → 43.218 = 설계 원형 AM 457 개 1e-13 안 · case15 = 빈칸 (c_cpl[22] < 0) · 원형 ×0.87 재현) ·
+#    벽 근접 접선 수 (분류 불변 · 자릿수는 파일마다 · STL 따로) · 피복 CLI 가 실행 위치 추적 파일을 안 덮는다 (--summary-out 명시만).
+run 'union coverage ⑥ (C2-⑥ · LHS-25)' python3 scripts/test_union_coverage.py
 run 'wall near tangent (LHSC-08)' python3 scripts/test_wall_near_tangent.py
+run 'coverage CLI no tracked write (LHS-27)' python3 scripts/test_coverage_cli_no_tracked_write.py
+run 'webapp: coverage_union_display' python3 webapp/test_coverage_union_display.py   # ⑥ 웹앱 같은 묶음 — Physics 열 = 합집합 · legacy 줄 · 옛 케이스 — · 그룹 · 보고서 · 그림
 #  ★ 2026-10-04 (J20-s ④b · 1저자 비준 *"권고대로"* · 원장 LHS-29) — Love–Weber 입자 응력 새 열 (접촉점 · 전체 텐서 · 벽 접촉 표지 ·
 #    검사 = 열 · F = Fn + Ft · 접촉점 · 전체 virial ↔ c_strs) · real_14 독립 구현 대조 · 생산 CLI 끝단 (옛 키 불변).
 run 'love_weber_stress (④b · LHS-29)' python3 scripts/test_love_weber_stress.py

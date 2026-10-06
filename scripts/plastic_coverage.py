@@ -637,6 +637,108 @@ def film_area_g2(delta, r1, r2, *, pair, ligg_area, length_scale, consumer='tran
     return _out(U, 'tabor' if U == A_tabor else 'volume' if U == A_volume else 'cap')
 
 
+# =============================================================
+#   ⑥ 합집합 cap 피복 (1저자 비준 2026-10-06 · C2-⑥ "권고대로" · 원장 LHS-25)
+# =============================================================
+#: 규칙 이름 — 피복 산출물 `coverage_rule_physics_union` 에 그대로 실린다.  옛 Physics 피복 (`coverage_*_mean_physics`) =
+#:   AM 마다 접촉 면적 **합** ÷ (4πr² − ΣA(AM–AM)) → 100 % 클립 (표면 한도 없음 · SE 가 많은 침대에서 포화 · LHS-25) 은 그대로 둔다.
+UNION_COVERAGE_RULE = 'union_caps_g2_surface'
+#: Fibonacci 점 수 (결정적 · 난수 없음).  표본 오차 (10-06 실측): 무작위 cap 5,000 개 (넓이 비 1e-4–0.5) 의 |오차| 최대 0.23 %p ·
+#:   p99 0.13 %p · 평균 0.037 %p.  침대 평균은 AM · cap 수가 많아 줄어든다 (real_14 N 6000 ↔ 24000 — scripts/test_union_coverage.py R5).
+UNION_FIB_N = 6000
+#: cap 묶음 크기 (메모리: N × 묶음 × 8 바이트 — 6000 × 256 ≈ 12 MB) — 값과 무관하다.
+_UNION_CHUNK = 256
+
+
+def fibonacci_sphere(n=UNION_FIB_N):
+    """단위 구면 Fibonacci 격자 (n, 3) — 점 k = 0 … n−1 에서 i = k + ½ · z = 1 − 2i/n · ρ = √(1 − z²) · φ = π(1 + √5)·i.
+    결정적 (난수 없음) · 극점에 점이 없다 (z = ±1 이 안 나온다 · n 이 짝수면 z = 0 도 없다) · 설계 원형 (C2 cov_union2.py) 과 같은 식."""
+    if isinstance(n, bool) or not isinstance(n, (int, np.integer)) or int(n) < 1:
+        raise ValueError(f'n = {n!r} — 양의 정수여야 한다')
+    i = np.arange(int(n)) + 0.5
+    z = 1 - 2 * i / int(n)
+    rho = np.sqrt(1 - z * z)
+    phi = math.pi * (1 + 5 ** 0.5) * i
+    return np.stack([rho * np.cos(phi), rho * np.sin(phi), z], 1)
+
+
+def _union_caps(name, dirs, areas):
+    """cap 묶음 검사 → (단위 방향 (k, 3), 넓이 (k,)).  실수 · 유한 · 방향 길이 > 0 · 넓이 ≥ 0 · 개수 일치 — 아니면 예외 (조용히 버리지 않는다)."""
+    if dirs is None and areas is None:
+        return np.zeros((0, 3)), np.zeros(0)
+    if dirs is None or areas is None:
+        raise ValueError(f'{name}: 방향 · 넓이 중 하나만 주어졌다')
+    for v in (areas if isinstance(areas, (list, tuple)) else []):
+        if isinstance(v, bool) or isinstance(v, str):
+            raise TypeError(f'{name} 넓이: 실수가 아니다 ({v!r})')
+    try:
+        d = np.asarray(dirs, dtype=np.float64)
+        a = np.asarray(areas, dtype=np.float64)
+    except (TypeError, ValueError) as e:
+        raise TypeError(f'{name}: 실수 배열이 아니다 ({e})') from e
+    if d.size == 0 and a.size == 0:
+        return np.zeros((0, 3)), np.zeros(0)
+    if d.ndim != 2 or d.shape[1] != 3:
+        raise ValueError(f'{name} 방향: (k, 3) 꼴이어야 한다 (받은 꼴 {d.shape})')
+    if a.ndim != 1 or a.shape[0] != d.shape[0]:
+        raise ValueError(f'{name}: 방향 {d.shape[0]} 개 ↔ 넓이 {a.shape} — 개수가 어긋난다')
+    if not (np.isfinite(d).all() and np.isfinite(a).all()):
+        raise ValueError(f'{name}: 비유한 방향 · 넓이')
+    if (a < 0).any():
+        raise ValueError(f'{name}: 넓이 < 0 ({float(a.min())!r})')
+    nrm = np.linalg.norm(d, axis=1)
+    if (nrm <= 0).any():
+        raise ValueError(f'{name}: 길이 0 인 방향 — cap 중심을 정할 수 없다')
+    return d / nrm[:, None], a
+
+
+def _union_mask(U, dirs, a_over_half):
+    """U 의 점 중 cap (u·n ≥ 1 − a/(2πR²)) 하나라도 안에 드는 점 — 넓이 0 인 cap 은 점이 없다."""
+    out = np.zeros(len(U), dtype=bool)
+    keep = a_over_half > 0
+    dirs, cth = dirs[keep], 1.0 - a_over_half[keep]
+    for s in range(0, len(cth), _UNION_CHUNK):
+        out |= ((U @ dirs[s:s + _UNION_CHUNK].T) >= cth[s:s + _UNION_CHUNK]).any(axis=1)
+    return out
+
+
+def union_cap_coverage(radius, se_dirs, se_areas, am_dirs=None, am_areas=None, *, points=None):
+    """한 AM 입자의 **합집합 cap 피복률** (%) → `(cov, info)` — C2-⑥ (1저자 비준 10-06 · LHS-25).
+
+    접촉 하나 = AM 구면 위 cap 하나 (중심 = AM 중심 → 상대 입자 중심 방향 · cap 넓이 = 접촉 면적 A → cosθ = 1 − A/(2πR²)).
+      • 피복 = SE cap 들의 **합집합** (겹친 곳은 한 번) ∩ 가리지 않은 표면 ÷ 가리지 않은 표면 × 100
+      • 가린 표면 = AM–AM cap 들의 합집합 — 분자 · 분모에서 같이 뺀다 (설계 원형 cov_union2.py 와 같은 정의)
+      • 반구보다 큰 cap 은 반구 (2πR² = 표면 소비자 상한 `film_area_g2(consumer='surface')` 의 2π r_min² 에서 AM 이 작은 쪽일 때) 로
+        자르고 `n_caps_clipped_hemisphere` 로 센다 (세대 2 표면 면적이면 원리상 0 — 0 이 아니면 입력을 의심)
+      • 넓이는 점 집합으로 잰다 — `points` (기본 `fibonacci_sphere(UNION_FIB_N)`) 중 비율 (결정적)
+    단위: radius 와 넓이는 같은 길이 단위 (생산자 = µm · µm²).  방향은 단위 벡터가 아니어도 된다 (안에서 나눈다).
+    반환: cov = 측정값 (%) · SE 접촉 0 이면 **0.0** (측정된 0) · 가리지 않은 표면 표본이 0 이면 **None** + `info['reason'] =
+      'free_surface_empty'` (분모 무효 — 0 으로 넣지 않는다 · LHSC-01 (a) 와 같은 계약).
+    info: n_points · n_free · free_frac · n_se_caps · n_am_caps · n_caps_clipped_hemisphere · reason.
+    정의역 밖 (반경이 유한 양수가 아님 · 비유한 / 길이 0 방향 · 넓이 < 0 · 비유한 · 개수 어긋남 · 꼴 어긋남) = ValueError · TypeError.
+    """
+    R = _v2_real('radius', radius)
+    if R <= 0:
+        raise ValueError(f'반경 ≤ 0 ({R!r})')
+    U = fibonacci_sphere(UNION_FIB_N) if points is None else np.asarray(points, dtype=np.float64)
+    if U.ndim != 2 or U.shape[1] != 3 or len(U) < 1 or not np.isfinite(U).all():
+        raise ValueError(f'points: 유한한 (N, 3) 이어야 한다 (받은 꼴 {U.shape})')
+    sd, sa = _union_caps('SE cap', se_dirs, se_areas)
+    ad, aa = _union_caps('AM–AM cap', am_dirs, am_areas)
+    half = 2 * math.pi * R * R
+    info = dict(n_points=int(len(U)), n_se_caps=int(len(sa)), n_am_caps=int(len(aa)),
+                n_caps_clipped_hemisphere=int((sa > half).sum() + (aa > half).sum()), reason=None)
+    occl = _union_mask(U, ad, np.minimum(aa, half) / half)
+    free = ~occl
+    n_free = int(free.sum())
+    info.update(n_free=n_free, free_frac=n_free / len(U))
+    if n_free == 0:
+        info['reason'] = 'free_surface_empty'
+        return None, info
+    cov = _union_mask(U, sd, np.minimum(sa, half) / half)
+    return 100.0 * int((cov & free).sum()) / n_free, info
+
+
 def compute_coverage(atom_path: str, contact_path: str,
                      se_type: int = SE_ATOM_TYPE,
                      mode: str = "capped",

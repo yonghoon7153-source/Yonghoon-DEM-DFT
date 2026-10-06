@@ -2875,7 +2875,8 @@ function applyViewMode(state, mode) {
       ? '<div style="color:#f59e0b;font-size:11px;margin-top:2px">⚠ Hertz 계열 대체 — physics 열 없음 · '
         + 'LIGGGHTS c_cpl[22] 기하 교차 원판 (physics 값의 약 1/2.7)</div>'
       : covSrc === 'coverage_physics_pct'
-      ? '<div style="color:#9ca3af;font-size:11px;margin-top:2px">값: Physics v1 (Tabor · 부피 · 기하 cap)</div>'
+      ? '<div style="color:#9ca3af;font-size:11px;margin-top:2px">값: Physics v1 합-클립 (Tabor · 부피 · 기하 cap · 접촉 면적 합 · 100 % 클립) — '
+        + '케이스 표 Physics 열은 합집합 cap (겹침 한 번 · 세대 2 · LHS-25) · 입자별 합집합 값은 아직 뷰어에 없음</div>'
       : '';
     setLegend(state,
       `<b>AM Coverage — SE / surface area (%)</b>${covSrcLine}

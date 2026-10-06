@@ -695,6 +695,13 @@ def plot_coverage(all_data, names, ax=None):
     return ax
 
 
+def plot_coverage_physics_union(all_data, names, ax=None):
+    """⑥ 합집합 cap 피복 (C2-⑥ · 10-06 · LHS-25) — 전체 AM 입자 평균 `coverage_AM_mean_physics_union`.  값이 없는 (재분석 전 · 빈칸 침대)
+    케이스는 점을 안 찍는다 (_metric_points — 0 으로 채우지 않는다).  옛 Physics 합-클립 (coverage_AM_mean_physics) 과 다른 양."""
+    return _plot_metric_line(all_data, names, "coverage_AM_mean_physics_union", "Coverage, Physics union of caps (%)",
+                             "AM Coverage — Physics union of caps (gen-2 area)", ax)
+
+
 def plot_stress_cv(all_data, names, ax=None):
     """두 규약을 같이 — 실선 = Love–Weber (stress_cv_lw · ④b 10-04 · 입자 접촉력 기반 대칭 응력의 VM — kinetic · 벽 · couple 미포함 ·
     RGL-06 이름 한정) · 점선 = 옛 열 (stress_cv = LIGGGHTS stress/atom 50/50 분할 · 대각 · LHS-29).
@@ -3652,6 +3659,13 @@ PLOT_REGISTRY = {
         "title": "AM Coverage",
         "description": "AM 표면의 SE 피복률.\n= (SE 접촉 면적) / (AM 자유 표면적) × 100%\n\nAM_P가 클수록 SE 접촉 면적↑ → Coverage↑.\nError bar = 입자 간 편차(std).",
         "origin_tip": "Grouped Bar + Error Bar.\nAM_P: Green #548235, AM_S: Light Green #A9D18E.\nCap size 4, Line width 1.2.\nX: Configuration, Y: Coverage (%).",
+    },
+    "coverage_AM_mean_physics_union": {
+        "func": plot_coverage_physics_union,
+        "file": "coverage_physics_union.png",
+        "title": "AM Coverage — Physics union of caps",
+        "description": "⑥ 합집합 cap 피복 (C2-⑥ · 10-06 · LHS-25) — AM 마다 SE 접촉 하나 = 구면 cap 하나 (넓이 = 세대 2 표면 소비자 면적 film_area_g2) · 겹친 cap 은 한 번 · AM–AM 이 가린 표면은 분자 · 분모에서 뺀다 · Fibonacci 점 6000 · 입자 평균.\n옛 Physics 합-클립 (접촉 면적 합 ÷ 자유 표면 · 100 % 포화) 과 다른 양 (real_14 51.5 → 43.2 %).\n값이 없는 (재분석 전 · 빈칸) 케이스는 점을 찍지 않는다.",
+        "origin_tip": "Line+Symbol → X: Configuration, Y: Coverage, Physics union of caps (%).\nCoverage (Hertz 계열 막대) 그림과 나란히 본다.",
     },
     "stress_cv": {
         "func": plot_stress_cv,
