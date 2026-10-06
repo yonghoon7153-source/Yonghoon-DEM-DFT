@@ -1,0 +1,119 @@
+{
+  "schema": "reil-c5-static-prereview/v1",
+  "date": "2026-10-06",
+  "target_commit": "7def9238c8fdac605decc5bf17c1428a93faad1d",
+  "target_sha256": "2656ab2bf142ea1ea64245f816cc8c7c4f5b6ac086d1ad28a50961d68bf85cc6",
+  "verdict": "DIRECTION_ACCEPTED_DOCUMENT_CORRECTIONS_REQUIRED_BEFORE_IMPLEMENTATION_APPROVAL",
+  "findings": [
+    {
+      "id": "C5-N1",
+      "priority": "P1",
+      "title": "Fixed-array sealing cannot be deferred by automatic pilot-exclusion interpretation",
+      "request_lines": [
+        63,
+        64,
+        109
+      ]
+    },
+    {
+      "id": "C5-N2",
+      "priority": "P1",
+      "title": "P0-specific environment acceptance does not create automatic future rebuild tolerance",
+      "request_lines": [
+        62,
+        79,
+        80,
+        128,
+        129
+      ]
+    },
+    {
+      "id": "C5-N3",
+      "priority": "P2",
+      "title": "Interrupted versus unstarted runs; explicit resource and closeout boundaries",
+      "request_lines": [
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        71,
+        73,
+        83,
+        86,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96
+      ]
+    },
+    {
+      "id": "C5-N4",
+      "priority": "P2",
+      "title": "Structural error priority and independent reevaluation failure",
+      "request_lines": [
+        35,
+        36,
+        37,
+        38,
+        40,
+        48,
+        71,
+        86,
+        87
+      ]
+    },
+    {
+      "id": "C5-N5",
+      "priority": "P2",
+      "title": "Bounded implementation tests and synthetic dry-run authorization",
+      "request_lines": [
+        70,
+        71,
+        72,
+        73,
+        75,
+        118,
+        119,
+        128
+      ]
+    }
+  ],
+  "accepted_static_scope": [
+    "P0 JSON supports the specified cell #1 selection rule",
+    "J_V=sqrt(f2) matches the registered objective definition",
+    "Eight stated options match the stored COBYQA_OPTIONS.json",
+    "Separate implementation approval, then stop, then separate pilot approval"
+  ],
+  "approval": {
+    "implementation": false,
+    "tests": false,
+    "cost_pilot": false,
+    "data_opening": false,
+    "sobol_generation": false,
+    "environment_rebuild": false,
+    "confirmatory_C4": false
+  },
+  "nonblocking_note": "Do not call four-worker-only resource observations measured speedup/parallel efficiency versus serial.",
+  "preserved_prior_status": {
+    "C3": "C3_OUTPUTS_ACCEPTED_WITH_EXECUTION_RECORD_GAPS",
+    "execution_compliance": "INCOMPLETE_UNVERIFIED_NOT_A_NUMERICAL_FAILURE"
+  },
+  "reviewer_scope": "Static document/source-excerpt/allowed JSON review; own report creation and byte/hash checks only. No source edits or scientific execution.",
+  "actions_not_performed": [
+    "REIL xlsx, pickle or notebook opening",
+    "provided module import or execution",
+    "fitting or numerical/P0 rerun",
+    "tests or synthetic dry run",
+    "Sobol regeneration",
+    "installation/environment rebuild",
+    "COMSOL/Java execution",
+    "external message dispatch"
+  ],
+  "next_step": "Resolve the five document findings; user separately approves the revised implementation scope. No implicit execution authority."
+}

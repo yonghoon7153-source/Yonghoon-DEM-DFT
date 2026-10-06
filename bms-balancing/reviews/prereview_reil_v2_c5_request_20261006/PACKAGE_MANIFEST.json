@@ -1,0 +1,39 @@
+{
+  "schema": "review-package-manifest/v1",
+  "package": "REIL_C5_PREREVIEW_20261006",
+  "source_commit": "7def9238c8fdac605decc5bf17c1428a93faad1d",
+  "payload_count": 6,
+  "files": [
+    {
+      "path": "CLAUDE_REPLY_KO.md",
+      "bytes": 3857,
+      "sha256": "25977dd95ebe9ae0fd9ad2b6e01e0cd7c015c715828a9796dabd139b2e191bc5"
+    },
+    {
+      "path": "DECISION.json",
+      "bytes": 3220,
+      "sha256": "906047d0dc6ca90026107667c7bff18af4ee07b82173b8af8f6a824bf0219727"
+    },
+    {
+      "path": "DOCUMENT_CORRECTIONS_KO.md",
+      "bytes": 5974,
+      "sha256": "26b74ad24183f4818ade53ea13c38bba618f7fd1f501e4893ed0762e513e6060"
+    },
+    {
+      "path": "READ_SNAPSHOT.json",
+      "bytes": 60370,
+      "sha256": "b6c6201eda1e28544e8245593143aaba4ff41cf7d84898ab40794881ee7695ba"
+    },
+    {
+      "path": "README_KO.md",
+      "bytes": 1699,
+      "sha256": "e50c9ebac01d7bafdd11abd2d1c763161f149c106777a66fcc1b8c4190223964"
+    },
+    {
+      "path": "REVIEW_KO.md",
+      "bytes": 15845,
+      "sha256": "8a5a95ad0049a724d50dd32574cd7b74a5963d9274aeda8e1490093d17d6bbdd"
+    }
+  ],
+  "scope": "Recipient static prereview only. No execution approval. Manifest excludes itself."
+}

@@ -1,0 +1,649 @@
+{
+  "type": "STATIC_REVIEW_SOURCE_EXCERPTS_AND_ALLOWED_JSON_RECORDS",
+  "repository": "yonghoon7153-source/Yonghoon-DEM-DFT",
+  "commit": "7def9238c8fdac605decc5bf17c1428a93faad1d",
+  "identity_note": "git_blob_sha1 values identify the full source files as returned by the connector; content_excerpts are not full-file byte copies. Only the approval request additionally underwent raw-byte equality and SHA-256 comparison with the local attachment.",
+  "sources": [
+    {
+      "path": "bms-balancing/docs/REIL_C5_PILOT_APPROVAL_REQUEST_20261006.md",
+      "git_blob_sha1": "5d9fe84b8a4f676baa810f5b11f6ae719648fb89",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/7def9238c8fdac605decc5bf17c1428a93faad1d/bms-balancing/docs/REIL_C5_PILOT_APPROVAL_REQUEST_20261006.md",
+      "content_excerpts": [
+        {
+          "start_line": 1,
+          "end_line": 130,
+          "text": "# REIL C5 비용 파일럿 승인 요청 — 셀 하나 · A0 · J_V · Phase A 128 (범위 · 구현 · 예산 · 중단 · 보존) · 사용자 승인용 · 2026-10-06 · 실행 0\n\n> 이 문서는 **승인 요청**이다. 승인 전에는 구현 · 시험 · 설치 · 환경 재구축 · 자료 개봉 · Sobol 재생성 · 비용 측정 · 맞춤을 하지 않는다. 승인은 §10 의 문구 둘을\n> **따로** 채택하는 것으로 받는다 (구현 승인 → 비용 측정 승인). 게이트 · PyBaMM · COMSOL 과 무관 · RUN_SCOPE 0.\n\n## §0 무엇이고 왜 지금인가\n\n- **C5** = 부속 A §3-9 의 \"한 셀 · 한 단위의 비용 측정\" — **맞춤이다** (P0 와 다르다). 목적은 확인적 실행 (C4) 의 벽시계 예산표와 병렬 수를 정하는 것 하나뿐이다.\n  이 측정의 결과는 **확인적 분석에 쓰지 않는다** (Ĵ · H1–H4 · 상태표에 들어가지 않는다 · 확인적 실행은 그 단위를 처음부터 다시 돈다).\n- 선행: C3 (P0 출력 고정) 한정 수용 · 실행 기록 완결은 미완으로 신고 (상태 §22 · 회신 `prereview_reil_v2_p0_result_20261006` · `C3_OUTPUTS_ACCEPTED_WITH_EXECUTION_RECORD_GAPS`).\n  회신의 다음 단계가 이 요청문이다 — 그 회신이 열거한 항목 (셀 고정 · A0 · J_V · Phase A 128 · 옵션 · 내부 평가와 독립 재평가 상한 · 실행본 / 환경 / Sobol 봉인 · 시간 /\n  메모리 / 디스크 / 병렬 · 자원 관측과 종료 기록 · 실패 · 미실행 보존 · 확인적 분석 제외 · 종료 / 무효 증인 ↔ 구조 오류 구분 · 숨은 시작 · 재시도 · fallback 금지 ·\n  바꿀 수 있는 것 · 구현 승인 범위) 을 §1–§9 에 그대로 연결했다.\n- 대응표 13 / 13 `판정 불가` (P0 · 부속 D §3-4) 는 이 요청 옆의 **제한**이다 — 선택 경로를 바꾸지 않고, 논문의 다섯 번째 cycle · 방향이 확인됐다고 쓰지 않는다.\n\n## §1 범위 — 결과를 보기 전에 고정\n\n| 축 | 고정값 | 근거 |\n|---|---|---|\n| **셀** | **#1 LLI-1** (`15-LFP 16-Gr SOC-10` · `cell_idx` 0 · `step_idx` 6) | 규칙 (맞춤 결과를 보기 전 · P0 출력만 보고): 번호 순으로 첫 행 중 (i) A0 의 τ 0 · 0.02 · 0.05 가 모두 PRIOR_COMPATIBLE (ii) 경계 행 (#0 · #4 · #5 — G 가 자르는 행) 아님 (iii) P0 추출 OK. #0 은 (i) · (ii) 에서 빠지고 #1 이 첫 행이다. 다른 셀 fallback 없음 |\n| 영역 | **A0** — 그들 상자 `m_P ∈ [0.6, 1.1]` · `m_N ∈ [0.5, 1.1]` · `d_P ∈ [0.005, 0.5]` · `d_N ∈ [0, 1]` ∩ G `d_P − d_N ≥ 1e-4` | v2 §1-1 · §4-1 |\n| 목적 | **J_V = sqrt(f2(x))** — f2 = 그들 `objective_fun(x, Model, halfcell)` 의 반환 `[f1, f2, f3, f4]` 중 **둘째** (`util_LFP.py:217` `mean((Vf_sim − V_exp)²)` · 100 점) · 최적화하는 함수도 J_V | v2 §3 |\n| 단계 | **Phase A 만** — 128 지역 실행 = Sobol 64 (seed 0) + Sobol 64 (seed 1) · A0 상자 위 · G 를 어기는 시작점은 그대로 | A §3-2 1 · §3-9 |\n| 지역 방법 · 옵션 | SciPy `minimize(method=\"COBYQA\")` · bounds = A0 상자 · G = `LinearConstraint([0, 0, 1, −1], 1e-4, inf)` · 옵션 8 개 명시 (`maxfev` 2000 · `maxiter` 4000 · `f_target` −∞ · `feasibility_tol` 1e-12 · `scale` True · `initial_tr_radius` 1.0 · `final_tr_radius` 1e-6 · `disp` False) — C6 봉인 `COBYQA_OPTIONS.json` 의 `options` 와 같은 값 (실행 때 대조) | A §3-1 |\n| 입력 곡선 | 그들 경로 그대로 — `visualize_LFP_data` · `extract_battery_data` (셀 #1) · 노트북 셀 6 의 `halfcell = [q_PE_hc, V_PE_hc, q_NE_hc, V_NE_hc]` · P0 와 같은 세 파일 (sha256 다시 대조) | v2 §1-5 · P0 |\n\n**하지 않는 것:** 다른 셀 · A1 · A2 · J_D · 결합 · J_V^s · Phase B (프로파일 · 동시 양립 · 명목점 대조) · 공통 갱신 · E3a / E3b · H1–H4 · 상태 판정 · 문턱 T 계산 ·\npickle · 노트북 실행 · 추가 시작점 · 자동 재시도 · 다른 셀 / 영역 fallback · 확인적 분석에 이 결과를 쓰는 것.\n\n## §2 평가 함수 · 예외 · 증인 (결과 전에 고정)\n\n| 항목 | 규칙 |\n|---|---|\n| 평가 함수 | `J_V(x) = sqrt(util.objective_fun(x, M, halfcell)[1])` — `M` 은 셀 #1 의 `extract_battery_data` 결과. `objective_fun` 은 `M` 에 키를 써 넣는다 (`Vf_sim` · `Q_sim` 등 — f2 의 입력 `Q_exp_interp` · `V_exp_interp` 는 바꾸지 않음) → 실행마다 **새 깊은 사본**을 쓴다 |\n| 예외 | 평가 중 예외 (예: 205 행 `np.max` 의 빈 배열 — x 에 따라 날 수 있음) 는 **잡지 않고 그 지역 실행을 끝낸다** → `termination = solver_error` · `witness = invalid:SOLVER_ERROR` · 예외 형 · 메시지 · 그때까지의 평가 수 기록. 벌점 값으로 바꾸지 않는다 |\n| 비유한 | f2 가 nan / inf 면 그 값을 그대로 solver 에 넘긴다 (바꾸지 않음) · 기록에 비유한 평가 수를 센다 |\n| 독립 재평가 | 반환점 x (float 그대로 · clip · 투영 없음) 마다 같은 평가 함수 · 새 사본으로 **1 회** — solver 의 `fun` 을 쓰지 않는다 (A §2-1) |\n| 증인 | A §2-1 · §2-2 · §2-3 · B §1-2 그대로: 재평가 유한 · 상자 · G 잔차를 정확 유리수로 계산해 모두 ≤ `1e-10` → `valid` · 그 밖 `invalid:<NONFINITE · INFEASIBLE_RETURN · SOLVER_ERROR>` · `termination` (`converged` · `budget` · `solver_error` + 원 status · message) 은 따로 · `feasibility_class` (영역 A0 에 대해 `exact_feasible` · `numerically_accepted`) |\n| 외삽 라벨 | `n_out_PE` · `n_out_NE` (재평가 때 — 실험 Q 점 중 그들 슬라이스 `Q_*_hc_ad[Q0*_ID:Qmax*_ID]` 의 범위 밖 수) — 라벨이지 유효성 조건이 아니다 (A §2-1 3) |\n| **구조 오류** (증인 무효와 다름) | 스크립트 · 환경 · 입출력 · 작업자 프로세스 비정상 종료 · 기록 쓰기 실패 · 봉인 대조 실패 — 이것은 지역 실행의 결과가 아니다 → **파일럿 전체를 그 자리에서 멈춘다** (§6) · 남은 실행은 `미실행` 으로 기록 · 재시도 없음 |\n\n## §3 상한 (예상이 아니다)\n\n| 항목 | 상한 |\n|---|---:|\n| 지역 실행 | **128** (추가 시작 0 · 재시도 0) |\n| 내부 목적 평가 | 실행마다 `maxfev` 2000 → **≤ 256,000** |\n| 독립 재평가 | 반환점마다 1 → **≤ 128** (SOLVER_ERROR 는 반환점 없음 → 0) |\n| 외삽 라벨 계산 | 재평가와 같은 점 · ≤ 128 |\n| 벽시계 (준비 · 대조 포함 전체) | **7,200 s** — 넘으면 진행 중 실행을 끊고 `미실행 (시간 상한)` 으로 기록 · 연장 없음 |\n| 병렬 | **작업자 프로세스 4** (이 컨테이너 `nproc` 4) · 각 작업자 BLAS 스레드 1 (`OMP_NUM_THREADS` · `OPENBLAS_NUM_THREADS` · `MKL_NUM_THREADS` = 1) · 실행 → 작업자 배정은 실행 번호로 고정 (동적 재배정 · 재시도 없음) |\n| 메모리 | **4 GiB** (부모 + 작업자 RSS 합) — 1 초 간격 표본으로 **관측 · 감시**, 넘으면 멈춤 |\n| 디스크 | 새 산출 **≤ 1 GiB** · 시작 여유 ≥ 5 GiB — 시작 / 끝에 `df` · 산출 디렉터리 `du` 관측 |\n| 시도 | **한 번.** 실패 · 중단은 기록하고 멈춘다 — 다시 하려면 새 승인 |\n\n## §4 실행본 · 환경 · Sobol 봉인\n\n| 항목 | 고정 |\n|---|---|\n| 파일럿 스크립트 | `bms-balancing/scripts/reil_c5_pilot.py` (구현 승인 뒤 작성) — **실행 전 커밋** · 그 blob · sha256 을 실행 기록에 |\n| 그들 코드 · 자료 | `util_LFP.py` `3c19e45e…` · `LFP_Data.xlsx` `fd50e095…` (10,841,377 B) — 실행 시작에 다시 대조 · 노트북은 이 단계에 쓰지 않는다 |\n| 환경 | 새 봉인 `bms-balancing/reil_c6_rebuild_20261006/` (MANIFEST `a14617ec…` · lock `b392f7b0…`) 의 venv. 컨테이너가 바뀌어 venv 가 없으면 P0 와 같은 절차로 재구축 → 새 경로에 emit → 그 봉인 (`reil_c6_rebuild_20261006/`) 과 대조 (허용 차이 = 상태 §19 의 보완 규칙 그대로 · 그 밖이면 멈춤) → 변이 증명 12 / 12. venv 가 있으면 같은 venv 에서 `check` 만. **어느 쪽이든 lock sha 를 실행 기록 자체에 적는다** |\n| Sobol (Phase A · A0) | 시작점 = 봉인 파일 `sobol_A0_their_box_seed0.npy` · `…seed1.npy` (두 봉인에서 바이트 동일). 실행 전 같은 venv 에서 `qmc.Sobol(4, scramble=True, rng=seed)` 로 다시 만들어 **봉인 배열과 바이트 대조** (다르면 멈춤) · 실행 기록에 두 배열 sha256 · 실행 번호 ↔ (seed, 행 index) 대응 |\n| 그 밖의 Sobol | 프로파일 슬라이스 · 동시 양립 · label seed 배열은 **만들지 않는다** (§9 Q1) |\n\n## §5 구현 (구현 승인의 범위)\n\n| 하는 것 | 하지 않는 것 |\n|---|---|\n| `scripts/reil_c5_pilot.py` — 평가 함수 래퍼 · 예외 · 재평가 · 정확 잔차 · 증인 / 종료 분류 · 작업자 4 · 자원 감시 · 시간 상한 · 기록 · 봉인 대조 | 그들 `util_LFP.py` 수정 · 다른 단계 (Phase B · E3a) 코드 · 확인적 실행 경로 |\n| `tests/test_reil_c5_pilot.py` — **합성 입력만** (RED 먼저): 정확 잔차 · 증인 / 종료 분류 · 예외 → SOLVER_ERROR · 비유한 · 구조 오류 → 전체 중단 · 시간 상한 → `미실행` · 실행 번호 ↔ Sobol 대응 · 옵션 표 = C6 봉인 `options` 값 · 셀 고정 규칙이 P0 결과 JSON 에서 #1 을 고름 | REIL xlsx 를 여는 시험 · 실제 비용 측정 |\n| 합성 건조 실행 — 보존된 util 사본 (`reviews/…/util_LFP.py.txt`) + **합성 반쪽 · 전지 곡선** + 시작 4 · `maxfev` 작게 — 끝까지 도는지 · 기록 형식 확인 (시간 숫자는 비용 근거로 쓰지 않는다) | 그 숫자로 예산표를 바꾸는 것 |\n| 실행 기록 래퍼 — **시작 / 종료 HEAD · 시작 / 종료 작업 트리 파일 목록 · 환경 lock sha · 스크립트 sha · 자료 sha · 자원 관측 (메모리 최대 · 시작 / 끝 디스크)** 을 실행 기록 자체에 (상태 §22 의 누락을 되풀이하지 않는다) | 지난 P0 기록의 사후 보충 |\n\n구현이 끝나면 합성 시험 · 건조 실행 · bms 전체 시험 결과를 보고하고 **멈춘다** — 비용 측정은 §10 둘째 문구의 승인 뒤.\n\n## §6 중단 조건 (하나라도 걸리면 그 자리에서 기록하고 멈춘다)\n\n1. 세 식별 (util · xlsx · 스크립트 커밋) 불일치 · 환경 `check` 실패 · 허용 차이 밖 · Sobol 재생성 배열이 봉인과 다름 · 옵션 표가 C6 봉인의 `options` 와 다름 · 고정 판에서 옵션 이름 / 의미가\n   다르거나 알 수 없는 옵션 경고 (A §3-1 fail-closed).\n2. 셀 고정 규칙이 #1 이 아닌 행을 고름 (P0 결과 JSON 에서 다시 계산).\n3. 구조 오류 (§2 표 끝).\n4. 벽시계 7,200 s · 메모리 4 GiB · 디스크 상한 초과.\n5. 판정 · 수치 규칙을 바꿔야 할 것 같은 상황 — 바꾸지 않고 멈춰 보인다 (바꾸면 새 등록).\n\n`solver_error` · `budget` · 무효 증인은 **중단이 아니라 결과**다 (그 실행만 기록하고 다음 실행). 128 전부 무효여도 파일럿은 끝까지 돌고 그 사실을 보고한다 (계산 UNFIT\n판정은 확인적 실행의 몫 — 이 파일럿은 상태를 판정하지 않는다).\n\n## §7 기록 · 보존\n\n- **실행 기록 (`evidence/reil_c5_<날짜>/`):** argv · cwd · 시작 / 종료 UTC · 시작 / 종료 HEAD · 시작 / 종료 `git status --porcelain` 원문 · 스크립트 · 자료 · lock sha · stdout /\n  stderr 원문 · 외부 rc · 자원 표본 요약 (최대 RSS · 시점) · `df` / `du` · `.log` 는 `git add -f`.\n- **실행마다 (128 행):** 실행 번호 · seed · 행 index · 시작점 x0 · 작업자 · 시작 / 끝 시각 · 벽시계 · CPU 시간 · `nfev` · `nit` · solver 원 status · message · 실제로 받은 옵션 ·\n  반환 x · solver `fun` · 재평가 J_V · 상자 · G 의 정확 잔차 (분수 문자열) · `termination` · `witness` · `feasibility_class` · `n_out_PE` · `n_out_NE` · 비유한 평가 수 · 예외\n  (형 · 메시지) · `미실행` 사유.\n- **요약 (비용용 — 판정 아님):** 실행당 · 평가당 벽시계 · CPU 분포 · 상한 (`budget`) 도달 비율 · 무효 비율 · 작업자 4 의 실제 병렬 효율 · 이것으로 만든 C4 예산표 **제안**.\n  Ĵ · 증인 순위 · 명목과의 거리 · 상태는 **요약하지 않는다** (확인적 분석 제외).\n- 원자료는 저장소에 넣지 않는다. 결과 JSON · 로그는 저장소 (`-text` 규칙 먼저). 실패 · 중단 · 미실행 기록도 그대로 보존 — 고치거나 다시 돌려 덮지 않는다.\n\n## §8 비용 결과 뒤 바꿀 수 있는 것\n\n**벽시계 예산표와 병렬 수뿐** (A §3-9). 문턱 · 수치 규칙 · 옵션 · 시작 · 격자 · 상태 정의 · 셀 · 단위 수는 바꾸지 않는다 — 바꾸면 이 측정은 탐색 / 파일럿이고 바뀐 등록은\n새 판이다. C4 (확인적 실행) 는 다시 별도 승인 — 이 파일럿의 실행을 재사용하지 않는다.\n\n## §9 열린 질문 (Codex · 사용자)\n\n| # | 질문 | 우리 제안 |\n|---|---|---|\n| Q1 | 부속 B §2-1 의 \"맞춤 전 (P0 뒤 · **첫 지역 실행 전**)\" 정식 봉인 — 파일럿이 첫 지역 실행이다. 자료에 기대지 않는 고정 배열 **전부** (Phase A 의 세 상자 · 프로파일 슬라이스 Sobol 2 · 동시 양립 Sobol 16 · label seed) 를 지금 봉인해야 하는가, 아니면 파일럿은 쓰는 배열 (Phase A · A0 · 이미 두 봉인에서 식별된 바이트) 만 대조하고 전체 정식 봉인은 확인적 실행 승인 때인가 | **후자** — 파일럿은 확인적 실행에서 제외되고 그 단위를 처음부터 다시 돈다 (A §3-9). 확인적 실행 전에 전체를 봉인한다. Codex 확인을 받는다 |\n| Q2 | 목적을 J_V (= sqrt(f2)) 로 최적화하는가 f2 로 하는가 | **J_V** — v2 §3 의 목적 정의와 같게. 최소점은 같지만 COBYQA 경로가 다를 수 있으므로 확인적 실행도 같은 것을 쓴다 |\n| Q3 | 평가 중 예외를 벌점으로 바꾸지 않고 실행을 끝내는 규칙 (§2) | 채택 — A §2-1 의 SOLVER_ERROR 정의 그대로. 무효 비율이 이 파일럿의 관측 대상이다 |\n| Q4 | 병렬 4 · BLAS 스레드 1 | 채택 — 바꿀 수 있는 축이 병렬 수이므로 기준점으로 4 를 잰다 |\n\n## §10 사용자 채택용 문구 (따로 · 이대로 또는 고쳐서)\n\n**(1) 구현 승인:**\n\n> REIL C5 비용 파일럿의 구현을 이 문서 (`bms-balancing/docs/REIL_C5_PILOT_APPROVAL_REQUEST_20261006.md`) §5 의 범위로 승인합니다. 스크립트와 합성 시험 (RED 먼저) · 합성\n> 건조 실행 · bms 전체 시험까지만 하고, REIL 자료를 열거나 비용 측정을 하지 말고 멈추세요.\n\n**(2) 비용 측정 승인 (구현 결과를 본 뒤):**\n\n> REIL C5 비용 파일럿을 이 문서 §1–§8 의 범위로 한 번 승인합니다. 셀 #1 · A0 · J_V · Phase A 128 실행 · 작업자 4 · 벽시계 7,200 s · 메모리 4 GiB 를 상한으로, §6 의 조건에\n> 걸리면 기록하고 멈추세요. 결과는 확인적 분석에 쓰지 않고, 바꿀 수 있는 것은 예산표와 병렬 수뿐입니다.\n\n## §11 승인 뒤 순서\n\n(1) 승인 기록 (상태 새 절 · 코드 변경 전) → 보존 규칙 커밋 → RED → 구현 → GREEN → 합성 건조 실행 → bms 전체 → 보고 · **멈춤** → (2) 승인 기록 → 환경 `check` (또는 재구축\n· 대조 · 변이 증명) → 식별 · Sobol · 옵션 대조 → 파일럿 한 번 → 보존 · 결과 절 → (사용자 결정) Codex 검토 → C4 승인 요청.\n"
+        }
+      ]
+    },
+    {
+      "path": "bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md",
+      "git_blob_sha1": "b07edd659e714dbe9598bcedd02cfb4f2bbc32d1",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/7def9238c8fdac605decc5bf17c1428a93faad1d/bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md",
+      "content_excerpts": [
+        {
+          "start_line": 306,
+          "end_line": 317,
+          "text": "## §19 §18 정지에 대한 사용자 결정 (가) — 허용 차이 보완 · 새 봉인을 P0 기준으로 (2026-10-06 · 재개 전 · 덧붙임 — 위 §0–§18 은 그대로)\n\n- 사용자 원문: \"reil은 가\". 제시한 (가) = 허용 차이 (승인 요청문 §2-4) 에 한 줄을 더하고 계속한다.\n- **보완 규칙 (자료를 열기 전에 정함):** lock 의 RECORD sha 차이는 (i) 차이가 난 배포판 집합이 새 venv 에서 RECORD 에 `../../../bin/` 콘솔 스크립트\n  항목이 있는 배포판 집합과 **정확히 같고** (ii) Sobol 배열 6 · `SOBOL_PHASE_A.json` · `PROFILE.json` · `COBYQA_OPTIONS.json` 이 바이트 동일하며\n  (iii) 배포판 집합 · 판 · `#@ files` 집계가 같을 때만 허용한다. §18 의 관측은 셋 다 충족 (cffi · fonttools · numpy · pip = bin 항목이 있는 넷 ·\n  나머지 바이트 동일 · 집계 7187 / 5301 / 1 / 1). 그 밖의 차이는 여전히 멈춘다.\n- 그 뒤 P0 의 환경 기준 = **새 봉인 `reil_c6_rebuild_20261006/`** (MANIFEST sha 는 P0 결과에 기록). 옛 봉인 `reil_c6_20261005/` 는 이력 · 고치지 않음.\n  Sobol 정식 봉인 (부속 B §2-1) 의 대조 대상 sha 는 두 봉인에서 같다.\n- 한계 (그대로 밝힘): 옛 RECORD 원문이 없어 네 배포판의 bin 밖 항목이 옛 설치와 같았는지는 직접 대조하지 못했다 — 같은 판 wheel 이고 설치 파일\n  전부가 새 RECORD 와 대조됐다 (verified 7187) 는 것까지가 근거다. P0 결과를 Codex 에 보낼 때 이 결정을 함께 밝힌다.\n- 재개 순서: 새 봉인 변이 증명 (기대 12 / 12) → P0 스크립트 + 합성 시험 (RED 먼저) → 세 파일 → P0 한 번."
+        },
+        {
+          "start_line": 349,
+          "end_line": 398,
+          "text": "## §22 P0 결과 검토 회신 접수 · **실행 기록 누락 신고** · §20 정정 (2026-10-06 · 덧붙임 — §20 의 한 칸만 취소선 정정 · 그 밖은 그대로)\n\n- 묶음: `reviews/prereview_reil_v2_p0_result_20261006/` (`REIL_P0_RESULT_REVIEW_20261006.zip` 113,541 B · sha256 `a903a6ac0c6806d404d3f4c20ce6d205a82d7ac50f68fd3a8d5072f5b9bc4ba9` · 풀린 12 파일\n  manifest 크기 · sha256 일치 · CRLF 0 · 비밀 패턴 0 · 동봉 `verify_received_text.ps1` 실행 안 함). 규칙 `3625944ec` → 보존 `b3cace600`. 대상 커밋 `b38855c2c`.\n- **판정:** `C3_OUTPUTS_ACCEPTED_WITH_EXECUTION_RECORD_GAPS` — C3 (P0 출력) = 고정 제출에 한정 수용 (99 칸을 부속 A 구간식으로 검산 · 83 / 16 / 0 · 분수 끝점 일치 ·\n  결과 · 소스 sha 일치. σ̂_v · 추출 · 대응표는 제출 결과와 정적 흐름의 수용 — 원 xlsx 재계산 아님) · 실행 준수 = `INCOMPLETE_UNVERIFIED_NOT_A_NUMERICAL_FAILURE` ·\n  환경 결정 (가) = 이번에 승인한 새 기준 봉인에 한정 수용 (옛 RECORD 가 없어 bin 밖 바이트의 옛 환경 동일성은 증명 못 함 — 한계 유지) · P0 재실행 불요 ·\n  C5 · E3a · E3b · 구현 승인 아님.\n\n### 22-1. 실행 기록 누락 (P0-N1 · P2) — 승인 요청문 §7 \"종료 직후 보존\" 중 지키지 못한 것\n\n| 요구 | 당시 기록 | 상태 |\n|---|---|---|\n| 종료 HEAD | 없음 (`12_p0_run.meta.txt` 는 시작 HEAD `ac62645dc` 만) | **누락.** git reflog · 커밋 순서 (`ac62645dc` 08:02:41 → `240429d3f` 08:04:43) 는 간접 근거이지 당시 실행 기록의 대체물이 아니다 |\n| 작업 트리 상태 | 시작 때 dirty **줄 수 2** 만 · 파일 목록 없음 · 종료 때 기록 없음 | **누락** — 두 줄이 무엇이었는지 기록으로 알 수 없다 |\n| 환경 lock 결속 | 실행 기록 · 결과 JSON 어디에도 lock sha 가 없다 (결과 JSON `versions` 는 python · numpy · scipy · pandas 판만) | **누락** — 새 봉인 (`reil_c6_rebuild_20261006/` · 실행 전 커밋) 과의 연결은 실행 명령의 venv 경로와 커밋 순서뿐 |\n| 메모리 4 GB · 디스크 3 GB 상한 | 측정 · 감시하지 않음 (실제로 건 상한은 `timeout 1800` 시간 하나) | **UNVERIFIED** — §20 의 \"메모리 · 디스크 상한 안\" 을 철회하고 위처럼 정정했다 |\n| 맞춤 · 목적함수 · 최적화 호출 0 | 결과 JSON 의 `fitting_calls` · `objective_calls` · `optimizer_calls` = 0 은 스크립트의 **고정값** | 실행 감시가 아니다 (코드에 그런 호출이 없다는 정적 사실까지) |\n\n- 원인: 제 실행 기록 래퍼 (`runlog.sh` · 스크래치패드) 가 시작 쪽만 적고 종료 쪽은 시각 · rc 만 적었다.\n- **고치지 않는 것:** P0 결과 · 로그 · meta · 봉인 바이트 (원본 보존). 지금 측정하거나 P0 를 재실행해 과거 누락을 메우지 않는다. 사후 연결표가 필요해지면 \"사후 작성\"\n  으로 표시해 따로 만든다 (이번에는 만들지 않음).\n- 다음 실행 (C5 등) 의 기록에는 종료 HEAD · 시작 / 종료 작업 트리 파일 목록 · 환경 lock sha · 자원 관측을 실행 기록 자체에 넣는다 (C5 승인 요청문에 반영).\n\n### 22-2. AST 검사의 범위 (P0-N2 · P3)\n\n메서드 전용 클래스 허용은 **고정 util sha (`3c19e45e…`) 와 수동 열람 기록에 한정해** 수용됐다. 이 AST 검사는 좁은 구문 선별이지 import 안전 보증이 아니다 — 함수 /\n메서드 데코레이터 · 기본값 · 주석 · base 클래스 생성 훅은 막지 않는다. 다른 파일로 일반화하지 않는다.\n\n### 22-3. 시험 범위 (그대로 남김)\n\n최종 한정 시험 = `test_reil_p0.py` 37 passed (venv python · `11_green_venv`). bms 전체 = 583 passed · 1 failed (시험 수 줄) · 1 skipped (`08_bms_full`) → 수 정정 뒤 그\n한 시험만 통과 (`13_count_fix`) — **전체 재실행 통과가 아니다.** 첫 RED (수집 오류) 와 중간 GREEN 로그가 덮인 사실도 그대로 둔다.\n\n### 22-4. 대응표 · 다음\n\n- 13 / 13 `판정 불가` 는 부속 D §3-4 대로 C5 · E3a 요청 옆에 제한으로 둔다. 선택 경로는 바꾸지 않으며, 논문의 다섯 번째 cycle · 방향이 확인됐다고 쓰지 않는다.\n- 다음 = **C5 (비용 파일럿) 승인 요청문 준비** — 셀 하나를 결과 확인 전에 고정 · A0 · J_V · Phase A 128 시작만 · 기존 옵션 · 내부 목적 평가와 독립 재평가 각각의 상한 ·\n  실행본 / 환경 / Sobol 봉인 · 단계 · 전체 시간 / 메모리 / 디스크 / 병렬 수 · 실제 자원 관측과 종료 기록 · 실패 · 미실행 보존 · 확인적 분석 제외 · 종료 / 무효 증인과\n  구조 오류 구분 · 숨은 추가 시작 · 자동 재시도 · 다른 셀 fallback 금지 · 비용 결과 뒤 바꿀 수 있는 것은 시간 예산과 병렬 수뿐 · 필요 구현 · 제한 검증의 승인 범위 따로.\n  문서 작성 뒤 멈추고 사용자 승인을 받는다.\n\n## §23 C5 비용 파일럿 승인 요청문 초안 — 사용자 승인 대기 (2026-10-06 · 실행 0 · 덧붙임)\n\n- 초안: `docs/REIL_C5_PILOT_APPROVAL_REQUEST_20261006.md` — §22-4 의 회신 항목을 그대로 연결: 셀 #1 LLI-1 (결과 전 고정 규칙 · P0 결과 JSON 으로 다시 계산해 #1 확인) · A0 ·\n  J_V = sqrt(f2) · Phase A 128 · 옵션 8 · 예외 = SOLVER_ERROR (벌점 없음) · 내부 평가 ≤ 256,000 · 독립 재평가 ≤ 128 · 작업자 4 · 벽시계 7,200 s · 메모리 4 GiB (감시) ·\n  디스크 · 실행본 / 환경 / Sobol (Phase A A0 배열 바이트 대조) · 구조 오류 ↔ 무효 증인 구분 · 종료 기록 (§22 누락 반영) · 확인적 분석 제외 · 바꿀 수 있는 것 = 예산표 · 병렬 수.\n- 승인은 **둘로 나눔**: (1) 구현 (스크립트 · 합성 시험 · 합성 건조 실행 · bms 전체 — 자료 열기 0) → 보고 · 멈춤 → (2) 비용 측정 한 번.\n- 열린 질문 Q1 (부속 B §2-1 정식 봉인 시점 — 파일럿이 첫 지역 실행) 은 Codex 확인 대상.\n- 상태: 사용자 승인 전 — 구현 · 시험 · 설치 · 자료 개봉 · Sobol 재생성 · 측정 0."
+        },
+        {
+          "start_line": 408,
+          "end_line": 412,
+          "text": "## §25 C5 요청문 — 사용자 승인 전 Codex 사전 검토 (2026-10-06 · 사용자 결정 · 실행 0)\n\n- 사용자 원문: \"그럼 저거 codex에 물어보고 할게\" — C5 비용 파일럿 요청문 (`docs/REIL_C5_PILOT_APPROVAL_REQUEST_20261006.md` · §23) 을 구현 승인 (§10 (1)) 전에 Codex 에\n  검토받는다. 특히 Q1 (부속 B §2-1 정식 봉인 시점 — 파일럿이 첫 지역 실행) · Q2–Q4 · 요청문이 P0 회신 (§22-4) 의 항목을 빠짐없이 연결했는지.\n- 회신 전에는 구현 · 시험 · 설치 · 자료 개봉 · Sobol 재생성 · 측정 0."
+        }
+      ]
+    },
+    {
+      "path": "bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2.md",
+      "git_blob_sha1": "872ca88b3b5c57aebf295bd0109e95a830b3ae13",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/7def9238c8fdac605decc5bf17c1428a93faad1d/bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2.md",
+      "content_excerpts": [
+        {
+          "start_line": 119,
+          "end_line": 134,
+          "text": "E3a 가 완료되지 않으면 H 분석을 시작하지 않는다 (같은 자료 경로 · 같은 `objective_fun` 을 쓰므로). 실패는 그대로 raw 에 적는다.\n\n## §3 목적함수 · 문턱 (R3)\n\n| 이름 | 식 | 단위 · 비고 |\n|---|---|---|\n| **J_V** (V–Q) | `sqrt(f2(x))` = 100 점 RMSE | [V] |\n| **J_D** (dV/dQ) | `sqrt(f4(x))` = 마스크 M = {i : `dVdQ_exp_interp[i] < 0.4`} 위 RMSE | [V/mAh] · M 이 비거나 값이 비유한이면 그 셀 · 목적은 **UNFIT** |\n| **결합** | 벡터 제약 집합 `S_VD = {x ∈ A : J_V ≤ T_V, J_D ≤ T_D}` — 가중 합을 쓰지 않는다 | 점 추정 (H1 결합) = `argmin max(J_V/T_V, J_D/T_D)` — 각 목적의 문턱으로만 무차원화 · 규칙은 결과 전에 고정 |\n| f1 · f3 | E3 에서만 그대로 (f1 은 제곱 오차와 RMS 를 섞은 합) | H 분석에 쓰지 않는다 |\n\n| 문턱 | 정의 | 쓰는 곳 |\n|---|---|---|\n| 잡음 기준 | `T_V = J_V_hat + ε_noise` · `ε_noise = 2 σ̂_v` | **H2 주 판정** (V–Q) |\n| 상대 | `T_o(δ) = (1 + δ) · J_o_hat` · δ ∈ {0.01, 0.05, 0.1, 0.2} 곡선 · 판정 δ = 0.1 | H3 (J_V · J_D · 결합) |\n| 퇴화 분기 | J_o_hat 이 유한한 양수가 아니면 상대 문턱을 정의하지 않는다 → 그 셀 · 목적 UNFIT (상대 판정 없음) | floor 숫자를 만들지 않는다 |"
+        }
+      ]
+    },
+    {
+      "path": "bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2_ANNEX_A.md",
+      "git_blob_sha1": "9f49d6061cf3c9e69ed35e3b00e5e0addafd8fd3",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/7def9238c8fdac605decc5bf17c1428a93faad1d/bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2_ANNEX_A.md",
+      "content_excerpts": [
+        {
+          "start_line": 108,
+          "end_line": 148,
+          "text": "기록 점 x (지역 실행 반환점 · 격자점 · ray 점) 가 **유효 증인**인 것은 다음이 모두 참일 때다. x 를 고치지 (clip · 투영) 않는다 — 반환점\n그대로 판정한다.\n\n1. **독립 재평가:** solver 가 보고한 `fun` 을 쓰지 않는다. 같은 고정 평가 함수로 x 에서 목적을 다시 계산한 값이 유한하다 (H4 는 §4-2\n   의 교차 조건까지).\n2. **선형 제약:** §2-2 의 수용 규칙 안 (잔차는 x 의 float 좌표를 정확한 유리수로 바꿔 계산한다).\n3. 외삽 계수 `n_out_PE` · `n_out_NE` 는 유효성 조건이 아니라 **라벨**이다 (v2 §4-1 그대로 — `n_out > 0` = 외삽 의존).\n\n유효하지 않은 점은 Ĵ · 증인 · 상태의 근거가 되지 못한다. 버리지 않고 이유별로 센다: `NONFINITE` (재평가 비유한 · 교차 실패) ·\n`INFEASIBLE_RETURN` (§2-2 밖) · `SOLVER_ERROR` (예외 — 반환점 없음).\n\n### 2-2. 수치 규칙 (단위 · 근거) — v2 192 \"영역 잔차 0\" 대체\n\n| 검사 | 단위 | 수용 |\n|---|---|---|\n| 상자 `xl ≤ x ≤ xu` (소거된 좌표의 상자 포함 — §3-3) | m: 무차원 · d: 원 코드의 용량 좌표 (q_PE_hc 와 같은 단위 — v2 §1-4 의 mAh 환산) | 좌표마다 위반 ≤ `1e-10` (그 좌표의 단위) |\n| G `d_P − d_N ≥ 1e-4` | d 단위 | 위반 ≤ `1e-10` |\n| 프로파일 등식 `h_k(x) = t` | 무차원 (h 좌표) | 위반 ≤ `1e-10` — 등식은 소거로 만족시키므로 (§3-3) 이 검사는 반올림 확인이다 |\n| 명목 τ 상자 `‖h(x) − h_true‖∞ ≤ τ` | 무차원 | 위반 ≤ `1e-10` |\n| 목적 문턱 `J ≤ T` | 목적 단위 (V · V/mAh · ρ 무차원) | 고정 환경의 float 비교 · 같음은 충족 · `|T − J| ≤ 1e-9` 이면 **경계 근접** 라벨 (판정은 그대로 · 근접 증인에만 기대는 상태는 그 라벨을 달고 보고) |\n\n- 근거: 좌표와 h 는 크기 O(1) 이고 double 의 반올림 단위는 2⁻⁵² ≈ 2.2e-16 이다. `1e-10` 은 그 약 10⁵ 배라 계산 잔차 (예: scale 변환\n  왕복의 1 ulp 넘침) 를 흡수하고, 판정 해상도 (G 여유 1e-4 · τ ≥ 0.02 · LII 로 옮기면 `1e-10/max_q`) 보다 6 자릿수 이상 작아 어떤\n  상태도 바꿀 수 없다. `1e-9` (목적 단위) 는 H4 구현 대칭 기준 (§4-4) 과 같은 값이다 — 목적 계산의 반올림 (상대 ~1e-15) 보다 충분히\n  크고, 의미 있는 잔차 차이 (mV 급) 보다 충분히 작다.\n- **±0.02 · ±0.05 는 성능 판정 허용오차이지 이 표의 계산 오차 허용치가 아니다** — 섞지 않는다. 이 값들은 결과를 본 뒤 넓히지 않는다.\n- solver 의 종료 판단 (§3-1 `feasibility_tol` 등) 은 이 수용 규칙과 **독립**이다 — solver 가 수렴 · feasible 이라고 해도 위를 못 넘으면\n  증인이 아니다.\n\n### 2-3. 종료 상태 ↔ 증인 유효성 분리 — v2 197 대체\n\n지역 실행마다 두 필드를 따로 적는다.\n\n| 필드 | 값 |\n|---|---|\n| `termination` | `converged` (solver 가 자기 기준으로 끝냄) · `budget` (`maxfev` · `maxiter` 도달) · `solver_error` — solver 의 원 status · message 를 함께 그대로 |\n| `witness` | `valid` · `invalid:<NONFINITE · INFEASIBLE_RETURN · SOLVER_ERROR>` |\n\n- `budget` 으로 끝났어도 반환점이 유효하면 **증인으로 쓴다** — \"수렴\" 이라고 쓰지 않고 `budget` 을 함께 적는다 (실용 선택: 유효 증인은\n  보존하고 최적화 미완을 병기).\n- UNFIT (계산) = **그 단위의 Phase A 128 반환점 중 유효 증인 0** — 종료 상태와 무관하다. v2 의 \"지역 방법 전부 실패\" 를 이것으로 바꾼다."
+        },
+        {
+          "start_line": 181,
+          "end_line": 209,
+          "text": "지역 방법 = SciPy `minimize(method=\"COBYQA\")`. 옵션은 판 기본값에 기대지 않고 **모두 명시**한다.\n\n| 옵션 | 값 | 비고 |\n|---|---|---|\n| `maxfev` | 2000 | v2 와 같음 · 변수 수 (4 · 프로파일 소거 뒤 3 · 다듬기 1) 와 무관하게 고정 — §3-8 상한의 근거 |\n| `maxiter` | 4000 | 고정 |\n| `f_target` | −∞ | 목표값 조기 종료 없음 |\n| `feasibility_tol` | 1e-12 | solver 의 내부 판단 — 증인 수용 (§2-2 · 1e-10) 보다 엄격하게 두어 solver 의 \"feasible\" 반환이 수용 규칙 안에 들게 한다 · 둘은 독립 |\n| `scale` | True | m (폭 0.5–1.2) · d (폭 0.5–2) 의 범위가 달라 bounds 로 [−1, 1] 정규화 |\n| `initial_tr_radius` | 1.0 | 정규화 좌표 기준 |\n| `final_tr_radius` | 1e-6 | 정규화 좌표 기준 |\n| `disp` | False | |\n\n- **판 고정은 실행 승인 때** 한다 (환경 고정 — PyBaMM 라운드의 목적별 분리 환경과 같은 방식). 고정 판에서 위 옵션의 이름 · 의미가 다르면\n  **실행하지 않고** 이 표를 새 등록으로 고친다 (fail-closed). 실행 기록에는 solver 가 실제로 받은 옵션을 남겨 이 표와 대조한다 — 기록이\n  사전 결정을 대신하지 않는다.\n- 이 값들의 적합성 (무효 반환 비율 등) 은 실행 0 이라 확인하지 않았다. 비용 측정 (§3-9) 을 본 뒤 바꾸면 그 뒤 실행은 새 등록이고 그\n  측정은 파일럿이다.\n- 준-무작위 시작점: `scipy.stats.qmc.Sobol(d, scramble=True, <seed>)` · 점 수는 2 의 거듭제곱 (64 · 2 · 16). 판에 따라 seed 인자 이름과\n  생성 배열이 다를 수 있으므로 **모든 시작점 배열을 맞춤 전에 만들어 sha256 으로 봉인**한다 (max_q 에 기대는 슬라이스 · τ 상자\n  시작점은 P0 뒤 · 맞춤 전).\n\n### 3-2. 계산 순서 (셀 · 영역마다)\n\n1. **Phase A (점 추정 · H1):** J_V (A0 · A1 · A2) · J_D (A0) · J_V^s (A0 · A1) 각각 128 실행 = Sobol 64 (seed 0) + Sobol 64 (seed 1) ·\n   4 차원 · 영역 상자 위 (G 를 어기는 시작점은 그대로 둔다 — v2 그대로). → Ĵ⁽⁰⁾.\n2. **결합 Phase A:** A0 의 J_V · J_D Phase A 가 끝난 뒤 ρ (분모 Ĵ⁽⁰⁾) 로 128 실행 (같은 seed 0 · 1 배열).\n3. **Phase B (집합):** 단위마다 프로파일 (§3-3) → 동시 양립 (§3-4) → 명목점 정확 대조 (§3-5). H4 는 그 뒤 ray (§4-6).\n4. **공통 갱신 · 판독 (§1-1):** 그 (셀 · 영역) 의 모든 단위가 끝난 뒤 한 번."
+        },
+        {
+          "start_line": 275,
+          "end_line": 285,
+          "text": "### 3-9. 비용 측정의 승인 경계 (v2 216 대체)\n\n한 셀 · 한 단위의 비용 측정은 **맞춤이다** — P0 와 다르게 본다. 이 문서는 그 측정을 등록하지도 승인 요청하지도 않는다. 측정 승인을\n요청할 때 그 요청문이 **측정 전에** 고정해야 할 것과 우리 제안:\n\n| 항목 | 제안 (승인 대상 · 이 문서로 승인되지 않음) |\n|---|---|\n| 셀 · 영역 · 목적 · 단계 | 셀 하나 · A0 · J_V · Phase A 128 실행만 (집합 단계 없음) |\n| 최대 작업 · 벽시계 | 128 실행 · 실행 수 상한 · 벽시계 상한을 요청문에 숫자로 |\n| 확인적 분석 포함 여부 | **제외** (파일럿) — 확인적 실행은 그 단위를 처음부터 다시 돈다 |\n| 측정 뒤 바꿀 수 있는 것 | 벽시계 예산표 · 병렬 수만. 문턱 · 수치 규칙 · 옵션 · 시작 · 격자 · 상태 정의는 바꾸지 않는다 — 바꾸면 그 측정은 탐색 / 파일럿이고 바뀐 등록은 새 판 |"
+        }
+      ]
+    },
+    {
+      "path": "bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2_ANNEX_B.md",
+      "git_blob_sha1": "b25f9c4eb56d0cfe609b47c5d8463e9f17fac53b",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/7def9238c8fdac605decc5bf17c1428a93faad1d/bms-balancing/docs/REIL_EXTERNAL_VALIDATION_PROTOCOL_v2_ANNEX_B.md",
+      "content_excerpts": [
+        {
+          "start_line": 54,
+          "end_line": 77,
+          "text": "### 1-2. 증인의 두 등급 — 주장이 서는 정확한 집합 기준 (A 123–126 보충)\n\n기록 점마다 **원 좌표** (float 그대로) 와 **제약별 정확 잔차** (상자의 좌표마다 · G · 프로파일 등식 `h_k(x) − t` · 명목 τ 상자의 좌표마다\n— 정확 유리수 · 단위는 A §2-2 그대로) 를 남긴다. 반환점은 여전히 고치지 않는다 (clip · 투영 없음). 수용 (`witness = valid`) 은 A\n그대로다 — 잔차가 모두 `1e-10` 이하 · 넘으면 `invalid:INFEASIBLE_RETURN`.\n\n등급은 **그 증인이 받치는 주장의 정확한 집합**에 대해 매긴다 (모두 정확 유리수 비교):\n\n| 주장 | 정확한 집합 |\n|---|---|\n| 점 추정 · Ĵ (A §1-1) | 영역 A (상자 · G) |\n| 개별 양립 (좌표 k) | 영역 A 且 `|h_k(x) − t_k*| ≤ τ` — **실제 h_k(x)** 로 본다 (격자 t 가 아니다) |\n| 동시 양립 | 영역 A 且 `‖h(x) − h*‖∞ ≤ τ` |\n| 프로파일 `충족` · WIDE | 영역 A — 투영값은 실제 h_k(x) 로 보고한다 (격자 t 는 탐색 장치) |\n\n| `feasibility_class` (주장마다) | 조건 |\n|---|---|\n| `exact_feasible` | 그 정확한 집합 안 — 해당 잔차가 모두 ≤ 0 |\n| `numerically_accepted` | 해당 잔차 중 하나라도 0 초과 (모두 `1e-10` 이하) — 정확한 집합 밖일 수 있다 |\n\n- 프로파일 등식 잔차 `h_k(x) − t` 는 **기록하되 등급을 정하지 않는다.** k = LII 의 d_N 소거는 float 식이라 이 잔차가 반올림 크기로 0 이\n  아닌 것이 보통이다 — 그것으로 등급을 매기면 LII 프로파일의 모든 증인이 일괄로 `numerically_accepted` 가 된다 (우리 재독에서 찾음). 주장은\n  격자 t 가 아니라 실제 h_k(x) 위에 선다 — 재검토의 \"프로파일 t 와 실제 h(x) 가 어긋나는 경우\" 는 이렇게 다룬다: 실제 h_k(x) 가 주장의\n  구간 경계를 반올림만큼 넘으면 그 주장에 대해 `numerically_accepted` 다."
+        },
+        {
+          "start_line": 93,
+          "end_line": 102,
+          "text": "## §2 RV2A-N2 — 적응적 시작점의 봉인 시점 · 부족 규칙\n\n### 2-1. 봉인 시점 둘 (A 200–201 대체)\n\n| 시점 | 봉인하는 것 |\n|---|---|\n| **맞춤 전** (P0 뒤 · 첫 지역 실행 전) | 규칙 (순회 · 동률 · 대체 · 중복 · 부족) · label 문자열 형식 (A §3-6) · **자료에 기대지 않는 고정 배열 전부** — Phase A 의 Sobol 64 × 2 (seed 0 · 1 · 영역 상자) · 프로파일 슬라이스의 Sobol 2 (자유 변수 상자 · label seed — 격자 index 는 P0 의 max_q 로 정해진 격자) · 동시 양립의 Sobol 16 (P · N · d 상자) — 을 생성해 sha256 으로 봉인 |\n| **적응적 시작점** (Phase A · 이웃 격자점 결과에 기대는 프로파일 s1 · s2 · 동시 양립의 상위 증인) | 앞선 결과가 생긴 뒤 **그 시작점을 쓰는 지역 실행이 시작하기 직전**에 실제 배열을 봉인 — 근거 run ID (Phase A 실행 번호 · 이웃 격자점 · 실행 번호) · 근거 증인의 식별 (기록 점의 좌표 · sha256) · 적용한 변환 (k 좌표 = t · 소거식 · P · N 으로 자르기 · bounds 반올림 자르기 여부) 을 함께 적는다 |\n\n이미 끝난 실행의 시작점을 소급해 바꾸지 않는다. 봉인 기록은 실행 기록 (§2-5 의 기록 항목) 에 시작점 배열 sha256 으로 결속한다."
+        },
+        {
+          "start_line": 126,
+          "end_line": 133,
+          "text": "### 2-5. 기록 항목 (자체 재독 — A 가 놓친 것을 되살린다)\n\nA §0 은 v2 205–219 (종료 · 예산 · 미해결) 를 A §3-8 · §3-9 로 대체한다고 적었지만, 그 범위 안의 v2 218–219 **기록 항목** (\"시작점 배열\nsha256 · SciPy · NumPy · pymoo 판 · 옵션 · 평가 수 · 종료 사유 · 실패 · NaN · 독립 재계산 잔차 · 활성 경계 · 활성 G · 각 상태의 근거 증인\nx\") 을 다시 적지 않았다 — 문서상 그 목록의 효력이 사라진 상태였다 (우리 재독에서 찾음 · 재검토가 짚은 것이 아니다). 그 목록을 **그대로\n유효로 되살리고** 다음을 더한다: 원 좌표 · 제약별 정확 잔차 · `feasibility_class` (§1-2) · `termination` · `witness` (A §2-3) · 시작점\n봉인 기록 (근거 run · 증인 · 변환 — §2-1) · 격자점 · 단위마다 실제 시작 수와 `시작 부족` 사유 (§2-2 · §2-3) · cutoff 교차 항목 목록\n(§3) · 결합 단위의 모든 유효 기록 점의 `(J_V, J_D)` (§4)."
+        }
+      ]
+    },
+    {
+      "path": "bms-balancing/evidence/reil_p0_20261006/P0_RESULT.json",
+      "git_blob_sha1": "2aa50f0bcb6e3bf3ff9fdfc15729458e6df6c024",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/7def9238c8fdac605decc5bf17c1428a93faad1d/bms-balancing/evidence/reil_p0_20261006/P0_RESULT.json",
+      "selected_existing_json": {
+        "versions": {
+          "numpy": "2.4.6",
+          "pandas": "3.0.5",
+          "python": "3.11.15",
+          "scipy": "1.17.1"
+        },
+        "identity": {
+          "notebook": {
+            "bytes": 4134001,
+            "ok": true,
+            "sha256": "388f2a6f101abf42ef8c7c1c627b7046e8bf900b913d22f83435b39eb81a9e29"
+          },
+          "util_LFP.py": {
+            "ok": true,
+            "sha256": "3c19e45ef8a64ce67cda1f623551e758d4c0f67086bbae02b978428d78de1c76"
+          },
+          "xlsx": {
+            "bytes": 10841377,
+            "ok": true,
+            "sha256": "fd50e09542be7adb2270963d65a6e7b5ccae1473a512f68462c2dd419d620ee1"
+          }
+        },
+        "extraction": [
+          {
+            "Q_exp_max": 2.972,
+            "Q_first": 0,
+            "V_first": 2.3464,
+            "V_last": 3.5604,
+            "cell_idx": 0,
+            "kind": "analysis",
+            "label": "LLI-1",
+            "n_points": 1046,
+            "row": 1,
+            "sheet": "15-LFP 16-Gr SOC-10",
+            "status": "OK",
+            "step_idx": 6
+          }
+        ],
+        "prior_table": [
+          {
+            "D": [
+              "1e-4",
+              "0.5"
+            ],
+            "I": {
+              "decimal": [
+                "1",
+                "1"
+              ],
+              "fraction": [
+                "1",
+                "1"
+              ]
+            },
+            "N": {
+              "decimal": [
+                "1",
+                "1"
+              ],
+              "fraction": [
+                "1",
+                "1"
+              ]
+            },
+            "P": {
+              "decimal": [
+                "1",
+                "1"
+              ],
+              "fraction": [
+                "1",
+                "1"
+              ]
+            },
+            "label": "Fresh",
+            "lhs": {
+              "decimal": [
+                "0",
+                "0"
+              ],
+              "fraction": [
+                "0",
+                "0"
+              ]
+            },
+            "max_q_fraction": "886368576912267/281474976710656",
+            "nominal": [
+              "1",
+              "1",
+              "1"
+            ],
+            "reason": "m_P − LII 구간과 D/max_q 가 교차하지 않음",
+            "region": "A0",
+            "rhs": {
+              "decimal": [
+                "3.17559742124e-05",
+                "0.158779871062"
+              ],
+              "fraction": [
+                "17592186044416/553980360570166875",
+                "140737488355328/886368576912267"
+              ]
+            },
+            "row": 0,
+            "status": "PRIOR_INCOMPATIBLE",
+            "tau": "0"
+          },
+          {
+            "D": [
+              "1e-4",
+              "0.5"
+            ],
+            "I": {
+              "decimal": [
+                "0.98",
+                "1.02"
+              ],
+              "fraction": [
+                "49/50",
+                "51/50"
+              ]
+            },
+            "N": {
+              "decimal": [
+                "0.98",
+                "1.02"
+              ],
+              "fraction": [
+                "49/50",
+                "51/50"
+              ]
+            },
+            "P": {
+              "decimal": [
+                "0.98",
+                "1.02"
+              ],
+              "fraction": [
+                "49/50",
+                "51/50"
+              ]
+            },
+            "label": "Fresh",
+            "lhs": {
+              "decimal": [
+                "-0.04",
+                "0.04"
+              ],
+              "fraction": [
+                "-1/25",
+                "1/25"
+              ]
+            },
+            "max_q_fraction": "886368576912267/281474976710656",
+            "nominal": [
+              "1",
+              "1",
+              "1"
+            ],
+            "reason": "구간 교차",
+            "region": "A0",
+            "rhs": {
+              "decimal": [
+                "3.17559742124e-05",
+                "0.158779871062"
+              ],
+              "fraction": [
+                "17592186044416/553980360570166875",
+                "140737488355328/886368576912267"
+              ]
+            },
+            "row": 0,
+            "status": "PRIOR_COMPATIBLE",
+            "tau": "0.02"
+          },
+          {
+            "D": [
+              "1e-4",
+              "0.5"
+            ],
+            "I": {
+              "decimal": [
+                "0.95",
+                "1.05"
+              ],
+              "fraction": [
+                "19/20",
+                "21/20"
+              ]
+            },
+            "N": {
+              "decimal": [
+                "0.95",
+                "1.05"
+              ],
+              "fraction": [
+                "19/20",
+                "21/20"
+              ]
+            },
+            "P": {
+              "decimal": [
+                "0.95",
+                "1.05"
+              ],
+              "fraction": [
+                "19/20",
+                "21/20"
+              ]
+            },
+            "label": "Fresh",
+            "lhs": {
+              "decimal": [
+                "-0.1",
+                "0.1"
+              ],
+              "fraction": [
+                "-1/10",
+                "1/10"
+              ]
+            },
+            "max_q_fraction": "886368576912267/281474976710656",
+            "nominal": [
+              "1",
+              "1",
+              "1"
+            ],
+            "reason": "구간 교차",
+            "region": "A0",
+            "rhs": {
+              "decimal": [
+                "3.17559742124e-05",
+                "0.158779871062"
+              ],
+              "fraction": [
+                "17592186044416/553980360570166875",
+                "140737488355328/886368576912267"
+              ]
+            },
+            "row": 0,
+            "status": "PRIOR_COMPATIBLE",
+            "tau": "0.05"
+          },
+          {
+            "D": [
+              "1e-4",
+              "0.5"
+            ],
+            "I": {
+              "decimal": [
+                "0.9",
+                "0.9"
+              ],
+              "fraction": [
+                "9/10",
+                "9/10"
+              ]
+            },
+            "N": {
+              "decimal": [
+                "1",
+                "1"
+              ],
+              "fraction": [
+                "1",
+                "1"
+              ]
+            },
+            "P": {
+              "decimal": [
+                "1",
+                "1"
+              ],
+              "fraction": [
+                "1",
+                "1"
+              ]
+            },
+            "label": "LLI-1",
+            "lhs": {
+              "decimal": [
+                "0.1",
+                "0.1"
+              ],
+              "fraction": [
+                "1/10",
+                "1/10"
+              ]
+            },
+            "max_q_fraction": "886368576912267/281474976710656",
+            "nominal": [
+              "1",
+              "1",
+              "0.9"
+            ],
+            "reason": "구간 교차",
+            "region": "A0",
+            "rhs": {
+              "decimal": [
+                "3.17559742124e-05",
+                "0.158779871062"
+              ],
+              "fraction": [
+                "17592186044416/553980360570166875",
+                "140737488355328/886368576912267"
+              ]
+            },
+            "row": 1,
+            "status": "PRIOR_COMPATIBLE",
+            "tau": "0"
+          },
+          {
+            "D": [
+              "1e-4",
+              "0.5"
+            ],
+            "I": {
+              "decimal": [
+                "0.88",
+                "0.92"
+              ],
+              "fraction": [
+                "22/25",
+                "23/25"
+              ]
+            },
+            "N": {
+              "decimal": [
+                "0.98",
+                "1.02"
+              ],
+              "fraction": [
+                "49/50",
+                "51/50"
+              ]
+            },
+            "P": {
+              "decimal": [
+                "0.98",
+                "1.02"
+              ],
+              "fraction": [
+                "49/50",
+                "51/50"
+              ]
+            },
+            "label": "LLI-1",
+            "lhs": {
+              "decimal": [
+                "0.06",
+                "0.14"
+              ],
+              "fraction": [
+                "3/50",
+                "7/50"
+              ]
+            },
+            "max_q_fraction": "886368576912267/281474976710656",
+            "nominal": [
+              "1",
+              "1",
+              "0.9"
+            ],
+            "reason": "구간 교차",
+            "region": "A0",
+            "rhs": {
+              "decimal": [
+                "3.17559742124e-05",
+                "0.158779871062"
+              ],
+              "fraction": [
+                "17592186044416/553980360570166875",
+                "140737488355328/886368576912267"
+              ]
+            },
+            "row": 1,
+            "status": "PRIOR_COMPATIBLE",
+            "tau": "0.02"
+          },
+          {
+            "D": [
+              "1e-4",
+              "0.5"
+            ],
+            "I": {
+              "decimal": [
+                "0.85",
+                "0.95"
+              ],
+              "fraction": [
+                "17/20",
+                "19/20"
+              ]
+            },
+            "N": {
+              "decimal": [
+                "0.95",
+                "1.05"
+              ],
+              "fraction": [
+                "19/20",
+                "21/20"
+              ]
+            },
+            "P": {
+              "decimal": [
+                "0.95",
+                "1.05"
+              ],
+              "fraction": [
+                "19/20",
+                "21/20"
+              ]
+            },
+            "label": "LLI-1",
+            "lhs": {
+              "decimal": [
+                "0",
+                "0.2"
+              ],
+              "fraction": [
+                "0",
+                "1/5"
+              ]
+            },
+            "max_q_fraction": "886368576912267/281474976710656",
+            "nominal": [
+              "1",
+              "1",
+              "0.9"
+            ],
+            "reason": "구간 교차",
+            "region": "A0",
+            "rhs": {
+              "decimal": [
+                "3.17559742124e-05",
+                "0.158779871062"
+              ],
+              "fraction": [
+                "17592186044416/553980360570166875",
+                "140737488355328/886368576912267"
+              ]
+            },
+            "row": 1,
+            "status": "PRIOR_COMPATIBLE",
+            "tau": "0.05"
+          }
+        ]
+      },
+      "note": "Selection of existing P0 JSON fields; no new P0, objective, extraction, or numerical calculation."
+    },
+    {
+      "path": "bms-balancing/reil_c6_rebuild_20261006/COBYQA_OPTIONS.json",
+      "git_blob_sha1": "f99f007e405e18f100671bf5d0458f790ea6a3ae",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/7def9238c8fdac605decc5bf17c1428a93faad1d/bms-balancing/reil_c6_rebuild_20261006/COBYQA_OPTIONS.json",
+      "existing_json": {
+        "accepted": true,
+        "all_documented": true,
+        "implementation_files_sha256": {
+          "scipy/_lib/cobyqa/framework.py": "94878a0a40cbc476cc9924e231cc9ab2f55eefb8d5be1fd84ce617d079cae109",
+          "scipy/_lib/cobyqa/main.py": "c33d0cda2a857f379369952afe3d53905ffd57f489d6def703ed1f747d1e4ace",
+          "scipy/_lib/cobyqa/problem.py": "4a23e09a2153c625b9c89fc555fdfb67d1901a8e86c7f7c9dd15ccce1b2b9f8d",
+          "scipy/_lib/cobyqa/settings.py": "a207e24a1c6e3c7b0c7d6d7a3864b007dfa620f462b9665219704e08ed870efc"
+        },
+        "options": {
+          "disp": {
+            "description": "Set to True to print information about the optimization procedure. Default is ``False``.",
+            "documented": true,
+            "planned": "False",
+            "type": "bool"
+          },
+          "f_target": {
+            "description": "Target value for the objective function. The optimization procedure is terminated when the objective function value of a feasible point (see `feasibility_tol` below) is less than or equal to this target. Default is ``-numpy.inf``.",
+            "documented": true,
+            "planned": "-inf",
+            "type": "float"
+          },
+          "feasibility_tol": {
+            "description": "Absolute tolerance for the constraint violation. Default is ``1e-8``.",
+            "documented": true,
+            "planned": "1e-12",
+            "type": "float"
+          },
+          "final_tr_radius": {
+            "description": "Final trust-region radius. It should indicate the accuracy required in the final values of the variables. If provided, this option overrides the value of `tol` in the `minimize` function. Default is ``1e-6``.",
+            "documented": true,
+            "planned": "1e-06",
+            "type": "float"
+          },
+          "initial_tr_radius": {
+            "description": "Initial trust-region radius. Typically, this value should be in the order of one tenth of the greatest expected change to the variables. Default is ``1.0``.",
+            "documented": true,
+            "planned": "1.0",
+            "type": "float"
+          },
+          "maxfev": {
+            "description": "Maximum number of function evaluations. Default is ``500 * n``, where ``n`` is the number of variables.",
+            "documented": true,
+            "planned": "2000",
+            "type": "int"
+          },
+          "maxiter": {
+            "description": "Maximum number of iterations. Default is ``1000 * n``, where ``n`` is the number of variables.",
+            "documented": true,
+            "planned": "4000",
+            "type": "int"
+          },
+          "scale": {
+            "description": "Set to True to scale the variables according to the bounds. If True and if all the lower and upper bounds are finite, the variables are scaled to be within the range :math:`[-1, 1]`. If any of the lower or upper bounds is infinite, the variables are not scaled. Default is ``False``.",
+            "documented": true,
+            "planned": "True",
+            "type": "bool"
+          }
+        },
+        "synthetic_call": {
+          "function": "sum((x - 0.3)**2) · x0 = 0.9 × 4 · bounds [0, 1]^4 (REIL 자료 아님)",
+          "success": true,
+          "unknown_option_warnings": [],
+          "warnings": [],
+          "x_within_1e-6_of_0.3": true
+        }
+      }
+    }
+  ],
+  "util_excerpt": {
+    "path": "bms-balancing/reviews/prereview_pybamm_reil_20261003/external/util_LFP.py.txt",
+    "content": "def objective_fun(x, Model, halfcell):\n\n    Q_exp = Model['Q_exp_interp']\n    dVdQ_exp = Model['dVdQ_exp_interp']\n    V_exp = Model['V_exp_interp']\n    \n    # Load half-cell data\n    q_PE_hc = halfcell[0]\n    V_PE_hc = halfcell[1]\n    q_NE_hc = halfcell[2]\n    V_NE_hc = halfcell[3]\n    \n    # Extract parameters\n    m_P, m_N, d_P, d_N = x\n    \n    # Get half-cell VQ and dVdQ curves (function to be implemented separately)\n    Q_PE_hc_ad, Q_NE_hc_ad, dVdQ_PE_hc, dVdQ_NE_hc, VPE_hc_sim, VNE_hc_sim, dQdV_PE_hc, dQdV_NE_hc = dVdQ_hc(\n        V_PE_hc, q_PE_hc, V_NE_hc, q_NE_hc, m_P, m_N, d_P, d_N, interp_len=500\n    )\n    \n    # Find indices where Q is closest to zero\n    Q0P_ID = np.argmin(np.abs(Q_PE_hc_ad))\n    Q0N_ID = np.argmin(np.abs(Q_NE_hc_ad))\n    QmaxP_ID = np.argmax(Q_PE_hc_ad)\n    QmaxN_ID = np.argmax(Q_NE_hc_ad)\n    \n    # Interpolate using experimental data\n    VPE_interp = interp1d(Q_PE_hc_ad[Q0P_ID:QmaxP_ID], VPE_hc_sim[Q0P_ID:QmaxP_ID], fill_value='extrapolate')\n    VNE_interp = interp1d(Q_NE_hc_ad[Q0N_ID:QmaxN_ID], VNE_hc_sim[Q0N_ID:QmaxN_ID], fill_value=(1.5,0.01), bounds_error=False)\n    \n    VPE_sim = VPE_interp(Q_exp)\n    VNE_sim = VNE_interp(Q_exp)\n    Vf_sim = VPE_sim - VNE_sim\n    Model['Vf_sim'] = Vf_sim\n    \n    # Capacity estimation\n    Q_sim = np.linspace(0, Q_PE_hc_ad[QmaxP_ID], 250)\n    VPE_sim_4Cap = VPE_interp(Q_sim)\n    VNE_sim_4Cap = VNE_interp(Q_sim)\n    Vf_sim_4Cap = VPE_sim_4Cap - VNE_sim_4Cap\n    \n    Vexp_max, Vexp_min = 3.6, 2\n    \n    Vmin_ID = np.argmin(np.abs(Vf_sim_4Cap - Vexp_min))\n    Vmax_ID = np.argmin(np.abs(Vf_sim_4Cap - Vexp_max))\n    \n    Model['Q_sim'] = Q_sim[Vmin_ID:Vmax_ID]\n    Model['Vf_sim_4Cap'] = Vf_sim_4Cap[Vmin_ID:Vmax_ID]\n    Model['Q_sim_max'] = np.max(Model['Q_sim'])\n    \n    # Calculate dV/dQ\n    unique_Q, unique_indices = np.unique(Q_exp, return_index=True)\n    dVdQ_sim = np.diff(Vf_sim[unique_indices]) / np.diff(unique_Q)\n    dVdQ_sim = np.append(dVdQ_sim, dVdQ_sim[-1])\n    Model['dVdQ_sim'] = dVdQ_sim\n    \n    # Compute errors\n    # QV end-point error\n    f1 = (np.mean((np.max(Vf_sim) - np.max(V_exp)) ** 2)) + np.sqrt(np.mean((np.min(Vf_sim) - np.min(V_exp)) ** 2))/2\n    # QV curve error\n    f2 = np.mean((Vf_sim - V_exp) ** 2)\n    # dVdQ peak error (identify the two peaks)\n    try:\n        # First peak location\n        peak_loc_exp = find_peaks(dVdQ_exp,distance=20,prominence=0.05)[0][0] # Returns a scalar value\n        peak_loc_sim = find_peaks(dVdQ_sim,distance=20,prominence=0.05)[0][0] # Returns a scalar value\n\n        f3 = np.mean((Q_exp[peak_loc_sim] - Q_exp[peak_loc_exp]) ** 2) # peak location error\n        # peak magnitude error of a range of 16 points, also only look at the peak region of experiment\n        f3 += np.mean((dVdQ_sim[peak_loc_exp-8:peak_loc_exp+8] - \n                               dVdQ_exp[peak_loc_exp-8:peak_loc_exp+8])**2) \n    except:\n        f3 = 1\n    \n    # dVdQ curve error\n    # Only consider the range where experimental dV/dQ is above a threshold to avoid noise-dominated regions\n    dVdQ_clean_range = dVdQ_exp < 0.4 # Adjust threshold as needed\n    f4 = np.mean((dVdQ_sim[dVdQ_clean_range] - dVdQ_exp[dVdQ_clean_range]) ** 2)\n\n    return np.array([f1, f2, f3, f4])",
+    "encoding": "utf-8",
+    "sha": "1d4afe9f5ef451b9cf479640fd5e361fdbd08bd0",
+    "display_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/7def9238c8fdac605decc5bf17c1428a93faad1d/bms-balancing/reviews/prereview_pybamm_reil_20261003/external/util_LFP.py.txt",
+    "display_title": "util_LFP.py.txt",
+    "start_line": 157,
+    "end_line": 236,
+    "executed": false
+  },
+  "attachment_comparison": {
+    "file": "REIL_C5_PILOT_APPROVAL_REQUEST_20261006.md",
+    "bytes": 15765,
+    "sha256": "2656ab2bf142ea1ea64245f816cc8c7c4f5b6ac086d1ad28a50961d68bf85cc6",
+    "exact_remote_and_attachment_bytes_equal": true,
+    "tool_chunk": "7b6cc8"
+  },
+  "companion_attachment": {
+    "path": "C:/Users/Administrator/Desktop/CODEX_REIL_C5_REQUEST_PREREVIEW_20261006.md",
+    "bytes": 5037,
+    "sha256": "8537e4e6010a8da4eb3f36bc50c2c20e2b9cd0009cdaef0c168d395d3dd26973"
+  }
+}
