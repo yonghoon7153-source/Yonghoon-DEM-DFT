@@ -8191,13 +8191,16 @@
     {
       "id": "GEN2-01",
       "severity": "P3",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "claude (10-06 저녁 · 정확 Dirichlet 전극 구현 중 — C 묶음 구현 보고)",
       "opened_in": "docs/reviews/codex_gen2_network_request_20261006.md",
       "title": "협착-only 진단 가지 — R_c = 0 간선을 **열림 (g = 0)** 으로 둔다: 떠 있는 섬을 빼면 유한값 (= 그 가지의 하한) · HEAD 는 특이 → physics NaN",
-      "note": "★ 2026-10-06 저녁 `a0a24c538` (세대 2 나머지 · 1저자 비준 C1 · C2).  자리: `network_conductivity.solve_network` (mode=constriction_only · 떠 있는 섬 = R > 0 간선 그래프에서 고정 노드와 끊긴 자유 노드 · V = 0).  real_14 이온: g2 0.054176 · g1 0.071330 · 떠 있는 노드 29.  쓰이는 곳 = 194 배치 진단 열 `sigma_constr_net_mScm_<m>` 뿐 (인계표 · 배포 열 아님).  처리 후보: (가) R_c = 0 간선 양끝을 단락 수축 (같은 노드로 병합) · (나) 그 가지를 not_computed 로 표지 — 결정 = 1저자.\n★ 10-06 밤 Codex (G2R 판정 §7 Q3): 단락 수축 정답 1.1 S ↔ 실제 0.1 S computed (−90.9 % · 수렴 문제 아님 = 다른 회로) · 권고 = 이번 배치 전 NOT_COMPUTED 우선 (Rc=0 포함 모드만 zero_resistance_requires_contraction · FULL · CF 독립 유지) 또는 별도 하한 열 zero_edges_removed_lower_bound · 정확값은 union-find 수축 (B/T 동시 포함 = 무한 · 경계 모순 명시) · ε 저항 치환 자동 대체 금지.  우리 트리 재현 (7a5976602 · probes 무변경 · 출력 = 증거 폴더 _reproduction_ours_7a5976602/): G 0.1 vs 1.1.  처리 = 1저자.",
-      "evidence_tests": []
+      "note": "★ 2026-10-06 저녁 `a0a24c538` (세대 2 나머지 · 1저자 비준 C1 · C2).  자리: `network_conductivity.solve_network` (mode=constriction_only · 떠 있는 섬 = R > 0 간선 그래프에서 고정 노드와 끊긴 자유 노드 · V = 0).  real_14 이온: g2 0.054176 · g1 0.071330 · 떠 있는 노드 29.  쓰이는 곳 = 194 배치 진단 열 `sigma_constr_net_mScm_<m>` 뿐 (인계표 · 배포 열 아님).  처리 후보: (가) R_c = 0 간선 양끝을 단락 수축 (같은 노드로 병합) · (나) 그 가지를 not_computed 로 표지 — 결정 = 1저자.\n★ 10-06 밤 Codex (G2R 판정 §7 Q3): 단락 수축 정답 1.1 S ↔ 실제 0.1 S computed (−90.9 % · 수렴 문제 아님 = 다른 회로) · 권고 = 이번 배치 전 NOT_COMPUTED 우선 (Rc=0 포함 모드만 zero_resistance_requires_contraction · FULL · CF 독립 유지) 또는 별도 하한 열 zero_edges_removed_lower_bound · 정확값은 union-find 수축 (B/T 동시 포함 = 무한 · 경계 모순 명시) · ε 저항 치환 자동 대체 금지.  우리 트리 재현 (7a5976602 · probes 무변경 · 출력 = 증거 폴더 _reproduction_ours_7a5976602/): G 0.1 vs 1.1.  처리 = 1저자.\n★ 10-06 밤 수정 (1저자 비준 · 반례 먼저): 권고대로 NOT_COMPUTED 우선 — 관통 간선에 R_c ≤ 0 이 있으면 협착-only 가지만 not_computed zero_resistance_requires_contraction (FULL · CF 불변) · Codex 반례 0.1 S computed → 거부 · real14 · case15 physics g2 협착-only = not_computed (진단 열 sigma_constr_net 빈칸) · 배치 표에 sigma_constr_net_status/_reason",
+      "evidence_tests": [
+        "scripts/test_network_solve_certificate.py"
+      ],
+      "claimed_fixed_sha": "05977e94a"
     },
     {
       "id": "LHS-34",
@@ -8258,45 +8261,60 @@
       "id": "G2R-01",
       "severity": "P1",
       "title": "H12 를 주 Hertz 자리에 넣어도 게시 (정지 계약 ⑨) · τ 인계 (load_tau_results) 가 통과 — 주 Hertz 의 bulk · 협착 모델이 세대 축에 없다 (주 σ +28.2 %)",
-      "note": "자리: webapp/pipeline_service.py:953 (⑨ 가 중첩 H12 메타만 · 주 Hertz 가 H0 인지 안 봄) · scripts/tau_flux.py:374 GENERATION_AXES = ψ · Physics 면적 · 전극뿐 (:378 · :387) · scripts/lhs_design_dataset.py:1846 · :2656 같은 비교 · scripts/lhs_release_build.py:71 · :93 은 열 이름만.  반례: 실 생산 hertz_h12 레코드를 주 hertzian 에 복사 → 게시 done · network_stop_verdict (True, ok) · τ OK · 정상 행과 섞어도 인계 통과 · f_ion_hertz 0.00400538 → 0.00513502 · tau2 10.98 → 8.57 · ion_net_bulk_hertz = sphere_segment 가 보이는데 수용.  우리 트리 재현 (7a5976602 · probes 무변경 · 출력 = 증거 폴더 _reproduction_ours_7a5976602/): h12_as_primary done (True, ok) σ 0.00513502 · 인계 [baseline, h12_as_primary] True.  해제 = 모드별 허용 조합 (H0 = Maxwell + 원기둥 · H12 = ψ 곱 + 구 조각 · Physics) 을 게시 전 검사 + 인계 재독에서 같은 규칙 · 통합 회귀 (변이체 게시 전 거부 · 강제 폴더 인계 거부 · 정상 세 모드 · 역사 세대 통과).  ⛔ 새 194 생산 · v1.3 주 학습 인계 HOLD (판정문 §8).",
-      "status": "open",
+      "note": "자리: webapp/pipeline_service.py:953 (⑨ 가 중첩 H12 메타만 · 주 Hertz 가 H0 인지 안 봄) · scripts/tau_flux.py:374 GENERATION_AXES = ψ · Physics 면적 · 전극뿐 (:378 · :387) · scripts/lhs_design_dataset.py:1846 · :2656 같은 비교 · scripts/lhs_release_build.py:71 · :93 은 열 이름만.  반례: 실 생산 hertz_h12 레코드를 주 hertzian 에 복사 → 게시 done · network_stop_verdict (True, ok) · τ OK · 정상 행과 섞어도 인계 통과 · f_ion_hertz 0.00400538 → 0.00513502 · tau2 10.98 → 8.57 · ion_net_bulk_hertz = sphere_segment 가 보이는데 수용.  우리 트리 재현 (7a5976602 · probes 무변경 · 출력 = 증거 폴더 _reproduction_ours_7a5976602/): h12_as_primary done (True, ok) σ 0.00513502 · 인계 [baseline, h12_as_primary] True.  해제 = 모드별 허용 조합 (H0 = Maxwell + 원기둥 · H12 = ψ 곱 + 구 조각 · Physics) 을 게시 전 검사 + 인계 재독에서 같은 규칙 · 통합 회귀 (변이체 게시 전 거부 · 강제 폴더 인계 거부 · 정상 세 모드 · 역사 세대 통과).  ⛔ 새 194 생산 · v1.3 주 학습 인계 HOLD (판정문 §8).\n★ 10-06 밤 수정 (1저자 비준 · 반례 먼저): 공용 세대 계약 tau_flux.network_generation_contract — 모드마다 닫힌 표 (hertz = maxwell · cylinder_half_d · dirichlet_exact · hertz_ccpl22 / hertz_h12 = mikic_psi_multiply · sphere_segment · sensitivity_mode / physics = mikic · physics_g2 · cylinder_half_d) · 게시 전 (정지 ⑨ · 일반 경로) · τ 소비자 · 인계 생성기 · 배포 빌더가 같은 함수 · h12_as_primary 변이 = 게시 전 거부 + 강제 폴더 인계 거부 (test_gen2_publication_handover 2/12 → 12/12 · test_gen2_role_contract 5/24 → 30/30) (커밋: 계약 05c60ae2d · 증서 05977e94a · 통합 5627a74a6)",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 10-06 밤 (핀 c13da95a3 · 고정 blob 130 · 실 CLI 생산자 · 실 게시 app._network_and_stage_e · 실 인계 load_tau_results · 합성 반례 · FV 기준해)",
       "opened_in": "docs/reviews/codex_review_gen2_network_20261006.md",
-      "evidence_tests": []
+      "evidence_tests": [
+        "scripts/test_gen2_role_contract.py",
+        "webapp/test_gen2_publication_handover.py"
+      ],
+      "claimed_fixed_sha": "5627a74a6"
     },
     {
       "id": "G2R-02",
       "severity": "P2",
       "title": "알 수 없는 세대 · 부분 결손을 옛 세대로 수용 — ψ 오타 · 전극 오타 · area_rule/psi 삭제가 게시 · 인계 통과 (행간 동질성 ≠ 유효 세대)",
-      "note": "자리: webapp/pipeline_service.py:963 (주 Hertz 전극 ≠ dirichlet_exact 이면 옛 레코드로 조기 반환) · scripts/tau_flux.py:364 (누락 = 옛 기본값) · :378 (모르는 ψ = 빈 축) · :387 (빈 축 비교 제외) · ion_record_problem (:168) 가 세대 열거형 미검증.  반례 셋: psi_placement=multiply_TYPO · 세 모드 전극 DIRICHLET_TYPO · 현행 g2 Physics 에서 area_rule · psi_placement 만 삭제 → 전부 done · ok · 단독 인계 통과 (코호트 전체가 같은 결손이면 섞음 검사도 통과).  우리 트리 재현 (7a5976602 · probes 무변경 · 출력 = 증거 폴더 _reproduction_ours_7a5976602/): bad_psi · bad_electrode · partial_missing_g2 전부 done (True, ok) · 인계 True · [baseline, bad_psi] True.  해제 = unknown · 부분 결손 · 진짜 legacy 분리 · 새 배치 영수증에 기대 조합/스키마 봉인 · 현행 생산물 필수 필드 · legacy 추론은 역사 세대 자격 자료에만 + inferred_legacy 표지.",
-      "status": "open",
+      "note": "자리: webapp/pipeline_service.py:963 (주 Hertz 전극 ≠ dirichlet_exact 이면 옛 레코드로 조기 반환) · scripts/tau_flux.py:364 (누락 = 옛 기본값) · :378 (모르는 ψ = 빈 축) · :387 (빈 축 비교 제외) · ion_record_problem (:168) 가 세대 열거형 미검증.  반례 셋: psi_placement=multiply_TYPO · 세 모드 전극 DIRICHLET_TYPO · 현행 g2 Physics 에서 area_rule · psi_placement 만 삭제 → 전부 done · ok · 단독 인계 통과 (코호트 전체가 같은 결손이면 섞음 검사도 통과).  우리 트리 재현 (7a5976602 · probes 무변경 · 출력 = 증거 폴더 _reproduction_ours_7a5976602/): bad_psi · bad_electrode · partial_missing_g2 전부 done (True, ok) · 인계 True · [baseline, bad_psi] True.  해제 = unknown · 부분 결손 · 진짜 legacy 분리 · 새 배치 영수증에 기대 조합/스키마 봉인 · 현행 생산물 필수 필드 · legacy 추론은 역사 세대 자격 자료에만 + inferred_legacy 표지.\n★ 10-06 밤 수정 (1저자 비준 · 반례 먼저): 세대 2 = 표기 전부 필수 (부분 결손 거부 · 모르는 값 거부 · 증서 키도 표지) · 옛 세대 추론 = 세대 2 표지가 하나도 없는 역사 레코드만 (inferred_legacy 표지 · 194 v1.2 원천 194/194) · 행마다 먼저 검사 (같은 결함 코호트도 거부) · 새 열 ion_net_generation · provenance P4_model_generation · 웹앱 망 세대 행 · ⚠ 라벨만 검사 (숫자 바꿔치기 · 모든 사본 일관 편집은 재계산 없이 못 잡는다) · 배치 영수증에 기대 세대 봉인 = 새 194 등록 때 (커밋: 계약 05c60ae2d · 증서 05977e94a · 통합 5627a74a6)",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 10-06 밤 (핀 c13da95a3 · 고정 blob 130 · 실 CLI 생산자 · 실 게시 app._network_and_stage_e · 실 인계 load_tau_results · 합성 반례 · FV 기준해)",
       "opened_in": "docs/reviews/codex_review_gen2_network_20261006.md",
-      "evidence_tests": []
+      "evidence_tests": [
+        "scripts/test_gen2_role_contract.py",
+        "webapp/test_gen2_publication_handover.py"
+      ],
+      "claimed_fixed_sha": "5627a74a6"
     },
     {
       "id": "G2R-03",
       "severity": "P2",
       "title": "CG 종료 코드 0 + G ≤ 1.1·Σg 는 전류 정확성 증서가 아니다 — 고대비 막다른 간선 (1e14 S) 에서 G +100 % 가 computed",
-      "note": "자리: scripts/network_conductivity.py:895–907 (CG info 0 · 유한 해만) · :933 (바닥 전류만 G) · :940–957 (Σg 상한 · 양 전극 전류 기록만 · 보존을 수용 조건으로 안 씀) · :1290 이후 생산 레코드가 모드별 전류 · 잔차 증서를 직렬화 안 함 · :903 일반 spilu 를 SPD 보증 없이 CG 전처리.  반례: B–중간–T 1 Ω 경로 30,001 병렬 + B 에만 붙은 막다른 노드 1e14 S · 자유 노드 30,002 → computed · cg · G 30,001 (참 15,000.5 · +100 %) · I_top ≈ −3e-10 · q 0.03 (가드 통과) · 1e6~1e12 는 참값.  실침대 FULL 전류 불일치 real14 ≤ 1.37e-13 · case15 ≤ 6.39e-9 (이 194 에 이 대비가 있다는 증거 아님).  우리 트리 재현 (7a5976602 · probes 무변경 · 출력 = 증거 폴더 _reproduction_ours_7a5976602/): 다섯째 대비 G 30001.0 vs 15000.5.  해제 = 모드별 양 전극 전류 · 보존 잔차 · 내부 잔차 · 풀이 방법을 수용 조건 + 영구 산출물 · 허용치 사전 고정 · 반례는 참값 회복 또는 NOT_COMPUTED · 정상 큰 망 통과 · ILU 쓰면 맞는 Krylov 또는 SPD 전처리.",
-      "status": "open",
+      "note": "자리: scripts/network_conductivity.py:895–907 (CG info 0 · 유한 해만) · :933 (바닥 전류만 G) · :940–957 (Σg 상한 · 양 전극 전류 기록만 · 보존을 수용 조건으로 안 씀) · :1290 이후 생산 레코드가 모드별 전류 · 잔차 증서를 직렬화 안 함 · :903 일반 spilu 를 SPD 보증 없이 CG 전처리.  반례: B–중간–T 1 Ω 경로 30,001 병렬 + B 에만 붙은 막다른 노드 1e14 S · 자유 노드 30,002 → computed · cg · G 30,001 (참 15,000.5 · +100 %) · I_top ≈ −3e-10 · q 0.03 (가드 통과) · 1e6~1e12 는 참값.  실침대 FULL 전류 불일치 real14 ≤ 1.37e-13 · case15 ≤ 6.39e-9 (이 194 에 이 대비가 있다는 증거 아님).  우리 트리 재현 (7a5976602 · probes 무변경 · 출력 = 증거 폴더 _reproduction_ours_7a5976602/): 다섯째 대비 G 30001.0 vs 15000.5.  해제 = 모드별 양 전극 전류 · 보존 잔차 · 내부 잔차 · 풀이 방법을 수용 조건 + 영구 산출물 · 허용치 사전 고정 · 반례는 참값 회복 또는 NOT_COMPUTED · 정상 큰 망 통과 · ILU 쓰면 맞는 Krylov 또는 SPD 전처리.\n★ 10-06 밤 수정 (1저자 비준 · 반례 먼저): 풀이마다 증서 (I_bottom · I_top · conservation_rel · residual_rel · method · attempts) · 허용치 DIRICHLET_CONSERVATION_REL_MAX = DIRICHLET_RESIDUAL_REL_MAX = 1e-6 (실침대 ≤ 6.4e-9 · 반례 ≈ 1) · 실패면 사다리 (작은 망 spsolve → cg+jacobi → gmres+ilu · 큰 망 cg → spsolve ≤ 250k → cg+jacobi → gmres+ilu · ILU 는 GMRES 와만) · 다 실패 = not_computed current_conservation_failed · 레코드 solve_certificate_{full,bulk_net,constr_net} (세 채널 · H12) · 계약이 게시되는 FULL σ 에 통과 증서 요구 (게시 · 인계 공용) · 1e14 막다른 간선 = 15,000.5 회복 (test_network_solve_certificate 5/23 → 23/23) · 실침대 16/18 비트 동일 (커밋: 계약 05c60ae2d · 증서 05977e94a · 통합 5627a74a6)",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 10-06 밤 (핀 c13da95a3 · 고정 blob 130 · 실 CLI 생산자 · 실 게시 app._network_and_stage_e · 실 인계 load_tau_results · 합성 반례 · FV 기준해)",
       "opened_in": "docs/reviews/codex_review_gen2_network_20261006.md",
-      "evidence_tests": []
+      "evidence_tests": [
+        "scripts/test_network_solve_certificate.py",
+        "scripts/test_gen2_role_contract.py"
+      ],
+      "claimed_fixed_sha": "5627a74a6"
     },
     {
       "id": "G2R-04",
       "severity": "P2",
       "title": "H12 범위 \"z ≤ 10 개선 (±5 %)\" 은 배위수만으로 보증 안 됨 — 구 사슬 z=2 · s=0.45 에서 H12 −5.55 % · 참값이 [H0, H12] 밖",
-      "note": "자리: docs/reviews/gen2_network_design_20261006.md:17 (±5 % 문구) · scripts/network_conductivity.py:336 (구 조각 h²/(σV)) · :605 · :629 · 기준해 docs/data/gen2_design_20261006/c1/fv_sphere_chain.py:26 · :93.  반례: 같은 구 무한 사슬 s=0.45 · FV nr 100/200/400 = 1.16216/1.16030/1.15947 · 외삽 1.15864 · H0 1.67963 · H12 1.22759 → H12 전도도 −5.55 % (nr400) · −5.62 % (외삽) · H0 · H12 둘 다 기준보다 낮다 · s=0.30 −2.04 % · 0.50 −6.44 % · 0.70 −7.37 %.  해제 = 문구를 \"시험한 기하 · s 범위의 오차\" 로 좁히고 구 사슬 포함 · 인계 [H0, H12] = 두 규약의 쌍대응 시나리오 (오차막대 · 상하한 · 신뢰구간 아님) 명시 · H12 주 모델 승격은 공유-코어 검증 등 별도 조건.",
-      "status": "open",
+      "note": "자리: docs/reviews/gen2_network_design_20261006.md:17 (±5 % 문구) · scripts/network_conductivity.py:336 (구 조각 h²/(σV)) · :605 · :629 · 기준해 docs/data/gen2_design_20261006/c1/fv_sphere_chain.py:26 · :93.  반례: 같은 구 무한 사슬 s=0.45 · FV nr 100/200/400 = 1.16216/1.16030/1.15947 · 외삽 1.15864 · H0 1.67963 · H12 1.22759 → H12 전도도 −5.55 % (nr400) · −5.62 % (외삽) · H0 · H12 둘 다 기준보다 낮다 · s=0.30 −2.04 % · 0.50 −6.44 % · 0.70 −7.37 %.  해제 = 문구를 \"시험한 기하 · s 범위의 오차\" 로 좁히고 구 사슬 포함 · 인계 [H0, H12] = 두 규약의 쌍대응 시나리오 (오차막대 · 상하한 · 신뢰구간 아님) 명시 · H12 주 모델 승격은 공유-코어 검증 등 별도 조건.\n★ 10-06 밤 수정 (1저자 비준 · 반례 먼저): 문구 정정 — 설계 기록 ±5 % 에 \"시험한 기하\" 한정 + 구 사슬 반례 · 열 사전 · 배포 빌더 · tau_flux: [H0, H12] = 두 규약의 쌍대응 시나리오 (오차막대 · 상하한 · 신뢰구간 아님)",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 10-06 밤 (핀 c13da95a3 · 고정 blob 130 · 실 CLI 생산자 · 실 게시 app._network_and_stage_e · 실 인계 load_tau_results · 합성 반례 · FV 기준해)",
       "opened_in": "docs/reviews/codex_review_gen2_network_20261006.md",
-      "evidence_tests": []
+      "evidence_tests": [
+        "scripts/test_gen2_role_contract.py"
+      ],
+      "claimed_fixed_sha": "5627a74a6"
     }
   ]
 }

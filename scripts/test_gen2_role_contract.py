@@ -436,6 +436,14 @@ def main():
     _c6 = con_of(strip_g2(base))
     chk('X6 표지 · 증서를 다 뺀 역사 모양 → inferred_legacy (증서 키도 세대 2 표지)', _c6.get('generation') == 'inferred_legacy', _c6)
 
+    #  ★ 10-06 밤 G2R-04 — [H0, H12] 는 두 규약의 쌍대응 시나리오 (오차막대 · 상하한 · 신뢰구간 아님) · ±5 % 는 시험한 기하 한정
+    import lhs_design_dataset as _ldd
+    _v = getattr(_ldd, 'TAU_NET_VERDICT_H12', '')
+    _dr = open(os.path.join(ROOT, 'docs', 'reviews', 'gen2_network_design_20261006.md'), encoding='utf-8').read()
+    chk('W1 ★ 열 사전 H12 판정 = 쌍대응 시나리오 · 구간 아님 (괄호로 읽는다 문구 없음) · 부록 전용 유지',
+        '쌍대응 시나리오' in _v and '신뢰구간이 아니다' in _v and '괄호로 읽는다' not in _v and '부록 전용' in _v, _v[:200])
+    chk('W2 ★ 설계 기록 ±5 % = 시험한 기하 한정 + 구 사슬 반례 (G2R-04)', '시험한 기하' in _dr and '구 사슬 z = 2' in _dr)
+
     print(f'\ntest_gen2_role_contract: {_ok}/{_ok + len(_fail)} PASS' + (f'   FAILED: {_fail}' if _fail else ''))
     return 0 if not _fail else 1
 
