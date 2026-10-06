@@ -19,6 +19,7 @@
 
 > elements: Li, S, P, Cl, Br, I, O, C, N, F, B, Al, Si, Ti, V, Mn, Co, Ni, Cu, Ge, Se, Y, Ag, In, Sn, La, Zr
 > methods: DFT, ESW
+> 🔗 **관련 (2026-10-06)**: `lee2025_halide_segregation_uhs_mixing_li_chalcogen_assb` — ref 101 원전의 SM digest (경쟁 가설 T1 · 혼합 프로토콜 · SE 용량 기여 `Table S6`).
 
 > **저자**: **Jinghua Wu**†\*ᵃᵇᶜ · **Tianyi Liu**†ᵃ · Wenjie Wangᵃ · **Hongli Wan**\*ᵃᵇᶜ · **Xiayin Yao**\*ᵃᵇᶜ (ᵃ Ningbo Institute of Materials Technology and Engineering, CAS · ᵇ UCAS Center of Materials Science and Optoelectronics Engineering · ᶜ Zhejiang Key Lab of Advanced Fuel Cells and Electrolyzers Technology) · † 공동 1저자 · 접수 2026-07-10 · 게재 2026-09-28 (Advance Article — 권·쪽 미정) · NSFC U25A20627·52172253·52372244 외 · *"No primary research results, software, or code have been included, and no new data were generated"* · 이해충돌 없음
 > ⚠ **한양대 접점**: 교신 Xiayin Yao 의 저자 소개에 *"research fellow or visiting scholar in **Hanyang University**, South Korea (2012–2013)"* (p.2). litdb 의 한양대 접점 표시 선례는 `[Lee26Coat]`.

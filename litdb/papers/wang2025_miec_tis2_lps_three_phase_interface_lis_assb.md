@@ -9,6 +9,7 @@
 > slug `wang2025_miec_tis2_lps_three_phase_interface_lis_assb` · DOI `10.1038/s41563-024-02057-x` · type `mixed (exp 주 + VASP-PBE DFT·AIMD·LOBSTER 보조)` · PDF `litdb/inbox/0923-3. NatMater_2025_Wang_MIEC_three-phase_interface_LiS_ASSB_MAIN.pdf` (본문 12 pp) + `0923-3. Sup) NatMater_2025_Wang_MIEC_SI1.pdf` (SI 71 pp · Fig S1–S39 · Table S1–S11 · Note 1–8) + `0923-3. Sup) NatMater_2025_Wang_MIEC_figshare_structures.zip` (구조 8 파일) · digested `2026-09-23` · status ✅ · 태그 **[외부 · 유리 Li₃PS₄ 계 — 아지로다이트 아님]**
 > elements: Li, P, S, Ti, Mo, Fe, F
 > methods: DFT, AIMD, ICOHP, LOBSTER, DOS, PDOS, XPS, Raman, ESW
+> 🔗 **관련 (2026-10-06)**: `lee2025_halide_segregation_uhs_mixing_li_chalcogen_assb` — 같은 Li–S 양극 계면 축 · 할로겐 아지로다이트 + 원심혼합 편석(LiX) 경로.
 
 > **저자**: **Daiwei Wang**¹, Bharat Gwalani², Dominik Wierzbicki³, **Vijay Singh**⁴⁵, Li-Ji Jhang⁶, **Tomas Rojas**⁴⁵, Rong Kou¹, Meng Liao¹, Lei Ye¹, Heng Jiang¹, Shuhua Shan¹, Alexander Silver⁷, **Anh T. Ngo**⁴⁵, Yonghua Du³, Xiaolin Li², **Donghai Wang\***¹⁸ — ¹Penn State ME · ²PNNL · ³NSLS-II BNL · ⁴UIC ChemE · ⁵Argonne MSD · ⁶Penn State ChemE · ⁷Penn State MSE · ⁸SMU ME. 교신 donghaiwang@smu.edu. 접수 2023-11-13 · 수리 2024-10-21 · 온라인 2025-01-06. DOE EERE BMR DE-EE0008862 + Battery500. 심사위원 Yan Yao 외 익명.
 > **계산 담당 = V. Singh · T. Rojas · A. T. Ngo (UIC/ANL, 저자기여 문장)** · 계산자원 Argonne LCRC **Bebop** · 계산 데이터 figshare `10.6084/m9.figshare.27257931`.

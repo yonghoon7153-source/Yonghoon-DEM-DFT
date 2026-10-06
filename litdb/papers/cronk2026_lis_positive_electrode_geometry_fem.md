@@ -3,6 +3,7 @@
 # 확률적 voxel 기하 생성(MATLAB) + TauFactor τ + FEM 팽창응력으로 설계한 Li–S 전환형 양극 (LPSCl 촉매전해질) — 11 mAh cm⁻² · 10 MPa anode-free 파우치 — Cronk (Nat. Commun. 2026)
 
 > slug `cronk2026_lis_positive_electrode_geometry_fem` · DOI `10.1038/s41467-026-69750-0` · type `FEM (COMSOL 6.1, 선형탄성+등방 eigenstrain) + 확률적 voxel 기하생성(MATLAB, Duquesnoy) + TauFactor τ + 실험(전기화학·cryo-FIB·XAS·operando 압력)` · PDF `Cronk_2026_NatCommun_LiS_PositiveElectrode_ASSB.pdf` · digested `2026-09-03` · status ✅
+> 🔗 **관련 (2026-10-06)**: `lee2025_halide_segregation_uhs_mixing_li_chalcogen_assb` — Science 2025 · 같은 Li–S 양극 공정 축(THINKY 2000 rpm 원심혼합 · 18–70 MPa 스택압 · in situ µ-CT 두께).
 >
 > ★ **우리 축에서의 자리**: 이 논문은 **DEM 도 MPM 도 없다.**  기하를 *확률적으로 생성*하고 **porosity 를 10 vol% 로 입력 고정**한 뒤 그 위에서 τ(TauFactor)·표면적(voxel)·응력(FEM)을 읽는다.  우리는 **압밀에서 porosity 를 산출**한다 → frame[3]/[5] 의 정면 대비.  동시에 **소재계가 정확히 우리 것**(Li₆PS₅Cl 촉매전해질)이고 **FEM 이 E_SE=22 GPa 를 쓴다** — 우리 DFT(E_VRH 22.06) 와 0.3 % 일치.  ⇒ 경쟁자가 아니라 **"압밀 물리를 빼면 무엇을 물을 수 없게 되는가"의 대조군**이자 **LPSCl 탄성·부피변화·스택압 앵커 공급원**.
 >
