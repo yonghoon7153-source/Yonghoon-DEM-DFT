@@ -228,6 +228,7 @@ run 'union coverage ⑥ (C2-⑥ · LHS-25)' python3 scripts/test_union_coverage.
 run 'wall near tangent (LHSC-08)' python3 scripts/test_wall_near_tangent.py
 run 'coverage CLI no tracked write (LHS-27)' python3 scripts/test_coverage_cli_no_tracked_write.py
 run 'webapp: coverage_union_display' python3 webapp/test_coverage_union_display.py   # ⑥ 웹앱 같은 묶음 — Physics 열 = 합집합 · legacy 줄 · 옛 케이스 — · 그룹 · 보고서 · 그림
+run 'parse_case_paste ⑥ 라벨 (합집합 · legacy 줄)' python3 scripts/test_parse_case_paste_union.py   # 전체 복사 붙여넣기 수집기가 새 행 이름에 조용히 비지 않게
 #  ★ 2026-10-04 (J20-s ④b · 1저자 비준 *"권고대로"* · 원장 LHS-29) — Love–Weber 입자 응력 새 열 (접촉점 · 전체 텐서 · 벽 접촉 표지 ·
 #    검사 = 열 · F = Fn + Ft · 접촉점 · 전체 virial ↔ c_strs) · real_14 독립 구현 대조 · 생산 CLI 끝단 (옛 키 불변).
 run 'love_weber_stress (④b · LHS-29)' python3 scripts/test_love_weber_stress.py
