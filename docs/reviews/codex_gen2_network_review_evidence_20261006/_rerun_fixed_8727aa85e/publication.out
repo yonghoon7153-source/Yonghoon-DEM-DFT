@@ -1,0 +1,7 @@
+[Storage] NOT configured - SUPABASE_URL=False SUPABASE_KEY=False
+[Security] WARNING: auth OFF - local/private only. For public deploy set WEBAPP_REQUIRE_AUTH=1 + WEBAPP_AUTH_TOKEN.
+baseline done (True, 'ok') {'sigma_full': 0.00400538, 'bulk_model': 'cylinder_half_d', 'resistance_model': None, 'electrode_model': 'dirichlet_exact', 'area_rule_physics': 'physics_g2', 'psi_placement_physics': 'multiply'}
+h12_as_primary failed (False, '① hertzian: 파일 없음; physics: 파일 없음; per-mode 산출물이 하나도 없다; 읽기 실패 (FileNotFoundError)') {'sigma_full': None, 'bulk_model': None, 'resistance_model': None, 'electrode_model': None, 'area_rule_physics': None, 'psi_placement_physics': None}
+bad_psi failed (False, '① hertzian: 파일 없음; physics: 파일 없음; per-mode 산출물이 하나도 없다; 읽기 실패 (FileNotFoundError)') {'sigma_full': None, 'bulk_model': None, 'resistance_model': None, 'electrode_model': None, 'area_rule_physics': None, 'psi_placement_physics': None}
+bad_electrode failed (False, '① hertzian: 파일 없음; physics: 파일 없음; per-mode 산출물이 하나도 없다; 읽기 실패 (FileNotFoundError)') {'sigma_full': None, 'bulk_model': None, 'resistance_model': None, 'electrode_model': None, 'area_rule_physics': None, 'psi_placement_physics': None}
+partial_missing_g2 failed (False, '① hertzian: 파일 없음; physics: 파일 없음; per-mode 산출물이 하나도 없다; 읽기 실패 (FileNotFoundError)') {'sigma_full': None, 'bulk_model': None, 'resistance_model': None, 'electrode_model': None, 'area_rule_physics': None, 'psi_placement_physics': None}
