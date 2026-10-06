@@ -1,0 +1,18 @@
+{
+  "manifest_key_sets_equal": true,
+  "different_entries": [
+    "REIL_C6.lock.txt"
+  ],
+  "payload_count": 10,
+  "distributions": 30,
+  "sets_match": true,
+  "versions_match": true,
+  "record_diff": [
+    "cffi",
+    "fonttools",
+    "numpy",
+    "pip"
+  ],
+  "file_aggregate_match": true,
+  "limit": "Nine equal manifest hashes and recorded SAME lines are cross-checked; no Sobol regeneration or environment rebuild in this review."
+}

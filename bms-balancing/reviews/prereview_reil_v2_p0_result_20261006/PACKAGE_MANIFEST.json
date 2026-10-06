@@ -1,0 +1,70 @@
+{
+  "schema": "review-package-manifest/v1",
+  "date": "2026-10-06",
+  "source_commit": "b38855c2c2212ce8f3513adfc3a5ef2601528512",
+  "status": "C3_OUTPUTS_ACCEPTED_WITH_EXECUTION_RECORD_GAPS",
+  "scope": "Independent review materials only; no experimental data workbook/notebook/pickle, execution approval, or new fitting results.",
+  "payload_count": 12,
+  "files": [
+    {
+      "path": "ARITHMETIC_CHECKS.json",
+      "bytes": 17879,
+      "sha256": "4be1981da55bdf7a10de04ac0bd56cde1b393d5299eb5844d16886c4b8c9258c"
+    },
+    {
+      "path": "ARITHMETIC_METHOD.md",
+      "bytes": 1312,
+      "sha256": "bbf1f93576f732302303e60503bb0c703eff29f9cfe82f228cb0900dbf60be7e"
+    },
+    {
+      "path": "CLAUDE_REPLY_KO.md",
+      "bytes": 3444,
+      "sha256": "c09c8e913ad44243fedc590962e6d24a1dde17d0d79073391842917d2fe6bba1"
+    },
+    {
+      "path": "DECISION.json",
+      "bytes": 2160,
+      "sha256": "3f67b064cca7e02cf80e61431bec8d2ddaf8547cb502acb005dfb48b0b37174c"
+    },
+    {
+      "path": "ENVIRONMENT_CHECKS.json",
+      "bytes": 438,
+      "sha256": "672d90da8e9b26008977dd9278c722c84ff5cfff9265eef229dee79de9164574"
+    },
+    {
+      "path": "ENVIRONMENT_MANIFEST_COMPARISON.json",
+      "bytes": 114,
+      "sha256": "a789126b42f9faf0ab7bf3a9d866c145321aaf5111fd70b405bd467bbfabf8c9"
+    },
+    {
+      "path": "RECEIVED_SNAPSHOT.json",
+      "bytes": 457416,
+      "sha256": "99d85491b4c86e64d93bf8d4500ddd6ac3bab943f2c802e57943be716b0ba221"
+    },
+    {
+      "path": "REVIEW_KO.md",
+      "bytes": 15237,
+      "sha256": "6d63e8394f1c9e19f6c68262be38dbea252973438ef3efe826c31eb6696aca47"
+    },
+    {
+      "path": "ROSTER_CHECK.json",
+      "bytes": 37,
+      "sha256": "5664139fe8045c439fa4f653cc3176705be95eff2abbf7f50d3e6ac51b160f17"
+    },
+    {
+      "path": "TEXT_IDENTITY_CHECKS.json",
+      "bytes": 14365,
+      "sha256": "151fbe42e89c1bc227f83041517787ebaf36f378acf39658f0dd2718ee1253d6"
+    },
+    {
+      "path": "USER_FOLLOWUP_KO.md",
+      "bytes": 1422,
+      "sha256": "d1bd7b0b58cf74dcbca68ffe81401c3c5340441e965ab905c4643fabdb02f796"
+    },
+    {
+      "path": "verify_received_text.ps1",
+      "bytes": 1476,
+      "sha256": "550b7165ee5b8ce84fe4c98441885f09884531208dd667f02cec2524938c21b9"
+    }
+  ]
+}

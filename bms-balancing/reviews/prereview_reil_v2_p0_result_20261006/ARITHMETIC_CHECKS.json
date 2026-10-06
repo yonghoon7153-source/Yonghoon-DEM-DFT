@@ -1,0 +1,755 @@
+{
+  "scope": "Read-only arithmetic on submitted JSON and protocol constants; no supplied code imported/executed, no raw experimental data opened, no P0 rerun.",
+  "max_q_exact_float_fraction_match": true,
+  "max_q_fraction": "886368576912267/281474976710656",
+  "counts": {
+    "PRIOR_INCOMPATIBLE": 16,
+    "PRIOR_COMPATIBLE": 83,
+    "P0_UNFIT": 0
+  },
+  "unique_keys": 99,
+  "prior_rows": [
+    {
+      "key": "0:0:A0",
+      "expected": "PRIOR_INCOMPATIBLE",
+      "status": "PRIOR_INCOMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "0:0:A1",
+      "expected": "PRIOR_INCOMPATIBLE",
+      "status": "PRIOR_INCOMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "0:0:A2",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "0:0.02:A0",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "0:0.02:A1",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "0:0.02:A2",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "0:0.05:A0",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "0:0.05:A1",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "0:0.05:A2",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "1:0:A0",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "1:0:A1",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "1:0:A2",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "1:0.02:A0",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "1:0.02:A1",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "1:0.02:A2",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "1:0.05:A0",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "1:0.05:A1",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "1:0.05:A2",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "2:0:A0",
+      "expected": "PRIOR_INCOMPATIBLE",
+      "status": "PRIOR_INCOMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "2:0:A1",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "2:0:A2",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "2:0.02:A0",
+      "expected": "PRIOR_INCOMPATIBLE",
+      "status": "PRIOR_INCOMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "2:0.02:A1",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "2:0.02:A2",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "2:0.05:A0",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "2:0.05:A1",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "2:0.05:A2",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "3:0:A0",
+      "expected": "PRIOR_INCOMPATIBLE",
+      "status": "PRIOR_INCOMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "3:0:A1",
+      "expected": "PRIOR_INCOMPATIBLE",
+      "status": "PRIOR_INCOMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "3:0:A2",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "3:0.02:A0",
+      "expected": "PRIOR_INCOMPATIBLE",
+      "status": "PRIOR_INCOMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "3:0.02:A1",
+      "expected": "PRIOR_INCOMPATIBLE",
+      "status": "PRIOR_INCOMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "3:0.02:A2",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "3:0.05:A0",
+      "expected": "PRIOR_INCOMPATIBLE",
+      "status": "PRIOR_INCOMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "3:0.05:A1",
+      "expected": "PRIOR_INCOMPATIBLE",
+      "status": "PRIOR_INCOMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "3:0.05:A2",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "4:0:A0",
+      "expected": "PRIOR_INCOMPATIBLE",
+      "status": "PRIOR_INCOMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "4:0:A1",
+      "expected": "PRIOR_INCOMPATIBLE",
+      "status": "PRIOR_INCOMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "4:0:A2",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "4:0.02:A0",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "4:0.02:A1",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "4:0.02:A2",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "4:0.05:A0",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "4:0.05:A1",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "4:0.05:A2",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "5:0:A0",
+      "expected": "PRIOR_INCOMPATIBLE",
+      "status": "PRIOR_INCOMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "5:0:A1",
+      "expected": "PRIOR_INCOMPATIBLE",
+      "status": "PRIOR_INCOMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "5:0:A2",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "5:0.02:A0",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "5:0.02:A1",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "5:0.02:A2",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "5:0.05:A0",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "5:0.05:A1",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "5:0.05:A2",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "6:0:A0",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "6:0:A1",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "6:0:A2",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "6:0.02:A0",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "6:0.02:A1",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "6:0.02:A2",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "6:0.05:A0",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "6:0.05:A1",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "6:0.05:A2",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "7:0:A0",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "7:0:A1",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "7:0:A2",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "7:0.02:A0",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "7:0.02:A1",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "7:0.02:A2",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "7:0.05:A0",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "7:0.05:A1",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "7:0.05:A2",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "8:0:A0",
+      "expected": "PRIOR_INCOMPATIBLE",
+      "status": "PRIOR_INCOMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "8:0:A1",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "8:0:A2",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "8:0.02:A0",
+      "expected": "PRIOR_INCOMPATIBLE",
+      "status": "PRIOR_INCOMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "8:0.02:A1",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "8:0.02:A2",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "8:0.05:A0",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "8:0.05:A1",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "8:0.05:A2",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "9:0:A0",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "9:0:A1",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "9:0:A2",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "9:0.02:A0",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "9:0.02:A1",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "9:0.02:A2",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "9:0.05:A0",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "9:0.05:A1",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "9:0.05:A2",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "10:0:A0",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "10:0:A1",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "10:0:A2",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "10:0.02:A0",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "10:0.02:A1",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "10:0.02:A2",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "10:0.05:A0",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "10:0.05:A1",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    },
+    {
+      "key": "10:0.05:A2",
+      "expected": "PRIOR_COMPATIBLE",
+      "status": "PRIOR_COMPATIBLE",
+      "endpoint_match": true,
+      "errors": []
+    }
+  ],
+  "errors": [],
+  "result_collections": {
+    "extraction": 13,
+    "sigma_v": 11,
+    "correspondence": 13,
+    "cell_columns": 13,
+    "outside_sheets": 6
+  },
+  "extractions_ok": true,
+  "sigma_all_ok": true,
+  "sigma_range": [
+    0.0003153178128297169,
+    0.0012809288186791722
+  ],
+  "correspondence_all_unknown": true,
+  "raw_cycle_step_current_absent": true,
+  "reconstructed_arrays_claimed_equal": true,
+  "sheet_names": {
+    "actual": [
+      "12-LFP Half-cell @ C_20",
+      "12-Graphite Half-cell @ C_30",
+      "12-Graphite Half-cell @ C_20",
+      "12-LFP 16-Gr Full-cell @ C_20",
+      "15-LFP 12-Gr Full-cell @ C_20",
+      "15-LFP 16-Gr Full-cell @ C_20",
+      "15-LFP 16-Gr SOC-10",
+      "15-LFP 16-Gr SOC-20",
+      "12-LFP 16-Gr SOC-10",
+      "12-LFP 12-Gr SOC-10",
+      "12-LFP 12-Gr SOC-20",
+      "12-LFP 16-Gr SOC-100",
+      "15-LFP 12-Gr SOC-10",
+      "15-LFP 12-Gr SOC-20",
+      "12-LFP C_20 Updated",
+      "12-14 12-15",
+      "Half cell after FM",
+      "Full cell after FM SOC 0",
+      "Full cell after FM SOC 10"
+    ],
+    "extra": [],
+    "missing": [],
+    "same": true
+  },
+  "limits": [
+    "max_q and sigma_v not rederived from raw XLSX",
+    "Input hashes are submitted records, not fresh reviewer hashes of forbidden raw files",
+    "Zero fitting/objective/optimizer counters are literals and static call-path evidence, not runtime counters",
+    "No approval-compliance pass inferred from mathematical agreement"
+  ]
+}

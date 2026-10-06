@@ -1,0 +1,52 @@
+{
+  "schema": "review-decision/v1",
+  "date": "2026-10-06",
+  "repository": "yonghoon7153-source/Yonghoon-DEM-DFT",
+  "ref": "b38855c2c2212ce8f3513adfc3a5ef2601528512",
+  "status": "C3_OUTPUTS_ACCEPTED_WITH_EXECUTION_RECORD_GAPS",
+  "c3_outputs": "ACCEPTED_LIMITED_TO_FIXED_SUBMISSION",
+  "execution_compliance": "INCOMPLETE_UNVERIFIED_NOT_A_NUMERICAL_FAILURE",
+  "environment_exception": "ACCEPTED_FOR_EXPLICITLY_APPROVED_NEW_BASELINE_ONLY",
+  "next": "Document disclosure/correction and prepare a separate C5 approval request; stop before execution",
+  "findings": [
+    {
+      "id": "P0-N1",
+      "priority": 2,
+      "title": "Execution preservation and resource-compliance claims incomplete",
+      "scope": "end HEAD/tree missing; run-time lock hash not bound; memory/disk unobserved; retract status section 20 compliance claim",
+      "blocks": "unqualified execution-compliance PASS, not C3 output content"
+    },
+    {
+      "id": "P0-N2",
+      "priority": 3,
+      "title": "AST check is a narrow syntax screen, not general import safety assurance",
+      "scope": "function/method decorators/defaults/annotations and base hooks not excluded",
+      "blocks": "generalizing the checker; no P0 rerun required"
+    }
+  ],
+  "p0_rerun_required": false,
+  "c5_approved": false,
+  "e3a_approved": false,
+  "e3b_approved": false,
+  "implementation_approved": false,
+  "reviewer_actions": {
+    "raw_xlsx_opened": false,
+    "notebook_opened": false,
+    "pickle_opened": false,
+    "supplied_code_imported": false,
+    "supplied_tests_run": false,
+    "p0_run": false,
+    "fitting": false,
+    "installation": false,
+    "comsol": false,
+    "data_only_text_hashing": true,
+    "submitted_json_rational_crosscheck": true
+  },
+  "post_request_user_disclosure": "USER_FOLLOWUP_KO.md; summary of conversation reply, not raw OS evidence",
+  "scope_limits": [
+    "max_q and sigma_v not recalculated from experimental data",
+    "historical bin-external equality unavailable",
+    "P0 zero-call counters are literals, not runtime monitoring",
+    "37 final narrow tests only; do not turn partial historical suite plus one retest into full-suite pass"
+  ]
+}
