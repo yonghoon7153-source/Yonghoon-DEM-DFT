@@ -4027,3 +4027,15 @@ gate INCOMPLETE · 실효 정책 UNVERIFIED · native 미승인 · 게이트 리
 - **PS01-16 (§59-3 의 2):** 승인권자 (사용자) 결정 대기 — (가) 외부 fail-closed 결과만 수용 · 내부 TryParse 분기 `UNOBSERVED` (검토자 권고) /
   (나) 내부 분기 확인 필수 유지 · 한정 관측 1 건 별도 승인.
 - 이 절이 바꾸지 않는 것: §57 · §59 · r2 꾸러미 바이트 · native 미승인 · 정상 gate INCOMPLETE · 게이트 · REIL 무관 · RUN_SCOPE 0. 실행 = 생성기 둘 (데이터 읽기만).
+
+## 61. PS01-16 수용 범위 — 사용자 결정 (가) · 기록 보완 검토 요청 준비 (2026-10-06)
+
+> **추가 기록이다.** 사용자 (2026-10-06): "가 랑 승인 요청문 부탁해" — §59-3 의 2 · §60 의 PS01-16 선택에 **(가)** 로 답했다.
+
+- **결정 (가):** PS01-16 은 **외부 fail-closed 결과만 수용 대상** (GDecision INCOMPLETE · GFields INVALID / INCONCLUSIVE — 결과 묶음 `ed0138b9…` 의
+  `results/PS_RESULTS.json` · `PS51_stdout.txt` 그 줄, 정정표 PS01-16 행이 결속) · **TryParse 내부 분기 = `UNOBSERVED`** · 원안의 "target engine 에서 내부
+  actual path 확인" 은 **미충족으로 기록**하고 계획 종결은 외부 결과 범위로 한다. 내부 분기 관측 · probe · 재시험 · 생산 변경 없음. 근거 문서
+  `bms-balancing/docs/COMSOL_BMIN_R2_RETRY3_PS01_16_SCOPE_DISPOSITION_20261006.md` (이 절과 같은 커밋).
+- **다음:** 기록 보완 둘 (BMIN-R3-C1 정정표 §60 · 이 범위 정리) 을 수신 검토에 보낸다 — 요청문 `bms-balancing/docs/COMSOL_BMIN_R2_RETRY3_SUPPLEMENT_REVIEW_REQUEST_20261006.md`
+  (발송은 사용자 · 발송문은 저장소 밖). 수용되면 같은 고정 실행본의 native 150 s 승인 요청 준비로 — 그것도 별도 사용자 승인.
+- 바꾸지 않는 것: §57 · §59 · §60 · r2 꾸러미 바이트 · native 미승인 · 정상 gate INCOMPLETE · 게이트 · REIL 무관 · RUN_SCOPE 0. 실행 0.
