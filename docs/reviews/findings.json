@@ -2111,7 +2111,7 @@
       "found_by": "codex",
       "opened_in": "docs/reviews/codex_verdict_lhs_descriptors_20260913.md",
       "title": "덤프를 읽었다고 **같은 최종 프레임**인 것은 아니다",
-      "note": "(Codex 판정문 라벨: **P2-DESC-06**)\n`parse_liggghts.py:243` 의 파일 선택은 atom/contact/mesh **각 종류의 최신 파일을 독립 선택**한다.  Codex: 합성 `atom_100 + contact_200 + mesh_100` 을 **rc=0** 으로 받았다.  다중 프레임 파일은 행을 이어 붙이고, atom loader 는 ID 사전으로 마지막 값을 쓰는 반면 contact 는 중복될 수 있다.\n`dem_analysis_core.py:110` — mesh 가 없으면 **최고 입자 중심으로 벽을 추정**한다.  실제 벽 .020 · 최고 중심 .019 이면 부피 분율에 **5.263 % 상대차**.\n⇒ 수확 계약은 **같은 최종 timestep · 상자/벽 실물 · type map · 완료 압력 · 원파일 해시**를 검사해야 한다.  기본값·추정값으로 조용히 메우지 않는다.  ⚠ 130 배치가 이런 입력을 가진다고 **단정하지 않는다**.  ⊕ 09-28 밤 (LHS J20-a · 접촉 위상 감사): **CN 에 직접 걸린다** — 합성 2 프레임 접촉 덤프를 웹앱 경로 (`parse_liggghts.parse_contact_file` → `dem_analysis_core.calc_se_se_cn`) 로 읽으면 SE-SE CN 이 정확히 2 배 (1.333 → 2.667) · 접촉 수 · 면적 · AM–SE CN 도 같은 부류.  LHS 배치 (`lhs_webapp_batch.stage_case`) 는 수확과 **같은 파일** (sha) 을 쓰지만 **파일 안 프레임 수**는 검사하지 않는다 (수확기 `read_contact_dump` 는 마지막 블록만) ⇒ ⬜ 130 접촉 덤프의 ENTRIES 블록 수 실측 · 관문 추가는 비준 대기.  ⊕ 09-28 밤 (J20-a ⓑ · 비준): LHS 배치 관문 — atom · contact 프레임 ≠ 1 · contact 중복 행 · 자기쌍이면 REFUSED (`lhs_webapp_batch` selftest ⑧–⑪, 옛 코드에서 실패 확인 뒤 수정) · 읽기 전용 감사 `scripts/lhs_contact_audit.py` 가 130 덤프를 센다 (WSL 대기).  ⚠ 웹앱 파서 (`parse_liggghts`) 자체는 그대로 — 일반 업로드 경로의 다중 프레임은 여전히 이어 붙인다 (열림).  ⊕ 09-29 WSL 실측 (감사 v1 · 봉인 코호트 130): 접촉 · 원자 프레임 **전부 1** · 중복 행 0 ⇒ 이 코호트에서는 CN 배가 경로가 실현되지 않는다 (관문 `stage_case` 는 그대로 — 다른 입력을 막는다).  ↪ 10-01 대조: 배포 경로는 같은 timestep · 같은 step 메시 · sha · 한 프레임 · 같은 프레임 porosity 관문.  남은 것 = 목표 압력 도달 검사 없음 (수확 · 배치 · 봉인 grep 0) · 웹앱 파서는 여전히 프레임을 섞는다.  ↪ 10-01 Codex 최종 (§6): PARTIAL · open — 배치 프레임/SHA 관문은 작동.  raw 파일 · 완료 압력 · dirty 실행코드 미확인 + **최종 join 이 접촉 status 의 raw SHA 변이를 놓친다** (초기 배치 관문은 거부 · 현 194 행의 네 SHA 는 일치).",
+      "note": "(Codex 판정문 라벨: **P2-DESC-06**)\n`parse_liggghts.py:243` 의 파일 선택은 atom/contact/mesh **각 종류의 최신 파일을 독립 선택**한다.  Codex: 합성 `atom_100 + contact_200 + mesh_100` 을 **rc=0** 으로 받았다.  다중 프레임 파일은 행을 이어 붙이고, atom loader 는 ID 사전으로 마지막 값을 쓰는 반면 contact 는 중복될 수 있다.\n`dem_analysis_core.py:110` — mesh 가 없으면 **최고 입자 중심으로 벽을 추정**한다.  실제 벽 .020 · 최고 중심 .019 이면 부피 분율에 **5.263 % 상대차**.\n⇒ 수확 계약은 **같은 최종 timestep · 상자/벽 실물 · type map · 완료 압력 · 원파일 해시**를 검사해야 한다.  기본값·추정값으로 조용히 메우지 않는다.  ⚠ 130 배치가 이런 입력을 가진다고 **단정하지 않는다**.  ⊕ 09-28 밤 (LHS J20-a · 접촉 위상 감사): **CN 에 직접 걸린다** — 합성 2 프레임 접촉 덤프를 웹앱 경로 (`parse_liggghts.parse_contact_file` → `dem_analysis_core.calc_se_se_cn`) 로 읽으면 SE-SE CN 이 정확히 2 배 (1.333 → 2.667) · 접촉 수 · 면적 · AM–SE CN 도 같은 부류.  LHS 배치 (`lhs_webapp_batch.stage_case`) 는 수확과 **같은 파일** (sha) 을 쓰지만 **파일 안 프레임 수**는 검사하지 않는다 (수확기 `read_contact_dump` 는 마지막 블록만) ⇒ ⬜ 130 접촉 덤프의 ENTRIES 블록 수 실측 · 관문 추가는 비준 대기.  ⊕ 09-28 밤 (J20-a ⓑ · 비준): LHS 배치 관문 — atom · contact 프레임 ≠ 1 · contact 중복 행 · 자기쌍이면 REFUSED (`lhs_webapp_batch` selftest ⑧–⑪, 옛 코드에서 실패 확인 뒤 수정) · 읽기 전용 감사 `scripts/lhs_contact_audit.py` 가 130 덤프를 센다 (WSL 대기).  ⚠ 웹앱 파서 (`parse_liggghts`) 자체는 그대로 — 일반 업로드 경로의 다중 프레임은 여전히 이어 붙인다 (열림).  ⊕ 09-29 WSL 실측 (감사 v1 · 봉인 코호트 130): 접촉 · 원자 프레임 **전부 1** · 중복 행 0 ⇒ 이 코호트에서는 CN 배가 경로가 실현되지 않는다 (관문 `stage_case` 는 그대로 — 다른 입력을 막는다).  ↪ 10-01 대조: 배포 경로는 같은 timestep · 같은 step 메시 · sha · 한 프레임 · 같은 프레임 porosity 관문.  남은 것 = 목표 압력 도달 검사 없음 (수확 · 배치 · 봉인 grep 0) · 웹앱 파서는 여전히 프레임을 섞는다.  ↪ 10-01 Codex 최종 (§6): PARTIAL · open — 배치 프레임/SHA 관문은 작동.  raw 파일 · 완료 압력 · dirty 실행코드 미확인 + **최종 join 이 접촉 status 의 raw SHA 변이를 놓친다** (초기 배치 관문은 거부 · 현 194 행의 네 SHA 는 일치).\n★ 2026-10-06 저녁 (3단계 A · B · 1저자 비준 순서 3): 관문은 `5c2669538` — 압축 루프 로그 줄 (\"Current Pressure: X MPa (Target: T)\") 로 300 MPa 도달 기록 (`scripts/lhs_pressure_record.py` · 시험 `scripts/test_lhs_pressure_record.py` 25/25) · `--export-handover` 는 `--pressure-record` 또는 `--pressure-unverified` 를 반드시 요구 · 원자료 sha 넷 = 수확과 일치 (130/130 · 64/64).  열림 = WSL 압력 기록 값 · 일반 웹앱 파서의 프레임 섞임 · 미검증 dirty 실행 코드.",
       "evidence_tests": [
         "scripts/parse_liggghts.py",
         "scripts/dem_analysis_core.py"
@@ -2125,11 +2125,12 @@
       "found_by": "codex",
       "opened_in": "docs/reviews/codex_verdict_lhs_descriptors_20260913.md",
       "title": "일곱 열을 **일곱 독립 회귀**로 세면 안 된다 — 두 개는 정의 종속",
-      "note": "(Codex 판정문 라벨: **P2-DESC-07**)\n① `eps_sphere(%) = 100(1 - phi_SE - phi_AM)` — AM+SE 만, 동일 프레임/상자일 때.  291 코퍼스 DEM 열에서 최대 절댓값 **2.22e-16** 으로 재현된다(부동소수 오차).\n② `C_total = (N_P C_P + N_S C_S)/(N_P + N_S)` — **실측 입자수까지 주어지면** 전체 피복률에 추가 정보가 없다.  ⚠ 행마다 가중치가 달라지므로 *세 coverage 열의 고정계수 행렬 rank 가 항상 2* 라는 뜻은 **아니다**.\n권고 기본 출력 = `phi_SE`·`phi_AM`, **존재상별** Hertz `C_P`·`C_S`, **검증된 관통** graph 의 Dijkstra tau.  전체 coverage 와 eps 는 파생/QC 로 보관.\n⚠ 예측 시점에 실현 `N_P`/`N_S` 를 모르는 모델이면 관측 N 을 몰래 넣어 total 을 예측했다고 하면 안 된다.  설계 추정 N 과 dump 실측 N 도 구분한다.\n\n## ★ 실측 검증 2026-09-19 (`c540de993`) — **두 항등식 다 성립한다** (열린 채 둔다)\n수확 130 에서 직접 쟀다: ① `|ε − 100(1−φ_SE−φ_AM)|` 최대 **2.842e-14** (부동소수) ·\n② `|C_total − (N_P C_P + N_S C_S)/(N_P+N_S)|` 최대 **정확히 0** (100건; mono 30 은 상이\n하나라 정의상 제외).  ⇒ 이 코퍼스에서 **두 열은 독립 정보가 아니다.**\n✅ 기계 강제 완료: `lhs_design_dataset.fill_descriptors` 가 병합마다 다시 재고 위반 시\n**거부**한다 (selftest ⑮b 가 두 방향 위반을 심어 거부를 확인).  유도열은 매니페스트\n`derived_not_independent_targets` 에 적힌다.\n⛔ **그래서 닫지 않는다**: 이 항목의 나머지 절반 — *\"예측 시점에 실현 `N_P`/`N_S` 를 모르는\n모델이 관측 N 을 몰래 넣어 `C_total` 을 예측했다고 하면 안 된다\"* · *\"설계 추정 N 과 dump\n실측 N 을 구분한다\"* — 은 **아무 코드도 강제하지 않는다**.  회귀 단계에서 걸린다.  ↪ 10-01 Codex 최종 (§6): 부분 verified — 현재 항등식 일치 · 종속 경고 있음.  total coverage 변이는 관문을 통과 (일반 강제 미완) · 다운스트림 독립 타깃/누설 방지는 별도.",
+      "note": "(Codex 판정문 라벨: **P2-DESC-07**)\n① `eps_sphere(%) = 100(1 - phi_SE - phi_AM)` — AM+SE 만, 동일 프레임/상자일 때.  291 코퍼스 DEM 열에서 최대 절댓값 **2.22e-16** 으로 재현된다(부동소수 오차).\n② `C_total = (N_P C_P + N_S C_S)/(N_P + N_S)` — **실측 입자수까지 주어지면** 전체 피복률에 추가 정보가 없다.  ⚠ 행마다 가중치가 달라지므로 *세 coverage 열의 고정계수 행렬 rank 가 항상 2* 라는 뜻은 **아니다**.\n권고 기본 출력 = `phi_SE`·`phi_AM`, **존재상별** Hertz `C_P`·`C_S`, **검증된 관통** graph 의 Dijkstra tau.  전체 coverage 와 eps 는 파생/QC 로 보관.\n⚠ 예측 시점에 실현 `N_P`/`N_S` 를 모르는 모델이면 관측 N 을 몰래 넣어 total 을 예측했다고 하면 안 된다.  설계 추정 N 과 dump 실측 N 도 구분한다.\n\n## ★ 실측 검증 2026-09-19 (`c540de993`) — **두 항등식 다 성립한다** (열린 채 둔다)\n수확 130 에서 직접 쟀다: ① `|ε − 100(1−φ_SE−φ_AM)|` 최대 **2.842e-14** (부동소수) ·\n② `|C_total − (N_P C_P + N_S C_S)/(N_P+N_S)|` 최대 **정확히 0** (100건; mono 30 은 상이\n하나라 정의상 제외).  ⇒ 이 코퍼스에서 **두 열은 독립 정보가 아니다.**\n✅ 기계 강제 완료: `lhs_design_dataset.fill_descriptors` 가 병합마다 다시 재고 위반 시\n**거부**한다 (selftest ⑮b 가 두 방향 위반을 심어 거부를 확인).  유도열은 매니페스트\n`derived_not_independent_targets` 에 적힌다.\n⛔ **그래서 닫지 않는다**: 이 항목의 나머지 절반 — *\"예측 시점에 실현 `N_P`/`N_S` 를 모르는\n모델이 관측 N 을 몰래 넣어 `C_total` 을 예측했다고 하면 안 된다\"* · *\"설계 추정 N 과 dump\n실측 N 을 구분한다\"* — 은 **아무 코드도 강제하지 않는다**.  회귀 단계에서 걸린다.  ↪ 10-01 Codex 최종 (§6): 부분 verified — 현재 항등식 일치 · 종속 경고 있음.  total coverage 변이는 관문을 통과 (일반 강제 미완) · 다운스트림 독립 타깃/누설 방지는 별도.\n★ 2026-10-06 저녁 (3단계 A · B · 1저자 비준 순서 3): claimed_fixed sha c981d77f0 → `5c2669538` — 전체 피복 가중평균 항등식을 인계표에서도 검사 (Codex \"전체만 +1 %p\" 반례 거부 · 실 이봉 100 + 48 통과 · selftest ㉜f–h).",
       "evidence_tests": [
-        "scripts/lhs_design_dataset.py::selftest"
+        "scripts/lhs_design_dataset.py::selftest",
+        "scripts/lhs_design_dataset.py"
       ],
-      "claimed_fixed_sha": "c981d77f0",
+      "claimed_fixed_sha": "5c2669538",
       "verification_note": "[범위: 생산자 측] 항등식 관문 (porosity 닫힘 · CN G1–G7 · P3 · v1.1 D1–D5) + 배포 README §3 항등식 목록 · c981d77f0 에서 \"전부 1e-9 검사\" 과장을 정정 (coverage_AM_total 가중평균은 관문 밖이라고 명시).  다운스트림 (ML 이 항등식 열을 독립 성능으로 세지 않는지) 은 생산자가 강제할 수 없다."
     },
     {
@@ -3979,7 +3980,7 @@
     {
       "id": "LHS-03",
       "severity": "P2",
-      "status": "open",
+      "status": "wontfix",
       "owner": "claude",
       "found_by": "claude",
       "opened_in": "docs/lhs_corpus_readout_20260915.md",
@@ -3989,7 +3990,8 @@
         "docs/data/lhs_design_20260818.csv"
       ],
       "title": "이온 채널만 **25/127 (19.7 %) 이 관통하지 않는다** — S3 이온 정의역이 102 이하다",
-      "note": "2026-09-15 전수 판독 (생산 솔버, legacy 팔 = 기본값.  ⚠ **S3 결과가 아니다**):\n\n```\nionic       OK 102 · SOLVE_NONE 25     경로 spsolve 70 · cg 32 · none 25\nelectronic  OK 127 · SOLVE_NONE  0     경로 spsolve 114 · cg 13\nthermal     OK 127 · SOLVE_NONE  0     경로 spsolve 74 · cg 53\n```\n⇒ **S3 이온 채널의 판정 정의역은 최대 102** 다 (`OLD_ZERO` 를 빼면 더 작다).\n\n★ **유한크기가 φ 보다 잘 가른다**:\n```\n두께/최대입자 < 3    막힘률 42.9 % (n=28)\n             3 – 5          13.7 % (n=51)\n             5 – 10          8.3 % (n=36)\n             ≥ 10           25.0 % (n=12)\n```\n⚠ `≥ 10` 이 다시 오르는 것은 **n = 12 라 잡음일 수 있고**, 그 구간은 얇아서가 아니라 SE 가\n적어서 막히는 쪽일 것이다 — **두 축이 분리되지 않았다**.\n\n★ σ 산포 (legacy 팔): 이온 `3.802e-11` ~ `2.683e-07` = **7,059배** · 전자 27배 · 열 3.2배.\n이온만 퍼콜 경계를 가로지른다.  이온 하위 다섯은 **연속적으로 0 에 접근**한다 (급단절 아님).\n⚠ 전자 채널 최소 `n_nodes = 30` — 30 노드짜리 AM–AM 망이 관통 판정을 받았다 (⬜ 미확인).\n\n⬜ **봉인과의 대조**: 봉인기가 이 25건을 `OLD_NONE` 으로 분류해야 봉인과 ρ 가 **같은\n데이터를 본 것**이다.  다르면 러너의 `measured_by_channel` 검사가 09-17 에 막는다.\n\n★★ **기전 확정 2026-09-15 — 24/25 는 진짜 단절이다** (`lhs00_009` 만 경계, `LHS-04`).\n25건 전부에 솔버 진단을 돌린 결과:\n\n```\n                성분 수        고립 SE 입자(접촉 0)      φ_SE\n단절 24건   29 ~ 2,324 (중앙 629)   3.2 ~ 49.3 % (중앙 20.2 %)   0.0916 ~ 0.1720\n```\n⇒ SE 망이 **수백~수천 조각**으로 부서져 있다.  *\"벽에 못 닿는다\"* 가 아니라\n**\"애초에 이어지지 않았다\"** 다.\n\n★★★ **그리고 이것이 `LHS-01` 의 ③번 서술을 정밀화한다 — 내 문장을 고친다.**\n  · 옛 표현: *\"φ_SE 로 안 갈린다 — 해없음 최대 0.3064 vs 해있음 최소 0.0916, 완전히 겹친다\"*\n  · **그 겹침을 만든 유일한 케이스가 `lhs00_009` 이고 그것은 경계 artifact 다.**\n  · 그것을 빼면 **`φ_SE ≥ 0.20` 인 진짜 단절은 0건**이다.\n  ⇒ 바른 문장: **동결 문턱 `φc = 0.20` 은 \"위면 뚫린다\" 쪽에서는 맞다** (문턱 위 단절 0건).\n    **틀린 것은 \"아래면 안 뚫린다\" 쪽뿐**이다 — `φ_SE = 0.1720` 에서 17/17 이 뚫린다.\n    즉 **충분조건으로는 성립하고 필요조건으로는 성립하지 않는다.**\n  ⚠ 그래도 `se_percolation` 라벨의 45 % 오류는 그대로다 (`LHS-01`) — 그 라벨은 `BELOW_phic`\n    쪽을 *\"안 뚫린다\"* 로 쓰기 때문이다.\n\n⬜ **새 관측 — 고립 SE 입자 비율이 크다.**  `lhs00_093` 은 SE 입자 **1,570개 중 774개\n(49.3 %)가 접촉이 하나도 없다**.  `lhs00_107` 43.8 % · `lhs00_075` 40.2 %.\nφ_SE ≈ 0.09 인 침대라 AM 공극에 낱개로 갇히는 것이 **물리적으로 그럴듯하지만**, 300 MPa\n압밀 뒤에 절반이 무접촉인 것이 정상인지는 **확인된 바 없다**.\n⚠ 접촉 검출(cutoff·δ 규약) 쪽일 가능성도 배제 못 한다 — 별건으로 남긴다."
+      "note": "2026-09-15 전수 판독 (생산 솔버, legacy 팔 = 기본값.  ⚠ **S3 결과가 아니다**):\n\n```\nionic       OK 102 · SOLVE_NONE 25     경로 spsolve 70 · cg 32 · none 25\nelectronic  OK 127 · SOLVE_NONE  0     경로 spsolve 114 · cg 13\nthermal     OK 127 · SOLVE_NONE  0     경로 spsolve 74 · cg 53\n```\n⇒ **S3 이온 채널의 판정 정의역은 최대 102** 다 (`OLD_ZERO` 를 빼면 더 작다).\n\n★ **유한크기가 φ 보다 잘 가른다**:\n```\n두께/최대입자 < 3    막힘률 42.9 % (n=28)\n             3 – 5          13.7 % (n=51)\n             5 – 10          8.3 % (n=36)\n             ≥ 10           25.0 % (n=12)\n```\n⚠ `≥ 10` 이 다시 오르는 것은 **n = 12 라 잡음일 수 있고**, 그 구간은 얇아서가 아니라 SE 가\n적어서 막히는 쪽일 것이다 — **두 축이 분리되지 않았다**.\n\n★ σ 산포 (legacy 팔): 이온 `3.802e-11` ~ `2.683e-07` = **7,059배** · 전자 27배 · 열 3.2배.\n이온만 퍼콜 경계를 가로지른다.  이온 하위 다섯은 **연속적으로 0 에 접근**한다 (급단절 아님).\n⚠ 전자 채널 최소 `n_nodes = 30` — 30 노드짜리 AM–AM 망이 관통 판정을 받았다 (⬜ 미확인).\n\n⬜ **봉인과의 대조**: 봉인기가 이 25건을 `OLD_NONE` 으로 분류해야 봉인과 ρ 가 **같은\n데이터를 본 것**이다.  다르면 러너의 `measured_by_channel` 검사가 09-17 에 막는다.\n\n★★ **기전 확정 2026-09-15 — 24/25 는 진짜 단절이다** (`lhs00_009` 만 경계, `LHS-04`).\n25건 전부에 솔버 진단을 돌린 결과:\n\n```\n                성분 수        고립 SE 입자(접촉 0)      φ_SE\n단절 24건   29 ~ 2,324 (중앙 629)   3.2 ~ 49.3 % (중앙 20.2 %)   0.0916 ~ 0.1720\n```\n⇒ SE 망이 **수백~수천 조각**으로 부서져 있다.  *\"벽에 못 닿는다\"* 가 아니라\n**\"애초에 이어지지 않았다\"** 다.\n\n★★★ **그리고 이것이 `LHS-01` 의 ③번 서술을 정밀화한다 — 내 문장을 고친다.**\n  · 옛 표현: *\"φ_SE 로 안 갈린다 — 해없음 최대 0.3064 vs 해있음 최소 0.0916, 완전히 겹친다\"*\n  · **그 겹침을 만든 유일한 케이스가 `lhs00_009` 이고 그것은 경계 artifact 다.**\n  · 그것을 빼면 **`φ_SE ≥ 0.20` 인 진짜 단절은 0건**이다.\n  ⇒ 바른 문장: **동결 문턱 `φc = 0.20` 은 \"위면 뚫린다\" 쪽에서는 맞다** (문턱 위 단절 0건).\n    **틀린 것은 \"아래면 안 뚫린다\" 쪽뿐**이다 — `φ_SE = 0.1720` 에서 17/17 이 뚫린다.\n    즉 **충분조건으로는 성립하고 필요조건으로는 성립하지 않는다.**\n  ⚠ 그래도 `se_percolation` 라벨의 45 % 오류는 그대로다 (`LHS-01`) — 그 라벨은 `BELOW_phic`\n    쪽을 *\"안 뚫린다\"* 로 쓰기 때문이다.\n\n⬜ **새 관측 — 고립 SE 입자 비율이 크다.**  `lhs00_093` 은 SE 입자 **1,570개 중 774개\n(49.3 %)가 접촉이 하나도 없다**.  `lhs00_107` 43.8 % · `lhs00_075` 40.2 %.\nφ_SE ≈ 0.09 인 침대라 AM 공극에 낱개로 갇히는 것이 **물리적으로 그럴듯하지만**, 300 MPa\n압밀 뒤에 절반이 무접촉인 것이 정상인지는 **확인된 바 없다**.\n⚠ 접촉 검출(cutoff·δ 규약) 쪽일 가능성도 배제 못 한다 — 별건으로 남긴다.\n★ 2026-10-06 저녁 (3단계 A · B · 1저자 비준 순서 3): wontfix — 관측이지 결함이 아님 — v1.2 에서 비관통 24 건이 일관 (Hertz NOT_PERCOLATING 24 = 벽 τ NOT_PERCOLATING = percolation_pct 0 · 검산기 교차확인) · `lhs00_009` 는 LHS-04 · 고립 SE 질문은 LHS-06 이 추적.",
+      "decision_note": "관측이지 결함이 아님 — v1.2 에서 비관통 24 건이 일관 (Hertz NOT_PERCOLATING 24 = 벽 τ NOT_PERCOLATING = percolation_pct 0 · 검산기 교차확인) · `lhs00_009` 는 LHS-04 · 고립 SE 질문은 LHS-06 이 추적."
     },
     {
       "id": "LHS-04",
@@ -4005,12 +4007,12 @@
         "scripts/network_conductivity.py"
       ],
       "title": "`lhs00_009` — 망은 **하나로 이어져 있는데** 상단 전극이 4개뿐이라 미퍼콜로 판정된다 (`L2-04` 경계 규칙의 실증)",
-      "note": "φ_SE = **0.3064** 로 평균장 문턱 한참 위이고, **같은 φ_SE 인 형제 20건이 전부\n뚫리는데 혼자 막혔다** (2026-09-15 전수 판독).\n\n```\n                          lhs00_009    형제 20건 범위\nthick_over_d_am_max           2.719    [2.719, 20.39]   ← 최소\nd_am_max_um                      15    [2, 15]          ← 최대\nrve_over_d_am_max             3.333    [3.333, 25]      ← 최소\nsize_ratio_AM_over_SE            15    [1, 15]          ← 최대\nfinite_size_flag        thin+n_am_p_low\n솔버                     SOLVE_NONE · n_nodes 59,616 · path none\n```\n\n⇒ **두께 방향으로 AM_P 가 2.7개, RVE 폭으로 3.3개**뿐이다.  φ 가 아니라 **유한크기\ncorner** 이고, 설계 자신이 `thin+n_am_p_low` 로 표시해 뒀다.\n★ 솔버가 노드 **59,616개**를 만들고도 관통 성분을 못 찾았다 — *\"입자가 없다\"* 가 아니라\n**\"벽에서 벽까지 잇는 SE 사슬이 없다\"** 다.\n\n⬜ **미확인 — 물리인가 경계 규칙인가.**  원장의 열린 P1 `L2-04` 가 *\"벽에 닿지 않는 입자\n사슬을 관통으로 판정한다 (전극을 내부 15/85 % 로 옮김)\"* 를 이미 결함으로 등재했다.\n이 케이스는 그 축의 **반대쪽 면**(너무 엄격한 쪽)일 수 있다.\n확인 = `solve_network` 의 진단 인쇄(`bottom=… top=… · components reaching bottom/top`)를\n이 케이스에서 한 번 본다.  ⚠ 원자료가 저자 기계에 있어 여기서는 못 돈다.\n⛔ **아직 결함이라고 부르지 않는다** — 얇은 침대에서 관통이 없는 것은 **정상일 수 있다**.\n\n★★★ **진단 완료 2026-09-15 — 물리가 아니라 경계 규칙이다.**  저자 기계에서 그 케이스 하나를\n생산 경로로 풀어 솔버의 진단 인쇄를 받았다:\n\n```\nNo percolating component. DIAGNOSTIC:\n  n_target_nodes=59616, n_graph_nodes=59612, n_edges=245707\n  bottom=2720, top=4  (plate_z=0.0372)\n  n_components=1, top-5 sizes=[59612]\n  components reaching bottom=1, top=0 (need overlap for percolation)\n```\n\n★★ **읽는 법 — 세 줄이 서로를 닫는다.**\n① `n_components = 1 · top-5 sizes = [59612]` ⇒ SE 망은 **쪼개져 있지 않다**.\n   **하나의 거대 성분이 침대 전체**를 덮는다.  *\"SE 가 끊겼다\"* 가 아니다.\n② `n_target 59616 − n_graph 59612 = 4` ⇒ **접촉이 하나도 없는 고립 입자가 정확히 4개**다.\n③ `top = 4` 이고 `components reaching top = 0` ⇒ 그 거대 성분에 상단 노드가 **하나도 없다**\n   ⇒ **상단 전극으로 뽑힌 4개가 바로 그 고립 입자 4개**다 (다른 해가 없다).\n\n⇒ **판정: 이어진 망을 \"미퍼콜\" 로 부른 것은 경계 배정 때문이다.**\n`bottom = 2720` vs `top = 4` — **680배 비대칭**이다.  `d_am_p = 15 µm` 인 침대(두께\n40.8 µm)에서 상단 띠가 큰 AM_P 에 점령돼 SE 가 거의 안 남고, 남은 넷은 압밀 위에 뜬\n**접촉 없는 낱개**다.\n\n⇒ 이것은 원장의 열린 **P1 `L2-04`**(*\"벽에 닿지 않는 입자 사슬을 관통으로 판정한다 —\n전극을 내부 15/85 % 로 옮김\"*)와 **같은 축의 반대쪽 면**이고, **실물 증거**다.\n`L2-04` 는 경계가 **너무 느슨**한 쪽을, 이 케이스는 **너무 엄격**한 쪽을 보여 준다.\n⇒ 등급을 `P2 → P1` 로 올린다 — **S3 이온 정의역에서 케이스를 실제로 뺀다**.\n\n⚠⚠ **아직 모르는 것 — 나머지 24건도 같은 부류인가.**  `lhs00_009` 하나만 확인했다.\n같은 진단을 나머지 24건에 돌리면 *\"경계 때문\"* 과 *\"진짜 안 이어짐\"* 이 갈린다:\n`n_components` 와 `top`/`bottom` 수, 그리고 `n_target − n_graph` 를 보면 된다.\n⛔ **그 전에는 \"이온 25건이 전부 경계 artifact\" 라고 쓰지 않는다.**\n\n⛔ **그리고 이 발견이 S3 를 멈추지 않는다** — 봉인이 이 케이스를 `OLD_NONE` 으로 분류하면\n정의역 밖이고, 그것은 **봉인과 ρ 가 일관된** 상태다.  경계 규칙 수정은 `L2-04` 의 일이고\n**세대 2** 다 (S3 는 ψ 배치 한 줄만 바꾸는 계약이다).\n\n★★★ **범위 확정 2026-09-15 — 25건 중 `lhs00_009` **하나뿐**이다.**  같은 진단을 나머지\n24건에 전부 돌렸다 (저자 기계, 생산 경로):\n\n```\n                성분 수        고립 SE 입자 비율      φ_SE\n단절 24건   29 ~ 2,324 (중앙 629)   3.2 ~ 49.3 % (중앙 20.2 %)   0.0916 ~ 0.1720\nlhs00_009            1                    0.007 %                  0.3064\n```\n⇒ `lhs00_009` 는 고립 비율이 단절군 **최소의 477분의 1**, 성분 수는 **29배 아래**다.\n**모든 축에서 다른 동물**이다.\n⇒ **내 걱정은 반증됐다** — *\"이온 25건이 경계 artifact 일 수 있다\"* 는 **1건뿐**이다.\n   나머지 24건은 SE 망이 실제로 **수백~수천 조각으로 부서진** 진짜 단절이다.\n\n★ 그리고 이것이 이 항목의 **등급 근거를 좁힌다**: 경계 규칙이 S3 이온 정의역에서 빼는\n것은 **1건**(102 → 103 이 될 뻔한 것)이다.  ⇒ P1 유지하되 **크기는 1/127** 로 적는다.\n⚠ 다만 `L2-04` 의 **반대쪽 면이 실재한다**는 증거로서의 가치는 그대로다 — 이어진 망을\n미퍼콜로 부르는 경로가 **실제 코퍼스에 있다**.\n\n★ ② 퍼콜레이션 감사기 legacy 대조 (WSL 09-29 · `scripts/lhs_perc_audit.py` · 127 건): **유일 불일치 = 이 케이스** — 웹앱 밴드 규칙 (`calc_percolation` L0) 은 SE 관통 99.993 % · legacy `ionic_percolates` (솔버 결과) False.  진단 (경계 규칙) 과 정합 · ② 열 `percolation_pct` 와 σ_ion 열이 이 케이스에서 어긋난다는 한정어를 열 사전에 적는다."
+      "note": "φ_SE = **0.3064** 로 평균장 문턱 한참 위이고, **같은 φ_SE 인 형제 20건이 전부\n뚫리는데 혼자 막혔다** (2026-09-15 전수 판독).\n\n```\n                          lhs00_009    형제 20건 범위\nthick_over_d_am_max           2.719    [2.719, 20.39]   ← 최소\nd_am_max_um                      15    [2, 15]          ← 최대\nrve_over_d_am_max             3.333    [3.333, 25]      ← 최소\nsize_ratio_AM_over_SE            15    [1, 15]          ← 최대\nfinite_size_flag        thin+n_am_p_low\n솔버                     SOLVE_NONE · n_nodes 59,616 · path none\n```\n\n⇒ **두께 방향으로 AM_P 가 2.7개, RVE 폭으로 3.3개**뿐이다.  φ 가 아니라 **유한크기\ncorner** 이고, 설계 자신이 `thin+n_am_p_low` 로 표시해 뒀다.\n★ 솔버가 노드 **59,616개**를 만들고도 관통 성분을 못 찾았다 — *\"입자가 없다\"* 가 아니라\n**\"벽에서 벽까지 잇는 SE 사슬이 없다\"** 다.\n\n⬜ **미확인 — 물리인가 경계 규칙인가.**  원장의 열린 P1 `L2-04` 가 *\"벽에 닿지 않는 입자\n사슬을 관통으로 판정한다 (전극을 내부 15/85 % 로 옮김)\"* 를 이미 결함으로 등재했다.\n이 케이스는 그 축의 **반대쪽 면**(너무 엄격한 쪽)일 수 있다.\n확인 = `solve_network` 의 진단 인쇄(`bottom=… top=… · components reaching bottom/top`)를\n이 케이스에서 한 번 본다.  ⚠ 원자료가 저자 기계에 있어 여기서는 못 돈다.\n⛔ **아직 결함이라고 부르지 않는다** — 얇은 침대에서 관통이 없는 것은 **정상일 수 있다**.\n\n★★★ **진단 완료 2026-09-15 — 물리가 아니라 경계 규칙이다.**  저자 기계에서 그 케이스 하나를\n생산 경로로 풀어 솔버의 진단 인쇄를 받았다:\n\n```\nNo percolating component. DIAGNOSTIC:\n  n_target_nodes=59616, n_graph_nodes=59612, n_edges=245707\n  bottom=2720, top=4  (plate_z=0.0372)\n  n_components=1, top-5 sizes=[59612]\n  components reaching bottom=1, top=0 (need overlap for percolation)\n```\n\n★★ **읽는 법 — 세 줄이 서로를 닫는다.**\n① `n_components = 1 · top-5 sizes = [59612]` ⇒ SE 망은 **쪼개져 있지 않다**.\n   **하나의 거대 성분이 침대 전체**를 덮는다.  *\"SE 가 끊겼다\"* 가 아니다.\n② `n_target 59616 − n_graph 59612 = 4` ⇒ **접촉이 하나도 없는 고립 입자가 정확히 4개**다.\n③ `top = 4` 이고 `components reaching top = 0` ⇒ 그 거대 성분에 상단 노드가 **하나도 없다**\n   ⇒ **상단 전극으로 뽑힌 4개가 바로 그 고립 입자 4개**다 (다른 해가 없다).\n\n⇒ **판정: 이어진 망을 \"미퍼콜\" 로 부른 것은 경계 배정 때문이다.**\n`bottom = 2720` vs `top = 4` — **680배 비대칭**이다.  `d_am_p = 15 µm` 인 침대(두께\n40.8 µm)에서 상단 띠가 큰 AM_P 에 점령돼 SE 가 거의 안 남고, 남은 넷은 압밀 위에 뜬\n**접촉 없는 낱개**다.\n\n⇒ 이것은 원장의 열린 **P1 `L2-04`**(*\"벽에 닿지 않는 입자 사슬을 관통으로 판정한다 —\n전극을 내부 15/85 % 로 옮김\"*)와 **같은 축의 반대쪽 면**이고, **실물 증거**다.\n`L2-04` 는 경계가 **너무 느슨**한 쪽을, 이 케이스는 **너무 엄격**한 쪽을 보여 준다.\n⇒ 등급을 `P2 → P1` 로 올린다 — **S3 이온 정의역에서 케이스를 실제로 뺀다**.\n\n⚠⚠ **아직 모르는 것 — 나머지 24건도 같은 부류인가.**  `lhs00_009` 하나만 확인했다.\n같은 진단을 나머지 24건에 돌리면 *\"경계 때문\"* 과 *\"진짜 안 이어짐\"* 이 갈린다:\n`n_components` 와 `top`/`bottom` 수, 그리고 `n_target − n_graph` 를 보면 된다.\n⛔ **그 전에는 \"이온 25건이 전부 경계 artifact\" 라고 쓰지 않는다.**\n\n⛔ **그리고 이 발견이 S3 를 멈추지 않는다** — 봉인이 이 케이스를 `OLD_NONE` 으로 분류하면\n정의역 밖이고, 그것은 **봉인과 ρ 가 일관된** 상태다.  경계 규칙 수정은 `L2-04` 의 일이고\n**세대 2** 다 (S3 는 ψ 배치 한 줄만 바꾸는 계약이다).\n\n★★★ **범위 확정 2026-09-15 — 25건 중 `lhs00_009` **하나뿐**이다.**  같은 진단을 나머지\n24건에 전부 돌렸다 (저자 기계, 생산 경로):\n\n```\n                성분 수        고립 SE 입자 비율      φ_SE\n단절 24건   29 ~ 2,324 (중앙 629)   3.2 ~ 49.3 % (중앙 20.2 %)   0.0916 ~ 0.1720\nlhs00_009            1                    0.007 %                  0.3064\n```\n⇒ `lhs00_009` 는 고립 비율이 단절군 **최소의 477분의 1**, 성분 수는 **29배 아래**다.\n**모든 축에서 다른 동물**이다.\n⇒ **내 걱정은 반증됐다** — *\"이온 25건이 경계 artifact 일 수 있다\"* 는 **1건뿐**이다.\n   나머지 24건은 SE 망이 실제로 **수백~수천 조각으로 부서진** 진짜 단절이다.\n\n★ 그리고 이것이 이 항목의 **등급 근거를 좁힌다**: 경계 규칙이 S3 이온 정의역에서 빼는\n것은 **1건**(102 → 103 이 될 뻔한 것)이다.  ⇒ P1 유지하되 **크기는 1/127** 로 적는다.\n⚠ 다만 `L2-04` 의 **반대쪽 면이 실재한다**는 증거로서의 가치는 그대로다 — 이어진 망을\n미퍼콜로 부르는 경로가 **실제 코퍼스에 있다**.\n\n★ ② 퍼콜레이션 감사기 legacy 대조 (WSL 09-29 · `scripts/lhs_perc_audit.py` · 127 건): **유일 불일치 = 이 케이스** — 웹앱 밴드 규칙 (`calc_percolation` L0) 은 SE 관통 99.993 % · legacy `ionic_percolates` (솔버 결과) False.  진단 (경계 규칙) 과 정합 · ② 열 `percolation_pct` 와 σ_ion 열이 이 케이스에서 어긋난다는 한정어를 열 사전에 적는다.\n★ 2026-10-06 저녁 (3단계 A · B · 1저자 비준 순서 3): 닫기 제안 (Codex 확인 뒤) — `0424795d6` (LHS-11 같은 step 메시) 뒤 `lhs00_009` 의 판 z 0.0372 → 0.036056 · 위 띠 SE 4 → 2,835 · v1.2 Hertz OK · L0 · 관통 99.993 · 벽 τ OK."
     },
     {
       "id": "LHS-05",
       "severity": "P3",
-      "status": "open",
+      "status": "wontfix",
       "owner": "claude",
       "found_by": "claude",
       "opened_in": "docs/lhs_corpus_readout_20260915.md",
@@ -4020,7 +4022,8 @@
         "docs/data/lhs_design_20260818.csv"
       ],
       "title": "ρ 는 **코호트의 안정성이 아니라 가장 취약한 설계점**에서 나온다 (읽기 규약)",
-      "note": "2026-09-15 전수 ρ 측정에서 **세 채널의 ρ 를 지배한 케이스가 전부 같은 설계점**이었다:\n\n```\nionic       ρ 7.117172448780858e-06 %  ← lhs00_020  (치환, 직접해)  σ_ratio 3.802e-11 ← 이온 최소\nelectronic  ρ 1.4629494790028302e-05 % ← lhs00_093  (조임, 반복해)\nthermal     ρ 1.385157665230787e-05 %  ← lhs00_023  (조임, 반복해)\n                          셋 다  φ_SE 0.0916 · am_pct 95\n```\n`φ_SE 0.0916 · am_pct 95` 는 **코호트에서 SE 가 가장 적은 설계점**이다.  우연이 아니다 —\n퍼콜 문턱 근처에서 망은 **가는 실 하나**가 되고, 그때 σ 가 행렬 순서·허용오차에 가장\n민감해진다.\n\n⇒ **채널 최대를 잡는 집계 규약이 의도대로 작동한다** (보수적).\n⛔ **읽기 규약**: ρ 를 *\"코호트가 그만큼 안정적\"* 으로 읽지 말 것.\n   바른 문장은 ***\"최악의 설계점에서도 그만큼\"*** 이다.\n⚠ 중앙값이나 분포를 보고 싶으면 그것은 **다른 양**이고 따로 등록해야 한다."
+      "note": "2026-09-15 전수 ρ 측정에서 **세 채널의 ρ 를 지배한 케이스가 전부 같은 설계점**이었다:\n\n```\nionic       ρ 7.117172448780858e-06 %  ← lhs00_020  (치환, 직접해)  σ_ratio 3.802e-11 ← 이온 최소\nelectronic  ρ 1.4629494790028302e-05 % ← lhs00_093  (조임, 반복해)\nthermal     ρ 1.385157665230787e-05 %  ← lhs00_023  (조임, 반복해)\n                          셋 다  φ_SE 0.0916 · am_pct 95\n```\n`φ_SE 0.0916 · am_pct 95` 는 **코호트에서 SE 가 가장 적은 설계점**이다.  우연이 아니다 —\n퍼콜 문턱 근처에서 망은 **가는 실 하나**가 되고, 그때 σ 가 행렬 순서·허용오차에 가장\n민감해진다.\n\n⇒ **채널 최대를 잡는 집계 규약이 의도대로 작동한다** (보수적).\n⛔ **읽기 규약**: ρ 를 *\"코호트가 그만큼 안정적\"* 으로 읽지 말 것.\n   바른 문장은 ***\"최악의 설계점에서도 그만큼\"*** 이다.\n⚠ 중앙값이나 분포를 보고 싶으면 그것은 **다른 양**이고 따로 등록해야 한다.\n★ 2026-10-06 저녁 (3단계 A · B · 1저자 비준 순서 3): wontfix — 읽기 규칙 — `docs/lhs_corpus_readout_20260915.md:224` · `scripts/build_review_before_after.py:178–182` 에 문서화 · `measure_rho` 가 케이스별 행을 쓰므로 지배 설계점을 보일 수 있다.",
+      "decision_note": "읽기 규칙 — `docs/lhs_corpus_readout_20260915.md:224` · `scripts/build_review_before_after.py:178–182` 에 문서화 · `measure_rho` 가 케이스별 행을 쓰므로 지배 설계점을 보일 수 있다."
     },
     {
       "id": "LHS-06",
@@ -4477,7 +4480,7 @@
         "scripts/lhs_descriptor_harvest.py::tortuosity_se",
         "docs/data/lhs_descriptors_20260919/"
       ],
-      "note": "전수 수확 130 의 실측:\n```\nstatus.tortuosity   NOT_PERCOLATING 116 · OK 14   (τ 가 10.8 % 에서만 나온다)\n```\n다른 양은 전부 건재하다 — `phi` 130/130 OK · `coverage_AM_total` 130/130 OK ·\n`closure_residual` 130 건 전부 0 · `coverage_AM_P/S` 의 n=100 은 mono 설계 30 건의\n`N_A_PHASE_ABSENT` 라 **정상**(0 으로 안 뭉갰다).\n\n## SE 부피분율로 설명되지 않는다\n```\nτ OK      phi_se 0.1860 ~ 0.4103\nτ 미관통  phi_se 0.0433 ~ 0.4164   ← 완전히 겹친다\n```\nOK 최소(0.1860)보다 SE 가 **많은데** 미관통인 케이스가 **53** 건이다\n(`lhs00_118` 0.4164 · `lhs00_100` 0.4139 · `lhs00_121` 0.4116 …).\n⇒ *\"SE 가 적어서\"* 가 아니다.\n\n## ⛔ 먼저 고칠 것은 **진단**이다 — 원인이 구분되지 않는다\n`tortuosity_se` 에 `return base` 가 두 군데인데 **같은 status** 를 낸다:\n```\nif not bot or not top: return base   # ⓐ 전극 밴드가 비었다 (판정 기준이 SE 를 전극으로 인정 안 함)\nif not cands:          return base   # ⓑ 위아래를 잇는 성분이 없다 (진짜 미관통)\n```\n산출물은 둘 다 `n_sampled 0 · n_valid 0 · NOT_PERCOLATING` 이라 **구분 불가**다.\n⇒ 규약을 고치기 **전에** ⓐ/ⓑ 를 가르는 status 를 넣고 재측정해야 한다.  안 그러면\n  무엇이 고쳐졌는지 말할 수 없다.\n\n## 의심되는 자리 (특정됨, 미확정)\n```python\nz_lo, z_hi = 전체 입자(AM 포함)의 z 범위\nt = SE 최대 반경\nbot/top = SE 중 그 밴드 안에 드는 것\n```\n밴드를 **AM 포함 전체 범위**로 잡는데 자격은 **SE 에게만** 주고, 폭은 **SE 반경**뿐이다.\nAM ≫ SE 면 튀어나온 AM 한 알이 `z_hi` 를 끌어올려 SE 가 밴드에 못 든다.\n⚠ `tau_convention` 문자열이 `solid_zrange/rSEmax` 라고 **스스로 적는다** — 의도된 규약이다.\n  그러나 의도됐다고 옳은 것은 아니다.\n★ **`plate_z_sim` 이 이미 산출물에 있다** — 플래튼이 진짜 전극면인데 대신 *'제일 높이\n  튀어나온 입자'* 를 쓴다.  후보 규약이 이미 손에 있다는 뜻이다.\n\n## 원장 안의 이웃\n`LHS-04`(P1, *\"망은 하나로 이어져 있는데 상단 전극이 4개뿐이라 미퍼콜로 판정\"*) ·\n`L2-04`(P1, *\"벽에 닿지 않는 입자 사슬을 관통으로 판정\"*) 과 **같은 부류**(전극 정의)다.\n⚠ 다만 `LHS-03` 은 *\"이온 채널 25/127 (19.7 %) 미관통\"* 이라 적는데 여기선 **89 %** 다 —\n  같은 수가 아니므로 그 둘을 같은 사실로 묶지 말 것.\n\n## 쓸 수 있는 것 / 없는 것 (지금)\n✅ `phi_se`·`phi_am`·`coverage_*` 의 분포와 설계족 대조 — 130/130 OK\n⛔ τ 관련 전부.  *\"89 % 가 미관통\"* 도 **결론이 아니라 의심 신호**다\n⚠ 회귀·병합에 쓸 때는 `DESC-07`(둘은 정의 종속) · `DESC-08`(291 코퍼스와 병합 금지) 이 걸린다\n\n## 다음 (GPU 불요 · 원자료는 사용자 기계)\n① ⓐ/ⓑ 를 가르는 status 신설 + 재현 시험 → ② 130 재수확 → ③ 그 분포를 보고 전극 규약 판단.\n\n## ① 완료 (2026-09-19) — 진단이 갈라졌다.  ②③ 은 **그대로 열려 있다**\n`scripts/lhs_descriptor_harvest.py` 에 `ELECTRODE_BAND_EMPTY` 신설 + `band_detail` 진단.\n규율 ② 대로 **재현 시험을 먼저** 넣었고, 고치기 전 실행에서 실제로 실패했다:\n```\n✗ ⑭ LHS-08 ★재현: ⓐ(밴드 빔) 과 ⓑ(진짜 미관통) 의 status 가 **다르다**\n✗ ⑭ LHS-08: ⓐ = ELECTRODE_BAND_EMPTY\n```\n변이시험 2건으로 이빨을 확인했다 (apply/restore sha256 단언):\n- **변이① 두 원인을 다시 접기** (`STATUS_BAND_EMPTY` → `STATUS_NOPERC`) ⇒ ⑭ 2건 적발.\n- **변이② `plate_z` 를 진짜 규약으로 쓰기** (`z_hi = plate_z`) ⇒ 같은 침대가\n  `ELECTRODE_BAND_EMPTY` → **`OK` · τ = 1.0** 으로 뒤집힌다.  ★가드가 적발.\n  ⇒ 규약 교체는 **판정을 뒤집는 크기**다.  그래서 재측정 전에 바꾸면 안 된다.\n\n`band_detail` 이 케이스마다 적는 것: `n_se` · `z_lo/z_hi` · `band_t` · `se_z_lo/se_z_hi` ·\n`n_bot`/`n_top` · `n_components` · `n_span_components` · `largest_comp_frac` ·\n`largest_comp_z_span_frac` · **`alt_n_top`**(plate_z 규약이면 위 밴드가 몇 명인지) ·\n`alt_plate_above_solid`.\n⚠ `plate_z` 는 **진단 전용**이다 — 보고 τ 와 `tau_convention` 문자열은 `solid_zrange`\n그대로고, selftest ⑭ 가 그것을 강제한다 (판정이 뒤집히는 침대로 검사한다).\n\n★ **`alt_plate_above_solid` 가 규약 판단의 갈림길이다**: 플래튼이 최고 입자보다 **위**면\nplate_z 규약은 밴드를 **더 어렵게** 만든다(= 후보 탈락) · **아래**면 더 쉬워진다.\n어느 쪽인지는 **재수확 전에는 모른다** — 130 산출물에 `z_hi` 가 없었다.\n\n⬜ **남은 것**: ② 130 재수확(사용자 기계, GPU 불요) → ③ ⓐ/ⓑ 분포를 보고 전극 규약 판단.\n   ⛔ ② 전에는 *\"116 이 미관통\"* 도 *\"규약이 틀렸다\"* 도 **결론이 아니다**. · 10-01 벽 규약 τ 새 열을 인계표에 실었다 (J20-n · 수확 v3 · 130 중 OK 106 · NOT_PERCOLATING 24 = ② 미관통과 같은 집합 · 관문 T1–T3) — 옛 solid_zrange τ (`tortuosity_dijkstra_SE`) 보류는 그대로"
+      "note": "전수 수확 130 의 실측:\n```\nstatus.tortuosity   NOT_PERCOLATING 116 · OK 14   (τ 가 10.8 % 에서만 나온다)\n```\n다른 양은 전부 건재하다 — `phi` 130/130 OK · `coverage_AM_total` 130/130 OK ·\n`closure_residual` 130 건 전부 0 · `coverage_AM_P/S` 의 n=100 은 mono 설계 30 건의\n`N_A_PHASE_ABSENT` 라 **정상**(0 으로 안 뭉갰다).\n\n## SE 부피분율로 설명되지 않는다\n```\nτ OK      phi_se 0.1860 ~ 0.4103\nτ 미관통  phi_se 0.0433 ~ 0.4164   ← 완전히 겹친다\n```\nOK 최소(0.1860)보다 SE 가 **많은데** 미관통인 케이스가 **53** 건이다\n(`lhs00_118` 0.4164 · `lhs00_100` 0.4139 · `lhs00_121` 0.4116 …).\n⇒ *\"SE 가 적어서\"* 가 아니다.\n\n## ⛔ 먼저 고칠 것은 **진단**이다 — 원인이 구분되지 않는다\n`tortuosity_se` 에 `return base` 가 두 군데인데 **같은 status** 를 낸다:\n```\nif not bot or not top: return base   # ⓐ 전극 밴드가 비었다 (판정 기준이 SE 를 전극으로 인정 안 함)\nif not cands:          return base   # ⓑ 위아래를 잇는 성분이 없다 (진짜 미관통)\n```\n산출물은 둘 다 `n_sampled 0 · n_valid 0 · NOT_PERCOLATING` 이라 **구분 불가**다.\n⇒ 규약을 고치기 **전에** ⓐ/ⓑ 를 가르는 status 를 넣고 재측정해야 한다.  안 그러면\n  무엇이 고쳐졌는지 말할 수 없다.\n\n## 의심되는 자리 (특정됨, 미확정)\n```python\nz_lo, z_hi = 전체 입자(AM 포함)의 z 범위\nt = SE 최대 반경\nbot/top = SE 중 그 밴드 안에 드는 것\n```\n밴드를 **AM 포함 전체 범위**로 잡는데 자격은 **SE 에게만** 주고, 폭은 **SE 반경**뿐이다.\nAM ≫ SE 면 튀어나온 AM 한 알이 `z_hi` 를 끌어올려 SE 가 밴드에 못 든다.\n⚠ `tau_convention` 문자열이 `solid_zrange/rSEmax` 라고 **스스로 적는다** — 의도된 규약이다.\n  그러나 의도됐다고 옳은 것은 아니다.\n★ **`plate_z_sim` 이 이미 산출물에 있다** — 플래튼이 진짜 전극면인데 대신 *'제일 높이\n  튀어나온 입자'* 를 쓴다.  후보 규약이 이미 손에 있다는 뜻이다.\n\n## 원장 안의 이웃\n`LHS-04`(P1, *\"망은 하나로 이어져 있는데 상단 전극이 4개뿐이라 미퍼콜로 판정\"*) ·\n`L2-04`(P1, *\"벽에 닿지 않는 입자 사슬을 관통으로 판정\"*) 과 **같은 부류**(전극 정의)다.\n⚠ 다만 `LHS-03` 은 *\"이온 채널 25/127 (19.7 %) 미관통\"* 이라 적는데 여기선 **89 %** 다 —\n  같은 수가 아니므로 그 둘을 같은 사실로 묶지 말 것.\n\n## 쓸 수 있는 것 / 없는 것 (지금)\n✅ `phi_se`·`phi_am`·`coverage_*` 의 분포와 설계족 대조 — 130/130 OK\n⛔ τ 관련 전부.  *\"89 % 가 미관통\"* 도 **결론이 아니라 의심 신호**다\n⚠ 회귀·병합에 쓸 때는 `DESC-07`(둘은 정의 종속) · `DESC-08`(291 코퍼스와 병합 금지) 이 걸린다\n\n## 다음 (GPU 불요 · 원자료는 사용자 기계)\n① ⓐ/ⓑ 를 가르는 status 신설 + 재현 시험 → ② 130 재수확 → ③ 그 분포를 보고 전극 규약 판단.\n\n## ① 완료 (2026-09-19) — 진단이 갈라졌다.  ②③ 은 **그대로 열려 있다**\n`scripts/lhs_descriptor_harvest.py` 에 `ELECTRODE_BAND_EMPTY` 신설 + `band_detail` 진단.\n규율 ② 대로 **재현 시험을 먼저** 넣었고, 고치기 전 실행에서 실제로 실패했다:\n```\n✗ ⑭ LHS-08 ★재현: ⓐ(밴드 빔) 과 ⓑ(진짜 미관통) 의 status 가 **다르다**\n✗ ⑭ LHS-08: ⓐ = ELECTRODE_BAND_EMPTY\n```\n변이시험 2건으로 이빨을 확인했다 (apply/restore sha256 단언):\n- **변이① 두 원인을 다시 접기** (`STATUS_BAND_EMPTY` → `STATUS_NOPERC`) ⇒ ⑭ 2건 적발.\n- **변이② `plate_z` 를 진짜 규약으로 쓰기** (`z_hi = plate_z`) ⇒ 같은 침대가\n  `ELECTRODE_BAND_EMPTY` → **`OK` · τ = 1.0** 으로 뒤집힌다.  ★가드가 적발.\n  ⇒ 규약 교체는 **판정을 뒤집는 크기**다.  그래서 재측정 전에 바꾸면 안 된다.\n\n`band_detail` 이 케이스마다 적는 것: `n_se` · `z_lo/z_hi` · `band_t` · `se_z_lo/se_z_hi` ·\n`n_bot`/`n_top` · `n_components` · `n_span_components` · `largest_comp_frac` ·\n`largest_comp_z_span_frac` · **`alt_n_top`**(plate_z 규약이면 위 밴드가 몇 명인지) ·\n`alt_plate_above_solid`.\n⚠ `plate_z` 는 **진단 전용**이다 — 보고 τ 와 `tau_convention` 문자열은 `solid_zrange`\n그대로고, selftest ⑭ 가 그것을 강제한다 (판정이 뒤집히는 침대로 검사한다).\n\n★ **`alt_plate_above_solid` 가 규약 판단의 갈림길이다**: 플래튼이 최고 입자보다 **위**면\nplate_z 규약은 밴드를 **더 어렵게** 만든다(= 후보 탈락) · **아래**면 더 쉬워진다.\n어느 쪽인지는 **재수확 전에는 모른다** — 130 산출물에 `z_hi` 가 없었다.\n\n⬜ **남은 것**: ② 130 재수확(사용자 기계, GPU 불요) → ③ ⓐ/ⓑ 분포를 보고 전극 규약 판단.\n   ⛔ ② 전에는 *\"116 이 미관통\"* 도 *\"규약이 틀렸다\"* 도 **결론이 아니다**. · 10-01 벽 규약 τ 새 열을 인계표에 실었다 (J20-n · 수확 v3 · 130 중 OK 106 · NOT_PERCOLATING 24 = ② 미관통과 같은 집합 · 관문 T1–T3) — 옛 solid_zrange τ (`tortuosity_dijkstra_SE`) 보류는 그대로\n★ 2026-10-06 저녁 (3단계 A · B · 1저자 비준 순서 3): 닫기 제안 (Codex 확인 뒤) — `1cbb00364` 두 원인 상태 분리 · v3 재수확 OK 106 / NOT_PERCOLATING 24 · 출하 = 벽 규약 열 (`5f3836afc` · 관문 T1–T3) · 옛 열 보류 · Codex 10-01 이 이 경로의 DESC-02 확인."
     },
     {
       "id": "HET-01",
@@ -4660,7 +4663,7 @@
       "found_by": "user",
       "opened_in": "docs/param_audit_report_20260919.md",
       "title": "**실측 두께를 못 낸다** — `plate_z` 는 있는데 바닥 기준이 수확 산출물에 없다",
-      "note": "1저자 질문(2026-09-19): *\"두께도 하나의 파라미터로 가는 거지?\"*\n인계표에 들어간 `thickness_est_um` 은 **설계 추정치**(로딩·조성에서 계산)이고 실측이 아니다.\n★ 실측 대조: `plate_z_sim × 1e3` 대 `thickness_est_um` 의 |오차| **중앙 31.19 % · 최대 76.78 %**.\n선형회귀 `est = 480.3·plate_z + 15.83` 의 **R² = 0.4436** — 단순 단위환산으로 설명되지 않는다.\n낮은 쪽은 맞고 높은 쪽이 벌어진다 ⇒ **바닥 z 가 0 이 아니거나 플래튼이 고체 위에 떠 있다**.\n⚠ 판별에 필요한 `z_lo` · `se_z_lo` · `alt_plate_above_solid` 는 `tortuosity_se()` 의 `band` 안에만 있고 **수확 JSON 최상위로 안 나온다** (`tau_detail` 8키에 없다).\n⇒ `LHS-08` 재수확에서 **band 진단을 최상위로 승격**하면 두께도 같이 실측으로 낼 수 있다. 두 번 갈 일이 아니다.\n⛔ 그 전까지 `thickness_est_um` 을 *'두께 측정값'* 으로 넘기지 말 것 — 열 이름의 `_est` 를 지우지 않는다.",
+      "note": "1저자 질문(2026-09-19): *\"두께도 하나의 파라미터로 가는 거지?\"*\n인계표에 들어간 `thickness_est_um` 은 **설계 추정치**(로딩·조성에서 계산)이고 실측이 아니다.\n★ 실측 대조: `plate_z_sim × 1e3` 대 `thickness_est_um` 의 |오차| **중앙 31.19 % · 최대 76.78 %**.\n선형회귀 `est = 480.3·plate_z + 15.83` 의 **R² = 0.4436** — 단순 단위환산으로 설명되지 않는다.\n낮은 쪽은 맞고 높은 쪽이 벌어진다 ⇒ **바닥 z 가 0 이 아니거나 플래튼이 고체 위에 떠 있다**.\n⚠ 판별에 필요한 `z_lo` · `se_z_lo` · `alt_plate_above_solid` 는 `tortuosity_se()` 의 `band` 안에만 있고 **수확 JSON 최상위로 안 나온다** (`tau_detail` 8키에 없다).\n⇒ `LHS-08` 재수확에서 **band 진단을 최상위로 승격**하면 두께도 같이 실측으로 낼 수 있다. 두 번 갈 일이 아니다.\n⛔ 그 전까지 `thickness_est_um` 을 *'두께 측정값'* 으로 넘기지 말 것 — 열 이름의 `_est` 를 지우지 않는다.\n★ 2026-10-06 저녁 (3단계 A · B · 1저자 비준 순서 3): 닫기 제안 (Codex 확인 뒤) — `af528e24d` `thickness_wall_gap_um` · 배포 v1.1 이 측정 두께로 출하 · `thickness_est_um` 은 `_est` + 사전 \"측정 아님\" · Codex 10-01 두께 산술 독립 재유도.",
       "evidence_tests": [
         "scripts/lhs_descriptor_harvest.py",
         "docs/data/lhs_handover_20260919.csv"
@@ -4881,62 +4884,89 @@
     {
       "id": "LREL-01",
       "severity": "P2",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "Codex LHS 배포 v1.1 최종 리뷰 (1저자 경유 · 2026-10-01)",
       "opened_in": "docs/reviews/codex_lhs_release_final_verdict_20261001.md",
       "title": "D1–D5 이온 분할 관문이 음수 개수를 수용한다 — 정수 · 합 검사만 있어 무접촉 −1 개 (전체 no_SE −0.0025 % · P −2.17 %) 가 통과 (lhs_design_dataset.py:1667–1689)",
-      "note": "현재 194 행에는 음수 없음 · 생산 함수는 집합을 실제로 센다.  해제: 전체 · 상별 active/dead/no_SE 각 유한 · [0,100] · 정수 개수 [0,N] 검사 + 본 반례 거부 (단순 합 오류 음성대조와 별도).  (판정문 표기 = LHSREL-01 · 원장 ID 형식 5 자 제한으로 LREL)"
+      "note": "현재 194 행에는 음수 없음 · 생산 함수는 집합을 실제로 센다.  해제: 전체 · 상별 active/dead/no_SE 각 유한 · [0,100] · 정수 개수 [0,N] 검사 + 본 반례 거부 (단순 합 오류 음성대조와 별도).  (판정문 표기 = LHSREL-01 · 원장 ID 형식 5 자 제한으로 LREL)\n★ 2026-10-06 저녁 (3단계 A · B · 1저자 비준 순서 3) `b2aab6b31`: 생성기 D0 — 이온 분할 값 수치 · 유한 · [0, 100] · 개수 [0, N] (음수 분할 · NaN 거부 · selftest ㉚).",
+      "claimed_fixed_sha": "b2aab6b31",
+      "evidence_tests": [
+        "scripts/lhs_design_dataset.py"
+      ]
     },
     {
       "id": "LREL-02",
       "severity": "P2",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "Codex LHS 배포 v1.1 최종 리뷰 (1저자 경유 · 2026-10-01)",
       "opened_in": "docs/reviews/codex_lhs_release_final_verdict_20261001.md",
       "title": "적격성 표지 누락을 생성기와 배포 부분집합 검사기가 막지 않는다 — 수확의 status/reason/boundary None → 빈칸 행 정상 생성 · 3 열을 뺀 배포 130×86 이 check() 문제 []",
-      "note": "고정 v1.1 에는 3 열이 다 있고 194/194 재계산 일치 (REL-01 인스턴스는 verified).  해제: v1.1 전용 schema/profile 에서 3 열 필수 · 허용 enum · status/reason/boundary 정합 · missing/None/열 제외 거부.  (판정문 표기 = LHSREL-02 · 원장 ID 형식 5 자 제한으로 LREL)"
+      "note": "고정 v1.1 에는 3 열이 다 있고 194/194 재계산 일치 (REL-01 인스턴스는 verified).  해제: v1.1 전용 schema/profile 에서 3 열 필수 · 허용 enum · status/reason/boundary 정합 · missing/None/열 제외 거부.  (판정문 표기 = LHSREL-02 · 원장 ID 형식 5 자 제한으로 LREL)\n★ 2026-10-06 저녁 (3단계 A · B · 1저자 비준 순서 3) `b2aab6b31`: 공용 `eligibility_problems()` — 깃발 셋 필수 · 허용값 · HOLD ⟺ 코드 ≥ 1 · 경계 · porosity < 0 · calculation_status · 섞인 수확 거부 (실 194 행 통과).",
+      "claimed_fixed_sha": "b2aab6b31",
+      "evidence_tests": [
+        "scripts/lhs_design_dataset.py",
+        "scripts/lhs_release_build.py"
+      ]
     },
     {
       "id": "LREL-03",
       "severity": "P2",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "Codex LHS 배포 v1.1 최종 리뷰 (1저자 경유 · 2026-10-01)",
       "opened_in": "docs/reviews/codex_lhs_release_final_verdict_20261001.md",
       "title": "\"130 행\" 이 \"130 개 고유 설계\" 를 보증하지 않는다 — 설계 행 중복 (lhs00_001 → lhs00_000) 을 생성기 · 배포 빌더가 통과 (130 행 · 129 고유 · 문제 [])",
-      "note": "현재 배포 키 집합 · 순서는 130/64 정확.  해제: 최종 생성기 · 릴리스 프로파일에 unique-key · 고정 ID 집합 대조 · 같은 행 수 대체/중복 변이 검사.  (판정문 표기 = LHSREL-03 · 원장 ID 형식 5 자 제한으로 LREL)"
+      "note": "현재 배포 키 집합 · 순서는 130/64 정확.  해제: 최종 생성기 · 릴리스 프로파일에 unique-key · 고정 ID 집합 대조 · 같은 행 수 대체/중복 변이 검사.  (판정문 표기 = LHSREL-03 · 원장 ID 형식 5 자 제한으로 LREL)\n★ 2026-10-06 저녁 (3단계 A · B · 1저자 비준 순서 3) `b2aab6b31`: 설계 case_id 빈칸 · 중복 거부 (생성기 · 배포 빌더 키 중복).",
+      "claimed_fixed_sha": "b2aab6b31",
+      "evidence_tests": [
+        "scripts/lhs_design_dataset.py",
+        "scripts/lhs_release_build.py"
+      ]
     },
     {
       "id": "LREL-04",
       "severity": "P2",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "Codex LHS 배포 v1.1 최종 리뷰 (1저자 경유 · 2026-10-01)",
       "opened_in": "docs/reviews/codex_lhs_release_final_verdict_20261001.md",
       "title": "union 행의 SE 고체 몫이 φ 장부와 독립적으로 바뀌어도 통과 — se_of_solid_vol 0.5 로 바꿔도 φ 합 닫힘만 보는 관문이 못 잡는다 (lhs_design_dataset.py:1454–1486)",
-      "note": "현재 194 행은 φ_SE = (1−ε)·se_of_solid_vol 이 기계 정밀도로 성립 (README v1.1 개정판 검산).  해제: SE 몫을 수확의 V_SE/(V_SE+V_AM) 에서 재계산해 교차대조 · [0,1] 강제.  (판정문 표기 = LHSREL-04 · 원장 ID 형식 5 자 제한으로 LREL)"
+      "note": "현재 194 행은 φ_SE = (1−ε)·se_of_solid_vol 이 기계 정밀도로 성립 (README v1.1 개정판 검산).  해제: SE 몫을 수확의 V_SE/(V_SE+V_AM) 에서 재계산해 교차대조 · [0,1] 강제.  (판정문 표기 = LHSREL-04 · 원장 ID 형식 5 자 제한으로 LREL)\n★ 2026-10-06 저녁 (3단계 A · B · 1저자 비준 순서 3) `b2aab6b31`: `se_of_solid_vol` 유한 · [0, 1] · 수확 V_SE/(V_SE+V_AM) 및 φ_SE/(φ_SE+φ_AM) 와 1e-9 안 (실데이터 최대 5.6e-16).",
+      "claimed_fixed_sha": "b2aab6b31",
+      "evidence_tests": [
+        "scripts/lhs_design_dataset.py"
+      ]
     },
     {
       "id": "LREL-05",
       "severity": "P2",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "Codex LHS 배포 v1.1 최종 리뷰 (1저자 경유 · 2026-10-01)",
       "opened_in": "docs/reviews/codex_lhs_release_final_verdict_20261001.md",
       "title": "README 의 τ 분모 (\"길 / 두께\") 와 \"실제 이온 도달\" 문구가 계산량을 바꿔 적었다 — 실제 τ 분모는 쌍의 z 중심 간격 (반례 1.25 vs 1.0) · 이온 고립은 상단 2r 띠 기준 그래프 지표 (위 평면 접촉 0 개인데 active 100 % 반례)",
-      "note": "열 사전의 쌍 Δz 설명은 맞다.  README 를 판정문 권고 문안으로 정정 (README v1.1 개정판 · 이 커밋) → 다음 커밋에서 claimed_fixed.  (판정문 표기 = LHSREL-05 · 원장 ID 형식 5 자 제한으로 LREL)"
+      "note": "열 사전의 쌍 Δz 설명은 맞다.  README 를 판정문 권고 문안으로 정정 (README v1.1 개정판 · 이 커밋) → 다음 커밋에서 claimed_fixed.  (판정문 표기 = LHSREL-05 · 원장 ID 형식 5 자 제한으로 LREL)\n★ 2026-10-06 저녁 (3단계 A · B · 1저자 비준 순서 3) `5c2669538`: 열 사전 · 웹앱 문구 = SE 접촉 그래프의 위 띠 연결 지표 (실제 이온 도달 · 전류 아님) · README 부분은 앞서 `f9f6ea96c`.",
+      "claimed_fixed_sha": "5c2669538",
+      "evidence_tests": [
+        "scripts/lhs_design_dataset.py",
+        "webapp/test_ionic_isolation_labels.py"
+      ]
     },
     {
       "id": "LREL-06",
       "severity": "P3",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "Codex LHS 배포 v1.1 최종 리뷰 (1저자 경유 · 2026-10-01)",
       "opened_in": "docs/reviews/codex_lhs_release_final_verdict_20261001.md",
       "title": "열 사전 · 상수 · 학습 안내의 축약 — am_pct (AM 질량 %) · ps_frac (AM 중 P 질량 몫) 분모 미기재 · 확장 사전이 130 설계만 가리킴 · \"n_large_components · ionic_dead_pct 0\" 붙여 씀 · exact union 의 MC 오차 · 15:1 을 보증처럼 씀",
-      "note": "README v1.1 개정판에서 문구 정정 (이 커밋) · 열 사전 TSV 문구는 다음 생성 때 (배포 TSV 는 Codex 승인 바이트 그대로 둠).  (판정문 표기 = LHSREL-06 · 원장 ID 형식 5 자 제한으로 LREL)"
+      "note": "README v1.1 개정판에서 문구 정정 (이 커밋) · 열 사전 TSV 문구는 다음 생성 때 (배포 TSV 는 Codex 승인 바이트 그대로 둠).  (판정문 표기 = LHSREL-06 · 원장 ID 형식 5 자 제한으로 LREL)\n★ 2026-10-06 저녁 (3단계 A · B · 1저자 비준 순서 3) `5c2669538`: 설계 열 기준 — `am_pct` = 고체 중 AM 질량 % · `ps_frac` = AM 중 AM_P 질량 몫 (개수 몫 아님) · `*_est` = 추정 · 설계 출처 = `--design`.",
+      "claimed_fixed_sha": "5c2669538",
+      "evidence_tests": [
+        "scripts/lhs_design_dataset.py"
+      ]
     },
     {
       "id": "MIX-01",
@@ -6087,15 +6117,16 @@
     {
       "id": "SELF-65",
       "severity": "P3",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "claude (WSL ② 실측 요약 판독 09-29 — 1저자 실행)",
       "opened_in": "docs/reviews/lhs_handover_judgments_20260924.md",
       "title": "`lhs_perc_audit._summary` 의 `box_default_cases` 가 어느 행에도 없는 낡은 키 `box_is_webapp_default` 를 읽어 **항상 0** 을 찍었다 (WSL 09-29 요약에 그대로) — 행 값 `box_is_lhs_rve` 는 옳다 · 규율 ⑤ 부류 (조용한 초록 계수)",
-      "note": "자기리뷰 뒤 행 키를 `box_is_webapp_default` → `box_is_lhs_rve` 로 바꾸면서 요약 줄을 함께 안 고쳤다 (그 줄은 selftest 가 보지 않았다).  영향: 요약의 상자 계수만 (판정 · TSV 행 무영향 · 화면 요약 `box_default_cases: 0` 은 뜻 없음).  수정 = 반례 ⑭e 먼저 (옛 코드에서 실패 확인) → `box_not_lhs_rve_cases` = `box_is_lhs_rve is False` 인 OK 행 수 · 33/33.  교훈: 요약/집계 줄도 행 키 변경과 같은 selftest 에 묶는다 (집계는 키가 틀려도 0 을 내고 초록이다).  ⬜ 검증 = TSV 반입 뒤 `box_is_lhs_rve` 열 130/130 True 확인 + 재실행 요약.",
+      "note": "자기리뷰 뒤 행 키를 `box_is_webapp_default` → `box_is_lhs_rve` 로 바꾸면서 요약 줄을 함께 안 고쳤다 (그 줄은 selftest 가 보지 않았다).  영향: 요약의 상자 계수만 (판정 · TSV 행 무영향 · 화면 요약 `box_default_cases: 0` 은 뜻 없음).  수정 = 반례 ⑭e 먼저 (옛 코드에서 실패 확인) → `box_not_lhs_rve_cases` = `box_is_lhs_rve is False` 인 OK 행 수 · 33/33.  교훈: 요약/집계 줄도 행 키 변경과 같은 selftest 에 묶는다 (집계는 키가 틀려도 0 을 내고 초록이다).  ⬜ 검증 = TSV 반입 뒤 `box_is_lhs_rve` 열 130/130 True 확인 + 재실행 요약.\n★ 2026-10-06 저녁 (3단계 A · B · 1저자 비준 순서 3) `416a0092a`: 확인 조건 충족 — 10-01 감사가 `box_not_lhs_rve_cases` 0 (낡은 키 없음) · `box_is_lhs_rve` True 130/130 · 64/64 (반례 ⑭e).",
       "evidence_tests": [
         "scripts/lhs_perc_audit.py"
-      ]
+      ],
+      "claimed_fixed_sha": "416a0092a"
     },
     {
       "id": "SELF-66",
@@ -6404,15 +6435,16 @@
     {
       "id": "LHSC-08",
       "severity": "P3",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "Codex LHS 피복률 병합 전 리뷰 (사용자 경유, 2026-09-30) — 고정 핀 2e57dff90 · 대상 = da4670594 + 제출 패치 0001–0007 (패치 sha 7/7 일치 · 8 파일 = 우리 64ae3cba8 과 CRLF 정규화 뒤 바이트 동일) · 합성 입력에 실제 함수 · CLI · run_pipeline 호출 (Windows) · 우리 재현 (Linux · 2e57dff90 + 패치 7 = 검토 트리) 네 감사 스크립트 전부 같은 결과 (_reproduction_*_cand_64ae3cba8.json) · 실 DEM · 130/64 원자료 · 시뮬레이션 없음",
       "opened_in": "docs/reviews/codex_lhs_coverage_verdict_20260930.md",
       "title": "[패치 0001 · item 4 벽 규칙] 규칙 = **저장 좌표에서 양의 cap 깊이** (`_wall_contact` 하나 · `:592` `:601`) 이지 반올림 전 실제 접촉 분류가 아니다 — 깊이 `r − z + z_wall` 의 불확실폭 (토큰 반올림 반폭 합) 안에 드는 |depth| 수를 상 · 벽별로 보고하지 않는다 · STL 정밀도는 atom dump 의 6 자리 가정을 복제하지 말고 따로 읽어야 한다",
-      "note": "구현 통일은 CONFIRMED (세 소비자가 같은 depth > 0 함수 · τ 슬래브 부등식은 다른 양이라 결함 아님).  분류 하나가 움직이면 그 상의 비율은 1/N_phase · 벽 제외 분모가 0 근처면 피복률 민감도 작다고 보장 못 함.  130/64 원 dump 가 리뷰에 없어 near-tangent 실측 수 · 코퍼스 민감도 미측정 — 5번 재수확 때 상 · 벽별 근접 접선 수를 보고 (추정으로 채우지 않는다).  ▶ 09-30 밤 병합 뒤 **열림 · 5번 재수확 보고 항목**: 상 · 벽별 근접 접선 수 (깊이 |r − z + z_wall| 이 토큰 반올림 반폭 합 안) 를 새 수확 원자료에서 센다 (추정으로 채우지 않는다).",
+      "note": "구현 통일은 CONFIRMED (세 소비자가 같은 depth > 0 함수 · τ 슬래브 부등식은 다른 양이라 결함 아님).  분류 하나가 움직이면 그 상의 비율은 1/N_phase · 벽 제외 분모가 0 근처면 피복률 민감도 작다고 보장 못 함.  130/64 원 dump 가 리뷰에 없어 near-tangent 실측 수 · 코퍼스 민감도 미측정 — 5번 재수확 때 상 · 벽별 근접 접선 수를 보고 (추정으로 채우지 않는다).  ▶ 09-30 밤 병합 뒤 **열림 · 5번 재수확 보고 항목**: 상 · 벽별 근접 접선 수 (깊이 |r − z + z_wall| 이 토큰 반올림 반폭 합 안) 를 새 수확 원자료에서 센다 (추정으로 채우지 않는다).\n★ 2026-10-06 저녁 (3단계 A · B · 1저자 비준 순서 3) `cc4210080`: 수확기 `wall_near_tangent` — 상 · 벽마다 근접 접선 수 (|깊이| ≤ h(r) + h(z) + h(벽) · 자릿수는 파일마다 토큰에서) · 분류 불변.  194 침대 값 = 수확기 재실행 뒤 (추정으로 채우지 않음).\n(옛 증거 목록: docs/reviews/codex_lhs_coverage_evidence_20260930/README.md)",
       "evidence_tests": [
-        "docs/reviews/codex_lhs_coverage_evidence_20260930/README.md"
-      ]
+        "scripts/test_wall_near_tangent.py"
+      ],
+      "claimed_fixed_sha": "cc4210080"
     },
     {
       "id": "LHSC-09",
@@ -6591,7 +6623,7 @@
       "found_by": "claude (10-01 · 웹앱 ③ — v2 후보 표지를 달다가 예측기 자동 타깃 경로를 읽음)",
       "opened_in": "docs/reviews/lhs_handover_judgments_20260924.md",
       "title": "예측기 자동 타깃 (predictor_engine · full_metrics 숫자 키 전부) 이 빠진 값을 0 으로 채운다 — 새 키가 케이스 절반을 넘는 순간 옛 케이스가 가짜 0 타깃이 된다 · physics v2 (*_physics_v2 · 미검증 후보) 도 자동 타깃이 되고 있었다",
-      "note": "`load_training_data` 가 `r.get(fk, 0)` 으로 채우고, 자동 타깃은 non_zero ≥ 50 % · std > 0 이면 들어간다 — 코퍼스 절반 이상이 새 키를 가지면 나머지 (재분석 전 케이스) 는 0 으로 학습된다.  ② ·③ 에서 늘어난 키 (porosity_union · 정확 union · 질량 보존 두께 · φ) 도 같은 길.  ↪ 10-01 웹앱 ③: `_fm_auto_target_ok` 가 `*_physics_v2` 를 뺀다 (J20-l (나) · 시험 V4–V6) — 0 채움 자체는 **열림** (처방 후보: 자동 타깃은 값이 있는 행만으로 학습 · 타깃별 마스크).",
+      "note": "`load_training_data` 가 `r.get(fk, 0)` 으로 채우고, 자동 타깃은 non_zero ≥ 50 % · std > 0 이면 들어간다 — 코퍼스 절반 이상이 새 키를 가지면 나머지 (재분석 전 케이스) 는 0 으로 학습된다.  ② ·③ 에서 늘어난 키 (porosity_union · 정확 union · 질량 보존 두께 · φ) 도 같은 길.  ↪ 10-01 웹앱 ③: `_fm_auto_target_ok` 가 `*_physics_v2` 를 뺀다 (J20-l (나) · 시험 V4–V6) — 0 채움 자체는 **열림** (처방 후보: 자동 타깃은 값이 있는 행만으로 학습 · 타깃별 마스크).\n★ 2026-10-06 저녁 (3단계 A · B · 1저자 비준 순서 3): 합집합 키 (`coverage_*_physics_union`) 가 재계산으로 대부분 채워지면 예측기 자동 타깃 후보가 되고 옛 케이스는 0 채움 — 이 항목과 같은 결함 (3단계 B 보고).",
       "evidence_tests": [
         "webapp/test_closed_param_exact_union.py"
       ]
@@ -6599,15 +6631,17 @@
     {
       "id": "LHS-25",
       "severity": "P2",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "1저자 (10-01 · \"이런 경우가 세상에 어딨어\" — v2 빈칸 설명을 되물음) → claude 원자료 대조 (5번 배치 · 수확기 JSON + 웹앱 metrics_flat) + 합리성 검사 서브에이전트",
       "opened_in": "docs/reviews/lhs_handover_judgments_20260924.md",
       "title": "physics 피복률 (v1 · v2) 은 접촉마다 추정한 소성 면적 (Tabor F/H · SE 경도 0.85 GPa — 기하 원판의 약 3 배) 을 표면 한도 없이 더한다 — 접촉 조각끼리 겹치는 부분을 빼는 규칙이 없어 SE 가 많은 침대에서 100 % 에 포화하고 (5번 배치 v1 침대 평균 ≥ 99 % LHS 29/130 · lhsx 62/64 · v2 AM 클립 22.41 % · 97.04 % · lhsx v2 AM_P 55/55 = 100.000 상수열), 같은 원인이 v2 의 AM–AM 쪽 (SE 경도 · L1-03 · 접촉 하나가 작은 쪽 표면 절반 2πr² 까지) 에서 분모 ≤ 0 을 만든다 (18 침대 빈칸 · 73 AM — 같은 AM · 같은 접촉을 c_cpl[22] 기하면적으로 세면 1,320,178 개 중 0)",
-      "note": "계산 결함 아님 (경계 · 항등식 · 순서 · 두 구현 대조 전부 정상 — docs/reviews/lhs_coverage_reasonableness_20261001.md) · 모형 구조의 결손.  legacy 부피 cap 은 194 침대 어디서도 안 잡는다 (DESC-03 과 정합).  ✅ 결정 J20-m (1저자 10-01 \"그렇게 하자\"): LHS · lhsx 인계 coverage = 기하면적 열만 · physics v1 · v2 · rough 제외 · 웹앱 표지 (webapp/test_coverage_handover_scope.py 옛 코드 3 PASS · 13 FAIL → 16/16).  ⬜ 열림: ① σ_ionic T1 의 면적 선택 (CLAUDE.md 기록 cov_Hertz · Spearman 0.697 vs 0.476) 은 코드 함수 검토 전 — 1저자 \"이걸로 닫지 말고 아직 · 코드를 아직 안 뜯어봤으니까\" ② 망 전도도 physics 채널 · σ_thermal T1 타깃 · 등급 physics 피복 축에 주는 영향 미확인 (등급 축은 SE 많은 케이스에서 판별력이 없을 가능성) ③ 처방 (표면 예산 · 접촉 조각 겹침 공제 등) 은 설계 전 — 비준 대상.",
+      "note": "계산 결함 아님 (경계 · 항등식 · 순서 · 두 구현 대조 전부 정상 — docs/reviews/lhs_coverage_reasonableness_20261001.md) · 모형 구조의 결손.  legacy 부피 cap 은 194 침대 어디서도 안 잡는다 (DESC-03 과 정합).  ✅ 결정 J20-m (1저자 10-01 \"그렇게 하자\"): LHS · lhsx 인계 coverage = 기하면적 열만 · physics v1 · v2 · rough 제외 · 웹앱 표지 (webapp/test_coverage_handover_scope.py 옛 코드 3 PASS · 13 FAIL → 16/16).  ⬜ 열림: ① σ_ionic T1 의 면적 선택 (CLAUDE.md 기록 cov_Hertz · Spearman 0.697 vs 0.476) 은 코드 함수 검토 전 — 1저자 \"이걸로 닫지 말고 아직 · 코드를 아직 안 뜯어봤으니까\" ② 망 전도도 physics 채널 · σ_thermal T1 타깃 · 등급 physics 피복 축에 주는 영향 미확인 (등급 축은 SE 많은 케이스에서 판별력이 없을 가능성) ③ 처방 (표면 예산 · 접촉 조각 겹침 공제 등) 은 설계 전 — 비준 대상.\n★ 2026-10-06 저녁 (3단계 A · B · 1저자 비준 순서 3) `69c2adec9`: 처방 ③ 범위만 — 새 키 `coverage_*_physics_union` (합집합 cap · 겹침 한 번 · AM–AM 가림 제외 · g2 표면 면적 2π r_min²) · 옛 합-클립 키는 그대로 (legacy 줄) · real_14 51.522 → 43.218 % (×0.839 · 프로토타입과 AM 457 개 일치) · 웹앱 Physics 열 = 합집합.  남은 ①② (σ_ionic T1 면적 선택 · 망 Physics 채널 · σ_thermal T1 타깃 · 등급 축) = `LHS-34`.\n(옛 증거 목록: webapp/test_coverage_handover_scope.py)",
       "evidence_tests": [
-        "webapp/test_coverage_handover_scope.py"
-      ]
+        "scripts/test_union_coverage.py",
+        "webapp/test_coverage_union_display.py"
+      ],
+      "claimed_fixed_sha": "69c2adec9"
     },
     {
       "id": "LHS-26",
@@ -6637,12 +6671,16 @@
     {
       "id": "LHS-27",
       "severity": "P3",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "claude (09-30 · 5번 배치 대조 서브에이전트 §5-1 '193/194 dirty' → 1저자 WSL git status · git diff = 추적 파일 하나 → 코드 확인)",
       "opened_in": "docs/reviews/lhs_coverage_batch5_comparison_20261001.md",
       "title": "피복 단계 scripts/coverage_physics_vs_hertzian.py 가 요약 CSV 를 실행 위치 기준 경로 (Path('docs/figures/physics_regime')/coverage_hertz_vs_physics_summary.csv) 에 매 호출 덮어쓴다 — 리포 루트에서 도는 웹앱 파이프라인 · LHS 배치가 추적 파일을 바꿔 run 의 dirty=true 를 만든다 (5번 193/194 케이스) · 여러 케이스를 돌면 마지막 케이스 요약만 남는다",
-      "note": "코드 변경이 아닌데 코드 출처 표지 (dirty) 가 켜져 '깨끗한 봉인 커밋에서 돌았다' 는 증명을 스스로 무너뜨린다 — 5번은 기존 키 · 공통 열 비트 동일로 완화됐다 (보고서 §2).  처방 후보 (비준 대상): 요약 CSV 를 케이스 출력 폴더 · 명시적 --summary-out 으로 옮기거나 --all 일 때만 쓰기 · 추적 파일에서 빼기.  배치 쪽 dirty 판정에서 이 파일만 예외로 두는 것은 권하지 않는다 (가림)."
+      "note": "코드 변경이 아닌데 코드 출처 표지 (dirty) 가 켜져 '깨끗한 봉인 커밋에서 돌았다' 는 증명을 스스로 무너뜨린다 — 5번은 기존 키 · 공통 열 비트 동일로 완화됐다 (보고서 §2).  처방 후보 (비준 대상): 요약 CSV 를 케이스 출력 폴더 · 명시적 --summary-out 으로 옮기거나 --all 일 때만 쓰기 · 추적 파일에서 빼기.  배치 쪽 dirty 판정에서 이 파일만 예외로 두는 것은 권하지 않는다 (가림).\n★ 2026-10-06 저녁 (3단계 A · B · 1저자 비준 순서 3) `69c2adec9`: 피복 CLI 요약 CSV = `--summary-out PATH` 를 줄 때만 (기본 = 쓰지 않음 · 추적 파일 덮어쓰기 없음).  194 실행기의 cwd 우회는 봉인 파일이라 그대로.",
+      "claimed_fixed_sha": "69c2adec9",
+      "evidence_tests": [
+        "scripts/test_coverage_cli_no_tracked_write.py"
+      ]
     },
     {
       "id": "SELF-75",
@@ -7106,13 +7144,17 @@
     {
       "id": "TAU-24",
       "severity": "P2",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "claude (10-03 · τ 적대 리뷰 셋 — 코드 · 문헌 · 물리 — 반영 판단 메모 v2 §4)",
       "opened_in": "docs/reviews/tau_conventions_judgment_v2_20261003.md",
       "title": "**L0 띠도 띠 노드를 등전위로 묶고 정규화는 판 간격** — 실효 길이가 L 보다 짧아 T 를 ≤ 4r_SE/L 낮춘다 (L1 폴백과 같은 기전, 크기만 작다; 중앙 6 % · p90 12 % · 최대 17 %, 상한 추정) · r_SE/L 에 따라 달라 입경군 간 대조를 비튼다",
-      "note": "자리: (봉인) `network_conductivity.py:225–249` · 620–666 · 853–857  ·  시험 먼저 → 최소 수정: 메타 `ion_net_band_frac` (= 4r_SE/L) + 한정어 · (선택) L_eff 보정판 병기 — 보정식은 런 전 등록  ·  웹앱 짝: 웹앱 표에 띠 두께/L.  등재 2026-10-03 = 결정 16 실행 1단계 (1저자 비준 10-03 · 판단 메모 v2 §4 표 그대로 옮김) (리뷰 원번호 코드 M5).  ⛔ 공통 제약 (메모 §4 머리): S3 봉인 모듈 수정은 재봉인 강제 · f/T/τ 는 봉인 밖 새 도우미 · 코드 → 웹앱 → 게이트 → 커밋 한 묶음 (J20-l).  ·  10-04 진행 (c911adf05): 메타 `boundary_band_frac` (솔버 · L0 = 2·bf·r_max/판 = 4r_SE/L 상한) → 인계 `ion_net_band_frac_<m>` (tau_flux) · 웹앱 케이스 τ 블록 띠 행 \"L0 · 0.0xx\" + 툴팁 한정어.  남은 것: 인계 열 사전 문구 (값이 생길 때 생성기에) · (선택) L_eff 보정판 = 런 전 등록 (open 유지).",
-      "evidence_tests": []
+      "note": "자리: (봉인) `network_conductivity.py:225–249` · 620–666 · 853–857  ·  시험 먼저 → 최소 수정: 메타 `ion_net_band_frac` (= 4r_SE/L) + 한정어 · (선택) L_eff 보정판 병기 — 보정식은 런 전 등록  ·  웹앱 짝: 웹앱 표에 띠 두께/L.  등재 2026-10-03 = 결정 16 실행 1단계 (1저자 비준 10-03 · 판단 메모 v2 §4 표 그대로 옮김) (리뷰 원번호 코드 M5).  ⛔ 공통 제약 (메모 §4 머리): S3 봉인 모듈 수정은 재봉인 강제 · f/T/τ 는 봉인 밖 새 도우미 · 코드 → 웹앱 → 게이트 → 커밋 한 묶음 (J20-l).  ·  10-04 진행 (c911adf05): 메타 `boundary_band_frac` (솔버 · L0 = 2·bf·r_max/판 = 4r_SE/L 상한) → 인계 `ion_net_band_frac_<m>` (tau_flux) · 웹앱 케이스 τ 블록 띠 행 \"L0 · 0.0xx\" + 툴팁 한정어.  남은 것: 인계 열 사전 문구 (값이 생길 때 생성기에) · (선택) L_eff 보정판 = 런 전 등록 (open 유지).\n★ 2026-10-06 저녁 (3단계 A · B · 1저자 비준 순서 3) `5c2669538`: 띠 몫 `ion_net_band_frac_<mode>` (이미 출하) 의 사전 = (아래 띠 + 위 띠 폭) / 판 간격 · L0 = 4 r_SE/L · T 를 낮추는 정도의 상한 · v1.2 실측 범위.  보정 T 는 하지 않음 → `TAU-26`.  배포 표에 넣을지 = 1저자.",
+      "evidence_tests": [
+        "scripts/lhs_design_dataset.py",
+        "webapp/test_tau_handover_status.py"
+      ],
+      "claimed_fixed_sha": "5c2669538"
     },
     {
       "id": "TAU-25",
@@ -8083,22 +8125,30 @@
     {
       "id": "RGLR4-01",
       "severity": "P2",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 10-06 5차 재검증 (핀 92b6ebde1 · ZIP 26 · 획득 207 Git blob 검증 · 194 원천 독립 대조 · 실 검산기 CLI 변조 · 합성 망 · Windows Python 3.12.14 NumPy 2.5.3 · 우리 트리 Linux 재현 판정값 차이 0)",
       "opened_in": "docs/reviews/codex_review_rglr3_reverify_20261006.md",
       "title": "다시 읽기 검산기 reread_v12.py 의 C4 (옛 인계 공통 열 회귀) 가 차이 · 열 탈락을 기록만 하고 최종 판정 실패 목록에 넣지 않는다 — 공통 칸 하나를 99 로 바꿔도 PASS · rc 0",
-      "note": "자리: docs/data/lhs_network194_11fcf91e8/handover_v12_20261006/reread_v12.py:143 (C4 diff_cols · dropped_cols) · :262 (최종 판정).  재현 (실 CLI · 복사본만 변조): lhs00_000.coverage_AM_total_hertz_pct 13.643988681252257 → 99 · same 24439 · diff 1 · verdict PASS · fails [] · rc 0 (Codex evidence/reread_mutants.json · 우리 트리 재현 같음).  무너지는 결론: \"검산기 PASS = 옛 공통 열 무변경 보증\" (자동 배포 관문으로 못 씀).  무너지지 않는 것: 고정 194 인계표 자체 — Codex 독립 대조 공통 36,600 칸 차이 0 (원본 칸은 맞다).  해제: 차이 1 칸 · 등록 안 된 열 탈락 = 실패 · 의도된 변화는 세대별 allowlist · 기대값으로 따로 봉인 · 한 칸 변조 · 열 삭제 CLI 회귀가 **비영 종료** (출력에 차이를 적는 것만으로는 부족) · baseline PASS 유지.  재실행 불요 (계산 캠페인 아님 · 검산 · 포장 관문 수정)"
+      "note": "자리: docs/data/lhs_network194_11fcf91e8/handover_v12_20261006/reread_v12.py:143 (C4 diff_cols · dropped_cols) · :262 (최종 판정).  재현 (실 CLI · 복사본만 변조): lhs00_000.coverage_AM_total_hertz_pct 13.643988681252257 → 99 · same 24439 · diff 1 · verdict PASS · fails [] · rc 0 (Codex evidence/reread_mutants.json · 우리 트리 재현 같음).  무너지는 결론: \"검산기 PASS = 옛 공통 열 무변경 보증\" (자동 배포 관문으로 못 씀).  무너지지 않는 것: 고정 194 인계표 자체 — Codex 독립 대조 공통 36,600 칸 차이 0 (원본 칸은 맞다).  해제: 차이 1 칸 · 등록 안 된 열 탈락 = 실패 · 의도된 변화는 세대별 allowlist · 기대값으로 따로 봉인 · 한 칸 변조 · 열 삭제 CLI 회귀가 **비영 종료** (출력에 차이를 적는 것만으로는 부족) · baseline PASS 유지.  재실행 불요 (계산 캠페인 아님 · 검산 · 포장 관문 수정)\n★ 2026-10-06 저녁 (3단계 A · B · 1저자 비준 순서 3) `b69d3ae74`: 검산기 `reread_v12.py` — C4 칸 차이 · 열 탈락 · 짝 없는 행 = 실패 (세대별 허용목록 `C4_ALLOWED` · v1.2 = 빈) · C6 행 수 · 중복 · C8 중복 · ID 집합 = 두 인계표 = manifest plan.queue · 코호트 · 상태 · merged · record sha256 · \"검산 도구 · 자동 배포 관문 아님\" 표기.  옛 검산기 2 PASS · 10 FAIL → 13/13 · 실제 v1.2 폴더 그대로 통과.",
+      "claimed_fixed_sha": "b69d3ae74",
+      "evidence_tests": [
+        "scripts/test_reread_v12.py"
+      ]
     },
     {
       "id": "RGLR4-02",
       "severity": "P2",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 10-06 5차 재검증 (핀 92b6ebde1 · ZIP 26 · 획득 207 Git blob 검증 · 194 원천 독립 대조 · 실 검산기 CLI 변조 · 합성 망 · Windows Python 3.12.14 NumPy 2.5.3 · 우리 트리 Linux 재현 판정값 차이 0)",
       "opened_in": "docs/reviews/codex_review_rglr3_reverify_20261006.md",
       "title": "다시 읽기 검산기의 C8 (봉인 감사) 이 194 줄 · verdict · merged 문자열만 세고 케이스 ID 의 유일성 · 정확한 집합을 안 본다 — lhsx_064 행을 lhs00_000 중복으로 바꿔도 SEALED_LEGACY 194 · PASS · rc 0",
-      "note": "자리: reread_v12.py:249–261 (C8).  재현 (실 CLI · 복사본만): seal_audit.tsv 마지막 lhsx_064 행 → 첫 lhs00_000 행 복제 · 194 줄 · 고유 193 · lhsx_064 증거 없음 · SEALED_LEGACY=194 · merged same 194 · PASS · rc 0 (Codex · 우리 트리 재현 같음).  무너지는 결론: \"C8 PASS = 194 케이스 각각의 봉인 증거 확인\".  무너지지 않는 것: 원본 감사표 = 고유 194 · record hash 194 일치 (Codex 별도 검산 · execution_and_567).  해제: 인계표 / 등록 manifest 의 정확한 ID 집합 ↔ 감사표 집합 · 행 수 · 중복 · 코호트 · record status · record hash 를 병합 기록에 묶어 대조 · 같은 집합 검사만 쓰는 C6 출처 부록도 중복 차단 · 누락+중복 교체 · record sha 변조가 비영 종료 · baseline PASS 유지"
+      "note": "자리: reread_v12.py:249–261 (C8).  재현 (실 CLI · 복사본만): seal_audit.tsv 마지막 lhsx_064 행 → 첫 lhs00_000 행 복제 · 194 줄 · 고유 193 · lhsx_064 증거 없음 · SEALED_LEGACY=194 · merged same 194 · PASS · rc 0 (Codex · 우리 트리 재현 같음).  무너지는 결론: \"C8 PASS = 194 케이스 각각의 봉인 증거 확인\".  무너지지 않는 것: 원본 감사표 = 고유 194 · record hash 194 일치 (Codex 별도 검산 · execution_and_567).  해제: 인계표 / 등록 manifest 의 정확한 ID 집합 ↔ 감사표 집합 · 행 수 · 중복 · 코호트 · record status · record hash 를 병합 기록에 묶어 대조 · 같은 집합 검사만 쓰는 C6 출처 부록도 중복 차단 · 누락+중복 교체 · record sha 변조가 비영 종료 · baseline PASS 유지\n★ 2026-10-06 저녁 (3단계 A · B · 1저자 비준 순서 3) `b69d3ae74`: 검산기 `reread_v12.py` — C4 칸 차이 · 열 탈락 · 짝 없는 행 = 실패 (세대별 허용목록 `C4_ALLOWED` · v1.2 = 빈) · C6 행 수 · 중복 · C8 중복 · ID 집합 = 두 인계표 = manifest plan.queue · 코호트 · 상태 · merged · record sha256 · \"검산 도구 · 자동 배포 관문 아님\" 표기.  옛 검산기 2 PASS · 10 FAIL → 13/13 · 실제 v1.2 폴더 그대로 통과.",
+      "claimed_fixed_sha": "b69d3ae74",
+      "evidence_tests": [
+        "scripts/test_reread_v12.py"
+      ]
     },
     {
       "id": "SELF-90",
@@ -8108,7 +8158,7 @@
       "found_by": "codex 10-06 5차 재검증 §2 · §6 QV3 · QV5 (요청서 · 인계 README 문장 대조)",
       "opened_in": "docs/reviews/codex_review_rglr3_reverify_20261006.md",
       "title": "5차 요청서 §6-6 초안 · §6-2 표 · 인계 README C7 의 문장 여섯이 과장 · 표지 누락 — \"정의상 1 이 바닥\" · \"Physics = 소성 접촉 면적 민감도\" · \"큰 접촉 면적이 접촉 저항을 거의 지운다\" · \"상태로 거른다\" · σ_ion (판 간격 해) 무표지 · C7 \"독립 재계산\"",
-      "note": "자리: docs/reviews/codex_rglr3_reverify_request_20261006.md §6-2 · §6-6 · docs/data/lhs_network194_11fcf91e8/handover_v12_20261006/README.md C7 행 · CLAUDE.md LHS 행 \"τ 원천 독립 재계산\".  Codex 정정: ① T ≥ 1 은 정의가 아니라 조건부 변분 상한 (같은 영역 · 경계조건 · 국소 σ ≤ σ₀ · 나머지 상 절연 · 중복 없는 전도상 체적일 때 σ_eff ≤ φσ₀) — 저항망에 φ/q 이름을 붙였다고 강제되지 않는다 ② Physics 는 면적 선택 (network_conductivity.py:419 부근) · 협착식 (:483–513 legacy ψ) · g_boundary (:724–726) 가 함께 다르다 = \"면적 + 협착 규약의 결합 민감도\" (면적 단독 인과 분해 아님) ③ legacy 식 Rc = 1/[2σ r s (1−s)^1.5] 는 d log Rc/ds = −1/s + 1.5/(1−s) > 0 (s > 0.4) — 면적이 커질수록 Rc 가 커지고 s ≥ 0.998 에서 0 으로 절벽 ⇒ \"큰 면적이 접촉 저항을 지운다\" 철회 ④ 10 건만 상태로 거르고 나머지 Physics 를 기본 학습에 쓰라는 권고 철회 — T ≥ 1 결과로 조밀 조성 일부를 고르는 선택이고 남은 160 의 물리 타당성을 인증하지 않는다 (Physics 묶음 전체 opt-in) ⑤ §6-2 σ_ion 행 = 판 간격 해 q × 3.0 (L_gap) 인데 같은 표의 수송 tortuosity 는 L_mc 재척도 — basis 표지 없이 한 표 (Hertz 중앙 LHS 0.2273 ↔ f_mc × 3.0 0.2104 · LHSx 1.4122 ↔ 1.2553) ⑥ C7 은 생성기와 같은 tau_flux.ion_columns 를 원천에서 다시 부른 것 = 자료 경로 독립 · 식 독립 아님 (식 독립 검산 = C5 · metrics_flat 에서 φ/σ_ratio).  §6-3 의 7 \"CF 빈칸 = σ_ratio > 1.5 거부로 보이나 미확인\" 은 맞게 유보했다 — 원 JSON 사유 29/29 solve_failed (거부선 · 예외 · 퇴화를 한 사유로 묶는다 · network_conductivity.py SOLVE_FAILED_REASON) 라 확정 불가.  같은 부류 = SELF-67 · SELF-88 (요청서 압축 · 과장).  고침 = 요청서는 발송본이라 그대로 두고 이 항목이 정오표 · 인계 README C7 · CLAUDE.md 문구는 이 반입 커밋에서 고친다 · 배포 README · 열 사전은 Codex §7 문안으로 (1저자 비준 뒤)"
+      "note": "자리: docs/reviews/codex_rglr3_reverify_request_20261006.md §6-2 · §6-6 · docs/data/lhs_network194_11fcf91e8/handover_v12_20261006/README.md C7 행 · CLAUDE.md LHS 행 \"τ 원천 독립 재계산\".  Codex 정정: ① T ≥ 1 은 정의가 아니라 조건부 변분 상한 (같은 영역 · 경계조건 · 국소 σ ≤ σ₀ · 나머지 상 절연 · 중복 없는 전도상 체적일 때 σ_eff ≤ φσ₀) — 저항망에 φ/q 이름을 붙였다고 강제되지 않는다 ② Physics 는 면적 선택 (network_conductivity.py:419 부근) · 협착식 (:483–513 legacy ψ) · g_boundary (:724–726) 가 함께 다르다 = \"면적 + 협착 규약의 결합 민감도\" (면적 단독 인과 분해 아님) ③ legacy 식 Rc = 1/[2σ r s (1−s)^1.5] 는 d log Rc/ds = −1/s + 1.5/(1−s) > 0 (s > 0.4) — 면적이 커질수록 Rc 가 커지고 s ≥ 0.998 에서 0 으로 절벽 ⇒ \"큰 면적이 접촉 저항을 지운다\" 철회 ④ 10 건만 상태로 거르고 나머지 Physics 를 기본 학습에 쓰라는 권고 철회 — T ≥ 1 결과로 조밀 조성 일부를 고르는 선택이고 남은 160 의 물리 타당성을 인증하지 않는다 (Physics 묶음 전체 opt-in) ⑤ §6-2 σ_ion 행 = 판 간격 해 q × 3.0 (L_gap) 인데 같은 표의 수송 tortuosity 는 L_mc 재척도 — basis 표지 없이 한 표 (Hertz 중앙 LHS 0.2273 ↔ f_mc × 3.0 0.2104 · LHSx 1.4122 ↔ 1.2553) ⑥ C7 은 생성기와 같은 tau_flux.ion_columns 를 원천에서 다시 부른 것 = 자료 경로 독립 · 식 독립 아님 (식 독립 검산 = C5 · metrics_flat 에서 φ/σ_ratio).  §6-3 의 7 \"CF 빈칸 = σ_ratio > 1.5 거부로 보이나 미확인\" 은 맞게 유보했다 — 원 JSON 사유 29/29 solve_failed (거부선 · 예외 · 퇴화를 한 사유로 묶는다 · network_conductivity.py SOLVE_FAILED_REASON) 라 확정 불가.  같은 부류 = SELF-67 · SELF-88 (요청서 압축 · 과장).  고침 = 요청서는 발송본이라 그대로 두고 이 항목이 정오표 · 인계 README C7 · CLAUDE.md 문구는 이 반입 커밋에서 고친다 · 배포 README · 열 사전은 Codex §7 문안으로 (1저자 비준 뒤)\n★ 2026-10-06 저녁 (3단계 A · B · 1저자 비준 순서 3): 닫기 제안 (Codex 확인 뒤) — 인계 README C7 · CLAUDE.md 고침 (`04756e749` · `ac039350a`) · 배포 README = Codex §7 문안 · 여섯 문장 생성기 사전에 없음."
     },
     {
       "id": "GEN2-01",
@@ -8119,6 +8169,61 @@
       "opened_in": "docs/reviews/codex_gen2_network_request_20261006.md",
       "title": "협착-only 진단 가지 — R_c = 0 간선을 **열림 (g = 0)** 으로 둔다: 떠 있는 섬을 빼면 유한값 (= 그 가지의 하한) · HEAD 는 특이 → physics NaN",
       "note": "★ 2026-10-06 저녁 `a0a24c538` (세대 2 나머지 · 1저자 비준 C1 · C2).  자리: `network_conductivity.solve_network` (mode=constriction_only · 떠 있는 섬 = R > 0 간선 그래프에서 고정 노드와 끊긴 자유 노드 · V = 0).  real_14 이온: g2 0.054176 · g1 0.071330 · 떠 있는 노드 29.  쓰이는 곳 = 194 배치 진단 열 `sigma_constr_net_mScm_<m>` 뿐 (인계표 · 배포 열 아님).  처리 후보: (가) R_c = 0 간선 양끝을 단락 수축 (같은 노드로 병합) · (나) 그 가지를 not_computed 로 표지 — 결정 = 1저자.",
+      "evidence_tests": []
+    },
+    {
+      "id": "LHS-34",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "claude (10-06 저녁 · 3단계 구현 보고)",
+      "opened_in": "docs/reviews/lhs_handover_judgments_20260924.md",
+      "title": "`LHS-25` 잔여 — Physics 피복의 소비자 ①② (σ_ionic T1 면적 선택 · 망 Physics 채널 · σ_thermal T1 타깃 · 등급 축) 는 아직 옛 합-클립 / 옛 면적",
+      "note": "★ 2026-10-06 저녁 (3단계 A · B · 1저자 비준 순서 3).  합집합 키 (`LHS-25` ③) 는 들어갔지만 등급 축 · 적합 타깃 · 예측기는 옛 값을 쓴다 (웹앱 문구: \"이 등급 축은 아직 옛 합-클립 값\") · 바꿀지 = 1저자.",
+      "evidence_tests": []
+    },
+    {
+      "id": "GEN2-02",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "claude (10-06 저녁 · 3단계 구현 보고)",
+      "opened_in": "docs/reviews/gen2_network_design_20261006.md",
+      "title": "합집합 피복 — 완전 포함 쌍 (c_cpl[22] < 0 · 작은 SE 가 큰 AM 안에 통째로) 이 있으면 침대 전체가 빈칸",
+      "note": "★ 2026-10-06 저녁 (3단계 A · B · 1저자 비준 순서 3).  case15 2 쌍 (첫째 31–29241 · 0.5 µm SE ⊂ 6 µm AM) → 합집합 · v2 모두 빈칸 + 사유 (LHSC-01 (a) 계약).  설계 프로토타입의 ×0.87 은 그 두 쌍에 π r_SE² 를 조용히 넣은 값.  처리 = 1저자: (가) 빈칸 유지 (지금) · (나) 그 쌍만 빼고 수 기록 · (다) 원판 면적 대체.",
+      "evidence_tests": []
+    },
+    {
+      "id": "GEN2-03",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "claude (10-06 저녁 · 3단계 구현 보고)",
+      "opened_in": "docs/reviews/lhs_network_batch_registration_20261005.md",
+      "title": "`scripts/lens_geometry.py` 가 g2 면적 · 수확기 계산에 쓰이는데 194 배치 봉인 `CODE_FILES` (19) 에 없다",
+      "note": "★ 2026-10-06 저녁 (3단계 A · B · 1저자 비준 순서 3).  봉인 공백 — 새 194 등록 (4단계) 에서 목록에 넣는다 (실행기 `run_network_194_parallel.py` CODE_FILES 변경 = 등록 문서와 같은 커밋).",
+      "evidence_tests": []
+    },
+    {
+      "id": "PARSE-01",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "claude (10-06 저녁 · 3단계 구현 보고)",
+      "opened_in": "docs/reviews/gen2_network_design_20261006.md",
+      "title": "`parse_liggghts.parse_input_script` 가 **마지막** `region … block` 을 읽는다 — box_z 가 투입 영역 값 (real_14 0.09 ↔ 실제 1.01)",
+      "note": "★ 2026-10-06 저녁 (3단계 A · B · 1저자 비준 순서 3).  x · y 는 투입 영역이 도메인 전체라 우연히 맞는다 · 다른 주기 코드는 상자가 없으면 0.05 로 조용히 대체.  합집합 피복은 `input_params.json` 의 box_x/box_y 를 쓰고 없으면 빈칸 (사유 box) — 이 결함의 영향 없음.",
+      "evidence_tests": []
+    },
+    {
+      "id": "TAU-26",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "claude (10-06 저녁 · 3단계 구현 보고)",
+      "opened_in": "docs/reviews/tau_conventions_judgment_v2_20261003.md",
+      "title": "`TAU-24` 잔여 — 전극 띠로 낮아진 수송 tortuosity 의 **보정 T** (띠 몫 열은 출하 · 보정식 = 1저자 결정)",
+      "note": "★ 2026-10-06 저녁 (3단계 A · B · 1저자 비준 순서 3).  띠 몫 (L0 = 4 r_SE/L) 은 T 를 낮추는 정도의 상한일 뿐 · 보정식 · 적용 여부 = 1저자.",
       "evidence_tests": []
     }
   ]
