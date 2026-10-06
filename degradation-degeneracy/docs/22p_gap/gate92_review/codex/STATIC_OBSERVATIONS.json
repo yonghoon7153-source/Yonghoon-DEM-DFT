@@ -1,0 +1,56 @@
+{
+  "mode": "STATIC_ONLY_NO_EXECUTION",
+  "confirmed": [
+    {
+      "id": "S01",
+      "path": "src/io.py",
+      "line": 1873,
+      "fact": "Missing-only stage3 required-key check, without extra-key check"
+    },
+    {
+      "id": "S02",
+      "path": "src/io.py",
+      "line": 1927,
+      "fact": "Candidate map top/entries not closed; potential invalid-type .get paths not converted here to structured failures",
+      "confidence": "static control-flow inspection, not a reproduced runtime result"
+    },
+    {
+      "id": "S03",
+      "path": "src/fitting.py",
+      "line": 1545,
+      "fact": "Provider hash uses default JSON separators"
+    },
+    {
+      "id": "S04",
+      "path": "tools/preserve.py",
+      "line": 6656,
+      "fact": "Approval axis provider hash uses existing canonical digest; helper defined at 138-150"
+    },
+    {
+      "id": "S05",
+      "path": "tools/preserve.py",
+      "line": 6168,
+      "fact": "Index compares complete derived stage3 axis"
+    },
+    {
+      "id": "S06",
+      "path": "docs/22p_gap/STAGE4_SCOPE_RESEARCH_20261006.md",
+      "line": 247,
+      "fact": "k09 enumerates C4/C6/C2 subset, needs complete new/reused/deferred consumer-key mapping"
+    },
+    {
+      "id": "S07",
+      "path": "docs/22p_gap/STAGE4_SCOPE_RESEARCH_20261006.md",
+      "line": 259,
+      "fact": "four direct-key witness claim conflicts with k05 nine-key list; exact_bounds is k06 and already independently recomputed"
+    }
+  ],
+  "not_claimed": [
+    "production probes or RED/GREEN reproduction",
+    "historical git log -S exhaustiveness",
+    "remote untracked/operational file absence",
+    "new docs-lint raw-log verification",
+    "source_digest execution",
+    "unconditional bundle6 closure"
+  ]
+}

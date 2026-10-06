@@ -1,0 +1,73 @@
+{
+  "review": "GATE92_STAGE4_SCOPE_PREREVIEW",
+  "date": "2026-10-06",
+  "status": "CONDITIONALLY_SUITABLE_SCOPE_AFTER_N1_N2_N3",
+  "head": "7a8a22a2d61a17ec360a1589615a36c5c223cd1f",
+  "request_commit": "37e3b5c46715c2414147894db58392be5b94c597",
+  "code_commit": "b08bb6944b03511c97c8deeb38e6a347bbb1f1fb",
+  "accepted_source_digest": "f0175fff71132003",
+  "digest_reexecuted": false,
+  "run_scope_files": 60,
+  "run_scope_blob_mode_and_set_equal": true,
+  "findings": [
+    {
+      "id": "G92-N1",
+      "priority": 1,
+      "kind": "scope_and_evidence_plan",
+      "title": "Fix consumer-by-key evidence matrix and bounded closure claims before implementation"
+    },
+    {
+      "id": "G92-N2",
+      "priority": 2,
+      "kind": "schema_acceptance_contract",
+      "title": "Specify type-safe structured rejection at the two sig-6 schema boundaries"
+    },
+    {
+      "id": "G92-N3",
+      "priority": 2,
+      "kind": "witness_plan_correction",
+      "title": "Map exact_bounds to k06 and preserve existing independent recomputation"
+    }
+  ],
+  "q": {
+    "Q1": "accept_exclusion",
+    "Q2": "accept_both_with_evidence_matrix_and_nonduplicate_sites",
+    "Q3": "scoped_prerequisite_satisfied_not_all_stage3_features_complete",
+    "Q4": "accept_existing_canonical_digest",
+    "Q5": "accept_keep_and_bind_copies",
+    "Q6": "only_bundle6_row_no_closed_status_yet",
+    "Q7": "user_implementation_approval_required_after_fixed_spec",
+    "Q8": "accept_sig6_only_io_change_and_two_receipts_once_as_future_scope",
+    "Q9": "only_one_future_prerequisite_not_bundle9_closure"
+  },
+  "implementation_authorized": false,
+  "execution_go": false,
+  "bundle6_closed": false,
+  "bundle9_closed": false,
+  "tests_run_by_reviewer": 0,
+  "probes_run_by_reviewer": 0,
+  "native_runs_by_reviewer": 0,
+  "receipt_regenerations_by_reviewer": 0,
+  "production_source_changes_by_reviewer": 0,
+  "submitted_test_results": {
+    "gate92_docs_and_citations": 360,
+    "provenance": "submitter sending note only; raw run log not independently checked this turn",
+    "reused_gate91": {
+      "pytest_passed": 2182,
+      "xfailed": 1,
+      "smoke_rc": 0,
+      "provenance": "previously accepted record, not a fresh G92 run"
+    }
+  },
+  "communication": {
+    "auto_sent_to_claude": false,
+    "approval_inferred_from_attachment": false
+  },
+  "bounds": [
+    "grid_fit_v5 remains diagnostic only",
+    "prior gate closures preserved",
+    "no new research leg, floor, pilot, class, projection, p_ini, adaptive, requirements or environment install",
+    "no claim/generation publication",
+    "future production changes beyond allowed functions/files require separate authorization"
+  ]
+}

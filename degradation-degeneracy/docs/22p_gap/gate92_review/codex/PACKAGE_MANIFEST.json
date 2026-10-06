@@ -1,0 +1,68 @@
+{
+  "payload_count": 10,
+  "files": [
+    {
+      "path": "CLAUDE_REPLY_KO.md",
+      "bytes": 2893,
+      "sha256": "60b625d416b740b6e1864b38a7227a3f82da4af45333dd2298b1d6e3e168d78a"
+    },
+    {
+      "path": "DECISION.json",
+      "bytes": 2679,
+      "sha256": "70980c66618bbb84357ae2c439cae9c447cab71cff5a923403e6422c915beb2a"
+    },
+    {
+      "path": "reference/GATE92_REQUEST.md.txt",
+      "bytes": 14228,
+      "sha256": "240c6b3bf66dde8fc4f787c117047d1953eac0f85ec1ff4da165b8c63d476227"
+    },
+    {
+      "path": "reference/SOURCE_EXCERPTS.json",
+      "bytes": 70201,
+      "sha256": "af4c1fc49f74b45b0eeb63cafe68f52f0e72808c8016203d62b3686bdf3ef146"
+    },
+    {
+      "path": "reference/STAGE4_SCOPE_RESEARCH_20261006.md.txt",
+      "bytes": 36757,
+      "sha256": "c071cd596713048ff9adf0bbb0513b4461ce810319d8cef6814730a0e7088877"
+    },
+    {
+      "path": "REVIEW_KO.md",
+      "bytes": 12772,
+      "sha256": "571d604befa93bf4bd1051f74af624b51b34879e915ba1220ac8c9ad3d3d1a25"
+    },
+    {
+      "path": "REVIEWER_TOOL_NOTES.json",
+      "bytes": 1534,
+      "sha256": "76c12fc488794dd5152b7f6f4e0268d9c672d27bdba138c1ad50cbf95cae795f"
+    },
+    {
+      "path": "RUN_SCOPE_COMPARISON.json",
+      "bytes": 9716,
+      "sha256": "8aba2fa358e8a976845bc8d10db8d57610f34ce3a5a56352e8545573b87cc860"
+    },
+    {
+      "path": "SOURCE_IDENTITIES.json",
+      "bytes": 4044,
+      "sha256": "97a2791eab7d675267cdf3a52eb745ac3777f8b9f95a94af7c88d2ed9707c33a"
+    },
+    {
+      "path": "STATIC_OBSERVATIONS.json",
+      "bytes": 1744,
+      "sha256": "52dd015c70eeaacd35fc5f4f35dfc607ff4e0495bd0f7a228074f525fd08c3ea"
+    }
+  ],
+  "scope": "Reviewer artifact payload; manifest excludes itself",
+  "source_reference_checks": [
+    {
+      "file": "reference/GATE92_REQUEST.md.txt",
+      "git_blob": "2664ad6985d85780668c8978adcbcdd464c56641",
+      "bytes": 14228
+    },
+    {
+      "file": "reference/STAGE4_SCOPE_RESEARCH_20261006.md.txt",
+      "git_blob": "6385aab2584baaa95aa7a09a3ceb73076d84ac5a",
+      "bytes": 36757
+    }
+  ]
+}

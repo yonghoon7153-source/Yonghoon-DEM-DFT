@@ -1,0 +1,31 @@
+{
+  "scope": "Reviewer artifact housekeeping only; not submitted production/test results",
+  "events": [
+    {
+      "event": "manifest_collection_orchestration",
+      "result": "JSON.parse failed with Unexpected non-whitespace character after JSON at position 4",
+      "boundary": "Parsing command output inside functions.exec failed before PACKAGE_MANIFEST.json write; first inner command return was not emitted in that tool response",
+      "cause": "Not asserted; subsequent collection separated from source-blob checks"
+    },
+    {
+      "event": "source_copy_check_followup",
+      "chunk_id": "9e9e38",
+      "exit_code": 1,
+      "result": "PowerShell parser rejected foreach statement piped directly to ConvertTo-Json: An empty pipe element is not allowed",
+      "fix": "Collect foreach output in an array before JSON serialization"
+    },
+    {
+      "event": "corrected_source_copy_check",
+      "return": {
+        "chunk_id": "32b7ee",
+        "wall_time_seconds": 1.2974095,
+        "exit_code": 0,
+        "original_token_count": 76,
+        "output": "[\r\n  {\r\n    \"file\": \"reference/GATE92_REQUEST.md.txt\",\r\n    \"git_blob\": \"2664ad6985d85780668c8978adcbcdd464c56641\",\r\n    \"bytes\": 14228\r\n  },\r\n  {\r\n    \"file\": \"reference/STAGE4_SCOPE_RESEARCH_20261006.md.txt\",\r\n    \"git_blob\": \"6385aab2584baaa95aa7a09a3ceb73076d84ac5a\",\r\n    \"bytes\": 36757\r\n  }\r\n]\r\n"
+      }
+    }
+  ],
+  "native_executions": 0,
+  "supplied_code_executions": 0,
+  "review_findings_changed": false
+}

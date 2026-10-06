@@ -1,0 +1,77 @@
+{
+  "repository": "yonghoon7153-source/Yonghoon-DEM-DFT",
+  "ref": "7a8a22a2d61a17ec360a1589615a36c5c223cd1f",
+  "read_mode": "GitHub text retrieval and static inspection only; no checkout, imports or supplied program execution",
+  "attachment": {
+    "path": "C:/Users/Administrator/Desktop/SEND_GATE92.md",
+    "sha256": "a3a9a707ba7671cd2a51eed1ccfaf83544b341dea9a9832150ffce6d031460cd"
+  },
+  "files": [
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/GATE92_REQUEST.md",
+      "git_blob": "2664ad6985d85780668c8978adcbcdd464c56641",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/7a8a22a2d61a17ec360a1589615a36c5c223cd1f/degradation-degeneracy/docs/22p_gap/GATE92_REQUEST.md",
+      "lines": 84
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/STAGE4_SCOPE_RESEARCH_20261006.md",
+      "git_blob": "6385aab2584baaa95aa7a09a3ceb73076d84ac5a",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/7a8a22a2d61a17ec360a1589615a36c5c223cd1f/degradation-degeneracy/docs/22p_gap/STAGE4_SCOPE_RESEARCH_20261006.md",
+      "lines": 318
+    },
+    {
+      "path": "degradation-degeneracy/src/io.py",
+      "git_blob": "9284a4370bc6afb52722fb60e78657016ea44111",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/7a8a22a2d61a17ec360a1589615a36c5c223cd1f/degradation-degeneracy/src/io.py",
+      "lines": 2525
+    },
+    {
+      "path": "degradation-degeneracy/src/fitting.py",
+      "git_blob": "723a47489d6c7c811be6be285e4e6c70b607e62a",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/7a8a22a2d61a17ec360a1589615a36c5c223cd1f/degradation-degeneracy/src/fitting.py",
+      "lines": 2498
+    },
+    {
+      "path": "degradation-degeneracy/tools/preserve.py",
+      "git_blob": "e8f3105b784fc8ff8e184b3e671a2d68d138ad9f",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/7a8a22a2d61a17ec360a1589615a36c5c223cd1f/degradation-degeneracy/tools/preserve.py",
+      "lines": 9302
+    },
+    {
+      "path": "degradation-degeneracy/tools/design_wire.py",
+      "git_blob": "1f388c039d97384f8316afa975338e60c6d866c9",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/7a8a22a2d61a17ec360a1589615a36c5c223cd1f/degradation-degeneracy/tools/design_wire.py",
+      "lines": 898
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/STAGE3_CONTRACT.md",
+      "git_blob": "5bc9ab318bbf352de34d382c7b2dee0fa04126ff",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/7a8a22a2d61a17ec360a1589615a36c5c223cd1f/degradation-degeneracy/docs/22p_gap/STAGE3_CONTRACT.md",
+      "lines": 1556
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/STAGE3_IMPL_ROUND1_SPEC.md",
+      "git_blob": "c9b30b50e5ba7e6629f63fa10301309346fbede5",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/7a8a22a2d61a17ec360a1589615a36c5c223cd1f/degradation-degeneracy/docs/22p_gap/STAGE3_IMPL_ROUND1_SPEC.md",
+      "lines": 406
+    },
+    {
+      "path": "degradation-degeneracy/docs/08_REVIEW_RESPONSE.md",
+      "git_blob": "f55205162cf2ac66ccabd35e94e9f0ee0fc8fb05",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/7a8a22a2d61a17ec360a1589615a36c5c223cd1f/degradation-degeneracy/docs/08_REVIEW_RESPONSE.md",
+      "lines": 9314
+    },
+    {
+      "path": "degradation-degeneracy/tests/test_gate87_round2b.py",
+      "git_blob": "2224e0df87c7fb9a359feef295c18fdec3a2cfaf",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/7a8a22a2d61a17ec360a1589615a36c5c223cd1f/degradation-degeneracy/tests/test_gate87_round2b.py",
+      "lines": 701
+    },
+    {
+      "path": "degradation-degeneracy/tests/test_gate82_residuals.py",
+      "git_blob": "b4dde3d6bd02c0811b34192506307da323337b22",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/7a8a22a2d61a17ec360a1589615a36c5c223cd1f/degradation-degeneracy/tests/test_gate82_residuals.py",
+      "lines": 314
+    }
+  ]
+}
