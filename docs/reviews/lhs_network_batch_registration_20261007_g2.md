@@ -36,7 +36,7 @@ git fetch origin claude/stoic-knuth-NObVQ
 git checkout --detach origin/claude/stoic-knuth-NObVQ
 git log -1 --oneline
 echo "dirty 줄 수 = $(git status --porcelain --untracked-files=no | wc -l) (0 이어야)"
-PY=~/Yonghoon-DEM-DFT/venv/bin/python
+PY=$(ls ~/Yonghoon-DEM-DFT/venv/bin/python ~/Yonghoon-DEM-DFT/.venv/bin/python3 2>/dev/null | head -1)
 $PY -c "import numpy, scipy, networkx; print(numpy.__version__, scipy.__version__, networkx.__version__)"
 S=$(git rev-parse --short HEAD); T=$(date +%m%d_%H%M)
 DL=/mnt/c/Users/Administrator/Downloads        # 다른 PC 면 /mnt/c/Users/안용훈/Downloads
@@ -158,7 +158,7 @@ cd ~ && tar czf ~/g2pre_${S}_$T.tar.gz "$(basename "$SM")/smoke_report.json" "$(
 
 ```bash
 cd ~/dem-audit && git fetch origin claude/stoic-knuth-NObVQ && git checkout --detach <발사 커밋>
-PY=~/Yonghoon-DEM-DFT/venv/bin/python; R=~/net194_$(git rev-parse --short HEAD)
+PY=$(ls ~/Yonghoon-DEM-DFT/venv/bin/python ~/Yonghoon-DEM-DFT/.venv/bin/python3 2>/dev/null | head -1); R=~/net194_$(git rev-parse --short HEAD)
 $PY scripts/run_network_194_parallel.py run --root "$R" --dry-run 2>&1 | grep -E "코드 |기대 망 세대|전이 의존|입력 지문|원자료 · 메시 문제|⛔"   # §2 · §3 값과 같아야
 $PY scripts/run_network_194_parallel.py run --root "$R" 2>&1 | tee ~/net194_run_$(date +%m%d_%H%M).log | tail -40
 ```
