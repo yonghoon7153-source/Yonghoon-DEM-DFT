@@ -1,14 +1,14 @@
 {
  "schema": "campaign_closure/v1",
  "record_kind": "closure",
- "closed": false,
+ "closed": true,
  "date": "2026-10-06",
  "system": "Ag(111)|흑연(0001) 3층 · 2×2 정합 셀 (흑연 +1.078 % 변형 · Ag 격자) · PBE+D3(BJ) 2체 · 고정기하 W_sep (끝점 10 Å) · registry 넷 · QE (kgy) · 헤드라인 k 9×9×1 (registry 넷 + N4) · k 수렴 확인 = 대표 AGC_N3_top_fcc 의 12×12×1 탐침",
  "track": "W_ad (점착) — 1저자 = 사용자 (결정이 그 자리에서 난다 · 통지할 제3자 없음 · DEM 은 값을 받는 쪽)",
  "citable": "라벨 문장만 (§2) — 값에 §1 라벨을 붙인다 · ⛔ 화면(webapp)에 W 값을 싣지 않는다",
  "results_seen": true,
  "제목": "P1b Ag(111)|흑연 3층 W_sep 마감 교체 — 사전 규칙 REPLACE: 헤드라인을 k 9×9×1 registry 넷 평균으로 (두께 k9 PASS · 폭 OK) · 마감 (a′) 의 k6 헤드라인은 이력",
- "⚠_상태": "**proposed** — 결정 D-2026-10-06-wad-agc-graphite-closed-k9 이 비준되면 closed: true 로 바꾸고 D-2026-10-05-wad-agc-graphite-closed 를 superseded 로 재봉인한다. 비준 전에는 마감 (a′) (db/properties/wad_agc_graphite_closed_2026_10_05.json) 이 유효하다.",
+ "⚠_상태": "✅ active — 결정 D-2026-10-06-wad-agc-graphite-closed-k9 비준 2026-10-06 (1저자 = 사용자). 마감 (a′) D-2026-10-05-wad-agc-graphite-closed 는 superseded (재봉인). 이 카드가 P1b 마감의 정본이다.",
  "⚠_순서": "판독 규칙 (10 잡 전부 OK → REPLACE · 폭 0.01 · 두께 |ΔW| ≤ 0.02) 은 새 8 잡 결과 전에 결정 D-2026-10-05-wad-agc-graphite-k9-registry 에 박혔다. 이 카드는 그 규칙의 출력을 옮긴 것이다 — 결과를 보고 문턱·표본을 바꾸지 않았다.",
  "닫는_범위": "사전등록 카드 db/properties/wad_agc_graphite_prereg_2026_10_02.json (결정 D-2026-10-02-wad-agc-graphite) 의 1단계 (기계 대조 · 이완) · 2단계 (SCF 31) · G4 k 탐침 (결정 D-2026-10-05-wad-agc-kprobe12 · 2 잡) · (b) 나머지 넷 9×9×1 (결정 D-2026-10-05-wad-agc-graphite-k9-registry · 8 잡). ⛔ 점착 트랙 전체 (P1 LPSCl|Ag · P2 · V5 VASP 외주) 는 닫지 않는다.",
  "1_확정": {
@@ -80,7 +80,7 @@
   "② DEM 또는 1저자가 registry 각각의 12×12×1 수렴을 요구하면 → 8 잡 (넷 × 두 끝점 · 12×12×1) 새 결정 · 그 결과로 라벨만 바꾼다 (헤드라인 추정자는 k9 registry 평균 그대로)",
   "⛔ 이 둘 말고 다른 이유로 열지 않는다 ('대표 말고 다른 registry 의 k12 가 궁금하다' 는 사유가 아니다 · ② 는 요구가 있어야 한다)"
  ],
- "8_비준": "⏳ 대기 — 결정 D-2026-10-06-wad-agc-graphite-closed-k9 (proposed) · 1저자 = 사용자 (W_ad 트랙)",
+ "8_비준": "✅ 1저자(사용자) 결정 2026-10-06 — AskUserQuestion '비준 (Recommended)' · 결정 D-2026-10-06-wad-agc-graphite-closed-k9 active · D-2026-10-05-wad-agc-graphite-closed superseded",
  "출처": [
   "db/properties/wad_agc_graphite_prereg_2026_10_02.json",
   "db/properties/wad_agc_graphite_result_2026_10_05.json",
@@ -93,6 +93,11 @@
    "at": "2026-10-06",
    "state": "proposed",
    "note": "(b) k9 넷 8 잡 rc 0 (kgy · 17 h 35 m · 상한 30 h) → 회수 bc2a0200 · SHA256SUMS 251 일치 → 레포 재집계 = kgy 집계 → 사전 규칙 REPLACE."
+  },
+  {
+   "at": "2026-10-06",
+   "state": "closed",
+   "note": "1저자 비준 · 마감 (a′) 대체."
   }
  ]
 }
