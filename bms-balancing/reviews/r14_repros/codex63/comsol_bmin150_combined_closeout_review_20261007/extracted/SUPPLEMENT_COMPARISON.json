@@ -1,0 +1,96 @@
+{
+  "status": "SAME_ACCEPTED_RECORDS_CLOSURE_UNCHANGED",
+  "errors": [],
+  "containers": {
+    "previous": {
+      "filename": "BMIN150_EXISTING_AFTER_RECORDS_20261007.zip",
+      "bytes": 41339,
+      "sha256": "1c37531de5102a026993bb65d089f761e46bbd48c634e7475f0cf1023c34ee2a",
+      "entries": 4,
+      "members": {
+        "SELECTED_SOURCES_AFTER.json": {
+          "bytes": 2861947,
+          "sha256": "4dc9b2387d56566c9d1107ce8d12ee448338741397b582f4a7a451e2acab1aa8"
+        },
+        "DELIVERY_RECEIPT.json": {
+          "bytes": 1425,
+          "sha256": "7760236d6238e24ce205b4b20ab794028fce8c1ee75fbacd085e510b2a22399c"
+        },
+        "FINAL_PACKAGE_TOOL_RETURN.json": {
+          "bytes": 1691,
+          "sha256": "2ef72fd0d9e02abbd342f7f966b463f46c41e0a25caabc238e59e49d99c92edb"
+        },
+        "PACKAGE_MANIFEST.json": {
+          "bytes": 881,
+          "sha256": "f3cb90c834b9650488681e4eafd48c23a237064bf0d4f67f3fa9114346bb7aa9"
+        }
+      },
+      "crc_all_members_read_to_eof": true
+    },
+    "additional": {
+      "filename": "BMIN150_DELIVERY_AFTER_SUPPLEMENT_20261007.zip",
+      "bytes": 42318,
+      "sha256": "cc0a8b5c94becc4bfd05b3657a47565810999c8f648f1df1bb06b7590f2b0dce",
+      "entries": 5,
+      "members": {
+        "DELIVERY_RECEIPT.json": {
+          "bytes": 1425,
+          "sha256": "7760236d6238e24ce205b4b20ab794028fce8c1ee75fbacd085e510b2a22399c"
+        },
+        "FINAL_PACKAGE_TOOL_RETURN.json": {
+          "bytes": 1691,
+          "sha256": "2ef72fd0d9e02abbd342f7f966b463f46c41e0a25caabc238e59e49d99c92edb"
+        },
+        "PACKAGE_MANIFEST.json": {
+          "bytes": 709,
+          "sha256": "de632f3bb9e58924003032e372d7e3682b43d6368694accfa886c2c1ba84fa88"
+        },
+        "SELECTED_SOURCES_AFTER.json": {
+          "bytes": 2861947,
+          "sha256": "4dc9b2387d56566c9d1107ce8d12ee448338741397b582f4a7a451e2acab1aa8"
+        },
+        "SEND_TO_REVIEWER_KO.md": {
+          "bytes": 1327,
+          "sha256": "14e9a18d17d997c9a2e4a4c852055503d6f7601e0dea571157fc40cede759b4b"
+        }
+      },
+      "crc_all_members_read_to_eof": true
+    }
+  },
+  "shared_records": [
+    {
+      "file": "SELECTED_SOURCES_AFTER.json",
+      "bytes": 2861947,
+      "sha256": "4dc9b2387d56566c9d1107ce8d12ee448338741397b582f4a7a451e2acab1aa8",
+      "byte_for_byte_equal": true
+    },
+    {
+      "file": "DELIVERY_RECEIPT.json",
+      "bytes": 1425,
+      "sha256": "7760236d6238e24ce205b4b20ab794028fce8c1ee75fbacd085e510b2a22399c",
+      "byte_for_byte_equal": true
+    },
+    {
+      "file": "FINAL_PACKAGE_TOOL_RETURN.json",
+      "bytes": 1691,
+      "sha256": "2ef72fd0d9e02abbd342f7f966b463f46c41e0a25caabc238e59e49d99c92edb",
+      "byte_for_byte_equal": true
+    }
+  ],
+  "additional_document": "SEND_TO_REVIEWER_KO.md",
+  "container_manifest_differs": true,
+  "selected_preservation_count_from_unchanged_accepted_record": 8674,
+  "previous_closeout_decision_identity": {
+    "bytes": 2470,
+    "sha256": "c088ca3506978b3a93d5c96d9761af1b369ff574bfc6119eb0486bf740711662"
+  },
+  "previous_check_result_identity": {
+    "bytes": 2789,
+    "sha256": "3a3e202add594ac7865852daf593bdf2b6fcb85316abf186cf919a0df1ec1488"
+  },
+  "received_code_execution": 0,
+  "COMSOL_calls": 0,
+  "numeric_recalculation": 0,
+  "remote_source_remeasurement": false,
+  "note": "Two containers carry the same three historical records; they are not two independent preservation observations. New cover letter and container manifest do not change the underlying accepted evidence."
+}

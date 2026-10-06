@@ -1,0 +1,38 @@
+{
+  "date": "2026-10-07",
+  "status": "LIMITED_NATIVE150_REVIEW_CLOSED_WITH_DOCUMENTED_SCOPE",
+  "previous_closure_maintained": true,
+  "additional_supplement_accepted": true,
+  "new_supplement": {
+    "file": "BMIN150_DELIVERY_AFTER_SUPPLEMENT_20261007.zip",
+    "bytes": 42318,
+    "sha256": "cc0a8b5c94becc4bfd05b3657a47565810999c8f648f1df1bb06b7590f2b0dce"
+  },
+  "previous_supplement": {
+    "file": "BMIN150_EXISTING_AFTER_RECORDS_20261007.zip",
+    "bytes": 41339,
+    "sha256": "1c37531de5102a026993bb65d089f761e46bbd48c634e7475f0cf1023c34ee2a"
+  },
+  "same_three_historical_record_bytes": true,
+  "additional_content": ["SEND_TO_REVIEWER_KO.md", "different container PACKAGE_MANIFEST.json"],
+  "new_independent_preservation_observation": false,
+  "recorded_selected_source_preservation_count": 8674,
+  "recorded_selected_source_preservation": "ACCEPTED_PREVIOUS_CHECK_RETAINED",
+  "native_completion": "NORMAL_150S_COMPLETED",
+  "mesh_comparison": "WITHIN_LIMITS_THIS_WINDOW",
+  "comparison_scope": "Fixed input; particle radial mesh 320/320 versus 640/640; 120-150 s, 301 requested times, 241 coordinates per electrode",
+  "delivery_closeout": "CLOSED",
+  "open_items_in_this_limited_review": [],
+  "normal_gate": "INCOMPLETE",
+  "overall_convergence": "INCOMPLETE",
+  "effective_policy": "UNVERIFIED",
+  "actual_cores": "UNVERIFIED",
+  "PS01_16_internal": "UNOBSERVED",
+  "new_execution_approved": false,
+  "MPH_deletion_authorized": false,
+  "historical_record_rewrite_authorized": false,
+  "retest_or_rerun_required": false,
+  "received_code_executed": false,
+  "COMSOL_calls": 0,
+  "numeric_recalculation": 0
+}

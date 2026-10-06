@@ -1,0 +1,38 @@
+{
+  "date": "2026-10-07",
+  "scope": "Combined reply for two byte-identical historical-record supplements; previous limited closure maintained",
+  "payload_count": 6,
+  "files": [
+    {
+      "file": "CLAUDE_REPLY_KO.md",
+      "bytes": 1375,
+      "sha256": "1d63cb14835403d19133aeeee0718ecb40a187a9cff9fac061a73b1f1ce84398"
+    },
+    {
+      "file": "COMBINED_REPLY_KO.md",
+      "bytes": 3821,
+      "sha256": "6d77397ae554c1bd3edd3c8d35491c310beed36f079b37a24115219f04c0cede"
+    },
+    {
+      "file": "compare_supplements.py",
+      "bytes": 4336,
+      "sha256": "544d0c1794966920e63ac9569a0adf8b8edb5281edc9f9e306889d72f83eaabb"
+    },
+    {
+      "file": "DECISION.json",
+      "bytes": 1625,
+      "sha256": "7257d5a436b3b3acb80e6d310f6a260305cedd1145358a72d6c0e572cfa50305"
+    },
+    {
+      "file": "REVIEW_TOOL_RETURN.json",
+      "bytes": 4325,
+      "sha256": "f6ee80aa0c4761b50fc0486356032e501f064117d0575937250a65875d8431b7"
+    },
+    {
+      "file": "SUPPLEMENT_COMPARISON.json",
+      "bytes": 3531,
+      "sha256": "4d32f57d593c623abb53c7eccc649ef8924af2c7418ec62df03f9fab51b80e66"
+    }
+  ],
+  "excludes_self": "PACKAGE_MANIFEST.json"
+}
