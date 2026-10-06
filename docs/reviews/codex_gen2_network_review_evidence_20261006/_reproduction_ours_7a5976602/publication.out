@@ -1,0 +1,7 @@
+[Storage] NOT configured - SUPABASE_URL=False SUPABASE_KEY=False
+[Security] WARNING: auth OFF - local/private only. For public deploy set WEBAPP_REQUIRE_AUTH=1 + WEBAPP_AUTH_TOKEN.
+baseline done (True, 'ok') {'sigma_full': 0.00400538, 'bulk_model': 'cylinder_half_d', 'resistance_model': None, 'electrode_model': 'dirichlet_exact', 'area_rule_physics': 'physics_g2', 'psi_placement_physics': 'multiply'}
+h12_as_primary done (True, 'ok') {'sigma_full': 0.00513502, 'bulk_model': 'sphere_segment', 'resistance_model': None, 'electrode_model': 'dirichlet_exact', 'area_rule_physics': 'physics_g2', 'psi_placement_physics': 'multiply'}
+bad_psi done (True, 'ok') {'sigma_full': 0.00400538, 'bulk_model': 'cylinder_half_d', 'resistance_model': None, 'electrode_model': 'dirichlet_exact', 'area_rule_physics': 'physics_g2', 'psi_placement_physics': 'multiply_TYPO'}
+bad_electrode done (True, 'ok') {'sigma_full': 0.00400538, 'bulk_model': 'cylinder_half_d', 'resistance_model': None, 'electrode_model': 'DIRICHLET_TYPO', 'area_rule_physics': 'physics_g2', 'psi_placement_physics': 'multiply'}
+partial_missing_g2 done (True, 'ok') {'sigma_full': 0.00400538, 'bulk_model': 'cylinder_half_d', 'resistance_model': None, 'electrode_model': 'dirichlet_exact', 'area_rule_physics': 'physics_g2', 'psi_placement_physics': None}

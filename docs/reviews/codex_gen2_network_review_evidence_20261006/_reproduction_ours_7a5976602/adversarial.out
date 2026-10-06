@@ -1,0 +1,239 @@
+{
+  "cg_dead_end": [
+    {
+      "high": 1000000.0,
+      "G": 15000.5,
+      "q": 0.0150005,
+      "exact_G": 15000.5,
+      "rel_error": 0.0,
+      "info": {
+        "electrode_model": "dirichlet_exact",
+        "status": "computed",
+        "reason": null,
+        "method": "cg",
+        "n_free": 30002,
+        "n_fixed": 2,
+        "n_floating": 0,
+        "I_bottom": 15000.5,
+        "I_top": -15000.500000000002
+      }
+    },
+    {
+      "high": 100000000.0,
+      "G": 15000.5,
+      "q": 0.0150005,
+      "exact_G": 15000.5,
+      "rel_error": 0.0,
+      "info": {
+        "electrode_model": "dirichlet_exact",
+        "status": "computed",
+        "reason": null,
+        "method": "cg",
+        "n_free": 30002,
+        "n_fixed": 2,
+        "n_floating": 0,
+        "I_bottom": 15000.5,
+        "I_top": -15000.500000000002
+      }
+    },
+    {
+      "high": 10000000000.0,
+      "G": 15000.5,
+      "q": 0.0150005,
+      "exact_G": 15000.5,
+      "rel_error": 0.0,
+      "info": {
+        "electrode_model": "dirichlet_exact",
+        "status": "computed",
+        "reason": null,
+        "method": "cg",
+        "n_free": 30002,
+        "n_fixed": 2,
+        "n_floating": 0,
+        "I_bottom": 15000.5,
+        "I_top": -15000.500000000002
+      }
+    },
+    {
+      "high": 1000000000000.0,
+      "G": 15000.5,
+      "q": 0.0150005,
+      "exact_G": 15000.5,
+      "rel_error": 0.0,
+      "info": {
+        "electrode_model": "dirichlet_exact",
+        "status": "computed",
+        "reason": null,
+        "method": "cg",
+        "n_free": 30002,
+        "n_fixed": 2,
+        "n_floating": 0,
+        "I_bottom": 15000.5,
+        "I_top": -15000.5
+      }
+    },
+    {
+      "high": 100000000000000.0,
+      "G": 30001.0,
+      "q": 0.030001,
+      "exact_G": 15000.5,
+      "rel_error": 1.0,
+      "info": {
+        "electrode_model": "dirichlet_exact",
+        "status": "computed",
+        "reason": null,
+        "method": "cg",
+        "n_free": 30002,
+        "n_fixed": 2,
+        "n_floating": 0,
+        "I_bottom": 30001.0,
+        "I_top": -3.0000999999995355e-10
+      }
+    }
+  ],
+  "direct": [
+    {
+      "high": 1000000.0,
+      "G": 0.9999990001088008,
+      "exact_G": 0.999999000001,
+      "rel_error": 1.078008793342633e-10,
+      "info": {
+        "electrode_model": "dirichlet_exact",
+        "status": "computed",
+        "reason": null,
+        "method": "spsolve",
+        "n_free": 1,
+        "n_fixed": 2,
+        "n_floating": 0,
+        "I_bottom": 0.9999990001088008,
+        "I_top": -0.999999000001
+      }
+    },
+    {
+      "high": 100000000.0,
+      "G": 1.0,
+      "exact_G": 0.9999999900000001,
+      "rel_error": 9.99999993922529e-09,
+      "info": {
+        "electrode_model": "dirichlet_exact",
+        "status": "computed",
+        "reason": null,
+        "method": "spsolve",
+        "n_free": 1,
+        "n_fixed": 2,
+        "n_floating": 0,
+        "I_bottom": 1.0,
+        "I_top": -0.9999999900000001
+      }
+    },
+    {
+      "high": 10000000000.0,
+      "G": 1.0,
+      "exact_G": 0.9999999999,
+      "rel_error": 1.000000082740371e-10,
+      "info": {
+        "electrode_model": "dirichlet_exact",
+        "status": "computed",
+        "reason": null,
+        "method": "spsolve",
+        "n_free": 1,
+        "n_fixed": 2,
+        "n_floating": 0,
+        "I_bottom": 1.0,
+        "I_top": -0.9999999999
+      }
+    },
+    {
+      "high": 1000000000000.0,
+      "G": 1.0,
+      "exact_G": 0.999999999999,
+      "rel_error": 1.000088900582341e-12,
+      "info": {
+        "electrode_model": "dirichlet_exact",
+        "status": "computed",
+        "reason": null,
+        "method": "spsolve",
+        "n_free": 1,
+        "n_fixed": 2,
+        "n_floating": 0,
+        "I_bottom": 1.0,
+        "I_top": -0.999999999999
+      }
+    },
+    {
+      "high": 100000000000000.0,
+      "G": 1.0,
+      "exact_G": 0.99999999999999,
+      "rel_error": 9.992007221626409e-15,
+      "info": {
+        "electrode_model": "dirichlet_exact",
+        "status": "computed",
+        "reason": null,
+        "method": "spsolve",
+        "n_free": 1,
+        "n_fixed": 2,
+        "n_floating": 0,
+        "I_bottom": 1.0,
+        "I_top": -0.99999999999999
+      }
+    },
+    {
+      "high": 1000000000000000.0,
+      "G": 1.0,
+      "exact_G": 0.999999999999999,
+      "rel_error": 1.1102230246251565e-15,
+      "info": {
+        "electrode_model": "dirichlet_exact",
+        "status": "computed",
+        "reason": null,
+        "method": "spsolve",
+        "n_free": 1,
+        "n_fixed": 2,
+        "n_floating": 0,
+        "I_bottom": 1.0,
+        "I_top": -0.999999999999999
+      }
+    },
+    {
+      "high": 1e+16,
+      "G": null,
+      "exact_G": 1.0,
+      "rel_error": null,
+      "info": {
+        "electrode_model": "dirichlet_exact",
+        "status": "solve_failed",
+        "reason": "solve_failed",
+        "method": "spsolve",
+        "n_free": 1,
+        "n_fixed": 2,
+        "n_floating": 0,
+        "I_bottom": null,
+        "I_top": null
+      }
+    }
+  ],
+  "zero_Rc": {
+    "G": 0.1,
+    "correct_contracted_G": 1.1,
+    "rel_error": -0.9090909090909091,
+    "info": {
+      "electrode_model": "dirichlet_exact",
+      "status": "computed",
+      "reason": null,
+      "method": "spsolve",
+      "n_free": 1,
+      "n_fixed": 2,
+      "n_floating": 0,
+      "I_bottom": 0.1,
+      "I_top": -0.1
+    }
+  }
+}
+H0 bulk relabelled sphere_segment {'hertz': 'OK', 'physics': 'OK', 'hertz_h12': 'OK'} stop9= [] mixed= 
+H0 constriction relabelled Mikic {'hertz': 'OK', 'physics': 'OK', 'hertz_h12': 'OK'} stop9= [] mixed= 
+unknown electrode all {'hertz': 'OK', 'physics': 'OK', 'hertz_h12': 'OK'} stop9= [] mixed= 세대 섞임 — 한 표 · 학습 집합에 세대가 다른 행 (ψ 배치 · physics 면적 규칙 · 전극) 을 표기 없이 섞지 않는다: electrode: DIRICHLET_TYPO (예: ?) · dirichlet_exact (예: ?)
+unknown area {'hertz': 'OK', 'physics': 'OK', 'hertz_h12': 'OK'} stop9= [] mixed= 세대 섞임 — 한 표 · 학습 집합에 세대가 다른 행 (ψ 배치 · physics 면적 규칙 · 전극) 을 표기 없이 섞지 않는다: area_rule_physics: physics_g2 (예: ?) · physics_g9 (예: ?)
+unknown psi {'hertz': 'OK', 'physics': 'OK', 'hertz_h12': 'OK'} stop9= [] mixed= 
+missing psi {'hertz': 'OK', 'physics': 'OK', 'hertz_h12': 'OK'} stop9= [] mixed= 세대 섞임 — 한 표 · 학습 집합에 세대가 다른 행 (ψ 배치 · physics 면적 규칙 · 전극) 을 표기 없이 섞지 않는다: psi: legacy_divide (예: ?) · multiply (예: ?)
+missing area {'hertz': 'OK', 'physics': 'OK', 'hertz_h12': 'OK'} stop9= [] mixed= 세대 섞임 — 한 표 · 학습 집합에 세대가 다른 행 (ψ 배치 · physics 면적 규칙 · 전극) 을 표기 없이 섞지 않는다: area_rule_physics: physics_g1 (예: ?) · physics_g2 (예: ?)
+physics bulk relabelled sphere_segment {'hertz': 'OK', 'physics': 'OK', 'hertz_h12': 'OK'} stop9= [] mixed= 

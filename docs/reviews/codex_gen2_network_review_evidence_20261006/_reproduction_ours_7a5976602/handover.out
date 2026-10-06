@@ -1,0 +1,7 @@
+['baseline'] True 
+['h12_as_primary'] True 
+['bad_psi'] True 
+['bad_electrode'] True 
+['partial_missing_g2'] True 
+['baseline', 'h12_as_primary'] True 
+['baseline', 'bad_psi'] True 

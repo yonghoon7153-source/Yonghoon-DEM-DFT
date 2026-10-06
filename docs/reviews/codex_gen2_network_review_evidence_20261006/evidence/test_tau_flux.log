@@ -1,0 +1,57 @@
+  PASS  A1 OK (hertz): f = σ_ratio·L_gap/L_mc · tau2 = φ_mc/f · tau = √tau2 · f_gap = σ_ratio · 상태 OK
+  PASS  A2 tau2 = φ_구합 / σ_ratio (현행 웹앱 T 와 정의상 같은 수 — 결정 1 · v2 §3-7) · 상대 1e-12
+  PASS  A3 키 = v2 §5-1 (상태 · 메타는 모드 꼬리 — 10-04 비준) + 10-06 세대 2 (모드 hertz_h12 · 표기 셋) · 꼬리 없는 상태 키 (`ion_net_status`) 없음
+  PASS  A4 메타: 면적 모드 hertz/physics · 협착 maxwell_halfspace / mikic_psi_divide · ψ = physics 만 legacy_divide · σ₀ 3.0 mS/cm @ 25 °C · phi_basis mass_conserving · L_basis L_mc
+  PASS  A5 띠 메타 = 솔버 기록 그대로 (규칙 L0 · 폭 0.06)
+  PASS  A6 상태 값은 다섯 중 하나 · 사유 코드는 여섯 중 하나 (RGLR-01 invalid_input · RGLR2-02 generation_invalid 추가) — SOLVER_ANOMALY 를 쓰지 않는다 (v2 §5-1 · 물리 f3)
+  PASS  B1 G1 띠 L1 → BAND_FALLBACK · f · tau2 · tau · f_gap 빈칸 (physics 는 L0 그대로 OK)
+  PASS  B2 G1 띠 L2 → BAND_FALLBACK (두 모드)
+  PASS  B3 띠 규칙 기록 없음 (안 A 전의 옛 산출물) → NOT_COMPUTED (missing_input) · 짐작하지 않는다
+  PASS  C1 G2 솔버 관통 > 0 인데 calc_percolation 0 → NOT_COMPUTED (percolation_disagree) · 빈칸
+  PASS  C2 G2 반대 (솔버 0 · calc_percolation 12 %) → NOT_COMPUTED (percolation_disagree)
+  PASS  C3 상태 ↔ 값 모순 (not_computed 인데 σ 있음 · 관통) → NOT_COMPUTED (solver_guard) — 옛 TAU-22 의 "상태 무시" 는 RGL-02 · RGLR-01 로 대체
+  PASS  D1 G3 비관통 (두 판정 모두 0) → NOT_PERCOLATING · f = 0 · f_gap = 0 · tau2 · tau 빈칸 (= ∞)
+  PASS  E1 G4 σ_grain 두 값 (3.0 · 1.6 mS/cm) → tau2 · f 비트 동일 · σ₀ 메타만 다르다 (무차원 sigma_full · TAU-25)
+  PASS  E2 G4 호출자가 25 °C 의 σ₀ 를 쓰려는데 망은 60 °C → NOT_COMPUTED (temperature_mismatch) · 빈칸
+  PASS  E3 주장 없음 → σ₀ 메타 = 망 자신의 값 (14.37 mS/cm @ 60 °C) · 짝이 정의상 맞으므로 OK
+  PASS  E4 두 모드의 σ₀ · T 가 다르면 두 모드 다 NOT_COMPUTED (temperature_mismatch) · σ₀ 메타 빈칸
+  PASS  F1 G5 f > φ (T < 1) → MODEL_BELOW_CONTINUUM_BOUND · 값 유지 (빈칸으로 거르지 않는다)
+  PASS  F2 경계 T = 1 은 OK (엄격한 T < 1 만 표지)
+  PASS  G1 관통인데 σ 없음 (솔버 관문 · 경계 겹침 퇴화) → NOT_COMPUTED (solver_guard)
+  PASS  G2 computed 인데 σ_ratio 가 0 · 음수 · NaN · inf → NOT_COMPUTED (invalid_input — RGLR-01 · 옛 solver_guard)
+  PASS  H1 질량 보존 두께 없음 → 두 모드 NOT_COMPUTED (missing_input) (판 간격 f 를 φ_mc 와 섞지 않는다)
+  PASS  H2 physics 결과 없음 → physics NOT_COMPUTED (missing_input) · hertz OK
+  PASS  H3 calc_percolation 값 없음 → NOT_COMPUTED (missing_input)
+  PASS  H4 장부 값이 0 · NaN · 음수 · bool → missing_input
+  PASS  H5 G4 — 그 모드의 온도 기록 (temperature_provenance) 이 없으면 짝을 볼 수 없다 → physics NOT_COMPUTED (missing_input) · hertz OK
+  PASS  I1 망 φ (4 자리) = φ_mc·L_mc/L_gap → basis_check ok
+  PASS  I2 망 φ 가 장부와 0.01 어긋남 → basis_check "mismatch:…" (상태는 그대로 — 새 게이트로 쓰려면 등록 · 1저자)
+  PASS  I3 망 φ 없음 → basis_check "unchecked"
+  PASS  J1 case_row: 폴더 (dual + full_metrics) → 같은 열 · 이름 = 폴더 이름
+  PASS  J2 dual 파일 없음 → 두 모드 NOT_COMPUTED (missing_input) — 행은 남긴다 (조용히 빠지지 않는다)
+  PASS  J3 CLI → TSV (머리 = case + 열 · 두 행 · 수는 repr 로 되읽어 같은 값) · rc 0
+  PASS  K1 솔버 결과 그대로 → 두 모드 OK · 띠 L0 · 폭 0.2 · 협착 (physics = mikic_psi_multiply · 세대 2) · ψ multiply · σ₀ 3.0 @ 25 °C · basis ok · tau2 = φ_망/σ_ratio (4 자리 φ 반올림 안)
+  PASS  K2 같은 결과에서 띠 규칙만 지우면 (안 A 전 산출물) → NOT_COMPUTED (missing_input) — 옛 코퍼스를 짐작으로 채우지 않는다
+  PASS  K3 위 띠에만 닿는 합성 → 솔버 관통 0 · 상태 valid_zero + 사유 no_through_path (RGL-02 — 옛 판 not_computed) · CF · constr 같은 상태 · σ None (F-12) · calc_percolation 0 % · 띠 L0 → NOT_PERCOLATING · f = 0 · tau2 빈칸 (두 모드)
+  PASS  K4 관통인데 풀이 실패 (spsolve 예외) → 상태 not_computed + 사유 solve_failed · 관통 분율 > 0 · 전력 몫 사유 ≠ "비관통" · NOT_COMPUTED (solver_guard) (두 모드)
+  PASS  K5 관통 침대의 σ 는 상태 · 사유 필드를 더해도 그대로 (computed · 사유 None)
+  PASS  K6 ★ WEB-03 Q1 — 관통인데 풀지 못함 (spsolve 예외 · 전 채널) → 이온 · 열 채널 상태 failed + 사유 solve_failed (옛: valid_null) (두 모드)
+  PASS  K7 ★ WEB-03 Q1 — 채널마다: 요청된 채널 (이온 · 전자 · 열) 의 관통 풀이 실패만 failed · 비관통 (valid_zero · valid_null) · 상 부재 (not_applicable) 는 유효 null 그대로 (두 모드) 
+  PASS  L1 공용 기술 검사 `ion_record_problem` — 실 생산자 출력 (관통 · 비관통 · 띠 L1 · L2 · 작은 σ · 60 °C σ₀) 두 모드 전부 유효 (None) 
+  PASS  L1b 픽스처 조건이 섰다 — 띠 규칙 L1 · L2 · 작은 σ (Hertz σ_dim < 1e-3 mS/cm) · 60 °C σ₀ (Arrhenius · σ_grain_S_cm ≠ 0.003)
+  PASS  L2 ★ RGLR-01 Codex 반례 (실 띠 L1 침대 · 같은 필드를 두 모드 함께) σ_ratio None · NaN · −1 · 관통 분율 2 → NOT_COMPUTED (invalid_input) · physics 만 바꾸면 physics 만 (Hertz 는 BAND_FALLBACK 그대로) — 옛: 넷 다 BAND_FALLBACK {'σ_ratio None': ('NOT_COMPUTED', 'invalid_input', 'NOT_COMPUTED', 'invalid_input', 'BAND_FALLBACK', 'NOT_COMPUTED', 'invalid_input'), 'σ_ratio NaN': ('NOT_COMPUTED', 'invalid_input', 'NOT_COMPUTED', 'invalid_input', 'BAND_FALLBACK', 'NOT_COMPUTED', 'invalid_input'), 'σ_ratio −1': ('NOT_COMPUTED', 'invalid_input', 'NOT_COMPUTED', 'invalid_input', 'BAND_FALLBACK', 'NOT_COMPUTED', 'invalid_input'), '관통 분율 2': ('NOT_COMPUTED', 'invalid_input', 'NOT_COMPUTED', 'invalid_input', 'BAND_FALLBACK', 'NOT_COMPUTED', 'invalid_input')}
+  PASS  L2b 같은 반례를 L0 침대에서도 → NOT_COMPUTED (invalid_input) — 띠와 무관한 한 판정 (옛: σ 반례 solver_guard · 관통 분율 2 = OK) {'σ_ratio None': ('NOT_COMPUTED', 'invalid_input'), 'σ_ratio NaN': ('NOT_COMPUTED', 'invalid_input'), 'σ_ratio −1': ('NOT_COMPUTED', 'invalid_input'), '관통 분율 2': ('NOT_COMPUTED', 'invalid_input')}
+  PASS  L3 양성 대조 — 입력이 유효한 등록된 과학적 HOLD 는 그대로: 띠 L1 · L2 → BAND_FALLBACK · 연속체 하한 → MODEL_BELOW_CONTINUUM_BOUND (값 유지) · 정상 비관통 → NOT_PERCOLATING (K3) — 기술 검사가 과잉차단하지 않는다
+  PASS  L4 ★ RGLR-02 두 σ 표현 항등식 (실 L0 침대) — σ_ratio 만 · σ_dim 만 ×4 (두 모드 · 한 모드) → 바뀐 모드만 NOT_COMPUTED (invalid_input) · tau2 빈칸 (옛: σ_ratio ×4 → tau2 ÷4 로 OK) · 안 바꾼 모드는 OK 그대로 {'σ_ratio ×4 · 두 모드 (Codex ratio_times4)': True, 'σ_ratio ×4 · physics 만': True, 'σ_dim ×4 · 두 모드': True, 'σ_dim ×4 · Hertz 만': True}
+  PASS  L4b 양성 대조 — 작은 σ (Hertz σ_dim ~1e-4 · 6 자리 반올림이 상대 0.4 %) · 60 °C σ₀ (Arrhenius) 는 생산자 그대로 OK (σ₀ 메타 = 그 온도의 값)
+  PASS  L4c 경계 — 허용 = 5e-7 + 1000·σ₀·5e-9 + 부동소수 여유 (= 5.15e-07 mS/cm) · 0.999×허용 안 → 유효 · 1.001×허용 밖 → invalid_input
+  PASS  L5 성질 시험 (2 만 표본 · σ_ratio 1e-6–1.5 · σ₀ 25 °C · −30–120 °C × Ea 띠) — 생산자 반올림 출력 19900 건 전부 통과 · 반올림 0 (100 건) 은 양수 규칙이 막음 · σ_ratio ×4 놓침 0 
+  PASS  L6 ★ 증명된 비관통 = RGL-02 조합만 (사유 no_through_path · σ 숫자 None · 관통 분율 0 · CF · constr · 이온 채널 valid_zero) — 한 키씩 어긋나면 invalid_input · τ 인계 NOT_COMPUTED (NOT_PERCOLATING 아님) 
+  PASS  L7 상태 어휘 — 생산자 계약 밖 (None · 키 없음 · 모르는 문자열 · 채널 어휘 valid_null) → invalid_input · 생산자 신고 not_computed → solver_guard {'None': 'invalid_input', "'garbage'": 'invalid_input', "'valid_null'": 'invalid_input', "'COMPUTED'": 'invalid_input', '키 없음': 'invalid_input', 'not_computed': 'solver_guard'}
+  PASS  L8 어휘 짝 — 공용 기술 검사의 비관통 사유 = 생산자 (network_conductivity.NO_THROUGH_REASON) · 사유 코드 invalid_input 은 REASONS 안
+  PASS  M1 양성 대조 — 세대 일치 · 접촉 분석만 · 도장 이전 · 되돌림 성공한 재계산 실패 · 다른 단계 stash → τ 인계 그대로 (OK · 같은 tau2) · 세대 문제 없음 
+  PASS  M2 ★ RGLR2-02 세대가 확정되지 않은 폴더 7 종 → 두 모드 NOT_COMPUTED (generation_invalid: 세부) · f · tau2 · tau 빈칸 (옛: OK — dual 만 읽어 옛 세대 τ 를 실었다) 
+  PASS  M3 세대 문제 사유 = 무엇이 어긋났는지 (두 id) — "full_metrics 의 망 세대 'R2' ≠ 도장 'R1' — 파일들이 서로 다른 세대를 가리킨다 (되돌림 실패 · 중단된 게시)"
+  PASS  M4 ★ 등급 τ getter (tau2_from_metrics) — 읽는 쪽이 세대 무효 표지를 단 metrics → tau2 None (hertz · bulk) · 표지 없으면 값 그대로
+
+test_tau_flux: 55/55 PASS

@@ -1,0 +1,3 @@
+  cylinder b=0.5 nr=80: R=2.0371832716 exact=2.0371832716 rel=7.66e-14
+  cylinder b=1.0 nr=64: R=0.5092958179 exact=0.5092958179 rel=4.40e-14
+SELFTEST PASS

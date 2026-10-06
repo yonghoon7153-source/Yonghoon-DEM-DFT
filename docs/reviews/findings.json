@@ -2048,7 +2048,7 @@
     {
       "id": "DESC-03",
       "severity": "P1",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex",
       "opened_in": "docs/reviews/codex_verdict_lhs_descriptors_20260913.md",
@@ -2057,7 +2057,11 @@
       "evidence_tests": [
         "scripts/test_physics_area_g2.py"
       ],
-      "claimed_fixed_sha": "a0a24c538"
+      "claimed_fixed_sha": "a0a24c538",
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_review_gen2_network_20261006.md",
+      "verified_sha": "c13da95a3",
+      "verified_scope": "g2 네트워크 경로의 단위 (µm · h 0.005 µm) · 옛 V 호출 제거 — legacy · 다른 coverage 세대의 전면 종결 아님"
     },
     {
       "id": "DESC-04",
@@ -2196,7 +2200,7 @@
     {
       "id": "L1-01",
       "severity": "P1",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex",
       "opened_in": "docs/reviews/codex_verdict_dem_stack_L1_20260913.md",
@@ -2205,12 +2209,16 @@
       "evidence_tests": [
         "scripts/test_physics_area_g2.py"
       ],
-      "claimed_fixed_sha": "a0a24c538"
+      "claimed_fixed_sha": "a0a24c538",
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_review_gen2_network_20261006.md",
+      "verified_sha": "c13da95a3",
+      "verified_scope": "g2 수송 면적 = 규칙 B 상 · 하한 계약과 구현 (원판 floor 위 소성 연장만 제한) — 현실 patch 검증 · 임의 raw 원판의 기하 정합성은 범위 밖"
     },
     {
       "id": "L1-02",
       "severity": "P1",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex",
       "opened_in": "docs/reviews/codex_verdict_dem_stack_L1_20260913.md",
@@ -2219,12 +2227,16 @@
       "evidence_tests": [
         "scripts/test_physics_area_g2.py"
       ],
-      "claimed_fixed_sha": "a0a24c538"
+      "claimed_fixed_sha": "a0a24c538",
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_review_gen2_network_20261006.md",
+      "verified_sha": "c13da95a3",
+      "verified_scope": "g2 가 정확 lens (lens_volume) 를 쓴다 — 다른 호출자의 옛 V 경로 (coverage_physics_vs_hertzian.py:80 · :463 legacy · :81 · :265 physics v2) 는 범위 밖"
     },
     {
       "id": "L1-03",
       "severity": "P1",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex",
       "opened_in": "docs/reviews/codex_verdict_dem_stack_L1_20260913.md",
@@ -2233,7 +2245,11 @@
       "evidence_tests": [
         "scripts/test_physics_area_g2.py"
       ],
-      "claimed_fixed_sha": "a0a24c538"
+      "claimed_fixed_sha": "a0a24c538",
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_review_gen2_network_20261006.md",
+      "verified_sha": "c13da95a3",
+      "verified_scope": "지원 쌍의 E* 분리 (SE–SE · AM–SE) · AM–AM 미지원 표지 (native_unsupported_pair) — NCM 소성 앵커 · 실제 DEM 접촉력 대체의 정당성은 범위 밖"
     },
     {
       "id": "L1-04",
@@ -2318,7 +2334,7 @@
     {
       "id": "L2-01",
       "severity": "P1",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex",
       "opened_in": "docs/reviews/codex_verdict_dem_stack_L2_20260913.md",
@@ -2328,7 +2344,11 @@
       "evidence_tests": [
         "scripts/test_psi_default_switch.py",
         "webapp/test_psi_generation_stamp.py"
-      ]
+      ],
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_review_gen2_network_20261006.md",
+      "verified_sha": "c13da95a3",
+      "verified_scope": "ψ 위치 (분모 → 곱) 산술 · 세 채널 · legacy 명시 경로 (21/21) · flux-tube FV (s=0.05 세분 nr 400 · 600 에서 곱셈이 가깝다) — 계약 개정으로 수용 (S3 사전등록 성공으로 소급 아님) · 전체 침대 정확성 · 혼합상 min(σ) · 면적 · 공유 bulk 는 범위 밖"
     },
     {
       "id": "L2-02",
@@ -2372,7 +2392,7 @@
     {
       "id": "L2-05",
       "severity": "P1",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "codex",
       "opened_in": "docs/reviews/codex_verdict_dem_stack_L2_20260913.md",
@@ -2383,7 +2403,11 @@
         "scripts/test_network_boundary_rule.py",
         "scripts/test_constriction_power_share.py"
       ],
-      "claimed_fixed_sha": "a0a24c538"
+      "claimed_fixed_sha": "a0a24c538",
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_review_gen2_network_20261006.md",
+      "verified_sha": "c13da95a3",
+      "verified_scope": "전극 모델 = 고정 전위 노드 제거 · B∩T 거부 · 떠 있는 성분 제외 (큰 망 CG 34.85358577955638 = 직접해) — 수치 증서는 G2R-03 · 정확 Dirichlet = 선택된 띠 노드의 전위 (L0/L1/L2 가 실제 판 접촉을 표현한다는 뜻 아님)"
     },
     {
       "id": "L2-06",
@@ -2957,7 +2981,7 @@
       "found_by": "claude (사용자가 \"2πR_min² 에 걸리는 값이 없다\" 고 해서 코퍼스로 확인하다 발견)",
       "opened_in": "docs/reviews/codex_verdict_dem_stack_L2_20260913.md",
       "title": "`geom` cap 이 결속하면 **ψ = 0 이 되어 협착저항이 삭제**된다 (AM–SE 접촉의 13.84 %)",
-      "note": "L2-01 은 ψ 절벽을 `s* = 0.99784556531` 이라는 **극단 좌표**로 보였고, L2-10 은 `R_c = 0` 간선이 지워진다는 것을 보였다.  그런데 **생산에서 그 0 이 어떻게 만들어지는지**는 어느 판정문도 적지 않았다 — 극단이 아니라 **구조적**이다.\n★ **결정론적 연쇄** (산술): `binding == 'geom'` ⇒ `A_final = 2π·r_min²` ⇒ `a = sqrt(A/π) = √2·r_min` (`network_conductivity.py:323`) ⇒ `a > r_min` 이라 clamp 발동 (`:395`) ⇒ `a_eff = r_min` **정확히** ⇒ `ψ = (1 − 1)^1.5 = 0` (`:396`) ⇒ `ψ ≤ 1e-4` 분기로 **`R_constriction = 0`** (`:399-401`).  반지름에 무관하게 **항상** 그렇다 (`r_min_real = min(r1,r2)` `:386` 이 `A_geom` 의 `R_min` 과 같은 양).\n★ **실측 (코퍼스 `docs/data/case_master.csv`, 163 케이스)**: `geom` 결속이 **163/163 케이스 전부에서 > 0** 이다.  접촉 가중으로 전체 접촉의 **약 3.97 %**, **AM–SE 접촉의 약 13.84 %**.  ⛔ **정수 접촉수는 인용하지 않는다** (`AREA-07`) — `coverage_physics_vs_hertzian.py:407`·`:413` 이 비율을 소수 첫째 자리로 반올림해 저장하므로 정수는 복원되지 않는다.  반올림 호환 범위만 말할 수 있다 (전체 3.916696–4.016287 % · AM–SE 13.794221–13.892413 %; **통계적 CI 가 아니라 저장 반올림의 정보 손실 범위**).  케이스별 범위: 전체 0.1~17.0 % · AM–SE **1.4~42.5 %**.\n⇒ 옛 인식 *'2πR_min² 는 명목상 cap 이라 걸리는 값이 없다'* 는 **반증**된다.  ★ 다만 **정말 명목뿐인 cap 은 따로 있다** — `A_volume` 과 `hertzian` 은 **0/163** 이다 (최대 0.000 %).  기억이 이 둘과 섞인 것으로 보인다.\n★ **실제 함수로 사다리 재현** (r_SE 0.5 ↔ r_AM 6.0 µm, ligg_area = 0): δ = 0.02 → `R = 5.9403496296` (binding volume) · 0.05 → `6.3713479493` (tabor) · 0.10 → **`380.2740936428`** (tabor, ψ = 0.0026814364) · 0.20 → **`0`** (geom, ψ = 0).  ⇒ 접촉이 커지는 동안 저항이 **5.94 → 6.37 → 380.27 → 0** 으로 간다 = L2-01 의 비단조 R(A) 가 합성 좌표가 아니라 **실제 SE↔AM 접촉 크기에서** 나타난다.\n⚠ **적용 범위**: Physics 가지 전용이다 (`contact_mode == 'physics'`; Hertz-명명 가지에는 이 clamp 자체가 없다).  그러나 **σ_thermal Stage T1 의 타깃이 바로 그 가지**이고(`thermal_sigma_full_mScm_stage_e_physics`), 특징 10·12·14 도 `*_physics` 다.\n⚠ 두 산출 경로가 **같은 인자로** 같은 함수를 부른다 — `network_conductivity.py:299-302` 와 `coverage_physics_vs_hertzian.py:230-232` 가 `(delta, R_star, R_min=, ligg_area=, mode='physics')` 로 동일 ⇒ 위 결속 비율이 곧 솔버가 보는 비율이다.\n⇒ **E 결정(‘L2 에 넘길 면적 A 가 무엇인가’)이 장식이 아니다**: 지금 규약에서는 접촉이 충분히 커지면 협착 항이 **근사되는 것이 아니라 사라진다** = 그 간선이 국소적으로 `CONTACT_FREE` 가 된다 (CL-81 의 구조와 같은 방향).\n처방은 L2-01·L1-01 과 같다 — 숫자 패치가 아니라 **A 의 정의 먼저**.  그 전까지 Physics 가지의 σ 절대값 옆에는 *'협착 항이 일부 접촉에서 0 으로 삭제됨'* 을 적는다.\n\n★★ **실측 완료 2026-09-13 (S0 2판, LHS 코퍼스 30 케이스 `lhs00_100`~`129`, 실패 0)** — 산출 CSV `docs/data/constriction_deleted_lhs_20260913.csv` (커밋 `a08fa395`).  덱에서 케이스별 type_map 유도, `build_network` 를 직접 불러 `R_constriction == 0` 을 센 **간선 가중** 집계:\n```\nionic       SE–SE   469,249 / 2,263,802 = 20.728 %\nelectronic  AM–AM         0 /   256,441 =  0.000 %\nthermal             973,137 / 3,624,410 = 26.850 %\n   AM–SE      503,888 / 1,104,167 = 45.635 %\n   SE–SE      469,249 / 2,263,802 = 20.728 %\n```\n★ 케이스별 이온 삭제율 **2.96 % ~ 36.12 %** (12배 산포) — 침대 구조에 강하게 걸린다.\n★★ **전자망은 무영향** — AM–AM 이 **256,441 간선에서 정확히 0** 이다.  30 침대 전부에서 0 이라 잡음이 아니다.  ⇒ σ_e 축(SDCP 계열)은 이 결함에 **안 걸린다**.\n⚠ **기전 가설 (미검정)**: AM `E = 1.4e8` 은 단단하고 SE 는 `0.135e7` = **18배 연화**다.  연화된 SE 가 깊게 겹쳐 `a/r → 1` 로 밀리고 단단한 AM 끼리는 안 밀린다 ⇒ SE 가 낀 접촉만 걸린다 (SE–SE 20.7 · AM–SE 45.6 · AM–AM 0).  **상관이지 인과 검정이 아니다.**\n⚠ **코퍼스가 다르다** — 이 30건은 **LHS**(2·3-type 설계)이고, `case_master.csv` 의 약 13.84 % 는 **legacy 169**다.  두 수를 직접 비교하지 않는다.  legacy 는 원자료가 유실돼 (`scripts/backup_webapp_data.sh` 헤더) **영구 재계산 불가**다.\n⚠ 이것은 **협착 항** 삭제다 — `R_bulk` 는 남는다.  간선 삭제·총저항 0 과 다르다 (`L2-10`).\n\n★★ **해석 하향 2026-09-13 (`AREA-09` STEP 4 독립 기준해)** — **사실은 그대로, 해석이 바뀐다.**\n축대칭 flux-tube 유한체적 기준해(`scripts/constriction_reference.py`)가 ψ 의 자리를 가렸다:\n참값은 **`R_c = ψ(a/b)/(2σa)`** (ψ 를 **곱한다**) 이고 우리 코드 `1/(2σaψ)` 는 그 **`(1−s)^−3` 배**다.\n⇒ 올바른 배치에서는 `s→1` 일 때 **참값 자체가 0 으로 간다**.\n⇒ ⛔ **`geom` 결속에서 `R_c = 0` 이 되는 것은 그 자체로 물리 오류가 아니다** — **틀린 길로\n맞는 극한에 도착한 것**이다 (현 분기는 자기가 만든 발산을 막는 패치다).\n★ **살아남는 것**: 결정론적 연쇄(산술) · 163/163 · 약 3.97 % / 13.84 % · S0 실측(이온 20.728 % ·\n전자 0.000 % · 열 26.850 %) · 사다리의 **비단조 R(A)** · `A_volume`/`hertzian` 이 안 걸린다는 것.\n★ **무너지는 것**: *\"협착이 삭제되는 것이 이 축의 결함\"* 이라는 **프레이밍**.  진짜 결함은\n**반대쪽**이다 — 삭제되지 **않은** 모든 접촉에서 `R_c` 가 `(1−s)^−3` 배 부풀어 있고, 그\n부호는 σ **상향**이다.  ⇒ 이 항목의 처방은 *\"A 의 정의 먼저\"* 에서 **`L2-01`(ψ 배치) 먼저**\n로 바뀐다.  ⚠ 그렇다고 A 정의가 불필요해진 것은 아니다 — `AREA-12` 가 그것을 따로 판정한다.\n\n★ **로더 검증 2026-09-13**: S0 도구가 CSV 층 없이 `post_*/` 원본 덤프를 직접 읽는 경로를 얻었고\n(`plastic_coverage` 파서 재사용), **지난 S0 CSV 와 30/30 케이스에서 n_contact_rows · type_hist ·\n채널별 n_edges/n_deleted 전부 일치** (`--expect-csv`).  ⇒ 위 실측(20.728 / 0.000 / 26.850 %)은\n두 독립 로더가 같은 수를 낸 값이다.  `docs/data/constriction_deleted_lhs_20260913_l1.csv` (L1 열 추가).\n\n⛔ **정정 2026-09-13 (R2-08)** — 내 *\"tabor 가 먼저 넘는 δ=0.10234~0.16292 구간은 s<1 이라 참값이 0 이 아니다\"* 는 **틀렸다**.  δ=.12 는 tabor 결속인데 이미 s_raw 1.124 → clamp s=1 이다.  floor 만이 양수를 지우는 s<1 띠는 **0.102338~0.102633** 뿐.  삭제는 binding 이 아니라 **s_raw · s_clamped · ψ** 로 가른다 (`clamp_zero` vs `floor_only`).  ⚠ 생산의 clamp 0 은 a=b 의 **독립 측정이 아니다** — 원판으로 읽어 강제된 값일 수 있으니 \"참값 0\" 으로 면책하지 않는다.  ⬜ 두 부류의 코퍼스 비율 **미측정** (S0 재실행).\n\n★ **두 부류 코퍼스 값** (R2-08 실측): 삭제 973,137 중 clamp_zero **99.436 %** · floor_only **0.564 %**.\n⇒ \"협착 항이 삭제된다\" 의 실체는 거의 전부 **\"A_surface 를 원판으로 읽어 a ≥ r_min 이 된 접촉\"** 이다.\nS3 는 이것을 안 건드린다 (곱식도 s=1 에서 0).  이 접촉들의 참값은 **A 의 정의(AREA-03/09 STEP 2)** 가\n정해져야 나온다 — ψ 배치 문제가 아니다.\n★ 2026-10-06 저녁 `a0a24c538` (세대 2 나머지 · 1저자 비준 C1 · C2): g2 에서도 floor (ψ < 1e-4) 동결 그대로 · 간선별 clamp/floor 수를 결과에 기록 — real_14 이온 g2 clamp 2,607 + floor 22 (g1 7,487 + 43).  협착 0 간선이 남으므로 open.",
+      "note": "L2-01 은 ψ 절벽을 `s* = 0.99784556531` 이라는 **극단 좌표**로 보였고, L2-10 은 `R_c = 0` 간선이 지워진다는 것을 보였다.  그런데 **생산에서 그 0 이 어떻게 만들어지는지**는 어느 판정문도 적지 않았다 — 극단이 아니라 **구조적**이다.\n★ **결정론적 연쇄** (산술): `binding == 'geom'` ⇒ `A_final = 2π·r_min²` ⇒ `a = sqrt(A/π) = √2·r_min` (`network_conductivity.py:323`) ⇒ `a > r_min` 이라 clamp 발동 (`:395`) ⇒ `a_eff = r_min` **정확히** ⇒ `ψ = (1 − 1)^1.5 = 0` (`:396`) ⇒ `ψ ≤ 1e-4` 분기로 **`R_constriction = 0`** (`:399-401`).  반지름에 무관하게 **항상** 그렇다 (`r_min_real = min(r1,r2)` `:386` 이 `A_geom` 의 `R_min` 과 같은 양).\n★ **실측 (코퍼스 `docs/data/case_master.csv`, 163 케이스)**: `geom` 결속이 **163/163 케이스 전부에서 > 0** 이다.  접촉 가중으로 전체 접촉의 **약 3.97 %**, **AM–SE 접촉의 약 13.84 %**.  ⛔ **정수 접촉수는 인용하지 않는다** (`AREA-07`) — `coverage_physics_vs_hertzian.py:407`·`:413` 이 비율을 소수 첫째 자리로 반올림해 저장하므로 정수는 복원되지 않는다.  반올림 호환 범위만 말할 수 있다 (전체 3.916696–4.016287 % · AM–SE 13.794221–13.892413 %; **통계적 CI 가 아니라 저장 반올림의 정보 손실 범위**).  케이스별 범위: 전체 0.1~17.0 % · AM–SE **1.4~42.5 %**.\n⇒ 옛 인식 *'2πR_min² 는 명목상 cap 이라 걸리는 값이 없다'* 는 **반증**된다.  ★ 다만 **정말 명목뿐인 cap 은 따로 있다** — `A_volume` 과 `hertzian` 은 **0/163** 이다 (최대 0.000 %).  기억이 이 둘과 섞인 것으로 보인다.\n★ **실제 함수로 사다리 재현** (r_SE 0.5 ↔ r_AM 6.0 µm, ligg_area = 0): δ = 0.02 → `R = 5.9403496296` (binding volume) · 0.05 → `6.3713479493` (tabor) · 0.10 → **`380.2740936428`** (tabor, ψ = 0.0026814364) · 0.20 → **`0`** (geom, ψ = 0).  ⇒ 접촉이 커지는 동안 저항이 **5.94 → 6.37 → 380.27 → 0** 으로 간다 = L2-01 의 비단조 R(A) 가 합성 좌표가 아니라 **실제 SE↔AM 접촉 크기에서** 나타난다.\n⚠ **적용 범위**: Physics 가지 전용이다 (`contact_mode == 'physics'`; Hertz-명명 가지에는 이 clamp 자체가 없다).  그러나 **σ_thermal Stage T1 의 타깃이 바로 그 가지**이고(`thermal_sigma_full_mScm_stage_e_physics`), 특징 10·12·14 도 `*_physics` 다.\n⚠ 두 산출 경로가 **같은 인자로** 같은 함수를 부른다 — `network_conductivity.py:299-302` 와 `coverage_physics_vs_hertzian.py:230-232` 가 `(delta, R_star, R_min=, ligg_area=, mode='physics')` 로 동일 ⇒ 위 결속 비율이 곧 솔버가 보는 비율이다.\n⇒ **E 결정(‘L2 에 넘길 면적 A 가 무엇인가’)이 장식이 아니다**: 지금 규약에서는 접촉이 충분히 커지면 협착 항이 **근사되는 것이 아니라 사라진다** = 그 간선이 국소적으로 `CONTACT_FREE` 가 된다 (CL-81 의 구조와 같은 방향).\n처방은 L2-01·L1-01 과 같다 — 숫자 패치가 아니라 **A 의 정의 먼저**.  그 전까지 Physics 가지의 σ 절대값 옆에는 *'협착 항이 일부 접촉에서 0 으로 삭제됨'* 을 적는다.\n\n★★ **실측 완료 2026-09-13 (S0 2판, LHS 코퍼스 30 케이스 `lhs00_100`~`129`, 실패 0)** — 산출 CSV `docs/data/constriction_deleted_lhs_20260913.csv` (커밋 `a08fa395`).  덱에서 케이스별 type_map 유도, `build_network` 를 직접 불러 `R_constriction == 0` 을 센 **간선 가중** 집계:\n```\nionic       SE–SE   469,249 / 2,263,802 = 20.728 %\nelectronic  AM–AM         0 /   256,441 =  0.000 %\nthermal             973,137 / 3,624,410 = 26.850 %\n   AM–SE      503,888 / 1,104,167 = 45.635 %\n   SE–SE      469,249 / 2,263,802 = 20.728 %\n```\n★ 케이스별 이온 삭제율 **2.96 % ~ 36.12 %** (12배 산포) — 침대 구조에 강하게 걸린다.\n★★ **전자망은 무영향** — AM–AM 이 **256,441 간선에서 정확히 0** 이다.  30 침대 전부에서 0 이라 잡음이 아니다.  ⇒ σ_e 축(SDCP 계열)은 이 결함에 **안 걸린다**.\n⚠ **기전 가설 (미검정)**: AM `E = 1.4e8` 은 단단하고 SE 는 `0.135e7` = **18배 연화**다.  연화된 SE 가 깊게 겹쳐 `a/r → 1` 로 밀리고 단단한 AM 끼리는 안 밀린다 ⇒ SE 가 낀 접촉만 걸린다 (SE–SE 20.7 · AM–SE 45.6 · AM–AM 0).  **상관이지 인과 검정이 아니다.**\n⚠ **코퍼스가 다르다** — 이 30건은 **LHS**(2·3-type 설계)이고, `case_master.csv` 의 약 13.84 % 는 **legacy 169**다.  두 수를 직접 비교하지 않는다.  legacy 는 원자료가 유실돼 (`scripts/backup_webapp_data.sh` 헤더) **영구 재계산 불가**다.\n⚠ 이것은 **협착 항** 삭제다 — `R_bulk` 는 남는다.  간선 삭제·총저항 0 과 다르다 (`L2-10`).\n\n★★ **해석 하향 2026-09-13 (`AREA-09` STEP 4 독립 기준해)** — **사실은 그대로, 해석이 바뀐다.**\n축대칭 flux-tube 유한체적 기준해(`scripts/constriction_reference.py`)가 ψ 의 자리를 가렸다:\n참값은 **`R_c = ψ(a/b)/(2σa)`** (ψ 를 **곱한다**) 이고 우리 코드 `1/(2σaψ)` 는 그 **`(1−s)^−3` 배**다.\n⇒ 올바른 배치에서는 `s→1` 일 때 **참값 자체가 0 으로 간다**.\n⇒ ⛔ **`geom` 결속에서 `R_c = 0` 이 되는 것은 그 자체로 물리 오류가 아니다** — **틀린 길로\n맞는 극한에 도착한 것**이다 (현 분기는 자기가 만든 발산을 막는 패치다).\n★ **살아남는 것**: 결정론적 연쇄(산술) · 163/163 · 약 3.97 % / 13.84 % · S0 실측(이온 20.728 % ·\n전자 0.000 % · 열 26.850 %) · 사다리의 **비단조 R(A)** · `A_volume`/`hertzian` 이 안 걸린다는 것.\n★ **무너지는 것**: *\"협착이 삭제되는 것이 이 축의 결함\"* 이라는 **프레이밍**.  진짜 결함은\n**반대쪽**이다 — 삭제되지 **않은** 모든 접촉에서 `R_c` 가 `(1−s)^−3` 배 부풀어 있고, 그\n부호는 σ **상향**이다.  ⇒ 이 항목의 처방은 *\"A 의 정의 먼저\"* 에서 **`L2-01`(ψ 배치) 먼저**\n로 바뀐다.  ⚠ 그렇다고 A 정의가 불필요해진 것은 아니다 — `AREA-12` 가 그것을 따로 판정한다.\n\n★ **로더 검증 2026-09-13**: S0 도구가 CSV 층 없이 `post_*/` 원본 덤프를 직접 읽는 경로를 얻었고\n(`plastic_coverage` 파서 재사용), **지난 S0 CSV 와 30/30 케이스에서 n_contact_rows · type_hist ·\n채널별 n_edges/n_deleted 전부 일치** (`--expect-csv`).  ⇒ 위 실측(20.728 / 0.000 / 26.850 %)은\n두 독립 로더가 같은 수를 낸 값이다.  `docs/data/constriction_deleted_lhs_20260913_l1.csv` (L1 열 추가).\n\n⛔ **정정 2026-09-13 (R2-08)** — 내 *\"tabor 가 먼저 넘는 δ=0.10234~0.16292 구간은 s<1 이라 참값이 0 이 아니다\"* 는 **틀렸다**.  δ=.12 는 tabor 결속인데 이미 s_raw 1.124 → clamp s=1 이다.  floor 만이 양수를 지우는 s<1 띠는 **0.102338~0.102633** 뿐.  삭제는 binding 이 아니라 **s_raw · s_clamped · ψ** 로 가른다 (`clamp_zero` vs `floor_only`).  ⚠ 생산의 clamp 0 은 a=b 의 **독립 측정이 아니다** — 원판으로 읽어 강제된 값일 수 있으니 \"참값 0\" 으로 면책하지 않는다.  ⬜ 두 부류의 코퍼스 비율 **미측정** (S0 재실행).\n\n★ **두 부류 코퍼스 값** (R2-08 실측): 삭제 973,137 중 clamp_zero **99.436 %** · floor_only **0.564 %**.\n⇒ \"협착 항이 삭제된다\" 의 실체는 거의 전부 **\"A_surface 를 원판으로 읽어 a ≥ r_min 이 된 접촉\"** 이다.\nS3 는 이것을 안 건드린다 (곱식도 s=1 에서 0).  이 접촉들의 참값은 **A 의 정의(AREA-03/09 STEP 2)** 가\n정해져야 나온다 — ψ 배치 문제가 아니다.\n★ 2026-10-06 저녁 `a0a24c538` (세대 2 나머지 · 1저자 비준 C1 · C2): g2 에서도 floor (ψ < 1e-4) 동결 그대로 · 간선별 clamp/floor 수를 결과에 기록 — real_14 이온 g2 clamp 2,607 + floor 22 (g1 7,487 + 43).  협착 0 간선이 남으므로 open.\n★ 10-06 밤 Codex Q1: 설계표의 \"연속 끝점\" 은 s→1 곱셈식 극한에만 맞고 cutoff ψ ≤ 1e-4 는 엄밀히 연속 아님 (작은 점프) — 문구 정정 · 새 결함으로 세지 않음.",
       "evidence_tests": [
         "scripts/network_conductivity.py",
         "scripts/plastic_coverage.py",
@@ -4544,7 +4568,7 @@
     {
       "id": "DESC-10",
       "severity": "P1",
-      "status": "claimed_fixed",
+      "status": "verified",
       "owner": "claude",
       "found_by": "claude",
       "opened_in": "docs/param_audit_report_20260919.md",
@@ -4553,7 +4577,11 @@
       "evidence_tests": [
         "scripts/test_physics_area_g2.py"
       ],
-      "claimed_fixed_sha": "a0a24c538"
+      "claimed_fixed_sha": "a0a24c538",
+      "verified_by": "codex",
+      "verified_in": "docs/reviews/codex_review_gen2_network_20261006.md",
+      "verified_sha": "c13da95a3",
+      "verified_scope": "g2 네트워크 경로의 단위 · 옛 V 호출 제거 — legacy · 다른 coverage 세대 · 수확기 · 화면 피복률 전체는 범위 밖"
     },
     {
       "id": "DESC-11",
@@ -6943,7 +6971,7 @@
       "found_by": "claude (10-03 · τ 적대 리뷰 셋 — 코드 · 문헌 · 물리 — 반영 판단 메모 v2 §4)",
       "opened_in": "docs/reviews/tau_conventions_judgment_v2_20261003.md",
       "title": "τ_Lap,geom ('geom' 오명 · T < 1 가능) + **CF 의 지위**: \"CONTACT_FREE — upper bound, ideal contact limit\" 은 이 모델의 σ 상한일 뿐 물리적 이상 접촉 극한이 아니다 (물리 f1)",
-      "note": "자리: `app.py:1946` · 2138–2139 · 2613 · 9545 · `single.html:1837–1841` (\"τ_Dij 의 0.8배 · GB\") · `grade_engine.py:176–181` (φ^−0.5 — √ 관례면 φ^−0.25) · `export_comsol_2d.py:106–107` · `docs/literature_review_dem_mpm_assb.md:106` · taufactor 카드 §(2) · CLAUDE.md CL-81 절  ·  시험 먼저 → 최소 수정: 곧은 사슬 시험 T_CF = (4/3)r d N(N−1)/L² (기록용) → 이름 \"τ (flux · 접촉 저항 0 · 모델 내부 기준선 — 부피 비보존 bulk)\" · 인계 안 함 · 복셀 ÷ 접촉망 대조 계획에 CF 과전도 (× 1/(0.6–0.8)) 사전등록 (결정 11)  ·  웹앱 짝: 같은 묶음.  등재 2026-10-03 = 결정 16 실행 1단계 (1저자 비준 10-03 · 판단 메모 v2 §4 표 그대로 옮김).  ⛔ 공통 제약 (메모 §4 머리): S3 봉인 모듈 수정은 재봉인 강제 · f/T/τ 는 봉인 밖 새 도우미 · 코드 → 웹앱 → 게이트 → 커밋 한 묶음 (J20-l).\n★ 2026-10-06 저녁 `a0a24c538` (세대 2 나머지 · 1저자 비준 C1 · C2): CF 지위 고침 — \"상한\" 문구 철회 · q > 1.5 = 값 유지 + model_over_conduction (FULL 만 거부) · 툴팁 같은 묶음.  남은 것 = τ_Lap,geom 의 \"geom\" 오명 → open 유지.",
+      "note": "자리: `app.py:1946` · 2138–2139 · 2613 · 9545 · `single.html:1837–1841` (\"τ_Dij 의 0.8배 · GB\") · `grade_engine.py:176–181` (φ^−0.5 — √ 관례면 φ^−0.25) · `export_comsol_2d.py:106–107` · `docs/literature_review_dem_mpm_assb.md:106` · taufactor 카드 §(2) · CLAUDE.md CL-81 절  ·  시험 먼저 → 최소 수정: 곧은 사슬 시험 T_CF = (4/3)r d N(N−1)/L² (기록용) → 이름 \"τ (flux · 접촉 저항 0 · 모델 내부 기준선 — 부피 비보존 bulk)\" · 인계 안 함 · 복셀 ÷ 접촉망 대조 계획에 CF 과전도 (× 1/(0.6–0.8)) 사전등록 (결정 11)  ·  웹앱 짝: 같은 묶음.  등재 2026-10-03 = 결정 16 실행 1단계 (1저자 비준 10-03 · 판단 메모 v2 §4 표 그대로 옮김).  ⛔ 공통 제약 (메모 §4 머리): S3 봉인 모듈 수정은 재봉인 강제 · f/T/τ 는 봉인 밖 새 도우미 · 코드 → 웹앱 → 게이트 → 커밋 한 묶음 (J20-l).\n★ 2026-10-06 저녁 `a0a24c538` (세대 2 나머지 · 1저자 비준 C1 · C2): CF 지위 고침 — \"상한\" 문구 철회 · q > 1.5 = 값 유지 + model_over_conduction (FULL 만 거부) · 툴팁 같은 묶음.  남은 것 = τ_Lap,geom 의 \"geom\" 오명 → open 유지.\n★ 10-06 밤 Codex Q4: CF · 협착-only 값 보존 + model_over_conduction = 진단 목적 수용 · q ≤ 1.5 는 물리 유효성 증서 아님 · FULL 의 over_conduction_guard 를 \"CG 오수렴\" 으로 단정한 주석 (network_conductivity.py:971 이후) 정정 권고.",
       "evidence_tests": []
     },
     {
@@ -7011,7 +7039,7 @@
       "found_by": "claude (10-03 · τ 적대 리뷰 셋 — 코드 · 문헌 · 물리 — 반영 판단 메모 v2 §4)",
       "opened_in": "docs/reviews/tau_conventions_judgment_v2_20261003.md",
       "title": "**두 면적 모드 모두 1세대 협착식** — 게이트 없이 인계하면 \"더 정교한 면적\" 이나 물리값으로 오독된다.  hertz: R_c = 1/(2σa) 반공간 Maxwell (`network_conductivity.py:406–408` 주석 \"Exact for point-contact-on-halfspace geometry\" · :421 · :453–454).  평균 a/r_SE 0.44 · 0.41 · 0.33 · 0.30 (φ 띠 높음 → 낮음) 에서 리포 기준해 대비 R_c × ≈ 0.41–0.58 → **1.7–2.4 배 과대** — 기준해 = 곱 배치 ψ = (1 − a/r)^1.5, 축대칭 flux-tube 유한체적 `scripts/constriction_reference.py` (`:428–442` 주석 · `AREA-09`).  physics: ψ 분모 (`:444`, `L2-01`) · 접촉별 상한값 면적 (`plastic_coverage.py:374–395`, `LHS-25`) · ψ 절벽 (`:445–452`) · a_eff 클램프 (`:425`) (물리 a4 · b8)",
-      "note": "자리: (봉인) `network_conductivity.py:406–454` · `plastic_coverage.py:374–395`  ·  시험 먼저 → 최소 수정: 코드 수정 없음 — 인계 메타 `ion_net_constriction` (`maxwell_halfspace` / `mikic_psi_divide`) · `ion_net_psi = legacy_divide` · **두 모드 모두 물리 타깃 HOLD** · S3 판정 + 순수 SE 게이트 뒤 재계산  ·  웹앱 짝: hertz · physics 열 머리에 \"1세대 (반공간 Holm / ψ 분모)\".  등재 2026-10-03 = 결정 16 실행 1단계 (1저자 비준 10-03 · 판단 메모 v2 §4 표 그대로 옮김).  ⛔ 공통 제약 (메모 §4 머리): S3 봉인 모듈 수정은 재봉인 강제 · f/T/τ 는 봉인 밖 새 도우미 · 코드 → 웹앱 → 게이트 → 커밋 한 묶음 (J20-l).\n★ 2026-10-06 저녁 `a0a24c538` (세대 2 나머지 · 1저자 비준 C1 · C2): 세대 표기 (electrode_model · bulk_model · area_rule_physics · psi_placement) + H12 민감도 팔 + 세대 섞임 거부 (tau_flux · 인계 생성기 · 배포 빌더) — 증거 scripts/test_network_generation2.py · lhs_design_dataset ㉙m1–m4.  H0 = 세대 1 Maxwell 은 설계상 유지 → 닫을지 = 1저자 결정 (open 유지).",
+      "note": "자리: (봉인) `network_conductivity.py:406–454` · `plastic_coverage.py:374–395`  ·  시험 먼저 → 최소 수정: 코드 수정 없음 — 인계 메타 `ion_net_constriction` (`maxwell_halfspace` / `mikic_psi_divide`) · `ion_net_psi = legacy_divide` · **두 모드 모두 물리 타깃 HOLD** · S3 판정 + 순수 SE 게이트 뒤 재계산  ·  웹앱 짝: hertz · physics 열 머리에 \"1세대 (반공간 Holm / ψ 분모)\".  등재 2026-10-03 = 결정 16 실행 1단계 (1저자 비준 10-03 · 판단 메모 v2 §4 표 그대로 옮김).  ⛔ 공통 제약 (메모 §4 머리): S3 봉인 모듈 수정은 재봉인 강제 · f/T/τ 는 봉인 밖 새 도우미 · 코드 → 웹앱 → 게이트 → 커밋 한 묶음 (J20-l).\n★ 2026-10-06 저녁 `a0a24c538` (세대 2 나머지 · 1저자 비준 C1 · C2): 세대 표기 (electrode_model · bulk_model · area_rule_physics · psi_placement) + H12 민감도 팔 + 세대 섞임 거부 (tau_flux · 인계 생성기 · 배포 빌더) — 증거 scripts/test_network_generation2.py · lhs_design_dataset ㉙m1–m4.  H0 = 세대 1 Maxwell 은 설계상 유지 → 닫을지 = 1저자 결정 (open 유지).\n★ 10-06 밤 Codex Q5: 부분 — H0 = Maxwell 명시 · H12 생산은 구현됨 · H0 / 현실 / 고배위 검증 · 인계 격리 미완 (G2R-01) → open 유지 (1저자 선택은 정확성 닫힘이 아니다).",
       "evidence_tests": []
     },
     {
@@ -8168,7 +8196,7 @@
       "found_by": "claude (10-06 저녁 · 정확 Dirichlet 전극 구현 중 — C 묶음 구현 보고)",
       "opened_in": "docs/reviews/codex_gen2_network_request_20261006.md",
       "title": "협착-only 진단 가지 — R_c = 0 간선을 **열림 (g = 0)** 으로 둔다: 떠 있는 섬을 빼면 유한값 (= 그 가지의 하한) · HEAD 는 특이 → physics NaN",
-      "note": "★ 2026-10-06 저녁 `a0a24c538` (세대 2 나머지 · 1저자 비준 C1 · C2).  자리: `network_conductivity.solve_network` (mode=constriction_only · 떠 있는 섬 = R > 0 간선 그래프에서 고정 노드와 끊긴 자유 노드 · V = 0).  real_14 이온: g2 0.054176 · g1 0.071330 · 떠 있는 노드 29.  쓰이는 곳 = 194 배치 진단 열 `sigma_constr_net_mScm_<m>` 뿐 (인계표 · 배포 열 아님).  처리 후보: (가) R_c = 0 간선 양끝을 단락 수축 (같은 노드로 병합) · (나) 그 가지를 not_computed 로 표지 — 결정 = 1저자.",
+      "note": "★ 2026-10-06 저녁 `a0a24c538` (세대 2 나머지 · 1저자 비준 C1 · C2).  자리: `network_conductivity.solve_network` (mode=constriction_only · 떠 있는 섬 = R > 0 간선 그래프에서 고정 노드와 끊긴 자유 노드 · V = 0).  real_14 이온: g2 0.054176 · g1 0.071330 · 떠 있는 노드 29.  쓰이는 곳 = 194 배치 진단 열 `sigma_constr_net_mScm_<m>` 뿐 (인계표 · 배포 열 아님).  처리 후보: (가) R_c = 0 간선 양끝을 단락 수축 (같은 노드로 병합) · (나) 그 가지를 not_computed 로 표지 — 결정 = 1저자.\n★ 10-06 밤 Codex (G2R 판정 §7 Q3): 단락 수축 정답 1.1 S ↔ 실제 0.1 S computed (−90.9 % · 수렴 문제 아님 = 다른 회로) · 권고 = 이번 배치 전 NOT_COMPUTED 우선 (Rc=0 포함 모드만 zero_resistance_requires_contraction · FULL · CF 독립 유지) 또는 별도 하한 열 zero_edges_removed_lower_bound · 정확값은 union-find 수축 (B/T 동시 포함 = 무한 · 경계 모순 명시) · ε 저항 치환 자동 대체 금지.  우리 트리 재현 (7a5976602 · probes 무변경 · 출력 = 증거 폴더 _reproduction_ours_7a5976602/): G 0.1 vs 1.1.  처리 = 1저자.",
       "evidence_tests": []
     },
     {
@@ -8224,6 +8252,50 @@
       "opened_in": "docs/reviews/tau_conventions_judgment_v2_20261003.md",
       "title": "`TAU-24` 잔여 — 전극 띠로 낮아진 수송 tortuosity 의 **보정 T** (띠 몫 열은 출하 · 보정식 = 1저자 결정)",
       "note": "★ 2026-10-06 저녁 (3단계 A · B · 1저자 비준 순서 3).  띠 몫 (L0 = 4 r_SE/L) 은 T 를 낮추는 정도의 상한일 뿐 · 보정식 · 적용 여부 = 1저자.",
+      "evidence_tests": []
+    },
+    {
+      "id": "G2R-01",
+      "severity": "P1",
+      "title": "H12 를 주 Hertz 자리에 넣어도 게시 (정지 계약 ⑨) · τ 인계 (load_tau_results) 가 통과 — 주 Hertz 의 bulk · 협착 모델이 세대 축에 없다 (주 σ +28.2 %)",
+      "note": "자리: webapp/pipeline_service.py:953 (⑨ 가 중첩 H12 메타만 · 주 Hertz 가 H0 인지 안 봄) · scripts/tau_flux.py:374 GENERATION_AXES = ψ · Physics 면적 · 전극뿐 (:378 · :387) · scripts/lhs_design_dataset.py:1846 · :2656 같은 비교 · scripts/lhs_release_build.py:71 · :93 은 열 이름만.  반례: 실 생산 hertz_h12 레코드를 주 hertzian 에 복사 → 게시 done · network_stop_verdict (True, ok) · τ OK · 정상 행과 섞어도 인계 통과 · f_ion_hertz 0.00400538 → 0.00513502 · tau2 10.98 → 8.57 · ion_net_bulk_hertz = sphere_segment 가 보이는데 수용.  우리 트리 재현 (7a5976602 · probes 무변경 · 출력 = 증거 폴더 _reproduction_ours_7a5976602/): h12_as_primary done (True, ok) σ 0.00513502 · 인계 [baseline, h12_as_primary] True.  해제 = 모드별 허용 조합 (H0 = Maxwell + 원기둥 · H12 = ψ 곱 + 구 조각 · Physics) 을 게시 전 검사 + 인계 재독에서 같은 규칙 · 통합 회귀 (변이체 게시 전 거부 · 강제 폴더 인계 거부 · 정상 세 모드 · 역사 세대 통과).  ⛔ 새 194 생산 · v1.3 주 학습 인계 HOLD (판정문 §8).",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-06 밤 (핀 c13da95a3 · 고정 blob 130 · 실 CLI 생산자 · 실 게시 app._network_and_stage_e · 실 인계 load_tau_results · 합성 반례 · FV 기준해)",
+      "opened_in": "docs/reviews/codex_review_gen2_network_20261006.md",
+      "evidence_tests": []
+    },
+    {
+      "id": "G2R-02",
+      "severity": "P2",
+      "title": "알 수 없는 세대 · 부분 결손을 옛 세대로 수용 — ψ 오타 · 전극 오타 · area_rule/psi 삭제가 게시 · 인계 통과 (행간 동질성 ≠ 유효 세대)",
+      "note": "자리: webapp/pipeline_service.py:963 (주 Hertz 전극 ≠ dirichlet_exact 이면 옛 레코드로 조기 반환) · scripts/tau_flux.py:364 (누락 = 옛 기본값) · :378 (모르는 ψ = 빈 축) · :387 (빈 축 비교 제외) · ion_record_problem (:168) 가 세대 열거형 미검증.  반례 셋: psi_placement=multiply_TYPO · 세 모드 전극 DIRICHLET_TYPO · 현행 g2 Physics 에서 area_rule · psi_placement 만 삭제 → 전부 done · ok · 단독 인계 통과 (코호트 전체가 같은 결손이면 섞음 검사도 통과).  우리 트리 재현 (7a5976602 · probes 무변경 · 출력 = 증거 폴더 _reproduction_ours_7a5976602/): bad_psi · bad_electrode · partial_missing_g2 전부 done (True, ok) · 인계 True · [baseline, bad_psi] True.  해제 = unknown · 부분 결손 · 진짜 legacy 분리 · 새 배치 영수증에 기대 조합/스키마 봉인 · 현행 생산물 필수 필드 · legacy 추론은 역사 세대 자격 자료에만 + inferred_legacy 표지.",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-06 밤 (핀 c13da95a3 · 고정 blob 130 · 실 CLI 생산자 · 실 게시 app._network_and_stage_e · 실 인계 load_tau_results · 합성 반례 · FV 기준해)",
+      "opened_in": "docs/reviews/codex_review_gen2_network_20261006.md",
+      "evidence_tests": []
+    },
+    {
+      "id": "G2R-03",
+      "severity": "P2",
+      "title": "CG 종료 코드 0 + G ≤ 1.1·Σg 는 전류 정확성 증서가 아니다 — 고대비 막다른 간선 (1e14 S) 에서 G +100 % 가 computed",
+      "note": "자리: scripts/network_conductivity.py:895–907 (CG info 0 · 유한 해만) · :933 (바닥 전류만 G) · :940–957 (Σg 상한 · 양 전극 전류 기록만 · 보존을 수용 조건으로 안 씀) · :1290 이후 생산 레코드가 모드별 전류 · 잔차 증서를 직렬화 안 함 · :903 일반 spilu 를 SPD 보증 없이 CG 전처리.  반례: B–중간–T 1 Ω 경로 30,001 병렬 + B 에만 붙은 막다른 노드 1e14 S · 자유 노드 30,002 → computed · cg · G 30,001 (참 15,000.5 · +100 %) · I_top ≈ −3e-10 · q 0.03 (가드 통과) · 1e6~1e12 는 참값.  실침대 FULL 전류 불일치 real14 ≤ 1.37e-13 · case15 ≤ 6.39e-9 (이 194 에 이 대비가 있다는 증거 아님).  우리 트리 재현 (7a5976602 · probes 무변경 · 출력 = 증거 폴더 _reproduction_ours_7a5976602/): 다섯째 대비 G 30001.0 vs 15000.5.  해제 = 모드별 양 전극 전류 · 보존 잔차 · 내부 잔차 · 풀이 방법을 수용 조건 + 영구 산출물 · 허용치 사전 고정 · 반례는 참값 회복 또는 NOT_COMPUTED · 정상 큰 망 통과 · ILU 쓰면 맞는 Krylov 또는 SPD 전처리.",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-06 밤 (핀 c13da95a3 · 고정 blob 130 · 실 CLI 생산자 · 실 게시 app._network_and_stage_e · 실 인계 load_tau_results · 합성 반례 · FV 기준해)",
+      "opened_in": "docs/reviews/codex_review_gen2_network_20261006.md",
+      "evidence_tests": []
+    },
+    {
+      "id": "G2R-04",
+      "severity": "P2",
+      "title": "H12 범위 \"z ≤ 10 개선 (±5 %)\" 은 배위수만으로 보증 안 됨 — 구 사슬 z=2 · s=0.45 에서 H12 −5.55 % · 참값이 [H0, H12] 밖",
+      "note": "자리: docs/reviews/gen2_network_design_20261006.md:17 (±5 % 문구) · scripts/network_conductivity.py:336 (구 조각 h²/(σV)) · :605 · :629 · 기준해 docs/data/gen2_design_20261006/c1/fv_sphere_chain.py:26 · :93.  반례: 같은 구 무한 사슬 s=0.45 · FV nr 100/200/400 = 1.16216/1.16030/1.15947 · 외삽 1.15864 · H0 1.67963 · H12 1.22759 → H12 전도도 −5.55 % (nr400) · −5.62 % (외삽) · H0 · H12 둘 다 기준보다 낮다 · s=0.30 −2.04 % · 0.50 −6.44 % · 0.70 −7.37 %.  해제 = 문구를 \"시험한 기하 · s 범위의 오차\" 로 좁히고 구 사슬 포함 · 인계 [H0, H12] = 두 규약의 쌍대응 시나리오 (오차막대 · 상하한 · 신뢰구간 아님) 명시 · H12 주 모델 승격은 공유-코어 검증 등 별도 조건.",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "codex 10-06 밤 (핀 c13da95a3 · 고정 blob 130 · 실 CLI 생산자 · 실 게시 app._network_and_stage_e · 실 인계 load_tau_results · 합성 반례 · FV 기준해)",
+      "opened_in": "docs/reviews/codex_review_gen2_network_20261006.md",
       "evidence_tests": []
     }
   ]

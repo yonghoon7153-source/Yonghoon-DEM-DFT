@@ -1,0 +1,16 @@
+  PASS  D1 ★ 바닥 노드에 막다른 가지 (R 1e-3) — G 불변 · 단일 경로 R = 1 → G = 1 (상대 1e-12) (옛: 0.96153846 → 0.99996004 · +4.0 %)   1.0 → 1.0
+  PASS  D2 ★ 내부 노드에 막다른 가지 — G 불변 = 1 (상대 1e-12) (옛: 0.990099 → 0.999960 · +1.0 %)   1.0 → 1.0000000000000115
+  PASS  D3 ★ 해석해 — 직렬 1/ΣR = 1/15 · 공유 끝 병렬 1/20 + 1/2 = 0.55 · 휘트스톤 브리지 (Fraction 정확 해) — 상대 1e-12   0.06666666666666676 · 0.55 · 0.6923076923076923 vs 0.6923076923076923
+  PASS  D3b ★ 양 끝이 다른 두 경로 (C1d) — 협착 전력 몫 = 이상 전극 극한 9/110 정확 (옛 유한 전극 0.0916787 · +12.05 %)   0.08181818181818183
+  PASS  D3c L2-08 반례 (공유 끝) 몫 = 18/220 그대로 (전극이 공유 끝이면 옛 판도 같았다)
+  PASS  D4 단위 척도 — 모든 R ×7 → G ÷7 (상대 1e-12)   1.370370370370382 · 0.19576719576719842
+  PASS  D5 ★ B ∩ T ≠ ∅ (노드 2) → (None, None) · solve_info 사유 'boundary_overlap' (옛: 값이 나왔다)   ((None, None), {'electrode_model': 'dirichlet_exact', 'status': 'not_computed', 'reason': 'boundary_overlap', 'method': None, 'n_free': None, 'n_fixed': None, 'n_floating': 0, 'I_bottom': None, 'I_top': None})
+  PASS  D5b run_decomposition — 얇은 침대 (띠 겹침 2 노드) → sigma_full None · 상태 not_computed · 사유 boundary_overlap · n_boundary_overlap 2   {'sigma_full': None, 'sigma_full_status': 'not_computed', 'sigma_full_reason': 'boundary_overlap', 'n_boundary_overlap': 2}
+  PASS  D6 ★ 전류 보존 — 바닥 띠에서 나간 전류 = G (ΔV 1) = 위 띠로 들어간 전류 · 자유 노드 KCL (|ΣI| ≤ 1e-10·G) · V ∈ [0, 1] · 띠 = 1 · 0   G 1.0558139478155613 · I_bot 1.0558139478155624 · I_top -1.0558139478155586 · KCL 1.22e-15
+  PASS  D6b 장 출력 호환 — V_source = 1.0 · G_eff = G · σ_ratio = G·L/A · electrode_model = 'dirichlet_exact' (장 · solve_info) · 방법 spsolve   (1.0, {'electrode_model': 'dirichlet_exact', 'status': 'computed', 'reason': None, 'method': 'spsolve', 'n_free': 36, 'n_fixed': 18, 'n_floating': 0, 'I_bottom': 1.0558139478155613, 'I_top': -1.0558139478155586})
+  PASS  D6c run_decomposition 결과 electrode_model = 'dirichlet_exact' (세 풀이 같은 전극)   'dirichlet_exact'
+  PASS  D7 ★ 자유 노드 32368 > 30,000 → CG 경로 (방법 'cg') · 독립 직접해와 상대 ≤ 1e-8 · n_free 기록   34.85358577955638 vs 34.85358577955665 · {'electrode_model': 'dirichlet_exact', 'status': 'computed', 'reason': None, 'method': 'cg', 'n_free': 32368, 'n_fixed': 2312, 'n_floating': 0, 'I_bottom': 34.85358577955638, 'I_top': -34.85358577945186}
+  PASS  D7b SciPy < 1.12 (rtol 키워드 없음) → tol 키워드로 같은 해 (상대 1e-8)   34.85358577955638
+  PASS  D7c 직접해 ↔ CG 문턱 줄 = 상수 DIRICHLET_DIRECT_MAX_FREE (30000) · 소스에 한 번 (measure_rho 치환 앵커)   count=1
+
+test_network_dirichlet: 14/14 PASS
