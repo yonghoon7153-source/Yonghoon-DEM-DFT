@@ -4039,3 +4039,22 @@ gate INCOMPLETE · 실효 정책 UNVERIFIED · native 미승인 · 게이트 리
 - **다음:** 기록 보완 둘 (BMIN-R3-C1 정정표 §60 · 이 범위 정리) 을 수신 검토에 보낸다 — 요청문 `bms-balancing/docs/COMSOL_BMIN_R2_RETRY3_SUPPLEMENT_REVIEW_REQUEST_20261006.md`
   (발송은 사용자 · 발송문은 저장소 밖). 수용되면 같은 고정 실행본의 native 150 s 승인 요청 준비로 — 그것도 별도 사용자 승인.
 - 바꾸지 않는 것: §57 · §59 · §60 · r2 꾸러미 바이트 · native 미승인 · 정상 gate INCOMPLETE · 게이트 · REIL 무관 · RUN_SCOPE 0. 실행 0.
+
+## 62. B-min r2 retry3 보충 검토 회신 접수 — `LIMITED_VALIDATION_CLOSED_WITH_DOCUMENTED_SCOPE` · **B-min r2 한정 검증 계획 종결** · native 150 s 미승인 (2026-10-06)
+
+- 묶음: `reviews/r14_repros/codex63/comsol_bmin_r2_retry3_supplement_review_20261006/` (`BMIN_R2_RETRY3_SUPPLEMENT_REVIEW_20261006.zip` 185,171 B · sha256
+  `105c84ae203a0d480521d0086f945a2ed20892b95c274067e8895c3142428d76` · 풀린 7 파일 manifest 크기 · sha256 7 / 7 일치 · CRLF 는 `REVIEW_CHECKS.json`
+  하나 · 비밀 패턴 0 · 동봉 `reviewer_checks.py` · `package_review.py` 실행 안 함). 규칙 `dcf9d4a58` → 보존 `b03d48635`.
+- 대상: 고정 커밋 `10525ae1e30cf2d0f5e6e232e92897f08db3030f` (§61 의 발송본).
+- **판정:** `BMIN_R3_C1 = CLOSED` · PS01-16 외부 fail-closed `ACCEPTED` · TryParse 내부 분기 `UNOBSERVED` · 원안의 내부 actual path 요구 =
+  `NOT_FULFILLED_RETAINED_AS_SCOPE_LIMIT` · 77 입력 · 62 ID · 근거 참조 396 개 (고유 ZIP 멤버 140) 가 원 ZIP 바이트와 일치 · 차단 0 ·
+  생산 변경 · 재시험 불요 · `original_plan_without_amendment_fully_satisfied: false` (원안 문장 전부가 그대로 충족됐다는 뜻 아님).
+- **P3 비차단 — 시간 순서 정정 (권고 문구 그대로 반영):** 정정표 `BMIN_R2_RETRY3_ACCOUNTING_CORRECTION_20261006.json` 의 `not_claimed[0]`
+  "승인권자 결정 대기" 는 **작성 당시 (§60) 상태이고, 현재 범위 결정은 §61 및 `COMSOL_BMIN_R2_RETRY3_PS01_16_SCOPE_DISPOSITION_20261006.md`
+  를 따른다.** 원 정정표 · ZIP · 영수증은 고치지 않는다.
+- 유지되는 한계 (검토 §5 그대로): PY04-02 · PY05-03 한정 대체 증거 · profile 원 reader 14 + 같은 바이트 재사용 39 · 원 CSV 미동봉 · 과거 실패 ·
+  후속 반환 전사 · Java helper ↔ COMSOL 모델 실행 구분 · 정상 gate `INCOMPLETE`.
+- 검토자 실행 0: 받은 소스 · 생성기 · suite · Java · COMSOL 0 · 원 ZIP 전후 sha 동일.
+- **native 150 s 는 미승인** (`native150_approved: false` · approval / token / runtime 생성 권한 아님). 다음 = 같은 고정 실행본의 native 150 s
+  **별도 승인 요청문 준비** (정확 source / manifest · NORMAL480 기준 · run / cwd / argv · 정책 · 자원 / 예산 · 정리 · 보존 · 실패 중단 범위). 실제 실행은
+  별도 명시 승인 뒤 · 960 s 자동 연장 · 생산 변경 · 전체 시험 반복 없음.
