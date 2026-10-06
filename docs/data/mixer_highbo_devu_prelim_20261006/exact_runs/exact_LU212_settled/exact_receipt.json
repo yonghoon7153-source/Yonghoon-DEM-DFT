@@ -1,0 +1,141 @@
+{
+ "schema": "mixer_exact_frames_deck/1",
+ "registered": "docs/reviews/mixer_highbo_stiffness_prereg_20260929.md §12-4 (나) — 보고 전용 · 관문 아님 · 정의 불변",
+ "note": "보고 전용 — 관문 아님 · 정의 불변 (§12-4 (나)).  체크포인트 프레임은 등록 프레임 (t₀ 덤프 · bin 1 격자) 이 아니다.  exact = double 좌표 (collapsed · ambiguous_at_hp = hp 정밀도 · 반경 = 계획 double) · rounded = 같은 배치를 %g 로 반올림한 좌표에 등록 규칙 + [확실 lo, 가능 hi] (판독기 규칙 그대로) · exact.reader_resolution_on_hp = 진단 (판독기 반경 자릿수 바닥 포함)",
+ "created_utc": "2026-10-06T10:29:59Z",
+ "tool": "scripts/mixer_exact_frames.py",
+ "tool_sha256": "57bff9789c63483dc2a37165adc29bbfc401ef2e7f6cd058cc91ceda5a05a173",
+ "resume_transform": {
+  "file": "scripts/make_mixer_resume.py",
+  "sha256": "b0930cd7704fa2298578c147ccdb5f4e38780c867193a221783affc2cd82279e"
+ },
+ "run": "LU212_ref_r2_s32452843",
+ "run_dir": "/lustre/home/yonghoon/mixer_dev7_20260930_v26/LU212_ref_r2_s32452843",
+ "work_dir": "/lustre/home/yonghoon/mixer_dev7_20260930_v26/exact_LU212_settled",
+ "deck_source": {
+  "path": "/lustre/home/yonghoon/mixer_dev7_20260930_v26/LU212_ref_r2_s32452843/in.mixer",
+  "sha256": "8cb48a132d8a90c03da706f04dd426508a0d48418df6ac1a127ed42b9eadca8c"
+ },
+ "deck_meta_sha256": "a1a62baac59d458642f6dd652fa9a13ff718d1ba02933ddb9a0c41f201c628a9",
+ "plan": {
+  "t0_step": 1037408,
+  "steps_per_rev": 3051763.358778626,
+  "dump_every": 30512,
+  "steps_total": 7139962,
+  "rotation": true,
+  "settled_planned": 1037429,
+  "restart_every": 200000,
+  "last_two_restarts_if_complete": [
+   6800000,
+   7000000
+  ]
+ },
+ "ckpt": {
+  "label": "settled",
+  "file": "restart/settled.bin",
+  "path": "/lustre/home/yonghoon/mixer_dev7_20260930_v26/LU212_ref_r2_s32452843/restart/settled.bin",
+  "sha256": "038610de423c95d38192eddf1f28c5f388e05507b58ce548406b17cc4470a526",
+  "bytes": 36179883,
+  "header": {
+   "version": "Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by yonghoon, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d",
+   "sizes": {
+    "smallint": 4,
+    "tagint": 4,
+    "bigint": 8
+   },
+   "units": "si",
+   "ntimestep": 1037429,
+   "dimension": 3,
+   "nprocs": 20
+  },
+  "header_error": null,
+  "step": 1037429,
+  "bin": 0,
+  "in_bin1": false,
+  "step_minus_t0": 21,
+  "on_dump_lattice": false,
+  "planned_match": true
+ },
+ "deck": {
+  "file": "in.exact",
+  "sha256": "7ef3abd5c58c37f010efedc5355b1f46f5af90d9a538fa6a9c375052fd531643"
+ },
+ "sbatch": {
+  "file": "run_exact.sbatch",
+  "sha256": "ef0e75820b27d0ef873eeaa130696996a396bf3986c5d7d2399c88ab5d6bcbdc"
+ },
+ "dumps": {
+  "hp": {
+   "columns": [
+    "id",
+    "type",
+    "x",
+    "y",
+    "z",
+    "radius"
+   ],
+   "format": "%d %d %.17g %.17g %.17g %.17g"
+  },
+  "g6": {
+   "columns": [
+    "id",
+    "type",
+    "x",
+    "y",
+    "z",
+    "radius"
+   ],
+   "format": "LIGGGHTS 기본 (id · type %d · 나머지 %g)"
+  }
+ },
+ "links": {
+  "Drum.stl": "/lustre/home/yonghoon/mixer_dev7_20260930_v26/LU212_ref_r2_s32452843/Drum.stl",
+  "Front.stl": "/lustre/home/yonghoon/mixer_dev7_20260930_v26/LU212_ref_r2_s32452843/Front.stl",
+  "Back.stl": "/lustre/home/yonghoon/mixer_dev7_20260930_v26/LU212_ref_r2_s32452843/Back.stl"
+ },
+ "dropped_commands": [
+  "region reg block -0.0151083 0.0151083 -0.0151083 0.0151083 -0.0151083 0.0151083 units box",
+  "create_box 4 reg",
+  "fix pt1 all particletemplate/sphere 10487 atom_type 1 density constant 4800 radius constant 0.0006813",
+  "fix pt2 all particletemplate/sphere 11887 atom_type 2 density constant 4800 radius constant 0.0003028",
+  "fix pt3 all particletemplate/sphere 13901 atom_type 3 density constant 2000 radius constant 7.57e-05",
+  "fix pddA all particledistribution/discrete 32452867 2 pt1 0.700000 pt2 0.300000",
+  "fix pddB all particledistribution/discrete 32452883 1 pt3 1.000000",
+  "region ins_reg cylinder x 0.0 0.0 0.0118239 -0.00236478 0.00236478 units box",
+  "fix insA all insert/pack seed 32452843 distributiontemplate pddA maxattempt 200 insert_every once overlapcheck yes all_in yes vel constant 0. 0. -0.2 region ins_reg particles_in_region 1035 ntry_mc 20000",
+  "shell mkdir post",
+  "shell mkdir restart",
+  "run 1",
+  "run 518714",
+  "unfix insA",
+  "region ins_hi block -0.00236478 0.00236478 -0.00788261 0.00788261 -0.00522312 0.0102474 units box",
+  "fix insB all insert/pack seed 32452867 distributiontemplate pddB maxattempt 200 insert_every once overlapcheck yes all_in yes vel constant 0. 0. -0.2 region ins_hi particles_in_region 98965 ntry_mc 20000",
+  "run 518714",
+  "unfix insB",
+  "write_restart restart/settled.bin",
+  "run 6102533",
+  "restart 200000 restart/a.bin restart/b.bin",
+  "dump dmp all custom 30512 post/mix_*.liggghts id type x y z vx vy vz fx fy fz radius",
+  "run 7139962 upto"
+ ],
+ "binary": {
+  "path": "/lustre/home/yonghoon/LIGGGHTS-PUBLIC/src/lmp_mpi",
+  "source": "launch_record.json",
+  "sha256": "ee2d77261bac9e7fa4e9311c8709e74bf7583a13225a5bc35a791bef9be60a3f",
+  "run_seal_sha256": "ee2d77261bac9e7fa4e9311c8709e74bf7583a13225a5bc35a791bef9be60a3f",
+  "matches_run_seal": true
+ },
+ "slurm": {
+  "partition": "cpu",
+  "qos": "cpu-60",
+  "time": "00:20:00",
+  "conda_env": "myenv",
+  "path_prefix": "",
+  "mpirun_flags": "--oversubscribe --bind-to none"
+ },
+ "commands": {
+  "srun": "cd /lustre/home/yonghoon/mixer_dev7_20260930_v26/exact_LU212_settled && srun -p cpu --qos cpu-60 -n 1 -t 00:20:00 /lustre/home/yonghoon/LIGGGHTS-PUBLIC/src/lmp_mpi -in in.exact > log.exact 2>&1",
+  "sbatch": "cd /lustre/home/yonghoon/mixer_dev7_20260930_v26/exact_LU212_settled && sbatch run_exact.sbatch",
+  "read": "python3 scripts/mixer_exact_frames.py read /lustre/home/yonghoon/mixer_dev7_20260930_v26/LU212_ref_r2_s32452843 /lustre/home/yonghoon/mixer_dev7_20260930_v26/exact_LU212_settled/exact/hp_1037429.liggghts --g6 /lustre/home/yonghoon/mixer_dev7_20260930_v26/exact_LU212_settled/exact/g6_1037429.liggghts --json <출력.json>"
+ }
+}

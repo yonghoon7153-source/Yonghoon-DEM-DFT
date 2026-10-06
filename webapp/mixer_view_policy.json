@@ -17,6 +17,11 @@
    "pattern": "(LHx10_ref_r2|LHx30_ref_r2)_s32452843",
    "basis": "고-Bo 강성 축 DEV 탐색 dev-bo (AM–AM Bo_code 384 · 1152 = 공동 개입 B · 사후 선택 수준) · 2 바퀴 · 개발 자료 · 판정 미사용 — M 열람 기록 2026-10-03 19:13:56 KST docs/data/mixer_highbo_devbo_prelim_20261003/ · 등록 docs/reviews/mixer_highbo_stiffness_prereg_20260929.md §11-6 · 정책 등재 2026-10-04 (1저자 — 침대 보기 · GIF · 덩어리 · 벽 부착 짐작을 영상으로 확인)",
    "since": "2026-10-03"
+  },
+  {
+   "pattern": "(LU212_ref_r2|LU637_ref_r2)_s32452843",
+   "basis": "고-Bo 강성 축 DEV 탐색 dev-u (균일 γ 배율 U ×10 · ×14.42 = CED 9 원소 공동 개입 · 사후 설계) · 2 바퀴 · 개발 자료 · 판정 미사용 — 판독 (M · 보조 s1 s2 · 정확 좌표) 열람 기록 2026-10-06 19:30:04 KST docs/data/mixer_highbo_devu_prelim_20261006/ · 등록 docs/reviews/mixer_highbo_stiffness_prereg_20260929.md §12-4 · §12-6 · 정책 등재 2026-10-06 (1저자 비준 10-06 밤 — 판독 뒤 보기 추가 · 권고대로)",
+   "since": "2026-10-06"
   }
  ]
 }

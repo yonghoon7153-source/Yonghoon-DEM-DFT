@@ -1,0 +1,89 @@
+LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by yonghoon, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)
+Reading restart file ...
+version 3 8
+WARNING: Restart file used different # of processors (../read_restart.cpp:574)
+  orthogonal box = (-0.0151083 -0.0151083 -0.0151083) to (0.0151083 0.0151083 0.0151083)
+  1 by 1 by 1 MPI processor grid
+WARNING: 
+	The contact model you specified is not located in any whitelist.
+	Because of this the model will be run in an unoptimized version (increasing runtime by up to 20%).
+	In order to optimize this model you have the following options:
+		(i)  Run the genAutoExamplesWhitelist.sh script in your LIGGGHTS(R) source folder to automatically parse the input script
+		(ii) Add the model combination by hand to your style_contact_model_user.whitelist that can be found in your LIGGGHTS(R) source folder
+		(iii) Use the ENABLE_MODEL_* flag when building with cmake.
+	If you perform one of the steps above LIGGGHTS(R) needs to be recompiled to generate the optimized code.
+
+ (../contact_models.h:365)
+  100000 atoms
+EXACT_STEP 6800000 ckpt b
+WARNING: 
+	The contact model you specified is not located in any whitelist.
+	Because of this the model will be run in an unoptimized version (increasing runtime by up to 20%).
+	In order to optimize this model you have the following options:
+		(i)  Run the genAutoExamplesWhitelist.sh script in your LIGGGHTS(R) source folder to automatically parse the input script
+		(ii) Add the model combination by hand to your style_contact_model_user.whitelist that can be found in your LIGGGHTS(R) source folder
+		(iii) Use the ENABLE_MODEL_* flag when building with cmake.
+	If you perform one of the steps above LIGGGHTS(R) needs to be recompiled to generate the optimized code.
+
+ (../contact_models.h:365)
+INFO: mesh file (Drum.stl) is required, but data will be taken from restart file (../fix_mesh.cpp:429)
+Resetting global state of Fix Drum Style mesh/surface from restart file info
+INFO: mesh file (Front.stl) is required, but data will be taken from restart file (../fix_mesh.cpp:429)
+Resetting global state of Fix Front Style mesh/surface from restart file info
+INFO: mesh file (Back.stl) is required, but data will be taken from restart file (../fix_mesh.cpp:429)
+Resetting global state of Fix Back Style mesh/surface from restart file info
+WARNING: 
+	The contact model you specified is not located in any whitelist.
+	Because of this the model will be run in an unoptimized version (increasing runtime by up to 20%).
+	In order to optimize this model you have the following options:
+		(i)  Run the genAutoExamplesWhitelist.sh script in your LIGGGHTS(R) source folder to automatically parse the input script
+		(ii) Add the model combination by hand to your style_contact_model_user.whitelist that can be found in your LIGGGHTS(R) source folder
+		(iii) Use the ENABLE_MODEL_* flag when building with cmake.
+	If you perform one of the steps above LIGGGHTS(R) needs to be recompiled to generate the optimized code.
+
+ (../contact_models.h:365)
+Resetting global state of Fix n_neighs_mesh_Drum Style property/atom from restart file info
+Resetting per-atom state of Fix n_neighs_mesh_Drum Style property/atom from restart file info
+Resetting global state of Fix tracker_Drum Style contacthistory/mesh from restart file info
+Resetting per-atom state of Fix tracker_Drum Style contacthistory/mesh from restart file info
+Resetting global state of Fix n_neighs_mesh_Front Style property/atom from restart file info
+Resetting per-atom state of Fix n_neighs_mesh_Front Style property/atom from restart file info
+Resetting global state of Fix tracker_Front Style contacthistory/mesh from restart file info
+Resetting per-atom state of Fix tracker_Front Style contacthistory/mesh from restart file info
+Resetting global state of Fix n_neighs_mesh_Back Style property/atom from restart file info
+Resetting per-atom state of Fix n_neighs_mesh_Back Style property/atom from restart file info
+Resetting global state of Fix tracker_Back Style contacthistory/mesh from restart file info
+Resetting per-atom state of Fix tracker_Back Style contacthistory/mesh from restart file info
+Resetting global state of Fix mvD Style move/mesh from restart file info
+Resetting global state of Fix mvF Style move/mesh from restart file info
+Resetting global state of Fix mvB Style move/mesh from restart file info
+Resetting global state of Fix contacthistory Style contacthistory from restart file info
+Resetting per-atom state of Fix contacthistory Style contacthistory from restart file info
+Setting up run at Tue Oct  6 19:30:08 2026
+
+Import and parallelization of mesh Drum containing 78 triangle(s) successful
+Import and parallelization of mesh Front containing 39 triangle(s) successful
+Import and parallelization of mesh Back containing 39 triangle(s) successful
+Memory usage per processor = 97.2749 Mbytes
+    Step    Atoms         KinEng            rke         Volume 
+ 6800000   100000  1.4221071e-05  2.6082529e-07  2.7589053e-05 
+Loop time of 1.227e-06 on 1 procs for 0 steps with 100000 atoms, finish time Tue Oct  6 19:30:10 2026
+
+
+Pair  time (%) = 0 (0)
+Neigh time (%) = 0 (0)
+Comm  time (%) = 0 (0)
+Outpt time (%) = 0 (0)
+Other time (%) = 1.227e-06 (100)
+
+Nlocal:    100000 ave 100000 max 100000 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Nghost:    0 ave 0 max 0 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Neighs:    419264 ave 419264 max 419264 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+
+Total # of neighbors = 419264
+Ave neighs/atom = 4.19264
+Neighbor list builds = 0
+Dangerous builds = 0

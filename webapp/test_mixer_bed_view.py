@@ -361,15 +361,18 @@ def main():
     #  10-04 (1저자 *"믹서 lh 도 웹앱에서 gif 등으로 볼 수 있게"*): DEV seed 1 의 2 바퀴 런은 M 열람 기록이 있어 열린다 —
     #  정지된 09-28 LH (M · 겹침 미열람) · 후행 8 바퀴 (`LH_ref_s32452843`) · holdout 시드 · 다른 개발 시드 · 기록 없는 E0 는 그대로 잠금.
     #  10-05 — 개발 탐색 dev-u 의 LU212 · LU637 (등록 §12 · M 열람 전) 도 잠금 (⑭e 가 정책 쪽을 본다).
+    #  10-06 — dev-u 판독 (M · s1 s2 · 정확 좌표) 열람 기록 docs/data/mixer_highbo_devu_prelim_20261006/ 이 생겨 LU212 · LU637 (ref_r2 · seed 1) 은
+    #          열린다 (③d) · 다른 dev-u 이름 (다른 시드 · soft · 8 바퀴) 은 그대로 잠금 (⑭e).
     locked = ('LH_s32452843', 'E0_ref_dthalf_s32452843', 'npprobe20_E0_ref_s32452843', 'LC_s32452843_old',
-              'LH_ref_s32452843', 'LH_ref_r2_s15485863', 'LHx10_ref_r2_s49979687', 'LU212_ref_r2_s32452843', 'LU637_ref_r2_s32452843')
+              'LH_ref_s32452843', 'LH_ref_r2_s15485863', 'LHx10_ref_r2_s49979687')
     chk('③ 고-Bo · 강성 축 · NP 프로브 · 패턴 밖 이름은 잠긴다 (프레임 목록도 안 준다)',
         all(runs.get((0, n), {}).get('allowed') is False and not runs[(0, n)].get('steps') for n in locked))
     chk('③b 잠긴 런에는 사유 문자열이 있다 (맹검)', all('맹검' in runs.get((0, n), {}).get('reason', '') for n in locked))
     rr = c.get('/api/mixer/frame?root=0&run=LH_s32452843&step=1&view=3d')
     chk('③c 잠긴 런의 프레임 요청은 403', rr.status_code == 403 and rr.get_json().get('ok') is False)
     dev = {'LC_ref_r2_s32452843': 'mixer_highbo_devrot_prelim_20261002', 'LH_ref_r2_s32452843': 'mixer_highbo_devrot_prelim_20261002',
-           'LHx30_ref_r2_s32452843': 'mixer_highbo_devbo_prelim_20261003'}
+           'LHx30_ref_r2_s32452843': 'mixer_highbo_devbo_prelim_20261003',
+           'LU212_ref_r2_s32452843': 'mixer_highbo_devu_prelim_20261006', 'LU637_ref_r2_s32452843': 'mixer_highbo_devu_prelim_20261006'}
     chk('③d DEV seed 1 의 2 바퀴 런 (M 열람 기록 있음) 은 열린다 · 근거 = 그 열람 기록 폴더 + "판정 미사용" 표지',
         all(runs.get((0, n), {}).get('allowed') is True and runs[(0, n)].get('steps') == [1, 201, 1001]
             and rec in runs[(0, n)].get('basis', '') and '판정 미사용' in runs[(0, n)].get('basis', '')
@@ -541,9 +544,11 @@ def main():
         w_['allow'][1]['pattern'] = pat_
         p = os.path.join(pdir, f'wide_{k_}.json'); open(p, 'w').write(json.dumps(w_, ensure_ascii=False))
         wide.append(mixer_bed.load_policy(p))
-    chk('⑭e ★ dev-u (LU212 · LU637) 런은 M 열람 기록 없이 열리지 않는다 — 선적 정책에서 잠김 (분류 · 목록 ③) · 열린다면 그 항목 basis 가 리포 안의 dev-u 열람 '
-        '기록 폴더를 적어야 한다 / 반례 둘 (dev-rot 항목에 LU 를 끼움 · L* 일반 패턴 — 근거 = dev-rot 기록) 은 "기록 없는 열림" 으로 잡힌다',
-        not any(mixer_bed.classify(n_, pol)[0] for n_ in lu_names) and lu_open_without_record(pol) == []
+    chk('⑭e ★ dev-u (LU212 · LU637) 런은 M 열람 기록 없이 열리지 않는다 — 선적 정책 (10-06) 은 seed 1 의 ref_r2 둘만 dev-u 열람 기록 근거로 열고 '
+        '(분류 · ③d) 다른 dev-u 이름은 잠금 · 열린 항목 basis 는 리포 안의 dev-u 열람 기록 폴더를 적는다 / 반례 둘 (dev-rot 항목에 LU 를 끼움 · '
+        'L* 일반 패턴 — 근거 = dev-rot 기록) 은 "기록 없는 열림" 으로 잡힌다',
+        [n_ for n_ in lu_names if mixer_bed.classify(n_, pol)[0]] == ['LU212_ref_r2_s32452843', 'LU637_ref_r2_s32452843']
+        and lu_open_without_record(pol) == []
         and all(w_['ok'] and lu_open_without_record(w_) for w_ in wide))
 
     # ── ⑮ 크기 상한 · 캐시 ──
