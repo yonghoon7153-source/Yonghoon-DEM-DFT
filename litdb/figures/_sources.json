@@ -62,7 +62,7 @@
   ]
  },
  "asano2017_ncm111_li3ps4_composite_electronic_ionic_conductivity": {
-  "figures": 5,
+  "figures": 7,
   "generated": "2026-10-03",
   "pdfs": [
    "23. Electronic and Ionic Conductivities of LiNi13Mn13Co13O2-Li3PS4 Positive Composite Electrodes for All-Solid-State Lithium Batteries.pdf"
@@ -843,7 +843,7 @@
   ]
  },
  "kakar1967_deformation_theory_hot_pressing": {
-  "figures": 8,
+  "figures": 13,
   "generated": "2026-10-03",
   "pdfs": [
    "29. Deformation theory of hot‐pressing.pdf"
@@ -889,7 +889,7 @@
   ]
  },
  "kato2018_thick_electrode_assb_cycle_tortuosity": {
-  "figures": 14,
+  "figures": 17,
   "generated": "2026-10-03",
   "pdfs": [
    "22. All-solid-state batteries with thick electrode configurations.pdf",
@@ -1003,7 +1003,7 @@
   ]
  },
  "kim2026_electrolyte_interfacial_reactivity_alloying_anode_pulverization": {
-  "figures": 46,
+  "figures": 48,
   "generated": "2026-10-04",
   "pdfs": [
    "Kim 2026 - Electrolyte interfacial reactivity regulates alloying anode pulverization (Adv Energy Mater aenm.71596).pdf",
@@ -1142,6 +1142,14 @@
   "pdfs": [
    "Lee_2025_EES_dual_fibrous_PTFE_dry_electrode.pdf",
    "Lee_2025_EES_dual_fibrous_PTFE_dry_electrode_sup_SI.pdf"
+  ]
+ },
+ "lee2025_halide_segregation_uhs_mixing_li_chalcogen_assb": {
+  "figures": 49,
+  "generated": "2026-10-06",
+  "pdfs": [
+   "Sup) Lee2025 Science Halide segregation all-solid-state lithium-chalcogen batteries part1 adt1882_sm.pdf",
+   "Sup) Lee2025 Science Halide segregation all-solid-state lithium-chalcogen batteries part2 adt1882_sm.pdf"
   ]
  },
  "lee2026_lpscl_coating_thickness_ncm811": {
@@ -1436,7 +1444,7 @@
   ]
  },
  "malifarge2017_tortuosity_symmetric_cell_impedance_tlm": {
-  "figures": 6,
+  "figures": 7,
   "generated": "2026-10-03",
   "pdfs": [
    "24. Determination of tortuosity using impedance spectra analysis of symmetric cell.pdf"
@@ -1524,7 +1532,7 @@
   ]
  },
  "molerus1975_theory_of_yield_cohesive_powders": {
-  "figures": 10,
+  "figures": 12,
   "generated": "2026-10-03",
   "pdfs": [
    "28. Theory of yield of cohesive powders.pdf"
@@ -2481,7 +2489,7 @@
   ]
  },
  "yuan2026_layered_composite_electrolyte_stress_homogenization_li_metal": {
-  "figures": 13,
+  "figures": 46,
   "generated": "2026-10-04",
   "pdfs": [
    "Yuan 2026 - Stress homogenization layered composite electrolyte ASSLMB (Nat Commun s41467-026-78129-0).pdf",

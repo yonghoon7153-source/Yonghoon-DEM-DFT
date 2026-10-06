@@ -1,0 +1,1184 @@
+{
+ "slug": "lee2025_halide_segregation_uhs_mixing_li_chalcogen_assb",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-06",
+ "sources": [
+  "Sup) Lee2025 Science Halide segregation all-solid-state lithium-chalcogen batteries part1 adt1882_sm.pdf",
+  "Sup) Lee2025 Science Halide segregation all-solid-state lithium-chalcogen batteries part2 adt1882_sm.pdf"
+ ],
+ "figures": [
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 5,
+   "file": "fig_S1.png",
+   "caption": "Fig. S1. Schematic illustration of composite chalcogen cathodes prepared by ultrahigh-speed and conventional mixing. The conventional approaches using low-speed mixing of chalcogen cathode, solid-state electrolyte, and conductive carbon resulted in the formation of voids and poor solid/solid contact inside the resultant composite chalcogen cathodes, leading to poor ion transport, severe reaction heterogeneity, and contact loss upon cycling. By contrast, during ultrahigh-speed mixing, the localized heating striking and shearing fracturing force induce a mechanochemical reaction, leading to the segregation of nanosized lithium halides from bulk halogen-containing solid-state electrolytes and subsequent deposition onto the interface with chalcogen cathode particles. Such a universal halogen-chalcogen chemistry substantially improves effective ionic transport and suppresses the volume change",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    591.9,
+    545.2
+   ],
+   "w": 2192,
+   "h": 1997,
+   "dpi": 300,
+   "src": "Sup) Lee2025 Science Halide segregation all-solid-state lithium-chalcogen batteries part1 adt1882_sm.pdf",
+   "blank": 0.639
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 6,
+   "file": "fig_S2.png",
+   "caption": "Fig. S2. Electrochemical performance comparison of all-solid-state Li-S batteries (1, 12, 13, 20, 22, 24, 27, 43-66). (A) Projected cell energy density of various reported ASSLSB cells as a function of areal S loading and sulfur utilization (Фs). The calculations were based on an all-solid- state Li–S pouch cell utilizing LPSCl as solid electrolyte and a thin LPSCl thickness of 30 µm. (B) Summary of reported ASSLSB cells with their areal capacity, sulfur utilization (Фs), and cycle life. Achieving long cycle life is relatively straightforward in cells with low areal loading, but becomes significantly more challenging as the areal loading increases. Therefore, it is essential to evaluate electrochemical performance metrics in conjunction with areal loading by comparing both areal capacity and sulfur utilization. Note that the sulfur utilization reported in studies utilizing sulfide solid-",
+   "rotated_deg": 0,
+   "bbox": [
+    61.5,
+    66.0,
+    574.3,
+    264.5
+   ],
+   "w": 2138,
+   "h": 828,
+   "dpi": 300,
+   "src": "Sup) Lee2025 Science Halide segregation all-solid-state lithium-chalcogen batteries part1 adt1882_sm.pdf",
+   "blank": 0.915
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 7,
+   "file": "fig_S3.png",
+   "caption": "Fig. S3. Summary of sulfur utilization in the reported composite S cathodes prepared by different mixing speeds. References include studies on composite sulfur cathodes incorporating both sulfur-impregnated carbon structures and raw sulfur cycled at room temperature (1, 12, 13, 20, 22, 24, 43-59, 61-66). Note that the sulfur utilization reported in studies utilizing sulfide solid electrolytes may include extra capacity contributed by the redox reactions of the sulfides themselves. As shown, the Фs of the UHS-mixed composite S cathode was significantly increased compared to those using low speed, highlighting the crucial role of halide segregation in promoting the reaction kinetics of composite S cathodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    392.5
+   ],
+   "w": 2013,
+   "h": 1361,
+   "dpi": 300,
+   "src": "Sup) Lee2025 Science Halide segregation all-solid-state lithium-chalcogen batteries part1 adt1882_sm.pdf",
+   "blank": 0.923
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 8,
+   "file": "fig_S4.png",
+   "caption": "Fig. S4. SEM image and corresponding EDS mappings of the composite S/LPSCl/C cathode prepared with an ultrahigh mixing speed of 2000 rpm for 5 h.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    176.8
+   ],
+   "w": 2013,
+   "h": 462,
+   "dpi": 300,
+   "src": "Sup) Lee2025 Science Halide segregation all-solid-state lithium-chalcogen batteries part1 adt1882_sm.pdf",
+   "blank": 0.264
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 9,
+   "file": "fig_S5.png",
+   "caption": "Fig. S5. SEM image and corresponding EDS mappings of the composite S/LPSCl/C cathode prepared with an ultrahigh mixing speed of 2000 rpm for 1 h.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    172.2
+   ],
+   "w": 2013,
+   "h": 443,
+   "dpi": 300,
+   "src": "Sup) Lee2025 Science Halide segregation all-solid-state lithium-chalcogen batteries part1 adt1882_sm.pdf",
+   "blank": 0.272
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 10,
+   "file": "fig_S6.png",
+   "caption": "Fig. S6. SEM image and corresponding EDS mappings of the composite S/LPSCl/C cathode prepared with a low mixing speed of 400 rpm for 5 h. Low-speed mixing leads to no clear segregation of P, S and Cl in LPSCl particles, as well as inhomogeneous distribution of Cl over S particles.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    160.5
+   ],
+   "w": 2013,
+   "h": 394,
+   "dpi": 300,
+   "src": "Sup) Lee2025 Science Halide segregation all-solid-state lithium-chalcogen batteries part1 adt1882_sm.pdf",
+   "blank": 0.3
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 11,
+   "file": "fig_S7.png",
+   "caption": "Fig. S7. Cryo-TEM setup and sensitivity of argyrodite Li6PS5Cl solid electrolyte. (A, B) E- beam damage and air sensitivity of Li6PS5Cl. Room-temperature TEM (RT-TEM) has proven ineffective for imaging sulfide solid-state electrolytes due to their extreme vulnerability to e-beam damage, which is an order of magnitude greater than that of lithium metal (31). RT-TEM images show significant structural damage under focused e-beam exposure. Additionally, Li6PS5Cl is highly sensitive to moisture and air, with EDS spectra revealing a sharp increase in oxygen content after just 3 minutes of air exposure, indicating potential sample degradation during transfer from the Ar-filled glovebox to the TEM chamber without using air-free holder. (C) Overview of the cryo-TEM methodology. To address these challenges, this study thoroughly investigated a cryo- TEM approach for argyrodite Li6PS5Cl, focusing o",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    611.2,
+    375.1
+   ],
+   "w": 2272,
+   "h": 1289,
+   "dpi": 300,
+   "src": "Sup) Lee2025 Science Halide segregation all-solid-state lithium-chalcogen batteries part1 adt1882_sm.pdf",
+   "blank": 0.59
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 12,
+   "file": "fig_S8.png",
+   "caption": "Fig. S8. Cryo-TEM images of argyrodite Li6PS5Cl under low e-beam dose at varying exposure times. Achieving high-resolution, high signal-to-noise ratio (SNR) images while minimizing e-beam damage requires balancing the e-beam dose rate and exposure time under cryogenic conditions. Although longer exposure times improve the SNR, they can also cause sample drift. Lowering the e-beam dose rate helps reduce radiolysis and knock-on damage, which are the primary causes of structural changes in sensitive materials. A careful balance between the e-beam dose rate and exposure time is essential to maintain a high SNR without causing excessive damage. At an e-beam dose rate of 0.05 e– Å–2 s–1, cryo-TEM images show that increasing the exposure time from 50 ms to 10 s significantly enhances the SNR with minimal sample drift. This suggests that under low-dose conditions, extended exposure times can be ",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    219.3
+   ],
+   "w": 2013,
+   "h": 639,
+   "dpi": 300,
+   "src": "Sup) Lee2025 Science Halide segregation all-solid-state lithium-chalcogen batteries part1 adt1882_sm.pdf",
+   "blank": 0.375
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 13,
+   "file": "fig_S9.png",
+   "caption": "Fig. S9. In situ observation of argyrodite Li6PS5Cl. (A) Time-series TEM images at room temperature at 3.87 e– Å–2 s–1. (B) Time-series STEM images at room temperature at 0.25 nA. (C) Time-series TEM images at the cryogenic condition at 3.87 e– Å–2 s–1. In cryo-TEM, e-beam damage is influenced by both the dose rate (the number of electrons hitting a sample area per unit time) and the accumulated dose (total exposure during imaging). To assess the effect of accumulated dose on argyrodite Li6PS5Cl, in situ observations were conducted using bright-field and dark-field (DF) TEM, comparing room temperature and cryogenic conditions. In RT-TEM, Li6PS5Cl showed significant structural changes, including volume expansion, shrinkage, and pore formation, during a 107.5 s observation at a dose rate of 3.87 e– Å–2 s–1. Similar damage was confirmed in DF-STEM with a screen current of 0.25 nA over 97 s.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    383.7
+   ],
+   "w": 2013,
+   "h": 1324,
+   "dpi": 300,
+   "src": "Sup) Lee2025 Science Halide segregation all-solid-state lithium-chalcogen batteries part1 adt1882_sm.pdf",
+   "blank": 0.286
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 14,
+   "file": "fig_S10.png",
+   "caption": "Fig. S10. High-resolution cryogenic observation of Li6PS5Cl. (A) HRTEM image of Li6PS5Cl with the corresponding fast Fourier transform (FFT) pattern. (B) SAED pattern of Li6PS5Cl along the [111] direction, showing typical hexagonal diffraction spots at an angle of ~60° and a d-spacing of ~3.5 Å. (C) HRTEM image along the [111] direction, revealing a lattice spacing of ~3.57 Å, corresponding to the (220) crystal plane.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    352.6
+   ],
+   "w": 2013,
+   "h": 1195,
+   "dpi": 300,
+   "src": "Sup) Lee2025 Science Halide segregation all-solid-state lithium-chalcogen batteries part1 adt1882_sm.pdf",
+   "blank": 0.356
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 15,
+   "file": "fig_S11.png",
+   "caption": "Fig. S11. EELS characterization of composite S/LPSCl/C cathode prepared with 2000 rpm for 5 h. (A) HAADF-STEM image. (B) ABF-STEM image. (C) S-L2,3 and Cl-L2,3 edges EELS spectra of selected regions #9/#10/#11 in (A) and (B). Ideally, elemental sulfur (S0) in the composite sulfur cathode, which exhibits molecular bonding, and sulfide ions (Sn–) from the LPSCl solid electrolyte, which exhibit ionic bonding, should display distinct EELS features due to their differences in valence state and bonding environments. In EELS, the S-L2,3 edge peaks in elemental sulfur corresponds to transitions from the S 2p core level to unoccupied molecular orbitals associated with the S8 ring structure, whereas in sulfides, sulfur is in a reduced oxidation state (Sn–). This reduction leads to a shift in the S-L2,3 edge peaks to lower energy loss values— 166.6 eV for sulfides compared to 168.6 eV for elemental",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    574.2,
+    357.2
+   ],
+   "w": 2118,
+   "h": 1214,
+   "dpi": 300,
+   "src": "Sup) Lee2025 Science Halide segregation all-solid-state lithium-chalcogen batteries part1 adt1882_sm.pdf",
+   "blank": 0.741
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 16,
+   "file": "fig_S12.png",
+   "caption": "Fig. S12. Schematic illustration of halide segregation mechanism enabled by ultrahigh-speed mixing. The shearing and heating striking force during ultrahigh-speed mixing would induce a mechanochemical reaction to drive halide segregation and homogeneous distribution within the composite chalcogen cathodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    390.8
+   ],
+   "w": 2013,
+   "h": 1354,
+   "dpi": 300,
+   "src": "Sup) Lee2025 Science Halide segregation all-solid-state lithium-chalcogen batteries part1 adt1882_sm.pdf",
+   "blank": 0.754
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 17,
+   "file": "fig_S13.png",
+   "caption": "Fig. S13. In situ SXRD patterns during heating of a hand-mixed mixture of elemental sulfur, carbon (Ketjenblack, C45), and Li6PS5Cl. To investigate the influence of the heating striking force, a composite sulfur cathode mixture was hand-grounded prior to the in situ heating experiment. The SXRD patterns showed that the crystalline peaks of elemental sulfur disappeared at about 100 °C, indicating the transition to an amorphous state after heating. Crystalline LiCl formation started to appear at about 200 °C, while nanocrystalline LiCl could form at a temperature below 200 °C by the localized heat during ultrahigh-speed mixing.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    428.4
+   ],
+   "w": 2013,
+   "h": 1510,
+   "dpi": 300,
+   "src": "Sup) Lee2025 Science Halide segregation all-solid-state lithium-chalcogen batteries part1 adt1882_sm.pdf",
+   "blank": 0.565
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 18,
+   "file": "fig_S14.png",
+   "caption": "Fig. S14. In situ SXRD patterns measured during heating of a hand-mixed mixture of carbon (Ketjenblack, C45) and Li6PS5Cl. LiCl can be thermally produced from Li6PS5Cl and carbon even without the presence of elemental sulfur, indicating the halide segregation is not driven by reactions with the ionic-insulating sulfur.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    298.7
+   ],
+   "w": 2013,
+   "h": 970,
+   "dpi": 300,
+   "src": "Sup) Lee2025 Science Halide segregation all-solid-state lithium-chalcogen batteries part1 adt1882_sm.pdf",
+   "blank": 0.567
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 19,
+   "file": "fig_S15.png",
+   "caption": "Fig. S15. Effect of heat treatment on the composite S cathode. (A) HAADF-STEM and bright field (BF)-STEM images, along with EDS elemental mapping of the hand-mixed composite S/LPSCl/C cathode without heat treatment. (B) HAADF-STEM and BF-STEM images along with EDS elemental mapping of the hand-mixed composite S/LPSCl/C cathode after heating at 145 °C for 3 h. (C) Comparison of normalized EDS spectra for P, S, and Cl elements in (A, #1) and (B, #2). The unheated S/LPSCl/C cathode shows a uniform distribution of P, S, and Cl elements, while the heated sample exhibits clear Cl segregation. The Cl peak intensity in the heated sample significantly increases relative to P, indicating an atomic ratio shift from the original 1:1 due to Cl segregation.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.2,
+    64.1,
+    549.0,
+    267.1
+   ],
+   "w": 2017,
+   "h": 846,
+   "dpi": 300,
+   "src": "Sup) Lee2025 Science Halide segregation all-solid-state lithium-chalcogen batteries part1 adt1882_sm.pdf",
+   "blank": 0.462
+  },
+  {
+   "bbox": [
+    70.0,
+    70.0,
+    542.0,
+    274.0
+   ],
+   "blank": null,
+   "caption": "Fig. S16 In situ heating TEM of Se/LPSCl/C mixture by laser heating. (A) Time-series TEM images of Se/LPSCL/C during in situ heating under a laser power rate of 1 mW. (B) Local details of the white dashed box area in Fig. S16A (t0 s). The formation of voids can be attributed to the decomposition of the LPSCL/C region during in situ heating, triggered by the Luminary laser. The white dashed circle in fig. S16A (t0 + 259 s) highlights a void area within the Se/LPSCL/C region, which is likely due to Se migration. The selection of Se over sulfur is because of similar halide segregation and the vulnerability of sulfur under vacuum and heating. In-situ TEM heating experiments were conducted to Se/LPSCl/C composite, processed by high-speed mixing at 2000 rpm for 0.5 hours, resulting in a mixture of selenium (Se), LPSCl electrolyte, and carbon. In-situ TEM heating experiments, driven by a combination of laser heating (fig. S16, Video S1) or thermoelectric coupling (fig. S17, Video S2), were conducted to simulate the heat-driven dynamics during processing. For laser-heated samples, TEM imaging at t0 seconds revealed two distinct regions differentiated by contrast: Se/LPSCl/C regions with hi",
+   "dpi": 300,
+   "file": "fig_S16.png",
+   "h": 851,
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 20,
+   "rotated_deg": 0,
+   "src": "Sup) Lee2025 Science Halide segregation all-solid-state lithium-chalcogen batteries part1 adt1882_sm.pdf",
+   "w": 1968,
+   "manual_crop": "tool reported fS16 as a number gap (caption 'Fig. S16 In situ ...' lacks the period after the number, so the caption anchor missed it); clip = the single raster image above the caption on SM part1 p.20 (72,72,540,272.2) + 2 pt (2026-10-06, litdb-curator)"
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 21,
+   "file": "fig_S17.png",
+   "caption": "Fig. S17. In situ heating TEM of Se/LPSCL/C mixture from 20 °C to 220 °C. (A) Digital photographs showing the in situ heating TEM setup. (B) Calibrated profile of linear temperature and time dependence. (C) Time-series in situ TEM images during heating from 20 °C to 220 °C. (D) Illustration of image contrast at the pixel level, represented by gray values ranging from 0 to 255. (E, F) TEM images showing subtracted frames at specific time intervals during in situ heating (fig. S16 and fig. S17). The lighter regions, highlighted by white dashed boxes, indicate areas of electrolyte decomposition or Se migration, resulting in reduced contrast. (G) Quantification of gray value variations corresponding to the Se and LPSCL/C areas marked by white dashed boxes in the TEM images. The gray values exhibit an inverse trend as Se migrates into the LPSCL/C region. To further understand the temperature-",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    385.1
+   ],
+   "w": 2013,
+   "h": 1330,
+   "dpi": 300,
+   "src": "Sup) Lee2025 Science Halide segregation all-solid-state lithium-chalcogen batteries part1 adt1882_sm.pdf",
+   "blank": 0.443
+  },
+  {
+   "key": "fS18",
+   "kind": "figure",
+   "label": "S18",
+   "page": 22,
+   "file": "fig_S18.png",
+   "caption": "Fig. S18. Structural characterization of composite S/LPSCl/C cathodes with 2000 rpm for 5 h using single carbon additive. SEM images of (A) Ketjenblack and (B) C45 used in this work. SEM and corresponding EDS mapping of composite S/LPSCl/C cathode with 2000 rpm for 5 h using (C) KB or (D) C45 only. Carbon not only served as grinding materials but also worked as milling media. Following the \"thumb rule\" in ball milling (67), use of carbon additives with different particle sizes such as Ketjenblack (~65 nm) and C45 (~90 nm) (fig. S18A, B) could increase the milling efficiency, while single carbon additive shows significantly less halide segregation (fig. S18C, D).",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    410.9
+   ],
+   "w": 2013,
+   "h": 1438,
+   "dpi": 300,
+   "src": "Sup) Lee2025 Science Halide segregation all-solid-state lithium-chalcogen batteries part1 adt1882_sm.pdf",
+   "blank": 0.299
+  },
+  {
+   "key": "fS19",
+   "kind": "figure",
+   "label": "S19",
+   "page": 23,
+   "file": "fig_S19.png",
+   "caption": "Fig. S19. Structure characterization of composite S/LPSCl/C cathodes. (A) SXRD patterns of composite S/LPSCl/C cathodes prepared under different mixing conditions with standard sulfur and LPSCl. (B) Lattice parameter a and crystallite sizes of Li6PS5Cl in various composite S cathodes determined from Rietveld refinement. From left to right: pristine LPSCl and LPSCl in composite S/LPSCl/C cathodes mixed at 2000 rpm for 1 h, 5 h, and at 400 rpm for 5 h. (C) X-ray pair distribution function (PDF) analysis of various composite S/LPSCl/C cathodes. Crystalline sulfur exhibits three peaks at around 2.0 Å, 3.3 Å and 4.5 Å, corresponding to unique correlations within the crystallize S8 puckered ring. Bulk LPSCl shows three major peaks at ~ 2.0 Å, 3.35 Å and 4.1 Å (68), which are probably related to the local distance of P-S (within PS43- anions), S-S (within PS43- anions) and S-S (between PS43- an",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    421.5
+   ],
+   "w": 2013,
+   "h": 1482,
+   "dpi": 300,
+   "src": "Sup) Lee2025 Science Halide segregation all-solid-state lithium-chalcogen batteries part1 adt1882_sm.pdf",
+   "blank": 0.878
+  },
+  {
+   "key": "fS20",
+   "kind": "figure",
+   "label": "S20",
+   "page": 24,
+   "file": "fig_S20.png",
+   "caption": "Fig. S20. X-ray photoelectron spectroscopy (XPS) spectra of (A, B, C) pristine Li6PS5Cl and (D) elemental sulfur.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    493.1
+   ],
+   "w": 2013,
+   "h": 1780,
+   "dpi": 300,
+   "src": "Sup) Lee2025 Science Halide segregation all-solid-state lithium-chalcogen batteries part1 adt1882_sm.pdf",
+   "blank": 0.892
+  },
+  {
+   "key": "fS21",
+   "kind": "figure",
+   "label": "S21",
+   "page": 25,
+   "file": "fig_S21.png",
+   "caption": "Fig. S21. XPS characterization of the composite sulfur cathode processed under different conditions. (A) Cl 2p, (B) Li 1s, and (C) S 2p spectra. The Cl peak remained unchanged before and after processing, irrespective of LiCl formation, as its state in LPSCl and LiCl was identical. In contrast, the Li 1s peak shifted to higher binding energy after milling, as a result of LiCl formation.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    370.1
+   ],
+   "w": 2013,
+   "h": 1268,
+   "dpi": 300,
+   "src": "Sup) Lee2025 Science Halide segregation all-solid-state lithium-chalcogen batteries part1 adt1882_sm.pdf",
+   "blank": 0.904
+  },
+  {
+   "key": "fS22",
+   "kind": "figure",
+   "label": "S22",
+   "page": 26,
+   "file": "fig_S22.png",
+   "caption": "Fig. S22. P 2p XPS spectra of pristine LPSCl and composite S/LPSCl/C cathode with 2000 rpm for 5h. The result showed that no phosphorus compounds such as Li3P was formed after UHS mixing, indicating that no severe structural collapse of LPSCl as P is the central atom in the PS43- polyanion.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    286.5
+   ],
+   "w": 2013,
+   "h": 919,
+   "dpi": 300,
+   "src": "Sup) Lee2025 Science Halide segregation all-solid-state lithium-chalcogen batteries part1 adt1882_sm.pdf",
+   "blank": 0.908
+  },
+  {
+   "key": "fS23",
+   "kind": "figure",
+   "label": "S23",
+   "page": 27,
+   "file": "fig_S23.png",
+   "caption": "Fig. S23. SEM image and corresponding EDS mappings of the composite selenium cathode prepared with a mixing speed of (A) 2000 and (B) 400 rpm, respectively, for 5 h. Cl was found to be homogeneously dispersed within the selenium domains of the UHS-mixed composite selenium cathode, which was similar to the distribution observed in the UHS-mixed composite sulfur cathode. In contrast, no Cl segregation was detected in the composite selenium cathode mixed at the low mixing speed.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    222.0
+   ],
+   "w": 2013,
+   "h": 651,
+   "dpi": 300,
+   "src": "Sup) Lee2025 Science Halide segregation all-solid-state lithium-chalcogen batteries part1 adt1882_sm.pdf",
+   "blank": 0.235
+  },
+  {
+   "key": "fS24",
+   "kind": "figure",
+   "label": "S24",
+   "page": 28,
+   "file": "fig_S24.png",
+   "caption": "Fig. S24. SEM image and corresponding EDS mappings of the composite selenium sulfide (A) and tellurium (B) cathode prepared with an ultrahigh mixing speed of 2000 rpm for 5 h.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    237.8
+   ],
+   "w": 2013,
+   "h": 717,
+   "dpi": 300,
+   "src": "Sup) Lee2025 Science Halide segregation all-solid-state lithium-chalcogen batteries part1 adt1882_sm.pdf",
+   "blank": 0.262
+  },
+  {
+   "key": "fS25",
+   "kind": "figure",
+   "label": "S25",
+   "page": 29,
+   "file": "fig_S25.png",
+   "caption": "Fig. S25. SEM image and corresponding EDS mappings of the composite S cathode using various solid-state electrolytes including (A) LPSBr, (B) LPSClBr, and (C) LPSClI prepared with an ultrahigh mixing speed of 2000 rpm for 5 h. Despite the presence of two different halogens in the solid-state electrolytes, both halogens were successfully dispersed within the sulfur matrix.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    300.4
+   ],
+   "w": 2013,
+   "h": 977,
+   "dpi": 300,
+   "src": "Sup) Lee2025 Science Halide segregation all-solid-state lithium-chalcogen batteries part1 adt1882_sm.pdf",
+   "blank": 0.238
+  },
+  {
+   "key": "fS26",
+   "kind": "figure",
+   "label": "S26",
+   "page": 30,
+   "file": "fig_S26.png",
+   "caption": "Fig. S26. TEM images and EDS mappings of composite Se/LPSCl/C cathode with 2000 rpm for 5 h in multi regions. The results indicate a uniform halide segregation within the composite Se cathodes prepared by ultrahigh speed mixing.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    578.0
+   ],
+   "w": 2013,
+   "h": 2134,
+   "dpi": 300,
+   "src": "Sup) Lee2025 Science Halide segregation all-solid-state lithium-chalcogen batteries part1 adt1882_sm.pdf",
+   "blank": 0.231
+  },
+  {
+   "key": "fS27",
+   "kind": "figure",
+   "label": "S27",
+   "page": 1,
+   "file": "fig_S27.png",
+   "caption": "Fig. S27. Structure characterization of composite Se/LPSCl/C cathode with 2000 rpm for 5 h. (A) TEM image, (B) EDS mapping, and (C) HRTEM images of selected regions (a-c) in (A). In addition to the halide segregation, carbon was uniformly distributed within the UHS-mixed composite Se cathode. Lattice fringes of conductive carbon additives were clearly observed at the surface of Se particles.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    402.7
+   ],
+   "w": 2013,
+   "h": 1404,
+   "dpi": 300,
+   "src": "Sup) Lee2025 Science Halide segregation all-solid-state lithium-chalcogen batteries part2 adt1882_sm.pdf",
+   "blank": 0.186
+  },
+  {
+   "key": "fS28",
+   "kind": "figure",
+   "label": "S28",
+   "page": 2,
+   "file": "fig_S28.png",
+   "caption": "Fig. S28. Cl L2,3-edge EELS spectra of the composite Se/LPSCl/C cathode with 2000 rpm for 5 h, obtained from the regions marked by boxes in Fig. 2D. EELS data was collected with a beam current of 0.035 pA.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    418.3
+   ],
+   "w": 2013,
+   "h": 1468,
+   "dpi": 300,
+   "src": "Sup) Lee2025 Science Halide segregation all-solid-state lithium-chalcogen batteries part2 adt1882_sm.pdf",
+   "blank": 0.932
+  },
+  {
+   "key": "fS29",
+   "kind": "figure",
+   "label": "S29",
+   "page": 3,
+   "file": "fig_S29.png",
+   "caption": "Fig. S29. HAADF-STEM image and EDS results. (A) HAADF-STEM image and EDS mappings of composite Se/LPSCl/C cathode with 2000 rpm for 5 h. The corresponding EELS spectra of region #VII and #VIII are shown in Fig. 2E. EDS mapping revealed the presence of a Cl-rich phase at the Se surface, while Cl-deficient regions exhibited higher P intensity, indicating a relative distribution of Cl and P elements. (B) Comparison of EDS spectra regarding S/LPSCl/C, Se/LPSCl/C, and Se/LPSBr/C, corresponding to Fig. 1C, Fig. 2A, and Fig. 2B, respectively. The EDS spectra provide further evidence for the presence of halide-rich phases (Cl and Br) and phosphorus-deficient phases in various chalcogen composite cathode materials (S and Se). The characteristic X-ray energies are provided for reference: P-Kα (2.013 keV), S-Kα (2.307 keV), Cl- Kα (2.621 keV), Br-Lα (1.480 keV), and Se-Lα (1.379 keV).",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    343.5
+   ],
+   "w": 2013,
+   "h": 1157,
+   "dpi": 300,
+   "src": "Sup) Lee2025 Science Halide segregation all-solid-state lithium-chalcogen batteries part2 adt1882_sm.pdf",
+   "blank": 0.676
+  },
+  {
+   "key": "fS30",
+   "kind": "figure",
+   "label": "S30",
+   "page": 4,
+   "file": "fig_S30.png",
+   "caption": "Fig. S30. Localized HRTEM images and FFT patterns of composite Se/LPSCl/C cathode with 2000 rpm for 5 h, corresponding to the HRTEM image in Fig. 2F.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    585.7,
+    539.3
+   ],
+   "w": 2166,
+   "h": 1972,
+   "dpi": 300,
+   "src": "Sup) Lee2025 Science Halide segregation all-solid-state lithium-chalcogen batteries part2 adt1882_sm.pdf",
+   "blank": 0.52
+  },
+  {
+   "key": "fS31",
+   "kind": "figure",
+   "label": "S31",
+   "page": 5,
+   "file": "fig_S31.png",
+   "caption": "Fig. S31. Additional HRTEM images of composite Se/LPSCl/C cathode with 2000 rpm for 5 h showing the interface structures. Inset figures in (A-D) are the corresponding FFT patterns.",
+   "rotated_deg": 0,
+   "bbox": [
+    62.3,
+    66.0,
+    549.0,
+    518.0
+   ],
+   "w": 2029,
+   "h": 1884,
+   "dpi": 300,
+   "src": "Sup) Lee2025 Science Halide segregation all-solid-state lithium-chalcogen batteries part2 adt1882_sm.pdf",
+   "blank": 0.221
+  },
+  {
+   "key": "fS32",
+   "kind": "figure",
+   "label": "S32",
+   "page": 6,
+   "file": "fig_S32.png",
+   "caption": "Fig. S32. (A) Cycling performance and (B) discharge/charge profiles of the composite S cathode prepared with a low mixing speed of 400 rpm for 5 h.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    265.3
+   ],
+   "w": 2013,
+   "h": 831,
+   "dpi": 300,
+   "src": "Sup) Lee2025 Science Halide segregation all-solid-state lithium-chalcogen batteries part2 adt1882_sm.pdf",
+   "blank": 0.93
+  },
+  {
+   "key": "fS33",
+   "kind": "figure",
+   "label": "S33",
+   "page": 7,
+   "file": "fig_S33.png",
+   "caption": "Fig. S33. Particle size effect study. SEM images of LPSCl solid electrolyte (A) before and (B) after milling at a mixing speed of 2000 rpm for 5 h. (C) SEM image and (D) corresponding EDS mappings of the composite S cathode using pre-milled LPSCl solid electrolytes with a mixing speed of 400 rpm for 5 h. Inset figure in (C) shows the Cl/P ratio is close to 1, indicating no halide segregation. (E) Discharge/charge curves and (F) cycling performance of the composite S/pre- milled LPSCl/C cathode. The areal S loading is 4 mg cm–2, and the current density is 0.67 mA cm– 2. To reveal the effect of reduced particle size of solid-state electrolytes by UHS mixing, a composite sulfur cathode using pre-milled LPSCl was fabricated. The pristine LPSCl was milled separately with the same high mixing speed of 2000 rpm for 5 h before mixing with sulfur and carbon additives at a lower mixing speed of 40",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    612.0,
+    489.9
+   ],
+   "w": 2275,
+   "h": 1767,
+   "dpi": 300,
+   "src": "Sup) Lee2025 Science Halide segregation all-solid-state lithium-chalcogen batteries part2 adt1882_sm.pdf",
+   "blank": 0.628
+  },
+  {
+   "key": "fS34",
+   "kind": "figure",
+   "label": "S34",
+   "page": 8,
+   "file": "fig_S34.png",
+   "caption": "Fig. S34 Structure and electrochemical characterization of composite S/LPSCl/C cathode with a mixing speed of 1500 rpm for 5 h. (A) SEM image and corresponding EDS mapping, (B) voltage curves and (C) cycling performance. Inset figure in (A) shows the Cl/P ratio was slightly increased to 1.3. The areal S loading is 4 mg cm–2, and the current density is 0.67 mA cm–2. Halide segregation and cell improvement were much less significant when slightly lowering the mixing speed to 1500 rpm with reduced shearing force, highlighting the crucial role of ultrahigh speed mixing.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    370.5
+   ],
+   "w": 2013,
+   "h": 1269,
+   "dpi": 300,
+   "src": "Sup) Lee2025 Science Halide segregation all-solid-state lithium-chalcogen batteries part2 adt1882_sm.pdf",
+   "blank": 0.581
+  },
+  {
+   "key": "fS35",
+   "kind": "figure",
+   "label": "S35",
+   "page": 9,
+   "file": "fig_S35.png",
+   "caption": "Fig. S35. Structure characterization of the composite sulfur cathode prepared with a high mixing speed of 2000 rpm for 10 h. (A) SEM image and corresponding EDS mappings. (B) SXRD patterns of the 10 h composite S cathode in comparison with the 5 h composite S cathode.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    257.7
+   ],
+   "w": 2013,
+   "h": 799,
+   "dpi": 300,
+   "src": "Sup) Lee2025 Science Halide segregation all-solid-state lithium-chalcogen batteries part2 adt1882_sm.pdf",
+   "blank": 0.582
+  },
+  {
+   "key": "fS36",
+   "kind": "figure",
+   "label": "S36",
+   "page": 10,
+   "file": "fig_S36.png",
+   "caption": "Fig. S36. (A) Ionic conductivities of Li6PS5Cl after different processing conditions. (B) Linear fits of peak current of composite sulfur cathodes processed under different conditions, as a function of scan rates. The ionic conductivities of the pristine Li6PS5Cl and Li6PS5Cl processed at 2000 rpm for 1 h, 5 h, and 10 h in (A) were 0.44, 0.11, 0.01, and 0.002 mS cm–1, respectively. Cyclic voltammetry (CV) measurements of all-solid-state Li-S cells were conducted at scan rates from 0.1 to 0.5 mV s-1. Peak currents from the CV profiles at each scan rate were plotted against scan rate. The slopes of the plots in (B), which are proportional to the square root of the lithium ion diffusion coefficient (DLi+) as determined using the Randles-Sevick equation, were obtained as 2.1, 8.4, 6.1, and 0.6 mA mV–1/2s1/2 for the composite sulfur cathodes processed at 2000 rpm for 1 h, 5 h, and 10 h, and a",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    259.2
+   ],
+   "w": 2013,
+   "h": 805,
+   "dpi": 300,
+   "src": "Sup) Lee2025 Science Halide segregation all-solid-state lithium-chalcogen batteries part2 adt1882_sm.pdf",
+   "blank": 0.932
+  },
+  {
+   "key": "fS37",
+   "kind": "figure",
+   "label": "S37",
+   "page": 11,
+   "file": "fig_S37.png",
+   "caption": "Fig. S37. (A) Pressure changes of all-solid-state lithium-sulfur cells with various composite S cathodes during discharge/charge. Uniaxial pressure evolution curves along with voltage profiles as a function of the cumulative areal capacity of the composite sulfur cathodes prepared at 2000 rpm for (B) 1 h, (C) 5 h, and (D) 10 h. The initial stack pressure for all the cells was 70 MPa. Since the partial molar volume of lithium in the Li-In alloy is larger than that of sulfur, the overall stack pressure change would be predominantly influenced by the Li-In anode. Nevertheless, rational composite sulfur cathode design could accommodate the volume change and thus benefit the pressure retention. Thus, in situ pressure monitoring during cycling offered mechanistic insights into sulfur utilization and its reversibility. The 5 h UHS-mixed composite sulfur cathode delivered the lowest stack pressu",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    582.5,
+    335.8
+   ],
+   "w": 2153,
+   "h": 1125,
+   "dpi": 300,
+   "src": "Sup) Lee2025 Science Halide segregation all-solid-state lithium-chalcogen batteries part2 adt1882_sm.pdf",
+   "blank": 0.881
+  },
+  {
+   "key": "fS38",
+   "kind": "figure",
+   "label": "S38",
+   "page": 12,
+   "file": "fig_S38.png",
+   "caption": "Fig. S38. (A) Cycling performance and (B) discharge/charge profiles of the composite S/LPSCl/C cathode with 2000 rpm for 5 h using lithium metal as the anode. Due to the vulnerability of sulfide solid electrolytes to issues such as dendrite formation, using lithium metal as the anode in high-loading all-solid-state Li-S batteries presents challenges. Despite these challenges, an all-solid-state Li-S battery with a lithium metal anode and an areal S loading of 1.7 mg cm–2 was cycled at C/10 (1C=1675 mA g-1), successfully achieving a capacity of 2.45 mAh cm–2 after 100 cycles.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    249.2
+   ],
+   "w": 2013,
+   "h": 764,
+   "dpi": 300,
+   "src": "Sup) Lee2025 Science Halide segregation all-solid-state lithium-chalcogen batteries part2 adt1882_sm.pdf",
+   "blank": 0.9
+  },
+  {
+   "key": "fS39",
+   "kind": "figure",
+   "label": "S39",
+   "page": 13,
+   "file": "fig_S39.png",
+   "caption": "Fig. S39. Cycling performance of the composite S/LPSCl/C cathode prepared at 2000 rpm for 5 h with a weight ratio of S:LPSCl:Ketjenblack of 32.5:50:17.5 at room temperature. The areal S loading is 4 mg cm-2, and the current density is 0.67 mA cm-2.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    558.6,
+    279.6
+   ],
+   "w": 2053,
+   "h": 890,
+   "dpi": 300,
+   "src": "Sup) Lee2025 Science Halide segregation all-solid-state lithium-chalcogen batteries part2 adt1882_sm.pdf",
+   "blank": 0.968
+  },
+  {
+   "key": "fS40",
+   "kind": "figure",
+   "label": "S40",
+   "page": 14,
+   "file": "fig_S40.png",
+   "caption": "Fig. S40. Electrochemical characterization of composite S/LPSCl/C cathode with 2000 rpm for 5 h at lower stack pressure. (A) The 1st voltage curves at lower stack pressure of 2 N‧m (36 MPa) and 1 N‧m (18 MPa). (B) Comparison of the specific capacity, areal S loading and stack pressure of different composite cathode designs. Voltage profiles during cycling at lower stack pressure of (C) 2 N‧m and (D) 1 N‧m. The areal S loading is 4 mg cm-2, and the current density is 0.67 mA cm-2. No visible difference was observed when lowering the stack pressure to 36MPa (fig. S40A, C), while the halide segregation could still enable high and reversible specific capacities of ~ 1340 mAh g-1 under high areal S loading (4 mg cm-2), room temperature and a lower stack pressure of 18 MPa (fig. S40D), representing significant advance compared to most of the reported composite cathode design (fig. S40B).",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    421.8
+   ],
+   "w": 2013,
+   "h": 1483,
+   "dpi": 300,
+   "src": "Sup) Lee2025 Science Halide segregation all-solid-state lithium-chalcogen batteries part2 adt1882_sm.pdf",
+   "blank": 0.87
+  },
+  {
+   "key": "fS41",
+   "kind": "figure",
+   "label": "S41",
+   "page": 15,
+   "file": "fig_S41.png",
+   "caption": "Fig. S41. (A, B, C) Discharge/charge profiles and (D, E, F) rate capabilities of various composite chalcogen cathodes prepared with 2000 rpm for 5 h.",
+   "rotated_deg": 0,
+   "bbox": [
+    63.8,
+    66.0,
+    549.0,
+    333.6
+   ],
+   "w": 2023,
+   "h": 1115,
+   "dpi": 300,
+   "src": "Sup) Lee2025 Science Halide segregation all-solid-state lithium-chalcogen batteries part2 adt1882_sm.pdf",
+   "blank": 0.877
+  },
+  {
+   "key": "fS42",
+   "kind": "figure",
+   "label": "S42",
+   "page": 16,
+   "file": "fig_S42.png",
+   "caption": "Fig. S42. Lithium-ion conductivities of various sulfide solid-state electrolytes used in this work. Li6PS5Cl (LPSCl), Li6PS5Br (LPSBr), Li6PS5Cl0.5Br0.5 (LPSClBr), and Li6PS5Cl0.9I0.1 (LPSClI) are halogen-containing argyrodite solid-state electrolytes, while SS7 is an argyrodite without halogen as illustrated by the MSE Supply LLC. Li10GeP2S12 (LGPS, from NEI Corp.) is a well-known sulfide solid-state electrolyte that is neither argyrodite nor halogen-containing.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    316.2
+   ],
+   "w": 2013,
+   "h": 1043,
+   "dpi": 300,
+   "src": "Sup) Lee2025 Science Halide segregation all-solid-state lithium-chalcogen batteries part2 adt1882_sm.pdf",
+   "blank": 0.854
+  },
+  {
+   "key": "fS43",
+   "kind": "figure",
+   "label": "S43",
+   "page": 17,
+   "file": "fig_S43.png",
+   "caption": "Fig. S43. Cycling performance and discharge/charge profiles of the 1 h UHS-mixed composite S cathode after heated at different temperatures. (A, B) 100 °C for 3 h; (C, D) 115 °C for 3 h; (E, F) 145 °C for 3 h.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    313.5
+   ],
+   "w": 2013,
+   "h": 1032,
+   "dpi": 300,
+   "src": "Sup) Lee2025 Science Halide segregation all-solid-state lithium-chalcogen batteries part2 adt1882_sm.pdf",
+   "blank": 0.898
+  },
+  {
+   "key": "fS44",
+   "kind": "figure",
+   "label": "S44",
+   "page": 18,
+   "file": "fig_S44.png",
+   "caption": "Fig. S44. (A) Cyclic voltammograms, (B) cycling performance, (C) discharge/charge profiles, and (D) X-ray photoelectron spectroscopy (XPS) spectra of the composite LPSCl/C cathode prepared with a high mixing speed of 2000 rpm for 5 h. Within the same voltage window as sulfur, the LPSCl reversibly reduced to Li2S and oxidized back to sulfur, contributing its own capacity.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    500.0
+   ],
+   "w": 2013,
+   "h": 1809,
+   "dpi": 300,
+   "src": "Sup) Lee2025 Science Halide segregation all-solid-state lithium-chalcogen batteries part2 adt1882_sm.pdf",
+   "blank": 0.904
+  },
+  {
+   "key": "fS45",
+   "kind": "figure",
+   "label": "S45",
+   "page": 19,
+   "file": "fig_S45.png",
+   "caption": "Fig. S45. S 2p XPS spectra of the composite S/LPSCl/C cathode with 2000 rpm for 5 h during (A) discharge and (B) charge processes. The elemental sulfur peak at 163.3 eV disappeared at the start of discharge, while a lithium sulfide peak at 160.3 eV emerged and its intensity increased as the discharge proceeded. During charging, the lithium sulfide peak gradually diminished and the elemental sulfur peak reappeared. Peaks corresponding to LPSCl remained unchanged throughout cycling.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    374.1
+   ],
+   "w": 2013,
+   "h": 1284,
+   "dpi": 300,
+   "src": "Sup) Lee2025 Science Halide segregation all-solid-state lithium-chalcogen batteries part2 adt1882_sm.pdf",
+   "blank": 0.881
+  },
+  {
+   "key": "fS46",
+   "kind": "figure",
+   "label": "S46",
+   "page": 20,
+   "file": "fig_S46.png",
+   "caption": "Fig. S46. P 2p XPS spectra of the composite S/LPSCl/C cathode with 2000 rpm for 5 h during (A) discharge and (B) charge processes. As a major component of composite cathodes, sulfide solid electrolytes can contribute to extra capacity and energy density to the cell through redox reactions. Nevertheless, potential control including both upper and lower cut-off potential is crucial for the cycling stability of sulfide solid electrolytes. Specifically, Zeier et al. (39) reported that the inevitable oxidative degradation (e.g., S and P2S5) of sulfides SSEs during Li-S battery operation can increase the attainable capacity but the reductive degradation (formation of phosphorus compounds) may deteriorate the retention. Therefore, they suggested that the lower cut-off potential for cycling Li-S batteries needs to be fixed at a sufficiently high potential (>0.8 V vs. Li-In). In the 5 h UHS-mixed",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    351.6
+   ],
+   "w": 2013,
+   "h": 1190,
+   "dpi": 300,
+   "src": "Sup) Lee2025 Science Halide segregation all-solid-state lithium-chalcogen batteries part2 adt1882_sm.pdf",
+   "blank": 0.899
+  },
+  {
+   "key": "fS47",
+   "kind": "figure",
+   "label": "S47",
+   "page": 21,
+   "file": "fig_S47.png",
+   "caption": "Fig. S47. S K-edge XANES spectra of the composite S/LPSCl/C cathode with 2000 rpm for 10 h at different discharge/charge states.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    300.4
+   ],
+   "w": 2013,
+   "h": 977,
+   "dpi": 300,
+   "src": "Sup) Lee2025 Science Halide segregation all-solid-state lithium-chalcogen batteries part2 adt1882_sm.pdf",
+   "blank": 0.952
+  },
+  {
+   "key": "fS48",
+   "kind": "figure",
+   "label": "S48",
+   "page": 22,
+   "file": "fig_S48.png",
+   "caption": "Fig. S48. Normalized in situ Se K-edge XANES spectra during (A) discharge and (B) charge processes of the composite Se/LPSCl/C cathode with 2000 rpm for 5 h.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    278.8
+   ],
+   "w": 2013,
+   "h": 887,
+   "dpi": 300,
+   "src": "Sup) Lee2025 Science Halide segregation all-solid-state lithium-chalcogen batteries part2 adt1882_sm.pdf",
+   "blank": 0.897
+  },
+  {
+   "key": "fS49",
+   "kind": "figure",
+   "label": "S49",
+   "page": 23,
+   "file": "fig_S49.png",
+   "caption": "Fig. S49. Se K-edge XANES spectra of various composite selenium cathodes during discharge/charge. (A) Comparison of the mixing time; (B) comparison of the mixing speed. Upon discharge, the elemental selenium peak shifted to higher energy levels, indicating the formation of lithium selenide. Among these composite Se cathodes, the composite Se/LPSCl/C cathode with 2000 rpm for 5 h demonstrated the best reversibility.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    297.1
+   ],
+   "w": 2013,
+   "h": 963,
+   "dpi": 300,
+   "src": "Sup) Lee2025 Science Halide segregation all-solid-state lithium-chalcogen batteries part2 adt1882_sm.pdf",
+   "blank": 0.923
+  },
+  {
+   "key": "fS50",
+   "kind": "figure",
+   "label": "S50",
+   "page": 24,
+   "file": "fig_S50.png",
+   "caption": "Fig. S50. In situ micro-CT experiment during discharge/charge of the composite S/LPSCl/C cathode with 2000 rpm for 5 h. (A) Experimental setup and in situ cell design. (B) Voltage curve and the corresponding micro-CT cross section image of the cell at open circuit voltage, 1st discharge, and 1st charge. The scale bar is 20 µm. The thickness of the composite S cathode is about 60 µm, which remained almost unchanged during discharge and charge, indicating good mechanical stability enabled by halide segregation.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    549.0,
+    297.2
+   ],
+   "w": 2013,
+   "h": 964,
+   "dpi": 300,
+   "src": "Sup) Lee2025 Science Halide segregation all-solid-state lithium-chalcogen batteries part2 adt1882_sm.pdf",
+   "blank": 0.573
+  },
+  {
+   "bbox": [
+    70.0,
+    70.0,
+    542.0,
+    589.0
+   ],
+   "blank": null,
+   "caption": "Table S1. Comparison of different strategies for all-solid-state lithium-sulfur batteries.",
+   "dpi": 300,
+   "file": "tab_S1.png",
+   "h": 2164,
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 25,
+   "rotated_deg": 0,
+   "src": "Sup) Lee2025 Science Halide segregation all-solid-state lithium-chalcogen batteries part2 adt1882_sm.pdf",
+   "w": 1968,
+   "manual_crop": "auto extractor dropped Table S1 as 'almost blank (1.000)' (caption sits BELOW the vector-drawn table, extractor looked below the caption); clip = union of vector drawings on SM part2 p.25 (printed p.55) + 2 pt (2026-10-06, litdb-curator)"
+  },
+  {
+   "bbox": [
+    70.0,
+    70.0,
+    542.0,
+    411.7
+   ],
+   "blank": null,
+   "caption": "Table S2. Refinement parameter details of pristine Li6PS5Cl.",
+   "dpi": 300,
+   "file": "tab_S2.png",
+   "h": 1425,
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 26,
+   "rotated_deg": 0,
+   "src": "Sup) Lee2025 Science Halide segregation all-solid-state lithium-chalcogen batteries part2 adt1882_sm.pdf",
+   "w": 1968,
+   "manual_crop": "auto extractor dropped Table S2 as 'almost blank (1.000)' (caption sits BELOW the vector-drawn table, extractor looked below the caption); clip = union of vector drawings on SM part2 p.26 (printed p.56) + 2 pt (2026-10-06, litdb-curator)"
+  },
+  {
+   "bbox": [
+    70.0,
+    70.0,
+    542.0,
+    411.7
+   ],
+   "blank": null,
+   "caption": "Table S3. Refinement parameter details of Li6PS5Cl (LPSCl) in composite S/LPSCl/C cathode after mixing at 2000 rpm for 1 h.",
+   "dpi": 300,
+   "file": "tab_S3.png",
+   "h": 1425,
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 27,
+   "rotated_deg": 0,
+   "src": "Sup) Lee2025 Science Halide segregation all-solid-state lithium-chalcogen batteries part2 adt1882_sm.pdf",
+   "w": 1968,
+   "manual_crop": "auto extractor dropped Table S3 as 'almost blank (1.000)' (caption sits BELOW the vector-drawn table, extractor looked below the caption); clip = union of vector drawings on SM part2 p.27 (printed p.57) + 2 pt (2026-10-06, litdb-curator)"
+  },
+  {
+   "bbox": [
+    70.0,
+    70.0,
+    542.0,
+    411.7
+   ],
+   "blank": null,
+   "caption": "Table S4. Refinement parameter details of Li6PS5Cl (LPSCl) in composite S/LPSCl/C cathode after mixing at 2000 rpm for 5 h.",
+   "dpi": 300,
+   "file": "tab_S4.png",
+   "h": 1425,
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 28,
+   "rotated_deg": 0,
+   "src": "Sup) Lee2025 Science Halide segregation all-solid-state lithium-chalcogen batteries part2 adt1882_sm.pdf",
+   "w": 1968,
+   "manual_crop": "auto extractor dropped Table S4 as 'almost blank (1.000)' (caption sits BELOW the vector-drawn table, extractor looked below the caption); clip = union of vector drawings on SM part2 p.28 (printed p.58) + 2 pt (2026-10-06, litdb-curator)"
+  },
+  {
+   "bbox": [
+    70.0,
+    70.0,
+    542.0,
+    411.7
+   ],
+   "blank": null,
+   "caption": "Table S5. Refinement parameter details of Li6PS5Cl (LPSCl) in composite S/LPSCl/C cathode after mixing at 400 rpm for 5 h.",
+   "dpi": 300,
+   "file": "tab_S5.png",
+   "h": 1425,
+   "key": "tS5",
+   "kind": "table",
+   "label": "S5",
+   "page": 29,
+   "rotated_deg": 0,
+   "src": "Sup) Lee2025 Science Halide segregation all-solid-state lithium-chalcogen batteries part2 adt1882_sm.pdf",
+   "w": 1968,
+   "manual_crop": "auto extractor dropped Table S5 as 'almost blank (1.000)' (caption sits BELOW the vector-drawn table, extractor looked below the caption); clip = union of vector drawings on SM part2 p.29 (printed p.59) + 2 pt (2026-10-06, litdb-curator)"
+  },
+  {
+   "bbox": [
+    70.0,
+    70.0,
+    542.0,
+    439.8
+   ],
+   "blank": null,
+   "caption": "Table S6. Quantification of capacity contribution from sulfide solid electrolytes in various 5 h UHS-mixed composite chalcogen cathodes with assumption of full utilization of chalcogen active materials.",
+   "dpi": 300,
+   "file": "tab_S6.png",
+   "h": 1542,
+   "key": "tS6",
+   "kind": "table",
+   "label": "S6",
+   "page": 30,
+   "rotated_deg": 0,
+   "src": "Sup) Lee2025 Science Halide segregation all-solid-state lithium-chalcogen batteries part2 adt1882_sm.pdf",
+   "w": 1968,
+   "manual_crop": "auto extractor dropped Table S6 as 'almost blank (1.000)' (caption sits BELOW the vector-drawn table, extractor looked below the caption); clip = union of vector drawings on SM part2 p.30 (printed p.60) + 2 pt (2026-10-06, litdb-curator)"
+  }
+ ],
+ "missing_labels": [],
+ "manual_note": "fS16 and tS1-tS6 cropped by hand (see manual_crop). Main-text PDF not available: only the two SM PDFs were received; main Fig. 1-4 are NOT in this folder. Movie frames movie_S1_t*.png / movie_S2_t*.png extracted with ffmpeg from lee2025_adt1882_movie_s1/s2.mp4 (see movies[]).",
+ "movies": [
+  {
+   "file": "movie_S1_t04.png",
+   "src": "lee2025_adt1882_movie_s1.mp4",
+   "t_s": 4.0,
+   "overlay_timestamp": "00:40.000",
+   "kind": "movie_frame",
+   "label": "Movie S1 t=4 s",
+   "seen": true,
+   "note": "in situ TEM laser heating (1 mW, Luminary Micro) of 2000 rpm 0.5 h Se/LPSCl/KB/C45; playback 20x; dark lozenge = Se/LPSCl/C region, grainy surround = LPSCl/C"
+  },
+  {
+   "file": "movie_S1_t15.png",
+   "src": "lee2025_adt1882_movie_s1.mp4",
+   "t_s": 15.5,
+   "overlay_timestamp": "04:30.000",
+   "kind": "movie_frame",
+   "label": "Movie S1 t=15.5 s",
+   "seen": true,
+   "note": "same field; by eye only subtle contrast change between 00:40 and 04:30 overlay time (no chemical identification in the movie)"
+  },
+  {
+   "file": "movie_S2_t04.png",
+   "src": "lee2025_adt1882_movie_s2.mp4",
+   "t_s": 4.0,
+   "overlay_timestamp": "00:30.000",
+   "kind": "movie_frame",
+   "label": "Movie S2 t=4 s",
+   "seen": true,
+   "note": "in situ TEM thermal heating 20->220 C at 100 C/min; top-left dark particle = exposed Se"
+  },
+  {
+   "file": "movie_S2_t15.png",
+   "src": "lee2025_adt1882_movie_s2.mp4",
+   "t_s": 15.5,
+   "overlay_timestamp": "03:22.500",
+   "kind": "movie_frame",
+   "label": "Movie S2 t=15.5 s",
+   "seen": true,
+   "note": "exposed Se particle gone (hollow outline left); main Se/LPSCl/C particle darker and more uniform; no temperature overlay in frame"
+  }
+ ],
+ "movies_method": "ffmpeg -ss <t> -frames:v 1 (854x854, 30 fps; S1 15.77 s, S2 16.03 s). Frames at 0/4/8/12/15.5 s were extracted to scratch; only the 4 frames above were viewed and kept (2026-10-06, litdb-curator)."
+}
