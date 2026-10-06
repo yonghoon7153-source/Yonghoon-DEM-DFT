@@ -1,0 +1,23 @@
+  PASS  ① PSI_PLACEMENT_DEFAULT == PSI_MULTIPLY (세대 2 · 10-06 개정) · legacy 는 PSI_DIVIDE 상수로 남는다   'multiply'
+  PASS  ①b build_network · run_decomposition · _run_all_networks 의 psi_placement 기본 = multiply (서명)   {'build_network': 'multiply', 'run_decomposition': 'multiply', '_run_all_networks': 'multiply'}
+  PASS  ①c 인자 없이 지은 망의 기록 psi_placement = multiply (망이 세대를 들고 다닌다)   'multiply'
+  PASS  ②a 픽스처가 목표 영역에 든다 — s ∈ (0.15, 0.25) · (0.45, 0.55) · (0.85, 0.95) · ψ > floor (세 채널)   [('ionic', 0.03, 0.2028, True), ('ionic', 0.1, 0.5003, True), ('ionic', 0.22, 0.9037, True)]
+  PASS  ②b ★ 기본 간선 R_c = ψ/(σ_rel·k·2·a_eff) (상대 1e-12 · 세 채널 × 세 s)   []
+  PASS  ②c 명시 PSI_DIVIDE 간선 R_c = 1/(σ_rel·k·2·a_eff·ψ) (세대 1 재현 · 상대 1e-12)   []
+  PASS  ②d 기본 = 명시 PSI_MULTIPLY (R_c float.hex 동일)   []
+  PASS  ③a 전제: 겹침을 키우면 a_eff 가 단조 증가 (2 구 · 이온)
+  PASS  ③b ★ 기본 (곱셈) R_c 는 a_eff 에 단조 감소 — 접촉을 키우면 저항이 준다   R_c 2.62075 → 0.00344997
+  PASS  ③c 명시 legacy 는 s ≥ 0.4 에서 a_eff 를 키우면 R_c 가 **오른다** (16 쌍 · L2-01 비단조) · s < 0.4 에서는 내려간다   legacy s≥0.4 첫·끝 R_c 2.69701 → 77.8781
+  PASS  ④a Hertz 간선 (전 필드) — PSI_DIVIDE · PSI_MULTIPLY · 기본이 비트 동일 (세 채널 × 세 겹침)   []
+  PASS  ④b Hertz 21 구 사슬 run_decomposition σ (FULL · CF · CONSTR) — 두 배치 · 기본이 비트 동일   {'sigma_full': '0x1.067f201ba953dp-8', 'sigma_bulk_net': '0x1.41b2f86556f1dp-5', 'sigma_constr_net': '0x1.244f95947c4e6p-8', 'sigma_full_mScm': '0x1.89bd8383ad9f1p-7', 'percolating_fraction': '0x1.0000000000000p+0', 'phi_se': '0x1.6872b020c49bap-5'}
+  PASS  ④c ★ H12 (Hertz ψ 곱 + 구 조각 bulk · 10-06) — ψ 배치 인자와 무관 (두 배치 · 기본 비트 동일) · R_c = ψ/(σ·k·2·a_eff) (세 채널 × 세 겹침)   []
+  PASS  ⑤a 손 레코드 — physics + multiply → mikic_psi_multiply · ψ 칸 multiply · hertz → maxwell_halfspace · hertz ψ 칸 빈칸   ('maxwell_halfspace', 'mikic_psi_multiply', 'multiply', '')
+  PASS  ⑤b 손 레코드 — physics + legacy_divide → mikic_psi_divide (세대 1 라벨 그대로)   ('maxwell_halfspace', 'mikic_psi_divide', 'legacy_divide', '')
+  PASS  ⑤c ψ 기록 없는 mikic (09-15 깃발 도입 전 산출물 = 세대 1 · 두 모드 다 ψ 기록 없음) → mikic_psi_divide · ψ 칸 빈칸 · 모르는 ψ → unknown 표지   (('maxwell_halfspace', 'mikic_psi_divide', '', ''), ('maxwell_halfspace', 'unknown:mikic/foo', 'foo', ''))
+  PASS  ⑤d 실 생산자 21 구 사슬 — 기본 = mikic_psi_multiply · multiply · OK · 명시 legacy (연구 팔) = 라벨 mikic_psi_divide · legacy_divide 그대로 · 상태 NOT_COMPUTED (invalid_input · 세대 계약 — 인계에 안 실린다)   {'default': ('mikic_psi_multiply', 'multiply', 'maxwell_halfspace', 'OK', 6.348896384761877, ''), 'legacy': ('mikic_psi_divide', 'legacy_divide', 'maxwell_halfspace', 'NOT_COMPUTED', None, 'invalid_input')}
+  PASS  ⑤e 같은 사슬의 physics σ_ratio — 세대 2 (곱셈) > 명시 ψ 분모 (곱셈 = 활성 간선 R_c 가 ψ² 배 → σ 상향 = tau2 하향 · 계약 §C 방향)   physics sigma_full ψ 분모 0.00352099 → 곱셈 0.00692755
+  PASS  ⑥a ★ 기본 — 이온 · 전자 · 열 결과가 모두 psi_placement = multiply 를 싣는다 (전자 · 열 채널이 실제로 풀렸다)   ('multiply', 'multiply', 'multiply', 'computed', 'computed')
+  PASS  ⑥b 명시 PSI_DIVIDE — 세 채널 모두 legacy_divide (값 = 실제로 쓴 배치 · 상수 표기가 아니다)   ('legacy_divide', 'legacy_divide', 'legacy_divide', 'computed', 'computed')
+  PASS  ⑥c Hertz 결과도 같은 표기를 싣는다 (Hertz 는 ψ 를 안 쓴다 — 값 무관 · 표기만)   (('multiply', 'multiply', 'multiply', 'computed', 'computed'), ('legacy_divide', 'legacy_divide', 'legacy_divide', 'computed', 'computed'))
+
+test_psi_default_switch: 21/21 PASS

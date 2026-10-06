@@ -1,0 +1,4 @@
+[lhs] shape [130, 251] · C1 True · C4 cells {'same': 24440, 'close': 0, 'diff': 0} diff_cols [] · τ hertz {'OK': 106, 'NOT_PERCOLATING': 24} · physics {'OK': 106, 'NOT_PERCOLATING': 24} · prov 130 · fail []
+[lhsx] shape [64, 253] · C1 True · C4 cells {'same': 12160, 'close': 0, 'diff': 0} diff_cols [] · τ hertz {'OK': 64} · physics {'OK': 54, 'MODEL_BELOW_CONTINUUM_BOUND': 10} · prov 64 · fail []
+[C8] 194 행 · 고유 194 · 등록 큐 194 · 판정 {'SEALED_LEGACY': 194} · merged {'same': 194} · record sha 일치 194 · 문제 0
+verdict PASS [] — 검산 도구 결과 (자동 배포 관문 아님)

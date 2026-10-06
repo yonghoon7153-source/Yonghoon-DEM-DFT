@@ -1,0 +1,24 @@
+  Percolating component: 32234 nodes, 74459 edges
+  Solve: spsolve
+  Percolating component: 32234 nodes, 74459 edges
+  Solve: spsolve
+  Percolating component: 32234 nodes, 74459 edges
+  Solve: spsolve
+  Percolating component: 32234 nodes, 74459 edges
+  Solve: spsolve
+  Percolating component: 32234 nodes, 74459 edges
+  Solve: spsolve
+  Percolating component: 32234 nodes, 74459 edges
+  ⚠ 협착-only: 관통 간선 7528 개가 R_c = 0 (ψ floor · clamp) — 빼면 단락이 개방이 된다 · 수축 전에는 값 없음 (zero_resistance_requires_contraction)
+  Percolating component: 32234 nodes, 74459 edges
+  Solve: spsolve
+  Percolating component: 32234 nodes, 74459 edges
+  Solve: spsolve
+  Percolating component: 32234 nodes, 74459 edges
+  ⚠ 협착-only: 관통 간선 2628 개가 R_c = 0 (ψ floor · clamp) — 빼면 단락이 개방이 된다 · 수축 전에는 값 없음 (zero_resistance_requires_contraction)
+  Percolating component: 32234 nodes, 74459 edges
+  Solve: spsolve
+  Percolating component: 32234 nodes, 74459 edges
+  Solve: spsolve
+  Percolating component: 32234 nodes, 74459 edges
+  Solve: spsolve

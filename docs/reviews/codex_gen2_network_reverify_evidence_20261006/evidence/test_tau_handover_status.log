@@ -1,0 +1,45 @@
+[Storage] NOT configured - SUPABASE_URL=False SUPABASE_KEY=False
+[Security] WARNING: auth OFF - local/private only. For public deploy set WEBAPP_REQUIRE_AUTH=1 + WEBAPP_AUTH_TOKEN.
+  PASS  T1 _ion_handover = tau_flux.ion_columns (dual + 장부) — 두 모드 OK · 같은 키
+  PASS  T2 [Step 4] 상태 행 OK · OK · 띠 행 "L0 · 0.200" (H · P) · 각 한 번
+  PASS  T2b [Step 4] 값 행 (tau2 · √tau2 · 비율) 은 그대로 있다 (표시만 더했다)
+  PASS  T2 [Step 4b] 상태 행 OK · OK · 띠 행 "L0 · 0.200" (H · P) · 각 한 번
+  PASS  T2b [Step 4b] 값 행 (tau2 · √tau2 · 비율) 은 그대로 있다 (표시만 더했다)
+  PASS  T2c 전체 체인 (정규화 · 논문 라벨) 뒤에도 비율 행 → 상태 행 → 띠 행 이 붙어 선다
+  PASS  T3 안 A 전 산출물 → 상태 "NOT_COMPUTED (missing_input) — 기술적 실패" · 띠 행 "기록 없음 …" (짐작하지 않는다)
+  PASS  T4 _ion_handover 키 없음 → 인계 행 없음 (다른 렌더러 · 옛 시험 무영향)
+  PASS  T5 키는 있는데 None (도우미 못 불러옴) → "미계산 …" 한 행
+  PASS  T6 비관통 (실 생산자 · σ 없음 → τ 블록 없음) 이어도 상태 행 = "NOT_PERCOLATING — 비관통 (관통 경로 없음) · 과학적 HOLD" (H · P)
+  PASS  T11a ★ 띠 L1 인데 computed σ_ratio 없음 (RGLR-01) → Hertz "NOT_COMPUTED (invalid_input: …) — 기술적 실패" · 같은 침대 physics (입력 유효) → "BAND_FALLBACK — 과학적 HOLD …" (옛: 둘 다 BAND_FALLBACK)
+  PASS  T11b 연속체 하한 (G5 · 값 유지) → "MODEL_BELOW_CONTINUUM_BOUND — 과학적 HOLD …" · OK 는 "OK" 그대로
+  PASS  T11c ★ RGLR-02 두 σ 표현 불일치 (σ_ratio 만 ×4) → "NOT_COMPUTED (invalid_input: …) — 기술적 실패" (옛: OK · tau2 ÷4)
+  PASS  T9a 정상 비관통 (실 생산자 상태 머지) → 망 상태 행 = "비관통 (관통 경로 없음)" (H · P)
+  PASS  T9b 관통 (computed) → "계산됨"
+  PASS  T9c 관통인데 풀지 못함 (not_computed · solve_failed) → "미계산 — 관통인데 풀지 못함 (solve_failed)" — 비관통과 다른 이름
+  PASS  T9d 옛 세대 (상태 키 없음) → 망 상태 행 없음 (옛 화면 그대로)
+  PASS  T10a 최근 시도 failed (활성 세대 있음) → 행 "최근 재계산 실패 (<사유>) · <실패 종류> · … · 활성 세대 RUN-OLD …" (사유 그대로)
+  PASS  T10b 첫 실행 실패 (활성 세대 없음) → "활성 세대 없음" 이라고 말한다 ("최근 재계산 실패" 가 아니다 — 보일 이전 값이 없다)
+  PASS  T10f 최근 재계산 실패의 종류가 화면에 보인다 (솔버 · 게시 중 예외 · lock) {'solver': True, 'publish_exception': True, 'lock': True}
+  PASS  T10c 최근 시도 = 활성 세대 (success) → 행 없음 · 키 없음 → 행 없음
+  PASS  T10h ★ RGLR2-02 되돌림 실패 · 세대 불일치 → 최근 시도 행이 "이전 성공 세대 그대로" 라 하지 않는다 (되돌림 실패 · 무효) · 무효 행 (사유 · 인용 금지 · 재실행 필요) · 망 상태 행도 "계산됨" 이라 하지 않는다 (옛: "활성 세대 RUN-OLD 의 값 (이전 성공 세대 그대로)")
+  PASS  T10i ★ 최근 시도 기록이 success 그대로 (실패 기록을 못 씀) 여도 세대가 무효면 무효 행이 선다 (최근 시도 행은 없음)
+  PASS  T10j 케이스 페이지 가드의 표지 (network_generation_problem) 만 있어도 무효 행 · 세대 유효 (gen_fail · 표지 없음) 면 무효 행 없음 (보통 화면 그대로)
+  PASS  T10e 전체 체인 (정규화 · 논문 라벨) 뒤에도 망 상태 → 최근 시도 행이 붙어 서고 값이 그대로
+  PASS  T10d _network_generation(폴더) = network_provenance (활성) + network_attempt (최근 시도) 를 읽는다 (도장 없음 = 활성 없음)
+  PASS  T10g 옛 v1 시도 기록 → latest_attempt_status failed · 종류 = 단계 이름에서 (거부 · lock · 솔버) · 활성 없음이라 stale False {'candidate_rejected': ('failed', 'candidate_rejected', False), 'lock': ('failed', 'lock', False), 'solver': ('failed', 'solver', False)}
+  PASS  T6b dual 파일 없는 케이스 → NOT_COMPUTED (missing_input) — 조용히 빠지지 않는다
+  PASS  T12a ★ 세대 행 — 실 생산자 = "g2 — …" · 표기 없는 옛 레코드 = "inferred_legacy — …" (추론) · H · P 같은 값 {'g2 (실 생산자 비관통)': ['g2 — 세대 2 계약 통과 (주 Hertz = H0 Maxwell + 원기둥 · physics = ψ 곱 + physics_g2 · H12 민감도 · 전극 dirichlet_exact)', 'g2 — 세대 2 계약 통과 (주 Hertz = H0 Maxwell + 원기둥 · physics = ψ 곱 + physics_g2 · H12 민감도 · 전극 dirichlet_exact)'], 'inferred_legacy (표기 없는 옛 손 레코드)': ['inferred_legacy — 세대 2 표기가 하나도 없는 옛 산출물 (옛 세대로 추론: virtual_source_legacy · physics_g1 · 원기둥 · ψ 분모 — 레코드에 적힌 값이 아니다)', 'inferred_legacy — 세대 2 표기가 하나도 없는 옛 산출물 (옛 세대로 추론: virtual_source_legacy · physics_g1 · 원기둥 · ψ 분모 — 레코드에 적힌 값이 아니다)']}
+  PASS  T12b ★ G2R-01 — H12 레코드를 주 Hertz 자리에 둔 케이스 → 세대 행 "invalid — …" · 상태 행 "NOT_COMPUTED (invalid_input: 세대 계약 …) — 기술적 실패" (H · P)
+  PASS  T7a 두 라벨에 논문 라벨이 있다
+  PASS  T7b 정렬 표: 비율 행 바로 뒤에 상태 · 띠 행 (그 순서)
+  PASS  T7c 툴팁: 상태 행 = 다섯 상태 · 다섯 사유 (RGLR-01 invalid_input) · 두 부류 (기술적 실패 · 과학적 HOLD) · tau_flux · G5 값 유지 · 띠 행 = L0/L1/L2 · 4r_SE/L (TAU-24) · 안 A 전 산출물
+  PASS  T7c2 ★ 띠 행 툴팁 = 인계 열 사전 띠 분율과 같은 한정어 — (바닥 띠 폭 + 위 띠 폭)/판 간격 · 상한 · 보정한 T 는 내지 않는다 · 기준 길이 판 간격 (L_mc 아님)
+  PASS  T7d 별칭 표 (PAPER_TO_ORIG) 가 두 논문 라벨 → 원 라벨
+  PASS  T7e 망 상태 · 최근 시도 행: 논문 라벨 · 정렬 표 (σ_ionic 행 뒤) · 툴팁 (valid_zero · no_through_path · solve_failed · network_attempt · RGL-04) · 별칭
+  PASS  T7f ★ RGLR2-02 망 활성 세대 무효 행: 라벨 상수 · 논문 라벨 · 정렬 표 (최근 시도 행 뒤) · 툴팁 (rollback_failed · interrupted_publish · full_metrics ↔ provenance · 중단 · 재실행 · 인용 금지 · RGLR2-02) · 별칭 · 최근 시도 툴팁에 rollback_failed · τ 인계 상태 툴팁에 generation_invalid · 실패 종류 화면 이름
+  PASS  T12c ★ 망 세대 행 — 라벨 상수 · 논문 라벨 · 정렬 표 (띠 행 바로 뒤) · 툴팁 (g2 · inferred_legacy · invalid · H0 Maxwell · H12 · dirichlet_exact · physics_g2 · G2R-01 · G2R-02 · tau_flux · 숫자만 바꾼 레코드는 못 잡는다) · 별칭 · 상태 툴팁에 세대 계약
+  PASS  T8 케이스 라우트가 transform 전에 _ion_handover 를 붙인다
+  PASS  T8b 케이스 라우트가 transform 전에 _network_generation (활성 세대 · 최근 시도) 을 붙인다
+  PASS  T8c ★ RGLR2-02 케이스 라우트가 _ion_handover · 표 변환 전에 망 세대 가드 (확정되지 않은 세대의 망 값 = None) 를 건다
+
+test_tau_handover_status: 41/41 PASS

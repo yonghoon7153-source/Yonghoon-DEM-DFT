@@ -1,0 +1,62 @@
+{
+  "checks": [
+    [
+      "14 test entrypoints exited 0",
+      true
+    ],
+    [
+      "prior CG error rejected and exact G recovered",
+      true
+    ],
+    [
+      "zero Rc constriction-only refuses instead of opening",
+      true
+    ],
+    [
+      "8 previous generation mutants rejected",
+      true
+    ],
+    [
+      "actual CLI baseline publishes",
+      true
+    ],
+    [
+      "absent FULL certificate blocked",
+      true
+    ],
+    [
+      "G2RR-01 stamp contradictions still pass",
+      true
+    ],
+    [
+      "G2RR-02 foreign branch certificates still publish",
+      true
+    ],
+    [
+      "diagnostic-only certificate failures do not gate FULL",
+      true
+    ],
+    [
+      "C8 positive baseline",
+      true
+    ],
+    [
+      "G2RR-03 missing/duplicate queue still passes",
+      true
+    ],
+    [
+      "20/24 raw-bed solves bit-identical including g1 control",
+      true
+    ],
+    [
+      "all FULL and CF raw-bed values bit-identical",
+      true
+    ],
+    [
+      "only physics g1/g2 constriction-only changed to None",
+      true
+    ]
+  ],
+  "pass_count": 14,
+  "fail_count": 0
+}

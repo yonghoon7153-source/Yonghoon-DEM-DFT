@@ -1,0 +1,23 @@
+{
+  "schema": "network_attempt/v2",
+  "network_attempt_run_id": "20261006T202012-9d110c30",
+  "solver_status": "failed",
+  "latest_attempt_status": "failed",
+  "failure_kind": "candidate_rejected",
+  "reason": "Network stop contract (stop_after=network): \u2605 \ub9dd \uc815\uc9c0 \uacc4\uc57d \uc2e4\ud328: \u2466 \u03c4 \uc778\uacc4 hertz: NOT_COMPUTED (invalid_input: \uc138\ub300 \uacc4\uc57d (G2R-01 \u00b7 02): hertz: H0 (Maxwell \ud611\ucc29 + \uc6d0\uae30\ub465 bulk) \uc5ed\ud560 \ud45c\uae30\uac00 \uc544\ub2c8\ub2e4 \u2014 solve_certificate_full: \uc99d\uc11c \uc5c6\uc74c (NoneType)) \u2014 \uae30\uc220\uc801 \uacb0\uc190 (\ub4f1\ub85d\ub41c \uacfc\ud559\uc801 HOLD \uc544\ub2d8); \u2466 \u03c4 \uc778\uacc4 physics: NOT_COMPUTED (invalid_input: \uc138\ub300 \uacc4\uc57d (G2R-01 \u00b7 02): hertz: H0 (Maxwell \ud611\ucc29 + \uc6d0\uae30\ub465 bulk) \uc5ed\ud560 \ud45c\uae30\uac00 \uc544\ub2c8\ub2e4 \u2014 solve_certificate_full: \uc99d\uc11c \uc5c6\uc74c (NoneType)) \u2014 \uae30\uc220\uc801 \uacb0\uc190 (\ub4f1\ub85d\ub41c \uacfc\ud559\uc801 HOLD \uc544\ub2d8); \u2468 \uc8fc Hertz (H0 \uc790\ub9ac): \uc5ed\ud560 \ud45c\uae30\uac00 H0 (Maxwell \ud611\ucc29 + \uc6d0\uae30\ub465 bulk) \uac00 \uc544\ub2c8\ub2e4 \u2014 \uc138\ub300 \uacc4\uc57d (G2R-01 \u00b7 02): solve_certificate_full: \uc99d\uc11c \uc5c6\uc74c (NoneType)",
+  "stage": "Network stop contract (stop_after=network)",
+  "active_network_run_id": null,
+  "active_status": "none",
+  "previous_generation_kept": false,
+  "input_digests": {
+    "atoms.csv": "d8965a296bef61a0",
+    "contacts.csv": "d8886e55a0205e3d"
+  },
+  "code_sha": "unknown",
+  "attempted_at": "2026-10-06T20:20:12",
+  "argv": {
+    "type_map": "1:SE",
+    "scale": 1,
+    "contact_mode": "both"
+  }
+}

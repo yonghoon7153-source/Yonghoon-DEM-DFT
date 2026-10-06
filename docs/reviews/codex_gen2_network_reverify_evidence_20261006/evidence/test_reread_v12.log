@@ -1,0 +1,27 @@
+  PASS  V0 검산기 머리말 — 자동 배포 관문이 아니다 (Codex 5차 QV1) · 검산 도구
+  PASS  T0 baseline (원본 복사본) — PASS · rc 0 · 실패 0
+  PASS  T0b baseline C8 — 194 행 · 고유 194 · record sha 194 일치 · 코호트 · 상태 대조
+  PASS  T1 ★ RGLR4-01 — 공통 칸 한 칸 (13.643988681252257 → 99) 변조 = FAIL · 비영 종료 · 실패 목록에 lhs:C4
+  PASS  T2 ★ RGLR4-01 — 등록 안 된 공통 열 탈락 = FAIL · 비영 종료 · lhs:C4 (C3 은 통과 — 열 사전도 같이 뺐다)
+  PASS  T3 픽스처 — 원본 감사표 마지막 행 = lhsx_064 · 첫 행 = lhs00_000
+  PASS  T3 ★ RGLR4-02 — 누락 + 중복 교체 (194 줄 · 고유 193) = FAIL · 비영 종료 · C8
+  PASS  T4 ★ RGLR4-02 — record sha 한 글자 변조 = FAIL · 비영 종료 · C8 (병합 기록의 정규 JSON sha 와 대조)
+  PASS  T5 ★ record 상태 변조 (done → partial · 병합 기록은 done) = FAIL · C8
+  PASS  T6 ★ 코호트 변조 (lhs 케이스를 lhsx 로) = FAIL · C8
+  PASS  T7 ★ C6 출처 부록 중복 행 (집합은 같다 · 131 행) = FAIL · 비영 종료 · lhs:C6
+  PASS  T8 허용 목록 상수 C4_ALLOWED 가 있다 · v1.2 세대는 비었다 (옛 인계와 공통 칸 차이 0 · 탈락 0 이 기대값)
+[lhs] shape [130, 251] · C1 True · C4 cells {'same': 24439, 'close': 0, 'diff': 1} diff_cols ['coverage_AM_total_hertz_pct'] · τ hertz {'OK': 106, 'NOT_PERCOLATING': 24} · physics {'OK': 106, 'NOT_PERCOLATING': 24} · prov 130 · fail []
+[lhsx] shape [64, 253] · C1 True · C4 cells {'same': 12160, 'close': 0, 'diff': 0} diff_cols [] · τ hertz {'OK': 64} · physics {'OK': 54, 'MODEL_BELOW_CONTINUUM_BOUND': 10} · prov 64 · fail []
+[C8] 194 행 · 고유 194 · 등록 큐 194 · 판정 {'SEALED_LEGACY': 194} · merged {'same': 194} · record sha 일치 194 · 문제 0
+verdict PASS [] — 검산 도구 결과 (자동 배포 관문 아님)
+[lhs] shape [130, 251] · C1 True · C4 cells {'same': 24439, 'close': 0, 'diff': 1} diff_cols ['coverage_AM_total_hertz_pct'] · τ hertz {'OK': 106, 'NOT_PERCOLATING': 24} · physics {'OK': 106, 'NOT_PERCOLATING': 24} · prov 130 · fail ['C4 회귀 (1: diff coverage_AM_total_hertz_pct 1 칸 ≠ 허용 목록 기대 2 칸)']
+[lhsx] shape [64, 253] · C1 True · C4 cells {'same': 12160, 'close': 0, 'diff': 0} diff_cols [] · τ hertz {'OK': 64} · physics {'OK': 54, 'MODEL_BELOW_CONTINUUM_BOUND': 10} · prov 64 · fail []
+[C8] 194 행 · 고유 194 · 등록 큐 194 · 판정 {'SEALED_LEGACY': 194} · merged {'same': 194} · record sha 일치 194 · 문제 0
+verdict FAIL ['lhs:C4 회귀 (1: diff coverage_AM_total_hertz_pct 1 칸 ≠ 허용 목록 기대 2 칸)'] — 검산 도구 결과 (자동 배포 관문 아님)
+[lhs] shape [130, 250] · C1 True · C4 cells {'same': 24310, 'close': 0, 'diff': 0} diff_cols [] · τ hertz {'OK': 106, 'NOT_PERCOLATING': 24} · physics {'OK': 106, 'NOT_PERCOLATING': 24} · prov 130 · fail []
+[lhsx] shape [64, 253] · C1 True · C4 cells {'same': 12160, 'close': 0, 'diff': 0} diff_cols [] · τ hertz {'OK': 64} · physics {'OK': 54, 'MODEL_BELOW_CONTINUUM_BOUND': 10} · prov 64 · fail []
+[C8] 194 행 · 고유 194 · 등록 큐 194 · 판정 {'SEALED_LEGACY': 194} · merged {'same': 194} · record sha 일치 194 · 문제 0
+verdict PASS [] — 검산 도구 결과 (자동 배포 관문 아님)
+  PASS  T9 허용 목록 — 등록한 열 · 기대 칸 수 (1) 가 맞으면 통과 · 칸 수가 다르면 (2) 실패 · 등록한 탈락 열은 통과
+
+13 PASS · 0 FAIL

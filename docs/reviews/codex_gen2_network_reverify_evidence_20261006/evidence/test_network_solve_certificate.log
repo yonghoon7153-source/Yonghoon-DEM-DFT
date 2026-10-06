@@ -1,0 +1,26 @@
+  (고치기 전 모듈 a0a24c538 를 git 에서 못 읽었다 — 비트 동일 대조는 SKIP)
+  PASS  S1 ★ G2R-03 반례 (10^14 막다른 간선 · 자유 노드 30,002 · CG 가지) — 참 G 15,000.5 (상대 1e-9) 또는 NOT_COMPUTED (current_conservation_failed) · 계산됐는데 틀린 값 없음 (옛: computed · cg · 30,001 = +100 %)   G 15000.5 · q 0.0150005 · computed · None · spsolve_fallback
+  PASS  S2 대조 10^6 · 10^8 · 10^10 · 10^12 — 참값 그대로 (상대 1e-9) · computed · 첫 단 cg 가 채택   {}
+  PASS  S3 ★ 대조 넷의 증서 — I_bottom = G · I_top ≈ −G · 보존 잔차 = 독립 재계산 ≤ 1e-6 · 내부 잔차 ≤ 1e-6 · 방법 · 허용치 기록 · certificate_problem 통과 (옛: 증서 없음)   []
+  PASS  S4 ★ 반례의 사다리 기록 — 첫 단 cg 가 보존 잔차로 떨어지고 (잔차 > 0.5 · I_top ≈ −3e-10) 직접해 단이 참값을 증서와 함께 낸다 (method ≠ cg · certificate_problem 통과)   attempts [('cg', 'certificate_failed', 0.99999999999999), ('spsolve_fallback', 'pass', 0.0)] · prob None · method 'spsolve_fallback' · cons 0.0 · res 0.0
+  PASS  S5 허용치 상수 = 등록값 (보존 잔차 · 내부 잔차 1e-6) · 사유 이름
+  PASS  K1 ★ 직접해가 막히면 Jacobi CG (SPD 대각 전처리 · 잔차 보정) — 10^14 반례 참값 (상대 1e-9) · 증서 통과 (옛: cg 30,001)   G 15000.5 · prob None · method 'cg+jacobi' · cons 0.0 · res 0.0
+  PASS  K2 ★ 큰 간선이 자유 노드끼리 이어진 변형 (B–2 10^14 · 2–3 · 3–T) — Jacobi CG + 잔차 보정 (2 회 이상) 이 참값 15,001.0 (상대 1e-9) · 증서 통과 · 첫 단 cg 는 보존 잔차로 떨어진다 (내부 잔차는 1e-6 밑 — 판별력 없음)   G 15001.0 vs 15001.0 · prob None · method 'cg+jacobi' · cons 0.0 · res 0.0 · 단 [('cg', 'certificate_failed', None), ('spsolve_fallback', 'exception', None), ('cg+jacobi', 'pass', 2)]
+  PASS  K2b ★ 잔차 보정을 끄면 (1 회) 두 Krylov 단이 다 ‖b‖ 상대 종료로 일찍 멈춰 증서 실패 → 틀린 값 대신 NOT_COMPUTED (current_conservation_failed)   ((None, None), [('cg', 'certificate_failed', 0.99999999999999), ('spsolve_fallback', 'exception', None), ('cg+jacobi', 'certificate_failed', 6.666000066660001e-05), ('gmres+ilu', 'certificate_failed', 0.00018540430637981718)])
+  PASS  K3 ★ 직접해 · Jacobi CG 가 다 막히면 ILU + GMRES (ILU 를 CG 에 넣지 않는다) — 참값 (상대 1e-9) · 증서 통과   G 15000.5 · prob None · method 'gmres+ilu' · cons 0.0 · res 0.0
+  PASS  K4 ★ 모든 단이 거짓 해 (0 · 수렴 신고) → (None, None) · NOT_COMPUTED · current_conservation_failed · 단마다 기록 (옛: 바닥 간선 전류를 G 로 게시)   ((None, None), 'not_computed', 'current_conservation_failed', [('spsolve', 'certificate_failed'), ('cg+jacobi', 'certificate_failed'), ('gmres+ilu', 'certificate_failed')])
+  PASS  K5 ★ run_decomposition — sigma_full None · 상태 not_computed · 사유 current_conservation_failed (CF · constr 도) · _run_all_networks 이온 채널 failed (사유에 current_conservation_failed — 게시 차단)   {'sigma_full': None, 'sigma_full_status': 'not_computed', 'sigma_full_reason': 'current_conservation_failed'} · ionic 'failed'
+  PASS  Z1 ★ GEN2-01 반례 (B–중간–T: R_c 0 · 1 Ω 직렬 ∥ B–T 10 Ω) — 협착-only = (None, None) · NOT_COMPUTED · zero_resistance_requires_contraction · 0 저항 간선 1 (옛: 0.1 S computed · 단락 수축 참값 1.1 S)   ((None, None), 'not_computed', 'zero_resistance_requires_contraction', 1)
+  PASS  Z2 같은 망의 FULL = 1/5 + 1/12 · CF = 1/4 + 1/2 (상대 1e-12) · computed · 고치기 전 모듈과 비트 동일 (FULL · CF 는 영향 없음)   0.2833333333333333 · 0.75 · old 비트 동일 SKIP
+  PASS  Z3 ★ run_decomposition (physics g2 · 21 구 사슬 · 가운데 접촉 clamp) — sigma_constr_net None · 상태 not_computed · 사유 zero_resistance_requires_contraction (옛: 단락을 개방으로 바꿔 G 1.1e-16 = 반올림 잡음 · I_top 0 을 computed 0.0 으로 게시) · FULL · CF computed · H0 (Maxwell) 협착-only computed · H12 협착-only 같은 사유   {'n_clamp_zero': 1, 'sigma_constr_net': None, 'sigma_constr_net_status': 'not_computed', 'sigma_constr_net_reason': 'zero_resistance_requires_contraction'} · H0 constr 'computed' · H12 constr 'not_computed'
+  SKIP  Z3b   git 객체 없음
+  PASS  R1 ★ run_decomposition 결과 — 가지마다 solve_certificate_{full,bulk_net,constr_net} (I_bottom · I_top · 보존 · 내부 잔차 · 방법 · 허용치 · 단 기록) · 도우미 통과 · JSON 왕복 (NaN 없음) · solve_method_full = 증서 방법 (21 구 사슬 · Hertz · physics)   []
+  PASS  R2 ★ _run_all_networks (SE + AM 두 사슬) — 이온 · 전자 (electronic_) · 열 (thermal_) · H12 레코드 모두 세 가지의 증서 · 도우미 통과   []
+  PASS  R3 ★ 실 망 단계 (CLI network_conductivity.py) 가 쓴 네 JSON (모드 둘 · dual · legacy) — 이온 · 전자 · 열 FULL 증서 + Hertz 쪽 H12 증서 · 표준 JSON (NaN · Infinity 없음) · 도우미 통과   rc 0 · [] · ''
+  PASS  R4 ★ certificate_problem (순수) — 정상 증서 None · 반례 첫 단 · 과소 기록 · 내부 잔차 · NaN · 결손 · G ≤ 0 · 상태 · 모르는 방법 · 없음 → 사유   []
+  PASS  R5 ★ real_14 기준 덤프 (커밋 · 이온 망) — Hertz FULL · CF · 협착-only 와 physics FULL · CF 의 증서 통과 (실측 보존 · 내부 잔차는 아래) · physics 협착-only (clamp 접촉 있음) = NOT_COMPUTED zero_resistance_requires_contraction   [] · clamp 2607 · hertzian/full spsolve cons 6.129169337408572e-14 res 1.391098765063102e-15 · hertzian/bulk_net spsolve cons 3.1868216876992547e-14 res 1.427119088846047e-15 · hertzian/constr_net spsolve cons 8.15247851007032e-14 res 1.3016260230643982e-15 · physics/full spsolve cons 1.361900605023182e-13 res 1.2795612942152427e-15 · physics/bulk_net spsolve cons 3.1868216876992547e-14 res 1.427119088846047e-15
+  SKIP  B1   git 객체 없음
+  PASS  B2 ★ 큰 망 (34×34×30 · 자유 노드 32368 > 30,000) — 첫 단 cg 채택 · 증서 통과 (실측 prob None · method 'cg' · cons 2.99885461115505e-12 · res 8.866906753997674e-11)   G 34.85358577955638
+  SKIP  B3   git 객체 없음
+
+test_network_solve_certificate: 20/20 PASS · SKIP 3

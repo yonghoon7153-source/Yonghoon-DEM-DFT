@@ -1,0 +1,213 @@
+[
+  {
+    "args": [
+      "scripts/test_gen2_role_contract.py"
+    ],
+    "rc": 0,
+    "seconds": 5.702999999979511,
+    "tail": [
+      "  PASS  X5 ★ 지운 방법 (cg+ilu · SPD 아닌 전처리 CG) 의 증서 → invalid",
+      "  PASS  X6 표지 · 증서를 다 뺀 역사 모양 → inferred_legacy (증서 키도 세대 2 표지)",
+      "  PASS  W1 ★ 열 사전 H12 판정 = 쌍대응 시나리오 · 구간 아님 (괄호로 읽는다 문구 없음) · 부록 전용 유지",
+      "  PASS  W2 ★ 설계 기록 ±5 % = 시험한 기하 한정 + 구 사슬 반례 (G2R-04)",
+      "",
+      "test_gen2_role_contract: 32/32 PASS"
+    ]
+  },
+  {
+    "args": [
+      "scripts/test_network_solve_certificate.py"
+    ],
+    "rc": 0,
+    "seconds": 9.0,
+    "tail": [
+      "  PASS  R5 ★ real_14 기준 덤프 (커밋 · 이온 망) — Hertz FULL · CF · 협착-only 와 physics FULL · CF 의 증서 통과 (실측 보존 · 내부 잔차는 아래) · physics 협착-only (clamp 접촉 있음) = NOT_COMPUTED zero_resistance_requires_contraction   [] · clamp 2607 · hertzian/full spsolve cons 6.129169337408572e-14 res 1.391098765063102e-15 · hertzian/bulk_net spsolve cons 3.1868216876992547e-14 res 1.427119088846047e-15 · hertzian/constr_net spsolve cons 8.15247851007032e-14 res 1.3016260230643982e-15 · physics/full spsolve cons 1.361900605023182e-13 res 1.2795612942152427e-15 · physics/bulk_net spsolve cons 3.1868216876992547e-14 res 1.427119088846047e-15",
+      "  SKIP  B1   git 객체 없음",
+      "  PASS  B2 ★ 큰 망 (34×34×30 · 자유 노드 32368 > 30,000) — 첫 단 cg 채택 · 증서 통과 (실측 prob None · method 'cg' · cons 2.99885461115505e-12 · res 8.866906753997674e-11)   G 34.85358577955638",
+      "  SKIP  B3   git 객체 없음",
+      "",
+      "test_network_solve_certificate: 20/20 PASS · SKIP 3"
+    ]
+  },
+  {
+    "args": [
+      "webapp/test_gen2_publication_handover.py"
+    ],
+    "rc": 0,
+    "seconds": 5.516000000061467,
+    "tail": [
+      "  PASS ③c ★ 세대 2 표기 레코드 + 세대 키 없는 옛 도장 (역사 폴더에 표기만 덧붙인 모양) → 거부 (세대 2 로 싣지 않는다 · 옛: 통과)",
+      "④ 표 만들 때 (build_handover) — 같은 결함만 모인 원천도 거부 (행마다 먼저)",
+      "  PASS ④a 양성 — 실 배치 케이스 둘 + baseline 폴더 → load_tau_results · build_handover 통과 · 두 행 세대 칸 g2",
+      "  PASS ④b ★ 다른 길로 들어온 원천 — 두 행 다 같은 결함 (주 Hertz 칸 = H12 표기) → build_handover 거부 (τ 세대 · 옛: 동질이라 통과)",
+      "",
+      "test_gen2_publication_handover: 12/12 PASS"
+    ]
+  },
+  {
+    "args": [
+      "webapp/test_tau_handover_status.py"
+    ],
+    "rc": 0,
+    "seconds": 2.047000000020489,
+    "tail": [
+      "  PASS  T12c ★ 망 세대 행 — 라벨 상수 · 논문 라벨 · 정렬 표 (띠 행 바로 뒤) · 툴팁 (g2 · inferred_legacy · invalid · H0 Maxwell · H12 · dirichlet_exact · physics_g2 · G2R-01 · G2R-02 · tau_flux · 숫자만 바꾼 레코드는 못 잡는다) · 별칭 · 상태 툴팁에 세대 계약",
+      "  PASS  T8 케이스 라우트가 transform 전에 _ion_handover 를 붙인다",
+      "  PASS  T8b 케이스 라우트가 transform 전에 _network_generation (활성 세대 · 최근 시도) 을 붙인다",
+      "  PASS  T8c ★ RGLR2-02 케이스 라우트가 _ion_handover · 표 변환 전에 망 세대 가드 (확정되지 않은 세대의 망 값 = None) 를 건다",
+      "",
+      "test_tau_handover_status: 41/41 PASS"
+    ]
+  },
+  {
+    "args": [
+      "scripts/lhs_release_build.py",
+      "--selftest"
+    ],
+    "rc": 0,
+    "seconds": 0.5940000000409782,
+    "tail": [
+      "  ✓ ⑳b ★ G2R-01 — 주 Hertz 칸 이름 (tau2_ion_hertz) 아래 H12 표기 행 (x2: 협착 mikic_psi_multiply · bulk sphere_segment) 이면 만들기 거부 (옛: 이름만 보고 통과)",
+      "  ✓ ⑳c ★ 대조도 같은 계약 — 값 · 행이 같은 배포를 H12 표기 행이 섞인 인계표에 대조하면 역할 문제 (값 대조만으로는 못 본다)",
+      "  ✓ ⑳d 부록도 같은 계약 — 행 계약이 깨진 인계표에서는 H12 부록 열도 거부 (행 하나의 표기가 틀리면 그 행의 세대가 확정되지 않는다)",
+      "  ✓ ⑳e τ 모드 열을 안 실으면 역할 계약을 걸지 않는다 (그 숫자가 배포에 없다)",
+      "  ✓ ⑳f 옛 세대 행 (inferred_legacy · 표기 = 이력 사실) 은 통과 · 세대 2 행과 한 배포에 섞이면 거부 (세대 섞임)",
+      "29/29  ✓ 전부 통과"
+    ]
+  },
+  {
+    "args": [
+      "scripts/test_reread_v12.py"
+    ],
+    "rc": 0,
+    "seconds": 1.9059999999590218,
+    "tail": [
+      "[lhsx] shape [64, 253] · C1 True · C4 cells {'same': 12160, 'close': 0, 'diff': 0} diff_cols [] · τ hertz {'OK': 64} · physics {'OK': 54, 'MODEL_BELOW_CONTINUUM_BOUND': 10} · prov 64 · fail []",
+      "[C8] 194 행 · 고유 194 · 등록 큐 194 · 판정 {'SEALED_LEGACY': 194} · merged {'same': 194} · record sha 일치 194 · 문제 0",
+      "verdict PASS [] — 검산 도구 결과 (자동 배포 관문 아님)",
+      "  PASS  T9 허용 목록 — 등록한 열 · 기대 칸 수 (1) 가 맞으면 통과 · 칸 수가 다르면 (2) 실패 · 등록한 탈락 열은 통과",
+      "",
+      "13 PASS · 0 FAIL"
+    ]
+  },
+  {
+    "args": [
+      "scripts/test_physics_area_g2.py"
+    ],
+    "rc": 0,
+    "seconds": 4.265000000130385,
+    "tail": [
+      "  PASS  T9b 세대 1 은 명시 area_rule='physics_g1' 로 그대로 — 옛 sim 단위 경로 (film_area_from_overlap) 와 비트 동일   []",
+      "  PASS  T9c 모르는 area_rule → ValueError",
+      "  PASS  T9d 결과 기록 — area_rule_physics = physics_g2 (이온 · 전자 · 열) · area_rule (physics = physics_g2 · hertz = hertz_ccpl22) · 결속 수 dict · n_clamp_zero · n_floor_only (세 채널)   {'area_rule_physics': 'physics_g2', 'area_rule': 'physics_g2', 'area_binding_counts_physics': {'tabor': 20}, 'n_clamp_zero': 0, 'n_floor_only': 0}",
+      "  PASS  T9e hertzian 모드는 type_map 이 없어도 돈다 (physics 면적은 진단 칸 — None) · R_c 는 Maxwell 그대로",
+      "",
+      "test_physics_area_g2: 27/27 PASS"
+    ]
+  },
+  {
+    "args": [
+      "scripts/test_network_dirichlet.py"
+    ],
+    "rc": 0,
+    "seconds": 4.766000000061467,
+    "tail": [
+      "  PASS  D6c run_decomposition 결과 electrode_model = 'dirichlet_exact' (세 풀이 같은 전극)   'dirichlet_exact'",
+      "  PASS  D7 ★ 자유 노드 32368 > 30,000 → CG 경로 (방법 'cg') · 독립 직접해와 상대 ≤ 1e-8 · n_free 기록   34.85358577955638 vs 34.85358577955665 · {'electrode_model': 'dirichlet_exact', 'status': 'computed', 'reason': None, 'method': 'cg', 'n_free': 32368, 'n_fixed': 2312, 'n_floating': 0, 'n_zero_resistance': None, 'I_bottom': 34.85358577955638, 'I_top': -34.85358577945186, 'conservation_rel': 2.99885461115505e-12, 'residual_rel': 8.866906753997674e-11, 'conservation_rel_max': 1e-06, 'residual_rel_max': 1e-06, 'attempts': [{'method': 'cg', 'outcome': 'pass', 'krylov_info': 0, 'refine_passes': None, 'I_bottom': 34.85358577955638, 'I_top': -34.85358577945186, 'conservation_rel': 2.99885461115505e-12, 'residual_rel': 8.866906753997674e-11, 'error': None}]}",
+      "  PASS  D7b SciPy < 1.12 (rtol 키워드 없음) → tol 키워드로 같은 해 (상대 1e-8)   34.85358577955638",
+      "  PASS  D7c 직접해 ↔ CG 문턱 줄 = 상수 DIRICHLET_DIRECT_MAX_FREE (30000) · 소스에 한 번 (measure_rho 치환 앵커)   count=1",
+      "",
+      "test_network_dirichlet: 14/14 PASS"
+    ]
+  },
+  {
+    "args": [
+      "scripts/test_network_generation2.py"
+    ],
+    "rc": 0,
+    "seconds": 2.906999999890104,
+    "tail": [
+      "  PASS  E4 세대 축 — 세대 2 (g2 · psi multiply · physics_g2 · dirichlet_exact · H0 maxwell + 원기둥 · physics ψ 곱 + 원기둥 · H12 ψ 곱 + 구 조각) ↔ 옛 (inferred_legacy · legacy_divide · physics_g1 · virtual_source_legacy · H0 · physics ψ 분모 · H12 없음)   ({'generation': 'g2', 'psi': 'multiply', 'area_rule_physics': 'physics_g2', 'electrode': 'dirichlet_exact', 'constriction_hertz': 'maxwell_halfspace', 'bulk_hertz': 'cylinder_half_d', 'constriction_physics': 'mikic_psi_multiply', 'bulk_physics': 'cylinder_half_d', 'constriction_hertz_h12': 'mikic_psi_multiply', 'bulk_hertz_h12': 'sphere_segment'}, {'generation': 'inferred_legacy', 'psi': 'legacy_divide', 'area_rule_physics': 'physics_g1', 'electrode': 'virtual_source_legacy', 'constriction_hertz': 'maxwell_halfspace', 'bulk_hertz': 'cylinder_half_d', 'constriction_physics': 'mikic_psi_divide', 'bulk_physics': 'cylinder_half_d', 'constriction_hertz_h12': '', 'bulk_hertz_h12': ''})",
+      "  PASS  E5 ★ 여러 행 섞임 판정 — 같은 세대 행끼리 = 문제 없음 · 세대 2 + 옛 행 = 거부 사유 (축 · 값) · 레코드 없는 행 (모든 축 빈칸) 은 판정 밖",
+      "  PASS  E6 ★ tau_flux CLI — 세대가 다른 케이스 폴더를 한 표로 묶으면 거부 (rc 2 · TSV 를 쓰지 않는다 · 사유에 세대) · 한 세대만이면 rc 0   rc 2 · 's_g2 (예: a_g2); electrode: dirichlet_exact (예: a_g2) · virtual_source_legacy (예: b_g1); constriction_physics: mikic_psi_divide (예: b_g1) · mikic_psi_multiply (예: a_g2) — 출력하지 않는다 (같은 세대 폴더끼리 따로 부를 것)\\n' · 한 세대 rc 0",
+      "  PASS  E7 열 — 모드 셋 (hertz · physics · hertz_h12) × (12 + 전극 · bulk · 면적 규칙 3) + 공통 5 (σ₀ · T · φ · L 기준 · 세대 칸) = 50 · 모드 꼬리 · 꼬리 없는 상태 키 없음",
+      "",
+      "test_network_generation2: 18/18 PASS"
+    ]
+  },
+  {
+    "args": [
+      "scripts/test_psi_default_switch.py"
+    ],
+    "rc": 0,
+    "seconds": 1.1400000001303852,
+    "tail": [
+      "  PASS  ⑤e 같은 사슬의 physics σ_ratio — 세대 2 (곱셈) > 명시 ψ 분모 (곱셈 = 활성 간선 R_c 가 ψ² 배 → σ 상향 = tau2 하향 · 계약 §C 방향)   physics sigma_full ψ 분모 0.00352099 → 곱셈 0.00692755",
+      "  PASS  ⑥a ★ 기본 — 이온 · 전자 · 열 결과가 모두 psi_placement = multiply 를 싣는다 (전자 · 열 채널이 실제로 풀렸다)   ('multiply', 'multiply', 'multiply', 'computed', 'computed')",
+      "  PASS  ⑥b 명시 PSI_DIVIDE — 세 채널 모두 legacy_divide (값 = 실제로 쓴 배치 · 상수 표기가 아니다)   ('legacy_divide', 'legacy_divide', 'legacy_divide', 'computed', 'computed')",
+      "  PASS  ⑥c Hertz 결과도 같은 표기를 싣는다 (Hertz 는 ψ 를 안 쓴다 — 값 무관 · 표기만)   (('multiply', 'multiply', 'multiply', 'computed', 'computed'), ('legacy_divide', 'legacy_divide', 'legacy_divide', 'computed', 'computed'))",
+      "",
+      "test_psi_default_switch: 21/21 PASS"
+    ]
+  },
+  {
+    "args": [
+      "scripts/test_tau_flux.py"
+    ],
+    "rc": 0,
+    "seconds": 1.452999999979511,
+    "tail": [
+      "  PASS  M1 양성 대조 — 세대 일치 · 접촉 분석만 · 도장 이전 · 되돌림 성공한 재계산 실패 · 다른 단계 stash → τ 인계 그대로 (OK · 같은 tau2) · 세대 문제 없음 ",
+      "  PASS  M2 ★ RGLR2-02 세대가 확정되지 않은 폴더 7 종 → 두 모드 NOT_COMPUTED (generation_invalid: 세부) · f · tau2 · tau 빈칸 (옛: OK — dual 만 읽어 옛 세대 τ 를 실었다) ",
+      "  PASS  M3 세대 문제 사유 = 무엇이 어긋났는지 (두 id) — \"full_metrics 의 망 세대 'R2' ≠ 도장 'R1' — 파일들이 서로 다른 세대를 가리킨다 (되돌림 실패 · 중단된 게시)\"",
+      "  PASS  M4 ★ 등급 τ getter (tau2_from_metrics) — 읽는 쪽이 세대 무효 표지를 단 metrics → tau2 None (hertz · bulk) · 표지 없으면 값 그대로",
+      "",
+      "test_tau_flux: 55/55 PASS"
+    ]
+  },
+  {
+    "args": [
+      "scripts/test_constriction_power_share.py"
+    ],
+    "rc": 0,
+    "seconds": 1.0629999998491257,
+    "tail": [
+      "  PASS  C4b 해 없음 (None) → (None, not_computed …)",
+      "  PASS  C5 _run_all_networks (hertzian) — ion · el · th 세 키 + 상태",
+      "  PASS  C6 pipeline_service.NET_MERGE_KEYS 에 hertz 세 키 + 상태",
+      "  PASS  C6b physics 꼬리 키는 이름 그대로 복사 (옛 _physics 덧붙이기 미러가 아니다 — 두 번 붙지 않게)",
+      "",
+      "17/17 PASS"
+    ]
+  },
+  {
+    "args": [
+      "webapp/test_psi_generation_stamp.py"
+    ],
+    "rc": 0,
+    "seconds": 3.515000000130385,
+    "tail": [
+      "  PASS ⑤f H12 σ_full_mScm ×4 (σ_ratio 그대로 — 두 표현 항등식 깨짐) → 망 정지 계약 거부 · 사유 = ⑨ 뿐 (⑨ H12: 기술적 입력 무효 — invalid_input: 두 σ 표현 불일치 (RGLR-02): σ_dim 0.06162 mS/cm ≠ 1000·σ₀·σ_ra)",
+      "  PASS ⑤g H12 bulk = 원기둥 (짝 메타 어긋남 — ψ 단독 H1 은 기각) → 망 정지 계약 거부 · 사유 = ⑨/⑦ τ 인계 뿐 (⑦ τ 인계 hertz: NOT_COMPUTED (invalid_input: 세대 계약 (G2R-01 · 02): hertz_h12: H12 (ψ 곱 협착 + 구)",
+      "  PASS ⑤h 모드끼리 전극 섞임 (physics = virtual_source_legacy) → 망 정지 계약 거부 · 사유 = ⑨/⑦ τ 인계 뿐 (⑦ τ 인계 hertz: NOT_COMPUTED (invalid_input: 세대 계약 (G2R-01 · 02): physics: 세대 2 physics (ψ 곱)",
+      "  PASS ⑤i 표기 없는 옛 legacy → 투영에 electrode_model · bulk_model · area_rule_physics 키 없음 ({'electrode_model': '키 없음', 'bulk_model': '키 없음', 'area_rule_physics': '키 없음'})",
+      "",
+      "test_psi_generation_stamp: 18/18 PASS"
+    ]
+  },
+  {
+    "args": [
+      "webapp/test_pipeline_provenance.py"
+    ],
+    "rc": 0,
+    "seconds": 28.280999999959022,
+    "tail": [
+      "  PASS  T23d) ★ 흔적이 있던 폴더에서 다음 실행이 실패 (정지 계약) → 최근 시도 failed · active invalid · previous_generation_kept True 아님 · 읽는 쪽 무효 — 옛 세대를 조용히 유효로 되살리지 않는다 (재실행 필요) (failed · 'invalid' · 'invalid')",
+      "  PASS  T23e) 그 뒤 정상 재계산이 성공하면 유효로 돌아온다 (최근 시도 success · 세대 문제 없음 · τ OK) (done)",
+      "  PASS  T23f) ★ 망 stash (풀이 중 죽은 실행) → recover_stale_stashes 가 옛 망 파일을 되살려 유효 세대로 쓰지 않는다 (옛: 네 JSON + 도장을 제자리로 = 조용한 재사용) · 흔적 보존 · 읽는 쪽 무효 (0 · 0)",
+      "  PASS  T23g) 재분석 라우트가 보존 거부 사유를 meta 에 남긴다 (network_preserve_refused · 확정되지 않은 세대 = 재실행)",
+      "",
+      "test_pipeline_provenance: 281/281 PASS"
+    ]
+  }
+]

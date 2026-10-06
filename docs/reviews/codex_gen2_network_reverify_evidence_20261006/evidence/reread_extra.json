@@ -1,0 +1,82 @@
+[
+  {
+    "label": "baseline",
+    "rc": 0,
+    "verdict": "PASS",
+    "c8": {
+      "n": 194,
+      "n_unique": 194,
+      "verdicts": {
+        "SEALED_LEGACY": 194
+      },
+      "merged": {
+        "same": 194
+      },
+      "record_sha_match": 194,
+      "queue_n": 194,
+      "problems": [],
+      "n_problems": 0
+    },
+    "fails": []
+  },
+  {
+    "label": "queue_empty",
+    "rc": 0,
+    "verdict": "PASS",
+    "c8": {
+      "n": 194,
+      "n_unique": 194,
+      "verdicts": {
+        "SEALED_LEGACY": 194
+      },
+      "merged": {
+        "same": 194
+      },
+      "record_sha_match": 194,
+      "queue_n": 0,
+      "problems": [],
+      "n_problems": 0
+    },
+    "fails": []
+  },
+  {
+    "label": "plan_absent",
+    "rc": 0,
+    "verdict": "PASS",
+    "c8": {
+      "n": 194,
+      "n_unique": 194,
+      "verdicts": {
+        "SEALED_LEGACY": 194
+      },
+      "merged": {
+        "same": 194
+      },
+      "record_sha_match": 194,
+      "queue_n": 0,
+      "problems": [],
+      "n_problems": 0
+    },
+    "fails": []
+  },
+  {
+    "label": "queue_duplicate",
+    "rc": 0,
+    "verdict": "PASS",
+    "c8": {
+      "n": 194,
+      "n_unique": 194,
+      "verdicts": {
+        "SEALED_LEGACY": 194
+      },
+      "merged": {
+        "same": 194
+      },
+      "record_sha_match": 194,
+      "queue_n": 194,
+      "problems": [],
+      "n_problems": 0
+    },
+    "fails": []
+  }
+]
