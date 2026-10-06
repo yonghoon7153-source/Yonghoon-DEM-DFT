@@ -9363,3 +9363,11 @@ codex/ 11 · manifest 10 / 10 일치 · 비밀 패턴 0) · 규칙 `8a010cf2f` �
   docs-lint 3 건. (2) 계약 `STAGE3_CONTRACT.md` 의 줄 인용 `src/fitting.py:2116 → 2117` (GREEN 의 주석 한 줄로 밀림 · 의미 변경 없음 · §13.1 밖이지만 기계적 결과) —
   docs-lint 1 건. (3) 계약 §13.1 묶음 6 행 "미착수" → "제출 · 닫힘 아님" (§16-1 "함께").
 - 다음: clean HEAD 에서 전체 pytest · strict smoke · 등록부 전체 재생 (순차 · 동시 시험 없음) → GATE93 결과 심사 요청.
+
+## §147 단계 4 검증 완료 · GATE93 요청 (2026-10-06 · 결과 심사 · 실행 GO 아님)
+
+- 검증 HEAD `3ec8aadb1` (clean · 순차 · 각 단계 시작 = 끝 HEAD · dirty 0): 전체 pytest **2320 passed / 1 xfailed / rc 0** · strict smoke **rc 0** · 등록부 전체 재생
+  **421 / 421 물었다 · rc 0** (scenario 432 · executable 421 · declared 11). 환경 프로필 C MISMATCH 34 (기록 전용 · 컨테이너 차이). 증거 `docs/22p_gap/gate93_evidence/` (`2ab61069b`).
+- 요청문 `docs/22p_gap/GATE93_REQUEST.md` — 판정 대상 코드 `d7a97aa57` (`source_digest` `c7f48918ff971e91`) · §16 대응표 · RED 41 / GREEN · 변이 `-g92` 9 + `-k` 확장 2 ·
+  영수증 35 / 34 · 자체 신고 6 (앵커 누락 · §13.1 밖 계약 줄 인용 2 · k07 증인 · 차단 범위 · 환경 · 이월).
+- 다음: 사용자 발송 → 93차 회신 보존 · 접수.
