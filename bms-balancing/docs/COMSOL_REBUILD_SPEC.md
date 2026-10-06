@@ -4091,3 +4091,16 @@ gate INCOMPLETE · 실효 정책 UNVERIFIED · native 미승인 · 게이트 리
   - 문구: §5 "2 단계 사전 관측" → "1 단계 관측값을 2 단계 승인에 결속" · 채택 문구의 "§9-2" → "§9 표 2 번 및 §9-1".
 - 다음: **사용자 1 단계 승인** (승인 전 관측 0) → Codex 읽기 전용 사전 관측 · 새 폴더 기록 · manifest · 최종 2 단계 초안 → 멈춤. approval · release · USER_DECISION ·
   runtime · token · native 실행은 그 뒤 별도 승인. 유지: PS01-16 내부 분기 UNOBSERVED · 실효 정책 · 실제 코어 UNVERIFIED · 전체 / 정상 gate INCOMPLETE · 기존 실패 기록.
+
+## 65. native 150 s **1 단계 사용자 승인** · 실행 기기 Codex 에 전달 (2026-10-06 · 실행 기기 관측은 아직 결과 없음)
+
+- 사용자 원문 (이 저장소 쪽 대화): "이렇게 외부 codex에 지시했어" — 실행 기기의 기존 Codex 대화에 보낸 지시 원문 (사용자 전달 그대로):
+  > 첨부 SEND_TO_EXTERNAL_CODEX_KO.md대로 B-min r2 native150의 1단계만 승인합니다. 정정 커밋은 e4e06889338f22df53e4d4ece9e29e1131570fad입니다.
+  > 읽기 전용 사전 관측을 1,800초·50 MB·1회 범위에서 수행하고, 지정 새 폴더에 기록과 비활성 2단계 최종 요청문을 작성한 뒤 멈추세요. COMSOL 실행·배치·실제 승인 파일 생성은 하지 마세요.
+- 첨부 묶음 (검토 쪽 Codex 가 만든 작업지시): `reviews/r14_repros/codex63/comsol_bmin_r2_native150_stage1_handoff_20261006/`
+  (`BMIN_NATIVE150_STAGE1_TO_EXTERNAL_CODEX_20261006.zip` 30,068 B · sha256 `23dc2168d48890f5117e332f35df7b36a3eba4667c66ddb32ed6f607d9619d4a` · 풀린 5 · manifest 일치 ·
+  비밀 패턴 0). `SEND_TO_EXTERNAL_CODEX_KO.md` 의 승인 인용은 요청문 §9 채택 문구와 같고, 문서 blob `d1d80525…` · manifest `4cdca2e6…` · 쓰기 폴더 · 1,800 s · 50 MB · 1 회 ·
+  관측 7 항목 (N150-N1 PowerShell 식별 포함) · 중지 규칙 · 비활성 2 단계 초안 · N150-N2 시간 경계를 담았다. 규칙 `a6265ee23` → 보존 (이 절 직전 커밋).
+- 이 승인이 허락하는 것: 실행 기기의 **읽기 전용** 사전 관측 · 새 기록 폴더 하나의 쓰기 · 비활성 2 단계 최종 요청문. 허락하지 않는 것: COMSOL 실행 · r2 배치 · approval /
+  release / USER_DECISION / runtime / token 생성 · native 150 s.
+- 다음: 실행 기기 Codex 의 관측 결과 · 2 단계 초안 수신 → 보존 → 검토 → 사용자 최종 (2 단계) 승인 여부.
