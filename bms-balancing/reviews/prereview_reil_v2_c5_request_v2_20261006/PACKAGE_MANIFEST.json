@@ -1,0 +1,33 @@
+{
+  "type": "REIL_C5_V2_REVIEW_PACKAGE_MANIFEST",
+  "payload_count": 5,
+  "scope": "Review artifacts only; manifest excludes itself",
+  "files": [
+    {
+      "path": "CLAUDE_REPLY_KO.md",
+      "bytes": 3161,
+      "sha256": "9488040d4b08a404587d8a641afee4e327481cb9cce9118238becba15b885685"
+    },
+    {
+      "path": "DECISION.json",
+      "bytes": 3471,
+      "sha256": "b64148123da5b777714f6741ceed05783efe289a07f20ff191c2eeb7d63446b9"
+    },
+    {
+      "path": "READ_SNAPSHOT.json",
+      "bytes": 26595,
+      "sha256": "e4e360901b6bdec323f3c1b27dde5a92e879585391977f1679dc34a13ec0e14a"
+    },
+    {
+      "path": "reference/REIL_C5_PILOT_APPROVAL_REQUEST_v2_20261006.md.txt",
+      "bytes": 24568,
+      "sha256": "3ee657da0b531e3e477f2871ca4662eabbc9576c3f40bdb2036da9794efda75f"
+    },
+    {
+      "path": "REVIEW_KO.md",
+      "bytes": 12298,
+      "sha256": "d03a021f379006e6aff36b78ac655023d8259e85ae1fb0fe49b26f9c65e7d17e"
+    }
+  ],
+  "attachment_copy_byte_identity": true
+}

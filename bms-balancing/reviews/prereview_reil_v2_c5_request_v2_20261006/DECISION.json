@@ -1,0 +1,85 @@
+{
+  "schema": "reil-c5-v2-static-prereview/v1",
+  "date": "2026-10-06",
+  "target_attachment": "REIL_C5_PILOT_APPROVAL_REQUEST_v2_20261006.md",
+  "attachment_bytes": 24568,
+  "attachment_sha256": "3ee657da0b531e3e477f2871ca4662eabbc9576c3f40bdb2036da9794efda75f",
+  "attachment_git_blob": "25e09eb90c8a880adc919149493bfb1a0a502e22",
+  "review_resolved_head": "032886301fd9ccbddcfe48b7a06d1fe5b334d1d8",
+  "head_is_user_declared": false,
+  "attachment_matches_resolved_commit": true,
+  "verdict": "MAJOR_CORRECTIONS_ACCEPTED_ONE_ENVIRONMENT_CHECK_SCOPE_CONFLICT_REMAINS",
+  "blocking_findings": [
+    {
+      "id": "C5V2-N1",
+      "priority": "P1",
+      "title": "Full C6 check performs synthetic optimization and Sobol regeneration beyond environment identity checks",
+      "document_lines": [
+        118,
+        119,
+        128,
+        129,
+        130,
+        131,
+        132,
+        133,
+        134,
+        190,
+        191,
+        192,
+        202,
+        203
+      ],
+      "code": "bms-balancing/scripts/reil_c6_profile.py",
+      "call_chain": [
+        "check:237-246",
+        "emit:222-234",
+        "cobyqa_options:149-181",
+        "sobol:185-219"
+      ],
+      "basis": "static source control flow, not executed"
+    }
+  ],
+  "prior_findings": {
+    "C5_N1": "prior-registration interpretation corrected; choice recorded in status §26, not execution authorization",
+    "C5_N2": "automatic rebuild removed; actual check sub-actions require scope correction",
+    "C5_N3": "direction accepted; row/global status wording and command-time boundary clarify",
+    "C5_N4": "accepted in design, requires implementation evidence",
+    "C5_N5": "bounded two-phase approach accepted; actual environment check and allowed text input list clarify"
+  },
+  "editorial_and_preimplementation_items": [
+    "four per-run states versus global RECORD_INCOMPLETE",
+    "preserved notebook source excerpts JSON is another test input; not original notebook execution",
+    "command-time sum is not full implementation wall-clock",
+    "RED timeout, cumulative environment/preservation command accounting, fixture/output collision rules",
+    "exact pytest path/cwd/options and no automatic install; Threads is total threads not measured BLAS threads"
+  ],
+  "recommendation": "Preserve existing no-formal-array-generation implementation boundary by separating identity-only verification from full C6 functional check. Full check remains NOT_RUN; only A0 seed 0/1 regenerated during later approved pilot. Alternative full check needs explicit additional scope and counts.",
+  "approval": {
+    "implementation": false,
+    "tests": false,
+    "cost_pilot": false,
+    "data_opening": false,
+    "sobol_generation": false,
+    "environment_rebuild": false,
+    "confirmatory_C4": false
+  },
+  "reviewer_actions": {
+    "provided_code_import": 0,
+    "provided_functions_executed": 0,
+    "tests": 0,
+    "fitting": 0,
+    "sobol_generation": 0,
+    "installation": 0,
+    "COMSOL": 0,
+    "raw_REIL_data_opened": 0,
+    "notebook_excerpt_json_content_opened": 0,
+    "remote_source_writes": 0,
+    "external_message_dispatch": 0
+  },
+  "prior_status": {
+    "C3": "OUTPUTS_ACCEPTED_WITH_EXECUTION_RECORD_GAPS",
+    "P0": "execution record gaps preserved"
+  },
+  "next": "Amend the single operation-scope conflict and wording, then seek explicit implementation-only user approval; stop after approved implementation evidence; pilot needs later separate approval."
+}
