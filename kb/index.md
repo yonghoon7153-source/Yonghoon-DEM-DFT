@@ -1,6 +1,6 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-10-06 · managed-files: 508
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-10-06 · managed-files: 509
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
@@ -420,7 +420,7 @@
 - `kb/reports/weekly_2026_09_27.md` — 주간 정리 2026-09-21 ~ 09-27 (주간보고 초안)  (2026-09-28 · 완료 (2026-09-28 · 다음 주 문서는 새 파일))
 - `kb/reports/weekly_2026_10_04.md` — 주간 정리 2026-09-28 ~ 10-04 (주간보고 초안)  (2026-10-04 · 초안 (2026-10-04 · 도는 계산은 10-04 17:59 실측…)
 
-## projects/ (44)
+## projects/ (45)
 - `kb/projects/HANDOFF_2026_08_31_session.md` — 인수인계 — 2026-08-31 세션 (외주 C-12 AR→AV · 폴라론 S0 · nscf 사고)  (2026-09-03 · 활성)
 - `kb/projects/MULTI_CATEGORY_BATCH_PLAN_v22.md` — Multi-Category Multi-Compound Batch Plan — Paper #2 (v4.5.18)
 - `kb/projects/MUST_READ_digital_twin_north_star.md` — 🚨🚨🚨 MUST READ — AI 계산 스크리닝 플랫폼 North Star (구: Digital Twin)
@@ -462,6 +462,7 @@
 - `kb/projects/symposium_2026_competitive_analysis.md` — 전지기술 심포지엄 2026 — 경쟁 좌표 분석 (이상욱 / 문장혁)
 - `kb/projects/wad_dem_reply_4_send_2026_09_25.md` — DEM 회신 4 — 발송본 (부탁 1 잔류 응력 PBE/PBE+D3 · 부탁 2 수용 · 한 기하 뜻 확인 요청 · Ag 격자상수·변형률)  (2026-09-25 · 발송본 — 1저자 발송 (2026-09-25) · 아래 구분선 이후를…)
 - `kb/projects/wad_dem_reply_5_send_2026_09_26.md` — wad_dem_reply_5_send_2026_09_26
+- `kb/projects/wad_dem_reply_9_send_2026_10_06.md` — wad_dem_reply_9_send_2026_10_06
 - `kb/projects/wad_dem_reply_draft_2026_09_23.md` — DEM 쪽 회신 초안 — Ag–C 점착일 요청: 착수 전 질문 3개 답 · 바뀐 점 · 확인 요청  (2026-10-01 · 회신 4 발송 완료 (09-25) · DEM 4차 회신 수령 (09-…)
 - `kb/projects/wad_lpscl_agc_vgcf_plan_2026_09_23.md` — LPSCl | Ag–C | VGCF 점착일(W_ad) — 계획 v4 (Codex BX 뒤 파이프라인 재편 · v3 = Fable · Codex BV 반영) · 보고량 카드 초안  (2026-09-25 · 계획 v4 — SE|SE 4층 대조 끝(경보 v2 유지 · Codex…)
 - `kb/projects/zn_alzib_dft_md_contribution_2026_09_03.md` — Zn ALZIB 세미나(2026-09-02) — 우리가 DFT/MD 로 기여할 수 있는 지점  (2026-09-27 · 진행)
