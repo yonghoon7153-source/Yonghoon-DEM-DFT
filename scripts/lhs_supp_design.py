@@ -66,6 +66,7 @@ REF = dict(case='lhs00_000', n=45030, steps=2_420_000, hours_1core=43.0)
 FIXED_STEPS = 500_001                # 침강 200 k + 1 + 안정 200 k + 완화 100 k (압축 루프 밖)
 EFF_MPI = 0.8
 WALL_TARGET_H = 100.0
+MIN_PP = 5000                        # 코어당 입자 하한 — LIGGGHTS 는 코어당 5 k–20 k 에서 잘 확장 (lhs_design_dataset_20260818.md)
 
 COLS = ['id', 'block', 'partner', 'stratum', 'ntype', 'kind', 'pdd_SE', 'w_AM_P', 'w_AM_S', 'rP_um', 'rS_um',
         'rSE_um', 'rSE_lo_um', 'rSE_truncated', 'volfrac', 'loading_rule', 'loading_mAh_cm2', 'ins_scale',
@@ -172,6 +173,28 @@ def _ntasks_for(core_h, lo, hi):
     if core_h <= WALL_TARGET_H:
         return max(lo, 1)
     return int(min(hi, max(lo, math.ceil(core_h / (EFF_MPI * WALL_TARGET_H)))))
+
+
+def allocate_cores(rows, slots=SLOTS, min_pp=MIN_PP):
+    """qos 코어 (60) 를 꽉 채운다 — 1저자 10-06 밤 "10만 넘는것들에 코어 잘 분배해서 60코어 꽉꽉 채워".
+
+    모든 런 1 코어에서 시작해, **추정 벽시계가 가장 긴 런**에 한 코어씩 더한다 (코어당 입자 ≥ min_pp 인 동안).
+    결과: 가장 늦게 끝나는 런 (makespan) 이 줄어든다.  ⚠ 효율 0.8 은 가정 (첫 완주 런으로 고친다).
+    """
+    nt = {r['id']: 1 for r in rows}
+
+    def wall(r, n):
+        return float(r['core_h_est']) / (n * (1.0 if n == 1 else EFF_MPI))
+    while sum(nt.values()) < slots:
+        cand = [r for r in rows if (nt[r['id']] + 1) * min_pp <= float(r['n_total_est'])]
+        if not cand:
+            break
+        r = max(cand, key=lambda r: (wall(r, nt[r['id']]), r['id']))
+        nt[r['id']] += 1
+    for r in rows:
+        r['ntasks'] = nt[r['id']]
+        r['wall_h_est'] = round(wall(r, nt[r['id']]), 1)
+    return rows
 
 
 def generate(seed=DESIGN_SEED):
@@ -285,6 +308,7 @@ def generate(seed=DESIGN_SEED):
                              n_SE_est=round(n_se), n_total_est=round(n_am + n_se), cap_adjust='', gap_dist='',
                              lhs_cell='', seed=s, ntasks=nt, steps_est=steps, core_h_est=round(core_h, 1),
                              wall_h_est=round(wall_h, 1)))
+    allocate_cores(rows)
     feas = (lambda q: _best_case_n(q[0], 5.0 + 65.0 * q[1], 1.0 + q[2]) <= cap)
     gb, tot = gap_fraction(ex_xyz, feasible=feas)
     ga, _ = gap_fraction(ex_xyz + [norm(r['w_AM_P'] / (1 - r['pdd_SE']) if r['ntype'] == 3 else
@@ -356,6 +380,8 @@ def verify_rows(rows, cap=None):
             bad.append(f'{rid}: 입자 수 {n_am + n_se:.0f} > 상한 {cap:.0f}')
         if not (1 <= ntasks <= SLOTS):
             bad.append(f'{rid}: ntasks {ntasks}')
+        if ntasks > 1 and (n_am + n_se) / ntasks < MIN_PP:
+            bad.append(f'{rid}: 코어당 입자 {(n_am + n_se) / ntasks:.0f} < {MIN_PP} ({ntasks} 코어)')
         if abs(loading_of(1 - pdd, vf) * sc - L) > 1e-3:
             bad.append(f'{rid}: 로딩 {L} ↔ volfrac·높이 {loading_of(1 - pdd, vf) * sc:.4f}')
         if r['block'] == 'supp':
@@ -438,6 +464,15 @@ def selftest() -> int:
     mut(lambda rr: rr[sp[0]].update(rSE_um='0.5', rS_um='0.5', ntype='3', kind='bimodal', pdd_SE='0.7', w_AM_P='0.15',
                                      w_AM_S='0.15', volfrac='0.317759', loading_rule='volfrac_free',
                                      loading_mAh_cm2=str(loading_of(0.3, 0.317759))), '입자 수 상한 초과')
+    _nt = sum(int(r['ntasks']) for r in rows)
+    chk(f's8 코어 = {SLOTS} 꽉 채움 (1저자 10-06 밤 — "60코어 꽉꽉 채워" · 지금 {_nt})', _nt == SLOTS)
+    chk('s8 코어당 입자 ≥ MIN_PP (1 코어 런 제외)',
+        all(int(r['ntasks']) == 1 or float(r['n_total_est']) / int(r['ntasks']) >= MIN_PP for r in rows))
+    _big = [r for r in rows if float(r['n_total_est']) > 100_000]
+    chk('s8 10 만 넘는 런은 3 코어 이상', bool(_big) and all(int(r['ntasks']) >= 3 for r in _big))
+    _w1 = max(float(r['core_h_est']) for r in rows)
+    chk('s8 최장 벽시계 < 1 코어 최장 core-h 의 절반', max(float(r['wall_h_est']) for r in rows) < 0.5 * _w1)
+    mut(lambda rr: rr[0].update(ntasks='9'), '코어당 입자 < MIN_PP')
     toy = maximin([(0.0, 0.0, 0.0)], [((0.1, 0.1, 0.1), 'a'), ((1.0, 1.0, 1.0), 'b'), ((0.5, 0.5, 0.5), 'c')], 1)
     chk('s7 maximin 첫 점 = 가장 먼 구석', toy[0][0][1] == 'b')
     print(f'\n{"전부 통과" if not fails else f"실패 {len(fails)}"}')

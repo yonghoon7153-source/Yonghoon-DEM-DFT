@@ -7,7 +7,7 @@
   "gap_before": 0.0932,
   "gap_after": 0.0157,
   "slots": 60,
-  "cores_total": 43,
+  "cores_total": 60,
   "C_LOAD": 12.76799601554108,
   "ref": {
     "case": "lhs00_000",
@@ -18,7 +18,7 @@
   "eff_mpi": 0.8,
   "design_seed": 20261006,
   "supp_steps": 2760000,
-  "sha256": "26f33fddcfe618ee19659d94630d6ef24a0463eeb1455fd2ef921d131a9162e3",
+  "sha256": "73d9a47f76f49989ddbd2c1237007c8499601d63bd5baf0e1ad11c527f21beb0",
   "rows": [
     {
       "id": "lhss_001",
@@ -79,10 +79,10 @@
       "gap_dist": 0.2687,
       "lhs_cell": "",
       "seed": 39989,
-      "ntasks": 2,
+      "ntasks": 3,
       "steps_est": 2760000,
       "core_h_est": 124.7,
-      "wall_h_est": 77.9
+      "wall_h_est": 52.0
     },
     {
       "id": "lhss_003",
@@ -143,10 +143,10 @@
       "gap_dist": 0.2541,
       "lhs_cell": "",
       "seed": 31727,
-      "ntasks": 2,
+      "ntasks": 3,
       "steps_est": 2760000,
       "core_h_est": 124.7,
-      "wall_h_est": 77.9
+      "wall_h_est": 52.0
     },
     {
       "id": "lhss_005",
@@ -335,10 +335,10 @@
       "gap_dist": 0.2474,
       "lhs_cell": "",
       "seed": 30389,
-      "ntasks": 2,
+      "ntasks": 3,
       "steps_est": 2760000,
       "core_h_est": 112.9,
-      "wall_h_est": 70.6
+      "wall_h_est": 47.0
     },
     {
       "id": "lhss_011",
@@ -463,10 +463,10 @@
       "gap_dist": 0.2288,
       "lhs_cell": "",
       "seed": 31769,
-      "ntasks": 1,
+      "ntasks": 2,
       "steps_est": 2760000,
       "core_h_est": 79.3,
-      "wall_h_est": 79.3
+      "wall_h_est": 49.6
     },
     {
       "id": "lhss_015",
@@ -655,10 +655,10 @@
       "gap_dist": 0.2189,
       "lhs_cell": "",
       "seed": 32783,
-      "ntasks": 1,
+      "ntasks": 3,
       "steps_est": 2760000,
       "core_h_est": 92.7,
-      "wall_h_est": 92.7
+      "wall_h_est": 38.6
     },
     {
       "id": "lhst_078_6m",
@@ -687,10 +687,10 @@
       "gap_dist": "",
       "lhs_cell": "",
       "seed": 35311,
-      "ntasks": 2,
+      "ntasks": 4,
       "steps_est": 9559998,
       "core_h_est": 134.2,
-      "wall_h_est": 83.9
+      "wall_h_est": 41.9
     },
     {
       "id": "lhst_078_8m",
@@ -719,10 +719,10 @@
       "gap_dist": "",
       "lhs_cell": "",
       "seed": 38053,
-      "ntasks": 3,
+      "ntasks": 6,
       "steps_est": 12579997,
       "core_h_est": 235.4,
-      "wall_h_est": 98.1
+      "wall_h_est": 49.0
     },
     {
       "id": "lhst_036_6m",
@@ -751,10 +751,10 @@
       "gap_dist": "",
       "lhs_cell": "",
       "seed": 33739,
-      "ntasks": 3,
+      "ntasks": 5,
       "steps_est": 7609998,
       "core_h_est": 182.9,
-      "wall_h_est": 76.2
+      "wall_h_est": 45.7
     },
     {
       "id": "lhst_036_8m",
@@ -783,10 +783,10 @@
       "gap_dist": "",
       "lhs_cell": "",
       "seed": 39019,
-      "ntasks": 4,
+      "ntasks": 8,
       "steps_est": 9979997,
       "core_h_est": 319.8,
-      "wall_h_est": 99.9
+      "wall_h_est": 50.0
     },
     {
       "id": "lhst_045_6m",
@@ -815,10 +815,10 @@
       "gap_dist": "",
       "lhs_cell": "",
       "seed": 31231,
-      "ntasks": 2,
+      "ntasks": 1,
       "steps_est": 7519998,
       "core_h_est": 51.0,
-      "wall_h_est": 31.9
+      "wall_h_est": 51.0
     },
     {
       "id": "lhst_045_8m",
@@ -911,10 +911,10 @@
       "gap_dist": "",
       "lhs_cell": "",
       "seed": 39709,
-      "ntasks": 2,
+      "ntasks": 3,
       "steps_est": 8219997,
       "core_h_est": 107.5,
-      "wall_h_est": 67.2
+      "wall_h_est": 44.8
     }
   ]
 }
