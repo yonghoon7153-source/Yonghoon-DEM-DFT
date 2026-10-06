@@ -193,6 +193,7 @@ run 'webapp: temp_pressure'       python3 webapp/test_temp_pressure_wiring.py
 run 'webapp: ledger_view'         python3 webapp/test_ledger_view.py
 run 'webapp: meta_json_robust'    python3 webapp/test_meta_json_robust.py   # 09-26 깨진 meta.json → / 500 회귀
 run 'webapp: atoms_only_viewer'   python3 webapp/test_atoms_only_viewer.py  # 10-02 atom 만 올린 케이스 결과 페이지 500 · atom+mesh 3D 판 (WEB-01)
+run 'webapp: atoms_only_porosity' python3 webapp/test_atoms_only_porosity.py  # 10-07 atom + 판 메시만 — 공극률 · 두께 (접촉 분석과 같은 함수 · real_14 비트 같음) · 입자 윗면 기준 (덜 다져진 프레임) · 덤프 상자 · 기공 보기 영역 윗면
 run 'webapp: dem_pore_path_view'  python3 webapp/test_dem_pore_path_view.py  # 10-07 DEM 3D — 기공 (빈 공간 · 격자 추정) 보기 · Path Only View 가 화면의 경로를 연다 (옛 판: 늘 0 번 클러스터)
 run 'webapp: tau_paths_view'      python3 webapp/test_tau_paths_view.py     # 10-07 DEM 3D — Tortuosity 후보 경로 여럿 (τ 색 · 금색 = 가장 작은 τ · 주기 반 토막) · All Paths View PNG (투명 4× · 컬러바 따로 / 넣기)
 run 'webapp: viewer_coordination' python3 webapp/test_viewer_coordination.py  # 10-06 3D 뷰어 배위수 보기 — 입자별 CN 평균 = core 함수 = 보고값 (real_14 정확히) · 캐시 스키마 12 (live · archive) · 범례 PC/SC

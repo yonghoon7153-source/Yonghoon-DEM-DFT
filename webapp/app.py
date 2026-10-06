@@ -3903,6 +3903,44 @@ def _stopped_after(stages, log, where, network_run_id=None):
             'failed_stages': [s.get('step') for s in failed_stages], 'stopped_after': where}
 
 
+def _atoms_only_porosity_written(results_dir):
+    """공극률 단계의 내용 계약 — 이번 실행이 full_metrics.json 에 `porosity_status` (판정 · 사유) 를 적었는가.
+    atoms-only 분기가 바로 앞에서 그 키가 없는 새 full_metrics (mode_note · has_contacts) 를 쓰므로, 있으면 이번 실행이 쓴 것이다."""
+    try:
+        with open(os.path.join(results_dir, 'full_metrics.json'), encoding='utf-8') as _f:
+            return isinstance(json.load(_f).get('porosity_status'), str)
+    except Exception:                                              # noqa: BLE001
+        return False
+
+
+def _atoms_only_porosity(results_dir, scale, atom_files, log):
+    """★ 10-07 (1저자 보고 그림) — atom 덤프 + 판 메시만 올린 케이스 (접촉 덤프 없음) 의 공극률 · 두께 (판 간격).
+    `scripts/atoms_only_porosity.py` = 접촉 분석과 **같은 함수** (calc_porosity · calc_porosity_union_exact · get_plate_z · 같은 원자 읽기) —
+    새 식 없음 · 판 메시가 없으면 계산하지 않고 사유만 적는다 · 판이 입자 윗면보다 위면 입자 윗면 기준 값도 따로.
+    viewer 전용 성공 계약은 그대로 — 이 단계가 실패해도 success 이고 사유를 full_metrics 에 남긴다 (optional 단계).
+    stop_after 가 있는 호출은 여기 오지 않는다 (`_atoms_only_refused` · LHSC-02 · 계산 · 러너 호출 없음 그대로)."""
+    cmd = [sys.executable, os.path.join(app.config['SCRIPTS_FOLDER'], 'atoms_only_porosity.py'), results_dir,
+           '--scale', str(scale)]
+    if atom_files:
+        cmd += ['--atom-dump'] + list(atom_files)
+    _st = _ps.run_stage('Porosity (atoms only)', cmd, required=False, expects=('full_metrics.json',),
+                        results_dir=results_dir, verify=_atoms_only_porosity_written)
+    log.append(_st)
+    if _st.ok:
+        return
+    try:                                                           # 단계가 사유를 못 적고 죽었다 — 사유를 대신 적는다 (옛 값을 남기지 않는다)
+        fm_path = os.path.join(results_dir, 'full_metrics.json')
+        with open(fm_path, encoding='utf-8') as _f:
+            fm = json.load(_f)
+        if not isinstance(fm.get('porosity_status'), str):
+            tail = [ln for ln in (_st.get('stderr') or '').strip().splitlines() if ln.strip()]
+            fm['porosity_status'] = 'failed: ' + (tail[-1][:300] if tail else f"공극률 단계 실패 (rc {_st.get('rc')})")
+            fm.setdefault('porosity_source', 'atoms_only')
+            _ps.atomic_write_json(fm_path, fm)
+    except Exception:                                              # noqa: BLE001 — viewer 전용 성공은 지킨다
+        pass
+
+
 def _atoms_only_refused(stop_after, why, log):
     """★ Codex `LHSC-02` (09-30 · P1 · 1저자 비준): 분석 단계를 명시적으로 요청했는데 (`stop_after`) 접촉 파일이 없다 —
     viewer 전용 atoms-only 조기 반환으로 **success 를 내지 않는다**.  계산 · 도장 · 러너 호출 없이 failed 로 돌려준다
@@ -4215,6 +4253,8 @@ def run_pipeline(case_id, mode, type_map, scale=1000,
                 fm_path = os.path.join(results_dir, 'full_metrics.json')
                 with open(fm_path, 'w') as f:
                     json.dump(atoms_only_meta, f, indent=2)
+                # ★ 10-07 — 판 메시가 있으면 공극률 · 두께 (판 간격) — 접촉이 필요 없는 정의만 · 접촉 분석과 같은 함수
+                _atoms_only_porosity(results_dir, scale, atom_files, log)
                 return {'success': True, 'log': log, 'atoms_only': True}
             # Hybrid mode falls through to the full pipeline below — atoms.csv
             # is already in results_dir, and parse_liggghts will skip atom parsing.
@@ -4241,6 +4281,7 @@ def run_pipeline(case_id, mode, type_map, scale=1000,
                 fm_path = os.path.join(results_dir, 'full_metrics.json')
                 with open(fm_path, 'w') as f:
                     json.dump(atoms_only_meta, f, indent=2)
+                _atoms_only_porosity(results_dir, scale, [], log)   # ★ 10-07 — mesh_info.json 이 있으면 공극률 · 두께 (같은 함수)
                 return {'success': True, 'log': log, 'atoms_only': True}
             else:
                 return {'error': 'atom_*.liggghts 또는 contact_*.liggghts 파일을 찾을 수 없습니다 (CSV fallback도 없음).'}

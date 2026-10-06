@@ -5619,8 +5619,11 @@ function computeVoidVoxels(particles, box, zTop, nx, opts) {
 }
 
 /* 영역 윗면 — 판 메시 (payload mesh_triangles = mesh_info 의 판 · µm) 꼭짓점 z 평균.  없거나 바닥 아래면 입자 윗면 최댓값
- * (max z + r — 판 위치가 아니다 · 범례에 적는다).  반환 {zTop, source: 'mesh' | 'particle_top' | 'none'} */
-function demPoreDomainTop(data) {
+ * (max z + r — 판 위치가 아니다 · 범례에 적는다).  반환 {zTop, source: 'mesh' | 'particle_top' | 'none'}
+ * ★ 10-07 — which = 'bed_top' 이면 판이 있어도 입자 윗면 최댓값 (source 'bed_top') — 판이 침대 위에 떠 있는 덜 다져진 프레임
+ *   (atom + 판 메시만 올린 케이스 등) 에서 빈 머리 공간을 빼고 본다 (표의 '입자 윗면 기준' 공극률과 같은 영역).
+ *   모든 반환에 particleTop (입자 윗면 최댓값) · 판이 있으면 plateZ 를 함께 싣는다 (범례의 머리 공간 안내). */
+function demPoreDomainTop(data, which) {
   const tris = (data && data.mesh_triangles) || [];
   let n = 0, s = 0, lo = Infinity, hi = -Infinity;
   for (const t of tris) {
@@ -5632,13 +5635,16 @@ function demPoreDomainTop(data) {
       if (z > hi) hi = z;
     }
   }
-  if (n && s / n > 0) return { zTop: s / n, source: 'mesh', zMin: lo, zMax: hi };
   let top = -Infinity;
   for (const p of ((data && data.particles) || [])) {
     const v = Number(p.z) + Number(p.r);
     if (Number.isFinite(v) && v > top) top = v;
   }
-  return (Number.isFinite(top) && top > 0) ? { zTop: top, source: 'particle_top' } : { zTop: null, source: 'none' };
+  const pTop = (Number.isFinite(top) && top > 0) ? top : null;
+  const plate = (n && s / n > 0) ? s / n : null;
+  if (which === 'bed_top' && pTop != null) return { zTop: pTop, source: 'bed_top', plateZ: plate, particleTop: pTop };
+  if (plate != null) return { zTop: plate, source: 'mesh', zMin: lo, zMax: hi, plateZ: plate, particleTop: pTop };
+  return pTop != null ? { zTop: pTop, source: 'particle_top', particleTop: pTop } : { zTop: null, source: 'none' };
 }
 
 /* 격자 선택 → x 방향 칸 수 (칸 부피 = 영역 부피 / 목표 칸 수) */
@@ -5657,7 +5663,24 @@ function demPoreLegendHTML(res, dom, ui) {
   const zt = Number(dom.zTop).toFixed(2);
   const src = dom.source === 'mesh'
     ? `판 z = 판 메시 (mesh_info)`
-    : `<span style="color:#fbbf24">⚠ 판 메시 없음 → 입자 윗면 최댓값 (max z + r · 판 위치 아님)</span>`;
+    : dom.source === 'bed_top'
+      ? `윗면 = 입자 윗면 최댓값 (max z + r) — 판 메시 z ${dom.plateZ != null ? Number(dom.plateZ).toFixed(2) + ' µm ' : ''}대신 (표의 '입자 윗면 기준' 공극률과 같은 영역 · 윗면 요철 사이 빈 곳은 들어 있다)`
+      : `<span style="color:#fbbf24">⚠ 판 메시 없음 → 입자 윗면 최댓값 (max z + r · 판 위치 아님)</span>`;
+  //  ★ 10-07 — 판이 있으면 영역 윗면을 고른다 (판 · 입자 윗면) · 판이 입자 윗면보다 위면 빈 머리 공간 안내 (덜 다져진 프레임)
+  const hasPlate = dom.source === 'mesh' || dom.plateZ != null;
+  const topSel = hasPlate
+    ? `<div style="margin-top:4px;display:flex;gap:6px;align-items:center;font-size:11.5px">영역 윗면
+         <select id="dem-pore-top" style="background:#16192e;color:#e4e6f0;border:1px solid #2a2d3e;border-radius:4px;font-size:11.5px">
+           <option value="plate"${dom.source !== 'bed_top' ? ' selected' : ''}>판 메시 (판 간격)</option>
+           <option value="bed_top"${dom.source === 'bed_top' ? ' selected' : ''}>입자 윗면 최댓값 (max z + r)</option></select></div>` : '';
+  const head = (dom.plateZ != null && dom.particleTop != null) ? Number(dom.plateZ) - Number(dom.particleTop) : NaN;
+  const headNote = head > 0
+    ? `<div style="margin-top:3px;color:#fbbf24;font-size:11px">⚠ 판 (z = ${Number(dom.plateZ).toFixed(2)} µm) 이 입자 윗면 최댓값
+       (${Number(dom.particleTop).toFixed(2)} µm) 보다 ${head.toFixed(2)} µm 위 — 판 영역에는 빈 머리 공간이 들어 있다 (덜 다져진 프레임) ·
+       영역 윗면 = 입자 윗면 으로 바꾸면 빠진다</div>`
+    : (dom.source === 'bed_top' && head < 0)
+      ? `<div style="margin-top:3px;color:#fbbf24;font-size:11px">⚠ 이 프레임은 판 (z = ${Number(dom.plateZ).toFixed(2)} µm) 이 입자 윗면
+         최댓값보다 아래 (판이 침대에 닿음) — 입자 윗면 영역은 판 위로 나온 입자 끝 사이 빈 곳까지 넣는다 · 표의 값은 판 영역</div>` : '';
   const ph = ui.presetH || {};
   const opts = Object.keys(DEM_PORE_PRESETS).map(k => `<option value="${k}"${k === (ui.preset || 'normal') ? ' selected' : ''}>`
     + `${DEM_PORE_PRESETS[k].label}${ph[k] ? ` (칸 ${ph[k].toFixed(2)} µm)` : ''}</option>`).join('');
@@ -5669,7 +5692,7 @@ function demPoreLegendHTML(res, dom, ui) {
      <div style="margin-top:3px;color:#9ca3af;font-size:11px">격자 ${res.nx}×${res.ny}×${res.nz} · 칸 ${Number(res.hx).toFixed(2)} µm`
        + `${ui.ms != null ? ` · 계산 ${n(ui.ms)} ms` : ''}</div>
      <div id="dem-pore-status" style="margin-top:3px;color:#cbd5e1;font-size:11px"></div>
-     <div style="margin-top:3px;color:#9ca3af;font-size:11px">영역 = 상자 x·y (주기 — 상자 밖으로 나간 입자 부분은 반대쪽 면에) × z [0, ${zt} µm] · ${src}</div>
+     <div style="margin-top:3px;color:#9ca3af;font-size:11px">영역 = 상자 x·y (주기 — 상자 밖으로 나간 입자 부분은 반대쪽 면에) × z [0, ${zt} µm] · ${src}</div>${headNote}${topSel}
      <div style="margin-top:3px;color:#9ca3af;font-size:11px">정의: 칸 중심이 어느 구 안에도 없으면 빈 칸 — 겹친 부피는 한 번 (합집합) ·
        바닥 아래 · 판 위로 나간 부피는 세지 않는다.  판 메시가 있으면 표의 ε_union 정확 (MC) 과 같은 정의 (무작위 점 대신 칸 중심) ·
        표의 ε_sphere (구 부피 합 · 생산 규약) 와 다른 양.</div>
@@ -5749,10 +5772,10 @@ function renderDemPore(state) {
   const box = data.box || {};
   // 입자 불투명도는 보기마다 따로 — 3D 안개 = 흐리게 (기공이 비친다) · 단면 = 불투명 (AM · SE · 기공 3 상 단면)
   const ui = state.demPore || (state.demPore = { preset: 'normal', poreOpacity: 0.08, particleOpacity: 0.15,
-                                                 particleOpacitySection: 1, slabLayers: 1 });
+                                                 particleOpacitySection: 1, slabLayers: 1, top: 'plate' });
   if (state.meshes && state.meshes.MESH) state.meshes.MESH.visible = false;   // 판 메시 숨김 (MPM pore 와 같다 · 다음 모드에서 체크박스대로)
   _demPoreFade(state, ui.particleOpacity, true);
-  const dom = demPoreDomainTop(data);
+  const dom = demPoreDomainTop(data, ui.top);                // 영역 윗면 — 판 (기본) · 입자 윗면 (범례에서 고름 · 10-07)
   if (dom.zTop == null) {
     _teardownDemPore(state, true);
     state._demPoreRes = null;
@@ -5851,6 +5874,12 @@ function _demPoreWireControls(state) {
   const sel = document.getElementById('dem-pore-grid');
   if (sel) sel.addEventListener('change', () => {
     ui.preset = sel.value;
+    setLegend(state, '<b>기공 (빈 공간 · 격자 추정)</b><div style="margin-top:4px;color:#9ca3af">격자 계산 중…</div>');
+    setTimeout(() => { if (state.viewMode === 'dem_pore') renderDemPore(state); }, 30);
+  });
+  const topSel = document.getElementById('dem-pore-top');     // 영역 윗면 — 판 · 입자 윗면 (10-07 · 덜 다져진 프레임의 빈 머리 공간)
+  if (topSel) topSel.addEventListener('change', () => {
+    ui.top = topSel.value === 'bed_top' ? 'bed_top' : 'plate';
     setLegend(state, '<b>기공 (빈 공간 · 격자 추정)</b><div style="margin-top:4px;color:#9ca3af">격자 계산 중…</div>');
     setTimeout(() => { if (state.viewMode === 'dem_pore') renderDemPore(state); }, 30);
   });
