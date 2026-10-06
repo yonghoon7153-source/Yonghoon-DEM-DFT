@@ -1,0 +1,25 @@
+{
+  "scope": "Stage-1 handoff only, not native approval",
+  "files": [
+    {
+      "path": "SEND_TO_EXTERNAL_CODEX_KO.md",
+      "bytes": 8858,
+      "sha256": "cf9d0028293b38b246d8c418ff8024e66d72e3abe386cbd7eb58f40bc7f5181b"
+    },
+    {
+      "path": "README_KO.md",
+      "bytes": 1695,
+      "sha256": "029ecca512c726ca1e79a1475121f2822333dfac775a6da05b60c76869d156a6"
+    },
+    {
+      "path": "READONLY_REFERENCE_SNAPSHOT.json",
+      "bytes": 96860,
+      "sha256": "54a400cff6af36cbc219bace5d3ad8a07cd7a4678fffa46048fc0cc3cef1f65e"
+    },
+    {
+      "path": "HANDOFF_IDENTITIES.json",
+      "bytes": 1450,
+      "sha256": "b0d272ffcb7a33791743ba2772dc3830ca700a85f0ac81fe445465fa3a28a80c"
+    }
+  ]
+}

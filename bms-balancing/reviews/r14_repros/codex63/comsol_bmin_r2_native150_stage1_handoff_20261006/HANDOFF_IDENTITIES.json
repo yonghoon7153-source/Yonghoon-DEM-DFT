@@ -1,0 +1,38 @@
+{
+  "commit": "e4e06889338f22df53e4d4ece9e29e1131570fad",
+  "files": {
+    "request": {
+      "bytes": 18381,
+      "sha256": "801cb835c70ff1fa05589bbf98c9ae5276003bfd92dff75ccb04f96e0ae63ef2",
+      "git_blob": "d1d80525ad725d924054e647f2f2238f7446b361"
+    },
+    "CODE_MANIFEST.json": {
+      "bytes": 1050,
+      "sha256": "4cdca2e6bf7d073f813d97be73825b8cd2043c2fc44e285f4a190bc6fb97cf25",
+      "git_blob": "826d860f8ad7c323a9dd1731570bbfc24cce68a2"
+    },
+    "CONTRACT.json": {
+      "bytes": 55211,
+      "sha256": "98820a8447b8ed830447125567312c7033e77a141bab59e84f1a1b83b3b2ce42",
+      "git_blob": "9ac6604ab75fdb7b2a1c80d44cb30fc7f89cba42"
+    },
+    "COMMAND_MAP.json": {
+      "bytes": 6189,
+      "sha256": "a8bda4e6dc250ec8bb104dc7a0c67eb2e5b7ebb555e1b8fa4b02223ff8d32394",
+      "git_blob": "6d42830adfc03b1b7f5bf6bb30ae0048bd7970c6"
+    },
+    "NATIVE_APPROVAL_FIELD_SPEC.json": {
+      "bytes": 4346,
+      "sha256": "61aa028fbcb851293beeab0e9cff716948d9df163f227d56a7eb093929bb0f7b",
+      "git_blob": "696cf1f9d2c9f29aa89d42f708fc7176274152cf"
+    }
+  },
+  "N150_N1_document_correction": "CONFIRMED",
+  "N150_N2_document_correction": "CONFIRMED",
+  "target_thread_connected": false,
+  "message_sent_to_execution_thread": false,
+  "handoff_mode": "USER_FORWARD_REQUIRED",
+  "execution_machine_preflight_performed": false,
+  "native150_approved_by_this_handoff": false,
+  "COMSOL_calls": 0
+}
