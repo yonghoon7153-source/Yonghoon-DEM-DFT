@@ -1,0 +1,41 @@
+...................................s                                     [100%]
+=============================== warnings summary ===============================
+tests/test_reil_p0.py::test_notebook_check_accepts_preserved_cells
+tests/test_reil_p0.py::test_notebook_check_rejects_changed_constants[cell_idx = [1,0,0,0,0,0,1,1,1,0,0]-cell_idx = [1,0,0,0,0,0,1,1,0,0,0]]
+tests/test_reil_p0.py::test_notebook_check_rejects_changed_constants[LFP_mass_factor = 20.16-LFP_mass_factor = 20.15]
+tests/test_reil_p0.py::test_notebook_check_rejects_changed_constants[[0.64,0.56,0.51]-[0.64,0.56,0.52]]
+  <unknown>:26: DeprecationWarning: invalid escape sequence '\m'
+
+tests/test_reil_p0.py::test_notebook_check_accepts_preserved_cells
+tests/test_reil_p0.py::test_notebook_check_rejects_changed_constants[cell_idx = [1,0,0,0,0,0,1,1,1,0,0]-cell_idx = [1,0,0,0,0,0,1,1,0,0,0]]
+tests/test_reil_p0.py::test_notebook_check_rejects_changed_constants[LFP_mass_factor = 20.16-LFP_mass_factor = 20.15]
+tests/test_reil_p0.py::test_notebook_check_rejects_changed_constants[[0.64,0.56,0.51]-[0.64,0.56,0.52]]
+  <unknown>:27: DeprecationWarning: invalid escape sequence '\m'
+
+tests/test_reil_p0.py::test_notebook_check_accepts_preserved_cells
+tests/test_reil_p0.py::test_notebook_check_rejects_changed_constants[cell_idx = [1,0,0,0,0,0,1,1,1,0,0]-cell_idx = [1,0,0,0,0,0,1,1,0,0,0]]
+tests/test_reil_p0.py::test_notebook_check_rejects_changed_constants[LFP_mass_factor = 20.16-LFP_mass_factor = 20.15]
+tests/test_reil_p0.py::test_notebook_check_rejects_changed_constants[[0.64,0.56,0.51]-[0.64,0.56,0.52]]
+  <unknown>:28: DeprecationWarning: invalid escape sequence '\m'
+
+tests/test_reil_p0.py::test_notebook_check_accepts_preserved_cells
+tests/test_reil_p0.py::test_notebook_check_rejects_changed_constants[cell_idx = [1,0,0,0,0,0,1,1,1,0,0]-cell_idx = [1,0,0,0,0,0,1,1,0,0,0]]
+tests/test_reil_p0.py::test_notebook_check_rejects_changed_constants[LFP_mass_factor = 20.16-LFP_mass_factor = 20.15]
+tests/test_reil_p0.py::test_notebook_check_rejects_changed_constants[[0.64,0.56,0.51]-[0.64,0.56,0.52]]
+  <unknown>:29: DeprecationWarning: invalid escape sequence '\m'
+
+tests/test_reil_p0.py::test_notebook_check_accepts_preserved_cells
+tests/test_reil_p0.py::test_notebook_check_rejects_changed_constants[cell_idx = [1,0,0,0,0,0,1,1,1,0,0]-cell_idx = [1,0,0,0,0,0,1,1,0,0,0]]
+tests/test_reil_p0.py::test_notebook_check_rejects_changed_constants[LFP_mass_factor = 20.16-LFP_mass_factor = 20.15]
+tests/test_reil_p0.py::test_notebook_check_rejects_changed_constants[[0.64,0.56,0.51]-[0.64,0.56,0.52]]
+  <unknown>:30: DeprecationWarning: invalid escape sequence '\m'
+
+tests/test_reil_p0.py::test_notebook_check_accepts_preserved_cells
+tests/test_reil_p0.py::test_notebook_check_rejects_changed_constants[cell_idx = [1,0,0,0,0,0,1,1,1,0,0]-cell_idx = [1,0,0,0,0,0,1,1,0,0,0]]
+tests/test_reil_p0.py::test_notebook_check_rejects_changed_constants[LFP_mass_factor = 20.16-LFP_mass_factor = 20.15]
+tests/test_reil_p0.py::test_notebook_check_rejects_changed_constants[[0.64,0.56,0.51]-[0.64,0.56,0.52]]
+  <unknown>:31: DeprecationWarning: invalid escape sequence '\m'
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+35 passed, 1 skipped, 24 warnings in 1.34s
+rc=0

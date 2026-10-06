@@ -1,0 +1,673 @@
+FFFFFFFFFFFFFFFFFFFFFFFFFFFFF.F                                          [100%]
+=================================== FAILURES ===================================
+____________ test_a0_tau0_exact_fraction_boundaries[rows0-lo0-hi0] _____________
+
+rows = (1, 7), lo = Fraction(1, 1000), hi = Fraction(5, 1)
+
+    @pytest.mark.parametrize("rows,lo,hi", [((1, 7), F(1, 1000), F(5)), ((2, 8), F(1, 2000), F(5, 2)),
+                                            ((10,), F(1, 1300), F(50, 13)), ((6, 9), F(1, 600), F(25, 3))])
+    def test_a0_tau0_exact_fraction_boundaries(rows, lo, hi):
+        for i in rows:
+>           assert st(i, "0", "A0", lo) == "PRIOR_COMPATIBLE"
+                   ^^^^^^^^^^^^^^^^^^^^
+
+tests/test_reil_p0.py:25: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_reil_p0.py:17: in st
+    return p0.prior_compat(NOM[i], tau, region, max_q)["status"]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+nominal = ('1', '1', '0.9'), tau = '0', region = 'A0', max_q = Fraction(1, 1000)
+
+    def prior_compat(nominal, tau, region, max_q):
+>       raise NotImplementedError
+E       NotImplementedError
+
+scripts/reil_p0.py:16: NotImplementedError
+____________ test_a0_tau0_exact_fraction_boundaries[rows1-lo1-hi1] _____________
+
+rows = (2, 8), lo = Fraction(1, 2000), hi = Fraction(5, 2)
+
+    @pytest.mark.parametrize("rows,lo,hi", [((1, 7), F(1, 1000), F(5)), ((2, 8), F(1, 2000), F(5, 2)),
+                                            ((10,), F(1, 1300), F(50, 13)), ((6, 9), F(1, 600), F(25, 3))])
+    def test_a0_tau0_exact_fraction_boundaries(rows, lo, hi):
+        for i in rows:
+>           assert st(i, "0", "A0", lo) == "PRIOR_COMPATIBLE"
+                   ^^^^^^^^^^^^^^^^^^^^
+
+tests/test_reil_p0.py:25: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_reil_p0.py:17: in st
+    return p0.prior_compat(NOM[i], tau, region, max_q)["status"]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+nominal = ('1', '1', '0.8'), tau = '0', region = 'A0', max_q = Fraction(1, 2000)
+
+    def prior_compat(nominal, tau, region, max_q):
+>       raise NotImplementedError
+E       NotImplementedError
+
+scripts/reil_p0.py:16: NotImplementedError
+____________ test_a0_tau0_exact_fraction_boundaries[rows2-lo2-hi2] _____________
+
+rows = (10,), lo = Fraction(1, 1300), hi = Fraction(50, 13)
+
+    @pytest.mark.parametrize("rows,lo,hi", [((1, 7), F(1, 1000), F(5)), ((2, 8), F(1, 2000), F(5, 2)),
+                                            ((10,), F(1, 1300), F(50, 13)), ((6, 9), F(1, 600), F(25, 3))])
+    def test_a0_tau0_exact_fraction_boundaries(rows, lo, hi):
+        for i in rows:
+>           assert st(i, "0", "A0", lo) == "PRIOR_COMPATIBLE"
+                   ^^^^^^^^^^^^^^^^^^^^
+
+tests/test_reil_p0.py:25: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_reil_p0.py:17: in st
+    return p0.prior_compat(NOM[i], tau, region, max_q)["status"]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+nominal = ('0.64', '0.56', '0.51'), tau = '0', region = 'A0'
+max_q = Fraction(1, 1300)
+
+    def prior_compat(nominal, tau, region, max_q):
+>       raise NotImplementedError
+E       NotImplementedError
+
+scripts/reil_p0.py:16: NotImplementedError
+____________ test_a0_tau0_exact_fraction_boundaries[rows3-lo3-hi3] _____________
+
+rows = (6, 9), lo = Fraction(1, 600), hi = Fraction(25, 3)
+
+    @pytest.mark.parametrize("rows,lo,hi", [((1, 7), F(1, 1000), F(5)), ((2, 8), F(1, 2000), F(5, 2)),
+                                            ((10,), F(1, 1300), F(50, 13)), ((6, 9), F(1, 600), F(25, 3))])
+    def test_a0_tau0_exact_fraction_boundaries(rows, lo, hi):
+        for i in rows:
+>           assert st(i, "0", "A0", lo) == "PRIOR_COMPATIBLE"
+                   ^^^^^^^^^^^^^^^^^^^^
+
+tests/test_reil_p0.py:25: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_reil_p0.py:17: in st
+    return p0.prior_compat(NOM[i], tau, region, max_q)["status"]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+nominal = ('0.64', '1', '0.58'), tau = '0', region = 'A0'
+max_q = Fraction(1, 600)
+
+    def prior_compat(nominal, tau, region, max_q):
+>       raise NotImplementedError
+E       NotImplementedError
+
+scripts/reil_p0.py:16: NotImplementedError
+____________________ test_50_over_13_is_not_rounded_to_3_85 ____________________
+
+    def test_50_over_13_is_not_rounded_to_3_85():
+>       assert st(10, "0", "A0", 3.85) == "PRIOR_INCOMPATIBLE"            # 3.85 > 50/13 = 3.846153…
+               ^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_reil_p0.py:32: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_reil_p0.py:17: in st
+    return p0.prior_compat(NOM[i], tau, region, max_q)["status"]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+nominal = ('0.64', '0.56', '0.51'), tau = '0', region = 'A0', max_q = 3.85
+
+    def prior_compat(nominal, tau, region, max_q):
+>       raise NotImplementedError
+E       NotImplementedError
+
+scripts/reil_p0.py:16: NotImplementedError
+____________________________ test_boundary_rows[0] _____________________________
+
+i = 0
+
+    @pytest.mark.parametrize("i", [0, 4, 5])
+    def test_boundary_rows(i):
+        for q in (0.5, 3.1, 7.0):
+>           assert st(i, "0", "A0", q) == "PRIOR_INCOMPATIBLE"
+                   ^^^^^^^^^^^^^^^^^^^
+
+tests/test_reil_p0.py:40: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_reil_p0.py:17: in st
+    return p0.prior_compat(NOM[i], tau, region, max_q)["status"]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+nominal = ('1', '1', '1'), tau = '0', region = 'A0', max_q = 0.5
+
+    def prior_compat(nominal, tau, region, max_q):
+>       raise NotImplementedError
+E       NotImplementedError
+
+scripts/reil_p0.py:16: NotImplementedError
+____________________________ test_boundary_rows[4] _____________________________
+
+i = 4
+
+    @pytest.mark.parametrize("i", [0, 4, 5])
+    def test_boundary_rows(i):
+        for q in (0.5, 3.1, 7.0):
+>           assert st(i, "0", "A0", q) == "PRIOR_INCOMPATIBLE"
+                   ^^^^^^^^^^^^^^^^^^^
+
+tests/test_reil_p0.py:40: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_reil_p0.py:17: in st
+    return p0.prior_compat(NOM[i], tau, region, max_q)["status"]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+nominal = ('1', '0.56', '1'), tau = '0', region = 'A0', max_q = 0.5
+
+    def prior_compat(nominal, tau, region, max_q):
+>       raise NotImplementedError
+E       NotImplementedError
+
+scripts/reil_p0.py:16: NotImplementedError
+____________________________ test_boundary_rows[5] _____________________________
+
+i = 5
+
+    @pytest.mark.parametrize("i", [0, 4, 5])
+    def test_boundary_rows(i):
+        for q in (0.5, 3.1, 7.0):
+>           assert st(i, "0", "A0", q) == "PRIOR_INCOMPATIBLE"
+                   ^^^^^^^^^^^^^^^^^^^
+
+tests/test_reil_p0.py:40: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_reil_p0.py:17: in st
+    return p0.prior_compat(NOM[i], tau, region, max_q)["status"]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+nominal = ('0.64', '1', '0.64'), tau = '0', region = 'A0', max_q = 0.5
+
+    def prior_compat(nominal, tau, region, max_q):
+>       raise NotImplementedError
+E       NotImplementedError
+
+scripts/reil_p0.py:16: NotImplementedError
+___________________________ test_lli2_tau_boundaries ___________________________
+
+    def test_lli2_tau_boundaries():
+        for i in (2, 8):
+>           assert st(i, "0.02", "A0", F(25, 8)) == "PRIOR_COMPATIBLE"
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_reil_p0.py:51: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_reil_p0.py:17: in st
+    return p0.prior_compat(NOM[i], tau, region, max_q)["status"]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+nominal = ('1', '1', '0.8'), tau = '0.02', region = 'A0'
+max_q = Fraction(25, 8)
+
+    def prior_compat(nominal, tau, region, max_q):
+>       raise NotImplementedError
+E       NotImplementedError
+
+scripts/reil_p0.py:16: NotImplementedError
+_________________ test_row3_structurally_incompatible_under_G __________________
+
+    def test_row3_structurally_incompatible_under_G():
+        for tau in ("0", "0.02", "0.05"):
+            for q in (0.01, 3.1, 100.0):
+>               assert st(3, tau, "A0", q) == "PRIOR_INCOMPATIBLE"
+                       ^^^^^^^^^^^^^^^^^^^
+
+tests/test_reil_p0.py:63: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_reil_p0.py:17: in st
+    return p0.prior_compat(NOM[i], tau, region, max_q)["status"]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+nominal = ('0.64', '1', '1'), tau = '0', region = 'A0', max_q = 0.01
+
+    def prior_compat(nominal, tau, region, max_q):
+>       raise NotImplementedError
+E       NotImplementedError
+
+scripts/reil_p0.py:16: NotImplementedError
+_________________ test_empty_box_intersection_is_incompatible __________________
+
+    def test_empty_box_intersection_is_incompatible():
+        # m_P 명목 1.3 은 A0 상자 [0.6, 1.1] 밖 — τ = 0.05 로도 P = ∅
+>       r = p0.prior_compat(("1.3", "1", "1.2"), "0.05", "A0", 3.0)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_reil_p0.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+nominal = ('1.3', '1', '1.2'), tau = '0.05', region = 'A0', max_q = 3.0
+
+    def prior_compat(nominal, tau, region, max_q):
+>       raise NotImplementedError
+E       NotImplementedError
+
+scripts/reil_p0.py:16: NotImplementedError
+________________ test_bad_max_q_is_unfit_not_incompatible[0.0] _________________
+
+bad = 0.0
+
+    @pytest.mark.parametrize("bad", [0.0, -1.0, float("nan"), float("inf"), None])
+    def test_bad_max_q_is_unfit_not_incompatible(bad):
+>       assert st(1, "0", "A0", bad) == "P0_UNFIT"
+               ^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_reil_p0.py:76: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_reil_p0.py:17: in st
+    return p0.prior_compat(NOM[i], tau, region, max_q)["status"]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+nominal = ('1', '1', '0.9'), tau = '0', region = 'A0', max_q = 0.0
+
+    def prior_compat(nominal, tau, region, max_q):
+>       raise NotImplementedError
+E       NotImplementedError
+
+scripts/reil_p0.py:16: NotImplementedError
+________________ test_bad_max_q_is_unfit_not_incompatible[-1.0] ________________
+
+bad = -1.0
+
+    @pytest.mark.parametrize("bad", [0.0, -1.0, float("nan"), float("inf"), None])
+    def test_bad_max_q_is_unfit_not_incompatible(bad):
+>       assert st(1, "0", "A0", bad) == "P0_UNFIT"
+               ^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_reil_p0.py:76: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_reil_p0.py:17: in st
+    return p0.prior_compat(NOM[i], tau, region, max_q)["status"]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+nominal = ('1', '1', '0.9'), tau = '0', region = 'A0', max_q = -1.0
+
+    def prior_compat(nominal, tau, region, max_q):
+>       raise NotImplementedError
+E       NotImplementedError
+
+scripts/reil_p0.py:16: NotImplementedError
+________________ test_bad_max_q_is_unfit_not_incompatible[nan] _________________
+
+bad = nan
+
+    @pytest.mark.parametrize("bad", [0.0, -1.0, float("nan"), float("inf"), None])
+    def test_bad_max_q_is_unfit_not_incompatible(bad):
+>       assert st(1, "0", "A0", bad) == "P0_UNFIT"
+               ^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_reil_p0.py:76: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_reil_p0.py:17: in st
+    return p0.prior_compat(NOM[i], tau, region, max_q)["status"]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+nominal = ('1', '1', '0.9'), tau = '0', region = 'A0', max_q = nan
+
+    def prior_compat(nominal, tau, region, max_q):
+>       raise NotImplementedError
+E       NotImplementedError
+
+scripts/reil_p0.py:16: NotImplementedError
+________________ test_bad_max_q_is_unfit_not_incompatible[inf] _________________
+
+bad = inf
+
+    @pytest.mark.parametrize("bad", [0.0, -1.0, float("nan"), float("inf"), None])
+    def test_bad_max_q_is_unfit_not_incompatible(bad):
+>       assert st(1, "0", "A0", bad) == "P0_UNFIT"
+               ^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_reil_p0.py:76: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_reil_p0.py:17: in st
+    return p0.prior_compat(NOM[i], tau, region, max_q)["status"]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+nominal = ('1', '1', '0.9'), tau = '0', region = 'A0', max_q = inf
+
+    def prior_compat(nominal, tau, region, max_q):
+>       raise NotImplementedError
+E       NotImplementedError
+
+scripts/reil_p0.py:16: NotImplementedError
+________________ test_bad_max_q_is_unfit_not_incompatible[None] ________________
+
+bad = None
+
+    @pytest.mark.parametrize("bad", [0.0, -1.0, float("nan"), float("inf"), None])
+    def test_bad_max_q_is_unfit_not_incompatible(bad):
+>       assert st(1, "0", "A0", bad) == "P0_UNFIT"
+               ^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_reil_p0.py:76: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_reil_p0.py:17: in st
+    return p0.prior_compat(NOM[i], tau, region, max_q)["status"]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+nominal = ('1', '1', '0.9'), tau = '0', region = 'A0', max_q = None
+
+    def prior_compat(nominal, tau, region, max_q):
+>       raise NotImplementedError
+E       NotImplementedError
+
+scripts/reil_p0.py:16: NotImplementedError
+_______________________ test_max_q_float_is_used_exactly _______________________
+
+    def test_max_q_float_is_used_exactly():
+        q = 0.1 + 0.2                       # 0.30000000000000004 — Fraction(q) 그대로
+>       r = p0.prior_compat(NOM[1], "0", "A0", q)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_reil_p0.py:81: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+nominal = ('1', '1', '0.9'), tau = '0', region = 'A0'
+max_q = 0.30000000000000004
+
+    def prior_compat(nominal, tau, region, max_q):
+>       raise NotImplementedError
+E       NotImplementedError
+
+scripts/reil_p0.py:16: NotImplementedError
+____________ test_table_shape_and_endpoints_as_fraction_and_decimal ____________
+
+    def test_table_shape_and_endpoints_as_fraction_and_decimal():
+>       t = p0.prior_table(3.1)
+            ^^^^^^^^^^^^^^^^^^^
+
+tests/test_reil_p0.py:86: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+max_q = 3.1
+
+    def prior_table(max_q):
+>       raise NotImplementedError
+E       NotImplementedError
+
+scripts/reil_p0.py:20: NotImplementedError
+__________________ test_sigma_v_zero_on_cubic_and_unfit_rules __________________
+
+    def test_sigma_v_zero_on_cubic_and_unfit_rules():
+        v = np.polyval([1e-3, -2e-2, 0.1, 3.3], np.arange(40.0))
+>       val, status = p0.sigma_v(v)
+                      ^^^^^^^^^^^^^
+
+tests/test_reil_p0.py:97: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+v = array([ 3.3  ,  3.381,  3.428,  3.447,  3.444,  3.425,  3.396,  3.363,
+        3.332,  3.309,  3.3  ,  3.311,  3.348, ... 9.956, 11.103, 12.372, 13.769, 15.3  , 16.971,
+       18.788, 20.757, 22.884, 25.175, 27.636, 30.273, 33.092, 36.099])
+
+    def sigma_v(v):
+>       raise NotImplementedError
+E       NotImplementedError
+
+scripts/reil_p0.py:24: NotImplementedError
+___________________ test_sigma_v_matches_definition_on_noise ___________________
+
+    def test_sigma_v_matches_definition_on_noise():
+        from scipy.signal import savgol_filter
+        rng = np.random.default_rng(0)
+        v = 3.3 + 0.01 * rng.standard_normal(200)
+        want = float(np.sqrt(np.mean((v - savgol_filter(v, 21, 3, mode="interp")) ** 2)))
+>       assert p0.sigma_v(v) == (want, "OK")
+               ^^^^^^^^^^^^^
+
+tests/test_reil_p0.py:110: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+v = array([3.3012573 , 3.29867895, 3.30640423, 3.301049  , 3.29464331,
+       3.30361595, 3.31304   , 3.30947081, 3.292962...35, 3.28692247, 3.31086831, 3.29949396, 3.29716875,
+       3.31643252, 3.28717351, 3.29414342, 3.29527412, 3.30586337])
+
+    def sigma_v(v):
+>       raise NotImplementedError
+E       NotImplementedError
+
+scripts/reil_p0.py:24: NotImplementedError
+_____________ test_combine[\uc77c\uce58-\uc77c\uce58-\uc77c\uce58] _____________
+
+c = '일치', d = '일치', want = '일치'
+
+    @pytest.mark.parametrize("c,d,want", [("일치", "일치", "일치"), ("불일치", "일치", "불일치"), ("일치", "불일치", "불일치"),
+                                          ("불일치", "판정 불가", "불일치"), ("판정 불가", "일치", "판정 불가"),
+                                          ("판정 불가", "판정 불가", "판정 불가")])
+    def test_combine(c, d, want):
+>       assert p0.combine(c, d) == want
+               ^^^^^^^^^^^^^^^^
+
+tests/test_reil_p0.py:118: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+c = '일치', d = '일치'
+
+    def combine(c, d):
+>       raise NotImplementedError
+E       NotImplementedError
+
+scripts/reil_p0.py:28: NotImplementedError
+_______ test_combine[\ubd88\uc77c\uce58-\uc77c\uce58-\ubd88\uc77c\uce58] _______
+
+c = '불일치', d = '일치', want = '불일치'
+
+    @pytest.mark.parametrize("c,d,want", [("일치", "일치", "일치"), ("불일치", "일치", "불일치"), ("일치", "불일치", "불일치"),
+                                          ("불일치", "판정 불가", "불일치"), ("판정 불가", "일치", "판정 불가"),
+                                          ("판정 불가", "판정 불가", "판정 불가")])
+    def test_combine(c, d, want):
+>       assert p0.combine(c, d) == want
+               ^^^^^^^^^^^^^^^^
+
+tests/test_reil_p0.py:118: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+c = '불일치', d = '일치'
+
+    def combine(c, d):
+>       raise NotImplementedError
+E       NotImplementedError
+
+scripts/reil_p0.py:28: NotImplementedError
+_______ test_combine[\uc77c\uce58-\ubd88\uc77c\uce58-\ubd88\uc77c\uce58] _______
+
+c = '일치', d = '불일치', want = '불일치'
+
+    @pytest.mark.parametrize("c,d,want", [("일치", "일치", "일치"), ("불일치", "일치", "불일치"), ("일치", "불일치", "불일치"),
+                                          ("불일치", "판정 불가", "불일치"), ("판정 불가", "일치", "판정 불가"),
+                                          ("판정 불가", "판정 불가", "판정 불가")])
+    def test_combine(c, d, want):
+>       assert p0.combine(c, d) == want
+               ^^^^^^^^^^^^^^^^
+
+tests/test_reil_p0.py:118: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+c = '일치', d = '불일치'
+
+    def combine(c, d):
+>       raise NotImplementedError
+E       NotImplementedError
+
+scripts/reil_p0.py:28: NotImplementedError
+_ test_combine[\ubd88\uc77c\uce58-\ud310\uc815 \ubd88\uac00-\ubd88\uc77c\uce58] _
+
+c = '불일치', d = '판정 불가', want = '불일치'
+
+    @pytest.mark.parametrize("c,d,want", [("일치", "일치", "일치"), ("불일치", "일치", "불일치"), ("일치", "불일치", "불일치"),
+                                          ("불일치", "판정 불가", "불일치"), ("판정 불가", "일치", "판정 불가"),
+                                          ("판정 불가", "판정 불가", "판정 불가")])
+    def test_combine(c, d, want):
+>       assert p0.combine(c, d) == want
+               ^^^^^^^^^^^^^^^^
+
+tests/test_reil_p0.py:118: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+c = '불일치', d = '판정 불가'
+
+    def combine(c, d):
+>       raise NotImplementedError
+E       NotImplementedError
+
+scripts/reil_p0.py:28: NotImplementedError
+_ test_combine[\ud310\uc815 \ubd88\uac00-\uc77c\uce58-\ud310\uc815 \ubd88\uac00] _
+
+c = '판정 불가', d = '일치', want = '판정 불가'
+
+    @pytest.mark.parametrize("c,d,want", [("일치", "일치", "일치"), ("불일치", "일치", "불일치"), ("일치", "불일치", "불일치"),
+                                          ("불일치", "판정 불가", "불일치"), ("판정 불가", "일치", "판정 불가"),
+                                          ("판정 불가", "판정 불가", "판정 불가")])
+    def test_combine(c, d, want):
+>       assert p0.combine(c, d) == want
+               ^^^^^^^^^^^^^^^^
+
+tests/test_reil_p0.py:118: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+c = '판정 불가', d = '일치'
+
+    def combine(c, d):
+>       raise NotImplementedError
+E       NotImplementedError
+
+scripts/reil_p0.py:28: NotImplementedError
+_ test_combine[\ud310\uc815 \ubd88\uac00-\ud310\uc815 \ubd88\uac00-\ud310\uc815 \ubd88\uac00] _
+
+c = '판정 불가', d = '판정 불가', want = '판정 불가'
+
+    @pytest.mark.parametrize("c,d,want", [("일치", "일치", "일치"), ("불일치", "일치", "불일치"), ("일치", "불일치", "불일치"),
+                                          ("불일치", "판정 불가", "불일치"), ("판정 불가", "일치", "판정 불가"),
+                                          ("판정 불가", "판정 불가", "판정 불가")])
+    def test_combine(c, d, want):
+>       assert p0.combine(c, d) == want
+               ^^^^^^^^^^^^^^^^
+
+tests/test_reil_p0.py:118: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+c = '판정 불가', d = '판정 불가'
+
+    def combine(c, d):
+>       raise NotImplementedError
+E       NotImplementedError
+
+scripts/reil_p0.py:28: NotImplementedError
+_____________________ test_cycle_state_rules_no_inference ______________________
+
+    def test_cycle_state_rules_no_inference():
+        # 메타데이터 없음 → 판정 불가 (NaN 분절 번호 · step 순번으로 채우지 않는다)
+>       assert p0.cycle_state(cycle_cols=[], values=None, n_cells=1)[0] == "판정 불가"
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_reil_p0.py:123: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+cycle_cols = [], values = None, n_cells = 1
+
+    def cycle_state(cycle_cols, values, n_cells):
+>       raise NotImplementedError
+E       NotImplementedError
+
+scripts/reil_p0.py:32: NotImplementedError
+_______________ test_direction_needs_documented_sign_convention ________________
+
+    def test_direction_needs_documented_sign_convention():
+        # P0 입력에 장비 · 전지 부호 규약 문서가 없다 → raw 를 적되 판정 불가 (추측으로 통과시키지 않는다)
+>       assert p0.direction_state(step_values=["CC_Chg"], current_sign="양", convention=None)[0] == "판정 불가"
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_reil_p0.py:136: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+step_values = ['CC_Chg'], current_sign = '양', convention = None
+
+    def direction_state(step_values, current_sign, convention):
+>       raise NotImplementedError
+E       NotImplementedError
+
+scripts/reil_p0.py:36: NotImplementedError
+____________________ test_sheet_set_exact_no_fuzzy_matching ____________________
+
+    def test_sheet_set_exact_no_fuzzy_matching():
+>       assert p0.sheet_set_diff(list(p0.SHEETS_ALL)) == {"missing": [], "extra": [], "same": True}
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_reil_p0.py:141: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+actual = ['15-LFP 16-Gr Full-cell @ C_20', '15-LFP 16-Gr SOC-10', '15-LFP 16-Gr SOC-20', '12-LFP 16-Gr SOC-100', '15-LFP 12-Gr Full-cell @ C_20', 'Full cell after FM SOC 0', ...]
+
+    def sheet_set_diff(actual):
+>       raise NotImplementedError
+E       NotImplementedError
+
+scripts/reil_p0.py:40: NotImplementedError
+____________ test_util_static_check_rejects_top_level_side_effects _____________
+
+    def test_util_static_check_rejects_top_level_side_effects():
+        ok = "import numpy as np\nfrom x import y\n\ndef f():\n    return open('a','w')\n"
+>       assert p0.util_static_check(ok)["ok"] is True
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_reil_p0.py:156: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = "import numpy as np\nfrom x import y\n\ndef f():\n    return open('a','w')\n"
+
+    def util_static_check(text):
+>       raise NotImplementedError
+E       NotImplementedError
+
+scripts/reil_p0.py:44: NotImplementedError
+=========================== short test summary info ============================
+FAILED tests/test_reil_p0.py::test_a0_tau0_exact_fraction_boundaries[rows0-lo0-hi0]
+FAILED tests/test_reil_p0.py::test_a0_tau0_exact_fraction_boundaries[rows1-lo1-hi1]
+FAILED tests/test_reil_p0.py::test_a0_tau0_exact_fraction_boundaries[rows2-lo2-hi2]
+FAILED tests/test_reil_p0.py::test_a0_tau0_exact_fraction_boundaries[rows3-lo3-hi3]
+FAILED tests/test_reil_p0.py::test_50_over_13_is_not_rounded_to_3_85 - NotImp...
+FAILED tests/test_reil_p0.py::test_boundary_rows[0] - NotImplementedError
+FAILED tests/test_reil_p0.py::test_boundary_rows[4] - NotImplementedError
+FAILED tests/test_reil_p0.py::test_boundary_rows[5] - NotImplementedError
+FAILED tests/test_reil_p0.py::test_lli2_tau_boundaries - NotImplementedError
+FAILED tests/test_reil_p0.py::test_row3_structurally_incompatible_under_G - N...
+FAILED tests/test_reil_p0.py::test_empty_box_intersection_is_incompatible - N...
+FAILED tests/test_reil_p0.py::test_bad_max_q_is_unfit_not_incompatible[0.0]
+FAILED tests/test_reil_p0.py::test_bad_max_q_is_unfit_not_incompatible[-1.0]
+FAILED tests/test_reil_p0.py::test_bad_max_q_is_unfit_not_incompatible[nan]
+FAILED tests/test_reil_p0.py::test_bad_max_q_is_unfit_not_incompatible[inf]
+FAILED tests/test_reil_p0.py::test_bad_max_q_is_unfit_not_incompatible[None]
+FAILED tests/test_reil_p0.py::test_max_q_float_is_used_exactly - NotImplement...
+FAILED tests/test_reil_p0.py::test_table_shape_and_endpoints_as_fraction_and_decimal
+FAILED tests/test_reil_p0.py::test_sigma_v_zero_on_cubic_and_unfit_rules - No...
+FAILED tests/test_reil_p0.py::test_sigma_v_matches_definition_on_noise - NotI...
+FAILED tests/test_reil_p0.py::test_combine[\uc77c\uce58-\uc77c\uce58-\uc77c\uce58]
+FAILED tests/test_reil_p0.py::test_combine[\ubd88\uc77c\uce58-\uc77c\uce58-\ubd88\uc77c\uce58]
+FAILED tests/test_reil_p0.py::test_combine[\uc77c\uce58-\ubd88\uc77c\uce58-\ubd88\uc77c\uce58]
+FAILED tests/test_reil_p0.py::test_combine[\ubd88\uc77c\uce58-\ud310\uc815 \ubd88\uac00-\ubd88\uc77c\uce58]
+FAILED tests/test_reil_p0.py::test_combine[\ud310\uc815 \ubd88\uac00-\uc77c\uce58-\ud310\uc815 \ubd88\uac00]
+FAILED tests/test_reil_p0.py::test_combine[\ud310\uc815 \ubd88\uac00-\ud310\uc815 \ubd88\uac00-\ud310\uc815 \ubd88\uac00]
+FAILED tests/test_reil_p0.py::test_cycle_state_rules_no_inference - NotImplem...
+FAILED tests/test_reil_p0.py::test_direction_needs_documented_sign_convention
+FAILED tests/test_reil_p0.py::test_sheet_set_exact_no_fuzzy_matching - NotImp...
+FAILED tests/test_reil_p0.py::test_util_static_check_rejects_top_level_side_effects
+30 failed, 1 passed in 7.98s
+rc=1

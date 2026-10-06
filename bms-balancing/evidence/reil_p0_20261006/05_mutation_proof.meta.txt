@@ -1,0 +1,7 @@
+argv: /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/bin/python bms-balancing/scripts/reil_c6_mutation_proof.py bms-balancing/reil_c6_rebuild_20261006 /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/mut_work
+cwd: /home/user/Yonghoon-DEM-DFT
+start_utc: 2026-10-06T07:42:27Z
+head: 6673f0193f40f04870a97bb948481508cc7e3379
+tree_dirty_lines: 1
+end_utc: 2026-10-06T07:44:47Z
+rc: 0

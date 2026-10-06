@@ -1,0 +1,13 @@
+PASS  baseline_plus_human_records      rc=0 want=0  | check OK
+PASS  lock_numpy_version               rc=1 want=1  | 다름: MANIFEST.json · 다름: REIL_C6.lock.txt · check FAIL (2)
+PASS  lock_collision_line              rc=1 want=1  | 다름: MANIFEST.json · 다름: REIL_C6.lock.txt · check FAIL (2)
+PASS  sobol_array_one_bit              rc=1 want=1  | 다름: MANIFEST.json · 다름: SOBOL_PHASE_A.json · 다름: sobol_unit_seed0.npy · check FAIL (3)
+PASS  sobol_legacy_seed_fact           rc=1 want=1  | 다름: MANIFEST.json · 다름: SOBOL_PHASE_A.json · check FAIL (2)
+PASS  cobyqa_description               rc=1 want=1  | 다름: COBYQA_OPTIONS.json · 다름: MANIFEST.json · check FAIL (2)
+PASS  cobyqa_implementation_hash       rc=1 want=1  | 다름: COBYQA_OPTIONS.json · 다름: MANIFEST.json · check FAIL (2)
+PASS  profile_blas_version             rc=1 want=1  | 다름: MANIFEST.json · 다름: PROFILE.json · check FAIL (2)
+PASS  manifest_hash_only               rc=1 want=1  | 다름: MANIFEST.json · 다름: PROFILE.json · check FAIL (2)
+PASS  manifest_entry_dropped           rc=1 want=1  | 다름: MANIFEST.json · check FAIL (1)
+PASS  file_removed_with_manifest       rc=1 want=1  | 다름: MANIFEST.json · 다름: sobol_A1_A2_wide_box_seed1.npy · check FAIL (2)
+PASS  extra_file                       rc=1 want=1  | 다름: sobol_extra.npy · check FAIL (1)
+mutation proofs: ALL PASS (12 cases)
