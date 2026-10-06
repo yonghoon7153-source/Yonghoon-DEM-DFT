@@ -97,9 +97,11 @@ def main():
                  f'ion_net_status_reason_{m}', f'ion_net_area_mode_{m}', f'ion_net_constriction_{m}', f'ion_net_psi_{m}',
                  f'ion_net_area_rule_{m}', f'ion_net_electrode_{m}', f'ion_net_bulk_{m}',
                  f'ion_net_band_rule_{m}', f'ion_net_band_frac_{m}', f'ion_net_basis_check_{m}'}
-    want |= {'ion_sigma0_mScm', 'ion_sigma0_T_C', 'phi_basis', 'L_basis'}
-    chk('A3 키 = v2 §5-1 (상태 · 메타는 모드 꼬리 — 10-04 비준) + 10-06 세대 2 (모드 hertz_h12 · 표기 셋) · 꼬리 없는 상태 키 (`ion_net_status`) 없음',
-        set(o) == want and 'ion_net_status' not in o)
+    #  ★ 10-06 밤 (G2R-02) — 공통 세대 칸 ion_net_generation (g2 · inferred_legacy · invalid — 옛 세대 추론이 행에서 보인다)
+    want |= {'ion_sigma0_mScm', 'ion_sigma0_T_C', 'phi_basis', 'L_basis', 'ion_net_generation'}
+    chk('A3 키 = v2 §5-1 (상태 · 메타는 모드 꼬리 — 10-04 비준) + 10-06 세대 2 (모드 hertz_h12 · 표기 셋) + 10-06 밤 세대 칸 · 꼬리 없는 상태 키 '
+        '(`ion_net_status`) 없음 · 표기 없는 손 레코드 = inferred_legacy',
+        set(o) == want and 'ion_net_status' not in o and o.get('ion_net_generation') == 'inferred_legacy')
     chk('A4 메타: 면적 모드 hertz/physics · 협착 maxwell_halfspace / mikic_psi_divide · ψ = physics 만 legacy_divide · '
         'σ₀ 3.0 mS/cm @ 25 °C · phi_basis mass_conserving · L_basis L_mc',
         o['ion_net_area_mode_hertz'] == 'hertz' and o['ion_net_area_mode_physics'] == 'physics'

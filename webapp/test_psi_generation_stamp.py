@@ -15,7 +15,8 @@
   ④ τ 인계 메타 (`tau_flux.case_row` — 같은 폴더) — 협착 mikic_psi_multiply · ψ multiply · 상태 OK
   ⑤ ★ 10-06 저녁 세대 2 (1저자 비준 C1 · C2) — 전극 · bulk · physics 면적 규칙 표기 (full_metrics · 활성 도장) · H12 민감도 레코드
      (Hertz 레코드 안 · 모든 사본 · τ 상태 OK) · 망 정지 계약 ⑨ 가 H12 없음 · H12 σ ×4 · H12 짝 메타 어긋남 · 모드끼리 전극 섞임을 거부
-     (복사본 폴더 · 다른 것은 그대로 — 거부 사유가 ⑨ 하나뿐) · 옛 세대 (표기 없는 legacy) 투영엔 새 표기 키가 없다
+     (복사본 폴더 · 다른 것은 그대로 — 거부 사유가 ⑨ 뿐 · ★ 10-06 밤 세대 계약 (G2R-01 · 02) 뒤로는 H12 없음 · 짝 메타 · 전극 섞임에 τ 소비자 ⑦ 도
+     같은 계약으로 함께 선다) · 옛 세대 (표기 없는 legacy) 투영엔 새 표기 키가 없다
 ⚠ 범위 — 합성 21 구 사슬 침대의 표기 · 소유 시험이다 (값 · 물리 정확도 아님).
 """
 import json
@@ -182,9 +183,11 @@ def main():
                 if isinstance(dd.get('physics'), dict):
                     dd['physics']['electrode_model'] = 'virtual_source_legacy'
             #  (라벨 · 변이 · 꼭 있어야 할 사유 · 허용 사유 머리) — 전극 섞임은 τ 소비자 (⑦ — 한 행 안 전극 세대 섞임 = NOT_COMPUTED) 도 함께 거부한다
-            for lab, fn, tag, allow in (('⑤e H12 없음 (세대 2 Hertz 레코드)', _drop, '⑨ H12', ('⑨',)),
+            #  ★ 10-06 밤 (G2R-01 · 02 · 1저자 비준 세대 계약) — H12 없음 (부분 결손) · H12 짝 메타 어긋남도 이제 τ 소비자가 **같은 세대 계약**으로 케이스
+            #    전체를 NOT_COMPUTED (invalid_input) 로 막는다 → ⑦ τ 인계 사유가 함께 선다 (⑨ 가 거부한다는 사실 · 사유 문구는 그대로).
+            for lab, fn, tag, allow in (('⑤e H12 없음 (세대 2 Hertz 레코드)', _drop, '⑨ H12', ('⑨', '⑦ τ 인계')),
                                         ('⑤f H12 σ_full_mScm ×4 (σ_ratio 그대로 — 두 표현 항등식 깨짐)', _x4, '⑨ H12: 기술적 입력 무효', ('⑨',)),
-                                        ('⑤g H12 bulk = 원기둥 (짝 메타 어긋남 — ψ 단독 H1 은 기각)', _bulk, '⑨ H12: 짝 메타', ('⑨',)),
+                                        ('⑤g H12 bulk = 원기둥 (짝 메타 어긋남 — ψ 단독 H1 은 기각)', _bulk, '⑨ H12: 짝 메타', ('⑨', '⑦ τ 인계')),
                                         ('⑤h 모드끼리 전극 섞임 (physics = virtual_source_legacy)', _mix, '⑨ 세대 섞임', ('⑨', '⑦ τ 인계'))):
                 okv, whyv = ps.network_stop_verdict(_variant(d, os.path.join(d5, lab[:2]), fn), rid)
                 bad_other = [w for w in str(whyv).split('; ') if not w.startswith(allow)]

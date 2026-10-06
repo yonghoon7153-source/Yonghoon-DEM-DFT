@@ -18,6 +18,9 @@ subprocess 는 전부 **가짜 실행기**로 바꿔 센다 — 실제 solver �
     T23 중단된 게시 흔적 (stash · 사본) 이 남은 폴더를 유효 세대로 조용히 재사용하지 않는다.
     가짜 실행기 (FakeRunner 류) 의 망 레코드는 생산자 계약 모양 (`_fake_net_rec`) 으로 맞췄다 — 공용 기술 검사가 일반 경로에도 서므로
     계약보다 느슨한 fixture 는 거짓 실패한다 (RC7-02 와 같은 fixture-drift 규약).
+  ★ 10-06 밤 (Codex G2R-01 · 02 · 1저자 비준) — 승격 전 공용 세대 계약이 현행 생산물에 세대 2 표기 전부 (모드마다 H0 · physics + H12 민감도) 를
+    요구한다 → 가짜 망 레코드 (`_write_fake_net` · T16a) 도 `_g2_net_records` 로 생산자 세대 2 모양을 갖춘다 (값 · 상태는 그대로).
+    역할 · 닫힌 열거 · 부분 결손 반례 = test_gen2_publication_handover (실 생산자 사슬).
 
   python3 webapp/test_pipeline_provenance.py
 """
@@ -68,9 +71,27 @@ def _fake_net_rec(sigma_mScm, **over):
     return rec
 
 
+def _g2_net_records(rec_h, rec_p):
+    """★ 10-06 밤 세대 계약 (Codex G2R-01 · 02 · 1저자 비준) — 가짜 solver 레코드에 생산자 세대 2 표기를 붙인다: 모드마다 `tau_flux.G2_MODE_CONTRACT`
+    (주 Hertz = H0 · physics) + Hertz 안 H12 민감도 레코드 (같은 σ · 같은 그래프 · H12 표기).  승격 전 공용 기록 검사 (일반 · 정지 경로) 가 현행 생산물에
+    세대 2 표기 **전부**를 요구한다 — 표기 없는 옛 모양 가짜는 거짓 실패한다 (RGLR2-01 · RC7-02 와 같은 fixture-drift 규약).  값 (σ · 상태) 은 그대로."""
+    if _SCRIPTS_DIR not in sys.path:
+        sys.path.insert(0, _SCRIPTS_DIR)
+    import tau_flux as _tf
+
+    def _lab(rec, mode):
+        out = {k: v for k, v in rec.items() if k != _tf.H12_MODE}
+        out.update({k: v for k, v in _tf.G2_MODE_CONTRACT[mode] if v is not None})
+        return out
+    h = _lab(rec_h, 'hertz')
+    h[_tf.H12_MODE] = _lab(rec_h, _tf.H12_MODE)
+    return h, _lab(rec_p, 'physics')
+
+
 def _write_fake_net(d, rec_h, rec_p=None):
-    """네 망 JSON (legacy = Hertz 사본 · 모드 파일 둘 · dual = 두 모드) 을 생산자와 같은 모양으로 쓴다."""
+    """네 망 JSON (legacy = Hertz 사본 · 모드 파일 둘 · dual = 두 모드) 을 생산자와 같은 모양으로 쓴다 (★ 10-06 밤 — 세대 2 표기 · H12 포함)."""
     rec_p = rec_h if rec_p is None else rec_p
+    rec_h, rec_p = _g2_net_records(rec_h, rec_p)
     for _n, _v in (('network_conductivity.json', rec_h), ('network_conductivity_hertzian.json', rec_h),
                    ('network_conductivity_physics.json', rec_p),
                    ('network_conductivity_dual.json', {'hertzian': rec_h, 'physics': rec_p})):
@@ -650,7 +671,8 @@ def _t13_t20_network_real(webapp):
             fm.update(seed or {})
             with open(os.path.join(d, 'full_metrics.json'), 'w') as f:
                 json.dump(fm, f)
-            H, P = _codex_record('hertzian'), _codex_record('physics')
+            #  ★ 10-06 밤 — 세대 2 표기 (H0 · physics · H12) 를 붙인다 (승격 전 세대 계약 · 값은 Codex 수치 그대로)
+            H, P = _g2_net_records(_codex_record('hertzian'), _codex_record('physics'))
             arts = {'network_conductivity.json': copy.deepcopy(H), 'network_conductivity_hertzian.json': H,
                     'network_conductivity_physics.json': P,
                     'network_conductivity_dual.json': {'hertzian': copy.deepcopy(H), 'physics': copy.deepcopy(P)}}

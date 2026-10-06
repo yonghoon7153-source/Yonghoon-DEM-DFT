@@ -1350,7 +1350,7 @@ WA_GROUPS = ('contact', 'percolation', 'f1', 'fracture', 'area')
 #:   ④a 협착 전력 몫 · electronic_active_fraction 은 아직 인계 묶음이 아니다 (v1.2 범위 밖 · Codex 10-05 3차 §6-5).
 #:   생산 쪽 정지점 (배치 `--stop-after` choices · 웹앱 `PIPELINE_STOP_AFTER`) 이 늘면 여기에 역량을 적기 전까지 거부한다 (selftest ㉖i 가 동기를 본다).
 #: ★ 망 τ 묶음 (v1.2 · Codex 10-05 3차 재검증 §3 Q5 · §6-5 *"⑤⑥⑦ · 망 τ 만 · LW 제외"*) — network 정지 배치의 케이스 폴더 (`<--work>/results/<case>/`)
-#:   에서 **tau_flux 자신** (`case_row`) 이 낸 이온 망 인계 열 (v2 §5-1 · 모드 꼬리 · `tau_flux.column_names()` — 10-06 저녁부터 49 열: 모드 셋 × 15 + 공통 4) 을 싣는다.  census 열이 아니라
+#:   에서 **tau_flux 자신** (`case_row`) 이 낸 이온 망 인계 열 (v2 §5-1 · 모드 꼬리 · `tau_flux.column_names()` — 10-06 밤부터 50 열: 모드 셋 × 15 + 공통 5 (σ₀ · T · φ · L 기준 · 세대 칸)) 을 싣는다.  census 열이 아니라
 #:   (metrics_flat 에 dual 레코드가 없다) 별도 원천 (`load_tau_results` · CLI `--tau-results`) 이 필요하다 — 묶음만 부르거나 원천만 주면 거부.
 WA_TAU_GROUP = 'tau'
 WA_ALL_GROUPS = WA_GROUPS + (WA_TAU_GROUP,)
@@ -1658,7 +1658,11 @@ TAU_NET_SCHEMA = 'lhs_tau_net/v2'
 TAU_NET_SOURCE = 'tau_flux'
 #: ★ 10-05 RGLR3-02 (Codex 4차 재검증 §3 · §8-2) — 인계 때 케이스마다 다시 도는 같은 세대 검사 (이 순서 · 출처 부록 same_generation_checks 에 그대로).
 #:   하나라도 실패하면 생성기가 거부한다 (P0–P3 과 같은 규칙 — 그 케이스 τ 를 빈칸 + 사유로 싣지 않는다) ⇒ 출처 부록에 행이 있다 = 이 검사를 다 통과했다.
-TAU_SAME_GEN_CHECKS = ('P0_records', 'P1_run_id', 'P2_input_digest', 'P3_batch_tie', 'P4_stop_contract', 'P4_generation', 'P4_read_stable')
+#:   ★ 10-06 밤 (G2R-01 · 02) — P4_model_generation = 공용 세대 계약 (tau_flux.network_generation_contract — 모드마다 허용 모델 조합 · 닫힌 열거 ·
+#:   부분 결손 거부) + 옛 세대 추론 자격 (도장이 세대 2 게시를 말하면 표지 없는 레코드를 옛 세대로 읽지 않는다 — pipeline_service.provenance_claims_generation2 ·
+#:   거울: 세대 2 레코드가 세대 2 이전 도장 아래면 거부 — provenance_predates_generation2).
+TAU_SAME_GEN_CHECKS = ('P0_records', 'P1_run_id', 'P2_input_digest', 'P3_batch_tie', 'P4_model_generation', 'P4_stop_contract', 'P4_generation',
+                       'P4_read_stable')
 #: 대조의 기준 — **지금 파일끼리** (배치 기록 status.json · metrics_flat 과 폴더의 모든 사본) · 게시 시점 해시가 없다 ⇒ 모든 사본 (dual · 모드 파일 ·
 #:   legacy · full_metrics · 도장) 을 함께 일관되게 바꾼 편집은 못 잡는다 (Codex RGLR3-02 §8-2 마지막 항 — 잡으려면 게시 때 결과 해시를 배치 기록에 묶어야 한다).
 TAU_SAME_GEN_BASIS = 'current_files_no_publish_hash'
@@ -1684,8 +1688,9 @@ _TAU_AREA = {'hertz': ('hertz = LIGGGHTS c_cpl[22] 기하 교차 원판 π(rδ �
 #: 한정어 (v2 §5-3) — 'tortuosity factor' 라는 이름은 tau2 열에만 쓴다 (규약) → 일반 한정어에는 그 낱말을 넣지 않는다.
 #:   ★ 10-06 (`L2-01` 세대 2 · 1저자 개정) — physics 협착식의 세대가 둘이 됐다.  열 사전은 행 값을 보지 않으므로 (column_dictionary(cols)) 두 세대를
 #:   다 적고, 행의 세대는 그 행의 ion_net_psi_physics · ion_net_constriction_physics 칸이 정한다 (세대가 다른 행을 표기 없이 섞지 않는다).
-CAVEAT_TAU_NET = ('세대 (행마다 ion_net_constriction · ion_net_psi · ion_net_area_rule · ion_net_electrode · ion_net_bulk <모드> — 세대가 다른 행을 '
-                  '표기 없이 섞지 않는다 · tau_flux · 인계 생성기가 섞임을 거부한다): ★ 2026-10-06 저녁 세대 2 = 전극 정확 Dirichlet (dirichlet_exact — '
+CAVEAT_TAU_NET = ('세대 (행마다 ion_net_constriction · ion_net_psi · ion_net_area_rule · ion_net_electrode · ion_net_bulk <모드> + 세대 칸 ion_net_generation '
+                  '(g2 · inferred_legacy) — 세대가 다른 행을 표기 없이 섞지 않는다 · tau_flux · 인계 생성기가 행마다 세대 계약 (모드마다 허용 모델 조합의 닫힌 표 · '
+                  '10-06 밤 G2R-01 · 02) 을 먼저 보고 섞임을 거부한다): ★ 2026-10-06 저녁 세대 2 = 전극 정확 Dirichlet (dirichlet_exact — '
                   '바닥 띠 V = 1 · 위 띠 V = 0 고정 · 옛 가상 전원 g_b 제거 · L2-05 · 배포값 변화 ≤ 1.5e-4 = 5–6 째 자리) · physics 면적 physics_g2 · '
                   'ψ 곱셈 · 표기 없는 옛 산출물 = virtual_source_legacy · physics_g1 · 원기둥 bulk (이력 사실).  협착식: hertz = 1세대 반공간 '
                   'Maxwell R_c = 1/(2σa) + 원기둥 bulk (H0) — z ≤ 10 에서 tau2 −12 … −28 % 쪽 편향 · z ≈ 12 에서 ±5 % 상쇄 (설계 측정 · H12 민감도 열이 '
@@ -1716,7 +1721,9 @@ _TAU_STATUS = ('이온 망 인계 상태 (tau_flux 게이트 G1–G6 · v2 §5-2
                '(P0–P4) 를 다 통과한 케이스')
 _TAU_REASON = ('NOT_COMPUTED 의 사유 (사유 코드 = ":" 앞) — missing_input (망 결과 · 장부 L_gap · L_mc · φ_mc · calc_percolation · 띠 규칙 기록 · '
                '온도 기록 없음) · invalid_input: 세부 (공용 기술 검사 tau_flux.ion_record_problem — 생산자 계약 위반: computed 인데 σ 두 표현이 유한 양수가 '
-               '아니거나 서로 다름 (RGLR-02) · 관통 분율 (0, 1] 밖 · 증명된 비관통 조합이 아닌 valid_zero · 모르는 상태) · solver_guard (관통인데 σ 없음 — '
+               '아니거나 서로 다름 (RGLR-02) · 관통 분율 (0, 1] 밖 · 증명된 비관통 조합이 아닌 valid_zero · 모르는 상태 · ★ 10-06 밤 세대 계약 위반 '
+               '"invalid_input: 세대 계약 (G2R-01 · 02): …" — H12 를 주 Hertz 자리에 · 모르는 ψ · 전극 · 면적 · bulk · 세대 2 표기 부분 결손 · '
+               'tau_flux.network_generation_contract · 레코드 있는 모드 전부) · solver_guard (관통인데 σ 없음 — '
                '생산자 not_computed) · percolation_disagree (G2 — 솔버 관통 ≠ calc_percolation) · temperature_mismatch (G4 — σ₀ 와 σ_full 의 온도가 다르다 · '
                '두 모드의 (σ₀, T) 가 다르다) · generation_invalid: 세부 (10-05 RGLR2-02 — 케이스 폴더의 망 활성 세대가 확정되지 않음: '
                'tau_flux.network_generation_problem — full_metrics ↔ 도장 불일치 · 되돌림 실패 · 중단된 게시 흔적 · 도장 손상 · 두 모드 모두) · 다른 상태면 빈칸 · '
@@ -1748,10 +1755,13 @@ _TAU_PER_MODE = {
     'ion_net_psi': ('ψ 배치 ({m} · 세대 표기 · L2-01) — physics · hertz_h12 에만 의미: multiply = 세대 2 (ψ 곱셈 · 2026-10-06 기본 · H12 는 늘 곱셈) · '
                     'legacy_divide = 세대 1 (ψ 분모 · 2026-10-06 전 산출물) · 빈칸 = hertz (ψ 없음) 또는 ψ 기록이 없는 옛 산출물 (09-15 깃발 전 = 세대 1)'),
     'ion_net_area_rule': ('면적 규칙 ({m} · 세대 표기 · 10-06 저녁) — hertz_ccpl22 (hertz · hertz_h12: LIGGGHTS c_cpl[22] 기하 원판) · physics_g2 (physics 세대 2 · '
-                          'film_area_g2 규칙 B) · physics_g1 (physics 세대 1 · 표기 없는 옛 산출물 = 이력 사실) · 빈칸 = 그 모드 레코드 없음'),
+                          'film_area_g2 규칙 B) · physics_g1 (physics 세대 1 · 표기 없는 옛 산출물 = 이력 사실 — ion_net_generation = inferred_legacy 행에만 '
+                          '**추론** 값) · 빈칸 = 그 모드 레코드 없음 (또는 세대 2 표지가 남은 레코드의 빈 칸 — 옛 기본값으로 채우지 않는다 · 그 행은 세대 계약 위반)'),
     'ion_net_electrode': ('전극 ({m} · 세대 표기 · L2-05 · 10-06 저녁) — dirichlet_exact (세대 2: 바닥 띠 V = 1 · 위 띠 V = 0 고정 · G = 바닥 띠 전류) · '
-                          'virtual_source_legacy (표기 없는 옛 산출물 — 가상 전원 · 싱크 g_b = max(100·Σg/n, 10·g_max) · 막다른 가지가 σ 를 바꿨다) · '
-                          '한 행 안 모드끼리 다르면 그 행은 NOT_COMPUTED (invalid_input) · 빈칸 = 레코드 없음'),
+                          'virtual_source_legacy (표기 없는 옛 산출물 — 가상 전원 · 싱크 g_b = max(100·Σg/n, 10·g_max) · 막다른 가지가 σ 를 바꿨다 · '
+                          'ion_net_generation = inferred_legacy 행에만 **추론** 값) · 세대 계약 (모드마다 닫힌 표 · 10-06 밤 G2R-01 · 02) 을 어기면 (모르는 값 · '
+                          '모드끼리 다름 · 부분 결손) 그 행은 NOT_COMPUTED (invalid_input) · 빈칸 = 레코드 없음 (또는 세대 2 표지가 남은 레코드의 빈 칸 — '
+                          '옛 기본값으로 채우지 않는다)'),
     'ion_net_bulk': ('간선 bulk 모형 ({m} · 세대 표기 · C1-3) — cylinder_half_d (H0 · hertz · physics 의 주 값: 반 d 원기둥 (d/2)/(σ·π r²) 두 쪽) · '
                      'sphere_segment (hertz_h12 민감도: 중심 ↔ 접촉 평면 구 조각 h_i²/(σ·V_i)) · 빈칸 = 레코드 없음'),
     'ion_net_band_rule': ('솔버 경계 띠 규칙 ({m} · 안 A 10-04) — L0 (입자 자기 반지름 2 배 · 양 끝 ≥ 3) · L1 · L2 (폴백 — G1 → BAND_FALLBACK) · 빈칸 = '
@@ -1772,6 +1782,14 @@ _TAU_SHARED = {
     'ion_sigma0_T_C': 'σ₀ 의 온도 (°C) — 망 기록 temperature_provenance 의 T_C (없으면 규약 기준 T_ref_C = 25 · NOT_MODELLED) · σ₀ 와 같은 규칙으로 빈칸',
     'phi_basis': 'φ 기준 = mass_conserving (φ_SE,mc = 장부 phi_se_mass_conserving · 같은 장부 · v2 D3) — tau2 의 분자',
     'L_basis': '길이 기준 = L_mc (장부 thickness_mass_conserving_um · v2 D3) — f 의 재척도 기준',
+    #  ★ 10-06 밤 (G2R-01 · 02 · 1저자 비준) — 공용 세대 계약의 판정 (tau_flux.network_generation_contract · 세 모드 공통)
+    'ion_net_generation': ('망 세대 (세대 계약 · 세 모드 공통 · G2R-01 · 02) — g2 = 세대 2 계약 통과 (모드마다 허용 모델 조합의 닫힌 표: 주 Hertz = H0 '
+                           'Maxwell 협착 + 원기둥 bulk · H12 = ψ 곱 협착 + 구 조각 bulk · physics = ψ 곱 + physics_g2 + 원기둥 · 셋 다 전극 dirichlet_exact · '
+                           '표기 전부 필수 · 세대 2 Hertz 는 H12 필수) · inferred_legacy = 세대 2 표지가 **하나도 없는** 역사 레코드를 옛 세대로 **추론** '
+                           '(표기 칸의 virtual_source_legacy · physics_g1 · cylinder_half_d · ψ 분모는 이력 사실로 채운 값이지 레코드에 적힌 값이 아니다 · '
+                           '도장이 세대 2 게시를 말하면 추론하지 않는다) · invalid = 세대 계약 위반 (H12 를 주 Hertz 자리에 · 모르는 값 · 부분 결손 — 그 행 '
+                           'NOT_COMPUTED invalid_input · 인계표에는 실리지 않는다) · 빈칸 = 망 레코드 없음 · ⚠ 표기 (메타) 계약 — 숫자만 바꿔 끼운 레코드는 '
+                           '재계산 없이 못 잡는다 · 한 인계표 = 한 세대 (행마다 계약 먼저 · 그다음 섞임)'),
 }
 _TAU_COL_RE = re.compile(r'(f_ion|tau2_ion|tau_ion|ion_net_status_reason|ion_net_status|ion_net_area_mode|ion_net_constriction|ion_net_psi|'
                          r'ion_net_area_rule|ion_net_electrode|ion_net_bulk|'
@@ -1806,7 +1824,8 @@ TAU_HERTZ_AREA_NOTE = ('hertz 면적 = LIGGGHTS c_cpl[22] 기하 교차 원판 �
 
 #: H12 상태 · 사유 칸의 세대 1 예외 — 표기 없는 옛 폴더 (2026-10-06 저녁 전 생산자) 에는 H12 레코드가 없다 (망 정지 계약 ⑨ 는 세대 2 Hertz 레코드에만
 #:   H12 를 요구한다 — `pipeline_service.network_generation2_problems`).
-TAU_H12_GEN1_NOTE = (' · ⚠ 세대 1 배치 (표기 없는 옛 폴더 · ion_net_electrode = virtual_source_legacy — 2026-10-06 저녁 전 생산자) 에는 H12 레코드가 '
+TAU_H12_GEN1_NOTE = (' · ⚠ 세대 1 배치 (표기 없는 옛 폴더 · ion_net_generation = inferred_legacy · ion_net_electrode = virtual_source_legacy — '
+                     '2026-10-06 저녁 전 생산자) 에는 H12 레코드가 '
                      '없다 → 이 모드만 NOT_COMPUTED (missing_input) · 값 빈칸 = 그 세대에 없는 열 (기술적 결손 아님) — "인계표에는 NOT_COMPUTED 가 '
                      '실리지 않는다" 의 유일한 예외 · 세대 2 배치는 망 정지 계약 ⑨ 가 H12 를 요구한다 (없으면 배치 · 인계 거부)')
 
@@ -1870,7 +1889,12 @@ def load_tau_results(results_dir, webapp):
       P3 같은 세대 (배치 기록) — full_metrics 의 τ 장부 (NETWORK_STOP_LEDGER_KEYS) · 도장 · 망 σ 투영 (TAU_TIE_EXTRA) = 배치 metrics_flat 칸
          (row_for 직렬화) · dual σ_ratio · 상태 = full_metrics 투영 (TAU_DUAL_PROJ)
       P4 같은 세대 (인계 때 재검사 · 10-05 RGLR3-02 — Codex 4차 재검증 §3 · §8-2 최소 해제 "기존 정지 계약의 전 사본 · 투영 · σ₀ 대조를 인계 때 다시 호출"):
-         P4_stop_contract — 배치가 done 을 준 **바로 그 함수** `pipeline_service.network_stop_verdict` (①–⑧ — 전 사본 (dual · 모드 파일 둘 · legacy) ·
+         P4_model_generation — ★ 10-06 밤 (G2R-01 · 02 · 1저자 비준) 공용 세대 계약 `tau_flux.network_generation_contract` (망 정지 계약 ⑨ · τ 인계 소비자 ·
+            배포 빌더와 같은 함수): 모드마다 허용 모델 조합 (주 Hertz = H0 · H12 · physics) · 닫힌 열거 · 세대 2 표기 전부 필수 · 옛 세대 추론은 표지가 하나도
+            없는 레코드 **이고** 도장이 세대 2 게시를 말하지 않을 때만 (`pipeline_service.provenance_claims_generation2` — 게시 뒤 표기만 지운 폴더 거부) —
+            그때만 정지 계약을 legacy_ok 로 다시 부른다 (194 v1.2 같은 역사 배치) · 거울: 세대 2 레코드인데 도장이 세대 2 이전 코드의 것 (세대 키 없음 ·
+            `provenance_predates_generation2`) 이면 거부 (역사 폴더에 표기만 덧붙인 모양).  옛 판은 H12 를 주 Hertz 자리에 둔 폴더 · ψ 오타 · 부분 결손을 받았다.
+         P4_stop_contract — 배치가 done 을 준 **바로 그 함수** `pipeline_service.network_stop_verdict` (①–⑨ — 전 사본 (dual · 모드 파일 둘 · legacy) ·
             full_metrics 망 투영 (NET_MERGE_KEYS) · σ₀ · 온도 짝 (두 모드 · legacy · full_metrics · 등급 짝 σ₀) · 띠 규칙 필드 · 공용 기술 검사 · τ 소비자 상태
             = OK · 등록된 과학적 HOLD 만) 를 지금 폴더에 다시 부른다 (fm = 관문이 본 바이트 · 사본 아님 — 규율 ①).  ⚠ P3 은 dual 의 두 키만 보아 dual 만
             바꾼 띠 규칙 L0 → L1 (BAND_FALLBACK 로) · σ₀ ×2 (σ₀ 6.0 mS/cm 로) 를 받았다 (Codex 실 CLI 생산본 반례).  기술적 결손 폴더 (tau_flux 라면
@@ -1950,13 +1974,27 @@ def load_tau_results(results_dir, webapp):
             dv = dual.get(dk).get(rk) if isinstance(dual.get(dk), dict) else None
             if _tau_canon(dv) != _tau_canon(fm.get(fk)):
                 raise FillRefusal(f'{case}: τ P3 — dual[{dk}].{rk}={dv!r} ≠ full_metrics {fk}={fm.get(fk)!r} — dual 이 도장 세대의 망 결과가 아니다')
-        #  P4_stop_contract — 배치가 done 을 준 같은 계약을 지금 폴더에 다시 (전 사본 · 투영 · σ₀ 짝 · 띠 규칙 필드 · τ 소비자 상태 — 사본 아님 · 규율 ①)
+        #  P4_model_generation — ★ 10-06 밤 (G2R-01 · 02) 공용 세대 계약 (tau_flux 의 같은 함수 · 사본 없음) + 옛 세대 추론 자격 (도장)
+        con = tf.network_generation_contract(dual)
+        if con.get('problems'):
+            raise FillRefusal(f'{case}: τ P4 — 세대 계약 위반 (G2R-01 · 02 · tau_flux.network_generation_contract): '
+                              f'{tf.generation_contract_text(con)[:600]} — 역할 · 표기가 확정되지 않은 망의 τ 를 싣지 않는다 (주 Hertz = H0 · H12 · physics 표)')
+        claim = ps.provenance_claims_generation2(prov)
+        if con.get('generation') == tf.NET_GEN_LEGACY and claim:
+            raise FillRefusal(f'{case}: τ P4 — 세대 계약: 세대 2 표기가 하나도 없는 레코드인데 {claim} — 게시 뒤 표기만 지운 폴더다 · 옛 세대로 추론하지 '
+                              '않는다 (G2R-02 · 옛 세대 추론 = 역사 폴더만)')
+        if con.get('generation') == tf.NET_GEN_G2 and ps.provenance_predates_generation2(prov):
+            raise FillRefusal(f'{case}: τ P4 — 세대 계약: 세대 2 표기 레코드인데 도장 ({ps.PROVENANCE_FILE}) 이 세대 2 이전 코드의 것 (세대 표기 키 '
+                              f'{list(ps.PROVENANCE_GENERATION_KEYS)} 가 하나도 없다) — 역사 폴더에 표기만 덧붙인 모양 · 세대 2 로 싣지 않는다 (G2R-02 거울)')
+        legacy_ok = con.get('generation') == tf.NET_GEN_LEGACY
+        #  P4_stop_contract — 배치가 done 을 준 같은 계약을 지금 폴더에 다시 (전 사본 · 투영 · σ₀ 짝 · 띠 규칙 필드 · τ 소비자 상태 · 세대 계약 ⑨ — 사본 아님 ·
+        #   규율 ①).  옛 세대 추론은 위 자격을 통과한 역사 폴더에만 (legacy_ok — 게시 때는 늘 False)
         try:
-            ok4, why4 = ps.network_stop_verdict(str(cd), rid, fm=fm)
+            ok4, why4 = ps.network_stop_verdict(str(cd), rid, fm=fm, legacy_ok=legacy_ok)
         except Exception as e:                                       # noqa: BLE001 — 판정을 못 내면 통과로 치지 않는다 (fail-closed)
             ok4, why4 = False, f'정지 계약 판정 중 예외 ({type(e).__name__}: {e})'
         if not ok4:
-            raise FillRefusal(f'{case}: τ P4 — 망 정지 계약 재검사 실패 (인계 때 · 배치가 done 을 준 같은 계약 pipeline_service.network_stop_verdict ①–⑧): '
+            raise FillRefusal(f'{case}: τ P4 — 망 정지 계약 재검사 실패 (인계 때 · 배치가 done 을 준 같은 계약 pipeline_service.network_stop_verdict ①–⑨): '
                               f'{str(why4)[:700]} — 그 계약을 통과한 세대의 폴더가 아니다 (배치 뒤 사본 · 투영 · σ₀ · 띠 규칙이 바뀌었거나 기술적 결손) · '
                               '이 케이스 τ 를 싣지 않는다 (NOT_COMPUTED 로도 싣지 않는다 — "같은 세대 검증 통과" 로 보이지 않게)')
         #  P4_generation — case_row 가 쓰는 같은 세대 검사 (옛 판은 이 경우를 아래 읽기 대조의 "읽는 사이 바뀌었다" 로 잘못 불렀다)
@@ -1975,6 +2013,7 @@ def load_tau_results(results_dir, webapp):
                      'same_generation_checks': list(TAU_SAME_GEN_CHECKS), 'same_generation_basis': TAU_SAME_GEN_BASIS,
                      'cells': {c: tf._cell(row.get(c)) for c in cols}}      # tau_flux 자신의 직렬화 (TSV 와 같은 칸)
     #  ★ 10-06 저녁 세대 2 — 케이스끼리 망 세대 (ψ 배치 · physics 면적 규칙 · 전극) 가 섞이면 거부 (tau_flux 의 같은 판정 함수 — 사본 없음)
+    #    ★ 10-06 밤 (G2R-02) — 그 함수가 행마다 세대 계약을 먼저 본다 (같은 결함만 모인 코호트도 거부 · 축에 모드별 협착 · bulk · 세대 칸)
     _mix = tf.generation_mixing_problem([dict(r_['cells'], case=c_) for c_, r_ in sorted(out.items())])
     if _mix:
         raise FillRefusal(f'τ 세대 — {_mix} — 한 배치의 폴더들이 같은 망 세대가 아니다 (같은 세대로 다시 계산할 것)')
@@ -2979,6 +3018,7 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp
                 raise FillRefusal(f'{c}: τ P4 — τ 기록의 같은 세대 검사 {_sg} ≠ {list(TAU_SAME_GEN_CHECKS)} — 인계 때 검사 (P0–P4) 를 다 통과한 원천이 아니다 '
                                   '(load_tau_results 로 다시 읽을 것)')
         #  ★ 10-06 저녁 세대 2 — 한 인계표에 망 세대 (ψ 배치 · physics 면적 규칙 · 전극) 가 다른 행을 섞지 않는다 (원천이 다른 길로 들어와도 여기서 한 번 더)
+        #    ★ 10-06 밤 (G2R-01 · 02) — 행마다 세대 계약 먼저 (tau_flux.row_generation_problems — 같은 결함만 모인 원천도 거부)
         _tf_g, _ = _tau_import()
         _mix = _tf_g.generation_mixing_problem([dict((tau['cases'][c] or {}).get('cells') or {}, case=c) for c in sorted(_okc)])
         if _mix:
@@ -5299,7 +5339,7 @@ def _selftest():
             _o29, _c29, _r29, _e29a = [], [], {}, _e29 or f'{type(e).__name__}: {e}'
         _m29 = next((r_ for r_ in _o29 if r_['case_id'] == 'q1'), {})
         _p29 = next((r_ for r_ in _o29 if r_['case_id'] == 'q2'), {})
-        chk('㉙a ★ network 배치 + 망 τ 묶음 (--webapp-groups …,tau + 케이스 폴더) — tau_flux 열 전부 (10-06 저녁부터 49 · 세 모드 (hertz · physics · '
+        chk('㉙a ★ network 배치 + 망 τ 묶음 (--webapp-groups …,tau + 케이스 폴더) — tau_flux 열 전부 (10-06 밤부터 50 · 세 모드 (hertz · physics · '
             'hertz_h12 부록) f · f_gap · tau2 · tau · 상태 · 사유 · 메타 · 세대 표기 + 공통 σ₀ · T · 기준) 이 표 끝에 tau_flux 순서로 · 모든 케이스 '
             '(q1 관통 OK · q2 비관통 NOT_PERCOLATING) 값 = tau_flux 그대로 · 출처 관문 2 행' + (f' — {_e29a}' if _e29a else ''),
             not _e29a and bool(_tc29) and _c29[-len(_tc29):] == _tc29

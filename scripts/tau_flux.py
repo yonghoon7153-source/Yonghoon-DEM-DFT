@@ -10,9 +10,13 @@
 `ion_net_status_hertz` …).  σ₀ · 온도 · φ · L 기준은 두 모드 공통이라 꼬리가 없다.
 ★ 10-06 저녁 세대 2 (1저자 비준) — 셋째 모드 `hertz_h12` = Hertz 이온 **민감도** (ψ 곱 협착 + 구 조각 bulk · 같은 망 · 같은 전극 ·
 Hertz 레코드 안 `hertz_h12` 에서 읽는다 · **기본 학습 열 아님** = 배포 부록).  모드마다 세대 표기 셋 (`ion_net_area_rule_<m>` ·
-`ion_net_electrode_<m>` · `ion_net_bulk_<m>` — 표기 없는 옛 레코드 = 이력 사실 physics_g1 · virtual_source_legacy · cylinder_half_d) →
-한 행 49 열 (모드 셋 × 15 + 공통 4).  여러 폴더를 한 표로 낼 때 세대 (ψ 배치 · physics 면적 규칙 · 전극) 가 섞이면 거부한다
-(`generation_mixing_problem` · CLI rc 2 · 한 행 안 전극 섞임 = NOT_COMPUTED invalid_input).
+`ion_net_electrode_<m>` · `ion_net_bulk_<m>`) + 공통 세대 칸 `ion_net_generation` → 한 행 50 열 (모드 셋 × 15 + 공통 5).
+★ 10-06 밤 세대 계약 (Codex 세대 2 적대 리뷰 G2R-01 · G2R-02 · 1저자 비준) — 모드마다 허용 모델 조합을 **닫힌 표**로 본다 (`network_generation_contract` ·
+`G2_MODE_CONTRACT` · `LEGACY_MODE_CONTRACT`): 세대 2 = 표기 전부 필수 (부분 결손 · 모르는 값 · H12 를 주 Hertz 자리에 = 거부) · 옛 세대 추론 =
+세대 2 표지 (`G2_MARKER_KEYS`) 가 **하나도 없는** 레코드에만 (`inferred_legacy` 로 표지 — 이력 사실 physics_g1 · virtual_source_legacy · cylinder_half_d) ·
+그 밖 = `invalid` (레코드 있는 모드 전부 NOT_COMPUTED invalid_input).  여러 폴더를 한 표로 낼 때 행마다 계약 먼저 (`row_generation_problems`) ·
+그다음 세대 섞임 (`generation_mixing_problem` · CLI rc 2) — 같은 결함만 모인 코호트도 거부한다.  웹앱 망 정지 계약 ⑨ · 공용 기록 검사 · 인계 생성기 ·
+배포 빌더가 같은 함수를 부른다.
 
 | 열 | 식 |
 |---|---|
@@ -27,6 +31,7 @@ Hertz 레코드 안 `hertz_h12` 에서 읽는다 · **기본 학습 열 아님**
 | (폴더) | ★ 세대 (10-05 RGLR2-02) — 케이스 폴더 (`case_row` · 웹앱 `_ion_handover`) 의 망 활성 세대가 확정되지 않음 (`network_generation_problem`: full_metrics ↔ 도장 불일치 · 되돌림 실패 기록 · 중단된 게시 흔적 · 도장 손상) — 아래 게이트 결과를 덮는다 | `NOT_COMPUTED` (`generation_invalid: 세부` · 두 모드 · 값 빈칸) |
 | 0 | 그 모드의 망 결과 · 장부 (L_gap · L_mc · φ_mc) · calc_percolation 값이 있다 · 띠 규칙 기록이 있다 (안 A · 기록 없는 옛 산출물은 짐작하지 않는다) | `NOT_COMPUTED` (`missing_input`) |
 | 0b | ★ 공용 기술 검사 `ion_record_problem` (10-05 RGLR-01 · 02) — 상태 ↔ 값 (computed = σ 두 표현 유한 양수 · 관통 분율 (0, 1] · 두 표현 항등식 · valid_zero = RGL-02 의 증명된 비관통 조합만 · 그 밖 = 생산자 계약 밖) | `NOT_COMPUTED` (`invalid_input: 세부` · 생산자 not_computed 신고면 `solver_guard`) |
+| 0c | ★ 세대 계약 `network_generation_contract` (10-06 밤 G2R-01 · 02) — 케이스 전체: 모드마다 허용 모델 조합 (닫힌 표) · 세대 2 표기 전부 필수 · 옛 세대 추론은 표지가 하나도 없을 때만 | `NOT_COMPUTED` (`invalid_input: 세대 계약 (G2R-01 · 02): 세부` · 레코드 있는 모드 전부 · 세대 칸 invalid) |
 | 1 | G1 띠 = 솔버 기록 `boundary_rule` 이 L0 | `BAND_FALLBACK` |
 | 2 | G2 솔버 관통 (`percolating_fraction > 0`) == calc_percolation (`percolation_pct > 0`) — 판정은 관통 분율로 한다 (`TAU-22` · 상태 ↔ 값 정합은 0b 가 먼저 본다) | `NOT_COMPUTED` (`percolation_disagree`) |
 | 3 | G4 온도 짝 — 그 모드의 σ₀ · T 기록이 있다 (없으면 `missing_input`) · 두 모드의 (σ₀, T) 가 같다 · 호출자가 σ₀ 의 T 를 주장하면 망 T 와 같다 | `NOT_COMPUTED` (`temperature_mismatch`) |
@@ -49,6 +54,7 @@ G6 (협착 세대) = 메타 `ion_net_constriction_<m>` · 두 모드 모두 **�
 from __future__ import annotations
 
 import argparse
+import itertools
 import json
 import math
 import os
@@ -60,13 +66,19 @@ import sys
 MODES = ('hertz', 'physics', 'hertz_h12')
 DUAL_KEY = {'hertz': 'hertzian', 'physics': 'physics'}
 H12_MODE = 'hertz_h12'
-#: 세대 표기 (값 = network_conductivity 상수와 같은 문자열 — 무거운 생산자를 임포트하지 않으려고 둔다 · test_network_generation2 E1 · E2 가 대조).
-#:   표기 없는 옛 레코드 = 이력 사실: 10-06 전 솔버는 늘 가상 전원 전극 · 원기둥 bulk · physics 면적 세대 1 이었다 (짐작이 아니다 —
-#:   ψ 기록 없는 mikic = 세대 1 과 같은 규약).
+#: 세대 표기 (값 = network_conductivity 상수와 같은 문자열 — 무거운 생산자를 임포트하지 않으려고 둔다 · test_network_generation2 E1 · E2 ·
+#:   test_gen2_role_contract T1 이 대조).  표기 없는 옛 레코드 = 이력 사실: 10-06 전 솔버는 늘 가상 전원 전극 · 원기둥 bulk · physics 면적 세대 1
+#:   이었다 (짐작이 아니다 — ψ 기록 없는 mikic = 세대 1 과 같은 규약).  ★ 10-06 밤 (G2R-02) — 그 추론은 세대 2 표지가 **하나도 없는** 레코드에만
+#:   (`network_generation_contract` = inferred_legacy) — 옛 판은 빈 칸이면 늘 채워 세대 2 physics 의 면적 · ψ 삭제를 세대 1 로 읽었다.
 ELECTRODE_LEGACY = 'virtual_source_legacy'
+ELECTRODE_G2 = 'dirichlet_exact'
 AREA_RULE_HERTZ = 'hertz_ccpl22'
 AREA_RULE_PHYSICS_G1 = 'physics_g1'
+AREA_RULE_PHYSICS_G2 = 'physics_g2'
 BULK_CYLINDER = 'cylinder_half_d'
+BULK_SPHERE_SEGMENT = 'sphere_segment'
+PSI_LEGACY = 'legacy_divide'
+PSI_G2 = 'multiply'
 
 
 def mode_record(dual, m):
@@ -98,7 +110,9 @@ CONSTRICTION = {'maxwell': 'maxwell_halfspace', 'mikic': 'mikic_psi_divide'}    
 PSI_CONSTRICTION = {'legacy_divide': 'mikic_psi_divide', 'multiply': 'mikic_psi_multiply'}
 BAND_RULES = ('L0', 'L1', 'L2')
 PHI_TOL = 5e-5 + 1e-9          # 망 φ 는 4 자리 반올림 (network_conductivity `round(phi_se, 4)`) — 반폭 + 부동소수 여유
-SHARED = ('ion_sigma0_mScm', 'ion_sigma0_T_C', 'phi_basis', 'L_basis')
+#: 행의 망 세대 칸 (세 모드 공통 · 10-06 밤 G2R-02) — g2 · inferred_legacy (옛 세대 **추론**) · invalid (세대 계약 위반) · '' (레코드 없음)
+ROW_GENERATION_COL = 'ion_net_generation'
+SHARED = ('ion_sigma0_mScm', 'ion_sigma0_T_C', 'phi_basis', 'L_basis', ROW_GENERATION_COL)
 #: 생산자 (`network_conductivity.NO_THROUGH_REASON`) 의 증명된 비관통 사유 — 같은 값이어야 한다 (test_tau_flux L8 이 대조한다 · 무거운 생산자를
 #:   이 도우미에서 임포트하지 않으려고 값을 둔다 — `pipeline_service.NETWORK_NO_THROUGH_REASON` 과 같은 방식).
 NO_THROUGH_REASON = 'no_through_path'
@@ -109,16 +123,17 @@ def reason_code(reason):
     return str(reason or '').split(':', 1)[0].strip()
 
 
-def constriction_label(res):
+def constriction_label(res, legacy=False):
     """망 결과 한 모드 → 협착식 라벨 (G6 세대 메타).  hertz (maxwell) = maxwell_halfspace · physics (mikic) = 결과의 ψ 배치
-    (multiply → mikic_psi_multiply · legacy_divide → mikic_psi_divide · 기록 없음 → mikic_psi_divide (09-15 전 = 세대 1) ·
-    모르는 값 → unknown:mikic/<값>) · 모르는 저항 모델 → unknown:<이름> · 결과 없음 → ''."""
+    (multiply → mikic_psi_multiply · legacy_divide → mikic_psi_divide · 모르는 값 → unknown:mikic/<값>) · 모르는 저항 모델 → unknown:<이름> ·
+    결과 없음 → ''.  ψ 기록 없음 → legacy=True (케이스가 옛 세대로 추론됨 — 09-15 깃발 전 = 세대 1) 면 mikic_psi_divide · 아니면 unknown:mikic/None
+    (★ 10-06 밤 G2R-02 — 세대 2 표지가 남은 레코드의 빈 ψ 를 세대 1 로 읽지 않는다)."""
     rm = (res or {}).get('resistance_model')
     if rm is None:
         return ''
     if rm == 'mikic':
         psi = (res or {}).get('psi_placement')
-        if psi is None:
+        if psi is None and legacy:
             return CONSTRICTION['mikic']
         return PSI_CONSTRICTION.get(psi, f'unknown:mikic/{psi}')
     return CONSTRICTION.get(rm, f'unknown:{rm}')
@@ -361,31 +376,283 @@ def column_names():
     return out + list(SHARED)
 
 
-def generation_meta(res, m):
-    """망 레코드 한 모드 → (면적 규칙, 전극, bulk) 표기.  레코드 없음 → ('', '', '').  표기 없는 옛 레코드 = 이력 사실
-    (hertz 면적 hertz_ccpl22 · physics 면적 physics_g1 · 전극 virtual_source_legacy · bulk cylinder_half_d)."""
+def generation_meta(res, m, legacy=False):
+    """망 레코드 한 모드 → (면적 규칙, 전극, bulk) 표기.  레코드 없음 → ('', '', '').
+    ★ 10-06 밤 (G2R-02) — 옛 기본값 (hertz 면적 hertz_ccpl22 · physics 면적 physics_g1 · 전극 virtual_source_legacy · bulk cylinder_half_d = 이력 사실)
+    은 **옛 세대로 추론된** 케이스 (legacy=True — `network_generation_contract` 가 inferred_legacy) 에만 채운다.  그 밖 (세대 2 · 계약 위반) 은 레코드
+    값 그대로 · 없으면 빈칸 (옛 판은 늘 채워 세대 2 숫자를 세대 1 표기로 읽었다)."""
     if not isinstance(res, dict):
         return '', '', ''
+    if not legacy:
+        return tuple('' if res.get(k) is None else str(res.get(k)) for k in ('area_rule', 'electrode_model', 'bulk_model'))
     area = res.get('area_rule') or (AREA_RULE_PHYSICS_G1 if m == 'physics' else AREA_RULE_HERTZ)
     return str(area), str(res.get('electrode_model') or ELECTRODE_LEGACY), str(res.get('bulk_model') or BULK_CYLINDER)
 
 
-#: 세대 축 (여러 행이 한 표 · 한 학습 집합에 들어갈 때 같아야 하는 것) — ψ 배치 (physics 협착 라벨에서) · physics 면적 규칙 · 전극.
-GENERATION_AXES = ('psi', 'area_rule_physics', 'electrode')
+#  ── 망 세대 계약 (10-06 밤 · Codex 세대 2 적대 리뷰 `docs/reviews/codex_review_gen2_network_20261006.md` G2R-01 · G2R-02 · 1저자 비준) ────────────
+#  한 표 · 한 함수 — 웹앱 망 정지 계약 ⑨ (게시 전) · 공용 기록 검사 (일반 · 정지 경로 · `pipeline_service.network_record_verdict`) · τ 인계 소비자
+#  (`ion_columns`) · 인계 생성기 (`lhs_design_dataset.load_tau_results` · `build_handover` — `generation_mixing_problem`) · 배포 빌더
+#  (`lhs_release_build` — `row_generation_problems`) 가 **이 표**를 부른다 (규율 ① — 사본 금지).
+#  옛 판의 구멍 (Codex 실 생산자 반례 · 우리 트리 재현 7a5976602):
+#    (가) G2R-01 — 정지 계약 ⑨ 가 중첩 H12 메타만 보고 주 Hertz 가 H0 인지 안 봐, 생산된 H12 레코드를 주 `hertzian` 자리에 넣어도 done · 인계 통과
+#         (주 σ +28.2 %) — 세대 축에 모드별 bulk · 협착이 없었다.
+#    (나) G2R-02 — 주 Hertz 전극이 dirichlet_exact 가 아니면 무엇이든 "옛 레코드" (⑨ 조기 반환) · 빈 면적 · 전극 · bulk 를 옛 기본값으로 채움 ·
+#         모르는 ψ 라벨을 빈 축으로 만들어 비교에서 뺐다 → ψ 오타 · 전극 오타 · 세대 2 physics 의 면적 · ψ 삭제 · 같은 결함 코호트가 통과.
+#  규칙 (닫힌 열거): 세대 2 표지 (`G2_MARKER_KEYS` · ψ multiply) 가 레코드 어디에든 하나라도 있으면 세대 2 — 모드마다 `G2_MODE_CONTRACT` 표기 **전부**
+#  필수 · 값은 표와 같아야 하고 (주 Hertz = H0 · H12 = ψ 곱 + 구 조각 · physics = ψ 곱 + physics_g2) 세대 2 Hertz 는 H12 레코드도 필수 (생산자가 늘
+#  함께 낸다).  표지가 하나도 없으면 옛 세대 **추론** (`inferred_legacy`) — `LEGACY_MODE_CONTRACT` (194 v1.2 배치 원천의 실제 모양) 와 맞아야 한다.
+#  그 밖 = `invalid` (레코드 있는 모드 전부 NOT_COMPUTED invalid_input).  ⚠ 표기 (메타) 계약이다 — 숫자만 바꿔 끼운 레코드 (표기 그대로) 는 재계산 없이
+#  못 잡는다 (TAU_SAME_GEN_BASIS 한계와 같은 부류).
+NET_GEN_G2 = 'g2'
+NET_GEN_LEGACY = 'inferred_legacy'            # 세대 2 표지가 하나도 없는 역사 레코드 — 옛 기본값으로 **추론**했다는 표지
+NET_GEN_BAD = 'invalid'                       # 세대 계약 위반 (사유 = 그 행의 상태 칸 · `generation_contract_text`)
+#: 세대 2 생산자 (`network_conductivity` a0a24c538 뒤 · CLI `--contact-mode both`) 가 모드마다 쓰는 모델 조합 — (키, 값) · 값 None = 키가 없거나 null
+#:   이어야 한다 (physics 의 hertz_constriction = null · 주 Hertz · physics 에 민감도 표지 없음).  값 = 생산자 상수와 같은 문자열 (test_gen2_role_contract
+#:   T1 이 생산자 상수 · 실 출력과 대조).  주 Hertz 의 psi_placement = 그 실행의 ψ 배치 표기 (Hertz 는 ψ 를 안 쓴다 — 세대 2 실행은 multiply 뿐 ·
+#:   명시 ψ 분모 연구 팔 (세대 2 생산자 + legacy_divide) 은 세대 1 도 2 도 아니다).
+G2_MODE_CONTRACT = {
+    'hertz': (('contact_mode', 'hertzian'), ('resistance_model', 'maxwell'), ('hertz_constriction', 'maxwell'),
+              ('bulk_model', BULK_CYLINDER), ('electrode_model', ELECTRODE_G2), ('area_rule', AREA_RULE_HERTZ),
+              ('area_rule_physics', AREA_RULE_PHYSICS_G2), ('psi_placement', PSI_G2), ('sensitivity_mode', None)),
+    H12_MODE: (('contact_mode', 'hertzian'), ('resistance_model', 'mikic'), ('hertz_constriction', 'mikic_psi_multiply'),
+               ('bulk_model', BULK_SPHERE_SEGMENT), ('electrode_model', ELECTRODE_G2), ('area_rule', AREA_RULE_HERTZ),
+               ('area_rule_physics', AREA_RULE_PHYSICS_G2), ('psi_placement', PSI_G2), ('sensitivity_mode', H12_MODE)),
+    'physics': (('contact_mode', 'physics'), ('resistance_model', 'mikic'), ('hertz_constriction', None),
+                ('bulk_model', BULK_CYLINDER), ('electrode_model', ELECTRODE_G2), ('area_rule', AREA_RULE_PHYSICS_G2),
+                ('area_rule_physics', AREA_RULE_PHYSICS_G2), ('psi_placement', PSI_G2), ('sensitivity_mode', None)),
+}
+#: 채널 (전자 · 열) 결과를 이온 레코드에 올린 표기 (`electronic_<키>` · `thermal_<키>`) — 있으면 그 모드 표와 같아야 한다 (닫힌 열거).
+CHANNEL_PREFIXES = ('electronic_', 'thermal_')
+G2_CHANNEL_LABELS = ('electrode_model', 'bulk_model', 'area_rule', 'area_rule_physics', 'psi_placement')
+#: 세대 2 표지 키 — 하나라도 있으면 옛 세대 추론 자격이 없다.  실 생산자 세대 2 레코드에는 다 있고 194 v1.2 배치 원천 (역사 레코드) 에는 하나도 없다
+#:   (test_gen2_role_contract K1 · K2 가 그 차로 대조).  ψ 는 **값** multiply 가 표지다 (legacy_divide 는 09-15 깃발부터 옛 세대에도 있다).
+_G2_MARKER_BASE = ('electrode_model', 'bulk_model', 'area_rule', 'area_rule_physics', 'hertz_constriction', 'sensitivity_mode', H12_MODE,
+                   'area_binding_counts_physics', 'n_area_physics_unavailable', 'n_clamp_zero', 'n_floor_only', 'h_film_nm', 'h_film_status',
+                   'solve_method_full')
+_G2_CHANNEL_MARKERS = ('electrode_model', 'bulk_model', 'area_rule', 'area_rule_physics', 'area_binding_counts_physics', 'n_clamp_zero',
+                       'n_floor_only', 'psi_placement')
+G2_MARKER_KEYS = _G2_MARKER_BASE + tuple(p + k for p in CHANNEL_PREFIXES for k in _G2_CHANNEL_MARKERS)
+#: 옛 세대 (10-06 전 생산자 — 194 v1.2 배치 원천의 실제 모양) — (키, 허용 값) · 허용 값의 None = 키 없음 또는 null.  resistance_model 은 04-24 첫
+#:   반입부터 늘 있다 · contact_mode 는 있으면 자리와 같아야 한다 (손 레코드 · 옛 시험 대역에는 없을 수 있다) · ψ = legacy_divide (09-15 깃발 뒤) 또는
+#:   기록 없음 (그 전).  H12 는 옛 세대에 없다 (있으면 그 키가 세대 2 표지다).
+LEGACY_MODE_CONTRACT = {
+    'hertz': (('resistance_model', ('maxwell',)), ('contact_mode', ('hertzian', None)), ('psi_placement', (PSI_LEGACY, None))),
+    'physics': (('resistance_model', ('mikic',)), ('contact_mode', ('physics', None)), ('psi_placement', (PSI_LEGACY, None))),
+}
+ROLE_NAME = {'hertz': 'H0 (Maxwell 협착 + 원기둥 bulk)', H12_MODE: 'H12 (ψ 곱 협착 + 구 조각 bulk)',
+             'physics': '세대 2 physics (ψ 곱 + physics_g2 + 원기둥 bulk)'}
+
+
+def g2_markers(rec):
+    """레코드 한 모드 → 그 안의 세대 2 표지 (키 · ψ multiply) 목록 ([] = 표지 없음)."""
+    if not isinstance(rec, dict):
+        return []
+    out = [k for k in G2_MARKER_KEYS if k in rec]
+    if rec.get('psi_placement') == PSI_G2:
+        out.append('psi_placement=multiply')
+    return out
+
+
+def _g2_mode_problems(m, rec):
+    """세대 2 한 모드 레코드 → 어긋남 목록 (부분 결손 · 모르는 값 · 다른 역할의 값).  생산자 실패 레코드 (sigma_full_status not_computed — H12 풀이
+    예외 가지는 표기 일부만 싣는다) 는 **있는** 표기만 대조한다 — 그 모드는 공용 기술 검사가 solver_guard 로 막아 값이 실리지 않는다."""
+    bad = []
+    failed = rec.get('sigma_full_status') == 'not_computed'
+    want = dict(G2_MODE_CONTRACT[m])
+    for k, v in G2_MODE_CONTRACT[m]:
+        if v is None:
+            if rec.get(k) is not None:
+                bad.append(f'{k}={rec.get(k)!r} (없어야 한다)')
+        elif k not in rec:
+            if not failed:
+                bad.append(f'{k} 없음 (부분 결손)')
+        elif rec.get(k) != v:
+            bad.append(f'{k}={rec.get(k)!r} ≠ {v!r}')
+    for p in CHANNEL_PREFIXES:
+        for k in G2_CHANNEL_LABELS:
+            if p + k in rec and rec.get(p + k) != want.get(k):
+                bad.append(f'{p}{k}={rec.get(p + k)!r} ≠ {want.get(k)!r}')
+    return bad
+
+
+def _legacy_mode_problems(m, rec):
+    """옛 세대로 추론할 한 모드 레코드 → 옛 세대 표 (`LEGACY_MODE_CONTRACT`) 와의 어긋남 목록."""
+    return [f'{k}={rec.get(k)!r} ∉ {allowed}' for k, allowed in LEGACY_MODE_CONTRACT.get(m, ()) if rec.get(k) not in allowed]
+
+
+def network_generation_contract(dual):
+    """망 레코드 묶음 (dual — 'hertzian' · 'physics' · Hertz 안 'hertz_h12') → 세대 계약 판정 (표기만 본다 · 값 무관).
+
+      → {'generation': 'g2' | 'inferred_legacy' | 'invalid' | '' (모드 레코드가 하나도 없음),
+         'problems': [(모드, 종류, 세부)] — 종류 = 'role' (세대 2 표와 어긋남 · 부분 결손 · 모르는 값) · 'missing_h12' (세대 2 Hertz 에 H12 없음) ·
+                     'not_object' (H12 자리가 객체가 아님) · 'legacy_role' (옛 세대 표와 어긋남),
+         'markers': {모드: [세대 2 표지]}}"""
+    d = dual if isinstance(dual, dict) else {}
+    recs = {m: mode_record(d, m) for m in MODES}
+    present = [m for m in MODES if recs[m] is not None]
+    rh = d.get(DUAL_KEY['hertz'])
+    if not present:
+        return {'generation': '', 'problems': [], 'markers': {}}
+    markers = {m: g2_markers(recs[m]) for m in present}
+    probs = []
+    if any(markers.values()):
+        for m in present:
+            bad = _g2_mode_problems(m, recs[m])
+            if bad:
+                probs.append((m, 'role', ' · '.join(bad)))
+        if recs['hertz'] is not None and recs[H12_MODE] is None:
+            if H12_MODE in rh:
+                probs.append((H12_MODE, 'not_object', f'H12 자리 (hertzian.{H12_MODE}) 가 객체가 아니다 ({type(rh.get(H12_MODE)).__name__})'))
+            else:
+                probs.append((H12_MODE, 'missing_h12', f'세대 2 Hertz 레코드에 이온 민감도 레코드 ({H12_MODE}) 가 없다 — 생산자 (hertzian 실행) 는 늘 '
+                                                        '함께 낸다 (부분 결손)'))
+        gen = NET_GEN_G2
+    else:
+        for m in present:
+            bad = _legacy_mode_problems(m, recs[m])
+            if bad:
+                probs.append((m, 'legacy_role', ' · '.join(bad)))
+        gen = NET_GEN_LEGACY
+    return {'generation': NET_GEN_BAD if probs else gen, 'problems': probs, 'markers': markers}
+
+
+def generation_contract_text(con):
+    """세대 계약 판정 → 사유 문장 ('' = 문제 없음) — 모드 · 역할 · 어긋남."""
+    out = []
+    for m, kind, det in (con or {}).get('problems') or []:
+        if kind == 'role':
+            out.append(f'{m}: {ROLE_NAME.get(m, m)} 역할 표기가 아니다 — {det}')
+        elif kind == 'legacy_role':
+            out.append(f'{m}: 세대 2 표기가 없는데 옛 세대 역할 표기도 아니다 — {det}')
+        else:
+            out.append(f'{m}: {det}')
+    return '; '.join(out)
+
+
+#: 행 표기 칸 (`ion_net_<칸>_<모드>`) — 세대 계약을 행에서 다시 보는 데 쓴다 (`row_generation_problems`).
+ROW_META = ('constriction', 'psi', 'area_rule', 'electrode', 'bulk', 'area_mode')
+
+
+def _row_meta(m, res, legacy):
+    """망 레코드 한 모드 → 행 표기 칸 (`ion_columns` 와 같은 표기 함수)."""
+    g_area, g_elec, g_bulk = generation_meta(res, m, legacy)
+    return {'constriction': constriction_label(res, legacy),
+            'psi': ((res or {}).get('psi_placement') or '') if m in ('physics', H12_MODE) else '',
+            'area_rule': g_area, 'electrode': g_elec, 'bulk': g_bulk, 'area_mode': ('hertz' if m == H12_MODE else m)}
+
+
+def _expected_row_meta():
+    """세대마다 · 모드마다 행 표기 칸의 허용 값 — 계약 표 (`G2_MODE_CONTRACT` · `LEGACY_MODE_CONTRACT`) 를 `ion_columns` 와 **같은 표기 함수**로 옮긴 것
+    (표가 하나라 행 판정이 레코드 판정과 갈라지지 않는다).  None = 그 세대에 없는 모드."""
+    exp = {NET_GEN_G2: {}, NET_GEN_LEGACY: {}}
+    for m in MODES:
+        canon = {k: v for k, v in G2_MODE_CONTRACT[m] if v is not None}
+        exp[NET_GEN_G2][m] = {b: {v} for b, v in _row_meta(m, canon, False).items()}
+        if m not in LEGACY_MODE_CONTRACT:
+            exp[NET_GEN_LEGACY][m] = None
+            continue
+        keys = [k for k, _a in LEGACY_MODE_CONTRACT[m]]
+        sets = {}
+        for combo in itertools.product(*(a for _k, a in LEGACY_MODE_CONTRACT[m])):
+            canon = {k: v for k, v in zip(keys, combo) if v is not None}
+            for b, v in _row_meta(m, canon, True).items():
+                sets.setdefault(b, set()).add(v)
+        exp[NET_GEN_LEGACY][m] = sets
+    return exp
+
+
+_EXPECTED_ROW_META = _expected_row_meta()
+
+
+def row_generation_problems(row):
+    """τ 인계 행 (`ion_columns` 값 · 인계 원천 직렬화 칸 · 인계표 CSV 행) → (세대, [문제]) — 행 하나의 세대 계약 (코호트 판정 **앞**에 행마다).
+
+      세대 칸 (`ion_net_generation`) 이 있는 행 (새 스키마) — 값은 g2 · inferred_legacy 여야 하고 (invalid · 모르는 값 = 위반) 모드마다 표기 칸
+        (`ion_net_<협착 · ψ · 면적 규칙 · 전극 · bulk · 면적 모드>_<모드>`) 이 **전부** 있고 그 세대의 허용 값 (`_expected_row_meta`) 이어야 한다 ·
+        세대 2 는 주 Hertz 가 있으면 H12 도 필수 · 옛 세대는 H12 없음.
+      세대 칸이 없는 행 (계약 전 스키마 — v1.2 인계표 등) — 있는 표기 칸만 대조 · 세대는 전극 칸으로 (dirichlet_exact = 세대 2 · virtual_source_legacy =
+        옛 세대) · 전극 칸도 없으면 옛 세대 (그 스키마는 세대 2 전 tau_flux 의 것 — 세대 2 행에는 늘 전극 칸이 있다).
+      레코드 없는 행 (모든 표기 칸 빈칸 — 폴더 · dual 없음) — ('', []) 판정 밖.
+    값 · 직렬화 칸 둘 다 문자열로 대조한다."""
+    r = row if isinstance(row, dict) else {}
+
+    def cell(k):
+        v = r.get(k)
+        return '' if v is None else str(v)
+    new_schema = ROW_GENERATION_COL in r
+    present = [m for m in MODES if any(cell(f'ion_net_{b}_{m}') for b in ('constriction', 'electrode', 'bulk', 'area_rule'))]
+    g = cell(ROW_GENERATION_COL) if new_schema else None
+    if not present:
+        return ('', []) if not g else (g, [f'세대 칸 {g!r} 인데 모드 표기가 하나도 없다'])
+    if g is None:
+        if any(f'ion_net_electrode_{m}' in r for m in MODES):
+            el = {cell(f'ion_net_electrode_{m}') for m in present}
+            g = NET_GEN_G2 if el == {ELECTRODE_G2} else NET_GEN_LEGACY if el == {ELECTRODE_LEGACY} else ''
+            if not g:
+                return '', [f'세대 칸 없는 행의 전극 표기 {sorted(el)} — 한 세대로 읽을 수 없다']
+        else:
+            g = NET_GEN_LEGACY
+    if g == NET_GEN_BAD:
+        return g, ['세대 계약 위반 (invalid — 사유는 그 행의 상태 칸 · network_generation_contract)']
+    if g not in (NET_GEN_G2, NET_GEN_LEGACY):
+        return g, [f'모르는 세대 칸 {g!r} (g2 · inferred_legacy 만)']
+    probs = []
+    for m in MODES:
+        want = _EXPECTED_ROW_META[g].get(m)
+        if want is None:
+            if m in present:
+                probs.append(f'{m}: 세대 {g} 에 없는 모드인데 표기가 있다')
+            continue
+        if m not in present:
+            if g == NET_GEN_G2 and m == H12_MODE and 'hertz' in present:
+                probs.append(f'{m}: 세대 2 행인데 H12 표기가 없다 (부분 결손 — 세대 2 Hertz 는 늘 H12 를 함께 낸다)')
+            continue
+        role = ROLE_NAME.get(m, m) if g == NET_GEN_G2 else '옛 세대'
+        for b, allowed in want.items():
+            col = f'ion_net_{b}_{m}'
+            if col not in r:
+                if new_schema:
+                    probs.append(f'{col} 칸 없음')
+                continue
+            if cell(col) not in allowed:
+                probs.append(f'{col}={cell(col)!r} ∉ {sorted(allowed)} ({role} 역할)')
+    return g, probs
+
+
+#: 세대 축 (여러 행이 한 표 · 한 학습 집합에 들어갈 때 같아야 하는 것) — 세대 · ψ 배치 (physics 협착 라벨에서) · physics 면적 규칙 · 전극 ·
+#:   ★ 10-06 밤 (G2R-01) 모드별 협착 · bulk (옛 축에는 주 Hertz 의 bulk · 협착이 없어 H12 를 주 자리에 둔 행이 축으로는 같았다).
+GENERATION_AXES = ('generation', 'psi', 'area_rule_physics', 'electrode') + tuple(f'{b}_{m}' for m in MODES for b in ('constriction', 'bulk'))
 _PSI_FROM_LABEL = {'mikic_psi_multiply': 'multiply', 'mikic_psi_divide': 'legacy_divide'}
 
 
 def generation_axes(row):
-    """τ 인계 행 (값 또는 직렬화 칸) → {'psi', 'area_rule_physics', 'electrode'} — 모르는 축은 '' (레코드 없음).
-    전극 = 레코드 있는 모드의 전극 (한 행 안 섞임은 `ion_columns` 가 이미 NOT_COMPUTED 로 막는다 — 여기서는 처음 값)."""
+    """τ 인계 행 (값 또는 직렬화 칸) → 세대 축 dict (GENERATION_AXES) — 빈칸 = 그 축의 레코드 없음.
+    ψ = physics 협착 라벨에서 · 모르는 라벨 (unknown:…) 은 **그대로** 축 값이 된다 (옛 판은 빈 축으로 만들어 비교에서 빠졌다 — G2R-02) ·
+    전극 = 레코드 있는 모드의 처음 값 (한 행 안 어긋남은 행 계약이 먼저 본다)."""
     r = row if isinstance(row, dict) else {}
-    psi = _PSI_FROM_LABEL.get(str(r.get('ion_net_constriction_physics') or ''), '')
-    elec = next((str(r.get(f'ion_net_electrode_{m}')) for m in MODES if r.get(f'ion_net_electrode_{m}')), '')
-    return {'psi': psi, 'area_rule_physics': str(r.get('ion_net_area_rule_physics') or ''), 'electrode': elec}
+    lab = str(r.get('ion_net_constriction_physics') or '')
+    out = {'generation': str(r.get(ROW_GENERATION_COL) or ''), 'psi': _PSI_FROM_LABEL.get(lab, lab),
+           'area_rule_physics': str(r.get('ion_net_area_rule_physics') or ''),
+           'electrode': next((str(r.get(f'ion_net_electrode_{m}')) for m in MODES if r.get(f'ion_net_electrode_{m}')), '')}
+    for m in MODES:
+        for b in ('constriction', 'bulk'):
+            out[f'{b}_{m}'] = str(r.get(f'ion_net_{b}_{m}') or '')
+    return out
 
 
 def generation_mixing_problem(rows):
-    """여러 행의 세대 섞임 → '' (한 세대 · 또는 판정할 표기 없음) | 사유 (축 · 값 · 예시 행).  빈칸 축은 판정 밖 (레코드 없는 행)."""
+    """여러 행 → '' (한 세대 · 또는 판정할 표기 없음) | 사유.
+    ★ 10-06 밤 (G2R-02) — **행마다 세대 계약 먼저** (`row_generation_problems` — 같은 결함만 모인 코호트도 걸린다 · 옛 판은 "서로 같다" 를 "유효하다" 로
+    썼다) · 그다음 세대 축 섞임 (세대 · ψ · physics 면적 · 전극 · 모드별 협착 · bulk).  빈칸 축 · 레코드 없는 행은 판정 밖."""
+    bad_rows = []
+    for r in rows or []:
+        g, probs = row_generation_problems(r)
+        if probs:
+            bad_rows.append(f'{(r or {}).get("case") or (r or {}).get("case_id") or "?"} ({g or "?"}): {probs[0]}'
+                            + (f' 외 {len(probs) - 1}' if len(probs) > 1 else ''))
+    if bad_rows:
+        return ('세대 계약 위반 행 (G2R-01 · 02 — 행마다 먼저 · 같은 결함만 모인 코호트도 거부): ' + '; '.join(bad_rows[:5])
+                + (f' … 모두 {len(bad_rows)} 행' if len(bad_rows) > 5 else ''))
     seen = {a: {} for a in GENERATION_AXES}
     for r in rows or []:
         ax = generation_axes(r)
@@ -393,7 +660,8 @@ def generation_mixing_problem(rows):
             if ax[a]:
                 seen[a].setdefault(ax[a], (r or {}).get('case') or (r or {}).get('case_id') or '?')
     bad = [f'{a}: ' + ' · '.join(f'{v} (예: {c})' for v, c in sorted(vals.items())) for a, vals in seen.items() if len(vals) > 1]
-    return ('세대 섞임 — 한 표 · 학습 집합에 세대가 다른 행 (ψ 배치 · physics 면적 규칙 · 전극) 을 표기 없이 섞지 않는다: ' + '; '.join(bad)) if bad else ''
+    return ('세대 섞임 — 한 표 · 학습 집합에 세대가 다른 행 (세대 · ψ 배치 · physics 면적 규칙 · 전극 · 모드별 협착 · bulk) 을 표기 없이 섞지 않는다: '
+            + '; '.join(bad)) if bad else ''
 
 
 def _sigma0(res):
@@ -450,18 +718,21 @@ def ion_columns(dual, ledger, perc_pct, sigma0_T_claim=None):
     out['ion_sigma0_T_C'] = None if (t_bad or shared_s0 is None) else shared_s0[1]
     out['phi_basis'], out['L_basis'] = 'mass_conserving', 'L_mc'
 
-    #  ★ 10-06 세대 2 — 한 행 안 전극 세대가 섞이면 (레코드 있는 모드끼리 다르면) 그 행의 레코드 있는 모드 전부 기술적 무효 (invalid_input)
-    elec = {m: generation_meta(r, m)[1] for m, r in recs.items() if isinstance(r, dict)}
-    elec_mixed = len(set(elec.values())) > 1
+    #  ★ 10-06 밤 세대 계약 (G2R-01 · 02) — 케이스의 세대를 닫힌 표로 먼저 정한다 (옛 판: 한 행 안 전극이 서로 같은지만 봤다 = "서로 같다" 를 "유효하다"
+    #    로).  위반이면 레코드 있는 모드 전부 기술적 무효 (invalid_input · 값 빈칸) · 옛 기본값은 inferred_legacy 케이스에만 채운다.
+    con = network_generation_contract(dual)
+    legacy = con['generation'] == NET_GEN_LEGACY
+    gen_txt = generation_contract_text(con)
+    out[ROW_GENERATION_COL] = con['generation']
     for m in MODES:
         res = recs[m]
         o = _blank(m)
         rule = (res or {}).get('boundary_rule')
-        g_area, g_elec, g_bulk = generation_meta(res, m)
+        meta = _row_meta(m, res, legacy) if isinstance(res, dict) else {b: '' for b in ROW_META}
         o.update({f'ion_net_area_mode_{m}': ('hertz' if m == H12_MODE else m),       # H12 면적 = Hertz 면적 (c_cpl[22]) 그대로
-                  f'ion_net_constriction_{m}': constriction_label(res),          # ★ 10-06 — ψ 배치까지 본다 (세대 2 = mikic_psi_multiply)
-                  f'ion_net_psi_{m}': ((res or {}).get('psi_placement') or '') if m in ('physics', H12_MODE) else '',
-                  f'ion_net_area_rule_{m}': g_area, f'ion_net_electrode_{m}': g_elec, f'ion_net_bulk_{m}': g_bulk,
+                  f'ion_net_constriction_{m}': meta['constriction'],             # ★ 10-06 — ψ 배치까지 본다 (세대 2 = mikic_psi_multiply)
+                  f'ion_net_psi_{m}': meta['psi'],
+                  f'ion_net_area_rule_{m}': meta['area_rule'], f'ion_net_electrode_{m}': meta['electrode'], f'ion_net_bulk_{m}': meta['bulk'],
                   f'ion_net_band_rule_{m}': rule if rule in BAND_RULES else '',
                   f'ion_net_band_frac_{m}': _num((res or {}).get('boundary_band_frac')),
                   f'ion_net_status_reason_{m}': ''})
@@ -485,8 +756,8 @@ def ion_columns(dual, ledger, perc_pct, sigma0_T_claim=None):
             out.update(fail('NOT_COMPUTED', 'missing_input'))
             continue
         prob = ion_record_problem(res)                   # 0b 공용 기술 검사 (RGLR-01 · 02) — 과학적 게이트 (G1 · G3 · G5) 앞 · 띠와 무관
-        if prob is None and elec_mixed:                   # ★ 10-06 — 한 행 안 전극 세대 섞임 (생산자는 한 실행에서 한 전극만 쓴다)
-            prob = (INVALID_INPUT, '한 행 안 전극 세대 섞임 ' + ' · '.join(f'{k}={v}' for k, v in sorted(elec.items())))
+        if prob is None and gen_txt:                      # ★ 10-06 밤 세대 계약 (G2R-01 · 02) — 케이스 전체 (한 모드가 틀리면 그 실행의 세대가 미확정)
+            prob = (INVALID_INPUT, f'세대 계약 (G2R-01 · 02): {gen_txt}')
         if prob is not None:
             code, detail = prob
             out.update(fail('NOT_COMPUTED', code if code != INVALID_INPUT else f'{code}: {detail}'))

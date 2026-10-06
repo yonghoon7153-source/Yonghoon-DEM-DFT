@@ -13,7 +13,9 @@
   ③ 단조 — 기본 R_c 는 a_eff 에 단조 감소 · legacy 는 s > 0.4 에서 오른다 (L2-01 비단조 재현 · 최소 = s 0.4)
   ④ Hertz 가지 — 두 배치의 간선 · σ 가 비트 동일 (ψ 를 안 쓴다 · 계약 §3) · ④c (10-06) H12 민감도 팔은 늘 곱셈 (배치 인자와 무관)
   ⑤ tau_flux 협착 라벨 = 결과의 ψ 배치 (physics multiply → mikic_psi_multiply · legacy_divide → mikic_psi_divide ·
-     hertz → maxwell_halfspace) — 손 레코드 · 실 생산자 둘 다
+     hertz → maxwell_halfspace) — 손 레코드 · 실 생산자 둘 다.  ★ 10-06 밤 세대 계약 (G2R-02) — 명시 ψ 분모 실 생산자 팔은 세대 1 도 2 도 아닌 연구
+     팔이라 τ 상태는 NOT_COMPUTED (invalid_input · 라벨은 그대로) · 방향은 생산자 σ_ratio 로 · ⑤c 옛 픽스처 (Hertz ψ multiply + physics ψ 없음 혼종) 는
+     두 모드 다 ψ 기록 없는 진짜 옛 모양으로 고쳤다
   ⑥ `_run_all_networks` 의 세 채널 결과가 ψ 배치를 싣는다 (이온 psi_placement · electronic_psi_placement ·
      thermal_psi_placement) — 기본 · 명시 legacy 둘 다 (값 = 실제로 쓴 배치)
 ⚠ 범위 — 합성 2 구 · 사슬 픽스처의 식 · 표기 시험이다.  실침대 σ · 코퍼스 · 물리 정확도로 확대하지 않는다
@@ -245,12 +247,15 @@ def main():
             o = tf.ion_columns({'hertzian': rec('hertzian', psi_placement=kw.get('h_psi', 'multiply')),
                                 'physics': rec('physics', **({'psi_placement': kw['p_psi']} if 'p_psi' in kw else {}))}, led, 92.0)
             return o['ion_net_constriction_hertz'], o['ion_net_constriction_physics'], o['ion_net_psi_physics'], o['ion_net_psi_hertz']
-        m, d_, miss, unk = lab(p_psi='multiply'), lab(p_psi='legacy_divide'), lab(), lab(p_psi='foo')
+        #  ★ 10-06 밤 (G2R-02) — ⑤c 의 "ψ 기록 없는 옛 산출물" 은 두 모드 다 ψ 기록이 없다 (09-15 깃발 전 생산자는 어느 결과에도 psi_placement 를 안 썼다).
+        #    옛 픽스처는 Hertz 에 multiply (세대 2 표지) 를 둔 혼종이었다 — 새 세대 계약은 세대 2 표지가 남은 레코드의 빈 ψ 를 세대 1 로 추론하지 않는다
+        #    (unknown:mikic/None · 세대 계약 위반 — test_gen2_role_contract R3).  라벨 규칙 (기록 없음 = 세대 1) 자체는 그대로 시험한다.
+        m, d_, miss, unk = lab(p_psi='multiply'), lab(p_psi='legacy_divide'), lab(h_psi=None), lab(p_psi='foo')
         chk('⑤a 손 레코드 — physics + multiply → mikic_psi_multiply · ψ 칸 multiply · hertz → maxwell_halfspace · hertz ψ 칸 빈칸',
             m == ('maxwell_halfspace', 'mikic_psi_multiply', 'multiply', ''), repr(m))
         chk('⑤b 손 레코드 — physics + legacy_divide → mikic_psi_divide (세대 1 라벨 그대로)',
             d_ == ('maxwell_halfspace', 'mikic_psi_divide', 'legacy_divide', ''), repr(d_))
-        chk('⑤c ψ 기록 없는 mikic (09-15 깃발 도입 전 산출물 = 세대 1) → mikic_psi_divide · ψ 칸 빈칸 · 모르는 ψ → unknown 표지',
+        chk('⑤c ψ 기록 없는 mikic (09-15 깃발 도입 전 산출물 = 세대 1 · 두 모드 다 ψ 기록 없음) → mikic_psi_divide · ψ 칸 빈칸 · 모르는 ψ → unknown 표지',
             miss == ('maxwell_halfspace', 'mikic_psi_divide', '', '') and unk[1] == 'unknown:mikic/foo', repr((miss, unk)))
         A = {i: {'type': 1, 'x': 0.0, 'y': 0.0, 'z': float(z), 'radius': 1.0} for i, z in enumerate(range(21), 1)}
         C = [{'id1': i, 'id2': i + 1, 'contact_area': 0.1, 'delta': 0.05} for i in range(1, 21)]
@@ -258,7 +263,7 @@ def main():
         eps_s, eps_u = 1.0 - v_se / (10.0 * 10.0 * 20.0), 0.97
         led2 = {'thickness_um': 20.0, 'thickness_mass_conserving_um': 20.0 * (1 - eps_s) / (1 - eps_u),
                 'phi_se_mass_conserving': 1 - eps_u}
-        out = {}
+        out, sig = {}, {}
         for tag, kw in (('default', {}), ('legacy', {'psi_placement': nc.PSI_DIVIDE})):
             with contextlib.redirect_stdout(io.StringIO()):
                 dk = {cm: nc._run_all_networks(A, C, [1], [], {1: 'SE'}, 1.0, 20.0, 10.0, 10.0, None, contact_mode=cm, **kw)
@@ -266,13 +271,20 @@ def main():
             dk = json.loads(json.dumps(dk))                         # 디스크 모양
             o = tf.ion_columns(dk, led2, 100.0)
             out[tag] = (o['ion_net_constriction_physics'], o['ion_net_psi_physics'], o['ion_net_constriction_hertz'],
-                        o['ion_net_status_physics'], o['tau2_ion_physics'])
-        chk('⑤d 실 생산자 21 구 사슬 — 기본 = mikic_psi_multiply · multiply · OK · 명시 legacy = mikic_psi_divide · legacy_divide · OK',
+                        o['ion_net_status_physics'], o['tau2_ion_physics'], tf.reason_code(o['ion_net_status_reason_physics']))
+            sig[tag] = dk['physics']['sigma_full']
+        #  ★ 10-06 밤 (G2R-02 · 1저자 비준 세대 계약) — 명시 ψ 분모 (세대 2 생산자 + PSI_DIVIDE) 는 세대 1 도 2 도 아닌 **연구 팔**이다 (전극 dirichlet_exact ·
+        #    physics_g2 면적 위의 ψ 분모 · 세대 1 전극은 더 만들 수 없다) → τ 인계 소비자는 세대 계약 위반 (NOT_COMPUTED invalid_input) 으로 막는다
+        #    (인계 · 학습 표에 들어가지 않는다).  라벨 (mikic_psi_divide · legacy_divide) 은 결과의 실제 배치 그대로 보인다.
+        chk('⑤d 실 생산자 21 구 사슬 — 기본 = mikic_psi_multiply · multiply · OK · 명시 legacy (연구 팔) = 라벨 mikic_psi_divide · legacy_divide 그대로 · '
+            '상태 NOT_COMPUTED (invalid_input · 세대 계약 — 인계에 안 실린다)',
             out['default'][:4] == ('mikic_psi_multiply', 'multiply', 'maxwell_halfspace', 'OK')
-            and out['legacy'][:4] == ('mikic_psi_divide', 'legacy_divide', 'maxwell_halfspace', 'OK'), repr(out))
-        chk('⑤e 같은 사슬의 physics tau2 — 세대 2 < 세대 1 (곱셈 = 활성 간선 R_c 가 ψ² 배 → σ 상향 · 계약 §C 방향)',
-            isinstance(out['default'][4], float) and isinstance(out['legacy'][4], float) and out['default'][4] < out['legacy'][4],
-            f"tau2_ion_physics 세대 1 {out['legacy'][4]!r} → 세대 2 {out['default'][4]!r}")
+            and out['legacy'][:4] == ('mikic_psi_divide', 'legacy_divide', 'maxwell_halfspace', 'NOT_COMPUTED')
+            and out['legacy'][5] == 'invalid_input' and out['legacy'][4] is None, repr(out))
+        #  방향 (세대 2 곱셈 → σ 상향 = tau2 하향) 은 생산자 σ_ratio 로 직접 본다 (τ 소비자는 연구 팔을 받지 않는다)
+        chk('⑤e 같은 사슬의 physics σ_ratio — 세대 2 (곱셈) > 명시 ψ 분모 (곱셈 = 활성 간선 R_c 가 ψ² 배 → σ 상향 = tau2 하향 · 계약 §C 방향)',
+            isinstance(sig['default'], float) and isinstance(sig['legacy'], float) and sig['default'] > sig['legacy'],
+            f"physics sigma_full ψ 분모 {sig['legacy']!r} → 곱셈 {sig['default']!r}")
     _guard('⑤', s5)
 
     # ── ⑥ 세 채널 결과가 ψ 배치를 싣는다 ──

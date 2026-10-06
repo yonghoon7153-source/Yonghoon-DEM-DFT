@@ -18,6 +18,9 @@
   T10 (10-05 RGL-04 웹앱 짝) 망 최근 시도 행 — 최근 시도가 failed 면 사유 · 활성 세대 (없으면 "활성 세대 없음") · 성공이면 행 없음 · 전체 체인 뒤 순서
   T10h–j · T7f · T8c (10-05 RGLR2-02 웹앱 짝) 망 활성 세대가 확정되지 않으면 (되돌림 실패 · full_metrics ↔ 도장 불일치 · 중단된 게시) "이전 성공 세대
      그대로" 라 하지 않는다 — 무효 행 (사유 · 인용 금지 · 재실행 필요) · 라벨 · 정렬 · 툴팁 · 별칭 · 케이스 라우트 가드 배선
+  T12 (10-06 밤 G2R-01 · 02 웹앱 짝 · J20-l) 망 세대 행 — 도우미 세대 칸 (`ion_net_generation`) 을 그대로: g2 (세대 2 계약 통과) ·
+     inferred_legacy (세대 2 표기가 하나도 없는 옛 산출물 — 옛 기본값으로 추론) · invalid (세대 계약 위반 — H12 를 주 Hertz 자리에 · 모르는 값 ·
+     부분 결손 · 상태 행 = NOT_COMPUTED (invalid_input: 세대 계약 …) — 기술적 실패) · 라벨 · 정렬 (띠 행 뒤) · 툴팁 · 별칭.  옛 코드에는 행이 없다.
 
   python3 webapp/test_tau_handover_status.py
 """
@@ -59,6 +62,8 @@ RECALC = '최근 재계산 실패'
 #  ★ 10-05 RGLR2-02 웹앱 짝 (Codex 3차 재검증) — 망 활성 세대가 확정되지 않았을 때 (full_metrics ↔ 도장 불일치 · 되돌림 실패 · 중단된 게시)
 #    따로 서는 행.  정의 = `scripts/tau_flux.network_generation_problem` (읽는 쪽 fail-closed) — 옛 코드에는 이 행이 없다.
 GENINV = '망 활성 세대 무효 (full_metrics ↔ 도장 · 되돌림 실패 · 중단된 게시)'
+#  ★ 10-06 밤 G2R-01 · 02 웹앱 짝 — 망 세대 계약 행 (정의 = `scripts/tau_flux.network_generation_contract` · 행 칸 `ion_net_generation`)
+GEN = '망 세대 (세대 계약 · G2R-01 · 02)'
 
 
 def producer_nonthrough():
@@ -320,6 +325,26 @@ def main():
         chk('T6b dual 파일 없는 케이스 → NOT_COMPUTED (missing_input) — 조용히 빠지지 않는다',
             isinstance(ihx, dict) and ihx['ion_net_status_hertz'] == 'NOT_COMPUTED'
             and ihx['ion_net_status_reason_hertz'] == 'missing_input')
+
+        # ── T12 (10-06 밤 G2R-01 · 02 웹앱 짝 · J20-l) — 망 세대 행: 도우미 세대 칸 그대로 (g2 · inferred_legacy · invalid) ──
+        g12 = {}
+        for lab_, ih_ in (('g2 (실 생산자 비관통)', ih6), ('inferred_legacy (표기 없는 옛 손 레코드)', ih)):
+            r_ = row(render(dict(MET, _ion_handover=ih_), True), GEN)
+            g12[lab_] = r_[1:3] if r_ else None
+        npd_bad = json.loads(json.dumps(npd))
+        npd_bad['hertzian'].update(json.loads(json.dumps(npd_bad['hertzian']['hertz_h12'])))     # Codex h12_as_primary (실 생산자 레코드 위)
+        ih12 = webapp._ion_handover(case_dir(tmp, 'h12_primary', npd_bad), m6)
+        rows12 = render(dict(m6, _ion_handover=ih12), True)
+        s12, r12 = row(rows12, STATUS), row(rows12, GEN)
+        chk(f'T12a ★ 세대 행 — 실 생산자 = "g2 — …" · 표기 없는 옛 레코드 = "inferred_legacy — …" (추론) · H · P 같은 값 {g12}',
+            g12.get('g2 (실 생산자 비관통)') is not None and str(g12['g2 (실 생산자 비관통)'][0]).startswith('g2')
+            and g12.get('inferred_legacy (표기 없는 옛 손 레코드)') is not None
+            and str(g12['inferred_legacy (표기 없는 옛 손 레코드)'][0]).startswith('inferred_legacy')
+            and all(v and v[0] == v[1] for v in g12.values()), repr(g12))
+        chk('T12b ★ G2R-01 — H12 레코드를 주 Hertz 자리에 둔 케이스 → 세대 행 "invalid — …" · 상태 행 "NOT_COMPUTED (invalid_input: 세대 계약 …) — 기술적 실패" (H · P)',
+            r12 is not None and str(r12[1]).startswith('invalid') and s12 is not None
+            and all(str(s12[i]).startswith('NOT_COMPUTED (invalid_input') and '세대 계약' in str(s12[i]) and str(s12[i]).endswith(f'— {TECH}')
+                    for i in (1, 2)), repr((s12, r12)))
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
 
@@ -379,6 +404,16 @@ def main():
         and f"'{PL.get(GENINV, '?')}'" in alias and f"'{GENINV}'" in alias
         and 'rollback_failed' in _tip(ATTEMPT) and 'generation_invalid' in body_s
         and {'rollback_failed', 'interrupted_publish'} <= set(getattr(webapp, 'NET_FAILURE_KIND_TEXT', {})))
+
+    # ── T12c (G2R-01 · 02 웹앱 짝) — 망 세대 행: 라벨 상수 · 논문 라벨 · 정렬 표 (띠 행 바로 뒤) · 툴팁 (세 값 · 계약 표 · 한정어) · 별칭 ·
+    #    상태 툴팁에 세대 계약 사유 ──
+    chk('T12c ★ 망 세대 행 — 라벨 상수 · 논문 라벨 · 정렬 표 (띠 행 바로 뒤) · 툴팁 (g2 · inferred_legacy · invalid · H0 Maxwell · H12 · '
+        'dirichlet_exact · physics_g2 · G2R-01 · G2R-02 · tau_flux · 숫자만 바꾼 레코드는 못 잡는다) · 별칭 · 상태 툴팁에 세대 계약',
+        getattr(webapp, 'ION_HANDOVER_GEN_LABEL', None) == GEN and GEN in PL and GEN in canon
+        and canon.index(BAND) < canon.index(GEN)
+        and all(w in _tip(GEN) for w in ('g2', 'inferred_legacy', 'invalid', 'Maxwell', 'H12', 'dirichlet_exact', 'physics_g2',
+                                          'G2R-01', 'G2R-02', 'tau_flux', '숫자'))
+        and f"'{PL.get(GEN, '?')}'" in alias and f"'{GEN}'" in alias and '세대 계약' in body_s)
 
     # ── T8 라우트 배선 ──
     i_set = src.find("metrics['_ion_handover'] = _ion_handover(results_dir, metrics)")

@@ -203,6 +203,7 @@ run 'webapp: s567_labels'         python3 webapp/test_s567_labels.py   # 10-04 �
 run 'webapp: tau_grade_unify'     python3 webapp/test_tau_grade_unify.py   # 10-04 ②b TAU-03 — 등급 τ · overhead = Hertz 원 솔버 σ + 짝 σ₀ (한 도우미) · COMSOL 2D 두 모드 행 · regime DB · L4-04
 run 'webapp: network_handover_chain' python3 webapp/test_network_handover_chain.py  # 10-05 RGL · SELF-86 — 실 생산자 → 정지 helper → τ → 배치 기록 (stop_after=network) → build_handover 끝-끝 (옛 코드 5/8 = RGL-02 · 03 · 04)
 run 'webapp: psi_generation_stamp' python3 webapp/test_psi_generation_stamp.py  # 10-06 L2-01 세대 2 — full_metrics · 도장 psi_placement_physics (솔버 출력) · 망 소유 키 · 정지 계약 ⑥b · 옛 세대 재투영 · τ 협착 라벨
+run 'webapp: gen2_publication_handover' python3 webapp/test_gen2_publication_handover.py  # 10-06 밤 G2R-01 · 02 — Codex 게시 · 인계 반례 (H12 주 자리 · ψ/전극 오타 · 부분 결손 · 표지 없는 후보) 를 실 생산자 사슬로: 정지 · 일반 경로 게시 전 거부 · 강제 폴더 인계 거부 · 같은 결함 코호트 · 옛 세대 추론 자격 (도장) · build_handover (옛 코드 2/11)
 run 'webapp: hetero_transcript'   python3 webapp/test_hetero_transcript_page.py   # 10-05 이종기술 회의록 — 회의 둘 (09-18 · 10-02) 고르기 · 회의 종합 · 등록부 밖 키 404 · /hetero 논지 정본 비준 블록 (docs/hetero_thesis.md 에서 읽음 · fail-closed)
 #  ★ 2026-10-03 (Codex r_int 1단계 RINT-02 · 13 · 14 · 20) — ① 계면 요청 ↔ 네 솔브 적용 영수증을 **실물 producer** 로.
 #    `solve_sigma_z(..., rint=)` 호출 넷을 AST 로 찾아 하나씩 `rint=` 를 지우면 게시가 거부돼야 한다 (주 솔브만 보던
@@ -226,6 +227,10 @@ run 'psi default switch (L2-01 세대 2)' python3 scripts/test_psi_default_switc
 run 'physics area g2 (C2 ①–⑤ · L1-01/02/03)' python3 scripts/test_physics_area_g2.py
 run 'network dirichlet (L2-05 · D1–D7)' python3 scripts/test_network_dirichlet.py
 run 'network generation 2 (CF 표지 · H12 · 세대 표기)' python3 scripts/test_network_generation2.py
+#  ★ 2026-10-06 밤 (Codex 세대 2 적대 리뷰 G2R-01 · 02 · 1저자 비준) — 공용 세대 계약 (tau_flux.network_generation_contract · 모드마다 허용 모델 조합의
+#    닫힌 표 · 부분 결손 거부 · 옛 세대 추론 = 세대 2 표지가 하나도 없을 때만 inferred_legacy) · 행마다 먼저 (같은 결함 코호트 거부) · 진짜 역사 레코드 194
+#    (v1.2 배치 원천) = inferred_legacy · v1.2 표 τ 칸 재현 (옛 코드 5/24).
+run 'gen2 role contract (G2R-01 · 02 — 역할 · 닫힌 열거 · 옛 세대 추론)' python3 scripts/test_gen2_role_contract.py
 #  ★ 2026-10-06 밤 (3단계 · C2-⑥ 1저자 비준 · LHS-25 · LHSC-08 · LHS-27) — Physics 피복 = 합집합 cap (`*_physics_union` 새 키 · 해석해 ·
 #    생산자 빈칸 계약 · real_14 51.522 → 43.218 = 설계 원형 AM 457 개 1e-13 안 · case15 = 빈칸 (c_cpl[22] < 0) · 원형 ×0.87 재현) ·
 #    벽 근접 접선 수 (분류 불변 · 자릿수는 파일마다 · STL 따로) · 피복 CLI 가 실행 위치 추적 파일을 안 덮는다 (--summary-out 명시만).

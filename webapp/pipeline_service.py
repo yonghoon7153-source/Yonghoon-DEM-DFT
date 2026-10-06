@@ -148,10 +148,34 @@ def _canon(v):
 
 #: ★ 10-06 저녁 — H12 Hertz 이온 민감도 레코드의 자리 (dual Hertz 레코드 안 · 생산자 `network_conductivity.HERTZ_H12_MODE`) · 세대 2 전극 이름.
 #:   값은 생산자와 같은 문자열 (무거운 생산자를 임포트하지 않으려고 둔다 — test_psi_generation_stamp 가 대조한다).
+#:   ★ 10-06 밤 (G2R-01 · 02) — 역할 판정의 정본은 `tau_flux.G2_MODE_CONTRACT` (모드마다 · 닫힌 열거) 다.  NETWORK_H12_META 는 그 H12 줄의 부분집합
+#:   (표시 · 옛 시험용 — test_gen2_role_contract 가 같은지 대조) 이고 정지 계약 ⑨ 는 더 이상 이것으로 판정하지 않는다 (주 Hertz 를 안 봤다).
 NETWORK_H12_KEY = 'hertz_h12'
 NETWORK_ELECTRODE_G2 = 'dirichlet_exact'
 NETWORK_H12_META = (('hertz_constriction', 'mikic_psi_multiply'), ('bulk_model', 'sphere_segment'), ('resistance_model', 'mikic'),
                     ('psi_placement', 'multiply'), ('sensitivity_mode', 'hertz_h12'))
+#: 활성 세대 도장 (`stamp_network_provenance`) 이 솔버 출력에서 읽어 남기는 세대 표기 키 (10-06 · 50de4e806 · a0a24c538 부터).  194 v1.2 배치 도장에는
+#:   하나도 없다 (그 전 코드).  인계 때 옛 세대 추론 자격 (`provenance_claims_generation2`) 의 근거.
+PROVENANCE_GENERATION_KEYS = ('psi_placement_physics', 'electrode_model', 'area_rule_physics', 'hertz_h12')
+
+
+def provenance_claims_generation2(prov):
+    """★ 10-06 밤 (G2R-02) — 활성 세대 도장이 **세대 2 산출물을 게시했다**고 말하는가 → 사유 문장 ('' = 말하지 않는다).
+    도장은 게시 때 솔버 출력 (dual) 에서 읽은 표기다 — 전극 dirichlet_exact · H12 레코드 있음 · physics 면적 physics_g2 · ψ multiply 중 하나라도면
+    그 폴더는 세대 2 게시다 ⇒ 지금 레코드에 세대 2 표지가 없으면 (게시 뒤 표기만 지움) 옛 세대로 **추론하지 않는다** (인계 거부).
+    키가 없거나 값이 None · False 면 말하지 않는다 (194 v1.2 도장 = 키 없음 · 시험 도장 = 망 JSON 을 쓰기 전에 찍어 None)."""
+    p = prov if isinstance(prov, dict) else {}
+    why = [f'{k}={p.get(k)!r}' for k, want in (('electrode_model', NETWORK_ELECTRODE_G2), ('hertz_h12', True),
+                                                ('area_rule_physics', 'physics_g2'), ('psi_placement_physics', 'multiply'))
+           if p.get(k) == want]
+    return ('도장이 세대 2 게시를 말한다 (' + ' · '.join(why) + ')') if why else ''
+
+
+def provenance_predates_generation2(prov):
+    """★ 10-06 밤 (G2R-02 거울) — 활성 세대 도장이 세대 2 **이전 코드**가 찍은 것인가 (세대 표기 키 `PROVENANCE_GENERATION_KEYS` 가 하나도 없다 =
+    194 v1.2 배치 도장 모양).  세대 2 레코드는 세대 2 코드만 낼 수 있고 그 코드의 게시는 늘 그 키를 찍는다 ⇒ 세대 2 표기 레코드 + 이 도장 = 역사 폴더에
+    표기만 덧붙인 모양 (인계 거부).  도장이 객체가 아니면 False (다른 관문 — P0 · P1 — 이 답한다)."""
+    return isinstance(prov, dict) and not any(k in prov for k in PROVENANCE_GENERATION_KEYS)
 
 
 def network_h12_record(dual):
@@ -814,10 +838,13 @@ def _read_json_or_none(path):
         return None
 
 
-def network_stop_verdict(results_dir, run_id, fm=None):
+def network_stop_verdict(results_dir, run_id, fm=None, legacy_ok=False):
     """`stop_after='network'` 로 멈춘 결과 폴더 → (ok, reason).  fail-closed — 읽기 실패 · 키 없음 · 모순은 전부 False.
 
     fm = 승격 **전** 후보의 full_metrics 투영 (10-05 RGL-04 — 아직 디스크에 쓰지 않은 것).  None 이면 디스크의 full_metrics.json.
+    legacy_ok = ★ 10-06 밤 (G2R-02) — 세대 2 표지가 하나도 없는 레코드를 옛 세대로 **추론**해 받을 것인가.  게시 (후보 = 현행 생산물) 는 늘 False —
+      현행 생산자는 세대 2 표기를 전부 싣는다.  인계 재검사 (`lhs_design_dataset.load_tau_results` P4) 만 역사 폴더 (도장이 세대 2 게시를 말하지 않는다 ·
+      `provenance_claims_generation2`) 에 True 를 준다.
     정본 (canonical) = **dual** (`network_conductivity_dual.json` — 두 모드를 한 파일에 · τ 인계 도우미가 읽는 것).  모드 파일 · legacy 는
     그 사본이어야 하고 full_metrics 는 그 투영이다 (값 일치는 복사 검산 · 세대 증거는 ② 도장 + stash 인과 계약이 진다).
 
@@ -835,10 +862,13 @@ def network_stop_verdict(results_dir, run_id, fm=None):
          `tau_flux.ion_columns` 의 두 모드 상태가 `NETWORK_STOP_TAU_OK` (OK · 등록된 과학적 HOLD) 이며 생산자 상태와 맞는다
       ⑧ σ₀ · 온도 짝 (RGL-07) — 두 모드 · legacy · full_metrics 의 (σ₀, 온도) 가 이번 세대의 같은 값이고, 등급 · 웹앱 τ 가 쓰는 짝 σ₀
          (`tau_flux.tau2_from_metrics` = `se_material.sigma_grain_context(full_metrics)`) = 인계 σ₀ (망 기록)
-      ⑨ ★ 10-06 저녁 세대 2 (1저자 비준 — C1 · C2) — 한 실행의 세대 표기가 모드끼리 같다 (전극 · Hertz · physics) · Hertz 레코드가 세대 2 전극
-         (dirichlet_exact) 이면 H12 이온 민감도 레코드 (`hertz_h12` — Hertz 레코드 안) 가 **있어야** 하고 (생산자가 늘 함께 낸다): 공용 기술 검사
-         (`tau_flux.ion_record_problem`) · 짝 메타 (ψ 곱 · 구 조각 · mikic · multiply) · 같은 전극 · 같은 그래프 (관통 분율 · 띠 규칙 · 띠 폭 · σ 상태
-         부류) · τ 인계 상태 ∈ OK · 등록된 과학적 HOLD (소비자 자신).  표기 없는 옛 레코드 (전극 기록 없음 = 10-06 전 산출물) 는 H12 를 요구하지 않는다.
+      ⑨ ★ 10-06 저녁 세대 2 (1저자 비준 — C1 · C2) · ★ 10-06 밤 세대 계약 (G2R-01 · 02 · 1저자 비준) — 공용 세대 계약 `tau_flux.network_generation_contract`
+         (τ 인계 소비자 · 인계 생성기 · 배포 빌더와 같은 함수 · 닫힌 표): 모드마다 허용 모델 조합 (주 Hertz = H0 Maxwell + 원기둥 · H12 = ψ 곱 + 구 조각 ·
+         physics = ψ 곱 + physics_g2 · 셋 다 dirichlet_exact) · 세대 2 표지가 하나라도 있으면 표기 전부 필수 (부분 결손 · 모르는 값 = 거부 · 세대 2 Hertz 는
+         H12 필수) · 표지가 하나도 없는 후보 (inferred_legacy) 는 legacy_ok 일 때만.  세대 2 면 H12 를 더 본다: 공용 기술 검사 (`tau_flux.ion_record_problem`)
+         · 같은 그래프 (관통 분율 · 띠 규칙 · 띠 폭 · σ 상태 부류) · τ 인계 상태 ∈ OK · 등록된 과학적 HOLD (소비자 자신).  옛 판은 중첩 H12 메타만 보고
+         주 Hertz 가 H0 인지 안 봐 H12 를 주 자리에 둔 후보가 done 이었고 (G2R-01) · 주 Hertz 전극이 dirichlet_exact 가 아니면 무엇이든 옛 레코드로 보고
+         조기 반환했다 (G2R-02).
     """
     ok_c, why_c = network_content_verdict(results_dir, strict=True)
     bad = [] if ok_c else [f'① {why_c}']
@@ -944,34 +974,57 @@ def network_stop_verdict(results_dir, run_id, fm=None):
         s0_fm = tf.tau2_from_metrics(fm)[1]
         if _stop_num(s0_net) and not (_stop_num(s0_fm) and abs(s0_fm - s0_net) <= 1e-9 * max(1.0, abs(s0_net))):
             bad.append(f'⑧ 짝 σ₀: 등급 · 웹앱 τ 가 쓰는 σ₀ {s0_fm!r} mS/cm (full_metrics) ≠ 인계 σ₀ {s0_net!r} (망 기록)')
-        bad.extend(network_generation2_problems(dual, row, tf))
+        bad.extend(network_generation2_problems(dual, row, tf, legacy_ok=legacy_ok))
     except Exception as e:                                     # noqa: BLE001 — 소비자를 못 부르면 증서를 못 낸다 (fail-closed)
         bad.append(f'⑦ τ 인계 도우미 실패 ({type(e).__name__}: {e})')
     return (not bad), ('; '.join(bad) if bad else 'ok')
 
 
-def network_generation2_problems(dual, row, tf):
-    """★ 10-06 저녁 — 망 정지 계약 ⑨ (세대 표기 일치 · H12 민감도 레코드) → 문제 목록 ([] = 통과).
+#: ⑨ 사유 머리 — 세대 계약의 모드 · 종류 → 화면 문구 (H12 역할 어긋남은 옛 문구 "짝 메타가 H12 가 아니다" 를 그대로 쓴다).
+_GEN_PREFIX = {'hertz': '⑨ 주 Hertz (H0 자리)', 'physics': '⑨ physics', NETWORK_H12_KEY: '⑨ H12'}
 
+
+def _generation_contract_lines(con, tf):
+    """세대 계약 판정 (`tau_flux.network_generation_contract`) → ⑨ 사유 줄."""
+    out = []
+    for m, kind, det in con.get('problems') or []:
+        head = _GEN_PREFIX.get(m, f'⑨ {m}')
+        if kind == 'role':
+            what = '짝 메타가 H12 가 아니다' if m == NETWORK_H12_KEY else f'역할 표기가 {tf.ROLE_NAME.get(m, m)} 가 아니다'
+            out.append(f'{head}: {what} — 세대 계약 (G2R-01 · 02): {det}')
+        elif kind == 'legacy_role':
+            out.append(f'{head}: 세대 2 표기가 없는데 옛 세대 역할 표기도 아니다 — 세대 계약 (G2R-02): {det}')
+        else:
+            out.append(f'{head}: {det} — 세대 계약 (G2R-02)')
+    return out
+
+
+def network_generation2_problems(dual, row, tf, legacy_ok=False):
+    """★ 10-06 저녁 — 망 정지 계약 ⑨ (세대 계약 · H12 민감도 레코드) → 문제 목록 ([] = 통과).
+
+    ★ 10-06 밤 (G2R-01 · 02 · 1저자 비준) — 판정 = 공용 세대 계약 `tau_flux.network_generation_contract` (τ 인계 소비자 · 인계 생성기 · 배포 빌더와 같은
+    함수 · 모드마다 닫힌 표).  표지가 하나도 없는 후보 (inferred_legacy) 는 legacy_ok (인계 재검사의 역사 폴더) 일 때만 받는다.
     row = 같은 후보의 `tau_flux.ion_columns` (소비자 자신이 낸 H12 상태 · 표기) · tf = tau_flux 모듈."""
     out = []
-    rH, rP = dual.get('hertzian'), dual.get('physics')
-    recs = {k: r for k, r in (('hertzian', rH), ('physics', rP), (NETWORK_H12_KEY, network_h12_record(dual))) if isinstance(r, dict)}
+    rH = dual.get('hertzian')
+    recs = {k: r for k, r in (('hertzian', rH), ('physics', dual.get('physics')), (NETWORK_H12_KEY, network_h12_record(dual)))
+            if isinstance(r, dict)}
     elec = {k: (r.get('electrode_model') or '') for k, r in recs.items()}
     if len(set(elec.values())) > 1:
         out.append(f'⑨ 세대 섞임 — 한 실행의 모드끼리 전극 표기가 다르다 {elec} (생산자는 한 실행에 한 전극만 쓴다)')
-    if not (isinstance(rH, dict) and rH.get('electrode_model') == NETWORK_ELECTRODE_G2):
-        return out                                             # 표기 없는 옛 레코드 — H12 를 요구하지 않는다 (10-06 전 산출물)
+    con = tf.network_generation_contract(dual)
+    out.extend(_generation_contract_lines(con, tf))
+    if con.get('generation') == tf.NET_GEN_LEGACY and not legacy_ok:
+        out.append('⑨ 세대 계약: 세대 2 표기가 하나도 없는 후보 (inferred_legacy) — 현행 생산물은 세대 2 표기를 전부 싣는다 (G2R-02 · 옛 세대 추론은 '
+                   '역사 폴더의 인계 재검사에만)')
+    if con.get('generation') != tf.NET_GEN_G2:
+        return out                                             # 세대 2 가 아니면 (옛 세대 · 위반) H12 를 더 보지 않는다 — 위반은 위에서 이미 거부
     r12 = network_h12_record(dual)
-    if r12 is None:
-        out.append(f'⑨ H12: 세대 2 Hertz 레코드에 이온 민감도 레코드 ({NETWORK_H12_KEY}) 가 없다 — 생산자 (hertzian 실행) 는 늘 함께 낸다')
-        return out
     prob = tf.ion_record_problem(r12)
     if prob is not None:
         out.append(f'⑨ H12: 기술적 입력 무효 — {prob[0]}: {prob[1]}')
-    meta_bad = {k: r12.get(k) for k, v in NETWORK_H12_META if r12.get(k) != v}
-    if meta_bad:
-        out.append(f'⑨ H12: 짝 메타가 H12 가 아니다 {meta_bad} (기대 {dict(NETWORK_H12_META)})')
+    if not (isinstance(rH, dict) and isinstance(r12, dict)):
+        return out                                             # 주 Hertz 없는 dual (정지 계약 ③ · ⑦ 이 따로 거부) — 같은 그래프 대조를 할 수 없다
     same_graph = {k: (rH.get(k), r12.get(k)) for k in ('percolating_fraction', 'active_fraction', 'boundary_rule', 'boundary_band_frac',
                                                         'n_nodes', 'n_edges', 'n_bottom', 'n_top')
                   if _canon(rH.get(k)) != _canon(r12.get(k))}
@@ -1005,7 +1058,9 @@ def network_record_verdict(results_dir):
     유한 양수 · 관통 분율 (0, 1] · σ₀ · 두 표현 항등식 (저장 정밀도) / valid_zero = 증명된 비관통 조합 / not_computed · 그 밖 = 거부.
     ⚠ 정지 계약의 **과학적 HOLD 조건은 옮기지 않는다** — 띠 폴백 L1 · L2 · 정상 비관통 (valid_zero) · 연속체 하한 · 온도 변환 σ₀ 는 통과한다 (그 판정은
     τ 인계 소비자 · 정지 계약의 몫).  옛 판은 일반 경로 (Stage E 앞 승격) 가 이 검사를 건너뛰어 σ_ratio 만 ×4 · 띠 L1 의 σ_ratio None 이 done 으로
-    게시됐다 (Codex general_ratio_times4 · general_band_ratio_missing).  읽기 실패 · 레코드 없음 · 도우미를 못 부름 = 거부 (fail-closed)."""
+    게시됐다 (Codex general_ratio_times4 · general_band_ratio_missing).  읽기 실패 · 레코드 없음 · 도우미를 못 부름 = 거부 (fail-closed).
+    ★ 10-06 밤 (G2R-01 · 02) — 공용 세대 계약 (`tau_flux.network_generation_contract`) 도 여기서 (두 경로 · 사본 묶음 셋) — 옛 판은 정지 경로 ⑨ 에만
+    있었고 그마저 주 Hertz 역할을 안 봤다."""
     try:
         tf = _scripts_import('tau_flux')
     except Exception as e:                                     # noqa: BLE001
@@ -1025,6 +1080,21 @@ def network_record_verdict(results_dir):
         prob = tf.ion_record_problem(r12)
         if prob is not None:
             bad.append(f'network_conductivity_dual.json[hertzian][{NETWORK_H12_KEY}]: {prob[0]}: {prob[1]}')
+    #  ★ 10-06 밤 세대 계약 (G2R-01 · 02 · 1저자 비준) — 같은 공용 세대 계약 (`tau_flux.network_generation_contract` · 정지 계약 ⑨ · τ 인계와 같은 함수) 을
+    #    일반 · 정지 경로 둘 다에서 · 소비자가 읽는 묶음 셋 (dual · legacy + physics 파일 · 모드 파일 둘) 에 부른다 — 주 Hertz 투영 (full_metrics · Stage E)
+    #    원천이 legacy 사본이라 dual 만 보면 사본만 바꾼 H12 주 자리를 못 본다.  후보 = 현행 생산물 → 표지 없는 옛 모양 (inferred_legacy) 도 거부.
+    dual = files.get('network_conductivity_dual.json')
+    for lab, h_, p_ in (('network_conductivity_dual.json', (dual or {}).get('hertzian') if isinstance(dual, dict) else None,
+                         (dual or {}).get('physics') if isinstance(dual, dict) else None),
+                        ('network_conductivity.json + network_conductivity_physics.json', files.get('network_conductivity.json'),
+                         files.get('network_conductivity_physics.json')),
+                        ('network_conductivity_hertzian.json + network_conductivity_physics.json', files.get('network_conductivity_hertzian.json'),
+                         files.get('network_conductivity_physics.json'))):
+        con = tf.network_generation_contract({'hertzian': h_, 'physics': p_})
+        if con.get('problems'):
+            bad.append(f'세대 계약 (G2R-01 · 02) {lab}: {tf.generation_contract_text(con)}')
+        elif con.get('generation') == tf.NET_GEN_LEGACY:
+            bad.append(f'세대 계약 {lab}: 세대 2 표기가 하나도 없는 후보 (inferred_legacy) — 현행 생산물은 세대 2 표기를 전부 싣는다 (G2R-02)')
     return (not bad), ('; '.join(bad) if bad else 'ok')
 
 

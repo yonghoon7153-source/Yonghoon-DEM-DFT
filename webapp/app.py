@@ -713,6 +713,16 @@ def _tau_block_rows(phi_se, sigma0, sig_full_h, sig_full_p, sig_bulk, tau_dij, t
 #    G1–G6 · 상태/메타 모드 꼬리) — 웹앱은 표시만 한다 (같은 정의 · 이름 · 한정어, J20-l).  값 행 (tau2 · √ · 비율) 은 ① 그대로.
 ION_HANDOVER_STATUS_LABEL = 'tau2 인계 상태 (게이트 G1–G6 · v2 §5-2)'
 ION_HANDOVER_BAND_LABEL = '띠 규칙 · 띠 폭/판 간격 (G1 · TAU-24)'
+#  ★ 10-06 밤 (G2R-01 · 02 웹앱 짝 · J20-l) — 망 세대 행: 도우미 세대 칸 (`tau_flux` ion_net_generation — 공용 세대 계약 `network_generation_contract`) 을
+#    같은 이름으로 (g2 · inferred_legacy (옛 세대 **추론**) · invalid (세대 계약 위반)) — 옛 세대 추론이 화면에서 보인다.
+ION_HANDOVER_GEN_LABEL = '망 세대 (세대 계약 · G2R-01 · 02)'
+ION_HANDOVER_GEN_TEXT = {
+    'g2': 'g2 — 세대 2 계약 통과 (주 Hertz = H0 Maxwell + 원기둥 · physics = ψ 곱 + physics_g2 · H12 민감도 · 전극 dirichlet_exact)',
+    'inferred_legacy': ('inferred_legacy — 세대 2 표기가 하나도 없는 옛 산출물 (옛 세대로 추론: virtual_source_legacy · physics_g1 · 원기둥 · '
+                        'ψ 분모 — 레코드에 적힌 값이 아니다)'),
+    'invalid': 'invalid — 세대 계약 위반 (값 인용 금지 · 사유 = 위 상태 칸) — 기술적 실패',
+    '': '— (망 레코드 없음)',
+}
 
 
 def _ion_handover(results_dir, metrics):
@@ -861,7 +871,7 @@ def _network_state_rows(metrics):
 
 
 def _ion_handover_rows(ih):
-    """케이스 τ 블록 뒤 두 행 — [상태 (사유)] · [띠 규칙 · 띠 폭/판 간격].  ih = `_ion_handover` 결과 (None = 도우미 미계산)."""
+    """케이스 τ 블록 뒤 세 행 — [상태 (사유)] · [띠 규칙 · 띠 폭/판 간격] · [망 세대 (세대 계약)].  ih = `_ion_handover` 결과 (None = 도우미 미계산)."""
     if not isinstance(ih, dict):
         return [_same_row(ION_HANDOVER_STATUS_LABEL, '미계산 (도우미 결과 없음)')]
 
@@ -886,8 +896,12 @@ def _ion_handover_rows(ih):
         if not r:
             return '기록 없음 (안 A 전 산출물 — 망 재계산 뒤 생긴다)'
         return f'{r} · {f:.3f}' if isinstance(f, (int, float)) and not isinstance(f, bool) else r
+    #  ★ 10-06 밤 (G2R-01 · 02) — 세대는 케이스 하나에 하나 (세 모드 공통) → H · P 같은 값
+    g = ih.get('ion_net_generation')
+    gtxt = '미계산 (세대 칸 없는 도우미 결과)' if g is None else ION_HANDOVER_GEN_TEXT.get(str(g), f'{g} — 모르는 세대 값 (기술적 실패)')
     return [[ION_HANDOVER_STATUS_LABEL, _st('hertz'), _st('physics'), ''],
-            [ION_HANDOVER_BAND_LABEL, _band('hertz'), _band('physics'), '']]
+            [ION_HANDOVER_BAND_LABEL, _band('hertz'), _band('physics'), ''],
+            [ION_HANDOVER_GEN_LABEL, gtxt, gtxt, '']]
 
 
 def _inject_input_params(metrics, results_dir):
@@ -2280,6 +2294,7 @@ def normalize_network_summary_layout(tables, metrics):
         'τ_Lap,eff / τ_Dij (정의가 다른 두 τ 의 비)',
         'tau2 인계 상태 (게이트 G1–G6 · v2 §5-2)',
         '띠 규칙 · 띠 폭/판 간격 (G1 · TAU-24)',
+        '망 세대 (세대 계약 · G2R-01 · 02)',
         'AM Percolation (%)',
         'Electronic Active AM (%)',
         # Tier-1
@@ -2494,6 +2509,9 @@ _PAPER_LABEL_MAP = {
         'tau2 handover status — gates G1–G6 (τ judgment v2 §5-2 · scripts/tau_flux.py)',
     '띠 규칙 · 띠 폭/판 간격 (G1 · TAU-24)':
         'Boundary band rule · band width / plate gap (G1 · TAU-24)',
+    #  ★ 10-06 밤 G2R-01 · 02 웹앱 짝 — ⚠ 바꾸면 single.html PAPER_TO_ORIG 역맵도 같이 (test_closed_param_labels T1)
+    '망 세대 (세대 계약 · G2R-01 · 02)':
+        'Network generation contract — g2 · inferred_legacy (historical, inferred) · invalid (G2R-01 · 02)',
     #  ★ 10-05 RGL-02 · 04 웹앱 짝 — ⚠ 바꾸면 single.html PAPER_TO_ORIG 역맵도 같이 (test_closed_param_labels T1)
     'σ_ionic 망 상태 (생산자 sigma_full_status)':
         'σ_ionic network state — producer sigma_full_status (valid_zero = proven no through path · not_computed = solve failed)',

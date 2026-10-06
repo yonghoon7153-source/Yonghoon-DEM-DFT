@@ -13,6 +13,10 @@
      (세대 1 과 같은 협착 · bulk).  H12 는 이온 민감도 레코드 (`hertz_h12` — Hertz 결과 안에 · `_run_all_networks` 의 hertzian 실행이 함께 낸다) 로만.
   E  세대 표기 — 결과 · τ 인계 열에 전극 (`ion_net_electrode_<m>` = dirichlet_exact) · bulk (`ion_net_bulk_<m>`) · 면적 규칙 (`ion_net_area_rule_<m>`) ·
      표기 없는 옛 산출물 = 이력 사실 (전극 virtual_source_legacy · 면적 physics_g1 · bulk cylinder_half_d) · 한 행 안 · 여러 행 사이 세대 섞임 거부.
+★ 10-06 밤 세대 계약 (Codex G2R-01 · 02 · 1저자 비준) 으로 뜻을 고친 넷 — E2 옛 산출물 픽스처는 세대 2 표지를 **전부** 뺀다 (옛 픽스처는 진단 키 ·
+  채널 표기를 남겨 세대 2 숫자에 세대 1 표기를 붙인 혼종이었다 — 새 계약은 그런 부분 결손을 옛 세대로 추론하지 않는다 · 194 역사 레코드에는 표지가 하나도
+  없다) · E4 세대 축 = 세대 칸 + 모드별 협착 · bulk 까지 · E7 열 50 (공통 세대 칸 ion_net_generation) · H5b H12 없는 세대 2 결과 = 세대 계약 위반
+  (부분 결손 — 주 두 모드도 NOT_COMPUTED · 생산자는 hertzian 실행에 늘 H12 를 함께 낸다).  역할 · 닫힌 열거 · 코호트 반례 = test_gen2_role_contract.
 ⚠ 범위 — 합성 망 · 2 구 · 21 구 사슬의 식 · 표기 시험이다.  σ 의 물리 정확도 · 194 배포값으로 확대하지 않는다 (H12 = 민감도 · 기본 학습 열 제외).
 """
 import contextlib
@@ -215,9 +219,15 @@ def main():
         rr2 = copy.deepcopy(rr)
         rr2['hertzian'].pop('hertz_h12')
         o2 = tf.ion_columns(rr2, led, 100.0)
-        chk('H5b H12 레코드 없는 결과 (세대 2 전 · 다른 생산자) → hertz_h12 NOT_COMPUTED (missing_input) · 주 두 모드 그대로',
+        #  ★ 10-06 밤 (G2R-02) — 세대 2 표지가 있는 결과에서 H12 만 빠졌다 = 부분 결손 (생산자는 hertzian 실행에 늘 함께 낸다) → 세대 계약 위반 ·
+        #    레코드 있는 주 두 모드도 NOT_COMPUTED (invalid_input) · H12 는 레코드 없음 (missing_input).  옛 판은 주 두 모드를 그대로 OK 로 실었다.
+        chk('H5b ★ H12 레코드 없는 세대 2 결과 (부분 결손) → 세대 invalid · hertz_h12 NOT_COMPUTED (missing_input) · 주 두 모드 NOT_COMPUTED '
+            '(invalid_input: 세대 계약) · 값 빈칸',
             o2.get('ion_net_status_hertz_h12') == 'NOT_COMPUTED' and o2.get('ion_net_status_reason_hertz_h12') == 'missing_input'
-            and o2.get('ion_net_status_hertz') == o.get('ion_net_status_hertz') and o2.get('tau2_ion_physics') == o.get('tau2_ion_physics'))
+            and o2.get('ion_net_generation') == 'invalid'
+            and all(o2.get(f'ion_net_status_{m}') == 'NOT_COMPUTED' and '세대 계약' in str(o2.get(f'ion_net_status_reason_{m}'))
+                    and tf.reason_code(o2.get(f'ion_net_status_reason_{m}')) == 'invalid_input' for m in ('hertz', 'physics'))
+            and o2.get('tau2_ion_physics') is None, repr({k: o2.get(k) for k in ('ion_net_generation', 'ion_net_status_reason_hertz')}))
     _guard('H', sH)
 
     # ══ E. 세대 표기 · 섞임 거부 ═════════════════════════════════════════════════════════════════════
@@ -234,16 +244,26 @@ def main():
             and o.get('ion_net_bulk_hertz') == o.get('ion_net_bulk_physics') == 'cylinder_half_d',
             repr({k: o.get(k) for k in o if 'electrode' in k or 'area_rule' in k or 'bulk' in k}))
         old = copy.deepcopy(rr)
+        #  ★ 10-06 밤 (G2R-02) — 옛 산출물 모양 = 세대 2 표지가 **하나도** 없다 (194 v1.2 배치 원천 실측: resistance_model · contact_mode · ψ legacy_divide 만).
+        #    옛 픽스처는 모델 표기 다섯만 빼고 진단 키 (h_film_nm · n_clamp_zero …) · 채널 표기 (thermal_electrode_model …) 를 남겼다 — 새 계약은 그 혼종을
+        #    세대 2 부분 결손으로 거부한다 (test_gen2_role_contract R7).  표지 목록 = 실 생산자 ↔ 역사 레코드 키 차 (test_gen2_role_contract K1 오라클과 같다).
+        gone = ('electrode_model', 'area_rule', 'area_rule_physics', 'bulk_model', 'hertz_constriction', 'sensitivity_mode', 'hertz_h12',
+                'area_binding_counts_physics', 'n_area_physics_unavailable', 'n_clamp_zero', 'n_floor_only', 'h_film_nm', 'h_film_status',
+                'solve_method_full')
+        gone_ch = ('electrode_model', 'bulk_model', 'area_rule', 'area_rule_physics', 'area_binding_counts_physics', 'n_clamp_zero', 'n_floor_only',
+                   'psi_placement')
         for m in ('hertzian', 'physics'):
-            for k in ('electrode_model', 'area_rule', 'area_rule_physics', 'bulk_model', 'hertz_constriction'):
-                old[m].pop(k, None)
+            for k in list(old[m]):
+                if k in gone or any(k == f'{ch}_{g}' for ch in ('electronic', 'thermal') for g in gone_ch):
+                    old[m].pop(k, None)
             old[m]['psi_placement'] = 'legacy_divide'
-        old['hertzian'].pop('hertz_h12', None)
         og = tf.ion_columns(old, led, 100.0)
-        chk('E2 표기 없는 옛 산출물 = 이력 사실 — 전극 virtual_source_legacy · physics 면적 physics_g1 · bulk cylinder_half_d (짐작이 아니라 10-06 전 코드가 그것뿐)',
+        chk('E2 표기 없는 옛 산출물 = 이력 사실 — 전극 virtual_source_legacy · physics 면적 physics_g1 · bulk cylinder_half_d (짐작이 아니라 10-06 전 코드가 그것뿐) · '
+            '세대 칸 inferred_legacy (추론임을 말한다)',
             og.get('ion_net_electrode_hertz') == og.get('ion_net_electrode_physics') == 'virtual_source_legacy'
             and og.get('ion_net_area_rule_physics') == 'physics_g1' and og.get('ion_net_bulk_hertz') == 'cylinder_half_d'
-            and og.get('ion_net_electrode_hertz_h12') == '', repr({k: og.get(k) for k in og if 'electrode' in k or 'area_rule' in k}))
+            and og.get('ion_net_electrode_hertz_h12') == '' and og.get('ion_net_generation') == 'inferred_legacy',
+            repr({k: og.get(k) for k in og if 'electrode' in k or 'area_rule' in k or k == 'ion_net_generation'}))
         mix = copy.deepcopy(rr)
         mix['physics'].pop('electrode_model')
         om = tf.ion_columns(mix, led, 100.0)
@@ -251,9 +271,15 @@ def main():
             all(om.get(f'ion_net_status_{m}') == 'NOT_COMPUTED' and tf.reason_code(om.get(f'ion_net_status_reason_{m}')) == 'invalid_input'
                 for m in ('hertz', 'physics', 'hertz_h12')), repr({m: om.get(f'ion_net_status_reason_{m}', '')[:60] for m in ('hertz', 'physics')}))
         g2, g1 = tf.generation_axes(o), tf.generation_axes(og)
-        chk("E4 세대 축 — 세대 2 (psi multiply · physics_g2 · dirichlet_exact) ↔ 옛 (legacy_divide · physics_g1 · virtual_source_legacy)",
-            g2 == {'psi': 'multiply', 'area_rule_physics': 'physics_g2', 'electrode': 'dirichlet_exact'}
-            and g1 == {'psi': 'legacy_divide', 'area_rule_physics': 'physics_g1', 'electrode': 'virtual_source_legacy'}, repr((g2, g1)))
+        #  ★ 10-06 밤 (G2R-01) — 세대 축에 세대 칸 · 모드별 협착 · bulk 가 더해졌다 (옛 축에는 주 Hertz 의 bulk · 협착이 없어 H12 를 주 자리에 둔 행이 같았다)
+        chk("E4 세대 축 — 세대 2 (g2 · psi multiply · physics_g2 · dirichlet_exact · H0 maxwell + 원기둥 · physics ψ 곱 + 원기둥 · H12 ψ 곱 + 구 조각) ↔ "
+            "옛 (inferred_legacy · legacy_divide · physics_g1 · virtual_source_legacy · H0 · physics ψ 분모 · H12 없음)",
+            g2 == {'generation': 'g2', 'psi': 'multiply', 'area_rule_physics': 'physics_g2', 'electrode': 'dirichlet_exact',
+                   'constriction_hertz': 'maxwell_halfspace', 'bulk_hertz': 'cylinder_half_d', 'constriction_physics': 'mikic_psi_multiply',
+                   'bulk_physics': 'cylinder_half_d', 'constriction_hertz_h12': 'mikic_psi_multiply', 'bulk_hertz_h12': 'sphere_segment'}
+            and g1 == {'generation': 'inferred_legacy', 'psi': 'legacy_divide', 'area_rule_physics': 'physics_g1', 'electrode': 'virtual_source_legacy',
+                       'constriction_hertz': 'maxwell_halfspace', 'bulk_hertz': 'cylinder_half_d', 'constriction_physics': 'mikic_psi_divide',
+                       'bulk_physics': 'cylinder_half_d', 'constriction_hertz_h12': '', 'bulk_hertz_h12': ''}, repr((g2, g1)))
         chk('E5 ★ 여러 행 섞임 판정 — 같은 세대 행끼리 = 문제 없음 · 세대 2 + 옛 행 = 거부 사유 (축 · 값) · 레코드 없는 행 (모든 축 빈칸) 은 판정 밖',
             tf.generation_mixing_problem([dict(o, case='a'), dict(o, case='b')]) == ''
             and 'electrode' in tf.generation_mixing_problem([dict(o, case='a'), dict(og, case='b')])
@@ -273,8 +299,11 @@ def main():
             r.returncode == 2 and not os.path.exists(out_tsv) and '세대' in r.stderr and r1.returncode == 0 and os.path.exists(out_tsv + '1'),
             f'rc {r.returncode} · {r.stderr[-200:]!r} · 한 세대 rc {r1.returncode}')
         cols = tf.column_names()
-        chk('E7 열 — 모드 셋 (hertz · physics · hertz_h12) × (12 + 전극 · bulk · 면적 규칙 3) + 공통 4 = 49 · 모드 꼬리 · 꼬리 없는 상태 키 없음',
-            tuple(tf.MODES) == ('hertz', 'physics', 'hertz_h12') and len(cols) == 3 * 15 + 4 and len(set(cols)) == len(cols)
+        #  ★ 10-06 밤 (G2R-02) — 공통 세대 칸 ion_net_generation 이 더해졌다 (g2 · inferred_legacy · invalid — 옛 세대 추론이 행에서 보인다) → 공통 5
+        chk('E7 열 — 모드 셋 (hertz · physics · hertz_h12) × (12 + 전극 · bulk · 면적 규칙 3) + 공통 5 (σ₀ · T · φ · L 기준 · 세대 칸) = 50 · 모드 꼬리 · '
+            '꼬리 없는 상태 키 없음',
+            tuple(tf.MODES) == ('hertz', 'physics', 'hertz_h12') and len(cols) == 3 * 15 + 5 and len(set(cols)) == len(cols)
+            and cols[-1] == 'ion_net_generation'
             and all(f'ion_net_{b}_{m}' in cols for b in ('electrode', 'bulk', 'area_rule') for m in tf.MODES) and 'ion_net_status' not in cols)
     _guard('E', sE)
 

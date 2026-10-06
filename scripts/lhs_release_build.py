@@ -14,6 +14,8 @@
   python3 scripts/lhs_release_build.py --check --handover docs/data/lhs_handover_20261001.csv \\
       --release docs/data/lhs_release_20261001/lhs_release_20261001
   # 부록 — 부록 전용 열 (H12 민감도 `*_hertz_h12` · 열 사전 판정 '부록 전용') 은 --appendix 로 따로 만든 파일에만 (주 배포 표에 넣으면 거부)
+  #   ★ 10-06 밤 G2R-01 — τ 모드 열을 실으면 (주 · 부록 둘 다) 인계표 행마다 역할 표기가 공용 세대 계약 (tau_flux.row_generation_problems) 을 통과해야
+  #   한다 (이름만으로는 주 Hertz 이름 아래 들어온 H12 숫자를 못 본다 — 만들기 거부 · 대조 문제)
   python3 scripts/lhs_release_build.py --appendix --handover … --columns-from <case_id 한 줄 열 사전> --add tau2_ion_hertz_h12 … --out …_h12
   # ML 배포 프로필 (LREL-02 · 03 — 만들기 · 대조 둘 다) — 키 유일 · 기대 ID 집합 (설계 CSV case_id) · 적격성 세 열 · 열 사전 참조 표지
   python3 scripts/lhs_release_build.py --check --profile ml_v1 --expect-ids docs/data/lhs_design_20260818.csv --handover … --release …
@@ -45,6 +47,11 @@ PROFILES = ('ml_v1',)
 REF_MARK = '(정본 인계표 열)'
 #: 열 사전의 '<모드>' 틀 참조 (예: ion_net_band_frac_<모드>) 를 펼칠 모드 — 생성기 TAU_NET_MODES 와 같은 셋 (모르는 모드는 틀 참조로 안 잡힌다)
 REF_MODES = ('hertz', 'physics', 'hertz_h12')
+#: ★ 10-06 밤 G2R-01 (Codex 세대 2 적대 리뷰 §2 · 1저자 비준) — 부록 · 주 열을 **이름**으로만 가르면 (APPENDIX_ONLY_RE · 열 사전 판정) 주 Hertz 이름 아래
+#:   이미 들어온 H12 숫자를 못 본다.  τ 모드 열 (f_ion · tau2_ion · tau_ion · ion_net_* × hertz · physics · hertz_h12) 을 실을 때는 인계표 행마다 그 행의
+#:   역할 표기 (ion_net_<협착 · ψ · 면적 규칙 · 전극 · bulk · 면적 모드>_<모드> · 세대 칸 ion_net_generation) 가 공용 세대 계약
+#:   (`tau_flux.row_generation_problems` · `generation_mixing_problem` — 생성기 · 웹앱 정지 계약과 같은 표) 을 통과해야 한다 (만들기 거부 · 대조 문제).
+TAU_MODE_COL_RE = re.compile(r'(f_ion|tau2_ion|tau_ion|ion_net_[a-z0-9_]+?)_(hertz_h12|hertz|physics)(_gap)?')
 
 
 class ReleaseError(RuntimeError):
@@ -99,6 +106,29 @@ def _appendix_problem(columns, cdict, chead, appendix):
         return (f'부록 전용 열 {ap_} — 주 배포 표에 넣지 않는다 (기본 학습 열 아님 · H12 민감도 = 부록 · 10-06 1저자 비준 C1-3) — '
                 '--appendix 로 부록 파일을 따로 만든다')
     return ''
+
+
+def tau_role_problems(head, rows, columns):
+    """columns (배포할 열) 에 τ 모드 열이 있으면 인계표 행마다 공용 세대 계약 → 문제 목록 ([] = 통과 · τ 모드 열이 없으면 늘 [] — 그 숫자가 배포에 없다).
+    행의 역할 표기는 배포에 싣지 않은 열이어도 인계표에 있으면 본다 (숫자의 출처 = 그 행) · 세대 칸이 없는 계약 전 인계표 (v1.2) 는 있는 표기만 본다."""
+    if not any(TAU_MODE_COL_RE.fullmatch(c) for c in columns):
+        return []
+    here = os.path.dirname(os.path.abspath(__file__))
+    if here not in sys.path:
+        sys.path.insert(0, here)
+    import tau_flux as TF                                                # noqa: E402 — 세대 계약의 정본 (사본 금지)
+    drows = [dict(zip(head, r)) for r in rows]
+    probs = []
+    for r in drows:
+        g, pp = TF.row_generation_problems(r)
+        if pp:
+            probs.append(f'{r.get(KEY)}: τ 열의 역할 · 세대 계약 위반 ({g or "?"}) — {pp[0]}' + (f' 외 {len(pp) - 1}' if len(pp) > 1 else '')
+                         + ' (G2R-01 — 열 이름이 아니라 그 행의 역할 표기로 본다)')
+    if not probs:
+        mix = TF.generation_mixing_problem([dict(r, case=r.get(KEY)) for r in drows])
+        if mix:
+            probs.append(f'τ 열의 세대 — {mix}')
+    return probs
 
 
 def _dup_keys(head, rows):
@@ -223,6 +253,9 @@ def build(handover_csv, columns, out_prefix, appendix=False, profile=None, expec
     apx = _appendix_problem(columns, cdict, ch, appendix)
     if apx:
         raise ReleaseError(apx)
+    trp = tau_role_problems(head, rows, columns)                         # ★ 10-06 밤 G2R-01 — 이름이 아니라 행의 역할 표기
+    if trp:
+        raise ReleaseError(f'τ 열 역할 문제 {len(trp)} — ' + ' | '.join(trp[:4]))
     idx = [head.index(c) for c in columns]
     d = os.path.dirname(out_prefix)
     if d:
@@ -293,6 +326,7 @@ def check(handover_csv, release_prefix, appendix=False, profile=None, expect_ids
     apx = _appendix_problem(rh, cdict, ch, appendix)
     if apx:
         probs.append(apx)
+    probs += tau_role_problems(hh, hrows, rh)                            # ★ 10-06 밤 G2R-01 — 값 대조만으로는 역할을 못 본다
     if profile is not None:
         probs += profile_problems(profile, release_prefix, handover_csv, expect_ids, appendix=appendix)
     return probs
@@ -471,6 +505,68 @@ def _selftest():
             kinds.append((pre, [p for p in pp if '사전' not in p], sum('사전' in p for p in pp)))
         chk('⑲b 실데이터 — 배포 v1.2 주 표 (lhs · lhsx) ml_v1: 키 · 기대 ID (설계 CSV) · 적격성 문제 0 · 사전 참조 표지 문제만 남는다 (v1.2 문구 = 표지 전)',
             all(not k[1] and k[2] > 0 for k in kinds), repr(kinds))
+    #  ═══ ⑳ G2R-01 (Codex 세대 2 적대 리뷰 §2 · 1저자 비준 10-06 밤 — 반례 먼저) — 열 이름만으로 부록 · 주 열을 가르면 주 Hertz 이름 아래 이미 들어온
+    #   H12 숫자를 못 본다.  τ 모드 열을 실을 때 그 행의 역할 표기 (인계표의 ion_net_<협착 · ψ · 면적 규칙 · 전극 · bulk · 면적 모드>_<모드> · 세대 칸) 가
+    #   공용 세대 계약 (tau_flux.row_generation_problems) 을 통과해야 한다.  역할 표기 오라클 = 아래 손 칸 (도우미 상수를 베끼지 않는다).
+    G2H = {'constriction': 'maxwell_halfspace', 'psi': '', 'area_rule': 'hertz_ccpl22', 'electrode': 'dirichlet_exact', 'bulk': 'cylinder_half_d',
+           'area_mode': 'hertz'}
+    G2P = {'constriction': 'mikic_psi_multiply', 'psi': 'multiply', 'area_rule': 'physics_g2', 'electrode': 'dirichlet_exact',
+           'bulk': 'cylinder_half_d', 'area_mode': 'physics'}
+    G2H12 = {'constriction': 'mikic_psi_multiply', 'psi': 'multiply', 'area_rule': 'hertz_ccpl22', 'electrode': 'dirichlet_exact',
+             'bulk': 'sphere_segment', 'area_mode': 'hertz'}
+    G1H = dict(G2H, electrode='virtual_source_legacy')
+    G1P = {'constriction': 'mikic_psi_divide', 'psi': 'legacy_divide', 'area_rule': 'physics_g1', 'electrode': 'virtual_source_legacy',
+           'bulk': 'cylinder_half_d', 'area_mode': 'physics'}
+    NOREC = {k: '' for k in G2H}
+
+    def _row(case, gen, h, p, h12, tau=('2.0', '3.0', '2.5')):
+        r = {'case_id': case, 'tau2_ion_hertz': tau[0], 'tau2_ion_physics': tau[1], 'tau2_ion_hertz_h12': tau[2], 'ion_net_generation': gen}
+        for m, meta in (('hertz', h), ('physics', p), ('hertz_h12', h12)):
+            r.update({f'ion_net_{b}_{m}': v for b, v in meta.items()})
+        return r
+
+    def _hand(td_, name, rows):
+        head = list(rows[0])
+        hp_ = os.path.join(td_, name + '.csv')
+        with open(hp_, 'w', encoding='utf-8', newline='') as f:
+            w = csv.writer(f, lineterminator='\n')
+            w.writerow(head)
+            for r in rows:
+                w.writerow([r[c] for c in head])
+        with open(os.path.join(td_, name + '_columns.tsv'), 'w', encoding='utf-8', newline='') as f:
+            w = csv.writer(f, delimiter='\t', lineterminator='\n')
+            w.writerow(['column', 'source', 'verdict', 'meaning'])
+            for c in head:
+                w.writerow([c, 'tau_flux' if c != KEY else 'design',
+                            '⚠ 민감도 부록 전용 (H12)' if c.endswith('_hertz_h12') else '✅ 싣는다', '뜻 ' + c])
+        return hp_
+    with tempfile.TemporaryDirectory() as td:
+        ok_rows = [_row('x1', 'g2', G2H, G2P, G2H12), _row('x2', 'g2', G2H, G2P, G2H12)]
+        bad_rows = [_row('x1', 'g2', G2H, G2P, G2H12), _row('x2', 'g2', G2H12, G2P, G2H12, tau=('1.6', '3.0', '1.6'))]   # x2 = H12 를 주 자리에
+        hp_ok, hp_bad = _hand(td, 'ok', ok_rows), _hand(td, 'bad', bad_rows)
+        p20 = _probs(lambda: [str(build(hp_ok, ['case_id', 'tau2_ion_hertz', 'tau2_ion_physics'], os.path.join(td, 'r_ok')))])
+        chk('⑳a 양성 — 세대 2 행 (주 Hertz = H0 표기 · physics · H12) 의 주 τ 열 → 만들기 · 대조 통과',
+            p20 == ['(2, 3)'] and _probs(lambda: check(hp_ok, os.path.join(td, 'r_ok'))) == [], repr(p20))
+        p20b = _probs(lambda: [str(build(hp_bad, ['case_id', 'tau2_ion_hertz'], os.path.join(td, 'r_bad')))])
+        chk('⑳b ★ G2R-01 — 주 Hertz 칸 이름 (tau2_ion_hertz) 아래 H12 표기 행 (x2: 협착 mikic_psi_multiply · bulk sphere_segment) 이면 만들기 거부 '
+            '(옛: 이름만 보고 통과)', any('ReleaseError' in p and 'x2' in p and '역할' in p for p in p20b), repr(p20b))
+        shutil.copyfile(os.path.join(td, 'r_ok.csv'), os.path.join(td, 'r_cp.csv'))
+        shutil.copyfile(os.path.join(td, 'r_ok_columns.tsv'), os.path.join(td, 'r_cp_columns.tsv'))
+        p20c = _probs(lambda: check(hp_bad, os.path.join(td, 'r_cp'), appendix=False))
+        chk('⑳c ★ 대조도 같은 계약 — 값 · 행이 같은 배포를 H12 표기 행이 섞인 인계표에 대조하면 역할 문제 (값 대조만으로는 못 본다)',
+            any('x2' in p and '역할' in p for p in p20c), repr(p20c))
+        p20d = _probs(lambda: [str(build(hp_bad, ['case_id', 'tau2_ion_hertz_h12'], os.path.join(td, 'r_bad_h12'), appendix=True))])
+        chk('⑳d 부록도 같은 계약 — 행 계약이 깨진 인계표에서는 H12 부록 열도 거부 (행 하나의 표기가 틀리면 그 행의 세대가 확정되지 않는다)',
+            any('ReleaseError' in p and '역할' in p for p in p20d), repr(p20d))
+        p20e = _probs(lambda: [str(build(hp_bad, ['case_id'], os.path.join(td, 'r_bad_key')))])
+        chk('⑳e τ 모드 열을 안 실으면 역할 계약을 걸지 않는다 (그 숫자가 배포에 없다)', p20e == ['(2, 1)'], repr(p20e))
+        g1 = _hand(td, 'g1', [_row('y1', 'inferred_legacy', G1H, G1P, NOREC, tau=('2.0', '3.0', '')),
+                              _row('y2', 'inferred_legacy', G1H, G1P, NOREC, tau=('2.1', '3.1', ''))])
+        p20f = _probs(lambda: [str(build(g1, ['case_id', 'tau2_ion_hertz', 'tau2_ion_physics'], os.path.join(td, 'r_g1')))])
+        mixed = _hand(td, 'mixed', [_row('z1', 'g2', G2H, G2P, G2H12), _row('z2', 'inferred_legacy', G1H, G1P, NOREC, tau=('2.0', '3.0', ''))])
+        p20g = _probs(lambda: [str(build(mixed, ['case_id', 'tau2_ion_hertz'], os.path.join(td, 'r_mixed')))])
+        chk('⑳f 옛 세대 행 (inferred_legacy · 표기 = 이력 사실) 은 통과 · 세대 2 행과 한 배포에 섞이면 거부 (세대 섞임)',
+            p20f == ['(2, 3)'] and any('ReleaseError' in p and '세대' in p for p in p20g), repr((p20f, p20g)))
     print(f"{sum(ok)}/{len(ok)}  {'✓ 전부 통과' if all(ok) else '✗ 실패 있음'}")
     return 0 if all(ok) else 1
 
