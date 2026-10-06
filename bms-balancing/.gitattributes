@@ -117,3 +117,5 @@ reviews/prereview_reil_v2_p0_result_20261006/** -text
 reviews/r14_repros/codex63/comsol_bmin_r2_native150_approval_review_20261006/** -text
 # 2026-10-06: B-min r2 native 150 s 1 단계 — 외부 (실행 기기) Codex 전달 묶음 (사용자 1 단계 승인 · 읽기 전용 사전 관측 지시 · native 실행 승인 아님) — bytes 그대로
 reviews/r14_repros/codex63/comsol_bmin_r2_native150_stage1_handoff_20261006/** -text
+# 2026-10-06: REIL C5 승인 요청문 사전 검토 회신 묶음 (게이트 차수 밖 · 설계 방향 수용 · 승인문 정정 필요 C5-N1–N5 · 구현 · 측정 승인 아님) — bytes 그대로
+reviews/prereview_reil_v2_c5_request_20261006/** -text
