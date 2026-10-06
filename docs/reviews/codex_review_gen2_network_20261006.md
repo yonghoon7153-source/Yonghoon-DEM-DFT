@@ -274,7 +274,7 @@ Q7의 답이다. 개발용 작은 반례 시험까지 막는 것은 아니다. *
 
 요청서의 일부 selftest 개수와 현재 실행 개수가 다르므로 **실행 로그의 개수**를 적었다. 전체 `check_all.sh`와 `lhs_design_dataset` 331개 전수는 이번 검토에서 실행했다고 주장하지 않는다. 대신 `load_tau_results`의 실제 수용 경로를 실행했다. 검토용 테스트 실행기의 초기 Windows 출력 인코딩 오류는 UTF-8로 고쳐 재실행했으며, 위 최종 검사들은 rc=0이다. 이를 대상 코드 결함으로 세지 않았다.
 
-재현 명령은 묶음 최상위에서 실행한다. Python 3와 NumPy/SciPy/NetworkX 및 웹앱 검사용 Flask/pandas가 필요하다. 구체적인 사용 버전은 `evidence/environment.json`에 있다.
+재현 명령은 묶음 최상위에서 실행한다. Python 3와 NumPy/SciPy/NetworkX 및 웹앱 검사용 Flask/pandas가 필요하다. 구체적인 사용 버전은 `docs/reviews/codex_gen2_network_review_evidence_20261006/evidence/environment.json` [반입 때 리포 경로로 고침 · 원문은 묶음 최상위 기준 상대 경로]에 있다.
 
 ```bash
 python3 verify_bundle.py
