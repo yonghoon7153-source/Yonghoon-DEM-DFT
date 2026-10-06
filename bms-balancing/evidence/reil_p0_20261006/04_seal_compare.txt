@@ -1,0 +1,56 @@
+# 04 옛 봉인 ↔ 새 봉인 대조 (승인 요청문 §2-3 단계 2 · §2-4 허용 차이) — 2026-10-06T07:33:30Z
+SAME COBYQA_OPTIONS.json
+SAME PROFILE.json
+SAME SOBOL_PHASE_A.json
+SAME sobol_A0_their_box_seed0.npy
+SAME sobol_A0_their_box_seed1.npy
+SAME sobol_A1_A2_wide_box_seed0.npy
+SAME sobol_A1_A2_wide_box_seed1.npy
+SAME sobol_unit_seed0.npy
+SAME sobol_unit_seed1.npy
+DIFF REIL_C6.lock.txt
+DIFF MANIFEST.json
+## diff REIL_C6.lock.txt
+10c10
+< #@ collision {"claimed_by": ["about-time", "alive-progress"], "disk_matches": "alive-progress", "dist": "about-time", "path": "../../../LICENSE"}
+---
+> #@ collision {"claimed_by": ["about-time", "alive-progress"], "covered": {"expected": "sha256=UQdRLB-VXWaPYOmujOz0Qv2Wu19FsABts9bJ2RKFWS0", "record_sha256": "e5a630322aead38c00d7d20ca0050eb7cd2024eb035505a6ef7bab8e5329f0bd", "version": "4.2.1"}, "disk": "sha256=o_-3eZYgLX8zFLQWGhZh-5wJKsh4r0OR550wGu3BWGY", "disk_matches": "alive-progress", "disk_owner": {"expected": "sha256=o_-3eZYgLX8zFLQWGhZh-5wJKsh4r0OR550wGu3BWGY", "record_sha256": "00c80da0799ae100798d538d9946e030259eae3b2b39cb70f99e7ff6ac7e9be8", "version": "3.3.0"}, "dist": "about-time", "path": "../../../LICENSE"}
+16c16
+< cffi==2.1.1  # record-sha256 a7567e81a795af5b915374df704f1be7aa472c70aec55833ec13c5c262a98eaa
+---
+> cffi==2.1.1  # record-sha256 eaf1d223880183e41d9c85dae880ab9d5db2563e3f6eba4186f7b1427b3577c4
+22c22
+< fonttools==4.66.1  # record-sha256 f5229a4590591471b5121e8d7dc858986933aab09988e04894fbdd574c9d41b8
+---
+> fonttools==4.66.1  # record-sha256 201b77583a8943c54baff85744ca925c4438412a72b4eed21efd72fa927050e7
+27c27
+< numpy==2.4.6  # record-sha256 90ad470477c5ae218eeec8fb0efb0dc628b3ea1560d9fab1c2e7f0a78b7551a4
+---
+> numpy==2.4.6  # record-sha256 5f2cadac7692a8477da76ad3213fc4a807fc4538878bfa55d51ec7b7b36de51b
+32c32
+< pip==24.0  # record-sha256 8e0d9a07bd5b527790bddfc49a3782a8b0ae08b3951b65de4411c43093ac4fb6
+---
+> pip==24.0  # record-sha256 13dc90e08854d142d483d4be0af36a66cbe713028bfce01b48bcf12c320956ae
+## diff MANIFEST.json
+4c4
+<  "REIL_C6.lock.txt": "caef852326c66d09c1701c22b0b82f7b7ca489b65ce9077bc3a4720375aac0d8",
+---
+>  "REIL_C6.lock.txt": "b392f7b01f9492337a4c52ef323d9348af076866e6997d96179bc438375fe9ef",
+## 새 venv 에서 RECORD 에 ../../../bin/ 항목이 있는 배포판 (30 중)
+cffi-2.1.1.dist-info/RECORD bin_entries=1
+../../../bin/cffi-gen-src,sha256=_yEJ5PuT0Q29gMGpwBhSwxBszNavkLhGQWUSv873ILU,312
+fonttools-4.66.1.dist-info/RECORD bin_entries=4
+../../../bin/fonttools,sha256=GoeKgehJwnm9Aw4MBJUNoaWd3Y4pPNEX0CW7KSgo6r0,314
+../../../bin/pyftmerge,sha256=eYMyQ2sgAAH2RKAm8fq-l6E-bIPBY3cJ2DnXEDM20VM,311
+../../../bin/pyftsubset,sha256=0mj9wnGfLvPzl0hgFX4JRRa6k49OL8WF_4kl4m0ypp8,312
+../../../bin/ttx,sha256=2vSFiX33yAQiyrDWV0Ys47gC9Gkr1tHa7BrnZQTTEg0,309
+numpy-2.4.6.dist-info/RECORD bin_entries=2
+../../../bin/f2py,sha256=rmz2EckyhqGssYyW_W35ZI-q9C1I9wZAsLizrh0fTF4,313
+../../../bin/numpy-config,sha256=S6sVdwPhqf76p0EBu-S4IxIfee4qO8dNsqbiYTeKlOI,313
+pip-24.0.dist-info/RECORD bin_entries=3
+../../../bin/pip,sha256=1axEAQM7PmFOe81D0R0JAMDcwI13otjDqpGTK-Dz80E,319
+../../../bin/pip3,sha256=1axEAQM7PmFOe81D0R0JAMDcwI13otjDqpGTK-Dz80E,319
+../../../bin/pip3.11,sha256=1axEAQM7PmFOe81D0R0JAMDcwI13otjDqpGTK-Dz80E,319
+## 새 venv 의 스크립트 shebang (예)
+#!/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/bin/python
+## 판정: 허용 차이 (§2-4) 밖 — RECORD sha 4 개 다름 (cffi · fonttools · numpy · pip) → §6-1 중단 · 자료 열기 0 · 변이 증명 미실행

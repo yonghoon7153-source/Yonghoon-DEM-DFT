@@ -1,0 +1,7 @@
+argv: /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/bin/python bms-balancing/scripts/reil_c6_profile.py check bms-balancing/reil_c6_rebuild_20261006
+cwd: /home/user/Yonghoon-DEM-DFT
+start_utc: 2026-10-06T07:31:59Z
+head: 141ae9fbd4f52a88da59fdbb05a1dbc5b3c71dee
+tree_dirty_lines: 2
+end_utc: 2026-10-06T07:32:02Z
+rc: 0

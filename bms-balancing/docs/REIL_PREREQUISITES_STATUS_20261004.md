@@ -280,3 +280,25 @@
 - 사용자 원문: "그리고 위 REIL도 승인이고" — §16 의 초안 (`REIL_P0_APPROVAL_REQUEST_20261006.md` · 커밋 `694db0673`) 을 고치지 않고 승인한 것으로 읽는다.
   범위 · 예산 · 중단 조건 · 보존은 그 문서 §1–§8 그대로이고, 순서는 §10 그대로다.
 - 승인에 들지 않는 것 (그 문서 §8 그대로): 맞춤 · 비용 측정 · E3a / E3b · H1–H4 · Sobol 정식 봉인 · pickle · 노트북 실행 · 재시도 · 원자료 반입.
+
+## §18 P0 단계 1 (환경) — **중단 조건 §6-1 발동 · 자료 열기 전 정지** (2026-10-06 · 덧붙임 — 위 §0–§17 은 그대로)
+
+승인 (§17) 의 순서대로 진행: 보존 규칙 `141ae9fbd` → 버리는 venv 재구축 (python 3.11.15 · pip 24.0 · setuptools 79.0.1 기본 + C6 lock 28 배포판을
+같은 판으로 `-c` 고정 설치 · rc 0 · 30 배포판) → 현재 checker (`563813885` 판) 로 새 경로 `reil_c6_rebuild_20261006/` 에 emit rc 0 · 같은 venv check
+rc 0 → **옛 봉인 대조 (§2-4) 에서 허용 밖 차이** → 정지. 원문은 `evidence/reil_p0_20261006/` (01 설치 · 02 emit · 03 check · 04 대조).
+
+| 대조 | 결과 |
+|---|---|
+| Sobol 배열 6 · `SOBOL_PHASE_A.json` · `PROFILE.json` (BLAS / LAPACK 포함) · `COBYQA_OPTIONS.json` | **바이트 동일** |
+| lock 의 collision 줄 | 허용대로 — 새 키 (`covered` · `disk_owner` · `disk`) 만 더해짐 · 판 · RECORD sha 가 옛 13 · 14 행과 일치 |
+| lock 의 배포판 집합 · 판 · `#@ files` 집계 (verified 7187 · unhashed 5301 · mismatches 1 · explained 1) | 동일 |
+| lock 의 RECORD sha | **26 / 30 동일 · 4 다름 — cffi 2.1.1 · fonttools 4.66.1 · numpy 2.4.6 · pip 24.0** → §2-4 "RECORD 가 하나라도 다르면 멈춤" |
+| `MANIFEST.json` | lock sha 한 항목만 다름 (lock 차이의 결과) |
+
+- **관측된 원인 (해석 — 옛 RECORD 원문은 없어 직접 대조는 못 한다):** 30 배포판 중 RECORD 에 `../../../bin/` 콘솔 스크립트 항목이 있는 것이
+  정확히 이 넷이다 (cffi 1 · fonttools 4 · numpy 2 · pip 3). pip 가 설치 때 생성하는 스크립트의 첫 줄이 venv 의 **절대 경로** (`#!…/scratchpad/
+  reil_p0/venv/bin/python`) 이고, 그 바이트의 sha256 이 RECORD 에 적힌다. 옛 venv 경로는 저장소 · 남은 기록 어디에도 없다 (봉인은 경로를
+  일부러 넣지 않았다) → 같은 경로로 다시 만들어 맞출 수 없다.
+- **하지 않은 것:** 변이 증명 (§2-3 단계 3 — 대조에서 멈췄다) · REIL 세 파일 내려받기 · 자료 개봉 · P0 스크립트 · P0 계산 · 재시도.
+- 새 봉인 `reil_c6_rebuild_20261006/` 은 정지 상태의 기록으로 커밋했다 (P0 기준으로 채택한 것 아님).
+- **사용자 결정 필요** — 허용 차이 (§2-4) 는 판정 규칙이라 고치지 않고 멈췄다 (§6-6). 선택지는 결과 보고에.
