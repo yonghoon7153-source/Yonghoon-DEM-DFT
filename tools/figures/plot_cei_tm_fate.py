@@ -26,7 +26,21 @@ CEI 실험 쪽 1저자가 원고를 두 주장으로 닫으려 한다 — ① TM
 
 쓰는 법
   python3 tools/figures/plot_cei_tm_fate.py              # PNG + Origin CSV
+  python3 tools/figures/plot_cei_tm_fate.py --nd         # Nd₂O₃@LPSCl1.6 판 + 4.3 V 농도 판 (2026-10-06)
   python3 tools/figures/plot_cei_tm_fate.py --selftest   # 음성 경로 포함
+
+--nd 모드 (2026-10-06 · 사용자 "Nd₂O₃@LPSCl1.6 버전으로도" · "얼마나 줄어드는지")
+  · 막대 = Nd₂O₃@LPSCl1.6 = 1저자 조성 `nd_p_002_asused` (Li5.44Nd0.02P0.98S4.37O0.03Cl1.6 · Nd:O = 2:3)
+    — x = 0.02 스캔 반응식(`cei_figs/cei_x_scan_panels_x002.csv`)에 **같은 분류 함수**
+    (`interface_reactivity_v2.tm_fate`)를 돌린다. 원장 값과 대조: 보호율 원장의 ndP002 와 같아야 한다 (selftest).
+  · 비교 표식 = **Li 를 맞춘 무-Nd 대조군** (보호율 원장 `cei_protection_allcells_result_2026_09_21.csv`
+    의 tm_phosphate_share_control) — CEI 페이지 §2b 규칙: base(LPSCl1.6) 와 견주면 Li 재고 교란이 들어온다.
+    ⇒ 첫 그림(LPSCl1.6 막대)과 숫자가 거의 같지만(≤0.3 %p) **Δ 는 대조군 기준**이다.
+  · 비교 게이트(원장 gate_pass)를 못 넘은 칸은 Δ 를 쓰지 않고 'not comparable' 로 둔다 (0 이 아니다).
+  · 농도 판: 4.3 V · LiCoO2 · LiNiO2 · NMC811 (LiMnO2 4.3 V 는 전 농도 게이트 탈락 — 그리지 않는다).
+    x = 0 점은 같은 계열의 x → 0 끝 `o_only_003` (Li5.4PS4.37O0.03Cl1.6).
+  ⛔ "Nd 가 양극을 지킨다 · 열화를 억제한다" 로 읽지 않는다 — 인산염을 면한 TM 은 대부분 황화물로 간다
+    (CEI 페이지 §9). 이 그림은 **TM 인산염 몫의 변화**만 그린다.
 """
 import csv
 import json
@@ -44,6 +58,54 @@ VOLTS = [2.5, 3.0, 3.5, 4.0, 4.3, 4.5]
 MAIN = "modelc"                       # LPSCl1.6
 OVERLAY = [("comp1", "LPSCl", "o"), ("lpsocl", "LPSOCl1.6", "^")]
 SE_LABEL = {"modelc": "LPSCl1.6", "comp1": "LPSCl", "lpsocl": "LPSOCl1.6"}
+
+# ── --nd 모드 ──────────────────────────────────────────────────────────────
+X002_CSV = REPO / "db/properties/cei_figs/cei_x_scan_panels_x002.csv"
+PROT_CSV = REPO / "db/properties/cei_protection_allcells_result_2026_09_21.csv"
+ND = "nd_p_002_asused"                 # Nd₂O₃@LPSCl1.6 (1저자 조성)
+ND_X0 = "o_only_003"                   # 같은 계열 x → 0
+OUT_ND_PNG = REPO / "db/properties/cei_figs/cei_tm_fate_nd2o3_x002.png"
+OUT_ND_CSV = REPO / "db/properties/cei_figs/cei_tm_fate_nd2o3_x002.csv"
+OUT_DOSE_PNG = REPO / "db/properties/cei_figs/cei_tm_fate_nd_dose_4p3V.png"
+OUT_DOSE_CSV = REPO / "db/properties/cei_figs/cei_tm_fate_nd_dose_4p3V.csv"
+DOSE_V = 4.3
+DOSE_CATS = ["LiCoO2", "LiNiO2", "NMC811"]
+CAT_COLOR = {"LiCoO2": "#2563eb", "LiNiO2": "#059669", "NMC811": "#d97706"}
+
+
+def x002_fate(csv_path=X002_CSV, electrolytes=(ND, ND_X0)):
+    """x = 0.02 스캔 반응식에 첫 그림과 **같은 분류 함수**를 돌린다."""
+    sys.path.insert(0, str(REPO / "tools/oxidation"))
+    import interface_reactivity_v2 as IR
+    d = IR.tm_fate(str(csv_path))
+    rows = [r for r in d["rows"] if r["electrolyte"] in electrolytes]
+    # 조성 확인 — 라벨이 가리키는 반응식에 Nd 0.02 · O 0.03 이 실제로 있는가
+    with open(csv_path) as fh:
+        lhs = {r["electrolyte"]: r["reaction"].split("->")[0] for r in csv.DictReader(fh)
+               if r["electrolyte"] == ND and r["is_minimum"] in ("1", "True") and "->" in r["reaction"]}
+    if ND in electrolytes and not ("Nd0.02" in lhs.get(ND, "") and "O0.03" in lhs.get(ND, "")):
+        raise ValueError(f"{ND} 반응식에 Nd0.02 · O0.03 이 없다 — 라벨이 다른 조성을 가리킨다: {lhs.get(ND)!r}")
+    return table(rows)
+
+
+def prot_rows(path=PROT_CSV):
+    """(cathode, V, x) -> 보호율 원장 행.  gate_pass 는 bool 로."""
+    out = {}
+    with open(path) as fh:
+        for r in csv.DictReader(fh):
+            key = (r["cathode"], float(r["voltage_V"]), round(float(r["x_Nd"]), 4))
+            f = lambda k: None if r[k] in ("", None) else float(r[k])
+            out[key] = {"nd": f("tm_phosphate_share"), "ctrl": f("tm_phosphate_share_control"),
+                        "gate": r["gate_pass"] == "True", "phase": r["nd_phases"],
+                        "why": r["gate_fail_reason"]}
+    return out
+
+
+def delta_pp(nd_share, prot):
+    """Δ (%p) = Nd − 대조.  게이트 탈락·값 없음이면 None (0 이 아니다)."""
+    if prot is None or not prot["gate"] or prot["ctrl"] is None or nd_share is None:
+        return None
+    return 100.0 * (nd_share - prot["ctrl"])
 
 
 def load_rows(path=SRC):
@@ -121,6 +183,26 @@ def _selftest():
         except ValueError:
             caught = True
         check("⛔음성: 같은 칸이 두 번 나오면 잡는다", caught)
+    # ── --nd 모드 ──
+    tn = x002_fate()
+    pr = prot_rows()
+    same = all(abs(tn[(ND, c, v)]["phosphate"] - pr[(c, v, 0.02)]["nd"]) < 1e-4
+               for (e, c, v) in tn if e == ND and pr.get((c, v, 0.02), {}).get("nd") is not None)
+    check("--nd: tm_fate(x002 스캔) 의 Nd₂O₃@LPSCl1.6 몫 = 보호율 원장 ndP002 (같은 조성 · 다른 경로)", same)
+    check("⛔음성 --nd: 게이트 탈락 칸(LiMnO2 4.3 V)은 Δ 를 내지 않는다",
+          delta_pp(tn[(ND, "LiMnO2", 4.3)]["phosphate"], pr[("LiMnO2", 4.3, 0.02)]) is None)
+    check("--nd: LiCoO2 4.3 V Δ 는 음수 (Nd 가 인산염 몫을 줄인다)",
+          delta_pp(tn[(ND, "LiCoO2", 4.3)]["phosphate"], pr[("LiCoO2", 4.3, 0.02)]) < 0)
+    with tempfile.TemporaryDirectory() as d:
+        fake = Path(d) / "x.csv"
+        fake.write_text("cathode,electrolyte,voltage_V,x_atomic_frac,reaction_energy_eV_per_atom,is_minimum,"
+                        "forms_Nd_phosphate,reaction\nLiCoO2,nd_p_002_asused,4.3,0.5,-1,1,0,"
+                        "0.5 Li5.4P1S4.4Cl1.6 + 0.5 LiCoO2 -> 0.5 CoS2 + 1 Li\n")
+        try:
+            x002_fate(fake); caught = False
+        except ValueError:
+            caught = True
+        check("⛔음성 --nd: 라벨이 Nd 없는 조성을 가리키면 멈춘다", caught)
     print("selftest PASS" if ok else "selftest FAIL")
     return 0 if ok else 1
 
@@ -186,5 +268,146 @@ def main():
     return 0
 
 
+def main_nd():
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    from matplotlib.patches import Patch
+    from matplotlib.lines import Line2D
+    sys.path.insert(0, str(REPO / "tools/figures"))
+    from house_style import INK, MUT, ELEM, apply_axes
+
+    tn, pr = x002_fate(), prot_rows()
+    # ── CSV (Nd₂O₃ 판) ──
+    rows = []
+    for cat in CATHODES:
+        for v in VOLTS:
+            c, p = tn.get((ND, cat, v)), pr.get((cat, v, 0.02))
+            dp = None if c is None else delta_pp(c["phosphate"], p)
+            rows.append({"electrolyte": "Nd2O3@LPSCl1.6 (Li5.44Nd0.02P0.98S4.37O0.03Cl1.6)", "cathode": cat,
+                         "voltage_V": v,
+                         "TM_to_phosphate_frac": "" if c is None else round(c["phosphate"], 4),
+                         "TM_to_sulfide_frac": "" if c is None else round(c["sulfide"], 4),
+                         "TM_to_other_frac": "" if c is None else round(c["other"], 4),
+                         "TM_to_phosphate_frac_noNd_Li_matched": "" if (p is None or p["ctrl"] is None) else round(p["ctrl"], 4),
+                         "delta_TM_phosphate_pp": "" if dp is None else round(dp, 2),
+                         "Nd_phase": "" if (p is None or c is None) else p["phase"],
+                         "comparable": "" if p is None else p["gate"],
+                         "note": ("not drawn: electrolyte self-decomposition" if c is None else
+                                  ("" if dp is not None else f"no delta: comparability gate failed ({p['why'] if p else 'no control'})"))})
+    with OUT_ND_CSV.open("w", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=list(rows[0])); w.writeheader(); w.writerows(rows)
+
+    C_PHOS, C_SULF, C_OTH = ELEM["P"], ELEM["S"], "#d1d5db"
+    fig, axes = plt.subplots(1, 4, figsize=(13.2, 4.2), sharey=True)
+    for ax, cat in zip(axes, CATHODES):
+        ax.axvline(2.5, color=MUT, ls=":", lw=1.0, zorder=1)
+        for i, v in enumerate(VOLTS):
+            c, p = tn.get((ND, cat, v)), pr.get((cat, v, 0.02))
+            if c is None:
+                ax.text(i, 50, "n/a", ha="center", va="center", fontsize=9, color=MUT, rotation=90)
+                continue
+            ph, su, ot = 100 * c["phosphate"], 100 * c["sulfide"], 100 * c["other"]
+            ax.bar(i, ph, color=C_PHOS, width=0.72, zorder=2)
+            ax.bar(i, su, bottom=ph, color=C_SULF, width=0.72, alpha=0.55, zorder=2)
+            ax.bar(i, ot, bottom=ph + su, color=C_OTH, width=0.72, zorder=2)
+            if ph >= 1:
+                inside = ph > 12
+                ax.text(i, 2.0 if inside else ph + 1.5, f"{ph:.0f}", ha="center", va="bottom",
+                        fontsize=8.5, fontweight="bold", color="white" if inside else C_PHOS, zorder=4)
+            dp = delta_pp(c["phosphate"], p)
+            if p is not None and p["ctrl"] is not None and p["gate"]:
+                ax.plot(i, 100 * p["ctrl"], ls="none", marker="D", ms=5.5, mfc=INK, mec="white", mew=0.8, zorder=5)
+            if dp is not None and abs(dp) >= 0.05:
+                ax.text(i, max(ph, 100 * p["ctrl"]) + 4, f"{dp:+.1f}", ha="center", va="bottom",
+                        fontsize=8.3, color=INK, fontweight="bold", zorder=6,
+                        bbox=dict(boxstyle="round,pad=0.15", fc="white", ec="none", alpha=0.85))
+            elif p is not None and not p["gate"]:
+                ax.text(i, 60, "not comparable", ha="center", va="center", fontsize=7.5, color=INK,
+                        rotation=90, zorder=6)
+            if p is not None and p["phase"]:
+                ax.text(i, 98.5, p["phase"].replace("(PO3)", "(PO$_3$)").replace("PO4", "PO$_4$")
+                        .replace("P5O14", "P$_5$O$_{14}$").replace("(PO$_3$)4", "(PO$_3$)$_4$")
+                        .replace("(PO$_3$)3", "(PO$_3$)$_3$"),
+                        ha="center", va="top", rotation=90, fontsize=7.2, color="white", zorder=6)
+        ax.set_xticks(range(len(VOLTS)), [f"{v:g}" for v in VOLTS])
+        ax.set_ylim(0, 100); ax.set_xlim(-0.6, len(VOLTS) - 0.4)
+        apply_axes(ax, xlabel="Applied voltage (V vs. Li/Li$^+$)", title=CAT_LABEL[cat], fontsize=11)
+    apply_axes(axes[0], ylabel="Reacted cathode TM (%)", fontsize=11)
+    handles = [Patch(color=C_PHOS, label="TM phosphate"),
+               Patch(color=C_SULF, alpha=0.55, label="TM sulfide"),
+               Patch(color=C_OTH, label="TM chloride / sulfate"),
+               Line2D([], [], ls="none", marker="D", mfc=INK, mec="white", label="TM phosphate, no Nd (Li-matched)")]
+    fig.tight_layout(rect=(0, 0, 1, 0.86))
+    fig.legend(handles=handles, loc="upper center", ncol=4, frameon=False, fontsize=9,
+               bbox_to_anchor=(0.5, 0.93), labelcolor=INK)
+    fig.suptitle("Nd$_2$O$_3$@LPSCl1.6  (Li$_{5.44}$Nd$_{0.02}$P$_{0.98}$S$_{4.37}$O$_{0.03}$Cl$_{1.6}$, Nd on the P site)",
+                 y=0.99, fontsize=11.5, color=INK)
+    fig.text(0.5, -0.05,
+             "Bars: where the reacted cathode TM ends up with Nd$_2$O$_3$@LPSCl1.6. Diamond: same quantity for the Li-matched "
+             "Nd-free control. Bold number: change in the TM-phosphate share (percentage points, Nd minus control).\n"
+             "White text: Nd phase the hull selects. Minimum-energy reaction, 0 K grand-potential hull (MP GGA/GGA+U). "
+             "TM kept out of phosphate mostly goes to sulfide; this is a product channel, not a degradation rate.",
+             ha="center", va="top", fontsize=8.1, color=MUT)
+    fig.savefig(OUT_ND_PNG, dpi=300, bbox_inches="tight"); plt.close(fig)
+
+    # ── 농도 판 (4.3 V) ──
+    t0 = tn  # x = 0 끝 = o_only_003 (같은 스캔)
+    drows = []
+    fig, ax = plt.subplots(figsize=(6.4, 4.4))
+    for cat in DOSE_CATS:
+        col = CAT_COLOR[cat]
+        x0 = t0.get((ND_X0, cat, DOSE_V))
+        xs_nd, ys_nd, xs_c, ys_c = [], [], [], []
+        if x0 is not None:
+            xs_nd.append(0.0); ys_nd.append(100 * x0["phosphate"]); xs_c.append(0.0); ys_c.append(100 * x0["phosphate"])
+        for x in (0.02, 0.05, 0.10, 0.15, 0.20):
+            p = pr.get((cat, DOSE_V, x))
+            if p is None:
+                continue
+            if p["gate"] and p["nd"] is not None:
+                xs_nd.append(x); ys_nd.append(100 * p["nd"])
+            if p["gate"] and p["ctrl"] is not None:
+                xs_c.append(x); ys_c.append(100 * p["ctrl"])
+            drows.append({"cathode": cat, "voltage_V": DOSE_V, "x_Nd": x,
+                          "TM_phosphate_frac_Nd": "" if (p["nd"] is None or not p["gate"]) else round(p["nd"], 4),
+                          "TM_phosphate_frac_noNd_Li_matched": "" if (p["ctrl"] is None or not p["gate"]) else round(p["ctrl"], 4),
+                          "Nd_phase": p["phase"], "comparable": p["gate"],
+                          "note": "" if p["gate"] else f"not drawn: comparability gate failed ({p['why']})"})
+        if x0 is not None:
+            drows.insert(len(drows) - 5 if len(drows) >= 5 else 0,
+                         {"cathode": cat, "voltage_V": DOSE_V, "x_Nd": 0.0,
+                          "TM_phosphate_frac_Nd": round(x0["phosphate"], 4),
+                          "TM_phosphate_frac_noNd_Li_matched": round(x0["phosphate"], 4),
+                          "Nd_phase": "", "comparable": True, "note": "x = 0 end of the family (Li5.4PS4.37O0.03Cl1.6)"})
+        ax.plot(xs_c, ys_c, ls="--", lw=1.3, color=col, marker="o", ms=5, mfc="white", mec=col, zorder=2)
+        ax.plot(xs_nd, ys_nd, ls="-", lw=2.2, color=col, marker="o", ms=6, mfc=col, mec="white", zorder=3)
+        ax.text(xs_nd[-1] + 0.004, ys_nd[-1] + (0.9 if cat == "LiCoO2" else -0.9 if cat == "NMC811" else 0),
+                CAT_LABEL[cat], color=col, fontsize=9.5, va="center")
+    ax.axvline(0.02, color=MUT, ls=":", lw=1.1)
+    ax.text(0.021, 31.5, "target x = 0.02", color=MUT, fontsize=8.5, va="top")
+    ax.axhline(10, color=MUT, lw=0.8, ls=(0, (1, 3)))
+    ax.text(0.205, 10.8, "NMC811 Mn floor (10 %)", color=MUT, fontsize=8, ha="right", va="bottom")
+    ax.set_xlim(-0.005, 0.235); ax.set_ylim(0, 32)
+    apply_axes(ax, xlabel="Nd content x  (Li$_{5.4+2x}$Nd$_x$P$_{1-x}$S$_{4.37}$O$_{0.03}$Cl$_{1.6}$)",
+               ylabel="Reacted cathode TM to phosphate (%)", fontsize=10.5)
+    ax.set_title(f"How much Nd lowers the TM-phosphate share ({DOSE_V:g} V)", fontsize=11, color=INK)
+    ax.legend(handles=[Line2D([], [], color=INK, lw=2.2, marker="o", mfc=INK, label="with Nd"),
+                       Line2D([], [], color=INK, lw=1.3, ls="--", marker="o", mfc="white", label="no Nd, Li-matched")],
+              frameon=False, fontsize=8.8, loc="lower left")
+    fig.text(0.5, -0.02, "LiNiO$_2$ x = 0.20 failed the comparability gate and is not drawn. LiMnO$_2$ at 4.3 V fails at every x.\n"
+             "TM kept out of phosphate mostly goes to sulfide (CoS$_2$, NiS$_2$). 0 K grand-potential hull, minimum-energy reaction.",
+             ha="center", va="top", fontsize=7.8, color=MUT)
+    fig.tight_layout()
+    fig.savefig(OUT_DOSE_PNG, dpi=300, bbox_inches="tight"); plt.close(fig)
+    with OUT_DOSE_CSV.open("w", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=list(drows[0])); w.writeheader(); w.writerows(drows)
+    for pth in (OUT_ND_PNG, OUT_ND_CSV, OUT_DOSE_PNG, OUT_DOSE_CSV):
+        print(f"→ {pth.relative_to(REPO)}")
+    return 0
+
+
 if __name__ == "__main__":
-    raise SystemExit(_selftest() if "--selftest" in sys.argv else main())
+    if "--selftest" in sys.argv:
+        raise SystemExit(_selftest())
+    raise SystemExit(main_nd() if "--nd" in sys.argv else main())

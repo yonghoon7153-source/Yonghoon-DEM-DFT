@@ -1,0 +1,19 @@
+cathode,voltage_V,x_Nd,TM_phosphate_frac_Nd,TM_phosphate_frac_noNd_Li_matched,Nd_phase,comparable,note
+LiCoO2,4.3,0.0,0.1838,0.1838,,True,x = 0 end of the family (Li5.4PS4.37O0.03Cl1.6)
+LiCoO2,4.3,0.02,0.1648,0.1838,NdP5O14,True,
+LiCoO2,4.3,0.05,0.1349,0.184,NdP5O14,True,
+LiCoO2,4.3,0.1,0.081,0.184,NdP5O14,True,
+LiCoO2,4.3,0.15,0.0213,0.1842,NdP5O14,True,
+LiCoO2,4.3,0.2,0.0,0.1843,NdP5O14|Nd(PO3)3,True,
+LiNiO2,4.3,0.0,0.2854,0.2854,,True,x = 0 end of the family (Li5.4PS4.37O0.03Cl1.6)
+LiNiO2,4.3,0.02,0.2591,0.2825,NdP5O14,True,
+LiNiO2,4.3,0.05,0.2163,0.2778,NdP5O14,True,
+LiNiO2,4.3,0.1,0.1347,0.2697,NdP5O14,True,
+LiNiO2,4.3,0.15,0.037,0.2613,NdP5O14,True,
+LiNiO2,4.3,0.2,,,Nd(PO3)3|NdP5O14,False,not drawn: comparability gate failed (dx=0.073>0.05)
+NMC811,4.3,0.0,0.2092,0.2092,,True,x = 0 end of the family (Li5.4PS4.37O0.03Cl1.6)
+NMC811,4.3,0.02,0.1807,0.206,NdP5O14,True,
+NMC811,4.3,0.05,0.1343,0.2009,NdP5O14,True,
+NMC811,4.3,0.1,0.1,0.1922,NdP5O14,True,
+NMC811,4.3,0.15,0.1,0.1842,NdP5O14|Nd(PO3)3,True,
+NMC811,4.3,0.2,0.1,0.1843,Nd(PO3)3,True,
