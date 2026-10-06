@@ -4058,3 +4058,14 @@ gate INCOMPLETE · 실효 정책 UNVERIFIED · native 미승인 · 게이트 리
 - **native 150 s 는 미승인** (`native150_approved: false` · approval / token / runtime 생성 권한 아님). 다음 = 같은 고정 실행본의 native 150 s
   **별도 승인 요청문 준비** (정확 source / manifest · NORMAL480 기준 · run / cwd / argv · 정책 · 자원 / 예산 · 정리 · 보존 · 실패 중단 범위). 실제 실행은
   별도 명시 승인 뒤 · 960 s 자동 연장 · 생산 변경 · 전체 시험 반복 없음.
+
+## 63. B-min r2 native 150 s — 승인 요청문 준비 (1 단계 · 사용자 요청 · 실행 0) (2026-10-06)
+
+- 사용자 원문: "comsol도 승인 요청문 준비 부탁해요" (§62 의 다음 단계 — 검토자 "사용자가 요청하면 같은 고정 실행본의 native 150 초 별도 승인 요청문을 준비 ·
+  준비와 실제 계산은 구분").
+- 요청문: `docs/COMSOL_BMIN640_R2_NATIVE150_APPROVAL_REQUEST_20261006.md` — §31-4 의 ①–⑦ 틀 · 고정 입력 (manifest `4cdca2e6…` · 봉인 5 파일 · NORMAL480
+  `run/tables` 9 파일) · argv / cwd · 물리 / 판정 (바꾸지 않음) · 정책 · 예산 10,500 s (제안값 그대로) · 중단 조건 · 보존 · 사용자 결정 5 (실행 주체 · 사전 관측 범위 ·
+  예산 · MPH 보존 · 실효 정책 UNVERIFIED 수용).
+- **두 단계:** 실행 기계의 현재 값 (prefs · 경로 부재 · 기준 9 파일 · r2 바이트 배치 · 디스크) 은 이 저장소에서 볼 수 없다 → 1 단계 (이 요청 · 범위 승인 · 읽기 전용
+  사전 관측 허락) → 2 단계 (관측을 붙인 최종 승인 요청문 · 사용자 최종 승인 = USER_DECISION). 이전 native 30–480 s 와 같은 분담.
+- 유지: native 미승인 · approval / token / runtime 생성 0 · COMSOL 호출 0 · 960 s · 생산 변경 · 시험 반복 없음 · 정상 gate INCOMPLETE.
