@@ -423,3 +423,11 @@ rc 0 → **옛 봉인 대조 (§2-4) 에서 허용 밖 차이** → 정지. 원�
   종료 6,420 · 기록 6,720) · 실행 중 디스크 5 s 표본 · RSS 1 s 표본 (하드 제한 아님) · 카운터 분리 · N4 구조 오류 우선 · `REEVAL_ERROR` (C5 한정) · N5 두 파일 · RED 1 · GREEN ≤ 3 ·
   무자료 한정 시험 셋 (정적 확인) · 건조 실행 1 회 (maxfev 50 · 작업자 2 · 300 s) · 구현 전체 ≤ 3,600 s · bms 전체 시험 제외.
 - 다음: 사용자의 v2 §10 (1) 구현 승인 (승인 전 구현 · 시험 0).
+
+## §27 C5 v2 사전 검토 회신 접수 · 부록 (2026-10-06 · 실행 0 · 덧붙임)
+
+- 묶음: `reviews/prereview_reil_v2_c5_request_v2_20261006/` (zip 30,454 B · sha256 `65b07b6351df7b8185778470fa87c80a36e6933cfd38c9b4ffe728539ae5bb1e` · manifest 5 / 5 · 비밀 0) · 규칙 `73f365d51` → 보존
+  `0432b7aa1`. 판정: 주요 정정 수용 · **C5V2-N1 P1** (`reil_c6_profile.py check` 가 합성 최적화 · Sobol 생성까지 한다 → 환경 확인 범위 충돌) + 문구 3 · 구현 · 측정 승인 아님.
+- 부록: `docs/REIL_C5_PILOT_APPROVAL_REQUEST_v2_ADDENDUM_20261006.md` — A1 계산 없는 환경 식별 (`lock_text` · `profile` · COBYQA 구현 파일 재해시 · 실제 interpreter · full check `NOT_RUN`) · 측정 단계는
+  그 뒤 A0 seed 0 · 1 배열만 · A2 행 상태 4 + 전체 `RECORD_INCOMPLETE` · A3 시험의 텍스트 입력 식별 · A4 3,600 s = 명령 시간 합 · timeout · pytest 경로 · 증거 폴더 충돌 · A5 새 구현 승인 문구.
+- 다음: 사용자의 A5 구현 승인 (승인 전 구현 · 시험 0).
