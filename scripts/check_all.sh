@@ -299,6 +299,8 @@ run 'check_doc_refs         (문서가 가리키는 것이 실재하는가)' pyt
 #    ⚠ 해시를 여기 박아 두는 것이 요점이다 — CSV 가 바뀌면 이 줄이 **빨간불**이 되고,
 #      그때 사전등록의 봉인도 같이 고쳐야 한다는 것이 강제된다.
 run 'lhs_ext_materialize     --selftest' python3 scripts/lhs_ext_materialize.py --selftest
+run 'lhs_supp_design (보충 · 후막 설계 · 10-06)' python3 scripts/lhs_supp_design.py --selftest
+run 'lhs_supp_design (봉인 CSV ↔ 해시 · 재검증)' python3 scripts/lhs_supp_design.py --verify docs/data/lhs_supp_design_20261006.csv --expect-sha256 26f33fddcfe618ee19659d94630d6ef24a0463eeb1455fd2ef921d131a9162e3
 run 'lhs_ext_submit_gate     --selftest' python3 scripts/lhs_ext_submit_gate.py --selftest
 run 'lhs_ext_design (봉인 CSV ↔ 상자 ↔ 해시)' \
   python3 scripts/lhs_ext_design.py --verify docs/data/lhs_ext_design_v2_20260829.csv \

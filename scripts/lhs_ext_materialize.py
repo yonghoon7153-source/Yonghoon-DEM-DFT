@@ -54,6 +54,7 @@ import argparse
 import csv
 import hashlib
 import os
+import math
 import re
 import sys
 
@@ -71,6 +72,54 @@ _RE_VF = re.compile(r'volumefraction_region\s+([\d.eE+-]+)')
 _RE_CASE = re.compile(r'^#\s*(\S+):\s*(\S+)', re.M)
 _RE_PROC = re.compile(r'^[ \t]*processors[ \t]+([^\n]*?)[ \t]*$', re.M)
 _RE_CBOX = re.compile(r'^[ \t]*create_box\s', re.M)
+_RE_REGMIX = re.compile(r'^([ \t]*region[ \t]+reg_mix[ \t]+block(?:[ \t]+\S+){4}[ \t]+)(\S+)([ \t]+)(\S+)([ \t]+units[ \t]+box[ \t]*)$', re.M)
+_RE_REGBOX = re.compile(r'^[ \t]*region[ \t]+reg_box[ \t]+block(?:[ \t]+\S+){4}[ \t]+(\S+)[ \t]+(\S+)', re.M)
+
+
+def ins_z(text: str):
+    """삽입 영역 (reg_mix) 의 z 범위 (덱 단위) — 본문에서 정확히 한 줄일 때만, 아니면 None."""
+    ms = _RE_REGMIX.findall(_strip_comments(text))
+    if len(ms) != 1:
+        return None
+    return float(ms[0][1]), float(ms[0][3])
+
+
+def apply_ins_scale(text: str, scale) -> str:
+    """후막 (lhs_supp_design · 1저자 10-06 밤): 같은 volfrac 에서 삽입 영역 **높이만** scale 배.
+
+    reg_mix 위끝 z1 → z0 + (z1 − z0)·scale.  다른 줄은 한 글자도 안 바꾼다 (주석 한 줄 앞에 덧붙임).
+    본문 reg_mix 가 정확히 하나가 아니거나, 배율이 양수가 아니거나, 새 위끝이 상자 (reg_box) 위끝의 90 % 를
+    넘으면 **거부**한다 (조용히 반쯤 바뀐 덱이 최악이다).
+    """
+    sc = float(scale)
+    if not (sc > 0 and math.isfinite(sc)):
+        raise SystemExit(f'⛔ 삽입 높이 배율 {scale} — 양의 유한수여야 한다')
+    body = _strip_comments(text)
+    if len(_RE_REGMIX.findall(body)) != 1:
+        raise SystemExit('⛔ 본문의 region reg_mix block 줄이 정확히 하나가 아니다 — 삽입 높이를 못 바꾼다')
+    if abs(sc - 1.0) < 1e-12:
+        return text
+    ms = [m for m in _RE_REGMIX.finditer(text) if not m.group(0).lstrip().startswith('#')]
+    m = ms[0]
+    z0, z1 = float(m.group(2)), float(m.group(4))
+    nz1 = z0 + (z1 - z0) * sc
+    mb = _RE_REGBOX.search(body)
+    if mb is None or nz1 > 0.9 * float(mb.group(2)):
+        raise SystemExit(f'⛔ 새 삽입 위끝 {nz1:.6f} 이 상자 위끝 ({mb.group(2) if mb else "?"}) 의 90 % 를 넘는다')
+    new = (f'# ★ 후막 (lhs_supp_design): 삽입 높이 ×{sc:g} — reg_mix z {z0:g}–{z1:g} → {z0:g}–{nz1:.6f} (volfrac 그대로)\n'
+           + m.group(1) + m.group(2) + m.group(3) + f'{nz1:.6f}' + m.group(5))
+    return text[:m.start()] + new + text[m.end():]
+
+
+def roundtrip_ins(row: dict, deck_text: str, tmpl_text: str) -> list:
+    """덱의 reg_mix 를 다시 읽어 템플릿 × 설계 행 ins_scale 과 대조한다.  → 불일치 목록."""
+    zt, zd = ins_z(tmpl_text), ins_z(deck_text)
+    if zt is None or zd is None:
+        return [f'{row["id"]} reg_mix 를 못 읽었다 (템플릿 {zt} · 덱 {zd})']
+    want = zt[0] + (zt[1] - zt[0]) * float(row.get('ins_scale') or 1.0)
+    if abs(zd[0] - zt[0]) > 1e-9 or abs(zd[1] - want) > 1e-6:
+        return [f'{row["id"]} 삽입 z {zd} vs 기대 ({zt[0]}, {want:.6f})']
+    return []
 
 
 def _strip_comments(text: str) -> str:
@@ -110,7 +159,7 @@ def parse_deck(text: str) -> dict:
     mc = _RE_CASE.search(text)
 
     out = dict(ntype=len(pts), n_declared=n_decl, seed=int(mi.group(1)),
-               volfrac=float(mv.group(1)), weights=weights,
+               volfrac=float(mv.group(1)), weights=weights, ins_z=ins_z(text),
                header_case=mc.group(1) if mc else None,
                header_kind=mc.group(2) if mc else None)
     if len(pts) != n_decl:
@@ -531,6 +580,8 @@ def main(argv=None):
     ap.add_argument('--template-2t', help='mono 템플릿 덱 (실물)')
     ap.add_argument('--template-run', help='러너 템플릿 (실물 run_*.sh) — **필수**')
     ap.add_argument('--outdir', help='덱을 쓸 디렉터리 (없으면 dry-run: 검사만)')
+    ap.add_argument('--points', action='store_true',
+                    help='--design 이 lhs_supp_design 설계 (보충 · 후막) — 그 verifier 로 재검증 · 행별 ins_scale (삽입 높이) · ntasks')
     ap.add_argument('--pure-se', action='append', default=[], metavar='CASE:R_SE_UM:VOLFRAC:SEED',
                     help='순수 SE 판정 시험 덱 (docs/reviews/pure_se_union_prereg_20260927.md) — '
                          '--template-2t 필수 · --template-run 은 있으면 러너도 만든다 · 설계 CSV 흐름과 따로 돈다')
@@ -562,10 +613,13 @@ def main(argv=None):
 
     #  ── 봉인 재검증: 설계 자체를 verifier 로 다시 돌린다 (조건 1·6 우회 차단) ──
     import subprocess as _sp
-    _vf = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'lhs_ext_design.py')
-    _vr = _sp.run([sys.executable, _vf, '--verify', a.design,
-                   '--box', a.box, '--expect-sha256', a.expect_sha256],
-                  capture_output=True, text=True, stdin=_sp.DEVNULL)
+    if a.points:
+        _vf = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'lhs_supp_design.py')
+        _vargs = [sys.executable, _vf, '--verify', a.design, '--expect-sha256', a.expect_sha256]
+    else:
+        _vf = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'lhs_ext_design.py')
+        _vargs = [sys.executable, _vf, '--verify', a.design, '--box', a.box, '--expect-sha256', a.expect_sha256]
+    _vr = _sp.run(_vargs, capture_output=True, text=True, stdin=_sp.DEVNULL)
     if _vr.returncode != 0:
         print(_vr.stdout[-2000:])
         raise SystemExit('⛔ 봉인 설계가 verifier 를 통과하지 못했다 — 덱을 만들지 않는다')
@@ -600,10 +654,18 @@ def main(argv=None):
     for r in rows:
         nt = int(r['ntype'])
         text = render(t3 if nt == 3 else t2, r, c3 if nt == 3 else c2)
+        _nt = a.ntasks
+        if a.points:
+            try:
+                text = apply_ins_scale(text, r.get('ins_scale') or 1.0)
+            except SystemExit as _e:
+                bad.append(f'{r["id"]} {_e}')
+            bad += roundtrip_ins(r, text, t3 if nt == 3 else t2)
+            _nt = int(r['ntasks'])
         bad += roundtrip(r, text)
         made[r['id']] = text
-        rtext = render_runner(trun, r['id'], crun, a.ntasks)
-        bad += roundtrip_runner(r['id'], rtext, a.ntasks)
+        rtext = render_runner(trun, r['id'], crun, _nt)
+        bad += roundtrip_runner(r['id'], rtext, _nt)
         runs[r['id']] = rtext
     print(f'\n왕복검사 {len(rows)}건 — 불일치 {len(bad)}건')
     for b in bad[:12]:
@@ -636,7 +698,7 @@ def main(argv=None):
                             runs[cid].encode('utf-8')).hexdigest()))
     mp = os.path.join(a.outdir, 'deck_manifest.json')
     with open(mp, 'w', encoding='utf-8') as fh:
-        _json.dump(dict(design_sha256=sha, n=len(man),
+        _json.dump(dict(design_sha256=sha, n=len(man), design_kind=('lhs_supp_design' if a.points else 'lhs_ext_design'),
                         template_3t=dict(file=os.path.basename(a.template_3t),
                                          sha256=_files[os.path.basename(a.template_3t)]),
                         template_2t=dict(file=os.path.basename(a.template_2t),
@@ -1035,6 +1097,64 @@ mpirun -np 1 lmp_mpi -in input_lhs00_000.liggghts
             chk(f'★⑥ {_why} 거부', True)
         except NameError as e:
             chk(f'★⑥ {_why} 거부', False, str(e)[:60])
+
+    #  ⑦ 보충 · 후막 (lhs_supp_design · 1저자 10-06 밤) — 삽입 높이 배율 (reg_mix 위끝) 과 --points 경로
+    RM = 'region reg_mix block 0.0 0.05 0.0 0.05 0.005 0.138 units box\n'
+    T3m = T3.replace('fix ins_mix', RM + 'fix ins_mix', 1)
+    T2m = T2.replace('fix ins_mix', RM + 'fix ins_mix', 1)
+    try:
+        x3 = apply_ins_scale(T3m, 3.0)
+        chk('⑦ 삽입 높이 ×3: reg_mix 위끝 0.138 → 0.404', parse_deck(x3).get('ins_z') == (0.005, 0.404),
+            str(parse_deck(x3).get('ins_z')))
+        _d = [l for l in x3.split('\n') if not l.startswith('#')]
+        _o = [l for l in T3m.split('\n') if not l.startswith('#')]
+        chk('⑦ 바뀐 본문 줄은 reg_mix 하나뿐', sum(a != b for a, b in zip(_d, _o)) == 1 and len(_d) == len(_o))
+        chk('⑦ 배율 1 = 바이트 그대로', apply_ins_scale(T3m, 1.0) == T3m)
+        for _bad_t, _why in ((T3, 'reg_mix 줄 없음'), (T3m.replace(RM, RM + RM), 'reg_mix 줄 둘'),
+                             (T3m, '배율 0'), (T3m, '배율 8 (상자 위끝 1.0 넘음)')):
+            try:
+                apply_ins_scale(_bad_t, 0.0 if _why == '배율 0' else (8.0 if '8' in _why else 3.0))
+                chk(f'★⑦ {_why} 거부', False, '거부하지 않았다')
+            except SystemExit:
+                chk(f'★⑦ {_why} 거부', True)
+        _row = dict(id='lhst_045_6m', ins_scale='3.0')
+        chk('⑦ 왕복: 맞는 배율 통과', roundtrip_ins(_row, x3, T3m) == [])
+        chk('★⑦ 왕복: 덱 ×2 인데 CSV ×3 이면 잡는다', roundtrip_ins(_row, apply_ins_scale(T3m, 2.0), T3m) != [])
+        #  통합: 실제 lhs_supp_design 설계 → --points 로 덱 · 러너 (픽스처 템플릿 해시를 담은 임시 상자)
+        import tempfile, json as _js, subprocess as _sp
+        with tempfile.TemporaryDirectory() as td:
+            f3, f2, fr = (os.path.join(td, n) for n in ('input_lhs00_000.liggghts', 'input_lhs00_110.liggghts', 'run_lhs00_000.sh'))
+            open(f3, 'w').write(T3m); open(f2, 'w').write(T2m); open(fr, 'w').write(TRUN)
+            bx = os.path.join(td, 'box.json')
+            _js.dump(dict(source=dict(files=[dict(file=f, sha256=hashlib.sha256(open(f, 'rb').read()).hexdigest())
+                                              for f in (f3, f2)])), open(bx, 'w'))
+            dcsv = os.path.join(td, 'supp.csv')
+            _sp.run([sys.executable, os.path.join(os.path.dirname(os.path.abspath(__file__)), 'lhs_supp_design.py'),
+                     '--out', dcsv], check=True, capture_output=True)
+            dsha = hashlib.sha256(open(dcsv, 'rb').read()).hexdigest()
+            out = os.path.join(td, 'decks')
+            rc = main(['--design', dcsv, '--points', '--expect-sha256', dsha, '--box', bx, '--template-3t', f3,
+                       '--template-2t', f2, '--template-run', fr, '--outdir', out])
+            chk('⑦ --points 통합 rc 0', rc == 0, str(rc))
+            man = _js.load(open(os.path.join(out, 'deck_manifest.json')))
+            chk('⑦ --points 덱 28 (보충 20 + 후막 8)', man.get('n') == 28, str(man.get('n')))
+            t8 = open(os.path.join(out, 'lhst_078_8m', 'input_lhst_078_8m.liggghts')).read()
+            chk('⑦ 후막 8 mAh 덱의 삽입 위끝 0.537', parse_deck(t8).get('ins_z') == (0.005, 0.537), str(parse_deck(t8).get('ins_z')))
+            r8 = open(os.path.join(out, 'lhst_078_8m', 'run_lhst_078_8m.sh')).read()
+            import csv as _csv
+            _nt = {r['id']: r['ntasks'] for r in _csv.DictReader(open(dcsv))}
+            chk('⑦ 러너 코어 = 설계 행 ntasks (#SBATCH -n · mpirun -np 짝)',
+                f'#SBATCH -n {_nt["lhst_078_8m"]}' in r8 and f'-np {_nt["lhst_078_8m"]}' in r8)
+            s1 = open(os.path.join(out, 'lhss_001', 'input_lhss_001.liggghts')).read()
+            chk('⑦ 보충 침대 = 삽입 높이 그대로 (0.138)', parse_deck(s1).get('ins_z') == (0.005, 0.138))
+            try:
+                main(['--design', dcsv, '--points', '--expect-sha256', '0' * 64, '--box', bx, '--template-3t', f3,
+                      '--template-2t', f2, '--template-run', fr, '--outdir', os.path.join(td, 'decks2')])
+                chk('★⑦ --points 해시 불일치 거부', False, '거부하지 않았다')
+            except SystemExit:
+                chk('★⑦ --points 해시 불일치 거부', True)
+    except (NameError, TypeError, KeyError, FileNotFoundError, OSError) as e:
+        chk('⑦ 보충 · 후막 경로', False, f'{type(e).__name__}: {e}'[:120])
 
     print(f'lhs_ext_materialize selftest: {ok}/{ok + len(fail)} PASS')
     for f in fail:
