@@ -403,3 +403,92 @@ v2 대조는 새로 만들지 않는다 — 기존 f00_05 (v2 grid → fit 최�
 ### 15-5. 영수증 · 순서
 
 RUN_SCOPE (`tools/preserve.py`) 가 바뀌므로 source_digest · 두 leg 영수증의 validator identity 가 움직인다 → history 보존 뒤 1 회 재생성 (88차와 같은 절차 · LEG_PRESERVATION 앵커 2×2) → 전체 pytest · smoke (clean) · 등록부 전체 변이 재생 (start HEAD = end HEAD · dirty 0 · 다른 시험 동시 실행 없음) → GATE89. 88차 발송 HEAD `d6056415b` 의 docs-lint 358 PASS 원문 로그를 gate89 증거에 보충으로 싣는다 (리뷰어: 16 원문 밖).
+
+## §16 단계 4 (묶음 6) 시작 전 고정 표 — 92차 정정 G92-N1–N3 반영 (2026-10-06 · 코드 변경 전 · 구현은 사용자 별도 승인 뒤 · 원장 §143 · §144)
+
+> 92차 판정 "수정 조건부 적합" (`gate92_review/` · 원장 §143) 의 세 조건과 경계 문구를 반영한 고정 표다. 요청문 `GATE92_REQUEST.md` §2 의 결정 a–g 는 아래 정정과 함께
+> 유효하다. **같은 범위의 사전 검토를 다시 받지 않고** 사용자의 제한 오프라인 구현 승인으로 넘어간다 (92차 "다음 제출 조건"). 이 표와 다른 선택이 필요하면 구현하지 않고
+> 멈춰 묻는다.
+
+### 16-1. 범위 · 허용 변경
+
+| 항목 | 내용 |
+|---|---|
+| 일 | (A) 구 필드 (`pairing_design_id` · `inference_status`) **부재 고정** — 열거한 닫힌 객체와 정상 writer 출력에 한정 (16-6 의 제외 객체는 닫혔다고 쓰지 않음) · (B) consumer × key 음성 증거 — `GATE92_EVIDENCE_MATRIX.md` (이 표의 일부 · 고정 HEAD `248b84e7d` 기준 좌표) 의 "보강" 행 · (C) `provider_edges_sha256` 정의 하나 (canonical `digest`) |
+| production 허용 함수 | `src/io.py`: `_stage3_checks` (sig 6 분기 — `run_spec.stage3` 닫힘 · 자료형 · 키별 대조 · 구조화된 실패 · 실패한 객체의 재유도 차단) 와 그 안의 candidate_map 읽기 (`:1927–1934`) · `_stage3_rederive` 의 **입력 경계** (검사를 통과하지 못한 env / map 을 받지 않게 하는 데까지) · `src/fitting.py`: run_spec.stage3 블록 (`:1539–1548`) 의 `provider_edges_sha256` 한 줄 (`digest(env["provider_edges"])` 로) · `tools/preserve.py`: 공개 helper 재사용만 (수정은 PreserveError 를 validator 실패로 잇는 데 필요할 때만 · 그 밖 함수 0) |
+| production 밖 | `run.sh` · `scripts/` · `configs/` · `requirements*` · `src/grid.py` · `tools/design_wire.py` · 그 밖 함수 · legacy reader · 모든 JSON 소비자 일괄 재작성 — **필요해지면 기록하고 멈춘다 (별도 승인)**. 같은 파일이라는 이유만으로 다른 제어 경로의 수정을 포함하지 않는다 |
+| 함께 | 새 시험 `tests/test_gate92_stage4_linkage.py` · `docs/22p_gap/mutation_replay.py` (`-g92`) · 계약 `STAGE3_CONTRACT.md` §13.1 **묶음 6 행만** ("미착수" → 제출 증거 링크 · "닫힘" 표시 금지) · 영수증 history 보존 → 두 leg 각 1 회 · 전체 회귀 · strict smoke · 등록부 전체 재생 |
+
+### 16-2. 고정 결정 (요청문 a–g 의 정정)
+
+| # | 결정 |
+|---|---|
+| a | 부재는 닫힌 집합으로 (구 이름 deny-list 없음) · 새로 닫는 것은 v6 전용 두 객체 — `run_spec.stage3` · `candidate_map.json` — 를 **sig 6 분기 안에서만** |
+| b | 사본 9 키는 지우지 않고 대조 (Q5): **helper 투영 6** (`parameter_order_sha256` · `roster_sha256` · `provider_edges_sha256` · `arm` · `stage` · `candidate_mode` — `stage3_axis_from_envelope(env)` 의 같은 이름 값) · **env 직접 3** (`bank_version` ↔ `env["bank"]["version"]` · `budget_by_objective` ↔ `env["stages"][0]["budget_by_objective"]` · `warm_provider_map` ↔ `env["stages"][0]["warm_provider_map"]`) · 불일치 이유에 **키 이름** |
+| b′ (G92-N3) | **기존 독립 재계산 키는 그대로 둔다** — `planned_id` (`digest(envelope)` · `io.py:1883`) · `pairing_design_sha256` (설계 본체 재계산 · `:1684`) · `exact_bounds_sha256` (`run_spec.bounds` 재계산 · `:1696` — 3 자 대조) · `base_config_closure_sha256` · `_keys` (봉인 스냅샷 재계산 · `:2015–2048`) · `planned_envelope` (`check_planned_envelope`). 새 투영 루프는 **이 다섯 키를 비교하지 않는다** (중복 비교로 기존 위치 변이가 생존하지 않게) · 기존 재계산을 helper / 복사값 비교로 대체 · 약화하지 않는다 |
+| c | `provider_edges_sha256` = `digest(env["provider_edges"])` 하나 · `fitting.py:1545` 의 `json.dumps` 식 삭제 · **k07 을 k05 보다 먼저** 구현 (정의가 다른 채로 k05 를 넣으면 정상 warm run 을 거부한다) · v6 run_spec 바이트만 바뀜 (실물 v6 leg 0) |
+| e | v5 · v6_prep: 기존 봉인 · 수치 · 분기 · schema **의미** 불변 (sig 5 검사 집합 · `normalize_restart_record` 의 세 선언 · `g79_06` · `g79_02` 골든 · s00 v5 spec digest · 운영 원장 `planned_index()`). 새 validator identity · 새 영수증 identity 의 변화는 16-5 의 별도 표로 |
+| f | 키별 음성은 그 consumer 의 실제 호출 경로에서 · 자기일관 위조 (그 키 하나만) · 도구 재사용: `test_gate82_residuals.py::_forge_stage3` · `_reseal_fits` · `_rewrite_record` · **`test_gate85_closure_members.py:69 _resign` · `:86 _only_this_check_fails`** (요청문 f 의 "재서명 helper 새로" 를 재사용으로 정정) · C2 반례는 `record_digest` 를 다시 맞춘다 (지금 `n1_03` 하위 사례 다수가 가려짐 — 매트릭스 §16-2) |
+| g | 계약 §13.1 은 묶음 6 행만 · 제출 상태 · 닫힘 표시 금지 |
+| C8 | envelope 의 모든 키가 `planned_id` 로 접히므로 키별 독립 node 는 원리상 없다 — 대표 node 1 + 기존 위치 변이 (`claim-seals-the-run-spec`) 연결로 충족 |
+
+### 16-3. 두 새 닫힘 대상의 schema · 자료형 · 실패 경로 (G92-N2)
+
+| 대상 | 컨테이너 | 정확한 키 집합 | 값 자료형 (bool 은 int 로 받지 않음 · 변환 없음) |
+|---|---|---|---|
+| `run_spec.stage3` | dict (아니면 `stage3_schema` 실패) | `_STAGE3_SPEC_KEYS` 16 개 그대로 (`io.py:1522–1528`) — 누락 · 추가 모두 실패 | `planned_id` · `*_sha256` 다섯 · `bank_version` = str (hex64 인 것은 기존 hex64 규칙) · `planned_envelope` · `pairing_design` · `budget_by_objective` · `warm_provider_map` = dict · `base_config_closure_keys` = list · `candidate_mode` · `arm` · `stage` = str — 기존 writer 가 쓰는 형 그대로 · 허용 null 없음 |
+| `candidate_map.json` 최상위 | dict | `{schema, entries}` — 누락 · 추가 실패 · `schema == "candidate-map/v1"` | `entries` = list |
+| `candidate_map.json` 항목 | dict (비-dict 항목 = 위치 있는 실패) | `{cond_id, objective, i, source, candidate_id, bank_index, x0_sha256}` (writer `fitting.py:475–476` · `:1572–1579`) | `cond_id` · `objective` · `source` · `candidate_id` · `x0_sha256` = str · `i` = int (bool 아님) · `bank_index` = int (bool 아님) 또는 null — null 허용 여부는 기존 source 규칙 그대로 (`fitting.py:458–469`: bank 출처는 int · 그 밖 null) |
+
+- 실패는 **실제 `validate_provenance` 경로**가 이유 (키 이름 · 항목 위치) 있는 구조화된 실패로 돌려준다 · schema / env 검사가 실패한 객체는 `_stage3_rederive` 에 넘기지 않는다 (`io.py:1961` 의 지금 경로 차단) ·
+  `stage3_axis_from_envelope` 의 `PreserveError` 도 validator 실패로 잇는다 · **임의 `AttributeError` · `TypeError` 를 음성 PASS 로 세지 않는다** (시험은 실패 결과의 이유를 단언).
+- 음성 사례: 누락 · 두 구 이름 · 임의 제3 키 · 잘못된 컨테이너 (list · null · str) · 잘못된 항목 자료형 (비-dict · int 자리 bool / str · str 자리 int).
+
+### 16-4. 회귀 (RED 먼저 · 새 파일 · node 는 매트릭스 §13)
+
+| node | 결함 증거 | 내용 |
+|---|---|---|
+| **k03** | 예 (RED 예상) | `run_spec.stage3` 닫힘 + 자료형 (16-3) · `_resign` 재서명 |
+| **k04[…]** | 예 (RED 예상) | `candidate_map` 닫힘 + 자료형 (16-3) — `AttributeError` 로 떨어진 RED 는 따로 센다 |
+| **k05[9]** | 예 (RED 예상 ×9) | 투영 6 + env 직접 3 · 이유에 키 이름 |
+| **k07** | 예 (RED 예상) | warm edge 계획 → run_spec 의 edge sha == 승인 축 값 |
+| k00 · k01 · k02[자리] | 아니오 (GREEN 대조) | 정상 v6 · v5 골든 · 재귀 부재 · 이미 닫힌 9 자리에 구 필드 |
+| k06[5] | 아니오 (GREEN) | 기존 재계산 키의 **첫** 키별 s3 단독 node (`planned_id` · `pairing_design_sha256` · `exact_bounds_sha256`) + 대조 둘 |
+| k08[8] · k09 · k10 · k11 · k12 | 아니오 (GREEN) | 매트릭스의 "보강" 행 — C3 · C1 · C2 · C4 · C11 · C5 · C8 · C6 header · C7 행 · 이유 단언 |
+
+- RED 집계: 새 helper 부재 · `AttributeError` · 무관한 예외로 떨어진 node 는 따로 센다. 처음부터 GREEN 인 대조 node 는 정상이다.
+- **경계 (92차 문구):** 기존 증인의 누락은 승인된 **시험 파일**에서 보강할 수 있다. 16-1 의 허용 함수 밖 결함이 RED 로 드러나면 **범위에 넣지 않고** 기록 · 중지 · 별도 승인 요청.
+- 순서: k07 → k05 (16-2 c).
+
+### 16-5. 변이 · 영수증
+
+| 변이 (`-g92`) | 죽일 node |
+|---|---|
+| run_spec.stage3 닫힘 끄기 | k03 |
+| candidate_map 닫힘 · 자료형 끄기 | k04 |
+| 투영 루프 끄기 (하나) | k05 의 투영 6 (EXPECT 를 6 키로 한정 — 기존 재계산 키 비교 안 함) |
+| env 직접 비교 끄기 (같은 자리면 투영 루프와 합쳐 하나) | k05 의 env 3 |
+| 옛 `json.dumps` 식 되돌리기 | k07 |
+| k06 첫 증인 위치 셋 (`io.py:1883` · `:1684` · `:1696`) 각각 끄기 | k06 의 해당 키 |
+
+- **새 node 가 생긴 그 밖의 기존 비교 위치 (매트릭스 §14 의 "새 node 와 함께 오는 위치" 35 · "node 만 있고 변이 없는 위치" 4) 의 변이는 이번 범위에서 이월한다** — 데이터 음성 node 로 키별 증거를 고정하고, 위치 변이는 이월 목록에 남긴다 (사용자 승인 대상 · 92차 "동일 비교 위치의 변이를 키 수만큼 늘리지 않는다" 와 같은 방향).
+- 기존 변이의 `-k` 확장 둘 (`stage3-axis-is-derived-not-copied-g87` + k08 · `claim-seals-the-run-spec` + k10-C8) 은 **증인 집합 변경이라 먼저 보고**한다. `--emit-expect` 는 관측 도구이지 증인 교체 승인이 아니다 — 의미가 같은 좌표 이동과 이유 변경을 구분해 보고 · 이유 변경은 사용자 승인문에 적은 범위 안에서만.
+- 영수증: `src/io.py` 변경으로 validator identity 가 움직인다 → 현행 history 보존 → `paired_fixed5_v4` · `grid_fit_v5` 각 1 회 · **v5 검사 집합 35 / 34 불변**이 기대값 (다르면 중지) · identity 변화는 별도 표.
+
+### 16-6. 이월 · 제외 (닫혔다고 주장하지 않음)
+
+| 항목 | 이유 |
+|---|---|
+| **이월** C8 재개 경로 (`preserve.py:4192`) | v2 · v3 공통 기존 경로 · v6 linkage 밖 · 시험 / 변이 존재 불확실 |
+| **이월** C7 `planned_envelope` ↔ **원장 승인 계획** | validator 는 원장을 읽지 않는다 (산출 안 사본만) — 원장 결속은 C8 (실행 전) · finalize 의 몫 |
+| **이월** 16-5 의 기존 위치 변이 39 | 데이터 음성만 이번에 |
+| **제외** `run_spec` 최상위 닫힘 · solution map header 닫힘 · `LEG_PRESERVATION.yaml` 항목 닫힘 | v5 공유 경로 · header 는 바이트 sha 봉인뿐 · 운영 원장 v6 항목 승인 밖 |
+| C10 | 조사 문서 §3.4 에 C10 행 없음 — 번호 건너뜀 (빠진 consumer 아님) |
+
+이월이 있는 한 **묶음 6 전체 종결을 선언하지 않는다**. 묶음 6 이 나중에 닫혀도 묶음 9 는 선행 하나만 충족 (Q9).
+
+### 16-7. 순서 · 한도
+
+고정 표 커밋 (코드 변경 전) → 사용자 구현 승인 → RED 커밋 (k03 · k04 · k05 · k07 RED 확인 · 대조 GREEN) → k07 → k03 · k04 → k05 → GREEN → 변이 + EXPECT (관측값) → 영수증 1 회씩
+→ 전체 pytest · strict smoke (clean) · 등록부 전체 재생 (start HEAD = end HEAD · dirty 0 · 동시 시험 없음) → GATE93 (결과 심사) 요청. 실행 GO · 새 연구 leg · claim / 세대표 · p_ini · class /
+투영 · requirements 0.
