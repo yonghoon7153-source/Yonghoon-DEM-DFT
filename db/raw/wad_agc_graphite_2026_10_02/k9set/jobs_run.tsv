@@ -1,0 +1,9 @@
+job	rc	done	wall_s	peak_total_MiB	peak_self_MiB	killed	start	host_avail_min_MiB
+AGC_N3_top_hcp_K9_bound	0	1	9214	9763	—	0	2026-10-05 22:48:12	54865
+AGC_N3_top_hcp_K9_far	0	1	4784	9763	—	0	2026-10-06 01:21:47	55817
+AGC_N3_hollow_fcc_K9_bound	0	1	9824	10105	—	0	2026-10-06 02:41:32	55802
+AGC_N3_hollow_fcc_K9_far	0	1	5092	10105	—	0	2026-10-06 05:25:17	55752
+AGC_N3_s01_K9_bound	0	1	7693	10106	—	0	2026-10-06 06:50:10	55782
+AGC_N3_s01_K9_far	0	1	4654	10465	—	0	2026-10-06 08:58:24	55786
+AGC_N4_top_fcc_K9_bound	0	1	13599	12242	—	0	2026-10-06 10:15:59	54633
+AGC_N4_top_fcc_K9_far	0	1	6539	12241	—	0	2026-10-06 14:02:39	55734

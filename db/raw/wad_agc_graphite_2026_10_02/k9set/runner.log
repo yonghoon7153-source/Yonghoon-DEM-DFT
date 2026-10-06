@@ -1,0 +1,173 @@
+[2026-10-05 22:48:07] ════ run_sese_gpu · IN=/home/kgy/wt_agck9_1005/db/inputs/wad_agc_graphite_2026_10_02/k9set/qe · RUN=/home/kgy/work/runs/wad_agc_graphite_2026_10_02/k9set · JOBS=[AGC_N3_top_hcp_K9_bound AGC_N3_top_hcp_K9_far AGC_N3_hollow_fcc_K9_bound AGC_N3_hollow_fcc_K9_far AGC_N3_s01_K9_bound AGC_N3_s01_K9_far AGC_N4_top_fcc_K9_bound AGC_N4_top_fcc_K9_far]
+[2026-10-05 22:48:07] 공존 근거: D-2026-10-05-wad-agc-graphite-k9-registry · START<12000 MiB · KILL>23000 MiB · 표본 2s · UMA 공존 허용=1 · 허용 PID=[제한 없음]
+[2026-10-05 22:48:07] 공존 근거 D-2026-10-05-wad-agc-graphite-k9-registry — 원장에서 active
+[2026-10-05 22:48:07] ⚠ UMA 공존을 켰는데 ONLY_PIDS 가 비었다 — 공존 조건을 PID 로 걸지 못한다 (새 GPU 잡이 떠도 시작한다)
+[2026-10-05 22:48:07] 랭크 NP=1 · GPU 1 장 · pseudo=/home/kgy/work/pseudo (PSEUDO_DIR 로 교체)
+[2026-10-05 22:48:07] PP Ag_ONCV_PBE-1.0.oncvpsp.upf sha256 0494aa5927b754b4 · 기준과 같음 ✓
+[2026-10-05 22:48:07] PP C.pbe-n-kjpaw_psl.1.0.0.UPF sha256 9900d1efd50b9848 · 기준과 같음 ✓
+[2026-10-05 22:48:07] 디스크 289G 남음 (67% 사용)
+[2026-10-05 22:48:07] ⚠ GPU 사용량 5283 MiB 인데 프로세스 목록이 비었다 — 프로세스별 정보가 막힌 기계다.
+[2026-10-05 22:48:07]    nvidia-smi 원문: Process-level GPU information is restricted.
+[2026-10-05 22:48:07]    UMA 판정·ONLY_PIDS 가 여기서는 **작동하지 않는다**. 남는 가드는 합계 VRAM·호스트 RAM 뿐이다.
+[2026-10-05 22:48:07] GPU 합계 사용량 지금 5283 MiB · 호스트 MemAvailable 56925 MiB (시작 문턱 8192 · 중단 2048)
+[2026-10-05 22:48:07] DRY_RUN — 점검만 하고 끝낸다
+[2026-10-05 22:48:11] ════ run_sese_gpu · IN=/home/kgy/wt_agck9_1005/db/inputs/wad_agc_graphite_2026_10_02/k9set/qe · RUN=/home/kgy/work/runs/wad_agc_graphite_2026_10_02/k9set · JOBS=[AGC_N3_top_hcp_K9_bound]
+[2026-10-05 22:48:11] 공존 근거: D-2026-10-05-wad-agc-graphite-k9-registry · START<12000 MiB · KILL>23000 MiB · 표본 2s · UMA 공존 허용=1 · 허용 PID=[제한 없음]
+[2026-10-05 22:48:11] 공존 근거 D-2026-10-05-wad-agc-graphite-k9-registry — 원장에서 active
+[2026-10-05 22:48:11] ⚠ UMA 공존을 켰는데 ONLY_PIDS 가 비었다 — 공존 조건을 PID 로 걸지 못한다 (새 GPU 잡이 떠도 시작한다)
+[2026-10-05 22:48:11] 랭크 NP=1 · GPU 1 장 · pseudo=/home/kgy/work/pseudo (PSEUDO_DIR 로 교체)
+[2026-10-05 22:48:11] PP Ag_ONCV_PBE-1.0.oncvpsp.upf sha256 0494aa5927b754b4 · 기준과 같음 ✓
+[2026-10-05 22:48:11] PP C.pbe-n-kjpaw_psl.1.0.0.UPF sha256 9900d1efd50b9848 · 기준과 같음 ✓
+[2026-10-05 22:48:11] 디스크 289G 남음 (67% 사용)
+[2026-10-05 22:48:12] ⚠ GPU 사용량 5283 MiB 인데 프로세스 목록이 비었다 — 프로세스별 정보가 막힌 기계다.
+[2026-10-05 22:48:12]    nvidia-smi 원문: Process-level GPU information is restricted.
+[2026-10-05 22:48:12]    UMA 판정·ONLY_PIDS 가 여기서는 **작동하지 않는다**. 남는 가드는 합계 VRAM·호스트 RAM 뿐이다.
+[2026-10-05 22:48:12] GPU 합계 사용량 지금 5283 MiB · 호스트 MemAvailable 56931 MiB (시작 문턱 8192 · 중단 2048)
+[qe_gpu] MPI 를 바이너리에서 읽었다: /home/kgy/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi/lib/libmpi.so.40
+[qe_gpu]   prefix=/home/kgy/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi · mpirun=/home/kgy/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi/bin/mpirun
+[qe_gpu]   ⚠ libnvomp + libgomp 동시 링크 — OMP_NUM_THREADS=1 (libgomp: TODO 회피)
+[2026-10-05 22:48:12] ▶ AGC_N3_top_hcp_K9_bound (scf) 시작 · GPU 합계 5283 MiB · 호스트 여유 56918 MiB
+[2026-10-05 22:48:13]    래퍼(mpirun) PID 87114 · pw.x PID 87132
+[2026-10-05 22:48:41]    ⚠ nvidia-smi 목록에 우리 pw.x(87132) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)
+[2026-10-06 01:21:47] ■ AGC_N3_top_hcp_K9_bound rc=0 완료=1 벽시계 9214s · 피크 합계 9763 MiB · 자기 — MiB · 호스트 최저 54865 MiB · 중단=0
+[2026-10-06 01:21:47] ✅ 전부 완료 — 집계: python3 tools/wad/se_sym_slab.py --collect /home/kgy/work/runs/wad_agc_graphite_2026_10_02/k9set --qe_in /home/kgy/wt_agck9_1005/db/inputs/wad_agc_graphite_2026_10_02/k9set/qe
+[2026-10-06 01:21:47] ════ run_sese_gpu · IN=/home/kgy/wt_agck9_1005/db/inputs/wad_agc_graphite_2026_10_02/k9set/qe · RUN=/home/kgy/work/runs/wad_agc_graphite_2026_10_02/k9set · JOBS=[AGC_N3_top_hcp_K9_far]
+[2026-10-06 01:21:47] 공존 근거: D-2026-10-05-wad-agc-graphite-k9-registry · START<12000 MiB · KILL>23000 MiB · 표본 2s · UMA 공존 허용=1 · 허용 PID=[제한 없음]
+[2026-10-06 01:21:47] 공존 근거 D-2026-10-05-wad-agc-graphite-k9-registry — 원장에서 active
+[2026-10-06 01:21:47] ⚠ UMA 공존을 켰는데 ONLY_PIDS 가 비었다 — 공존 조건을 PID 로 걸지 못한다 (새 GPU 잡이 떠도 시작한다)
+[2026-10-06 01:21:47] 랭크 NP=1 · GPU 1 장 · pseudo=/home/kgy/work/pseudo (PSEUDO_DIR 로 교체)
+[2026-10-06 01:21:47] PP Ag_ONCV_PBE-1.0.oncvpsp.upf sha256 0494aa5927b754b4 · 기준과 같음 ✓
+[2026-10-06 01:21:47] PP C.pbe-n-kjpaw_psl.1.0.0.UPF sha256 9900d1efd50b9848 · 기준과 같음 ✓
+[2026-10-06 01:21:47] 디스크 289G 남음 (67% 사용)
+[2026-10-06 01:21:47] ⚠ GPU 사용량 5282 MiB 인데 프로세스 목록이 비었다 — 프로세스별 정보가 막힌 기계다.
+[2026-10-06 01:21:47]    nvidia-smi 원문: Process-level GPU information is restricted.
+[2026-10-06 01:21:47]    UMA 판정·ONLY_PIDS 가 여기서는 **작동하지 않는다**. 남는 가드는 합계 VRAM·호스트 RAM 뿐이다.
+[2026-10-06 01:21:47] GPU 합계 사용량 지금 5282 MiB · 호스트 MemAvailable 56915 MiB (시작 문턱 8192 · 중단 2048)
+[qe_gpu] MPI 를 바이너리에서 읽었다: /home/kgy/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi/lib/libmpi.so.40
+[qe_gpu]   prefix=/home/kgy/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi · mpirun=/home/kgy/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi/bin/mpirun
+[qe_gpu]   ⚠ libnvomp + libgomp 동시 링크 — OMP_NUM_THREADS=1 (libgomp: TODO 회피)
+[2026-10-06 01:21:47] ▶ AGC_N3_top_hcp_K9_far (scf) 시작 · GPU 합계 5282 MiB · 호스트 여유 56910 MiB
+[2026-10-06 01:21:48]    래퍼(mpirun) PID 202518 · pw.x PID 202554
+[2026-10-06 01:22:17]    ⚠ nvidia-smi 목록에 우리 pw.x(202554) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)
+[2026-10-06 02:41:32] ■ AGC_N3_top_hcp_K9_far rc=0 완료=1 벽시계 4784s · 피크 합계 9763 MiB · 자기 — MiB · 호스트 최저 55817 MiB · 중단=0
+[2026-10-06 02:41:32] ✅ 전부 완료 — 집계: python3 tools/wad/se_sym_slab.py --collect /home/kgy/work/runs/wad_agc_graphite_2026_10_02/k9set --qe_in /home/kgy/wt_agck9_1005/db/inputs/wad_agc_graphite_2026_10_02/k9set/qe
+[2026-10-06 02:41:32] ════ run_sese_gpu · IN=/home/kgy/wt_agck9_1005/db/inputs/wad_agc_graphite_2026_10_02/k9set/qe · RUN=/home/kgy/work/runs/wad_agc_graphite_2026_10_02/k9set · JOBS=[AGC_N3_hollow_fcc_K9_bound]
+[2026-10-06 02:41:32] 공존 근거: D-2026-10-05-wad-agc-graphite-k9-registry · START<12000 MiB · KILL>23000 MiB · 표본 2s · UMA 공존 허용=1 · 허용 PID=[제한 없음]
+[2026-10-06 02:41:32] 공존 근거 D-2026-10-05-wad-agc-graphite-k9-registry — 원장에서 active
+[2026-10-06 02:41:32] ⚠ UMA 공존을 켰는데 ONLY_PIDS 가 비었다 — 공존 조건을 PID 로 걸지 못한다 (새 GPU 잡이 떠도 시작한다)
+[2026-10-06 02:41:32] 랭크 NP=1 · GPU 1 장 · pseudo=/home/kgy/work/pseudo (PSEUDO_DIR 로 교체)
+[2026-10-06 02:41:32] PP Ag_ONCV_PBE-1.0.oncvpsp.upf sha256 0494aa5927b754b4 · 기준과 같음 ✓
+[2026-10-06 02:41:32] PP C.pbe-n-kjpaw_psl.1.0.0.UPF sha256 9900d1efd50b9848 · 기준과 같음 ✓
+[2026-10-06 02:41:32] 디스크 289G 남음 (67% 사용)
+[2026-10-06 02:41:32] ⚠ GPU 사용량 5282 MiB 인데 프로세스 목록이 비었다 — 프로세스별 정보가 막힌 기계다.
+[2026-10-06 02:41:32]    nvidia-smi 원문: Process-level GPU information is restricted.
+[2026-10-06 02:41:32]    UMA 판정·ONLY_PIDS 가 여기서는 **작동하지 않는다**. 남는 가드는 합계 VRAM·호스트 RAM 뿐이다.
+[2026-10-06 02:41:32] GPU 합계 사용량 지금 5282 MiB · 호스트 MemAvailable 56935 MiB (시작 문턱 8192 · 중단 2048)
+[qe_gpu] MPI 를 바이너리에서 읽었다: /home/kgy/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi/lib/libmpi.so.40
+[qe_gpu]   prefix=/home/kgy/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi · mpirun=/home/kgy/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi/bin/mpirun
+[qe_gpu]   ⚠ libnvomp + libgomp 동시 링크 — OMP_NUM_THREADS=1 (libgomp: TODO 회피)
+[2026-10-06 02:41:32] ▶ AGC_N3_hollow_fcc_K9_bound (scf) 시작 · GPU 합계 5282 MiB · 호스트 여유 56941 MiB
+[2026-10-06 02:41:33]    래퍼(mpirun) PID 263585 · pw.x PID 263603
+[2026-10-06 02:42:02]    ⚠ nvidia-smi 목록에 우리 pw.x(263603) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)
+[2026-10-06 05:25:17] ■ AGC_N3_hollow_fcc_K9_bound rc=0 완료=1 벽시계 9824s · 피크 합계 10105 MiB · 자기 — MiB · 호스트 최저 55802 MiB · 중단=0
+[2026-10-06 05:25:17] ✅ 전부 완료 — 집계: python3 tools/wad/se_sym_slab.py --collect /home/kgy/work/runs/wad_agc_graphite_2026_10_02/k9set --qe_in /home/kgy/wt_agck9_1005/db/inputs/wad_agc_graphite_2026_10_02/k9set/qe
+[2026-10-06 05:25:17] ════ run_sese_gpu · IN=/home/kgy/wt_agck9_1005/db/inputs/wad_agc_graphite_2026_10_02/k9set/qe · RUN=/home/kgy/work/runs/wad_agc_graphite_2026_10_02/k9set · JOBS=[AGC_N3_hollow_fcc_K9_far]
+[2026-10-06 05:25:17] 공존 근거: D-2026-10-05-wad-agc-graphite-k9-registry · START<12000 MiB · KILL>23000 MiB · 표본 2s · UMA 공존 허용=1 · 허용 PID=[제한 없음]
+[2026-10-06 05:25:17] 공존 근거 D-2026-10-05-wad-agc-graphite-k9-registry — 원장에서 active
+[2026-10-06 05:25:17] ⚠ UMA 공존을 켰는데 ONLY_PIDS 가 비었다 — 공존 조건을 PID 로 걸지 못한다 (새 GPU 잡이 떠도 시작한다)
+[2026-10-06 05:25:17] 랭크 NP=1 · GPU 1 장 · pseudo=/home/kgy/work/pseudo (PSEUDO_DIR 로 교체)
+[2026-10-06 05:25:17] PP Ag_ONCV_PBE-1.0.oncvpsp.upf sha256 0494aa5927b754b4 · 기준과 같음 ✓
+[2026-10-06 05:25:17] PP C.pbe-n-kjpaw_psl.1.0.0.UPF sha256 9900d1efd50b9848 · 기준과 같음 ✓
+[2026-10-06 05:25:17] 디스크 289G 남음 (67% 사용)
+[2026-10-06 05:25:17] ⚠ GPU 사용량 5624 MiB 인데 프로세스 목록이 비었다 — 프로세스별 정보가 막힌 기계다.
+[2026-10-06 05:25:17]    nvidia-smi 원문: Process-level GPU information is restricted.
+[2026-10-06 05:25:17]    UMA 판정·ONLY_PIDS 가 여기서는 **작동하지 않는다**. 남는 가드는 합계 VRAM·호스트 RAM 뿐이다.
+[2026-10-06 05:25:17] GPU 합계 사용량 지금 5624 MiB · 호스트 MemAvailable 56925 MiB (시작 문턱 8192 · 중단 2048)
+[qe_gpu] MPI 를 바이너리에서 읽었다: /home/kgy/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi/lib/libmpi.so.40
+[qe_gpu]   prefix=/home/kgy/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi · mpirun=/home/kgy/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi/bin/mpirun
+[qe_gpu]   ⚠ libnvomp + libgomp 동시 링크 — OMP_NUM_THREADS=1 (libgomp: TODO 회피)
+[2026-10-06 05:25:17] ▶ AGC_N3_hollow_fcc_K9_far (scf) 시작 · GPU 합계 5624 MiB · 호스트 여유 56916 MiB
+[2026-10-06 05:25:18]    래퍼(mpirun) PID 386130 · pw.x PID 386148
+[2026-10-06 05:25:47]    ⚠ nvidia-smi 목록에 우리 pw.x(386148) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)
+[2026-10-06 06:50:10] ■ AGC_N3_hollow_fcc_K9_far rc=0 완료=1 벽시계 5092s · 피크 합계 10105 MiB · 자기 — MiB · 호스트 최저 55752 MiB · 중단=0
+[2026-10-06 06:50:10] ✅ 전부 완료 — 집계: python3 tools/wad/se_sym_slab.py --collect /home/kgy/work/runs/wad_agc_graphite_2026_10_02/k9set --qe_in /home/kgy/wt_agck9_1005/db/inputs/wad_agc_graphite_2026_10_02/k9set/qe
+[2026-10-06 06:50:10] ════ run_sese_gpu · IN=/home/kgy/wt_agck9_1005/db/inputs/wad_agc_graphite_2026_10_02/k9set/qe · RUN=/home/kgy/work/runs/wad_agc_graphite_2026_10_02/k9set · JOBS=[AGC_N3_s01_K9_bound]
+[2026-10-06 06:50:10] 공존 근거: D-2026-10-05-wad-agc-graphite-k9-registry · START<12000 MiB · KILL>23000 MiB · 표본 2s · UMA 공존 허용=1 · 허용 PID=[제한 없음]
+[2026-10-06 06:50:10] 공존 근거 D-2026-10-05-wad-agc-graphite-k9-registry — 원장에서 active
+[2026-10-06 06:50:10] ⚠ UMA 공존을 켰는데 ONLY_PIDS 가 비었다 — 공존 조건을 PID 로 걸지 못한다 (새 GPU 잡이 떠도 시작한다)
+[2026-10-06 06:50:10] 랭크 NP=1 · GPU 1 장 · pseudo=/home/kgy/work/pseudo (PSEUDO_DIR 로 교체)
+[2026-10-06 06:50:10] PP Ag_ONCV_PBE-1.0.oncvpsp.upf sha256 0494aa5927b754b4 · 기준과 같음 ✓
+[2026-10-06 06:50:10] PP C.pbe-n-kjpaw_psl.1.0.0.UPF sha256 9900d1efd50b9848 · 기준과 같음 ✓
+[2026-10-06 06:50:10] 디스크 289G 남음 (67% 사용)
+[2026-10-06 06:50:10] ⚠ GPU 사용량 5624 MiB 인데 프로세스 목록이 비었다 — 프로세스별 정보가 막힌 기계다.
+[2026-10-06 06:50:10]    nvidia-smi 원문: Process-level GPU information is restricted.
+[2026-10-06 06:50:10]    UMA 판정·ONLY_PIDS 가 여기서는 **작동하지 않는다**. 남는 가드는 합계 VRAM·호스트 RAM 뿐이다.
+[2026-10-06 06:50:10] GPU 합계 사용량 지금 5624 MiB · 호스트 MemAvailable 56912 MiB (시작 문턱 8192 · 중단 2048)
+[qe_gpu] MPI 를 바이너리에서 읽었다: /home/kgy/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi/lib/libmpi.so.40
+[qe_gpu]   prefix=/home/kgy/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi · mpirun=/home/kgy/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi/bin/mpirun
+[qe_gpu]   ⚠ libnvomp + libgomp 동시 링크 — OMP_NUM_THREADS=1 (libgomp: TODO 회피)
+[2026-10-06 06:50:10] ▶ AGC_N3_s01_K9_bound (scf) 시작 · GPU 합계 5624 MiB · 호스트 여유 56906 MiB
+[2026-10-06 06:50:11]    래퍼(mpirun) PID 449070 · pw.x PID 449088
+[2026-10-06 06:50:40]    ⚠ nvidia-smi 목록에 우리 pw.x(449088) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)
+[2026-10-06 08:58:24] ■ AGC_N3_s01_K9_bound rc=0 완료=1 벽시계 7693s · 피크 합계 10106 MiB · 자기 — MiB · 호스트 최저 55782 MiB · 중단=0
+[2026-10-06 08:58:24] ✅ 전부 완료 — 집계: python3 tools/wad/se_sym_slab.py --collect /home/kgy/work/runs/wad_agc_graphite_2026_10_02/k9set --qe_in /home/kgy/wt_agck9_1005/db/inputs/wad_agc_graphite_2026_10_02/k9set/qe
+[2026-10-06 08:58:24] ════ run_sese_gpu · IN=/home/kgy/wt_agck9_1005/db/inputs/wad_agc_graphite_2026_10_02/k9set/qe · RUN=/home/kgy/work/runs/wad_agc_graphite_2026_10_02/k9set · JOBS=[AGC_N3_s01_K9_far]
+[2026-10-06 08:58:24] 공존 근거: D-2026-10-05-wad-agc-graphite-k9-registry · START<12000 MiB · KILL>23000 MiB · 표본 2s · UMA 공존 허용=1 · 허용 PID=[제한 없음]
+[2026-10-06 08:58:24] 공존 근거 D-2026-10-05-wad-agc-graphite-k9-registry — 원장에서 active
+[2026-10-06 08:58:24] ⚠ UMA 공존을 켰는데 ONLY_PIDS 가 비었다 — 공존 조건을 PID 로 걸지 못한다 (새 GPU 잡이 떠도 시작한다)
+[2026-10-06 08:58:24] 랭크 NP=1 · GPU 1 장 · pseudo=/home/kgy/work/pseudo (PSEUDO_DIR 로 교체)
+[2026-10-06 08:58:24] PP Ag_ONCV_PBE-1.0.oncvpsp.upf sha256 0494aa5927b754b4 · 기준과 같음 ✓
+[2026-10-06 08:58:24] PP C.pbe-n-kjpaw_psl.1.0.0.UPF sha256 9900d1efd50b9848 · 기준과 같음 ✓
+[2026-10-06 08:58:24] 디스크 289G 남음 (67% 사용)
+[2026-10-06 08:58:24] ⚠ GPU 사용량 5624 MiB 인데 프로세스 목록이 비었다 — 프로세스별 정보가 막힌 기계다.
+[2026-10-06 08:58:24]    nvidia-smi 원문: Process-level GPU information is restricted.
+[2026-10-06 08:58:24]    UMA 판정·ONLY_PIDS 가 여기서는 **작동하지 않는다**. 남는 가드는 합계 VRAM·호스트 RAM 뿐이다.
+[2026-10-06 08:58:24] GPU 합계 사용량 지금 5624 MiB · 호스트 MemAvailable 56912 MiB (시작 문턱 8192 · 중단 2048)
+[qe_gpu] MPI 를 바이너리에서 읽었다: /home/kgy/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi/lib/libmpi.so.40
+[qe_gpu]   prefix=/home/kgy/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi · mpirun=/home/kgy/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi/bin/mpirun
+[qe_gpu]   ⚠ libnvomp + libgomp 동시 링크 — OMP_NUM_THREADS=1 (libgomp: TODO 회피)
+[2026-10-06 08:58:24] ▶ AGC_N3_s01_K9_far (scf) 시작 · GPU 합계 5624 MiB · 호스트 여유 56907 MiB
+[2026-10-06 08:58:25]    래퍼(mpirun) PID 542397 · pw.x PID 542415
+[2026-10-06 08:58:54]    ⚠ nvidia-smi 목록에 우리 pw.x(542415) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)
+[2026-10-06 10:15:59] ■ AGC_N3_s01_K9_far rc=0 완료=1 벽시계 4654s · 피크 합계 10465 MiB · 자기 — MiB · 호스트 최저 55786 MiB · 중단=0
+[2026-10-06 10:15:59] ✅ 전부 완료 — 집계: python3 tools/wad/se_sym_slab.py --collect /home/kgy/work/runs/wad_agc_graphite_2026_10_02/k9set --qe_in /home/kgy/wt_agck9_1005/db/inputs/wad_agc_graphite_2026_10_02/k9set/qe
+[2026-10-06 10:15:59] ════ run_sese_gpu · IN=/home/kgy/wt_agck9_1005/db/inputs/wad_agc_graphite_2026_10_02/k9set/qe · RUN=/home/kgy/work/runs/wad_agc_graphite_2026_10_02/k9set · JOBS=[AGC_N4_top_fcc_K9_bound]
+[2026-10-06 10:15:59] 공존 근거: D-2026-10-05-wad-agc-graphite-k9-registry · START<12000 MiB · KILL>23000 MiB · 표본 2s · UMA 공존 허용=1 · 허용 PID=[제한 없음]
+[2026-10-06 10:15:59] 공존 근거 D-2026-10-05-wad-agc-graphite-k9-registry — 원장에서 active
+[2026-10-06 10:15:59] ⚠ UMA 공존을 켰는데 ONLY_PIDS 가 비었다 — 공존 조건을 PID 로 걸지 못한다 (새 GPU 잡이 떠도 시작한다)
+[2026-10-06 10:15:59] 랭크 NP=1 · GPU 1 장 · pseudo=/home/kgy/work/pseudo (PSEUDO_DIR 로 교체)
+[2026-10-06 10:15:59] PP Ag_ONCV_PBE-1.0.oncvpsp.upf sha256 0494aa5927b754b4 · 기준과 같음 ✓
+[2026-10-06 10:15:59] PP C.pbe-n-kjpaw_psl.1.0.0.UPF sha256 9900d1efd50b9848 · 기준과 같음 ✓
+[2026-10-06 10:15:59] 디스크 289G 남음 (67% 사용)
+[2026-10-06 10:15:59] ⚠ GPU 사용량 5984 MiB 인데 프로세스 목록이 비었다 — 프로세스별 정보가 막힌 기계다.
+[2026-10-06 10:15:59]    nvidia-smi 원문: Process-level GPU information is restricted.
+[2026-10-06 10:15:59]    UMA 판정·ONLY_PIDS 가 여기서는 **작동하지 않는다**. 남는 가드는 합계 VRAM·호스트 RAM 뿐이다.
+[2026-10-06 10:15:59] GPU 합계 사용량 지금 5984 MiB · 호스트 MemAvailable 56887 MiB (시작 문턱 8192 · 중단 2048)
+[qe_gpu] MPI 를 바이너리에서 읽었다: /home/kgy/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi/lib/libmpi.so.40
+[qe_gpu]   prefix=/home/kgy/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi · mpirun=/home/kgy/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi/bin/mpirun
+[qe_gpu]   ⚠ libnvomp + libgomp 동시 링크 — OMP_NUM_THREADS=1 (libgomp: TODO 회피)
+[2026-10-06 10:15:59] ▶ AGC_N4_top_fcc_K9_bound (scf) 시작 · GPU 합계 5984 MiB · 호스트 여유 56888 MiB
+[2026-10-06 10:16:00]    래퍼(mpirun) PID 598937 · pw.x PID 598955
+[2026-10-06 10:16:29]    ⚠ nvidia-smi 목록에 우리 pw.x(598955) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)
+[2026-10-06 14:02:39] ■ AGC_N4_top_fcc_K9_bound rc=0 완료=1 벽시계 13599s · 피크 합계 12242 MiB · 자기 — MiB · 호스트 최저 54633 MiB · 중단=0
+[2026-10-06 14:02:39] ✅ 전부 완료 — 집계: python3 tools/wad/se_sym_slab.py --collect /home/kgy/work/runs/wad_agc_graphite_2026_10_02/k9set --qe_in /home/kgy/wt_agck9_1005/db/inputs/wad_agc_graphite_2026_10_02/k9set/qe
+[2026-10-06 14:02:39] ════ run_sese_gpu · IN=/home/kgy/wt_agck9_1005/db/inputs/wad_agc_graphite_2026_10_02/k9set/qe · RUN=/home/kgy/work/runs/wad_agc_graphite_2026_10_02/k9set · JOBS=[AGC_N4_top_fcc_K9_far]
+[2026-10-06 14:02:39] 공존 근거: D-2026-10-05-wad-agc-graphite-k9-registry · START<12000 MiB · KILL>23000 MiB · 표본 2s · UMA 공존 허용=1 · 허용 PID=[제한 없음]
+[2026-10-06 14:02:39] 공존 근거 D-2026-10-05-wad-agc-graphite-k9-registry — 원장에서 active
+[2026-10-06 14:02:39] ⚠ UMA 공존을 켰는데 ONLY_PIDS 가 비었다 — 공존 조건을 PID 로 걸지 못한다 (새 GPU 잡이 떠도 시작한다)
+[2026-10-06 14:02:39] 랭크 NP=1 · GPU 1 장 · pseudo=/home/kgy/work/pseudo (PSEUDO_DIR 로 교체)
+[2026-10-06 14:02:39] PP Ag_ONCV_PBE-1.0.oncvpsp.upf sha256 0494aa5927b754b4 · 기준과 같음 ✓
+[2026-10-06 14:02:39] PP C.pbe-n-kjpaw_psl.1.0.0.UPF sha256 9900d1efd50b9848 · 기준과 같음 ✓
+[2026-10-06 14:02:39] 디스크 289G 남음 (67% 사용)
+[2026-10-06 14:02:39] ⚠ GPU 사용량 5984 MiB 인데 프로세스 목록이 비었다 — 프로세스별 정보가 막힌 기계다.
+[2026-10-06 14:02:39]    nvidia-smi 원문: Process-level GPU information is restricted.
+[2026-10-06 14:02:39]    UMA 판정·ONLY_PIDS 가 여기서는 **작동하지 않는다**. 남는 가드는 합계 VRAM·호스트 RAM 뿐이다.
+[2026-10-06 14:02:39] GPU 합계 사용량 지금 5984 MiB · 호스트 MemAvailable 56963 MiB (시작 문턱 8192 · 중단 2048)
+[qe_gpu] MPI 를 바이너리에서 읽었다: /home/kgy/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi/lib/libmpi.so.40
+[qe_gpu]   prefix=/home/kgy/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi · mpirun=/home/kgy/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi/bin/mpirun
+[qe_gpu]   ⚠ libnvomp + libgomp 동시 링크 — OMP_NUM_THREADS=1 (libgomp: TODO 회피)
+[2026-10-06 14:02:39] ▶ AGC_N4_top_fcc_K9_far (scf) 시작 · GPU 합계 5984 MiB · 호스트 여유 56958 MiB
+[2026-10-06 14:02:40]    래퍼(mpirun) PID 767870 · pw.x PID 767888
+[2026-10-06 14:03:09]    ⚠ nvidia-smi 목록에 우리 pw.x(767888) 가 안 보인다 — 컨테이너 PID 이름공간이 다르거나 프로세스 정보가 막혔다. 자기 VRAM 칸은 '—' 로 적는다 (0 이 아니다)
+[2026-10-06 15:51:39] ■ AGC_N4_top_fcc_K9_far rc=0 완료=1 벽시계 6539s · 피크 합계 12241 MiB · 자기 — MiB · 호스트 최저 55734 MiB · 중단=0
+[2026-10-06 15:51:39] ✅ 전부 완료 — 집계: python3 tools/wad/se_sym_slab.py --collect /home/kgy/work/runs/wad_agc_graphite_2026_10_02/k9set --qe_in /home/kgy/wt_agck9_1005/db/inputs/wad_agc_graphite_2026_10_02/k9set/qe
