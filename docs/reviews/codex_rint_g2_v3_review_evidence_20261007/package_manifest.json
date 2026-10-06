@@ -1,0 +1,99 @@
+{
+  "schema": "review_evidence_package/v1",
+  "pin": "c3ff4408c513f8fea78eb342619a185b13184d41",
+  "scope": "Rint G2 v3 design review; no production implementation or campaign",
+  "checks": {
+    "source_git_blobs": "9/9",
+    "review_questions": "R1-R9",
+    "probe_evidence": "PASS",
+    "meaning": "artifact completeness, not production GO"
+  },
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 4416,
+      "sha256": "bd0892c943c5a48102990d2efc8325cb26a6b7c624dcc9dd58fed59ff00349a2"
+    },
+    {
+      "path": "codex_review_rint_g2_v3_20261007.md",
+      "bytes": 24355,
+      "sha256": "913a8339a7a58c38c9daee066e46c349b80463a10d7c11eb29ec9f5ea8719005"
+    },
+    {
+      "path": "evidence.json",
+      "bytes": 6726,
+      "sha256": "ec5919e4dbca65f918d1023e3d42c71db828c4865cc38d7de51dbe7ef91fd90b"
+    },
+    {
+      "path": "evidence_v3.json",
+      "bytes": 9079,
+      "sha256": "22f30296118f5bffe462ae51af61415d12e042e6ae0babdc39ac136bc7b77ff0"
+    },
+    {
+      "path": "package_review.py",
+      "bytes": 4825,
+      "sha256": "76c55a49b6d3ad0591792b20ec792a18fdf0cb9ba9d0938cf4b84207a48a8b4b"
+    },
+    {
+      "path": "probe_prior.py",
+      "bytes": 7503,
+      "sha256": "53397815ac03c29be1f9a2f7226daeb9c3a8ffbf0371cef70f0507afdf9f2d9f"
+    },
+    {
+      "path": "probe_v3.py",
+      "bytes": 12610,
+      "sha256": "6a3301687c6c26217d23cb4a3a9eea4daf6df4235aa2ad05df4fff7aec4c794d"
+    },
+    {
+      "path": "source/AGENTS.md",
+      "bytes": 2822,
+      "sha256": "38b8708ba8a50c8a08819c7c4138763bce02b6dc6c5b8112f4c8aa386fb17ec3"
+    },
+    {
+      "path": "source/docs/reviews/codex_review_rint_g2_design_20261006.md",
+      "bytes": 31981,
+      "sha256": "ffbdabb5e8d2b089504011b303ac99b855a1fb80b21f22615e1ccdc6cb467c1d"
+    },
+    {
+      "path": "source/docs/reviews/codex_rint_g2_rereview_request_20261006.md",
+      "bytes": 8032,
+      "sha256": "649bc7a3c2798c398851528bd0d94133993c491712fc9a8731a4259f9e743876"
+    },
+    {
+      "path": "source/docs/reviews/contact_resistance_pipeline_draft_20261002.md",
+      "bytes": 28169,
+      "sha256": "59de3077dfa1fcfb970c459488496ab9fa04d39b2bb99d16b2e67f01d1c35e5d"
+    },
+    {
+      "path": "source/docs/reviews/contact_resistance_pipeline_draft_v2_20261006.md",
+      "bytes": 61540,
+      "sha256": "e276b2cd52fa3e5fe069cf10f08eb81a43716957f474f728363f1f32aa0418bc"
+    },
+    {
+      "path": "source/docs/reviews/contact_resistance_pipeline_draft_v3_20261006.md",
+      "bytes": 49425,
+      "sha256": "2fa89aaf4ed95e370144e68cab4f99860994ad7e65d794f31b483a9e739707f9"
+    },
+    {
+      "path": "source/scripts/lens_geometry.py",
+      "bytes": 5907,
+      "sha256": "891ac67f8b6c1b4c7978b5e806800ae74f5c8791928d6ece19a29e5f3b212b77"
+    },
+    {
+      "path": "source/scripts/se_material.py",
+      "bytes": 23261,
+      "sha256": "767a6a383d4581274b07ee79146a53fbe118f1f6eb0acb9ec0a5af21c9c9930c"
+    },
+    {
+      "path": "source/scripts/step3_sigma.py",
+      "bytes": 275510,
+      "sha256": "23f1e22e7a83b444dbd3c44786cd3de98b679ca3abff5c327b27e58de9d0ee39"
+    },
+    {
+      "path": "source_manifest.json",
+      "bytes": 1265,
+      "sha256": "adcfc19f49d409628f9baaf42f8a5f39cc683c8d04d1ca96f1e51ef9a2884d3c"
+    }
+  ],
+  "self_exclusion": "package_manifest.json hashes the listed files, not itself"
+}

@@ -1,0 +1,116 @@
+{
+  "worktree_blobs": {
+    "docs/reviews/codex_review_rint_g2_design_20261006.md": {
+      "worktree_blob": "d4a2b26595b98671bc0f9085ec6c0bfb7c99a99d",
+      "pin_blob": "d4a2b26595b98671bc0f9085ec6c0bfb7c99a99d",
+      "same": true
+    },
+    "AGENTS.md": {
+      "worktree_blob": "2829b46196a08ffae439ddbdc20dc093cde511c4",
+      "pin_blob": "2829b46196a08ffae439ddbdc20dc093cde511c4",
+      "same": true
+    },
+    "docs/reviews/contact_resistance_pipeline_draft_v3_20261006.md": {
+      "worktree_blob": "21558d722d0139556b4dc6d19ed8966a466d22ea",
+      "pin_blob": "21558d722d0139556b4dc6d19ed8966a466d22ea",
+      "same": true
+    },
+    "docs/reviews/contact_resistance_pipeline_draft_v2_20261006.md": {
+      "worktree_blob": "b0f9e2789480e2a53cc4267b6390eb715493bca4",
+      "pin_blob": "b0f9e2789480e2a53cc4267b6390eb715493bca4",
+      "same": true
+    },
+    "docs/reviews/contact_resistance_pipeline_draft_20261002.md": {
+      "worktree_blob": "30f14ecf5c2f32a65795fc5e56ae6c79fd2fdaba",
+      "pin_blob": "30f14ecf5c2f32a65795fc5e56ae6c79fd2fdaba",
+      "same": true
+    },
+    "docs/reviews/codex_rint_g2_rereview_request_20261006.md": {
+      "worktree_blob": "c9ae2ec904d11a5edf67f583d69a5efddbb9f9cd",
+      "pin_blob": "c9ae2ec904d11a5edf67f583d69a5efddbb9f9cd",
+      "same": true
+    },
+    "scripts/step3_sigma.py": {
+      "worktree_blob": "4b33c7a4526f2d55dfbdefa3257e36619a9e4136",
+      "pin_blob": "4b33c7a4526f2d55dfbdefa3257e36619a9e4136",
+      "same": true
+    },
+    "scripts/lens_geometry.py": {
+      "worktree_blob": "53a20c31554740957c21a0fa52362df0b000cc97",
+      "pin_blob": "53a20c31554740957c21a0fa52362df0b000cc97",
+      "same": true
+    },
+    "scripts/se_material.py": {
+      "worktree_blob": "506caca0f8744ee89836a026685f0730ef478f94",
+      "pin_blob": "506caca0f8744ee89836a026685f0730ef478f94",
+      "same": true
+    }
+  },
+  "runs": {
+    "checkout": {
+      "probes": {
+        "probe_v3.py": {
+          "rc": 0,
+          "stderr_tail": []
+        },
+        "probe_prior.py": {
+          "rc": 0,
+          "stderr_tail": []
+        }
+      },
+      "new_files": [
+        "evidence.json",
+        "evidence_v3.json",
+        "probe_prior.py.stderr.txt",
+        "probe_prior.py.stdout.txt",
+        "probe_v3.py.stderr.txt",
+        "probe_v3.py.stdout.txt"
+      ],
+      "changed_files": []
+    },
+    "headcopy": {
+      "probes": {
+        "probe_v3.py": {
+          "rc": 0,
+          "stderr_tail": []
+        },
+        "probe_prior.py": {
+          "rc": 0,
+          "stderr_tail": []
+        }
+      },
+      "new_files": [
+        "evidence.json",
+        "evidence_v3.json",
+        "probe_prior.py.stderr.txt",
+        "probe_prior.py.stdout.txt",
+        "probe_v3.py.stderr.txt",
+        "probe_v3.py.stdout.txt"
+      ],
+      "changed_files": []
+    },
+    "negctl": {
+      "probes": {
+        "probe_v3.py": {
+          "rc": 1,
+          "stderr_tail": [
+            "AssertionError: ('docs/reviews/contact_resistance_pipeline_draft_v3_20261006.md', '808ae4f6acda45e165f4c869e8fc3c2edb7a653a', '21558d722d0139556b4dc6d19ed8966a466d22ea')"
+          ]
+        },
+        "probe_prior.py": {
+          "rc": 1,
+          "stderr_tail": [
+            "AssertionError: ('docs/reviews/contact_resistance_pipeline_draft_v3_20261006.md', '808ae4f6acda45e165f4c869e8fc3c2edb7a653a', '21558d722d0139556b4dc6d19ed8966a466d22ea')"
+          ]
+        }
+      },
+      "new_files": [
+        "probe_prior.py.stderr.txt",
+        "probe_prior.py.stdout.txt",
+        "probe_v3.py.stderr.txt",
+        "probe_v3.py.stdout.txt"
+      ],
+      "changed_files": []
+    }
+  }
+}

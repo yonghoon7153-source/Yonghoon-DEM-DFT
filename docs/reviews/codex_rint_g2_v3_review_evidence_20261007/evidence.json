@@ -1,0 +1,201 @@
+{
+  "environment": {
+    "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+    "numpy": "2.3.5",
+    "scipy": "1.16.3"
+  },
+  "source_verification": [
+    {
+      "path": "docs/reviews/codex_review_rint_g2_design_20261006.md",
+      "git_blob": "d4a2b26595b98671bc0f9085ec6c0bfb7c99a99d",
+      "sha256": "ffbdabb5e8d2b089504011b303ac99b855a1fb80b21f22615e1ccdc6cb467c1d"
+    },
+    {
+      "path": "AGENTS.md",
+      "git_blob": "2829b46196a08ffae439ddbdc20dc093cde511c4",
+      "sha256": "38b8708ba8a50c8a08819c7c4138763bce02b6dc6c5b8112f4c8aa386fb17ec3"
+    },
+    {
+      "path": "docs/reviews/contact_resistance_pipeline_draft_v3_20261006.md",
+      "git_blob": "21558d722d0139556b4dc6d19ed8966a466d22ea",
+      "sha256": "2fa89aaf4ed95e370144e68cab4f99860994ad7e65d794f31b483a9e739707f9"
+    },
+    {
+      "path": "docs/reviews/contact_resistance_pipeline_draft_v2_20261006.md",
+      "git_blob": "b0f9e2789480e2a53cc4267b6390eb715493bca4",
+      "sha256": "e276b2cd52fa3e5fe069cf10f08eb81a43716957f474f728363f1f32aa0418bc"
+    },
+    {
+      "path": "docs/reviews/contact_resistance_pipeline_draft_20261002.md",
+      "git_blob": "30f14ecf5c2f32a65795fc5e56ae6c79fd2fdaba",
+      "sha256": "59de3077dfa1fcfb970c459488496ab9fa04d39b2bb99d16b2e67f01d1c35e5d"
+    },
+    {
+      "path": "docs/reviews/codex_rint_g2_rereview_request_20261006.md",
+      "git_blob": "c9ae2ec904d11a5edf67f583d69a5efddbb9f9cd",
+      "sha256": "649bc7a3c2798c398851528bd0d94133993c491712fc9a8731a4259f9e743876"
+    },
+    {
+      "path": "scripts/step3_sigma.py",
+      "git_blob": "4b33c7a4526f2d55dfbdefa3257e36619a9e4136",
+      "sha256": "23f1e22e7a83b444dbd3c44786cd3de98b679ca3abff5c327b27e58de9d0ee39"
+    },
+    {
+      "path": "scripts/lens_geometry.py",
+      "git_blob": "53a20c31554740957c21a0fa52362df0b000cc97",
+      "sha256": "891ac67f8b6c1b4c7978b5e806800ae74f5c8791928d6ece19a29e5f3b212b77"
+    },
+    {
+      "path": "scripts/se_material.py",
+      "git_blob": "506caca0f8744ee89836a026685f0730ef478f94",
+      "sha256": "767a6a383d4581274b07ee79146a53fbe118f1f6eb0acb9ec0a5af21c9c9930c"
+    }
+  ],
+  "radical_plane_um": {
+    "plane": 5.987578616352201,
+    "bridge": 5.975,
+    "offset": 0.0125786163522017
+  },
+  "E4_area_factor": {
+    "h_um": 0.2,
+    "rface_ohm_cm2": 0.01024,
+    "R_half_reduced": 20.0,
+    "rprime_reduced": 102.4,
+    "g_code": 0.00032679738562091506,
+    "actual_function_g_code": [
+      0.00032679738562091506
+    ],
+    "printed_Icode_squared_rprime_over_P": 0.0334640522875817,
+    "correct_film_share": 0.8366013071895424,
+    "log_derivative_FD": 0.8366013071636756,
+    "correct_to_printed_ratio": 24.999999999999996
+  },
+  "support_smearing_continuum": {
+    "a_um": 0.14106735979665894,
+    "Atrue_um2": 0.06251769380643697,
+    "lens_function_area_um2": 0.06251769380643697,
+    "b_um": 0.24,
+    "beta_per_um": 4.0,
+    "sum_g_same": true,
+    "P_true_div_G": 1.0796000000000001,
+    "P_smeared_div_G": 1.2304,
+    "P_relative_difference": 0.13968136346795101,
+    "support_area_ratio": 2.894472361809041,
+    "masked_two_parallel_patches": {
+      "before_R": 1.0,
+      "remove_one_fixed_patch_R": 2.0,
+      "renormalize_full_area_onto_remaining_R": 1.0
+    }
+  },
+  "sphere_dilution_false_pass": {
+    "sigma_eq": 0.9090909090909091,
+    "beta_correct": -0.03125000000000001,
+    "beta_film_deleted": 0.75,
+    "polarizability_error": 0.78125,
+    "rows": [
+      {
+        "outer_radius_over_a": 5.0,
+        "volume_fraction": 0.008,
+        "correct_k": 0.9992501874531367,
+        "film_deleted_k": 1.0181086519114688,
+        "absolute_difference": 0.01885846445833217,
+        "difference_div_volume_fraction": 2.357308057291521
+      },
+      {
+        "outer_radius_over_a": 10.0,
+        "volume_fraction": 0.001,
+        "correct_k": 0.999906252929596,
+        "film_deleted_k": 1.002251688766575,
+        "absolute_difference": 0.002345435836979104,
+        "difference_div_volume_fraction": 2.345435836979104
+      },
+      {
+        "outer_radius_over_a": 20.0,
+        "volume_fraction": 0.000125,
+        "correct_k": 0.9999882812957762,
+        "film_deleted_k": 1.0002812763696596,
+        "absolute_difference": 0.000292995073883362,
+        "difference_div_volume_fraction": 2.343960591066896
+      },
+      {
+        "outer_radius_over_a": 40.0,
+        "volume_fraction": 1.5625e-05,
+        "correct_k": 0.9999985351569651,
+        "film_deleted_k": 1.000035156661992,
+        "absolute_difference": 3.662150502692363e-05,
+        "difference_div_volume_fraction": 2.3437763217231122
+      },
+      {
+        "outer_radius_over_a": 80.0,
+        "volume_fraction": 1.953125e-06,
+        "correct_k": 0.9999998168945424,
+        "film_deleted_k": 1.0000043945376873,
+        "absolute_difference": 4.577643144876298e-06,
+        "difference_div_volume_fraction": 2.3437532901766644
+      }
+    ]
+  },
+  "actual_raster_order": {
+    "R_um": 1.0,
+    "delta_um": 0.1,
+    "vox_um": 0.1,
+    "bridge_um": 0.24,
+    "changed_sid_cells": 16,
+    "rows": [
+      {
+        "permutation": [
+          0,
+          1
+        ],
+        "sigma_eff_S_cm": 0.0017728521965377632,
+        "unconverged": false,
+        "cg_info": 0,
+        "resid": 9.929196490428454e-09,
+        "sid1_cells": 4172,
+        "sid2_cells": 4244
+      },
+      {
+        "permutation": [
+          1,
+          0
+        ],
+        "sigma_eff_S_cm": 0.0018568975000462676,
+        "unconverged": false,
+        "cg_info": 0,
+        "resid": 9.801807272078137e-09,
+        "sid1_cells": 4188,
+        "sid2_cells": 4228
+      }
+    ],
+    "relative_sigma_change": 0.04740683045808214
+  },
+  "units_direct_vs_face": {
+    "face_physical_G_S": 0.00999999000001,
+    "direct_physical_G_S": 0.01,
+    "halfcell_total_R_ohm": 0.0001
+  },
+  "fiber_sphere_threshold": {
+    "r_f_um": 0.075,
+    "r_AM_um": 2.0,
+    "distance_um": 2.12,
+    "correct_contact_threshold_um": 2.075,
+    "literal_J2_threshold_um": 2.15,
+    "correct_contact": false,
+    "literal_J2_contact": true
+  },
+  "multiclass_envelope": {
+    "R_total_ohm": 6.0,
+    "share_A": 0.16666666666666666,
+    "share_B": 0.3333333333333333,
+    "joint_log_derivative": 0.5,
+    "all_resistance_log_gain": -0.6931471805599453,
+    "only_A_integral_while_both_scaled": -0.23104906018664842
+  },
+  "mms_sign_check": {
+    "normal_from_1_to_2": true,
+    "normal_flux_1": -6.4,
+    "normal_flux_2": -6.400000000000001,
+    "phi1_minus_phi2": -0.6400000000000001,
+    "r_times_Jn": -0.6400000000000001
+  }
+}

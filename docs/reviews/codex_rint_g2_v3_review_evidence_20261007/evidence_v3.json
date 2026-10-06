@@ -1,0 +1,412 @@
+{
+  "pin": "c3ff4408c513f8fea78eb342619a185b13184d41",
+  "source_verification": [
+    {
+      "path": "docs/reviews/codex_review_rint_g2_design_20261006.md",
+      "git_blob": "d4a2b26595b98671bc0f9085ec6c0bfb7c99a99d",
+      "sha256": "ffbdabb5e8d2b089504011b303ac99b855a1fb80b21f22615e1ccdc6cb467c1d"
+    },
+    {
+      "path": "AGENTS.md",
+      "git_blob": "2829b46196a08ffae439ddbdc20dc093cde511c4",
+      "sha256": "38b8708ba8a50c8a08819c7c4138763bce02b6dc6c5b8112f4c8aa386fb17ec3"
+    },
+    {
+      "path": "docs/reviews/contact_resistance_pipeline_draft_v3_20261006.md",
+      "git_blob": "21558d722d0139556b4dc6d19ed8966a466d22ea",
+      "sha256": "2fa89aaf4ed95e370144e68cab4f99860994ad7e65d794f31b483a9e739707f9"
+    },
+    {
+      "path": "docs/reviews/contact_resistance_pipeline_draft_v2_20261006.md",
+      "git_blob": "b0f9e2789480e2a53cc4267b6390eb715493bca4",
+      "sha256": "e276b2cd52fa3e5fe069cf10f08eb81a43716957f474f728363f1f32aa0418bc"
+    },
+    {
+      "path": "docs/reviews/contact_resistance_pipeline_draft_20261002.md",
+      "git_blob": "30f14ecf5c2f32a65795fc5e56ae6c79fd2fdaba",
+      "sha256": "59de3077dfa1fcfb970c459488496ab9fa04d39b2bb99d16b2e67f01d1c35e5d"
+    },
+    {
+      "path": "docs/reviews/codex_rint_g2_rereview_request_20261006.md",
+      "git_blob": "c9ae2ec904d11a5edf67f583d69a5efddbb9f9cd",
+      "sha256": "649bc7a3c2798c398851528bd0d94133993c491712fc9a8731a4259f9e743876"
+    },
+    {
+      "path": "scripts/step3_sigma.py",
+      "git_blob": "4b33c7a4526f2d55dfbdefa3257e36619a9e4136",
+      "sha256": "23f1e22e7a83b444dbd3c44786cd3de98b679ca3abff5c327b27e58de9d0ee39"
+    },
+    {
+      "path": "scripts/lens_geometry.py",
+      "git_blob": "53a20c31554740957c21a0fa52362df0b000cc97",
+      "sha256": "891ac67f8b6c1b4c7978b5e806800ae74f5c8791928d6ece19a29e5f3b212b77"
+    },
+    {
+      "path": "scripts/se_material.py",
+      "git_blob": "506caca0f8744ee89836a026685f0730ef478f94",
+      "sha256": "767a6a383d4581274b07ee79146a53fbe118f1f6eb0acb9ec0a5af21c9c9930c"
+    }
+  ],
+  "environment": {
+    "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+    "numpy": "2.3.5",
+    "scipy": "1.16.3"
+  },
+  "epsilon_tie": {
+    "epsilon_um2": 1e-06,
+    "centers_um": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        2.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "radii_um": [
+      0.9999992499997188,
+      1.4142132972080272,
+      2.23606797749979
+    ],
+    "power_um2": [
+      -0.9999985000000001,
+      -0.9999992499999999,
+      -1.0000000000000009
+    ],
+    "pair_winners": {
+      "0_vs_1": 0,
+      "1_vs_2": 1,
+      "2_vs_0": 2
+    },
+    "sequential_results": [
+      {
+        "input": [
+          0,
+          1,
+          2
+        ],
+        "winner": 2
+      },
+      {
+        "input": [
+          0,
+          2,
+          1
+        ],
+        "winner": 1
+      },
+      {
+        "input": [
+          1,
+          0,
+          2
+        ],
+        "winner": 2
+      },
+      {
+        "input": [
+          1,
+          2,
+          0
+        ],
+        "winner": 0
+      },
+      {
+        "input": [
+          2,
+          0,
+          1
+        ],
+        "winner": 1
+      },
+      {
+        "input": [
+          2,
+          1,
+          0
+        ],
+        "winner": 0
+      }
+    ],
+    "global_min_epsilon_band": [
+      1,
+      2
+    ],
+    "global_band_winner": 1,
+    "set_rule_results": [
+      {
+        "input": [
+          0,
+          1,
+          2
+        ],
+        "winner": 1
+      },
+      {
+        "input": [
+          0,
+          2,
+          1
+        ],
+        "winner": 1
+      },
+      {
+        "input": [
+          1,
+          0,
+          2
+        ],
+        "winner": 1
+      },
+      {
+        "input": [
+          1,
+          2,
+          0
+        ],
+        "winner": 1
+      },
+      {
+        "input": [
+          2,
+          0,
+          1
+        ],
+        "winner": 1
+      },
+      {
+        "input": [
+          2,
+          1,
+          0
+        ],
+        "winner": 1
+      }
+    ],
+    "same_center_unequal_radii_um": [
+      1.0,
+      1.0000002499999687
+    ],
+    "same_center_power_difference": 4.999999998478444e-07
+  },
+  "legacy_AM_mask_permutation": {
+    "found": true,
+    "search_trials": 315,
+    "search_seed": 20261007,
+    "centers_um": [
+      [
+        1.9748831001799216,
+        1.879129304578067,
+        1.7896943576126298
+      ],
+      [
+        1.0611990064053254,
+        0.8549090548944595,
+        1.7364778658264648
+      ]
+    ],
+    "radii_um": [
+      0.534836145277679,
+      0.8437277367739292
+    ],
+    "types": [
+      2,
+      1
+    ],
+    "vox_um": 0.1,
+    "bridge_um": 0.2399999999999998,
+    "box_lo_um": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "box_hi_um": [
+      3.2,
+      3.2,
+      3.2
+    ],
+    "bridge_center_forward_um": [
+      1.6207772046790794,
+      1.482184199398439,
+      1.7690698621138585
+    ],
+    "bridge_center_reverse_um": [
+      1.6207772046790794,
+      1.4821841993984393,
+      1.7690698621138585
+    ],
+    "target_ijk": [
+      15,
+      15,
+      15
+    ],
+    "target_center_um": [
+      1.55,
+      1.55,
+      1.55
+    ],
+    "squared_grid_distance": [
+      5.75999999999999,
+      5.759999999999986
+    ],
+    "squared_bridge_radius_grid": 5.759999999999989,
+    "changed_AM_mask_cells": 1,
+    "changed_ijk": [
+      [
+        15,
+        15,
+        15
+      ]
+    ],
+    "AM_mask_count": [
+      3170,
+      3171
+    ],
+    "sid_at_changed": [
+      [
+        0
+      ],
+      [
+        2
+      ]
+    ]
+  },
+  "fixed_bridge_AM_mask_permutation": {
+    "found": true,
+    "centers_um": [
+      [
+        1.9748831001799223,
+        1.879129304578067,
+        1.7896943576126298
+      ],
+      [
+        1.061199006405326,
+        0.8549090548944595,
+        1.7364778658264648
+      ]
+    ],
+    "radii_um": [
+      0.534836145277679,
+      0.8437277367739292
+    ],
+    "types": [
+      2,
+      1
+    ],
+    "vox_um": 0.1,
+    "bridge_um": 0.24,
+    "box_lo_um": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "box_hi_um": [
+      3.2,
+      3.2,
+      3.2
+    ],
+    "bridge_centers_um": [
+      [
+        1.62077720467908,
+        1.482184199398439,
+        1.7690698621138585
+      ],
+      [
+        1.6207772046790803,
+        1.4821841993984393,
+        1.7690698621138585
+      ]
+    ],
+    "target_center_um": [
+      1.55,
+      1.55,
+      1.55
+    ],
+    "squared_grid_distances": [
+      5.760000000000001,
+      5.759999999999995
+    ],
+    "squared_bridge_radius_grid": 5.76,
+    "changed_AM_mask_cells": 1,
+    "changed_ijk": [
+      [
+        15,
+        15,
+        15
+      ]
+    ],
+    "AM_mask_counts": [
+      3170,
+      3171
+    ],
+    "sid_at_changed": [
+      [
+        0
+      ],
+      [
+        2
+      ]
+    ]
+  },
+  "sphere_bc": {
+    "sigma_i": 10.0,
+    "sigma_m": 1.0,
+    "r_over_a": 1.0,
+    "sigma_eq": 0.9090909090909091,
+    "beta": -0.03125000000000001,
+    "film_deleted_beta": 0.75,
+    "a": 1.0,
+    "L": 5.0,
+    "wrong_remote_coefficient_A": 1.006287726358149,
+    "wrong_dipole_B": 0.7547157947686116,
+    "prescribed_boundary_phi": -5.001250000000001,
+    "wrong_solution_boundary_phi": -5.001250000000001,
+    "beta_inferred_from_prescribed_boundary": -0.03125000000001043,
+    "annulus_r": [
+      2.0,
+      3.0,
+      4.0
+    ],
+    "annulus_phi": [
+      -1.8238965040241448,
+      -2.9350058685446005,
+      -3.977981168259557
+    ],
+    "annulus_fit_A": 1.0062877263581487,
+    "annulus_fit_B": 0.7547157947686128,
+    "beta_from_independent_two_parameter_annulus_fit": 0.7500000000000013,
+    "r_inner_observation": 2.0,
+    "correct_phi_inner": -2.0078125,
+    "film_deleted_phi_inner": -1.8238965040241448,
+    "linear_outer_sphere_keff_over_km": 0.9992501874531367,
+    "normalized_response": -0.09372656835791857,
+    "analytic_normalized_response": -0.09372656835791054,
+    "l_ge_2_exact_continuum_coefficient": 0.0
+  },
+  "carbon_bypass": {
+    "N0": 2,
+    "Nsurv": 1,
+    "fraction_surviving": 0.5,
+    "pure_film_remove_R_ohm": 2.0,
+    "pure_film_renormalize_R_ohm": 1.0,
+    "carbon_bypass_R_ohm": 0.02,
+    "full_remove_R_ohm": 0.019801980198019802,
+    "full_renormalize_R_ohm": 0.0196078431372549,
+    "current_fraction_carbon_remove": 0.9900990099009901,
+    "film_log_sensitivity_remove": 0.009900990099009901,
+    "Nsurv_zero_with_carbon_R_ohm": 0.02
+  },
+  "occlusion_scope": {
+    "quantity": "Nsurv/N0 is support-face fraction, not measured physical exposed area",
+    "N0_zero_policy_required": true,
+    "surv_subset_of_pre_additive_support_required": true
+  }
+}

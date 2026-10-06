@@ -1,6 +1,6 @@
 # 계면 저항 ①′ 면적 규약 — 설계안 v3 (Codex G2 재검토 2 차용 · 계획만 · 코드 변경 0)
 
-> **지위 · 비준** — **§0-2 표 한 곳**에만 적는다 (`RINTG-10`).  이 파일 = 2026-10-06 밤 에이전트 초안 → 10-07 새벽 리포 반입 (내용 그대로 · 반입 조치 = §9-3) · 코드 변경 0.
+> **지위 · 비준** — 📌 **10-07 부터 v3.1 §0-2 한 곳** (`docs/reviews/contact_resistance_pipeline_draft_v3_1_20261007.md` · Codex v3 재검토 뒤 계약 정정 · 1저자 비준 권고대로 · 정본 = v2 + v3 + v3.1 · 겹치면 뒤가 이긴다 — 아래 §0-2 는 반입 당시 기록) · 반입 당시: **§0-2 표 한 곳**에만 적는다 (`RINTG-10`).  이 파일 = 2026-10-06 밤 에이전트 초안 → 10-07 새벽 리포 반입 (내용 그대로 · 반입 조치 = §9-3) · 코드 변경 0.
 > **고치는 대상** — v2 `docs/reviews/contact_resistance_pipeline_draft_v2_20261006.md`.  `v2:L…` = Codex 가 심사한 고정본 (핀 `c859b9d08` · blob `1992522f`) 의 줄 = HEAD `70a6d91a4` 의 같은 줄 (다른 곳은 L158 증거 경로 한 줄).  작성 중 브랜치가 `49fa0b9b6` 로 나아갔으나 (세대 2 G2RR-01 · 7:3 압밀 기록) v1 · v2 · 판정문 · `step3_sigma.py` · CLAUDE.md Rint 절은 바이트 같다.
 > **정본 규칙** — 정본 = **v2 + v3**.  v3 가 고친 자리는 v3 가 이기고, v3 가 언급하지 않은 v2 절은 그대로다.
 > **근거 판정** — Codex G2 `docs/reviews/codex_review_rint_g2_design_20261006.md` (설계 완결 HOLD · 새 생산 P1 없음 · P2 6 · P3 4) · 증거 `docs/reviews/codex_rint_g2_design_review_evidence_20261006/` (`evidence.json` 의 키 이름을 증거 키로 그대로 쓴다).  **원장 `RINTG-NN` = Codex 표기 `RINTG2-NN`** (원장 ID 형식 때문 — 반입 README).

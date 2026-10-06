@@ -1,0 +1,104 @@
+{
+  "inputs": "decimal literals printed in codex_review_rint_g2_v3_20261007.md §2 §3 §5 §7",
+  "numpy": "2.4.6",
+  "python": "3.11.15",
+  "RINTV3_01_eps_tie": {
+    "power_um2": [
+      -0.9999985000000001,
+      -0.9999992499999999,
+      -1.0000000000000009
+    ],
+    "pairwise": {
+      "0_vs_1": 0,
+      "1_vs_2": 1,
+      "2_vs_0": 2
+    },
+    "sequential_fold_winner_by_input_order": {
+      "012": 2,
+      "021": 1,
+      "102": 2,
+      "120": 0,
+      "201": 1,
+      "210": 0
+    },
+    "set_rule_band": [
+      1,
+      2
+    ],
+    "set_rule_winner_by_input_order": {
+      "012": 1,
+      "021": 1,
+      "102": 1,
+      "120": 1,
+      "201": 1,
+      "210": 1
+    },
+    "concentric_power_difference_um2": 4.999999998478444e-07,
+    "concentric_within_eps": true,
+    "concentric_centre_only_key_winner_by_input_order": {
+      "01": 0,
+      "10": 1
+    }
+  },
+  "RINTV3_02_raw_mask": {
+    "orders": {
+      "01": {
+        "bridge_centre_um": [
+          1.62077720467908,
+          1.482184199398439,
+          1.7690698621138585
+        ],
+        "cell_15_15_15_dist2_over_h2": 5.760000000000001,
+        "bridge_r2_over_h2": 5.76,
+        "sid_at_15_15_15": 0,
+        "AM_mask_cells": 3170,
+        "sid1_cells": 618,
+        "sid2_cells": 2552
+      },
+      "10": {
+        "bridge_centre_um": [
+          1.6207772046790803,
+          1.4821841993984393,
+          1.7690698621138585
+        ],
+        "cell_15_15_15_dist2_over_h2": 5.759999999999995,
+        "bridge_r2_over_h2": 5.76,
+        "sid_at_15_15_15": 2,
+        "AM_mask_cells": 3171,
+        "sid1_cells": 618,
+        "sid2_cells": 2553
+      }
+    },
+    "changed_AM_mask_cells": [
+      [
+        15,
+        15,
+        15
+      ]
+    ],
+    "changed_cell_centre_um": [
+      [
+        1.55,
+        1.55,
+        1.55
+      ]
+    ]
+  },
+  "RINTV3_03_beta_q": {
+    "beta": -0.03125,
+    "f": 0.008000000000000002,
+    "keff_over_km": 0.9992501874531367,
+    "q_num": -0.09372656835791857,
+    "q_analytic": -0.09372656835791052,
+    "q_num_minus_q_analytic": -8.049116928532385e-15,
+    "beta_reconstructed_q_over_3_plus_qf": -0.031250000000002685,
+    "wrong_pairing_beta_minus_q_analytic": 0.06247656835791052
+  },
+  "R4_carbon_bypass": {
+    "film2_par_carbon": 0.019801980198019802,
+    "film1_par_carbon": 0.0196078431372549,
+    "film0_carbon_only": 0.02,
+    "carbon_current_share_with_2ohm": 0.9900990099009901,
+    "film_log_sensitivity_with_2ohm": 0.009900990099009901
+  }
+}
