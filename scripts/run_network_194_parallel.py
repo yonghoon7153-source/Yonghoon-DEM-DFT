@@ -32,7 +32,8 @@
     ⓒ 케이스 판정 (`case_seal` — merge · audit · retry 가 같은 함수) — 지금 케이스 기록을 쓴 시도 (record_sha 가 같은 마지막 시도) 로 판정한다:
          SEALED               fp_start = fp_end = 발사 지문 · 시작 · 끝 git sha = 워커 sha = 발사 sha · dirty 아님
          SEALED_DIRTY_ALLOWED 위와 같은데 dirty — 그 실행이 `--allow-dirty` 로 시작돼 기록됐을 때만 (merge 보고 dirty_allowed 에 남는다)
-         SEALED_LEGACY        옛 형식 (시도 지문이 없던 실행기) — 첫 `run` 의 유일한 시도 (그 시도의 결과 = 기록 상태 · run id 같음 =
+         SEALED_LEGACY        옛 형식 (시도 지문이 없던 실행기 · ★ 10-07 G2RR2-01: 등록된 역사 형식 ROOT 의 역사 모드에서만 — 새 실행 형식 ROOT 의
+                              지문 없는 시도 = UNSEALED) — 첫 `run` 의 유일한 시도 (그 시도의 결과 = 기록 상태 · run id 같음 =
                               그 시도가 이 기록을 썼다) · 깨끗한 사전 점검 (manifest git.dirty false, 또는
                               기록이 없고 --allow-dirty 도 아님 — 그때 사전 점검은 dirty 를 거부했다) · runs/run_001 의 code_changed_during_run = []
                               (h0 = h1 · h0 은 manifest 해시와 같은 프로세스에서 곧바로 잰 값) · 워커 runs[] 1 건 (발사 sha · dirty false)
@@ -51,6 +52,17 @@
     ⓖ CODE_FILES = 워커의 망 정지 경로가 import 하는 리포 모듈 전부 (정적 닫힘 `code_dependency_closure` ⊆ CODE_FILES 를 발사 사전 점검이 확인 —
        새 import 가 생기면 발사하지 않는다) · 인계 단계 코드 (생성기 · 다시 읽기 도구) 는 `handover_code_hashes` 로 기록 (봉인 판정 밖 · 후속 명령이 대조).
     ⓗ manifest `input_digest` = 계획 큐 ID · 코호트 · 원자료 sha256 (수확 JSON raw — 워커 같은 프레임 관문의 대조값) 지문 · audit 가 다시 계산해 대조.
+  • ★ 10-07 Codex 세대 2 재검증 2 (`docs/reviews/codex_review_gen2_network_reverify2_20261007.md` · 1저자 "해결해놔")
+    ⓘ G2RR2-01 — 한 자격 검사 `launch_eligibility` (run · retry · audit · merge 가 같은 함수): 새 실행 형식 (`launch_format` · seal v3) 은 기대 세대 (값 ·
+       봉인 사본 · 유도 탐침) · 입력 지문 · 코드 해시 · 전이 닫힘 · 인계 코드 지문 · 계획 꼴을 **필수**로 요구한다 — 선언을 지운 새 manifest 를 옛 형식으로
+       추론하지 않는다 (옛 판: 키가 없으면 "옛 manifest" 로 면제 → input_digest 삭제 · null · 기대 세대 두 키 삭제가 audit rc 0 · retry 세대 관문 []).
+       역사 형식 = 등록된 옛 실행 (`HISTORICAL_LAUNCHES` — 형식 + 발사 출처가 정확히) 만 · 역사 모드 (`audit --historical` · `merge --historical`) 에서만 ·
+       retry 불가.  ⚠ 같은 JSON 안의 사본 (값 · 봉인 사본 · 형식 사본) 은 **누락 검사**이지 독립 증거가 아니다 (함께 바꾼 위조는 다른 층 — git · 시도 지문).
+    ⓙ G2RR2-03 — CODE_FILES 32 (= 29 + 실제 생산 경로의 지연 import 셋: fracture_model · lhs_union_webapp (dem_analysis_core.run_full_analysis →
+       calc_fracture_stages · calc_porosity_union_exact — τ 의 L_mc · φ_mc 를 낸다) · ml_design_structure (structure_predictor 가 모듈 수준에서 부르는
+       `_restricted()` 안 — app 을 읽을 때마다 돈다)) · `DEP_LAZY` = 경로 위 지연 import 전부 · 봉인 파일의 함수 안 import 중 봉인 밖 모듈은
+       `DEP_LAZY_OFFPATH` 에 사유와 함께 분류 (`lazy_import_census` — 분류 밖이 있으면 발사하지 않는다) · 정적 검사는 보조 — selftest ㉟d 가 실제 생산 경로를
+       돌려 모든 프로세스의 import 를 관측한다 (봉인 ⊇ 관측).
 
 설정 (전부 `manifest.json` 에 남는다)
 ───────────────────────────────────────────────────────────────────────────────
@@ -81,6 +93,7 @@
   $P scripts/run_network_194_parallel.py run --root ~/net194_<sha>                 # 194 건 · 20 레인
   $P scripts/run_network_194_parallel.py status --root ~/net194_<sha>              # 진행 (다른 터미널)
   $P scripts/run_network_194_parallel.py audit --root ~/net194_<sha>               # 봉인 감사 — 케이스마다 어느 코드로 계산됐나 (읽기 전용)
+  $P scripts/run_network_194_parallel.py audit --root ~/net194_11fcf91e8 --historical   # 등록된 옛 실행 (10-05 v1.2) 만 — 역사 모드 (G2RR2-01)
   $P scripts/run_network_194_parallel.py retry --root ~/net194_<sha> -j 8          # done · partial 아닌 + 봉인 밖 (UNSEALED) 케이스만 다시
                                                                                    #   (시작 전 발사 봉인 대조 · 기록 보존)
   $P scripts/run_network_194_parallel.py merge --root ~/net194_<sha>               # run · retry 끝에 자동 — 다시 묶기
@@ -149,6 +162,9 @@ DISK_PER_CONTACT_B = 700                # 67 MB / 106.6 k ≈ 630 B (atoms.csv �
 #:   physics g2 면적의 원판 floor `intersection_disc_area` · σ 에 닿는다) · lhs_perc_extract (lhs_descriptor_harvest) · press_units (app · 목표 압력 단위) ·
 #:   grade_engine (predictor_engine) · app 이 모듈 수준에서 import 하는 웹앱 모듈 여섯.  발사 사전 점검이 닫힘 ⊆ CODE_FILES 를 확인한다 (새 import 가 생기면
 #:   목록을 먼저 고친다).  ⚠ 옛 ROOT (19 파일 봉인) 는 이 실행기로 retry 하면 봉인이 달라 거부된다 — 그 ROOT 의 커밋 실행기로 (감사는 그대로 읽는다).
+#: ★ 10-07 G2RR2-03 (Codex 세대 2 재검증 2 §4) — + 셋 (32): fracture_model · lhs_union_webapp (dem_analysis_core 의 함수 안 import — 접촉 분석 단계가
+#:   full_metrics 에 싣는 파괴 단계 · 정확 union porosity · 질량 보존 두께 · φ (τ 인계의 L_mc · φ_mc)) · ml_design_structure (structure_predictor 가 모듈
+#:   수준에서 `_restricted()` 를 불러 그 안의 import 가 app 을 읽을 때마다 돈다 — selftest ㉟d 실제 import 관측이 찾았다 · 정적 닫힘이 못 보는 꼴).
 CODE_FILES = (
     'scripts/network_conductivity.py', 'scripts/plastic_coverage.py', 'scripts/audit_constriction_deleted.py',
     'scripts/extract_se_network_diagnostics.py', 'scripts/dem_analysis_core.py', 'scripts/analyze_contacts.py',
@@ -158,7 +174,8 @@ CODE_FILES = (
     'scripts/export_master_csv.py', 'scripts/type_map_resolve.py',
     'scripts/lens_geometry.py', 'scripts/lhs_perc_extract.py', 'scripts/press_units.py', 'scripts/grade_engine.py',
     'webapp/ledger_view.py', 'webapp/mpm_lab_register.py', 'webapp/predictor_engine.py', 'webapp/security.py',
-    'webapp/storage_sync.py', 'webapp/structure_predictor.py')
+    'webapp/storage_sync.py', 'webapp/structure_predictor.py',
+    'scripts/fracture_model.py', 'scripts/lhs_union_webapp.py', 'scripts/ml_design_structure.py')
 LHS27_FILE = 'docs/figures/physics_regime/coverage_hertz_vs_physics_summary.csv'
 #: ★ 10-07 §7-3 전이 의존 — 닫힘의 시작점 (워커 · 단계 하위 프로세스 스크립트) 과 경로 위 지연 import (함수 안 import — 정적 닫힘이 모듈 수준만 보므로 적는다):
 #:   lhs_webapp_batch.run_batch → app · type_map_resolve · export_master_csv / pipeline_service → tau_flux (`_scripts_import` — 정지 계약 · 기록 검사) /
@@ -166,11 +183,97 @@ LHS27_FILE = 'docs/figures/physics_regime/coverage_hertz_vs_physics_summary.csv'
 #:   (bimodal · standard) → 피복 → 망 CLI.
 DEP_ENTRY = ('scripts/lhs_webapp_batch.py', 'scripts/parse_liggghts.py', 'scripts/analyze_contacts.py', 'scripts/analyze_contacts_bimodal.py',
              'scripts/coverage_physics_vs_hertzian.py', 'scripts/network_conductivity.py')
+#: ★ 10-07 G2RR2-03 — 경로 위 지연 import 를 실행 경로마다 완성: 접촉 분석 (analyze_contacts · _bimodal → dem_analysis_core.run_full_analysis →
+#:   calc_fracture_stages → fracture_model · calc_porosity_union_exact → lhs_union_webapp — 결과가 full_metrics 에 병합된다 · 인계 fracture 묶음 · τ 장부) ·
+#:   app 읽기 (structure_predictor 모듈 수준 `_restricted()` → ml_design_structure) · τ 도우미 (tau_flux → se_material — tau2_from_metrics 짝 σ₀ ·
+#:   G2RR2-04 온도 규약).
 DEP_LAZY = (('scripts/lhs_webapp_batch.py', 'app'), ('scripts/lhs_webapp_batch.py', 'type_map_resolve'),
             ('scripts/lhs_webapp_batch.py', 'export_master_csv'), ('webapp/pipeline_service.py', 'tau_flux'),
-            ('scripts/tau_flux.py', 'network_conductivity'))
+            ('scripts/tau_flux.py', 'network_conductivity'), ('scripts/tau_flux.py', 'se_material'),
+            ('scripts/dem_analysis_core.py', 'fracture_model'), ('scripts/dem_analysis_core.py', 'lhs_union_webapp'),
+            ('webapp/structure_predictor.py', 'ml_design_structure'))
+#: ★ 10-07 G2RR2-03 — 봉인 파일의 함수 안 import 중 **봉인 밖** 모듈 = 워커의 망 정지 경로 밖이라고 판단한 것 (사유와 함께 · `lazy_import_census` 가 분류 밖을
+#:   잡는다).  판단이 틀렸으면 (실제로 경로 위면) selftest ㉟d 의 실제 import 관측이 봉인 밖 모듈로 잡는다 — 이 표는 그 관측을 대신하지 않는다.
+_ROUTE = '웹앱 화면 · 라우트 전용 (run_pipeline(stop_after=network) 이 부르지 않는다)'
+DEP_LAZY_OFFPATH = {
+    ('scripts/extract_se_network_diagnostics.py', 'viewer3d_data'): 'analyze_case() — S3 진단 · 3D 뷰어 캐시 (워커 경로 밖 · 이 모듈은 S3 수치 모듈이라 봉인만)',
+    ('scripts/grade_engine.py', 'additives'): 'whatif_additives() — 첨가제 what-if 라우트 (등급 계산은 그 함수를 안 부른다)',
+    ('webapp/structure_predictor.py', 'ml_shap_pareto'): 'pareto() · shap_importance() — 예측기 화면 (모듈 수준 `_restricted()` 는 ml_design_structure 만 읽는다)',
+    ('webapp/app.py', 'viewer3d_data'): _ROUTE + ' — 3D 뷰어 · AM 접촉 확대',
+    ('webapp/app.py', 'plot_brittle_z_distribution'): _ROUTE + ' — 취성 z 분포 그림',
+    ('webapp/app.py', 'plot_combined_z_distribution'): _ROUTE + ' — 결합 z 분포 그림',
+    ('webapp/app.py', 'plot_coverage_z_distribution'): _ROUTE + ' — 피복 z 분포 그림',
+    ('webapp/app.py', 'plot_stress_z_distribution'): _ROUTE + ' — 응력 z 분포 그림',
+    ('webapp/app.py', 'eis_drt_ica'): _ROUTE + ' — EIS · DRT · ICA',
+    ('webapp/app.py', 'cam_kinetics'): _ROUTE + ' — MPM 킷 온도',
+    ('webapp/app.py', 'network_current'): _ROUTE + ' — ⚡ 전류 흐름 (게시 뒤 덤프 도구)',
+    ('webapp/app.py', 'rint_cycle_traj'): _ROUTE + ' — R_int 사이클',
+    ('webapp/app.py', 'backfill_am_metrics'): _ROUTE + ' — /retry-network 의 AM–AM 보충 (배치 워커는 부르지 않는다)',
+    ('webapp/app.py', 'extract_2d_microstructure'): _ROUTE + ' — 2D 합성 · 내보내기',
+    ('webapp/app.py', 'export_comsol_2d'): _ROUTE + ' — COMSOL 2D 내보내기',
+    ('webapp/app.py', 'hetero_transcript'): _ROUTE + ' — 이종기술 회의록',
+    ('webapp/app.py', 'mixer_bed'): _ROUTE + ' — /mixer 침대 보기',
+    ('webapp/app.py', 'b1_chem_fade'): _ROUTE + ' — STEP5 열화',
+    ('webapp/app.py', 'coating_presets'): _ROUTE + ' — STEP5 코팅 프리셋',
+    ('webapp/app.py', 'mech_reaction_correlation'): _ROUTE + ' — MPM lab 상관',
+    ('webapp/app.py', 'litdb_sync'): _ROUTE + ' — litdb (importlib.import_module)',
+}
 #: 인계 단계 코드 (워커가 돌리지 않는다 — 봉인 판정 밖) — 발사 때 지문을 기록해 후속 명령이 "인계는 발사 때 생성기 · 다시 읽기 도구로" 를 대조한다.
 HANDOVER_FILES = ('scripts/lhs_design_dataset.py', 'scripts/g2_network_reread.py')
+
+#: ★ 10-07 G2RR2-03 — 실제 import 관측 훅 (sitecustomize · PYTHONPATH — 워커와 단계 하위 프로세스가 환경을 물려받는다).  끝날 때 sys.modules 의 파일 +
+#:   경로로 읽은 모듈 (spec_from_file_location) 중 NP194_IMPORT_ROOT 아래 것을 프로세스마다 한 줄씩 적는다 — selftest ㉟d (합성 침대) 와
+#:   `run --observe-imports` (시범 — 진짜 LHS 침대 · 워커 · parse · bimodal) 가 같은 훅을 쓴다.  값에 닿지 않는다 (기록만) · 시범 전용 (manifest 에 남는다).
+IMPORT_OBS_DIR = 'import_obs'
+IMPORT_OBS_HOOK = (
+    'import atexit, os, sys\n'
+    '_L, _R = os.environ.get("NP194_IMPORT_LOG"), os.environ.get("NP194_IMPORT_ROOT")\n'
+    '_P = set()\n'
+    'def _dump():\n'
+    '    try:\n'
+    '        fs = {os.path.realpath(getattr(m, "__file__", None) or "") for m in list(sys.modules.values())} | _P\n'
+    '        fs.discard(os.path.realpath(""))\n'
+    '        with open(os.path.join(_L, "%d.txt" % os.getpid()), "w", encoding="utf-8") as fh:\n'
+    '            fh.write("\\n".join(sorted(f for f in fs if f.startswith(_R + os.sep))))\n'
+    '    except Exception:\n'
+    '        pass\n'
+    'if _L and _R:\n'
+    '    import importlib.util as _u\n'
+    '    _sf = _u.spec_from_file_location\n'
+    '    def _spec(name, location=None, *a, **k):\n'
+    '        if location is not None:\n'
+    '            _P.add(os.path.realpath(str(location)))\n'
+    '        return _sf(name, location, *a, **k)\n'
+    '    _u.spec_from_file_location = _spec\n'
+    '    atexit.register(_dump)\n')
+#: 관측에서 빼는 시험 도구 (생산 경로가 아니다) — selftest 의 합성 침대 자식 (wsl_network_smoke --_child) 과 침대 도구.
+IMPORT_OBS_HARNESS = ('scripts/wsl_network_smoke.py', 'webapp/test_pipeline_provenance.py')
+
+
+def import_obs_env(obs_dir: Path, code_root) -> dict:
+    """관측 훅을 켜는 환경 변수 (obs_dir/hook 의 sitecustomize · obs_dir/log 에 기록 · code_root 아래 파일만)."""
+    hook, log = Path(obs_dir) / 'hook', Path(obs_dir) / 'log'
+    hook.mkdir(parents=True, exist_ok=True)
+    log.mkdir(parents=True, exist_ok=True)
+    (hook / 'sitecustomize.py').write_text(IMPORT_OBS_HOOK, encoding='utf-8')
+    return dict(NP194_IMPORT_LOG=str(log), NP194_IMPORT_ROOT=str(Path(code_root).resolve()),
+                PYTHONPATH=os.pathsep.join([str(hook)] + [p for p in (os.environ.get('PYTHONPATH') or '').split(os.pathsep) if p]))
+
+
+def import_observation(obs_dir: Path, code_root) -> dict:
+    """관측 기록 → dict(n_processes, files (리포 상대 · 정렬), observed (scripts · webapp 의 .py · 시험 도구 제외), outside (그중 CODE_FILES 밖))."""
+    r = Path(code_root).resolve()
+    logs = sorted((Path(obs_dir) / 'log').glob('*.txt'))
+    seen = set()
+    for lf in logs:
+        for ln in lf.read_text(encoding='utf-8').splitlines():
+            if ln.strip():
+                try:
+                    seen.add(Path(ln.strip()).resolve().relative_to(r).as_posix())
+                except ValueError:
+                    continue
+    obs = sorted(f for f in seen if f.endswith('.py') and f.startswith(('scripts/', 'webapp/')) and f not in IMPORT_OBS_HARNESS)
+    return dict(n_processes=len(logs), files=sorted(seen), observed=obs, outside=[f for f in obs if f not in CODE_FILES])
 
 #: ★ 10-07 G2RR-01 · §7-3 — 발사 봉인의 기대 망 세대.  키 = 인계 생성기 `lhs_design_dataset.TAU_MANIFEST_GENERATION_KEY` (`tau_manifest_expected_generation` ·
 #:   CLI `--tau-batch-manifest` 가 읽는다 · 없으면 거부) · 같은 값을 manifest.seal 안에도 둔다 (retry · audit 가 둘을 대조).  값은 손으로 적지 않는다 —
@@ -202,10 +305,40 @@ print('GEN_PROBE ' + json.dumps(dict(generation=con.get('generation'), g2_name=t
 '''
 
 #: 발사 봉인 (RGLR3-01) — 스키마 · 판정 이름.  판정 규칙은 모듈 docstring '발사 봉인' ⓒ (case_seal 이 그대로 구현한다).
-#:   v2 (10-07) = seal 안에 기대 망 세대 (GEN_KEY) · CODE_FILES 29 (전이 의존).  v1 manifest (194 v1.2) 도 그대로 읽는다 (선언 없음 = 옛 manifest).
-LAUNCH_SEAL_SCHEMA = 'launch_seal/v2'       # manifest.seal
+#:   v2 (10-07 새벽) = seal 안에 기대 망 세대 (GEN_KEY) · CODE_FILES 29.  ★ v3 (10-07 G2RR2-01 · 03) = 새 실행 형식 `LAUNCH_FORMAT` (manifest 와 seal 에) ·
+#:   필수 선언 (`launch_eligibility`) · CODE_FILES 32.  v2 manifest (9d25757dc – 이 수정 전 실행기) 는 이 실행기의 형식이 아니다 — 그 ROOT 는 그 커밋의 실행기로.
+#:   역사 형식 = 등록된 옛 실행 (`HISTORICAL_LAUNCHES`) 만 (역사 모드에서만 읽는다).
+LAUNCH_SEAL_SCHEMA = 'launch_seal/v3'       # manifest.seal
+LAUNCH_FORMAT = 'network_parallel_launch/v3'     # manifest.launch_format (+ seal 사본 — 같은 JSON 의 사본 = 누락 검사 · 독립 증거 아님)
+CURRENT_GENERATION = 'g2'                   # 현행 게시가 받는 유일한 세대 (`tau_flux.NET_GEN_G2` — 사전 점검의 유도 탐침이 같은지 본다)
 ATTEMPT_SEAL_SCHEMA = 'attempt_seal/v1'     # worker.json attempts[].seal
 SEAL_OK = ('SEALED', 'SEALED_DIRTY_ALLOWED', 'SEALED_LEGACY')
+#: 새 실행 형식의 표지 — 하나라도 있으면 역사 형식이 아니다 (필수 선언 전부를 요구한다 · 지운 것을 옛 형식으로 추론하지 않는다).
+NEW_FORMAT_KEYS = ('seal', 'launch_format', GEN_KEY, 'input_digest', 'generation_probe', 'code_dependency_closure', 'handover_code_hashes')
+INPUT_DIGEST_KEYS = ('n', 'ids_sha256', 'raw_sha256_table_sha256', 'missing_raw_sha', 'cohort_tsv_sha256')
+_HEX64 = re.compile(r'^[0-9a-f]{64}$')
+_HEX40 = re.compile(r'^[0-9a-f]{40}$')
+#: ★ 10-07 G2RR2-01 — 확인된 옛 실행 (역사 허용 = 이 표와 형식 · 발사 출처가 **정확히** 같을 때만 · 역사 모드에서만).  값은 커밋된 증거 manifest
+#:   (`evidence`) 에서 잰 것 — selftest ㉞ 가 그 파일로 다시 대조한다.  계획 큐 (입력) 는 고정하지 않는다 — 꼴만 본다 (그 형식에는 입력 지문이 없었다 ·
+#:   역사 모드 판정은 "입력 대조 없음" 표지를 단다).
+HISTORICAL_LAUNCHES = {
+    'net194_v12_11fcf91e8': dict(
+        evidence='docs/data/lhs_network194_11fcf91e8/manifest.json',
+        registration='docs/reviews/lhs_network_batch_registration_20261005.md',
+        schema='network_parallel_launcher/v1',
+        git_sha='11fcf91e8a1f4837b83892b7e4a81125eaeee4e5',
+        code_fp='3bc0a116ddab109c01f6ab1e1f0cf0d3abf67c5cf6c6336d058315c6189eb0b5',
+        code_files=('scripts/analyze_contacts.py', 'scripts/analyze_contacts_bimodal.py', 'scripts/audit_constriction_deleted.py',
+                    'scripts/coverage_physics_vs_hertzian.py', 'scripts/dem_analysis_core.py', 'scripts/export_master_csv.py',
+                    'scripts/extract_se_network_diagnostics.py', 'scripts/lhs_descriptor_harvest.py', 'scripts/lhs_harvest_batch.py',
+                    'scripts/lhs_webapp_batch.py', 'scripts/metrics_json.py', 'scripts/network_conductivity.py', 'scripts/parse_liggghts.py',
+                    'scripts/plastic_coverage.py', 'scripts/se_material.py', 'scripts/tau_flux.py', 'scripts/type_map_resolve.py',
+                    'webapp/app.py', 'webapp/pipeline_service.py'),
+        keys=('allow_dirty', 'allow_missing_raw', 'argv', 'code_hashes', 'created', 'git', 'lanes', 'mem_budget_mb', 'mem_model',
+              'mem_reserve_gb', 'min_free_gb', 'network_lock', 'plan', 'preflight', 'pyc_purged', 'python', 'python_versions', 'repo_root',
+              'retries', 'root_from', 'root_to', 'schema', 'stop_after', 'thread_env', 'worker_override', 'worker_script'),
+        cohorts=('lhs', 'lhsx')),
+}
 
 
 class LaunchError(RuntimeError):
@@ -341,19 +474,202 @@ def generation_probe_problem(gp: dict) -> str:
     return ''
 
 
+def _plan_problems(plan, cohort_names=None) -> list:
+    """계획 (manifest plan) 의 꼴 — cohorts (비지 않은 목록 · 이름 문자열 · 중복 없음 · cohort_names 가 주어지면 그 집합 안) · queue (비지 않은 목록 ·
+    case · cohort 문자열 · 케이스 중복 없음 · 코호트 소속).  ⚠ 케이스가 0 인 코호트는 정당하다 (`--case` 시범이 한 코호트만 고를 때 — build_plan 이
+    요청한 코호트를 다 싣는다) — 등록 집합과의 대조는 다시 읽기 (`g2_network_reread` 등록 모드) 의 몫."""
+    if not isinstance(plan, dict):
+        return [f'plan 이 객체가 아니다 ({type(plan).__name__})']
+    cs, q = plan.get('cohorts'), plan.get('queue')
+    out = []
+    if not isinstance(cs, list) or not cs or not all(isinstance(c, dict) and isinstance(c.get('name'), str) and c.get('name') for c in cs):
+        return out + [f'plan.cohorts 가 비지 않은 코호트 목록이 아니다 ({cs!r:.120})']
+    names = [c['name'] for c in cs]
+    if len(set(names)) != len(names):
+        out.append(f'plan.cohorts 이름 중복 {names}')
+    if cohort_names is not None and set(names) - set(cohort_names):
+        out.append(f'plan.cohorts 에 등록 밖 코호트 {sorted(set(names) - set(cohort_names))} (등록 {sorted(cohort_names)})')
+    if not isinstance(q, list) or not q or not all(isinstance(e, dict) and isinstance(e.get('case'), str) and isinstance(e.get('cohort'), str)
+                                                   for e in q):
+        return out + [f'plan.queue 가 비지 않은 (case, cohort) 목록이 아니다 ({q!r:.120})']
+    cases = [e['case'] for e in q]
+    dup = sorted({c for c in cases if cases.count(c) > 1})
+    if dup:
+        out.append(f'plan.queue 케이스 중복 {dup[:5]}')
+    stray = sorted({e['cohort'] for e in q} - set(names))
+    if stray:
+        out.append(f'plan.queue 의 코호트 {stray} 가 plan.cohorts 에 없다')
+    return out
+
+
+def ids_digest(pairs) -> str:
+    """(케이스, 코호트) 쌍 → 'case\\tcohort' 줄 ((코호트, 케이스) 순 · 줄마다 끝 개행) 의 sha256 — manifest input_digest.ids_sha256 · 등록 문서 §2 ·
+    다시 읽기 (`g2_network_reread` 등록 집합) 가 같은 식."""
+    lines = [f'{c}\t{h}' for c, h in sorted(pairs, key=lambda x: (x[1], x[0]))]
+    return hashlib.sha256(('\n'.join(lines) + '\n').encode('utf-8')).hexdigest()
+
+
+def _historical_match(m) -> tuple:
+    """manifest → (등록 이름 | None, [어긋남]) — 등록된 옛 실행 (`HISTORICAL_LAUNCHES`) 과 형식 · 발사 출처가 정확히 같은가."""
+    best = (None, ['등록된 옛 실행이 없다'])
+    for name, h in HISTORICAL_LAUNCHES.items():
+        why = []
+        if m.get('schema') != h['schema']:
+            why.append(f'schema {m.get("schema")!r} ≠ {h["schema"]!r}')
+        if sorted(m) != sorted(h['keys']):
+            why.append(f'키 집합 ≠ 등록 (남는 키 {sorted(set(m) - set(h["keys"]))} · 없는 키 {sorted(set(h["keys"]) - set(m))})')
+        g = m.get('git') if isinstance(m.get('git'), dict) else {}
+        if g.get('sha') != h['git_sha'] or g.get('dirty') is not False:
+            why.append(f'발사 git {str(g.get("sha"))[:12]} · dirty {g.get("dirty")!r} ≠ 등록 {h["git_sha"][:12]} · False')
+        ch = m.get('code_hashes') if isinstance(m.get('code_hashes'), dict) else {}
+        if sorted(ch) != sorted(h['code_files']) or code_fp(ch) != h['code_fp']:
+            why.append(f'코드 해시 {len(ch)} 파일 · 지문 {str(code_fp(ch))[:12]} ≠ 등록 {len(h["code_files"])} · {h["code_fp"][:12]}')
+        if m.get('stop_after') != STOP or m.get('worker_override') is not False:
+            why.append(f'stop_after {m.get("stop_after")!r} · worker_override {m.get("worker_override")!r}')
+        why += _plan_problems(m.get('plan'), h['cohorts'])
+        if not why:
+            return name, []
+        best = (None, [f'{name}: ' + ' · '.join(why)])
+    return best
+
+
+def launch_eligibility(man) -> dict:
+    """★ 10-07 G2RR2-01 (Codex 세대 2 재검증 2 §2) — manifest 의 실행 형식 자격.  run (쓴 뒤 자기 대조) · retry · audit · merge 가 **이 한 함수**를 쓴다.
+    → dict(kind='current' | 'historical' | 'invalid', problems=[…], historical=등록 이름 | None, note=…)
+      current    — 새 실행 형식: launch_format · seal (schema v3 · 형식 사본 · code_fp = code_hashes 지문 · 파일 수) · 기대 세대 (값 = 봉인 사본 = g2 ·
+                   유도 탐침 기록이 같은 세대 · 문제 0) · input_digest (꼴 · 케이스 수 = 계획 · ids 지문 = 계획 큐에서 다시 잰 값 · 원자료 결손 0) ·
+                   code_hashes (CODE_FILES 정확히) · 전이 닫힘 ⊆ 봉인 · 인계 코드 지문 · git sha · 계획 꼴 — **전부 필수**
+      historical — 새 형식 표지 (NEW_FORMAT_KEYS) 가 하나도 없고 등록된 옛 실행과 형식 · 발사 출처가 정확히 같다 (역사 모드에서만 읽는다)
+      invalid    — 그 밖 (새 형식 표지가 있는데 선언이 빠졌거나 · 표지가 없는데 등록된 옛 실행이 아니다 — 필드가 없다는 것으로 옛 형식을 추론하지 않는다)
+    ⚠ 같은 JSON 의 사본 (값 · 봉인 사본 · 형식 사본) 은 누락 검사다 — 독립 증거가 아니다 (함께 바꾼 위조는 git · 시도 지문 · 기록 sha 층의 몫)."""
+    if not isinstance(man, dict):
+        return dict(kind='invalid', problems=[f'manifest 가 객체가 아니다 ({type(man).__name__})'], historical=None, note='')
+    if man.get('schema') != SCHEMA:
+        return dict(kind='invalid', problems=[f'schema {man.get("schema")!r} ≠ {SCHEMA!r} — 이 실행기의 manifest 가 아니다'], historical=None, note='')
+    if not any(k in man for k in NEW_FORMAT_KEYS):
+        name, why = _historical_match(man)
+        if name:
+            return dict(kind='historical', problems=[], historical=name,
+                        note=(f'역사 형식 {name} (등록된 옛 실행 · {HISTORICAL_LAUNCHES[name]["registration"]}) — 기대 세대 · 입력 지문 선언이 없는 형식이라 '
+                              '세대 · 입력 대조 없이 코드 봉인 판정만 · 역사 모드에서만 읽는다 · retry 는 그 커밋의 실행기로'))
+        return dict(kind='invalid', historical=None, note='',
+                    problems=['새 실행 형식의 표지가 하나도 없는데 등록된 옛 실행도 아니다 — 필드가 없다는 것으로 옛 형식을 추론하지 않는다: ' + ' ; '.join(why)])
+    p = []
+    s = man.get('seal')
+    if not isinstance(s, dict):
+        p.append(f'seal 이 없다 · 객체가 아니다 ({type(s).__name__}) — 새 실행 형식은 발사 봉인을 싣는다')
+        s = {}
+    if man.get('launch_format') != LAUNCH_FORMAT or s.get('launch_format') != LAUNCH_FORMAT:
+        p.append(f'launch_format {man.get("launch_format")!r} · 봉인 사본 {s.get("launch_format")!r} ≠ {LAUNCH_FORMAT!r}')
+    if s and s.get('schema') != LAUNCH_SEAL_SCHEMA:
+        p.append(f'seal.schema {s.get("schema")!r} ≠ {LAUNCH_SEAL_SCHEMA!r} (다른 판 실행기의 봉인 — 그 커밋의 실행기로)')
+    if man.get(GEN_KEY) != CURRENT_GENERATION or s.get(GEN_KEY) != CURRENT_GENERATION:
+        p.append(f'기대 망 세대 {GEN_KEY} {man.get(GEN_KEY, "ABSENT")!r} · 봉인 사본 {s.get(GEN_KEY, "ABSENT")!r} ≠ {CURRENT_GENERATION!r} (둘 다 필수 · 같아야)')
+    gp = man.get('generation_probe')
+    if not isinstance(gp, dict) or gp.get('generation') != man.get(GEN_KEY) or gp.get('problems') or gp.get('error'):
+        p.append(f'generation_probe (봉인 코드에서 기대 세대를 유도한 기록) 없음 · 다름 · 문제 ({(gp or {}).get("generation") if isinstance(gp, dict) else gp!r})')
+    ch = man.get('code_hashes')
+    if not isinstance(ch, dict) or sorted(ch) != sorted(CODE_FILES) or not all(isinstance(v, str) and _HEX64.match(v) for v in ch.values()):
+        p.append(f'code_hashes 가 봉인 대상 CODE_FILES {len(CODE_FILES)} 파일의 sha256 지도가 아니다 '
+                 f'(있는 {len(ch) if isinstance(ch, dict) else ch!r} · 빠진 {sorted(set(CODE_FILES) - set(ch or {}))[:4]})')
+    elif s and (s.get('code_fp') != code_fp(ch) or s.get('files') != len(CODE_FILES)):
+        p.append(f'seal.code_fp · files ({str(s.get("code_fp"))[:12]} · {s.get("files")}) ≠ code_hashes 지문 · 파일 수 ({str(code_fp(ch))[:12]} · {len(CODE_FILES)})')
+    clo = man.get('code_dependency_closure')
+    if not isinstance(clo, list) or not clo or [f for f in clo if f not in CODE_FILES]:
+        p.append(f'code_dependency_closure (전이 닫힘) 없음 · 봉인 밖 파일 {[f for f in clo or [] if f not in CODE_FILES][:4] if isinstance(clo, list) else clo!r}')
+    hh = man.get('handover_code_hashes')
+    if not isinstance(hh, dict) or sorted(hh) != sorted(HANDOVER_FILES) or not all(isinstance(v, str) and _HEX64.match(v) for v in hh.values()):
+        p.append(f'handover_code_hashes (인계 도구 지문) 없음 · 꼴이 다르다 ({sorted(hh) if isinstance(hh, dict) else hh!r})')
+    g = man.get('git') if isinstance(man.get('git'), dict) else {}
+    if not (isinstance(g.get('sha'), str) and _HEX40.match(g['sha'])):
+        p.append(f'git.sha {g.get("sha")!r} — 발사 커밋 신원이 없다')
+    pp = _plan_problems(man.get('plan'))
+    p += pp
+    dg = man.get('input_digest')
+    if not isinstance(dg, dict):
+        p.append(f'input_digest (194 ID · 코호트 · 원자료 sha256 지문) 없음 · 객체 아님 ({type(dg).__name__}) — 새 실행 형식의 필수 선언')
+    else:
+        miss = [k for k in INPUT_DIGEST_KEYS if k not in dg]
+        if miss:
+            p.append(f'input_digest 키 결손 {miss}')
+        q = (man.get('plan') or {}).get('queue') if isinstance(man.get('plan'), dict) else None
+        if not pp and isinstance(q, list):
+            if dg.get('n') != len(q):
+                p.append(f'input_digest.n {dg.get("n")!r} ≠ 계획 큐 {len(q)}')
+            if dg.get('ids_sha256') != ids_digest((e['case'], e['cohort']) for e in q):
+                p.append('input_digest.ids_sha256 ≠ 계획 큐 (case, cohort) 에서 다시 잰 지문 — 발사 뒤 계획 또는 지문이 바뀌었다')
+            names = sorted(c['name'] for c in man['plan']['cohorts'])
+            cts = dg.get('cohort_tsv_sha256')
+            if not isinstance(cts, dict) or sorted(cts) != names or not all(isinstance(v, str) and _HEX64.match(v) for v in cts.values()):
+                p.append(f'input_digest.cohort_tsv_sha256 꼴 ({cts!r:.120}) ≠ 코호트 {names} 의 sha256')
+        if not (isinstance(dg.get('raw_sha256_table_sha256'), str) and _HEX64.match(dg['raw_sha256_table_sha256'])):
+            p.append(f'input_digest.raw_sha256_table_sha256 {dg.get("raw_sha256_table_sha256")!r} — 원자료 sha256 표 지문이 없다')
+        if dg.get('missing_raw_sha') != []:
+            p.append(f'input_digest.missing_raw_sha {dg.get("missing_raw_sha")!r} (빈 목록이어야 — 원자료 sha 결손이 있으면 발사하지 않았다)')
+    return dict(kind=('invalid' if p else 'current'), problems=p, historical=None, note='')
+
+
+def lazy_import_census(root=None) -> dict:
+    """★ 10-07 G2RR2-03 — 봉인 파일 (CODE_FILES) 의 **함수 안** import (Import · ImportFrom · `importlib.import_module` · `_scripts_import` · `__import__` 의
+    문자열 인자) 중 리포 모듈 (<root>/scripts · webapp) 로 풀리는 것 → dict(lazy=[(importer, 함수, 대상 파일, 이름)], unclassified=[…], stale=[…]).
+      unclassified = 봉인 밖 대상인데 DEP_LAZY (경로 위 — 대상은 봉인돼야) 에도 DEP_LAZY_OFFPATH (경로 밖 · 사유) 에도 없는 것 → 발사 사전 점검 중단
+      stale        = 분류표에 있는데 지금 코드에 없는 (importer, 이름) — 정보 (표 정리)
+    ⚠ 경로를 변수로 읽는 동적 적재 (spec_from_file_location 등) 는 정적으로 풀지 않는다 — selftest ㉟d 의 실제 import 관측이 생산 경로를 본다."""
+    import ast
+    r = Path(root) if root is not None else ROOT
+    search = (r / 'scripts', r / 'webapp')
+
+    def resolve(name):
+        top = name.split('.')[0]
+        for d in search:
+            if (d / f'{top}.py').is_file():
+                return (d / f'{top}.py').relative_to(r).as_posix()
+        return None
+    dyn = {'import_module', '_scripts_import', '__import__'}
+    found = []
+    for rel in CODE_FILES:
+        p = r / rel
+        try:
+            tree = ast.parse(p.read_text(encoding='utf-8'))
+        except (OSError, SyntaxError, ValueError, UnicodeDecodeError):
+            continue                                            # 못 읽는 봉인 파일 = 사전 점검의 해시 · 닫힘 검사가 따로 잡는다
+        for fn in ast.walk(tree):
+            if not isinstance(fn, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                continue
+            for s in ast.walk(fn):
+                names = []
+                if isinstance(s, ast.Import):
+                    names = [a.name for a in s.names]
+                elif isinstance(s, ast.ImportFrom) and s.module and s.level == 0:
+                    names = [s.module]
+                elif isinstance(s, ast.Call) and s.args and isinstance(s.args[0], ast.Constant) and isinstance(s.args[0].value, str):
+                    f_ = s.func
+                    nm = f_.attr if isinstance(f_, ast.Attribute) else (f_.id if isinstance(f_, ast.Name) else '')
+                    if nm in dyn:
+                        names = [s.args[0].value]
+                for n in names:
+                    q = resolve(n)
+                    if q is not None:
+                        found.append((rel, fn.name, q, n.split('.')[0]))
+    lazy_on = {(a, b) for a, b in DEP_LAZY}
+    seen = {(a, n) for a, _f, _q, n in found}
+    unclassified = sorted({(a, f, q, n) for a, f, q, n in found if q not in CODE_FILES and (a, n) not in DEP_LAZY_OFFPATH})
+    stale = sorted(k for k in DEP_LAZY_OFFPATH if k not in seen) + sorted(k for k in lazy_on if k not in seen)
+    return dict(lazy=sorted(set(found)), unclassified=unclassified, stale=stale)
+
+
 def generation_gate(man, root=None) -> tuple:
-    """★ 10-07 G2RR-01 — retry 시작 관문의 기대 망 세대 대조 → (막는 사유 목록, 표지).  넘김 (--allow-*) 으로 못 넘긴다.
-    · manifest 와 seal 둘 다 키가 없다 = 옛 manifest (이 필드 이전 실행기 · 194 v1.2) → 막지 않는다 (표지만 · 옛 판과 같은 코드 봉인 판정)
-    · 값 ≠ 봉인 사본 (한쪽 없음 포함) → 막는다 (발사 뒤 manifest 가 바뀌었다)
+    """★ 10-07 G2RR-01 · ★ G2RR2-01 — retry 시작 관문의 실행 형식 · 기대 망 세대 대조 → (막는 사유 목록, 표지).  넘김 (--allow-*) 으로 못 넘긴다.
+    · 실행 형식 자격 (`launch_eligibility`) 이 current 가 아니면 막는다 — 역사 형식 (그 ROOT 의 커밋 실행기로) · 선언을 지운 manifest (옛 판: 두 키가
+      없으면 "옛 manifest" 로 면제 → 막는 사유 [] · Codex 세대 2 재검증 2 §2)
     · 워커 체크아웃 코드로 다시 유도한 세대 ≠ 봉인 기대 세대 → 막는다"""
     m = man if isinstance(man, dict) else {}
-    s = m.get('seal') if isinstance(m.get('seal'), dict) else {}
-    if GEN_KEY not in m and GEN_KEY not in s:
-        return [], ('옛 manifest — 기대 망 세대 선언 없음 (이 필드 이전 실행기 · 194 v1.2 런처 manifest) · 세대 대조 없이 코드 봉인 판정만 · '
-                    '그 ROOT 의 인계는 --tau-batch-manifest 로 대조할 수 없다')
-    top, sealed = m.get(GEN_KEY), s.get(GEN_KEY)
-    if top != sealed:
-        return [f'manifest {GEN_KEY} {top!r} ≠ 봉인 사본 seal.{GEN_KEY} {sealed!r} — 발사 뒤 manifest 의 기대 망 세대가 바뀌었다'], ''
+    el = launch_eligibility(m)
+    if el['kind'] == 'historical':
+        return [f'역사 형식 ROOT ({el["historical"]}) — 이 실행기로 retry 하지 않는다 (그 ROOT 의 커밋 실행기로 · 넘김 불가) · {el["note"]}'], ''
+    if el['kind'] != 'current':
+        return [f'실행 형식 자격 없음 (G2RR2-01): {p}' for p in el['problems'][:8]], ''
+    top = m.get(GEN_KEY)
     gp = derive_generation(root if root is not None else code_root(m), m.get('python'))
     if gp.get('error') or gp.get('problems') or gp.get('generation') != top:
         return [f'봉인 기대 망 세대 {top!r} ≠ 워커 체크아웃 ({root if root is not None else code_root(m)}) 코드가 지금 내는 세대 '
@@ -375,30 +691,16 @@ def plan_input_digest(plan) -> dict:
     워커 (`lhs_webapp_batch` 같은 프레임 관문) 가 실제 파일과 대조하는 값) 의 지문.  줄 = 'case\\tcohort[\\tatom\\tcontact\\tmesh\\tdeck]' · (코호트, 케이스) 순 ·
     줄마다 끝 개행 · sha256.  → dict(n, ids_sha256, raw_sha256_table_sha256, missing_raw_sha, cohort_tsv_sha256)."""
     hdirs = {c['name']: Path(c['harvest_dir']) for c in (plan or {}).get('cohorts') or []}
-    ids, rows, missing = [], [], []
+    pairs, rows, missing = [], [], []
     for e in sorted((plan or {}).get('queue') or [], key=lambda x: (x['cohort'], x['case'])):
         raw = (read_json(hdirs.get(e['cohort'], Path('/nonexistent')) / f"{e['case']}.json") or {}).get('raw') or {}
         shas = [str((raw.get(k) or {}).get('sha256') or '') for k in ('atom', 'contact', 'mesh', 'deck')]
         if '' in shas:
             missing.append(e['case'])
-        ids.append(f"{e['case']}\t{e['cohort']}")
+        pairs.append((e['case'], e['cohort']))
         rows.append('\t'.join([e['case'], e['cohort'], *shas]))
-
-    def _h(lines):
-        return hashlib.sha256(('\n'.join(lines) + '\n').encode('utf-8')).hexdigest()
-    return dict(n=len(ids), ids_sha256=_h(ids), raw_sha256_table_sha256=_h(rows), missing_raw_sha=missing,
-                cohort_tsv_sha256={c['name']: sha256_file(Path(c['cohort'])) for c in (plan or {}).get('cohorts') or []})
-
-
-def manifest_generation_problems(man) -> list:
-    """manifest 수준 기대 세대 정합 — 값 = 봉인 사본 (둘 다 없으면 옛 manifest = 문제 없음)."""
-    m = man if isinstance(man, dict) else {}
-    s = m.get('seal') if isinstance(m.get('seal'), dict) else {}
-    if GEN_KEY not in m and GEN_KEY not in s:
-        return []
-    if m.get(GEN_KEY) != s.get(GEN_KEY):
-        return [f'manifest {GEN_KEY} {m.get(GEN_KEY)!r} ≠ 봉인 사본 seal.{GEN_KEY} {s.get(GEN_KEY)!r}']
-    return []
+    return dict(n=len(pairs), ids_sha256=ids_digest(pairs), raw_sha256_table_sha256=hashlib.sha256(('\n'.join(rows) + '\n').encode('utf-8')).hexdigest(),
+                missing_raw_sha=missing, cohort_tsv_sha256={c['name']: sha256_file(Path(c['cohort'])) for c in (plan or {}).get('cohorts') or []})
 
 
 def code_fp(hashes):
@@ -603,8 +905,10 @@ def _judge_legacy(man, legacy: list, rec: dict, st_runs: list, runs_by_no: dict,
                              '같은 프로세스에서 곧바로 잰 값) · 워커 runs 1 건 (발사 sha · dirty false)')
 
 
-def case_seal(root: Path, man: dict, case: str, runs_by_no=None) -> dict:
-    """케이스 판정 (docstring '발사 봉인' ⓒ) — 지금 케이스 기록을 쓴 시도의 증거로.  → dict(case · verdict · why · attempt · run · form …)."""
+def case_seal(root: Path, man: dict, case: str, runs_by_no=None, history=False) -> dict:
+    """케이스 판정 (docstring '발사 봉인' ⓒ) — 지금 케이스 기록을 쓴 시도의 증거로.  → dict(case · verdict · why · attempt · run · form …).
+    ★ 10-07 G2RR2-01 — 옛 형식 시도 (시도 지문 없음) 판정은 history (manifest 자격 = 등록된 역사 형식 · 역사 모드) 일 때만.  새 실행 형식 ROOT 의 시도 지문
+    없는 기록 = UNSEALED (지문이 없다는 것으로 옛 형식을 추론하지 않는다)."""
     if runs_by_no is None:
         runs_by_no = _runs_by_no(root)
     seal = seal_context(man)
@@ -633,6 +937,11 @@ def case_seal(root: Path, man: dict, case: str, runs_by_no=None) -> dict:
     legacy = [a for a in atts if not isinstance(a.get('seal'), dict)]
     if not legacy:
         out.update(verdict='UNSEALED', why='기록을 쓴 시도 증거가 없다 (worker.json 시도 없음 · 실행기 밖에서 쓴 기록)')
+        return out
+    if not history:
+        out.update(verdict='UNSEALED', form='legacy',
+                   why='시도 지문 (attempt_seal) 없는 옛 형식 시도 — 새 실행 형식 ROOT 에서는 옛 형식으로 추론하지 않는다 (역사 형식 = 등록된 옛 실행 · 역사 모드만 · '
+                       'G2RR2-01)')
         return out
     v, why = _judge_legacy(man, legacy, rec, st_runs, runs_by_no, seal['sha'])
     out.update(verdict=v, why=why, attempt=legacy[-1].get('attempt'), run=legacy[-1].get('run'), form='legacy',
@@ -860,6 +1169,13 @@ def preflight(args, plan, root: Path, budget_mb) -> dict:
     _outside = [f for f in clo['files'] if f not in CODE_FILES]
     if _outside or clo['errors']:
         stop.append(f'봉인 밖 의존 모듈 {_outside} · 닫힘 해석 오류 {clo["errors"][:3]} — CODE_FILES 를 먼저 고칠 것 (Codex 세대 2 재검증 §7-3 전이 의존)')
+    #  ★ 10-07 G2RR2-03 — 봉인 파일의 함수 안 import 중 봉인 밖 모듈은 전부 경로 밖으로 분류돼 있어야 한다 (새 지연 import 가 생기면 발사하지 않는다)
+    cen = lazy_import_census()
+    if cen['unclassified']:
+        stop.append(f'분류 밖 지연 import {[(a, f, q) for a, f, q, _n in cen["unclassified"][:5]]} — 경로 위면 CODE_FILES · DEP_LAZY 에, 경로 밖이면 '
+                    'DEP_LAZY_OFFPATH 에 사유와 함께 (Codex 세대 2 재검증 2 §4 G2RR2-03)')
+    if cen['stale']:
+        warn.append(f'지연 import 분류표의 낡은 항목 (지금 코드에 없음) {cen["stale"][:5]} — 표 정리')
     #  ★ 10-07 G2RR-01 — 기대 망 세대 = 이 체크아웃 (워커 체크아웃) 의 봉인 코드에서 유도 (손으로 적지 않는다)
     gp = derive_generation(ROOT, args.python)
     _gwhy = generation_probe_problem(gp)
@@ -921,7 +1237,7 @@ def preflight(args, plan, root: Path, budget_mb) -> dict:
                 est_mem_largest_mb=max(e['est_mem_mb'] for e in q), disk_free_GB=gib(free), disk_need_GB=gib(disk_need),
                 est_serial_h=round(tot_s / 3600, 2), est_makespan_h=round(max(tot_s / eff, max(e['est_time_s'] for e in q)) / 3600, 2),
                 git=git, raw_problems=probs[:50], n_raw_problems=len(probs), warn=warn, stop=stop, generation=gp, dependency_closure=clo,
-                input_digest=idg)
+                input_digest=idg, lazy_census=dict(n_lazy=len(cen['lazy']), unclassified=cen['unclassified'], stale=cen['stale']))
 
 
 def print_preflight(pf, plan, args, root):
@@ -951,10 +1267,13 @@ def print_preflight(pf, plan, args, root):
     _out = [f for f in clo.get('files') or [] if f not in CODE_FILES]
     p(f'  전이 의존 닫힘 {len(clo.get("files") or [])} 모듈 ⊆ 봉인 CODE_FILES {len(CODE_FILES)} — ' + ('✓' if not _out and not clo.get('errors')
                                                                                            else f'✗ 밖 {_out} · 오류 {clo.get("errors")}'))
+    lc = pf.get('lazy_census') or {}
+    p(f'  지연 import 분류 — 봉인 파일의 함수 안 리포 import {lc.get("n_lazy")} · 분류 밖 {len(lc.get("unclassified") or [])} — '
+      + ('✓' if not lc.get('unclassified') else f'✗ {[(a, q) for a, _f, q, _n in lc.get("unclassified")][:5]}'))
     idg = pf.get('input_digest') or {}
     p(f'  입력 지문 (ID · 코호트 · 원자료 sha256 = 수확 JSON raw) — 케이스 {idg.get("n")} · ids_sha256 {idg.get("ids_sha256")} · '
       f'raw_sha256_table_sha256 {idg.get("raw_sha256_table_sha256")} · 원자료 sha 결손 {len(idg.get("missing_raw_sha") or [])}')
-    p('  ⚠ Codex 세대 2 재검증 (10-06 밤) = HOLD — 새 194 생산 · v1.3 인계는 Codex GO 뒤 (등록 docs/reviews/lhs_network_batch_registration_20261007_g2.md).  '
+    p('  ⚠ Codex 세대 2 재검증 2 (10-07) = HOLD — 새 194 생산 · v1.3 인계는 Codex GO · 1저자 발사 승인 뒤 (등록 docs/reviews/lhs_network_batch_registration_20261007_g2.md).  '
       '이 실행기는 그 판정을 대신하지 않는다 — 어느 코드 · 세대로 돌았는지는 manifest.json 이 증명한다.')
     for w in pf['warn']:
         p(f'  ⚠ {w}')
@@ -999,6 +1318,8 @@ def run_queue(root: Path, manifest: dict, todo: list, lanes: int, run_no: int, *
     seal_broken = []
     python, wscript = manifest['python'], manifest['worker_script']
     lock_mode = manifest['network_lock']
+    #  ★ 10-07 G2RR2-03 — 시범의 실제 import 관측 (`run --observe-imports` · manifest 에 남는다 · 값에 닿지 않는다)
+    obs_env = import_obs_env(root / IMPORT_OBS_DIR, code_root(manifest)) if manifest.get('observe_imports') else {}
     rf, rt = manifest.get('root_from') or '', manifest.get('root_to') or ''
     cspec = {c['name']: c for c in manifest['plan']['cohorts']}
     t_launch = time.monotonic()
@@ -1042,7 +1363,8 @@ def run_queue(root: Path, manifest: dict, todo: list, lanes: int, run_no: int, *
         ln.attempt = _attempt_no(ln.cdir)
         ln.cmd = case_cmd(python, wscript, cspec[e['cohort']], e['case'], ln.cdir, rf, rt, force=bool(e.get('force')))
         env = worker_env(ln.cdir, lock_mode)
-        ln.env_note = {k: env.get(k) for k in (*THREAD_ENV, 'TMPDIR', 'PYTHONDONTWRITEBYTECODE')}
+        env.update(obs_env)
+        ln.env_note = {k: env.get(k) for k in (*THREAD_ENV, 'TMPDIR', 'PYTHONDONTWRITEBYTECODE', *(('NP194_IMPORT_LOG',) if obs_env else ()))}
         ln.log = open(ln.cdir / 'log.txt', 'ab')
         ln.start_iso = now_iso()
         ln.log.write((f'===== attempt {ln.attempt} (run {run_no}) start {ln.start_iso} · cwd {ln.cdir} · lock {lock_mode}\n'
@@ -1210,17 +1532,24 @@ def _synth_failed(case, cdir: Path, wrec: dict | None, why0: str) -> dict:
                 why=why, elapsed_s=att.get('wall_s'), parallel_synthesized=True)
 
 
-def merge(root: Path, *, allow_mixed=False, out=print) -> int:
+def merge(root: Path, *, allow_mixed=False, out=print, historical=False) -> int:
     """케이스별 산출 → `<root>/merged/<코호트>/` (status.json · metrics_flat.csv · results/ · parallel_cases.tsv) + merge_report.json.
 
     rc 0 = 전 케이스 done · partial · 이상 없음 / 1 = 실패 · 이상 있음 (merged 는 쓴다 — 실패는 기록으로 남는다) /
     2 = 구조 이상 (남의 케이스 기록 · 스키마 · 정지점 · 세대 섞임) · **봉인 밖 기록** (case_seal = UNSEALED · RGLR3-01) → merged 를 바꾸지 않는다.
     allow_mixed (--allow-mixed-generation) = 세대 섞임 · 봉인 밖 기록을 알고도 묶는다 → rc 1 + 보고 (allow_mixed_generation · seal.unsealed).
+    ★ 10-07 G2RR2-01 — 실행 형식 자격 (`launch_eligibility`) 이 current 여야 한다 · 역사 형식은 historical (--historical) 일 때만 · invalid = rc 2.
     """
     man = read_json(root / 'manifest.json')
     if not isinstance(man, dict) or man.get('schema') != SCHEMA:
         out(f'⛔ {root}/manifest.json 이 없거나 스키마가 다르다 — 이 실행기가 만든 ROOT 가 아니다')
         return 2
+    el = launch_eligibility(man)
+    if el['kind'] == 'invalid' or (el['kind'] == 'historical' and not historical):
+        out('⛔ merge 거부 — 실행 형식 자격 (G2RR2-01): ' + ('; '.join(el['problems'][:6]) if el['kind'] == 'invalid' else
+                                                         f'역사 형식 ROOT ({el["historical"]}) — 역사 모드 (--historical) 로만 다시 묶는다'))
+        return 2
+    history = el['kind'] == 'historical'
     git_sha = (man.get('git') or {}).get('sha') or ''
     structural, mixed, anomalies, failures = [], [], [], []
     unsealed, dirty_ok, seal_cnt = [], [], collections.Counter()
@@ -1231,7 +1560,8 @@ def merge(root: Path, *, allow_mixed=False, out=print) -> int:
     #  지금 트리 (워커 체크아웃) 가 봉인과 다른지 = 정보 — 판정은 시도별 증거로 (끝난 뒤 트리만 바뀐 배치를 기각하지 않는다 · Codex 4차 §3)
     report = dict(schema=SCHEMA + '#merge', merged_at=now_iso(), git_sha=git_sha, cohorts={},
                   code_changed_since_launch=seal_diff(_hashes_at(seal['root']), seal['hashes']),
-                  **{GEN_KEY: man.get(GEN_KEY)})        # ★ 10-07 — 정보 (세대 대조 = audit · 인계 --tau-batch-manifest)
+                  **{GEN_KEY: man.get(GEN_KEY)},        # ★ 10-07 — 정보 (세대 대조 = audit · 인계 --tau-batch-manifest)
+                  eligibility=dict(kind=el['kind'], historical=el['historical'], note=el['note']))
     runs_by_no = _runs_by_no(root)
     #  실행 중 코드 변화 (run 의 h0 ≠ h1) = 정보.  옛 형식 시도는 case_seal 이 run_001 의 이 기록으로 판정하고, 새 형식 시도는 시도별 지문으로
     #   가른다 (그 실행 안에서 어느 케이스가 바뀐 코드로 돌았는지) — 옛 판은 이것 하나로 배치 전체를 영원히 거부했다 (다시 돌려도 안 풀렸다).
@@ -1270,7 +1600,7 @@ def merge(root: Path, *, allow_mixed=False, out=print) -> int:
             elif (cdir / 'out' / 'status.json').exists():
                 anomalies.append(f'{c}: out/status.json 을 읽을 수 없다 (깨짐)')
             #  RGLR3-01 ⓒ — 이 기록을 쓴 시도가 발사 봉인 코드였나 (기록 없음 = NO_RECORD → 아래에서 failed 로 합성)
-            sv = case_seal(root, man, c, runs_by_no)
+            sv = case_seal(root, man, c, runs_by_no, history=history)
             seal_cnt[sv['verdict']] += 1
             if sv['verdict'] == 'UNSEALED':
                 unsealed.append(f'{c}: {sv["why"]}')
@@ -1507,19 +1837,26 @@ def cmd_run(args) -> int:
     with root_lock(root):
         hashes = code_hashes()
         gen = pf['generation']['generation']                     # ★ 10-07 G2RR-01 — 봉인 코드에서 유도 (사전 점검이 g2 · 문제 0 을 확인했다)
-        man = dict(schema=SCHEMA, created=now_iso(), argv=sys.argv, repo_root=str(ROOT), python=str(args.python),
+        man = dict(schema=SCHEMA, launch_format=LAUNCH_FORMAT, created=now_iso(), argv=sys.argv, repo_root=str(ROOT), python=str(args.python),
                    python_versions=python_versions(args.python), worker_script=str(worker), worker_override=(worker != BATCH),
                    stop_after=STOP, lanes=args.lanes, network_lock=args.network_lock, thread_env=THREAD_ENV,
                    mem_budget_mb=budget_mb, mem_reserve_gb=args.mem_reserve_gb, min_free_gb=args.min_free_gb,
                    mem_model=dict(base_mb=MEM_BASE_MB, per_kcontact_mb=MEM_PER_KCONTACT_MB, time_per_kcontact_s=TIME_PER_KCONTACT_S),
                    root_from=args.root_from, root_to=args.root_to, allow_dirty=args.allow_dirty,
+                   observe_imports=bool(args.observe_imports),
                    allow_missing_raw=args.allow_missing_raw, pyc_purged=n_pyc, git=pf['git'], code_hashes=hashes,
                    **{GEN_KEY: gen}, generation_probe=pf['generation'], code_dependency_closure=pf['dependency_closure']['files'],
                    handover_code_hashes={rel: sha256_file(ROOT / rel) for rel in HANDOVER_FILES}, input_digest=pf['input_digest'],
-                   seal=dict(schema=LAUNCH_SEAL_SCHEMA, code_fp=code_fp(hashes), code_root=str(ROOT), files=len(hashes),
+                   seal=dict(schema=LAUNCH_SEAL_SCHEMA, launch_format=LAUNCH_FORMAT, code_fp=code_fp(hashes), code_root=str(ROOT), files=len(hashes),
                              dirty=bool(pf['git'].get('dirty')), allow_dirty=bool(args.allow_dirty), **{GEN_KEY: gen}),
                    preflight={k: v for k, v in pf.items() if k not in ('git', 'generation', 'dependency_closure', 'input_digest')}, plan=plan,
                    retries=[])
+        #  ★ 10-07 G2RR2-01 — 쓰기 전에 같은 자격 검사 (run · retry · audit · merge 가 쓰는 함수) 로 자기 대조 — 새 형식 필수 선언이 하나라도 빠진 manifest 로는
+        #    발사하지 않는다 (실행기 결함이면 여기서 멈춘다)
+        _el = launch_eligibility(json.loads(json.dumps(man, ensure_ascii=False)))
+        if _el['kind'] != 'current':
+            print(f'⛔ 발사 manifest 가 자기 자격 검사를 통과하지 않는다 (G2RR2-01) — {_el["problems"][:5]} · 아무것도 띄우지 않았다', file=sys.stderr)
+            return 2
         write_json(root / 'manifest.json', man)
         rc = _run_and_merge(root, man, plan['queue'], args.lanes, budget_mb, args.min_free_gb, args.no_merge, run_label='run',
                             allow_dirty=args.allow_dirty)
@@ -1595,6 +1932,14 @@ def cmd_retry(args) -> int:
     _guard_posix()
     root = Path(args.root).expanduser().resolve()
     man = _load_root(root)
+    #  ★ 10-07 G2RR2-01 — 실행 형식 자격 먼저 (run · audit · merge 와 같은 함수) — 역사 형식 · 선언을 지운 manifest 는 retry 하지 않는다 (넘김 불가)
+    el = launch_eligibility(man)
+    if el['kind'] != 'current':
+        print('⛔ retry 거부 — 실행 형식 자격 (G2RR2-01) · 아무것도 띄우지 않았다 · 아무 파일도 쓰지 않았다', file=sys.stderr)
+        for p in ([f'역사 형식 ROOT ({el["historical"]}) — 이 실행기로 retry 하지 않는다 (그 ROOT 의 커밋 실행기로 · 넘김 불가)']
+                  if el['kind'] == 'historical' else el['problems'][:10]):
+            print(f'   형식: {p}', file=sys.stderr)
+        return 2
     #  RGLR3-01 ⓐ — 시작 관문: 워커 체크아웃의 HEAD · 봉인 파일 해시 · dirty · 기대 망 세대 를 발사 봉인과 대조 (같은 HEAD 여도 코드가 다르면 거부)
     gate = seal_gate(man)
     g = gate['git']
@@ -1646,15 +1991,16 @@ def cmd_retry(args) -> int:
     return rc
 
 
-def seal_audit(root: Path, man: dict) -> list:
+def seal_audit(root: Path, man: dict, history=False) -> list:
     """케이스마다 case_seal 판정 + merged 기록이 케이스 폴더 기록과 같은가 (읽기 전용).
-    ★ 10-07 G2RR-01 — manifest 가 기대 망 세대를 선언했으면 done · partial 케이스마다 레코드 세대 (`case_record_generation`) 를 싣는다 (옛 manifest = None)."""
+    ★ 10-07 G2RR-01 · G2RR2-01 — 새 실행 형식 (자격 current) 이면 done · partial 케이스마다 레코드 세대 (`case_record_generation`) 를 싣는다 · 역사 형식 (history) = None ·
+    옛 형식 시도 판정은 history 일 때만."""
     runs_by_no = _runs_by_no(root)
-    declared = GEN_KEY in man or GEN_KEY in (man.get('seal') or {})
+    declared = not history
     merged = {}
     out = []
     for e in sorted(man['plan']['queue'], key=lambda x: (x['cohort'], x['case'])):
-        sv = dict(case_seal(root, man, e['case'], runs_by_no), cohort=e['cohort'])
+        sv = dict(case_seal(root, man, e['case'], runs_by_no, history=history), cohort=e['cohort'])
         sv['generation'] = case_record_generation(root, e['case']) if declared and sv.get('record_status') in KEEP else None
         if e['cohort'] not in merged:
             merged[e['cohort']] = read_json(root / 'merged' / e['cohort'] / 'status.json')
@@ -1674,15 +2020,32 @@ def seal_audit(root: Path, man: dict) -> list:
 
 def cmd_audit(args) -> int:
     """봉인 감사 (읽기 전용) — 케이스마다 어느 코드로 계산됐나.  rc 0 = 기록 전부 봉인 안 (SEALED · SEALED_DIRTY_ALLOWED · SEALED_LEGACY) ·
-    merged 가 있으면 케이스 폴더 기록과 같다 / 1 = 봉인 밖 (UNSEALED) 또는 merged 와 다름 / 2 = 이 실행기의 ROOT 가 아님."""
+    merged 가 있으면 케이스 폴더 기록과 같다 / 1 = 봉인 밖 (UNSEALED) 또는 merged 와 다름 · 세대 · 입력 지문 문제 / 2 = 이 실행기의 ROOT 가 아님 ·
+    ★ 10-07 G2RR2-01 실행 형식 자격 invalid (선언을 지운 새 manifest 등) · 역사 형식인데 --historical 이 아님."""
     root = Path(args.root).expanduser().resolve()
     man = _load_root(root)
+    #  ★ 10-07 G2RR2-01 — 실행 형식 자격 (run · retry · merge 와 같은 함수).  invalid = rc 2 (판정표 없음 — 그 manifest 의 봉인은 대조 기준이 못 된다) ·
+    #    역사 형식 = --historical 일 때만 (아니면 rc 2)
+    el = launch_eligibility(man)
+    if el['kind'] == 'invalid' or (el['kind'] == 'historical' and not getattr(args, 'historical', False)):
+        why = (el['problems'] if el['kind'] == 'invalid' else
+               [f'역사 형식 ROOT ({el["historical"]}) — 역사 모드 (--historical) 에서만 읽는다 · {el["note"]}'])
+        print(f'⛔ 봉인 감사 거부 — 실행 형식 자격 {el["kind"]} (G2RR2-01) — {root}')
+        for p_ in why[:12]:
+            print(f'  ✗ 형식: {p_}')
+        if args.json:
+            write_json(Path(args.json).expanduser(), dict(schema=LAUNCH_SEAL_SCHEMA + '#audit', root=str(root), audited_at=now_iso(),
+                                                          eligibility=dict(kind=el['kind'], historical=el['historical'], problems=why, note=el['note']),
+                                                          refused=True))
+        return 2
+    history = el['kind'] == 'historical'
     seal = seal_context(man)
-    rows = seal_audit(root, man)
+    rows = seal_audit(root, man, history=history)
     now = _hashes_at(seal['root'])
     cnt = collections.Counter(r['verdict'] for r in rows)
     mcnt = collections.Counter(r['merged'] for r in rows)
     print(f'══ 봉인 감사 — {root}')
+    print(f'  실행 형식 자격 {el["kind"]}' + (f' · {el["note"]}' if el['note'] else ' (새 실행 형식 — 필수 선언 전부 · G2RR2-01)'))
     print(f'  발사 git {seal["sha"][:9] or "?"} · 지문 {str(seal["fp"] or "없음 (봉인 불완전)")[:16]} · 워커 체크아웃 {seal["root"]} '
           f'(지금 그 체크아웃 = 봉인 {"✓" if not seal_diff(now, seal["hashes"]) else "✗ " + str(seal_diff(now, seal["hashes"]))} — 정보 · 판정과 무관)')
     print('  case\tcohort\tstatus\tverdict\tattempt(run)\tmerged\twhy')
@@ -1691,27 +2054,39 @@ def cmd_audit(args) -> int:
               f'{r.get("attempt") if r.get("attempt") is not None else "-"}({r.get("run") if r.get("run") is not None else "-"})\t'
               f'{r["merged"]}\t{r["why"][:220]}')
     print(f'  판정 {dict(cnt)} · merged {dict(mcnt)}')
-    #  ★ 10-07 G2RR-01 — 기대 망 세대: manifest = 봉인 사본 · 케이스 레코드 세대 = 선언 (옛 manifest = 선언 없음 · 대조 안 함)
-    declared = GEN_KEY in man or GEN_KEY in (man.get('seal') or {})
-    gen_problems = manifest_generation_problems(man)
+    #  ★ 10-07 G2RR-01 · G2RR2-01 — 기대 망 세대: 새 실행 형식은 선언이 필수 (자격 검사가 값 = 봉인 사본 = g2 를 이미 봤다) · 케이스 레코드 세대 = 선언 ·
+    #    역사 형식 = 선언 없는 형식 (세대 대조 안 함 · 표지)
+    declared = not history
+    gen_problems = []
     if declared:
         gen_problems += [f'{r["case"]}: 레코드 세대 {r["generation"]!r} ≠ manifest 기대 세대 {man.get(GEN_KEY)!r}'
                          for r in rows if r.get('generation') is not None and r['generation'] != man.get(GEN_KEY)]
     gcnt = collections.Counter(r.get('generation') for r in rows if r.get('generation') is not None)
     print(f'  기대 망 세대 ({GEN_KEY}) {man.get(GEN_KEY)!r} · 봉인 사본 {(man.get("seal") or {}).get(GEN_KEY)!r} · 케이스 레코드 세대 {dict(gcnt)}'
-          if declared else '  기대 망 세대 — 선언 없음 (옛 manifest · 이 필드 이전 실행기) — 세대 대조 안 함')
+          if declared else '  기대 망 세대 — 역사 형식 (선언 없는 형식 · 등록된 옛 실행) — 세대 대조 안 함')
     for p_ in gen_problems[:20]:
         print(f'  ✗ 세대: {p_}')
-    #  ★ 10-07 §7-3 — 입력 지문 (ID · 코호트 · 원자료 sha256) 을 지금 수확 JSON 으로 다시 계산해 대조 (옛 manifest = 기록 없음 · 대조 안 함)
+    #  ★ 10-07 §7-3 — 입력 지문 (ID · 코호트 · 원자료 sha256) 을 지금 수확 JSON 으로 다시 계산해 대조 (새 실행 형식 = 필수 · 역사 형식 = 기록 없음 · 대조 안 함)
     input_problems = []
-    if isinstance(man.get('input_digest'), dict):
+    if declared:
         now_d = plan_input_digest(man.get('plan') or {})
         input_problems = [f'입력 지문 {k}: 발사 {man["input_digest"].get(k)!r} ≠ 지금 {now_d.get(k)!r}'
                           for k in ('n', 'ids_sha256', 'raw_sha256_table_sha256', 'cohort_tsv_sha256') if man['input_digest'].get(k) != now_d.get(k)]
         print('  입력 지문 (ID · 코호트 · 원자료 sha256) = 발사 기록 ' + ('✓' if not input_problems else '✗'))
         for p_ in input_problems:
             print(f'  ✗ {p_}')
-    bad = cnt.get('UNSEALED', 0) + mcnt.get('differs', 0) + mcnt.get('missing', 0) + len(gen_problems) + len(input_problems)
+    #  ★ 10-07 G2RR2-03 — 시범의 실제 import 관측 (`run --observe-imports`) — 워커 · 단계 하위 프로세스가 읽은 리포 모듈 ⊆ 봉인 CODE_FILES
+    import_obs, obs_problems = None, []
+    if man.get('observe_imports') or (root / IMPORT_OBS_DIR / 'log').is_dir():
+        import_obs = import_observation(root / IMPORT_OBS_DIR, code_root(man))
+        if man.get('observe_imports') and not import_obs['n_processes']:
+            obs_problems.append('manifest 는 import 관측을 켰는데 관측 기록이 하나도 없다 (훅이 돌지 않았다)')
+        obs_problems += [f'봉인 밖 모듈을 실제로 읽었다: {f}' for f in import_obs['outside']]
+        print(f'  실제 import 관측 (run --observe-imports · G2RR2-03) — 프로세스 {import_obs["n_processes"]} · 리포 모듈 {len(import_obs["observed"])} ⊆ 봉인 '
+              f'CODE_FILES {len(CODE_FILES)} ' + ('✓' if not obs_problems else '✗'))
+        for p_ in obs_problems[:20]:
+            print(f'  ✗ 관측: {p_}')
+    bad = cnt.get('UNSEALED', 0) + mcnt.get('differs', 0) + mcnt.get('missing', 0) + len(gen_problems) + len(input_problems) + len(obs_problems)
     print('  ✓ 기록 전부 발사 봉인 코드에서 나왔다' + (' · merged = 케이스 폴더' if mcnt.get('same') else '')
           + (' · 레코드 세대 = 기대 세대' if declared else '') if not bad else
           f'  ✗ 봉인 밖 {cnt.get("UNSEALED", 0)} 건 · merged 와 다름 {mcnt.get("differs", 0) + mcnt.get("missing", 0)} 건 · 세대 문제 {len(gen_problems)} 건 — '
@@ -1721,7 +2096,9 @@ def cmd_audit(args) -> int:
     payload = dict(schema=LAUNCH_SEAL_SCHEMA + '#audit', root=str(root), audited_at=now_iso(), launch_sha=seal['sha'], seal_fp=seal['fp'],
                    code_root=str(seal['root']), code_root_changed_now=seal_diff(now, seal['hashes']), verdicts=dict(cnt),
                    merged=dict(mcnt), cases=rows, **{GEN_KEY: man.get(GEN_KEY)}, generation_declared=declared,
-                   generation_problems=gen_problems, input_problems=input_problems)
+                   generation_problems=gen_problems, input_problems=input_problems,
+                   eligibility=dict(kind=el['kind'], historical=el['historical'], problems=el['problems'], note=el['note']),
+                   import_observation=import_obs, import_observation_problems=obs_problems)
     if args.json:
         write_json(Path(args.json).expanduser(), payload)
     if args.tsv:
@@ -1740,12 +2117,15 @@ def cmd_merge(args) -> int:
     root = Path(args.root).expanduser().resolve()
     _load_root(root)
     with root_lock(root):
-        return merge(root, allow_mixed=args.allow_mixed_generation)
+        return merge(root, allow_mixed=args.allow_mixed_generation, historical=args.historical)
 
 
 def cmd_status(args) -> int:
     root = Path(args.root).expanduser().resolve()
     man = _load_root(root)
+    _el = launch_eligibility(man)
+    print(f'  실행 형식 자격 {_el["kind"]}' + (f' ({_el["historical"]})' if _el['historical'] else '')
+          + (f' — {_el["problems"][:3]}' if _el['problems'] else ''))
     cnt, running = collections.Counter(), []
     for e in man['plan']['queue']:
         cdir = case_dir(root, e['case'])
@@ -1793,6 +2173,9 @@ def _parse(argv=None):
     r.add_argument('--allow-dirty', action='store_true', help='추적 파일이 바뀐 트리에서도 돈다 (manifest 에 남는다)')
     r.add_argument('--allow-missing-raw', action='store_true', help='원자료 · 메시가 없는 케이스가 있어도 돈다 (REFUSED 로 남는다)')
     r.add_argument('--skip-batch-selftest', action='store_true', help='발사 전 lhs_webapp_batch --selftest 를 건너뛴다')
+    r.add_argument('--observe-imports', action='store_true',
+                   help='시범 전용 — 워커 · 단계 하위 프로세스의 실제 import 를 <ROOT>/import_obs 에 적는다 (sitecustomize 훅 · 값에 닿지 않는다 · audit 가 봉인 ⊇ 관측을 '
+                        '본다 · G2RR2-03 · manifest 에 남는다)')
     r.add_argument('--worker-script', default='', help=argparse.SUPPRESS)        # selftest 전용 (manifest 에 남는다)
 
     t = sub.add_parser('retry', help='done · partial 아닌 케이스 + 봉인 밖 (UNSEALED) 기록만 같은 ROOT 에서 다시 (시작 전 발사 봉인 대조 · 기록 보존)')
@@ -1809,6 +2192,8 @@ def _parse(argv=None):
     m.add_argument('--root', required=True)
     m.add_argument('--allow-mixed-generation', action='store_true',
                    help='워커 코드 sha 가 섞이거나 발사 봉인 밖 기록 (UNSEALED) 이 있어도 묶는다 (보고에 기록 · rc 1)')
+    m.add_argument('--historical', action='store_true',
+                   help='역사 모드 — 등록된 옛 실행 (HISTORICAL_LAUNCHES) 의 ROOT 만 (옛 형식 첫 run 규칙 · 세대 · 입력 대조 없음 표지 · G2RR2-01)')
 
     s = sub.add_parser('status', help='진행 상황')
     s.add_argument('--root', required=True)
@@ -1817,6 +2202,8 @@ def _parse(argv=None):
     u.add_argument('--root', required=True)
     u.add_argument('--tsv', default='', help='판정표 TSV 를 쓸 곳 (주지 않으면 아무 파일도 안 쓴다)')
     u.add_argument('--json', default='', help='판정 JSON 을 쓸 곳')
+    u.add_argument('--historical', action='store_true',
+                   help='역사 모드 — 등록된 옛 실행 (HISTORICAL_LAUNCHES — 형식 + 발사 출처가 정확히) 의 ROOT 만 읽는다 (그 밖 = rc 2 · G2RR2-01)')
     return ap.parse_args(argv)
 
 
@@ -1851,6 +2238,8 @@ sys.dont_write_bytecode = True
 sys.path.insert(0, os.path.join(os.environ['NP194_REPO'], 'scripts'))
 import lhs_webapp_batch as LWB
 PLAN = json.load(open(os.environ['NP194_FAKE_PLAN']))
+if os.environ.get('NP194_FAKE_EXTRA_IMPORT'):          # ★ 10-07 G2RR2-03 import 관측 시험 — 워커가 봉인 밖 모듈을 읽는 대역
+    __import__(os.environ['NP194_FAKE_EXTRA_IMPORT'])
 ENVK = ('OMP_NUM_THREADS', 'MKL_NUM_THREADS', 'OPENBLAS_NUM_THREADS', 'NUMEXPR_NUM_THREADS', 'VECLIB_MAXIMUM_THREADS',
         'TMPDIR', 'PYTHONDONTWRITEBYTECODE')
 if os.environ.get('NP194_FAKE_DIRTY') in ('0', '1'):     # 봉인 시험 대역 — 워커 자신의 runs[] dirty 표지만 바꾼다 (git sha 는 진짜)
@@ -1934,7 +2323,7 @@ def _selftest() -> int:
             fails.append(name)
 
     tmp = Path(tempfile.mkdtemp(prefix='np194_')).resolve()
-    env_keep = {k: os.environ.get(k) for k in ('NP194_REPO', 'NP194_FAKE_PLAN', 'TMPDIR', 'NP194_FAKE_DIRTY', 'NP194_FAKE_DUAL')}
+    env_keep = {k: os.environ.get(k) for k in ('NP194_REPO', 'NP194_FAKE_PLAN', 'TMPDIR', 'NP194_FAKE_DIRTY', 'NP194_FAKE_DUAL', 'NP194_FAKE_EXTRA_IMPORT')}
     os.environ.pop('NP194_FAKE_DIRTY', None)
     os.environ.pop('NP194_FAKE_DUAL', None)
     try:
@@ -2414,14 +2803,17 @@ def _selftest() -> int:
         _scenario('㉒ 실행 중 코드 변경 시나리오', _s22)
 
         # ㉓ (e) Codex new_probes.py 반례 그대로 — 실제 cmd_retry → _run_and_merge → merge · OS 잠금 · 환경 조회 · 워커만 대역
+        #   ★ 10-07 G2RR2-01 — 옛 형식 ROOT 픽스처 = 등록된 옛 실행의 manifest 바이트 (형식 · 발사 출처 그대로 · 계획만 이 케이스) — 손으로 줄인 manifest 는
+        #     이제 어느 형식도 아니다 (invalid · 옛 형식으로 추론하지 않는다)
         rr = tmp / 'codex_rglr3'
         case_ = 'lhs00_000'
         cs_ = dict(name='lhs', harvest_dir='sealed_harvest', cohort='sealed_cohort', expect_n=1, union='', design='')
         q_ = dict(case=case_, cohort='lhs', contacts=100, est_mem_mb=150.5)
         gh_ = '11fcf91e8a1f4837b83892b7e4a81125eaeee4e5'
-        man_c = dict(schema=SCHEMA, git=dict(sha=gh_, short=gh_[:9]), code_hashes=dict(_h_real), plan=dict(cohorts=[cs_], queue=[q_]),
-                     lanes=20, network_lock='per-case')
-        changed_ = dict(_h_real)
+        _hm = json.loads((ROOT / 'docs' / 'data' / 'lhs_network194_11fcf91e8' / 'manifest.json').read_text(encoding='utf-8'))
+        man_c = dict(_hm, plan=dict(cohorts=[cs_], queue=[q_], order='cost'))
+        _h_hist = dict(_hm['code_hashes'])
+        changed_ = dict(_h_hist)
         changed_[_NCF] = '0' * 64
 
         def _legacy_root(root_, *, attempts, runs, st_runs, status='done'):
@@ -2439,11 +2831,14 @@ def _selftest() -> int:
             cd_, st_ = _legacy_root(rr, attempts=[dict(rc=0, outcome='done', run=1, attempt=1)], runs={1: dict(code_changed_during_run=[])},
                                     st_runs=[dict(git_sha=gh_, dirty=False)])
             with _patch(code_hashes=lambda *a, **k: changed_):
-                rc_m = merge(rr, out=lambda *a, **k: None)
+                rc_m0 = merge(rr, out=lambda *a, **k: None)
+                rc_m = merge(rr, out=lambda *a, **k: None, historical=True)
             rep_ = read_json(rr / 'merged' / 'merge_report.json') or {}
-            chk('㉓e Codex 반례 앞 절반 — 끝난 뒤 지금 트리만 바뀐 배치는 기각하지 않는다 (옛 형식 첫 run = SEALED_LEGACY) · 바뀐 파일은 정보로 남는다',
-                rc_m == 0 and rep_.get('code_changed_since_launch') == [_NCF] and not rep_.get('mixed_generation')
-                and (rep_.get('seal') or {}).get('verdicts') == {'SEALED_LEGACY': 1}, repr((rc_m, rep_.get('seal'))))
+            chk('㉓e Codex 반례 앞 절반 — 끝난 뒤 지금 트리만 바뀐 배치는 기각하지 않는다 (옛 형식 첫 run = SEALED_LEGACY · ★ 역사 모드 merge --historical 에서만 · '
+                '기본 merge = rc 2) · 바뀐 파일은 정보로 남는다',
+                rc_m0 == 2 and rc_m == 0 and _NCF in (rep_.get('code_changed_since_launch') or []) and not rep_.get('mixed_generation')
+                and (rep_.get('seal') or {}).get('verdicts') == {'SEALED_LEGACY': 1}
+                and (rep_.get('eligibility') or {}).get('kind') == 'historical', repr((rc_m0, rc_m, rep_.get('seal'))))
             st_['cases'][case_]['status'] = 'failed'
             LWB.write_outputs(cd_ / 'out', st_, {case_: dict(case=case_)})
             called_ = []
@@ -2467,18 +2862,42 @@ def _selftest() -> int:
                 except SystemExit as e:
                     return (e.code if isinstance(e.code, int) else 2), buf_.getvalue()
             rc_r, o_r = _retry(['retry', '--root', str(rr)])
-            chk('㉓e ★ Codex new_probes.py 반례 그대로 — 같은 HEAD · dirty · 발사 뒤 바뀐 network_conductivity.py 지문으로 retry → rc 2 · '
-                '워커 안 부름 · runs/run_002 없음 · merged 그대로 (옛 코드: retry_rc 0 · code_changed_during_run [] · mixed [])',
-                rc_r == 2 and not called_ and not (rr / 'runs' / 'run_002.json').exists()
-                and (rr / 'merged' / 'merge_report.json').read_bytes() == rep_b and '발사 봉인' in o_r, repr((rc_r, bool(called_), o_r[-300:])))
-            rc_o, _o = _retry(['retry', '--root', str(rr), '--allow-dirty', '--allow-mixed-generation'])
-            rep_o = read_json(rr / 'merged' / 'merge_report.json') or {}
-            last_ = ((read_json(rr / 'manifest.json') or {}).get('retries') or [{}])[-1]
-            chk('㉓e 넘김은 조용하지 않다 — --allow-dirty --allow-mixed-generation 이면 돌지만 그 기록은 봉인 밖 (시도 지문 없음 · runs 2 건) · '
+            rc_o, o_o = _retry(['retry', '--root', str(rr), '--allow-dirty', '--allow-mixed-generation'])
+            chk('㉓e ★ Codex new_probes.py 반례 그대로 — 같은 HEAD · dirty · 발사 뒤 바뀐 network_conductivity.py 지문으로 옛 형식 ROOT retry → rc 2 · '
+                '워커 안 부름 · runs/run_002 없음 · merged 그대로 (옛 코드: retry_rc 0) · ★ G2RR2-01 — 역사 형식 ROOT 는 넘김 (--allow-dirty · '
+                '--allow-mixed-generation) 으로도 이 실행기로 retry 하지 않는다 (그 커밋의 실행기로)',
+                rc_r == 2 and rc_o == 2 and not called_ and not (rr / 'runs' / 'run_002.json').exists()
+                and (rr / 'merged' / 'merge_report.json').read_bytes() == rep_b and '역사' in o_r and '역사' in o_o,
+                repr((rc_r, rc_o, bool(called_), o_r[-300:])))
+            #  넘김은 조용하지 않다 — 새 실행 형식 ROOT (⑳ 의 진짜 run ROOT 사본) 에서: 코드 · HEAD · dirty 가 발사와 다른 채 넘김 둘로 retry 하면 돌지만 그 기록은
+            #   봉인 밖 · merge rc 1 · allow_mixed_generation · manifest retries[] 에 두 넘김 · 바뀐 파일
+            rc_ = tmp / 'override_current'
+            shutil.copytree(R20, rc_, symlinks=True)
+            stp_ = case_dir(rc_, 'lhsx_901') / 'out' / 'status.json'
+            st2_ = json.loads(stp_.read_text(encoding='utf-8'))
+            st2_['cases']['lhsx_901']['status'] = 'failed'
+            stp_.write_text(json.dumps(st2_), encoding='utf-8')
+            called2_ = []
+
+            def synthetic_worker2(*a, **kw):
+                called2_.append(True)
+                st2_['cases']['lhsx_901'].update(status='done', network_run_id='RUN-lhsx_901-override')    # 이 시도가 쓴 새 기록 (시도 지문 없음 — 대역)
+                st2_['runs'].append(dict(git_sha=gh_, dirty=True))
+                stp_.write_text(json.dumps(st2_), encoding='utf-8')
+                return dict(outcomes={'done': 1}, wall_h=0, max_concurrent=1, budget_events=0, backfills=0, events=0, interrupted=False)
+            changed_cur = dict(_h_real)
+            changed_cur[_NCF] = '0' * 64
+            mocks2_ = dict(mocks_, code_hashes=lambda *a, **k: changed_cur, run_queue=synthetic_worker2)
+            buf2_ = io.StringIO()
+            with _patch(**mocks2_), contextlib.redirect_stdout(buf2_), contextlib.redirect_stderr(buf2_):
+                rc_o2 = cmd_retry(_parse(['retry', '--root', str(rc_), '--allow-dirty', '--allow-mixed-generation']))
+            rep_o = read_json(rc_ / 'merged' / 'merge_report.json') or {}
+            last_ = ((read_json(rc_ / 'manifest.json') or {}).get('retries') or [{}])[-1]
+            chk('㉓e 넘김은 조용하지 않다 (새 실행 형식 ROOT) — --allow-dirty --allow-mixed-generation 이면 돌지만 그 기록은 봉인 밖 · '
                 'merge rc 1 · allow_mixed_generation · manifest retries[] 에 두 넘김 · 바뀐 파일',
-                rc_o == 1 and bool(called_) and rep_o.get('allow_mixed_generation') is True and bool((rep_o.get('seal') or {}).get('unsealed'))
+                rc_o2 == 1 and bool(called2_) and rep_o.get('allow_mixed_generation') is True and bool((rep_o.get('seal') or {}).get('unsealed'))
                 and last_.get('allow_dirty') is True and last_.get('allow_mixed_generation') is True
-                and _NCF in (last_.get('code_changed_vs_seal') or []), repr((rc_o, rep_o.get('seal'), last_)))
+                and _NCF in (last_.get('code_changed_vs_seal') or []), repr((rc_o2, rep_o.get('seal'), last_, buf2_.getvalue()[-300:])))
         _scenario('㉓ Codex 반례 시나리오', _s23)
 
         # ㉔ 옛 형식 (시도 지문 없는 실행기) 판정 규칙 — 첫 run 의 유일한 시도만 입증된다
@@ -2489,12 +2908,20 @@ def _selftest() -> int:
             _legacy_root(rl, attempts=[dict(rc=-9, outcome='NO_RECORD', run=1, attempt=1), dict(rc=0, outcome='done', run=2, attempt=2)],
                          runs={1: dict(kind='run', code_changed_during_run=[]), 2: dict(kind='retry', code_changed_during_run=[])},
                          st_runs=[dict(git_sha=gh_, dirty=False)])
-            v_ = _cs(rl, man_c, case_) if _cs else {}
+            v_ = _cs(rl, man_c, case_, history=True) if _cs else {}
             t_ = _rt(rl, man_c)[0] if _rt else []
-            rc_ = merge(rl, out=lambda *a, **k: None)
-            chk('㉔ ★ 옛 형식 재시도 (run 2) 가 쓴 기록 — 시도 지문이 없어 입증 못 한다 → UNSEALED · merge rc 2 · retry 는 done 이어도 --force 로 다시 고른다',
+            rc_ = merge(rl, out=lambda *a, **k: None, historical=True)
+            chk('㉔ ★ 옛 형식 재시도 (run 2) 가 쓴 기록 — 시도 지문이 없어 입증 못 한다 → UNSEALED · merge (역사 모드) rc 2 · retry 목록은 done 이어도 --force 로 '
+                '다시 고른다 (그 ROOT 의 retry 는 그 커밋의 실행기 몫)',
                 v_.get('verdict') == 'UNSEALED' and rc_ == 2 and [e.get('case') for e in t_] == [case_] and t_[0].get('force') is True,
                 repr((v_, rc_, t_)))
+            rok = tmp / 'legacy_ok_first_run'
+            _legacy_root(rok, attempts=[dict(rc=0, outcome='done', run=1, attempt=1)], runs={1: dict(kind='run', code_changed_during_run=[])},
+                         st_runs=[dict(git_sha=gh_, dirty=False)])
+            vh_, vn_ = _cs(rok, man_c, case_, history=True), _cs(rok, man_c, case_)
+            chk('㉔ ★ G2RR2-01 — 같은 옛 형식 첫 run 기록: 역사 모드 = SEALED_LEGACY · 역사 모드가 아니면 (새 실행 형식 판정) UNSEALED — 시도 지문이 없다는 것으로 '
+                '옛 형식을 추론하지 않는다', vh_.get('verdict') == 'SEALED_LEGACY' and vn_.get('verdict') == 'UNSEALED' and 'G2RR2-01' in vn_.get('why', ''),
+                repr((vh_.get('verdict'), vn_.get('verdict'), vn_.get('why'))))
             bad = []
             for nm_, kw_ in (('첫 run 중 코드 변경 (h0 ≠ h1)', dict(runs={1: dict(kind='run', code_changed_during_run=[_NCF])})),
                              ('워커 dirty', dict(st_runs=[dict(git_sha=gh_, dirty=True)])),
@@ -2507,7 +2934,7 @@ def _selftest() -> int:
                              st_runs=[dict(git_sha=gh_, dirty=False)])
                 base_.update(kw_)
                 _legacy_root(rv, **base_)
-                vv = _cs(rv, man_c, case_) if _cs else {}
+                vv = _cs(rv, man_c, case_, history=True) if _cs else {}
                 if vv.get('verdict') != 'UNSEALED':
                     bad.append((nm_, vv.get('verdict')))
             chk('㉔ 옛 형식 첫 run 도 — 실행 중 코드 변경 · 워커 dirty · 워커 sha 다름 · 기록 두 번이면 UNSEALED', not bad and bool(_cs), repr(bad))
@@ -2574,7 +3001,7 @@ def _selftest() -> int:
             for rel in CODE_FILES:
                 (alt / rel).parent.mkdir(parents=True, exist_ok=True)
                 shutil.copyfile(ROOT / rel, alt / rel)
-            man_a = dict(man_c, repo_root=str(alt))
+            man_a = dict(man_c, code_hashes=dict(_h_real), repo_root=str(alt))      # 봉인 = 지금 코드 (형식 자격은 이 시험 밖 — 해시 대조만 본다)
             seen = []
 
             def g_alt(root=None):
@@ -2656,8 +3083,10 @@ def _selftest() -> int:
                 rc_p, o_p = _main_rc(['retry', '--root', str(r_), *L20])
             chk('㉘ 양성 — manifest · 코드 그대로면 retry 가 세대 관문을 지난다 (할 일 없음 → merge rc 0)', rc_p == 0, o_p[-300:])
             rc_a, aj_, _o = _audit_json(tmp / 'gen_var0')
-            chk('㉘ audit — manifest 기대 세대 ≠ 봉인 사본 → rc 1 · generation_problems', rc_a == 1 and bool(aj_.get('generation_problems')),
-                repr((rc_a, aj_.get('generation_problems'))))
+            chk('㉘ audit — manifest 기대 세대 ≠ 봉인 사본 → 비영 (★ G2RR2-01: 실행 형식 자격 invalid = rc 2 · 판정표 없음 · 사유 = 기대 망 세대)',
+                rc_a == 2 and (aj_.get('eligibility') or {}).get('kind') == 'invalid'
+                and any('기대 망 세대' in p_ for p_ in (aj_.get('eligibility') or {}).get('problems') or []),
+                repr((rc_a, aj_.get('eligibility'))))
             set_plan({'lhsx_901': dict(legacy_dual=True)})
             with _patch(git_info=_git_fake()):
                 _main_rc(args_for(tmp / 'run_gen_legacy_case', '--cohorts', 'lhsx', *L20, allow_dirty=False))
@@ -2673,17 +3102,22 @@ def _selftest() -> int:
             sg_ = _G.get('seal_gate')
             with _patch(git_info=lambda *a, **k: dict(sha=gh_, short=gh_[:9], dirty=False, porcelain=[])):
                 g_old = sg_(dict(man_c))
-            chk('㉙ 옛 manifest (기대 세대 선언 없음 — 194 v1.2 런처 모양) — 세대 관문이 retry 를 막지 않는다 (옛 실행기와 같은 코드 봉인 판정 · 표지만)',
-                not g_old.get('generation_bad', ['옛 코드']) and 'manifest' in str(g_old.get('generation_note') or '') and not g_old['mixed'],
+            chk('㉙ ★ G2RR2-01 — 옛 manifest (등록된 옛 실행 · 기대 세대 선언 없는 형식) 의 retry 세대 관문 = 막는다 (역사 형식 · 그 커밋의 실행기로 · 넘김 불가) '
+                '(옛 판: 막지 않았다 — 선언이 없다는 것만으로 면제)',
+                bool(g_old.get('generation_bad')) and '역사' in str(g_old.get('generation_bad')),
                 repr((g_old.get('generation_bad'), g_old.get('generation_note'), g_old.get('mixed'))))
             rl_ = tmp / 'legacy_gen_audit'
             _legacy_root(rl_, attempts=[dict(rc=0, outcome='done', run=1, attempt=1)], runs={1: dict(kind='run', code_changed_during_run=[])},
                          st_runs=[dict(git_sha=gh_, dirty=False)])
-            rc_a, aj_, _o = _audit_json(rl_)
-            chk('㉙ 옛 manifest 감사는 그대로 읽힌다 — rc 0 · SEALED_LEGACY · 기대 세대 None (선언 없음 표지) · 세대 문제 0 · 케이스 세대 대조 안 함',
-                rc_a == 0 and _verdicts(aj_) == {case_: 'SEALED_LEGACY'} and GK in aj_ and aj_.get(GK) is None
+            rc_n, _aj_n, _o_n = _audit_json(rl_)
+            jp_ = tmp / f'audit_hist_{time.monotonic_ns()}.json'
+            rc_a, _o = _main_rc(['audit', '--root', str(rl_), '--historical', '--json', str(jp_)])
+            aj_ = read_json(jp_) or {}
+            chk('㉙ 옛 manifest 감사 — 기본 = rc 2 (역사 형식) · 역사 모드 (--historical) = rc 0 · SEALED_LEGACY · 기대 세대 None (선언 없음 표지) · 세대 문제 0 · '
+                '케이스 세대 대조 안 함',
+                rc_n == 2 and rc_a == 0 and _verdicts(aj_) == {case_: 'SEALED_LEGACY'} and GK in aj_ and aj_.get(GK) is None
                 and not aj_.get('generation_problems') and all(r_.get('generation') is None for r_ in aj_.get('cases') or []),
-                repr((rc_a, _verdicts(aj_), aj_.get(GK, 'KEY_ABSENT'), aj_.get('generation_problems'))))
+                repr((rc_n, rc_a, _verdicts(aj_), aj_.get(GK, 'KEY_ABSENT'), aj_.get('generation_problems'))))
         _scenario('㉙ 옛 manifest 시나리오', _s29)
 
         def _s30():
@@ -2748,6 +3182,244 @@ def _selftest() -> int:
                 rc_a == 1 and bool(aj_.get('input_problems')) and rc_b == 0 and not aj_b.get('input_problems'),
                 repr((rc_a, aj_.get('input_problems'), rc_b, aj_b.get('input_problems'))))
         _scenario('㉜ 입력 지문 시나리오', _s32)
+
+        # ═══ ㉝–㉟ ★ 10-07 Codex 세대 2 재검증 2 (`docs/reviews/codex_review_gen2_network_reverify2_20261007.md`) — 반례 먼저 (옛 코드에서 ✗) ═══════════
+        #   ㉝ G2RR2-01 §2 표 — 새 29+ 파일 봉인 · 시도 영수증 · generation_probe 는 남기고 선언만 지운 manifest 가 옛 형식 면제로 통과 (audit rc 0 · retry 세대 관문 []).
+        #   ㉞ 역사 형식 = 등록된 옛 실행 (HISTORICAL_LAUNCHES — 형식 + 발사 출처) 만 · 역사 모드 (--historical) 에서만 읽힌다 · retry 불가.
+        #   ㉟ G2RR2-03 §4 — 실제 접촉 생산 경로 (analyze_contacts → run_full_analysis → calc_fracture_stages → fracture_model · calc_porosity_union_exact →
+        #      lhs_union_webapp) 의 지연 import 가 봉인 밖 · 정적 닫힘 · 지연 import 분류 · 누락 모듈 변이 · 실제 import 관측.
+        HL = _G.get('HISTORICAL_LAUNCHES') or {}
+        HIST_MAN = ROOT / 'docs' / 'data' / 'lhs_network194_11fcf91e8' / 'manifest.json'
+
+        def _legacy_case_dual(r_, case='lhsx_901'):
+            p_ = case_dir(r_, case) / 'work' / 'results' / case / 'network_conductivity_dual.json'
+            p_.write_text(json.dumps({'hertzian': {'resistance_model': 'maxwell', 'sigma_full': 0.004},
+                                      'physics': {'resistance_model': 'mikic', 'sigma_full': 0.004}}), encoding='utf-8')
+
+        def _s33():
+            src_ = tmp / 'run_gen'
+            hj = Path(specs['lhsx']['harvest']) / 'lhsx_901.json'
+            orig = hj.read_text(encoding='utf-8')
+
+            def _variant(name, edit, atom=False):
+                r_ = tmp / f'g2rr2_01_{name}'
+                shutil.copytree(src_, r_, symlinks=True)
+                m_ = read_json(r_ / 'manifest.json') or {}
+                edit(m_, r_)
+                write_json(r_ / 'manifest.json', m_)
+                try:
+                    if atom:
+                        j_ = json.loads(orig)
+                        j_['raw']['atom']['sha256'] = '0' * 64
+                        hj.write_text(json.dumps(j_), encoding='utf-8')
+                    rc_, aj_, o_ = _audit_json(r_)
+                finally:
+                    hj.write_text(orig, encoding='utf-8')
+                return r_, rc_, aj_, o_
+
+            def _del_gen(m_):
+                m_.pop(GK, None)
+                (m_.get('seal') or {}).pop(GK, None)
+            rows = {
+                '양성 control': (_variant('ctrl', lambda m_, r_: None), 0),
+                '수확 JSON atom SHA 만 변경': (_variant('atom', lambda m_, r_: None, atom=True), 1),
+                '같은 변경 + input_digest 삭제': (_variant('atom_del', lambda m_, r_: m_.pop('input_digest', None), atom=True), 'nz'),
+                '같은 변경 + input_digest=null': (_variant('atom_null', lambda m_, r_: m_.update(input_digest=None), atom=True), 'nz'),
+                '케이스 dual 옛 모양 · 기대 세대 g2 유지': (_variant('legacy', lambda m_, r_: _legacy_case_dual(r_)), 1),
+                '같은 옛 레코드 + top/seal 기대 세대 두 키 삭제': (_variant('legacy_gen_del', lambda m_, r_: (_legacy_case_dual(r_), _del_gen(m_))), 'nz'),
+                'seal 통째 삭제 (generation_probe · 새 해시 · input_digest 남김)': (_variant('seal_del', lambda m_, r_: m_.pop('seal', None)), 'nz'),
+                'generation_probe 삭제': (_variant('probe_del', lambda m_, r_: m_.pop('generation_probe', None)), 'nz'),
+                'launch_format 삭제': (_variant('fmt_del', lambda m_, r_: m_.pop('launch_format', None)), 'nz'),
+                'input_digest 의 raw 표 지문 키 삭제': (_variant('raw_key_del', lambda m_, r_: (m_.get('input_digest') or {}).pop('raw_sha256_table_sha256', None)), 'nz'),
+            }
+            bad = {k: (v[0][1], v[1]) for k, v in rows.items() if not (v[0][1] != 0 if v[1] == 'nz' else v[0][1] == v[1])}
+            chk('㉝ ★ G2RR2-01 Codex §2 표 — 새 manifest 의 필수 선언 (input_digest · 기대 세대 · seal · generation_probe · 형식) 삭제 · null = audit 비영 · '
+                '양성 control rc 0 · 원래 반례 (atom SHA · 옛 레코드) rc 1 유지 (옛: 삭제 · null · 두 키 삭제 = rc 0)', not bad, repr(bad))
+            elig = {k: (v[0][2].get('eligibility') or {}).get('kind') for k, v in rows.items()}
+            chk('㉝ audit JSON 의 자격 — control · 원래 반례 = current · 선언을 지운 것 = invalid (옛 형식으로 추론하지 않는다)',
+                all(elig[k] == 'current' for k in ('양성 control', '수확 JSON atom SHA 만 변경', '케이스 dual 옛 모양 · 기대 세대 g2 유지'))
+                and all(elig[k] == 'invalid' for k, v in rows.items() if v[1] == 'nz'), repr(elig))
+            r_del = rows['같은 옛 레코드 + top/seal 기대 세대 두 키 삭제'][0][0]
+            gb_, _gn = generation_gate(read_json(r_del / 'manifest.json'), ROOT)
+            snap_ = _snap(r_del)
+            with _patch(git_info=_git_fake()):
+                rc_r, o_r = _main_rc(['retry', '--root', str(r_del), *L20, '--allow-mixed-generation', '--allow-dirty'])
+            chk('㉝ ★ retry 세대 관문 — 같은 manifest (기대 세대 두 키 삭제) 를 generation_gate 에 넣으면 막는 사유가 있다 · 실제 retry rc 2 · 아무것도 안 돈다 '
+                '(넘김으로도 못 넘긴다 · 옛: 막는 사유 [])', bool(gb_) and rc_r == 2 and _snap(r_del) == snap_, repr((gb_, rc_r, o_r[-200:])))
+
+        _scenario('㉝ G2RR2-01 필수 선언 시나리오', _s33)
+
+        def _hist_root(name, *, cases=(), edit=None, plan=None):
+            """등록된 옛 실행 (10-05 · 11fcf91e8) 의 manifest 바이트 그대로 + (선택) 케이스 기록 — 옛 실행기가 남긴 모양 (worker.json · out/status.json ·
+            runs/run_001.json).  plan = 계획만 바꿀 때 (등록 형식 · 발사 출처는 그대로)."""
+            r_ = tmp / name
+            r_.mkdir()
+            m_ = json.loads(HIST_MAN.read_text(encoding='utf-8'))
+            if plan is not None:
+                m_['plan'] = plan
+            if edit:
+                edit(m_)
+            write_json(r_ / 'manifest.json', m_)
+            shutil.copytree(HIST_MAN.parent / 'runs', r_ / 'runs')
+            gsha = (m_.get('git') or {}).get('sha')
+            for c in cases:
+                e_ = next(x for x in m_['plan']['queue'] if x['case'] == c)
+                cs_ = next(x for x in m_['plan']['cohorts'] if x['name'] == e_['cohort'])
+                w_ = read_json(HIST_MAN.parent / 'cases' / c / 'worker.json') or {}
+                write_json(case_dir(r_, c) / 'worker.json', w_)
+                at_ = (w_.get('attempts') or [{}])[-1]
+                st_ = dict(schema=LWB.SCHEMA, stop_after='network', harvest_dir=cs_['harvest_dir'], cohort=cs_['cohort'],
+                           cases={c: dict(case=c, stop_after='network', status=at_.get('outcome'), failed_stages=[],
+                                          network_run_id=at_.get('network_run_id'))}, runs=[dict(git_sha=gsha, dirty=False)])
+                LWB.write_outputs(case_dir(r_, c) / 'out', st_, {c: dict(case=c)})
+            return r_
+
+        def _s34():
+            hv_ = _G.get('launch_eligibility')
+            m0 = json.loads(HIST_MAN.read_text(encoding='utf-8'))
+            e0 = hv_(m0) if hv_ else {}
+            chk('㉞ 등록된 옛 실행 — 커밋된 10-05 manifest (11fcf91e8 · 19 파일 · seal 없음) = 역사 형식 (historical) · 등록 이름 · 문제 0',
+                e0.get('kind') == 'historical' and e0.get('historical') in HL and not e0.get('problems'), repr(e0))
+            rh_ = _hist_root('hist_ok', cases=('lhs00_000', 'lhsx_061'))
+            rc_n, aj_n, o_n = _audit_json(rh_)
+            jp_ = tmp / 'audit_hist_mode.json'
+            rc_h, o_h = _main_rc(['audit', '--root', str(rh_), '--historical', '--json', str(jp_)])
+            aj_h = read_json(jp_) or {}
+            vh_ = collections.Counter(r_.get('verdict') for r_ in aj_h.get('cases') or [])
+            chk('㉞ ★ 진짜 역사 ROOT — audit (기본) = 비영 (역사 형식은 역사 모드에서만) · audit --historical = rc 0 · 기록 둘 SEALED_LEGACY · 나머지 NO_RECORD · '
+                '자격 historical (세대 · 입력 지문 대조 없음 표지)',
+                rc_n != 0 and '역사' in o_n and rc_h == 0 and vh_.get('SEALED_LEGACY') == 2 and vh_.get('NO_RECORD') == len(m0['plan']['queue']) - 2
+                and (aj_h.get('eligibility') or {}).get('kind') == 'historical', repr((rc_n, o_n[-160:], rc_h, dict(vh_), o_h[-200:])))
+            bad = {}
+            for nm_, ed_ in (('코드 해시 하나 바뀜', lambda m_: m_['code_hashes'].update({'scripts/network_conductivity.py': '0' * 64})),
+                             ('발사 git sha 다름', lambda m_: m_['git'].update(sha='f' * 40)),
+                             ('기대 세대 키 하나 덧붙임', lambda m_: m_.update({GK: 'g2'})),
+                             ('input_digest 덧붙임 (null)', lambda m_: m_.update(input_digest=None)),
+                             ('키 하나 삭제 (preflight)', lambda m_: m_.pop('preflight', None)),
+                             ('세 번째 코호트', lambda m_: m_['plan']['cohorts'].append(dict(m_['plan']['cohorts'][0], name='lhsz')))):
+                r_ = _hist_root(f'hist_bad_{len(bad)}_{time.monotonic_ns()}', edit=ed_)
+                rc_v, _o = _main_rc(['audit', '--root', str(r_), '--historical'])
+                if rc_v == 0:
+                    bad[nm_] = rc_v
+            chk('㉞ ★ 등록과 다른 옛 모양 — 코드 해시 · 발사 sha · 새 형식 키 덧붙임 · 키 삭제 · 모르는 코호트 → audit --historical 도 비영 (필드 모양으로 역사를 추론하지 않는다)',
+                not bad and len(HL) >= 1, repr(bad))
+            snap_ = _snap(rh_)
+            with _patch(git_info=lambda *a, **k: dict(sha=m0['git']['sha'], short=m0['git']['sha'][:9], dirty=False, porcelain=[])):
+                rc_r, o_r = _main_rc(['retry', '--root', str(rh_), *L20, '--allow-mixed-generation', '--allow-dirty'])
+            chk('㉞ 역사 ROOT 의 retry = rc 2 · 아무것도 안 돈다 (그 ROOT 의 커밋 실행기로 — 넘김 불가)', rc_r == 2 and _snap(rh_) == snap_ and '역사' in o_r,
+                repr((rc_r, o_r[-200:])))
+
+        _scenario('㉞ 역사 형식 시나리오', _s34)
+
+        def _s35():
+            FM, LU = 'scripts/fracture_model.py', 'scripts/lhs_union_webapp.py'
+            cdc = _G.get('code_dependency_closure')
+            clo = cdc(ROOT) if cdc else {}
+            chk('㉟a ★ G2RR2-03 — 정적 닫힘에 실제 접촉 생산 경로의 지연 import (dem_analysis_core → fracture_model · lhs_union_webapp) 가 있다 · 닫힘 ⊆ CODE_FILES '
+                '(옛: 닫힘 27 ⊆ 29 — fracture_model 이 목록 밖)',
+                FM in (clo.get('files') or []) and LU in (clo.get('files') or []) and FM in CODE_FILES and LU in CODE_FILES
+                and not [f for f in clo.get('files') or [] if f not in CODE_FILES] and not clo.get('errors'),
+                repr((sorted(set(clo.get('files') or []) - set(CODE_FILES)), clo.get('errors'))))
+            lic = _G.get('lazy_import_census')
+            cen = lic(ROOT) if lic else {'unclassified': ['(분류 함수 없음)']}
+            alt = tmp / 'census_alt'
+            for rel in set(CODE_FILES) | {FM, LU}:
+                (alt / rel).parent.mkdir(parents=True, exist_ok=True)
+                if (ROOT / rel).is_file():
+                    shutil.copyfile(ROOT / rel, alt / rel)
+            (alt / 'scripts' / 'viewer3d_data.py').write_text('# 봉인 밖 모듈 (selftest)\n', encoding='utf-8')
+            p_ = alt / 'scripts' / 'dem_analysis_core.py'
+            p_.write_text(p_.read_text(encoding='utf-8') + '\n\ndef _selftest_new_lazy():\n    import viewer3d_data  # selftest — 새 지연 import\n',
+                          encoding='utf-8')
+            cen2 = lic(alt) if lic else {'unclassified': []}
+            chk('㉟b ★ 지연 import 분류 — 봉인 파일의 함수 안 import 중 봉인 밖 모듈은 전부 경로 밖 (DEP_LAZY_OFFPATH · 사유) 으로 분류됐다 · 새 지연 import '
+                '(dem_analysis_core → viewer3d_data) 는 분류 밖으로 잡힌다 (발사 사전 점검 중단 사유)',
+                not cen.get('unclassified') and any(u[0] == 'scripts/dem_analysis_core.py' and u[2] == 'scripts/viewer3d_data.py'
+                                                    for u in cen2.get('unclassified') or []),
+                repr((cen.get('unclassified'), cen2.get('unclassified'))))
+            # 누락 모듈 변이 (Codex dependency_gap) — 워커 체크아웃 사본의 fracture_model K_IC_AM_P 0.3 → 30 MPa·m^0.5
+            altc = tmp / 'frac_alt'
+            for rel in set(CODE_FILES) | {FM, LU}:
+                (altc / rel).parent.mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(ROOT / rel, altc / rel)
+            fp0 = code_fp(code_hashes(altc))
+            q_ = altc / FM
+            q_.write_text(q_.read_text(encoding='utf-8').replace('K_IC_AM_P = 0.3e6', 'K_IC_AM_P = 30e6', 1), encoding='utf-8')
+            fp1 = code_fp(code_hashes(altc))
+            man_f = dict(read_json(tmp / 'run_gen' / 'manifest.json') or {}, repo_root=str(altc))
+            with _patch(git_info=lambda *a, **k: dict(sha=(man_f.get('git') or {}).get('sha'), short='x', dirty=False, porcelain=[])):
+                sg_ = seal_gate(man_f)
+            import importlib.util as _ilu
+
+            def _frac(path):
+                spec_ = _ilu.spec_from_file_location(f'_fm_{time.monotonic_ns()}', path)
+                mod_ = _ilu.module_from_spec(spec_)
+                spec_.loader.exec_module(mod_)
+                import dem_analysis_core as _dac
+                saved_ = sys.modules.get('fracture_model')
+                sys.modules['fracture_model'] = mod_
+                try:
+                    A_ = {1: dict(type=1, x=0.0, y=0.0, z=0.0, radius=0.006), 2: dict(type=1, x=0.0, y=0.0, z=0.0118, radius=0.006)}
+                    return _dac.calc_fracture_stages(A_, [dict(id1=1, id2=2, delta=0.0002)], {1: 'AM_P'}, scale=1000.0)
+                finally:
+                    if saved_ is None:
+                        sys.modules.pop('fracture_model', None)
+                    else:
+                        sys.modules['fracture_model'] = saved_
+            f0, f1 = _frac(ROOT / FM), _frac(q_)
+            chk('㉟c ★ 누락 모듈 변이 (Codex dependency_gap) — 사본의 K_IC_AM_P 0.3 → 30: 실제 calc_fracture_stages frac_multicrack_pct 100 → 0 (의존 연결) · '
+                '지문 code_fp 가 바뀐다 · 그 체크아웃으로 retry 시작 관문 = 봉인과 다른 파일 fracture_model (옛: 지문 그대로 f3f54951…) · 정상 모듈 값 보존',
+                f0.get('frac_multicrack_pct') == 100.0 and f0.get('frac_intact_pct') == 0.0 and f1.get('frac_multicrack_pct') == 0.0
+                and f1.get('frac_intact_pct') == 100.0 and fp0 and fp1 and fp0 != fp1 and FM in (sg_.get('changed') or []) and bool(sg_.get('mixed')),
+                repr((f0.get('frac_multicrack_pct'), f1.get('frac_multicrack_pct'), fp0 == fp1, sg_.get('changed'))))
+            # 실제 import 관측 — 생산 경로 (합성 침대 se_am · 실제 웹앱 run_pipeline(stop_after='network') · 단계 하위 프로세스 전부) 의 모든 Python 프로세스가
+            #   끝날 때 sys.modules 의 리포 파일을 적는다 (sitecustomize · PYTHONPATH — 하위 프로세스도 환경을 물려받는다)
+            obs = tmp / 'import_obs'
+            _ioe, _ioo = _G.get('import_obs_env'), _G.get('import_observation')
+            spec_c = dict(id='obs_network', kind='synthetic', bed='se_am', type_map='1:SE,2:AM_P', scale=1, stop='network', root=str(obs / 'root'))
+            (obs / 'root' / 'cases' / 'obs_network').mkdir(parents=True)
+            spec_p = obs / 'spec.json'
+            write_json(spec_p, spec_c)
+            env_ = dict(os.environ, **THREAD_ENV, PYTHONDONTWRITEBYTECODE='1', TMPDIR=str(obs), MPLBACKEND='Agg', **(_ioe(obs, ROOT) if _ioe else {}))
+            rp_ = subprocess.run([sys.executable, str(ROOT / 'scripts' / 'wsl_network_smoke.py'), '--_child', str(spec_p)], cwd=str(obs / 'root'),
+                                 env=env_, capture_output=True, text=True, timeout=900)
+            rep_ = read_json(obs / 'root' / 'cases' / 'obs_network' / 'report.json') or {}
+            io_ = _ioo(obs, ROOT) if _ioo else dict(files=[], observed=[], outside=['(관측 함수 없음)'])
+            seen, outside, _obs_py = set(io_['files']), io_['outside'], io_['observed']
+            stages_ = [s_.get('step') for s_ in rep_.get('stages') or []]
+            chk(f'㉟d ★ 실제 import 관측 — 생산 → 게시 경로 (합성 se_am · run_pipeline stop_after network = {rep_.get("status")!r} · 단계 {len(stages_)} · 프로세스 '
+                f'{len(list((obs / "log").glob("*.txt")))}) 가 읽은 리포 모듈 {len(_obs_py)} ⊆ 봉인 CODE_FILES {len(CODE_FILES)} (시험 도구 둘 제외) · fracture_model · '
+                f'lhs_union_webapp 이 실제로 읽혔다 (경로가 돌았다) (옛: 봉인 밖 fracture_model · lhs_union_webapp · ml_design_structure) {outside or ""}',
+                rp_.returncode == 0 and rep_.get('status') == 'done' and not outside and FM in seen and LU in seen
+                and 'scripts/network_conductivity.py' in seen and 'scripts/lens_geometry.py' in seen,
+                repr((rp_.returncode, rep_.get('status'), outside, sorted(seen)[:40], (rp_.stderr or '')[-300:])))
+
+        _scenario('㉟ G2RR2-03 전이 의존 시나리오', _s35)
+
+        def _s35e():
+            # 시범의 실제 import 관측 (`run --observe-imports`) — 진짜 실행기 · 진짜 lhs_webapp_batch (가짜 웹앱 의존) 의 모든 프로세스 · audit 가 봉인 ⊇ 관측을 본다
+            set_plan({})
+            os.environ['NP194_FAKE_DIRTY'] = '0'
+            Ro, Rx = tmp / 'run_obs', tmp / 'run_obs_extra'
+            with _patch(git_info=_git_fake()):
+                rc_o, o_o = _main_rc(args_for(Ro, '--cohorts', 'lhsx', '--case', 'lhsx_900', *L20, '--observe-imports', allow_dirty=False))
+                rc_a, aj_, _o = _audit_json(Ro)
+                os.environ['NP194_FAKE_EXTRA_IMPORT'] = 'coating_presets'
+                try:
+                    rc_x, _ox = _main_rc(args_for(Rx, '--cohorts', 'lhsx', '--case', 'lhsx_900', *L20, '--observe-imports', allow_dirty=False))
+                finally:
+                    os.environ.pop('NP194_FAKE_EXTRA_IMPORT', None)
+                rc_ax, ajx_, _o = _audit_json(Rx)
+            io_ = aj_.get('import_observation') or {}
+            iox_ = ajx_.get('import_observation') or {}
+            chk('㉟e ★ 시범 import 관측 (run --observe-imports) — 진짜 워커 (lhs_webapp_batch) 프로세스의 리포 import 가 적힌다 · audit rc 0 · 봉인 밖 0 / '
+                '워커가 봉인 밖 모듈 (coating_presets) 을 읽으면 audit rc 1 · 그 파일이 관측 문제로 남는다',
+                rc_o == 0 and rc_a == 0 and io_.get('n_processes', 0) >= 1 and 'scripts/lhs_webapp_batch.py' in (io_.get('observed') or [])
+                and not io_.get('outside') and (read_json(Ro / 'manifest.json') or {}).get('observe_imports') is True
+                and rc_x == 0 and rc_ax == 1 and iox_.get('outside') == ['scripts/coating_presets.py'],
+                repr((rc_o, rc_a, io_.get('n_processes'), io_.get('outside'), rc_x, rc_ax, iox_.get('outside'), o_o[-200:])))
+
+        _scenario('㉟e 시범 import 관측 시나리오', _s35e)
     finally:
         for k, v in env_keep.items():
             if v is None:
