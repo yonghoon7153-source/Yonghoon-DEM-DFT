@@ -55,6 +55,8 @@ JUDGE_REL = 1e-5      # 판정 줄 ↔ thermo 압력 상대 허용 (thermo 인�
 COLLAPSE_RATIO = 0.01   # 잇는 자리: 뒤 조각 첫 줄들이 앞 압력의 1 % 밑이면 붕괴 (판 재부양 증상)
 COLLAPSE_MIN_FRAC = 0.05  # … 단 앞 압력이 목표의 5 % 이상일 때만 (접촉 전은 원래 0)
 COLLAPSE_ROWS = 5
+SHORT_BLOCK_ROWS = 2    # 설정 줄 + 끝 줄뿐인 run (run 0 · run 1) — 재시작 덱의 zmax 진단 등 · 압력 열 검사 밖
+MESH_GAP_MAX = 10000    # 보간에 쓰는 이웃 메시 간격 상한 (덱 dump 간격 5,000 의 두 칸)
 
 RX_MARK = re.compile(r'^\s*=+\s*PHASE\s+(\d+)\s*:\s*(.*?)\s*=+\s*$')
 RX_PLATE = re.compile(r'^\s*=+\s*PLATE HEIGHT:\s*(\S+)\s*=+\s*$')
@@ -229,7 +231,9 @@ def build(seg_paths, mesh_dir, press_col=None):
         if starts[k] > prev['last']:
             fail('C2', f'빈 구간 — {s["label"]} 은 {starts[k]} 에서 시작하는데 {prev["label"]} 는 {prev["last"]} 에서 끝났다')
         if not s['restarts']:
-            fail('C2', f'{s["label"]}: read_restart 줄이 없다 — 재시작 조각이 아니다')
+            # SLURM 화면 출력에는 명령 되풀이 (echo) 가 없다 (2026-10-06 ibb 로그 실측) — 거부하지 않고 표지.
+            # 재시작 step = 첫 thermo 설정 줄 step · 판 위치는 C3 (PLATE HEIGHT ↔ 메시) · C5 (메시 등속) · 압력 붕괴로 본다.
+            note('C2', f'{s["label"]}: read_restart 명령 줄 없음 (화면 출력) — 체크포인트 파일 step 대조 못 함 · 첫 thermo step {starts[k]} 를 재시작 step 으로')
         for rf in s['restarts']:
             d = RX_DIGITS.findall(os.path.basename(rf))
             if not d:
@@ -250,6 +254,7 @@ def build(seg_paths, mesh_dir, press_col=None):
             for step, vals in b['rows'][1:]:                 # 설정 줄 (첫 줄) 버림
                 if kept(k, step):
                     rows.append({'step': step, 'segment': s['label'], 'k': k, 'pcol': b['pcol'],
+                                 'short': len(b['rows']) <= SHORT_BLOCK_ROWS,
                                  'p_deck': (vals[b['pcol']] if b['pcol'] is not None else None)})
     bounds = {}
     for k, s in enumerate(segs):
@@ -284,7 +289,10 @@ def build(seg_paths, mesh_dir, press_col=None):
         r['phase'] = _phase_at(bounds, r['step'])
 
     # ── C1 압력 열 · 유한 ──
-    nopc = [r for r in rows if r['phase'] >= 2 and r['pcol'] is None]
+    nopc = [r for r in rows if r['phase'] >= 2 and r['pcol'] is None and not r['short']]
+    nshort = sum(1 for r in rows if r['phase'] >= 2 and r['pcol'] is None and r['short'])
+    if nshort:
+        note('C1', f'짧은 run (설정 줄 + 끝 줄 ≤ {SHORT_BLOCK_ROWS}) 의 압력 열 없는 줄 {nshort} — 재시작 덱의 zmax `run 1` 등 · 압력 곡선 밖')
     if nopc:
         fail('C1', f'단계 ≥ 2 의 thermo 에 압력 열 (v_pressMPa · pressMPa) 이 없다 — {nopc[0]["segment"]} step {nopc[0]["step"]} 외 {len(nopc) - 1}')
     nonfin = [r for r in rows if r['p_deck'] is not None and not math.isfinite(r['p_deck'])]
@@ -348,8 +356,14 @@ def build(seg_paths, mesh_dir, press_col=None):
             if ref is None:
                 # 같은 step 메시가 없으면 다음 메시 — 단 그 사이에 판이 움직이지 않을 때만 (압축 구간 (b3, b4] 과 안 겹침)
                 nxt = next(((ms, mzv) for ms, mzv in meshes if ms > st), None)
+                prv = next(((ms, mzv) for ms, mzv in reversed(meshes) if ms < st), None)
                 if nxt and (b3 is None or nxt[0] <= b3 or (b4 is not None and st >= b4)):
                     ref, how = nxt[1], f'mesh_{nxt[0]} (판 고정 구간)'
+                elif prv and nxt and nxt[0] - prv[0] <= MESH_GAP_MAX:
+                    # 압축 중 재시작 (실제 r3 · r5 덱: zmax run 1 로 ckpt+1 에서 판을 놓는다) — 이웃 메시 둘의 직선 보간.
+                    # 판은 등속이라 보간이 정확하다 (STL 인쇄 자릿수 안) · 이웃이 재부양으로 어긋나면 C5 가 따로 잡는다.
+                    ref = prv[1] + (nxt[1] - prv[1]) * (st - prv[0]) / (nxt[0] - prv[0])
+                    how = f'mesh_{prv[0]} · mesh_{nxt[0]} 보간'
             if ref is None:
                 note('C3', f'{s["label"]} PLATE HEIGHT {z} (step {st}) — 같은 step 메시가 없어 대조 못 함')
             elif abs(z - ref) > Z_TOL:
@@ -413,7 +427,7 @@ def _refused(segs, why, checks):
 
 def _write_csv(path, rows, cols):
     with open(path, 'w', newline='', encoding='utf-8') as f:
-        w = csv.DictWriter(f, fieldnames=cols)
+        w = csv.DictWriter(f, fieldnames=cols, lineterminator='\n')    # LF 고정 (.gitattributes — CSV eol=lf · Codex R14 P2)
         w.writeheader()
         w.writerows(rows)
 

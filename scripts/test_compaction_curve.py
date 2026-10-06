@@ -142,6 +142,40 @@ def restart_lines(*, plate, ckpt_name=f'restart_ps/restart_settling_{CKPT}.bin',
     return L
 
 
+def restart_r3style(*, plate, ckpt=CKPT, ckpt_name=None, lifted=False, echo=True):
+    """실제 r3 · r5 덱 꼴 — read_restart → zmax `run 1` (ckpt → ckpt+1) → PLATE HEIGHT → PHASE 2 `run 0` (설정 줄만) →
+    PHASE 3 루프가 ckpt+1 부터 → 이완.  (2026-10-06 ibb ps_7_3_r45 r3 로그 머리와 같은 순서)"""
+    name = ckpt_name or f'restart_ps/restart_settling_{ckpt}.bin'
+    L = ['LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26)']
+    if echo:
+        L.append(f'read_restart {name}')
+    L += ['Reading restart file ...', '  160420 atoms']
+    L += block(['Step', 'Atoms', 'zmax'], [ckpt, ckpt + 1], lambda s: [0.1340])
+    L += ['====== SETTLING COMPLETE ======', f'====== PLATE HEIGHT: {plate} ======', '====== PHASE 2: STABILIZE ======']
+    L += block(HDR_P, [ckpt + 1], pvals)                       # run 0 — 설정 줄 하나
+    L += ['====== PHASE 3: COMPRESSION (Speed 0.01) ======']
+    pv = (lambda s: [1e-6, 12.5, 0.0]) if lifted else pvals
+    a = ckpt + 1
+    while True:
+        b = a + 500
+        L += block(HDR_P, thermo_steps(a, b), pv, setup_scale=1.08)
+        x = 0.0 if lifted else p_of(b)
+        L += judge(b, value=x)[1:] if not echo else judge(b, value=x)
+        a = b
+        if lifted and b >= 9001:
+            return L
+        if not lifted and x >= TARGET:
+            break
+    L += ['====== PHASE 4: RELAXATION ======']
+    L += block(HDR_P, thermo_steps(a, a + 1000), pvals)
+    return L
+
+
+def screen_only(lines):
+    """SLURM 화면 출력 꼴 — 명령 되풀이 (echo) 줄이 없다: read_restart · print "…" · fix … 줄을 지운다."""
+    return [ln for ln in lines if not ln.lstrip().startswith(('read_restart', 'print "', 'fix '))]
+
+
 def write(path, lines):
     with open(path, 'w', encoding='utf-8') as f:
         f.write('\n'.join(lines) + '\n')
@@ -316,6 +350,38 @@ def main():
                   f'rc={rc} {sorted(os.listdir(busy))}')
         except Exception as e:
             check('㉑ 비어 있지 않은 --out 거부', False, f'예외 {type(e).__name__}: {e}')
+
+        # ── 실제 ibb 로그 꼴 (2026-10-06 수신 — SLURM 화면 출력 · r3 식 재시작) ──
+        def ok_case(name, segs, mdir=md, want_note=None):
+            out = tempfile.mkdtemp(dir=tmp, prefix='okc_')
+            try:
+                rc = run(sum((['--segment', s_] for s_ in segs), []) + ['--mesh-dir', mdir, '--out', out])
+                s_ = load(out)
+                notes = ' '.join(d for c in s_.get('checks', {}).values() for d in c.get('detail', []))
+                check(name, rc == 0 and s_.get('status') == 'OK' and (want_note is None or want_note in notes),
+                      f'rc={rc} why={s_.get("why")} notes={notes[:200]!r}')
+            except Exception as e:
+                check(name, False, f'예외 {type(e).__name__}: {e}')
+
+        sc = os.path.join(tmp, 'screen')
+        os.makedirs(sc)
+        write(os.path.join(sc, 'r1.out'), screen_only(r1_lines()))
+        write(os.path.join(sc, 'r3.out'), screen_only(restart_lines(plate=f'{z_of(CKPT):.6f}')))
+        ok_case('㉒ 화면 출력 꼴 (read_restart · print 되풀이 줄 없음) — 통과 · read_restart 대조 못 함 표지',
+                [os.path.join(sc, 'r1.out'), os.path.join(sc, 'r3.out')], want_note='read_restart')
+
+        r3s = os.path.join(tmp, 'r3style')
+        os.makedirs(r3s)
+        write(os.path.join(r3s, 'r3.out'), screen_only(restart_r3style(plate=f'{z_of(CKPT):.6f}', echo=False)))
+        write(os.path.join(r3s, 'r2.out'), screen_only(restart_r3style(plate=f'{z_of(CKPT) + LIFT:.6f}', lifted=True, echo=False)))
+        ok_case('㉓ r3 식 재시작 (zmax run 1 · run 0 · 루프 ckpt+1) — 통과 (짧은 블록은 압력 열 검사 밖) · 판 높이 = 메시 보간',
+                [os.path.join(sc, 'r1.out'), os.path.join(r3s, 'r3.out')], want_note='보간')
+        refused('㉔ r3 식 구조의 판 재부양 (r2 꼴) 거부 — C3 (메시 보간 대조)',
+                ['--segment', os.path.join(sc, 'r1.out'), '--segment', os.path.join(r3s, 'r2.out'), '--mesh-dir', md], 'C3')
+        write(os.path.join(r3s, 'r5.out'), screen_only(restart_r3style(plate=f'{z_of(CKPT):.6f}', ckpt=8000, echo=False)))
+        refused('㉕ 늦은 체크포인트에 옛 판 높이 (r5 꼴 · 판 재부양) 거부 — C3',
+                ['--segment', os.path.join(sc, 'r1.out'), '--segment', os.path.join(r3s, 'r3.out'),
+                 '--segment', os.path.join(r3s, 'r5.out'), '--mesh-dir', md], 'C3')
 
         # ── 표지 없는 이완: 판정 줄 탈출 step 으로 경계 ──
         q = os.path.join(tmp, 'nomark')
