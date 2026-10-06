@@ -3,6 +3,7 @@
 > **지위** — 2026-10-06 밤 · 에이전트 초안 → 리포 반입 (같은 밤 · 내용 그대로) · ✅ **1저자 비준 (10-06 밤 *"Rint 비준이야"* — §5-2 결정 D1 · D2′–D8 · D10–D15 권고대로 · D12 의 숫자는 실행 전 1저자 · D15 → 원장 `RINT-21`)** ·
 > Codex G2 재검토 요청서 `docs/reviews/codex_rint_g2_request_20261006.md` (발송 = 1저자) · 코드 변경 0.
 > 1저자 비준 10-06 밤 *"권고대로"* — 세대 2 Codex 재검증을 기다리는 동안 **설계 문서만** · 코드 변경 없음 (위임 지시문 기준).
+> 📌 **v3 (10-07 새벽 반입 · Codex G2 HOLD 뒤 개정 · 1저자 확인 전)** — `docs/reviews/contact_resistance_pipeline_draft_v3_20261006.md` · 정본 = v2 + v3 (겹치면 v3) · 비준 상태는 v3 §0-2 한 곳 (아래 §7 "비준 상태" 행은 낡음).
 > **고치는 대상** — v1 `docs/reviews/contact_resistance_pipeline_draft_20261002.md` (10-02 · 1저자 미보고 · 머리 배너에 반증 · 철회 서술 목록).
 > **근거 판정** — Codex 1차 `docs/reviews/codex_review_rint_stage1_20261003.md` (G1 HOLD · **G2 HOLD** · 원장 `RINT-01`~`20`) ·
 > 증거 `docs/reviews/codex_rint_stage1_review_evidence_20261003/evidence_area/` (`independent_area_review.md` · `probe_outputs.json`) ·
@@ -496,5 +497,5 @@
 | 포락선 · 축별 관찰 | 유도만 · 시험 전 | T0-3 · T2-1 이 판정 |
 | 근축면 ↔ 브리지 중심 어긋남 | 손 계산 0.0126 µm (R 6 / 2 µm · δ 0.05 µm) | T3-2 에서 기록 |
 | `CL-81` 배수 | 접촉망 **안**의 비 (중앙값 4.04 · 6.69) — 이 설계와 무관 · 바뀌지 않음 | — |
-| 비준 상태 | v1 · v2 결정 모두 1저자 비준 전 (D1 · D2′ · D3′ · D4′ · D5–D8 · D10–D15) | Codex G2 재검토 뒤 보고 → 설명 → 비준 → 실행 |
+| 비준 상태 (⚠ 낡음 → v3 §0-2) | v1 · v2 결정 모두 1저자 비준 전 (D1 · D2′ · D3′ · D4′ · D5–D8 · D10–D15) | Codex G2 재검토 뒤 보고 → 설명 → 비준 → 실행 |
 | 원장 상태 | 이 문서는 원장을 바꾸지 않는다 — `RINT-06`~`10` · `15` · `16` 은 그대로 open | 상태 변경 = Codex 재검토 · 1저자 판단 뒤 (`RINT-10` 은 note 의 남은 조건이 이 본문 정정이라 커밋 때 claimed_fixed 후보) |
