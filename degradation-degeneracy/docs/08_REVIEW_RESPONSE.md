@@ -9347,3 +9347,19 @@ codex/ 11 · manifest 10 / 10 일치 · 비밀 패턴 0) · 규칙 `8a010cf2f` �
 - 범위 = 고정 표 §16 (커밋 `9cc97ec0f`) 그대로 · 16-5 의 기존 위치 변이 39 이월 확정 (데이터 음성 node 만) · 허용 함수 밖 결함 = 기록 · 중지 · 별도 승인.
 - 순서 (§16-7): RED 커밋 → k07 → k03 · k04 → k05 → GREEN → 변이 + EXPECT → 영수증 1 회씩 → 전체 pytest · strict smoke · 등록부 전체 재생 → GATE93 결과 심사 요청.
 - 포함하지 않음: 실행 GO · 새 연구 leg · claim / 세대표 게시 · p_ini · adaptive · class / 투영 · requirements.
+
+## §146 단계 4 구현 진행 · 사용자 승인 ("다 승인") · 검증 전 정정 (2026-10-06)
+
+- 구현 커밋: RED `7e5bdd9e9` (138 node · RED 41 = k03 11 · k04 20 · k05 9 · k07 1 — 그중 예외로 떨어진 5 는 따로: AttributeError 4 · WireError 1) →
+  GREEN `d7a97aa57` (`src/io.py` `_stage3_checks` · `src/fitting.py` edge sha 한 줄 + 같은 함수 import) → 변이 `-g92` 9 `5768b7f8f` (EXPECT = `--emit-expect` 관측값 ·
+  k07 증인에서 실행마다 다른 digest 제거) → 영수증 history `683503225` → 재생성 1 회 `7fea9cdb7` (검사 35 / 34 불변 · core d527cde9… / 8de4e4af… ·
+  validator `c7f48918ff971e91` · stamp 환경 프로필 C = MISMATCH 34 — 이 컨테이너 이미지 (설치 2026-09-14) 가 91차와 다름 · 기록 전용).
+- **사용자 원문 (2026-10-06):** "다 승인 / 게이트는 해야되면 요청문 보내고" — 직전 보고의 결정 목록 (REIL 비용 측정 · 게이트 `-k` 확장 둘 · 논문 후속 P2) 전부.
+  게이트 몫: §16-5 의 기존 변이 `-k` 확장 둘 적용 — `stage3-axis-is-derived-not-copied-g87` (`s03_05 or test_g92_k08` · 13 node) ·
+  `claim-seals-the-run-spec` (`claim_seals_the_exact_run_spec or test_g92_k10_c8_another` · 2 node). 증인은 기존과 같은 `DID NOT RAISE PreserveError` (이유 변경 없음) ·
+  두 변이 모두 기대 node 를 call 단계에서 물었다.
+- **검증 전 정정 (첫 전체 회귀가 15 % 지점에서 F 4 — 중단):** (1) 영수증 재생성 커밋에 원장 앵커 갱신을 빠뜨렸다 — `LEG_PRESERVATION.yaml` 의
+  `verification_receipt_core_sha256` 2 · `validator_identity.source_digest` 2 를 새 값으로 (91차 `f27006370` 과 같은 방식 · `make_receipt.py --check` 두 leg 바이트 동일) —
+  docs-lint 3 건. (2) 계약 `STAGE3_CONTRACT.md` 의 줄 인용 `src/fitting.py:2116 → 2117` (GREEN 의 주석 한 줄로 밀림 · 의미 변경 없음 · §13.1 밖이지만 기계적 결과) —
+  docs-lint 1 건. (3) 계약 §13.1 묶음 6 행 "미착수" → "제출 · 닫힘 아님" (§16-1 "함께").
+- 다음: clean HEAD 에서 전체 pytest · strict smoke · 등록부 전체 재생 (순차 · 동시 시험 없음) → GATE93 결과 심사 요청.

@@ -67,7 +67,7 @@ for k in range(n_max):
 
 | # | 교란 | 근거 | v6 경로 (sig 6) 의 상태 — 84차 R2-f · 2a `{GREEN}` |
 |---|---|---|---|
-| 1 | `warm_start` 하나가 **원점과 조건 fitting 을 동시에** 바꾼다 | `src/fitting.py:2116` 가 조건 task 를 그대로 물려받는다. 404 half-cell `p_ini(34p)` `[1.509716,…] → [1.518503,…]` | **해소 (v6 원점 fitting 없음)** — v6 는 reference `grid` · condition stage 만; `_stage3_preflight` (`src/fitting.py:1386`) 가 halfcell/p_ini 를 원점 self-fit **앞**에서 거부 (G84-N3 · `test_gate84_round2a.py::n3_01`). legacy 경로는 그대로 |
+| 1 | `warm_start` 하나가 **원점과 조건 fitting 을 동시에** 바꾼다 | `src/fitting.py:2117` 가 조건 task 를 그대로 물려받는다. 404 half-cell `p_ini(34p)` `[1.509716,…] → [1.518503,…]` | **해소 (v6 원점 fitting 없음)** — v6 는 reference `grid` · condition stage 만; `_stage3_preflight` (`src/fitting.py:1386`) 가 halfcell/p_ini 를 원점 self-fit **앞**에서 거부 (G84-N3 · `test_gate84_round2a.py::n3_01`). legacy 경로는 그대로 |
 | 2 | `--n-restarts` 는 실행 횟수가 아니라 **예산 상한** | adaptive 조기 종료. 2회 종료 행 223 → 238 | **해소** — v6 는 `adaptive=False` 만 · objective 별 예산 = 계획 `budget_by_objective` (`restart_예산_완주`, F12). legacy 그대로 |
 | 3 | **noise 층을 바꾸면 restart 난수가 통째로 갈린다** | `cond_id = sha1(asdict(Condition))[:12]` 가 `noise`·`seed` 포함 (`src/grid.py:99`) → `task["seed"] = int(sha1(cond_id)[:8],16)` (`src/fitting.py:2066`) | **해소 (v6)** — bank seed 는 `H(pair_group_id, bank_version)` (`tools/design_wire.py` `_bank_seed`) · pair_group 은 물리 좌표만 (noise · seed 제외) → 같은 좌표의 두 noise 실현이 **같은 bank** (`test_gate81_stage3_wire.py::s07` · `test_gate82_residuals.py::n1_00`). legacy 의 `task["seed"]` 유도는 그대로 |
 | 4 | **warm 은 slot 을 교체한다** (§0) | 투영 `restart_sources` | **계획으로 명시** — `candidate_mode` (`legacy_slot_replace` / `equal_start_count_base_retained`) 가 계획 envelope 에 · 실현 `counts_by_source` 를 record 가 센다. legacy 그대로 |
@@ -825,7 +825,7 @@ receipt · atomic promotion 을 넣으면 그 순간 digest 가 움직인다. �
 | 3 | provider materialize→seal→consumer DAG · `p_ini` arm 별 solution map | **미착수** | |
 | 4 | `mono_tol` / `material_tol` 분리 · stratum · budget adoption · max-failure | **미착수** | |
 | 5 | 실제 `sentinel_panel.yaml` | **미착수** | |
-| 6 | 구 `pairing_design_id`·`inference_status` 제거 · per-key linkage mutation test | **미착수** | 묶음 9 의 final gate 는 이것 없이 닫을 수 없다 (25차 Q3) |
+| 6 | 구 `pairing_design_id`·`inference_status` 제거 · per-key linkage mutation test | **제출 (92차 단계 4 · 2026-10-06 · 닫힘 아님 — 93차 결과 심사 전)** | 고정 표 `STAGE3_IMPL_ROUND1_SPEC.md` §16 · 매트릭스 `GATE92_EVIDENCE_MATRIX.md`. **있는 것**: `run_spec.stage3` 닫힌 키 16 + 자료형 (k03) · `candidate_map.json` 최상위 · 항목 닫힘 + 자료형 · 실패 envelope / map 의 재유도 차단 (k04) · 사본 9 키 ↔ envelope (k05 · 검사 `stage3_축_유도`) · `provider_edges_sha256` 정의 하나 (k07) · 키별 음성 node 138 (`tests/test_gate92_stage4_linkage.py`) · 변이 `-g92` 9. **없는 것 (이월 · §16-6)**: 기존 위치 변이 39 · C8 재개 경로 · C7 envelope ↔ 원장 결속 · 제외 3 (run_spec 최상위 · solution map header · 원장 항목). 묶음 9 의 final gate 는 이것 없이 닫을 수 없다 (25차 Q3) |
 | 7 | 상태 schema 단일 authority | **부분** | §8 이 **제약**을 적고 회귀가 조합을 생성한다 (열거표가 아니다). `claim_roles` 는 `CLAIM_STATUS.yaml` 의 claim ID 와 role enum·protocol generation 에 묶였고, 중복·철회주장·원자료 없는 canonical 을 거부한다. **없는 것**: planned lifecycle (묶음 9) |
 | 8 | immutable bundle index · receipt schema | **부분** | member 전수 재해시 → 빈 root 복원 → **`repo_root` 로 검증기를 그 root 에 결속**(26차 P1-5 정정) → 복원본만으로 재채점 → file·semantic 두 digest → **봉인본과 semantic equality 강제**(26차 P1-6 정정). core/stamp 분리로 core 가 바이트 동일 재생성. **없는 것**: 비-git backend URI 형식, legacy 다리의 외부 store 사본 |
 | 9 | 트랜잭션 보존 gate | **부분** | §13.2 · §13.4 — 26차 P0 둘(CAS 복원·영수증 저장)을 고쳤고 46차에 planned leg index 를 실행 전 gate 로 배선했다. **실물 provider 어댑터**가 남았다 |

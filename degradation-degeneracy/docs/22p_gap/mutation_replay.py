@@ -141,7 +141,8 @@ MUTANTS = [
     ("claim-seals-the-run-spec", PRESERVE,
      '    if e["run_spec_digest"] != want:',
      "    if False:",
-     "claim_seals_the_exact_run_spec"),
+     # ★ 92차 §16-5 -k 확장 (사용자 승인 2026-10-06 "다 승인") — v3 (v6) 계획의 대표 node k10-C8 을 증인에 더한다
+     "claim_seals_the_exact_run_spec or test_g92_k10_c8_another"),
     ("claim-checks-the-whole-index", PRESERVE,
      "    assert_planned_index_consistent(ledger)          # 전체가 먼저",
      "    pass                                             # 전체가 먼저",
@@ -2147,7 +2148,8 @@ MUTANTS = [
     ("stage3-axis-is-derived-not-copied-g87", PRESERVE,                     # §13-2 c · §13-3 b: run_spec.stage3 == 유도값
      '    got = spec.get("stage3")\n    if got != want:\n',
      '    got = spec.get("stage3")\n    if False:  # 변이: 유도값 대조를 끈다\n',
-     "s03_05"),
+     # ★ 92차 §16-5 -k 확장 (사용자 승인 2026-10-06 "다 승인") — 축의 나머지 키 (k08 · 이유에 키 이름) 를 증인에 더한다
+     "s03_05 or test_g92_k08"),
     ("provider-runs-match-the-warm-consumers-g87", PRESERVE,                # §13-3 b: provider 키 집합
      '    if set(pr) != need:\n',
      '    if False:  # 변이: provider 키 집합 대조를 끈다\n',
@@ -4046,10 +4048,14 @@ EXPECT: dict = {
     },
     "claim-seals-the-run-spec": {
         "fail": [
-            "tests/test_preserve.py::test_the_claim_seals_the_exact_run_spec"
+            "tests/test_gate92_stage4_linkage.py::test_g92_k10_c8_another_self_consistent_plan_is_not_the_approved_run_spec",
+            "tests/test_preserve.py::test_the_claim_seals_the_exact_run_spec",
         ],
         "witness": {
-            "tests/test_preserve.py::test_the_claim_seals_the_exact_run_spec": "Failed: DID NOT RAISE PreserveError"
+            "tests/test_gate92_stage4_linkage.py::test_g92_k10_c8_another_self_consistent_plan_is_not_the_approved_run_spec":
+                "Failed: DID NOT RAISE PreserveError",
+            "tests/test_preserve.py::test_the_claim_seals_the_exact_run_spec":
+                "Failed: DID NOT RAISE PreserveError",
         }
     },
     "claim-stores-a-verifier-not-the-token": {
@@ -6873,6 +6879,14 @@ EXPECT: dict = {
             "tests/test_gate87_round2b.py::test_s03_05_a_stage3_axis_that_is_not_derived_from_the_envelope_is_refused[planned_id]",
             "tests/test_gate87_round2b.py::test_s03_05_a_stage3_axis_that_is_not_derived_from_the_envelope_is_refused[provider_edges_sha256]",
             "tests/test_gate87_round2b.py::test_s03_05_a_stage3_axis_that_is_not_derived_from_the_envelope_is_refused[roster_sha256]",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[bank.exact_bounds_sha256]",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[bank.generator]",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[bank.length]",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[bank.n_params]",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[bank.version]",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[pairing_design_sha256]",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[parameter_order_sha256]",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[stage]",
         ],
         "witness": {
             "tests/test_gate87_round2b.py::test_s03_05_a_stage3_axis_that_is_not_derived_from_the_envelope_is_refused[arm]":
@@ -6884,6 +6898,22 @@ EXPECT: dict = {
             "tests/test_gate87_round2b.py::test_s03_05_a_stage3_axis_that_is_not_derived_from_the_envelope_is_refused[provider_edges_sha256]":
                 "Failed: DID NOT RAISE PreserveError",
             "tests/test_gate87_round2b.py::test_s03_05_a_stage3_axis_that_is_not_derived_from_the_envelope_is_refused[roster_sha256]":
+                "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[bank.exact_bounds_sha256]":
+                "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[bank.generator]":
+                "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[bank.length]":
+                "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[bank.n_params]":
+                "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[bank.version]":
+                "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[pairing_design_sha256]":
+                "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[parameter_order_sha256]":
+                "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[stage]":
                 "Failed: DID NOT RAISE PreserveError",
         }
     },
