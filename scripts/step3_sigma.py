@@ -191,8 +191,13 @@ def _grid_fp(a):
 
 
 def share_label(k):
-    """소산 분담 dict 의 키 → 이름 (계면 몫은 `interface`)."""
-    return 'interface' if k == SID_INTERFACE else SID_NAME[k]
+    """소산 분담 dict 의 키 → 이름 (계면 몫은 `interface` · ①′ 부류별 막 몫은 `iface_am:<종류 쌍>`)."""
+    if k == SID_INTERFACE:
+        return 'interface'
+    for _nm, _k in SID_IFACE_AM.items():
+        if k == _k:
+            return f'iface_am:{_nm}'
+    return SID_NAME[k]
 
 
 def parse_rint_table(specs):
@@ -512,6 +517,49 @@ def _solve_cg(L, b):
         return cg(L, b, tol=1e-8, maxiter=CG_MAXITER, M=Minv)
 
 
+def _ball_cells(centre_um, rad_um, lo, vox, n):
+    """구 하나가 덮는 셀 — **한 판정식** (`rasterize._ball` 과 ①′ 청구자 `am_iface_ledger` 가 같이 쓴다 · 규율 ① ·
+    계약 v3.1 §1 ③ "구 포함 판정 = `_ball` 과 같은 식").  → `(i0, i1, mask)` 또는 None (상자 밖).
+
+    mask = 셀 중심 (격자 단위 ijk + ½) 이 구 안 (경계 포함 ≤).  식 · 연산 순서는 옮기기 전 `_ball` 과 같다
+    (원소마다 비트 같음 — `scripts/test_rint_g2_am_iface.py` 의 옛 raster 지문 대조가 지킨다)."""
+    c = (centre_um - lo) / vox; rr = rad_um / vox
+    i0 = np.maximum(0, np.floor(c - rr).astype(int)); i1 = np.minimum(n - 1, np.ceil(c + rr).astype(int))
+    if (i1 < i0).any():
+        return None
+    gx, gy, gz = np.ogrid[i0[0]:i1[0] + 1, i0[1]:i1[1] + 1, i0[2]:i1[2] + 1]
+    m = ((gx + 0.5 - c[0]) ** 2 + (gy + 0.5 - c[1]) ** 2 + (gz + 0.5 - c[2]) ** 2) <= rr * rr
+    return i0, i1, m
+
+
+def am_bridge_pairs(am_c, am_r, tol_am_um):
+    """AM–AM 접촉 브리지 **쌍 집합** — `rasterize` 와 ①′ 원장이 같이 부르는 한 함수 (규율 ① · v2 §3-3 "브리지 쌍" 행 ·
+    v3.1 §1 ③).  쌍 규칙 = 표면 간극 ≤ `tol_am_um` (econn 규약).  → `[(i, j, d), …]` (i < j · 입력 행 번호 ·
+    d = 중심 거리 µm).  ⚠ 순서 = 옛 루프가 `cKDTree.query_pairs` 집합을 돌던 순서 그대로 (브리지 덮어쓰기 순서가
+    sid 를 정하므로 바꾸지 않는다 — 옛 raster 와 비트 같음)."""
+    out = []
+    if len(am_c) < 2:
+        return out
+    from scipy.spatial import cKDTree
+    tree = cKDTree(am_c)
+    for i, j in tree.query_pairs(2.0 * float(am_r.max()) + tol_am_um):
+        d = float(np.linalg.norm(am_c[i] - am_c[j]))
+        if d <= am_r[i] + am_r[j] + tol_am_um:
+            out.append((i, j, d))
+    return out
+
+
+def _am_bridge_mid(am_c, am_r, i, j, d):
+    """브리지 공 중심 — 두 표면 사이 구간의 중점, **(i, j) 계산 순서**대로 (옛 식 그대로 · RINTV-02: 순서를 바꾸면 끝자리가
+    달라질 수 있다)."""
+    return am_c[i] + (am_c[j] - am_c[i]) * (am_r[i] + 0.5 * (d - am_r[i] - am_r[j])) / max(d, 1e-12)
+
+
+def _am_bridge_radius(vox, bridge_um):
+    """브리지 공 반경 — 기본 `1.2·vox` (격자에 묶임) · `bridge_um` 을 주면 물리 고정 (CL-87 · CL-88)."""
+    return 1.2 * vox if bridge_um is None else float(bridge_um)
+
+
 def rasterize(am_c, am_r, am_t, add_pts, add_phase, box_lo, box_hi, vox, tol_am_um=0.10, se_pts=None,
               sdcp_sphere_d_um=0.0, sdcp_yield_to_vgcf=False, sdcp_bridge_um=0.0,
               add_fid=None, fid_gap_tol=2.0, add_kind=None, bridge_um=None,
@@ -542,12 +590,11 @@ def rasterize(am_c, am_r, am_t, add_pts, add_phase, box_lo, box_hi, vox, tol_am_
             sid[ijk[:, 0], ijk[:, 1], ijk[:, 2]] = 6
 
     def _ball(centre_um, rad_um, s, particle):
-        c = (centre_um - lo) / vox; rr = rad_um / vox
-        i0 = np.maximum(0, np.floor(c - rr).astype(int)); i1 = np.minimum(n - 1, np.ceil(c + rr).astype(int))
-        if (i1 < i0).any():
+        #  ①′ (10-07) — 판정식을 `_ball_cells` 로 뺐다 (청구자 원장과 **같은 식** · 규율 ①).  식 · 연산 순서 그대로.
+        _hit = _ball_cells(centre_um, rad_um, lo, vox, n)
+        if _hit is None:
             return
-        gx, gy, gz = np.ogrid[i0[0]:i1[0] + 1, i0[1]:i1[1] + 1, i0[2]:i1[2] + 1]
-        m = ((gx + 0.5 - c[0]) ** 2 + (gy + 0.5 - c[1]) ** 2 + (gz + 0.5 - c[2]) ** 2) <= rr * rr
+        i0, i1, m = _hit
         sub = sid[i0[0]:i1[0] + 1, i0[1]:i1[1] + 1, i0[2]:i1[2] + 1]
         sub[m] = s
         if particle >= 0:
@@ -570,20 +617,17 @@ def rasterize(am_c, am_r, am_t, add_pts, add_phase, box_lo, box_hi, vox, tol_am_
         _ball(am_c[i], am_r[i], 2 if am_t[i] == 1 else 1, i)   # type 1 = AM_P → sid 2; 2 = AM_S → sid 1
     # AM-AM contact bridges (econn contact rule: gap ≤ tol) — NO blanket except here: silently
     # losing every bridge = the fragmented-skeleton σ-collapse the integration test exists to catch
+    #  ①′ (10-07) — 쌍 집합 · 중심식 · 반경을 원장과 **같은 함수**로 (규율 ① · v3.1 §1 ③).  순서 · 식 그대로 (비트 같음).
     if len(am_c) >= 2:
-        from scipy.spatial import cKDTree
-        tree = cKDTree(am_c)
-        for i, j in tree.query_pairs(2.0 * float(am_r.max()) + tol_am_um):
-            d = float(np.linalg.norm(am_c[i] - am_c[j]))
-            if d <= am_r[i] + am_r[j] + tol_am_um:
-                mid = am_c[i] + (am_c[j] - am_c[i]) * (am_r[i] + 0.5 * (d - am_r[i] - am_r[j])) / max(d, 1e-12)
-                soft = i if am_t[i] == 1 else j            # the LOWER-σ particle = AM_P (0.005 < AM_S 0.010)
-                s = 2 if (am_t[i] == 1 or am_t[j] == 1) else 1   # mixed / P-P → AM_P id (series-conservative);
-                # ★ 2026-08-13: 브리지 반경이 **격자에 묶여 있다** (1.2·vox).  격자를 조이면
-                #   AM 접촉 목도 같이 얇아져 격자 수렴 시험에서 탄소 효과와 **섞인다** (CL-21).
-                #   `bridge_um` 을 주면 물리 단위로 **고정**한다.  기본 None = 현행(1.2·vox) 이라
-                #   기존 호출은 바이트 동일.
-                _ball(mid, (1.2 * vox if bridge_um is None else float(bridge_um)), s, soft)
+        for i, j, d in am_bridge_pairs(am_c, am_r, tol_am_um):
+            mid = _am_bridge_mid(am_c, am_r, i, j, d)
+            soft = i if am_t[i] == 1 else j                # the LOWER-σ particle = AM_P (0.005 < AM_S 0.010)
+            s = 2 if (am_t[i] == 1 or am_t[j] == 1) else 1   # mixed / P-P → AM_P id (series-conservative);
+            # ★ 2026-08-13: 브리지 반경이 **격자에 묶여 있다** (1.2·vox).  격자를 조이면
+            #   AM 접촉 목도 같이 얇아져 격자 수렴 시험에서 탄소 효과와 **섞인다** (CL-21).
+            #   `bridge_um` 을 주면 물리 단위로 **고정**한다.  기본 None = 현행(1.2·vox) 이라
+            #   기존 호출은 바이트 동일.
+            _ball(mid, _am_bridge_radius(vox, bridge_um), s, soft)
     # additive points: cell-stamp (carbon overwrites AM at shared cells — the higher-σ phase wins,
     # which is the physical series-shortcut at an anchored contact)
     if add_pts is not None and len(add_pts):
@@ -904,6 +948,743 @@ def _fibre_segment_ijk(add_pts, add_phase, add_fid, lo, vox, n, gap_tol=2.0,
     return ijk[ok], ph[ok]
 
 
+# ══ ①′ AM–AM 계면 막 (Rint G2 · 2026-10-07) ══════════════════════════════════════════════════════════════════════
+#  정본 = 계약 v2 + v3 + v3.1 (겹치면 뒤가 이긴다): docs/reviews/contact_resistance_pipeline_draft_v2_20261006.md →
+#  …_v3_20261006.md → …_v3_1_20261007.md · 판정 docs/reviews/codex_review_rint_g2_v3_20261007.md (계약 정정 둘 뒤 AM–AM ①′
+#  구현 GO · 정량 채택 · 생산 HOLD) · 1저자 10-07 "다 권고야".
+#  ★ 무엇: AM–AM 접점마다 막 r [Ω·cm²] 을 owner 쌍 면 S_c 에 싣는다 — CNC (contact-normalized coarse closure):
+#      r_face(c) = r_type(c) · N_c^ref · h² / A(c)  (h² · A 둘 다 µm² → 비)  을 S_c^surv 에 고르게.
+#    ⇒ 접점 막 총 컨덕턴스 ΣG = 1e−8·A·(N_surv/N_ref)/r [S] (RINTG-07).  N_ref = N_c^0 (`remove_area` · 기본 — 탄소가 덮은 몫의
+#      막 면적이 사라진다) 또는 N_c^surv (`renormalize` · 민감도).
+#  ⛔ 지위 = **기구 (mechanism) 만**: 정량 채택 · 생산 HOLD (D12-V 수치 봉인 · T2/T3 독립 검증 · CNC 적용 범위 · 물성 조건) ·
+#    `PROTOCOL_FIELDS` 밖 · payload CLI 미배선 · 기본 끔 (`solve_sigma_z(iface=None)` = 옛 경로 비트 같음).
+#  ⚠ 한정어 (v3 §2 · v3.1 §5): CNC 는 참 원판 위 국소 ASR 의 정확한 구현이 **아니다** (고정 support 편향 미인증) · 탄소 가림
+#    2 Ω (remove_area) / 1 Ω (renormalize) = **막 소자만**의 차 · 물리적 상 · 하한 아님 · 탄소 접합 (②) · SE 입계 (③) 미표현 ·
+#    `unrealized` = AM–AM 막이 남지 않음 (전체 절연 아님 — 탄소 경로가 전도할 수 있다).
+#  ★ owner (I8′ · I1‴ · v3.1 §1 · §2): 셀 x 의 청구자 C(x) = 셀 중심을 품는 구 (`_ball_cells` — raster 와 같은 식) ∪ 그 셀을 품는
+#    브리지 청구 영역 (= 두 계산 순서 브리지 공의 합집합 · 권고 · 1저자 확인 전 → 기록 `iface_bridge_claim`) 의 두 입자.
+#    주인 = C(x) **전체**에서 p_min · 띠 T = {p ≤ p_min + ε_p} · T 안 canonical 키 (중심 사전순) 최솟값 — 쌍별 fold 아님.
+#    정확한 순열 불변은 **동결 AM 마스크 M + 동결 청구자 기하 G** 에서만 (raw raster 순열 = 진단 `am_iface_raw_perm_diag`).
+#  ⚠ ε_p · power 평가 규약은 이 구현 커밋에서 시험과 함께 봉인 (v3.1 §1 "구현 때 봉인") — 바꾸려면 새 봉인.
+IFACE_MODEL_VERSION = 'r2-owner-cnc'
+IFACE_MODEL_LABEL = ('①′ AM–AM 막 (CNC coarse closure) — 추가 계면막 (r_int 경로 한정) · 탄소 접합 (②) · SE 입계 (③) 미표현 · '
+                     '협착 부분 해상 · 상한 아님 · 정량 채택 HOLD')
+IFACE_OWNER_RULE = 'claimant_power_partition_v1'
+IFACE_TIE_RULE = 'global_pmin_eps_band_center_lex_v1'          # v3.1 I8′ (집합 규칙 · 쌍별 fold 아님)
+IFACE_POWER_EVAL = 'cell_centre_ball_formula_grid_units_x_vox2_float64'   # p = Σ(ijk + ½ − (c − lo)/h)² − (r/h)² → × h² [µm²]
+IFACE_EPS_P_UM2 = 1.0e-9                                       # ε_p [µm²] — 절대값 하나 · 봉인 (반올림 잡음 ≲ 1e−12 µm² 의 ≥ 1e3 배)
+IFACE_BRIDGE_CLAIM = 'union_both_orders_v1'                    # v3.1 §2 권고 (1저자 확인 전 · 다음 Codex 검토에 올린다)
+IFACE_AREA_LAW = 'contact_normalized_coarse_closure'
+IFACE_AREA_SOURCE = 'scaffold_lens_geometry'                   # 덤프 (c_cpl[22]) 경로 · 조인 관문 = 미구현 (T4-2 · N5′)
+IFACE_CARBON_LAWS = ('remove_area', 'renormalize')
+IFACE_EXCEPTION_LAWS = ('cut', 'fused', 'reject')
+IFACE_AMBIGUOUS_ARMS = ('cut', 'a_hi')
+IFACE_TYPE_KEYS = ('AM_S|AM_S', 'AM_P|AM_P', 'AM_S|AM_P')      # 주인 **종류** 쌍 (면 양쪽 sid 가 아니다 · v2 §3-2)
+IFACE_CONTACT_CLASSES = ('contact', 'ambiguous', 'gap_bridged')
+#: 소산 분담의 ①′ 부류별 막 몫 키 (상이 아니다 · E4′ · RINT-16 — 부류 = 주인 종류 쌍).
+SID_IFACE_AM = {'AM_S|AM_S': -11, 'AM_P|AM_P': -12, 'AM_S|AM_P': -13}
+UM2_TO_CM2 = 1.0e-8
+IFACE_STATUS = ('mechanism_only — 정량 채택 · 생산 HOLD (D12-V 수치 봉인 · T2/T3 독립 검증 · CNC 적용 범위 · 물성 조건 · '
+                'Codex v3 판정 §0) · PROTOCOL_FIELDS 밖 · 검증 PASS 아님')
+IFACE_QUALIFIERS = (
+    'CNC = 미해상 접점의 coarse closure — 참 원판 위 국소 ASR 의 정확한 구현이 아니다 (고정 support 편향 미인증 · T2-4 · T3-B 전)',
+    '탄소 가림 remove_area (2 Ω 판) ↔ renormalize (1 Ω 판) = 막 소자만의 차 — 물리적 불확실성의 상·하한이 아니다 · 탄소 접합 (②) 미식별',
+    'unrealized = AM–AM 막이 남지 않음 — 전체 절연이 아니다 (탄소 경로가 전도할 수 있다)',
+    'r 재료값 [미확인] — 기구 · 감도 전용 (④ 전 값 인용 금지)',
+    'cut = 등록된 비접촉 support 를 제거한 복셀 절단 모델 — DEM 접촉 위상과 같다는 뜻 아님 · 미실현 진짜 접점을 복원하지 않는다 (v3 §6-2)',
+    '"전체 계면저항을 보정했다" · "두 판이 상·하한이다" · "탄소 계면까지 식별됐다" 문장 금지 (v3.1 §5)',
+)
+#: R1 (v3 §6-6) — ①′ 을 안 쓴 해 (iface 기록 없음) 를 소비자가 표지할 때의 문구.  복셀 목의 접근 · 협착이 사라진다는 뜻 아님 ·
+#  DEM 망 CONTACT_FREE 가지와 같은 뜻 아님 (CL-81 의 복셀 ↔ 망 서술은 바꾸지 않는다).
+IFACE_NONE_LABEL = '추가 계면막 없음 (r_int 경로 한정)'
+
+
+def _iface_type_name(t):
+    """LIGGGHTS type → 이름 (1 = AM_P · 2 = AM_S — `rasterize` 와 같은 규약)."""
+    return 'AM_P' if int(t) == 1 else 'AM_S'
+
+
+def _iface_type_key(ta, tb):
+    """주인 종류 쌍 → 표 키 (`AM_S|AM_S` · `AM_P|AM_P` · `AM_S|AM_P`)."""
+    na, nb = _iface_type_name(ta), _iface_type_name(tb)
+    if na == nb:
+        return f'{na}|{nb}'
+    return 'AM_S|AM_P'
+
+
+def parse_iface_r_type(table):
+    """①′ 막 표 `{'AM_S|AM_S': r, …}` [Ω·cm²] → 정규화 dict (키 순서 = IFACE_TYPE_KEYS).  `AM_P|AM_S` 는 `AM_S|AM_P` 로.
+    거부: dict 아님 · 키가 문자열 아님 · AM 아닌 이름 · bool · 문자열 값 · 음수 · 비유한 · 같은 키에 다른 값."""
+    if not isinstance(table, dict):
+        raise TypeError('①′ r_type 은 {"AM_S|AM_S": r[Ω·cm²], …} dict 여야 한다')
+    out = {}
+    for k, v in table.items():
+        if not isinstance(k, str):
+            raise TypeError(f'①′ r_type 키는 문자열 (`AM_S|AM_P`) 이어야 한다: {k!r}')
+        parts = [p.strip() for p in k.split('|')]
+        if len(parts) != 2 or not set(parts) <= {'AM_S', 'AM_P'}:
+            raise ValueError(f'①′ r_type 키는 AM 종류 쌍 (허용 {IFACE_TYPE_KEYS}) 이어야 한다: {k!r}')
+        key = (f'{parts[0]}|{parts[1]}' if parts[0] == parts[1] else 'AM_S|AM_P')
+        if isinstance(v, (bool, np.bool_)) or not isinstance(v, (int, float, np.integer, np.floating)):
+            raise TypeError(f'①′ r_type 값은 실수여야 한다 (bool · 문자열 금지): {k!r} → {v!r}')
+        r = float(v)
+        if not (np.isfinite(r) and r >= 0.0):
+            raise ValueError(f'①′ r_type 값은 유한한 0 이상 (Ω·cm²): {k!r} → {v!r}')
+        if key in out and out[key] != r:
+            raise ValueError(f'①′ r_type 같은 종류 쌍에 다른 값: {key}')
+        out[key] = r
+    return {k: out[k] for k in IFACE_TYPE_KEYS if k in out}
+
+
+def _iface_input_check(am_c, am_r, am_t):
+    """입력 형 (오류) + 정량 거부 (N8 정확 중복 · N8b 동심 비동일 — v3.1 §1) + canonical id.
+
+    canonical id = 중심 (x, y, z) 사전순 **조밀** 순위 — 같은 중심은 같은 순위 (그래서 N8 · N8b 를 **먼저** 거부한다).
+    행 번호 · 스탬프 순서는 키가 아니다.  → (c, r, t, rejections, rank)."""
+    c = np.asarray(am_c, np.float64); r = np.asarray(am_r, np.float64); t = np.asarray(am_t)
+    if c.ndim != 2 or c.shape[1] != 3 or r.shape != (len(c),) or t.shape != (len(c),):
+        raise ValueError(f'①′ 입자 배열 모양이 틀렸다: c {c.shape} · r {r.shape} · t {t.shape}')
+    if not (np.isfinite(c).all() and np.isfinite(r).all() and (r > 0.0).all()):
+        raise ValueError('①′ 입자 중심 · 반경은 유한해야 하고 반경 > 0')
+    if len(t) and not np.isin(t, (1, 2)).all():
+        raise ValueError('①′ 종류는 1 (AM_P) · 2 (AM_S) 뿐 (LIGGGHTS 규약)')
+    n = len(c)
+    rej = []
+    if n == 0:
+        return c, r, t, rej, np.zeros(0, np.int64)
+    order = np.lexsort((c[:, 2], c[:, 1], c[:, 0]))       # 첫 열 = x (주 키)
+    cs = c[order]
+    new = np.ones(n, bool)
+    new[1:] = np.any(cs[1:] != cs[:-1], axis=1)           # 값 비교 (−0.0 == 0.0)
+    dense = np.cumsum(new) - 1
+    rank = np.empty(n, np.int64)
+    rank[order] = dense
+    dup, conc = [], []
+    for g in np.unique(dense[~new]):                       # 둘 이상이 같은 중심인 무리
+        mem = order[dense == g]
+        ctr = tuple(float(x) for x in c[mem[0]])
+        for ia in range(len(mem)):
+            for ib in range(ia + 1, len(mem)):
+                pa, pb = mem[ia], mem[ib]
+                rr_ = tuple(sorted((float(r[pa]), float(r[pb]))))
+                tt_ = tuple(sorted((_iface_type_name(t[pa]), _iface_type_name(t[pb]))))
+                (dup if r[pa] == r[pb] else conc).append((ctr, rr_, tt_))
+    if dup:
+        rej.append({'code': 'exact_duplicate', 'test': 'N8', 'n': len(dup), 'detail': sorted(dup)[:8],
+                    'why': '같은 중심 · 같은 반경 (종류 같음 · 다름) — canonical 키가 못 가른다 · 병합 규칙 미등록 (D20)'})
+    if conc:
+        rej.append({'code': 'concentric_nonidentical', 'test': 'N8b', 'n': len(conc), 'detail': sorted(conc)[:8],
+                    'why': '동심 비동일 (중심 비트 같음 · 반경 다름) — ε 띠 안이든 밖이든 입력 단계 거부 (1저자 Q1 10-07)'})
+    return c, r, t, rej, rank
+
+
+def _cells_power_grid(ijk, cg, rr2):
+    """셀 (정수 ijk [M, 3]) 에서 입자 power [격자 단위²] — `_ball_cells` 와 같은 식 · 같은 연산 순서 (원소마다 같은 값).
+    cg = (c − lo)/h (항목마다) · rr2 = (r/h)·(r/h).  p ≤ 0 ⇔ 셀 중심이 구 안 (부호는 뺄셈에서 정확)."""
+    return ((ijk[:, 0] + 0.5 - cg[:, 0]) ** 2 + (ijk[:, 1] + 0.5 - cg[:, 1]) ** 2
+            + (ijk[:, 2] + 0.5 - cg[:, 2]) ** 2) - rr2
+
+
+def _iface_owner_select(cell, rank, part, p_um2, eps_p_um2):
+    """I8′ (v3.1 §1) — 셀마다 청구자 집합 C(x) **전체**에서 ① p_min ② 띠 T = {i : p_i ≤ p_min + ε_p} ③ T 안 canonical 키
+    (중심 사전순 rank) 최솟값.  입력 = 청구 항목 (cell 오름차순 · (cell, part) 중복 없음).
+
+    ★ 모든 연산이 집합 함수 (min · 개수) — 항목 순서 · 입력 행 순서와 무관.  승자의 power 를 다음 비교 기준으로 쓰는 쌍별
+      fold 가 아니다 (그 fold 는 비추이 반례에서 순서마다 승자가 바뀐다 · RINTV-01).
+    ⛔ fail-closed: T 안의 최소 rank 를 서로 다른 입자 둘 이상이 가지면 (같은 중심) 오류 — 반경 · 종류 · 행 번호로 가르지 않는다.
+    → (cells, owner_rank, band_size, n_claim) — cells 마다 하나."""
+    cell = np.asarray(cell, np.int64); rank = np.asarray(rank, np.int64)
+    part = np.asarray(part, np.int64); p = np.asarray(p_um2, np.float64)
+    eps = float(eps_p_um2)
+    if not (np.isfinite(eps) and eps > 0.0):
+        raise ValueError(f'①′ ε_p 는 유한한 양수 (µm²): {eps_p_um2!r}')
+    if len(cell) == 0:
+        z = np.zeros(0, np.int64)
+        return z, z.copy(), z.copy(), z.copy()
+    if np.any(cell[1:] < cell[:-1]):
+        raise ValueError('①′ 청구 항목이 cell 순으로 정렬돼 있지 않다')
+    if not np.isfinite(p).all():
+        raise ValueError('①′ power 에 비유한 값')
+    starts = np.flatnonzero(np.r_[True, cell[1:] != cell[:-1]])
+    sizes = np.diff(np.r_[starts, len(cell)])
+    grp = np.repeat(np.arange(len(starts)), sizes)
+    pmin = np.minimum.reduceat(p, starts)
+    band = p <= pmin[grp] + eps
+    big = np.iinfo(np.int64).max
+    own = np.minimum.reduceat(np.where(band, rank, big), starts)
+    hit = band & (rank == own[grp])
+    nhit = np.add.reduceat(hit.astype(np.int64), starts)
+    if (nhit > 1).any():
+        k = int(np.flatnonzero(nhit > 1)[0])
+        raise ValueError(f'①′ 띠 T 안에 같은 canonical 키 (같은 중심) 입자가 둘 이상 — cell {int(cell[starts[k]])} · '
+                         f'반경 · 종류 · 행 번호로 가르지 않는다 (fail-closed · N8 · N8b 입력 거부가 먼저여야 한다)')
+    band_size = np.add.reduceat(band.astype(np.int64), starts)
+    return cell[starts], own, band_size, sizes.astype(np.int64)
+
+
+def _am_bridge_claim_mids(am_c, am_r, i, j, d):
+    """①′ 브리지 청구 영역의 공 중심들 = **두 계산 순서** (i, j) · (j, i) — 그 합집합이 청구 영역 (v3.1 §2 권고 ·
+    `IFACE_BRIDGE_CLAIM`).  어느 legacy 행 순서가 찍은 브리지 셀도 청구된다 (RINTV-02: 순서에 따라 공 중심이 끝자리에서
+    달라져 격자 경계 셀 하나가 바뀐다).  bulk sid 는 다시 칠하지 않는다 (D21 아님)."""
+    return (_am_bridge_mid(am_c, am_r, i, j, d), _am_bridge_mid(am_c, am_r, j, i, d))
+
+
+def _iface_area_hi(r1, r2, delta, db):
+    """모호 접점의 A_hi = δ 포괄 구간 [δ − db, δ + db] 위 교차 원판 면적의 **최대** (v3 §6-2 · Codex Q3).
+    A(δ) 는 (0, 포함 경계) 에서 단봉 (극대 δ* : d² = |r1² − r2²| → π·min(r)²) — 구간 최대 = 위 끝값 또는 δ* 가 안이면 극대."""
+    import math
+    from lens_geometry import intersection_disc_area
+    hi = delta + db
+    if hi <= 0.0:
+        return 0.0
+    cand = intersection_disc_area(r1, r2, hi)
+    if r1 != r2:
+        dstar = r1 + r2 - math.sqrt(abs(r1 * r1 - r2 * r2))
+        if delta - db <= dstar <= hi:
+            cand = max(cand, math.pi * min(r1, r2) ** 2)
+    return float(cand)
+
+
+def _iface_quant(x):
+    """요약 분위 (min · median · max) — 빈 배열 → None."""
+    x = np.asarray(x, np.float64)
+    if x.size == 0:
+        return None
+    return {'min': float(x.min()), 'median': float(np.median(x)), 'max': float(x.max())}
+
+
+def am_iface_ledger(am_c, am_r, am_t, sid, sid_pre, box_lo, vox, *, delta_bound_um, tol_am_um=0.10,
+                    bridge_um=None, eps_p_um2=IFACE_EPS_P_UM2, raster_sdcp_bridge_um=0.0):
+    """①′ **접촉 원장** (기하만 — r · 법칙 무관 · v2 §3-3 · §3-6 · v3 §2 · v3.1 §1 · §2 · §5).
+
+    sid      최종 raster (첨가제 뒤) — 동결 AM 마스크 M = sid ∈ {1, 2} (1 ↔ 2 라벨은 읽지 않는다 · I1‴)
+    sid_pre  같은 입력 · 같은 순서의 **첨가제 전** raster (AM 구 + 브리지) — M0 = sid_pre ∈ {1, 2} → N_c^0 의 기준
+    delta_bound_um  scaffold 반올림 폭 — |δ| ≤ 이것 = ambiguous (필수 · 기본값 없음: 조용히 0 으로 두지 않는다)
+    tol_am_um · bridge_um  raster 와 **같은 값** (쌍 집합 · 브리지 청구 영역 — 다르면 M ⊄ claimed(G) 로 거부될 수 있다)
+    eps_p_um2  I8′ 띠 폭 (기본 = 봉인값 `IFACE_EPS_P_UM2` · 시험 픽스처만 다른 값을 준다)
+    raster_sdcp_bridge_um  raster 의 SDCP 접촉 브리지 (`sdcp_bridge_um`) — > 0 이면 정량 거부 (N7: 빈 셀에 AM sid 를 pid ·
+               청구자 없이 깐다 · 실제 그런 셀은 M ⊄ claimed(G) 로도 잡힌다)
+
+    → dict (`kind = am_iface_ledger`): owner (int32 격자 · canonical id = 중심 사전순 순위 · −1 = 주인 없음) · contacts
+    (canonical 쌍 표 — 부류 contact · ambiguous · gap_bridged · A_true · A_hi · N_c^0 · N_c^surv · 3중 면 · a < h) · faces
+    (owner 가 다른 이웃 쌍 면 — 면 키 = (축, 아래쪽 셀 선형 번호) · 접점 id 또는 −1 = 미등록 · surv = 최종 마스크에서도 남음) ·
+    rejections (정량 모드 거부 사유 — 원장은 그래도 만든다: census 가 수를 읽는다).
+    ⚠ 행렬 · 솔브 없음 (CPU raster 만).  ⚠ 정확한 순열 불변 = 같은 sid · sid_pre (동결 M) 에서만 (I1‴)."""
+    from lens_geometry import intersection_disc_area
+    c, r, t, rej, rank = _iface_input_check(am_c, am_r, am_t)
+    sid = np.asarray(sid); sid_pre = np.asarray(sid_pre)
+    if sid.ndim != 3 or sid.shape != sid_pre.shape:
+        raise ValueError(f'①′ sid {sid.shape} · sid_pre {sid_pre.shape} — 같은 3-D 격자여야 한다')
+    vox = float(vox)
+    db = float(delta_bound_um); tol = float(tol_am_um); eps = float(eps_p_um2)
+    if not (np.isfinite(vox) and vox > 0.0):
+        raise ValueError(f'①′ vox 는 유한한 양수: {vox!r}')
+    if not (np.isfinite(db) and db >= 0.0):
+        raise ValueError(f'①′ delta_bound_um 은 유한한 0 이상: {delta_bound_um!r}')
+    if not (np.isfinite(tol) and tol >= 0.0):
+        raise ValueError(f'①′ tol_am_um 은 유한한 0 이상: {tol_am_um!r}')
+    if not (np.isfinite(eps) and eps > 0.0):
+        raise ValueError(f'①′ ε_p 는 유한한 양수 (µm²): {eps_p_um2!r}')
+    rb = _am_bridge_radius(vox, bridge_um)
+    shape = tuple(int(x) for x in sid.shape)
+    n = np.array(shape, dtype=int)
+    lo = np.asarray(box_lo, np.float64)
+    M = np.isin(sid, (1, 2)); M0 = np.isin(sid_pre, (1, 2)); Mx = M | M0
+    N = len(c)
+    _sb = float(raster_sdcp_bridge_um)
+    if not (np.isfinite(_sb) and _sb >= 0.0):
+        raise ValueError(f'①′ raster_sdcp_bridge_um 은 유한한 0 이상: {raster_sdcp_bridge_um!r}')
+    if _sb > 0.0:
+        rej.append({'code': 'sdcp_bridge_raster', 'test': 'N7', 'n': 1,
+                    'why': 'SDCP–AM 브리지 진단 팔 (sdcp_bridge_um > 0) 은 빈 셀에 AM sid 를 주인 없이 깐다 — 정량 모드와 함께 쓰지 않는다'})
+    led = {'kind': 'am_iface_ledger', 'version': IFACE_MODEL_VERSION,
+           'iface_owner_rule': IFACE_OWNER_RULE, 'iface_tie_rule': IFACE_TIE_RULE, 'iface_eps_p_um2': eps,
+           'iface_power_eval': IFACE_POWER_EVAL, 'iface_bridge_claim': IFACE_BRIDGE_CLAIM,
+           'iface_area_source': IFACE_AREA_SOURCE,
+           'shape': shape, 'vox': vox, 'box_lo': tuple(float(x) for x in lo), 'bridge_um': float(rb),
+           'bridge_um_requested': None if bridge_um is None else float(bridge_um), 'tol_am_um': tol,
+           'delta_bound_um': db, 'n_particles': int(N), 'raster_sdcp_bridge_um': _sb,
+           'fp_sid': _grid_fp(sid), 'fp_sid_pre': _grid_fp(sid_pre),
+           'n_M': int(M.sum()), 'n_M0': int(M0.sum()), 'rejections': rej}
+    if any(x['code'] in ('exact_duplicate', 'concentric_nonidentical') for x in rej):
+        led.update(owner=None, contacts=None, faces=None, claims=None)   # canonical 키가 없다 → owner 를 정하지 않는다
+        return led
+    #  ── 청구 항목 (cell, 입자) — 구 (raster 와 같은 식) ∪ 브리지 청구 영역 (두 순서 합집합) · M ∪ M0 의 셀만 ──
+    Mflat = Mx.reshape(-1)
+    cells_l, parts_l = [], []
+
+    def _claim(centre, rad, parts):
+        hit = _ball_cells(centre, rad, lo, vox, n)
+        if hit is None:
+            return
+        i0, i1, m = hit
+        ii, jj, kk = np.nonzero(m)
+        lin = np.ravel_multi_index((ii + i0[0], jj + i0[1], kk + i0[2]), shape)
+        lin = lin[Mflat[lin]]
+        if len(lin):
+            for p_ in parts:
+                cells_l.append(lin); parts_l.append(np.full(len(lin), p_, np.int64))
+    for k in range(N):
+        _claim(c[k], r[k], (k,))
+    pairs = am_bridge_pairs(c, r, tol) if N >= 2 else []
+    for i, j, d in pairs:
+        for mid in _am_bridge_claim_mids(c, r, i, j, d):
+            _claim(mid, rb, (i, j))
+    if cells_l:
+        key = np.unique(np.concatenate(cells_l) * max(N, 1) + np.concatenate(parts_l))
+        cell, part = key // max(N, 1), key % max(N, 1)
+    else:
+        cell = part = np.zeros(0, np.int64)
+    ijk = np.stack(np.unravel_index(cell, shape), axis=1) if len(cell) else np.zeros((0, 3), np.int64)
+    cg = (c - lo) / vox
+    rrv = r / vox
+    rr2 = rrv * rrv
+    p_um2 = _cells_power_grid(ijk, cg[part], rr2[part]) * (vox * vox) if len(cell) else np.zeros(0)
+    cells_u, own_rank, band_size, n_claim = _iface_owner_select(cell, rank[part] if len(part) else part, part,
+                                                                 p_um2, eps)
+    owner = np.full(shape, -1, np.int32)
+    owner.reshape(-1)[cells_u] = own_rank.astype(np.int32)
+    #  ── 불변식 M ⊆ claimed(G) (v3.1 §2) · M ⊆ M0 (S_surv ⊆ S_0 의 전제 · v3.1 §5) ──
+    for code_, mask_, why_ in (
+            ('mask_unclaimed', M & (owner < 0),
+             'M ⊄ claimed(G) — 청구자 없는 AM 셀을 조용한 bulk 면으로 두지 않는다 (T0-1g · SDCP–AM 브리지 N7 · 다른 bridge/tol)'),
+            ('mask_pre_unclaimed', M0 & (owner < 0), 'M0 ⊄ claimed(G) — N_c^0 를 셀 수 없다 (raster 와 다른 bridge/tol?)'),
+            ('mask_not_subset_pre', M & ~M0, 'M ⊄ M0 — 첨가제 뒤에 AM 셀이 생겼다 (S_surv ⊆ S_0 전제 깨짐 · N7)')):
+        if mask_.any():
+            w = np.argwhere(mask_)
+            rej.append({'code': code_, 'n': int(len(w)), 'detail': [tuple(int(v) for v in x) for x in w[:8]],
+                        'why': why_})
+    #  ── 면 — owner 가 다른 이웃 쌍 (면 키 = (축, 아래쪽 셀 선형 번호)) · M0 위 (S^0) · M 에서도 남음 (surv) ──
+    Nr = int(rank.max()) + 1 if N else 1
+    f_ax, f_lin, f_lo, f_hi, f_sv = [], [], [], [], []
+    extra = 0
+    for ax in range(3):
+        sa = [slice(None)] * 3; sb = [slice(None)] * 3
+        sa[ax] = slice(0, -1); sb[ax] = slice(1, None)
+        sa, sb = tuple(sa), tuple(sb)
+        oa, ob = owner[sa], owner[sb]
+        diff = (oa >= 0) & (ob >= 0) & (oa != ob)
+        m0 = diff & M0[sa] & M0[sb]
+        ms = diff & M[sa] & M[sb]
+        extra += int((ms & ~m0).sum())
+        ii, jj, kk = np.nonzero(m0)
+        f_lin.append(np.ravel_multi_index((ii, jj, kk), shape).astype(np.int64))
+        f_ax.append(np.full(len(ii), ax, np.int8))
+        f_lo.append(oa[ii, jj, kk].astype(np.int64)); f_hi.append(ob[ii, jj, kk].astype(np.int64))
+        f_sv.append(ms[ii, jj, kk])
+    if extra:
+        rej.append({'code': 'surv_not_subset', 'n': extra,
+                    'why': 'S_surv ⊄ S_0 — 같은 면 키에서 최종 마스크에만 있는 owner 쌍 면 (v3.1 §5 구현 검사)'})
+    f_ax = np.concatenate(f_ax); f_lin = np.concatenate(f_lin)
+    f_lo = np.concatenate(f_lo); f_hi = np.concatenate(f_hi); f_sv = np.concatenate(f_sv)
+    pa_, pb_ = np.minimum(f_lo, f_hi), np.maximum(f_lo, f_hi)
+    f_code = pa_ * Nr + pb_
+    reg = sorted({(int(min(rank[i], rank[j])), int(max(rank[i], rank[j]))) for i, j, _d in pairs})
+    reg_code = np.array([a_ * Nr + b_ for a_, b_ in reg], np.int64)
+    pos = np.searchsorted(reg_code, f_code)
+    okc = pos < len(reg_code)
+    okc[okc] = reg_code[pos[okc]] == f_code[okc]
+    f_cid = np.where(okc, pos, -1).astype(np.int64)
+    #  ── 3중: 면 양쪽 셀 중 하나라도 **둘 이상의 다른 주인**과 닿으면 (짝 + 셋째) ──
+    stride = np.array([shape[1] * shape[2], shape[2], 1], np.int64)
+    lin_hi = f_lin + stride[f_ax.astype(np.int64)]
+    if len(f_lin):
+        kk_ = np.unique(np.concatenate([f_lin, lin_hi]) * Nr + np.concatenate([f_hi, f_lo]))
+        ucell, ucnt = np.unique(kk_ // Nr, return_counts=True)
+        f_tri = (ucnt[np.searchsorted(ucell, f_lin)] >= 2) | (ucnt[np.searchsorted(ucell, lin_hi)] >= 2)
+    else:
+        f_tri = np.zeros(0, bool)
+    faces = {'axis': f_ax, 'lin': f_lin, 'cid': f_cid, 'o_lo': f_lo, 'o_hi': f_hi, 'surv': f_sv,
+             'pair': f_code, 'triple': f_tri}
+    #  ── 접점 표 (canonical 쌍 순) ──
+    nC = len(reg)
+    rep = np.zeros(Nr, np.int64)
+    rep[rank] = np.arange(N)                                   # canonical id → 입력 행 (중복 없음이 위에서 보장)
+    C = {k_: np.zeros(nC, np.float64) for k_ in ('r_a', 'r_b', 'd', 'delta', 'A_true', 'A_hi', 'a_um')}
+    C['a'] = np.array([a_ for a_, _ in reg], np.int64); C['b'] = np.array([b_ for _, b_ in reg], np.int64)
+    C['cls'] = np.zeros(nC, np.int8)
+    tkeys = []
+    for q, (ka, kb) in enumerate(reg):
+        A_, B_ = int(rep[ka]), int(rep[kb])
+        ra_, rb_ = float(r[A_]), float(r[B_])
+        dd = float(np.linalg.norm(c[A_] - c[B_]))
+        dl = (ra_ + rb_) - dd
+        cl = 0 if dl > db else (2 if dl < -db else 1)
+        at = intersection_disc_area(ra_, rb_, dl) if dl > 0.0 else 0.0
+        ah = _iface_area_hi(ra_, rb_, dl, db) if cl == 1 else 0.0
+        af = at if cl == 0 else (ah if cl == 1 else 0.0)
+        C['r_a'][q], C['r_b'][q], C['d'][q], C['delta'][q] = ra_, rb_, dd, dl
+        C['A_true'][q], C['A_hi'][q], C['a_um'][q] = at, ah, float(np.sqrt(af / np.pi))
+        C['cls'][q] = cl
+        tkeys.append(_iface_type_key(t[A_], t[B_]))
+    C['type_key'] = np.array(tkeys, dtype='<U9') if nC else np.zeros(0, dtype='<U9')
+    reg_face = f_cid >= 0
+    C['n0'] = np.bincount(f_cid[reg_face], minlength=nC).astype(np.int64)
+    C['nsurv'] = np.bincount(f_cid[reg_face & f_sv], minlength=nC).astype(np.int64)
+    C['n_triple'] = np.bincount(f_cid[reg_face & f_tri], minlength=nC).astype(np.int64)
+    C['a_lt_h'] = C['a_um'] < vox
+    led.update(owner=owner, contacts=C, faces=faces,
+               claims={'cell': cell, 'rank': rank[part] if len(part) else part.copy()},
+               fp_owner=_grid_fp(owner), n_cells_claimed=int(len(cells_u)),
+               n_cells_multi_claim=int((n_claim >= 3).sum()), n_cells_band_gt1=int((band_size > 1).sum()),
+               n_reg_pairs=int(nC))
+    return led
+
+
+def _iface_empty_rows():
+    z = np.zeros(0, np.int64)
+    return {'lin': z, 'rface': np.zeros(0, np.float64), 'cut': np.zeros(0, bool), 'ck': z.copy(),
+            'cid': z.copy(), 'olo': z.copy()}
+
+
+def _iface_rows_fp(axes):
+    """간선 행 지문 (E5) — 축마다 키 이름 · dtype · 모양 · 바이트."""
+    h = hashlib.blake2b(digest_size=16)
+    for ax in axes:
+        for k in sorted(ax):
+            x = np.ascontiguousarray(np.asarray(ax[k]))
+            h.update(k.encode()); h.update(x.dtype.str.encode()); h.update(repr(x.shape).encode()); h.update(x.data)
+    return h.hexdigest()
+
+
+def am_iface_plan(ledger, r_type, *, carbon_cover='remove_area', gap_law=None, unreg_law=None, ambiguous_arm=None):
+    """①′ **막 · 절단 간선 계획** = 원장 + 막 표 + 법칙 → `solve_sigma_z(..., iface=plan)` 이 받는 것.
+
+    r_type         {'AM_S|AM_S': r, 'AM_P|AM_P': r, 'AM_S|AM_P': r} [Ω·cm²] — 막을 진 접점의 종류 쌍이 표에 없으면 거부
+    carbon_cover   'remove_area' (기본 · N_ref = N_c^0) | 'renormalize' (민감도 · N_ref = N_c^surv) — 두 법칙의 r_face 를
+                   **둘 다** 계산해 기록한다 (값 보고는 두 판을 늘 함께 · 막 소자만의 차)
+    gap_law        gap_bridged (−tol ≤ δ < −δ_bound) 법칙 'cut' | 'fused' | 'reject' — 그 부류가 있으면 선언 필수 (N6)
+    unreg_law      미등록 owner 쌍 면 (등록 쌍이 아닌데 두 주인이 면을 공유) 법칙 — 최종 마스크에 있으면 선언 필수 (N6)
+    ambiguous_arm  모호 (|δ| ≤ δ_bound) 팔 'cut' | 'a_hi' — 있으면 선언 필수 (N4) · 두 팔을 모두 보고하는 것은 소비자 몫
+    ⚠ 자동 fallback 없음 (L1 · 막 생략 = fused 로 조용히 돌아가지 않는다 · RINT-08).  cut = g 0 · 원장에 tombstone 행 (E6).
+    → dict (`kind = am_iface_plan`): axes (축마다 활성 행: lin · rface · cut · ck · cid · olo) · record (v3 §6-6 이름) ·
+      rejections (정량 모드 거부 사유 — 하나라도 있으면 솔브가 거부한다)."""
+    if not isinstance(ledger, dict) or ledger.get('kind') != 'am_iface_ledger':
+        raise TypeError('am_iface_plan: am_iface_ledger 의 결과를 줄 것')
+    if carbon_cover not in IFACE_CARBON_LAWS:
+        raise ValueError(f'carbon_cover 는 {IFACE_CARBON_LAWS} 중 하나: {carbon_cover!r}')
+    for nm_, v_, al_ in (('gap_law', gap_law, IFACE_EXCEPTION_LAWS), ('unreg_law', unreg_law, IFACE_EXCEPTION_LAWS),
+                         ('ambiguous_arm', ambiguous_arm, IFACE_AMBIGUOUS_ARMS)):
+        if v_ is not None and v_ not in al_:
+            raise ValueError(f'{nm_} 는 None 또는 {al_} 중 하나: {v_!r}')
+    rt = parse_iface_r_type(r_type)
+    rej = [dict(x) for x in ledger['rejections']]
+    vox = float(ledger['vox']); h2 = vox * vox
+    axes = tuple(_iface_empty_rows() for _ in range(3))
+    summary = {'vox_um': vox, 'bridge_um': ledger['bridge_um'], 'tol_am_um': ledger['tol_am_um'],
+               'delta_bound_um': ledger['delta_bound_um'], 'n_particles': ledger['n_particles'],
+               'carbon_path_current_share': None,
+               'carbon_path_current_share_status': 'not_computed — 탄소 경유 경로의 정의 미등록 (② 접합 전 · v3 R4)'}
+    plan = {'kind': 'am_iface_plan', 'version': IFACE_MODEL_VERSION, 'ledger': ledger, 'fp_sid': ledger['fp_sid'],
+            'vox': vox, 'shape': ledger['shape'], 'axes': axes, 'n_film_rows': 0, 'n_cut_rows': 0,
+            'realized': np.zeros(0, bool), 'rface_c': np.zeros(0), 'carbon_cover': carbon_cover}
+    if ledger['owner'] is not None:
+        C, F = ledger['contacts'], ledger['faces']
+        cls = C['cls']; nC = len(cls)
+        if (cls == 1).any() and ambiguous_arm is None:
+            rej.append({'code': 'ambiguous_without_arms', 'test': 'N4', 'n': int((cls == 1).sum()),
+                        'why': '|δ| ≤ δ_bound 접점이 있는데 팔 (cut · a_hi) 선언이 없다 — 두 팔을 따로 풀어 구간으로 보고'})
+        if (cls == 2).any():
+            if gap_law is None:
+                rej.append({'code': 'gap_law_undeclared', 'test': 'N6', 'n': int((cls == 2).sum()),
+                            'why': 'gap_bridged 접점에 법칙 선언 없음 — 자동 fallback (L1 · fused) 없음 (RINT-08)'})
+            elif gap_law == 'reject':
+                rej.append({'code': 'gap_law_reject', 'n': int((cls == 2).sum()), 'why': 'gap_law = reject'})
+        unreg_sv = (F['cid'] < 0) & F['surv']
+        if unreg_sv.any():
+            if unreg_law is None:
+                rej.append({'code': 'unreg_law_undeclared', 'test': 'N6', 'n': int(unreg_sv.sum()),
+                            'why': '미등록 owner 쌍 면에 법칙 선언 없음 — 자동 fallback 없음 (RINT-08)'})
+            elif unreg_law == 'reject':
+                rej.append({'code': 'unreg_law_reject', 'n': int(unreg_sv.sum()), 'why': 'unreg_law = reject'})
+        film = (cls == 0) | ((cls == 1) & (ambiguous_arm == 'a_hi'))
+        cutc = ((cls == 1) & (ambiguous_arm == 'cut')) | ((cls == 2) & (gap_law == 'cut'))
+        A_f = np.where(cls == 0, C['A_true'], np.where(cls == 1, C['A_hi'], 0.0))
+        zero_a = film & ~(A_f > 0.0)
+        if zero_a.any():
+            rej.append({'code': 'zero_true_area', 'n': int(zero_a.sum()),
+                        'why': '막을 질 접점의 원판 면적 0 (포함된 구 · 퇴화) — 막 법칙이 정의되지 않는다'})
+        rvec = np.array([rt.get(str(k_), np.nan) for k_ in C['type_key']], np.float64) if nC else np.zeros(0)
+        miss = film & np.isnan(rvec)
+        if miss.any():
+            rej.append({'code': 'r_type_missing', 'n': int(miss.sum()),
+                        'detail': sorted({str(k_) for k_ in C['type_key'][miss]}),
+                        'why': '막을 질 접점의 종류 쌍이 r 표에 없다 (v2 §3-4 "표에 없는 종류 쌍 = 거부")'})
+        n0, ns = C['n0'], C['nsurv']
+        realized = film & (ns > 0) & (A_f > 0.0) & ~np.isnan(rvec)
+        unreal = film & (ns == 0)
+        rf_rm = np.zeros(nC); rf_rn = np.zeros(nC)
+        q_ = np.flatnonzero(realized)
+        rf_rm[q_] = iface_rface_ohm_cm2(rvec[q_], n0[q_], vox, A_f[q_])    # r·N_c^0·h²/A   (remove_area)
+        rf_rn[q_] = iface_rface_ohm_cm2(rvec[q_], ns[q_], vox, A_f[q_])    # r·N_c^surv·h²/A (renormalize)
+        rface_c = rf_rm if carbon_cover == 'remove_area' else rf_rn
+        cid = F['cid']; cidc = np.maximum(cid, 0); sv = F['surv']
+        reg_ = cid >= 0
+        film_face = sv & reg_ & realized[cidc] if nC else np.zeros(len(cid), bool)
+        act = film_face & (rface_c[cidc] > 0.0) if nC else film_face
+        zero_r = film_face & ~act
+        cut_face = sv & ((reg_ & (cutc[cidc] if nC else False)) | (~reg_ & (unreg_law == 'cut')))
+        rows = act | cut_face
+        ck_c = np.array([SID_IFACE_AM[str(k_)] for k_ in C['type_key']], np.int64) if nC else np.zeros(1, np.int64)
+        out_axes = []
+        for ax in range(3):
+            s_ = rows & (F['axis'] == ax)
+            o_ = np.argsort(F['lin'][s_], kind='stable')
+            lin_ = F['lin'][s_][o_]
+            cut_ = cut_face[s_][o_]
+            cid_ = cid[s_][o_]
+            rf_ = np.where(cut_, 0.0, rface_c[np.maximum(cid_, 0)] if nC else 0.0)
+            ck_ = np.where(cut_, 0, ck_c[np.maximum(cid_, 0)] if nC else 0).astype(np.int64)
+            out_axes.append({'lin': lin_.astype(np.int64), 'rface': rf_.astype(np.float64), 'cut': cut_.astype(bool),
+                             'ck': ck_, 'cid': cid_.astype(np.int64), 'olo': F['o_lo'][s_][o_].astype(np.int64)})
+        axes = tuple(out_axes)
+        Gs = np.zeros(nC)
+        Gs[q_] = UM2_TO_CM2 * A_f[q_] / np.where(rvec[q_] > 0, rvec[q_], np.inf)
+        summary.update({
+            'n_contacts': {nm: int((cls == k_).sum()) for k_, nm in enumerate(IFACE_CONTACT_CLASSES)},
+            'n_film_contacts': int(film.sum()), 'n_realized': int(realized.sum()),
+            'unrealized': {'n': int(unreal.sum()), 'carbon': int((unreal & (n0 > 0)).sum()),
+                           'no_support': int((unreal & (n0 == 0)).sum()),
+                           'meaning': 'AM–AM 막이 남지 않음 — 전체 절연이 아니다 (탄소 경로가 전도할 수 있다 · v3.1 §5)'},
+            'unregistered': {'n_faces_pre': int((~reg_).sum()), 'n_faces_surv': int(unreg_sv.sum()),
+                             'n_pairs': int(len(np.unique(F['pair'][~reg_])))},
+            'n_cells_multi_claim': ledger['n_cells_multi_claim'],
+            'n_faces_triple': int((F['triple'] & reg_).sum()),
+            'a_lt_h': {'n': int((realized & C['a_lt_h']).sum()), 'film_current_share': None,
+                       'meaning': 'a < h — CNC 편향 미인증 범위 (RRM 없음 · v3 §2-1)'},
+            'A_film_sum_um2': float(A_f[realized].sum()),
+            'support_over_true': {'pre': _iface_quant((n0 * h2 / np.where(A_f > 0, A_f, 1.0))[realized]),
+                                  'surv': _iface_quant((ns * h2 / np.where(A_f > 0, A_f, 1.0))[realized])},
+            'Nsurv_over_N0': _iface_quant((ns / np.maximum(n0, 1))[realized]),
+            'Nsurv_over_N0_meaning': '격자 support 면 비율 — 실측 원판의 노출 면적 비율 아님 (v3.1 §5)',
+            'carbon_cover_frac': _iface_quant((1.0 - ns / np.maximum(n0, 1))[film & (n0 > 0)]),
+            'film_faces': {'pre': int(n0[film].sum()), 'surv': int(ns[film].sum()), 'active': int(act.sum()),
+                           'zero_r': int(zero_r.sum())},
+            'cut_faces': int(cut_face.sum()),
+            'rface_ohm_cm2': {'remove_area': _iface_quant(rf_rm[realized]), 'renormalize': _iface_quant(rf_rn[realized])},
+            'film_G_S_total': {'remove_area': float((Gs * ns / np.maximum(n0, 1)).sum()), 'renormalize': float(Gs.sum())},
+        })
+        plan.update(realized=realized, rface_c=rface_c, rface_remove=rf_rm, rface_renorm=rf_rn,
+                    n_film_rows=int(act.sum()), n_cut_rows=int(cut_face.sum()))
+    plan['axes'] = axes
+    plan['fp_rows'] = _iface_rows_fp(axes)
+    plan['rejections'] = rej
+    plan['record'] = {
+        'iface_model': IFACE_MODEL_VERSION, 'iface_model_label': IFACE_MODEL_LABEL,
+        'iface_owner_rule': IFACE_OWNER_RULE, 'iface_tie_rule': IFACE_TIE_RULE,
+        'iface_eps_p_um2': ledger['iface_eps_p_um2'], 'iface_power_eval': IFACE_POWER_EVAL,
+        'iface_bridge_claim': IFACE_BRIDGE_CLAIM, 'iface_bridge_claim_status': '권고 · 1저자 확인 전 (v3.1 §2 · 다음 Codex 검토)',
+        'iface_area_law': IFACE_AREA_LAW, 'iface_carbon_cover': carbon_cover,
+        'iface_area_source': IFACE_AREA_SOURCE, 'iface_join': None,
+        'iface_join_status': '덤프 (c_cpl[22]) 경로 · G-geo · G-frame 조인 관문 미구현 (T4-2 · N5′) — scaffold 재계산만',
+        'iface_geom_reuse': None,
+        'iface_exception_law': {'gap': gap_law, 'unregistered': unreg_law, 'ambiguous_arm': ambiguous_arm},
+        'iface_r_type_ohm_cm2': rt, 'unit': 'ohm_cm2',
+        'iface_contact_ledger': summary,
+        'iface_rejections': [{k_: v_ for k_, v_ in x.items() if k_ != 'detail'} for x in rej],
+        'iface_status': IFACE_STATUS, 'iface_qualifiers': list(IFACE_QUALIFIERS)}
+    return plan
+
+
+def iface_require_quantitative(plan, sid=None, sigma_of_sid=None, rint=None, periodic_xy=False):
+    """①′ 정량 모드 관문 — 거부 입력이면 ValueError (계획 행 변조 · 원장/계획 거부 사유 · r1 탐침 동시 사용 (N3) · 주기 (N2) ·
+    다른 격자 (E5) · 이 채널에서 AM 이 절연 (막이 조용히 무효 — RINT-14 와 같은 부류))."""
+    if not isinstance(plan, dict) or plan.get('kind') != 'am_iface_plan':
+        raise TypeError('iface 는 am_iface_plan 의 결과여야 한다')
+    _miss = [k for k in ('axes', 'fp_rows', 'rejections', 'fp_sid', 'n_film_rows', 'n_cut_rows', 'record', 'ledger',
+                         'realized') if k not in plan]
+    if _miss or not (isinstance(plan['axes'], tuple) and len(plan['axes']) == 3):
+        raise TypeError(f'iface 계획 모양이 틀렸다 (빠진 키 {_miss}) — am_iface_plan 의 결과를 그대로 줄 것')
+    if _iface_rows_fp(plan['axes']) != plan.get('fp_rows'):
+        raise ValueError('①′ 계획의 간선 행이 만든 뒤 바뀌었다 (지문 불일치 · E5)')
+    if plan['rejections']:
+        raise ValueError('①′ 정량 모드 거부 — ' + ' · '.join(
+            f"{x['code']}({x.get('test', '')}{'' if not x.get('test') else ' '}n={x.get('n')})" for x in plan['rejections']))
+    if rint:
+        raise ValueError('①′ 정량 모드에 r1 탐침 표 (--step3-rint-e/-i) 를 함께 줄 수 없다 — AM 쌍 키는 곡면 위치 · 이중 막 (N3) · '
+                         'r1 은 탐침 전용 (v2 §3-2 · D14)')
+    if periodic_xy:
+        raise ValueError('①′ 정량 모드는 주기 경계를 거부한다 — raster 가 주기 영상 · 이음매 브리지를 만들지 않는다 (N2 · D13)')
+    if sid is not None and _grid_fp(sid) != plan['fp_sid']:
+        raise ValueError('①′ 계획이 다른 격자에서 만들어졌다 (sid 지문 불일치 · E5)')
+    if sigma_of_sid is not None and sid is not None and plan['n_film_rows'] > 0:
+        a = np.asarray(sigma_of_sid, np.float64)
+        sid_ = np.asarray(sid)
+        bad = []
+        if a.ndim == 1:
+            for s_ in (1, 2):
+                if (sid_ == s_).any() and not (0 <= s_ < a.shape[0] and a[s_] > 0.0):
+                    bad.append(SID_NAME[s_])
+        else:
+            m_ = np.isin(sid_, (1, 2))
+            if m_.any() and not (a[m_] > 0.0).all():
+                bad.append('AM(복셀 σ 장)')
+        if bad:
+            raise ValueError(f'①′ 이 채널의 실제 σ 에서 AM 이 절연 ({bad}) — 막을 실을 면이 없어 요청이 조용히 무효가 된다 '
+                             f'(RINT-14 와 같은 부류 · ①′ = 전자 채널 AM–AM 막)')
+    return plan
+
+
+def iface_rface_ohm_cm2(r_ohm_cm2, n_ref, vox, A_um2):
+    """CNC 면 막 ASR [Ω·cm²] = r · N_ref · h² / A (h² · A 둘 다 µm² → 비 · v2 §3-4 · v3 §2-1).  면 하나의 막 G =
+    h²·1e−8/r_face [S] → N_ref 면 합 = 1e−8·A/r (접점 막 총량).  N_ref = N_c^0 (remove_area) 이면 덮이고 남은 N_c^surv 면의
+    합 = 1e−8·A·(N_surv/N_0)/r · N_ref = N_c^surv (renormalize) 이면 1e−8·A/r 유지."""
+    return (np.asarray(r_ohm_cm2, np.float64) * np.asarray(n_ref, np.float64) * (float(vox) * float(vox))
+            / np.asarray(A_um2, np.float64))
+
+
+def iface_plan_film_G_S(plan):
+    """계획의 활성 막 행 → 접점마다 물리 막 총 컨덕턴스 ΣG [S] = Σ_e h²·1e−8/r_face,e (RINTG-07 단위 사슬 · 면적 µm² → cm²)."""
+    nC = len(plan['realized'])
+    out = np.zeros(nC)
+    h2 = float(plan['vox']) ** 2
+    for ax in plan['axes']:
+        f = ~ax['cut'] & (ax['rface'] > 0.0)
+        if f.any():
+            out += np.bincount(ax['cid'][f], weights=h2 * UM2_TO_CM2 / ax['rface'][f], minlength=nC)
+    return out
+
+
+def iface_code_G_S(g_code):
+    """코드 면 컨덕턴스 [S/cm·µm] → 물리 G [S] (= ×1e−4 · σ·h·1e−4 cm)."""
+    return 1.0e-4 * np.asarray(g_code, np.float64)
+
+
+def iface_face_film_R_ohm(r_face, vox):
+    """면 하나의 막 소자 저항 [Ω] = r_face / (h²·1e−8) (RINTG-03 — 코드 간선 저항으로는 r′/h², r′ 자체가 아니다)."""
+    return np.asarray(r_face, np.float64) / (float(vox) ** 2 * UM2_TO_CM2)
+
+
+def iface_contact_film_G_S(A_um2, r_ohm_cm2):
+    """접점 막 총 컨덕턴스 [S] = 1e−8·A[µm²]/r[Ω·cm²] (RINTG-07)."""
+    return UM2_TO_CM2 * np.asarray(A_um2, np.float64) / np.asarray(r_ohm_cm2, np.float64)
+
+
+def iface_face_split(sa, sb, r_face, vox):
+    """E4′ (v3 §3) — 막 있는 면 소산의 세 몫 (반셀 a · 반셀 b · 막) = R_a/R_t · R_b/R_t · r′/R_t,
+    R_a = h/(2σa) · R_b = h/(2σb) · r′ = r_face·1e4 · R_t = R_a + R_b + r′ (코드 단위 · 단위 무관 비).
+    막 몫 = −∂ln g/∂ln r′ (면 하나 · 포락선) — 간선 저항으로는 r′/h² (r′ 자체를 I² 에 곱하면 1/h² 배 틀린다 · RINTG-03)."""
+    sa = np.asarray(sa, np.float64); sb = np.asarray(sb, np.float64)
+    ra = vox / (2.0 * sa); rb = vox / (2.0 * sb)
+    ri = np.asarray(r_face, np.float64) * RINT_OHM_CM2_TO_UM_CM_PER_S
+    rt = ra + rb + ri
+    return ra / rt, rb / rt, ri / rt
+
+
+def _iface_label_cut(cond, cut_lin):
+    """E3 — 절단 면 (g = 0) 을 뺀 **실제 간선** 그래프의 연결 성분 (6-이웃 · 비주기).  절단이 없으면 `ndimage.label(cond)` 과
+    같은 성분 집합 (번호만 다를 수 있다 — 그래서 절단이 없을 때는 호출하지 않는다 · I2).  cut_lin = 축마다 아래쪽 셀 선형 번호."""
+    from scipy.sparse.csgraph import connected_components
+    shape = cond.shape
+    flat = np.flatnonzero(cond.reshape(-1))
+    gid = -np.ones(cond.size, np.int64)
+    gid[flat] = np.arange(len(flat))
+    rr, cc = [], []
+    stride = (shape[1] * shape[2], shape[2], 1)
+    for ax in range(3):
+        sa = [slice(None)] * 3; sb = [slice(None)] * 3
+        sa[ax] = slice(0, -1); sb[ax] = slice(1, None)
+        both = cond[tuple(sa)] & cond[tuple(sb)]
+        ii, jj, kk = np.nonzero(both)
+        lo_ = np.ravel_multi_index((ii, jj, kk), shape).astype(np.int64)
+        if len(cut_lin[ax]):
+            lo_ = lo_[~np.isin(lo_, cut_lin[ax])]
+        rr.append(gid[lo_]); cc.append(gid[lo_ + stride[ax]])
+    rr = np.concatenate(rr); cc = np.concatenate(cc)
+    A = sparse.coo_matrix((np.ones(len(rr), np.int8), (rr, cc)), shape=(len(flat), len(flat)))
+    ncomp, labels = connected_components(A, directed=False)
+    lab = np.zeros(shape, np.int32)
+    lab.reshape(-1)[flat] = labels.astype(np.int32) + 1
+    return lab, int(ncomp)
+
+
+def _iface_edges_fp(axes):
+    """해에 실린 ①′ 간선 원장 지문 (E5 · T0-6b)."""
+    return _iface_rows_fp(axes)
+
+
+def iface_ctx_from(res, sid, sigma_of_sid=None):
+    """진단용 ①′ 간선 원장 (E2 — 진단은 막 면의 g 를 **원장에서** 읽는다 · `face_rint` 재호출 없음).  ①′ 을 안 쓴 해 → None.
+    ⛔ 지문 (E5 · T0-6b): 진단에 넘긴 sid · σ · 해의 φ · 원장 자신이 솔브 때와 다르면 거부 (다른 원장을 끼운 해 · 사후 변조)."""
+    e = res.get('_iface')
+    if not e:
+        return None
+    if _grid_fp(sid) != e.get('fp_sid'):
+        raise ValueError('①′ 원장: 진단에 넘긴 sid 가 솔브한 sid 와 다르다 (E5)')
+    if sigma_of_sid is not None and _grid_fp(np.asarray(sigma_of_sid, np.float64)) != e.get('fp_sig'):
+        raise ValueError('①′ 원장: 진단에 넘긴 σ 가 솔브한 σ 와 다르다 (E5)')
+    if e.get('fp_phi') is not None and 'phi' in res and _grid_fp(res['phi']) != e['fp_phi']:
+        raise ValueError('①′ 원장: 해의 φ 가 원장을 만든 솔브의 φ 가 아니다 (다른 원장을 끼운 해 · T0-6b)')
+    if _iface_edges_fp(e.get('axes') or ()) != e.get('fp_edges'):
+        raise ValueError('①′ 원장: 간선 원장이 솔브 뒤 바뀌었다 (지문 불일치 · T0-6b)')
+    return e
+
+
+def _iface_override_g(g, axis, ctx, scale):
+    """진단의 면 g (축 `axis` 의 슬라이스 모양) 에서 원장 행이 있는 면만 원장 g × scale 로 바꾼다.  행이 없으면 g **그대로**
+    (같은 객체 — 비트 같음).  scale = 1 (조립 단위 ×vox) · 1/vox (σ 단위 진단)."""
+    if ctx is None:
+        return g
+    rows = ctx['axes'][axis]
+    if not len(rows['lin']):
+        return g
+    g = np.array(g, np.float64, copy=True)
+    ijk = np.unravel_index(rows['lin'], ctx['shape'])
+    g[ijk] = rows['g'] * scale
+    return g
+
+
+def am_iface_raw_perm_diag(am_c, am_r, am_t, perm_a, perm_b, box_lo, box_hi, vox, *, delta_bound_um,
+                           add_pts=None, add_phase=None, eps_p_um2=IFACE_EPS_P_UM2, **raster_kw):
+    """RINTV-02 진단 `raw_perm_mask_diag` (v3.1 §2 · §4 T0-1d) — **raw** 행 순서 둘을 실제 `rasterize` 로 찍어 먼저 동결 마스크
+    (M · M0) 와 청구자 기하 G 를 비교한다.  같으면 owner/support 동일을 판정 (`owner_equal`) · 다르면 차이 (셀 · sid 전후 ·
+    청구자) 를 **기록만** 하고 owner 규칙의 통과 · 실패로 대신 판정하지 않는다 (`owner_judged = False`).
+    ⚠ legacy raster 를 조용히 canonical 화하지 않는다 (그것은 D21 · 새 OFF 세대)."""
+    c = np.asarray(am_c, np.float64); r = np.asarray(am_r, np.float64); t = np.asarray(am_t)
+    tol = raster_kw.get('tol_am_um', 0.10); bu = raster_kw.get('bridge_um')
+    runs = []
+    for perm in (np.asarray(perm_a), np.asarray(perm_b)):
+        cc, rr, tt = c[perm], r[perm], t[perm]
+        sid, _ = rasterize(cc, rr, tt, add_pts, add_phase, box_lo, box_hi, vox, **raster_kw)
+        sid_pre, _ = rasterize(cc, rr, tt, None, None, box_lo, box_hi, vox, **raster_kw)
+        led = am_iface_ledger(cc, rr, tt, sid, sid_pre, box_lo, vox, delta_bound_um=delta_bound_um,
+                              tol_am_um=tol, bridge_um=bu, eps_p_um2=eps_p_um2,
+                              raster_sdcp_bridge_um=float(raster_kw.get('sdcp_bridge_um', 0.0) or 0.0))
+        runs.append((sid, sid_pre, led))
+    (sa, spa, la), (sb, spb, lb) = runs
+    Ma, Mb = np.isin(sa, (1, 2)), np.isin(sb, (1, 2))
+    M0a, M0b = np.isin(spa, (1, 2)), np.isin(spb, (1, 2))
+    geo = lambda cc, rr, tt: sorted(zip(map(tuple, cc.tolist()), rr.tolist(), [int(x) for x in tt]))   # noqa: E731
+    pairs_g = [sorted({tuple(sorted((tuple(c[p][i].tolist()), tuple(c[p][j].tolist()))))
+                       for i, j, _d in am_bridge_pairs(c[p], r[p], tol)}) for p in (np.asarray(perm_a), np.asarray(perm_b))]
+    claims_equal = (geo(c[np.asarray(perm_a)], r[np.asarray(perm_a)], t[np.asarray(perm_a)])
+                    == geo(c[np.asarray(perm_b)], r[np.asarray(perm_b)], t[np.asarray(perm_b)])
+                    and pairs_g[0] == pairs_g[1])
+    masks_equal = bool(np.array_equal(Ma, Mb) and np.array_equal(M0a, M0b))
+    out = {'test': 'T0-1d raw_perm_mask_diag', 'n_M': (int(Ma.sum()), int(Mb.sum())),
+           'n_M0': (int(M0a.sum()), int(M0b.sum())), 'masks_equal': masks_equal, 'claims_equal': bool(claims_equal)}
+    if masks_equal and claims_equal and la['owner'] is not None and lb['owner'] is not None:
+        out['owner_judged'] = True
+        out['owner_equal'] = bool(np.array_equal(la['owner'], lb['owner'])
+                                  and all(np.array_equal(la['faces'][k], lb['faces'][k]) for k in la['faces'])
+                                  and all(np.array_equal(la['contacts'][k], lb['contacts'][k]) for k in la['contacts']))
+        return out
+    diff = []
+    for w in np.argwhere((Ma != Mb) | (M0a != M0b))[:16]:
+        w = tuple(int(v) for v in w)
+        lin = int(np.ravel_multi_index(w, sa.shape))
+        cl = set()
+        for L in (la, lb):
+            if L.get('claims') is not None:
+                m_ = L['claims']['cell'] == lin
+                cl |= {int(x) for x in L['claims']['rank'][m_]}
+        diff.append({'ijk': w, 'sid_a': int(sa[w]), 'sid_b': int(sb[w]), 'sid_pre_a': int(spa[w]),
+                     'sid_pre_b': int(spb[w]), 'claimants_canonical': sorted(cl)})
+    out.update(owner_judged=False, n_diff_cells=int(((Ma != Mb) | (M0a != M0b)).sum()), diff=diff,
+               note='M (또는 청구자) 다름 → 차이만 기록 · owner 규칙의 통과/실패로 판정하지 않는다 (v3.1 §2)')
+    return out
+
+
 #: ★★★ **플레이트 결합 규약 판**.  이 문자열이 바뀌면 σ_e 절대값이 바뀐다 —
 #   `p2` = 2026-08-25 (CDXR3-6) 가장 바깥 **점유 고체**를 먼저 정하고 그것이 도체일 때만
 #   플레이트에 붙인다.  `p1` = 그 이전, `cond`(σ>0) 로 표면을 골라 절연 고체를 **관통**했다.
@@ -914,7 +1695,7 @@ PLATE_RULE_VERSION = 'p2-occupied-surface-first'
 
 def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, plate_band_um=None,
                   z_bot_um=None, plate_band_bot_um=None, bot_allowed=None, periodic_xy=False,
-                  area_um2=None, rint=None, pid=None):
+                  area_um2=None, rint=None, pid=None, iface=None):
     """Effective through-plane (z) σ of the voxel σ-id grid.  Finite volume, harmonic-mean face
     conductance g = (2σaσb/(σa+σb))·vox (cubic voxels: face area vox² / distance vox), collector
     plate φ=1 at the bed bottom, φ=0 plate at the bed top, lateral Neumann.
@@ -947,6 +1728,11 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
         if _same and pid is None:
             raise ValueError(f'solve_sigma_z: 같은 상 계면 {_same} 은 입자 번호 pid 가 있어야 한다 — 없으면 면 0 '
                              f'으로 조용히 무효 (unsupported identity · RINT-02/14)')
+    #  ①′ AM–AM 막 (2026-10-07 · Rint G2 · 기구만 · 정량 채택 HOLD) — `iface` = am_iface_plan(...) 의 결과.  None (기본) 이면
+    #    아래 어떤 줄도 바뀌지 않는다 (옛 조립 · 연결성 · 반환 dict 키 비트 같음).  거부 입력 · r1 동시 · 주기 · 다른 격자 → 거부.
+    _ifp = (iface_require_quantitative(iface, sid, sigma_of_sid, rint=_rint, periodic_xy=periodic_xy)
+            if iface is not None else None)
+    _ife_used = {}                                           # ①′ 조립이 실제로 쓴 간선 (축마다) — 진단이 이것을 읽는다 (E2)
     _faces = {}                                              # 계면 면 수 (상 쌍별 · 실물 증거)
 
     def _iface(solved):
@@ -959,11 +1745,17 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
                 'table': rint_table_record(_rint), 'pid_used': pid is not None,
                 'n_faces_rint': int(sum(_faces.values())),
                 'faces_by_pair': dict(sorted(_faces.items())), 'solved': bool(solved)}
+
+    def _ret(d):
+        #  ①′ — 조기 반환 해에도 기록 (solved False) · iface 를 안 줬으면 dict 를 **그대로** 돌려준다 (옛 키 그대로).
+        if _ifp is not None:
+            d['iface'] = dict(_ifp['record'], solved=False)
+        return d
     cond = sig > 0
     if not cond.any():
-        return {'sigma_eff': 0.0, 'n_dof': 0, 'n_floating_dropped': 0, 'cg_info': 0, 'resid': 0.0,
-                'unconverged': False, 'reason': 'no_conductive_voxels',
-                'periodic_xy': bool(periodic_xy), 'interface': _iface(False)}
+        return _ret({'sigma_eff': 0.0, 'n_dof': 0, 'n_floating_dropped': 0, 'cg_info': 0, 'resid': 0.0,
+                     'unconverged': False, 'reason': 'no_conductive_voxels',
+                     'periodic_xy': bool(periodic_xy), 'interface': _iface(False)})
     occ = np.where(cond.any((0, 1)))[0]
     k_bot = int(occ[0])
     am_occ = np.where((((sid == 1) | (sid == 2)) & cond).any((0, 1)))[0]
@@ -975,9 +1767,9 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
     z_plate = float(z_top_um) if z_top_um is not None else (k_top_ref + 1) * vox
     z_plate = min(z_plate, nz * vox)
     if z_plate - z_b <= 1.5 * vox:                         # degenerate (≈1-layer bed) → no through-path
-        return {'sigma_eff': 0.0, 'n_dof': int(cond.sum()), 'n_floating_dropped': 0, 'cg_info': 0,
-                'resid': 0.0, 'unconverged': False, 'reason': 'degenerate_thin_bed',
-                'periodic_xy': bool(periodic_xy), 'interface': _iface(False)}
+        return _ret({'sigma_eff': 0.0, 'n_dof': int(cond.sum()), 'n_floating_dropped': 0, 'cg_info': 0,
+                     'resid': 0.0, 'unconverged': False, 'reason': 'degenerate_thin_bed',
+                     'periodic_xy': bool(periodic_xy), 'interface': _iface(False)})
     band = plate_band_um if plate_band_um is not None else (vox + 0.10)
     # BOTTOM band override (collector GEOMETRY axis): 'wetted/primer' = default band (vox+0.1 —
     # a conformal conductive film reaches ~0.2µm gaps, + quantization half-voxel); 'bare' passes a
@@ -1022,18 +1814,23 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
         bot_m &= np.asarray(bot_allowed, bool)
     top_m = any_c & _surf_top_cond & (np.abs(z_plate - zc[k_last]) <= band)
     if not bot_m.any() or not top_m.any():
-        return {'sigma_eff': 0.0, 'n_dof': int(cond.sum()), 'n_floating_dropped': 0, 'cg_info': 0,
-                'resid': 0.0, 'unconverged': False,
-                'reason': f'no_plate_contact(bot={int(bot_m.sum())},top={int(top_m.sum())},'
-                          f'z_b={z_b:.2f},z_plate={z_plate:.2f},band={band:.2f})',
-                'periodic_xy': bool(periodic_xy), 'interface': _iface(False)}
+        return _ret({'sigma_eff': 0.0, 'n_dof': int(cond.sum()), 'n_floating_dropped': 0, 'cg_info': 0,
+                     'resid': 0.0, 'unconverged': False,
+                     'reason': f'no_plate_contact(bot={int(bot_m.sum())},top={int(top_m.sum())},'
+                               f'z_b={z_b:.2f},z_plate={z_plate:.2f},band={band:.2f})',
+                     'periodic_xy': bool(periodic_xy), 'interface': _iface(False)})
     # FLOATING ISLANDS (components touching NEITHER plate contact) = singular blocks, zero current
     # by physics → dropped (their je reads 0).
     # ★ 리뷰 B#1 caveat: 이 label 은 6-connectivity(비주기)라 periodic_xy=True 의 x/y wrap 커플링을
     #   모른다.  σ_z/thermal/pore 는 무해(plate 안 닿는 성분은 어차피 net through-flux 0=dangling).
     #   solve_reaction_current 은 seam으로만 본류에 붙은 경계 patch의 BV 반응전류를 0으로 과소계상할
     #   수 있으나, 프로덕션 조밀 베드는 본류가 bulk로 x=0 에 닿아 실질 영향 미미(경계 몇 입자).
-    lab, _nl = ndimage.label(cond)                         # 6-connectivity = the face-coupling graph
+    if _ifp is not None and _ifp['n_cut_rows'] > 0:
+        #  ①′ E3 — 절단 면 (g = 0) 을 뺀 **실제 간선** 그래프로 떠 있는 성분을 가린다 (셀 6-연결 라벨은 절단을 모른다).
+        #    절단이 없으면 위 옛 라벨 그대로 (성분 집합이 같다 → I2 비트 같음).
+        lab, _nl = _iface_label_cut(cond, tuple(ax['lin'][ax['cut']] for ax in _ifp['axes']))
+    else:
+        lab, _nl = ndimage.label(cond)                     # 6-connectivity = the face-coupling graph
     _ii, _jj = np.where(bot_m); _lb = lab[_ii, _jj, k_first[bot_m]]
     _ii, _jj = np.where(top_m); _lt = lab[_ii, _jj, k_last[top_m]]
     plate = np.unique(np.concatenate([_lb, _lt]))
@@ -1053,9 +1850,9 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
     n_dof = int(cond.sum())
     n_plate_reachable_dof = n_dof                          # = 합집합 (이름을 정직하게)
     if n_dof == 0:
-        return {'sigma_eff': 0.0, 'n_dof': 0, 'n_floating_dropped': n_float, 'cg_info': 0,
-                'resid': 0.0, 'unconverged': False, 'reason': 'all_floating_dropped',
-                'periodic_xy': bool(periodic_xy), 'interface': _iface(False)}
+        return _ret({'sigma_eff': 0.0, 'n_dof': 0, 'n_floating_dropped': n_float, 'cg_info': 0,
+                     'resid': 0.0, 'unconverged': False, 'reason': 'all_floating_dropped',
+                     'periodic_xy': bool(periodic_xy), 'interface': _iface(False)})
     #  ★★★ 2026-08-30 (Codex R13 C-4) — **관통 성분이 없으면 조기반환한다.**
     #    `plate` 는 위 주석대로 **합집합**("한쪽에라도 닿음")이라, 양쪽 판에 각각 닿지만
     #    서로 이어지지 않은 두 성분이 있으면 `n_dof > 0` 인 채 정상 솔브 경로를 탄다.
@@ -1068,11 +1865,11 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
     #    오판한다.  거기서 fail-closed 하면 **정상 펠릿 RVE 런을 죽인다.**  주기 라벨링이
     #    생기기 전까지 그 축은 열어 둔다 (모르는 것을 아는 척하지 않는다).
     if n_through_dof == 0 and not periodic_xy:
-        return {'sigma_eff': 0.0, 'n_dof': n_dof, 'n_through_dof': 0,
-                'n_plate_reachable_dof': n_plate_reachable_dof,
-                'n_floating_dropped': n_float, 'cg_info': 0, 'resid': 0.0,
-                'unconverged': False, 'reason': 'no_through_component',
-                'periodic_xy': bool(periodic_xy), 'interface': _iface(False)}
+        return _ret({'sigma_eff': 0.0, 'n_dof': n_dof, 'n_through_dof': 0,
+                     'n_plate_reachable_dof': n_plate_reachable_dof,
+                     'n_floating_dropped': n_float, 'cg_info': 0, 'resid': 0.0,
+                     'unconverged': False, 'reason': 'no_through_component',
+                     'periodic_xy': bool(periodic_xy), 'interface': _iface(False)})
     sig = np.where(cond, sig, 0.0)
     idx = -np.ones(sid.shape, np.int64)
     idx[cond] = np.arange(n_dof)
@@ -1081,7 +1878,37 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
     diag = np.zeros(n_dof, np.float64)
     b = np.zeros(n_dof, np.float64)
 
-    def couple(sl_a, sl_b):
+    def _ifa_assemble(axis, m, sa_m, sb_m, g, a2, b2):
+        #  ①′ — 계획의 활성 행 (막 r_face > 0 · 절단) 중 이 행렬에 있는 면 (양쪽 셀 다 dof) 만 바꾼다.  행이 없으면 그대로.
+        ax = _ifp['axes'][axis]
+        z_ = np.zeros(0, np.int64)
+        _ife_used[axis] = {'lin': z_, 'g': np.zeros(0), 'rface': np.zeros(0), 'cut': np.zeros(0, bool),
+                           'ck': z_.copy(), 'cid': z_.copy(), 'olo': z_.copy()}
+        if not len(ax['lin']):
+            return g, a2, b2
+        shp = list(sid.shape); shp[axis] -= 1
+        pos = np.ravel_multi_index(np.unravel_index(ax['lin'], sid.shape), tuple(shp))
+        mf = np.flatnonzero(m)
+        loc = np.searchsorted(mf, pos)
+        ok = loc < len(mf)
+        ok[ok] = mf[loc[ok]] == pos[ok]
+        if not ok.any():
+            return g, a2, b2
+        g = np.array(g, np.float64, copy=True)
+        L_ = loc[ok]; cut_ = ax['cut'][ok]
+        fl_ = ~cut_
+        if fl_.any():
+            g[L_[fl_]] = interface_face_g(g[L_[fl_]], sa_m[L_[fl_]], sb_m[L_[fl_]], ax['rface'][ok][fl_], vox)
+        if cut_.any():
+            g[L_[cut_]] = 0.0                              # E6 — 절단 = g 0 (원장에는 tombstone 행으로 남는다)
+        _ife_used[axis] = {'lin': ax['lin'][ok], 'g': g[L_].copy(), 'rface': ax['rface'][ok], 'cut': cut_.copy(),
+                           'ck': ax['ck'][ok], 'cid': ax['cid'][ok], 'olo': ax['olo'][ok]}
+        if cut_.any():
+            keep = np.ones(len(g), bool); keep[L_[cut_]] = False
+            g, a2, b2 = g[keep], a2[keep], b2[keep]
+        return g, a2, b2
+
+    def couple(sl_a, sl_b, axis=None):
         A, B = idx[sl_a], idx[sl_b]
         sa, sb = sig[sl_a], sig[sl_b]
         m = (A >= 0) & (B >= 0)
@@ -1102,13 +1929,15 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
                          f'{SID_NAME.get(int(_c) % 1000, str(int(_c) % 1000))}'
                     _faces[_k] = _faces.get(_k, 0) + int(_n)
         a2, b2 = A[m], B[m]
+        if _ifp is not None and axis is not None:          # ①′ AM–AM 막 · 절단 (원장 행만 · 나머지 면 그대로)
+            g, a2, b2 = _ifa_assemble(axis, m, sa[m], sb[m], g, a2, b2)
         rows.append(a2); cols.append(b2); vals.append(-g)
         rows.append(b2); cols.append(a2); vals.append(-g)
         np.add.at(diag, a2, g); np.add.at(diag, b2, g)
 
-    couple(np.s_[:-1, :, :], np.s_[1:, :, :])
-    couple(np.s_[:, :-1, :], np.s_[:, 1:, :])
-    couple(np.s_[:, :, :-1], np.s_[:, :, 1:])
+    couple(np.s_[:-1, :, :], np.s_[1:, :, :], 0)
+    couple(np.s_[:, :-1, :], np.s_[:, 1:, :], 1)
+    couple(np.s_[:, :, :-1], np.s_[:, :, 1:], 2)
     if periodic_xy:                                        # ★x,y 주기 wrap (MPM RVE 'boundary p p f' 정합;
         if nx > 1:                                         #   z=plate 유지).  nx/ny=1이면 자기결합 방지 가드.
             couple(np.s_[-1:, :, :], np.s_[:1, :, :])      # x: nx-1 ↔ 0
@@ -1184,6 +2013,39 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
     if return_field:
         P = np.zeros(sid.shape, np.float64); P[cond] = phi
         out['phi'] = P; out['cond'] = cond
+    if _ifp is not None:
+        #  ①′ 간선 원장 (E1 · E2 · E5) — 조립이 **실제로 쓴** 막 · 절단 간선 (축마다 · 아래쪽 셀 번호 · g 코드 · r_face ·
+        #    부류 · 접점 · 아래쪽 셀 주인) + 지문 (sid · σ · φ · 원장).  진단은 이것을 읽는다 (face_rint 재호출 없음).
+        _z = np.zeros(0, np.int64)
+        _axes = tuple(_ife_used.get(a_) or {'lin': _z, 'g': np.zeros(0), 'rface': np.zeros(0), 'cut': np.zeros(0, bool),
+                                            'ck': _z.copy(), 'cid': _z.copy(), 'olo': _z.copy()} for a_ in range(3))
+        #  접점마다 막 순전류 (주인 a → b · a = canonical 작은 쪽) → a < h 접점의 막 전류 몫 (v3 R4)
+        _C = _ifp['ledger']['contacts']
+        _nC = 0 if _C is None else len(_C['a'])
+        _Ic = np.zeros(_nC)
+        _st = np.array([sid.shape[1] * sid.shape[2], sid.shape[2], 1], np.int64)
+        for a_, ed in enumerate(_axes):
+            f_ = ~ed['cut']
+            if f_.any() and _nC:
+                lo_ = idx.reshape(-1)[ed['lin'][f_]]; hi_ = idx.reshape(-1)[ed['lin'][f_] + _st[a_]]
+                ie = ed['g'][f_] * (phi[lo_] - phi[hi_])
+                sg = np.where(ed['olo'][f_] == _C['a'][ed['cid'][f_]], 1.0, -1.0)
+                _Ic += np.bincount(ed['cid'][f_], weights=sg * ie, minlength=_nC)
+        _real = _ifp['realized']
+        _den = float(np.abs(_Ic[_real]).sum()) if _nC else 0.0
+        _alh = (float(np.abs(_Ic[_real & _C['a_lt_h']]).sum()) / _den) if _den > 0 else None
+        _rec = dict(_ifp['record'], solved=True)
+        _cl = dict(_rec['iface_contact_ledger'])
+        if 'a_lt_h' in _cl:
+            _cl['a_lt_h'] = dict(_cl['a_lt_h'], film_current_share=_alh)
+        _cl['n_film_rows_used'] = int(sum(int((~ed['cut']).sum()) for ed in _axes))
+        _cl['n_cut_rows_used'] = int(sum(int(ed['cut'].sum()) for ed in _axes))
+        _rec['iface_contact_ledger'] = _cl
+        out['iface'] = _rec
+        out['_iface'] = {'kind': 'am_iface_edges', 'version': IFACE_MODEL_VERSION, 'vox_um': float(vox),
+                         'shape': tuple(sid.shape), 'axes': _axes, 'contact_current_code': _Ic,
+                         'fp_sid': _grid_fp(sid), 'fp_sig': _grid_fp(np.asarray(sigma_of_sid, np.float64)),
+                         'fp_phi': _grid_fp(out['phi']) if return_field else None, 'fp_edges': _iface_edges_fp(_axes)}
     return out
 
 
@@ -1210,6 +2072,9 @@ def per_particle_current(res, sid, pid, sigma_of_sid, n_am):
                                       None if _pid is None else _pid[:, :, :-1],
                                       None if _pid is None else _pid[:, :, 1:]), 0.0)
         g = interface_face_g(g, sa, sb, _r, _vx)
+    _ictx = iface_ctx_from(res, sid, sigma_of_sid)        # ①′ 막 · 절단 면 = 조립 원장의 g (E2 · σ 단위 = g/vox)
+    if _ictx is not None:
+        g = _iface_override_g(g, 2, _ictx, 1.0 / _ictx['vox_um'])
     dphi = P[:, :, :-1] - P[:, :, 1:]
     f = g * dphi                                           # face current ∝ σ·Δφ (per face area vox²)
     jz[:, :, :-1] += np.abs(f) * 0.5
@@ -1220,8 +2085,13 @@ def per_particle_current(res, sid, pid, sigma_of_sid, n_am):
     return np.where(nv > 0, je / np.maximum(nv, 1), 0.0)
 
 
-def phase_current_share(res, sid, sigma_of_sid, periodic_xy=None):
+def phase_current_share(res, sid, sigma_of_sid, periodic_xy=None, return_total=False):
     """σ-id 별 **줄손실(J²R) 분담** — 저항-가중 반쪽 배분.
+
+    ①′ (2026-10-07 · E4′ · RINT-16): ①′ 해 (`res['_iface']`) 면 막 면의 g 를 **조립 원장**에서 읽고 (E2) 막 몫
+    r′/(R_a + R_b + r′) 를 **부류 (주인 종류 쌍) 별 버킷** `SID_IFACE_AM[…]` 에 쌓는다 → 부류 몫 s_c = −∂lnσ/∂ln r_c (부류 전체에
+    공통 배율 · 포락선).  막 행이 없는 해는 옛 경로 그대로 (비트 같음).  `return_total=True` → (분담, 총 소산 [코드 단위]) —
+    에너지 항등식 Σ P = I·ΔV (I7) 검사용 (기본 False = 옛 반환형 그대로).
 
     ⚠ 2026-08-12 (SR-01 리뷰 게이트 4): 옛 한 줄 "where the current actually flows" 는
     **오답**이다.  이 함수가 내는 것은 전류가 흐르는 곳이 아니라 **소산이 일어나는 곳**이고,
@@ -1240,7 +2110,7 @@ def phase_current_share(res, sid, sigma_of_sid, periodic_xy=None):
     (fail-closed — 옛 res 를 조용히 비주기로 읽으면 같은 결함이 되살아난다).
     """
     if 'phi' not in res:
-        return {}
+        return ({}, 0.0) if return_total else {}
     if periodic_xy is None:
         periodic_xy = res.get('periodic_xy')
     if periodic_xy is None:
@@ -1292,13 +2162,33 @@ def phase_current_share(res, sid, sigma_of_sid, periodic_xy=None):
     _use_plate = True
     _u = float(_vox)
     _ctx = rint_ctx_from(res, sid, sigma_of_sid)           # ① 계면 항을 쓴 해인가 (None = 옛 경로 그대로)
+    _ictx = iface_ctx_from(res, sid, sigma_of_sid)         # ①′ 간선 원장 (None 또는 행 없음 = 옛 경로 그대로)
     diss_int = 0.0                                         # 계면 몫 (상이 아니라 따로 센다)
-    for sl_a, sl_b in pairs:
+    diss_cls = {}                                          # ①′ 부류별 막 몫 (E4′ · RINT-16)
+    _st = (sid.shape[1] * sid.shape[2], sid.shape[2], 1)
+    for _axi, (sl_a, sl_b) in enumerate(pairs):
         both = cond[sl_a] & cond[sl_b]
         sa, sb = sig[sl_a], sig[sl_b]
         g = np.where(both, 2.0 * sa * sb / np.maximum(sa + sb, 1e-30), 0.0) * _u
+        _rows = None
+        if _ictx is not None and _axi < 3 and len(_ictx['axes'][_axi]['lin']):
+            _rows = _ictx['axes'][_axi]
+            g = _iface_override_g(g, _axi, _ictx, 1.0)     # E2 — 막 · 절단 면의 g = 조립 원장 (조립 단위 ×vox)
         if _ctx is None:
             d = g * (P[sl_a] - P[sl_b]) ** 2               # per-face dissipation; split ∝ each side's
+            if _rows is not None:
+                #  ①′ 막 면 — 세 몫 (반셀 a · 반셀 b · 막 r′ → 부류 버킷) · 절단 면은 g 0 이라 d 0
+                _f = ~_rows['cut']
+                _ijk = tuple(x[_f] for x in np.unravel_index(_rows['lin'], sid.shape))
+                _df = d[_ijk].copy()
+                d = d.copy(); d[_ijk] = 0.0
+                _wa, _wb, _wi = iface_face_split(sa[_ijk], sb[_ijk], _rows['rface'][_f], _u)
+                np.add.at(diss, _ijk, _wa * _df)
+                _up = np.unravel_index(_rows['lin'][_f] + _st[_axi], sid.shape)
+                np.add.at(diss, _up, _wb * _df)
+                for _ck in np.unique(_rows['ck'][_f]):
+                    _mk = _rows['ck'][_f] == _ck
+                    diss_cls[int(_ck)] = diss_cls.get(int(_ck), 0.0) + float((_wi[_mk] * _df[_mk]).sum())
             wa = np.where(both, sb / np.maximum(sa + sb, 1e-30), 0.0)   # RESISTANCE (review F4 — the old
             diss[sl_a] += wa * d; diss[sl_b] += (1.0 - wa) * d          # half-half gave carbon 50% at a
             #   1e4-contrast face where it truly dissipates ~0.01%)
@@ -1332,13 +2222,15 @@ def phase_current_share(res, sid, sigma_of_sid, periodic_xy=None):
                 continue
             _i, _j, _k = _c
             np.add.at(diss, (_i, _j, _k), np.asarray(_g) * (P[_i, _j, _k] - _phi_p) ** 2)
-    tot = diss.sum() + diss_int
+    tot = diss.sum() + diss_int + sum(diss_cls.values())
     out = {}
     for s in np.unique(sid[sid > 0]):
         out[int(s)] = float(diss[sid == s].sum() / max(tot, 1e-30))
     if _ctx is not None:                                   # ① 계면 몫 — r 없는 해에는 키 자체가 없다
         out[SID_INTERFACE] = float(diss_int / max(tot, 1e-30))
-    return out
+    for _ck in sorted(diss_cls):                           # ①′ 부류별 막 몫 — 막 행이 없는 해에는 키 자체가 없다
+        out[_ck] = float(diss_cls[_ck] / max(tot, 1e-30))
+    return (out, float(tot)) if return_total else out
 
 
 # ── STEP3 열전도 (σ_thermal) — 범용 Laplace 솔버(solve_sigma_z) 재사용, 多상 k 맵 ──────────────
@@ -1543,7 +2435,7 @@ def carbon_se_contact_area(sid, vox, periodic_xy=False):
     return float(faces) * vox * vox
 
 
-def _voxel_jmag(P, cond, sig, periodic_xy=False, rint_ctx=None):
+def _voxel_jmag(P, cond, sig, periodic_xy=False, rint_ctx=None, iface_ctx=None):
     """Cell-centred |J| proxy (∝ σ·Δφ, run-relative) — per_particle_current 와 동일 규약.
     각 축의 양면 전류 |g·Δφ|(g=조화평균 컨덕턴스)를 셀에 반씩 배분 → |J|=√(ΣJ축²).
     field_point_cloud·joule_hotspot 공유(단일 소스, 중복 제거).
@@ -1552,7 +2444,7 @@ def _voxel_jmag(P, cond, sig, periodic_xy=False, rint_ctx=None):
     나오고, 그것이 joule_hotspot 의 hot-spot 선정을 경계에서 체계적으로 놓치게 만든다.
     `periodic_xy` 면 x/y wrap 면을 포함한다.  z 는 감지 않는다.
     ① `rint_ctx` (= `rint_ctx_from(res, sid)`) 가 있으면 계면 면에 조립과 같은 배율을 건다 —
-    없으면 옛 경로 그대로."""
+    없으면 옛 경로 그대로.  ①′ `iface_ctx` (= `iface_ctx_from(res, sid)`) 가 있으면 막 · 절단 면의 g 를 조립 원장에서 읽는다 (E2)."""
     jmag = np.zeros(sig.shape, np.float64)
     for axis in (0, 1, 2):
         sa_sl = [slice(None)] * 3; sb_sl = [slice(None)] * 3
@@ -1560,7 +2452,7 @@ def _voxel_jmag(P, cond, sig, periodic_xy=False, rint_ctx=None):
         sa_sl, sb_sl = tuple(sa_sl), tuple(sb_sl)
         comp = np.zeros(sig.shape, np.float64)
 
-        def _accum(a, b, _comp=comp):
+        def _accum(a, b, _comp=comp, _ax=None):
             both = cond[a] & cond[b]
             sa, sb = sig[a], sig[b]
             g = np.where(both, 2.0 * sa * sb / np.maximum(sa + sb, 1e-30), 0.0)
@@ -1570,10 +2462,12 @@ def _voxel_jmag(P, cond, sig, periodic_xy=False, rint_ctx=None):
                                               None if _pid is None else _pid[a],
                                               None if _pid is None else _pid[b]), 0.0)
                 g = interface_face_g(g, sa, sb, _r, _vx)
+            if iface_ctx is not None and _ax is not None:   # ①′ 막 · 절단 면 = 조립 원장 g (σ 단위 = g/vox)
+                g = _iface_override_g(g, _ax, iface_ctx, 1.0 / iface_ctx['vox_um'])
             f = np.abs(g * (P[a] - P[b]))                   # face current ∝ σ·Δφ (per face area)
             _comp[a] += f * 0.5
             _comp[b] += f * 0.5
-        _accum(sa_sl, sb_sl)
+        _accum(sa_sl, sb_sl, _ax=axis)
         if periodic_xy and axis in (0, 1):                  # seam 면 (마지막 층 ↔ 첫 층)
             wa = [slice(None)] * 3; wb = [slice(None)] * 3
             wa[axis] = slice(-1, None); wb[axis] = slice(0, 1)
@@ -1595,7 +2489,8 @@ def joule_hotspot(res, sid, sigma_of_sid, vox, sel_sids, box_lo=(0.0, 0.0, 0.0),
     P, cond = res['phi'], res['cond']
     sig = sigma_field(sigma_of_sid, sid)
     jmag = _voxel_jmag(P, cond, sig, periodic_xy=bool(res.get('periodic_xy')),
-                       rint_ctx=rint_ctx_from(res, sid, sigma_of_sid))   # ① 계면 배율 = 조립과 동일 · RINT-19 지문
+                       rint_ctx=rint_ctx_from(res, sid, sigma_of_sid),   # ① 계면 배율 = 조립과 동일 · RINT-19 지문
+                       iface_ctx=iface_ctx_from(res, sid, sigma_of_sid))   # ①′ 막 · 절단 = 조립 원장 (E2 · E5)
     q = np.where(cond, jmag * jmag / np.maximum(sig, 1e-30), 0.0)     # 발열밀도 (run-relative, W/cm³ 스케일 전)
     sel = np.isin(sid, np.asarray(list(sel_sids), np.int64)) & cond & (q > 0)
     ii, jj, kk = np.where(sel)
@@ -1670,7 +2565,8 @@ def field_point_cloud(res, sid, sigma_of_sid, vox, sel_sids, box_lo=(0.0, 0.0, 0
     P, cond = res['phi'], res['cond']
     sig = sigma_field(sigma_of_sid, sid)
     jmag = _voxel_jmag(P, cond, sig, periodic_xy=bool(res.get('periodic_xy')),
-                       rint_ctx=rint_ctx_from(res, sid, sigma_of_sid))   # ① 계면 배율 = 조립과 동일 · RINT-19 지문
+                       rint_ctx=rint_ctx_from(res, sid, sigma_of_sid),   # ① 계면 배율 = 조립과 동일 · RINT-19 지문
+                       iface_ctx=iface_ctx_from(res, sid, sigma_of_sid))   # ①′ 막 · 절단 = 조립 원장 (E2 · E5)
     sel = np.isin(sid, np.asarray(list(sel_sids), np.int64)) & cond
     ii, jj, kk = np.where(sel)
     if not len(ii):

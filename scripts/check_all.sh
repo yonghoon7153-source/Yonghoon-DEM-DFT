@@ -217,6 +217,11 @@ run 'webapp: hetero_transcript'   python3 webapp/test_hetero_transcript_page.py 
 #    `solve_sigma_z(..., rint=)` 호출 넷을 AST 로 찾아 하나씩 `rint=` 를 지우면 게시가 거부돼야 한다 (주 솔브만 보던
 #    옛 사후 단언은 wetted/bare 배선 삭제를 초록으로 냈다) · CLI 모순 요청 · check_arm 영수증 변조 · 레지스트리 전수 분류.
 run 'rint_receipts (요청 ↔ 적용 영수증 · AST 변이 4)' python3 scripts/test_rint_receipts.py
+#  ★ 2026-10-07 (Rint G2 ①′ AM–AM · 계약 v3.1 · Codex v3 "계약 정정 둘 뒤 구현 GO · 정량 채택 HOLD") — 반례 먼저:
+#    ε 동률 집합 규칙 (3 청구자 6 순열) · 동심 비동일 · 정확 중복 거부 · raw raster 순열 진단 (3170 ↔ 3171) · 동결 마스크 순열 불변 ·
+#    OFF 비트 같음 (막 0 + 예외 융합 · 순서마다) · 단위 (같은 리드 · 1e−8·A/r) · 탄소 가림 (막 소자만) · E4′ 부류 FD · 원장 무결성.
+#    고치기 전 코드 = 10 PASS · 18 FAIL (새 API 없음) · `--s3 PATH` 로 다른 step3_sigma 를 시험할 수 있다.
+run 'rint_g2_am_iface (①′ AM–AM 계약 v3.1 · 반례 먼저)' python3 scripts/test_rint_g2_am_iface.py
 #  ★ 2026-10-04 (τ 결정 16 ② · 1저자 비준 *"권고대로"*) — 안 A: 망 솔버 띠 선택을 `boundary_sets` 로 추출 (추출 전 기준값과 비트 동일)
 #    + 쓴 규칙 · 띠 폭 기록 (LHS-17 · TAU-14) · 이온 인계 열 도우미 `tau_flux` (v2 §5 · 게이트 G1–G6 · 생산자 ↔ 소비자 계약).
 run 'network boundary_rule (안 A · 동작 중립)' python3 scripts/test_network_boundary_rule.py
