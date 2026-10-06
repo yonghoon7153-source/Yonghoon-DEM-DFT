@@ -221,6 +221,8 @@ run 'psi default switch (L2-01 세대 2)' python3 scripts/test_psi_default_switc
 run 'physics area g2 (C2 ①–⑤ · L1-01/02/03)' python3 scripts/test_physics_area_g2.py
 run 'network dirichlet (L2-05 · D1–D7)' python3 scripts/test_network_dirichlet.py
 run 'network generation 2 (CF 표지 · H12 · 세대 표기)' python3 scripts/test_network_generation2.py
+#  ★ 2026-10-06 밤 (3단계 · LHSC-08) — 벽 접촉 판정의 근접 접선 수 (분류 불변 · 자릿수는 파일마다 토큰에서 · STL 따로 · 상 · 벽별).
+run 'wall near tangent (LHSC-08)' python3 scripts/test_wall_near_tangent.py
 #  ★ 2026-10-04 (J20-s ④b · 1저자 비준 *"권고대로"* · 원장 LHS-29) — Love–Weber 입자 응력 새 열 (접촉점 · 전체 텐서 · 벽 접촉 표지 ·
 #    검사 = 열 · F = Fn + Ft · 접촉점 · 전체 virial ↔ c_strs) · real_14 독립 구현 대조 · 생산 CLI 끝단 (옛 키 불변).
 run 'love_weber_stress (④b · LHS-29)' python3 scripts/test_love_weber_stress.py

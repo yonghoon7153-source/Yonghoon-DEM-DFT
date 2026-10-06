@@ -929,7 +929,7 @@ def _wall_contact(r, dist):
       ② 09-24 · 09-25 커밋 수확 JSON 의 `wall_record.*.n_touch` · `n_touch_by_phase` 가 이미 이 규칙 (r − dist > 0) 의 값이다 —
          반대쪽 (<=) 을 고르면 커밋된 키의 뜻이 조용히 바뀐다.  `wall_touch` (옛 `<=`) 는 커밋된 산출물이 없다 (수확 v3 미실행).
     ⚠ 판정 경계에 허용오차는 없다 (덤프 6 유효숫자 반올림 폭 안의 '거의 접선' 은 어느 쪽으로도 갈릴 수 있다 — 세는 수의 뜻은
-      "그 좌표에서 겹침 깊이가 양수" 까지다).
+      "그 좌표에서 겹침 깊이가 양수" 까지다).  그 폭 안의 입자 수 = `wall_near_tangent` (LHSC-08 · 상 · 벽별 · 분류는 그대로).
     """
     depth = r - dist
     return depth, depth > 0, dist < 0, dist < -r, np.clip(depth, 0.0, 2.0 * r)
@@ -988,6 +988,104 @@ def wall_touch_fractions(labels, z, r, plate_z, z_floor=Z_FLOOR):
         out[ph] = dict(n=k, n_floor=int(fl[m].sum()), n_plate=int(pl[m].sum()),
                        floor=float(fl[m].mean()), plate=float(pl[m].mean()), either=float((fl[m] | pl[m]).mean()))
     return out
+
+
+#: LHSC-08 (Codex 09-30 · P3 · 5번 재수확 보고 항목) — 벽 접촉 판정 (`_wall_contact` = **저장 좌표**에서 depth > 0) 이 반올림 폭 안에서
+#:   갈릴 수 있는 입자 수.  분류는 **바꾸지 않는다** (조용히 정하지 않는다 — 세기만 한다).
+WALL_NEAR_RULE = (
+    'LHSC-08 — 벽마다 depth = r − dist (dist = z − z_floor · plate_z − z) 의 불확실폭 u = h(r) + h(z) + h(z_벽) · '
+    'h(v) = 0.5·10^(E(v) − S + 1) (E = 십진 지수 · S = **그 파일에서 읽은** 유효숫자: atom = 마지막 프레임 x · y · z · radius 토큰의 최대 · '
+    '판 = STL 꼭짓점 좌표 토큰에서 따로 (atom 의 6 자리를 복제하지 않는다) · CLI plate_z = 그 수의 자릿수 · 바닥 = 덱 zplane 리터럴 0 = 반폭 0) · '
+    '|depth| ≤ u 인 입자 = 근접 접선 (반올림 전 분류가 반대일 수 있다) · 상 · 벽별 n_near = n_near_touch (depth > 0 = 규칙상 닿음) + '
+    'n_near_not (depth ≤ 0) · 분류 규칙 (WALL_TOUCH_RULE · wall_touch · wall_record · 벽 분할) 은 바꾸지 않는다 · '
+    '토큰 자릿수는 끝 0 도 센다 (%g 는 끝 0 을 지우므로 토큰이 짧으면 S 를 작게 = 폭을 넓게 읽는다 — 보수적)')
+
+
+def _token_sigfig(tok):
+    """숫자 토큰의 유효숫자 수 — **문자열로** 센다: 부호 · 지수 · 소수점 · 앞 0 을 빼고 끝 0 은 센다 (`0.0302845` → 6 · `0.030000` → 5 ·
+    `3.34479e-06` → 6 · `0` → 0).  `lhs_contact_audit._sigfigs` 와 같은 규칙 (그 도구가 이 모듈을 import 하므로 거꾸로 가져오지 않는다 — 순환)."""
+    t = str(tok).strip().lower().lstrip('+-')
+    if t in ('nan', 'inf', 'infinity'):
+        return 0                                    # 비유한 토큰은 자릿수가 없다 (Decimal 의 digits 도 빈 것 — 같은 규칙)
+    mant = t.split('e', 1)[0].replace('.', '').lstrip('0')
+    if mant and not mant.isdigit():
+        raise ValueError(f'숫자 토큰이 아니다: {tok!r}')
+    return len(mant)
+
+
+def atom_dump_sigfig(path, cols=('x', 'y', 'z', 'radius')):
+    """원자 덤프 **마지막 프레임** ATOMS 블록의 `cols` 토큰에서 읽은 유효숫자 최대 (`read_atom_dump` 와 같은 프레임 · 행 규칙) — LHSC-08."""
+    with open(path, 'r', encoding='utf-8', errors='replace') as fh:
+        lines = fh.read().splitlines()
+    frames = [i for i, ln in enumerate(lines) if ln.startswith('ITEM: TIMESTEP')]
+    if not frames:
+        raise BedRefusal(f'{path}: `ITEM: TIMESTEP` 이 없다')
+    s, i = 0, frames[-1]
+    while i < len(lines):
+        if lines[i].startswith('ITEM: ATOMS'):
+            headers = lines[i].replace('ITEM: ATOMS', '').strip().split()
+            miss = [c for c in cols if c not in headers]
+            if miss:
+                raise BedRefusal(f'{path}: 원자 덤프에 열 {miss} 이 없다 — 자릿수를 읽을 수 없다')
+            ix = [headers.index(c) for c in cols]
+            i += 1
+            while i < len(lines) and not lines[i].startswith('ITEM:'):
+                v = lines[i].split()
+                if len(v) == len(headers):
+                    s = max(s, max(_token_sigfig(v[k]) for k in ix))
+                i += 1
+            break
+        i += 1
+    return int(s)
+
+
+def plate_stl_sigfig(path):
+    """플래튼 STL 꼭짓점 좌표 토큰에서 읽은 유효숫자 최대 — atom dump 의 6 자리 가정을 **복제하지 않는다** (LHSC-08)."""
+    s, n = 0, 0
+    with open(path, 'r', encoding='utf-8', errors='replace') as fh:
+        for ln in fh:
+            p = ln.split()
+            if len(p) == 4 and p[0] == 'vertex':
+                s = max(s, max(_token_sigfig(t) for t in p[1:]))
+                n += 1
+    if not n:
+        raise BedRefusal(f'{path}: STL 에 vertex 가 없다')
+    return int(s)
+
+
+def wall_near_tangent(labels, z, r, plate_z, *, sig_atom, sig_plate, z_floor=Z_FLOOR, h_floor=0.0,
+                      plate_z_source='mesh_stl', floor_z_source='deck_literal'):
+    """LHSC-08 — 상 · 벽별 **근접 접선** 수 (규칙 `WALL_NEAR_RULE`).  분류 (`_wall_contact`) 는 그대로이고 이 함수는 세기만 한다.
+
+    depth 는 분류와 **같은 식** (`_wall_dists` → `_wall_contact`) 으로 잰다.  반폭은 `_half_unit` (덤프 반올림 반폭 · 면적 대조와 같은 함수).
+    반환: rule · sigfig_atom · sigfig_plate · h_floor_sim · h_plate_sim · floor_z_source · plate_z_source ·
+      by_phase = {상: {n, floor: {n_near, n_near_touch, n_near_not}, plate: {…}}} — 상 = 있는 상 + AM (P · S 둘 다면) + total.
+    """
+    labels = np.asarray([str(q) for q in labels], dtype=object)
+    z, r = np.asarray(z, dtype=np.float64), np.asarray(r, dtype=np.float64)
+    d_f, d_p = _wall_dists(z, float(plate_z), z_floor)
+    hp = float(_half_unit(np.asarray([float(plate_z)]), int(sig_plate))[0])
+    base = _half_unit(r, int(sig_atom)) + _half_unit(z, int(sig_atom))
+    walls = {}
+    for wall, dist, hw in (('floor', d_f, float(h_floor)), ('plate', d_p, hp)):
+        depth = _wall_contact(r, dist)[0]
+        near = np.abs(depth) <= base + hw
+        walls[wall] = (near, near & (depth > 0))
+    groups = {ph: labels == ph for ph in sorted(set(labels))}
+    if 'AM_P' in groups and 'AM_S' in groups:
+        groups['AM'] = groups['AM_P'] | groups['AM_S']
+    groups['total'] = np.ones(len(labels), dtype=bool)
+    by = {}
+    for ph, m in groups.items():
+        k = int(m.sum())
+        if k == 0:
+            continue
+        by[ph] = {'n': k}
+        for wall, (near, touch) in walls.items():
+            nn, nt = int((near & m).sum()), int((touch & m).sum())
+            by[ph][wall] = {'n_near': nn, 'n_near_touch': nt, 'n_near_not': nn - nt}
+    return dict(rule=WALL_NEAR_RULE, sigfig_atom=int(sig_atom), sigfig_plate=int(sig_plate), h_floor_sim=float(h_floor),
+                h_plate_sim=hp, floor_z_source=floor_z_source, plate_z_source=plate_z_source, by_phase=by)
 
 
 def volumes_and_phi(atoms, labels, box_lo, box_hi, plate_z):
@@ -1455,6 +1553,15 @@ def harvest(atom_path, contact_path, n_types, case, plate_z=None, mesh_path=None
     gate = contact_gate(ids, c1, c2)
     #  J20-a — 새 키만 더한다 (옛 키 · status 는 그대로: run_lhs_fill_wsl.sh [2] 의 옛 수확 대조가 선다)
     wall_touch = wall_touch_fractions(labels, atoms['z'], atoms['radius'], plate_z)
+    #  LHSC-08 — 같은 규칙의 **근접 접선 수** (분류는 그대로 · 자릿수는 파일마다 토큰에서: atom 덤프 · STL 따로 · CLI = 그 수 · 바닥 = 덱 리터럴)
+    if mesh_path is not None:
+        _sig_p, _p_src = plate_stl_sigfig(mesh_path), 'mesh_stl'
+    else:
+        _sig_p, _p_src = _token_sigfig(repr(float(plate_z))), 'cli_explicit'
+    wall_near = wall_near_tangent(labels, atoms['z'], atoms['radius'], plate_z, sig_atom=atom_dump_sigfig(atom_path),
+                                  sig_plate=_sig_p, plate_z_source=_p_src,
+                                  floor_z_source=('deck_literal (zplane 0.0 · 반폭 0)' if deck else
+                                                  'unverified_constant (덱 없음 · Z_FLOOR 상수 · 반폭 0)'))
     contact_scan = scan_contact_dump(contact_path)
     n_atom_frames = count_blocks(atom_path, 'ITEM: TIMESTEP')
     cov = coverage_hertz(ids, labels, atoms['radius'], c1, c2, carea)
@@ -1581,7 +1688,9 @@ def harvest(atom_path, contact_path, n_types, case, plate_z=None, mesh_path=None
         #  ── item 2 — c_cpl[22] ↔ 정확한 교차 원판 (r1 · r2 · δ = c_cpl[23]) 대조 · 주기 플래그 0/1 · 쌍 종류별 (진단 기록) ──
         contact_area_check=area_check,
         #  ── item 3 — 접촉 행의 문 기록 (중복 · 자기쌍이면 이 dict 대신 거부 · 고아 행 수는 여기에) ──
-        contact_gate=gate)
+        contact_gate=gate,
+        #  ── LHSC-08 — 벽 접촉 판정의 근접 접선 수 (상 · 벽별 · 분류 불변 · `WALL_NEAR_RULE`) ──
+        wall_near_tangent=wall_near)
 
 
 def _atom_ids(path):
@@ -2358,7 +2467,8 @@ def selftest():
         _NEW_KEYS = ('coverage_AM_P_wallexcl_pct', 'coverage_AM_S_wallexcl_pct', 'coverage_AM_total_wallexcl_pct',
                      'coverage_AM_only_wallexcl_pct', 'coverage_AM_P_wallexcl_status', 'coverage_AM_S_wallexcl_status',
                      'coverage_AM_total_wallexcl_status', 'coverage_AM_only_wallexcl_status', 'coverage_wallexcl_detail',
-                     'coverage_wall_split', 'contact_area_check', 'contact_gate')
+                     'coverage_wall_split', 'contact_area_check', 'contact_gate',
+                     'wall_near_tangent')                        # LHSC-08 (10-06) — 근접 접선 수 (scripts/test_wall_near_tangent.py)
         chk('⑳ item 1: 새 키는 정해진 이름으로 옛 키 **뒤에만** 붙는다 (status · handover_qc 는 늘지 않는다 — WSL [2] 옛 수확 대조)',
             all(tuple(res.keys())[len(_OLD_KEYS):] == _NEW_KEYS for res in (r4, r20, r20c))
             and set(r20['status']) == set(r4['status']) and set(r20['handover_qc']) == set(r4['handover_qc']))
