@@ -831,6 +831,77 @@ HANDOVER_EXTRA = (
 )
 
 
+#: ★ LREL-02 (Codex 배포 v1.1 최종 리뷰 10-01 §3 · 1저자 비준 10-06) — 적격성 표지 계약 = 수확기 판정 규칙 그대로
+#:   (`lhs_descriptor_harvest` boundary: FULLY_OUT = 통째로 평면 밖 ≥ 1 · CENTER_CROSSED = 중심이 평면 밖 ≥ 1 · 그 밖 INSIDE ·
+#:   hold_reason_codes ⊆ {BOUNDARY_CENTER_OUT (중심 밖 ≥ 1) · NEGATIVE_POROSITY (구 부피 합 porosity < 0)} ('|' 로 잇기 · 중복 없음) ·
+#:   physical_target_status = HOLD ⟺ 코드 ≥ 1).  옛 생성기는 수확의 세 값이 None 이어도 빈칸 행을 정상 생성했다 (Codex drop_eligibility).
+#:   생성기 · 배포 프로필 (`lhs_release_build --profile`) 이 같은 함수를 쓴다 (사본 금지 — 규율 ①).  10-06 실측: 130 · 64 전 행 정합.
+ELIGIBILITY_COLS = ('physical_target_status', 'hold_reason_codes', 'boundary_state')
+ELIGIBILITY_STATUS = ('OK', 'HOLD')
+ELIGIBILITY_CODES = ('BOUNDARY_CENTER_OUT', 'NEGATIVE_POROSITY')
+ELIGIBILITY_BOUNDARY = ('INSIDE', 'CENTER_CROSSED', 'FULLY_OUT')
+ELIGIBILITY_COUNTS = ('n_floor_center_out', 'n_plate_center_out', 'n_floor_fully_out', 'n_plate_fully_out')
+
+
+def eligibility_problems(rec, porosity_pct=None):
+    """적격성 표지 한 행 → 문제 목록 ([] = 정합).  rec = 수확 `handover_qc` (dict) 또는 표의 한 행 (문자열 칸).
+
+    필수 — 세 열 (ELIGIBILITY_COLS) 이 있고 None 이 아니다 · 허용 값 · 코드 중복 없음 · HOLD ⟺ 코드 ≥ 1 · BOUNDARY_CENTER_OUT ⟺ boundary ≠ INSIDE.
+    있으면 함께 — calculation_status = OK · 벽 밖 개수 (ELIGIBILITY_COUNTS) ↔ boundary (중심 밖 합 > 0 ⟺ ≠ INSIDE · 통째로 밖 합 > 0 ⟺ FULLY_OUT) ·
+    porosity_pct (구 부피 합) < 0 ⟺ NEGATIVE_POROSITY · phi_sum_gt_one ⟺ NEGATIVE_POROSITY."""
+    rec = rec if isinstance(rec, dict) else {}
+    prob = []
+    miss = [c for c in ELIGIBILITY_COLS if rec.get(c) is None]
+    if miss:
+        return [f'적격성 표지 없음 {miss} (None · 키 없음 — 빈칸 표지 행을 만들지 않는다)']
+    st, b, raw = str(rec['physical_target_status']), str(rec['boundary_state']), rec['hold_reason_codes']
+    codes = [str(x) for x in raw] if isinstance(raw, (list, tuple)) else [x for x in str(raw).split('|') if x != '']
+    if st not in ELIGIBILITY_STATUS:
+        prob.append(f'physical_target_status {st!r} ∉ {ELIGIBILITY_STATUS}')
+    if b not in ELIGIBILITY_BOUNDARY:
+        prob.append(f'boundary_state {b!r} ∉ {ELIGIBILITY_BOUNDARY}')
+    bad_c = [c for c in codes if c not in ELIGIBILITY_CODES]
+    if bad_c:
+        prob.append(f'hold_reason_codes 의 모르는 코드 {bad_c} (허용 {ELIGIBILITY_CODES})')
+    if len(codes) != len(set(codes)):
+        prob.append(f'hold_reason_codes 중복 {codes}')
+    if (st == 'HOLD') != bool(codes):
+        prob.append(f'physical_target_status {st} ↔ 보류 코드 {codes} — HOLD ⟺ 코드 ≥ 1')
+    if ('BOUNDARY_CENTER_OUT' in codes) != (b != 'INSIDE'):
+        prob.append(f'boundary_state {b} ↔ BOUNDARY_CENTER_OUT {"있음" if "BOUNDARY_CENTER_OUT" in codes else "없음"} — 중심이 평면 밖인 입자가 있으면 둘 다')
+    cs = rec.get('calculation_status')
+    if cs is not None and str(cs) != 'OK':
+        prob.append(f'calculation_status {cs!r} ≠ OK')
+
+    def _int(v):
+        try:
+            f_ = float(v)
+        except (TypeError, ValueError):
+            return None
+        return int(f_) if math.isfinite(f_) and f_ == int(f_) and f_ >= 0 else None
+    if any(rec.get(k) not in (None, '') for k in ELIGIBILITY_COUNTS):
+        n_ = {k: _int(rec.get(k)) for k in ELIGIBILITY_COUNTS}
+        if None in n_.values():
+            prob.append(f'벽 밖 개수가 0 이상 정수가 아니다 {[k for k, v in n_.items() if v is None]}')
+        else:
+            co, fo = n_['n_floor_center_out'] + n_['n_plate_center_out'], n_['n_floor_fully_out'] + n_['n_plate_fully_out']
+            if (co > 0) != (b != 'INSIDE') or (fo > 0) != (b == 'FULLY_OUT') or fo > co:
+                prob.append(f'boundary_state {b} ↔ 벽 밖 개수 (중심 밖 {co} · 통째로 밖 {fo})')
+    if porosity_pct is not None:
+        try:
+            p_ = float(porosity_pct)
+        except (TypeError, ValueError):
+            p_ = float('nan')
+        if not math.isfinite(p_):
+            prob.append(f'구 부피 합 porosity {porosity_pct!r} 가 유한하지 않다 — NEGATIVE_POROSITY 를 확인할 수 없다')
+        elif (p_ < 0) != ('NEGATIVE_POROSITY' in codes):
+            prob.append(f'구 부피 합 porosity {p_!r} ↔ NEGATIVE_POROSITY {"있음" if "NEGATIVE_POROSITY" in codes else "없음"}')
+    g = rec.get('phi_sum_gt_one')
+    if g is not None and str(g) in ('True', 'False') and (str(g) == 'True') != ('NEGATIVE_POROSITY' in codes):
+        prob.append(f'phi_sum_gt_one {g} ↔ NEGATIVE_POROSITY')
+    return prob
+
+
 #: J19 (1저자 비준 2026-09-28 — docs/reviews/pure_se_union_prereg_20260927.md §6-2 · lhs_handover_judgments_20260924.md J19) —
 #:   겹침 보정 porosity 를 **병기**한다.  구 부피 합 열 (`porosity_sphere_pct_RECORD_ONLY`) 은 J1 대로 **그대로** 남는다 — 교체가 아니다
 #:   (CLAUDE.md porosity 규약 · 생산 코퍼스가 그 규약을 공유한다).  ⛔ φ_SE · φ_AM 의 union 판은 **넣지 않는다** (AM–SE 겹침 배분 = 별도 저자
@@ -846,6 +917,8 @@ SE_RICH_MIN = 0.50
 UNION_TOL = {'eps_sphere_pct': 1e-9, 'thickness_um': 1e-6}
 #: J20-e — 질량 보존 φ 닫힘 (φ_SE + φ_AM + ε_union = 1) 허용치.  식으로는 정확하다 — 넘으면 DESC-07 (φ 둘 ↔ ε_sphere) 이 깨진 것이다.
 PHI_MC_CLOSURE_TOL = 1e-9
+#: LREL-04 — union se_of_solid_vol ↔ 수확 V_SE/(V_SE + V_AM) · φ_SE/(φ_SE + φ_AM) 허용치 (같은 덤프 · 다른 코드 · 10-06 실측 최대 5.6e-16 — 부동소수 여유)
+SE_SHARE_TOL = 1e-9
 HANDOVER_UNION = (
     ('porosity_union_exact_pct',        'mc_void_pct',
      '★ 겹침 보정 porosity (정확 union — 상자 [0,Lx)×[0,Ly)×[0,plate_z) 무작위 점 · 세 입자 이상 겹침까지) — 물리 porosity 열 (J19)'),
@@ -1987,6 +2060,34 @@ def _union_cols(case, h, u):
     eps_u = float(u['mc_void_pct'])
     if not 0.0 < eps_u < 100.0:
         raise FillRefusal(f'{case}: 정확 union {eps_u!r} % 가 (0, 100) 밖이다')
+    #  ★ LREL-04 (Codex 배포 v1.1 최종 리뷰 반례 union_SE_fraction_half) — SE/고체 를 수확에서 **다시 재** 교차대조 · [0, 1].  φ 합 닫힘만 보면
+    #    union 행의 se_of_solid_vol 한 칸을 0.5 로 바꿔도 통과했다 (ε · φ_SE 는 그대로 · se_rich 만 오염).  원천 = 수확 부피 감사 V_SE/(V_SE + V_AM)
+    #    (handover_qc) · φ_SE/(φ_SE + φ_AM) (φ 상태 OK) — 있는 것 전부와 맞아야 하고 하나는 있어야 한다 (10-06 실측 194 행 최대 차 5.6e-16).
+    try:
+        se_u = float(u.get('se_of_solid_vol'))
+    except (TypeError, ValueError):
+        se_u = float('nan')
+    if not (math.isfinite(se_u) and 0.0 <= se_u <= 1.0):
+        raise FillRefusal(f'{case}: union se_of_solid_vol {u.get("se_of_solid_vol")!r} 가 유한 [0, 1] 밖이다 (LREL-04)')
+    refs = []
+    qc_ = h.get('handover_qc') or {}
+    try:
+        vs_, va_ = float(qc_.get('V_SE_full_um3')), float(qc_.get('V_AM_full_um3'))
+        if math.isfinite(vs_) and math.isfinite(va_) and vs_ >= 0 and va_ >= 0 and vs_ + va_ > 0:
+            refs.append(('수확 부피 감사 V_SE/(V_SE + V_AM)', vs_ / (vs_ + va_)))
+    except (TypeError, ValueError):
+        pass
+    if (h.get('status') or {}).get(DESCRIPTOR_STATUS_KEY['phi_se']) == 'OK' and h.get('phi_se') is not None and h.get('phi_am') is not None:
+        ps_, pa_ = float(h['phi_se']), float(h['phi_am'])
+        if math.isfinite(ps_) and math.isfinite(pa_) and ps_ + pa_ > 0:
+            refs.append(('수확 φ_SE/(φ_SE + φ_AM)', ps_ / (ps_ + pa_)))
+    if not refs:
+        raise FillRefusal(f'{case}: SE/고체 를 다시 잴 원천이 없다 (수확 handover_qc V_SE · V_AM 없음 · φ 상태 OK 아님) — union se_of_solid_vol 을 '
+                          '그대로 싣지 않는다 (LREL-04)')
+    for lab_, ref_ in refs:
+        if abs(se_u - ref_) > SE_SHARE_TOL:
+            raise FillRefusal(f'{case}: union se_of_solid_vol {se_u!r} ≠ {lab_} {ref_!r} (차 {abs(se_u - ref_):.3e} > {SE_SHARE_TOL:.0e}) — '
+                              'SE 몫이 φ 장부와 따로 바뀌었다 (LREL-04)')
     o = {name: (str(u[col]) if col == 'pair_upper_bound_ok' else repr(float(u[col]))) for name, col, _w in HANDOVER_UNION}
     o['thickness_mass_conserving_um'] = repr(float(th) * (1.0 - eps_s / 100.0) / (1.0 - eps_u / 100.0))
     o['se_rich'] = str(float(u['se_of_solid_vol']) >= SE_RICH_MIN)
@@ -2465,6 +2566,7 @@ def _wa_ionic_gates(case, o, take, h, dp):
     """v1.1 ①② 관문 (fail-closed) — 이온 활성 · 경로 기준 고립 · 분해가 calc_ionic_active_am 의 **세 집합 하나**에서 나왔는가.
 
       상 있음/없음 — 상 (수확 phase_counts · mono 는 설계 상) 이 있으면 실린 상별 분해 열은 값이 있어야 · 없으면 빈칸이어야
+      D0 (LREL-01) 각 비율 숫자 · 유한 · [0, 100] · 개수 [0, N] — 합 · 정수 검사는 음수 개수 분할 · NaN 을 통과시켰다
       D1 전체 활성 + 단절 + 무접촉 = 100 · D2 상별 같은 합 = 100
       D3 비율 × 입자 수 / 100 = 정수 개수 (활성은 분해 키가 없는 옛 배치에서도 — ① 의 원천)
       D4 상별 개수 합 = 전체 개수 (활성 · 단절 · 무접촉 각각)
@@ -2479,7 +2581,12 @@ def _wa_ionic_gates(case, o, take, h, dp):
 
     def num(c):
         v = o.get(c, '') if c in take else ''
-        return None if v in (None, '') else float(v)
+        if v in (None, ''):
+            return None
+        try:
+            return float(v)
+        except (TypeError, ValueError):
+            raise FillRefusal(f'{case}: {c} = {v!r} 가 숫자가 아니다 (v1.1 D0)')
     for c in take:                                                    # 상 있음/없음
         m = WA_IONIC_PHASE_RE.fullmatch(c)
         if not m:
@@ -2491,6 +2598,12 @@ def _wa_ionic_gates(case, o, take, h, dp):
             raise FillRefusal(f'{case}: {m.group(1)} 가 없는 침대인데 {c} = {o[c]} — 다른 침대의 값이다 (v1.1 상 없음)')
     trio = {'전체': [num(f'ionic_{s_}_pct') for s_ in ('active', 'dead', 'no_se')]}
     trio.update({ph: [num(f'{ph}_ionic_{s_}_pct') for s_ in ('active', 'dead', 'no_se')] for ph in present})
+    #  ★ D0 (LREL-01 · Codex 배포 v1.1 최종 리뷰 반례 negative_ionic_no_se_counts) — 각 비율이 유한 · [0, 100].  정수 · 합 · 상별 합 (D1–D4) 만으로는
+    #    무접촉 −1 개 + 단절 +1 개 분할이 통과했다 (−1 도 정수 · 합은 100) · NaN 은 합 검사를 그대로 지났다 (비교가 거짓).  개수 [0, N] 은 D3 뒤에서.
+    for lab, vals in trio.items():
+        for s_, v in zip(('active', 'dead', 'no_se'), vals):
+            if v is not None and not (math.isfinite(v) and 0.0 <= v <= 100.0):
+                raise FillRefusal(f'{case}: {lab} {s_} 비율 {v!r} 이 유한 [0, 100] 밖이다 — 집합 분할의 비율이 아니다 (v1.1 D0 · LREL-01)')
     if None not in trio['전체'] and abs(sum(trio['전체']) - 100.0) > WA_PCT_SUM_TOL:        # D1
         raise FillRefusal(f'{case}: 활성 + 단절 + 무접촉 = {sum(trio["전체"])!r} ≠ 100 — 같은 세 집합이 아니다 (v1.1 D1)')
     for ph in present:                                                # D2
@@ -2505,6 +2618,8 @@ def _wa_ionic_gates(case, o, take, h, dp):
             if abs(x - round(x)) > WA_COUNT_INT_TOL:
                 raise FillRefusal(f'{case}: {lab} {s_} 비율 {v!r} × 입자 수 {N} / 100 = {x!r} 이 정수 개수가 아니다 (v1.1 D3)')
             cnt[(lab, s_)] = round(x)
+            if not 0 <= cnt[(lab, s_)] <= N:                               # D0 (LREL-01) — 개수 [0, N] (비율 범위의 개수 쪽 · 이중 안전장치)
+                raise FillRefusal(f'{case}: {lab} {s_} 개수 {cnt[(lab, s_)]} ∉ [0, {N}] (v1.1 D0 · LREL-01)')
     for s_ in ('active', 'dead', 'no_se'):                             # D4
         if present and ('전체', s_) in cnt and all((ph, s_) in cnt for ph in present) \
                 and cnt[('전체', s_)] != sum(cnt[(ph, s_)] for ph in present):
@@ -2536,9 +2651,22 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp
     #    selftest(list) 는 통과하는데 프로덕션(dict)에서 죽었다 — 시험이 프로덕션
     #    모양을 안 쓰면 그 자리가 곧 사각지대다 (규율 ⑤).  둘 다 받는다.
     hv = dict(harvest) if isinstance(harvest, dict) else {h['case']: h for h in harvest}
+    #  ★ LREL-03 (Codex 배포 v1.1 최종 리뷰 반례 design_row_duplicate) — "130 행" 이 "130 개 고유 설계" 를 보증하게: 설계행 case_id 는 비지 않고
+    #    유일해야 한다.  옛 판은 두 번째 행을 첫 행으로 바꾼 설계 (행 수 그대로 · 고유 129) 를 그대로 실었다 (lhs00_001 이 사라지고 lhs00_000 이 둘).
+    _ids = [str(r.get(key) or '') for r in rows]
+    _dup = sorted({i for i in _ids if _ids.count(i) > 1})
+    if '' in _ids or _dup:
+        raise FillRefusal(f'설계행 {key} 가 비었거나 중복이다 — 빈 ID {_ids.count("")} 건 · 중복 {_dup[:5]} — 행 수가 고유 설계 수를 보증하지 않는다 (LREL-03)')
     miss = [r[key] for r in rows if r[key] not in hv]
     if miss:
         raise FillRefusal(f'수확에 없는 설계행 {len(miss)} 건: {miss[:5]} — 부분 인계는 금지 (DESC-09)')
+    #  ★ LREL-02 — 적격성 표지 (handover_qc) 는 전부 있거나 (0925 판 이후 수확) 전부 없어야 (옛 수확 · 시험 전용) 한다 — 한 표에 섞으면 빈칸 표지 행이 생긴다
+    _qc_has = [isinstance(hv[r[key]].get('handover_qc'), dict) for r in rows]
+    if any(_qc_has) and not all(_qc_has):
+        _no = [r[key] for r, h_ in zip(rows, _qc_has) if not h_]
+        raise FillRefusal(f'적격성 표지 (handover_qc) 가 {sum(_qc_has)}/{len(rows)} 수확에만 있다 — 수확 세대가 섞였다 (없는 행 {_no[:5]}) · '
+                          '표지가 빈칸인 행을 만들지 않는다 (LREL-02)')
+    elig_on = bool(_qc_has) and all(_qc_has)
     design_cols = [c for c in rows[0]
                    if c not in HANDOVER_VALUE_COLS
                    and c not in HANDOVER_HELD_BACK
@@ -2658,9 +2786,11 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp
             raise FillRefusal(f'τ 세대 — {_mix} — 같은 세대 배치끼리 인계한다 (10-06 세대 2 · 1저자 비준)')
         cols += tau_cols
     out, rep = [], {'n': 0, 'blank_by_status': collections.Counter(),
-                    'held_back': dict(HANDOVER_HELD_BACK), 'mono_rows': 0, 'mono_harvest_filled': 0}
+                    'held_back': dict(HANDOVER_HELD_BACK), 'mono_rows': 0, 'mono_harvest_filled': 0,
+                    'eligibility_checked': 0, 'eligibility_on': elig_on}
     if uv is not None:
         rep['union_extra'] = sorted(set(uv) - {r[key] for r in rows})
+        rep['se_share_checked'] = 0
     if tw_on:
         rep['tau_wall_status'] = collections.Counter()
         rep['tau_wall_checked'] = rep['tau_perc_crosschecked'] = 0
@@ -2707,8 +2837,14 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp
                  - 100.0 * (1.0 - float(h['phi_se']) - float(h['phi_am'])))
         if e1 > DESC07_TOL['porosity']:
             raise FillRefusal(f"{r[key]}: DESC-07 항등식 위반 {e1:.3e}")
+        if elig_on:                                                   # ★ LREL-02 — 적격성 표지가 다 있고 수확기 규칙대로 정합한가
+            _ep = eligibility_problems(h['handover_qc'], porosity_pct=h.get('porosity_sphere_pct_RECORD_ONLY'))
+            if _ep:
+                raise FillRefusal(f'{r[key]}: 적격성 표지 — ' + ' · '.join(_ep[:4]) + ' (LREL-02)')
+            rep['eligibility_checked'] += 1
         if uv is not None:
             o.update(_union_cols(r[key], h, uv[r[key]]))
+            rep['se_share_checked'] += 1                              # LREL-04 — _union_cols 가 SE/고체 를 수확에서 다시 쟀다
         if tw_on:
             t = h['tau_wall_detail']
             if t.get('tau_convention') != TAU_WALL_CONVENTION:
@@ -3147,6 +3283,7 @@ def _selftest():
     _hn['handover_qc'] = dict(calculation_status='OK', physical_target_status='HOLD',
                               hold_reason_codes='NEGATIVE_POROSITY|BOUNDARY_CENTER_OUT', phi_sum_gt_one=True,
                               thickness_wall_gap_um=45.9, n_floor_center_out=4,
+                              boundary_state='CENTER_CROSSED', n_floor_fully_out=0, n_plate_center_out=0, n_plate_fully_out=0,   # 수확기 모양 (LREL-02)
                               boundary_model_id='floor=primitive_zplane_type3|platen=mesh_stl',
                               measurement_protocol_id='harvest_v2_20260925/spheresum_nominal_gap/wall_z0',
                               deck_sha256='d' * 64, contact_sha256='b' * 64, mesh_sha256='m' * 64)
@@ -3357,7 +3494,15 @@ def _selftest():
     def _hq(case, eps_s=11.0, th=34.0, n_se=100, n_p=1, n_s=10):
         h = _h(case, porosity_sphere_pct_RECORD_ONLY=eps_s, phi_se=0.5, phi_am=0.5 - eps_s / 100.0)
         h['phase_counts'] = {'AM_P': n_p, 'AM_S': n_s, 'SE': n_se}
-        h['handover_qc'] = {'thickness_wall_gap_um': th}
+        #  ★ 10-06 (LREL-02 · 04) — 수확기 handover_qc 모양: 부피 감사 (V_SE · V_AM — φ 와 같은 비) · 적격성 (calculation_status · physical_target_status ·
+        #    hold_reason_codes · boundary_state · 벽 밖 개수 · phi_sum_gt_one) 을 수확기 규칙대로 (eps < 0 → NEGATIVE_POROSITY · HOLD) 채운다.
+        #    옛 픽스처는 두께만 있어 적격성 관문 · SE 몫 교차대조가 설 원천이 없었다.
+        _neg_p = eps_s < 0
+        h['handover_qc'] = {'thickness_wall_gap_um': th, 'V_SE_full_um3': 0.5, 'V_AM_full_um3': 0.5 - eps_s / 100.0,
+                            'calculation_status': 'OK', 'boundary_state': 'INSIDE',
+                            'n_floor_center_out': 0, 'n_plate_center_out': 0, 'n_floor_fully_out': 0, 'n_plate_fully_out': 0,
+                            'phi_sum_gt_one': _neg_p, 'hold_reason_codes': ('NEGATIVE_POROSITY' if _neg_p else ''),
+                            'physical_target_status': ('HOLD' if _neg_p else 'OK')}
         h['n_types'] = 3                                      # J20-f — 수확 JSON 의 type 수 (bimodal)
         return h
 
@@ -3367,7 +3512,9 @@ def _selftest():
                 'se_of_solid_vol': repr(se), 'n_SE': str(n_se), 'n_AM': str(n_am), 'status': status}
     _dq = [{'case_id': 'q1'}, {'case_id': 'q2'}]
     _hqs = {'q1': _hq('q1', eps_s=-2.0, th=30.0), 'q2': _hq('q2', eps_s=20.0, th=40.0)}
-    _uq = {'q1': _u('q1', eps_s=-2.0, th=30.0, eps_u=6.5, se=0.62), 'q2': _u('q2', eps_s=20.0, th=40.0, eps_u=21.0, se=0.25),
+    #  ★ 10-06 (LREL-04) — union 의 SE/고체 = 수확 φ_SE/(φ_SE + φ_AM) (= V_SE/(V_SE + V_AM)) 와 같은 값.  옛 픽스처 (0.62 · 0.25) 는 φ 장부와
+    #    모순이었다 (q1 0.5/1.02 · q2 0.5/0.8) — 생성기가 그 모순을 거부하게 된 뒤 같은 장부 값으로 맞춘다 (SE-rich 표지도 그 값을 따른다).
+    _uq = {'q1': _u('q1', eps_s=-2.0, th=30.0, eps_u=6.5, se=0.5 / 1.02), 'q2': _u('q2', eps_s=20.0, th=40.0, eps_u=21.0, se=0.5 / 0.8),
            'perc': _u('perc', status='MISSING')}
     try:
         _oq, _cq, _rq = build_handover(_dq, _hqs, union=_uq)
@@ -3383,8 +3530,8 @@ def _selftest():
         _q1.get('porosity_sphere_pct_RECORD_ONLY') == repr(-2.0) and _q1.get('porosity_union_exact_pct') == repr(6.5))
     chk('⑱c 질량 보존 두께 = 두께 × (1 − ε_sphere)/(1 − ε_union) (같은 고체를 union 공극률로 받을 때의 두께)',
         _q1.get('thickness_mass_conserving_um') == repr(30.0 * (1 - (-2.0) / 100) / (1 - 6.5 / 100)))
-    chk(f'⑱d SE-rich 표지 = SE/고체 ≥ {globals().get("SE_RICH_MIN")} (0.62 → True · 0.25 → False) · 연속값도 함께',
-        _q1.get('se_rich') == 'True' and _q2.get('se_rich') == 'False' and _q1.get('se_of_solid_vol') == repr(0.62))
+    chk(f'⑱d SE-rich 표지 = SE/고체 ≥ {globals().get("SE_RICH_MIN")} (q1 0.490 → False · q2 0.625 → True) · 연속값도 함께',
+        _q1.get('se_rich') == 'False' and _q2.get('se_rich') == 'True' and _q1.get('se_of_solid_vol') == repr(0.5 / 1.02))
     chk('⑱e 설계에 없는 union 행 (코호트의 perc) 은 인계표에 안 들어가고 보고에 남는다',
         len(_oq) == 2 and 'perc' in (_rq.get('union_extra') or []))
     chk('⑱e2 union 없이 부르면 옛 인계표 그대로 (union 열 없음 · 하위 호환)',
@@ -5332,6 +5479,91 @@ def _selftest():
             chk(f'㉙m4 ({type(e).__name__}: {e})', False)
     finally:
         shutil.rmtree(_td29, ignore_errors=True)
+    #  ═══ ㉚ LREL-01 · 02 · 03 · 04 (Codex 배포 v1.1 최종 리뷰 10-01 §3 반례 · 1저자 비준 10-06 "A·B 코드" — 반례 먼저) ═══════════════════════════
+    #   현재 194 행에는 이 반례가 없다 (판정문) — 관문이 **앞으로 다시 만드는 표**에서 그것을 막는가를 본다.
+    _dq30 = [{'case_id': 'q1'}, {'case_id': 'q2'}]
+    #  LREL-01 — D0: 이온 분할 비율이 유한 · [0, 100] · 개수 [0, N] — 정수 · 합 · 상별 합 검사만으로는 음수 개수 분할이 통과했다
+    _neg7('㉚a ★ LREL-01 — 무접촉 −1 개 (전체 −100/11 % · AM_P −100 %) + 단절 +1 개 — 합 100 · 정수 · 상별 합을 다 맞춘 음수 분할이면 거부 '
+          '(Codex negative_ionic_no_se_counts 를 q2 에 옮김)',
+          _bad10('q2', ionic_no_se_pct=repr(-100 / 11), ionic_dead_pct=repr(700 / 11), AM_P_ionic_no_se_pct='-100.0', AM_P_ionic_dead_pct='100.0'),
+          'v1.1 D0')
+    _neg7('㉚b ★ LREL-01 — 상별 단절 비율이 NaN 이면 거부 (합 검사는 NaN 을 못 본다)', _bad10('q2', AM_S_ionic_dead_pct='nan'), 'v1.1 D0')
+    _neg7('㉚c ★ LREL-01 — 상별 활성 > 100 (AM_P 110 · 단절 −10 — 합은 100) 이면 거부',
+          _bad10('q2', AM_P_ionic_active_pct='110.0', AM_P_ionic_dead_pct='-10.0'), 'v1.1 D0')
+    #  LREL-02 — 적격성 (physical_target_status · hold_reason_codes · boundary_state + calculation_status) 이 수확기 규칙대로 다 있고 정합한가
+    _h30ok = {'q1': _hq('q1', eps_s=-2.0, th=30.0), 'q2': _hq('q2', eps_s=20.0, th=40.0)}
+
+    def _hq30(case='q2', **qc):
+        h_ = _hq(case, eps_s=20.0, th=40.0)
+        h_['handover_qc'] = dict(h_['handover_qc'], **qc)
+        return h_
+    try:
+        _o30, _c30, _r30 = build_handover(_dq30, _h30ok)
+        _e30 = ''
+    except Exception as e:                                                # noqa: BLE001
+        _o30, _c30, _r30, _e30 = [], [], {}, f'{type(e).__name__}: {e}'
+    _q30 = {r_['case_id']: r_ for r_ in _o30}
+    chk('㉚d ★ LREL-02 — 수확기 모양의 적격성 (q1 HOLD · NEGATIVE_POROSITY · q2 OK · INSIDE) 은 통과 · 세 열 값 그대로 · 보고에 검사 2 행'
+        + (f' — {_e30}' if _e30 else ''),
+        not _e30 and _q30.get('q1', {}).get('physical_target_status') == 'HOLD' and _q30.get('q1', {}).get('hold_reason_codes') == 'NEGATIVE_POROSITY'
+        and _q30.get('q2', {}).get('physical_target_status') == 'OK' and _q30.get('q2', {}).get('boundary_state') == 'INSIDE'
+        and _r30.get('eligibility_checked') == 2)
+    for _nm30, _kv30 in (('physical_target_status None', dict(physical_target_status=None)),
+                         ('hold_reason_codes None', dict(hold_reason_codes=None)),
+                         ('boundary_state None', dict(boundary_state=None)),
+                         ('physical_target_status 모르는 값 (MAYBE)', dict(physical_target_status='MAYBE')),
+                         ('hold_reason_codes 모르는 코드 (BOGUS)', dict(hold_reason_codes='BOGUS', physical_target_status='HOLD')),
+                         ('boundary_state 모르는 값 (OUTSIDE)', dict(boundary_state='OUTSIDE')),
+                         ('HOLD 인데 보류 코드 없음', dict(physical_target_status='HOLD')),
+                         ('OK 인데 보류 코드 있음', dict(hold_reason_codes='BOUNDARY_CENTER_OUT', boundary_state='CENTER_CROSSED',
+                                                     n_floor_center_out=3)),
+                         ('BOUNDARY_CENTER_OUT 인데 boundary INSIDE', dict(hold_reason_codes='BOUNDARY_CENTER_OUT', physical_target_status='HOLD',
+                                                                       n_floor_center_out=3)),
+                         ('boundary CENTER_CROSSED 인데 BOUNDARY_CENTER_OUT 없음', dict(boundary_state='CENTER_CROSSED', n_floor_center_out=3)),
+                         ('NEGATIVE_POROSITY 인데 구 부피 합 porosity ≥ 0', dict(hold_reason_codes='NEGATIVE_POROSITY', physical_target_status='HOLD')),
+                         ('FULLY_OUT 인데 통째로 밖 0 개', dict(boundary_state='FULLY_OUT', hold_reason_codes='BOUNDARY_CENTER_OUT',
+                                                           physical_target_status='HOLD', n_floor_center_out=2)),
+                         ('같은 코드 두 번', dict(hold_reason_codes='BOUNDARY_CENTER_OUT|BOUNDARY_CENTER_OUT', boundary_state='CENTER_CROSSED',
+                                              physical_target_status='HOLD', n_floor_center_out=2)),
+                         ('calculation_status FAILED', dict(calculation_status='FAILED'))):
+        _neg7(f'㉚e ★ LREL-02 — 적격성 {_nm30} 이면 거부', (lambda kv=_kv30: build_handover(_dq30, dict(_h30ok, q2=_hq30(**kv)))), 'LREL-02')
+    _h30del = _hq30()
+    for _k30 in ('physical_target_status', 'hold_reason_codes', 'boundary_state'):
+        _h30del['handover_qc'].pop(_k30)
+    _neg7('㉚f ★ LREL-02 — 세 키를 지운 수확 (Codex drop_eligibility — 수치는 그대로 · 표지 3 칸 빈칸 행이 정상 생성됐다) 이면 거부',
+          lambda: build_handover(_dq30, dict(_h30ok, q2=_h30del)), 'LREL-02')
+    _neg7('㉚g ★ LREL-02 — 한 행만 handover_qc 가 없으면 거부 (수확 세대 혼합 · 표지 빈칸 행을 만들지 않는다)',
+          lambda: build_handover(_dq30, dict(_h30ok, q2={k_: v_ for k_, v_ in _hq('q2', eps_s=20.0, th=40.0).items() if k_ != 'handover_qc'})),
+          'LREL-02')
+    #  LREL-03 — "130 행" ≠ "130 개 고유 설계" — 설계행 case_id 중복 (같은 행 수의 대체) · 빈 ID
+    _neg7('㉚h ★ LREL-03 — 설계행 case_id 중복 (두 번째 행을 첫 행으로 교체 · 행 수 그대로 — Codex design_row_duplicate) 이면 거부',
+          lambda: build_handover([{'case_id': 'q1'}, {'case_id': 'q1'}], _h30ok), 'LREL-03')
+    _neg7('㉚i ★ LREL-03 — 설계행 case_id 가 비면 거부', lambda: build_handover([{'case_id': 'q1'}, {'case_id': ''}], dict(_h30ok, **{'': _h30ok['q2']})),
+          'LREL-03')
+    #  LREL-04 — union SE/고체 = 수확 V_SE/(V_SE + V_AM) (부피 감사) = φ_SE/(φ_SE + φ_AM) · [0, 1] (φ 합 닫힘만으로는 SE 몫 변조를 못 본다)
+    _u30 = {'q1': _u('q1', eps_s=-2.0, th=30.0, eps_u=6.5, se=0.5 / 1.02), 'q2': _u('q2', eps_s=20.0, th=40.0, eps_u=21.0, se=0.5 / 0.8)}
+    try:
+        _r30u = build_handover(_dq30, _h30ok, union=_u30)[2]
+        _e30u = ''
+    except Exception as e:                                                # noqa: BLE001
+        _r30u, _e30u = {}, f'{type(e).__name__}: {e}'
+    chk('㉚j ★ LREL-04 — SE/고체 = 수확 V_SE/(V_SE + V_AM) = φ_SE/(φ_SE + φ_AM) 이면 통과 · 보고에 교차대조 2 행' + (f' — {_e30u}' if _e30u else ''),
+        not _e30u and _r30u.get('se_share_checked') == 2)
+    _neg7('㉚k ★ LREL-04 — union SE/고체 한 칸만 0.5 (ε · φ_SE 는 그대로 — Codex union_SE_fraction_half) 이면 거부',
+          lambda: build_handover(_dq30, _h30ok, union=dict(_u30, q1=_u('q1', eps_s=-2.0, th=30.0, eps_u=6.5, se=0.5))), 'LREL-04')
+    _neg7('㉚l ★ LREL-04 — SE/고체 > 1 이면 거부', lambda: build_handover(_dq30, _h30ok, union=dict(_u30, q2=dict(_u30['q2'], se_of_solid_vol='1.2'))),
+          'LREL-04')
+    _neg7('㉚m ★ LREL-04 — SE/고체 NaN 이면 거부', lambda: build_handover(_dq30, _h30ok, union=dict(_u30, q2=dict(_u30['q2'], se_of_solid_vol='nan'))),
+          'LREL-04')
+    _h30ns = _hq('q2', eps_s=20.0, th=40.0)
+    _h30ns['handover_qc'] = {k_: v_ for k_, v_ in _h30ns['handover_qc'].items() if k_ not in ('V_SE_full_um3', 'V_AM_full_um3')}
+    _h30ns['status'] = dict(_h30ns['status'], phi='N_A_TEST')
+    _neg7('㉚n ★ LREL-04 — SE 몫을 다시 잴 원천이 없으면 (부피 감사 없음 · φ 상태 OK 아님) 거부',
+          lambda: build_handover(_dq30, dict(_h30ok, q2=_h30ns), union=_u30), 'LREL-04')
+    _h30v = _hq('q2', eps_s=20.0, th=40.0)
+    _h30v['handover_qc'] = dict(_h30v['handover_qc'], V_SE_full_um3=0.6)
+    _neg7('㉚o ★ LREL-04 — 수확 부피 감사 V_SE/(V_SE + V_AM) 가 union SE/고체와 어긋나면 (φ 비와는 같아도) 거부',
+          lambda: build_handover(_dq30, dict(_h30ok, q2=_h30v), union=_u30), 'LREL-04')
     print(f'\nlhs_design_dataset selftest: {ok}/{ok + len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0

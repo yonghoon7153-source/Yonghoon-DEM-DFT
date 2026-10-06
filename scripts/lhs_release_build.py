@@ -15,13 +15,19 @@
       --release docs/data/lhs_release_20261001/lhs_release_20261001
   # 부록 — 부록 전용 열 (H12 민감도 `*_hertz_h12` · 열 사전 판정 '부록 전용') 은 --appendix 로 따로 만든 파일에만 (주 배포 표에 넣으면 거부)
   python3 scripts/lhs_release_build.py --appendix --handover … --columns-from <case_id 한 줄 열 사전> --add tau2_ion_hertz_h12 … --out …_h12
+  # ML 배포 프로필 (LREL-02 · 03 — 만들기 · 대조 둘 다) — 키 유일 · 기대 ID 집합 (설계 CSV case_id) · 적격성 세 열 · 열 사전 참조 표지
+  python3 scripts/lhs_release_build.py --check --profile ml_v1 --expect-ids docs/data/lhs_design_20260818.csv --handover … --release …
   python3 scripts/lhs_release_build.py --selftest
+
+키 (case_id) 는 늘 유일해야 한다 (인계표 · 배포 둘 다 — LREL-03).  프로필은 부분집합 충실성 위에 **용도 계약**을 더한다 (범용 부분집합 도구에
+모든 용도의 열을 강제하지 않는다 — Codex 배포 v1.1 최종 리뷰 LHSREL-02 해제 조건).
 """
 import argparse
 import csv
 import io
 import os
 import re
+import shutil
 import sys
 import tempfile
 
@@ -31,6 +37,14 @@ KEY = 'case_id'
 #:   주 배포 표에 넣으면 거부 — `--appendix` 로 만든 부록 파일에만 싣는다.  옛 배포 (v1 · v1.1 · v1.2 · Physics 부록) 에는 해당 열이 없다 (selftest ⑬).
 APPENDIX_ONLY_RE = re.compile(r'.+_hertz_h12(_gap)?')
 APPENDIX_VERDICT_MARK = '부록 전용'
+#: ★ LREL-02 · 03 (Codex 배포 v1.1 최종 리뷰 10-01 · 1저자 비준 10-06) — ML 배포 프로필.  ml_v1 = 주 배포 표 (부록은 ① 만):
+#:   ① 키 유일 · 기대 ID 집합 (--expect-ids = 설계 CSV 의 case_id 열 · 또는 한 줄 한 ID) 과 같은 집합 · 같은 수 (같은 행 수의 대체 · 중복 거부)
+#:   ② 적격성 세 열 (생성기 ELIGIBILITY_COLS) 이 있고 행마다 허용 값 · 정합 (생성기 `eligibility_problems` — 사본 금지)
+#:   ③ 열 사전이 이 배포에 없는 정본 인계표 열을 가리키면 그 이름 바로 뒤에 REF_MARK — 배포 표만 받은 사람이 없는 열을 찾지 않게 (사전 문구 = 생성기 소관)
+PROFILES = ('ml_v1',)
+REF_MARK = '(정본 인계표 열)'
+#: 열 사전의 '<모드>' 틀 참조 (예: ion_net_band_frac_<모드>) 를 펼칠 모드 — 생성기 TAU_NET_MODES 와 같은 셋 (모르는 모드는 틀 참조로 안 잡힌다)
+REF_MODES = ('hertz', 'physics', 'hertz_h12')
 
 
 class ReleaseError(RuntimeError):
@@ -87,14 +101,117 @@ def _appendix_problem(columns, cdict, chead, appendix):
     return ''
 
 
-def build(handover_csv, columns, out_prefix, appendix=False):
+def _dup_keys(head, rows):
+    """키 열 (case_id) 의 빈 값 · 중복 → (빈 칸 수, 중복 키 목록).  키 열이 없으면 (0, None)."""
+    if KEY not in head:
+        return 0, None
+    i = head.index(KEY)
+    ks = [r[i] for r in rows]
+    return ks.count(''), sorted({k for k in ks if k != '' and ks.count(k) > 1})
+
+
+def _load_ids(path):
+    """기대 ID — CSV 머리에 case_id 가 있으면 그 열 · 아니면 한 줄 한 ID (빈 줄 · '#' 줄 무시).  중복 · 빈 목록이면 ReleaseError."""
+    if not path or not os.path.isfile(path):
+        raise ReleaseError(f'기대 ID 원천이 없다 ({path!r}) — 프로필은 --expect-ids (설계 CSV) 를 요구한다')
+    with open(path, encoding='utf-8-sig', newline='') as f:
+        text = f.read()
+    lines = text.splitlines()
+    if lines and KEY in next(csv.reader([lines[0]])):
+        ids = [r.get(KEY, '') for r in csv.DictReader(io.StringIO(text))]
+    else:
+        ids = [ln.strip() for ln in lines if ln.strip() and not ln.lstrip().startswith('#')]
+    if not ids or '' in ids or len(set(ids)) != len(ids):
+        raise ReleaseError(f'기대 ID 원천 {path} 이 비었거나 빈 ID · 중복이 있다')
+    return ids
+
+
+def dangling_refs(rel_cols, handover_cols, dict_rows):
+    """열 사전 행 (첫 칸 = 열 이름) 의 글에서 '이 배포에 없는 정본 인계표 열' 참조 중 바로 뒤에 REF_MARK 가 없는 것 → [(행 열, 참조)].
+    참조 = 인계표 열 이름과 같은 낱말 (영숫자 · 밑줄 · 한글) · '<모드>' 틀 (REF_MODES 로 펼쳐 하나라도 인계표에만 있으면)."""
+    shipped, hs = set(rel_cols), set(handover_cols)
+    out = []
+    for row in dict_rows:
+        text = ' '.join(row[1:])
+        for m in re.finditer(r'([A-Za-z0-9_]+_)<모드>', text):
+            names = {m.group(1) + md for md in REF_MODES} | {m.group(1) + md + '_gap' for md in REF_MODES}
+            if any(n in hs and n not in shipped for n in names) and not text[m.end():].lstrip().startswith(REF_MARK):
+                out.append((row[0], m.group(0)))
+        for m in re.finditer(r'(?<![\w<])(\w+)(?![\w<])', text):
+            t = m.group(1)
+            if t in hs and t not in shipped and not text[m.end():].lstrip().startswith(REF_MARK):
+                out.append((row[0], t))
+    return out
+
+
+def profile_problems(profile, release_prefix, handover_csv, expect_ids, appendix=False):
+    """ML 배포 프로필 (PROFILES) 문제 목록 ([] = 통과).  release_prefix 의 CSV · 열 사전 · 인계표 (사전 참조의 열 이름 원천) 를 읽는다."""
+    if profile not in PROFILES:
+        raise ReleaseError(f'모르는 프로필 {profile!r} (아는 것: {PROFILES})')
+    probs = []
+    rh, rrows = _read_csv(release_prefix + '.csv')
+    n_blank, dups = _dup_keys(rh, rrows)
+    if dups is None:
+        return [f'배포에 키 열 {KEY} 가 없다']
+    if n_blank or dups:
+        probs.append(f'배포 키 빈 칸 {n_blank} · 중복 {dups[:5]} (LREL-03)')
+    try:
+        want = _load_ids(expect_ids)
+    except ReleaseError as e:
+        probs.append(f'기대 ID — {e} (LREL-03)')
+        want = None
+    if want is not None:
+        got = [r[rh.index(KEY)] for r in rrows]
+        if len(got) != len(want) or set(got) != set(want):
+            probs.append(f'기대 ID 집합과 다르다 — 행 {len(got)} · 기대 {len(want)} · 배포에만 {sorted(set(got) - set(want))[:5]} · '
+                         f'기대에만 {sorted(set(want) - set(got))[:5]} (LREL-03)')
+    if appendix:
+        return probs
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import lhs_design_dataset as LDD                                     # noqa: E402 — 적격성 규칙의 정본 (사본 금지)
+    miss = [c for c in LDD.ELIGIBILITY_COLS if c not in rh]
+    if miss:
+        probs.append(f'적격성 열이 배포에 없다 {miss} — ML 주 배포는 세 열을 함께 싣는다 (LREL-02)')
+    else:
+        extra = [c for c in ('calculation_status', 'porosity_sphere_pct_RECORD_ONLY', 'phi_sum_gt_one', *LDD.ELIGIBILITY_COUNTS) if c in rh]
+        nbad = 0
+        for r in rrows:
+            rec = {c: r[rh.index(c)] for c in (*LDD.ELIGIBILITY_COLS, *extra)}
+            ep = LDD.eligibility_problems(rec, porosity_pct=rec.get('porosity_sphere_pct_RECORD_ONLY'))
+            if ep:
+                nbad += 1
+                if nbad <= 5:
+                    probs.append(f'{r[rh.index(KEY)]}: 적격성 — ' + ' · '.join(ep[:3]) + ' (LREL-02)')
+        if nbad > 5:
+            probs.append(f'… 적격성 문제 행 모두 {nbad} (LREL-02)')
+    hh, _ = _read_csv(handover_csv)
+    _, crow = _read_tsv(_cols_path(release_prefix))
+    dg = dangling_refs(rh, hh, crow)
+    if dg:
+        by = {}
+        for col, ref in dg:
+            by.setdefault(ref, []).append(col)
+        for ref, cols in sorted(by.items())[:8]:
+            probs.append(f'열 사전이 배포에 없는 정본 인계표 열 {ref} 을 표지 {REF_MARK} 없이 가리킨다 (사전 행 {len(cols)}: {cols[:3]})')
+        if len(by) > 8:
+            probs.append(f'… 사전 참조 표지 문제 참조 모두 {len(by)}')
+    return probs
+
+
+def build(handover_csv, columns, out_prefix, appendix=False, profile=None, expect_ids=None):
     """columns (순서 그대로) 를 인계표에서 뽑아 `<out_prefix>.csv` · `_columns.tsv` 를 쓴다.
-    appendix=False (주 배포) 이면 부록 전용 열 (`appendix_only`) 을 거부한다."""
+    appendix=False (주 배포) 이면 부록 전용 열 (`appendix_only`) 을 거부한다 · 인계표 키 빈 칸 · 중복이면 거부 (LREL-03) ·
+    profile (ml_v1) 이면 쓴 뒤 `profile_problems` 가 문제를 내면 파일을 지우고 거부한다."""
     if not columns or columns[0] != KEY:
         raise ReleaseError(f'첫 열은 {KEY} 여야 한다 (받은 것: {columns[:1]})')
     if len(set(columns)) != len(columns):
         raise ReleaseError('배포 열 목록에 중복이 있다')
+    if profile is not None and profile not in PROFILES:
+        raise ReleaseError(f'모르는 프로필 {profile!r} (아는 것: {PROFILES})')
     head, rows = _read_csv(handover_csv)
+    n_blank, dups = _dup_keys(head, rows)
+    if n_blank or dups:
+        raise ReleaseError(f'인계표 키 {KEY} 빈 칸 {n_blank} · 중복 {(dups or [])[:5]} — 행 수가 고유 설계 수를 보증하지 않는다 (LREL-03)')
     missing = [c for c in columns if c not in head]
     if missing:
         raise ReleaseError(f'인계표에 없는 열: {missing}')
@@ -120,18 +237,30 @@ def build(handover_csv, columns, out_prefix, appendix=False):
         w.writerow(ch)
         for c in columns:
             w.writerow(cdict[c])
+    if profile is not None:
+        pp = profile_problems(profile, out_prefix, handover_csv, expect_ids, appendix=appendix)
+        if pp:
+            for f_ in (out_prefix + '.csv', _cols_path(out_prefix)):
+                if os.path.exists(f_):
+                    os.remove(f_)
+            raise ReleaseError(f'프로필 {profile} 문제 {len(pp)} — ' + ' | '.join(pp[:4]))
     return len(rows), len(columns)
 
 
-def check(handover_csv, release_prefix, appendix=False):
+def check(handover_csv, release_prefix, appendix=False, profile=None, expect_ids=None):
     """배포 ⊆ 인계표 — 행 집합 · 순서 · 값 · 열 사전 행이 모두 같아야 한다.  문제 목록을 돌려준다 (빈 목록 = 통과).
-    appendix=False (주 배포) 이면 부록 전용 열이 있는 것도 문제로 보고한다."""
+    appendix=False (주 배포) 이면 부록 전용 열이 있는 것도 문제로 보고한다 · 키 빈 칸 · 중복 (인계표 · 배포) 도 문제 (LREL-03) ·
+    profile (ml_v1) 이면 `profile_problems` 를 더한다 (LREL-02 · 03)."""
     probs = []
     hh, hrows = _read_csv(handover_csv)
     rh, rrows = _read_csv(release_prefix + '.csv')
     if not rh or rh[0] != KEY:
         probs.append(f'배포 첫 열이 {KEY} 가 아니다')
         return probs
+    for lab_, h_, r_ in (('인계표', hh, hrows), ('배포', rh, rrows)):
+        n_blank, dups = _dup_keys(h_, r_)
+        if n_blank or dups:
+            probs.append(f'{lab_} 키 {KEY} 빈 칸 {n_blank} · 중복 {(dups or [])[:5]} — 행 수가 고유 설계 수를 보증하지 않는다 (LREL-03)')
     extra = [c for c in rh if c not in hh]
     if extra:
         probs.append(f'인계표에 없는 배포 열: {extra}')
@@ -164,15 +293,17 @@ def check(handover_csv, release_prefix, appendix=False):
     apx = _appendix_problem(rh, cdict, ch, appendix)
     if apx:
         probs.append(apx)
+    if profile is not None:
+        probs += profile_problems(profile, release_prefix, handover_csv, expect_ids, appendix=appendix)
     return probs
 
 
 def _selftest():
     ok = []
 
-    def chk(name, cond):
+    def chk(name, cond, extra=''):
         ok.append(bool(cond))
-        print(f"  {'✓' if cond else '✗'} {name}")
+        print(f"  {'✓' if cond else '✗'} {name}" + (f' — {extra[:300]}' if extra and not cond else ''))
 
     with tempfile.TemporaryDirectory() as td:
         hp = os.path.join(td, 'h.csv')
@@ -252,6 +383,94 @@ def _selftest():
             for suf in ('', '_physics'):
                 pr13 += check(os.path.join(hd, f'{pre}_handover_v12_20261006.csv'), os.path.join(rd, f'{pre}_release_20261006_v12{suf}'))
         chk('⑬ 실데이터 — 배포 v1.2 주 표 · Physics 부록 (lhs · lhsx) 대조 통과 그대로' + (f' — {pr13[:2]}' if pr13 else ''), pr13 == [])
+    #  ═══ ⑭–⑲ LREL-02 · 03 (Codex 배포 v1.1 최종 리뷰 10-01 §3 · 1저자 비준 10-06 — 반례 먼저) ═══════════════════════════════════════════
+    #   LREL-03 "130 행" ≠ "130 개 고유 설계" — 키 중복 (같은 행 수의 대체) 을 빌더 · 대조가 통과시켰다 → 키 유일은 늘 · 기대 ID 집합은 프로필에서
+    #   LREL-02 적격성 세 열을 뺀 배포 (130 × 86) 가 check() 문제 [] 였다 → ML 배포 프로필 (ml_v1) 에서 세 열 필수 · 허용 값 · 정합
+    #   + 열 사전이 배포에 없는 정본 인계표 열을 표지 없이 가리키면 프로필 문제 (사전 문구 = 생성기 · 배포 표만 받은 사람이 없는 열을 찾지 않게)
+    def _probs(fn):
+        try:
+            return fn()
+        except ReleaseError as e:
+            return [f'ReleaseError: {e}']
+        except Exception as e:                                       # noqa: BLE001
+            return [f'{type(e).__name__}: {e}']
+    with tempfile.TemporaryDirectory() as td:
+        hp = os.path.join(td, 'h.csv')
+        elig = ('physical_target_status', 'hold_reason_codes', 'boundary_state')
+        with open(hp, 'w', encoding='utf-8', newline='') as f:
+            f.write('case_id,a,physical_target_status,hold_reason_codes,boundary_state,c\n'
+                    'x1,1,OK,,INSIDE,5\nx2,2,HOLD,BOUNDARY_CENTER_OUT,CENTER_CROSSED,6\n')
+        with open(os.path.join(td, 'h_columns.tsv'), 'w', encoding='utf-8', newline='') as f:
+            f.write('column\tsource\tmeaning\ncase_id\tdesign\t키\na\tw\t뜻 a — c (정본 인계표 열) 와 같이 본다\n'
+                    'physical_target_status\th\t적격성\nhold_reason_codes\th\t코드\nboundary_state\th\t경계\nc\tw\t뜻 c\n')
+        ids = os.path.join(td, 'ids.csv')
+        with open(ids, 'w', encoding='utf-8', newline='') as f:
+            f.write('case_id,block\nx1,bimodal\nx2,bimodal\n')
+        out = os.path.join(td, 'rel', 'r')
+        hd = os.path.join(td, 'hdup.csv')
+        with open(hd, 'w', encoding='utf-8', newline='') as f:
+            f.write('case_id,a\nx1,1\nx1,1\n')
+        with open(os.path.join(td, 'hdup_columns.tsv'), 'w', encoding='utf-8', newline='') as f:
+            f.write('column\tsource\tmeaning\ncase_id\tdesign\t키\na\tw\t뜻 a\n')
+        p14 = _probs(lambda: [str(build(hd, ['case_id', 'a'], out + 'd'))])
+        chk('⑭ ★ LREL-03 — 인계표 키 중복 (x1 두 번 · 행 수 2) 이면 만들기 거부', any('ReleaseError' in p and '중복' in p for p in p14), repr(p14))
+        os.makedirs(os.path.dirname(out), exist_ok=True)
+        with open(out + 'dd.csv', 'w', encoding='utf-8', newline='') as f:
+            f.write('case_id,a\nx1,1\nx1,1\n')
+        with open(out + 'dd_columns.tsv', 'w', encoding='utf-8', newline='') as f:
+            f.write('column\tsource\tmeaning\ncase_id\tdesign\t키\na\tw\t뜻 a\n')
+        p15 = _probs(lambda: check(hd, out + 'dd'))
+        chk('⑮ ★ LREL-03 — 인계표 · 배포가 같은 키 중복 (행 키 · 순서는 같다) 이어도 대조가 문제로 보고', any('중복' in p for p in p15), repr(p15))
+        build(hp, ['case_id', 'a', 'c'], out + 'n')                       # 적격성 세 열을 뺀 배포 (Codex export_omitted_eligibility 축소판)
+        p16 = _probs(lambda: check(hp, out + 'n', profile='ml_v1', expect_ids=ids))
+        chk('⑯ ★ LREL-02 — 적격성 세 열을 뺀 주 배포를 ml_v1 프로필로 대조하면 문제 (옛 대조는 [] — 부분집합 충실성만 봤다)',
+            any('적격성' in p for p in p16) and check(hp, out + 'n') == [], repr(p16))
+        p16b = _probs(lambda: [str(build(hp, ['case_id', 'a', 'c'], out + 'nb', profile='ml_v1', expect_ids=ids))])
+        chk('⑯b ★ LREL-02 — ml_v1 프로필로 만들 때 적격성 열이 빠지면 만들기 거부', any('ReleaseError' in p and '적격성' in p for p in p16b), repr(p16b))
+        _probs(lambda: [str(build(hp, ['case_id', 'a', *elig, 'c'], out + 'ok', profile='ml_v1', expect_ids=ids))])
+        p17 = _probs(lambda: check(hp, out + 'ok', profile='ml_v1', expect_ids=ids))
+        chk('⑰ ml_v1 — 키 · 기대 ID · 적격성 세 열 · 사전 참조 표지 (c 가 배포에 있어도 표지는 무해) 가 맞으면 통과', p17 == [], repr(p17))
+        s17 = open(out + 'ok.csv', encoding='utf-8').read() if os.path.exists(out + 'ok.csv') else ''
+        with open(out + 'bad.csv', 'w', encoding='utf-8', newline='') as f:
+            f.write(s17.replace('x2,2,HOLD,BOUNDARY_CENTER_OUT,CENTER_CROSSED', 'x2,2,HOLD,,CENTER_CROSSED'))
+        if os.path.exists(out + 'ok_columns.tsv'):
+            shutil.copyfile(out + 'ok_columns.tsv', out + 'bad_columns.tsv')
+        p17b = _probs(lambda: profile_problems('ml_v1', out + 'bad', hp, ids))
+        chk('⑰b ★ LREL-02 — 적격성 정합 위반 (HOLD 인데 보류 코드 없음 · CENTER_CROSSED 인데 BOUNDARY_CENTER_OUT 없음) 이면 프로필 문제 (생성기 같은 함수)',
+            any('x2' in p and '적격성' in p for p in p17b), repr(p17b))
+        ids2 = os.path.join(td, 'ids2.csv')
+        with open(ids2, 'w', encoding='utf-8', newline='') as f:
+            f.write('case_id\nx1\nx3\n')
+        p18 = _probs(lambda: check(hp, out + 'ok', profile='ml_v1', expect_ids=ids2))
+        chk('⑱ ★ LREL-03 — 기대 ID 집합 (설계 CSV case_id) 과 다르면 (x2 ↔ x3) 프로필 문제', any('기대 ID' in p for p in p18), repr(p18))
+        p18b = _probs(lambda: check(hp, out + 'ok', profile='ml_v1'))
+        chk('⑱b 프로필에 기대 ID 원천이 없으면 문제 (기대 ID 없이 "완전" 을 말하지 않는다)',
+            any('기대 ID' in p and 'Error' not in p.split(':')[0] for p in p18b), repr(p18b))
+        _probs(lambda: [str(build(hp, ['case_id', 'a', *elig], out + 'dg', profile=None))])
+        sdg = open(out + 'dg_columns.tsv', encoding='utf-8').read() if os.path.exists(out + 'dg_columns.tsv') else ''
+        with open(out + 'dg_columns.tsv', 'w', encoding='utf-8', newline='') as f:
+            f.write(sdg.replace('c (정본 인계표 열) 와 같이 본다', 'c 와 같이 본다'))
+        with open(os.path.join(td, 'h2.csv'), 'w', encoding='utf-8', newline='') as f, open(hp, encoding='utf-8') as g:
+            f.write(g.read())
+        with open(os.path.join(td, 'h2_columns.tsv'), 'w', encoding='utf-8', newline='') as f, open(os.path.join(td, 'h_columns.tsv'), encoding='utf-8') as g:
+            f.write(g.read().replace('c (정본 인계표 열) 와 같이 본다', 'c 와 같이 본다'))
+        p19 = _probs(lambda: profile_problems('ml_v1', out + 'dg', os.path.join(td, 'h2.csv'), ids))
+        chk('⑲ ★ 열 사전이 배포에 없는 정본 인계표 열 (c) 을 표지 없이 가리키면 프로필 문제 · 표지 "(정본 인계표 열)" 가 있으면 통과',
+            any('c' in p and '사전' in p for p in p19)
+            and _probs(lambda: profile_problems('ml_v1', out + 'ok', hp, ids)) == [], repr(p19))
+    #  ⑲b 실데이터 — 배포 v1.2 주 표 둘 (설계 CSV 기대 ID) 은 키 · 기대 ID · 적격성 = 통과 · 사전 참조만 문제 (v1.2 사전 문구는 표지 전 — README 가 정정판)
+    here = os.path.dirname(os.path.abspath(__file__))
+    hd_ = os.path.join(here, '..', 'docs', 'data', 'lhs_network194_11fcf91e8', 'handover_v12_20261006')
+    rd_ = os.path.join(here, '..', 'docs', 'data', 'lhs_release_20261006_v12')
+    if os.path.isdir(hd_) and os.path.isdir(rd_):
+        kinds = []
+        for pre, dsg in (('lhs', 'lhs_design_20260818.csv'), ('lhsx', 'lhsx_design_adapted_20260929.csv')):
+            pp = _probs(lambda: profile_problems('ml_v1', os.path.join(rd_, f'{pre}_release_20261006_v12'),
+                                                 os.path.join(hd_, f'{pre}_handover_v12_20261006.csv'),
+                                                 os.path.join(here, '..', 'docs', 'data', dsg)))
+            kinds.append((pre, [p for p in pp if '사전' not in p], sum('사전' in p for p in pp)))
+        chk('⑲b 실데이터 — 배포 v1.2 주 표 (lhs · lhsx) ml_v1: 키 · 기대 ID (설계 CSV) · 적격성 문제 0 · 사전 참조 표지 문제만 남는다 (v1.2 문구 = 표지 전)',
+            all(not k[1] and k[2] > 0 for k in kinds), repr(kinds))
     print(f"{sum(ok)}/{len(ok)}  {'✓ 전부 통과' if all(ok) else '✗ 실패 있음'}")
     return 0 if all(ok) else 1
 
@@ -266,6 +485,9 @@ def main(argv=None):
     ap.add_argument('--release', help='대조할 배포 접두사')
     ap.add_argument('--appendix', action='store_true',
                     help='부록 파일 (부록 전용 열 — H12 민감도 `*_hertz_h12` · 열 사전 판정 "부록 전용" — 을 싣는다 · 없으면 그 열을 거부)')
+    ap.add_argument('--profile', choices=PROFILES, default=None,
+                    help='ML 배포 프로필 (LREL-02 · 03) — 키 유일 · 기대 ID 집합 · 적격성 세 열 · 열 사전 참조 표지 (부록은 키 · ID 만)')
+    ap.add_argument('--expect-ids', default=None, help='(--profile) 기대 ID — 설계 CSV (case_id 열) 또는 한 줄 한 ID')
     ap.add_argument('--selftest', action='store_true')
     a = ap.parse_args(argv)
     if a.selftest:
@@ -274,7 +496,7 @@ def main(argv=None):
         if a.check:
             if not (a.handover and a.release):
                 ap.error('--check 에는 --handover 와 --release 가 필요하다')
-            probs = check(a.handover, a.release, appendix=a.appendix)
+            probs = check(a.handover, a.release, appendix=a.appendix, profile=a.profile, expect_ids=a.expect_ids)
             for p in probs:
                 print('⛔', p)
             print('✓ 배포 ⊆ 인계표 (행 · 순서 · 값 · 열 사전)' if not probs else f'✗ 문제 {len(probs)}')
@@ -283,8 +505,8 @@ def main(argv=None):
             ap.error('만들기에는 --handover · --columns-from · --out 이 필요하다')
         _, rows = _read_tsv(a.columns_from)
         cols = [r[0] for r in rows] + list(a.add)
-        n, k = build(a.handover, cols, a.out, appendix=a.appendix)
-        probs = check(a.handover, a.out, appendix=a.appendix)
+        n, k = build(a.handover, cols, a.out, appendix=a.appendix, profile=a.profile, expect_ids=a.expect_ids)
+        probs = check(a.handover, a.out, appendix=a.appendix, profile=a.profile, expect_ids=a.expect_ids)
         if probs:
             for p in probs:
                 print('⛔', p)
