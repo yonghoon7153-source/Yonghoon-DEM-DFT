@@ -1569,6 +1569,11 @@
    "date": "2026-10-05",
    "stage": "dft",
    "text": "P1b (b) k9 넷 kgy 발사 (tmux agck9 · 6adf297c · 22:48:11 · DRY_RUN 통과) · 첫 잡 AGC_N3_top_hcp_K9_bound k 점 41 (k6 20 · 시간반전 대칭만 · 예상 일치) · 8 잡 한 잡씩 · 상한 30 h. W 값은 결과 기록에만."
+  },
+  {
+   "date": "2026-10-06",
+   "stage": "dft",
+   "text": "P1b (b) k9 넷 끝 — 8 잡 rc 0 (17 h 35 m / 상한 30 h) · 회수 bc2a0200 · SHA256SUMS 251 일치 · 레포 재집계 = kgy 집계 → 사전 규칙 판독 REPLACE (두께 PASS · 폭 OK) · 새 마감 카드 wad_agc_graphite_closed_2026_10_06.json · 결정 D-2026-10-06-wad-agc-graphite-closed-k9 proposed (1저자 비준 대기). W 값은 결과 기록·마감 카드에만."
   }
  ],
  "related_decisions": [

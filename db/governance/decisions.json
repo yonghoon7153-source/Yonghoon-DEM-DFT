@@ -7668,6 +7668,63 @@
     "commit": "bb12faa25d85b3d170b6e614889efc2160116c7e",
     "decision_digest": "sha256:d58473d92c28661efc3ab1022e8195416ce0ecb303857de2ef049d7d7c1722b1"
    }
+  },
+  {
+   "id": "D-2026-10-06-wad-agc-graphite-closed-k9",
+   "schema_version": 2,
+   "kind": "closure",
+   "scope": "wad.agc_graphite",
+   "slot": "wad_agc_graphite_closure",
+   "applies_to": {
+    "systems": [
+     "agc_graphite"
+    ],
+    "tasks": [
+     "wad_agc_graphite_closure"
+    ],
+    "methods": [
+     "qe_gpu_pw_scf"
+    ],
+    "use_cases": [
+     "internal"
+    ]
+   },
+   "title": "P1b Ag(111)|흑연 3층 W_sep 마감 교체 — 헤드라인을 k 9×9×1 registry 넷 평균으로 (사전 규칙 REPLACE · 두께 PASS · 폭 OK) · k6 헤드라인은 이력",
+   "statement": "P1b 마감의 헤드라인 추정자를 '생산 k 6×6×1 registry 넷 평균 + k 미수렴 라벨' 에서 'k 9×9×1 registry 넷 평균 [min, max] + k9 라벨 (k 수렴은 대표 registry 12×12×1 탐침으로 확인 · 넷 각각은 안 잼)' 로 바꾼다. 모형·2체 라벨은 그대로다. 값과 허용·금지 서술은 마감 카드에만 있다.",
+   "rationale": "결정 D-2026-10-05-wad-agc-graphite-k9-registry 가 새 8 잡 결과 전에 박은 규칙 — 10 잡 전부 OK 면 헤드라인을 k9 registry 평균으로 교체 — 의 출력이다. 10 잡 전부 OK · 레포 재집계가 kgy 집계와 같다. 결과를 보고 문턱·표본을 바꾸지 않았다.",
+   "decision_state": "proposed",
+   "record_kind": "closure",
+   "results_seen": true,
+   "card": "db/properties/wad_agc_graphite_prereg_2026_10_02.json",
+   "record": "db/properties/wad_agc_graphite_closed_2026_10_06.json",
+   "depends_on": [
+    "D-2026-10-02-wad-agc-graphite",
+    "D-2026-10-05-wad-agc-kprobe12",
+    "D-2026-10-05-wad-agc-graphite-k9-registry"
+   ],
+   "supersedes": [
+    "D-2026-10-05-wad-agc-graphite-closed"
+   ],
+   "amends": [],
+   "evidence": [
+    "db/raw/wad_agc_graphite_2026_10_02/k9set_collect_repo_2026_10_06.json (= k9set_collect_kgy.json · SHA256SUMS 251 · 회수 bc2a0200)",
+    "db/properties/wad_agc_graphite_result_2026_10_05.json (b_k9_넷_결과_2026_10_06)"
+   ],
+   "reopen_criteria": [
+    "① 모형 질문이 바뀌면 (비정합 셀 · 변형 없는 흑연 · 이완 포함 G_c · 다른 Ag 면 · 3체 헤드라인) → 새 카드 (이 마감의 재개가 아니다)",
+    "② DEM 또는 1저자가 registry 각각의 12×12×1 수렴을 요구하면 → 8 잡 (넷 × 두 끝점 · 12×12×1) 새 결정 · 그 결과로 라벨만 바꾼다 (헤드라인 추정자는 k9 registry 평균 그대로)"
+   ],
+   "enforcement": "① 헤드라인은 §1 라벨과 함께만 ② W 값은 화면(webapp)·원장 로그·open_items·결정 제목/문장에 싣지 않는다 (마감 카드·결과 기록에만) ③ k6 헤드라인은 이력으로만",
+   "proposed_by": "claude-session-2026-10-06 (friendly)",
+   "status": "proposed",
+   "status_history": [
+    {
+     "at": "2026-10-06",
+     "state": "proposed",
+     "by": "agent",
+     "note": "사전 규칙 REPLACE (10 잡 전부 OK) → 새 마감 카드. 비준은 1저자(사용자 · W_ad 트랙) — 비준 때 D-2026-10-05-wad-agc-graphite-closed 를 superseded 로 재봉인."
+    }
+   ]
   }
  ]
 }

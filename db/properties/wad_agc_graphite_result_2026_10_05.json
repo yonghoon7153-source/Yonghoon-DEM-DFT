@@ -223,5 +223,25 @@
    "단계_시작": "2026-10-05 22:48:11 ($RUN/k9set/.t0 · 상한 30 h 의 기준)",
    "첫_watch_22_49": "AGC_N3_top_hcp_K9_bound · k 점 41 (k6 20 · 시간반전 대칭만 · 예상 일치) · GPU 합계 8,358 / 24,576 MiB · 사용률 100 % (cascade v7 · li2s 담금질과 공유)"
   }
+ },
+ "b_k9_넷_결과_2026_10_06": {
+  "실행": "kgy tmux agck9 · 6adf297c · 2026-10-05 22:48:11 → 2026-10-06 15:51:40 (17 h 35 m · 상한 30 h) · 8 잡 rc 0",
+  "회수": "bc2a0200 (friendly) · db/raw/wad_agc_graphite_2026_10_02/k9set/ (26 파일 · 1.2 MB · tmp 제외) · SHA256SUMS 251 (레포 sha256sum -c 전부 일치)",
+  "집계": "k9set_collect_kgy.json = k9set_collect_repo_2026_10_06.json (키 15 · 경로 셋 빼고 동일)",
+  "판독": {
+   "headline": "REPLACE",
+   "폭": "OK",
+   "두께": "PASS",
+   "jobs_not_ok": [],
+   "all_10_ok": true
+  },
+  "headline_k9": {
+   "mean_J_m2": 0.492608,
+   "range_J_m2": [
+    0.492562,
+    0.492739
+   ]
+  },
+  "다음": "새 마감 카드 db/properties/wad_agc_graphite_closed_2026_10_06.json · 결정 D-2026-10-06-wad-agc-graphite-closed-k9 (proposed · 1저자 비준 대기) → 비준되면 마감 (a′) 을 superseded 로 재봉인 → DEM 회신"
  }
 }
