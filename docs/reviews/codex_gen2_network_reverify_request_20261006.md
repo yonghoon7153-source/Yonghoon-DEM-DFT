@@ -13,6 +13,7 @@
 | `05977e94a` | G2R-03 · GEN2-01 | 풀이마다 증서 (`I_bottom` · `I_top` · `conservation_rel` · `residual_rel` · `method` · `attempts`) · 허용치 `DIRICHLET_CONSERVATION_REL_MAX = DIRICHLET_RESIDUAL_REL_MAX = 1e-6` · 실패면 사다리 · 다 실패 = not_computed `current_conservation_failed` · 레코드 `solve_certificate_{full,bulk_net,constr_net}` (세 채널 · H12) · 협착-only 에 R_c ≤ 0 이면 그 가지만 not_computed `zero_resistance_requires_contraction` | `test_network_solve_certificate` 5/23 → 23/23 (고치기 전 모듈) |
 | `5627a74a6` | G2R-03 · 04 · GEN2-01 | 증서 → 계약: 게시되는 FULL σ (`sigma_full_status` computed) 는 통과 증서 필수 (판정 = 생산자 `certificate_problem` 하나) · 증서 키 = 세대 2 표지 · G2R-04 문구 (열 사전 · 배포 빌더 · tau_flux · 설계 기록) · 배치 열 `sigma_constr_net_status/_reason` | `test_gen2_role_contract` X2–X5 25/30 → 30/30 · W1 · W2 (G2R-04) · `test_pipeline_provenance` 픽스처 (증서) 267/284 → 284/284 |
 | `8727aa85e` | 원장 | G2R-01~04 · GEN2-01 claimed_fixed | — |
+| `b69d3ae74` | RGLR4-01 · 02 (5차 판정의 검산기 P2 · 동봉 = 1저자 10-06 밤 *"권고대로"*) | 다시 읽기 검산기 `reread_v12.py` — C4 공통 칸 차이 · 열 탈락 = 실패 (기록만 하던 것) · C6 중복 · C8 케이스 ID 집합 · 유일성 · 상태 · record sha | `scripts/test_reread_v12.py` 13/13 (반례 먼저 — 커밋 메시지) · 검산기는 여전히 **자동 배포 관문이 아니다** (5차 판정 그대로) |
 
 ## 2. 계약 표 (생산자 실 출력에서 읽은 필드 · 값)
 
@@ -68,3 +69,4 @@
 4. 증서를 FULL 에만 요구 (§4-7) 하는 것이 194 인계 (τ = FULL 만) 에 충분한가.  CF · 협착-only 진단 열에도 요구해야 하나.
 5. 새 194 를 돌리기 전 남은 것 = §3 "새 배치 봉인" 하나로 보는가.  덤프 몇 개로 생산 → 게시 → 인계를 먼저 통과시키는 순서 (1저자 비준) 에 더할 것이 있나.
 6. TAU-13 · SELF-28 · TAU-07 의 메모 (판정 §6 · §7) 처리에 이의가 있나.
+7. `b69d3ae74` 가 RGLR4-01 · 02 (5차 판정 — C4 차이를 기록만 하고 PASS · C8 ID 집합 · 중복 미검사) 를 닫는가.  194 v1.2 값은 5차가 따로 대조했으므로 이 수정은 그 값에 영향이 없다.
