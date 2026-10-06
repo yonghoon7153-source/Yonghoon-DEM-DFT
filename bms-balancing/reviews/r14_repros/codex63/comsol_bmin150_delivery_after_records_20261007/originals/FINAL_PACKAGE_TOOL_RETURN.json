@@ -1,0 +1,8 @@
+{
+  "kind": "SUBSEQUENT_TOOL_RETURN_TRANSCRIPTION",
+  "chunk_id": "6b5778",
+  "exit_code": 0,
+  "wall_time_seconds": 13.5086222,
+  "output": "ZIP_WRITTEN elapsed=251.4593594\r\nZIP_READBACK_MATCH elapsed=257.8323742\r\n{\r\n  \"status\": \"PACKAGE_READBACK_MATCH_EXTERNAL_REVIEW_PENDING\",\r\n  \"zip\": {\r\n    \"path\": \"C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/bmin640_native150_result_delivery_20261006/BMIN_R2_NATIVE150_RESULT_FOR_REVIEW_20261006.zip\",\r\n    \"bytes\": 256397169,\r\n    \"sha256\": \"7c40d5babd69a92a70952ddef1fb5bf328878021fb7eb1caef834754cac1aa62\"\r\n  },\r\n  \"payload_count\": 8681,\r\n  \"receipt\": {\r\n    \"path\": \"C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/bmin640_native150_result_delivery_20261006/DELIVERY_RECEIPT.json\",\r\n    \"bytes\": 1425,\r\n    \"sha256\": \"7760236d6238e24ce205b4b20ab794028fce8c1ee75fbacd085e510b2a22399c\"\r\n  },\r\n  \"sources_after\": {\r\n    \"path\": \"C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/bmin640_native150_result_delivery_20261006/SELECTED_SOURCES_AFTER.json\",\r\n    \"bytes\": 2861947,\r\n    \"sha256\": \"4dc9b2387d56566c9d1107ce8d12ee448338741397b582f4a7a451e2acab1aa8\"\r\n  },\r\n  \"final_snapshot_before_tool_return_s\": 271.031481,\r\n  \"limit_s\": 1800,\r\n  \"within_limits\": true,\r\n  \"native_rerun\": 0,\r\n  \"original_records_modified\": false\r\n}\r\n",
+  "provenance": "Tool-visible final poll output transcribed after completion. Poll wall time is not total packaging time and is not added to the 271.031481-second snapshot. No independent OS audit."
+}

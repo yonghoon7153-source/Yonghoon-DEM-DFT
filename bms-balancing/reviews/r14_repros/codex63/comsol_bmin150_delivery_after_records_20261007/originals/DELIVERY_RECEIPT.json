@@ -1,0 +1,29 @@
+{
+  "status": "PACKAGE_READBACK_MATCH_EXTERNAL_REVIEW_PENDING",
+  "zip": {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/bmin640_native150_result_delivery_20261006/BMIN_R2_NATIVE150_RESULT_FOR_REVIEW_20261006.zip",
+    "bytes": 256397169,
+    "sha256": "7c40d5babd69a92a70952ddef1fb5bf328878021fb7eb1caef834754cac1aa62"
+  },
+  "payload_count": 8681,
+  "manifest": {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/bmin640_native150_result_delivery_20261006/PACKAGE_MANIFEST.json",
+    "bytes": 1450858,
+    "sha256": "82ebc1ef12ebdc594d3b25ead9b0b2722a5ad4f4c9df01a6fc534aaa4b0adc2d"
+  },
+  "sources_after": {
+    "path": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/bmin640_native150_result_delivery_20261006/SELECTED_SOURCES_AFTER.json",
+    "bytes": 2861947,
+    "sha256": "4dc9b2387d56566c9d1107ce8d12ee448338741397b582f4a7a451e2acab1aa8"
+  },
+  "receipt_recipient": null,
+  "parent_snapshot_s": 4471.8936425,
+  "parent_limit_s": 10500,
+  "packaging_limit_s": 1800,
+  "packaging_snapshot_before_receipt_s": 271.0134535,
+  "native_rerun": 0,
+  "analysis_rerun": 0,
+  "mph_included": false,
+  "user_console_provenance": "User-provided text, subsequently recorded",
+  "crc": "NOT_SEPARATELY_COMPUTED; all decompressed member bytes checked by SHA256"
+}
