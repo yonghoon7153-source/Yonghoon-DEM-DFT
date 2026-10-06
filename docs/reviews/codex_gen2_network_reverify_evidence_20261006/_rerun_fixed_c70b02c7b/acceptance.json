@@ -1,0 +1,328 @@
+{
+  "publication": [
+    {
+      "label": "baseline",
+      "status": "done",
+      "stop": [
+        true,
+        "ok"
+      ],
+      "row": {
+        "tau2_ion_hertz": 10.980805104698454,
+        "ion_net_status_hertz": "OK",
+        "ion_net_status_reason_hertz": "",
+        "tau2_ion_physics": 6.34889638476187,
+        "ion_net_status_physics": "OK",
+        "ion_net_status_reason_physics": "",
+        "tau2_ion_hertz_h12": 8.565165695607242,
+        "ion_net_status_hertz_h12": "OK",
+        "ion_net_status_reason_hertz_h12": "",
+        "ion_net_generation": "g2"
+      },
+      "full_q": 0.00400538,
+      "cf_q": 0.03926991,
+      "full_certificate": {
+        "electrode_model": "dirichlet_exact",
+        "status": "computed",
+        "reason": null,
+        "method": "spsolve",
+        "n_free": 15,
+        "n_fixed": 6,
+        "n_floating": 0,
+        "n_zero_resistance": null,
+        "I_bottom": 0.0200268809166404,
+        "I_top": -0.020026880916640195,
+        "conservation_rel": 1.0221130839959184e-14,
+        "residual_rel": 4.343151465412654e-16,
+        "conservation_rel_max": 1e-06,
+        "residual_rel_max": 1e-06,
+        "branch": "full",
+        "delta_V": 1.0,
+        "g_to_q": 0.2,
+        "geometry": {
+          "plate_z": 20.0,
+          "box_x": 10.0,
+          "box_y": 10.0,
+          "scale": 1
+        },
+        "attempts": [
+          {
+            "method": "spsolve",
+            "outcome": "pass",
+            "krylov_info": null,
+            "refine_passes": null,
+            "I_bottom": 0.0200268809166404,
+            "I_top": -0.020026880916640195,
+            "conservation_rel": 1.0221130839959184e-14,
+            "residual_rel": 4.343151465412654e-16,
+            "error": null
+          }
+        ],
+        "channel": "ionic",
+        "role": "H0",
+        "contact_mode": "hertzian",
+        "sigma_bulk_S_cm": 0.003
+      },
+      "cf_certificate": {
+        "electrode_model": "dirichlet_exact",
+        "status": "computed",
+        "reason": null,
+        "method": "spsolve",
+        "n_free": 15,
+        "n_fixed": 6,
+        "n_floating": 0,
+        "n_zero_resistance": null,
+        "I_bottom": 0.1963495408493623,
+        "I_top": -0.19634954084936224,
+        "conservation_rel": 2.827159716856456e-16,
+        "residual_rel": 4.0717173445645147e-16,
+        "conservation_rel_max": 1e-06,
+        "residual_rel_max": 1e-06,
+        "branch": "bulk_only",
+        "delta_V": 1.0,
+        "g_to_q": 0.2,
+        "geometry": {
+          "plate_z": 20.0,
+          "box_x": 10.0,
+          "box_y": 10.0,
+          "scale": 1
+        },
+        "attempts": [
+          {
+            "method": "spsolve",
+            "outcome": "pass",
+            "krylov_info": null,
+            "refine_passes": null,
+            "I_bottom": 0.1963495408493623,
+            "I_top": -0.19634954084936224,
+            "conservation_rel": 2.827159716856456e-16,
+            "residual_rel": 4.0717173445645147e-16,
+            "error": null
+          }
+        ],
+        "channel": "ionic",
+        "role": "H0",
+        "contact_mode": "hertzian",
+        "sigma_bulk_S_cm": 0.003
+      }
+    },
+    {
+      "label": "missing_full_cert",
+      "status": "failed",
+      "stop": [
+        false,
+        "① hertzian: 파일 없음; physics: 파일 없음; per-mode 산출물이 하나도 없다; 읽기 실패 (FileNotFoundError)"
+      ],
+      "row": {
+        "tau2_ion_hertz": null,
+        "ion_net_status_hertz": "NOT_COMPUTED",
+        "ion_net_status_reason_hertz": "missing_input",
+        "tau2_ion_physics": null,
+        "ion_net_status_physics": "NOT_COMPUTED",
+        "ion_net_status_reason_physics": "missing_input",
+        "tau2_ion_hertz_h12": null,
+        "ion_net_status_hertz_h12": "NOT_COMPUTED",
+        "ion_net_status_reason_hertz_h12": "missing_input",
+        "ion_net_generation": ""
+      },
+      "full_q": null,
+      "cf_q": null,
+      "full_certificate": null,
+      "cf_certificate": null
+    },
+    {
+      "label": "full_cert_from_cf",
+      "status": "failed",
+      "stop": [
+        false,
+        "① hertzian: 파일 없음; physics: 파일 없음; per-mode 산출물이 하나도 없다; 읽기 실패 (FileNotFoundError)"
+      ],
+      "row": {
+        "tau2_ion_hertz": null,
+        "ion_net_status_hertz": "NOT_COMPUTED",
+        "ion_net_status_reason_hertz": "missing_input",
+        "tau2_ion_physics": null,
+        "ion_net_status_physics": "NOT_COMPUTED",
+        "ion_net_status_reason_physics": "missing_input",
+        "tau2_ion_hertz_h12": null,
+        "ion_net_status_hertz_h12": "NOT_COMPUTED",
+        "ion_net_status_reason_hertz_h12": "missing_input",
+        "ion_net_generation": ""
+      },
+      "full_q": null,
+      "cf_q": null,
+      "full_certificate": null,
+      "cf_certificate": null
+    },
+    {
+      "label": "full_cert_from_h12",
+      "status": "failed",
+      "stop": [
+        false,
+        "① hertzian: 파일 없음; physics: 파일 없음; per-mode 산출물이 하나도 없다; 읽기 실패 (FileNotFoundError)"
+      ],
+      "row": {
+        "tau2_ion_hertz": null,
+        "ion_net_status_hertz": "NOT_COMPUTED",
+        "ion_net_status_reason_hertz": "missing_input",
+        "tau2_ion_physics": null,
+        "ion_net_status_physics": "NOT_COMPUTED",
+        "ion_net_status_reason_physics": "missing_input",
+        "tau2_ion_hertz_h12": null,
+        "ion_net_status_hertz_h12": "NOT_COMPUTED",
+        "ion_net_status_reason_hertz_h12": "missing_input",
+        "ion_net_generation": ""
+      },
+      "full_q": null,
+      "cf_q": null,
+      "full_certificate": null,
+      "cf_certificate": null
+    },
+    {
+      "label": "missing_cf_cert",
+      "status": "failed",
+      "stop": [
+        false,
+        "① hertzian: 파일 없음; physics: 파일 없음; per-mode 산출물이 하나도 없다; 읽기 실패 (FileNotFoundError)"
+      ],
+      "row": {
+        "tau2_ion_hertz": null,
+        "ion_net_status_hertz": "NOT_COMPUTED",
+        "ion_net_status_reason_hertz": "missing_input",
+        "tau2_ion_physics": null,
+        "ion_net_status_physics": "NOT_COMPUTED",
+        "ion_net_status_reason_physics": "missing_input",
+        "tau2_ion_hertz_h12": null,
+        "ion_net_status_hertz_h12": "NOT_COMPUTED",
+        "ion_net_status_reason_hertz_h12": "missing_input",
+        "ion_net_generation": ""
+      },
+      "full_q": null,
+      "cf_q": null,
+      "full_certificate": null,
+      "cf_certificate": null
+    },
+    {
+      "label": "cf_bad_conservation",
+      "status": "failed",
+      "stop": [
+        false,
+        "① hertzian: 파일 없음; physics: 파일 없음; per-mode 산출물이 하나도 없다; 읽기 실패 (FileNotFoundError)"
+      ],
+      "row": {
+        "tau2_ion_hertz": null,
+        "ion_net_status_hertz": "NOT_COMPUTED",
+        "ion_net_status_reason_hertz": "missing_input",
+        "tau2_ion_physics": null,
+        "ion_net_status_physics": "NOT_COMPUTED",
+        "ion_net_status_reason_physics": "missing_input",
+        "tau2_ion_hertz_h12": null,
+        "ion_net_status_hertz_h12": "NOT_COMPUTED",
+        "ion_net_status_reason_hertz_h12": "missing_input",
+        "ion_net_generation": ""
+      },
+      "full_q": null,
+      "cf_q": null,
+      "full_certificate": null,
+      "cf_certificate": null
+    },
+    {
+      "label": "missing_constr_cert",
+      "status": "failed",
+      "stop": [
+        false,
+        "① hertzian: 파일 없음; physics: 파일 없음; per-mode 산출물이 하나도 없다; 읽기 실패 (FileNotFoundError)"
+      ],
+      "row": {
+        "tau2_ion_hertz": null,
+        "ion_net_status_hertz": "NOT_COMPUTED",
+        "ion_net_status_reason_hertz": "missing_input",
+        "tau2_ion_physics": null,
+        "ion_net_status_physics": "NOT_COMPUTED",
+        "ion_net_status_reason_physics": "missing_input",
+        "tau2_ion_hertz_h12": null,
+        "ion_net_status_hertz_h12": "NOT_COMPUTED",
+        "ion_net_status_reason_hertz_h12": "missing_input",
+        "ion_net_generation": ""
+      },
+      "full_q": null,
+      "cf_q": null,
+      "full_certificate": null,
+      "cf_certificate": null
+    }
+  ],
+  "stamp": [
+    {
+      "label": "control",
+      "accepted": true,
+      "problem": "",
+      "generation": "g2",
+      "stamp": {
+        "psi_placement_physics": "multiply",
+        "electrode_model": "dirichlet_exact",
+        "area_rule_physics": "physics_g2",
+        "hertz_h12": true
+      }
+    },
+    {
+      "label": "all_unknown",
+      "accepted": false,
+      "problem": "FillRefusal: lhs00_000: τ P4 — 세대 도장 대조 (G2RR-01 · pipeline_service.provenance_generation_problem): 레코드 세대 'g2' · 도장 psi_placement_physics='unrecognized' ≠ 레코드에서 유도한 'multiply' · 도장 electrode_model='unrecognized' ≠ 레코드에서 유도한 'dirichlet_exact' · 도장 area_rule_physics='unrecognized' ≠ 레코드에서 유도한 'physics_g2' · 도장 hertz_h12='unrecognized' ≠ 레코드에서 유도한 True — 도장 (network_provenance.json) ↔ 레코드가 한 세대를 가리키지 않는다 · 세대 2 로 싣지 않는다 (g2 = 도장 네 세대 값 = 레코드에서 유도한 기대값)",
+      "generation": null,
+      "stamp": {
+        "psi_placement_physics": "unrecognized",
+        "electrode_model": "unrecognized",
+        "area_rule_physics": "unrecognized",
+        "hertz_h12": "unrecognized"
+      }
+    },
+    {
+      "label": "all_null",
+      "accepted": false,
+      "problem": "FillRefusal: lhs00_000: τ P4 — 세대 도장 대조 (G2RR-01 · pipeline_service.provenance_generation_problem): 레코드 세대 'g2' · 도장 psi_placement_physics=None ≠ 레코드에서 유도한 'multiply' · 도장 electrode_model=None ≠ 레코드에서 유도한 'dirichlet_exact' · 도장 area_rule_physics=None ≠ 레코드에서 유도한 'physics_g2' · 도장 hertz_h12=None ≠ 레코드에서 유도한 True — 도장 (network_provenance.json) ↔ 레코드가 한 세대를 가리키지 않는다 · 세대 2 로 싣지 않는다 (g2 = 도장 네 세대 값 = 레코드에서 유도한 기대값)",
+      "generation": null,
+      "stamp": {
+        "psi_placement_physics": null,
+        "electrode_model": null,
+        "area_rule_physics": null,
+        "hertz_h12": null
+      }
+    },
+    {
+      "label": "one_null_legacy_shape",
+      "accepted": false,
+      "problem": "FillRefusal: lhs00_000: τ P4 — 세대 도장 대조 (G2RR-01 · pipeline_service.provenance_generation_problem): 레코드 세대 'inferred_legacy' · 확인된 역사 도장 스키마 (194 v1.2 · 8 키) 가 아니다 — 남는 키 ['electrode_model'] · 없는 키 [] — 도장 (network_provenance.json) ↔ 레코드가 한 세대를 가리키지 않는다 · 옛 세대로 추론하지 않는다 (inferred_legacy = 확인된 역사 도장 스키마 · 194 v1.2 만)",
+      "generation": null,
+      "stamp": {
+        "psi_placement_physics": "ABSENT",
+        "electrode_model": null,
+        "area_rule_physics": "ABSENT",
+        "hertz_h12": "ABSENT"
+      }
+    },
+    {
+      "label": "g2_declares_legacy",
+      "accepted": false,
+      "problem": "FillRefusal: lhs00_000: τ P4 — 세대 도장 대조 (G2RR-01 · pipeline_service.provenance_generation_problem): 레코드 세대 'g2' · 도장 psi_placement_physics='legacy_divide' ≠ 레코드에서 유도한 'multiply' · 도장 electrode_model='virtual_source_legacy' ≠ 레코드에서 유도한 'dirichlet_exact' · 도장 area_rule_physics='physics_g1' ≠ 레코드에서 유도한 'physics_g2' · 도장 hertz_h12=False ≠ 레코드에서 유도한 True — 도장 (network_provenance.json) ↔ 레코드가 한 세대를 가리키지 않는다 · 세대 2 로 싣지 않는다 (g2 = 도장 네 세대 값 = 레코드에서 유도한 기대값)",
+      "generation": null,
+      "stamp": {
+        "psi_placement_physics": "legacy_divide",
+        "electrode_model": "virtual_source_legacy",
+        "area_rule_physics": "physics_g1",
+        "hertz_h12": false
+      }
+    },
+    {
+      "label": "stamp_absent_keys",
+      "accepted": false,
+      "problem": "FillRefusal: lhs00_000: τ P4 — 세대 도장 대조 (G2RR-01 · pipeline_service.provenance_generation_problem): 레코드 세대 'g2' · 도장에 psi_placement_physics 없음 (부분 결손) · 도장에 electrode_model 없음 (부분 결손) · 도장에 area_rule_physics 없음 (부분 결손) · 도장에 hertz_h12 없음 (부분 결손) — 도장 (network_provenance.json) ↔ 레코드가 한 세대를 가리키지 않는다 · 세대 2 로 싣지 않는다 (g2 = 도장 네 세대 값 = 레코드에서 유도한 기대값)",
+      "generation": null,
+      "stamp": {
+        "psi_placement_physics": "ABSENT",
+        "electrode_model": "ABSENT",
+        "area_rule_physics": "ABSENT",
+        "hertz_h12": "ABSENT"
+      }
+    }
+  ]
+}

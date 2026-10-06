@@ -8,6 +8,8 @@
 케이스 (각각 **자식 프로세스** — 케이스마다 경과 · 최대 RSS (os.wait4) · user/sys 를 잰다 · 194 실행기와 같은 단일 스레드 env):
   A  real_14 (리포 `docs/data/real14_reference_20260928/` — atom · contact .gz · 메시 · 덱 · sha256 = README 표)
        a) 일반 경로 + **실제 Stage E** (figures · auto_db 끔)      b) `stop_after='network'`
+     case15 (리포 `docs/data/case15_corner_20261001/` — 같은 꼴 · ★ 10-07 Codex 세대 2 재검증 §7-4) — `stop_after='network'` (`--skip-case15`)
+     ⇒ 게시된 증서 · 도장 · 진단 상태 · 열 역할 · 인계 출처 관문의 다시 읽기 = `scripts/g2_network_reread.py --smoke-root <ROOT>` (이 도구는 게시까지)
   B  LHS 코호트 (원자료 = 코호트 TSV 경로 · 같은 프레임 관문 = `lhs_webapp_batch.stage_case` · `resolve_mode` 그대로) — `stop_after='network'`
        기본 고르기 (커밋된 인계표 · 수확 JSON 에서 · 접촉 수 가장 작은 것): 관통 bimodal (lhs) · 비관통 (lhs) · lhsx 한 건
   C  음성 대조 (합성 침대 · 실 network CLI 같은 프로세스 · `webapp/test_pipeline_provenance` 의 도구 · Codex 탐침과 같은 주입) —
@@ -51,17 +53,37 @@ sys.path[:0] = [str(ROOT / 'scripts'), str(ROOT / 'webapp')]
 
 REAL14 = ROOT / 'docs' / 'data' / 'real14_reference_20260928'
 REAL14_POROSITY_REF = 15.639            # case_master 106 행 ε_sphere (README 표 · 이 세션 컨테이너 실측 15.639124908717994)
+CASE15 = ROOT / 'docs' / 'data' / 'case15_corner_20261001'
+#: ★ 10-07 (Codex 세대 2 재검증 §7-4 — real14 · case15 · 정상 비관통을 생산 → 후보 검사 → 게시 → 인계까지) — 커밋된 참조 침대 둘.
+#:   (원본 이름 · 업로드 폴더에 둘 이름 · README sha256 표의 이름) — 덤프 둘은 .gz 를 풀어 둔다 (sha256 = 압축 푼 바이트 · README 표).
+#:   case15 의 `v4_` 는 첨부 때 붙은 이름 (README) — 업로드 폴더에는 덱의 덤프 이름 꼴 (atom_<step>) 로 둔다 (바이트 그대로 · sha 대조는 README 이름으로).
+REFBEDS = {
+    'real14': dict(dir=REAL14, deck='input_real_14.liggghts', atom='atom_2060000.liggghts',
+                   files=(('atom_2060000.liggghts.gz', 'atom_2060000.liggghts', 'atom_2060000.liggghts'),
+                          ('contact_2060000.liggghts.gz', 'contact_2060000.liggghts', 'contact_2060000.liggghts'),
+                          ('mesh_2060000.stl', 'mesh_2060000.stl', 'mesh_2060000.stl'),
+                          ('input_real_14.liggghts', 'input_real_14.liggghts', 'input_real_14.liggghts'))),
+    'case15': dict(dir=CASE15, deck='input_case15.liggghts', atom='atom_1710000.liggghts',
+                   files=(('atom_v4_1710000.liggghts.gz', 'atom_1710000.liggghts', 'atom_v4_1710000.liggghts'),
+                          ('contact_v4_1710000.liggghts.gz', 'contact_1710000.liggghts', 'contact_v4_1710000.liggghts'),
+                          ('mesh_v4_1710000.stl', 'mesh_1710000.stl', 'mesh_v4_1710000.stl'),
+                          ('input_case15.liggghts', 'input_case15.liggghts', 'input_case15.liggghts'))),
+}
 
 
-def real14_sha_table():
+def refbed_sha_table(folder):
     """README 의 sha256 표 (원자료 바이트 · 압축 푼 atom · contact 포함) → {파일 이름: sha256} — 사본을 두지 않고 정본에서 읽는다."""
     import re
     out = {}
-    for ln in (REAL14 / 'README.md').read_text(encoding='utf-8').splitlines():
+    for ln in (Path(folder) / 'README.md').read_text(encoding='utf-8').splitlines():
         m = re.match(r'^([0-9a-f]{64})\s+[\d,]+ B\s+(\S+)', ln)
         if m:
             out[m.group(2)] = m.group(1)
     return out
+
+
+def real14_sha_table():
+    return refbed_sha_table(REAL14)
 THREAD_ENV = {'OMP_NUM_THREADS': '1', 'MKL_NUM_THREADS': '1', 'OPENBLAS_NUM_THREADS': '1',
               'NUMEXPR_NUM_THREADS': '1', 'VECLIB_MAXIMUM_THREADS': '1'}
 KEEP = ('done', 'partial')
@@ -165,6 +187,26 @@ def collect(app, ps, tf, cid, out, pipeline_s):
                 collector='해당 없음 — 웹앱 망 경로에는 STEP3 집전체 (collector) 가 없다 (계획/미계획 = mpm_webapp_payload 생산자 · 이 시험 밖)')
 
 
+def stage_refbed(kind, cd: Path) -> dict:
+    """참조 침대 (REFBEDS) 를 업로드 폴더 cd 에 둔다 → dict(raw_sha_ok, raw_sha, type_map, type_map_errors).
+    덤프 둘은 .gz 를 풀고 · README sha256 표 (압축 푼 바이트) 와 대조 · 덱이 선언한 상 매핑 (type_map_resolve — 배치와 같은 함수)."""
+    bed = REFBEDS[kind]
+    for src, dst, _key in bed['files']:
+        if src.endswith('.gz'):
+            with gzip.open(bed['dir'] / src, 'rb') as fi, open(cd / dst, 'wb') as fo:
+                shutil.copyfileobj(fi, fo)
+        else:
+            shutil.copy2(bed['dir'] / src, cd / dst)
+    sha = {key: sha256_bytes_file(cd / dst) for _src, dst, key in bed['files']}
+    want = refbed_sha_table(bed['dir'])
+    import type_map_resolve as TMR
+    m, _notes, errs = TMR.resolve_from_files(str(cd / bed['deck']), str(cd / bed['atom']))
+    #  README 표의 네 파일 (덱 · 메시 · 압축 푼 덤프 둘) 이 전부 표에 있고 같아야 한다 (case15 표의 첨부 zip 줄은 업로드에 없다 — 대조 밖)
+    return dict(raw_sha_ok=all(want.get(key) and sha.get(key) == want.get(key) for _src, _dst, key in bed['files']),
+                raw_sha={key: (sha.get(key, '')[:12], want.get(key, '')[:12]) for _src, _dst, key in bed['files']},
+                type_map=TMR.format_map(m), type_map_errors=errs)
+
+
 def child_case(spec: dict) -> dict:
     root = Path(spec['root'])
     _setup_child_env(root)
@@ -177,23 +219,9 @@ def child_case(spec: dict) -> dict:
         shutil.rmtree(cd)
     cd.mkdir(parents=True)
     rep = dict(id=cid, kind=kind, stop_after=stop)
-    if kind == 'real14':
-        names = {'atom_2060000.liggghts.gz': 'atom_2060000.liggghts', 'contact_2060000.liggghts.gz': 'contact_2060000.liggghts',
-                 'mesh_2060000.stl': 'mesh_2060000.stl', 'input_real_14.liggghts': 'input_real_14.liggghts'}
-        for src, dst in names.items():
-            if src.endswith('.gz'):
-                with gzip.open(REAL14 / src, 'rb') as fi, open(cd / dst, 'wb') as fo:
-                    shutil.copyfileobj(fi, fo)
-            else:
-                shutil.copy2(REAL14 / src, cd / dst)
-        sha = {dst: sha256_bytes_file(cd / dst) for dst in names.values()}
-        want = real14_sha_table()
-        rep['raw_sha_ok'] = len(want) == 4 and all(sha.get(n) == h for n, h in want.items())
-        rep['raw_sha'] = {n: (sha.get(n, '')[:12], want.get(n, '')[:12]) for n in names.values()}
-        import type_map_resolve as TMR
-        m, _notes, errs = TMR.resolve_from_files(str(cd / 'input_real_14.liggghts'), str(cd / 'atom_2060000.liggghts'))
-        tm, mode = TMR.format_map(m), app.detect_mode(str(cd))
-        rep.update(type_map=tm, mode=mode, type_map_errors=errs)
+    if kind in REFBEDS:
+        rep.update(stage_refbed(kind, cd))
+        rep['mode'] = app.detect_mode(str(cd))
     elif kind == 'lhs':
         import lhs_harvest_batch as HB
         import lhs_webapp_batch as LWB
@@ -470,10 +498,10 @@ def evaluate(reports: dict, timings: dict, expect_vm='zero', lhs_expect=None) ->
         if cid == 'controls':
             continue
         t = timings.get(cid) or {}
-        grp = 'A' if r.get('kind') in ('real14', 'synthetic') else 'B'
+        grp = 'A' if r.get('kind') in (*REFBEDS, 'synthetic') else 'B'
         add(grp, f'{cid}: 자식 프로세스 정상 종료 · 보고서 있음', ok(t.get('rc') == 0 and r.get('id') == cid),
             f'rc {t.get("rc")} {t.get("signal") or ""}')
-        if r.get('kind') == 'real14':
+        if r.get('kind') in REFBEDS:
             add(grp, f'{cid}: 원자료 sha256 = README 표 (압축 푼 바이트)', ok(r.get('raw_sha_ok')), r.get('raw_sha'))
         st, stop = r.get('status'), r.get('stop_after')
         req_bad = [s['step'] for s in r.get('stages') or [] if s.get('required') and not s.get('ok')]
@@ -622,6 +650,8 @@ def build_jobs(args) -> list:
         if not args.skip_real14_general:
             jobs.append(dict(id='real14_general', kind='real14', stop=None))
         jobs.append(dict(id='real14_network', kind='real14', stop='network'))
+    if not args.skip_case15:                                # ★ 10-07 §7-4 — case15 (corner · 182,995 접촉) 망 정지
+        jobs.append(dict(id='case15_network', kind='case15', stop='network'))
     if not args.skip_lhs:
         picks = ([(c, *lhs_expected_perc(c)) for c in args.lhs_case] if args.lhs_case
                  else [(c, f, e) for c, f, e in pick_lhs_cases()])
@@ -659,6 +689,19 @@ def _selftest() -> int:
     chk('판정 C2 — 섞인 세대 + kept True · active success = FAIL (수정 전 모양) · kept False · rollback_failed = PASS · 주입 안 됨 = FAIL',
         judge_c2(p2, mixed_bad)[0] == 'FAIL' and judge_c2(p2, mixed_ok)[0] == 'PASS'
         and judge_c2(p2, dict(mixed_ok, fired={}))[0] == 'FAIL')
+    #  ★ 10-07 §7-4 — 참조 침대 둘 (real14 · case15) 을 업로드 폴더에 두는 단계 (파이프라인 전) — sha256 = README 표 · 덱의 상 매핑
+    _st_tmp = Path(tempfile.mkdtemp(prefix='smoke_ref_')).resolve()
+    try:
+        staged = {}
+        for k in REFBEDS:
+            (_st_tmp / k).mkdir()
+            staged[k] = stage_refbed(k, _st_tmp / k)
+        chk('참조 침대 두기 — real14 · case15 원자료 sha256 = README 표 (압축 푼 바이트) · 상 매핑 real14 1:AM_P,2:AM_S,3:SE · case15 1:AM_P,2:SE · 오류 0',
+            all(v['raw_sha_ok'] and not v['type_map_errors'] for v in staged.values())
+            and staged['real14']['type_map'] == '1:AM_P,2:AM_S,3:SE' and staged['case15']['type_map'] == '1:AM_P,2:SE',
+            repr({k: (v['raw_sha_ok'], v['type_map'], v['type_map_errors']) for k, v in staged.items()}))
+    finally:
+        shutil.rmtree(_st_tmp, ignore_errors=True)
     vm_bad = dict(exact_vm_equal=True, actual={'status': 'computed', 'vm_cv': 100.0}, positive_control={'status': 'computed', 'vm_cv': 0.0})
     vm_ok = dict(vm_bad, actual={'status': 'computed', 'vm_cv': 0.0})
     vm_null = dict(vm_bad, actual={'status': 'invalid', 'vm_cv': None})
@@ -711,6 +754,7 @@ def _parse(argv=None):
     ap.add_argument('--lhs-case', action='append', default=[], help='LHS 케이스 바꾸기 (여러 번 · 기본 = 자동 고르기 셋)')
     ap.add_argument('--skip-real14', action='store_true')
     ap.add_argument('--skip-real14-general', action='store_true', help='real_14 일반 경로 (실제 Stage E) 빼기')
+    ap.add_argument('--skip-case15', action='store_true', help='case15 (커밋된 corner 침대 · 망 정지) 빼기')
     ap.add_argument('--skip-lhs', action='store_true', help='LHS 원자료가 없는 기계')
     ap.add_argument('--skip-controls', action='store_true')
     ap.add_argument('--vm-expect', choices=['zero', 'null'], default='zero', help='C3 기대 — zero = CV 0 (안정식) · null = 계산 안 함')

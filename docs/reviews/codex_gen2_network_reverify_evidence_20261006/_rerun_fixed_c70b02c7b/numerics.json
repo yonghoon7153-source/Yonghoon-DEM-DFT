@@ -1,0 +1,688 @@
+[
+  {
+    "high": 1000000000.0,
+    "G": 1.4499997615814209,
+    "exact_G": 1.45,
+    "rel_error": -1.6442660633053663e-07,
+    "certificate": {
+      "electrode_model": "dirichlet_exact",
+      "status": "computed",
+      "reason": null,
+      "method": "cg",
+      "n_free": 30002,
+      "n_fixed": 2,
+      "n_floating": 0,
+      "n_zero_resistance": null,
+      "I_bottom": 1.4499997615814209,
+      "I_top": -1.4500000000000024,
+      "conservation_rel": 1.644266079614157e-07,
+      "residual_rel": 2.384185791015625e-16,
+      "conservation_rel_max": 1e-06,
+      "residual_rel_max": 1e-06,
+      "attempts": [
+        {
+          "method": "cg",
+          "outcome": "pass",
+          "krylov_info": 0,
+          "refine_passes": null,
+          "I_bottom": 1.4499997615814209,
+          "I_top": -1.4500000000000024,
+          "conservation_rel": 1.644266079614157e-07,
+          "residual_rel": 2.384185791015625e-16,
+          "error": null
+        }
+      ],
+      "branch": "full",
+      "delta_V": 1.0,
+      "g_to_q": 1e-06,
+      "geometry": {
+        "plate_z": 1.0,
+        "box_x": 1000.0,
+        "box_y": 1000.0,
+        "scale": 1.0
+      }
+    },
+    "certificate_problem": null,
+    "log": "  Percolating component: 30004 nodes, 60003 edges\n  Large network: 30002 free nodes \u2014 CG (rtol 1e-10) first...\n  Solve: cg\n"
+  },
+  {
+    "high": 10000000000.0,
+    "G": 1.45,
+    "exact_G": 1.45,
+    "rel_error": 0.0,
+    "certificate": {
+      "electrode_model": "dirichlet_exact",
+      "status": "computed",
+      "reason": null,
+      "method": "cg",
+      "n_free": 30002,
+      "n_fixed": 2,
+      "n_floating": 0,
+      "n_zero_resistance": null,
+      "I_bottom": 1.45,
+      "I_top": -1.45,
+      "conservation_rel": 0.0,
+      "residual_rel": 1.570092458683775e-26,
+      "conservation_rel_max": 1e-06,
+      "residual_rel_max": 1e-06,
+      "attempts": [
+        {
+          "method": "cg",
+          "outcome": "pass",
+          "krylov_info": 0,
+          "refine_passes": null,
+          "I_bottom": 1.45,
+          "I_top": -1.45,
+          "conservation_rel": 0.0,
+          "residual_rel": 1.570092458683775e-26,
+          "error": null
+        }
+      ],
+      "branch": "full",
+      "delta_V": 1.0,
+      "g_to_q": 1e-06,
+      "geometry": {
+        "plate_z": 1.0,
+        "box_x": 1000.0,
+        "box_y": 1000.0,
+        "scale": 1.0
+      }
+    },
+    "certificate_problem": null,
+    "log": "  Percolating component: 30004 nodes, 60003 edges\n  Large network: 30002 free nodes \u2014 CG (rtol 1e-10) first...\n  Solve: cg\n"
+  },
+  {
+    "high": 11500000000.0,
+    "G": 1.45,
+    "exact_G": 1.45,
+    "rel_error": 0.0,
+    "certificate": {
+      "electrode_model": "dirichlet_exact",
+      "status": "computed",
+      "reason": null,
+      "method": "cg",
+      "n_free": 30002,
+      "n_fixed": 2,
+      "n_floating": 0,
+      "n_zero_resistance": null,
+      "I_bottom": 1.45,
+      "I_top": -1.4500000000000002,
+      "conservation_rel": 1.5313421029312503e-16,
+      "residual_rel": 2.1587253506498028e-26,
+      "conservation_rel_max": 1e-06,
+      "residual_rel_max": 1e-06,
+      "attempts": [
+        {
+          "method": "cg",
+          "outcome": "pass",
+          "krylov_info": 0,
+          "refine_passes": null,
+          "I_bottom": 1.45,
+          "I_top": -1.4500000000000002,
+          "conservation_rel": 1.5313421029312503e-16,
+          "residual_rel": 2.1587253506498028e-26,
+          "error": null
+        }
+      ],
+      "branch": "full",
+      "delta_V": 1.0,
+      "g_to_q": 1e-06,
+      "geometry": {
+        "plate_z": 1.0,
+        "box_x": 1000.0,
+        "box_y": 1000.0,
+        "scale": 1.0
+      }
+    },
+    "certificate_problem": null,
+    "log": "  Percolating component: 30004 nodes, 60003 edges\n  Large network: 30002 free nodes \u2014 CG (rtol 1e-10) first...\n  Solve: cg\n"
+  },
+  {
+    "high": 11600000000.0,
+    "G": 1.45,
+    "exact_G": 1.45,
+    "rel_error": 0.0,
+    "certificate": {
+      "electrode_model": "dirichlet_exact",
+      "status": "computed",
+      "reason": null,
+      "method": "spsolve_fallback",
+      "n_free": 30002,
+      "n_fixed": 2,
+      "n_floating": 0,
+      "n_zero_resistance": null,
+      "I_bottom": 1.45,
+      "I_top": -1.4500000000000002,
+      "conservation_rel": 1.5313421029312503e-16,
+      "residual_rel": 0.0,
+      "conservation_rel_max": 1e-06,
+      "residual_rel_max": 1e-06,
+      "attempts": [
+        {
+          "method": "cg",
+          "outcome": "certificate_failed",
+          "krylov_info": 0,
+          "refine_passes": null,
+          "I_bottom": 1.8188455750443668,
+          "I_top": -1.8181818202593334,
+          "conservation_rel": 0.0003649319074365358,
+          "residual_rel": 9.974862197279925e-11,
+          "error": null
+        },
+        {
+          "method": "spsolve_fallback",
+          "outcome": "pass",
+          "krylov_info": null,
+          "refine_passes": null,
+          "I_bottom": 1.45,
+          "I_top": -1.4500000000000002,
+          "conservation_rel": 1.5313421029312503e-16,
+          "residual_rel": 0.0,
+          "error": null
+        }
+      ],
+      "branch": "full",
+      "delta_V": 1.0,
+      "g_to_q": 1e-06,
+      "geometry": {
+        "plate_z": 1.0,
+        "box_x": 1000.0,
+        "box_y": 1000.0,
+        "scale": 1.0
+      }
+    },
+    "certificate_problem": null,
+    "log": "  Percolating component: 30004 nodes, 60003 edges\n  Large network: 30002 free nodes \u2014 CG (rtol 1e-10) first...\n  \u26a0 cg: \uc99d\uc11c \uc2e4\ud328 \u2014 \ubcf4\uc874 \uc794\ucc28 0.000365 \u00b7 \ub0b4\ubd80 \uc794\ucc28 9.97e-11 (\ud5c8\uc6a9 1e-06 \u00b7 1e-06) \u00b7 I_bottom 1.8188455750443668 \u00b7 I_top -1.8181818202593334 \u2014 \ub2e4\uc74c \ub2e8\n  Solve: spsolve_fallback\n"
+  },
+  {
+    "high": 11650000000.0,
+    "G": 1.45,
+    "exact_G": 1.45,
+    "rel_error": 0.0,
+    "certificate": {
+      "electrode_model": "dirichlet_exact",
+      "status": "computed",
+      "reason": null,
+      "method": "cg",
+      "n_free": 30002,
+      "n_fixed": 2,
+      "n_floating": 0,
+      "n_zero_resistance": null,
+      "I_bottom": 1.45,
+      "I_top": -1.4499999999999995,
+      "conservation_rel": 3.062684205862501e-16,
+      "residual_rel": 3.436022354065855e-26,
+      "conservation_rel_max": 1e-06,
+      "residual_rel_max": 1e-06,
+      "attempts": [
+        {
+          "method": "cg",
+          "outcome": "pass",
+          "krylov_info": 0,
+          "refine_passes": null,
+          "I_bottom": 1.45,
+          "I_top": -1.4499999999999995,
+          "conservation_rel": 3.062684205862501e-16,
+          "residual_rel": 3.436022354065855e-26,
+          "error": null
+        }
+      ],
+      "branch": "full",
+      "delta_V": 1.0,
+      "g_to_q": 1e-06,
+      "geometry": {
+        "plate_z": 1.0,
+        "box_x": 1000.0,
+        "box_y": 1000.0,
+        "scale": 1.0
+      }
+    },
+    "certificate_problem": null,
+    "log": "  Percolating component: 30004 nodes, 60003 edges\n  Large network: 30002 free nodes \u2014 CG (rtol 1e-10) first...\n  Solve: cg\n"
+  },
+  {
+    "high": 11700000000.0,
+    "G": 1.45,
+    "exact_G": 1.45,
+    "rel_error": 0.0,
+    "certificate": {
+      "electrode_model": "dirichlet_exact",
+      "status": "computed",
+      "reason": null,
+      "method": "cg",
+      "n_free": 30002,
+      "n_fixed": 2,
+      "n_floating": 0,
+      "n_zero_resistance": null,
+      "I_bottom": 1.45,
+      "I_top": -1.4500000000000002,
+      "conservation_rel": 1.5313421029312503e-16,
+      "residual_rel": 1.8978171361113787e-26,
+      "conservation_rel_max": 1e-06,
+      "residual_rel_max": 1e-06,
+      "attempts": [
+        {
+          "method": "cg",
+          "outcome": "pass",
+          "krylov_info": 0,
+          "refine_passes": null,
+          "I_bottom": 1.45,
+          "I_top": -1.4500000000000002,
+          "conservation_rel": 1.5313421029312503e-16,
+          "residual_rel": 1.8978171361113787e-26,
+          "error": null
+        }
+      ],
+      "branch": "full",
+      "delta_V": 1.0,
+      "g_to_q": 1e-06,
+      "geometry": {
+        "plate_z": 1.0,
+        "box_x": 1000.0,
+        "box_y": 1000.0,
+        "scale": 1.0
+      }
+    },
+    "certificate_problem": null,
+    "log": "  Percolating component: 30004 nodes, 60003 edges\n  Large network: 30002 free nodes \u2014 CG (rtol 1e-10) first...\n  Solve: cg\n"
+  },
+  {
+    "high": 11800000000.0,
+    "G": 1.45,
+    "exact_G": 1.45,
+    "rel_error": 0.0,
+    "certificate": {
+      "electrode_model": "dirichlet_exact",
+      "status": "computed",
+      "reason": null,
+      "method": "spsolve_fallback",
+      "n_free": 30002,
+      "n_fixed": 2,
+      "n_floating": 0,
+      "n_zero_resistance": null,
+      "I_bottom": 1.45,
+      "I_top": -1.4500000000000002,
+      "conservation_rel": 1.5313421029312503e-16,
+      "residual_rel": 0.0,
+      "conservation_rel_max": 1e-06,
+      "residual_rel_max": 1e-06,
+      "attempts": [
+        {
+          "method": "cg",
+          "outcome": "certificate_failed",
+          "krylov_info": 0,
+          "refine_passes": null,
+          "I_bottom": 1.8188360383090276,
+          "I_top": -1.8181818202241213,
+          "conservation_rel": 0.0003596905224698072,
+          "residual_rel": 9.805796690173295e-11,
+          "error": null
+        },
+        {
+          "method": "spsolve_fallback",
+          "outcome": "pass",
+          "krylov_info": null,
+          "refine_passes": null,
+          "I_bottom": 1.45,
+          "I_top": -1.4500000000000002,
+          "conservation_rel": 1.5313421029312503e-16,
+          "residual_rel": 0.0,
+          "error": null
+        }
+      ],
+      "branch": "full",
+      "delta_V": 1.0,
+      "g_to_q": 1e-06,
+      "geometry": {
+        "plate_z": 1.0,
+        "box_x": 1000.0,
+        "box_y": 1000.0,
+        "scale": 1.0
+      }
+    },
+    "certificate_problem": null,
+    "log": "  Percolating component: 30004 nodes, 60003 edges\n  Large network: 30002 free nodes \u2014 CG (rtol 1e-10) first...\n  \u26a0 cg: \uc99d\uc11c \uc2e4\ud328 \u2014 \ubcf4\uc874 \uc794\ucc28 0.00036 \u00b7 \ub0b4\ubd80 \uc794\ucc28 9.81e-11 (\ud5c8\uc6a9 1e-06 \u00b7 1e-06) \u00b7 I_bottom 1.8188360383090276 \u00b7 I_top -1.8181818202241213 \u2014 \ub2e4\uc74c \ub2e8\n  Solve: spsolve_fallback\n"
+  },
+  {
+    "high": 12000000000.0,
+    "G": 1.45,
+    "exact_G": 1.45,
+    "rel_error": 0.0,
+    "certificate": {
+      "electrode_model": "dirichlet_exact",
+      "status": "computed",
+      "reason": null,
+      "method": "spsolve_fallback",
+      "n_free": 30002,
+      "n_fixed": 2,
+      "n_floating": 0,
+      "n_zero_resistance": null,
+      "I_bottom": 1.45,
+      "I_top": -1.4500000000000002,
+      "conservation_rel": 1.5313421029312503e-16,
+      "residual_rel": 0.0,
+      "conservation_rel_max": 1e-06,
+      "residual_rel_max": 1e-06,
+      "attempts": [
+        {
+          "method": "cg",
+          "outcome": "certificate_failed",
+          "krylov_info": 0,
+          "refine_passes": null,
+          "I_bottom": 1.636363809538581,
+          "I_top": -1.8181818191584023,
+          "conservation_rel": 0.09999990523718959,
+          "residual_rel": 9.760680632092631e-11,
+          "error": null
+        },
+        {
+          "method": "spsolve_fallback",
+          "outcome": "pass",
+          "krylov_info": null,
+          "refine_passes": null,
+          "I_bottom": 1.45,
+          "I_top": -1.4500000000000002,
+          "conservation_rel": 1.5313421029312503e-16,
+          "residual_rel": 0.0,
+          "error": null
+        }
+      ],
+      "branch": "full",
+      "delta_V": 1.0,
+      "g_to_q": 1e-06,
+      "geometry": {
+        "plate_z": 1.0,
+        "box_x": 1000.0,
+        "box_y": 1000.0,
+        "scale": 1.0
+      }
+    },
+    "certificate_problem": null,
+    "log": "  Percolating component: 30004 nodes, 60003 edges\n  Large network: 30002 free nodes \u2014 CG (rtol 1e-10) first...\n  \u26a0 cg: \uc99d\uc11c \uc2e4\ud328 \u2014 \ubcf4\uc874 \uc794\ucc28 0.1 \u00b7 \ub0b4\ubd80 \uc794\ucc28 9.76e-11 (\ud5c8\uc6a9 1e-06 \u00b7 1e-06) \u00b7 I_bottom 1.636363809538581 \u00b7 I_top -1.8181818191584023 \u2014 \ub2e4\uc74c \ub2e8\n  Solve: spsolve_fallback\n"
+  },
+  {
+    "high": 13000000000.0,
+    "G": 1.45,
+    "exact_G": 1.45,
+    "rel_error": 0.0,
+    "certificate": {
+      "electrode_model": "dirichlet_exact",
+      "status": "computed",
+      "reason": null,
+      "method": "spsolve_fallback",
+      "n_free": 30002,
+      "n_fixed": 2,
+      "n_floating": 0,
+      "n_zero_resistance": null,
+      "I_bottom": 1.45,
+      "I_top": -1.4500000000000002,
+      "conservation_rel": 1.5313421029312503e-16,
+      "residual_rel": 0.0,
+      "conservation_rel_max": 1e-06,
+      "residual_rel_max": 1e-06,
+      "attempts": [
+        {
+          "method": "cg",
+          "outcome": "certificate_failed",
+          "krylov_info": 0,
+          "refine_passes": null,
+          "I_bottom": 1.6363657169041665,
+          "I_top": -1.8181818190832806,
+          "conservation_rel": 0.09999885614893285,
+          "residual_rel": 9.009856767299997e-11,
+          "error": null
+        },
+        {
+          "method": "spsolve_fallback",
+          "outcome": "pass",
+          "krylov_info": null,
+          "refine_passes": null,
+          "I_bottom": 1.45,
+          "I_top": -1.4500000000000002,
+          "conservation_rel": 1.5313421029312503e-16,
+          "residual_rel": 0.0,
+          "error": null
+        }
+      ],
+      "branch": "full",
+      "delta_V": 1.0,
+      "g_to_q": 1e-06,
+      "geometry": {
+        "plate_z": 1.0,
+        "box_x": 1000.0,
+        "box_y": 1000.0,
+        "scale": 1.0
+      }
+    },
+    "certificate_problem": null,
+    "log": "  Percolating component: 30004 nodes, 60003 edges\n  Large network: 30002 free nodes \u2014 CG (rtol 1e-10) first...\n  \u26a0 cg: \uc99d\uc11c \uc2e4\ud328 \u2014 \ubcf4\uc874 \uc794\ucc28 0.1 \u00b7 \ub0b4\ubd80 \uc794\ucc28 9.01e-11 (\ud5c8\uc6a9 1e-06 \u00b7 1e-06) \u00b7 I_bottom 1.6363657169041665 \u00b7 I_top -1.8181818190832806 \u2014 \ub2e4\uc74c \ub2e8\n  Solve: spsolve_fallback\n"
+  },
+  {
+    "high": 14000000000.0,
+    "G": 1.45,
+    "exact_G": 1.45,
+    "rel_error": 0.0,
+    "certificate": {
+      "electrode_model": "dirichlet_exact",
+      "status": "computed",
+      "reason": null,
+      "method": "spsolve_fallback",
+      "n_free": 30002,
+      "n_fixed": 2,
+      "n_floating": 0,
+      "n_zero_resistance": null,
+      "I_bottom": 1.45,
+      "I_top": -1.4500000000000002,
+      "conservation_rel": 1.5313421029312503e-16,
+      "residual_rel": 0.0,
+      "conservation_rel_max": 1e-06,
+      "residual_rel_max": 1e-06,
+      "attempts": [
+        {
+          "method": "cg",
+          "outcome": "certificate_failed",
+          "krylov_info": 0,
+          "refine_passes": null,
+          "I_bottom": 1.6363638095700646,
+          "I_top": -1.8181818190188903,
+          "conservation_rel": 0.09999990515081525,
+          "residual_rel": 8.366297684306214e-11,
+          "error": null
+        },
+        {
+          "method": "spsolve_fallback",
+          "outcome": "pass",
+          "krylov_info": null,
+          "refine_passes": null,
+          "I_bottom": 1.45,
+          "I_top": -1.4500000000000002,
+          "conservation_rel": 1.5313421029312503e-16,
+          "residual_rel": 0.0,
+          "error": null
+        }
+      ],
+      "branch": "full",
+      "delta_V": 1.0,
+      "g_to_q": 1e-06,
+      "geometry": {
+        "plate_z": 1.0,
+        "box_x": 1000.0,
+        "box_y": 1000.0,
+        "scale": 1.0
+      }
+    },
+    "certificate_problem": null,
+    "log": "  Percolating component: 30004 nodes, 60003 edges\n  Large network: 30002 free nodes \u2014 CG (rtol 1e-10) first...\n  \u26a0 cg: \uc99d\uc11c \uc2e4\ud328 \u2014 \ubcf4\uc874 \uc794\ucc28 0.1 \u00b7 \ub0b4\ubd80 \uc794\ucc28 8.37e-11 (\ud5c8\uc6a9 1e-06 \u00b7 1e-06) \u00b7 I_bottom 1.6363638095700646 \u00b7 I_top -1.8181818190188903 \u2014 \ub2e4\uc74c \ub2e8\n  Solve: spsolve_fallback\n"
+  },
+  {
+    "high": 15000000000.0,
+    "G": 1.45,
+    "exact_G": 1.45,
+    "rel_error": 0.0,
+    "certificate": {
+      "electrode_model": "dirichlet_exact",
+      "status": "computed",
+      "reason": null,
+      "method": "spsolve_fallback",
+      "n_free": 30002,
+      "n_fixed": 2,
+      "n_floating": 0,
+      "n_zero_resistance": null,
+      "I_bottom": 1.45,
+      "I_top": -1.4500000000000002,
+      "conservation_rel": 1.5313421029312503e-16,
+      "residual_rel": 0.0,
+      "conservation_rel_max": 1e-06,
+      "residual_rel_max": 1e-06,
+      "attempts": [
+        {
+          "method": "cg",
+          "outcome": "certificate_failed",
+          "krylov_info": 0,
+          "refine_passes": null,
+          "I_bottom": 1.9999999998666667,
+          "I_top": -1.3333333333333333e-09,
+          "conservation_rel": 0.9999999993333333,
+          "residual_rel": 9.428090408906701e-11,
+          "error": null
+        },
+        {
+          "method": "spsolve_fallback",
+          "outcome": "pass",
+          "krylov_info": null,
+          "refine_passes": null,
+          "I_bottom": 1.45,
+          "I_top": -1.4500000000000002,
+          "conservation_rel": 1.5313421029312503e-16,
+          "residual_rel": 0.0,
+          "error": null
+        }
+      ],
+      "branch": "full",
+      "delta_V": 1.0,
+      "g_to_q": 1e-06,
+      "geometry": {
+        "plate_z": 1.0,
+        "box_x": 1000.0,
+        "box_y": 1000.0,
+        "scale": 1.0
+      }
+    },
+    "certificate_problem": null,
+    "log": "  Percolating component: 30004 nodes, 60003 edges\n  Large network: 30002 free nodes \u2014 CG (rtol 1e-10) first...\n  \u26a0 cg: \uc99d\uc11c \uc2e4\ud328 \u2014 \ubcf4\uc874 \uc794\ucc28 1 \u00b7 \ub0b4\ubd80 \uc794\ucc28 9.43e-11 (\ud5c8\uc6a9 1e-06 \u00b7 1e-06) \u00b7 I_bottom 1.9999999998666667 \u00b7 I_top -1.3333333333333333e-09 \u2014 \ub2e4\uc74c \ub2e8\n  Solve: spsolve_fallback\n"
+  },
+  {
+    "high": 100000000000.0,
+    "G": 1.45,
+    "exact_G": 1.45,
+    "rel_error": 0.0,
+    "certificate": {
+      "electrode_model": "dirichlet_exact",
+      "status": "computed",
+      "reason": null,
+      "method": "spsolve_fallback",
+      "n_free": 30002,
+      "n_fixed": 2,
+      "n_floating": 0,
+      "n_zero_resistance": null,
+      "I_bottom": 1.45,
+      "I_top": -1.4500000000000002,
+      "conservation_rel": 1.5313421029312503e-16,
+      "residual_rel": 0.0,
+      "conservation_rel_max": 1e-06,
+      "residual_rel_max": 1e-06,
+      "attempts": [
+        {
+          "method": "cg",
+          "outcome": "certificate_failed",
+          "krylov_info": 0,
+          "refine_passes": null,
+          "I_bottom": 1.99999999998,
+          "I_top": -2e-10,
+          "conservation_rel": 0.9999999999,
+          "residual_rel": 1.4142135622175316e-11,
+          "error": null
+        },
+        {
+          "method": "spsolve_fallback",
+          "outcome": "pass",
+          "krylov_info": null,
+          "refine_passes": null,
+          "I_bottom": 1.45,
+          "I_top": -1.4500000000000002,
+          "conservation_rel": 1.5313421029312503e-16,
+          "residual_rel": 0.0,
+          "error": null
+        }
+      ],
+      "branch": "full",
+      "delta_V": 1.0,
+      "g_to_q": 1e-06,
+      "geometry": {
+        "plate_z": 1.0,
+        "box_x": 1000.0,
+        "box_y": 1000.0,
+        "scale": 1.0
+      }
+    },
+    "certificate_problem": null,
+    "log": "  Percolating component: 30004 nodes, 60003 edges\n  Large network: 30002 free nodes \u2014 CG (rtol 1e-10) first...\n  \u26a0 cg: \uc99d\uc11c \uc2e4\ud328 \u2014 \ubcf4\uc874 \uc794\ucc28 1 \u00b7 \ub0b4\ubd80 \uc794\ucc28 1.41e-11 (\ud5c8\uc6a9 1e-06 \u00b7 1e-06) \u00b7 I_bottom 1.99999999998 \u00b7 I_top -2e-10 \u2014 \ub2e4\uc74c \ub2e8\n  Solve: spsolve_fallback\n"
+  },
+  {
+    "high": 100000000000000.0,
+    "G": 1.45,
+    "exact_G": 1.45,
+    "rel_error": 0.0,
+    "certificate": {
+      "electrode_model": "dirichlet_exact",
+      "status": "computed",
+      "reason": null,
+      "method": "spsolve_fallback",
+      "n_free": 30002,
+      "n_fixed": 2,
+      "n_floating": 0,
+      "n_zero_resistance": null,
+      "I_bottom": 1.45,
+      "I_top": -1.4500000000000002,
+      "conservation_rel": 1.5313421029312503e-16,
+      "residual_rel": 0.0,
+      "conservation_rel_max": 1e-06,
+      "residual_rel_max": 1e-06,
+      "attempts": [
+        {
+          "method": "cg",
+          "outcome": "certificate_failed",
+          "krylov_info": 0,
+          "refine_passes": null,
+          "I_bottom": 1.99999999999998,
+          "I_top": -2e-13,
+          "conservation_rel": 0.9999999999999,
+          "residual_rel": 1.4142135623729394e-14,
+          "error": null
+        },
+        {
+          "method": "spsolve_fallback",
+          "outcome": "pass",
+          "krylov_info": null,
+          "refine_passes": null,
+          "I_bottom": 1.45,
+          "I_top": -1.4500000000000002,
+          "conservation_rel": 1.5313421029312503e-16,
+          "residual_rel": 0.0,
+          "error": null
+        }
+      ],
+      "branch": "full",
+      "delta_V": 1.0,
+      "g_to_q": 1e-06,
+      "geometry": {
+        "plate_z": 1.0,
+        "box_x": 1000.0,
+        "box_y": 1000.0,
+        "scale": 1.0
+      }
+    },
+    "certificate_problem": null,
+    "log": "  Percolating component: 30004 nodes, 60003 edges\n  Large network: 30002 free nodes \u2014 CG (rtol 1e-10) first...\n  \u26a0 cg: \uc99d\uc11c \uc2e4\ud328 \u2014 \ubcf4\uc874 \uc794\ucc28 1 \u00b7 \ub0b4\ubd80 \uc794\ucc28 1.41e-14 (\ud5c8\uc6a9 1e-06 \u00b7 1e-06) \u00b7 I_bottom 1.99999999999998 \u00b7 I_top -2e-13 \u2014 \ub2e4\uc74c \ub2e8\n  Solve: spsolve_fallback\n"
+  }
+]

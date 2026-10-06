@@ -1,0 +1,34 @@
+  Percolating component: 64650 nodes, 154370 edges
+  Large network: 55912 free nodes — CG (rtol 1e-10) first...
+  Solve: cg
+  Percolating component: 64650 nodes, 154370 edges
+  Large network: 55912 free nodes — CG (rtol 1e-10) first...
+  Solve: cg
+  Percolating component: 64650 nodes, 154370 edges
+  Large network: 55912 free nodes — CG (rtol 1e-10) first...
+  Solve: cg
+  Percolating component: 64650 nodes, 154370 edges
+  Large network: 55912 free nodes — CG (rtol 1e-10) first...
+  Solve: cg
+  Percolating component: 64650 nodes, 154370 edges
+  Large network: 55912 free nodes — CG (rtol 1e-10) first...
+  Solve: cg
+  Percolating component: 64650 nodes, 154370 edges
+  ⚠ 협착-only: 관통 간선 1543 개가 R_c = 0 (ψ floor · clamp) — 빼면 단락이 개방이 된다 · 수축 전에는 값 없음 (zero_resistance_requires_contraction)
+  Percolating component: 64650 nodes, 154370 edges
+  Large network: 55912 free nodes — CG (rtol 1e-10) first...
+  Solve: cg
+  Percolating component: 64650 nodes, 154370 edges
+  Large network: 55912 free nodes — CG (rtol 1e-10) first...
+  Solve: cg
+  Percolating component: 64650 nodes, 154370 edges
+  ⚠ 협착-only: 관통 간선 312 개가 R_c = 0 (ψ floor · clamp) — 빼면 단락이 개방이 된다 · 수축 전에는 값 없음 (zero_resistance_requires_contraction)
+  Percolating component: 64650 nodes, 154370 edges
+  Large network: 55912 free nodes — CG (rtol 1e-10) first...
+  Solve: cg
+  Percolating component: 64650 nodes, 154370 edges
+  Large network: 55912 free nodes — CG (rtol 1e-10) first...
+  Solve: cg
+  Percolating component: 64650 nodes, 154370 edges
+  Large network: 55912 free nodes — CG (rtol 1e-10) first...
+  Solve: cg

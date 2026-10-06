@@ -21,9 +21,9 @@
   • 실패는 숨기지 않는다 — 워커가 죽어 케이스 기록이 없으면 merge 가 status 'failed' 기록 (사유 = 워커 rc · 신호 · 로그 경로) 을 만든다.
     done · partial 이 아닌 케이스가 하나라도 있으면 rc 1 · 구조 이상 (다른 케이스 기록 · 세대 섞임 · 스키마) 이면 rc 2 (merged 를 쓰지 않는다).
   • 발사 봉인 (RGLR3-01 · Codex 10-05 4차 재검증 §3 — 같은 HEAD 의 dirty retry 가 발사와 다른 코드로 돌고도 merge 성공이었다)
-      봉인 = manifest `code_hashes` (CODE_FILES 19 파일 sha256) · 지문 `code_fp` = 정렬한 해시 지도의 sha256.  재는 곳 = **워커가 실제로 도는
+      봉인 = manifest `code_hashes` (CODE_FILES sha256 — 10-05 판 19 · ★ 10-07 판 29 = 전이 의존 ⓖ) · 지문 `code_fp` = 정렬한 해시 지도의 sha256.  재는 곳 = **워커가 실제로 도는
       체크아웃** (manifest `repo_root`) — 실행기 파일 위치가 아니다 (새 실행기를 다른 체크아웃에서 돌려도 봉인은 워커 쪽에서 잰다).
-    ⓐ retry 시작 관문 — 워커 체크아웃의 HEAD · 19 파일 해시 · dirty 를 발사 봉인과 대조한다.  같은 HEAD 여도 코드가 다르거나 · 해시가 빠졌거나
+    ⓐ retry 시작 관문 — 워커 체크아웃의 HEAD · 봉인 파일 (CODE_FILES) 해시 · dirty · 기대 망 세대 (ⓕ) 를 발사 봉인과 대조한다.  같은 HEAD 여도 코드가 다르거나 · 해시가 빠졌거나
        (파일 없음 · manifest 에 없음) · 추적 파일이 바뀐 트리면 rc 2 (아무것도 띄우지 않는다 · 아무 파일도 안 쓴다).  넘김 = `--allow-mixed-generation`
        (코드 · HEAD) · `--allow-dirty` (트리만 — 코드 해시는 봉인과 같아야 한다) · 둘 다 manifest retries[] · runs/ · 시도 기록에 남는다.
     ⓑ 시도 증거 — `worker.json` attempts[].seal (attempt_seal/v1) = 띄우기 직전 · 거둔 직후의 코드 지문 (fp_start · fp_end) · 바뀐 파일 ·
@@ -42,6 +42,15 @@
        다른지 (code_changed_since_launch) 는 정보다 — 끝난 뒤 트리만 바뀐 배치를 기각하지 않는다 (판정은 기록된 시도 증거로만).
     ⓓ retry 는 done · partial 이어도 UNSEALED 인 케이스를 `--force` 로 다시 돌린다 (입증 못 한 케이스만 — 봉인된 케이스는 그대로).
     ⓔ `audit --root R` = 읽기 전용 판정표 (케이스마다 판정 · 근거 · merged 기록 = 케이스 폴더 기록인가) · rc 0 = 기록 전부 봉인 안 · 1 = 아님.
+  • ★ 10-07 기대 망 세대 · 전이 의존 (Codex 세대 2 재검증 `docs/reviews/codex_review_gen2_network_reverify_20261006.md` §2 · §7-3 · G2RR-01)
+    ⓕ manifest `expected_network_generation` (+ 같은 값을 seal 안에) = 워커 체크아웃의 봉인 코드에서 **유도**한 세대 (`derive_generation` — 생산자
+       `_run_all_networks` 를 망 CLI 기본값으로 21 구 사슬에 · 같은 체크아웃의 세대 계약) — 세대 2 · 문제 0 이 아니면 발사하지 않는다.  인계 생성기
+       `lhs_design_dataset.py --tau-batch-manifest <ROOT>/manifest.json` 이 이 값과 케이스마다 레코드 세대를 교차 대조한다 (없으면 거부).
+       retry = 값 ≠ 봉인 사본 · 워커 체크아웃 코드로 다시 유도한 세대 ≠ 값이면 rc 2 (넘김 불가) · audit = 같은 대조 + done · partial 케이스마다 레코드 세대
+       = 선언 (아니면 rc 1).  옛 manifest (선언 없음 — 194 v1.2) 는 그대로 읽는다 (세대 대조 없이 · 표지만).
+    ⓖ CODE_FILES = 워커의 망 정지 경로가 import 하는 리포 모듈 전부 (정적 닫힘 `code_dependency_closure` ⊆ CODE_FILES 를 발사 사전 점검이 확인 —
+       새 import 가 생기면 발사하지 않는다) · 인계 단계 코드 (생성기 · 다시 읽기 도구) 는 `handover_code_hashes` 로 기록 (봉인 판정 밖 · 후속 명령이 대조).
+    ⓗ manifest `input_digest` = 계획 큐 ID · 코호트 · 원자료 sha256 (수확 JSON raw — 워커 같은 프레임 관문의 대조값) 지문 · audit 가 다시 계산해 대조.
 
 설정 (전부 `manifest.json` 에 남는다)
 ───────────────────────────────────────────────────────────────────────────────
@@ -135,17 +144,66 @@ TIME_PER_KCONTACT_S = 0.7               # 73.4 s / 106.6 k (컨테이너 · 단�
 DISK_PER_CONTACT_B = 700                # 67 MB / 106.6 k ≈ 630 B (atoms.csv · contacts.csv · *_analyzed.csv 가 대부분)
 
 #: 해시로 남기는 코드 — σ 를 바꿀 수 있는 모듈 (`seal_s3_prerun.NUMERIC_MODULES`) + 망 경로 · 배치 · 소비자.
+#: ★ 10-07 (Codex 세대 2 재검증 §7-3 "전체 전이 코드 의존성 … 러너가 재검사") — 10-05 판 19 에 워커의 망 정지 경로가 실제로 import 하는 모듈 10 을 더했다
+#:   (`code_dependency_closure` 의 정적 닫힘 = 모듈 수준 import + 경로 위 지연 import): lens_geometry (plastic_coverage 가 모듈 수준에서 import —
+#:   physics g2 면적의 원판 floor `intersection_disc_area` · σ 에 닿는다) · lhs_perc_extract (lhs_descriptor_harvest) · press_units (app · 목표 압력 단위) ·
+#:   grade_engine (predictor_engine) · app 이 모듈 수준에서 import 하는 웹앱 모듈 여섯.  발사 사전 점검이 닫힘 ⊆ CODE_FILES 를 확인한다 (새 import 가 생기면
+#:   목록을 먼저 고친다).  ⚠ 옛 ROOT (19 파일 봉인) 는 이 실행기로 retry 하면 봉인이 달라 거부된다 — 그 ROOT 의 커밋 실행기로 (감사는 그대로 읽는다).
 CODE_FILES = (
     'scripts/network_conductivity.py', 'scripts/plastic_coverage.py', 'scripts/audit_constriction_deleted.py',
     'scripts/extract_se_network_diagnostics.py', 'scripts/dem_analysis_core.py', 'scripts/analyze_contacts.py',
     'scripts/analyze_contacts_bimodal.py', 'scripts/coverage_physics_vs_hertzian.py', 'scripts/parse_liggghts.py',
     'scripts/se_material.py', 'scripts/metrics_json.py', 'scripts/tau_flux.py', 'scripts/lhs_webapp_batch.py',
     'scripts/lhs_harvest_batch.py', 'scripts/lhs_descriptor_harvest.py', 'webapp/app.py', 'webapp/pipeline_service.py',
-    'scripts/export_master_csv.py', 'scripts/type_map_resolve.py')
+    'scripts/export_master_csv.py', 'scripts/type_map_resolve.py',
+    'scripts/lens_geometry.py', 'scripts/lhs_perc_extract.py', 'scripts/press_units.py', 'scripts/grade_engine.py',
+    'webapp/ledger_view.py', 'webapp/mpm_lab_register.py', 'webapp/predictor_engine.py', 'webapp/security.py',
+    'webapp/storage_sync.py', 'webapp/structure_predictor.py')
 LHS27_FILE = 'docs/figures/physics_regime/coverage_hertz_vs_physics_summary.csv'
+#: ★ 10-07 §7-3 전이 의존 — 닫힘의 시작점 (워커 · 단계 하위 프로세스 스크립트) 과 경로 위 지연 import (함수 안 import — 정적 닫힘이 모듈 수준만 보므로 적는다):
+#:   lhs_webapp_batch.run_batch → app · type_map_resolve · export_master_csv / pipeline_service → tau_flux (`_scripts_import` — 정지 계약 · 기록 검사) /
+#:   tau_flux → network_conductivity (`_nc_mod` — 증서 판정).  하위 프로세스 = app.run_pipeline (stop_after='network') 이 띄우는 parse → 접촉 분석
+#:   (bimodal · standard) → 피복 → 망 CLI.
+DEP_ENTRY = ('scripts/lhs_webapp_batch.py', 'scripts/parse_liggghts.py', 'scripts/analyze_contacts.py', 'scripts/analyze_contacts_bimodal.py',
+             'scripts/coverage_physics_vs_hertzian.py', 'scripts/network_conductivity.py')
+DEP_LAZY = (('scripts/lhs_webapp_batch.py', 'app'), ('scripts/lhs_webapp_batch.py', 'type_map_resolve'),
+            ('scripts/lhs_webapp_batch.py', 'export_master_csv'), ('webapp/pipeline_service.py', 'tau_flux'),
+            ('scripts/tau_flux.py', 'network_conductivity'))
+#: 인계 단계 코드 (워커가 돌리지 않는다 — 봉인 판정 밖) — 발사 때 지문을 기록해 후속 명령이 "인계는 발사 때 생성기 · 다시 읽기 도구로" 를 대조한다.
+HANDOVER_FILES = ('scripts/lhs_design_dataset.py', 'scripts/g2_network_reread.py')
+
+#: ★ 10-07 G2RR-01 · §7-3 — 발사 봉인의 기대 망 세대.  키 = 인계 생성기 `lhs_design_dataset.TAU_MANIFEST_GENERATION_KEY` (`tau_manifest_expected_generation` ·
+#:   CLI `--tau-batch-manifest` 가 읽는다 · 없으면 거부) · 같은 값을 manifest.seal 안에도 둔다 (retry · audit 가 둘을 대조).  값은 손으로 적지 않는다 —
+#:   워커 체크아웃의 봉인 코드로 유도한다 (`derive_generation`: 생산자 `network_conductivity._run_all_networks` 를 망 CLI 와 같은 기본값 (hertzian · physics) 으로
+#:   21 구 사슬에 한 번 → 같은 체크아웃의 `tau_flux.network_generation_contract`).  현행 게시는 세대 2 만 받는다 (pipeline_service.network_record_verdict ·
+#:   정지 계약 ⑨ legacy_ok False) ⇒ 유도 세대가 그 계약의 g2 (문제 0) 가 아니면 발사하지 않는다.
+GEN_KEY = 'expected_network_generation'
+GEN_PROBE_METHOD = ('chain21 — network_conductivity._run_all_networks (망 CLI 기본값 · hertzian + physics · 21 구 SE 사슬 · 판 20 · 상자 10 · 척도 1) → '
+                    'tau_flux.network_generation_contract (같은 워커 체크아웃 · python -I -B)')
+GEN_PROBE = r'''
+import contextlib, io, json, os, sys
+root = sys.argv[1]
+sys.path[:0] = [os.path.join(root, 'scripts'), os.path.join(root, 'webapp')]
+sys.dont_write_bytecode = True
+import network_conductivity as nc
+import tau_flux as tf
+A = {i: dict(type=1, x=0.0, y=0.0, z=float(i), radius=1.0) for i in range(21)}
+C = [dict(id1=i, id2=i + 1, contact_area=0.01, delta=0.05) for i in range(20)]
+with contextlib.redirect_stdout(io.StringIO()):
+    dual = {cm: nc._run_all_networks(A, C, [1], [], {1: 'SE'}, 1.0, 20.0, 10.0, 10.0, None, contact_mode=cm) for cm in ('hertzian', 'physics')}
+con = tf.network_generation_contract(dual)
+if len(sys.argv) > 2 and sys.argv[2]:
+    with open(sys.argv[2], 'w', encoding='utf-8') as fh:
+        json.dump(dual, fh)
+print('GEN_PROBE ' + json.dumps(dict(generation=con.get('generation'), g2_name=tf.NET_GEN_G2,
+                                     problems=[list(p) for p in con.get('problems') or []],
+                                     modes=[m for m in tf.MODES if tf.mode_record(dual, m) is not None],
+                                     nc_file=os.path.abspath(nc.__file__), tf_file=os.path.abspath(tf.__file__))))
+'''
 
 #: 발사 봉인 (RGLR3-01) — 스키마 · 판정 이름.  판정 규칙은 모듈 docstring '발사 봉인' ⓒ (case_seal 이 그대로 구현한다).
-LAUNCH_SEAL_SCHEMA = 'launch_seal/v1'       # manifest.seal
+#:   v2 (10-07) = seal 안에 기대 망 세대 (GEN_KEY) · CODE_FILES 29 (전이 의존).  v1 manifest (194 v1.2) 도 그대로 읽는다 (선언 없음 = 옛 manifest).
+LAUNCH_SEAL_SCHEMA = 'launch_seal/v2'       # manifest.seal
 ATTEMPT_SEAL_SCHEMA = 'attempt_seal/v1'     # worker.json attempts[].seal
 SEAL_OK = ('SEALED', 'SEALED_DIRTY_ALLOWED', 'SEALED_LEGACY')
 
@@ -193,6 +251,154 @@ def sha256_file(p: Path):
 def code_hashes(root=None):
     r = Path(root) if root is not None else ROOT
     return {rel: sha256_file(r / rel) for rel in CODE_FILES}
+
+
+def code_dependency_closure(root=None) -> dict:
+    """★ 10-07 §7-3 — 워커의 망 정지 경로가 import 하는 리포 모듈의 정적 닫힘 → dict(files (리포 상대 · 정렬), errors, entry, lazy).
+    시작점 DEP_ENTRY · 모듈 수준 import (if · try · with · class 본문 포함 · 함수 본문 제외) + 경로 위 지연 import DEP_LAZY ·
+    이름은 <root>/scripts · <root>/webapp 의 .py 로 푼다 (표준 · 외부 패키지는 밖).  못 읽는 시작점 · 구문 오류 = errors (사전 점검 중단 사유)."""
+    import ast
+    r = Path(root) if root is not None else ROOT
+    search = (r / 'scripts', r / 'webapp')
+
+    def resolve(name):
+        top = name.split('.')[0]
+        for d in search:
+            if (d / f'{top}.py').is_file():
+                return d / f'{top}.py'
+        return None
+
+    def toplevel(p):
+        names = set()
+
+        def visit(stmts):
+            for s in stmts:
+                if isinstance(s, ast.Import):
+                    names.update(a.name for a in s.names)
+                elif isinstance(s, ast.ImportFrom) and s.module and s.level == 0:
+                    names.add(s.module)
+                elif isinstance(s, (ast.If, ast.Try, ast.With, ast.For, ast.While)):
+                    for fld in ('body', 'orelse', 'finalbody'):
+                        visit(getattr(s, fld, None) or [])
+                    for h in getattr(s, 'handlers', None) or []:
+                        visit(h.body)
+                elif isinstance(s, ast.ClassDef):
+                    visit([b for b in s.body if not isinstance(b, (ast.FunctionDef, ast.AsyncFunctionDef))])
+        visit(ast.parse(p.read_text(encoding='utf-8')).body)
+        return names
+    lazy = {}
+    for imp, mod in DEP_LAZY:
+        lazy.setdefault(imp, set()).add(mod)
+    seen, errors, todo = set(), [], [r / e for e in DEP_ENTRY]
+    while todo:
+        p = todo.pop()
+        rel = p.relative_to(r).as_posix()
+        if rel in seen:
+            continue
+        try:
+            names = toplevel(p) | lazy.get(rel, set())
+        except (OSError, SyntaxError, ValueError, UnicodeDecodeError) as e:
+            errors.append(f'{rel}: {type(e).__name__}: {e}')
+            continue
+        seen.add(rel)
+        for n in sorted(names):
+            q = resolve(n)
+            if q is not None and q.relative_to(r).as_posix() not in seen:
+                todo.append(q)
+    return dict(files=sorted(seen), errors=errors, entry=list(DEP_ENTRY), lazy=[list(x) for x in DEP_LAZY])
+
+
+def derive_generation(code_root, python=None, dual_out=None) -> dict:
+    """★ 10-07 G2RR-01 · §7-3 — 워커 체크아웃 code_root 의 봉인 코드가 내는 망 세대를 유도한다 (GEN_PROBE · 하위 프로세스 `python -I -B` — 환경의
+    PYTHONPATH · 사용자 site 가 다른 사본을 끌어오지 않게) → dict(generation, g2_name, problems, modes, error, method, python, code_root).
+    dual_out = 탐침이 낸 dual 을 쓸 곳 (선택 · selftest 의 가짜 워커가 쓴다)."""
+    py = str(python or sys.executable)
+    base = dict(generation=None, g2_name=None, problems=[], modes=[], method=GEN_PROBE_METHOD, python=py, code_root=str(code_root))
+    try:
+        r = subprocess.run([py, '-I', '-B', '-c', GEN_PROBE, str(code_root), str(dual_out or '')], capture_output=True, text=True, timeout=600,
+                           cwd=str(code_root), env=dict(os.environ, **THREAD_ENV, PYTHONDONTWRITEBYTECODE='1'))
+    except Exception as e:                                  # noqa: BLE001 — 유도를 못 하면 세대를 모른다 (fail-closed)
+        return dict(base, error=f'{type(e).__name__}: {e}')
+    line = next((ln for ln in reversed(r.stdout.splitlines()) if ln.startswith('GEN_PROBE ')), None)
+    if r.returncode != 0 or line is None:
+        return dict(base, error=f'탐침 rc {r.returncode} · {((r.stderr or "") + (r.stdout or ""))[-500:]}')
+    try:
+        d = json.loads(line[len('GEN_PROBE '):])
+    except ValueError as e:
+        return dict(base, error=f'탐침 출력 해석 실패 ({e})')
+    return dict(base, error='', **{k: d.get(k) for k in ('generation', 'g2_name', 'problems', 'modes', 'nc_file', 'tf_file')})
+
+
+def generation_probe_problem(gp: dict) -> str:
+    """유도 결과 → '' (발사 가능: 세대 = 그 계약의 g2 · 문제 0) | 사유."""
+    if gp.get('error'):
+        return f'세대 유도 실패 — {gp["error"]}'
+    if gp.get('problems'):
+        return f'유도 탐침의 세대 계약 문제 {gp["problems"][:3]}'
+    if not gp.get('generation') or gp.get('generation') != gp.get('g2_name'):
+        return (f'봉인 코드가 내는 세대 {gp.get("generation")!r} ≠ 세대 2 ({gp.get("g2_name")!r}) — 현행 게시는 세대 2 만 받는다 '
+                '(network_record_verdict · 정지 계약 ⑨) · 이 코드로는 게시될 케이스가 없다')
+    return ''
+
+
+def generation_gate(man, root=None) -> tuple:
+    """★ 10-07 G2RR-01 — retry 시작 관문의 기대 망 세대 대조 → (막는 사유 목록, 표지).  넘김 (--allow-*) 으로 못 넘긴다.
+    · manifest 와 seal 둘 다 키가 없다 = 옛 manifest (이 필드 이전 실행기 · 194 v1.2) → 막지 않는다 (표지만 · 옛 판과 같은 코드 봉인 판정)
+    · 값 ≠ 봉인 사본 (한쪽 없음 포함) → 막는다 (발사 뒤 manifest 가 바뀌었다)
+    · 워커 체크아웃 코드로 다시 유도한 세대 ≠ 봉인 기대 세대 → 막는다"""
+    m = man if isinstance(man, dict) else {}
+    s = m.get('seal') if isinstance(m.get('seal'), dict) else {}
+    if GEN_KEY not in m and GEN_KEY not in s:
+        return [], ('옛 manifest — 기대 망 세대 선언 없음 (이 필드 이전 실행기 · 194 v1.2 런처 manifest) · 세대 대조 없이 코드 봉인 판정만 · '
+                    '그 ROOT 의 인계는 --tau-batch-manifest 로 대조할 수 없다')
+    top, sealed = m.get(GEN_KEY), s.get(GEN_KEY)
+    if top != sealed:
+        return [f'manifest {GEN_KEY} {top!r} ≠ 봉인 사본 seal.{GEN_KEY} {sealed!r} — 발사 뒤 manifest 의 기대 망 세대가 바뀌었다'], ''
+    gp = derive_generation(root if root is not None else code_root(m), m.get('python'))
+    if gp.get('error') or gp.get('problems') or gp.get('generation') != top:
+        return [f'봉인 기대 망 세대 {top!r} ≠ 워커 체크아웃 ({root if root is not None else code_root(m)}) 코드가 지금 내는 세대 '
+                f'{gp.get("generation")!r} ({gp.get("error") or gp.get("problems") or "다른 세대"})'], ''
+    return [], ''
+
+
+def case_record_generation(root: Path, case: str):
+    """케이스 결과 폴더의 망 레코드 (dual) 세대 — `tau_flux.network_generation_contract` (인계 · 게시와 같은 함수).  dual 없음 · 못 읽음 = 'missing'."""
+    import tau_flux as _tf
+    dual = read_json(case_dir(Path(root), case) / 'work' / 'results' / case / 'network_conductivity_dual.json')
+    if not isinstance(dual, dict):
+        return 'missing'
+    return _tf.network_generation_contract(dual).get('generation') or 'none'
+
+
+def plan_input_digest(plan) -> dict:
+    """★ 10-07 §7-3 "194 ID · cohort · 원 dump 의 해시" — 계획 큐의 (케이스, 코호트) 와 원자료 sha256 (수확 JSON raw.{atom,contact,mesh,deck}.sha256 —
+    워커 (`lhs_webapp_batch` 같은 프레임 관문) 가 실제 파일과 대조하는 값) 의 지문.  줄 = 'case\\tcohort[\\tatom\\tcontact\\tmesh\\tdeck]' · (코호트, 케이스) 순 ·
+    줄마다 끝 개행 · sha256.  → dict(n, ids_sha256, raw_sha256_table_sha256, missing_raw_sha, cohort_tsv_sha256)."""
+    hdirs = {c['name']: Path(c['harvest_dir']) for c in (plan or {}).get('cohorts') or []}
+    ids, rows, missing = [], [], []
+    for e in sorted((plan or {}).get('queue') or [], key=lambda x: (x['cohort'], x['case'])):
+        raw = (read_json(hdirs.get(e['cohort'], Path('/nonexistent')) / f"{e['case']}.json") or {}).get('raw') or {}
+        shas = [str((raw.get(k) or {}).get('sha256') or '') for k in ('atom', 'contact', 'mesh', 'deck')]
+        if '' in shas:
+            missing.append(e['case'])
+        ids.append(f"{e['case']}\t{e['cohort']}")
+        rows.append('\t'.join([e['case'], e['cohort'], *shas]))
+
+    def _h(lines):
+        return hashlib.sha256(('\n'.join(lines) + '\n').encode('utf-8')).hexdigest()
+    return dict(n=len(ids), ids_sha256=_h(ids), raw_sha256_table_sha256=_h(rows), missing_raw_sha=missing,
+                cohort_tsv_sha256={c['name']: sha256_file(Path(c['cohort'])) for c in (plan or {}).get('cohorts') or []})
+
+
+def manifest_generation_problems(man) -> list:
+    """manifest 수준 기대 세대 정합 — 값 = 봉인 사본 (둘 다 없으면 옛 manifest = 문제 없음)."""
+    m = man if isinstance(man, dict) else {}
+    s = m.get('seal') if isinstance(m.get('seal'), dict) else {}
+    if GEN_KEY not in m and GEN_KEY not in s:
+        return []
+    if m.get(GEN_KEY) != s.get(GEN_KEY):
+        return [f'manifest {GEN_KEY} {m.get(GEN_KEY)!r} ≠ 봉인 사본 seal.{GEN_KEY} {s.get(GEN_KEY)!r}']
+    return []
 
 
 def code_fp(hashes):
@@ -275,7 +481,7 @@ def seal_context(man, *, dirty_allowed=False, mixed_allowed=False) -> dict:
 
 
 def seal_gate(man) -> dict:
-    """retry 시작 관문 — 워커 체크아웃의 HEAD · 19 파일 해시 · dirty 를 발사 봉인과 대조.  mixed (코드 · HEAD · 빠진 해시) · dirty 사유 목록."""
+    """retry 시작 관문 — 워커 체크아웃의 HEAD · 봉인 파일 해시 · dirty 를 발사 봉인과 대조.  mixed (코드 · HEAD · 빠진 해시) · dirty · 기대 망 세대 (넘김 불가) 사유 목록."""
     seal = seal_context(man)
     g = _git_at(seal['root'])
     h = _hashes_at(seal['root'])
@@ -288,7 +494,10 @@ def seal_gate(man) -> dict:
     if (g.get('sha') or '') != seal['sha']:
         mixed.append(f'HEAD {str(g.get("sha") or "?")[:9]} ≠ 발사 {seal["sha"][:9] or "?"} (워커 체크아웃 {seal["root"]})')
     dirty = [f'추적 파일이 바뀐 트리 (워커 체크아웃 {seal["root"]}) {list(g.get("porcelain") or [])[:5]}'] if g.get('dirty') else []
-    return dict(seal=seal, git=g, hashes=h, fp=code_fp(h), changed=changed, mixed=mixed, dirty=dirty)
+    #  ★ 10-07 G2RR-01 — 기대 망 세대 (manifest = 봉인 사본 = 지금 워커 체크아웃 코드가 내는 세대) · 넘김 불가
+    gen_bad, gen_note = generation_gate(man, seal['root'])
+    return dict(seal=seal, git=g, hashes=h, fp=code_fp(h), changed=changed, mixed=mixed, dirty=dirty,
+                generation_bad=gen_bad, generation_note=gen_note)
 
 
 def _evidence_start(seal, cdir: Path, case: str) -> dict:
@@ -646,6 +855,20 @@ def preflight(args, plan, root: Path, budget_mb) -> dict:
     _miss = sorted(k for k, v in code_hashes().items() if v is None)
     if _miss:
         stop.append(f'봉인 대상 코드 파일이 없다: {_miss}')
+    #  ★ 10-07 §7-3 — 워커가 import 하는 리포 모듈 (전이 닫힘) 이 전부 봉인 대상인가 (새 import 가 생겼는데 목록이 그대로면 봉인이 새는 것)
+    clo = code_dependency_closure()
+    _outside = [f for f in clo['files'] if f not in CODE_FILES]
+    if _outside or clo['errors']:
+        stop.append(f'봉인 밖 의존 모듈 {_outside} · 닫힘 해석 오류 {clo["errors"][:3]} — CODE_FILES 를 먼저 고칠 것 (Codex 세대 2 재검증 §7-3 전이 의존)')
+    #  ★ 10-07 G2RR-01 — 기대 망 세대 = 이 체크아웃 (워커 체크아웃) 의 봉인 코드에서 유도 (손으로 적지 않는다)
+    gp = derive_generation(ROOT, args.python)
+    _gwhy = generation_probe_problem(gp)
+    if _gwhy:
+        stop.append(f'기대 망 세대 — {_gwhy}')
+    #  ★ 10-07 §7-3 — 입력 지문 (ID · 코호트 · 원자료 sha256) · 원자료 sha 가 없는 수확 JSON 은 워커가 대조할 수 없다
+    idg = plan_input_digest(plan)
+    if idg['missing_raw_sha']:
+        stop.append(f'수확 JSON 에 원자료 sha256 (raw.atom · contact · mesh · deck) 이 없는 케이스 {idg["missing_raw_sha"][:5]} — 입력 지문을 봉인할 수 없다')
     cpu = cpu_info()
     mi = meminfo()
     lanes = args.lanes
@@ -697,7 +920,8 @@ def preflight(args, plan, root: Path, budget_mb) -> dict:
                 lanes=lanes, mem_budget_mb=budget_mb, first_lanes_est_mem_GB=round(first_mb / 1024, 2),
                 est_mem_largest_mb=max(e['est_mem_mb'] for e in q), disk_free_GB=gib(free), disk_need_GB=gib(disk_need),
                 est_serial_h=round(tot_s / 3600, 2), est_makespan_h=round(max(tot_s / eff, max(e['est_time_s'] for e in q)) / 3600, 2),
-                git=git, raw_problems=probs[:50], n_raw_problems=len(probs), warn=warn, stop=stop)
+                git=git, raw_problems=probs[:50], n_raw_problems=len(probs), warn=warn, stop=stop, generation=gp, dependency_closure=clo,
+                input_digest=idg)
 
 
 def print_preflight(pf, plan, args, root):
@@ -715,13 +939,23 @@ def print_preflight(pf, plan, args, root):
     p(f'  디스크 여유 {pf["disk_free_GB"]} GB · 결과 추정 {pf["disk_need_GB"]} GB')
     p(f'  시간 추정 (컨테이너 real_14 기준 · 거칠다): 직렬 {pf["est_serial_h"]} h · 이 레인 수 {pf["est_makespan_h"]} h — 케이스별 실측 초는 progress.tsv')
     g = pf['git']
-    p(f'  코드 {g["short"]} ({g["branch"]}) dirty={g["dirty"]}' + (f' {g["porcelain"][:3]}' if g['dirty'] else ''))
+    p(f'  코드 {g["short"]} ({g["branch"]}) dirty={g["dirty"]}' + (f' {g["porcelain"][:3]}' if g['dirty'] else '')
+      + f' · 봉인 지문 code_fp {code_fp(code_hashes())} (CODE_FILES {len(CODE_FILES)})')
     p(f'  network lock = {args.network_lock}  (per-case = 케이스마다 TMPDIR — 망 단계도 동시에 · shared = 웹앱처럼 하나씩)')
     for cs in plan['cohorts']:
         p(f'  코호트 {cs["name"]}: 수확 {cs["n_harvest"]} 건 (선택 {cs["n_selected"]}) · {cs["harvest_dir"]} · 코호트 {cs["cohort"]}')
     p(f'  원자료 · 메시 문제 {pf["n_raw_problems"]} 건')
-    p('  ⚠ Codex RGLR 3차 재검증 (10-05): 194 생산 실행 · 인계 = HOLD (RGLR2-01·02·03 수정 → 저자 승인 재봉인 뒤).  '
-      '이 실행기는 그 판정을 대신하지 않는다 — 어느 코드에서 돌았는지는 manifest.json 이 증명한다.')
+    gp, clo = pf.get('generation') or {}, pf.get('dependency_closure') or {}
+    p(f'  기대 망 세대 ({GEN_KEY} — 이 체크아웃의 봉인 코드에서 유도): {gp.get("generation")!r} · 세대 계약 문제 {len(gp.get("problems") or [])} · '
+      f'모드 {gp.get("modes")}' + (f' · ⛔ {gp.get("error")[:200]}' if gp.get('error') else ''))
+    _out = [f for f in clo.get('files') or [] if f not in CODE_FILES]
+    p(f'  전이 의존 닫힘 {len(clo.get("files") or [])} 모듈 ⊆ 봉인 CODE_FILES {len(CODE_FILES)} — ' + ('✓' if not _out and not clo.get('errors')
+                                                                                           else f'✗ 밖 {_out} · 오류 {clo.get("errors")}'))
+    idg = pf.get('input_digest') or {}
+    p(f'  입력 지문 (ID · 코호트 · 원자료 sha256 = 수확 JSON raw) — 케이스 {idg.get("n")} · ids_sha256 {idg.get("ids_sha256")} · '
+      f'raw_sha256_table_sha256 {idg.get("raw_sha256_table_sha256")} · 원자료 sha 결손 {len(idg.get("missing_raw_sha") or [])}')
+    p('  ⚠ Codex 세대 2 재검증 (10-06 밤) = HOLD — 새 194 생산 · v1.3 인계는 Codex GO 뒤 (등록 docs/reviews/lhs_network_batch_registration_20261007_g2.md).  '
+      '이 실행기는 그 판정을 대신하지 않는다 — 어느 코드 · 세대로 돌았는지는 manifest.json 이 증명한다.')
     for w in pf['warn']:
         p(f'  ⚠ {w}')
     for s in pf['stop']:
@@ -996,7 +1230,8 @@ def merge(root: Path, *, allow_mixed=False, out=print) -> int:
         shutil.rmtree(tmp_root)
     #  지금 트리 (워커 체크아웃) 가 봉인과 다른지 = 정보 — 판정은 시도별 증거로 (끝난 뒤 트리만 바뀐 배치를 기각하지 않는다 · Codex 4차 §3)
     report = dict(schema=SCHEMA + '#merge', merged_at=now_iso(), git_sha=git_sha, cohorts={},
-                  code_changed_since_launch=seal_diff(_hashes_at(seal['root']), seal['hashes']))
+                  code_changed_since_launch=seal_diff(_hashes_at(seal['root']), seal['hashes']),
+                  **{GEN_KEY: man.get(GEN_KEY)})        # ★ 10-07 — 정보 (세대 대조 = audit · 인계 --tau-batch-manifest)
     runs_by_no = _runs_by_no(root)
     #  실행 중 코드 변화 (run 의 h0 ≠ h1) = 정보.  옛 형식 시도는 case_seal 이 run_001 의 이 기록으로 판정하고, 새 형식 시도는 시도별 지문으로
     #   가른다 (그 실행 안에서 어느 케이스가 바뀐 코드로 돌았는지) — 옛 판은 이것 하나로 배치 전체를 영원히 거부했다 (다시 돌려도 안 풀렸다).
@@ -1167,15 +1402,27 @@ def print_followups(root: Path, man: dict, out=print):
     d = time.strftime('%Y%m%d')
     names = [c['name'] for c in man['plan']['cohorts']]
     by = {c['name']: c for c in man['plan']['cohorts']}
+    #  ★ 10-07 G2RR-01 — manifest 가 기대 망 세대를 선언했으면 인계 생성기가 그 값과 케이스마다 교차 대조한다 (--tau-batch-manifest) · 세대 2 = 인계 v1.3
+    declared = man.get(GEN_KEY)
+    ver = 'v13' if declared == 'g2' else 'v12'
+    tbm = f' --tau-batch-manifest {q(str(root / "manifest.json"))}' if declared else ''
     out('━━ 다음 명령 (리포 루트에서 · 그대로 복사) ━━')
     out(f'cd {q(str(ROOT))}')
     tf = 'scripts/tau_flux.py'
     same = (code_hashes() or {}).get(tf) == (man.get('code_hashes') or {}).get(tf)
     out(f'# 인계 생성기 · τ 관문은 이 체크아웃의 것을 쓴다 — {tf} 지문 = 발사 봉인 '
         + ('✓ 같다' if same else '✗ 다르다 (τ 관문이 봉인 밖 코드 — 발사 체크아웃에서 돌릴 것)'))
+    if man.get('handover_code_hashes'):
+        _hd = [rel for rel, h in (man.get('handover_code_hashes') or {}).items() if sha256_file(ROOT / rel) != h]
+        out('# 인계 생성기 · 다시 읽기 도구 지문 = 발사 기록 (handover_code_hashes) ' + ('✓ 같다' if not _hd else f'✗ 다르다 {_hd} — 발사 커밋의 도구로 돌릴 것'))
     out(f'mkdir -p {q(str(root / "tau"))} {q(str(root / "handover"))} {q(str(root / "pressure"))}')
-    out('# ⓪ 봉인 감사 (RGLR3-01) — 케이스마다 어느 코드로 계산됐나 (시도별 지문 · 옛 형식은 첫 run 규칙).  UNSEALED 가 있으면 인계하지 않는다 (retry)')
-    out(f'python3 scripts/run_network_194_parallel.py audit --root {q(str(root))} --tsv {q(str(root / "seal_audit.tsv"))}')
+    out('# ⓪ 봉인 감사 (RGLR3-01 · 기대 망 세대 G2RR-01) — 케이스마다 어느 코드 · 세대로 계산됐나 (시도별 지문 · 옛 형식은 첫 run 규칙).  '
+        'UNSEALED · 세대 문제가 있으면 인계하지 않는다 (retry)')
+    out(f'python3 scripts/run_network_194_parallel.py audit --root {q(str(root))} --tsv {q(str(root / "seal_audit.tsv"))} '
+        f'--json {q(str(root / "seal_audit.json"))}')
+    if declared:
+        out('# ⓪b 게시 다시 읽기 (Codex 세대 2 재검증 §7 끝 — 전체 상태 · ID · 증서 · 도장 · 열 역할 · 인계 출처 관문 · 읽기 전용) — rc 0 이 아니면 인계하지 않는다')
+        out(f'python3 scripts/g2_network_reread.py --launcher-root {q(str(root))} --json {q(str(root / "reread.json"))}')
     out('# ① τ 관문 진단 표 — 모든 케이스 폴더 (실패 케이스도 NOT_COMPUTED 행).  진단 전용: 인계표에 손으로 잇지 않는다 (인계 τ = ② 의 --tau-results 경로)')
     for n in names:
         out(f'python3 scripts/tau_flux.py {q(str(root / "merged" / n / "results"))}/* '
@@ -1187,21 +1434,23 @@ def print_followups(root: Path, man: dict, out=print):
         c = by[n]
         out(f'python3 scripts/lhs_pressure_record.py --cohort {q(c["cohort"])} --harvest-dir {q(c["harvest_dir"])}{rmap} '
             f'--out {q(str(root / "pressure" / f"{n}_pressure_record.tsv"))}')
-    out(f'# ② 인계 v1.2 — 생성기 한 번 (망 배치 묶음 {HANDOVER_GROUPS} · RGL-03 · RGLR3-03).  τ 열 (f · f_gap · tau2 · tau · 상태 · 사유 · 메타) 은')
-    out('#    --tau-results 의 출처 관문 P0–P3 (배치 status.json run id · 입력 digest · metrics_flat 세대) 를 지난 값만 표 끝에 싣는다 ·')
+    out(f'# ② 인계 {ver[0]}{ver[1]}.{ver[2]} — 생성기 한 번 (망 배치 묶음 {HANDOVER_GROUPS} · RGL-03 · RGLR3-03).  τ 열 (f · f_gap · tau2 · tau · 상태 · 사유 · 메타) 은')
+    out('#    --tau-results 의 출처 관문 P0–P4 (배치 status.json run id · 입력 digest · metrics_flat 세대 · 정지 계약 재검사 · 도장 ↔ 레코드) 를 지난 값만 표 끝에 싣는다 ·'
+        + (' --tau-batch-manifest = manifest 기대 망 세대와 케이스마다 교차 대조 (G2RR-01) ·' if declared else ''))
     out('#    열 사전 <표>_columns.tsv · τ 출처 부록 <표>_tau_provenance.tsv · 제외 노트 <표>_excluded.tsv (LW ④b = frame_unverified 명시 제외).')
     for n in names:
         c = by[n]
         extra = (f' --design {q(c["design"])}' if c.get('design') else '')
-        out(f'python3 scripts/lhs_design_dataset.py --export-handover {q(str(root / "handover" / f"{n}_handover_v12_{d}.csv"))}'
+        out(f'python3 scripts/lhs_design_dataset.py --export-handover {q(str(root / "handover" / f"{n}_handover_{ver}_{d}.csv"))}'
             f'{extra} --harvest {q(c["harvest_dir"])} --union {q(c.get("union") or "")} '
-            f'--webapp {q(str(root / "merged" / n))} --webapp-groups {HANDOVER_GROUPS} --tau-results {q(str(root / "merged" / n / "results"))} '
-            f'--pressure-record {q(str(root / "pressure" / f"{n}_pressure_record.tsv"))}')
-    hand = ' '.join(f'handover/{n}_handover_v12_{d}{suf}' for n in names
+            f'--webapp {q(str(root / "merged" / n))} --webapp-groups {HANDOVER_GROUPS} --tau-results {q(str(root / "merged" / n / "results"))}'
+            f'{tbm} --pressure-record {q(str(root / "pressure" / f"{n}_pressure_record.tsv"))}')
+    hand = ' '.join(f'handover/{n}_handover_{ver}_{d}{suf}' for n in names
                     for suf in ('.csv', '_columns.tsv', '_tau_provenance.tsv', '_excluded.tsv'))
     out('# ③ 보낼 묶음 — 인계표 · 열 사전 · τ 출처 부록 · 제외 노트 · 봉인 감사 · manifest · 실행 · 시도 기록 (케이스 결과 원본 · 작업 폴더는 빼고)')
     out(f'(cd {q(str(root))} && tar czf ~/net194_{sha}_{d}.tar.gz manifest.json runs progress.tsv seal_audit.tsv merged/merge_report.json '
-        f'merged/*/status.json merged/*/metrics_flat.csv merged/*/parallel_cases.tsv tau pressure {hand} cases/*/worker.json cases/*/log.txt)')
+        + ('seal_audit.json reread.json ' if declared else '')
+        + f'merged/*/status.json merged/*/metrics_flat.csv merged/*/parallel_cases.tsv tau pressure {hand} cases/*/worker.json cases/*/log.txt)')
     out('# ③b (선택 · 받는 쪽 독립 재검증용) τ 원천 canonical 파일 — 출처 부록의 sha256 을 다시 잴 수 있게 (dual · full_metrics · 망 도장)')
     out(f'(cd {q(str(root))} && tar czf ~/net194_{sha}_{d}_tau_sources.tar.gz cases/*/work/results/*/network_conductivity_dual.json '
         'cases/*/work/results/*/full_metrics.json cases/*/work/results/*/network_provenance.json)')
@@ -1257,6 +1506,7 @@ def cmd_run(args) -> int:
     root.mkdir(parents=True, exist_ok=True)
     with root_lock(root):
         hashes = code_hashes()
+        gen = pf['generation']['generation']                     # ★ 10-07 G2RR-01 — 봉인 코드에서 유도 (사전 점검이 g2 · 문제 0 을 확인했다)
         man = dict(schema=SCHEMA, created=now_iso(), argv=sys.argv, repo_root=str(ROOT), python=str(args.python),
                    python_versions=python_versions(args.python), worker_script=str(worker), worker_override=(worker != BATCH),
                    stop_after=STOP, lanes=args.lanes, network_lock=args.network_lock, thread_env=THREAD_ENV,
@@ -1264,9 +1514,12 @@ def cmd_run(args) -> int:
                    mem_model=dict(base_mb=MEM_BASE_MB, per_kcontact_mb=MEM_PER_KCONTACT_MB, time_per_kcontact_s=TIME_PER_KCONTACT_S),
                    root_from=args.root_from, root_to=args.root_to, allow_dirty=args.allow_dirty,
                    allow_missing_raw=args.allow_missing_raw, pyc_purged=n_pyc, git=pf['git'], code_hashes=hashes,
+                   **{GEN_KEY: gen}, generation_probe=pf['generation'], code_dependency_closure=pf['dependency_closure']['files'],
+                   handover_code_hashes={rel: sha256_file(ROOT / rel) for rel in HANDOVER_FILES}, input_digest=pf['input_digest'],
                    seal=dict(schema=LAUNCH_SEAL_SCHEMA, code_fp=code_fp(hashes), code_root=str(ROOT), files=len(hashes),
-                             dirty=bool(pf['git'].get('dirty')), allow_dirty=bool(args.allow_dirty)),
-                   preflight={k: v for k, v in pf.items() if k != 'git'}, plan=plan, retries=[])
+                             dirty=bool(pf['git'].get('dirty')), allow_dirty=bool(args.allow_dirty), **{GEN_KEY: gen}),
+                   preflight={k: v for k, v in pf.items() if k not in ('git', 'generation', 'dependency_closure', 'input_digest')}, plan=plan,
+                   retries=[])
         write_json(root / 'manifest.json', man)
         rc = _run_and_merge(root, man, plan['queue'], args.lanes, budget_mb, args.min_free_gb, args.no_merge, run_label='run',
                             allow_dirty=args.allow_dirty)
@@ -1342,12 +1595,14 @@ def cmd_retry(args) -> int:
     _guard_posix()
     root = Path(args.root).expanduser().resolve()
     man = _load_root(root)
-    #  RGLR3-01 ⓐ — 시작 관문: 워커 체크아웃의 HEAD · 19 파일 해시 · dirty 를 발사 봉인과 대조 (같은 HEAD 여도 코드가 다르면 거부)
+    #  RGLR3-01 ⓐ — 시작 관문: 워커 체크아웃의 HEAD · 봉인 파일 해시 · dirty · 기대 망 세대 를 발사 봉인과 대조 (같은 HEAD 여도 코드가 다르면 거부)
     gate = seal_gate(man)
     g = gate['git']
-    blocked = bool((gate['mixed'] and not args.allow_mixed_generation) or (gate['dirty'] and not args.allow_dirty))
+    blocked = bool(gate['generation_bad'] or (gate['mixed'] and not args.allow_mixed_generation) or (gate['dirty'] and not args.allow_dirty))
     if blocked:
-        print('⛔ retry 거부 — 발사 봉인과 대조 (RGLR3-01) · 아무것도 띄우지 않았다 · 아무 파일도 쓰지 않았다', file=sys.stderr)
+        print('⛔ retry 거부 — 발사 봉인과 대조 (RGLR3-01 · 기대 망 세대 G2RR-01) · 아무것도 띄우지 않았다 · 아무 파일도 쓰지 않았다', file=sys.stderr)
+        for p in gate['generation_bad']:
+            print(f'   기대 망 세대: {p}  (넘김 없음 — 다른 세대로 계산한 기록은 인계 (--tau-batch-manifest) 가 거부한다)', file=sys.stderr)
         for p in gate['mixed']:
             print(f'   세대: {p}' + ('' if args.allow_mixed_generation else '  (진짜 의도면 --allow-mixed-generation · 기록된다 · merge 는 봉인 밖으로 표시)'),
                   file=sys.stderr)
@@ -1357,6 +1612,10 @@ def cmd_retry(args) -> int:
         return 2
     for p in gate['mixed'] + gate['dirty']:
         print(f'⚠ 넘김 (기록된다): {p}')
+    if gate.get('generation_note'):
+        print(f'  ⓘ {gate["generation_note"]}')
+    else:
+        print(f'  기대 망 세대 {man.get(GEN_KEY)!r} = 봉인 사본 = 워커 체크아웃 코드가 지금 내는 세대 (다시 유도)')
     #  봉인 밖 done · partial 을 --force 로 다시 — 지금 코드가 봉인과 같을 때만 (아니면 다시 돌려도 또 봉인 밖이다)
     todo, forced, skip = retry_todo(root, man, args.case, force_unsealed=not gate['mixed'])
     for c, why in skip:
@@ -1379,7 +1638,8 @@ def cmd_retry(args) -> int:
             git_sha=g.get('sha'), dirty=bool(g.get('dirty')), porcelain=list(g.get('porcelain') or [])[:10], code_root=str(gate['seal']['root']),
             code_fp=gate['fp'], seal_fp=gate['seal']['fp'], code_changed_vs_seal=gate['changed'],
             allow_dirty=bool(args.allow_dirty), allow_mixed_generation=bool(args.allow_mixed_generation),
-            seal_overrides=gate['mixed'] + gate['dirty']))
+            seal_overrides=gate['mixed'] + gate['dirty'], expected_network_generation=man.get(GEN_KEY),
+            generation_note=gate.get('generation_note') or ''))
         write_json(root / 'manifest.json', man)
         rc = _run_and_merge(root, man, todo, args.lanes, budget_mb, args.min_free_gb, args.no_merge, run_label='retry',
                             allow_mixed=args.allow_mixed_generation, allow_dirty=args.allow_dirty)
@@ -1387,12 +1647,15 @@ def cmd_retry(args) -> int:
 
 
 def seal_audit(root: Path, man: dict) -> list:
-    """케이스마다 case_seal 판정 + merged 기록이 케이스 폴더 기록과 같은가 (읽기 전용)."""
+    """케이스마다 case_seal 판정 + merged 기록이 케이스 폴더 기록과 같은가 (읽기 전용).
+    ★ 10-07 G2RR-01 — manifest 가 기대 망 세대를 선언했으면 done · partial 케이스마다 레코드 세대 (`case_record_generation`) 를 싣는다 (옛 manifest = None)."""
     runs_by_no = _runs_by_no(root)
+    declared = GEN_KEY in man or GEN_KEY in (man.get('seal') or {})
     merged = {}
     out = []
     for e in sorted(man['plan']['queue'], key=lambda x: (x['cohort'], x['case'])):
         sv = dict(case_seal(root, man, e['case'], runs_by_no), cohort=e['cohort'])
+        sv['generation'] = case_record_generation(root, e['case']) if declared and sv.get('record_status') in KEEP else None
         if e['cohort'] not in merged:
             merged[e['cohort']] = read_json(root / 'merged' / e['cohort'] / 'status.json')
         ms = merged[e['cohort']]
@@ -1428,15 +1691,37 @@ def cmd_audit(args) -> int:
               f'{r.get("attempt") if r.get("attempt") is not None else "-"}({r.get("run") if r.get("run") is not None else "-"})\t'
               f'{r["merged"]}\t{r["why"][:220]}')
     print(f'  판정 {dict(cnt)} · merged {dict(mcnt)}')
-    bad = cnt.get('UNSEALED', 0) + mcnt.get('differs', 0) + mcnt.get('missing', 0)
-    print('  ✓ 기록 전부 발사 봉인 코드에서 나왔다' + (' · merged = 케이스 폴더' if mcnt.get('same') else '') if not bad else
-          f'  ✗ 봉인 밖 {cnt.get("UNSEALED", 0)} 건 · merged 와 다름 {mcnt.get("differs", 0) + mcnt.get("missing", 0)} 건 — '
-          '봉인 밖은 retry (발사 코드 그대로 둔 워커 체크아웃) 가 --force 로 다시 · merged 다름은 merge 를 다시')
+    #  ★ 10-07 G2RR-01 — 기대 망 세대: manifest = 봉인 사본 · 케이스 레코드 세대 = 선언 (옛 manifest = 선언 없음 · 대조 안 함)
+    declared = GEN_KEY in man or GEN_KEY in (man.get('seal') or {})
+    gen_problems = manifest_generation_problems(man)
+    if declared:
+        gen_problems += [f'{r["case"]}: 레코드 세대 {r["generation"]!r} ≠ manifest 기대 세대 {man.get(GEN_KEY)!r}'
+                         for r in rows if r.get('generation') is not None and r['generation'] != man.get(GEN_KEY)]
+    gcnt = collections.Counter(r.get('generation') for r in rows if r.get('generation') is not None)
+    print(f'  기대 망 세대 ({GEN_KEY}) {man.get(GEN_KEY)!r} · 봉인 사본 {(man.get("seal") or {}).get(GEN_KEY)!r} · 케이스 레코드 세대 {dict(gcnt)}'
+          if declared else '  기대 망 세대 — 선언 없음 (옛 manifest · 이 필드 이전 실행기) — 세대 대조 안 함')
+    for p_ in gen_problems[:20]:
+        print(f'  ✗ 세대: {p_}')
+    #  ★ 10-07 §7-3 — 입력 지문 (ID · 코호트 · 원자료 sha256) 을 지금 수확 JSON 으로 다시 계산해 대조 (옛 manifest = 기록 없음 · 대조 안 함)
+    input_problems = []
+    if isinstance(man.get('input_digest'), dict):
+        now_d = plan_input_digest(man.get('plan') or {})
+        input_problems = [f'입력 지문 {k}: 발사 {man["input_digest"].get(k)!r} ≠ 지금 {now_d.get(k)!r}'
+                          for k in ('n', 'ids_sha256', 'raw_sha256_table_sha256', 'cohort_tsv_sha256') if man['input_digest'].get(k) != now_d.get(k)]
+        print('  입력 지문 (ID · 코호트 · 원자료 sha256) = 발사 기록 ' + ('✓' if not input_problems else '✗'))
+        for p_ in input_problems:
+            print(f'  ✗ {p_}')
+    bad = cnt.get('UNSEALED', 0) + mcnt.get('differs', 0) + mcnt.get('missing', 0) + len(gen_problems) + len(input_problems)
+    print('  ✓ 기록 전부 발사 봉인 코드에서 나왔다' + (' · merged = 케이스 폴더' if mcnt.get('same') else '')
+          + (' · 레코드 세대 = 기대 세대' if declared else '') if not bad else
+          f'  ✗ 봉인 밖 {cnt.get("UNSEALED", 0)} 건 · merged 와 다름 {mcnt.get("differs", 0) + mcnt.get("missing", 0)} 건 · 세대 문제 {len(gen_problems)} 건 — '
+          '봉인 밖은 retry (발사 코드 그대로 둔 워커 체크아웃) 가 --force 로 다시 · merged 다름은 merge 를 다시 · 세대 문제는 그 기록을 인계하지 않는다')
     if cnt.get('NO_RECORD'):
         print(f'  ⚠ 기록 없음 {cnt["NO_RECORD"]} 건 — 계산되지 않았다 (merge 는 failed 로 싣는다 · retry 대상)')
     payload = dict(schema=LAUNCH_SEAL_SCHEMA + '#audit', root=str(root), audited_at=now_iso(), launch_sha=seal['sha'], seal_fp=seal['fp'],
                    code_root=str(seal['root']), code_root_changed_now=seal_diff(now, seal['hashes']), verdicts=dict(cnt),
-                   merged=dict(mcnt), cases=rows)
+                   merged=dict(mcnt), cases=rows, **{GEN_KEY: man.get(GEN_KEY)}, generation_declared=declared,
+                   generation_problems=gen_problems, input_problems=input_problems)
     if args.json:
         write_json(Path(args.json).expanduser(), payload)
     if args.tsv:
@@ -1515,7 +1800,7 @@ def _parse(argv=None):
     common_run(t)
     t.add_argument('--case', action='append', default=[], help='이 케이스만')
     t.add_argument('--allow-mixed-generation', action='store_true',
-                   help='워커 체크아웃의 코드 (HEAD · 봉인 19 파일 해시 · 빠진 해시) 가 발사 때와 달라도 돈다 (manifest retries[] · 실행 · 시도 기록에 남고 '
+                   help='워커 체크아웃의 코드 (HEAD · 봉인 파일 해시 · 빠진 해시) 가 발사 때와 달라도 돈다 (manifest retries[] · 실행 · 시도 기록에 남고 '
                         'merge 는 그 기록을 봉인 밖으로 판정한다)')
     t.add_argument('--allow-dirty', action='store_true',
                    help='추적 파일이 바뀐 트리에서도 돈다 — 코드 해시는 발사 봉인과 같아야 한다 (기록된다 · 그 시도 판정 SEALED_DIRTY_ALLOWED)')
@@ -1561,7 +1846,7 @@ def main(argv=None) -> int:
 #: 가짜 워커 — **진짜 `lhs_webapp_batch.run_batch`** (스테이징 · sha · 프레임 관문 · status · metrics writer) 에 가짜 웹앱 의존만 넣는다.
 #:   케이스마다 동작은 NP194_FAKE_PLAN (JSON) 이 정한다: ok · fail · crash (SIGKILL) · hang · sleep · alloc_mb · child_alloc_mb · extra · none_key.
 FAKE_WORKER = r'''
-import json, os, signal, subprocess, sys, time
+import json, os, shutil, signal, subprocess, sys, time
 sys.dont_write_bytecode = True
 sys.path.insert(0, os.path.join(os.environ['NP194_REPO'], 'scripts'))
 import lhs_webapp_batch as LWB
@@ -1609,8 +1894,16 @@ class FakeA:
         if b.get('none_key'):
             fm['nullable_key'] = None
         json.dump(fm, open(os.path.join(rd, 'full_metrics.json'), 'w'))
-        json.dump({'hertzian': {'sigma_full': 0.004}, 'physics': {'sigma_full': 0.004}},
-                  open(os.path.join(rd, 'network_conductivity_dual.json'), 'w'))
+        #  ★ 10-07 — 망 레코드 모양: NP194_FAKE_DUAL = 실 생산자가 낸 세대 2 dual (selftest 가 봉인 코드의 세대 유도 탐침으로 만든다 · 감사의 케이스별 세대) ·
+        #    legacy_dual = 세대 2 표지 없는 옛 모양 (세대 대조 반례) · 둘 다 없으면 옛 가짜 (σ 만)
+        if b.get('legacy_dual'):
+            json.dump({'hertzian': {'resistance_model': 'maxwell', 'sigma_full': 0.004}, 'physics': {'resistance_model': 'mikic', 'sigma_full': 0.004}},
+                      open(os.path.join(rd, 'network_conductivity_dual.json'), 'w'))
+        elif os.environ.get('NP194_FAKE_DUAL'):
+            shutil.copyfile(os.environ['NP194_FAKE_DUAL'], os.path.join(rd, 'network_conductivity_dual.json'))
+        else:
+            json.dump({'hertzian': {'sigma_full': 0.004}, 'physics': {'sigma_full': 0.004}},
+                      open(os.path.join(rd, 'network_conductivity_dual.json'), 'w'))
         del keep
         st = 'failed' if b.get('mode') == 'fail' else 'done'
         return {'status': st, 'success': st != 'failed',
@@ -1641,9 +1934,17 @@ def _selftest() -> int:
             fails.append(name)
 
     tmp = Path(tempfile.mkdtemp(prefix='np194_')).resolve()
-    env_keep = {k: os.environ.get(k) for k in ('NP194_REPO', 'NP194_FAKE_PLAN', 'TMPDIR', 'NP194_FAKE_DIRTY')}
+    env_keep = {k: os.environ.get(k) for k in ('NP194_REPO', 'NP194_FAKE_PLAN', 'TMPDIR', 'NP194_FAKE_DIRTY', 'NP194_FAKE_DUAL')}
     os.environ.pop('NP194_FAKE_DIRTY', None)
+    os.environ.pop('NP194_FAKE_DUAL', None)
     try:
+        # ⓪ (★ 10-07) 봉인 코드의 세대 유도 탐침이 남긴 세대 2 dual — 가짜 워커가 케이스 결과에 쓴다 (감사의 케이스별 세대 대조 · ㉗–㉘).
+        #    옛 코드 = 탐침 없음 → 옛 가짜 dual (σ 만) — 그때 ㉗ 이후는 ✗ 로 남는다
+        _dg0 = globals().get('derive_generation')
+        _tpl_dual = tmp / 'g2_probe_dual.json'
+        _probe0 = _dg0(ROOT, sys.executable, dual_out=_tpl_dual) if _dg0 else {}
+        if _tpl_dual.is_file():
+            os.environ['NP194_FAKE_DUAL'] = str(_tpl_dual)
         # ── 합성 코호트 두 개 (lhs · lhsx) — 진짜 배치 관문을 통과하는 원자료 · 수확 JSON (lhs_webapp_batch selftest 와 같은 모양) ──
         _CHD = 'ITEM: ENTRIES c_cpl[7] c_cpl[8] c_cpl[9] c_cpl[22] c_cpl[23]\n'
         C_OK = 'ITEM: TIMESTEP\n100\nITEM: NUMBER OF ENTRIES\n2\n' + _CHD + '1 2 0 0.1 0.01\n2 3 1 0.1 0.02\n'
@@ -2288,6 +2589,165 @@ def _selftest() -> int:
                 not ok_['mixed'] and not ok_['dirty'] and bad_['changed'] == [_NCF] and bool(bad_['mixed']) and str(alt) in seen
                 and None not in seen, repr((ok_['mixed'], bad_['changed'], seen)))
         _scenario('㉖ 워커 체크아웃 시나리오', _s26)
+
+        # ═══ ㉗–㉛ ★ 10-07 Codex 세대 2 재검증 §7-3 · G2RR-01 (manifest 기대 세대 · 전이 의존 봉인) — 반례 먼저 (옛 코드에서 ✗) ═════════════════
+        #   인계 생성기 (`lhs_design_dataset.load_tau_results(expected_generation=)` · CLI `--tau-batch-manifest`) 는 manifest 의 expected_network_generation 을
+        #   읽고 없으면 거부한다 — 이 실행기가 그 값을 쓰지 않았다 (소비자 쪽 hook 만 있었다 · e1dab4265).  값은 손으로 적지 않고 워커 체크아웃의 봉인 코드로
+        #   유도한다 (생산자 _run_all_networks 를 CLI 기본값으로 작은 사슬에 한 번 → 같은 체크아웃의 세대 계약).
+        GK = _G.get('GEN_KEY', 'expected_network_generation')
+
+        def _s27():
+            set_plan({})
+            os.environ['NP194_FAKE_DIRTY'] = '0'
+            with _patch(git_info=_git_fake()):
+                rc_d, o_d = _main_rc(args_for(tmp / 'dry_gen', '--cohorts', 'lhsx', '--dry-run', allow_dirty=False))
+                rc_, _o = _main_rc(args_for(tmp / 'run_gen', '--cohorts', 'lhsx', *L20, allow_dirty=False))
+            man_ = read_json(tmp / 'run_gen' / 'manifest.json') or {}
+            pr_ = man_.get('generation_probe') or {}
+            import lhs_design_dataset as LDD3
+            try:
+                consumer = LDD3.tau_manifest_expected_generation(man_)
+            except Exception as e:                          # noqa: BLE001
+                consumer = f'{type(e).__name__}'
+            chk('㉗ ★ G2RR-01 · §7-3 — 발사 manifest 에 기대 망 세대 (expected_network_generation) = 봉인 코드에서 유도한 g2 · 봉인 사본 seal 안 같은 값 · '
+                '유도 탐침 기록 (세대 계약 문제 0) · 인계 생성기 (tau_manifest_expected_generation) 가 그 값을 읽는다',
+                rc_ == 0 and man_.get(GK) == 'g2' and (man_.get('seal') or {}).get(GK) == 'g2' and pr_.get('generation') == 'g2'
+                and pr_.get('problems') == [] and consumer == 'g2',
+                repr((rc_, man_.get(GK), (man_.get('seal') or {}).get(GK), pr_, consumer)))
+            chk('㉗ --dry-run 도 유도한 기대 망 세대를 찍는다 (아무것도 안 쓴다)',
+                rc_d == 0 and '기대 망 세대' in o_d and 'g2' in o_d and not (tmp / 'dry_gen').exists(), o_d[-400:])
+            rc_a, aj_, _o = _audit_json(tmp / 'run_gen')
+            gens_ = [r_.get('generation') for r_ in aj_.get('cases') or []]
+            chk('㉗ audit — 선언 g2 · 케이스마다 레코드 세대 = g2 (세 케이스) · 세대 문제 0 · rc 0',
+                rc_a == 0 and aj_.get(GK) == 'g2' and not aj_.get('generation_problems') and gens_ == ['g2'] * 3,
+                repr((rc_a, aj_.get(GK), aj_.get('generation_problems'), gens_)))
+        _scenario('㉗ 기대 세대 발사 시나리오', _s27)
+
+        def _s28():
+            src_ = tmp / 'run_gen'
+            bad = []
+            variants = {'값만 바꿈 (inferred_legacy)': lambda m: m.update({GK: 'inferred_legacy'}),
+                        '값 · 봉인 사본 둘 다 바꿈': lambda m: (m.update({GK: 'inferred_legacy'}), m.setdefault('seal', {}).update({GK: 'inferred_legacy'})),
+                        '봉인 사본 삭제': lambda m: m.setdefault('seal', {}).pop(GK, None),
+                        '값 삭제 (봉인 사본만 남음)': lambda m: m.pop(GK, None)}
+            for i_, (nm_, ed_) in enumerate(variants.items()):
+                r_ = tmp / f'gen_var{i_}'
+                shutil.copytree(src_, r_, symlinks=True)
+                m_ = read_json(r_ / 'manifest.json') or {}
+                ed_(m_)
+                write_json(r_ / 'manifest.json', m_)
+                snap_ = _snap(r_)
+                with _patch(git_info=_git_fake()):
+                    rc_v, o_v = _main_rc(['retry', '--root', str(r_), *L20, '--allow-mixed-generation', '--allow-dirty'])
+                if not (rc_v == 2 and _snap(r_) == snap_ and '기대 망 세대' in o_v):
+                    bad.append((nm_, rc_v, o_v[-200:]))
+            chk('㉘ ★ retry — manifest 기대 세대 변조 (값만 · 값과 봉인 사본 · 봉인 사본 삭제 · 값 삭제) → rc 2 · 아무것도 안 돈다 · '
+                '--allow-mixed-generation · --allow-dirty 로도 못 넘긴다', not bad, repr(bad))
+            r_ = tmp / 'gen_code_other'
+            shutil.copytree(src_, r_, symlinks=True)
+            snap_ = _snap(r_)
+            with _patch(git_info=_git_fake(), derive_generation=lambda *a, **k: dict(generation='inferred_legacy', g2_name='g2', problems=[], error='')):
+                rc_c, o_c = _main_rc(['retry', '--root', str(r_), *L20, '--allow-mixed-generation', '--allow-dirty'])
+            chk('㉘ ★ retry — 워커 체크아웃 코드가 지금 내는 세대 (다시 유도) ≠ 봉인 기대 세대 → rc 2 · 아무것도 안 돈다 (넘김 불가)',
+                rc_c == 2 and _snap(r_) == snap_ and '기대 망 세대' in o_c, o_c[-300:])
+            r_ = tmp / 'gen_ok'
+            shutil.copytree(src_, r_, symlinks=True)
+            with _patch(git_info=_git_fake()):
+                rc_p, o_p = _main_rc(['retry', '--root', str(r_), *L20])
+            chk('㉘ 양성 — manifest · 코드 그대로면 retry 가 세대 관문을 지난다 (할 일 없음 → merge rc 0)', rc_p == 0, o_p[-300:])
+            rc_a, aj_, _o = _audit_json(tmp / 'gen_var0')
+            chk('㉘ audit — manifest 기대 세대 ≠ 봉인 사본 → rc 1 · generation_problems', rc_a == 1 and bool(aj_.get('generation_problems')),
+                repr((rc_a, aj_.get('generation_problems'))))
+            set_plan({'lhsx_901': dict(legacy_dual=True)})
+            with _patch(git_info=_git_fake()):
+                _main_rc(args_for(tmp / 'run_gen_legacy_case', '--cohorts', 'lhsx', *L20, allow_dirty=False))
+                rc_l, aj_l, _o = _audit_json(tmp / 'run_gen_legacy_case')
+            set_plan({})
+            gens_ = {r_['case']: r_.get('generation') for r_ in aj_l.get('cases') or []}
+            chk('㉘ ★ audit — 한 케이스의 레코드 세대 (세대 2 표지 없는 옛 모양 dual) ≠ manifest 기대 세대 → rc 1 · 그 케이스만 다른 세대 표지',
+                rc_l == 1 and gens_.get('lhsx_901') not in ('g2', None) and gens_.get('lhsx_900') == 'g2' and gens_.get('lhsx_902') == 'g2',
+                repr((rc_l, gens_)))
+        _scenario('㉘ 기대 세대 변조 · 불일치 시나리오', _s28)
+
+        def _s29():
+            sg_ = _G.get('seal_gate')
+            with _patch(git_info=lambda *a, **k: dict(sha=gh_, short=gh_[:9], dirty=False, porcelain=[])):
+                g_old = sg_(dict(man_c))
+            chk('㉙ 옛 manifest (기대 세대 선언 없음 — 194 v1.2 런처 모양) — 세대 관문이 retry 를 막지 않는다 (옛 실행기와 같은 코드 봉인 판정 · 표지만)',
+                not g_old.get('generation_bad', ['옛 코드']) and 'manifest' in str(g_old.get('generation_note') or '') and not g_old['mixed'],
+                repr((g_old.get('generation_bad'), g_old.get('generation_note'), g_old.get('mixed'))))
+            rl_ = tmp / 'legacy_gen_audit'
+            _legacy_root(rl_, attempts=[dict(rc=0, outcome='done', run=1, attempt=1)], runs={1: dict(kind='run', code_changed_during_run=[])},
+                         st_runs=[dict(git_sha=gh_, dirty=False)])
+            rc_a, aj_, _o = _audit_json(rl_)
+            chk('㉙ 옛 manifest 감사는 그대로 읽힌다 — rc 0 · SEALED_LEGACY · 기대 세대 None (선언 없음 표지) · 세대 문제 0 · 케이스 세대 대조 안 함',
+                rc_a == 0 and _verdicts(aj_) == {case_: 'SEALED_LEGACY'} and GK in aj_ and aj_.get(GK) is None
+                and not aj_.get('generation_problems') and all(r_.get('generation') is None for r_ in aj_.get('cases') or []),
+                repr((rc_a, _verdicts(aj_), aj_.get(GK, 'KEY_ABSENT'), aj_.get('generation_problems'))))
+        _scenario('㉙ 옛 manifest 시나리오', _s29)
+
+        def _s30():
+            cdc = _G.get('code_dependency_closure')
+            clo = cdc(ROOT) if cdc else {}
+            files_ = clo.get('files') or []
+            miss_ = [f for f in files_ if f not in CODE_FILES]
+            chk('㉚ ★ §7-3 전이 의존 — 워커 망 정지 경로의 정적 import 닫힘 ⊆ 봉인 CODE_FILES (lens_geometry — plastic_coverage 가 import · physics g2 원판 floor — 포함) · '
+                '해석 오류 0', bool(files_) and not miss_ and 'scripts/lens_geometry.py' in files_ and 'scripts/lens_geometry.py' in CODE_FILES
+                and not clo.get('errors'), repr((miss_, clo.get('errors'))))
+            alt = tmp / 'dep_alt'
+            for rel in set(CODE_FILES) | {'scripts/step3_sigma.py'}:
+                (alt / rel).parent.mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(ROOT / rel, alt / rel)
+            p_ = alt / 'scripts' / 'network_conductivity.py'
+            p_.write_text('import step3_sigma  # selftest — 새 의존\n' + p_.read_text(encoding='utf-8'), encoding='utf-8')
+            clo2 = cdc(alt) if cdc else {}
+            chk('㉚ 반례 — 봉인 모듈에 새 import (network_conductivity → step3_sigma) 를 넣으면 닫힘에 잡힌다 (봉인 밖 의존)',
+                'scripts/step3_sigma.py' in (clo2.get('files') or []) and 'scripts/step3_sigma.py' not in CODE_FILES, repr(clo2.get('files')))
+            with _patch(code_dependency_closure=lambda *a, **k: dict(files=sorted(set(CODE_FILES) | {'scripts/step3_sigma.py'}), errors=[])):
+                rc_, o_ = _main_rc(args_for(tmp / 'dry_dep', '--cohorts', 'lhsx', '--dry-run'))
+            chk('㉚ 발사 사전 점검 — 봉인 밖 의존 모듈이 있으면 중단 (rc 2 · 아무것도 안 쓴다)',
+                rc_ == 2 and 'step3_sigma' in o_ and not (tmp / 'dry_dep').exists(), o_[-300:])
+        _scenario('㉚ 전이 의존 시나리오', _s30)
+
+        def _s31():
+            Rf = tmp / 'fu_gen'
+            pl_ = dict(cohorts=[dict(name=n, harvest_dir=str(_abs(COHORT_SPECS[n]['harvest'])), cohort=str(_abs(COHORT_SPECS[n]['cohort'])),
+                                     union=COHORT_SPECS[n]['union'], design=COHORT_SPECS[n]['design']) for n in ('lhs', 'lhsx')], queue=[])
+            mf_ = dict(schema=SCHEMA, git=dict(sha='a' * 40, short='a' * 9), code_hashes=dict(_h_real), plan=pl_, **{GK: 'g2'},
+                       seal={GK: 'g2'})
+            ln_ = []
+            print_followups(Rf, mf_, out=lambda *a, **k: ln_.append(' '.join(map(str, a))))
+            gen_ = [l_ for l_ in ln_ if l_.startswith('python3 scripts/lhs_design_dataset.py')]
+            rr_ = [l_ for l_ in ln_ if l_.startswith('python3 scripts/g2_network_reread.py')]
+            chk('㉛ ★ 후속 명령 — 기대 세대 선언 manifest 면 인계 생성기 둘 다 --tau-batch-manifest <ROOT>/manifest.json · 이름 v13 · '
+                '다시 읽기 (g2_network_reread --launcher-root <ROOT>) 명령',
+                len(gen_) == 2 and all(f'--tau-batch-manifest {shlex.quote(str(Rf / "manifest.json"))}' in g_ and '_handover_v13_' in g_ for g_ in gen_)
+                and len(rr_) == 1 and f'--launcher-root {shlex.quote(str(Rf))}' in rr_[0], repr((gen_, rr_)))
+        _scenario('㉛ 후속 명령 시나리오', _s31)
+
+        # ㉜ ★ §7-3 "194 ID · cohort · 원 dump 의 해시" — manifest 입력 지문 (계획 큐 ID · 코호트 · 수확 JSON raw sha256 = 워커 같은 프레임 관문의 대조값) ·
+        #   audit 가 다시 계산해 대조한다 (발사 뒤 수확 JSON 의 원자료 sha 가 바뀌면 rc 1)
+        def _s32():
+            pid = _G.get('plan_input_digest')
+            man_ = read_json(tmp / 'run_gen' / 'manifest.json') or {}
+            dg_ = man_.get('input_digest') or {}
+            chk('㉜ ★ manifest 입력 지문 — 케이스 3 · ID · 원자료 sha256 표 지문 = 계획에서 다시 계산한 값 · 원자료 sha 결손 0',
+                bool(pid) and dg_.get('n') == 3 and dg_ == pid(man_.get('plan') or {}) and not dg_.get('missing_raw_sha')
+                and len(dg_.get('raw_sha256_table_sha256') or '') == 64, repr(dg_))
+            hj = Path(specs['lhsx']['harvest']) / 'lhsx_901.json'
+            orig = hj.read_text(encoding='utf-8')
+            try:
+                j_ = json.loads(orig)
+                j_['raw']['atom']['sha256'] = '0' * 64
+                hj.write_text(json.dumps(j_), encoding='utf-8')
+                rc_a, aj_, _o = _audit_json(tmp / 'run_gen')
+            finally:
+                hj.write_text(orig, encoding='utf-8')
+            rc_b, aj_b, _o = _audit_json(tmp / 'run_gen')
+            chk('㉜ ★ audit — 발사 뒤 수확 JSON 의 원자료 sha256 이 바뀌면 rc 1 · input_problems · 되돌리면 rc 0',
+                rc_a == 1 and bool(aj_.get('input_problems')) and rc_b == 0 and not aj_b.get('input_problems'),
+                repr((rc_a, aj_.get('input_problems'), rc_b, aj_b.get('input_problems'))))
+        _scenario('㉜ 입력 지문 시나리오', _s32)
     finally:
         for k, v in env_keep.items():
             if v is None:
