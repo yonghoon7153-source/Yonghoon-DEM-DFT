@@ -1,0 +1,9 @@
+argv: /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/bin/python -m pytest -p no:cacheprovider tests/test_reil_c5_pilot.py -q --tb=short
+timeout_s: 600
+cwd: /home/user/Yonghoon-DEM-DFT/bms-balancing
+start_utc: 2026-10-06T12:44:18Z
+head_start: e8a09f60a65f10958081a9cd45036edeb740e630
+end_utc: 2026-10-06T12:44:29Z
+head_end: e8a09f60a65f10958081a9cd45036edeb740e630
+rc: 0
+elapsed_s: 10.853

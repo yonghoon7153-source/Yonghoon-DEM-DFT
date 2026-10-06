@@ -1,0 +1,130 @@
+{
+ "argv": [
+  "scripts/reil_c5_pilot.py",
+  "dryrun",
+  "--venv",
+  "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv",
+  "--out",
+  "evidence/reil_c5_impl_20261006/05_dryrun_out"
+ ],
+ "blas_env_set": {
+  "MKL_NUM_THREADS": "1",
+  "OMP_NUM_THREADS": "1",
+  "OPENBLAS_NUM_THREADS": "1"
+ },
+ "cwd": "/home/user/Yonghoon-DEM-DFT/bms-balancing",
+ "dirty_end": {
+  "other": [
+   "?? bms-balancing/evidence/reil_c5_impl_20261006/"
+  ],
+  "own_output": []
+ },
+ "drain_ok": true,
+ "exitcodes": {
+  "0": 0,
+  "1": 0
+ },
+ "external_rc": "바깥 래퍼가 따로 적는다",
+ "fixture_sobol": "qmc.Sobol(4, scramble=True, rng=20261006).random_base2(2) · A0 상자",
+ "git_end": {
+  "head": "e8a09f60a65f10958081a9cd45036edeb740e630",
+  "head_rc": 0,
+  "porcelain": "?? bms-balancing/evidence/reil_c5_impl_20261006/\n",
+  "porcelain_rc": 0
+ },
+ "git_start": {
+  "head": "e8a09f60a65f10958081a9cd45036edeb740e630",
+  "head_rc": 0,
+  "porcelain": "?? bms-balancing/evidence/reil_c5_impl_20261006/\n",
+  "porcelain_rc": 0
+ },
+ "global_stop": null,
+ "halfcell_digest_end": "93aa9ace65f17094ba5e8c9d3f2831a80408a0b4b9522fb23a75fc382b24df30",
+ "halfcell_digest_start": "93aa9ace65f17094ba5e8c9d3f2831a80408a0b4b9522fb23a75fc382b24df30",
+ "identity": {
+  "full_c6_check": "NOT_RUN",
+  "note": "계산 없는 식별 — 'C6 전체 기능 PASS' 가 아니다 (부록 A1)",
+  "ok": true,
+  "problems": [],
+  "record": {
+   "executable": "/usr/bin/python3.11",
+   "lock_sha256_now": "b392f7b01f9492337a4c52ef323d9348af076866e6997d96179bc438375fe9ef",
+   "prefix": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv",
+   "profile_sha256_now": "c9449c284d755363c75848ad4c6d0582bdb7b6c1799674646b13ed2dfc49191d",
+   "seal_manifest_sha256": "a14617ecad1954a86122922072b8d1656e9b13fdbf003d131ad32e0ff52a91f5",
+   "venv": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv",
+   "version": "3.11.15 (main, Mar  3 2026, 09:26:23) [GCC 13.3.0]"
+  }
+ },
+ "kind": "dryrun (합성 · 비용 근거 아님)",
+ "limits": {
+  "disk_free": 5368709120,
+  "disk_gap": 15.0,
+  "disk_new": 10485760,
+  "grace": 10.0,
+  "measure": 240.0,
+  "prep": 60.0,
+  "record": 280.0,
+  "rss": 4294967296,
+  "rss_gap": 5.0,
+  "total": 300.0,
+  "workers": 255.0
+ },
+ "model_digest_end": "ca5d00e48b5dbf5ae38c966102a31348b4ba8a48b265dde9918c1468f3ef5250",
+ "model_digest_start": "ca5d00e48b5dbf5ae38c966102a31348b4ba8a48b265dde9918c1468f3ef5250",
+ "n_workers": 2,
+ "options": {
+  "disp": "False",
+  "f_target": "-inf",
+  "feasibility_tol": "1e-12",
+  "final_tr_radius": "1e-06",
+  "initial_tr_radius": "1.0",
+  "maxfev": "50",
+  "maxiter": "100",
+  "scale": "True"
+ },
+ "owned_alive_after": 0,
+ "source_changed": [],
+ "source_hashes_end": {
+  "/home/user/Yonghoon-DEM-DFT/bms-balancing/reil_c6_rebuild_20261006/MANIFEST.json": "a14617ecad1954a86122922072b8d1656e9b13fdbf003d131ad32e0ff52a91f5",
+  "/home/user/Yonghoon-DEM-DFT/bms-balancing/reviews/prereview_pybamm_reil_20261003/external/util_LFP.py.txt": "bdf78273d50f40ce3154d01a3ef8d36f0f5ea5ec1b04539584809d7b19b46f9c",
+  "/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c5_pilot.py": "73bee8dc412b39863afb64b70bc128cbecee2075a3a17914fc7288f353ef11a6"
+ },
+ "source_hashes_start": {
+  "/home/user/Yonghoon-DEM-DFT/bms-balancing/reil_c6_rebuild_20261006/MANIFEST.json": "a14617ecad1954a86122922072b8d1656e9b13fdbf003d131ad32e0ff52a91f5",
+  "/home/user/Yonghoon-DEM-DFT/bms-balancing/reviews/prereview_pybamm_reil_20261003/external/util_LFP.py.txt": "bdf78273d50f40ce3154d01a3ef8d36f0f5ea5ec1b04539584809d7b19b46f9c",
+  "/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c5_pilot.py": "73bee8dc412b39863afb64b70bc128cbecee2075a3a17914fc7288f353ef11a6"
+ },
+ "start_utc": "2026-10-06T12:45:07Z",
+ "util_copy_sha256": "bdf78273d50f40ce3154d01a3ef8d36f0f5ea5ec1b04539584809d7b19b46f9c",
+ "worker_end": {
+  "0": {
+   "t": 8794.953007866
+  },
+  "1": {
+   "t": 8794.979021992
+  }
+ },
+ "workers": {
+  "0": {
+   "blas_env": {
+    "MKL_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1"
+   },
+   "pid": 24590,
+   "t": 8794.438385808,
+   "threads": 1
+  },
+  "1": {
+   "blas_env": {
+    "MKL_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1"
+   },
+   "pid": 24592,
+   "t": 8794.447505364,
+   "threads": 1
+  }
+ }
+}

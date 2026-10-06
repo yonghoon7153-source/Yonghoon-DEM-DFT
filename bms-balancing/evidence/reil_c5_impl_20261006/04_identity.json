@@ -1,0 +1,15 @@
+{
+ "full_c6_check": "NOT_RUN",
+ "note": "계산 없는 식별 — 'C6 전체 기능 PASS' 가 아니다 (부록 A1)",
+ "ok": true,
+ "problems": [],
+ "record": {
+  "executable": "/usr/bin/python3.11",
+  "lock_sha256_now": "b392f7b01f9492337a4c52ef323d9348af076866e6997d96179bc438375fe9ef",
+  "prefix": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv",
+  "profile_sha256_now": "c9449c284d755363c75848ad4c6d0582bdb7b6c1799674646b13ed2dfc49191d",
+  "seal_manifest_sha256": "a14617ecad1954a86122922072b8d1656e9b13fdbf003d131ad32e0ff52a91f5",
+  "venv": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv",
+  "version": "3.11.15 (main, Mar  3 2026, 09:26:23) [GCC 13.3.0]"
+ }
+}

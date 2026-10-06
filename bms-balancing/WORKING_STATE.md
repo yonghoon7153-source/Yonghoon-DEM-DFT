@@ -719,7 +719,7 @@ U14 가 드러낸 다섯 건(U14-01 줄끝로 서명이 fresh clone 에서 깨�
 # ── 0. 받기 · 확인 (몇 분) ────────────────────────────────────────────────────────────────────────
 cd ~/dd/bms-balancing && git pull --rebase origin claude/bms-alpha-beta-verify
 source .venv/bin/activate && export BMS_DATA_ROOT='/mnt/d/가형 관련/degradation mode'
-python3 -m pytest tests/ -q                       # 586 passed 기대 (원자료 불필요; R17 +27 · ⑥ +9 · R17 후속 +26 · R17 후속 2차 +41 · R17 후속 3차 +26 · MSC 부호표 +4 · B_A8R1 보존 +2 · MSC 사전 선별 +4 · REIL C6 +9 · REIL C6-N1 +11 · REIL P0 +37 — 시스템 python 은 pymoo 가 없어 1 skipped)
+python3 -m pytest tests/ -q                       # 629 passed 기대 (원자료 불필요 · 2026-10-06 REIL C5 +43 은 산술 갱신 — 전체 미실행: C5 구현 승인은 무자료 한정 3 파일만 · 586 은 마지막 실측; R17 +27 · ⑥ +9 · R17 후속 +26 · R17 후속 2차 +41 · R17 후속 3차 +26 · MSC 부호표 +4 · B_A8R1 보존 +2 · MSC 사전 선별 +4 · REIL C6 +9 · REIL C6-N1 +11 · REIL P0 +37 — 시스템 python 은 pymoo 가 없어 1 skipped)
 
 # ── 1. 배관 확인 — 새 스키마가 붙는지만 (몇 분, STARTS=6 이라 수치는 못 쓴다) ─────────────────────
 STARTS=6 STATES=100 OUT=out_u14_smoke ./scripts/run_states.sh

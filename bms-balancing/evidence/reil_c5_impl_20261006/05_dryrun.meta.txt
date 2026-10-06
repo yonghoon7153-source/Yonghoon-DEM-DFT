@@ -1,0 +1,9 @@
+argv: /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/bin/python -I scripts/reil_c5_pilot.py dryrun --venv /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv --out evidence/reil_c5_impl_20261006/05_dryrun_out
+timeout_s: 300
+cwd: /home/user/Yonghoon-DEM-DFT/bms-balancing
+start_utc: 2026-10-06T12:45:03Z
+head_start: e8a09f60a65f10958081a9cd45036edeb740e630
+end_utc: 2026-10-06T12:45:08Z
+head_end: e8a09f60a65f10958081a9cd45036edeb740e630
+rc: 0
+elapsed_s: 4.522

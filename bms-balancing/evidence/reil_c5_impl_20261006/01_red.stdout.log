@@ -1,0 +1,136 @@
+FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF                              [100%]
+=================================== FAILURES ===================================
+E   NotImplementedError: exact_residuals
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c5_pilot.py:124: NotImplementedError: exact_residuals
+E   NotImplementedError: witness
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c5_pilot.py:128: NotImplementedError: witness
+E   NotImplementedError: termination_of
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c5_pilot.py:136: NotImplementedError: termination_of
+E   NotImplementedError: run_one
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c5_pilot.py:152: NotImplementedError: run_one
+E   NotImplementedError: run_one
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c5_pilot.py:152: NotImplementedError: run_one
+E   NotImplementedError: run_one
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c5_pilot.py:152: NotImplementedError: run_one
+E   NotImplementedError: run_one
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c5_pilot.py:152: NotImplementedError: run_one
+E   NotImplementedError: run_one
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c5_pilot.py:152: NotImplementedError: run_one
+E   NotImplementedError: run_one
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c5_pilot.py:152: NotImplementedError: run_one
+E   NotImplementedError: run_one
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c5_pilot.py:152: NotImplementedError: run_one
+E   NotImplementedError: run_one
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c5_pilot.py:152: NotImplementedError: run_one
+E   ValueError: x
+
+During handling of the above exception, another exception occurred:
+E   NotImplementedError: classify_exception
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c5_pilot.py:144: NotImplementedError: classify_exception
+E   NotImplementedError: Objective
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c5_pilot.py:281: NotImplementedError: Objective
+E   NotImplementedError: orchestrate
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c5_pilot.py:176: NotImplementedError: orchestrate
+E   NotImplementedError: orchestrate
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c5_pilot.py:176: NotImplementedError: orchestrate
+E   NotImplementedError: orchestrate
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c5_pilot.py:176: NotImplementedError: orchestrate
+E   NotImplementedError: assemble_states
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c5_pilot.py:172: NotImplementedError: assemble_states
+E   NotImplementedError: final_record
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c5_pilot.py:192: NotImplementedError: final_record
+E   NotImplementedError: orchestrate
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c5_pilot.py:176: NotImplementedError: orchestrate
+E   NotImplementedError: orchestrate
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c5_pilot.py:176: NotImplementedError: orchestrate
+E   NotImplementedError: orchestrate
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c5_pilot.py:176: NotImplementedError: orchestrate
+E   NotImplementedError: orchestrate
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c5_pilot.py:176: NotImplementedError: orchestrate
+E   NotImplementedError: orchestrate
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c5_pilot.py:176: NotImplementedError: orchestrate
+E   NotImplementedError: orchestrate
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c5_pilot.py:176: NotImplementedError: orchestrate
+E   NotImplementedError: orchestrate
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c5_pilot.py:176: NotImplementedError: orchestrate
+E   NotImplementedError: _sha
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c5_pilot.py:104: NotImplementedError: _sha
+E   NotImplementedError: _sha
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c5_pilot.py:104: NotImplementedError: _sha
+E   NotImplementedError: _sha
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c5_pilot.py:104: NotImplementedError: _sha
+E   NotImplementedError: _sha
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c5_pilot.py:104: NotImplementedError: _sha
+E   NotImplementedError: _sha
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c5_pilot.py:104: NotImplementedError: _sha
+E   NotImplementedError: _sha
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c5_pilot.py:104: NotImplementedError: _sha
+E   NotImplementedError: _sha
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c5_pilot.py:104: NotImplementedError: _sha
+E   NotImplementedError: check_options
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c5_pilot.py:212: NotImplementedError: check_options
+E   NotImplementedError: pilot_arrays
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c5_pilot.py:220: NotImplementedError: pilot_arrays
+E   NotImplementedError: plan_runs
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c5_pilot.py:224: NotImplementedError: plan_runs
+E   NotImplementedError: git_state
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c5_pilot.py:196: NotImplementedError: git_state
+E   NotImplementedError: source_hashes
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c5_pilot.py:204: NotImplementedError: source_hashes
+E   NotImplementedError: model_digest
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c5_pilot.py:120: NotImplementedError: model_digest
+E   NotImplementedError: summarize
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c5_pilot.py:184: NotImplementedError: summarize
+E   NotImplementedError: guard_paths
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c5_pilot.py:240: NotImplementedError: guard_paths
+E   NotImplementedError: fixture_starts
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c5_pilot.py:228: NotImplementedError: fixture_starts
+E   NotImplementedError: select_cell
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c5_pilot.py:232: NotImplementedError: select_cell
+E   NotImplementedError: load_util
+/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/reil_c5_pilot.py:244: NotImplementedError: load_util
+=========================== short test summary info ============================
+FAILED tests/test_reil_c5_pilot.py::test_01_exact_residuals_are_rationals_and_the_tolerance_is_inclusive
+FAILED tests/test_reil_c5_pilot.py::test_01_witness_priority_and_nonfinite - ...
+FAILED tests/test_reil_c5_pilot.py::test_01_termination_classes_keep_converged_budget_and_others_apart
+FAILED tests/test_reil_c5_pilot.py::test_02_util_error_during_optimization_is_a_local_solver_error_counted_with_the_failing_call
+FAILED tests/test_reil_c5_pilot.py::test_02_an_error_inside_scipy_outside_the_objective_is_local_with_optimizer_origin
+FAILED tests/test_reil_c5_pilot.py::test_02_structural_errors_from_util_stop_the_pilot[raise_memory-MemoryError]
+FAILED tests/test_reil_c5_pilot.py::test_02_structural_errors_from_util_stop_the_pilot[raise_os-OSError]
+FAILED tests/test_reil_c5_pilot.py::test_02_structural_errors_from_util_stop_the_pilot[raise_recursion-RecursionError]
+FAILED tests/test_reil_c5_pilot.py::test_02_an_error_in_our_own_wrapper_is_structural
+FAILED tests/test_reil_c5_pilot.py::test_02_a_reeval_error_keeps_the_returned_point_and_is_its_own_reason
+FAILED tests/test_reil_c5_pilot.py::test_02_unknown_option_warning_is_fail_closed
+FAILED tests/test_reil_c5_pilot.py::test_02_classification_table_without_running_a_solver
+FAILED tests/test_reil_c5_pilot.py::test_03_nonfinite_is_passed_through_unchanged_and_counted
+FAILED tests/test_reil_c5_pilot.py::test_04_all_runs_complete_without_a_global_stop
+FAILED tests/test_reil_c5_pilot.py::test_04_a_stop_before_start_leaves_every_run_not_started
+FAILED tests/test_reil_c5_pilot.py::test_04_the_measurement_boundary_interrupts_and_keeps_what_was_secured
+FAILED tests/test_reil_c5_pilot.py::test_04_returned_but_not_reevaluated_is_its_own_state_and_keeps_the_point
+FAILED tests/test_reil_c5_pilot.py::test_04_record_deadline_or_write_failure_is_record_incomplete_and_keeps_written_files
+FAILED tests/test_reil_c5_pilot.py::test_05_global_stops_end_only_owned_workers[worker_exit]
+FAILED tests/test_reil_c5_pilot.py::test_05_global_stops_end_only_owned_workers[structural]
+FAILED tests/test_reil_c5_pilot.py::test_05_global_stops_end_only_owned_workers[rss_over]
+FAILED tests/test_reil_c5_pilot.py::test_05_global_stops_end_only_owned_workers[monitor_fail]
+FAILED tests/test_reil_c5_pilot.py::test_05_global_stops_end_only_owned_workers[rss_gap]
+FAILED tests/test_reil_c5_pilot.py::test_05_global_stops_end_only_owned_workers[disk_new]
+FAILED tests/test_reil_c5_pilot.py::test_05_global_stops_end_only_owned_workers[disk_free]
+FAILED tests/test_reil_c5_pilot.py::test_06_identity_passes_without_computation_and_leaves_the_full_check_not_run
+FAILED tests/test_reil_c5_pilot.py::test_06_identity_tampering_is_refused[interpreter]
+FAILED tests/test_reil_c5_pilot.py::test_06_identity_tampering_is_refused[lock]
+FAILED tests/test_reil_c5_pilot.py::test_06_identity_tampering_is_refused[profile]
+FAILED tests/test_reil_c5_pilot.py::test_06_identity_tampering_is_refused[options]
+FAILED tests/test_reil_c5_pilot.py::test_06_identity_tampering_is_refused[impl_file]
+FAILED tests/test_reil_c5_pilot.py::test_06_identity_tampering_is_refused[manifest]
+FAILED tests/test_reil_c5_pilot.py::test_06_options_equal_the_sealed_c6_table_and_a_change_is_named
+FAILED tests/test_reil_c5_pilot.py::test_06_pilot_arrays_are_compared_byte_for_byte_with_the_seal
+FAILED tests/test_reil_c5_pilot.py::test_06_run_plan_is_fixed_by_run_number_and_bad_starts_are_refused
+FAILED tests/test_reil_c5_pilot.py::test_07_git_state_records_head_and_raw_porcelain_and_own_output_is_split
+FAILED tests/test_reil_c5_pilot.py::test_07_a_source_change_during_the_run_is_detected
+FAILED tests/test_reil_c5_pilot.py::test_08_runs_and_reeval_use_fresh_deep_copies_and_the_original_is_unchanged
+FAILED tests/test_reil_c5_pilot.py::test_09_summary_partitions_every_run_and_keeps_censored_apart
+FAILED tests/test_reil_c5_pilot.py::test_10_data_paths_are_refused_in_this_stage
+FAILED tests/test_reil_c5_pilot.py::test_10_fixture_starts_are_four_points_in_the_box_and_deterministic
+FAILED tests/test_reil_c5_pilot.py::test_10_the_cell_rule_picks_row_1_from_the_p0_result_and_refuses_another
+FAILED tests/test_reil_c5_pilot.py::test_10_the_preserved_util_copy_loads_by_path_after_its_sha_and_static_check
+43 failed in 1.68s

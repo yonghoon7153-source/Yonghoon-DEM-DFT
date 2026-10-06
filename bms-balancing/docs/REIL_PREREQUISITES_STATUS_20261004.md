@@ -441,3 +441,25 @@ rc 0 → **옛 봉인 대조 (§2-4) 에서 허용 밖 차이** → 정지. 원�
   - **비용 측정 (v2 §10 (2)) 은 포함하지 않는다** — 구현 결과 보고 뒤 따로 승인.
 - 시작 상태: 증거 폴더 `evidence/reil_c5_impl_20261006/` 부재 · 지정 venv `…/scratchpad/reil_p0/venv` 있음 (실제 `/usr/bin/python3.11` 기반 venv · scipy 1.17.1 · numpy 2.4.6) ·
   pytest 경로 `…/scratchpad/reil_p0/pytest_t` 있음.
+
+## §29 C5 구현 결과 (2026-10-06 · 승인 §28 범위 · 측정 0 · 여기서 멈춤)
+
+| 단계 | 기록 (`evidence/reil_c5_impl_20261006/`) | 결과 | 소요 |
+|---|---|---|---:|
+| RED 1 | `01_red.*` (HEAD `8a5fcb0d6` — 시험 + 함수 껍데기) | 43 failed · 전부 `NotImplementedError` (껍데기) | 2.6 s |
+| GREEN 1 (1 / 3 회) | `02_green1.*` (HEAD `e8a09f60a`) | **43 passed** — 첫 GREEN 에서 통과 · 추가 GREEN 0 | 10.9 s |
+| 무자료 한정 시험 집합 1 | `03_nodata_set.*` (`test_reil_c5_pilot.py` · `test_reil_p0.py` · `test_reil_c6_profile.py`) | **100 passed** | 7.3 s |
+| `env_identity` 단독 1 | `04_identity.*` · `04_identity.json` | ok · problems 0 · **full C6 check `NOT_RUN`** | 9.8 s |
+| 합성 건조 실행 1 | `05_dryrun.*` · `05_dryrun_out/` (28 KB) | 4 / 4 COMPLETED (budget 3 · converged 1 · 증인 valid 4) · 전역 중단 없음 · 기록 COMPLETE · 소스 변경 0 · Model / halfcell 해시 불변 · 작업자 Threads 1 · 1 | 4.5 s |
+
+- **명령 시간 합:** 35.1 s (≤ 3,600 s). 이 밖에 기록 래퍼 밖 명령이 하나 있었다. 구현 전 COBYQA 종료 코드 확인용 venv python `-c` import 1 회로, `ImportError` 로 실패했다
+  (그 뒤에는 설치 소스를 텍스트로만 읽었다). 소요는 기록하지 않았다 (≈ 1 s 미만으로 보이지만 실측 아님).
+- **RED 뒤 GREEN 전 시험 정정 1:** `test_01_exact_residuals…` 의 x `0.6` → `0.75`. 상자 경계는 십진 문자열의 정확 유리수이고, float `0.6` 은 3/5 보다 2.2e-17
+  작다 — 그래서 '경계 밖 · 허용치 안' 이 맞다. 이 사실을 단언 둘로 추가했다 (커밋 `e8a09f60a`).
+- **식별:** `scripts/reil_c5_pilot.py` sha256 `73bee8dc…11a6` (blob `0e5a9f3a`) · `tests/test_reil_c5_pilot.py` sha256 `2375c41d…4bac` · venv `/usr/bin/python3.11` 기반 ·
+  scipy 1.17.1 · numpy 2.4.6.
+- **관측 (고치지 않음 · 보고):** 건조 실행의 작업 트리 분류가 `?? bms-balancing/evidence/reil_c5_impl_20261006/` 을 '그 밖' 으로 셌다. git 이 추적 안 된 부모 폴더를
+  한 줄로 접기 때문이다 (산출 폴더 `05_dryrun_out` 은 그 안). 측정 단계의 산출 폴더 `evidence/reil_c5_pilot_20261006/` 은 그 자체가 새 폴더라 '이 실행의 산출' 로 분류된다.
+- **하지 않은 것:** REIL xlsx · pkl · 노트북 · 정식 Sobol 생성 · full C6 check · 환경 재구축 · 비용 측정 · bms 전체 시험.
+  `WORKING_STATE.md` 기대 수는 586 + 43 = 629 로 산술 갱신했다 — 전체는 실행하지 않았다.
+- 다음: 사용자의 **비용 측정 승인** (v2 §10 (2) · "환경 확인" = 부록 A1 측정 단계 규칙). 그 전에는 측정하지 않는다.
