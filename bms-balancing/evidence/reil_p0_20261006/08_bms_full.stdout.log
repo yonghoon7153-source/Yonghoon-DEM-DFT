@@ -1,0 +1,70 @@
+........................................................................ [ 12%]
+........................................................................ [ 24%]
+........................................................................ [ 36%]
+........................................................................ [ 49%]
+.........................................................F.............. [ 61%]
+........................................................................ [ 73%]
+..........................................s............................. [ 86%]
+........................................................................ [ 98%]
+.........                                                                [100%]
+=================================== FAILURES ===================================
+_________ test_i6d_04_working_state_test_count_matches_the_collection __________
+
+    def test_i6d_04_working_state_test_count_matches_the_collection():
+        """[R6 내부 DF-04] "86 passed 기대" 가 87 개짜리 트리에 남았다 (Codex R5 §1 이 지난 라운드에 74/75 로 같은
+        종류를 짚었다). 문서의 기대 수는 수집된 테스트 수와 같아야 한다."""
+        import subprocess
+        out = subprocess.run([sys.executable, "-m", "pytest", "tests/", "--collect-only", "-q", "-p", "no:cacheprovider"],
+                             cwd=ROOT, capture_output=True, text=True).stdout
+        n = int(re.search(r"(\d+) tests? collected", out).group(1))          # 매개변수화된 항목까지 센 수 = "N passed"
+        m = re.search(r"# (\d+) passed 기대", _doc("WORKING_STATE.md"))
+>       assert m and int(m.group(1)) == n, (m and m.group(0), n)
+E       AssertionError: ('# 549 passed 기대', 585)
+E       assert (<re.Match object; span=(58250, 58265), match='# 549 passed 기대'> and 549 == 585)
+E        +  where 549 = int('549')
+E        +    where '549' = <built-in method group of re.Match object at 0x7f8819875480>(1)
+E        +      where <built-in method group of re.Match object at 0x7f8819875480> = <re.Match object; span=(58250, 58265), match='# 549 passed 기대'>.group
+
+tests/test_r6_internal.py:235: AssertionError
+=============================== warnings summary ===============================
+tests/test_reil_p0.py::test_notebook_check_accepts_preserved_cells
+tests/test_reil_p0.py::test_notebook_check_rejects_changed_constants[cell_idx = [1,0,0,0,0,0,1,1,1,0,0]-cell_idx = [1,0,0,0,0,0,1,1,0,0,0]]
+tests/test_reil_p0.py::test_notebook_check_rejects_changed_constants[LFP_mass_factor = 20.16-LFP_mass_factor = 20.15]
+tests/test_reil_p0.py::test_notebook_check_rejects_changed_constants[[0.64,0.56,0.51]-[0.64,0.56,0.52]]
+  <unknown>:26: DeprecationWarning: invalid escape sequence '\m'
+
+tests/test_reil_p0.py::test_notebook_check_accepts_preserved_cells
+tests/test_reil_p0.py::test_notebook_check_rejects_changed_constants[cell_idx = [1,0,0,0,0,0,1,1,1,0,0]-cell_idx = [1,0,0,0,0,0,1,1,0,0,0]]
+tests/test_reil_p0.py::test_notebook_check_rejects_changed_constants[LFP_mass_factor = 20.16-LFP_mass_factor = 20.15]
+tests/test_reil_p0.py::test_notebook_check_rejects_changed_constants[[0.64,0.56,0.51]-[0.64,0.56,0.52]]
+  <unknown>:27: DeprecationWarning: invalid escape sequence '\m'
+
+tests/test_reil_p0.py::test_notebook_check_accepts_preserved_cells
+tests/test_reil_p0.py::test_notebook_check_rejects_changed_constants[cell_idx = [1,0,0,0,0,0,1,1,1,0,0]-cell_idx = [1,0,0,0,0,0,1,1,0,0,0]]
+tests/test_reil_p0.py::test_notebook_check_rejects_changed_constants[LFP_mass_factor = 20.16-LFP_mass_factor = 20.15]
+tests/test_reil_p0.py::test_notebook_check_rejects_changed_constants[[0.64,0.56,0.51]-[0.64,0.56,0.52]]
+  <unknown>:28: DeprecationWarning: invalid escape sequence '\m'
+
+tests/test_reil_p0.py::test_notebook_check_accepts_preserved_cells
+tests/test_reil_p0.py::test_notebook_check_rejects_changed_constants[cell_idx = [1,0,0,0,0,0,1,1,1,0,0]-cell_idx = [1,0,0,0,0,0,1,1,0,0,0]]
+tests/test_reil_p0.py::test_notebook_check_rejects_changed_constants[LFP_mass_factor = 20.16-LFP_mass_factor = 20.15]
+tests/test_reil_p0.py::test_notebook_check_rejects_changed_constants[[0.64,0.56,0.51]-[0.64,0.56,0.52]]
+  <unknown>:29: DeprecationWarning: invalid escape sequence '\m'
+
+tests/test_reil_p0.py::test_notebook_check_accepts_preserved_cells
+tests/test_reil_p0.py::test_notebook_check_rejects_changed_constants[cell_idx = [1,0,0,0,0,0,1,1,1,0,0]-cell_idx = [1,0,0,0,0,0,1,1,0,0,0]]
+tests/test_reil_p0.py::test_notebook_check_rejects_changed_constants[LFP_mass_factor = 20.16-LFP_mass_factor = 20.15]
+tests/test_reil_p0.py::test_notebook_check_rejects_changed_constants[[0.64,0.56,0.51]-[0.64,0.56,0.52]]
+  <unknown>:30: DeprecationWarning: invalid escape sequence '\m'
+
+tests/test_reil_p0.py::test_notebook_check_accepts_preserved_cells
+tests/test_reil_p0.py::test_notebook_check_rejects_changed_constants[cell_idx = [1,0,0,0,0,0,1,1,1,0,0]-cell_idx = [1,0,0,0,0,0,1,1,0,0,0]]
+tests/test_reil_p0.py::test_notebook_check_rejects_changed_constants[LFP_mass_factor = 20.16-LFP_mass_factor = 20.15]
+tests/test_reil_p0.py::test_notebook_check_rejects_changed_constants[[0.64,0.56,0.51]-[0.64,0.56,0.52]]
+  <unknown>:31: DeprecationWarning: invalid escape sequence '\m'
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_r6_internal.py::test_i6d_04_working_state_test_count_matches_the_collection
+1 failed, 583 passed, 1 skipped, 24 warnings in 937.94s (0:15:37)
+rc=1
