@@ -7,6 +7,8 @@
 > elements: Li, P, S, Cl, Br, I, Se, Te, Ge, C
 > methods: XPS, Raman
 >
+> 📨 **받은 경로 (사용자 2026-10-06)** — li2s 트랙의 **외부 1저자가 보내 준 논문**이다 (우리가 고른 문헌이 아니다). 그래서 이 digest 의 '우리 대비' 는 그쪽에 되돌려 줄 질문의 재료이고, 해석·판정은 외부 1저자가 한다.
+>
 > ⭐ **중요 논문 (사용자 강조 2026-10-06)** — 실험 쪽 Li₂S 복합양극에서 이 논문 방식(Thinky 초고속 혼합)을 따라 한 조건이 지금까지 가장 높은 practical 용량을 냈다 (주간보고 2026-10-05). ⚠ 단 그 최고 조건은 **SE 를 Thinky 단계에 넣지 않았다** — 논문의 핵심 주장(할라이드 편석)은 할로겐 SE 가 고에너지 혼합 안에 있어야 성립하고, 본문 `Fig. 3F` 는 *할로겐 없는 SE 로 같은 혼합을 하면 2 회째부터 용량이 ≈1/6 로 주저앉는다* 를 보인다(§5.9). 그 차이가 이 카드의 제일 중요한 읽기다(§9).
 >
 > **저자**: **Jieun Lee**¹†‡, **Shiyuan Zhou**¹†, Victoria C. Ferrari¹, Chen Zhao¹, Angela Sun¹, Sarah Nicholas², Yuzi Liu³, Chengjun Sun⁴, Dominik Wierzbicki², Dilworth Y. Parkinson⁵, Jianming Bai², Wenqian Xu⁴, Yonghua Du², **Khalil Amine**¹,⁶\*, **Gui-Liang Xu**¹,⁶\* — ¹ANL Chemical Sciences & Engineering · ²BNL NSLS-II · ³ANL Center for Nanoscale Materials · ⁴ANL X-ray Science Division · ⁵LBNL ALS · ⁶UChicago Pritzker (PME). † 공동 1저자 · ‡ **Jieun Lee 현 소속 = KIST 에너지저장연구센터(서울)**. *Science* **388**, 724–729 (2025-05-15) · 투고 2024-09-16 / 수리 2025-03-25. 미국 특허 출원 18/440,838 (2024-02-13, G.-L.X.·J.L.·K.A.). 편집자 요약(M. S. Lavine): *"lithium chloride–rich shell on the surface of the particles"*.

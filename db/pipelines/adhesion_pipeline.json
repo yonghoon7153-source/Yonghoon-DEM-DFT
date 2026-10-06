@@ -1579,6 +1579,11 @@
    "date": "2026-10-06",
    "stage": "dft",
    "text": "P1b 마감 교체 비준 — 1저자(사용자) '비준' · 결정 D-2026-10-06-wad-agc-graphite-closed-k9 active · 마감 (a′) D-2026-10-05-wad-agc-graphite-closed superseded (재봉인) · 정본 마감 카드 wad_agc_graphite_closed_2026_10_06.json · DEM 회신은 회신 9 초안에 붙인다. W 값은 마감 카드·결과 기록에만."
+  },
+  {
+   "date": "2026-10-06",
+   "stage": "dft",
+   "text": "V5 VASP 외주 본 잡 — 사용자 '도는 중' (건엽 씨 · 파일럿 2 잡 OK 뒤 · PP 등록부 a279d529). 반송되면 --collect --pp_registry … --uma → G5."
   }
  ],
  "related_decisions": [
