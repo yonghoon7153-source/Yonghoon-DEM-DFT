@@ -299,6 +299,12 @@ def main():
             '"도장이 세대 2 게시를 말하면 추론하지 않는다" 없음',
             all(w in tip for w in ('G2RR-01', '네 세대 값', '레코드에서 유도', '역사 도장 스키마', '도장 ↔ 레코드 불일치'))
             and '도장이 세대 2 게시를 말하면' not in tip, tip[:300])
+        #  ★ 10-07 — 인계 열 사전 (`_TAU_SHARED['ion_net_generation']`) 도 같은 규칙 (G2RR-02 에이전트가 찾은 낡은 문장 · 웹앱 툴팁 W4 와 짝)
+        gdoc = getattr(LDD, '_TAU_SHARED', {}).get('ion_net_generation', '')
+        chk('W5 ★ 인계 열 사전 ion_net_generation — 새 규칙 (G2RR-01 · 확인된 역사 도장 스키마 · 레코드에서 유도한 기대값) · 옛 문구 '
+            '"도장이 세대 2 게시를 말하면 추론하지 않는다" 없음',
+            all(w in gdoc for w in ('G2RR-01', '역사 도장 스키마', '레코드에서 유도')) and '도장이 세대 2 게시를 말하면' not in gdoc,
+            gdoc[:300])
 
         print('  (변이마다 멈춘 곳 — 관문 · 첫 사유)')
         for lab, e_ in stop.items():
