@@ -2,10 +2,10 @@
 title: PyProBE (OCV/DVA 피팅 도구)
 description: "Imperial College 의 배터리 데이터 처리 도구 — 전극 OCP 로 셀 OCV·ICA·DVA 를 맞춰 전극 용량과 리튬 재고를 추정한다. 우리에게는 경쟁 도구이자, 우리 degeneracy 질문을 적용할 '판정 대상' 후보"
 created: 2026-10-01
-updated: 2026-10-05
+updated: 2026-10-06
 type: entity
 tags: [degradation, tooling, research]
-sources: [raw/articles/2026-10-01-github-research-briefing.md, raw/repositories/2026-10-01-pyprobe-dma-on-synthetic-truth.md, raw/repositories/2026-10-01-pyprobe-shape-only-on-synthetic-truth.md]
+sources: [raw/papers/asheruddin2025_phantom-lam-lli-ir-hysteresis-dma.md, raw/articles/2026-10-01-github-research-briefing.md, raw/repositories/2026-10-01-pyprobe-dma-on-synthetic-truth.md, raw/repositories/2026-10-01-pyprobe-shape-only-on-synthetic-truth.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -71,6 +71,20 @@ evidenceScope: multi-source-mixed
 유지되는지" — 우리 [[fitting-degeneracy]] 의 flat valley 판정과 같은 축이다. 우리 쪽에서 하면 **참값을 아는**
 합성 곡선으로 할 수 있다는 점이 다르다 (실측 곡선으로는 "안정적" 이 "정확함" 을 뜻하지 않는다). 착수는 사용자
 승인 뒤, 운영 환경 밖 별도 가상환경에서.
+
+## 실셀 적용 논문 (2026-10-06 · 같은 기관 · 사전인쇄)
+
+Asheruddin N, Leal De Souza, Holland, Folkson, Offer, Marinescu 2025 (arXiv 2512.19773, Imperial — raw
+`raw/papers/asheruddin2025_phantom-lam-lli-ir-hysteresis-dma.md`) 가 `[인쇄]` "The degradation mode analysis (DMA) tools used in this work are
+available as open-source software in the PyProBE repository" 라고 적는다. 이 도구 계열을 실셀 (LG M50T · Molicel P45B, C/SiOx 음극) 에 건
+첫 출판 사례로 이 위키가 아는 것이다.
+
+- 그 논문의 적합은 **5 매개** (`ν_NE, ν_PE, σ_NE, σ_PE` + blend 몫 `φ_Si`) 에 전압 + 기울기 잔차 (`λ`) · 내부 가중이다 — 2026-10-01 에 우리가
+  시험한 2.6.0 의 창 4 매개 (위 실측) 와 다르다. **어느 판 · 어느 함수인지 원문에 없다** — 같은 기능인지 미확인.
+- 그 논문이 보인 것 (`[인쇄]` · 참값 없음 · 구성 간 차이): 가지 · 창 하한 · IR 보정만 바꿔도 LAM_PE · LLI 1–6 pp · Si-LAM 최대 14 pp. 위 실측의
+  "범위를 5–10 % 자르면 RMSE 는 내려가며 답이 1–2 %p 이동" 과 같은 축의 실셀 판이다 (크기는 실셀 쪽이 크다 — Si 몫 적합 · 실셀 · 다른 창
+  폭이라 직접 비교는 아니다) — [[pocv-nonequilibrium-mode-bias]].
+- 불확실성 · 식별성 진단 0 은 위 실측의 결론 ("불확실성 · 식별성 진단은 없다") 과 같다.
 
 ## 이 위키와의 관계
 

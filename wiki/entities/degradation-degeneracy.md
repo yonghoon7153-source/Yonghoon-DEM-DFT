@@ -2,10 +2,10 @@
 title: degradation-degeneracy
 description: "22p 세미나의 LLI/LAM 분해가 물리인지 fitting degeneracy 인지, 정답을 아는 PyBaMM 합성 곡선 격자로 판별한다"
 created: 2026-08-11
-updated: 2026-10-01
+updated: 2026-10-06
 type: entity
 tags: [project, satellite, battery, degradation, pybamm, gate-review]
-sources: [raw/repositories/degradation-degeneracy-audit.md, raw/papers/dubarry2012_synthesize-degradation-modes.md]
+sources: [raw/repositories/degradation-degeneracy-audit.md, raw/papers/dubarry2012_synthesize-degradation-modes.md, raw/papers/asheruddin2025_phantom-lam-lli-ir-hysteresis-dma.md]
 confidence: high
 explored: false
 verificationStatus: unverified
@@ -79,3 +79,7 @@ evidenceScope: multi-source-primary
 - 이 페이지의 상태 서술은 **파이프라인 진행 상태**이지 연구 결론이 아니다.
   결론은 실행 뒤 실제로 철회·한정됐으므로, 인용은 반드시 정본에서 한다.
 - [[pybamm]] — 합성 truth 엔진의 버전 · 릴리스 영향 판정 (2026-10-01: requirements 상한 없음 — 재현성 위험 메모)
+- **가지 · IR (2026-10-06, 코드 읽기 · 실행 0)**: truth 의 Si 상은 current sigmoid 이력 OCP (`configs/base.yaml` 15–17 행) 이고 적합은
+  0.05 C 최종 방전 스텝 곡선 + 탈리튬화 가지 기준 (`src/halfcell.py` 87–106 · 195–199 행) 이다 — 실셀 DMA 의 가지 불일치 · IR 미보정
+  편향은 우리 하한 **밖**이고, 0 mV 다리 자체도 0.05 C 동적 곡선 ('미보정 pOCV') 이다. `ocpbias` PE 오프셋 다리는 SOC 무관 IR 미보정과
+  같은 섭동이다 (기준 +δ ≡ 측정 −δ) — 실셀 대응물과 대조 설계는 [[pocv-nonequilibrium-mode-bias]].

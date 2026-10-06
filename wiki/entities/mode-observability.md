@@ -2,10 +2,10 @@
 title: mode-observability
 description: "관측을 늘리면(PVS·SEV) 정말 LLI 와 LAM_PE 가 갈리는가 — Jacobian 식별 가능성 + ML 라벨 degeneracy 전파를 묻는 satellite"
 created: 2026-09-03
-updated: 2026-10-02
+updated: 2026-10-06
 type: entity
 tags: [project, satellite, battery, degradation, research]
-sources: [raw/papers/2026-09-02-siwon-kim-degradation-mode-ml-seminar.md, raw/papers/sun2025_dl-eis-degradation-mode-diagnostics.md, raw/papers/oney2025_dead-slow-overworked-graphite-operando-microxrd.md]
+sources: [raw/papers/2026-09-02-siwon-kim-degradation-mode-ml-seminar.md, raw/papers/sun2025_dl-eis-degradation-mode-diagnostics.md, raw/papers/oney2025_dead-slow-overworked-graphite-operando-microxrd.md, raw/papers/asheruddin2025_phantom-lam-lli-ir-hysteresis-dma.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -52,3 +52,7 @@ evidenceScope: single-source
   `n₁` 계수의 실셀 점유율 z_eff ≈0.17–0.25(`[재현·가정]`)를 준다 — `docs/PHASE1M_NOTES.md` "다음" 둘째 항(중간 점유율에서
   열화하는 실셀)의 전제에 대한 숫자이지 시험은 아니다. 같은 편의 율속 의존 비활성(+10 %p)은 [[thermo-kinetic-loss-partition]]
   함정 6. README Phases 표 반영은 위키 밖 일이다. 정리는 [[birkl-ocv-degradation-diagnostic]] 2026-10-02 절.
+- (2026-10-06) **'관측을 늘린다' 의 한 후보 — 두 가지 (충전 · 방전)** — Asheruddin N 2025 (`raw/papers/asheruddin2025_phantom-lam-lli-ir-hysteresis-dma.md`,
+  사전인쇄): 같은 전극 상태의 관측 둘이지만 가지별 기준 곡선 (이력 모형) 이 있을 때만 정보가 늘고, 없으면 한 가지가 '유령' 모드를 만든다
+  (같은 창에서 LAM_PE +3.42 · LLI +5.36 · Si-LAM 차 14.38 pp). 그 편은 동시 적합을 하지 않고 충전 가지를 버린다. 우리 truth 에는 Si 의
+  두 가지가 이미 있다 (current sigmoid) — Phase 설계에 넣을지는 위키 밖 결정. 정리는 [[pocv-nonequilibrium-mode-bias]].

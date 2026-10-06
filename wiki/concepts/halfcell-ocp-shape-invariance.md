@@ -2,10 +2,10 @@
 title: 반쪽전지 OCP 형상 불변 가정과 그 파괴 (blend 전극)
 description: "The α·β affine-rescaling premise behind every electrode-balancing diagnostic, where it breaks for Si/graphite blends, and the directional bias it leaves in LLI/LAM"
 created: 2026-09-10
-updated: 2026-10-02
+updated: 2026-10-06
 type: concept
 tags: [battery, degradation, research]
-sources: [raw/papers/khalik2021_dfn-grouping-sensitivity-parameter-estimation.md, raw/papers/schmitt2022_sic-ocp-shape-change-degradation-modes.md, raw/papers/2026-09-21-siwon-kim-si-gr-ica-lam-si-gitt-ocp.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/dubarry2012_synthesize-degradation-modes.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/transcripts/2026-09-14-bms-handoff-width-and-wiki-candidates.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md]
+sources: [raw/papers/asheruddin2025_phantom-lam-lli-ir-hysteresis-dma.md, raw/papers/khalik2021_dfn-grouping-sensitivity-parameter-estimation.md, raw/papers/schmitt2022_sic-ocp-shape-change-degradation-modes.md, raw/papers/2026-09-21-siwon-kim-si-gr-ica-lam-si-gitt-ocp.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/dubarry2012_synthesize-degradation-modes.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/transcripts/2026-09-14-bms-handoff-width-and-wiki-candidates.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -253,9 +253,32 @@ K⁻¹ 로 **부호가 바뀐다**(sum rule 위반 후보 = 재료 변화·창 �
 하나가 아니다. 그리고 이 편의 경우 1 권고("the modeled EMF coincides exactly with the measured EMF (by definition)")는
 출력 기준이다 — 창 · 전극 배분의 정확성을 말하지 않는다.
 
+## ★ 처방 ③ 을 실셀의 가지 · 창 · IR 에 건 출판 사례 — 음수 · 비단조 구성요소 LAM (2026-10-06, Asheruddin N 2025 · arXiv 사전인쇄)
+
+`raw/papers/asheruddin2025_phantom-lam-lli-ir-hysteresis-dma.md` → [[pocv-nonequilibrium-mode-bias]]. 이 페이지 본문과 같은 모집단
+(NMC811 · 고 Ni NCA ‖ C/SiOx 21700) 에 **처방 ③** (`φ_Si` 를 창 넷과 함께 맞추는 5 매개, 원문 식 4–7 — 같은 전위 blend) 을 걸고 **가지 ·
+창 · IR 보정**만 바꾼다. 이 페이지에 붙는 것 넷:
+
+1. **세 번째 파괴 방식 (한 사이클 안 방향 의존) 의 실셀 DMA 크기.** 같은 3.0–4.2 V 창에서 충전 가지가 Si-LAM 을 최대 14.38 pp 작게,
+   LAM_PE 를 3.42 pp · LLI 를 5.36 pp 크게 낸다 `[인쇄]`. 원문은 DMA 에 가지별 기준 곡선을 썼는지 적지 않는다 — 측정 가지와 기준 가지가
+   다르면 위 2026-09-22 절 4 번 ("방향 의존을 보인 뒤 한 함수로 적합") 의 실물이다.
+2. **`γ_Si ↔ α_an` 새 축퇴의 세 번째 야생 모양.** 충전 가지에서 Si-LAM ≈−1 % (초기) · 흑연 LAM ≈−1.85 % (말기) `[도표]` — 원문은
+   "under/over-compensation inside the NE decomposition" 이라 부르고 재지 않는다. 그리고 **권고 가지 (방전) 에서도** 흑연 LAM 이 ≈6 % →
+   ≈2 % 로 내려간다 (비단조) `[도표]`. 2026-09-21 덱의 `LAM_Si −20.5 → +50 %` 에 이어 같은 꼴이 출판본에 나왔다.
+3. **체크리스트 (c) 는 여전히 0.** `φ_Si` 값 · `φ_Si ↔ 창` 상관 · 다중 시작 0. 대신 판독값으로 역산한 신품 Si 몫이 구성마다 다르다 —
+   전체 창 방전 ≈0.23 (일정) · 공통 창 충전 ≈0.3 · 공통 창 방전은 ≈850 · ≈1250 Ah 에서 어떤 `φ ∈ [0,1]` 로도 원문의 blend 규칙이 성립하지
+   않는다 `[재현]` (digest §2-m). 같은 셀의 '물질 상수' 가 가지 · 창에 따라 움직인다는 것은 `γ_Si` 가 형상 오설정을 흡수하는 통로라는 이
+   페이지의 경고와 맞다.
+4. **'적용' 1 에 한 줄**: 우리 truth 의 Si 상은 current sigmoid 이력 OCP 이고 (`degradation-degeneracy/configs/base.yaml` 15–17 행),
+   적합은 방전 가지 + 탈리튬화 기준이다 (`src/halfcell.py` 87–106 행) — 노화에 대한 형상 불변은 정의상 참이고 **가지는 일치시켜** 맞춘다.
+   이 편이 보인 가지 · IR 편향은 우리 하한 밖이다.
+
+⚠ 사전인쇄 · 셀 종류당 1 개 · 참값 0 · 내부 불일치 다수 (digest §2) — 방향만 읽고 크기는 유보.
+
 ## 관련
 - [[fitting-degeneracy]] — 같은 증상(적합도 불변, 파라미터 이동)의 다른 원인
 - [[ag-c-interlayer-lithium-phase-path]] — ASSB 음극 중간층의 상 이력 (위 반례, 모집단 다름)
 - [[halfcell-window-parametrization-lineage]] — 자유 파라미터 개수·제약의 계보표
 - [[np-lip-ocv-reparametrization]] — 전극 OCP 함수 고정 시의 2 자유도 정리
 - [[dubarry-mechanistic-mode-synthesis]] · [[birkl-ocv-degradation-diagnostic]] — 이 가정을 깔고 있는 원전들
+- [[pocv-nonequilibrium-mode-bias]] — 기준 곡선이 아니라 **측정 곡선** 쪽 오설정 (IR · 가지 · 창) — 기준 +δ ≡ 측정 −δ

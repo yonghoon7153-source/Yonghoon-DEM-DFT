@@ -1,7 +1,7 @@
 # 위키 색인
 
 > 내용 목록. 모든 위키 페이지를 종류별로 한 줄 요약과 함께 싣는다.
-> 마지막 갱신: 2026-10-05 | 전체 페이지: 60
+> 마지막 갱신: 2026-10-06 | 전체 페이지: 61
 
 ## Entities (satellite 프로젝트)
 
@@ -34,6 +34,7 @@
 - [[constrained-crb-identifiability]] — 등식 제약이 걸린 상태의 Fisher/CRB (Stoica–Ng nullspace 사영, Mohtat 2019 식 28–34): 판정이 **이분법(𝒪ᵀ𝓘_f𝒪 특이 여부) + 정도(sqrt diag Σ)** 두 층이라는 것, 이 계보가 `Σ` 를 구해 놓고 **대각선만 보고하는 공통 습관**, 그리고 **제약 추가(모르는 방향을 줄임) ≠ 관측 추가(정보를 늘림)** 의 구분과 관측 추가가 이득이 되는 기계적 조건(새 감도 열 ≠ 0).
 - [[data-window-identifiability]] — 관측 창 `DW = [Q_s, Q_e]`(DOD 구간)이 식별 가능성을 정하는 **세 번째 조작**(제약 추가·관측 추가와 구분: 감도행렬의 **행을 갈아 끼운다**). Lee 2020 의 창 전수 삼각지도와 처방 `DOD = [0.35, 0.73]`, 같은 폭 40 %라도 위치가 **어느 전극이 보이는지**를 고른다는 실측, 그리고 "넓을수록 좋다" 가 깨지는 자리(`y₁₀₀`: shallow 14.2 % < medium 25.1 %).
 - [[halfcell-ocp-shape-invariance]] — 모든 electrode balancing 진단이 깔고 있는 **아핀 재조정 전제**(열화 전극 OCP = pristine 곡선의 α·β 변환)와 그 파괴: Si/graphite blend 에서 `γ_Si` 가 9.52 → 5.55 % 로 움직이면 **곡선 모양 자체가 바뀌고**, `γ_Si ↓` 는 `α_an ↓` 와 full-cell 에 **같은 서명**을 남긴다. 강제 시 편향은 방향이 정해져 있다 (LAM_an +2.4 pp 과대 · LAM_cat −3 pp · LLI −1.1 pp) — 그런데 OCV RMSE 는 9.9 → 8.2 mV 로 거의 안 변한다.
+- [[pocv-nonequilibrium-mode-bias]] — **pOCV 의 비평형 성분 (옴 IR · 가지 이력 · 창) 이 모드로 새는 경로 — 'phantom LAM/LLI'** (2026-10-06, Asheruddin N 외 2025 arXiv 사전인쇄 · NMC811/NCA ‖ C/SiOx 21700 두 종): 같은 셀 · 같은 추정기에서 IR 보정 · 가지 · 창 하한만 바꿔도 LAM_PE · LLI 1–6 pp · Si-LAM 최대 14 pp · PE − NE 격차 ≈1.5–5 %p 가 움직인다 (참값 없음 · 구성 간 차이 · 셀 종류당 1 개). 기준 곡선 +δ ≡ 측정 곡선 −δ 라 우리 `ocpbias` PE 다리가 곧 SOC 무관 IR 미보정의 합성 truth 판. IR 처리 두 방식 (측정 `R(SOC)` 사전 보정 ↔ 적합 상수 오프셋 — ampworks `iR` · PyDMA 옵션) 은 같은 것이 아니다. 우리 truth 는 이미 권고 구성 (방전 가지 · 가지 일치 Si 기준) 위 · REIL 충전 맞춤에는 방향만 옮겨진다.
 - [[reference-electrode-halfcell-dma]] — 기준전극을 셀에 심어 **최적화 없이** 전극별 열화를 재는 DMA (Natterer 2026): LAM 은 한 전극 **안** 두 DVA feature 사이 거리로, LLI 는 스케일한 pristine OCP 대비 **가로 이동량**으로. 축퇴가 풀리는 것이 아니라 **불확실성이 최적화 지형에서 특징점 판독으로 이동**하며, 그 대가 6개(feature 불변·0.2 C≈OCP·pristine OCP 재사용·판독 절차 미인쇄·RE 위치 20 mV·셀 1개)가 여기 정리돼 있다. **2026-09-29 갱신(78호 Buchberger 2015 *JES* — 액체 흑연/NMC111 풀셀)**: **구조 채널판** — 해체 양극의 방전 끝 격자(c/a → x)로 순환 Li 손실을 산술로 읽는다(최적화 0) · 대가는 **영점 규약**(0.1 C ICL ↔ 1 C 보정 — 7.0 mAh g⁻¹ · 형성 뒤 흑연 저장소)과 **방전 끝 한계 전극**(분극 한계면 상한) — 경미 셀 LLI 가 정의에 따라 −2 … +16 mAh g⁻¹ · LAM 은 재지 않고 용출 한 기구만 지웠다.
 - [[rate-independent-li-plating-signature]] — 무율(rate-independent) 리튬 도금 (Wang (Xiong) 2025, LFP/graphite 17 셀 중 10 셀): 원인은 `Q_NE < Q_Li` (LAM_NE), 0.05 C 에서도 생기며 충전 말단 평탄역(≈3.46 V)·방전 시작 짝 평탄역·dV/dQ **새** 봉우리·≈2 mV 동역학 하강을 남긴다. 가역분은 **LLI/LAM 어느 칸에도 안 들어가고**, 아핀 창 매개화가 깨지자 원전은 자유도를 4 → 8 로 늘리고 유일성을 안 쟀다. 음극 0 V 교차점이 창 밖(1.08)에서 안(0.88)으로 들어올 때 `Q_NE` 가 계단으로 떨어지는 국면 전환, `bms-balancing/` 요구서용 구분 시험 T1–T5.
 - [[ic-peak-area-direct-mode-readout-lfp]] — Cui 2026 의 적합 없는 직접 진단 (LFP/graphite 20 Ah): **Peak C 절대 면적 감소(Ah) = LLI**, Peak B 상대 감소 = LAM_NE — LFP 평탄 양극 덕에 full-cell dQ/dV 봉우리가 음극 stage 용량 그대로라서 성립하는 항등식. 이 계보 첫 **재료 라벨**(코인셀·XRD, OCV 적합 대비 1.35 / 1.68 %)과 그 대가(오차 막대 0·교차 셀 보간), IC 법의 정답 축은 적합값(1.79 / 1.62 %), 평탄 양극이 만드는 `(X1, X3)` = LAM_PE ↔ LLI 축퇴를 재료 측정이 대신 푼 구조, 사전믿음 등식으로 닫은 li/de 분할(0.36 = 순환 구간 중점), NMC·Si/Gr·무릎 이후로의 이식 조건.

@@ -1,10 +1,10 @@
 ---
 title: 관측 창(data window)이 정하는 식별 가능성
 created: 2026-09-04
-updated: 2026-10-03
+updated: 2026-10-06
 type: concept
 tags: [battery, degradation, research]
-sources: [raw/papers/xie2008_lco-thin-film-orientation-diffusion-gitt-pitt-eis.md, raw/papers/lee2020_estimation-error-bound-limited-data-window.md, raw/papers/mohtat2019_electrode-soh-estimability-expansion.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/kim2019_assb-ekf-soc-estimation-weak-observability.md]
+sources: [raw/papers/asheruddin2025_phantom-lam-lli-ir-hysteresis-dma.md, raw/papers/xie2008_lco-thin-film-orientation-diffusion-gitt-pitt-eis.md, raw/papers/lee2020_estimation-error-bound-limited-data-window.md, raw/papers/mohtat2019_electrode-soh-estimability-expansion.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/kim2019_assb-ekf-soc-estimation-weak-observability.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -91,6 +91,18 @@ DOD = Q / C              C = V_max·V_min 로 정의된 셀 용량
 - **★ 창이 시간 상수를 고른다** (`[재현·가정]`): #120 · 4.08 V 에서 EIS 의 무릎 · 저주파 용량(0.70 F ≈ 막 삽입 용량 0.51 F)은 전 막 τ ≈8–30 s 를, GITT · PITT 는 L²/D ≈1400–3400 s 를 준다 — 후자의 무릎(1–3×10⁻⁴ Hz)은 EIS 창(≥1 mHz) 밖이다. 같은 막에서 '측정 D' 가 창(방법)에 따라 ×10²–10³ 다르다.
 - **창이 조건 검사를 정한다**: 인쇄 조건 't ≪ L²/D̃'(GITT)는 이 편 자기 D̃ 로 Li0.5 에서 맞춤 창 t·D/L² 0.18–0.49 · 펄스 600 s 1.05–2.94 · PITT 장시간 해는 창 끝 t·D/L² 0.06–0.10(둘째 항 0.14–0.32).
 - **우리 작업과의 연결**: 프로토콜(창) 선택이 같은 물리량의 '측정값' 을 바꾼다는 이 페이지의 축이 측정 층에서도 성립한다는 표본 — 합성 truth 의 D 를 문헌 측정값으로 고를 때 방법 · 창을 같이 적어야 한다(우리 수치는 `degradation-degeneracy/docs/RESULTS*.md` 정본 — 옮기지 않음).
+
+## ★ 실셀 판 — 하한 컷오프 0.5 V 가 blend 음극의 Si 를 보이게 · 안 보이게 한다 (2026-10-06, Asheruddin N 2025 · arXiv 사전인쇄)
+
+`raw/papers/asheruddin2025_phantom-lam-lli-ir-hysteresis-dma.md` §8 (Molicel P45B NCA ‖ C/SiOx · C/20 방전 · 같은 적합 · 같은 기준 곡선).
+
+- **창이 성분을 고른다** `[인쇄]`: 하한만 2.5 → 3.0 V 로 올리면 EOL 에서 Si-LAM −13.61 pp · LLI −5.72 · LAM_PE −2.25 · 흑연 LAM +1.32 pp ·
+  SoH +2.90 pp — 저자 말로 잘린 2.5–3.0 V 띠가 "precisely where the Si-dominated degradation signature resides". Lee 2020 의 "같은 폭이라도
+  위치가 어느 전극이 보이는지를 고른다" 가 **한 전극 안의 두 성분**에서 실측으로 나온 꼴이다.
+- **창이 RPT 마다 다시 정해진다** — 이 편의 가지 공정 창은 RPT 마다 충 · 방전 겹침으로 정한다 (§5-3). 창이 노화와 함께 움직이면 이
+  페이지의 '설계 변수' 가 '노화의 함수' 가 된다 (일곱째 축 Sun 2025 와 같은 꼴 — [[halfcell-window-parametrization-lineage]]).
+- `[해석]` 창 밖이 빠지면 모드는 '창 안 접근 용량의 비' 로 뜻이 바뀐다 — 잘린 창에서 흑연 LAM 이 비단조이고 blend 산술이 성립하지 않는 값이
+  나온다 (digest §2-m). 참값이 없어 어느 창이 맞는지는 이 편으로 정해지지 않는다 — 정리는 [[pocv-nonequilibrium-mode-bias]].
 
 ## 한계
 

@@ -2,10 +2,10 @@
 title: Fitting Degeneracy (LLI/LAM 분리가능성)
 description: "full-cell 곡선 하나로 LLI·LAM_PE·LAM_NE 를 가를 수 있는가 — flat valley(데이터 한계)와 multimodal(최적화 난이도)의 구분"
 created: 2026-08-11
-updated: 2026-10-05
+updated: 2026-10-06
 type: concept
 tags: [battery, degradation, research]
-sources: [raw/repositories/degradation-degeneracy-audit.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/li2026_half-cell-fitting-multiobjective-benchmark.md]
+sources: [raw/papers/asheruddin2025_phantom-lam-lli-ir-hysteresis-dma.md, raw/repositories/degradation-degeneracy-audit.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/li2026_half-cell-fitting-multiobjective-benchmark.md]
 confidence: high
 explored: false
 verificationStatus: unverified
@@ -251,6 +251,14 @@ flat 방향의 비율이 "LAM_PE ≈ LAM_NE 는 수학" 가설의 직접 증거 
 - [[piml-physics-injection-points]] — 위 Navidi 2024 처럼 **정답 자체가 이
   적합의 산물**인 파이프라인이 이 계보에 다섯 편 있다. 그 여섯째 자리(라벨)는
   방법 간 비교로는 원리적으로 검출되지 않는다.
+
+- [[pocv-nonequilibrium-mode-bias]] (2026-10-06) — 같은 증상 (적합은 그대로 ·
+  모드가 움직임) 을 **측정 곡선의 비평형 성분** (옴 IR · 가지 이력 · 창) 이 만드는
+  경우. 축퇴가 아니라 오설정이지만, 오설정이 매개변수로 사영되는 크기는 이 페이지의
+  약방향이 정한다 (`Δθ ≈ (JᵀJ)⁻¹Jᵀδ`, `[해석]`). 실셀 (Asheruddin N 2025 사전인쇄 ·
+  참값 없음) 에서 세 섭동 모두 **LAM_PE 와 LLI 가 같은 방향**으로 움직이고 PE − NE
+  격차가 ≈1.5–5 %p 움직인다. 그리고 기준 곡선 +δ ≡ 측정 곡선 −δ 라 우리 `ocpbias`
+  PE 다리가 곧 SOC 무관 IR 미보정의 참값 있는 판이다.
 
 ## 한계
 - 판정은 tol 임계와 guard-feasible 모집단에 조건부다.

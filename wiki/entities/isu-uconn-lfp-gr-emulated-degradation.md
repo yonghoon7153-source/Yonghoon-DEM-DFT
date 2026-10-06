@@ -5,7 +5,7 @@ created: 2026-10-03
 updated: 2026-10-06
 type: entity
 tags: [degradation, tooling, research]
-sources: [raw/articles/2026-10-02-github-research-briefing.md, raw/repositories/2026-10-03-reil-uconn-moo-known-truth-table.md, raw/papers/li2026_half-cell-fitting-multiobjective-benchmark.md]
+sources: [raw/articles/2026-10-02-github-research-briefing.md, raw/repositories/2026-10-03-reil-uconn-moo-known-truth-table.md, raw/papers/li2026_half-cell-fitting-multiobjective-benchmark.md, raw/papers/asheruddin2025_phantom-lam-lli-ir-hysteresis-dma.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -257,6 +257,10 @@ C1-core 기록과 같은 원문을 다시 읽은 것이고 그 기록 · 프로�
 - 방법 축: [[fitting-degeneracy]] · [[near-optimal-set-width-measurement]] · 원전: [[birkl-ocv-degradation-diagnostic]] · 자유도: [[np-lip-ocv-reparametrization]]
 - 같은 판정 틀의 앞선 실측: [[pyprobe]] · 물음: [[22p-physics-or-degeneracy]]
 - 같은 브리핑: [[pybamm]] (#5813) · [[pyimpspec]] · 처리 기준: [[daily-github-briefing-triage]]
+- 해석 제한 후보 (2026-10-06 · 논문 에이전트 · 판단은 REIL 문서 쪽 몫): 충전 곡선의 IR · 가지 이력 편향 — Asheruddin N 2025 (사전인쇄 ·
+  NMC811/NCA ‖ C/SiOx 21700 · LFP 0) 에서 **방향만** 옮겨진다 (충전 곡선이 위 → 창 안 용량 ↓ · 겉보기 LLI ↑ · dV/dQ 목적 f3 · f4 는 균일
+  이동에 둔감) · 크기는 안 옮겨진다 · 완전지 가지 ↔ 반쪽전지 기준 가지 불일치가 편향의 원천이라 P0 방향 대조 (RV2C-N3) 가 통제 자리 —
+  [[pocv-nonequilibrium-mode-bias]] (raw `raw/papers/asheruddin2025_phantom-lam-lli-ir-hysteresis-dma.md` §15-3).
 
 ## 관련
 - [[fitting-degeneracy]]

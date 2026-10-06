@@ -2,10 +2,10 @@
 title: N/P·Li/P 재매개화와 2 자유도 정리
 description: "The SOC-normalized full-cell OCV shape is governed by exactly two ratios, so LLI/LAM_PE/LAM_NE enter it only projectively — Lin & Khoo 2024"
 created: 2026-09-03
-updated: 2026-10-01
+updated: 2026-10-06
 type: concept
 tags: [battery, degradation, research]
-sources: [raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/dubarry2012_synthesize-degradation-modes.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/cui2024_electrode-utilization-formation-cycle-life.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md]
+sources: [raw/papers/asheruddin2025_phantom-lam-lli-ir-hysteresis-dma.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/dubarry2012_synthesize-degradation-modes.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/cui2024_electrode-utilization-formation-cycle-life.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md]
 confidence: high
 explored: false
 verificationStatus: unverified
@@ -140,6 +140,10 @@ Table 4 캡션은 "**only** identifiable" 이라고 쓰는데 같은 문장의 �
   **같은 정규화 곡선에서 파생된 관측은 2 자유도를 넘을 수 없다**는 상한을 준다.
 - 우리 창 좌표와의 사영 대응 (`[해석]`, 미검증):
   `z₀⁺ ↔ (β_NE − β_PE)/α_PE`, `r_N/P ↔ α_NE/α_PE`.
+- **실셀 DMA 논문을 읽을 때의 첫 물음** (2026-10-06): SOC 를 RPT 마다 자기 용량으로 정규화했다면 셋째 자유도 (공통 인수) 를 무엇으로
+  닫았나. Asheruddin N 2025 (`raw/papers/asheruddin2025_phantom-lam-lli-ir-hysteresis-dma.md`, PyProBE 도구) 는 "cycle-local SoC" 와
+  "`Q_FC = 1` 로 정규화" 만 적고 절대 용량이 모드 계산에 어떻게 들어가는지 쓰지 않는다 — 보고된 LLI 가 SoH 감소와 같은 크기로 자라
+  절대 용량을 쓴 것으로 보일 뿐이다 (`[도표·해석]`). 체크리스트는 [[pocv-nonequilibrium-mode-bias]].
 
 ## ★ 우리 좌표에서의 수치 검증 (2026-09-03, Phase 1c)
 

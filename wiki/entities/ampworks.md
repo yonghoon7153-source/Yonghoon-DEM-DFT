@@ -2,10 +2,10 @@
 title: ampworks (dQdV · dVdQ 피팅으로 LAM · LLI — watch)
 description: "저율 반쪽전지 · 전지 곡선의 전압 · ICA · DVA 를 맞춰 전극 창 (xn0 · xn1 · xp0 · xp1) 을 찾고 LAM · LLI 와 그 불확도를 내는 Python 도구 (BSD-3 · Python ≥3.11). 우리에게는 경쟁 · 비교 도구이자 판정 대상. 2026-10-05 실측 (버리는 venv · 우리 합성 truth): 점 추정은 비용 항 · 시작점에 민감하고 (dQdV 만이 가장 안정 · 기본값은 LLI 단독 조건에서 국소 최소), 보고 불확도는 틀린 적합에서 참 오차를 덮지 못하며 Hessian 이 대부분 양정치가 아니다. watch 유지 · 불확도 출력은 채택하지 않는다. upstream 결함 둘 (LLI_std 변수 혼동 · constrained_fit 의 x0 덮어쓰기) 은 초안만 — 발송은 사용자."
 created: 2026-10-05
-updated: 2026-10-05
+updated: 2026-10-06
 type: entity
 tags: [degradation, tooling, research]
-sources: [raw/articles/2026-10-05-github-research-briefing.md, raw/repositories/2026-10-05-ampworks-on-synthetic-truth.md]
+sources: [raw/articles/2026-10-05-github-research-briefing.md, raw/repositories/2026-10-05-ampworks-on-synthetic-truth.md, raw/papers/asheruddin2025_phantom-lam-lli-ir-hysteresis-dma.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -106,6 +106,10 @@ pristine + 조건 4 (LLI 단독 10 % · LAM_NE 단독 10 % · 혼합 10/10/10 ·
 ## 이 위키와의 관계
 
 - 브리핑 분류 ②: [[pyprobe]] (같은 계열 · 실측 있음) 와 나란히 둔다. 우리 파이프라인의 대안이 아니라 **판정 대상**이다 — 실측은 위.
+- IR 처리 대조 (2026-10-06): ampworks 는 상수 `iR` 를 다섯째 매개변수로 **맞추고**, Asheruddin N 2025 (사전인쇄 · raw
+  `raw/papers/asheruddin2025_phantom-lam-lli-ir-hysteresis-dma.md`) 는 ≈50 ms 펄스로 `R_Ω(SOC)` 를 **재서 미리 뺀다** — 같은 것이 아니다
+  (SOC 의존 · 담는 성분 · 매개변수 수가 다르다). ampworks 가 자기 문헌으로 적은 Weng · Siegel · Stefanopoulou 2023 이 그 논문의 참고문헌
+  [15] 다. 비교와 시험 설계 (적합 `iR` 열이 모드 열과 이루는 각) 는 [[pocv-nonequilibrium-mode-bias]].
 - 우리 저장소에서의 사용: 브리핑은 기본 가지만 보았다고 적었다 — 2026-10-05 로컬 원격 추적 가지 28 개를 텍스트 · 코드 파일에서 `git grep` 으로
   본 결과 **없음 (28 가지 모두 · 첫 검색에서 시간 초과한 3 가지는 재시도에서 없음)** (원문 출력은 raw 1차 대조 끝).
 

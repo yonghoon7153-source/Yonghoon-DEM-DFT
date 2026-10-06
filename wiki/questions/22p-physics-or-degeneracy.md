@@ -2,10 +2,10 @@
 title: 22p 결과는 물리인가 fitting degeneracy 인가
 description: "Is the seminar 22p LLI/LAM decomposition (LAM_PE=LAM_NE=13%, LLI=17%) real physics or an artifact of non-identifiability"
 created: 2026-08-11
-updated: 2026-10-05
+updated: 2026-10-06
 type: research-question
 tags: [battery, degradation, research]
-sources: [raw/repositories/degradation-degeneracy-audit.md, raw/papers/schmitt2022_sic-ocp-shape-change-degradation-modes.md, raw/papers/2026-09-21-siwon-kim-si-gr-ica-lam-si-gitt-ocp.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/cui2024_electrode-utilization-formation-cycle-life.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/mohtat2019_electrode-soh-estimability-expansion.md, raw/papers/natterer2026_re-halfcell-anode-potential-aging.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/sun2025_dl-eis-degradation-mode-diagnostics.md, raw/papers/oney2025_dead-slow-overworked-graphite-operando-microxrd.md, raw/papers/li2026_half-cell-fitting-multiobjective-benchmark.md]
+sources: [raw/papers/asheruddin2025_phantom-lam-lli-ir-hysteresis-dma.md, raw/repositories/degradation-degeneracy-audit.md, raw/papers/schmitt2022_sic-ocp-shape-change-degradation-modes.md, raw/papers/2026-09-21-siwon-kim-si-gr-ica-lam-si-gitt-ocp.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/cui2024_electrode-utilization-formation-cycle-life.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/mohtat2019_electrode-soh-estimability-expansion.md, raw/papers/natterer2026_re-halfcell-anode-potential-aging.md, raw/papers/bizeray2019_spm-identifiability-parameter-estimation.md, raw/papers/sun2025_dl-eis-degradation-mode-diagnostics.md, raw/papers/oney2025_dead-slow-overworked-graphite-operando-microxrd.md, raw/papers/li2026_half-cell-fitting-multiobjective-benchmark.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -229,6 +229,21 @@ LAM_PE ≈ LAM_NE 는 물리가 아니라 **flat valley 방향에서 두 전극�
   부호는 두 전극이 같은 셀 넷 · 반대 둘이라 가설의 '같은 부호 결합' 의 직접 근거가 아니다; (ii) (b) 는 LFP 평탄 양극의 LAM_PE ↔
   LLI 방향이고 22p 의 PE ↔ NE 방향 · 화학과 다르다; (iii) (a) 에는 참값이 없고 (b) 의 참값은 설계값이다 (formation 손실 · N/P 극단
   셀의 불확실성 — digest §8-4 · §9-3).
+
+- **[2026-10-06] 같은 셀 · 같은 추정기에서 '가지 · 창 · IR 보정' 만 바꿔도 PE − NE 격차가 판정선 크기만큼 움직인다** (Asheruddin N,
+  Leal De Souza, Holland, Folkson, Offer, Marinescu 2025, arXiv 2512.19773 사전인쇄 · Imperial · `raw/papers/asheruddin2025_phantom-lam-lli-ir-hysteresis-dma.md`
+  · 개념 [[pocv-nonequilibrium-mode-bias]]). 2026-09-21 덱의 코드와 같은 꼴의 5 매개 반쪽전지 맞춤 (창 4 + Gr/Si blend 몫 `φ_Si` —
+  우리 파이프라인은 그중 창 4 만 맞춘다) 을 C/SiOx 음극 21700 두 종에 걸고 구성만 바꾼다. `[인쇄]` P45B (NCA, C/20): 같은 3.0–4.2 V 창에서 충전 가지가 LAM_PE +3.42 pp · LLI +5.36 pp, 방전
+  가지가 Si-LAM +14.38 pp; 방전 창 하한 2.5 → 3.0 V 로 Si-LAM −13.61 · LLI −5.72 · LAM_PE −2.25 pp. M50T (NMC811, C/10): IR 미보정이
+  LAM_PE 를 상대 최대 −8.80 % · 흑연 LAM 을 중앙 +17.68 % 로 민다. 이 카드의 좌표로 옮기면 **PE − NE 격차가 IR ≈−1.45 · 가지 ≈+5.1 ·
+  창 +3.55 %p** 움직인다 (`[도표]` · `[재현]` — digest §14) — 판정선 2 %p 와 같은 자릿수이고, 세 섭동 모두 **LAM_PE 와 LLI 가 같은
+  방향**이다. `[해석]` 이 카드의 전제 (분해값이 절차에 묶여 있어 그대로 물리로 읽을 수 없다) 에 실셀 근거 하나를 더한다.
+  **범위 한정 셋**: (a) 이것은 **축퇴가 아니라 오설정** (측정 성분 · 가지 불일치) 이다 — 같은 증상 · 다른 원인 (2026-09-10 Schmitt 항목과
+  같은 분류). 다만 오설정이 사영되는 크기는 약방향이 정한다 (`Δθ ≈ (JᵀJ)⁻¹Jᵀδ`) — 두 축이 만나는 자리. (b) **참값이 없다** — 전부 구성
+  간 차이이고 셀 종류당 1 개 · 잔차 · 오차 막대 0 · 원문 내부 불일치 다수 (digest §2 — 가지 ↔ 전극 과정 · 부호 · `ν` 규약 · 그림 ↔
+  본문 수치). 원문의 '기준' 구성 (보정 · 방전 · 전체 창) 이 세 실험 모두 Si-LAM 최대 쪽이라 유령의 방향도 확정이 아니다. (c) 22p 에
+  걸리려면 22p 셀이 blend 음극이고 맞춤이 `φ_Si` 를 열었어야 하며 (2026-09-21 덱의 코드는 열었다), **22p 맞춤의 가지 · 율 · 창**이
+  무엇이었는지가 먼저 정해져야 한다 — 미확인.
 
 ## Evidence Against
 - (방향성 관측, 인용 금지 등급) half-cell 기준(Case 1)과 dQ/dV 항 추가가 복원
@@ -1077,8 +1092,14 @@ LAM_PE ≈ LAM_NE 는 물리가 아니라 **flat valley 방향에서 두 전극�
   - **유효범위 표기가 한 단계 더 좁아진다.** 2026-09-10 에 "우리 축퇴는 형상 불변이
     참인 이상적 하한" 이라 적었는데, 이 덱은 Si OCP 가 **충/방전 방향에 따라 다른
     함수**임을 GITT 로 보인다(γ_Si 25.7 ↔ 30.5 %, OCP 출처만 바꿔서) →
-    [[halfcell-ocp-shape-invariance]] 세 번째 파괴 방식. 우리 PyBaMM truth 는 방향
-    의존 OCP 를 갖지 않으므로 하한 진술에 "**단일 방향 OCP 가정 하**" 를 덧붙인다.
+    [[halfcell-ocp-shape-invariance]] 세 번째 파괴 방식. ~~우리 PyBaMM truth 는 방향
+    의존 OCP 를 갖지 않으므로 하한 진술에 "**단일 방향 OCP 가정 하**" 를 덧붙인다.~~
+    (2026-10-06 정정 — 코드 읽기 · 실행 0: `degradation-degeneracy/configs/base.yaml` 15–17 행
+    `negative: ["single", "current sigmoid"]` → truth 의 Si 상은 전류 부호로 리튬화 ↔ 탈리튬화
+    OCP 를 바꾸는 **방향 의존 OCP 를 갖는다**. 정확한 한정은 '단일 방향 OCP 가정' 이 아니라
+    **'방전 가지 한 개 + 가지 일치 (Si 탈리튬화) 기준으로만 적합'** 이다 — `src/halfcell.py`
+    87–106 · 195–199 행. 즉 우리 하한은 가지 불일치 · 충전 가지 · 노화에 따라 변하는 이력을
+    **뺀** 구성 위에서 잰 것이다 — [[pocv-nonequilibrium-mode-bias]].)
 - **[2026-09-23] Bizeray 2019 흡수(액체셀 SPM 식별성, `assb` 28호로 번호) — 이 카드에는 형식 유비 하나.**
   2전극 차 측정의 전극 맞바꿈 대칭이 전달함수 수준에서 인쇄돼 있다(Evidence For). 그리고 반대쪽
   사실 하나: 식별성을 **잰** 원전도 모드 축(`Q_th` · `x⁰`)은 입력으로 뺐다 —
@@ -1132,6 +1153,17 @@ LAM_PE ≈ LAM_NE 는 물리가 아니라 **flat valley 방향에서 두 전극�
   포함하는가 · 얼마나 넓은가) 을 실측에 얹을 자리가 그대로 남는다 — 이 편은 맞춤 경우마다 점 추정 하나만 냈고 그 점들이 공개
   코드의 부등식 경계 · 상자 끝에 붙어 있다 (digest §8-3). 식별 가능성 (ABC) 은 LCO 두 셀의 주변분포뿐이라 방향 정보가 없다 →
   [[mode-identifiability-unmeasured-lineage]] 반론 (h). 수치 판정은 REIL 프로토콜 (E3a / H) 의 몫이고 이 카드에는 옮기지 않는다.
+- **[2026-10-06] Asheruddin N 외 2025 흡수 (arXiv 2512.19773 사전인쇄 · 사용자 업로드 · 논문 에이전트) — Evidence For 1 건 (범위 한정
+  셋) · 기록 정정 하나.** `active` 유지. 새 개념 [[pocv-nonequilibrium-mode-bias]] — pOCV 의 비평형 성분 (옴 · 가지 이력 · 창) 이 모드로
+  사영되는 경로. 이 카드에 달라진 것 셋:
+  1. **새 축 '측정 성분' 이 붙었다.** 지금까지의 '모델 오차 민감도' (2026-08-20 (a) · Schmitt 2022) 는 반쪽전지 기준 쪽이었고, 이 편은
+     **측정 곡선 쪽** (IR · 가지 · 창) 이다. 항등식 — 기준 곡선 +δ ≡ 측정 곡선 −δ — 때문에 우리 `ocpbias` PE 다리
+     (`docs/09_22P_GAP.md` §7.10) 가 곧 **SOC 무관 IR 미보정의 참값 있는 판**이다. 이 편이 못 한 '참값 대비 오차' 를 우리는 이미 갖고 있다.
+  2. **정정**: 2026-09-22 줄의 "우리 PyBaMM truth 는 방향 의존 OCP 를 갖지 않으므로" 를 취소선으로 고쳤다 (위 · 원문 보존). truth 는
+     current sigmoid 이력 OCP 를 갖고, 파이프라인은 방전 가지 + 탈리튬화 기준으로만 맞춘다 — 이 편이 권하는 구성과 같다.
+  3. **값싼 대조 다섯 (미실행 · 사용자 승인 대상)** — 개념 페이지 "이 위키에서의 적용" P1–P5: §7.10 격차 bias **부호**와 이 편 방향의 대조
+     (부호 규약 · 지표 차이 먼저 고정) · 꼭대기 무거운 SOC 의존 오프셋 다리 · `φ_Si` 자유 5 매개 적합 · 충전 가지 + 가지 불일치 기준 ·
+     적합 R 열 각도 (ampworks `iR` · PyDMA 옵션). 수치는 이 카드에 옮기지 않는다 — 정본은 artifact + `docs/RESULTS*.md` · `docs/09_22P_GAP.md`.
 
 ### 이 카드가 속한 논지 (2026-09-03)
 

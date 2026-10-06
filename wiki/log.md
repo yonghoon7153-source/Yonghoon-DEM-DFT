@@ -3557,3 +3557,19 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - 출처: `bms-balancing/reviews/prereview_reil_v2_c6_supplement_20261006/` (받은 바이트 · `C6_PREREQUISITE_REVIEW_ACCEPTED_N1_N2_CLOSED_WITH_EVIDENCE_LIMITS`) · 상태 문서 `bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md` §15.
 - [[isu-uconn-lfp-gr-emulated-degradation]]: "부속 C 재검토" 절에 한 줄 — C6 종결 · 다음 = P0 승인 요청.
 - 하지 않은 것: 묶음 스크립트 실행 · 자료 개봉 · 재구축 · 시험 · 맞춤 · P0.
+
+## [2026-10-06] ingest | Asheruddin N, Leal De Souza, Holland, Folkson, Offer, Marinescu 2025 — Phantom LAM and LLI: Resistance and Hysteresis Bias in Voltage-Curve Degradation Mode Analysis (arXiv 2512.19773v1 · 사전인쇄)
+- raw: `raw/papers/asheruddin2025_phantom-lam-lli-ir-hysteresis-dma.md` (본문 sha256 봉인 `0de18219…` · 원문 PDF `222dcd2d…` 12 쪽 · 1,239,480 B — 호출자가 준 해시와 직접 재계산 일치 · PDF 미커밋 · SI 언급 0 이라 미수령 항목 없음) · 그림 `raw/figures/asheruddin2025_phantom-lam-lli-ir-hysteresis-dma/` (크로퍼 자동 9 · SI 0 — 호출자의 중간 커밋 `a2445f1a4` 에 이미 들어간 것 그대로).
+- 출처 · 지시: 사용자 업로드 (2026-10-06) · 호출자 "논문 에이전트 해줘" — 고치는 곳 wiki/ 만 · 실행 · 피팅 · 설치 0 · git commit 은 호출자.
+- 서지 대조: 제목 · 저자 여섯 · 순서가 호출자 검색 결과와 일치 · 소속 전원 Imperial College London · 1 저자 성은 원문상 "N" (slug 는 검색성을 위해 `asheruddin`).
+- 본 그림: Fig. 1–9 전부 (스크래치패드 확대: Fig. 1 왼쪽 세 열 · 4a · 4b · 5b–f · 6d–f · 7a–f) · 페이지 렌더로 글자 확인: p.4 식 4–12 · p.5 오른쪽 단. 안 본 그림 0.
+- 핵심 (digest §0-1): (a) 참값 없음 — 전부 구성 간 차이이고 원문의 기준 구성 (보정 · 방전 · 전체 창) 이 셋 다 Si-LAM 최대 쪽; (b) IR (상대 %) ↔ 창 · 가지 (pp) 단위가 섞임 — IR 의 EOL 절대 차는 LAM_PE ≈1.0 · LLI ≈0.65 %p `[도표]`; (c) 권고 구성 (공통 창 방전) 에서 원문의 blend 규칙이 ≈850 · ≈1250 Ah 에 성립하지 않고 흑연 LAM 이 비단조 `[재현]`; (d) `identifiab*` 1 회 · 잔차 · 매개변수 값 · 반복 셀 0; (e) 내부 불일치 (digest §2 a–p — 가지 ↔ 전극 과정 · 식 3 과 반대 부호 · `ν` 규약 · 저항 대소 · Fig. 4b ↔ '−45 %' · Fig. 8 ↔ 7 · 인용 다섯 목록 밖).
+- 하지 않은 것: Zenodo · PyProBE · PyDMA 열람 · 우리 파이프라인 실행 · 대조 P1–P5 (사용자 승인 대상) · bms-balancing 문서 수정 · 우리 연구 수치 복사.
+
+## [2026-10-06] update | Asheruddin N 2025 컴파일 — 새 개념 pocv-nonequilibrium-mode-bias · 22p 카드 (Evidence For 1 · 기록 정정 1) 외 12 페이지 · index
+- 출처: `raw/papers/asheruddin2025_phantom-lam-lli-ir-hysteresis-dma.md` (직전 ingest) + 코드 읽기만 (`degradation-degeneracy/configs/base.yaml` 15–17 · `src/halfcell.py` 87–106 · 144–148 · 195–199 — RUN_SCOPE 수정 0).
+- create [[pocv-nonequilibrium-mode-bias]] — 세 통로 표 · 기준 +δ ≡ 측정 −δ 항등식 · IR 처리 두 방식 (측정 `R(SOC)` 사전 보정 ↔ 적합 상수 오프셋: ampworks `iR` · Sun 2025 `R` · Rhyu 2025 `V_shift` · PyDMA `allow_resistance_offset` — PyDMA 는 호출자 전달 · 코드 미확인) · 우리 파이프라인의 자리 · REIL 로 옮기면 · 체크리스트. index 등록 (전체 61).
+- [[22p-physics-or-degeneracy]]: Evidence For 1 (가지 · 창 · IR 만으로 PE − NE 격차 ≈1.5–5 %p · 범위 한정 셋) · Status Log 1 · **정정** — 2026-09-22 줄 "우리 PyBaMM truth 는 방향 의존 OCP 를 갖지 않으므로" 를 취소선으로 보존하고 고침 (truth 의 Si 상 = current sigmoid 이력 OCP · 적합은 방전 가지 + 탈리튬화 기준).
+- [[pvs-sev-lli-lampe-separability]]: Status Log 1 (Gap 라벨 불확실성 상향 · PVS 는 균일 이동에 불변 메모). [[halfcell-ocp-shape-invariance]]: 새 절 (처방 ③ 의 실셀 출판 사례 · 음수 · 비단조 구성요소 LAM · 체크리스트 (c) 여전히 0). [[halfcell-window-parametrization-lineage]]: 비교표 행 + 메모 (일곱째 축과 반대 처방). [[fitting-degeneracy]] · [[data-window-identifiability]] · [[np-lip-ocv-reparametrization]]: 짧은 절 · 줄. [[mode-identifiability-unmeasured-lineage]]: Thesis 20 → 21 편 · §1 표 행.
+- 엔티티: [[pyprobe]] (실셀 적용 논문 절) · [[ampworks]] (IR 처리 대조 한 줄) · [[isu-uconn-lfp-gr-emulated-degradation]] (해석 제한 후보 한 줄 — 판단은 REIL 문서 쪽) · [[degradation-degeneracy]] (가지 · IR 한계 한 줄) · [[mode-observability]] (두 가지 = 관측 둘 한 줄).
+- 하지 않은 것: bms-balancing · degradation-degeneracy 문서 수정 · PyDMA 엔티티 생성 (근거 raw 없음) · 대조 실행.

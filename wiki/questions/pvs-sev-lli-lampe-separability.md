@@ -2,10 +2,10 @@
 title: PVS·SEV 는 LLI 와 LAM_PE 를 가르는가
 description: "Do the two physics-inspired features add an independent direction separating LLI from LAM_PE, or do they share one contrast"
 created: 2026-09-03
-updated: 2026-10-02
+updated: 2026-10-06
 type: research-question
 tags: [battery, degradation, research]
-sources: [raw/papers/2026-09-02-siwon-kim-degradation-mode-ml-seminar.md, raw/papers/2026-09-21-siwon-kim-si-gr-ica-lam-si-gitt-ocp.md, raw/transcripts/2026-09-03-voice-memo-007-degradation-mode-ml.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/wang2025_interpretable-ml-battery-prognosis.md, raw/papers/kim2023_graphite-heterogeneity-lifetime.md, raw/papers/su2024_drt-soh-health-features.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/zhang2020_eis-gpr-capacity-rul.md, raw/papers/tao2025_nondestructive-degradation-decoupling.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/mohtat2019_electrode-soh-estimability-expansion.md, raw/papers/natterer2026_re-halfcell-anode-potential-aging.md, raw/papers/sun2025_dl-eis-degradation-mode-diagnostics.md]
+sources: [raw/papers/asheruddin2025_phantom-lam-lli-ir-hysteresis-dma.md, raw/papers/2026-09-02-siwon-kim-degradation-mode-ml-seminar.md, raw/papers/2026-09-21-siwon-kim-si-gr-ica-lam-si-gitt-ocp.md, raw/transcripts/2026-09-03-voice-memo-007-degradation-mode-ml.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/wang2025_interpretable-ml-battery-prognosis.md, raw/papers/kim2023_graphite-heterogeneity-lifetime.md, raw/papers/su2024_drt-soh-health-features.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/zhang2020_eis-gpr-capacity-rul.md, raw/papers/tao2025_nondestructive-degradation-decoupling.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/mohtat2019_electrode-soh-estimability-expansion.md, raw/papers/natterer2026_re-halfcell-anode-potential-aging.md, raw/papers/sun2025_dl-eis-degradation-mode-diagnostics.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -1018,6 +1018,14 @@ H2 가 참일 수 있음에 주의한다 — 부호가 같다고 벡터가 평�
   변화의 부호 반전(r = −0.962)이고 두 LAM 이 같은 대역이다. 이 카드에 남는 할 일: SEV(동역학 축)를 판정할 때
   **두 모드 감도의 상관부터 재고**, 모드가 반대로 움직이는 합성 조합으로 시험하는 단계(digest §17.4 실험 3)를
   "이 질문에 답하는 방법" 에 넣는다 (미실행).
+
+- **[2026-10-06] Asheruddin N 외 2025 흡수 (arXiv 사전인쇄 · 논문 에이전트) — Evidence For/Against 변화 없음, Gap (라벨 불확실성) 의
+  무게 상향.** `open` 유지. 세미나 프레임워크의 라벨 생성기와 같은 꼴 (반쪽전지 기준 곡선 + Gr/Si blend 몫 `φ_Si` 를 맞추는 5 매개) 에서
+  **가지 · 창 하한 · IR 보정**만 바꿔도 LAM_PE · LLI 가 1–6 pp, Si-LAM 이 최대 14 pp 움직인다 (실셀 · 참값 없음 ·
+  `raw/papers/asheruddin2025_phantom-lam-lli-ir-hysteresis-dma.md` · [[pocv-nonequilibrium-mode-bias]]). 이 카드의 정답 축 (ML 라벨) 이
+  어느 가지 · 율 · 창의 맞춤인지가 PVS · SEV 판정 앞에 붙는 조건이 된다. PVS 는 봉우리 · 골의 dQ/dV 차를 **전압 차**로 나누므로 균일한
+  IR 이동에는 불변이고 (`[해석]`), SOC 의존 이동만큼만 움직인다 — 그 편 Fig. 2c 에서 IR 보정이 특징점마다 다르게 민다 (중 V 골 +18.7 /
+  +10.4 mV · 고 V 골 +18.0 / +24.8 mV, 첫 / 끝 사이클 `[인쇄]`). 판정 아님 · 메모.
 
 ### 이 카드가 속한 논지 (2026-09-03)
 
