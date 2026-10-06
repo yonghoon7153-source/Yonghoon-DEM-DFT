@@ -81,6 +81,7 @@ scripts/lhs_harvest_batch.py	--selftest	fast	none	claude	초록 0.0s (실측) �
 scripts/lhs_phi_crosscheck.py	--selftest	fast	none	claude	초록 <1s (실측) — 수확기 ↔ 웹앱 porosity 교차검사: 두 코드 함수를 같은 덤프에 호출 · LHS-10 바닥 재현 · 음성 대조 (바닥 = 벽) · 플래튼 − 고체 윗면 (LHS-11)
 scripts/lhs_ext_design.py	--selftest	fast	both	claude	초록 0.7s (실측)
 scripts/lhs_ext_materialize.py	--selftest	fast	both	claude	초록 0.1s (실측)
+scripts/lhs_supp_design.py	--selftest	fast	check_all	claude	초록 16.7s (실측 · 26 건 · 변이 13) — 보충 20 + 후막 8 설계: 2 mAh 규칙 · 입자 수 실측 재현 · 결정론 · 자기 검증 · 빈 곳 감소 · 코어 60 (allocate_cores) · 반례 거부
 scripts/lhs_ext_submit_gate.py	--selftest	fast	both	claude	초록 0.1s (실측)
 scripts/lhs_union_webapp.py	--selftest	fast	none	claude	초록 3.6s (실측) — 웹앱 함수 sphere · 쌍 렌즈 union 손계산 · 정확 union (MC) 4σ · coverage 전수 대조 (주기 x·y) · 세 입자 겹침 상한 · delta 열 어긋남 · 두 프레임 거부 · 내부 공극률 · z 분포 · --scan-root
 scripts/lhs_contact_audit.py	--selftest	fast	none	claude	초록 1.2s (실측) — J20-a ⓐ LHS 접촉 덤프 읽기 전용 점검 v2 (34 건 · 자기리뷰 12 항 반례 포함): 다중 프레임 · 중복 쌍 · δ≤0 · 주기 플래그 ↔ 기하 최소영상 재계수 (쌍 단위) · 반올림 폭 (덤프 유효숫자 실측) 판별 ①②③ · MPI 고스트 플래그 (띠 + 최소 격자) · 상별 벽 접촉 비율 · 웹앱 경로 CN 2 배 실증
