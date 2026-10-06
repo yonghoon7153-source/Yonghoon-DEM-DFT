@@ -1,0 +1,70 @@
+{
+  "review_date": "2026-10-07",
+  "status": "LIMITED_NATIVE_AND_NUMERICAL_RESULT_ACCEPTED_DELIVERY_PRESERVATION_PENDING",
+  "native_completion": "NORMAL_150S_COMPLETED",
+  "evidence_validity_in_received_native_package": "VALID_WITH_STATED_PROVENANCE_LIMITS",
+  "mesh_comparison": "WITHIN_LIMITS_THIS_WINDOW",
+  "comparison_scope": "This fixed input, particle radial mesh 320/320 versus 640/640, exact 120-150 s requested window, 301 times and 241 coordinates per electrode",
+  "blocking_numerical_or_native_findings": [],
+  "delivery_closeout": "PENDING_ORIGINAL_SELECTED_SOURCES_AFTER",
+  "delivery_pending_item": {
+    "file": "SELECTED_SOURCES_AFTER.json",
+    "bytes": 2861947,
+    "sha256": "4dc9b2387d56566c9d1107ce8d12ee448338741397b582f4a7a451e2acab1aa8",
+    "reason": "Only the identity and summary were supplied; full post-packaging list is outside the received archive. Before list has 8674 entries and matches received members. Cannot independently compare every before/after entry without the after file.",
+    "remedy": "Send the existing original after file, preferably with existing DELIVERY_RECEIPT.json and FINAL_PACKAGE_TOOL_RETURN.json; do not rerun native, analyzer, or packaging to recreate historical evidence."
+  },
+  "input_zip": {
+    "bytes": 256397169,
+    "sha256": "7c40d5babd69a92a70952ddef1fb5bf328878021fb7eb1caef834754cac1aa62",
+    "payload_count": 8681,
+    "manifest_bytes": 1450858,
+    "manifest_sha256": "82ebc1ef12ebdc594d3b25ead9b0b2722a5ad4f4c9df01a6fc534aaa4b0adc2d",
+    "all_payload_size_and_sha": "PASS",
+    "exact_set_and_paths": "PASS",
+    "crc_read_to_eof": "PASS"
+  },
+  "parent_completion": {
+    "pre_write_s": 4471.8464505,
+    "post_write_s": 4471.8936425,
+    "limit_s": 10500,
+    "record_errors": [],
+    "native_child_rc": 0,
+    "analysis_child_rc": 0,
+    "outer_NoExit_process_rc": null,
+    "boundary": "SCRIPT_FINAL_RECORD_NOT_PROCESS_EXIT",
+    "post_write_provenance": "User-provided console text, subsequently recorded; not independent reviewer OS observation"
+  },
+  "packaging_return": {
+    "chunk_id": "6b5778",
+    "exit_code": 0,
+    "wall_time_seconds": 13.5086222,
+    "snapshot_before_return_s": 271.031481,
+    "limit_s": 1800,
+    "provenance": "Submitted conversation transcription; does not replace absent after-list bytes",
+    "wall_time_added_to_snapshot": false,
+    "transcription_320_981_s": "SUBMITTER_REPORT_ONLY"
+  },
+  "preservation_native": "ACCEPTED_FROM_SEALED_EXECUTION_RECORDS",
+  "cleanup_native": "ACCEPTED_FROM_SEALED_EXECUTION_RECORDS",
+  "policy_preservation": "ACCEPTED_FROM_SEALED_EXECUTION_RECORDS",
+  "mph": {
+    "bytes": 6162301981,
+    "sha256": "f6053533e299e6688da0063aa9c0c271ea6755d6dee0721dd30c0c7a4a13fcd1",
+    "included": false,
+    "reviewer_direct_bytes_verification": false,
+    "keep_existing_file": true
+  },
+  "normal_gate": "INCOMPLETE",
+  "overall_convergence": "INCOMPLETE",
+  "effective_policy": "UNVERIFIED",
+  "actual_cores": "UNVERIFIED",
+  "PS01_16_internal": "UNOBSERVED",
+  "new_execution_approved": false,
+  "source_changes_required": false,
+  "native_rerun_required": false,
+  "received_analyzer_rerun_required": false,
+  "reviewer_supplied_code_executed": false,
+  "reviewer_COMSOL_calls": 0,
+  "reviewer_data_only_recalculation": true
+}

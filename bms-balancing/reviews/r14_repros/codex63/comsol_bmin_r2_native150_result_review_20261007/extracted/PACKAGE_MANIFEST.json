@@ -1,0 +1,59 @@
+{
+  "review_date": "2026-10-07",
+  "scope": "Limited native and numerical result review; final delivery preservation pending existing source-after file",
+  "payload_count": 10,
+  "files": [
+    {
+      "file": "CLAUDE_REPLY_KO.md",
+      "bytes": 1874,
+      "sha256": "d84d2b1623f24acb58e14563a41582019a6d1334ae93b062c0ba3cb7ca5f1a74"
+    },
+    {
+      "file": "DECISION.json",
+      "bytes": 3276,
+      "sha256": "9ad8ae5f562652c2bd618149934a90c59fb5a682d67b2bb0674dc4fc1f3fd977"
+    },
+    {
+      "file": "EVIDENCE_CROSSCHECK.json",
+      "bytes": 2987,
+      "sha256": "4e8a96a83594913ccc6bf1dfc8ff2ff643d9b992d9f430792f1f61e40b513247"
+    },
+    {
+      "file": "INPUT_IDENTITY_CHECK.json",
+      "bytes": 825,
+      "sha256": "863a39d5eed5302f0423920fb7ea15e2c2f2bd6a12afd6d6da4896bf92e5ce8a"
+    },
+    {
+      "file": "LOCAL_CODEX_REPLY.md",
+      "bytes": 2212,
+      "sha256": "a1c1cb6fa48ae40aa0cceb05f2a8f6e78452c749586bd32f2a9808d921bcbc86"
+    },
+    {
+      "file": "NUMERICAL_CROSSCHECK.json",
+      "bytes": 2264,
+      "sha256": "58ac722e92bac94fb721be12e7836c24f03f1dfc2a09d6b1949f0b77b1b0cfd8"
+    },
+    {
+      "file": "REVIEW_KO.md",
+      "bytes": 10176,
+      "sha256": "f687a3b0412bb85dd9182d7e982f937154e51c22e90b04a4d4560b69d5c6a66f"
+    },
+    {
+      "file": "REVIEWER_EVIDENCE_TOOL_RETURNS.json",
+      "bytes": 6933,
+      "sha256": "f99905176486cd4bfdf80e88809d4a9875df462af6d108ccf4d26144657151a5"
+    },
+    {
+      "file": "REVIEWER_INSPECTION_NOTES.txt",
+      "bytes": 1318,
+      "sha256": "f0535bb820255829029245bcd6ffdfbc3978ba92d8fb99a4fda3385d4847bd9b"
+    },
+    {
+      "file": "reviewer_readonly.py",
+      "bytes": 21059,
+      "sha256": "1af3448f15abf69075d4eac89ff6adcef4a9b440c2d9289c2b0186e92d1db7e0"
+    }
+  ],
+  "excludes_self": "PACKAGE_MANIFEST.json",
+  "received_zip_sha256": "7c40d5babd69a92a70952ddef1fb5bf328878021fb7eb1caef834754cac1aa62"
+}

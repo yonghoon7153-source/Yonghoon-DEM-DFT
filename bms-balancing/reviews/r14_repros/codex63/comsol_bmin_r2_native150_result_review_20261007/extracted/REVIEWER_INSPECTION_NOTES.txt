@@ -1,0 +1,8 @@
+Reviewer tool observations, not supplied production failures
+2026-10-07
+
+The initial compact ZIP-text inspection used the Windows default cp949 output encoding and raised UnicodeEncodeError on a nonbreaking space in an equation table. Repeated read-only inspection with the interpreter's UTF-8 option succeeded. No received source or analyzer was executed.
+
+The first reviewer metadata/log crosscheck (tool chunk a08077, rc 0) reported one reviewer-check discrepancy: producer_complete. The raw line is 'PREFLIGHT_SOLVER_RETURNED=true; physical checks separate', whereas the reviewer initially compared the whole line with 'PREFLIGHT_SOLVER_RETURNED=true'. The retained production consumer checks that token as a substring. The reviewer check is corrected to require the observed complete line, exactly once; BMIN640_PRODUCER_COMPLETE remains required exactly once. All other 8,805 data assertions in that first pass had no discrepancy. This is not a production, native, or received analyzer failure.
+
+All reads and calculations here inspect submitted data. Supplied Python/Java/PowerShell files are not imported, compiled, or run. No COMSOL, solver, supplied analysis routine, or submitted test suite is executed. Read-only CSV arithmetic is independent reviewer recomputation, not a rerun of the submitted analyzer.

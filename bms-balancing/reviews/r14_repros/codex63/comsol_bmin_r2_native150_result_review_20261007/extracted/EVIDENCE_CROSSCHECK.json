@@ -1,0 +1,67 @@
+{
+  "checks": 8831,
+  "errors": [],
+  "selected_before_members": 8674,
+  "emitted_csv_count": 35,
+  "native_steps": 2447,
+  "transient_dof": [
+    [
+      "156925",
+      "12"
+    ]
+  ],
+  "native_significant_lines": [
+    "ELECTROLYTE_COUPLING=minguardall|dimension=1|entities=[1, 2, 3]|points=lagrange|lagrange=5",
+    "ELECTROLYTE_COUPLING=minguard1|dimension=1|entities=[1]|points=lagrange|lagrange=5",
+    "ELECTROLYTE_COUPLING=minguard2|dimension=1|entities=[2]|points=lagrange|lagrange=5",
+    "ELECTROLYTE_COUPLING=minguard3|dimension=1|entities=[3]|points=lagrange|lagrange=5",
+    "AXES_PHYSICAL_MESH_DOMAIN=1|numelem=120",
+    "AXES_PHYSICAL_MESH_DOMAIN=2|numelem=60",
+    "AXES_PHYSICAL_MESH_DOMAIN=3|numelem=120",
+    "AXES_PARTICLE=pce1|Nel=640|Nord=1|Distribution=CubicRoot",
+    "AXES_PARTICLE=pce2|Nel=640|Nord=1|Distribution=CubicRoot",
+    "PREFLIGHT_SOLVER_RETURNED=true; physical checks separate",
+    "AXES_ACTUAL_MESH=mesh1|edges=300|vertices=301",
+    "BMIN640_PRODUCER_COMPLETE"
+  ],
+  "parent_boundary": {
+    "elapsed_seconds": 4471.8464505,
+    "raw_host_rc": null,
+    "delivery_elapsed_seconds": 1.107357600000796,
+    "transcript": {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\bmin_particle640_offline_preparation_20261004\\future_parent_001\\PARENT_TRANSCRIPT.txt",
+      "sha256": "c0a39b5446a1146174dbdb7cad5aa6285427dcb006144148c40a31e9577c6485",
+      "bytes": 1721
+    },
+    "host_boundary": "SCRIPT_FINAL_RECORD_NOT_PROCESS_EXIT",
+    "observation_phase": "PRE_WRITE",
+    "within_limits": true,
+    "body_completed_without_error": true,
+    "source": "USER_VISIBLE_POWERSHELL_PARENT",
+    "local_decision": {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\bmin_particle640_offline_preparation_20261004\\future_parent_001\\PARENT_LOCAL_DECISION.json",
+      "sha256": "65a70a19c2ebf4eef484d0ecd98a5d35f6c6aef6b488056a21a4a5fc7b36aed0",
+      "bytes": 2341
+    },
+    "errors": [],
+    "overall": "INCOMPLETE",
+    "limited": "AWAITING_BMIN640_150S_EXTERNAL_ACCEPTANCE",
+    "status": "AWAITING_EXTERNAL_ACCEPTANCE",
+    "fields": {
+      "mesh_comparison": "WITHIN_LIMITS_THIS_WINDOW",
+      "native_completion": "NORMAL_150S_COMPLETED",
+      "native_completion_cause": null,
+      "evidence_validity": "VALID",
+      "consumer_native_completion_unverified": "NORMAL_150S_COMPLETED"
+    }
+  },
+  "post_write_snapshot_seconds": 4471.8936425,
+  "nested_zip_counts": {
+    "BMIN_R2_RETRY3_SUPPLEMENT_REVIEW_20261006.zip": 8,
+    "BMIN150_DEPLOYMENT_PREFLIGHT_REVIEW_20261006.zip": 7,
+    "BMIN150_DEPLOYMENT_PREFLIGHT_FOR_REVIEW_20261006.zip": 22,
+    "BMIN_R2_LIMITED_VALIDATION_RETRY3_RESULT_20261005.zip": 245
+  },
+  "run_file_count_excludes_events": 53,
+  "note": "Native preservation/cleanup are accepted from saved records and source behavior, not current host observation. Post-packaging source-after file absent."
+}
