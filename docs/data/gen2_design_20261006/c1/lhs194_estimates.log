@@ -1,0 +1,27 @@
+== lhs: n=130
+  sA     n=130  min 0.1994  p10 0.2972  med 0.3869  p90 0.4382  max 0.4463
+  cn     n=130  min 0.6803  p10 1.681  med 4.746  p90 7.985  max 9.174
+  pc     n=106  min 0.6719  p10 0.6737  med 0.697  p90 0.7747  max 0.9229
+  T_H0   n=106  min 1.974  p10 2.279  med 4.77  p90 36.11  max 1868
+  T_CF0  n=106  min 0.6229  p10 0.7136  med 1.347  p90 7.321  max 178.8
+  kb     n=130  min 1.364  p10 1.369  med 1.396  p90 1.437  max 1.471
+  k=0.35: sigma H1/H0 med 1.165 [1.102-1.179] -> T x0.858 | H12/H0 med 1.028 [1.010-1.105] -> T x0.973
+  k=0.72: sigma H1/H0 med 1.387 [1.230-1.424] -> T x0.721 | H12/H0 med 1.198 [1.142-1.316] -> T x0.835
+  k=1.0: sigma H1/H0 med 1.599 [1.344-1.659] -> T x0.625 | H12/H0 med 1.353 [1.259-1.522] -> T x0.739
+  CF computed 106 · T_CF0<1: 43 · q_CF0>1: 0 · T_CF2<1 (proxy): 16 · CF missing: 24
+  T_CF2 proxy: min 0.853 med 1.859
+== lhsx: n=64
+  sA     n= 64  min 0.4158  p10 0.4305  med 0.4464  p90 0.4536  max 0.4568
+  cn     n= 64  min 6.892  p10 7.844  med 9.619  p90 10.78  max 11.15
+  pc     n= 64  min 0.6629  p10 0.6638  med 0.6684  p90 0.6744  max 0.6793
+  T_H0   n= 64  min 1.254  p10 1.324  med 1.588  p90 2.081  max 2.555
+  T_CF0  n= 35  min 0.4726  p10 0.5042  med 0.5677  p90 0.719  max 0.8046
+  kb     n= 64  min 1.358  p10 1.36  med 1.364  p90 1.373  max 1.381
+  k=0.35: sigma H1/H0 med 1.177 [1.167-1.180] -> T x0.850 | H12/H0 med 1.030 [1.021-1.034] -> T x0.971
+  k=0.72: sigma H1/H0 med 1.417 [1.391-1.426] -> T x0.706 | H12/H0 med 1.209 [1.189-1.218] -> T x0.827
+  k=1.0: sigma H1/H0 med 1.646 [1.603-1.662] -> T x0.608 | H12/H0 med 1.372 [1.340-1.385] -> T x0.729
+  CF computed 35 · T_CF0<1: 35 · q_CF0>1: 24 · T_CF2<1 (proxy): 33 · CF missing: 29
+  T_CF2 proxy: min 0.645 med 0.777
+  Physics T<1 rows: 10 · their T_CF0 [None, None, None, None, None, None, None, None, None, None]
+                     their T_CF2 proxy [None, None, None, None, None, None, None, None, None, None]
+                     their T_H0 [1.387, 1.351, 1.323, 1.326, 1.28, 1.29, 1.311, 1.254, 1.301, 1.273] · cn [10.1, 10.5, 11.0, 10.7, 11.1, 10.8, 10.9, 11.0, 10.9, 10.9]

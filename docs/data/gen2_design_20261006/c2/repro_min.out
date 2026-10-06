@@ -1,0 +1,19 @@
+HEAD constants: E*_AMSE=2.24149e+10  H=8.5e+08  H_FILM_MIN=5e-09  DR_YIELD_ONSET=0.00113148  DR_FULLY_PLASTIC=0.00779661
+E* by pair (GPa): {'AM_SE': 22.4149, 'SE_SE': 13.1868, 'AM_AM': 74.6667}
+DESC-03 SI (m)                                        binding=volume  A/A_hertz=1.229167 A_volume/A_tabor=0.491155
+DESC-03 sim (mm = SI×1e3, what build_network passes)  binding=tabor   A/A_hertz=2.502607 A_volume/A_tabor=491.155
+L1-02 r=0.5 δ=0.0125: legacy=+0.000060336578  exact=+0.000122207136  ratio=0.493724
+L1-02 r=0.5 δ=0.95: legacy=-0.094509578995  exact=+0.484361592352  ratio=-0.195122
+L1-01 binding=liggghts cap_conflict=True A/A_tabor=1.784757 A/A_volume=8.016722
+L1-03 AM_AM: A=0.0120673155 µm² (helper has no pair/E*/H argument) ; A_tabor would scale ×3.3311 with own E*
+L1-03 AM_SE: A=0.0120673155 µm² (helper has no pair/E*/H argument) ; A_tabor would scale ×1.0000 with own E*
+L1-03 SE_SE: A=0.0120673155 µm² (helper has no pair/E*/H argument) ; A_tabor would scale ×0.5883 with own E*
+SELF-28 ladder (µm): δ, A_phys, binding, s, ψ, R_c(divide), R_c(multiply), R_Holm(a)
+   0.0200  0.067563  tabor    s=0.293297 ψ=0.594094  Rd=5.73901  Rm=2.02557  Holm=3.40951
+   0.0500  0.267065  tabor    s=0.583127 ψ=0.269157  Rd=6.37135  Rm=0.461575  Holm=1.71489
+   0.1000  0.755373  tabor    s=0.980699 ψ=0.00268144  Rd=380.274  Rm=0.00273421  Holm=1.01968
+   0.1023  0.781583  tabor    s=0.997568 ψ=0.000119939  Rd=8357.92  Rm=0.000120231  Holm=1.00244
+   0.1025  0.783876  tabor    s=0.999030 ψ=3.01964e-05  Rd=0  Rm=0  Holm=1.00097
+   0.1200  0.992963  tabor    s=1.000000 ψ=0  Rd=0  Rm=0  Holm=1
+   0.2000  1.570796  geom     s=1.000000 ψ=0  Rd=0  Rm=0  Holm=1
+floor: ψ≤1e-4 ⟺ s≥0.99784556531 ; multiply jump at floor = 1e-4/(2σ·0.99785·r_min) = 5.011e-05/(σ r_min) ; vs R_bulk(equal r, δ→0) = 2/(π σ r) = 0.6366/(σ r) → ratio 7.87e-05

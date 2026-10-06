@@ -1,0 +1,3 @@
+am_id,am_type,shape_factor,radius_um,surface_area_um2,surface_area_rough_um2,A_AM_SE_hertzian_um2,A_AM_SE_physics_um2,coverage_hertzian_pct,coverage_physics_pct,coverage_physics_rough_pct,delta_pct_physics_vs_hertzian,delta_pct_rough_vs_physics
+1,AM_S,1.1,2.0,50.265,55.292,0.25,0.5761,0.505,1.165,1.057,130.44,-9.22
+2,AM_S,1.1,1.0,12.566,13.823,0.0718,0.1265,0.61,1.075,0.971,76.24,-9.65

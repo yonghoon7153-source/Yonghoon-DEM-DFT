@@ -1,0 +1,46 @@
+{
+ "bed": "case15",
+ "n_nodes": 65866,
+ "n_edges": 154610,
+ "n_perc": 64650,
+ "phi_se": 0.1801329657283734,
+ "boundary_rule": "L0",
+ "band_frac": 0.10446318978350004,
+ "n_bottom": 9296,
+ "n_top": 45,
+ "s_all": {
+  "5": 0.061649483976970954,
+  "10": 0.06984362612280945,
+  "25": 0.07565075467664435,
+  "50": 0.14243814977548752,
+  "75": 0.2369132092340221,
+  "90": 0.32375860838283704,
+  "95": 0.37588535580956245
+ },
+ "s_mean": 0.17042356806326586,
+ "a_over_ageo_median": 1.0000002872293845,
+ "a_over_ageo_p01_p99": [
+  0.9835980192526725,
+  1.0171992716637646
+ ],
+ "RbW_over_Rbcyl": {
+  "5": 1.4010181296252926,
+  "50": 1.484937155549593,
+  "95": 1.4971530535178277
+ },
+ "module_check": {
+  "sigma_full_module": 0.0003263258666971756,
+  "sigma_full_mine": 0.00032632582307726154,
+  "rel_full": -1.3366980222695446e-07,
+  "sigma_cf_module": 0.003920941583706067,
+  "sigma_cf_mine": 0.0039209413209512975,
+  "rel_cf": -6.70131813373942e-08
+ },
+ "seconds": 128.52227926254272
+}
+H0_full {'sigma_adaptive': np.float64(0.000326), 'sigma_dirichlet': 0.000326, 'T_adaptive': np.float64(552.003406), 'T_dirichlet': 551.961115, 'dirichlet_over_adaptive': np.float64(1.000077), 'g_boundary': np.float64(236.635945), 'sum_g': 20677.248849, 'G_over_sumg': 8e-06, 'I_bot_minus_I_top': 0.0, 'constriction_power_share': 0.915165, 's_power_weighted': {10: 0.06668319918568422, 25: 0.07007552601695392, 50: 0.07073236506071566, 75: 0.0727864915439007, 90: 0.0774387147192892}}
+H1_full {'sigma_adaptive': np.float64(0.000362), 'sigma_dirichlet': 0.000362, 'T_adaptive': np.float64(497.613588), 'T_dirichlet': 497.581635, 'dirichlet_over_adaptive': np.float64(1.000064), 'g_boundary': np.float64(314.389505), 'sum_g': 27471.354961, 'G_over_sumg': 7e-06, 'I_bot_minus_I_top': 0.0, 'constriction_power_share': 0.90545, 's_power_weighted': {10: 0.06673988385166221, 25: 0.07007552601695392, 50: 0.07073236506071566, 75: 0.0727864915439007, 90: 0.07730278533207217}}
+H12_full {'sigma_adaptive': np.float64(0.000346), 'sigma_dirichlet': 0.000346, 'T_adaptive': np.float64(520.850008), 'T_dirichlet': 520.81486, 'dirichlet_over_adaptive': np.float64(1.000067), 'g_boundary': np.float64(278.661457), 'sum_g': 24349.438135, 'G_over_sumg': 7e-06, 'I_bot_minus_I_top': 0.0, 'constriction_power_share': 0.865292, 's_power_weighted': {10: 0.06673988385166221, 25: 0.07007552601695392, 50: 0.07073236506071566, 75: 0.0727864915439007, 90: 0.07730278533207217}}
+H2_full {'sigma_adaptive': np.float64(0.000313), 'sigma_dirichlet': 0.000313, 'T_adaptive': np.float64(575.147351), 'T_dirichlet': 575.102276, 'dirichlet_over_adaptive': np.float64(1.000078), 'g_boundary': np.float64(217.169426), 'sum_g': 18976.26447, 'G_over_sumg': 9e-06, 'I_bot_minus_I_top': 0.0}
+CF0 {'sigma_adaptive': np.float64(0.003921), 'sigma_dirichlet': 0.003922, 'T_adaptive': np.float64(45.941255), 'T_dirichlet': 45.93416, 'dirichlet_over_adaptive': np.float64(1.000154), 'g_boundary': np.float64(1418.126985), 'sum_g': 123915.935957, 'G_over_sumg': 1.7e-05, 'I_bot_minus_I_top': 0.0}
+CF2 {'sigma_adaptive': np.float64(0.002622), 'sigma_dirichlet': 0.002623, 'T_adaptive': np.float64(68.695796), 'T_dirichlet': 68.685276, 'dirichlet_over_adaptive': np.float64(1.000153), 'g_boundary': np.float64(965.234677), 'sum_g': 84342.20611, 'G_over_sumg': 1.6e-05, 'I_bot_minus_I_top': 0.0}

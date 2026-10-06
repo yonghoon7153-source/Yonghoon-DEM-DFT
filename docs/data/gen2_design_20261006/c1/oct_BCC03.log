@@ -1,0 +1,3 @@
+BCC s=0.30 n_oct=48 r/dx=43.6 f_all=0.472659 (bal 1.000000, cg 0, 14s, N 88776) f_inside=0.457855 (bal 1.000000, cg 0, 13s) total 27s
+BCC s=0.30 n_oct=72 r/dx=65.4 f_all=0.468096 (bal 1.000000, cg 0, 17s, N 295860) f_inside=0.456729 (bal 1.000000, cg 0, 15s) total 34s
+BCC s=0.30 n_oct=96 r/dx=87.2 f_all=0.465590 (bal 1.000000, cg 0, 44s, N 697074) f_inside=0.457888 (bal 1.000000, cg 0, 79s) total 125s

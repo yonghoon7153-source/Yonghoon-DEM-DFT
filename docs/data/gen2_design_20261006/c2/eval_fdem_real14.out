@@ -1,0 +1,3 @@
+[real14] ionic: NATIVE|multiply σ=0.0281404   FDEM|multiply σ=0.0281404 (floor binds 100.0% of edges)
+[real14] electronic: NATIVE|multiply σ=0.102137   FDEM|multiply σ=0.263109 (floor binds 14.4% of edges)
+[real14] thermal: NATIVE|multiply σ=4.15762   FDEM|multiply σ=6.16334 (floor binds 99.4% of edges)

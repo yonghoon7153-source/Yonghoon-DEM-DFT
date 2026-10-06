@@ -1,0 +1,82 @@
+{
+ "bed": "case15",
+ "npt": 24000,
+ "AM_P": {
+  "n": 104,
+  "HERTZ": {
+   "sumclip_mean": 7.936,
+   "union_mean": 7.524,
+   "union/sumclip": 0.9482,
+   "clip100_pct": 0.0,
+   "union_ge99_pct": 0.0,
+   "rawsum_p50_p90_max": [
+    6.94,
+    13.25,
+    18.72
+   ]
+  },
+  "G1": {
+   "sumclip_mean": 18.324,
+   "union_mean": 15.985,
+   "union/sumclip": 0.8723,
+   "clip100_pct": 0.0,
+   "union_ge99_pct": 0.0,
+   "rawsum_p50_p90_max": [
+    15.39,
+    32.67,
+    47.5
+   ]
+  },
+  "ULBPs": {
+   "sumclip_mean": 18.324,
+   "union_mean": 15.985,
+   "union/sumclip": 0.8723,
+   "clip100_pct": 0.0,
+   "union_ge99_pct": 0.0,
+   "rawsum_p50_p90_max": [
+    15.39,
+    32.67,
+    47.5
+   ]
+  }
+ },
+ "ALL": {
+  "n": 104,
+  "HERTZ": {
+   "sumclip_mean": 7.936,
+   "union_mean": 7.524,
+   "union/sumclip": 0.9482,
+   "clip100_pct": 0.0,
+   "union_ge99_pct": 0.0,
+   "rawsum_p50_p90_max": [
+    6.94,
+    13.25,
+    18.72
+   ]
+  },
+  "G1": {
+   "sumclip_mean": 18.324,
+   "union_mean": 15.985,
+   "union/sumclip": 0.8723,
+   "clip100_pct": 0.0,
+   "union_ge99_pct": 0.0,
+   "rawsum_p50_p90_max": [
+    15.39,
+    32.67,
+    47.5
+   ]
+  },
+  "ULBPs": {
+   "sumclip_mean": 18.324,
+   "union_mean": 15.985,
+   "union/sumclip": 0.8723,
+   "clip100_pct": 0.0,
+   "union_ge99_pct": 0.0,
+   "rawsum_p50_p90_max": [
+    15.39,
+    32.67,
+    47.5
+   ]
+  }
+ }
+}

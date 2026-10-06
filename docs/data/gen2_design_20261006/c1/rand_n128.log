@@ -1,0 +1,24 @@
+packing N=60 phi_sum=0.700 seed=1 L=7.107 FIRE it=1594 contacts=237 z=7.90 s: p10 0.078 med 0.147 p90 0.205 max 0.242 (0s)
+  FV n=128 r/dx=18.0: f_all=0.26550 (cg 0) f_inside=0.19747 (cg 0) phi_union=0.6992 (323s)
+  H0   f=0.15814  f/f_FV(all)=0.596  f/f_FV(inside)=0.801  T(phi_sum)=4.426
+  H1   f=0.18957  f/f_FV(all)=0.714  f/f_FV(inside)=0.960  T(phi_sum)=3.692
+  H12  f=0.17484  f/f_FV(all)=0.659  f/f_FV(inside)=0.885  T(phi_sum)=4.004
+  CF0  f=1.16850  f/f_FV(all)=4.401  f/f_FV(inside)=5.917  T(phi_sum)=0.599
+  CF2  f=0.78604  f/f_FV(all)=2.961  f/f_FV(inside)=3.981  T(phi_sum)=0.891
+  T_FV(phi_sum) = 2.636..3.545
+packing N=60 phi_sum=0.800 seed=1 L=6.798 FIRE it=832 contacts=308 z=10.27 s: p10 0.088 med 0.230 p90 0.361 max 0.386 (0s)
+  FV n=128 r/dx=18.8: f_all=0.50419 (cg 0) f_inside=0.43614 (cg 0) phi_union=0.7892 (255s)
+  H0   f=0.36349  f/f_FV(all)=0.721  f/f_FV(inside)=0.833  T(phi_sum)=2.201
+  H1   f=0.51509  f/f_FV(all)=1.022  f/f_FV(inside)=1.181  T(phi_sum)=1.553
+  H12  f=0.44498  f/f_FV(all)=0.883  f/f_FV(inside)=1.020  T(phi_sum)=1.798
+  CF0  f=1.73917  f/f_FV(all)=3.449  f/f_FV(inside)=3.988  T(phi_sum)=0.460
+  CF2  f=1.20052  f/f_FV(all)=2.381  f/f_FV(inside)=2.753  T(phi_sum)=0.666
+  T_FV(phi_sum) = 1.587..1.834
+packing N=60 phi_sum=0.900 seed=1 L=6.536 FIRE it=470 contacts=360 z=12.00 s: p10 0.067 med 0.345 p90 0.399 max 0.452 (0s)
+  FV n=128 r/dx=19.6: f_all=0.71360 (cg 0) f_inside=0.66185 (cg 0) phi_union=0.8646 (235s)
+  H0   f=0.67086  f/f_FV(all)=0.940  f/f_FV(inside)=1.014  T(phi_sum)=1.342
+  H1   f=0.99755  f/f_FV(all)=1.398  f/f_FV(inside)=1.507  T(phi_sum)=0.902
+  H12  f=0.84751  f/f_FV(all)=1.188  f/f_FV(inside)=1.281  T(phi_sum)=1.062
+  CF0  f=2.57536  f/f_FV(all)=3.609  f/f_FV(inside)=3.891  T(phi_sum)=0.349
+  CF2  f=1.80645  f/f_FV(all)=2.531  f/f_FV(inside)=2.729  T(phi_sum)=0.498
+  T_FV(phi_sum) = 1.261..1.360

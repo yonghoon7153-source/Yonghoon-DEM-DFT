@@ -1,0 +1,16 @@
+SC s=0.20 n=  50 r/dx=  25.5 N=   74544 f=0.180228 cg=0 solve   3.3s total   4.5s phi_union~0.55776
+SC s=0.20 n=  80 r/dx=  40.8 N=  297624 f=0.183781 cg=0 solve   9.7s total  16.1s phi_union~0.55552
+  -> SC s=0.20: f_FV(finest)=0.183781 f_FV(lin-extrap)=0.189704 phi_sum=0.55666 T_FV=3.0289..2.9344
+     H0 cyl+Maxwell   f=0.163364  f/f_FV(finest)= 0.8889  f/f_FV(extrap)= 0.8612  T(phi_sum)= 3.4075
+     H1 cyl+psi       f=0.211518  f/f_FV(finest)= 1.1509  f/f_FV(extrap)= 1.1150  T(phi_sum)= 2.6318
+     H12 Wiener+psi   f=0.188575  f/f_FV(finest)= 1.0261  f/f_FV(extrap)= 0.9940  T(phi_sum)= 2.9519
+     CF0 cyl          f=0.818123  f/f_FV(finest)= 4.4516  f/f_FV(extrap)= 4.3126  T(phi_sum)= 0.6804
+     CF2 Wiener       f=0.556324  f/f_FV(finest)= 3.0271  f/f_FV(extrap)= 2.9326  T(phi_sum)= 1.0006
+SC s=0.40 n=  50 r/dx=  27.3 N=   87248 f=0.405504 cg=0 solve   4.0s total   4.8s phi_union~0.65920
+SC s=0.40 n=  80 r/dx=  43.6 N=  349864 f=0.407260 cg=0 solve  10.7s total  16.1s phi_union~0.66048
+  -> SC s=0.40: f_FV(finest)=0.407260 f_FV(lin-extrap)=0.410187 phi_sum=0.68011 T_FV=1.6700..1.6581
+     H0 cyl+Maxwell   f=0.297547  f/f_FV(finest)= 0.7306  f/f_FV(extrap)= 0.7254  T(phi_sum)= 2.2857
+     H1 cyl+psi       f=0.468512  f/f_FV(finest)= 1.1504  f/f_FV(extrap)= 1.1422  T(phi_sum)= 1.4516
+     H12 Wiener+psi   f=0.392105  f/f_FV(finest)= 0.9628  f/f_FV(extrap)= 0.9559  T(phi_sum)= 1.7345
+     CF0 cyl          f=0.934998  f/f_FV(finest)= 2.2958  f/f_FV(extrap)= 2.2794  T(phi_sum)= 0.7274
+     CF2 Wiener       f=0.673198  f/f_FV(finest)= 1.6530  f/f_FV(extrap)= 1.6412  T(phi_sum)= 1.0103

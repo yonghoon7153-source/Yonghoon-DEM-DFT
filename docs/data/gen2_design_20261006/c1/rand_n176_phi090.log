@@ -1,0 +1,8 @@
+packing N=60 phi_sum=0.900 seed=1 L=6.536 FIRE it=470 contacts=360 z=12.00 s: p10 0.067 med 0.345 p90 0.399 max 0.452 (0s)
+  FV n=176 r/dx=26.9: f_all=0.70269 (cg 0) f_inside=0.66460 (cg 0) phi_union=0.8647 (673s)
+  H0   f=0.67086  f/f_FV(all)=0.955  f/f_FV(inside)=1.009  T(phi_sum)=1.342
+  H1   f=0.99755  f/f_FV(all)=1.420  f/f_FV(inside)=1.501  T(phi_sum)=0.902
+  H12  f=0.84751  f/f_FV(all)=1.206  f/f_FV(inside)=1.275  T(phi_sum)=1.062
+  CF0  f=2.57536  f/f_FV(all)=3.665  f/f_FV(inside)=3.875  T(phi_sum)=0.349
+  CF2  f=1.80645  f/f_FV(all)=2.571  f/f_FV(inside)=2.718  T(phi_sum)=0.498
+  T_FV(phi_sum) = 1.281..1.354

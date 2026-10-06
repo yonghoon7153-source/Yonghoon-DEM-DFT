@@ -1,0 +1,8 @@
+== Codex counterexample (single path R=1, bottom node 1, top node 2) ==
+  dead end at bottom node      HEAD G 0.96153846153846 -> 0.99996004156128 (+3.995844 %) | Dirichlet G 1.00000000000000 -> 1.00000000000000 (+0.00e+00 %)
+  dead end at interior node    HEAD G 0.99009900990097 -> 0.99996016095077 (+0.995976 %) | Dirichlet G 1.00000000000000 -> 1.00000000000001 (+1.15e-12 %)
+  unit scaling (all R x7): HEAD 0.999999999999090 · Dirichlet 0.999999999999957
+== real_14 ionic Hertz FULL (HEAD edges) ==
+  HEAD sigma 0.0210206038 -> with dead end 0.0210148742 (-0.02726 %)
+  Dirichlet sigma 0.0210210554 -> with dead end 0.0210210554 (+3.65e-09 %)
+  Dirichlet / HEAD (no dead end) = 1.00002148

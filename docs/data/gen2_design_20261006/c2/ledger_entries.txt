@@ -1,0 +1,152 @@
+<class 'list'> 551
+===== DESC-03
+{
+ "id": "DESC-03",
+ "severity": "P1",
+ "status": "open",
+ "owner": "claude",
+ "found_by": "codex",
+ "opened_in": "docs/reviews/codex_verdict_lhs_descriptors_20260913.md",
+ "title": "Physics 피복률이 **확대 DEM 길이와 미확대 5 nm 두께를 혼용**한다 — cap 선택이 뒤집힌다",
+ "note": "(Codex 판정문 라벨: **P1-DESC-03**)\n`coverage_physics_vs_hertzian.py:205-207` 이 `delta_sim`·`r` 를 sim 단위 그대로 `film_area_from_overlap` 에 넘기는데 `plastic_coverage.py:50` 의 `H_FILM_MIN = 5.0e-9` 은 **SI 미터**다.  `:284` 의 `A_volume = V_overlap / H_FILM_MIN` 은 분자만 길이³(1e9)로 스케일되어 **부피 cap 이 1000배 부풀고 사실상 안 걸린다**.\n★★ **이 리포에서 수치까지 독립 재현**: AM/SE 반지름 0.5 um, delta/R* = 0.05 를 실제 함수에 넣으면 binding cap 이 `tabor`(현행 sim) -> `volume`(SI 통일) 로 **뒤집히고** A_physics/A_hertz 가 **2.502607 -> 1.229167** (비의 비 **2.036019**).  요청서의 Hertz 0.312500 % 를 곱하면 **0.782065 % -> 0.384115 %** = 판정문의 두 수치와 일치.\n⇒ 내가 요청서에 쓴 *\"큰 델타는 정의 차이뿐이며 단위 문제는 없다\"* 는 **반증됐다**.\n⚠ **경계**: Hertz 는 두 경우 모두 불변(0.312500 %)이므로 등록 타깃이 Hertz 전용인 한 이 오류는 일곱 열로 **전이되지 않는다**.  화면 델타 세 수치(+281.6/+299.4/+270.3 %)의 원인이 이것이라고 **단정하지 않는다** — 원자료 미확인.\n처방: 표준 scale 에서 Hertz 보존을 확인하고 Physics helper 의 단위를 일관화 (수확 계약 4번).\n\n★ **결과 2026-09-13 — 이 결함이 `L1-02` 를 가리고 있다** (LHS 30 케이스 실측, 3,619,759 간선):\n정확 lens 로 바꿔도 `A_final`·`a_eff`·ψ 분기 변화 **0/3,619,759** 인데, 그 이유가 이 항목이다 —\nmm 를 m 로 읽어 `A_volume` 이 다른 항보다 **1000배** 부풀어 volume cap 이 **원리적으로 결속 불가**.\n⇒ ① `case_master.csv` 의 `volume` 결속 0/163 은 물리가 아니라 이 단위 교란의 산물 ② DESC-03 을\n고치면 `L1-02` 의 크기가 **0 이 아니게 될 수 있다** — 고친 직후 같은 L1 블록으로 재측정할 것.\n⚠ `L1-01` 의 5.240 % 는 이 교란과 **무관**하다 (`A_tabor/A_hertz` 가 무차원).  ↪ 10-01 Codex 최종 (§6): 배포 MOOT · 원 항목 open (배제는 수정이 아님).",
+ "evidence_tests": [
+  "scripts/plastic_coverage.py",
+  "scripts/coverage_physics_vs_hertzian.py"
+ ]
+}
+===== DESC-10
+{
+ "id": "DESC-10",
+ "severity": "P1",
+ "status": "open",
+ "owner": "claude",
+ "found_by": "claude",
+ "opened_in": "docs/param_audit_report_20260919.md",
+ "title": "`DESC-03` 을 **단독으로 고치면 더 나빠진다** — 부피 cap 이 깨어나면 `L1-02` 의 틀린 식이 답을 정한다",
+ "note": "`plastic_coverage.py:372` 가 `A_cap = min(A_tabor, A_volume, A_geom)` 이고 `:362` 의 `A_volume = legacy_v_overlap(delta, R_star) / H_FILM_MIN` 이다.\n★ **전수 실측**: `case_master.csv` 163행 전부에서 `A_binding_share_AM_SE_pct.volume == 0.0` (최대값도 0.0) — 즉 **부피 cap 이 코퍼스 전체에서 한 번도 결속하지 않는다**. 같은 칸의 `tabor` 는 중앙 72.2 % (범위 11.5–95.4) 로 결속한다.\n⇒ 지금은 `DESC-03` 의 단위 교란 덕분에 `A_volume` 이 부풀어 **`L1-02` 의 틀린 식이 무해하게 잠들어 있다**. 단위만 통일하면 그 cap 이 **깨어나** 답을 결정한다 — SI 스윕 실측으로 δ/R* = 0.1–0.2 구간에서 `binding = volume` 이 된다.\n그런데 `legacy_v_overlap` 은 정확 lens 의 **0.494배**(얕은 극한)이고 `δ > 3R*` 면 **음수**다(`L1-02`).\n⇒ **순서 제약**: `L1-02` 의 저자 결정(전체 lens 인가 / 한 상의 몫인가) → 그 다음 단위 통일.\n⛔ 단위만 먼저 고치는 커밋을 내지 말 것. 지금의 '틀렸지만 비활성' 이 '틀렸고 활성' 으로 바뀐다.\n⚠ 같은 이유로 `L1-01`(하한>상한) 도 함께 정해야 한다 — 부피 cap 이 살아나면 `U` 가 내려가 `cap_conflict` 발동 구간이 넓어진다.",
+ "evidence_tests": [
+  "scripts/plastic_coverage.py",
+  "scripts/coverage_physics_vs_hertzian.py",
+  "docs/data/case_master_column_census_20260919.tsv"
+ ]
+}
+===== L1-01
+{
+ "id": "L1-01",
+ "severity": "P1",
+ "status": "open",
+ "owner": "claude",
+ "found_by": "codex",
+ "opened_in": "docs/reviews/codex_verdict_dem_stack_L1_20260913.md",
+ "title": "하한 > 상한이어도 **정상 Physics 면적**을 낸다 (feasibility 미검사)",
+ "note": "(Codex 라벨: **L1-CX-01**)\n`plastic_coverage.py:292` 가 세 cap 의 min 을, `:307` 이 Hertz/LIGGGHTS floor 와 max 를 취한다.  `L = max(A_H, A_LIGG)` > `U = min(A_Tabor, A_volume, A_geom)` 이면 **모든 조건을 만족하는 A 가 없는데** 거부하지 않고 L 을 돌려준다.  `binding` 이름은 feasibility 증거가 아니다.\n★ **이 리포에서 소수 자리까지 재현**: SI 로 r=0.5 um, d/R*=0.01, ligg_area = 기하 교차 원판 ⇒ `binding=liggghts`, A_final/A_tabor = **1.784757** · A_final/A_volume = **8.016722** (판정문 1.78476 · 8.01672), `L > U` **True**.  얕은 겹침(d/R*=0.01)에서 나온다.\n⇒ 무너지는 결론: *'체적 보존 및 Tabor 상한으로 비물리 면적을 차단했다'* · *'단위만 고치면 L1 이 닫힌다'*.\n⚠ min/max 순서를 뒤집으면 하한을 깨뜨릴 뿐이다.  caps 가 **전체 접촉면적의 한계**인지 **추가로 퍼진 막의 한계**인지 먼저 정해야 한다.\n최소 코드 방어 = 불가능 조합을 `cap_conflict` 로 기록하고 **검증된 Physics 값으로 승격하지 않기**.\n\n**대응 2026-09-13 — 판정문의 최소 방어 그대로: 기록하고, 승격하지 않는다.**\n`plastic_coverage.py` physics 분기가 `A_lower = max(A_hertz, A_ligg)` · `A_upper = min(A_tabor, A_volume, A_geom)`\n을 계산해 **`cap_conflict = (A_lower > A_upper)`** 를 components 에 싣는다.  ⛔ **`A_final` 은 안 바꿨다**\n(min/max 순서를 뒤집으면 하한을 깨뜨릴 뿐이고, caps 가 *전체 접촉면적* 의 한계인지 *추가로\n퍼진 막* 의 한계인지가 저자 결정이다).  `network_conductivity.py` 가 그 키를 `A_components` 로\n간선에 실어, `audit_constriction_deleted.py` 가 **실제 솔버 간선**에서 센다 (thermal 채널 = 전 간선).\n★ **재현 고정** (`plastic_coverage.py --selftest` ⑦): SI r=0.5 µm · δ/R*=0.01 · ligg=교차원판\n⇒ `binding=liggghts` · `cap_conflict=True` · `A_final/A_tabor = 1.784757` · `A_final/A_volume = 8.016722`\n— 판정문 소수 자리까지 일치.  ⑧ 이 깊은 겹침에서 False 임을 대조.\n★ **기본 동작 불변을 실측 핀으로 강제** (⑨): 계측 추가 **전** 코드(`git show HEAD:…`)를 격리\n로드해 찍은 5핀(hertzian·tabor×2·elastic·transition)이 비트 일치.  ⚠ 첫 판은 핀을 **추측해**\n적었다가 빨간불 — 회귀 핀은 손으로 짓지 않는다 (`SELF-25` 부류).\n★ **크기 — 합성 스윕만** (`plastic_coverage.py --audit-l1`, 200,000 접촉, δ/R* log-uniform 1e-4~0.316,\nligg ∈ {없음, 0, 교차원판}): 사다리 도달 139,620 중 **cap_conflict 55.309 %**.\n⚠⚠ **코퍼스 발생률이 아니다** — ligg 로 교차원판(≈2×Hertz)을 1/3 확률로 넣은 합성 분포라\n얕은 구간에서 과대할 수 있다.  코퍼스 값은 원자료가 있는 기계에서\n`audit_constriction_deleted.py --webapp … --deck-dir …` 로 잰다 (S0 와 같은 명령, L1 블록이 추가로 나온다).\n⬜ **미실행**: 그 코퍼스 측정.  ⬜ **저자 결정**: caps 의 뜻 (전체 면적 vs 추가 막).\n\n★★ **코퍼스 실측 2026-09-13** (LHS 30 케이스, 원본 덤프 경로, `audit_constriction_deleted.py` L1 블록):\n사다리 도달 간선 **3,619,759** 중 `cap_conflict` **189,674 = 5.240 %**.\n⇒ 합성 스윕의 55.309 % 는 **10.6배 과대**였다 (ligg 로 교차원판을 1/3 확률로 넣은 분포가 얕은\n구간을 부풀렸다).  ⛔ 합성값은 이제 **인용하지 않는다** — 코퍼스 값 5.240 % 만 쓴다.\n★ 이 5.24 % 는 **단위 교란(DESC-03)과 무관**하다 — `A_tabor/A_hertz = (4/3)(E*/H)/π·√(δ/R*)`\n(무차원) 이라 `Lo = max(A_hertz, A_ligg) > A_tabor` 는 `δ/R*` 만의 함수다.  실제로 `A_ligg ≈ 2×Hertz`\n이므로 `11.2·√(δ/R*) < 2` ⟺ **`DR_YIELD_ONSET ≈ 0.0011 < δ/R* < 0.032`** 구간에서 일어난다.\n⚠ **아직 닫지 않는다** — 판정문의 \"승격하지 않기\" 는 미완이다: 하류(coverage · σ 산출)가\n`cap_conflict` 를 **읽지 않아** 그 5.24 % 가 여전히 검증된 Physics 값으로 흐른다.  ⬜ 남은 것:\n① 케이스별 `cap_conflict_pct` 를 산출 지표에 실어 표시 ② caps 의 뜻(전체 면적 vs 추가 막)\n저자 결정.  ⚠ 지난 S0 CSV 대조 30/30 일치 = 이 측정의 로더는 옛 경로와 같다.\n\n★ Codex 2라운드: 합성 55.309 % = 77,222/139,620 (사다리 도달 **조건부**; 전체 200,000 의 38.611 %; sampling law 를 바꾸면 98.567 %/28.076 %) — 삭제할 숫자가 아니라 **승격을 금지할 숫자**.  코퍼스 5.240 % 만 인용.",
+ "evidence_tests": [
+  "scripts/plastic_coverage.py",
+  "docs/data/constriction_deleted_lhs_20260913_l1.csv",
+  "scripts/audit_constriction_deleted.py"
+ ]
+}
+===== L1-02
+{
+ "id": "L1-02",
+ "severity": "P1",
+ "status": "open",
+ "owner": "claude",
+ "found_by": "codex",
+ "opened_in": "docs/reviews/codex_verdict_dem_stack_L1_20260913.md",
+ "title": "`V_overlap` 이 이름대로의 **구 교집합이 아니다** — 얕으면 절반, 깊으면 **음수**",
+ "note": "(Codex 라벨: **L1-CX-02**)\n`plastic_coverage.py:284` 의 `V_code = pi d^2 (3R* - d)/6` 인데 동일 반경의 정확한 전체 lens 는 `pi d^2 (6r - d)/12` 다.  `R* = r/2` 를 넣으면 비 = `(3r - 2d)/(6r - d)`.\n★ **재현**: r=0.5 um · d=0.0125 um → 코드 +0.000060336578 vs 정확 +0.000122207136 um^3 (**0.493724배**, 해석식과 일치).  d=0.95 um → 코드 **-0.094509578995** (음수!) vs 정확 +0.484361592352 ⇒ **거부 없이 양의 면적 반환**.\n⇒ 무너지는 결론: *'V_overlap 은 구 겹침 부피이고 이 cap 이 재료 체적을 보존한다'*.\n⚠ 처방이 자명하지 않다: **전체 교집합**을 의도했다면 두 반경·중심거리 piecewise lens + 내포/동심 처리가 필요하고, **한쪽 상에 할당되는 부피**를 의도했다면 전체 lens 라 부를 수 없고 분담식과 근거를 밝혀야 한다.  판정문은 *'기계적으로 전체 lens 로 치환하라는 물리 승인이 아니다'* 라고 못 박았다.\n\n**대응 2026-09-13 — 정확 lens 를 이름 붙여 나란히 내되, 값은 안 바꿨다.**\n새 함수 `lens_volume(r₁, r₂, δ)` = 두 구의 정확한 교집합\n`V = π(r₁+r₂−d)²(d² + 2d(r₁+r₂) − 3(r₁−r₂)²)/(12d)` (내포 `d ≤ |r₁−r₂|` 는 작은 구 전체, 분리는 0);\n`radii_from_rstar_rmin(R*, R_min)` 이 `(R*, R_min)` 에서 두 반경을 복원한다 (`R_min ≤ R*` 는 기하\n불가 ⇒ None).  legacy 식은 `legacy_v_overlap()` 으로 **이름을 바꿔 격리**하고 physics 분기는\n여전히 그것을 쓴다 (`volume_formula='legacy_cap_with_Rstar'` 로 표시).  components 에\n`V_overlap_legacy` · `V_lens_exact` · `A_volume_exact` 가 나란히 실린다.\n★ **재현 고정** (`--selftest` ①②): r=0.5 · δ=0.0125 → legacy `+0.000060336578` vs 정확\n`+0.000122207136` (**0.493724배**) · δ=0.95 → legacy **`−0.094509578995`** vs 정확 `+0.484361592352`\n— 판정문 마지막 자리까지 일치.  ③ 동일 반경 폐형 `πδ²(6r−δ)/12` · **④ 독립 수치적분**(단면 원 면적을\nx 로 적분, 닫힌 식을 다시 쓰지 않는다)과 비대칭 5쌍 상대차 **2.1e-11** · ⑤ 내포 · ⑥ 반경 왕복.\n★ **얕은 극한 유도**: 정확 lens `→ πR*δ²`, legacy `= (π/6)δ²(3R*−δ) → πR*δ²/2` = **정확히 절반**\n(단일 구면 cap 공식에 `R*` 를 넣은 것).  `δ > 3R*` 에서 음수.\n★ **크기 — 합성 스윕만** (`--audit-l1`, 위와 같은 분포): 정확 lens 를 넣으면 가장 작은 cap 이\n**24.013 %** 에서 바뀌고 **최종 면적이 20.464 %** 에서 바뀐다 (A_exact/A_legacy 중앙값 **1.3021**,\n최대 2.1040).  legacy 음수는 **0** (δ/R* ≤ 0.316 라 안 닿는다).  volume 결속 88,306 → 54,779\n(정확 lens ≥ legacy 라 **줄기만 해야** 하고 실제로 줄었다 — 초판 감사가 라벨과 cap 을 섞어\n반대로 냈다가 고쳤다).\n⚠⚠ **이것은 `AREA-12` 와 다르다** — S2 는 항등이었지만 L1-02 는 **`a_eff` 를 실제로 움직인다**\n(S0 selftest ⑩c: volume 결속 간선에서 a_eff 변화 1/1).  ⇒ 세대 2 후보이고 **σ 가 움직인다**.\n⚠ **코퍼스 발생률이 아니다** — `case_master.csv` 는 `volume` 결속을 163/163 에서 0.0 % 로 저장하는데\n(AREA-07: 0.05 % 미만을 숨긴다) 합성 스윕은 63 % 다.  실제 코퍼스에서는 `ligg_area` 가 크고\nδ/R* 가 좁게 몰려 하한이 이기는 것으로 보인다 ⇒ 실제 크기는 **훨씬 작을 수 있다**.  원자료가 있는\n기계에서 `audit_constriction_deleted.py` L1 블록(`a_eff` 바뀐 간선 · ψ 분기 바뀐 간선)으로 잰다.\n⬜ **저자 결정 (판정문이 못 박은 것)**: 전체 교집합인가, 한 상에 할당된 몫인가.  둘 중 하나를\n고르기 전에는 `V_lens_exact` 를 생산에 넣지 않는다.  ⬜ 코퍼스 측정 미실행.\n\n★★ **코퍼스 실측 2026-09-13** (같은 런): 정확 lens 계산 가능 **3,619,759** 간선 전부에서\n`A_final` 변화 **0** · `a_eff` 변화 **0** · ψ 분기 변화 **0** · legacy `V_overlap < 0` **0**.\n한 줄로: **0/3,619,759** (A_final · a_eff · ψ 분기 모두).\n⇒ **이 코퍼스에서 정확 lens 로의 교체는 σ 에 항등**이다.  합성 스윕의 20.464 % 는 코퍼스와\n**무관한 숫자**였다 — ⛔ 인용하지 않는다.\n★★ **그러나 \"무해\" 로 닫지 않는다 — 다른 결함이 가리고 있다.**  volume cap 이 한 번도 결속하지\n않는 이유는 물리가 아니라 **`DESC-03`** 이다: 사다리가 sim 길이(mm)를 **m 로 읽어** `A_volume =\nV/h_film_min` 의 `V` 가 1e9배, 면적 항들은 1e6배 부풀어 `A_volume/A_tabor` 가 **1000배** 과대\n⇒ volume 이 min 이 될 수 없다.  ⇒ L1-02 의 코퍼스 효과 0 은 **DESC-03 이 안 고쳐진 동안만**\n성립한다.  DESC-03 을 고치면 volume 이 결속할 수 있고 그때 legacy(절반)와 정확 lens 의 차이가\n**σ 에 들어간다**.  ⇒ 상태: `open` 유지, **DESC-03 뒤에 재측정** (같은 L1 블록으로 즉시 잰다).\n⚠ `case_master.csv` 의 `volume` 결속 0/163 (legacy 169) 도 같은 이유로 읽힌다 — \"명목상 cap\"\n이 아니라 **단위 교란으로 도달 불가**였던 것.  ⬜ 저자 결정(전체 교집합 vs 상별 몫)은 여전히 선행.\n\n★ Codex 2라운드: 옛/새 모듈 **7핀 + 정상 접촉 6,000개** 대조에서 A_final 변화 0 (전환이 이미 일어났다는 반례 없음).  geom 핀 부재는 R2-05 (판정 기준 뒤 `ef339643e` 로 닫힘).  반경 역산 guard `R* ≥ R_min/2` 추가 · 지원 반경비 ≲ 1e6 선언.",
+ "evidence_tests": [
+  "scripts/plastic_coverage.py",
+  "docs/data/constriction_deleted_lhs_20260913_l1.csv",
+  "scripts/audit_constriction_deleted.py"
+ ]
+}
+===== L1-03
+{
+ "id": "L1-03",
+ "severity": "P1",
+ "status": "open",
+ "owner": "claude",
+ "found_by": "codex",
+ "opened_in": "docs/reviews/codex_verdict_dem_stack_L1_20260913.md",
+ "title": "**AM–AM · SE–SE 에도 AM–SE 탄성률과 SE 경도**를 쓴다 (상 쌍 인자가 없다)",
+ "note": "(Codex 라벨: **L1-CX-03**)\n`coverage_physics_vs_hertzian.py:214` 가 **상 분류 전에** 같은 helper 를 부르고, `plastic_coverage.py:277` 이 전역 AM–SE E*, `:280` 이 전역 SE 경도를 쓴다.  `:379` 는 그 값을 **SE–SE · AM–AM Physics 면적으로 기록**하고 `network_conductivity.py:299` 의 수송 경로도 같은 helper 를 쓴다.\n★ **재현**: `film_area_from_overlap` 시그니처는 `(delta, R_star, R_min, ligg_area, mode, k_spread, return_components)` — **phase/pair/E*/hardness 인자가 없다**.  본문이 쓰는 전역은 `E_STAR_AM_SE = 2.2414943e10` · `H_REAL_SE = 8.5e8`.  Codex: 동일 반경·겹침의 AM–AM / AM–SE / SE–SE 세 호출이 **전부 A = 0.3610932373 um^2, binding=tabor**.  상수로 reduced modulus 만 따로 계산하면 AM–AM **74.6667** · AM–SE **22.4149** · SE–SE **13.1868 GPa** 로 갈린다.\n⇒ 무너지는 결론: *'상별 실제 물성으로 보정한 Physics 면적'* — 특히 **SE–SE 이온 경로**와 전상 열 경로 해석을 지지하지 못한다.\n⚠ 단위 수정으로 **안 닫힌다**.  코드 방어 = 지원 pair 를 명시하고 미지원 pair 를 조용히 Physics 로 내지 않기.  정식 모델은 pair 별 탄소성/경도/형상 규약이 필요하다.",
+ "evidence_tests": [
+  "scripts/plastic_coverage.py",
+  "scripts/coverage_physics_vs_hertzian.py"
+ ]
+}
+===== L1-08
+{
+ "id": "L1-08",
+ "severity": "P2",
+ "status": "open",
+ "owner": "claude",
+ "found_by": "codex",
+ "opened_in": "docs/reviews/codex_verdict_dem_stack_L1_20260913.md",
+ "title": "`H_FILM_MIN = 5 nm` 의 앵커로 지목된 Sakuda 2013 은 그 상수를 제시하지 않는다",
+ "note": "(Codex 갱신질문 (a))\n`plastic_coverage.py:48-50` 이 5 nm 를 *'Sakuda 2013 discussion'* 으로 앵커한다.  판정문: 그 본문은 Li2S–P2S5 glass 의 성형·밀착·밀도/탄성률을 다루며 **LPSCl 전체 접촉면적용 5 nm 최소막 cap 을 제시하지 않는다** (Sci. Rep. 3, 2261).  ⚠ 보충자료·후속 논문까지 부재를 증명했다는 뜻은 아니다.\n★ 부등식 자체는 옳다: 두께 h(x) >= h_min 인 막이면 `A_film <= V_available / h_min`.  빠진 연결이 넷이다 — ① 가상 구 겹침 부피가 **어느 상의 이동 가능한 재료량**인가 ② 막이 기존 elastic contact 와 **별개인가 전체 load-bearing 면적인가** ③ 5 nm 가 그 재료·압력·온도·길이 범위의 최소 두께인가 ④ 재구성한 Hertz force 가 **연화 DEM 의 하중·잔류변형·이력**과 양립하는가.\n⚠ 판정문은 *'고정 h_min 이 차원적으로 틀린 것은 아니고, 반드시 h(a) 로 바꾸라는 뜻도 아니다'* 라고 적었다 — 임의의 접촉반경 함수로 바꾼다고 물리가 생기지 않는다.\n⇒ 기하 지표 보존은 가능하지만 **이 한 식을 실제 소성면적으로 승인하는 것은 불가능**.",
+ "evidence_tests": [
+  "scripts/plastic_coverage.py"
+ ]
+}
+===== SELF-28
+{
+ "id": "SELF-28",
+ "severity": "P1",
+ "status": "open",
+ "owner": "claude",
+ "found_by": "claude (사용자가 \"2πR_min² 에 걸리는 값이 없다\" 고 해서 코퍼스로 확인하다 발견)",
+ "opened_in": "docs/reviews/codex_verdict_dem_stack_L2_20260913.md",
+ "title": "`geom` cap 이 결속하면 **ψ = 0 이 되어 협착저항이 삭제**된다 (AM–SE 접촉의 13.84 %)",
+ "note": "L2-01 은 ψ 절벽을 `s* = 0.99784556531` 이라는 **극단 좌표**로 보였고, L2-10 은 `R_c = 0` 간선이 지워진다는 것을 보였다.  그런데 **생산에서 그 0 이 어떻게 만들어지는지**는 어느 판정문도 적지 않았다 — 극단이 아니라 **구조적**이다.\n★ **결정론적 연쇄** (산술): `binding == 'geom'` ⇒ `A_final = 2π·r_min²` ⇒ `a = sqrt(A/π) = √2·r_min` (`network_conductivity.py:323`) ⇒ `a > r_min` 이라 clamp 발동 (`:395`) ⇒ `a_eff = r_min` **정확히** ⇒ `ψ = (1 − 1)^1.5 = 0` (`:396`) ⇒ `ψ ≤ 1e-4` 분기로 **`R_constriction = 0`** (`:399-401`).  반지름에 무관하게 **항상** 그렇다 (`r_min_real = min(r1,r2)` `:386` 이 `A_geom` 의 `R_min` 과 같은 양).\n★ **실측 (코퍼스 `docs/data/case_master.csv`, 163 케이스)**: `geom` 결속이 **163/163 케이스 전부에서 > 0** 이다.  접촉 가중으로 전체 접촉의 **약 3.97 %**, **AM–SE 접촉의 약 13.84 %**.  ⛔ **정수 접촉수는 인용하지 않는다** (`AREA-07`) — `coverage_physics_vs_hertzian.py:407`·`:413` 이 비율을 소수 첫째 자리로 반올림해 저장하므로 정수는 복원되지 않는다.  반올림 호환 범위만 말할 수 있다 (전체 3.916696–4.016287 % · AM–SE 13.794221–13.892413 %; **통계적 CI 가 아니라 저장 반올림의 정보 손실 범위**).  케이스별 범위: 전체 0.1~17.0 % · AM–SE **1.4~42.5 %**.\n⇒ 옛 인식 *'2πR_min² 는 명목상 cap 이라 걸리는 값이 없다'* 는 **반증**된다.  ★ 다만 **정말 명목뿐인 cap 은 따로 있다** — `A_volume` 과 `hertzian` 은 **0/163** 이다 (최대 0.000 %).  기억이 이 둘과 섞인 것으로 보인다.\n★ **실제 함수로 사다리 재현** (r_SE 0.5 ↔ r_AM 6.0 µm, ligg_area = 0): δ = 0.02 → `R = 5.9403496296` (binding volume) · 0.05 → `6.3713479493` (tabor) · 0.10 → **`380.2740936428`** (tabor, ψ = 0.0026814364) · 0.20 → **`0`** (geom, ψ = 0).  ⇒ 접촉이 커지는 동안 저항이 **5.94 → 6.37 → 380.27 → 0** 으로 간다 = L2-01 의 비단조 R(A) 가 합성 좌표가 아니라 **실제 SE↔AM 접촉 크기에서** 나타난다.\n⚠ **적용 범위**: Physics 가지 전용이다 (`contact_mode == 'physics'`; Hertz-명명 가지에는 이 clamp 자체가 없다).  그러나 **σ_thermal Stage T1 의 타깃이 바로 그 가지**이고(`thermal_sigma_full_mScm_stage_e_physics`), 특징 10·12·14 도 `*_physics` 다.\n⚠ 두 산출 경로가 **같은 인자로** 같은 함수를 부른다 — `network_conductivity.py:299-302` 와 `coverage_physics_vs_hertzian.py:230-232` 가 `(delta, R_star, R_min=, ligg_area=, mode='physics')` 로 동일 ⇒ 위 결속 비율이 곧 솔버가 보는 비율이다.\n⇒ **E 결정(‘L2 에 넘길 면적 A 가 무엇인가’)이 장식이 아니다**: 지금 규약에서는 접촉이 충분히 커지면 협착 항이 **근사되는 것이 아니라 사라진다** = 그 간선이 국소적으로 `CONTACT_FREE` 가 된다 (CL-81 의 구조와 같은 방향).\n처방은 L2-01·L1-01 과 같다 — 숫자 패치가 아니라 **A 의 정의 먼저**.  그 전까지 Physics 가지의 σ 절대값 옆에는 *'협착 항이 일부 접촉에서 0 으로 삭제됨'* 을 적는다.\n\n★★ **실측 완료 2026-09-13 (S0 2판, LHS 코퍼스 30 케이스 `lhs00_100`~`129`, 실패 0)** — 산출 CSV `docs/data/constriction_deleted_lhs_20260913.csv` (커밋 `a08fa395`).  덱에서 케이스별 type_map 유도, `build_network` 를 직접 불러 `R_constriction == 0` 을 센 **간선 가중** 집계:\n```\nionic       SE–SE   469,249 / 2,263,802 = 20.728 %\nelectronic  AM–AM         0 /   256,441 =  0.000 %\nthermal             973,137 / 3,624,410 = 26.850 %\n   AM–SE      503,888 / 1,104,167 = 45.635 %\n   SE–SE      469,249 / 2,263,802 = 20.728 %\n```\n★ 케이스별 이온 삭제율 **2.96 % ~ 36.12 %** (12배 산포) — 침대 구조에 강하게 걸린다.\n★★ **전자망은 무영향** — AM–AM 이 **256,441 간선에서 정확히 0** 이다.  30 침대 전부에서 0 이라 잡음이 아니다.  ⇒ σ_e 축(SDCP 계열)은 이 결함에 **안 걸린다**.\n⚠ **기전 가설 (미검정)**: AM `E = 1.4e8` 은 단단하고 SE 는 `0.135e7` = **18배 연화**다.  연화된 SE 가 깊게 겹쳐 `a/r → 1` 로 밀리고 단단한 AM 끼리는 안 밀린다 ⇒ SE 가 낀 접촉만 걸린다 (SE–SE 20.7 · AM–SE 45.6 · AM–AM 0).  **상관이지 인과 검정이 아니다.**\n⚠ **코퍼스가 다르다** — 이 30건은 **LHS**(2·3-type 설계)이고, `case_master.csv` 의 약 13.84 % 는 **legacy 169**다.  두 수를 직접 비교하지 않는다.  legacy 는 원자료가 유실돼 (`scripts/backup_webapp_data.sh` 헤더) **영구 재계산 불가**다.\n⚠ 이것은 **협착 항** 삭제다 — `R_bulk` 는 남는다.  간선 삭제·총저항 0 과 다르다 (`L2-10`).\n\n★★ **해석 하향 2026-09-13 (`AREA-09` STEP 4 독립 기준해)** — **사실은 그대로, 해석이 바뀐다.**\n축대칭 flux-tube 유한체적 기준해(`scripts/constriction_reference.py`)가 ψ 의 자리를 가렸다:\n참값은 **`R_c = ψ(a/b)/(2σa)`** (ψ 를 **곱한다**) 이고 우리 코드 `1/(2σaψ)` 는 그 **`(1−s)^−3` 배**다.\n⇒ 올바른 배치에서는 `s→1` 일 때 **참값 자체가 0 으로 간다**.\n⇒ ⛔ **`geom` 결속에서 `R_c = 0` 이 되는 것은 그 자체로 물리 오류가 아니다** — **틀린 길로\n맞는 극한에 도착한 것**이다 (현 분기는 자기가 만든 발산을 막는 패치다).\n★ **살아남는 것**: 결정론적 연쇄(산술) · 163/163 · 약 3.97 % / 13.84 % · S0 실측(이온 20.728 % ·\n전자 0.000 % · 열 26.850 %) · 사다리의 **비단조 R(A)** · `A_volume`/`hertzian` 이 안 걸린다는 것.\n★ **무너지는 것**: *\"협착이 삭제되는 것이 이 축의 결함\"* 이라는 **프레이밍**.  진짜 결함은\n**반대쪽**이다 — 삭제되지 **않은** 모든 접촉에서 `R_c` 가 `(1−s)^−3` 배 부풀어 있고, 그\n부호는 σ **상향**이다.  ⇒ 이 항목의 처방은 *\"A 의 정의 먼저\"* 에서 **`L2-01`(ψ 배치) 먼저**\n로 바뀐다.  ⚠ 그렇다고 A 정의가 불필요해진 것은 아니다 — `AREA-12` 가 그것을 따로 판정한다.\n\n★ **로더 검증 2026-09-13**: S0 도구가 CSV 층 없이 `post_*/` 원본 덤프를 직접 읽는 경로를 얻었고\n(`plastic_coverage` 파서 재사용), **지난 S0 CSV 와 30/30 케이스에서 n_contact_rows · type_hist ·\n채널별 n_edges/n_deleted 전부 일치** (`--expect-csv`).  ⇒ 위 실측(20.728 / 0.000 / 26.850 %)은\n두 독립 로더가 같은 수를 낸 값이다.  `docs/data/constriction_deleted_lhs_20260913_l1.csv` (L1 열 추가).\n\n⛔ **정정 2026-09-13 (R2-08)** — 내 *\"tabor 가 먼저 넘는 δ=0.10234~0.16292 구간은 s<1 이라 참값이 0 이 아니다\"* 는 **틀렸다**.  δ=.12 는 tabor 결속인데 이미 s_raw 1.124 → clamp s=1 이다.  floor 만이 양수를 지우는 s<1 띠는 **0.102338~0.102633** 뿐.  삭제는 binding 이 아니라 **s_raw · s_clamped · ψ** 로 가른다 (`clamp_zero` vs `floor_only`).  ⚠ 생산의 clamp 0 은 a=b 의 **독립 측정이 아니다** — 원판으로 읽어 강제된 값일 수 있으니 \"참값 0\" 으로 면책하지 않는다.  ⬜ 두 부류의 코퍼스 비율 **미측정** (S0 재실행).\n\n★ **두 부류 코퍼스 값** (R2-08 실측): 삭제 973,137 중 clamp_zero **99.436 %** · floor_only **0.564 %**.\n⇒ \"협착 항이 삭제된다\" 의 실체는 거의 전부 **\"A_surface 를 원판으로 읽어 a ≥ r_min 이 된 접촉\"** 이다.\nS3 는 이것을 안 건드린다 (곱식도 s=1 에서 0).  이 접촉들의 참값은 **A 의 정의(AREA-03/09 STEP 2)** 가\n정해져야 나온다 — ψ 배치 문제가 아니다.",
+ "evidence_tests": [
+  "scripts/network_conductivity.py",
+  "scripts/plastic_coverage.py",
+  "docs/data/case_master.csv",
+  "scripts/audit_constriction_deleted.py",
+  "docs/data/constriction_deleted_lhs_20260913.csv",
+  "docs/reviews/codex_verdict_area_round2_20260913.md"
+ ]
+}
+===== LHS-25
+{
+ "id": "LHS-25",
+ "severity": "P2",
+ "status": "open",
+ "owner": "claude",
+ "found_by": "1저자 (10-01 · \"이런 경우가 세상에 어딨어\" — v2 빈칸 설명을 되물음) → claude 원자료 대조 (5번 배치 · 수확기 JSON + 웹앱 metrics_flat) + 합리성 검사 서브에이전트",
+ "opened_in": "docs/reviews/lhs_handover_judgments_20260924.md",
+ "title": "physics 피복률 (v1 · v2) 은 접촉마다 추정한 소성 면적 (Tabor F/H · SE 경도 0.85 GPa — 기하 원판의 약 3 배) 을 표면 한도 없이 더한다 — 접촉 조각끼리 겹치는 부분을 빼는 규칙이 없어 SE 가 많은 침대에서 100 % 에 포화하고 (5번 배치 v1 침대 평균 ≥ 99 % LHS 29/130 · lhsx 62/64 · v2 AM 클립 22.41 % · 97.04 % · lhsx v2 AM_P 55/55 = 100.000 상수열), 같은 원인이 v2 의 AM–AM 쪽 (SE 경도 · L1-03 · 접촉 하나가 작은 쪽 표면 절반 2πr² 까지) 에서 분모 ≤ 0 을 만든다 (18 침대 빈칸 · 73 AM — 같은 AM · 같은 접촉을 c_cpl[22] 기하면적으로 세면 1,320,178 개 중 0)",
+ "note": "계산 결함 아님 (경계 · 항등식 · 순서 · 두 구현 대조 전부 정상 — docs/reviews/lhs_coverage_reasonableness_20261001.md) · 모형 구조의 결손.  legacy 부피 cap 은 194 침대 어디서도 안 잡는다 (DESC-03 과 정합).  ✅ 결정 J20-m (1저자 10-01 \"그렇게 하자\"): LHS · lhsx 인계 coverage = 기하면적 열만 · physics v1 · v2 · rough 제외 · 웹앱 표지 (webapp/test_coverage_handover_scope.py 옛 코드 3 PASS · 13 FAIL → 16/16).  ⬜ 열림: ① σ_ionic T1 의 면적 선택 (CLAUDE.md 기록 cov_Hertz · Spearman 0.697 vs 0.476) 은 코드 함수 검토 전 — 1저자 \"이걸로 닫지 말고 아직 · 코드를 아직 안 뜯어봤으니까\" ② 망 전도도 physics 채널 · σ_thermal T1 타깃 · 등급 physics 피복 축에 주는 영향 미확인 (등급 축은 SE 많은 케이스에서 판별력이 없을 가능성) ③ 처방 (표면 예산 · 접촉 조각 겹침 공제 등) 은 설계 전 — 비준 대상.",
+ "evidence_tests": [
+  "webapp/test_coverage_handover_scope.py"
+ ]
+}
+===== LHS-26
+{
+ "id": "LHS-26",
+ "severity": "P3",
+ "status": "open",
+ "owner": "claude",
+ "found_by": "합리성 검사 서브에이전트 (10-01 · 5번 배치 · 1저자 요청 \"coverage 로 나온 값들이 다 합리적인 값인지 확인해봐\")",
+ "opened_in": "docs/reviews/lhs_coverage_reasonableness_20261001.md",
+ "title": "rough 피복률 (B3 · coverage_*_physics_rough) 의 모양 인자가 설계 상이 아니라 웹앱 반지름 이름을 따른다 — mono_AM_P 인데 반지름 규칙 (r > 4 µm → AM_P) 때문에 AM_S 로 불린 9 침대 (lhs00_118 · 121 · 124 · 125 · 126 · lhsx_003 · 017 · 048 · 062) 는 SF 1.10 (단결정), 나머지 mono_AM_P 는 1.40 (다결정) — 같은 설계 칸 안에 두 규약이 섞인다",
+ "note": "lhs00_124 · 126 에서 1.40 이었다면 약 +28 % 상대 차 (추정 — 보고서 §6) · lhsx 4 침대는 전부 포화라 수치 영향 0 · bimodal 은 덱 판독 이름 = 설계 상이라 해당 없음 · J20-f · 7b (웹앱 이름 ↔ 설계 이름) 와 같은 뿌리.  rough 는 인계 열이 아니다 (J20-m) — 영향 = 웹앱 표시 · 등급 축 coverage_AM_mean_physics_rough.  SF 값 자체 (1.40 · 1.10) 도 가정값.  처방 (모양 인자를 설계 상 · 반지름 규칙 중 어디에 걸지) = 비준 대상."
+}
+===== L1-04
+{
+ "id": "L1-04",
+ "severity": "P2",
+ "status": "claimed_fixed",
+ "owner": "claude",
+ "found_by": "codex",
+ "opened_in": "docs/reviews/codex_verdict_dem_stack_L1_20260913.md",
+ "title": "`contact_area` 는 **기하 교차면적**인데 `hertz` 채널로 읽힌다 (1.9875배)",
+ "note": "(Codex 라벨: **L1-CX-04**)\n`parse_liggghts.py:47` 이 `c_cpl[22]` 를 `contact_area` 로 보존하고 `coverage_physics_vs_hertzian.py:206` 이 그것을 **Hertz 채널**로 쓴다.  공식 LIGGGHTS 문서·구현(`compute_pair_gran_local.cpp#L509-L517`)은 이를 **역학 해가 아닌 기하학적 교차 원판**으로 구분한다.\n★ **재현**: `A_LIGG/A_Hertz = 2 - d/(2r)` — r=0.5 um · d/R*=0.05 에서 **1.987500** (해석·실측 일치, 판정문 1.9875).\n또 `plastic_coverage.py:273` 의 elastic 반환은 LIGG floor 를 안 쓴다 ⇒ *'Physics 는 항상 DEM-native 보다 크다'* 도 전 구간 계약이 아니다 (비 0.50003536).\n⇒ 무너지는 결론: `hertz` 를 `pi R* d` 로 읽거나 두 열 차이를 *'추가 소성면적'* 으로만 읽는 것.\n처치(부분): 새 수확기 `lhs_descriptor_harvest.py` 가 매 행에 `area_channel` 을 박는다 (`dem_geometric_c_cpl22 … Hertz 탄성이 아니다; 비 = 2 - d/(2r)`) + selftest ⑬b 회귀.\n⛔ **미해결**: 웹앱/스케일링법칙 쪽 키 이름은 **그대로다** — 판정문이 *'기존 키와 frozen feature 를 세대 표시 없이 바꾸면 안 된다'* 고 했으므로 `A_dem_geometric`/`A_hertz_elastic`/`A_plastic_model` 로의 개명은 **세대 표시와 함께** 별건으로 해야 한다.\n\n**추가 수정 (설명만)** `62e67e02`: 남아 있던 *'웹앱/스케일링법칙 쪽'* 중 **설명 층**을 닫았다 — `parse_liggghts.py` 의 `c_cpl[22]` 매핑 주석과 `coverage_physics_vs_hertzian.py` 의 독스트링·`am_se_hertz` 주석에 *'LIGGGHTS `contact_area` = **기하학적 교차 원판**, Hertz 탄성 해가 아니다 (`A_LIGG/A_Hertz = 2 − d/(2r)`, r=0.5 µm·δ/R*=0.05 에서 **1.9875배**)'* 와 **무너지는 읽기 두 가지**(π R* δ 환산 · 차이를 추가 소성면적으로만 읽기, 비 0.50003536 구간 존재)를 적었다.\n⛔ **키 개명은 여전히 미해결**이고 그대로 둔다 (`coverage_*_hertz_pct` 등) — 판정문의 *'세대 표시 없이 바꾸면 안 된다'* 를 지킨다.",
+ "evidence_tests": [
+  "scripts/lhs_descriptor_harvest.py"
+ ],
+ "claimed_fixed_sha": "62e67e0206473dc854425d36be448f14dea438a8"
+}

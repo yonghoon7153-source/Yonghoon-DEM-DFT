@@ -1,0 +1,8 @@
+SC s=0.30 n=40 r/dx=21.0  f_all=0.284078 (cg 0, 6s)  f_inside=0.274499 (cg 0, 6s)  mid=0.279288  T_mid=2.1597  total 13s
+SC s=0.30 n=80 r/dx=41.9  f_all=0.286445 (cg 0, 15s)  f_inside=0.280074 (cg 0, 17s)  mid=0.283259  T_mid=2.1294  total 40s
+SC s=0.30 n=120 r/dx=62.9  f_all=0.287485 (cg 0, 49s)  f_inside=0.282623 (cg 0, 42s)  mid=0.285054  T_mid=2.1160  total 122s
+   H0 cyl+Maxwell   f=0.230497  T(phi_sum)=2.6168
+   H1 cyl+psi       f=0.331023  T(phi_sum)=1.8221
+   H12 Wiener+psi   f=0.283654  T(phi_sum)=2.1264
+   CF0 cyl          f=0.863075  T(phi_sum)=0.6989
+   CF2 Wiener       f=0.601276  T(phi_sum)=1.0031

@@ -1,0 +1,3 @@
+[real14] z=0.25·plate  contacts crossing  3601  σ_zz(DEM) =   248.9 MPa   σ_zz(HEAD real-E reconstruction) =   787.1 MPa   ratio 3.16
+[real14] z=0.50·plate  contacts crossing  3420  σ_zz(DEM) =   245.8 MPa   σ_zz(HEAD real-E reconstruction) =   677.5 MPa   ratio 2.76
+[real14] z=0.75·plate  contacts crossing  2928  σ_zz(DEM) =   237.7 MPa   σ_zz(HEAD real-E reconstruction) =   599.2 MPa   ratio 2.52

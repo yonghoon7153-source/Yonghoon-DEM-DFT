@@ -1,0 +1,9 @@
+FCC s=0.30 n_oct=48 r/dx=35.6 f_all=0.659508 (bal 1.000000, cg 0, 1s, N 96204) f_inside=0.603401 (bal 1.000000, cg 0, 1s) total 1s
+FCC s=0.30 n_oct=72 r/dx=53.4 f_all=0.649480 (bal 1.000000, cg 0, 7s, N 320716) f_inside=0.614868 (bal 1.000000, cg 0, 8s) total 16s
+FCC s=0.30 n_oct=96 r/dx=71.2 f_all=0.643978 (bal 1.000000, cg 0, 47s, N 755184) f_inside=0.618641 (bal 1.000000, cg 0, 64s) total 115s
+FCC s=0.30 n_oct=128 r/dx=94.9 f_all=0.640410 (bal 1.000000, cg 0, 158s, N 1781716) f_inside=0.619485 (bal 1.000000, cg 0, 117s) total 285s
+   H0 cyl+Maxwell   f=0.651945  T(phi_sum)=1.3084   phi_sum=0.85300
+   H1 cyl+psi       f=0.936276  T(phi_sum)=0.9111   phi_sum=0.85300
+   H12 Wiener+psi   f=0.802296  T(phi_sum)=1.0632   phi_sum=0.85300
+   CF0 cyl          f=2.441144  T(phi_sum)=0.3494   phi_sum=0.85300
+   CF2 Wiener       f=1.700664  T(phi_sum)=0.5016   phi_sum=0.85300

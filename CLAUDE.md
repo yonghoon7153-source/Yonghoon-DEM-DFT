@@ -13,6 +13,7 @@
 
 ★ **2026-09-29 — 연장 세션 (pqwtv8) → 본 세션 (stoic-knuth) 복귀 = fast-forward 병합 인계 `docs/handoff_merge_to_stoic_knuth_20260929.md`** (절차 · 검사 · 넘어간 뒤 상태 · 붙여 넣을 프롬프트).
 ★ **2026-10-06 — 두 번째 복귀 병합 `docs/handoff_merge_to_stoic_knuth_20261006.md`** (10-03 ~ 10-06 연장 세션 77 커밋 + Codex 5차 반입 · fast-forward `d0b495cf4` → `04756e749` · 충돌 0 · litdb 무변경 · §5 넘어간 뒤 상태 · §6 이종기술 바로 팔로우).  그 뒤로는 **이 브랜치 하나**다 — 194 배치 · 인계 · WSL `~/dem-audit` 명령의 `origin/claude/sdcp-dem-manuscript-si-pqwtv8` 은 `claude/stoic-knuth-NObVQ` 로 바꿔 쓴다.
+★ **2026-10-06 저녁 — 접촉망 세대 2** (1저자 비준 · 설계 기록 `docs/reviews/gen2_network_design_20261006.md` · Codex 요청서 `docs/reviews/codex_gen2_network_request_20261006.md`): Physics ψ = 곱셈 (`50de4e806` · L2-01) + Physics 면적 g2 (규칙 B · 원판 floor · 쌍별 E* · µm) · 정확 Dirichlet 전극 · CF 과전도 표지 (FULL 만 거부) · H12 민감도 팔 (`a0a24c538`).  Hertz 기본 (H0) 간선은 비트 동일 · 전극만 σ 상대 ~1e-5.  ⚠ 그 전에 만든 망 산출물 (194 배치 · LHS 배포 v1.2 의 Physics 부록 · 웹앱 옛 케이스 · 10-06 보고 덱 8 장 Tabor 보정 선) = **세대 1** — 세대 섞인 표는 tau_flux · 인계 생성기가 거부 · 194 재실행 = 새 등록 문서 뒤 (봉인 CODE_FILES 5/19 변경).
 
 ⚠⚠⚠ **현재 상태 — 2026-09-23 (Lee · 믹서 · MPM · SELF-45 네 줄 갱신; 09-22 판은 인계 검증 `docs/handoff_review_20260922.md` §C-3 로 고친 것).  이 블록이 최신이다.**
 아래 *"살아있는 트랙 3개"* 는 **2026-08-12 시점**이고, 그 뒤 5주(08-26 ~ 09-22)의 트랙은

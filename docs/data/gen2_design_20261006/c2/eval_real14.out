@@ -1,0 +1,396 @@
+[real14] atoms 33289 contacts 106563 type_map {1: 'AM_P', 2: 'AM_S', 3: 'SE'} plate_z 0.0302845 box (0.05, 0.05)  (1.3s)
+  ionic: nodes 32832 edges 74604 bottom 2955 top 1256
+  electronic: nodes 457 edges 660 bottom 94 top 77
+  thermal: nodes 33289 edges 106563 bottom 3049 top 1333
+  G1 recompute vs HEAD A_physics: max rel dev 8.88e-16
+{
+ "SE_SE": {
+  "n": 74604,
+  "delta_over_Rstar_p10_50_90": [
+   0.011397207999999999,
+   0.14339839999999998,
+   0.5045883999999996
+  ],
+  "delta_nm_p10_50_90": [
+   2.8493020000000002,
+   35.849599999999995,
+   126.14709999999992
+  ],
+  "G1": {
+   "binding_pct": {
+    "tabor": 77.87,
+    "liggghts": 19.546,
+    "geom": 2.272,
+    "elastic": 0.312
+   },
+   "cap_conflict_pct": 19.546,
+   "A_over_G1_p10_50_90": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "frac_A_changed_gt1e-9": 0.0,
+   "A_below_ligg_pct": 0.312,
+   "s_eq_1_pct (clamp_zero)": 10.036,
+   "floor_only_pct": 0.0576
+  },
+  "U": {
+   "binding_pct": {
+    "liggghts": 35.054,
+    "tabor": 31.536,
+    "volume": 30.825,
+    "geom": 2.272,
+    "elastic": 0.312
+   },
+   "cap_conflict_pct": 35.054,
+   "A_over_G1_p10_50_90": [
+    0.6925,
+    1.0,
+    1.0
+   ],
+   "frac_A_changed_gt1e-9": 0.46334,
+   "A_below_ligg_pct": 0.312,
+   "s_eq_1_pct (clamp_zero)": 10.036,
+   "floor_only_pct": 0.0576
+  },
+  "UL": {
+   "binding_pct": {
+    "tabor": 71.432,
+    "liggghts": 22.497,
+    "volume": 3.486,
+    "geom": 2.272,
+    "elastic": 0.312
+   },
+   "cap_conflict_pct": 22.497,
+   "A_over_G1_p10_50_90": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "frac_A_changed_gt1e-9": 0.06438,
+   "A_below_ligg_pct": 0.312,
+   "s_eq_1_pct (clamp_zero)": 10.036,
+   "floor_only_pct": 0.0576
+  },
+  "ULA": {
+   "binding_pct": {
+    "tabor": 71.432,
+    "volume": 25.984,
+    "geom": 2.272,
+    "elastic": 0.312
+   },
+   "cap_conflict_pct": 22.497,
+   "A_over_G1_p10_50_90": [
+    0.2939,
+    1.0,
+    1.0
+   ],
+   "frac_A_changed_gt1e-9": 0.25984,
+   "A_below_ligg_pct": 22.81,
+   "s_eq_1_pct (clamp_zero)": 10.036,
+   "floor_only_pct": 0.0576
+  },
+  "ULB": {
+   "binding_pct": {
+    "tabor": 63.668,
+    "floor": 22.81,
+    "geom": 10.036,
+    "volume": 3.486
+   },
+   "cap_conflict_pct": 22.81,
+   "A_over_G1_p10_50_90": [
+    0.9125,
+    1.0,
+    1.0
+   ],
+   "frac_A_changed_gt1e-9": 0.16786,
+   "A_below_ligg_pct": 0.0,
+   "s_eq_1_pct (clamp_zero)": 10.036,
+   "floor_only_pct": 0.0576
+  },
+  "ULBP": {
+   "binding_pct": {
+    "tabor": 58.841,
+    "floor": 37.664,
+    "geom": 3.494
+   },
+   "cap_conflict_pct": 37.664,
+   "A_over_G1_p10_50_90": [
+    0.5883,
+    0.5883,
+    1.0
+   ],
+   "frac_A_changed_gt1e-9": 0.80454,
+   "A_below_ligg_pct": 0.0,
+   "s_eq_1_pct (clamp_zero)": 3.494,
+   "floor_only_pct": 0.0295
+  }
+ },
+ "AM_SE": {
+  "n": 31299,
+  "delta_over_Rstar_p10_50_90": [
+   0.020012382,
+   0.14265658333333334,
+   0.5545922333333333
+  ],
+  "delta_nm_p10_50_90": [
+   8.761214,
+   60.1022,
+   232.55599999999998
+  ],
+  "G1": {
+   "binding_pct": {
+    "tabor": 62.075,
+    "liggghts": 19.707,
+    "geom": 18.01,
+    "elastic": 0.208
+   },
+   "cap_conflict_pct": 19.707,
+   "A_over_G1_p10_50_90": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "frac_A_changed_gt1e-9": 0.0,
+   "A_below_ligg_pct": 0.208,
+   "s_eq_1_pct (clamp_zero)": 32.305,
+   "floor_only_pct": 0.0703
+  },
+  "U": {
+   "binding_pct": {
+    "tabor": 48.104,
+    "liggghts": 25.755,
+    "geom": 18.01,
+    "volume": 7.924,
+    "elastic": 0.208
+   },
+   "cap_conflict_pct": 25.755,
+   "A_over_G1_p10_50_90": [
+    0.9437,
+    1.0,
+    1.0
+   ],
+   "frac_A_changed_gt1e-9": 0.13972,
+   "A_below_ligg_pct": 0.208,
+   "s_eq_1_pct (clamp_zero)": 32.305,
+   "floor_only_pct": 0.0703
+  },
+  "UL": {
+   "binding_pct": {
+    "tabor": 62.075,
+    "liggghts": 19.707,
+    "geom": 18.01,
+    "elastic": 0.208
+   },
+   "cap_conflict_pct": 19.707,
+   "A_over_G1_p10_50_90": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "frac_A_changed_gt1e-9": 0.0,
+   "A_below_ligg_pct": 0.208,
+   "s_eq_1_pct (clamp_zero)": 32.305,
+   "floor_only_pct": 0.0703
+  },
+  "ULA": {
+   "binding_pct": {
+    "tabor": 77.149,
+    "geom": 18.01,
+    "volume": 4.633,
+    "elastic": 0.208
+   },
+   "cap_conflict_pct": 19.707,
+   "A_over_G1_p10_50_90": [
+    0.7975,
+    1.0,
+    1.0
+   ],
+   "frac_A_changed_gt1e-9": 0.19707,
+   "A_below_ligg_pct": 19.914,
+   "s_eq_1_pct (clamp_zero)": 32.305,
+   "floor_only_pct": 0.0703
+  },
+  "ULB": {
+   "binding_pct": {
+    "tabor": 47.781,
+    "geom": 32.305,
+    "floor": 19.914
+   },
+   "cap_conflict_pct": 19.914,
+   "A_over_G1_p10_50_90": [
+    0.5,
+    1.0,
+    1.0
+   ],
+   "frac_A_changed_gt1e-9": 0.32512,
+   "A_below_ligg_pct": 0.0,
+   "s_eq_1_pct (clamp_zero)": 32.305,
+   "floor_only_pct": 0.0703
+  },
+  "ULBP": {
+   "binding_pct": {
+    "tabor": 47.781,
+    "geom": 32.305,
+    "floor": 19.914
+   },
+   "cap_conflict_pct": 19.914,
+   "A_over_G1_p10_50_90": [
+    0.5,
+    1.0,
+    1.0
+   ],
+   "frac_A_changed_gt1e-9": 0.32512,
+   "A_below_ligg_pct": 0.0,
+   "s_eq_1_pct (clamp_zero)": 32.305,
+   "floor_only_pct": 0.0703
+  }
+ },
+ "AM_AM": {
+  "n": 660,
+  "delta_over_Rstar_p10_50_90": [
+   0.006303742666666667,
+   0.05142425,
+   0.170119
+  ],
+  "delta_nm_p10_50_90": [
+   7.164145000000002,
+   66.30565,
+   232.96349999999998
+  ],
+  "G1": {
+   "binding_pct": {
+    "tabor": 63.03,
+    "liggghts": 35.152,
+    "elastic": 1.818
+   },
+   "cap_conflict_pct": 35.152,
+   "A_over_G1_p10_50_90": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "frac_A_changed_gt1e-9": 0.0,
+   "A_below_ligg_pct": 1.818,
+   "s_eq_1_pct (clamp_zero)": 1.667,
+   "floor_only_pct": 0.0
+  },
+  "U": {
+   "binding_pct": {
+    "tabor": 63.03,
+    "liggghts": 35.152,
+    "elastic": 1.818
+   },
+   "cap_conflict_pct": 35.152,
+   "A_over_G1_p10_50_90": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "frac_A_changed_gt1e-9": 0.0,
+   "A_below_ligg_pct": 1.818,
+   "s_eq_1_pct (clamp_zero)": 1.667,
+   "floor_only_pct": 0.0
+  },
+  "UL": {
+   "binding_pct": {
+    "tabor": 63.03,
+    "liggghts": 35.152,
+    "elastic": 1.818
+   },
+   "cap_conflict_pct": 35.152,
+   "A_over_G1_p10_50_90": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "frac_A_changed_gt1e-9": 0.0,
+   "A_below_ligg_pct": 1.818,
+   "s_eq_1_pct (clamp_zero)": 1.667,
+   "floor_only_pct": 0.0
+  },
+  "ULA": {
+   "binding_pct": {
+    "tabor": 95.606,
+    "volume": 2.576,
+    "elastic": 1.818
+   },
+   "cap_conflict_pct": 35.152,
+   "A_over_G1_p10_50_90": [
+    0.4967,
+    1.0,
+    1.0
+   ],
+   
+  [ionic] HEAD solve σ_ratio=0.0150760347  G1/divide recomputed=0.0150760347  rel 0.00e+00
+  [ionic] done (397s)
+  [electronic] HEAD solve σ_ratio=0.0441009055  G1/divide recomputed=0.0441009055  rel 0.00e+00
+  [electronic] done (397s)
+  [thermal] HEAD solve σ_ratio=2.33521869  G1/divide recomputed=2.33521869  rel 0.00e+00
+  [thermal] done (872s)
+
+σ_ratio table (σ/σ_bulk; [σ, frac R_c=0])
+--- ionic  (HERTZ 0.0210206)
+   HEAD_divide                  σ=0.015076
+   HERTZ                        σ=0.0210206  Rc0=0.000%  vs G1|multiply -43.509%
+   G1|divide                    σ=0.015076  Rc0=10.093%  vs G1|multiply -59.484%
+   G1|multiply                  σ=0.0372103  Rc0=10.093%  vs G1|multiply +0.000%
+   U|divide                     σ=0.0147106  Rc0=10.093%  vs G1|multiply -60.466%
+   U|multiply                   σ=0.0347607  Rc0=10.093%  vs G1|multiply -6.583%
+   UL|divide                    σ=0.015052  Rc0=10.093%  vs G1|multiply -59.549%
+   UL|multiply                  σ=0.0371262  Rc0=10.093%  vs G1|multiply -0.226%
+   ULA|divide                   σ=0.013547  Rc0=10.093%  vs G1|multiply -63.593%
+   ULA|multiply                 σ=0.0336224  Rc0=10.093%  vs G1|multiply -9.642%
+   ULB|divide                   σ=0.0150591  Rc0=10.093%  vs G1|multiply -59.530%
+   ULB|multiply                 σ=0.0371382  Rc0=10.093%  vs G1|multiply -0.194%
+   ULBP|divide                  σ=0.014376  Rc0=3.524%  vs G1|multiply -61.366%
+   ULBP|multiply                σ=0.0316395  Rc0=3.524%  vs G1|multiply -14.971%
+   ULBP|multiply|nofloor        σ=0.0316395  Rc0=3.494%  vs G1|multiply -14.971%
+   ULBP|multiply|h1             σ=0.0316395  Rc0=3.524%  vs G1|multiply -14.971%
+   ULBP|multiply|h2             σ=0.0316395  Rc0=3.524%  vs G1|multiply -14.971%
+   ULBP|multiply|h10            σ=0.0316395  Rc0=3.524%  vs G1|multiply -14.971%
+   ULBP|multiply|h20            σ=0.0307476  Rc0=3.524%  vs G1|multiply -17.368%
+   ULBP|multiply|h50            σ=0.0284774  Rc0=1.091%  vs G1|multiply -23.469%
+--- electronic  (HERTZ 0.0650332)
+   HEAD_divide                  σ=0.0441009
+   HERTZ                        σ=0.0650332  Rc0=0.000%  vs G1|multiply -60.436%
+   G1|divide                    σ=0.0441009  Rc0=1.667%  vs G1|multiply -73.170%
+   G1|multiply                  σ=0.164373  Rc0=1.667%  vs G1|multiply +0.000%
+   U|divide                     σ=0.0441009  Rc0=1.667%  vs G1|multiply -73.170%
+   U|multiply                   σ=0.164373  Rc0=1.667%  vs G1|multiply +0.000%
+   UL|divide                    σ=0.0441009  Rc0=1.667%  vs G1|multiply -73.170%
+   UL|multiply                  σ=0.164373  Rc0=1.667%  vs G1|multiply +0.000%
+   ULA|divide                   σ=0.0432492  Rc0=1.667%  vs G1|multiply -73.688%
+   ULA|multiply                 σ=0.162651  Rc0=1.667%  vs G1|multiply -1.048%
+   ULB|divide                   σ=0.0441252  Rc0=1.667%  vs G1|multiply -73.155%
+   ULB|multiply                 σ=0.164408  Rc0=1.667%  vs G1|multiply +0.021%
+   ULBP|divide                  σ=0.0407047  Rc0=0.000%  vs G1|multiply -75.236%
+   ULBP|multiply                σ=0.102137  Rc0=0.000%  vs G1|multiply -37.863%
+   ULBP|multiply|nofloor        σ=0.102137  Rc0=0.000%  vs G1|multiply -37.863%
+   ULBP|multiply|h1             σ=0.102137  Rc0=0.000%  vs G1|multiply -37.863%
+   ULBP|multiply|h2             σ=0.102137  Rc0=0.000%  vs G1|multiply -37.863%
+   ULBP|multiply|h10            σ=0.102137  Rc0=0.000%  vs G1|multiply -37.863%
+   ULBP|multiply|h20            σ=0.102137  Rc0=0.000%  vs G1|multiply -37.863%
+   ULBP|multiply|h50            σ=0.102137  Rc0=0.000%  vs G1|multiply -37.863%
+--- thermal  (HERTZ 2.98422)
+   HEAD_divide                  σ=2.33522
+   HERTZ                        σ=2.98422  Rc0=0.000%  vs G1|multiply -44.222%
+   G1|divide                    σ=2.33522  Rc0=16.585%  vs G1|multiply -56.353%
+   G1|multiply                  σ=5.35022  Rc0=16.585%  vs G1|multiply +0.000%
+   U|divide                     σ=2.3296  Rc0=16.585%  vs G1|multiply -56.458%
+   U|multiply                   σ=5.31971  Rc0=16.585%  vs G1|multiply -0.570%
+   UL|divide                    σ=2.33494  Rc0=16.585%  vs G1|multiply -56.358%
+   UL|multiply                  σ=5.34964  Rc0=16.585%  vs G1|multiply -0.011%
+   ULA|divide                   σ=2.30051  Rc0=16.585%  vs G1|multiply -57.001%
+   ULA|multiply                 σ=5.29166  Rc0=16.585%  vs G1|multiply -1.094%
+   ULB|divide                   σ=2.33537  Rc0=16.585%  vs G1|multiply -56.350%
+   ULB|multiply                 σ=5.35007  Rc0=16.585%  vs G1|multiply -0.003%
+   ULBP|divide                  σ=2.2552  Rc0=11.976%  vs G1|multiply -57.848%
+   ULBP|multiply                σ=4.42649  Rc0=11.976%  vs G1|multiply -17.265%
+   ULBP|multiply|nofloor        σ=4.42649  Rc0=11.935%  vs G1|multiply -17.265%
+   ULBP|multiply|h1             σ=4.42649  Rc0=11.976%  vs G1|multiply -17.265%
+   ULBP|multiply|h2             σ=4.42649  Rc0=11.976%  vs G1|multiply -17.265%
+   ULBP|multiply|h10            σ=4.42229  Rc0=11.976%  vs G1|multiply -17.344%
+   ULBP|multiply|h20            σ=4.35724  Rc0=11.420%  vs G1|multiply -18.559%
+   ULBP|multiply|h50            σ=4.20746  Rc0=5.505%  vs G1|multiply -21.359%
+total 872s

@@ -1,0 +1,324 @@
+[case15] atoms 65970 contacts 182995 type_map {1: 'AM_P', 2: 'SE'} plate_z 0.0191455 box (0.1, 0.1)  (1.0s)
+  ionic: nodes 65866 edges 154610 bottom 9296 top 45
+  electronic: nodes 104 edges 119 bottom 56 top 52
+  thermal: nodes 65970 edges 182995 bottom 9352 top 97
+  G1 recompute vs HEAD A_physics: max rel dev 8.88e-16
+{
+ "SE_SE": {
+  "n": 154610,
+  "delta_over_Rstar_p10_50_90": [
+   0.009763028000000002,
+   0.0406218,
+   0.21531004000000012
+  ],
+  "delta_nm_p10_50_90": [
+   2.440757,
+   10.15545,
+   53.827510000000025
+  ],
+  "G1": {
+   "binding_pct": {
+    "tabor": 54.95,
+    "liggghts": 44.484,
+    "elastic": 0.456,
+    "geom": 0.11
+   },
+   "cap_conflict_pct": 44.484,
+   "A_over_G1_p10_50_90": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "frac_A_changed_gt1e-9": 0.0,
+   "A_below_ligg_pct": 0.456,
+   "s_eq_1_pct (clamp_zero)": 0.986,
+   "floor_only_pct": 0.0123
+  },
+  "U": {
+   "binding_pct": {
+    "liggghts": 65.961,
+    "volume": 25.29,
+    "tabor": 8.183,
+    "elastic": 0.456,
+    "geom": 0.11
+   },
+   "cap_conflict_pct": 65.961,
+   "A_over_G1_p10_50_90": [
+    0.6823,
+    1.0,
+    1.0
+   ],
+   "frac_A_changed_gt1e-9": 0.46767,
+   "A_below_ligg_pct": 0.456,
+   "s_eq_1_pct (clamp_zero)": 0.986,
+   "floor_only_pct": 0.0123
+  },
+  "UL": {
+   "binding_pct": {
+    "liggghts": 49.201,
+    "tabor": 44.992,
+    "volume": 5.241,
+    "elastic": 0.456,
+    "geom": 0.11
+   },
+   "cap_conflict_pct": 49.201,
+   "A_over_G1_p10_50_90": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "frac_A_changed_gt1e-9": 0.09958,
+   "A_below_ligg_pct": 0.456,
+   "s_eq_1_pct (clamp_zero)": 0.986,
+   "floor_only_pct": 0.0123
+  },
+  "ULA": {
+   "binding_pct": {
+    "volume": 54.442,
+    "tabor": 44.992,
+    "elastic": 0.456,
+    "geom": 0.11
+   },
+   "cap_conflict_pct": 49.201,
+   "A_over_G1_p10_50_90": [
+    0.2455,
+    0.9065,
+    1.0
+   ],
+   "frac_A_changed_gt1e-9": 0.54442,
+   "A_below_ligg_pct": 49.657,
+   "s_eq_1_pct (clamp_zero)": 0.986,
+   "floor_only_pct": 0.0123
+  },
+  "ULB": {
+   "binding_pct": {
+    "floor": 49.657,
+    "tabor": 44.116,
+    "volume": 5.241,
+    "geom": 0.986
+   },
+   "cap_conflict_pct": 49.657,
+   "A_over_G1_p10_50_90": [
+    0.9893,
+    1.0,
+    1.0
+   ],
+   "frac_A_changed_gt1e-9": 0.114,
+   "A_below_ligg_pct": 0.0,
+   "s_eq_1_pct (clamp_zero)": 0.986,
+   "floor_only_pct": 0.0123
+  },
+  "ULBP": {
+   "binding_pct": {
+    "floor": 69.059,
+    "tabor": 30.744,
+    "geom": 0.197
+   },
+   "cap_conflict_pct": 69.059,
+   "A_over_G1_p10_50_90": [
+    0.5883,
+    0.8821,
+    1.0
+   ],
+   "frac_A_changed_gt1e-9": 0.55516,
+   "A_below_ligg_pct": 0.0,
+   "s_eq_1_pct (clamp_zero)": 0.197,
+   "floor_only_pct": 0.0052
+  }
+ },
+ "AM_SE": {
+  "n": 28266,
+  "delta_over_Rstar_p10_50_90": [
+   0.019104345000000002,
+   0.02801619166666667,
+   0.3308153333333333
+  ],
+  "delta_nm_p10_50_90": [
+   8.81739,
+   12.93055,
+   152.68399999999997
+  ],
+  "G1": {
+   "binding_pct": {
+    "liggghts": 52.179,
+    "tabor": 38.23,
+    "geom": 9.393,
+    "elastic": 0.198
+   },
+   "cap_conflict_pct": 52.179,
+   "A_over_G1_p10_50_90": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "frac_A_changed_gt1e-9": 0.0,
+   "A_below_ligg_pct": 0.198,
+   "s_eq_1_pct (clamp_zero)": 14.445,
+   "floor_only_pct": 0.0318
+  },
+  "U": {
+   "binding_pct": {
+    "liggghts": 58.455,
+    "tabor": 25.996,
+    "geom": 9.393,
+    "volume": 5.958,
+    "elastic": 0.198
+   },
+   "cap_conflict_pct": 58.455,
+   "A_over_G1_p10_50_90": [
+    0.9689,
+    1.0,
+    1.0
+   ],
+   "frac_A_changed_gt1e-9": 0.12234,
+   "A_below_ligg_pct": 0.198,
+   "s_eq_1_pct (clamp_zero)": 14.445,
+   "floor_only_pct": 0.0318
+  },
+  "UL": {
+   "binding_pct": {
+    "liggghts": 52.179,
+    "tabor": 38.23,
+    "geom": 9.393,
+    "elastic": 0.198
+   },
+   "cap_conflict_pct": 52.179,
+   "A_over_G1_p10_50_90": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "frac_A_changed_gt1e-9": 0.0,
+   "A_below_ligg_pct": 0.198,
+   "s_eq_1_pct (clamp_zero)": 14.445,
+   "floor_only_pct": 0.0318
+  },
+  "ULA": {
+   "binding_pct": {
+    "tabor": 86.436,
+    "geom": 9.393,
+    "volume": 3.973,
+    "elastic": 0.198
+   },
+   "cap_conflict_pct": 52.179,
+   "A_over_G1_p10_50_90": [
+    0.7807,
+    0.9514,
+    1.0
+   ],
+   "frac_A_changed_gt1e-9": 0.52179,
+   "A_below_ligg_pct": 52.377,
+   "s_eq_1_pct (clamp_zero)": 14.445,
+   "floor_only_pct": 0.0318
+  },
+  "ULB": {
+   "binding_pct": {
+    "floor": 52.384,
+    "tabor": 33.178,
+    "geom": 14.438
+   },
+   "cap_conflict_pct": 52.377,
+   "A_over_G1_p10_50_90": [
+    0.5511,
+    1.0,
+    1.0
+   ],
+   "frac_A_changed_gt1e-9": 0.14643,
+   "A_below_ligg_pct": 0.0,
+   "s_eq_1_pct (clamp_zero)": 14.445,
+   "floor_only_pct": 0.0318
+  },
+  "ULBP": {
+   "binding_pct": {
+    "floor": 52.384,
+    "tabor": 33.178,
+    "geom": 14.438
+   },
+   "cap_conflict_pct": 52.377,
+   "A_over_G1_p10_50_90": [
+    0.5511,
+    1.0,
+    1.0
+   ],
+   "frac_A_changed_gt1e-9": 0.14643,
+   "A_below_ligg_pct": 0.0,
+   "s_eq_1_pct (clamp_zero)": 14.445,
+   "floor_only_pct": 0.0318
+  }
+ },
+ "AM_AM": {
+  "n": 119,
+  "delta_over_Rstar_p10_50_90": [
+   0.0038748000000000003,
+   0.065737,
+   0.2545052
+  ],
+  "delta_nm_p10_50_90": [
+   11.624400000000001,
+   197.21099999999998,
+   763.5156000000001
+  ],
+  "G1": {
+   "binding_pct": {
+    "tabor": 57.983,
+    "liggghts": 39.496,
+    "elastic": 2.521
+   },
+   "cap_conflict_pct": 39.496,
+   "A_over_G1_p10_50_90": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "frac_A_changed_gt1e-9": 0.0,
+   "A_below_ligg_pct": 2.521,
+   "s_eq_1_pct (clamp_zero)": 0.0,
+   "floor_only_pct": 0.0
+  },
+  "U": {
+   "binding_pct": {
+    "tabor": 57.983,
+    "liggghts": 39.496,
+    "elastic": 2.521
+   },
+   "cap_conflict_pct": 39.496,
+   "A_over_G1_p10_50_90": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "frac_A_changed_gt1e-9": 0.0,
+   "A_below_ligg_pct": 2.521,
+   "s_eq_1_pct (clamp_zero)": 0.0,
+   "floor_only_pct": 0.0
+  },
+  "UL": {
+   "binding_pct": {
+    "tabor": 57.983,
+    "liggghts": 39.496,
+    "elastic": 2.521
+   },
+   "cap_conflict_pct": 39.496,
+   "A_over_G1_p10_50_90": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "frac_A_changed_gt1e-9": 0.0,
+   "A_below_ligg_pct": 2.521,
+   "s_eq_1_pct (clamp_zero)": 0.0,
+   "floor_only_pct": 0.0
+  },
+  "ULA": {
+   "binding_pct": {
+    "tabor": 97.479,
+    "elastic": 2.521
+   },
+   "cap_conflict_pct": 39.496,
+   "A_over_G1_p10_50_90": [
+    0.4376,
+    1.0,
+    1.0
+   ],
+   "frac_A_changed_gt1e-9": 0.39496,
+
