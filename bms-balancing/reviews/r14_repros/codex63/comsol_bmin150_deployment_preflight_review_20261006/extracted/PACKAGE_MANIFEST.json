@@ -1,0 +1,40 @@
+{
+  "type": "BMIN150_DEPLOYMENT_PREFLIGHT_REVIEW_PACKAGE",
+  "payload_count": 6,
+  "files": [
+    {
+      "path": "CLAUDE_REPLY_KO.md",
+      "bytes": 2195,
+      "sha256": "f21ecaa05b5f876d7ae5ad5ac3ce031cb4c939d6fa0571fc89fc93d667cf7eb2"
+    },
+    {
+      "path": "DECISION.json",
+      "bytes": 1461,
+      "sha256": "f017e94f7e7a7bd7e5cc7361b1c98669a249184a9b3c8c52b2f013f6ee0213d3"
+    },
+    {
+      "path": "EVIDENCE_INDEX.json",
+      "bytes": 35551,
+      "sha256": "8cfd98847e609e327949a71fa978e5ca3939c9357dcd65a0c8de57ee9762ecc2"
+    },
+    {
+      "path": "FINAL_NATIVE150_APPROVAL_DRAFT_KO.md",
+      "bytes": 3723,
+      "sha256": "bb0a16bd709c9687a3a69aed789790f1d9caa64b47dd344d967a92f08e0aa10e"
+    },
+    {
+      "path": "REVIEW_KO.md",
+      "bytes": 8116,
+      "sha256": "1e18c4f7f8e48c8cb2aff1fe3e123ae2869365888d09bee6296db7a999516d9f"
+    },
+    {
+      "path": "STATIC_DATA_CHECKS.json",
+      "bytes": 2584,
+      "sha256": "ae38621945f7f75d340aa6c8d437fcbdfc18b9bb3f6837fd5db25f618cb0972f"
+    }
+  ],
+  "excludes": [
+    "PACKAGE_MANIFEST.json"
+  ],
+  "native150_approved": false
+}

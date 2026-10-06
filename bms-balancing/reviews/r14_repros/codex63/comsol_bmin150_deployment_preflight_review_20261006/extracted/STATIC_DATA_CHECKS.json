@@ -1,0 +1,115 @@
+{
+  "type": "REVIEWER_STATIC_DATA_RECONCILIATION",
+  "passed": 16,
+  "total": 16,
+  "checks": [
+    {
+      "id": "ZIP_RAW_IDENTITY",
+      "pass": true,
+      "detail": "8800035eb5ed427ea66d98d8dab8406fff189edceb9d86732706fbd323e70640"
+    },
+    {
+      "id": "ZIP_SAFE_EXACT_SET",
+      "pass": true,
+      "detail": {
+        "entries": 22
+      }
+    },
+    {
+      "id": "PACKAGE_MANIFEST_21",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "id": "RECORD_MANIFEST_17",
+      "pass": true,
+      "detail": [
+        "MANIFEST.json",
+        "CLOSEOUT.json"
+      ]
+    },
+    {
+      "id": "RECORD_COUNTS_FINAL_RETURN",
+      "pass": true,
+      "detail": {
+        "files": 19,
+        "bytes": 78470
+      }
+    },
+    {
+      "id": "FINAL_manifest_sha256",
+      "pass": true,
+      "detail": "8258b3c1826b585467e672deb07d54a38db729c71b575b663c2ef152e0b61f0e"
+    },
+    {
+      "id": "FINAL_closeout_sha256",
+      "pass": true,
+      "detail": "67aab5f65d316413589e856dcef039bb13726764e38af121417f2f248410f310"
+    },
+    {
+      "id": "SOURCE_ZIP_PIN",
+      "pass": true,
+      "detail": "ed0138b90cf2dc4e42f22ec18d8719ff56906780f74b4139850d604b096bb470"
+    },
+    {
+      "id": "DEPLOYED_EIGHT_BOUND_TO_ORIGINAL",
+      "pass": true,
+      "detail": {
+        "count": 8,
+        "total_bytes": 212467
+      }
+    },
+    {
+      "id": "COMMAND_MAP_AND_BUDGETS",
+      "pass": true,
+      "detail": {
+        "manifest": "4cdca2e6bf7d073f813d97be73825b8cd2043c2fc44e285f4a190bc6fb97cf25"
+      }
+    },
+    {
+      "id": "29_PINNED_FILE_OBSERVATIONS",
+      "pass": true,
+      "detail": {
+        "baseline": 9,
+        "dependencies": 16,
+        "executables": 4
+      }
+    },
+    {
+      "id": "FIVE_FUTURE_PATHS",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "id": "PREFS_DECLARED_IDENTITY",
+      "pass": true,
+      "detail": {
+        "security_lines": 16,
+        "effective_policy": "UNVERIFIED"
+      }
+    },
+    {
+      "id": "39_COMPLETE_OBSERVATIONS",
+      "pass": true,
+      "detail": {
+        "first": "2026-10-06T11:54:38.0560940+00:00",
+        "last": "2026-10-06T11:54:40.5737121+00:00"
+      }
+    },
+    {
+      "id": "BUDGET_COMPLETION_LINK",
+      "pass": true,
+      "detail": {
+        "snapshot_s": 298.9079295,
+        "host_rc": 0,
+        "wall_seconds_separate": 0.9614202
+      }
+    },
+    {
+      "id": "NATIVE_INACTIVE",
+      "pass": true,
+      "detail": null
+    }
+  ],
+  "scope": "Data hashing and comparisons only. Not candidate tests or direct BML host observation. CRC not separately checked."
+}

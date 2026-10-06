@@ -1,0 +1,37 @@
+{
+  "date": "2026-10-06",
+  "status": "DEPLOYMENT_AND_PREFLIGHT_ACCEPTED_WITH_STATED_EVIDENCE_LIMITS",
+  "blocking_findings": [],
+  "native150_approved": false,
+  "approval_file_creation_authorized": false,
+  "source_changes_required": false,
+  "retest_required": false,
+  "next_step": "Separate explicit user authorization for one fixed native150 attempt and separately bounded packaging",
+  "purpose": "Particle radial mesh 320/320 versus 640/640 sensitivity over declared 120-150 second comparison window; not longer-time extension",
+  "source_zip": "8800035eb5ed427ea66d98d8dab8406fff189edceb9d86732706fbd323e70640",
+  "manifest_sha256": "4cdca2e6bf7d073f813d97be73825b8cd2043c2fc44e285f4a190bc6fb97cf25",
+  "accepted_recorded_deployment": {
+    "files": 8,
+    "bytes": 212467
+  },
+  "accepted_recorded_observations": 39,
+  "preflight_completion": {
+    "snapshot_seconds": 298.9079295,
+    "limit_seconds": 1800,
+    "record_bytes": 78470,
+    "record_limit_bytes": 50000000,
+    "tool_chunk": "ed90f4",
+    "reported_tool_rc": 0,
+    "provenance": "Submitted subsequent field transcription; not independent reviewer OS observation"
+  },
+  "retained_limits": {
+    "PS01_16_internal": "UNOBSERVED",
+    "effective_policy": "UNVERIFIED",
+    "actual_core_utilization": "UNVERIFIED",
+    "normal_gate": "INCOMPLETE",
+    "overall_convergence": "INCOMPLETE"
+  },
+  "reviewer_source_execution": 0,
+  "reviewer_COMSOL_calls": 0,
+  "reviewer_python_calls": 0
+}
