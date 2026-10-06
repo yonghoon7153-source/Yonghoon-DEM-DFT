@@ -144,6 +144,40 @@ def cchange(du, label):
                         v.pop(b, None)
 
 
+#: ★ 10-07 G2RR2-04 · 05 (Codex 세대 2 재검증 2 §5 · §6 · probes/branch_policy.py) — σ₀ 결합 · 진단 가지 통째 결손 변이 (네 사본에 같이 · 부모 σ₀ ·
+#:   FULL · q · 전류 · 기하 · 도장은 그대로).  CF 차원값은 그 증서의 σ₀ 로 다시 계산한다 (Codex 표: 0.117810 → 0.235619 mS/cm).
+SIGMA0_LABELS = ('cf_cert_sigma0_x2', 'full_cert_sigma0_x2', 'cf_cert_sigma0_T60', 'parent_T_C_changed')
+ABSENT_LABELS = ('cf_record_absent',)
+CF_FIVE = ('sigma_bulk_net', 'sigma_bulk_net_mScm', 'sigma_bulk_net_status', 'sigma_bulk_net_reason', 'solve_certificate_bulk_net')
+
+
+def _sigma_60():
+    import se_material as _sm
+    return _sm.sigma_grain_S_cm(60.0)
+
+
+def schange(du, label):
+    """G2RR2-04 · 05 변이 — du = {'hertzian': …, 'physics': …} (사본마다 같은 결과)."""
+    rh = du.get('hertzian')
+    if label == 'cf_cert_sigma0_x2' and rh:                 # Codex cf_sigma0_x2 — 주 Hertz CF 증서 σ₀ 만 ×2 + CF 차원값을 그 증서로 다시 계산
+        c = rh['solve_certificate_bulk_net']
+        c['sigma_bulk_S_cm'] = c['sigma_bulk_S_cm'] * 2
+        rh['sigma_bulk_net_mScm'] = round(rh['sigma_bulk_net'] * c['sigma_bulk_S_cm'] * 1000, 6)
+    elif label == 'full_cert_sigma0_x2' and rh:             # Codex full_cert_sigma0_x2 — FULL 증서 σ₀ 만 ×2 (계산은 부모 σ₀ 라 FULL 숫자는 그대로)
+        rh['solve_certificate_full']['sigma_bulk_S_cm'] = rh['solve_certificate_full']['sigma_bulk_S_cm'] * 2
+    elif label == 'cf_cert_sigma0_T60' and rh:              # 같은 부류 · 온도 — CF 증서 σ₀ = 60 °C 규약값 (부모는 25 °C 그대로) + CF 차원값 다시 계산
+        c = rh['solve_certificate_bulk_net']
+        c['sigma_bulk_S_cm'] = _sigma_60()
+        rh['sigma_bulk_net_mScm'] = round(rh['sigma_bulk_net'] * c['sigma_bulk_S_cm'] * 1000, 6)
+    elif label == 'parent_T_C_changed':                     # 같은 부류 · 온도 — 부모 온도 규약만 60 °C 로 (σ₀ · 배수 · σ 숫자 그대로 · 모드 셋 · 사본 넷 같이)
+        for r in (rh, (rh or {}).get('hertz_h12'), du.get('physics')):
+            if isinstance(r, dict) and isinstance(r.get('temperature_provenance'), dict):
+                r['temperature_provenance']['T_C'] = 60.0
+    elif label == 'cf_record_absent' and rh:                # Codex diagnostic_fields_absent — 주 Hertz CF 다섯 키 삭제 (값 · 차원값 · 상태 · 사유 · 증서)
+        for k in CF_FIVE:
+            rh.pop(k, None)
+
+
 def mut(d, label):
     """Codex `mut` 그대로 — 네 망 JSON (dual · legacy · 모드 파일 둘) 에 같은 변이 (사본끼리 일관)."""
     for name, key in NET_FILES:
@@ -154,9 +188,49 @@ def mut(d, label):
             strip_g2(wrapped)
         elif label in CERT_LABELS:
             cchange(wrapped, label)
+        elif label in SIGMA0_LABELS + ABSENT_LABELS:
+            schange(wrapped, label)
         else:
             change(wrapped, label)
         p.write_text(json.dumps(obj), encoding='utf-8')
+
+
+def solve_frame():
+    """주입 위치 — 호출 사슬에서 (solve_network 의 가지 mode, run_decomposition 의 채널 _mode · contact_mode · hertz_constriction)."""
+    fr, smode, rd = sys._getframe(2), None, None
+    while fr is not None:
+        if fr.f_code.co_name == 'solve_network' and smode is None:
+            smode = fr.f_locals.get('mode')
+        if fr.f_code.co_name == 'run_decomposition':
+            rd = (fr.f_locals.get('_mode'), fr.f_locals.get('contact_mode'), fr.f_locals.get('hertz_constriction'))
+            break
+        fr = fr.f_back
+    return smode, rd
+
+
+def _is_h0_ion_cf():
+    smode, rd = solve_frame()
+    return smode == 'bulk_only' and rd == ('ionic', 'hertzian', 'maxwell')
+
+
+def honest_patches(kind):
+    """★ G2RR2 §7 (Codex Q2) — 실 생산자가 부르는 SciPy 풀이에 **H0 이온 CF 에서만** 결함을 주입 (완성된 JSON 에 실패 상태를 손으로 채우지 않는다).
+      raise     — 첫 spsolve 예외 (첫 단 예외 = solve_failed · 사다리 안 탐)
+      bad_solve — CF 사다리의 각 풀이 (spsolve · Jacobi CG · ILU GMRES) 가 증서 불합격 해 (참 해 × 2 — 잔차 보정이 진동해 수렴하지 않는다) 를 돌려준다"""
+    def sp(orig, *a, **k):
+        if _is_h0_ion_cf():
+            if kind == 'raise':
+                raise RuntimeError('주입: H0 이온 CF 첫 spsolve 예외 (G2RR2 §7)')
+            import numpy as _np
+            return _np.asarray(orig(*a, **k)) * 2.0
+        return orig(*a, **k)
+
+    def kr(orig, *a, **k):
+        x, info = orig(*a, **k)
+        if kind == 'bad_solve' and _is_h0_ion_cf():
+            return x * 2.0, info
+        return x, info
+    return {'spsolve': sp, 'cg': kr, 'gmres': kr}
 
 
 def _why(stages):
@@ -176,12 +250,13 @@ def _write_clamp_bed(d):
     return a, c
 
 
-def _publish(app, label, stop=True, bed='through'):
+def _publish(app, label, stop=True, bed='through', extra_argv=None, patches=None):
     d = tempfile.mkdtemp(prefix=f'g2ph_{label}_')
     a, c = _write_clamp_bed(d) if bed == 'clamp' else TP._write_bed(d, bed)
     with open(os.path.join(d, 'full_metrics.json'), 'w') as f:
         json.dump(TP._bed_ledger('through' if bed == 'clamp' else bed), f)
-    runner = TP._CLIRunner(mutate=(None if label == 'baseline' else (lambda p, _l=label: mut(p, _l))), delegate=TP._fake_stage_e)
+    runner = TP._CLIRunner(mutate=(None if label == 'baseline' else (lambda p, _l=label: mut(p, _l))), delegate=TP._fake_stage_e,
+                           extra_argv=extra_argv, patches=patches)
     stages, rid = app._network_and_stage_e(d, str(SCRIPTS), a, c, '1:SE', 1, [], runner=runner, stop_before_stage_e=stop)
     st, failed = ps.summarize(stages)
     return d, st, failed, rid
@@ -412,6 +487,114 @@ def main():
             pos5['비관통'] == ('done', ('NOT_PERCOLATING',) * 3, 'g2', '', ('NOT_PERCOLATING',) * 3)
             and pos5['GEN2-01'] == ('done', ('OK',) * 3, 'g2', '', ('OK',) * 3)
             and set(zr.values()) == {'zero_resistance_requires_contraction'})
+
+        #  ═══ ⑥–⑧ ★ 10-07 Codex 세대 2 재검증 2 (`docs/reviews/codex_review_gen2_network_reverify2_20261007.md` §5 · §6 · §7) — 반례 먼저 ═══
+        import g2_network_reread as RR
+
+        def _reread(p, tag):
+            dst_ = tmp / f'rr_{tag}'
+            shutil.copytree(p, dst_)
+            rep_ = RR.run_smoke_or_dirs([dst_], 'g2')[0]
+            return {c_['name'][:2] for c_ in rep_['checks'] if not c_['ok']}, rep_
+
+        def _pubrow(lab, **kw):
+            d_, st_, f_, rid_ = _publish(app, lab, **kw)
+            made.append(d_)
+            prov_ = ps.read_network_provenance(d_)
+            left_ = sorted(n for n in os.listdir(d_) if n.startswith('network_conductivity'))
+            att_ = json.load(open(os.path.join(d_, ps.ATTEMPT_FILE))) if os.path.exists(os.path.join(d_, ps.ATTEMPT_FILE)) else {}
+            return d_, (st_, prov_.get('provenance_state'), bool(left_), att_.get('failure_kind'), _why(f_)), rid_
+
+        print('⑥ ★ G2RR2-04 — 증서 σ₀ ↔ 부모 σ₀ · 실행 온도 규약 (실 생산자 → 정지 · 일반 경로 → 강제 폴더 → τ 소비자 → 인계 → 다시 읽기)')
+        rh_b = json.load(open(os.path.join(b_d, 'network_conductivity_dual.json')))['hertzian']
+        cf_q, cf_d = rh_b.get('sigma_bulk_net'), rh_b.get('sigma_bulk_net_mScm')
+        cf_d2 = round(cf_q * rh_b['solve_certificate_bulk_net']['sigma_bulk_S_cm'] * 2 * 1000, 6)
+        chk(f'⑥0 고정점 — 실 생산자 H0 CF q {cf_q} · σ_dim {cf_d} mS/cm · 증서 σ₀ ×2 로 다시 계산하면 {cf_d2} (Codex 표 0.117810 → 0.235619) · '
+            f'FULL q {rh_b.get("sigma_full")} (Codex 0.00400538) · 증서 σ₀ = 부모 σ₀ {rh_b.get("sigma_grain_S_cm")}',
+            cf_q == 0.03926991 and cf_d == 0.11781 and cf_d2 == 0.235619 and rh_b.get('sigma_full') == 0.00400538
+            and rh_b['solve_certificate_bulk_net']['sigma_bulk_S_cm'] == rh_b['sigma_grain_S_cm'] == 0.003)
+        pub6 = {}
+        for lab in SIGMA0_LABELS:
+            _d6, pub6[lab], _r6 = _pubrow(lab)
+        bad6 = {k: v[:4] for k, v in pub6.items() if v[:4] != ('failed', 'missing', False, 'candidate_rejected')}
+        chk(f'⑥a ★ 정지 경로 — CF 증서 σ₀ ×2 (+ CF 차원값 재계산) · FULL 증서 σ₀ ×2 · CF 증서 σ₀ = 60 °C 값 · 부모 온도 규약만 60 °C → failed · 활성 세대 없음 · '
+            f'망 JSON 안 남음 · candidate_rejected (옛: 넷 다 done) {bad6 or ""}', not bad6 and len(pub6) == len(SIGMA0_LABELS))
+        why6 = {k: v[4] for k, v in pub6.items()}
+        chk('⑥a2 거부 사유에 G2RR2-04 (증서 σ₀ ↔ 부모 σ₀ · 온도 규약) 가 보인다', all('G2RR2-04' in w for w in why6.values()),
+            {k: v[:240] for k, v in why6.items()})
+        gen6 = {}
+        for lab in ('cf_cert_sigma0_x2', 'full_cert_sigma0_x2', 'parent_T_C_changed'):
+            d_, st_, f_, _rid = _publish(app, lab, stop=False)
+            made.append(d_)
+            gen6[lab] = (st_, any(ps.NETWORK_RECORD_CHECK_STEP in str(s.get('step')) for s in f_) or 'σ₀' in _why(f_), _why(f_)[:160])
+        chk(f'⑥b ★ 일반 경로 (Stage E 앞 승격) — 같은 변이 셋 = failed (승격 전 공용 기록 검사 · 투영 σ₀ 짝) {gen6}',
+            all(v[:2] == ('failed', True) for v in gen6.values()) and len(gen6) == 3)
+        f6 = {lab: _force(app, b_d, b_rid, lab, tmp / f'forced6_{lab}') for lab in SIGMA0_LABELS}
+        rows6 = {lab: tf.case_row(str(p)) for lab, p in f6.items()}
+        bad_r6 = {lab: (tuple(r.get(f'ion_net_status_{m}') for m in MODES3), r.get(GEN_COL)) for lab, r in rows6.items()
+                  if not (all(r.get(f'ion_net_status_{m}') == 'NOT_COMPUTED' for m in MODES3) and r.get(GEN_COL) == 'invalid'
+                          and r.get('tau2_ion_hertz') is None)}
+        chk(f'⑥c ★ τ 소비자 (case_row) — 강제 폴더 넷 → 세 모드 NOT_COMPUTED · 세대 invalid · 주 tau2 빈칸 (옛: OK) {bad_r6 or ""}', not bad_r6)
+        hv6 = {lab: _load(f'g2rr2_04_{lab}', {'lhs00_000': p})[1] for lab, p in f6.items()}
+        bad_h6 = {k: (v[:200] or '통과') for k, v in hv6.items() if not (v.startswith('FillRefusal') and 'τ P4' in v and 'G2RR2-04' in v)}
+        chk(f'⑥d ★ 인계 (load_tau_results) — 강제 폴더 넷 → 전부 거부 (τ P4 · G2RR2-04 · 옛: 통과) {bad_h6 or ""}', not bad_h6 and len(hv6) == 4)
+        rr6 = {lab: _reread(p, f'g2rr2_04_{lab}')[0] for lab, p in f6.items()}
+        bad_rr6 = {k: sorted(v) for k, v in rr6.items() if not ({'K2', 'K4', 'H1'} <= v)}
+        chk(f'⑥e ★ 다시 읽기 (g2_network_reread) — 강제 폴더 넷 → K2 · K4 · H1 실패 (옛: K1–K7 · H1 전부 통과) {bad_rr6 or ""}', not bad_rr6)
+        d60, row60, rid60 = _pubrow('baseline', extra_argv=['--temp-c', '60'])
+        du60 = json.load(open(os.path.join(d60, 'network_conductivity_dual.json'))) if row60[0] == 'done' else {}
+        s60 = _sigma_60()
+        certs60 = [(r_ or {}).get(k_, {}).get('sigma_bulk_S_cm') for r_ in ((du60.get('hertzian') or {}), (du60.get('hertzian') or {}).get('hertz_h12'),
+                                                                          du60.get('physics')) for k_ in CERT_KEYS]
+        tv60, e60 = _load('g2rr2_04_T60', {'lhs00_000': d60})
+        c60 = ((tv60 or {}).get('cases') or {}).get('lhs00_000', {}).get('cells') or {}
+        rr60 = _reread(d60, 'g2rr2_04_T60')[0] if row60[0] == 'done' else {'게시 실패'}
+        chk(f'⑥f 양성 — 정상 온도 적용 (--temp-c 60) = done · 부모 σ₀ = 증서 σ₀ (아홉) = 60 °C 규약값 {s60} · 인계 통과 · τ 세 모드 OK · σ₀ 메타 60 °C · '
+            f'다시 읽기 전부 통과 {row60[:2]} {e60[:200]} {sorted(rr60)}',
+            row60[0] == 'done' and (du60.get('hertzian') or {}).get('sigma_grain_S_cm') == s60 and len(certs60) == 9 and set(certs60) == {s60}
+            and not e60 and all(c60.get(f'ion_net_status_{m}') == 'OK' for m in MODES3) and c60.get('ion_sigma0_T_C') == '60.0' and not rr60)
+
+        print('⑦ ★ G2RR2-05 — 진단 가지 기록 통째 결손 ≠ 정직한 실패 (공용 계약이 가른다 · 다시 읽기 K7 은 그 결과를 그대로 쓴다)')
+        _d7, row7, _r7 = _pubrow('cf_record_absent')
+        chk(f'⑦a ★ 정지 경로 — 주 Hertz CF 다섯 키 (값 · 차원값 · 상태 · 사유 · 증서) 삭제 → failed · candidate_rejected · 사유 G2RR2-05 (옛: done) {row7[:4]}',
+            row7[:4] == ('failed', 'missing', False, 'candidate_rejected') and 'G2RR2-05' in row7[4], row7[4][:300])
+        d_, st_, f_, _rid = _publish(app, 'cf_record_absent', stop=False)
+        made.append(d_)
+        chk(f'⑦b ★ 일반 경로 — 같은 변이 → failed (승격 전 공용 기록 검사) ({st_})',
+            st_ == 'failed' and any(ps.NETWORK_RECORD_CHECK_STEP in str(s.get('step')) for s in f_), _why(f_)[:300])
+        f7 = _force(app, b_d, b_rid, 'cf_record_absent', tmp / 'forced7_absent')
+        _tv7, e7 = _load('g2rr2_05', {'lhs00_000': f7})
+        chk('⑦c ★ 인계 — 강제 폴더 → 거부 (τ P4 · G2RR2-05 · 옛: 통과)', e7.startswith('FillRefusal') and 'τ P4' in e7 and 'G2RR2-05' in e7, e7[:300] or '통과')
+        bad7, rep7 = _reread(f7, 'g2rr2_05')
+        k7 = next((c_ for c_ in rep7['checks'] if c_['name'].startswith('K7')), {})
+        du7 = json.load(open(f7 / 'network_conductivity_dual.json'))
+        common7 = tf.branch_table_problems('hertz', du7['hertzian']) if hasattr(tf, 'branch_table_problems') else ['(공용 함수 없음)']
+        chk(f'⑦d ★ 다시 읽기 — K2 · K7 실패 · K7 사유 = 공용 계약 (tau_flux.branch_table_problems) 의 결과 그대로 (별도 자격 없음) {sorted(bad7)}',
+            {'K2', 'K7'} <= bad7 and bool(common7) and all(p_[:120] in k7.get('detail', '') for p_ in common7[:1]), (k7.get('detail', '')[:300], common7[:1]))
+
+        print('⑧ ★ 정직한 가지 실패 양성 (Codex §7 Q2 — 실 생산자 SciPy 풀이에 H0 이온 CF 만 결함 주입 · 상주 시험)')
+        q_full_b = rh_b.get('sigma_full')
+        for kind, want_rsn in (('raise', 'solve_failed'), ('bad_solve', 'current_conservation_failed')):
+            d8, row8, _rid8 = _pubrow('baseline', patches=honest_patches(kind))
+            du8 = json.load(open(os.path.join(d8, 'network_conductivity_dual.json'))) if row8[0] == 'done' else {}
+            rh8 = du8.get('hertzian') or {}
+            c8 = rh8.get('solve_certificate_bulk_net') or {}
+            others = {m_: (r_ or {}).get('sigma_bulk_net_status') for m_, r_ in (('physics', du8.get('physics')), ('hertz_h12', rh8.get('hertz_h12')))}
+            tv8, e8 = _load(f'honest_{kind}', {'lhs00_000': d8})
+            c8_ = ((tv8 or {}).get('cases') or {}).get('lhs00_000', {}).get('cells') or {}
+            rr8 = _reread(d8, f'honest_{kind}')[0] if row8[0] == 'done' else {'게시 실패'}
+            meth = [a_.get('method') for a_ in c8.get('attempts') or []]
+            outc = [a_.get('outcome') for a_ in c8.get('attempts') or []]
+            ladder_ok = (meth == ['spsolve'] and outc == ['exception']) if kind == 'raise' else (
+                meth == ['spsolve', 'cg+jacobi', 'gmres+ilu'] and set(outc) == {'certificate_failed'})
+            chk(f'⑧ ★ {kind} — 게시 done · H0 CF = not_computed / {want_rsn} · 값 없음 · 증서가 해를 주장하지 않음 · 시도 {meth} {outc} · FULL q {rh8.get("sigma_full")} '
+                f'= 정상 {q_full_b} · physics · H12 CF 그대로 {others} · 인계 통과 (τ 세 모드 OK) · 다시 읽기 K1–K7 · H1 통과 {sorted(rr8)}',
+                row8[0] == 'done' and rh8.get('sigma_bulk_net_status') == 'not_computed' and rh8.get('sigma_bulk_net_reason') == want_rsn
+                and rh8.get('sigma_bulk_net') is None and rh8.get('sigma_bulk_net_mScm') is None and c8.get('I_bottom') is None
+                and c8.get('status') not in ('computed', 'model_over_conduction') and ladder_ok and rh8.get('sigma_full') == q_full_b
+                and set(others.values()) <= {'computed', 'model_over_conduction'} and not e8
+                and all(c8_.get(f'ion_net_status_{m}') == 'OK' for m in MODES3) and not rr8,
+                (row8[4][:200], e8[:200], meth, outc, rh8.get('sigma_bulk_net_status'), rh8.get('sigma_bulk_net_reason')))
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
         for d in made:

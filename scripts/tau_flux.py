@@ -20,6 +20,9 @@ Hertz 레코드 안 `hertz_h12` 에서 읽는다 · **기본 학습 열 아님**
 ★ 10-06 밤 G2RR-02 (Codex 세대 2 재검증 §3 · §7-2 · 1저자 비준) — 세대 2 계약이 수치 증서의 **결합**까지 본다 (`certificate_binding_problems` · 종류 'cert'):
 가지 · 채널 · 역할 · 전극 · ΔV · 봉인된 기하 (G→q) 대조 + 발행 σ_ratio · σ_dim 을 증서의 I_bottom/ΔV × T/A 로 저장 반올림 반폭 안에 재구성 · 숫자를 싣는
 CF · 협착-only 진단도 같은 검사 · 해 없는 가지는 증서를 요구하지 않는다 (상태 ↔ 증서가 해를 주장하지 않는가만) — 정책 표 `CERT_BRANCH_POLICY`.
+★ 10-07 Codex 세대 2 재검증 2 (§5 G2RR2-04 · §6 G2RR2-05 · 1저자 "해결해놔") — 같은 계약이 σ₀ 결합 (`sigma0_binding_problems` — 이온 세 가지 증서 σ₀ =
+부모 σ₀ · 부모 σ₀ = 그 레코드의 온도 규약 · 전자 · 열 증서 = 그 채널 기준 전도도 · 정지 계약 ⑧ 도 같은 함수) 과 가지 표 (`branch_table_problems` — 정직한
+실패 = 숫자 없음 + 상태 + 사유 ↔ 상태 기록 통째 결손 = 거부 · 다시 읽기 K7 이 이 결과를 그대로 쓴다) 를 본다.  CF · 협착-only 차원값은 부모 σ₀ 로 재구성한다.
 
 | 열 | 식 |
 |---|---|
@@ -481,9 +484,14 @@ def _cert_problem(cert):
 #    ② 기하 — geometry {plate_z, box_x, box_y, scale} 유한 양수 · g_to_q = (plate_z·scale)/(box_x·box_y·scale²) (상대 1e-12) · 한 실행의 모든 증서
 #       (모드 셋 · 가지 셋 · 채널 사본) 가 같은 기하 = 봉인된 기하 (`_cert_geometry_problems`)
 #    ③ 재구성 — q = (I_bottom/ΔV)·T/A (생산자 σ 환산과 같은 식 · 같은 순서) 가 저장 σ_ratio 의 반올림 반폭 (5e-9 + 16ε) 안 · 1000·σ₀·q 가 저장
-#       σ_dim 의 저장 정밀도 허용 (`sigma_identity_tol` — 6 자리 반폭 5e-7 + 8 자리 반폭 몫 + 16ε) 안 · σ₀ = FULL 은 부모 sigma_grain_S_cm (두 표현
-#       항등식과 같은 σ₀) · CF · 협착-only 는 그 증서의 sigma_bulk_S_cm (그 가지 mS/cm 열의 σ) — 증서 σ_bulk ↔ 부모 σ₀ 짝은 정지 계약 ⑧ 의 몫
-#       (RGL-07 · RGLR3-02 · 여기서 보지 않는다 — 거부 지점을 옮기지 않는다)
+#       σ_dim 의 저장 정밀도 허용 (`sigma_identity_tol` — 6 자리 반폭 5e-7 + 8 자리 반폭 몫 + 16ε) 안 · σ₀ = **세 가지 모두 부모 sigma_grain_S_cm**
+#       (★ 10-07 G2RR2-04 — 옛 판은 CF · 협착-only 를 그 증서 자신의 sigma_bulk_S_cm 로 재구성해 증서 내부 자기일관성만 봤고 · 주석은 증서 ↔ 부모 짝을
+#       정지 계약 ⑧ 에 맡긴다고 했는데 ⑧ (`pipeline_service.network_sigma0_problem`) 은 증서를 읽지 않았다 → CF 증서 σ₀ ×2 + CF 차원값 재계산이 게시 ·
+#       인계 · 다시 읽기를 다 지났다 · Codex 세대 2 재검증 2 §5)
+#    ③b ★ 10-07 G2RR2-04 σ₀ 결합 (`sigma0_binding_problems` — 이 계약과 정지 계약 ⑧ 이 같은 함수를 부른다): 이온 세 가지 증서의 sigma_bulk_S_cm = 부모
+#       sigma_grain_S_cm (생산자가 같은 float 을 두 자리에 쓴다 — 정확히 같아야 · FULL 도 표기 어긋남을 받지 않는다) · 부모 σ₀ = 그 레코드의 온도 규약
+#       (`sigma0_convention_problem` — temperature_provenance 의 T_C · Ea · T_ref 로 se_material 을 다시 부른 값) · 전자 · 열 채널 증서는 그 채널의 기준
+#       전도도 (`network_conductivity.SIGMA_AM_ELECTRONIC` · `K_SE_THERMAL`) — 이온 σ₀ 를 강제하지 않는다
 #    ④ 수치 증서 — `network_conductivity.certificate_problem` (보존 · 잔차 · 방법 · 허용치 1e-6)
 #  정책 (`CERT_BRANCH_POLICY` · 봉인 — 새 194 전 고정 · 결과를 보고 옮기지 않는다):
 #    · FULL — 게시 (computed) 면 ①–④ 필수 (τ 의 수치 의존).
@@ -492,6 +500,10 @@ def _cert_problem(cert):
 #    · 숫자 없는 가지 (비관통 valid_zero · 0 저항 수축 미구현 · 증서 실패 · 경계 겹침 = not_computed) — **없는 수렴 증서를 요구하지 않는다**: 상태가
 #      있으면 이유를 말해야 하고 (valid_zero · not_computed) · 증서가 있으면 해를 주장하지 않아야 (status computed · I_bottom 없음) · 생산자 사유
 #      (경계 겹침 · 증서 실패 · 0 저항) 는 증서 사유와 같아야 한다 — 해 없는 가지를 거짓 수렴으로 채우지 않는다.
+#    · ★ 10-07 G2RR2-05 (Codex 세대 2 재검증 2 §6) — **정직한 실패 = 숫자 없음 + 상태 + 사유** ↔ **가지 기록 통째 결손** (상태 키가 없거나 null) 을 공용
+#      계약이 가른다 (`branch_table_problems`): 생산자는 세 가지의 상태 · 사유를 늘 쓴다 → 상태가 없는 가지는 숫자 · 증서가 함께 없어도 실패 기록이 아니라
+#      결손이다 → 레코드 거부 (결손을 임의의 not_computed 로 채우지 않는다).  옛 판은 상태 None 이 첫 검사를 지나고 증서 None 이면 바로 통과해, 주 Hertz
+#      CF 다섯 키 삭제가 게시 · 인계를 지났고 다시 읽기 K7 만 따로 거부했다 (K7 = 별도 자격).  이제 K7 은 이 함수의 결과를 그대로 쓴다.
 #    · 어긋남 = 레코드 계약 위반 (세대 invalid · 그 실행의 모드 전부 NOT_COMPUTED · 게시 거부 · 인계 거부).  생산자는 증서를 못 넘은 가지에 숫자를
 #      싣지 않는다 (그 가지만 NOT_COMPUTED + 사유 · FULL 유지 — 정직한 개별 풀이 실패는 위 "숫자 없는 가지" 로 통과) → 숫자가 실렸는데 결합 증서가
 #      없거나 맞지 않으면 개별 풀이 실패가 아니라 레코드 조립 · 편집 모순이다 (Codex §6 의 "모드 정체성 모순" 부류 — 그 레코드의 다른 숫자도 믿을 근거가 없다).
@@ -515,8 +527,17 @@ CERT_BRANCH_KEYS = (('full', 'sigma_full', 'sigma_full_mScm', 'sigma_full_status
                      'solve_certificate_constr_net'))
 CERT_PUBLISHED_STATES = ('computed', 'model_over_conduction')
 CERT_UNPUBLISHED_STATES = ('valid_zero', 'not_computed')
-CERT_BRANCH_POLICY = {'full': 'required_when_computed', 'bulk_only': 'required_when_published', 'constriction_only': 'required_when_published'}
+#: ★ 10-07 G2RR2-05 — 가지 상태의 닫힌 집합 (생산자 `_net_sigma_status` 가 내는 넷) · 정직한 실패 = 숫자 없음 + 이 중 비게시 상태 + 사유.
+CERT_BRANCH_STATES = CERT_PUBLISHED_STATES + CERT_UNPUBLISHED_STATES
+CERT_BRANCH_POLICY = {'full': 'required_when_computed', 'bulk_only': 'required_when_published', 'constriction_only': 'required_when_published',
+                      'record': 'status_required'}       # ★ G2RR2-05 — 세 가지의 상태 기록 필수 (결손 ≠ 정직한 실패)
 CERT_G2Q_REL_TOL = 1e-12
+#: ★ 10-07 G2RR2-04 — 부모 σ₀ ↔ 온도 규약 대조의 상대 허용 (se_material 을 같은 인자로 다시 부른 값 — 같은 기계면 비트 같다 · 다른 기계의 libm exp 마지막
+#:   자리만 덮는다 · 새 물리 허용오차가 아니다).  증서 σ₀ ↔ 부모 σ₀ 는 정확히 같아야 한다 (생산자가 같은 float 을 두 자리에 쓴다 · JSON 왕복 비트 보존).
+SIGMA0_CONVENTION_REL_TOL = 1e-12
+#: ★ G2RR2-04 — 전자 · 열 채널 증서의 기준 전도도 = 생산자 상수 (이온 σ₀ 를 강제하지 않는다) · 채널 이름.
+CHANNEL_SIGMA_REF = {'electronic_': 'SIGMA_AM_ELECTRONIC', 'thermal_': 'K_SE_THERMAL'}
+CHANNEL_CERT_NAME = {'electronic_': 'electronic', 'thermal_': 'thermal'}
 
 
 def _cert_geometry(cert):
@@ -577,22 +598,24 @@ def _cert_published_problem(m, branch, rec, q, sd, st, cert):
         qn, sdn = _num(q), _num(sd)
         if qn is None or not abs(qn - q_rec) <= SIGMA_RATIO_ROUND_HALF + _ID_FP * abs(q_rec):
             bad.append(f'발행 σ_ratio {q!r} ≠ 증서 재구성 I_bottom/ΔV × T/A = {q_rec!r} (저장 반올림 반폭 {SIGMA_RATIO_ROUND_HALF:g} 밖)')
-        #  차원 σ — FULL = 부모 σ₀ (공용 기술 검사의 두 표현 항등식과 같은 σ₀ · 같은 허용) · CF · 협착-only = 그 증서의 sigma_bulk_S_cm (그 가지의 mS/cm
-        #  열을 만든 σ).  증서 σ_bulk ↔ 부모 σ₀ 의 짝은 여기서 보지 않는다 — σ₀ · 온도 짝은 정지 계약 ⑧ (RGL-07 · RGLR3-02) 의 몫 (거부 지점을 옮기지 않는다)
-        s_key = 'sigma_grain_S_cm (부모)' if branch == 'full' else 'sigma_bulk_S_cm (증서)'
-        s_ref = _pos(rec.get('sigma_grain_S_cm')) if branch == 'full' else _pos(cert.get('sigma_bulk_S_cm'))
+        #  차원 σ — ★ 10-07 G2RR2-04: 세 가지 모두 **부모 σ₀** (공용 기술 검사의 두 표현 항등식과 같은 σ₀ · 같은 허용).  옛 판은 CF · 협착-only 를 그
+        #  증서 자신의 sigma_bulk_S_cm 로 재구성해 증서 σ₀ 와 차원값을 함께 바꾼 레코드 (Codex cf_sigma0_x2) 가 자기일관으로 통과했다.  증서 σ₀ = 부모 σ₀
+        #  · 부모 σ₀ = 온도 규약은 `sigma0_binding_problems` (이 계약 · 정지 계약 ⑧ 같은 함수) 가 따로 본다.
+        s_ref = _pos(rec.get('sigma_grain_S_cm'))
         if s_ref is None or sdn is None:
-            bad.append(f'차원 σ {sd!r} · σ₀ {s_key} 결손 — 증서에서 재구성할 수 없다')
+            bad.append(f'차원 σ {sd!r} · 부모 σ₀ (sigma_grain_S_cm) {rec.get("sigma_grain_S_cm")!r} 결손 — 증서에서 재구성할 수 없다')
         else:
             d_rec = 1000.0 * s_ref * q_rec
             tol = sigma_identity_tol(s_ref, q_rec, sdn)
             if not abs(sdn - d_rec) <= tol:
-                bad.append(f'발행 σ_dim {sdn!r} mS/cm ≠ 증서 재구성 1000·σ₀·q = {d_rec!r} (σ₀ = {s_key} · 저장 정밀도 허용 {tol:.3g} 밖)')
+                bad.append(f'발행 σ_dim {sdn!r} mS/cm ≠ 증서 재구성 1000·σ₀(부모)·q = {d_rec!r} (G2RR2-04 · 저장 정밀도 허용 {tol:.3g} 밖 — 증서 σ₀ 로 '
+                           '다시 계산한 차원값은 받지 않는다)')
     return ' · '.join(bad) if bad else None
 
 
 def _cert_unpublished_problem(branch, st, rsn, cert):
-    """숫자 없는 가지 → None | 사유 — 없는 수렴 증서를 요구하지 않는다 · 상태 ↔ 증서가 해를 주장하지 않는가만."""
+    """숫자 없는 가지 → None | 사유 — 없는 수렴 증서를 요구하지 않는다 · 상태 ↔ 증서가 해를 주장하지 않는가만.
+    (상태 기록 결손 · 사유 없음 = `_branch_table` · 증서 σ₀ = `sigma0_binding_problems` — 같은 계약의 다른 자리)"""
     if st is not None and st not in CERT_UNPUBLISHED_STATES:
         return f'숫자 없음 ↔ 상태 {st!r} (사유 {rsn!r}) — 해가 없는 가지는 valid_zero · not_computed 로 이유를 말해야 한다'
     if cert is None:
@@ -609,13 +632,131 @@ def _cert_unpublished_problem(branch, st, rsn, cert):
     return None
 
 
-def certificate_binding_problems(m, rec):
-    """★ 10-06 밤 G2RR-02 — 세대 2 레코드 한 모드 (hertz · hertz_h12 · physics) → 증서 결합 어긋남 목록 ([] = 통과 · 정책 = 위 절 · CERT_BRANCH_POLICY).
-    공용 기술 검사 (`ion_record_problem`) 를 못 넘은 레코드는 [] — 모든 소비처가 그 검사로 먼저 거부한다."""
-    if not isinstance(rec, dict) or m not in CERT_ROLE or ion_record_problem(rec) is not None:
-        return []
+def _branch_table(rec):
+    """★ 10-07 G2RR2-05 — 가지 표 (FULL · CF · 협착-only) 의 상태 기록 → [(가지, 키, 사유)].  정직한 실패 (숫자 없음 + 비게시 상태 + 사유) ↔ 기록 결손."""
     out = []
     for branch, qk, dk, sk, rk, ck in CERT_BRANCH_KEYS:
+        st, rsn = rec.get(sk), rec.get(rk)
+        has_num = rec.get(qk) is not None or rec.get(dk) is not None
+        if st is None:
+            left = [k for k in (qk, dk, sk, rk, ck) if k in rec]
+            out.append((branch, sk, f'가지 {branch} 의 상태 기록이 없다 ({"키 없음" if sk not in rec else "null"} · 남은 키 {left}) — 정직한 실패 '
+                                    '(숫자 없음 + 상태 + 사유) 가 아니라 기록 결손이다 (생산자는 세 가지의 상태 · 사유를 늘 쓴다 · 결손을 not_computed 로 채우지 '
+                                    '않는다 · G2RR2-05)'))
+        elif st not in CERT_BRANCH_STATES:
+            out.append((branch, sk, f'모르는 가지 상태 {st!r} (닫힌 집합 {list(CERT_BRANCH_STATES)} · G2RR2-05)'))
+        elif has_num and st not in CERT_PUBLISHED_STATES:
+            out.append((branch, sk, f'숫자 (σ_ratio {rec.get(qk)!r} · σ_dim {rec.get(dk)!r}) 가 실렸는데 상태 {st!r} — 숫자를 싣는 가지는 '
+                                    f'{list(CERT_PUBLISHED_STATES)}'))
+        elif not has_num and st not in CERT_UNPUBLISHED_STATES:
+            out.append((branch, sk, f'숫자 없음 ↔ 상태 {st!r} (사유 {rsn!r}) — 해가 없는 가지는 {list(CERT_UNPUBLISHED_STATES)} 로 이유를 말한다'))
+        elif not has_num and not (isinstance(rsn, str) and rsn):
+            out.append((branch, rk, f'숫자 없는 가지 ({st}) 의 사유가 없다 ({rsn!r}) — 정직한 실패는 이유를 말한다 (G2RR2-05)'))
+    return out
+
+
+def branch_table_problems(m, rec):
+    """★ 10-07 G2RR2-05 (Codex 세대 2 재검증 2 §6) — 세대 2 이온 모드 레코드 한 모드 → 가지 표 어긋남 ['키: 사유'] ([] = 통과).
+    공용 계약 (`certificate_binding_problems` — 정지 계약 ⑨ · 공용 기록 검사 · τ 소비자 · 인계 P4) 이 이 결과를 그대로 싣고, 다시 읽기 K7 이 이 결과를
+    그대로 쓴다 (별도 자격 없음).  공용 기술 검사 (`ion_record_problem`) 를 못 넘은 레코드는 [] (같은 문 — 그 검사가 먼저 거부한다)."""
+    if not isinstance(rec, dict) or m not in CERT_ROLE or ion_record_problem(rec) is not None:
+        return []
+    return [f'{k}: {w}' for _b, k, w in _branch_table(rec)]
+
+
+def _se_material():
+    """σ₀ 온도 규약의 정본 (se_material — 생산자 `network_conductivity._run_all_networks` 와 같은 함수) — 부를 때만 임포트한다."""
+    import se_material as _sm
+    return _sm
+
+
+def sigma0_convention_problem(rec):
+    """★ 10-07 G2RR2-04 — 레코드의 σ₀ (sigma_grain_S_cm) = 그 레코드의 온도 규약 (temperature_provenance — T_C · Ea_ion_eV · T_ref_C 로 se_material 을
+    다시 부른 값) 인가 → None | 사유.  T_dependence (NOT_MODELLED ⇔ T_C 없음) · sigma_ion_T_factor 도 같은 규약이어야 한다.  허용 = 상대
+    SIGMA0_CONVENTION_REL_TOL (같은 함수 · 같은 인자 — 다른 기계의 libm 마지막 자리만).  옛 판은 두 모드의 (σ₀, 온도) 가 서로 같은지만 봐서, 모드 셋 ·
+    사본 넷의 T_C 만 60 °C 로 바꾼 레코드가 σ₀ 3.0 mS/cm '@60 °C' 로 게시 · 인계됐다."""
+    if not isinstance(rec, dict):
+        return f'레코드가 객체가 아니다 ({type(rec).__name__})'
+    s0, prov = _pos(rec.get('sigma_grain_S_cm')), rec.get('temperature_provenance')
+    if s0 is None or not isinstance(prov, dict):
+        return (f'σ₀ (sigma_grain_S_cm) {rec.get("sigma_grain_S_cm")!r} · 온도 규약 (temperature_provenance) {type(prov).__name__} — 둘 다 있어야 '
+                '그 실행의 온도 규약과 대조할 수 있다')
+    t_c, ea, t_ref = prov.get('T_C'), prov.get('Ea_ion_eV'), prov.get('T_ref_C')
+    why = [f'{k} {v!r} — 유한 수가 아니다' for k, v in (('T_C', t_c), ('Ea_ion_eV', ea)) if v is not None and _num(v) is None]
+    if _num(t_ref) is None:
+        why.append(f'T_ref_C {t_ref!r} — 유한 수가 아니다')
+    if why:
+        return '온도 규약 기록 형식 — ' + ' · '.join(why)
+    sm = _se_material()
+    try:
+        want = sm.sigma_grain_S_cm(_num(t_c), _num(ea), _num(t_ref))
+        fac = sm.arrhenius_sigma_factor(_num(t_c), _num(ea), _num(t_ref))
+    except (TypeError, ValueError, OverflowError) as e:
+        return f'온도 규약을 다시 계산할 수 없다 ({type(e).__name__}: {e})'
+    bad = []
+    dep = 'NOT_MODELLED' if t_c is None else 'ARRHENIUS'
+    if prov.get('T_dependence') != dep:
+        bad.append(f'T_dependence {prov.get("T_dependence")!r} ≠ {dep!r} (T_C {t_c!r})')
+    f_rec = _num(prov.get('sigma_ion_T_factor'))
+    if f_rec is None or not abs(f_rec - fac) <= SIGMA0_CONVENTION_REL_TOL * abs(fac):
+        bad.append(f'sigma_ion_T_factor {prov.get("sigma_ion_T_factor")!r} ≠ 규약 배수 {fac!r}')
+    if not abs(s0 - want) <= SIGMA0_CONVENTION_REL_TOL * abs(want):
+        bad.append(f'σ₀ {s0!r} S/cm ≠ 온도 규약 (T_C {t_c!r} · Ea {ea!r} · T_ref {t_ref!r}) 의 σ_grain {want!r}')
+    return ('σ₀ ↔ 온도 규약 (G2RR2-04): ' + ' · '.join(bad)) if bad else None
+
+
+def sigma0_binding_problems(rec):
+    """★ 10-07 G2RR2-04 (Codex 세대 2 재검증 2 §5 최소 수정) — 망 레코드 한 모드 (dual 의 hertzian · physics · H12) 의 σ₀ 결합 → ['사유'] ([] = 통과).
+      · 부모 σ₀ ↔ 그 레코드의 온도 규약 (`sigma0_convention_problem`)
+      · 이온 세 가지 (FULL · CF · 협착-only) 증서의 sigma_bulk_S_cm = 부모 sigma_grain_S_cm — 정확히 (생산자가 같은 float 을 쓴다 · FULL 도 표기 어긋남 거부 ·
+        해 없는 가지의 증서도 σ₀ 를 실었으면 같아야)
+      · 전자 · 열 채널 증서 (`electronic_` · `thermal_`) = 그 채널의 기준 전도도 (생산자 상수) · 채널 이름 — 이온 σ₀ 를 강제하지 않는다
+    정지 계약 ⑧ (`pipeline_service.network_sigma0_problem` — 승격 전 투영 · 게시 · 인계 P4 재검사) 과 세대 2 계약 (`certificate_binding_problems` — ⑨ · 공용
+    기록 검사 · τ 소비자 · 다시 읽기 K2) 이 이 한 함수를 부른다 (사본 금지 — 규율 ①)."""
+    if not isinstance(rec, dict):
+        return [f'레코드가 객체가 아니다 ({type(rec).__name__})']
+    out = []
+    cv = sigma0_convention_problem(rec)
+    if cv:
+        out.append(cv)
+    p0 = rec.get('sigma_grain_S_cm')
+    for _b, *_k, ck in CERT_BRANCH_KEYS:
+        c = rec.get(ck)
+        if isinstance(c, dict) and 'sigma_bulk_S_cm' in c:
+            cs = c.get('sigma_bulk_S_cm')
+            if _num(cs) is None or _num(p0) is None or _num(cs) != _num(p0):
+                out.append(f'{ck}: 증서 σ₀ (sigma_bulk_S_cm) {cs!r} ≠ 부모 σ₀ (sigma_grain_S_cm) {p0!r} — 이온 가지 증서는 그 실행의 σ₀ 로 풀린다 '
+                           '(G2RR2-04 · 정확히 같은 수)')
+    refs = None
+    for pre in CHANNEL_PREFIXES:
+        for _b, *_k, ck in CERT_BRANCH_KEYS:
+            c = rec.get(pre + ck)
+            if not isinstance(c, dict):
+                continue
+            if refs is None:
+                nc = _nc_mod()
+                refs = {p_: float(getattr(nc, a_)) for p_, a_ in CHANNEL_SIGMA_REF.items()}
+            if 'sigma_bulk_S_cm' in c and _num(c.get('sigma_bulk_S_cm')) != refs[pre]:
+                out.append(f'{pre}{ck}: 증서 σ_bulk {c.get("sigma_bulk_S_cm")!r} ≠ {CHANNEL_CERT_NAME[pre]} 채널 기준 전도도 {refs[pre]!r} '
+                           f'(network_conductivity.{CHANNEL_SIGMA_REF[pre]} · G2RR2-04)')
+            if 'channel' in c and c.get('channel') != CHANNEL_CERT_NAME[pre]:
+                out.append(f'{pre}{ck}: 증서 채널 {c.get("channel")!r} ≠ 자리 {CHANNEL_CERT_NAME[pre]!r} (G2RR2-04 · 채널마다 그 채널의 기준 전도도)')
+    return out
+
+
+def certificate_binding_problems(m, rec):
+    """★ 10-06 밤 G2RR-02 — 세대 2 레코드 한 모드 (hertz · hertz_h12 · physics) → 증서 결합 어긋남 목록 ([] = 통과 · 정책 = 위 절 · CERT_BRANCH_POLICY).
+    공용 기술 검사 (`ion_record_problem`) 를 못 넘은 레코드는 [] — 모든 소비처가 그 검사로 먼저 거부한다.
+    ★ 10-07 — G2RR2-05 가지 표 (`branch_table_problems` — 상태 기록 결손 · 사유 없음 · 모르는 상태) · G2RR2-04 σ₀ 결합 (`sigma0_binding_problems`) 을 싣는다
+    (가지 표에서 이미 어긋난 가지는 증서 검사를 겹치지 않는다)."""
+    if not isinstance(rec, dict) or m not in CERT_ROLE or ion_record_problem(rec) is not None:
+        return []
+    table = _branch_table(rec)
+    out = [f'{k}: {w}' for _b, k, w in table]
+    bad_b = {b for b, _k, _w in table}
+    for branch, qk, dk, sk, rk, ck in CERT_BRANCH_KEYS:
+        if branch in bad_b:
+            continue
         q, sd, st, cert = rec.get(qk), rec.get(dk), rec.get(sk), rec.get(ck)
         if st in CERT_PUBLISHED_STATES or q is not None or sd is not None:
             why = _cert_published_problem(m, branch, rec, q, sd, st, cert)
@@ -623,6 +764,7 @@ def certificate_binding_problems(m, rec):
             why = _cert_unpublished_problem(branch, st, rec.get(rk), cert)
         if why:
             out.append(f'{ck}: {why}')
+    out += sigma0_binding_problems(rec)
     return out
 
 

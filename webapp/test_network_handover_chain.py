@@ -264,7 +264,9 @@ def main():
                 fh.write('\n')
         _neg('dual_band', 'dual 만 두 모드 띠 규칙 L0 → L1 (Codex dual_band_only — 옛: BAND_FALLBACK 로 수용)', 'τ P4 — 망 정지 계약 재검사',
              _edit_json('network_conductivity_dual.json', _dual_band))
-        _neg('dual_sigma0', 'dual 만 두 모드 σ₀ ×2 · σ_dim 6 자리 재계산 (Codex dual_sigma0_only — 옛: OK · σ₀ 6.0 으로 수용)', 'τ P4 — 망 정지 계약 재검사',
+        #  ★ 10-07 G2RR2-04 — 이 반례는 이제 같은 τ P4 의 앞 관문 (세대 계약의 σ₀ 결합: 증서 σ₀ ≠ 부모 σ₀ · CF 차원값을 부모 σ₀ 로 재구성) 에서 먼저 걸린다
+        #    (거부 지점은 그대로 인계 τ P4 · 정지 계약 재검사 ⑧ 도 같은 함수로 거부한다)
+        _neg('dual_sigma0', 'dual 만 두 모드 σ₀ ×2 · σ_dim 6 자리 재계산 (Codex dual_sigma0_only — 옛: OK · σ₀ 6.0 으로 수용)', 'τ P4',
              _edit_json('network_conductivity_dual.json', _dual_sigma0))
         _neg('atom_input', 'atom 입력 바이트 변경 (Codex atom_input_mutation)', 'τ P2', _atoms_append)
         _neg('dual_ratio', 'dual σ_ratio 만 ×4 (Codex dual_sigma_ratio_only)', 'τ P3',

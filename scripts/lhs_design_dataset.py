@@ -5641,8 +5641,10 @@ def _selftest():
             return fn
         _neg7('㉙c19 ★ RGLR3-02 Codex 반례 ① — dual 만 두 모드 띠 규칙 L0 → L1 (다른 사본 · 투영 · 입력 · 도장 그대로) 이면 거부 (BAND_FALLBACK 로 싣지 않는다)',
               _c5('dual_band'), 'τ P4 — 망 정지 계약 재검사')
+        #  ★ 10-07 G2RR2-04 — 이 반례는 같은 τ P4 의 앞 관문 (세대 계약의 σ₀ 결합 — 증서 σ₀ ≠ 부모 σ₀ · CF 차원값 부모 σ₀ 재구성) 에서 먼저 걸린다 (정지 계약
+        #    재검사 ⑧ 도 같은 함수로 거부) — 거부 지점은 그대로 τ P4
         _neg7('㉙c20 ★ RGLR3-02 Codex 반례 ② — dual 만 두 모드 σ₀ ×2 (σ_dim 을 같은 σ_ratio 에서 6 자리로 다시 — 레코드는 자기 항등식 성립) 이면 거부 '
-              '(σ₀ 6.0 mS/cm 로 싣지 않는다)', _c5('dual_sigma0'), 'τ P4 — 망 정지 계약 재검사')
+              '(σ₀ 6.0 mS/cm 로 싣지 않는다)', _c5('dual_sigma0'), 'τ P4')
         _neg7('㉙c21 ★ 모드 파일 (network_conductivity_physics.json) 만 띠 규칙이 바뀌었으면 거부 (모드 파일 = dual 의 사본)', _c5('mode_file'), 'τ P4 — 망 정지 계약 재검사')
         _neg7('㉙c22 ★ legacy (network_conductivity.json — Hertz 사본 · full_metrics 투영 원천) 만 σ₀ 가 바뀌었으면 거부', _c5('legacy'), 'τ P4 — 망 정지 계약 재검사')
         _neg7('㉙c23 ★ full_metrics 투영의 σ₀ 만 바뀌었으면 거부 (P3 대조 키 밖 · 등급 · 웹앱 τ 가 쓰는 짝 σ₀ — 정지 계약 ⑥b · ⑧)', _c5('fm_sigma0'), 'τ P4 — 망 정지 계약 재검사')

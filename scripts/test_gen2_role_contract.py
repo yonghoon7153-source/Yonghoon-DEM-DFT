@@ -605,6 +605,96 @@ def main():
             con_of(strip_g2(base)).get('generation') == 'inferred_legacy' and got['결합 키 없는 증서 (G2RR-02 이전 세대 2 증서 모양)'][0] == 'invalid')
     _guard('Y', sY)
 
+    #  ══ Z. ★ 10-07 G2RR2-04 · 05 (Codex 세대 2 재검증 2 §5 · §6) — σ₀ 결합 · 진단 가지 기록 결손을 실 생산자 레코드 위에 (공용 계약 단위) ══════════════
+    #     옛 계약: CF · 협착-only 차원값을 그 증서 자신의 σ₀ 로 재구성 (증서 ↔ 부모 σ₀ 미대조) · 부모 σ₀ ↔ 온도 규약 미대조 · 상태 키가 없는 가지 = 통과.
+    #     e2e (게시 · 인계 · 다시 읽기) 는 webapp/test_gen2_publication_handover ⑥ · ⑦ · ⑧.
+    def _z_cf_s0(d, k='solve_certificate_bulk_net', qk='sigma_bulk_net', dk='sigma_bulk_net_mScm', mode='hertzian'):
+        r = d[mode]
+        r[k]['sigma_bulk_S_cm'] = r[k]['sigma_bulk_S_cm'] * 2
+        if qk and r.get(qk) is not None:
+            r[dk] = round(r[qk] * r[k]['sigma_bulk_S_cm'] * 1000, 6)
+
+    def _z_parent_s0(d):
+        for r in (d['hertzian'], d['hertzian']['hertz_h12'], d['physics']):
+            r['sigma_grain_S_cm'] *= 2
+            r['sigma_full_mScm'] = round(1000 * r['sigma_grain_S_cm'] * r['sigma_full'], 6)
+
+    def _z_tc(d):
+        for r in (d['hertzian'], d['hertzian']['hertz_h12'], d['physics']):
+            r['temperature_provenance']['T_C'] = 60.0
+
+    def _z_absent(d):
+        for k in ('sigma_bulk_net', 'sigma_bulk_net_mScm', 'sigma_bulk_net_status', 'sigma_bulk_net_reason', 'solve_certificate_bulk_net'):
+            d['hertzian'].pop(k, None)
+
+    def _z_honest(d, reason='solve_failed'):
+        """정직한 실패 모양 (생산자 `_net_sigma_status` · `solve_certificate` 가 첫 단 예외에 내는 것) — 값 없음 · not_computed · 사유 · 해를 주장하지 않는 증서."""
+        r = d['hertzian']
+        c = r['solve_certificate_bulk_net']
+        c.update(status='solve_failed', reason='solve_failed', I_bottom=None, I_top=None, conservation_rel=None, residual_rel=None)
+        r.update(sigma_bulk_net=None, sigma_bulk_net_mScm=None, sigma_bulk_net_status='not_computed', sigma_bulk_net_reason=reason)
+        r.pop('R_brug_over_full', None)
+
+    ZMUT = {
+        'CF 증서 σ₀ ×2 + CF 차원값 그 σ₀ 로 재계산 (Codex cf_sigma0_x2)': _z_cf_s0,
+        'FULL 증서 σ₀ ×2 (Codex full_cert_sigma0_x2 — FULL 숫자 그대로)': lambda d: _z_cf_s0(d, 'solve_certificate_full', None),
+        '협착-only 증서 σ₀ ×2 + 그 차원값 재계산': lambda d: _z_cf_s0(d, 'solve_certificate_constr_net', 'sigma_constr_net', 'sigma_constr_net_mScm'),
+        'physics CF 증서 σ₀ ×2 + 차원값 재계산': lambda d: _z_cf_s0(d, mode='physics'),
+        'H12 FULL 증서 σ₀ ×2': lambda d: d['hertzian']['hertz_h12']['solve_certificate_full'].update(
+            sigma_bulk_S_cm=d['hertzian']['hertz_h12']['solve_certificate_full']['sigma_bulk_S_cm'] * 2),
+        '부모 σ₀ 만 ×2 (모드 셋 · FULL 차원값 재계산 — 두 표현 항등식 맞춤 · 증서 그대로)': _z_parent_s0,
+        '부모 온도 규약 T_C 만 60 °C (모드 셋 · σ₀ · 배수 그대로)': _z_tc,
+        '전자 채널 FULL 증서 σ_bulk = 이온 σ₀ (채널 기준 전도도가 아니다)': lambda d: d['hertzian']['electronic_solve_certificate_full'].update(
+            sigma_bulk_S_cm=d['hertzian']['sigma_grain_S_cm']),
+        '열 채널 증서 채널 이름 electronic': lambda d: d['physics']['thermal_solve_certificate_full'].update(channel='electronic'),
+        'CF 다섯 키 삭제 (Codex diagnostic_fields_absent)': _z_absent,
+        'CF 사유 없는 not_computed (값 · 증서 없음)': lambda d: (_z_honest(d), d['hertzian'].update(sigma_bulk_net_reason=None)),
+        'CF 모르는 상태 failed (값 없음)': lambda d: (_z_honest(d), d['hertzian'].update(sigma_bulk_net_status='failed')),
+    }
+
+    def sZ():
+        got = {}
+        for lab, fn in ZMUT.items():
+            d2 = copy.deepcopy(base)
+            fn(d2)
+            c, o = con_of(d2), cols(d2)
+            got[lab] = (c.get('generation'), tuple((o.get(f'ion_net_status_{m}'), _rc(o.get(f'ion_net_status_reason_{m}'))) for m in MODES3),
+                        o.get('tau2_ion_hertz'), _probs_text(c))
+        want = ('invalid', (('NOT_COMPUTED', 'invalid_input'),) * 3, None)
+        bad = {k: (v[0], v[1], v[2], v[3][:160]) for k, v in got.items() if v[:3] != want}
+        chk(f'Z1 ★ G2RR2-04 · 05 변이 {len(ZMUT)} 종 (증서 σ₀ 넷 · 부모 σ₀ · 온도 규약 · 전자 · 열 채널 기준 · 가지 기록 결손 · 사유 없음 · 모르는 상태) → 세대 '
+            f'invalid · 세 모드 NOT_COMPUTED (invalid_input) · 주 tau2 빈칸 (옛: σ₀ 변이 · 채널 · 결손 = g2 · OK) {bad or ""}',
+            not bad and len(got) == len(ZMUT))
+        why = {k: v[3] for k, v in got.items()}
+        chk('Z2 ★ 사유 — σ₀ 변이 = G2RR2-04 · 결손 · 사유 없음 · 모르는 상태 = G2RR2-05',
+            all('G2RR2-04' in why[k] for k in list(ZMUT)[:9]) and all('G2RR2-05' in why[k] for k in list(ZMUT)[9:]),
+            {k: v[:160] for k, v in why.items()})
+        dh = copy.deepcopy(base)
+        _z_honest(dh)
+        ch, oh = con_of(dh), cols(dh)
+        dh2 = copy.deepcopy(base)
+        _z_honest(dh2, 'current_conservation_failed')
+        dh2['hertzian']['solve_certificate_bulk_net'].update(status='not_computed', reason='current_conservation_failed')
+        ch2 = con_of(dh2)
+        chk('Z3 ★ 양성 — 정직한 CF 실패 (값 없음 · not_computed · 사유 solve_failed / current_conservation_failed · 해를 주장하지 않는 증서) = g2 · 문제 없음 · '
+            '세 모드 OK (FULL 유지) · 다시 읽기 K7 이 쓰는 공용 가지 표도 [] · 전자 증서 σ_bulk (채널 기준 0.05) ≠ 이온 σ₀ 인 정상 레코드 = 문제 없음',
+            ch.get('generation') == 'g2' and not ch.get('problems') and all(oh.get(f'ion_net_status_{m}') == 'OK' for m in MODES3)
+            and ch2.get('generation') == 'g2' and not ch2.get('problems') and tf.branch_table_problems('hertz', dh['hertzian']) == []
+            and base['hertzian']['electronic_solve_certificate_full'].get('sigma_bulk_S_cm') != base['hertzian']['sigma_grain_S_cm']
+            and not con_of(base).get('problems'),
+            (ch.get('problems'), ch2.get('problems')))
+        Ah = {i: {'type': 1, 'x': 0.0, 'y': 0.0, 'z': float(z), 'radius': 1.0} for i, z in enumerate(range(21), 1)}
+        Ch = [{'id1': i, 'id2': i + 1, 'contact_area': 0.1, 'delta': 0.05} for i in range(1, 21)]
+        dT = json.loads(json.dumps({cm: quiet(nc._run_all_networks, Ah, Ch, [1], [], {1: 'SE'}, 1.0, 20.0, 10.0, 10.0, None, contact_mode=cm,
+                                              temp_c=60.0) for cm in ('hertzian', 'physics')}))
+        cT = con_of(dT)
+        s60 = dT['hertzian']['sigma_grain_S_cm']
+        chk(f'Z4 양성 — 정상 온도 적용 (생산자 temp_c 60) = g2 · 문제 없음 · 부모 σ₀ = 증서 σ₀ = 60 °C 규약값 {s60} · 온도 규약 대조 없음',
+            cT.get('generation') == 'g2' and not cT.get('problems') and s60 != 0.003
+            and tf.sigma0_convention_problem(dT['hertzian']) is None
+            and {c_.get('sigma_bulk_S_cm') for c_ in _all_certs(dT) if c_.get('channel') == 'ionic'} == {s60}, cT.get('problems'))
+    _guard('Z', sZ)
+
     #  ★ 10-06 밤 G2R-04 — [H0, H12] 는 두 규약의 쌍대응 시나리오 (오차막대 · 상하한 · 신뢰구간 아님) · ±5 % 는 시험한 기하 한정
     import lhs_design_dataset as _ldd
     _v = getattr(_ldd, 'TAU_NET_VERDICT_H12', '')

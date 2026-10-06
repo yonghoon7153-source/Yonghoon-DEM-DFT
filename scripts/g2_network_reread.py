@@ -94,25 +94,17 @@ def branch_table(tf, dual):
     return out
 
 
-def _k7_problems(tf, table):
-    """K7 — 숫자 있음 ⇔ 상태 computed · model_over_conduction (증서 가지 · 역할 = 자리) / 숫자 없음 ⇒ 상태 valid_zero · not_computed + 사유."""
-    bad = []
-    for m, row in (table or {}).items():
-        if row is None:
-            continue
-        for b, d in row.items():
-            st, val, c = d['status'], d['value'], d['cert']
-            if val is not None:
-                if st not in tf.CERT_PUBLISHED_STATES:
-                    bad.append(f'{m}.{b}: 숫자 {val!r} 인데 상태 {st!r}')
-                elif c is None or c.get('branch') != b or c.get('role') != tf.CERT_ROLE[m]:
-                    bad.append(f'{m}.{b}: 숫자 {val!r} 의 증서 가지 · 역할 {c and (c.get("branch"), c.get("role"))} ≠ ({b}, {tf.CERT_ROLE[m]})')
-            else:
-                if st not in tf.CERT_UNPUBLISHED_STATES:
-                    bad.append(f'{m}.{b}: 숫자 없음 ↔ 상태 {st!r}')
-                elif st == 'not_computed' and not d['reason']:
-                    bad.append(f'{m}.{b}: not_computed 인데 사유 없음')
-    return bad
+def _k7_problems(tf, dual):
+    """K7 — 가지 표 = **공용 계약의 결과 그대로** (`tau_flux.branch_table_problems` — 세대 2 계약 · 정지 계약 ⑨ · 공용 기록 검사 · τ 소비자 · 인계 P4 가
+    싣는 같은 결과: 숫자 있음 ⇔ 게시 상태 / 숫자 없음 ⇒ 비게시 상태 + 사유 / 상태 기록 결손 = 거부).  ★ 10-07 G2RR2-05 (Codex 세대 2 재검증 2 §6) — 옛 K7 은
+    별도 자격 (숫자 없음 ↔ 상태 None) 을 더했고 공용 계약은 그 결손을 받았다 (진단 가지 다섯 키 삭제 = 게시 done · 인계 통과 · K7 만 거부).  증서 가지 ·
+    역할 결합은 K2 (같은 계약의 증서 결합) 가 본다."""
+    out = []
+    for m in tf.MODES:
+        rec = tf.mode_record(dual, m)
+        if rec is not None:
+            out += [f'{m}.{p}' for p in tf.branch_table_problems(m, rec)]
+    return out
 
 
 def reread_case(cd, expected, ps, tf):
@@ -164,8 +156,9 @@ def reread_case(cd, expected, ps, tf):
         elif st_full not in ('computed', 'valid_zero'):
             bad6.append(f'{m}: 생산자 FULL 상태 {st_full!r} (게시된 레코드에 있을 수 없는 상태)')
     ck('K6 관통 일치 — 생산자 FULL 상태 ↔ τ 상태 (세 모드)', not bad6, ' · '.join(bad6) or statuses)
-    bad7 = _k7_problems(tf, table)
-    ck('K7 가지 표 — 숫자 ⇔ 상태 · 증서 가지 · 역할 = 자리 / 숫자 없음 ⇒ 이유 있는 상태', not bad7, ' · '.join(bad7[:6]))
+    bad7 = _k7_problems(tf, dual)
+    ck('K7 가지 표 — 공용 계약 (tau_flux.branch_table_problems) 그대로: 숫자 ⇔ 게시 상태 / 숫자 없음 ⇒ 비게시 상태 + 사유 / 상태 기록 결손 = 거부',
+       not bad7, ' · '.join(bad7[:6]))
     return dict(case=cd.name, folder=str(cd), run_id=rid, checks=checks, generation=gen, statuses=statuses, table=table,
                 stamp={k: prov.get(k, 'ABSENT') for k in ps.PROVENANCE_GENERATION_KEYS},
                 sigma_ratio={m: ((table.get(m) or {}).get('full') or {}).get('value') for m in tf.MODES},

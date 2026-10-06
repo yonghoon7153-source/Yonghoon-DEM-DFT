@@ -241,6 +241,7 @@ def network_sigma0_problem(dual, legacy=None, fm=None):
         ★ 10-06 — H12 민감도 레코드가 있으면 그것도 같은 실행의 같은 짝이어야 한다
       · legacy (= Hertz 사본 · full_metrics 머지 원천) 가 있으면 dual Hertz 와 같아야 한다
       · fm 이 있으면 (머지 뒤 투영) 그 기록이 이번 세대의 것이어야 한다 — 옛 세대 짝이 남으면 거부
+      · ★ 10-07 G2RR2-04 — 레코드마다 σ₀ = 그 온도 규약 · 이온 세 가지 증서 σ₀ = 부모 σ₀ · 전자 · 열 증서 = 채널 기준 (`tau_flux.sigma0_binding_problems`)
     두 모드 모두 기록이 없으면 (옛 모양 산출물 · 시험 대역) 대조할 것이 없다 → '' (머지 쪽은 옛 값을 이미 걷어냈다)."""
     recs = {m: dual.get(m) for m in ('hertzian', 'physics')} if isinstance(dual, dict) else {}
     if network_h12_record(dual) is not None:
@@ -256,6 +257,16 @@ def network_sigma0_problem(dual, legacy=None, fm=None):
         return 'σ₀ · 온도 짝: legacy (network_conductivity.json) 기록 ≠ dual Hertz'
     if isinstance(fm, dict) and _canon(tuple(fm.get(k) for k in NET_SIGMA0_KEYS)) != _canon(ref):
         return 'σ₀ · 온도 짝: full_metrics 의 기록이 이번 망 세대의 것이 아니다 (옛 세대 짝이 남았다 — RGL-07)'
+    #  ★ 10-07 G2RR2-04 (Codex 세대 2 재검증 2 §5) — 레코드마다 σ₀ ↔ 그 실행의 온도 규약 · 이온 세 가지 증서 σ₀ = 부모 σ₀ · 전자 · 열 증서 = 그 채널 기준
+    #    전도도 (`tau_flux.sigma0_binding_problems` — 세대 2 계약 ⑨ 와 같은 함수 · **증서 내부 σ₀ 를 읽는다**).  옛 판은 모드 · legacy · full_metrics 의 부모
+    #    값끼리만 비교해 (tau_flux 주석은 증서 ↔ 부모 짝을 여기에 맡긴다고 했는데) CF 증서 σ₀ ×2 + CF 차원값 재계산 · 모드 셋의 T_C 만 바꾼 레코드가 지났다.
+    try:
+        tf = _scripts_import('tau_flux')
+        bind = [f'{m}: {p}' for m, r in recs.items() if isinstance(r, dict) for p in tf.sigma0_binding_problems(r)]
+    except Exception as e:                                     # noqa: BLE001 — 대조를 못 하면 통과로 치지 않는다 (fail-closed)
+        return f'σ₀ 결합 (G2RR2-04): tau_flux 를 부르지 못했다 ({type(e).__name__}: {e}) — 대조할 수 없다'
+    if bind:
+        return 'σ₀ 결합 (G2RR2-04 — 증서 σ₀ ↔ 부모 σ₀ · 온도 규약): ' + '; '.join(bind[:6]) + (f' … 모두 {len(bind)}' if len(bind) > 6 else '')
     return ''
 
 #: network 산출물의 세대를 식별하는 파일 (**게시된 active baseline** 을 가리킨다).
@@ -907,6 +918,8 @@ def network_stop_verdict(results_dir, run_id, fm=None, legacy_ok=False):
          `tau_flux.ion_columns` 의 두 모드 상태가 `NETWORK_STOP_TAU_OK` (OK · 등록된 과학적 HOLD) 이며 생산자 상태와 맞는다
       ⑧ σ₀ · 온도 짝 (RGL-07) — 두 모드 · legacy · full_metrics 의 (σ₀, 온도) 가 이번 세대의 같은 값이고, 등급 · 웹앱 τ 가 쓰는 짝 σ₀
          (`tau_flux.tau2_from_metrics` = `se_material.sigma_grain_context(full_metrics)`) = 인계 σ₀ (망 기록)
+         ★ 10-07 G2RR2-04 — 레코드마다 σ₀ = 그 온도 규약 · 이온 세 가지 (FULL · CF · 협착-only) 증서 σ₀ = 부모 σ₀ · 전자 · 열 증서 = 채널 기준 전도도
+         (`tau_flux.sigma0_binding_problems` — ⑨ 의 세대 2 계약과 같은 함수 · 증서 내부 σ₀ 를 읽는다)
       ⑨ ★ 10-06 저녁 세대 2 (1저자 비준 — C1 · C2) · ★ 10-06 밤 세대 계약 (G2R-01 · 02 · 1저자 비준) — 공용 세대 계약 `tau_flux.network_generation_contract`
          (τ 인계 소비자 · 인계 생성기 · 배포 빌더와 같은 함수 · 닫힌 표): 모드마다 허용 모델 조합 (주 Hertz = H0 Maxwell + 원기둥 · H12 = ψ 곱 + 구 조각 ·
          physics = ψ 곱 + physics_g2 · 셋 다 dirichlet_exact) · 세대 2 표지가 하나라도 있으면 표기 전부 필수 (부분 결손 · 모르는 값 = 거부 · 세대 2 Hertz 는

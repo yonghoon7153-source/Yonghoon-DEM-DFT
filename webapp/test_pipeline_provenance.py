@@ -61,7 +61,9 @@ _ALL_CH_OK = {'ionic_status': 'computed', 'electronic_status': 'computed',
 #:   레코드도 생산자 계약 모양이어야 한다 — 상태 computed · σ 두 표현 (σ_ratio 8 자리 · σ_dim = σ_ratio × σ₀[S/cm] × 1000 mS/cm) · 관통 분율 ·
 #:   σ₀ · 온도 기록 (두 모드 같은 짝) · dual = 두 모드.  RC7-02 와 같은 fixture-drift 규약 (계약보다 느슨한 fixture 는 거짓 실패 · 회귀 무력화).
 _FAKE_S0 = 0.003
-_FAKE_TPROV = {'sigma_ion_T_factor': 1.0, 'T_C': None, 'T_ref_C': 25.0}
+#  ★ 10-07 G2RR2-04 (fixture-drift — RGLR2-01 · RC7-02 와 같은 규약) — 계약이 σ₀ = 그 레코드의 온도 규약 (T_C · Ea · T_ref → se_material) 이고 T_dependence 가
+#    그 규약과 맞는지 본다 → 가짜 레코드도 생산자 `se_material.provenance()` 의 그 키들을 단다 (25 °C · NOT_MODELLED · 배수 1 — 값 그대로).
+_FAKE_TPROV = {'sigma_ion_T_factor': 1.0, 'T_C': None, 'T_ref_C': 25.0, 'Ea_ion_eV': None, 'T_dependence': 'NOT_MODELLED'}
 
 
 def _fake_net_rec(sigma_mScm, **over):
@@ -90,6 +92,16 @@ def _g2_net_records(rec_h, rec_p):
         #    ΔV · 봉인 기하 · G→q · σ₀ · 발행값 재구성) 를 요구한다 → 가짜 레코드도 생산자 모양의 자기일관 결합 증서를 단다: 기하 (판 1 · 상자 1 · 척도 1 →
         #    G→q 1) · I_bottom = σ_ratio (ΔV 1 → 재구성 = 발행값) · I_top = −I_bottom · 보존 0 · 잔차 0 · 직접해 · 숫자를 싣는 CF · 협착-only 에도 (상태가
         #    없으면 computed — 생산자는 늘 싣는다).  값 · FULL 상태는 그대로.  결합 반례 = test_gen2_role_contract Y · test_gen2_publication_handover ⑤.
+        #  ★ 10-07 G2RR2-05 (fixture-drift — 같은 규약) — 계약이 세 가지의 상태 기록을 요구한다 (상태 키 결손 = 기록 결손 ≠ 정직한 실패) → 숫자 없는
+        #    가짜 진단 가지 (CF · 협착-only) 는 생산자의 정직한 실패 모양 (상태 + 사유) 을 단다: 비관통 = valid_zero · no_through_path · 그 밖 = not_computed ·
+        #    solve_failed.  FULL · 숫자 있는 가지는 그대로.
+        for branch, qk, _dk, sk, rk, ck in _tf.CERT_BRANCH_KEYS:
+            if branch == 'full' or out.get(qk) is not None:
+                continue
+            if out.get(sk) is None:
+                out[sk] = 'valid_zero' if out.get('sigma_full_status') == 'valid_zero' else 'not_computed'
+            if not out.get(rk):
+                out[rk] = 'no_through_path' if out[sk] == 'valid_zero' else 'solve_failed'
         for branch, qk, _dk, sk, _rk, ck in _tf.CERT_BRANCH_KEYS:
             q = out.get(qk)
             if q is None or (branch == 'full' and out.get('sigma_full_status') != 'computed'):
@@ -318,11 +330,15 @@ class _CLIRunner:
     mutate(out_dir) = 생산자가 쓴 **뒤**의 계약 변이 (반례) · break_solver = scipy `spsolve` 예외 주입 (관통인데 풀지 못함 = 수치 실패) ·
     delegate = 다른 스크립트 (Stage E 등) 대역.  produced = 생산자가 쓴 네 JSON (변이 전 · 거부된 후보는 디스크에서 치워지므로 여기서 본다).
     ★ 10-05 WEB-03 · RGLR-02 (선택 인자 — 옛 호출 그대로): break_channel = 그 채널 ('ionic' · 'electronic' · 'thermal') 의 FULL 풀이에서만
-    spsolve 예외 (호출 사슬의 run_decomposition `_mode` 로 가린다 — 채널마다 관통 풀이 실패) · extra_argv = CLI 에 덧붙일 인자 (예: --temp-c 60)."""
+    spsolve 예외 (호출 사슬의 run_decomposition `_mode` 로 가린다 — 채널마다 관통 풀이 실패) · extra_argv = CLI 에 덧붙일 인자 (예: --temp-c 60).
+    ★ 10-07 (Codex 세대 2 재검증 2 §7 — 정직한 가지 실패 양성을 상주 시험으로): patches = {이름: wrap(orig, *a, **k)} — `scipy.sparse.linalg` 의 그 이름
+    (spsolve · cg · gmres) 을 실행 동안만 감싼다 (생산자가 모듈 머리에서 `from scipy.sparse.linalg import …` 로 묶으므로 runpy 전에 바꾼다 · 끝나면 되돌린다).
+    어느 풀이에 주입할지는 wrap 이 호출 사슬로 가린다 (`solve_frame`)."""
 
-    def __init__(self, mutate=None, break_solver=False, delegate=None, break_channel=None, extra_argv=None):
+    def __init__(self, mutate=None, break_solver=False, delegate=None, break_channel=None, extra_argv=None, patches=None):
         self.mutate, self.break_solver, self.delegate = mutate, break_solver, delegate
         self.break_channel, self.extra_argv = break_channel, list(extra_argv or [])
+        self.patches = dict(patches or {})
         self.calls, self.produced = [], {}
 
     def __call__(self, cmd, **kw):
@@ -338,6 +354,9 @@ class _CLIRunner:
         self.calls.append(list(cmd))
         argv0, orig, rc = sys.argv, _spl.spsolve, 0
         out, err = io.StringIO(), io.StringIO()
+        _saved = {n: getattr(_spl, n) for n in self.patches}
+        for _n, _w in self.patches.items():
+            setattr(_spl, _n, (lambda *a, _o=_saved[_n], _w=_w, **k: _w(_o, *a, **k)))
         try:
             if self.break_solver:
                 def _boom(*_a, **_k):
@@ -369,6 +388,8 @@ class _CLIRunner:
             err.write(f'{type(e).__name__}: {e}')
         finally:
             sys.argv, _spl.spsolve = argv0, orig
+            for _n, _f in _saved.items():
+                setattr(_spl, _n, _f)
         o_dir = str(cmd[list(map(str, cmd)).index('-o') + 1])
         self.produced = {n: json.load(open(os.path.join(o_dir, n))) for n in _NET_FOUR
                          if os.path.exists(os.path.join(o_dir, n))}
@@ -672,7 +693,7 @@ def _t13_t20_network_real(webapp):
         tail = 'hertz' if mode == 'hertzian' else 'physics'
         return dict(sigma_full=0.05, sigma_full_mScm=0.15, sigma_full_status='computed', sigma_bulk_net=0.1, sigma_bulk_net_mScm=0.3,
                     percolating_fraction=1.0, sigma_grain_S_cm=0.003,
-                    temperature_provenance={'sigma_ion_T_factor': 1.0, 'T_C': None, 'T_ref_C': 25.0},
+                    temperature_provenance=dict(_FAKE_TPROV),         # ★ 10-07 G2RR2-04 fixture-drift — 생산자 온도 규약 키 (값 그대로)
                     phi_se=0.3, boundary_rule='L0', boundary_band_frac=0.08,
                     ionic_status='computed', electronic_status='computed', thermal_status='computed',
                     **{f'constriction_power_share_ion_{tail}': 0.5, f'constriction_power_share_ion_{tail}_status': 'computed'})
