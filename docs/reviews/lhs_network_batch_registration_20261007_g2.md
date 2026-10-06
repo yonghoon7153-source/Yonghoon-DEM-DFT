@@ -75,7 +75,7 @@ cd ~ && tar czf ~/g2pre_${S}_$T.tar.gz "$(basename "$SM")/smoke_report.json" "$(
 | 단계 | 기대 |
 |---|---|
 | 1 | `g2_network_reread` ✓ 전부 통과 · 실행기 ✓ 전부 통과 (이 컨테이너 실측 9/9 · 68/68) |
-| 2 | 코드 줄의 `code_fp f3f54951a69eb5d9f55a205e2143a8807b047b257fc5685d7f369deafff532ea (CODE_FILES 29)` · 기대 망 세대 `'g2'` · 세대 계약 문제 0 · 모드 `['hertz', 'physics', 'hertz_h12']` · 전이 의존 닫힘 27 ⊆ 29 ✓ · 입력 지문 케이스 194 · `ids_sha256 a04282d7…` · `raw_sha256_table_sha256 da7c93f9…` (§2) · 원자료 sha 결손 0 · 원자료 · 메시 문제 0 건 · ⛔ 줄 없음 |
+| 2 | 코드 줄의 `code_fp b313e61ab551566257dca8b7ceeeaf7ea6412898b6b0bad3974f408b537c9086 (CODE_FILES 29)` · 기대 망 세대 `'g2'` · 세대 계약 문제 0 · 모드 `['hertz', 'physics', 'hertz_h12']` · 전이 의존 닫힘 27 ⊆ 29 ✓ · 입력 지문 케이스 194 · `ids_sha256 a04282d7…` · `raw_sha256_table_sha256 da7c93f9…` (§2) · 원자료 sha 결손 0 · 원자료 · 메시 문제 0 건 · ⛔ 줄 없음 |
 | 3 | `smoke rc=0` — A: real14_network · case15_network = done · 원자료 sha256 = README 표 · 망 정지 계약 통과 · run id 일치 / B: lhs00_055 · lhsx_007 = 두 모드 computed · τ ≠ NOT_COMPUTED · lhs00_128 = 두 모드 valid_zero · τ NOT_PERCOLATING / C: 음성 대조 넷 PASS (RGLR2 수정 뒤 동작 · §9-1 컨테이너 스모크 selftest 의 C 판정 참조) |
 | 4 | `reread rc=0` — 다섯 케이스 세대 `'g2'` · K1–K7 · H1 ✓ / **real14 · case15**: τ 세 모드 = OK 또는 등록된 과학적 HOLD (NOT_COMPUTED · NOT_PERCOLATING 아님) · physics 협착-only = `not_computed` (`zero_resistance_requires_contraction` — Codex 직접 풀이: 관통 Rc=0 간선 real14 2,628 · case15 312) · hertz · hertz_h12 협착-only 와 세 모드 CF = 숫자 (증서 결합 통과 — Codex 직접 풀이에서 H0 · H12 clamp · floor 0) / **lhs00_128**: τ 세 모드 NOT_PERCOLATING · 모드 셋 × 가지 셋 valid_zero (숫자 없음 · 증서가 해를 주장하지 않음) / **lhs00_055 · lhsx_007**: 협착-only · CF 상태는 미리 정하지 않는다 (physics · H12 의 R_c = 0 간선 수 · CF `model_over_conduction` 여부는 침대마다 — 화면 그대로 보고) |
 | 4 참고 | σ_ratio (화면 `σ_ratio`) 참고값 = Codex 직접 build/solve (`docs/reviews/codex_gen2_network_reverify_evidence_20261006/probes/real_beds.py`) 의 8 자리 반올림 — real14 hertz 0.02102106 · physics 0.03164009 · hertz_h12 0.02494138 / case15 0.00032635 · 0.00036225 · 0.00034587.  **판정 기준 아님** (파이프라인 = 덱 상자 · 메시 판 높이 · 같은 c_cpl[22] · c_cpl[23] — 다르면 그대로 보고) |
@@ -97,7 +97,9 @@ cd ~ && tar czf ~/g2pre_${S}_$T.tar.gz "$(basename "$SM")/smoke_report.json" "$(
 
 ## 3. 코드 신원 (봉인)
 
-- 발사 커밋 = 아래 29 파일 sha256 (= 봉인 지문 `code_fp f3f54951a69eb5d9f55a205e2143a8807b047b257fc5685d7f369deafff532ea`) 과 같은 코드를 담은 커밋 — 이 문서를 담은 커밋 또는
+- ⚠ **10-07 05:2x 갱신** — 요청서 핀 `2802c649e` 뒤 `webapp/app.py` 가 한 번 더 바뀌었다 (atom + 판 메시만 올린 케이스의 porosity — atoms-only 경로만 · 망 정지 경로 · 생산 · 게시 · 인계 코드 무변경 · 시험 `webapp/test_atoms_only_porosity.py` 41/41 · `test_pipeline_provenance` 284/284) ⇒ 봉인 지문 `f3f54951…` → `b313e61ab551…` (아래 값 갱신 · 런처 `code_fp(code_hashes())` 로 다시 계산 · 29 파일 중 `webapp/app.py` 한 줄만 바뀜).  발사는 이 지문의 커밋으로.
+
+- 발사 커밋 = 아래 29 파일 sha256 (= 봉인 지문 `code_fp b313e61ab551566257dca8b7ceeeaf7ea6412898b6b0bad3974f408b537c9086`) 과 같은 코드를 담은 커밋 — 이 문서를 담은 커밋 또는
   그 뒤 **문서 · 원장만** 바뀐 커밋.  1저자가 발사 직후 §9 에 `git rev-parse HEAD` · manifest `seal.code_fp` · `expected_network_generation` 을 적는다 (지문이 이 값과 다르면 이 봉인의 배치가 아니다 ·
   추적 파일이 바뀐 트리는 실행기가 거부한다).
 - ★ 전이 의존 (판정 §7-3): 10-05 판 19 파일에 **워커의 망 정지 경로가 실제로 import 하는 리포 모듈 10** 을 더해 29 (`CODE_FILES`).  정적 닫힘 (`code_dependency_closure` — 시작점 =
@@ -124,7 +126,7 @@ cd ~ && tar czf ~/g2pre_${S}_$T.tar.gz "$(basename "$SM")/smoke_report.json" "$(
 | `scripts/lhs_webapp_batch.py` | `b9d0199cc1bd23cd1ed5405a283081c2c3a31bc6ce256670c8a9b63d177b5668` | 같음 |
 | `scripts/lhs_harvest_batch.py` | `4d798c631ac893ca32018fde58145bc5c8a2e3e2a6423da61cb87bd13599148e` | 같음 |
 | `scripts/lhs_descriptor_harvest.py` | `96fa643e309aab46b2a5cbd59e2276ee16b99107a9a7514e5d9fdcaf5c2d8d9e` | 바뀜 (`cc4210080` — LHSC-08 · 분류 불변) |
-| `webapp/app.py` | `a01a273c0bd89e37bc26e033326991859b2453ac5274104e7653a6f804e3a2f8` | 바뀜 (G2RR-01 `e1dab4265` · G2RR-02 `f3f720985` · 3D 뷰어 라우트 `761e32645` · `92839aeb7` 포함) |
+| `webapp/app.py` | `bd4c25e507e3c7a2b8e35f9b4602f22ab17d8e56fb6f8980021d33323994826b` | 바뀜 (G2RR-01 `e1dab4265` · G2RR-02 `f3f720985` · 3D 뷰어 라우트 `761e32645` · `92839aeb7` 포함) |
 | `webapp/pipeline_service.py` | `2414fb217e4c93f2f89c9ce56e5dc96f0af6107716da828c9202bc208d9225d5` | 바뀜 (G2RR-01 `e1dab4265` · G2RR-02 `f3f720985` 포함) |
 | `scripts/export_master_csv.py` | `2899dc2410ad8840dadf41993511c225d60f29f77edfdb2fac6703b25ccf767b` | 같음 |
 | `scripts/type_map_resolve.py` | `4a289c6412e4b8e1bc0fba573cb287966dfa00a053399097b587f1e14726bfe5` | 같음 |
