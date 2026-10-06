@@ -1,0 +1,25 @@
+{
+  "review_date": "2026-10-06",
+  "commit": "10525ae1e30cf2d0f5e6e232e92897f08db3030f",
+  "decision": "LIMITED_VALIDATION_CLOSED_WITH_DOCUMENTED_SCOPE",
+  "BMIN_R3_C1": "CLOSED",
+  "PS01_16": {
+    "external_fail_closed": "ACCEPTED",
+    "internal_TryParse_branch": "UNOBSERVED",
+    "original_internal_path_requirement": "NOT_FULFILLED_RETAINED_AS_SCOPE_LIMIT",
+    "scope_disposition": "ACCEPTED_BASED_ON_SUBMITTED_SECTION_61_USER_DECISION_RECORD"
+  },
+  "accepted_inputs": 77,
+  "unique_ids": 62,
+  "original_plan_without_amendment_fully_satisfied": false,
+  "blocking_findings": [],
+  "nonblocking_findings": [{"priority": "P3", "field": "correction.not_claimed[0]", "issue": "Old awaiting-decision wording predates section 61 disposition", "action": "Add a chronological clarification in reception record; do not rewrite sealed originals"}],
+  "production_change_required": false,
+  "retest_required": false,
+  "native150_approved": false,
+  "approval_token_runtime_creation_authorized": false,
+  "supplied_code_executed": false,
+  "COMSOL_calls": 0,
+  "normal_gate": "INCOMPLETE",
+  "next_step": "Separately authorized preparation of fixed native150 approval request; not execution"
+}

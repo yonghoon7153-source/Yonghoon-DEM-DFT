@@ -1,0 +1,31 @@
+{
+  "review_date": "2026-10-06",
+  "decision": "STAGE1_PREFLIGHT_PLAN_CONDITIONALLY_ACCEPTED_DOCUMENT_CORRECTIONS",
+  "initial_request_commit": "b67fed84646e5b783a1046280df73dec0727f6dc",
+  "revised_request_commit": "9c6f58200eb67a68f063e5399c454d6fc6883e5d",
+  "candidate_origin_commit": "939b544b8bb77dbf20a56520af9f74a82acd0a94",
+  "code_manifest_sha256": "4cdca2e6bf7d073f813d97be73825b8cd2043c2fc44e285f4a190bc6fb97cf25",
+  "prior_limited_validation": "LIMITED_VALIDATION_CLOSED_WITH_DOCUMENTED_SCOPE retained",
+  "required_document_corrections": [
+    {"id": "N150-N1", "priority": "P2", "action": "Add pinned PowerShell executable identity to stage-1 read-only observations; preserve early console-only failure without invented host evidence."},
+    {"id": "N150-N2", "priority": "P2", "action": "Correct parent budget origin to line 4; identify final observation as line 239 pre-output POST_WRITE snapshot, not post-prompt measurement."}
+  ],
+  "clarifications_accepted": {
+    "preexec": {"seconds": 1800, "megabytes": 50, "attempts": 1, "writes": "new fixed record folder outside r2 root only"},
+    "parent_overall_seconds": 10500,
+    "parent_local_delivery_seconds": 300,
+    "separate_packaging_seconds": 1800,
+    "separate_packaging_attempts": 1,
+    "packaging_failure_must_not_rewrite_native_result_fields": true
+  },
+  "production_change_required": false,
+  "functional_retest_required": false,
+  "stage1_preflight_approved": false,
+  "native150_approved": false,
+  "approval_runtime_token_creation_authorized": false,
+  "execution_machine_current_identities": "NOT_OBSERVED",
+  "received_code_executed": false,
+  "COMSOL_calls": 0,
+  "normal_gate": "INCOMPLETE",
+  "next_step": "Apply two document corrections and request separate user authorization for stage-1 observations only."
+}

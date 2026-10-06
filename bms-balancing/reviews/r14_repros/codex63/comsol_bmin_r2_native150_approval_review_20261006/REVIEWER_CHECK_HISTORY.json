@@ -1,0 +1,20 @@
+{
+  "scope": "Reviewer-owned byte/JSON/text/arithmetic checks only; no supplied candidate execution",
+  "first_check": {
+    "result_file": "STATIC_CHECKS.json",
+    "checks": 51,
+    "matches": 50,
+    "mismatches": 1,
+    "tool_chunk": "28766d",
+    "tool_exit_code": 1,
+    "cause": "Reviewer compared contract string maximum_physical_s='150' directly to integer 150; not a candidate or approval-plan error.",
+    "old_expression": "c['maximum_physical_s'] == 150"
+  },
+  "correction": {
+    "new_expression": "Decimal(c['maximum_physical_s']) == 150",
+    "final_result_file": "STATIC_CHECKS_FINAL.json",
+    "original_result_preserved": true,
+    "candidate_bytes_changed": false,
+    "native_or_functional_test_repeated": false
+  }
+}

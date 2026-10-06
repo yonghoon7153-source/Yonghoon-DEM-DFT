@@ -1,0 +1,323 @@
+{
+  "scope": "Received text bytes, JSON values, exact arithmetic, static source strings only. Not functional tests or execution-machine observations.",
+  "status": "MATCH",
+  "checks_count": 51,
+  "mismatches": [],
+  "identities": {
+    "bms-balancing/docs/COMSOL_BMIN640_R2_NATIVE150_APPROVAL_REQUEST_20261006.md": {
+      "bytes": 13541,
+      "sha256": "8e87252e208adfdc065ca5e08b00b406224a4137601e42cc44e19483681ddfe9",
+      "git_blob": "8698b11b85905b246c940a723152e09207cf6ec0"
+    },
+    "bms-balancing/comsol_candidates/bmin_particle640_r2_20261005/candidate/CODE_MANIFEST.json": {
+      "bytes": 1050,
+      "sha256": "4cdca2e6bf7d073f813d97be73825b8cd2043c2fc44e285f4a190bc6fb97cf25",
+      "git_blob": "826d860f8ad7c323a9dd1731570bbfc24cce68a2"
+    },
+    "bms-balancing/comsol_candidates/bmin_particle640_r2_20261005/candidate/CONTRACT.json": {
+      "bytes": 55211,
+      "sha256": "98820a8447b8ed830447125567312c7033e77a141bab59e84f1a1b83b3b2ce42",
+      "git_blob": "9ac6604ab75fdb7b2a1c80d44cb30fc7f89cba42"
+    },
+    "bms-balancing/comsol_candidates/bmin_particle640_r2_20261005/candidate/COMMAND_MAP.json": {
+      "bytes": 6189,
+      "sha256": "a8bda4e6dc250ec8bb104dc7a0c67eb2e5b7ebb555e1b8fa4b02223ff8d32394",
+      "git_blob": "6d42830adfc03b1b7f5bf6bb30ae0048bd7970c6"
+    },
+    "bms-balancing/comsol_candidates/bmin_particle640_r2_20261005/candidate/NATIVE_APPROVAL_FIELD_SPEC.json": {
+      "bytes": 4346,
+      "sha256": "61aa028fbcb851293beeab0e9cff716948d9df163f227d56a7eb093929bb0f7b",
+      "git_blob": "696cf1f9d2c9f29aa89d42f708fc7176274152cf"
+    },
+    "bms-balancing/comsol_candidates/bmin_particle640_r2_20261005/candidate/src/candidate_entry.py": {
+      "bytes": 13995,
+      "sha256": "0a0d308101d54ce11af305033d77ede2e6f4a28c97ff15852a230b283c178fed",
+      "git_blob": "e1c4f047ccd5ec13d7467df565178981b3fb538c"
+    },
+    "bms-balancing/comsol_candidates/bmin_particle640_r2_20261005/candidate/src/diagnostic_consumer.py": {
+      "bytes": 26394,
+      "sha256": "c3c8feb3680adde6ba1888ddc87e158e5b497245cc872ee5b1c99a09c812fc73",
+      "git_blob": "b33d8b6d7254c688c87366c9a33c4d969ddf4139"
+    },
+    "bms-balancing/comsol_candidates/bmin_particle640_r2_20261005/candidate/PARENT_COMMAND.ps1": {
+      "bytes": 24469,
+      "sha256": "fda741a149fdb32cd42879d19e0510292f62f7fa9db2089242f8a89a0c91e783",
+      "git_blob": "40f38a93d73cb0b76a47495887381baf201e6ce0"
+    },
+    "bms-balancing/comsol_candidates/bmin_particle640_r2_20261005/candidate/src/Bmin640Candidate.java": {
+      "bytes": 80813,
+      "sha256": "ef0ca60aeae1d9bd3790bbfe49a5732984c489cc7928b9692f102e061f5462ff",
+      "git_blob": "20055a24bd7d1c219b875fd5d3a772ed3e573c47"
+    },
+    "revised_request": {
+      "bytes": 17060,
+      "sha256": "758baf7b0d44981f727a417cd2f56b55431186469debba1baa915a5e76812795",
+      "git_blob": "853cf8f6e9318238fb948024683ff75ef28ce490"
+    },
+    "local_attachment": {
+      "path": "C:\\Users\\Administrator\\Desktop\\COMSOL_BMIN640_R2_NATIVE150_APPROVAL_REQUEST_20261006.md",
+      "bytes": 13541,
+      "sha256": "8e87252e208adfdc065ca5e08b00b406224a4137601e42cc44e19483681ddfe9"
+    }
+  },
+  "checks": [
+    {
+      "check": "received Git blob bms-balancing/docs/COMSOL_BMIN640_R2_NATIVE150_APPROVAL_REQUEST_20261006.md",
+      "status": "MATCH",
+      "detail": null
+    },
+    {
+      "check": "received Git blob bms-balancing/comsol_candidates/bmin_particle640_r2_20261005/candidate/CODE_MANIFEST.json",
+      "status": "MATCH",
+      "detail": null
+    },
+    {
+      "check": "same candidate blob at origin and initial request bms-balancing/comsol_candidates/bmin_particle640_r2_20261005/candidate/CODE_MANIFEST.json",
+      "status": "MATCH",
+      "detail": null
+    },
+    {
+      "check": "received Git blob bms-balancing/comsol_candidates/bmin_particle640_r2_20261005/candidate/CONTRACT.json",
+      "status": "MATCH",
+      "detail": null
+    },
+    {
+      "check": "same candidate blob at origin and initial request bms-balancing/comsol_candidates/bmin_particle640_r2_20261005/candidate/CONTRACT.json",
+      "status": "MATCH",
+      "detail": null
+    },
+    {
+      "check": "received Git blob bms-balancing/comsol_candidates/bmin_particle640_r2_20261005/candidate/COMMAND_MAP.json",
+      "status": "MATCH",
+      "detail": null
+    },
+    {
+      "check": "same candidate blob at origin and initial request bms-balancing/comsol_candidates/bmin_particle640_r2_20261005/candidate/COMMAND_MAP.json",
+      "status": "MATCH",
+      "detail": null
+    },
+    {
+      "check": "received Git blob bms-balancing/comsol_candidates/bmin_particle640_r2_20261005/candidate/NATIVE_APPROVAL_FIELD_SPEC.json",
+      "status": "MATCH",
+      "detail": null
+    },
+    {
+      "check": "same candidate blob at origin and initial request bms-balancing/comsol_candidates/bmin_particle640_r2_20261005/candidate/NATIVE_APPROVAL_FIELD_SPEC.json",
+      "status": "MATCH",
+      "detail": null
+    },
+    {
+      "check": "received Git blob bms-balancing/comsol_candidates/bmin_particle640_r2_20261005/candidate/src/candidate_entry.py",
+      "status": "MATCH",
+      "detail": null
+    },
+    {
+      "check": "same candidate blob at origin and initial request bms-balancing/comsol_candidates/bmin_particle640_r2_20261005/candidate/src/candidate_entry.py",
+      "status": "MATCH",
+      "detail": null
+    },
+    {
+      "check": "received Git blob bms-balancing/comsol_candidates/bmin_particle640_r2_20261005/candidate/src/diagnostic_consumer.py",
+      "status": "MATCH",
+      "detail": null
+    },
+    {
+      "check": "same candidate blob at origin and initial request bms-balancing/comsol_candidates/bmin_particle640_r2_20261005/candidate/src/diagnostic_consumer.py",
+      "status": "MATCH",
+      "detail": null
+    },
+    {
+      "check": "received Git blob bms-balancing/comsol_candidates/bmin_particle640_r2_20261005/candidate/PARENT_COMMAND.ps1",
+      "status": "MATCH",
+      "detail": null
+    },
+    {
+      "check": "same candidate blob at origin and initial request bms-balancing/comsol_candidates/bmin_particle640_r2_20261005/candidate/PARENT_COMMAND.ps1",
+      "status": "MATCH",
+      "detail": null
+    },
+    {
+      "check": "received Git blob bms-balancing/comsol_candidates/bmin_particle640_r2_20261005/candidate/src/Bmin640Candidate.java",
+      "status": "MATCH",
+      "detail": null
+    },
+    {
+      "check": "same candidate blob at origin and initial request bms-balancing/comsol_candidates/bmin_particle640_r2_20261005/candidate/src/Bmin640Candidate.java",
+      "status": "MATCH",
+      "detail": null
+    },
+    {
+      "check": "revised request Git blob",
+      "status": "MATCH",
+      "detail": null
+    },
+    {
+      "check": "local attachment matches initial request byte for byte",
+      "status": "MATCH",
+      "detail": null
+    },
+    {
+      "check": "amendment diff leaves candidate tree unchanged",
+      "status": "MATCH",
+      "detail": null
+    },
+    {
+      "check": "manifest identity",
+      "status": "MATCH",
+      "detail": null
+    },
+    {
+      "check": "manifest has exactly five unique members",
+      "status": "MATCH",
+      "detail": null
+    },
+    {
+      "check": "manifest member src/Bmin640Candidate.java",
+      "status": "MATCH",
+      "detail": null
+    },
+    {
+      "check": "manifest member src/diagnostic_consumer.py",
+      "status": "MATCH",
+      "detail": null
+    },
+    {
+      "check": "manifest member src/candidate_entry.py",
+      "status": "MATCH",
+      "detail": null
+    },
+    {
+      "check": "manifest member PARENT_COMMAND.ps1",
+      "status": "MATCH",
+      "detail": null
+    },
+    {
+      "check": "manifest member CONTRACT.json",
+      "status": "MATCH",
+      "detail": null
+    },
+    {
+      "check": "inactive flags remain false",
+      "status": "MATCH",
+      "detail": null
+    },
+    {
+      "check": "command map and approval field spec bind manifest",
+      "status": "MATCH",
+      "detail": null
+    },
+    {
+      "check": "field spec binds run and exact approval paths",
+      "status": "MATCH",
+      "detail": null
+    },
+    {
+      "check": "native argv map equals contract",
+      "status": "MATCH",
+      "detail": null
+    },
+    {
+      "check": "native cwd equals run root",
+      "status": "MATCH",
+      "detail": null
+    },
+    {
+      "check": "parent and Python cwd equal contract",
+      "status": "MATCH",
+      "detail": null
+    },
+    {
+      "check": "approval commands and budgets equal contract",
+      "status": "MATCH",
+      "detail": null
+    },
+    {
+      "check": "six stage budgets sum to overall",
+      "status": "MATCH",
+      "detail": null
+    },
+    {
+      "check": "five protected future paths",
+      "status": "MATCH",
+      "detail": null
+    },
+    {
+      "check": "external pins 16 with sha256 size and path",
+      "status": "MATCH",
+      "detail": null
+    },
+    {
+      "check": "NORMAL480 baseline nine pinned run tables",
+      "status": "MATCH",
+      "detail": null
+    },
+    {
+      "check": "requested 1637 distinct ordered times 0 to 150",
+      "status": "MATCH",
+      "detail": null
+    },
+    {
+      "check": "primary exactly 301 times 120 to 150 every 0.1",
+      "status": "MATCH",
+      "detail": null
+    },
+    {
+      "check": "241 distinct ordered coordinates per electrode",
+      "status": "MATCH",
+      "detail": null
+    },
+    {
+      "check": "comparison limits unchanged",
+      "status": "MATCH",
+      "detail": null
+    },
+    {
+      "check": "fresh solve one loadCopy zero",
+      "status": "MATCH",
+      "detail": null
+    },
+    {
+      "check": "Java requested times match contract",
+      "status": "MATCH",
+      "detail": null
+    },
+    {
+      "check": "Java one literal runAll call",
+      "status": "MATCH",
+      "detail": null
+    },
+    {
+      "check": "parent embeds expected PS hash",
+      "status": "MATCH",
+      "detail": null
+    },
+    {
+      "check": "stopwatch starts before PARENT_START record",
+      "status": "MATCH",
+      "detail": null
+    },
+    {
+      "check": "POST_WRITE outside stopped transcript",
+      "status": "MATCH",
+      "detail": null
+    },
+    {
+      "check": "NoExit is explicit and outer rc null",
+      "status": "MATCH",
+      "detail": null
+    },
+    {
+      "check": "amended separate packaging and preexec limits present",
+      "status": "MATCH",
+      "detail": null
+    },
+    {
+      "check": "native policy change prohibited",
+      "status": "MATCH",
+      "detail": null
+    }
+  ],
+  "candidate_execution": 0,
+  "native_execution": 0,
+  "execution_machine_preflight": 0
+}

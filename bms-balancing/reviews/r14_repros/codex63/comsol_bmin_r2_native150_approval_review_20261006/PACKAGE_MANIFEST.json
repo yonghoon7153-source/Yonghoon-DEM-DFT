@@ -1,0 +1,56 @@
+{
+  "scope": "Reviewer static evidence; not native execution authorization",
+  "created_at": "2026-10-06T10:57:42.841591+00:00",
+  "files": [
+    {
+      "path": "REVIEW_KO.md",
+      "bytes": 10416,
+      "sha256": "eb5bc150c9056f65cf3774d34006358d183d72f475ec9d815497da85d611c07e"
+    },
+    {
+      "path": "CLAUDE_REPLY_KO.md",
+      "bytes": 3128,
+      "sha256": "f73e15e51afc372f800a13906d2ad9f1875fe3eaa83d1b79cca99798c1adb8e8"
+    },
+    {
+      "path": "DECISION.json",
+      "bytes": 1804,
+      "sha256": "e84496479abe94b5bca520c088d9cb9027617d99897206f7ae0130fec48b7fac"
+    },
+    {
+      "path": "RECEIVED_SNAPSHOT.json",
+      "bytes": 273319,
+      "sha256": "bb7f82af73344080fa8cc0e5389185e99322e1c9c73e42805a9e75094ef5e3a1"
+    },
+    {
+      "path": "PRIOR_VALIDATION_DECISION.json",
+      "bytes": 1192,
+      "sha256": "d06014b283b645807d4aa4713f19a9f4bea1d59cf55a312725ba9829daaeb701"
+    },
+    {
+      "path": "STATIC_CHECKS.json",
+      "bytes": 11044,
+      "sha256": "4c0425378c5470163dfd3536499d9097b51938280eb7d1cef546ecfd3c5ae4d7"
+    },
+    {
+      "path": "STATIC_CHECKS_FINAL.json",
+      "bytes": 10920,
+      "sha256": "9e756a7fee3be87bd1635382892cd5ca581a924845f660a1987de3b8e8eff145"
+    },
+    {
+      "path": "REVIEWER_CHECK_HISTORY.json",
+      "bytes": 740,
+      "sha256": "18945515c3a3aebb7c92d84b22030e2a0377b1935306eadfe83e821943118784"
+    },
+    {
+      "path": "reviewer_static_checks.py",
+      "bytes": 7695,
+      "sha256": "c3f2ff7f66ad90d253c1ffd43ec3b2f641a0174e631f8898133bf894fee44e67"
+    },
+    {
+      "path": "package_review.py",
+      "bytes": 2729,
+      "sha256": "ed57d6ac26ecd24adce0dc9a5196c5f45eabe060159ddbff2f6d1585273d0d39"
+    }
+  ]
+}
