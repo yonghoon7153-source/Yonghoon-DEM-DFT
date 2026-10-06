@@ -9311,3 +9311,22 @@ dispatch · 과거 봉인 유지" (의존: 단계 3).
 관찰 · RED 미실행) · §2 범위 · 생산 파일 경계 · 고정 결정 a–g · 회귀 k00–k09 (결함 증거 k03 · k04 · k05 · k07) · 변이 · 영수증 · §3 Q1–Q9 의 채택 답.
 
 **다음:** 92차 회신 대기 → 접수 → 고정 표 `STAGE3_IMPL_ROUND1_SPEC.md` §16 → 구현은 사용자 별도 승인 뒤.
+
+## §143 92차 회신 접수 — `CONDITIONALLY_SUITABLE_SCOPE_AFTER_N1_N2_N3` · **G92-N1 P1 · N2 P2 · N3 P2** · Q1–Q9 방향 수용 · 구현 승인 아님 · 실행 GO 아님
+
+**패키지:** `docs/22p_gap/gate92_review/` (`GATE92_SCOPE_REVIEW_20261006.zip` 58,473 B · SHA-256 `6584ccf05f8468f14fdc573974c123cf63310e0e8abb927449f59bfee198569f` ·
+codex/ 11 · manifest 10 / 10 일치 · 비밀 패턴 0) · 규칙 `8a010cf2f` → 보존 `248b84e7d`. 검토자 행위: 코드 · 시험 · 계산 실행 0 · RUN_SCOPE 60 파일의 집합 · blob · mode 가
+`b08bb6944` 와 발송 HEAD `7a8a22a2d` 에서 같음 (tree 직접 대조 · source_digest 함수 미실행) · 요청문 커밋 → 발송 HEAD 의 degradation-degeneracy 변경 0.
+
+| 항목 | 판정 |
+|---|---|
+| 코드 사실 | 수용 — `io.py:1873–1878` 누락만 · `:1927–1934` candidate_map 키 집합 열림 · 사본 9 키의 키별 대조 없음 · `fitting.py:1545` json.dumps ↔ `preserve.py:138–150 · 6656` canonical digest (비어 있지 않은 edge 에서 다름) · `preserve.py:6168–6175` 는 dict 전체 비교라 키별 증인 보강이 맞음. 실행 반례 재현은 아님 |
+| **G92-N1 (P1)** | consumer × key 증거표를 §16 에 — 키 · 기대값의 독립 출처 · 실제 호출 경로 · 양성 대조 · 음성 node · 이유 · 비교 위치 변이 · 재사용 / 신규 · C5 · C8 · C9 · C11 · C7 행 재유도도 "기존 충족 / 이번 보강 / 명시적 이월" · 부재 보증은 열거한 닫힌 객체 · 정상 writer 출력에 한정 (run_spec 최상위 · solution map header · 원장 항목은 닫혔다고 쓰지 않음) |
+| **G92-N2 (P2)** | 두 새 닫힘 대상 (run_spec.stage3 · candidate_map) 의 키 집합 + 컨테이너 / 항목 / 값 자료형 · 허용 null · 누락 · 구 이름 둘 · 임의 제3 키 · 잘못된 컨테이너 · 항목 자료형 → 실제 validator 의 구조화된 실패 · 실패한 객체를 재유도에 넘기지 않음 · `PreserveError` 도 실패 결과로 연결 · 임의 `AttributeError` 를 음성 PASS 로 세지 않음 · sig 6 경계 안 |
+| **G92-N3 (P2)** | 16 키 근거를 helper 투영 · env 직접 비교 · 기존 독립 재계산으로 나눔 · `exact_bounds_sha256` 은 k06 + 기존 3자 재계산 (k05 아님) · 독립 재계산 약화 금지 · 비교 위치별 변이 하나 |
+| 경계 문구 | "RED 면 그 키를 범위에 넣음" 철회 → 승인 production 파일 · 함수 밖 결함은 기록 · 중지 · 별도 승인 · `--emit-expect` 는 증인 교체 승인이 아님 · v5 / v6_prep "바이트 불변" = 기존 봉인 · 수치 · 분기 · schema 의미 (새 validator identity · 영수증 identity 변화는 별도 표) |
+| Q1–Q9 | 방향 수용 (Q3 = 이번 제한 단계 4 의 선행 충족 · 단계 3 전체 기능 완료 아님 · Q7 = 정정 §16 → 사용자 구현 승인 → 결과 검토 · Q9 = 묶음 9 선행 하나만) |
+| 범위 밖 | 구현 · 실행 GO · 묶음 6 / 9 종결 · claim / 세대표 게시 · 새 연구 leg · pilot / floor · COMSOL · class / 투영 · p_ini / adaptive · requirements |
+
+**다음 (검토자 권고 그대로):** 같은 개괄 계획을 다시 사전 검토하지 않는다 — N1–N3 을 고정 표 `STAGE3_IMPL_ROUND1_SPEC.md` §16 과 승인 범위에 반영한 뒤 사용자에게 **제한 오프라인 구현** 승인을 따로
+요청한다. 구현 뒤 제출: 고정 표 대비 diff · 정확한 이유의 RED / GREEN · 키별 대응표 · 비교 위치별 변이 · legacy 대조 · history 와 새 영수증 · 최종 clean 검증 로그.
