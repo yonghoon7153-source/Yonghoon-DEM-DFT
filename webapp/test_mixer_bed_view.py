@@ -583,6 +583,13 @@ def main():
         'bedRuns' in html and not any('${' in ln for ln in html.splitlines() if 'innerHTML' in ln))
     chk('⑯b 화면이 겹침 · 혼합 지표를 계산한다는 문구가 없다 (보기 전용 표지와 함께 "계산하지 않는다")',
         '계산하지 않는다' in html)
+    #  ⑯c (2026-10-06 · 1저자 — 런 목록이 길어져 펼침 목록이 화면 밖으로 잘린다 → "스크롤 목록 상자") —
+    #     런 선택 = 높이가 고정된 목록 상자 (select size ≥ 8 · 루트별 optgroup 그대로) · 고른 런이 보이도록 목록을 스크롤한다.
+    _m_sel = _re.search(r'<select id="bedRuns"[^>]*>', html)
+    _m_size = _re.search(r'\bsize="(\d+)"', _m_sel.group(0)) if _m_sel else None
+    chk('⑯c 런 선택은 스크롤 목록 상자 (size ≥ 8) · 고른 런으로 목록을 스크롤한다 (scrollTop)',
+        bool(_m_size) and int(_m_size.group(1)) >= 8 and 'bed-runlist' in html
+        and 'sel.scrollTop' in html)
 
     # ── ⑰ 재생 · 고화질 PNG · GIF (1저자 요청 09-30 밤) — 화면 쪽 계약만 (동작은 브라우저 시험) ──
     chk('⑰ 자동 재생 · 고화질 PNG · GIF 버튼이 있다',

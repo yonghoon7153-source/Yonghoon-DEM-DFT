@@ -64,6 +64,9 @@
   .bed-warn { color:var(--yellow,#fbbf24); font-size:12px; }
   #bedRunInfo, #bedLocked, #bedStat { overflow-wrap:anywhere; }
   .bed-lock { font-size:12px; opacity:.85; margin:3px 0; }
+  .bed-runlist { width:100%; height:auto; overflow-y:auto; }
+  .bed-runlist optgroup { font-weight:600; }
+  .bed-runlist option { font-weight:400; padding:1px 4px; }
   .bed-legend { color:#444; font-size:12px; margin-top:6px; text-align:center; }
 </style>
 
@@ -119,7 +122,7 @@
     </div>
     <div class="bed-grid">
       <div class="card bed-ctl">
-        <label class="blk">런 <select id="bedRuns" class="input"></select></label>
+        <label class="blk">런 <select id="bedRuns" class="input bed-runlist" size="12" title="루트별 런 목록 — 스크롤바를 끌거나 휠로 넘기고 클릭해서 고른다"></select></label>
         <div id="bedRunInfo"></div>
         <label class="blk">프레임 (시간) <input type="range" id="bedFrame" min="0" max="0" value="0"></label>
         <div class="bed-row"><button class="btn btn-secondary btn-sm" id="bedPrev" type="button">◀</button>
@@ -242,6 +245,8 @@ function mxTab(t){
       if (!sel.options.length) { msg('열 수 있는 런이 없다 — 아래 "잠긴 런 · 루트 · 정책" 에서 루트 경로 (WEBAPP_MIXER_RUNS) 와 정책을 확인', 'warn'); return; }
       var last = null; try { last = localStorage.getItem('mx-bed-run'); } catch (e) {}
       if (last && Array.prototype.some.call(sel.options, function (o) { return o.value === last; })) sel.value = last;
+      //  목록 상자 (size) — 고른 런이 보이도록 스크롤 (페이지는 움직이지 않게 scrollTop 만)
+      try { var _o = sel.options[sel.selectedIndex]; if (_o) sel.scrollTop = Math.max(0, _o.offsetTop - sel.clientHeight / 2); } catch (e) {}
       msg(''); onRun();
     }).catch(function (e) { msg('런 목록을 못 읽음: ' + e, 'err'); });
   }

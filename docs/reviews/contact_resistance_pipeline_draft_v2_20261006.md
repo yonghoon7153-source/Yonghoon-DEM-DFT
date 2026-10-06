@@ -155,7 +155,7 @@
 - 간극 쌍 (δ ≤ 0) 에도 정의되고, 여러 입자가 만나는 곳은 Laguerre (power diagram) 칸으로 순서 없이 갈린다.
 - 반경이 다른 쌍에서 브리지 중심 (`rasterize` :579 — 두 표면 사이 구간의 중점) 과 근축면은 다르다: R 6 · 2 µm · δ 0.05 µm 에서 근축면은 큰 구 중심에서 5.98758 µm · 브리지 중심은 5.975 µm (어긋남 0.0126 µm · 손 계산 · T3-2 에서 기록).
 
-**무엇이 바뀌나** (Codex 픽스처 · R 1 µm 두 구 · δ 0.02 µm · 브리지 0.24 µm · `evidence_area/probe_area_contract.py`):
+**무엇이 바뀌나** (Codex 픽스처 · R 1 µm 두 구 · δ 0.02 µm · 브리지 0.24 µm · `docs/reviews/codex_rint_stage1_review_evidence_20261003/evidence_area/probe_area_contract.py`):
 
 | | 현 pid 경계 (r1 경로) | v2 근축면 소유권 |
 |---|---|---|
