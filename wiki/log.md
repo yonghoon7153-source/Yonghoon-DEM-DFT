@@ -3573,3 +3573,8 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - [[pvs-sev-lli-lampe-separability]]: Status Log 1 (Gap 라벨 불확실성 상향 · PVS 는 균일 이동에 불변 메모). [[halfcell-ocp-shape-invariance]]: 새 절 (처방 ③ 의 실셀 출판 사례 · 음수 · 비단조 구성요소 LAM · 체크리스트 (c) 여전히 0). [[halfcell-window-parametrization-lineage]]: 비교표 행 + 메모 (일곱째 축과 반대 처방). [[fitting-degeneracy]] · [[data-window-identifiability]] · [[np-lip-ocv-reparametrization]]: 짧은 절 · 줄. [[mode-identifiability-unmeasured-lineage]]: Thesis 20 → 21 편 · §1 표 행.
 - 엔티티: [[pyprobe]] (실셀 적용 논문 절) · [[ampworks]] (IR 처리 대조 한 줄) · [[isu-uconn-lfp-gr-emulated-degradation]] (해석 제한 후보 한 줄 — 판단은 REIL 문서 쪽) · [[degradation-degeneracy]] (가지 · IR 한계 한 줄) · [[mode-observability]] (두 가지 = 관측 둘 한 줄).
 - 하지 않은 것: bms-balancing · degradation-degeneracy 문서 수정 · PyDMA 엔티티 생성 (근거 raw 없음) · 대조 실행.
+
+## [2026-10-06] update | pocv-nonequilibrium-mode-bias — P1 격차 bias 부호 대조 (실행 0)
+- 출처: 사용자 "논문 후속도 REIL랑 병렬로 진행해보고" · 정본 `degradation-degeneracy/docs/09_22P_GAP.md` §7.10 표 재집계 · 부호 규약은 `src/halfcell.py` 143–145 · `tools/diagnose_pini_transition.py` `gap_stats` 에서 확인
+- 더한 것: 개념 페이지 "P1 결과" 절 — 원점 건강 PE 오프셋 다리 다섯의 0 mV 대비 Δ 가 모두 + (+0.35 – +2.85 %p) · 원문 IR 방향 (격차 −) 과 반대 부호 · 공통 모드 대조 0 · 반대 부호를 모순으로 읽지 않는 이유 넷 · 성분별 부호는 원 fit 부재로 미확인
+- 하지 않은 것: fit 재실행 · 새 다리 · RUN_SCOPE 변경 (P2–P5 는 실행이 필요 — 사용자 승인 대상)
