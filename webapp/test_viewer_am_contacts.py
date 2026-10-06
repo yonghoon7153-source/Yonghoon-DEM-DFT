@@ -358,6 +358,10 @@ def section_v():
     chk('V2c 모달 — 상대 입자 보기 토글 (#amcc-partners) · cap 규칙 (#amcc-rule: hertz · g2) · PC/SC 고르기 (#amcc-phase)',
         'id="amcc-partners"' in sm and re.search(r'id="amcc-rule"[\s\S]*value="hertz"[\s\S]*value="g2"', sm) is not None
         and re.search(r'id="amcc-phase"[\s\S]*AM_P \(PC\)[\s\S]*AM_S \(SC\)', sm) is not None)
+    #  ★ 10-07 1저자 결정 — Coverage 그림의 노랑 = Physics 세대 2 (케이스 표의 보고 coverage 와 같은 cap) 가 **기본**
+    chk('V2f ★ 기본 cap 넓이 = Physics 세대 2 (#amcc-rule 의 g2 option 이 selected · hertz 는 선택지로 남음 · 1저자 10-07)',
+        re.search(r'<option value="g2" selected>', sm) is not None and '<option value="hertz" selected>' not in sm
+        and 'value="hertz"' in sm)
     chk("V2d 모달 — SE 접촉 = 노란 cap · AM–AM 접촉 = 회색 cap (쌍 이름으로 가른다) · cap 각 = capHalfAngle",
         "pair === 'AM_SE'" in sm and "pair === 'AM_AM'" in sm and 'capHalfAngle(' in sm)
     chk('V2e 모달 — 이전 · 다음 · id 로 가기', 'id="amcc-prev"' in sm and 'id="amcc-next"' in sm and 'id="amcc-goto"' in sm)

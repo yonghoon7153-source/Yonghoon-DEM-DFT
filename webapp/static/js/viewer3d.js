@@ -8831,7 +8831,7 @@ function showAMContactCloseup(state) {
         <label><input type="checkbox" id="amcc-partners" checked> 상대 입자 보기 (활물질 주위) — 끄면 cap 만 (Coverage 확대)</label>
         <label>cap 넓이 <select id="amcc-rule">
           <option value="hertz">c_cpl[22] 기하면적 (Hertz 계열)</option>
-          <option value="g2">Physics 세대 2 (보고 합집합과 같은 cap)</option>
+          <option value="g2" selected>Physics 세대 2 (보고 합집합과 같은 cap · 기본)</option>
         </select></label>
       </div>
       <div class="path-modal-actions">
