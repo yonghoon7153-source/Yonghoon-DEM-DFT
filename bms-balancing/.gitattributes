@@ -125,3 +125,9 @@ reviews/prereview_reil_v2_c5_request_v2_20261006/** -text
 reviews/r14_repros/codex63/comsol_bmin150_deployment_preflight_review_20261006/** -text
 # 2026-10-06: REIL C5 구현 단계 증거 (RED · GREEN · 무자료 한정 시험 · 합성 건조 실행 · 환경 식별 기록) — bytes 그대로
 evidence/reil_c5_impl_20261006/** -text
+# 2026-10-06: B-min r2 native150 결과 검토 회신 (회신 표기 2026-10-07 · 150 s 정상 종료 · 120–150 s 입자 격자 비교 한정 수용 · 전달 보존 보류) — bytes 그대로
+reviews/r14_repros/codex63/comsol_bmin_r2_native150_result_review_20261007/** -text
+# 2026-10-06: B-min150 전달 보존 보충 — 실행 기기 원파일 3 (AFTER · 영수증 · 마지막 반환) + 검토자에게 넘긴 보충 묶음 — bytes 그대로
+reviews/r14_repros/codex63/comsol_bmin150_delivery_after_records_20261007/** -text
+# 2026-10-06: B-min150 통합 종결 회신 (LIMITED_NATIVE150_REVIEW_CLOSED_WITH_DOCUMENTED_SCOPE · 회신 표기 2026-10-07) — bytes 그대로
+reviews/r14_repros/codex63/comsol_bmin150_combined_closeout_review_20261007/** -text
