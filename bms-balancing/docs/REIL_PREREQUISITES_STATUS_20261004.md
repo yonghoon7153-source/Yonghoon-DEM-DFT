@@ -239,3 +239,28 @@
   수 (`bms-balancing/WORKING_STATE.md`) 를 같은 커밋에서 올린다.
 - **하지 않는 것:** 봉인 `reil_c6_20261005/` 10 파일 · README 수정 (새 lock 형식은 같은 판 재구축 단계의 새 emit 에서 새 식별로) · venv · 설치 · emit /
   check 실행 · 변이 증명 실행 (venv 필요) · REIL 자료 개봉 · P0 · 맞춤 · `degradation-degeneracy/` (RUN_SCOPE) 수정.
+
+## §15 C6 보충 검토 회신 — 접수 · **C6 사전 준비 검토 종결** · 다음 = P0 승인 요청문 (2026-10-06 · 덧붙임 — 위 §0–§14 는 그대로)
+
+> 사용자 (2026-10-06): "검토 완료했습니다. C6-N1·N2 보충을 수용하고, C6 사전 준비 검토를 종결합니다" + 묶음 `REIL_C6_SUPPLEMENT_REVIEW_20261006.zip`.
+
+- **받은 바이트:** `bms-balancing/reviews/prereview_reil_v2_c6_supplement_20261006/` — zip (sha256 `509cf3a216278854e9ab6c3a6fb5200512096fe8d9ba0d9c3f889882c1ef4c8d`)
+  + 풀어 놓은 11 파일 (zip 멤버와 바이트 동일 · `PACKAGE_MANIFEST.json` payload 10 일치 · 비밀정보 패턴 0 · 묶음 스크립트 실행 안 함). 규칙 `fdbcae5b8` ·
+  보존 `db4f5d7c5`.
+- **판정:** `C6_PREREQUISITE_REVIEW_ACCEPTED_N1_N2_CLOSED_WITH_EVIDENCE_LIMITS` (고정 커밋 `563813885`). 부속 D · C2 · C1-core 논문 쪽 수용 유지.
+  - **C6-N1 수용** — 허용 목록 (경로 · 두 배포판 / 판 · RECORD sha · 방향 · 주장자 하나 · disk = owner expected · 해시값 기록) 이 코드에 연결됨. 한계: 기존
+    fatal 시험 셋은 `dists` 없이 호출돼 새 코드에서는 식별 누락만으로 거부된다 → 각자의 깊은 분기를 독립 검증한 것으로 확대하지 않는다 (비차단 · 나중에
+    checker 를 손댈 때 유효한 DISTS 아래 거부 사례를 따로 둔다). RED 12 중 실제 결함 실증은 2 (나머지 10 은 새 인자 부재).
+  - **C6-N2 종결** — `C6_RUN.log` 와 옛 9 / 12 / 538 원문은 **미보존**으로 남고 제출자 보고다. 옵션은 표와 호출이 같은 `COBYQA_OPTIONS` 에서 나오는
+    **정적 구조까지만** 수용 (전달 dict 직접 기록 · 옵션별 효과는 관측 아님). 재실행 요구 없음.
+  - **봉인 유지** — payload 10 + MANIFEST · README 의 blob · 크기 · 집합 불변. 새 checker 의 emit / check · 변이는 **미실행** · 새 lock 형식은 승인된 환경
+    준비에서 새 식별로 따로 봉인 (옛 10 파일은 고치지 않는다).
+  - **시험 표현 정정** — `bms-balancing/evidence/reil_c6_n1_20261006/03_…log` 는 548 passed + 1 failed · rc 1 · 시작 dirty 3 의 **짧은 보존 기록**이다.
+    기대 수를 549 로 고친 뒤 그 시험이 통과한 것은 제출자 보고이고, **"전체 549 개 clean 재실행 통과" 는 확인된 사실이 아니다** (§14 · 커밋 `563813885`
+    메시지의 문장도 이 뜻으로 읽는다). GREEN 20 은 host rc · 시작 / 끝 HEAD 기록이 없는 2 행 출력이다.
+- **다음 (회신 그대로 · 사용자 승인 대기):** **P0 승인 요청문**을 써서 사용자에게 제시하고 멈춘다. 담을 것 — (1) 버리는 환경 재구축이 필요하면 설치 범위 ·
+  판 · 자원 · 시간 (과거 C6 수용으로 갈음하지 않는다) (2) 새 checker emit / check 를 실제 환경 사용 전에 확인하는 범위 · 새 lock 은 새 경로 · manifest (3)
+  예상된 collision 메타데이터 추가 ↔ 예상 밖 패키지 / RECORD / 배열 차이 구분 (형식 변경을 이유로 임의 차이를 허용하지 않음) · Sobol 정식 재생성 시점과
+  기존 sha 대조 계약 유지 (4) P0 의 허용 입력 · 시트 / 셀 / cycle / 방향 확인 · 정확 유리수 판정 · 산출물 · 중단 조건 (pickle · 노트북 실행 · 맞춤 · 비용
+  측정 · E3b 는 자동 포함 아님) (5) 실행 시 명령 · 코드 / 환경 식별 · stdout / stderr · 외부 rc · 시간 · 옵션 dict 를 종료 직후 보존. 그 전 자료 개봉 ·
+  설치 · 재구축 · 시험 · 맞춤 0.

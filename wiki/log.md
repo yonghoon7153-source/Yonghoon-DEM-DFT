@@ -3552,3 +3552,8 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 - 출처: `bms-balancing/reviews/prereview_reil_v2_annexD_c6_20261006/` (받은 바이트 · A `ANNEX_D_ACCEPTED_RV2C_N1_N2_N3_CLOSED` · B `C6_SEALED_ARTIFACT_IDENTITY_ACCEPTED_FULL_CLOSEOUT_PENDING_TWO_LOCAL_SUPPLEMENTS`) · 상태 문서 `bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md` §13 · 보충 `bms-balancing/docs/REIL_C6_SUPPLEMENT_20261006.md`.
 - [[isu-uconn-lfp-gr-emulated-degradation]]: "부속 C 재검토" 절에 한 줄 — D 종결 · C6 보충 둘.
 - 하지 않은 것: 묶음 스크립트 실행 · 자료 개봉 · 재구축 · 재시험 · 봉인 수정 · 코드 변경 (허용 목록 구현은 사용자 승인 뒤).
+
+## [2026-10-06] update | isu-uconn-lfp-gr-emulated-degradation — REIL C6 사전 준비 검토 종결 (N1 · N2 보충 수용)
+- 출처: `bms-balancing/reviews/prereview_reil_v2_c6_supplement_20261006/` (받은 바이트 · `C6_PREREQUISITE_REVIEW_ACCEPTED_N1_N2_CLOSED_WITH_EVIDENCE_LIMITS`) · 상태 문서 `bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md` §15.
+- [[isu-uconn-lfp-gr-emulated-degradation]]: "부속 C 재검토" 절에 한 줄 — C6 종결 · 다음 = P0 승인 요청.
+- 하지 않은 것: 묶음 스크립트 실행 · 자료 개봉 · 재구축 · 시험 · 맞춤 · P0.
