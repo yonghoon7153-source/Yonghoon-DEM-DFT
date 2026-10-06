@@ -103,3 +103,5 @@ evidence/reil_c6_n1_20261006/** -text
 reviews/r14_repros/codex63/comsol_bmin_r2_retry3_review_20261006/** -text
 # 2026-10-06: B-min r2 한정 검증 retry3 결과 묶음 원본 (Codex 실행 · §57 승인의 결과 · 수신 검토 §59 가 본 바로 그 ZIP · 집계 정정표가 결속하는 원본) — bytes 그대로
 reviews/r14_repros/codex63/comsol_bmin_r2_retry3_result_20261005/** -text
+# 2026-10-06: REIL C6 보충 검토 회신 묶음 (게이트 차수 밖 · C6_PREREQUISITE_REVIEW_ACCEPTED_N1_N2_CLOSED_WITH_EVIDENCE_LIMITS · C6 사전 준비 종결 · P0 · 설치 · 실행 승인 아님) — bytes 그대로
+reviews/prereview_reil_v2_c6_supplement_20261006/** -text
