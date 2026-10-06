@@ -59,7 +59,7 @@
 ## §5 정책 · 승인 파일 (④)
 
 - 정책 무변경 · 실효 정책 `UNVERIFIED` — 승인 파일의 `effective_policy_unverified_accepted: true` 는 **사용자의 명시 수용**이 필요하다 (아래 §9 문구에 포함).
-- 기본 prefs `C:/Users/BML/.comsol/v63/comsol.prefs` 의 **현재** 크기 · SHA · `security.external.enable=on` 은 2 단계 사전 관측으로만 정한다 (과거 1198 시점
+- 기본 prefs `C:/Users/BML/.comsol/v63/comsol.prefs` 의 **현재** 크기 · SHA · `security.external.enable=on` 은 **1 단계 사전 관측값으로만 정하고, 그 관측값을 2 단계 승인에 결속한다** (2026-10-06 검토 정정) (과거 1198 시점
   22,252 B `064d1900…` 은 현재 값이 아니다 — 추정해 적지 않는다).
 - 승인 파일 순서 (1198 관례): 사용자 결정 원문 (USER_DECISION — 사용자가 2 단계에서 쓴 승인 문장 그대로) → 원문 파일 식별 → 현재 증거 목록과
   VALIDATION_RELEASE (`changed_branch_validation PASS` 는 수용된 실제 검증 결과로만 · `manifest_bytes_unchanged_since_validation true` · evidence = §2 검증 근거)
@@ -82,9 +82,12 @@
 
 ### 6-1. 예산 경계 — 부모 기록까지 · 포장은 별도 (2026-10-06 Codex 질문에 답해 덧붙임)
 
-- **위 표의 시계는 부모 `PARENT_COMMAND.ps1` 의 `$bClock` 하나**다 — 부모 시작 (207 행 `PARENT_START`) 부터 **POST_WRITE 콘솔 줄** (239–246 행) 까지. `delivery`
-  300 s 는 분석 반환 뒤 (216 행 `$bDeliveryStart`) 부터 POST_WRITE 까지 — 판정 계산 · `PARENT_LOCAL_DECISION.json` · `FINAL_BOUNDARY.json` 쓰기 / 다시 읽기 · 최종 줄
-  출력이다. `overall` 10,500 s 도 POST_WRITE 에서 끝난다 (222 · 234 · 241 행). 봉인 코드는 고치지 않는다.
+- **위 표의 시계는 부모 `PARENT_COMMAND.ps1` 의 `$bClock` 하나**다 — **원점은 4 행 `[Diagnostics.Stopwatch]::StartNew()`**, 마지막 관측은 `FINAL_BOUNDARY.json`
+  쓰기 · 다시 읽기 · 해시 뒤 **239 행의 POST_WRITE snapshot** (`$postWrite`) 이다. 246 행은 그 값을 콘솔에 출력할 뿐이다. `delivery` 300 s 는 분석 반환 뒤 (216 행
+  `$bDeliveryStart`) 부터 239 행 snapshot 까지 — 판정 계산 · `PARENT_LOCAL_DECISION.json` · `FINAL_BOUNDARY.json` 쓰기 / 다시 읽기 · 해시. `overall` 10,500 s 도 239 행에서
+  끝난다 (222 · 234 · 241 행). **246 행 출력 · 249 행 STOP 줄 · 프롬프트 복귀 이후는 이 시계로 재지 않는다** — 그 시간까지 측정했다고 쓰지 않는다. POST_WRITE 줄은
+  `Stop-Transcript` (232 행) **뒤**에 나오므로 transcript 파일에 없다 — 사용자가 화면 원문을 따로 제공해야 한다. 봉인 코드는 고치지 않는다.
+  (N150-N2 정정 — 처음 판은 원점을 207 행 `PARENT_START`, 끝을 "239–246 행 POST_WRITE 콘솔 줄" 로 적었다.)
 - **결과 수집 · ZIP 포장 · 다시 읽기 대조 (Codex 몫) 는 이 두 예산 밖**의 별도 단계다. 제안 규칙:
   - 시작은 사용자가 부모 프롬프트 복귀를 관측한 **뒤** · 시작 / 끝 시각과 소요를 포장 기록에 따로 적는다 (부모 예산 · 판정 필드에 더하지 않는다).
   - 상한 1,800 s (제안 · 사용자 승인 대상) · 한 번 · 넘거나 실패하면 원 산출을 그대로 두고 멈춘다 — COMSOL 재실행 · 부모 재실행 · 원 파일 수정 · 재포장으로 덮기 없음.
@@ -94,7 +97,7 @@
 
 entry / 부모의 기존 거부를 그대로 쓴다: `EXISTING_RUN_NO_RETRY` · `CWD` · `START_OPTIONS` · `PYTHON_IDENTITY` · `MANIFEST_IDENTITY` · `BASELINE_IDENTITY` (기준 9
 파일 · compile 전) · `DISK_START` · `OTHER_NATIVE_BATCH_PRESENT` · `PREFS_PATH` · `DEFAULT_PREFS_CHANGED` · `PRIVATE_POLICY_CHANGED` · `ATTEMPT_DUPLICATE` · 승인 /
-release 비활성 · 예산 초과 · 첫 `BHash` 오류 · `NATIVE_FATAL_RC0` 로그 패턴. 다른 프로세스 종료 · 자동 재시도 · 다른 shell / 권한 / 정책 fallback 은 없다 (정리는
+release 비활성 · 예산 초과 · 첫 `BHash` 오류 · `POWERSHELL_IDENTITY` (189 행) · `NATIVE_FATAL_RC0` 로그 패턴. transcript 생성 (205 행) 전에 멈춘 실패 (첫 `BHash` 오류 · `POWERSHELL_51_REQUIRED` · `POWERSHELL_IDENTITY` 등) 는 **화면 원문으로 보존**하고, 없는 rc · 기록을 만들어 넣지 않는다 (N150-N1). 다른 프로세스 종료 · 자동 재시도 · 다른 shell / 권한 / 정책 fallback 은 없다 (정리는
 소유 Job 만).
 
 ## §8 결과 수집 · 보존 (⑦)
@@ -111,7 +114,7 @@ release 비활성 · 예산 초과 · 첫 `BHash` 오류 · `NATIVE_FATAL_RC0` �
 | # | 결정 | 제안 |
 |---|---|---|
 | 1 | 실행 주체 | **이전 native 와 같은 분담** — Windows 쪽 Codex 가 읽기 전용 사전 관측 · 최종 승인 요청문 (2 단계) · 승인 뒤 승인 파일 생성 · 결과 포장을 맡고, **사용자가** 보이는 PS 5.1 창에서 부모를 실행하고 challenge 를 직접 입력한다 |
-| 2 | 사전 관측 범위 (읽기 전용 · 실행 기계) | r2 바이트가 root 에 놓였는지 (v1 · r1 바이트와의 충돌 포함) · 지금 없어야 할 경로 5 개의 부재 · NORMAL480 `run/tables` 9 파일의 현재 크기 · SHA · 기본 prefs 크기 · SHA · security 값 · 외부 의존 16 개 · COMSOL exe 둘 · python.exe 의 현재 해시 · 디스크 · RAM · 다른 COMSOL 프로세스 부재. **쓰기 · 이동 · 복사 · 설정 변경 0** (r2 바이트를 root 에 두는 일이 필요하면 그것도 2 단계 승인 항목으로 따로 적는다) |
+| 2 | 사전 관측 범위 (읽기 전용 · 실행 기계) | r2 바이트가 root 에 놓였는지 (v1 · r1 바이트와의 충돌 포함) · 지금 없어야 할 경로 5 개의 부재 · NORMAL480 `run/tables` 9 파일의 현재 크기 · SHA · 기본 prefs 크기 · SHA · security 값 · 외부 의존 16 개 · COMSOL exe 둘 · python.exe 의 현재 해시 · **PowerShell 실행 파일 `C:/WINDOWS/System32/WindowsPowerShell/v1.0/powershell.exe` 의 현재 경로 · 크기 · SHA-256** (부모 189 행 고정값 `8bb6fa8c283b4d92120b1ef249a9b311b0f804d4cabbe9981159976c8be76a5e` 과 대조 · 파일 읽기 대조만 · 부모 · 엔진 probe 없음 · 불일치 = 중지 — N150-N1) · 디스크 · RAM · 다른 COMSOL 프로세스 부재. **§9-1 의 새 기록 폴더 밖 쓰기 · 이동 · 복사 · 설정 변경 0** (r2 바이트를 root 에 두는 일이 필요하면 그것도 2 단계 승인 항목으로 따로 적는다) |
 | 3 | 예산 | §6 의 10,500 s 그대로 (연장 없음 · 부모 POST_WRITE 까지) · 포장 단계는 별도 상한 1,800 s (§6-1) |
 | 4 | MPH 보존 | 식별만 전달 · 수신 검토 끝까지 실행 기계에 유지 |
 | 5 | 실효 정책 | `UNVERIFIED` 를 명시 수용 (이전 native 와 같음) |
@@ -132,7 +135,7 @@ release 비활성 · 예산 초과 · 첫 `BHash` 오류 · `NATIVE_FATAL_RC0` �
 **채택 문구 (이대로 또는 고쳐서):**
 
 > B-min r2 native 150 s 의 1 단계를 이 문서 (`bms-balancing/docs/COMSOL_BMIN640_R2_NATIVE150_APPROVAL_REQUEST_20261006.md`) 의 범위로 승인합니다. Codex 는
-> 실행 기계에서 §9-2 의 읽기 전용 사전 관측만 하고 (쓰기는 §9-1 의 새 기록 폴더 하나 · 그 한도 안), 그 결과를 붙인 최종 승인 요청문을 만들어 주세요. approval / token / runtime · `future_authorizations/*` 생성과
+> 실행 기계에서 §9 표 2 번 및 §9-1 의 읽기 전용 사전 관측만 하고 (쓰기는 §9-1 의 새 기록 폴더 하나 · 그 한도 안), 그 결과를 붙인 최종 승인 요청문을 만들어 주세요. approval / token / runtime · `future_authorizations/*` 생성과
 > COMSOL 실행은 최종 승인 뒤에만 합니다. 예산은 §6 그대로 (전체 10,500 s · 연장 없음 · 1 회), 실효 정책 UNVERIFIED 를 수용하고, 결과 MPH 는 식별만 보내고 수신
 > 검토가 끝날 때까지 지우지 않습니다.
 

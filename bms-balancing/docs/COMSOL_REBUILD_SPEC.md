@@ -4074,3 +4074,20 @@ gate INCOMPLETE · 실효 정책 UNVERIFIED · native 미승인 · 게이트 리
 - (2026-10-06 덧붙임) Codex 질문 "1 단계 '쓰기 0' 은 기존 코드 · prefs · 실행 경로 변경 금지이고, 새 검토 폴더에 사전 관측 원문 · 최종 요청문 저장은 허용인가" → **예** ·
   요청문 §9-1 에 폴더 (`…/outputs/bmin640_native150_preexec_20261006/` · r2 root 밖 · 이미 있으면 멈춤) · 넣는 것 / 넣지 않는 것 · 한도 (읽기 전용 명령 · 실행 0 · 네트워크 0 ·
   ≤ 50 MB · ≤ 1,800 s · 한 번) 를 더했다. 아직 사용자 1 단계 승인 전.
+
+## 64. native 150 s 1 단계 승인안 검토 회신 접수 — `STAGE1_PREFLIGHT_PLAN_CONDITIONALLY_ACCEPTED_DOCUMENT_CORRECTIONS` · 정정 둘 반영 (2026-10-06)
+
+- 묶음: `reviews/r14_repros/codex63/comsol_bmin_r2_native150_approval_review_20261006/` (`BMIN_R2_NATIVE150_APPROVAL_REVIEW_20261006.zip` 91,058 B · sha256
+  `0b5203dae4996a59260122c710f6cc71d33719d393f9507b1219e3841dbe7adc` · 풀린 10 파일 manifest 일치 · CRLF 는 `STATIC_CHECKS*.json` 둘 · 비밀 패턴 0 · 동봉 스크립트 실행 안 함).
+  규칙 `b1d42e8cd` → 보존 `273a2f567`. 대상: 최초 `b67fed846` · 질의 반영 `9c6f58200`.
+- 판정: 1 단계 사전 관측안 문구 두 곳 정정 조건부 수용 · 후보 manifest `4cdca2e6…` · 생산 코드 불변 확인 · 기존 한정 검증 종결 유지 · 생산 수정 · 재시험 불요 ·
+  별도 예산 · 쓰기 범위 수용 (사전 관측 root 밖 새 폴더 1,800 s · 50 MB · 1 회 · 부모 10,500 s 와 그 안의 로컬 전달 300 s · 포장 별도 1,800 s · 1 회 · 포장 실패는 원 산출 ·
+  세 필드 불변). `stage1_preflight_approved: false` — 사용자 1 단계 승인 전.
+- 반영 (요청문 `docs/COMSOL_BMIN640_R2_NATIVE150_APPROVAL_REQUEST_20261006.md`):
+  - **N150-N1** — §9 표 2 번에 PowerShell 실행 파일 (`C:/WINDOWS/System32/WindowsPowerShell/v1.0/powershell.exe`) 의 현재 경로 · 크기 · SHA 를 더하고 부모 189 행 고정값
+    `8bb6fa8c…6a5e` 과 대조 (파일 읽기만 · probe 없음 · 불일치 중지) · §7 에 transcript 전 실패는 화면 원문 보존 · 없는 rc · 기록을 만들지 않음.
+  - **N150-N2** — §6-1 원점 = 4 행 `Stopwatch.StartNew()` · 마지막 관측 = 239 행 POST_WRITE snapshot (246 행은 출력) · 출력 · STOP · 프롬프트 복귀 뒤는 재지 않음 ·
+    POST_WRITE 줄은 `Stop-Transcript` 뒤라 사용자 화면 원문이 필요 (처음 판의 잘못된 원점 · 끝은 괄호로 남김).
+  - 문구: §5 "2 단계 사전 관측" → "1 단계 관측값을 2 단계 승인에 결속" · 채택 문구의 "§9-2" → "§9 표 2 번 및 §9-1".
+- 다음: **사용자 1 단계 승인** (승인 전 관측 0) → Codex 읽기 전용 사전 관측 · 새 폴더 기록 · manifest · 최종 2 단계 초안 → 멈춤. approval · release · USER_DECISION ·
+  runtime · token · native 실행은 그 뒤 별도 승인. 유지: PS01-16 내부 분기 UNOBSERVED · 실효 정책 · 실제 코어 UNVERIFIED · 전체 / 정상 gate INCOMPLETE · 기존 실패 기록.
