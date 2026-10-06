@@ -116,10 +116,23 @@ release 비활성 · 예산 초과 · 첫 `BHash` 오류 · `NATIVE_FATAL_RC0` �
 | 4 | MPH 보존 | 식별만 전달 · 수신 검토 끝까지 실행 기계에 유지 |
 | 5 | 실효 정책 | `UNVERIFIED` 를 명시 수용 (이전 native 와 같음) |
 
+### 9-1. 1 단계의 "쓰기 0" 이 뜻하는 것 · 기록 폴더 · 한도 (2026-10-06 Codex 질문에 답해 덧붙임)
+
+- **"쓰기 0" = 기존 코드 · prefs · 실행 경로를 바꾸지 않는다**는 뜻이다 — r2 root (`…/outputs/bmin_particle640_offline_preparation_20261004/`) · NORMAL480 기준 경로 ·
+  `b020_profile_unit_stages_20260927/` · `C:/Users/BML/.comsol/` · COMSOL 설치 · Codex 런타임 python 의 어떤 파일도 만들기 · 고치기 · 옮기기 · 지우기 · 권한 변경 0.
+  `future_run_001` · `future_parent_001` · `future_authorizations/*` 는 만들지 않는다.
+- **허용하는 쓰기는 새 기록 폴더 하나뿐:** `C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/bmin640_native150_preexec_20261006/`
+  — r2 root **밖** (entry 의 경로 검사 · `EXISTING_RUN_NO_RETRY` 와 섞이지 않게). 시작 때 이 폴더가 이미 있으면 쓰지 않고 멈춘다 (덮기 · 새 이름 우회 없음).
+- **넣는 것:** 사전 관측 원문 (명령 · 출력 · 시각 · 해시 — 경로 · 크기 · sha256 · prefs 의 security 줄 · 디스크 · RAM · 프로세스 목록) · 최종 승인 요청문 (2 단계 초안) ·
+  그 폴더의 manifest. **넣지 않는 것:** 기준 CSV · MPH · r2 소스 등 다른 파일의 사본 (해시만) · approval / token / runtime / USER_DECISION / VALIDATION_RELEASE.
+- **1 단계 한도:** 읽기 전용 명령만 (해시 · 목록 · 속성 · 텍스트 읽기 · `df` 류 · 프로세스 목록) · COMSOL · 부모 · entry · python 실행본 · 동봉 스크립트 실행 0 · 네트워크 0 ·
+  폴더 크기 ≤ 50 MB · 벽시계 ≤ 1,800 s · 한 번 (같은 관측의 반복 · 덮어쓰기 없음 — 다시 하려면 새 폴더 이름으로 새 승인).
+- r2 바이트가 root 에 없거나 v1 · r1 바이트와 충돌하면 **고치지 않고 기록만** 하고, 배치 작업은 2 단계 승인 항목으로 따로 적는다.
+
 **채택 문구 (이대로 또는 고쳐서):**
 
 > B-min r2 native 150 s 의 1 단계를 이 문서 (`bms-balancing/docs/COMSOL_BMIN640_R2_NATIVE150_APPROVAL_REQUEST_20261006.md`) 의 범위로 승인합니다. Codex 는
-> 실행 기계에서 §9-2 의 읽기 전용 사전 관측만 하고, 그 결과를 붙인 최종 승인 요청문을 만들어 주세요. approval / token / runtime · `future_authorizations/*` 생성과
+> 실행 기계에서 §9-2 의 읽기 전용 사전 관측만 하고 (쓰기는 §9-1 의 새 기록 폴더 하나 · 그 한도 안), 그 결과를 붙인 최종 승인 요청문을 만들어 주세요. approval / token / runtime · `future_authorizations/*` 생성과
 > COMSOL 실행은 최종 승인 뒤에만 합니다. 예산은 §6 그대로 (전체 10,500 s · 연장 없음 · 1 회), 실효 정책 UNVERIFIED 를 수용하고, 결과 MPH 는 식별만 보내고 수신
 > 검토가 끝날 때까지 지우지 않습니다.
 
