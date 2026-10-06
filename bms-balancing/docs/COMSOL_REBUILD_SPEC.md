@@ -4118,3 +4118,12 @@ gate INCOMPLETE · 실효 정책 UNVERIFIED · native 미승인 · 게이트 리
   과 비교. 작은 차이가 전체 공간 수렴 · 480 s 후반 정확도를 보이지는 않는다.
 - 다음 = **사용자 최종 (2 단계) 승인** 하나. 회신의 `FINAL_NATIVE150_APPROVAL_DRAFT_KO.md` 는 **미채택 초안**이다 (수신 · 보존은 승인이 아님). 한도: 부모 전체 10,500 s
   (사전 입력 180 · compile+batch 9,000 · 정리 120 · 분석 900 · 로컬 전달 300) + 포장 별도 1,800 s · 1 회. 두 challenge 는 사용자 직접 입력.
+
+## 67. native 150 s **2 단계 사용자 최종 승인** · 실행 기기 전달문 (2026-10-06 · 이 저장소 실행 0)
+
+- 사용자 채택 (2026-10-06 채팅 원문): "COMSOL: 최종 승인 초안을 채택할지, 채택한다면 실행 기기 Codex에 전달. 승인이야 관련해서 프롬프트 줘봐".
+- 채택 문구 = §66 묶음의 `FINAL_NATIVE150_APPROVAL_DRAFT_KO.md` (sha256 `bb0a16bd709c9687a3a69aed789790f1d9caa64b47dd344d967a92f08e0aa10e`) "사용자 채택용 문구" 6 문단을 바이트 그대로 옮겼다.
+  범위: 고정 R2 manifest `4cdca2e6…` · run_id `bmin_particle640_candidate_001` · 정책 무변경 · fresh0→150 s · 입자 640/640 · compile / batch / solve 각 ≤ 1 · retry 0 · 부모 10,500 s
+  (180 / 9,000 / 120 / 900 / 300) · 포장 별도 1,800 s · 1 회 · challenge 둘은 사용자 직접 입력 · 결과 MPH 보존.
+- 전달문: `docs/COMSOL_NATIVE150_SEND_TO_EXECUTION_CODEX_20261006.md` (사용자가 붙여 보냄). 승인 파일 (USER_DECISION · VALIDATION_RELEASE · `bmin640_001.json`) 은 **실행 기기**가 근거 SHA 에 결속해 만든다 — 이 저장소는 만들지 않는다.
+- 다음: 실행 기기 결과 묶음 수신 → 보존 → 검토 (native_completion · evidence_validity · mesh_comparison 구분).
