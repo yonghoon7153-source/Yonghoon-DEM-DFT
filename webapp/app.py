@@ -411,6 +411,25 @@ def microshort():
     return render_template("microshort.html", active="microshort")
 
 
+@app.route("/microshort/summary")
+def microshort_summary():
+    """마이크로 쇼츠 — 처음부터 B-min 150 s 종결 (원문 §69) 까지 **한 페이지 요약**. (2026-10-06)
+
+    `/microshort` (인계용 · §30 까지) 를 대신하지 않는다. 같은 규율: 숫자는 원문
+    `bms-balancing/docs/COMSOL_REBUILD_SPEC.md` 와 보존 묶음의 사본 · 경고를 떼지 않는다 · 비유 없음.
+    PDF 는 `/microshort/summary.pdf` (이 화면의 headless Chromium 인쇄 사본 — `make_microshort_pdf.sh`).
+    """
+    return render_template("microshort_summary.html", active="microshort_summary")
+
+
+@app.route("/microshort/summary.pdf")
+def microshort_summary_pdf():
+    """요약 화면의 PDF 사본을 파일로 내려준다 (`static/pdf/` 밖은 서빙하지 않는다)."""
+    return send_from_directory(os.path.join(app.root_path, "static", "pdf"), "microshort_summary.pdf",
+                               as_attachment=True, download_name="microshort_summary.pdf",
+                               mimetype="application/pdf")
+
+
 @app.route("/trust")
 def trust():
     return render_template("trust.html", active="trust",

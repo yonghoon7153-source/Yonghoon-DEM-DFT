@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+{% block title %}마이크로 쇼츠 — 지금까지 한 페이지 요약{% endblock %}
+{% block content %}
+{# 2026-10-06 신설 (사용자 요청 "마이크로쇼츠 관련해서 지금까지 진행해왔던거 … 한 페이지로 · pdf 로도").
+   `/microshort` (인계용 · 원문 §30 까지 · 1,100 줄) 를 대신하지 않는다 — 처음부터 B-min 150 s 종결까지를 한 장에 모은
+   **요약**이고, 자세한 근거는 `/microshort` 와 원문 `bms-balancing/docs/COMSOL_REBUILD_SPEC.md` 에 있다.
+
+   ⚠ 규율 (`/microshort` · `/alphabeta` 와 같다)
+   1. **숫자를 여기서 새로 만들지 않는다.** 값은 원문 각 절과 보존 묶음의 사본이다 (하드룰 4 — 인용 정본은 그쪽).
+      B-min 150 s 결과 (2026-10-07 표기 회신 두 건) 는 원문 §68 · §69 와 보존 묶음에서 온다.
+   2. **경고를 떼지 않는다.** "수용" 은 전부 수신 검토자 판정의 사본이고, 범위 문장을 같이 옮긴다.
+   3. **비유를 쓰지 않는다.**
+   4. PDF 파일 (`static/pdf/microshort_summary.pdf`) 은 이 화면을 headless Chromium 으로 인쇄한 사본이다 —
+      이 템플릿을 고치면 `webapp/make_microshort_pdf.sh` 로 다시 만든다. #}
+<header class="phead phead-pipe">
+  <p class="eyebrow">2026-10-06 작성 · COMSOL 갈래 하나만 · 원문 §1 – §69 요약 · 수치는 원문의 사본</p>
+  <h1>마이크로 쇼츠 — 지금까지 한 페이지 요약</h1>
+  <p class="lead">다른 팀의 마이크로 쇼츠 모델 (분리막에 전자 전도를 넣은 1D full-cell DFN) 을 <b>COMSOL 6.3 에서 다시 짓고</b>,
+    그 해를 믿을 수 있는지 <b>하나씩 범위를 정해 점검해 온</b> 기록이다. 결론부터 —
+    <b>계산 결과를 확보하고 한정 점검하는 단계는 마무리됐고, 이제 연구 질문과 실험에 연결할 차례다.</b>
+    다만 이것은 <b>실제 마이크로 쇼츠를 재현했다거나 실험과 일치한다는 뜻이 아니다</b> — 유한 microshort 조건 · 실험 대응 ·
+    전체 수렴은 지금까지의 수용 범위 밖이고, 정상 전체 gate 는 <b>INCOMPLETE</b> 다.</p>
+  <p class="pipe-p"><a class="btn btn-primary" href="/microshort/summary.pdf" download="microshort_summary.pdf">
+    <svg class="ic" aria-hidden="true"><use href="#i-download"></use></svg>PDF 파일 내려받기</a>
+    &nbsp;<a class="btn" href="/microshort">자세한 인계용 화면 (원문 §30 까지)</a></p>
+</header>
+
+<!-- ══ 1 ══════════════════════════════════════════════════════════════ -->
+<section class="pipe-sec">
+  <h2 class="pipe-h"><span class="pipe-n">1</span> 지금 어디인가 — 세 줄</h2>
+  <div class="pg-tablewrap">
+    <table class="pg-table is-prose">
+      <thead><tr><th>구분</th><th>내용</th></tr></thead>
+      <tbody>
+        <tr><td><b>확보한 것</b> (모두 한정 수용)</td><td>정상조건 0–480 s 저장 결과와 전압 상승 분석 · 0–30 s 창의 rtol 민감도 · 120–150 s 창의 입자 반경 격자 민감도 (B-min · 최종 검토 종결)</td></tr>
+        <tr><td><b>말할 수 없는 것</b></td><td>실제 마이크로 쇼츠 재현 · 실험과의 일치 · 유한 σ (microshort) 조건 검증 · 전체 시간 / 공간 수렴</td></tr>
+        <tr><td><b>다음</b></td><td>기존 결과를 정리하고 실험의 정상 / 단락 조건과 모델을 대응시키는 단계. 새 계산이 필요하면 그 질문과 범위를 <b>먼저 따로</b> 정한다 — 960 s 자동 연장은 없다</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="plain">
+    <p class="plain-t">쉬운 말로</p>
+    <p>모델을 다시 지어서 정상 조건에서 480 초까지 계산했고, 계산 설정 두 가지 (시간 적분 허용오차 · 입자 안쪽 격자) 를 바꿔도
+      정해 둔 시간 창 안에서는 결과가 거의 같다는 것까지 확인했다. 아직 실제 단락 상태를 계산한 적은 없고, 실험 자료와 비교한 적도 없다.</p>
+  </div>
+</section>
+
+<!-- ══ 2 ══════════════════════════════════════════════════════════════ -->
+<section class="pipe-sec">
+  <h2 class="pipe-h"><span class="pipe-n">2</span> 연대표 — 처음부터 오늘까지</h2>
+  <p class="pipe-p">"판정" 칸은 수신 검토자의 판정 사본이다 (우리 검증 아님). 오른쪽 칸은 원문 <code>COMSOL_REBUILD_SPEC.md</code> 의 절 번호.</p>
+  <div class="pg-tablewrap">
+    <table class="pg-table is-prose">
+      <thead><tr><th>날짜</th><th>무슨 일</th><th>판정 · 상태</th><th>원문</th></tr></thead>
+      <tbody>
+        <tr><td>09-13</td><td>재구축 명세 작성. <b>우리가 틀렸던 것:</b> 원본 모델의 “확정 버그” M1 을 철회 — 원인은 모델이 아니라 우리 추출 도구의 오독</td><td>M1 철회</td><td>머리 · §0</td></tr>
+        <tr><td>09-13</td><td>6.3 에서 5 s 짧은 검증. 초기 OCV 2.1653333265 V 가 독립 계산과 일치. 단 Vmax 4.25 V 가 OCP 표의 평형 상한 4.1856 V 와 충돌</td><td>제한된 검증 뒷받침 · 전체 프로토콜 보류</td><td>§8</td></tr>
+        <tr><td>09-13</td><td>사전 진단 — 양극 표면 조성이 표 범위를 벗어나 정지. 격자 150/20 → 300/40 차 2.041557 mV (1 mV 초과)</td><td><code>INCOMPLETE_RANGE_STOP</code> · 전체 운전 보류</td><td>§9</td></tr>
+        <tr><td>09-13 – 15</td><td>격자 · 시간 · 코어 아홉 축 점검. 입자 반경 160 → 320 에서 0.6170341087208 mV 로 처음 기준 안</td><td>축마다 “이 표본에서” 기준 충족 · 전체 수렴 아님</td><td>§10 – §19</td></tr>
+        <tr><td>09-15</td><td><b>결과 꺼내기에서 막힘</b> — 시간 적분은 5 s 까지 끝났는데 후처리 실패 · API 복구는 파일 정책에 막힘 · 화면에서 일부만 회수</td><td>후처리 미완 · 부분 회수</td><td>§20 – §22</td></tr>
+        <tr><td>09-15 – 24</td><td>저장 해만 읽는 후처리 경로 준비 → 독립 검토에서 막힘 셋 (R1 · R2 · R3) → 보완 · 제한 배치</td><td>B 단계 NO-GO → C1 · C3 닫힘 · C2 미완</td><td>§23 – §25</td></tr>
+        <tr><td>09-28</td><td>고정 저장 해 B020 (0–5 s) 수치 회수 · 표본 비교 · 시각화 · 전압 분해</td><td>회수 · 비교 한정 수용 · 시각화 · 분해 수용</td><td>§26</td></tr>
+        <tr><td>09-28</td><td><b>1198 시험</b> — 보호식 (guard) 이 실제로 계산을 멈추는지 native 로 한 번</td><td>발동 · 발동 전 표본 비교 한정 수용</td><td>§27 – §29</td></tr>
+        <tr><td>09-28 – 30</td><td>정상조건 fresh 0 → 30 s (보완 2 건 뒤)</td><td><code>NORMAL_30S_DIAGNOSTIC_ACCEPTED</code></td><td>§30 – §32</td></tr>
+        <tr><td>09-30</td><td>0 → 60 · 120 · 240 s 순서대로</td><td>각각 한정 진단 수용</td><td>§33 – §38</td></tr>
+        <tr><td>10-01</td><td>0 → 480 s. <b>사용자 결정: 시간 연장은 여기서 멈춤 (960 s 없음)</b></td><td><code>ACCEPTED_NORMAL480_LIMITED_DIAGNOSTIC</code></td><td>§39</td></tr>
+        <tr><td>10-03</td><td>저장된 0–480 s 결과 분석</td><td><code>ACCEPTED_SAVED_ANALYSIS_0_480</code></td><td>§40</td></tr>
+        <tr><td>10-04</td><td>0–30 s 에서 rtol 1e-6 → 1e-7</td><td><code>ACCEPTED_LIMITED_RTOL30_SENSITIVITY</code></td><td>§41</td></tr>
+        <tr><td>10-04 – 05</td><td>실험 대응표 · 자료 요청문 · B-min 범위 v1 → v2. “오차 바닥” 표현을 “해당 설정 간 관측 차이” 로 정정. 자료 요청: 발송 알림 (§50) 뒤 사용자가 A0 를 닫음 (“요청은 못해 이건 닫고” · §58)</td><td>v2 수용 · A0 닫힘 · 새 계산 0</td><td>§42 – §51 · §58</td></tr>
+        <tr><td>10-04 – 06</td><td>B-min 오프라인 후보 v1 → r1 → r2 · 변경부 한정 검증 (실패 기록 보존 · retry3 · PS01-16 처리)</td><td><code>LIMITED_VALIDATION_CLOSED_WITH_DOCUMENTED_SCOPE</code></td><td>§45 – §62</td></tr>
+        <tr><td>10-06</td><td>native 150 s 두 단계 승인 — 1 단계 (읽기 전용 사전 관측) · 2 단계 (사용자 최종 승인)</td><td>배치 · 사전 관측 수용 → 최종 승인</td><td>§63 – §67</td></tr>
+        <tr><td>10-07 (회신 표기)</td><td><b>B-min native 150 s 실행 · 결과 검토 · 전달 보존 종결</b></td><td><code>LIMITED_NATIVE150_REVIEW_CLOSED_WITH_DOCUMENTED_SCOPE</code></td><td>§68 · §69</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ══ 3 ══════════════════════════════════════════════════════════════ -->
+<section class="pipe-sec">
+  <h2 class="pipe-h"><span class="pipe-n">3</span> 확보한 결과 — 범위 문장과 함께</h2>
+  <p class="pipe-p">각 줄의 “범위” 를 떼고 숫자만 인용하면 틀린 문장이 된다.</p>
+  <div class="pg-tablewrap">
+    <table class="pg-table is-prose">
+      <thead><tr><th>결과</th><th>범위 (원문)</th><th>핵심 수치 (원문 사본)</th><th>원문</th></tr></thead>
+      <tbody>
+        <tr><td><b>1198 guard 실제 발동</b></td><td>step 뒤 발동과 중단을 확인한 것 — 연속시간 임계 통과 시점 · Newton trial 보호가 아니다. 1198 은 의도적 시험 임계값</td><td>1.75 s 최소 1198.0459471016604 mol/m³ (guard 0) → 1.8 s 1197.990365419921 (guard 1) · 발동 전 922 시각 최대 ΔV 4.3e-15 V</td><td>§29</td></tr>
+        <tr><td><b>0–5 s 전압 분해 (B020)</b></td><td>대수적 기여는 인과 지배성 · 실험 타당성의 증명이 아니다</td><td>0 → 5 s: Eeq +123.562957037 · etaMid −2.772077151 · phiL +0.773850634 · 단자 전압 +121.564730521 mV</td><td>§26</td></tr>
+        <tr><td><b>NORMAL480</b> (fresh 0 → 480 s)</td><td>종료시간이 다른 실행의 공통 구간 재현성 — 격자 · 시간간격 수렴이나 실험 정확도 검증이 아니다</td><td>저장 5,740 시각 · NORMAL240 대비 최대 ΔV 6e-15 V · 전압 2.2306115890 → 3.1461077189 V (480 s)</td><td>§39</td></tr>
+        <tr><td><b>0–480 s 저장 분석 · 전압 분해</b></td><td>정상상태 도달 · 수치 수렴 · 물리 타당성은 서로 다른 질문 · 대수 분해는 독립 물리 원인의 증명이 아니다</td><td>전체 상승 +915.4961 mV = Eeq +922.2674 · etaMid −19.7011 · phiL +12.9298 mV (Eeq 중 N +916.3904 / P +5.8770 mV) · 360–480 s +60.3979 mV</td><td>§40</td></tr>
+        <tr><td><b>rtol 민감도</b> (0–30 s)</td><td>고정 모델 · 출력 · 물리 · 공간 해상도에서 rtol 1e−6 → 1e−7 변경에 따른 선언 관측량 차이가 사전 한도 안이라는 한정 질문</td><td>공통 1,196 시각 최대 |ΔV| 2.3812821772 µV · |Δx_surf| 3.9797189265e−8</td><td>§41</td></tr>
+        <tr><td><b>B-min native 150 s</b></td><td>고정 입력 · 입자 반경 격자 320/320 ↔ 640/640 · <b>120–150 s 창</b> · 요청 301 시각 × 전극별 241 좌표</td><td><code>NORMAL_150S_COMPLETED</code> (저장 2,447 시각 · guard 미발동) · <code>WITHIN_LIMITS_THIS_WINDOW</code>: 최대 전압 차 <b>0.0003449917063 mV</b> (한도 1 mV) · N / P 표면 조성 최대 차 1.1309035403e-8 / 3.3226834e-9 (한도 1e-4)</td><td>§68</td></tr>
+        <tr><td>(위 줄의 단서)</td><td><b>창 밖은 관측 전용 · 판정 아님</b></td><td>이른 시각 포함 공통 1,336 시각 최대 0.3081961318368 mV (0.0005 s) — “0–150 s 최대 0.000345 mV” 라고 쓰면 안 된다</td><td>§68</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="plain">
+    <p class="plain-t">쉬운 말로</p>
+    <p>표의 숫자는 “이 입력 · 이 시간 창에서 이 설정 하나를 바꿨을 때 결과가 얼마나 움직였나” 다. 0.000345 mV 는 120–150 초 창의 값이고,
+      계산 시작 직후에는 0.3 mV 까지 차이가 났다 (판정 대상이 아닌 관측). 두 숫자를 섞으면 안 된다.</p>
+  </div>
+</section>
+
+<!-- ══ 4 ══════════════════════════════════════════════════════════════ -->
+<section class="pipe-sec">
+  <h2 class="pipe-h"><span class="pipe-n">4</span> 아직 말할 수 없는 것 · 그대로 남은 한계</h2>
+  <div class="pg-tablewrap">
+    <table class="pg-table is-prose">
+      <thead><tr><th>항목</th><th>상태</th><th>원문</th></tr></thead>
+      <tbody>
+        <tr><td>정상 전체 gate</td><td><b>INCOMPLETE</b> — 그 뒤의 한정 수용들이 소급해 바꾸지 않는다</td><td>§21 · §66 · §69</td></tr>
+        <tr><td>전체 · 공간 수렴</td><td>미확립 — 5–120 s · 150–480 s 는 축 전부 미검증 · 120–150 s 도 물리 격자 축은 미검증 · 1 mV / 1e-4 는 비교 한도이지 수렴 인증선이 아니다</td><td>§41 · §42 · B-min v2 §2</td></tr>
+        <tr><td>실험 타당성 · 실제 마이크로 쇼츠 재현</td><td>미확립 — 대응표 v2 의 실험 칸은 “미확보” 또는 “간접”</td><td>§41 · §58 · 대응표 v2 §1</td></tr>
+        <tr><td><b>유한 σ (microshort) 조건</b></td><td><b>한 번도 실행하지 않았다</b> — 모델을 만든 이유인 정상 ↔ 단락 대비가 아직 없다</td><td>§40 · 계획 §0</td></tr>
+        <tr><td>실효 정책 · 실제 코어 사용</td><td><b>UNVERIFIED</b> (로그의 “16 cores” 는 실제 사용률이 아니다)</td><td>§29 · §32 · §66</td></tr>
+        <tr><td>PS01-16 내부 분기</td><td><b>UNOBSERVED</b> (밖으로 드러난 결과만 수용)</td><td>§61 · §62</td></tr>
+        <tr><td>연속 시공간 양수성</td><td>증명 아님 — guard 0 은 저장 시각 · 평가점에서만</td><td>§29 · §36</td></tr>
+        <tr><td>OCP 표 범위</td><td>CV 끝 · 12 h 휴지는 표 밖 · 평형 상한 4.185562 V ↔ 목표 4.25 V 미결 · 외삽 금지</td><td>§32</td></tr>
+        <tr><td>장시간 · 960 s</td><td>장시간 운전 미확립 · 960 s 없음 (사용자 결정)</td><td>§39</td></tr>
+        <tr><td>이번 종결이 승인하지 <b>않은</b> 것</td><td>새 계산 · 960 s 연장 · 결과 MPH 삭제 · 과거 기록 수정</td><td>§69</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ══ 5 ══════════════════════════════════════════════════════════════ -->
+<section class="pipe-sec">
+  <h2 class="pipe-h"><span class="pipe-n">5</span> 다음 — 실험과 연결하기</h2>
+  <p class="pipe-p">대응표 v2 (<code>COMSOL_EXPERIMENT_CORRESPONDENCE_v2_20261004.md</code>) 가 제안한 순서다. <b>잔차를 보기 전에</b> 비교 규칙을 고정한다.</p>
+  <div class="pg-tablewrap">
+    <table class="pg-table is-prose">
+      <thead><tr><th>단계</th><th>내용</th></tr></thead>
+      <tbody>
+        <tr><td>A1</td><td>자료가 오면 <b>식별만</b> — sha256 · 단위 · 시각 기준 · 기기 · 직전 이력. 모델과의 차는 계산하지 않는다</td></tr>
+        <tr><td>A2</td><td>비교 규칙을 차이를 보기 전에 커밋 — 정렬 (t=0 = 충전 시작 · 오프셋 / 배율 보정 없음 · 모델의 정확 저장 시각) · 구간 W0 [0,5] · W1 (5,30] · W2 (30,120] · W3 (120,240] · W4 (240,480] s · 지표 M1 점 차 · M2 구간 기울기 · M3 무부하 OCV → 충전 5 s 총 변화</td></tr>
+        <tr><td>A3</td><td>별도 승인 뒤 저장된 0–480 s 해로만 한 번 비교</td></tr>
+        <tr><td>쓸 수 있는 첫 문장</td><td>“어느 입력이 실측과 맞고 / 다르고 / 확인할 수 없는가” 까지. “모델이 실험과 맞는다” · “OCP 를 바꿔야 한다” 는 쓰지 않는다. 실험 저항에서 σ 를 자동 역산하지 않는다</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="pipe-note"><b>실험 자료 요청의 상태.</b> 원장 §50 에 발송 알림 (“보냈엉”) 이, §58 에 사용자의 A0 닫음 (“요청은 못해 이건 닫고”) 이
+    기록돼 있다 — 준비본 파일 머리의 “미발송” 표기와 엇갈린다. 다시 열면 새 절로 열고, 비교 구간 · 정렬 · 지표는 결과를 보기 전에 고정한다 (§58).</p>
+  <p class="pipe-p"><b>새 계산 후보</b> — 하나씩 질문과 범위를 먼저 정해 따로 승인한다 (이번 종결은 어느 것도 승인하지 않았다):
+    B-std (같은 창에서 물리 격자 300 → 600) · 유한 σ 조건 (A2 비교 창이 정해진 뒤) · 장시간 step 설계 대조 · OCP 범위 결정 (반쪽셀 OCP 교체 / Vmax 를 표 안으로 / 외삽을 별도 실험으로).</p>
+</section>
+
+<!-- ══ 6 ══════════════════════════════════════════════════════════════ -->
+<section class="pipe-sec">
+  <h2 class="pipe-h"><span class="pipe-n">6</span> 용어</h2>
+  <dl class="gloss">
+    <dt>native</dt><dd>실제 COMSOL 을 호출한 실행. 정적 대조 · 합성 시험 · stub 과 구분한다.</dd>
+    <dt>guard (보호식) · 1198</dt><dd>농도나 표면 조성이 말이 안 되는 범위로 가면 계산을 멈추는 StopCondition (step 뒤 평가). 1198 은 그것이 실제로 멈추는지 보려고 전해질 임계를 1198 mol/m³ 로 올린 시험이며 실제 운전 한계가 아니다.</dd>
+    <dt>rtol</dt><dd>시간 적분의 상대 허용오차. 기준 1e-6 · 민감도 시험 1e-7.</dd>
+    <dt>NORMAL30 … NORMAL480 · B020</dt><dd>NORMALxxx 는 정상 조건 (σ 1e-20 · 0.1C 충전) 을 t=0 부터 새로 계산한 0 → xxx s 진단. B020 은 먼저 고정해 둔 0–5 s 저장 해.</dd>
+    <dt>B-min</dt><dd>NORMAL480 을 기준으로 물리 격자 300 은 고정하고 입자 반경 격자만 320 → 640 으로 바꾼 한정 공간 민감도 시험. fresh 0 → 150 s 1 회 · 120–150 s 만 판정.</dd>
+    <dt>PS01-16</dt><dd>B-min r2 한정 검증의 PowerShell 사례 하나 — 30 자리 소수 정밀도 불일치가 INCOMPLETE 로 닫히는지. 외부 결과만 수용 · 내부 분기 UNOBSERVED.</dd>
+    <dt>한정 수용</dt><dd>수신 검토자가 적은 범위 안에서만 받아들였다는 판정. 실행 승인도 전체 검증도 아니다.</dd>
+    <dt>INCOMPLETE · UNVERIFIED · UNOBSERVED</dt><dd>판정이 끝나지 않음 · 확인되지 않음 · 관측되지 않음. 실패라는 뜻이 아니다.</dd>
+  </dl>
+</section>
+
+<p class="pipe-note">출처: <code>bms-balancing/docs/COMSOL_REBUILD_SPEC.md</code> (§1 – §69) · <code>COMSOL_EXPERIMENT_CORRESPONDENCE_v2_20261004.md</code> ·
+  <code>COMSOL_NEXT_PLAN_20261004.md</code> · <code>COMSOL_BMIN_SCOPE_v2_20261004.md</code> · 보존 묶음 <code>reviews/r14_repros/codex63/</code>.
+  이 화면의 숫자는 사본이며 인용 근거가 아니다.</p>
+{% endblock %}
