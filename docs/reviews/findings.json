@@ -7547,6 +7547,16 @@
       "verified_scope": "통합시험 49/49 중 실 off/e_on/ei_on/rxn_on/joule_on/e_zero 6 종 manifest 분류 검사 포함"
     },
     {
+      "id": "RINT-21",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "claude (Rint G2 설계 초안 v2 작성 중 · 코드 판독 · 10-06 밤)",
+      "opened_in": "docs/reviews/contact_resistance_pipeline_draft_v2_20261006.md",
+      "title": "r1 면 규칙의 `AM_S|AM_P` 상 경계도 RINT-06 과 같은 위치 결함 — 혼합 쌍 브리지가 AM_P sid 로 찍혀 계면이 실제 접촉면에서 벗어난다",
+      "note": "코드 판독뿐 · 크기 미측정.  r1 = 탐침 전용이라 생산 산출 영향 없음.  1저자 비준 10-06 밤 (*\"Rint 비준이야\"* — 초안 §5-2 D15 = 등재).  ①′ v2 의 위치 규약 (근축면) 이 생산 경로를 대체하고, r1 은 탐침 전용으로 남긴다 — Codex G2 재검토 (docs/reviews/codex_rint_g2_request_20261006.md) 에 함께 올림."
+    },
+    {
       "id": "LHS-29",
       "severity": "P1",
       "status": "open",
