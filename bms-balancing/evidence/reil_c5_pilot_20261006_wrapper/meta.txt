@@ -1,0 +1,12 @@
+argv: /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/bin/python -I scripts/reil_c5_pilot.py measure --venv /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv --out evidence/reil_c5_pilot_20261006 --xlsx /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/data_dl/LFP_Data.xlsx --util /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/data_dl/util_LFP.py --approval bms-balancing/docs/REIL_PREREQUISITES_STATUS_20261004.md §30 (사용자 2026-10-06 '다 승인')
+cwd: /home/user/Yonghoon-DEM-DFT/bms-balancing
+start_utc: 2026-10-06T19:20:42Z
+head_start: b76418680550c1a16a23455e16bf45c648b6f7af
+nproc: 4
+df_start: /dev/vda       270553174016 32138760192 7642128384  81% /
+end_utc: 2026-10-06T19:21:54Z
+head_end: b76418680550c1a16a23455e16bf45c648b6f7af
+external_rc: 0
+wall_s: 71.71
+df_end: /dev/vda       270553174016 32139304960 7641583616  81% /
+du_out: 191753	evidence/reil_c5_pilot_20261006

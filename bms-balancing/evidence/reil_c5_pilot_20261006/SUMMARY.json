@@ -1,0 +1,68 @@
+{
+ "budget_ratio_of_completed": 0.0,
+ "by_state": {
+  "COMPLETED": 128,
+  "NOT_STARTED": 0,
+  "RETURNED_REEVAL_INTERRUPTED": 0,
+  "STARTED_INTERRUPTED": 0
+ },
+ "censored_elapsed_s": [],
+ "censored_note": "중단 실행의 경과는 우측 검열 — 완료 분포에 섞지 않는다",
+ "completed": 128,
+ "completed_local_error": 0,
+ "completed_without_local_error": 128,
+ "cpu_completed_s": {
+  "max": 5.238191542999999,
+  "median": 1.630644449,
+  "min": 0.4430532350000007,
+  "n": 128,
+  "sum": 231.89559875900002
+ },
+ "evals_completed": 46741,
+ "interrupted": 0,
+ "invalid_ratio_of_completed": 0.0,
+ "load_imbalance_s": 6.577332548997219,
+ "n_planned": 128,
+ "not_started": 0,
+ "note": "작업자 관측 wall · CPU · 점유 · 부하 불균형 — 직렬 대조가 없어 speedup · 병렬 효율이라 부르지 않는다",
+ "occupancy": {
+  "0": 0.8930385759750733,
+  "1": 0.9969744736387365,
+  "2": 0.8958405341394454,
+  "3": 0.9907376533544116
+ },
+ "wall_completed_s": {
+  "max": 5.318193908999092,
+  "median": 1.6578171639994252,
+  "min": 0.44960893700044835,
+  "n": 128,
+  "sum": 238.9924658029886
+ },
+ "wall_local_error_s": {
+  "n": 0
+ },
+ "wall_per_eval_s": 0.00511312265041374,
+ "wall_s": 63.28258760300014,
+ "workers": {
+  "0": {
+   "busy_s": 56.51379191700107,
+   "cpu_s": 54.951819268,
+   "runs": 32
+  },
+  "1": {
+   "busy_s": 63.09112446599829,
+   "cpu_s": 61.47388094200003,
+   "runs": 32
+  },
+  "2": {
+   "busy_s": 56.69110707999789,
+   "cpu_s": 54.64059918000001,
+   "runs": 32
+  },
+  "3": {
+   "busy_s": 62.696442339991336,
+   "cpu_s": 60.82929936899999,
+   "runs": 32
+  }
+ }
+}
