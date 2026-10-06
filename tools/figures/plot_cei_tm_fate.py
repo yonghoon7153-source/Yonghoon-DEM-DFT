@@ -29,6 +29,7 @@ CEI 실험 쪽 1저자가 원고를 두 주장으로 닫으려 한다 — ① TM
   python3 tools/figures/plot_cei_tm_fate.py --nd         # Nd₂O₃@LPSCl1.6 판 + 4.3 V 농도 판 (2026-10-06)
   python3 tools/figures/plot_cei_tm_fate.py --simple     # 한 장 요약 (4.3 V · 양극 셋 · Nd 없음 / x 0.02 / x 0.10)
   python3 tools/figures/plot_cei_tm_fate.py --ncm        # NMC811 만 · 금속별(Ni·Co·Mn) 인산염 % 표 그림
+  python3 tools/figures/plot_cei_tm_fate.py --story      # ⭐ 주 서술 그림: 4단계 도식 + NMC811 Ni 인산염 % (2026-10-06)
   python3 tools/figures/plot_cei_tm_fate.py --selftest   # 음성 경로 포함
 
 --nd 모드 (2026-10-06 · 사용자 "Nd₂O₃@LPSCl1.6 버전으로도" · "얼마나 줄어드는지")
@@ -550,6 +551,89 @@ def main_ncm():
     return 0
 
 
+OUT_STORY_PNG = REPO / "db/properties/cei_figs/cei_story_p_pulls_ni_nd_takes_p.png"
+OUT_STORY_CSV = REPO / "db/properties/cei_figs/cei_story_p_pulls_ni_nd_takes_p.csv"
+STORY_STEPS = [
+    ("1", "High voltage oxidizes the electrolyte",
+     "P in LPSCl (PS$_4$) meets cathode oxygen\nand turns into phosphate (PO$_x$)."),
+    ("2", "Phosphate pulls cathode metal out",
+     "Phosphate needs a metal partner: Ni (and Mn)\nfrom NMC811 becomes metal phosphate."),
+    ("3", "Nd takes part of the P first",
+     "Nd forms NdP$_5$O$_{14}$, so less P is left\nto pull Ni into phosphate."),
+    ("4", "NdP$_5$O$_{14}$ stays at the interface",
+     "An Nd-containing CEI layer\n(compare with XPS Nd 3d / P 2p)."),
+]
+
+
+def main_story():
+    """⭐ CEI 주 서술 그림 (2026-10-06 · 사용자 "위 설명을 주요하게 가져가줘 · 이정도면 이해할 수 있어").
+    왼쪽 = 4 단계 도식 (P 가 양극 금속을 끌고 간다 → Nd 가 P 를 먼저 잡는다 → Nd 함유 CEI).
+    오른쪽 = NMC811 의 **Ni** 가 인산염이 되는 % (Nd 없음 = Li 맞춘 대조군 vs Nd₂O₃ x = 0.02).
+    Mn 은 늘 인산염 · Co 는 늘 황화물이라 Nd 로 바뀌는 것은 Ni 뿐이다 (--ncm 표)."""
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    from matplotlib.patches import FancyBboxPatch, FancyArrowPatch
+    sys.path.insert(0, str(REPO / "tools/figures"))
+    from house_style import INK, MUT, ELEM, apply_axes
+    t = ncm_table()
+    fig = plt.figure(figsize=(13.0, 5.2))
+    gs = fig.add_gridspec(1, 2, width_ratios=[1.0, 1.15], wspace=0.12)
+    a0 = fig.add_subplot(gs[0]); a0.axis("off"); a0.set_xlim(0, 1); a0.set_ylim(0, 1)
+    a0.set_title("(a) The story in four steps", loc="left", fontsize=11.5, color=INK)
+    ys = [0.86, 0.62, 0.38, 0.14]
+    edge = [ELEM["S"], ELEM["P"], ELEM["Nd"], ELEM["Nd"]]
+    for (num, head, body), y, ec in zip(STORY_STEPS, ys, edge):
+        a0.add_patch(FancyBboxPatch((0.03, y - 0.095), 0.94, 0.19, boxstyle="round,pad=0.01,rounding_size=0.02",
+                                    fc="white", ec=ec, lw=1.6))
+        a0.text(0.075, y, num, ha="center", va="center", fontsize=15, fontweight="bold", color=ec)
+        a0.text(0.13, y + 0.04, head, ha="left", va="center", fontsize=10.6, fontweight="bold", color=INK)
+        a0.text(0.13, y - 0.035, body, ha="left", va="center", fontsize=9.0, color=INK, linespacing=1.25)
+    for y0, y1 in zip(ys[:-1], ys[1:]):
+        a0.add_patch(FancyArrowPatch((0.5, y0 - 0.097), (0.5, y1 + 0.097), arrowstyle="-|>", mutation_scale=12,
+                                     color=MUT, lw=1.2))
+    a1 = fig.add_subplot(gs[1])
+    rows = []
+    w = 0.38
+    for i, v in enumerate(VOLTS):
+        c0 = t.get(("liMatch002", v), {}).get("Ni"); c1 = t.get(("ndP002", v), {}).get("Ni")
+        v0 = None if c0 is None else 100 * c0["phosphate"]; v1 = None if c1 is None else 100 * c1["phosphate"]
+        if v0 is not None:
+            a1.bar(i - w / 2, v0, width=w * 0.95, color="#9ca3af", zorder=2, label="No Nd" if i == 0 else None)
+            if v0 >= 0.5:
+                a1.text(i - w / 2, v0 + 0.4, f"{v0:.0f}", ha="center", va="bottom", fontsize=9, color=INK)
+        if v1 is not None:
+            a1.bar(i + w / 2, v1, width=w * 0.95, color=ELEM["P"], zorder=2,
+                   label="Nd$_2$O$_3$@LPSCl1.6 (x = 0.02)" if i == 0 else None)
+            if v1 >= 0.5:
+                a1.text(i + w / 2, v1 + 0.4, f"{v1:.0f}", ha="center", va="bottom", fontsize=9,
+                        color=ELEM["P"], fontweight="bold")
+        rows.append({"cathode": "NMC811", "metal": "Ni", "voltage_V": v,
+                     "Ni_to_phosphate_pct_noNd_Li_matched": "" if v0 is None else round(v0, 2),
+                     "Ni_to_phosphate_pct_Nd2O3_x0.02": "" if v1 is None else round(v1, 2),
+                     "delta_pp": "" if (v0 is None or v1 is None) else round(v1 - v0, 2),
+                     "Ni_phosphate_phase_noNd": "" if c0 is None else " ".join(c0["phases"]),
+                     "Ni_phosphate_phase_Nd": "" if c1 is None else " ".join(c1["phases"])})
+    a1.axvspan(1.5, len(VOLTS) - 0.5, color="#f5f3ff", zorder=0)
+    a1.text(1.6, 25.2, "steps 1-3 happen here", fontsize=8.8, color=ELEM["P"], va="top")
+    a1.text(0.5, 1.2, "Ni stays\nas sulfide", ha="center", va="bottom", fontsize=8.8, color=MUT)
+    a1.set_xticks(range(len(VOLTS)), [f"{v:g}" for v in VOLTS]); a1.set_ylim(0, 26)
+    apply_axes(a1, xlabel="Applied voltage (V vs. Li/Li$^+$)", ylabel="Ni from NMC811 that becomes phosphate (%)",
+               fontsize=10.5)
+    a1.set_title("(b) NMC811: Ni pulled into phosphate, with and without Nd", loc="left", fontsize=11.5, color=INK)
+    a1.legend(frameon=False, fontsize=9, loc="upper left")
+    fig.text(0.5, -0.03,
+             "In NMC811 only Ni changes: Mn always ends up as phosphate and Co always as sulfide. Ni kept out of phosphate "
+             "becomes NiS$_2$, not cathode again.\nNo Nd = Li-matched Nd-free control. Most favorable cathode | electrolyte "
+             "reaction, 0 K grand-potential hull (MP GGA/GGA+U); a product channel, not a degradation rate.",
+             ha="center", va="top", fontsize=8.3, color=MUT)
+    fig.savefig(OUT_STORY_PNG, dpi=300, bbox_inches="tight"); plt.close(fig)
+    with OUT_STORY_CSV.open("w", newline="") as f:
+        wr = csv.DictWriter(f, fieldnames=list(rows[0])); wr.writeheader(); wr.writerows(rows)
+    print(f"→ {OUT_STORY_PNG.relative_to(REPO)}\n→ {OUT_STORY_CSV.relative_to(REPO)}")
+    return 0
+
+
 def main_simple():
     """한 장 요약 (2026-10-06 · 사용자 "그림이 전혀 이해가 안돼").
     4.3 V · LiCoO2 · LiNiO2 · NMC811 에서 '양극 금속 중 인산염이 되는 몫' 막대 셋:
@@ -607,6 +691,8 @@ def main_simple():
 
 
 if __name__ == "__main__":
+    if "--story" in sys.argv:
+        raise SystemExit(main_story())
     if "--ncm" in sys.argv:
         raise SystemExit(main_ncm())
     if "--simple" in sys.argv:

@@ -1,0 +1,7 @@
+cathode,metal,voltage_V,Ni_to_phosphate_pct_noNd_Li_matched,Ni_to_phosphate_pct_Nd2O3_x0.02,delta_pp,Ni_phosphate_phase_noNd,Ni_phosphate_phase_Nd
+NMC811,Ni,2.5,0.0,0.0,0.0,,
+NMC811,Ni,3.0,0.0,0.0,0.0,,
+NMC811,Ni,3.5,7.44,6.01,-1.44,Ni(PO3)2,Ni(PO3)2
+NMC811,Ni,4.0,22.8,21.03,-1.76,Ni(PO3)2,Ni(PO3)2
+NMC811,Ni,4.3,13.25,10.08,-3.16,Ni(PO3)2,Ni(PO3)2
+NMC811,Ni,4.5,7.51,8.1,0.59,NiP4O11,NiP4O11

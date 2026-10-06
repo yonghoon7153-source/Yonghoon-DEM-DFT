@@ -1,7 +1,7 @@
 ---
 title: Nd 원고 논지 확정안 — "고전압 안정성 개선" 대신 "고전압 계면 분해 산물의 재분배" 로 (09-30 · 외부 리뷰 회신 CM — 종전 "양극 계면 열화 억제" 철회)
 date: 2026-09-18
-updated: 2026-09-30
+updated: 2026-10-06
 tags: [cei, nd, manuscript, framing, high-voltage, interphase]
 status: 확정 — 사용자 승인 2026-09-29 "ㅇㅇ si 쪽으로 가는게 좋을듯 · 둘다 해줘" (원고 틀 · 그림 순서) · 승인 전에 x = 0.02 원장과 어긋난 7 곳을 고쳤다 (⚠ 09-29 표시) · ⚠ 2026-09-30: CEI 1저자는 실험 쪽 다른 사람 — 이 카드는 그 사람의 검토 전 (CEI 페이지 송부) · 2026-09-30 외부 리뷰 회신 CM 이행(논지·원고 문구·9 할·창 문장 범위 축소)
 confidence: medium
@@ -16,6 +16,28 @@ targetVenue:
 
 > ⚠ **2026-09-30 정정 — 이 카드의 "1저자" 는 사용자(계산 담당)였다.** CEI 트랙의 1저자는 **실험 쪽 다른 사람**이다 (CLAUDE.md 트랙 목록).
 > 09-17~29 에 CEI 를 '우리 DFT' 로 묶어 "1저자 = 사용자" 로 적었다 — 아래 승인·판단은 전부 **사용자 결정**이고, 1저자 검토는 아직이다.
+
+## ⭐ 쉬운 스토리 — 주 서술 (사용자 2026-10-06 *"위 설명을 주요하게 가져가줘 · 이정도면 이해할 수 있어"*)
+
+> 트랙 CEI · 1저자 = 실험 쪽 다른 사람 · 아래는 **사용자(계산 담당)** 가 고른 설명 순서다 (1저자 검토 전).
+> 아래 Thesis 이하의 정밀 논지·반론·금지는 그대로 유효하다 — 이 절은 그것을 **사람이 처음 읽는 순서**로 바꾼 것이다.
+> 그림: `db/properties/cei_figs/cei_story_p_pulls_ni_nd_takes_p.png` (+ CSV · `tools/figures/plot_cei_tm_fate.py --story`).
+
+**한 줄**: 고전압에서 전해질의 인(P)이 양극 금속을 끌어가는데, Nd 가 그 P 를 일부 먼저 가로챈다.
+
+1. **고전압에서 전해질이 분해된다.** LPSCl 의 P 는 원래 S 와 묶여 있다(PS₄). 양극 표면에서 산화되면 양극의 O 와 만나 인산염(PO_x)이 된다.
+2. **그 인산염이 양극 금속을 끌고 간다.** 인산염이 되려면 짝 금속이 필요하고, 양극의 Ni·Mn 이 그 짝이 된다 — 실험 주장 ① "TM 이 인산염과 반응해 양극이 열화된다" 의 계산 쪽 근거. NMC811 에서 Ni 는 3.0 V 까지 전부 황화물이고 3.5 V 부터 일부가 Ni 인산염이 된다 (Mn 은 늘 인산염 · Co 는 늘 황화물 — `cei_tm_fate_nmc811_by_metal.png`).
+3. **Nd 가 있으면 Nd 가 P 를 먼저 잡는다.** Nd 는 강한 인산염 형성체라 P 일부를 NdP₅O₁₄ 로 가져가고, 그만큼 Ni 인산염이 준다 (NMC811 4.3 V · Ni 의 인산염 몫 13 → 10 % · x = 0.02 · Li 맞춘 대조군 기준).
+4. **그 NdP₅O₁₄ 가 계면에 남는 층이 된다** — 실험 주장 ② "Nd 함유 CEI" 와 잇는 자리. 실험 XPS 의 Nd 3d · P 2p 가 인산염 환경이면 계산과 맞물린다.
+
+**비유**: P 는 금속을 끌고 가는 '손' 이다. Nd 가 없으면 그 손이 양극의 Ni 를 잡고, Nd 가 있으면 손 일부가 Nd 를 잡아 Ni 를 덜 잡는다.
+
+**같이 말할 것 (빼지 않는다)**
+- x = 0.02 에서는 효과가 작다 (Ni 인산염 몫 −1.4 ~ −3.2 %p · 4.5 V 는 +0.6). 이 그림이 받치는 것은 **"Nd 가 P 를 먼저 잡는 경로가 있다" 는 기전**이지 "크게 줄인다" 가 아니다.
+- 인산염을 면한 Ni 는 양극에 남지 않고 NiS₂ 로 간다 ⇒ **"Nd 가 양극 열화를 막는다" 는 이 계산으로 말하지 않는다** (§9 금지 · 회신 CM P0-1). 열화 감소는 실험의 임피던스·사이클이 말한다.
+- 0 K hull 의 산물 경로다 — 속도·두께·전도가 아니다.
+
+**원고에서의 역할**: "왜 Nd 가 CEI 에 인산염 형태로 들어가는가" 를 설명하는 그림 — 실험 XPS 와 짝을 짓는다.
 
 ## Thesis
 
@@ -161,4 +183,5 @@ Nd x = 0.20 (참고) →  2.583 Li + 0.6667 SCl + 0.08333 NdP₅O₁₄ + 0.5833
 | Li 맞춤 가산성 · 기울기 항등식 | `db/properties/cei_ga_result_2026_09_29.json` · 결정 `D-2026-09-28-cei-li-ledger-identity` (active) |
 | 갭 (판별종 10 종) | `db/properties/cei_gap_results_2026_09_19.json` (NdP₅O₁₄ 미재현 표지) |
 | 화면 | `db/properties/cei_figs/index.html` — §2 Fig. 1 (상) · §2b Fig. 3 (P 포획) · §7 Fig. 7 (양면) · SI §S1 Fig. S1 (분해) · §9 금지 목록 |
+| ⭐ 쉬운 스토리 그림 (10-06) | `cei_story_p_pulls_ni_nd_takes_p.png` · `cei_tm_fate_nmc811_by_metal.png` · `cei_tm_fate_undoped.png` · `cei_tm_fate_nd2o3_x002.png` · `cei_tm_fate_nd_dose_4p3V.png` (+ CSV · `tools/figures/plot_cei_tm_fate.py`) |
 | 그림 | `cei_nd_protection.png` + CSV 2 본 · `cei_nd_phase_x002.png` · `cei_nd_o_decomposition_x002_si.png` (옛 3 패널 `cei_nd_o_decomposition_x002.png` 은 이력으로 남김) |

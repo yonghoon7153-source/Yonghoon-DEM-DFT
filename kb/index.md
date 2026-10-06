@@ -1,12 +1,13 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-10-05 · managed-files: 508
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-10-06 · managed-files: 508
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
 ## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 304건)
+- 2026-10-06 · `kb/syntheses/cei_nd_manuscript_framing_2026_09_18.md` — Nd 원고 논지 확정안 — "고전압 안정성 개선" 대신 "고전압 계면 분해 산물의 재분배" 로 (09-30 · 외부 리뷰 회신 CM — 종전 "양극 계면 열화 억제" 철회) · 확정 — 사용자 승인 2026-09-29 "ㅇㅇ si 쪽으로 가는게 …
 - 2026-10-05 · `kb/reviews/li2s1a_CQ_reply_li2s_glass_v2_readout_2026_10_05.md` — 회신 CQ — 외부 1저자 (li2s 소셀 유리 MD v2 판독): 갈래 v2-2 확정 · 마감 문장 끝 절 좁힘 (550 K = 문턱 부근 · 미통과 0) · 늦은 창 한 줄 (10 런 0.909–1.029) · 골격 ③ 일시 변화 수도 게이트 (문턱 따로) · 다음 = 대조 계 a-Li₃PS₄ 먼저 (여기서 닫지 않는다) · p90² 따로 재서 넣기 · 수령 (2026-10-05 · 사용자 붙여넣기) — 회신 원문 · 고…
 - 2026-10-05 · `kb/reviews/li2s1a_CR_prompt_li2s_glass_control_card_2026_10_05.md` — CR 프롬프트 — li2s 소셀 유리 MD: 회신 CQ 이행 보고 · 해설 문장 검산 셋 · 대조 계 a-Li₃PS₄ 유리 카드 초안 (600 K 400 ps · 5 담금질 시드 · D 상대차) · 확인 요청 여섯 (외부 1저자에게) · 초안 (2026-10-05) — 사용자 검토 · 발송 대기 (p90²…
 - 2026-10-05 · `kb/reviews/li2s1a_CR_reply_li2s_glass_control_card_2026_10_05.md` — 회신 CR — 외부 1저자 (li2s 소셀 유리 대조 계 카드): 검산 셋 수용 (1.49 eV⁻¹ · 산포 문장은 IQR 에만) · Q-CR-1~6 전건 · R 은 두 계 모두 통과 시드 ≥ 4 · 1 포함 문장에 검출한계 (결과 전 모의) · 골격 게이트 600 K 에서도 · 일시 변화 문턱은 A 실측에서 (예 5) · c2 = 1차 관측 · N_eff 열 · 밀도 −15 % 단서 · Tg 100 K 사전 문장 · 대조표 항목 · 수령 (2026-10-05 · 사용자 붙여넣기) — 회신 원문 · 고…
@@ -26,7 +27,6 @@
 - 2026-09-30 · `kb/results/sdcp_ptfe_c12_eads_brief_2026_09_23.md` — SDCP vs PTFE 흡착에너지 (C-12 v41) — 숫자의 지위 · PTFE 크기 검증 · 세미나 대응 · 닫힘 (2026-09-30 · 2단계 보류) — 값은 citable:…
 - 2026-09-30 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
 - 2026-09-30 · `kb/reviews/codex_CM_prompt_cei_nd_handoff_2026_09_30.md` — 리뷰 CM 프롬프트 — CEI (Nd 계면) 외부 송부 전 리뷰: 정본 페이지 · 송부판 · 인계 카드 · 1저자 읽기 지침서 · AI 프롬프트 · 발송됨 (사용자 · 2026-09-30 · 인계 zip 첨부) · ✅…
-- 2026-09-30 · `kb/reviews/codex_CM_reply_cei_nd_handoff_2026_09_30.md` — 회신 CM — CEI (Nd 계면) 외부 인계본 리뷰: NO-GO (P0 7 · P1 6) — 수치·무결성은 대체로 맞음 · 요약·교육 문구가 계산 범위를 넘음 · Fig. 2 재현 명령이 이력 파일을 덮음 · 수령 (2026-09-30 · 사용자 붙여넣기) — 회신 원문 · 고…
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -483,7 +483,7 @@
 ## syntheses/ (9)
 - `kb/syntheses/binder_adsorption_charge_state_2026_08_29.md` — 음이온성 바인더의 흡착에너지 — ICEP 의 (−H) 는 탈양성자가 아니라 H 이동이었다  (2026-08-29 · 판독 완료 — ICEP 본문 + SI, Kang 본문 + SI 모두 확보)
 - `kb/syntheses/cathode_coating_computational_lineage.md` — 양극 코팅 계산 계보 — Wolverton → Ceder → Mo 라인과 우리 LPSCl 산화축의 관계  (2026-09-12 · 진행)
-- `kb/syntheses/cei_nd_manuscript_framing_2026_09_18.md` — Nd 원고 논지 확정안 — "고전압 안정성 개선" 대신 "고전압 계면 분해 산물의 재분배" 로 (09-30 · 외부 리뷰 회신 CM — 종전 "양극 계면 열화 억제" 철회)  (2026-09-30 · 확정 — 사용자 승인 2026-09-29 "ㅇㅇ si 쪽으로 가는게 …)
+- `kb/syntheses/cei_nd_manuscript_framing_2026_09_18.md` — Nd 원고 논지 확정안 — "고전압 안정성 개선" 대신 "고전압 계면 분해 산물의 재분배" 로 (09-30 · 외부 리뷰 회신 CM — 종전 "양극 계면 열화 억제" 철회)  (2026-10-06 · 확정 — 사용자 승인 2026-09-29 "ㅇㅇ si 쪽으로 가는게 …)
 - `kb/syntheses/li3n_barrier_revision_defense_2026_08_12.md` — Li3N(001) 장벽 — 리비전 방어 카드 (AF-ASSB 원고 v5)  (2026-08-13 · 확정 — 2026-08-12: 0.118 로 통일 · 궤적 패널 제외…)
 - `kb/syntheses/md_sampling_variance_defense_2026_08_25.md` — 왜 3시드·200 ps·β 게이트인가 — 짧은 단일 런은 산포를 없애지 않고 가린다  (2026-08-25 · 방어논지)
 - `kb/syntheses/nd_doping_two_axis_verdict.md` — Nd₂O₃ 도핑 — 열역학 창과 전자구조가 **같은 방향으로** 진다  (2026-08-12 · 진행)
@@ -571,4 +571,4 @@
 ## elements/ — 118개 (생성물/템플릿, 목록 생략)
 ## templates/ — 3개 (생성물/템플릿, 목록 생략)
 
-## litdb/ — digest 382개 (정본 목록: litdb/INDEX.md)
+## litdb/ — digest 383개 (정본 목록: litdb/INDEX.md)
