@@ -1,0 +1,40 @@
+{
+  "scope": "Reviewer-created supplement review; original retry3 archive not duplicated",
+  "files": [
+    {
+      "file": "REVIEW_KO.md",
+      "bytes": 8421,
+      "sha256": "a645d5002abfabac327e20d2abaa36aec971c5d850f5f4615e1b32394ed73700"
+    },
+    {
+      "file": "CLAUDE_REPLY_KO.md",
+      "bytes": 2421,
+      "sha256": "f24752fe13d8abdf5367d8826eefc57506fca91229ad404eaa3946391e3f75a9"
+    },
+    {
+      "file": "DECISION.json",
+      "bytes": 1192,
+      "sha256": "d06014b283b645807d4aa4713f19a9f4bea1d59cf55a312725ba9829daaeb701"
+    },
+    {
+      "file": "RECEIVED_SNAPSHOT.json",
+      "bytes": 625695,
+      "sha256": "d4e4a567bf706facdfa839ca8072425c99cf1ff6c50fe5be81719e9a74369fb0"
+    },
+    {
+      "file": "REVIEW_CHECKS.json",
+      "bytes": 10257,
+      "sha256": "0aa0f5371ba35336058385fd009671fd3c612a5f6efd8113010f490265d3f75f"
+    },
+    {
+      "file": "reviewer_checks.py",
+      "bytes": 7567,
+      "sha256": "5056c9e2f63606bdcbb37fc0b2f6a67d5251f6e53b0e8e4466b6d5f7b539e62d"
+    },
+    {
+      "file": "package_review.py",
+      "bytes": 1736,
+      "sha256": "9673b0a85b33372468312ed2ea9d77241ca41dc9979eba5d78ebd212513810d5"
+    }
+  ]
+}

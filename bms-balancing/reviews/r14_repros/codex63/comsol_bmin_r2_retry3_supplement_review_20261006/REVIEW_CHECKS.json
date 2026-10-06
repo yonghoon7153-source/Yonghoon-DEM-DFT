@@ -1,0 +1,505 @@
+{
+  "scope": "Independent static and data-only comparisons. No supplied code, generator, candidate, suite, Java or COMSOL executed.",
+  "commit": "10525ae1e30cf2d0f5e6e232e92897f08db3030f",
+  "archive_sha256": "ed0138b90cf2dc4e42f22ec18d8719ff56906780f74b4139850d604b096bb470",
+  "archive_unchanged": true,
+  "archive_payloads": 244,
+  "correction_bytes": 138108,
+  "correction_sha256": "16876bb01afe549f9f78ef1c5b32569a85f8e8e3dde0c1daef65bf56305c4414",
+  "rows": 77,
+  "unique_ids": 62,
+  "engine_counts": {
+    "Python": 42,
+    "Java": 2,
+    "Windows": 33
+  },
+  "reference_occurrences": 396,
+  "unique_referenced_members": 140,
+  "checks": 1758,
+  "errors": [],
+  "row_results": [
+    {
+      "id": "PY01-01",
+      "input_index": 1,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PY01-02",
+      "input_index": 1,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PY01-03",
+      "input_index": 1,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PY01-04",
+      "input_index": 1,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PY02-01",
+      "input_index": 1,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PY02-02",
+      "input_index": 1,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PY02-03",
+      "input_index": 1,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PY02-04",
+      "input_index": 1,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PY02-05",
+      "input_index": 1,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PY03-01",
+      "input_index": 1,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PY03-02",
+      "input_index": 1,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PY03-03",
+      "input_index": 1,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PY03-04",
+      "input_index": 1,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PY03-05",
+      "input_index": 1,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PY03-06",
+      "input_index": 1,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PY03-07",
+      "input_index": 1,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PY03-08",
+      "input_index": 1,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PY03-09",
+      "input_index": 1,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PY03-10",
+      "input_index": 1,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PY03-11",
+      "input_index": 1,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PY03-12",
+      "input_index": 1,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PY03-12",
+      "input_index": 2,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PY03-13",
+      "input_index": 1,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PY03-13",
+      "input_index": 2,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PY03-14",
+      "input_index": 1,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PY04-01",
+      "input_index": 1,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PY04-02",
+      "input_index": 1,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PY04-03",
+      "input_index": 1,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PY05-01",
+      "input_index": 1,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PY05-02",
+      "input_index": 1,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PY05-03",
+      "input_index": 1,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PY05-04",
+      "input_index": 1,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PY05-05",
+      "input_index": 1,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PY05-06",
+      "input_index": 1,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PY05-06",
+      "input_index": 2,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PY05-07",
+      "input_index": 1,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PY06-01",
+      "input_index": 1,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PY06-02",
+      "input_index": 1,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PY06-03",
+      "input_index": 1,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PY06-04",
+      "input_index": 1,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PY07-01",
+      "input_index": 1,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PY07-02",
+      "input_index": 1,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "JV01-01",
+      "input_index": 1,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "JV01-02",
+      "input_index": 1,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PS01-01",
+      "input_index": 1,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PS01-02",
+      "input_index": 1,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PS01-03",
+      "input_index": 1,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PS01-04",
+      "input_index": 1,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PS01-05",
+      "input_index": 1,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PS01-06",
+      "input_index": 1,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PS01-07",
+      "input_index": 1,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PS01-07",
+      "input_index": 2,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PS01-08",
+      "input_index": 1,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PS01-08",
+      "input_index": 2,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PS01-09",
+      "input_index": 1,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PS01-10",
+      "input_index": 1,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PS01-11",
+      "input_index": 1,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PS01-12",
+      "input_index": 1,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PS01-13",
+      "input_index": 1,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PS01-13",
+      "input_index": 2,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PS01-14",
+      "input_index": 1,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PS01-15",
+      "input_index": 1,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PS01-16",
+      "input_index": 1,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PS01-17",
+      "input_index": 1,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PS01-17",
+      "input_index": 2,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PS01-18",
+      "input_index": 1,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PS01-18",
+      "input_index": 2,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PS01-18",
+      "input_index": 3,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PS01-18",
+      "input_index": 4,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PS01-18",
+      "input_index": 5,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PS01-19",
+      "input_index": 1,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PS01-19",
+      "input_index": 2,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PS01-20",
+      "input_index": 1,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PS01-20",
+      "input_index": 2,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PS01-20",
+      "input_index": 3,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PS01-20",
+      "input_index": 4,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "id": "PS01-21",
+      "input_index": 1,
+      "status": "PASS",
+      "errors": []
+    }
+  ],
+  "PS01_16_observed": {
+    "id": "PS01-16",
+    "expected_reason": "GDecision INCOMPLETE. The string has 30 decimal places (28 significant digits), beyond the 28-place scale of .NET decimal: TryParse either rounds it to 0.001 (parent label WITHIN != consumer EXCEEDS -> disagreement) or fails; both paths are INCOMPLETE (fail-closed), never WITHIN. This documents the disagreement principle, not a precision guarantee; it is not an exact-equality case (that is PY01-02 / PS01-04) and its actual path must be confirmed on the target engine.",
+    "fields": {
+      "mesh_comparison": "INCONCLUSIVE",
+      "native_completion": "NORMAL_150S_COMPLETED",
+      "native_completion_cause": null,
+      "evidence_validity": "INVALID",
+      "consumer_native_completion_unverified": "NORMAL_150S_COMPLETED"
+    },
+    "elapsed_s": 6.0158162,
+    "status": "PASS",
+    "reached_functions": [
+      "GDecision",
+      "GNativeAxis",
+      "GFields"
+    ],
+    "input_index": 1,
+    "decision": "INCOMPLETE"
+  },
+  "nonblocking_stale_text": "PS01-16 의 TryParse 내부 분기 (UNOBSERVED — §59-3 의 2 · 승인권자 결정 대기)"
+}
