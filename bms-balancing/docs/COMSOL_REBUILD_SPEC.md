@@ -4104,3 +4104,17 @@ gate INCOMPLETE · 실효 정책 UNVERIFIED · native 미승인 · 게이트 리
 - 이 승인이 허락하는 것: 실행 기기의 **읽기 전용** 사전 관측 · 새 기록 폴더 하나의 쓰기 · 비활성 2 단계 최종 요청문. 허락하지 않는 것: COMSOL 실행 · r2 배치 · approval /
   release / USER_DECISION / runtime / token 생성 · native 150 s.
 - 다음: 실행 기기 Codex 의 관측 결과 · 2 단계 초안 수신 → 보존 → 검토 → 사용자 최종 (2 단계) 승인 여부.
+
+## 66. native 150 s 배치 · 사전 관측 검토 회신 접수 — `DEPLOYMENT_AND_PREFLIGHT_ACCEPTED_WITH_STATED_EVIDENCE_LIMITS` (2026-10-06 · 실행 0 · native 승인 아님)
+
+- 묶음: `reviews/r14_repros/codex63/comsol_bmin150_deployment_preflight_review_20261006/` — zip 17,394 B · sha256 `062f224d08db003f5cda3a69fc48f4081e0377fac694a1ddb63a5a122948e1a3` ·
+  manifest 6 / 6 (크기 · sha) · 비밀 패턴 0 · 동봉 스크립트 0 실행. 규칙 `f94d70bbe` → 보존 `d9b641aa3`.
+- 판정 (`DECISION.json`): 새 차단 0 · 원천 수정 · 재시험 불필요 · **`native150_approved=false` · 승인 파일 생성 미승인**. 수용 범위 = 검토자가 받은 사전 관측 zip
+  (33,990 B · `8800035e…`) 의 기록과 원 retry3 zip (`ed0138b9…`) 의 후보 8 멤버 대조 — R2 배치 8 파일 212,467 B (배치 전후 sha 동일) · 관측 39 건 · CLOSEOUT
+  298.9079295 / 1,800 s · 기록 78,470 B / 50 MB · 도구 반환 `ed90f4` rc 0 (후속 전사 — 독립 OS 감사 아님) · manifest `4cdca2e6…` · prefs 22,252 B `064d1900…`.
+- 유지하는 한계: PS01–16 내부 UNOBSERVED · 실효 정책 · 실제 코어 UNVERIFIED · RAM 은 시작 관측값뿐 · 프로세스 부재는 그 조회 범위만 · 전체 / 정상 gate INCOMPLETE ·
+  앞선 root 부재 중지 · Python 1 회 절차 이탈 기록을 소급 PASS 로 바꾸지 않음.
+- 목적 문구 (회신): 시간 연장이 아니라 **입자 반경 메시 320/320 ↔ 640/640 한 축 민감도** — fresh 0→150 s 1 회를 NORMAL480 의 120–150 s 구간 (요청 301 시각 · 전극별 241 좌표)
+  과 비교. 작은 차이가 전체 공간 수렴 · 480 s 후반 정확도를 보이지는 않는다.
+- 다음 = **사용자 최종 (2 단계) 승인** 하나. 회신의 `FINAL_NATIVE150_APPROVAL_DRAFT_KO.md` 는 **미채택 초안**이다 (수신 · 보존은 승인이 아님). 한도: 부모 전체 10,500 s
+  (사전 입력 180 · compile+batch 9,000 · 정리 120 · 분석 900 · 로컬 전달 300) + 포장 별도 1,800 s · 1 회. 두 challenge 는 사용자 직접 입력.
