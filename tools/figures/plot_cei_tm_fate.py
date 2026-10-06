@@ -27,6 +27,7 @@ CEI 실험 쪽 1저자가 원고를 두 주장으로 닫으려 한다 — ① TM
 쓰는 법
   python3 tools/figures/plot_cei_tm_fate.py              # PNG + Origin CSV
   python3 tools/figures/plot_cei_tm_fate.py --nd         # Nd₂O₃@LPSCl1.6 판 + 4.3 V 농도 판 (2026-10-06)
+  python3 tools/figures/plot_cei_tm_fate.py --simple     # 한 장 요약 (4.3 V · 양극 셋 · Nd 없음 / x 0.02 / x 0.10)
   python3 tools/figures/plot_cei_tm_fate.py --selftest   # 음성 경로 포함
 
 --nd 모드 (2026-10-06 · 사용자 "Nd₂O₃@LPSCl1.6 버전으로도" · "얼마나 줄어드는지")
@@ -407,7 +408,69 @@ def main_nd():
     return 0
 
 
+OUT_SIMPLE_PNG = REPO / "db/properties/cei_figs/cei_tm_fate_simple_4p3V.png"
+OUT_SIMPLE_CSV = REPO / "db/properties/cei_figs/cei_tm_fate_simple_4p3V.csv"
+
+
+def main_simple():
+    """한 장 요약 (2026-10-06 · 사용자 "그림이 전혀 이해가 안돼").
+    4.3 V · LiCoO2 · LiNiO2 · NMC811 에서 '양극 금속 중 인산염이 되는 몫' 막대 셋:
+      Nd 없음 (같은 계열 x → 0 끝 o_only_003 ≈ LPSCl1.6) · Nd₂O₃ x = 0.02 (1저자 조성) · x = 0.10 (참고 · 만든 적 없음).
+    ⚠ Δ 의 정본은 --nd 판(Li 맞춘 대조군 기준)이다. 여기 'Nd 없음' 막대와 Li 맞춘 대조군의 차이는
+      x = 0.02 에서 ≤ 0.3 %p · x = 0.10 에서 ≤ 1.6 %p (CSV 에 둘 다 싣는다)."""
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    sys.path.insert(0, str(REPO / "tools/figures"))
+    from house_style import INK, MUT, ELEM, apply_axes
+    tn, pr = x002_fate(), prot_rows()
+    groups = [("No Nd\n(LPSCl1.6)", None, "#9ca3af"),
+              ("Nd$_2$O$_3$, x = 0.02\n(target composition)", 0.02, ELEM["P"]),
+              ("Nd$_2$O$_3$, x = 0.10\n(reference only)", 0.10, "#c4b5fd")]
+    fig, ax = plt.subplots(figsize=(7.6, 4.6))
+    w = 0.26
+    rows = []
+    for j, cat in enumerate(DOSE_CATS):
+        for k, (lab, x, col) in enumerate(groups):
+            if x is None:
+                c = tn.get((ND_X0, cat, DOSE_V)); val = None if c is None else 100 * c["phosphate"]; ctrl = val
+            else:
+                p = pr.get((cat, DOSE_V, x)); ok = p is not None and p["gate"]
+                val = 100 * p["nd"] if ok and p["nd"] is not None else None
+                ctrl = 100 * p["ctrl"] if ok and p["ctrl"] is not None else None
+            xpos = j + (k - 1) * w
+            if val is None:
+                ax.text(xpos, 1, "n/a", ha="center", va="bottom", fontsize=8, color=MUT)
+            else:
+                ax.bar(xpos, val, width=w * 0.92, color=col, zorder=2,
+                       label=lab if j == 0 else None)
+                ax.text(xpos, val + 0.6, f"{val:.0f}%", ha="center", va="bottom", fontsize=9.5,
+                        color=INK, fontweight="bold" if x == 0.02 else "normal")
+            rows.append({"cathode": cat, "voltage_V": DOSE_V,
+                         "case": "no Nd (x->0 end, Li5.4PS4.37O0.03Cl1.6)" if x is None else f"Nd2O3 x={x}",
+                         "TM_to_phosphate_pct": "" if val is None else round(val, 2),
+                         "Li_matched_noNd_control_pct": "" if ctrl is None else round(ctrl, 2)})
+    ax.set_xticks(range(len(DOSE_CATS)), [CAT_LABEL[c] for c in DOSE_CATS], fontsize=11)
+    ax.set_ylim(0, 38)
+    apply_axes(ax, ylabel="Cathode metal that becomes phosphate (%)", fontsize=11)
+    ax.set_title("At 4.3 V: Nd takes phosphorus, so less cathode metal ends up as phosphate",
+                 fontsize=11, color=INK)
+    ax.legend(frameon=False, fontsize=9, loc="upper right", ncol=1, handlelength=1.2)
+    fig.text(0.5, -0.03, "Of the cathode metal (Co, Ni) that reacts with the electrolyte, the share that ends up as a "
+             "metal phosphate (CoP$_4$O$_{11}$, Ni(PO$_3$)$_2$).\nThe rest becomes metal sulfide (CoS$_2$, NiS$_2$). "
+             "0 K thermodynamics of the most favorable cathode | electrolyte reaction; not a degradation rate.",
+             ha="center", va="top", fontsize=8.3, color=MUT)
+    fig.tight_layout()
+    fig.savefig(OUT_SIMPLE_PNG, dpi=300, bbox_inches="tight"); plt.close(fig)
+    with OUT_SIMPLE_CSV.open("w", newline="") as f:
+        wr = csv.DictWriter(f, fieldnames=list(rows[0])); wr.writeheader(); wr.writerows(rows)
+    print(f"→ {OUT_SIMPLE_PNG.relative_to(REPO)}\n→ {OUT_SIMPLE_CSV.relative_to(REPO)}")
+    return 0
+
+
 if __name__ == "__main__":
+    if "--simple" in sys.argv:
+        raise SystemExit(main_simple())
     if "--selftest" in sys.argv:
         raise SystemExit(_selftest())
     raise SystemExit(main_nd() if "--nd" in sys.argv else main())
