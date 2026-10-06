@@ -1,0 +1,5 @@
+2026-10-06 19:25:06,232 INFO __main__: 완방상태 산출: Gr=36.6 mol/m3 (x=0.0013), Si=3446.1 (x=0.0124), PE=58439.9 (y=0.9261)
+2026-10-06 19:25:06,232 WARNING __main__:   vs 원본 하드코딩 ne_primary: 36.7 -> 36.6 (차이 0.1%) — 하드코딩은 사용하지 않음
+2026-10-06 19:25:06,233 WARNING __main__:   vs 원본 하드코딩 ne_secondary: 3446.3 -> 3446.1 (차이 0.0%) — 하드코딩은 사용하지 않음
+2026-10-06 19:25:06,233 WARNING __main__:   vs 원본 하드코딩 pe: 58439.9 -> 58439.9 (차이 0.0%) — 하드코딩은 사용하지 않음
+2026-10-06 19:25:06,992 INFO __main__: 완방상태 캐시 저장: /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/p2/degradation-degeneracy/.cache/discharged_state/a8e262f7d6aa4beb.json

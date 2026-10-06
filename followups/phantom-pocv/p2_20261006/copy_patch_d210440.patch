@@ -1,0 +1,102 @@
+From d210440de0188ada76fa632a153a6f4f11663ee9 Mon Sep 17 00:00:00 2001
+From: p2 <p2@local>
+Date: Tue, 6 Oct 2026 19:25:40 +0000
+Subject: [PATCH] =?UTF-8?q?P2=20top-heavy=20pe=5Ftilt=5Fmv=20(scratch=20on?=
+ =?UTF-8?q?ly=20=C2=B7=20y=5FT=3D17038/63104=20=C2=B7=20y=5FB=3Ddischarged?=
+ =?UTF-8?q?=2058439.873864492365/63104)?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ src/halfcell.py | 25 +++++++++++++++++++------
+ 1 file changed, 19 insertions(+), 6 deletions(-)
+
+diff --git a/src/halfcell.py b/src/halfcell.py
+index 51b30ed..bc71769 100644
+--- a/src/halfcell.py
++++ b/src/halfcell.py
+@@ -89,7 +89,10 @@ def compute_halfcell_from_ocp(cfg: dict, n_points: int = 400,
+                               pe_offset_mv: float = 0.0,
+                               ne_offset_mv: float = 0.0,
+                               pe_stretch: float = 1.0,
+-                              ne_stretch: float = 1.0) -> HalfCellReference:
++                              ne_stretch: float = 1.0,
++                              pe_tilt_mv: float = 0.0,
++                              pe_tilt_y_top: float = 0.2699987322515213,
++                              pe_tilt_y_bot: float = 0.9260882648404596) -> HalfCellReference:
+     """★ 진짜 full-range half-cell OCV — 파라미터셋의 OCP 함수를 직접 평가한다.
+ 
+     시뮬레이션 추출본은 셀이 실제로 지나간 구간(PE y 0.251~0.928)만 담지만,
+@@ -144,6 +147,12 @@ def compute_halfcell_from_ocp(cfg: dict, n_points: int = 400,
+     # ── 계통 왜곡 (ocpbias) — 기준 곡선에만, truth 에는 없다 ──
+     if pe_offset_mv:
+         u_pe = u_pe + pe_offset_mv / 1000.0
++    # ★ P2 (논문 후속 · scratch 사본 전용) — SOC 의존 PE 오프셋. y 가 낮을수록 (고 SOC · 꼭대기) 크다.
++    #   δ(y) = offset + tilt · clip((y_C − y)/(y_B − y_T), −½, ½) — [y_T, y_B] 위 y-균일 평균 = offset (정확).
++    #   y_T · y_B = truth 무열화 완충 · 완방 PE 화학량 (17038/63104 · 완방상태 캐시 58439.87…/63104) — 실행 전 고정.
++    if pe_tilt_mv:
++        _yc = 0.5 * (pe_tilt_y_top + pe_tilt_y_bot)
++        u_pe = u_pe + pe_tilt_mv / 1000.0 * np.clip((_yc - x) / (pe_tilt_y_bot - pe_tilt_y_top), -0.5, 0.5)
+     if ne_offset_mv:
+         u_grid = u_grid + ne_offset_mv / 1000.0
+     # ★ stretch 는 **정의역을 자르지 않는다** (13차 자체 리뷰 R7 후속).
+@@ -239,7 +248,8 @@ RECIPE_DEFAULTS = {
+     #   `<16hex>_<method>_<12hex>` 에서 method 를 `[a-z]+` 로 본다.
+     "ocpbias": {"n_points": 400, "branch": "delithiation",
+                 "pe_offset_mv": 0.0, "ne_offset_mv": 0.0,
+-                "pe_stretch": 1.0, "ne_stretch": 1.0},
++                "pe_stretch": 1.0, "ne_stretch": 1.0,
++                "pe_tilt_mv": 0.0, "pe_tilt_y_top": 0.2699987322515213, "pe_tilt_y_bot": 0.9260882648404596},
+     "sim": {"v_lo": 2.0, "v_hi": 4.4, "c_rate": 0.02},
+ }
+ 
+@@ -290,7 +300,7 @@ def is_noop_bias(method: str, **kw) -> bool:
+     r = recipe_of(method, **kw)
+     base = RECIPE_DEFAULTS[method]
+     return all(r[k] == base[k] for k in ("pe_offset_mv", "ne_offset_mv",
+-                                         "pe_stretch", "ne_stretch"))
++                                         "pe_stretch", "ne_stretch", "pe_tilt_mv"))
+ 
+ 
+ def recipe_hash(cfg: dict, method: str = "ocp", **kw) -> str:
+@@ -535,6 +545,8 @@ def main() -> None:
+                     help="PE 화학량론 축 배율 (method=ocpbias)")
+     ap.add_argument("--ne-stretch", type=float, default=None,
+                     help="NE 화학량론 축 배율 (method=ocpbias)")
++    ap.add_argument("--pe-tilt-mv", type=float, default=None,
++                    help="PE SOC 의존 오프셋 기울기 (mV · 꼭대기 − 바닥, method=ocpbias · P2 사본 전용)")
+     ap.add_argument("--force", action="store_true")
+     ap.add_argument("--verify", action="store_true",
+                     help="캐시를 recipe로 **다시 계산해** 배열까지 대조한다 (F74). "
+@@ -554,7 +566,8 @@ def main() -> None:
+         kw = {k: v for k, v in (("pe_offset_mv", args.pe_offset_mv),
+                                 ("ne_offset_mv", args.ne_offset_mv),
+                                 ("pe_stretch", args.pe_stretch),
+-                                ("ne_stretch", args.ne_stretch)) if v is not None}
++                                ("ne_stretch", args.ne_stretch),
++                                ("pe_tilt_mv", args.pe_tilt_mv)) if v is not None}
+     else:
+         kw = {"v_lo": args.v_lo, "v_hi": args.v_hi, "c_rate": args.c_rate}
+     # ★ 왜곡을 줬는데 method 가 ocpbias 가 아니면 **조용히 무시된다** — 그러면
+@@ -563,7 +576,7 @@ def main() -> None:
+     #   두면 fit 쪽에서 --halfcell-arg 를 잊었을 때 **조용히 읽히는 미끼**가
+     #   된다 (그러면 민감도 0 을 보고한다). 미끼 자체를 만들지 않는다.
+     if args.method == "ocpbias" and not any(
+-            v not in (None, 0.0) for v in (args.pe_offset_mv, args.ne_offset_mv)) \
++            v not in (None, 0.0) for v in (args.pe_offset_mv, args.ne_offset_mv, args.pe_tilt_mv)) \
+             and not any(v not in (None, 1.0) for v in (args.pe_stretch,
+                                                        args.ne_stretch)):
+         raise SystemExit("왜곡이 0 인 ocpbias 는 ocp 와 배열이 같습니다 — 만들 "
+@@ -573,7 +586,7 @@ def main() -> None:
+                          "--method ocp 를 쓰세요.")
+     if args.method != "ocpbias" and any(
+             v is not None for v in (args.pe_offset_mv, args.ne_offset_mv,
+-                                    args.pe_stretch, args.ne_stretch)):
++                                    args.pe_stretch, args.ne_stretch, args.pe_tilt_mv)):
+         raise SystemExit("왜곡 인자는 --method ocpbias 에서만 쓸 수 있습니다 "
+                          "(지금 --method %s). 그대로 두면 왜곡 없는 기준으로 "
+                          "민감도를 쟀다고 착각하게 됩니다." % args.method)
+-- 
+2.43.0
+

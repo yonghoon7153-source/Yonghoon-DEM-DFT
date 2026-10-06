@@ -1,0 +1,3 @@
+2026-10-06 19:26:01,065 INFO __main__: half-cell(OCP 함수) 기준: PE y 0.0001~0.9999, NE z 0.0001~0.9999 (Si 가지=delithiation)
+2026-10-06 19:26:01,820 INFO __main__: half-cell 기준 캐시 저장: /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/p2/degradation-degeneracy/.cache/halfcell/a8e262f7d6aa4beb_ocpbias_137bdffc9eda.json (recipe {'method': 'ocpbias', 'n_points': 400, 'branch': 'delithiation', 'pe_offset_mv': 5.0, 'ne_offset_mv': 0.0, 'pe_stretch': 1.0, 'ne_stretch': 1.0, 'pe_tilt_mv': 10.0, 'pe_tilt_y_top': 0.2699987322515213, 'pe_tilt_y_bot': 0.9260882648404596})
+2026-10-06 19:26:02,452 INFO __main__: half-cell(OCP 함수) 기준: PE y 0.0001~0.9999, NE z 0.0001~0.9999 (Si 가지=delithiation)

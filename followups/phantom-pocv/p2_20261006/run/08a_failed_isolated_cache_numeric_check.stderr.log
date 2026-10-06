@@ -1,0 +1,20 @@
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/dist-packages/pandas/__init__.py", line 11, in <module>
+    __import__(_dependency)
+ModuleNotFoundError: No module named 'dateutil'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/p2run/cache_check.py", line 7, in <module>
+    base = compute_halfcell_from_ocp(cfg)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/p2/degradation-degeneracy/src/halfcell.py", line 121, in compute_halfcell_from_ocp
+    import pybamm
+  File "/usr/local/lib/python3.11/dist-packages/pybamm/__init__.py", line 197, in <module>
+    from .solvers.solution import (
+  File "/usr/local/lib/python3.11/dist-packages/pybamm/solvers/solution.py", line 14, in <module>
+    import pandas as pd
+  File "/usr/local/lib/python3.11/dist-packages/pandas/__init__.py", line 13, in <module>
+    raise ImportError(
+ImportError: Unable to import required dependency dateutil. Please see the traceback for details.

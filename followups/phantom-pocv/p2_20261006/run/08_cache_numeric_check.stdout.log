@@ -1,0 +1,65 @@
+{
+ "y_T": 0.2699987322515213,
+ "y_B": 0.9260882648404596,
+ "U5": {
+  "top_mv": [
+   5.0,
+   5.0
+  ],
+  "bottom_mv": [
+   5.0,
+   5.0
+  ],
+  "window_mean_mv": 5.0,
+  "ne_unchanged": true
+ },
+ "U10": {
+  "top_mv": [
+   10.0,
+   10.0
+  ],
+  "bottom_mv": [
+   10.0,
+   10.0
+  ],
+  "window_mean_mv": 10.0,
+  "ne_unchanged": true
+ },
+ "T5": {
+  "top_mv": [
+   10.0,
+   10.0
+  ],
+  "bottom_mv": [
+   0.0,
+   0.0
+  ],
+  "window_mean_mv": 5.000006,
+  "ne_unchanged": true
+ },
+ "T10": {
+  "top_mv": [
+   20.0,
+   20.0
+  ],
+  "bottom_mv": [
+   0.0,
+   0.0
+  ],
+  "window_mean_mv": 10.000011,
+  "ne_unchanged": true
+ },
+ "L6": {
+  "top_mv": [
+   5.0,
+   5.0
+  ],
+  "bottom_mv": [
+   -5.0,
+   -5.0
+  ],
+  "window_mean_mv": 6e-06,
+  "ne_unchanged": true
+ },
+ "U5_bit_equal_old_uniform": true
+}

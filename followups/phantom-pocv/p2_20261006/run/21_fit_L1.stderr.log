@@ -1,0 +1,14 @@
+2026-10-06 19:45:18,402 INFO __main__: 실행 시작 provenance: git d210440d dirty=False src 194b1c515598d991 → /proc/self/fd/3/attempts/manifest_start_20261006T194518_9919_000.yaml
+2026-10-06 19:45:20,357 INFO __main__: reference: Q=5621.1 mAh, 300점
+2026-10-06 19:45:20,360 INFO src.inventory: reference 재고: PE 2.358 Ah, NE 5.748 Ah (w_PE=0.291, w_NE=0.709, κ=0.694)
+2026-10-06 19:45:20,382 INFO __main__: half-cell 기준 범위: {'pe_min': 0.0001, 'pe_max': 0.9999, 'ne_min': 8.349462684794871e-05, 'ne_max': 0.999916505373152}
+2026-10-06 19:45:28,236 INFO __main__: α_ini·β_ini[pocv_dvdq] = [1.476, -0.4084, 1.0617, -0.0583] (기준 조건 4fd289571cd7 자체 fitting, warm=False)
+2026-10-06 19:45:28,236 INFO __main__: α_ini·β_ini[pocv_dvdq_dqdv] = [1.5191, -0.4222, 1.0613, -0.0581] (기준 조건 4fd289571cd7 자체 fitting, warm=True)
+2026-10-06 19:45:28,294 INFO __main__: fitting: 320조건 × 2목적함수 × 5 restart (nproc=4, warm_start=True)
+         입력 /tmp/fit-stage-vb9b4xsp/results/_smoke/p2/grid_22p_seed_101
+         출력 /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/p2/degradation-degeneracy/results/_smoke/p2/fit_L1_ocp
+2026-10-06 19:48:42,518 INFO __main__: fit 진행: 100/320 (31%) — 1.9 s/cond, 남은 예상 7분
+2026-10-06 19:52:04,663 INFO __main__: fit 진행: 200/320 (62%) — 2.0 s/cond, 남은 예상 4분
+2026-10-06 19:55:26,351 INFO __main__: fit 진행: 300/320 (94%) — 2.0 s/cond, 남은 예상 1분
+2026-10-06 19:56:07,518 INFO __main__: fit 진행: 320/320 (100%) — 2.0 s/cond, 남은 예상 0분
+2026-10-06 19:56:07,806 INFO __main__: fitting 완료: 640행, 639.2s → /proc/self/fd/3/fits.parquet

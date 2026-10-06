@@ -1,0 +1,10 @@
+# 대형 산출 — sha 만 (사본 /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/p2/degradation-degeneracy · 사본 HEAD d210440 · dirty 0)
+4c71884d7152ef7bfedfda184b35d3dcea59f4be5e74de5887d9269b9bae36d8  505513  results/_smoke/p2/fit_L0_grid/fits.parquet
+44e2d9ea177f081d74161e7492deb50b520555cff0d17b3d07a1fcfb7f8ad48f  492446  results/_smoke/p2/fit_L1_ocp/fits.parquet
+51d7b35f667829ffe5047f1785785d618497a95fe10cb0f6a0e7a4b44b064edb  494844  results/_smoke/p2/fit_L2_u5/fits.parquet
+f3e2d5b3825132dfba142142c07403191cd0d096c10e9c51d1c75b2c0e3785d0  501253  results/_smoke/p2/fit_L3_u10/fits.parquet
+c92a10e4e8ae67902f827b22ddd03d3f89cd04cd55843cc78b88d1df88eaed20  501817  results/_smoke/p2/fit_L4_t5/fits.parquet
+291c13d9cb3c4749c381731e1a7077fed57070453d1976e6a762160c7d59cc08  510408  results/_smoke/p2/fit_L5_t10/fits.parquet
+b1984ca3e58a04453ea29c4b95e22340b7c16a2730ac78e2b260a21b8c68c7da  490389  results/_smoke/p2/fit_L6_tilt10/fits.parquet
+0320137f688a7f589c29d3a3a96b3261c031246dd6ef6e302d671d576c322abd  46028  results/_smoke/p2/fit_timing/fits.parquet
+e989e95322e4e1f945b48cdea8fad04295071392a88751bb048dd9d821ecf908  3887077  results/_smoke/p2/grid_22p_seed_101/curves.parquet

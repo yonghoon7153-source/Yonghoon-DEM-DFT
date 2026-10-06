@@ -1,0 +1,11 @@
+argv: ./run.sh --mode fit --in results/_smoke/p2/grid_22p_seed_101 --objective pocv_dvdq,pocv_dvdq_dqdv --n-restarts 5 --nproc 4 --reference halfcell --halfcell-method ocpbias --halfcell-arg pe_offset_mv=10 --halfcell-arg pe_tilt_mv=20 --out results/_smoke/p2/fit_L5_t10
+cwd: /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/p2/degradation-degeneracy
+start_utc: 2026-10-06T20:29:30Z
+copy_head: d210440de0188ada76fa632a153a6f4f11663ee9
+repo_head: 217230fe27d8fe3ed5bb424189b117eba67bb234
+copy_dirty: 0
+disk_free_start: 7017533440
+end_utc: 2026-10-06T20:40:19Z
+rc: 0
+elapsed_s: 648.46
+disk_free_end: 7008419840

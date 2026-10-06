@@ -1,0 +1,144 @@
+{
+ "rules": "P2 성분 분석 (사본 밖 · 진단 전용 · 인용 금지).\n\n사본 디렉터리에서 `python <이 파일> --out <json>` 으로 돈다 (cwd = 사본 — src/tools import).\n다리 경로는 results/_smoke/p2/ 아래 고정 이름.\n\n판정 규칙 (데이터 보기 전 고정 · 2026-10-06):\n  · 원점 건강: L1 의 p_ini a_ne ∈ [1.05, 1.08] — 두 목적함수 모두 (아니면 전체 중단).\n  · 왜곡 다리 원점 오염: 그 다리 a_ne ∉ [1.05, 1.08] → 권고 5 대로 세트 중단.\n  · 조건 집합: L1–L6 의 cond_id 집합이 같아야 한다 (목적함수별).\n  · + 부호 재현: objective pocv_dvdq_dqdv (§7.10 의 목적함수) · gap_stats 원 창에서\n    Δ = gap_bias(L2) − gap_bias(L1) > 0 그리고 Δ(L3) > 0. 아니면 tilt 해석 전에 멈춘다.\n",
+ "y_T": 0.2699987322515213,
+ "y_B": 0.9260882648404596,
+ "bootstrap": {
+  "B": 10000,
+  "seed": 20261006
+ },
+ "objectives": {
+  "pocv_dvdq": {
+   "n_pop_L0_recoverable": 232,
+   "legs": {
+    "L1": {
+     "dir": "results/_smoke/p2/fit_L1_ocp",
+     "offset_mv": 0.0,
+     "tilt_mv": 0.0,
+     "recipe": {
+      "method": "ocp",
+      "n_points": 400,
+      "branch": "delithiation"
+     },
+     "source_digest": "194b1c515598d991",
+     "p_ini": [
+      1.476,
+      -0.4084,
+      1.0617,
+      -0.0583
+     ],
+     "origin_a_ne": 1.0616619966657797,
+     "origin_ok": true,
+     "n_noise0": 320,
+     "n_pop": 232,
+     "gap_stats_strict": {
+      "n_near": 74,
+      "n_gap0": 8,
+      "false_split": 0,
+      "gap_bias_pp": 0.09,
+      "median_rec_gap0_pp": 0.14
+     },
+     "gap_stats_tol": {
+      "n_near": 117,
+      "n_gap0": 15,
+      "false_split": 1,
+      "gap_bias_pp": -0.05
+     },
+     "mean_err_pp_pop": {
+      "e_pe": 0.153,
+      "e_ne": 0.087,
+      "e_lli": -0.152,
+      "gap": 0.065
+     },
+     "mean_err_pp_window_strict": {
+      "e_pe": -0.13,
+      "e_ne": -0.216,
+      "e_lli": -0.241,
+      "gap": 0.086
+     },
+     "mean_err_pp_window_tol": {
+      "e_pe": -0.029,
+      "e_ne": 0.023,
+      "e_lli": -0.222,
+      "gap": -0.052
+     },
+     "n_window_strict": 74,
+     "n_window_tol": 117,
+     "n_restarts_dist": {
+      "2": 83,
+      "5": 149
+     },
+     "n_restarts_mean": 3.927,
+     "converged_frac": 1.0
+    }
+   },
+   "cond_sets_equal": true
+  },
+  "pocv_dvdq_dqdv": {
+   "n_pop_L0_recoverable": 232,
+   "legs": {
+    "L1": {
+     "dir": "results/_smoke/p2/fit_L1_ocp",
+     "offset_mv": 0.0,
+     "tilt_mv": 0.0,
+     "recipe": {
+      "method": "ocp",
+      "n_points": 400,
+      "branch": "delithiation"
+     },
+     "source_digest": "194b1c515598d991",
+     "p_ini": [
+      1.5191,
+      -0.4222,
+      1.0613,
+      -0.0581
+     ],
+     "origin_a_ne": 1.061285762636591,
+     "origin_ok": true,
+     "n_noise0": 320,
+     "n_pop": 232,
+     "gap_stats_strict": {
+      "n_near": 74,
+      "n_gap0": 8,
+      "false_split": 0,
+      "gap_bias_pp": -0.45,
+      "median_rec_gap0_pp": 0.15
+     },
+     "gap_stats_tol": {
+      "n_near": 117,
+      "n_gap0": 15,
+      "false_split": 1,
+      "gap_bias_pp": -0.62
+     },
+     "mean_err_pp_pop": {
+      "e_pe": -1.145,
+      "e_ne": 0.104,
+      "e_lli": -0.717,
+      "gap": -1.249
+     },
+     "mean_err_pp_window_strict": {
+      "e_pe": -0.901,
+      "e_ne": -0.452,
+      "e_lli": -0.603,
+      "gap": -0.449
+     },
+     "mean_err_pp_window_tol": {
+      "e_pe": -0.882,
+      "e_ne": -0.267,
+      "e_lli": -0.594,
+      "gap": -0.616
+     },
+     "n_window_strict": 74,
+     "n_window_tol": 117,
+     "n_restarts_dist": {
+      "2": 14,
+      "5": 218
+     },
+     "n_restarts_mean": 4.819,
+     "converged_frac": 1.0
+    }
+   },
+   "cond_sets_equal": true
+  }
+ },
+ "stops": []
+}

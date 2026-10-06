@@ -1,0 +1,11 @@
+argv: python -m src.halfcell --config configs/base.yaml --method ocp --verify
+cwd: /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/p2/degradation-degeneracy
+start_utc: 2026-10-06T19:25:40Z
+copy_head: d210440de0188ada76fa632a153a6f4f11663ee9
+repo_head: 4e99a09a9b2a53e9a92f2597c6060f7b66904f50
+copy_dirty: 0
+disk_free_start: 7086256128
+end_utc: 2026-10-06T19:25:45Z
+rc: 0
+elapsed_s: 5.72
+disk_free_end: 7086137344

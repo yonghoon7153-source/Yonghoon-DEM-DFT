@@ -1,0 +1,15 @@
+{"stops": ["pocv_dvdq: L5 원점 a_ne=1.022424964648462 ∉ (1.05, 1.08) — 오염 (권고 5: 세트 중단)", "pocv_dvdq_dqdv: L5 원점 a_ne=1.014844184715615 ∉ (1.05, 1.08) — 오염 (권고 5: 세트 중단)"]}
+== pocv_dvdq · pop 232 · cond 집합 같음 True
+  L1 a_ne=1.0616619966657797 ok=True n=232 bias strict/tol=0.09/-0.05 Δ=None err_win={'e_pe': -0.13, 'e_ne': -0.216, 'e_lli': -0.241, 'gap': 0.086} δeff=None restarts=3.927
+  L2 a_ne=1.0624380534172988 ok=True n=232 bias strict/tol=0.42/0.46 Δ={'strict': 0.33, 'tol': 0.51} err_win={'e_pe': -0.345, 'e_ne': -0.769, 'e_lli': -0.311, 'gap': 0.424} δeff={'mean': 5.0, 'min': 5.0, 'max': 5.0} restarts=3.901
+  L3 a_ne=1.0648931129662542 ok=True n=232 bias strict/tol=-0.03/0.31 Δ={'strict': -0.12, 'tol': 0.36} err_win={'e_pe': -0.275, 'e_ne': -0.247, 'e_lli': -0.336, 'gap': -0.028} δeff={'mean': 10.0, 'min': 10.0, 'max': 10.0} restarts=4.134
+  L4 a_ne=1.0617079371684768 ok=True n=232 bias strict/tol=0.4/0.35 Δ={'strict': 0.31, 'tol': 0.4} err_win={'e_pe': -0.073, 'e_ne': -0.469, 'e_lli': -0.24, 'gap': 0.396} δeff={'mean': 5.2322, 'min': 4.9066, 'max': 5.6867} restarts=4.121
+  L5 a_ne=1.022424964648462 ok=False n=232 bias strict/tol=3.84/4.03 Δ={'strict': 3.75, 'tol': 4.08} err_win={'e_pe': -0.012, 'e_ne': -3.856, 'e_lli': 0.135, 'gap': 3.844} δeff={'mean': 10.4645, 'min': 9.8133, 'max': 11.3735} restarts=4.198
+  L6 a_ne=1.0616687373337859 ok=True n=232 bias strict/tol=-0.0/0.23 Δ={'strict': -0.09, 'tol': 0.28} err_win={'e_pe': 0.009, 'e_ne': 0.012, 'e_lli': -0.255, 'gap': -0.003} δeff={'mean': 0.2322, 'min': -0.0934, 'max': 0.6867} restarts=3.888
+== pocv_dvdq_dqdv · pop 232 · cond 집합 같음 True
+  L1 a_ne=1.061285762636591 ok=True n=232 bias strict/tol=-0.45/-0.62 Δ=None err_win={'e_pe': -0.901, 'e_ne': -0.452, 'e_lli': -0.603, 'gap': -0.449} δeff=None restarts=4.819
+  L2 a_ne=1.0693070490416183 ok=True n=232 bias strict/tol=0.21/0.29 Δ={'strict': 0.66, 'tol': 0.91} err_win={'e_pe': -0.573, 'e_ne': -0.778, 'e_lli': -0.372, 'gap': 0.205} δeff={'mean': 5.0, 'min': 5.0, 'max': 5.0} restarts=4.871
+  L3 a_ne=1.068173318631327 ok=True n=232 bias strict/tol=1.93/2.14 Δ={'strict': 2.38, 'tol': 2.76} err_win={'e_pe': 0.18, 'e_ne': -1.748, 'e_lli': 0.097, 'gap': 1.929} δeff={'mean': 10.0, 'min': 10.0, 'max': 10.0} restarts=4.871
+  L4 a_ne=1.0612031399103286 ok=True n=232 bias strict/tol=2.76/2.59 Δ={'strict': 3.21, 'tol': 3.21} err_win={'e_pe': 0.162, 'e_ne': -2.602, 'e_lli': 0.037, 'gap': 2.764} δeff={'mean': 5.3699, 'min': 5.0558, 'max': 5.8604} restarts=4.832
+  L5 a_ne=1.014844184715615 ok=False n=232 bias strict/tol=17.69/16.46 Δ={'strict': 18.14, 'tol': 17.08} err_win={'e_pe': 3.51, 'e_ne': -14.177, 'e_lli': 2.49, 'gap': 17.687} δeff={'mean': 10.7397, 'min': 10.1117, 'max': 11.7209} restarts=4.922
+  L6 a_ne=1.066439486611414 ok=True n=232 bias strict/tol=1.39/1.49 Δ={'strict': 1.84, 'tol': 2.11} err_win={'e_pe': 0.956, 'e_ne': -0.438, 'e_lli': 0.619, 'gap': 1.394} δeff={'mean': 0.3699, 'min': 0.0558, 'max': 0.8604} restarts=4.858

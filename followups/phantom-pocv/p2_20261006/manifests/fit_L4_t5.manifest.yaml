@@ -1,0 +1,278 @@
+timestamp: '2026-10-06T20:29:29'
+config_hash: fb6aa0510a6f
+pybamm_version: 26.8.0.0
+platform: Linux-6.18.44-fc-v70-x86_64-with-glibc2.39
+python: 3.11.15
+git_commit: d210440de0188ada76fa632a153a6f4f11663ee9
+git_commit_short: d210440d
+git_dirty: false
+git_dirty_tracked: false
+git_dirty_files_in_scope: []
+git_dirty_out_of_scope: []
+git_dirty_repo_wide: false
+git_dirty_scope:
+- src/
+- tools/
+- configs/
+- scripts/
+- run.sh
+- requirements*.txt
+git_untracked_count: 0
+git_untracked_critical: []
+input_sha256:
+  results/_smoke/p2/grid_22p_seed_101/curves.parquet: e989e95322e4e1f9
+  configs/base.yaml: 26fe6c7cc2a2d719
+  results/_smoke/p2/grid_22p_seed_101/curves_manifest.yaml: 802aa9a0b97bc5ff
+  results/_smoke/p2/grid_22p_seed_101/curves_manifest_start.yaml: 425fed7a43dad40d
+  results/_smoke/p2/grid_22p_seed_101/failed.csv: 1efe94b7e52e4bec
+  .cache/halfcell/a8e262f7d6aa4beb_ocpbias_137bdffc9eda.json: 6e00fbe0a0af025c
+  .cache/halfcell/a8e262f7d6aa4beb_ocpbias_137bdffc9eda.meta.yaml: 2a9716b6cc9d0b42
+input_sha256_source: sealed_at_start
+input_sha256_at_end:
+  results/_smoke/p2/grid_22p_seed_101/curves.parquet: e989e95322e4e1f9
+  configs/base.yaml: 26fe6c7cc2a2d719
+  results/_smoke/p2/grid_22p_seed_101/curves_manifest.yaml: 802aa9a0b97bc5ff
+  results/_smoke/p2/grid_22p_seed_101/curves_manifest_start.yaml: 425fed7a43dad40d
+  results/_smoke/p2/grid_22p_seed_101/failed.csv: 1efe94b7e52e4bec
+  .cache/halfcell/a8e262f7d6aa4beb_ocpbias_137bdffc9eda.json: 6e00fbe0a0af025c
+  .cache/halfcell/a8e262f7d6aa4beb_ocpbias_137bdffc9eda.meta.yaml: 2a9716b6cc9d0b42
+inputs_changed_during_run: false
+run_type: fit
+input: results/_smoke/p2/grid_22p_seed_101
+run_signature: 3b14de6aa7ef
+run_spec:
+  sig_version: 5
+  objective_order:
+  - pocv_dvdq
+  - pocv_dvdq_dqdv
+  condition_ids_sha256: 0583e1b2e18481cf
+  n_conditions: 320
+  selection: full
+  p_ini: &id007
+    pocv_dvdq:
+    - 1.4722365770378294
+    - -0.41041519310982194
+    - 1.0617079371684768
+    - -0.058264168797177676
+    pocv_dvdq_dqdv:
+    - 1.5231980711792297
+    - -0.43246951955970225
+    - 1.0612031399103286
+    - -0.058147375043534635
+  p_ini_cond: 4fd289571cd7
+  optimizer:
+    method: Nelder-Mead
+    adaptive: true
+    n_restarts: 5
+    agree_tol: 0.001
+    seed_scheme: sha1(cond_id)[:8]
+  git_commit: d210440de0188ada76fa632a153a6f4f11663ee9
+  git_dirty: false
+  source_digest: 194b1c515598d991
+  objectives:
+    pocv_dvdq: &id001
+      w_pocv: 1.0
+      w_dvdq: 1.0
+      w_dqdv: 0.0
+    pocv_dvdq_dqdv: &id002
+      w_pocv: 1.0
+      w_dvdq: 1.0
+      w_dqdv: 1.0
+  reference: halfcell
+  bounds_preset: halfcell
+  bounds: &id003
+    init:
+    - 1.05
+    - -0.05
+    - 1.4
+    - -0.4
+    lb:
+    - 0.5
+    - -1.5
+    - 0.5
+    - -1.5
+    ub:
+    - 3.0
+    - 1.0
+    - 3.0
+    - 1.0
+  v_col: v_full_noisy
+  warm_start: true
+  n_restarts: 5
+  obj_cfg:
+    objectives: &id006
+      pocv:
+        w_pocv: 1.0
+        w_dvdq: 0.0
+        w_dqdv: 0.0
+      pocv_dvdq: *id001
+      pocv_dvdq_dqdv: *id002
+      dqdv_only:
+        w_pocv: 0.0
+        w_dvdq: 0.0
+        w_dqdv: 1.0
+    scaling:
+      method: reference_rmse
+    dqdv:
+      smoothing: savgol
+      window: 21
+      polyorder: 3
+      peak_weight: 3.0
+      peak_prominence: 0.05
+      peak_halfwidth: 10
+    fitting:
+      bounds_presets:
+        original_33p:
+          init:
+          - 1.03
+          - -0.1
+          - 1.08
+          - -0.01
+          lb:
+          - 1.0
+          - -0.3
+          - 1.0
+          - -0.15
+          ub:
+          - 1.1
+          - 0.0
+          - 1.1
+          - 0.0
+        expanded:
+          init:
+          - 1.03
+          - -0.1
+          - 1.08
+          - -0.01
+          lb:
+          - 0.7
+          - -0.6
+          - 0.7
+          - -0.6
+          ub:
+          - 1.8
+          - 0.4
+          - 1.8
+          - 0.4
+        halfcell: *id003
+      method: Nelder-Mead
+      n_restarts: 5
+      detect_active_bounds: true
+    scoring:
+      tolerance: 0.02
+    _config_path: configs/objectives.yaml
+    _loaded_files:
+    - configs/objectives.yaml
+  base_config: configs/base.yaml
+  inventory: &id008
+    n_pe_ah: 2.3577068144188655
+    n_ne_ah: 5.747602547811476
+    q_ref_ah: 5.621072847109866
+    w_pe: 0.2908842474792466
+    w_ne: 0.7091157525207533
+    kappa: 0.6935050342807781
+  env: &id004
+    python: 3.11.15
+    platform: Linux-6.18.44-fc-v70-x86_64-with-glibc2.39
+    machine: x86_64
+    smoothing_backend: banded_cache
+    numpy: 2.4.6
+    scipy: 1.17.1
+    pandas: 3.0.5
+    joblib: 1.6.0
+    pyarrow: 25.0.1
+    pybamm: 26.8.0.0
+    matplotlib: 3.11.2
+    yaml: 6.0.1
+    pybammsolvers: 0.9.1
+    casadi: 3.7.2
+  sealed_inputs: &id005
+    results/_smoke/p2/grid_22p_seed_101/curves.parquet: e989e95322e4e1f9
+    configs/base.yaml: 26fe6c7cc2a2d719
+    results/_smoke/p2/grid_22p_seed_101/curves_manifest.yaml: 802aa9a0b97bc5ff
+    results/_smoke/p2/grid_22p_seed_101/curves_manifest_start.yaml: 425fed7a43dad40d
+    results/_smoke/p2/grid_22p_seed_101/failed.csv: 1efe94b7e52e4bec
+    .cache/halfcell/a8e262f7d6aa4beb_ocpbias_137bdffc9eda.json: 6e00fbe0a0af025c
+    .cache/halfcell/a8e262f7d6aa4beb_ocpbias_137bdffc9eda.meta.yaml: 2a9716b6cc9d0b42
+  curves_sha: e989e95322e4e1f9
+  base_config_sha: 26fe6c7cc2a2d719
+  halfcell_sha: 6e00fbe0a0af025c
+  halfcell_meta_sha: 2a9716b6cc9d0b42
+  halfcell_cache: .cache/halfcell/a8e262f7d6aa4beb_ocpbias_137bdffc9eda.json
+  halfcell_recipe:
+    method: ocpbias
+    n_points: 400
+    branch: delithiation
+    pe_offset_mv: 5.0
+    ne_offset_mv: 0.0
+    pe_stretch: 1.0
+    ne_stretch: 1.0
+    pe_tilt_mv: 10.0
+    pe_tilt_y_top: 0.2699987322515213
+    pe_tilt_y_bot: 0.9260882648404596
+  producer_sha: 802aa9a0b97bc5ff
+  producer:
+    config_hash: 5a2880644b013eaa
+    solver: IDAKLUSolver
+    protocol_unified: charge_first
+    noise_seed: 101
+    source_digest: 194b1c515598d991
+    curves_sha256: e989e95322e4e1f945b48cdea8fad04295071392a88751bb048dd9d821ecf908
+start_provenance:
+  attempt_id: 20261006T201904_11860_000
+  started_at: '2026-10-06T20:19:04'
+  resume: false
+  source_digest: 194b1c515598d991
+  git_commit: d210440de0188ada76fa632a153a6f4f11663ee9
+  git_commit_short: d210440d
+  git_dirty: false
+  git_dirty_tracked: false
+  git_dirty_files_in_scope: []
+  git_dirty_out_of_scope: []
+  git_dirty_repo_wide: false
+  git_dirty_scope:
+  - src/
+  - tools/
+  - configs/
+  - scripts/
+  - run.sh
+  - requirements*.txt
+  git_untracked_count: 0
+  git_untracked_critical: []
+  env: *id004
+  input_sha256: *id005
+  halfcell_cache: .cache/halfcell/a8e262f7d6aa4beb_ocpbias_137bdffc9eda.json
+  halfcell_recipe: null
+  _주의: 실행 **시작** 시점 상태다 (입력 로드·self-fit 이전). manifest.yaml 은 종료 시점이므로 둘이 다르면 실행 도중
+    코드나 입력이 바뀐 것이다 (F42/F51). half-cell 캐시 digest 는 기준 곡선을 고른 뒤 attempt 파일에 추가된다.
+attempt_id: 20261006T201904_11860_000
+attempts_dir: attempts
+git_commit_changed_during_run: false
+source_digest_changed_during_run: false
+objectives_resolved: *id006
+n_conditions: 320
+objectives:
+- pocv_dvdq
+- pocv_dvdq_dqdv
+bounds_preset: halfcell
+bounds: *id003
+n_restarts: 5
+target_column: v_full_noisy
+reference: halfcell
+p_ini: *id007
+warm_start: true
+q_ref_mah: 5621.0728471098655
+lli_inventory_constants: *id008
+elapsed_s: 614.3
+fits_parquet: results/_smoke/p2/fit_L4_t5/fits.parquet
+fits_seal:
+  file_sha256: c92a10e4e8ae67902f827b22ddd03d3f89cd04cd55843cc78b88d1df88eaed20
+  n_rows: 640
+  key_sha256: c5b05d9d3c3e5669809e4fc8628e690cc3e441ce8cc71382a7bdedfce30e3280
+  cond_sha256: 0583e1b2e18481cf
+  n_conditions: 320
+  n_objectives: 2
+  objectives:
+  - pocv_dvdq
+  - pocv_dvdq_dqdv
+reproducible: true

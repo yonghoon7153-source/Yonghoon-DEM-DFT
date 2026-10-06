@@ -1,0 +1,41 @@
+timestamp: '2026-10-06T19:29:26'
+config_hash: 5a2880644b013eaa
+pybamm_version: 26.8.0.0
+platform: Linux-6.18.44-fc-v70-x86_64-with-glibc2.39
+python: 3.11.15
+git_commit: d210440de0188ada76fa632a153a6f4f11663ee9
+git_commit_short: d210440d
+git_dirty: false
+git_dirty_tracked: false
+git_dirty_files_in_scope: []
+git_dirty_out_of_scope: []
+git_dirty_repo_wide: false
+git_dirty_scope:
+- src/
+- tools/
+- configs/
+- scripts/
+- run.sh
+- requirements*.txt
+git_untracked_count: 0
+git_untracked_critical: []
+run_type: grid
+protocol_unified: charge_first
+solver: IDAKLUSolver
+nproc: 4
+chunk_size: 200
+n_conditions: 400
+n_resume_skipped: 0
+discharged_state:
+  ne_primary: 36.64970365755636
+  ne_secondary: 3446.0841935664557
+  pe: 58439.873864492365
+reproducible: true
+n_ok: 320
+n_failed: 80
+n_completed_total: 400
+n_failed_total: 80
+n_curves_total: 320
+elapsed_s: 204.5
+curves_parquet: results/_smoke/p2/grid_22p_seed_101/curves.parquet
+finished: '2026-10-06T19:32:51'

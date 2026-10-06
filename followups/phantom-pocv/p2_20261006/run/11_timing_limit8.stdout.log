@@ -1,0 +1,7 @@
+· 실행 전 gate 면제 — 모든 경로가 smoke namespace 안이다 (정규 격리)
+{
+  "n_rows": 16,
+  "n_conditions": 8,
+  "elapsed_s": 18.60162369399768,
+  "out": "results/_smoke/p2/fit_timing/fits.parquet"
+}

@@ -1,0 +1,11 @@
+argv: python /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/p2run/p2_components.py --out /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/p2run/31_components_all.json
+cwd: /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/p2/degradation-degeneracy
+start_utc: 2026-10-06T20:50:56Z
+copy_head: d210440de0188ada76fa632a153a6f4f11663ee9
+repo_head: 217230fe27d8fe3ed5bb424189b117eba67bb234
+copy_dirty: 0
+disk_free_start: 6999298048
+end_utc: 2026-10-06T20:51:00Z
+rc: 1
+elapsed_s: 3.65
+disk_free_end: 6999252992

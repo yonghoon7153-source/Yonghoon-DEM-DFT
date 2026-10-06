@@ -1,0 +1,11 @@
+argv: nice -n 19 python /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/p2run/p2_components.py --legs L1 L2 L3 --out /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/p2run/30_sign_check_L1_L3.json
+cwd: /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/p2/degradation-degeneracy
+start_utc: 2026-10-06T20:20:15Z
+copy_head: d210440de0188ada76fa632a153a6f4f11663ee9
+repo_head: 93e8943ac49f51b39fad0e687845fffaad6556c2
+copy_dirty: 0
+disk_free_start: 7015223296
+end_utc: 2026-10-06T20:20:18Z
+rc: 0
+elapsed_s: 2.5
+disk_free_end: 7015198720

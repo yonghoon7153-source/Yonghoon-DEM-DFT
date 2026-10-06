@@ -1,0 +1,8 @@
+2026-10-06 19:29:24,440 WARNING src.baseline: 완방상태 캐시가 다른 코드 로 계산됨 (c7f48918ff971e91 ≠ 194b1c515598d991) — 미스로 취급해 재계산: /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/p2/degradation-degeneracy/.cache/discharged_state/a8e262f7d6aa4beb.json
+2026-10-06 19:29:26,910 INFO src.baseline: 완방상태 산출: Gr=36.6 mol/m3 (x=0.0013), Si=3446.1 (x=0.0124), PE=58439.9 (y=0.9261)
+2026-10-06 19:29:26,910 WARNING src.baseline:   vs 원본 하드코딩 ne_primary: 36.7 -> 36.6 (차이 0.1%) — 하드코딩은 사용하지 않음
+2026-10-06 19:29:26,910 WARNING src.baseline:   vs 원본 하드코딩 ne_secondary: 3446.3 -> 3446.1 (차이 0.0%) — 하드코딩은 사용하지 않음
+2026-10-06 19:29:26,910 WARNING src.baseline:   vs 원본 하드코딩 pe: 58439.9 -> 58439.9 (차이 0.0%) — 하드코딩은 사용하지 않음
+2026-10-06 19:29:26,921 INFO src.baseline: 완방상태 캐시 저장: /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/p2/degradation-degeneracy/.cache/discharged_state/a8e262f7d6aa4beb.json
+grid:   0%|          | 0/320 [00:00<?, ?cond/s]grid:  62%|██████▎   | 200/320 [02:10<01:18,  1.53cond/s]grid: 100%|██████████| 320/320 [03:24<00:00,  1.58cond/s]grid: 100%|██████████| 320/320 [03:24<00:00,  1.57cond/s]
+2026-10-06 19:32:51,699 INFO __main__: grid 완료: ok=320 failed=80 (누적 곡선 320) elapsed=204.5s

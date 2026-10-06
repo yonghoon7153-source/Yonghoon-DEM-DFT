@@ -1,0 +1,1 @@
+❌ 실행 전 gate 거부 — [plan] 계획 index 에 없는 다리다: 'grid_fit_v4' — 실행 전에 `LEG_PRESERVATION.yaml` 의 `planned:` 에 사람이 적어야 한다 (현재 계획: ['fit_22p_seed_404_hc', 'fit_22p_seed_404_hc_nowarm', 'fit_22p_seed_404_hc_warm_now', 'fit_seed404_pe5mv', 'fit_seed404_pe5mv_nowarm', 'grid_fit_v5', 'paired_fixed5_v4', 'paired_fixed5_v4_nowarm_now', 'paired_fixed5_v4_warm'])
