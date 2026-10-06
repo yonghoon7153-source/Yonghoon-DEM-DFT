@@ -4069,3 +4069,5 @@ gate INCOMPLETE · 실효 정책 UNVERIFIED · native 미승인 · 게이트 리
 - **두 단계:** 실행 기계의 현재 값 (prefs · 경로 부재 · 기준 9 파일 · r2 바이트 배치 · 디스크) 은 이 저장소에서 볼 수 없다 → 1 단계 (이 요청 · 범위 승인 · 읽기 전용
   사전 관측 허락) → 2 단계 (관측을 붙인 최종 승인 요청문 · 사용자 최종 승인 = USER_DECISION). 이전 native 30–480 s 와 같은 분담.
 - 유지: native 미승인 · approval / token / runtime 생성 0 · COMSOL 호출 0 · 960 s · 생산 변경 · 시험 반복 없음 · 정상 gate INCOMPLETE.
+- (2026-10-06 덧붙임) Codex 질문 "전달 300 s · 전체 10,500 s 는 부모 POST_WRITE 까지인가, 결과 수집 · ZIP 포장까지인가" → 코드 근거로 **부모 POST_WRITE 까지**
+  (`PARENT_COMMAND.ps1` 207 · 216 · 222 · 234 · 239–246 행 — 부모에 ZIP 포장 없음). 요청문 §6-1 에 경계와 별도 포장 단계 (제안 상한 1,800 s · 한 번 · 판정 필드 불변) 를 더했다.
