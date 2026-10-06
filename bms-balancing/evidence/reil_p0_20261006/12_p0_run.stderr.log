@@ -1,0 +1,154 @@
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1317: RuntimeWarning: divide by zero encountered in divide
+  a = -(dx2) / (dx1 * (dx1 + dx2))
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1317: RuntimeWarning: invalid value encountered in divide
+  a = -(dx2) / (dx1 * (dx1 + dx2))
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1318: RuntimeWarning: divide by zero encountered in divide
+  b = (dx2 - dx1) / (dx1 * dx2)
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1318: RuntimeWarning: invalid value encountered in divide
+  b = (dx2 - dx1) / (dx1 * dx2)
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1319: RuntimeWarning: divide by zero encountered in divide
+  c = dx1 / (dx2 * (dx1 + dx2))
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1319: RuntimeWarning: invalid value encountered in divide
+  c = dx1 / (dx2 * (dx1 + dx2))
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1328: RuntimeWarning: invalid value encountered in add
+  out[tuple(slice1)] = a * f[tuple(slice2)] + b * f[tuple(slice3)] \
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1317: RuntimeWarning: divide by zero encountered in divide
+  a = -(dx2) / (dx1 * (dx1 + dx2))
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1317: RuntimeWarning: invalid value encountered in divide
+  a = -(dx2) / (dx1 * (dx1 + dx2))
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1318: RuntimeWarning: divide by zero encountered in divide
+  b = (dx2 - dx1) / (dx1 * dx2)
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1318: RuntimeWarning: invalid value encountered in divide
+  b = (dx2 - dx1) / (dx1 * dx2)
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1319: RuntimeWarning: divide by zero encountered in divide
+  c = dx1 / (dx2 * (dx1 + dx2))
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1319: RuntimeWarning: invalid value encountered in divide
+  c = dx1 / (dx2 * (dx1 + dx2))
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1328: RuntimeWarning: invalid value encountered in add
+  out[tuple(slice1)] = a * f[tuple(slice2)] + b * f[tuple(slice3)] \
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1317: RuntimeWarning: divide by zero encountered in divide
+  a = -(dx2) / (dx1 * (dx1 + dx2))
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1317: RuntimeWarning: invalid value encountered in divide
+  a = -(dx2) / (dx1 * (dx1 + dx2))
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1318: RuntimeWarning: divide by zero encountered in divide
+  b = (dx2 - dx1) / (dx1 * dx2)
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1318: RuntimeWarning: invalid value encountered in divide
+  b = (dx2 - dx1) / (dx1 * dx2)
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1319: RuntimeWarning: divide by zero encountered in divide
+  c = dx1 / (dx2 * (dx1 + dx2))
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1319: RuntimeWarning: invalid value encountered in divide
+  c = dx1 / (dx2 * (dx1 + dx2))
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1328: RuntimeWarning: invalid value encountered in add
+  out[tuple(slice1)] = a * f[tuple(slice2)] + b * f[tuple(slice3)] \
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1317: RuntimeWarning: divide by zero encountered in divide
+  a = -(dx2) / (dx1 * (dx1 + dx2))
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1317: RuntimeWarning: invalid value encountered in divide
+  a = -(dx2) / (dx1 * (dx1 + dx2))
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1318: RuntimeWarning: divide by zero encountered in divide
+  b = (dx2 - dx1) / (dx1 * dx2)
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1318: RuntimeWarning: invalid value encountered in divide
+  b = (dx2 - dx1) / (dx1 * dx2)
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1319: RuntimeWarning: divide by zero encountered in divide
+  c = dx1 / (dx2 * (dx1 + dx2))
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1319: RuntimeWarning: invalid value encountered in divide
+  c = dx1 / (dx2 * (dx1 + dx2))
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1328: RuntimeWarning: invalid value encountered in add
+  out[tuple(slice1)] = a * f[tuple(slice2)] + b * f[tuple(slice3)] \
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1317: RuntimeWarning: divide by zero encountered in divide
+  a = -(dx2) / (dx1 * (dx1 + dx2))
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1317: RuntimeWarning: invalid value encountered in divide
+  a = -(dx2) / (dx1 * (dx1 + dx2))
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1318: RuntimeWarning: divide by zero encountered in divide
+  b = (dx2 - dx1) / (dx1 * dx2)
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1318: RuntimeWarning: invalid value encountered in divide
+  b = (dx2 - dx1) / (dx1 * dx2)
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1319: RuntimeWarning: divide by zero encountered in divide
+  c = dx1 / (dx2 * (dx1 + dx2))
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1319: RuntimeWarning: invalid value encountered in divide
+  c = dx1 / (dx2 * (dx1 + dx2))
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1328: RuntimeWarning: invalid value encountered in add
+  out[tuple(slice1)] = a * f[tuple(slice2)] + b * f[tuple(slice3)] \
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1317: RuntimeWarning: divide by zero encountered in divide
+  a = -(dx2) / (dx1 * (dx1 + dx2))
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1317: RuntimeWarning: invalid value encountered in divide
+  a = -(dx2) / (dx1 * (dx1 + dx2))
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1318: RuntimeWarning: divide by zero encountered in divide
+  b = (dx2 - dx1) / (dx1 * dx2)
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1318: RuntimeWarning: invalid value encountered in divide
+  b = (dx2 - dx1) / (dx1 * dx2)
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1319: RuntimeWarning: divide by zero encountered in divide
+  c = dx1 / (dx2 * (dx1 + dx2))
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1319: RuntimeWarning: invalid value encountered in divide
+  c = dx1 / (dx2 * (dx1 + dx2))
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1328: RuntimeWarning: invalid value encountered in add
+  out[tuple(slice1)] = a * f[tuple(slice2)] + b * f[tuple(slice3)] \
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1317: RuntimeWarning: divide by zero encountered in divide
+  a = -(dx2) / (dx1 * (dx1 + dx2))
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1317: RuntimeWarning: invalid value encountered in divide
+  a = -(dx2) / (dx1 * (dx1 + dx2))
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1318: RuntimeWarning: divide by zero encountered in divide
+  b = (dx2 - dx1) / (dx1 * dx2)
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1318: RuntimeWarning: invalid value encountered in divide
+  b = (dx2 - dx1) / (dx1 * dx2)
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1319: RuntimeWarning: divide by zero encountered in divide
+  c = dx1 / (dx2 * (dx1 + dx2))
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1319: RuntimeWarning: invalid value encountered in divide
+  c = dx1 / (dx2 * (dx1 + dx2))
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1328: RuntimeWarning: invalid value encountered in add
+  out[tuple(slice1)] = a * f[tuple(slice2)] + b * f[tuple(slice3)] \
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1317: RuntimeWarning: divide by zero encountered in divide
+  a = -(dx2) / (dx1 * (dx1 + dx2))
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1317: RuntimeWarning: invalid value encountered in divide
+  a = -(dx2) / (dx1 * (dx1 + dx2))
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1318: RuntimeWarning: divide by zero encountered in divide
+  b = (dx2 - dx1) / (dx1 * dx2)
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1318: RuntimeWarning: invalid value encountered in divide
+  b = (dx2 - dx1) / (dx1 * dx2)
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1319: RuntimeWarning: divide by zero encountered in divide
+  c = dx1 / (dx2 * (dx1 + dx2))
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1319: RuntimeWarning: invalid value encountered in divide
+  c = dx1 / (dx2 * (dx1 + dx2))
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1328: RuntimeWarning: invalid value encountered in add
+  out[tuple(slice1)] = a * f[tuple(slice2)] + b * f[tuple(slice3)] \
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1317: RuntimeWarning: divide by zero encountered in divide
+  a = -(dx2) / (dx1 * (dx1 + dx2))
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1317: RuntimeWarning: invalid value encountered in divide
+  a = -(dx2) / (dx1 * (dx1 + dx2))
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1318: RuntimeWarning: divide by zero encountered in divide
+  b = (dx2 - dx1) / (dx1 * dx2)
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1318: RuntimeWarning: invalid value encountered in divide
+  b = (dx2 - dx1) / (dx1 * dx2)
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1319: RuntimeWarning: divide by zero encountered in divide
+  c = dx1 / (dx2 * (dx1 + dx2))
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1319: RuntimeWarning: invalid value encountered in divide
+  c = dx1 / (dx2 * (dx1 + dx2))
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1328: RuntimeWarning: invalid value encountered in add
+  out[tuple(slice1)] = a * f[tuple(slice2)] + b * f[tuple(slice3)] \
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1317: RuntimeWarning: divide by zero encountered in divide
+  a = -(dx2) / (dx1 * (dx1 + dx2))
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1317: RuntimeWarning: invalid value encountered in divide
+  a = -(dx2) / (dx1 * (dx1 + dx2))
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1318: RuntimeWarning: divide by zero encountered in divide
+  b = (dx2 - dx1) / (dx1 * dx2)
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1318: RuntimeWarning: invalid value encountered in divide
+  b = (dx2 - dx1) / (dx1 * dx2)
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1319: RuntimeWarning: divide by zero encountered in divide
+  c = dx1 / (dx2 * (dx1 + dx2))
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1319: RuntimeWarning: invalid value encountered in divide
+  c = dx1 / (dx2 * (dx1 + dx2))
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1328: RuntimeWarning: invalid value encountered in add
+  out[tuple(slice1)] = a * f[tuple(slice2)] + b * f[tuple(slice3)] \
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1317: RuntimeWarning: divide by zero encountered in divide
+  a = -(dx2) / (dx1 * (dx1 + dx2))
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1317: RuntimeWarning: invalid value encountered in divide
+  a = -(dx2) / (dx1 * (dx1 + dx2))
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1318: RuntimeWarning: divide by zero encountered in divide
+  b = (dx2 - dx1) / (dx1 * dx2)
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1318: RuntimeWarning: invalid value encountered in divide
+  b = (dx2 - dx1) / (dx1 * dx2)
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1319: RuntimeWarning: divide by zero encountered in divide
+  c = dx1 / (dx2 * (dx1 + dx2))
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1319: RuntimeWarning: invalid value encountered in divide
+  c = dx1 / (dx2 * (dx1 + dx2))
+/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/b881d255-9513-5adc-9b14-3c0be18d7ad6/scratchpad/reil_p0/venv/lib/python3.11/site-packages/numpy/lib/_function_base_impl.py:1328: RuntimeWarning: invalid value encountered in add
+  out[tuple(slice1)] = a * f[tuple(slice2)] + b * f[tuple(slice3)] \

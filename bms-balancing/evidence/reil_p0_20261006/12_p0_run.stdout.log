@@ -1,0 +1,3 @@
+No datetime column found. Proceeding with the original data.
+No datetime column found. Proceeding with the original data.
+{"rc": 0, "stopped": null, "max_q": {"float": 3.149013767655145, "repr": "3.149013767655145", "fraction": "886368576912267/281474976710656", "n_q_PE_hc": 1313, "status": "OK", "path": "노트북 셀 6 (PE_data = LFP_data[1] · [argmin:argmax] / LFP_mass_12 × 20.16) · util 718–719 np.max"}, "statuses": {"PRIOR_COMPATIBLE": 83, "PRIOR_INCOMPATIBLE": 16, "P0_UNFIT": 0}}

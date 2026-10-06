@@ -1,0 +1,8309 @@
+{
+ "cell_columns": [
+  {
+   "cell_columns": [
+    [
+     "Capacity/mAh.2",
+     "Voltage/V.2"
+    ],
+    [
+     "Capacity/mAh.3",
+     "Voltage/V.3"
+    ],
+    [
+     "Capacity/mAh.4",
+     "Voltage/V.4"
+    ]
+   ],
+   "cell_idx_points_to": [
+    "Capacity/mAh.3",
+    "Voltage/V.3"
+   ],
+   "datetime_header_found": "2025-04-27 00:00:00",
+   "dropped_columns": [
+    "S1",
+    "Capacity/mAh",
+    "Voltage/V",
+    "Unnamed: 3",
+    "S2",
+    "Capacity/mAh.1",
+    "Voltage/V.1",
+    "Unnamed: 7",
+    "2025-04-27 00:00:00",
+    "S1.1",
+    "Unnamed: 12",
+    "S2.1",
+    "Unnamed: 16",
+    "S3"
+   ],
+   "headers_after_their_drop": [
+    "Capacity/mAh.2",
+    "Voltage/V.2",
+    "Capacity/mAh.3",
+    "Voltage/V.3",
+    "Capacity/mAh.4",
+    "Voltage/V.4"
+   ],
+   "headers_original": [
+    "S1",
+    "Capacity/mAh",
+    "Voltage/V",
+    "Unnamed: 3",
+    "S2",
+    "Capacity/mAh.1",
+    "Voltage/V.1",
+    "Unnamed: 7",
+    "2025-04-27 00:00:00",
+    "S1.1",
+    "Capacity/mAh.2",
+    "Voltage/V.2",
+    "Unnamed: 12",
+    "S2.1",
+    "Capacity/mAh.3",
+    "Voltage/V.3",
+    "Unnamed: 16",
+    "S3",
+    "Capacity/mAh.4",
+    "Voltage/V.4"
+   ],
+   "n_cells": 3,
+   "replicate_equals_their_output": true,
+   "sheet": "15-LFP 16-Gr Full-cell @ C_20"
+  },
+  {
+   "cell_columns": [
+    [
+     "Capacity/mAh",
+     "Voltage/V"
+    ]
+   ],
+   "cell_idx_points_to": [
+    "Capacity/mAh",
+    "Voltage/V"
+   ],
+   "datetime_header_found": "2025-05-05 00:00:00",
+   "dropped_columns": [
+    "2025-05-05 00:00:00"
+   ],
+   "headers_after_their_drop": [
+    "Capacity/mAh",
+    "Voltage/V"
+   ],
+   "headers_original": [
+    "2025-05-05 00:00:00",
+    "Capacity/mAh",
+    "Voltage/V"
+   ],
+   "n_cells": 1,
+   "replicate_equals_their_output": true,
+   "sheet": "15-LFP 16-Gr SOC-10"
+  },
+  {
+   "cell_columns": [
+    [
+     "Capacity/mAh",
+     "Voltage/V"
+    ],
+    [
+     "Capacity/mAh.1",
+     "Voltage/V.1"
+    ]
+   ],
+   "cell_idx_points_to": [
+    "Capacity/mAh",
+    "Voltage/V"
+   ],
+   "datetime_header_found": "2025-05-05 00:00:00",
+   "dropped_columns": [
+    "2025-05-05 00:00:00",
+    "Unnamed: 3"
+   ],
+   "headers_after_their_drop": [
+    "Capacity/mAh",
+    "Voltage/V",
+    "Capacity/mAh.1",
+    "Voltage/V.1"
+   ],
+   "headers_original": [
+    "2025-05-05 00:00:00",
+    "Capacity/mAh",
+    "Voltage/V",
+    "Unnamed: 3",
+    "Capacity/mAh.1",
+    "Voltage/V.1"
+   ],
+   "n_cells": 2,
+   "replicate_equals_their_output": true,
+   "sheet": "15-LFP 16-Gr SOC-20"
+  },
+  {
+   "cell_columns": [
+    [
+     "Capacity/mAh",
+     "Voltage/V"
+    ],
+    [
+     "Capacity/mAh.1",
+     "Voltage/V.1"
+    ],
+    [
+     "Capacity/mAh.2",
+     "Voltage/V.2"
+    ]
+   ],
+   "cell_idx_points_to": [
+    "Capacity/mAh",
+    "Voltage/V"
+   ],
+   "datetime_header_found": "2025-05-23 00:00:00",
+   "dropped_columns": [
+    "2025-05-23 00:00:00",
+    "Unnamed: 3",
+    "Unnamed: 6"
+   ],
+   "headers_after_their_drop": [
+    "Capacity/mAh",
+    "Voltage/V",
+    "Capacity/mAh.1",
+    "Voltage/V.1",
+    "Capacity/mAh.2",
+    "Voltage/V.2"
+   ],
+   "headers_original": [
+    "2025-05-23 00:00:00",
+    "Capacity/mAh",
+    "Voltage/V",
+    "Unnamed: 3",
+    "Capacity/mAh.1",
+    "Voltage/V.1",
+    "Unnamed: 6",
+    "Capacity/mAh.2",
+    "Voltage/V.2"
+   ],
+   "n_cells": 3,
+   "replicate_equals_their_output": true,
+   "sheet": "12-LFP 16-Gr SOC-100"
+  },
+  {
+   "cell_columns": [
+    [
+     "Capacity/mAh.1",
+     "Voltage/V.1"
+    ],
+    [
+     "Capacity/mAh.2",
+     "Voltage/V.2"
+    ]
+   ],
+   "cell_idx_points_to": [
+    "Capacity/mAh.1",
+    "Voltage/V.1"
+   ],
+   "datetime_header_found": "2025-05-05 00:00:00",
+   "dropped_columns": [
+    "Capacity/mAh",
+    "Voltage/V",
+    "Unnamed: 2",
+    "2025-05-05 00:00:00",
+    "Unnamed: 6"
+   ],
+   "headers_after_their_drop": [
+    "Capacity/mAh.1",
+    "Voltage/V.1",
+    "Capacity/mAh.2",
+    "Voltage/V.2"
+   ],
+   "headers_original": [
+    "Capacity/mAh",
+    "Voltage/V",
+    "Unnamed: 2",
+    "2025-05-05 00:00:00",
+    "Capacity/mAh.1",
+    "Voltage/V.1",
+    "Unnamed: 6",
+    "Capacity/mAh.2",
+    "Voltage/V.2"
+   ],
+   "n_cells": 2,
+   "replicate_equals_their_output": true,
+   "sheet": "15-LFP 12-Gr Full-cell @ C_20"
+  },
+  {
+   "cell_columns": [
+    [
+     "Capacity/mAh",
+     "Voltage/V"
+    ]
+   ],
+   "cell_idx_points_to": [
+    "Capacity/mAh",
+    "Voltage/V"
+   ],
+   "datetime_header_found": null,
+   "dropped_columns": [
+    "S1"
+   ],
+   "headers_after_their_drop": [
+    "Capacity/mAh",
+    "Voltage/V"
+   ],
+   "headers_original": [
+    "S1",
+    "Capacity/mAh",
+    "Voltage/V"
+   ],
+   "n_cells": 1,
+   "replicate_equals_their_output": true,
+   "sheet": "Full cell after FM SOC 0"
+  },
+  {
+   "cell_columns": [
+    [
+     "Capacity/mAh",
+     "Voltage/V"
+    ],
+    [
+     "Capacity/mAh.1",
+     "Voltage/V.1"
+    ],
+    [
+     "Capacity/mAh.2",
+     "Voltage/V.2"
+    ]
+   ],
+   "cell_idx_points_to": [
+    "Capacity/mAh.1",
+    "Voltage/V.1"
+   ],
+   "datetime_header_found": null,
+   "dropped_columns": [
+    "S1",
+    "Unnamed: 3",
+    "Unnamed: 4",
+    "S2",
+    "Unnamed: 8",
+    "S3"
+   ],
+   "headers_after_their_drop": [
+    "Capacity/mAh",
+    "Voltage/V",
+    "Capacity/mAh.1",
+    "Voltage/V.1",
+    "Capacity/mAh.2",
+    "Voltage/V.2"
+   ],
+   "headers_original": [
+    "S1",
+    "Capacity/mAh",
+    "Voltage/V",
+    "Unnamed: 3",
+    "Unnamed: 4",
+    "S2",
+    "Capacity/mAh.1",
+    "Voltage/V.1",
+    "Unnamed: 8",
+    "S3",
+    "Capacity/mAh.2",
+    "Voltage/V.2"
+   ],
+   "n_cells": 3,
+   "replicate_equals_their_output": true,
+   "sheet": "Full cell after FM SOC 10"
+  },
+  {
+   "cell_columns": [
+    [
+     "Capacity/mAh",
+     "Voltage/V"
+    ],
+    [
+     "Capacity/mAh.1",
+     "Voltage/V.1"
+    ]
+   ],
+   "cell_idx_points_to": [
+    "Capacity/mAh.1",
+    "Voltage/V.1"
+   ],
+   "datetime_header_found": "2025-05-23 00:00:00",
+   "dropped_columns": [
+    "2025-05-23 00:00:00",
+    "Unnamed: 3"
+   ],
+   "headers_after_their_drop": [
+    "Capacity/mAh",
+    "Voltage/V",
+    "Capacity/mAh.1",
+    "Voltage/V.1"
+   ],
+   "headers_original": [
+    "2025-05-23 00:00:00",
+    "Capacity/mAh",
+    "Voltage/V",
+    "Unnamed: 3",
+    "Capacity/mAh.1",
+    "Voltage/V.1"
+   ],
+   "n_cells": 2,
+   "replicate_equals_their_output": true,
+   "sheet": "15-LFP 12-Gr SOC-10"
+  },
+  {
+   "cell_columns": [
+    [
+     "Capacity/mAh",
+     "Voltage/V"
+    ],
+    [
+     "Capacity/mAh.1",
+     "Voltage/V.1"
+    ]
+   ],
+   "cell_idx_points_to": [
+    "Capacity/mAh.1",
+    "Voltage/V.1"
+   ],
+   "datetime_header_found": "2025-05-23 00:00:00",
+   "dropped_columns": [
+    "2025-05-23 00:00:00",
+    "Unnamed: 3"
+   ],
+   "headers_after_their_drop": [
+    "Capacity/mAh",
+    "Voltage/V",
+    "Capacity/mAh.1",
+    "Voltage/V.1"
+   ],
+   "headers_original": [
+    "2025-05-23 00:00:00",
+    "Capacity/mAh",
+    "Voltage/V",
+    "Unnamed: 3",
+    "Capacity/mAh.1",
+    "Voltage/V.1"
+   ],
+   "n_cells": 2,
+   "replicate_equals_their_output": true,
+   "sheet": "15-LFP 12-Gr SOC-20"
+  },
+  {
+   "cell_columns": [
+    [
+     "Capacity/mAh",
+     "Voltage/V"
+    ],
+    [
+     "Capacity/mAh.1",
+     "Voltage/V.1"
+    ]
+   ],
+   "cell_idx_points_to": [
+    "Capacity/mAh",
+    "Voltage/V"
+   ],
+   "datetime_header_found": "2025-05-11 00:00:00",
+   "dropped_columns": [
+    "2025-05-11 00:00:00",
+    "Unnamed: 3"
+   ],
+   "headers_after_their_drop": [
+    "Capacity/mAh",
+    "Voltage/V",
+    "Capacity/mAh.1",
+    "Voltage/V.1"
+   ],
+   "headers_original": [
+    "2025-05-11 00:00:00",
+    "Capacity/mAh",
+    "Voltage/V",
+    "Unnamed: 3",
+    "Capacity/mAh.1",
+    "Voltage/V.1"
+   ],
+   "n_cells": 2,
+   "replicate_equals_their_output": true,
+   "sheet": "12-LFP 12-Gr SOC-10"
+  },
+  {
+   "cell_columns": [
+    [
+     "Capacity/mAh",
+     "Voltage/V"
+    ],
+    [
+     "Capacity/mAh.1",
+     "Voltage/V.1"
+    ]
+   ],
+   "cell_idx_points_to": [
+    "Capacity/mAh",
+    "Voltage/V"
+   ],
+   "datetime_header_found": "2025-05-11 00:00:00",
+   "dropped_columns": [
+    "2025-05-11 00:00:00",
+    "Unnamed: 3"
+   ],
+   "headers_after_their_drop": [
+    "Capacity/mAh",
+    "Voltage/V",
+    "Capacity/mAh.1",
+    "Voltage/V.1"
+   ],
+   "headers_original": [
+    "2025-05-11 00:00:00",
+    "Capacity/mAh",
+    "Voltage/V",
+    "Unnamed: 3",
+    "Capacity/mAh.1",
+    "Voltage/V.1"
+   ],
+   "n_cells": 2,
+   "replicate_equals_their_output": true,
+   "sheet": "12-LFP 12-Gr SOC-20"
+  },
+  {
+   "cell_columns": [
+    [
+     "Capacity/mAh",
+     "Voltage/V"
+    ],
+    [
+     "Capacity/mAh.1",
+     "Voltage/V.1"
+    ]
+   ],
+   "cell_idx_points_to": [
+    "Capacity/mAh.1",
+    "Voltage/V.1"
+   ],
+   "datetime_header_found": "2025-05-26 00:00:00",
+   "dropped_columns": [
+    "2025-05-26 00:00:00",
+    "Unnamed: 3"
+   ],
+   "headers_after_their_drop": [
+    "Capacity/mAh",
+    "Voltage/V",
+    "Capacity/mAh.1",
+    "Voltage/V.1"
+   ],
+   "headers_original": [
+    "2025-05-26 00:00:00",
+    "Capacity/mAh",
+    "Voltage/V",
+    "Unnamed: 3",
+    "Capacity/mAh.1",
+    "Voltage/V.1"
+   ],
+   "n_cells": 2,
+   "replicate_equals_their_output": true,
+   "sheet": "12-LFP C_20 Updated"
+  },
+  {
+   "cell_columns": [
+    [
+     "Capacity/mAh.1",
+     "Voltage/V.1"
+    ],
+    [
+     "Capacity/mAh.2",
+     "Voltage/V.2"
+    ]
+   ],
+   "cell_idx_points_to": [
+    "Capacity/mAh.2",
+    "Voltage/V.2"
+   ],
+   "datetime_header_found": "2025-04-27 00:00:00",
+   "dropped_columns": [
+    "Capacity/mAh",
+    "Voltage/V",
+    "Unnamed: 2",
+    "2025-04-27 00:00:00",
+    "S1",
+    "Unnamed: 7",
+    "S2"
+   ],
+   "headers_after_their_drop": [
+    "Capacity/mAh.1",
+    "Voltage/V.1",
+    "Capacity/mAh.2",
+    "Voltage/V.2"
+   ],
+   "headers_original": [
+    "Capacity/mAh",
+    "Voltage/V",
+    "Unnamed: 2",
+    "2025-04-27 00:00:00",
+    "S1",
+    "Capacity/mAh.1",
+    "Voltage/V.1",
+    "Unnamed: 7",
+    "S2",
+    "Capacity/mAh.2",
+    "Voltage/V.2"
+   ],
+   "n_cells": 2,
+   "replicate_equals_their_output": true,
+   "sheet": "12-Graphite Half-cell @ C_20"
+  }
+ ],
+ "correspondence": [
+  {
+   "cycle": {
+    "basis": "cycle 메타데이터 없음 (NaN 분절 번호 · step 순번 · 곡선 모양으로 채우지 않는다)",
+    "state": "판정 불가"
+   },
+   "direction": {
+    "basis": "부호 규약 · step 뜻을 정하는 문서가 P0 입력에 없음 (raw 칸에 보존 · 추측으로 통과시키지 않는다)",
+    "expected": "완전지 충전 = PE 탈리튬 · NE 리튬화",
+    "state": "판정 불가"
+   },
+   "overall": "판정 불가",
+   "raw": {
+    "cc_end_df_index": 7947,
+    "cell_idx": 1,
+    "current_columns_sign": {},
+    "cycle_columns": [],
+    "cycle_values_unique": "없음",
+    "n_selected_rows": 1084,
+    "nan_segment": 6,
+    "nan_segments_total": 16,
+    "q_v_columns": [
+     "Capacity/mAh.3",
+     "Voltage/V.3"
+    ],
+    "segment_rows_df_index": [
+     6862,
+     7970
+    ],
+    "selected_rows_df_index": [
+     6863,
+     7946
+    ],
+    "selected_rows_excel": [
+     6865,
+     7948
+    ],
+    "sheet": "15-LFP 16-Gr Full-cell @ C_20",
+    "step_columns": {},
+    "step_idx": 6
+   }
+  },
+  {
+   "cycle": {
+    "basis": "cycle 메타데이터 없음 (NaN 분절 번호 · step 순번 · 곡선 모양으로 채우지 않는다)",
+    "state": "판정 불가"
+   },
+   "direction": {
+    "basis": "부호 규약 · step 뜻을 정하는 문서가 P0 입력에 없음 (raw 칸에 보존 · 추측으로 통과시키지 않는다)",
+    "expected": "완전지 충전 = PE 탈리튬 · NE 리튬화",
+    "state": "판정 불가"
+   },
+   "overall": "판정 불가",
+   "raw": {
+    "cc_end_df_index": 7640,
+    "cell_idx": 0,
+    "current_columns_sign": {},
+    "cycle_columns": [],
+    "cycle_values_unique": "없음",
+    "n_selected_rows": 1046,
+    "nan_segment": 6,
+    "nan_segments_total": 14,
+    "q_v_columns": [
+     "Capacity/mAh",
+     "Voltage/V"
+    ],
+    "segment_rows_df_index": [
+     6593,
+     7664
+    ],
+    "selected_rows_df_index": [
+     6594,
+     7639
+    ],
+    "selected_rows_excel": [
+     6596,
+     7641
+    ],
+    "sheet": "15-LFP 16-Gr SOC-10",
+    "step_columns": {},
+    "step_idx": 6
+   }
+  },
+  {
+   "cycle": {
+    "basis": "cycle 메타데이터 없음 (NaN 분절 번호 · step 순번 · 곡선 모양으로 채우지 않는다)",
+    "state": "판정 불가"
+   },
+   "direction": {
+    "basis": "부호 규약 · step 뜻을 정하는 문서가 P0 입력에 없음 (raw 칸에 보존 · 추측으로 통과시키지 않는다)",
+    "expected": "완전지 충전 = PE 탈리튬 · NE 리튬화",
+    "state": "판정 불가"
+   },
+   "overall": "판정 불가",
+   "raw": {
+    "cc_end_df_index": 6815,
+    "cell_idx": 0,
+    "current_columns_sign": {},
+    "cycle_columns": [],
+    "cycle_values_unique": "없음",
+    "n_selected_rows": 927,
+    "nan_segment": 6,
+    "nan_segments_total": 16,
+    "q_v_columns": [
+     "Capacity/mAh",
+     "Voltage/V"
+    ],
+    "segment_rows_df_index": [
+     5887,
+     6838
+    ],
+    "selected_rows_df_index": [
+     5888,
+     6814
+    ],
+    "selected_rows_excel": [
+     5890,
+     6816
+    ],
+    "sheet": "15-LFP 16-Gr SOC-20",
+    "step_columns": {},
+    "step_idx": 6
+   }
+  },
+  {
+   "cycle": {
+    "basis": "cycle 메타데이터 없음 (NaN 분절 번호 · step 순번 · 곡선 모양으로 채우지 않는다)",
+    "state": "판정 불가"
+   },
+   "direction": {
+    "basis": "부호 규약 · step 뜻을 정하는 문서가 P0 입력에 없음 (raw 칸에 보존 · 추측으로 통과시키지 않는다)",
+    "expected": "완전지 충전 = PE 탈리튬 · NE 리튬화",
+    "state": "판정 불가"
+   },
+   "overall": "판정 불가",
+   "raw": {
+    "cc_end_df_index": 10431,
+    "cell_idx": 0,
+    "current_columns_sign": {},
+    "cycle_columns": [],
+    "cycle_values_unique": "없음",
+    "n_selected_rows": 1318,
+    "nan_segment": 7,
+    "nan_segments_total": 17,
+    "q_v_columns": [
+     "Capacity/mAh",
+     "Voltage/V"
+    ],
+    "segment_rows_df_index": [
+     9112,
+     10454
+    ],
+    "selected_rows_df_index": [
+     9113,
+     10430
+    ],
+    "selected_rows_excel": [
+     9115,
+     10432
+    ],
+    "sheet": "12-LFP 16-Gr SOC-100",
+    "step_columns": {},
+    "step_idx": 7
+   }
+  },
+  {
+   "cycle": {
+    "basis": "cycle 메타데이터 없음 (NaN 분절 번호 · step 순번 · 곡선 모양으로 채우지 않는다)",
+    "state": "판정 불가"
+   },
+   "direction": {
+    "basis": "부호 규약 · step 뜻을 정하는 문서가 P0 입력에 없음 (raw 칸에 보존 · 추측으로 통과시키지 않는다)",
+    "expected": "완전지 충전 = PE 탈리튬 · NE 리튬화",
+    "state": "판정 불가"
+   },
+   "overall": "판정 불가",
+   "raw": {
+    "cc_end_df_index": 12088,
+    "cell_idx": 0,
+    "current_columns_sign": {},
+    "cycle_columns": [],
+    "cycle_values_unique": "없음",
+    "n_selected_rows": 1572,
+    "nan_segment": 6,
+    "nan_segments_total": 182,
+    "q_v_columns": [
+     "Capacity/mAh.1",
+     "Voltage/V.1"
+    ],
+    "segment_rows_df_index": [
+     10515,
+     12112
+    ],
+    "selected_rows_df_index": [
+     10516,
+     12087
+    ],
+    "selected_rows_excel": [
+     10518,
+     12089
+    ],
+    "sheet": "15-LFP 12-Gr Full-cell @ C_20",
+    "step_columns": {},
+    "step_idx": 6
+   }
+  },
+  {
+   "cycle": {
+    "basis": "cycle 메타데이터 없음 (NaN 분절 번호 · step 순번 · 곡선 모양으로 채우지 않는다)",
+    "state": "판정 불가"
+   },
+   "direction": {
+    "basis": "부호 규약 · step 뜻을 정하는 문서가 P0 입력에 없음 (raw 칸에 보존 · 추측으로 통과시키지 않는다)",
+    "expected": "완전지 충전 = PE 탈리튬 · NE 리튬화",
+    "state": "판정 불가"
+   },
+   "overall": "판정 불가",
+   "raw": {
+    "cc_end_df_index": 1078,
+    "cell_idx": 0,
+    "current_columns_sign": {},
+    "cycle_columns": [],
+    "cycle_values_unique": "없음",
+    "n_selected_rows": 1077,
+    "nan_segment": 0,
+    "nan_segments_total": 1,
+    "q_v_columns": [
+     "Capacity/mAh",
+     "Voltage/V"
+    ],
+    "segment_rows_df_index": [
+     0,
+     1079
+    ],
+    "selected_rows_df_index": [
+     1,
+     1077
+    ],
+    "selected_rows_excel": [
+     3,
+     1079
+    ],
+    "sheet": "Full cell after FM SOC 0",
+    "step_columns": {},
+    "step_idx": 0
+   }
+  },
+  {
+   "cycle": {
+    "basis": "cycle 메타데이터 없음 (NaN 분절 번호 · step 순번 · 곡선 모양으로 채우지 않는다)",
+    "state": "판정 불가"
+   },
+   "direction": {
+    "basis": "부호 규약 · step 뜻을 정하는 문서가 P0 입력에 없음 (raw 칸에 보존 · 추측으로 통과시키지 않는다)",
+    "expected": "완전지 충전 = PE 탈리튬 · NE 리튬화",
+    "state": "판정 불가"
+   },
+   "overall": "판정 불가",
+   "raw": {
+    "cc_end_df_index": 1022,
+    "cell_idx": 1,
+    "current_columns_sign": {},
+    "cycle_columns": [],
+    "cycle_values_unique": "없음",
+    "n_selected_rows": 1021,
+    "nan_segment": 0,
+    "nan_segments_total": 2,
+    "q_v_columns": [
+     "Capacity/mAh.1",
+     "Voltage/V.1"
+    ],
+    "segment_rows_df_index": [
+     0,
+     1045
+    ],
+    "selected_rows_df_index": [
+     1,
+     1021
+    ],
+    "selected_rows_excel": [
+     3,
+     1023
+    ],
+    "sheet": "Full cell after FM SOC 10",
+    "step_columns": {},
+    "step_idx": 0
+   }
+  },
+  {
+   "cycle": {
+    "basis": "cycle 메타데이터 없음 (NaN 분절 번호 · step 순번 · 곡선 모양으로 채우지 않는다)",
+    "state": "판정 불가"
+   },
+   "direction": {
+    "basis": "부호 규약 · step 뜻을 정하는 문서가 P0 입력에 없음 (raw 칸에 보존 · 추측으로 통과시키지 않는다)",
+    "expected": "완전지 충전 = PE 탈리튬 · NE 리튬화",
+    "state": "판정 불가"
+   },
+   "overall": "판정 불가",
+   "raw": {
+    "cc_end_df_index": 11446,
+    "cell_idx": 1,
+    "current_columns_sign": {},
+    "cycle_columns": [],
+    "cycle_values_unique": "없음",
+    "n_selected_rows": 1528,
+    "nan_segment": 6,
+    "nan_segments_total": 36,
+    "q_v_columns": [
+     "Capacity/mAh.1",
+     "Voltage/V.1"
+    ],
+    "segment_rows_df_index": [
+     9917,
+     11469
+    ],
+    "selected_rows_df_index": [
+     9918,
+     11445
+    ],
+    "selected_rows_excel": [
+     9920,
+     11447
+    ],
+    "sheet": "15-LFP 12-Gr SOC-10",
+    "step_columns": {},
+    "step_idx": 6
+   }
+  },
+  {
+   "cycle": {
+    "basis": "cycle 메타데이터 없음 (NaN 분절 번호 · step 순번 · 곡선 모양으로 채우지 않는다)",
+    "state": "판정 불가"
+   },
+   "direction": {
+    "basis": "부호 규약 · step 뜻을 정하는 문서가 P0 입력에 없음 (raw 칸에 보존 · 추측으로 통과시키지 않는다)",
+    "expected": "완전지 충전 = PE 탈리튬 · NE 리튬화",
+    "state": "판정 불가"
+   },
+   "overall": "판정 불가",
+   "raw": {
+    "cc_end_df_index": 10964,
+    "cell_idx": 1,
+    "current_columns_sign": {},
+    "cycle_columns": [],
+    "cycle_values_unique": "없음",
+    "n_selected_rows": 1463,
+    "nan_segment": 6,
+    "nan_segments_total": 64,
+    "q_v_columns": [
+     "Capacity/mAh.1",
+     "Voltage/V.1"
+    ],
+    "segment_rows_df_index": [
+     9500,
+     10988
+    ],
+    "selected_rows_df_index": [
+     9501,
+     10963
+    ],
+    "selected_rows_excel": [
+     9503,
+     10965
+    ],
+    "sheet": "15-LFP 12-Gr SOC-20",
+    "step_columns": {},
+    "step_idx": 6
+   }
+  },
+  {
+   "cycle": {
+    "basis": "cycle 메타데이터 없음 (NaN 분절 번호 · step 순번 · 곡선 모양으로 채우지 않는다)",
+    "state": "판정 불가"
+   },
+   "direction": {
+    "basis": "부호 규약 · step 뜻을 정하는 문서가 P0 입력에 없음 (raw 칸에 보존 · 추측으로 통과시키지 않는다)",
+    "expected": "완전지 충전 = PE 탈리튬 · NE 리튬화",
+    "state": "판정 불가"
+   },
+   "overall": "판정 불가",
+   "raw": {
+    "cc_end_df_index": 7411,
+    "cell_idx": 0,
+    "current_columns_sign": {},
+    "cycle_columns": [],
+    "cycle_values_unique": "없음",
+    "n_selected_rows": 986,
+    "nan_segment": 6,
+    "nan_segments_total": 16,
+    "q_v_columns": [
+     "Capacity/mAh",
+     "Voltage/V"
+    ],
+    "segment_rows_df_index": [
+     6424,
+     7434
+    ],
+    "selected_rows_df_index": [
+     6425,
+     7410
+    ],
+    "selected_rows_excel": [
+     6427,
+     7412
+    ],
+    "sheet": "12-LFP 12-Gr SOC-10",
+    "step_columns": {},
+    "step_idx": 6
+   }
+  },
+  {
+   "cycle": {
+    "basis": "cycle 메타데이터 없음 (NaN 분절 번호 · step 순번 · 곡선 모양으로 채우지 않는다)",
+    "state": "판정 불가"
+   },
+   "direction": {
+    "basis": "부호 규약 · step 뜻을 정하는 문서가 P0 입력에 없음 (raw 칸에 보존 · 추측으로 통과시키지 않는다)",
+    "expected": "완전지 충전 = PE 탈리튬 · NE 리튬화",
+    "state": "판정 불가"
+   },
+   "overall": "판정 불가",
+   "raw": {
+    "cc_end_df_index": 6431,
+    "cell_idx": 0,
+    "current_columns_sign": {},
+    "cycle_columns": [],
+    "cycle_values_unique": "없음",
+    "n_selected_rows": 847,
+    "nan_segment": 6,
+    "nan_segments_total": 131,
+    "q_v_columns": [
+     "Capacity/mAh",
+     "Voltage/V"
+    ],
+    "segment_rows_df_index": [
+     5583,
+     6456
+    ],
+    "selected_rows_df_index": [
+     5584,
+     6430
+    ],
+    "selected_rows_excel": [
+     5586,
+     6432
+    ],
+    "sheet": "12-LFP 12-Gr SOC-20",
+    "step_columns": {},
+    "step_idx": 6
+   }
+  },
+  {
+   "cycle": {
+    "basis": "cycle 메타데이터 없음 (NaN 분절 번호 · step 순번 · 곡선 모양으로 채우지 않는다)",
+    "state": "판정 불가"
+   },
+   "direction": {
+    "basis": "부호 규약 · step 뜻을 정하는 문서가 P0 입력에 없음 (raw 칸에 보존 · 추측으로 통과시키지 않는다)",
+    "expected": "LFP 탈리튬",
+    "state": "판정 불가"
+   },
+   "overall": "판정 불가",
+   "raw": {
+    "cc_end_df_index": 9460,
+    "cell_idx": 1,
+    "current_columns_sign": {},
+    "cycle_columns": [],
+    "cycle_values_unique": "없음",
+    "n_selected_rows": 1314,
+    "nan_segment": 6,
+    "nan_segments_total": 16,
+    "q_v_columns": [
+     "Capacity/mAh.1",
+     "Voltage/V.1"
+    ],
+    "segment_rows_df_index": [
+     8145,
+     9483
+    ],
+    "selected_rows_df_index": [
+     8146,
+     9459
+    ],
+    "selected_rows_excel": [
+     8148,
+     9461
+    ],
+    "sheet": "12-LFP C_20 Updated",
+    "step_columns": {},
+    "step_idx": 6
+   }
+  },
+  {
+   "cycle": {
+    "basis": "cycle 메타데이터 없음 (NaN 분절 번호 · step 순번 · 곡선 모양으로 채우지 않는다)",
+    "state": "판정 불가"
+   },
+   "direction": {
+    "basis": "부호 규약 · step 뜻을 정하는 문서가 P0 입력에 없음 (raw 칸에 보존 · 추측으로 통과시키지 않는다)",
+    "expected": "흑연 리튬화",
+    "state": "판정 불가"
+   },
+   "overall": "판정 불가",
+   "raw": {
+    "cc_end_df_index": 8439,
+    "cell_idx": 1,
+    "current_columns_sign": {},
+    "cycle_columns": [],
+    "cycle_values_unique": "없음",
+    "n_selected_rows": 1170,
+    "nan_segment": 6,
+    "nan_segments_total": 1068,
+    "q_v_columns": [
+     "Capacity/mAh.2",
+     "Voltage/V.2"
+    ],
+    "segment_rows_df_index": [
+     7268,
+     8466
+    ],
+    "selected_rows_df_index": [
+     7269,
+     8438
+    ],
+    "selected_rows_excel": [
+     7271,
+     8440
+    ],
+    "sheet": "12-Graphite Half-cell @ C_20",
+    "step_columns": {},
+    "step_idx": 6
+   }
+  }
+ ],
+ "extraction": [
+  {
+   "Q_first": 0.0,
+   "Q_last": 2.3867,
+   "V_first": 2.7573,
+   "V_last": 3.9538,
+   "cell_idx": 1,
+   "kind": "reference",
+   "n_points": 1314,
+   "sheet": "12-LFP C_20 Updated",
+   "status": "OK",
+   "step_idx": 6
+  },
+  {
+   "Q_first": 0.0,
+   "Q_last": 2.11,
+   "V_first": 1.0711,
+   "V_last": 0.0146,
+   "cell_idx": 1,
+   "kind": "reference",
+   "n_points": 212,
+   "sheet": "12-Graphite Half-cell @ C_20",
+   "status": "OK",
+   "step_idx": 6
+  },
+  {
+   "Q_exp_max": 3.0805,
+   "Q_first": 0.0,
+   "V_first": 2.3365,
+   "V_last": 3.5525,
+   "cell_idx": 1,
+   "kind": "analysis",
+   "label": "Fresh",
+   "n_points": 1084,
+   "row": 0,
+   "sheet": "15-LFP 16-Gr Full-cell @ C_20",
+   "status": "OK",
+   "step_idx": 6
+  },
+  {
+   "Q_exp_max": 2.972,
+   "Q_first": 0.0,
+   "V_first": 2.3464,
+   "V_last": 3.5604,
+   "cell_idx": 0,
+   "kind": "analysis",
+   "label": "LLI-1",
+   "n_points": 1046,
+   "row": 1,
+   "sheet": "15-LFP 16-Gr SOC-10",
+   "status": "OK",
+   "step_idx": 6
+  },
+  {
+   "Q_exp_max": 2.627,
+   "Q_first": 0.0,
+   "V_first": 2.3411,
+   "V_last": 3.5527,
+   "cell_idx": 0,
+   "kind": "analysis",
+   "label": "LLI-2",
+   "n_points": 927,
+   "row": 2,
+   "sheet": "15-LFP 16-Gr SOC-20",
+   "status": "OK",
+   "step_idx": 6
+  },
+  {
+   "Q_exp_max": 2.4011,
+   "Q_first": 0.0,
+   "V_first": 2.5859,
+   "V_last": 3.5869,
+   "cell_idx": 0,
+   "kind": "analysis",
+   "label": "LAM_PE-1",
+   "n_points": 1318,
+   "row": 3,
+   "sheet": "12-LFP 16-Gr SOC-100",
+   "status": "OK",
+   "step_idx": 7
+  },
+  {
+   "Q_exp_max": 2.8257,
+   "Q_first": 0.0,
+   "V_first": 2.3521,
+   "V_last": 3.5961,
+   "cell_idx": 0,
+   "kind": "analysis",
+   "label": "LAM_NE-1",
+   "n_points": 1572,
+   "row": 4,
+   "sheet": "15-LFP 12-Gr Full-cell @ C_20",
+   "status": "OK",
+   "step_idx": 6
+  },
+  {
+   "Q_exp_max": 1.95,
+   "Q_first": 0.002,
+   "V_first": 2.4247,
+   "V_last": 3.5848,
+   "cell_idx": 0,
+   "kind": "analysis",
+   "label": "LAM_PE,LLI-1",
+   "n_points": 1077,
+   "row": 5,
+   "sheet": "Full cell after FM SOC 0",
+   "status": "OK",
+   "step_idx": 0
+  },
+  {
+   "Q_exp_max": 1.8584,
+   "Q_first": 0.0018,
+   "V_first": 2.6097,
+   "V_last": 3.5934,
+   "cell_idx": 1,
+   "kind": "analysis",
+   "label": "LAM_PE,LLI-2",
+   "n_points": 1021,
+   "row": 6,
+   "sheet": "Full cell after FM SOC 10",
+   "status": "OK",
+   "step_idx": 0
+  },
+  {
+   "Q_exp_max": 2.7969,
+   "Q_first": 0.0,
+   "V_first": 2.363,
+   "V_last": 3.5995,
+   "cell_idx": 1,
+   "kind": "analysis",
+   "label": "LAM_NE,LLI-1",
+   "n_points": 1528,
+   "row": 7,
+   "sheet": "15-LFP 12-Gr SOC-10",
+   "status": "OK",
+   "step_idx": 6
+  },
+  {
+   "Q_exp_max": 2.6591,
+   "Q_first": 0.0,
+   "V_first": 2.3713,
+   "V_last": 3.5958,
+   "cell_idx": 1,
+   "kind": "analysis",
+   "label": "LAM_NE,LLI-2",
+   "n_points": 1463,
+   "row": 8,
+   "sheet": "15-LFP 12-Gr SOC-20",
+   "status": "OK",
+   "step_idx": 6
+  },
+  {
+   "Q_exp_max": 1.7915,
+   "Q_first": 0.0,
+   "V_first": 2.3535,
+   "V_last": 3.5601,
+   "cell_idx": 0,
+   "kind": "analysis",
+   "label": "All mode-1",
+   "n_points": 986,
+   "row": 9,
+   "sheet": "12-LFP 12-Gr SOC-10",
+   "status": "OK",
+   "step_idx": 6
+  },
+  {
+   "Q_exp_max": 1.542,
+   "Q_first": 0.0,
+   "V_first": 2.3619,
+   "V_last": 3.5547,
+   "cell_idx": 0,
+   "kind": "analysis",
+   "label": "All mode-2",
+   "n_points": 847,
+   "row": 10,
+   "sheet": "12-LFP 12-Gr SOC-20",
+   "status": "OK",
+   "step_idx": 6
+  }
+ ],
+ "fitting_calls": 0,
+ "identity": {
+  "notebook": {
+   "bytes": 4134001,
+   "ok": true,
+   "sha256": "388f2a6f101abf42ef8c7c1c627b7046e8bf900b913d22f83435b39eb81a9e29"
+  },
+  "util_LFP.py": {
+   "ok": true,
+   "sha256": "3c19e45ef8a64ce67cda1f623551e758d4c0f67086bbae02b978428d78de1c76"
+  },
+  "xlsx": {
+   "bytes": 10841377,
+   "ok": true,
+   "sha256": "fd50e09542be7adb2270963d65a6e7b5ccae1473a512f68462c2dd419d620ee1"
+  }
+ },
+ "max_q": {
+  "float": 3.149013767655145,
+  "fraction": "886368576912267/281474976710656",
+  "n_q_PE_hc": 1313,
+  "path": "노트북 셀 6 (PE_data = LFP_data[1] · [argmin:argmax] / LFP_mass_12 × 20.16) · util 718–719 np.max",
+  "repr": "3.149013767655145",
+  "status": "OK"
+ },
+ "notebook_check": {
+  "cells_differing": [],
+  "cells_equal_excerpts": true,
+  "constants": {
+   "Gr_mass_12": true,
+   "Gr_mass_factor": true,
+   "LFP_mass_12": true,
+   "LFP_mass_factor": true,
+   "area": true,
+   "cell6_refs": true,
+   "cell_idx": true,
+   "sheets": true,
+   "step_idx": true,
+   "theoretical": true
+  },
+  "ok": true
+ },
+ "objective_calls": 0,
+ "optimizer_calls": 0,
+ "outside_sheets": [
+  {
+   "headers": [
+    "Capacity/mAh",
+    "Voltage/V",
+    "Unnamed: 2",
+    "Unnamed: 3",
+    "2025-05-05 00:00:00",
+    "Capacity/mAh.1",
+    "Voltage/V.1",
+    "Unnamed: 7",
+    "Capacity/mAh.2",
+    "Voltage/V.2",
+    "Unnamed: 10",
+    "Capacity/mAh.3",
+    "Voltage/V.3"
+   ],
+   "n_rows": 16485,
+   "sheet": "12-LFP 16-Gr Full-cell @ C_20"
+  },
+  {
+   "headers": [
+    "2025-05-11 00:00:00",
+    "Capacity/mAh",
+    "Voltage/V",
+    "Unnamed: 3",
+    "Capacity/mAh.1",
+    "Voltage/V.1"
+   ],
+   "n_rows": 15261,
+   "sheet": "12-LFP 16-Gr SOC-10"
+  },
+  {
+   "headers": [
+    "S1",
+    "Capacity/mAh",
+    "Voltage/V",
+    "Unnamed: 3",
+    "S2",
+    "Capacity/mAh.1",
+    "Voltage/V.1",
+    "Unnamed: 7",
+    "S3",
+    "Capacity/mAh.2",
+    "Voltage/V.2",
+    "Unnamed: 11",
+    "Unnamed: 12",
+    "2025-04-27 00:00:00",
+    "S1.1",
+    "Capacity/mAh.3",
+    "Voltage/V.3",
+    "Unnamed: 17",
+    "S2.1",
+    "Capacity/mAh.4",
+    "Voltage/V.4"
+   ],
+   "n_rows": 19600,
+   "sheet": "12-LFP Half-cell @ C_20"
+  },
+  {
+   "headers": [
+    "S1",
+    "Capacity/mAh",
+    "Voltage/V",
+    "Unnamed: 3",
+    "S2",
+    "Capacity/mAh.1",
+    "Voltage/V.1",
+    "Unnamed: 7",
+    "S3",
+    "Capacity/mAh.2",
+    "Voltage/V.2"
+   ],
+   "n_rows": 27522,
+   "sheet": "12-Graphite Half-cell @ C_30"
+  },
+  {
+   "headers": [
+    "S16-Gr",
+    "Capacity/mAh",
+    "Voltage/V",
+    "Unnamed: 3",
+    "S12-LFP",
+    "Capacity/mAh.1",
+    "Voltage/V.1"
+   ],
+   "n_rows": 1361,
+   "sheet": "Half cell after FM"
+  },
+  {
+   "headers": [
+    "12 14",
+    "0",
+    "2.3461",
+    "Unnamed: 3",
+    "0.1",
+    "3.3918",
+    "Unnamed: 6",
+    "Unnamed: 7",
+    "12 15",
+    "0.2",
+    "2.3222",
+    "Unnamed: 11",
+    "0.3",
+    "3.4001"
+   ],
+   "n_rows": 1028,
+   "sheet": "12-14 12-15"
+  }
+ ],
+ "prior_table": [
+  {
+   "D": [
+    "1e-4",
+    "0.5"
+   ],
+   "I": {
+    "decimal": [
+     "1",
+     "1"
+    ],
+    "fraction": [
+     "1",
+     "1"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "1",
+     "1"
+    ],
+    "fraction": [
+     "1",
+     "1"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "1",
+     "1"
+    ],
+    "fraction": [
+     "1",
+     "1"
+    ]
+   },
+   "label": "Fresh",
+   "lhs": {
+    "decimal": [
+     "0",
+     "0"
+    ],
+    "fraction": [
+     "0",
+     "0"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "1",
+    "1",
+    "1"
+   ],
+   "reason": "m_P − LII 구간과 D/max_q 가 교차하지 않음",
+   "region": "A0",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.158779871062"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "140737488355328/886368576912267"
+    ]
+   },
+   "row": 0,
+   "status": "PRIOR_INCOMPATIBLE",
+   "tau": "0"
+  },
+  {
+   "D": [
+    "1e-4",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "1",
+     "1"
+    ],
+    "fraction": [
+     "1",
+     "1"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "1",
+     "1"
+    ],
+    "fraction": [
+     "1",
+     "1"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "1",
+     "1"
+    ],
+    "fraction": [
+     "1",
+     "1"
+    ]
+   },
+   "label": "Fresh",
+   "lhs": {
+    "decimal": [
+     "0",
+     "0"
+    ],
+    "fraction": [
+     "0",
+     "0"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "1",
+    "1",
+    "1"
+   ],
+   "reason": "m_P − LII 구간과 D/max_q 가 교차하지 않음",
+   "region": "A1",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 0,
+   "status": "PRIOR_INCOMPATIBLE",
+   "tau": "0"
+  },
+  {
+   "D": [
+    "-2",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "1",
+     "1"
+    ],
+    "fraction": [
+     "1",
+     "1"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "1",
+     "1"
+    ],
+    "fraction": [
+     "1",
+     "1"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "1",
+     "1"
+    ],
+    "fraction": [
+     "1",
+     "1"
+    ]
+   },
+   "label": "Fresh",
+   "lhs": {
+    "decimal": [
+     "0",
+     "0"
+    ],
+    "fraction": [
+     "0",
+     "0"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "1",
+    "1",
+    "1"
+   ],
+   "reason": "구간 교차",
+   "region": "A2",
+   "rhs": {
+    "decimal": [
+     "-0.635119484247",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "-562949953421312/886368576912267",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 0,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0"
+  },
+  {
+   "D": [
+    "1e-4",
+    "0.5"
+   ],
+   "I": {
+    "decimal": [
+     "0.98",
+     "1.02"
+    ],
+    "fraction": [
+     "49/50",
+     "51/50"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.98",
+     "1.02"
+    ],
+    "fraction": [
+     "49/50",
+     "51/50"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.98",
+     "1.02"
+    ],
+    "fraction": [
+     "49/50",
+     "51/50"
+    ]
+   },
+   "label": "Fresh",
+   "lhs": {
+    "decimal": [
+     "-0.04",
+     "0.04"
+    ],
+    "fraction": [
+     "-1/25",
+     "1/25"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "1",
+    "1",
+    "1"
+   ],
+   "reason": "구간 교차",
+   "region": "A0",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.158779871062"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "140737488355328/886368576912267"
+    ]
+   },
+   "row": 0,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0.02"
+  },
+  {
+   "D": [
+    "1e-4",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "0.98",
+     "1.02"
+    ],
+    "fraction": [
+     "49/50",
+     "51/50"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.98",
+     "1.02"
+    ],
+    "fraction": [
+     "49/50",
+     "51/50"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.98",
+     "1.02"
+    ],
+    "fraction": [
+     "49/50",
+     "51/50"
+    ]
+   },
+   "label": "Fresh",
+   "lhs": {
+    "decimal": [
+     "-0.04",
+     "0.04"
+    ],
+    "fraction": [
+     "-1/25",
+     "1/25"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "1",
+    "1",
+    "1"
+   ],
+   "reason": "구간 교차",
+   "region": "A1",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 0,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0.02"
+  },
+  {
+   "D": [
+    "-2",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "0.98",
+     "1.02"
+    ],
+    "fraction": [
+     "49/50",
+     "51/50"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.98",
+     "1.02"
+    ],
+    "fraction": [
+     "49/50",
+     "51/50"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.98",
+     "1.02"
+    ],
+    "fraction": [
+     "49/50",
+     "51/50"
+    ]
+   },
+   "label": "Fresh",
+   "lhs": {
+    "decimal": [
+     "-0.04",
+     "0.04"
+    ],
+    "fraction": [
+     "-1/25",
+     "1/25"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "1",
+    "1",
+    "1"
+   ],
+   "reason": "구간 교차",
+   "region": "A2",
+   "rhs": {
+    "decimal": [
+     "-0.635119484247",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "-562949953421312/886368576912267",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 0,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0.02"
+  },
+  {
+   "D": [
+    "1e-4",
+    "0.5"
+   ],
+   "I": {
+    "decimal": [
+     "0.95",
+     "1.05"
+    ],
+    "fraction": [
+     "19/20",
+     "21/20"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.95",
+     "1.05"
+    ],
+    "fraction": [
+     "19/20",
+     "21/20"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.95",
+     "1.05"
+    ],
+    "fraction": [
+     "19/20",
+     "21/20"
+    ]
+   },
+   "label": "Fresh",
+   "lhs": {
+    "decimal": [
+     "-0.1",
+     "0.1"
+    ],
+    "fraction": [
+     "-1/10",
+     "1/10"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "1",
+    "1",
+    "1"
+   ],
+   "reason": "구간 교차",
+   "region": "A0",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.158779871062"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "140737488355328/886368576912267"
+    ]
+   },
+   "row": 0,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0.05"
+  },
+  {
+   "D": [
+    "1e-4",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "0.95",
+     "1.05"
+    ],
+    "fraction": [
+     "19/20",
+     "21/20"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.95",
+     "1.05"
+    ],
+    "fraction": [
+     "19/20",
+     "21/20"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.95",
+     "1.05"
+    ],
+    "fraction": [
+     "19/20",
+     "21/20"
+    ]
+   },
+   "label": "Fresh",
+   "lhs": {
+    "decimal": [
+     "-0.1",
+     "0.1"
+    ],
+    "fraction": [
+     "-1/10",
+     "1/10"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "1",
+    "1",
+    "1"
+   ],
+   "reason": "구간 교차",
+   "region": "A1",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 0,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0.05"
+  },
+  {
+   "D": [
+    "-2",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "0.95",
+     "1.05"
+    ],
+    "fraction": [
+     "19/20",
+     "21/20"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.95",
+     "1.05"
+    ],
+    "fraction": [
+     "19/20",
+     "21/20"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.95",
+     "1.05"
+    ],
+    "fraction": [
+     "19/20",
+     "21/20"
+    ]
+   },
+   "label": "Fresh",
+   "lhs": {
+    "decimal": [
+     "-0.1",
+     "0.1"
+    ],
+    "fraction": [
+     "-1/10",
+     "1/10"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "1",
+    "1",
+    "1"
+   ],
+   "reason": "구간 교차",
+   "region": "A2",
+   "rhs": {
+    "decimal": [
+     "-0.635119484247",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "-562949953421312/886368576912267",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 0,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0.05"
+  },
+  {
+   "D": [
+    "1e-4",
+    "0.5"
+   ],
+   "I": {
+    "decimal": [
+     "0.9",
+     "0.9"
+    ],
+    "fraction": [
+     "9/10",
+     "9/10"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "1",
+     "1"
+    ],
+    "fraction": [
+     "1",
+     "1"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "1",
+     "1"
+    ],
+    "fraction": [
+     "1",
+     "1"
+    ]
+   },
+   "label": "LLI-1",
+   "lhs": {
+    "decimal": [
+     "0.1",
+     "0.1"
+    ],
+    "fraction": [
+     "1/10",
+     "1/10"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "1",
+    "1",
+    "0.9"
+   ],
+   "reason": "구간 교차",
+   "region": "A0",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.158779871062"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "140737488355328/886368576912267"
+    ]
+   },
+   "row": 1,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0"
+  },
+  {
+   "D": [
+    "1e-4",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "0.9",
+     "0.9"
+    ],
+    "fraction": [
+     "9/10",
+     "9/10"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "1",
+     "1"
+    ],
+    "fraction": [
+     "1",
+     "1"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "1",
+     "1"
+    ],
+    "fraction": [
+     "1",
+     "1"
+    ]
+   },
+   "label": "LLI-1",
+   "lhs": {
+    "decimal": [
+     "0.1",
+     "0.1"
+    ],
+    "fraction": [
+     "1/10",
+     "1/10"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "1",
+    "1",
+    "0.9"
+   ],
+   "reason": "구간 교차",
+   "region": "A1",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 1,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0"
+  },
+  {
+   "D": [
+    "-2",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "0.9",
+     "0.9"
+    ],
+    "fraction": [
+     "9/10",
+     "9/10"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "1",
+     "1"
+    ],
+    "fraction": [
+     "1",
+     "1"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "1",
+     "1"
+    ],
+    "fraction": [
+     "1",
+     "1"
+    ]
+   },
+   "label": "LLI-1",
+   "lhs": {
+    "decimal": [
+     "0.1",
+     "0.1"
+    ],
+    "fraction": [
+     "1/10",
+     "1/10"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "1",
+    "1",
+    "0.9"
+   ],
+   "reason": "구간 교차",
+   "region": "A2",
+   "rhs": {
+    "decimal": [
+     "-0.635119484247",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "-562949953421312/886368576912267",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 1,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0"
+  },
+  {
+   "D": [
+    "1e-4",
+    "0.5"
+   ],
+   "I": {
+    "decimal": [
+     "0.88",
+     "0.92"
+    ],
+    "fraction": [
+     "22/25",
+     "23/25"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.98",
+     "1.02"
+    ],
+    "fraction": [
+     "49/50",
+     "51/50"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.98",
+     "1.02"
+    ],
+    "fraction": [
+     "49/50",
+     "51/50"
+    ]
+   },
+   "label": "LLI-1",
+   "lhs": {
+    "decimal": [
+     "0.06",
+     "0.14"
+    ],
+    "fraction": [
+     "3/50",
+     "7/50"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "1",
+    "1",
+    "0.9"
+   ],
+   "reason": "구간 교차",
+   "region": "A0",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.158779871062"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "140737488355328/886368576912267"
+    ]
+   },
+   "row": 1,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0.02"
+  },
+  {
+   "D": [
+    "1e-4",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "0.88",
+     "0.92"
+    ],
+    "fraction": [
+     "22/25",
+     "23/25"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.98",
+     "1.02"
+    ],
+    "fraction": [
+     "49/50",
+     "51/50"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.98",
+     "1.02"
+    ],
+    "fraction": [
+     "49/50",
+     "51/50"
+    ]
+   },
+   "label": "LLI-1",
+   "lhs": {
+    "decimal": [
+     "0.06",
+     "0.14"
+    ],
+    "fraction": [
+     "3/50",
+     "7/50"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "1",
+    "1",
+    "0.9"
+   ],
+   "reason": "구간 교차",
+   "region": "A1",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 1,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0.02"
+  },
+  {
+   "D": [
+    "-2",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "0.88",
+     "0.92"
+    ],
+    "fraction": [
+     "22/25",
+     "23/25"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.98",
+     "1.02"
+    ],
+    "fraction": [
+     "49/50",
+     "51/50"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.98",
+     "1.02"
+    ],
+    "fraction": [
+     "49/50",
+     "51/50"
+    ]
+   },
+   "label": "LLI-1",
+   "lhs": {
+    "decimal": [
+     "0.06",
+     "0.14"
+    ],
+    "fraction": [
+     "3/50",
+     "7/50"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "1",
+    "1",
+    "0.9"
+   ],
+   "reason": "구간 교차",
+   "region": "A2",
+   "rhs": {
+    "decimal": [
+     "-0.635119484247",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "-562949953421312/886368576912267",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 1,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0.02"
+  },
+  {
+   "D": [
+    "1e-4",
+    "0.5"
+   ],
+   "I": {
+    "decimal": [
+     "0.85",
+     "0.95"
+    ],
+    "fraction": [
+     "17/20",
+     "19/20"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.95",
+     "1.05"
+    ],
+    "fraction": [
+     "19/20",
+     "21/20"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.95",
+     "1.05"
+    ],
+    "fraction": [
+     "19/20",
+     "21/20"
+    ]
+   },
+   "label": "LLI-1",
+   "lhs": {
+    "decimal": [
+     "0",
+     "0.2"
+    ],
+    "fraction": [
+     "0",
+     "1/5"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "1",
+    "1",
+    "0.9"
+   ],
+   "reason": "구간 교차",
+   "region": "A0",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.158779871062"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "140737488355328/886368576912267"
+    ]
+   },
+   "row": 1,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0.05"
+  },
+  {
+   "D": [
+    "1e-4",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "0.85",
+     "0.95"
+    ],
+    "fraction": [
+     "17/20",
+     "19/20"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.95",
+     "1.05"
+    ],
+    "fraction": [
+     "19/20",
+     "21/20"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.95",
+     "1.05"
+    ],
+    "fraction": [
+     "19/20",
+     "21/20"
+    ]
+   },
+   "label": "LLI-1",
+   "lhs": {
+    "decimal": [
+     "0",
+     "0.2"
+    ],
+    "fraction": [
+     "0",
+     "1/5"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "1",
+    "1",
+    "0.9"
+   ],
+   "reason": "구간 교차",
+   "region": "A1",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 1,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0.05"
+  },
+  {
+   "D": [
+    "-2",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "0.85",
+     "0.95"
+    ],
+    "fraction": [
+     "17/20",
+     "19/20"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.95",
+     "1.05"
+    ],
+    "fraction": [
+     "19/20",
+     "21/20"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.95",
+     "1.05"
+    ],
+    "fraction": [
+     "19/20",
+     "21/20"
+    ]
+   },
+   "label": "LLI-1",
+   "lhs": {
+    "decimal": [
+     "0",
+     "0.2"
+    ],
+    "fraction": [
+     "0",
+     "1/5"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "1",
+    "1",
+    "0.9"
+   ],
+   "reason": "구간 교차",
+   "region": "A2",
+   "rhs": {
+    "decimal": [
+     "-0.635119484247",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "-562949953421312/886368576912267",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 1,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0.05"
+  },
+  {
+   "D": [
+    "1e-4",
+    "0.5"
+   ],
+   "I": {
+    "decimal": [
+     "0.8",
+     "0.8"
+    ],
+    "fraction": [
+     "4/5",
+     "4/5"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "1",
+     "1"
+    ],
+    "fraction": [
+     "1",
+     "1"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "1",
+     "1"
+    ],
+    "fraction": [
+     "1",
+     "1"
+    ]
+   },
+   "label": "LLI-2",
+   "lhs": {
+    "decimal": [
+     "0.2",
+     "0.2"
+    ],
+    "fraction": [
+     "1/5",
+     "1/5"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "1",
+    "1",
+    "0.8"
+   ],
+   "reason": "m_P − LII 구간과 D/max_q 가 교차하지 않음",
+   "region": "A0",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.158779871062"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "140737488355328/886368576912267"
+    ]
+   },
+   "row": 2,
+   "status": "PRIOR_INCOMPATIBLE",
+   "tau": "0"
+  },
+  {
+   "D": [
+    "1e-4",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "0.8",
+     "0.8"
+    ],
+    "fraction": [
+     "4/5",
+     "4/5"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "1",
+     "1"
+    ],
+    "fraction": [
+     "1",
+     "1"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "1",
+     "1"
+    ],
+    "fraction": [
+     "1",
+     "1"
+    ]
+   },
+   "label": "LLI-2",
+   "lhs": {
+    "decimal": [
+     "0.2",
+     "0.2"
+    ],
+    "fraction": [
+     "1/5",
+     "1/5"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "1",
+    "1",
+    "0.8"
+   ],
+   "reason": "구간 교차",
+   "region": "A1",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 2,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0"
+  },
+  {
+   "D": [
+    "-2",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "0.8",
+     "0.8"
+    ],
+    "fraction": [
+     "4/5",
+     "4/5"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "1",
+     "1"
+    ],
+    "fraction": [
+     "1",
+     "1"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "1",
+     "1"
+    ],
+    "fraction": [
+     "1",
+     "1"
+    ]
+   },
+   "label": "LLI-2",
+   "lhs": {
+    "decimal": [
+     "0.2",
+     "0.2"
+    ],
+    "fraction": [
+     "1/5",
+     "1/5"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "1",
+    "1",
+    "0.8"
+   ],
+   "reason": "구간 교차",
+   "region": "A2",
+   "rhs": {
+    "decimal": [
+     "-0.635119484247",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "-562949953421312/886368576912267",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 2,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0"
+  },
+  {
+   "D": [
+    "1e-4",
+    "0.5"
+   ],
+   "I": {
+    "decimal": [
+     "0.78",
+     "0.82"
+    ],
+    "fraction": [
+     "39/50",
+     "41/50"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.98",
+     "1.02"
+    ],
+    "fraction": [
+     "49/50",
+     "51/50"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.98",
+     "1.02"
+    ],
+    "fraction": [
+     "49/50",
+     "51/50"
+    ]
+   },
+   "label": "LLI-2",
+   "lhs": {
+    "decimal": [
+     "0.16",
+     "0.24"
+    ],
+    "fraction": [
+     "4/25",
+     "6/25"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "1",
+    "1",
+    "0.8"
+   ],
+   "reason": "m_P − LII 구간과 D/max_q 가 교차하지 않음",
+   "region": "A0",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.158779871062"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "140737488355328/886368576912267"
+    ]
+   },
+   "row": 2,
+   "status": "PRIOR_INCOMPATIBLE",
+   "tau": "0.02"
+  },
+  {
+   "D": [
+    "1e-4",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "0.78",
+     "0.82"
+    ],
+    "fraction": [
+     "39/50",
+     "41/50"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.98",
+     "1.02"
+    ],
+    "fraction": [
+     "49/50",
+     "51/50"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.98",
+     "1.02"
+    ],
+    "fraction": [
+     "49/50",
+     "51/50"
+    ]
+   },
+   "label": "LLI-2",
+   "lhs": {
+    "decimal": [
+     "0.16",
+     "0.24"
+    ],
+    "fraction": [
+     "4/25",
+     "6/25"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "1",
+    "1",
+    "0.8"
+   ],
+   "reason": "구간 교차",
+   "region": "A1",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 2,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0.02"
+  },
+  {
+   "D": [
+    "-2",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "0.78",
+     "0.82"
+    ],
+    "fraction": [
+     "39/50",
+     "41/50"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.98",
+     "1.02"
+    ],
+    "fraction": [
+     "49/50",
+     "51/50"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.98",
+     "1.02"
+    ],
+    "fraction": [
+     "49/50",
+     "51/50"
+    ]
+   },
+   "label": "LLI-2",
+   "lhs": {
+    "decimal": [
+     "0.16",
+     "0.24"
+    ],
+    "fraction": [
+     "4/25",
+     "6/25"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "1",
+    "1",
+    "0.8"
+   ],
+   "reason": "구간 교차",
+   "region": "A2",
+   "rhs": {
+    "decimal": [
+     "-0.635119484247",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "-562949953421312/886368576912267",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 2,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0.02"
+  },
+  {
+   "D": [
+    "1e-4",
+    "0.5"
+   ],
+   "I": {
+    "decimal": [
+     "0.75",
+     "0.85"
+    ],
+    "fraction": [
+     "3/4",
+     "17/20"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.95",
+     "1.05"
+    ],
+    "fraction": [
+     "19/20",
+     "21/20"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.95",
+     "1.05"
+    ],
+    "fraction": [
+     "19/20",
+     "21/20"
+    ]
+   },
+   "label": "LLI-2",
+   "lhs": {
+    "decimal": [
+     "0.1",
+     "0.3"
+    ],
+    "fraction": [
+     "1/10",
+     "3/10"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "1",
+    "1",
+    "0.8"
+   ],
+   "reason": "구간 교차",
+   "region": "A0",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.158779871062"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "140737488355328/886368576912267"
+    ]
+   },
+   "row": 2,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0.05"
+  },
+  {
+   "D": [
+    "1e-4",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "0.75",
+     "0.85"
+    ],
+    "fraction": [
+     "3/4",
+     "17/20"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.95",
+     "1.05"
+    ],
+    "fraction": [
+     "19/20",
+     "21/20"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.95",
+     "1.05"
+    ],
+    "fraction": [
+     "19/20",
+     "21/20"
+    ]
+   },
+   "label": "LLI-2",
+   "lhs": {
+    "decimal": [
+     "0.1",
+     "0.3"
+    ],
+    "fraction": [
+     "1/10",
+     "3/10"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "1",
+    "1",
+    "0.8"
+   ],
+   "reason": "구간 교차",
+   "region": "A1",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 2,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0.05"
+  },
+  {
+   "D": [
+    "-2",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "0.75",
+     "0.85"
+    ],
+    "fraction": [
+     "3/4",
+     "17/20"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.95",
+     "1.05"
+    ],
+    "fraction": [
+     "19/20",
+     "21/20"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.95",
+     "1.05"
+    ],
+    "fraction": [
+     "19/20",
+     "21/20"
+    ]
+   },
+   "label": "LLI-2",
+   "lhs": {
+    "decimal": [
+     "0.1",
+     "0.3"
+    ],
+    "fraction": [
+     "1/10",
+     "3/10"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "1",
+    "1",
+    "0.8"
+   ],
+   "reason": "구간 교차",
+   "region": "A2",
+   "rhs": {
+    "decimal": [
+     "-0.635119484247",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "-562949953421312/886368576912267",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 2,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0.05"
+  },
+  {
+   "D": [
+    "1e-4",
+    "0.5"
+   ],
+   "I": {
+    "decimal": [
+     "1",
+     "1"
+    ],
+    "fraction": [
+     "1",
+     "1"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "1",
+     "1"
+    ],
+    "fraction": [
+     "1",
+     "1"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.64",
+     "0.64"
+    ],
+    "fraction": [
+     "16/25",
+     "16/25"
+    ]
+   },
+   "label": "LAM_PE-1",
+   "lhs": {
+    "decimal": [
+     "-0.36",
+     "-0.36"
+    ],
+    "fraction": [
+     "-9/25",
+     "-9/25"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "0.64",
+    "1",
+    "1"
+   ],
+   "reason": "m_P − LII 구간과 D/max_q 가 교차하지 않음",
+   "region": "A0",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.158779871062"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "140737488355328/886368576912267"
+    ]
+   },
+   "row": 3,
+   "status": "PRIOR_INCOMPATIBLE",
+   "tau": "0"
+  },
+  {
+   "D": [
+    "1e-4",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "1",
+     "1"
+    ],
+    "fraction": [
+     "1",
+     "1"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "1",
+     "1"
+    ],
+    "fraction": [
+     "1",
+     "1"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.64",
+     "0.64"
+    ],
+    "fraction": [
+     "16/25",
+     "16/25"
+    ]
+   },
+   "label": "LAM_PE-1",
+   "lhs": {
+    "decimal": [
+     "-0.36",
+     "-0.36"
+    ],
+    "fraction": [
+     "-9/25",
+     "-9/25"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "0.64",
+    "1",
+    "1"
+   ],
+   "reason": "m_P − LII 구간과 D/max_q 가 교차하지 않음",
+   "region": "A1",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 3,
+   "status": "PRIOR_INCOMPATIBLE",
+   "tau": "0"
+  },
+  {
+   "D": [
+    "-2",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "1",
+     "1"
+    ],
+    "fraction": [
+     "1",
+     "1"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "1",
+     "1"
+    ],
+    "fraction": [
+     "1",
+     "1"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.64",
+     "0.64"
+    ],
+    "fraction": [
+     "16/25",
+     "16/25"
+    ]
+   },
+   "label": "LAM_PE-1",
+   "lhs": {
+    "decimal": [
+     "-0.36",
+     "-0.36"
+    ],
+    "fraction": [
+     "-9/25",
+     "-9/25"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "0.64",
+    "1",
+    "1"
+   ],
+   "reason": "구간 교차",
+   "region": "A2",
+   "rhs": {
+    "decimal": [
+     "-0.635119484247",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "-562949953421312/886368576912267",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 3,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0"
+  },
+  {
+   "D": [
+    "1e-4",
+    "0.5"
+   ],
+   "I": {
+    "decimal": [
+     "0.98",
+     "1.02"
+    ],
+    "fraction": [
+     "49/50",
+     "51/50"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.98",
+     "1.02"
+    ],
+    "fraction": [
+     "49/50",
+     "51/50"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.62",
+     "0.66"
+    ],
+    "fraction": [
+     "31/50",
+     "33/50"
+    ]
+   },
+   "label": "LAM_PE-1",
+   "lhs": {
+    "decimal": [
+     "-0.4",
+     "-0.32"
+    ],
+    "fraction": [
+     "-2/5",
+     "-8/25"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "0.64",
+    "1",
+    "1"
+   ],
+   "reason": "m_P − LII 구간과 D/max_q 가 교차하지 않음",
+   "region": "A0",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.158779871062"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "140737488355328/886368576912267"
+    ]
+   },
+   "row": 3,
+   "status": "PRIOR_INCOMPATIBLE",
+   "tau": "0.02"
+  },
+  {
+   "D": [
+    "1e-4",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "0.98",
+     "1.02"
+    ],
+    "fraction": [
+     "49/50",
+     "51/50"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.98",
+     "1.02"
+    ],
+    "fraction": [
+     "49/50",
+     "51/50"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.62",
+     "0.66"
+    ],
+    "fraction": [
+     "31/50",
+     "33/50"
+    ]
+   },
+   "label": "LAM_PE-1",
+   "lhs": {
+    "decimal": [
+     "-0.4",
+     "-0.32"
+    ],
+    "fraction": [
+     "-2/5",
+     "-8/25"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "0.64",
+    "1",
+    "1"
+   ],
+   "reason": "m_P − LII 구간과 D/max_q 가 교차하지 않음",
+   "region": "A1",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 3,
+   "status": "PRIOR_INCOMPATIBLE",
+   "tau": "0.02"
+  },
+  {
+   "D": [
+    "-2",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "0.98",
+     "1.02"
+    ],
+    "fraction": [
+     "49/50",
+     "51/50"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.98",
+     "1.02"
+    ],
+    "fraction": [
+     "49/50",
+     "51/50"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.62",
+     "0.66"
+    ],
+    "fraction": [
+     "31/50",
+     "33/50"
+    ]
+   },
+   "label": "LAM_PE-1",
+   "lhs": {
+    "decimal": [
+     "-0.4",
+     "-0.32"
+    ],
+    "fraction": [
+     "-2/5",
+     "-8/25"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "0.64",
+    "1",
+    "1"
+   ],
+   "reason": "구간 교차",
+   "region": "A2",
+   "rhs": {
+    "decimal": [
+     "-0.635119484247",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "-562949953421312/886368576912267",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 3,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0.02"
+  },
+  {
+   "D": [
+    "1e-4",
+    "0.5"
+   ],
+   "I": {
+    "decimal": [
+     "0.95",
+     "1.05"
+    ],
+    "fraction": [
+     "19/20",
+     "21/20"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.95",
+     "1.05"
+    ],
+    "fraction": [
+     "19/20",
+     "21/20"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.6",
+     "0.69"
+    ],
+    "fraction": [
+     "3/5",
+     "69/100"
+    ]
+   },
+   "label": "LAM_PE-1",
+   "lhs": {
+    "decimal": [
+     "-0.45",
+     "-0.26"
+    ],
+    "fraction": [
+     "-9/20",
+     "-13/50"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "0.64",
+    "1",
+    "1"
+   ],
+   "reason": "m_P − LII 구간과 D/max_q 가 교차하지 않음",
+   "region": "A0",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.158779871062"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "140737488355328/886368576912267"
+    ]
+   },
+   "row": 3,
+   "status": "PRIOR_INCOMPATIBLE",
+   "tau": "0.05"
+  },
+  {
+   "D": [
+    "1e-4",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "0.95",
+     "1.05"
+    ],
+    "fraction": [
+     "19/20",
+     "21/20"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.95",
+     "1.05"
+    ],
+    "fraction": [
+     "19/20",
+     "21/20"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.59",
+     "0.69"
+    ],
+    "fraction": [
+     "59/100",
+     "69/100"
+    ]
+   },
+   "label": "LAM_PE-1",
+   "lhs": {
+    "decimal": [
+     "-0.46",
+     "-0.26"
+    ],
+    "fraction": [
+     "-23/50",
+     "-13/50"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "0.64",
+    "1",
+    "1"
+   ],
+   "reason": "m_P − LII 구간과 D/max_q 가 교차하지 않음",
+   "region": "A1",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 3,
+   "status": "PRIOR_INCOMPATIBLE",
+   "tau": "0.05"
+  },
+  {
+   "D": [
+    "-2",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "0.95",
+     "1.05"
+    ],
+    "fraction": [
+     "19/20",
+     "21/20"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.95",
+     "1.05"
+    ],
+    "fraction": [
+     "19/20",
+     "21/20"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.59",
+     "0.69"
+    ],
+    "fraction": [
+     "59/100",
+     "69/100"
+    ]
+   },
+   "label": "LAM_PE-1",
+   "lhs": {
+    "decimal": [
+     "-0.46",
+     "-0.26"
+    ],
+    "fraction": [
+     "-23/50",
+     "-13/50"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "0.64",
+    "1",
+    "1"
+   ],
+   "reason": "구간 교차",
+   "region": "A2",
+   "rhs": {
+    "decimal": [
+     "-0.635119484247",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "-562949953421312/886368576912267",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 3,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0.05"
+  },
+  {
+   "D": [
+    "1e-4",
+    "0.5"
+   ],
+   "I": {
+    "decimal": [
+     "1",
+     "1"
+    ],
+    "fraction": [
+     "1",
+     "1"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.56",
+     "0.56"
+    ],
+    "fraction": [
+     "14/25",
+     "14/25"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "1",
+     "1"
+    ],
+    "fraction": [
+     "1",
+     "1"
+    ]
+   },
+   "label": "LAM_NE-1",
+   "lhs": {
+    "decimal": [
+     "0",
+     "0"
+    ],
+    "fraction": [
+     "0",
+     "0"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "1",
+    "0.56",
+    "1"
+   ],
+   "reason": "m_P − LII 구간과 D/max_q 가 교차하지 않음",
+   "region": "A0",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.158779871062"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "140737488355328/886368576912267"
+    ]
+   },
+   "row": 4,
+   "status": "PRIOR_INCOMPATIBLE",
+   "tau": "0"
+  },
+  {
+   "D": [
+    "1e-4",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "1",
+     "1"
+    ],
+    "fraction": [
+     "1",
+     "1"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.56",
+     "0.56"
+    ],
+    "fraction": [
+     "14/25",
+     "14/25"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "1",
+     "1"
+    ],
+    "fraction": [
+     "1",
+     "1"
+    ]
+   },
+   "label": "LAM_NE-1",
+   "lhs": {
+    "decimal": [
+     "0",
+     "0"
+    ],
+    "fraction": [
+     "0",
+     "0"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "1",
+    "0.56",
+    "1"
+   ],
+   "reason": "m_P − LII 구간과 D/max_q 가 교차하지 않음",
+   "region": "A1",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 4,
+   "status": "PRIOR_INCOMPATIBLE",
+   "tau": "0"
+  },
+  {
+   "D": [
+    "-2",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "1",
+     "1"
+    ],
+    "fraction": [
+     "1",
+     "1"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.56",
+     "0.56"
+    ],
+    "fraction": [
+     "14/25",
+     "14/25"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "1",
+     "1"
+    ],
+    "fraction": [
+     "1",
+     "1"
+    ]
+   },
+   "label": "LAM_NE-1",
+   "lhs": {
+    "decimal": [
+     "0",
+     "0"
+    ],
+    "fraction": [
+     "0",
+     "0"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "1",
+    "0.56",
+    "1"
+   ],
+   "reason": "구간 교차",
+   "region": "A2",
+   "rhs": {
+    "decimal": [
+     "-0.635119484247",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "-562949953421312/886368576912267",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 4,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0"
+  },
+  {
+   "D": [
+    "1e-4",
+    "0.5"
+   ],
+   "I": {
+    "decimal": [
+     "0.98",
+     "1.02"
+    ],
+    "fraction": [
+     "49/50",
+     "51/50"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.54",
+     "0.58"
+    ],
+    "fraction": [
+     "27/50",
+     "29/50"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.98",
+     "1.02"
+    ],
+    "fraction": [
+     "49/50",
+     "51/50"
+    ]
+   },
+   "label": "LAM_NE-1",
+   "lhs": {
+    "decimal": [
+     "-0.04",
+     "0.04"
+    ],
+    "fraction": [
+     "-1/25",
+     "1/25"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "1",
+    "0.56",
+    "1"
+   ],
+   "reason": "구간 교차",
+   "region": "A0",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.158779871062"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "140737488355328/886368576912267"
+    ]
+   },
+   "row": 4,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0.02"
+  },
+  {
+   "D": [
+    "1e-4",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "0.98",
+     "1.02"
+    ],
+    "fraction": [
+     "49/50",
+     "51/50"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.54",
+     "0.58"
+    ],
+    "fraction": [
+     "27/50",
+     "29/50"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.98",
+     "1.02"
+    ],
+    "fraction": [
+     "49/50",
+     "51/50"
+    ]
+   },
+   "label": "LAM_NE-1",
+   "lhs": {
+    "decimal": [
+     "-0.04",
+     "0.04"
+    ],
+    "fraction": [
+     "-1/25",
+     "1/25"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "1",
+    "0.56",
+    "1"
+   ],
+   "reason": "구간 교차",
+   "region": "A1",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 4,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0.02"
+  },
+  {
+   "D": [
+    "-2",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "0.98",
+     "1.02"
+    ],
+    "fraction": [
+     "49/50",
+     "51/50"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.54",
+     "0.58"
+    ],
+    "fraction": [
+     "27/50",
+     "29/50"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.98",
+     "1.02"
+    ],
+    "fraction": [
+     "49/50",
+     "51/50"
+    ]
+   },
+   "label": "LAM_NE-1",
+   "lhs": {
+    "decimal": [
+     "-0.04",
+     "0.04"
+    ],
+    "fraction": [
+     "-1/25",
+     "1/25"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "1",
+    "0.56",
+    "1"
+   ],
+   "reason": "구간 교차",
+   "region": "A2",
+   "rhs": {
+    "decimal": [
+     "-0.635119484247",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "-562949953421312/886368576912267",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 4,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0.02"
+  },
+  {
+   "D": [
+    "1e-4",
+    "0.5"
+   ],
+   "I": {
+    "decimal": [
+     "0.95",
+     "1.05"
+    ],
+    "fraction": [
+     "19/20",
+     "21/20"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.51",
+     "0.61"
+    ],
+    "fraction": [
+     "51/100",
+     "61/100"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.95",
+     "1.05"
+    ],
+    "fraction": [
+     "19/20",
+     "21/20"
+    ]
+   },
+   "label": "LAM_NE-1",
+   "lhs": {
+    "decimal": [
+     "-0.1",
+     "0.1"
+    ],
+    "fraction": [
+     "-1/10",
+     "1/10"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "1",
+    "0.56",
+    "1"
+   ],
+   "reason": "구간 교차",
+   "region": "A0",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.158779871062"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "140737488355328/886368576912267"
+    ]
+   },
+   "row": 4,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0.05"
+  },
+  {
+   "D": [
+    "1e-4",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "0.95",
+     "1.05"
+    ],
+    "fraction": [
+     "19/20",
+     "21/20"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.51",
+     "0.61"
+    ],
+    "fraction": [
+     "51/100",
+     "61/100"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.95",
+     "1.05"
+    ],
+    "fraction": [
+     "19/20",
+     "21/20"
+    ]
+   },
+   "label": "LAM_NE-1",
+   "lhs": {
+    "decimal": [
+     "-0.1",
+     "0.1"
+    ],
+    "fraction": [
+     "-1/10",
+     "1/10"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "1",
+    "0.56",
+    "1"
+   ],
+   "reason": "구간 교차",
+   "region": "A1",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 4,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0.05"
+  },
+  {
+   "D": [
+    "-2",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "0.95",
+     "1.05"
+    ],
+    "fraction": [
+     "19/20",
+     "21/20"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.51",
+     "0.61"
+    ],
+    "fraction": [
+     "51/100",
+     "61/100"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.95",
+     "1.05"
+    ],
+    "fraction": [
+     "19/20",
+     "21/20"
+    ]
+   },
+   "label": "LAM_NE-1",
+   "lhs": {
+    "decimal": [
+     "-0.1",
+     "0.1"
+    ],
+    "fraction": [
+     "-1/10",
+     "1/10"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "1",
+    "0.56",
+    "1"
+   ],
+   "reason": "구간 교차",
+   "region": "A2",
+   "rhs": {
+    "decimal": [
+     "-0.635119484247",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "-562949953421312/886368576912267",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 4,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0.05"
+  },
+  {
+   "D": [
+    "1e-4",
+    "0.5"
+   ],
+   "I": {
+    "decimal": [
+     "0.64",
+     "0.64"
+    ],
+    "fraction": [
+     "16/25",
+     "16/25"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "1",
+     "1"
+    ],
+    "fraction": [
+     "1",
+     "1"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.64",
+     "0.64"
+    ],
+    "fraction": [
+     "16/25",
+     "16/25"
+    ]
+   },
+   "label": "LAM_PE,LLI-1",
+   "lhs": {
+    "decimal": [
+     "0",
+     "0"
+    ],
+    "fraction": [
+     "0",
+     "0"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "0.64",
+    "1",
+    "0.64"
+   ],
+   "reason": "m_P − LII 구간과 D/max_q 가 교차하지 않음",
+   "region": "A0",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.158779871062"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "140737488355328/886368576912267"
+    ]
+   },
+   "row": 5,
+   "status": "PRIOR_INCOMPATIBLE",
+   "tau": "0"
+  },
+  {
+   "D": [
+    "1e-4",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "0.64",
+     "0.64"
+    ],
+    "fraction": [
+     "16/25",
+     "16/25"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "1",
+     "1"
+    ],
+    "fraction": [
+     "1",
+     "1"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.64",
+     "0.64"
+    ],
+    "fraction": [
+     "16/25",
+     "16/25"
+    ]
+   },
+   "label": "LAM_PE,LLI-1",
+   "lhs": {
+    "decimal": [
+     "0",
+     "0"
+    ],
+    "fraction": [
+     "0",
+     "0"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "0.64",
+    "1",
+    "0.64"
+   ],
+   "reason": "m_P − LII 구간과 D/max_q 가 교차하지 않음",
+   "region": "A1",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 5,
+   "status": "PRIOR_INCOMPATIBLE",
+   "tau": "0"
+  },
+  {
+   "D": [
+    "-2",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "0.64",
+     "0.64"
+    ],
+    "fraction": [
+     "16/25",
+     "16/25"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "1",
+     "1"
+    ],
+    "fraction": [
+     "1",
+     "1"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.64",
+     "0.64"
+    ],
+    "fraction": [
+     "16/25",
+     "16/25"
+    ]
+   },
+   "label": "LAM_PE,LLI-1",
+   "lhs": {
+    "decimal": [
+     "0",
+     "0"
+    ],
+    "fraction": [
+     "0",
+     "0"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "0.64",
+    "1",
+    "0.64"
+   ],
+   "reason": "구간 교차",
+   "region": "A2",
+   "rhs": {
+    "decimal": [
+     "-0.635119484247",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "-562949953421312/886368576912267",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 5,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0"
+  },
+  {
+   "D": [
+    "1e-4",
+    "0.5"
+   ],
+   "I": {
+    "decimal": [
+     "0.62",
+     "0.66"
+    ],
+    "fraction": [
+     "31/50",
+     "33/50"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.98",
+     "1.02"
+    ],
+    "fraction": [
+     "49/50",
+     "51/50"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.62",
+     "0.66"
+    ],
+    "fraction": [
+     "31/50",
+     "33/50"
+    ]
+   },
+   "label": "LAM_PE,LLI-1",
+   "lhs": {
+    "decimal": [
+     "-0.04",
+     "0.04"
+    ],
+    "fraction": [
+     "-1/25",
+     "1/25"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "0.64",
+    "1",
+    "0.64"
+   ],
+   "reason": "구간 교차",
+   "region": "A0",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.158779871062"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "140737488355328/886368576912267"
+    ]
+   },
+   "row": 5,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0.02"
+  },
+  {
+   "D": [
+    "1e-4",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "0.62",
+     "0.66"
+    ],
+    "fraction": [
+     "31/50",
+     "33/50"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.98",
+     "1.02"
+    ],
+    "fraction": [
+     "49/50",
+     "51/50"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.62",
+     "0.66"
+    ],
+    "fraction": [
+     "31/50",
+     "33/50"
+    ]
+   },
+   "label": "LAM_PE,LLI-1",
+   "lhs": {
+    "decimal": [
+     "-0.04",
+     "0.04"
+    ],
+    "fraction": [
+     "-1/25",
+     "1/25"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "0.64",
+    "1",
+    "0.64"
+   ],
+   "reason": "구간 교차",
+   "region": "A1",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 5,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0.02"
+  },
+  {
+   "D": [
+    "-2",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "0.62",
+     "0.66"
+    ],
+    "fraction": [
+     "31/50",
+     "33/50"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.98",
+     "1.02"
+    ],
+    "fraction": [
+     "49/50",
+     "51/50"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.62",
+     "0.66"
+    ],
+    "fraction": [
+     "31/50",
+     "33/50"
+    ]
+   },
+   "label": "LAM_PE,LLI-1",
+   "lhs": {
+    "decimal": [
+     "-0.04",
+     "0.04"
+    ],
+    "fraction": [
+     "-1/25",
+     "1/25"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "0.64",
+    "1",
+    "0.64"
+   ],
+   "reason": "구간 교차",
+   "region": "A2",
+   "rhs": {
+    "decimal": [
+     "-0.635119484247",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "-562949953421312/886368576912267",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 5,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0.02"
+  },
+  {
+   "D": [
+    "1e-4",
+    "0.5"
+   ],
+   "I": {
+    "decimal": [
+     "0.59",
+     "0.69"
+    ],
+    "fraction": [
+     "59/100",
+     "69/100"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.95",
+     "1.05"
+    ],
+    "fraction": [
+     "19/20",
+     "21/20"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.6",
+     "0.69"
+    ],
+    "fraction": [
+     "3/5",
+     "69/100"
+    ]
+   },
+   "label": "LAM_PE,LLI-1",
+   "lhs": {
+    "decimal": [
+     "-0.09",
+     "0.1"
+    ],
+    "fraction": [
+     "-9/100",
+     "1/10"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "0.64",
+    "1",
+    "0.64"
+   ],
+   "reason": "구간 교차",
+   "region": "A0",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.158779871062"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "140737488355328/886368576912267"
+    ]
+   },
+   "row": 5,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0.05"
+  },
+  {
+   "D": [
+    "1e-4",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "0.59",
+     "0.69"
+    ],
+    "fraction": [
+     "59/100",
+     "69/100"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.95",
+     "1.05"
+    ],
+    "fraction": [
+     "19/20",
+     "21/20"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.59",
+     "0.69"
+    ],
+    "fraction": [
+     "59/100",
+     "69/100"
+    ]
+   },
+   "label": "LAM_PE,LLI-1",
+   "lhs": {
+    "decimal": [
+     "-0.1",
+     "0.1"
+    ],
+    "fraction": [
+     "-1/10",
+     "1/10"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "0.64",
+    "1",
+    "0.64"
+   ],
+   "reason": "구간 교차",
+   "region": "A1",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 5,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0.05"
+  },
+  {
+   "D": [
+    "-2",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "0.59",
+     "0.69"
+    ],
+    "fraction": [
+     "59/100",
+     "69/100"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.95",
+     "1.05"
+    ],
+    "fraction": [
+     "19/20",
+     "21/20"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.59",
+     "0.69"
+    ],
+    "fraction": [
+     "59/100",
+     "69/100"
+    ]
+   },
+   "label": "LAM_PE,LLI-1",
+   "lhs": {
+    "decimal": [
+     "-0.1",
+     "0.1"
+    ],
+    "fraction": [
+     "-1/10",
+     "1/10"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "0.64",
+    "1",
+    "0.64"
+   ],
+   "reason": "구간 교차",
+   "region": "A2",
+   "rhs": {
+    "decimal": [
+     "-0.635119484247",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "-562949953421312/886368576912267",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 5,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0.05"
+  },
+  {
+   "D": [
+    "1e-4",
+    "0.5"
+   ],
+   "I": {
+    "decimal": [
+     "0.58",
+     "0.58"
+    ],
+    "fraction": [
+     "29/50",
+     "29/50"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "1",
+     "1"
+    ],
+    "fraction": [
+     "1",
+     "1"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.64",
+     "0.64"
+    ],
+    "fraction": [
+     "16/25",
+     "16/25"
+    ]
+   },
+   "label": "LAM_PE,LLI-2",
+   "lhs": {
+    "decimal": [
+     "0.06",
+     "0.06"
+    ],
+    "fraction": [
+     "3/50",
+     "3/50"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "0.64",
+    "1",
+    "0.58"
+   ],
+   "reason": "구간 교차",
+   "region": "A0",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.158779871062"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "140737488355328/886368576912267"
+    ]
+   },
+   "row": 6,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0"
+  },
+  {
+   "D": [
+    "1e-4",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "0.58",
+     "0.58"
+    ],
+    "fraction": [
+     "29/50",
+     "29/50"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "1",
+     "1"
+    ],
+    "fraction": [
+     "1",
+     "1"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.64",
+     "0.64"
+    ],
+    "fraction": [
+     "16/25",
+     "16/25"
+    ]
+   },
+   "label": "LAM_PE,LLI-2",
+   "lhs": {
+    "decimal": [
+     "0.06",
+     "0.06"
+    ],
+    "fraction": [
+     "3/50",
+     "3/50"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "0.64",
+    "1",
+    "0.58"
+   ],
+   "reason": "구간 교차",
+   "region": "A1",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 6,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0"
+  },
+  {
+   "D": [
+    "-2",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "0.58",
+     "0.58"
+    ],
+    "fraction": [
+     "29/50",
+     "29/50"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "1",
+     "1"
+    ],
+    "fraction": [
+     "1",
+     "1"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.64",
+     "0.64"
+    ],
+    "fraction": [
+     "16/25",
+     "16/25"
+    ]
+   },
+   "label": "LAM_PE,LLI-2",
+   "lhs": {
+    "decimal": [
+     "0.06",
+     "0.06"
+    ],
+    "fraction": [
+     "3/50",
+     "3/50"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "0.64",
+    "1",
+    "0.58"
+   ],
+   "reason": "구간 교차",
+   "region": "A2",
+   "rhs": {
+    "decimal": [
+     "-0.635119484247",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "-562949953421312/886368576912267",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 6,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0"
+  },
+  {
+   "D": [
+    "1e-4",
+    "0.5"
+   ],
+   "I": {
+    "decimal": [
+     "0.56",
+     "0.6"
+    ],
+    "fraction": [
+     "14/25",
+     "3/5"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.98",
+     "1.02"
+    ],
+    "fraction": [
+     "49/50",
+     "51/50"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.62",
+     "0.66"
+    ],
+    "fraction": [
+     "31/50",
+     "33/50"
+    ]
+   },
+   "label": "LAM_PE,LLI-2",
+   "lhs": {
+    "decimal": [
+     "0.02",
+     "0.1"
+    ],
+    "fraction": [
+     "1/50",
+     "1/10"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "0.64",
+    "1",
+    "0.58"
+   ],
+   "reason": "구간 교차",
+   "region": "A0",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.158779871062"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "140737488355328/886368576912267"
+    ]
+   },
+   "row": 6,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0.02"
+  },
+  {
+   "D": [
+    "1e-4",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "0.56",
+     "0.6"
+    ],
+    "fraction": [
+     "14/25",
+     "3/5"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.98",
+     "1.02"
+    ],
+    "fraction": [
+     "49/50",
+     "51/50"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.62",
+     "0.66"
+    ],
+    "fraction": [
+     "31/50",
+     "33/50"
+    ]
+   },
+   "label": "LAM_PE,LLI-2",
+   "lhs": {
+    "decimal": [
+     "0.02",
+     "0.1"
+    ],
+    "fraction": [
+     "1/50",
+     "1/10"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "0.64",
+    "1",
+    "0.58"
+   ],
+   "reason": "구간 교차",
+   "region": "A1",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 6,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0.02"
+  },
+  {
+   "D": [
+    "-2",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "0.56",
+     "0.6"
+    ],
+    "fraction": [
+     "14/25",
+     "3/5"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.98",
+     "1.02"
+    ],
+    "fraction": [
+     "49/50",
+     "51/50"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.62",
+     "0.66"
+    ],
+    "fraction": [
+     "31/50",
+     "33/50"
+    ]
+   },
+   "label": "LAM_PE,LLI-2",
+   "lhs": {
+    "decimal": [
+     "0.02",
+     "0.1"
+    ],
+    "fraction": [
+     "1/50",
+     "1/10"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "0.64",
+    "1",
+    "0.58"
+   ],
+   "reason": "구간 교차",
+   "region": "A2",
+   "rhs": {
+    "decimal": [
+     "-0.635119484247",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "-562949953421312/886368576912267",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 6,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0.02"
+  },
+  {
+   "D": [
+    "1e-4",
+    "0.5"
+   ],
+   "I": {
+    "decimal": [
+     "0.53",
+     "0.63"
+    ],
+    "fraction": [
+     "53/100",
+     "63/100"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.95",
+     "1.05"
+    ],
+    "fraction": [
+     "19/20",
+     "21/20"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.6",
+     "0.69"
+    ],
+    "fraction": [
+     "3/5",
+     "69/100"
+    ]
+   },
+   "label": "LAM_PE,LLI-2",
+   "lhs": {
+    "decimal": [
+     "-0.03",
+     "0.16"
+    ],
+    "fraction": [
+     "-3/100",
+     "4/25"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "0.64",
+    "1",
+    "0.58"
+   ],
+   "reason": "구간 교차",
+   "region": "A0",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.158779871062"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "140737488355328/886368576912267"
+    ]
+   },
+   "row": 6,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0.05"
+  },
+  {
+   "D": [
+    "1e-4",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "0.53",
+     "0.63"
+    ],
+    "fraction": [
+     "53/100",
+     "63/100"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.95",
+     "1.05"
+    ],
+    "fraction": [
+     "19/20",
+     "21/20"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.59",
+     "0.69"
+    ],
+    "fraction": [
+     "59/100",
+     "69/100"
+    ]
+   },
+   "label": "LAM_PE,LLI-2",
+   "lhs": {
+    "decimal": [
+     "-0.04",
+     "0.16"
+    ],
+    "fraction": [
+     "-1/25",
+     "4/25"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "0.64",
+    "1",
+    "0.58"
+   ],
+   "reason": "구간 교차",
+   "region": "A1",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 6,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0.05"
+  },
+  {
+   "D": [
+    "-2",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "0.53",
+     "0.63"
+    ],
+    "fraction": [
+     "53/100",
+     "63/100"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.95",
+     "1.05"
+    ],
+    "fraction": [
+     "19/20",
+     "21/20"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.59",
+     "0.69"
+    ],
+    "fraction": [
+     "59/100",
+     "69/100"
+    ]
+   },
+   "label": "LAM_PE,LLI-2",
+   "lhs": {
+    "decimal": [
+     "-0.04",
+     "0.16"
+    ],
+    "fraction": [
+     "-1/25",
+     "4/25"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "0.64",
+    "1",
+    "0.58"
+   ],
+   "reason": "구간 교차",
+   "region": "A2",
+   "rhs": {
+    "decimal": [
+     "-0.635119484247",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "-562949953421312/886368576912267",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 6,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0.05"
+  },
+  {
+   "D": [
+    "1e-4",
+    "0.5"
+   ],
+   "I": {
+    "decimal": [
+     "0.9",
+     "0.9"
+    ],
+    "fraction": [
+     "9/10",
+     "9/10"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.56",
+     "0.56"
+    ],
+    "fraction": [
+     "14/25",
+     "14/25"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "1",
+     "1"
+    ],
+    "fraction": [
+     "1",
+     "1"
+    ]
+   },
+   "label": "LAM_NE,LLI-1",
+   "lhs": {
+    "decimal": [
+     "0.1",
+     "0.1"
+    ],
+    "fraction": [
+     "1/10",
+     "1/10"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "1",
+    "0.56",
+    "0.9"
+   ],
+   "reason": "구간 교차",
+   "region": "A0",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.158779871062"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "140737488355328/886368576912267"
+    ]
+   },
+   "row": 7,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0"
+  },
+  {
+   "D": [
+    "1e-4",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "0.9",
+     "0.9"
+    ],
+    "fraction": [
+     "9/10",
+     "9/10"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.56",
+     "0.56"
+    ],
+    "fraction": [
+     "14/25",
+     "14/25"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "1",
+     "1"
+    ],
+    "fraction": [
+     "1",
+     "1"
+    ]
+   },
+   "label": "LAM_NE,LLI-1",
+   "lhs": {
+    "decimal": [
+     "0.1",
+     "0.1"
+    ],
+    "fraction": [
+     "1/10",
+     "1/10"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "1",
+    "0.56",
+    "0.9"
+   ],
+   "reason": "구간 교차",
+   "region": "A1",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 7,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0"
+  },
+  {
+   "D": [
+    "-2",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "0.9",
+     "0.9"
+    ],
+    "fraction": [
+     "9/10",
+     "9/10"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.56",
+     "0.56"
+    ],
+    "fraction": [
+     "14/25",
+     "14/25"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "1",
+     "1"
+    ],
+    "fraction": [
+     "1",
+     "1"
+    ]
+   },
+   "label": "LAM_NE,LLI-1",
+   "lhs": {
+    "decimal": [
+     "0.1",
+     "0.1"
+    ],
+    "fraction": [
+     "1/10",
+     "1/10"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "1",
+    "0.56",
+    "0.9"
+   ],
+   "reason": "구간 교차",
+   "region": "A2",
+   "rhs": {
+    "decimal": [
+     "-0.635119484247",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "-562949953421312/886368576912267",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 7,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0"
+  },
+  {
+   "D": [
+    "1e-4",
+    "0.5"
+   ],
+   "I": {
+    "decimal": [
+     "0.88",
+     "0.92"
+    ],
+    "fraction": [
+     "22/25",
+     "23/25"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.54",
+     "0.58"
+    ],
+    "fraction": [
+     "27/50",
+     "29/50"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.98",
+     "1.02"
+    ],
+    "fraction": [
+     "49/50",
+     "51/50"
+    ]
+   },
+   "label": "LAM_NE,LLI-1",
+   "lhs": {
+    "decimal": [
+     "0.06",
+     "0.14"
+    ],
+    "fraction": [
+     "3/50",
+     "7/50"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "1",
+    "0.56",
+    "0.9"
+   ],
+   "reason": "구간 교차",
+   "region": "A0",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.158779871062"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "140737488355328/886368576912267"
+    ]
+   },
+   "row": 7,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0.02"
+  },
+  {
+   "D": [
+    "1e-4",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "0.88",
+     "0.92"
+    ],
+    "fraction": [
+     "22/25",
+     "23/25"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.54",
+     "0.58"
+    ],
+    "fraction": [
+     "27/50",
+     "29/50"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.98",
+     "1.02"
+    ],
+    "fraction": [
+     "49/50",
+     "51/50"
+    ]
+   },
+   "label": "LAM_NE,LLI-1",
+   "lhs": {
+    "decimal": [
+     "0.06",
+     "0.14"
+    ],
+    "fraction": [
+     "3/50",
+     "7/50"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "1",
+    "0.56",
+    "0.9"
+   ],
+   "reason": "구간 교차",
+   "region": "A1",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 7,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0.02"
+  },
+  {
+   "D": [
+    "-2",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "0.88",
+     "0.92"
+    ],
+    "fraction": [
+     "22/25",
+     "23/25"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.54",
+     "0.58"
+    ],
+    "fraction": [
+     "27/50",
+     "29/50"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.98",
+     "1.02"
+    ],
+    "fraction": [
+     "49/50",
+     "51/50"
+    ]
+   },
+   "label": "LAM_NE,LLI-1",
+   "lhs": {
+    "decimal": [
+     "0.06",
+     "0.14"
+    ],
+    "fraction": [
+     "3/50",
+     "7/50"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "1",
+    "0.56",
+    "0.9"
+   ],
+   "reason": "구간 교차",
+   "region": "A2",
+   "rhs": {
+    "decimal": [
+     "-0.635119484247",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "-562949953421312/886368576912267",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 7,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0.02"
+  },
+  {
+   "D": [
+    "1e-4",
+    "0.5"
+   ],
+   "I": {
+    "decimal": [
+     "0.85",
+     "0.95"
+    ],
+    "fraction": [
+     "17/20",
+     "19/20"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.51",
+     "0.61"
+    ],
+    "fraction": [
+     "51/100",
+     "61/100"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.95",
+     "1.05"
+    ],
+    "fraction": [
+     "19/20",
+     "21/20"
+    ]
+   },
+   "label": "LAM_NE,LLI-1",
+   "lhs": {
+    "decimal": [
+     "0",
+     "0.2"
+    ],
+    "fraction": [
+     "0",
+     "1/5"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "1",
+    "0.56",
+    "0.9"
+   ],
+   "reason": "구간 교차",
+   "region": "A0",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.158779871062"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "140737488355328/886368576912267"
+    ]
+   },
+   "row": 7,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0.05"
+  },
+  {
+   "D": [
+    "1e-4",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "0.85",
+     "0.95"
+    ],
+    "fraction": [
+     "17/20",
+     "19/20"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.51",
+     "0.61"
+    ],
+    "fraction": [
+     "51/100",
+     "61/100"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.95",
+     "1.05"
+    ],
+    "fraction": [
+     "19/20",
+     "21/20"
+    ]
+   },
+   "label": "LAM_NE,LLI-1",
+   "lhs": {
+    "decimal": [
+     "0",
+     "0.2"
+    ],
+    "fraction": [
+     "0",
+     "1/5"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "1",
+    "0.56",
+    "0.9"
+   ],
+   "reason": "구간 교차",
+   "region": "A1",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 7,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0.05"
+  },
+  {
+   "D": [
+    "-2",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "0.85",
+     "0.95"
+    ],
+    "fraction": [
+     "17/20",
+     "19/20"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.51",
+     "0.61"
+    ],
+    "fraction": [
+     "51/100",
+     "61/100"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.95",
+     "1.05"
+    ],
+    "fraction": [
+     "19/20",
+     "21/20"
+    ]
+   },
+   "label": "LAM_NE,LLI-1",
+   "lhs": {
+    "decimal": [
+     "0",
+     "0.2"
+    ],
+    "fraction": [
+     "0",
+     "1/5"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "1",
+    "0.56",
+    "0.9"
+   ],
+   "reason": "구간 교차",
+   "region": "A2",
+   "rhs": {
+    "decimal": [
+     "-0.635119484247",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "-562949953421312/886368576912267",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 7,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0.05"
+  },
+  {
+   "D": [
+    "1e-4",
+    "0.5"
+   ],
+   "I": {
+    "decimal": [
+     "0.8",
+     "0.8"
+    ],
+    "fraction": [
+     "4/5",
+     "4/5"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.56",
+     "0.56"
+    ],
+    "fraction": [
+     "14/25",
+     "14/25"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "1",
+     "1"
+    ],
+    "fraction": [
+     "1",
+     "1"
+    ]
+   },
+   "label": "LAM_NE,LLI-2",
+   "lhs": {
+    "decimal": [
+     "0.2",
+     "0.2"
+    ],
+    "fraction": [
+     "1/5",
+     "1/5"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "1",
+    "0.56",
+    "0.8"
+   ],
+   "reason": "m_P − LII 구간과 D/max_q 가 교차하지 않음",
+   "region": "A0",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.158779871062"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "140737488355328/886368576912267"
+    ]
+   },
+   "row": 8,
+   "status": "PRIOR_INCOMPATIBLE",
+   "tau": "0"
+  },
+  {
+   "D": [
+    "1e-4",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "0.8",
+     "0.8"
+    ],
+    "fraction": [
+     "4/5",
+     "4/5"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.56",
+     "0.56"
+    ],
+    "fraction": [
+     "14/25",
+     "14/25"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "1",
+     "1"
+    ],
+    "fraction": [
+     "1",
+     "1"
+    ]
+   },
+   "label": "LAM_NE,LLI-2",
+   "lhs": {
+    "decimal": [
+     "0.2",
+     "0.2"
+    ],
+    "fraction": [
+     "1/5",
+     "1/5"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "1",
+    "0.56",
+    "0.8"
+   ],
+   "reason": "구간 교차",
+   "region": "A1",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 8,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0"
+  },
+  {
+   "D": [
+    "-2",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "0.8",
+     "0.8"
+    ],
+    "fraction": [
+     "4/5",
+     "4/5"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.56",
+     "0.56"
+    ],
+    "fraction": [
+     "14/25",
+     "14/25"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "1",
+     "1"
+    ],
+    "fraction": [
+     "1",
+     "1"
+    ]
+   },
+   "label": "LAM_NE,LLI-2",
+   "lhs": {
+    "decimal": [
+     "0.2",
+     "0.2"
+    ],
+    "fraction": [
+     "1/5",
+     "1/5"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "1",
+    "0.56",
+    "0.8"
+   ],
+   "reason": "구간 교차",
+   "region": "A2",
+   "rhs": {
+    "decimal": [
+     "-0.635119484247",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "-562949953421312/886368576912267",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 8,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0"
+  },
+  {
+   "D": [
+    "1e-4",
+    "0.5"
+   ],
+   "I": {
+    "decimal": [
+     "0.78",
+     "0.82"
+    ],
+    "fraction": [
+     "39/50",
+     "41/50"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.54",
+     "0.58"
+    ],
+    "fraction": [
+     "27/50",
+     "29/50"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.98",
+     "1.02"
+    ],
+    "fraction": [
+     "49/50",
+     "51/50"
+    ]
+   },
+   "label": "LAM_NE,LLI-2",
+   "lhs": {
+    "decimal": [
+     "0.16",
+     "0.24"
+    ],
+    "fraction": [
+     "4/25",
+     "6/25"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "1",
+    "0.56",
+    "0.8"
+   ],
+   "reason": "m_P − LII 구간과 D/max_q 가 교차하지 않음",
+   "region": "A0",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.158779871062"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "140737488355328/886368576912267"
+    ]
+   },
+   "row": 8,
+   "status": "PRIOR_INCOMPATIBLE",
+   "tau": "0.02"
+  },
+  {
+   "D": [
+    "1e-4",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "0.78",
+     "0.82"
+    ],
+    "fraction": [
+     "39/50",
+     "41/50"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.54",
+     "0.58"
+    ],
+    "fraction": [
+     "27/50",
+     "29/50"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.98",
+     "1.02"
+    ],
+    "fraction": [
+     "49/50",
+     "51/50"
+    ]
+   },
+   "label": "LAM_NE,LLI-2",
+   "lhs": {
+    "decimal": [
+     "0.16",
+     "0.24"
+    ],
+    "fraction": [
+     "4/25",
+     "6/25"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "1",
+    "0.56",
+    "0.8"
+   ],
+   "reason": "구간 교차",
+   "region": "A1",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 8,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0.02"
+  },
+  {
+   "D": [
+    "-2",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "0.78",
+     "0.82"
+    ],
+    "fraction": [
+     "39/50",
+     "41/50"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.54",
+     "0.58"
+    ],
+    "fraction": [
+     "27/50",
+     "29/50"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.98",
+     "1.02"
+    ],
+    "fraction": [
+     "49/50",
+     "51/50"
+    ]
+   },
+   "label": "LAM_NE,LLI-2",
+   "lhs": {
+    "decimal": [
+     "0.16",
+     "0.24"
+    ],
+    "fraction": [
+     "4/25",
+     "6/25"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "1",
+    "0.56",
+    "0.8"
+   ],
+   "reason": "구간 교차",
+   "region": "A2",
+   "rhs": {
+    "decimal": [
+     "-0.635119484247",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "-562949953421312/886368576912267",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 8,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0.02"
+  },
+  {
+   "D": [
+    "1e-4",
+    "0.5"
+   ],
+   "I": {
+    "decimal": [
+     "0.75",
+     "0.85"
+    ],
+    "fraction": [
+     "3/4",
+     "17/20"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.51",
+     "0.61"
+    ],
+    "fraction": [
+     "51/100",
+     "61/100"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.95",
+     "1.05"
+    ],
+    "fraction": [
+     "19/20",
+     "21/20"
+    ]
+   },
+   "label": "LAM_NE,LLI-2",
+   "lhs": {
+    "decimal": [
+     "0.1",
+     "0.3"
+    ],
+    "fraction": [
+     "1/10",
+     "3/10"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "1",
+    "0.56",
+    "0.8"
+   ],
+   "reason": "구간 교차",
+   "region": "A0",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.158779871062"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "140737488355328/886368576912267"
+    ]
+   },
+   "row": 8,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0.05"
+  },
+  {
+   "D": [
+    "1e-4",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "0.75",
+     "0.85"
+    ],
+    "fraction": [
+     "3/4",
+     "17/20"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.51",
+     "0.61"
+    ],
+    "fraction": [
+     "51/100",
+     "61/100"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.95",
+     "1.05"
+    ],
+    "fraction": [
+     "19/20",
+     "21/20"
+    ]
+   },
+   "label": "LAM_NE,LLI-2",
+   "lhs": {
+    "decimal": [
+     "0.1",
+     "0.3"
+    ],
+    "fraction": [
+     "1/10",
+     "3/10"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "1",
+    "0.56",
+    "0.8"
+   ],
+   "reason": "구간 교차",
+   "region": "A1",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 8,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0.05"
+  },
+  {
+   "D": [
+    "-2",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "0.75",
+     "0.85"
+    ],
+    "fraction": [
+     "3/4",
+     "17/20"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.51",
+     "0.61"
+    ],
+    "fraction": [
+     "51/100",
+     "61/100"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.95",
+     "1.05"
+    ],
+    "fraction": [
+     "19/20",
+     "21/20"
+    ]
+   },
+   "label": "LAM_NE,LLI-2",
+   "lhs": {
+    "decimal": [
+     "0.1",
+     "0.3"
+    ],
+    "fraction": [
+     "1/10",
+     "3/10"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "1",
+    "0.56",
+    "0.8"
+   ],
+   "reason": "구간 교차",
+   "region": "A2",
+   "rhs": {
+    "decimal": [
+     "-0.635119484247",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "-562949953421312/886368576912267",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 8,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0.05"
+  },
+  {
+   "D": [
+    "1e-4",
+    "0.5"
+   ],
+   "I": {
+    "decimal": [
+     "0.58",
+     "0.58"
+    ],
+    "fraction": [
+     "29/50",
+     "29/50"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.56",
+     "0.56"
+    ],
+    "fraction": [
+     "14/25",
+     "14/25"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.64",
+     "0.64"
+    ],
+    "fraction": [
+     "16/25",
+     "16/25"
+    ]
+   },
+   "label": "All mode-1",
+   "lhs": {
+    "decimal": [
+     "0.06",
+     "0.06"
+    ],
+    "fraction": [
+     "3/50",
+     "3/50"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "0.64",
+    "0.56",
+    "0.58"
+   ],
+   "reason": "구간 교차",
+   "region": "A0",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.158779871062"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "140737488355328/886368576912267"
+    ]
+   },
+   "row": 9,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0"
+  },
+  {
+   "D": [
+    "1e-4",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "0.58",
+     "0.58"
+    ],
+    "fraction": [
+     "29/50",
+     "29/50"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.56",
+     "0.56"
+    ],
+    "fraction": [
+     "14/25",
+     "14/25"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.64",
+     "0.64"
+    ],
+    "fraction": [
+     "16/25",
+     "16/25"
+    ]
+   },
+   "label": "All mode-1",
+   "lhs": {
+    "decimal": [
+     "0.06",
+     "0.06"
+    ],
+    "fraction": [
+     "3/50",
+     "3/50"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "0.64",
+    "0.56",
+    "0.58"
+   ],
+   "reason": "구간 교차",
+   "region": "A1",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 9,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0"
+  },
+  {
+   "D": [
+    "-2",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "0.58",
+     "0.58"
+    ],
+    "fraction": [
+     "29/50",
+     "29/50"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.56",
+     "0.56"
+    ],
+    "fraction": [
+     "14/25",
+     "14/25"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.64",
+     "0.64"
+    ],
+    "fraction": [
+     "16/25",
+     "16/25"
+    ]
+   },
+   "label": "All mode-1",
+   "lhs": {
+    "decimal": [
+     "0.06",
+     "0.06"
+    ],
+    "fraction": [
+     "3/50",
+     "3/50"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "0.64",
+    "0.56",
+    "0.58"
+   ],
+   "reason": "구간 교차",
+   "region": "A2",
+   "rhs": {
+    "decimal": [
+     "-0.635119484247",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "-562949953421312/886368576912267",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 9,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0"
+  },
+  {
+   "D": [
+    "1e-4",
+    "0.5"
+   ],
+   "I": {
+    "decimal": [
+     "0.56",
+     "0.6"
+    ],
+    "fraction": [
+     "14/25",
+     "3/5"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.54",
+     "0.58"
+    ],
+    "fraction": [
+     "27/50",
+     "29/50"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.62",
+     "0.66"
+    ],
+    "fraction": [
+     "31/50",
+     "33/50"
+    ]
+   },
+   "label": "All mode-1",
+   "lhs": {
+    "decimal": [
+     "0.02",
+     "0.1"
+    ],
+    "fraction": [
+     "1/50",
+     "1/10"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "0.64",
+    "0.56",
+    "0.58"
+   ],
+   "reason": "구간 교차",
+   "region": "A0",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.158779871062"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "140737488355328/886368576912267"
+    ]
+   },
+   "row": 9,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0.02"
+  },
+  {
+   "D": [
+    "1e-4",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "0.56",
+     "0.6"
+    ],
+    "fraction": [
+     "14/25",
+     "3/5"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.54",
+     "0.58"
+    ],
+    "fraction": [
+     "27/50",
+     "29/50"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.62",
+     "0.66"
+    ],
+    "fraction": [
+     "31/50",
+     "33/50"
+    ]
+   },
+   "label": "All mode-1",
+   "lhs": {
+    "decimal": [
+     "0.02",
+     "0.1"
+    ],
+    "fraction": [
+     "1/50",
+     "1/10"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "0.64",
+    "0.56",
+    "0.58"
+   ],
+   "reason": "구간 교차",
+   "region": "A1",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 9,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0.02"
+  },
+  {
+   "D": [
+    "-2",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "0.56",
+     "0.6"
+    ],
+    "fraction": [
+     "14/25",
+     "3/5"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.54",
+     "0.58"
+    ],
+    "fraction": [
+     "27/50",
+     "29/50"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.62",
+     "0.66"
+    ],
+    "fraction": [
+     "31/50",
+     "33/50"
+    ]
+   },
+   "label": "All mode-1",
+   "lhs": {
+    "decimal": [
+     "0.02",
+     "0.1"
+    ],
+    "fraction": [
+     "1/50",
+     "1/10"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "0.64",
+    "0.56",
+    "0.58"
+   ],
+   "reason": "구간 교차",
+   "region": "A2",
+   "rhs": {
+    "decimal": [
+     "-0.635119484247",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "-562949953421312/886368576912267",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 9,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0.02"
+  },
+  {
+   "D": [
+    "1e-4",
+    "0.5"
+   ],
+   "I": {
+    "decimal": [
+     "0.53",
+     "0.63"
+    ],
+    "fraction": [
+     "53/100",
+     "63/100"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.51",
+     "0.61"
+    ],
+    "fraction": [
+     "51/100",
+     "61/100"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.6",
+     "0.69"
+    ],
+    "fraction": [
+     "3/5",
+     "69/100"
+    ]
+   },
+   "label": "All mode-1",
+   "lhs": {
+    "decimal": [
+     "-0.03",
+     "0.16"
+    ],
+    "fraction": [
+     "-3/100",
+     "4/25"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "0.64",
+    "0.56",
+    "0.58"
+   ],
+   "reason": "구간 교차",
+   "region": "A0",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.158779871062"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "140737488355328/886368576912267"
+    ]
+   },
+   "row": 9,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0.05"
+  },
+  {
+   "D": [
+    "1e-4",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "0.53",
+     "0.63"
+    ],
+    "fraction": [
+     "53/100",
+     "63/100"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.51",
+     "0.61"
+    ],
+    "fraction": [
+     "51/100",
+     "61/100"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.59",
+     "0.69"
+    ],
+    "fraction": [
+     "59/100",
+     "69/100"
+    ]
+   },
+   "label": "All mode-1",
+   "lhs": {
+    "decimal": [
+     "-0.04",
+     "0.16"
+    ],
+    "fraction": [
+     "-1/25",
+     "4/25"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "0.64",
+    "0.56",
+    "0.58"
+   ],
+   "reason": "구간 교차",
+   "region": "A1",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 9,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0.05"
+  },
+  {
+   "D": [
+    "-2",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "0.53",
+     "0.63"
+    ],
+    "fraction": [
+     "53/100",
+     "63/100"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.51",
+     "0.61"
+    ],
+    "fraction": [
+     "51/100",
+     "61/100"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.59",
+     "0.69"
+    ],
+    "fraction": [
+     "59/100",
+     "69/100"
+    ]
+   },
+   "label": "All mode-1",
+   "lhs": {
+    "decimal": [
+     "-0.04",
+     "0.16"
+    ],
+    "fraction": [
+     "-1/25",
+     "4/25"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "0.64",
+    "0.56",
+    "0.58"
+   ],
+   "reason": "구간 교차",
+   "region": "A2",
+   "rhs": {
+    "decimal": [
+     "-0.635119484247",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "-562949953421312/886368576912267",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 9,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0.05"
+  },
+  {
+   "D": [
+    "1e-4",
+    "0.5"
+   ],
+   "I": {
+    "decimal": [
+     "0.51",
+     "0.51"
+    ],
+    "fraction": [
+     "51/100",
+     "51/100"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.56",
+     "0.56"
+    ],
+    "fraction": [
+     "14/25",
+     "14/25"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.64",
+     "0.64"
+    ],
+    "fraction": [
+     "16/25",
+     "16/25"
+    ]
+   },
+   "label": "All mode-2",
+   "lhs": {
+    "decimal": [
+     "0.13",
+     "0.13"
+    ],
+    "fraction": [
+     "13/100",
+     "13/100"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "0.64",
+    "0.56",
+    "0.51"
+   ],
+   "reason": "구간 교차",
+   "region": "A0",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.158779871062"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "140737488355328/886368576912267"
+    ]
+   },
+   "row": 10,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0"
+  },
+  {
+   "D": [
+    "1e-4",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "0.51",
+     "0.51"
+    ],
+    "fraction": [
+     "51/100",
+     "51/100"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.56",
+     "0.56"
+    ],
+    "fraction": [
+     "14/25",
+     "14/25"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.64",
+     "0.64"
+    ],
+    "fraction": [
+     "16/25",
+     "16/25"
+    ]
+   },
+   "label": "All mode-2",
+   "lhs": {
+    "decimal": [
+     "0.13",
+     "0.13"
+    ],
+    "fraction": [
+     "13/100",
+     "13/100"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "0.64",
+    "0.56",
+    "0.51"
+   ],
+   "reason": "구간 교차",
+   "region": "A1",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 10,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0"
+  },
+  {
+   "D": [
+    "-2",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "0.51",
+     "0.51"
+    ],
+    "fraction": [
+     "51/100",
+     "51/100"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.56",
+     "0.56"
+    ],
+    "fraction": [
+     "14/25",
+     "14/25"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.64",
+     "0.64"
+    ],
+    "fraction": [
+     "16/25",
+     "16/25"
+    ]
+   },
+   "label": "All mode-2",
+   "lhs": {
+    "decimal": [
+     "0.13",
+     "0.13"
+    ],
+    "fraction": [
+     "13/100",
+     "13/100"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "0.64",
+    "0.56",
+    "0.51"
+   ],
+   "reason": "구간 교차",
+   "region": "A2",
+   "rhs": {
+    "decimal": [
+     "-0.635119484247",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "-562949953421312/886368576912267",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 10,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0"
+  },
+  {
+   "D": [
+    "1e-4",
+    "0.5"
+   ],
+   "I": {
+    "decimal": [
+     "0.49",
+     "0.53"
+    ],
+    "fraction": [
+     "49/100",
+     "53/100"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.54",
+     "0.58"
+    ],
+    "fraction": [
+     "27/50",
+     "29/50"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.62",
+     "0.66"
+    ],
+    "fraction": [
+     "31/50",
+     "33/50"
+    ]
+   },
+   "label": "All mode-2",
+   "lhs": {
+    "decimal": [
+     "0.09",
+     "0.17"
+    ],
+    "fraction": [
+     "9/100",
+     "17/100"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "0.64",
+    "0.56",
+    "0.51"
+   ],
+   "reason": "구간 교차",
+   "region": "A0",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.158779871062"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "140737488355328/886368576912267"
+    ]
+   },
+   "row": 10,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0.02"
+  },
+  {
+   "D": [
+    "1e-4",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "0.49",
+     "0.53"
+    ],
+    "fraction": [
+     "49/100",
+     "53/100"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.54",
+     "0.58"
+    ],
+    "fraction": [
+     "27/50",
+     "29/50"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.62",
+     "0.66"
+    ],
+    "fraction": [
+     "31/50",
+     "33/50"
+    ]
+   },
+   "label": "All mode-2",
+   "lhs": {
+    "decimal": [
+     "0.09",
+     "0.17"
+    ],
+    "fraction": [
+     "9/100",
+     "17/100"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "0.64",
+    "0.56",
+    "0.51"
+   ],
+   "reason": "구간 교차",
+   "region": "A1",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 10,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0.02"
+  },
+  {
+   "D": [
+    "-2",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "0.49",
+     "0.53"
+    ],
+    "fraction": [
+     "49/100",
+     "53/100"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.54",
+     "0.58"
+    ],
+    "fraction": [
+     "27/50",
+     "29/50"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.62",
+     "0.66"
+    ],
+    "fraction": [
+     "31/50",
+     "33/50"
+    ]
+   },
+   "label": "All mode-2",
+   "lhs": {
+    "decimal": [
+     "0.09",
+     "0.17"
+    ],
+    "fraction": [
+     "9/100",
+     "17/100"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "0.64",
+    "0.56",
+    "0.51"
+   ],
+   "reason": "구간 교차",
+   "region": "A2",
+   "rhs": {
+    "decimal": [
+     "-0.635119484247",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "-562949953421312/886368576912267",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 10,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0.02"
+  },
+  {
+   "D": [
+    "1e-4",
+    "0.5"
+   ],
+   "I": {
+    "decimal": [
+     "0.46",
+     "0.56"
+    ],
+    "fraction": [
+     "23/50",
+     "14/25"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.51",
+     "0.61"
+    ],
+    "fraction": [
+     "51/100",
+     "61/100"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.6",
+     "0.69"
+    ],
+    "fraction": [
+     "3/5",
+     "69/100"
+    ]
+   },
+   "label": "All mode-2",
+   "lhs": {
+    "decimal": [
+     "0.04",
+     "0.23"
+    ],
+    "fraction": [
+     "1/25",
+     "23/100"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "0.64",
+    "0.56",
+    "0.51"
+   ],
+   "reason": "구간 교차",
+   "region": "A0",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.158779871062"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "140737488355328/886368576912267"
+    ]
+   },
+   "row": 10,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0.05"
+  },
+  {
+   "D": [
+    "1e-4",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "0.46",
+     "0.56"
+    ],
+    "fraction": [
+     "23/50",
+     "14/25"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.51",
+     "0.61"
+    ],
+    "fraction": [
+     "51/100",
+     "61/100"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.59",
+     "0.69"
+    ],
+    "fraction": [
+     "59/100",
+     "69/100"
+    ]
+   },
+   "label": "All mode-2",
+   "lhs": {
+    "decimal": [
+     "0.03",
+     "0.23"
+    ],
+    "fraction": [
+     "3/100",
+     "23/100"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "0.64",
+    "0.56",
+    "0.51"
+   ],
+   "reason": "구간 교차",
+   "region": "A1",
+   "rhs": {
+    "decimal": [
+     "3.17559742124e-05",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "17592186044416/553980360570166875",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 10,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0.05"
+  },
+  {
+   "D": [
+    "-2",
+    "2"
+   ],
+   "I": {
+    "decimal": [
+     "0.46",
+     "0.56"
+    ],
+    "fraction": [
+     "23/50",
+     "14/25"
+    ]
+   },
+   "N": {
+    "decimal": [
+     "0.51",
+     "0.61"
+    ],
+    "fraction": [
+     "51/100",
+     "61/100"
+    ]
+   },
+   "P": {
+    "decimal": [
+     "0.59",
+     "0.69"
+    ],
+    "fraction": [
+     "59/100",
+     "69/100"
+    ]
+   },
+   "label": "All mode-2",
+   "lhs": {
+    "decimal": [
+     "0.03",
+     "0.23"
+    ],
+    "fraction": [
+     "3/100",
+     "23/100"
+    ]
+   },
+   "max_q_fraction": "886368576912267/281474976710656",
+   "nominal": [
+    "0.64",
+    "0.56",
+    "0.51"
+   ],
+   "reason": "구간 교차",
+   "region": "A2",
+   "rhs": {
+    "decimal": [
+     "-0.635119484247",
+     "0.635119484247"
+    ],
+    "fraction": [
+     "-562949953421312/886368576912267",
+     "562949953421312/886368576912267"
+    ]
+   },
+   "row": 10,
+   "status": "PRIOR_COMPATIBLE",
+   "tau": "0.05"
+  }
+ ],
+ "q_NE_hc_max_record_only": 3.6685628130367562,
+ "schema": "reil-p0/v1",
+ "sheet_names": {
+  "actual": [
+   "12-LFP Half-cell @ C_20",
+   "12-Graphite Half-cell @ C_30",
+   "12-Graphite Half-cell @ C_20",
+   "12-LFP 16-Gr Full-cell @ C_20",
+   "15-LFP 12-Gr Full-cell @ C_20",
+   "15-LFP 16-Gr Full-cell @ C_20",
+   "15-LFP 16-Gr SOC-10",
+   "15-LFP 16-Gr SOC-20",
+   "12-LFP 16-Gr SOC-10",
+   "12-LFP 12-Gr SOC-10",
+   "12-LFP 12-Gr SOC-20",
+   "12-LFP 16-Gr SOC-100",
+   "15-LFP 12-Gr SOC-10",
+   "15-LFP 12-Gr SOC-20",
+   "12-LFP C_20 Updated",
+   "12-14 12-15",
+   "Half cell after FM",
+   "Full cell after FM SOC 0",
+   "Full cell after FM SOC 10"
+  ],
+  "extra": [],
+  "missing": [],
+  "same": true
+ },
+ "sigma_v": [
+  {
+   "row": 0,
+   "rule": "SG polyorder 3 · window 21 · mode=interp · 그들 경로의 V (중복 제거 뒤 · 보간 전) · 표본 순서",
+   "sheet": "15-LFP 16-Gr Full-cell @ C_20",
+   "sigma_v_V": 0.0010221580595239684,
+   "status": "OK"
+  },
+  {
+   "row": 1,
+   "rule": "SG polyorder 3 · window 21 · mode=interp · 그들 경로의 V (중복 제거 뒤 · 보간 전) · 표본 순서",
+   "sheet": "15-LFP 16-Gr SOC-10",
+   "sigma_v_V": 0.0012015774157589092,
+   "status": "OK"
+  },
+  {
+   "row": 2,
+   "rule": "SG polyorder 3 · window 21 · mode=interp · 그들 경로의 V (중복 제거 뒤 · 보간 전) · 표본 순서",
+   "sheet": "15-LFP 16-Gr SOC-20",
+   "sigma_v_V": 0.0012809288186791722,
+   "status": "OK"
+  },
+  {
+   "row": 3,
+   "rule": "SG polyorder 3 · window 21 · mode=interp · 그들 경로의 V (중복 제거 뒤 · 보간 전) · 표본 순서",
+   "sheet": "12-LFP 16-Gr SOC-100",
+   "sigma_v_V": 0.0011439615666462657,
+   "status": "OK"
+  },
+  {
+   "row": 4,
+   "rule": "SG polyorder 3 · window 21 · mode=interp · 그들 경로의 V (중복 제거 뒤 · 보간 전) · 표본 순서",
+   "sheet": "15-LFP 12-Gr Full-cell @ C_20",
+   "sigma_v_V": 0.0006392603864995949,
+   "status": "OK"
+  },
+  {
+   "row": 5,
+   "rule": "SG polyorder 3 · window 21 · mode=interp · 그들 경로의 V (중복 제거 뒤 · 보간 전) · 표본 순서",
+   "sheet": "Full cell after FM SOC 0",
+   "sigma_v_V": 0.0003153178128297169,
+   "status": "OK"
+  },
+  {
+   "row": 6,
+   "rule": "SG polyorder 3 · window 21 · mode=interp · 그들 경로의 V (중복 제거 뒤 · 보간 전) · 표본 순서",
+   "sheet": "Full cell after FM SOC 10",
+   "sigma_v_V": 0.0005870436338098319,
+   "status": "OK"
+  },
+  {
+   "row": 7,
+   "rule": "SG polyorder 3 · window 21 · mode=interp · 그들 경로의 V (중복 제거 뒤 · 보간 전) · 표본 순서",
+   "sheet": "15-LFP 12-Gr SOC-10",
+   "sigma_v_V": 0.000702451319416834,
+   "status": "OK"
+  },
+  {
+   "row": 8,
+   "rule": "SG polyorder 3 · window 21 · mode=interp · 그들 경로의 V (중복 제거 뒤 · 보간 전) · 표본 순서",
+   "sheet": "15-LFP 12-Gr SOC-20",
+   "sigma_v_V": 0.0007288734126501958,
+   "status": "OK"
+  },
+  {
+   "row": 9,
+   "rule": "SG polyorder 3 · window 21 · mode=interp · 그들 경로의 V (중복 제거 뒤 · 보간 전) · 표본 순서",
+   "sheet": "12-LFP 12-Gr SOC-10",
+   "sigma_v_V": 0.0011925258027145008,
+   "status": "OK"
+  },
+  {
+   "row": 10,
+   "rule": "SG polyorder 3 · window 21 · mode=interp · 그들 경로의 V (중복 제거 뒤 · 보간 전) · 표본 순서",
+   "sheet": "12-LFP 12-Gr SOC-20",
+   "sigma_v_V": 0.0012115069030354281,
+   "status": "OK"
+  }
+ ],
+ "stopped": null,
+ "util_static": {
+  "bad": [],
+  "functions": [
+   "visualize_LFP_data",
+   "extract_battery_data",
+   "dVdQ_hc",
+   "objective_fun",
+   "plot_half_cell_analysis",
+   "manual_radviz",
+   "plot_nsga_results",
+   "compare_nsga_manual",
+   "run_multiple_ga",
+   "run_nsga",
+   "run_optimization",
+   "extract_health_parameter",
+   "plot_health_parameters",
+   "filter_first_occurrences_by_column",
+   "find_balanced_solution"
+  ],
+  "imports": [
+   "numpy",
+   "pandas",
+   "datetime",
+   "scipy.interpolate",
+   "scipy.signal",
+   "pickle",
+   "matplotlib.pyplot",
+   "matplotlib.ticker",
+   "seaborn",
+   "pymoo.core.problem",
+   "pymoo.algorithms.soo.nonconvex.ga",
+   "pymoo.algorithms.moo.nsga2",
+   "pymoo.algorithms.moo.nsga3",
+   "pymoo.optimize",
+   "pymoo.termination",
+   "pymoo.util.ref_dirs",
+   "pymoo.core.result"
+  ],
+  "ok": true
+ },
+ "versions": {
+  "numpy": "2.4.6",
+  "pandas": "3.0.5",
+  "python": "3.11.15",
+  "scipy": "1.17.1"
+ }
+}
