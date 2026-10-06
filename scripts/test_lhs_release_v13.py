@@ -23,7 +23,8 @@ v1.3 = 세대 2 망 값 + #1 ML 표 (빈칸 뜻대로) · #2 f 타깃 · 관통 
   V14 DRY RUN (커밋된 v1.2 = 세대 1) — dry-run 없이 거부 · dry-run 이면 표지 (DRYRUN_ · "DRY RUN — not a release") · docs/data 아래 거부
   V15 CLI — --v13 --dry-run · --v13-check · dry-run 없는 세대 1 거부 (rc ≠ 0 · 폴더 안 만듦)
   V16 발사 봉인 대조 (세대 2 등록 20261007_g2 §3 · §5) — manifest code_hashes ↔ 지금 체크아웃 (다르면 거부 · --allow-seal-diff 명시 승인 · 기록) ·
-      handover_code_hashes 다름 = 경고 · ⓪b 다시 읽기 기록 (reread.json) 실패 = 거부 · 단계 A 도 같은 관문 · CLI
+      handover_code_hashes 다름 = 경고 · ⓪b 다시 읽기 기록 (reread.json) 실패 = 거부 · 단계 A 도 같은 관문 · CLI ·
+      ★ 10-07 G2RR2-02 — 다시 읽기 기록이 등록 집합 production194 전부 (기대 = 읽음 · 같음) 가 아니면 거부 (V16n · V16o)
 
   python3 scripts/test_lhs_release_v13.py
 """
@@ -167,6 +168,11 @@ HANDOVER_FILES = ('scripts/lhs_design_dataset.py', 'scripts/g2_network_reread.py
 
 def _sha_file(rel):
     return __import__('hashlib').sha256(open(os.path.join(ROOT, rel), 'rb').read()).hexdigest()
+
+
+#  ⓪b 다시 읽기 기록 (g2_network_reread --launcher-root … --expect-set production194 --json) 의 통과 모양 — 10-07 G2RR2-02 부터 등록 집합 필드 필수
+RR_OK = {'schema': 'g2_network_reread/v2', 'expected_generation': 'g2', 'n_fail': 0, 'expected_set': 'production194', 'expected_source': 'registered',
+         'expected_n': 194, 'read_n': 194, 'set_equal': True, 'missing': [], 'extra': []}
 
 
 def make_batch_root(td, gen='g2', code=True, handover=True, alter=None, reread=None):
@@ -758,17 +764,33 @@ with tempfile.TemporaryDirectory() as td:
             if isinstance(r16['hd'], dict):
                 r16['hd_man'] = json.load(open(os.path.join(o_hd, 'v13_build_manifest.json'), encoding='utf-8'))
                 r16['hd_readme'] = open(os.path.join(o_hd, 'README.md'), encoding='utf-8').read()
-            b_rf = make_batch_root(os.path.join(td, 'b_rf'), reread={'schema': 'g2_network_reread/v1', 'expected_generation': 'g2', 'n_fail': 1})
+            b_rf = make_batch_root(os.path.join(td, 'b_rf'), reread=dict(RR_OK, n_fail=1))
             r16['rf_msg'] = refusal_msg(lambda: LRB.build_v13(out_dir=os.path.join(td, 'o_rf'), handover_dir=hd, batch_root=b_rf, date=DATE,
                                                               codex_verdict=ver))
-            b_rl = make_batch_root(os.path.join(td, 'b_rl'), reread={'schema': 'g2_network_reread/v1', 'expected_generation': 'inferred_legacy', 'n_fail': 0})
+            b_rl = make_batch_root(os.path.join(td, 'b_rl'), reread=dict(RR_OK, expected_generation='inferred_legacy'))
             r16['rl_msg'] = refusal_msg(lambda: LRB.build_v13(out_dir=os.path.join(td, 'o_rl'), handover_dir=hd, batch_root=b_rl, date=DATE,
                                                               codex_verdict=ver))
-            b_r0 = make_batch_root(os.path.join(td, 'b_r0'), reread={'schema': 'g2_network_reread/v1', 'expected_generation': 'g2', 'n_fail': 0})
+            b_r0 = make_batch_root(os.path.join(td, 'b_r0'), reread=dict(RR_OK))
             o_r0 = os.path.join(td, 'o_r0')
             r16['r0'] = safe(lambda: LRB.build_v13(out_dir=o_r0, handover_dir=hd, batch_root=b_r0, date=DATE, codex_verdict=ver))
             if isinstance(r16['r0'], dict):
                 r16['r0_man'] = json.load(open(os.path.join(o_r0, 'v13_build_manifest.json'), encoding='utf-8'))
+                #  check_v13 — 빌드 manifest 의 다시 읽기 기록을 일부 집합으로 바꾸면 문제 (G2RR2-02)
+                _mp = os.path.join(o_r0, 'v13_build_manifest.json')
+                _mm = json.load(open(_mp, encoding='utf-8'))
+                _mm['batch_gate_files']['reread.json'].update(set_equal=False, read_n=193)
+                json.dump(_mm, open(_mp, 'w', encoding='utf-8'))
+                r16['r0_tamper'] = safe(lambda: LRB.check_v13(o_r0, hd))
+            #  ★ 10-07 G2RR2-02 (Codex 세대 2 재검증 2 §3) — n_fail 0 · g2 여도 등록 집합 (생산 194) 을 다 읽은 기록이 아니면 거부
+            r16['rs_msg'] = {}
+            for tag, rec in (('일부 집합 (193 · 같음 False)', dict(RR_OK, read_n=193, set_equal=False, missing=[['lhs', 'lhs00_055']])),
+                             ('시범 집합 pilot3', dict(RR_OK, expected_set='pilot3', expected_n=3, read_n=3)),
+                             ('옛 도구 기록 (집합 필드 없음)', {k: v for k, v in RR_OK.items() if k in ('schema', 'expected_generation', 'n_fail')}),
+                             ('0 케이스 (기대 0)', dict(RR_OK, expected_n=0, read_n=0))):
+                b_rs = make_batch_root(os.path.join(td, f'b_rs{len(r16["rs_msg"])}'), reread=rec)
+                o_rs = os.path.join(td, f'o_rs{len(r16["rs_msg"])}')
+                r16['rs_msg'][tag] = (refusal_msg(lambda: LRB.build_v13(out_dir=o_rs, handover_dir=hd, batch_root=b_rs, date=DATE, codex_verdict=ver)),
+                                      os.path.exists(o_rs))
             o_un = os.path.join(td, 'o_unused')
             r16['unused'] = safe(lambda: LRB.build_v13(out_dir=o_un, handover_dir=hd, batch_root=b0, date=DATE, codex_verdict=ver,
                                                        allow_seal_diff=['webapp/app.py']))
@@ -810,11 +832,27 @@ with tempfile.TemporaryDirectory() as td:
         'reread.json' in rf and not rf.startswith('OTHER') and 'reread.json' in rl and not rl.startswith('OTHER'), (rf[:200], rl[:200]))
     r0m = r16.get('r0_man') or {}
     gf = (r0m.get('batch_gate_files') or {})
-    chk('V16i 다시 읽기 기록 통과 (n_fail 0 · g2) → 만들기 성공 · sha256 · n_fail 기록 · 감사 기록 (seal_audit.json) 없음 = 경고',
+    chk('V16i 다시 읽기 기록 통과 (n_fail 0 · g2 · 등록 집합 production194 전부 = 기대 194 · 읽음 194 · 같음) → 만들기 성공 · sha256 · n_fail · 집합 기록 · '
+        '감사 기록 (seal_audit.json) 없음 = 경고',
         isinstance(r16.get('r0'), dict) and (gf.get('reread.json') or {}).get('n_fail') == 0
+        and {k: (gf.get('reread.json') or {}).get(k) for k in ('expected_set', 'expected_n', 'read_n', 'set_equal')}
+        == {'expected_set': 'production194', 'expected_n': 194, 'read_n': 194, 'set_equal': True}
         and (gf.get('reread.json') or {}).get('sha256') == __import__('hashlib').sha256(open(os.path.join(b_r0, 'reread.json'), 'rb').read()).hexdigest()
         and gf.get('seal_audit.json') is None and any('seal_audit.json' in w for w in r16['r0'].get('warnings', [])),
         (r16.get('r0') if not isinstance(r16.get('r0'), dict) else gf))
+    rs = r16.get('rs_msg') or {}
+    chk('V16n ⓪b 다시 읽기 기록이 n_fail 0 · g2 여도 등록 집합 production194 전부가 아니면 (일부 · pilot3 · 옛 도구 기록 · 0 케이스) → 만들기 거부 · 산출 폴더 없음 (G2RR2-02)',
+        len(rs) == 4 and all(m is not None and not m.startswith('OTHER') and 'production194' in m and not made for m, made in rs.values()),
+        {k: ((m or '')[:160], made) for k, (m, made) in rs.items()})
+    chk('V16o check_v13 — 빌드 manifest 의 다시 읽기 기록을 일부 집합으로 바꾸면 문제 (G2RR2-02)',
+        isinstance(r16.get('r0_tamper'), list) and any('G2RR2-02' in p_ for p_ in r16['r0_tamper']), r16.get('r0_tamper'))
+    try:
+        import run_network_194_parallel as _NP194                         # noqa: E402
+        _reg = (getattr(_NP194, 'REGISTERED_ID_SETS', None) or {}).get(getattr(LRB, 'V13_REREAD_SET', None)) or {}
+    except Exception as e:                                                # noqa: BLE001
+        _reg = {'err': repr(e)}
+    chk('V16p 빌드의 등록 집합 이름 · 크기 = 실행기 등록 (REGISTERED_ID_SETS · 다시 읽기 --expect-set 과 같은 표)',
+        getattr(LRB, 'V13_REREAD_SET', None) == 'production194' and _reg.get('n') == getattr(LRB, 'V13_REREAD_N', None) == 194, _reg)
     un = r16.get('unused')
     chk('V16j 승인했지만 바뀌지 않은 파일 (--allow-seal-diff webapp/app.py · 봉인 같음) → 만들기는 한다 · 경고 (쓰이지 않은 승인)',
         isinstance(un, dict) and any('--allow-seal-diff' in w and 'webapp/app.py' in w for w in un.get('warnings', [])), un)

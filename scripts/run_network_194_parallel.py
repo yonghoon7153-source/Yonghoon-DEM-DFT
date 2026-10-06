@@ -474,7 +474,7 @@ def generation_probe_problem(gp: dict) -> str:
     return ''
 
 
-def _plan_problems(plan, cohort_names=None) -> list:
+def plan_problems(plan, cohort_names=None) -> list:
     """계획 (manifest plan) 의 꼴 — cohorts (비지 않은 목록 · 이름 문자열 · 중복 없음 · cohort_names 가 주어지면 그 집합 안) · queue (비지 않은 목록 ·
     case · cohort 문자열 · 케이스 중복 없음 · 코호트 소속).  ⚠ 케이스가 0 인 코호트는 정당하다 (`--case` 시범이 한 코호트만 고를 때 — build_plan 이
     요청한 코호트를 다 싣는다) — 등록 집합과의 대조는 다시 읽기 (`g2_network_reread` 등록 모드) 의 몫."""
@@ -509,6 +509,35 @@ def ids_digest(pairs) -> str:
     return hashlib.sha256(('\n'.join(lines) + '\n').encode('utf-8')).hexdigest()
 
 
+#: ★ 10-07 G2RR2-02 (Codex 세대 2 재검증 2 §3) — 다시 읽기의 **등록 집합** (manifest 계획 큐 = 고칠 수 있는 파일 하나를 자기 자신의 유일한 기대 집합으로 쓰지
+#:   않는다).  production194 = 등록 문서 §2 의 ID 지문 (커밋된 수확 폴더에서 열거 → 지문이 같아야 쓴다) · pilot3 = 등록 문서 §1 시범 세 케이스.
+REGISTERED_ID_SETS = {
+    'production194': dict(n=194, ids_sha256='a04282d7275bd8f92b0afb4ac8b045f72f3867ccebbb7813b530b3901fd7b3bf', cohort_n={'lhs': 130, 'lhsx': 64},
+                          source='docs/reviews/lhs_network_batch_registration_20261007_g2.md §2 (lhs 130 · lhsx 64 · ids_sha256)'),
+    'pilot3': dict(pairs=(('lhs00_055', 'lhs'), ('lhs00_128', 'lhs'), ('lhsx_007', 'lhsx')),
+                   source='docs/reviews/lhs_network_batch_registration_20261007_g2.md §1 단계 5 (시범 세 케이스)'),
+}
+
+
+def registered_id_set(name) -> dict:
+    """등록 집합 이름 → dict(name, pairs (frozenset of (case, cohort)), source).  production194 는 커밋된 수확 폴더 (COHORT_SPECS · build_plan 과 같은 규칙) 에서
+    열거한 뒤 등록 지문 · 수와 같아야 한다 (아니면 LaunchError — 등록과 다른 집합을 기대 집합으로 쓰지 않는다)."""
+    reg = REGISTERED_ID_SETS.get(name)
+    if reg is None:
+        raise LaunchError(f'모르는 등록 집합 {name!r} — {sorted(REGISTERED_ID_SETS)}')
+    if 'pairs' in reg:
+        return dict(name=name, pairs=frozenset(reg['pairs']), source=reg['source'])
+    pairs = set()
+    for coh in sorted(reg['cohort_n']):
+        hdir = _abs(COHORT_SPECS[coh]['harvest'])
+        pairs |= {(p.stem, coh) for p in hdir.glob('*.json') if not p.name.startswith('_')}
+    cn = collections.Counter(h for _c, h in pairs)
+    if len(pairs) != reg['n'] or dict(cn) != reg['cohort_n'] or ids_digest(pairs) != reg['ids_sha256']:
+        raise LaunchError(f'등록 집합 {name} — 수확 폴더에서 열거한 집합 (n {len(pairs)} · {dict(cn)} · {ids_digest(pairs)[:12]}) ≠ 등록 '
+                          f'(n {reg["n"]} · {reg["cohort_n"]} · {reg["ids_sha256"][:12]})')
+    return dict(name=name, pairs=frozenset(pairs), source=reg['source'])
+
+
 def _historical_match(m) -> tuple:
     """manifest → (등록 이름 | None, [어긋남]) — 등록된 옛 실행 (`HISTORICAL_LAUNCHES`) 과 형식 · 발사 출처가 정확히 같은가."""
     best = (None, ['등록된 옛 실행이 없다'])
@@ -526,7 +555,7 @@ def _historical_match(m) -> tuple:
             why.append(f'코드 해시 {len(ch)} 파일 · 지문 {str(code_fp(ch))[:12]} ≠ 등록 {len(h["code_files"])} · {h["code_fp"][:12]}')
         if m.get('stop_after') != STOP or m.get('worker_override') is not False:
             why.append(f'stop_after {m.get("stop_after")!r} · worker_override {m.get("worker_override")!r}')
-        why += _plan_problems(m.get('plan'), h['cohorts'])
+        why += plan_problems(m.get('plan'), h['cohorts'])
         if not why:
             return name, []
         best = (None, [f'{name}: ' + ' · '.join(why)])
@@ -583,7 +612,7 @@ def launch_eligibility(man) -> dict:
     g = man.get('git') if isinstance(man.get('git'), dict) else {}
     if not (isinstance(g.get('sha'), str) and _HEX40.match(g['sha'])):
         p.append(f'git.sha {g.get("sha")!r} — 발사 커밋 신원이 없다')
-    pp = _plan_problems(man.get('plan'))
+    pp = plan_problems(man.get('plan'))
     p += pp
     dg = man.get('input_digest')
     if not isinstance(dg, dict):
@@ -1751,8 +1780,20 @@ def print_followups(root: Path, man: dict, out=print):
     out(f'python3 scripts/run_network_194_parallel.py audit --root {q(str(root))} --tsv {q(str(root / "seal_audit.tsv"))} '
         f'--json {q(str(root / "seal_audit.json"))}')
     if declared:
-        out('# ⓪b 게시 다시 읽기 (Codex 세대 2 재검증 §7 끝 — 전체 상태 · ID · 증서 · 도장 · 열 역할 · 인계 출처 관문 · 읽기 전용) — rc 0 이 아니면 인계하지 않는다')
-        out(f'python3 scripts/g2_network_reread.py --launcher-root {q(str(root))} --json {q(str(root / "reread.json"))}')
+        #  ★ 10-07 G2RR2-02 — 다시 읽기는 등록 집합을 명시한다 (계획 큐가 자기 자신의 기대 집합이 되지 않게): 계획 = 등록 집합이면 그 이름 · 아니면 케이스를 하나씩
+        _plan_pairs = frozenset((e.get('case'), e.get('cohort')) for e in (man.get('plan') or {}).get('queue') or [])
+        _reg = ''
+        for _nm in REGISTERED_ID_SETS:
+            try:
+                if registered_id_set(_nm)['pairs'] == _plan_pairs:
+                    _reg = f'--expect-set {_nm}'
+                    break
+            except LaunchError:
+                continue
+        _reg = _reg or ' '.join(f'--expect-case {q(f"{h}:{c}")}' for c, h in sorted(_plan_pairs, key=lambda x: (x[1], x[0])))
+        out('# ⓪b 게시 다시 읽기 (Codex 세대 2 재검증 §7 끝 · 재검증 2 §3 — 등록 집합 · 전체 상태 · ID · 증서 · 도장 · 열 역할 · 인계 출처 관문 · 읽기 전용) — '
+            'rc 0 이 아니면 인계하지 않는다')
+        out(f'python3 scripts/g2_network_reread.py --launcher-root {q(str(root))} {_reg} --json {q(str(root / "reread.json"))}')
     out('# ① τ 관문 진단 표 — 모든 케이스 폴더 (실패 케이스도 NOT_COMPUTED 행).  진단 전용: 인계표에 손으로 잇지 않는다 (인계 τ = ② 의 --tau-results 경로)')
     for n in names:
         out(f'python3 scripts/tau_flux.py {q(str(root / "merged" / n / "results"))}/* '
@@ -3157,6 +3198,22 @@ def _selftest() -> int:
                 '다시 읽기 (g2_network_reread --launcher-root <ROOT>) 명령',
                 len(gen_) == 2 and all(f'--tau-batch-manifest {shlex.quote(str(Rf / "manifest.json"))}' in g_ and '_handover_v13_' in g_ for g_ in gen_)
                 and len(rr_) == 1 and f'--launcher-root {shlex.quote(str(Rf))}' in rr_[0], repr((gen_, rr_)))
+
+            #  ★ 10-07 G2RR2-02 — 다시 읽기 명령이 등록 집합을 명시한다: 계획 = production194 · pilot3 이면 그 이름 · 아니면 케이스를 하나씩 (계획 큐가
+            #    자기 자신의 기대 집합이 되지 않게)
+            def _fu(pairs):
+                m_ = dict(mf_, plan=dict(pl_, queue=[dict(case=c, cohort=h) for c, h in pairs]))
+                l_ = []
+                print_followups(Rf, m_, out=lambda *a, **k: l_.append(' '.join(map(str, a))))
+                return [x_ for x_ in l_ if x_.startswith('python3 scripts/g2_network_reread.py')]
+            r194 = _fu(sorted(registered_id_set('production194')['pairs']))
+            rp3 = _fu(REGISTERED_ID_SETS['pilot3']['pairs'])
+            r1 = _fu([('lhsx_901', 'lhsx')])
+            chk('㉛b ★ 후속 다시 읽기 명령 = 등록 집합 명시 (G2RR2-02) — 생산 194 계획 → --expect-set production194 · 시범 셋 → --expect-set pilot3 · '
+                '등록 밖 계획 → --expect-case 코호트:케이스',
+                len(r194) == 1 and '--expect-set production194' in r194[0] and '--expect-case' not in r194[0]
+                and len(rp3) == 1 and '--expect-set pilot3' in rp3[0]
+                and len(r1) == 1 and '--expect-case lhsx:lhsx_901' in r1[0] and '--expect-set' not in r1[0], repr((r194, rp3, r1)))
         _scenario('㉛ 후속 명령 시나리오', _s31)
 
         # ㉜ ★ §7-3 "194 ID · cohort · 원 dump 의 해시" — manifest 입력 지문 (계획 큐 ID · 코호트 · 수확 JSON raw sha256 = 워커 같은 프레임 관문의 대조값) ·

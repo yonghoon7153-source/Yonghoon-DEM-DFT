@@ -1029,6 +1029,8 @@ def v13_manifest_inputs_problems(manifest):
 #: ⓪ 봉인 감사 · ⓪b 게시 다시 읽기 기록 — 194 실행기 후속 명령이 배치 뿌리에 쓰는 이름 (세대 2 등록 `lhs_network_batch_registration_20261007_g2.md` §5-2 · §5-3).
 #:   빌드는 내용을 해석하지 않고 sha256 을 남긴다 — 다시 읽기 기록만 실패 표지 (n_fail · expected_generation) 를 읽어 실패면 거부한다.
 V13_BATCH_GATE_FILES = ('seal_audit.json', 'reread.json')
+V13_REREAD_SET = 'production194'          # ★ 10-07 G2RR2-02 — ⓪b 다시 읽기의 등록 집합 (g2_network_reread --expect-set production194)
+V13_REREAD_N = 194                         #   그 집합의 고정 크기 (run_network_194_parallel.REGISTERED_ID_SETS — 시험이 대조)
 
 
 def _sha256_or_none(path):
@@ -1121,8 +1123,18 @@ def v13_batch_gate_files(batch_root):
                 j = None
             d['n_fail'] = j.get('n_fail') if isinstance(j, dict) else None
             d['expected_generation'] = j.get('expected_generation') if isinstance(j, dict) else None
+            #  ★ 10-07 G2RR2-02 — 등록 집합 대조 (다시 읽기가 실제로 읽은 고유 집합 = 등록 집합 · n_fail 만이 아니다)
+            for k_ in ('expected_set', 'expected_n', 'read_n', 'set_equal'):
+                d[k_] = j.get(k_) if isinstance(j, dict) else None
         out[name] = d
     return out
+
+
+def v13_reread_set_ok(rr):
+    """⓪b 다시 읽기 기록이 등록 집합 production194 전부를 읽었다고 적었나 (G2RR2-02) — 집합 이름 · 기대 수 = 읽은 수 = 194 · 같음 True.
+    옛 도구 기록 (필드 없음) · 일부 · 시범 집합 · 0 케이스 = False."""
+    return (isinstance(rr, dict) and rr.get('expected_set') == V13_REREAD_SET and rr.get('set_equal') is True
+            and rr.get('expected_n') == V13_REREAD_N and rr.get('read_n') == V13_REREAD_N)
 
 
 def v13_batch_gate_check(batch_root):
@@ -1137,6 +1149,11 @@ def v13_batch_gate_check(batch_root):
         elif nf != 0 or eg != V13_GENERATION:
             raise ReleaseError(f'⓪b 다시 읽기 기록 {os.path.join(batch_root, "reread.json")} = n_fail {nf} · 기대 세대 {eg!r} — 세대 2 등록 §5-3 '
                                '(rc 0 · g2 가 아니면 인계하지 않는다)')
+        elif not v13_reread_set_ok(rr):
+            #  ★ 10-07 G2RR2-02 (Codex 세대 2 재검증 2 §3) — 0 케이스 · 일부 코호트만 읽은 성공 배제: 생산 194 등록 집합을 다 읽었다는 기록이어야
+            raise ReleaseError(f'⓪b 다시 읽기 기록 {os.path.join(batch_root, "reread.json")} — 등록 집합 {rr.get("expected_set")!r} · 기대 '
+                               f'{rr.get("expected_n")!r} · 읽음 {rr.get("read_n")!r} · 같음 {rr.get("set_equal")!r} — v1.3 은 등록 집합 {V13_REREAD_SET} 을 전부 '
+                               '다시 읽은 배치만 싣는다 (G2RR2-02 · 그 전 도구의 기록이면 지금 도구로 다시)')
     for name, d in gf.items():
         if d is None:
             warns.append(f'배치 뿌리에 {name} 이 없다 — 세대 2 등록 §5 의 ⓪ 봉인 감사 · ⓪b 다시 읽기 (rc 0) 를 먼저 · 이 빌드는 그 기록을 보지 못했다')
@@ -1880,6 +1897,9 @@ def check_v13(release_dir, handover_dir, dry_run=False):
         rr = (man.get('batch_gate_files') or {}).get('reread.json')
         if isinstance(rr, dict) and isinstance(rr.get('n_fail'), int) and (rr['n_fail'] != 0 or rr.get('expected_generation') != V13_GENERATION):
             probs.append(f'⓪b 다시 읽기 기록 n_fail {rr["n_fail"]} · 기대 세대 {rr.get("expected_generation")!r} — 인계하지 않는다 (등록 §5-3)')
+        elif isinstance(rr, dict) and isinstance(rr.get('n_fail'), int) and not v13_reread_set_ok(rr):
+            probs.append(f'⓪b 다시 읽기 기록 등록 집합 {rr.get("expected_set")!r} · 기대 {rr.get("expected_n")!r} · 읽음 {rr.get("read_n")!r} · '
+                         f'같음 {rr.get("set_equal")!r} — 등록 집합 {V13_REREAD_SET} 전부가 아니다 (G2RR2-02)')
     return probs
 
 
