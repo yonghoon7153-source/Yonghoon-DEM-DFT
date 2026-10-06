@@ -1231,7 +1231,7 @@ WA_GROUPS = ('contact', 'percolation', 'f1', 'fracture', 'area')
 #:   ④a 협착 전력 몫 · electronic_active_fraction 은 아직 인계 묶음이 아니다 (v1.2 범위 밖 · Codex 10-05 3차 §6-5).
 #:   생산 쪽 정지점 (배치 `--stop-after` choices · 웹앱 `PIPELINE_STOP_AFTER`) 이 늘면 여기에 역량을 적기 전까지 거부한다 (selftest ㉖i 가 동기를 본다).
 #: ★ 망 τ 묶음 (v1.2 · Codex 10-05 3차 재검증 §3 Q5 · §6-5 *"⑤⑥⑦ · 망 τ 만 · LW 제외"*) — network 정지 배치의 케이스 폴더 (`<--work>/results/<case>/`)
-#:   에서 **tau_flux 자신** (`case_row`) 이 낸 이온 망 인계 열 (v2 §5-1 · 모드 꼬리 · `tau_flux.column_names()` 28 열) 을 싣는다.  census 열이 아니라
+#:   에서 **tau_flux 자신** (`case_row`) 이 낸 이온 망 인계 열 (v2 §5-1 · 모드 꼬리 · `tau_flux.column_names()` — 10-06 저녁부터 49 열: 모드 셋 × 15 + 공통 4) 을 싣는다.  census 열이 아니라
 #:   (metrics_flat 에 dual 레코드가 없다) 별도 원천 (`load_tau_results` · CLI `--tau-results`) 이 필요하다 — 묶음만 부르거나 원천만 주면 거부.
 WA_TAU_GROUP = 'tau'
 WA_ALL_GROUPS = WA_GROUPS + (WA_TAU_GROUP,)
@@ -1543,22 +1543,38 @@ TAU_SAME_GEN_CHECKS = ('P0_records', 'P1_run_id', 'P2_input_digest', 'P3_batch_t
 #: 대조의 기준 — **지금 파일끼리** (배치 기록 status.json · metrics_flat 과 폴더의 모든 사본) · 게시 시점 해시가 없다 ⇒ 모든 사본 (dual · 모드 파일 ·
 #:   legacy · full_metrics · 도장) 을 함께 일관되게 바꾼 편집은 못 잡는다 (Codex RGLR3-02 §8-2 마지막 항 — 잡으려면 게시 때 결과 해시를 배치 기록에 묶어야 한다).
 TAU_SAME_GEN_BASIS = 'current_files_no_publish_hash'
-TAU_NET_MODES = ('hertz', 'physics')
+#: ★ 10-06 저녁 세대 2 (1저자 비준) — 모드 셋째 hertz_h12 (Hertz 이온 민감도 · tau_flux.MODES 와 같아야 한다 — selftest ㉙m).
+TAU_NET_MODES = ('hertz', 'physics', 'hertz_h12')
+TAU_NET_H12 = 'hertz_h12'
 TAU_NET_VERDICT = ('✅ 싣는다 (망 τ 묶음 · v1.2 — Codex 10-05 3차 재검증 §3 Q5 · §6-5 · LW 제외) · ⚠ G6 (협착 세대) — 두 모드 모두 물리 타깃 '
                    '(실험 절대 대조) HOLD · 값은 싣는다 (ML 기술자 전용)')
+#: H12 열 = 민감도 부록 전용 (기본 학습 열 아님 · 배포는 `lhs_release_build --appendix` 로만 — 주 배포 표에 넣으면 거부).
+TAU_NET_VERDICT_H12 = ('⚠ 민감도 부록 전용 (H12 = Hertz ψ 곱 협착 + 구 조각 bulk · 10-06 1저자 비준 C1-3) — **기본 학습 열에 넣지 않는다** · '
+                       '행마다 [H0 (hertz 열), H12 (이 열)] 괄호로 읽는다 · 배포 = 부록 (lhs_release_build --appendix) · G6 물리 타깃 HOLD 그대로')
 _TAU_AREA = {'hertz': ('hertz = LIGGGHTS c_cpl[22] 기하 교차 원판 π(rδ − δ²/4) (같은 반지름 r · 겹침 δ — 탄성 πR*δ 의 (2 − δ/2r) 배 · '
-                       '"Hertz" 는 이름만 · L1-04) · 협착 maxwell_halfspace'),
-             'physics': ('physics = v1 Tabor · 부피 · 기하 cap 면적 (plastic_coverage — 접촉별 **상한값** · 표면 한도 없음 · LHS-25) · '
+                       '"Hertz" 는 이름만 · L1-04) · 협착 maxwell_halfspace · bulk 원기둥 반 d (H0 · 세대 1 과 같은 간선)'),
+             'physics': ('physics = 행의 ion_net_area_rule_physics — physics_g2 (2026-10-06 저녁 세대 2 · plastic_coverage.film_area_g2: '
+                         'A = max(c_cpl[22] 원판, min(Tabor F/H · 정확 lens/h · 원판 상한 π r_min²)) · 쌍별 E* (SE–SE 13.19 · AM–SE 22.41 GPa · '
+                         'AM–AM = 원판 그대로) · µm + h 5 nm [미확인] · 원판 floor 라 간선마다 R_c(physics) ≤ R_c(hertz)) · physics_g1 (2026-10-06 '
+                         '전 산출물 · v1 Tabor · 부피 · 기하 cap 면적 — 접촉별 **상한값** · 표면 한도 없음 · LHS-25 · sim 단위 혼용 DESC-03) · '
                          '협착 = 그 행의 ion_net_constriction_physics (세대 2 mikic_psi_multiply = ψ 곱셈 · 2026-10-06 기본 · '
-                         '세대 1 mikic_psi_divide = ψ 분모 · 절벽 · legacy_divide = 2026-10-06 전 산출물)')}
+                         '세대 1 mikic_psi_divide = ψ 분모 · 절벽 · legacy_divide = 2026-10-06 전 산출물)'),
+             'hertz_h12': ('hertz_h12 = Hertz 면적 (c_cpl[22] 기하 원판 — hertz 와 같은 면적 · 같은 망) 위의 H12 민감도: 협착 ψ 곱 '
+                           '(mikic_psi_multiply · R_c = ψ/(2σa) · ψ ≤ 1e-4 → 0) + 구 조각 bulk (sphere_segment · h_i²/(σ·V_i)) — 짝으로만 '
+                           '(ψ 단독 H1 기각 · 모든 기하 과전도) · z ≤ 10 에서 ±5 % 개선 · z ≈ 12 · s ≳ 0.3 (LHSx 고밀) 에서 +20–28 % 과전도 (설계 측정)')}
 #: 한정어 (v2 §5-3) — 'tortuosity factor' 라는 이름은 tau2 열에만 쓴다 (규약) → 일반 한정어에는 그 낱말을 넣지 않는다.
 #:   ★ 10-06 (`L2-01` 세대 2 · 1저자 개정) — physics 협착식의 세대가 둘이 됐다.  열 사전은 행 값을 보지 않으므로 (column_dictionary(cols)) 두 세대를
 #:   다 적고, 행의 세대는 그 행의 ion_net_psi_physics · ion_net_constriction_physics 칸이 정한다 (세대가 다른 행을 표기 없이 섞지 않는다).
-CAVEAT_TAU_NET = ('협착식 세대 (행마다 ion_net_constriction_<모드> · ion_net_psi_<모드> — 세대가 다른 행을 표기 없이 섞지 않는다): hertz = 1세대 반공간 '
-                  'Maxwell R_c = 1/(2σa) — a/r_SE 0.30–0.44 에서 R_c 1.7–2.4 배 과대 · physics = 접촉별 상한값 면적 + ψ 배치 — 세대 2 (multiply · '
-                  '2026-10-06 기본 · 독립 기준해 AREA-09 STEP 4) R_c = ψ/(2σa) · 세대 1 (legacy_divide · 2026-10-06 전 산출물) R_c = 1/(2σaψ) + '
-                  'ψ < 1e-4 절벽 · 두 세대 모두 ψ ≤ 1e-4 → R_c = 0 (floor 동결) — ML 기술자 전용 · **실험 절대 대조 금지** (G6 HOLD — 순수 SE 게이트 · '
-                  '결정 4) · z 한 축 (Tjaden 식 21 τ_C 와 '
+CAVEAT_TAU_NET = ('세대 (행마다 ion_net_constriction · ion_net_psi · ion_net_area_rule · ion_net_electrode · ion_net_bulk <모드> — 세대가 다른 행을 '
+                  '표기 없이 섞지 않는다 · tau_flux · 인계 생성기가 섞임을 거부한다): ★ 2026-10-06 저녁 세대 2 = 전극 정확 Dirichlet (dirichlet_exact — '
+                  '바닥 띠 V = 1 · 위 띠 V = 0 고정 · 옛 가상 전원 g_b 제거 · L2-05 · 배포값 변화 ≤ 1.5e-4 = 5–6 째 자리) · physics 면적 physics_g2 · '
+                  'ψ 곱셈 · 표기 없는 옛 산출물 = virtual_source_legacy · physics_g1 · 원기둥 bulk (이력 사실).  협착식: hertz = 1세대 반공간 '
+                  'Maxwell R_c = 1/(2σa) + 원기둥 bulk (H0) — z ≤ 10 에서 tau2 −12 … −28 % 쪽 편향 · z ≈ 12 에서 ±5 % 상쇄 (설계 측정 · H12 민감도 열이 '
+                  '행마다 괄호) · physics = ψ 배치 — 세대 2 (multiply · '
+                  '2026-10-06 기본 · 독립 기준해 AREA-09 STEP 4) R_c = ψ/(2σa) (+ 원기둥 bulk = 과전도 쪽) · 세대 1 (legacy_divide · 2026-10-06 전 산출물) '
+                  'R_c = 1/(2σaψ) + ψ < 1e-4 절벽 · 두 세대 모두 ψ ≤ 1e-4 → R_c = 0 (floor 동결) — ML 기술자 전용 · **실험 절대 대조 금지** (G6 HOLD — '
+                  '순수 SE 게이트 · 결정 4) · CF (CONTACT_FREE · 협착 0) 가지의 T_CF ≈ 4/z (원기둥 bulk · z = SE–SE 배위수 · 구 조각이면 6/z) = 모형 과전도 — '
+                  '상한이 아니다 (q > 1.5 면 값 유지 + 상태 model_over_conduction · 진단 열만) · z 한 축 (Tjaden 식 21 τ_C 와 '
                   '직접 비교 금지) · 형상 · CBD 차단 없음 · σ₀ 펠릿값 위 Holm 접촉 저항 = 부분 이중계상 (방향 tau2↑) · 띠 끝 단락 → tau2 하향 ≤ 4r_SE/L '
                   '(ion_net_band_frac_<모드>) · φ = 전 SE (비관통 · 고립 포함 — dead 부피가 tau2 를 키운다) → 1차 수송량은 f · τ_e (Nguyen Eq 2 · '
                   'electrode) 아님 · 출처 관문 (인계 때 케이스마다 다시 돈다 · 출처 부록 <인계표>_tau_provenance.tsv 의 same_generation_checks — P0 기록 · '
@@ -1610,8 +1626,15 @@ _TAU_PER_MODE = {
                              '세대 2: R_c = ψ/(2σa) · ψ 곱셈 · 2026-10-06 기본 · L2-01 · 독립 기준해 AREA-09 STEP 4) · mikic_psi_divide (physics 세대 1: '
                              'R_c = 1/(2σaψ) · ψ 분모 · legacy_divide · ψ < 1e-4 → R_c = 0 절벽 — 2026-10-06 전 산출물) · 두 세대 모두 ψ ≤ 1e-4 → R_c = 0 '
                              '(floor 동결) · 세대가 다른 행을 표기 없이 섞지 않는다 · "unknown:<이름>" = 모르는 저항 모델 · "unknown:mikic/<값>" = 모르는 ψ 배치'),
-    'ion_net_psi': ('ψ 배치 ({m} · 세대 표기 · L2-01) — physics 에만 의미: multiply = 세대 2 (ψ 곱셈 · 2026-10-06 기본) · legacy_divide = 세대 1 '
-                    '(ψ 분모 · 2026-10-06 전 산출물) · 빈칸 = hertz (ψ 없음) 또는 ψ 기록이 없는 옛 산출물 (09-15 깃발 전 = 세대 1)'),
+    'ion_net_psi': ('ψ 배치 ({m} · 세대 표기 · L2-01) — physics · hertz_h12 에만 의미: multiply = 세대 2 (ψ 곱셈 · 2026-10-06 기본 · H12 는 늘 곱셈) · '
+                    'legacy_divide = 세대 1 (ψ 분모 · 2026-10-06 전 산출물) · 빈칸 = hertz (ψ 없음) 또는 ψ 기록이 없는 옛 산출물 (09-15 깃발 전 = 세대 1)'),
+    'ion_net_area_rule': ('면적 규칙 ({m} · 세대 표기 · 10-06 저녁) — hertz_ccpl22 (hertz · hertz_h12: LIGGGHTS c_cpl[22] 기하 원판) · physics_g2 (physics 세대 2 · '
+                          'film_area_g2 규칙 B) · physics_g1 (physics 세대 1 · 표기 없는 옛 산출물 = 이력 사실) · 빈칸 = 그 모드 레코드 없음'),
+    'ion_net_electrode': ('전극 ({m} · 세대 표기 · L2-05 · 10-06 저녁) — dirichlet_exact (세대 2: 바닥 띠 V = 1 · 위 띠 V = 0 고정 · G = 바닥 띠 전류) · '
+                          'virtual_source_legacy (표기 없는 옛 산출물 — 가상 전원 · 싱크 g_b = max(100·Σg/n, 10·g_max) · 막다른 가지가 σ 를 바꿨다) · '
+                          '한 행 안 모드끼리 다르면 그 행은 NOT_COMPUTED (invalid_input) · 빈칸 = 레코드 없음'),
+    'ion_net_bulk': ('간선 bulk 모형 ({m} · 세대 표기 · C1-3) — cylinder_half_d (H0 · hertz · physics 의 주 값: 반 d 원기둥 (d/2)/(σ·π r²) 두 쪽) · '
+                     'sphere_segment (hertz_h12 민감도: 중심 ↔ 접촉 평면 구 조각 h_i²/(σ·V_i)) · 빈칸 = 레코드 없음'),
     'ion_net_band_rule': ('솔버 경계 띠 규칙 ({m} · 안 A 10-04) — L0 (입자 자기 반지름 2 배 · 양 끝 ≥ 3) · L1 · L2 (폴백 — G1 → BAND_FALLBACK) · 빈칸 = '
                           '기록 없는 옛 산출물 (NOT_COMPUTED missing_input)'),
     'ion_net_band_frac': ('띠 폭 / 판 간격 ({m} · 무차원) — 띠 끝 단락에 의한 tau2 하향의 상한 (≤ 4r_SE/L · TAU-24) · L0 자체도 tau2 를 낮춘다 '
@@ -1628,7 +1651,8 @@ _TAU_SHARED = {
     'L_basis': '길이 기준 = L_mc (장부 thickness_mass_conserving_um · v2 D3) — f 의 재척도 기준',
 }
 _TAU_COL_RE = re.compile(r'(f_ion|tau2_ion|tau_ion|ion_net_status_reason|ion_net_status|ion_net_area_mode|ion_net_constriction|ion_net_psi|'
-                         r'ion_net_band_rule|ion_net_band_frac|ion_net_basis_check)_(hertz|physics)(_gap)?')
+                         r'ion_net_area_rule|ion_net_electrode|ion_net_bulk|'
+                         r'ion_net_band_rule|ion_net_band_frac|ion_net_basis_check)_(hertz_h12|hertz|physics)(_gap)?')
 
 
 def tau_net_define(col):
@@ -1641,7 +1665,24 @@ def tau_net_define(col):
     base = 'f_ion_gap' if m_.group(3) else m_.group(1)
     mode = m_.group(2)
     text = _TAU_PER_MODE[base].format(m=mode, area=_TAU_AREA[mode])
+    if mode == TAU_NET_H12:                          # ★ 10-06 — 민감도 열은 뜻 앞에 표지 (기본 학습 열 아님)
+        text = '[H12 민감도 · 부록 전용] ' + text
+        if base in ('ion_net_status', 'ion_net_status_reason'):
+            text += TAU_H12_GEN1_NOTE
     return text, (CAVEAT_TAU_NET_T2 if base == 'tau2_ion' else CAVEAT_TAU_NET)
+
+
+#: H12 상태 · 사유 칸의 세대 1 예외 — 표기 없는 옛 폴더 (2026-10-06 저녁 전 생산자) 에는 H12 레코드가 없다 (망 정지 계약 ⑨ 는 세대 2 Hertz 레코드에만
+#:   H12 를 요구한다 — `pipeline_service.network_generation2_problems`).
+TAU_H12_GEN1_NOTE = (' · ⚠ 세대 1 배치 (표기 없는 옛 폴더 · ion_net_electrode = virtual_source_legacy — 2026-10-06 저녁 전 생산자) 에는 H12 레코드가 '
+                     '없다 → 이 모드만 NOT_COMPUTED (missing_input) · 값 빈칸 = 그 세대에 없는 열 (기술적 결손 아님) — "인계표에는 NOT_COMPUTED 가 '
+                     '실리지 않는다" 의 유일한 예외 · 세대 2 배치는 망 정지 계약 ⑨ 가 H12 를 요구한다 (없으면 배치 · 인계 거부)')
+
+
+def tau_net_verdict(col):
+    """망 τ 열의 판정 — H12 민감도 열 (`*_hertz_h12`) = 부록 전용 · 그 밖 = TAU_NET_VERDICT."""
+    m_ = _TAU_COL_RE.fullmatch(col)
+    return TAU_NET_VERDICT_H12 if (m_ is not None and m_.group(2) == TAU_NET_H12) else TAU_NET_VERDICT
 
 
 #: 출처 관문 (fail-closed) — 배치 기록 ↔ 케이스 폴더.  P0 기록 · P1 run id · P2 입력 digest · P3 같은 세대 (metrics_flat · dual 투영).
@@ -1801,6 +1842,10 @@ def load_tau_results(results_dir, webapp):
                      'dual_sha256': dual_sha, 'full_metrics_sha256': fm_sha,
                      'same_generation_checks': list(TAU_SAME_GEN_CHECKS), 'same_generation_basis': TAU_SAME_GEN_BASIS,
                      'cells': {c: tf._cell(row.get(c)) for c in cols}}      # tau_flux 자신의 직렬화 (TSV 와 같은 칸)
+    #  ★ 10-06 저녁 세대 2 — 케이스끼리 망 세대 (ψ 배치 · physics 면적 규칙 · 전극) 가 섞이면 거부 (tau_flux 의 같은 판정 함수 — 사본 없음)
+    _mix = tf.generation_mixing_problem([dict(r_['cells'], case=c_) for c_, r_ in sorted(out.items())])
+    if _mix:
+        raise FillRefusal(f'τ 세대 — {_mix} — 한 배치의 폴더들이 같은 망 세대가 아니다 (같은 세대로 다시 계산할 것)')
     return {'schema': TAU_NET_SCHEMA, 'source': str(root), 'batch_source': wv.get('source'), 'columns': cols,
             'tau_flux_sha256': hashlib.sha256(pathlib.Path(tf.__file__).read_bytes()).hexdigest(),
             'same_generation_checks': list(TAU_SAME_GEN_CHECKS), 'same_generation_basis': TAU_SAME_GEN_BASIS, 'cases': out}
@@ -1888,7 +1933,7 @@ def column_dictionary(cols, webapp=None):
             d.update(source='qc', meaning=qc[c])
         elif tau_net_define(c) is not None:          # v1.2 망 τ (tau_flux 열 · τ 명명 규약) — 이름이 정확히 τ 꼴일 때만 (옛 열은 안 잡는다)
             _tm, _tc = tau_net_define(c)
-            d.update(source=TAU_NET_SOURCE, verdict=TAU_NET_VERDICT, meaning=_tm, caveat=_tc)
+            d.update(source=TAU_NET_SOURCE, verdict=tau_net_verdict(c), meaning=_tm, caveat=_tc)
         elif webapp is not None and c in wverd:
             v = wverd[c]
             why = wwhy.get(c) or '웹앱 파이프라인 산출 (코퍼스 case_master 와 같은 이름 · 같은 계산)'
@@ -2606,6 +2651,11 @@ def build_handover(rows, harvest, key='case_id', union=None, webapp=None, webapp
             if _sg != list(TAU_SAME_GEN_CHECKS):
                 raise FillRefusal(f'{c}: τ P4 — τ 기록의 같은 세대 검사 {_sg} ≠ {list(TAU_SAME_GEN_CHECKS)} — 인계 때 검사 (P0–P4) 를 다 통과한 원천이 아니다 '
                                   '(load_tau_results 로 다시 읽을 것)')
+        #  ★ 10-06 저녁 세대 2 — 한 인계표에 망 세대 (ψ 배치 · physics 면적 규칙 · 전극) 가 다른 행을 섞지 않는다 (원천이 다른 길로 들어와도 여기서 한 번 더)
+        _tf_g, _ = _tau_import()
+        _mix = _tf_g.generation_mixing_problem([dict((tau['cases'][c] or {}).get('cells') or {}, case=c) for c in sorted(_okc)])
+        if _mix:
+            raise FillRefusal(f'τ 세대 — {_mix} — 같은 세대 배치끼리 인계한다 (10-06 세대 2 · 1저자 비준)')
         cols += tau_cols
     out, rep = [], {'n': 0, 'blank_by_status': collections.Counter(),
                     'held_back': dict(HANDOVER_HELD_BACK), 'mono_rows': 0, 'mono_harvest_filled': 0}
@@ -4868,9 +4918,9 @@ def _selftest():
             _o29, _c29, _r29, _e29a = [], [], {}, _e29 or f'{type(e).__name__}: {e}'
         _m29 = next((r_ for r_ in _o29 if r_['case_id'] == 'q1'), {})
         _p29 = next((r_ for r_ in _o29 if r_['case_id'] == 'q2'), {})
-        chk('㉙a ★ network 배치 + 망 τ 묶음 (--webapp-groups …,tau + 케이스 폴더) — tau_flux 열 전부 (지금 28 · 두 모드 f · f_gap · tau2 · tau · 상태 · 사유 · '
-            '메타 + 공통 σ₀ · T · 기준) 이 표 끝에 tau_flux 순서로 · 모든 케이스 (q1 관통 OK · q2 비관통 NOT_PERCOLATING) 값 = tau_flux 그대로 · '
-            '출처 관문 2 행' + (f' — {_e29a}' if _e29a else ''),
+        chk('㉙a ★ network 배치 + 망 τ 묶음 (--webapp-groups …,tau + 케이스 폴더) — tau_flux 열 전부 (10-06 저녁부터 49 · 세 모드 (hertz · physics · '
+            'hertz_h12 부록) f · f_gap · tau2 · tau · 상태 · 사유 · 메타 · 세대 표기 + 공통 σ₀ · T · 기준) 이 표 끝에 tau_flux 순서로 · 모든 케이스 '
+            '(q1 관통 OK · q2 비관통 NOT_PERCOLATING) 값 = tau_flux 그대로 · 출처 관문 2 행' + (f' — {_e29a}' if _e29a else ''),
             not _e29a and bool(_tc29) and _c29[-len(_tc29):] == _tc29
             and all(_m29.get(c_) == _orc29('OK')[c_] for c_ in _tc29) and all(_p29.get(c_) == _orc29('NPERC')[c_] for c_ in _tc29)
             and _m29.get('ion_net_status_hertz') == _m29.get('ion_net_status_physics') == 'OK'
@@ -5209,6 +5259,77 @@ def _selftest():
             all(k_ in _mt29 for k_ in ('MODEL_BELOW_CONTINUUM_BOUND', 'NOT_PERCOLATING', 'f_ion 0', '= ∞', '0 아님', '인계표 v1.2', 'f_ion_gap',
                                         'τ P4', '인계표에는 NOT_COMPUTED 가 실리지 않는다'))
             and '일 때만 값을 싣는다' not in _mt29)
+
+        #  ㉙m — ★ 10-06 저녁 세대 2 (1저자 비준) — ① 모드 목록 = tau_flux.MODES (사본이 어긋나면 열 사전 · 인계표가 H12 를 빠뜨린다)
+        #    ② H12 열 = 같은 행에 실리되 열 사전 판정 '부록 전용' (기본 학습 열 아님) · 세대 표기 (q1 = 세대 2) · q1 관통 OK · q2 비관통 NOT_PERCOLATING
+        #    ③ 세대 섞임 — 세대 2 폴더 (q1) + 표기 없는 옛 폴더 (q2 · 10-06 저녁 전 생산자 레코드 모양) 를 한 배치로 읽으면 로더 거부 · 옛 세대끼리
+        #       (q1 · q2 둘 다 표기 없음) 는 통과 + H12 = NOT_COMPUTED missing_input (그 세대에 없는 열) — 거부 사유가 세대 섞임 하나뿐임을 보인다
+        #    ④ 다른 길로 들어온 τ 원천 (기록 한 행의 전극 칸을 옛 세대로) — 표 만들 때 거부.
+        chk('㉙m1 ★ 모드 목록 = tau_flux.MODES (hertz · physics · hertz_h12) — 열 사전 정규식 · 판정이 같은 셋을 안다',
+            _TF29 is not None and tuple(TAU_NET_MODES) == tuple(_TF29.MODES) and TAU_NET_H12 == _TF29.H12_MODE
+            and all(_TAU_COL_RE.fullmatch(f'tau2_ion_{m_}') for m_ in TAU_NET_MODES))
+        _h12c = {
+            'dict': bool(_d29t),
+            'status': _m29.get('ion_net_status_hertz_h12') == 'OK' and _p29.get('ion_net_status_hertz_h12') == 'NOT_PERCOLATING',
+            'values': _sem29(_m29, 'hertz_h12', 'OK') and _sem29(_p29, 'hertz_h12', 'NOT_PERCOLATING'),
+            'electrode': (_m29.get('ion_net_electrode_hertz') == _m29.get('ion_net_electrode_physics')
+                          == _m29.get('ion_net_electrode_hertz_h12') == 'dirichlet_exact'),
+            'area_psi': _m29.get('ion_net_area_rule_physics') == 'physics_g2' and _m29.get('ion_net_psi_physics') == 'multiply',
+            'bulk': _m29.get('ion_net_bulk_hertz') == 'cylinder_half_d' and _m29.get('ion_net_bulk_hertz_h12') == 'sphere_segment',
+            'h12_psi': (_m29.get('ion_net_psi_hertz_h12') == 'multiply'
+                        and _m29.get('ion_net_constriction_hertz_h12') == 'mikic_psi_multiply'),
+            'h12_differs': _m29.get('tau2_ion_hertz_h12') != _m29.get('tau2_ion_hertz'),
+            'verdict_h12': all(_g29(c_, 'verdict') == TAU_NET_VERDICT_H12 and _g29(c_, 'meaning').startswith('[H12 민감도 · 부록 전용]')
+                               for c_ in _tc29 if '_hertz_h12' in c_),          # f_ion_hertz_h12_gap 포함 (꼬리 _gap)
+            'verdict_main': all(_g29(c_, 'verdict') == TAU_NET_VERDICT for c_ in _tc29 if '_hertz_h12' not in c_),
+            'gen1_note': (TAU_H12_GEN1_NOTE in _g29('ion_net_status_hertz_h12', 'meaning')
+                          and TAU_H12_GEN1_NOTE not in _g29('ion_net_status_hertz', 'meaning')),
+        }
+        _h12bad = sorted(k_ for k_, v_ in _h12c.items() if not v_)
+        chk('㉙m2 ★ H12 민감도 열 — 같은 행 (q1 OK · q2 NOT_PERCOLATING · 값 규칙 = 주 모드와 같다) · 세대 표기 (전극 dirichlet_exact 세 모드 · physics_g2 · '
+            'ψ multiply · bulk H0 원기둥 / H12 구 조각) · 열 사전 판정 = 부록 전용 (H12 만) · 세대 1 예외 문구는 H12 상태에만'
+            + (f' — 어긋남 {_h12bad}' if _h12bad else ''), not _h12bad)
+
+        def _g1v29(d_):
+            """표기 없는 옛 레코드 모양 (10-06 저녁 전 생산자) — 세대 표기 · H12 레코드 · ψ 기록 · 새 계수를 뺀다 (값은 그대로 · 세대 판정만 시험)."""
+            d2 = json.loads(json.dumps(d_))
+            gone = ('electrode_model', 'area_rule', 'area_rule_physics', 'bulk_model', 'hertz_constriction', 'hertz_h12', 'psi_placement',
+                    'area_binding_counts_physics', 'n_area_physics_unavailable', 'n_clamp_zero', 'n_floor_only', 'h_film_nm', 'h_film_status',
+                    'solve_method_full')
+            for m_ in ('hertzian', 'physics'):
+                for k_ in list(d2[m_]):
+                    if k_ in gone or any(k_ == f'{ch_}_{g_}' for ch_ in ('electronic', 'thermal') for g_ in gone):
+                        d2[m_].pop(k_, None)
+            return d2
+        try:
+            _VAR29.update({'OK_G1': (_g1v29(_VAR29['OK'][0]),) + tuple(_VAR29['OK'][1:]),
+                           'NPERC_G1': (_g1v29(_VAR29['NPERC'][0]),) + tuple(_VAR29['NPERC'][1:])})
+            _lwx, _resx, _ = _sc29('m_mix', q1='OK', q2='NPERC_G1')
+            _neg7('㉙m3 ★ 세대 섞임 — 세대 2 폴더 (q1) + 표기 없는 옛 폴더 (q2 · 가상 전원 · physics_g1 · ψ 분모) 를 한 배치로 읽으면 로더 거부 '
+                  '(tau_flux.generation_mixing_problem · 사본 없음)', lambda: _ld29(_resx, _lwx), 'τ 세대')
+            _lw1, _res1, _ = _sc29('m_g1', q1='OK_G1', q2='NPERC_G1')
+            _tv1 = _ld29(_res1, _lw1)
+            _o1, _c1, _ = _bh29(_lw1, _tv1)
+            _m1 = next((r_ for r_ in _o1 if r_['case_id'] == 'q1'), {})
+            _e1 = ''
+        except Exception as e:                                            # noqa: BLE001
+            _m1, _c1, _e1 = {}, [], f'{type(e).__name__}: {e}'
+        chk('㉙m3b ★ 옛 세대끼리 (q1 · q2 표기 없음) 는 통과 — 표기 = 이력 사실 (virtual_source_legacy · physics_g1 · cylinder_half_d · ψ legacy_divide) · '
+            'H12 = NOT_COMPUTED missing_input · 값 빈칸 (그 세대에 없는 열) · 주 모드 상태 OK 그대로' + (f' — {_e1}' if _e1 else ''),
+            not _e1 and _m1.get('ion_net_electrode_hertz') == 'virtual_source_legacy' and _m1.get('ion_net_area_rule_physics') == 'physics_g1'
+            and _m1.get('ion_net_bulk_hertz') == 'cylinder_half_d' and _m1.get('ion_net_constriction_physics') == 'mikic_psi_divide'
+            and _m1.get('ion_net_status_hertz') == _m1.get('ion_net_status_physics') == 'OK'
+            and _m1.get('ion_net_status_hertz_h12') == 'NOT_COMPUTED' and str(_m1.get('ion_net_status_reason_hertz_h12')).startswith('missing_input')
+            and _m1.get('tau2_ion_hertz_h12') == '' and _m1.get('f_ion_hertz_h12') == '')
+        try:
+            _tvx = json.loads(json.dumps(_tv29))
+            for m_ in TAU_NET_MODES:
+                if _tvx['cases']['q2']['cells'].get(f'ion_net_electrode_{m_}'):
+                    _tvx['cases']['q2']['cells'][f'ion_net_electrode_{m_}'] = 'virtual_source_legacy'
+            _neg7('㉙m4 ★ 다른 길로 들어온 τ 원천 — 기록 한 행 (q2) 의 전극 칸을 옛 세대로 바꾸면 표 만들 때 거부 (원천이 로더를 안 거쳐도 한 번 더)',
+                  lambda: _bh29(_lw29, _tvx), 'τ 세대')
+        except Exception as e:                                            # noqa: BLE001
+            chk(f'㉙m4 ({type(e).__name__}: {e})', False)
     finally:
         shutil.rmtree(_td29, ignore_errors=True)
     print(f'\nlhs_design_dataset selftest: {ok}/{ok + len(fail)} PASS'

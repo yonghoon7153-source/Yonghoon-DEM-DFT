@@ -165,6 +165,11 @@ def real_solver_edges(nc_mod, r1_um=0.5, r2_um=6.0, delta_um=0.2, native_um2=0.0
              2: {'type': t2, 'radius': r2_um / scale, 'x': (r1_um + r2_um - delta_um) / scale, 'y': 0.0, 'z': 0.0}}
     rows = [{'id1': 1, 'id2': 2, 'contact_area': native_um2 / scale ** 2, 'delta': delta_um / scale}]
     kw = {} if psi_placement is None else {'psi_placement': psi_placement}
+    #  ★ 10-06 세대 2 면적 (C2 · film_area_g2) 이 기본이 됐다 — 이 감사의 물음 (S2 cap 동치 · S3 ψ 배치 · 재료계수 · 동결 격자) 은 전부
+    #    **세대 1 면적 사슬** (plastic_coverage.film_area_from_overlap · `_film_area` 바꿔 끼우기 · CAP_LINE 치환) 위에 있다 ⇒ 그 인자를 아는
+    #    모듈에는 명시 area_rule='physics_g1' 을 넘긴다 (도입 전 소스 2d9ce3e87 은 모른다 — 넘기지 않는다 · 그 판의 면적이 곧 세대 1).
+    if hasattr(nc_mod, 'AREA_RULE_G1'):
+        kw['area_rule'] = nc_mod.AREA_RULE_G1
     n = nc_mod.build_network(atoms, rows, {t1, t2}, scale, 10.0, box_x=1e3, box_y=1e3,
                              mode=mode, type_map=dict(FIXTURE_TYPE_MAP), contact_mode='physics', **kw)
     return n['edges'] if isinstance(n, dict) else n[1]

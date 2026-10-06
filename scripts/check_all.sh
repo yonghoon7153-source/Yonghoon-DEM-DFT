@@ -215,6 +215,12 @@ run 'tau_flux (이온 인계 열 · 게이트 G1–G6)' python3 scripts/test_tau
 #  ★ 2026-10-06 (`L2-01` 세대 2 · 1저자 개정 — 계약 개정 노트) — ψ 배치 기본값 = 곱셈 · legacy 는 명시 인자로만 · 2 구 접촉 식 (세 채널 ×
 #    s ≈ 0.2 · 0.5 · 0.9) · 단조 · Hertz 비트 동일 · tau_flux 협착 라벨 = ψ 배치 · 세 채널 결과의 세대 표기.
 run 'psi default switch (L2-01 세대 2)' python3 scripts/test_psi_default_switch.py
+#  ★ 2026-10-06 저녁 (세대 2 나머지 · 1저자 비준 C1 · C2) — Physics 면적 g2 (film_area_g2 규칙 B · 정확 lens · 쌍별 E* · µm · 원판 floor ·
+#    간선마다 R_c(physics) ≤ R_c(hertz) — real_14 107,223 간선) · 정확 Dirichlet 전극 (가상 전원 제거 · 막다른 가지 · 해석해 · 경계 겹침 ·
+#    CG ↔ 직접) · CF 과전도 표지 (FULL 만 거부) · H12 민감도 (짝으로만 · 식 오라클 · H0 비트 동일) · τ 세대 표기 · 섞임 거부.
+run 'physics area g2 (C2 ①–⑤ · L1-01/02/03)' python3 scripts/test_physics_area_g2.py
+run 'network dirichlet (L2-05 · D1–D7)' python3 scripts/test_network_dirichlet.py
+run 'network generation 2 (CF 표지 · H12 · 세대 표기)' python3 scripts/test_network_generation2.py
 #  ★ 2026-10-04 (J20-s ④b · 1저자 비준 *"권고대로"* · 원장 LHS-29) — Love–Weber 입자 응력 새 열 (접촉점 · 전체 텐서 · 벽 접촉 표지 ·
 #    검사 = 열 · F = Fn + Ft · 접촉점 · 전체 virial ↔ c_strs) · real_14 독립 구현 대조 · 생산 CLI 끝단 (옛 키 불변).
 run 'love_weber_stress (④b · LHS-29)' python3 scripts/test_love_weber_stress.py

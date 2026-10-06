@@ -91,12 +91,14 @@ def main():
     chk('A2 tau2 = φ_구합 / σ_ratio (현행 웹앱 T 와 정의상 같은 수 — 결정 1 · v2 §3-7) · 상대 1e-12',
         abs(o['tau2_ion_hertz'] / (PHI_SPHERE / 0.05) - 1) < 1e-12 and abs(o['tau2_ion_physics'] / (PHI_SPHERE / 0.08) - 1) < 1e-12)
     want = set()
-    for m in ('hertz', 'physics'):
+    #  ★ 10-06 세대 2 (1저자 비준) — 모드 셋째 hertz_h12 (Hertz 이온 민감도 · 기본 학습 열 아님) · 모드마다 세대 표기 셋 (면적 규칙 · 전극 · bulk)
+    for m in ('hertz', 'physics', 'hertz_h12'):
         want |= {f'f_ion_{m}', f'f_ion_{m}_gap', f'tau2_ion_{m}', f'tau_ion_{m}', f'ion_net_status_{m}',
                  f'ion_net_status_reason_{m}', f'ion_net_area_mode_{m}', f'ion_net_constriction_{m}', f'ion_net_psi_{m}',
+                 f'ion_net_area_rule_{m}', f'ion_net_electrode_{m}', f'ion_net_bulk_{m}',
                  f'ion_net_band_rule_{m}', f'ion_net_band_frac_{m}', f'ion_net_basis_check_{m}'}
     want |= {'ion_sigma0_mScm', 'ion_sigma0_T_C', 'phi_basis', 'L_basis'}
-    chk('A3 키 = v2 §5-1 (상태 · 메타는 모드 꼬리 — 10-04 비준) · 꼬리 없는 상태 키 (`ion_net_status`) 없음',
+    chk('A3 키 = v2 §5-1 (상태 · 메타는 모드 꼬리 — 10-04 비준) + 10-06 세대 2 (모드 hertz_h12 · 표기 셋) · 꼬리 없는 상태 키 (`ion_net_status`) 없음',
         set(o) == want and 'ion_net_status' not in o)
     chk('A4 메타: 면적 모드 hertz/physics · 협착 maxwell_halfspace / mikic_psi_divide · ψ = physics 만 legacy_divide · '
         'σ₀ 3.0 mS/cm @ 25 °C · phi_basis mass_conserving · L_basis L_mc',

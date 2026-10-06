@@ -558,6 +558,85 @@ def film_area_physics_v2(delta, r1, r2, *, length_scale, ligg_area=None):
     return float(U), comp
 
 
+# =============================================================
+#   physics 세대 2 (g2) — 망 솔버의 Physics 접촉면적 (1저자 비준 2026-10-06 · C2 ①–⑤ "권고대로")
+# =============================================================
+#: 세대 이름 (망 결과 `area_rule_physics` · τ 인계 `ion_net_area_rule_<모드>` 와 같은 문자열).
+AREA_RULE_G2 = 'physics_g2'
+#: 쌍별 E* (`L1-03`) — AM–SE = 기존 `E_STAR_AM_SE` · SE–SE = 1/(2(1−ν_SE²)/E_SE) = 13.1868 GPa.  AM–AM 은 NCM 경도 앵커가 없어 **지원하지 않는다**
+#:   (면적 = 원판 그대로 · 결속 'native_unsupported_pair').  모르는 쌍은 거부 (조용히 AM–SE 로 떨어지지 않는다).
+E_STAR_SE_SE = 1.0 / (2.0 * (1.0 - POISSON_SE ** 2) / E_REAL_SE)
+PAIR_ESTAR_G2 = {'AM_SE': E_STAR_AM_SE, 'SE_SE': E_STAR_SE_SE}
+PAIRS_G2 = ('AM_SE', 'SE_SE', 'AM_AM')
+#: 소비자별 상한 (`S1`/`AREA-12`) — 수송 = 원판 π r_min² (망 솔버 · a_eff ≤ r_min 과 같은 말) · 표면 = 반구 2π r_min² (피복 소비자 · 아직 배선 없음).
+G2_CONSUMER_CAP_FACTOR = {'transport': 1.0, 'surface': 2.0}
+#: `L1-08` — 5 nm 막 두께의 지위.  값은 유지한다 (real_14 측정 10-06: h 1–10 nm 에서 이온 σ 6 자리 동일 · 20 nm −2.8 % · 50 nm −10 %).
+H_FILM_STATUS = '[미확인] L1-08 — 앵커로 지목된 Sakuda 2013 은 이 5 nm 상수를 제시하지 않는다 (값 유지 · 출처 미확인)'
+
+
+def film_area_g2(delta, r1, r2, *, pair, ligg_area, length_scale, consumer='transport', return_components=False):
+    """Physics 접촉면적 **세대 2** → `(A, binding)` (return_components 면 `(A, binding, comp)`).  legacy `film_area_from_overlap` 과
+    `film_area_physics_v2` 는 **그대로** 두고 옆에 선다 (세대 1 재현 = 망 솔버의 명시 `area_rule='physics_g1'`).
+
+    규칙 (비준 ① ② ②b ③ ④ — 결정 기록은 C2 설계 요약 · 계약 10-06 개정 노트):
+      • floor = A_disc = LIGGGHTS `c_cpl[22]` 기하 원판 (`ligg_area` · = Hertz 모드 면적) — 없거나 0 이면 같은 기하의 교차 원판
+        (`lens_geometry.intersection_disc_area`) · **모든 δ 에서 같은 floor** (탄성 가지 없음 — 옛 `DR_YIELD_ONSET` 불연속 · `L1-01` 해소)
+      • δ ≤ 0 → floor ('none') · AM–AM → floor ('native_unsupported_pair')
+      • 그 밖 → U = min(A_Tabor, V_lens/(h·length_scale), cap) · **A = max(floor, U)** (규칙 B — 상한은 소성 연장분만 묶는다) ·
+        floor ≥ U 면 결속 'floor' (옛 'cap_conflict' 자리 — 연장 없음) · 아니면 U 를 준 상한 (동률 tabor → volume → cap)
+      • A_Tabor = (4/3) E*_쌍 √R* δ^1.5 / H (`L1-03` 쌍별 E*) · V_lens = 정확한 두 구 교집합 (`lens_volume` · `L1-02` · 옛 V 경로 없음 = `DESC-10`) ·
+        h = H_FILM_MIN × length_scale (`DESC-03` — δ · r 과 같은 길이 단위 · 망 솔버는 µm 와 1e6) · cap = 인자 × π r_min² (수송 1 · 표면 2)
+    ⇒ 간선마다 A ≥ A_disc 이고 ψ ≤ 1 이므로 R_c(physics) ≤ R_c(hertz) (같은 σ_rel · k · 같은 c_cpl[22]) — 망 시험 T8 이 실침대에서 본다.
+    ⚠ h_film 5 nm = [미확인] (`H_FILM_STATUS` · L1-08) · Tabor 힘 = 실 E 재구성 (DEM 자신의 힘이 아니다 — 세대 3 질문 · 오늘 아님).
+    단위: δ · r1 · r2 = 1 m 가 `length_scale` 인 길이 · `ligg_area` 와 반환 면적 = 그 단위의 제곱.
+    정의역 밖 (실수 아님 · 비유한 · 반경 ≤ 0 · length_scale ≤ 0 · ligg < 0 · δ ≥ r1+r2 · 모르는 쌍 · 모르는 소비자) = ValueError · TypeError.
+    comp: rule · pair · A_final · A_disc · A_tabor · A_volume · A_cap · V_lens · h_film · E_star (지원 쌍 · δ > 0 일 때) · binding.
+    """
+    delta = _v2_real('delta', delta)
+    r1 = _v2_real('r1', r1)
+    r2 = _v2_real('r2', r2)
+    ls = _v2_real('length_scale', length_scale)
+    if r1 <= 0 or r2 <= 0:
+        raise ValueError(f'반경 ≤ 0 (r1={r1!r}, r2={r2!r})')
+    if ls <= 0:
+        raise ValueError(f'length_scale ≤ 0 ({ls!r})')
+    if delta >= r1 + r2:
+        raise ValueError(f'δ ≥ r1+r2 — 중심거리 ≤ 0, 접촉 기하가 아니다 (δ={delta!r}, r1+r2={r1 + r2!r})')
+    if consumer not in G2_CONSUMER_CAP_FACTOR:
+        raise ValueError(f'consumer={consumer!r} — {tuple(G2_CONSUMER_CAP_FACTOR)} 중 하나')
+    if pair not in PAIRS_G2:
+        raise ValueError(f'pair={pair!r} — {PAIRS_G2} 중 하나 (모르는 쌍은 거부 · L1-03)')
+    ligg = None if ligg_area is None else _v2_real('ligg_area', ligg_area)
+    if ligg is not None and ligg < 0:
+        raise ValueError(f'ligg_area < 0 ({ligg!r})')
+    floor = ligg if (ligg is not None and ligg > 0) else _intersection_disc_area(r1, r2, delta)
+    h_film = H_FILM_MIN * ls
+    comp = dict(rule=AREA_RULE_G2, pair=pair, A_final=float(floor), A_disc=float(floor), A_tabor=None, A_volume=None, A_cap=None,
+                V_lens=None, h_film=h_film, E_star=None, binding='none')
+
+    def _out(A, b):
+        comp.update(A_final=float(A), binding=b)
+        return (float(A), b, comp) if return_components else (float(A), b)
+    if delta <= 0:
+        return _out(floor, 'none')
+    if pair == 'AM_AM':
+        return _out(floor, 'native_unsupported_pair')
+    R_star = (r1 * r2) / (r1 + r2)
+    e_star = PAIR_ESTAR_G2[pair]
+    A_tabor = (4.0 / 3.0) * e_star * np.sqrt(R_star) * (delta ** 1.5) / H_REAL_SE
+    V_lens = lens_volume(r1, r2, delta)
+    A_volume = V_lens / h_film
+    A_cap = G2_CONSUMER_CAP_FACTOR[consumer] * np.pi * min(r1, r2) ** 2
+    U = min(A_tabor, A_volume, A_cap)
+    for _n, _v in (('A_tabor', A_tabor), ('A_volume', A_volume), ('A_cap', A_cap)):
+        if not math.isfinite(_v):
+            raise ValueError(f'{_n} 비유한 ({_v!r}) — δ={delta!r}, r1={r1!r}, r2={r2!r}')
+    comp.update(A_tabor=float(A_tabor), A_volume=float(A_volume), A_cap=float(A_cap), V_lens=float(V_lens), E_star=float(e_star))
+    if floor >= U:
+        return _out(floor, 'floor')
+    return _out(U, 'tabor' if U == A_tabor else 'volume' if U == A_volume else 'cap')
+
+
 def compute_coverage(atom_path: str, contact_path: str,
                      se_type: int = SE_ATOM_TYPE,
                      mode: str = "capped",

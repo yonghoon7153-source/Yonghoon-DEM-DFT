@@ -285,8 +285,10 @@ def type_map_from_deck(deck_path):
 
 def case_networks(case_dir, contact_mode='physics',
                   channels=('ionic', 'electronic', 'thermal'), deck_dir=None,
-                  psi_placement=None):
+                  psi_placement=None, area_rule=None):
     """★★ **한 케이스 → 채널별 net + 원자료 출처** (2026-09-15, `R4-01`·`R4-02`).
+
+    ★ 10-06 세대 2 — `area_rule` (None = 솔버 기본 · 'physics_g1' = 세대 1 면적 명시) 을 그대로 넘긴다 (psi_placement 와 같은 규약).
 
     `audit_case` 와 `seal_s3_prerun` 이 **같은 경로**로 망을 만들게 하려고 뽑아낸 것이다.
     ⚠ 봉인 도구가 이 일을 **따로 다시 쓰고 있었고**, 그 사본이 세 군데 어긋나 있었다:
@@ -345,6 +347,8 @@ def case_networks(case_dir, contact_mode='physics',
         #  `psi_placement=None` = 솔버 기본값 (인자를 넘기지 않는다).  ★ 10-06 (`L2-01` 세대 2 · 계약 개정 노트) — 기본이
         #  곱셈이 됐다 ⇒ 세대 1 (legacy) 기준을 재는 호출자 (S0 census `audit_case` · S3 봉인 · S3 러너 old 팔) 는 PSI_DIVIDE 를 명시한다.
         _pk = {} if psi_placement is None else {'psi_placement': psi_placement}
+        if area_rule is not None:
+            _pk['area_rule'] = area_rule
         net = _NC.build_network(atoms, contacts, tt, scale, plate_z,
                                box_x=box, box_y=box, mode=mode, type_map=type_map,
                                contact_mode=contact_mode, **_pk)
@@ -367,9 +371,10 @@ def audit_case(case_dir, contact_mode='physics', channels=('ionic', 'electronic'
     #    봉인 도구가 이 일을 따로 다시 쓰고 있었고 그 사본이 세 군데 어긋나 있었다 (헤더 참조).
     #  ★ 10-06 — S0 census 의 정의는 세대 1 (legacy) 망 위에 있다 → 명시 PSI_DIVIDE (기본 = 곱셈 · 세대 2).
     #    ψ ≤ 1e-4 → R_c = 0 분기는 두 배치가 같아 삭제 수는 배치와 무관하다 — 정의만 고정한다.
+    #  ★ 10-06 저녁 (C2) — census 의 면적도 세대 1 (physics_g1) 명시 — 결속 · L1 집계 (cap_conflict · A_lower …) 는 세대 1 면적 사슬의 정의다.
     nets, prov = case_networks(case_dir, contact_mode=contact_mode,
                                channels=tuple(channels), deck_dir=deck_dir,
-                               psi_placement=_NC.PSI_DIVIDE)
+                               psi_placement=_NC.PSI_DIVIDE, area_rule='physics_g1')
     type_map, type_hist = prov['type_map'], prov['type_hist']
     row = {'case': prov['case'], 'contact_mode': contact_mode, 'source': prov['source'],
            'atom_step': prov['atom_step'], 'contact_step': prov['contact_step'],
@@ -653,7 +658,7 @@ def _selftest() -> int:
         tt = CHANNELS[{'ionic': 'ionic', 'electronic': 'electronic'}.get(mode, 'thermal')][1](tm)
         n = _NC.build_network(atoms, rows, tt, scale, 10.0,
                               box_x=1e4, box_y=1e4, mode=mode, type_map=tm,
-                              contact_mode=cm)
+                              contact_mode=cm, area_rule='physics_g1')     # ★ 10-06 — census = 세대 1 면적
         e = n['edges'] if isinstance(n, dict) else n[1]
         return e
 
@@ -710,7 +715,7 @@ def _selftest() -> int:
              2: {'type': 3, 'radius': R, 'x': 2 * R, 'y': 0.0, 'z': 0.0}}
     em = m.build_network(atoms, [deep], {1, 3}, scale, 10.0, box_x=1e4, box_y=1e4,
                          mode='thermal', type_map={1: 'AM_P', 3: 'SE'},
-                         contact_mode='physics')
+                         contact_mode='physics', area_rule='physics_g1')
     em = em['edges'] if isinstance(em, dict) else em[1]
     chk('⑥b ★ 변이판에서는 같은 접촉이 **삭제되지 않는다** — 이 검사에 판별력이 있다 '
         '(초판은 이 변이에도 13/13 PASS 였다)',
@@ -785,7 +790,7 @@ def _selftest() -> int:
         tt = CHANNELS['thermal'][1](tm)
         n = _NC.build_network(atoms, rows, tt, 1e6, 10.0,
                               box_x=1.0, box_y=1.0, mode='thermal', type_map=tm,
-                              contact_mode=cm)
+                              contact_mode=cm, area_rule='physics_g1')
         return n['edges'] if isinstance(n, dict) else n[1]
 
     conf = {'id1': 1, 'id2': 2, 'contact_area': 2.0 * math.pi * Rs_ * (0.01 * Rs_),
@@ -900,7 +905,7 @@ def _selftest() -> int:
         tm = {1: 'AM', 2: 'SE'}
         n = _NC.build_network(atoms_, cts, set(tm), scale_, _SED.estimate_plate_z(atoms_),
                               box_x=1e3, box_y=1e3, mode='thermal', type_map=tm,
-                              contact_mode='physics')
+                              contact_mode='physics', area_rule='physics_g1')
         es = n['edges'] if isinstance(n, dict) else n[1]
         c = _l1_counters(); [_l1_tally(c, e_) for e_ in es]
         return sum(1 for e_ in es if e_['R_constriction'] == 0.0), c
@@ -926,7 +931,8 @@ def _selftest() -> int:
                  2: {'type': 1, 'radius': 6.0 / sc, 'x': (6.5 - delta_um) / sc, 'y': 0.0, 'z': 0.0}}
         rows = [{'id1': 1, 'id2': 2, 'contact_area': 0.0, 'delta': delta_um / sc}]
         n = _NC.build_network(atoms, rows, {1, 3}, sc, 10.0, box_x=1e3, box_y=1e3,
-                              mode='thermal', type_map={1: 'AM_P', 3: 'SE'}, contact_mode='physics')
+                              mode='thermal', type_map={1: 'AM_P', 3: 'SE'}, contact_mode='physics',
+                              area_rule='physics_g1')
         return (n['edges'] if isinstance(n, dict) else n[1])[0]
     e_f = net_pair(0.1025); e_c = net_pair(0.12); e_p = net_pair(0.10)
     cf = _l1_counters(); _l1_tally(cf, e_f)

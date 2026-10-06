@@ -13,10 +13,15 @@ Three decomposition runs:
        추정치이고, **AM–AM 망만** 푼다 (VGCF/SDCP 복합망은 STEP3 복셀 솔버 소관) ⇒
        두 솔버는 같은 estimand 가 아니다.  이 값의 자연스러운 형태는 무차원
        formation factor `F_e = σ_eff / σ_AM,input` 이다.
-  2. CONTACT_FREE: R_constriction=0 → σ_cf (upper bound, ideal contact limit)
+  2. CONTACT_FREE: R_constriction=0 → σ_cf (협착 0 가지 — ⚠ 상한 아님 (10-06 저녁 · TAU-07): 원기둥 bulk 의 T_CF ≈ 4/z 모형 과전도 ·
+     q > 1.5 면 값 유지 + 상태 model_over_conduction · 진단 열만)
   3. CONSTRICTION_ONLY: R_bulk=0 → σ_constr (spreading resistance limit)
 
 σ_eff/σ_bulk = G_eff × L / A  (Ohm's law, dimensionless)
+
+전극 (세대 2 · 2026-10-06 · L2-05): 바닥 띠 V = 1 · 위 띠 V = 0 **정확 Dirichlet** — G = 바닥 띠에서 나가는 전류 (가상 전원 · 싱크 g_b 없음).
+Physics 면적 (세대 2): `plastic_coverage.film_area_g2` (규칙 B · µm · 쌍별 E* · 정확 lens) — 세대 1 은 명시 `area_rule='physics_g1'`.
+Hertz 기본 = H0 (Maxwell 협착 + 원기둥 반 d bulk · 세대 1 과 같은 간선) · H12 (ψ 곱 + 구 조각 bulk) = 짝 인자로만 · 이온 민감도 레코드.
 
 Networks: ionic (SE-SE), electronic (AM-AM), thermal (all contacts)
 
@@ -42,6 +47,12 @@ try:
     from plastic_coverage import film_area_from_overlap as _film_area
 except Exception:
     _film_area = None  # graceful fallback if numpy/import issue
+#  ★ 10-06 세대 2 Physics 면적 (C2 ①–⑤) — 없으면 physics 모드가 거부한다 (조용히 세대 1 로 떨어지지 않는다).
+try:
+    from plastic_coverage import (film_area_g2 as _film_area_g2, H_FILM_MIN as _H_FILM_MIN,
+                                  H_FILM_STATUS as _H_FILM_STATUS)
+except Exception:
+    _film_area_g2, _H_FILM_MIN, _H_FILM_STATUS = None, None, None
 
 import se_material  # single source of truth for σ_grain + its temperature convention
 
@@ -72,6 +83,37 @@ PSI_DIVIDE = 'legacy_divide'
 PSI_MULTIPLY = 'multiply'
 PSI_PLACEMENTS = (PSI_DIVIDE, PSI_MULTIPLY)
 PSI_PLACEMENT_DEFAULT = PSI_MULTIPLY
+
+# ── 망 세대 2 (1저자 비준 2026-10-06 *"권고대로"* · C1 · C2 설계 · 계약 `docs/area_contract_20260913.md` 10-06 개정 노트) ──────────
+#  세 축은 서로 독립이고 결과 · τ 인계 열에 **각각** 실린다 (세대를 표기 없이 섞지 않는다 — tau_flux · 인계 생성기가 섞임을 거부한다).
+#  ① Physics 면적 (`L1-01` · `L1-02` · `L1-03` · `DESC-03` · `DESC-10`) — 세대 2 = `plastic_coverage.film_area_g2` (규칙 B · floor = c_cpl[22]
+#     원판 · 정확 lens · 쌍별 E* · µm + length_scale 1e6 · 수송 cap π r_min²) · 세대 1 = 옛 `film_area_from_overlap` (sim 단위 그대로) — **명시 인자로만**.
+AREA_RULE_G1 = 'physics_g1'
+AREA_RULE_G2 = 'physics_g2'
+AREA_RULES = (AREA_RULE_G1, AREA_RULE_G2)
+AREA_RULE_DEFAULT = AREA_RULE_G2
+AREA_RULE_HERTZ = 'hertz_ccpl22'          # Hertz 모드 면적 = LIGGGHTS c_cpl[22] 기하 교차 원판 (L1-04 — "Hertz" 는 이름만)
+G2_LENGTH_SCALE_UM = 1.0e6                # µm 단위 — 1 m = 1e6 µm (DESC-03: h_film 을 δ · r 과 같은 단위로)
+#  ② 전극 (`L2-05`) — 정확 Dirichlet (바닥 띠 V = 1 · 위 띠 V = 0).  옛 가상 전원 · 싱크 (g_b) 는 지웠다 — 세대 1 σ 는 git 이력의 옛 모듈로만 재현한다
+#     (test_network_boundary_rule ⑨ 가 그렇게 한다).  ELECTRODE_LEGACY 는 **표기 없는 옛 산출물의 이름**이다 (만들 수 없다).
+ELECTRODE_DIRICHLET = 'dirichlet_exact'
+ELECTRODE_LEGACY = 'virtual_source_legacy'
+DIRICHLET_DIRECT_MAX_FREE = 30000          # 자유 노드가 이보다 많으면 CG (rtol 1e-10 · atol 0 · 실패하면 ILU 전처리 · 그래도 실패하면 직접해) —
+#                                            solve_network 의 문턱 줄은 글자 그대로 30000 (measure_rho 치환 앵커 · 셀프테스트가 같은 값인지 본다)
+DIRICHLET_CG_RTOL = 1e-10
+BOUNDARY_OVERLAP_REASON = 'boundary_overlap'   # B ∩ T ≠ ∅ — 한 노드에 V = 1 과 0 을 동시에 강제할 수 없다 (풀지 않는다)
+#  ③ Hertz 가지 (C1-3) — 기본 H0 = Maxwell 협착 1/(2σa) + 원기둥 반 d bulk (세대 1 과 같은 간선 · 주 값).  H12 = ψ 곱셈 협착 + 구 조각 bulk 를
+#     **짝으로만** (ψ 단독 H1 = 모든 기하에서 과전도 +6…+50 % · 기각 · bulk 단독도 받지 않는다) — 이온 민감도 레코드 (`hertz_h12`) 로만 쓴다.
+HERTZ_CONSTRICTION_MAXWELL = 'maxwell'
+HERTZ_CONSTRICTION_PSI = 'mikic_psi_multiply'
+BULK_CYLINDER = 'cylinder_half_d'
+BULK_SPHERE_SEGMENT = 'sphere_segment'
+HERTZ_ARMS = {(HERTZ_CONSTRICTION_MAXWELL, BULK_CYLINDER): 'H0', (HERTZ_CONSTRICTION_PSI, BULK_SPHERE_SEGMENT): 'H12'}
+HERTZ_H12_MODE = 'hertz_h12'               # 이온 민감도 레코드의 이름 (Hertz 결과 안 · τ 인계 모드 꼬리)
+#  ④ CF 가드 (C1-5) — σ_ratio > 1.5 거부는 **FULL 에만**.  CONTACT_FREE · CONSTRICTION_ONLY 의 q > 1.5 = 모형 과전도 (간선별 bulk · T_CF ≈ 4/z) —
+#     값 유지 + 상태 (진단 열만).
+MODEL_OVER_CONDUCTION = 'model_over_conduction'
+MODEL_OVER_CONDUCTION_REASON = 'q_gt_1p5'
 
 # ───────────────────────────────────────────────────────────────────────
 # Grain-boundary (crystallinity) correction for NCM σ_AM — "Trevisanello-spirit"
@@ -128,20 +170,29 @@ CPS_NO_THROUGH_STATUS = 'not_computed (no percolating FULL solution)'      # 옛
 CPS_SOLVE_FAILED_STATUS = 'not_computed (FULL solve failed on a percolating network)'
 
 
-def _net_sigma_status(v, no_through):
+def _net_sigma_status(v, no_through, solve_info=None):
     """망 σ (FULL · CONTACT_FREE · CONSTRICTION_ONLY) 의 (상태, 사유) — 값 분류는 `_sigma_status` 를 재사용한다 (판정 중복 금지).
 
       · 값 있음 → ('computed', None)  (실제 0 이면 ('valid_zero', 'zero_value'))
+        ★ 10-06 C1-5: 솔버가 그 풀이를 모형 과전도로 표지했으면 (CF · 협착-only 의 q > 1.5) → ('model_over_conduction', 'q_gt_1p5') · 값 유지
       · None ∧ no_through (같은 그래프의 관통 성분 0) → ('valid_zero', NO_THROUGH_REASON)   ← 증명된 비관통
+      · None ∧ 경계 겹침 (★ 10-06 L2-05 — 솔버 사유 boundary_overlap) → ('not_computed', BOUNDARY_OVERLAP_REASON)
       · None ∧ 관통 → ('not_computed', SOLVE_FAILED_REASON)  · NaN → ('not_computed', NON_FINITE_REASON)
-    no_through 는 `active_fractions(net)['perc_nodes']` 가 비었는가 (반올림 전 · solve_network 와 같은 그래프 · 같은 띠)."""
+    no_through 는 `active_fractions(net)['perc_nodes']` 가 비었는가 (반올림 전 · solve_network 와 같은 그래프 · 같은 띠).
+    solve_info = 그 풀이의 `net['solve_info'][mode]` (solve_network 가 남긴다 · 없으면 옛 규칙)."""
     st = _sigma_status(v)
+    info = solve_info if isinstance(solve_info, dict) else {}
     if st == 'computed':
+        #  ★ 10-06 C1-5 — CF · 협착-only 가지의 q > 1.5 는 값 유지 + 모형 과전도 상태 (FULL 은 솔버가 None 으로 거부한다)
+        if info.get('status') == MODEL_OVER_CONDUCTION:
+            return MODEL_OVER_CONDUCTION, MODEL_OVER_CONDUCTION_REASON
         return st, None
     if st == 'valid_zero':
         return st, 'zero_value'
     if v is None and no_through:
         return 'valid_zero', NO_THROUGH_REASON
+    if v is None and info.get('reason') == BOUNDARY_OVERLAP_REASON:      # ★ 10-06 L2-05 — B ∩ T ≠ ∅ (정확 Dirichlet 이 풀 수 없다)
+        return 'not_computed', BOUNDARY_OVERLAP_REASON
     return 'not_computed', (SOLVE_FAILED_REASON if v is None else NON_FINITE_REASON)
 
 def sigma_AM_relative(r_um, particle_type):
@@ -265,10 +316,41 @@ def boundary_sets(atoms_raw, target_ids, plate_z, boundary_factor):
     return bottom_ids, top_ids, rule, band_frac
 
 
+def _phase_class(label):
+    """상 이름 → 'SE' · 'AM' · None (모름).  type_map 규약 (AM_P · AM_S · AM · SE) — `sigma_AM_relative` 와 같은 이름 체계."""
+    if label == 'SE':
+        return 'SE'
+    if isinstance(label, str) and 'AM' in label:
+        return 'AM'
+    return None
+
+
+def _pair_kind_g2(label1, label2):
+    """두 상 이름 → film_area_g2 의 쌍 ('SE_SE' · 'AM_SE' · 'AM_AM') · 모르는 상이면 None (호출자가 physics 모드에서 거부한다)."""
+    c1, c2 = _phase_class(label1), _phase_class(label2)
+    if c1 is None or c2 is None:
+        return None
+    return {('SE', 'SE'): 'SE_SE', ('AM', 'AM'): 'AM_AM'}.get((c1, c2), 'AM_SE')
+
+
+def _sphere_segment_half(r_i, r_j, d, sk):
+    """H12 bulk 반쪽 (C1-3 · 구 조각) — 중심 평면 ↔ 접촉 평면 사이 구 조각의 부피를 가진 균일 막대의 저항 h_i²/(σ_i·k·V_i).
+    h_i = clip((d² + r_i² − r_j²)/(2d), 0, r_i) · V_i = π(r_i² h_i − h_i³/3) · h_i = 0 이면 0 (극한 h/(πr²) → 0)."""
+    if d <= 0 or r_i <= 0:
+        return 0.0
+    h = min(max((d * d + r_i * r_i - r_j * r_j) / (2.0 * d), 0.0), r_i)
+    if h <= 0:
+        return 0.0
+    vol = np.pi * (r_i * r_i * h - h ** 3 / 3.0)
+    return (h * h) / (sk * vol) if vol > 0 else 0.0
+
+
 def build_network(atoms_raw, contacts_raw, target_types, scale,
                   plate_z, box_x=0.05, box_y=0.05, boundary_factor=2.0,
                   mode='ionic', type_map=None, results_dir=None,
-                  contact_mode='hertzian', psi_placement=PSI_PLACEMENT_DEFAULT):
+                  contact_mode='hertzian', psi_placement=PSI_PLACEMENT_DEFAULT,
+                  area_rule=AREA_RULE_DEFAULT, hertz_constriction=HERTZ_CONSTRICTION_MAXWELL,
+                  bulk_model=BULK_CYLINDER):
     # ⚠ `results_dir` 는 **읽히지 않는다** (2026-08-20 전수 감사 코드 하위 α).
     #   옛 docstring 은 "ionic 모드는 percolation_sets.json 으로 경계를 잡는다" 고 약속했지만
     #   본문 어디서도 그 파일을 열지 않는다 — 경계는 **항상 z-규칙**(아래 `boundary_factor`)
@@ -284,6 +366,11 @@ def build_network(atoms_raw, contacts_raw, target_types, scale,
     contact_mode='hertzian'  : use LIGGGHTS-reported contact_area directly (DEM-native)
     contact_mode='physics'   : use plastic-film area from δ/R* Tabor+volume model
                                (literature-anchored, 0 free params — see plastic_coverage.py)
+    area_rule (★ 10-06 세대 2) : physics 면적 — 'physics_g2' (기본 · `film_area_g2` · µm + 쌍 · type_map 필수) · 'physics_g1'
+                               (세대 1 재현 · 옛 sim 단위 경로 그대로 · 명시로만).  hertzian 모드에서도 진단 칸 A_physics 를 같은 규칙으로 낸다
+                               (type_map 이 없거나 상을 모르면 None — 그 모드의 σ 에는 안 쓰인다).
+    hertz_constriction · bulk_model (★ 10-06 C1-3) : Hertz 가지 — (maxwell · cylinder_half_d) = H0 기본 · (mikic_psi_multiply ·
+                               sphere_segment) = H12 민감도.  짝으로만 · physics 모드는 H0 만 (그 밖 = ValueError).
     Returns nodes, edges, bottom/top boundary sets.
     """
     #  ★ 2026-08-19 (코팅 트랙 코드리뷰 A2) — 프로덕션이 실제로 어떤 mode 로 들어왔는지
@@ -295,6 +382,21 @@ def build_network(atoms_raw, contacts_raw, target_types, scale,
     #    "돌렸다" 는 기록만 남는다 (규율 ⑤ 의 false-green).  거부한다.
     if psi_placement not in PSI_PLACEMENTS:
         raise ValueError(f'psi_placement 는 {PSI_PLACEMENTS} 중 하나여야 한다: {psi_placement!r}')
+    #  ★ 10-06 세대 2 — 면적 규칙 · Hertz 팔도 같은 방식으로 거부한다 (모르는 값 · 짝 아닌 조합 · physics 모드의 H12).
+    if area_rule not in AREA_RULES:
+        raise ValueError(f'area_rule 은 {AREA_RULES} 중 하나여야 한다: {area_rule!r}')
+    hertz_arm = HERTZ_ARMS.get((hertz_constriction, bulk_model))
+    if hertz_arm is None:
+        raise ValueError(f'(hertz_constriction, bulk_model) = ({hertz_constriction!r}, {bulk_model!r}) — 짝으로만 '
+                         f'{sorted(HERTZ_ARMS)} (ψ 단독 H1 · bulk 단독은 받지 않는다 · C1-3)')
+    if contact_mode == 'physics' and hertz_arm != 'H0':
+        raise ValueError('H12 (ψ 곱 Hertz + 구 조각 bulk) 는 Hertz 민감도 팔이다 — physics 모드에는 쓰지 않는다')
+    if contact_mode == 'physics' and area_rule == AREA_RULE_G2:
+        if not type_map:
+            raise ValueError("physics 면적 세대 2 (physics_g2) 는 상 쌍이 필요하다 — type_map 없음은 거부 (L1-03 · 쌍별 E*)")
+        if _film_area_g2 is None:
+            raise ValueError('plastic_coverage.film_area_g2 를 불러오지 못했다 — physics 세대 2 를 풀 수 없다 (세대 1 로 떨어지지 않는다)')
+    h12 = (hertz_arm == 'H12')
     if mode == 'thermal':
         target_ids = list(atoms_raw.keys())
     else:
@@ -339,6 +441,9 @@ def build_network(atoms_raw, contacts_raw, target_types, scale,
     # But we normalize: set ρ=1, then σ_eff comes out as ratio to σ_bulk
 
     edges = []
+    #  ★ 10-06 세대 2 기록 — physics 면적 결속 수 (그 망의 전 간선 · 진단) · 협착 0 의 두 부류 (활성 모드가 ψ 를 쓸 때만:
+    #    clamp_zero = a ≥ r_min → ψ = 0 · floor_only = s < 1 인데 ψ ≤ 1e-4 → 동결 floor) · physics 면적을 못 낸 간선 수 (hertzian 진단 칸)
+    area_bind, n_area_unavailable, n_clamp_zero, n_floor_only = {}, 0, 0, 0
     for pair, cdat in contact_map.items():
         id1, id2 = pair
         a1, a2 = atoms_raw[id1], atoms_raw[id2]
@@ -368,8 +473,41 @@ def build_network(atoms_raw, contacts_raw, target_types, scale,
         #   Lower bounds: A_hertzian (πR*δ), A_ligg (LIGGGHTS internal)
         #   Upper caps:   A_tabor (F/H), A_volume (V/h_min), A_geom (2πR_min²)
         #   Final:        A_physics = max(lower, min(caps))
+        #  ★ 10-06 세대 2 (C2 ①–⑤) — 기본은 `film_area_g2` (µm + length_scale 1e6 · 쌍 · ligg = c_cpl[22] 원판 floor · 규칙 B).  위 5-case 는
+        #    세대 1 (명시 area_rule='physics_g1') 의 설명이다 — 그 경로 (아래 elif) 는 한 글자도 안 바꿨다 (세대 1 재현 · 감사 ⑦f).
         A_components = None
-        if delta_sim > 0 and r1_sim > 0 and r2_sim > 0:
+        if area_rule == AREA_RULE_G2:
+            R_star_sim = (r1_sim * r2_sim) / (r1_sim + r2_sim) if (r1_sim > 0 and r2_sim > 0) else 0.0
+            delta_over_R = delta_sim / R_star_sim if (delta_sim > 0 and R_star_sim > 0) else 0.0
+            lbl1 = type_map.get(a1['type'], '') if type_map else ''
+            lbl2 = type_map.get(a2['type'], '') if type_map else ''
+            gpair = _pair_kind_g2(lbl1, lbl2)
+            gcomp = None
+            if gpair is None or _film_area_g2 is None:
+                if contact_mode == 'physics':
+                    raise ValueError(f'physics_g2: 간선 ({id1}, {id2}) 의 상 쌍을 모른다 (type_map {lbl1!r} · {lbl2!r}) — '
+                                     'SE · AM 이름이 있어야 한다 (거부 · L1-03)')
+                A_physics, regime = None, 'unavailable_pair'          # hertzian 모드의 진단 칸만 — σ 에 안 쓰인다
+            else:
+                try:
+                    A_physics, regime, gcomp = _film_area_g2(delta_sim * scale, r1, r2, pair=gpair, ligg_area=A_hertzian,
+                                                             length_scale=G2_LENGTH_SCALE_UM, consumer='transport',
+                                                             return_components=True)
+                except (ValueError, TypeError) as _ge:
+                    if contact_mode == 'physics':
+                        raise ValueError(f'physics_g2: 간선 ({id1}, {id2}) — {_ge}') from _ge
+                    A_physics, regime = None, 'unavailable_geometry'
+            if A_physics is None:
+                n_area_unavailable += 1
+            else:
+                A_components = {
+                    'rule': AREA_RULE_G2, 'pair': gpair, 'binding': regime,
+                    'A_disc_um2': gcomp['A_disc'], 'A_tabor_um2': gcomp['A_tabor'], 'A_volume_um2': gcomp['A_volume'],
+                    'A_cap_um2': gcomp['A_cap'], 'A_final_um2': A_physics, 'V_lens_um3': gcomp['V_lens'],
+                    'h_film_um': gcomp['h_film'], 'E_star_Pa': gcomp['E_star'],
+                }
+            area_bind[regime] = area_bind.get(regime, 0) + 1
+        elif delta_sim > 0 and r1_sim > 0 and r2_sim > 0:
             R_star_sim = (r1_sim * r2_sim) / (r1_sim + r2_sim)
             R_min_sim = min(r1_sim, r2_sim)
             delta_over_R = delta_sim / R_star_sim if R_star_sim > 0 else 0.0
@@ -408,6 +546,9 @@ def build_network(atoms_raw, contacts_raw, target_types, scale,
             delta_over_R = 0.0
             A_physics = A_hertzian
             regime = 'no_delta'
+        if area_rule == AREA_RULE_G1:                                # 세대 1 결속 수 (진단 · 값 무관)
+            _b1 = (A_components or {}).get('binding') or regime
+            area_bind[_b1] = area_bind.get(_b1, 0) + 1
 
         # Select active area for this run
         A_contact = A_physics if contact_mode == 'physics' else A_hertzian
@@ -458,8 +599,13 @@ def build_network(atoms_raw, contacts_raw, target_types, scale,
         else:
             sigma_rel_1 = 1.0
             sigma_rel_2 = 1.0
-        R_bulk_1 = (d_ij / 2) / (sigma_rel_1 * k_weight * np.pi * r1**2) if r1 > 0 else 0
-        R_bulk_2 = (d_ij / 2) / (sigma_rel_2 * k_weight * np.pi * r2**2) if r2 > 0 else 0
+        if bulk_model == BULK_SPHERE_SEGMENT:
+            #  ★ 10-06 H12 (C1-3) — 구 조각 bulk (중심 평면 ↔ 접촉 평면 · 반쪽마다 h_i²/(σ_i·k·V_i)) · Hertz 민감도 팔에서만
+            R_bulk_1 = _sphere_segment_half(r1, r2, d_ij, sigma_rel_1 * k_weight)
+            R_bulk_2 = _sphere_segment_half(r2, r1, d_ij, sigma_rel_2 * k_weight)
+        else:
+            R_bulk_1 = (d_ij / 2) / (sigma_rel_1 * k_weight * np.pi * r1**2) if r1 > 0 else 0
+            R_bulk_2 = (d_ij / 2) / (sigma_rel_2 * k_weight * np.pi * r2**2) if r2 > 0 else 0
         R_bulk = R_bulk_1 + R_bulk_2
 
         # Contact resistance.
@@ -479,13 +625,14 @@ def build_network(atoms_raw, contacts_raw, target_types, scale,
         # (electron path through constriction limited by lowest-σ region).
         sigma_rel_contact = min(sigma_rel_1, sigma_rel_2)
         R_Maxwell = 1.0 / (sigma_rel_contact * k_weight * 2 * a_contact) if a_contact > 0 else 1e12
-        if contact_mode == 'physics' and a_contact > 0 and r_min_real > 0:
+        #  ★ 10-06 H12 (C1-3) — Hertz 면적 (c_cpl[22]) 위에서도 같은 ψ 곱셈식을 쓴다 (짝 인자 · 민감도 팔만).  H0 (기본) 은 아래 else = Maxwell 그대로.
+        if (contact_mode == 'physics' or h12) and a_contact > 0 and r_min_real > 0:
             # Clamp a to r_min — our plastic cap 2πR_min² gives a > r_min, which
             # is geometrically impossible for a disk contact between spheres.
             a_eff = min(a_contact, r_min_real)
             psi = max(1.0 - a_eff / r_min_real, 0.0) ** 1.5
             if psi > 1e-4:
-                if psi_placement == PSI_MULTIPLY:
+                if psi_placement == PSI_MULTIPLY or h12:          # H12 = 늘 곱셈 (psi_placement 은 physics 가지의 배치)
                     # ── S3 (계약 `docs/area_contract_20260913.md` §C · 원장 `L2-01`) ──
                     #   `R_c = ψ(a/b)/(2σa)` — ψ 를 **곱한다**.
                     #   자리: Yovanovich 1982 p.86 식 1-3 · 2005 리뷰(접촉 conductance 분모).
@@ -511,6 +658,11 @@ def build_network(atoms_raw, contacts_raw, target_types, scale,
                 #    ⛔ floor 자체는 계약 §C 가 **동결**했다 — 곱셈판에서도 건드리지 않는다
                 #      (0 → 양수 복원은 **별도 축**이다).
                 R_constriction = 0.0
+                #  ★ 10-06 기록 — 두 부류 (SELF-28): a ≥ r_min (원판 상한 · 반올림 1e-12 안 포함) = clamp_zero · 그 밖 = floor_only
+                if a_contact >= r_min_real * (1.0 - 1e-12):
+                    n_clamp_zero += 1
+                else:
+                    n_floor_only += 1
         else:
             R_constriction = R_Maxwell
         # Legacy per-edge R_film field kept for backward compat with readers;
@@ -561,8 +713,19 @@ def build_network(atoms_raw, contacts_raw, target_types, scale,
         #   'maxwell' (point-contact only) for Hertzian
         #   'mikic'   (Mikic 1974 constriction w/ finite-cylinder correction)
         #              for Physics. Vanishes correctly at full-contact limit.
-        'resistance_model': ('mikic' if contact_mode == 'physics'
+        #  ★ 10-06 H12 — Hertz 민감도 팔도 ψ 곱셈 협착이라 'mikic' (H0 는 'maxwell' 그대로)
+        'resistance_model': ('mikic' if (contact_mode == 'physics' or h12)
                              else 'maxwell'),
+        #  ★ 10-06 세대 2 기록 (C1 · C2 — 결과 · τ 인계 열의 세대 표기 원천)
+        'area_rule_physics': area_rule,
+        'area_rule': (area_rule if contact_mode == 'physics' else AREA_RULE_HERTZ),
+        'area_binding_counts_physics': dict(sorted(area_bind.items())),
+        'n_area_physics_unavailable': n_area_unavailable,
+        'n_clamp_zero': n_clamp_zero,
+        'n_floor_only': n_floor_only,
+        'hertz_constriction': hertz_constriction,
+        'bulk_model': bulk_model,
+        'hertz_arm': hertz_arm,
         # ★★ 2026-08-19 — bottom ∩ top.  같은 노드가 양쪽 경계에 속하면 Kirchhoff 계가
         #   **퇴화**해 (한 노드에 1 V 와 0 V 를 동시에 강제) σ 가 조용히 None 으로 나온다.
         #   실사고: 얇은 고압 침대(P600, AM z-범위 22.1 µm)에서 `boundary_factor=2.0` 의
@@ -587,10 +750,21 @@ def solve_network(network_data, mode='full', return_field=False):
     return_field: if True, also return per-node voltages and per-edge currents
                   (used by dump_network_raw for reviewer-auditable output).
 
+    ★ 10-06 세대 2 전극 (`L2-05` · C1-1 · 1저자 비준) — **정확 Dirichlet**: 관통 성분의 바닥 띠 B 노드 V = 1 · 위 띠 T 노드 V = 0 을 고정하고
+      자유 노드만 푼다 (L_ff·x = −L_fB·1) · G = Σ_{b∈B} (L·V)_b (ΔV = 1).  옛 가상 전원 · 싱크 g_b = max(100·Σg/n_el, 10·g_max, 1e-6) 는 지웠다 —
+      g_b 가 **모든 간선**에서 나와 전류 0 인 막다른 가지가 σ 를 바꿨다 (Codex 반례 +4.0 %).  세대 1 σ 재현 = git 이력의 옛 모듈.
+      · B ∩ T ≠ ∅ → (None, None) · 사유 `boundary_overlap` (한 노드에 1 과 0 을 동시에 강제할 수 없다)
+      · 자유 노드 ≤ DIRICHLET_DIRECT_MAX_FREE (30,000) → spsolve · 그 위 → CG (rtol 1e-10 · atol 0 · SciPy < 1.12 는 tol) → 실패하면 ILU 전처리
+        CG → 그래도 실패하면 직접해 (spsolve_fallback)
+      · 어느 고정 노드와도 (R > 0 간선으로) 이어지지 않은 자유 노드 = 떠 있는 섬 — 풀이에서 빼고 V = 0 (전류 0 · solve_info n_floating)
+      · 가드 (그대로): G ≤ 1.1·Σg (위반 = 수치 실패 · 직접해였으면 CG 로 다시) · 열 = 병렬 상한 · 단상 σ_ratio > 1.5 = **FULL 만** 거부
+        (★ C1-5 — CF · 협착-only 의 q > 1.5 = 모형 과전도: 값 유지 + 상태 model_over_conduction)
+    기록: network_data['solve_info'][mode] = {electrode_model, status, reason, method, n_free, n_fixed, n_floating, I_bottom, I_top}.
+
     Returns:
         G_eff: effective conductance (normalized, ρ=1)
         sigma_ratio: σ_eff / σ_bulk
-        field (optional): {'node_V': {id: V}, 'edge_records': [{...}]}
+        field (optional): {'node_V': {id: V}, 'edge_records': [{...}], 'V_source': 1.0 (호환 — 바닥 띠 전위), …}
     """
     nodes = network_data['nodes']
     edges = network_data['edges']
@@ -600,11 +774,17 @@ def solve_network(network_data, mode='full', return_field=False):
     plate_z = network_data['plate_z']
     box_x = network_data['box_x']
     box_y = network_data['box_y']
+    info = {'electrode_model': ELECTRODE_DIRICHLET, 'status': None, 'reason': None, 'method': None,
+            'n_free': None, 'n_fixed': None, 'n_floating': 0, 'I_bottom': None, 'I_top': None}
+    if isinstance(network_data, dict):
+        network_data.setdefault('solve_info', {})[mode] = info
+
+    def _none(status, reason):
+        info.update(status=status, reason=reason)
+        return (None, None, None) if return_field else (None, None)
 
     if not bottom or not top or not edges:
-        if return_field:
-            return None, None, None
-        return None, None
+        return _none('no_input', 'empty boundary or edge set')
 
     # Build networkx graph to find percolating component
     import networkx as nx
@@ -635,281 +815,150 @@ def solve_network(network_data, mode='full', return_field=False):
         print(f"    bottom={len(bottom)}, top={len(top)}  (plate_z={plate_z:.4f})")
         print(f"    n_components={n_comp}, top-5 sizes={comp_sizes}")
         print(f"    components reaching bottom={reaches_bot}, top={reaches_top} (need overlap for percolation)")
-        if return_field:
-            return None, None, None
-        return None, None
+        return _none('no_through', NO_THROUGH_REASON)
 
     # Filter to percolating nodes only
     perc_bottom = bottom & perc_nodes
     perc_top = top & perc_nodes
+    if perc_bottom & perc_top:
+        print(f"  ⚠ 경계 겹침 B ∩ T = {len(perc_bottom & perc_top)} 노드 — 정확 Dirichlet 이 풀 수 없다 (boundary_overlap · 풀지 않는다)")
+        return _none('not_computed', BOUNDARY_OVERLAP_REASON)
     perc_edges = [e for e in edges if e['id1'] in perc_nodes and e['id2'] in perc_nodes]
 
     print(f"  Percolating component: {len(perc_nodes)} nodes, {len(perc_edges)} edges")
 
-    # Node index mapping (percolating only)
+    def _edge_R(e):
+        if mode == 'full':
+            return e['R_total']
+        if mode == 'bulk_only':
+            return e['R_bulk'] if e['R_bulk'] > 0 else 1e-12
+        if mode == 'constriction_only':
+            return e['R_constriction']
+        return e['R_total']
+
+    # Node index mapping (percolating only) — 가상 전원 · 싱크 없음 (L2-05)
     all_ids = list(perc_nodes)
     id_to_idx = {nid: i for i, nid in enumerate(all_ids)}
     N = len(all_ids)
-
-    # Virtual source (idx=N) and sink (idx=N+1)
-    source_idx = N
-    sink_idx = N + 1
-    total_nodes = N + 2
-
-    # Build conductance matrix (sparse)
     row, col, val = [], [], []
-
-    def add_conductance(i, j, g):
-        if g <= 0:
-            return
-        # Add g to (i,i), (j,j) and subtract from (i,j), (j,i)
-        row.extend([i, j, i, j])
-        col.extend([i, j, j, i])
-        val.extend([g, g, -g, -g])
-
+    sum_g_check = 0.0
     for e in perc_edges:
-        i = id_to_idx[e['id1']]
-        j = id_to_idx[e['id2']]
-
-        if mode == 'full':
-            R = e['R_total']
-        elif mode == 'bulk_only':
-            R = e['R_bulk'] if e['R_bulk'] > 0 else 1e-12
-        elif mode == 'constriction_only':
-            R = e['R_constriction']
-        else:
-            R = e['R_total']
-
-        if R > 0:
-            g = 1.0 / R
-            add_conductance(i, j, g)
-
-    # Connect bottom SE to source with large conductance (low resistance).
-    # Adaptive g_boundary fixes σ-inflation observed across two regimes:
-    #
-    # (1) Original baseline anomaly (commit 1c24bd2): hardcoded g_boundary
-    #     = 1e6 caused 10^6 boundary/bulk ratio for thin-pellet AM-AM
-    #     graphs where Σg_bulk was ~160. spsolve LU mis-converged → V_source
-    #     ~2e-6 instead of ~0.006 → σ inflated 3000×.
-    #
-    # (2) Stage-E inflation (this fix): network_conductivity is re-invoked
-    #     by run_network_full_corrections.py with contacts.csv having
-    #     contact_area × σ_factor (0.02-1.0) per Lawn fracture stage.
-    #     For high-fracture cases, ALL AM-AM edges get scaled to ~0.02,
-    #     making g_max_bulk and Σg_bulk both very small. The previous
-    #     floor of 100 in `max(100*g_max, 100)` then forced boundary g_total
-    #     = N_electrodes × 100 ≫ Σg_bulk, re-creating the ill-conditioning.
-    #
-    # Robust criterion (independent of edge magnitude):
-    #   boundary g_total ≈ 100 × bulk g_total
-    # so the matrix has dynamic range ~100, safely within spsolve LU
-    # accuracy. Plus a 10×g_max safety floor so boundary R is at least 10×
-    # smaller than any single bulk edge (boundary not the rate-limiting
-    # step).
-    g_max_bulk = 0.0
-    sum_g_bulk = 0.0
-    for e in perc_edges:
-        if mode == 'full':
-            R = e['R_total']
-        elif mode == 'bulk_only':
-            R = e['R_bulk'] if e['R_bulk'] > 0 else 1e-12
-        elif mode == 'constriction_only':
-            R = e['R_constriction']
-        else:
-            R = e['R_total']
+        R = _edge_R(e)
         if R and R > 0:
             g = 1.0 / R
-            sum_g_bulk += g
-            g_max_bulk = max(g_max_bulk, g)
+            i, j = id_to_idx[e['id1']], id_to_idx[e['id2']]
+            row.extend([i, j, i, j])
+            col.extend([i, j, j, i])
+            val.extend([g, g, -g, -g])
+            sum_g_check += g
+    L = sparse.csr_matrix((val, (row, col)), shape=(N, N))
+    L.eliminate_zeros()                                   # 자기쌍 간선의 상쇄 0 — 연결성 판정이 저장된 0 을 간선으로 읽지 않게
 
-    n_electrodes = max(len(perc_bottom) + len(perc_top), 1)
-    g_boundary_from_sum = 100.0 * sum_g_bulk / n_electrodes
-    g_boundary_from_max = 10.0 * g_max_bulk
-    g_boundary = max(g_boundary_from_sum, g_boundary_from_max, 1e-6)
+    # Dirichlet 고정 — 바닥 띠 1 · 위 띠 0
+    V = np.zeros(N)
+    fixed = np.zeros(N, dtype=bool)
     for bid in perc_bottom:
-        add_conductance(id_to_idx[bid], source_idx, g_boundary)
-
-    # Connect top SE to sink
+        k = id_to_idx[bid]
+        fixed[k], V[k] = True, 1.0
     for tid in perc_top:
-        add_conductance(id_to_idx[tid], sink_idx, g_boundary)
+        fixed[id_to_idx[tid]] = True
+    #  떠 있는 섬 — R > 0 간선만의 그래프에서 고정 노드와 이어지지 않은 자유 노드 (협착-only 의 R_c = 0 간선 등).  전위가 정의되지 않으므로 풀이에서 빼고
+    #  V = 0 으로 둔다 (그 노드에 닿는 간선은 g = 0 이거나 같은 섬 안이라 전류 0).
+    from scipy.sparse.csgraph import connected_components as _cc
+    _nlab, _lab = _cc(L, directed=False)
+    anchored = np.zeros(_nlab, dtype=bool)
+    anchored[np.unique(_lab[fixed])] = True
+    floating = (~fixed) & (~anchored[_lab])
+    free = np.flatnonzero((~fixed) & (~floating))
+    fx = np.flatnonzero(fixed)
+    n_nodes = len(free)          # ★ 자유 노드 수 (Dirichlet 고정 · 떠 있는 섬 제외) — 아래 문턱 줄은 measure_rho 의 CG 강제 치환 앵커 (글자 그대로 유지)
+    info.update(n_free=int(n_nodes), n_fixed=int(len(fx)), n_floating=int(floating.sum()))
 
-    # Build sparse Laplacian
-    L = sparse.csr_matrix((val, (row, col)), shape=(total_nodes, total_nodes))
+    def _cg(A, b, M=None, maxiter=20000):
+        kw = {'maxiter': maxiter} if M is None else {'maxiter': maxiter, 'M': M}
+        try:
+            return cg(A, b, rtol=DIRICHLET_CG_RTOL, atol=0.0, **kw)
+        except TypeError:                                   # SciPy < 1.12 — rtol 키워드가 없다 (tol 이 상대 허용오차)
+            return cg(A, b, tol=DIRICHLET_CG_RTOL, atol=0.0, **kw)
 
-    # Right-hand side: inject current at source, extract at sink
-    b = np.zeros(total_nodes)
-    b[source_idx] = 1.0
-    b[sink_idx] = -1.0
+    def _direct(A, b):
+        x_ = spsolve(A.tocsc(), b)
+        return np.atleast_1d(np.asarray(x_, dtype=float))
 
-    # Ground one node to make system solvable (pin sink to V=0)
-    # Zero out sink row and set diagonal to 1 (V_sink = 0)
-    # Use CSR manipulation directly to avoid memory-heavy tolil() conversion
-    L_csr = L.tocsr()
-    start, end = L_csr.indptr[sink_idx], L_csr.indptr[sink_idx + 1]
-    L_csr.data[start:end] = 0.0
-    # Set diagonal
-    sink_diag_mask = L_csr.indices[start:end] == sink_idx
-    if sink_diag_mask.any():
-        L_csr.data[start:end][sink_diag_mask] = 1.0
-    else:
-        # Fallback: rebuild with sink row replaced
-        L_csr = L_csr.tolil()
-        L_csr[sink_idx, :] = 0
-        L_csr[sink_idx, sink_idx] = 1.0
-        L_csr = L_csr.tocsr()
-    b[sink_idx] = 0.0
-    L_csr.eliminate_zeros()
-
-    n_nodes = L_csr.shape[0]
-    # 3-stage robust solve: CG → CG with ILU preconditioner → spsolve fallback.
-    # Silent-None bug root cause was: pure CG can return info != 0 (not
-    # converged) yet leave V nearly zeros, so V_source ≈ 0 triggered our
-    # "V_source ≤ 0" bail-out even though the network was perfectly
-    # percolating (e.g. input_9 with SE_perc = 99%).
-    V = None
     solve_method = None
     try:
-        if n_nodes > 30000:
-            print(f"  Large network: {n_nodes} nodes — trying CG solver first...")
-            try:
-                V, info = cg(L_csr, b, tol=1e-8, maxiter=10000)
-            except TypeError:
-                V, info = cg(L_csr, b, atol=1e-8, maxiter=10000)
-            V_src_trial = V[source_idx] if V is not None else 0.0
-            if info == 0 and V_src_trial > 1e-12:
-                solve_method = "cg"
-            else:
-                # CG failed or gave noisy V — try ILU-preconditioned CG
-                print(f"  CG didn't converge (info={info}, V_src={V_src_trial:.3e}). "
-                      f"Trying ILU-preconditioned CG...")
-                try:
-                    from scipy.sparse.linalg import spilu, LinearOperator
-                    ilu = spilu(L_csr.tocsc(), drop_tol=1e-4, fill_factor=10)
-                    M = LinearOperator(L_csr.shape, ilu.solve)
-                    try:
-                        V, info = cg(L_csr, b, M=M, tol=1e-8, maxiter=5000)
-                    except TypeError:
-                        V, info = cg(L_csr, b, M=M, atol=1e-8, maxiter=5000)
-                    V_src_trial = V[source_idx] if V is not None else 0.0
-                    if info == 0 and V_src_trial > 1e-12:
-                        solve_method = "cg+ilu"
-                    else:
-                        raise RuntimeError(f"ILU-CG failed (info={info}, V_src={V_src_trial:.3e})")
-                except Exception as ilu_err:
-                    print(f"  ILU-CG failed: {ilu_err}. Falling back to direct spsolve...")
-                    V = spsolve(L_csr, b)
-                    solve_method = "spsolve_fallback"
+        if n_nodes == 0:
+            solve_method = 'none_free'
         else:
-            V = spsolve(L_csr, b)
-            solve_method = "spsolve"
+            L_ff = L[free][:, free].tocsr()
+            rhs = -(L[free][:, fx] @ V[fx])
+            if n_nodes > 30000:
+                print(f"  Large network: {n_nodes} free nodes — CG (rtol {DIRICHLET_CG_RTOL:g}) first...")
+                x, cg_info = _cg(L_ff, rhs)
+                if cg_info == 0 and np.all(np.isfinite(x)):
+                    solve_method = 'cg'
+                else:
+                    print(f"  CG didn't converge (info={cg_info}). Trying ILU-preconditioned CG...")
+                    try:
+                        from scipy.sparse.linalg import spilu, LinearOperator
+                        ilu = spilu(L_ff.tocsc(), drop_tol=1e-4, fill_factor=10)
+                        M = LinearOperator(L_ff.shape, ilu.solve)
+                        x, cg_info = _cg(L_ff, rhs, M=M, maxiter=5000)
+                        if cg_info == 0 and np.all(np.isfinite(x)):
+                            solve_method = 'cg+ilu'
+                        else:
+                            raise RuntimeError(f"ILU-CG failed (info={cg_info})")
+                    except Exception as ilu_err:
+                        print(f"  ILU-CG failed: {ilu_err}. Falling back to direct spsolve...")
+                        x = _direct(L_ff, rhs)
+                        solve_method = 'spsolve_fallback'
+            else:
+                x = _direct(L_ff, rhs)
+                solve_method = 'spsolve'
+            V[free] = x
     except Exception as e:
         print(f"  Network solve failed: {e}")
-        if return_field:
-            return None, None, None
-        return None, None
-
+        return _none('solve_failed', SOLVE_FAILED_REASON)
+    info['method'] = solve_method
     if solve_method:
         print(f"  Solve: {solve_method}")
 
-    V_source = V[source_idx]
-    V_sink = V[sink_idx]  # = 0
+    bot_idx = np.array(sorted(id_to_idx[b] for b in perc_bottom), dtype=int)
+    top_idx = np.array(sorted(id_to_idx[t] for t in perc_top), dtype=int)
 
-    if V_source <= 0:
-        if return_field:
-            return None, None, None
-        return None, None
+    def _currents(Vv):
+        """(바닥 띠에서 나가는 전류, 위 띠로 나가는 전류) — (L·V) 를 띠마다 더한다 (보존이면 둘의 합 = 0)."""
+        Iv = L @ Vv
+        return float(Iv[bot_idx].sum()), float(Iv[top_idx].sum())
+    I_bot, I_top = _currents(V)
+    G_eff = I_bot                                    # ΔV = 1 (바닥 1 · 위 0)
+    if not (np.isfinite(G_eff) and G_eff > 0):
+        print(f"  ⚠ G_eff={G_eff!r} — 유한 양수가 아니다 (수치 실패)")
+        return _none('solve_failed', SOLVE_FAILED_REASON)
 
-    # G_eff = I / ΔV = 1.0 / V_source  (since I=1, V_sink=0)
-    G_eff = 1.0 / V_source
-
-    # ── Sanity check: G_eff must satisfy G_eff ≤ Σg_bulk (mathematical
-    #    upper bound for any electrical network — all bulk edges in
-    #    parallel between source and sink).
-    #    spsolve LU mis-converges for some sparse-graph topologies (e.g.
-    #    Stage E modified contacts where σ_factor scaling creates wide
-    #    g dynamic range), producing G_eff > Σg_bulk by 5-10×. Detect
-    #    this violation and retry with CG (which handles ill-conditioning
-    #    better via iterative solver and natural regularization).
-    sum_g_check = 0.0
-    for e in perc_edges:
-        if mode == 'full':       _R = e['R_total']
-        elif mode == 'bulk_only': _R = e['R_bulk'] if e['R_bulk'] > 0 else 1e-12
-        elif mode == 'constriction_only': _R = e['R_constriction']
-        else:                     _R = e['R_total']
-        if _R and _R > 0:
-            sum_g_check += 1.0 / _R
-
+    # ── Sanity check (그대로): G_eff ≤ Σg (모든 간선을 병렬로 둔 상한) — 위반은 직접해 수치 실패.  직접해였으면 CG 로 한 번 더.
     if G_eff > sum_g_check * 1.1 and solve_method == 'spsolve':
-        # spsolve gave non-physical G_eff (mathematical bound G ≤ Σg
-        # violated). Threshold 1.1 catches even mild violations; basic
-        # numerical noise typically stays within 1.05.
-        if os.environ.get('NETWORK_DEBUG'):
-            print(f"  ⚠ spsolve G_eff={G_eff:.3e} > 1.1·Σg={sum_g_check:.3e} "
-                  f"— retrying with CG …")
-        cg_succeeded = False
         try:
-            try:
-                V_cg, info_cg = cg(L_csr, b, tol=1e-8, maxiter=20000)
-            except TypeError:
-                V_cg, info_cg = cg(L_csr, b, atol=1e-8, maxiter=20000)
-            V_src_cg = V_cg[source_idx] if V_cg is not None else 0.0
-            if info_cg == 0 and V_src_cg > 1e-12:
-                G_eff_cg = 1.0 / V_src_cg
-                if G_eff_cg <= sum_g_check * 1.1:
-                    # CG result mathematically valid — adopt it
-                    V = V_cg
-                    V_source = V_src_cg
-                    G_eff = G_eff_cg
-                    solve_method = "cg_after_spsolve"
-                    cg_succeeded = True
-                    if os.environ.get('NETWORK_DEBUG'):
-                        print(f"  ✓ CG retry succeeded: G_eff={G_eff:.3e}, "
-                              f"G/Σg={G_eff/sum_g_check:.3f}")
-                elif os.environ.get('NETWORK_DEBUG'):
-                    print(f"  ✗ CG retry insufficient: G_eff_cg={G_eff_cg:.3e} "
-                          f"still > 1.1·Σg={1.1*sum_g_check:.3e}")
-        except Exception as cg_err:
+            x, cg_info = _cg(L[free][:, free].tocsr(), -(L[free][:, fx] @ V[fx]))
+            if cg_info == 0 and np.all(np.isfinite(x)):
+                V2 = V.copy()
+                V2[free] = x
+                ib2, it2 = _currents(V2)
+                if 0 < ib2 <= sum_g_check * 1.1:
+                    V, I_bot, I_top, G_eff, solve_method = V2, ib2, it2, ib2, 'cg_after_spsolve'
+                    info['method'] = solve_method
+        except Exception as cg_err:                                       # noqa: BLE001
             if os.environ.get('NETWORK_DEBUG'):
                 print(f"  ✗ CG retry failed: {cg_err}")
+    if G_eff > sum_g_check * 1.1:
+        if os.environ.get('NETWORK_DEBUG'):
+            print(f"  ⚠ G_eff={G_eff:.3e} > 1.1·Σg={sum_g_check:.3e} — returning None (수치 실패)")
+        return _none('solve_failed', SOLVE_FAILED_REASON)
+    info.update(I_bottom=I_bot, I_top=I_top)
 
-        if not cg_succeeded:
-            # Both solvers gave non-physical G_eff for this topology.
-            # Return None instead of propagating the garbage value to σ_eff.
-            # This typically happens for σ_e on very-small graphs (~10³
-            # nodes) where the boundary-to-interior ratio exceeds 50 %
-            # — the AM-AM percolation is geometrically too weak for any
-            # solver to reliably extract σ_e. The case is then excluded
-            # by the section7 anomaly filter rather than producing a
-            # wildly inflated σ value.
-            if os.environ.get('NETWORK_DEBUG'):
-                print(f"  ⚠ Both spsolve and CG produced G/Σg > 1.2 — "
-                      f"returning None (case fundamentally ill-conditioned)")
-            if return_field:
-                return None, None, None
-            return None, None
-
-    # ── Anomaly diagnostic: sanity-bound G_eff against sum-of-conductances ─
-    # Theoretical upper bound: G_eff ≤ Σ g  (all edges in parallel between
-    # source and sink — physically impossible to exceed). When numerical
-    # spsolve mis-converges for ill-conditioned topologies (sparse top
-    # electrode + dense bulk), V_source can come out vanishingly small and
-    # make G_eff exceed Σ g by orders of magnitude. Emit a clear warning so
-    # downstream scripts can flag/exclude the case rather than silently
-    # propagate a non-physical σ.
     if os.environ.get('NETWORK_DEBUG'):
-        sum_g_bulk = 0.0
-        for e in perc_edges:
-            R = e['R_total'] if mode == 'full' else (
-                e['R_bulk'] if mode == 'bulk_only' else e['R_constriction'])
-            if R and R > 0:
-                sum_g_bulk += 1.0 / R
-        print(f"  DEBUG[{mode}]: V_source={V_source:.4e}  G_eff={G_eff:.4e}  "
-              f"Σg_bulk={sum_g_bulk:.4e}  G/Σg={G_eff/sum_g_bulk:.4f}  "
-              f"perc(b/t)={len(perc_bottom)}/{len(perc_top)}",
-              flush=True)
-        if G_eff > sum_g_bulk * 2:
-            print(f"  ⚠ G_eff exceeds Σg×2 — NUMERICAL ANOMALY (likely "
-                  f"ill-conditioned Laplacian for this topology)", flush=True)
+        print(f"  DEBUG[{mode}]: G_eff={G_eff:.4e}  Σg={sum_g_check:.4e}  G/Σg={G_eff/sum_g_check:.4f}  "
+              f"I_bot+I_top={I_bot + I_top:.3e}  perc(b/t)={len(perc_bottom)}/{len(perc_top)}  free={n_nodes}", flush=True)
 
     # Convert to σ_eff / σ_bulk
     # G_eff is in normalized units (ρ=1)
@@ -937,9 +986,17 @@ def solve_network(network_data, mode='full', return_field=False):
     # (all edges in parallel); enforce THAT for thermal instead of the
     # single-phase sigma_ratio cap. (Diagnosed on a real case: G/Σg=0.038 —
     # bound satisfied — yet sigma_ratio=10.3 was nuking κ to None.)
+    #  ★ 10-06 C1-5 — 단상 σ_ratio > 1.5 거부는 **FULL 에만**.  CONTACT_FREE · CONSTRICTION_ONLY 가지는 간선별 bulk (원기둥 T_CF ≈ 4/z) 의 모형
+    #    과전도로 1.5 를 넘을 수 있다 (LHSx CF 29 행 · q = −0.222 + 0.233·φ·CN) — 풀이 실패가 아니다 → 값 유지 + 상태 model_over_conduction.
     is_thermal = network_data.get('is_thermal', False)
-    reject = ((G_eff > sum_g_check * 1.1) if is_thermal
-              else (sigma_ratio > 1.5))
+    if is_thermal:
+        reject = G_eff > sum_g_check * 1.1
+    elif mode == 'full':
+        reject = sigma_ratio > 1.5
+    else:
+        reject = False
+        if sigma_ratio > 1.5:
+            info.update(status=MODEL_OVER_CONDUCTION, reason=MODEL_OVER_CONDUCTION_REASON)
     if reject:
         if os.environ.get('NETWORK_DEBUG'):
             if is_thermal:
@@ -949,9 +1006,9 @@ def solve_network(network_data, mode='full', return_field=False):
                 print(f"  ⚠ sigma_ratio={sigma_ratio:.3f} > 1.5 — non-physical "
                       f"(σ_eff cannot exceed σ_bulk for porous composite). "
                       f"Returning None.")
-        if return_field:
-            return None, None, None
-        return None, None
+        return _none('over_conduction_guard', 'sigma_ratio > 1.5' if not is_thermal else 'G > 1.1·Σg (thermal parallel bound)')
+    if info['status'] is None:
+        info['status'] = 'computed'
 
     if return_field:
         # Per-node voltages (percolating component only)
@@ -960,14 +1017,7 @@ def solve_network(network_data, mode='full', return_field=False):
         edge_records = []
         for e in perc_edges:
             i, j = id_to_idx[e['id1']], id_to_idx[e['id2']]
-            if mode == 'full':
-                R = e['R_total']
-            elif mode == 'bulk_only':
-                R = e['R_bulk'] if e['R_bulk'] > 0 else 1e-12
-            elif mode == 'constriction_only':
-                R = e['R_constriction']
-            else:
-                R = e['R_total']
+            R = _edge_R(e)
             g = 1.0 / R if R > 0 else 0.0
             dV = V[i] - V[j]
             I_edge = g * dV
@@ -988,11 +1038,14 @@ def solve_network(network_data, mode='full', return_field=False):
         field = {
             'node_V': node_V,
             'edge_records': edge_records,
-            'V_source': float(V_source),
+            'V_source': 1.0,                 # 호환 — 바닥 띠 전위 (정확 Dirichlet · 옛 가상 전원 전위가 아니다)
             'G_eff':    float(G_eff),
             'sigma_ratio': float(sigma_ratio),
             'n_perc_nodes': len(all_ids),
             'n_perc_edges': len(perc_edges),
+            'electrode_model': ELECTRODE_DIRICHLET,
+            'I_bottom': I_bot, 'I_top': I_top,
+            'solve_method': solve_method,
         }
         return G_eff, sigma_ratio, field
 
@@ -1111,14 +1164,17 @@ def run_decomposition(atoms_raw, contacts_raw, target_types, scale,
                       sigma_bulk=SIGMA_BULK_DEFAULT, results_dir=None,
                       type_map=None, contact_mode='hertzian',
                       dump_raw_dir=None, dump_tag=None, is_thermal=False, mode=None,
-                      boundary_factor=2.0, psi_placement=PSI_PLACEMENT_DEFAULT):
+                      boundary_factor=2.0, psi_placement=PSI_PLACEMENT_DEFAULT,
+                      area_rule=AREA_RULE_DEFAULT, hertz_constriction=HERTZ_CONSTRICTION_MAXWELL,
+                      bulk_model=BULK_CYLINDER):
     """
     Run full decomposition analysis:
     1. FULL (R_bulk + R_constriction): explicit-contact model estimate (물리 정본 아님, R20-06)
-    2. CONTACT_FREE (R_constriction=0): ideal contact upper bound
+    2. CONTACT_FREE (R_constriction=0): 협착 0 가지 (상한 아님 — T_CF ≈ 4/z 모형 과전도 · model_over_conduction 표지)
     3. CONSTRICTION_ONLY (R_bulk=0): spreading resistance limit
 
     contact_mode: 'hertzian' (default, LIGGGHTS area) or 'physics' (Tabor+volume)
+    area_rule · hertz_constriction · bulk_model (★ 10-06 세대 2): build_network 와 같다 (physics 면적 세대 · Hertz H0/H12 짝).
     dump_raw_dir: if set, write edges/nodes CSV + solution JSON here
     dump_tag: file suffix for raw dump (e.g. 'hertzian_ionic', 'physics_ionic')
 
@@ -1151,7 +1207,8 @@ def run_decomposition(atoms_raw, contacts_raw, target_types, scale,
                         mode=_mode,
                         results_dir=results_dir,
                         type_map=type_map, contact_mode=contact_mode,
-                        psi_placement=psi_placement)
+                        psi_placement=psi_placement, area_rule=area_rule,
+                        hertz_constriction=hertz_constriction, bulk_model=bulk_model)
 
     if net is None:
         print("  No network found")
@@ -1212,7 +1269,7 @@ def run_decomposition(atoms_raw, contacts_raw, target_types, scale,
         print(f"  협착 저항 전력 몫 Σ I²R_c / Σ I²R_total (FULL 해 · 관통 간선): {cps:.1%}  "
               f"[{_cps_key}] ↔ 접촉별 비가중 평균 {1 - bulk_frac:.1%}")
 
-    # === Run 2: CONTACT-FREE (ideal contacts, upper bound) ===
+    # === Run 2: CONTACT-FREE (협착 0 가지 — 상한 아님 · q > 1.5 = model_over_conduction 표지 · 값 유지) ===
     print("  Solving CONTACT_FREE network (R_constriction=0)...")
     G_bulk, sigma_cf = solve_network(net, mode='bulk_only')
 
@@ -1229,18 +1286,34 @@ def run_decomposition(atoms_raw, contacts_raw, target_types, scale,
     sigma_bruggeman = phi_se ** 1.5 if phi_se > 0 else 0
 
     #  (active / percolating 분율 = 위 `_af` — 풀이 앞에서 셌다 · RGL-02)
-    _sf_st, _sf_rs = _net_sigma_status(sigma_full, _no_through)
-    _cf_st, _cf_rs = _net_sigma_status(sigma_cf, _no_through)
-    _cn_st, _cn_rs = _net_sigma_status(sigma_constr_net, _no_through)
+    #  ★ 10-06 — 풀이마다 솔버가 남긴 기록 (정확 Dirichlet 전극 · 경계 겹침 사유 · CF 모형 과전도 표지 — L2-05 · C1-5)
+    _si = net.get('solve_info') or {}
+    _sf_st, _sf_rs = _net_sigma_status(sigma_full, _no_through, _si.get('full'))
+    _cf_st, _cf_rs = _net_sigma_status(sigma_cf, _no_through, _si.get('bulk_only'))
+    _cn_st, _cn_rs = _net_sigma_status(sigma_constr_net, _no_through, _si.get('constriction_only'))
+    _h12 = (net.get('hertz_arm') == 'H12')
 
     # Results
     results = {
         'contact_mode': contact_mode,
-        'resistance_model': ('mikic' if contact_mode == 'physics'
-                             else 'maxwell'),
+        'resistance_model': net.get('resistance_model'),         # ★ 10-06 — 망이 정한 이름 그대로 (H12 = mikic · H0 = maxwell · physics = mikic)
         #  ★ `L2-01` 세대 표기 — `multiply` = 세대 2 (10-06 기본) · `legacy_divide` = 세대 1 (10-06 전의 모든 Physics σ ·
         #    명시 인자로만).  Hertz 결과에도 실리지만 Hertz 는 ψ 를 안 쓴다 (값 무관 · 표기만).
-        'psi_placement': psi_placement,
+        #  ★ 10-06 H12 — 그 팔은 ψ 를 늘 곱한다 (psi_placement 인자와 무관) → 실제로 쓴 배치 'multiply' 를 싣는다.
+        'psi_placement': (PSI_MULTIPLY if _h12 else psi_placement),
+        #  ★ 10-06 세대 2 표기 (C1 · C2 · 결과마다 — τ 인계 열 ion_net_electrode · ion_net_bulk · ion_net_area_rule 의 원천)
+        'electrode_model': ELECTRODE_DIRICHLET,
+        'hertz_constriction': (net.get('hertz_constriction') if contact_mode == 'hertzian' else None),
+        'bulk_model': net.get('bulk_model'),
+        'area_rule': net.get('area_rule'),
+        'area_rule_physics': net.get('area_rule_physics'),
+        'area_binding_counts_physics': net.get('area_binding_counts_physics'),
+        'n_area_physics_unavailable': net.get('n_area_physics_unavailable'),
+        'n_clamp_zero': net.get('n_clamp_zero'),
+        'n_floor_only': net.get('n_floor_only'),
+        'h_film_nm': (round(_H_FILM_MIN * 1e9, 12) if (area_rule == AREA_RULE_G2 and _H_FILM_MIN is not None) else None),
+        'h_film_status': (_H_FILM_STATUS if area_rule == AREA_RULE_G2 else None),
+        'solve_method_full': (_si.get('full') or {}).get('method'),
         'n_nodes': n_nodes,
         'n_edges': n_edges,
         'n_bottom': n_bottom,
@@ -1325,13 +1398,18 @@ def run_decomposition(atoms_raw, contacts_raw, target_types, scale,
 def _run_all_networks(atoms_raw, contacts_raw, target_types, am_types, type_map,
                        scale, plate_z, box_x, box_y, output_dir,
                        contact_mode='hertzian', dump_raw_dir=None,
-                       temp_c=None, ea_ion_ev=None, psi_placement=PSI_PLACEMENT_DEFAULT):
+                       temp_c=None, ea_ion_ev=None, psi_placement=PSI_PLACEMENT_DEFAULT,
+                       area_rule=AREA_RULE_DEFAULT, hertz_h12=True):
     """Run ionic + electronic + thermal decomposition under a fixed contact_mode.
     Returns the merged ionic-centric results dict.
 
     ★ 10-06 (`L2-01` 세대 2) — `psi_placement` 를 세 채널에 같이 넘기고 세 채널 결과에 세대를 싣는다
       (이온 = `psi_placement` · 전자 = `electronic_psi_placement` · 열 = `thermal_psi_placement`).
       기본 = 곱셈 (세대 2) · 세대 1 은 명시 `PSI_DIVIDE` 로만.  CLI 깃발은 두지 않는다 (계약 개정 노트).
+    ★ 10-06 세대 2 (C1 · C2) — `area_rule` 을 세 채널에 같이 넘긴다 (기본 physics_g2 · 세대 1 = 명시 physics_g1) · 채널마다 면적 규칙 ·
+      결속 수 · 협착 0 의 두 부류 · 전극을 싣는다.  hertzian 실행은 (hertz_h12=True 기본) **이온 민감도 레코드** `hertz_h12` (H12 = ψ 곱
+      Hertz 협착 + 구 조각 bulk · 같은 망 · 같은 전극) 를 결과 안에 함께 싣는다 — 모드 파일 · legacy · dual 의 Hertz 레코드에 그대로 실려 τ 인계
+      (`tau_flux` 모드 hertz_h12) 와 망 정지 계약 (⑨) 이 읽는다.  H12 는 기본 학습 열이 아니다 (민감도 부록).
     """
     tag_ionic = f"{contact_mode}_ionic"
     tag_el    = f"{contact_mode}_electronic"
@@ -1352,7 +1430,7 @@ def _run_all_networks(atoms_raw, contacts_raw, target_types, am_types, type_map,
                                 results_dir=output_dir, type_map=type_map,
                                 contact_mode=contact_mode,
                                 dump_raw_dir=dump_raw_dir, dump_tag=tag_ionic,
-                                psi_placement=psi_placement)
+                                psi_placement=psi_placement, area_rule=area_rule)
 
     results_el = None
     #: ★ RC7-02 (Codex 7회차): 여기가 **RC5-03 이 thermal 에 대해 고친 결함이 그대로 남아
@@ -1378,7 +1456,7 @@ def _run_all_networks(atoms_raw, contacts_raw, target_types, am_types, type_map,
                                            contact_mode=contact_mode,
                                            dump_raw_dir=dump_raw_dir, dump_tag=tag_el,
                                            mode='electronic',   # ★ A2: 라벨을 사실로
-                                           psi_placement=psi_placement)
+                                           psi_placement=psi_placement, area_rule=area_rule)
             el_status = 'computed' if results_el else 'no_result'
             if not results_el:
                 el_reason = 'run_decomposition returned no result (AM 망 미퍼콜 — 물리적으로 옳은 답)'
@@ -1405,7 +1483,7 @@ def _run_all_networks(atoms_raw, contacts_raw, target_types, am_types, type_map,
                                        type_map=type_map,
                                        contact_mode=contact_mode,
                                        dump_raw_dir=dump_raw_dir, dump_tag=tag_th,
-                                       is_thermal=True, psi_placement=psi_placement)
+                                       is_thermal=True, psi_placement=psi_placement, area_rule=area_rule)
         th_status = 'computed' if results_th else 'no_result'
         if not results_th:
             th_reason = 'run_decomposition returned no result (열망 미형성 가능)'
@@ -1433,6 +1511,8 @@ def _run_all_networks(atoms_raw, contacts_raw, target_types, am_types, type_map,
             results['electronic_boundary_rule']      = results_el.get('boundary_rule')        # ★ 10-04 안 A
             results['electronic_boundary_band_frac'] = results_el.get('boundary_band_frac')
             results['electronic_psi_placement']      = results_el.get('psi_placement')        # ★ 10-06 L2-01 세대 표기 (채널마다)
+            for _k in GEN2_CHANNEL_KEYS:                                                           # ★ 10-06 세대 2 표기 (채널마다)
+                results['electronic_' + _k] = results_el.get(_k)
             # ★ 10-04 ④a — 전자 채널 협착 전력 몫 (꼬리 이름 그대로 — 이온 중심 결과에 싣는다)
             for _k, _v in results_el.items():
                 if _k.startswith('constriction_power_share_el_'):
@@ -1475,6 +1555,8 @@ def _run_all_networks(atoms_raw, contacts_raw, target_types, am_types, type_map,
             results['thermal_boundary_rule']      = results_th.get('boundary_rule')           # ★ 10-04 안 A
             results['thermal_boundary_band_frac'] = results_th.get('boundary_band_frac')
             results['thermal_psi_placement']      = results_th.get('psi_placement')           # ★ 10-06 L2-01 세대 표기 (채널마다)
+            for _k in GEN2_CHANNEL_KEYS:                                                           # ★ 10-06 세대 2 표기 (채널마다)
+                results['thermal_' + _k] = results_th.get(_k)
             # ★ 10-04 ④a — 열 채널 협착 전력 몫 (꼬리 이름 그대로)
             for _k, _v in results_th.items():
                 if _k.startswith('constriction_power_share_th_'):
@@ -1489,7 +1571,55 @@ def _run_all_networks(atoms_raw, contacts_raw, target_types, am_types, type_map,
         results['thermal_status'] = th_status
         if th_reason:
             results['thermal_status_reason'] = th_reason
+        #  ★ 10-06 H12 (C1-3) — Hertz 실행의 이온 민감도 레코드 (주 값 H0 는 위 그대로 · 이 레코드는 기본 학습 열이 아니다)
+        if contact_mode == 'hertzian' and hertz_h12:
+            results[HERTZ_H12_MODE] = _hertz_h12_record(
+                atoms_raw, contacts_raw, target_types, scale, plate_z, box_x, box_y, output_dir, type_map,
+                sigma_bulk_ion, temp_c, ea_ion_ev, psi_placement, area_rule)
     return results
+
+
+#: ★ 10-06 세대 2 — 채널마다 상위 결과로 올리는 표기 키 (전자 · 열 = `electronic_<키>` · `thermal_<키>` · 이온 = 이름 그대로).
+GEN2_CHANNEL_KEYS = ('electrode_model', 'area_rule', 'area_rule_physics', 'area_binding_counts_physics', 'n_clamp_zero', 'n_floor_only',
+                     'bulk_model')
+
+
+def _hertz_h12_record(atoms_raw, contacts_raw, target_types, scale, plate_z, box_x, box_y, output_dir, type_map,
+                      sigma_bulk_ion, temp_c, ea_ion_ev, psi_placement, area_rule):
+    """H12 이온 민감도 레코드 (C1-3 · 1저자 비준 10-06) — 같은 망 · 같은 전극 · Hertz 면적 (c_cpl[22]) 위에서 ψ 곱 협착 + 구 조각 bulk.
+
+    주 이온 결과와 **같은 모양** (run_decomposition 결과 + σ₀ · 온도 기록 + 이온 채널 상태) 이라 τ 인계 도우미 (`tau_flux` 모드 hertz_h12) 와
+    공용 기술 검사 (`tau_flux.ion_record_problem`) 가 그대로 읽는다.  풀이가 예외로 죽으면 조용히 빠지지 않고 not_computed 레코드를 낸다
+    (망 정지 계약 ⑨ 가 거부한다 — 기술적 실패)."""
+    rec = None
+    try:
+        rec = run_decomposition(atoms_raw, contacts_raw, target_types, scale, plate_z, box_x, box_y,
+                                sigma_bulk=sigma_bulk_ion, results_dir=output_dir, type_map=type_map,
+                                contact_mode='hertzian', psi_placement=psi_placement, area_rule=area_rule,
+                                hertz_constriction=HERTZ_CONSTRICTION_PSI, bulk_model=BULK_SPHERE_SEGMENT)
+    except Exception as e:                                                     # noqa: BLE001 — 실패를 레코드로 남긴다
+        print(f"  H12 sensitivity solve failed: {e}")
+        return {'sensitivity_mode': HERTZ_H12_MODE, 'sigma_full': None, 'sigma_full_mScm': None,
+                'sigma_full_status': 'not_computed', 'sigma_full_reason': SOLVE_FAILED_REASON,
+                'ionic_status': 'failed', 'ionic_status_reason': f'H12 민감도 풀이 예외 ({type(e).__name__}: {e})',
+                'electrode_model': ELECTRODE_DIRICHLET, 'hertz_constriction': HERTZ_CONSTRICTION_PSI,
+                'bulk_model': BULK_SPHERE_SEGMENT, 'resistance_model': 'mikic', 'psi_placement': PSI_MULTIPLY,
+                'temperature_provenance': se_material.provenance(temp_c, ea_ion_ev), 'sigma_grain_S_cm': sigma_bulk_ion}
+    if not rec:
+        return {'sensitivity_mode': HERTZ_H12_MODE, 'sigma_full_status': 'not_computed', 'sigma_full_reason': 'no_network',
+                'ionic_status': 'no_result', 'electrode_model': ELECTRODE_DIRICHLET}
+    rec['sensitivity_mode'] = HERTZ_H12_MODE
+    rec['temperature_provenance'] = se_material.provenance(temp_c, ea_ion_ev)
+    rec['sigma_grain_S_cm'] = sigma_bulk_ion
+    _st, _rs = status_for_value(rec.get('sigma_full_mScm'), 'ionic')
+    if rec.get('sigma_full_status') == 'valid_zero' and rec.get('sigma_full_reason') == NO_THROUGH_REASON:
+        _st, _rs = 'valid_zero', '관통 성분 없음 (no_through_path) — H12 민감도 (주 Hertz 와 같은 망)'
+    elif _st == 'valid_null':
+        _st, _rs = _channel_solve_failure(rec, 'ionic') or (_st, _rs)
+    rec['ionic_status'] = _st
+    if _rs:
+        rec['ionic_status_reason'] = _rs
+    return rec
 
 
 def _channel_solve_failure(res, chan):

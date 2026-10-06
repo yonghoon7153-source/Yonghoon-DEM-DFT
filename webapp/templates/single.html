@@ -1843,13 +1843,13 @@ const METRIC_TIPS = {
     title: 'τ_Lap_geom — Laplace bulk-only tortuosity',
     formula: 'τ_Lap_geom = √(φ_SE × σ_grain / σ_bulk_net)',
     desc: 'Kirchhoff 회로망 CONTACT_FREE 모드 (R_bulk only, 접촉 저항 제외). 병렬 경로 모두 합산.',
-    meaning: '참고 지표. 일반적으로 τ_Dij 의 0.8배 정도 (병렬 경로 덕분에 조금 낮음). 입력 칸 값으로 쓰지 않는다 — 접촉 협착이 빠진 모형 내부 기준선이다 (TAU-07).'
+    meaning: '참고 지표. 일반적으로 τ_Dij 의 0.8배 정도 (병렬 경로 덕분에 조금 낮음). 입력 칸 값으로 쓰지 않는다 — 접촉 협착이 빠진 모형 내부 기준선이다 (TAU-07 · CF 가지 T_CF ≈ 4/z = 원기둥 bulk 모형 과전도 — 상한 아님 · 10-06 저녁).'
   },
   'tau2 = φ·σ₀/σ_full (tortuosity factor · 협착 포함)': {
     title: 'tau2 — tortuosity factor (접촉망 모델 T)',
     formula: 'tau2 = φ_SE × σ₀ / σ_full\n(σ₀ = {{ "%.1f"|format(sigma_grain(metrics)) }} mS/cm — 간선 재료 σ = 펠릿값 (CL-91) · σ_full 과 같은 온도)',
     desc: 'Kirchhoff 회로망 FULL 모드 (원기둥 bulk + 접촉 Holm 협착) 의 유효 전도도를 φ_SE 로 정규화해 뒤집은 값.  문헌 tortuosity factor (Tjaden κ = τ² · Landesfeind τ · TauFactor τ · COMSOL 종 수송 τ_F) 와 같은 정의식이다 — 물리 기준 상태 (σ₀) 는 다르다.\n\nCOMSOL: 종 수송 인터페이스 Eq 6-6 (p.376) 의 τ_F 와 같은 꼴.  배터리 모듈 앱 예제 (Homogenizing a Heterogeneous Electrode Model · 6.4) 식 (1) f_eff = ε/τ 도 같은 꼴이고, 그 예제는 Tortuosity 칸 대신 Porous Electrode 보정을 User defined 로 두고 f (= φ/tau2 = σ_full/σ₀) 를 직접 넣는다 — 이 경로면 τ 관례가 끼지 않는다.  노드의 Tortuosity 선택지 식은 인쇄본에 없다 = 강하게 시사 — 사용 버전 GUI Equation 보기로 확인하기 전에는 tau2 를 "COMSOL 입력" 이라 하지 않는다.  σ_full 재현은 COMSOL σ₀ 칸 = 위 σ₀ 일 때만.',
-    meaning: '협착식 (hertz = 반공간 Maxwell · 1세대 · physics = ψ 곱셈 (세대 2 · 2026-10-06) + 상한값 면적 — 10-06 전에 푼 케이스의 physics 는 ψ 분모 (세대 1 · 망 결과의 psi_placement 로 가른다)) — ML 기술자 전용 · 실험 절대 대조 보류 (순수 SE 게이트 · 결정 4).  physics σ 가 없으면 physics 칸은 "—".'
+    meaning: '협착식 (hertz = 반공간 Maxwell + 원기둥 bulk (H0 · 1세대) — z ≤ 10 에서 tau2 −12 … −28 % 쪽 편향 · z ≈ 12 에서 ±5 % 상쇄 (설계 측정 · H12 민감도 (ψ 곱 협착 + 구 조각 bulk) 는 LHS 인계표 부록 열 *_hertz_h12 — 이 페이지에는 없다) · physics = ψ 곱셈 (세대 2 · 2026-10-06) + 면적 physics_g2 (10-06 저녁 · 원판 floor 위 min(Tabor · 정확 lens/h · π r_min²) · 쌍별 E* — 간선마다 R_c(physics) ≤ R_c(hertz)) — 그 전에 푼 케이스의 physics 는 ψ 분모 · 상한값 면적 (세대 1 · 망 결과의 psi_placement · area_rule 로 가른다)) · 전극 = 정확 Dirichlet (10-06 저녁 · 바닥 띠 V = 1 · 위 띠 V = 0 · 옛 가상 전원과 차이 ≤ 1.5e-4) — ML 기술자 전용 · 실험 절대 대조 보류 (순수 SE 게이트 · 결정 4).  physics σ 가 없으면 physics 칸은 "—".'
   },
   'τ_Lap,eff = √tau2 (Laplace · 협착 포함)': {
     title: 'τ_Lap,eff — √tau2 (τ² 관례의 τ)',
@@ -1867,7 +1867,7 @@ const METRIC_TIPS = {
     title: 'tau2 인계 상태 — 인계 열을 싣는가 (게이트 G1–G6)',
     formula: '도우미 scripts/tau_flux.py (τ 판정 v2 §5-1 열 · §5-2 게이트) — 웹앱은 표시만\nf_ion = σ_ratio·L_gap/L_mc (재척도 · 해 아님) · tau2 = φ_mc/f_ion (= φ_구합/σ_ratio · 위 tau2 행과 정의상 같은 수) · tau = √tau2',
     desc: '상태 다섯: OK · NOT_PERCOLATING — 비관통 (관통 경로 없음) (관통 성분 없음 = 망 상태 행의 생산자 valid_zero + no_through_path · f = 0 · tau2 빈칸 = ∞) · BAND_FALLBACK (G1 — 띠 규칙이 L0 가 아님 · 값 빈칸) · MODEL_BELOW_CONTINUUM_BOUND (G5 — T < 1 · 원기둥 bulk 모델 성질 · 값 유지) · NOT_COMPUTED (빈칸 + 사유).\n두 부류 (10-05 RGLR-01): NOT_COMPUTED = 기술적 실패 (입력 결손 · 무효 · 솔버 관문 · 온도 짝 · 관통 불일치 · 세대 무효 — 값 없음) · BAND_FALLBACK · NOT_PERCOLATING · MODEL_BELOW_CONTINUUM_BOUND = 과학적 HOLD (입력은 유효 · 등록된 규칙대로 빈칸 또는 표지).\n사유 여섯: missing_input (망 결과 · 장부 · 띠 규칙 기록 · 온도 기록 없음) · invalid_input (공용 기술 검사 tau_flux.ion_record_problem — 상태 computed 인데 σ_ratio · σ_dim 이 유한 양수가 아님 · 관통 분율 (0, 1] 밖 · 두 σ 표현 불일치 σ_dim ≠ 1000·σ₀·σ_ratio (저장 정밀도 8 · 6 자리 반올림 밖 · RGLR-02) · valid_zero 인데 증명된 비관통 조합이 아님 · 모르는 상태) · percolation_disagree (G2 — 솔버 관통 ≠ calc_percolation) · solver_guard (관통인데 σ 없음 — 생산자 not_computed) · temperature_mismatch (G4 — σ₀ 와 σ_full 의 온도가 다름) · generation_invalid (10-05 RGLR2-02 — 케이스 폴더의 망 활성 세대가 확정되지 않음: full_metrics ↔ 도장 불일치 · 되돌림 실패 · 중단된 게시 흔적 · 도장 손상 · tau_flux.network_generation_problem — 두 모드 · 값 빈칸).\n⚠ 공용 기술 검사는 띠 규칙과 무관하게 과학적 HOLD 앞에서 돈다 — 옛 판은 L1/L2 레코드를 바로 BAND_FALLBACK 로 돌려 무효 σ 가 HOLD 로 보였다 (RGLR-01).  network 정지 계약 ③ 이 같은 함수를 쓴다.\n⚠ 띠 규칙은 안 A (10-04) 뒤 망을 다시 푼 케이스에만 기록된다 — 그 전 케이스는 NOT_COMPUTED (missing_input) 이 정상이다 (짐작하지 않는다).',
-    meaning: '인계 열 (f_ion · f_ion_gap · tau2_ion · tau_ion) 값 규칙 = tau_flux 그대로 — OK · MODEL_BELOW_CONTINUUM_BOUND 는 값 (MODEL_BELOW_CONTINUUM_BOUND 는 T < 1 이어도 유지) · NOT_PERCOLATING 은 f_ion 0 (물리적 0) · tau2 · tau 빈칸 (= ∞) · BAND_FALLBACK · NOT_COMPUTED 는 빈칸 (0 아님).  LHS 인계표 v1.2 (망 τ 묶음) 에 같은 열 · 같은 규칙으로 실린다 — 단 인계표 행은 network 배치 done · partial 이고 인계 때 같은 세대 검사 (P0–P4 · τ P4 = 망 정지 계약 재검사: 전 사본 · 투영 · σ₀ 짝 · 띠 규칙) 를 통과한 케이스뿐이다 · 인계표에는 NOT_COMPUTED 가 실리지 않는다 (그 폴더는 생성기가 거부 · 10-05 RGLR3-02).  기술적 실패는 고칠 대상 (재계산 · 입력 점검) · 과학적 HOLD 는 규칙대로의 답이다.  협착식 세대 (메타 ion_net_constriction · ion_net_psi): hertz = 반공간 Maxwell · 1세대 · physics = ψ 곱셈 (세대 2 · 2026-10-06 · 그 전 산출물은 ψ 분모 세대 1) — ML 기술자 전용 · 실험 절대 대조 보류 (G6).'
+    meaning: '인계 열 (f_ion · f_ion_gap · tau2_ion · tau_ion) 값 규칙 = tau_flux 그대로 — OK · MODEL_BELOW_CONTINUUM_BOUND 는 값 (MODEL_BELOW_CONTINUUM_BOUND 는 T < 1 이어도 유지) · NOT_PERCOLATING 은 f_ion 0 (물리적 0) · tau2 · tau 빈칸 (= ∞) · BAND_FALLBACK · NOT_COMPUTED 는 빈칸 (0 아님).  LHS 인계표 v1.2 (망 τ 묶음) 에 같은 열 · 같은 규칙으로 실린다 — 단 인계표 행은 network 배치 done · partial 이고 인계 때 같은 세대 검사 (P0–P4 · τ P4 = 망 정지 계약 재검사: 전 사본 · 투영 · σ₀ 짝 · 띠 규칙) 를 통과한 케이스뿐이다 · 인계표에는 NOT_COMPUTED 가 실리지 않는다 (그 폴더는 생성기가 거부 · 10-05 RGLR3-02).  기술적 실패는 고칠 대상 (재계산 · 입력 점검) · 과학적 HOLD 는 규칙대로의 답이다.  협착식 세대 (메타 ion_net_constriction · ion_net_psi): hertz = 반공간 Maxwell · 1세대 · physics = ψ 곱셈 (세대 2 · 2026-10-06 · 그 전 산출물은 ψ 분모 세대 1) — ML 기술자 전용 · 실험 절대 대조 보류 (G6).  ★ 10-06 저녁 세대 2 — 세대 표기 (ion_net_area_rule · ion_net_electrode · ion_net_bulk: 전극 dirichlet_exact · physics 면적 physics_g2 · 표기 없는 옛 산출물 = virtual_source_legacy · physics_g1 · cylinder_half_d) · 세대가 다른 케이스를 한 표에 섞으면 tau_flux · 인계 생성기가 거부 · 한 행 안 모드끼리 전극이 다르면 NOT_COMPUTED (invalid_input) · 인계표에 H12 민감도 부록 열 (*_hertz_h12 · 기본 학습 열 아님 · 세대 1 배치에는 레코드가 없어 그 모드만 NOT_COMPUTED).'
   },
   '띠 규칙 · 띠 폭/판 간격 (G1 · TAU-24)': {
     title: '경계 띠 규칙 · 띠 폭 / 판 간격',
@@ -2136,9 +2136,9 @@ const METRIC_TIPS = {
   },
   'Contact-free / Full': {
     title: 'CONTACT_FREE / FULL — 모델 내부 협착 민감도 (L2-07)',
-    formula: 'Ratio = σ_contact_free / σ_full\nσ_contact_free: R_constriction=0 (ideal contacts, upper bound)\nσ_full: R_bulk + R_constriction (ground truth)\n'
+    formula: 'Ratio = σ_contact_free / σ_full\nσ_contact_free: R_constriction=0 (협착 0 가지 — ⚠ 상한이 아니다: 원기둥 bulk 의 T_CF ≈ 4/z 모형 과전도 · q > 1.5 면 값 유지 + model_over_conduction 표지 · 10-06 저녁)\nσ_full: R_bulk + R_constriction (같은 망의 주 해)\n'
       + '※ 둘 다 **같은 접촉 그래프** 위의 값이다 (접촉이 있어야 그래프에 들어온다)',
-    desc: '접촉 저항이 없다고 가정한 상한이 실제의 몇 배인가 — **같은 망 안에서의 비**.',
+    desc: '접촉 저항을 뺀 가지 (CONTACT_FREE) 가 FULL 의 몇 배인가 — **같은 망 안에서의 비** (CF 는 상한이 아니라 모형 과전도 가지 — 위 식 줄).',
     meaning: 'Ratio가 클수록 constriction 저항이 지배적. SE 0.5μm: ~4~10×, SE 1.5μm: ~2~3×.\n'
       + '⚠ 이론식(Bruggeman) 대 실측의 비가 **아니다** — 그쪽은 σ_brug/σ_ionic 이고 방향도 다르다 '
       + '(같은 침대에서 CF/FULL 3.65 ↔ Brug/FULL 0.28). 실험 오차 분포가 아니므로 다른 솔버에 '
@@ -2156,7 +2156,7 @@ const METRIC_TIPS = {
   'Constriction 전력 몫 (I²R · %)': {
     title: 'Constriction 전력 몫 — Σ I²R_c / Σ I²R_total (④a)',
     formula: 'share = Σ_e I_e² R_c,e / Σ_e I_e² R_total,e   (R_total = R_bulk + R_c · I_e = 같은 FULL 망 해의 간선 전류)\n'
-      + '합 = 관통 간선만 · 가상 전극 연결 (경계 전도도) 제외 · 이온 채널 · Hertz / Physics 칸 = 접촉 면적 모드',
+      + '합 = 관통 간선만 · 가상 전극 연결 없음 (10-06 저녁 세대 2 = 정확 Dirichlet 전극 · 옛 세대는 가상 전극 연결 (경계 전도도) 제외) · 이온 채널 · Hertz / Physics 칸 = 접촉 면적 모드',
     desc: '협착 (접촉 목) 저항에서 실제로 소산되는 전력의 몫입니다. 위 행 (접촉별 비가중 평균) 과 달리 전류가 많이 흐르는 접촉이 크게 셉니다.',
     meaning: '반례 (L2-08): 같은 망에서 비가중 평균 45 % ↔ 이 값 8.18 % (5.5 배). real_14 이온 hertz 78.6 % (비가중 76.6 %) · 열 physics 는 54 % ↔ 70 % 로 크게 갈린다. '
       + '재분석 (망 단계) 전 케이스는 빈칸입니다. 등급 축 (협착 R 비율) 은 아직 위 행 — 전환은 바뀌는 등급값 보고 뒤.'

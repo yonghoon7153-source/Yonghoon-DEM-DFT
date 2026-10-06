@@ -540,8 +540,11 @@ def _t13_t20_network_real(webapp):
 
     # ── T15 (RGL-08) — 정지 계약의 입력 집합 · 파일 대조 · null 사유 (Codex probe_contracts 변이를 실 생산자 출력 위에) ──────────
     def _drop_tau(rec, _n, _m):
-        for k in ('sigma_full', 'percolating_fraction', 'temperature_provenance', 'sigma_grain_S_cm'):
-            rec.pop(k, None)
+        #  ★ 10-06 저녁 — Hertz 레코드 안 H12 민감도 레코드 (hertz_h12) 도 같은 생산자 실행의 이온 레코드다 → 같은 결손을 함께 넣는다.
+        #    (H12 만 σ₀ 가 남으면 승격 전 σ₀ · 온도 짝 검사가 먼저 막아 — 그것도 옳은 거부다 — 이 변이가 정지 계약의 입력 집합을 시험하지 못한다)
+        for r_ in (rec, rec.get('hertz_h12') if isinstance(rec.get('hertz_h12'), dict) else None):
+            for k in (('sigma_full', 'percolating_fraction', 'temperature_provenance', 'sigma_grain_S_cm') if r_ is not None else ()):
+                r_.pop(k, None)
 
     def _power_excuse(rec, _n, _m):
         for k in list(rec):

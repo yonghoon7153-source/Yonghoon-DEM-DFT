@@ -8,6 +8,11 @@
 정본 = `docs/reviews/tau_conventions_judgment_v2_20261003.md` §5-1 (열 · 식) · §5-2 (게이트 G1–G6) · 결정 1 · 2 · 15 · 16.
 모드 = `hertz` · `physics` (같은 정의 · 면적과 협착식만 다름).  상태 · 메타 키는 **모드 꼬리**를 단다 (10-04 비준 —
 `ion_net_status_hertz` …).  σ₀ · 온도 · φ · L 기준은 두 모드 공통이라 꼬리가 없다.
+★ 10-06 저녁 세대 2 (1저자 비준) — 셋째 모드 `hertz_h12` = Hertz 이온 **민감도** (ψ 곱 협착 + 구 조각 bulk · 같은 망 · 같은 전극 ·
+Hertz 레코드 안 `hertz_h12` 에서 읽는다 · **기본 학습 열 아님** = 배포 부록).  모드마다 세대 표기 셋 (`ion_net_area_rule_<m>` ·
+`ion_net_electrode_<m>` · `ion_net_bulk_<m>` — 표기 없는 옛 레코드 = 이력 사실 physics_g1 · virtual_source_legacy · cylinder_half_d) →
+한 행 49 열 (모드 셋 × 15 + 공통 4).  여러 폴더를 한 표로 낼 때 세대 (ψ 배치 · physics 면적 규칙 · 전극) 가 섞이면 거부한다
+(`generation_mixing_problem` · CLI rc 2 · 한 행 안 전극 섞임 = NOT_COMPUTED invalid_input).
 
 | 열 | 식 |
 |---|---|
@@ -49,8 +54,32 @@ import math
 import os
 import sys
 
-MODES = ('hertz', 'physics')
+#: ★ 10-06 세대 2 (C1-3 · 1저자 비준) — 세 번째 모드 `hertz_h12` = Hertz 이온 **민감도** 레코드 (ψ 곱 협착 + 구 조각 bulk · 같은 망 · 같은 전극).
+#:   생산자 (`network_conductivity._run_all_networks` hertzian) 가 Hertz 레코드 **안** `hertz_h12` 로 싣는다 (모드 파일 · legacy · dual 이 같은 사본) →
+#:   `mode_record` 가 거기서 읽는다.  **기본 학습 열이 아니다** (배포 = 민감도 부록 · 행마다 [H0, H12] 괄호) — 주 값은 hertz (H0) 그대로.
+MODES = ('hertz', 'physics', 'hertz_h12')
 DUAL_KEY = {'hertz': 'hertzian', 'physics': 'physics'}
+H12_MODE = 'hertz_h12'
+#: 세대 표기 (값 = network_conductivity 상수와 같은 문자열 — 무거운 생산자를 임포트하지 않으려고 둔다 · test_network_generation2 E1 · E2 가 대조).
+#:   표기 없는 옛 레코드 = 이력 사실: 10-06 전 솔버는 늘 가상 전원 전극 · 원기둥 bulk · physics 면적 세대 1 이었다 (짐작이 아니다 —
+#:   ψ 기록 없는 mikic = 세대 1 과 같은 규약).
+ELECTRODE_LEGACY = 'virtual_source_legacy'
+AREA_RULE_HERTZ = 'hertz_ccpl22'
+AREA_RULE_PHYSICS_G1 = 'physics_g1'
+BULK_CYLINDER = 'cylinder_half_d'
+
+
+def mode_record(dual, m):
+    """dual (`network_conductivity_dual.json`) 에서 모드 하나의 망 레코드 — hertz · physics = 그 키 · hertz_h12 = Hertz 레코드 안 `hertz_h12`.
+    없거나 객체가 아니면 None."""
+    if not isinstance(dual, dict):
+        return None
+    if m == H12_MODE:
+        rh = dual.get(DUAL_KEY['hertz'])
+        rec = rh.get(H12_MODE) if isinstance(rh, dict) else None
+    else:
+        rec = dual.get(DUAL_KEY.get(m, m))
+    return rec if isinstance(rec, dict) else None
 STATUSES = ('OK', 'NOT_PERCOLATING', 'BAND_FALLBACK', 'MODEL_BELOW_CONTINUUM_BOUND', 'NOT_COMPUTED')
 #: 사유 **코드** — 사유 칸은 코드 그대로이거나 '코드: 세부' (세부를 다는 코드 = invalid_input · generation_invalid · 코드는 `reason_code`).
 #:   ★ 10-05 RGLR-01: invalid_input = 공용 기술 검사 (`ion_record_problem`) 가 생산자 계약 위반으로 본 레코드.
@@ -327,8 +356,44 @@ def column_names():
     for m in MODES:
         out += [f'f_ion_{m}', f'f_ion_{m}_gap', f'tau2_ion_{m}', f'tau_ion_{m}', f'ion_net_status_{m}',
                 f'ion_net_status_reason_{m}', f'ion_net_area_mode_{m}', f'ion_net_constriction_{m}', f'ion_net_psi_{m}',
+                f'ion_net_area_rule_{m}', f'ion_net_electrode_{m}', f'ion_net_bulk_{m}',          # ★ 10-06 세대 2 표기
                 f'ion_net_band_rule_{m}', f'ion_net_band_frac_{m}', f'ion_net_basis_check_{m}']
     return out + list(SHARED)
+
+
+def generation_meta(res, m):
+    """망 레코드 한 모드 → (면적 규칙, 전극, bulk) 표기.  레코드 없음 → ('', '', '').  표기 없는 옛 레코드 = 이력 사실
+    (hertz 면적 hertz_ccpl22 · physics 면적 physics_g1 · 전극 virtual_source_legacy · bulk cylinder_half_d)."""
+    if not isinstance(res, dict):
+        return '', '', ''
+    area = res.get('area_rule') or (AREA_RULE_PHYSICS_G1 if m == 'physics' else AREA_RULE_HERTZ)
+    return str(area), str(res.get('electrode_model') or ELECTRODE_LEGACY), str(res.get('bulk_model') or BULK_CYLINDER)
+
+
+#: 세대 축 (여러 행이 한 표 · 한 학습 집합에 들어갈 때 같아야 하는 것) — ψ 배치 (physics 협착 라벨에서) · physics 면적 규칙 · 전극.
+GENERATION_AXES = ('psi', 'area_rule_physics', 'electrode')
+_PSI_FROM_LABEL = {'mikic_psi_multiply': 'multiply', 'mikic_psi_divide': 'legacy_divide'}
+
+
+def generation_axes(row):
+    """τ 인계 행 (값 또는 직렬화 칸) → {'psi', 'area_rule_physics', 'electrode'} — 모르는 축은 '' (레코드 없음).
+    전극 = 레코드 있는 모드의 전극 (한 행 안 섞임은 `ion_columns` 가 이미 NOT_COMPUTED 로 막는다 — 여기서는 처음 값)."""
+    r = row if isinstance(row, dict) else {}
+    psi = _PSI_FROM_LABEL.get(str(r.get('ion_net_constriction_physics') or ''), '')
+    elec = next((str(r.get(f'ion_net_electrode_{m}')) for m in MODES if r.get(f'ion_net_electrode_{m}')), '')
+    return {'psi': psi, 'area_rule_physics': str(r.get('ion_net_area_rule_physics') or ''), 'electrode': elec}
+
+
+def generation_mixing_problem(rows):
+    """여러 행의 세대 섞임 → '' (한 세대 · 또는 판정할 표기 없음) | 사유 (축 · 값 · 예시 행).  빈칸 축은 판정 밖 (레코드 없는 행)."""
+    seen = {a: {} for a in GENERATION_AXES}
+    for r in rows or []:
+        ax = generation_axes(r)
+        for a in GENERATION_AXES:
+            if ax[a]:
+                seen[a].setdefault(ax[a], (r or {}).get('case') or (r or {}).get('case_id') or '?')
+    bad = [f'{a}: ' + ' · '.join(f'{v} (예: {c})' for v, c in sorted(vals.items())) for a, vals in seen.items() if len(vals) > 1]
+    return ('세대 섞임 — 한 표 · 학습 집합에 세대가 다른 행 (ψ 배치 · physics 면적 규칙 · 전극) 을 표기 없이 섞지 않는다: ' + '; '.join(bad)) if bad else ''
 
 
 def _sigma0(res):
@@ -371,8 +436,9 @@ def ion_columns(dual, ledger, perc_pct, sigma0_T_claim=None):
         pp = None
     ledger_ok = None not in (L_gap, L_mc, phi_mc)
     phi_sphere = (phi_mc * L_mc / L_gap) if ledger_ok else None
-    # G4 — 두 모드의 σ₀ · T 짝 (공통 메타)
-    s0 = {m: _sigma0(dual[DUAL_KEY[m]]) for m in MODES if isinstance(dual.get(DUAL_KEY[m]), dict)}
+    # G4 — 모드들의 σ₀ · T 짝 (공통 메타 · ★ 10-06: H12 레코드도 같은 실행의 같은 σ₀ 여야 한다)
+    recs = {m: mode_record(dual, m) for m in MODES}
+    s0 = {m: _sigma0(r) for m, r in recs.items() if isinstance(r, dict)}
     s0_vals = {v for v in s0.values() if v is not None}
     t_bad = len(s0_vals) > 1
     shared_s0 = next(iter(s0_vals)) if len(s0_vals) == 1 else None
@@ -384,14 +450,18 @@ def ion_columns(dual, ledger, perc_pct, sigma0_T_claim=None):
     out['ion_sigma0_T_C'] = None if (t_bad or shared_s0 is None) else shared_s0[1]
     out['phi_basis'], out['L_basis'] = 'mass_conserving', 'L_mc'
 
+    #  ★ 10-06 세대 2 — 한 행 안 전극 세대가 섞이면 (레코드 있는 모드끼리 다르면) 그 행의 레코드 있는 모드 전부 기술적 무효 (invalid_input)
+    elec = {m: generation_meta(r, m)[1] for m, r in recs.items() if isinstance(r, dict)}
+    elec_mixed = len(set(elec.values())) > 1
     for m in MODES:
-        res = dual.get(DUAL_KEY[m])
-        res = res if isinstance(res, dict) else None
+        res = recs[m]
         o = _blank(m)
         rule = (res or {}).get('boundary_rule')
-        o.update({f'ion_net_area_mode_{m}': m,
+        g_area, g_elec, g_bulk = generation_meta(res, m)
+        o.update({f'ion_net_area_mode_{m}': ('hertz' if m == H12_MODE else m),       # H12 면적 = Hertz 면적 (c_cpl[22]) 그대로
                   f'ion_net_constriction_{m}': constriction_label(res),          # ★ 10-06 — ψ 배치까지 본다 (세대 2 = mikic_psi_multiply)
-                  f'ion_net_psi_{m}': ((res or {}).get('psi_placement') or '') if m == 'physics' else '',
+                  f'ion_net_psi_{m}': ((res or {}).get('psi_placement') or '') if m in ('physics', H12_MODE) else '',
+                  f'ion_net_area_rule_{m}': g_area, f'ion_net_electrode_{m}': g_elec, f'ion_net_bulk_{m}': g_bulk,
                   f'ion_net_band_rule_{m}': rule if rule in BAND_RULES else '',
                   f'ion_net_band_frac_{m}': _num((res or {}).get('boundary_band_frac')),
                   f'ion_net_status_reason_{m}': ''})
@@ -415,6 +485,8 @@ def ion_columns(dual, ledger, perc_pct, sigma0_T_claim=None):
             out.update(fail('NOT_COMPUTED', 'missing_input'))
             continue
         prob = ion_record_problem(res)                   # 0b 공용 기술 검사 (RGLR-01 · 02) — 과학적 게이트 (G1 · G3 · G5) 앞 · 띠와 무관
+        if prob is None and elec_mixed:                   # ★ 10-06 — 한 행 안 전극 세대 섞임 (생산자는 한 실행에서 한 전극만 쓴다)
+            prob = (INVALID_INPUT, '한 행 안 전극 세대 섞임 ' + ' · '.join(f'{k}={v}' for k, v in sorted(elec.items())))
         if prob is not None:
             code, detail = prob
             out.update(fail('NOT_COMPUTED', code if code != INVALID_INPUT else f'{code}: {detail}'))
@@ -481,6 +553,11 @@ def main(argv=None):
     ap.add_argument('--sigma0-T-claim', type=float, help='쓰려는 σ₀ 의 온도 °C (예: 25) — 망 T 와 다르면 temperature_mismatch')
     a = ap.parse_args(argv)
     rows = [case_row(c, a.sigma0_T_claim) for c in a.cases]
+    #  ★ 10-06 세대 2 — 세대가 다른 케이스 폴더를 한 표로 묶지 않는다 (ψ 배치 · physics 면적 규칙 · 전극).  TSV · JSON 을 쓰지 않고 rc 2.
+    mix = generation_mixing_problem(rows)
+    if mix:
+        sys.stderr.write(f'[tau_flux] ⛔ {mix} — 출력하지 않는다 (같은 세대 폴더끼리 따로 부를 것)\n')
+        return 2
     cols = ['case'] + column_names()
     txt = '\t'.join(cols) + '\n' + ''.join('\t'.join(_cell(r[c]) for c in cols) + '\n' for r in rows)
     if a.tsv:
@@ -492,7 +569,7 @@ def main(argv=None):
         with open(a.json, 'w', encoding='utf-8') as fh:
             json.dump(rows, fh, ensure_ascii=False, indent=1)
     n = {s: sum(1 for r in rows for m in MODES if r[f'ion_net_status_{m}'] == s) for s in STATUSES}
-    sys.stderr.write('[tau_flux] ' + ' · '.join(f'{k} {v}' for k, v in n.items()) + f' (케이스 {len(rows)} × 모드 2)\n')
+    sys.stderr.write('[tau_flux] ' + ' · '.join(f'{k} {v}' for k, v in n.items()) + f' (케이스 {len(rows)} × 모드 {len(MODES)})\n')
     return 0
 
 

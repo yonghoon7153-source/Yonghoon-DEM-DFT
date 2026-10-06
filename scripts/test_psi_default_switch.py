@@ -11,7 +11,7 @@
      명시 `PSI_DIVIDE` R_c = 1/(σ_rel·k·2·a_eff·ψ) (상대 1e-12).  ψ · σ_rel · k 는 **동결 상수로 따로** 계산한다
      (솔버에서 빌리면 상수 변이가 기대값과 같이 움직인다 — audit_transport_cap_equivalence ⑦i · ⑦k 와 같은 규약)
   ③ 단조 — 기본 R_c 는 a_eff 에 단조 감소 · legacy 는 s > 0.4 에서 오른다 (L2-01 비단조 재현 · 최소 = s 0.4)
-  ④ Hertz 가지 — 두 배치의 간선 · σ 가 비트 동일 (ψ 를 안 쓴다 · 계약 §3)
+  ④ Hertz 가지 — 두 배치의 간선 · σ 가 비트 동일 (ψ 를 안 쓴다 · 계약 §3) · ④c (10-06) H12 민감도 팔은 늘 곱셈 (배치 인자와 무관)
   ⑤ tau_flux 협착 라벨 = 결과의 ψ 배치 (physics multiply → mikic_psi_multiply · legacy_divide → mikic_psi_divide ·
      hertz → maxwell_halfspace) — 손 레코드 · 실 생산자 둘 다
   ⑥ `_run_all_networks` 의 세 채널 결과가 ψ 배치를 싣는다 (이온 psi_placement · electronic_psi_placement ·
@@ -64,12 +64,17 @@ CHANNELS = {
 
 def edge(nc, delta, mode='ionic', cm='physics', place=None, r=1.0):
     """2 구 접촉 한 간선 (audit_constriction_deleted selftest `net()` 꼴 — 반경 r · 척도 1 · 판 10 · 상자 1e4).
-    place=None 이면 인자를 넘기지 않는다 (= 기본값 경로)."""
+    place=None 이면 인자를 넘기지 않는다 (= 기본값 경로).
+    ★ 10-06 세대 2 면적 (C2 · `film_area_g2`) 이 기본이 됐다 — 이 픽스처의 겹침 → s 목표 (0.2 · 0.5 · 0.9) 는 세대 1 면적으로 잡은 것이라
+      physics 간선은 **명시 area_rule='physics_g1'** 로 짓는다 (ψ 식 · 배치 시험은 면적 규칙과 무관 — 세대 2 면적은 test_physics_area_g2).
+      ψ 배치 인자는 그대로 기본 / 명시 두 길을 본다."""
     t, tm, _sr, _k = CHANNELS[mode]
     atoms = {1: {'type': t[0], 'radius': r, 'x': 0.0, 'y': 0.0, 'z': 0.0},
              2: {'type': t[1], 'radius': r, 'x': 2.0 * r - delta, 'y': 0.0, 'z': 0.0}}
     rows = [{'id1': 1, 'id2': 2, 'contact_area': 0.0, 'delta': delta}]
     kw = {} if place is None else {'psi_placement': place}
+    if cm == 'physics':
+        kw['area_rule'] = 'physics_g1'                          # ★ 10-06 — 픽스처의 s 목표를 잡은 면적 (위 docstring)
     with contextlib.redirect_stdout(io.StringIO()):
         n = nc.build_network(atoms, rows, set(t), 1.0, 10.0, box_x=1e4, box_y=1e4, mode=mode, type_map=dict(tm),
                              contact_mode=cm, **kw)
@@ -198,6 +203,28 @@ def main():
             got[p] = _bits({k: r.get(k) for k in keys})
         chk('④b Hertz 21 구 사슬 run_decomposition σ (FULL · CF · CONSTR) — 두 배치 · 기본이 비트 동일',
             got[nc.PSI_DIVIDE] == got[nc.PSI_MULTIPLY] == got[None], str(got[None]))
+        #  ★ 10-06 H12 (C1-3) — Hertz 민감도 팔은 ψ 를 **늘 곱한다** (psi_placement 는 physics 가지의 배치) → 두 배치 · 기본이 비트 동일 · R_c = ψ·R_Maxwell
+        bad12 = []
+        for mode in CHANNELS:
+            for d, _lo, _hi in S_TARGETS:
+                t, tm, _sr, _k = CHANNELS[mode]
+                atoms = {1: {'type': t[0], 'radius': 1.0, 'x': 0.0, 'y': 0.0, 'z': 0.0},
+                         2: {'type': t[1], 'radius': 1.0, 'x': 2.0 - d, 'y': 0.0, 'z': 0.0}}
+                a2 = d * (4.0 - d) / 4.0 * math.pi                    # 같은 반경 교차 원판 (c_cpl[22] 기하)
+                rows = [{'id1': 1, 'id2': 2, 'contact_area': a2, 'delta': d}]
+                es = []
+                for p in (nc.PSI_DIVIDE, nc.PSI_MULTIPLY, None):
+                    kw = {} if p is None else {'psi_placement': p}
+                    with contextlib.redirect_stdout(io.StringIO()):
+                        es.append(nc.build_network(atoms, rows, set(t), 1.0, 10.0, box_x=1e4, box_y=1e4, mode=mode, type_map=dict(tm),
+                                                   contact_mode='hertzian', hertz_constriction='mikic_psi_multiply',
+                                                   bulk_model='sphere_segment', **kw)['edges'][0])
+                o = oracle(es[0], mode)
+                if not (_bits(es[0]) == _bits(es[1]) == _bits(es[2])
+                        and (o['psi'] <= PSI_FLOOR or _rel(es[0]['R_constriction'], o['mul']) <= 1e-12)):
+                    bad12.append((mode, d))
+        chk('④c ★ H12 (Hertz ψ 곱 + 구 조각 bulk · 10-06) — ψ 배치 인자와 무관 (두 배치 · 기본 비트 동일) · R_c = ψ/(σ·k·2·a_eff) (세 채널 × 세 겹침)',
+            not bad12, str(bad12))
     _guard('④', s4)
 
     # ── ⑤ tau_flux 협착 라벨 = 결과의 ψ 배치 ──

@@ -827,6 +827,12 @@ selftest 에 없으면 도구 자체가 공허하다 (⑥ 이 단언한다).
 > (`scripts/constriction_reference.py` · AREA-09 STEP 4 · 곱셈이 10 점 모두에서 우위).  S3 의 사전등록 h0/h1 판정은 하지 않는다
 > (등록 검정 소멸 — 결과를 보고 고른 전환이 아님을 여기 기록).  legacy (`PSI_DIVIDE`) 는 명시 인자로만 남긴다 (세대 1 값 재현).
 > 세대 표기 = `psi_placement`.  재적합 (Physics σ 를 타깃으로 쓰는 적합) 은 별건 (§3).
+> **2026-10-06 저녁 (세대 2 나머지 · 1저자 비준 C1 · C2)** — 면적 = `plastic_coverage.film_area_g2` (`area_rule_physics = physics_g2` ·
+> 규칙 B = max(c_cpl[22] 원판, min(Tabor · 정확 lens/h · π r_min²)) · 쌍별 E* · µm · h 5 nm [미확인] · ψ < 1e-4 floor 동결 · 세대 1 =
+> `area_rule='physics_g1'` 명시 인자) · 전극 = 정확 Dirichlet (`electrode_model = dirichlet_exact` · 가상 전원 g_b 제거 · 옛 전극 재현 = git 이력의
+> 옛 모듈) · CF 과전도 표지 (`model_over_conduction` · FULL 만 거부) · Hertz 민감도 H12 (`hertz_constriction=mikic_psi_multiply` +
+> `bulk_model=sphere_segment` 짝 · 기본 H0 그대로 · 이온 레코드 `hertz_h12`).  표기 없는 옛 산출물 = physics_g1 · virtual_source_legacy ·
+> cylinder_half_d (이력 사실) · 세대가 섞인 표는 tau_flux · 인계 생성기가 거부.
 
 ★★ **고정 수신 종료 시각 — 저자 결정 2026-09-15 (`R4-07`)**
 `D-3` 의 원문은 *"봉인 순간을 마감으로 삼되 09-17 이전에는 봉인하지 않는다"* 였고, 코드는
@@ -887,6 +893,8 @@ clamp · `ψ ≤ 1e-4` 의 `Rc = 0` · `b = r_min` · 재료 계수 · 면적 ·
   복원은 **별도 축**이다.  ⛔ 2라운드의 *"cutoff 0→양수가 반대 방향을 낼 수 있다"* 는 설명을
   이 전환에 적용하지 않는다 (Codex 가 조건 누락으로 자기 회신을 정정했다).
 - **음성 대조**(coverage 셀 불변 · `hertzian` Rc bitwise 불변)는 **유지**한다.  통과하는 것이 맞다.
+  (2026-10-06 저녁 — `hertzian` Rc bitwise 불변은 **기본 H0 (Maxwell + 원기둥 bulk) 에서만** 선다 · H12 민감도 팔
+  (`hertz_constriction=mikic_psi_multiply` + `bulk_model=sphere_segment`) 은 Rc · bulk 를 함께 바꾸는 별도 팔이다.)
 - ★ **양성 대조를 추가한다** — 실제 `build_network` 의 활성 간선에서
   **`Rc_new / Rc_old = ψ²`** 를 요구하고, **no-op 변이는 반드시 실패**해야
   한다.  floor **위·아래·clamp 경계**를 각각 핀한다.

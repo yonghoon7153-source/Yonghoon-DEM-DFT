@@ -582,10 +582,11 @@ def main(argv=None) -> int:
             _dk = (row.get('deck') or '').strip()
             #  ★ 10-06 (`L2-01` 세대 2 · 계약 개정 노트) — 솔버 기본이 곱셈으로 바뀌었다.  봉인의 σ_old 는 **세대 1 (legacy) 기준**이다
             #    (계약 §D-3 · 러너 `run_s3_psi.run_case` 의 old 팔도 명시 PSI_DIVIDE) ⇒ 기본값에 기대지 않고 명시한다.
+            #  ★ 10-06 저녁 (C2) — physics 면적도 세대 1 (physics_g1) 명시 (S3 = ψ 만 바꾸는 시험 · 면적 동결 — 계약 §C).
             nets, prov = _S0.case_networks(cdir, contact_mode='physics',
                                            channels=tuple(channels),
                                            deck_dir=(str(Path(_dk).parent) if _dk else None),
-                                           psi_placement=_S0._NC.PSI_DIVIDE)
+                                           psi_placement=_S0._NC.PSI_DIVIDE, area_rule='physics_g1')
         except Exception as e:
             #  ⛔ **기술 실패는 `ERROR` 다** — 물리 상태(`NO_NETWORK`)로 둔갑시키지 않는다.
             for ch in per_channel:

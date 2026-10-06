@@ -114,6 +114,10 @@ NET_MERGE_KEYS = (
     #    없음 = 09-15 깃발 전 산출물).  dual physics 의 `psi_placement` 미러 (NET_PHYSICS_MIRROR_KEYS) 로 채우고 σ 와 한 소유 단위로 지운다 —
     #    옛 세대 표기가 새 σ 밑에 남거나 (그 반대로) 새 표기가 옛 σ 위에 붙지 않게 (RC5-03).
     'psi_placement_physics',
+    #  ★ 10-06 저녁 세대 2 (1저자 비준 — C1 · C2) — 전극 (정확 Dirichlet · L2-05) · Hertz bulk 모형 · physics 면적 규칙 (physics_g2 · C2) 의 세대 표기.
+    #    legacy (= dual Hertz 사본) 에서 이름 그대로 채운다 (생산자 run_decomposition 이 채널 결과마다 싣는 키 — Hertz 실행도 그 망의 physics 면적 규칙을
+    #    싣는다) · σ 와 한 소유 단위로 지우고 채운다 (옛 세대 표기가 새 σ 밑에 남지 않게 — RC5-03).
+    'electrode_model', 'bulk_model', 'area_rule_physics',
 )
 
 #: ★ 10-05 RGL-07 — 망 σ 와 짝인 σ₀ · 온도 기록 (모드마다 같은 값이어야 한다 — full_metrics 에는 한 벌만 싣는다).
@@ -142,14 +146,32 @@ def _canon(v):
     return json.dumps(v, sort_keys=True, default=str)
 
 
+#: ★ 10-06 저녁 — H12 Hertz 이온 민감도 레코드의 자리 (dual Hertz 레코드 안 · 생산자 `network_conductivity.HERTZ_H12_MODE`) · 세대 2 전극 이름.
+#:   값은 생산자와 같은 문자열 (무거운 생산자를 임포트하지 않으려고 둔다 — test_psi_generation_stamp 가 대조한다).
+NETWORK_H12_KEY = 'hertz_h12'
+NETWORK_ELECTRODE_G2 = 'dirichlet_exact'
+NETWORK_H12_META = (('hertz_constriction', 'mikic_psi_multiply'), ('bulk_model', 'sphere_segment'), ('resistance_model', 'mikic'),
+                    ('psi_placement', 'multiply'), ('sensitivity_mode', 'hertz_h12'))
+
+
+def network_h12_record(dual):
+    """dual 의 H12 민감도 레코드 (Hertz 레코드 안 `hertz_h12`) → dict | None."""
+    rh = dual.get('hertzian') if isinstance(dual, dict) else None
+    rec = rh.get(NETWORK_H12_KEY) if isinstance(rh, dict) else None
+    return rec if isinstance(rec, dict) else None
+
+
 def network_sigma0_problem(dual, legacy=None, fm=None):
     """★ 10-05 RGL-07 — 망 σ 와 짝인 (σ₀, 온도) 기록의 정합 → '' (정합) | 사유.
 
       · dual 의 두 모드 기록이 같아야 한다 (full_metrics 에는 한 벌만 싣고 τ 도우미가 두 모드에 같은 σ₀ 를 쓴다)
+        ★ 10-06 — H12 민감도 레코드가 있으면 그것도 같은 실행의 같은 짝이어야 한다
       · legacy (= Hertz 사본 · full_metrics 머지 원천) 가 있으면 dual Hertz 와 같아야 한다
       · fm 이 있으면 (머지 뒤 투영) 그 기록이 이번 세대의 것이어야 한다 — 옛 세대 짝이 남으면 거부
     두 모드 모두 기록이 없으면 (옛 모양 산출물 · 시험 대역) 대조할 것이 없다 → '' (머지 쪽은 옛 값을 이미 걷어냈다)."""
     recs = {m: dual.get(m) for m in ('hertzian', 'physics')} if isinstance(dual, dict) else {}
+    if network_h12_record(dual) is not None:
+        recs[NETWORK_H12_KEY] = network_h12_record(dual)
     pairs = {m: tuple(r.get(k) for k in NET_SIGMA0_KEYS) for m, r in recs.items() if isinstance(r, dict)}
     if not pairs or all(all(v is None for v in p) for p in pairs.values()):
         return ''
@@ -472,7 +494,11 @@ def stamp_network_provenance(results_dir, run_id, inputs=None, solver_status='su
             'argv': dict(argv or {}),
             'units_contract': 'sim_to_real_v1',
             'input_digests': inputs or {},
-            'psi_placement_physics': solver_psi_placement(results_dir)}
+            'psi_placement_physics': solver_psi_placement(results_dir),
+            #  ★ 10-06 저녁 세대 2 — 같은 규약 (솔버 출력에서 읽는다 · 모듈 기본값을 베끼지 않는다 · 기록 없음 = None)
+            'electrode_model': solver_record_value(results_dir, 'hertzian', 'electrode_model'),
+            'area_rule_physics': solver_record_value(results_dir, 'physics', 'area_rule'),
+            'hertz_h12': network_h12_record(_read_json_or_none(os.path.join(results_dir, 'network_conductivity_dual.json'))) is not None}
     atomic_write_json(os.path.join(results_dir, PROVENANCE_FILE), prov)
     return prov
 
@@ -480,9 +506,14 @@ def stamp_network_provenance(results_dir, run_id, inputs=None, solver_status='su
 def solver_psi_placement(results_dir, mode='physics'):
     """★ 10-06 (`L2-01` 세대 2) — 그 폴더 망 산출물의 ψ 배치 (솔버가 dual 의 그 모드 결과에 남긴 `psi_placement`) → 문자열 | None.
     None = 기록 없음 (09-15 깃발 전 산출물) · dual 없음 · 못 읽음 — 짐작하지 않는다."""
+    return solver_record_value(results_dir, mode, 'psi_placement')
+
+
+def solver_record_value(results_dir, mode, key):
+    """그 폴더 dual 의 한 모드 레코드에 솔버가 남긴 표기 문자열 → 문자열 | None (기록 없음 · dual 없음 · 못 읽음 — 짐작하지 않는다)."""
     d = _read_json_or_none(os.path.join(results_dir, 'network_conductivity_dual.json'))
     rec = d.get(mode) if isinstance(d, dict) else None
-    v = rec.get('psi_placement') if isinstance(rec, dict) else None
+    v = rec.get(key) if isinstance(rec, dict) else None
     return v if isinstance(v, str) and v else None
 
 
@@ -804,6 +835,10 @@ def network_stop_verdict(results_dir, run_id, fm=None):
          `tau_flux.ion_columns` 의 두 모드 상태가 `NETWORK_STOP_TAU_OK` (OK · 등록된 과학적 HOLD) 이며 생산자 상태와 맞는다
       ⑧ σ₀ · 온도 짝 (RGL-07) — 두 모드 · legacy · full_metrics 의 (σ₀, 온도) 가 이번 세대의 같은 값이고, 등급 · 웹앱 τ 가 쓰는 짝 σ₀
          (`tau_flux.tau2_from_metrics` = `se_material.sigma_grain_context(full_metrics)`) = 인계 σ₀ (망 기록)
+      ⑨ ★ 10-06 저녁 세대 2 (1저자 비준 — C1 · C2) — 한 실행의 세대 표기가 모드끼리 같다 (전극 · Hertz · physics) · Hertz 레코드가 세대 2 전극
+         (dirichlet_exact) 이면 H12 이온 민감도 레코드 (`hertz_h12` — Hertz 레코드 안) 가 **있어야** 하고 (생산자가 늘 함께 낸다): 공용 기술 검사
+         (`tau_flux.ion_record_problem`) · 짝 메타 (ψ 곱 · 구 조각 · mikic · multiply) · 같은 전극 · 같은 그래프 (관통 분율 · 띠 규칙 · 띠 폭 · σ 상태
+         부류) · τ 인계 상태 ∈ OK · 등록된 과학적 HOLD (소비자 자신).  표기 없는 옛 레코드 (전극 기록 없음 = 10-06 전 산출물) 는 H12 를 요구하지 않는다.
     """
     ok_c, why_c = network_content_verdict(results_dir, strict=True)
     bad = [] if ok_c else [f'① {why_c}']
@@ -909,9 +944,50 @@ def network_stop_verdict(results_dir, run_id, fm=None):
         s0_fm = tf.tau2_from_metrics(fm)[1]
         if _stop_num(s0_net) and not (_stop_num(s0_fm) and abs(s0_fm - s0_net) <= 1e-9 * max(1.0, abs(s0_net))):
             bad.append(f'⑧ 짝 σ₀: 등급 · 웹앱 τ 가 쓰는 σ₀ {s0_fm!r} mS/cm (full_metrics) ≠ 인계 σ₀ {s0_net!r} (망 기록)')
+        bad.extend(network_generation2_problems(dual, row, tf))
     except Exception as e:                                     # noqa: BLE001 — 소비자를 못 부르면 증서를 못 낸다 (fail-closed)
         bad.append(f'⑦ τ 인계 도우미 실패 ({type(e).__name__}: {e})')
     return (not bad), ('; '.join(bad) if bad else 'ok')
+
+
+def network_generation2_problems(dual, row, tf):
+    """★ 10-06 저녁 — 망 정지 계약 ⑨ (세대 표기 일치 · H12 민감도 레코드) → 문제 목록 ([] = 통과).
+
+    row = 같은 후보의 `tau_flux.ion_columns` (소비자 자신이 낸 H12 상태 · 표기) · tf = tau_flux 모듈."""
+    out = []
+    rH, rP = dual.get('hertzian'), dual.get('physics')
+    recs = {k: r for k, r in (('hertzian', rH), ('physics', rP), (NETWORK_H12_KEY, network_h12_record(dual))) if isinstance(r, dict)}
+    elec = {k: (r.get('electrode_model') or '') for k, r in recs.items()}
+    if len(set(elec.values())) > 1:
+        out.append(f'⑨ 세대 섞임 — 한 실행의 모드끼리 전극 표기가 다르다 {elec} (생산자는 한 실행에 한 전극만 쓴다)')
+    if not (isinstance(rH, dict) and rH.get('electrode_model') == NETWORK_ELECTRODE_G2):
+        return out                                             # 표기 없는 옛 레코드 — H12 를 요구하지 않는다 (10-06 전 산출물)
+    r12 = network_h12_record(dual)
+    if r12 is None:
+        out.append(f'⑨ H12: 세대 2 Hertz 레코드에 이온 민감도 레코드 ({NETWORK_H12_KEY}) 가 없다 — 생산자 (hertzian 실행) 는 늘 함께 낸다')
+        return out
+    prob = tf.ion_record_problem(r12)
+    if prob is not None:
+        out.append(f'⑨ H12: 기술적 입력 무효 — {prob[0]}: {prob[1]}')
+    meta_bad = {k: r12.get(k) for k, v in NETWORK_H12_META if r12.get(k) != v}
+    if meta_bad:
+        out.append(f'⑨ H12: 짝 메타가 H12 가 아니다 {meta_bad} (기대 {dict(NETWORK_H12_META)})')
+    same_graph = {k: (rH.get(k), r12.get(k)) for k in ('percolating_fraction', 'active_fraction', 'boundary_rule', 'boundary_band_frac',
+                                                        'n_nodes', 'n_edges', 'n_bottom', 'n_top')
+                  if _canon(rH.get(k)) != _canon(r12.get(k))}
+    cls = {'computed': 'through', 'not_computed': 'through', 'valid_zero': 'no_through'}
+    if cls.get(rH.get('sigma_full_status')) != cls.get(r12.get('sigma_full_status')):
+        same_graph['sigma_full_status (관통 부류)'] = (rH.get('sigma_full_status'), r12.get('sigma_full_status'))
+    if same_graph:
+        out.append(f'⑨ H12: 주 Hertz 와 같은 망 · 띠가 아니다 {same_graph} (H12 는 간선 저항만 다르다)')
+    s12, rs12 = row.get(f'ion_net_status_{NETWORK_H12_KEY}'), row.get(f'ion_net_status_reason_{NETWORK_H12_KEY}')
+    if s12 not in NETWORK_STOP_TAU_OK:
+        out.append(f'⑨ τ 인계 {NETWORK_H12_KEY}: {s12} ({rs12}) — 기술적 결손 (등록된 과학적 HOLD 아님)')
+    elif r12.get('sigma_full_status') == 'valid_zero' and s12 not in ('NOT_PERCOLATING', 'BAND_FALLBACK'):
+        out.append(f'⑨ τ 인계 {NETWORK_H12_KEY}: 생산자 비관통인데 τ 상태 {s12}')
+    elif r12.get('sigma_full_status') == 'computed' and s12 == 'NOT_PERCOLATING':
+        out.append(f'⑨ τ 인계 {NETWORK_H12_KEY}: 생산자 관통인데 τ 상태 NOT_PERCOLATING')
+    return out
 
 
 #: ★ 10-05 RGLR2-01 (Codex 3차 재검증 §2 · Q1) — 일반 · 정지 경로 **공통**의 승격 전 기술 검사 단계 이름 (웹앱 단계 로그 · 최근 시도 stage).
@@ -943,6 +1019,12 @@ def network_record_verdict(results_dir):
         prob = tf.ion_record_problem(rec)
         if prob is not None:
             bad.append(f'{fname}{f"[{mode}]" if mode else ""}: {prob[0]}: {prob[1]}')
+    #  ★ 10-06 저녁 — H12 민감도 레코드 (dual Hertz 안) 가 있으면 같은 공용 기술 검사 (일반 · 정지 경로 공통 · 과학적 HOLD 는 통과)
+    r12 = network_h12_record(files.get('network_conductivity_dual.json'))
+    if r12 is not None:
+        prob = tf.ion_record_problem(r12)
+        if prob is not None:
+            bad.append(f'network_conductivity_dual.json[hertzian][{NETWORK_H12_KEY}]: {prob[0]}: {prob[1]}')
     return (not bad), ('; '.join(bad) if bad else 'ok')
 
 

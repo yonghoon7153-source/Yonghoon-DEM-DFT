@@ -58,7 +58,8 @@ def _load(name, path, subs=()):
 
 _S0 = _load('_s0_for_rho', SCRIPTS / 'audit_constriction_deleted.py')   # 로더·채널·덱 지도 재사용
 TIGHTEN = 0.1
-RTOL_DEFAULT = 1e-5      # scipy ≥ 1.12 `cg` 기본 rtol — 생산이 안 넘기므로 이것이 실제 판정 기준
+RTOL_DEFAULT = 1e-5      # scipy ≥ 1.12 `cg` 기본 rtol — 호출이 rtol 을 안 넘길 때의 판정 기준.  ★ 10-06 세대 2 전극 (정확 Dirichlet ·
+                         #   L2-05) 부터 생산 CG 는 rtol = network_conductivity.DIRICHLET_CG_RTOL (1e-10) · atol 0 을 **넘긴다** (래퍼가 그 값을 기록 · 조인다)
 
 
 def set_tighten(factor):
@@ -261,9 +262,11 @@ def measure_case(case_dir: Path, deck_dir, channels, permute=True):
         if not tt:
             raise ValueError(f'채널 {ch}: target_types 비었다')
         #  ★ 10-06 (`L2-01` 세대 2) — ρ 는 S3 봉인의 세대 1 (legacy) 망 위에서 등록됐다 → 기본 (곱셈) 에 기대지 않고 명시한다.
+        #  ★ 10-06 저녁 (C2) — physics 면적도 세대 1 (physics_g1) 명시 (S3 = ψ 만 바꾸는 시험 · 면적 동결 — 계약 §C).  전극은 세대 2 (정확 Dirichlet ·
+        #    옛 가상 전원은 지웠다 — S3 은 돌지 않았고 등록 창이 닫혔다 · 계약 10-06 개정 노트).
         net = _S0._NC.build_network(atoms, contacts, tt, scale, plate_z, box_x=box, box_y=box,
                                     mode=mode, type_map=type_map, contact_mode='physics',
-                                    psi_placement=_S0._NC.PSI_DIVIDE)
+                                    psi_placement=_S0._NC.PSI_DIVIDE, area_rule='physics_g1')
         if net is None:
             rows.append({'case': case_dir.name, 'channel': ch, 'status': 'NO_NETWORK'}); continue
         r = solve_pair(_S0._NC, net)
@@ -508,7 +511,7 @@ def _selftest() -> int:
     pz = _S0._SED.estimate_plate_z(atoms)
     #  ★ 10-06 — 등록된 실측값 (⑪e Δ = 7.22e-12 %) 은 legacy 망이다 → 기본 (곱셈 · 세대 2) 이 아니라 명시 PSI_DIVIDE.
     net = nc.build_network(atoms, rows, {3}, sc, pz, box_x=4 * pitch, box_y=4 * pitch, mode='ionic', type_map=tm,
-                           contact_mode='physics', psi_placement=nc.PSI_DIVIDE)
+                           contact_mode='physics', psi_placement=nc.PSI_DIVIDE, area_rule='physics_g1')   # ★ 10-06 세대 1 면적 명시
     r = solve_pair(nc, net)
     chk('① 작은 망은 직접해 경로 — path=spsolve, Δ=0 (허용오차 없음)',
         r['path_A'] == 'spsolve' and r['path_B'] == 'spsolve' and r['sigma_A'] == r['sigma_B'] and r['kwarg'] == '',
@@ -516,13 +519,15 @@ def _selftest() -> int:
     #  ② CG 경로를 **강제** (격리 메모리에서 문턱 30000 → 0): 래퍼가 kwarg·info 를 기록하고 조임이 실제로 들어간다
     nc2 = _load('_nc_cg', SCRIPTS / 'network_conductivity.py', [('if n_nodes > 30000:', 'if n_nodes > 0:')])
     net2 = nc2.build_network(atoms, rows, {3}, sc, pz, box_x=4 * pitch, box_y=4 * pitch, mode='ionic', type_map=tm,
-                             contact_mode='physics', psi_placement=nc2.PSI_DIVIDE)
+                             contact_mode='physics', psi_placement=nc2.PSI_DIVIDE, area_rule='physics_g1')
     r2 = solve_pair(nc2, net2)
     chk('② CG 강제 경로: path 가 cg 계열, kwarg 기록 (scipy 1.17 은 tol→TypeError→atol)',
         r2['path_A'].startswith('cg') and r2['kwarg'] in ('tol', 'atol'),
         f"path={r2['path_A']} kwarg={r2['kwarg']} tol_A={r2['tol_A']} info={r2['info_A']}")
-    chk('②b 조임이 **rtol** 에 들어갔다 (rtol_B = 1e-5 × 0.1) · 실제 기준 = rtol (atol 1e-8 은 안 걸린다)',
-        r2['rtol_A'] == RTOL_DEFAULT and abs(r2['rtol_B'] / RTOL_DEFAULT - TIGHTEN) < 1e-12 and r2['binding_A'] == 'rtol',
+    chk('②b 조임이 **rtol** 에 들어갔다 (rtol_B = 생산 rtol × 0.1 · ★ 10-06 생산 rtol = DIRICHLET_CG_RTOL 1e-10 — 옛 기본 1e-5 아님) · '
+        '실제 기준 = rtol (atol 0)',
+        r2['rtol_A'] == getattr(nc2, 'DIRICHLET_CG_RTOL', RTOL_DEFAULT) and abs(r2['rtol_B'] / r2['rtol_A'] - TIGHTEN) < 1e-12
+        and r2['binding_A'] == 'rtol',
         f"rtol {r2['rtol_A']} → {r2['rtol_B']} · atol {r2['atol_A']} · binding {r2['binding_A']}")
     # ②d ★ 판별력 (SELF-31): atol 만 조이면 σ 가 **비트 동일**(거짓 0), rtol 을 조이면 움직인다
     from scipy.sparse.linalg import cg as _cg
@@ -580,9 +585,10 @@ def _selftest() -> int:
         set_tighten('0.001')
         r5 = solve_pair(nc2, net2)
         sm5 = summarize([], ('ionic',))
-        chk('⑤ --tighten 0.001: rtol_B = 1e-8 (의도값) · rtol_A 불변 · 요약에 tighten 기록  (64-노드 픽스처는 1e-6 에서 이미 기계정밀이라 σ_B 동일이 정상)',
-            abs(r5['rtol_B'] - 1e-8) < 1e-20 and sm5['tighten'] == 0.001 and r5['rtol_A'] == RTOL_DEFAULT
-            and r5['sigma_B'] is not None,
+        chk('⑤ --tighten 0.001: rtol_B = rtol_A × 0.001 (★ 10-06 생산 rtol_A = 1e-10 → 1e-13) · rtol_A 불변 · 요약에 tighten 기록  '
+            '(64-노드 픽스처는 이미 기계정밀이라 σ_B 동일이 정상)',
+            abs(r5['rtol_B'] - r5['rtol_A'] * 0.001) <= 1e-12 * r5['rtol_B'] and sm5['tighten'] == 0.001
+            and r5['rtol_A'] == getattr(nc2, 'DIRICHLET_CG_RTOL', RTOL_DEFAULT) and r5['sigma_B'] is not None,
             f"rtol_B={r5['rtol_B']} tighten={sm5['tighten']} σ_B(×0.1)={r2['sigma_B']!r} σ_B(×0.001)={r5['sigma_B']!r}")
         # ⑤d 사다리 판별력 — 같은 래퍼(atol 만 넘기는 생산 호출 형태)로 ②d 의 3000-노드 toy 를 ×0.1 / ×0.001 로 풀면
         #    기록된 rtol 이 1e-6 / 1e-8 이고 해가 **다르다** (조임이 실제로 더 깊이 들어간다)

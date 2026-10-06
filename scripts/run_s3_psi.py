@@ -416,10 +416,11 @@ def run_case(case_dir, deck_dir, channels, case_networks, solve, seal=None, root
     """
     import network_conductivity as nc
     out = {}
+    #  ★ 10-06 저녁 (C2 · 세대 2 면적이 기본이 됐다) — S3 은 ψ 만 바꾸는 시험이다 (면적 동결 · 계약 §C) → 두 팔 모두 세대 1 면적 (physics_g1) 명시.
     nets_old, prov = case_networks(case_dir, contact_mode='physics', channels=channels,
-                                   deck_dir=deck_dir, psi_placement=nc.PSI_DIVIDE)
+                                   deck_dir=deck_dir, psi_placement=nc.PSI_DIVIDE, area_rule='physics_g1')
     nets_new, prov2 = case_networks(case_dir, contact_mode='physics', channels=channels,
-                                    deck_dir=deck_dir, psi_placement=nc.PSI_MULTIPLY)
+                                    deck_dir=deck_dir, psi_placement=nc.PSI_MULTIPLY, area_rule='physics_g1')
     _keys = ('atom_file', 'contact_file', 'atom_step', 'contact_step', 'n_contact_rows',
              'plate_z', 'scale', 'deck')
     _drift = {k: (prov.get(k), prov2.get(k)) for k in _keys if prov.get(k) != prov2.get(k)}
@@ -1054,7 +1055,7 @@ def _selftest() -> int:
         '다른 실험이다', compare_frozen_axes(_no, _bad) != '')
 
     #  ⑬ 봉인된 σ_old 를 재현하지 못하면 판정을 멈춘다 (`AREA5-03` ⓓ).
-    def _cn_stub(case_dir, contact_mode='physics', channels=(), deck_dir=None, psi_placement=None):
+    def _cn_stub(case_dir, contact_mode='physics', channels=(), deck_dir=None, psi_placement=None, area_rule=None):
         net = _no if psi_placement != nc.PSI_MULTIPLY else _nn
         return {ch: net for ch in channels}, {'case': case_dir.name, 'atom_file': '',
                                               'contact_file': '', 'deck': ''}

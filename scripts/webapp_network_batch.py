@@ -90,12 +90,20 @@ NET_KEYS = (
     'sigma_constr_net_mScm', 'R_brug_over_full', 'percolating_fraction', 'active_fraction',
     'ionic_status', 'ionic_status_reason', 'phi_se', 'boundary_rule', 'boundary_band_frac',
     'n_nodes', 'n_edges', 'resistance_model', 'psi_placement',
+    # ★ 10-06 저녁 세대 2 표기 (1저자 비준) — 전극 · bulk · 면적 규칙 (모드 · physics) · Hertz 협착 짝 · ψ floor 계수 (clamp = 원판 상한 R_c 0 ·
+    #   floor = ψ < 1e-4 동결)
+    'electrode_model', 'bulk_model', 'area_rule', 'area_rule_physics', 'hertz_constriction', 'n_clamp_zero', 'n_floor_only',
     # 전자 — AM–AM 망
     'electronic_sigma_full_mScm', 'electronic_R_brug', 'electronic_percolating_fraction', 'electronic_active_fraction',
     'electronic_status', 'electronic_status_reason', 'electronic_boundary_rule', 'electronic_n_nodes', 'electronic_n_edges',
     # 열 — 전 접촉 망
     'thermal_sigma_full_mScm', 'thermal_R_brug', 'thermal_status', 'thermal_status_reason', 'thermal_boundary_rule',
 )
+#: ★ 10-06 저녁 — H12 민감도 레코드 (Hertz 레코드 안 `hertz_h12` · 이온만) 에서 싣는 키 → 열 `<키>_hertz_h12` (기본 학습 열 아님 · 부록).
+H12_KEYS = ('sigma_full_mScm', 'sigma_full_status', 'sigma_full_reason', 'sigma_bulk_net_mScm', 'sigma_bulk_net_status',
+            'sigma_constr_net_mScm', 'R_brug_over_full', 'percolating_fraction', 'ionic_status', 'ionic_status_reason',
+            'electrode_model', 'bulk_model', 'area_rule', 'hertz_constriction', 'resistance_model', 'psi_placement',
+            'n_clamp_zero', 'n_floor_only')
 #: full_metrics 에서 싣는 키 (접촉 분석 장부 · 게시 때 머지된 도장 · 채널 판정) — 이름 그대로.
 FM_KEYS = ('phi_se', 'phi_se_mass_conserving', 'thickness_um', 'thickness_mass_conserving_um', 'percolation_pct', 'porosity',
            'network_run_id', 'network_solver_status', 'failed_channels',
@@ -128,7 +136,14 @@ COLUMN_NOTES = {
                      "사본 (채널 판정 · 정지 계약 실패로 게시 안 됨 — 그대로 인용 금지, 사유는 latest_attempt_reason) · '' = 값 없음",
     'sigma_full_mScm_<m>': 'σ_ion FULL — SE–SE 접촉망 (bulk + 접촉당 협착) mS/cm.  m = hertz (Hertz 면적 · Maxwell 협착) · physics '
                            '(Tabor+부피 면적 · Mikic) — 망 정본 dual 의 그 모드 레코드 그대로',
-    'sigma_bulk_net_mScm_<m>': 'σ_ion CONTACT_FREE — 같은 망 · 협착 0 (이상 접촉 상한 가지) mS/cm',
+    'sigma_bulk_net_mScm_<m>': 'σ_ion CONTACT_FREE — 같은 망 · 협착 0 mS/cm (★ 10-06: 상한이 아니다 — 원기둥 bulk 의 T_CF ≈ 4/z 모형 과전도 · '
+                               'q > 1.5 면 값 유지 + 상태 model_over_conduction · 진단 열만)',
+    'electrode_model_<m>': "전극 (10-06 저녁 세대 2 · L2-05) — dirichlet_exact = 바닥 띠 V = 1 · 위 띠 V = 0 고정 (옛 가상 전원 g_b 제거) · '' = 표기 없는 옛 산출물 (가상 전원)",
+    'bulk_model_<m> · hertz_constriction_<m>': '간선 bulk (cylinder_half_d = H0 · sphere_segment = H12) · Hertz 협착 (maxwell = H0 · mikic_psi_multiply = H12) — 짝으로만',
+    'area_rule_<m> · area_rule_physics_<m>': '면적 규칙 — 그 모드 (hertz_ccpl22 · physics_g2 · physics_g1) · 실행이 쓴 physics 면적 세대 (physics_g2 = film_area_g2 규칙 B · 10-06 저녁)',
+    'n_clamp_zero_<m> · n_floor_only_<m>': 'ψ floor 계수 (R_c = 0 간선) — clamp = 면적이 원판 상한 π r_min² (ψ → 0) · floor = ψ < 1e-4 동결 (SELF-28)',
+    '<키>_hertz_h12': 'H12 민감도 레코드 (Hertz 레코드 안 hertz_h12 · 이온 · ψ 곱 협착 + 구 조각 bulk · 같은 망 · 같은 전극) — 기본 학습 열 아님 (부록) · '
+                       '세대 1 산출물 = 빈칸',
     'sigma_constr_net_mScm_<m>': 'σ_ion CONSTRICTION_ONLY (bulk 0) mS/cm',
     'R_brug_over_full_<m>': '⚠ 이름과 달리 CONTACT_FREE / FULL (이온 · L2-07 — Bruggeman 아님) · 모형 내부 협착 비',
     'electronic_sigma_full_mScm_<m>': 'σ_e FULL — AM–AM 접촉망 mS/cm (간선 σ_AM = 50 mS/cm 모델 기준값 — CL-92: 측정 NCM811 의 약 10 배)',
@@ -453,6 +468,9 @@ def extract_row(c: dict, rec: dict, work: Path, out: Path, ps) -> dict:
         for ch in ('ion', 'el', 'th'):
             k = f'constriction_power_share_{ch}_{tail}'
             row[k], row[k + '_status'] = r.get(k), r.get(k + '_status')
+    r12 = recs['hertz'].get('hertz_h12') if isinstance(recs['hertz'].get('hertz_h12'), dict) else {}   # ★ 10-06 — H12 (없으면 빈칸 · 세대 1)
+    for k in H12_KEYS:
+        row[f'{k}_hertz_h12'] = r12.get(k)
     s0 = [recs[t].get('sigma_grain_S_cm') for t in ('hertz', 'physics')]
     row['sigma_grain_S_cm'] = s0[0] if s0[0] == s0[1] else None
     row['sigma_grain_modes_agree'] = (s0[0] == s0[1]) if any(v is not None for v in s0) else None
@@ -781,6 +799,15 @@ def _selftest() -> int:
             for k in ('phi_se', 'phi_se_mass_conserving', 'thickness_um', 'percolation_pct', 'network_run_id'):
                 if not _same(k, fm.get(k)):
                     mism.append(k)
+            #  ★ 10-06 저녁 세대 2 — 세대 표기 (전극 · bulk · 면적 규칙 · ψ floor 계수) 와 H12 민감도 레코드 (Hertz 레코드 안 hertz_h12) 도 dual 그대로
+            for dkey, tail in MODES:
+                for k in ('electrode_model', 'bulk_model', 'area_rule', 'area_rule_physics', 'hertz_constriction', 'n_clamp_zero', 'n_floor_only'):
+                    if not _same(f'{k}_{tail}', dual[dkey].get(k)):
+                        mism.append(f'{k}_{tail}')
+            _r12 = dual['hertzian'].get('hertz_h12') if isinstance(dual['hertzian'].get('hertz_h12'), dict) else {}
+            for k in H12_KEYS:
+                if not _same(f'{k}_hertz_h12', _r12.get(k)):
+                    mism.append(f'{k}_hertz_h12')
             tau = TF.case_row(str(rd))
             mism += [k for k in TF.column_names() if not _same(k, tau.get(k))]
             view = ps.network_status_view(str(rd))
@@ -794,6 +821,16 @@ def _selftest() -> int:
                 and t0.get('sigma_full_status_hertz') == 'computed' and t0.get('ion_net_status_hertz') == 'OK'
                 and all(t0.get(f'{ch}_status_physics') == 'computed' for ch in ('ionic', 'electronic', 'thermal'))
                 and float(t0.get('tau2_ion_hertz') or 0) > 0)
+            chk('③ ★ 세대 2 표기 · H12 값이 실제로 있다 — 전극 dirichlet_exact (두 모드 · H12) · physics 면적 physics_g2 · hertz 면적 hertz_ccpl22 · '
+                'bulk H0 원기둥 / H12 구 조각 · H12 σ_ion FULL 양수 computed · τ 상태 OK',
+                t0.get('electrode_model_hertz') == t0.get('electrode_model_physics') == t0.get('electrode_model_hertz_h12') == 'dirichlet_exact'
+                and t0.get('area_rule_physics') == 'physics_g2' and t0.get('area_rule_hertz') == 'hertz_ccpl22'
+                and t0.get('bulk_model_hertz') == 'cylinder_half_d' and t0.get('bulk_model_hertz_h12') == 'sphere_segment'
+                and t0.get('hertz_constriction_hertz_h12') == 'mikic_psi_multiply'
+                and float(t0.get('sigma_full_mScm_hertz_h12') or 0) > 0 and t0.get('sigma_full_status_hertz_h12') == 'computed'
+                and t0.get('ion_net_status_hertz_h12') == 'OK',
+                {k: t0.get(k) for k in ('electrode_model_hertz', 'electrode_model_hertz_h12', 'area_rule_physics', 'bulk_model_hertz_h12',
+                                        'sigma_full_mScm_hertz_h12', 'ion_net_status_hertz_h12')})
             chk('③ JSON 행 = TSV 행 (숫자 비트 동일 · 같은 열) · 열 설명 동봉',
                 jrow.get('sigma_full_mScm_hertz') == dual['hertzian']['sigma_full_mScm']
                 and jrow.get('electronic_sigma_full_mScm_physics') == dual['physics']['electronic_sigma_full_mScm']
