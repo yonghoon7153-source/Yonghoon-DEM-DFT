@@ -4127,3 +4127,38 @@ gate INCOMPLETE · 실효 정책 UNVERIFIED · native 미승인 · 게이트 리
   (180 / 9,000 / 120 / 900 / 300) · 포장 별도 1,800 s · 1 회 · challenge 둘은 사용자 직접 입력 · 결과 MPH 보존.
 - 전달문: `docs/COMSOL_NATIVE150_SEND_TO_EXECUTION_CODEX_20261006.md` (사용자가 붙여 보냄). 승인 파일 (USER_DECISION · VALIDATION_RELEASE · `bmin640_001.json`) 은 **실행 기기**가 근거 SHA 에 결속해 만든다 — 이 저장소는 만들지 않는다.
 - 다음: 실행 기기 결과 묶음 수신 → 보존 → 검토 (native_completion · evidence_validity · mesh_comparison 구분).
+
+
+## 68. native 150 s 결과 검토 회신 접수 — `LIMITED_NATIVE_AND_NUMERICAL_RESULT_ACCEPTED_DELIVERY_PRESERVATION_PENDING` (2026-10-06 수신 · 회신 표기 2026-10-07 · 이 저장소 실행 0)
+
+- 묶음: `reviews/r14_repros/codex63/comsol_bmin_r2_native150_result_review_20261007/` — zip 24,139 B · sha256 `92b72b4f9006b61089a3af637f8f0d020ed7969dc272e1ff9fbcae15cbcf98b5` ·
+  manifest 10 / 10 · 비밀 패턴 0 · 동봉 `reviewer_readonly.py` 실행 0. 규칙 ``de281ea8a`` → 보존 ``56ad12f08``.
+- 판정 (`DECISION.json` · `REVIEW_KO.md` 의 사본 — 우리 검증 아님):
+  - `native_completion` = `NORMAL_150S_COMPLETED` — 저장 2,447 시각 · 마지막 150 s · 보호식 미발동 · compile / batch 각 1 회 rc 0 · 부모 최종 snapshot 4,471.8936425 / 10,500 s (POST_WRITE ·
+    사용자 콘솔 전사 · 독립 OS 관측 아님) · 외부 NoExit rc null.
+  - `mesh_comparison` = `WITHIN_LIMITS_THIS_WINDOW` — 고정 입력 · 입자 반경 격자 320/320 ↔ 640/640 · **120–150 s · 요청 301 시각 · 전극별 241 좌표** · 최대 전압 차
+    3.449917063×10⁻⁷ V (= 0.0003449917063 mV · 한도 0.001 V) · N / P 표면 조성 최대 차 1.1309035403×10⁻⁸ / 3.3226834×10⁻⁹ (한도 1×10⁻⁴).
+  - **표현 범위:** 주 비교 밖 공통 요청 1,336 시각에서는 0.0005 s 에 **0.3081961318368 mV** 가 최대 (관측 전용 · 판정 아님) — "0–150 s 최대 0.000345 mV" 라고 쓰지 않는다.
+  - 수신 본체 ZIP 256,397,169 B · `7c40d5ba…` · 8,681 payload · 크기 / SHA / 집합 / CRC 통과. 결과 MPH 6,162,301,981 B · `f6053533…` (본 묶음에 없음 · 보존 유지).
+  - 보류였던 것: `SELECTED_SOURCES_AFTER.json` 원파일 (§69 에서 닫힘).
+- 유지: 전체 / 정상 gate `INCOMPLETE` · 전체 수렴 `INCOMPLETE` · 실효 정책 · 실제 코어 `UNVERIFIED` · PS01–16 내부 `UNOBSERVED` · 새 실행 승인 없음 · 원 기록 소급 수정 없음.
+  이것은 두 입자 격자의 민감도 관측이다 — 세분화 순서 · 참해 오차 상한 · 물리 공간 격자 수렴 · 480 s 후반 · 유한 microshort · 실험 타당성을 입증하지 않는다.
+
+## 69. 전달 보존 종결 · 통합 종결 회신 — `LIMITED_NATIVE150_REVIEW_CLOSED_WITH_DOCUMENTED_SCOPE` · 단계 전환 (2026-10-06 수신 · 회신 표기 2026-10-07 · 실행 0)
+
+- 보충 원파일 3 (실행 기기가 읽기 · 해시만 하고 보냄 · 생성 · 재포장 · 재실행 0): `comsol_bmin150_delivery_after_records_20261007/` —
+  `SELECTED_SOURCES_AFTER.json` 2,861,947 B · `4dc9b238…aa8` · `DELIVERY_RECEIPT.json` 1,425 B · `7760236d…99c` · `FINAL_PACKAGE_TOOL_RETURN.json` 1,691 B · `2ef72fd0…edb`
+  (앞 둘은 §68 의 기대 식별과 일치). 이 저장소가 검토자에게 넘긴 묶음 `BMIN150_DELIVERY_AFTER_SUPPLEMENT_20261007.zip` (42,318 B · `cc0a8b5c…`) 은 같은 3 파일 + manifest +
+  요청문이다. 규칙 ``de281ea8a`` → 보존 ``8ce20503d``.
+- 통합 종결 회신: `comsol_bmin150_combined_closeout_review_20261007/` — zip 10,090 B · sha256 `82b2373285b23e526e570eb60c2abea5a3a47faaab83bb5dfb3eabc3f2fb847f` · manifest 6 / 6 ·
+  비밀 0 · 동봉 `compare_supplements.py` 실행 0. 규칙 ``de281ea8a`` → 보존 ``37b270818``. 판정: 두 보충본의 원파일 3 은 바이트 동일 (전달문 · manifest 만 다름 → 새 관측으로 세지 않음) ·
+  BEFORE / AFTER **8,674** 선택 원본 경로 · 크기 · SHA 일치 → `delivery_closeout = CLOSED` · 남은 항목 0 · **`LIMITED_NATIVE150_REVIEW_CLOSED_WITH_DOCUMENTED_SCOPE`**.
+  승인 아님: 새 실행 · MPH 삭제 · 과거 기록 수정 · 재시험.
+- **단계 전환 (사용자 원문 · 2026-10-06):** "이번 계산·검토 묶음은 끝났고, 마이크로쇼트 연구 전체가 끝난 것은 아니에요. … 하지만 이것만으로 실제 마이크로쇼트를 재현했다거나
+  실험과 일치한다는 결론까지 내릴 수는 없습니다. 유한 microshort 조건의 검증·실험 대응·전체 수렴은 이번 수용 범위 밖입니다. 이제는 기존 결과를 정리하고, 실험의 정상/단락 조건과
+  모델을 대응시키는 단계로 넘어가면 됩니다. 이번 검토를 닫기 위한 추가 계산이나 960초 자동 연장은 필요 없어요. 한마디로 '계산 결과를 확보하고 한정 점검하는 단계는 마무리,
+  이제 연구 질문과 실험에 연결할 차례'입니다."
+  - 확보 (모두 한정 수용): 0–480 s 저장 결과 · 전압 상승 분석 (§39 · §40) · 0–30 s rtol 민감도 (§41) · 120–150 s 입자 격자 민감도 · 종결 (§68 · §69).
+  - 이 전환은 **새 계산 · 960 s 연장 · 실험 비교 실행의 승인이 아니다.** 다음 계산이 필요하면 질문과 범위를 먼저 따로 정한다. 실험 대응은 대응표 v2 의 A1 → A2 → A3 순서
+    (A0 자료 요청은 §58 에서 닫혔다 — 다시 열면 새 절).
+- 한 쪽 요약 화면: webapp `/microshort/summary` (+ PDF) — 이 절까지의 사본.
