@@ -1,0 +1,14 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+__ test_util_static_check_allows_method_only_classes_but_not_class_body_code ___
+
+    def test_util_static_check_allows_method_only_classes_but_not_class_body_code():
+        ok = "from m import Base\n\nclass P(Base):\n    def __init__(self, a):\n        super().__init__(n=1)\n\n    def _evaluate(self, x, out):\n        out['F'] = [x]\n"
+>       assert p0.util_static_check(ok)["ok"] is True
+E       assert False is True
+
+tests/test_reil_p0.py:241: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_reil_p0.py::test_util_static_check_allows_method_only_classes_but_not_class_body_code
+1 failed, 36 deselected in 0.25s
+rc=1

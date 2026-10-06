@@ -233,3 +233,12 @@ def test_raw_entry_matches_their_extraction_on_synthetic_sheet(tmp_path):
     assert raw["cycle_columns"] == ["Cycle"] and cy[0] == "판정 불가"          # 셀 둘 (Q1/V1 · Q2/V2) → 결속 근거 없음
     assert di[0] == "판정 불가" and raw["current_columns_sign"] == {"Current (mA)": "양"}
     assert "Cycle" in ex["headers_original"] and cl["cell_idx_points_to"] == ["Q2", "V2"]
+
+
+# ---- 실제 util_LFP.py 가 최상위에 ElementwiseProblem 하위 클래스 셋 (594 · 616 · 637 줄 — 메서드 정의만) 을 둔다 (2026-10-06 실행 전 점검) ----
+def test_util_static_check_allows_method_only_classes_but_not_class_body_code():
+    ok = "from m import Base\n\nclass P(Base):\n    def __init__(self, a):\n        super().__init__(n=1)\n\n    def _evaluate(self, x, out):\n        out['F'] = [x]\n"
+    assert p0.util_static_check(ok)["ok"] is True
+    for bad in ("class P:\n    import os\n    os.system('ls')\n", "class P:\n    x = open('f', 'w')\n",
+                "@register\nclass P:\n    def f(self):\n        pass\n", "class P(make_base()):\n    def f(self):\n        pass\n"):
+        assert p0.util_static_check(bad)["ok"] is False, bad

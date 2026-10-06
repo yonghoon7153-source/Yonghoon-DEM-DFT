@@ -1,0 +1,19 @@
+# 09 세 파일 식별 · util_LFP.py 정적 열람 — 2026-10-06T08:01:45Z
+## 출처: raw.githubusercontent.com/REIL-UConn/Multi-Objective-Optimization-for-Lithium-Ion-Battery-Degradation-Diagnostics/1188c371e5836df4a7e5f5acf336a34ffd4027e6/<file> (curl rc 0 ×3)
+total 14664
+-rw-r--r-- 1 root root  4134001 Oct  6 08:01 Benchmarking_LFP_final.ipynb
+-rw-r--r-- 1 root root 10841377 Oct  6 08:01 LFP_Data.xlsx
+-rw-r--r-- 1 root root    33754 Oct  6 08:01 util_LFP.py
+388f2a6f101abf42ef8c7c1c627b7046e8bf900b913d22f83435b39eb81a9e29  Benchmarking_LFP_final.ipynb
+fd50e09542be7adb2270963d65a6e7b5ccae1473a512f68462c2dd419d620ee1  LFP_Data.xlsx
+3c19e45ef8a64ce67cda1f623551e758d4c0f67086bbae02b978428d78de1c76  util_LFP.py
+## util_LFP.py 줄끝: CRLF 846 줄
+## 보존 사본 (reviews/prereview_pybamm_reil_20261003/external/util_LFP.py.txt) 과 CRLF 정규화 뒤 대조:
+DIFFERENT 32908 32909
+## AST 최상위 검사 (scripts/reil_p0.py util_static_check · 허용 import 집합):
+{"ok": false, "bad": [[594, "ClassDef"], [616, "ClassDef"], [637, "ClassDef"]], "imports": ["numpy", "pandas", "datetime", "scipy.interpolate", "scipy.signal", "pickle", "matplotlib.pyplot", "matplotlib.ticker", "seaborn", "pymoo.core.problem", "pymoo.algorithms.soo.nonconvex.ga", "pymoo.algorithms.moo.nsga2", "pymoo.algorithms.moo.nsga3", "pymoo.optimize", "pymoo.termination", "pymoo.util.ref_dirs", "pymoo.core.result"], "functions": ["visualize_LFP_data", "extract_battery_data", "dVdQ_hc", "objective_fun", "plot_half_cell_analysis", "manual_radviz", "plot_nsga_results", "compare_nsga_manual", "run_multiple_ga", "run_nsga", "run_optimization", "extract_health_parameter", "plot_health_parameters", "filter_first_occurrences_by_column", "find_balanced_solution"]}
+## 위험 호출 grep (파일 전체 · 줄 번호):
+(없음)
+## P0 가 부르는 함수: visualize_LFP_data (24–97) · extract_battery_data (101–128) · filter_first_occurrences_by_column (817–819) — 전문 열람: pd.read_excel 읽기 · print 1 회 (datetime 없음 분기) · plt 는 visualize=True 일 때만 (P0 는 False / 기본 False) · 쓰기 · 네트워크 · 하위 프로세스 · pickle 없음
+ok True []
+{"cells_equal_excerpts": true, "cells_differing": [], "constants": {"sheets": true, "cell_idx": true, "step_idx": true, "theoretical": true, "LFP_mass_factor": true, "Gr_mass_factor": true, "area": true, "LFP_mass_12": true, "Gr_mass_12": true, "cell6_refs": true}, "ok": true}

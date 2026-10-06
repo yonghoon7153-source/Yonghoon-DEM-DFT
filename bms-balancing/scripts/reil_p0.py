@@ -178,6 +178,10 @@ def sheet_set_diff(actual) -> dict:
     return {"missing": missing, "extra": extra, "same": not missing and not extra and len(a) == len(set(a))}
 
 
+def _is_docstring(node) -> bool:
+    return isinstance(node, ast.Expr) and isinstance(node.value, ast.Constant) and isinstance(node.value.value, str)
+
+
 def util_static_check(text, allowed=None) -> dict:
     """최상위 문장이 import · 함수 정의 · 문서 문자열뿐인가 (import 시 실행되는 코드 = 부작용 후보). allowed 가 주어지면 import 최상위 이름도 대조."""
     tree = ast.parse(text)
@@ -188,10 +192,12 @@ def util_static_check(text, allowed=None) -> dict:
             imports += names
             if allowed is not None and any(n.split(".")[0] not in allowed for n in names):
                 bad.append((node.lineno, "허용 밖 import " + ",".join(names)))
-        elif isinstance(node, ast.FunctionDef):
+        elif isinstance(node, ast.FunctionDef) or _is_docstring(node):
             continue
-        elif isinstance(node, ast.Expr) and isinstance(node.value, ast.Constant) and isinstance(node.value.value, str):
-            continue
+        elif (isinstance(node, ast.ClassDef) and not node.decorator_list and not node.keywords
+              and all(isinstance(b, ast.Name) for b in node.bases)
+              and all(isinstance(n, ast.FunctionDef) or _is_docstring(n) for n in node.body)):
+            continue                               # 메서드 정의만 있는 클래스 — 본문이 import 때 실행할 코드가 없다
         else:
             bad.append((node.lineno, type(node).__name__))
     return {"ok": not bad, "bad": bad, "imports": imports,
