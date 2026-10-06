@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""194 인계 v1.2 다시 읽기 검산기 (`docs/data/lhs_network194_11fcf91e8/handover_v12_20261006/reread_v12.py`) 의 반례 회귀 — RGLR4-01 · RGLR4-02.
+"""194 인계 v1.2 다시 읽기 검산기 (`docs/data/lhs_network194_11fcf91e8/handover_v12_20261006/reread_v12.py`) 의 반례 회귀 — RGLR4-01 · RGLR4-02 · G2RR-03.
 
   python3 scripts/test_reread_v12.py        # 종료코드 0 = PASS
 
@@ -8,6 +8,11 @@ Codex 5차 재검증 (`docs/reviews/codex_review_rglr3_reverify_20261006.md` §5
   RGLR4-01  C4 — 옛 인계 공통 칸 하나를 99 로 바꿔도 · 공통 열을 빼도 PASS · rc 0 이었다 (차이를 기록만 하고 실패 목록에 안 넣었다)
   RGLR4-02  C8 — 봉인 감사표의 lhsx_064 행을 lhs00_000 중복으로 바꿔도 SEALED_LEGACY 194 · PASS · rc 0 이었다 (줄 수 · 판정 문자열만 셌다)
             + record sha · record 상태 · 코호트 변조 · C6 출처 부록 중복 행
+Codex 세대 2 재검증 (`docs/reviews/codex_review_gen2_network_reverify_20261006.md` §5 · 탐침 `…_evidence_20261006/probes/reread_extra.py`):
+  G2RR-03   C8 — 등록 manifest 의 `plan.queue` 가 비어도 (`[]`) · 없어도 (`plan` 삭제) · 첫 ID 를 중복 추가해도 (194 + 1 행) PASS · rc 0 이었다
+            (빈 큐면 집합 비교 생략 · 기대 코호트를 인계표로 대체 · dict 변환이 중복을 삼킨다).
+            Q 사례는 **작은 리포 사본** (검산기를 같은 상대 경로에 둔다 — 검산기는 자기 자리에서 리포 뿌리를 찾는다) 의 manifest 만 바꿔 실 CLI 로 돌리고,
+            출력의 `batch` 경로가 그 사본인지 확인한다 (진짜 manifest 를 조용히 읽은 실행은 통과하지 못한다).
 해제 조건 = 위 변조가 **비영 종료** (출력에 차이를 적는 것만으로는 부족) · 원본 (baseline) PASS 유지 · 의도된 변화는 세대별 허용 목록 (기대 칸 수 · 커밋 = 봉인).
 ⚠ 이 검산기는 **검산 도구**다 — 자동 배포 관문으로 쓰지 않는다 (Codex 5차 QV1).  이 시험은 그 문구가 검산기에 남아 있는지도 본다.
 """
@@ -22,8 +27,17 @@ import tempfile
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-HD = os.path.join(ROOT, 'docs', 'data', 'lhs_network194_11fcf91e8', 'handover_v12_20261006')
+BATCH_REL = os.path.join('docs', 'data', 'lhs_network194_11fcf91e8')
+HD_REL = os.path.join(BATCH_REL, 'handover_v12_20261006')
+HD = os.path.join(ROOT, HD_REL)
 VERIFIER = os.path.join(HD, 'reread_v12.py')
+#: G2RR-03 작은 리포 사본 — 검산기가 리포 뿌리 아래에서 읽는 파일 (C1–C6 · C8 입력).  τ 원천 tar 는 뺀다 (C7 은 이 사례에서 안 돈다).
+MINI_FILES = (os.path.join(BATCH_REL, 'manifest.json'),
+              os.path.join(BATCH_REL, 'merged', 'lhs', 'metrics_flat.csv'), os.path.join(BATCH_REL, 'merged', 'lhs', 'status.json'),
+              os.path.join(BATCH_REL, 'merged', 'lhsx', 'metrics_flat.csv'), os.path.join(BATCH_REL, 'merged', 'lhsx', 'status.json'),
+              os.path.join('docs', 'data', 'lhs_handover_20261001.csv'), os.path.join('docs', 'data', 'lhsx_handover_20261001.csv'),
+              os.path.join('docs', 'data', 'lhs_perc_audit_20261001', 'lhs_20261001_d1ec42fba', 'perc_audit.tsv'),
+              os.path.join('docs', 'data', 'lhs_perc_audit_20261001', 'lhsx_20261001_d1ec42fba', 'perc_audit.tsv'))
 
 _ok, _fail = 0, []
 
@@ -74,6 +88,45 @@ def run(hd, seal=None, extra=()):
 
 def _fails(js):
     return list(js.get('fails') or [])
+
+
+def _mini_repo(dst, mutate=None):
+    """G2RR-03 — 작은 리포 사본: 검산기 · 인계 입력을 같은 상대 경로에 복사하고 **복사한 manifest 만** mutate(m) 로 바꾼다.
+    반환 (리포 뿌리, 사본 검산기, 사본 인계 폴더).  검산기는 자기 자리에서 리포 뿌리를 찾으므로 이 사본의 manifest · 병합 기록을 읽는다."""
+    for rel_ in MINI_FILES:
+        q = os.path.join(dst, rel_)
+        os.makedirs(os.path.dirname(q), exist_ok=True)
+        shutil.copyfile(os.path.join(ROOT, rel_), q)
+    hd_ = _copy(os.path.join(dst, HD_REL))
+    ver_ = os.path.join(hd_, 'reread_v12.py')
+    shutil.copyfile(VERIFIER, ver_)
+    if mutate is not None:
+        mp = os.path.join(dst, BATCH_REL, 'manifest.json')
+        with open(mp, encoding='utf-8') as fh:
+            m = json.load(fh)
+        mutate(m)
+        with open(mp, 'w', encoding='utf-8') as fh:
+            json.dump(m, fh, ensure_ascii=False)
+    return dst, ver_, hd_
+
+
+def run_mini(dst, mutate=None):
+    """사본 검산기를 실 CLI 로 (봉인 감사 제공) — env 의 REPO 는 뺀다 (검산기가 자기 자리에서 뿌리를 찾게).  반환 (rc, 출력 JSON, 끝 출력, 사본 batch 경로)."""
+    repo_, ver_, hd_ = _mini_repo(dst, mutate)
+    out = os.path.join(dst, '_reread_out.json')
+    env = {k: v for k, v in os.environ.items() if k != 'REPO'}
+    env['PYTHONDONTWRITEBYTECODE'] = '1'
+    cmd = [sys.executable, ver_, '--handover-dir', hd_, '--seal-audit', os.path.join(hd_, 'seal_audit.tsv'), '--out', out]
+    p = subprocess.run(cmd, capture_output=True, text=True, timeout=300, env=env)
+    try:
+        js = json.load(open(out, encoding='utf-8'))
+    except (OSError, ValueError):
+        js = {}
+    return p.returncode, js, (p.stdout + p.stderr)[-1500:], os.path.join(repo_, BATCH_REL)
+
+
+def _same_path(a, b):
+    return bool(a) and bool(b) and os.path.realpath(a) == os.path.realpath(b)
 
 
 def main():
@@ -188,6 +241,77 @@ def main():
                 mod.C4_ALLOWED.update(saved)
             chk('T9 허용 목록 — 등록한 열 · 기대 칸 수 (1) 가 맞으면 통과 · 칸 수가 다르면 (2) 실패 · 등록한 탈락 열은 통과',
                 rc_a == 0 and rc_b != 0 and rc_c == 0, repr((rc_a, rc_b, rc_c)))
+
+        # ── G2RR-03 — 등록 큐 (manifest plan.queue) 변조.  작은 리포 사본의 manifest 만 바꾸고 · 실 CLI · 봉인 감사 제공 · 출력 batch = 사본
+        with open(os.path.join(ROOT, BATCH_REL, 'manifest.json'), encoding='utf-8') as fh:
+            q_real = (json.load(fh).get('plan') or {}).get('queue')
+        q_ok = isinstance(q_real, list) and all(isinstance(e, dict) for e in q_real)
+        q_coh = {}
+        for e in (q_real if q_ok else []):
+            q_coh[e.get('cohort')] = q_coh.get(e.get('cohort'), 0) + 1
+        q_ids = [e.get('case') for e in (q_real if q_ok else [])]
+        chk('QF 픽스처 — 실제 등록 큐 = 194 행 · lhs 130 · lhsx 64 · 고유 194 · 첫 ID ≠ 끝 ID',
+            q_ok and len(q_real) == 194 and q_coh == {'lhs': 130, 'lhsx': 64} and len(set(q_ids)) == 194 and q_ids[0] != q_ids[-1],
+            repr((len(q_real) if isinstance(q_real, list) else q_real, q_coh)))
+        qd = os.path.join(td, 'q')
+
+        rc, js, tail, bq = run_mini(os.path.join(qd, 'q0'))
+        c8 = js.get('C8_seal_audit') or {}
+        chk('Q0 G2RR-03 — 사본 manifest 그대로 = PASS · rc 0 · 출력 batch = 사본 · C8 194 행 · 등록 큐 194 · record sha 194 · 문제 0',
+            rc == 0 and js.get('verdict') == 'PASS' and _fails(js) == [] and _same_path(js.get('batch'), bq)
+            and c8.get('n') == 194 and c8.get('queue_n') == 194 and c8.get('record_sha_match') == 194 and not c8.get('problems'),
+            f'rc={rc} · batch={js.get("batch")} · {_fails(js)} · {repr({k: c8.get(k) for k in ("n", "queue_n", "record_sha_match", "problems")})} · {tail}')
+
+        def _q_empty(m):
+            m['plan']['queue'] = []
+
+        def _q_plan_absent(m):
+            m.pop('plan', None)
+
+        def _q_key_absent(m):
+            m['plan'].pop('queue', None)
+
+        def _q_null(m):
+            m['plan']['queue'] = None
+
+        def _q_dup_first(m):
+            m['plan']['queue'].append(dict(m['plan']['queue'][0]))
+
+        def _q_last_as_first(m):
+            m['plan']['queue'][-1] = dict(m['plan']['queue'][0])
+
+        def _q_swap_cohort(m):
+            q_ = m['plan']['queue']
+            i_ = next(k for k, e in enumerate(q_) if e.get('cohort') == 'lhs')
+            j_ = next(k for k, e in enumerate(q_) if e.get('cohort') == 'lhsx')
+            q_[i_]['cohort'], q_[j_]['cohort'] = q_[j_]['cohort'], q_[i_]['cohort']
+
+        def _c8_fail(js_):
+            return js_.get('verdict') == 'FAIL' and any('C8' in f for f in _fails(js_))
+
+        for tag, fn, label in (('q1', _q_empty, 'Q1 plan.queue = []'), ('q2', _q_plan_absent, 'Q2 plan 삭제'),
+                               ('q3', _q_key_absent, 'Q3 queue 키 삭제'), ('q4', _q_null, 'Q4 queue = null')):
+            rc, js, tail, bq = run_mini(os.path.join(qd, tag), fn)
+            c8 = js.get('C8_seal_audit') or {}
+            chk(f'{label} ★ G2RR-03 — 등록 큐 결손 = FAIL · 비영 종료 · C8 · 출력 batch = 사본 · queue_n 0 · 큐 코호트 없는 감사표 194 행의 병합 기록은 대조 안 함 (인계표 대체 없음)',
+                rc != 0 and _c8_fail(js) and _same_path(js.get('batch'), bq) and c8.get('queue_n') == 0
+                and c8.get('record_unreferenced') == 194 and c8.get('record_sha_match') == 0,
+                f'rc={rc} · batch={js.get("batch")} · {_fails(js)} · '
+                f'{repr({k: c8.get(k) for k in ("queue_n", "record_unreferenced", "record_sha_match")})}')
+
+        rc, js, tail, bq = run_mini(os.path.join(qd, 'q5'), _q_dup_first)
+        c8 = js.get('C8_seal_audit') or {}
+        chk('Q5 ★ G2RR-03 — 첫 ID 중복 추가 (194 + 1 행) = FAIL · 비영 종료 · C8 · 출력 batch = 사본 · queue_n 195 (원 행 수) · 고유 194',
+            rc != 0 and _c8_fail(js) and _same_path(js.get('batch'), bq) and c8.get('queue_n') == 195 and c8.get('queue_n_unique') == 194,
+            f'rc={rc} · batch={js.get("batch")} · {_fails(js)} · {repr({k: c8.get(k) for k in ("queue_n", "queue_n_unique")})}')
+
+        rc, js, tail, bq = run_mini(os.path.join(qd, 'q6'), _q_last_as_first)
+        chk('Q6 ★ G2RR-03 — 끝 행을 첫 행 사본으로 교체 (194 행 · 고유 193 · 끝 ID 빠짐) = FAIL · 비영 종료 · C8 · 출력 batch = 사본',
+            rc != 0 and _c8_fail(js) and _same_path(js.get('batch'), bq), f'rc={rc} · batch={js.get("batch")} · {_fails(js)}')
+
+        rc, js, tail, bq = run_mini(os.path.join(qd, 'q7'), _q_swap_cohort)
+        chk('Q7 ★ G2RR-03 — lhs 하나 · lhsx 하나의 코호트 맞바꿈 (코호트 수 130 · 64 그대로) = FAIL · 비영 종료 · C8 · 출력 batch = 사본',
+            rc != 0 and _c8_fail(js) and _same_path(js.get('batch'), bq), f'rc={rc} · batch={js.get("batch")} · {_fails(js)}')
     finally:
         shutil.rmtree(td, ignore_errors=True)
     return finish()

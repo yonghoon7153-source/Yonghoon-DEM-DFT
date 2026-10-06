@@ -8,6 +8,10 @@
   C6 = 행 수 = 표 행 수 · 케이스 중복 0 · C8 = 케이스 중복 0 · 집합 = 인계표 두 코호트 = 등록 manifest `plan.queue` · 코호트 · record 상태 = 병합 기록 · record sha256 = 병합 기록 정규 JSON (194/194).
   고친 검산기로 이 폴더를 다시 돌려도 **PASS** (C4 차이 0 · C8 고유 194 · record sha 일치 194).  아래 표 · `reread_20261006.json` 은 **옛 검산기** 실행 기록이다 (그대로 둔다).
   ⛔ 고친 뒤에도 자동 배포 관문으로 쓰지 않는다 (Codex 5차 QV1 — 검산 도구).
+  ↪ **검산기 수정 2 — `G2RR-03` (10-06 밤 · Codex 세대 2 재검증 §5 · 1저자 비준 *"권고대로"* · 반례 먼저 — `scripts/test_reread_v12.py` 옛 검산기 17 PASS · 5 FAIL → 22/22)**: 옛 C8 은 등록 큐가 비거나 (`plan.queue = []`) · 없거나 (`plan` · `queue` 키 삭제 · `null`) · 첫 ID 를 중복 추가해도 (194 + 1 행) PASS · rc 0 이었다.
+  이제 C8 = `registration_queue()` 가 큐를 **dict 로 바꾸기 전에** 검사 (비지 않은 목록 · 행 형식 · 원 행 수 194 · ID 중복 0 · 코호트 lhs 130 · lhsx 64 = 인계표 · 행마다 코호트 = 인계표 · 케이스 집합 = 인계표) · 빈 큐에서도 감사표 ↔ 큐 집합 비교 ·
+  큐 코호트가 없는 감사표 행 = 실패 · 그 병합 기록은 대조 안 함 (인계표로 대체하지 않는다) · 출력 `queue_n` = 큐 원 행 수 + `queue_n_unique` · `queue_cohorts` · `record_unreferenced`.  Codex 탐침 (`docs/reviews/codex_gen2_network_reverify_evidence_20261006/probes/reread_extra.py` 무변경 사본) = 정상 큐 rc 0 · 세 변이 rc 1.
+  고친 검산기로 이 폴더를 다시 돌려도 **PASS** (C4 24,440 + 12,160 칸 같음 · C7 130 + 64 · C8 194 행 · 고유 194 · 등록 큐 194 = lhs 130 · lhsx 64 · record sha 194 · 문제 0 — 옛 검산기 출력과 다른 것은 새 C8 필드 셋뿐) · `--seal-audit` 은 그대로 선택 · v1.2 값 · 자료 파일 변경 없음.
 
 ## 파일
 

@@ -29,6 +29,11 @@
      PASS 였다.  이제 = 행 수 194 · 케이스 중복 0 · 케이스 집합 = 인계표 두 코호트 집합 = 등록 manifest plan.queue 집합 · 코호트 = 큐의 코호트 ·
      판정 SEALED / SEALED_LEGACY · merged same · record_status = 병합 기록 (merged/<코호트>/status.json) 의 상태 (done · partial) ·
      record_sha256 = 그 병합 기록의 정규 JSON sha256 (`run_network_194_parallel._rec_sha` 와 같은 직렬화 — 정렬 키 · 구분자 , :) — 하나라도 어긋나면 실패.
+     ★ G2RR-03 (Codex 세대 2 재검증 §5): 옛 판은 큐가 비거나 (`[]`) 없거나 (`plan` 삭제) 첫 ID 를 중복 추가해도 (194 + 1 행) PASS 였다 — 빈 큐면
+     집합 비교를 건너뛰고 · 기대 코호트를 인계표로 대체하고 · 큐를 바로 dict 로 바꿔 중복이 사라졌다.  이제 `registration_queue()` 가 큐를 **dict 로
+     바꾸기 전에** 검사한다 = 비지 않은 목록 · 행마다 {case: 비지 않은 문자열, cohort: lhs | lhsx} · 원 행 수 194 · ID 중복 0 · 코호트 수 lhs 130 · lhsx 64
+     (= 인계표) · 행마다 코호트 = 인계표 · 케이스 집합 = 인계표.  빈 큐에서도 집합 비교를 한다 · 큐 코호트가 없는 감사표 행은 실패이고 그 병합 기록은
+     대조하지 않는다 (인계표로 대체하지 않는다 · 출력 `record_unreferenced`).  출력 `queue_n` = 큐 원 행 수 · `queue_n_unique` · `queue_cohorts`.
 """
 import argparse
 import csv
@@ -294,8 +299,72 @@ def cohort(coh, hdir, tau_root, out):
     out[coh] = res
 
 
+def registration_queue(man, tab_ids):
+    """★ G2RR-03 — 등록 manifest 의 `plan.queue` 를 **dict 로 바꾸기 전에** 검사한다 (옛 판은 바로 dict 로 바꿔 결손 · 중복이 사라졌다).
+    man = 읽은 manifest (못 읽었으면 None) · tab_ids = {케이스: 코호트} (인계표 두 코호트).
+    요구 = 비지 않은 목록 · 행마다 {case: 비지 않은 문자열, cohort: lhs | lhsx} · 원 행 수 194 · ID 중복 0 · 코호트 수 = EXPECT_N = 인계표 ·
+    행마다 코호트 = 인계표 · 케이스 집합 = 인계표.
+    반환 (queue, info, problems) — queue = {케이스: 코호트} (형식이 맞는 행만 · 코호트가 엇갈린 중복 ID 는 뺀다 = 그 케이스는 큐 코호트 없음) ·
+    info = {'n': 원 행 수 (목록이 아니면 0), 'n_unique': 고유 ID 수, 'cohorts': 코호트별 행 수} · problems 가 비어야 통과.
+    결손 · 형식 오류에 인계표로 기준을 대체하지 않는다."""
+    prob = []
+    raw = None
+    if not isinstance(man, dict):
+        prob.append(f'등록 manifest 가 JSON 객체가 아니다 ({type(man).__name__}) — plan.queue 없음')
+    elif not isinstance(man.get('plan'), dict):
+        prob.append('등록 manifest 에 plan 이 없다' if man.get('plan') is None else f'등록 manifest plan 이 객체가 아니다 ({type(man.get("plan")).__name__})')
+    elif 'queue' not in man['plan']:
+        prob.append('등록 manifest plan 에 queue 키가 없다')
+    else:
+        raw = man['plan']['queue']
+        if raw is None:
+            prob.append('등록 manifest plan.queue = null')
+        elif not isinstance(raw, list):
+            prob.append(f'등록 manifest plan.queue 가 목록이 아니다 ({type(raw).__name__})')
+        elif not raw:
+            prob.append('등록 manifest plan.queue 가 비었다 (빈 목록)')
+    rows = raw if isinstance(raw, list) else []
+    good, bad = [], []
+    for i, e in enumerate(rows):
+        c_, k_ = (e.get('case'), e.get('cohort')) if isinstance(e, dict) else (None, None)
+        if isinstance(c_, str) and c_.strip() and isinstance(k_, str) and k_ in EXPECT_N:
+            good.append((c_, k_))
+        else:
+            bad.append(i)
+    if bad:
+        prob.append(f'등록 큐 형식 오류 {len(bad)} 행 (case = 비지 않은 문자열 · cohort ∈ {sorted(EXPECT_N)} 이어야 한다) — 행 번호 {bad[:5]}')
+    n_exp = sum(EXPECT_N.values())
+    if len(rows) != n_exp:
+        prob.append(f'등록 큐 행 수 {len(rows)} ≠ {n_exp}')
+    qids = [c_ for c_, _ in good]
+    dups = sorted({c_ for c_ in qids if qids.count(c_) > 1})
+    if dups:
+        prob.append(f'등록 큐 케이스 중복 {len(dups)} — {dups[:5]}')
+    qcoh, tcoh = {}, {}
+    for _, k_ in good:
+        qcoh[k_] = qcoh.get(k_, 0) + 1
+    for k_ in tab_ids.values():
+        tcoh[k_] = tcoh.get(k_, 0) + 1
+    qcoh, tcoh = dict(sorted(qcoh.items())), dict(sorted(tcoh.items()))
+    if qcoh != dict(sorted(EXPECT_N.items())) or qcoh != tcoh:
+        prob.append(f'등록 큐 코호트 수 {qcoh} ≠ 기대 {dict(sorted(EXPECT_N.items()))} · 인계표 {tcoh}')
+    mism = sorted({c_ for c_, k_ in good if c_ in tab_ids and k_ != tab_ids[c_]})
+    if mism:
+        prob.append(f'등록 큐 코호트 ≠ 인계표 {len(mism)} 케이스 — {mism[:5]}')
+    if set(qids) != set(tab_ids):
+        prob.append(f'등록 큐 집합 ≠ 인계표 집합 — 큐에만 {sorted(set(qids) - set(tab_ids))[:5]} · 인계표에만 {sorted(set(tab_ids) - set(qids))[:5]}')
+    queue, clash = {}, set()
+    for c_, k_ in good:
+        if c_ in queue and queue[c_] != k_:
+            clash.add(c_)
+        queue.setdefault(c_, k_)
+    for c_ in clash:
+        del queue[c_]
+    return queue, {'n': len(rows), 'n_unique': len(set(qids)), 'cohorts': qcoh}, prob
+
+
 def seal_audit_check(path, out):
-    """C8 — 봉인 감사표 ↔ 인계표 · 등록 manifest 큐 · 병합 기록 (★ RGLR4-02).  반환 dict (problems 가 비면 통과)."""
+    """C8 — 봉인 감사표 ↔ 인계표 · 등록 manifest 큐 · 병합 기록 (★ RGLR4-02 · ★ G2RR-03 큐 자격 = `registration_queue`).  반환 dict (problems 가 비면 통과)."""
     rows = read_csv(path, '\t')
     head = list(rows[0].keys()) if rows else []
     vk = next((k for k in head if k.lower() in ('verdict', '판정')), None)
@@ -314,13 +383,16 @@ def seal_audit_check(path, out):
     tab_ids = {c: coh for coh in ('lhs', 'lhsx') for c in ((out.get(coh) or {}).get('case_ids') or [])}
     try:
         man = json.load(open(os.path.join(BATCH, 'manifest.json'), encoding='utf-8'))
-        queue = {e['case']: e['cohort'] for e in ((man.get('plan') or {}).get('queue') or [])}
-    except (OSError, ValueError, KeyError, TypeError) as e:
-        queue = {}
-        prob.append(f'등록 manifest plan.queue 를 못 읽었다 ({type(e).__name__})')
+    except (OSError, ValueError) as e:
+        man = None
+        prob.append(f'등록 manifest 를 못 읽었다 ({type(e).__name__})')
+    #  ★ G2RR-03 — 큐 자격을 dict 로 바꾸기 전에 검사 (빈 · 없는 · null · 형식 오류 · 행 수 · 중복 · 코호트 · 집합).  결손을 인계표로 대체하지 않는다.
+    queue, qinfo, qprob = registration_queue(man, tab_ids)
+    prob.extend(qprob)
     if set(cases) != set(tab_ids):
         prob.append(f'감사표 집합 ≠ 인계표 집합 — 감사표에만 {sorted(set(cases) - set(tab_ids))[:5]} · 인계표에만 {sorted(set(tab_ids) - set(cases))[:5]}')
-    if queue and set(cases) != set(queue):
+    #  ★ G2RR-03 — 옛 판은 `if queue and …` 로 빈 큐에서 이 비교를 건너뛰었다 → 이제 늘 비교한다
+    if set(cases) != set(queue):
         prob.append(f'감사표 집합 ≠ 등록 큐 — 감사표에만 {sorted(set(cases) - set(queue))[:5]} · 큐에만 {sorted(set(queue) - set(cases))[:5]}')
     merged = {}
     for coh in ('lhs', 'lhsx'):
@@ -329,7 +401,7 @@ def seal_audit_check(path, out):
         except (OSError, ValueError) as e:
             merged[coh] = {}
             prob.append(f'병합 기록 merged/{coh}/status.json 을 못 읽었다 ({type(e).__name__})')
-    cnt, mcnt, n_sha = {}, {}, 0
+    cnt, mcnt, n_sha, n_unref = {}, {}, 0, 0
     for r in rows:
         c, coh = r.get('case'), r.get('cohort')
         cnt[r.get(vk)] = cnt.get(r.get(vk), 0) + 1
@@ -338,9 +410,15 @@ def seal_audit_check(path, out):
             prob.append(f'{c}: 판정 {r.get(vk)!r} ∉ {C8_VERDICTS_OK}')
         if r.get('merged') != 'same':
             prob.append(f'{c}: merged {r.get("merged")!r} ≠ same')
-        want_coh = queue.get(c) or tab_ids.get(c)
+        #  ★ G2RR-03 — 기대 코호트 = 등록 큐뿐 (옛 판 `queue.get(c) or tab_ids.get(c)` 의 인계표 대체를 뺐다).
+        #    큐 코호트가 없으면 (큐 결손 · 코호트가 엇갈린 중복 · 큐 밖 케이스) 실패 · 병합 기록은 대조하지 않는다 (record_unreferenced 로 센다).
+        want_coh = queue.get(c)
+        if want_coh is None:
+            prob.append(f'{c}: 등록 큐에 코호트가 없다 — 인계표로 대체하지 않는다 · 병합 기록 대조 안 함')
+            n_unref += 1
+            continue
         if coh != want_coh or (c in tab_ids and coh != tab_ids[c]):
-            prob.append(f'{c}: 코호트 {coh!r} ≠ 등록 큐 · 인계표 {want_coh!r}')
+            prob.append(f'{c}: 코호트 {coh!r} ≠ 등록 큐 {want_coh!r} · 인계표 {tab_ids.get(c)!r}')
         rec = (merged.get(want_coh) or {}).get(c)
         if not isinstance(rec, dict):
             prob.append(f'{c}: 병합 기록 (merged/{want_coh}) 에 케이스가 없다')
@@ -352,7 +430,8 @@ def seal_audit_check(path, out):
         else:
             n_sha += 1
     return {'n': len(rows), 'n_unique': len(set(cases)), 'verdicts': cnt, 'merged': mcnt, 'record_sha_match': n_sha,
-            'queue_n': len(queue), 'problems': prob[:30], 'n_problems': len(prob)}
+            'record_unreferenced': n_unref, 'queue_n': qinfo['n'], 'queue_n_unique': qinfo['n_unique'], 'queue_cohorts': qinfo['cohorts'],
+            'problems': prob[:30], 'n_problems': len(prob)}
 
 
 def main(argv=None):
@@ -385,8 +464,9 @@ def main(argv=None):
               f"prov {((r.get('C6_provenance') or {}).get('n'))} · fail {r['fail']}")
     c8 = out.get('C8_seal_audit') or {}
     print('[C8] ' + ('건너뜀 (--seal-audit 없음 — 봉인 증거 미대조)' if c8.get('skipped') else
-                     f"{c8.get('n')} 행 · 고유 {c8.get('n_unique')} · 등록 큐 {c8.get('queue_n')} · 판정 {c8.get('verdicts')} · merged {c8.get('merged')} · "
-                     f"record sha 일치 {c8.get('record_sha_match')} · 문제 {c8.get('n_problems')}"))
+                     f"{c8.get('n')} 행 · 고유 {c8.get('n_unique')} · 등록 큐 {c8.get('queue_n')} 행 (고유 {c8.get('queue_n_unique')} · 코호트 {c8.get('queue_cohorts')}) · "
+                     f"판정 {c8.get('verdicts')} · merged {c8.get('merged')} · "
+                     f"record sha 일치 {c8.get('record_sha_match')} · 병합 기록 미대조 {c8.get('record_unreferenced')} · 문제 {c8.get('n_problems')}"))
     print('verdict', out['verdict'], fails, '— 검산 도구 결과 (자동 배포 관문 아님)')
     return 0 if not fails else 1
 
