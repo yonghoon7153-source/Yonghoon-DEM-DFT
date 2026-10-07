@@ -24,16 +24,35 @@
 - **접선력** (`tangential_share.txt`): 접선 ÷ 법선 (합) = 0.25 · 0.27 · 0.26 (AM–AM · AM–SE · SE–SE) · 쿨롱 한계 (μ 0.5) 의 미끄럼 접촉 21–27 % · 크기 합 몫을 합력
   |Fn + Ft| 로 바꿔도 차이 ≤ 0.05 %p — 단면 하중 몫은 처음부터 합력 z 성분을 쓴다.
 
-## 2. ps45 다섯 조성 (⬜ 1저자 WSL)
+## 2. ps45 다섯 조성 (✅ 1저자 WSL 10-07 · 코드 `d581154be` · 원자료 `raw/ps45_plane_load_20261007.tgz` sha256 `71f1a2a7311d6c927b991400041a2e2350158a0b67e45f99cc5f5c8d90f48913` · 푼 것 `ps45/`)
 
 ```bash
 cd ~/dem-audit && pgrep -af "run_network_194_parallel|lhs_webapp_batch" || echo "실행 중인 배치 없음"
 git fetch -q origin claude/stoic-knuth-NObVQ && git checkout -q --detach FETCH_HEAD && git log --oneline -1
-python3 scripts/plane_load_share.py --selftest | tail -1
-python3 scripts/plane_load_share.py --batch ~/ps45_network_20261006 --out ~/ps45_plane_load_20261007; echo "rc=$?"
+PY=$(ls ~/Yonghoon-DEM-DFT/venv/bin/python ~/Yonghoon-DEM-DFT/.venv/bin/python3 2>/dev/null | head -1)   # 시스템 python3 에는 numpy 가 없다 (10-07 첫 실행 실패)
+$PY scripts/plane_load_share.py --selftest | tail -1
+$PY scripts/plane_load_share.py --batch ~/ps45_network_20261006 --out ~/ps45_plane_load_20261007; echo "rc=$?"
 tar -czf ~/ps45_plane_load_20261007.tgz -C ~ ps45_plane_load_20261007 && sha256sum ~/ps45_plane_load_20261007.tgz
 ```
 
 - 입력 = 망 배치 폴더의 `work/results/<id>/` (atoms.csv · contacts.csv · mesh_info.json · input_params.json) + `work/uploads/<id>/meta.json` (type map · scale) — 읽기만 한다.
 - 출력 = `plane_load_share_slide.csv` (Origin 머리 세 줄 · 가운데 단면 묶음 몫) · `plane_load_summary.csv` (+ 단면 평균 · 옛 방식 비교 · 하중 · 검사) · 단면별 CSV · JSON.
 - ⚠ 한정: 이 프레임은 압축 뒤 이완 단계 (7:3 판 압력 165 MPa) · 단면 하중 몫은 그 프레임의 하중 경로 — 판 하중 분담 (CLAUDE.md f_AM 절) 과 같은 계열이지만 같은 정의는 아니다.
+
+### 결과 (가운데 단면 · `ps45/plane_load_share_slide.csv`)
+
+| PC:SC | AM–AM | AM–SE | SE–SE | 크기 합 몫 (옛 5 쪽) | 가운데 하중 (MPa) | 상태 |
+|---|---|---|---|---|---|---|
+| 0:10 | 64.38 % | 25.92 % | 9.70 % | 33.1 · 37.2 · 29.7 | 158.25 | CHECK (보존 1.0222) |
+| 3:7 | 55.56 % | 34.62 % | 9.82 % | 25.4 · 38.3 · 36.3 | 159.93 | OK |
+| 5:5 | 51.48 % | 35.72 % | 12.80 % | 21.2 · 37.9 · 40.9 | 164.47 | OK |
+| 7:3 | 46.36 % | 39.46 % | 14.18 % | 17.0 · 36.4 · 46.6 | 167.14 | OK |
+| 10:0 | 51.99 % | 36.73 % | 11.28 % | 19.8 · 30.5 · 49.6 | 175.49 | OK |
+
+- 읽기 (모델 안 · 이완된 프레임): AM–AM 접촉 (전체 접촉의 0.14–1.6 %) 이 하중의 46–64 % · SE–SE 10–14 % ⇒ 크기 합 기준 해석 *"SE 망이 힘 경로의 중심"* 은 하중 기준으로 틀렸다 (`SELF-95`) ·
+  7:3 = 다섯 조성 중 AM–AM 몫 최소 · AM–SE · SE–SE 몫 최대 (크기 합 몫의 7:3 최소와 같은 자리).
+- 입자 힘 평형 1.65–2.26e-4 (다섯 모두 통과).
+- **보존 CHECK (0:10) = 침대 무게** (확인 · 10-07 단면별 CSV): 단면 하중이 높이에 따라 **직선으로** 준다 — 기울기 −0.029 ~ −0.034 MPa/µm · 직선에서의 잔차 최대 0.009–0.023 % ·
+  기울기 ÷ (g × 1e-6) = 유효 침대 밀도 2.9–3.4 g/cm³ (축척 덱: 길이 × 1000 · 응력 ÷ 1000 → 무게 ÷ 응력이 실제의 10⁶ 배 · 110 µm 침대에서 ≈ 2 %).
+  교차 대조: 7:3 압밀 로그의 이 프레임 판 압력 165.30 MPa (`docs/data/ps73_compaction_curve_20261006/curve/pressure.csv` step 3,220,000) ↔ 가장 위 단면 (102 µm) 165.59 MPa.
+  ⇒ 몫 값 (가운데 단면) 은 무관 · 검사를 "무게 직선을 뺀 잔차" 로 바꿀지 = ⬜ 1저자 (Q2).
