@@ -5391,7 +5391,9 @@ function netCurrentLegendHtml(pay, opt, st) {
     }
     L.push('<span style="color:#9ca3af">A_c = 같은 풀이의 접촉 면적 (' + (pay.mode === 'physics' ? 'Physics = 세대 2 면적' : 'Hertz = c_cpl[22] 원판')
       + ') · σ₀ = ' + esc(d.sigma0_S_cm) + ' S/cm (' + esc(d.sigma0_source) + ')'
-      + (d.n_no_area ? ' · 면적 없는 접촉 ' + d.n_no_area + ' 개 = 회색' : '') + '</span>');
+      + (d.n_no_area ? ' · 면적 없는 접촉 ' + d.n_no_area + ' 개 = 회색' : '')
+      + ' · @1V 절대값 ∝ σ₀ (입력 기준값' + (pay.channel === 'electronic' ? ' — 전자 σ_AM 50 mS/cm = 모델 기준값 · 측정 NCM811 의 약 10 배 · CL-92'
+        : ' — σ_grain = 펠릿값 · CL-91') + ') · @1C 는 σ₀ 와 무관 (j_1C × 면적 집중)</span>');
   } else {
     L.push('<span style="color:#f87171">⚠ 전류 밀도 계산 불가 — ' + esc(f1.reason) + ' (회색으로 그림 · 몫으로 칠하지 않는다)</span>');
   }
