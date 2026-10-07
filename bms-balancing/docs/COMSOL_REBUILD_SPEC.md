@@ -4169,3 +4169,11 @@ gate INCOMPLETE · 실효 정책 UNVERIFIED · native 미승인 · 게이트 리
 - 초안: `docs/COMSOL_MICROSHORT_PHYSICS_REQUEST_DRAFT_20261007.md` (Q1 휴지 감쇠 · Q2 충전 중 · Q3 내부 상태 / LLI 여부 · Q4 열화 모드 적합 혼동 · 단계 S0–S3) ·
   발송 프롬프트 `docs/COMSOL_MICROSHORT_S0_SEND_TO_CODEX_20261007.md`. 출발점은 §37-4 질문 1–2 · §37-5 L7 · §4-5 의 "휴지 감쇠 관측 (다음 단계)".
 - **발송 전 · 사용자 결정 대기.** 이 절은 계산 · 후보 작성 · 960 s · 실험 비교의 승인이 아니다. 요청서의 σ 사다리 값은 우리 산술 (추론) 이다.
+
+## 71. 미세단락 물리 탐구 S0 승인 · 발송 (2026-10-07 · COMSOL 계산 0)
+
+- 사용자 원문 (2026-10-07): "comsol 보낼게" — §70 요청서 (`docs/COMSOL_MICROSHORT_PHYSICS_REQUEST_DRAFT_20261007.md`) 의 **S0 (설계 보고 + 후보 준비 · COMSOL 계산 0)** 승인.
+  이어서 "지금 codex 차고 넘쳐서 엄청 오래 검토하고 생각하게 만들게 prompt 줘도돼" → 발송 프롬프트를 심층판 `docs/COMSOL_MICROSHORT_S0_SEND_TO_CODEX_v2_DEEP_20261007.md` 로 바꿨다
+  (v1 `…S0_SEND_TO_CODEX_20261007.md` 는 그대로 두고 v2 가 대신한다). 범위 동일 — 독립 재도출 (지배식 · 휴지 자가방전 축약 모형 · LLI 여부) · σ 사다리 반박 · 결과 전 판정 범주 ·
+  비용 · 실패 모드 · 후보 (실행 안 함) · 자기 반박 · 회신 5 종. 허용은 정적 읽기 · 손계산 · COMSOL 을 부르지 않는 직접 쓴 오프라인 산술.
+- 발송은 사용자가 한다. 승인이 아닌 것: S1 이후 계산 · native · 960 s · 실험 비교 · MPH 삭제 · 기존 수용 결과 재개방. 회신은 받은 바이트 그대로 보존 → 수신 검토 → S1 결정.
