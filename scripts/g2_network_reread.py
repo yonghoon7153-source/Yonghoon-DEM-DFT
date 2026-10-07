@@ -8,6 +8,7 @@
 
 입력 (셋 중 하나):
   --smoke-root S     `scripts/wsl_network_smoke.py` ROOT — smoke_report.json 의 망 정지 (stop_after=network) 케이스 · 폴더 S/work/results/<id>
+                     (★ 10-07 G2RR4-03 — 음성 대조 표지 (negative_control · case15) 케이스는 S0 에서 빼고 S0b = 게시 없음 ∧ 스모크 [음성 대조] 판정 PASS)
   --launcher-root R  `scripts/run_network_194_parallel.py` ROOT — manifest 의 기대 세대 (expected_network_generation · 없으면 FAIL) · merged/<코호트>
                      (진짜 배치 기록 status.json · metrics_flat.csv) · merged/<코호트>/results/<case>
                      ★ 10-07 G2RR2-02 — **등록 모드 필수**: --expect-set production194 (등록 ID 지문 194) | pilot3 (시범 세 케이스) · 또는 --expect-case 코호트:케이스
@@ -544,9 +545,28 @@ def main(argv=None) -> int:
     if a.smoke_root:
         sr = Path(a.smoke_root).expanduser().resolve()
         rep = _read_json(sr / 'smoke_report.json') or {}
-        ids = [cid for cid, r in (rep.get('reports') or {}).items() if (r or {}).get('stop_after') == 'network']
+        ids_all = [cid for cid, r in (rep.get('reports') or {}).items() if (r or {}).get('stop_after') == 'network']
+        #  ★ 10-07 G2RR4-03 (Codex 세대 2 재검증 4 §6-3(b)) — 스모크 음성 대조 (보고의 negative_control 표지 · case15 게시 차단 기대) 는 S0 (게시 done) 에서 빼고 S0b 로:
+        #    게시 없음 (done 아님 · 반환 run id 없음) ∧ 스모크의 '<id>: [음성 대조]' 판정 (원인 발화 · 이온 정상 · τ 비노출) 넷 이상이 전부 PASS.  표지 없는 failed 는
+        #    S0 실패 그대로 (이름으로 면제하지 않는다) · 음성 대조 폴더는 K1–K7 로 다시 읽지 않는다 (게시가 없다).
+        neg = sorted(cid for cid in ids_all if (rep['reports'][cid] or {}).get('negative_control'))
+        ids = [cid for cid in ids_all if cid not in neg]
         notdone = {cid: (rep['reports'][cid] or {}).get('status') for cid in ids if (rep['reports'][cid] or {}).get('status') != 'done'}
-        meta.append(dict(name=f'S0 스모크 망 정지 케이스 전부 done ({len(ids)})', ok=bool(ids) and not notdone, detail=notdone or ids))
+        meta.append(dict(name=f'S0 스모크 망 정지 케이스 전부 done ({len(ids)} · 음성 대조 {len(neg)} 제외)', ok=bool(ids) and not notdone, detail=notdone or ids))
+        if neg:
+            nbad = {}
+            for cid in neg:
+                r_ = rep['reports'][cid] or {}
+                nck = [c for c in rep.get('checks') or [] if isinstance(c, dict) and str(c.get('name', '')).startswith(f'{cid}: [음성 대조]')]
+                why = []
+                if r_.get('status') == 'done' or r_.get('returned_network_run_id'):
+                    why.append(f'게시됨 (status {r_.get("status")} · run id {r_.get("returned_network_run_id")}) — 음성 대조가 발화하지 않았다')
+                if len(nck) < 4 or any(c.get('verdict') != 'PASS' for c in nck):
+                    why.append(f'스모크 [음성 대조] 판정 {[(c.get("name", "")[len(cid) + 2:][:24], c.get("verdict")) for c in nck]} — 넷 이상 전부 PASS 여야')
+                if why:
+                    nbad[cid] = why
+            meta.append(dict(name=f'S0b 스모크 음성 대조 ({len(neg)}) = 게시 없음 · 지정한 원인 발화 · 이온 정상 (스모크 [음성 대조] 판정 · G2RR4-03 · 등록 §9-4 제안)',
+                             ok=not nbad, detail=nbad or neg))
         folders = [sr / 'work' / 'results' / cid for cid in ids if cid not in notdone]
         reports = run_smoke_or_dirs(folders, exp)
     elif a.launcher_root:

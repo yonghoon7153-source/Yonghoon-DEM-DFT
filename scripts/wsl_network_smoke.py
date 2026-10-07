@@ -9,6 +9,8 @@
   A  real_14 (리포 `docs/data/real14_reference_20260928/` — atom · contact .gz · 메시 · 덱 · sha256 = README 표)
        a) 일반 경로 + **실제 Stage E** (figures · auto_db 끔)      b) `stop_after='network'`
      case15 (리포 `docs/data/case15_corner_20261001/` — 같은 꼴 · ★ 10-07 Codex 세대 2 재검증 §7-4) — `stop_after='network'` (`--skip-case15`)
+       ★ 10-07 G2RR4-03 (재검증 4 §6-3(b)) = **음성 대조** (`CASE15_NEGCTL`): 게시 차단 · τ 비노출 · 원인 발화 (원덤프 직접 6 조합 — 전자 · Hertz 열 B∩T 넷 ·
+       Physics 열 음수 면적 거부) · 이온 정상 이 `[음성 대조]` 검사 넷으로 실제 발화해야 PASS (whitelist 아님 · 등록 §9-4 제안 · ⬜ 1저자 비준)
      ⇒ 게시된 증서 · 도장 · 진단 상태 · 열 역할 · 인계 출처 관문의 다시 읽기 = `scripts/g2_network_reread.py --smoke-root <ROOT>` (이 도구는 게시까지)
   B  LHS 코호트 (원자료 = 코호트 TSV 경로 · 같은 프레임 관문 = `lhs_webapp_batch.stage_case` · `resolve_mode` 그대로) — `stop_after='network'`
        기본 고르기 (커밋된 인계표 · 수확 JSON 에서 · 접촉 수 가장 작은 것): 관통 bimodal (lhs) · 비관통 (lhs) · lhsx 한 건
@@ -69,6 +71,68 @@ REFBEDS = {
                           ('mesh_v4_1710000.stl', 'mesh_1710000.stl', 'mesh_v4_1710000.stl'),
                           ('input_case15.liggghts', 'input_case15.liggghts', 'input_case15.liggghts'))),
 }
+
+
+#: ★ 10-07 G2RR4-03 (Codex 세대 2 재검증 4 §6-3(b)) — case15 = **음성 대조** (얇은 corner 침대 · 판 간격 19.1455 µm < 4 r_AM): 이온 채널은 정상으로 풀리고, 전자 두 모드 ·
+#:   Hertz 열 = 띠 겹침 (boundary_overlap · B∩T 입자 ID 24 · 40 · 57 · 103) · Physics 열 = 음수 원자료 접촉 면적 거부 (두 행 31–29241 · 38–29241) → 망 게시 차단 (WEB-03 Q1).
+#:   그 지정한 실패가 **실제로 발화해야** PASS — whitelist · 이름으로 PASS 하지 않는다 · 스모크 전체를 소급 "기대대로" 로 바꾸지 않는다 (원 실패 기록 = 등록 §9-2 · 10-07 14:15 ·
+#:   이 기대 = 등록 §9-4 제안 · ⬜ 1저자 비준).  이온 참고값 = Codex 재검증 4 §6-1 직접 풀이 (σ_ratio 8 자리 · 우리 재현 같음) · 증서 문턱 = network_conductivity 1e-6.
+CASE15_NEGCTL = dict(tag='case15_publication_blocked', b_and_t_ids=(24, 40, 57, 103), negative_rows=((31, 29241), (38, 29241)),
+                     ionic_ref8={'hertzian': 0.00032635, 'physics': 0.00036225}, cert_max=1e-6,
+                     overlap_channels=('electronic_hertzian', 'electronic_physics', 'thermal_hertzian'), refuse_channel='thermal_physics',
+                     refuse_text='ligg_area < 0', solver_step='Network Solver (both modes)')
+
+
+def case15_channel_probe(cd: Path, type_map='1:AM_P,2:SE') -> dict:
+    """★ 10-07 G2RR4-03 — case15 음성 대조의 원인 증거 (읽기만): 업로드 폴더의 압축 푼 원덤프 (atom · contact) · STL 꼭짓점 (판 높이) · atom BOX (상자) →
+    실제 `network_conductivity.build_network` · `solve_network` 를 채널 셋 × 모드 둘 (Codex 재검증 4 탐침 case15_channels 와 같은 꼴 · 문서 상수를 쓰지 않는다).
+    → dict(atoms · contacts · plate_um · box_um · negative_area [[id1, id2, µm², δ µm]] · channels {채널_모드: dict(value · status · reason · 보존 · 잔차 · B∩T) | dict(error)})."""
+    import network_conductivity as nc
+    bed = REFBEDS['case15']
+    files = {dst: Path(cd) / dst for _src, dst, _key in bed['files']}
+    atom_p = files[bed['atom']]
+    contact_p = next(p for n, p in files.items() if n.startswith('contact_'))
+    stl_p = next(p for n, p in files.items() if n.endswith('.stl'))
+
+    def rows(p, tag):
+        with open(p, encoding='utf-8') as fh:
+            head = None
+            for line in fh:
+                if line.startswith(tag):
+                    head = line[len(tag):].split()
+                    break
+            return [dict(zip(head or [], x.split())) for x in fh if x.strip() and not x.startswith('ITEM')]
+    A = {int(r['id']): dict(type=int(r['type']), **{k: float(r[k]) for k in ('x', 'y', 'z', 'radius')}) for r in rows(atom_p, 'ITEM: ATOMS')}
+    C = [dict(id1=int(float(r['c_cpl[7]'])), id2=int(float(r['c_cpl[8]'])), contact_area=float(r['c_cpl[22]']), delta=float(r['c_cpl[23]']))
+         for r in rows(contact_p, 'ITEM: ENTRIES')]
+    zs = [float(s.split()[3]) for s in stl_p.read_text(encoding='utf-8').splitlines() if s.strip().startswith('vertex')]
+    plate = sum(zs) / len(zs)
+    with open(atom_p, encoding='utf-8') as fh:
+        for line in fh:
+            if line.startswith('ITEM: BOX BOUNDS'):
+                break
+        bounds = [[float(x) for x in next(fh).split()[:2]] for _ in range(3)]
+    box = [b[1] - b[0] for b in bounds[:2]]
+    tm = {int(k): v for k, v in (x.split(':') for x in str(type_map).split(','))}
+    se = sorted(t for t, lab in tm.items() if lab == 'SE')
+    am = sorted(t for t, lab in tm.items() if lab.startswith('AM'))
+    out = dict(atoms=len(A), contacts=len(C), plate_um=round(plate * 1000, 6), box_um=[round(b * 1000, 6) for b in box],
+               negative_area=[[c['id1'], c['id2'], round(c['contact_area'] * 1e6, 6), round(c['delta'] * 1000, 6)] for c in C if c['contact_area'] < 0],
+               channels={})
+    for mode, target in (('ionic', se), ('electronic', am), ('thermal', sorted(se + am))):
+        for cm in ('hertzian', 'physics'):
+            with contextlib.redirect_stdout(io.StringIO()):
+                try:
+                    n = nc.build_network(A, C, target, 1000., plate, box_x=box[0], box_y=box[1], type_map=tm, mode=mode, contact_mode=cm)
+                    val = nc.solve_network(n, mode='full')
+                    si = (n.get('solve_info') or {}).get('full') or {}
+                    d = dict(value=list(val) if isinstance(val, (list, tuple)) else val, status=si.get('status'), reason=si.get('reason'),
+                             conservation_rel=si.get('conservation_rel'), residual_rel=si.get('residual_rel'),
+                             intersection=sorted(int(x) for x in (set(n.get('bottom') or ()) & set(n.get('top') or ()))))
+                except Exception as e:                       # noqa: BLE001 — 음성 대조의 기대 거부 (Physics 열) 도 여기로 온다 — 기록한다
+                    d = dict(error=f'{type(e).__name__}: {e}')
+            out['channels'][f'{mode}_{cm}'] = d
+    return out
 
 
 def refbed_sha_table(folder):
@@ -257,6 +321,13 @@ def child_case(spec: dict) -> dict:
         kw['stop_after'] = stop
     out = app.run_pipeline(cid, rep['mode'], rep['type_map'], spec.get('scale', 1000), **kw)
     rep.update(collect(app, ps, tf, cid, out, time.monotonic() - t))
+    if spec.get('negative_control'):
+        #  ★ G2RR4-03 — 음성 대조 (case15): 표지 + 원인 증거 (원덤프 → 실제 build_network · solve_network 6 조합 · 파이프라인 뒤 · 읽기만) — 판정은 부모 evaluate
+        rep['negative_control'] = spec['negative_control']
+        try:
+            rep['negctl'] = case15_channel_probe(cd, rep['type_map'])
+        except Exception as e:                              # noqa: BLE001 — 증거를 못 만들면 그대로 남긴다 (판정 = FAIL)
+            rep['negctl'] = dict(error=f'{type(e).__name__}: {e}')
     return rep
 
 
@@ -486,6 +557,44 @@ def judge_c3(vm, expect='zero'):
     return ('PASS' if ok else 'FAIL'), f'거의 정수압 쌍 → {a} (기대 null · 계산 안 함)'
 
 
+def negative_control_checks(add, ok, cid, r):
+    """★ 10-07 G2RR4-03 — case15 음성 대조 판정 (A 묶음 · 이름 앞 '[음성 대조]') — 지정한 실패가 실제로 발화하고 이온 채널은 정상이어야 PASS.
+      ① 게시 차단 — status failed · 실패 단계 = 망 솔버 (both modes) · Stage E 안 돌았다 · 반환 run id 없음 (첫 실행 · 활성 세대 없음 = 옛 성공 산출물 재사용 없음)
+      ② 인계 숫자 비노출 — τ 세 모드 상태 NOT_COMPUTED (숫자 칸 없음)
+      ③ 원인 발화 (원덤프 직접 6 조합) — 전자 두 모드 · Hertz 열 = boundary_overlap · B∩T = 입자 ID 24 · 40 · 57 · 103 · Physics 열 = 음수 원자료 면적 거부 · 음수 행 = 둘
+      ④ 이온 정상 — 두 모드 computed · σ_ratio 참고 8 자리 · 증서 보존 · 잔차 < 1e-6"""
+    ng = CASE15_NEGCTL
+    tag = f'{cid}: [음성 대조]'
+    add('A', f'{tag} 게시 차단 — failed · 실패 단계 {ng["solver_step"]} · Stage E 안 돌았다 · 반환 run id 없음 (옛 성공 산출물 재사용 없음)',
+        ok(r.get('status') == 'failed' and ng['solver_step'] in (r.get('failed_stages') or []) and r.get('stage_e_ran') is False
+           and not r.get('returned_network_run_id')),
+        f'status {r.get("status")} · 실패 단계 {r.get("failed_stages")} · Stage E {r.get("stage_e_ran")} · run id {r.get("returned_network_run_id")}')
+    tau = r.get('tau') or {}
+    sts = {m: tau.get(f'ion_net_status_{m}') for m in ('hertz', 'physics', 'hertz_h12')}
+    nums = {k: v for k, v in tau.items() if k.startswith(('f_ion_', 'tau2_ion_', 'tau_ion_')) and v not in (None, '')}
+    add('A', f'{tag} 인계 숫자 비노출 — τ 세 모드 NOT_COMPUTED · 숫자 칸 없음', ok(set(sts.values()) == {'NOT_COMPUTED'} and not nums), f'{sts} · 숫자 {nums}')
+    neg = r.get('negctl') if isinstance(r.get('negctl'), dict) else {}
+    ch = neg.get('channels') if isinstance(neg.get('channels'), dict) else {}
+    ids = list(ng['b_and_t_ids'])
+    ov = {k: ((ch.get(k) or {}).get('reason'), (ch.get(k) or {}).get('intersection')) for k in ng['overlap_channels']}
+    refuse = str((ch.get(ng['refuse_channel']) or {}).get('error') or '')
+    rows_ = sorted(tuple(int(v) for v in x[:2]) for x in (neg.get('negative_area') or []) if isinstance(x, (list, tuple)) and len(x) >= 2)
+    add('A', f'{tag} 원인 발화 (원덤프 직접 6 조합) — 전자 두 모드 · Hertz 열 boundary_overlap · B∩T = 입자 ID {ids} · Physics 열 음수 원자료 면적 거부 · '
+             f'음수 행 {len(ng["negative_rows"])}',
+        ok(bool(ch) and all(v == ('boundary_overlap', ids) for v in ov.values()) and ng['refuse_text'] in refuse
+           and rows_ == sorted(ng['negative_rows'])),
+        f'겹침 {ov} · Physics 열 {refuse[:120]!r} · 음수 행 {rows_} · 증거 오류 {neg.get("error")}')
+    ion = {}
+    for m, ref in ng['ionic_ref8'].items():
+        d = ch.get(f'ionic_{m}') or {}
+        v = (d.get('value') or [None, None])
+        q = v[1] if isinstance(v, (list, tuple)) and len(v) > 1 else None
+        ion[m] = (d.get('status'), None if not isinstance(q, (int, float)) else round(q, 8), d.get('conservation_rel'), d.get('residual_rel'))
+    add('A', f'{tag} 이온 정상 — 두 모드 computed · σ_ratio 참고 8 자리 {ng["ionic_ref8"]} · 증서 보존 · 잔차 < {ng["cert_max"]}',
+        ok(all(s == 'computed' and q == ng['ionic_ref8'][m] and isinstance(c, (int, float)) and isinstance(e, (int, float))
+               and c < ng['cert_max'] and e < ng['cert_max'] for m, (s, q, c, e) in ion.items())), ion)
+
+
 def evaluate(reports: dict, timings: dict, expect_vm='zero', lhs_expect=None) -> list:
     checks = []
 
@@ -505,6 +614,9 @@ def evaluate(reports: dict, timings: dict, expect_vm='zero', lhs_expect=None) ->
             add(grp, f'{cid}: 원자료 sha256 = README 표 (압축 푼 바이트)', ok(r.get('raw_sha_ok')), r.get('raw_sha'))
         st, stop = r.get('status'), r.get('stop_after')
         req_bad = [s['step'] for s in r.get('stages') or [] if s.get('required') and not s.get('ok')]
+        if r.get('negative_control') == CASE15_NEGCTL['tag']:
+            negative_control_checks(add, ok, cid, r)
+            continue
         if stop == 'network':
             add(grp, f'{cid}: stop_after=network → done · Stage E 안 돌았다 · 망 정지 계약 통과',
                 ok(st == 'done' and r.get('stage_e_ran') is False
@@ -651,7 +763,8 @@ def build_jobs(args) -> list:
             jobs.append(dict(id='real14_general', kind='real14', stop=None))
         jobs.append(dict(id='real14_network', kind='real14', stop='network'))
     if not args.skip_case15:                                # ★ 10-07 §7-4 — case15 (corner · 182,995 접촉) 망 정지
-        jobs.append(dict(id='case15_network', kind='case15', stop='network'))
+        #  ★ G2RR4-03 (Codex 세대 2 재검증 4 §6-3(b)) — 음성 대조: 게시 차단 + 지정한 원인 발화가 기대 (등록 §9-4 제안 · ⬜ 1저자 비준 · 원 실패 기록 §9-2)
+        jobs.append(dict(id='case15_network', kind='case15', stop='network', negative_control=CASE15_NEGCTL['tag']))
     if not args.skip_lhs:
         picks = ([(c, *lhs_expected_perc(c)) for c in args.lhs_case] if args.lhs_case
                  else [(c, f, e) for c, f, e in pick_lhs_cases()])

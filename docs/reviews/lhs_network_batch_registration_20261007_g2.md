@@ -188,6 +188,10 @@ cd ~ && tar czf ~/g2pre_${S}_$T.tar.gz "$(basename "$SM")/smoke_report.json" "$(
   `expected_n` · `read_n` · `set_equal` · `missing` · `extra`).  v1.3 생성기는 production194 전부 (기대 = 읽음 = 194 · 같음) 인 기록만 받는다 (G2RR2-02).
 - 시범 import 관측 (`run --observe-imports`) — 워커 · 단계 하위 프로세스가 읽은 리포 모듈을 남기고 audit 가 봉인 ⊇ 관측을 본다 (값에 닿지 않는다).
   §1 시범에서 켠다 — 194 본 실행에서 켤지는 발사 승인 때 1저자가 정한다.
+  > ⬜ **제안 (10-07 · Codex 재검증 4 `G2RR4-03` · 1저자 비준 대기 — 등록 기대를 바꾼다 · 위 줄은 원문으로 둔다)**: 194 본 실행도 `--observe-imports` **필수**.
+  > 실행기 (`36ba39070`) 가 생산 계획 (계획 큐 = 등록 production194) 을 관측 없이 띄우지 않는다 (사전 점검 ⛔ · `--dry-run` 에도 보인다) · 감사 = 관측을 끈 생산 manifest 를
+  > 문제로 (rc 1) · v1.3 배포 관문 = 배치 manifest `observe_imports` true · 감사의 관측 객체 · 관측 내부 문제 0 · 실행 단계 ↔ 영수증 결합 기록 (`stage_binding` — G2RR4-01 ·
+  > 02) 이 없으면 받지 않는다.  변경 이력 = §9-4.
 
 ## 4. 계산 · 발사 (Codex GO 뒤)
 
@@ -201,6 +205,19 @@ PY=$(ls ~/Yonghoon-DEM-DFT/venv/bin/python ~/Yonghoon-DEM-DFT/.venv/bin/python3 
 $PY scripts/run_network_194_parallel.py run --root "$R" --dry-run 2>&1 | grep -E "코드 |기대 망 세대|전이 의존|지연 import|입력 지문|원자료 · 메시 문제|⛔"   # §2 · §3 값과 같아야
 $PY scripts/run_network_194_parallel.py run --root "$R" 2>&1 | tee ~/net194_run_$(date +%m%d_%H%M).log | tail -40
 ```
+
+> ⬜ **제안 — 본 실행 명령 · manifest 확인 (10-07 · `G2RR4-03` · Codex 재검증 4 §4 Q3 · §7-3 · 1저자 비준 대기 · 위 블록은 원문으로 둔다)**.  고친 실행기는 위 둘째 줄
+> (관측 플래그 없음) 을 생산 194 에서 사전 점검 ⛔ 로 거부한다.
+>
+> ```bash
+> $PY scripts/run_network_194_parallel.py run --root "$R" --dry-run --observe-imports 2>&1 | grep -E "코드 |기대 망 세대|전이 의존|지연 import|fork|입력 지문|원자료 · 메시 문제|⛔"   # ⛔ 줄 없음 · fork 0 줄 ✓
+> $PY scripts/run_network_194_parallel.py run --root "$R" --observe-imports 2>&1 | tee ~/net194_run_$(date +%m%d_%H%M).log | tail -40
+> # 시작 직후 (manifest 가 생기면 · 다른 터미널) 와 완료 뒤 두 번 — 관측 표지 · 실행 신원 (각 1 줄 · 값 true · 32 hex)
+> grep -oE '"observe_imports": (true|false)' "$R/manifest.json"; grep -oE '"import_obs_run_id": "[0-9a-f]{32}"' "$R/manifest.json"
+> # 완료 뒤 — 감사의 관측 · 단계 결합 (기대: audit rc 0 · 시작 = 끝맺음 · 완료 시도 194 · stage_binding 194 · 문제 [])
+> $PY scripts/run_network_194_parallel.py audit --root "$R" --tsv "$R/seal_audit.tsv" --json "$R/seal_audit.json" 2>&1 | grep -v '^  lhs' | tail -12; echo "audit rc=${PIPESTATUS[0]}"
+> $PY -c "import json,sys; a=json.load(open(sys.argv[1])); o=a['import_observation']; print(o['n_started'], o['n_finalized'], len(o['completed_attempts']), o['stage_binding']['schema'], len(o['stage_binding']['attempts']), a['import_observation_problems'])" "$R/seal_audit.json"
+> ```
 
 ## 5. 판정 · 관문 (결과 전 등록)
 
@@ -254,4 +271,21 @@ $PY scripts/run_network_194_parallel.py run --root "$R" 2>&1 | tee ~/net194_run_
   이온 채널은 계산됨 (Codex 직접 풀이와 같음 · Physics 협착-only 312 간선 not_computed = 기대 그대로).  ⇒ **코드는 등록 계약대로 · 등록 기대 (case15 done) 가 틀렸다** (`SELF-92`).
   이 결과를 본 뒤 §1 기대 · 스모크 기대를 **고치지 않는다**.  194 도달 = 띠 겹침 0/194 · 음수 · 0 덤프 면적 0/194 (기록 · 증거 README §3) · 처리 = 재검증 4 요청서 §4 · Q6 (Codex) ·
   같이 등재 `GEN2-04` (면적 ≤ 0 처리 모드 비대칭) · `WEB-05` (시도 사유 끝 300 자) · ✅ 전체 출력 보충 묶음 (판정문 §8-4 · 1저자 · 증거 README §5 — 자체 시험 rc 0 · 100/100 · 영수증 15 = 15).
+  ⚠ 정정 10-07 (`SELF-94` · Codex 재검증 4 §5): 보충 묶음이 채운 것 = 자체 시험 전문 둘 · 시범 3 워커 로그 · 영수증 · run 기록 — 전체 dry-run 원 stdout · 전체 스모크 stdout ·
+  게시된 dual/full_metrics 원파일은 아니다 ("전체 출력" 으로 일반화하지 않는다 · 로그 포장만으로 수치 재실행은 요구되지 않았다) · ⚠ case15 음수 면적은 한 행이 아니라 **두 행**
+  (31–29241 −0.186036 · 38–29241 −0.186264 µm² — Physics 는 첫 행에서 멈춘다 · 판정문 §6-1).
 - 9-3 발사: 커밋 ⬜ · manifest `seal.code_fp` ⬜ · `expected_network_generation` ⬜ · `input_digest.raw_sha256_table_sha256` ⬜
+- 9-4 **변경 이력 (10-07 · Codex 재검증 4 `docs/reviews/codex_review_gen2_network_reverify4_20261007.md` 뒤 · 결과 0 건 — 194 미실행)** — ⬜ **제안 · 1저자 비준 대기** (등록 기대를 바꾸는 항목):
+  ① **본 실행 관측 필수** (`G2RR4-03` · 판정문 §4 Q3 · §7-3) — §3b · §4 제안 표지 그대로 (실행기 `36ba39070` 사전 점검 ⛔ · 감사 문제 · v1.3 배포 관문 필수 조건).
+  ② **case15 = 음성 대조** (판정문 §6-3(b)) — 원 실패 기록 = §9-2 (10-07 14:15 · 고치지 않는다) · 변경 사유 = *"이온 단독 성공을 전체 채널 성공으로 잘못 예상했다"* (`SELF-92`).
+     새 기대 (제안 · `scripts/wsl_network_smoke.py` `CASE15_NEGCTL` · 스모크 `case15_network` 의 `[음성 대조]` 검사 넷 — 지정한 실패가 **실제로 발화해야** PASS · whitelist · 이름 PASS 아님):
+     이온 직접 풀이 = 두 모드 computed · σ_ratio 8 자리 0.00032635 (Hertz) · 0.00036225 (Physics) · 증서 보존 · 잔차 < 1e-6 / 전자 두 모드 · Hertz 열 = `boundary_overlap` ·
+     B∩T = 입자 ID 24 · 40 · 57 · 103 / Physics 열 = 음수 원자료 면적 거부 (`ligg_area < 0` · 음수 행 둘) / 파이프라인 = 게시 차단 (failed · 실패 단계 = 망 솔버) · 반환 run id 없음
+     (옛 성공 산출물 재사용 없음) · 인계 숫자 비노출 (τ 세 모드 NOT_COMPUTED · 숫자 칸 없음).  다시 읽기 (`--smoke-root`) = 음성 대조를 S0 에서 빼고 S0b (게시 없음 ∧
+     스모크 `[음성 대조]` 판정 PASS) · 표지 없는 failed = S0 실패 그대로.  스모크 전체를 "기대대로 통과" 로 소급 수정하지 않는다 · 얇은 침대 띠 규칙 · 채널별 게시 =
+     모형/계약 변경 → 이 194 와 분리 (판정문 §6-3(b)).
+  ③ 다음 사전 점검 기대 (제안): §1 단계 3 smoke rc 0 (case15 음성 대조 PASS · 나머지 그대로) · 단계 4 reread rc 0 (S0 · S0b) · 단계 5 audit = 고친 실행기 (`4c8f84928`) 의
+     단계 결합 — 옛 실행기 시범 ROOT 는 시도에 stage_plan 이 없어 지금 케이스 기록 (out/status.json stages) 으로 결합 (WSL 에서 다시 확인 ⬜) · 다시 읽기 = 상세 계약 (`942e851fd`).
+  ④ 코드 신원: G2RR4-01 `942e851fd` · G2RR4-02 `4c8f84928` · G2RR4-03 `36ba39070` + 스모크 · 다시 읽기 음성 대조 구현 커밋 (이 문서와 같은 커밋) — **봉인 32 파일 불변**
+     (`code_fp e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71`) · 인계 도구 `scripts/g2_network_reread.py` 지문은 바뀐다 (발사 때 manifest `handover_code_hashes` 에 기록 ·
+     §3 의 10-07 재등록 지문은 역사).
