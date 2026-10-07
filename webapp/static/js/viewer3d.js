@@ -5245,8 +5245,10 @@ function netCurrentT(s, lo, hi) {
 }
 
 /* 눈금 · 범례 숫자 (A cm⁻² · µN · 비) — 0.01 ≤ v < 1000 은 유효 2 자리 (꼬리 0 없음) · 그 밖 = m×10ⁿ (지수 · 천 단위 콤마 없음 —
- * 보고자료 원칙).  0 → '0' · 비유한 → '—'. */
+ * 보고자료 원칙).  0 → '0' · 비유한 → '—'.  (인자 하나만 — Array.map 에 그대로 넘겨도 순번이 자리수가 되지 않는다.  범례의 요약 값
+ * (평균 · Q_areal) 은 그 함수 안에서 유효 3 자리로.) */
 function netCurrentFmtJ(v) {
+  const pr = 2;
   v = +v;
   if (!isFinite(v)) return '—';
   if (v === 0) return '0';
@@ -5254,12 +5256,12 @@ function netCurrentFmtJ(v) {
                                                         '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹' })[ch]);
   const a = Math.abs(v), sign = v < 0 ? '-' : '';
   if (a >= 0.01 && a < 1000) {
-    const r = Number(a.toPrecision(2));
+    const r = Number(a.toPrecision(pr));
     if (r < 1000) return sign + String(r);
   }
   let e = Math.floor(Math.log10(a));
-  let m = Number((a / Math.pow(10, e)).toPrecision(2));
-  if (m >= 10) { m = Number((m / 10).toPrecision(2)); e += 1; }
+  let m = Number((a / Math.pow(10, e)).toPrecision(pr));
+  if (m >= 10) { m = Number((m / 10).toPrecision(pr)); e += 1; }
   return sign + (m === 1 ? '' : String(m) + '×') + '10' + sup(e);
 }
 
@@ -5337,7 +5339,8 @@ function netCurrentColorbarSpec(pay, opt, lo, hi, frame) {
     ticks: netCurrentTicks(lo + sh, hi + sh, netCurrentFmtJ),
     sub: c1
       ? ('@1C = linear scaling of the 1 V probe solve: j(1C) = j(1V) × I_1C / I_1V (× ' + netCurrentFmtJ(f) + ') · I_1C = Q_areal × 1 h⁻¹'
-         + (q > 0 ? ' = ' + netCurrentFmtJ(q) + ' mA cm⁻²' : '') + ' (current-conservation assumption — no reaction distribution).  ' + base)
+         + (q > 0 ? ' = ' + (q >= 0.01 && q < 1000 ? String(Number((+q).toPrecision(3))) : netCurrentFmtJ(q)) + ' mA cm⁻²' : '')
+         + ' (current-conservation assumption — no reaction distribution).  ' + base)
       : ('1 V probe across the electrode (bottom band 1 V → top band 0 V).  ' + base),
   };
 }
@@ -5363,6 +5366,7 @@ function netCurrentLegendHtml(pay, opt, st) {
   const n = pay.n_returned || 0;
   const pct = netCurrentPct;
   const fj = netCurrentFmtJ;
+  const f3 = v => ((+v >= 0.01 && +v < 1000) ? String(Number((+v).toPrecision(3))) : fj(v));   // 요약 값 (Q_areal) — 유효 3 자리
   const esc = jeEscH;
   const d = pay.density || {};
   const c1 = d.c1 || {};
@@ -5379,8 +5383,8 @@ function netCurrentLegendHtml(pay, opt, st) {
       + (d.j_mean_1V > 0 ? ' <span style="color:#9ca3af">(단면 평균 ⟨J⟩ ' + fj(d.j_mean_1V) + ')</span>' : ''));
     if (fc.ok) {
       L.push('@1C (운전 환산 × ' + fj(fc.factor) + ' = I_1C / I_1V): <b>' + fj(Math.pow(10, st.lo) * fc.factor) + ' … '
-        + fj(Math.pow(10, st.hi) * fc.factor) + ' A cm⁻²</b> <span style="color:#9ca3af">(Q_areal ' + fj(c1.Q_areal_mAh_cm2)
-        + ' mAh/cm² → j_1C ' + fj(c1.Q_areal_mAh_cm2) + ' mA cm⁻² · 케이스 표 등급 값)</span>'
+        + fj(Math.pow(10, st.hi) * fc.factor) + ' A cm⁻²</b> <span style="color:#9ca3af">(Q_areal ' + f3(c1.Q_areal_mAh_cm2)
+        + ' mAh/cm² → j_1C ' + f3(c1.Q_areal_mAh_cm2) + ' mA cm⁻² · 케이스 표 등급 값)</span>'
         + ((c1.defaults_used || []).length ? ' <span style="color:#fbbf24">⚠ ' + esc((c1.defaults_used || []).join(' · ')) + '</span>' : ''));
     } else {
       L.push('<span style="color:#fbbf24">⚠ @1C 환산 불가 — ' + esc(fc.reason) + '</span>');
@@ -5619,17 +5623,18 @@ function pressureViewInfo(aux) {
 /* Max contact pressure 범례 — 이름 · 툴팁 한정어 · 압축만 / 옛 계산 경고 · 색 막대 (coolwarm · log p5–p95) · AM 만 보기 안내 · Z-profile */
 function pressureLegendHtml(info, sLo, sMed, sHi) {
   const esc = jeEscH, fj = netCurrentFmtJ;
+  const f3 = v => ((+v >= 0.01 && +v < 1000) ? String(Number((+v).toPrecision(3))) : fj(v));   // 범위 끝 · 중앙값 — 유효 3 자리
   const stops = [0, 0.25, 0.5, 0.75, 1.0].map(v => '#' + coolwarmColor(v).toString(16).padStart(6, '0'));
   const rule = info.rule === 'compressive'
-    ? ('압축 접촉만 — 당김 (접착) 접촉 ' + info.nAttr + ' 행 · 부호 판정 불가 ' + info.nUnknown + ' 행 · δ ≤ 0 · 힘 0 ' + info.nNoOverlap
-       + ' 행은 범위에서 뺐다 (옛 계산 (당김 포함) 이 더 컸던 입자 ' + info.nLegacyHigher + ' 개)')
+    ? ('압축 접촉만 — 당김 (접착) 접촉 ' + info.nAttr + ' 행 · 부호 판정 불가 ' + info.nUnknown + ' 행 · 겹침 없음 (δ ≤ 0 · 면적 0 · 힘 0) '
+       + info.nNoOverlap + ' 행을 범위에서 뺐다 (옛 계산 (당김 포함) 이 더 컸던 입자 ' + info.nLegacyHigher + ' 개)')
     : ('<span style="color:#fbbf24">⚠ 당김 (접착) 접촉 포함 — 옛 계산 (3D 데이터에 입자 하중 자료 load_view 없음 · webapp/app.py 발사 뒤 패치 전) · '
        + '10⁴ MPa 넘는 값은 당김 접촉 (δ ≈ 0 면적)</span>');
   return '<b title="' + esc(pressureViewTip()) + '">Max contact pressure (|Fn|/A · MPa · log)</b>'
     + '<div style="color:#9ca3af;font-size:11px">' + rule + '</div>'
     + '<div style="margin:6px 0 2px 0;height:10px;border-radius:3px;background:linear-gradient(90deg,' + stops.join(',') + ')"></div>'
     + '<div style="display:flex;justify-content:space-between;font-size:10px;color:#9ca3af">'
-    + '<span>' + fj(sLo) + '</span><span>median ≈ ' + fj(sMed) + '</span><span>' + fj(sHi) + '</span></div>'
+    + '<span>' + f3(sLo) + '</span><span>median ≈ ' + f3(sMed) + '</span><span>' + f3(sHi) + '</span></div>'
     + '<div style="color:#9ca3af;font-size:11px">하중이 아니다 — 압축 접촉의 p 는 쌍 유형마다 거의 일정 (≈ k/(2πR*)) · '
     + '하중 (z 차이) 은 View Mode "AM 만 — 입자 응력 (LW)" 로</div>'
     + '<button id="stress-z-modal-btn" class="data-modal-btn"><span class="ico">📊</span><span>Z-profile 데이터</span></button>';
@@ -5673,6 +5678,7 @@ function amOnlyMissingHtml(lv) {
 /* AM 만 범례 — 양 · 범위 · 벽 표지 조작 · 컬러바 · 수 · 한정어.  st = {n, nColored, nWall, nNoValue, lo, hi} */
 function amOnlyLegendHtml(lv, ui, st) {
   const esc = jeEscH, fj = netCurrentFmtJ;
+  const f3 = v => ((+v >= 0.01 && +v < 1000) ? String(Number((+v).toPrecision(3))) : fj(v));   // ⟨σ_VM⟩ — 유효 3 자리
   const m = loadViewAmMetric(lv, ui.metric);
   const am = (lv && lv.am) || {};
   const css = 'background:#16192e;color:#e4e6f0;border:1px solid #2a2d3e;border-radius:4px;padding:1px 2px;font-size:11px';
@@ -5691,11 +5697,15 @@ function amOnlyLegendHtml(lv, ui, st) {
     L.push('<span style="color:#fbbf24">⚠ ' + esc(m.label || '') + ' — ' + esc(m.reason) + ' — 칠하지 않는다 (AM 기본색)</span>');
     return L.join('<br>');
   }
+  if (st.noRange) {
+    L.push('<span style="color:#fbbf24">⚠ 칠할 값이 없다 (범위에 넣을 AM 값 0 개' + (ui.wall ? ' — 벽 접촉 입자를 뺐다' : '') + ') — 칠하지 않는다 (AM 기본색)</span>');
+    return L.join('<br>');
+  }
   const stops = [0, 0.25, 0.5, 0.75, 1].map(v => '#' + jetColor(v).toString(16).padStart(6, '0'));
   L.push('<div style="margin:3px 0 1px 0;height:9px;border-radius:3px;background:linear-gradient(90deg,' + stops.join(',') + ')"></div>');
   const lo = Math.pow(10, st.lo), hi = Math.pow(10, st.hi);
   L.push('<b>' + esc(m.label) + '</b>: ' + fj(lo) + ' … ' + fj(hi) + (fn ? ' µN' : ' × ⟨σ_VM⟩')
-    + (!fn && m.mpa > 0 ? ' <span style="color:#9ca3af">(⟨σ_VM⟩ = ' + fj(m.mpa) + ' MPa · 모델 단위 · ' + fj(lo * m.mpa) + ' … '
+    + (!fn && m.mpa > 0 ? ' <span style="color:#9ca3af">(⟨σ_VM⟩ = ' + f3(m.mpa) + ' MPa · 모델 단위 · ' + fj(lo * m.mpa) + ' … '
        + fj(hi * m.mpa) + ' MPa)</span>' : '') + ' (jet · log)');
   L.push('색 범위 = AM 만의 ' + (ui.range === 'minmax' ? '최소–최대' : 'p5–p95') + (ui.wall ? ' (벽 접촉 입자 뺌)' : ''));
   L.push('AM ' + st.n + ' 개 · 칠한 ' + st.nColored + ' · 벽 접촉 ' + st.nWall + ' 개'
@@ -5762,7 +5772,7 @@ function applyAmOnlyView(state) {
     if (v > 0) vals.push(v);
   }));
   const rng = met.ok ? amOnlyRange(vals, ui.range) : null;
-  const st = { n: 0, nColored: 0, nWall: 0, nNoValue: 0, lo: rng ? rng[0] : 0, hi: rng ? rng[1] : 1 };
+  const st = { n: 0, nColored: 0, nWall: 0, nNoValue: 0, lo: rng ? rng[0] : 0, hi: rng ? rng[1] : 1, noRange: met.ok && !rng };
   if (!met.ok || !rng) {
     base();
     amMeshes.forEach(([, m]) => m.userData.particles.forEach(p => { st.n += 1; if (wall[p.id]) st.nWall += 1; }));
