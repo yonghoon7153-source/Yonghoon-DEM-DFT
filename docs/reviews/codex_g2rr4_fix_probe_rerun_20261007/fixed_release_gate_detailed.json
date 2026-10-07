@@ -1,0 +1,249 @@
+{
+  "scope": "(우리 파생 탐침 · G2RR4-01 — Codex `probes/release_gate.py` 를 바탕으로 한 것 · 원 탐침은 무변경으로 따로 돌린다)\n\nCodex 탐침은 정상 대조를 포함한 **모든** 변이의 다시 읽기 `meta` · `cases` 를 최소 꼴 (meta 'M2 all completed' 한 줄 · 케이스마다 K1 하나) 로 덮어쓴다.\n상세 계약 (필수 검사 ID 한 번씩 · 빈 checks 공집합 PASS 금지) 을 둔 고친 트리에서는 그 정상 대조까지 거부된다 — 그러면 \"새 관문이 정상 기록까지 막는가\" 와\n\"변이를 막는가\" 가 갈리지 않는다.  여기서는 고친 트리의 시험 픽스처 (`scripts/test_lhs_release_v13.py` 의 `make_batch_root` — 생산자 계약 꼴 상세 reread ·\n관측 객체 · 단계 결합 기록이 든 감사 · manifest `observe_imports`) 를 **덮어쓰지 않고** 그 위에 Codex 와 같은 변이만 넣어 실제 build_v13 → check_v13 를 돌린다\n(상위 τ 재독해만 대역 — Codex 와 같음).  `audit_observation_inner_failed` = 같은 부류 (관측 객체는 그대로 · 내부 problems · outside 만 · 최상위 [] 유지).\n합성 픽스처의 관문 반례다 — 실제 194 배치 · 값의 인증이 아니다.\n",
+  "artifact_root": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rv4/drv_fixed/evidence/release_gate_detailed/run_zb3vghff",
+  "cases": [
+    {
+      "label": "control",
+      "accepted": true,
+      "check": [],
+      "fixture_shape": {
+        "meta": 10,
+        "cases": 194,
+        "checks_per_case": [
+          7
+        ],
+        "observation_keys": [
+          "completed_attempts",
+          "files",
+          "n_finalized",
+          "n_processes",
+          "n_started",
+          "observed",
+          "outside",
+          "problems",
+          "processes",
+          "stage_binding",
+          "tmp_leftover",
+          "unfinalized_noncompleted"
+        ]
+      },
+      "out_dir_exists": true
+    },
+    {
+      "label": "absent_reread",
+      "accepted": false,
+      "error": "ReleaseError: 배치 관문 증거 문제 1 (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — reread.json — 없다 — 등록 §5-3 ⓪b 다시 읽기 (`g2_network_reread.py --launcher-root <ROOT> --expect-set production194 --json <ROOT>/reread.json`) 를 먼저 · 실제 배포는 이 기록이 필수 — 실제 배포는 두 기록이 이 배치 뿌리 · manifest · 발사 봉인 지문에 대해 통과여야 한다 (옛 · 부분 기록을 들여다볼 때만 --diagnostic-batch-gate · NOT FOR RELEASE)",
+      "fixture_shape": {
+        "meta": 10,
+        "cases": 194,
+        "checks_per_case": [
+          7
+        ],
+        "observation_keys": [
+          "completed_attempts",
+          "files",
+          "n_finalized",
+          "n_processes",
+          "n_started",
+          "observed",
+          "outside",
+          "problems",
+          "processes",
+          "stage_binding",
+          "tmp_leftover",
+          "unfinalized_noncompleted"
+        ]
+      },
+      "out_dir_exists": false
+    },
+    {
+      "label": "null_nfail",
+      "accepted": false,
+      "error": "ReleaseError: 배치 관문 증거 문제 1 (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — reread.json — n_fail None — 정수가 아니다 (null · bool · 문자열 · 결손 = 판정을 모른다) — 실제 배포는 두 기록이 이 배치 뿌리 · manifest · 발사 봉인 지문에 대해 통과여야 한다 (옛 · 부분 기록을 들여다볼 때만 --diagnostic-batch-gate · NOT FOR RELEASE)",
+      "fixture_shape": {
+        "meta": 10,
+        "cases": 194,
+        "checks_per_case": [
+          7
+        ],
+        "observation_keys": [
+          "completed_attempts",
+          "files",
+          "n_finalized",
+          "n_processes",
+          "n_started",
+          "observed",
+          "outside",
+          "problems",
+          "processes",
+          "stage_binding",
+          "tmp_leftover",
+          "unfinalized_noncompleted"
+        ]
+      },
+      "out_dir_exists": false
+    },
+    {
+      "label": "failed_audit",
+      "accepted": false,
+      "error": "ReleaseError: 배치 관문 증거 문제 1 (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — seal_audit.json — input_problems 1 — ['raw bytes mismatch'] (빈 목록이어야) — 실제 배포는 두 기록이 이 배치 뿌리 · manifest · 발사 봉인 지문에 대해 통과여야 한다 (옛 · 부분 기록을 들여다볼 때만 --diagnostic-batch-gate · NOT FOR RELEASE)",
+      "fixture_shape": {
+        "meta": 10,
+        "cases": 194,
+        "checks_per_case": [
+          7
+        ],
+        "observation_keys": [
+          "completed_attempts",
+          "files",
+          "n_finalized",
+          "n_processes",
+          "n_started",
+          "observed",
+          "outside",
+          "problems",
+          "processes",
+          "stage_binding",
+          "tmp_leftover",
+          "unfinalized_noncompleted"
+        ]
+      },
+      "out_dir_exists": false
+    },
+    {
+      "label": "wrong_manifest",
+      "accepted": false,
+      "error": "ReleaseError: 배치 관문 증거 문제 1 (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — reread.json — manifest_sha256 '0000000000000000' ≠ 이 배치 '89220d649f9a42e9'… — 기록 뒤 manifest 가 바뀌었거나 다른 배치 — 실제 배포는 두 기록이 이 배치 뿌리 · manifest · 발사 봉인 지문에 대해 통과여야 한다 (옛 · 부분 기록을 들여다볼 때만 --diagnostic-batch-gate · NOT FOR RELEASE)",
+      "fixture_shape": {
+        "meta": 10,
+        "cases": 194,
+        "checks_per_case": [
+          7
+        ],
+        "observation_keys": [
+          "completed_attempts",
+          "files",
+          "n_finalized",
+          "n_processes",
+          "n_started",
+          "observed",
+          "outside",
+          "problems",
+          "processes",
+          "stage_binding",
+          "tmp_leftover",
+          "unfinalized_noncompleted"
+        ]
+      },
+      "out_dir_exists": false
+    },
+    {
+      "label": "reread_checks_false",
+      "accepted": false,
+      "error": "ReleaseError: 배치 관문 증거 문제 2 (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — reread.json — 상세 (G2RR4-01) — 상세 실패 재계수 1 ≠ n_fail 0 — 요약이 상세를 덮는다 (또는 상세가 요약을 뒷받침하지 않는다) | reread.json — 상세 (G2RR4-01) — 상세 실패 1 — 첫 ['M2 lhs 전 케이스 done · partial'] (전부 통과여야) — 실제 배포는 두 기록이 이 배치 뿌리 · manifest · 발사 봉인 지문에 대해 통과여야 한다 (옛 · 부분 기록을 들여다볼 때만 --diagnostic-batch-gate · NOT FOR RELEASE)",
+      "fixture_shape": {
+        "meta": 10,
+        "cases": 194,
+        "checks_per_case": [
+          7
+        ],
+        "observation_keys": [
+          "completed_attempts",
+          "files",
+          "n_finalized",
+          "n_processes",
+          "n_started",
+          "observed",
+          "outside",
+          "problems",
+          "processes",
+          "stage_binding",
+          "tmp_leftover",
+          "unfinalized_noncompleted"
+        ]
+      },
+      "out_dir_exists": false
+    },
+    {
+      "label": "reread_cases_missing",
+      "accepted": false,
+      "error": "ReleaseError: 배치 관문 증거 문제 3 (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — reread.json — 상세 (G2RR4-01) — meta 검사 ID 가 한 번씩이 아니다 {'M0': 0, 'M-plan': 0, 'M-reg': 0, 'M3': 0, 'M1 lhs': 0, 'M2 lhs': 0, 'H1 lhs': 0, 'M1 lhsx': 0, 'M2 lhsx': 0, 'H1 lhsx': 0} — 상세 계약: M0 · M-plan · M-reg · M3 한 번 + 코호트 ['lhs', 'lhsx'] 마다 M1 · M2 · H1 한 번 | reread.json — 상세 (G2RR4-01) — 상세 (케이스, 코호트) 고유 0 ≠ 등록 집합 'production194' (194) — 빠진 [('lhs00_000', 'lhs'), ('lhs00_001', 'lhs'), ('lhs00_002', 'lhs')] · 남는 [] | reread.json — 상세 (G2RR4-01) — 상세 케이스 0 ≠ read_n 194 — 읽었다는 수를 상세가 뒷받침하지 않는다 — 실제 배포는 두 기록이 이 배치 뿌리 · manifest · 발사 봉인 지문에 대해 통과여야 한다 (옛 · 부분 기록을 들여다볼 때만 --diagnostic-batch-gate · NOT FOR RELEASE)",
+      "fixture_shape": {
+        "meta": 10,
+        "cases": 194,
+        "checks_per_case": [
+          7
+        ],
+        "observation_keys": [
+          "completed_attempts",
+          "files",
+          "n_finalized",
+          "n_processes",
+          "n_started",
+          "observed",
+          "outside",
+          "problems",
+          "processes",
+          "stage_binding",
+          "tmp_leftover",
+          "unfinalized_noncompleted"
+        ]
+      },
+      "out_dir_exists": false
+    },
+    {
+      "label": "audit_observation_failed",
+      "accepted": false,
+      "error": "ReleaseError: 배치 관문 증거 문제 7 (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — seal_audit.json — import_observation.problems 1 — ['log truncated'] (빈 목록이어야 · G2RR4-01) | seal_audit.json — import_observation.outside ['scripts/unsealed.py'] — 봉인 밖 모듈을 실제로 읽었다 (빈 목록이어야 · G2RR4-01) | seal_audit.json — 관측 내부 문제 · 봉인 밖 모듈 2 이 최상위 import_observation_problems 에 없다 ['log truncated', 'scripts/unsealed.py'] — 요약이 상세를 덮는다 (G2RR4-01) | seal_audit.json — import_observation.n_processes None — 정수가 아니다 (G2RR4-01) | seal_audit.json — import_observation.n_started None — 정수가 아니다 (G2RR4-01) | seal_audit.json — import_observation.n_finalized None — 정수가 아니다 (G2RR4-01) | seal_audit.json — import_observation.completed_attempts None — [케이스, run, 시도] 목록이 아니다 (G2RR4-01) — 실제 배포는 두 기록이 이 배치 뿌리 · manifest · 발사 봉인 지문에 대해 통과여야 한다 (옛 · 부분 기록을 들여다볼 때만 --diagnostic-batch-gate · NOT FOR RELEASE)",
+      "fixture_shape": {
+        "meta": 10,
+        "cases": 194,
+        "checks_per_case": [
+          7
+        ],
+        "observation_keys": [
+          "completed_attempts",
+          "files",
+          "n_finalized",
+          "n_processes",
+          "n_started",
+          "observed",
+          "outside",
+          "problems",
+          "processes",
+          "stage_binding",
+          "tmp_leftover",
+          "unfinalized_noncompleted"
+        ]
+      },
+      "out_dir_exists": false
+    },
+    {
+      "label": "audit_observation_inner_failed",
+      "accepted": false,
+      "error": "ReleaseError: 배치 관문 증거 문제 3 (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — seal_audit.json — import_observation.problems 1 — ['log truncated'] (빈 목록이어야 · G2RR4-01) | seal_audit.json — import_observation.outside ['scripts/unsealed.py'] — 봉인 밖 모듈을 실제로 읽었다 (빈 목록이어야 · G2RR4-01) | seal_audit.json — 관측 내부 문제 · 봉인 밖 모듈 2 이 최상위 import_observation_problems 에 없다 ['log truncated', 'scripts/unsealed.py'] — 요약이 상세를 덮는다 (G2RR4-01) — 실제 배포는 두 기록이 이 배치 뿌리 · manifest · 발사 봉인 지문에 대해 통과여야 한다 (옛 · 부분 기록을 들여다볼 때만 --diagnostic-batch-gate · NOT FOR RELEASE)",
+      "fixture_shape": {
+        "meta": 10,
+        "cases": 194,
+        "checks_per_case": [
+          7
+        ],
+        "observation_keys": [
+          "completed_attempts",
+          "files",
+          "n_finalized",
+          "n_processes",
+          "n_started",
+          "observed",
+          "outside",
+          "problems",
+          "processes",
+          "stage_binding",
+          "tmp_leftover",
+          "unfinalized_noncompleted"
+        ]
+      },
+      "out_dir_exists": false
+    }
+  ]
+}

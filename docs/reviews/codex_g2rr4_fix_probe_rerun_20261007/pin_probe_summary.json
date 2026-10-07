@@ -1,0 +1,323 @@
+{
+ "rev": "87f0906a2674e7d4e8ec31ca98aed5b14babc293",
+ "batch_rc": {
+  "first": 0,
+  "observation": 0,
+  "derived": 0,
+  "regression": 1
+ },
+ "release_gate": [
+  {
+   "label": "control",
+   "accepted": true,
+   "error": ""
+  },
+  {
+   "label": "absent_reread",
+   "accepted": false,
+   "error": "ReleaseError: 배치 관문 증거 문제 1 (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — reread.json — 없다 — 등록 §5-3 ⓪b 다시 읽기 (`g2_network_reread.py --launcher-root <ROOT> --expect-set production194 --json <ROOT>/reread.json`) 를 먼저 · 실제 배포는 이 기록이 필수 — 실제 배포는"
+  },
+  {
+   "label": "null_nfail",
+   "accepted": false,
+   "error": "ReleaseError: 배치 관문 증거 문제 1 (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — reread.json — n_fail None — 정수가 아니다 (null · bool · 문자열 · 결손 = 판정을 모른다) — 실제 배포는 두 기록이 이 배치 뿌리 · manifest · 발사 봉인 지문에 대해 통과여야 한다 (옛 · 부분 기록을 들여다볼 때만 --diagnostic-batch-g"
+  },
+  {
+   "label": "failed_audit",
+   "accepted": false,
+   "error": "ReleaseError: 배치 관문 증거 문제 1 (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — seal_audit.json — input_problems 1 — ['raw bytes mismatch'] (빈 목록이어야) — 실제 배포는 두 기록이 이 배치 뿌리 · manifest · 발사 봉인 지문에 대해 통과여야 한다 (옛 · 부분 기록을 들여다볼 때만 --diagnostic-batch-ga"
+  },
+  {
+   "label": "wrong_manifest",
+   "accepted": false,
+   "error": "ReleaseError: 배치 관문 증거 문제 1 (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — reread.json — manifest_sha256 '0000000000000000' ≠ 이 배치 'ecea559da6f258d1'… — 기록 뒤 manifest 가 바뀌었거나 다른 배치 — 실제 배포는 두 기록이 이 배치 뿌리 · manifest · 발사 봉인 지문에 대해 통과여야 한다 (옛 · "
+  },
+  {
+   "label": "reread_checks_false",
+   "accepted": true,
+   "error": ""
+  },
+  {
+   "label": "reread_cases_missing",
+   "accepted": true,
+   "error": ""
+  },
+  {
+   "label": "audit_observation_failed",
+   "accepted": true,
+   "error": ""
+  }
+ ],
+ "release_gate_detailed": [],
+ "observation_cli": [
+  {
+   "label": "all5",
+   "rc": 0,
+   "n_start": 5,
+   "n_final": 5,
+   "import_problems": [],
+   "stage_binding": {}
+  },
+  {
+   "label": "helper_final_missing",
+   "rc": 1,
+   "n_start": 5,
+   "n_final": 4,
+   "import_problems": [
+    "lhs00_000 (run 1 · 시도 1): 완료 시도의 프로세스 1 가 시작만 하고 끝맺지 않았다 ['1518000-eafaac15'] — 그 프로세스의 import 를 모른다"
+   ],
+   "stage_binding": {}
+  },
+  {
+   "label": "helper_pair_missing",
+   "rc": 0,
+   "n_start": 4,
+   "n_final": 4,
+   "import_problems": [],
+   "stage_binding": {}
+  },
+  {
+   "label": "only_worker_and_solver",
+   "rc": 0,
+   "n_start": 2,
+   "n_final": 2,
+   "import_problems": [],
+   "stage_binding": {}
+  }
+ ],
+ "observation_cli_staged": [
+  {
+   "label": "all5",
+   "rc": 0,
+   "n_start": 5,
+   "n_final": 5,
+   "import_problems": [],
+   "stage_binding": {}
+  },
+  {
+   "label": "helper_final_missing",
+   "rc": 1,
+   "n_start": 5,
+   "n_final": 4,
+   "import_problems": [
+    "lhs00_000 (run 1 · 시도 1): 완료 시도의 프로세스 1 가 시작만 하고 끝맺지 않았다 ['1518000-eafaac15'] — 그 프로세스의 import 를 모른다"
+   ],
+   "stage_binding": {}
+  },
+  {
+   "label": "helper_pair_missing",
+   "rc": 0,
+   "n_start": 4,
+   "n_final": 4,
+   "import_problems": [],
+   "stage_binding": {}
+  },
+  {
+   "label": "only_worker_and_solver",
+   "rc": 0,
+   "n_start": 2,
+   "n_final": 2,
+   "import_problems": [],
+   "stage_binding": {}
+  }
+ ],
+ "submitted_evidence_baseline": [
+  "PATH_TRANSLATED_BASELINE []"
+ ],
+ "submitted_evidence_tail": [
+  "    }",
+  "  }",
+  "}"
+ ],
+ "case15": {
+  "plate_um": 19.1455,
+  "atoms": 65970,
+  "contacts": 182995,
+  "negative_rows": [
+   [
+    31,
+    29241,
+    -0.186036
+   ],
+   [
+    38,
+    29241,
+    -0.186264
+   ]
+  ],
+  "channels": {
+   "ionic_hertzian": [
+    0.1704582411149847,
+    0.00032635082552669387
+   ],
+   "ionic_physics": [
+    0.1892075130340654,
+    0.00036224724407936984
+   ],
+   "electronic_hertzian": [
+    null,
+    null
+   ],
+   "electronic_physics": [
+    null,
+    null
+   ],
+   "thermal_hertzian": [
+    null,
+    null
+   ],
+   "thermal_physics": null
+  }
+ },
+ "scope194": {
+  "lhs": {
+   "n": 130,
+   "se_levels": {
+    "L0": 130
+   },
+   "am_levels": {
+    "L0": 130
+   },
+   "se_overlap": 0,
+   "am_overlap": 0,
+   "area_counts": {
+    "n_rows": 18111468,
+    "n_area_dump_negative": 0,
+    "n_area_dump_zero": 0,
+    "n_tested": 18111468,
+    "n_orphan_rows_skipped": 0,
+    "n_nonfinite_skipped": 0
+   },
+   "linkage_mismatch": [],
+   "minimum_L_minus_4r_um": [
+    1.469699999999996,
+    "lhs00_075"
+   ],
+   "audit_has_atom_contact_hashes": false
+  },
+  "lhsx": {
+   "n": 64,
+   "se_levels": {
+    "L0": 64
+   },
+   "am_levels": {
+    "L0": 64
+   },
+   "se_overlap": 0,
+   "am_overlap": 0,
+   "area_counts": {
+    "n_rows": 14694721,
+    "n_area_dump_negative": 0,
+    "n_area_dump_zero": 0,
+    "n_tested": 14694721,
+    "n_orphan_rows_skipped": 0,
+    "n_nonfinite_skipped": 0
+   },
+   "linkage_mismatch": [],
+   "minimum_L_minus_4r_um": [
+    -6.0611,
+    "lhsx_045"
+   ],
+   "audit_has_atom_contact_hashes": false
+  }
+ },
+ "runs": {
+  "observation_cli": {
+   "rc": 0,
+   "tail": [
+    "{\"label\": \"all5\", \"rc\": 0, \"verdicts\": {\"SEALED\": 1}, \"input_problems\": [], \"generation_problems\": [], \"import_problems\": [], \"n_start\": 5, \"n_final\": 5}",
+    "{\"label\": \"helper_final_missing\", \"rc\": 1, \"verdicts\": {\"SEALED\": 1}, \"input_problems\": [], \"generation_problems\": [], \"import_problems\": [\"lhs00_000 (run 1 · 시도 1): 완료 시도의 프로세스 1 가 시작만 하고 끝맺지 않았다 ['1518000-eafaac15'] — 그 프로세스의 import 를 모른다\"], \"n_start\": 5, \"n_final\": 4}",
+    "{\"label\": \"helper_pair_missing\", \"rc\": 0, \"verdicts\": {\"SEALED\": 1}, \"input_problems\": [], \"generation_problems\": [], \"import_problems\": [], \"n_start\": 4, \"n_final\": 4}",
+    "{\"label\": \"only_worker_and_solver\", \"rc\": 0, \"verdicts\": {\"SEALED\": 1}, \"input_problems\": [], \"generation_problems\": [], \"import_problems\": [], \"n_start\": 2, \"n_final\": 2}"
+   ]
+  },
+  "observation_cli_staged": {
+   "rc": 0,
+   "tail": [
+    "{\"label\": \"all5\", \"rc\": 0, \"verdicts\": {\"SEALED\": 1}, \"merged\": {\"same\": 1}, \"input_problems\": [], \"generation_problems\": [], \"import_problems\": [], \"n_start\": 5, \"n_final\": 5, \"removed\": [], \"stage_binding\": null}",
+    "{\"label\": \"helper_final_missing\", \"rc\": 1, \"verdicts\": {\"SEALED\": 1}, \"merged\": {\"same\": 1}, \"input_problems\": [], \"generation_problems\": [], \"import_problems\": [\"lhs00_000 (run 1 · 시도 1): 완료 시도의 프로세스 1 가 시작만 하고 끝맺지 않았다 ['1518000-eafaac15'] — 그 프로세스의 import 를 모른다\"], \"n_start\": 5, \"n_final\": 4, \"removed\": [\"parse_liggghts.py (끝만)\"], \"stage_binding\": null}",
+    "{\"label\": \"helper_pair_missing\", \"rc\": 0, \"verdicts\": {\"SEALED\": 1}, \"merged\": {\"same\": 1}, \"input_problems\": [], \"generation_problems\": [], \"import_problems\": [], \"n_start\": 4, \"n_final\": 4, \"removed\": [\"parse_liggghts.py (시작 · 끝)\"], \"stage_binding\": null}",
+    "{\"label\": \"only_worker_and_solver\", \"rc\": 0, \"verdicts\": {\"SEALED\": 1}, \"merged\": {\"same\": 1}, \"input_problems\": [], \"generation_problems\": [], \"import_problems\": [], \"n_start\": 2, \"n_final\": 2, \"removed\": [\"parse_liggghts.py (시작 · 끝)\", \"analyze_contacts_bimodal.py (시작 · 끝)\", \"coverage_physics_vs_hertzian.py (시작 · 끝)\"], \"stage_binding\": null}"
+   ]
+  },
+  "reread": {
+   "rc": 0,
+   "tail": [
+    "  ✓ symlink 거부 환경 — 폴더 링크가 hardlink 로 대체되고 그 폴더가 K1–K7 · H1 통과",
+    "  ✓ ★ 등록 집합 양성 production194 (합성 — 등록 ID 지문 194 · lhs 130 · lhsx 64) — 194 케이스 K1–K7 · 코호트 H1 둘 통과 · M3 기대 194 = 읽음 194",
+    "",
+    "✓ 전부 통과"
+   ]
+  },
+  "publication": {
+   "rc": 0,
+   "tail": [
+    "  PASS ⑧ ★ raise — 게시 done · H0 CF = not_computed / solve_failed · 값 없음 · 증서가 해를 주장하지 않음 · 시도 ['spsolve'] ['exception'] · FULL q 0.00400538 = 정상 0.00400538 · physics · H12 CF 그대로 {'physics': 'computed', 'hertz_h12': 'computed'} · 인계 통과 (τ 세 모드 OK) · 다시 읽기 K1–K7 · H1 통과 []",
+    "  PASS ⑧ ★ bad_solve — 게시 done · H0 CF = not_computed / current_conservation_failed · 값 없음 · 증서가 해를 주장하지 않음 · 시도 ['spsolve', 'cg+jacobi', 'gmres+ilu'] ['certificate_failed', 'certificate_failed', 'certificate_failed'] · FULL q 0.00400538 = 정상 0.00400538 · physics · H12 CF 그대로 {'physics': 'computed', 'hertz_h12': 'computed'} · 인계 통과 (τ 세 모드 OK) · 다시 읽기 K1–K7 · H1 통과 []",
+    "",
+    "test_gen2_publication_handover: 32/32 PASS"
+   ]
+  },
+  "role": {
+   "rc": 0,
+   "tail": [
+    "  PASS  W1 ★ 열 사전 H12 판정 = 쌍대응 시나리오 · 구간 아님 (괄호로 읽는다 문구 없음) · 부록 전용 유지",
+    "  PASS  W2 ★ 설계 기록 ±5 % = 시험한 기하 한정 + 구 사슬 반례 (G2R-04)",
+    "",
+    "test_gen2_role_contract: 44/44 PASS"
+   ]
+  },
+  "release": {
+   "rc": 1,
+   "tail": [
+    "  PASS  V17k 생산 배포 정책 — 받는 봉인 판정 = SEALED 만 (SEALED_DIRTY_ALLOWED · SEALED_LEGACY 는 실행기 audit rc 0 이어도 배포 아님) · 실행기 SEAL_OK 의 부분집합",
+    "",
+    "134 PASS · 1 FAIL",
+    "  - V16a 발사 기록 = 지금 파일 → 봉인 다름 0 · 인계 도구 다름 0 · 봉인 파일 수 · git HEAD (40 자리)"
+   ]
+  },
+  "submitted_evidence": {
+   "rc": 0,
+   "tail": [
+    "      ]",
+    "    }",
+    "  }",
+    "}"
+   ]
+  },
+  "scope194": {
+   "rc": 0,
+   "tail": [
+    "    ],",
+    "    \"audit_has_atom_contact_hashes\": false",
+    "  }",
+    "}"
+   ]
+  },
+  "case15_channels": {
+   "rc": 0,
+   "tail": [
+    "electronic_physics {\"value\": [null, null], \"solve_info\": {\"electrode_model\": \"dirichlet_exact\", \"status\": \"not_computed\", \"reason\": \"boundary_overlap\", \"method\": null, \"n_free\": null, \"n_fixed\": null, \"n_floating\": 0, \"n_zero_resistance\": null, \"I_bottom\": null, \"I_top\": null, \"conservation_rel\": null, \"residual_rel\": null, \"conservation_rel_max\": 1e-06, \"residual_rel_max\": 1e-06, \"attempts\": [], \"branch\": \"full\", \"delta_V\": 1.0, \"g_to_q\": 0.0019145499999999995, \"geometry\": {\"plate_z\": 0.0191455, \"box_x\": 0.1, \"box_y\": 0.1, \"scale\": 1000.0}}, \"bottom\": 56, \"top\": 52, \"intersection\": [24, 40, 57, 103], \"n_edges\": 119}",
+    "thermal_hertzian {\"value\": [null, null], \"solve_info\": {\"electrode_model\": \"dirichlet_exact\", \"status\": \"not_computed\", \"reason\": \"boundary_overlap\", \"method\": null, \"n_free\": null, \"n_fixed\": null, \"n_floating\": 0, \"n_zero_resistance\": null, \"I_bottom\": null, \"I_top\": null, \"conservation_rel\": null, \"residual_rel\": null, \"conservation_rel_max\": 1e-06, \"residual_rel_max\": 1e-06, \"attempts\": [], \"branch\": \"full\", \"delta_V\": 1.0, \"g_to_q\": 0.0019145499999999995, \"geometry\": {\"plate_z\": 0.0191455, \"box_x\": 0.1, \"box_y\": 0.1, \"scale\": 1000.0}}, \"bottom\": 9352, \"top\": 97, \"intersection\": [24, 40, 57, 103], \"n_edges\": 182995}",
+    "thermal_physics {\"error\": \"ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)\"}",
+    "geometry 19.1455 [100.0, 100.0] negative contacts 2"
+   ]
+  },
+  "release_gate": {
+   "rc": 0,
+   "tail": [
+    "{\"label\": \"wrong_manifest\", \"accepted\": false, \"error\": \"ReleaseError: 배치 관문 증거 문제 1 (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — reread.json — manifest_sha256 '0000000000000000' ≠ 이 배치 'ecea559da6f258d1'… — 기록 뒤 manifest 가 바뀌었거나 다른 배치 — 실제 배포는 두 기록이 이 배치 뿌리 · manifest · 발사 봉인 지문에 대해 통과여야 한다 (옛 · 부분 기록을 들여다볼 때만 --diagnostic-batch-gate · NOT FOR RELEASE)\"}",
+    "{\"label\": \"reread_checks_false\", \"accepted\": true, \"check\": []}",
+    "{\"label\": \"reread_cases_missing\", \"accepted\": true, \"check\": []}",
+    "{\"label\": \"audit_observation_failed\", \"accepted\": true, \"check\": []}"
+   ]
+  }
+ },
+ "expect": {
+  "first": 0,
+  "observation": 0,
+  "derived": 0,
+  "regression": 1
+ },
+ "ok": true
+}

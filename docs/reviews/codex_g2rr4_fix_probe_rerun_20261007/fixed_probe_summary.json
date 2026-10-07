@@ -1,0 +1,684 @@
+{
+ "rev": "a51e61b05dda841bf4d34b24e005ecff0c1ee53d",
+ "batch_rc": {
+  "first": 1,
+  "observation": 0,
+  "derived": 0,
+  "regression": 1
+ },
+ "release_gate": [
+  {
+   "label": "control",
+   "accepted": false,
+   "error": "ReleaseError: 배치 관문 증거 문제 3 (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — reread.json — 상세 (G2RR4-01) — meta 검사 ID 가 한 번씩이 아니다 {'M0': 0, 'M-plan': 0, 'M-reg': 0, 'M3': 0, 'M1 lhs': 0, 'M2 lhs': 0, 'H1 lhs': 0, 'M1 lhsx': 0, 'M2 lhsx': 0, 'H1 "
+  },
+  {
+   "label": "absent_reread",
+   "accepted": false,
+   "error": "ReleaseError: 배치 관문 증거 문제 1 (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — reread.json — 없다 — 등록 §5-3 ⓪b 다시 읽기 (`g2_network_reread.py --launcher-root <ROOT> --expect-set production194 --json <ROOT>/reread.json`) 를 먼저 · 실제 배포는 이 기록이 필수 — 실제 배포는"
+  },
+  {
+   "label": "null_nfail",
+   "accepted": false,
+   "error": "ReleaseError: 배치 관문 증거 문제 4 (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — reread.json — n_fail None — 정수가 아니다 (null · bool · 문자열 · 결손 = 판정을 모른다) | reread.json — 상세 (G2RR4-01) — meta 검사 ID 가 한 번씩이 아니다 {'M0': 0, 'M-plan': 0, 'M-reg': 0, 'M3': 0"
+  },
+  {
+   "label": "failed_audit",
+   "accepted": false,
+   "error": "ReleaseError: 배치 관문 증거 문제 4 (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — seal_audit.json — input_problems 1 — ['raw bytes mismatch'] (빈 목록이어야) | reread.json — 상세 (G2RR4-01) — meta 검사 ID 가 한 번씩이 아니다 {'M0': 0, 'M-plan': 0, 'M-reg': 0, 'M3': 0,"
+  },
+  {
+   "label": "wrong_manifest",
+   "accepted": false,
+   "error": "ReleaseError: 배치 관문 증거 문제 4 (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — reread.json — manifest_sha256 '0000000000000000' ≠ 이 배치 '89220d649f9a42e9'… — 기록 뒤 manifest 가 바뀌었거나 다른 배치 | reread.json — 상세 (G2RR4-01) — meta 검사 ID 가 한 번씩이 아니다 {'M0': "
+  },
+  {
+   "label": "reread_checks_false",
+   "accepted": false,
+   "error": "ReleaseError: 배치 관문 증거 문제 5 (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — reread.json — 상세 (G2RR4-01) — meta 검사 ID 가 한 번씩이 아니다 {'M0': 0, 'M-plan': 0, 'M-reg': 0, 'M3': 0, 'M1 lhs': 0, 'M2 lhs': 0, 'H1 lhs': 0, 'M1 lhsx': 0, 'M2 lhsx': 0, 'H1 "
+  },
+  {
+   "label": "reread_cases_missing",
+   "accepted": false,
+   "error": "ReleaseError: 배치 관문 증거 문제 3 (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — reread.json — 상세 (G2RR4-01) — meta 검사 ID 가 한 번씩이 아니다 {'M0': 0, 'M-plan': 0, 'M-reg': 0, 'M3': 0, 'M1 lhs': 0, 'M2 lhs': 0, 'H1 lhs': 0, 'M1 lhsx': 0, 'M2 lhsx': 0, 'H1 "
+  },
+  {
+   "label": "audit_observation_failed",
+   "accepted": false,
+   "error": "ReleaseError: 배치 관문 증거 문제 10 (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — seal_audit.json — import_observation.problems 1 — ['log truncated'] (빈 목록이어야 · G2RR4-01) | seal_audit.json — import_observation.outside ['scripts/unsealed.py'] — 봉인 밖 "
+  }
+ ],
+ "release_gate_detailed": [
+  {
+   "label": "control",
+   "accepted": true,
+   "check": [],
+   "out_dir_exists": true,
+   "fixture_shape": {
+    "meta": 10,
+    "cases": 194,
+    "checks_per_case": [
+     7
+    ],
+    "observation_keys": [
+     "completed_attempts",
+     "files",
+     "n_finalized",
+     "n_processes",
+     "n_started",
+     "observed",
+     "outside",
+     "problems",
+     "processes",
+     "stage_binding",
+     "tmp_leftover",
+     "unfinalized_noncompleted"
+    ]
+   },
+   "error": ""
+  },
+  {
+   "label": "absent_reread",
+   "accepted": false,
+   "check": null,
+   "out_dir_exists": false,
+   "fixture_shape": {
+    "meta": 10,
+    "cases": 194,
+    "checks_per_case": [
+     7
+    ],
+    "observation_keys": [
+     "completed_attempts",
+     "files",
+     "n_finalized",
+     "n_processes",
+     "n_started",
+     "observed",
+     "outside",
+     "problems",
+     "processes",
+     "stage_binding",
+     "tmp_leftover",
+     "unfinalized_noncompleted"
+    ]
+   },
+   "error": "ReleaseError: 배치 관문 증거 문제 1 (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — reread.json — 없다 — 등록 §5-3 ⓪b 다시 읽기 (`g2_network_reread.py --launcher-root <ROOT> --expect-set production194 --json <ROOT>/reread.json`) 를 먼저 · 실제 배포는 이 기록이 필수 — 실제 배포는"
+  },
+  {
+   "label": "null_nfail",
+   "accepted": false,
+   "check": null,
+   "out_dir_exists": false,
+   "fixture_shape": {
+    "meta": 10,
+    "cases": 194,
+    "checks_per_case": [
+     7
+    ],
+    "observation_keys": [
+     "completed_attempts",
+     "files",
+     "n_finalized",
+     "n_processes",
+     "n_started",
+     "observed",
+     "outside",
+     "problems",
+     "processes",
+     "stage_binding",
+     "tmp_leftover",
+     "unfinalized_noncompleted"
+    ]
+   },
+   "error": "ReleaseError: 배치 관문 증거 문제 1 (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — reread.json — n_fail None — 정수가 아니다 (null · bool · 문자열 · 결손 = 판정을 모른다) — 실제 배포는 두 기록이 이 배치 뿌리 · manifest · 발사 봉인 지문에 대해 통과여야 한다 (옛 · 부분 기록을 들여다볼 때만 --diagnostic-batch-g"
+  },
+  {
+   "label": "failed_audit",
+   "accepted": false,
+   "check": null,
+   "out_dir_exists": false,
+   "fixture_shape": {
+    "meta": 10,
+    "cases": 194,
+    "checks_per_case": [
+     7
+    ],
+    "observation_keys": [
+     "completed_attempts",
+     "files",
+     "n_finalized",
+     "n_processes",
+     "n_started",
+     "observed",
+     "outside",
+     "problems",
+     "processes",
+     "stage_binding",
+     "tmp_leftover",
+     "unfinalized_noncompleted"
+    ]
+   },
+   "error": "ReleaseError: 배치 관문 증거 문제 1 (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — seal_audit.json — input_problems 1 — ['raw bytes mismatch'] (빈 목록이어야) — 실제 배포는 두 기록이 이 배치 뿌리 · manifest · 발사 봉인 지문에 대해 통과여야 한다 (옛 · 부분 기록을 들여다볼 때만 --diagnostic-batch-ga"
+  },
+  {
+   "label": "wrong_manifest",
+   "accepted": false,
+   "check": null,
+   "out_dir_exists": false,
+   "fixture_shape": {
+    "meta": 10,
+    "cases": 194,
+    "checks_per_case": [
+     7
+    ],
+    "observation_keys": [
+     "completed_attempts",
+     "files",
+     "n_finalized",
+     "n_processes",
+     "n_started",
+     "observed",
+     "outside",
+     "problems",
+     "processes",
+     "stage_binding",
+     "tmp_leftover",
+     "unfinalized_noncompleted"
+    ]
+   },
+   "error": "ReleaseError: 배치 관문 증거 문제 1 (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — reread.json — manifest_sha256 '0000000000000000' ≠ 이 배치 '89220d649f9a42e9'… — 기록 뒤 manifest 가 바뀌었거나 다른 배치 — 실제 배포는 두 기록이 이 배치 뿌리 · manifest · 발사 봉인 지문에 대해 통과여야 한다 (옛 · "
+  },
+  {
+   "label": "reread_checks_false",
+   "accepted": false,
+   "check": null,
+   "out_dir_exists": false,
+   "fixture_shape": {
+    "meta": 10,
+    "cases": 194,
+    "checks_per_case": [
+     7
+    ],
+    "observation_keys": [
+     "completed_attempts",
+     "files",
+     "n_finalized",
+     "n_processes",
+     "n_started",
+     "observed",
+     "outside",
+     "problems",
+     "processes",
+     "stage_binding",
+     "tmp_leftover",
+     "unfinalized_noncompleted"
+    ]
+   },
+   "error": "ReleaseError: 배치 관문 증거 문제 2 (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — reread.json — 상세 (G2RR4-01) — 상세 실패 재계수 1 ≠ n_fail 0 — 요약이 상세를 덮는다 (또는 상세가 요약을 뒷받침하지 않는다) | reread.json — 상세 (G2RR4-01) — 상세 실패 1 — 첫 ['M2 lhs 전 케이스 done · partial'] (전"
+  },
+  {
+   "label": "reread_cases_missing",
+   "accepted": false,
+   "check": null,
+   "out_dir_exists": false,
+   "fixture_shape": {
+    "meta": 10,
+    "cases": 194,
+    "checks_per_case": [
+     7
+    ],
+    "observation_keys": [
+     "completed_attempts",
+     "files",
+     "n_finalized",
+     "n_processes",
+     "n_started",
+     "observed",
+     "outside",
+     "problems",
+     "processes",
+     "stage_binding",
+     "tmp_leftover",
+     "unfinalized_noncompleted"
+    ]
+   },
+   "error": "ReleaseError: 배치 관문 증거 문제 3 (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — reread.json — 상세 (G2RR4-01) — meta 검사 ID 가 한 번씩이 아니다 {'M0': 0, 'M-plan': 0, 'M-reg': 0, 'M3': 0, 'M1 lhs': 0, 'M2 lhs': 0, 'H1 lhs': 0, 'M1 lhsx': 0, 'M2 lhsx': 0, 'H1 "
+  },
+  {
+   "label": "audit_observation_failed",
+   "accepted": false,
+   "check": null,
+   "out_dir_exists": false,
+   "fixture_shape": {
+    "meta": 10,
+    "cases": 194,
+    "checks_per_case": [
+     7
+    ],
+    "observation_keys": [
+     "completed_attempts",
+     "files",
+     "n_finalized",
+     "n_processes",
+     "n_started",
+     "observed",
+     "outside",
+     "problems",
+     "processes",
+     "stage_binding",
+     "tmp_leftover",
+     "unfinalized_noncompleted"
+    ]
+   },
+   "error": "ReleaseError: 배치 관문 증거 문제 7 (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — seal_audit.json — import_observation.problems 1 — ['log truncated'] (빈 목록이어야 · G2RR4-01) | seal_audit.json — import_observation.outside ['scripts/unsealed.py'] — 봉인 밖 모"
+  },
+  {
+   "label": "audit_observation_inner_failed",
+   "accepted": false,
+   "check": null,
+   "out_dir_exists": false,
+   "fixture_shape": {
+    "meta": 10,
+    "cases": 194,
+    "checks_per_case": [
+     7
+    ],
+    "observation_keys": [
+     "completed_attempts",
+     "files",
+     "n_finalized",
+     "n_processes",
+     "n_started",
+     "observed",
+     "outside",
+     "problems",
+     "processes",
+     "stage_binding",
+     "tmp_leftover",
+     "unfinalized_noncompleted"
+    ]
+   },
+   "error": "ReleaseError: 배치 관문 증거 문제 3 (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — seal_audit.json — import_observation.problems 1 — ['log truncated'] (빈 목록이어야 · G2RR4-01) | seal_audit.json — import_observation.outside ['scripts/unsealed.py'] — 봉인 밖 모"
+  }
+ ],
+ "observation_cli": [
+  {
+   "label": "all5",
+   "rc": 1,
+   "n_start": 5,
+   "n_final": 5,
+   "import_problems": [
+    "lhs00_000 (run 1 · 시도 1): 완료 시도의 실행 단계 기록이 없다 (worker.json 시도 stage_plan · out/status.json 케이스 기록 stages) — 관측 영수증을 단계와 맞출 수 없다 (G2RR4-02)"
+   ],
+   "stage_binding": {}
+  },
+  {
+   "label": "helper_final_missing",
+   "rc": 1,
+   "n_start": 5,
+   "n_final": 4,
+   "import_problems": [
+    "lhs00_000 (run 1 · 시도 1): 완료 시도의 프로세스 1 가 시작만 하고 끝맺지 않았다 ['1518000-eafaac15'] — 그 프로세스의 import 를 모른다",
+    "lhs00_000 (run 1 · 시도 1): 완료 시도의 실행 단계 기록이 없다 (worker.json 시도 stage_plan · out/status.json 케이스 기록 stages) — 관측 영수증을 단계와 맞출 수 없다 (G2RR4-02)"
+   ],
+   "stage_binding": {}
+  },
+  {
+   "label": "helper_pair_missing",
+   "rc": 1,
+   "n_start": 4,
+   "n_final": 4,
+   "import_problems": [
+    "lhs00_000 (run 1 · 시도 1): 완료 시도의 실행 단계 기록이 없다 (worker.json 시도 stage_plan · out/status.json 케이스 기록 stages) — 관측 영수증을 단계와 맞출 수 없다 (G2RR4-02)"
+   ],
+   "stage_binding": {}
+  },
+  {
+   "label": "only_worker_and_solver",
+   "rc": 1,
+   "n_start": 2,
+   "n_final": 2,
+   "import_problems": [
+    "lhs00_000 (run 1 · 시도 1): 완료 시도의 실행 단계 기록이 없다 (worker.json 시도 stage_plan · out/status.json 케이스 기록 stages) — 관측 영수증을 단계와 맞출 수 없다 (G2RR4-02)"
+   ],
+   "stage_binding": {}
+  }
+ ],
+ "observation_cli_staged": [
+  {
+   "label": "all5",
+   "rc": 0,
+   "n_start": 5,
+   "n_final": 5,
+   "import_problems": [],
+   "stage_binding": {
+    "lhs00_000|1|1": {
+     "executed": [
+      "parser",
+      "contact_bimodal",
+      "coverage",
+      "network_cli"
+     ],
+     "expected": {
+      "worker": 1,
+      "scripts/parse_liggghts.py": 1,
+      "scripts/analyze_contacts_bimodal.py": 1,
+      "scripts/coverage_physics_vs_hertzian.py": 1,
+      "scripts/network_conductivity.py": 1
+     },
+     "observed": {
+      "worker": 1,
+      "scripts/parse_liggghts.py": 1,
+      "scripts/analyze_contacts_bimodal.py": 1,
+      "scripts/coverage_physics_vs_hertzian.py": 1,
+      "scripts/network_conductivity.py": 1
+     }
+    }
+   }
+  },
+  {
+   "label": "helper_final_missing",
+   "rc": 1,
+   "n_start": 5,
+   "n_final": 4,
+   "import_problems": [
+    "lhs00_000 (run 1 · 시도 1): 완료 시도의 프로세스 1 가 시작만 하고 끝맺지 않았다 ['1518000-eafaac15'] — 그 프로세스의 import 를 모른다",
+    "lhs00_000 (run 1 · 시도 1): 실행된 단계의 끝맺은 프로세스 영수증 (시작 · 끝) 이 모자란다 {'scripts/parse_liggghts.py': '0/1'} (관측/계획) — 두 영수증이 함께 사라졌거나 그 단계가 훅 없이 돌았다 (G2RR4-02)"
+   ],
+   "stage_binding": {
+    "lhs00_000|1|1": {
+     "executed": [
+      "parser",
+      "contact_bimodal",
+      "coverage",
+      "network_cli"
+     ],
+     "expected": {
+      "worker": 1,
+      "scripts/parse_liggghts.py": 1,
+      "scripts/analyze_contacts_bimodal.py": 1,
+      "scripts/coverage_physics_vs_hertzian.py": 1,
+      "scripts/network_conductivity.py": 1
+     },
+     "observed": {
+      "worker": 1,
+      "scripts/analyze_contacts_bimodal.py": 1,
+      "scripts/coverage_physics_vs_hertzian.py": 1,
+      "scripts/network_conductivity.py": 1
+     }
+    }
+   }
+  },
+  {
+   "label": "helper_pair_missing",
+   "rc": 1,
+   "n_start": 4,
+   "n_final": 4,
+   "import_problems": [
+    "lhs00_000 (run 1 · 시도 1): 실행된 단계의 끝맺은 프로세스 영수증 (시작 · 끝) 이 모자란다 {'scripts/parse_liggghts.py': '0/1'} (관측/계획) — 두 영수증이 함께 사라졌거나 그 단계가 훅 없이 돌았다 (G2RR4-02)"
+   ],
+   "stage_binding": {
+    "lhs00_000|1|1": {
+     "executed": [
+      "parser",
+      "contact_bimodal",
+      "coverage",
+      "network_cli"
+     ],
+     "expected": {
+      "worker": 1,
+      "scripts/parse_liggghts.py": 1,
+      "scripts/analyze_contacts_bimodal.py": 1,
+      "scripts/coverage_physics_vs_hertzian.py": 1,
+      "scripts/network_conductivity.py": 1
+     },
+     "observed": {
+      "worker": 1,
+      "scripts/analyze_contacts_bimodal.py": 1,
+      "scripts/coverage_physics_vs_hertzian.py": 1,
+      "scripts/network_conductivity.py": 1
+     }
+    }
+   }
+  },
+  {
+   "label": "only_worker_and_solver",
+   "rc": 1,
+   "n_start": 2,
+   "n_final": 2,
+   "import_problems": [
+    "lhs00_000 (run 1 · 시도 1): 실행된 단계의 끝맺은 프로세스 영수증 (시작 · 끝) 이 모자란다 {'scripts/parse_liggghts.py': '0/1', 'scripts/analyze_contacts_bimodal.py': '0/1', 'scripts/coverage_physics_vs_hertzian.py': '0/1'} (관측/계획) — 두 영수증이 함께 사라졌거나 그 단계가 훅 없이 돌았다 (G2RR4-02)"
+   ],
+   "stage_binding": {
+    "lhs00_000|1|1": {
+     "executed": [
+      "parser",
+      "contact_bimodal",
+      "coverage",
+      "network_cli"
+     ],
+     "expected": {
+      "worker": 1,
+      "scripts/parse_liggghts.py": 1,
+      "scripts/analyze_contacts_bimodal.py": 1,
+      "scripts/coverage_physics_vs_hertzian.py": 1,
+      "scripts/network_conductivity.py": 1
+     },
+     "observed": {
+      "worker": 1,
+      "scripts/network_conductivity.py": 1
+     }
+    }
+   }
+  }
+ ],
+ "submitted_evidence_baseline": [
+  "PATH_TRANSLATED_BASELINE [\"lhs00_055 (run 1 · 시도 1): 완료 시도의 실행 단계 기록이 없다 (worker.json 시도 stage_plan · out/status.json 케이스 기록 stages) — 관측 영수증을 단계와 맞출 수 없다 (G2RR4-02)\", \"lhs00_128 (run 1 · 시도 1): 완료 시도의 실행 단계 기록이 없다 (worker.json 시도 stage_plan · out/status.json 케이스 기록 stages) — 관측 영수증을 단계와 맞출 수 없다 (G2RR4-02)\", \"lhsx_007 (run 1 · 시도 1): 완료 시도의 실행 단계 기록이 없다 (worker.json 시도 stage_plan · out/status.json 케이스 기록 stages) — 관측 영수증을 단계와 맞출 수 없다 (G2RR4-02)\"]"
+ ],
+ "submitted_evidence_tail": [
+  "    assert not problems",
+  "           ^^^^^^^^^^^^",
+  "AssertionError"
+ ],
+ "case15": {
+  "plate_um": 19.1455,
+  "atoms": 65970,
+  "contacts": 182995,
+  "negative_rows": [
+   [
+    31,
+    29241,
+    -0.186036
+   ],
+   [
+    38,
+    29241,
+    -0.186264
+   ]
+  ],
+  "channels": {
+   "ionic_hertzian": [
+    0.1704582411149847,
+    0.00032635082552669387
+   ],
+   "ionic_physics": [
+    0.1892075130340654,
+    0.00036224724407936984
+   ],
+   "electronic_hertzian": [
+    null,
+    null
+   ],
+   "electronic_physics": [
+    null,
+    null
+   ],
+   "thermal_hertzian": [
+    null,
+    null
+   ],
+   "thermal_physics": null
+  }
+ },
+ "scope194": {
+  "lhs": {
+   "n": 130,
+   "se_levels": {
+    "L0": 130
+   },
+   "am_levels": {
+    "L0": 130
+   },
+   "se_overlap": 0,
+   "am_overlap": 0,
+   "area_counts": {
+    "n_rows": 18111468,
+    "n_area_dump_negative": 0,
+    "n_area_dump_zero": 0,
+    "n_tested": 18111468,
+    "n_orphan_rows_skipped": 0,
+    "n_nonfinite_skipped": 0
+   },
+   "linkage_mismatch": [],
+   "minimum_L_minus_4r_um": [
+    1.469699999999996,
+    "lhs00_075"
+   ],
+   "audit_has_atom_contact_hashes": false
+  },
+  "lhsx": {
+   "n": 64,
+   "se_levels": {
+    "L0": 64
+   },
+   "am_levels": {
+    "L0": 64
+   },
+   "se_overlap": 0,
+   "am_overlap": 0,
+   "area_counts": {
+    "n_rows": 14694721,
+    "n_area_dump_negative": 0,
+    "n_area_dump_zero": 0,
+    "n_tested": 14694721,
+    "n_orphan_rows_skipped": 0,
+    "n_nonfinite_skipped": 0
+   },
+   "linkage_mismatch": [],
+   "minimum_L_minus_4r_um": [
+    -6.0611,
+    "lhsx_045"
+   ],
+   "audit_has_atom_contact_hashes": false
+  }
+ },
+ "runs": {
+  "observation_cli": {
+   "rc": 0,
+   "tail": [
+    "{\"label\": \"all5\", \"rc\": 1, \"verdicts\": {\"SEALED\": 1}, \"input_problems\": [], \"generation_problems\": [], \"import_problems\": [\"lhs00_000 (run 1 · 시도 1): 완료 시도의 실행 단계 기록이 없다 (worker.json 시도 stage_plan · out/status.json 케이스 기록 stages) — 관측 영수증을 단계와 맞출 수 없다 (G2RR4-02)\"], \"n_start\": 5, \"n_final\": 5}",
+    "{\"label\": \"helper_final_missing\", \"rc\": 1, \"verdicts\": {\"SEALED\": 1}, \"input_problems\": [], \"generation_problems\": [], \"import_problems\": [\"lhs00_000 (run 1 · 시도 1): 완료 시도의 프로세스 1 가 시작만 하고 끝맺지 않았다 ['1518000-eafaac15'] — 그 프로세스의 import 를 모른다\", \"lhs00_000 (run 1 · 시도 1): 완료 시도의 실행 단계 기록이 없다 (worker.json 시도 stage_plan · out/status.json 케이스 기록 stages) — 관측 영수증을 단계와 맞출 수 없다 (G2RR4-02)\"], \"n_start\": 5, \"n_final\": 4}",
+    "{\"label\": \"helper_pair_missing\", \"rc\": 1, \"verdicts\": {\"SEALED\": 1}, \"input_problems\": [], \"generation_problems\": [], \"import_problems\": [\"lhs00_000 (run 1 · 시도 1): 완료 시도의 실행 단계 기록이 없다 (worker.json 시도 stage_plan · out/status.json 케이스 기록 stages) — 관측 영수증을 단계와 맞출 수 없다 (G2RR4-02)\"], \"n_start\": 4, \"n_final\": 4}",
+    "{\"label\": \"only_worker_and_solver\", \"rc\": 1, \"verdicts\": {\"SEALED\": 1}, \"input_problems\": [], \"generation_problems\": [], \"import_problems\": [\"lhs00_000 (run 1 · 시도 1): 완료 시도의 실행 단계 기록이 없다 (worker.json 시도 stage_plan · out/status.json 케이스 기록 stages) — 관측 영수증을 단계와 맞출 수 없다 (G2RR4-02)\"], \"n_start\": 2, \"n_final\": 2}"
+   ]
+  },
+  "release_gate_detailed": {
+   "rc": 0,
+   "tail": [
+    "{\"label\": \"reread_checks_false\", \"accepted\": false, \"error\": \"ReleaseError: 배치 관문 증거 문제 2 (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — reread.json — 상세 (G2RR4-01) — 상세 실패 재계수 1 ≠ n_fail 0 — 요약이 상세를 덮는다 (또는 상세가 요약을 뒷받침하지 않는다) | reread.json — 상세 (G2RR4-01) — 상세 실패 1 — 첫 ['M2 lhs 전 케이스 done · partial'] (전부 통과여야) — 실제 배포는 두 기록이 이 배치 뿌리 · manifest · 발사 봉인 지문에 대해 통과여야 한다 (옛 · 부분 기록을 들여다볼 때만 --diagnostic-batch-gate · NOT FOR RELEASE)\", \"fixture_shape\": {\"meta\": 10, \"cases\": 194, \"checks_per_case\": [7], ",
+    "{\"label\": \"reread_cases_missing\", \"accepted\": false, \"error\": \"ReleaseError: 배치 관문 증거 문제 3 (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — reread.json — 상세 (G2RR4-01) — meta 검사 ID 가 한 번씩이 아니다 {'M0': 0, 'M-plan': 0, 'M-reg': 0, 'M3': 0, 'M1 lhs': 0, 'M2 lhs': 0, 'H1 lhs': 0, 'M1 lhsx': 0, 'M2 lhsx': 0, 'H1 lhsx': 0} — 상세 계약: M0 · M-plan · M-reg · M3 한 번 + 코호트 ['lhs', 'lhsx'] 마다 M1 · M2 · H1 한 번 | reread.json — 상세 (G2RR4-01) — 상세 (케이스, 코호트) 고유 0 ≠ 등록 집합 'production194' (194) — 빠진 [('lhs00_000', 'lhs')",
+    "{\"label\": \"audit_observation_failed\", \"accepted\": false, \"error\": \"ReleaseError: 배치 관문 증거 문제 7 (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — seal_audit.json — import_observation.problems 1 — ['log truncated'] (빈 목록이어야 · G2RR4-01) | seal_audit.json — import_observation.outside ['scripts/unsealed.py'] — 봉인 밖 모듈을 실제로 읽었다 (빈 목록이어야 · G2RR4-01) | seal_audit.json — 관측 내부 문제 · 봉인 밖 모듈 2 이 최상위 import_observation_problems 에 없다 ['log truncated', 'scripts/unsealed.py'] — 요약이 상세를 덮는다 (G2RR4-01) | seal_audit.js",
+    "{\"label\": \"audit_observation_inner_failed\", \"accepted\": false, \"error\": \"ReleaseError: 배치 관문 증거 문제 3 (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — seal_audit.json — import_observation.problems 1 — ['log truncated'] (빈 목록이어야 · G2RR4-01) | seal_audit.json — import_observation.outside ['scripts/unsealed.py'] — 봉인 밖 모듈을 실제로 읽었다 (빈 목록이어야 · G2RR4-01) | seal_audit.json — 관측 내부 문제 · 봉인 밖 모듈 2 이 최상위 import_observation_problems 에 없다 ['log truncated', 'scripts/unsealed.py'] — 요약이 상세를 덮는다 (G2RR4-01) — 실제 배포는 "
+   ]
+  },
+  "observation_cli_staged": {
+   "rc": 0,
+   "tail": [
+    "{\"label\": \"all5\", \"rc\": 0, \"verdicts\": {\"SEALED\": 1}, \"merged\": {\"same\": 1}, \"input_problems\": [], \"generation_problems\": [], \"import_problems\": [], \"n_start\": 5, \"n_final\": 5, \"removed\": [], \"stage_binding\": {\"lhs00_000|1|1\": {\"plan_source\": \"out/status.json 케이스 기록 stages (지금 기록을 쓴 시도 — 봉인 판정 record_sha)\", \"mode\": \"bimodal\", \"executed\": [\"parser\", \"contact_bimodal\", \"coverage\", \"network_cli\"], \"skipped\": [], \"in_process\": 4, \"expected\": {\"worker\": 1, \"scripts/parse_liggghts.py\": 1, \"scripts/analyze_contacts_bimodal.py\": 1, \"scripts/coverage_physics_vs_hertzian.py\": 1, \"scripts/network_conduct",
+    "{\"label\": \"helper_final_missing\", \"rc\": 1, \"verdicts\": {\"SEALED\": 1}, \"merged\": {\"same\": 1}, \"input_problems\": [], \"generation_problems\": [], \"import_problems\": [\"lhs00_000 (run 1 · 시도 1): 완료 시도의 프로세스 1 가 시작만 하고 끝맺지 않았다 ['1518000-eafaac15'] — 그 프로세스의 import 를 모른다\", \"lhs00_000 (run 1 · 시도 1): 실행된 단계의 끝맺은 프로세스 영수증 (시작 · 끝) 이 모자란다 {'scripts/parse_liggghts.py': '0/1'} (관측/계획) — 두 영수증이 함께 사라졌거나 그 단계가 훅 없이 돌았다 (G2RR4-02)\"], \"n_start\": 5, \"n_final\": 4, \"removed\": [\"parse_liggghts.py (끝만)\"], \"stage_binding\": {\"lhs00_000|1|1\": {\"plan_source\": \"out/status.json 케이스 기록 stages (지금 기록을 쓴 시도 — 봉인 판정 record_s",
+    "{\"label\": \"helper_pair_missing\", \"rc\": 1, \"verdicts\": {\"SEALED\": 1}, \"merged\": {\"same\": 1}, \"input_problems\": [], \"generation_problems\": [], \"import_problems\": [\"lhs00_000 (run 1 · 시도 1): 실행된 단계의 끝맺은 프로세스 영수증 (시작 · 끝) 이 모자란다 {'scripts/parse_liggghts.py': '0/1'} (관측/계획) — 두 영수증이 함께 사라졌거나 그 단계가 훅 없이 돌았다 (G2RR4-02)\"], \"n_start\": 4, \"n_final\": 4, \"removed\": [\"parse_liggghts.py (시작 · 끝)\"], \"stage_binding\": {\"lhs00_000|1|1\": {\"plan_source\": \"out/status.json 케이스 기록 stages (지금 기록을 쓴 시도 — 봉인 판정 record_sha)\", \"mode\": \"bimodal\", \"executed\": [\"parser\", \"contact_bimodal\", \"coverage\", \"network_cli\"], \"skipp",
+    "{\"label\": \"only_worker_and_solver\", \"rc\": 1, \"verdicts\": {\"SEALED\": 1}, \"merged\": {\"same\": 1}, \"input_problems\": [], \"generation_problems\": [], \"import_problems\": [\"lhs00_000 (run 1 · 시도 1): 실행된 단계의 끝맺은 프로세스 영수증 (시작 · 끝) 이 모자란다 {'scripts/parse_liggghts.py': '0/1', 'scripts/analyze_contacts_bimodal.py': '0/1', 'scripts/coverage_physics_vs_hertzian.py': '0/1'} (관측/계획) — 두 영수증이 함께 사라졌거나 그 단계가 훅 없이 돌았다 (G2RR4-02)\"], \"n_start\": 2, \"n_final\": 2, \"removed\": [\"parse_liggghts.py (시작 · 끝)\", \"analyze_contacts_bimodal.py (시작 · 끝)\", \"coverage_physics_vs_hertzian.py (시작 · 끝)\"], \"stage_binding\": {\"lhs00_000|"
+   ]
+  },
+  "reread": {
+   "rc": 0,
+   "tail": [
+    "  ✓ ★ G2RR4-01 — 생산 194 (합성) 판정 JSON 의 상세 = 상세 계약 통과 (194 케이스 × K1–K7 · meta 열 · 재계수 0 = n_fail 0)",
+    "  ✓ ★ G2RR4-03 스모크 음성 대조 (case15) — 게시 없음 + [음성 대조] 판정 PASS = S0 · S0b 통과 rc 0 (0, {'S0': True, 'S0b': True}) · 게시됨 = S0b 실패 (1, {'S0': True, 'S0b': False}) · [음성 대조] 판정 FAIL = S0b 실패 (1, {'S0': True, 'S0b': False}) · 표지 없는 failed = S0 실패 (이름 면제 없음) (1, {'S0': False})",
+    "",
+    "✓ 전부 통과"
+   ]
+  },
+  "publication": {
+   "rc": 0,
+   "tail": [
+    "  PASS ⑧ ★ raise — 게시 done · H0 CF = not_computed / solve_failed · 값 없음 · 증서가 해를 주장하지 않음 · 시도 ['spsolve'] ['exception'] · FULL q 0.00400538 = 정상 0.00400538 · physics · H12 CF 그대로 {'physics': 'computed', 'hertz_h12': 'computed'} · 인계 통과 (τ 세 모드 OK) · 다시 읽기 K1–K7 · H1 통과 []",
+    "  PASS ⑧ ★ bad_solve — 게시 done · H0 CF = not_computed / current_conservation_failed · 값 없음 · 증서가 해를 주장하지 않음 · 시도 ['spsolve', 'cg+jacobi', 'gmres+ilu'] ['certificate_failed', 'certificate_failed', 'certificate_failed'] · FULL q 0.00400538 = 정상 0.00400538 · physics · H12 CF 그대로 {'physics': 'computed', 'hertz_h12': 'computed'} · 인계 통과 (τ 세 모드 OK) · 다시 읽기 K1–K7 · H1 통과 []",
+    "",
+    "test_gen2_publication_handover: 32/32 PASS"
+   ]
+  },
+  "role": {
+   "rc": 0,
+   "tail": [
+    "  PASS  W1 ★ 열 사전 H12 판정 = 쌍대응 시나리오 · 구간 아님 (괄호로 읽는다 문구 없음) · 부록 전용 유지",
+    "  PASS  W2 ★ 설계 기록 ±5 % = 시험한 기하 한정 + 구 사슬 반례 (G2R-04)",
+    "",
+    "test_gen2_role_contract: 44/44 PASS"
+   ]
+  },
+  "release": {
+   "rc": 1,
+   "tail": [
+    "  PASS  V19b 결합 기록이 있는 감사 (스키마 = 실행기 IMPORT_OBS_STAGE_SCHEMA · 시도 = 완료 시도 194) → 감사 판정 문제 0",
+    "",
+    "172 PASS · 1 FAIL",
+    "  - V16a 발사 기록 = 지금 파일 → 봉인 다름 0 · 인계 도구 다름 0 · 봉인 파일 수 · git HEAD (40 자리)"
+   ]
+  },
+  "submitted_evidence": {
+   "rc": 1,
+   "tail": [
+    "  File \"/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rv4/drv_fixed/probes/submitted_evidence.py\", line 34, in <module>",
+    "    assert not problems",
+    "           ^^^^^^^^^^^^",
+    "AssertionError"
+   ]
+  },
+  "scope194": {
+   "rc": 0,
+   "tail": [
+    "    ],",
+    "    \"audit_has_atom_contact_hashes\": false",
+    "  }",
+    "}"
+   ]
+  },
+  "case15_channels": {
+   "rc": 0,
+   "tail": [
+    "electronic_physics {\"value\": [null, null], \"solve_info\": {\"electrode_model\": \"dirichlet_exact\", \"status\": \"not_computed\", \"reason\": \"boundary_overlap\", \"method\": null, \"n_free\": null, \"n_fixed\": null, \"n_floating\": 0, \"n_zero_resistance\": null, \"I_bottom\": null, \"I_top\": null, \"conservation_rel\": null, \"residual_rel\": null, \"conservation_rel_max\": 1e-06, \"residual_rel_max\": 1e-06, \"attempts\": [], \"branch\": \"full\", \"delta_V\": 1.0, \"g_to_q\": 0.0019145499999999995, \"geometry\": {\"plate_z\": 0.0191455, \"box_x\": 0.1, \"box_y\": 0.1, \"scale\": 1000.0}}, \"bottom\": 56, \"top\": 52, \"intersection\": [24, 40, 57, 103], \"n_edges\": 119}",
+    "thermal_hertzian {\"value\": [null, null], \"solve_info\": {\"electrode_model\": \"dirichlet_exact\", \"status\": \"not_computed\", \"reason\": \"boundary_overlap\", \"method\": null, \"n_free\": null, \"n_fixed\": null, \"n_floating\": 0, \"n_zero_resistance\": null, \"I_bottom\": null, \"I_top\": null, \"conservation_rel\": null, \"residual_rel\": null, \"conservation_rel_max\": 1e-06, \"residual_rel_max\": 1e-06, \"attempts\": [], \"branch\": \"full\", \"delta_V\": 1.0, \"g_to_q\": 0.0019145499999999995, \"geometry\": {\"plate_z\": 0.0191455, \"box_x\": 0.1, \"box_y\": 0.1, \"scale\": 1000.0}}, \"bottom\": 9352, \"top\": 97, \"intersection\": [24, 40, 57, 103], \"n_edges\": 182995}",
+    "thermal_physics {\"error\": \"ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)\"}",
+    "geometry 19.1455 [100.0, 100.0] negative contacts 2"
+   ]
+  },
+  "release_gate": {
+   "rc": 0,
+   "tail": [
+    "{\"label\": \"wrong_manifest\", \"accepted\": false, \"error\": \"ReleaseError: 배치 관문 증거 문제 4 (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — reread.json — manifest_sha256 '0000000000000000' ≠ 이 배치 '89220d649f9a42e9'… — 기록 뒤 manifest 가 바뀌었거나 다른 배치 | reread.json — 상세 (G2RR4-01) — meta 검사 ID 가 한 번씩이 아니다 {'M0': 0, 'M-plan': 0, 'M-reg': 0, 'M3': 0, 'M1 lhs': 0, 'M2 lhs': 0, 'H1 lhs': 0, 'M1 lhsx': 0, 'M2 lhsx': 0, 'H1 lhsx': 0} — 상세 계약: M0 · M-plan · M-reg · M3 한 번 + 코호트 ['lhs', 'lhsx'] 마다 M1 · M2 · H1 한 번 | reread.json — 상세 (G2RR4-01) — 모르는 검사 1 — 상세 계약 (LAUNCHER_META_IDS · LAUNCHER_COHORT_META_IDS · CASE_CHECK_IDS) 밖 · 첫 [\\\"M2 코호트 'all' (등록 코호트 ['lhs', 'lhsx'] 밖)\\\"] | reread.json — 상세 (G2RR4-01) — 케이스 194 에서 검사 ID 가 한 번씩이 아니다 — 케이스마다 K1·K2·K3·K4·K5·K6·K7 한 번씩 (빈 checks = 공집합 PASS 금지) · 첫 [('lhs00_000', {'K2': 0, 'K3': 0, 'K4': 0, 'K5': 0, 'K6': 0, 'K7': 0}), ('lhs00_001', {'K2': 0, 'K3': 0, 'K4': 0, 'K5': 0, 'K6': 0, 'K7': 0}), ('lhs00_002', {'K2': 0, 'K3': 0, 'K4': 0, 'K5': 0, 'K6': 0, 'K7': 0})] — 실제 배포는 두 기록이 이 배치 뿌리 · manifest · 발사 봉인 지문에 대해 통과여야 한다 (옛 · 부분 기록을 들여다볼 때만 --diagnostic-batch-gate · NOT FOR RELEASE)\"}",
+    "{\"label\": \"reread_checks_false\", \"accepted\": false, \"error\": \"ReleaseError: 배치 관문 증거 문제 5 (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — reread.json — 상세 (G2RR4-01) — meta 검사 ID 가 한 번씩이 아니다 {'M0': 0, 'M-plan': 0, 'M-reg': 0, 'M3': 0, 'M1 lhs': 0, 'M2 lhs': 0, 'H1 lhs': 0, 'M1 lhsx': 0, 'M2 lhsx': 0, 'H1 lhsx': 0} — 상세 계약: M0 · M-plan · M-reg · M3 한 번 + 코호트 ['lhs', 'lhsx'] 마다 M1 · M2 · H1 한 번 | reread.json — 상세 (G2RR4-01) — 모르는 검사 1 — 상세 계약 (LAUNCHER_META_IDS · LAUNCHER_COHORT_META_IDS · CASE_CHECK_IDS) 밖 · 첫 [\\\"M2 코호트 'all' (등록 코호트 ['lhs', 'lhsx'] 밖)\\\"] | reread.json — 상세 (G2RR4-01) — 케이스 194 에서 검사 ID 가 한 번씩이 아니다 — 케이스마다 K1·K2·K3·K4·K5·K6·K7 한 번씩 (빈 checks = 공집합 PASS 금지) · 첫 [('lhs00_000', {'K2': 0, 'K3': 0, 'K4': 0, 'K5': 0, 'K6': 0, 'K7': 0}), ('lhs00_001', {'K2': 0, 'K3': 0, 'K4': 0, 'K5': 0, 'K6': 0, 'K7': 0}), ('lhs00_002', {'K2': 0, 'K3': 0, 'K4': 0, 'K5': 0, 'K6': 0, 'K7': 0})] | reread.json — 상세 (G2RR4-01) — 상세 실패 재계수 1 ≠ n_fail 0 — 요약이 상세를 덮는다 (또는 상세가 요약을 뒷받침하지 않는다) | reread.json — 상세 (G2RR4-01) — 상세 실패 1 — 첫 ['M2 all completed'] (전부 통과여야) — 실제 배포는 두 기록이 이 배치 뿌리 · manifest · 발사 봉인 지문에 대해 통과여야 한다 (옛 · 부분 기록을 들여다볼 때만 --diagnostic-batch-gate · NOT FOR RELEASE)\"}",
+    "{\"label\": \"reread_cases_missing\", \"accepted\": false, \"error\": \"ReleaseError: 배치 관문 증거 문제 3 (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — reread.json — 상세 (G2RR4-01) — meta 검사 ID 가 한 번씩이 아니다 {'M0': 0, 'M-plan': 0, 'M-reg': 0, 'M3': 0, 'M1 lhs': 0, 'M2 lhs': 0, 'H1 lhs': 0, 'M1 lhsx': 0, 'M2 lhsx': 0, 'H1 lhsx': 0} — 상세 계약: M0 · M-plan · M-reg · M3 한 번 + 코호트 ['lhs', 'lhsx'] 마다 M1 · M2 · H1 한 번 | reread.json — 상세 (G2RR4-01) — 상세 (케이스, 코호트) 고유 0 ≠ 등록 집합 'production194' (194) — 빠진 [('lhs00_000', 'lhs'), ('lhs00_001', 'lhs'), ('lhs00_002', 'lhs')] · 남는 [] | reread.json — 상세 (G2RR4-01) — 상세 케이스 0 ≠ read_n 194 — 읽었다는 수를 상세가 뒷받침하지 않는다 — 실제 배포는 두 기록이 이 배치 뿌리 · manifest · 발사 봉인 지문에 대해 통과여야 한다 (옛 · 부분 기록을 들여다볼 때만 --diagnostic-batch-gate · NOT FOR RELEASE)\"}",
+    "{\"label\": \"audit_observation_failed\", \"accepted\": false, \"error\": \"ReleaseError: 배치 관문 증거 문제 10 (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — seal_audit.json — import_observation.problems 1 — ['log truncated'] (빈 목록이어야 · G2RR4-01) | seal_audit.json — import_observation.outside ['scripts/unsealed.py'] — 봉인 밖 모듈을 실제로 읽었다 (빈 목록이어야 · G2RR4-01) | seal_audit.json — 관측 내부 문제 · 봉인 밖 모듈 2 이 최상위 import_observation_problems 에 없다 ['log truncated', 'scripts/unsealed.py'] — 요약이 상세를 덮는다 (G2RR4-01) | seal_audit.json — import_observation.n_processes None — 정수가 아니다 (G2RR4-01) | seal_audit.json — import_observation.n_started None — 정수가 아니다 (G2RR4-01) | seal_audit.json — import_observation.n_finalized None — 정수가 아니다 (G2RR4-01) | seal_audit.json — import_observation.completed_attempts None — [케이스, run, 시도] 목록이 아니다 (G2RR4-01) | reread.json — 상세 (G2RR4-01) — meta 검사 ID 가 한 번씩이 아니다 {'M0': 0, 'M-plan': 0, 'M-reg': 0, 'M3': 0, 'M1 lhs': 0, 'M2 lhs': 0, 'H1 lhs': 0, 'M1 lhsx': 0, 'M2 lhsx': 0, 'H1 lhsx': 0} — 상세 계약: M0 · M-plan · M-reg · M3 한 번 + 코호트 ['lhs', 'lhsx'] 마다 M1 · M2 · H1 한 번 | reread.json — 상세 (G2RR4-01) — 모르는 검사 1 — 상세 계약 (LAUNCHER_META_IDS · LAUNCHER_COHORT_META_IDS · CASE_CHECK_IDS) 밖 · 첫 [\\\"M2 코호트 'all' (등록 코호트 ['lhs', 'lhsx'] 밖)\\\"] | reread.json — 상세 (G2RR4-01) — 케이스 194 에서 검사 ID 가 한 번씩이 아니다 — 케이스마다 K1·K2·K3·K4·K5·K6·K7 한 번씩 (빈 checks = 공집합 PASS 금지) · 첫 [('lhs00_000', {'K2': 0, 'K3': 0, 'K4': 0, 'K5': 0, 'K6': 0, 'K7': 0}), ('lhs00_001', {'K2': 0, 'K3': 0, 'K4': 0, 'K5': 0, 'K6': 0, 'K7': 0}), ('lhs00_002', {'K2': 0, 'K3': 0, 'K4': 0, 'K5': 0, 'K6': 0, 'K7': 0})] — 실제 배포는 두 기록이 이 배치 뿌리 · manifest · 발사 봉인 지문에 대해 통과여야 한다 (옛 · 부분 기록을 들여다볼 때만 --diagnostic-batch-gate · NOT FOR RELEASE)\"}"
+   ]
+  }
+ },
+ "expect": {
+  "first": 1,
+  "observation": 0,
+  "derived": 0,
+  "regression": 1
+ },
+ "ok": true
+}

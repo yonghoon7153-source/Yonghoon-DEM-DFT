@@ -1,0 +1,6 @@
+PATH_TRANSLATED_BASELINE ["lhs00_055 (run 1 · 시도 1): 완료 시도의 실행 단계 기록이 없다 (worker.json 시도 stage_plan · out/status.json 케이스 기록 stages) — 관측 영수증을 단계와 맞출 수 없다 (G2RR4-02)", "lhs00_128 (run 1 · 시도 1): 완료 시도의 실행 단계 기록이 없다 (worker.json 시도 stage_plan · out/status.json 케이스 기록 stages) — 관측 영수증을 단계와 맞출 수 없다 (G2RR4-02)", "lhsx_007 (run 1 · 시도 1): 완료 시도의 실행 단계 기록이 없다 (worker.json 시도 stage_plan · out/status.json 케이스 기록 stages) — 관측 영수증을 단계와 맞출 수 없다 (G2RR4-02)"]
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rv4/drv_fixed/probes/submitted_evidence.py", line 34, in <module>
+    assert not problems
+           ^^^^^^^^^^^^
+AssertionError

@@ -1,0 +1,46 @@
+{
+  "scope": "Synthetic bound gate fixtures; real build/check; tau-only upstream is a stub.\nThis does not certify any real 194 batch or its values.\n",
+  "artifact_root": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/81c0ad95-542f-503b-9cf7-2f6a678a4b5b/scratchpad/rv4/drv_fixed/evidence/release_gate/run_0lulm1_x",
+  "cases": [
+    {
+      "label": "control",
+      "accepted": false,
+      "error": "ReleaseError: 배치 관문 증거 문제 3 (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — reread.json — 상세 (G2RR4-01) — meta 검사 ID 가 한 번씩이 아니다 {'M0': 0, 'M-plan': 0, 'M-reg': 0, 'M3': 0, 'M1 lhs': 0, 'M2 lhs': 0, 'H1 lhs': 0, 'M1 lhsx': 0, 'M2 lhsx': 0, 'H1 lhsx': 0} — 상세 계약: M0 · M-plan · M-reg · M3 한 번 + 코호트 ['lhs', 'lhsx'] 마다 M1 · M2 · H1 한 번 | reread.json — 상세 (G2RR4-01) — 모르는 검사 1 — 상세 계약 (LAUNCHER_META_IDS · LAUNCHER_COHORT_META_IDS · CASE_CHECK_IDS) 밖 · 첫 [\"M2 코호트 'all' (등록 코호트 ['lhs', 'lhsx'] 밖)\"] | reread.json — 상세 (G2RR4-01) — 케이스 194 에서 검사 ID 가 한 번씩이 아니다 — 케이스마다 K1·K2·K3·K4·K5·K6·K7 한 번씩 (빈 checks = 공집합 PASS 금지) · 첫 [('lhs00_000', {'K2': 0, 'K3': 0, 'K4': 0, 'K5': 0, 'K6': 0, 'K7': 0}), ('lhs00_001', {'K2': 0, 'K3': 0, 'K4': 0, 'K5': 0, 'K6': 0, 'K7': 0}), ('lhs00_002', {'K2': 0, 'K3': 0, 'K4': 0, 'K5': 0, 'K6': 0, 'K7': 0})] — 실제 배포는 두 기록이 이 배치 뿌리 · manifest · 발사 봉인 지문에 대해 통과여야 한다 (옛 · 부분 기록을 들여다볼 때만 --diagnostic-batch-gate · NOT FOR RELEASE)"
+    },
+    {
+      "label": "absent_reread",
+      "accepted": false,
+      "error": "ReleaseError: 배치 관문 증거 문제 1 (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — reread.json — 없다 — 등록 §5-3 ⓪b 다시 읽기 (`g2_network_reread.py --launcher-root <ROOT> --expect-set production194 --json <ROOT>/reread.json`) 를 먼저 · 실제 배포는 이 기록이 필수 — 실제 배포는 두 기록이 이 배치 뿌리 · manifest · 발사 봉인 지문에 대해 통과여야 한다 (옛 · 부분 기록을 들여다볼 때만 --diagnostic-batch-gate · NOT FOR RELEASE)"
+    },
+    {
+      "label": "null_nfail",
+      "accepted": false,
+      "error": "ReleaseError: 배치 관문 증거 문제 4 (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — reread.json — n_fail None — 정수가 아니다 (null · bool · 문자열 · 결손 = 판정을 모른다) | reread.json — 상세 (G2RR4-01) — meta 검사 ID 가 한 번씩이 아니다 {'M0': 0, 'M-plan': 0, 'M-reg': 0, 'M3': 0, 'M1 lhs': 0, 'M2 lhs': 0, 'H1 lhs': 0, 'M1 lhsx': 0, 'M2 lhsx': 0, 'H1 lhsx': 0} — 상세 계약: M0 · M-plan · M-reg · M3 한 번 + 코호트 ['lhs', 'lhsx'] 마다 M1 · M2 · H1 한 번 | reread.json — 상세 (G2RR4-01) — 모르는 검사 1 — 상세 계약 (LAUNCHER_META_IDS · LAUNCHER_COHORT_META_IDS · CASE_CHECK_IDS) 밖 · 첫 [\"M2 코호트 'all' (등록 코호트 ['lhs', 'lhsx'] 밖)\"] | reread.json — 상세 (G2RR4-01) — 케이스 194 에서 검사 ID 가 한 번씩이 아니다 — 케이스마다 K1·K2·K3·K4·K5·K6·K7 한 번씩 (빈 checks = 공집합 PASS 금지) · 첫 [('lhs00_000', {'K2': 0, 'K3': 0, 'K4': 0, 'K5': 0, 'K6': 0, 'K7': 0}), ('lhs00_001', {'K2': 0, 'K3': 0, 'K4': 0, 'K5': 0, 'K6': 0, 'K7': 0}), ('lhs00_002', {'K2': 0, 'K3': 0, 'K4': 0, 'K5': 0, 'K6': 0, 'K7': 0})] — 실제 배포는 두 기록이 이 배치 뿌리 · manifest · 발사 봉인 지문에 대해 통과여야 한다 (옛 · 부분 기록을 들여다볼 때만 --diagnostic-batch-gate · NOT FOR RELEASE)"
+    },
+    {
+      "label": "failed_audit",
+      "accepted": false,
+      "error": "ReleaseError: 배치 관문 증거 문제 4 (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — seal_audit.json — input_problems 1 — ['raw bytes mismatch'] (빈 목록이어야) | reread.json — 상세 (G2RR4-01) — meta 검사 ID 가 한 번씩이 아니다 {'M0': 0, 'M-plan': 0, 'M-reg': 0, 'M3': 0, 'M1 lhs': 0, 'M2 lhs': 0, 'H1 lhs': 0, 'M1 lhsx': 0, 'M2 lhsx': 0, 'H1 lhsx': 0} — 상세 계약: M0 · M-plan · M-reg · M3 한 번 + 코호트 ['lhs', 'lhsx'] 마다 M1 · M2 · H1 한 번 | reread.json — 상세 (G2RR4-01) — 모르는 검사 1 — 상세 계약 (LAUNCHER_META_IDS · LAUNCHER_COHORT_META_IDS · CASE_CHECK_IDS) 밖 · 첫 [\"M2 코호트 'all' (등록 코호트 ['lhs', 'lhsx'] 밖)\"] | reread.json — 상세 (G2RR4-01) — 케이스 194 에서 검사 ID 가 한 번씩이 아니다 — 케이스마다 K1·K2·K3·K4·K5·K6·K7 한 번씩 (빈 checks = 공집합 PASS 금지) · 첫 [('lhs00_000', {'K2': 0, 'K3': 0, 'K4': 0, 'K5': 0, 'K6': 0, 'K7': 0}), ('lhs00_001', {'K2': 0, 'K3': 0, 'K4': 0, 'K5': 0, 'K6': 0, 'K7': 0}), ('lhs00_002', {'K2': 0, 'K3': 0, 'K4': 0, 'K5': 0, 'K6': 0, 'K7': 0})] — 실제 배포는 두 기록이 이 배치 뿌리 · manifest · 발사 봉인 지문에 대해 통과여야 한다 (옛 · 부분 기록을 들여다볼 때만 --diagnostic-batch-gate · NOT FOR RELEASE)"
+    },
+    {
+      "label": "wrong_manifest",
+      "accepted": false,
+      "error": "ReleaseError: 배치 관문 증거 문제 4 (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — reread.json — manifest_sha256 '0000000000000000' ≠ 이 배치 '89220d649f9a42e9'… — 기록 뒤 manifest 가 바뀌었거나 다른 배치 | reread.json — 상세 (G2RR4-01) — meta 검사 ID 가 한 번씩이 아니다 {'M0': 0, 'M-plan': 0, 'M-reg': 0, 'M3': 0, 'M1 lhs': 0, 'M2 lhs': 0, 'H1 lhs': 0, 'M1 lhsx': 0, 'M2 lhsx': 0, 'H1 lhsx': 0} — 상세 계약: M0 · M-plan · M-reg · M3 한 번 + 코호트 ['lhs', 'lhsx'] 마다 M1 · M2 · H1 한 번 | reread.json — 상세 (G2RR4-01) — 모르는 검사 1 — 상세 계약 (LAUNCHER_META_IDS · LAUNCHER_COHORT_META_IDS · CASE_CHECK_IDS) 밖 · 첫 [\"M2 코호트 'all' (등록 코호트 ['lhs', 'lhsx'] 밖)\"] | reread.json — 상세 (G2RR4-01) — 케이스 194 에서 검사 ID 가 한 번씩이 아니다 — 케이스마다 K1·K2·K3·K4·K5·K6·K7 한 번씩 (빈 checks = 공집합 PASS 금지) · 첫 [('lhs00_000', {'K2': 0, 'K3': 0, 'K4': 0, 'K5': 0, 'K6': 0, 'K7': 0}), ('lhs00_001', {'K2': 0, 'K3': 0, 'K4': 0, 'K5': 0, 'K6': 0, 'K7': 0}), ('lhs00_002', {'K2': 0, 'K3': 0, 'K4': 0, 'K5': 0, 'K6': 0, 'K7': 0})] — 실제 배포는 두 기록이 이 배치 뿌리 · manifest · 발사 봉인 지문에 대해 통과여야 한다 (옛 · 부분 기록을 들여다볼 때만 --diagnostic-batch-gate · NOT FOR RELEASE)"
+    },
+    {
+      "label": "reread_checks_false",
+      "accepted": false,
+      "error": "ReleaseError: 배치 관문 증거 문제 5 (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — reread.json — 상세 (G2RR4-01) — meta 검사 ID 가 한 번씩이 아니다 {'M0': 0, 'M-plan': 0, 'M-reg': 0, 'M3': 0, 'M1 lhs': 0, 'M2 lhs': 0, 'H1 lhs': 0, 'M1 lhsx': 0, 'M2 lhsx': 0, 'H1 lhsx': 0} — 상세 계약: M0 · M-plan · M-reg · M3 한 번 + 코호트 ['lhs', 'lhsx'] 마다 M1 · M2 · H1 한 번 | reread.json — 상세 (G2RR4-01) — 모르는 검사 1 — 상세 계약 (LAUNCHER_META_IDS · LAUNCHER_COHORT_META_IDS · CASE_CHECK_IDS) 밖 · 첫 [\"M2 코호트 'all' (등록 코호트 ['lhs', 'lhsx'] 밖)\"] | reread.json — 상세 (G2RR4-01) — 케이스 194 에서 검사 ID 가 한 번씩이 아니다 — 케이스마다 K1·K2·K3·K4·K5·K6·K7 한 번씩 (빈 checks = 공집합 PASS 금지) · 첫 [('lhs00_000', {'K2': 0, 'K3': 0, 'K4': 0, 'K5': 0, 'K6': 0, 'K7': 0}), ('lhs00_001', {'K2': 0, 'K3': 0, 'K4': 0, 'K5': 0, 'K6': 0, 'K7': 0}), ('lhs00_002', {'K2': 0, 'K3': 0, 'K4': 0, 'K5': 0, 'K6': 0, 'K7': 0})] | reread.json — 상세 (G2RR4-01) — 상세 실패 재계수 1 ≠ n_fail 0 — 요약이 상세를 덮는다 (또는 상세가 요약을 뒷받침하지 않는다) | reread.json — 상세 (G2RR4-01) — 상세 실패 1 — 첫 ['M2 all completed'] (전부 통과여야) — 실제 배포는 두 기록이 이 배치 뿌리 · manifest · 발사 봉인 지문에 대해 통과여야 한다 (옛 · 부분 기록을 들여다볼 때만 --diagnostic-batch-gate · NOT FOR RELEASE)"
+    },
+    {
+      "label": "reread_cases_missing",
+      "accepted": false,
+      "error": "ReleaseError: 배치 관문 증거 문제 3 (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — reread.json — 상세 (G2RR4-01) — meta 검사 ID 가 한 번씩이 아니다 {'M0': 0, 'M-plan': 0, 'M-reg': 0, 'M3': 0, 'M1 lhs': 0, 'M2 lhs': 0, 'H1 lhs': 0, 'M1 lhsx': 0, 'M2 lhsx': 0, 'H1 lhsx': 0} — 상세 계약: M0 · M-plan · M-reg · M3 한 번 + 코호트 ['lhs', 'lhsx'] 마다 M1 · M2 · H1 한 번 | reread.json — 상세 (G2RR4-01) — 상세 (케이스, 코호트) 고유 0 ≠ 등록 집합 'production194' (194) — 빠진 [('lhs00_000', 'lhs'), ('lhs00_001', 'lhs'), ('lhs00_002', 'lhs')] · 남는 [] | reread.json — 상세 (G2RR4-01) — 상세 케이스 0 ≠ read_n 194 — 읽었다는 수를 상세가 뒷받침하지 않는다 — 실제 배포는 두 기록이 이 배치 뿌리 · manifest · 발사 봉인 지문에 대해 통과여야 한다 (옛 · 부분 기록을 들여다볼 때만 --diagnostic-batch-gate · NOT FOR RELEASE)"
+    },
+    {
+      "label": "audit_observation_failed",
+      "accepted": false,
+      "error": "ReleaseError: 배치 관문 증거 문제 10 (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — seal_audit.json — import_observation.problems 1 — ['log truncated'] (빈 목록이어야 · G2RR4-01) | seal_audit.json — import_observation.outside ['scripts/unsealed.py'] — 봉인 밖 모듈을 실제로 읽었다 (빈 목록이어야 · G2RR4-01) | seal_audit.json — 관측 내부 문제 · 봉인 밖 모듈 2 이 최상위 import_observation_problems 에 없다 ['log truncated', 'scripts/unsealed.py'] — 요약이 상세를 덮는다 (G2RR4-01) | seal_audit.json — import_observation.n_processes None — 정수가 아니다 (G2RR4-01) | seal_audit.json — import_observation.n_started None — 정수가 아니다 (G2RR4-01) | seal_audit.json — import_observation.n_finalized None — 정수가 아니다 (G2RR4-01) | seal_audit.json — import_observation.completed_attempts None — [케이스, run, 시도] 목록이 아니다 (G2RR4-01) | reread.json — 상세 (G2RR4-01) — meta 검사 ID 가 한 번씩이 아니다 {'M0': 0, 'M-plan': 0, 'M-reg': 0, 'M3': 0, 'M1 lhs': 0, 'M2 lhs': 0, 'H1 lhs': 0, 'M1 lhsx': 0, 'M2 lhsx': 0, 'H1 lhsx': 0} — 상세 계약: M0 · M-plan · M-reg · M3 한 번 + 코호트 ['lhs', 'lhsx'] 마다 M1 · M2 · H1 한 번 | reread.json — 상세 (G2RR4-01) — 모르는 검사 1 — 상세 계약 (LAUNCHER_META_IDS · LAUNCHER_COHORT_META_IDS · CASE_CHECK_IDS) 밖 · 첫 [\"M2 코호트 'all' (등록 코호트 ['lhs', 'lhsx'] 밖)\"] | reread.json — 상세 (G2RR4-01) — 케이스 194 에서 검사 ID 가 한 번씩이 아니다 — 케이스마다 K1·K2·K3·K4·K5·K6·K7 한 번씩 (빈 checks = 공집합 PASS 금지) · 첫 [('lhs00_000', {'K2': 0, 'K3': 0, 'K4': 0, 'K5': 0, 'K6': 0, 'K7': 0}), ('lhs00_001', {'K2': 0, 'K3': 0, 'K4': 0, 'K5': 0, 'K6': 0, 'K7': 0}), ('lhs00_002', {'K2': 0, 'K3': 0, 'K4': 0, 'K5': 0, 'K6': 0, 'K7': 0})] — 실제 배포는 두 기록이 이 배치 뿌리 · manifest · 발사 봉인 지문에 대해 통과여야 한다 (옛 · 부분 기록을 들여다볼 때만 --diagnostic-batch-gate · NOT FOR RELEASE)"
+    }
+  ]
+}

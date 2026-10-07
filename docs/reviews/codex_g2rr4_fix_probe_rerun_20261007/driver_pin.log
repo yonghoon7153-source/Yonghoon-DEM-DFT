@@ -1,0 +1,6 @@
+source 87f0906a2674e7d4e8ec31ca98aed5b14babc293 pin 446 missing []
+first ['submitted_evidence', 'scope194', 'case15_channels', 'release_gate'] rc 0 21s
+observation ['observation_cli'] rc 0 3s
+derived ['observation_cli_staged'] rc 0 2s
+regression ['reread', 'publication', 'role', 'release'] rc 1 54s
+기대 {'first': 0, 'observation': 0, 'derived': 0, 'regression': 1} = True
