@@ -4224,3 +4224,23 @@ gate INCOMPLETE · 실효 정책 UNVERIFIED · native 미승인 · 게이트 리
   `implementation_accepted / native_ready / new_execution_approval: false`.
 - 다음 (회신): v2 + S0 근거를 **실행 담당 Codex** 에 고정 식별 (커밋 `f2d6fa0a9` · v2 sha256 `16797cc1…`) 과 함께 전달 → §73 범위의 비활성 S1-O 준비 · 정적 점검 → 제출 · 멈춤.
   머리말 `docs/COMSOL_MICROSHORT_S1O_EXEC_COVER_20261007.md`. 같은 발송문을 다시 정정하는 라운드는 없다.
+
+## 76. S1-O 준비본 정적 검토 회신 접수 — 부분 준비 수용 · 판정 코드 정정 N1–N4 필요 · 98 사례 검증 보류 (2026-10-07 · 실행 0)
+
+- 보존: `reviews/r14_repros/codex63/comsol_microshort_s1o_preparation_review_20261007/` — zip 805,653 B · sha256 `dee50be8d7dd1bcfd14323878deaeda1d31729f4f850cda5d6158bf64dfda46f` · 압축 해제 129 ·
+  manifest 128 / 128 · 그 안의 `received/` = 실행 Codex 준비본의 펼친 사본 (MANIFEST 112 / 112 · CODE_MANIFEST 21 / 21) · 비밀 0 · 동봉 스크립트 · 받은 코드 실행 0. 규칙 `e61b0d205` → 보존 `5a0121d30`.
+  준비본의 원 zip 바이트 (sha256 `0cae7acc…aaf53`) 는 이 저장소에 없다 — 검토자가 확인한 sha 와 펼친 사본만 있다.
+- 준비본 (`received/DECISION.json` · `TIMING.json` 사본): `PREPARED_WITH_EXPLICIT_OPEN_NATIVE_BLOCKERS` · 8 항목 done 4 (P 변형 · K · 수지 · 비용) / partial 4 (초기화 · 계수 · 실행 연결 · 자원 — 설치본 · OS 어댑터 OPEN) ·
+  기능 검증 미실행 · native_ready false · 소요 2,291 s / 상한 3,600 s (작성 1,746 · 정적 331 · 검증 설계 214).
+- 판정 (회신 `DECISION.json`): `PARTIAL_OFFLINE_PREPARATION_ACCEPTED_SOURCE_CORRECTIONS_REQUIRED` · 무결성 PASS · **현 바이트 그대로의 98 사례 검증은 권고하지 않음**.
+- **회신의 네 결함 — 이 저장소에서 받은 코드 텍스트로 정적 대조해 모두 확인 (import · 실행 0):**
+  - N1 (P1): `consumer.py` `charge_balance` 218–255 는 시작 시각 0 · 2 행 이상 · 증가만 본다 · `analyze` 295–296 의 native 끝 시각 검사는 312 의 `data['charge']` 와 결속되지 않고 charge 의 Li 값도
+    같은 시각 `global` 과 대조되지 않는다 → 0–1 s 만 있는 정상 수지가 `CONSISTENT` (255) → 317 `AWAITING_S1_LIMITED_EXTERNAL_REVIEW` 까지 갈 수 있다. 부모 `Parent.ps1` 112 도 기록 개수 ≥ 2 만 본다.
+  - N2 (P2): 237–238 은 시작 대비 누적 q 만 −2e-4 와 비교 — 직전 대비 증분 검사 없음. 회신 예 (25.001 → 25.00025 · 증분 −0.00075) 는 누적 양수 · 수지 한도 (≈ 2e-4 + 1e-4 × 25 ≈ 0.0027) 안이라 통과한다 (우리 산술).
+  - N3 (P2): `Parent.ps1` 117–124 는 `comparison_times` · `full_intersection` 의 개수만 본다 — 원소의 유한 · 순서 · 중복 · 고정 요청 목록 일치 검사 없음.
+  - N4 (경미): `P0.java` 416 `tout = tsteps` (P0 옛 정책 — 맞음) 인데 439 요약 문구가 "requested tlist storage" · 실제 값은 540 에서 따로 readback.
+  - 추가 확인: P0–P2 의 cap 식 `if(t<0.1[s],0.000125[s],0.1[s])` · P3 의 단계 cap · P1–P3 `tout = tlist` 는 설계 (P0 옛 → P1 저장만 → P2 요청만 → P3 cap 만) 와 맞는다 — 회신 밖의 새 결함은 찾지 못했다.
+- 그대로 인정되는 것: 설치본 t0 / 계수 · raw / native 어댑터 · OS 자원 감시 / 중지의 OPEN (이번에 채우라는 요구 없음) · P0–P3 / K / 비용 설계의 정합한 부분 · 24 회 / 60 h 는 미승인 명목 상한.
+  포장 반환 (chunk `892caf` · rc 0 · 2,299.13 s) 은 사용자 메시지 전사이지 원 sidecar 바이트 · 실행 PC 독립 관측이 아니다 (회신 `USER_SUPPLEMENT_AS_REPORTED.json`).
+- **다음 (사용자 결정):** 좁은 오프라인 정정 S1O-R1 (N1–N4 · 새 폴더 · 1 회 · 총 2,700 s — 작성 1,200 · 정적 600 · 검증안 600 · 전달 300 · 이전 예산 재사용 없음) — 채택 문구 · 발송 프롬프트
+  `docs/COMSOL_MICROSHORT_S1O_R1_SEND_TO_CODEX_20261007.md` (승인 뒤에만 발송). 그 뒤 정정본 검토 → 98 (+α) 사례 기능 검증 별도 승인 → S1-P 별도 승인. 이 절은 어떤 실행의 승인도 아니다.
