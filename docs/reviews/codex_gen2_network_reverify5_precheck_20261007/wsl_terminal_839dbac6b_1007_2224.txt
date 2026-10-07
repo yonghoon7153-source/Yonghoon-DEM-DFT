@@ -1,0 +1,65 @@
+# ③ 새 시범 (관측 켬 · 1–2 분)
+PL=~/g2pre_pilot_${S}_$T
+run pilot        $PY scripts/run_network_194_parallel.py run --root "$PL" -j 3 --observe-imports --case lhs00_055 --case lhs00_128 --case lhsx_007
+run pilot_audit  $PY scripts/run_network_194_parallel.py audit --root "$PL" --tsv "$PL/seal_audit.tsv" --json "$PL/sealtar czf "$O.tar.gz" $F; sha256sum "$O.tar.gz"; cp "$O.tar.gz" "$DL/"; ls -la "$DL/$(basename "$O").tar.gz"report.json,i
+remote: Enumerating objects: 250, done.
+remote: Counting objects: 100% (250/250), done.
+remote: Compressing objects: 100% (110/110), done.
+remote: Total 250 (delta 127), reused 246 (delta 123), pack-reused 0 (from 0)
+Receiving objects: 100% (250/250), 1007.54 KiB | 29.63 MiB/s, done.
+Resolving deltas: 100% (127/127), completed with 15 local objects.
+From https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT
+ * branch                claude/stoic-knuth-NObVQ -> FETCH_HEAD
+   d581154be..839dbac6b  claude/stoic-knuth-NObVQ -> origin/claude/stoic-knuth-NObVQ
+Previous HEAD position was d581154be 단면 하중 몫 도구 (scripts/plane_load_share.py) · real14 확인 · 5 쪽 해석 문장 표지 (SELF-95) · SELF-93 claimed_fixed
+HEAD is now at 839dbac6b DEM 압축 감쇠가 판 반력의 58 % — DEMP-01 (P1 open) · ibb 실측 기록 · real14 체크포인트 없음 표지
+839dbac6b DEM 압축 감쇠가 판 반력의 58 % — DEMP-01 (P1 open) · ibb 실측 기록 · real14 체크포인트 없음 표지
+dirty 줄 수 = 0 (0 이어야)
+2.5.2 1.18.1 3.7
+▶ st_reread
+  st_reread rc=0
+▶ st_runner
+  st_runner rc=0
+▶ st_smoke
+  st_smoke rc=0
+▶ old_audit
+  old_audit rc=0
+▶ old_reread
+  old_reread rc=0
+▶ smoke
+  smoke rc=0
+▶ smoke_reread
+  smoke_reread rc=0
+▶ pilot
+  pilot rc=0
+▶ pilot_audit
+  pilot_audit rc=0
+▶ pilot_reread
+  pilot_reread rc=0
+==> /home/yonghoon71/g2rr5_839dbac6b_1007_2224/st_reread.stdout <==
+
+✓ 전부 통과
+
+==> /home/yonghoon71/g2rr5_839dbac6b_1007_2224/st_runner.stdout <==
+
+✓ 전부 통과 (117/117)
+
+==> /home/yonghoon71/g2rr5_839dbac6b_1007_2224/st_smoke.stdout <==
+
+✓ 전부 통과
+old_audit.json 15 15 3 3 []
+  lhs00_055|1|1 out/status.json 케이스 기록 stages (지금 기록을 쓴  {'worker': 1, 'scripts/parse_liggghts.py': 1, 'scripts/analyze_contacts_bimodal.py': 1, 'scripts/coverage_physics_vs_hertzian.py': 1, 'scripts/network_conductivity.py': 1} {'worker': 1, 'scripts/parse_liggghts.py': 1, 'scripts/analyze_contacts_bimodal.py': 1, 'scripts/coverage_physics_vs_hertzian.py': 1, 'scripts/network_conductivity.py': 1}
+  lhs00_128|1|1 out/status.json 케이스 기록 stages (지금 기록을 쓴  {'worker': 1, 'scripts/parse_liggghts.py': 1, 'scripts/analyze_contacts.py': 1, 'scripts/coverage_physics_vs_hertzian.py': 1, 'scripts/network_conductivity.py': 1} {'worker': 1, 'scripts/parse_liggghts.py': 1, 'scripts/analyze_contacts.py': 1, 'scripts/coverage_physics_vs_hertzian.py': 1, 'scripts/network_conductivity.py': 1}
+  lhsx_007|1|1 out/status.json 케이스 기록 stages (지금 기록을 쓴  {'worker': 1, 'scripts/parse_liggghts.py': 1, 'scripts/analyze_contacts_bimodal.py': 1, 'scripts/coverage_physics_vs_hertzian.py': 1, 'scripts/network_conductivity.py': 1} {'worker': 1, 'scripts/parse_liggghts.py': 1, 'scripts/analyze_contacts_bimodal.py': 1, 'scripts/coverage_physics_vs_hertzian.py': 1, 'scripts/network_conductivity.py': 1}
+seal_audit.json 15 15 3 3 []
+  lhs00_055|1|1 worker.json attempts[].stage_plan (그 시도가 {'worker': 1, 'scripts/parse_liggghts.py': 1, 'scripts/analyze_contacts_bimodal.py': 1, 'scripts/coverage_physics_vs_hertzian.py': 1, 'scripts/network_conductivity.py': 1} {'worker': 1, 'scripts/parse_liggghts.py': 1, 'scripts/analyze_contacts_bimodal.py': 1, 'scripts/coverage_physics_vs_hertzian.py': 1, 'scripts/network_conductivity.py': 1}
+  lhs00_128|1|1 worker.json attempts[].stage_plan (그 시도가 {'worker': 1, 'scripts/parse_liggghts.py': 1, 'scripts/analyze_contacts.py': 1, 'scripts/coverage_physics_vs_hertzian.py': 1, 'scripts/network_conductivity.py': 1} {'worker': 1, 'scripts/parse_liggghts.py': 1, 'scripts/analyze_contacts.py': 1, 'scripts/coverage_physics_vs_hertzian.py': 1, 'scripts/network_conductivity.py': 1}
+  lhsx_007|1|1 worker.json attempts[].stage_plan (그 시도가 {'worker': 1, 'scripts/parse_liggghts.py': 1, 'scripts/analyze_contacts_bimodal.py': 1, 'scripts/coverage_physics_vs_hertzian.py': 1, 'scripts/network_conductivity.py': 1} {'worker': 1, 'scripts/parse_liggghts.py': 1, 'scripts/analyze_contacts_bimodal.py': 1, 'scripts/coverage_physics_vs_hertzian.py': 1, 'scripts/network_conductivity.py': 1}
+검사 26 · PASS 26 · 실데이터 FAIL 0 · 음성 대조 FAIL 0 (수정 전이면 정상) · rc 0
+  ✓ [A] case15_network: [음성 대조] 게시 차단 — failed · 실패 단계 Network Solver (both modes) · Stage E 안 돌았다 · 반환 run id 없음 (옛 성공 산출물 재사용 없음)
+  ✓ [A] case15_network: [음성 대조] 인계 숫자 비노출 — τ 세 모드 NOT_COMPUTED · 숫자 칸 없음
+  ✓ [A] case15_network: [음성 대조] 원인 발화 (원덤프 직접 6 조합) — 전자 두 모드 · Hertz 열 boundary_overlap · B∩T = 입자 ID [24, 40, 57, 103] · Physics 열 음수 원자료 면적 거부 · 음수 행 2
+  ✓ [A] case15_network: [음성 대조] 이온 정상 — 두 모드 computed · σ_ratio 참고 8 자리 {'hertzian': 0.00032635, 'physics': 0.00036225} · 증서 보존 · 잔차 < 1e-06
+41a755974d99aa0d1c8315cf3454cd15a7eeabdca31062c999f25c67118d2939  /home/yonghoon71/g2rr5_839dbac6b_1007_2224.tar.gz
+-rw-r--r-- 1 yonghoon71 yonghoon71 54375 Oct  7  2026 /mnt/c/Users/Administrator/Downloads/g2rr5_839dbac6b_1007_2224.tar.gz
+yonghoon71@DESKTOP-IK8J81H:~$

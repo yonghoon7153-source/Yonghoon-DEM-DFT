@@ -289,3 +289,7 @@ $PY scripts/run_network_194_parallel.py run --root "$R" 2>&1 | tee ~/net194_run_
   ④ 코드 신원: G2RR4-01 `942e851fd` · G2RR4-02 `4c8f84928` · G2RR4-03 `36ba39070` + 스모크 · 다시 읽기 음성 대조 구현 커밋 (이 문서와 같은 커밋) — **봉인 32 파일 불변**
      (`code_fp e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71`) · 인계 도구 `scripts/g2_network_reread.py` 지문은 바뀐다 (발사 때 manifest `handover_code_hashes` 에 기록 ·
      §3 의 10-07 재등록 지문은 역사).
+- 9-5 사전 점검 2 (10-07 22:24 KST · 1저자 WSL · 코드 `839dbac6b` · 재검증 5 첨부 · 증거 `docs/reviews/codex_gen2_network_reverify5_precheck_20261007/`): §9-4 ③ **제안** 기대와 **전부 같음** —
+  §1 단계 3 smoke rc 0 (26/26 · case15 `[음성 대조]` 넷 PASS · 나머지 10-07 14:15 와 같은 값) · 단계 4 reread rc 0 (S0 · S0b) · 옛 실행기 시범 ROOT (`c3117438a`) 재감사 = 지금 케이스 기록 stages 로 결합 3 ·
+  관측 문제 `[]` · SEALED 3 · 새 시범 (`839dbac6b` · `--observe-imports`) = 시도 사본 (`worker.json attempts[].stage_plan`) 으로 결합 3 · SEALED 3 · 봉인 `code_fp e8b2496b…` (32) 그대로.
+  ⚠ §3b · §4 · §9-4 는 아직 ⬜ 1저자 비준 전 — 이 줄은 결과 기록이지 비준이 아니다.  194 발사 = Codex GO 뒤 (§0).

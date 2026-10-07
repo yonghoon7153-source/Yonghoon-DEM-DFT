@@ -110,7 +110,8 @@
 # 0) 체크포인트 복사는 끝났다 (10-07 · sha256 82234bea… 양쪽 확인).  다시 할 때의 꼴만 남긴다 (주소 · 포트는 적지 않는다):
 #    scp -P <포트> <ibb 접속>:~/dem_test/ps45/ps_7_3_r45/restart_ps_7_3_r45/restart_compress_3100000.bin ~/ps73_branch_20261007/in/
 #    (선택 · G2 원자 대조) 같은 자리의 post_ps_7_3_r45/atom_3100000.liggghts 도 ~/ps73_branch_20261007/in/ 로 받으면 t0 가 원자까지 대조한다
-cd ~/dem-audit && git fetch -q origin claude/stoic-knuth-NObVQ && git checkout -q --detach FETCH_HEAD && git log --oneline -1
+# B 전용 작업 트리 (10-07 밤 고침 · SELF-76) — ~/dem-audit 는 재검증 · 194 체크아웃에 쓰이므로 도는 B 와 분리한다.  커밋마다 새 폴더 · 이미 있는 폴더는 다시 체크아웃하지 않는다
+cd ~/dem-audit && git fetch -q origin claude/stoic-knuth-NObVQ && W=~/ps73_branch_src_$(git rev-parse --short FETCH_HEAD) && { [ -d "$W" ] || git worktree add -q --detach "$W" FETCH_HEAD; } && cd "$W" && git log --oneline -1
 pgrep -af "lmp_|liggghts" || echo "실행 중인 LIGGGHTS 없음"
 sha256sum ~/ps73_branch_20261007/in/restart_compress_3100000.bin      # 82234bea543ae369043f54d4379c6451cdab5a404213c0ecf0a698638bf4b3ee
 python3 -I docs/data/ps73_damping_branch_20261007/make_branch_decks.py --check     # 덱 = 생성 결과 · SHA256SUMS
@@ -125,6 +126,7 @@ nohup bash docs/data/ps73_damping_branch_20261007/run_branch.sh > ~/ps73_branch_
 R=$(ls -d ~/ps73_branch_20261007/B_*/ | tail -1); R=${R%/}; tail -3 $R/branch_trace.csv; grep -E "BRANCH_|Hold [0-9]+:" $R/screen.out | tail -4
 
 # 3) B 끝나면 단면 하중 (멈춘 step · 서보 끝)
+cd "$(ls -dt ~/ps73_branch_src_* | head -1)"         # B 를 띄운 작업 트리 (가장 최근 것 · scripts/ 가 여기 있다 · 새 창이면 $W 가 없다)
 PY=$(ls ~/Yonghoon-DEM-DFT/venv/bin/python ~/Yonghoon-DEM-DFT/.venv/bin/python3 2>/dev/null | head -1)
 R=$(ls -d ~/ps73_branch_20261007/B_*/ | tail -1); R=${R%/}
 for st in stop end; do S=$(grep "^${st}_step=" $R/branch_summary.txt | tail -1 | cut -d= -f2); \

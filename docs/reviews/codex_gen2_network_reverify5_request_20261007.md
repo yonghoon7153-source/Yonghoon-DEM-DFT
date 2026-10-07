@@ -21,6 +21,13 @@ $PY -c "import json,sys; a=json.load(open(sys.argv[1])); o=a['import_observation
 $PY scripts/g2_network_reread.py --launcher-root "$OLD" --expect-set pilot3 --json ~/g2rr4_oldpilot_reread_$T.json 2>&1 | tail -14; echo "reread rc=${PIPESTATUS[0]}"
 ```
 
+- ✅ **받음 — 10-07 22:24 KST · 1저자 WSL · 코드 `839dbac6b` (detached · dirty 0) · ① ② ③ 전부** — 증거 `docs/reviews/codex_gen2_network_reverify5_precheck_20261007/`
+  (묶음 sha256 `41a755974d99aa0d1c8315cf3454cd15a7eeabdca31062c999f25c67118d2939` · 단계마다 원 프로세스 전체 출력 · rc · JSON · 받은 목록 = README §1 · 받지 않은 것 = 같은 절):
+  자체 시험 다시 읽기 20/20 · 실행기 117/117 · 스모크 14/14 / ① audit rc 0 (시작 15 = 끝맺음 15 · 완료 3 · 결합 3 = 지금 케이스 기록 stages · 관측 문제 `[]` · SEALED 3) · reread rc 0 (n_fail 0 · pilot3 같음) /
+  ② smoke rc 0 (26/26 · case15 `[음성 대조]` 넷 PASS · real14 · lhs00_055 · lhsx_007 값 = 10-07 14:15 와 같음 · lhs00_128 valid_zero) · reread rc 0 (S0 · S0b) /
+  ③ pilot · audit · reread rc 0 (결합 출처 = 시도 사본 `worker.json attempts[].stage_plan` · SEALED 3 · observe_imports true · seal `e8b2496b…`) — **기대 (등록 §9-4 ③ 제안) 와 전부 같음** (README §2 표).
+  등록 제안 (§3b · §4 · §9-4) 비준은 여전히 ⬜ — 이 결과는 비준이 아니다.
+
 ## 1. G2RR4-01 — 다시 읽기 상세 ↔ 요약 · 감사 관측 내부 ↔ 최상위 (`942e851fd`)
 
 | 판정문 최소 해결 증거 (§2) | 구현 |
