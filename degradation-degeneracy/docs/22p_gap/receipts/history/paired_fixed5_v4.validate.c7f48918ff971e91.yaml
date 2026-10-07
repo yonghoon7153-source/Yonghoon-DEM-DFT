@@ -1,0 +1,280 @@
+schema_version: 2
+_주의: 이 파일은 손으로 쓰지 않는다. `python3 docs/22p_gap/make_receipt.py <leg>` 가 만들고 `--check` 가 **core 바이트 동일**
+  재생성을 확인한다.
+core_sha256: d527cde9fc7251a285d5e753048235f1c3aff54661c7588733cc0ffcd63ad9f7
+core:
+  leg_id: paired_fixed5_v4
+  bundle:
+    uri: artifacts/paired_fixed5_v4
+    files: 26
+    bytes: 23863555
+    payload_index: artifacts/paired_fixed5_v4/payload_sha256.yaml
+    payload_index_sha256: eeb8ae8911083c992710ace2c8f255682b64930a03929f12ae72796ade174716
+    member_rehash: tools.archive_bundle.check
+    member_mismatches: 0
+    fits_sha256: e033b19510ddbed951cfebe7e28793f19c5f0da915268b0731a30c56f0b3b064
+  restore:
+    mode: empty_root
+    command: python3 -c "from tools.archive_bundle import restore; restore('artifacts/paired_fixed5_v4',
+      repo_root=<empty>)"
+    files_written: 24
+    run_dir_relative: results/paired_fixed5_v4
+    conflicts: 0
+  validation:
+    validator: src.io.validate_provenance
+    ok: true
+    fail: []
+    n_checks: 35
+    checks:
+      _참고_코드재계산불가: 통과
+      attempt_파일_일치: 통과
+      attempt_파일_존재: 통과
+      clean_worktree: 통과
+      config_hash: 통과
+      manifest_존재: 통과
+      manifest와_일치: 통과
+      optimizer_정책: 통과
+      producer_곡선일치: 통과
+      restart_예산_완주: 통과
+      restart_출처: 통과
+      run_signature_기록: 통과
+      run_signature_재계산: 통과
+      run_spec_schema: 통과
+      sig_version: 통과
+      start_파일_일치: 통과
+      start_파일_존재: 통과
+      곡선_producer_재검: 통과
+      단일_서명: 통과
+      목적함수_순서: 통과
+      세대_선언_일치: 통과
+      시작_provenance: 통과
+      시작종료_서명일치: 통과
+      실행중_코드불변: 통과
+      입력_digest_재해시: 통과
+      입력_스냅샷: 통과
+      입력봉인_교차일치: 통과
+      조건집합_서명일치: 통과
+      채점파일_정본: 통과
+      출력_격자완전성: 통과
+      출력_완전성: 통과
+      출력봉인_재계산: 통과
+      코드_identity: 통과
+      필수_입력_존재: 통과
+      행별_서명: 통과
+  identity:
+    validator_source_digest: c7f48918ff971e91
+    src_io_sha256: cde0be140cabc8dc
+    src_scoring_sha256: 69e69cb046f4b4ae
+    archive_bundle_sha256: 5f7fc3c89dfe5dba
+    make_receipt_sha256: 61be9d0faefbb837
+    row_projection_sha256: b8eae978b9525c3e
+    row_projection_compute_sha256: 150416386d3c0b93
+  outputs:
+  - role: rescored_summary
+    produced_from: restored fits.parquet only
+    source_file_sha256: e033b19510ddbed951cfebe7e28793f19c5f0da915268b0731a30c56f0b3b064
+    relative_path: _rescored_summary.yaml
+    byte_size: 8877
+    file_sha256: 0fd679bcee1d3c94028af8df7915daa31dac280056d8317294e48d83b395e276
+    n_rows: 6138
+    semantic_schema: degeneracy-summary/v5
+    canonicalizer: score-semantic/v3
+    semantic_view_drops:
+    - _채점원본
+    semantic_sha256: a644a692bf405372716db73d26d0bb4ad5b9e7d4f06781cf7fa6b7bd7aa795ef
+  - role: sealed_summary
+    relative_path: degeneracy_summary.yaml
+    byte_size: 9080
+    file_sha256: 020945db71731bf8019f8705085a5d20e84a4480bc9731f77f7610aa7722021c
+    semantic_schema: degeneracy-summary/v5
+    canonicalizer: score-semantic/v3
+    semantic_view_drops:
+    - _채점원본
+    semantic_sha256: a644a692bf405372716db73d26d0bb4ad5b9e7d4f06781cf7fa6b7bd7aa795ef
+  outputs_agree: true
+stamp:
+  _주의: 기록용. core 재생성 대조에서 제외된다.
+  validator_commit: 68350322592f400e3ef2655972d5d35f14851b60
+  validator_tree_dirty: false
+  generated_at_utc: '2026-10-06T13:06:34Z'
+  runtime:
+    python: 3.11.15
+    platform: Linux-6.18.44-fc-v70-x86_64-with-glibc2.39
+  environment_profile_C:
+    profile: C
+    lock_path: requirements-validation-C.lock.txt
+    lock_sha256: d886f30ff675fef723fb9bcedd98297910fb1f8f1809370c18d8980dc5e63b39
+    status: MISMATCH
+    reason: ''
+    mismatches:
+    - axis: dist_extra
+      subject: flask
+      locked: null
+      measured: 3.1.3
+    - axis: dist_extra
+      subject: itsdangerous
+      locked: null
+      measured: 2.2.0
+    - axis: dist_extra
+      subject: markdown
+      locked: null
+      measured: 3.10.3
+    - axis: dist_extra
+      subject: werkzeug
+      locked: null
+      measured: 3.1.8
+    - axis: dist_record
+      subject: blinker
+      locked: none
+      measured: dc82b32b2026557c17e24d3e48a6e379a3d5660e81983aa026998afe775a32a4
+    - axis: dist_record
+      subject: debugpy
+      locked: 93bb7a80876cc2c5b1a03a327ba26a34a51ee2ca0e65114725f0e82534f3207b
+      measured: a0018709f48a14ac29ba157023a6de58fd705aed306baa4d61b3d0821ff8d1c9
+    - axis: dist_record
+      subject: fonttools
+      locked: 5284752e0fa2c97798d4ac3bb89d559011cfbbfdf98ae1857a38f190f8c8e5af
+      measured: a27d20f5a6f885a67af62a2a03d0787f8def85840d9bfd3b80f35ee88c3e74d7
+    - axis: dist_record
+      subject: jupyter-server
+      locked: 1c069281d9330882ff1902936e44a6857db9f251e9f8725d5367fd3eaf9a6bc7
+      measured: e3c8431b4269bbbd0f24ad2c83e771bf8e56dbdfb8a9cb2007062b569ee5c6df
+    - axis: dist_record
+      subject: jupyterlab
+      locked: b81e81c8ebabe7774411a6486d64c692fd8bad63b619b41f4bd2d8f37d0da16c
+      measured: f3f26b1588efd1bb62fd7ad3c12a0c9851c54d3f98a28b1fb15c56a572d133d4
+    - axis: dist_record
+      subject: jupyterlab-server
+      locked: 9c2e9022df5d98d52d645361ee52054c1dc3e10ea9ba4513085ec40beb97718c
+      measured: 99e4a0667b0b92789c40e1e7451336d8e11b6f525414df3d0aacbc089368c6e7
+    - axis: dist_record
+      subject: nest-asyncio2
+      locked: 896d485c5d1fb04e0352d65ba7f410095f923b0dd672adff6815b77e4905bc0d
+      measured: 04847daff2aff192295361598b4b5fa068adaa168e069c3ffa0d5e57b7f10b1e
+    - axis: dist_record
+      subject: notebook
+      locked: 821c9ec3f1811ad7d842d384de9cd8de73284955504d3cf37e6f4a7751a6b9a4
+      measured: 0ea3ce48cdae99b8fcb5c843158c8479a1abcdf924b0ab2ed9ef7d6b2e4598d3
+    - axis: dist_record
+      subject: numpy
+      locked: c3dd00f045ea91bf972a08daad232f99a627186b0799af0379317a9edcc9fa86
+      measured: 641c07465e54880064a7ac478d33ea28ec0f3384e618f7ef734586bfabf75d5e
+    - axis: dist_record
+      subject: platformdirs
+      locked: 867c96df4a8756503ffd5b673b0e886d50c6a12442d9db05e27996dc9e2f88e0
+      measured: a8297e12b158ea591f74e78b7d6094e08401a9c18a85f9e969f84f870bce0181
+    - axis: dist_record
+      subject: posthog
+      locked: b027a054757dc3d609caae2352224277a64f1752666177aa86eedc918dfcd0a5
+      measured: 3df9778cf8962564afac9830714158997b0f665d1a22beee497e9155f84bb8af
+    - axis: dist_record
+      subject: pygments
+      locked: 41a99838b974f5e6cf39a8e387a449418e6762c666427e3c24152760aa6e2f4c
+      measured: 511b09ac3a4e667e2275c3316de174dbee67e859e5a1488c185a0667641221d0
+    - axis: dist_record
+      subject: pytest
+      locked: 7a423734645a175fcbf3fecb9703a3a9fd6756bdcda1ce7438bd1968b82261c9
+      measured: b13e2dde47d82b9fec29174e309b45a0c4b093da06fcea57e89ffdb3a61b3efb
+    - axis: dist_record
+      subject: soupsieve
+      locked: 0f498c090ee8e116e1132a9f61b81ce2c50ff022042c5a192d82644270ec8d18
+      measured: c7281305e942fabb7a9dfa02af2030d68b3c46e0dac6f36e66134fb41150c060
+    - axis: dist_record
+      subject: tornado
+      locked: a8fec524feae3f0d25a7d110637a7360bdec3e6256cf496b26258eb5d31b7e7d
+      measured: 27cef96e0b3874c6c859d13cc45a1e69fd8ace9df8cefff33f7a9cd5db679070
+    - axis: dist_record
+      subject: wcwidth
+      locked: f8c196e49b91ee8f74db1ae1b8ba04ec64661e0de2cf94d35ac9596dfb6b8215
+      measured: cb87e4ad19184953c3eade5642dbec7df3b8641c96b2ed84115bba57a2cb8d03
+    - axis: dist_version
+      subject: blinker
+      locked: 1.7.0
+      measured: 1.9.0
+    - axis: dist_version
+      subject: debugpy
+      locked: 1.8.22
+      measured: 1.8.21
+    - axis: dist_version
+      subject: fonttools
+      locked: 4.66.0
+      measured: 4.65.0
+    - axis: dist_version
+      subject: jupyter-server
+      locked: 2.21.1
+      measured: 2.21.0
+    - axis: dist_version
+      subject: jupyterlab
+      locked: 4.6.4
+      measured: 4.6.3
+    - axis: dist_version
+      subject: jupyterlab-server
+      locked: 2.28.1
+      measured: 2.28.0
+    - axis: dist_version
+      subject: nest-asyncio2
+      locked: 1.7.3
+      measured: 1.7.2
+    - axis: dist_version
+      subject: notebook
+      locked: 7.6.3
+      measured: 7.6.2
+    - axis: dist_version
+      subject: platformdirs
+      locked: 4.12.0
+      measured: 4.11.8
+    - axis: dist_version
+      subject: posthog
+      locked: 7.60.1
+      measured: 7.53.0
+    - axis: dist_version
+      subject: soupsieve
+      locked: '2.10'
+      measured: 2.9.2
+    - axis: dist_version
+      subject: tornado
+      locked: 6.5.10
+      measured: 6.5.8
+    - axis: dist_version
+      subject: wcwidth
+      locked: 0.9.1
+      measured: 0.8.3
+    - axis: shadowed
+      subject: blinker==1.7.0
+      locked: null
+      measured: none
+    unverifiable:
+      dists_without_record:
+      - argcomplete
+      - cryptography
+      - dbus-python
+      - distro
+      - launchpadlib
+      - lazr-restfulclient
+      - lazr-uri
+      - oauthlib
+      - pip
+      - pygobject
+      - pyjwt
+      - pyparsing
+      - python-apt
+      - pyyaml
+      - setuptools
+      - six
+      - toml
+      - wadllib
+      - wheel
+      - xmltodict
+      - yq
+      path_origins:
+      - yaml
+    counts:
+      dists_locked: 170
+      dists_measured: 174
+      shadowed_locked: 2
+      shadowed_measured: 3
+      files_verified: 24918
+      files_unhashed: 10456
+      path_origins_in_record: 9
+    not_measured:
+    - loaded_module_origin
