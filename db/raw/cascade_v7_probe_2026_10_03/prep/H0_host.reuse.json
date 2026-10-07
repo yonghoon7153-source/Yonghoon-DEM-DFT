@@ -1,0 +1,13 @@
+{
+ "source_json": "/home/kgy/work/runs/cascade_v6_40run_0921/prep/H0_host.prepared.json",
+ "source_xyz": "/home/kgy/work/runs/cascade_v6_40run_0921/prep/H0_host.prepared.xyz",
+ "sha256": "126476a9c0f5a28db9c01efe7dcdfdbc539e214f09fb9b8fdf141558207197d3",
+ "input_sha256": "5bca9a4f1d9bc119000ac93b48b7e1524490a4bc109d53f9ed4e99f849398d96",
+ "n_atoms": 208,
+ "V_A3": 4066.4796953466644,
+ "final_fmax_eV_A": 0.016040602698922157,
+ "converged": true,
+ "copied_to": "/home/kgy/work/runs/cascade_v7_probe_1003/prep/H0_host.prepared.xyz",
+ "copied_utc": "2026-10-03T11:24:38Z",
+ "⚠": "v6 준비를 초기 좌표로만 재사용 (개정 ⑩) — 이 온도에서의 평형을 뜻하지 않는다"
+}
