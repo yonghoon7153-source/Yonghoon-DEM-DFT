@@ -1,0 +1,155 @@
+발사 뒤 패치 (194 봉인 파일 webapp/app.py) — 10-07 1저자 결정 웹앱 묶음 #11 (AM 만 칠하기) · WEB-06 (최대 접촉 압력)
+
+왜 지금 넣지 않나: /3d-data 가 aux 키를 하나씩 옮겨 담고 캐시 스키마 (12) 도 webapp/app.py 에 있다 — 그 파일은 194 망 배치 봉인
+(code_fp e8b2496b…) 의 CODE_FILES 32 안이다.  계산 (scripts/viewer3d_data.particle_load_view_for_case) · 뷰어 (webapp/static/js/viewer3d.js) 는
+이미 들어가 있고, 이 패치가 들어가야 aux.load_view 가 화면에 온다 (그 전 = AM 만 보기 안내 · Max contact pressure = 옛 계산 ⚠ 범례).
+
+바꾸는 것: ① aux 기본값 load_view (live · archive) ② 배위수 키 다음에 particle_load_view_for_case(결과 폴더, type_map, scale) — 실패해도
+3D 데이터는 낸다 (상태만) ③ 캐시 스키마 12 → 13 (읽기 둘 · 쓰기 둘 — 옛 캐시는 다시 계산) ④ archive 캐시 복원 목록에 load_view ·
+webapp/test_viewer_coordination.py 의 스키마 기대값 12 → 13 (CN 계약은 그대로).
+
+적용 (194 발사 뒤 · 리포 뿌리): git apply docs/reviews/webapp_load_view_deferred_20261007.patch  → bash scripts/check_all.sh
+시험: webapp/test_viewer_load_view.py [P] 가 적용 전에는 임시 사본에 적용해 실행하고 (live · archive · 캐시 HIT · 옛 스키마 12),
+적용 뒤에는 진짜 app.py 를 본다.  v1.3 화면 패치 (lhs_release_v13_display_deferred_20261007.patch) 와 다른 자리 (3d-data 경로) —
+두 패치는 어느 순서로든 맞는다 (같은 시험이 확인).
+
+diff --git a/webapp/app.py b/webapp/app.py
+index 54115ea..06e9e8d 100644
+--- a/webapp/app.py
++++ b/webapp/app.py
+@@ -9197,6 +9197,8 @@ def serve_3d_data(case_id):
+         'se_n_percolating': 0,
+         'se_bn_median_norm': 0, 'se_bn_threshold_norm': 0,
+         'se_n_bn_below_threshold': 0,
++        # ★ 10-07 입자 하중 보기 (WEB-06 · #11) — scripts/viewer3d_data.particle_load_view_for_case (캐시 스키마 13)
++        'load_view': {},
+     }
+     try:
+         import sys as _sys
+@@ -9233,7 +9235,7 @@ def serve_3d_data(case_id):
+                 try:
+                     with open(cache_path) as _cf:
+                         cached = json.load(_cf)
+-                    if cached.get('_contacts_mtime') == contacts_mtime and cached.get('_schema') == 12:   # 12 = 입자별 배위수 (10-06)
++                    if cached.get('_contacts_mtime') == contacts_mtime and cached.get('_schema') == 13:   # 13 = 입자 하중 보기 load_view (10-07) · 12 = 입자별 배위수 (10-06)
+                         # Restore every cached key except metadata.  Some
+                         # int-keyed dicts (stress_max, dr_max, se_engagement,
+                         # particle_max_fpc, particle_n_brittle) need their
+@@ -9308,6 +9310,15 @@ def serve_3d_data(case_id):
+                     # 입자별 배위수 + 상별 요약 (3D 뷰어 '배위수' 보기 · 10-06 · 스키마 12)
+                     for _k in ('cn_se_se', 'cn_am_se', 'cn_am_am', 'cn_summary'):
+                         aux[_k] = agg.get(_k, {})
++                    # ★ 10-07 입자 하중 보기 (1저자 결정 · 웹앱 묶음 #11 · WEB-06) — 압축만 최대 접촉 압력 · AM 만 (Love–Weber 입자 응력 =
++                    #   calc_love_weber_stress 그대로 · 최대 AM–AM 접촉 힘 · 벽 표지).  계산 = scripts/viewer3d_data.particle_load_view_for_case
++                    #   (생산 분석기 읽기 · 같은 판 · 상자) · 실패해도 3D 데이터는 낸다 (상태만 싣는다)
++                    try:
++                        from viewer3d_data import particle_load_view_for_case
++                        aux['load_view'] = particle_load_view_for_case(results_dir, type_map, scale)
++                    except Exception as _elv:
++                        aux['load_view'] = {'schema': 'particle_load_view/v1',
++                                             'status': f'FAILED ({type(_elv).__name__}: {_elv})'}
+ 
+                     # Phase A5+A6 — SE network diagnostics (re-stream contacts;
+                     # NetworkX-based, ~1-2 s for typical 60k SE-SE contacts).
+@@ -9336,7 +9347,7 @@ def serve_3d_data(case_id):
+                     # Write cache so subsequent page loads are instant.
+                     try:
+                         cache_blob = dict(aux)
+-                        cache_blob['_contacts_mtime'] = contacts_mtime; cache_blob['_schema'] = 12
++                        cache_blob['_contacts_mtime'] = contacts_mtime; cache_blob['_schema'] = 13
+                         with open(cache_path, 'w') as _cf:
+                             json.dump(cache_blob, _cf, default=str)
+                         print(f'  [3d-data aux] cache WROTE → '
+@@ -11670,6 +11681,8 @@ def serve_archive_3d_data(folder):
+         'se_n_percolating': 0,
+         'se_bn_median_norm': 0, 'se_bn_threshold_norm': 0,
+         'se_n_bn_below_threshold': 0,
++        # ★ 10-07 입자 하중 보기 (WEB-06 · #11) — scripts/viewer3d_data.particle_load_view_for_case (캐시 스키마 13)
++        'load_view': {},
+     }
+     try:
+         import sys as _sys
+@@ -11697,7 +11710,7 @@ def serve_archive_3d_data(folder):
+                 try:
+                     with open(cache_path) as _cf:
+                         cached = json.load(_cf)
+-                    if cached.get('_contacts_mtime') == contacts_mtime and cached.get('_schema') == 12:   # 12 = 입자별 배위수 (10-06)
++                    if cached.get('_contacts_mtime') == contacts_mtime and cached.get('_schema') == 13:   # 13 = 입자 하중 보기 load_view (10-07) · 12 = 입자별 배위수 (10-06)
+                         for k in ('stress_max', 'dr_max', 'brittle_pairs',
+                                    'se_stress_pairs', 'am_se_stress_pairs',
+                                    'se_states', 'tabor_stats', 'all_se_ids_count',
+@@ -11709,7 +11722,7 @@ def serve_archive_3d_data(folder):
+                                                in cached[k].items()}
+                                 else:
+                                     aux[k] = cached[k]
+-                        for k in ('cn_se_se', 'cn_am_se', 'cn_am_am', 'cn_summary'):   # 배위수 (live 경로는 전 키 복원)
++                        for k in ('cn_se_se', 'cn_am_se', 'cn_am_am', 'cn_summary', 'load_view'):   # 배위수 · 입자 하중 (live 경로는 전 키 복원)
+                             if k in cached:
+                                 aux[k] = cached[k]
+                         cache_valid = True
+@@ -11759,6 +11772,15 @@ def serve_archive_3d_data(folder):
+                     # 입자별 배위수 + 상별 요약 (3D 뷰어 '배위수' 보기 · 10-06 · 스키마 12)
+                     for _k in ('cn_se_se', 'cn_am_se', 'cn_am_am', 'cn_summary'):
+                         aux[_k] = agg.get(_k, {})
++                    # ★ 10-07 입자 하중 보기 (1저자 결정 · 웹앱 묶음 #11 · WEB-06) — 압축만 최대 접촉 압력 · AM 만 (Love–Weber 입자 응력 =
++                    #   calc_love_weber_stress 그대로 · 최대 AM–AM 접촉 힘 · 벽 표지).  계산 = scripts/viewer3d_data.particle_load_view_for_case
++                    #   (생산 분석기 읽기 · 같은 판 · 상자) · 실패해도 3D 데이터는 낸다 (상태만 싣는다)
++                    try:
++                        from viewer3d_data import particle_load_view_for_case
++                        aux['load_view'] = particle_load_view_for_case(target, type_map, scale)
++                    except Exception as _elv:
++                        aux['load_view'] = {'schema': 'particle_load_view/v1',
++                                             'status': f'FAILED ({type(_elv).__name__}: {_elv})'}
+                     # Phase A5+A6 — SE network diagnostics
+                     try:
+                         _plate_z_sim = box.get('z_max', 0) / max(scale, 1)
+@@ -11778,7 +11800,7 @@ def serve_archive_3d_data(folder):
+                         print(f'  [3d-data aux/archive] SE diag failed: {_ediag}')
+                     try:
+                         cache_blob = dict(aux)
+-                        cache_blob['_contacts_mtime'] = contacts_mtime; cache_blob['_schema'] = 12
++                        cache_blob['_contacts_mtime'] = contacts_mtime; cache_blob['_schema'] = 13
+                         with open(cache_path, 'w') as _cf:
+                             json.dump(cache_blob, _cf, default=str)
+                         print(f'  [3d-data aux/archive] cache WROTE')
+diff --git a/webapp/test_viewer_coordination.py b/webapp/test_viewer_coordination.py
+index 910b376..7c6d657 100644
+--- a/webapp/test_viewer_coordination.py
++++ b/webapp/test_viewer_coordination.py
+@@ -12,6 +12,7 @@
+       A1 손으로 셀 수 있는 합성 접촉 · A2 같은 접촉에서 core 함수와 같은 평균 · A3 real_14 기준 상태 (커밋 덤프 → parse_liggghts →
+       contacts.csv) = core = case_master 보고값.
+   [C] 3D 데이터 캐시 스키마 11 → 12 (두 경로) — 옛 캐시는 다시 계산 · 새 캐시 HIT 에서도 CN 키가 살아 있다 (live · archive).
++      ★ 10-07 스키마 13 (입자 하중 보기 load_view · 발사 뒤 패치 docs/reviews/webapp_load_view_deferred_20261007.patch) — CN 키 계약은 그대로.
+   [V] viewer3d.js — DEM 드롭다운 'cn' (MPM 조작판에는 없음) · applyViewMode 'cn' 분기 · 범례 (AM_P (PC) · AM_S (SC) · SE–SE 평균 · n)
+       · 이산 색 구간 (node 로 함수를 잘라 그대로 돌린다).
+ """
+@@ -228,13 +229,13 @@ def write_synth_case(folder, meta=True):
+ 
+ 
+ def section_c_cache(tmp):
+-    print('[C] 3D 데이터 캐시 — 스키마 12 · 옛 캐시 다시 계산 · HIT 에서도 CN 키 (live · archive)')
++    print('[C] 3D 데이터 캐시 — 스키마 13 · 옛 캐시 다시 계산 · HIT 에서도 CN 키 (live · archive)')
+     src = open(os.path.join(HERE, 'app.py'), encoding='utf-8').read()
+-    n12 = len(re.findall(r"_schema'\)\s*==\s*12\b", src))
+-    w12 = len(re.findall(r"\['_schema'\]\s*=\s*12\b", src))
+-    n11 = len(re.findall(r"_schema'\)\s*==\s*11\b", src)) + len(re.findall(r"\['_schema'\]\s*=\s*11\b", src))
+-    chk(f'C0 두 경로 (live · archive) 모두 스키마 12 를 읽고 쓴다 · 11 은 남지 않는다 (읽기 {n12} · 쓰기 {w12} · 옛 {n11})',
+-        n12 == 2 and w12 == 2 and n11 == 0)
++    n13 = len(re.findall(r"_schema'\)\s*==\s*13\b", src))
++    w13 = len(re.findall(r"\['_schema'\]\s*=\s*13\b", src))
++    n11 = sum(len(re.findall(rf"_schema'\)\s*==\s*{v}\b", src)) + len(re.findall(rf"\['_schema'\]\s*=\s*{v}\b", src)) for v in (11, 12))
++    chk(f'C0 두 경로 (live · archive) 모두 스키마 13 (10-07 입자 하중 보기) 을 읽고 쓴다 · 11 · 12 는 남지 않는다 (읽기 {n13} · 쓰기 {w13} · 옛 {n11})',
++        n13 == 2 and w13 == 2 and n11 == 0)
+     up, rs, ar = (os.path.join(tmp, k) for k in ('uploads', 'results', 'archive'))
+     for p in (up, rs, ar):
+         os.makedirs(p, exist_ok=True)
+@@ -261,7 +262,7 @@ def section_c_cache(tmp):
+         {int(k): v for k, v in (cn1['cn_am_se'] or {}).items()} == WANT_AM_SE
+         and {int(k): v for k, v in (cn1['cn_se_se'] or {}).items()} == WANT_SE_SE)
+     blob = json.load(open(cache)) if os.path.exists(cache) else {}
+-    chk('C1c 새 캐시는 스키마 12 로 쓰고 CN 키를 담는다', blob.get('_schema') == 12 and 'cn_summary' in blob, repr(blob.get('_schema')))
++    chk('C1c 새 캐시는 스키마 13 으로 쓰고 CN 키를 담는다', blob.get('_schema') == 13 and 'cn_summary' in blob, repr(blob.get('_schema')))
+     j2 = c.get(f'/results/{cid}/3d-data').get_json(silent=True) or {}
+     aux2 = j2.get('aux') or {}
+     chk('C2 두 번째 요청 (캐시 HIT) 도 같은 CN 값 (live)',

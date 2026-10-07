@@ -23,6 +23,7 @@
       LW 상 비 = 2.737 (AM_P) · 2.341 (AM_S) · 0.981 (SE) · 벽 표지 = 정본 (AM_P 바닥 7 · 판 8 · AM_S 46 · 38).
   [J] 뷰어 (node) — 드롭다운 이름 · AM 만 보기 함수 (양 · 범위 = AM 만 · 벽 회색 · 컬러바) · 최대 접촉 압력 범례 (압축만 / 옛 계산 경고 · 툴팁) ·
       자료 없음 안내 (발사 뒤 패치).
+  [Z] Z-profile 이름 정정 (탭 · PNG 제목 — 값은 옛 계산 그대로 · "당김 포함" 표기 · 압축만으로 바꾸는 것은 다음 묶음).
   [P] 발사 뒤 패치 — 적용 확인 · 패치한 app 의 /3d-data (live · archive · 캐시 HIT · 옛 스키마 12 → 다시 계산).
   [X] check_all 배선.
 
@@ -212,8 +213,8 @@ def section_synth(tmp):
             for i in (r['id1'], r['id2']):
                 want[i] = max(want.get(i, 0.0), p)
     got = ikeys(pr.get('max_MPa'))
-    chk(f'W2 입자별 최대 압력 = 압축 접촉만 손 계산 (당김 1–10 · 2–3 · δ = 0 행 · 힘 0 행 제외) ({len(got)} 입자)',
-        set(got) == set(want) and all(rel(got[i], want[i]) < 1e-12 for i in want), repr((got, want))[:400])
+    chk(f'W2 입자별 최대 압력 = 압축 접촉만 손 계산 (당김 1–10 · 2–3 · δ = 0 행 · 힘 0 행 제외 · 전 입자 맵 = 유효 6 자리) ({len(got)} 입자)',
+        set(got) == set(want) and all(rel(got[i], want[i]) < 1e-6 for i in want), repr((got, want))[:400])
     chk(f'W3 셈 — 압축 4 · 당김 2 · 판정 불가 0 · 겹침 없음 / 면적 0 / 힘 0 = 2 ({pr.get("n_used")} · {pr.get("n_excluded_attractive")} · '
         f'{pr.get("n_excluded_unknown")} · {pr.get("n_excluded_no_overlap")})',
         pr.get('n_used') == 4 and pr.get('n_excluded_attractive') == 2 and pr.get('n_excluded_unknown') == 0
@@ -326,8 +327,15 @@ def section_real14(tmp):
     r2 = np.array([pos[int(i)][3] for i in cdf['id2']])
     fn = cdf[['fn_x', 'fn_y', 'fn_z']].to_numpy(float)
     s = V.contact_force_sign(fn, p1, p2, r1, r2, box_xy=(0.05, 0.05), cp=cdf[['cp_x', 'cp_y', 'cp_z']].to_numpy(float))
-    raw_d = np.linalg.norm(p1 - p2, axis=1)
+    #  점검 스크립트의 "주기 너머" = 접촉 덤프 pos1 · pos2 (c_cpl[1–6]) 의 거리 > 1.5 (r1 + r2) — 덤프 위치는 고스트 영상 좌표일 수 있어
+    #  (atoms.csv 와 최대 한 상자 차이) 같은 집합을 그 열로 고른다 · 부호는 최소영상이라 어느 위치로 재도 같다
+    dp1 = cdf[['p1_x', 'p1_y', 'p1_z']].to_numpy(float)
+    dp2 = cdf[['p2_x', 'p2_y', 'p2_z']].to_numpy(float)
+    raw_d = np.linalg.norm(dp1 - dp2, axis=1)
     near = raw_d <= 1.5 * (r1 + r2)
+    s_dump = V.contact_force_sign(fn, dp1, dp2, r1, r2, box_xy=(0.05, 0.05))
+    chk(f'R1a 부호는 atoms.csv 위치 · 덤프 위치 (고스트 영상) 어느 쪽으로 재도 같다 (최소영상 · 다른 행 {int((s != s_dump).sum())})',
+        int((s != s_dump).sum()) == 0)
     ok = (cdf['contact_area'].to_numpy(float) > 0) & (np.linalg.norm(fn, axis=1) > 0)
     n_c, n_a = int(((s > 0) & near & ok).sum()), int(((s < 0) & near & ok).sum())
     chk(f'R1 부호 (주기 너머 뺀 행) = WEB-06 점검 셈 — 압축 95,277 · 당김 6,757 ({n_c:,} · {n_a:,})', n_c == 95277 and n_a == 6757)
@@ -362,8 +370,8 @@ def section_real14(tmp):
 # ══════════════════════════════════════════════════════════════════════════════
 #  [J] 뷰어 (node)
 # ══════════════════════════════════════════════════════════════════════════════
-JS_NAMES = ('netCurrentFmtJ', 'netCurrentT', 'netCurrentTicks', 'jeEscH', 'jetColor', 'loadViewAmMetric', 'amOnlyRange',
-            'amOnlyLegendHtml', 'amOnlyMissingHtml', 'amOnlyColorbarSpec', 'pressureViewInfo', 'pressureLegendHtml')
+JS_NAMES = ('netCurrentFmtJ', 'netCurrentT', 'netCurrentTicks', 'jeEscH', 'jetColor', 'coolwarmColor', 'loadViewAmMetric', 'amOnlyRange',
+            'amOnlyLegendHtml', 'amOnlyMissingHtml', 'amOnlyColorbarSpec', 'pressureViewTip', 'pressureViewInfo', 'pressureLegendHtml')
 
 
 def section_js(lv):
@@ -484,6 +492,26 @@ console.log(JSON.stringify(out));
         '당김' in ln and '뺐' in ln and str(lv['pressure']['n_excluded_attractive']) in ln, ln[:600])
     chk('J23 옛 계산 범례 — ⚠ 당김 (접착) 접촉 포함 · 옛 계산 · 10⁴ MPa 넘는 값 = 당김 · 발사 뒤 패치 안내',
         '⚠' in lo_ and '당김' in lo_ and '옛 계산' in lo_ and '10⁴' in lo_ and 'app.py' in lo_, lo_[:600])
+    m_tab = re.search(r'<button class="zh-tab" data-tab="stress"[^>]*>([^<]*)</button>', js)
+    chk(f'J24 Z-profile 창의 탭 이름도 Max contact pressure · 툴팁 = 당김 포함 (그 z 그림 · CSV 는 옛 계산) · 하중 아님 '
+        f'({m_tab.group(1) if m_tab else None})',
+        m_tab is not None and 'Max contact pressure' in m_tab.group(1) and 'Stress hotspots' not in js
+        and re.search(r'data-tab="stress"[^>]*title="[^"]*당김[^"]*하중이 아니다', js) is not None)
+
+
+def section_zprofile_title(tmp):
+    print('[Z] Z-profile 그림 제목 — 이름 정정 (값 = 옛 계산 그대로 · 당김 포함 표기)')
+    P, rows = synth_bed()
+    d = os.path.join(tmp, 'z_case')
+    write_bed(d, P, rows)
+    import plot_stress_z_distribution as Z
+    prof = Z.compute_stress_zprofile(d, bins=5)
+    fig = Z.render_stress_figure(prof)
+    title = fig._suptitle.get_text() if fig._suptitle is not None else ''
+    import matplotlib.pyplot as plt
+    plt.close(fig)
+    chk(f'Z1 PNG 제목 = Max contact pressure |Fn|/A z-profile · incl. attractive · not a load ({title[:80]!r})',
+        'Max contact pressure' in title and 'attractive' in title and 'not a load' in title and 'Stress-hotspot' not in title)
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -631,6 +659,10 @@ def main():
             section_js(lv)
         except Exception as e:                                   # noqa: BLE001
             chk('section_js 실행', False, f'{type(e).__name__}: {e}')
+        try:
+            section_zprofile_title(tmp)
+        except Exception as e:                                   # noqa: BLE001
+            chk('section_zprofile_title 실행', False, f'{type(e).__name__}: {e}')
         try:
             section_patch(tmp)
         except Exception as e:                                   # noqa: BLE001

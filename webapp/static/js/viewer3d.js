@@ -1120,8 +1120,9 @@ function buildControls(container, isMPM) {
       <option value="brittle">Brittle Hotspots (AM)</option>
       <option value="brittle_surface">Brittle Hotspots (surface gradient)</option>
       <option value="cluster">Cluster Coloring (SE)</option>
-      <option value="stress">Stress Concentration</option>
-      <option value="stress_brittle">Stress + Brittle (overlay)</option>
+      <option value="stress">Max contact pressure (|Fn|/A)</option>
+      <option value="stress_brittle">Contact pressure + Brittle (overlay)</option>
+      <option value="am_only">AM 만 — 입자 응력 (LW) · 최대 AM–AM 힘</option>
       <option value="coverage">Coverage Heat (AM)</option>
       <option value="cn">배위수 (활물질 주위 SE · SE–SE)</option>
       <option value="se_engagement">SE engagement & pore risk</option>
@@ -2220,6 +2221,7 @@ function applyViewMode(state, mode) {
    * Cluster Coloring split-mesh) before reapplying any mode — stale
    * geometry left around confuses every other mode. */
   netCurrentTeardown(state);                       // ⚡ 전류 흐름 원기둥 · 늦게 오는 응답 무효 (mode 'net_current')
+  _amOnlyTeardown(state);                          // AM 만 보기가 숨긴 SE 를 체크박스대로 되돌림 (mode 'am_only')
   if (state.brittleGlowGroup && state.scene) {
     state.scene.remove(state.brittleGlowGroup);
     state.brittleGlowGroup.traverse(obj => {
@@ -2382,6 +2384,9 @@ function applyViewMode(state, mode) {
   }
 
   if (mode === 'net_current') { applyNetCurrentMode(state); return; }   // ⚡ 전류 흐름 — 망 해 간선 전류 (비동기 fetch · 자기 범례)
+
+  // AM 만 칠하기 — Love–Weber 입자 응력 · 최대 AM–AM 접촉 힘 (aux.load_view · SE 숨김 · 색 범위 = AM 만 · 벽 접촉 표지 · 10-07 #11)
+  if (mode === 'am_only') { applyAmOnlyView(state); return; }
 
   // Tortuosity 후보 경로 여럿 — se_clusters.json 의 저장 경로를 τ 색 관으로 한 번에 (10-07 · 자기 범례 · 그림 창)
   if (mode === 'tau_paths') { renderTauPaths(state); return; }
@@ -2634,16 +2639,19 @@ function applyViewMode(state, mode) {
   }
 
   if (mode === 'stress') {
-    /* Per-particle MAX contact pressure, coolwarm colormap on a
+    /* Per-particle MAX contact pressure |Fn|/A, coolwarm colormap on a
      * log10 scale clipped to the 5–95th percentile.  The raw
      * distribution is heavy-tailed (a handful of extreme contacts
      * can dwarf the median by 50×+), so a naïve linear normalise
      * crushes 95 % of particles into the deep-blue end and the
      * field looks featureless.  log + percentile clip keeps the
-     * middle of the colormap on the actual bulk of contacts. */
-    const sMap = aux.stress_max || {};
+     * middle of the colormap on the actual bulk of contacts.
+     * ★ 10-07 WEB-06 — 이름 = Max contact pressure (|Fn|/A) (하중이 아니다 · 쌍 유형 표지 ≈ k/(2πR*)) · 자료 = pressureViewInfo:
+     *   aux.load_view 가 있으면 압축 접촉만 (당김 · 접착 접촉의 10⁴–10⁶ MPa 튐을 범위에서 뺀다) · 없으면 옛 stress_max (⚠ 범례). */
+    const pInfo = pressureViewInfo(aux);
+    const sMap = pInfo.map;
     const all  = Object.values(sMap).filter(v => v > 0);
-    if (!all.length) { setLegend(state, '<i>No stress data available.</i>'); return; }
+    if (!all.length) { setLegend(state, '<i>No contact-pressure data available.</i>'); return; }
     const sorted = [...all].sort((a, b) => a - b);
     const pct = (p) => sorted[Math.max(0, Math.min(sorted.length - 1,
         Math.floor(p * (sorted.length - 1))))];
@@ -2672,20 +2680,7 @@ function applyViewMode(state, mode) {
       m.material.transparent = true;
     });
     flushColors();
-    const stops = [0, 0.25, 0.5, 0.75, 1.0]
-      .map(v => '#' + coolwarmColor(v).toString(16).padStart(6,'0'));
-    setLegend(state,
-      `<b>Stress Concentration (max MPa, log scale)</b>
-       <div style="margin:6px 0 2px 0;height:10px;border-radius:3px;
-         background:linear-gradient(90deg,${stops.join(',')})"></div>
-       <div style="display:flex;justify-content:space-between;font-size:10px;color:#9ca3af">
-         <span>${sLo.toFixed(0)}</span>
-         <span>median ≈ ${sMed.toFixed(0)}</span>
-         <span>${sHi.toFixed(0)}</span>
-       </div>
-       <button id="stress-z-modal-btn" class="data-modal-btn">
-         <span class="ico">📊</span><span>Z-profile 데이터</span>
-       </button>`);
+    setLegend(state, pressureLegendHtml(pInfo, sLo, sMed, sHi));
     const sBtn = document.getElementById('stress-z-modal-btn');
     if (sBtn) sBtn.addEventListener('click',
       () => showZProfileDataHub(state, 'stress'));
@@ -2704,8 +2699,9 @@ function applyViewMode(state, mode) {
      *      where the Lawn-stage hue dominates.  No cones — exactly
      *      the two screenshots the user pointed at, superposed. */
 
-    // ── 1) Paint stress field exactly like the 'stress' mode ────
-    const sMap = aux.stress_max || {};
+    // ── 1) Paint contact-pressure field exactly like the 'stress' mode (같은 자료 · 같은 규칙 — WEB-06) ────
+    const pInfo = pressureViewInfo(aux);
+    const sMap = pInfo.map;
     const all  = Object.values(sMap).filter(v => v > 0);
     if (all.length) {
       const sorted = [...all].sort((a, b) => a - b);
@@ -2801,9 +2797,10 @@ function applyViewMode(state, mode) {
     const stops = [0, 0.25, 0.5, 0.75, 1.0]
       .map(v => '#' + coolwarmColor(v).toString(16).padStart(6,'0'));
     setLegend(state,
-      `<b>Stress field + Brittle caps</b>
+      `<b title="${jeEscH(pressureViewTip())}">Contact pressure + Brittle caps</b>
        <span style="color:#9ca3af;font-size:11px">
-         particles = max contact pressure (log)<br>
+         particles = max contact pressure |Fn|/A (log · ${pInfo.rule === 'compressive' ? '압축 접촉만 — 당김 접촉 뺐다' : '⚠ 당김 접촉 포함 (옛 계산)'}
+         · 하중이 아니다 — 쌍 유형 표지)<br>
          surface caps = Lawn stage at damaged AM-AM contact
        </span>
        <div style="margin:6px 0 2px 0;height:8px;border-radius:3px;
@@ -5593,6 +5590,211 @@ function renderNetCurrent(state, pay) {
 function setLegend(state, html) {
   const el = document.getElementById('view-mode-legend');
   if (el) el.innerHTML = html;
+}
+
+/* ── 입자 하중 보기 — AM 만 칠하기 (#11) · Max contact pressure (WEB-06) — 10-07 1저자 결정 ─────────────────────────────────
+ * 자료 = aux.load_view (scripts/viewer3d_data.particle_load_view_for_case — 계산은 생산 함수 그대로: LW = calc_love_weber_stress ·
+ * 힘 µN = calc_contact_force_distribution 환산 · 압력 = 압축 접촉만 · 벽 표지 = LW 의 벽 규칙).
+ * ⚠ /3d-data 가 이 자료를 싣는 것은 webapp/app.py (194 봉인 파일) 의 일이라 발사 뒤 패치 (docs/reviews/webapp_load_view_deferred_20261007.patch)
+ *   가 들어가야 온다 — 그 전에는 AM 만 보기 = 안내 (amOnlyMissingHtml) · Max contact pressure = 옛 stress_max (⚠ 당김 포함 범례). */
+
+/* Max contact pressure 의 한정어 (툴팁) — 범례 · 겹침 보기가 같이 쓴다 */
+function pressureViewTip() {
+  return 'p = |Fn| / A (A = 덤프 접촉 면적 c_cpl[22] · MPa) — hooke/hysteresis 에서 압축 접촉의 p 는 쌍 유형마다 거의 일정 '
+    + '(p ≈ k/(2πR*) · real14 PC–PC 4151–4294 MPa) = 접촉 유형 표지에 가깝고 하중이 아니다 (WEB-06) · 당김 (접착) 접촉은 δ ≈ 0 면적이라 '
+    + '10⁴–10⁶ MPa 로 튄다 · z 방향 하중 차이는 AM 만 — 입자 응력 (LW) 보기로';
+}
+
+/* Max contact pressure 자료 — aux.load_view 가 있으면 압축 접촉만 (pressure.max_MPa) · 없으면 옛 stress_max (rule legacy · 당김 포함). */
+function pressureViewInfo(aux) {
+  const lv = aux && aux.load_view;
+  const pr = lv && lv.status === 'OK' ? lv.pressure : null;
+  if (pr && pr.max_MPa) {
+    return { rule: 'compressive', map: pr.max_MPa, nAttr: pr.n_excluded_attractive || 0, nUnknown: pr.n_excluded_unknown || 0,
+             nNoOverlap: pr.n_excluded_no_overlap || 0, nLegacyHigher: pr.n_particles_legacy_higher || 0, nParticles: pr.n_particles || 0 };
+  }
+  return { rule: 'legacy', map: (aux && aux.stress_max) || {} };
+}
+
+/* Max contact pressure 범례 — 이름 · 툴팁 한정어 · 압축만 / 옛 계산 경고 · 색 막대 (coolwarm · log p5–p95) · AM 만 보기 안내 · Z-profile */
+function pressureLegendHtml(info, sLo, sMed, sHi) {
+  const esc = jeEscH, fj = netCurrentFmtJ;
+  const stops = [0, 0.25, 0.5, 0.75, 1.0].map(v => '#' + coolwarmColor(v).toString(16).padStart(6, '0'));
+  const rule = info.rule === 'compressive'
+    ? ('압축 접촉만 — 당김 (접착) 접촉 ' + info.nAttr + ' 행 · 부호 판정 불가 ' + info.nUnknown + ' 행 · δ ≤ 0 · 힘 0 ' + info.nNoOverlap
+       + ' 행은 범위에서 뺐다 (옛 계산 (당김 포함) 이 더 컸던 입자 ' + info.nLegacyHigher + ' 개)')
+    : ('<span style="color:#fbbf24">⚠ 당김 (접착) 접촉 포함 — 옛 계산 (3D 데이터에 입자 하중 자료 load_view 없음 · webapp/app.py 발사 뒤 패치 전) · '
+       + '10⁴ MPa 넘는 값은 당김 접촉 (δ ≈ 0 면적)</span>');
+  return '<b title="' + esc(pressureViewTip()) + '">Max contact pressure (|Fn|/A · MPa · log)</b>'
+    + '<div style="color:#9ca3af;font-size:11px">' + rule + '</div>'
+    + '<div style="margin:6px 0 2px 0;height:10px;border-radius:3px;background:linear-gradient(90deg,' + stops.join(',') + ')"></div>'
+    + '<div style="display:flex;justify-content:space-between;font-size:10px;color:#9ca3af">'
+    + '<span>' + fj(sLo) + '</span><span>median ≈ ' + fj(sMed) + '</span><span>' + fj(sHi) + '</span></div>'
+    + '<div style="color:#9ca3af;font-size:11px">하중이 아니다 — 압축 접촉의 p 는 쌍 유형마다 거의 일정 (≈ k/(2πR*)) · '
+    + '하중 (z 차이) 은 View Mode "AM 만 — 입자 응력 (LW)" 로</div>'
+    + '<button id="stress-z-modal-btn" class="data-modal-btn"><span class="ico">📊</span><span>Z-profile 데이터</span></button>';
+}
+
+/* AM 만 보기의 양 — 'lw' = Love–Weber σ_VM / ⟨σ_VM⟩ (전 입자 · stress_ratio_<상>_lw 와 같은 정의) · 'fn' = 최대 AM–AM 접촉 법선력
+ * (µN · 압축 접촉만).  → {ok, map {id: 값}, label, unit, scale: 'log', reason, mpa (LW ⟨σ_VM⟩ MPa)} — 못 쓰면 ok false + 사유 (0 으로 안 칠함). */
+function loadViewAmMetric(lv, metric) {
+  const am = (lv && lv.am) || {};
+  if (!lv || lv.status !== 'OK') return { ok: false, map: {}, label: '', unit: '', scale: 'log', reason: (lv && lv.status) || '입자 하중 자료 없음' };
+  if (metric === 'fn') {
+    const map = am.fn_max_uN || {};
+    const n = Object.keys(map).length;
+    return { ok: n > 0, map: map, label: '최대 AM–AM 접촉 법선력 (압축 접촉만)', unit: 'µN', scale: 'log',
+             reason: n ? '' : '압축 AM–AM 접촉이 없다' };
+  }
+  const st = String(am.lw_status || '');
+  if (st !== 'OK') return { ok: false, map: {}, label: 'Love–Weber 입자 응력 σ_VM / ⟨σ_VM⟩', unit: '', scale: 'log', reason: st || 'LW 없음' };
+  return { ok: true, map: am.lw_ratio || {}, label: 'Love–Weber 입자 응력 σ_VM / ⟨σ_VM⟩ (전 입자)', unit: '', scale: 'log', reason: '',
+           mpa: am.lw_mean_all_MPa };
+}
+
+/* 색 범위 (log₁₀) — AM 값만 (양수) · 'p5p95' = 가장 가까운 순위 5 · 95 백분위 (Max contact pressure 보기와 같은 규칙) · 'minmax' · 없으면 null */
+function amOnlyRange(vals, mode) {
+  const v = (vals || []).filter(x => x > 0 && isFinite(x)).sort((a, b) => a - b);
+  if (!v.length) return null;
+  const pct = p => v[Math.max(0, Math.min(v.length - 1, Math.floor(p * (v.length - 1))))];
+  const lo = mode === 'minmax' ? v[0] : pct(0.05), hi = mode === 'minmax' ? v[v.length - 1] : pct(0.95);
+  return [Math.log10(lo), Math.log10(hi)];
+}
+
+/* 자료가 없을 때 (발사 뒤 패치 전 · 옛 캐시 · 접촉 덤프 없음) — 사유 + 패치 경로 */
+function amOnlyMissingHtml(lv) {
+  const st = lv && lv.status ? '<br>자료 상태: ' + jeEscH(lv.status) : '';
+  return '<b>AM 만 — 입자 응력 (LW) · 최대 AM–AM 힘</b><br><span style="color:#fbbf24">3D 데이터에 입자 하중 자료 (aux.load_view) 가 없다.</span>'
+    + st + '<br><span style="color:#9ca3af;font-size:11px">이 자료를 3D 데이터에 싣는 것은 webapp/app.py (194 봉인 파일) 의 일이라 발사 뒤 패치 '
+    + 'docs/reviews/webapp_load_view_deferred_20261007.patch 가 들어가야 온다 (계산 = scripts/viewer3d_data.particle_load_view_for_case · 이미 있다 · '
+    + '캐시 스키마 13).  그 전에는 Max contact pressure 보기 = 옛 계산 (당김 포함).</span>';
+}
+
+/* AM 만 범례 — 양 · 범위 · 벽 표지 조작 · 컬러바 · 수 · 한정어.  st = {n, nColored, nWall, nNoValue, lo, hi} */
+function amOnlyLegendHtml(lv, ui, st) {
+  const esc = jeEscH, fj = netCurrentFmtJ;
+  const m = loadViewAmMetric(lv, ui.metric);
+  const am = (lv && lv.am) || {};
+  const css = 'background:#16192e;color:#e4e6f0;border:1px solid #2a2d3e;border-radius:4px;padding:1px 2px;font-size:11px';
+  const sel = (id, cur, opts) => '<select id="' + id + '" style="' + css + '">'
+    + opts.map(o => '<option value="' + o[0] + '"' + (String(o[0]) === String(cur) ? ' selected' : '') + '>' + o[1] + '</option>').join('')
+    + '</select>';
+  const fn = ui.metric === 'fn';
+  const L = [];
+  L.push('<b>AM 만 — ' + (fn ? '최대 AM–AM 접촉 힘' : 'Love–Weber 입자 응력') + '</b> <span style="color:#9ca3af">(SE 숨김)</span>');
+  L.push('<div style="display:flex;flex-wrap:wrap;gap:3px;align-items:center;margin:3px 0">'
+    + sel('amonly-metric', ui.metric, [['lw', 'Love–Weber 입자 응력 (σ_VM / ⟨σ_VM⟩)'], ['fn', '최대 AM–AM 접촉 힘 (µN)']])
+    + sel('amonly-range', ui.range, [['p5p95', '범위 p5–p95'], ['minmax', '범위 최소–최대']])
+    + '<label style="font-size:11px"><input type="checkbox" id="amonly-wall"' + (ui.wall ? ' checked' : '')
+    + '> 벽 접촉 입자 회색 (범위에서 뺌)</label></div>');
+  if (!m.ok) {
+    L.push('<span style="color:#fbbf24">⚠ ' + esc(m.label || '') + ' — ' + esc(m.reason) + ' — 칠하지 않는다 (AM 기본색)</span>');
+    return L.join('<br>');
+  }
+  const stops = [0, 0.25, 0.5, 0.75, 1].map(v => '#' + jetColor(v).toString(16).padStart(6, '0'));
+  L.push('<div style="margin:3px 0 1px 0;height:9px;border-radius:3px;background:linear-gradient(90deg,' + stops.join(',') + ')"></div>');
+  const lo = Math.pow(10, st.lo), hi = Math.pow(10, st.hi);
+  L.push('<b>' + esc(m.label) + '</b>: ' + fj(lo) + ' … ' + fj(hi) + (fn ? ' µN' : ' × ⟨σ_VM⟩')
+    + (!fn && m.mpa > 0 ? ' <span style="color:#9ca3af">(⟨σ_VM⟩ = ' + fj(m.mpa) + ' MPa · 모델 단위 · ' + fj(lo * m.mpa) + ' … '
+       + fj(hi * m.mpa) + ' MPa)</span>' : '') + ' (jet · log)');
+  L.push('색 범위 = AM 만의 ' + (ui.range === 'minmax' ? '최소–최대' : 'p5–p95') + (ui.wall ? ' (벽 접촉 입자 뺌)' : ''));
+  L.push('AM ' + st.n + ' 개 · 칠한 ' + st.nColored + ' · 벽 접촉 ' + st.nWall + ' 개'
+    + (ui.wall ? ' = 회색' : ' (칠함' + (fn ? '' : ' — LW 에 벽 힘 없음') + ')') + ' · 값 없음 ' + st.nNoValue + ' 개 (어두운 회색)');
+  if (fn) {
+    L.push('<span style="color:#9ca3af;font-size:11px">AM 입자마다 그 입자의 AM–AM 접촉 중 압축 접촉 (δ > 0) 의 |Fn| 최대 · 당김 (접착) · 판정 불가 · δ ≤ 0 은 뺐다 · '
+      + '|Fn| × 1e6 / scale = µN (calc_contact_force_distribution · fn_&lt;쌍&gt;_mean 과 같은 환산) · 모델 단위 (덱 축척 환산 — 조성 비교 절대값에 쓰지 않는다)</span>');
+  } else {
+    const tr = am.lw_type_ratio || {};
+    const trs = Object.keys(tr).sort().map(k => esc(k) + ' ' + fj(tr[k])).join(' · ');
+    L.push('<span style="color:#9ca3af;font-size:11px">Love–Weber (calc_love_weber_stress) — full_metrics stress_ratio_&lt;상&gt;_lw 와 같은 정의 · 같은 분모 (전 입자 평균)'
+      + (trs ? ' · 상 비 ' + trs : '') + ' · 벽 (바닥 · 판) 에 닿은 입자는 벽 힘이 없다 (접촉 덤프에 벽 접촉 없음 — 그 값은 불완전) · 응력 기준틀 미인증 (모델 내부 비교)</span>');
+  }
+  L.push('<button id="amonly-cbar" class="data-modal-btn" title="이 그림의 색 눈금을 논문용 6× PNG 로">컬러바 ⬇</button>');
+  return L.join('<br>');
+}
+
+/* 논문용 컬러바 스펙 (영문) — jet · log₁₀ (lo · hi) · 눈금 = netCurrentTicks + netCurrentFmtJ */
+function amOnlyColorbarSpec(lv, ui, lo, hi) {
+  const fn = ui.metric === 'fn';
+  const rng = (ui.range === 'minmax' ? 'min–max' : 'p5–p95') + (ui.wall ? ', wall-touching AM greyed and excluded' : '');
+  return {
+    map: 'jet',
+    title: fn ? 'AM only — max AM–AM contact normal force (µN)' : 'AM only — Love–Weber particle stress σ_VM / ⟨σ_VM⟩ (all particles)',
+    ticks: netCurrentTicks(lo, hi, netCurrentFmtJ),
+    sub: 'Colour range = AM particles only (' + rng + ').  '
+      + (fn ? 'Per AM particle: max |Fn| over its compressive AM–AM contacts (attractive · δ ≤ 0 excluded) · model units (deck-scaled) — '
+              + 'not for absolute comparison.  '
+            : 'Love–Weber (same definition as stress_ratio_<phase>_lw) · wall forces absent for wall-touching particles · model contact forces.  ')
+      + 'Log colour scale.',
+  };
+}
+
+/* AM 만 보기를 떠날 때 (applyViewMode 머리) — 숨긴 SE 를 SE 체크박스대로 */
+function _amOnlyTeardown(state) {
+  if (!state._amOnlyHidSE) return;
+  if (state.meshes && state.meshes.SE) {
+    const cb = document.querySelector('.viewer-controls input[data-layer="SE"]');
+    state.meshes.SE.visible = cb ? cb.checked : true;
+  }
+  state._amOnlyHidSE = false;
+}
+
+function applyAmOnlyView(state) {
+  const aux = (state.data && state.data.aux) || {};
+  const lv = aux.load_view;
+  const ui = state._amOnlyUi || (state._amOnlyUi = { metric: 'lw', range: 'p5p95', wall: true });
+  if (state.meshes && state.meshes.SE) { state.meshes.SE.visible = false; state._amOnlyHidSE = true; }   // SE 숨김 (되돌림 = _amOnlyTeardown)
+  const amMeshes = ['AM_P', 'AM_S'].map(t => [t, state.meshes && state.meshes[t]]).filter(x => x[1]);
+  const base = () => amMeshes.forEach(([t, m]) => {
+    const c = new THREE.Color(COL[t]);
+    m.userData.particles.forEach((_, i) => m.setColorAt(i, c));
+    m.material.opacity = 1.0; m.material.transparent = false;
+    if (m.instanceColor) m.instanceColor.needsUpdate = true;
+  });
+  if (!lv || lv.status !== 'OK') { base(); setLegend(state, amOnlyMissingHtml(lv)); return; }
+  const met = loadViewAmMetric(lv, ui.metric);
+  const wall = (lv.am && lv.am.wall) || {};
+  const val = p => { const v = met.map[p.id]; return v === undefined ? met.map[String(p.id)] : v; };
+  const vals = [];
+  amMeshes.forEach(([, m]) => m.userData.particles.forEach(p => {
+    if (ui.wall && wall[p.id]) return;
+    const v = val(p);
+    if (v > 0) vals.push(v);
+  }));
+  const rng = met.ok ? amOnlyRange(vals, ui.range) : null;
+  const st = { n: 0, nColored: 0, nWall: 0, nNoValue: 0, lo: rng ? rng[0] : 0, hi: rng ? rng[1] : 1 };
+  if (!met.ok || !rng) {
+    base();
+    amMeshes.forEach(([, m]) => m.userData.particles.forEach(p => { st.n += 1; if (wall[p.id]) st.nWall += 1; }));
+  } else {
+    const col = new THREE.Color();
+    amMeshes.forEach(([, m]) => {
+      m.userData.particles.forEach((p, i) => {
+        st.n += 1;
+        const isWall = !!wall[p.id];
+        if (isWall) st.nWall += 1;
+        const v = val(p);
+        if (ui.wall && isWall) col.setHex(0x9ca3af);
+        else if (v > 0) { col.setHex(jetColor(netCurrentT(v, st.lo, st.hi))); st.nColored += 1; }
+        else { col.setHex(0x4b5563); st.nNoValue += 1; }
+        m.setColorAt(i, col);
+      });
+      m.material.opacity = 1.0; m.material.transparent = false;
+      if (m.instanceColor) m.instanceColor.needsUpdate = true;
+    });
+  }
+  state._amOnlyLast = { lv: lv, ui: ui, st: st };
+  setLegend(state, amOnlyLegendHtml(lv, ui, st));
+  const el = document.getElementById('view-mode-legend');
+  if (!el) return;
+  const on = (id, ev, fn) => { const x = el.querySelector('#' + id); if (x) x.addEventListener(ev, fn); };
+  on('amonly-metric', 'change', ev => { ui.metric = ev.target.value; applyAmOnlyView(state); });
+  on('amonly-range', 'change', ev => { ui.range = ev.target.value; applyAmOnlyView(state); });
+  on('amonly-wall', 'change', ev => { ui.wall = ev.target.checked; applyAmOnlyView(state); });
+  on('amonly-cbar', 'click', () => {
+    const l = state._amOnlyLast;
+    if (l) exportColorbarPNG(amOnlyColorbarSpec(l.lv, l.ui, l.st.lo, l.st.hi), 'colorbar_am_only_' + l.ui.metric + '.png');
+  });
 }
 
 /* ── DEM 기공 (빈 공간 · 격자 추정) — View Mode "dem_pore" (2026-10-07) ──────────────────────────
@@ -10943,7 +11145,7 @@ async function showZProfileDataHub(state, defaultTab) {
       </div>
       <div style="display:flex;gap:4px;margin-bottom:8px;border-bottom:1px solid #e5e7eb">
         <button class="zh-tab" data-tab="brittle"   style="${tabStyle(false)}">Brittle stages</button>
-        <button class="zh-tab" data-tab="stress"    style="${tabStyle(false)}">Stress hotspots</button>
+        <button class="zh-tab" data-tab="stress"    style="${tabStyle(false)}" title="입자별 최대 |Fn|/A — 당김 (접착) 접촉 포함 (이 z 그림 · CSV 는 옛 계산 그대로) · 하중이 아니다 (쌍 유형 표지 · WEB-06)">Max contact pressure (|Fn|/A)</button>
         <button class="zh-tab" data-tab="coverage"  style="${tabStyle(false)}">Coverage (AM)</button>
         <button class="zh-tab" data-tab="combined"  style="${tabStyle(false)}">Combined overlay</button>
         <button class="zh-tab" data-tab="se"        style="${tabStyle(false)}">SE Diagnostics</button>
