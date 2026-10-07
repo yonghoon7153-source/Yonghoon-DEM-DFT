@@ -24,6 +24,9 @@
 
 뷰어 자료 (`current_payload` — 웹앱 `/results/<id>/network-current` · `/archive/results/<folder>/network-current`)
   · 상위 N 간선 (|I| 내림차순 · 동률 = id 순) — 양 끝 위치 · 반경 (µm = sim × scale · 3d-data 와 같은 좌표) · |I|/I_전체 · 전위 · 주기 경계 표지
+  · ★ 10-07 (1저자 결정 · 웹앱 묶음 #17) — 간선마다 접촉 전류 밀도 j = |I_c| / A_c (A cm⁻² · @1V 프로브) · A_c = 같은 풀이의 접촉 면적
+    (덤프 A_used) · 뷰어는 j 로 칠한다 (옛 |I|/I_전체 몫 표시는 없앴다 — 몫 s 는 자료에만 남긴다).  @1C = @1V × I_1C / I_1V (선형) —
+    I_1C / A_상자 = j_1C = Q_areal × 1 h⁻¹ (리포 규약 · 케이스 표 등급 Q_areal = grade_engine `__Q_areal_mAhcm2`).  `density` 묶음 참조.
   · 방향 = 전위 강하: a = 높은 전위 끝 (바닥 띠 1 V → 위 띠 0 V · 정확 Dirichlet 프로브 해 — 충방전 방향이 아니다)
   · I_전체 = 해의 G (ΔV = 1 · solution.G_eff) · 한 간선의 |I| ≤ I_전체 (두 단자 저항망 — 등전위면 단면 논증)
   · z-단면 전류 몫 — 두 띠 사이 평면 32 개 (z ≤ z_k 쪽 노드 집합의 단면 전류): 전 간선 Σ = I_전체 (보존 검산) · 상위 N 의 몫 평균 · 최소 · 최대
@@ -72,7 +75,23 @@ NET_FOUR = ('network_conductivity.json', 'network_conductivity_hertzian.json',
 #: 게시 σ 대조 — 모드 파일 · 채널 키 (생산자 `_run_all_networks` 가 쓰는 이름 그대로)
 PUBLISHED_FILE = {'hertzian': 'network_conductivity_hertzian.json', 'physics': 'network_conductivity_physics.json'}
 SIGMA_KEY = {'ionic': 'sigma_full', 'electronic': 'electronic_sigma_full'}
+#: 채널 키 머리 — 게시 모드 파일에서 그 채널의 증서 · mS/cm 열 (`_run_all_networks` 가 쓰는 이름 그대로)
+CHANNEL_PREFIX = {'ionic': '', 'electronic': 'electronic_'}
 WEBAPP_CONTACT_MODE = 'both'           # 웹앱 망 단계 argv (`app._network_and_stage_e`) — 그 외 값의 도장은 웹앱 세대가 아니다
+
+#  ★ 10-07 (1저자 결정 · 웹앱 묶음 #17) — 접촉 전류 밀도 (A cm⁻²) · 두 틀 (@1V · @1C)
+J_UNIT = 'A cm^-2'
+#: 1 µm 정규화 해 → A cm⁻²: 해는 σ₀ = 1 · 길이 µm 로 푼다 (R = L / (σ_rel π r²) [1/µm]) ⇒ I_실 [A] = I_정규 [µm] × σ₀ [S/µm] × 1 V ·
+#  σ₀ [S/µm] = σ₀ [S/cm] × 1e-4 · A [cm²] = A [µm²] × 1e-8  ⇒  j [A/cm²] = I_정규 × σ₀ [S/cm] × 1e4 / A [µm²]
+J_PER_NORM = 1e4
+J_RULE = ('j_c = |I_c| / A_c — I_c = 1 V 프로브 FULL 해의 간선 전류 (바닥 띠 1 V → 위 띠 0 V · 실단위 = 정규화 해 × σ₀ · '
+          'j = I_정규 × σ₀ [S/cm] × 1e4 / A [µm²]) · A_c = 같은 풀이가 그 간선에 쓴 접촉 면적 (덤프 A_used: Hertz = c_cpl[22] 원판 · '
+          'Physics = 세대 2 면적) · A cm⁻² · 모델의 접촉망 풀이 (측정 전류 아님)')
+C1_RULE = ('@1C = @1V × I_1C / I_1V — 선형 환산 (같은 색 · 다른 숫자) · I_1C / A_상자 = j_1C = Q_areal × 1 h⁻¹ (리포 규약 — '
+           'mpm_webapp_payload j_1C_mA_cm2 · 뷰어 @1C 운전) · I_1V / A_상자 = ⟨J⟩_1V (이 해의 단면 평균 전류 밀도) · 전류 보존 가정 — '
+           '망 전체가 1C 전류를 끝에서 끝까지 나른다고 볼 때의 값 (반응 분포 없음 · 분리막 쪽 단면의 값에 해당)')
+C1_SOURCE = ('Q_areal = 케이스 표 등급 축 __Q_areal_mAhcm2 (grade_engine · full_metrics thickness_um · porosity · am_se_ratio + '
+             'input_params — 웹앱 _inject_input_params 와 같은 map_input_params) × 1 h⁻¹ = mA cm⁻²')
 
 
 class DumpRefused(RuntimeError):
@@ -391,6 +410,117 @@ def _sigma_check(results_dir, mode, channel, sol):
             'source': f'{os.path.basename(p)}:{SIGMA_KEY[channel]}'}
 
 
+def _pos_finite(v):
+    """유한 양수 → float · 그 밖 (None · bool · 문자열 · 0 · 음수 · NaN · inf) → None."""
+    if isinstance(v, bool):
+        return None
+    try:
+        x = float(v)
+    except (TypeError, ValueError):
+        return None
+    return x if (math.isfinite(x) and x > 0) else None
+
+
+def _published_mode(results_dir, mode):
+    p = os.path.join(results_dir, PUBLISHED_FILE[mode])
+    if mode == 'hertzian' and not os.path.exists(p):
+        p = os.path.join(results_dir, 'network_conductivity.json')     # 옛 legacy 이름 (= Hertz 결과)
+    return os.path.basename(p), _read_json(p)
+
+
+def _sigma0(results_dir, mode, channel):
+    """그 채널 · 모드 풀이의 σ₀ (S/cm) — (값, 출처) · 못 찾으면 (None, 사유).  짐작하지 않는다 (상수 기본값으로 떨어지지 않는다).
+
+    사다리: ① 게시 증서 `<채널>solve_certificate_full.sigma_bulk_S_cm` (G2RR-02 결합 — 채널 · 모드가 맞을 때만) →
+    ② 이온만 `sigma_grain_S_cm` (게시 파일 최상위) → ③ 게시 `<채널>sigma_full_mScm ÷ (σ/σ₀ × 1000)` (둘 다 반올림 저장 — 상대 ~1e-6 한계)."""
+    fname, pub = _published_mode(results_dir, mode)
+    if pub is None:
+        return None, (f'게시 파일 {PUBLISHED_FILE[mode]}' + (' · network_conductivity.json' if mode == 'hertzian' else '')
+                      + ' 없음 — σ₀ 미확인 (전류 밀도 계산 불가)')
+    pre = CHANNEL_PREFIX[channel]
+    cert = pub.get(pre + 'solve_certificate_full')
+    if isinstance(cert, dict):
+        s = _pos_finite(cert.get('sigma_bulk_S_cm'))
+        ch_ok = cert.get('channel') in (None, channel)
+        md_ok = cert.get('contact_mode') in (None, mode)
+        if s is not None and ch_ok and md_ok:
+            return s, f'{fname}:{pre}solve_certificate_full.sigma_bulk_S_cm'
+    if channel == 'ionic':
+        s = _pos_finite(pub.get('sigma_grain_S_cm'))
+        if s is not None:
+            return s, f'{fname}:sigma_grain_S_cm'
+    ms, q = _pos_finite(pub.get(pre + 'sigma_full_mScm')), _pos_finite(pub.get(SIGMA_KEY[channel]))
+    if ms is not None and q is not None:
+        return ms / (q * 1000.0), (f'{fname}:{pre}sigma_full_mScm ÷ ({SIGMA_KEY[channel]} × 1000) — 두 열 모두 반올림 저장 '
+                                   '(반올림 한계 상대 ~1e-6)')
+    return None, f'{fname} 에 σ₀ (증서 · sigma_grain_S_cm · mS/cm 열) 가 없다 — σ₀ 미확인 (전류 밀도 계산 불가)'
+
+
+def _box_area_um2(results_dir, mode, channel):
+    """그 풀이의 상자 단면 (µm²) — (값, 출처).  ① 게시 증서 geometry (풀이가 σ 환산에 쓴 기하) → ② input_params.json box × scale (도장 argv)."""
+    fname, pub = _published_mode(results_dir, mode)
+    cert = (pub or {}).get(CHANNEL_PREFIX[channel] + 'solve_certificate_full')
+    if isinstance(cert, dict) and isinstance(cert.get('geometry'), dict):
+        g = cert['geometry']
+        bx, by, sc = (_pos_finite(g.get(k)) for k in ('box_x', 'box_y', 'scale'))
+        if bx and by and sc:
+            return bx * by * sc * sc, f'{fname}:{CHANNEL_PREFIX[channel]}solve_certificate_full.geometry'
+    ip = _read_json(os.path.join(results_dir, 'input_params.json')) or {}
+    prov = _read_json(os.path.join(results_dir, 'network_provenance.json')) or {}
+    bx, by = _pos_finite(ip.get('box_x')), _pos_finite(ip.get('box_y'))
+    sc = _pos_finite((prov.get('argv') or {}).get('scale'))
+    if bx and by and sc:
+        return bx * by * sc * sc, 'input_params.json box × network_provenance argv scale'
+    return None, '상자 단면 미확인 (증서 geometry · input_params box 없음)'
+
+
+def c1_scaling(results_dir, j_mean_1V):
+    """@1C 환산 — I_1C / I_1V = j_1C / ⟨J⟩_1V (새 C-rate 식이 아니다: j_1C = Q_areal × 1 h⁻¹ · Q_areal = 케이스 표 등급 축과 같은 함수).
+
+    → {'status': 'ok' | 'unavailable', 'reason', 'Q_areal_mAh_cm2', 'j_1C_A_cm2', 'factor', 'defaults_used', 'source', 'rule'}.
+    두께 (full_metrics thickness_um) 가 없으면 환산하지 않는다 · AM:SE 비 · 공극률이 없으면 등급 엔진이 쓰는 기본값 (wt_AM 0.80 · 고체 0.85)
+    으로 낸 값을 표지한다 (케이스 표의 Q_areal 과 같은 값 — 숨기지 않는다)."""
+    out = {'status': 'unavailable', 'reason': None, 'Q_areal_mAh_cm2': None, 'j_1C_A_cm2': None, 'factor': None,
+           'defaults_used': [], 'source': C1_SOURCE, 'rule': C1_RULE}
+    fm = _read_json(os.path.join(results_dir, 'full_metrics.json'))
+    if fm is None:
+        out['reason'] = 'full_metrics.json 없음 (접촉 분석 산출이 없다) — Q_areal 미확인'
+        return out
+    if _pos_finite(fm.get('thickness_um')) is None:
+        out['reason'] = 'full_metrics.json 에 thickness_um 없음 — Q_areal (= 두께 × 고체 × AM 부피 몫 × ρ × C) 미확인'
+        return out
+    try:
+        import grade_engine as _G
+    except Exception as e:                                     # noqa: BLE001 — 환산만 못 한다 (사유)
+        out['reason'] = f'grade_engine 을 못 불렀다 ({type(e).__name__}) — Q_areal 미확인'
+        return out
+    ip = _read_json(os.path.join(results_dir, 'input_params.json')) or {}
+    m = dict(fm)
+    m.update(_G.map_input_params(ip, None))
+    has_ratio = any(isinstance(m.get(k), str) and ':' in m.get(k) for k in ('am_se_ratio', '_input_am_se_ratio'))
+    try:
+        eps = float(m.get('porosity'))
+        has_eps = math.isfinite(eps)
+    except (TypeError, ValueError):
+        has_eps = False
+    if not has_ratio:
+        out['defaults_used'].append('am_se_ratio 없음 → 등급 엔진 기본 wt_AM 0.80')
+    if not has_eps:
+        out['defaults_used'].append('porosity 없음 → 등급 엔진 기본 고체 0.85')
+    q = _pos_finite(_G._derived_value('__Q_areal_mAhcm2', m))
+    if q is None:
+        out['reason'] = 'Q_areal 을 낼 수 없다 (등급 엔진 값 없음)'
+        return out
+    out['Q_areal_mAh_cm2'] = q
+    out['j_1C_A_cm2'] = q * 1e-3
+    if _pos_finite(j_mean_1V) is None:
+        out['reason'] = '⟨J⟩_1V 미확인 (σ₀ · 상자 단면) — 배율 I_1C / I_1V 를 정할 수 없다'
+        return out
+    out['factor'] = out['j_1C_A_cm2'] / float(j_mean_1V)
+    out['status'] = 'ok'
+    return out
+
+
 def current_payload(results_dir, channel='ionic', mode='hertzian', top=None, scale=1000.0):
     """경로 본문 → (HTTP 상태, dict).  덤프 없음 = 404 (만드는 명령) · 잘못된 인자 = 400."""
     import numpy as np
@@ -431,7 +561,7 @@ def current_payload(results_dir, channel='ionic', mode='hertzian', top=None, sca
     if not (math.isfinite(I_tot) and I_tot > 0):
         return _err(422, 'bad_solution', f'해의 G = {sol.get("G_eff")!r} — 전류 몫을 정의할 수 없다')
 
-    e = pd.read_csv(ef, usecols=['id1', 'id2', 'V1', 'V2', 'I', 'R_total'])
+    e = pd.read_csv(ef, usecols=lambda c: c in ('id1', 'id2', 'V1', 'V2', 'I', 'R_total', 'A_used'))
     nd = pd.read_csv(nf, usecols=['id', 'x', 'y', 'z', 'radius', 'V'])
     nidx = pd.Index(nd['id'].to_numpy(dtype=np.int64))
     i1 = nidx.get_indexer(e['id1'].to_numpy(dtype=np.int64))
@@ -444,6 +574,7 @@ def current_payload(results_dir, channel='ionic', mode='hertzian', top=None, sca
     V1, V2 = e['V1'].to_numpy(float)[keep], e['V2'].to_numpy(float)[keep]
     I = e['I'].to_numpy(float)[keep]
     R = e['R_total'].to_numpy(float)[keep]
+    AC = e['A_used'].to_numpy(float)[keep] if 'A_used' in e.columns else None     # 그 풀이의 접촉 면적 (µm²)
     i1, i2 = i1[keep], i2[keep]
     X, Y, Z, RAD, VN = (nd[c].to_numpy(float) for c in ('x', 'y', 'z', 'radius', 'V'))
     aI = np.abs(I)
@@ -483,16 +614,47 @@ def current_payload(results_dir, channel='ionic', mode='hertzian', top=None, sca
         zcut.update(share_mean=float(sh.mean()), share_min=float(sh.min()), share_max=float(sh.max()),
                     drawn_share_mean=float(shd.mean()), drawn_share_min=float(shd.min()))
 
+    # ★ 10-07 (#17) 접촉 전류 밀도 — j = |I| σ₀ 1e4 / A_c (A cm⁻² · @1V) · ⟨J⟩_1V = I_전체 σ₀ 1e4 / A_상자 · @1C 배율 (c1_scaling)
+    sigma0, s0_src = _sigma0(rd, mode, channel)
+    a_box, box_src = _box_area_um2(rd, mode, channel)
+    j_reason = None
+    if AC is None:
+        j_reason = '덤프 edges 표에 A_used (접촉 면적) 열이 없다 — 전류 밀도 계산 불가 (덤프를 지금 코드로 다시 만들 것)'
+    elif sigma0 is None:
+        j_reason = s0_src
+    j_mean = (I_tot * sigma0 * J_PER_NORM / a_box) if (sigma0 is not None and a_box) else None
+
+    def _jc(k):
+        if j_reason is not None:
+            return None, (None if AC is None else (float(AC[k]) if math.isfinite(AC[k]) else None))
+        a = float(AC[k])
+        if not (math.isfinite(a) and a > 0):
+            return None, (a if math.isfinite(a) else None)
+        return float(aI[k] * sigma0 * J_PER_NORM / a), a
+
     def _p(k):
         return [round(float(X[k]) * scale, 6), round(float(Y[k]) * scale, 6), round(float(Z[k]) * scale, 6)]
     edges = []
     for k in sel:
         fwd = V1[k] >= V2[k]                                     # a = 높은 전위 끝 (전류 a → b)
         ka, kb = (i1[k], i2[k]) if fwd else (i2[k], i1[k])
+        jk, ak = _jc(k)
         edges.append({'a': _p(ka), 'b': _p(kb), 'ra': round(float(RAD[ka]) * scale, 6), 'rb': round(float(RAD[kb]) * scale, 6),
                       'ia': int(id1[k] if fwd else id2[k]), 'ib': int(id2[k] if fwd else id1[k]),
                       's': float(aI[k] / I_tot), 'va': float(V1[k] if fwd else V2[k]), 'vb': float(V2[k] if fwd else V1[k]),
-                      'w': int(bool(wrap[k]))})
+                      'w': int(bool(wrap[k])), 'j': jk, 'ac': ak})
+    jj = [x['j'] for x in edges if x['j'] is not None and x['j'] > 0]
+    density = {
+        'unit': J_UNIT, 'rule': J_RULE, 'probe': '1 V (바닥 띠 1 V → 위 띠 0 V · 정확 Dirichlet)',
+        'area_column': 'A_used' if AC is not None else None,
+        'sigma0_S_cm': sigma0, 'sigma0_source': s0_src if sigma0 is not None else None,
+        'box_area_um2': a_box, 'box_source': box_src,
+        'j_mean_1V': j_mean,
+        'j_min_1V': min(jj) if jj else None, 'j_max_1V': max(jj) if jj else None,
+        'n_no_area': int(sum(1 for x in edges if x['j'] is None)) if j_reason is None else 0,
+        'reason': j_reason,
+        'c1': c1_scaling(rd, j_mean),
+    }
     body = {
         'ok': True, 'channel': channel, 'mode': mode, 'top': top, 'scale': scale,
         'n_perc_edges': n_perc, 'n_perc_nodes': int(len(nd)), 'n_returned': len(edges), 'n_zero_current': n_zero,
@@ -511,6 +673,7 @@ def current_payload(results_dir, channel='ionic', mode='hertzian', top=None, sca
                   'published_match': (man.get('published_match') or {}).get('status'), 'argv_source': man.get('argv_source')}
                  if man else None),
         'probe': '1 V 프로브 FULL 해 — 바닥 띠 1 V · 위 띠 0 V (정확 Dirichlet) · R_total = R_bulk + R_c',
+        'density': density,
         'edges': edges,
     }
     return 200, body
@@ -537,7 +700,7 @@ def _cmd_dump(a):
     absent = [t for t, ok in man['present'].items() if not ok]
     if absent:
         print(f'  관통 해가 없어 빠진 채널 · 모드: {absent}')
-    print("  웹앱: DEM 3D → View Mode '⚡ 전류 흐름 (망 해 · 상위 간선)'")
+    print("  웹앱: DEM 3D → View Mode '⚡ 전류 흐름 (접촉 전류 밀도 A cm⁻² · 상위 접촉)'")
     return 0
 
 
@@ -552,6 +715,24 @@ def _cmd_show(a):
     print(f"I_전체 {body['I_total']:.6g} · 단면 몫 평균 {z.get('share_mean')} (최소 {z.get('share_min')} · 최대 {z.get('share_max')}) · "
           f"보존 편차 {z.get('identity_max_dev')} · 소산 몫 {body['power_share']} · Tellegen {body['power_identity_rel']:.2e}")
     print(f"게시 σ 대조 {body['sigma_check']} · 세대 {body['generation']}")
+    dn = body.get('density') or {}
+    c1 = dn.get('c1') or {}
+
+    def _g(v, f=1.0):
+        return f'{float(v) * f:.4g}' if isinstance(v, (int, float)) and not isinstance(v, bool) and math.isfinite(float(v)) else '—'
+    if dn.get('reason'):
+        print(f"전류 밀도: 계산 불가 — {dn['reason']}")
+    else:
+        print(f"전류 밀도 (A cm⁻² @1V · A_c = {dn.get('area_column')}) — 그린 접촉 {_g(dn.get('j_min_1V'))} … {_g(dn.get('j_max_1V'))} · "
+              f"단면 평균 ⟨J⟩ {_g(dn.get('j_mean_1V'))} · σ₀ {dn.get('sigma0_S_cm')} S/cm ({dn.get('sigma0_source')})"
+              + (f" · 면적 없는 접촉 {dn['n_no_area']}" if dn.get('n_no_area') else ''))
+        if c1.get('status') == 'ok':
+            f = float(c1['factor'])
+            print(f"@1C (× {f:.4g} = I_1C / I_1V · Q_areal {_g(c1.get('Q_areal_mAh_cm2'))} mAh/cm²) — "
+                  f"{_g(dn.get('j_min_1V'), f)} … {_g(dn.get('j_max_1V'), f)} A cm⁻²"
+                  + (f" · ⚠ 기본값 {c1['defaults_used']}" if c1.get('defaults_used') else ''))
+        else:
+            print(f"@1C 환산 불가 — {c1.get('reason')}")
     return 0
 
 

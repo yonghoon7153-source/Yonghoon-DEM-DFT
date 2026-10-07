@@ -263,7 +263,8 @@ def render_stress_figure(profile: dict):
     ax.set_ylim(z_lo, z_hi)
 
     plt.suptitle(
-        f'Stress-hotspot z-profile — {name}\n'
+        f'Max contact pressure |Fn|/A z-profile — {name}\n'
+        f'all contacts incl. attractive (pair-type marker, not a load — WEB-06); '
         f'particles with positive contact pressure: {n_with}; '
         f'thickness {profile["thickness_um"]:.1f} µm',
         fontsize=13, fontweight='bold', y=1.00,

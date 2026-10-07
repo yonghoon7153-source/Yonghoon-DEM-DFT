@@ -1120,8 +1120,9 @@ function buildControls(container, isMPM) {
       <option value="brittle">Brittle Hotspots (AM)</option>
       <option value="brittle_surface">Brittle Hotspots (surface gradient)</option>
       <option value="cluster">Cluster Coloring (SE)</option>
-      <option value="stress">Stress Concentration</option>
-      <option value="stress_brittle">Stress + Brittle (overlay)</option>
+      <option value="stress">Max contact pressure (|Fn|/A)</option>
+      <option value="stress_brittle">Contact pressure + Brittle (overlay)</option>
+      <option value="am_only">AM 만 — 입자 응력 (LW) · 최대 AM–AM 힘</option>
       <option value="coverage">Coverage Heat (AM)</option>
       <option value="cn">배위수 (활물질 주위 SE · SE–SE)</option>
       <option value="se_engagement">SE engagement & pore risk</option>
@@ -1138,7 +1139,7 @@ function buildControls(container, isMPM) {
         <option value="dem_pore">기공 (빈 공간 · 격자 추정)</option>
       </optgroup>
       <optgroup label="전류 (접촉망 해)">
-        <option value="net_current">⚡ 전류 흐름 (망 해 · 상위 간선)</option>
+        <option value="net_current">⚡ 전류 흐름 (접촉 전류 밀도 A cm⁻² · 상위 접촉)</option>
       </optgroup>
     </select>
     <div id="view-mode-legend" style="font-size:11px;color:#9ca3af;line-height:1.4;margin-top:3px;max-height:340px;overflow-y:auto;overflow-x:hidden;padding-right:2px"></div>
@@ -2220,6 +2221,7 @@ function applyViewMode(state, mode) {
    * Cluster Coloring split-mesh) before reapplying any mode — stale
    * geometry left around confuses every other mode. */
   netCurrentTeardown(state);                       // ⚡ 전류 흐름 원기둥 · 늦게 오는 응답 무효 (mode 'net_current')
+  _amOnlyTeardown(state);                          // AM 만 보기가 숨긴 SE 를 체크박스대로 되돌림 (mode 'am_only')
   if (state.brittleGlowGroup && state.scene) {
     state.scene.remove(state.brittleGlowGroup);
     state.brittleGlowGroup.traverse(obj => {
@@ -2382,6 +2384,9 @@ function applyViewMode(state, mode) {
   }
 
   if (mode === 'net_current') { applyNetCurrentMode(state); return; }   // ⚡ 전류 흐름 — 망 해 간선 전류 (비동기 fetch · 자기 범례)
+
+  // AM 만 칠하기 — Love–Weber 입자 응력 · 최대 AM–AM 접촉 힘 (aux.load_view · SE 숨김 · 색 범위 = AM 만 · 벽 접촉 표지 · 10-07 #11)
+  if (mode === 'am_only') { applyAmOnlyView(state); return; }
 
   // Tortuosity 후보 경로 여럿 — se_clusters.json 의 저장 경로를 τ 색 관으로 한 번에 (10-07 · 자기 범례 · 그림 창)
   if (mode === 'tau_paths') { renderTauPaths(state); return; }
@@ -2634,16 +2639,19 @@ function applyViewMode(state, mode) {
   }
 
   if (mode === 'stress') {
-    /* Per-particle MAX contact pressure, coolwarm colormap on a
+    /* Per-particle MAX contact pressure |Fn|/A, coolwarm colormap on a
      * log10 scale clipped to the 5–95th percentile.  The raw
      * distribution is heavy-tailed (a handful of extreme contacts
      * can dwarf the median by 50×+), so a naïve linear normalise
      * crushes 95 % of particles into the deep-blue end and the
      * field looks featureless.  log + percentile clip keeps the
-     * middle of the colormap on the actual bulk of contacts. */
-    const sMap = aux.stress_max || {};
+     * middle of the colormap on the actual bulk of contacts.
+     * ★ 10-07 WEB-06 — 이름 = Max contact pressure (|Fn|/A) (하중이 아니다 · 쌍 유형 표지 ≈ k/(2πR*)) · 자료 = pressureViewInfo:
+     *   aux.load_view 가 있으면 압축 접촉만 (당김 · 접착 접촉의 10⁴–10⁶ MPa 튐을 범위에서 뺀다) · 없으면 옛 stress_max (⚠ 범례). */
+    const pInfo = pressureViewInfo(aux);
+    const sMap = pInfo.map;
     const all  = Object.values(sMap).filter(v => v > 0);
-    if (!all.length) { setLegend(state, '<i>No stress data available.</i>'); return; }
+    if (!all.length) { setLegend(state, '<i>No contact-pressure data available.</i>'); return; }
     const sorted = [...all].sort((a, b) => a - b);
     const pct = (p) => sorted[Math.max(0, Math.min(sorted.length - 1,
         Math.floor(p * (sorted.length - 1))))];
@@ -2672,20 +2680,7 @@ function applyViewMode(state, mode) {
       m.material.transparent = true;
     });
     flushColors();
-    const stops = [0, 0.25, 0.5, 0.75, 1.0]
-      .map(v => '#' + coolwarmColor(v).toString(16).padStart(6,'0'));
-    setLegend(state,
-      `<b>Stress Concentration (max MPa, log scale)</b>
-       <div style="margin:6px 0 2px 0;height:10px;border-radius:3px;
-         background:linear-gradient(90deg,${stops.join(',')})"></div>
-       <div style="display:flex;justify-content:space-between;font-size:10px;color:#9ca3af">
-         <span>${sLo.toFixed(0)}</span>
-         <span>median ≈ ${sMed.toFixed(0)}</span>
-         <span>${sHi.toFixed(0)}</span>
-       </div>
-       <button id="stress-z-modal-btn" class="data-modal-btn">
-         <span class="ico">📊</span><span>Z-profile 데이터</span>
-       </button>`);
+    setLegend(state, pressureLegendHtml(pInfo, sLo, sMed, sHi));
     const sBtn = document.getElementById('stress-z-modal-btn');
     if (sBtn) sBtn.addEventListener('click',
       () => showZProfileDataHub(state, 'stress'));
@@ -2704,8 +2699,9 @@ function applyViewMode(state, mode) {
      *      where the Lawn-stage hue dominates.  No cones — exactly
      *      the two screenshots the user pointed at, superposed. */
 
-    // ── 1) Paint stress field exactly like the 'stress' mode ────
-    const sMap = aux.stress_max || {};
+    // ── 1) Paint contact-pressure field exactly like the 'stress' mode (같은 자료 · 같은 규칙 — WEB-06) ────
+    const pInfo = pressureViewInfo(aux);
+    const sMap = pInfo.map;
     const all  = Object.values(sMap).filter(v => v > 0);
     if (all.length) {
       const sorted = [...all].sort((a, b) => a - b);
@@ -2801,9 +2797,10 @@ function applyViewMode(state, mode) {
     const stops = [0, 0.25, 0.5, 0.75, 1.0]
       .map(v => '#' + coolwarmColor(v).toString(16).padStart(6,'0'));
     setLegend(state,
-      `<b>Stress field + Brittle caps</b>
+      `<b title="${jeEscH(pressureViewTip())}">Contact pressure + Brittle caps</b>
        <span style="color:#9ca3af;font-size:11px">
-         particles = max contact pressure (log)<br>
+         particles = max contact pressure |Fn|/A (log · ${pInfo.rule === 'compressive' ? '압축 접촉만 — 당김 접촉 뺐다' : '⚠ 당김 접촉 포함 (옛 계산)'}
+         · 하중이 아니다 — 쌍 유형 표지)<br>
          surface caps = Lawn stage at damaged AM-AM contact
        </span>
        <div style="margin:6px 0 2px 0;height:8px;border-radius:3px;
@@ -5201,9 +5198,12 @@ function renderSeStatsCardPNG(state, corpusRows) {
 /* ── ⚡ 전류 흐름 — 망 해의 간선 전류 (DEM view mode 'net_current') ────────────────────────────────
  * 1저자 요청 *"전류가 보이게"* (보고 슬라이드 그림).  자료 = `/network-current` (scripts/network_current.py 가 읽는 케이스 폴더
  * network_raw_dump/ — 같은 망 풀이의 1 V 프로브 FULL 해.  웹앱 망 단계는 간선 전류를 남기지 않아 케이스마다 한 번 `dump` 로 만든다).
- * 간선 = 접촉 하나 (SE–SE = 이온 · AM–AM = 전자).  상위 N 개 (|I| 내림차순) 를 굵기 · 색 = log₁₀(|I_간선| / I_전체) 원기둥으로 그린다
+ * 간선 = 접촉 하나 (SE–SE = 이온 · AM–AM = 전자).  상위 N 개 (|I| 내림차순) 를 굵기 · 색 = log₁₀ j 원기둥으로 그린다
  * (InstancedMesh 하나 — 20000 간선도 한 번에).  주기 경계를 넘는 간선은 상자를 가로지르는 직선이 되므로 그리지 않고 센다 (Stress Chain 과
  * 같은 반폭 규칙 · 서버 표지 w 와 같은 답).  색 사상 = jetColor(t) (감마 없음) = 컬러바 ⬇ 의 사상.
+ * ★ 10-07 (1저자 결정 · 웹앱 묶음 #17) — 색 · 굵기 = 접촉 전류 밀도 j = |I_c| / A_c (A cm⁻² · A_c = 같은 풀이의 접촉 면적 · 서버
+ *   density 묶음) · 컬러바 둘 = @1V (탐침 · 원고 S16 · S17 규약) · @1C (운전 환산 = × I_1C / I_1V · 선형 — 같은 색 · 다른 숫자).
+ *   옛 몫 (|I_간선| / I_전체 %) 으로 칠하던 것은 없앴다 (몫 s 는 자료에만).
  * 모델의 접촉망 풀이 (Kirchhoff · 접촉마다 Holm 협착) — 측정 전류도 충방전 방향도 아니다. */
 const NETCUR_TOPS = [500, 1000, 2000, 5000, 10000, 20000];
 const NETCUR_CHANNELS = {
@@ -5227,21 +5227,42 @@ function netCurrentWrap(a, b, halfX, halfY) {
   return Math.abs(a[0] - b[0]) > halfX || Math.abs(a[1] - b[1]) > halfY;
 }
 
-/* log10(|I|/I_전체) 의 [최소, 최대] — 0 전류는 버린다 · 하나도 없으면 null */
+/* log10 j (접촉 전류 밀도 · A cm⁻² @1V) 의 [최소, 최대] — j 없음 · 0 은 버린다 · 하나도 없으면 null */
 function netCurrentLogRange(edges) {
   let lo = Infinity, hi = -Infinity;
   (edges || []).forEach(e => {
-    if (e && e.s > 0) { const l = Math.log10(e.s); if (l < lo) lo = l; if (l > hi) hi = l; }
+    if (e && e.j > 0) { const l = Math.log10(e.j); if (l < lo) lo = l; if (l > hi) hi = l; }
   });
   return isFinite(lo) ? [lo, hi] : null;
 }
 
-/* 색 · 굵기 축 t ∈ [0, 1] = (log10 s − lo) / (hi − lo) — 범위 밖은 자른다 · 범위가 한 점이면 1 */
+/* 색 · 굵기 축 t ∈ [0, 1] = (log10 v − lo) / (hi − lo) — 범위 밖은 자른다 · 범위가 한 점이면 1 (AM 만 보기도 같은 함수) */
 function netCurrentT(s, lo, hi) {
   if (!(s > 0)) return 0;
   const span = hi - lo;
   if (!(span > 1e-9)) return 1;
   return Math.max(0, Math.min(1, (Math.log10(s) - lo) / span));
+}
+
+/* 눈금 · 범례 숫자 (A cm⁻² · µN · 비) — 0.01 ≤ v < 1000 은 유효 2 자리 (꼬리 0 없음) · 그 밖 = m×10ⁿ (지수 · 천 단위 콤마 없음 —
+ * 보고자료 원칙).  0 → '0' · 비유한 → '—'.  (인자 하나만 — Array.map 에 그대로 넘겨도 순번이 자리수가 되지 않는다.  범례의 요약 값
+ * (평균 · Q_areal) 은 그 함수 안에서 유효 3 자리로.) */
+function netCurrentFmtJ(v) {
+  const pr = 2;
+  v = +v;
+  if (!isFinite(v)) return '—';
+  if (v === 0) return '0';
+  const sup = s => String(s).replace(/[-0-9]/g, ch => ({ '-': '⁻', '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴', '5': '⁵',
+                                                        '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹' })[ch]);
+  const a = Math.abs(v), sign = v < 0 ? '-' : '';
+  if (a >= 0.01 && a < 1000) {
+    const r = Number(a.toPrecision(pr));
+    if (r < 1000) return sign + String(r);
+  }
+  let e = Math.floor(Math.log10(a));
+  let m = Number((a / Math.pow(10, e)).toPrecision(pr));
+  if (m >= 10) { m = Number((m / 10).toPrecision(pr)); e += 1; }
+  return sign + (m === 1 ? '' : String(m) + '×') + '10' + sup(e);
 }
 
 /* 몫 → 'x %' (≥ 10 % 소수 1 자리 · 1–10 % 소수 1 자리 · < 1 % 유효 2 자리 · 꼬리 0 없음) */
@@ -5256,12 +5277,13 @@ function netCurrentPct(v) {
   return s + ' %';
 }
 
-/* 컬러바 눈금 (exportColorbarPNG 의 ticks) — 양 끝 (실제 최소 · 최대) + 안쪽 1 · 2 · 5 × 10^k (많으면 10^k 만).
+/* 컬러바 눈금 (exportColorbarPNG 의 ticks) — 양 끝 (실제 최소 · 최대) + 안쪽 1 · 2 · 5 × 10^k (많으면 10^k 만) · log₁₀ 축.
  * 라벨이 겹치지 않게: 안쪽 눈금은 끝에서 0.14 이상 · 서로 0.12 이상 (막대 폭 비) — real14 상위 10000 (0.16–1.4 %) 에서
- * 0.2 % 가 0.16 % 끝 라벨에 붙었다 (미리보기 실측). */
-function netCurrentTicks(lo, hi) {
+ * 0.2 % 가 0.16 % 끝 라벨에 붙었다 (미리보기 실측).  fmt = 라벨 함수 (기본 netCurrentFmtJ — A cm⁻² · µN · 비). */
+function netCurrentTicks(lo, hi, fmt) {
+  const lab = (typeof fmt === 'function') ? fmt : netCurrentFmtJ;
   if (!(isFinite(lo) && isFinite(hi))) return [];
-  if (!(hi - lo > 1e-9)) return [{ p: 0.5, label: netCurrentPct(Math.pow(10, hi)) }];
+  if (!(hi - lo > 1e-9)) return [{ p: 0.5, label: lab(Math.pow(10, hi)) }];
   const span = hi - lo;
   let cand = [];
   for (let k = Math.floor(lo) - 1; k <= Math.ceil(hi) + 1; k++) {
@@ -5271,28 +5293,56 @@ function netCurrentTicks(lo, hi) {
     });
   }
   if (cand.length > 6) cand = cand.filter(c => c.m === 1);
-  const out = [{ p: 0, label: netCurrentPct(Math.pow(10, lo)) }];
+  const out = [{ p: 0, label: lab(Math.pow(10, lo)) }];
   let last = 0;
   cand.forEach(c => {
     const p = (c.l - lo) / span;
     if (p >= 0.14 && p <= 0.86 && p - last >= 0.12) {
-      out.push({ p: p, label: netCurrentPct(Math.pow(10, c.l)) });
+      out.push({ p: p, label: lab(Math.pow(10, c.l)) });
       last = p;
     }
   });
-  out.push({ p: 1, label: netCurrentPct(Math.pow(10, hi)) });
+  out.push({ p: 1, label: lab(Math.pow(10, hi)) });
   return out;
 }
 
-/* 논문용 컬러바 스펙 (그림 글자 = 영문) — 튜브 색과 같은 jet · 감마 없음 */
-function netCurrentColorbarSpec(pay, opt, lo, hi) {
+/* 두 틀 — '1V' = 해 그대로 (탐침 · 원고 S16 · S17 규약) · '1C' = × I_1C / I_1V (서버 density.c1.factor · 선형).
+ * → {ok, factor, reason} — @1V 가 안 되면 (σ₀ · 면적 없음) @1C 도 안 된다. */
+function netCurrentFrame(pay, frame) {
+  const d = (pay && pay.density) || {};
+  const has1V = !d.reason && ((pay && pay.edges) || []).some(e => e && e.j > 0);
+  if (frame !== '1C') return has1V ? { ok: true, factor: 1, reason: '' } : { ok: false, factor: null, reason: d.reason || '전류 밀도 없음' };
+  if (!has1V) return { ok: false, factor: null, reason: d.reason || '전류 밀도 없음' };
+  const c1 = d.c1 || {};
+  const f = +c1.factor;
+  if (c1.status === 'ok' && f > 0 && isFinite(f)) return { ok: true, factor: f, reason: '' };
+  return { ok: false, factor: null, reason: c1.reason || '@1C 환산 자료 없음' };
+}
+
+/* 논문용 컬러바 스펙 (그림 글자 = 영문) — 튜브 색과 같은 jet · 감마 없음 · lo · hi = log₁₀ j (@1V) · frame '1V' | '1C'
+ * (@1C 눈금 = @1V 값 × 배율 — 같은 색 막대 · 다른 숫자). */
+function netCurrentColorbarSpec(pay, opt, lo, hi, frame) {
   const ch = { ionic: 'ionic (SE–SE contacts)', electronic: 'electronic (AM–AM contacts)' }[pay.channel] || String(pay.channel);
   const md = pay.mode === 'physics' ? 'Physics FULL (sensitivity)' : 'Hertz FULL';
+  const want1C = frame === '1C';
+  const fr = netCurrentFrame(pay, want1C ? '1C' : '1V');
+  const c1 = want1C && fr.ok;                                  // @1C 를 못 하면 @1V 눈금 그대로 (제목 · 부제가 그렇게 말한다 — 단추는 꺼져 있다)
+  const f = c1 ? fr.factor : 1;
+  const sh = Math.log10(f);
+  const d = pay.density || {};
+  const q = (d.c1 || {}).Q_areal_mAh_cm2;
+  const base = 'j = |I_c| / A_c (A_c = contact area of the same solve · ' + (pay.mode === 'physics' ? 'Physics gen-2 area' : 'c_cpl[22] disc')
+    + ').  Model contact-network solve (Kirchhoff · Holm constriction per contact) — not a measured current.  Log colour scale.';
   return {
     map: 'jet',
-    title: 'Contact current |I| / I_total — ' + ch + ' · ' + md + ' · 1 V probe · top ' + (pay.n_returned || 0) + ' contacts',
-    ticks: netCurrentTicks(lo, hi),
-    sub: 'Model contact-network solve (Kirchhoff · Holm constriction per contact) — not a measured current.  Log colour scale.',
+    title: 'Contact current density (A cm⁻²) ' + (c1 ? '@1C (operating)' : '@1V probe') + ' — ' + ch + ' · ' + md
+      + ' · top ' + (pay.n_returned || 0) + ' contacts',
+    ticks: netCurrentTicks(lo + sh, hi + sh, netCurrentFmtJ),
+    sub: c1
+      ? ('@1C = linear scaling of the 1 V probe solve: j(1C) = j(1V) × I_1C / I_1V (× ' + netCurrentFmtJ(f) + ') · I_1C = Q_areal × 1 h⁻¹'
+         + (q > 0 ? ' = ' + (q >= 0.01 && q < 1000 ? String(Number((+q).toPrecision(3))) : netCurrentFmtJ(q)) + ' mA cm⁻²' : '')
+         + ' (current-conservation assumption — no reaction distribution).  ' + base)
+      : ((want1C ? '@1C unavailable — @1V values shown.  ' : '') + '1 V probe across the electrode (bottom band 1 V → top band 0 V).  ' + base),
   };
 }
 
@@ -5309,35 +5359,54 @@ function netCurrentControlsHtml(opt) {
     + '</div>';
 }
 
-/* 범례 — 채널 · 모드 · 몫 · 생략 · 검산 · 게시 σ · 세대 · 한정어.  서버 문자열은 이스케이프 (jeEscH). */
+/* 범례 — 채널 · 모드 · 접촉 전류 밀도 (A cm⁻²) 두 틀 (@1V · @1C) · 생략 · 검산 · 게시 σ · 세대 · 한정어.  서버 문자열은 이스케이프 (jeEscH).
+ * ★ 10-07 (#17) — 옛 몫 (|I_간선| / I_전체) 으로 칠하던 범례 · 머리 줄을 없앴다.  표본 줄 (그린 접촉이 나르는 단면 전류) 은 상위 N 이
+ *   흐름을 얼마나 담는지 보는 검산이라 검산 줄에 남긴다. */
 function netCurrentLegendHtml(pay, opt, st) {
   const z = pay.zcut || null;
   const n = pay.n_returned || 0;
   const pct = netCurrentPct;
+  const fj = netCurrentFmtJ;
+  const f3 = v => ((+v >= 0.01 && +v < 1000) ? String(Number((+v).toPrecision(3))) : fj(v));   // 요약 값 (Q_areal) — 유효 3 자리
   const esc = jeEscH;
+  const d = pay.density || {};
+  const c1 = d.c1 || {};
+  const f1 = netCurrentFrame(pay, '1V'), fc = netCurrentFrame(pay, '1C');
   const L = [];
-  L.push('<b>⚡ 전류 흐름 — 접촉망 해 (상위 간선)</b>');
+  L.push('<b>⚡ 전류 흐름 — 접촉 전류 밀도 (A cm⁻²) · 접촉망 해</b>');
   L.push(netCurrentControlsHtml(opt));
   L.push('채널: ' + (NETCUR_CHANNELS[pay.channel] || esc(pay.channel)) + ' · ' + (NETCUR_MODES[pay.mode] || esc(pay.mode)));
-  if (z && isFinite(z.share_mean)) {
-    L.push('<b>1 V 프로브 해 · 상위 ' + n + ' 간선 = 전체 전류의 ' + pct(z.share_mean) + '</b> '
-      + '<span style="color:#9ca3af">(z-단면 ' + z.planes + ' 개 평균 · 최소 ' + pct(z.share_min) + ' · 최대 ' + pct(z.share_max) + ')</span>');
+  L.push('<b>색 · 굵기 = 접촉 전류 밀도 j = |I| / A_c (log₁₀) · 상위 ' + n + ' 접촉 (|I| 큰 순)</b>');
+  if (f1.ok) {
+    const stops = [0, 0.25, 0.5, 0.75, 1].map(v => '#' + jetColor(v).toString(16).padStart(6, '0'));
+    L.push('<div style="margin:3px 0 1px 0;height:9px;border-radius:3px;background:linear-gradient(90deg,' + stops.join(',') + ')"></div>');
+    L.push('@1V (탐침 · 원고 S16 · S17 규약): <b>' + fj(Math.pow(10, st.lo)) + ' … ' + fj(Math.pow(10, st.hi)) + ' A cm⁻²</b>'
+      + (d.j_mean_1V > 0 ? ' <span style="color:#9ca3af">(단면 평균 ⟨J⟩ ' + fj(d.j_mean_1V) + ')</span>' : ''));
+    if (fc.ok) {
+      L.push('@1C (운전 환산 × ' + fj(fc.factor) + ' = I_1C / I_1V): <b>' + fj(Math.pow(10, st.lo) * fc.factor) + ' … '
+        + fj(Math.pow(10, st.hi) * fc.factor) + ' A cm⁻²</b> <span style="color:#9ca3af">(Q_areal ' + f3(c1.Q_areal_mAh_cm2)
+        + ' mAh/cm² → j_1C ' + f3(c1.Q_areal_mAh_cm2) + ' mA cm⁻² · 케이스 표 등급 값)</span>'
+        + ((c1.defaults_used || []).length ? ' <span style="color:#fbbf24">⚠ ' + esc((c1.defaults_used || []).join(' · ')) + '</span>' : ''));
+    } else {
+      L.push('<span style="color:#fbbf24">⚠ @1C 환산 불가 — ' + esc(fc.reason) + '</span>');
+    }
+    L.push('<span style="color:#9ca3af">A_c = 같은 풀이의 접촉 면적 (' + (pay.mode === 'physics' ? 'Physics = 세대 2 면적' : 'Hertz = c_cpl[22] 원판')
+      + ') · σ₀ = ' + esc(d.sigma0_S_cm) + ' S/cm (' + esc(d.sigma0_source) + ')'
+      + (d.n_no_area ? ' · 면적 없는 접촉 ' + d.n_no_area + ' 개 = 회색' : '')
+      + ' · @1V 절대값 ∝ σ₀ (입력 기준값' + (pay.channel === 'electronic' ? ' — 전자 σ_AM 50 mS/cm = 모델 기준값 · 측정 NCM811 의 약 10 배 · CL-92'
+        : ' — σ_grain = 펠릿값 · CL-91') + ') · @1C 는 σ₀ 와 무관 (j_1C × 면적 집중)</span>');
   } else {
-    L.push('<b>1 V 프로브 해 · 상위 ' + n + ' 간선</b> <span style="color:#9ca3af">(z-단면 몫 계산 불가 — 간선 |I| 합의 '
-      + pct(pay.sum_abs_share) + ')</span>');
+    L.push('<span style="color:#f87171">⚠ 전류 밀도 계산 불가 — ' + esc(f1.reason) + ' (회색으로 그림 · 몫으로 칠하지 않는다)</span>');
   }
-  L.push('색 · 굵기 = log₁₀(|I_간선| / I_전체) — ' + pct(Math.pow(10, st.lo)) + ' … ' + pct(Math.pow(10, st.hi)) + ' (jet · 접촉 하나가 나르는 몫)');
-  let drawn = '그린 간선 ' + st.nDrawn + ' / 관통 간선 ' + pay.n_perc_edges;
-  if (st.nWrapSkipped) {
-    drawn += ' · 주기 경계를 넘는 ' + st.nWrapSkipped + ' 간선은 그리지 않음';
-    if (z && isFinite(z.drawn_share_mean)) drawn += ' (그 몫 ' + pct(Math.max(0, z.share_mean - z.drawn_share_mean)) + 'p)';
-  }
+  let drawn = '그린 접촉 ' + st.nDrawn + ' / 관통 접촉 ' + pay.n_perc_edges;
+  if (st.nWrapSkipped) drawn += ' · 주기 경계를 넘는 ' + st.nWrapSkipped + ' 접촉은 그리지 않음';
   L.push(drawn);
-  L.push('소산 (Σ I²R) 몫 ' + pct(pay.power_share) + ' · 0 전류 간선 ' + (pay.n_zero_current || 0) + ' 개 (띠 안 등) 제외');
+  L.push('소산 (Σ I²R) 몫 ' + pct(pay.power_share) + ' · 0 전류 접촉 ' + (pay.n_zero_current || 0) + ' 개 (띠 안 등) 제외');
   const dev = z ? z.identity_max_dev : NaN, tel = pay.power_identity_rel;
   const okChk = isFinite(dev) && dev < 1e-6 && isFinite(tel) && tel < 1e-6;
   L.push('검산 — 단면 전류 보존 ' + (isFinite(dev) ? dev.toExponential(1) : '—') + ' · Tellegen Σ I²R = I_전체 '
-    + (isFinite(tel) ? tel.toExponential(1) : '—') + (okChk ? ' ✓' : ' <span style="color:#f87171">⚠</span>'));
+    + (isFinite(tel) ? tel.toExponential(1) : '—') + (okChk ? ' ✓' : ' <span style="color:#f87171">⚠</span>')
+    + (z && isFinite(z.drawn_share_mean) ? ' · 표본: 그린 접촉이 나르는 단면 전류 ' + pct(z.drawn_share_mean) + ' (z-단면 ' + z.planes + ' 개 평균)' : ''));
   const sc = pay.sigma_check || {};
   if (sc.match === true) L.push('게시 σ 와 같은 해 ✓ <span style="color:#9ca3af">(σ/σ₀ ' + esc(sc.published) + ')</span>');
   else if (sc.match === false) L.push('<span style="color:#f87171">⚠ 게시 σ 와 다른 해 — 게시 ' + esc(sc.published) + ' · 덤프 '
@@ -5357,8 +5426,13 @@ function netCurrentLegendHtml(pay, opt, st) {
     L.push('<span style="color:#fbbf24">⚠ 덤프를 만들 때 게시 JSON 과 값이 달랐다 (코드 세대 차이) — manifest.json 참조</span>');
   }
   L.push('<i style="color:#9ca3af">모델의 접촉망 풀이 (Kirchhoff · 접촉마다 Holm 협착 · R_total = R_bulk + R_c) — 측정 전류도 충방전 방향도 아니다.  '
-    + '바닥 띠 1 V → 위 띠 0 V (정확 Dirichlet) 프로브 해.</i>');
-  L.push('<button id="netcur-cbar" class="data-modal-btn" title="이 그림의 색 눈금 (|I|/I_전체 · log) 을 논문용 6× PNG 로">컬러바 ⬇</button>'
+    + '바닥 띠 1 V → 위 띠 0 V (정확 Dirichlet) 프로브 해.  @1C = 선형 환산 (전류 보존 가정 — 망 전체가 1C 전류를 끝에서 끝까지 나른다고 볼 때 · '
+    + '반응 분포 없음).</i>');
+  const dis = (ok, why) => (ok ? '' : ' disabled title="' + esc(why) + '"');
+  L.push('<button id="netcur-cbar-1v" class="data-modal-btn"' + (f1.ok ? ' title="@1V 컬러바 (접촉 전류 밀도 A cm⁻² · log) 를 논문용 6× PNG 로"'
+      : dis(false, f1.reason)) + '>컬러바 @1V ⬇</button>'
+    + '<button id="netcur-cbar-1c" class="data-modal-btn"' + (fc.ok ? ' title="@1C 컬러바 (× I_1C / I_1V · 같은 색 · 다른 숫자) 를 논문용 6× PNG 로"'
+      : dis(false, fc.reason)) + '>컬러바 @1C ⬇</button>'
     + '<label style="font-size:11px"><input type="checkbox" id="netcur-arrows"' + (opt.arrows ? ' checked' : '')
     + '> 방향 화살표 (전위 강하 · a → b)</label>');
   return L.join('<br>');
@@ -5406,10 +5480,16 @@ function netCurrentWireLegend(state, pay) {
   on('netcur-mode', 'change', ev => { opt.mode = ev.target.value; applyNetCurrentMode(state); });
   on('netcur-arrows', 'change', ev => { opt.arrows = ev.target.checked; if (pay) renderNetCurrent(state, pay); });
   on('netcur-retry', 'click', () => applyNetCurrentMode(state));          // 오류는 캐시하지 않는다 — 다시 fetch
-  on('netcur-cbar', 'click', () => {
+  //  컬러바 둘 — @1V (탐침) · @1C (운전 환산) · 같은 색 막대 · 다른 숫자 (A cm⁻²)
+  on('netcur-cbar-1v', 'click', () => {
     const l = state._netCurLast;
-    if (l) exportColorbarPNG(netCurrentColorbarSpec(l.pay, opt, l.st.lo, l.st.hi),
-                             'colorbar_net_current_' + l.pay.channel + '_' + l.pay.mode + '.png');
+    if (l) exportColorbarPNG(netCurrentColorbarSpec(l.pay, opt, l.st.lo, l.st.hi, '1V'),
+                             'colorbar_net_current_' + l.pay.channel + '_' + l.pay.mode + '_1V.png');
+  });
+  on('netcur-cbar-1c', 'click', () => {
+    const l = state._netCurLast;
+    if (l) exportColorbarPNG(netCurrentColorbarSpec(l.pay, opt, l.st.lo, l.st.hi, '1C'),
+                             'colorbar_net_current_' + l.pay.channel + '_' + l.pay.mode + '_1C.png');
   });
 }
 
@@ -5453,7 +5533,8 @@ function renderNetCurrent(state, pay) {
   const edges = pay.edges || [];
   const box = pay.box || {};
   const hx = (+box.x > 0 ? +box.x : Infinity) / 2, hy = (+box.y > 0 ? +box.y : Infinity) / 2;
-  const rng = netCurrentLogRange(edges) || [-1, 0];
+  const rngJ = netCurrentLogRange(edges);                     // log₁₀ j (A cm⁻² @1V) — 없으면 (σ₀ · 면적 미확인) 회색 · 중간 굵기
+  const rng = rngJ || [-1, 0];
   const lo = rng[0], hi = rng[1];
   const draw = edges.filter(e => !netCurrentWrap(e.a, e.b, hx, hy));
   const radii = [];
@@ -5475,14 +5556,15 @@ function renderNetCurrent(state, pay) {
       B.set(e.b[0], e.b[2], e.b[1]);
       d.subVectors(B, A);
       const len = d.length();
-      const t = netCurrentT(e.s, lo, hi), r = rMin + (rMax - rMin) * t;
+      const hasJ = !!(rngJ && e.j > 0);
+      const t = hasJ ? netCurrentT(e.j, lo, hi) : 0.5, r = rMin + (rMax - rMin) * t;
       if (len > 0) d.divideScalar(len); else d.copy(up);
       q.setFromUnitVectors(up, d);
       mid.addVectors(A, B).multiplyScalar(0.5);
       sc.set(r, Math.max(len, 1e-6), r);
       m4.compose(mid, q, sc);
       tubes.setMatrixAt(i, m4);
-      col.setHex(jetColor(t));
+      col.setHex(hasJ ? jetColor(t) : 0x9ca3af);               // j 없음 (면적 · σ₀ 미확인) = 회색 — 몫으로 칠하지 않는다
       tubes.setColorAt(i, col);
       if (cones) {                                             // 화살표 = 흐름 방향 a → b (높은 전위 → 낮은 전위)
         const h = Math.min(4.5 * r, 0.45 * len), w = 2.2 * r;
@@ -5515,6 +5597,217 @@ function renderNetCurrent(state, pay) {
 function setLegend(state, html) {
   const el = document.getElementById('view-mode-legend');
   if (el) el.innerHTML = html;
+}
+
+/* ── 입자 하중 보기 — AM 만 칠하기 (#11) · Max contact pressure (WEB-06) — 10-07 1저자 결정 ─────────────────────────────────
+ * 자료 = aux.load_view (scripts/viewer3d_data.particle_load_view_for_case — 계산은 생산 함수 그대로: LW = calc_love_weber_stress ·
+ * 힘 µN = calc_contact_force_distribution 환산 · 압력 = 압축 접촉만 · 벽 표지 = LW 의 벽 규칙).
+ * ⚠ /3d-data 가 이 자료를 싣는 것은 webapp/app.py (194 봉인 파일) 의 일이라 발사 뒤 패치 (docs/reviews/webapp_load_view_deferred_20261007.patch)
+ *   가 들어가야 온다 — 그 전에는 AM 만 보기 = 안내 (amOnlyMissingHtml) · Max contact pressure = 옛 stress_max (⚠ 당김 포함 범례). */
+
+/* Max contact pressure 의 한정어 (툴팁) — 범례 · 겹침 보기가 같이 쓴다 */
+function pressureViewTip() {
+  return 'p = |Fn| / A (A = 덤프 접촉 면적 c_cpl[22] · MPa) — hooke/hysteresis 에서 압축 접촉의 p 는 쌍 유형마다 거의 일정 '
+    + '(p ≈ k/(2πR*) · real14 PC–PC 4151–4294 MPa) = 접촉 유형 표지에 가깝고 하중이 아니다 (WEB-06) · 당김 (접착) 접촉은 δ ≈ 0 면적이라 '
+    + '10⁴–10⁶ MPa 로 튄다 · z 방향 하중 차이는 AM 만 — 입자 응력 (LW) 보기로';
+}
+
+/* Max contact pressure 자료 — aux.load_view 가 있으면 압축 접촉만 (pressure.max_MPa) · 없으면 옛 stress_max (rule legacy · 당김 포함). */
+function pressureViewInfo(aux) {
+  const lv = aux && aux.load_view;
+  const pr = lv && lv.status === 'OK' ? lv.pressure : null;
+  if (pr && pr.max_MPa) {
+    return { rule: 'compressive', map: pr.max_MPa, nAttr: pr.n_excluded_attractive || 0, nUnknown: pr.n_excluded_unknown || 0,
+             nNoOverlap: pr.n_excluded_no_overlap || 0, nLegacyHigher: pr.n_particles_legacy_higher || 0, nParticles: pr.n_particles || 0 };
+  }
+  return { rule: 'legacy', map: (aux && aux.stress_max) || {} };
+}
+
+/* Max contact pressure 범례 — 이름 · 툴팁 한정어 · 압축만 / 옛 계산 경고 · 색 막대 (coolwarm · log p5–p95) · AM 만 보기 안내 · Z-profile */
+function pressureLegendHtml(info, sLo, sMed, sHi) {
+  const esc = jeEscH, fj = netCurrentFmtJ;
+  const f3 = v => ((+v >= 0.01 && +v < 1000) ? String(Number((+v).toPrecision(3))) : fj(v));   // 범위 끝 · 중앙값 — 유효 3 자리
+  const stops = [0, 0.25, 0.5, 0.75, 1.0].map(v => '#' + coolwarmColor(v).toString(16).padStart(6, '0'));
+  const rule = info.rule === 'compressive'
+    ? ('압축 접촉만 — 당김 (접착) 접촉 ' + info.nAttr + ' 행 · 부호 판정 불가 ' + info.nUnknown + ' 행 · 겹침 없음 (δ ≤ 0 · 면적 0 · 힘 0) '
+       + info.nNoOverlap + ' 행을 범위에서 뺐다 (옛 계산 (당김 포함) 이 더 컸던 입자 ' + info.nLegacyHigher + ' 개)')
+    : ('<span style="color:#fbbf24">⚠ 당김 (접착) 접촉 포함 — 옛 계산 (3D 데이터에 입자 하중 자료 load_view 없음 · webapp/app.py 발사 뒤 패치 전) · '
+       + '10⁴ MPa 넘는 값은 당김 접촉 (δ ≈ 0 면적)</span>');
+  return '<b title="' + esc(pressureViewTip()) + '">Max contact pressure (|Fn|/A · MPa · log)</b>'
+    + '<div style="color:#9ca3af;font-size:11px">' + rule + '</div>'
+    + '<div style="margin:6px 0 2px 0;height:10px;border-radius:3px;background:linear-gradient(90deg,' + stops.join(',') + ')"></div>'
+    + '<div style="display:flex;justify-content:space-between;font-size:10px;color:#9ca3af">'
+    + '<span>' + f3(sLo) + '</span><span>median ≈ ' + f3(sMed) + '</span><span>' + f3(sHi) + '</span></div>'
+    + '<div style="color:#9ca3af;font-size:11px">하중이 아니다 — 압축 접촉의 p 는 쌍 유형마다 거의 일정 (≈ k/(2πR*)) · '
+    + '하중 (z 차이) 은 View Mode "AM 만 — 입자 응력 (LW)" 로</div>'
+    + '<button id="stress-z-modal-btn" class="data-modal-btn"><span class="ico">📊</span><span>Z-profile 데이터</span></button>';
+}
+
+/* AM 만 보기의 양 — 'lw' = Love–Weber σ_VM / ⟨σ_VM⟩ (전 입자 · stress_ratio_<상>_lw 와 같은 정의) · 'fn' = 최대 AM–AM 접촉 법선력
+ * (µN · 압축 접촉만).  → {ok, map {id: 값}, label, unit, scale: 'log', reason, mpa (LW ⟨σ_VM⟩ MPa)} — 못 쓰면 ok false + 사유 (0 으로 안 칠함). */
+function loadViewAmMetric(lv, metric) {
+  const am = (lv && lv.am) || {};
+  if (!lv || lv.status !== 'OK') return { ok: false, map: {}, label: '', unit: '', scale: 'log', reason: (lv && lv.status) || '입자 하중 자료 없음' };
+  if (metric === 'fn') {
+    const map = am.fn_max_uN || {};
+    const n = Object.keys(map).length;
+    return { ok: n > 0, map: map, label: '최대 AM–AM 접촉 법선력 (압축 접촉만)', unit: 'µN', scale: 'log',
+             reason: n ? '' : '압축 AM–AM 접촉이 없다' };
+  }
+  const st = String(am.lw_status || '');
+  if (st !== 'OK') return { ok: false, map: {}, label: 'Love–Weber 입자 응력 σ_VM / ⟨σ_VM⟩', unit: '', scale: 'log', reason: st || 'LW 없음' };
+  return { ok: true, map: am.lw_ratio || {}, label: 'Love–Weber 입자 응력 σ_VM / ⟨σ_VM⟩ (전 입자)', unit: '', scale: 'log', reason: '',
+           mpa: am.lw_mean_all_MPa };
+}
+
+/* 색 범위 (log₁₀) — AM 값만 (양수) · 'p5p95' = 가장 가까운 순위 5 · 95 백분위 (Max contact pressure 보기와 같은 규칙) · 'minmax' · 없으면 null */
+function amOnlyRange(vals, mode) {
+  const v = (vals || []).filter(x => x > 0 && isFinite(x)).sort((a, b) => a - b);
+  if (!v.length) return null;
+  const pct = p => v[Math.max(0, Math.min(v.length - 1, Math.floor(p * (v.length - 1))))];
+  const lo = mode === 'minmax' ? v[0] : pct(0.05), hi = mode === 'minmax' ? v[v.length - 1] : pct(0.95);
+  return [Math.log10(lo), Math.log10(hi)];
+}
+
+/* 자료가 없을 때 (발사 뒤 패치 전 · 옛 캐시 · 접촉 덤프 없음) — 사유 + 패치 경로 */
+function amOnlyMissingHtml(lv) {
+  const st = lv && lv.status ? '<br>자료 상태: ' + jeEscH(lv.status) : '';
+  return '<b>AM 만 — 입자 응력 (LW) · 최대 AM–AM 힘</b><br><span style="color:#fbbf24">3D 데이터에 입자 하중 자료 (aux.load_view) 가 없다.</span>'
+    + st + '<br><span style="color:#9ca3af;font-size:11px">이 자료를 3D 데이터에 싣는 것은 webapp/app.py (194 봉인 파일) 의 일이라 발사 뒤 패치 '
+    + 'docs/reviews/webapp_load_view_deferred_20261007.patch 가 들어가야 온다 (계산 = scripts/viewer3d_data.particle_load_view_for_case · 이미 있다 · '
+    + '캐시 스키마 13).  그 전에는 Max contact pressure 보기 = 옛 계산 (당김 포함).</span>';
+}
+
+/* AM 만 범례 — 양 · 범위 · 벽 표지 조작 · 컬러바 · 수 · 한정어.  st = {n, nColored, nWall, nNoValue, lo, hi} */
+function amOnlyLegendHtml(lv, ui, st) {
+  const esc = jeEscH, fj = netCurrentFmtJ;
+  const f3 = v => ((+v >= 0.01 && +v < 1000) ? String(Number((+v).toPrecision(3))) : fj(v));   // ⟨σ_VM⟩ — 유효 3 자리
+  const m = loadViewAmMetric(lv, ui.metric);
+  const am = (lv && lv.am) || {};
+  const css = 'background:#16192e;color:#e4e6f0;border:1px solid #2a2d3e;border-radius:4px;padding:1px 2px;font-size:11px';
+  const sel = (id, cur, opts) => '<select id="' + id + '" style="' + css + '">'
+    + opts.map(o => '<option value="' + o[0] + '"' + (String(o[0]) === String(cur) ? ' selected' : '') + '>' + o[1] + '</option>').join('')
+    + '</select>';
+  const fn = ui.metric === 'fn';
+  const L = [];
+  L.push('<b>AM 만 — ' + (fn ? '최대 AM–AM 접촉 힘' : 'Love–Weber 입자 응력') + '</b> <span style="color:#9ca3af">(SE 숨김)</span>');
+  L.push('<div style="display:flex;flex-wrap:wrap;gap:3px;align-items:center;margin:3px 0">'
+    + sel('amonly-metric', ui.metric, [['lw', 'Love–Weber 입자 응력 (σ_VM / ⟨σ_VM⟩)'], ['fn', '최대 AM–AM 접촉 힘 (µN)']])
+    + sel('amonly-range', ui.range, [['p5p95', '범위 p5–p95'], ['minmax', '범위 최소–최대']])
+    + '<label style="font-size:11px"><input type="checkbox" id="amonly-wall"' + (ui.wall ? ' checked' : '')
+    + '> 벽 접촉 입자 회색 (범위에서 뺌)</label></div>');
+  if (!m.ok) {
+    L.push('<span style="color:#fbbf24">⚠ ' + esc(m.label || '') + ' — ' + esc(m.reason) + ' — 칠하지 않는다 (AM 기본색)</span>');
+    return L.join('<br>');
+  }
+  if (st.noRange) {
+    L.push('<span style="color:#fbbf24">⚠ 칠할 값이 없다 (범위에 넣을 AM 값 0 개' + (ui.wall ? ' — 벽 접촉 입자를 뺐다' : '') + ') — 칠하지 않는다 (AM 기본색)</span>');
+    return L.join('<br>');
+  }
+  const stops = [0, 0.25, 0.5, 0.75, 1].map(v => '#' + jetColor(v).toString(16).padStart(6, '0'));
+  L.push('<div style="margin:3px 0 1px 0;height:9px;border-radius:3px;background:linear-gradient(90deg,' + stops.join(',') + ')"></div>');
+  const lo = Math.pow(10, st.lo), hi = Math.pow(10, st.hi);
+  L.push('<b>' + esc(m.label) + '</b>: ' + fj(lo) + ' … ' + fj(hi) + (fn ? ' µN' : ' × ⟨σ_VM⟩')
+    + (!fn && m.mpa > 0 ? ' <span style="color:#9ca3af">(⟨σ_VM⟩ = ' + f3(m.mpa) + ' MPa · 모델 단위 · ' + fj(lo * m.mpa) + ' … '
+       + fj(hi * m.mpa) + ' MPa)</span>' : '') + ' (jet · log)');
+  L.push('색 범위 = AM 만의 ' + (ui.range === 'minmax' ? '최소–최대' : 'p5–p95') + (ui.wall ? ' (벽 접촉 입자 뺌)' : ''));
+  L.push('AM ' + st.n + ' 개 · 칠한 ' + st.nColored + ' · 벽 접촉 ' + st.nWall + ' 개'
+    + (ui.wall ? ' = 회색' : ' (칠함' + (fn ? '' : ' — LW 에 벽 힘 없음') + ')') + ' · 값 없음 ' + st.nNoValue + ' 개 (어두운 회색)');
+  if (fn) {
+    L.push('<span style="color:#9ca3af;font-size:11px">AM 입자마다 그 입자의 AM–AM 접촉 중 압축 접촉 (δ > 0) 의 |Fn| 최대 · 당김 (접착) · 판정 불가 · δ ≤ 0 은 뺐다 · '
+      + '|Fn| × 1e6 / scale = µN (calc_contact_force_distribution · fn_&lt;쌍&gt;_mean 과 같은 환산) · 모델 단위 (덱 축척 환산 — 조성 비교 절대값에 쓰지 않는다)</span>');
+  } else {
+    const tr = am.lw_type_ratio || {};
+    const trs = Object.keys(tr).sort().map(k => esc(k) + ' ' + fj(tr[k])).join(' · ');
+    L.push('<span style="color:#9ca3af;font-size:11px">Love–Weber (calc_love_weber_stress) — full_metrics stress_ratio_&lt;상&gt;_lw 와 같은 정의 · 같은 분모 (전 입자 평균)'
+      + (trs ? ' · 상 비 ' + trs : '') + ' · 벽 (바닥 · 판) 에 닿은 입자는 벽 힘이 없다 (접촉 덤프에 벽 접촉 없음 — 그 값은 불완전) · 응력 기준틀 미인증 (모델 내부 비교)</span>');
+  }
+  L.push('<button id="amonly-cbar" class="data-modal-btn" title="이 그림의 색 눈금을 논문용 6× PNG 로">컬러바 ⬇</button>');
+  return L.join('<br>');
+}
+
+/* 논문용 컬러바 스펙 (영문) — jet · log₁₀ (lo · hi) · 눈금 = netCurrentTicks + netCurrentFmtJ */
+function amOnlyColorbarSpec(lv, ui, lo, hi) {
+  const fn = ui.metric === 'fn';
+  const rng = (ui.range === 'minmax' ? 'min–max' : 'p5–p95') + (ui.wall ? ', wall-touching AM greyed and excluded' : '');
+  return {
+    map: 'jet',
+    title: fn ? 'AM only — max AM–AM contact normal force (µN)' : 'AM only — Love–Weber particle stress σ_VM / ⟨σ_VM⟩ (all particles)',
+    ticks: netCurrentTicks(lo, hi, netCurrentFmtJ),
+    sub: 'Colour range = AM particles only (' + rng + ').  '
+      + (fn ? 'Per AM particle: max |Fn| over its compressive AM–AM contacts (attractive · δ ≤ 0 excluded) · model units (deck-scaled) — '
+              + 'not for absolute comparison.  '
+            : 'Love–Weber (same definition as stress_ratio_<phase>_lw) · wall forces absent for wall-touching particles · model contact forces.  ')
+      + 'Log colour scale.',
+  };
+}
+
+/* AM 만 보기를 떠날 때 (applyViewMode 머리) — 숨긴 SE 를 SE 체크박스대로 */
+function _amOnlyTeardown(state) {
+  if (!state._amOnlyHidSE) return;
+  if (state.meshes && state.meshes.SE) {
+    const cb = document.querySelector('.viewer-controls input[data-layer="SE"]');
+    state.meshes.SE.visible = cb ? cb.checked : true;
+  }
+  state._amOnlyHidSE = false;
+}
+
+function applyAmOnlyView(state) {
+  const aux = (state.data && state.data.aux) || {};
+  const lv = aux.load_view;
+  const ui = state._amOnlyUi || (state._amOnlyUi = { metric: 'lw', range: 'p5p95', wall: true });
+  if (state.meshes && state.meshes.SE) { state.meshes.SE.visible = false; state._amOnlyHidSE = true; }   // SE 숨김 (되돌림 = _amOnlyTeardown)
+  const amMeshes = ['AM_P', 'AM_S'].map(t => [t, state.meshes && state.meshes[t]]).filter(x => x[1]);
+  const base = () => amMeshes.forEach(([t, m]) => {
+    const c = new THREE.Color(COL[t]);
+    m.userData.particles.forEach((_, i) => m.setColorAt(i, c));
+    m.material.opacity = 1.0; m.material.transparent = false;
+    if (m.instanceColor) m.instanceColor.needsUpdate = true;
+  });
+  if (!lv || lv.status !== 'OK') { base(); setLegend(state, amOnlyMissingHtml(lv)); return; }
+  const met = loadViewAmMetric(lv, ui.metric);
+  const wall = (lv.am && lv.am.wall) || {};
+  const val = p => { const v = met.map[p.id]; return v === undefined ? met.map[String(p.id)] : v; };
+  const vals = [];
+  amMeshes.forEach(([, m]) => m.userData.particles.forEach(p => {
+    if (ui.wall && wall[p.id]) return;
+    const v = val(p);
+    if (v > 0) vals.push(v);
+  }));
+  const rng = met.ok ? amOnlyRange(vals, ui.range) : null;
+  const st = { n: 0, nColored: 0, nWall: 0, nNoValue: 0, lo: rng ? rng[0] : 0, hi: rng ? rng[1] : 1, noRange: met.ok && !rng };
+  if (!met.ok || !rng) {
+    base();
+    amMeshes.forEach(([, m]) => m.userData.particles.forEach(p => { st.n += 1; if (wall[p.id]) st.nWall += 1; }));
+  } else {
+    const col = new THREE.Color();
+    amMeshes.forEach(([, m]) => {
+      m.userData.particles.forEach((p, i) => {
+        st.n += 1;
+        const isWall = !!wall[p.id];
+        if (isWall) st.nWall += 1;
+        const v = val(p);
+        if (ui.wall && isWall) col.setHex(0x9ca3af);
+        else if (v > 0) { col.setHex(jetColor(netCurrentT(v, st.lo, st.hi))); st.nColored += 1; }
+        else { col.setHex(0x4b5563); st.nNoValue += 1; }
+        m.setColorAt(i, col);
+      });
+      m.material.opacity = 1.0; m.material.transparent = false;
+      if (m.instanceColor) m.instanceColor.needsUpdate = true;
+    });
+  }
+  state._amOnlyLast = { lv: lv, ui: ui, st: st };
+  setLegend(state, amOnlyLegendHtml(lv, ui, st));
+  const el = document.getElementById('view-mode-legend');
+  if (!el) return;
+  const on = (id, ev, fn) => { const x = el.querySelector('#' + id); if (x) x.addEventListener(ev, fn); };
+  on('amonly-metric', 'change', ev => { ui.metric = ev.target.value; applyAmOnlyView(state); });
+  on('amonly-range', 'change', ev => { ui.range = ev.target.value; applyAmOnlyView(state); });
+  on('amonly-wall', 'change', ev => { ui.wall = ev.target.checked; applyAmOnlyView(state); });
+  on('amonly-cbar', 'click', () => {
+    const l = state._amOnlyLast;
+    if (l) exportColorbarPNG(amOnlyColorbarSpec(l.lv, l.ui, l.st.lo, l.st.hi), 'colorbar_am_only_' + l.ui.metric + '.png');
+  });
 }
 
 /* ── DEM 기공 (빈 공간 · 격자 추정) — View Mode "dem_pore" (2026-10-07) ──────────────────────────
@@ -10865,7 +11158,7 @@ async function showZProfileDataHub(state, defaultTab) {
       </div>
       <div style="display:flex;gap:4px;margin-bottom:8px;border-bottom:1px solid #e5e7eb">
         <button class="zh-tab" data-tab="brittle"   style="${tabStyle(false)}">Brittle stages</button>
-        <button class="zh-tab" data-tab="stress"    style="${tabStyle(false)}">Stress hotspots</button>
+        <button class="zh-tab" data-tab="stress"    style="${tabStyle(false)}" title="입자별 최대 |Fn|/A — 당김 (접착) 접촉 포함 (이 z 그림 · CSV 는 옛 계산 그대로) · 하중이 아니다 (쌍 유형 표지 · WEB-06)">Max contact pressure (|Fn|/A)</button>
         <button class="zh-tab" data-tab="coverage"  style="${tabStyle(false)}">Coverage (AM)</button>
         <button class="zh-tab" data-tab="combined"  style="${tabStyle(false)}">Combined overlay</button>
         <button class="zh-tab" data-tab="se"        style="${tabStyle(false)}">SE Diagnostics</button>

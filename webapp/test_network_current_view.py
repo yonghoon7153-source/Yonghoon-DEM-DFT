@@ -16,6 +16,8 @@
      채널 · 모드 · 잘못된 인자 400 · 게시 σ 대조 · 세대 대조.
   ④ 뷰어 (node 로 함수를 잘라 실행) — DEM 드롭다운 · 주기 경계 함수 (서버 표지와 같은 답) · URL (실 · 보관 · 질의문) · 범례 문구 · 컬러바 눈금 ·
      모드 전환 정리 · 늦은 응답 무시.
+     ★ 10-07 (1저자 결정 · 웹앱 묶음 #17) — 색 · 굵기 = 접촉 전류 밀도 j (A cm⁻²) · 컬러바 @1V + @1C · 옛 몫 (|I|/I_전체 %) 표시 없음.
+       전류 밀도 자체 (단위 · 손 계산 · @1C 환산) 는 webapp/test_net_current_density.py.
 
   python3 webapp/test_network_current_view.py        # 종료코드 0 = PASS
 """
@@ -492,8 +494,9 @@ def section_routes(tmp, pub_rd, rid):
 # ══════════════════════════════════════════════════════════════════════════════
 #  ④ 뷰어 (node)
 # ══════════════════════════════════════════════════════════════════════════════
-JS_NAMES = ('netCurrentUrl', 'netCurrentWrap', 'netCurrentLogRange', 'netCurrentT', 'netCurrentPct', 'netCurrentTicks',
-            'netCurrentColorbarSpec', 'netCurrentControlsHtml', 'netCurrentLegendHtml', 'netCurrentErrorHtml', 'jeEscH', 'jetColor')
+JS_NAMES = ('netCurrentUrl', 'netCurrentWrap', 'netCurrentLogRange', 'netCurrentT', 'netCurrentPct', 'netCurrentFmtJ', 'netCurrentTicks',
+            'netCurrentFrame', 'netCurrentColorbarSpec', 'netCurrentControlsHtml', 'netCurrentLegendHtml', 'netCurrentErrorHtml', 'jeEscH',
+            'jetColor')
 
 
 def section_viewer(payload_all):
@@ -571,14 +574,14 @@ out.wrapSrv = PAY.edges.map(e => !!e.w);
 out.wrapFix = [netCurrentWrap([0, 0, 0], [3, 0, 0], 2, 2), netCurrentWrap([0, 0, 0], [1.9, 1.9, 5], 2, 2),
                netCurrentWrap([0, 0, 0], [0, -2.5, 0], 2, 2), netCurrentWrap([0, 0, 0], [0, 0, 99], 2, 2)];
 out.range = netCurrentLogRange(PAY.edges);
-out.rangeZero = netCurrentLogRange([{s: 0}, {s: 0.01}, {s: 0.1}]);
-out.rangeNone = netCurrentLogRange([{s: 0}]);
+out.rangeZero = netCurrentLogRange([{j: 0}, {j: 0.01}, {j: 0.1}]);
+out.rangeNone = netCurrentLogRange([{j: 0}]);
 out.t = [netCurrentT(0.01, -2, -1), netCurrentT(0.1, -2, -1), netCurrentT(10 ** -1.5, -2, -1), netCurrentT(1e-5, -2, -1), netCurrentT(5, -2, -1)];
 out.pct = [netCurrentPct(0.196), netCurrentPct(0.01), netCurrentPct(0.0031), netCurrentPct(1), netCurrentPct(0.00047)];
-out.ticksDec = netCurrentTicks(-4, -1);
-out.ticksNarrow = netCurrentTicks(Math.log10(0.0031), Math.log10(0.0143));
-out.ticksCrowd = netCurrentTicks(Math.log10(0.00157), Math.log10(0.0143));
-out.spec = netCurrentColorbarSpec(PAY5, {channel: 'ionic', mode: 'hertzian', top: 5}, -2.5, -1);
+out.ticksDec = netCurrentTicks(-4, -1, netCurrentPct);
+out.ticksNarrow = netCurrentTicks(Math.log10(0.0031), Math.log10(0.0143), netCurrentPct);
+out.ticksCrowd = netCurrentTicks(Math.log10(0.00157), Math.log10(0.0143), netCurrentPct);
+out.spec = netCurrentColorbarSpec(PAY5, {channel: 'ionic', mode: 'hertzian', top: 5}, -2.5, -1, '1V');
 const st = {nDrawn: 4, nWrapSkipped: 1, lo: -2.5, hi: -1};
 out.leg = netCurrentLegendHtml(PAY5, {channel: 'ionic', mode: 'hertzian', top: 5, arrows: false}, st);
 const bad = JSON.parse(JSON.stringify(PAY5));
@@ -607,17 +610,17 @@ console.log(JSON.stringify(out));
         res['wrapJs'] == res['wrapSrv'] and sum(res['wrapSrv']) > 0)
     chk(f'④l 주기 경계 고정 예 (x 반폭 초과 · 대각 안 · y 반폭 초과 · z 는 무관) {res["wrapFix"]}', res['wrapFix'] == [True, False, True, False])
     lo, hi = res['range'] or (None, None)
-    ss = [e['s'] for e in payload_all['edges']]
-    chk(f'④m log 범위 = 그 간선들의 log10 (최소 · 최대) ({lo} · {hi})',
-        lo is not None and abs(lo - math.log10(min(ss))) < 1e-12 and abs(hi - math.log10(max(ss))) < 1e-12)
-    chk(f'④n log 범위는 0 전류를 버린다 · 0 만 있으면 null ({res["rangeZero"]} · {res["rangeNone"]})',
+    ss = [e['j'] for e in payload_all['edges'] if e.get('j')]
+    chk(f'④m log 범위 = 그 간선들의 log10 j — 접촉 전류 밀도 (최소 · 최대) ({lo} · {hi})',
+        lo is not None and bool(ss) and abs(lo - math.log10(min(ss))) < 1e-12 and abs(hi - math.log10(max(ss))) < 1e-12)
+    chk(f'④n log 범위는 j = 0 을 버린다 · 0 만 있으면 null ({res["rangeZero"]} · {res["rangeNone"]})',
         res['rangeZero'] is not None and abs(res['rangeZero'][0] + 2) < 1e-12 and abs(res['rangeZero'][1] + 1) < 1e-12
         and res['rangeNone'] is None)
     chk(f'④o 색 · 굵기 축 t = log 정규화 · [0, 1] 로 자른다 {res["t"]}',
         [round(x, 9) for x in res['t']] == [0.0, 1.0, 0.5, 0.0, 1.0])
     chk(f'④p 백분율 표기 (0 꼬리 없음) {res["pct"]}', res['pct'] == ['19.6 %', '1 %', '0.31 %', '100 %', '0.047 %'])
     td = res['ticksDec']
-    chk(f'④q 눈금 — 10 배 간격 · 끝 포함 · 0..1 · 라벨 % ({[t["label"] for t in td]})',
+    chk(f'④q 눈금 배치 — 10 배 간격 · 끝 포함 · 0..1 · 라벨 함수를 넘긴다 (여기 % = netCurrentPct) ({[t["label"] for t in td]})',
         [t['label'] for t in td] == ['0.01 %', '0.1 %', '1 %', '10 %'] and all(0 <= t['p'] <= 1 for t in td)
         and abs(td[0]['p']) < 1e-12 and abs(td[-1]['p'] - 1) < 1e-12)
     tn = res['ticksNarrow']
@@ -630,18 +633,18 @@ console.log(JSON.stringify(out));
         f'({[t["label"] for t in tc]})',
         '0.2 %' not in [t['label'] for t in tc] and all(b - a >= 0.12 - 1e-12 for a, b in zip(ps_, ps_[1:])))
     sp = res['spec'] or {}
-    chk('④s 컬러바 스펙 = jet · 감마 없음 (튜브 색과 같은 사상) · 영문 제목 (채널 · Hertz FULL · 1 V probe) · 눈금',
-        sp.get('map') == 'jet' and not sp.get('gamma') and 'Hertz FULL' in sp.get('title', '') and '1 V probe' in sp.get('title', '')
-        and 'ionic' in sp.get('title', '') and len(sp.get('ticks') or []) >= 2, repr(sp)[:300])
+    chk('④s 컬러바 스펙 = jet · 감마 없음 (튜브 색과 같은 사상) · 영문 제목 (접촉 전류 밀도 A cm⁻² · 채널 · Hertz FULL · @1V probe) · 눈금',
+        sp.get('map') == 'jet' and not sp.get('gamma') and 'Hertz FULL' in sp.get('title', '') and '@1V probe' in sp.get('title', '')
+        and 'Contact current density' in sp.get('title', '') and 'ionic' in sp.get('title', '') and len(sp.get('ticks') or []) >= 2,
+        repr(sp)[:300])
     leg = res['leg']
-    pct5 = res['pct']  # noqa: F841
-    chk('④t 범례 — 채널 (이온 · SE–SE) · Hertz FULL · "1 V 프로브 해 · 상위 5 간선 = 전체 전류의 x %" · 모델 접촉망 풀이 표지',
-        '이온' in leg and 'SE–SE' in leg and 'Hertz FULL' in leg
-        and re.search(r'1 V 프로브 해 · 상위 5 간선 = 전체 전류의 [0-9.]+ %', leg) is not None
+    chk('④t 범례 — 채널 (이온 · SE–SE) · Hertz FULL · 접촉 전류 밀도 (A cm⁻² · @1V · @1C) · 상위 5 접촉 · 옛 몫 문구 없음 · 모델 접촉망 풀이 표지',
+        '이온' in leg and 'SE–SE' in leg and 'Hertz FULL' in leg and '접촉 전류 밀도' in leg and 'A cm⁻²' in leg
+        and '@1V' in leg and '@1C' in leg and '상위 5' in leg and '전체 전류의' not in leg
         and '접촉망 풀이' in leg and '측정 전류' in leg, leg[:400])
-    chk('④u 범례 — 주기 경계 생략 수 · 소산 몫 · 검산 · 게시 σ 같은 해 · 컬러바 · 화살표 · 조작 (채널 · top · 모드)',
-        '주기 경계' in leg and '1 간선' in leg and '소산' in leg and '검산' in leg and '게시 σ 와 같은 해' in leg
-        and 'id="netcur-cbar"' in leg and 'id="netcur-arrows"' in leg
+    chk('④u 범례 — 주기 경계 생략 수 · 소산 몫 · 검산 · 게시 σ 같은 해 · 컬러바 둘 (@1V · @1C) · 화살표 · 조작 (채널 · top · 모드)',
+        '주기 경계' in leg and '1 접촉' in leg and '소산' in leg and '검산' in leg and '게시 σ 와 같은 해' in leg
+        and 'id="netcur-cbar-1v"' in leg and 'id="netcur-cbar-1c"' in leg and 'id="netcur-arrows"' in leg
         and 'id="netcur-channel"' in leg and 'id="netcur-top"' in leg and 'id="netcur-mode"' in leg)
     lb = res['legBad']
     chk('④v 게시 σ 다름 · 세대 다름 → ⚠ 두 줄 · 서버 문자열은 이스케이프', '⚠ 게시 σ 와 다른 해' in lb and '⚠ 덤프 세대' in lb

@@ -200,6 +200,8 @@ run 'webapp: force_chain_view'    python3 webapp/test_force_chain_view.py   # 10
 run 'webapp: viewer_coordination' python3 webapp/test_viewer_coordination.py  # 10-06 3D 뷰어 배위수 보기 — 입자별 CN 평균 = core 함수 = 보고값 (real_14 정확히) · 캐시 스키마 12 (live · archive) · 범례 PC/SC
 run 'webapp: viewer_am_contacts'  python3 webapp/test_viewer_am_contacts.py   # 10-06 AM 접촉 확대 — /am-contacts (live · archive) · 최소영상 · 합집합 = 생산 함수 (real_14) · cap 각 · 4× 투명 PNG
 run 'webapp: network_current_view' python3 webapp/test_network_current_view.py  # 10-07 ⚡ 전류 흐름 (DEM 뷰어) — --dump-raw-dir 비트 동일 · 한 번 덤프 도구 (게시 파일 무변경 · 세대 glob) · /network-current (상위 N · 단면 보존 · Tellegen) · 뷰어 함수 (node)
+run 'webapp: net_current_density' python3 webapp/test_net_current_density.py  # 10-07 #17 접촉 전류 밀도 (A cm⁻²) — 손 계산 망 (j = I σ₀ 10⁴ / A) · 덤프 |I| 항등식 · σ₀ 출처 (증서) · ⟨J⟩_1V = 게시 σ × 10 / T · @1C = Q_areal (등급 엔진) × 1 h⁻¹ · 컬러바 @1V · @1C · 옛 몫 표시 없음
+run 'webapp: viewer_load_view'  python3 webapp/test_viewer_load_view.py   # 10-07 #11 AM 만 칠하기 (LW = 정본 calc_love_weber_stress · 최대 AM–AM 힘 · 벽 표지) · WEB-06 최대 접촉 압력 (압축만 · 이름 · 툴팁) · real14 (WEB-06 점검 셈 · LW 2.737) · 발사 뒤 app.py 패치 적용 · 실행
 run 'webapp: je_definition_label' python3 webapp/test_je_definition_label.py  # 10-03 RINT-03 — 입자별 je·jb 정의 표지 (옛 payload = 옛 정의 경고 · A/B 불일치)
 run 'webapp: rint_scope_labels'   python3 webapp/test_rint_scope_labels.py  # 10-03 RINT-04 · 05 · 17 · 18 — Joule bulk-only · 반응 솔브 r-ON 꺼짐 · 상/계면 · 단자 R_int
 run 'webapp: tau_labels'          python3 webapp/test_tau_labels.py         # 10-04 τ 2단계 ① TAU-01 · 02 · 21 — √ 행 COMSOL/EIS 표기 제거 · tau2 행 · physics 빈칸 · 정오표
