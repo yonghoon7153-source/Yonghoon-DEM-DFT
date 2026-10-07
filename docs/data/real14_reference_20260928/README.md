@@ -61,3 +61,5 @@ sha256sum input_real_14.liggghts mesh_2060000.stl            # 위 표와 같아
 grep vertex mesh_2060000.stl | awk '{print $4}' | sort -u     # 0.0302845 한 줄
 ```
 atom · contact 덤프의 사실 (원자 수 · 판 관통 · 바닥 누출 · CSV 대조) 은 그 두 파일이 있어야 재현된다 (⬜ 커밋 여부).
+
+- ⚠ **체크포인트 (.bin) 없음** (10-07 확인 · WSL · ibb `find … restart_real_14` 둘 다 없음) — 이 폴더의 네 파일 (덱 · 메시 · atom · contact 2,060,000) 이 real14 의 전부다 · 1저자에게 다시 묻지 않는다 · 체크포인트가 필요한 분기 실험은 ps45 7:3 (ibb `restart_compress_3100000` 등) 으로.

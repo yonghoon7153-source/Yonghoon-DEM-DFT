@@ -8965,6 +8965,20 @@
         "docs/data/ps45_plane_load_20261007/real14_validation/plane_load.json (scripts/plane_load_share.py · real14 커밋 덤프 · 가운데 단면 263.17 MPa · AM–AM 74.0 % · 크기 합 ÷ 하중 12.19)",
         "scripts/plane_load_share.py --selftest (T2 평행 기둥: 단면 몫 75/25 ↔ 크기 합 몫 12/21)"
       ]
+    },
+    {
+      "id": "DEMP-01",
+      "severity": "P1",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "1저자 질문 (10-07 \"300 MPa 에서 165 MPa 로 빠지는 건 당연한가\") → 덱 판독 + 1저자 ibb 실측 (ps45 7:3 압축 중 atom 덤프 · awk)",
+      "opened_in": "docs/data/ps45_plane_load_20261007/README.md",
+      "title": "DEM 압축 단계의 전역 감쇠 (fix damp all viscous 0.5 · 이완 단계는 1e-5) 가 판 반력 '300 MPa' 의 큰 몫을 차지한다 — ps45 7:3 압축 중 (step ≈ 3,120,000 · 입자 160,420) 감쇠 저항 −0.5·Σv_z = 434.3 N = 목표 판 힘 750 N (덱 0.30 MPa × 0.0025 m²) 의 57.9 % · 판이 멈추면 사라져 정적 망 압력은 이완 뒤 165 MPa · 저항은 입자 수 × 속도에 비례하므로 두꺼운 침대일수록 '300 MPa 도달' 의 실제 정적 압축 압력이 낮다 (real14 3.3 만 입자 어림 11 % ↔ 이완 263 MPa)",
+      "note": "자리: dem_scripts 덱 23 개 (ps_sweep_6mah_20260914 5 · oat_sweep 13 · case09 · particulate12 · thin6 · thin9 …) + heckel/input_SE_heckel_{100,200,300,400} (scripts/make_heckel_inputs.py:127) — PHASE 2 STABILIZE 에서 viscous 0.5 를 켜고 PHASE 3 압축 내내 유지 · 판 정지 판정 = abs(f_top_mesh[3]) / 면적 ≥ 목표 (감쇠 저항 포함).  실측 (1저자 ibb 10-07): ~/dem_test/ps45/ps_7_3_r45/post_ps_7_3_r45/atom_312*.liggghts (열 id type x y z radius vx vy vz …) · N 160420 · 감쇠 저항 434.3 N (57.9 %).  영향 (추정 · 확인 전): ① 공칭 압축 압력 300 MPa 의 정적 의미가 침대 두께에 따라 다르다 → 두께 · 면적용량이 다른 침대 사이 구조 (공극률 등) 비교에 프로토콜 교란 가능 ② 보정 (E_SE 1.35 · 얇은 침대 2 mAh 기준) 과 Heckel 다압력 (같은 감쇠) 에도 같은 성분 ③ LHS 194 덱이 같은 감쇠를 쓰는지 = 확인 필요 (리포에 LHS 덱 원본 없음).  같은 침대 안 조성 비교는 같은 두께라 대체로 공통 (ps45 다섯 조성 입자 수 159–163 k).  처방 후보 (1저자 결정 전): restart_compress_3100000 (ibb · 압축 중 마지막 체크포인트) 에서 (가) 원래 (나) 서보 300 MPa 유지 (다) 압축 감쇠 낮춤 세 갈래로 공극률 · 두께 · 하중 지지 비율 차이를 잰다.",
+      "evidence_tests": [
+        "docs/data/ps45_plane_load_20261007/ibb_damping_drag_20261007.txt (1저자 ibb 화면 그대로 · N 160420 · 감쇠 저항 434.3 N · 57.9 %)",
+        "dem_scripts/ps_sweep_6mah_20260914/in.ps_7_3_r45.liggghts (PHASE 2 viscous 0.5 · PHASE 4 1e-5 · target_press 0.30)"
+      ]
     }
   ]
 }

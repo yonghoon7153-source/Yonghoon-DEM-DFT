@@ -1,0 +1,8 @@
+# 1저자 ibb 화면 (10-07 · 붙여 넣은 그대로) — ps45 7:3 압축 중 atom 덤프의 감쇠 저항 (DEMP-01)
+# 덱: dem_scripts/ps_sweep_6mah_20260914/in.ps_7_3_r45.liggghts — PHASE 2–3 `fix damp all viscous 0.5` (F = −0.5 v · 덱 단위) · 목표 0.30 (덱 MPa) × 0.0025 m² = 750 N
+(base) [yonghoon@ibb-master post_ps_7_3_r45]$ f=$(ls atom_312* 2>/dev/null | tail -1); grep -m1 "ITEM: ATOMS" $f
+ITEM: ATOMS id type x y z radius vx vy vz c_strs[1] c_strs[2] c_strs[3] c_ke
+(base) [yonghoon@ibb-master post_ps_7_3_r45]$ awk 'f{s+=$9; n++} /ITEM: ATOMS/{f=1} END{printf "N=%d  감쇠 저항=%.4g N  (300 MPa 대비 %.1f %%)\n", n, -0.5*s, -0.5*s/750*100}' $f
+N=160420  감쇠 저항=434.3 N  (300 MPa 대비 57.9 %)
+# 같이 받은 체크포인트 목록 (~/dem_test/ps45/ps_7_3_r45/restart_ps_7_3_r45/): restart_compress_3000000 · 3050000 · 3100000 · 3150000 · 3200000 .bin
+# (압축 끝 = step 3,125,000 → 3,100,000 = 압축 중 마지막 · 3,150,000 · 3,200,000 = 이완 중 — restart 명령이 이완 단계에도 켜져 있음)
