@@ -1,0 +1,236 @@
+# make_branch_decks.py 가 만든다 — arm 덱 사이의 차이 (unified diff · 머리 주석 줄 제외)
+--- in.branch_A.liggghts
++++ in.branch_B.liggghts
+@@ -1,3 +1,3 @@
+ # ============================================================
+-# ps_7_3_r45 DEMP-01 감쇠 가지 실험 — arm A
++# ps_7_3_r45 DEMP-01 감쇠 가지 실험 — arm B
+ # ============================================================
+@@ -109,3 +109,3 @@
+ # >>> block guard_init — 가지 기준값 · 기록 (r8 에 없음 · 읽기 · 판정 전용 · 역학 불변)
+-variable br_arm string A
++variable br_arm string B
+ variable gamma_comp string 0.5
+@@ -197,16 +197,88 @@
+ 
+-# >>> block relax — r8 PHASE 4 그대로 (판 고정 · viscous 1e-5) · 경로 · 접촉 간격만 표지
+-print "====== PHASE 4: RELAXATION ======"
++# >>> block servo_switch — 판을 서보로 바꾼다 (r8 에 없음 · arm B)
++variable servo_kp index 30
++variable servo_vmax index 0.01
++print "====== PHASE 4B: SERVO HOLD (target ${F_target} N · vel_max ${servo_vmax} · kp ${servo_kp}) ======"
++undump dmp_mesh
++unfix zwall_top
++unfix top_mesh
++print "solid plate_servo" file ${out}/plate_servo_stop.stl screen no
++print "facet normal 0 0 -1" append ${out}/plate_servo_stop.stl screen no
++print "outer loop" append ${out}/plate_servo_stop.stl screen no
++print "vertex 0.0 0.0 ${br_pz_S}" append ${out}/plate_servo_stop.stl screen no
++print "vertex 0.05 0.05 ${br_pz_S}" append ${out}/plate_servo_stop.stl screen no
++print "vertex 0.05 0.0 ${br_pz_S}" append ${out}/plate_servo_stop.stl screen no
++print "endloop" append ${out}/plate_servo_stop.stl screen no
++print "endfacet" append ${out}/plate_servo_stop.stl screen no
++print "facet normal 0 0 -1" append ${out}/plate_servo_stop.stl screen no
++print "outer loop" append ${out}/plate_servo_stop.stl screen no
++print "vertex 0.0 0.0 ${br_pz_S}" append ${out}/plate_servo_stop.stl screen no
++print "vertex 0.0 0.05 ${br_pz_S}" append ${out}/plate_servo_stop.stl screen no
++print "vertex 0.05 0.05 ${br_pz_S}" append ${out}/plate_servo_stop.stl screen no
++print "endloop" append ${out}/plate_servo_stop.stl screen no
++print "endfacet" append ${out}/plate_servo_stop.stl screen no
++print "endsolid plate_servo" append ${out}/plate_servo_stop.stl screen no
++fix plate_servo all mesh/surface/stress/servo file ${out}/plate_servo_stop.stl type 1 scale 1.0 com 0.025 0.025 ${br_pz_S} ctrlPV force axis 0.0 0.0 -1.0 target_val ${F_target} vel_max ${servo_vmax} kp ${servo_kp}
++fix zwall_top all wall/gran model hooke/hysteresis tangential history rolling_friction cdt mesh n_meshes 1 meshes plate_servo
++fix_modify zwall_top energy yes
++dump dmp_mesh all mesh/stl 5000 ${out}/post_hold/mesh_*.stl plate_servo
+ unfix damp
+ fix damp all viscous 1.0e-5
+-dump dmp_contact all local 10000 ${out}/post/contact_*.liggghts &
+-    c_cpl[1] c_cpl[2] c_cpl[3] c_cpl[4] c_cpl[5] c_cpl[6] c_cpl[7] c_cpl[8] &
+-    c_cpl[9] c_cpl[10] c_cpl[11] c_cpl[12] c_cpl[13] c_cpl[14] c_cpl[15] c_cpl[16] &
+-    c_cpl[17] c_cpl[18] c_cpl[19] c_cpl[20] c_cpl[21] c_cpl[22] c_cpl[23] c_cpl[24] &
+-    c_cpl[25] c_cpl[26]
+-
+-run 100000
+-# <<< block relax
+-
+-# >>> block end_snap_top_mesh — 끝 상태 (원자 · 접촉 · 판) · run 0 · restart
++variable pressMPa equal abs(f_plate_servo[3])/0.0025/1000000
++undump dmp_atom
++dump dmp_atom all custom 50000 ${out}/post_hold/atom_*.liggghts id type x y z radius vx vy vz c_strs[1] c_strs[2] c_strs[3] c_ke
++restart 100000 ${out}/restart/restart_hold_*.bin
++# <<< block servo_switch
++
++# >>> block hold — 서보 유지 고리 (덩어리마다 가드 · 수렴 판정 · 기록)
++variable hold_chunk index 5000
++variable hold_max index 300
++variable hold_win equal 10
++variable hold_min equal 10
++variable ke_abs_win equal 1.0
++variable ke_abs_hold equal 1.0e-2
++variable ke_floor_hold equal 1.0e-3
++variable F_max equal 2*${F_target}
++variable conv_ferr equal 0.01
++variable conv_dz equal 5.0e-6
++variable conv_need equal 4
++variable hold_n equal 0
++variable conv_n equal 0
++variable pz_prev equal ${br_pz_S}
++variable hold_status string RUNNING
++print "BRANCH_HOLD_PARAMS target_N=${F_target} vel_max=${servo_vmax} kp=${servo_kp} chunk=${hold_chunk} max_chunks=${hold_max} conv_ferr=${conv_ferr} conv_dz=${conv_dz} conv_need=${conv_need}"
++label loop_hold
++    run ${hold_chunk}
++    variable hold_n equal ${hold_n}+1
++    variable g_step equal step
++    variable g_atoms equal atoms
++    variable g_ke equal ke
++    variable g_F equal f_plate_servo[3]
++    variable g_pz equal f_plate_servo[12]
++    variable current_press equal "abs(f_plate_servo[3]) / 0.0025 / 1000000"
++    region rg_above delete
++    region rg_above block INF INF INF INF ${g_pz} INF units box
++    variable g_leakd equal ${g_leak}-${br_leak0}
++    variable g_dz equal abs(${g_pz}-${pz_prev})
++    variable g_ferr equal abs(${g_F}/${F_target}-1.0)
++    variable g_kelim equal 10*${ke_prev}
++    print "Hold ${hold_n}: step ${g_step} F ${g_F} N (target ${F_target}) plate_z ${g_pz} dz ${g_dz} KE ${g_ke}"
++    print "${g_step},hold,${g_pz},${current_press},${g_F},${g_ke},${g_atoms},${g_leakd}" append ${out}/branch_trace.csv screen no
++    if "${g_atoms} < ${g_amin}" then "variable g_reason string atoms_lost" "jump SELF guard_stop"
++    if "${g_leakd} > 100" then "variable g_reason string leak" "jump SELF guard_stop"
++    if "${g_ke} > ${ke_abs_win}" then "variable g_reason string ke_abs" "jump SELF guard_stop"
++    if "(${hold_n} > ${hold_win}) && (${g_ke} > ${ke_abs_hold})" then "variable g_reason string ke_abs_late" "jump SELF guard_stop"
++    if "(${hold_n} > ${hold_win}) && (${g_ke} > ${g_kelim}) && (${g_ke} > ${ke_floor_hold})" then "variable g_reason string ke_jump" "jump SELF guard_stop"
++    if "${g_F} > ${F_max}" then "variable g_reason string servo_overshoot" "jump SELF guard_stop"
++    if "(${g_ferr} <= ${conv_ferr}) && (${g_dz} <= ${conv_dz})" then "variable conv_n equal ${conv_n}+1" else "variable conv_n equal 0"
++    variable pz_prev equal ${g_pz}
++    variable ke_prev equal ${g_ke}
++    if "(${conv_n} >= ${conv_need}) && (${hold_n} >= ${hold_min})" then "variable hold_status string CONVERGED" "jump SELF hold_done"
++    if "${hold_n} >= ${hold_max}" then "variable hold_status string BUDGET_EXHAUSTED" "jump SELF hold_done"
++    jump SELF loop_hold
++label hold_done
++print "BRANCH_HOLD_DONE arm=${br_arm} status=${hold_status} chunks=${hold_n} step=${g_step} F=${g_F} plate_z=${g_pz}"
++# <<< block hold
++
++# >>> block end_snap_plate_servo — 끝 상태 (원자 · 접촉 · 판) · run 0 · restart
+ variable g_step equal step
+@@ -214,5 +286,5 @@
+ variable g_ke equal ke
+-variable g_F equal abs(f_top_mesh[3])
+-variable current_press equal "abs(f_top_mesh[3]) / 0.0025 / 1000000"
+-variable g_pz equal ${br_pz_S}
++variable g_F equal abs(f_plate_servo[3])
++variable current_press equal "abs(f_plate_servo[3]) / 0.0025 / 1000000"
++variable g_pz equal f_plate_servo[12]
+ region rg_above delete
+@@ -235,3 +307,3 @@
+ dump_modify dmp_contact_end first yes
+-dump dmp_mesh_end all mesh/stl 5000 ${out}/end/mesh_*.stl top_mesh
++dump dmp_mesh_end all mesh/stl 5000 ${out}/end/mesh_*.stl plate_servo
+ dump_modify dmp_mesh_end first yes
+@@ -242,5 +314,5 @@
+ write_restart ${out}/restart/restart_end_${br_E}.bin
+-# <<< block end_snap_top_mesh
+-
+-# >>> block summary_relax — 요약 (key=value · run_branch.sh · analyze_branch.py 가 읽는다)
++# <<< block end_snap_plate_servo
++
++# >>> block summary_servo — 요약 (key=value · run_branch.sh · analyze_branch.py 가 읽는다)
+ print "arm=${br_arm}" file ${summary_file} screen no
+@@ -255,3 +327,7 @@
+ print "stop_force_N=${br_F_S}" append ${summary_file} screen no
+-print "relax_steps=100000" append ${summary_file} screen no
++print "hold_status=${hold_status}" append ${summary_file} screen no
++print "hold_chunks=${hold_n}" append ${summary_file} screen no
++print "hold_chunk_steps=${hold_chunk}" append ${summary_file} screen no
++print "servo_kp=${servo_kp}" append ${summary_file} screen no
++print "servo_vmax=${servo_vmax}" append ${summary_file} screen no
+ print "end_step=${br_E}" append ${summary_file} screen no
+@@ -266,3 +342,3 @@
+ print "BRANCH_DONE arm=${br_arm} stop_step=${br_S} stop_thickness_um=${br_h_S} end_step=${br_E} end_thickness_um=${br_h_E} end_press_deckMPa=${br_P_E}"
+-# <<< block summary_relax
++# <<< block summary_servo
+ 
+
+--- in.branch_A.liggghts
++++ in.branch_C1.liggghts
+@@ -1,3 +1,3 @@
+ # ============================================================
+-# ps_7_3_r45 DEMP-01 감쇠 가지 실험 — arm A
++# ps_7_3_r45 DEMP-01 감쇠 가지 실험 — arm C1
+ # ============================================================
+@@ -89,3 +89,3 @@
+ fix gravi all gravity 9.81 vector 0.0 0.0 -1.0
+-fix damp all viscous 0.5
++fix damp all viscous 0.15
+ 
+@@ -101,3 +101,3 @@
+ print "====== PHASE 3: COMPRESSION (Speed 0.01) ======"
+-dump dmp_atom all custom 5000 ${out}/post/atom_*.liggghts id type x y z radius vx vy vz c_strs[1] c_strs[2] c_strs[3] c_ke
++dump dmp_atom all custom 50000 ${out}/post/atom_*.liggghts id type x y z radius vx vy vz c_strs[1] c_strs[2] c_strs[3] c_ke
+ fix_modify      zwall_top energy yes
+@@ -107,6 +107,6 @@
+ 
+-restart 50000 ${out}/restart/restart_compress_*.bin
++restart 100000 ${out}/restart/restart_compress_*.bin
+ # >>> block guard_init — 가지 기준값 · 기록 (r8 에 없음 · 읽기 · 판정 전용 · 역학 불변)
+-variable br_arm string A
+-variable gamma_comp string 0.5
++variable br_arm string C1
++variable gamma_comp string 0.15
+ variable summary_file string ${out}/branch_summary.txt
+@@ -129,6 +129,6 @@
+ variable ke_floor_comp equal 10*${ke_ref}
+-variable comp_win equal 0
++variable comp_win equal 8
+ variable ke_abs_comp_win equal 0.1
+ variable comp_n equal 0
+-variable comp_max equal 40
++variable comp_max equal 400
+ variable g_reason string none
+@@ -201,3 +201,3 @@
+ fix damp all viscous 1.0e-5
+-dump dmp_contact all local 10000 ${out}/post/contact_*.liggghts &
++dump dmp_contact all local 50000 ${out}/post/contact_*.liggghts &
+     c_cpl[1] c_cpl[2] c_cpl[3] c_cpl[4] c_cpl[5] c_cpl[6] c_cpl[7] c_cpl[8] &
+
+--- in.branch_A.liggghts
++++ in.branch_C2.liggghts
+@@ -1,3 +1,3 @@
+ # ============================================================
+-# ps_7_3_r45 DEMP-01 감쇠 가지 실험 — arm A
++# ps_7_3_r45 DEMP-01 감쇠 가지 실험 — arm C2
+ # ============================================================
+@@ -89,3 +89,3 @@
+ fix gravi all gravity 9.81 vector 0.0 0.0 -1.0
+-fix damp all viscous 0.5
++fix damp all viscous 0.05
+ 
+@@ -101,3 +101,3 @@
+ print "====== PHASE 3: COMPRESSION (Speed 0.01) ======"
+-dump dmp_atom all custom 5000 ${out}/post/atom_*.liggghts id type x y z radius vx vy vz c_strs[1] c_strs[2] c_strs[3] c_ke
++dump dmp_atom all custom 50000 ${out}/post/atom_*.liggghts id type x y z radius vx vy vz c_strs[1] c_strs[2] c_strs[3] c_ke
+ fix_modify      zwall_top energy yes
+@@ -107,6 +107,6 @@
+ 
+-restart 50000 ${out}/restart/restart_compress_*.bin
++restart 100000 ${out}/restart/restart_compress_*.bin
+ # >>> block guard_init — 가지 기준값 · 기록 (r8 에 없음 · 읽기 · 판정 전용 · 역학 불변)
+-variable br_arm string A
+-variable gamma_comp string 0.5
++variable br_arm string C2
++variable gamma_comp string 0.05
+ variable summary_file string ${out}/branch_summary.txt
+@@ -129,6 +129,6 @@
+ variable ke_floor_comp equal 10*${ke_ref}
+-variable comp_win equal 0
++variable comp_win equal 8
+ variable ke_abs_comp_win equal 0.1
+ variable comp_n equal 0
+-variable comp_max equal 40
++variable comp_max equal 400
+ variable g_reason string none
+@@ -201,3 +201,3 @@
+ fix damp all viscous 1.0e-5
+-dump dmp_contact all local 10000 ${out}/post/contact_*.liggghts &
++dump dmp_contact all local 50000 ${out}/post/contact_*.liggghts &
+     c_cpl[1] c_cpl[2] c_cpl[3] c_cpl[4] c_cpl[5] c_cpl[6] c_cpl[7] c_cpl[8] &
+

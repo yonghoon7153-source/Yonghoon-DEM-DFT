@@ -1,0 +1,290 @@
+# ============================================================
+# ps_7_3_r45 DEMP-01 감쇠 가지 실험 — arm A
+#   생성: make_branch_decks.py (손으로 고치지 말 것 — 생성기를 고치고 다시 만든다 · SHA256SUMS)
+#   출발: read_restart ${ckpt} = restart_compress_3100000.bin (ibb 원 런 · 압축 중 마지막 체크포인트 · step 3100000)
+#         sha256 82234bea543ae369043f54d4379c6451cdab5a404213c0ecf0a698638bf4b3ee · 80,807,696 B
+#   꼴  : r8 재개 덱 (input_ps_7_3_r45_r8.liggghts) 그대로 + 표지 블록 (# >>> block … / # <<< block …) = r8 에 없는 줄
+#   변수: run_branch.sh 가 -var 로 준다 — ckpt (체크포인트) · out (이 런의 새 폴더) · plate_stl (판 STL · 자료는 restart 에서 온다)
+#   arm A (선택 · 재현) = 원 프로토콜 그대로: 판 0.01 · viscous 0.5 · 5000 step 마다 압력 판정 0.30 (덱 MPa) → 판 고정 · viscous 1e-5 ·
+#        100,000 step 이완.  r8 와 다른 줄 = 경로 (-var) · 가드 · 기록 · 멈춤/끝 스냅숏 (run 0) — 역학 줄은 r8 와 같다.
+# ============================================================
+
+# --- 1. General Settings ---
+atom_style      granular
+atom_modify     map array sort 0 0
+boundary        p p f
+newton          off
+soft_particles  yes
+communicate     single vel yes
+units           si
+
+# --- 2. Variables & Domain ---
+variable target_press equal 0.30          # 300 MPa × 0.001
+variable r_AM_P  equal 4.5e-3            # AM_P r=4.5μm → Sim 4.5mm
+variable r_AM_S  equal 2.0e-3            # AM_S r=2μm → Sim 2mm
+variable r_SE    equal 0.5e-3            # SE r=0.5μm → Sim 0.5mm
+variable dt      equal 1.0e-6
+variable plate_margin equal 0.003
+timestep        ${dt}
+
+# RVE: 50×50 μm → Sim 0.05×0.05 m
+processors * * 1
+
+read_restart    ${ckpt}
+
+neighbor        0.002 bin
+neigh_modify    delay 0 check yes
+
+# --- 3. Material Properties (Type 1:AM_P, 2:AM_S, 3:SE) ---
+# AM: E=140 GPa → Sim 1.4e8 Pa, ν=0.25
+# SE: E=1.35 GPa → Sim 0.135e7 Pa (소성변형 보정), ν=0.30
+fix m1 all property/global youngsModulus peratomtype 1.4e8 1.4e8 0.135e7
+fix m2 all property/global poissonsRatio peratomtype 0.25 0.25 0.30
+
+fix m3 all property/global coefficientRestitution peratomtypepair 3 &
+    0.3 0.3 0.3 &
+    0.3 0.3 0.3 &
+    0.3 0.3 0.3
+
+fix m4 all property/global coefficientFriction peratomtypepair 3 &
+    0.5 0.5 0.5 &
+    0.5 0.5 0.5 &
+    0.5 0.5 0.5
+
+fix m5 all property/global coefficientRollingFriction peratomtypepair 3 &
+    0.2 0.2 0.1 &
+    0.2 0.2 0.1 &
+    0.1 0.1 0.1
+
+fix m6 all property/global coefficientMaxElasticStiffness peratomtypepair 3 &
+    1.5 1.5 3.0 &
+    1.5 1.5 3.0 &
+    3.0 3.0 5.0
+
+fix m7 all property/global coefficientAdhesionStiffness peratomtypepair 3 &
+    1.0e5 1.0e5 2.0e5 &
+    1.0e5 1.0e5 2.0e5 &
+    2.0e5 2.0e5 1.0e6
+
+fix m8 all property/global coefficientPlasticityDepth peratomtypepair 3 &
+    0.05 0.05 0.01 &
+    0.05 0.05 0.01 &
+    0.01 0.01 0.005
+
+fix m9 all property/global characteristicVelocity scalar 2.0
+
+# --- 4. Contact Model ---
+pair_style      gran model hooke/hysteresis tangential history rolling_friction cdt
+pair_coeff      * *
+
+compute strs all stress/atom
+compute ke   all ke/atom
+compute cpl all pair/gran/local pos id force force_normal force_tangential torque contactArea delta contactPoint
+
+# --- 5. Wall (Bottom) ---
+fix zwall_bot all wall/gran model hooke/hysteresis tangential history rolling_friction cdt primitive type 1 zplane 0.0
+
+# --- 6. Templates & Distribution --- (r8 와 같이 생략: compress 체크포인트에는 type 1 · 2 · 3 원자가 다 있다)
+
+# --- 8. Output ---
+# (r8 의 `shell mkdir -p post_ps_7_3_r45` 는 뺐다 — 출력 폴더는 run_branch.sh 가 만든다 · LIGGGHTS shell mkdir 는 -p 도 폴더 이름으로 만든다)
+thermo_style    custom step atoms ke cpu
+thermo          1000
+
+# --- 9. 압축 단계 fix 재선언 (r8 그대로 · r8 주석의 "Phase 1: Settling" 은 원 덱에서 따온 이름일 뿐) ---
+fix integr all nve/sphere
+fix gravi all gravity 9.81 vector 0.0 0.0 -1.0
+fix damp all viscous 0.5
+
+fix top_mesh all mesh/surface/stress file ${plate_stl} type 1 scale 1.0 reference_point 0 0 0
+fix zwall_top all wall/gran model hooke/hysteresis tangential history rolling_friction cdt mesh n_meshes 1 meshes top_mesh
+
+dump dmp_mesh all mesh/stl 5000 ${out}/post/mesh_*.stl top_mesh
+
+variable pressMPa equal abs(f_top_mesh[3])/0.0025/1000000
+thermo_style    custom step atoms ke cpu v_pressMPa
+thermo 1000
+
+print "====== PHASE 3: COMPRESSION (Speed 0.01) ======"
+dump dmp_atom all custom 5000 ${out}/post/atom_*.liggghts id type x y z radius vx vy vz c_strs[1] c_strs[2] c_strs[3] c_ke
+fix_modify      zwall_top energy yes
+
+variable press_speed equal 0.01
+fix move_press all move/mesh mesh top_mesh linear 0.0 0.0 -${press_speed}
+
+restart 50000 ${out}/restart/restart_compress_*.bin
+# >>> block guard_init — 가지 기준값 · 기록 (r8 에 없음 · 읽기 · 판정 전용 · 역학 불변)
+variable br_arm string A
+variable gamma_comp string 0.5
+variable summary_file string ${out}/branch_summary.txt
+# equal 변수는 쓸 때마다 다시 계산된다 — 가지 시작 값은 즉시 치환으로 숫자를 박아 얼린다 (br_step0 · br_n0v)
+variable br_step_now equal step
+variable br_step0 equal ${br_step_now}
+if "${br_step0} != 3100000" then "print 'BRANCH_ABORT step=${br_step0} — 기대 3100000 (체크포인트가 다르다)'" "quit"
+variable br_atoms_now equal atoms
+variable br_n0v equal ${br_atoms_now}
+variable g_amin equal ${br_n0v}-50
+variable pz_branch equal 0.111302
+variable F_target equal 750.0
+region rg_below block INF INF INF INF INF 0.0 units box
+region rg_above block INF INF INF INF ${pz_branch} INF units box
+variable g_leak equal count(all,rg_below)+count(all,rg_above)
+variable br_leak0 equal ${g_leak}
+variable ke_ref equal 1.695918e-05
+variable ke_prev equal ${ke_ref}
+variable ke_abs_comp equal 100*${ke_ref}
+variable ke_floor_comp equal 10*${ke_ref}
+variable comp_win equal 0
+variable ke_abs_comp_win equal 0.1
+variable comp_n equal 0
+variable comp_max equal 40
+variable g_reason string none
+variable g_step equal step
+variable g_atoms equal atoms
+variable g_pz equal ${pz_branch}
+variable g_F equal 0.0
+variable g_ke equal ${ke_ref}
+variable g_leakd equal 0
+variable current_press equal 0.0
+print "BRANCH_START arm=${br_arm} step=${br_step0} atoms=${br_n0v} leak0=${br_leak0} gamma_comp=${gamma_comp} plate_z_deck=${pz_branch}"
+print "step,phase,plate_z_deck,press_deckMPa,force_N,ke_J,atoms,leak_delta" file ${out}/branch_trace.csv screen no
+# <<< block guard_init
+
+# >>> block comp_loop — r8 압축 고리 그대로 (run 5000 · 압력 판정 0.30) + 덩어리마다 가드 · 기록 (run 사이 · 역학 불변)
+label loop_press
+    run 5000
+    variable current_press equal "abs(f_top_mesh[3]) / 0.0025 / 1000000"
+    print "Current Pressure: ${current_press} MPa (Target: ${target_press})"
+    variable comp_n equal ${comp_n}+1
+    variable g_step equal step
+    variable g_atoms equal atoms
+    variable g_ke equal ke
+    variable g_F equal abs(f_top_mesh[3])
+    variable g_pz equal ${pz_branch}-${press_speed}*${dt}*(${g_step}-${br_step0})
+    region rg_above delete
+    region rg_above block INF INF INF INF ${g_pz} INF units box
+    variable g_leakd equal ${g_leak}-${br_leak0}
+    variable g_kelim equal 10*${ke_prev}
+    print "${g_step},comp,${g_pz},${current_press},${g_F},${g_ke},${g_atoms},${g_leakd}" append ${out}/branch_trace.csv screen no
+    if "${g_atoms} < ${g_amin}" then "variable g_reason string atoms_lost" "jump SELF guard_stop"
+    if "${g_leakd} > 100" then "variable g_reason string leak" "jump SELF guard_stop"
+    if "(${comp_n} <= ${comp_win}) && (${g_ke} > ${ke_abs_comp_win})" then "variable g_reason string ke_abs_win" "jump SELF guard_stop"
+    if "(${comp_n} > ${comp_win}) && (${g_ke} > ${ke_abs_comp})" then "variable g_reason string ke_abs" "jump SELF guard_stop"
+    if "(${comp_n} > ${comp_win}) && (${g_ke} > ${g_kelim}) && (${g_ke} > ${ke_floor_comp})" then "variable g_reason string ke_jump" "jump SELF guard_stop"
+    if "${comp_n} >= ${comp_max}" then "variable g_reason string comp_budget" "jump SELF guard_stop"
+    variable ke_prev equal ${g_ke}
+    if "${current_press} < ${target_press}" then "jump SELF loop_press"
+# <<< block comp_loop
+
+# >>> block stop_snap — 멈춘 step 의 상태 (원자 · 접촉 · 판) · run 0 = setup 만 (적분 없음 · 역학 불변) · restart
+unfix move_press
+variable br_S equal ${g_step}
+variable br_pz_S equal ${g_pz}
+variable br_P_S equal ${current_press}
+variable br_F_S equal ${g_F}
+variable br_h_S equal ${br_pz_S}*1000
+print "BRANCH_STOP arm=${br_arm} step=${br_S} plate_z_deck=${br_pz_S} thickness_um=${br_h_S} press_deckMPa=${br_P_S} force_N=${br_F_S}"
+print "${br_S},stop,${br_pz_S},${br_P_S},${br_F_S},${g_ke},${g_atoms},${g_leakd}" append ${out}/branch_trace.csv screen no
+dump dmp_atom_stop all custom 5000 ${out}/stop/atom_*.liggghts id type x y z radius vx vy vz c_strs[1] c_strs[2] c_strs[3] c_ke
+dump_modify dmp_atom_stop first yes
+dump dmp_contact_stop all local 5000 ${out}/stop/contact_*.liggghts &
+    c_cpl[1] c_cpl[2] c_cpl[3] c_cpl[4] c_cpl[5] c_cpl[6] c_cpl[7] c_cpl[8] &
+    c_cpl[9] c_cpl[10] c_cpl[11] c_cpl[12] c_cpl[13] c_cpl[14] c_cpl[15] c_cpl[16] &
+    c_cpl[17] c_cpl[18] c_cpl[19] c_cpl[20] c_cpl[21] c_cpl[22] c_cpl[23] c_cpl[24] &
+    c_cpl[25] c_cpl[26]
+dump_modify dmp_contact_stop first yes
+dump dmp_mesh_stop all mesh/stl 5000 ${out}/stop/mesh_*.stl top_mesh
+dump_modify dmp_mesh_stop first yes
+run 0
+undump dmp_atom_stop
+undump dmp_contact_stop
+undump dmp_mesh_stop
+write_restart ${out}/restart/restart_stop_${br_S}.bin
+# <<< block stop_snap
+
+# >>> block relax — r8 PHASE 4 그대로 (판 고정 · viscous 1e-5) · 경로 · 접촉 간격만 표지
+print "====== PHASE 4: RELAXATION ======"
+unfix damp
+fix damp all viscous 1.0e-5
+dump dmp_contact all local 10000 ${out}/post/contact_*.liggghts &
+    c_cpl[1] c_cpl[2] c_cpl[3] c_cpl[4] c_cpl[5] c_cpl[6] c_cpl[7] c_cpl[8] &
+    c_cpl[9] c_cpl[10] c_cpl[11] c_cpl[12] c_cpl[13] c_cpl[14] c_cpl[15] c_cpl[16] &
+    c_cpl[17] c_cpl[18] c_cpl[19] c_cpl[20] c_cpl[21] c_cpl[22] c_cpl[23] c_cpl[24] &
+    c_cpl[25] c_cpl[26]
+
+run 100000
+# <<< block relax
+
+# >>> block end_snap_top_mesh — 끝 상태 (원자 · 접촉 · 판) · run 0 · restart
+variable g_step equal step
+variable g_atoms equal atoms
+variable g_ke equal ke
+variable g_F equal abs(f_top_mesh[3])
+variable current_press equal "abs(f_top_mesh[3]) / 0.0025 / 1000000"
+variable g_pz equal ${br_pz_S}
+region rg_above delete
+region rg_above block INF INF INF INF ${g_pz} INF units box
+variable g_leakd equal ${g_leak}-${br_leak0}
+variable br_E equal ${g_step}
+variable br_pz_E equal ${g_pz}
+variable br_h_E equal ${br_pz_E}*1000
+variable br_P_E equal ${current_press}
+variable br_F_E equal ${g_F}
+print "BRANCH_END_STATE arm=${br_arm} dir=end step=${br_E} plate_z_deck=${br_pz_E} thickness_um=${br_h_E} press_deckMPa=${br_P_E} force_N=${br_F_E} atoms=${g_atoms} leak_delta=${g_leakd}"
+print "${br_E},end,${br_pz_E},${br_P_E},${br_F_E},${g_ke},${g_atoms},${g_leakd}" append ${out}/branch_trace.csv screen no
+dump dmp_atom_end all custom 5000 ${out}/end/atom_*.liggghts id type x y z radius vx vy vz c_strs[1] c_strs[2] c_strs[3] c_ke
+dump_modify dmp_atom_end first yes
+dump dmp_contact_end all local 5000 ${out}/end/contact_*.liggghts &
+    c_cpl[1] c_cpl[2] c_cpl[3] c_cpl[4] c_cpl[5] c_cpl[6] c_cpl[7] c_cpl[8] &
+    c_cpl[9] c_cpl[10] c_cpl[11] c_cpl[12] c_cpl[13] c_cpl[14] c_cpl[15] c_cpl[16] &
+    c_cpl[17] c_cpl[18] c_cpl[19] c_cpl[20] c_cpl[21] c_cpl[22] c_cpl[23] c_cpl[24] &
+    c_cpl[25] c_cpl[26]
+dump_modify dmp_contact_end first yes
+dump dmp_mesh_end all mesh/stl 5000 ${out}/end/mesh_*.stl top_mesh
+dump_modify dmp_mesh_end first yes
+run 0
+undump dmp_atom_end
+undump dmp_contact_end
+undump dmp_mesh_end
+write_restart ${out}/restart/restart_end_${br_E}.bin
+# <<< block end_snap_top_mesh
+
+# >>> block summary_relax — 요약 (key=value · run_branch.sh · analyze_branch.py 가 읽는다)
+print "arm=${br_arm}" file ${summary_file} screen no
+print "gamma_comp=${gamma_comp}" append ${summary_file} screen no
+print "ckpt_step=${br_step0}" append ${summary_file} screen no
+print "atoms_start=${br_n0v}" append ${summary_file} screen no
+print "leak_start=${br_leak0}" append ${summary_file} screen no
+print "stop_step=${br_S}" append ${summary_file} screen no
+print "stop_plate_z_deck=${br_pz_S}" append ${summary_file} screen no
+print "stop_thickness_um=${br_h_S}" append ${summary_file} screen no
+print "stop_press_deckMPa=${br_P_S}" append ${summary_file} screen no
+print "stop_force_N=${br_F_S}" append ${summary_file} screen no
+print "relax_steps=100000" append ${summary_file} screen no
+print "end_step=${br_E}" append ${summary_file} screen no
+print "end_plate_z_deck=${br_pz_E}" append ${summary_file} screen no
+print "end_thickness_um=${br_h_E}" append ${summary_file} screen no
+print "end_press_deckMPa=${br_P_E}" append ${summary_file} screen no
+print "end_force_N=${br_F_E}" append ${summary_file} screen no
+print "atoms_end=${g_atoms}" append ${summary_file} screen no
+print "leak_delta_end=${g_leakd}" append ${summary_file} screen no
+print "guard=none" append ${summary_file} screen no
+print "result=DONE" append ${summary_file} screen no
+print "BRANCH_DONE arm=${br_arm} stop_step=${br_S} stop_thickness_um=${br_h_S} end_step=${br_E} end_thickness_um=${br_h_E} end_press_deckMPa=${br_P_E}"
+# <<< block summary_relax
+
+print "====== Simulation Finished! (PS_7_3_R45: P:S=7:3, 81.6:18.4, 6mAh/cm2) ======"
+
+# >>> block guard_stop — 가드가 멈추면 여기로 온다 (restart + 요약 · 이어 돌리지 않는다)
+jump SELF branch_end
+label guard_stop
+print "BRANCH_GUARD_TRIP arm=${br_arm} reason=${g_reason} step=${g_step} atoms=${g_atoms} ke=${g_ke} leak_delta=${g_leakd}"
+print "${g_step},guard_${g_reason},${g_pz},${current_press},${g_F},${g_ke},${g_atoms},${g_leakd}" append ${out}/branch_trace.csv screen no
+print "arm=${br_arm}" append ${summary_file} screen no
+print "guard=${g_reason}" append ${summary_file} screen no
+print "guard_step=${g_step}" append ${summary_file} screen no
+print "result=GUARD_TRIP" append ${summary_file} screen no
+write_restart ${out}/restart/restart_guard_${g_step}.bin
+label branch_end
+print "BRANCH_SCRIPT_END arm=${br_arm}"
+# <<< block guard_stop
