@@ -1,0 +1,31 @@
+{
+ "schema": "cascade_v7_main_runlog/v1",
+ "track": "cascade (1저자 = 사용자 · 통지할 제3자 없음)",
+ "date": "2026-10-07",
+ "decisions": [
+  "D-2026-10-01-cascade-v7-probe-card",
+  "D-2026-10-03-cascade-v7-amend-cp",
+  "D-2026-10-07-cascade-v7-main-round-cap"
+ ],
+ "실행_승인": "사용자 2026-10-07 '비준이야' (상한 461.4 GPU-h) · 'cascade 던지자' (실행)",
+ "러너": "tools/doping/run_cascade_v7_probe.py --main (탐침 러너 확장 · 고정 명단 40 런 · 런 사이 판독기 없음 · selftest 104 ✓ · 깨기 7/7 빨강: 런 사이 판독기 호출 · 시드 (1,3) · 상한 결정 누락 · T* 이어받기 검사 제거 · budget 기록 검사 제거 · 상한 게이트 제거 · 라벨)",
+ "실행_매개변수": {
+  "기계": "kgy (RTX3090 · li2s 대조 kgy 몫 끝 · GPU 800 MiB 비어 있음 10-07 19:43)",
+  "worktree": "~/wt_cv7main_1007 (friendly · detached · ~/lldvar 에서 git worktree add) — ⛔ 본 라운드가 도는 동안 checkout·삭제 금지",
+  "out_root": "~/work/runs/cascade_v7_main_1007",
+  "prep_root": "~/work/runs/cascade_v6_40run_0921 (v6 prep · 초기 좌표로만 · 20 구조)",
+  "probe_json": "repo 사본 db/raw/cascade_v7_probe_2026_10_03/cascade_v7_probe.json (T* 1000 K · 회수 cca58f1e)",
+  "python": "/home/kgy/apps/miniforge3/envs/uma/bin/python",
+  "tmux": "cv7main",
+  "log": "~/work/runs/cascade_v7_main_1007.log",
+  "gpu_start_max_mib": 16000,
+  "감시": "러너 --main 없이 --status --out_root <같은 경로> (읽기만 · D 없음) — ⛔ out_root/logs/<태그>.log · msd.json 은 열지 않는다"
+ },
+ "어림": "단가 ≈ 10.4 (탐침 평균) – 11.5 (최댓값) GPU-h/런 × 40 ≈ 418–461 GPU-h ≈ 17–19 일 직렬 (kgy 단독 · 어림)",
+ "⛔": [
+  "40 런 전 중간 집계 금지 (판정은 40 런 뒤 사람이 judge_eprime --card v7 --probe_json)",
+  "탐침 시드 3·4 집계 제외",
+  "상한 461.4 넘으면 다음 런 안 띄우고 보고 → 새 결정"
+ ],
+ "발사": null
+}

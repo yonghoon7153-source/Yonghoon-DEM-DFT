@@ -9,6 +9,21 @@
     (실행)   같은 명령에서 --dry_run 만 뺀다 — tmux 안에서.  이어받기는 --resume.
     (감시)   … --status --out_root <같은 경로>          (읽기만 · D 안 찍음)
 
+    ── 본 라운드 (`--main` · 결정 D-2026-10-07-cascade-v7-main-round-cap 비준 2026-10-07 · 사용자 '비준이야' · 'cascade 던지자') ──
+    python3 tools/doping/run_cascade_v7_probe.py --main --dry_run \
+        --out_root ~/work/runs/cascade_v7_main_1007 \
+        --prep_root ~/work/runs/cascade_v6_40run_0921 \
+        --python /home/kgy/apps/miniforge3/envs/uma/bin/python
+    (실행·이어받기·감시는 위와 같다 — `--main` 만 붙인다)
+    · 명단은 **고정**이다: T* (탐침 산출물 · 기본 repo 사본 db/raw/cascade_v7_probe_2026_10_03/cascade_v7_probe.json) ×
+      부모 10 (v6 원장) × P1/P2 × 시드 1·2 = 40 런 · 순서 = 시드 1 의 부모 A→J (P1, P2) 다음 시드 2.
+      판독기가 런을 고르지 않는다 — 본 라운드는 고를 것이 없다 (카드 §5 · 개정 ④).
+    · ⛔ 런 사이에 판독기를 부르지 않는다 = **중간 집계 없음** (카드 §5 · 결정 enforcement ②). 40 런이 다 끝나면
+      판정 명령 한 줄만 찍고 멈춘다 (`judge_eprime.py --card v7 --probe_json … --out_root …` 는 사람이 친다).
+    · 상한 = 그 결정의 cost_cap.total_gpu_h (461.4) · 단가 = 실측 최댓값 (없으면 탐침 실측 최댓값 11.5341).
+      세 결정(카드 · 개정 · 본 라운드 상한)이 다 active 여야 시작한다.
+    · 탐침 시드 3·4 는 명단에 없다 (개정 ④ · 집계 제외). 탐침 out_root 와 섞지 않는다 (새 폴더).
+
 무엇을 하나
   · 한 번에 런 하나. **매 런 전에 판독기**(`judge_eprime.py --probe <out_root>`)를 부르고, 그 산출물
     `cascade_v7_probe.json` 의 `next` (T, 구조, 시드) 하나만 돌린다.
@@ -66,7 +81,9 @@ GPU (kgy — 점착 P1b pw.x 와 공유 · 사용자 실행 승인 2026-10-03)
     `--accept_flagged <태그>` 로 그 런을 명시적으로 받아들이면 (budget.json 에 남는다) 판독기 지시대로 간다.
   · md.log 의 실제 온도는 **기록만** 한다 (생산 구간 평균·표준편차) — 문턱은 카드가 정하지 않았다.
   · 준비 구조가 그 온도에서 평형이라는 보장을 안 한다 · 5 ps 평형화의 충분성을 검사하지 않는다 (개정 ⑩).
-  · 본 라운드를 띄우지 않는다 · 원자료를 repo 로 옮기지 않는다 (결정 record = db/raw/cascade_v7_probe/ — 사람이 한다).
+  · 탐침 모드는 본 라운드를 띄우지 않는다 · 원자료를 repo 로 옮기지 않는다 (결정 record = db/raw/cascade_v7_probe/ — 사람이 한다).
+  · `--main` 은 자격·판정을 런마다 보지 않는다 — 자격 미달 런이 나와도 40 런을 다 돈다 (카드 §5 · 대체·추가 런 없음).
+    셀 크기 (공통부피 한 변 ≈ 1.6 nm < Phuthi 2026 bulk 하한 2 nm) 는 결과 문장의 라벨이지 러너가 막는 조건이 아니다.
 """
 from __future__ import annotations
 
@@ -95,6 +112,12 @@ DECISION_AMEND = "D-2026-10-03-cascade-v7-amend-cp"
 CARD = "db/properties/cascade_estimand_card_v7_probe_2026_10_01.json"
 AMENDMENT = "db/properties/cascade_estimand_card_v7_probe_amendment_cp_2026_10_03.json"
 JUDGE = HERE / "judge_eprime.py"
+#: 본 라운드 (`--main`) — 상한 결정 · T* 출처 · 시드
+DECISION_MAIN = "D-2026-10-07-cascade-v7-main-round-cap"
+PROBE_JSON = REPO / "db" / "raw" / "cascade_v7_probe_2026_10_03" / "cascade_v7_probe.json"
+MAIN_SEEDS = tuple(int(x) for x in J.V7_MAIN_SEEDS)
+#: 탐침 실측 단가 최댓값 (실행 기록 ✅_탐침_끝_2026_10_06 · P1_Al2O3_C__T1000__s4) — 본 라운드 실측이 생기면 그 최댓값이 대신한다
+MAIN_EST_GPU_H_PER_RUN = 11.5341
 
 PROD_PS = float(J.V7_PROTOCOL["prod_ps"])
 DT_FS = float(J.V7_PROTOCOL["dt_fs"])
@@ -189,8 +212,8 @@ def constant_errors(plan=PLAN, ladder=LADDER, pair=PAIR_PARENT, roster=None) -> 
     return errs
 
 
-def decision_gate(path) -> tuple[float | None, list[str]]:
-    """원장에서 두 결정이 active 인지 · 탐침 상한 → (상한, 오류)."""
+def decision_gate(path, ids=(DECISION_CARD, DECISION_AMEND), cap_id=DECISION_AMEND) -> tuple[float | None, list[str]]:
+    """원장에서 결정들이 active 인지 · 상한 (cap_id 의 cost_cap) → (상한, 오류)."""
     try:
         d = json.loads(Path(path).read_text(encoding="utf-8"))
         items = d["decisions"] if isinstance(d, dict) else d
@@ -198,19 +221,19 @@ def decision_gate(path) -> tuple[float | None, list[str]]:
         return None, [f"결정 원장을 못 읽는다 ({path}: {type(e).__name__})"]
     by = {e.get("id"): e for e in items if isinstance(e, dict)}
     errs, cap = [], None
-    for did in (DECISION_CARD, DECISION_AMEND):
+    for did in ids:
         e = by.get(did)
         if e is None:
             errs.append(f"{did} 가 원장에 없다")
         elif e.get("decision_state") != "active":
             errs.append(f"{did} 가 active 가 아니다 ({e.get('decision_state')!r})")
     try:
-        cap = float(by[DECISION_AMEND]["cost_cap"]["total_gpu_h"])
+        cap = float(by[cap_id]["cost_cap"]["total_gpu_h"])
         if not cap > 0:
             raise ValueError
     except (KeyError, TypeError, ValueError):
         cap = None
-        errs.append(f"{DECISION_AMEND} 의 cost_cap.total_gpu_h 를 못 읽는다")
+        errs.append(f"{cap_id} 의 cost_cap.total_gpu_h 를 못 읽는다")
     return cap, errs
 
 
@@ -226,8 +249,34 @@ def budget_gate(used, measured, cap, est=EST_GPU_H_PER_RUN) -> tuple[bool, str, 
     return True, f"누적 {used:.2f} + 단가 {unit:.2f} ({src}) ≤ 상한 {cap:g}", unit
 
 
-def meta_expect(T, structure, seed, v0, n_atoms) -> dict:
-    return {"label": f"cv7probe_{structure}", "n_atoms": int(n_atoms), "supercell": [1, 1, 1],
+def main_roster(pairs, T, seeds=MAIN_SEEDS) -> list[tuple[int, str, int]]:
+    """본 라운드 명단 (고정) — 시드마다 부모 A→J 의 (P1, P2). 판독기 missing_runs 와 같은 집합이다."""
+    return [(int(T), st, int(sd)) for sd in seeds for k in sorted(pairs) for st in pairs[k]]
+
+
+def main_constant_errors(pairs, T, seeds=MAIN_SEEDS, roster_census=None) -> list[str]:
+    """본 라운드 명단이 카드·개정·판독기와 맞는가 (부모 10 · 시드 1·2 · 탐침 시드와 안 겹침 · T* 사다리 안 · 40 런)."""
+    errs = []
+    census = R.MD_STRUCTURES if roster_census is None else roster_census
+    if len(pairs) != 10:
+        errs.append(f"부모 {len(pairs)} 개 ≠ 10 (카드 v6 원장)")
+    if tuple(seeds) != MAIN_SEEDS or set(seeds) & set(J.V7_PAIR_SEEDS):
+        errs.append(f"시드 {list(seeds)} ≠ 본 라운드 {list(MAIN_SEEDS)} 이거나 탐침 시드 {list(J.V7_PAIR_SEEDS)} 와 겹친다 (개정 ④)")
+    if not any(J._same(T, x) for x in LADDER):
+        errs.append(f"T* {T} 가 사다리 {list(LADDER)} 밖이다")
+    ro = main_roster(pairs, T, seeds)
+    want = set((st, int(T), sd) for st, TT, sd in J.missing_runs({}, pairs, T=int(T), seeds=MAIN_SEEDS))
+    if len(ro) != 40 or len(set(ro)) != 40 or {(s, t, d) for t, s, d in ro} != want:
+        errs.append(f"명단 {len(ro)} 런이 판독기의 완결 집합 (40) 과 다르다")
+    for _, st, _ in ro:
+        if st not in census:
+            errs.append(f"{st} 가 v6 부모 census 에 없다")
+            break
+    return errs
+
+
+def meta_expect(T, structure, seed, v0, n_atoms, label="cv7probe") -> dict:
+    return {"label": f"{label}_{structure}", "n_atoms": int(n_atoms), "supercell": [1, 1, 1],
             "v0_xyz": str(v0), "temperatures": [float(T)], "prod_ps": PROD_PS,
             "equilib_ps": R.EQUILIB_PS, "seed": int(seed), "fit_window_ps": list(R.FIT_WINDOW_PS),
             "save_traj": True, "uma_model": R.UMA_MODEL, "uma_inference_mode_requested": UMA_MODE}
@@ -239,9 +288,9 @@ def meta_errors(meta, exp) -> list[str]:
     return [f"{k}: {meta.get(k)!r} ≠ {v!r}" for k, v in exp.items() if not _eq(meta.get(k), v)]
 
 
-def md_cmd(py, driver, v0, out_dir, T, structure, seed, device) -> list[str]:
+def md_cmd(py, driver, v0, out_dir, T, structure, seed, device, label="cv7probe") -> list[str]:
     return [str(py), str(driver),
-            "--v0_xyz", str(v0), "--label", f"cv7probe_{structure}", "--out_root", str(out_dir),
+            "--v0_xyz", str(v0), "--label", f"{label}_{structure}", "--out_root", str(out_dir),
             "--disorder_levels", "0.0", "--n_configs", "1",
             "--temperatures", str(int(T)),
             "--equilib_ps", str(R.EQUILIB_PS), "--prod_ps", str(PROD_PS),
@@ -625,7 +674,7 @@ def run_one(ctx, budget, T, s, seed) -> int:
     rdir = root / SUBDIR / f"T{int(T)}"
     if root.exists():
         if (rdir / "msd.json").exists():
-            say(f"⛔ 판독기가 이미 끝난 런 {tag} 을 다음으로 지목했다 — 판독기와 디스크가 어긋난다 (rc 6)")
+            say(f"⛔ 이미 끝난 런 {tag} 을 다시 돌리라는 지시다 — 지시와 디스크가 어긋난다 (rc 6)")
             return 6
         say(f"⛔ {tag} 폴더가 msd.json 없이 남아 있다 (끊긴 런) — 이어 돌리지 않는다. 흔적을 옮긴 뒤 --resume:\n"
             f"     mkdir -p {out_root}/attic && mv {root} {out_root}/attic/{tag}.$(date +%Y%m%d_%H%M%S)")
@@ -646,8 +695,9 @@ def run_one(ctx, budget, T, s, seed) -> int:
     if free_gb < ctx["disk_min_gb"]:
         say(f"⛔ 디스크 여유 {free_gb:.1f} GB < {ctx['disk_min_gb']} GB — 멈춘다 (rc 12)")
         return 12
-    cmd = md_cmd(ctx["python"], ctx["driver"], v0, root, T, s, seed, ctx["device"])
-    exp = meta_expect(T, s, seed, v0, ctx["prep"][s]["n_atoms"])
+    lab = ctx.get("label", "cv7probe")
+    cmd = md_cmd(ctx["python"], ctx["driver"], v0, root, T, s, seed, ctx["device"], label=lab)
+    exp = meta_expect(T, s, seed, v0, ctx["prep"][s]["n_atoms"], label=lab)
     step = {"tag": tag, "T_K": int(T), "structure": s, "seed": int(seed), "start_utc": utc(),
             "gpu_total_mib_at_start": tot, "gpu_wait_s": round(waited, 1), "disk_free_gb_at_start": round(free_gb, 1),
             "cmd": cmd}
@@ -764,13 +814,34 @@ def preflight(a) -> tuple[dict, list[str]]:
                                          ("struct_dir", a._struct_dir), ("nvidia_smi", a._nvidia_smi),
                                          ("repo", a._repo)) if v}
     ctx["budget_path"] = ctx["out_root"] / "budget.json"
+    ctx["main"] = bool(getattr(a, "main", False))
     errs += constant_errors()
-    ctx["cap"], e = decision_gate(ctx["decisions"]); errs += e
+    structures = PROBE_STRUCTURES
+    if ctx["main"]:
+        ctx["label"] = "cv7main"
+        ctx["probe_json"] = Path(a.probe_json or PROBE_JSON).expanduser().resolve()
+        if a.probe_json:
+            ctx["injected"]["probe_json"] = str(ctx["probe_json"])
+        ctx["T_star"], why = J.v7_probe_t_star(ctx["probe_json"])
+        ctx["probe_why"] = why
+        ctx["probe_json_sha256"] = R.sha256(ctx["probe_json"]) if ctx["probe_json"].is_file() else ""
+        if ctx["T_star"] is None:
+            errs.append(f"탐침 산출물 {ctx['probe_json']}: {why} — 본 라운드를 열지 않는다")
+            ctx["roster"] = []
+        else:
+            pairs = J.load_v6_pairs()
+            errs += main_constant_errors(pairs, ctx["T_star"])
+            ctx["roster"] = main_roster(pairs, ctx["T_star"])
+            structures = tuple(dict.fromkeys(st for _, st, _ in ctx["roster"]))
+        ctx["cap"], e = decision_gate(ctx["decisions"], ids=(DECISION_CARD, DECISION_AMEND, DECISION_MAIN),
+                                      cap_id=DECISION_MAIN); errs += e
+    else:
+        ctx["cap"], e = decision_gate(ctx["decisions"]); errs += e
     if ctx["prep_root"] is None:
         errs.append("--prep_root (v6 라운드 out_root) 가 없다")
         ctx["prep"] = {}
     else:
-        ctx["prep"], e = prep_check(ctx["prep_root"], ctx["struct_dir"]); errs += e
+        ctx["prep"], e = prep_check(ctx["prep_root"], ctx["struct_dir"], structures); errs += e
     for k in ("driver", "judge"):
         if not ctx[k].is_file():
             errs.append(f"{k} {ctx[k]} 가 없다")
@@ -801,6 +872,17 @@ def manifest_of(ctx) -> dict:
          "⛔": ["D 를 싣지 않는다 · 대표 쌍의 D 를 열지 않는다 (개정 §6)",
                "본 라운드 40 런을 띄우지 않는다 — 탐침 뒤 상한 비준 (개정 §7)",
                "탐침 시드 3·4 런은 본 라운드 집계에 안 넣는다 (개정 ④)"]}
+    if ctx.get("main"):
+        m.update({"schema": "cascade_v7_main_round/v1", "decisions": [DECISION_CARD, DECISION_AMEND, DECISION_MAIN],
+                  "execution_approval": "사용자 2026-10-07 '비준이야' (상한) · 'cascade 던지자' (실행)",
+                  "est_gpu_h_per_run": MAIN_EST_GPU_H_PER_RUN, "max_runs": len(ctx["roster"]),
+                  "T_star_K": ctx["T_star"], "probe_json": {"path": str(ctx["probe_json"]),
+                                                            "sha256": ctx["probe_json_sha256"], "why": ctx["probe_why"]},
+                  "roster": [tag_of(*x) for x in ctx["roster"]],
+                  "⛔": ["D 를 싣지 않는다 · 런 사이 판독기를 부르지 않는다 = 중간 집계 없음 (카드 §5 · 결정 enforcement ②)",
+                        "명단 고정 40 런 — 대체·추가 런 없음 · 탐침 시드 3·4 없음 (개정 ④)",
+                        "상한은 원장 cost_cap — 넘으면 다음 런을 띄우지 않고 보고한다",
+                        "결과 문장 라벨: 공통부피 한 변 ≈ 1.6 nm < Phuthi 2026 bulk 하한 2 nm (결정 enforcement ④)"]})
     if ctx["injected"]:
         m["⚠_시험_주입"] = ctx["injected"]
     return m
@@ -811,6 +893,12 @@ def resume_check(ctx) -> tuple[dict | None, list[str]]:
     if m is None:
         return None, [f"--resume 인데 {ctx['out_root']}/manifest.json 이 없다"]
     errs = []
+    want_schema = "cascade_v7_main_round/v1" if ctx.get("main") else "cascade_v7_probe_round/v1"
+    if m.get("schema") != want_schema:
+        errs.append(f"manifest schema {m.get('schema')!r} ≠ {want_schema!r} — 탐침 폴더와 본 라운드 폴더를 섞지 않는다")
+    if ctx.get("main") and ((m.get("T_star_K") != ctx.get("T_star"))
+                            or (m.get("probe_json") or {}).get("sha256") != ctx.get("probe_json_sha256")):
+        errs.append(f"T* · 탐침 산출물 해시가 manifest 와 다르다 ({m.get('T_star_K')} → {ctx.get('T_star')})")
     old, new = m.get("frozen") or {}, frozen_now()
     diff = sorted(k for k in set(old) | set(new) if old.get(k) != new.get(k))
     if diff:
@@ -954,6 +1042,115 @@ def run_probe(a) -> int:
         os.close(lock)
 
 
+def run_main(a) -> int:
+    """본 라운드 — 고정 명단 40 런을 차례로. 런 사이 판독기 없음 (중간 집계 금지)."""
+    ctx, errs = preflight(a)
+    if ctx["injected"]:
+        say(f"⚠ 시험 주입 사용: {ctx['injected']} — 실제 본 라운드면 이 줄이 나오면 안 된다")
+    ro = ctx["roster"]
+    say(f"v7 본 라운드 · T* = {ctx['T_star']} K (탐침 산출물 sha {ctx['probe_json_sha256'][:16]}) · 명단 {len(ro)} 런 "
+        f"(부모 10 × P1/P2 × 시드 {list(MAIN_SEEDS)}) · 생산 {PROD_PS:g} ps · dt {DT_FS:g} fs · save {SAVE_FS:g} fs · "
+        f"UMA {R.UMA_MODEL} {UMA_MODE}")
+    say(f"상한 {ctx['cap']} GPU-h (원장 {DECISION_MAIN}) · 단가 시작값 {MAIN_EST_GPU_H_PER_RUN} (탐침 실측 최댓값) · "
+        f"투영 {len(ro) * MAIN_EST_GPU_H_PER_RUN:.1f}")
+    for s, row in ctx["prep"].items():
+        say(f"  준비 {s}: {row['n_atoms']} 원자 · sha {row['sha256'][:16]} · fmax {row['final_fmax_eV_A']} · 입력 해시 = repo 구조 ✓")
+    st_tail = (ctx.get("judge_selftest_tail") or "—").splitlines()[-1]
+    say(f"  드라이버 sha {ctx['driver_sha256'][:16]} · 판독기 sha {ctx['judge_sha256'][:16]} · code {ctx['code_id'][:12]} · "
+        f"python {a.python} · 판독기 selftest: {st_tail}")
+    tot = gpu_total_mib(ctx["nvsmi"])
+    say(f"  GPU 합계 지금 {tot if tot is not None else '못 읽음'} MiB (시작 문턱 {a.gpu_start_max_mib})")
+    if errs:
+        say("⛔ 사전점검 불통과 — 시작하지 않는다 (rc 2):")
+        for e in errs:
+            print(f"     · {e}", flush=True)
+        return 2
+    if a.dry_run:
+        say("명단 (고정 · 이 순서):")
+        for i, x in enumerate(ro, 1):
+            print(f"     {i:2d}  {tag_of(*x)}", flush=True)
+        T, s0, sd0 = ro[0]
+        v0 = ctx["out_root"] / "prep" / f"{s0}.prepared.xyz"
+        print("     첫 명령: " + " ".join(md_cmd(a.python, ctx["driver"], v0, ctx["out_root"] / "md" / tag_of(*ro[0]),
+                                                    T, s0, sd0, a.device, label=ctx["label"])), flush=True)
+        say("■ dry_run — 아무것도 만들지 않았다")
+        return 0
+
+    out_root = ctx["out_root"]
+    if not a.resume:
+        if out_root.exists() and any(out_root.iterdir()):
+            say(f"⛔ out_root 가 비어 있지 않다: {out_root} — 새 본 라운드는 폴더를 재사용하지 않는다 (이어받기면 --resume) (rc 11)")
+            return 11
+        out_root.mkdir(parents=True, exist_ok=True)
+    elif not out_root.is_dir():
+        say(f"⛔ --resume 인데 {out_root} 가 없다 (rc 2)")
+        return 2
+    lock = take_lock(out_root)
+    if lock is None:
+        say(f"⛔ 이미 다른 러너가 {out_root} 를 잡고 있다 (rc 10)")
+        return 10
+    if a.resume:
+        budget, rerrs = resume_check(ctx)
+        if rerrs:
+            say("⛔ 이어받기 거부 (rc 2):")
+            for e in rerrs:
+                print(f"     · {e}", flush=True)
+            os.close(lock)
+            return 2
+        say(f"↻ 이어받기 · 누적 {float(budget.get('used_gpu_h') or 0):.2f} GPU-h 승계 · 끝난 런 "
+            f"{sum(1 for st in budget.get('steps', []) if st.get('ok'))}")
+    else:
+        (out_root / "prep").mkdir(exist_ok=True)
+        for s, row in ctx["prep"].items():
+            dst = out_root / "prep" / f"{s}.prepared.xyz"
+            shutil.copy2(row["source_xyz"], dst)
+            if R.sha256(dst) != row["sha256"]:
+                say(f"⛔ 준비 사본 해시가 원본과 다르다 ({s}) (rc 2)")
+                os.close(lock)
+                return 2
+            _write_json(out_root / "prep" / f"{s}.reuse.json",
+                        {**row, "copied_to": str(dst), "copied_utc": utc(),
+                         "⚠": "v6 준비를 초기 좌표로만 재사용 (개정 ⑩) — 이 온도에서의 평형을 뜻하지 않는다"})
+        _write_json(out_root / "manifest.json", manifest_of(ctx))
+        budget = {"cap_gpu_h": ctx["cap"], "est_gpu_h_per_run": MAIN_EST_GPU_H_PER_RUN, "used_gpu_h": 0.0,
+                  "steps": [], "T_star_K": ctx["T_star"],
+                  "⛔": "상한은 원장(cost_cap) 값이다 — 코드·CLI 로 못 올린다. 넘으면 멈추고 보고한다 (결정 "
+                       f"{DECISION_MAIN})."}
+        _write_json(ctx["budget_path"], budget)
+    for sig in (signal.SIGTERM, signal.SIGHUP):
+        signal.signal(sig, _on_signal)
+    try:
+        for i, (T, s, sd) in enumerate(ro, 1):
+            tag = tag_of(T, s, sd)
+            if (out_root / "md" / tag / SUBDIR / f"T{int(T)}" / "msd.json").exists():
+                if not any(st.get("tag") == tag and st.get("ok") for st in budget.get("steps", [])):
+                    say(f"⛔ {tag} 의 msd.json 이 있는데 budget 에 끝난 기록이 없다 — 이 러너가 돌린 런이 아니다 (rc 6)")
+                    return 6
+                continue
+            measured = [float(st["gpu_h"]) for st in budget.get("steps", []) if st.get("ok")]
+            ok, gwhy, unit = budget_gate(float(budget.get("used_gpu_h") or 0.0), measured, ctx["cap"],
+                                         est=MAIN_EST_GPU_H_PER_RUN)
+            if not ok:
+                budget["steps"].append({"tag": tag, "stopped": gwhy, "at_utc": utc()})
+                _write_json(ctx["budget_path"], budget)
+                say(gwhy.replace("개정 §4 · 상한 재비준이 필요하다", "결정 " + DECISION_MAIN + " · 남은 런은 새 결정")
+                    + f" · 남은 런 {len(ro) - i + 1} (rc 3)")
+                return 3
+            say(f"  [{i}/{len(ro)}] 비용: {gwhy}")
+            rc = run_one(ctx, budget, T, s, sd)
+            if rc != 0:
+                return rc
+        say(f"■ 본 라운드 {len(ro)} 런 끝 · 누적 {float(budget.get('used_gpu_h') or 0):.2f} / {ctx['cap']:g} GPU-h")
+        say("  판정은 사람이 친다 (이 러너는 D·집계를 안 연다):")
+        print(f"     {a.python} {ctx['judge']} --card v7 --probe_json {ctx['probe_json']} --out_root {out_root}", flush=True)
+        return 0
+    except (KeyboardInterrupt, _Stop) as e:
+        say(f"⛔ 사람이 중단 ({type(e).__name__}) — 돌던 런은 없었다 (rc 130)")
+        return 130
+    finally:
+        os.close(lock)
+
+
 def status(a) -> int:
     """읽기만 — 진행 · 누적 · 마지막 판독 (D 없음). 잠금·파일을 건드리지 않는다."""
     out_root = Path(a.out_root).expanduser().resolve()
@@ -963,7 +1160,8 @@ def status(a) -> int:
         return 2
     steps = b.get("steps", [])
     done = [st for st in steps if st.get("ok")]
-    print(f"■ v7 탐침 {out_root} · code {str(m.get('code_id'))[:12]} · 상한 {b.get('cap_gpu_h')} · 누적 "
+    kind = "본 라운드" if m.get("schema") == "cascade_v7_main_round/v1" else "탐침"
+    print(f"■ v7 {kind} {out_root} · T* {m.get('T_star_K', '—')} · 명단 {m.get('max_runs')} · code {str(m.get('code_id'))[:12]} · 상한 {b.get('cap_gpu_h')} · 누적 "
           f"{float(b.get('used_gpu_h') or 0):.2f} GPU-h · 끝난 런 {len(done)} · 단가 실측 "
           f"{[round(float(st['gpu_h']), 2) for st in done]}")
     for st in steps:
@@ -1148,10 +1346,11 @@ def _selftest() -> int:
                 "prepared_sha256": R.sha256(v6 / f"{s}.prepared.xyz"), "input_sha256": R.sha256(structs / f"{s}.xyz")}))
         dec = tmp / "decisions.json"
 
-        def write_dec(state="active", cap=141):
+        def write_dec(state="active", cap=141, main_state="active", main_cap=461.4):
             dec.write_text(json.dumps({"decisions": [
                 {"id": DECISION_CARD, "decision_state": "active"},
-                {"id": DECISION_AMEND, "decision_state": state, "cost_cap": {"total_gpu_h": cap}}]}))
+                {"id": DECISION_AMEND, "decision_state": state, "cost_cap": {"total_gpu_h": cap}},
+                {"id": DECISION_MAIN, "decision_state": main_state, "cost_cap": {"total_gpu_h": main_cap}}]}))
         write_dec()
         drv, jdg = tmp / "fake_driver.py", tmp / "fake_judge.py"
         drv.write_text(_FAKE_DRIVER); jdg.write_text(_FAKE_JUDGE)
@@ -1333,6 +1532,100 @@ def _selftest() -> int:
         rc, txt = subprocess.run([sys.executable, str(Path(__file__).resolve()), "--status", "--out_root",
                                   str(tmp / "allpass")], capture_output=True, text=True).returncode, ""
         ck("--status: 읽기만 rc 0", rc == 0)
+
+        print("── 본 라운드 (--main · 고정 명단 · 런 사이 판독기 없음) ──")
+        pairs = J.load_v6_pairs()
+        ro = main_roster(pairs, 1000)
+        ck("명단: 40 런 · 시드 1 의 A→J (P1, P2) 다음 시드 2 · 탐침 시드 3·4 없음",
+           len(ro) == 40 and tag_of(*ro[0]) == "P1_Al2O3_A__T1000__s1" and tag_of(*ro[1]) == "P2_Al2S3_A__T1000__s1"
+           and tag_of(*ro[20]) == "P1_Al2O3_A__T1000__s2" and tag_of(*ro[-1]) == "P2_Al2S3_J__T1000__s2"
+           and {sd for _, _, sd in ro} == {1, 2})
+        ck("명단 = 판독기의 완결 집합 (missing_runs) · 상수 검사 통과", main_constant_errors(pairs, 1000) == [])
+        ck("⛔음성 명단: 부모 9 개", any("부모" in e for e in main_constant_errors({k: v for k, v in pairs.items() if k != "J"}, 1000)))
+        ck("⛔음성 명단: 시드 (1, 3) — 탐침 시드와 겹친다", any("시드" in e for e in main_constant_errors(pairs, 1000, seeds=(1, 3))))
+        ck("⛔음성 명단: T* 600 — 사다리 밖", any("사다리" in e for e in main_constant_errors(pairs, 600)))
+        ck("⛔음성 명단: census 에 없는 구조", any("census" in e for e in main_constant_errors(pairs, 1000, roster_census=["H0_host"])))
+        ck("⛔음성 결정: 본 라운드 상한 결정이 proposed 면 잡는다",
+           decision_gate(Path(dec), ids=(DECISION_MAIN,), cap_id=DECISION_MAIN)[1] == [] and
+           (write_dec(main_state="proposed") or decision_gate(Path(dec), ids=(DECISION_MAIN,), cap_id=DECISION_MAIN)[1] != []))
+        write_dec()
+        for i, st in enumerate(sorted({st for _, st, _ in ro} - set(PROBE_STRUCTURES))):
+            (structs / f"{st}.xyz").write_text(f"4\n{lat}\nLi 0 0 {i + 5}\nLi 1 0 0\nS 0 1 0\nCl 0 0 1\n")
+            (v6 / f"{st}.prepared.xyz").write_text(f"4\n{lat}\nLi 0 0 {i + 5}.01\nLi 1 0 0\nS 0 1 0\nCl 0 0 1\n")
+            (v6 / f"{st}.prepared.json").write_text(json.dumps({
+                "structure": st, "converged": True, "n_atoms": 4, "final_fmax_eV_A": 0.01,
+                "prepared_sha256": R.sha256(v6 / f"{st}.prepared.xyz"), "input_sha256": R.sha256(structs / f"{st}.xyz")}))
+        pj = tmp / "probe.json"
+
+        def write_pj(T=1000, proto=None):
+            pj.write_text(json.dumps({"T_star_K": T, "protocol": proto or dict(J.V7_PROTOCOL), "pair_parent": PAIR_PARENT,
+                                      "next": None, "why": "시험"}))
+        write_pj()
+
+        def runm(out, *extra, env=None):
+            return run(out, "--main", "--probe_json", str(pj), *extra, env=env)
+
+        o = tmp / "m_dry"
+        rc, txt = runm(o, "--dry_run")
+        ck("본 라운드 dry_run: rc 0 · 아무것도 안 만든다 · 명단 40 줄 · 마지막 P2 J s2",
+           rc == 0 and not o.exists() and "40  P2_Al2S3_J__T1000__s2" in txt and "cv7main_P1_Al2O3_A" in txt)
+        o = tmp / "m_all"
+        rc, txt = runm(o)
+        ck("양성 본 라운드: rc 0 · 명단 순서 40 런 전부 끝 · 판정 명령 한 줄",
+           rc == 0 and steps(o) == [(tag_of(*x), True) for x in ro] and "--card v7 --probe_json" in txt)
+        ck("⛔ 중간 집계 없음: 런 사이 판독기를 안 불렀다 (판독 산출물·로그 없음 — 가짜 판독기는 불리면 남긴다)",
+           not (o / "cascade_v7_probe.json").exists() and not (o / "judge_probe.log").exists()
+           and not (o / "cascade_v7_judgement.json").exists())
+        ck("⛔ D 봉인 (본 라운드): 화면에 D 가 안 샌다 · 런 로그에는 있다",
+           "1.234e-06" not in txt and "D_Li" in (o / "logs" / f"{tag_of(*ro[0])}.log").read_text())
+        mm = _read_json(o / "manifest.json") or {}
+        ck("manifest: 본 라운드 schema · T* 1000 · 결정 셋 · 명단 40 · 라벨 cv7main",
+           mm.get("schema") == "cascade_v7_main_round/v1" and mm.get("T_star_K") == 1000 and DECISION_MAIN in mm.get("decisions", [])
+           and len(mm.get("roster", [])) == 40
+           and (_read_json(o / "md" / tag_of(*ro[0]) / "run_meta.json") or {}).get("label") == f"cv7main_{ro[0][1]}")
+        b = _read_json(o / "budget.json") or {}
+        b["steps"][3].pop("ok"); _write_json(o / "budget.json", b)
+        rc, txt = runm(o, "--resume")
+        ck("⛔음성 msd.json 은 있는데 budget 에 끝난 기록이 없다 → 6", rc == 6)
+        rc, txt = run(o, "--resume")
+        ck("⛔음성 본 라운드 폴더를 탐침 모드로 이어받기 → 2 (schema)", rc == 2 and "schema" in txt)
+
+        write_dec(main_state="proposed")
+        o = tmp / "m_dec"
+        rc, txt = runm(o)
+        ck("⛔음성 본 라운드 상한 결정 proposed → 2 · 폴더 안 만듦", rc == 2 and not o.exists())
+        write_dec(main_cap=5)
+        rc, txt = runm(o)
+        ck("⛔음성 상한 5 GPU-h → 첫 런 전에 3 · 런 0", rc == 3 and [x for x in steps(o) if x[1]] == [])
+        write_dec()
+        write_pj(T=None)
+        rc, txt = runm(tmp / "m_pjT")
+        ck("⛔음성 탐침 산출물에 T* 없음 → 2", rc == 2 and "T*" in txt)
+        write_pj(proto={**J.V7_PROTOCOL, "prod_ps": 200.0})
+        rc, txt = runm(tmp / "m_pjP")
+        ck("⛔음성 탐침 산출물 프로토콜 200 ps → 2", rc == 2)
+        write_pj()
+
+        o = tmp / "m_kill"
+        tg = tag_of(*ro[5])
+        rc, txt = runm(o, env={"FAKE_BAD": f"{tg}=seed"})
+        ck("⛔음성 6 번째 런 run_meta 불일치 → 9 · 앞 5 런만 끝", rc == 9 and [t for t, k in steps(o) if k] == [tag_of(*x) for x in ro[:5]])
+        rc, txt = runm(o, "--resume")
+        ck("⛔음성 끊긴 런 폴더 → 11", rc == 11 and "attic" in txt)
+        (o / "attic").mkdir(); (o / "md" / tg).rename(o / "attic" / tg)
+        write_pj(T=800)
+        rc, txt = runm(o, "--resume")
+        ck("⛔음성 이어받기인데 T* 가 바뀌었다 → 2", rc == 2 and "T*" in txt)
+        write_pj()
+        rc, txt = runm(o, "--resume")
+        oks = [t for t, k in steps(o) if k]
+        ck("이어받기: 같은 런부터 다시 → rc 0 · 40 런 · 끝난 5 런은 다시 안 돈다 · 죽인 런 시간도 누적",
+           rc == 0 and sorted(oks) == sorted(tag_of(*x) for x in ro) and len(oks) == 40
+           and any(st.get("stopped") for st in (_read_json(o / "budget.json") or {}).get("steps", [])))
+        rc = subprocess.run([sys.executable, str(Path(__file__).resolve()), "--status", "--out_root", str(o)],
+                            capture_output=True, text=True)
+        ck("--status 본 라운드: rc 0 · '본 라운드' 표시 · D 없음", rc.returncode == 0 and "본 라운드" in rc.stdout
+           and "1.234e-06" not in rc.stdout)
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
     print(f"selftest {'PASS' if not fails else 'FAIL'} ({len(fails)} 실패)")
@@ -1361,6 +1654,9 @@ def main() -> int:
     ap.add_argument("--heartbeat_s", type=float, default=1800.0)
     ap.add_argument("--gpu_log_s", type=float, default=600.0)
     ap.add_argument("--disk_min_gb", type=float, default=5.0)
+    ap.add_argument("--main", action="store_true", help="본 라운드 (고정 명단 40 런 · 결정 " + DECISION_MAIN + ")")
+    ap.add_argument("--probe_json", default=None,
+                    help="--main: 탐침 산출물 (기본 repo 사본 db/raw/cascade_v7_probe_2026_10_03/cascade_v7_probe.json)")
     ap.add_argument("--selftest", action="store_true")
     for k in ("--_decisions", "--_judge", "--_driver", "--_struct_dir", "--_nvidia_smi", "--_repo"):
         ap.add_argument(k, help=argparse.SUPPRESS)  # 시험 주입 — 쓰이면 화면·manifest 에 남는다
@@ -1371,7 +1667,9 @@ def main() -> int:
         ap.error("--out_root 가 필요하다")
     if a.status:
         return status(a)
-    return run_probe(a)
+    if a.probe_json and not a.main:
+        ap.error("--probe_json 은 --main 에서만 쓴다")
+    return run_main(a) if a.main else run_probe(a)
 
 
 if __name__ == "__main__":
