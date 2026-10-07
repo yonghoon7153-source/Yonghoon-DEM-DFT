@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""단면 하중 몫 — 수평 단면을 지나는 수직 하중을 접촉 종류별로 나눈다 (읽기 전용 · 웹앱 결과 폴더).
+"""단면 하중 몫 — 수평 단면을 지나는 수직 하중을 접촉 종류별로 나눈다 · 상별 응력 감소 계수 α (읽기 전용 · 웹앱 결과 폴더).
 
-    python3 scripts/plane_load_share.py --batch ~/ps45_network_20261006 --out ~/ps45_plane_load_20261007   (기록: docs/data/ps45_plane_load_20261007/)
+    python3 scripts/plane_load_share.py --batch ~/ps45_network_20261006 --out ~/ps45_plane_load_20261007_v2   (기록: docs/data/ps45_plane_load_20261007/)
     python3 scripts/plane_load_share.py --case <work/results/ID> --meta <work/uploads/ID/meta.json> --out <폴더>
+    python3 scripts/plane_load_share.py --rewrite <plane_load.json> --out <폴더>   (덤프 없이 CSV 다시 쓰기 · JSON 은 안 건드린다)
     python3 scripts/plane_load_share.py --selftest
 
 왜 (1저자 10-07 · 발표 5 쪽 힘 그래프): 접촉 힘 크기의 합은 같은 하중을 직렬로 놓인 접촉 수만큼 여러 번 센다 (real14: 합 = 단면 하중의 12.2 배)
@@ -15,17 +16,36 @@
     그 열이 없으면 fn + ft.  압력 = F ÷ (box_x · box_y) × scale ÷ 1e6 MPa (덱 축척: σ_실제 = σ_덱 × scale).
   몫 = 접촉 종류 (쌍 PC–PC … · 묶음 AM–AM · AM–SE · SE–SE) 별 F 합 ÷ F.  법선 성분만의 몫도 참고로 낸다.
   위 묶음의 힘 평형 (준정적): F(z0) = 판 힘 + 위 묶음 무게 → 높이마다 같아야 한다 → 보존 검사 (유효 단면 하중 최대 ÷ 최소).
+  ★ 슬라이드 양 = **Contribution to σ_zz** (1저자 10-07 Q1) = 21 단면의 단면 하중 합을 평균한 것끼리의 비 Σ_k F_X(z_k) ÷ Σ_k F(z_k)
+    (= 하중 가중 평균 몫 · `contribution_sigma_zz_pct`) · σ_zz = 21 단면 하중 평균.  연속 극한 = 창 [lo, hi] 의 (1/V) Σ_c f_z l_z 의 접촉
+    유형별 몫 (접촉마다 f_z^up × 중심 사이 가지가 창과 겹친 길이 ÷ 창 높이 — `contribution_sigma_zz_integral_pct` 로 함께 낸다 · 21 단면이
+    얼마나 가까운지 보는 값).  단면 몫의 단순 평균 (`share_group_mean_over_cuts_pct` · 10-07 첫 판 요약 '(mean)' 열) 과는 단면 하중이
+    높이에 따라 다를 때만 다르다.
+  α (응력 감소 계수 꼴 · 1저자 10-07 Q2) = ⟨σ_zz⟩_X ÷ ⟨σ_zz⟩_all — ⟨·⟩ = 부피 가중 평균 (중심이 단면 창 [lo, hi] 안인 입자) · X = AM_P · AM_S ·
+    AM (= 이름에 AM) · SE.  입자 응력 = Love–Weber σ_p = (1/V_p) Σ_c (x_c − x_p) ⊗ f_c — 봉인 `dem_analysis_core.calc_love_weber_stress`
+    (return_arrays) 의 입자 텐서 그대로 (읽기 전용 · 고치지 않는다 · 입력 = 봉인 `analyze_contacts` 로더).  닫힘 Σ_X (V_X/V_all) α_X = 1
+    (정의상 정확 — 어기면 FAILED) · 보조 α_p = 평균 응력 p = tr σ / 3.  상이 없거나 창 안에 중심이 없으면 null (0 아님) ·
+    ⟨σ_zz⟩_all = 0 이면 UNDEFINED.  ⚠ 모델 내부 비교 — 입자 응력 기준틀 미인증 (Codex 10-05 Q5).
+  교차 대조 (보고 · 관문 아님): LW 창 합 −Σ_창 V_p σ_zz,p ÷ (A · H) ↔ 21 단면 평균.  차는 창 가장자리 항으로 정확히 갈라 낸다 —
+    창 안 두 입자 접촉 (둘이 같다: f_z^up · l_z) · 한 입자만 창 안 (LW = 그 입자 → 접촉점 가지 · 적분 = 창과 겹친 길이) · 두 입자 모두 창 밖인데
+    창 전체를 걸친 접촉 (적분에만 — 창 높이 < 접촉 길이일 때).  벽 접촉 (덤프에 없음) 은 창 안 입자에 닿지 않는다 (창 = 벽에서 2 r_max 밖).
+  문헌 틀 [원문 미확인 — litdb 카드 전 · 검색 단계]: 평균 응력 텐서의 접촉 유형별 분할 σ_ij = (1/V) Σ_c f_i l_j (Minh · Cheng · Thornton 2014,
+    Granular Matter) · 응력 감소 계수 α = (한 분율이 진 응력) ÷ (전체 응력) (Shire · O'Sullivan · Hanley · Fannin 2014, J. Geotech. Geoenviron.
+    Eng. · Skempton–Brogan 개념).
 벽: 바닥 (z = 0 평면 — 덱 `zplane 0.0` 가정 · 덱은 읽지 않는다) · 판 (mesh_info.json plate_z) 접촉은 접촉 덤프에 없다 → 단면에 걸친 입자가
   벽에 닿으면 그 하중은 입자 몸을 지나 벽으로 가서 계산에서 빠진다 → 단면은 벽에서 2 × (가장 큰 반지름) 보다 먼 곳만 쓴다
   (벽에 닿은 입자의 몸은 벽에서 2r 안 — 그 밖의 단면에는 걸칠 수 없다).
 상태: OK = 유효 단면 ≥ 3 · 보존 (최대 ÷ 최소 − 1 ≤ 2 %) · 입자 힘 평형 (중심이 유효 구간 안인 입자의 힘 가중 알짜 힘 ≤ 1 %) · 원자 id 누락 0 ·
   상자 = input_params.json.  어기면 CHECK (값은 내되 사유를 적는다) · 입력 결손 · 유효 단면 없음 = FAILED (값 없음).
-출력 (--out): plane_load.json (전부 + 입력 sha256) · plane_load_cuts_<P_S>.csv (단면마다) · plane_load_summary.csv ·
-  plane_load_share_slide.csv (Origin 머리 세 줄 — 가운데 단면 묶음 몫).
+  α 상태는 따로 (OK · NOT_COMPUTED · UNDEFINED · FAILED) — 종료 코드는 단면 하중 상태만 따른다.
+출력 (--out): plane_load.json (전부 + 입력 sha256) · plane_load_cuts_<P_S>.csv (단면마다) · plane_load_summary.csv (가운데 · 21 단면 평균 ·
+  크기 합 · 하중 · 검사 · α) · plane_load_share_slide.csv (Origin 머리 세 줄 — Contribution to σ_zz · 21 단면 평균) ·
+  stress_reduction_slide.csv (Origin 머리 세 줄 — α).  --rewrite = 같은 CSV (JSON 에 α 가 없으면 α 슬라이드 빼고) + plane_load_rewrite.json (출처 sha256).
 """
 import argparse
 import csv
 import hashlib
+import importlib
 import json
 import math
 import os
@@ -35,6 +55,7 @@ from pathlib import Path
 
 import numpy as np
 
+_HERE = os.path.dirname(os.path.abspath(__file__))
 SHORT = {'AM_P': 'PC', 'AM_S': 'SC', 'SE': 'SE'}
 ORDER = {'PC': 0, 'SC': 1, 'SE': 2}
 GROUPS = ('AM–AM', 'AM–SE', 'SE–SE')
@@ -44,6 +65,56 @@ N_CUTS = 21
 CONSERVE_TOL = 0.02
 BALANCE_TOL = 0.01
 DEFAULT_BOX = 0.05
+#  슬라이드 (1저자 10-07 Q1) — Origin 머리 세 줄 (Long Name · Units · Comment)
+SLIDE_HEAD = ['PC:SC', 'AM–AM contacts', 'AM–SE contacts', 'SE–SE contacts']
+DEFINITION = ('수평 단면을 지나는 수직 하중 (전체 접촉력 z 성분 · 중심 기준 분할) 의 접촉 종류별 몫 · 슬라이드 = Contribution to σ_zz '
+              '(21 단면 평균 Σ_k F_X ÷ Σ_k F) · α = Love–Weber 상별 ⟨σ_zz⟩ 비 (부피 가중 · 단면 창 안)')
+#  α (1저자 10-07 Q2)
+ALPHA_PHASES = ('AM_P', 'AM_S', 'AM', 'SE')
+ALPHA_SLIDE = ('AM_P', 'AM_S', 'SE', 'AM')
+ALPHA_HEAD = ['PC:SC', 'α AM_P', 'α AM_S', 'α SE', 'α AM']
+ALPHA_COMMENT = 'α = ⟨σ_zz⟩_phase / ⟨σ_zz⟩_all (부피 가중 · Love–Weber 입자 응력 · 단면 창 안 입자) — α < 1 = 평균보다 덜 눌림'
+ALPHA_DEFINITION = ('α_X = ⟨σ_zz⟩_X ÷ ⟨σ_zz⟩_all — ⟨·⟩ = 부피 가중 평균 (중심이 단면 창 안인 입자) · σ_p = Love–Weber (1/V_p) Σ_c (x_c − x_p) ⊗ f_c '
+                    '(봉인 dem_analysis_core.calc_love_weber_stress · return_arrays) · α_p = 평균 응력 p = tr σ / 3 의 같은 비')
+ALPHA_QUALIFIER = '모델 내부 비교 — 입자 응력 기준틀 미인증 (Codex 10-05 Q5)'
+ALPHA_TOL = 1e-9          # 닫힘 · 교차 대조 항등식 (정의상 정확 — 부동소수만큼만 어긋난다)
+
+
+def slide_comment(n_cuts=N_CUTS):
+    return f'Contribution to σ_zz — {n_cuts} 수평 단면 평균 (= (1/V)Σ f_z l_z 의 접촉 유형별 몫 · 벽 근처 2 r_max 제외)'
+
+
+def _sealed(name):
+    """봉인 모듈 (scripts/ · 읽기 전용 import) — 이 파일과 같은 폴더."""
+    if _HERE not in sys.path:
+        sys.path.insert(0, _HERE)
+    return importlib.import_module(name)
+
+
+def _rel(a, b):
+    """상대 차 (둘 다 0 이면 0)."""
+    if a == b:
+        return 0.0
+    return abs(a - b) / max(abs(a), abs(b))
+
+
+def _neg(v):
+    """부호 바꿈 (압축 양수로) — −0.0 을 쓰지 않는다."""
+    return None if v is None else (0.0 if v == 0 else -v)
+
+
+def sigma_zz_contribution(cuts):
+    """Contribution to σ_zz — 단면 하중 합을 단면마다 더한 것끼리의 비 Σ_k F_X(z_k) ÷ Σ_k F(z_k) (%) · σ_zz = 단면 하중 평균 (MPa).
+    단면 기록 (share_group_pct · load_mpa) 만으로 계산한다 — compute 와 --rewrite 가 같은 식 · 같은 더하기 순서 (같은 CSV 바이트).
+    하중 ≤ 0 인 단면이 하나라도 있으면 몫 = None (그 단면 몫이 정의되지 않는다 · 평균 하중은 낸다)."""
+    if not cuts:
+        return None, None
+    loads = [float(c['load_mpa']) for c in cuts]
+    mean = sum(loads) / len(loads)
+    if not all(L > 0 for L in loads):
+        return None, mean
+    tot = sum(loads)
+    return {g: 100.0 * sum(float(c['share_group_pct'][g]) / 100.0 * float(c['load_mpa']) for c in cuts) / tot for g in GROUPS}, mean
 
 
 def parse_type_map(s):
@@ -170,9 +241,17 @@ def compute(atoms, contacts, type_map, plate_z, box, scale, n_cuts=N_CUTS):
                   if any(c['share_group_pct'][g] is not None for c in cuts) else None for g in GROUPS}
     rng = {g: [float(min(c['share_group_pct'][g] for c in cuts)), float(max(c['share_group_pct'][g] for c in cuts))]
            if all(c['share_group_pct'][g] is not None for c in cuts) else None for g in GROUPS}
+    contrib, s_mean = sigma_zz_contribution(cuts)              # 슬라이드 양 (Q1) — 단면 기록에서 (--rewrite 와 같은 식)
+    #  연속 극한 — 창 [lo, hi] 의 (1/V) Σ_c f_z l_z: 접촉마다 f_z^up × (중심 사이 가지가 창과 겹친 길이) ÷ 창 높이
+    w_int = fz_up * np.clip(np.minimum(hi_z, hi) - np.maximum(lo_z, lo), 0.0, None)
+    i_tot = float(w_int.sum())
+    integ = {g: (100.0 * float(w_int[grp == g].sum()) / i_tot if i_tot > 0 else None) for g in GROUPS}
     out = dict(base, cuts=cuts, mid=mid, conservation_max_over_min=cons, balance_residual=bal,
                magnitude_sum_over_mid_load=(tot / (mid['load_mpa'] / conv) if mid['load_mpa'] > 0 else None),
                share_group_mean_over_cuts_pct=mean_share, share_group_range_over_cuts_pct=rng,
+               contribution_sigma_zz_pct=contrib, sigma_zz_planes_mean_mpa=s_mean,
+               sigma_zz_window_integral_mpa=i_tot / (hi - lo) * conv, contribution_sigma_zz_integral_pct=integ,
+               window_deck=[float(lo), float(hi)],
                magnitude_share_group_pct=mag_share, contact_count_share_group_pct=cnt_share,
                n_other_group=int((grp == 'other').sum()))
     if (grp == 'other').any():
@@ -181,6 +260,135 @@ def compute(atoms, contacts, type_map, plate_z, box, scale, n_cuts=N_CUTS):
     out['status'] = 'OK' if not why else 'CHECK'
     out['why'] = why if hard else []
     return out
+
+
+def stress_alpha(atoms_raw, contacts_raw, type_map, plane, box, scale):
+    """α (응력 감소 계수 꼴) — 봉인 Love–Weber 입자 텐서 (dem_analysis_core.calc_love_weber_stress · return_arrays · 읽기 전용) 로.
+
+    atoms_raw · contacts_raw = 봉인 analyze_contacts 로더의 꼴 ({id: {type, x, y, z, radius, …}} · [{id1, id2, fx…, fn_*, ft_*, cp_*}]) ·
+    plane = 같은 침대의 compute 결과 (창 [lo, hi] · 판 높이 · 21 단면 평균 · 창 잘린 적분) · box = (box_x, box_y, 출처) · scale = 덱 축척.
+    ⟨s⟩_X = Σ_{p∈X, 중심이 창 안} V_p s_p ÷ Σ V_p (s = σ_zz 또는 p = tr σ / 3 · V_p = 4/3 π r³) · α_X = ⟨s⟩_X ÷ ⟨s⟩_all.
+    없는 상 · 창 안에 중심이 없는 상 = null.  ⟨σ_zz⟩_all = 0 = UNDEFINED (0 으로 채우지 않는다) · 닫힘 · 항등식이 어긋나면 FAILED.
+    교차 대조 (관문 아님) = 모듈 머리말."""
+    out = {'status': None, 'definition': ALPHA_DEFINITION, 'qualifier': ALPHA_QUALIFIER, 'alpha_zz': None, 'alpha_p': None}
+    if plane.get('status') == 'FAILED' or 'window_deck' not in plane:
+        out['status'] = 'NOT_COMPUTED (단면 창 없음 — 단면 하중 FAILED)'
+        return out
+    try:
+        core = _sealed('dem_analysis_core')
+    except Exception as e:                                    # noqa: BLE001 — 환경 결함 (networkx 등) 을 사유로 남긴다
+        out['status'] = f'NOT_COMPUTED (봉인 dem_analysis_core import 실패 — {type(e).__name__}: {e})'
+        return out
+    bx, by = float(box[0]), float(box[1])
+    plate_z = float(plane['plate_z_deck'])
+    lw = core.calc_love_weber_stress(atoms_raw, contacts_raw, type_map, plate_z, box_x=bx, box_y=by,
+                                     plate_z_source='mesh', return_arrays=True)
+    out['lw'] = {'status': lw.get('status'), 'definition': lw.get('definition'), 'contract': lw.get('contract'),
+                 'checks': lw.get('checks')}
+    st = str(lw.get('status'))
+    if st != 'OK':
+        head = st.split(' ', 1)[0]
+        out['status'] = f'{head if head in ("NOT_COMPUTED", "FAILED", "UNDEFINED") else "FAILED"} (Love–Weber: {st})'
+        return out
+    ids = list(lw['ids'])
+    sig = np.asarray(lw['tensor'], dtype=float)
+    z = np.array([float(atoms_raw[a]['z']) for a in ids])
+    r = np.array([float(atoms_raw[a]['radius']) for a in ids])
+    name = np.array([str(type_map.get(atoms_raw[a]['type'], '')) for a in ids], dtype=object)
+    vol = (4.0 / 3.0) * np.pi * r ** 3                      # 봉인 함수와 같은 부피 → V_p σ_p = Σ_c b ⊗ f
+    lo, hi = (float(v) for v in plane['window_deck'])
+    win = (z >= lo) & (z <= hi)
+    if not win.any():
+        out['status'] = 'NOT_COMPUTED (단면 창 안에 중심이 있는 입자 없음)'
+        return out
+    conv_s = float(scale) / 1e6                              # 덱 응력 → 실제 MPa (σ_실제 = σ_덱 × scale)
+    szz = sig[:, 2, 2]
+    ptr = (sig[:, 0, 0] + sig[:, 1, 1] + sig[:, 2, 2]) / 3.0
+    is_am = np.array(['AM' in n for n in name], dtype=bool)
+    masks = {'AM_P': win & (name == 'AM_P'), 'AM_S': win & (name == 'AM_S'), 'AM': win & is_am, 'SE': win & (name == 'SE')}
+    phases = sorted({n for n in name[win]})                  # 닫힘 = 창 안 입자의 서로소 상 전부
+    v_all = float(vol[win].sum())
+
+    def _mean(m, s):
+        v = float(vol[m].sum())
+        return float((vol[m] * s[m]).sum()) / v if v > 0 else None
+
+    block = {}
+    for key, s in (('zz', szz), ('p', ptr)):
+        m_all = _mean(win, s)
+        means = {X: (_mean(masks[X], s) if masks[X].any() else None) for X in ALPHA_PHASES}
+        if m_all is None or m_all == 0.0:
+            alpha, closure = {X: None for X in ALPHA_PHASES}, None
+        else:
+            alpha = {X: (means[X] / m_all if means[X] is not None else None) for X in ALPHA_PHASES}
+            closure = sum(float(vol[win & (name == P)].sum()) / v_all * (_mean(win & (name == P), s) / m_all) for P in phases)
+        block[key] = (m_all, means, alpha, closure)
+    m_zz, means_zz, a_zz, c_zz = block['zz']
+    m_p, means_p, a_p, c_p = block['p']
+
+    def _mpa(v):
+        return None if v is None else _neg(v) * conv_s
+
+    out.update(alpha_zz=a_zz, alpha_p=a_p, closure_zz=c_zz, closure_p=c_p,
+               mean_compressive_sigma_zz_mpa=dict({'all': _mpa(m_zz)}, **{X: _mpa(means_zz[X]) for X in ALPHA_PHASES}),
+               mean_compressive_pressure_mpa=dict({'all': _mpa(m_p)}, **{X: _mpa(means_p[X]) for X in ALPHA_PHASES}),
+               n_window={P: int((win & (name == P)).sum()) for P in phases},
+               volume_frac_window={P: float(vol[win & (name == P)].sum()) / v_all for P in phases},
+               window_um=[lo * float(scale), hi * float(scale)])
+    # 교차 대조 — 접촉마다 갈라 본다 (가지 z 성분 = 봉인 함수와 같은 x_c − x_p · z 는 주기 아님)
+    A, H = bx * by, hi - lo
+    k_mpa = conv_s / (A * H)
+    lw_sum = -float((vol[win] * szz[win]).sum())             # −Σ_창 V_p σ_zz,p (압축 양수 · 덱 힘 × 길이)
+    row = {a: k for k, a in enumerate(ids)}
+    k1 = np.array([row[c['id1']] for c in contacts_raw], dtype=np.int64)
+    k2 = np.array([row[c['id2']] for c in contacts_raw], dtype=np.int64)
+    fz = np.array([float(c['fz']) for c in contacts_raw])
+    cz = np.array([float(c['cp_z']) for c in contacts_raw])
+    z1, z2 = z[k1], z[k2]
+    in1, in2 = win[k1], win[k2]
+    fup = np.where(z1 > z2, fz, -fz)                          # 위쪽 입자가 받는 힘의 z 성분 (compute 와 같은 규칙)
+    ov = np.clip(np.minimum(np.maximum(z1, z2), hi) - np.maximum(np.minimum(z1, z2), lo), 0.0, None)
+    both, edge = in1 & in2, in1 ^ in2
+    span = ~(in1 | in2) & (ov > 0)
+    both_in = float((fup[both] * np.abs(z1 - z2)[both]).sum())
+    edge_lw = float((-(cz - z1) * fz)[edge & in1].sum() + ((cz - z2) * fz)[edge & in2].sum())
+    edge_int = float((fup * ov)[edge].sum())
+    span_int = float((fup * ov)[span].sum())
+    planes = plane.get('sigma_zz_planes_mean_mpa')
+    integral = plane.get('sigma_zz_window_integral_mpa')
+    lw_mpa = lw_sum * k_mpa
+    cc = {'definition': ('LW 창 합 = −Σ_창 V_p σ_zz,p ÷ (A · H) (압축 양수) ↔ 21 단면 평균 하중 · 차 = 가장자리 항 — 창 안 두 입자 접촉은 둘이 같다 · '
+                         '한 입자만 창 안 = LW 는 그 입자 → 접촉점 가지 · 적분은 창과 겹친 길이 · 창 전체를 걸친 접촉 = 적분에만'),
+          'lw_window_sigma_zz_mpa': lw_mpa, 'planes_mean_sigma_zz_mpa': planes, 'window_integral_sigma_zz_mpa': integral,
+          'ratio_lw_over_planes': (lw_mpa / planes if planes else None),
+          'ratio_planes_over_integral': (planes / integral if (planes is not None and integral) else None),
+          'both_in_mpa': both_in * k_mpa, 'edge_lw_mpa': edge_lw * k_mpa, 'edge_integral_mpa': edge_int * k_mpa,
+          'span_integral_mpa': span_int * k_mpa,
+          'n_contacts': {'both_in': int(both.sum()), 'edge': int(edge.sum()), 'span': int(span.sum())},
+          'lw_identity_rel': _rel(both_in + edge_lw, lw_sum),
+          'integral_identity_rel': (_rel((both_in + edge_int + span_int) * k_mpa, integral) if integral is not None else None),
+          'n_window_touching_wall': int((win & (((z - r) < 0.0) | ((z + r) > plate_z))).sum())}
+    out['cross_check'] = cc
+    bad = [f'닫힘 {nm} Σ (V_X/V_all) α_X = {c!r} ≠ 1' for nm, c in (('zz', c_zz), ('p', c_p)) if c is not None and not abs(c - 1.0) <= ALPHA_TOL]
+    bad += [f'교차 대조 항등식 {k} = {cc[k]!r} > {ALPHA_TOL:g}' for k in ('lw_identity_rel', 'integral_identity_rel')
+            if cc[k] is not None and not cc[k] <= ALPHA_TOL]
+    if cc['n_window_touching_wall']:
+        bad.append(f'창 안 입자 {cc["n_window_touching_wall"]} 개가 벽에 닿는다 (창 = 벽에서 2 r_max 밖이어야)')
+    if bad:
+        out['status'] = 'FAILED (' + ' · '.join(bad) + ')'
+    elif m_zz is None or m_zz == 0.0:
+        out['status'] = 'UNDEFINED (⟨σ_zz⟩_all = 0 — α_zz = 0/0 · 0 으로 채우지 않음)'
+    else:
+        out['status'] = 'OK'
+    return out
+
+
+def load_raw_for_lw(res_dir):
+    """봉인 analyze_contacts 의 로더 그대로 (웹앱 접촉 단계와 같은 파싱 · c_strs 검증 포함) → (atoms_raw, contacts_raw)."""
+    ac = _sealed('analyze_contacts')
+    atoms_raw, _df_a = ac.load_atoms_raw(str(Path(res_dir) / 'atoms.csv'))
+    contacts_raw, _df_c = ac.load_contacts_raw(str(Path(res_dir) / 'contacts.csv'))
+    return atoms_raw, contacts_raw
 
 
 # ── 파일 ────────────────────────────────────────────────────────────────────
@@ -247,6 +455,19 @@ def load_case(res_dir, meta_path, scale_cli=None):
 def run_one(res_dir, meta_path, scale_cli=None):
     atoms, contacts, tmap, plate_z, box, scale, inputs, f_src = load_case(res_dir, meta_path, scale_cli)
     out = compute(atoms, contacts, tmap, plate_z, box, scale)
+    try:                                                      # α 입력 = 봉인 로더 (같은 두 CSV — sha256 은 위 inputs)
+        atoms_raw, contacts_raw = load_raw_for_lw(res_dir)
+    except Exception as e:                                    # noqa: BLE001 — 입력 결손 (열 · 파싱) = α 만 NOT_COMPUTED
+        atoms_raw = contacts_raw = None
+        out['alpha'] = {'status': f'NOT_COMPUTED (입자 응력 입력 — {type(e).__name__}: {e})', 'definition': ALPHA_DEFINITION,
+                        'qualifier': ALPHA_QUALIFIER, 'alpha_zz': None, 'alpha_p': None}
+    if atoms_raw is not None:
+        try:
+            out['alpha'] = stress_alpha(atoms_raw, contacts_raw, tmap, out, box, scale)
+        except Exception as e:                                # noqa: BLE001 — 계산 중 예외 = FAILED (값 없음 · 사유)
+            out['alpha'] = {'status': f'FAILED (α 계산 예외 — {type(e).__name__}: {e})', 'definition': ALPHA_DEFINITION,
+                            'qualifier': ALPHA_QUALIFIER, 'alpha_zz': None, 'alpha_p': None}
+        del atoms_raw, contacts_raw
     out.update(results_dir=str(res_dir), meta=str(meta_path), inputs_sha256=inputs, force_source=f_src,
                type_map={str(k): v for k, v in tmap.items()})
     return out
@@ -263,10 +484,15 @@ def _fmt(v, nd=4):
     return '' if v is None else f'{v:.{nd}f}'
 
 
-def write_outputs(results, out_dir):
+def write_outputs(results, out_dir, write_json=True):
+    """→ 쓴 파일 이름 목록.  write_json=False = --rewrite (JSON 은 안 건드린다).  α 슬라이드 = 케이스에 α 덩어리가 하나라도 있을 때만
+    (α 없는 옛 JSON 을 다시 쓰면 빈 α 표를 만들지 않는다) · 행 = α 상태 OK 인 케이스."""
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
-    (out_dir / 'plane_load.json').write_text(json.dumps(results, ensure_ascii=False, indent=1) + '\n', encoding='utf-8')
+    written = []
+    if write_json:
+        (out_dir / 'plane_load.json').write_text(json.dumps(results, ensure_ascii=False, indent=1) + '\n', encoding='utf-8')
+        written.append('plane_load.json')
     for lab, r in results['cases'].items():
         if r.get('status') == 'FAILED':
             continue
@@ -279,24 +505,82 @@ def write_outputs(results, out_dir):
                      [[_fmt(c['z_um'], 3), _fmt(c['frac_of_gap'], 4), c['n_cross'], _fmt(c['load_mpa'], 3)]
                       + [_fmt(c['share_group_pct'][g]) for g in GROUPS] + [_fmt(c['share_pair_pct'][p]) for p in PAIRS]
                       for c in r['cuts']])
+        written.append(f'plane_load_cuts_{tag}.csv')
     labs = [l for l in results['order'] if results['cases'][l].get('status') != 'FAILED']
+    n_cuts = results.get('n_cuts', N_CUTS)
+    no_alpha = 'NOT_COMPUTED (α 없음 — 옛 plane_load.json · 덤프로 다시 돌려야 나온다)'
     rows = []
     for l in labs:
         r = results['cases'][l]
-        rows.append([l] + [_fmt(r['mid']['share_group_pct'][g]) for g in GROUPS]
-                    + [_fmt(r['share_group_mean_over_cuts_pct'][g]) for g in GROUPS]
-                    + [_fmt(r['magnitude_share_group_pct'][g]) for g in GROUPS]
-                    + [_fmt(r['mid']['load_mpa'], 3), _fmt(r['conservation_max_over_min'], 5), _fmt(r['balance_residual'], 6), r['status']])
+        con = r.get('contribution_sigma_zz_pct') or {}
+        mag = r.get('magnitude_share_group_pct') or {}
+        al = r.get('alpha') or {}
+        az, ap, cc = al.get('alpha_zz') or {}, al.get('alpha_p') or {}, al.get('cross_check') or {}
+        rows.append([l] + [_fmt(r['mid']['share_group_pct'][g]) for g in GROUPS] + [_fmt(con.get(g)) for g in GROUPS]
+                    + [_fmt(mag.get(g)) for g in GROUPS]
+                    + [_fmt(r['mid']['load_mpa'], 3), _fmt(r.get('sigma_zz_planes_mean_mpa'), 3), _fmt(r['conservation_max_over_min'], 5),
+                       _fmt(r['balance_residual'], 6), r['status']]
+                    + [_fmt(az.get(X)) for X in ALPHA_PHASES] + [_fmt(al.get('closure_zz'))] + [_fmt(ap.get(X)) for X in ALPHA_PHASES]
+                    + [_fmt(cc.get('ratio_lw_over_planes')), al.get('status', no_alpha)])
     write_origin(out_dir / 'plane_load_summary.csv',
                  ['PC:SC'] + [f'{g} (mid)' for g in GROUPS] + [f'{g} (mean)' for g in GROUPS] + [f'{g} (|F| sum)' for g in GROUPS]
-                 + ['Load (mid)', 'Load max/min', 'Balance residual', 'Status'],
-                 ['wt%'] + ['%'] * 9 + ['MPa', '-', '-', '-'],
-                 ['조성'] + ['가운데 단면 하중 몫'] * 3 + ['유효 단면 평균 몫'] * 3 + ['비교: 접촉 법선력 크기 합의 몫 (옛 5 쪽 방식 · 보존량 아님)'] * 3
-                 + ['가운데 단면 하중 (실제 MPa)', '유효 단면 하중 최대 ÷ 최소 (보존 검사)', '입자 힘 가중 알짜 힘 (평형 검사)', 'OK / CHECK'],
+                 + ['Load (mid)', 'σzz (planes mean)', 'Load max/min', 'Balance residual', 'Status']
+                 + [f'α {X}' for X in ALPHA_PHASES] + ['α closure'] + [f'α_p {X}' for X in ALPHA_PHASES] + ['LW σzz / planes', 'α status'],
+                 ['wt%'] + ['%'] * 9 + ['MPa', 'MPa', '-', '-', '-'] + ['-'] * 11,
+                 ['조성'] + ['가운데 단면 하중 몫'] * 3 + [f'Contribution to σ_zz — {n_cuts} 단면 평균 Σ_k F_X ÷ Σ_k F (하중 가중 · 슬라이드 값)'] * 3
+                 + ['비교: 접촉 법선력 크기 합의 몫 (옛 5 쪽 방식 · 보존량 아님)'] * 3
+                 + ['가운데 단면 하중 (실제 MPa)', f'σ_zz = {n_cuts} 단면 하중 평균 (실제 MPa)', '유효 단면 하중 최대 ÷ 최소 (보존 검사)',
+                    '입자 힘 가중 알짜 힘 (평형 검사)', 'OK / CHECK']
+                 + [f'{ALPHA_COMMENT} · {ALPHA_QUALIFIER}'] * 4 + ['Σ_X (V_X/V_all) α_X (정의상 1)']
+                 + ['α_p = ⟨p⟩_phase / ⟨p⟩_all (평균 응력 p = tr σ / 3 · 보조)'] * 4
+                 + [f'교차 대조 (관문 아님): −Σ_창 V σ_zz ÷ (A · H) ÷ {n_cuts} 단면 평균 하중', 'OK / NOT_COMPUTED / UNDEFINED / FAILED'],
                  rows)
-    write_origin(out_dir / 'plane_load_share_slide.csv', ['PC:SC'] + list(GROUPS), ['wt%'] + ['%'] * 3,
-                 ['조성'] + ['가운데 수평 단면을 지나는 수직 하중의 몫 (힘 평형 — 보존량)'] * 3,
-                 [[l] + [_fmt(results['cases'][l]['mid']['share_group_pct'][g]) for g in GROUPS] for l in labs])
+    written.append('plane_load_summary.csv')
+    write_origin(out_dir / 'plane_load_share_slide.csv', SLIDE_HEAD, ['wt%'] + ['%'] * 3, ['조성'] + [slide_comment(n_cuts)] * 3,
+                 [[l] + [_fmt((results['cases'][l].get('contribution_sigma_zz_pct') or {}).get(g)) for g in GROUPS] for l in labs])
+    written.append('plane_load_share_slide.csv')
+    if any('alpha' in results['cases'][l] for l in labs):
+        arows = []
+        for l in labs:
+            al = results['cases'][l].get('alpha') or {}
+            if al.get('status') == 'OK':
+                arows.append([l] + [_fmt(al['alpha_zz'].get(X)) for X in ALPHA_SLIDE])
+        write_origin(out_dir / 'stress_reduction_slide.csv', ALPHA_HEAD, ['wt%'] + ['-'] * 4, ['조성'] + [ALPHA_COMMENT] * 4, arows)
+        written.append('stress_reduction_slide.csv')
+    return written
+
+
+def rewrite_from_json(json_path, out_dir):
+    """--rewrite — 이 도구의 plane_load.json → CSV 다시 쓰기 (덤프 불요 · JSON 은 안 건드린다).
+
+    기여 (Contribution to σ_zz) 는 단면 기록 (share_group_pct · load_mpa) 에서 compute 와 **같은 식** (sigma_zz_contribution) 으로 다시 계산한다
+    — 저장된 값이 있으면 같아야 한다 (다르면 거부: 변조 · 정의 변경).  α 는 입자 덤프가 있어야 새로 계산된다 → 저장된 α 를 그대로 쓰고,
+    α 없는 옛 JSON 이면 α 슬라이드를 쓰지 않는다.  출처 = plane_load_rewrite.json (원 JSON · 코드 sha256 · 쓴 파일 sha256)."""
+    json_path, out_dir = Path(json_path), Path(out_dir)
+    src_sha = _sha(json_path)
+    R = json.loads(json_path.read_text(encoding='utf-8'))
+    if R.get('tool') != 'plane_load_share' or not isinstance(R.get('cases'), dict) or not isinstance(R.get('order'), list):
+        raise ValueError(f'{json_path} — plane_load_share 의 plane_load.json 이 아니다 (tool · cases · order)')
+    for lab in R['order']:
+        r = R['cases'][lab]
+        if r.get('status') == 'FAILED':
+            continue
+        contrib, s_mean = sigma_zz_contribution(r['cuts'])
+        for key, val in (('contribution_sigma_zz_pct', contrib), ('sigma_zz_planes_mean_mpa', s_mean)):
+            if key in r and r[key] != val:
+                raise ValueError(f'{lab}: 저장된 {key} {r[key]!r} ≠ 단면 기록에서 다시 계산한 {val!r} — JSON 변조 또는 정의 변경')
+            r[key] = val
+    out_dir.mkdir(parents=True, exist_ok=True)
+    if (out_dir / 'plane_load.json').exists() and (out_dir / 'plane_load.json').resolve() != json_path.resolve():
+        raise ValueError(f'{out_dir} 에 다른 plane_load.json 이 있다 — 재작성 CSV 가 그 JSON 과 어긋난다 (빈 폴더나 원 JSON 의 폴더로)')
+    written = write_outputs(R, out_dir, write_json=False)
+    prov = {'tool': 'plane_load_share', 'mode': 'rewrite', 'source_json': json_path.name, 'source_json_sha256': src_sha,
+            'source_code_sha256': R.get('code_sha256'), 'code_sha256': _sha(Path(__file__)),
+            'written': {n: _sha(out_dir / n) for n in written},
+            'note': ('단면 기록에서 다시 쓴 CSV (기여 = Σ_k F_X ÷ Σ_k F) — 입자 응력 α 는 덤프가 있어야 새로 계산된다 '
+                     '(원 JSON 에 있으면 그대로 · 없으면 α 슬라이드 없음)')}
+    (out_dir / 'plane_load_rewrite.json').write_text(json.dumps(prov, ensure_ascii=False, indent=1) + '\n', encoding='utf-8')
+    return R
 
 
 def run_batch(batch, out_dir, scale_cli=None):
@@ -316,25 +600,42 @@ def run_batch(batch, out_dir, scale_cli=None):
         r['case_id'] = cid
         cases[lab] = r
         order.append(lab)
-    results = {'tool': 'plane_load_share', 'definition': '수평 단면을 지나는 수직 하중 (전체 접촉력 z 성분 · 중심 기준 분할) 의 접촉 종류별 몫',
-               'tolerances': {'conservation': CONSERVE_TOL, 'balance': BALANCE_TOL}, 'n_cuts': N_CUTS,
+    results = {'tool': 'plane_load_share', 'definition': DEFINITION,
+               'tolerances': {'conservation': CONSERVE_TOL, 'balance': BALANCE_TOL, 'alpha_closure_identity': ALPHA_TOL}, 'n_cuts': N_CUTS,
                'code_sha256': _sha(Path(__file__)), 'order': order, 'cases': cases}
     write_outputs(results, out_dir)
     return results
 
 
 def print_report(results):
-    print(f'{"PC:SC":6s} {"상태":6s} {"가운데 하중 MPa":>14s} {"보존 최대/최소":>14s} {"평형":>9s}   가운데 단면 몫 AM–AM · AM–SE · SE–SE   (|F| 합 몫)')
+    n = results.get('n_cuts', N_CUTS)
+    print(f'{"PC:SC":6s} {"상태":6s} {"σzz MPa":>9s} {"보존":>8s} {"평형":>9s}   Contribution to σzz ({n} 단면 평균) AM–AM · AM–SE · SE–SE'
+          '   (가운데 단면) · (|F| 합 몫)')
     for l in results['order']:
         r = results['cases'][l]
         if r.get('status') == 'FAILED':
             print(f'{l:6s} FAILED  {"; ".join(r.get("why", []))}')
             continue
-        m = r['mid']['share_group_pct']; s = r['magnitude_share_group_pct']
-        print(f'{l:6s} {r["status"]:6s} {r["mid"]["load_mpa"]:14.2f} {r["conservation_max_over_min"] or float("nan"):14.4f} '
-              f'{r["balance_residual"]:9.2e}   ' + ' · '.join(_fmt(m[g], 1) for g in GROUPS) + '   (' + ' · '.join(_fmt(s[g], 1) for g in GROUPS) + ')')
+        c = r.get('contribution_sigma_zz_pct') or {}
+        m = r['mid']['share_group_pct']
+        s = r.get('magnitude_share_group_pct') or {}
+        bal = r.get('balance_residual')
+        print(f'{l:6s} {r["status"]:6s} {_fmt(r.get("sigma_zz_planes_mean_mpa"), 2):>9s} {_fmt(r.get("conservation_max_over_min"), 4):>8s} '
+              f'{(f"{bal:.2e}" if bal is not None else ""):>9s}   ' + ' · '.join(_fmt(c.get(g), 2) for g in GROUPS)
+              + '   (' + ' · '.join(_fmt(m[g], 1) for g in GROUPS) + ') · (' + ' · '.join(_fmt(s.get(g), 1) for g in GROUPS) + ')')
         for w in r.get('why', []):
             print(f'         ⚠ {w}')
+        al = r.get('alpha')
+        if al is None:
+            continue
+        if al.get('status') == 'OK':
+            az, cc = al['alpha_zz'], al['cross_check']
+            print(f'         α (σ_zz) AM_P {_fmt(az["AM_P"], 3)} · AM_S {_fmt(az["AM_S"], 3)} · SE {_fmt(az["SE"], 3)} · AM {_fmt(az["AM"], 3)}'
+                  f' · 닫힘 {_fmt(al["closure_zz"], 9)} · LW 창 합 ÷ {n} 단면 = {_fmt(cc["ratio_lw_over_planes"], 4)}'
+                  f' (창 안 두 입자 {_fmt(cc["both_in_mpa"], 2)} · 가장자리 LW {_fmt(cc["edge_lw_mpa"], 2)} ↔ 적분 {_fmt(cc["edge_integral_mpa"], 2)}'
+                  f' · 창 전체 걸침 {_fmt(cc["span_integral_mpa"], 2)} MPa)')
+        else:
+            print(f'         α {al.get("status")}')
 
 
 # ── 자체 시험 ───────────────────────────────────────────────────────────────
@@ -718,24 +1019,34 @@ def selftest():
 
 
 def main(argv=None):
-    ap = argparse.ArgumentParser(description='단면 하중 몫 — 수평 단면을 지나는 수직 하중의 접촉 종류별 몫 (읽기 전용)')
+    ap = argparse.ArgumentParser(description='단면 하중 몫 — 수평 단면을 지나는 수직 하중의 접촉 종류별 몫 · 상별 응력 감소 계수 α (읽기 전용)')
     ap.add_argument('--batch', help='망 배치 폴더 (network_cases.tsv · work/results · work/uploads)')
     ap.add_argument('--case', help='결과 폴더 하나 (atoms.csv · contacts.csv · mesh_info.json · input_params.json)')
     ap.add_argument('--meta', help='--case 의 meta.json (type map · scale)')
     ap.add_argument('--label', default='case', help='--case 의 이름 (예: 7:3)')
     ap.add_argument('--scale', type=float, help='덱 축척 (meta.json 과 다르면 거부)')
+    ap.add_argument('--rewrite', help='이 도구의 plane_load.json → CSV 다시 쓰기 (덤프 불요 · JSON 은 안 건드린다 · '
+                                      '출처 = plane_load_rewrite.json · α 는 JSON 에 있을 때만)')
     ap.add_argument('--out', help='출력 폴더')
     ap.add_argument('--selftest', action='store_true')
     a = ap.parse_args(argv)
     if a.selftest:
         return 0 if selftest() else 1
+    if a.rewrite:
+        if not a.out or a.batch or a.case:
+            ap.error('--rewrite 는 --out 과 같이 · --batch · --case 없이')
+        R = rewrite_from_json(a.rewrite, a.out)
+        print_report(R)
+        print(f'→ {a.out} · 재작성 (원 JSON 그대로 · 출처 plane_load_rewrite.json)')
+        return 0
     if not a.out or not (a.batch or (a.case and a.meta)):
         ap.error('--out 과 (--batch 또는 --case + --meta) 가 필요하다')
     if a.batch:
         R = run_batch(a.batch, a.out, a.scale)
     else:
         r = run_one(a.case, a.meta, a.scale)
-        R = {'tool': 'plane_load_share', 'tolerances': {'conservation': CONSERVE_TOL, 'balance': BALANCE_TOL}, 'n_cuts': N_CUTS,
+        R = {'tool': 'plane_load_share', 'definition': DEFINITION,
+             'tolerances': {'conservation': CONSERVE_TOL, 'balance': BALANCE_TOL, 'alpha_closure_identity': ALPHA_TOL}, 'n_cuts': N_CUTS,
              'code_sha256': _sha(Path(__file__)), 'order': [a.label], 'cases': {a.label: r}}
         write_outputs(R, a.out)
     print_report(R)

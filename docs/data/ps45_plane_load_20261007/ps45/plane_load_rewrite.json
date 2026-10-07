@@ -1,0 +1,18 @@
+{
+ "tool": "plane_load_share",
+ "mode": "rewrite",
+ "source_json": "plane_load.json",
+ "source_json_sha256": "0f65a06b3ab6060f19992cc8a09bbf4236e26d72cdbcc496e325b2770040707f",
+ "source_code_sha256": "4297f669606d30f3f3f6ff9fdde79f85e94a88364c6259f27e1fff6139dac89d",
+ "code_sha256": "a1d95cb9c2f800028d67c44d79330362f9ffee568fc9cccebb943cce064a61ee",
+ "written": {
+  "plane_load_cuts_0_10.csv": "9a5b83676de1a1aae612684087bf2727374a191de11f1bfcf5a9ea0ac907761b",
+  "plane_load_cuts_3_7.csv": "3079252e8ff07dd9662e40a736477bc90d79c090ded9cd6cb0355247fb13afe6",
+  "plane_load_cuts_5_5.csv": "95677fd5efba4efe1fa7cda616aab677f9e9e8248958869fcd4ee75792efc524",
+  "plane_load_cuts_7_3.csv": "4fd22cf590395ba29513b937c986ca3a000b818634edfa2b5e804fc0c4014993",
+  "plane_load_cuts_10_0.csv": "c58747106523214bc9feb225a6186d8e0e7059ccf9ac2c15efbac12746937997",
+  "plane_load_summary.csv": "3e24e97402f05392e4d9d109117e4975391d9cb19d9349ba615048463df0b396",
+  "plane_load_share_slide.csv": "593b7a3941304a2ecc4b7fbe9cce4cd2de15613a7c4de9b702345d5225b6057c"
+ },
+ "note": "단면 기록에서 다시 쓴 CSV (기여 = Σ_k F_X ÷ Σ_k F) — 입자 응력 α 는 덤프가 있어야 새로 계산된다 (원 JSON 에 있으면 그대로 · 없으면 α 슬라이드 없음)"
+}
