@@ -253,5 +253,5 @@ $PY scripts/run_network_194_parallel.py run --root "$R" 2>&1 | tee ~/net194_run_
   전자 두 모드 · Hertz 열 = 띠 겹침 B∩T 4 노드 (`boundary_overlap` — 판 간격 19.1455 µm < 4 r_AM 24 µm) · Physics 열 = 덤프 면적 −0.186036 µm² 간선 거부 → WEB-03 Q1 게시 차단 ·
   이온 채널은 계산됨 (Codex 직접 풀이와 같음 · Physics 협착-only 312 간선 not_computed = 기대 그대로).  ⇒ **코드는 등록 계약대로 · 등록 기대 (case15 done) 가 틀렸다** (`SELF-92`).
   이 결과를 본 뒤 §1 기대 · 스모크 기대를 **고치지 않는다**.  194 도달 = 띠 겹침 0/194 · 음수 · 0 덤프 면적 0/194 (기록 · 증거 README §3) · 처리 = 재검증 4 요청서 §4 · Q6 (Codex) ·
-  같이 등재 `GEN2-04` (면적 ≤ 0 처리 모드 비대칭) · `WEB-05` (시도 사유 끝 300 자) · ⬜ 전체 출력 보충 묶음 (판정문 §8-4 · 1저자).
+  같이 등재 `GEN2-04` (면적 ≤ 0 처리 모드 비대칭) · `WEB-05` (시도 사유 끝 300 자) · ✅ 전체 출력 보충 묶음 (판정문 §8-4 · 1저자 · 증거 README §5 — 자체 시험 rc 0 · 100/100 · 영수증 15 = 15).
 - 9-3 발사: 커밋 ⬜ · manifest `seal.code_fp` ⬜ · `expected_network_generation` ⬜ · `input_digest.raw_sha256_table_sha256` ⬜

@@ -7,7 +7,7 @@
 - **봉인**: 32 파일 · `code_fp e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71` **그대로** — 고친 파일 = 실행기 (`scripts/run_network_194_parallel.py`) ·
   다시 읽기 (`scripts/g2_network_reread.py` · 인계 도구 지문 = 발사 때 기록) · 배포 생성기 (`scripts/lhs_release_build.py`) · 시험.
 - **이 요청에 붙일 것 (1저자 · WSL)**: 등록 `docs/reviews/lhs_network_batch_registration_20261007_g2.md` §1 사전 점검 전체 로그 — 각 단계 **원 프로세스 rc 와 전체 출력**
-  (tail · grep 만이 아니라 · 판정문 §8-4) · 시범 3 케이스 `--observe-imports` 의 영수증 폴더 · audit JSON · 다시 읽기 JSON v3.  → ✅ 10-07 14:15 받음 = §4 (보충 묶음은 받는 대로).
+  (tail · grep 만이 아니라 · 판정문 §8-4) · 시범 3 케이스 `--observe-imports` 의 영수증 폴더 · audit JSON · 다시 읽기 JSON v3.  → ✅ 10-07 14:15 받음 = §4 · 보충 묶음 = 증거 README §5.
 
 ## 1. G2RR3-01 — v1.3 배포 관문 (`3f9f86f59`)
 
@@ -53,5 +53,5 @@
   **관측 영수증 = 프로세스 15 (시작 15 = 끝맺음 15) · 완료 시도 3 (역할 worker / network_solver) · 리포 모듈 30 ⊆ 32** · 다시 읽기 JSON v3.
 - 단계 3 · 4 = 기대와 다름: `case15_network` failed (smoke rc 1 · reread rc 1 = S0) · real14 σ_ratio = 참고값과 8 자리 같음 · LHS 셋 · 음성 대조 넷 = 기대대로.
   case15 = 전자 두 모드 · Hertz 열 띠 겹침 4 노드 (판 간격 19.1455 µm < 4 r_AM) · Physics 열 음수 덤프 면적 간선 거부 → 게시 차단 (이온 채널은 계산됨 = Codex 직접 풀이와 같음) → Q6.
-- 전체 출력 (판정문 §8-4): 등록 §1 명령은 tail · grep 이고 rc 는 원 프로세스 (`PIPESTATUS`) — 보충 묶음 (자체 시험 전체 출력 · 시범 `import_obs/` 영수증 · `runs/` · worker.json · log.txt) 은
-  1저자가 받는 대로 같은 폴더에 넣는다 → Q5.
+- 전체 출력 (판정문 §8-4): 등록 §1 명령은 tail · grep 이고 rc 는 원 프로세스 (`PIPESTATUS`) — 보충 묶음 (자체 시험 전체 출력 · 시범 `import_obs/` 영수증 · `runs/` · worker.json · log.txt) = ✅ 받음
+  (`g2pre_extra_c3117438a_1007_1415.tar.gz` · 증거 README §5 · 영수증 시작 15 = 끝맺음 15) → Q5.
