@@ -1,0 +1,16 @@
+[
+  {
+    "name": "case15_channels",
+    "argv": [
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\gen2_network_reverify4_20261007\\probes\\case15_channels.py"
+    ],
+    "rc": 0,
+    "seconds": 8.530999999959022,
+    "tail": [
+      "electronic_physics {\"value\": [null, null], \"solve_info\": {\"electrode_model\": \"dirichlet_exact\", \"status\": \"not_computed\", \"reason\": \"boundary_overlap\", \"method\": null, \"n_free\": null, \"n_fixed\": null, \"n_floating\": 0, \"n_zero_resistance\": null, \"I_bottom\": null, \"I_top\": null, \"conservation_rel\": null, \"residual_rel\": null, \"conservation_rel_max\": 1e-06, \"residual_rel_max\": 1e-06, \"attempts\": [], \"branch\": \"full\", \"delta_V\": 1.0, \"g_to_q\": 0.0019145499999999995, \"geometry\": {\"plate_z\": 0.0191455, \"box_x\": 0.1, \"box_y\": 0.1, \"scale\": 1000.0}}, \"bottom\": 56, \"top\": 52, \"intersection\": [24, 40, 57, 103], \"n_edges\": 119}",
+      "thermal_hertzian {\"value\": [null, null], \"solve_info\": {\"electrode_model\": \"dirichlet_exact\", \"status\": \"not_computed\", \"reason\": \"boundary_overlap\", \"method\": null, \"n_free\": null, \"n_fixed\": null, \"n_floating\": 0, \"n_zero_resistance\": null, \"I_bottom\": null, \"I_top\": null, \"conservation_rel\": null, \"residual_rel\": null, \"conservation_rel_max\": 1e-06, \"residual_rel_max\": 1e-06, \"attempts\": [], \"branch\": \"full\", \"delta_V\": 1.0, \"g_to_q\": 0.0019145499999999995, \"geometry\": {\"plate_z\": 0.0191455, \"box_x\": 0.1, \"box_y\": 0.1, \"scale\": 1000.0}}, \"bottom\": 9352, \"top\": 97, \"intersection\": [24, 40, 57, 103], \"n_edges\": 182995}",
+      "thermal_physics {\"error\": \"ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)\"}",
+      "geometry 19.1455 [100.0, 100.0] negative contacts 2"
+    ]
+  }
+]

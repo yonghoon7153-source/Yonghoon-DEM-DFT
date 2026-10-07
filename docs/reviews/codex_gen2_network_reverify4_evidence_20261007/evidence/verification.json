@@ -1,0 +1,132 @@
+{
+  "scope": "Review evidence consistency only, NOT production approval",
+  "checks": [
+    {
+      "name": "source448 unchanged after probes",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "WSL manifest byte SHA binding",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "WSL sealed code and handover tools identical",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "WSL hook identical",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "WSL starts15 finals15 completed3",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "WSL modules30 subset32",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "WSL reread3 detailed success",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "actual audit positive rc0",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "actual audit final-only loss rc1",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "counterexample helper pair loss rc0",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "counterexample only two core roles rc0",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "actual release positive builds and checks",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "original missing/bad witnesses rejected",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "counterexamples detailed false/missing accepted",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "194 input record census",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "194 all L0 overlap0 in archived audit",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "32806189 positive finite known-id contacts in harvested records",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "archived geometry linkage",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "case15 raw negative rows2",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "case15 four overlapping IDs",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "case15 physics thermal refuses negative",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "case15 ionic agrees at eight decimals",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "case15 ionic certificates pass",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "WSL tool git blobs agree",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "release regression reports exactly two qualified fails",
+      "ok": true,
+      "detail": null
+    }
+  ],
+  "n_pass": 25,
+  "n_fail": 0
+}

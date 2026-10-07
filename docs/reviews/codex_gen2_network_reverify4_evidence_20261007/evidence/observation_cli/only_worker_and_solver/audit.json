@@ -1,0 +1,185 @@
+{
+ "schema": "launch_seal/v3#audit",
+ "root": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\gen2_network_reverify4_20261007\\evidence\\observation_cli\\only_worker_and_solver",
+ "audited_at": "2026-10-07T15:45:45",
+ "launch_sha": "0801d4ceb540f5a5813761b20a5e0f304ed80a03",
+ "seal_fp": "e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71",
+ "code_root": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\gen2_network_reverify4_20261007\\source",
+ "code_root_changed_now": [],
+ "verdicts": {
+  "SEALED": 1
+ },
+ "merged": {
+  "same": 1
+ },
+ "cases": [
+  {
+   "case": "lhs00_000",
+   "record_status": "done",
+   "n_attempts": 1,
+   "attempt": 1,
+   "run": 1,
+   "form": "attempt_seal",
+   "verdict": "SEALED",
+   "why": "시작 · 끝 지문 = 발사 봉인 · git sha = 발사 · dirty 아님",
+   "record_sha": "e999d3a1143453b21d03013a1d8548c41912631d25f92c75596f280873f57d8e",
+   "fp_start": "e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71",
+   "fp_end": "e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71",
+   "git_sha": "0801d4ceb540f5a5813761b20a5e0f304ed80a03",
+   "cohort": "lhs",
+   "generation": "g2",
+   "merged": "same"
+  }
+ ],
+ "expected_network_generation": "g2",
+ "generation_declared": true,
+ "generation_problems": [],
+ "input_problems": [],
+ "eligibility": {
+  "kind": "current",
+  "historical": null,
+  "problems": [],
+  "note": ""
+ },
+ "import_observation": {
+  "n_processes": 2,
+  "n_started": 2,
+  "n_finalized": 2,
+  "processes": [
+   {
+    "proc": "1517930-f636b27b",
+    "pid": 1517930,
+    "ppid": 1517355,
+    "identity": {
+     "run_id": "81dc4ccc995152e9f06cfbc45d1cae8e",
+     "run_no": "1",
+     "case": "lhs00_000",
+     "attempt": "1"
+    },
+    "final": true,
+    "main": "C:/Users/Administrator/Documents/Codex/2026-08-24/claude-stoic-knuth-nobvq-x20/gen2_network_reverify4_20261007/source/scripts/lhs_webapp_batch.py",
+    "role": "worker",
+    "n": 24,
+    "files": [
+     "scripts/export_master_csv.py",
+     "scripts/grade_engine.py",
+     "scripts/lens_geometry.py",
+     "scripts/lhs_descriptor_harvest.py",
+     "scripts/lhs_harvest_batch.py",
+     "scripts/lhs_perc_extract.py",
+     "scripts/lhs_webapp_batch.py",
+     "scripts/metrics_json.py",
+     "scripts/ml_design_structure.py",
+     "scripts/network_conductivity.py",
+     "scripts/parse_liggghts.py",
+     "scripts/plastic_coverage.py",
+     "scripts/press_units.py",
+     "scripts/se_material.py",
+     "scripts/tau_flux.py",
+     "scripts/type_map_resolve.py",
+     "webapp/app.py",
+     "webapp/ledger_view.py",
+     "webapp/mpm_lab_register.py",
+     "webapp/pipeline_service.py",
+     "webapp/predictor_engine.py",
+     "webapp/security.py",
+     "webapp/storage_sync.py",
+     "webapp/structure_predictor.py"
+    ]
+   },
+   {
+    "proc": "1518907-3dba3a66",
+    "pid": 1518907,
+    "ppid": 1517930,
+    "identity": {
+     "run_id": "81dc4ccc995152e9f06cfbc45d1cae8e",
+     "run_no": "1",
+     "case": "lhs00_000",
+     "attempt": "1"
+    },
+    "final": true,
+    "main": "C:/Users/Administrator/Documents/Codex/2026-08-24/claude-stoic-knuth-nobvq-x20/gen2_network_reverify4_20261007/source/scripts/network_conductivity.py",
+    "role": "network_solver",
+    "n": 8,
+    "files": [
+     "scripts/analyze_contacts.py",
+     "scripts/dem_analysis_core.py",
+     "scripts/lens_geometry.py",
+     "scripts/metrics_json.py",
+     "scripts/network_conductivity.py",
+     "scripts/plastic_coverage.py",
+     "scripts/se_material.py",
+     "scripts/type_map_resolve.py"
+    ]
+   }
+  ],
+  "problems": [],
+  "tmp_leftover": [],
+  "files": [
+   "scripts/analyze_contacts.py",
+   "scripts/dem_analysis_core.py",
+   "scripts/export_master_csv.py",
+   "scripts/grade_engine.py",
+   "scripts/lens_geometry.py",
+   "scripts/lhs_descriptor_harvest.py",
+   "scripts/lhs_harvest_batch.py",
+   "scripts/lhs_perc_extract.py",
+   "scripts/lhs_webapp_batch.py",
+   "scripts/metrics_json.py",
+   "scripts/ml_design_structure.py",
+   "scripts/network_conductivity.py",
+   "scripts/parse_liggghts.py",
+   "scripts/plastic_coverage.py",
+   "scripts/press_units.py",
+   "scripts/se_material.py",
+   "scripts/tau_flux.py",
+   "scripts/type_map_resolve.py",
+   "webapp/app.py",
+   "webapp/ledger_view.py",
+   "webapp/mpm_lab_register.py",
+   "webapp/pipeline_service.py",
+   "webapp/predictor_engine.py",
+   "webapp/security.py",
+   "webapp/storage_sync.py",
+   "webapp/structure_predictor.py"
+  ],
+  "observed": [
+   "scripts/analyze_contacts.py",
+   "scripts/dem_analysis_core.py",
+   "scripts/export_master_csv.py",
+   "scripts/grade_engine.py",
+   "scripts/lens_geometry.py",
+   "scripts/lhs_descriptor_harvest.py",
+   "scripts/lhs_harvest_batch.py",
+   "scripts/lhs_perc_extract.py",
+   "scripts/lhs_webapp_batch.py",
+   "scripts/metrics_json.py",
+   "scripts/ml_design_structure.py",
+   "scripts/network_conductivity.py",
+   "scripts/parse_liggghts.py",
+   "scripts/plastic_coverage.py",
+   "scripts/press_units.py",
+   "scripts/se_material.py",
+   "scripts/tau_flux.py",
+   "scripts/type_map_resolve.py",
+   "webapp/app.py",
+   "webapp/ledger_view.py",
+   "webapp/mpm_lab_register.py",
+   "webapp/pipeline_service.py",
+   "webapp/predictor_engine.py",
+   "webapp/security.py",
+   "webapp/storage_sync.py",
+   "webapp/structure_predictor.py"
+  ],
+  "outside": [],
+  "completed_attempts": [
+   [
+    "lhs00_000",
+    "1",
+    "1"
+   ]
+  ],
+  "unfinalized_noncompleted": []
+ },
+ "import_observation_problems": []
+}

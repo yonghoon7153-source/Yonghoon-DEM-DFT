@@ -1,0 +1,59 @@
+[
+  {
+    "name": "release",
+    "argv": [
+      "scripts/test_lhs_release_v13.py"
+    ],
+    "rc": 1,
+    "seconds": 33.98399999993853,
+    "tail": [
+      "findfont: Font family 'Liberation Sans' not found.",
+      "findfont: Font family 'Liberation Sans' not found.",
+      "findfont: Font family 'Liberation Sans' not found.",
+      "findfont: Font family 'Liberation Sans' not found."
+    ]
+  },
+  {
+    "name": "reread",
+    "argv": [
+      "scripts/g2_network_reread.py",
+      "--selftest"
+    ],
+    "rc": 0,
+    "seconds": 16.375,
+    "tail": [
+      "  ✓ symlink 거부 환경 — 폴더 링크가 copy 로 대체되고 그 폴더가 K1–K7 · H1 통과",
+      "  ✓ ★ 등록 집합 양성 production194 (합성 — 등록 ID 지문 194 · lhs 130 · lhsx 64) — 194 케이스 K1–K7 · 코호트 H1 둘 통과 · M3 기대 194 = 읽음 194",
+      "",
+      "✓ 전부 통과"
+    ]
+  },
+  {
+    "name": "publication",
+    "argv": [
+      "webapp/test_gen2_publication_handover.py"
+    ],
+    "rc": 0,
+    "seconds": 12.344000000040978,
+    "tail": [
+      "  PASS ⑧ ★ raise — 게시 done · H0 CF = not_computed / solve_failed · 값 없음 · 증서가 해를 주장하지 않음 · 시도 ['spsolve'] ['exception'] · FULL q 0.00400538 = 정상 0.00400538 · physics · H12 CF 그대로 {'physics': 'computed', 'hertz_h12': 'computed'} · 인계 통과 (τ 세 모드 OK) · 다시 읽기 K1–K7 · H1 통과 []",
+      "  PASS ⑧ ★ bad_solve — 게시 done · H0 CF = not_computed / current_conservation_failed · 값 없음 · 증서가 해를 주장하지 않음 · 시도 ['spsolve', 'cg+jacobi', 'gmres+ilu'] ['certificate_failed', 'certificate_failed', 'certificate_failed'] · FULL q 0.00400538 = 정상 0.00400538 · physics · H12 CF 그대로 {'physics': 'computed', 'hertz_h12': 'computed'} · 인계 통과 (τ 세 모드 OK) · 다시 읽기 K1–K7 · H1 통과 []",
+      "",
+      "test_gen2_publication_handover: 32/32 PASS"
+    ]
+  },
+  {
+    "name": "role",
+    "argv": [
+      "scripts/test_gen2_role_contract.py"
+    ],
+    "rc": 0,
+    "seconds": 6.421000000089407,
+    "tail": [
+      "  PASS  W1 ★ 열 사전 H12 판정 = 쌍대응 시나리오 · 구간 아님 (괄호로 읽는다 문구 없음) · 부록 전용 유지",
+      "  PASS  W2 ★ 설계 기록 ±5 % = 시험한 기하 한정 + 구 사슬 반례 (G2R-04)",
+      "",
+      "test_gen2_role_contract: 44/44 PASS"
+    ]
+  }
+]

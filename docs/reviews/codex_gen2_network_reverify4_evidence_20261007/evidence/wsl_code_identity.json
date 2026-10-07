@@ -1,0 +1,31 @@
+{
+  "wsl_commit": "c3117438a260834fb5c6f31ea6a3952e0720b51a",
+  "review_commit": "87f0906a2674e7d4e8ec31ca98aed5b14babc293",
+  "rows": [
+    {
+      "path": "scripts/run_network_194_parallel.py",
+      "old": "eec5557dfc01859f6525128ac7f2073a3f8c6c0c",
+      "pin": "eec5557dfc01859f6525128ac7f2073a3f8c6c0c"
+    },
+    {
+      "path": "scripts/g2_network_reread.py",
+      "old": "4a20a66f474e7686f155dae96ed19d772ff70dcc",
+      "pin": "4a20a66f474e7686f155dae96ed19d772ff70dcc"
+    },
+    {
+      "path": "scripts/lhs_release_build.py",
+      "old": "aa3ae766a10a793677d6aae71fe68ec8edadc080",
+      "pin": "aa3ae766a10a793677d6aae71fe68ec8edadc080"
+    },
+    {
+      "path": "scripts/wsl_network_smoke.py",
+      "old": "4e6029a259014a8e258ffe324b98942a72181e4d",
+      "pin": "4e6029a259014a8e258ffe324b98942a72181e4d"
+    },
+    {
+      "path": "scripts/test_lhs_release_v13.py",
+      "old": "9258d4499f157f618fd24e973ce4afc2493f5d03",
+      "pin": "9258d4499f157f618fd24e973ce4afc2493f5d03"
+    }
+  ]
+}

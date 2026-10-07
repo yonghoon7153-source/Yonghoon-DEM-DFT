@@ -1,0 +1,16 @@
+[
+  {
+    "name": "release_gate",
+    "argv": [
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\gen2_network_reverify4_20261007\\probes\\release_gate.py"
+    ],
+    "rc": 0,
+    "seconds": 8.780999999959022,
+    "tail": [
+      "{\"label\": \"wrong_manifest\", \"accepted\": false, \"error\": \"ReleaseError: 배치 관문 증거 문제 1 (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — reread.json — manifest_sha256 '0000000000000000' ≠ 이 배치 'ecea559da6f258d1'… — 기록 뒤 manifest 가 바뀌었거나 다른 배치 — 실제 배포는 두 기록이 이 배치 뿌리 · manifest · 발사 봉인 지문에 대해 통과여야 한다 (옛 · 부분 기록을 들여다볼 때만 --diagnostic-batch-gate · NOT FOR RELEASE)\"}",
+      "{\"label\": \"reread_checks_false\", \"accepted\": true, \"check\": []}",
+      "{\"label\": \"reread_cases_missing\", \"accepted\": true, \"check\": []}",
+      "{\"label\": \"audit_observation_failed\", \"accepted\": true, \"check\": []}"
+    ]
+  }
+]
