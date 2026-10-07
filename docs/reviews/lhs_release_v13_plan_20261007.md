@@ -33,7 +33,7 @@
 
 관문 (하나라도 걸리면 폴더를 세우지 않는다 — 임시 폴더에 다 만들고 `check_v13` 통과 뒤에만 옮긴다):
 배치 manifest 기대 세대 = g2 · manifest plan.cohorts ↔ v1.3 입력 (수확 · union · 설계) · **발사 봉인 대조** (manifest `code_hashes` ↔ 빌드 체크아웃 — 다르면 거부 · 명시 승인만 통과) ·
-**⓪b 다시 읽기 기록** (`reread.json` 이 있고 n_fail ≠ 0 · 기대 세대 ≠ g2 면 거부) · 단계 A 생성기의 `load_tau_results(expected_generation='g2')` (P0–P4) ·
+**⓪b 다시 읽기 기록** (`reread.json` 이 있고 n_fail ≠ 0 · 기대 세대 ≠ g2 면 거부) (★ 10-07 G2RR3-01 `3f9f86f59` 뒤: ⓪ `seal_audit.json` · ⓪b `reread.json` **둘 다 필수** · 없음 · 손상 · 타입 · 실패 = 거부 · 이 배치 뿌리 · manifest · 봉인 지문 결합 · SEALED 만 · check_v13 가 같은 관문 재평가 · 옛 기록 = `--diagnostic-batch-gate` (NOT FOR RELEASE) · 다시 읽기는 JSON v3 도구로) · 단계 A 생성기의 `load_tau_results(expected_generation='g2')` (P0–P4) ·
 행마다 세대 계약 + 섞임 · 웹앱 배치 done · partial 만 · τ 출처 부록 = 지금 검사 목록 · τ 다시 읽기 (`load_tau_results` 한 번 더 · 인계표 τ 칸과 글자 대조) ·
 `se_isolated_pct` S1 · S2 · 빈칸 양방향 · 프로필 ml_v1 (키 · 기대 ID · 적격성 · 사전 참조 표지) · 열 역할 · ML 되읽기 · 재적합 재현 (상대 1e-9) · 파일 sha256 · README 표지.
 단계 A 도 생성기를 부르기 전에 같은 봉인 · 다시 읽기 관문을 지난다 (몇 분짜리 생성을 헛돌리지 않게).
