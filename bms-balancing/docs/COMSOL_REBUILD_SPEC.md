@@ -4177,3 +4177,22 @@ gate INCOMPLETE · 실효 정책 UNVERIFIED · native 미승인 · 게이트 리
   (v1 `…S0_SEND_TO_CODEX_20261007.md` 는 그대로 두고 v2 가 대신한다). 범위 동일 — 독립 재도출 (지배식 · 휴지 자가방전 축약 모형 · LLI 여부) · σ 사다리 반박 · 결과 전 판정 범주 ·
   비용 · 실패 모드 · 후보 (실행 안 함) · 자기 반박 · 회신 5 종. 허용은 정적 읽기 · 손계산 · COMSOL 을 부르지 않는 직접 쓴 오프라인 산술.
 - 발송은 사용자가 한다. 승인이 아닌 것: S1 이후 계산 · native · 960 s · 실험 비교 · MPH 삭제 · 기존 수용 결과 재개방. 회신은 받은 바이트 그대로 보존 → 수신 검토 → S1 결정.
+
+## 72. 미세단락 S0 심층 회신 접수 — `COMPLETE_WITH_EXPLICIT_S1_OPEN_CONDITIONS` · S1 조건부 권고 · 승인 아님 (2026-10-07 · COMSOL 0)
+
+- 보존: `reviews/r14_repros/codex63/comsol_microshort_s0_deep_20261007/` — zip 417,467 B · sha256 `e8c386913338198c9b1535a9131667f23c8a144232ae8fbf548acfd3748ea12e` · 압축 해제 39 ·
+  manifest 38 / 38 · 비밀 0 · 동봉 `s0_analytic.py` · `package_review.py` · `finalize_handoff.py` 실행 0. 규칙 `2d28ba60c` → 보존 `15263092e`.
+- 판정 (`DECISION.json` 사본): `s1_recommended: true` (`CONDITIONAL_WITHIN_MODEL_RESEARCH_ONLY`) · `approved / usable_for_native / native_approved: false` · 원 소스 `fd7ce941a` ·
+  비활성 후보 sha `a90d1e66…` (실행본 아님). 검토자 실행: COMSOL · native · JVM · compile 0 · 자기 산술 스크립트 1.
+- **우리 요청서 (§70) 의 오류 — 회신 지적 · 이 저장소에서 확인:**
+  - 분리막 `epss` — 실제 NORMAL480 소스는 `epss_short = 1 − epsl_sep` (= 0.55 · `NoCorr`) — 받은 `sources/Normal480Candidate.java.txt` l.594 · l.650–652 를 정적으로 읽어 확인.
+    요청서가 인용한 `epss 1` 은 옛 설계 §4-4 의 값이다.
+  - 누설비 — r = 0.01 (0.1C 대비) 은 0.001C = **정규화 용량 0.1 %/h**. 요청서의 "0.01C · 1 %/h" 는 10 배 오류 (우리 재계산: σ 1.7e−8 / 1.7e−7 / 1.7e−6 → 0.010 / 0.10 / 1.0 %/h).
+  - 유한 σ 의 "균일 평형 시작" 은 엄밀한 평형이 아니다 — 같은 균일 농도 · 재고에서 시작하는 자가방전 초기값 문제 (σ 별 대수 전위는 전류 일관성으로).
+  - 정상 (σ 1e−20) 은 near-zero 누설 기준이지 무열화가 아니다 (기존 LLI / LAM 입력 유지). 순수 누설은 Li 재배분이며 영구 LLI 와 구별한다.
+  요청서 원문은 고치지 않는다 (이 절이 정정).
+- 사전 예측 (회신 · 축약 OCV 산술 · COMSOL 결과 아님): 외부 전류 0 · xN 0.445 · xP ≈ 0.581151656 · 1 h — σ 1.7e−8 / 1.7e−7 / 1.7e−6 에서 평균조성 OCV 하강
+  0.096248 / 0.962366 / 9.503694 mV · 용량 이동 0.010114 / 0.101127 / 1.010097 %. 1 mV · 5 배 규칙은 연구 표시 기준 제안이지 오차 상계 · 검출한계가 아니다.
+- 비용: 현 정책 (0.1 s cap · 모든 step 저장) 은 1 h 에 ≈47 GB · compile/batch ≈10.6 h (거친 외삽). 후보 = 401 요청시각 · 요청시각 저장 · 후기 cap 완화 (MPH ≈0.52 GB 시나리오 · 보장 아님 · RAM 미확인).
+- 다음 단계 (회신 S1 범위 초안 §4): **S1-O** (오프라인 실행 연결 · consumer · 기록 / 자원 계약 · 변경부 검증안 · solve 0) → S1-P (정책 대조 ≤4 · σ 1.7e−6 · 120 s) → S1-M (주 사다리 4 · 3600 s) →
+  S1-N (같은 σ 수치 대조 K · 개수 미정 — 없으면 최종 판정 `INCONCLUSIVE`). 각 단계 별도 승인. 이 절은 어떤 단계의 승인도 아니다.
