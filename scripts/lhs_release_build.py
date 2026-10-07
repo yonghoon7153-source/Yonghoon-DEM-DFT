@@ -23,6 +23,8 @@
   # ★ 배포 v1.3 최종판 (10-07 미리 준비 · 실제 자료는 Codex 세대 2 GO + 새 194 배치 뒤에만) — 명령 전문 = docs/reviews/lhs_release_v13_plan_20261007.md
   python3 scripts/lhs_release_build.py --v13 --batch-root <배치 뿌리> --codex-verdict <GO 판정문> --out-dir <배포 폴더>   # 단계 A + B + 대조
   #   발사 봉인 (manifest code_hashes) 과 다른 봉인 파일이 있으면 거부 — 값과 무관한 변경 (웹앱 화면 문구) 만 [--allow-seal-diff <파일>] 로 명시 승인
+  #   배치 관문 (⓪ 감사 seal_audit.json · ⓪b 다시 읽기 reread.json) = 필수 · 판정 · 이 배치 뿌리 · manifest · 봉인 지문에 결합 (G2RR3-01 · build · check 같은 함수)
+  #   — 옛 · 부분 · 실패 기록을 들여다볼 때만 [--diagnostic-batch-gate] (README · 빌드 manifest 에 NOT FOR RELEASE · 리포 밖 · --v13-check 배포 대조 거부)
   python3 scripts/lhs_release_build.py --v13 --dry-run --handover-dir <세대 1 인계표 폴더> --out-dir <리포 밖 스크래치>   # 경로만 (DRYRUN_)
   python3 scripts/lhs_release_build.py --v13-check --release-dir <배포 폴더> --handover-dir <인계표 폴더> [--dry-run]
   시험: scripts/test_lhs_release_v13.py
@@ -690,7 +692,7 @@ REFIT_ROW_COLS = ('dataset', 'case_id', 'ion_net_status_hertz', 'included', 'exc
                   'phi_se_mass_conserving', 'se_se_cn', 'f_ion_hertz', 'g_phys', 'phi_c_eff', 'phi_eff', 'x_collapse', 'ln_f',
                   'ln_f_locked', 'resid_locked', 'ln_f_free', 'resid_free')
 REFIT_STEM = 'lhs_v13_refit_porosity_sigma_cn'
-V13_MANIFEST_SCHEMA = 'lhs_release_v13_build/v1'
+V13_MANIFEST_SCHEMA = 'lhs_release_v13_build/v2'      # v2 (10-07 G2RR3-01) = batch_gate (관문 결과 · 모드 · 배치 뿌리) · diagnostic · 판정 필드 기록
 V13_MANIFEST_NAME = 'v13_build_manifest.json'
 _V13_FLOAT_RTOL = 1e-9
 
@@ -1027,10 +1029,24 @@ def v13_manifest_inputs_problems(manifest):
 
 
 #: ⓪ 봉인 감사 · ⓪b 게시 다시 읽기 기록 — 194 실행기 후속 명령이 배치 뿌리에 쓰는 이름 (세대 2 등록 `lhs_network_batch_registration_20261007_g2.md` §5-2 · §5-3).
-#:   빌드는 내용을 해석하지 않고 sha256 을 남긴다 — 다시 읽기 기록만 실패 표지 (n_fail · expected_generation) 를 읽어 실패면 거부한다.
+#:   ★ 10-07 G2RR3-01 (Codex 세대 2 재검증 3 §3) — 옛 판은 감사 기록의 sha256 만 적고 판정을 읽지 않았고, 다시 읽기 기록이 없거나 · 깨졌거나 · 필드가 비면
+#:   경고만 하고 만들었다 (= 기록을 못 읽으면 더 적게 검사 — 실제 build_v13 이 21 파일 묶음을 만들고 check_v13 문제 0).  이제 실제 배포는 두 기록이 **필수**이고
+#:   내용을 판정한다 (`v13_batch_gate_problems` — build_v13 · 단계 A · check_v13 이 같은 함수) · 이 배치 뿌리 · 이 manifest · 이 발사 봉인 지문의 증거여야 한다.
+#:   옛 · 부분 · 실패 기록은 진단 모드 (`--diagnostic-batch-gate` · README · 빌드 manifest 에 NOT FOR RELEASE · 리포 밖 · check_v13 배포 대조 거부) 에서만 만든다.
 V13_BATCH_GATE_FILES = ('seal_audit.json', 'reread.json')
 V13_REREAD_SET = 'production194'          # ★ 10-07 G2RR2-02 — ⓪b 다시 읽기의 등록 집합 (g2_network_reread --expect-set production194)
 V13_REREAD_N = 194                         #   그 집합의 고정 크기 (run_network_194_parallel.REGISTERED_ID_SETS — 시험이 대조)
+#: ★ 10-07 G2RR3-01 — 생산 배포가 받는 봉인 판정 = **SEALED 만** (세대 2 등록 §5-2 "기록 전부 SEALED").  실행기 audit 의 rc 0 은 SEAL_OK 셋을 받지만
+#:   배포는 좁다: SEALED_DIRTY_ALLOWED (추적 파일이 바뀐 트리에서 --allow-dirty 로 돈 시도 — 봉인 코드 해시는 같아도 등록 §1 "봉인 커밋 · dirty 0" 밖) ·
+#:   SEALED_LEGACY (역사 형식 = 이 배포가 아니다) 는 받지 않는다 — 그런 배치를 싣는 판단이 필요하면 진단 모드로 기록만 하고 1저자 결정 (새 등록) 으로.
+V13_AUDIT_SEALED = ('SEALED',)
+V13_GATE_SCHEMA = 'lhs_release_v13_batch_gate/v1'        # 빌드 manifest batch_gate (모드 · 배치 뿌리 · manifest sha256 · 문제)
+V13_DIAG_BANNER = 'NOT FOR RELEASE — diagnostic build (batch gate evidence not accepted)'
+_V13_HEX64 = re.compile(r'[0-9a-f]{64}')
+#: 빌드 manifest 에 남기는 기록 필드 (check_v13 이 지금 배치 뿌리에서 다시 만든 기록과 맞댄다 — 기록 ≠ 지금 = 문제)
+_V13_REREAD_REC_KEYS = ('schema', 'n_fail', 'expected_generation', 'expected_set', 'expected_n', 'read_n', 'set_equal', 'launcher_root',
+                        'manifest_sha256', 'seal_fp', 'launch_sha')
+_V13_AUDIT_REC_KEYS = ('schema', 'root', 'seal_fp', 'launch_sha', 'refused', 'verdicts', 'merged', 'expected_network_generation')
 
 
 def _sha256_or_none(path):
@@ -1106,58 +1122,234 @@ def v13_seal_gate(manifest, allow_seal_diff=None):
     return dict(d, allowed=[f for f in allow if f in d['sealed_changed']]), warns
 
 
-def v13_batch_gate_files(batch_root):
-    """배치 뿌리의 ⓪ 봉인 감사 · ⓪b 다시 읽기 기록 (V13_BATCH_GATE_FILES) — 없으면 None · 있으면 sha256 (+ 다시 읽기는 n_fail · expected_generation).
-    해석하지 않는다 (스키마는 다른 도구의 것) — 다시 읽기의 실패 표지 둘만 읽는다."""
-    out = {}
-    for name in V13_BATCH_GATE_FILES:
-        p = os.path.join(batch_root, name)
-        if not os.path.isfile(p):
-            out[name] = None
+def _np194():
+    """194 실행기 모듈 — 발사 봉인 지문 `code_fp` · 등록 집합 `REGISTERED_ID_SETS` · `ids_digest` · 감사 스키마 `LAUNCH_SEAL_SCHEMA` (정본 · 사본 금지)."""
+    here = os.path.dirname(os.path.abspath(__file__))
+    if here not in sys.path:
+        sys.path.insert(0, here)
+    import run_network_194_parallel as NP                                # noqa: E402
+    return NP
+
+
+def _g2rr():
+    """세대 2 다시 읽기 도구 — 기록 스키마 `SCHEMA` (정본)."""
+    here = os.path.dirname(os.path.abspath(__file__))
+    if here not in sys.path:
+        sys.path.insert(0, here)
+    import g2_network_reread as RR                                       # noqa: E402
+    return RR
+
+
+def _v13_same_path(a, b):
+    """두 경로가 같은 곳인가 (realpath · normcase — 기록된 문자열 철자가 아니라 위치를 맞댄다)."""
+    return os.path.normcase(os.path.realpath(str(a))) == os.path.normcase(os.path.realpath(str(b)))
+
+
+def _v13_int(x):
+    return isinstance(x, int) and not isinstance(x, bool)
+
+
+def _v13_registered(expect_set):
+    """등록 집합 이름 → (수, ids 지문) — 실행기 표 (production194 = 등록 지문 · pilot3 = 세 쌍에서 잰 지문)."""
+    NP = _np194()
+    reg = NP.REGISTERED_ID_SETS.get(expect_set)
+    if reg is None:
+        raise ReleaseError(f'모르는 등록 집합 {expect_set!r} — {sorted(NP.REGISTERED_ID_SETS)}')
+    if 'ids_sha256' in reg:
+        return reg['n'], reg['ids_sha256']
+    return len(reg['pairs']), NP.ids_digest(reg['pairs'])
+
+
+def _v13_gate_load(path):
+    """관문 기록 하나를 **한 번** 읽는다 → (sha256 | None, 값, 사유).  사유 = 'absent' (없음) · 'invalid (…)' (못 읽음 · 깨진 JSON) · '' (읽었다) —
+    기록 (sha256) 과 판정 (값) 이 같은 바이트에서 나온다."""
+    if not os.path.isfile(path):
+        return None, None, 'absent'
+    try:
+        with open(path, 'rb') as f:
+            raw = f.read()
+    except OSError as e:
+        return None, None, f'invalid ({type(e).__name__})'
+    sha = hashlib.sha256(raw).hexdigest()
+    try:
+        return sha, json.loads(raw.decode('utf-8')), ''
+    except ValueError as e:                                              # UnicodeDecodeError · JSONDecodeError
+        return sha, None, f'invalid ({type(e).__name__})'
+
+
+def v13_batch_identity(batch_root):
+    """배치 뿌리의 실행 신원 → (dict(root, manifest_sha256, seal_fp, launch_sha), 문제 목록).  관문 기록 둘이 결합돼야 할 대상:
+    root = realpath · manifest_sha256 = 지금 manifest 바이트 · seal_fp = manifest seal.code_fp (= code_hashes 의 지문 `code_fp` 이어야 — 아니면 봉인이 자기
+    해시 지도와 어긋난다) · launch_sha = manifest git.sha.  못 정한 값은 None (그 결합 대조는 건너뛰고 문제는 여기서 낸다)."""
+    mp = os.path.join(batch_root, 'manifest.json')
+    sha, man, why = _v13_gate_load(mp)
+    ident = {'root': os.path.realpath(str(batch_root)), 'manifest_sha256': sha, 'seal_fp': None, 'launch_sha': None}
+    if why or not isinstance(man, dict):
+        return ident, [f'배치 manifest {mp} 를 못 읽었다 ({why or type(man).__name__}) — 실행 신원 (봉인 지문 · 발사 sha) 을 모른다']
+    probs = []
+    s = man.get('seal') if isinstance(man.get('seal'), dict) else {}
+    fp = s.get('code_fp')
+    if not (isinstance(fp, str) and _V13_HEX64.fullmatch(fp)):
+        probs.append(f'배치 manifest seal.code_fp {fp!r} — 발사 봉인 지문이 없다 (194 실행기 v3 manifest 가 아니다)')
+    elif _np194().code_fp(man.get('code_hashes')) != fp:
+        probs.append(f'배치 manifest seal.code_fp {fp[:12]}… ≠ code_hashes 의 지문 {str(_np194().code_fp(man.get("code_hashes")))[:12]}… — '
+                     '발사 봉인이 자기 해시 지도와 어긋난다')
+    else:
+        ident['seal_fp'] = fp
+    g = man.get('git') if isinstance(man.get('git'), dict) else {}
+    if isinstance(g.get('sha'), str) and g['sha']:
+        ident['launch_sha'] = g['sha']
+    else:
+        probs.append(f'배치 manifest git.sha {g.get("sha")!r} — 발사 커밋 신원이 없다')
+    return ident, probs
+
+
+def _v13_bind_problems(rec, ident, root_key):
+    """기록 ↔ 이 배치의 실행 신원 — 배치 뿌리 (위치) · 봉인 지문 · 발사 sha (+ 다시 읽기는 manifest sha256).  root_key = 기록의 배치 뿌리 필드 이름."""
+    p = []
+    rv = rec.get(root_key)
+    if not isinstance(rv, str) or not rv:
+        p.append(f'{root_key} {rv!r} — 어느 배치 뿌리의 기록인지 없다')
+    elif not _v13_same_path(rv, ident['root']):
+        p.append(f'{root_key} {rv!r} ≠ 이 배치 뿌리 {ident["root"]!r} — 다른 배치의 기록')
+    for k in ('seal_fp', 'launch_sha') + (('manifest_sha256',) if root_key == 'launcher_root' else ()):
+        if ident.get(k) and rec.get(k) != ident[k]:
+            got = rec.get(k) if rec.get(k) is None else str(rec.get(k))[:16]
+            p.append(f'{k} {got!r} ≠ 이 배치 {str(ident[k])[:16]!r}…' + (' — 기록 뒤 manifest 가 바뀌었거나 다른 배치' if k == 'manifest_sha256'
+                                                                     else ' — 다른 발사 (봉인 · 커밋) 의 기록'))
+    return p
+
+
+def v13_audit_problems(a, batch_root, why='', ident=None, expect_set=V13_REREAD_SET):
+    """⓪ 봉인 감사 기록 (`run_network_194_parallel.py audit --root <ROOT> --json <ROOT>/seal_audit.json` 의 dict) 판정 → 문제 목록 ([] = 통과).
+    읽기 · 꼴 (스키마 = 실행기 `LAUNCH_SEAL_SCHEMA`#audit · refused 아님 · 실행 형식 자격 current · 문제 0) · 이 배치 (배치 뿌리 · 봉인 지문 · 발사 sha) ·
+    판정 (봉인 판정 = V13_AUDIT_SEALED 만 · 합 = 등록 수 · merged = same 만 · 합 = 등록 수 · 요약 = 행에서 다시 센 값 · 행의 (케이스, 코호트) = 등록 집합 ID 지문 ·
+    기대 세대 선언 g2 · generation / input / import 관측 문제 · code_root_changed_now 전부 **빈 목록**).  수치 허용치 · σ 조건은 두지 않는다
+    (정직한 실패 행은 등록 §5-1 · 다시 읽기 M2 · 생성기 관문 소관)."""
+    if why == 'absent':
+        return ['없다 — 등록 §5-2 ⓪ 봉인 감사 (`run_network_194_parallel.py audit --root <ROOT> --json <ROOT>/seal_audit.json`) 를 먼저 · 실제 배포는 이 기록이 필수']
+    if why:
+        return [f'못 읽는다 ({why}) — 손상된 감사 기록을 받지 않는다']
+    if not isinstance(a, dict):
+        return [f'객체가 아니다 ({type(a).__name__}) — 감사 기록의 꼴이 아니다']
+    NP = _np194()
+    if ident is None:
+        ident = v13_batch_identity(batch_root)[0]
+    p = []
+    sch = NP.LAUNCH_SEAL_SCHEMA + '#audit'
+    if a.get('schema') != sch:
+        p.append(f'schema {a.get("schema")!r} ≠ {sch!r} — 지금 실행기의 감사 기록이 아니다')
+    if a.get('refused') not in (None, False):
+        p.append(f'refused {a.get("refused")!r} — 실행기가 판정표 없이 감사를 거부했다')
+    el = a.get('eligibility') if isinstance(a.get('eligibility'), dict) else {}
+    if el.get('kind') != 'current' or el.get('problems'):
+        p.append(f'실행 형식 자격 {el.get("kind")!r} (문제 {el.get("problems")!r:.200}) — current · 문제 0 이어야 (historical · invalid 는 생산 배포가 아니다)')
+    p += _v13_bind_problems(a, ident, 'root')
+    n_reg, ids_reg = _v13_registered(expect_set)
+    v, m, rows = a.get('verdicts'), a.get('merged'), a.get('cases')
+    for nm, d, ok_keys in (('verdicts', v, V13_AUDIT_SEALED), ('merged', m, ('same',))):
+        if not isinstance(d, dict) or not all(_v13_int(x) for x in d.values()):
+            p.append(f'{nm} {d!r:.200} — 정수 개수 dict 가 아니다')
             continue
-        d = {'sha256': _sha256(p)}
-        if name == 'reread.json':
-            try:
-                j = json.load(open(p, encoding='utf-8'))
-            except (OSError, ValueError):
-                j = None
-            d['n_fail'] = j.get('n_fail') if isinstance(j, dict) else None
-            d['expected_generation'] = j.get('expected_generation') if isinstance(j, dict) else None
-            #  ★ 10-07 G2RR2-02 — 등록 집합 대조 (다시 읽기가 실제로 읽은 고유 집합 = 등록 집합 · n_fail 만이 아니다)
-            for k_ in ('expected_set', 'expected_n', 'read_n', 'set_equal'):
-                d[k_] = j.get(k_) if isinstance(j, dict) else None
-        out[name] = d
-    return out
+        nz = {k: x for k, x in d.items() if x}
+        bad = {k: x for k, x in nz.items() if k not in ok_keys}
+        if bad:
+            p.append(f'{nm} 에 {bad} — 생산 배포는 {"/".join(ok_keys)} 만 받는다'
+                     + (' (UNSEALED · NO_RECORD · SEALED_DIRTY_ALLOWED · SEALED_LEGACY 거부 — 등록 §5-2 "기록 전부 SEALED")' if nm == 'verdicts'
+                        else ' (differs · missing · not_merged · synthesized_failed = merged 가 케이스 폴더 기록과 다르거나 없다)'))
+        if sum(nz.values()) != n_reg:
+            p.append(f'{nm} 합 {sum(nz.values())} ≠ 등록 집합 {expect_set} {n_reg}')
+    if not isinstance(rows, list) or not all(isinstance(r, dict) for r in rows):
+        p.append(f'cases (행) 가 목록이 아니다 ({type(rows).__name__})')
+    else:
+        pairs = [(r.get('case'), r.get('cohort')) for r in rows]
+        if len(set(pairs)) != len(pairs) or len(pairs) != n_reg or NP.ids_digest(pairs) != ids_reg:
+            p.append(f'행의 (케이스, 코호트) {len(pairs)} (고유 {len(set(pairs))}) ≠ 등록 집합 {expect_set} ({n_reg} · ID 지문 {ids_reg[:12]}…) — 다른 계획의 감사')
+        for nm, col in (('verdicts', 'verdict'), ('merged', 'merged')):
+            d = a.get(nm)
+            if isinstance(d, dict) and dict(collections.Counter(r.get(col) for r in rows)) != {k: x for k, x in d.items() if x}:
+                p.append(f'{nm} 요약 {d} ≠ 행에서 다시 센 값 {dict(collections.Counter(r.get(col) for r in rows))} — 요약 · 행이 어긋난 감사 기록')
+    if a.get('generation_declared') is not True or a.get('expected_network_generation') != V13_GENERATION:
+        p.append(f'기대 망 세대 선언 {a.get("generation_declared")!r} · {a.get("expected_network_generation")!r} — 선언된 {V13_GENERATION} 이어야')
+    for k in ('generation_problems', 'input_problems', 'import_observation_problems', 'code_root_changed_now'):
+        x = a.get(k)
+        if not isinstance(x, list):
+            p.append(f'{k} {x!r:.120} — 목록이 없다 (지금 실행기의 감사 기록이 아니다)')
+        elif x:
+            p.append(f'{k} {len(x)} — {x[:3]!r:.300} (빈 목록이어야)')
+    return p
 
 
-def v13_reread_set_ok(rr):
-    """⓪b 다시 읽기 기록이 등록 집합 production194 전부를 읽었다고 적었나 (G2RR2-02) — 집합 이름 · 기대 수 = 읽은 수 = 194 · 같음 True.
-    옛 도구 기록 (필드 없음) · 일부 · 시범 집합 · 0 케이스 = False."""
-    return (isinstance(rr, dict) and rr.get('expected_set') == V13_REREAD_SET and rr.get('set_equal') is True
-            and rr.get('expected_n') == V13_REREAD_N and rr.get('read_n') == V13_REREAD_N)
+def v13_reread_problems(r, batch_root, why='', ident=None, expect_set=V13_REREAD_SET):
+    """⓪b 다시 읽기 기록 (`g2_network_reread.py --launcher-root <ROOT> --expect-set production194 --json <ROOT>/reread.json` 의 dict) 판정 → 문제 목록.
+    스키마 = 도구 정본 (v3 — 실행 신원) · n_fail = 정수 (bool 아님) 0 · 기대 세대 g2 · 등록 집합 (이름 · 기대 = 읽음 = 등록 수 · 같음 True · 빠진 · 남는 = 빈 목록) ·
+    이 배치 (launcher_root = 배치 뿌리 · manifest_sha256 = 지금 manifest · seal_fp · launch_sha)."""
+    if why == 'absent':
+        return ['없다 — 등록 §5-3 ⓪b 다시 읽기 (`g2_network_reread.py --launcher-root <ROOT> --expect-set production194 --json <ROOT>/reread.json`) 를 먼저 · '
+                '실제 배포는 이 기록이 필수']
+    if why:
+        return [f'못 읽는다 ({why}) — 손상된 다시 읽기 기록을 받지 않는다']
+    if not isinstance(r, dict):
+        return [f'객체가 아니다 ({type(r).__name__} — 예: null) — 다시 읽기 기록의 꼴이 아니다']
+    if ident is None:
+        ident = v13_batch_identity(batch_root)[0]
+    p = []
+    sch = _g2rr().SCHEMA
+    if r.get('schema') != sch:
+        p.append(f'schema {r.get("schema")!r} ≠ {sch!r} — 지금 도구의 기록이 아니다 (옛 기록 = 실행 신원 없음 · 진단 모드에서만)')
+    nf = r.get('n_fail')
+    if not _v13_int(nf):
+        p.append(f'n_fail {nf!r} — 정수가 아니다 (null · bool · 문자열 · 결손 = 판정을 모른다)')
+    elif nf != 0:
+        p.append(f'n_fail {nf} — 다시 읽기 실패 (등록 §5-3 "rc 1 이면 인계하지 않는다")')
+    if r.get('expected_generation') != V13_GENERATION:
+        p.append(f'기대 세대 {r.get("expected_generation")!r} ≠ {V13_GENERATION} (등록 §5-3)')
+    n_reg = _v13_registered(expect_set)[0]
+    if not (r.get('expected_set') == expect_set and _v13_int(r.get('expected_n')) and _v13_int(r.get('read_n')) and r.get('expected_n') == n_reg
+            and r.get('read_n') == n_reg and r.get('set_equal') is True):
+        p.append(f'등록 집합 {r.get("expected_set")!r} · 기대 {r.get("expected_n")!r} · 읽음 {r.get("read_n")!r} · 같음 {r.get("set_equal")!r} — v1.3 은 등록 집합 '
+                 f'{expect_set} ({n_reg}) 을 전부 다시 읽은 배치만 싣는다 (G2RR2-02)')
+    if r.get('missing') != [] or r.get('extra') != []:
+        p.append(f'missing {r.get("missing")!r:.120} · extra {r.get("extra")!r:.120} — 빈 목록이어야')
+    p += _v13_bind_problems(r, ident, 'launcher_root')
+    return p
 
 
-def v13_batch_gate_check(batch_root):
-    """⓪b 다시 읽기 기록이 실패를 적었으면 거부 (등록 §5-3 "rc 1 이면 인계하지 않는다") · 없거나 못 읽으면 경고.  반환 (기록 dict, 경고 목록)."""
-    gf = v13_batch_gate_files(batch_root)
-    warns = []
-    rr = gf.get('reread.json')
-    if rr is not None:
-        nf, eg = rr.get('n_fail'), rr.get('expected_generation')
-        if isinstance(nf, bool) or not isinstance(nf, int) or eg is None:
-            warns.append(f'⓪b 다시 읽기 기록 reread.json 의 n_fail · expected_generation 을 못 읽었다 ({nf!r} · {eg!r}) — 사람이 rc 0 을 확인할 것')
-        elif nf != 0 or eg != V13_GENERATION:
-            raise ReleaseError(f'⓪b 다시 읽기 기록 {os.path.join(batch_root, "reread.json")} = n_fail {nf} · 기대 세대 {eg!r} — 세대 2 등록 §5-3 '
-                               '(rc 0 · g2 가 아니면 인계하지 않는다)')
-        elif not v13_reread_set_ok(rr):
-            #  ★ 10-07 G2RR2-02 (Codex 세대 2 재검증 2 §3) — 0 케이스 · 일부 코호트만 읽은 성공 배제: 생산 194 등록 집합을 다 읽었다는 기록이어야
-            raise ReleaseError(f'⓪b 다시 읽기 기록 {os.path.join(batch_root, "reread.json")} — 등록 집합 {rr.get("expected_set")!r} · 기대 '
-                               f'{rr.get("expected_n")!r} · 읽음 {rr.get("read_n")!r} · 같음 {rr.get("set_equal")!r} — v1.3 은 등록 집합 {V13_REREAD_SET} 을 전부 '
-                               '다시 읽은 배치만 싣는다 (G2RR2-02 · 그 전 도구의 기록이면 지금 도구로 다시)')
-    for name, d in gf.items():
-        if d is None:
-            warns.append(f'배치 뿌리에 {name} 이 없다 — 세대 2 등록 §5 의 ⓪ 봉인 감사 · ⓪b 다시 읽기 (rc 0) 를 먼저 · 이 빌드는 그 기록을 보지 못했다')
-    return gf, warns
+def v13_batch_gate_problems(batch_root):
+    """★ 10-07 G2RR3-01 — 배치 관문 판정 (등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — **build_v13 · 단계 A · check_v13 이 이 한 함수**.
+    → (기록 {이름: None (없음) | dict(sha256, read, + 판정 필드 사본)}, 문제 목록 (['<이름> — <사유>', …] · [] = 통과)).
+    배치 뿌리의 실행 신원 (`v13_batch_identity`) · 감사 (`v13_audit_problems`) · 다시 읽기 (`v13_reread_problems`) · 기록과 판정은 같은 바이트에서."""
+    ident, probs = v13_batch_identity(batch_root)
+    probs = [f'manifest — {p}' for p in probs]
+    rec = {}
+    for name, judge, keys in (('seal_audit.json', v13_audit_problems, _V13_AUDIT_REC_KEYS), ('reread.json', v13_reread_problems, _V13_REREAD_REC_KEYS)):
+        sha, j, why = _v13_gate_load(os.path.join(batch_root, name))
+        if why == 'absent':
+            rec[name] = None
+        else:
+            rec[name] = dict({'sha256': sha, 'read': why or 'ok'}, **{k: (j.get(k) if isinstance(j, dict) else None) for k in keys})
+        probs += [f'{name} — {p}' for p in judge(j, batch_root, why=why, ident=ident)]
+    return rec, probs
+
+
+def v13_batch_gate_files(batch_root):
+    """배치 뿌리의 관문 기록 (`v13_batch_gate_problems` 의 기록 반쪽) — 빌드 manifest `batch_gate_files` 에 남기고 check_v13 이 지금 파일에서 다시 만든 것과 맞댄다."""
+    return v13_batch_gate_problems(batch_root)[0]
+
+
+def v13_batch_gate_check(batch_root, diagnostic=False):
+    """배치 관문 (`v13_batch_gate_problems`) → (관문 dict, 경고 목록).  관문 dict = 빌드 manifest 의 batch_gate (스키마 · 모드 · 배치 뿌리 realpath ·
+    manifest sha256 · 문제) + files (기록).
+    실제 배포 (diagnostic False) — 문제가 하나라도 있으면 ReleaseError (★ G2RR3-01: 옛 판은 없거나 못 읽으면 경고만 · 감사 판정은 읽지 않았다).
+    진단 모드 (diagnostic True · NOT FOR RELEASE) — 문제를 경고 · 관문 dict 에 남기고 계속 (옛 · 부분 기록을 들여다볼 때만 · check_v13 배포 대조는 거부)."""
+    rec, probs = v13_batch_gate_problems(batch_root)
+    gate = {'schema': V13_GATE_SCHEMA, 'mode': 'diagnostic' if diagnostic else 'release', 'batch_root': os.path.realpath(str(batch_root)),
+            'manifest_sha256': _sha256_or_none(os.path.join(batch_root, 'manifest.json')), 'problems': probs, 'files': rec}
+    if probs and not diagnostic:
+        raise ReleaseError(f'배치 관문 증거 문제 {len(probs)} (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — ' + ' | '.join(probs)
+                           + ' — 실제 배포는 두 기록이 이 배치 뿌리 · manifest · 발사 봉인 지문에 대해 통과여야 한다 (옛 · 부분 기록을 들여다볼 때만 '
+                             '--diagnostic-batch-gate · NOT FOR RELEASE)')
+    return gate, ([f'({V13_DIAG_BANNER}) 배치 관문 {p}' for p in probs] if diagnostic else [])
 
 
 def v13_handover_argv(dataset, batch_root, handover_csv, pressure=None, python=None):
@@ -1175,16 +1367,18 @@ def v13_handover_argv(dataset, batch_root, handover_csv, pressure=None, python=N
     return a
 
 
-def stage_handovers_v13(batch_root, handover_out, date, pressure=None, pressure_unverified=False, python=None, allow_seal_diff=None):
+def stage_handovers_v13(batch_root, handover_out, date, pressure=None, pressure_unverified=False, python=None, allow_seal_diff=None,
+                        diagnostic=False):
     """단계 A — 배치 뿌리 → 인계표 둘 (`<ds>_handover_v13_<date>.csv` + 열 사전 · 제외 노트 · τ 출처 부록).  manifest = g2 · 원천 대조 ·
-    발사 봉인 대조 (`v13_seal_gate`) · ⓪b 다시 읽기 기록 (`v13_batch_gate_check`) 먼저 — 생성기를 부르기 전에 거부한다."""
+    발사 봉인 대조 (`v13_seal_gate`) · 배치 관문 (⓪ 감사 · ⓪b 다시 읽기 — `v13_batch_gate_check` · build · check 와 같은 함수) 먼저 — 생성기를 부르기 전에
+    거부한다 (diagnostic = 진단 모드 · 관문 문제를 경고로)."""
     man = os.path.join(batch_root, 'manifest.json')
     v13_manifest_generation(man)
     mp = v13_manifest_inputs_problems(man)
     if mp:
         raise ReleaseError('배치 manifest ↔ v1.3 입력 — ' + ' | '.join(mp))
     _ci, w1 = v13_seal_gate(man, allow_seal_diff)
-    _gf, w2 = v13_batch_gate_check(batch_root)
+    _gate, w2 = v13_batch_gate_check(batch_root, diagnostic=diagnostic)
     for w in w1 + w2:
         print('  ⚠ 단계 A', w)
     if os.path.exists(handover_out) and os.listdir(handover_out):
@@ -1583,10 +1777,11 @@ def _v13_prefix(dry_run):
     return V13_DRY_PREFIX if dry_run else ''
 
 
-def _v13_out_guard(out_dir, dry_run):
+def _v13_out_guard(out_dir, dry_run, diagnostic=False):
     a = os.path.abspath(out_dir)
-    if dry_run and (a + os.sep).startswith(REPO + os.sep):
-        raise ReleaseError(f'dry-run 산출을 리포 안 ({_v13_rel(a)}) 에 쓰지 않는다 — docs/data 의 배포 폴더와 섞이거나 커밋되지 않게 · 리포 밖 스크래치에')
+    if (dry_run or diagnostic) and (a + os.sep).startswith(REPO + os.sep):
+        raise ReleaseError(f'{"dry-run" if dry_run else "진단 (NOT FOR RELEASE)"} 산출을 리포 안 ({_v13_rel(a)}) 에 쓰지 않는다 — docs/data 의 배포 폴더와 섞이거나 '
+                           '커밋되지 않게 · 리포 밖 스크래치에')
     if os.path.exists(a) and (not os.path.isdir(a) or os.listdir(a)):
         raise ReleaseError(f'산출 폴더 {a} 가 이미 있고 비어 있지 않다 — 새 폴더에 만든다 (덮어쓰지 않는다)')
     return a
@@ -1609,14 +1804,19 @@ def _v13_iso_stats(rows):
 
 
 def build_v13(*, out_dir, handover_dir, batch_root=None, date=None, dry_run=False, codex_verdict=None, h12_appendix=False,
-              pressure_unverified=False, transfer_text=None, allow_seal_diff=None):
+              pressure_unverified=False, transfer_text=None, allow_seal_diff=None, diagnostic=False):
     """단계 B — 인계표 (둘) → v1.3 배포 묶음 (out_dir).  실제 (dry_run False): Codex 판정문 · 배치 뿌리 (manifest g2 · 원천 대조 · 발사 봉인 대조 ·
-    ⓪b 다시 읽기 기록 · τ 다시 읽기) · 인계표 세대 g2 · 완료 압력 열 (없으면 --pressure-unverified 명시 승인) 필수.  봉인 파일이 발사 때와 다르면 거부 —
+    배치 관문 = ⓪ 감사 · ⓪b 다시 읽기 (★ G2RR3-01 — 두 기록 필수 · 판정 · 이 배치에 결합 · check_v13 과 같은 함수) · τ 다시 읽기) · 인계표 세대 g2 ·
+    완료 압력 열 (없으면 --pressure-unverified 명시 승인) 필수.  봉인 파일이 발사 때와 다르면 거부 —
     값과 무관한 변경이면 allow_seal_diff (--allow-seal-diff) 로 명시 승인 · 기록.  dry-run: 세대 1 원천 허용 · 빠진 v1.3 열은 기록하고 뺀다 ·
     파일 이름 DRYRUN_ · README 첫 줄 "DRY RUN — not a release" · 리포 안 (docs/data 포함) 거부.  임시 폴더에 다 만들고 `check_v13` 통과 뒤에만 out_dir 로 옮긴다
     (거부 · 실패면 산출 폴더가 남지 않는다).  transfer_text = Codex GO 판정문의 전달 문안 파일 (있으면 README "외부 검토" 에 그대로 · sha256 기록 —
-    README 를 만든 뒤 손으로 고치면 빌드 manifest 의 sha256 이 어긋난다).  반환 = 보고 dict."""
+    README 를 만든 뒤 손으로 고치면 빌드 manifest 의 sha256 이 어긋난다).
+    diagnostic (--diagnostic-batch-gate · 실제 경로만) = 진단 모드 — 배치 관문 문제를 경고로 남기고 만든다 · README 첫 줄 · 빌드 manifest 에 NOT FOR RELEASE ·
+    리포 안 거부 · check_v13 배포 대조는 거부 (진단 대조 `check_v13(…, diagnostic=True)` 만 통과).  반환 = 보고 dict."""
     date = date or datetime.date.today().strftime('%Y%m%d')
+    if diagnostic and dry_run:
+        raise ReleaseError('--diagnostic-batch-gate 는 실제 경로 (배치 뿌리 · 배치 관문) 에만 — dry-run 은 배치 관문을 보지 않는다')
     tt = None
     if transfer_text:
         if not os.path.isfile(transfer_text):
@@ -1624,10 +1824,10 @@ def build_v13(*, out_dir, handover_dir, batch_root=None, date=None, dry_run=Fals
         tt = {'file': _v13_rel(transfer_text), 'sha256': _sha256(transfer_text), 'text': open(transfer_text, encoding='utf-8').read().strip()}
     if not re.fullmatch(r'\d{8}', str(date)):
         raise ReleaseError(f'날짜 {date!r} — YYYYMMDD')
-    out_abs = _v13_out_guard(out_dir, dry_run)
+    out_abs = _v13_out_guard(out_dir, dry_run, diagnostic)
     pre = _v13_prefix(dry_run)
     warnings = []
-    man_info = code_identity = gate_files = None
+    man_info = code_identity = gate = None
     if not dry_run:
         if not codex_verdict or not os.path.isfile(codex_verdict):
             raise ReleaseError(f'Codex 세대 2 판정문 (GO) 이 없다 ({codex_verdict!r}) — v1.3 은 GO 뒤에만 만든다 (--codex-verdict)')
@@ -1640,7 +1840,7 @@ def build_v13(*, out_dir, handover_dir, batch_root=None, date=None, dry_run=Fals
             raise ReleaseError('배치 manifest ↔ v1.3 입력 — ' + ' | '.join(mp))
         man_info = {'path': _v13_rel(mpath), 'sha256': _sha256(mpath), 'expected_network_generation': g_man}
         code_identity, w_seal = v13_seal_gate(mpath, allow_seal_diff)          # 발사 봉인 ↔ 이 체크아웃 (세대 2 등록 §3)
-        gate_files, w_gate = v13_batch_gate_check(batch_root)                   # ⓪ 감사 · ⓪b 다시 읽기 기록 (등록 §5-2 · §5-3)
+        gate, w_gate = v13_batch_gate_check(batch_root, diagnostic=diagnostic)  # ⓪ 감사 · ⓪b 다시 읽기 (등록 §5-2 · §5-3 · G2RR3-01 — check 와 같은 함수)
         warnings += w_seal + w_gate
     elif allow_seal_diff:
         raise ReleaseError('--allow-seal-diff 는 실제 v1.3 (배치 뿌리 · 발사 봉인 대조) 에만 쓴다 — dry-run 은 봉인 대조를 하지 않는다')
@@ -1748,7 +1948,8 @@ def build_v13(*, out_dir, handover_dir, batch_root=None, date=None, dry_run=Fals
         ctx = {'date': date, 'dry_run': dry_run, 'gens': gens, 'missing': missing, 'warnings': warnings, 'hand': hand, 'hrows': hrows,
                'by_ds': by_ds, 'tables': tables, 'fit': fit, 'codex_verdict': _v13_rel(codex_verdict) if codex_verdict else None,
                'manifest': man_info, 'tau_reread': tau_reread, 'press_ok': press_ok, 'specs': specs, 'stage': stage, 'pre': pre,
-               'h12': any(k[1] == 'h12' for k in specs), 'transfer': tt, 'code_identity': code_identity, 'gate_files': gate_files}
+               'h12': any(k[1] == 'h12' for k in specs), 'transfer': tt, 'code_identity': code_identity, 'gate': gate,
+               'gate_files': (gate or {}).get('files'), 'diagnostic': bool(diagnostic)}
         with open(os.path.join(stage, f'{pre}README.md'), 'w', encoding='utf-8', newline='') as f:
             f.write(_v13_readme(ctx))
         for root, _dirs, fs in os.walk(stage):
@@ -1761,7 +1962,8 @@ def build_v13(*, out_dir, handover_dir, batch_root=None, date=None, dry_run=Fals
                'codex_verdict': ctx['codex_verdict'], 'batch_manifest': man_info, 'pressure_verified': bool(press_ok),
                'missing_columns': missing, 'warnings': warnings, 'h12_appendix': ctx['h12'],
                'transfer_text': ({k: v for k, v in tt.items() if k != 'text'} if tt else None),
-               'code_identity': code_identity, 'batch_gate_files': gate_files,
+               'code_identity': code_identity, 'batch_gate_files': (gate or {}).get('files'), 'diagnostic': bool(diagnostic),
+               'batch_gate': ({k: v for k, v in gate.items() if k != 'files'} if gate else None),
                'handover': {ds: {'file': _v13_rel(hand[ds][0]), 'sha256': _sha256(hand[ds][0]), 'rows': len(hrows[ds]), 'cols': len(hand[ds][1])}
                             for ds in V13_DATASETS},
                'code': {n: _sha256(os.path.join(REPO, 'scripts', n)) for n in ('lhs_release_build.py', 'lhs_design_dataset.py', 'tau_flux.py',
@@ -1770,7 +1972,7 @@ def build_v13(*, out_dir, handover_dir, batch_root=None, date=None, dry_run=Fals
                'files': dict(sorted(files.items()))}
         with open(os.path.join(stage, f'{pre}{V13_MANIFEST_NAME}'), 'w', encoding='utf-8', newline='') as f:
             f.write(json.dumps(man, ensure_ascii=False, indent=1, sort_keys=True) + '\n')
-        cp = check_v13(stage, handover_dir, dry_run=dry_run)
+        cp = check_v13(stage, handover_dir, dry_run=dry_run, diagnostic=diagnostic)
         if cp:
             raise ReleaseError(f'만든 묶음 대조 실패 {len(cp)} — ' + ' | '.join(cp[:4]))
         if os.path.isdir(out_abs):
@@ -1779,13 +1981,16 @@ def build_v13(*, out_dir, handover_dir, batch_root=None, date=None, dry_run=Fals
     except BaseException:
         shutil.rmtree(stage, ignore_errors=True)
         raise
-    return {'out_dir': out_abs, 'dry_run': dry_run, 'generation': gens, 'missing_columns': missing, 'warnings': warnings,
-            'tau_reread': tau_reread, 'n_files': len(files)}
+    return {'out_dir': out_abs, 'dry_run': dry_run, 'diagnostic': bool(diagnostic), 'generation': gens, 'missing_columns': missing,
+            'warnings': warnings, 'tau_reread': tau_reread, 'n_files': len(files)}
 
 
-def check_v13(release_dir, handover_dir, dry_run=False):
+def check_v13(release_dir, handover_dir, dry_run=False, diagnostic=False):
     """v1.3 묶음 대조 — 문제 목록 ([] = 통과).  빌드 manifest 의 파일 sha256 · 배포 ⊆ 인계표 (주 = 프로필 ml_v1 · 부록 = appendix) · 빈칸 일관성 ·
-    ML 표 = 배포에서 다시 만든 표 (글자 그대로) · se_isolated 항등식 · 세대 (실제 = g2) · 재적합 재현 (상대 1e-9) · README 표지."""
+    ML 표 = 배포에서 다시 만든 표 (글자 그대로) · se_isolated 항등식 · 세대 (실제 = g2) · 재적합 재현 (상대 1e-9) · README 표지 ·
+    ★ 10-07 G2RR3-01 실제 경로 = 배치 관문을 빌드가 기록한 배치 뿌리에서 **같은 함수** (`v13_batch_gate_problems`) 로 다시 판정 · 빌드 기록 (sha256 · 판정 필드) ·
+    배치 manifest sha256 = 지금 파일 · 관문 모드 = 대조 모드.  diagnostic = 진단 묶음 대조 (관문 문제는 기록된 대로 두고 NOT FOR RELEASE 표지를 본다 —
+    배포 대조 (diagnostic False) 는 진단 묶음을 거부한다)."""
     pre = _v13_prefix(dry_run)
     probs = []
     mpath = os.path.join(release_dir, f'{pre}{V13_MANIFEST_NAME}')
@@ -1793,8 +1998,15 @@ def check_v13(release_dir, handover_dir, dry_run=False):
         man = json.load(open(mpath, encoding='utf-8'))
     except (OSError, ValueError) as e:
         return [f'빌드 manifest {os.path.basename(mpath)} 를 못 읽었다 ({type(e).__name__})']
+    if man.get('schema') != V13_MANIFEST_SCHEMA:
+        probs.append(f'빌드 manifest schema {man.get("schema")!r} ≠ {V13_MANIFEST_SCHEMA!r} — 지금 생성기의 묶음이 아니다 (옛 빌드 = 배치 관문 판정 기록 없음 · G2RR3-01)')
     if bool(man.get('dry_run')) != bool(dry_run):
         probs.append(f'빌드 manifest dry_run {man.get("dry_run")!r} ≠ 대조 모드 {dry_run!r}')
+    if diagnostic and dry_run:
+        probs.append('진단 (--diagnostic-batch-gate) 과 dry-run 을 함께 대조하지 않는다 — 진단은 실제 경로 (배치 관문) 에만')
+    if bool(man.get('diagnostic')) != bool(diagnostic):
+        probs.append(f'빌드 manifest diagnostic {man.get("diagnostic")!r} ≠ 대조 모드 {diagnostic!r}'
+                     + (f' — 진단 묶음 ({V13_DIAG_BANNER}) 은 배포가 아니다 (G2RR3-01)' if man.get('diagnostic') else ''))
     date = man.get('date')
     for rel, sha in (man.get('files') or {}).items():
         p = os.path.join(release_dir, rel)
@@ -1877,11 +2089,16 @@ def check_v13(release_dir, handover_dir, dry_run=False):
     if not os.path.isfile(rd):
         probs.append(f'README 없음 ({pre}README.md)')
     else:
-        first = (open(rd, encoding='utf-8').read().splitlines() or [''])[0]
+        rtxt = open(rd, encoding='utf-8').read()
+        first = (rtxt.splitlines() or [''])[0]
         if dry_run and V13_DRY_BANNER not in first:
             probs.append('dry-run README 첫 줄에 "DRY RUN — not a release" 표지가 없다')
-        if not dry_run and 'DRY RUN' in open(rd, encoding='utf-8').read():
+        if not dry_run and 'DRY RUN' in rtxt:
             probs.append('실제 배포 README 에 DRY RUN 표지가 있다')
+        if diagnostic and V13_DIAG_BANNER not in first:
+            probs.append(f'진단 README 첫 줄에 "{V13_DIAG_BANNER}" 표지가 없다')
+        if not diagnostic and 'NOT FOR RELEASE' in rtxt:
+            probs.append('배포 README 에 NOT FOR RELEASE 표지가 있다 — 진단 묶음이다 (G2RR3-01)')
     if not dry_run:
         if man.get('tau_reread') != 'performed':
             probs.append(f'τ 다시 읽기 {man.get("tau_reread")!r} — 실제 배포는 load_tau_results 로 다시 읽어야 한다')
@@ -1894,12 +2111,36 @@ def check_v13(release_dir, handover_dir, dry_run=False):
             un = [f for f in ci['sealed_changed'] if f not in (ci.get('allowed') or [])]
             if un:
                 probs.append(f'발사 봉인과 다른 파일 {un} 이 명시 승인 (--allow-seal-diff) 목록에 없다')
-        rr = (man.get('batch_gate_files') or {}).get('reread.json')
-        if isinstance(rr, dict) and isinstance(rr.get('n_fail'), int) and (rr['n_fail'] != 0 or rr.get('expected_generation') != V13_GENERATION):
-            probs.append(f'⓪b 다시 읽기 기록 n_fail {rr["n_fail"]} · 기대 세대 {rr.get("expected_generation")!r} — 인계하지 않는다 (등록 §5-3)')
-        elif isinstance(rr, dict) and isinstance(rr.get('n_fail'), int) and not v13_reread_set_ok(rr):
-            probs.append(f'⓪b 다시 읽기 기록 등록 집합 {rr.get("expected_set")!r} · 기대 {rr.get("expected_n")!r} · 읽음 {rr.get("read_n")!r} · '
-                         f'같음 {rr.get("set_equal")!r} — 등록 집합 {V13_REREAD_SET} 전부가 아니다 (G2RR2-02)')
+        #  ★ 10-07 G2RR3-01 — 배치 관문을 빌드가 기록한 배치 뿌리에서 같은 함수로 다시 판정 (옛 판: 빌드 manifest 의 기록이 읽히는 정수 n_fail 일 때만 봤다 —
+        #    기록이 없거나 · null 이면 검사 0 · 감사 판정은 보지 않았다).  빌드 기록 = 지금 배치 뿌리의 기록 (빌드 뒤 증거 교체 · 기록 고침을 잡는다)
+        probs += v13_batch_gate_recheck(man, diagnostic=diagnostic)
+    return probs
+
+
+def v13_batch_gate_recheck(man, diagnostic=False):
+    """check_v13 의 배치 관문 재판정 (실제 경로) — 빌드 manifest (dict) → 문제 목록.  batch_gate (스키마 · 모드 = 대조 모드 · 배치 뿌리) 가 있어야 ·
+    그 배치 뿌리에서 `v13_batch_gate_problems` (build_v13 · 단계 A 와 같은 함수) 를 다시 돌린다 → 기록 ≠ 지금 · manifest sha256 ≠ 지금 · (배포 대조면) 관문 문제."""
+    bg = man.get('batch_gate')
+    want = 'diagnostic' if diagnostic else 'release'
+    if not isinstance(bg, dict) or bg.get('schema') != V13_GATE_SCHEMA or not isinstance(bg.get('batch_root'), str) or not bg.get('batch_root'):
+        return [f'빌드 manifest 에 배치 관문 결과 (batch_gate · {V13_GATE_SCHEMA}) 가 없다 — 실제 배포는 ⓪ 감사 · ⓪b 다시 읽기를 판정한 빌드만 (G2RR3-01)']
+    probs = []
+    if bg.get('mode') != want:
+        probs.append(f'빌드 관문 모드 {bg.get("mode")!r} ≠ 대조 모드 {want!r}'
+                     + (f' — 진단 묶음 ({V13_DIAG_BANNER}) 은 배포로 대조하지 않는다 (G2RR3-01)' if bg.get('mode') == 'diagnostic' else ''))
+    br = bg['batch_root']
+    if not os.path.isdir(br):
+        return probs + [f'빌드가 판정한 배치 뿌리 {br} 가 없다 — 배치 관문을 다시 판정할 수 없다 (G2RR3-01 · check_v13 은 같은 관문을 다시 돈다)']
+    rec_now, gp_now = v13_batch_gate_problems(br)
+    rec = man.get('batch_gate_files') if isinstance(man.get('batch_gate_files'), dict) else {}
+    diff = [n for n in V13_BATCH_GATE_FILES if rec.get(n) != rec_now.get(n)]
+    if diff:
+        probs.append(f'빌드 manifest 의 배치 관문 기록 ≠ 지금 배치 뿌리 {diff} (sha256 · 판정 필드) — 빌드 뒤 증거가 바뀌었거나 기록이 고쳐졌다 (G2RR3-01)')
+    m_now = _sha256_or_none(os.path.join(br, 'manifest.json'))
+    if bg.get('manifest_sha256') != m_now or (man.get('batch_manifest') or {}).get('sha256') != m_now:
+        probs.append(f'배치 manifest sha256 (지금 {str(m_now)[:12]}…) ≠ 빌드 기록 — 빌드 뒤 배치 manifest 가 바뀌었다 (G2RR3-01)')
+    if not diagnostic:
+        probs += [f'배치 관문 (G2RR3-01) {p}' for p in gp_now]
     return probs
 
 
@@ -1916,6 +2157,10 @@ def _v13_readme(ctx):
     L = []
     if dry:
         L += [f'> ⚠ {V13_DRY_BANNER} — 세대 1 원천 (커밋된 v1.2 인계표) 으로 v1.3 생성기 경로만 돌린 것.  수영 님께 보내지 않는다 · 값 인용 금지.', '']
+    if ctx.get('diagnostic'):
+        _gp = (ctx.get('gate') or {}).get('problems') or []
+        L += [f'> ⚠ {V13_DIAG_BANNER} — 배치 관문 증거 (⓪ 감사 · ⓪b 다시 읽기) 가 통과가 아닌 채 진단 모드 (--diagnostic-batch-gate) 로 만든 것 '
+              f'(문제 {len(_gp)} · "외부 검토" 절).  수영 님께 보내지 않는다 · 값 인용 금지 · check_v13 배포 대조는 이 묶음을 거부한다 (G2RR3-01).', '']
     L += [f'# LHS 구조 디스크립터 — 배포 v1.3 최종판 ({d} · 접촉망 세대 {ctx["gens"].get("lhs")})', '',
           '> 수영 님 ML 용 구조 디스크립터 + 접촉망 수송 지표 — **v1.3 = 최종판** (1저자 10-06 밤 *"v1.3 에 최종이라고 하고 확실하게 넘겨주자"*).',
           '> v1.2 (`docs/data/lhs_release_20261006_v12/`) 의 열 · 값 규약을 이어받고 더한 것: **세대 2 망 값** · **ML 표 (빈칸 뜻 코드 · #1)** · '
@@ -1933,7 +2178,7 @@ def _v13_readme(ctx):
         L += [f'- Codex 세대 2 판정문 (GO): `{ctx["codex_verdict"]}` — 이 배포는 GO 뒤에만 만든다.  판정문의 전달 문안이 이 README 와 다르면 **판정문이 우선**이다.',
               f'- 배치 manifest: `{mi.get("path")}` (sha256 `{mi.get("sha256")}` · expected_network_generation = `{mi.get("expected_network_generation")}`) · '
               f'τ 다시 읽기 (생성기 `load_tau_results` · 같은 기대 세대 · 인계표 τ 칸 대조) = **{ctx["tau_reread"]}**.']
-        ci, gf = ctx.get('code_identity') or {}, ctx.get('gate_files') or {}
+        ci, gf, gt = ctx.get('code_identity') or {}, ctx.get('gate_files') or {}, ctx.get('gate') or {}
         hc = ci.get('handover_changed')
         L += [f'- 코드 신원 (세대 2 등록 §3): 발사 봉인 (배치 manifest `code_hashes`) {ci.get("sealed")} 파일 — '
               + ('이 빌드 체크아웃과 **같다**' if not ci.get('sealed_changed') else
@@ -1941,10 +2186,17 @@ def _v13_readme(ctx):
               + ' · 인계 생성기 · 다시 읽기 도구 (`handover_code_hashes`) '
               + ('기록 없음 (대조 못 함)' if hc is None else ('= 발사 기록' if not hc else f'**≠ 발사 기록** {hc} (v1.3 생성기 변경 — 등록 §9 에 이 커밋)'))
               + f' · 빌드 git HEAD `{ci.get("git_head")}` · 커밋 안 된 추적 파일 변경 {ci.get("git_dirty_tracked")} 줄.',
-              '- 배치 관문 기록 (등록 §5): ' + ' · '.join(
+              '- 배치 관문 (등록 §5-2 · §5-3 · ★ G2RR3-01 — 두 기록 필수 · build · 단계 A · check_v13 이 같은 판정 `v13_batch_gate_problems`): ' + ' · '.join(
                   f'`{n}` ' + ('**없음**' if gf.get(n) is None else f'sha256 `{gf[n]["sha256"]}`'
-                                + (f' (n_fail {gf[n].get("n_fail")} · 기대 세대 `{gf[n].get("expected_generation")}`)' if n == 'reread.json' else ''))
-                  for n in V13_BATCH_GATE_FILES) + ' — 빌드는 다시 읽기의 실패 표지만 읽는다 (내용 판정은 그 도구의 rc).']
+                                + (f' (n_fail {gf[n].get("n_fail")} · 기대 세대 `{gf[n].get("expected_generation")}` · 등록 집합 `{gf[n].get("expected_set")}` '
+                                   f'{gf[n].get("read_n")}/{gf[n].get("expected_n")})' if n == 'reread.json'
+                                   else f' (봉인 판정 {gf[n].get("verdicts")} · merged {gf[n].get("merged")})'))
+                  for n in V13_BATCH_GATE_FILES)
+              + (f' — **통과**: ⓪ 감사 = 실행 형식 자격 current · 봉인 판정 {"/".join(V13_AUDIT_SEALED)} 만 {V13_REREAD_N} · merged same · 등록 ID · 기대 세대 '
+                 f'{V13_GENERATION} · 세대 · 입력 지문 · import 관측 문제 0 / ⓪b 다시 읽기 = n_fail 0 · {V13_GENERATION} · {V13_REREAD_SET} '
+                 f'{V13_REREAD_N}/{V13_REREAD_N} · 둘 다 이 배치 뿌리 (`{_v13_rel(gt.get("batch_root") or "")}`) · 이 manifest · 이 발사 봉인 지문의 기록'
+                 if not gt.get('problems') else
+                 f' — **문제 {len(gt["problems"])} ({V13_DIAG_BANNER})**: ' + ' | '.join(gt['problems'][:8]))]
     L += [f'- 완료 압력 (DESC-06): ' + ('`press_*` 열 — 압밀 루프가 목표 300 MPa 에서 빠져나온 기록 (마지막 프레임 응력이 아니다)' if ctx['press_ok']
                                       else '**미검사** (press_* 열 없음)'),
           '- 5차 판정 (`docs/reviews/codex_review_rglr3_reverify_20261006.md` §6 · §7) 의 사용 조건은 그대로다: 모델 내부 ML 기술자 · 기본 = Hertz · '
@@ -2112,6 +2364,10 @@ def main(argv=None):
     ap.add_argument('--allow-seal-diff', action='append', default=[], metavar='FILE',
                     help='(--v13 실제) 발사 봉인 (배치 manifest code_hashes) 과 다른 파일 하나를 명시 승인 (값과 무관한 변경 — 예: 웹앱 화면 문구 · '
                          '여러 번 · README · 빌드 manifest 에 기록).  없으면 봉인 파일이 다를 때 거부한다')
+    ap.add_argument('--diagnostic-batch-gate', action='store_true',
+                    help='(--v13 · --v13-check 실제 경로) 진단 모드 — 배치 관문 증거 (⓪ 감사 seal_audit.json · ⓪b 다시 읽기 reread.json) 의 결손 · 손상 · 옛 · '
+                         '실패 기록을 경고로 남기고 만든다 · README 첫 줄 · 빌드 manifest 에 NOT FOR RELEASE · 리포 밖에만 · --v13-check 배포 대조는 거부 '
+                         '(진단 대조는 이 표지와 함께 · G2RR3-01).  없으면 관문 문제 하나라도 = 거부')
     ap.add_argument('--selftest', action='store_true')
     a = ap.parse_args(argv)
     if a.selftest:
@@ -2120,10 +2376,11 @@ def main(argv=None):
         if a.v13_check:
             if not (a.release_dir and a.handover_dir):
                 ap.error('--v13-check 에는 --release-dir 와 --handover-dir 가 필요하다')
-            probs = check_v13(a.release_dir, a.handover_dir, dry_run=a.dry_run)
+            probs = check_v13(a.release_dir, a.handover_dir, dry_run=a.dry_run, diagnostic=a.diagnostic_batch_gate)
             for p in probs:
                 print('⛔', p)
-            print(('✓ v1.3 묶음 대조 통과' + (f' ({V13_DRY_BANNER})' if a.dry_run else '')) if not probs else f'✗ 문제 {len(probs)}')
+            print(('✓ v1.3 묶음 대조 통과' + (f' ({V13_DRY_BANNER})' if a.dry_run else '') + (f' ({V13_DIAG_BANNER})' if a.diagnostic_batch_gate else ''))
+                  if not probs else f'✗ 문제 {len(probs)}')
             return 0 if not probs else 3
         if a.v13:
             if not a.out_dir:
@@ -2146,13 +2403,14 @@ def main(argv=None):
                     pr[k] = v
                 hdir = a.handover_out or os.path.join(a.batch_root, f'handover_v13_{date}')
                 stage_handovers_v13(a.batch_root, hdir, date, pressure=pr, pressure_unverified=a.pressure_unverified,
-                                    allow_seal_diff=a.allow_seal_diff)
+                                    allow_seal_diff=a.allow_seal_diff, diagnostic=a.diagnostic_batch_gate)
             rep = build_v13(out_dir=a.out_dir, handover_dir=hdir, batch_root=a.batch_root, date=date, dry_run=a.dry_run,
                             codex_verdict=a.codex_verdict, h12_appendix=a.h12_appendix, pressure_unverified=a.pressure_unverified,
-                            transfer_text=a.transfer_text, allow_seal_diff=a.allow_seal_diff)
+                            transfer_text=a.transfer_text, allow_seal_diff=a.allow_seal_diff, diagnostic=a.diagnostic_batch_gate)
             for w in rep['warnings']:
                 print('⚠', w)
-            print(f'✓ v1.3 {"DRY RUN 묶음" if a.dry_run else "배포 묶음"} {rep["out_dir"]} — 파일 {rep["n_files"]} · 세대 {rep["generation"]} · '
+            kind = 'DRY RUN 묶음' if a.dry_run else (f'진단 묶음 ({V13_DIAG_BANNER})' if a.diagnostic_batch_gate else '배포 묶음')
+            print(f'✓ v1.3 {kind} {rep["out_dir"]} — 파일 {rep["n_files"]} · 세대 {rep["generation"]} · '
                   f'τ 다시 읽기 {rep["tau_reread"]} · 대조 통과 (check_v13)' + (f' · 빠진 v1.3 열 {rep["missing_columns"]}' if rep['missing_columns'] else ''))
             return 0
         if a.check:

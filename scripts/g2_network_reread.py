@@ -35,6 +35,10 @@
 판정: rc 0 = 전부 PASS · 1 = FAIL 있음 · 2 = 사용 오류.  --json 이면 케이스마다 판정 · 상태표를 남긴다 (붙여 넣을 것 = 화면 요약).
   JSON 스키마 v2 (10-07) = 등록 집합 필드 (expected_set · expected_n · read_n · set_equal · missing · extra) — v1.3 생성기 (`lhs_release_build`) 는
   expected_set production194 · 기대 = 읽음 = 194 · 같음 True 인 기록만 받는다 (옛 v1 기록 · 일부 · pilot3 = 거부).
+  ★ JSON 스키마 v3 (10-07 G2RR3-01 · Codex 세대 2 재검증 3 §3 "reread 는 … 이번 ROOT/봉인에 대한 증거인지 결합") = 실행 신원 (--launcher-root 일 때 ·
+  그 밖 = null): launcher_root (읽은 ROOT · resolve) · manifest_sha256 (판정에 쓴 manifest **바이트** 의 sha256 — 같은 바이트를 해석했다) · seal_fp
+  (그 manifest 의 seal.code_fp) · launch_sha (git.sha).  v1.3 배포 관문 (`lhs_release_build.v13_reread_problems`) 이 배치 뿌리 · 지금 manifest · 발사 봉인과
+  맞댄다 — 다른 ROOT · 봉인 · 읽은 뒤 바뀐 manifest 의 기록 = 거부 (옛 v2 기록 = 실행 신원 없음 = 진단 모드에서만).
 ⚠ 한계 — 도장 · 레코드 · 모든 사본 · 증서를 한 실행 안에서 일관되게 함께 바꾼 전면 위조는 재계산 없이 못 잡는다 (TAU_SAME_GEN_BASIS · Codex §3 의 "보증 아님" 그대로).
    이 도구의 PASS 는 게시 · 인계가 쓰는 계약을 **지금 파일에** 다시 부른 결과다 — 숫자의 물리적 정확성 · 실험 대조가 아니다.
 
@@ -49,6 +53,7 @@ from __future__ import annotations
 
 import argparse
 import contextlib
+import hashlib
 import io
 import json
 import os
@@ -63,7 +68,9 @@ for _p in (str(ROOT / 'scripts'), str(ROOT / 'webapp')):
     if _p not in sys.path:
         sys.path.insert(0, _p)
 
-SCHEMA = 'g2_network_reread/v2'     # v2 (10-07 G2RR2-02) = 등록 집합 필드 (expected_set · expected_n · read_n · set_equal · missing · extra)
+SCHEMA = 'g2_network_reread/v3'     # v2 (10-07 G2RR2-02) = 등록 집합 필드 (expected_set · expected_n · read_n · set_equal · missing · extra) ·
+#                                     v3 (10-07 G2RR3-01) = 실행 신원 (launcher_root · manifest_sha256 · seal_fp · launch_sha — run_launcher 가 읽은 바이트에서)
+IDENTITY_KEYS = ('launcher_root', 'manifest_sha256', 'seal_fp', 'launch_sha')
 BRANCHES = (('full', 'sigma_full', 'sigma_full_status', 'sigma_full_reason', 'solve_certificate_full'),
             ('bulk_only', 'sigma_bulk_net', 'sigma_bulk_net_status', 'sigma_bulk_net_reason', 'solve_certificate_bulk_net'),
             ('constriction_only', 'sigma_constr_net', 'sigma_constr_net_status', 'sigma_constr_net_reason', 'solve_certificate_constr_net'))
@@ -264,14 +271,35 @@ def explicit_expected(specs):
     return dict(name='explicit', pairs=frozenset(pairs), source='CLI --expect-case')
 
 
-def run_launcher(root: Path, *, expected=None, out=print):
+def launcher_identity(root: Path, raw, man) -> dict:
+    """★ 10-07 G2RR3-01 — 판정 JSON 의 실행 신원 (IDENTITY_KEYS): 읽은 ROOT (resolve) · 판정에 쓴 manifest 바이트의 sha256 · 그 manifest 의 발사 봉인 지문
+    (seal.code_fp) · 발사 sha (git.sha).  못 읽은 값 = None (기록만 — 판정은 v1.3 배포 관문이 배치 뿌리와 맞대어 한다)."""
+    m = man if isinstance(man, dict) else {}
+    s = m.get('seal') if isinstance(m.get('seal'), dict) else {}
+    g = m.get('git') if isinstance(m.get('git'), dict) else {}
+    return dict(launcher_root=str(Path(root).resolve()), manifest_sha256=(hashlib.sha256(raw).hexdigest() if raw is not None else None),
+                seal_fp=s.get('code_fp'), launch_sha=g.get('sha'))
+
+
+def run_launcher(root: Path, *, expected=None, out=print, identity=None):
     """launcher-root — manifest 기대 세대 · ★ 등록 집합 (G2RR2-02) · 코호트별 진짜 배치 기록 · 케이스별 K1–K7 · 코호트별 H1.
     ★ 10-07 G2RR2-02 (Codex 세대 2 재검증 2 §3) — 옛 판은 `cohorts or []` 루프 안에서만 M1 을 봐서 plan · cohorts 를 지우거나 비우면 0 케이스를 읽고 실패 0 =
     rc 0 이었다.  이제 ① 루프 **전에** manifest · plan · cohorts · queue 의 꼴 (비지 않음 · 중복 · 코호트 소속 — 실행기와 같은 `plan_problems`) ②
     계획 큐 = **등록 집합** (expected — 고칠 수 있는 큐를 자기 자신의 기대 집합으로 쓰지 않는다) ③ 루프 **밖에서** 실제로 읽은 고유 (케이스, 코호트)
-    집합 = 등록 집합 (M3 · 기대 수 · 읽은 수 · 빠진 · 남는).  expected 가 없으면 FAIL (등록 모드 필수)."""
+    집합 = 등록 집합 (M3 · 기대 수 · 읽은 수 · 빠진 · 남는).  expected 가 없으면 FAIL (등록 모드 필수).
+    ★ 10-07 G2RR3-01 — identity (dict · 주면 채운다) = `launcher_identity` — manifest 를 **한 번** 바이트로 읽어 그 바이트를 해시하고 해석한다 (판정에 쓴
+    manifest 와 기록한 sha256 이 같은 바이트)."""
     ps, tf, LDD, LWB = _mods()
-    man = _read_json(root / 'manifest.json')
+    try:
+        raw = (root / 'manifest.json').read_bytes()
+    except OSError:
+        raw = None
+    try:
+        man = json.loads(raw.decode('utf-8')) if raw is not None else None
+    except ValueError:                                           # UnicodeDecodeError · JSONDecodeError
+        man = None
+    if identity is not None:
+        identity.update(launcher_identity(root, raw, man))
     meta = []
     if not isinstance(man, dict):
         return [], [dict(name='M0 manifest', ok=False, detail=f'{root}/manifest.json 없음 · 못 읽음')], None
@@ -379,6 +407,7 @@ def main(argv=None) -> int:
         return _selftest()
     meta, exp = [], a.expect_generation
     expected = None
+    ident = dict.fromkeys(IDENTITY_KEYS)                         # ★ G2RR3-01 — launcher-root 일 때만 채운다 (그 밖 = null · 배포 관문이 받지 않는다)
     if a.launcher_root:
         #  ★ 10-07 G2RR2-02 — 등록 모드 필수 (생산 194 · 시범의 정확한 ID) — 계획 큐를 자기 자신의 기대 집합으로 쓰지 않는다
         if bool(a.expect_set) == bool(a.expect_case):
@@ -402,7 +431,7 @@ def main(argv=None) -> int:
         folders = [sr / 'work' / 'results' / cid for cid in ids if cid not in notdone]
         reports = run_smoke_or_dirs(folders, exp)
     elif a.launcher_root:
-        reports, meta, exp = run_launcher(Path(a.launcher_root).expanduser().resolve(), expected=expected)
+        reports, meta, exp = run_launcher(Path(a.launcher_root).expanduser().resolve(), expected=expected, identity=ident)
     elif a.case_dir:
         reports = run_smoke_or_dirs([Path(p).expanduser().resolve() for p in a.case_dir], exp)
     else:
@@ -419,7 +448,7 @@ def main(argv=None) -> int:
         p.write_text(json.dumps(dict(schema=SCHEMA, expected_generation=exp, meta=meta, cases=reports, n_fail=n_bad,
                                      expected_set=(expected or {}).get('name'), expected_source=(expected or {}).get('source'),
                                      expected_n=m3.get('expected_n'), read_n=m3.get('read_n'), set_equal=m3.get('set_equal'),
-                                     missing=m3.get('missing'), extra=m3.get('extra')),
+                                     missing=m3.get('missing'), extra=m3.get('extra'), **ident),
                                 ensure_ascii=False, indent=1, default=str) + '\n', encoding='utf-8')
     return 0 if not n_bad else 1
 
@@ -498,7 +527,10 @@ def _selftest() -> int:
                     plan_q.append(dict(case=c, cohort=coh))
                 LWB.write_outputs(lr / 'merged' / coh, dict(schema=LWB.SCHEMA, stop_after='network', harvest_dir='', cohort='', runs=[], cases=cases), rows)
                 cohorts.append(dict(name=coh))
-            man = dict(schema='network_parallel_launcher/v1', plan=dict(cohorts=cohorts, queue=plan_q),
+            #  실행 신원 (★ G2RR3-01) — 발사 봉인 지문 = code_hashes 의 지문 (실행기 code_fp) · 발사 sha (합성)
+            ch_ = {'scripts/tau_flux.py': hashlib.sha256((ROOT / 'scripts' / 'tau_flux.py').read_bytes()).hexdigest()}
+            man = dict(schema='network_parallel_launcher/v1', plan=dict(cohorts=cohorts, queue=plan_q), code_hashes=ch_,
+                       seal=dict(schema='launch_seal/v3', code_fp=_np().code_fp(ch_)), git=dict(sha='ab' * 20),
                        **({'expected_network_generation': 'g2'} if decl is None else decl))
             (lr / 'manifest.json').write_text(json.dumps(man), encoding='utf-8')
             return lr, man
@@ -574,6 +606,28 @@ def _selftest() -> int:
         chk('★ 판정 JSON 이 기대 수 · 읽은 수 · 집합 대조를 싣는다 (n_fail 만이 아니다) — 기대 3 · 읽음 3 · 같음 · CLI rc 0',
             rc_j == 0 and jj.get('expected_n') == 3 and jj.get('read_n') == 3 and jj.get('set_equal') is True and jj.get('expected_set') == 'pilot3',
             {k: jj.get(k) for k in ('expected_n', 'read_n', 'set_equal', 'expected_set', 'n_fail')})
+        #  ★ 10-07 G2RR3-01 (Codex 세대 2 재검증 3 §3 최소 해결 3) — 판정 JSON 이 **이번 ROOT · 봉인** 의 증거: 읽은 배치 뿌리 (resolve) · 읽은 manifest 바이트의
+        #    sha256 · 발사 봉인 지문 (seal.code_fp) · 발사 sha (git.sha) · 스키마 v3 — v1.3 배포 관문 (`lhs_release_build.v13_reread_problems`) 이 배치 뿌리와 맞댄다
+        mp3 = lr_p3 / 'manifest.json'
+        chk('★ G2RR3-01 — 판정 JSON 스키마 v3 · launcher_root = 읽은 ROOT (resolve) · manifest_sha256 = 읽은 manifest 바이트 · seal_fp = seal.code_fp · '
+            'launch_sha = git.sha (옛 v2: 어느 ROOT · 봉인의 기록인지 없다)',
+            jj.get('schema') == 'g2_network_reread/v3' and jj.get('launcher_root') == str(lr_p3.resolve())
+            and jj.get('manifest_sha256') == hashlib.sha256(mp3.read_bytes()).hexdigest()
+            and jj.get('seal_fp') == m_p3['seal']['code_fp'] and jj.get('launch_sha') == m_p3['git']['sha'],
+            {k: jj.get(k) for k in ('schema', 'launcher_root', 'manifest_sha256', 'seal_fp', 'launch_sha')})
+        try:
+            import lhs_release_build as _LRB                     # noqa: E402  (v1.3 배포 관문 — 같은 판정 함수)
+            _vrp = getattr(_LRB, 'v13_reread_problems', None)
+            if _vrp is None:
+                p_same = p_other = ['(배포 관문의 다시 읽기 판정 함수 없음 — 옛 코드)']
+            else:
+                p_same = _vrp(jj, str(lr_p3), expect_set='pilot3')
+                p_other = _vrp(jj, str(tmp / 'lroot_declared'), expect_set='pilot3')
+        except Exception as e:                                   # noqa: BLE001
+            p_same = p_other = [f'{type(e).__name__}: {e}']
+        chk('★ G2RR3-01 — 실 생산자 JSON 을 v1.3 배포 관문의 다시 읽기 판정 (lhs_release_build.v13_reread_problems · 등록 집합 pilot3) 에 이 ROOT 로 넣으면 '
+            '문제 0 · 다른 ROOT 로 대조하면 결합 문제 (배치 뿌리 · manifest sha256)',
+            p_same == [] and any('launcher_root' in p_ for p_ in p_other) and any('manifest_sha256' in p_ for p_ in p_other), (p_same, p_other))
         #  폴더 링크 — symlink 가 막힌 환경 (Windows WinError 1314 · Codex 재검증 2 §11) 에서도 fixture 가 선다 (하드링크 · 사본)
         _sym = os.symlink
 
