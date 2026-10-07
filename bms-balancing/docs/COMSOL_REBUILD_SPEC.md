@@ -4205,3 +4205,13 @@ gate INCOMPLETE · 실효 정책 UNVERIFIED · native 미승인 · 게이트 리
 - 발송 프롬프트: `docs/COMSOL_MICROSHORT_S1O_SEND_TO_CODEX_20261007.md` — S0 `open_questions` 8 항목을 산출물 8 개 (초기화 · 계수 readback · 실행 연결 · P0–P3 · K 초안 · 수지 · 자원 감시 ·
   비용 관측) 에 하나씩 대응 · 변경부 검증안은 제시만 · 오프라인 상한 3600 s (S0 제안). 발송은 사용자가 한다.
 - 승인이 아닌 것: 검증 실행 · S1-P · S1-M · S1-N · native · 960 s / 12 h · 실험 비교 · 기존 원본 / MPH / state 변경.
+
+## 74. 미세단락 S1-O 발송문 사전 검토 회신 접수 — 적합 · 명확화 4 · v2 발송문 (2026-10-07 · 실행 0)
+
+- 보존: `reviews/r14_repros/codex63/comsol_microshort_s1o_prereview_20261007/` — zip 115,420 B · sha256 `727ca268623318c5a5722ff6b0fb7fc57a9a62a74893fc0b03c65f27bb5f3768` · 압축 해제 22 ·
+  manifest 21 / 21 · 비밀 0 · 동봉 `package_review.py` 실행 0. 규칙 `87cd72cb0` → 보존 `5d26e6c87`. 검토자가 본 발송문 (`reference/`) 은 v1 과 바이트 동일 (cmp).
+- 판정 (회신 사본): **S1-O 오프라인 준비 범위로 적합** — 명확화 넷: (1) 비활성 표시가 아니라 실행 차단 · 실제 approval / release / token / runtime 미생성 · 작성 ≠ 검증 ≠ native-ready
+  (2) readback 을 solve 전 설정 / 초기화 t=0(0+) / 완료 후로 분리 · 설정 readback ≠ 계수 소비 증거 (3) near-zero · t=0 부호의 절대 deadband · 분해능 부족 ≠ 역방향 수지 · 단위 · qI 적분 규칙
+  (4) 협조적 중지 → 한정 대기 → 소유 Job 강제 종료 → 종료 확인 · sampled_max ≠ OS peak · 감시 실패 ≠ 0. S0 물리 설계 재개방 · 지금 계산 불필요.
+- 반영: v1 은 그대로 두고 `docs/COMSOL_MICROSHORT_S1O_SEND_TO_CODEX_v2_20261007.md` 에 v1 본문 + 부속안 원문 (§6 · 다르면 §6 우선). 승인 범위는 §73 그대로.
+- 다음 순서 (회신): 비활성 S1-O 산출물 제출 → 변경부 검증 별도 승인 → 검증 결과 · native 미결 수용 → S1-P 별도 승인. 이 절은 어떤 실행의 승인도 아니다.
