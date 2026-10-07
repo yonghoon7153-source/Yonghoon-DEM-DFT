@@ -1,0 +1,13 @@
+  PASS  ① 세 픽스처 × 두 면적 모드의 σ · 경계 수 · 관통 분율 · 상태 = GOLD_G1 (10-06 정확 Dirichlet 전극 · physics = 명시 세대 1 간선)
+  PASS  ①b ★ 세대 2 기본 (ψ 곱셈 + physics_g2 · 10-06) 의 physics 행 = GOLD_G2 (세 픽스처 · 기록 multiply · physics_g2)
+  PASS  ①c 띠 추출의 동작 중립 그대로 — 경계 수 · 겹침 · 관통 · 활성 분율 · φ · 상태 = 옛 GOLD (eedada5d3 · 6 행)
+  PASS  ② 결과에 쓰인 띠 규칙 `boundary_rule` 이 남는다 — L0 · L1 · L2 픽스처가 각각 그 이름 (두 면적 모드)
+  PASS  ③ `boundary_band_frac` = (바닥 띠 문턱 + (판 − 위 띠 문턱)) / 판 — L0 0.2 (= 2·bf·r_max/판) · L1 0.3 · L2 0.86
+  PASS  ④ `boundary_sets(atoms, ids, plate_z, factor)` → (bottom, top, rule, band_frac) — build_network 이 그 함수를 쓴다 (같은 집합)
+  PASS  ⑤ L0 · L1 둘 다 3 개 미만 → L2 로 기록 (5 구 사슬 · 판 8)
+  PASS  ⑥ 다분산 L0 — 띠 폭 = 2·bf·r_max / 판 = 2·2·1.5/20 = 0.3 (TAU-24 의 4r_SE/L 상한)
+  PASS  ⑦ boundary_factor 3 → L0 · 띠 폭 2·3·1/20 = 0.3 (서명에만 있는 죽은 인자가 아니다)
+  PASS  ⑧ 이온 (상위) · 전자 · 열 결과에 띠 규칙이 남는다 (boundary_rule · electronic_boundary_rule · thermal_boundary_rule)
+  SKIP  ⑨ 원시 값 대조 — git 객체 eedada5d3:scripts/network_conductivity.py 를 못 읽었다 (얕은 클론?)
+
+test_network_boundary_rule: 10/10 PASS   SKIP: ['⑨ (git 객체 eedada5d3 없음)']

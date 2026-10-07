@@ -1,0 +1,17 @@
+[
+  {
+    "probe": "release_gate",
+    "rc": 0,
+    "seconds": 12.358999999938533,
+    "tail": [
+      "pass_control True None []",
+      "explicit_failure False ReleaseError: ⓪b 다시 읽기 기록 C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\gen2_network_reverify3_20261007\\evidence\\release_gate\\explicit_failure\\reread.json = n_fail 1 · 기대 세대 'g2' — 세대 2 등록 §5-3 (rc 0 · g2 가 아니면 인계하지 않는다) None",
+      "absent_reread True None []",
+      "invalid_reread True None []",
+      "empty_reread True None []",
+      "null_nfail True None []",
+      "refused_audit True None []",
+      "unsealed_audit True None []"
+    ]
+  }
+]

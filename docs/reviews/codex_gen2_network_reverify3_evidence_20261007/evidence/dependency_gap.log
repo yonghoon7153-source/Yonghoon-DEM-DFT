@@ -1,0 +1,43 @@
+{
+  "fixture": "two AM_P spheres r=6 um, delta=0.2 um, force channel absent; no physical claim",
+  "change": "reviewer copy: K_IC_AM_P 0.3e6 -> 30e6 Pa m^0.5",
+  "source_call": "dem_analysis_core.calc_fracture_stages (called by run_full_analysis)",
+  "hash_before": "e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71",
+  "hash_after": "2241d04655da64f7c2f54c13924fd07062fcef10a28ccae2fef188026e6f0db2",
+  "hash_unchanged": false,
+  "fracture_model_in_closure": true,
+  "changed_metrics": {
+    "frac_intact_AM_P-AM_P_pct": [
+      0.0,
+      100.0
+    ],
+    "n_multicrack_AM_AM": [
+      1,
+      0
+    ],
+    "n_multicrack_AM_P-AM_P": [
+      1,
+      0
+    ],
+    "frac_multicrack_pct": [
+      100.0,
+      0.0
+    ],
+    "frac_multicrack_AM_P-AM_P_pct": [
+      100.0,
+      0.0
+    ],
+    "n_intact_AM_AM": [
+      0,
+      1
+    ],
+    "n_intact_AM_P-AM_P": [
+      0,
+      1
+    ],
+    "frac_intact_pct": [
+      0.0,
+      100.0
+    ]
+  }
+}

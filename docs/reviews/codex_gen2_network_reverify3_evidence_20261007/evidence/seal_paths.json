@@ -1,0 +1,947 @@
+{
+  "code_fp": "e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71",
+  "code_files": 32,
+  "dependency_closure": {
+    "files": [
+      "scripts/analyze_contacts.py",
+      "scripts/analyze_contacts_bimodal.py",
+      "scripts/coverage_physics_vs_hertzian.py",
+      "scripts/dem_analysis_core.py",
+      "scripts/export_master_csv.py",
+      "scripts/fracture_model.py",
+      "scripts/grade_engine.py",
+      "scripts/lens_geometry.py",
+      "scripts/lhs_descriptor_harvest.py",
+      "scripts/lhs_harvest_batch.py",
+      "scripts/lhs_perc_extract.py",
+      "scripts/lhs_union_webapp.py",
+      "scripts/lhs_webapp_batch.py",
+      "scripts/metrics_json.py",
+      "scripts/ml_design_structure.py",
+      "scripts/network_conductivity.py",
+      "scripts/parse_liggghts.py",
+      "scripts/plastic_coverage.py",
+      "scripts/press_units.py",
+      "scripts/se_material.py",
+      "scripts/tau_flux.py",
+      "scripts/type_map_resolve.py",
+      "webapp/app.py",
+      "webapp/ledger_view.py",
+      "webapp/mpm_lab_register.py",
+      "webapp/pipeline_service.py",
+      "webapp/predictor_engine.py",
+      "webapp/security.py",
+      "webapp/storage_sync.py",
+      "webapp/structure_predictor.py"
+    ],
+    "errors": [],
+    "entry": [
+      "scripts/lhs_webapp_batch.py",
+      "scripts/parse_liggghts.py",
+      "scripts/analyze_contacts.py",
+      "scripts/analyze_contacts_bimodal.py",
+      "scripts/coverage_physics_vs_hertzian.py",
+      "scripts/network_conductivity.py"
+    ],
+    "lazy": [
+      [
+        "scripts/lhs_webapp_batch.py",
+        "app"
+      ],
+      [
+        "scripts/lhs_webapp_batch.py",
+        "type_map_resolve"
+      ],
+      [
+        "scripts/lhs_webapp_batch.py",
+        "export_master_csv"
+      ],
+      [
+        "webapp/pipeline_service.py",
+        "tau_flux"
+      ],
+      [
+        "scripts/tau_flux.py",
+        "network_conductivity"
+      ],
+      [
+        "scripts/tau_flux.py",
+        "se_material"
+      ],
+      [
+        "scripts/dem_analysis_core.py",
+        "fracture_model"
+      ],
+      [
+        "scripts/dem_analysis_core.py",
+        "lhs_union_webapp"
+      ],
+      [
+        "webapp/structure_predictor.py",
+        "ml_design_structure"
+      ]
+    ]
+  },
+  "function_imports_not_sealed": [
+    {
+      "importer": "scripts/grade_engine.py",
+      "line": 1861,
+      "module": "scripts/additives.py"
+    },
+    {
+      "importer": "webapp/app.py",
+      "line": 5584,
+      "module": "webapp/mixer_bed.py"
+    },
+    {
+      "importer": "webapp/app.py",
+      "line": 5590,
+      "module": "webapp/mixer_bed.py"
+    },
+    {
+      "importer": "webapp/app.py",
+      "line": 8391,
+      "module": "scripts/cam_kinetics.py"
+    },
+    {
+      "importer": "webapp/app.py",
+      "line": 9488,
+      "module": "scripts/viewer3d_data.py"
+    },
+    {
+      "importer": "webapp/app.py",
+      "line": 9544,
+      "module": "scripts/network_current.py"
+    },
+    {
+      "importer": "webapp/app.py",
+      "line": 9703,
+      "module": "scripts/plot_brittle_z_distribution.py"
+    },
+    {
+      "importer": "webapp/app.py",
+      "line": 9728,
+      "module": "scripts/plot_brittle_z_distribution.py"
+    },
+    {
+      "importer": "webapp/app.py",
+      "line": 9821,
+      "module": "scripts/plot_stress_z_distribution.py"
+    },
+    {
+      "importer": "webapp/app.py",
+      "line": 9997,
+      "module": "scripts/plot_coverage_z_distribution.py"
+    },
+    {
+      "importer": "webapp/app.py",
+      "line": 10847,
+      "module": "scripts/extract_2d_microstructure.py"
+    },
+    {
+      "importer": "webapp/app.py",
+      "line": 10882,
+      "module": "scripts/extract_2d_microstructure.py"
+    },
+    {
+      "importer": "webapp/app.py",
+      "line": 5005,
+      "module": "scripts/b1_chem_fade.py"
+    },
+    {
+      "importer": "webapp/app.py",
+      "line": 5201,
+      "module": "scripts/hetero_transcript.py"
+    },
+    {
+      "importer": "webapp/app.py",
+      "line": 5691,
+      "module": "scripts/eis_drt_ica.py"
+    },
+    {
+      "importer": "webapp/app.py",
+      "line": 5780,
+      "module": "scripts/eis_drt_ica.py"
+    },
+    {
+      "importer": "webapp/app.py",
+      "line": 5872,
+      "module": "scripts/eis_drt_ica.py"
+    },
+    {
+      "importer": "webapp/app.py",
+      "line": 5925,
+      "module": "scripts/eis_drt_ica.py"
+    },
+    {
+      "importer": "webapp/app.py",
+      "line": 6003,
+      "module": "scripts/eis_drt_ica.py"
+    },
+    {
+      "importer": "webapp/app.py",
+      "line": 6076,
+      "module": "scripts/eis_drt_ica.py"
+    },
+    {
+      "importer": "webapp/app.py",
+      "line": 6207,
+      "module": "scripts/eis_drt_ica.py"
+    },
+    {
+      "importer": "webapp/app.py",
+      "line": 8283,
+      "module": "scripts/rint_cycle_traj.py"
+    },
+    {
+      "importer": "webapp/app.py",
+      "line": 8899,
+      "module": "scripts/mech_reaction_correlation.py"
+    },
+    {
+      "importer": "webapp/app.py",
+      "line": 8928,
+      "module": "scripts/mech_reaction_correlation.py"
+    },
+    {
+      "importer": "webapp/app.py",
+      "line": 9206,
+      "module": "scripts/viewer3d_data.py"
+    },
+    {
+      "importer": "webapp/app.py",
+      "line": 9784,
+      "module": "scripts/plot_brittle_z_distribution.py"
+    },
+    {
+      "importer": "webapp/app.py",
+      "line": 9870,
+      "module": "scripts/plot_stress_z_distribution.py"
+    },
+    {
+      "importer": "webapp/app.py",
+      "line": 9897,
+      "module": "scripts/plot_stress_z_distribution.py"
+    },
+    {
+      "importer": "webapp/app.py",
+      "line": 9936,
+      "module": "scripts/plot_combined_z_distribution.py"
+    },
+    {
+      "importer": "webapp/app.py",
+      "line": 9965,
+      "module": "scripts/plot_combined_z_distribution.py"
+    },
+    {
+      "importer": "webapp/app.py",
+      "line": 10045,
+      "module": "scripts/plot_coverage_z_distribution.py"
+    },
+    {
+      "importer": "webapp/app.py",
+      "line": 10072,
+      "module": "scripts/plot_coverage_z_distribution.py"
+    },
+    {
+      "importer": "webapp/app.py",
+      "line": 11054,
+      "module": "scripts/extract_2d_microstructure.py"
+    },
+    {
+      "importer": "webapp/app.py",
+      "line": 11055,
+      "module": "scripts/export_comsol_2d.py"
+    },
+    {
+      "importer": "webapp/app.py",
+      "line": 11679,
+      "module": "scripts/viewer3d_data.py"
+    },
+    {
+      "importer": "webapp/app.py",
+      "line": 5010,
+      "module": "scripts/coating_presets.py"
+    },
+    {
+      "importer": "webapp/app.py",
+      "line": 6993,
+      "module": "scripts/backfill_am_metrics.py"
+    },
+    {
+      "importer": "webapp/structure_predictor.py",
+      "line": 258,
+      "module": "scripts/ml_shap_pareto.py"
+    },
+    {
+      "importer": "webapp/structure_predictor.py",
+      "line": 270,
+      "module": "scripts/ml_shap_pareto.py"
+    }
+  ],
+  "audit": [
+    {
+      "label": "baseline",
+      "rc": 0,
+      "audit": {
+        "schema": "launch_seal/v3#audit",
+        "root": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\gen2_network_reverify3_20261007\\evidence\\seal_paths\\baseline",
+        "audited_at": "2026-10-07T10:01:22",
+        "launch_sha": "0801d4ceb540f5a5813761b20a5e0f304ed80a03",
+        "seal_fp": "e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71",
+        "code_root": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\gen2_network_reverify3_20261007\\source",
+        "code_root_changed_now": [],
+        "verdicts": {
+          "SEALED": 1
+        },
+        "merged": {
+          "same": 1
+        },
+        "cases": [
+          {
+            "case": "lhs00_000",
+            "record_status": "done",
+            "n_attempts": 1,
+            "attempt": 1,
+            "run": 1,
+            "form": "attempt_seal",
+            "verdict": "SEALED",
+            "why": "시작 · 끝 지문 = 발사 봉인 · git sha = 발사 · dirty 아님",
+            "record_sha": "e999d3a1143453b21d03013a1d8548c41912631d25f92c75596f280873f57d8e",
+            "fp_start": "e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71",
+            "fp_end": "e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71",
+            "git_sha": "0801d4ceb540f5a5813761b20a5e0f304ed80a03",
+            "cohort": "lhs",
+            "generation": "g2",
+            "merged": "same"
+          }
+        ],
+        "expected_network_generation": "g2",
+        "generation_declared": true,
+        "generation_problems": [],
+        "input_problems": [],
+        "eligibility": {
+          "kind": "current",
+          "historical": null,
+          "problems": [],
+          "note": ""
+        },
+        "import_observation": null,
+        "import_observation_problems": []
+      }
+    },
+    {
+      "label": "raw_sha_changed",
+      "rc": 1,
+      "audit": {
+        "schema": "launch_seal/v3#audit",
+        "root": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\gen2_network_reverify3_20261007\\evidence\\seal_paths\\raw_sha_changed",
+        "audited_at": "2026-10-07T10:01:23",
+        "launch_sha": "0801d4ceb540f5a5813761b20a5e0f304ed80a03",
+        "seal_fp": "e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71",
+        "code_root": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\gen2_network_reverify3_20261007\\source",
+        "code_root_changed_now": [],
+        "verdicts": {
+          "SEALED": 1
+        },
+        "merged": {
+          "same": 1
+        },
+        "cases": [
+          {
+            "case": "lhs00_000",
+            "record_status": "done",
+            "n_attempts": 1,
+            "attempt": 1,
+            "run": 1,
+            "form": "attempt_seal",
+            "verdict": "SEALED",
+            "why": "시작 · 끝 지문 = 발사 봉인 · git sha = 발사 · dirty 아님",
+            "record_sha": "e999d3a1143453b21d03013a1d8548c41912631d25f92c75596f280873f57d8e",
+            "fp_start": "e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71",
+            "fp_end": "e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71",
+            "git_sha": "0801d4ceb540f5a5813761b20a5e0f304ed80a03",
+            "cohort": "lhs",
+            "generation": "g2",
+            "merged": "same"
+          }
+        ],
+        "expected_network_generation": "g2",
+        "generation_declared": true,
+        "generation_problems": [],
+        "input_problems": [
+          "입력 지문 raw_sha256_table_sha256: 발사 '0ed26b60b5e254cb29827768e0d391ab94d9a8b099ccef8ad683538a89a69605' ≠ 지금 '24716eb7bc4f66cc0b3dfe450302fa86222b6e50c746345f0b547a4315e93c39'"
+        ],
+        "eligibility": {
+          "kind": "current",
+          "historical": null,
+          "problems": [],
+          "note": ""
+        },
+        "import_observation": null,
+        "import_observation_problems": []
+      }
+    },
+    {
+      "label": "raw_sha_changed_digest_deleted",
+      "rc": 2,
+      "audit": {
+        "schema": "launch_seal/v3#audit",
+        "root": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\gen2_network_reverify3_20261007\\evidence\\seal_paths\\raw_sha_changed_digest_deleted",
+        "audited_at": "2026-10-07T10:01:24",
+        "eligibility": {
+          "kind": "invalid",
+          "historical": null,
+          "problems": [
+            "input_digest (194 ID · 코호트 · 원자료 sha256 지문) 없음 · 객체 아님 (NoneType) — 새 실행 형식의 필수 선언"
+          ],
+          "note": ""
+        },
+        "refused": true
+      }
+    },
+    {
+      "label": "raw_sha_changed_digest_null",
+      "rc": 2,
+      "audit": {
+        "schema": "launch_seal/v3#audit",
+        "root": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\gen2_network_reverify3_20261007\\evidence\\seal_paths\\raw_sha_changed_digest_null",
+        "audited_at": "2026-10-07T10:01:24",
+        "eligibility": {
+          "kind": "invalid",
+          "historical": null,
+          "problems": [
+            "input_digest (194 ID · 코호트 · 원자료 sha256 지문) 없음 · 객체 아님 (NoneType) — 새 실행 형식의 필수 선언"
+          ],
+          "note": ""
+        },
+        "refused": true
+      }
+    },
+    {
+      "label": "legacy_record_declared_g2",
+      "rc": 1,
+      "audit": {
+        "schema": "launch_seal/v3#audit",
+        "root": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\gen2_network_reverify3_20261007\\evidence\\seal_paths\\legacy_record_declared_g2",
+        "audited_at": "2026-10-07T10:01:25",
+        "launch_sha": "0801d4ceb540f5a5813761b20a5e0f304ed80a03",
+        "seal_fp": "e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71",
+        "code_root": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\gen2_network_reverify3_20261007\\source",
+        "code_root_changed_now": [],
+        "verdicts": {
+          "SEALED": 1
+        },
+        "merged": {
+          "same": 1
+        },
+        "cases": [
+          {
+            "case": "lhs00_000",
+            "record_status": "done",
+            "n_attempts": 1,
+            "attempt": 1,
+            "run": 1,
+            "form": "attempt_seal",
+            "verdict": "SEALED",
+            "why": "시작 · 끝 지문 = 발사 봉인 · git sha = 발사 · dirty 아님",
+            "record_sha": "e999d3a1143453b21d03013a1d8548c41912631d25f92c75596f280873f57d8e",
+            "fp_start": "e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71",
+            "fp_end": "e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71",
+            "git_sha": "0801d4ceb540f5a5813761b20a5e0f304ed80a03",
+            "cohort": "lhs",
+            "generation": "inferred_legacy",
+            "merged": "same"
+          }
+        ],
+        "expected_network_generation": "g2",
+        "generation_declared": true,
+        "generation_problems": [
+          "lhs00_000: 레코드 세대 'inferred_legacy' ≠ manifest 기대 세대 'g2'"
+        ],
+        "input_problems": [],
+        "eligibility": {
+          "kind": "current",
+          "historical": null,
+          "problems": [],
+          "note": ""
+        },
+        "import_observation": null,
+        "import_observation_problems": []
+      }
+    },
+    {
+      "label": "legacy_record_both_declarations_deleted",
+      "rc": 2,
+      "audit": {
+        "schema": "launch_seal/v3#audit",
+        "root": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\gen2_network_reverify3_20261007\\evidence\\seal_paths\\legacy_record_both_declarations_deleted",
+        "audited_at": "2026-10-07T10:01:25",
+        "eligibility": {
+          "kind": "invalid",
+          "historical": null,
+          "problems": [
+            "기대 망 세대 expected_network_generation 'ABSENT' · 봉인 사본 'ABSENT' ≠ 'g2' (둘 다 필수 · 같아야)",
+            "generation_probe (봉인 코드에서 기대 세대를 유도한 기록) 없음 · 다름 · 문제 ('g2')"
+          ],
+          "note": ""
+        },
+        "refused": true
+      },
+      "retry_generation_gate": [
+        [
+          "실행 형식 자격 없음 (G2RR2-01): 기대 망 세대 expected_network_generation 'ABSENT' · 봉인 사본 'ABSENT' ≠ 'g2' (둘 다 필수 · 같아야)",
+          "실행 형식 자격 없음 (G2RR2-01): generation_probe (봉인 코드에서 기대 세대를 유도한 기록) 없음 · 다름 · 문제 ('g2')"
+        ],
+        ""
+      ]
+    }
+  ],
+  "reread": [
+    {
+      "label": "baseline",
+      "rc": 0,
+      "result": {
+        "schema": "g2_network_reread/v2",
+        "expected_generation": "g2",
+        "meta": [
+          {
+            "name": "M0 manifest 기대 세대 선언 (expected_network_generation)",
+            "ok": true,
+            "detail": "g2"
+          },
+          {
+            "name": "M-plan manifest plan · cohorts · queue 꼴 (비지 않음 · 중복 · 코호트 소속 — 루프 전)",
+            "ok": true,
+            "detail": ""
+          },
+          {
+            "name": "M-reg 계획 큐 = 등록 집합 explicit (1)",
+            "ok": true,
+            "detail": "등록에만 [] · 계획에만 [] · 등록 밖 코호트 []"
+          },
+          {
+            "name": "M1 lhs 케이스 집합 — 계획 큐 = 배치 기록 (1)",
+            "ok": true,
+            "detail": "계획에만 [] · 기록에만 []"
+          },
+          {
+            "name": "M2 lhs 전 케이스 done · partial",
+            "ok": true,
+            "detail": {}
+          },
+          {
+            "name": "H1 lhs 인계 출처 관문 (load_tau_results · P0–P4 · manifest 기대 세대 'g2') · 칸 = case_row",
+            "ok": true,
+            "detail": "1 케이스 · 기대 세대 'g2' · 검사 ['P0_records', 'P1_run_id', 'P2_input_digest', 'P3_batch_tie', 'P4_model_generation', 'P4_stop_contract', 'P4_generation', 'P4_read_stable'] · 칸 다름 []"
+          },
+          {
+            "name": "M3 읽은 고유 (케이스, 코호트) = 등록 집합 explicit — 기대 1 · 읽음 1",
+            "ok": true,
+            "detail": "빠진 [] · 남는 []",
+            "expected_n": 1,
+            "read_n": 1,
+            "set_equal": true,
+            "missing": [],
+            "extra": []
+          }
+        ],
+        "cases": [
+          {
+            "case": "lhs00_000",
+            "folder": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\gen2_network_reverify3_20261007\\evidence\\seal_paths\\reread_baseline\\merged\\lhs\\results\\lhs00_000",
+            "run_id": "20261007T100115-9eb8cbd8",
+            "checks": [
+              {
+                "name": "K1 게시 — solver success · 도장 valid/success · run id (도장 = full_metrics = active)",
+                "ok": true,
+                "detail": "solver 'success' · 도장 'valid'/'success' · run id '20261007T100115-9eb8cbd8' · '20261007T100115-9eb8cbd8' · '20261007T100115-9eb8cbd8'"
+              },
+              {
+                "name": "K2 세대 계약 + 증서 결합 — 세대 'g2' · 문제 0 (모드 셋 × 가지 셋 증서 · G2R-01 · 02 · G2RR-02)",
+                "ok": true,
+                "detail": "세대 'g2' · "
+              },
+              {
+                "name": "K3 도장 ↔ 레코드 — 네 세대 값 = 레코드에서 유도한 기대값 (G2RR-01)",
+                "ok": true,
+                "detail": "{'psi_placement_physics': 'multiply', 'electrode_model': 'dirichlet_exact', 'area_rule_physics': 'physics_g2', 'hertz_h12': True}"
+              },
+              {
+                "name": "K4 망 정지 계약 다시 (①–⑨ · legacy_ok False)",
+                "ok": true,
+                "detail": "ok"
+              },
+              {
+                "name": "K5 열 역할 — ion_net_generation 'g2' · 행 세대 계약 문제 0 (모드별 협착 · ψ · 면적 · 전극 · bulk 칸)",
+                "ok": true,
+                "detail": "칸 'g2' · 행 판정 'g2' · []"
+              },
+              {
+                "name": "K6 관통 일치 — 생산자 FULL 상태 ↔ τ 상태 (세 모드)",
+                "ok": true,
+                "detail": "{'hertz': ('OK', ''), 'physics': ('OK', ''), 'hertz_h12': ('OK', '')}"
+              },
+              {
+                "name": "K7 가지 표 — 공용 계약 (tau_flux.branch_table_problems) 그대로: 숫자 ⇔ 게시 상태 / 숫자 없음 ⇒ 비게시 상태 + 사유 / 상태 기록 결손 = 거부",
+                "ok": true,
+                "detail": ""
+              }
+            ],
+            "generation": "g2",
+            "statuses": {
+              "hertz": [
+                "OK",
+                ""
+              ],
+              "physics": [
+                "OK",
+                ""
+              ],
+              "hertz_h12": [
+                "OK",
+                ""
+              ]
+            },
+            "table": {
+              "hertz": {
+                "full": {
+                  "status": "computed",
+                  "reason": null,
+                  "value": 0.00400538,
+                  "cert": {
+                    "branch": "full",
+                    "role": "H0",
+                    "status": "computed",
+                    "method": "spsolve",
+                    "reason": null
+                  }
+                },
+                "bulk_only": {
+                  "status": "computed",
+                  "reason": null,
+                  "value": 0.03926991,
+                  "cert": {
+                    "branch": "bulk_only",
+                    "role": "H0",
+                    "status": "computed",
+                    "method": "spsolve",
+                    "reason": null
+                  }
+                },
+                "constriction_only": {
+                  "status": "computed",
+                  "reason": null,
+                  "value": 0.00446031,
+                  "cert": {
+                    "branch": "constriction_only",
+                    "role": "H0",
+                    "status": "computed",
+                    "method": "spsolve",
+                    "reason": null
+                  }
+                }
+              },
+              "physics": {
+                "full": {
+                  "status": "computed",
+                  "reason": null,
+                  "value": 0.00692755,
+                  "cert": {
+                    "branch": "full",
+                    "role": "physics",
+                    "status": "computed",
+                    "method": "spsolve",
+                    "reason": null
+                  }
+                },
+                "bulk_only": {
+                  "status": "computed",
+                  "reason": null,
+                  "value": 0.03926991,
+                  "cert": {
+                    "branch": "bulk_only",
+                    "role": "physics",
+                    "status": "computed",
+                    "method": "spsolve",
+                    "reason": null
+                  }
+                },
+                "constriction_only": {
+                  "status": "computed",
+                  "reason": null,
+                  "value": 0.00841138,
+                  "cert": {
+                    "branch": "constriction_only",
+                    "role": "physics",
+                    "status": "computed",
+                    "method": "spsolve",
+                    "reason": null
+                  }
+                }
+              },
+              "hertz_h12": {
+                "full": {
+                  "status": "computed",
+                  "reason": null,
+                  "value": 0.00513502,
+                  "cert": {
+                    "branch": "full",
+                    "role": "H12",
+                    "status": "computed",
+                    "method": "spsolve",
+                    "reason": null
+                  }
+                },
+                "bulk_only": {
+                  "status": "computed",
+                  "reason": null,
+                  "value": 0.03599742,
+                  "cert": {
+                    "branch": "bulk_only",
+                    "role": "H12",
+                    "status": "computed",
+                    "method": "spsolve",
+                    "reason": null
+                  }
+                },
+                "constriction_only": {
+                  "status": "computed",
+                  "reason": null,
+                  "value": 0.00598941,
+                  "cert": {
+                    "branch": "constriction_only",
+                    "role": "H12",
+                    "status": "computed",
+                    "method": "spsolve",
+                    "reason": null
+                  }
+                }
+              }
+            },
+            "stamp": {
+              "psi_placement_physics": "multiply",
+              "electrode_model": "dirichlet_exact",
+              "area_rule_physics": "physics_g2",
+              "hertz_h12": true
+            },
+            "sigma_ratio": {
+              "hertz": 0.00400538,
+              "physics": 0.00692755,
+              "hertz_h12": 0.00513502
+            },
+            "row_cells": {
+              "f_ion_hertz": "0.00400538",
+              "f_ion_hertz_gap": "0.00400538",
+              "tau2_ion_hertz": "10.980805104698456",
+              "tau_ion_hertz": "3.3137297875201677",
+              "ion_net_status_hertz": "OK",
+              "ion_net_status_reason_hertz": "",
+              "ion_net_area_mode_hertz": "hertz",
+              "ion_net_constriction_hertz": "maxwell_halfspace",
+              "ion_net_psi_hertz": "",
+              "ion_net_area_rule_hertz": "hertz_ccpl22",
+              "ion_net_electrode_hertz": "dirichlet_exact",
+              "ion_net_bulk_hertz": "cylinder_half_d",
+              "ion_net_band_rule_hertz": "L0",
+              "ion_net_band_frac_hertz": "0.2",
+              "ion_net_basis_check_hertz": "ok",
+              "f_ion_physics": "0.00692755",
+              "f_ion_physics_gap": "0.00692755",
+              "tau2_ion_physics": "6.348896384761871",
+              "tau_ion_physics": "2.519701645981498",
+              "ion_net_status_physics": "OK",
+              "ion_net_status_reason_physics": "",
+              "ion_net_area_mode_physics": "physics",
+              "ion_net_constriction_physics": "mikic_psi_multiply",
+              "ion_net_psi_physics": "multiply",
+              "ion_net_area_rule_physics": "physics_g2",
+              "ion_net_electrode_physics": "dirichlet_exact",
+              "ion_net_bulk_physics": "cylinder_half_d",
+              "ion_net_band_rule_physics": "L0",
+              "ion_net_band_frac_physics": "0.2",
+              "ion_net_basis_check_physics": "ok",
+              "f_ion_hertz_h12": "0.00513502",
+              "f_ion_hertz_h12_gap": "0.00513502",
+              "tau2_ion_hertz_h12": "8.565165695607243",
+              "tau_ion_hertz_h12": "2.926630433725318",
+              "ion_net_status_hertz_h12": "OK",
+              "ion_net_status_reason_hertz_h12": "",
+              "ion_net_area_mode_hertz_h12": "hertz",
+              "ion_net_constriction_hertz_h12": "mikic_psi_multiply",
+              "ion_net_psi_hertz_h12": "multiply",
+              "ion_net_area_rule_hertz_h12": "hertz_ccpl22",
+              "ion_net_electrode_hertz_h12": "dirichlet_exact",
+              "ion_net_bulk_hertz_h12": "sphere_segment",
+              "ion_net_band_rule_hertz_h12": "L0",
+              "ion_net_band_frac_hertz_h12": "0.2",
+              "ion_net_basis_check_hertz_h12": "ok",
+              "ion_sigma0_mScm": "3.0",
+              "ion_sigma0_T_C": "25.0",
+              "phi_basis": "mass_conserving",
+              "L_basis": "L_mc",
+              "ion_net_generation": "g2"
+            },
+            "cohort": "lhs",
+            "batch": "launcher"
+          }
+        ],
+        "n_fail": 0,
+        "expected_set": "explicit",
+        "expected_source": "CLI --expect-case",
+        "expected_n": 1,
+        "read_n": 1,
+        "set_equal": true,
+        "missing": [],
+        "extra": []
+      }
+    },
+    {
+      "label": "plan_absent",
+      "rc": 1,
+      "result": {
+        "schema": "g2_network_reread/v2",
+        "expected_generation": "g2",
+        "meta": [
+          {
+            "name": "M0 manifest 기대 세대 선언 (expected_network_generation)",
+            "ok": true,
+            "detail": "g2"
+          },
+          {
+            "name": "M-plan manifest plan · cohorts · queue 꼴 (비지 않음 · 중복 · 코호트 소속 — 루프 전)",
+            "ok": false,
+            "detail": "plan 이 객체가 아니다 (NoneType)"
+          },
+          {
+            "name": "M3 읽은 고유 (케이스, 코호트) = 등록 집합 explicit — 기대 1 · 읽음 0",
+            "ok": false,
+            "detail": "빠진 [('lhs00_000', 'lhs')] · 남는 []",
+            "expected_n": 1,
+            "read_n": 0,
+            "set_equal": false,
+            "missing": [
+              [
+                "lhs00_000",
+                "lhs"
+              ]
+            ],
+            "extra": []
+          }
+        ],
+        "cases": [],
+        "n_fail": 2,
+        "expected_set": "explicit",
+        "expected_source": "CLI --expect-case",
+        "expected_n": 1,
+        "read_n": 0,
+        "set_equal": false,
+        "missing": [
+          [
+            "lhs00_000",
+            "lhs"
+          ]
+        ],
+        "extra": []
+      }
+    },
+    {
+      "label": "cohorts_empty_queue_present",
+      "rc": 1,
+      "result": {
+        "schema": "g2_network_reread/v2",
+        "expected_generation": "g2",
+        "meta": [
+          {
+            "name": "M0 manifest 기대 세대 선언 (expected_network_generation)",
+            "ok": true,
+            "detail": "g2"
+          },
+          {
+            "name": "M-plan manifest plan · cohorts · queue 꼴 (비지 않음 · 중복 · 코호트 소속 — 루프 전)",
+            "ok": false,
+            "detail": "plan.cohorts 가 비지 않은 코호트 목록이 아니다 ([])"
+          },
+          {
+            "name": "M3 읽은 고유 (케이스, 코호트) = 등록 집합 explicit — 기대 1 · 읽음 0",
+            "ok": false,
+            "detail": "빠진 [('lhs00_000', 'lhs')] · 남는 []",
+            "expected_n": 1,
+            "read_n": 0,
+            "set_equal": false,
+            "missing": [
+              [
+                "lhs00_000",
+                "lhs"
+              ]
+            ],
+            "extra": []
+          }
+        ],
+        "cases": [],
+        "n_fail": 2,
+        "expected_set": "explicit",
+        "expected_source": "CLI --expect-case",
+        "expected_n": 1,
+        "read_n": 0,
+        "set_equal": false,
+        "missing": [
+          [
+            "lhs00_000",
+            "lhs"
+          ]
+        ],
+        "extra": []
+      }
+    },
+    {
+      "label": "cohorts_absent_queue_present",
+      "rc": 1,
+      "result": {
+        "schema": "g2_network_reread/v2",
+        "expected_generation": "g2",
+        "meta": [
+          {
+            "name": "M0 manifest 기대 세대 선언 (expected_network_generation)",
+            "ok": true,
+            "detail": "g2"
+          },
+          {
+            "name": "M-plan manifest plan · cohorts · queue 꼴 (비지 않음 · 중복 · 코호트 소속 — 루프 전)",
+            "ok": false,
+            "detail": "plan.cohorts 가 비지 않은 코호트 목록이 아니다 (None)"
+          },
+          {
+            "name": "M3 읽은 고유 (케이스, 코호트) = 등록 집합 explicit — 기대 1 · 읽음 0",
+            "ok": false,
+            "detail": "빠진 [('lhs00_000', 'lhs')] · 남는 []",
+            "expected_n": 1,
+            "read_n": 0,
+            "set_equal": false,
+            "missing": [
+              [
+                "lhs00_000",
+                "lhs"
+              ]
+            ],
+            "extra": []
+          }
+        ],
+        "cases": [],
+        "n_fail": 2,
+        "expected_set": "explicit",
+        "expected_source": "CLI --expect-case",
+        "expected_n": 1,
+        "read_n": 0,
+        "set_equal": false,
+        "missing": [
+          [
+            "lhs00_000",
+            "lhs"
+          ]
+        ],
+        "extra": []
+      }
+    }
+  ]
+}

@@ -1,0 +1,377 @@
+{
+  "fixture": "two AM_P spheres r=6 um, delta=0.2 um, force channel absent; no physical claim",
+  "change": "reviewer copy: K_IC_AM_P 0.3e6 -> 30e6 Pa m^0.5",
+  "source_call": "dem_analysis_core.calc_fracture_stages (called by run_full_analysis)",
+  "hash_before": "e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71",
+  "hash_after": "2241d04655da64f7c2f54c13924fd07062fcef10a28ccae2fef188026e6f0db2",
+  "hash_unchanged": false,
+  "closure_before": {
+    "files": [
+      "scripts/analyze_contacts.py",
+      "scripts/analyze_contacts_bimodal.py",
+      "scripts/coverage_physics_vs_hertzian.py",
+      "scripts/dem_analysis_core.py",
+      "scripts/export_master_csv.py",
+      "scripts/fracture_model.py",
+      "scripts/grade_engine.py",
+      "scripts/lens_geometry.py",
+      "scripts/lhs_descriptor_harvest.py",
+      "scripts/lhs_harvest_batch.py",
+      "scripts/lhs_perc_extract.py",
+      "scripts/lhs_union_webapp.py",
+      "scripts/lhs_webapp_batch.py",
+      "scripts/metrics_json.py",
+      "scripts/ml_design_structure.py",
+      "scripts/network_conductivity.py",
+      "scripts/parse_liggghts.py",
+      "scripts/plastic_coverage.py",
+      "scripts/press_units.py",
+      "scripts/se_material.py",
+      "scripts/tau_flux.py",
+      "scripts/type_map_resolve.py",
+      "webapp/app.py",
+      "webapp/ledger_view.py",
+      "webapp/mpm_lab_register.py",
+      "webapp/pipeline_service.py",
+      "webapp/predictor_engine.py",
+      "webapp/security.py",
+      "webapp/storage_sync.py",
+      "webapp/structure_predictor.py"
+    ],
+    "errors": [],
+    "entry": [
+      "scripts/lhs_webapp_batch.py",
+      "scripts/parse_liggghts.py",
+      "scripts/analyze_contacts.py",
+      "scripts/analyze_contacts_bimodal.py",
+      "scripts/coverage_physics_vs_hertzian.py",
+      "scripts/network_conductivity.py"
+    ],
+    "lazy": [
+      [
+        "scripts/lhs_webapp_batch.py",
+        "app"
+      ],
+      [
+        "scripts/lhs_webapp_batch.py",
+        "type_map_resolve"
+      ],
+      [
+        "scripts/lhs_webapp_batch.py",
+        "export_master_csv"
+      ],
+      [
+        "webapp/pipeline_service.py",
+        "tau_flux"
+      ],
+      [
+        "scripts/tau_flux.py",
+        "network_conductivity"
+      ],
+      [
+        "scripts/tau_flux.py",
+        "se_material"
+      ],
+      [
+        "scripts/dem_analysis_core.py",
+        "fracture_model"
+      ],
+      [
+        "scripts/dem_analysis_core.py",
+        "lhs_union_webapp"
+      ],
+      [
+        "webapp/structure_predictor.py",
+        "ml_design_structure"
+      ]
+    ]
+  },
+  "closure_after": {
+    "files": [
+      "scripts/analyze_contacts.py",
+      "scripts/analyze_contacts_bimodal.py",
+      "scripts/coverage_physics_vs_hertzian.py",
+      "scripts/dem_analysis_core.py",
+      "scripts/export_master_csv.py",
+      "scripts/fracture_model.py",
+      "scripts/grade_engine.py",
+      "scripts/lens_geometry.py",
+      "scripts/lhs_descriptor_harvest.py",
+      "scripts/lhs_harvest_batch.py",
+      "scripts/lhs_perc_extract.py",
+      "scripts/lhs_union_webapp.py",
+      "scripts/lhs_webapp_batch.py",
+      "scripts/metrics_json.py",
+      "scripts/ml_design_structure.py",
+      "scripts/network_conductivity.py",
+      "scripts/parse_liggghts.py",
+      "scripts/plastic_coverage.py",
+      "scripts/press_units.py",
+      "scripts/se_material.py",
+      "scripts/tau_flux.py",
+      "scripts/type_map_resolve.py",
+      "webapp/app.py",
+      "webapp/ledger_view.py",
+      "webapp/mpm_lab_register.py",
+      "webapp/pipeline_service.py",
+      "webapp/predictor_engine.py",
+      "webapp/security.py",
+      "webapp/storage_sync.py",
+      "webapp/structure_predictor.py"
+    ],
+    "errors": [],
+    "entry": [
+      "scripts/lhs_webapp_batch.py",
+      "scripts/parse_liggghts.py",
+      "scripts/analyze_contacts.py",
+      "scripts/analyze_contacts_bimodal.py",
+      "scripts/coverage_physics_vs_hertzian.py",
+      "scripts/network_conductivity.py"
+    ],
+    "lazy": [
+      [
+        "scripts/lhs_webapp_batch.py",
+        "app"
+      ],
+      [
+        "scripts/lhs_webapp_batch.py",
+        "type_map_resolve"
+      ],
+      [
+        "scripts/lhs_webapp_batch.py",
+        "export_master_csv"
+      ],
+      [
+        "webapp/pipeline_service.py",
+        "tau_flux"
+      ],
+      [
+        "scripts/tau_flux.py",
+        "network_conductivity"
+      ],
+      [
+        "scripts/tau_flux.py",
+        "se_material"
+      ],
+      [
+        "scripts/dem_analysis_core.py",
+        "fracture_model"
+      ],
+      [
+        "scripts/dem_analysis_core.py",
+        "lhs_union_webapp"
+      ],
+      [
+        "webapp/structure_predictor.py",
+        "ml_design_structure"
+      ]
+    ]
+  },
+  "fracture_model_in_closure": true,
+  "changed_metrics": {
+    "frac_intact_AM_P-AM_P_pct": [
+      0.0,
+      100.0
+    ],
+    "n_multicrack_AM_AM": [
+      1,
+      0
+    ],
+    "n_multicrack_AM_P-AM_P": [
+      1,
+      0
+    ],
+    "frac_multicrack_pct": [
+      100.0,
+      0.0
+    ],
+    "frac_multicrack_AM_P-AM_P_pct": [
+      100.0,
+      0.0
+    ],
+    "n_intact_AM_AM": [
+      0,
+      1
+    ],
+    "n_intact_AM_P-AM_P": [
+      0,
+      1
+    ],
+    "frac_intact_pct": [
+      0.0,
+      100.0
+    ]
+  },
+  "baseline": {
+    "n_intact_AM_AM": 0,
+    "n_microcrack_AM_AM": 0,
+    "n_multicrack_AM_AM": 1,
+    "n_fragmentation_AM_AM": 0,
+    "n_pulverization_AM_AM": 0,
+    "n_intact_force_AM_AM": 0,
+    "n_microcrack_force_AM_AM": 0,
+    "n_multicrack_force_AM_AM": 0,
+    "n_fragmentation_force_AM_AM": 0,
+    "n_pulverization_force_AM_AM": 0,
+    "n_total_AM_AM": 1,
+    "n_total_AM_AM_force": 0,
+    "frac_intact_pct": 0.0,
+    "frac_microcrack_pct": 0.0,
+    "frac_multicrack_pct": 100.0,
+    "frac_fragmentation_pct": 0.0,
+    "frac_pulverization_pct": 0.0,
+    "fracture_index": 0.0,
+    "n_total_AM_P-AM_P": 1,
+    "n_intact_AM_P-AM_P": 0,
+    "frac_intact_AM_P-AM_P_pct": 0.0,
+    "n_microcrack_AM_P-AM_P": 0,
+    "frac_microcrack_AM_P-AM_P_pct": 0.0,
+    "n_multicrack_AM_P-AM_P": 1,
+    "frac_multicrack_AM_P-AM_P_pct": 100.0,
+    "n_fragmentation_AM_P-AM_P": 0,
+    "frac_fragmentation_AM_P-AM_P_pct": 0.0,
+    "n_pulverization_AM_P-AM_P": 0,
+    "frac_pulverization_AM_P-AM_P_pct": 0.0,
+    "n_total_AM_S-AM_S": 0,
+    "n_intact_AM_S-AM_S": 0,
+    "frac_intact_AM_S-AM_S_pct": 0.0,
+    "n_microcrack_AM_S-AM_S": 0,
+    "frac_microcrack_AM_S-AM_S_pct": 0.0,
+    "n_multicrack_AM_S-AM_S": 0,
+    "frac_multicrack_AM_S-AM_S_pct": 0.0,
+    "n_fragmentation_AM_S-AM_S": 0,
+    "frac_fragmentation_AM_S-AM_S_pct": 0.0,
+    "n_pulverization_AM_S-AM_S": 0,
+    "frac_pulverization_AM_S-AM_S_pct": 0.0,
+    "n_total_AM_P-AM_S": 0,
+    "n_intact_AM_P-AM_S": 0,
+    "frac_intact_AM_P-AM_S_pct": 0.0,
+    "n_microcrack_AM_P-AM_S": 0,
+    "frac_microcrack_AM_P-AM_S_pct": 0.0,
+    "n_multicrack_AM_P-AM_S": 0,
+    "frac_multicrack_AM_P-AM_S_pct": 0.0,
+    "n_fragmentation_AM_P-AM_S": 0,
+    "frac_fragmentation_AM_P-AM_S_pct": 0.0,
+    "n_pulverization_AM_P-AM_S": 0,
+    "frac_pulverization_AM_P-AM_S_pct": 0.0,
+    "n_total_force_AM_P-AM_P": 0,
+    "n_intact_force_AM_P-AM_P": 0,
+    "frac_intact_force_AM_P-AM_P_pct": 0.0,
+    "n_microcrack_force_AM_P-AM_P": 0,
+    "frac_microcrack_force_AM_P-AM_P_pct": 0.0,
+    "n_multicrack_force_AM_P-AM_P": 0,
+    "frac_multicrack_force_AM_P-AM_P_pct": 0.0,
+    "n_fragmentation_force_AM_P-AM_P": 0,
+    "frac_fragmentation_force_AM_P-AM_P_pct": 0.0,
+    "n_pulverization_force_AM_P-AM_P": 0,
+    "frac_pulverization_force_AM_P-AM_P_pct": 0.0,
+    "n_total_force_AM_S-AM_S": 0,
+    "n_intact_force_AM_S-AM_S": 0,
+    "frac_intact_force_AM_S-AM_S_pct": 0.0,
+    "n_microcrack_force_AM_S-AM_S": 0,
+    "frac_microcrack_force_AM_S-AM_S_pct": 0.0,
+    "n_multicrack_force_AM_S-AM_S": 0,
+    "frac_multicrack_force_AM_S-AM_S_pct": 0.0,
+    "n_fragmentation_force_AM_S-AM_S": 0,
+    "frac_fragmentation_force_AM_S-AM_S_pct": 0.0,
+    "n_pulverization_force_AM_S-AM_S": 0,
+    "frac_pulverization_force_AM_S-AM_S_pct": 0.0,
+    "n_total_force_AM_P-AM_S": 0,
+    "n_intact_force_AM_P-AM_S": 0,
+    "frac_intact_force_AM_P-AM_S_pct": 0.0,
+    "n_microcrack_force_AM_P-AM_S": 0,
+    "frac_microcrack_force_AM_P-AM_S_pct": 0.0,
+    "n_multicrack_force_AM_P-AM_S": 0,
+    "frac_multicrack_force_AM_P-AM_S_pct": 0.0,
+    "n_fragmentation_force_AM_P-AM_S": 0,
+    "frac_fragmentation_force_AM_P-AM_S_pct": 0.0,
+    "n_pulverization_force_AM_P-AM_S": 0,
+    "frac_pulverization_force_AM_P-AM_S_pct": 0.0
+  },
+  "mutant": {
+    "n_intact_AM_AM": 1,
+    "n_microcrack_AM_AM": 0,
+    "n_multicrack_AM_AM": 0,
+    "n_fragmentation_AM_AM": 0,
+    "n_pulverization_AM_AM": 0,
+    "n_intact_force_AM_AM": 0,
+    "n_microcrack_force_AM_AM": 0,
+    "n_multicrack_force_AM_AM": 0,
+    "n_fragmentation_force_AM_AM": 0,
+    "n_pulverization_force_AM_AM": 0,
+    "n_total_AM_AM": 1,
+    "n_total_AM_AM_force": 0,
+    "frac_intact_pct": 100.0,
+    "frac_microcrack_pct": 0.0,
+    "frac_multicrack_pct": 0.0,
+    "frac_fragmentation_pct": 0.0,
+    "frac_pulverization_pct": 0.0,
+    "fracture_index": 0.0,
+    "n_total_AM_P-AM_P": 1,
+    "n_intact_AM_P-AM_P": 1,
+    "frac_intact_AM_P-AM_P_pct": 100.0,
+    "n_microcrack_AM_P-AM_P": 0,
+    "frac_microcrack_AM_P-AM_P_pct": 0.0,
+    "n_multicrack_AM_P-AM_P": 0,
+    "frac_multicrack_AM_P-AM_P_pct": 0.0,
+    "n_fragmentation_AM_P-AM_P": 0,
+    "frac_fragmentation_AM_P-AM_P_pct": 0.0,
+    "n_pulverization_AM_P-AM_P": 0,
+    "frac_pulverization_AM_P-AM_P_pct": 0.0,
+    "n_total_AM_S-AM_S": 0,
+    "n_intact_AM_S-AM_S": 0,
+    "frac_intact_AM_S-AM_S_pct": 0.0,
+    "n_microcrack_AM_S-AM_S": 0,
+    "frac_microcrack_AM_S-AM_S_pct": 0.0,
+    "n_multicrack_AM_S-AM_S": 0,
+    "frac_multicrack_AM_S-AM_S_pct": 0.0,
+    "n_fragmentation_AM_S-AM_S": 0,
+    "frac_fragmentation_AM_S-AM_S_pct": 0.0,
+    "n_pulverization_AM_S-AM_S": 0,
+    "frac_pulverization_AM_S-AM_S_pct": 0.0,
+    "n_total_AM_P-AM_S": 0,
+    "n_intact_AM_P-AM_S": 0,
+    "frac_intact_AM_P-AM_S_pct": 0.0,
+    "n_microcrack_AM_P-AM_S": 0,
+    "frac_microcrack_AM_P-AM_S_pct": 0.0,
+    "n_multicrack_AM_P-AM_S": 0,
+    "frac_multicrack_AM_P-AM_S_pct": 0.0,
+    "n_fragmentation_AM_P-AM_S": 0,
+    "frac_fragmentation_AM_P-AM_S_pct": 0.0,
+    "n_pulverization_AM_P-AM_S": 0,
+    "frac_pulverization_AM_P-AM_S_pct": 0.0,
+    "n_total_force_AM_P-AM_P": 0,
+    "n_intact_force_AM_P-AM_P": 0,
+    "frac_intact_force_AM_P-AM_P_pct": 0.0,
+    "n_microcrack_force_AM_P-AM_P": 0,
+    "frac_microcrack_force_AM_P-AM_P_pct": 0.0,
+    "n_multicrack_force_AM_P-AM_P": 0,
+    "frac_multicrack_force_AM_P-AM_P_pct": 0.0,
+    "n_fragmentation_force_AM_P-AM_P": 0,
+    "frac_fragmentation_force_AM_P-AM_P_pct": 0.0,
+    "n_pulverization_force_AM_P-AM_P": 0,
+    "frac_pulverization_force_AM_P-AM_P_pct": 0.0,
+    "n_total_force_AM_S-AM_S": 0,
+    "n_intact_force_AM_S-AM_S": 0,
+    "frac_intact_force_AM_S-AM_S_pct": 0.0,
+    "n_microcrack_force_AM_S-AM_S": 0,
+    "frac_microcrack_force_AM_S-AM_S_pct": 0.0,
+    "n_multicrack_force_AM_S-AM_S": 0,
+    "frac_multicrack_force_AM_S-AM_S_pct": 0.0,
+    "n_fragmentation_force_AM_S-AM_S": 0,
+    "frac_fragmentation_force_AM_S-AM_S_pct": 0.0,
+    "n_pulverization_force_AM_S-AM_S": 0,
+    "frac_pulverization_force_AM_S-AM_S_pct": 0.0,
+    "n_total_force_AM_P-AM_S": 0,
+    "n_intact_force_AM_P-AM_S": 0,
+    "frac_intact_force_AM_P-AM_S_pct": 0.0,
+    "n_microcrack_force_AM_P-AM_S": 0,
+    "frac_microcrack_force_AM_P-AM_S_pct": 0.0,
+    "n_multicrack_force_AM_P-AM_S": 0,
+    "frac_multicrack_force_AM_P-AM_S_pct": 0.0,
+    "n_fragmentation_force_AM_P-AM_S": 0,
+    "frac_fragmentation_force_AM_P-AM_S_pct": 0.0,
+    "n_pulverization_force_AM_P-AM_S": 0,
+    "frac_pulverization_force_AM_P-AM_S_pct": 0.0
+  }
+}

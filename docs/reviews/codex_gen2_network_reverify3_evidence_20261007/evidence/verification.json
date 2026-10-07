@@ -1,0 +1,121 @@
+{
+  "pin": "0801d4ceb540f5a5813761b20a5e0f304ed80a03",
+  "checks": [
+    {
+      "name": "Pinned source bytes and Git blob IDs (432 files)",
+      "ok": true
+    },
+    {
+      "name": "Submitted text matches pin: codex_gen2_network_reverify3_request_20261007.md",
+      "ok": true
+    },
+    {
+      "name": "Submitted text matches pin: lhs_network_batch_registration_20261007_g2.md",
+      "ok": true
+    },
+    {
+      "name": "G2RR2-01 baseline passes",
+      "ok": true
+    },
+    {
+      "name": "G2RR2-01 original and deletion/null mutants refuse",
+      "ok": true
+    },
+    {
+      "name": "G2RR2-02 independent reread control passes",
+      "ok": true
+    },
+    {
+      "name": "G2RR2-02 zero-case mutants fail",
+      "ok": true
+    },
+    {
+      "name": "20 required-field removal/null mutants invalid",
+      "ok": true
+    },
+    {
+      "name": "Historical admission is explicit",
+      "ok": true
+    },
+    {
+      "name": "G2RR2-03 fracture mutation now changes seal",
+      "ok": true
+    },
+    {
+      "name": "Registered 32-file fingerprint matches",
+      "ok": true
+    },
+    {
+      "name": "Independent registered ID/metadata table hashes agree",
+      "ok": true
+    },
+    {
+      "name": "G2RR2-04/05 publication refuses all three mutants",
+      "ok": true
+    },
+    {
+      "name": "Honest branch failure preserves FULL and passes reread",
+      "ok": true
+    },
+    {
+      "name": "Temperature/activation-energy positive controls",
+      "ok": true
+    },
+    {
+      "name": "S3 six-file dependency check",
+      "ok": true
+    },
+    {
+      "name": "S3 valid six accepted, four mutated bundles refused (Git adapter)",
+      "ok": true
+    },
+    {
+      "name": "NEW G2RR3-02 no-log control refuses",
+      "ok": true
+    },
+    {
+      "name": "NEW G2RR3-02 empty/non-repo log falsely passes",
+      "ok": true
+    },
+    {
+      "name": "NEW G2RR3-02 lost-log differential",
+      "ok": true
+    },
+    {
+      "name": "NEW G2RR3-01 build positive/explicit-failure controls discriminate",
+      "ok": true
+    },
+    {
+      "name": "NEW G2RR3-01 six incomplete/failed evidence variants build and check green",
+      "ok": true
+    }
+  ],
+  "n": 22,
+  "n_fail": 0,
+  "source_errors": [],
+  "attachments": [
+    {
+      "name": "codex_gen2_network_reverify3_request_20261007.md",
+      "bytes": 12280,
+      "sha256": "63fd893d19c528815dc18e45faca4180d90d3123ab228bbeff6b6c093495dba5",
+      "matches_pinned_text_ignoring_line_endings": true
+    },
+    {
+      "name": "lhs_network_batch_registration_20261007_g2.md",
+      "bytes": 34466,
+      "sha256": "864acb7a825f6368dcdb4f51c15f6d0f13a2bf1600b1b93a2b36d6bd9a7d29ab",
+      "matches_pinned_text_ignoring_line_endings": true
+    }
+  ],
+  "environment": {
+    "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "packages": {
+      "numpy": "2.5.3",
+      "scipy": "1.16.3",
+      "matplotlib": "3.11.2",
+      "networkx": "3.7"
+    }
+  },
+  "scope": "Verifies review evidence, including EXPECTED current-code failures. Does not run or approve a 194 batch or registered S3 campaign."
+}

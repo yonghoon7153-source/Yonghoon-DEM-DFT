@@ -1,0 +1,8 @@
+[Storage] NOT configured - SUPABASE_URL=False SUPABASE_KEY=False
+[Security] WARNING: auth OFF - local/private only. For public deploy set WEBAPP_REQUIRE_AUTH=1 + WEBAPP_AUTH_TOKEN.
+baseline done q= 0.00400538 cf= 0.11781 handover= True fault_calls= [] reread_bad= []
+cf_sigma0_x2 failed q= 0.00400538 cf= 0.11781 handover= True fault_calls= [] reread_bad= None
+full_cert_sigma0_x2 failed q= 0.00400538 cf= 0.11781 handover= True fault_calls= [] reread_bad= None
+diagnostic_fields_absent failed q= 0.00400538 cf= 0.11781 handover= True fault_calls= [] reread_bad= None
+honest_cf_exception done q= 0.00400538 cf= None handover= True fault_calls= ['spsolve'] reread_bad= []
+honest_cf_cert_failure done q= 0.00400538 cf= None handover= True fault_calls= ['spsolve', 'cg', 'cg', 'cg', 'cg', 'gmres', 'gmres', 'gmres', 'gmres'] reread_bad= []

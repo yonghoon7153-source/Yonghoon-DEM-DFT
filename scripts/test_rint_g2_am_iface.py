@@ -813,6 +813,9 @@ def t_record_fields():
             'iface_bridge_claim': 'union_both_orders_v1', 'iface_eps_p_um2': 1e-9, 'unit': 'ohm_cm2'}
     chk('기록 v3 이름 · 봉인 값', all(rec.get(k) == v for k, v in want.items()) and rec.get('solved') is True,
         repr({k: rec.get(k) for k in want}))
+    _bcs = rec.get('iface_bridge_claim_status', '')
+    chk('브리지 청구 상태 = 1저자 결정 기록 (10-07 *"권고대로 진행"*) · Codex 재확인 대기 — "확인 전" 표지가 남지 않는다',
+        '1저자 10-07' in _bcs and 'Codex 재확인' in _bcs and '확인 전' not in _bcs, repr(_bcs))
     chk('기록 키 전부 (예외 법칙 · 접촉 원장 요약 · 조인 표지 · 상태 · 한정어)',
         {'iface_exception_law', 'iface_contact_ledger', 'iface_join', 'iface_geom_reuse', 'iface_status',
          'iface_qualifiers', 'iface_r_type_ohm_cm2', 'iface_power_eval'} <= set(rec), sorted(rec))

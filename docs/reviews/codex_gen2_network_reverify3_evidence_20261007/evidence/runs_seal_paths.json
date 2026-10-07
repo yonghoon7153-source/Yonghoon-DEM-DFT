@@ -1,0 +1,17 @@
+[
+  {
+    "probe": "seal_paths",
+    "rc": 0,
+    "seconds": 8.688000000081956,
+    "tail": [
+      "raw_sha_changed_digest_deleted 2 None None",
+      "raw_sha_changed_digest_null 2 None None",
+      "legacy_record_declared_g2 1 [\"lhs00_000: 레코드 세대 'inferred_legacy' ≠ manifest 기대 세대 'g2'\"] []",
+      "legacy_record_both_declarations_deleted 2 None None",
+      "reread baseline 0 1 0",
+      "reread plan_absent 1 0 2",
+      "reread cohorts_empty_queue_present 1 0 2",
+      "reread cohorts_absent_queue_present 1 0 2"
+    ]
+  }
+]

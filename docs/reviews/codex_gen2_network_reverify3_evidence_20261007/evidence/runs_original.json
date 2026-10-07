@@ -1,0 +1,55 @@
+[
+  {
+    "probe": "acceptance",
+    "rc": 0,
+    "seconds": 3.8589999999385327,
+    "tail": [
+      "cf_bad_conservation failed {'tau2_ion_hertz': None, 'ion_net_status_hertz': 'NOT_COMPUTED', 'ion_net_status_reason_hertz': 'missing_input', 'tau2_ion_physics': None, 'ion_net_status_physics': 'NOT_COMPUTED', 'ion_net_status_reason_physics': 'missing_input', 'tau2_ion_hertz_h12': None, 'ion_net_status_hertz_h12': 'NOT_COMPUTED', 'ion_net_status_reason_hertz_h12': 'missing_input', 'ion_net_generation': ''}",
+      "missing_constr_cert failed {'tau2_ion_hertz': None, 'ion_net_status_hertz': 'NOT_COMPUTED', 'ion_net_status_reason_hertz': 'missing_input', 'tau2_ion_physics': None, 'ion_net_status_physics': 'NOT_COMPUTED', 'ion_net_status_reason_physics': 'missing_input', 'tau2_ion_hertz_h12': None, 'ion_net_status_hertz_h12': 'NOT_COMPUTED', 'ion_net_status_reason_hertz_h12': 'missing_input', 'ion_net_generation': ''}",
+      "STAMP control True g2 ",
+      "STAMP all_unknown False None FillRefusal: lhs00_000: τ P4 — 세대 도장 대조 (G2RR-01 · pipeline_service.provenance_generation_problem): ",
+      "STAMP all_null False None FillRefusal: lhs00_000: τ P4 — 세대 도장 대조 (G2RR-01 · pipeline_service.provenance_generation_problem): ",
+      "STAMP one_null_legacy_shape False None FillRefusal: lhs00_000: τ P4 — 세대 도장 대조 (G2RR-01 · pipeline_service.provenance_generation_problem): ",
+      "STAMP g2_declares_legacy False None FillRefusal: lhs00_000: τ P4 — 세대 도장 대조 (G2RR-01 · pipeline_service.provenance_generation_problem): ",
+      "STAMP stamp_absent_keys False None FillRefusal: lhs00_000: τ P4 — 세대 도장 대조 (G2RR-01 · pipeline_service.provenance_generation_problem): "
+    ]
+  },
+  {
+    "probe": "branch_policy",
+    "rc": 0,
+    "seconds": 3.6410000000614673,
+    "tail": [
+      "[Storage] NOT configured - SUPABASE_URL=False SUPABASE_KEY=False",
+      "[Security] WARNING: auth OFF - local/private only. For public deploy set WEBAPP_REQUIRE_AUTH=1 + WEBAPP_AUTH_TOKEN.",
+      "baseline done q= 0.00400538 cf= 0.11781 handover= True fault_calls= [] reread_bad= []",
+      "cf_sigma0_x2 failed q= 0.00400538 cf= 0.11781 handover= True fault_calls= [] reread_bad= None",
+      "full_cert_sigma0_x2 failed q= 0.00400538 cf= 0.11781 handover= True fault_calls= [] reread_bad= None",
+      "diagnostic_fields_absent failed q= 0.00400538 cf= 0.11781 handover= True fault_calls= [] reread_bad= None",
+      "honest_cf_exception done q= 0.00400538 cf= None handover= True fault_calls= ['spsolve'] reread_bad= []",
+      "honest_cf_cert_failure done q= 0.00400538 cf= None handover= True fault_calls= ['spsolve', 'cg', 'cg', 'cg', 'cg', 'gmres', 'gmres', 'gmres', 'gmres'] reread_bad= []"
+    ]
+  },
+  {
+    "probe": "dependency_gap",
+    "rc": 0,
+    "seconds": 2.0,
+    "tail": [
+      "      0",
+      "    ],",
+      "    \"n_intact_AM_P-AM_P\": [",
+      "      0,",
+      "      1",
+      "    ]",
+      "  }",
+      "}"
+    ]
+  },
+  {
+    "probe": "input_digest",
+    "rc": 0,
+    "seconds": 0.4839999999385327,
+    "tail": [
+      "{\"independent\": {\"n\": 194, \"ids_sha256\": \"a04282d7275bd8f92b0afb4ac8b045f72f3867ccebbb7813b530b3901fd7b3bf\", \"raw_sha256_table_sha256\": \"da7c93f9a0887145ff171e381c8608cb79779d96aea5a595a25677dc361ef784\", \"cohort_tsv_sha256\": {\"lhs\": \"32f00daa8394188d1e72531fd7fda1a8b47a9c279be76311ae7f2afa024b2809\", \"lhsx\": \"0b85e8589917c9a3936ce29e9f36326993985ddd113ef32353a4ff96d981cb45\"}}, \"runner\": {\"n\": 194, \"ids_sha256\": \"a04282d7275bd8f92b0afb4ac8b045f72f3867ccebbb7813b530b3901fd7b3bf\", \"raw_sha256_table_sha256\": \"da7c93f9a0887145ff171e381c8608cb79779d96aea5a595a25677dc361ef784\", \"missing_raw_sha\": [], \"cohort_tsv_sha256\": {\"lhs\": \"32f00daa8394188d1e72531fd7fda1a8b47a9c279be76311ae7f2afa024b2809\", \"lhsx\": \"0b85e8589917c9a3936ce29e9f36326993985ddd113ef32353a4ff96d981cb45\"}}, \"equal\": true, \"registered_values_present\": true, \"counts\": {\"lhs\": 130, \"lhsx\": 64}, \"scope\": \"Hashes of 194 pinned harvest metadata, not on-disk WSL raw byte verification\"}"
+    ]
+  }
+]

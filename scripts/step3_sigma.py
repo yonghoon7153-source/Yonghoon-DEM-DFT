@@ -962,7 +962,7 @@ def _fibre_segment_ijk(add_pts, add_phase, add_fid, lo, vox, n, gap_tol=2.0,
 #    2 Ω (remove_area) / 1 Ω (renormalize) = **막 소자만**의 차 · 물리적 상 · 하한 아님 · 탄소 접합 (②) · SE 입계 (③) 미표현 ·
 #    `unrealized` = AM–AM 막이 남지 않음 (전체 절연 아님 — 탄소 경로가 전도할 수 있다).
 #  ★ owner (I8′ · I1‴ · v3.1 §1 · §2): 셀 x 의 청구자 C(x) = 셀 중심을 품는 구 (`_ball_cells` — raster 와 같은 식) ∪ 그 셀을 품는
-#    브리지 청구 영역 (= 두 계산 순서 브리지 공의 합집합 · 권고 · 1저자 확인 전 → 기록 `iface_bridge_claim`) 의 두 입자.
+#    브리지 청구 영역 (= 두 계산 순서 브리지 공의 합집합 · 1저자 10-07 *"권고대로 진행"* · Codex 재확인 대기 → 기록 `iface_bridge_claim`) 의 두 입자.
 #    주인 = C(x) **전체**에서 p_min · 띠 T = {p ≤ p_min + ε_p} · T 안 canonical 키 (중심 사전순) 최솟값 — 쌍별 fold 아님.
 #    정확한 순열 불변은 **동결 AM 마스크 M + 동결 청구자 기하 G** 에서만 (raw raster 순열 = 진단 `am_iface_raw_perm_diag`).
 #  ⚠ ε_p · power 평가 규약은 이 구현 커밋에서 시험과 함께 봉인 (v3.1 §1 "구현 때 봉인") — 바꾸려면 새 봉인.
@@ -973,7 +973,7 @@ IFACE_OWNER_RULE = 'claimant_power_partition_v1'
 IFACE_TIE_RULE = 'global_pmin_eps_band_center_lex_v1'          # v3.1 I8′ (집합 규칙 · 쌍별 fold 아님)
 IFACE_POWER_EVAL = 'cell_centre_ball_formula_grid_units_x_vox2_float64'   # p = Σ(ijk + ½ − (c − lo)/h)² − (r/h)² → × h² [µm²]
 IFACE_EPS_P_UM2 = 1.0e-9                                       # ε_p [µm²] — 절대값 하나 · 봉인 (반올림 잡음 ≲ 1e−12 µm² 의 ≥ 1e3 배)
-IFACE_BRIDGE_CLAIM = 'union_both_orders_v1'                    # v3.1 §2 권고 (1저자 확인 전 · 다음 Codex 검토에 올린다)
+IFACE_BRIDGE_CLAIM = 'union_both_orders_v1'                    # v3.1 §2 권고 = 1저자 10-07 확인 (*"권고대로 진행"*) · 다음 Codex 검토에서 재확인
 IFACE_AREA_LAW = 'contact_normalized_coarse_closure'
 IFACE_AREA_SOURCE = 'scaffold_lens_geometry'                   # 덤프 (c_cpl[22]) 경로 · 조인 관문 = 미구현 (T4-2 · N5′)
 IFACE_CARBON_LAWS = ('remove_area', 'renormalize')
@@ -1473,7 +1473,7 @@ def am_iface_plan(ledger, r_type, *, carbon_cover='remove_area', gap_law=None, u
         'iface_model': IFACE_MODEL_VERSION, 'iface_model_label': IFACE_MODEL_LABEL,
         'iface_owner_rule': IFACE_OWNER_RULE, 'iface_tie_rule': IFACE_TIE_RULE,
         'iface_eps_p_um2': ledger['iface_eps_p_um2'], 'iface_power_eval': IFACE_POWER_EVAL,
-        'iface_bridge_claim': IFACE_BRIDGE_CLAIM, 'iface_bridge_claim_status': '권고 · 1저자 확인 전 (v3.1 §2 · 다음 Codex 검토)',
+        'iface_bridge_claim': IFACE_BRIDGE_CLAIM, 'iface_bridge_claim_status': '1저자 10-07 확인 (권고대로) · Codex 재확인 대기 (v3.1 §2)',
         'iface_area_law': IFACE_AREA_LAW, 'iface_carbon_cover': carbon_cover,
         'iface_area_source': IFACE_AREA_SOURCE, 'iface_join': None,
         'iface_join_status': '덤프 (c_cpl[22]) 경로 · G-geo · G-frame 조인 관문 미구현 (T4-2 · N5′) — scaffold 재계산만',

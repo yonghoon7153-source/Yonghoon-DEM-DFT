@@ -1,0 +1,1042 @@
+{
+  "current": {
+    "kind": "current",
+    "problems": [],
+    "historical": null,
+    "note": ""
+  },
+  "deletions": [
+    {
+      "key": "seal",
+      "how": "delete",
+      "kind": "invalid",
+      "problems": [
+        "seal 이 없다 · 객체가 아니다 (NoneType) — 새 실행 형식은 발사 봉인을 싣는다",
+        "launch_format 'network_parallel_launch/v3' · 봉인 사본 None ≠ 'network_parallel_launch/v3'",
+        "기대 망 세대 expected_network_generation 'g2' · 봉인 사본 'ABSENT' ≠ 'g2' (둘 다 필수 · 같아야)"
+      ]
+    },
+    {
+      "key": "seal",
+      "how": "null",
+      "kind": "invalid",
+      "problems": [
+        "seal 이 없다 · 객체가 아니다 (NoneType) — 새 실행 형식은 발사 봉인을 싣는다",
+        "launch_format 'network_parallel_launch/v3' · 봉인 사본 None ≠ 'network_parallel_launch/v3'",
+        "기대 망 세대 expected_network_generation 'g2' · 봉인 사본 'ABSENT' ≠ 'g2' (둘 다 필수 · 같아야)"
+      ]
+    },
+    {
+      "key": "launch_format",
+      "how": "delete",
+      "kind": "invalid",
+      "problems": [
+        "launch_format None · 봉인 사본 'network_parallel_launch/v3' ≠ 'network_parallel_launch/v3'"
+      ]
+    },
+    {
+      "key": "launch_format",
+      "how": "null",
+      "kind": "invalid",
+      "problems": [
+        "launch_format None · 봉인 사본 'network_parallel_launch/v3' ≠ 'network_parallel_launch/v3'"
+      ]
+    },
+    {
+      "key": "expected_network_generation",
+      "how": "delete",
+      "kind": "invalid",
+      "problems": [
+        "기대 망 세대 expected_network_generation 'ABSENT' · 봉인 사본 'g2' ≠ 'g2' (둘 다 필수 · 같아야)",
+        "generation_probe (봉인 코드에서 기대 세대를 유도한 기록) 없음 · 다름 · 문제 ('g2')"
+      ]
+    },
+    {
+      "key": "expected_network_generation",
+      "how": "null",
+      "kind": "invalid",
+      "problems": [
+        "기대 망 세대 expected_network_generation None · 봉인 사본 'g2' ≠ 'g2' (둘 다 필수 · 같아야)",
+        "generation_probe (봉인 코드에서 기대 세대를 유도한 기록) 없음 · 다름 · 문제 ('g2')"
+      ]
+    },
+    {
+      "key": "input_digest",
+      "how": "delete",
+      "kind": "invalid",
+      "problems": [
+        "input_digest (194 ID · 코호트 · 원자료 sha256 지문) 없음 · 객체 아님 (NoneType) — 새 실행 형식의 필수 선언"
+      ]
+    },
+    {
+      "key": "input_digest",
+      "how": "null",
+      "kind": "invalid",
+      "problems": [
+        "input_digest (194 ID · 코호트 · 원자료 sha256 지문) 없음 · 객체 아님 (NoneType) — 새 실행 형식의 필수 선언"
+      ]
+    },
+    {
+      "key": "generation_probe",
+      "how": "delete",
+      "kind": "invalid",
+      "problems": [
+        "generation_probe (봉인 코드에서 기대 세대를 유도한 기록) 없음 · 다름 · 문제 (None)"
+      ]
+    },
+    {
+      "key": "generation_probe",
+      "how": "null",
+      "kind": "invalid",
+      "problems": [
+        "generation_probe (봉인 코드에서 기대 세대를 유도한 기록) 없음 · 다름 · 문제 (None)"
+      ]
+    },
+    {
+      "key": "code_dependency_closure",
+      "how": "delete",
+      "kind": "invalid",
+      "problems": [
+        "code_dependency_closure (전이 닫힘) 없음 · 봉인 밖 파일 None"
+      ]
+    },
+    {
+      "key": "code_dependency_closure",
+      "how": "null",
+      "kind": "invalid",
+      "problems": [
+        "code_dependency_closure (전이 닫힘) 없음 · 봉인 밖 파일 None"
+      ]
+    },
+    {
+      "key": "handover_code_hashes",
+      "how": "delete",
+      "kind": "invalid",
+      "problems": [
+        "handover_code_hashes (인계 도구 지문) 없음 · 꼴이 다르다 (None)"
+      ]
+    },
+    {
+      "key": "handover_code_hashes",
+      "how": "null",
+      "kind": "invalid",
+      "problems": [
+        "handover_code_hashes (인계 도구 지문) 없음 · 꼴이 다르다 (None)"
+      ]
+    },
+    {
+      "key": "git",
+      "how": "delete",
+      "kind": "invalid",
+      "problems": [
+        "git.sha None — 발사 커밋 신원이 없다"
+      ]
+    },
+    {
+      "key": "git",
+      "how": "null",
+      "kind": "invalid",
+      "problems": [
+        "git.sha None — 발사 커밋 신원이 없다"
+      ]
+    },
+    {
+      "key": "code_hashes",
+      "how": "delete",
+      "kind": "invalid",
+      "problems": [
+        "code_hashes 가 봉인 대상 CODE_FILES 32 파일의 sha256 지도가 아니다 (있는 None · 빠진 ['scripts/analyze_contacts.py', 'scripts/analyze_contacts_bimodal.py', 'scripts/audit_constriction_deleted.py', 'scripts/coverage_physics_vs_hertzian.py'])"
+      ]
+    },
+    {
+      "key": "code_hashes",
+      "how": "null",
+      "kind": "invalid",
+      "problems": [
+        "code_hashes 가 봉인 대상 CODE_FILES 32 파일의 sha256 지도가 아니다 (있는 None · 빠진 ['scripts/analyze_contacts.py', 'scripts/analyze_contacts_bimodal.py', 'scripts/audit_constriction_deleted.py', 'scripts/coverage_physics_vs_hertzian.py'])"
+      ]
+    },
+    {
+      "key": "plan",
+      "how": "delete",
+      "kind": "invalid",
+      "problems": [
+        "plan 이 객체가 아니다 (NoneType)"
+      ]
+    },
+    {
+      "key": "plan",
+      "how": "null",
+      "kind": "invalid",
+      "problems": [
+        "plan 이 객체가 아니다 (NoneType)"
+      ]
+    }
+  ],
+  "historical": {
+    "kind": "historical",
+    "problems": [],
+    "historical": "net194_v12_11fcf91e8",
+    "note": "역사 형식 net194_v12_11fcf91e8 (등록된 옛 실행 · docs/reviews/lhs_network_batch_registration_20261005.md) — 기대 세대 · 입력 지문 선언이 없는 형식이라 세대 · 입력 대조 없이 코드 봉인 판정만 · 역사 모드에서만 읽는다 · retry 는 그 커밋의 실행기로"
+  },
+  "history_mutants": [
+    {
+      "label": "baseline",
+      "result": {
+        "kind": "historical",
+        "problems": [],
+        "historical": "net194_v12_11fcf91e8",
+        "note": "역사 형식 net194_v12_11fcf91e8 (등록된 옛 실행 · docs/reviews/lhs_network_batch_registration_20261005.md) — 기대 세대 · 입력 지문 선언이 없는 형식이라 세대 · 입력 대조 없이 코드 봉인 판정만 · 역사 모드에서만 읽는다 · retry 는 그 커밋의 실행기로"
+      }
+    },
+    {
+      "label": "git_changed",
+      "result": {
+        "kind": "invalid",
+        "historical": null,
+        "note": "",
+        "problems": [
+          "새 실행 형식의 표지가 하나도 없는데 등록된 옛 실행도 아니다 — 필드가 없다는 것으로 옛 형식을 추론하지 않는다: net194_v12_11fcf91e8: 발사 git ffffffffffff · dirty False ≠ 등록 11fcf91e8a1f · False"
+        ]
+      }
+    },
+    {
+      "label": "hash_changed",
+      "result": {
+        "kind": "invalid",
+        "historical": null,
+        "note": "",
+        "problems": [
+          "새 실행 형식의 표지가 하나도 없는데 등록된 옛 실행도 아니다 — 필드가 없다는 것으로 옛 형식을 추론하지 않는다: net194_v12_11fcf91e8: 코드 해시 19 파일 · 지문 76887c49577d ≠ 등록 19 · 3bc0a116ddab"
+        ]
+      }
+    },
+    {
+      "label": "new_marker_added",
+      "result": {
+        "kind": "invalid",
+        "problems": [
+          "seal 이 없다 · 객체가 아니다 (NoneType) — 새 실행 형식은 발사 봉인을 싣는다",
+          "launch_format None · 봉인 사본 None ≠ 'network_parallel_launch/v3'",
+          "기대 망 세대 expected_network_generation 'ABSENT' · 봉인 사본 'ABSENT' ≠ 'g2' (둘 다 필수 · 같아야)",
+          "generation_probe (봉인 코드에서 기대 세대를 유도한 기록) 없음 · 다름 · 문제 (None)",
+          "code_hashes 가 봉인 대상 CODE_FILES 32 파일의 sha256 지도가 아니다 (있는 19 · 빠진 ['scripts/fracture_model.py', 'scripts/grade_engine.py', 'scripts/lens_geometry.py', 'scripts/lhs_perc_extract.py'])",
+          "code_dependency_closure (전이 닫힘) 없음 · 봉인 밖 파일 None",
+          "handover_code_hashes (인계 도구 지문) 없음 · 꼴이 다르다 (None)",
+          "input_digest (194 ID · 코호트 · 원자료 sha256 지문) 없음 · 객체 아님 (NoneType) — 새 실행 형식의 필수 선언"
+        ],
+        "historical": null,
+        "note": ""
+      }
+    }
+  ],
+  "history_cli": [
+    {
+      "args": [],
+      "rc": 2,
+      "tail": [
+        "⛔ 봉인 감사 거부 — 실행 형식 자격 historical (G2RR2-01) — C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\gen2_network_reverify3_20261007\\evidence\\scope_checks\\history",
+        "  ✗ 형식: 역사 형식 ROOT (net194_v12_11fcf91e8) — 역사 모드 (--historical) 에서만 읽는다 · 역사 형식 net194_v12_11fcf91e8 (등록된 옛 실행 · docs/reviews/lhs_network_batch_registration_20261005.md) — 기대 세대 · 입력 지문 선언이 없는 형식이라 세대 · 입력 대조 없이 코드 봉인 판정만 · 역사 모드에서만 읽는다 · retry 는 그 커밋의 실행기로"
+      ],
+      "stderr": ""
+    },
+    {
+      "args": [
+        "--historical"
+      ],
+      "rc": 0,
+      "tail": [
+        "  lhsx_063\tlhsx\t-\tNO_RECORD\t-(-)\tnot_merged\t케이스 기록 없음 — 계산되지 않았다 (merge 는 failed 로 싣는다 · retry 대상)",
+        "  lhsx_064\tlhsx\t-\tNO_RECORD\t-(-)\tnot_merged\t케이스 기록 없음 — 계산되지 않았다 (merge 는 failed 로 싣는다 · retry 대상)",
+        "  판정 {'NO_RECORD': 194} · merged {'not_merged': 194}",
+        "  기대 망 세대 — 역사 형식 (선언 없는 형식 · 등록된 옛 실행) — 세대 대조 안 함",
+        "  ✓ 기록 전부 발사 봉인 코드에서 나왔다",
+        "  ⚠ 기록 없음 194 건 — 계산되지 않았다 (merge 는 failed 로 싣는다 · retry 대상)"
+      ],
+      "stderr": ""
+    }
+  ],
+  "fingerprint": {
+    "code_fp": "e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71",
+    "files": 32,
+    "closure": {
+      "files": [
+        "scripts/analyze_contacts.py",
+        "scripts/analyze_contacts_bimodal.py",
+        "scripts/coverage_physics_vs_hertzian.py",
+        "scripts/dem_analysis_core.py",
+        "scripts/export_master_csv.py",
+        "scripts/fracture_model.py",
+        "scripts/grade_engine.py",
+        "scripts/lens_geometry.py",
+        "scripts/lhs_descriptor_harvest.py",
+        "scripts/lhs_harvest_batch.py",
+        "scripts/lhs_perc_extract.py",
+        "scripts/lhs_union_webapp.py",
+        "scripts/lhs_webapp_batch.py",
+        "scripts/metrics_json.py",
+        "scripts/ml_design_structure.py",
+        "scripts/network_conductivity.py",
+        "scripts/parse_liggghts.py",
+        "scripts/plastic_coverage.py",
+        "scripts/press_units.py",
+        "scripts/se_material.py",
+        "scripts/tau_flux.py",
+        "scripts/type_map_resolve.py",
+        "webapp/app.py",
+        "webapp/ledger_view.py",
+        "webapp/mpm_lab_register.py",
+        "webapp/pipeline_service.py",
+        "webapp/predictor_engine.py",
+        "webapp/security.py",
+        "webapp/storage_sync.py",
+        "webapp/structure_predictor.py"
+      ],
+      "errors": [],
+      "entry": [
+        "scripts/lhs_webapp_batch.py",
+        "scripts/parse_liggghts.py",
+        "scripts/analyze_contacts.py",
+        "scripts/analyze_contacts_bimodal.py",
+        "scripts/coverage_physics_vs_hertzian.py",
+        "scripts/network_conductivity.py"
+      ],
+      "lazy": [
+        [
+          "scripts/lhs_webapp_batch.py",
+          "app"
+        ],
+        [
+          "scripts/lhs_webapp_batch.py",
+          "type_map_resolve"
+        ],
+        [
+          "scripts/lhs_webapp_batch.py",
+          "export_master_csv"
+        ],
+        [
+          "webapp/pipeline_service.py",
+          "tau_flux"
+        ],
+        [
+          "scripts/tau_flux.py",
+          "network_conductivity"
+        ],
+        [
+          "scripts/tau_flux.py",
+          "se_material"
+        ],
+        [
+          "scripts/dem_analysis_core.py",
+          "fracture_model"
+        ],
+        [
+          "scripts/dem_analysis_core.py",
+          "lhs_union_webapp"
+        ],
+        [
+          "webapp/structure_predictor.py",
+          "ml_design_structure"
+        ]
+      ]
+    },
+    "census": {
+      "lazy": [
+        [
+          "scripts/analyze_contacts.py",
+          "_selftest",
+          "scripts/dem_analysis_core.py",
+          "dem_analysis_core"
+        ],
+        [
+          "scripts/coverage_physics_vs_hertzian.py",
+          "_selftest_fixture",
+          "scripts/plastic_coverage.py",
+          "plastic_coverage"
+        ],
+        [
+          "scripts/dem_analysis_core.py",
+          "calc_fracture_stages",
+          "scripts/fracture_model.py",
+          "fracture_model"
+        ],
+        [
+          "scripts/dem_analysis_core.py",
+          "calc_porosity_union_exact",
+          "scripts/lhs_union_webapp.py",
+          "lhs_union_webapp"
+        ],
+        [
+          "scripts/extract_se_network_diagnostics.py",
+          "analyze_case",
+          "scripts/viewer3d_data.py",
+          "viewer3d_data"
+        ],
+        [
+          "scripts/grade_engine.py",
+          "_tau_axis",
+          "scripts/tau_flux.py",
+          "tau_flux"
+        ],
+        [
+          "scripts/grade_engine.py",
+          "whatif_additives",
+          "scripts/additives.py",
+          "additives"
+        ],
+        [
+          "scripts/lhs_descriptor_harvest.py",
+          "selftest",
+          "scripts/lhs_descriptor_harvest.py",
+          "lhs_descriptor_harvest"
+        ],
+        [
+          "scripts/lhs_union_webapp.py",
+          "one",
+          "scripts/dem_analysis_core.py",
+          "dem_analysis_core"
+        ],
+        [
+          "scripts/lhs_union_webapp.py",
+          "one",
+          "scripts/lhs_descriptor_harvest.py",
+          "lhs_descriptor_harvest"
+        ],
+        [
+          "scripts/lhs_union_webapp.py",
+          "one",
+          "scripts/parse_liggghts.py",
+          "parse_liggghts"
+        ],
+        [
+          "scripts/lhs_union_webapp.py",
+          "run",
+          "scripts/lhs_harvest_batch.py",
+          "lhs_harvest_batch"
+        ],
+        [
+          "scripts/lhs_webapp_batch.py",
+          "load_deps",
+          "scripts/export_master_csv.py",
+          "export_master_csv"
+        ],
+        [
+          "scripts/lhs_webapp_batch.py",
+          "load_deps",
+          "scripts/type_map_resolve.py",
+          "type_map_resolve"
+        ],
+        [
+          "scripts/lhs_webapp_batch.py",
+          "load_deps",
+          "webapp/app.py",
+          "app"
+        ],
+        [
+          "scripts/ml_design_structure.py",
+          "_selftest",
+          "webapp/predictor_engine.py",
+          "predictor_engine"
+        ],
+        [
+          "scripts/ml_design_structure.py",
+          "derive_features",
+          "webapp/predictor_engine.py",
+          "predictor_engine"
+        ],
+        [
+          "scripts/network_conductivity.py",
+          "_selftest_status",
+          "webapp/pipeline_service.py",
+          "pipeline_service"
+        ],
+        [
+          "scripts/plastic_coverage.py",
+          "_selftest",
+          "scripts/lens_geometry.py",
+          "lens_geometry"
+        ],
+        [
+          "scripts/tau_flux.py",
+          "_nc_mod",
+          "scripts/network_conductivity.py",
+          "network_conductivity"
+        ],
+        [
+          "scripts/tau_flux.py",
+          "_se_material",
+          "scripts/se_material.py",
+          "se_material"
+        ],
+        [
+          "scripts/tau_flux.py",
+          "tau2_from_metrics",
+          "scripts/se_material.py",
+          "se_material"
+        ],
+        [
+          "scripts/type_map_resolve.py",
+          "_eval_expr",
+          "scripts/parse_liggghts.py",
+          "parse_liggghts"
+        ],
+        [
+          "webapp/app.py",
+          "_am_contacts_response",
+          "scripts/coverage_physics_vs_hertzian.py",
+          "coverage_physics_vs_hertzian"
+        ],
+        [
+          "webapp/app.py",
+          "_am_contacts_response",
+          "scripts/viewer3d_data.py",
+          "viewer3d_data"
+        ],
+        [
+          "webapp/app.py",
+          "_brittle_z_csv_response",
+          "scripts/plot_brittle_z_distribution.py",
+          "plot_brittle_z_distribution"
+        ],
+        [
+          "webapp/app.py",
+          "_brittle_z_png_response",
+          "scripts/plot_brittle_z_distribution.py",
+          "plot_brittle_z_distribution"
+        ],
+        [
+          "webapp/app.py",
+          "_brittle_z_profile_compute",
+          "scripts/plot_brittle_z_distribution.py",
+          "plot_brittle_z_distribution"
+        ],
+        [
+          "webapp/app.py",
+          "_build_grade_guide_md",
+          "scripts/grade_engine.py",
+          "grade_engine"
+        ],
+        [
+          "webapp/app.py",
+          "_combined_z_csv_response",
+          "scripts/plot_combined_z_distribution.py",
+          "plot_combined_z_distribution"
+        ],
+        [
+          "webapp/app.py",
+          "_combined_z_png_response",
+          "scripts/plot_combined_z_distribution.py",
+          "plot_combined_z_distribution"
+        ],
+        [
+          "webapp/app.py",
+          "_coverage_z_csv_response",
+          "scripts/plot_coverage_z_distribution.py",
+          "plot_coverage_z_distribution"
+        ],
+        [
+          "webapp/app.py",
+          "_coverage_z_png_response",
+          "scripts/plot_coverage_z_distribution.py",
+          "plot_coverage_z_distribution"
+        ],
+        [
+          "webapp/app.py",
+          "_coverage_z_profile_compute",
+          "scripts/plot_coverage_z_distribution.py",
+          "plot_coverage_z_distribution"
+        ],
+        [
+          "webapp/app.py",
+          "_eis_exp_table",
+          "scripts/eis_drt_ica.py",
+          "eis_drt_ica"
+        ],
+        [
+          "webapp/app.py",
+          "_grade_engine_result",
+          "scripts/grade_engine.py",
+          "grade_engine"
+        ],
+        [
+          "webapp/app.py",
+          "_ion_handover",
+          "scripts/tau_flux.py",
+          "tau_flux"
+        ],
+        [
+          "webapp/app.py",
+          "_kit_apply_temperature",
+          "scripts/cam_kinetics.py",
+          "cam_kinetics"
+        ],
+        [
+          "webapp/app.py",
+          "_litdb_mod",
+          "scripts/litdb_sync.py",
+          "litdb_sync"
+        ],
+        [
+          "webapp/app.py",
+          "_network_current_response",
+          "scripts/network_current.py",
+          "network_current"
+        ],
+        [
+          "webapp/app.py",
+          "_rint_anchor_pair",
+          "scripts/rint_cycle_traj.py",
+          "rint_cycle_traj"
+        ],
+        [
+          "webapp/app.py",
+          "_run_net",
+          "scripts/backfill_am_metrics.py",
+          "backfill_am_metrics"
+        ],
+        [
+          "webapp/app.py",
+          "_se_material",
+          "scripts/se_material.py",
+          "se_material"
+        ],
+        [
+          "webapp/app.py",
+          "_stress_z_csv_response",
+          "scripts/plot_stress_z_distribution.py",
+          "plot_stress_z_distribution"
+        ],
+        [
+          "webapp/app.py",
+          "_stress_z_png_response",
+          "scripts/plot_stress_z_distribution.py",
+          "plot_stress_z_distribution"
+        ],
+        [
+          "webapp/app.py",
+          "_stress_z_profile_compute",
+          "scripts/plot_stress_z_distribution.py",
+          "plot_stress_z_distribution"
+        ],
+        [
+          "webapp/app.py",
+          "_synth_2d",
+          "scripts/extract_2d_microstructure.py",
+          "extract_2d_microstructure"
+        ],
+        [
+          "webapp/app.py",
+          "_synth_2d_auto",
+          "scripts/extract_2d_microstructure.py",
+          "extract_2d_microstructure"
+        ],
+        [
+          "webapp/app.py",
+          "_tau_flux",
+          "scripts/tau_flux.py",
+          "tau_flux"
+        ],
+        [
+          "webapp/app.py",
+          "_transcript_load",
+          "scripts/hetero_transcript.py",
+          "hetero_transcript"
+        ],
+        [
+          "webapp/app.py",
+          "api_all_grades",
+          "scripts/grade_engine.py",
+          "grade_engine"
+        ],
+        [
+          "webapp/app.py",
+          "api_eis",
+          "scripts/eis_drt_ica.py",
+          "eis_drt_ica"
+        ],
+        [
+          "webapp/app.py",
+          "api_eis_cycle",
+          "scripts/eis_drt_ica.py",
+          "eis_drt_ica"
+        ],
+        [
+          "webapp/app.py",
+          "api_eis_exp",
+          "scripts/eis_drt_ica.py",
+          "eis_drt_ica"
+        ],
+        [
+          "webapp/app.py",
+          "api_eis_fig",
+          "scripts/eis_drt_ica.py",
+          "eis_drt_ica"
+        ],
+        [
+          "webapp/app.py",
+          "api_ica",
+          "scripts/eis_drt_ica.py",
+          "eis_drt_ica"
+        ],
+        [
+          "webapp/app.py",
+          "api_ica_case",
+          "scripts/eis_drt_ica.py",
+          "eis_drt_ica"
+        ],
+        [
+          "webapp/app.py",
+          "api_mixer_frame",
+          "webapp/mixer_bed.py",
+          "mixer_bed"
+        ],
+        [
+          "webapp/app.py",
+          "api_mixer_runs",
+          "webapp/mixer_bed.py",
+          "mixer_bed"
+        ],
+        [
+          "webapp/app.py",
+          "api_step5_fade",
+          "scripts/b1_chem_fade.py",
+          "b1_chem_fade"
+        ],
+        [
+          "webapp/app.py",
+          "api_step5_fade",
+          "scripts/coating_presets.py",
+          "coating_presets"
+        ],
+        [
+          "webapp/app.py",
+          "build_overall_grade_table",
+          "scripts/grade_engine.py",
+          "grade_engine"
+        ],
+        [
+          "webapp/app.py",
+          "case_grade_json",
+          "scripts/grade_engine.py",
+          "grade_engine"
+        ],
+        [
+          "webapp/app.py",
+          "case_whatif_additives",
+          "scripts/grade_engine.py",
+          "grade_engine"
+        ],
+        [
+          "webapp/app.py",
+          "case_whatif_carbon",
+          "scripts/grade_engine.py",
+          "grade_engine"
+        ],
+        [
+          "webapp/app.py",
+          "group",
+          "scripts/metrics_json.py",
+          "metrics_json"
+        ],
+        [
+          "webapp/app.py",
+          "group_param_options",
+          "scripts/grade_engine.py",
+          "grade_engine"
+        ],
+        [
+          "webapp/app.py",
+          "group_param_options",
+          "scripts/metrics_json.py",
+          "metrics_json"
+        ],
+        [
+          "webapp/app.py",
+          "list_cases",
+          "scripts/grade_engine.py",
+          "grade_engine"
+        ],
+        [
+          "webapp/app.py",
+          "mpm_lab_mech_reaction_csv",
+          "scripts/mech_reaction_correlation.py",
+          "mech_reaction_correlation"
+        ],
+        [
+          "webapp/app.py",
+          "mpm_lab_mech_reaction_png",
+          "scripts/mech_reaction_correlation.py",
+          "mech_reaction_correlation"
+        ],
+        [
+          "webapp/app.py",
+          "normalize_network_summary_layout",
+          "scripts/metrics_json.py",
+          "metrics_json"
+        ],
+        [
+          "webapp/app.py",
+          "retry_network",
+          "scripts/backfill_am_metrics.py",
+          "backfill_am_metrics"
+        ],
+        [
+          "webapp/app.py",
+          "serve_2d_export_zip",
+          "scripts/export_comsol_2d.py",
+          "export_comsol_2d"
+        ],
+        [
+          "webapp/app.py",
+          "serve_2d_export_zip",
+          "scripts/extract_2d_microstructure.py",
+          "extract_2d_microstructure"
+        ],
+        [
+          "webapp/app.py",
+          "serve_3d_data",
+          "scripts/viewer3d_data.py",
+          "viewer3d_data"
+        ],
+        [
+          "webapp/app.py",
+          "serve_archive_3d_data",
+          "scripts/viewer3d_data.py",
+          "viewer3d_data"
+        ],
+        [
+          "webapp/app.py",
+          "serve_report",
+          "scripts/metrics_json.py",
+          "metrics_json"
+        ],
+        [
+          "webapp/pipeline_service.py",
+          "network_generation_problem",
+          "scripts/tau_flux.py",
+          "tau_flux"
+        ],
+        [
+          "webapp/pipeline_service.py",
+          "network_record_verdict",
+          "scripts/tau_flux.py",
+          "tau_flux"
+        ],
+        [
+          "webapp/pipeline_service.py",
+          "network_sigma0_problem",
+          "scripts/tau_flux.py",
+          "tau_flux"
+        ],
+        [
+          "webapp/pipeline_service.py",
+          "network_stop_verdict",
+          "scripts/tau_flux.py",
+          "tau_flux"
+        ],
+        [
+          "webapp/pipeline_service.py",
+          "quarantine_network_leftovers",
+          "scripts/tau_flux.py",
+          "tau_flux"
+        ],
+        [
+          "webapp/structure_predictor.py",
+          "_restricted",
+          "scripts/ml_design_structure.py",
+          "ml_design_structure"
+        ],
+        [
+          "webapp/structure_predictor.py",
+          "_selftest",
+          "scripts/ml_design_structure.py",
+          "ml_design_structure"
+        ],
+        [
+          "webapp/structure_predictor.py",
+          "pareto",
+          "scripts/ml_shap_pareto.py",
+          "ml_shap_pareto"
+        ],
+        [
+          "webapp/structure_predictor.py",
+          "predict_structure",
+          "scripts/ml_design_structure.py",
+          "ml_design_structure"
+        ],
+        [
+          "webapp/structure_predictor.py",
+          "shap_importance",
+          "scripts/ml_shap_pareto.py",
+          "ml_shap_pareto"
+        ],
+        [
+          "webapp/structure_predictor.py",
+          "suggest_batch",
+          "scripts/ml_design_structure.py",
+          "ml_design_structure"
+        ],
+        [
+          "webapp/structure_predictor.py",
+          "surface",
+          "scripts/ml_design_structure.py",
+          "ml_design_structure"
+        ]
+      ],
+      "unclassified": [],
+      "stale": []
+    }
+  },
+  "temperature_positive": [
+    {
+      "T": null,
+      "ea": null,
+      "generation": "g2",
+      "problems": [],
+      "sigma0": 0.003,
+      "q": 0.00136157
+    },
+    {
+      "T": -40,
+      "ea": null,
+      "generation": "g2",
+      "problems": [],
+      "sigma0": 4.485196667359143e-05,
+      "q": 0.00136157
+    },
+    {
+      "T": 0,
+      "ea": null,
+      "generation": "g2",
+      "problems": [],
+      "sigma0": 0.0007600605763804945,
+      "q": 0.00136157
+    },
+    {
+      "T": 25,
+      "ea": null,
+      "generation": "g2",
+      "problems": [],
+      "sigma0": 0.003,
+      "q": 0.00136157
+    },
+    {
+      "T": 60,
+      "ea": null,
+      "generation": "g2",
+      "problems": [],
+      "sigma0": 0.014355301874382767,
+      "q": 0.00136157
+    },
+    {
+      "T": 120,
+      "ea": null,
+      "generation": "g2",
+      "problems": [],
+      "sigma0": 0.10756091448290986,
+      "q": 0.00136157
+    },
+    {
+      "T": 60,
+      "ea": 0.29,
+      "generation": "g2",
+      "problems": [],
+      "sigma0": 0.008788424745400768,
+      "q": 0.00136157
+    },
+    {
+      "T": 60,
+      "ea": 0.46,
+      "generation": "g2",
+      "problems": [],
+      "sigma0": 0.01761183201166258,
+      "q": 0.00136157
+    }
+  ],
+  "s3_dependencies": {
+    "files": [
+      "audit_constriction_deleted.py",
+      "extract_se_network_diagnostics.py",
+      "lens_geometry.py",
+      "network_conductivity.py",
+      "plastic_coverage.py",
+      "se_material.py"
+    ],
+    "entry": [
+      "audit_constriction_deleted.py",
+      "lens_geometry.py",
+      "network_conductivity.py",
+      "se_material.py"
+    ],
+    "outside": [],
+    "unclassified": [],
+    "errors": [],
+    "problems": []
+  },
+  "s3_bundle_adapter_checks": [
+    {
+      "label": "valid_six",
+      "accepted": true,
+      "why": ""
+    },
+    {
+      "label": "old_four",
+      "accepted": false,
+      "why": "lens_geometry.py: 봉인 — ≠ 지금 891ac67f8b6c; se_material.py: 봉인 — ≠ 지금 767a6a383d45; 커밋 트리 대조: `modules` 가 등록 집합과 다르다 — 봉인 ['audit_constriction_deleted.py', 'extract_se_network_diagnostics.py', 'network_conductivity.py', 'plastic_coverage.py'] vs 등록 ['audit_constriction_deleted.py', 'extract_se_network_diagnostics.py', 'lens_geometry.py', 'network_conductivity.py', 'plastic_coverage.py', 'se_material.py']"
+    },
+    {
+      "label": "wrong_lens_hash",
+      "accepted": false,
+      "why": "lens_geometry.py: 봉인 000000000000 ≠ 지금 891ac67f8b6c; 커밋 트리 대조: lens_geometry.py: 봉인이 든 바이트 000000000000 가 커밋 0801d4ceb 의 891ac67f8b6c 와 다르다 — **그 바이트는 그 커밋에 존재한 적이 없다**"
+    },
+    {
+      "label": "wrong_se_hash",
+      "accepted": false,
+      "why": "se_material.py: 봉인 000000000000 ≠ 지금 767a6a383d45; 커밋 트리 대조: se_material.py: 봉인이 든 바이트 000000000000 가 커밋 0801d4ceb 의 767a6a383d45 와 다르다 — **그 바이트는 그 커밋에 존재한 적이 없다**"
+    },
+    {
+      "label": "missing_sha",
+      "accepted": false,
+      "why": "봉인의 `code_bundle.git_sha` 가 비었다 (옛 판은 이때 대조를 건너뛰었다); 커밋 트리 대조: `code_bundle.git_sha` 가 비었다 — git 이 실패했거나 손으로 지운 것이다.  커밋 신원이 없으면 \"이 코드에서 났다\" 를 **복원할 수 없다** (fail-closed)"
+    }
+  ],
+  "s3_synthetic_raw": {
+    "ionic": {
+      "sigma_old": 4.385432008147404e-09,
+      "sigma_new": 7.166049643494914e-08,
+      "n_active_old": 2,
+      "n_active_new": 2,
+      "n_edges": 2,
+      "sealed_sigma_old": null,
+      "why_old": "",
+      "why_new": "",
+      "status": "ok",
+      "delta_pct": 1534.0578602476526
+    },
+    "electronic": {
+      "sigma_old": 4.385432008147404e-09,
+      "sigma_new": 7.166049643494914e-08,
+      "n_active_old": 2,
+      "n_active_new": 2,
+      "n_edges": 2,
+      "sealed_sigma_old": null,
+      "why_old": "",
+      "why_new": "",
+      "status": "ok",
+      "delta_pct": 1534.0578602476526
+    },
+    "thermal": {
+      "sigma_old": 2.9445043483275433e-08,
+      "sigma_new": 4.811490474918013e-07,
+      "n_active_old": 4,
+      "n_active_new": 4,
+      "n_edges": 4,
+      "sealed_sigma_old": null,
+      "why_old": "",
+      "why_new": "",
+      "status": "ok",
+      "delta_pct": 1534.0578602476521
+    }
+  },
+  "s3_scope": "synthetic run_case only; no registered S3 cohort, no new seal. Git proof adapter uses independently verified pinned blobs."
+}

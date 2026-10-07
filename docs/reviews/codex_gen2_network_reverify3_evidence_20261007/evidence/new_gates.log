@@ -1,0 +1,14 @@
+IMPORT {"label": "none", "rc": 1, "observed": {"n_processes": 0, "files": [], "observed": [], "outside": []}, "problems": ["manifest 는 import 관측을 켰는데 관측 기록이 하나도 없다 (훅이 돌지 않았다)"], "verdicts": {"SEALED": 1}}
+IMPORT {"label": "empty_file", "rc": 0, "observed": {"n_processes": 1, "files": [], "observed": [], "outside": []}, "problems": [], "verdicts": {"SEALED": 1}}
+IMPORT {"label": "unsealed_log", "rc": 1, "observed": {"n_processes": 2, "files": ["scripts/coating_presets.py", "scripts/network_conductivity.py"], "observed": ["scripts/coating_presets.py", "scripts/network_conductivity.py"], "outside": ["scripts/coating_presets.py"]}, "problems": ["봉인 밖 모듈을 실제로 읽었다: scripts/coating_presets.py"], "verdicts": {"SEALED": 1}}
+IMPORT {"label": "unsealed_log_lost", "rc": 0, "observed": {"n_processes": 1, "files": ["scripts/network_conductivity.py"], "observed": ["scripts/network_conductivity.py"], "outside": []}, "problems": [], "verdicts": {"SEALED": 1}}
+IMPORT {"label": "only_nonrepo_line", "rc": 0, "observed": {"n_processes": 1, "files": [], "observed": [], "outside": []}, "problems": [], "verdicts": {"SEALED": 1}}
+RELEASE good True
+RELEASE absent True
+RELEASE invalid_json True
+RELEASE null True
+RELEASE empty_object True
+RELEASE n_fail_null True
+RELEASE failed False
+RELEASE failed_audit True
+RELEASE refused_audit True

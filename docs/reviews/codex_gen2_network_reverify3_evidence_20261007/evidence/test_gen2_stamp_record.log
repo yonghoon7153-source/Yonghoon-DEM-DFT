@@ -1,0 +1,62 @@
+[Storage] NOT configured - SUPABASE_URL=False SUPABASE_KEY=False
+[Security] WARNING: auth OFF - local/private only. For public deploy set WEBAPP_REQUIRE_AUTH=1 + WEBAPP_AUTH_TOKEN.
+A 게시자 = 유도 — 실 CLI 가 게시한 활성 도장 (network_provenance.json)
+  PASS A1 양성 — 실 생산자 게시 = done · 활성 도장의 네 세대 값 = 세대 2 값 (생산자 상수 · hertz_h12 는 bool True) {'psi_placement_physics': 'multiply', 'electrode_model': 'dirichlet_exact', 'area_rule_physics': 'physics_g2', 'hertz_h12': True}
+  PASS A2 ★ 레코드에서 유도한 기대값 (pipeline_service.generation_stamp_values — 게시 · 인계 대조가 같은 함수) = 게시된 도장 네 값 (타입까지)
+  PASS A3 도장 파일 모양 그대로 — 12 키 · 순서 (유도를 한 함수로 옮겨도 게시 출력은 같다)
+  PASS A4 상수 짝 — pipeline_service.NETWORK_GENERATION2_STAMP = 생산자 상수 오라클 · NETWORK_GEN_G2 · LEGACY = tau_flux.NET_GEN_G2 · NET_GEN_LEGACY = lhs_design_dataset.TAU_EXPECTED_GENERATIONS (사본끼리 어긋나면 대조가 다른 세대 이름을 본다)
+S g2 인계 — 게시된 정상 g2 폴더 사본에서 도장 네 세대 필드만 바꾼다 → load_tau_results (출처 관문 P0–P4)
+  PASS S0 양성 — 정상 g2 도장 (Codex control · 읽은 그대로 다시 씀) → 통과 · 세대 칸 'g2' · 칸 = 같은 폴더의 tau_flux.case_row
+  PASS S1 ★ Codex 모순 변이 셋 (네 값 전부 unrecognized · 전부 null · virtual_source_legacy/physics_g1/legacy_divide/hertz_h12=False) → τ P4 거부 (G2RR-01 · 옛: 셋 다 g2 로 인계) 
+  PASS S2 회귀 — 네 키 자체를 삭제한 도장 (세대 2 이전 도장 모양) → τ P4 거부 (기존 G2R-02 거울 · 그대로)
+  PASS S3 ★ 키 하나만 — 결손 (부분 결손) · null · unknown · legacy 값 (네 키 × 넷 = 16) → 전부 τ P4 거부 (G2RR-01 · 옛: 결손 · 값 변이 다 통과) 
+  PASS S4 ★ 타입 모순 — hertz_h12 = 1 (1 == True 인 느슨한 대조) · 'True' (문자열) → τ P4 거부 (JSON 정규형으로 엄격 대조) 
+H 역사 경로 — 확인된 역사 도장 스키마만 (표지 없는 레코드 + 도장)
+  PASS H1 양성 — 표지 없는 레코드 + 정확한 역사 도장 모양 (세대 2 이전 게시자 · 8 키) → 통과 · 세대 칸 'inferred_legacy' · 주 두 모드 OK
+  PASS H2 ★ Codex one_null_legacy_shape — 역사 모양 레코드 + electrode_model=null 한 키만 남긴 도장 → τ P4 거부 (G2RR-01 · 옛: inferred_legacy 로 통과 · "세대 2 를 말하지 않음" 은 역사성 증명이 아니다)
+  PASS H3 ★ 확인된 역사 도장 스키마 밖 — 옛 세대 값 넷을 적은 도장 · 모르는 키 · argv 결손 · argv contact_mode hertzian · units_contract 다름 → τ P4 거부 (G2RR-01) 
+  PASS H4 ★ 진짜 역사 194 (v1.2 배치 원천 도장 + dual · 인계 P4 와 같은 함수) → inferred_legacy · 도장 = 확인된 역사 도장 스키마 194/194
+  PASS H5 역사 도장 스키마 오라클 — 194 도장의 키 집합은 하나 (8 키 · 세대 키 없음) = 도우미 상수 NETWORK_HISTORICAL_STAMP_KEYS [('argv', 'code_sha', 'input_digests', 'network_run_id', 'solver', 'solver_status', 'stamped_at', 'units_contract')]
+  PASS H6 ★ 같은 진짜 역사 레코드 (lhs00_000) + 도장에 세대 키 (null 한 키 · 옛 세대 값 넷 · 세대 2 값 넷) → 문제 (역사 스키마 아님) {'electrode_model=null': True, '옛 세대 값 넷': True, '세대 2 값 넷': True}
+M 배치 manifest 기대 세대 — load_tau_results(expected_generation=…) · manifest 읽기
+  PASS M1 양성 — 기대 세대 = 레코드 세대 (g2 폴더 · g2 / 역사 폴더 · inferred_legacy) → 통과 · 결과에 expected_generation · 칸 = 대조 없는 판과 같다
+  PASS M2 ★ 기대 세대 ≠ 레코드 세대 (g2 폴더에 inferred_legacy · 역사 폴더에 g2) → τ P4 거부 (배치 manifest 교차 대조) 
+  PASS M3 모르는 기대 세대 (g3) → 거부 (닫힌 열거 · 대조를 약속했는데 못 하면 통과로 치지 않는다)
+  PASS M4 ★ manifest 읽기 (tau_manifest_expected_generation) — 선언 = 값 · 선언 없음 · 모르는 값 · 194 v1.2 런처 manifest · 없는 파일 = 거부 {'dict g2': 'g2', 'file inferred_legacy': 'inferred_legacy', '선언 없음': 'FillRefusal: τ 기대 세대 — 배치 manifest 의 expected_network_genera', '모르는 값': 'FillRefusal: τ 기대 세대 — 배치 manifest 의 expected_network_genera', '194 v1.2 런처 manifest (선언 없음)': 'FillRefusal: τ 기대 세대 — 배치 manifest 의 expected_network_genera', '없는 파일': "FillRefusal: τ 기대 세대 — 배치 manifest 'C:\\\\Users\\\\Administrator"}
+W 웹앱 (J20-l) — 케이스 페이지 망 세대 행 · 툴팁
+  PASS W1 정상 g2 · 정확한 역사 모양 → 망 세대 행 그대로 (H · P = 세대 문구 · 덧붙임 없음 — 보통 화면 불변) · 도장 없는 폴더도 덧붙임 없음 (인계 τ P0 이 답한다 — 도장 이전 옛 케이스 화면에 표지를 뿌리지 않는다)
+  PASS W2 ★ 도장 모순 (all_null · one_null_legacy_shape) → 망 세대 행 끝에 "⚠ 도장 ↔ 레코드 불일치 — 인계 거부 (G2RR-01): …" (H · P 같은 값 · 인계와 같은 함수) 
+  PASS W3 케이스 라우트 배선 — _ion_handover 뒤 · 표 변환 전에 _ion_handover_stamp 를 붙인다
+  PASS W4 ★ 툴팁 — 새 규칙 (G2RR-01 · 네 세대 값 = 레코드에서 유도한 기대값 · 확인된 역사 도장 스키마 · 불일치 표지) · 옛 문구 "도장이 세대 2 게시를 말하면 추론하지 않는다" 없음
+  PASS W5 ★ 인계 열 사전 ion_net_generation — 새 규칙 (G2RR-01 · 확인된 역사 도장 스키마 · 레코드에서 유도한 기대값) · 옛 문구 "도장이 세대 2 게시를 말하면 추론하지 않는다" 없음
+  (변이마다 멈춘 곳 — 관문 · 첫 사유)
+    all_unknown                      → τ P4 · 레코드 세대 'g2' · 도장 psi_placement_physics='unrecognized' ≠ 레코드에서 유도한 'multiply' · 도장 electrode_model='unrecognized' ≠ 레코드에서 유도한 'dirichlet_exact' · 도장 ar
+    all_null                         → τ P4 · 레코드 세대 'g2' · 도장 psi_placement_physics=None ≠ 레코드에서 유도한 'multiply' · 도장 electrode_model=None ≠ 레코드에서 유도한 'dirichlet_exact' · 도장 area_rule_physics=None
+    g2_declares_legacy               → τ P4 · 레코드 세대 'g2' · 도장 psi_placement_physics='legacy_divide' ≠ 레코드에서 유도한 'multiply' · 도장 electrode_model='virtual_source_legacy' ≠ 레코드에서 유도한 'dirichlet_exac
+    stamp_absent_keys                → τ P4 · 레코드 세대 'g2' · 도장에 psi_placement_physics 없음 (부분 결손) · 도장에 electrode_model 없음 (부분 결손) · 도장에 area_rule_physics 없음 (부분 결손) · 도장에 hertz_h12 없음 (부분 결손) — 도장
+    drop:psi_placement_physics       → τ P4 · 레코드 세대 'g2' · 도장에 psi_placement_physics 없음 (부분 결손) — 도장 (network_provenance.json) ↔ 레코드가 한 세대를 가리키지 않는다 · 세대 2 로 싣지 않는다 (g2 = 도장 네 세대 값 = 레코드에서 유도한 기대
+    null:psi_placement_physics       → τ P4 · 레코드 세대 'g2' · 도장 psi_placement_physics=None ≠ 레코드에서 유도한 'multiply' — 도장 (network_provenance.json) ↔ 레코드가 한 세대를 가리키지 않는다 · 세대 2 로 싣지 않는다 (g2 = 도장 네 세대 
+    unknown:psi_placement_physics    → τ P4 · 레코드 세대 'g2' · 도장 psi_placement_physics='unrecognized' ≠ 레코드에서 유도한 'multiply' — 도장 (network_provenance.json) ↔ 레코드가 한 세대를 가리키지 않는다 · 세대 2 로 싣지 않는다 (g2 
+    legacy:psi_placement_physics     → τ P4 · 레코드 세대 'g2' · 도장 psi_placement_physics='legacy_divide' ≠ 레코드에서 유도한 'multiply' — 도장 (network_provenance.json) ↔ 레코드가 한 세대를 가리키지 않는다 · 세대 2 로 싣지 않는다 (g2
+    drop:electrode_model             → τ P4 · 레코드 세대 'g2' · 도장에 electrode_model 없음 (부분 결손) — 도장 (network_provenance.json) ↔ 레코드가 한 세대를 가리키지 않는다 · 세대 2 로 싣지 않는다 (g2 = 도장 네 세대 값 = 레코드에서 유도한 기대값)
+    null:electrode_model             → τ P4 · 레코드 세대 'g2' · 도장 electrode_model=None ≠ 레코드에서 유도한 'dirichlet_exact' — 도장 (network_provenance.json) ↔ 레코드가 한 세대를 가리키지 않는다 · 세대 2 로 싣지 않는다 (g2 = 도장 네 세대
+    unknown:electrode_model          → τ P4 · 레코드 세대 'g2' · 도장 electrode_model='unrecognized' ≠ 레코드에서 유도한 'dirichlet_exact' — 도장 (network_provenance.json) ↔ 레코드가 한 세대를 가리키지 않는다 · 세대 2 로 싣지 않는다 (g2
+    legacy:electrode_model           → τ P4 · 레코드 세대 'g2' · 도장 electrode_model='virtual_source_legacy' ≠ 레코드에서 유도한 'dirichlet_exact' — 도장 (network_provenance.json) ↔ 레코드가 한 세대를 가리키지 않는다 · 세대 2 로 싣
+    drop:area_rule_physics           → τ P4 · 레코드 세대 'g2' · 도장에 area_rule_physics 없음 (부분 결손) — 도장 (network_provenance.json) ↔ 레코드가 한 세대를 가리키지 않는다 · 세대 2 로 싣지 않는다 (g2 = 도장 네 세대 값 = 레코드에서 유도한 기대값)
+    null:area_rule_physics           → τ P4 · 레코드 세대 'g2' · 도장 area_rule_physics=None ≠ 레코드에서 유도한 'physics_g2' — 도장 (network_provenance.json) ↔ 레코드가 한 세대를 가리키지 않는다 · 세대 2 로 싣지 않는다 (g2 = 도장 네 세대 값 
+    unknown:area_rule_physics        → τ P4 · 레코드 세대 'g2' · 도장 area_rule_physics='unrecognized' ≠ 레코드에서 유도한 'physics_g2' — 도장 (network_provenance.json) ↔ 레코드가 한 세대를 가리키지 않는다 · 세대 2 로 싣지 않는다 (g2 = 
+    legacy:area_rule_physics         → τ P4 · 레코드 세대 'g2' · 도장 area_rule_physics='physics_g1' ≠ 레코드에서 유도한 'physics_g2' — 도장 (network_provenance.json) ↔ 레코드가 한 세대를 가리키지 않는다 · 세대 2 로 싣지 않는다 (g2 = 도장
+    drop:hertz_h12                   → τ P4 · 레코드 세대 'g2' · 도장에 hertz_h12 없음 (부분 결손) — 도장 (network_provenance.json) ↔ 레코드가 한 세대를 가리키지 않는다 · 세대 2 로 싣지 않는다 (g2 = 도장 네 세대 값 = 레코드에서 유도한 기대값)
+    null:hertz_h12                   → τ P4 · 레코드 세대 'g2' · 도장 hertz_h12=None ≠ 레코드에서 유도한 True — 도장 (network_provenance.json) ↔ 레코드가 한 세대를 가리키지 않는다 · 세대 2 로 싣지 않는다 (g2 = 도장 네 세대 값 = 레코드에서 유도한 기대값)
+    unknown:hertz_h12                → τ P4 · 레코드 세대 'g2' · 도장 hertz_h12='unrecognized' ≠ 레코드에서 유도한 True — 도장 (network_provenance.json) ↔ 레코드가 한 세대를 가리키지 않는다 · 세대 2 로 싣지 않는다 (g2 = 도장 네 세대 값 = 레코드에
+    legacy:hertz_h12                 → τ P4 · 레코드 세대 'g2' · 도장 hertz_h12=False ≠ 레코드에서 유도한 True — 도장 (network_provenance.json) ↔ 레코드가 한 세대를 가리키지 않는다 · 세대 2 로 싣지 않는다 (g2 = 도장 네 세대 값 = 레코드에서 유도한 기대값
+    type:hertz_h12=1                 → τ P4 · 레코드 세대 'g2' · 도장 hertz_h12=1 ≠ 레코드에서 유도한 True — 도장 (network_provenance.json) ↔ 레코드가 한 세대를 가리키지 않는다 · 세대 2 로 싣지 않는다 (g2 = 도장 네 세대 값 = 레코드에서 유도한 기대값)
+    type:hertz_h12='True'            → τ P4 · 레코드 세대 'g2' · 도장 hertz_h12='True' ≠ 레코드에서 유도한 True — 도장 (network_provenance.json) ↔ 레코드가 한 세대를 가리키지 않는다 · 세대 2 로 싣지 않는다 (g2 = 도장 네 세대 값 = 레코드에서 유도한 기대
+    one_null_legacy_shape            → τ P4 · 레코드 세대 'inferred_legacy' · 확인된 역사 도장 스키마 (194 v1.2 · 8 키) 가 아니다 — 남는 키 ['electrode_model'] · 없는 키 [] — 도장 (network_provenance.json) ↔ 레코드가 한 세대를 가리키지 
+    hist_declares_g1                 → τ P4 · 레코드 세대 'inferred_legacy' · 확인된 역사 도장 스키마 (194 v1.2 · 8 키) 가 아니다 — 남는 키 ['area_rule_physics', 'electrode_model', 'hertz_h12', 'psi_placement_physics'] 
+    hist_extra_key                   → τ P4 · 레코드 세대 'inferred_legacy' · 확인된 역사 도장 스키마 (194 v1.2 · 8 키) 가 아니다 — 남는 키 ['generation'] · 없는 키 [] — 도장 (network_provenance.json) ↔ 레코드가 한 세대를 가리키지 않는다 ·
+    hist_missing_argv                → τ P4 · 레코드 세대 'inferred_legacy' · 확인된 역사 도장 스키마 (194 v1.2 · 8 키) 가 아니다 — 남는 키 [] · 없는 키 ['argv'] — 도장 (network_provenance.json) ↔ 레코드가 한 세대를 가리키지 않는다 · 옛 세대로
+    hist_argv_hertzian               → τ P4 · 레코드 세대 'inferred_legacy' · 도장 argv={'type_map': '1:SE', 'scale': 1, 'contact_mode': 'hertzian'} — 역사 도장 모양 (type_map · scale · contact_mode both) 이 아니
+    hist_units_other                 → τ P4 · 레코드 세대 'inferred_legacy' · 도장 units_contract='sim_to_real_v0' ≠ 역사 도장 'sim_to_real_v1' — 도장 (network_provenance.json) ↔ 레코드가 한 세대를 가리키지 않는다 · 옛 세대로 추론
+
+test_gen2_stamp_record: 24/24 PASS

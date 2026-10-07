@@ -1,0 +1,1484 @@
+{
+  "schema": "network_parallel_launcher/v1",
+  "created": "2026-10-05T22:12:38",
+  "argv": [
+    "scripts/run_network_194_parallel.py",
+    "run",
+    "--root",
+    "/home/yonghoon71/net194_11fcf91e8"
+  ],
+  "repo_root": "/home/yonghoon71/dem-audit",
+  "python": "/home/yonghoon71/Yonghoon-DEM-DFT/venv/bin/python",
+  "python_versions": {
+    "python": "3.12.3",
+    "executable": "/home/yonghoon71/Yonghoon-DEM-DFT/venv/bin/python",
+    "numpy": "2.5.2",
+    "scipy": "1.18.1",
+    "pandas": "3.0.5"
+  },
+  "worker_script": "/home/yonghoon71/dem-audit/scripts/lhs_webapp_batch.py",
+  "worker_override": false,
+  "stop_after": "network",
+  "lanes": 20,
+  "network_lock": "per-case",
+  "thread_env": {
+    "OMP_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "VECLIB_MAXIMUM_THREADS": "1"
+  },
+  "mem_budget_mb": 12275.03515625,
+  "mem_reserve_gb": 2.0,
+  "min_free_gb": 1.0,
+  "mem_model": {
+    "base_mb": 150.0,
+    "per_kcontact_mb": 4.5,
+    "time_per_kcontact_s": 0.7
+  },
+  "root_from": "",
+  "root_to": "",
+  "allow_dirty": false,
+  "allow_missing_raw": false,
+  "pyc_purged": 0,
+  "git": {
+    "sha": "11fcf91e8a1f4837b83892b7e4a81125eaeee4e5",
+    "short": "11fcf91e8",
+    "branch": "HEAD",
+    "dirty": false,
+    "porcelain": []
+  },
+  "code_hashes": {
+    "scripts/network_conductivity.py": "b0555f7f7a65c2d327b4cca15791586e980d0b6b75b47c846457d628f19b7592",
+    "scripts/plastic_coverage.py": "fdb00df699d30cf7a24bcbf0485e9e6713955eecc0703ad4aa75fa3fabe91cc3",
+    "scripts/audit_constriction_deleted.py": "7028be8f10d491071e512767987bbcd7d74b47fa227badeded99916c7af512bd",
+    "scripts/extract_se_network_diagnostics.py": "db7151b51252e60c42c2bc2a2b3173ae6f4b97a94226b51a97b1e357e028ea9a",
+    "scripts/dem_analysis_core.py": "39fb19cb7eb962f11fe88546fa0ad93c4a9074846be13d15b27c2eae44fb620f",
+    "scripts/analyze_contacts.py": "a383ada7aef3d13ba08bd84728a20b6207f9b124a01ce3852c01ae2518ca1aa9",
+    "scripts/analyze_contacts_bimodal.py": "8afcc76030b747d8632014fa5b6cae1c1f066007b9247902caefb05288cf1ca5",
+    "scripts/coverage_physics_vs_hertzian.py": "4341b03b38ec1f811a3087d699471860cad366323ae9eb419cf76457e6cd6d01",
+    "scripts/parse_liggghts.py": "4fe3f1f32ebc4168978c7278b7a1d37b072d64fbf00e97d0933351337d223425",
+    "scripts/se_material.py": "767a6a383d4581274b07ee79146a53fbe118f1f6eb0acb9ec0a5af21c9c9930c",
+    "scripts/metrics_json.py": "baa671f895dd6103cf95c25647ee45877d98306f00ab15cd3968fbe4354a7702",
+    "scripts/tau_flux.py": "550dab08bcea0e35c3b84cdf51f797a4d4987d5d5738413347af09d4e4abc863",
+    "scripts/lhs_webapp_batch.py": "b9d0199cc1bd23cd1ed5405a283081c2c3a31bc6ce256670c8a9b63d177b5668",
+    "scripts/lhs_harvest_batch.py": "4d798c631ac893ca32018fde58145bc5c8a2e3e2a6423da61cb87bd13599148e",
+    "scripts/lhs_descriptor_harvest.py": "27624b8a39ab8807645f819776ea0125f423d4d4f61a90e8c3a3fc45b357178b",
+    "webapp/app.py": "3eca948001600a2f73b4057da30d1f0aff1141cad286c13701560c885600e4e3",
+    "webapp/pipeline_service.py": "60e0f9785c475eac542d8fffe4928350248ef39cd8aa829db49031611dc56413",
+    "scripts/export_master_csv.py": "2899dc2410ad8840dadf41993511c225d60f29f77edfdb2fac6703b25ccf767b",
+    "scripts/type_map_resolve.py": "4a289c6412e4b8e1bc0fba573cb287966dfa00a053399097b587f1e14726bfe5"
+  },
+  "preflight": {
+    "cpu": {
+      "cpu_count": 28,
+      "cpu_affinity": 28
+    },
+    "mem": {
+      "MemTotal_GB": 15.53,
+      "MemAvailable_GB": 13.99,
+      "SwapTotal_GB": 4.0,
+      "SwapFree_GB": 3.9
+    },
+    "lanes": 20,
+    "mem_budget_mb": 12275.03515625,
+    "first_lanes_est_mem_GB": 40.96,
+    "est_mem_largest_mb": 2938.7,
+    "disk_free_GB": 690.2,
+    "disk_need_GB": 21.39,
+    "est_serial_h": 6.38,
+    "est_makespan_h": 0.32,
+    "raw_problems": [],
+    "n_raw_problems": 0,
+    "warn": [
+      "처음 20 건 (큐 앞 = 가장 큰 침대) 의 메모리 추정 합 41.0 GB > MemAvailable 13.99 GB — 예산 관문이 동시 수를 줄인다 (추정은 real_14 기준 · WSL 시범으로 고칠 것)"
+    ],
+    "stop": []
+  },
+  "plan": {
+    "cohorts": [
+      {
+        "name": "lhs",
+        "harvest_dir": "/home/yonghoon71/dem-audit/docs/data/lhs_descriptors_cov_1e09f661d",
+        "cohort": "/home/yonghoon71/dem-audit/docs/data/area_s2_cohort.tsv",
+        "n_harvest": 130,
+        "n_selected": 130,
+        "expect_n": 130,
+        "union": "docs/data/lhs_union_20260927/lhs130_union.tsv",
+        "design": ""
+      },
+      {
+        "name": "lhsx",
+        "harvest_dir": "/home/yonghoon71/dem-audit/docs/data/lhsx_descriptors_cov_1e09f661d",
+        "cohort": "/home/yonghoon71/dem-audit/docs/data/lhsx_descriptors_20260925/_cohort.tsv",
+        "n_harvest": 64,
+        "n_selected": 64,
+        "expect_n": 64,
+        "union": "docs/data/lhs_union_20260927/lhsx64_union.tsv",
+        "design": "docs/data/lhsx_design_adapted_20260929.csv"
+      }
+    ],
+    "queue": [
+      {
+        "case": "lhsx_040",
+        "cohort": "lhsx",
+        "contacts": 619716,
+        "est_mem_mb": 2938.7,
+        "est_time_s": 433.8
+      },
+      {
+        "case": "lhsx_057",
+        "cohort": "lhsx",
+        "contacts": 504245,
+        "est_mem_mb": 2419.1,
+        "est_time_s": 353.0
+      },
+      {
+        "case": "lhsx_058",
+        "cohort": "lhsx",
+        "contacts": 504152,
+        "est_mem_mb": 2418.7,
+        "est_time_s": 352.9
+      },
+      {
+        "case": "lhsx_049",
+        "cohort": "lhsx",
+        "contacts": 493717,
+        "est_mem_mb": 2371.7,
+        "est_time_s": 345.6
+      },
+      {
+        "case": "lhsx_041",
+        "cohort": "lhsx",
+        "contacts": 457991,
+        "est_mem_mb": 2211.0,
+        "est_time_s": 320.6
+      },
+      {
+        "case": "lhs00_098",
+        "cohort": "lhs",
+        "contacts": 453859,
+        "est_mem_mb": 2192.4,
+        "est_time_s": 317.7
+      },
+      {
+        "case": "lhsx_023",
+        "cohort": "lhsx",
+        "contacts": 445622,
+        "est_mem_mb": 2155.3,
+        "est_time_s": 311.9
+      },
+      {
+        "case": "lhsx_056",
+        "cohort": "lhsx",
+        "contacts": 442861,
+        "est_mem_mb": 2142.9,
+        "est_time_s": 310.0
+      },
+      {
+        "case": "lhsx_045",
+        "cohort": "lhsx",
+        "contacts": 416313,
+        "est_mem_mb": 2023.4,
+        "est_time_s": 291.4
+      },
+      {
+        "case": "lhs00_029",
+        "cohort": "lhs",
+        "contacts": 414748,
+        "est_mem_mb": 2016.4,
+        "est_time_s": 290.3
+      },
+      {
+        "case": "lhsx_027",
+        "cohort": "lhsx",
+        "contacts": 408679,
+        "est_mem_mb": 1989.1,
+        "est_time_s": 286.1
+      },
+      {
+        "case": "lhs00_103",
+        "cohort": "lhs",
+        "contacts": 401102,
+        "est_mem_mb": 1955.0,
+        "est_time_s": 280.8
+      },
+      {
+        "case": "lhs00_061",
+        "cohort": "lhs",
+        "contacts": 400948,
+        "est_mem_mb": 1954.3,
+        "est_time_s": 280.7
+      },
+      {
+        "case": "lhs00_089",
+        "cohort": "lhs",
+        "contacts": 399594,
+        "est_mem_mb": 1948.2,
+        "est_time_s": 279.7
+      },
+      {
+        "case": "lhs00_042",
+        "cohort": "lhs",
+        "contacts": 398042,
+        "est_mem_mb": 1941.2,
+        "est_time_s": 278.6
+      },
+      {
+        "case": "lhs00_125",
+        "cohort": "lhs",
+        "contacts": 396794,
+        "est_mem_mb": 1935.6,
+        "est_time_s": 277.8
+      },
+      {
+        "case": "lhs00_129",
+        "cohort": "lhs",
+        "contacts": 393041,
+        "est_mem_mb": 1918.7,
+        "est_time_s": 275.1
+      },
+      {
+        "case": "lhsx_021",
+        "cohort": "lhsx",
+        "contacts": 374182,
+        "est_mem_mb": 1833.8,
+        "est_time_s": 261.9
+      },
+      {
+        "case": "lhs00_034",
+        "cohort": "lhs",
+        "contacts": 365366,
+        "est_mem_mb": 1794.1,
+        "est_time_s": 255.8
+      },
+      {
+        "case": "lhsx_008",
+        "cohort": "lhsx",
+        "contacts": 362080,
+        "est_mem_mb": 1779.4,
+        "est_time_s": 253.5
+      },
+      {
+        "case": "lhsx_038",
+        "cohort": "lhsx",
+        "contacts": 361549,
+        "est_mem_mb": 1777.0,
+        "est_time_s": 253.1
+      },
+      {
+        "case": "lhsx_011",
+        "cohort": "lhsx",
+        "contacts": 355746,
+        "est_mem_mb": 1750.9,
+        "est_time_s": 249.0
+      },
+      {
+        "case": "lhsx_030",
+        "cohort": "lhsx",
+        "contacts": 353729,
+        "est_mem_mb": 1741.8,
+        "est_time_s": 247.6
+      },
+      {
+        "case": "lhsx_010",
+        "cohort": "lhsx",
+        "contacts": 341925,
+        "est_mem_mb": 1688.7,
+        "est_time_s": 239.3
+      },
+      {
+        "case": "lhs00_084",
+        "cohort": "lhs",
+        "contacts": 339786,
+        "est_mem_mb": 1679.0,
+        "est_time_s": 237.9
+      },
+      {
+        "case": "lhsx_031",
+        "cohort": "lhsx",
+        "contacts": 333870,
+        "est_mem_mb": 1652.4,
+        "est_time_s": 233.7
+      },
+      {
+        "case": "lhsx_039",
+        "cohort": "lhsx",
+        "contacts": 330136,
+        "est_mem_mb": 1635.6,
+        "est_time_s": 231.1
+      },
+      {
+        "case": "lhsx_059",
+        "cohort": "lhsx",
+        "contacts": 318704,
+        "est_mem_mb": 1584.2,
+        "est_time_s": 223.1
+      },
+      {
+        "case": "lhs00_080",
+        "cohort": "lhs",
+        "contacts": 312306,
+        "est_mem_mb": 1555.4,
+        "est_time_s": 218.6
+      },
+      {
+        "case": "lhs00_030",
+        "cohort": "lhs",
+        "contacts": 300420,
+        "est_mem_mb": 1501.9,
+        "est_time_s": 210.3
+      },
+      {
+        "case": "lhsx_001",
+        "cohort": "lhsx",
+        "contacts": 295514,
+        "est_mem_mb": 1479.8,
+        "est_time_s": 206.9
+      },
+      {
+        "case": "lhsx_046",
+        "cohort": "lhsx",
+        "contacts": 293881,
+        "est_mem_mb": 1472.5,
+        "est_time_s": 205.7
+      },
+      {
+        "case": "lhs00_004",
+        "cohort": "lhs",
+        "contacts": 292701,
+        "est_mem_mb": 1467.2,
+        "est_time_s": 204.9
+      },
+      {
+        "case": "lhs00_066",
+        "cohort": "lhs",
+        "contacts": 290328,
+        "est_mem_mb": 1456.5,
+        "est_time_s": 203.2
+      },
+      {
+        "case": "lhs00_086",
+        "cohort": "lhs",
+        "contacts": 288433,
+        "est_mem_mb": 1447.9,
+        "est_time_s": 201.9
+      },
+      {
+        "case": "lhs00_048",
+        "cohort": "lhs",
+        "contacts": 288076,
+        "est_mem_mb": 1446.3,
+        "est_time_s": 201.7
+      },
+      {
+        "case": "lhs00_039",
+        "cohort": "lhs",
+        "contacts": 283333,
+        "est_mem_mb": 1425.0,
+        "est_time_s": 198.3
+      },
+      {
+        "case": "lhs00_071",
+        "cohort": "lhs",
+        "contacts": 281659,
+        "est_mem_mb": 1417.5,
+        "est_time_s": 197.2
+      },
+      {
+        "case": "lhs00_009",
+        "cohort": "lhs",
+        "contacts": 272771,
+        "est_mem_mb": 1377.5,
+        "est_time_s": 190.9
+      },
+      {
+        "case": "lhs00_013",
+        "cohort": "lhs",
+        "contacts": 262629,
+        "est_mem_mb": 1331.8,
+        "est_time_s": 183.8
+      },
+      {
+        "case": "lhs00_074",
+        "cohort": "lhs",
+        "contacts": 260256,
+        "est_mem_mb": 1321.2,
+        "est_time_s": 182.2
+      },
+      {
+        "case": "lhs00_088",
+        "cohort": "lhs",
+        "contacts": 258858,
+        "est_mem_mb": 1314.9,
+        "est_time_s": 181.2
+      },
+      {
+        "case": "lhsx_016",
+        "cohort": "lhsx",
+        "contacts": 255628,
+        "est_mem_mb": 1300.3,
+        "est_time_s": 178.9
+      },
+      {
+        "case": "lhsx_020",
+        "cohort": "lhsx",
+        "contacts": 252855,
+        "est_mem_mb": 1287.8,
+        "est_time_s": 177.0
+      },
+      {
+        "case": "lhsx_003",
+        "cohort": "lhsx",
+        "contacts": 252107,
+        "est_mem_mb": 1284.5,
+        "est_time_s": 176.5
+      },
+      {
+        "case": "lhsx_044",
+        "cohort": "lhsx",
+        "contacts": 249107,
+        "est_mem_mb": 1271.0,
+        "est_time_s": 174.4
+      },
+      {
+        "case": "lhs00_027",
+        "cohort": "lhs",
+        "contacts": 245989,
+        "est_mem_mb": 1257.0,
+        "est_time_s": 172.2
+      },
+      {
+        "case": "lhsx_050",
+        "cohort": "lhsx",
+        "contacts": 244113,
+        "est_mem_mb": 1248.5,
+        "est_time_s": 170.9
+      },
+      {
+        "case": "lhs00_104",
+        "cohort": "lhs",
+        "contacts": 243390,
+        "est_mem_mb": 1245.3,
+        "est_time_s": 170.4
+      },
+      {
+        "case": "lhs00_096",
+        "cohort": "lhs",
+        "contacts": 239738,
+        "est_mem_mb": 1228.8,
+        "est_time_s": 167.8
+      },
+      {
+        "case": "lhs00_006",
+        "cohort": "lhs",
+        "contacts": 232535,
+        "est_mem_mb": 1196.4,
+        "est_time_s": 162.8
+      },
+      {
+        "case": "lhs00_044",
+        "cohort": "lhs",
+        "contacts": 231507,
+        "est_mem_mb": 1191.8,
+        "est_time_s": 162.1
+      },
+      {
+        "case": "lhs00_053",
+        "cohort": "lhs",
+        "contacts": 229847,
+        "est_mem_mb": 1184.3,
+        "est_time_s": 160.9
+      },
+      {
+        "case": "lhs00_094",
+        "cohort": "lhs",
+        "contacts": 228449,
+        "est_mem_mb": 1178.0,
+        "est_time_s": 159.9
+      },
+      {
+        "case": "lhs00_076",
+        "cohort": "lhs",
+        "contacts": 215286,
+        "est_mem_mb": 1118.8,
+        "est_time_s": 150.7
+      },
+      {
+        "case": "lhsx_032",
+        "cohort": "lhsx",
+        "contacts": 214668,
+        "est_mem_mb": 1116.0,
+        "est_time_s": 150.3
+      },
+      {
+        "case": "lhs00_093",
+        "cohort": "lhs",
+        "contacts": 208977,
+        "est_mem_mb": 1090.4,
+        "est_time_s": 146.3
+      },
+      {
+        "case": "lhsx_054",
+        "cohort": "lhsx",
+        "contacts": 207740,
+        "est_mem_mb": 1084.8,
+        "est_time_s": 145.4
+      },
+      {
+        "case": "lhsx_034",
+        "cohort": "lhsx",
+        "contacts": 205553,
+        "est_mem_mb": 1075.0,
+        "est_time_s": 143.9
+      },
+      {
+        "case": "lhsx_051",
+        "cohort": "lhsx",
+        "contacts": 204089,
+        "est_mem_mb": 1068.4,
+        "est_time_s": 142.9
+      },
+      {
+        "case": "lhs00_095",
+        "cohort": "lhs",
+        "contacts": 200470,
+        "est_mem_mb": 1052.1,
+        "est_time_s": 140.3
+      },
+      {
+        "case": "lhsx_053",
+        "cohort": "lhsx",
+        "contacts": 199264,
+        "est_mem_mb": 1046.7,
+        "est_time_s": 139.5
+      },
+      {
+        "case": "lhs00_102",
+        "cohort": "lhs",
+        "contacts": 196862,
+        "est_mem_mb": 1035.9,
+        "est_time_s": 137.8
+      },
+      {
+        "case": "lhsx_006",
+        "cohort": "lhsx",
+        "contacts": 193973,
+        "est_mem_mb": 1022.9,
+        "est_time_s": 135.8
+      },
+      {
+        "case": "lhs00_032",
+        "cohort": "lhs",
+        "contacts": 191925,
+        "est_mem_mb": 1013.7,
+        "est_time_s": 134.3
+      },
+      {
+        "case": "lhs00_001",
+        "cohort": "lhs",
+        "contacts": 188517,
+        "est_mem_mb": 998.3,
+        "est_time_s": 132.0
+      },
+      {
+        "case": "lhsx_062",
+        "cohort": "lhsx",
+        "contacts": 185490,
+        "est_mem_mb": 984.7,
+        "est_time_s": 129.8
+      },
+      {
+        "case": "lhs00_113",
+        "cohort": "lhs",
+        "contacts": 182246,
+        "est_mem_mb": 970.1,
+        "est_time_s": 127.6
+      },
+      {
+        "case": "lhs00_010",
+        "cohort": "lhs",
+        "contacts": 180386,
+        "est_mem_mb": 961.7,
+        "est_time_s": 126.3
+      },
+      {
+        "case": "lhs00_106",
+        "cohort": "lhs",
+        "contacts": 179064,
+        "est_mem_mb": 955.8,
+        "est_time_s": 125.3
+      },
+      {
+        "case": "lhs00_085",
+        "cohort": "lhs",
+        "contacts": 178089,
+        "est_mem_mb": 951.4,
+        "est_time_s": 124.7
+      },
+      {
+        "case": "lhs00_028",
+        "cohort": "lhs",
+        "contacts": 178047,
+        "est_mem_mb": 951.2,
+        "est_time_s": 124.6
+      },
+      {
+        "case": "lhs00_000",
+        "cohort": "lhs",
+        "contacts": 177615,
+        "est_mem_mb": 949.3,
+        "est_time_s": 124.3
+      },
+      {
+        "case": "lhs00_081",
+        "cohort": "lhs",
+        "contacts": 177224,
+        "est_mem_mb": 947.5,
+        "est_time_s": 124.1
+      },
+      {
+        "case": "lhs00_064",
+        "cohort": "lhs",
+        "contacts": 176249,
+        "est_mem_mb": 943.1,
+        "est_time_s": 123.4
+      },
+      {
+        "case": "lhsx_061",
+        "cohort": "lhsx",
+        "contacts": 175328,
+        "est_mem_mb": 939.0,
+        "est_time_s": 122.7
+      },
+      {
+        "case": "lhsx_042",
+        "cohort": "lhsx",
+        "contacts": 174436,
+        "est_mem_mb": 935.0,
+        "est_time_s": 122.1
+      },
+      {
+        "case": "lhs00_052",
+        "cohort": "lhs",
+        "contacts": 169361,
+        "est_mem_mb": 912.1,
+        "est_time_s": 118.6
+      },
+      {
+        "case": "lhs00_120",
+        "cohort": "lhs",
+        "contacts": 167786,
+        "est_mem_mb": 905.0,
+        "est_time_s": 117.5
+      },
+      {
+        "case": "lhs00_031",
+        "cohort": "lhs",
+        "contacts": 167145,
+        "est_mem_mb": 902.2,
+        "est_time_s": 117.0
+      },
+      {
+        "case": "lhs00_005",
+        "cohort": "lhs",
+        "contacts": 167016,
+        "est_mem_mb": 901.6,
+        "est_time_s": 116.9
+      },
+      {
+        "case": "lhs00_057",
+        "cohort": "lhs",
+        "contacts": 166677,
+        "est_mem_mb": 900.0,
+        "est_time_s": 116.7
+      },
+      {
+        "case": "lhsx_047",
+        "cohort": "lhsx",
+        "contacts": 165355,
+        "est_mem_mb": 894.1,
+        "est_time_s": 115.7
+      },
+      {
+        "case": "lhs00_025",
+        "cohort": "lhs",
+        "contacts": 163945,
+        "est_mem_mb": 887.8,
+        "est_time_s": 114.8
+      },
+      {
+        "case": "lhs00_100",
+        "cohort": "lhs",
+        "contacts": 163411,
+        "est_mem_mb": 885.3,
+        "est_time_s": 114.4
+      },
+      {
+        "case": "lhs00_033",
+        "cohort": "lhs",
+        "contacts": 163247,
+        "est_mem_mb": 884.6,
+        "est_time_s": 114.3
+      },
+      {
+        "case": "lhsx_060",
+        "cohort": "lhsx",
+        "contacts": 160366,
+        "est_mem_mb": 871.6,
+        "est_time_s": 112.3
+      },
+      {
+        "case": "lhs00_121",
+        "cohort": "lhs",
+        "contacts": 160216,
+        "est_mem_mb": 871.0,
+        "est_time_s": 112.2
+      },
+      {
+        "case": "lhs00_112",
+        "cohort": "lhs",
+        "contacts": 159901,
+        "est_mem_mb": 869.6,
+        "est_time_s": 111.9
+      },
+      {
+        "case": "lhsx_005",
+        "cohort": "lhsx",
+        "contacts": 158808,
+        "est_mem_mb": 864.6,
+        "est_time_s": 111.2
+      },
+      {
+        "case": "lhsx_064",
+        "cohort": "lhsx",
+        "contacts": 158774,
+        "est_mem_mb": 864.5,
+        "est_time_s": 111.1
+      },
+      {
+        "case": "lhsx_022",
+        "cohort": "lhsx",
+        "contacts": 155748,
+        "est_mem_mb": 850.9,
+        "est_time_s": 109.0
+      },
+      {
+        "case": "lhsx_055",
+        "cohort": "lhsx",
+        "contacts": 153445,
+        "est_mem_mb": 840.5,
+        "est_time_s": 107.4
+      },
+      {
+        "case": "lhs00_046",
+        "cohort": "lhs",
+        "contacts": 151099,
+        "est_mem_mb": 829.9,
+        "est_time_s": 105.8
+      },
+      {
+        "case": "lhsx_029",
+        "cohort": "lhsx",
+        "contacts": 149353,
+        "est_mem_mb": 822.1,
+        "est_time_s": 104.5
+      },
+      {
+        "case": "lhs00_023",
+        "cohort": "lhs",
+        "contacts": 148753,
+        "est_mem_mb": 819.4,
+        "est_time_s": 104.1
+      },
+      {
+        "case": "lhs00_101",
+        "cohort": "lhs",
+        "contacts": 145945,
+        "est_mem_mb": 806.8,
+        "est_time_s": 102.2
+      },
+      {
+        "case": "lhsx_033",
+        "cohort": "lhsx",
+        "contacts": 143867,
+        "est_mem_mb": 797.4,
+        "est_time_s": 100.7
+      },
+      {
+        "case": "lhsx_014",
+        "cohort": "lhsx",
+        "contacts": 143646,
+        "est_mem_mb": 796.4,
+        "est_time_s": 100.6
+      },
+      {
+        "case": "lhsx_015",
+        "cohort": "lhsx",
+        "contacts": 143286,
+        "est_mem_mb": 794.8,
+        "est_time_s": 100.3
+      },
+      {
+        "case": "lhsx_043",
+        "cohort": "lhsx",
+        "contacts": 135931,
+        "est_mem_mb": 761.7,
+        "est_time_s": 95.2
+      },
+      {
+        "case": "lhsx_017",
+        "cohort": "lhsx",
+        "contacts": 134476,
+        "est_mem_mb": 755.1,
+        "est_time_s": 94.1
+      },
+      {
+        "case": "lhs00_035",
+        "cohort": "lhs",
+        "contacts": 132556,
+        "est_mem_mb": 746.5,
+        "est_time_s": 92.8
+      },
+      {
+        "case": "lhsx_019",
+        "cohort": "lhsx",
+        "contacts": 131545,
+        "est_mem_mb": 742.0,
+        "est_time_s": 92.1
+      },
+      {
+        "case": "lhsx_036",
+        "cohort": "lhsx",
+        "contacts": 131072,
+        "est_mem_mb": 739.8,
+        "est_time_s": 91.8
+      },
+      {
+        "case": "lhs00_050",
+        "cohort": "lhs",
+        "contacts": 130647,
+        "est_mem_mb": 737.9,
+        "est_time_s": 91.5
+      },
+      {
+        "case": "lhs00_070",
+        "cohort": "lhs",
+        "contacts": 130585,
+        "est_mem_mb": 737.6,
+        "est_time_s": 91.4
+      },
+      {
+        "case": "lhsx_025",
+        "cohort": "lhsx",
+        "contacts": 129679,
+        "est_mem_mb": 733.6,
+        "est_time_s": 90.8
+      },
+      {
+        "case": "lhsx_028",
+        "cohort": "lhsx",
+        "contacts": 129556,
+        "est_mem_mb": 733.0,
+        "est_time_s": 90.7
+      },
+      {
+        "case": "lhs00_051",
+        "cohort": "lhs",
+        "contacts": 128137,
+        "est_mem_mb": 726.6,
+        "est_time_s": 89.7
+      },
+      {
+        "case": "lhs00_024",
+        "cohort": "lhs",
+        "contacts": 127428,
+        "est_mem_mb": 723.4,
+        "est_time_s": 89.2
+      },
+      {
+        "case": "lhs00_069",
+        "cohort": "lhs",
+        "contacts": 126999,
+        "est_mem_mb": 721.5,
+        "est_time_s": 88.9
+      },
+      {
+        "case": "lhsx_052",
+        "cohort": "lhsx",
+        "contacts": 124407,
+        "est_mem_mb": 709.8,
+        "est_time_s": 87.1
+      },
+      {
+        "case": "lhs00_073",
+        "cohort": "lhs",
+        "contacts": 122940,
+        "est_mem_mb": 703.2,
+        "est_time_s": 86.1
+      },
+      {
+        "case": "lhs00_114",
+        "cohort": "lhs",
+        "contacts": 122313,
+        "est_mem_mb": 700.4,
+        "est_time_s": 85.6
+      },
+      {
+        "case": "lhsx_009",
+        "cohort": "lhsx",
+        "contacts": 119773,
+        "est_mem_mb": 689.0,
+        "est_time_s": 83.8
+      },
+      {
+        "case": "lhsx_037",
+        "cohort": "lhsx",
+        "contacts": 115946,
+        "est_mem_mb": 671.8,
+        "est_time_s": 81.2
+      },
+      {
+        "case": "lhsx_063",
+        "cohort": "lhsx",
+        "contacts": 114978,
+        "est_mem_mb": 667.4,
+        "est_time_s": 80.5
+      },
+      {
+        "case": "lhs00_014",
+        "cohort": "lhs",
+        "contacts": 112327,
+        "est_mem_mb": 655.5,
+        "est_time_s": 78.6
+      },
+      {
+        "case": "lhsx_013",
+        "cohort": "lhsx",
+        "contacts": 110913,
+        "est_mem_mb": 649.1,
+        "est_time_s": 77.6
+      },
+      {
+        "case": "lhsx_024",
+        "cohort": "lhsx",
+        "contacts": 109808,
+        "est_mem_mb": 644.1,
+        "est_time_s": 76.9
+      },
+      {
+        "case": "lhs00_065",
+        "cohort": "lhs",
+        "contacts": 103207,
+        "est_mem_mb": 614.4,
+        "est_time_s": 72.2
+      },
+      {
+        "case": "lhs00_067",
+        "cohort": "lhs",
+        "contacts": 99308,
+        "est_mem_mb": 596.9,
+        "est_time_s": 69.5
+      },
+      {
+        "case": "lhs00_059",
+        "cohort": "lhs",
+        "contacts": 97886,
+        "est_mem_mb": 590.5,
+        "est_time_s": 68.5
+      },
+      {
+        "case": "lhs00_036",
+        "cohort": "lhs",
+        "contacts": 96945,
+        "est_mem_mb": 586.3,
+        "est_time_s": 67.9
+      },
+      {
+        "case": "lhsx_002",
+        "cohort": "lhsx",
+        "contacts": 95539,
+        "est_mem_mb": 579.9,
+        "est_time_s": 66.9
+      },
+      {
+        "case": "lhsx_018",
+        "cohort": "lhsx",
+        "contacts": 94921,
+        "est_mem_mb": 577.1,
+        "est_time_s": 66.4
+      },
+      {
+        "case": "lhs00_117",
+        "cohort": "lhs",
+        "contacts": 93763,
+        "est_mem_mb": 571.9,
+        "est_time_s": 65.6
+      },
+      {
+        "case": "lhs00_110",
+        "cohort": "lhs",
+        "contacts": 93321,
+        "est_mem_mb": 569.9,
+        "est_time_s": 65.3
+      },
+      {
+        "case": "lhs00_022",
+        "cohort": "lhs",
+        "contacts": 93255,
+        "est_mem_mb": 569.6,
+        "est_time_s": 65.3
+      },
+      {
+        "case": "lhs00_040",
+        "cohort": "lhs",
+        "contacts": 92234,
+        "est_mem_mb": 565.1,
+        "est_time_s": 64.6
+      },
+      {
+        "case": "lhs00_109",
+        "cohort": "lhs",
+        "contacts": 87479,
+        "est_mem_mb": 543.7,
+        "est_time_s": 61.2
+      },
+      {
+        "case": "lhsx_004",
+        "cohort": "lhsx",
+        "contacts": 85339,
+        "est_mem_mb": 534.0,
+        "est_time_s": 59.7
+      },
+      {
+        "case": "lhsx_035",
+        "cohort": "lhsx",
+        "contacts": 84700,
+        "est_mem_mb": 531.1,
+        "est_time_s": 59.3
+      },
+      {
+        "case": "lhs00_003",
+        "cohort": "lhs",
+        "contacts": 84481,
+        "est_mem_mb": 530.2,
+        "est_time_s": 59.1
+      },
+      {
+        "case": "lhsx_012",
+        "cohort": "lhsx",
+        "contacts": 82331,
+        "est_mem_mb": 520.5,
+        "est_time_s": 57.6
+      },
+      {
+        "case": "lhs00_017",
+        "cohort": "lhs",
+        "contacts": 82020,
+        "est_mem_mb": 519.1,
+        "est_time_s": 57.4
+      },
+      {
+        "case": "lhsx_048",
+        "cohort": "lhsx",
+        "contacts": 80034,
+        "est_mem_mb": 510.2,
+        "est_time_s": 56.0
+      },
+      {
+        "case": "lhs00_056",
+        "cohort": "lhs",
+        "contacts": 77534,
+        "est_mem_mb": 498.9,
+        "est_time_s": 54.3
+      },
+      {
+        "case": "lhs00_054",
+        "cohort": "lhs",
+        "contacts": 76680,
+        "est_mem_mb": 495.1,
+        "est_time_s": 53.7
+      },
+      {
+        "case": "lhs00_092",
+        "cohort": "lhs",
+        "contacts": 73242,
+        "est_mem_mb": 479.6,
+        "est_time_s": 51.3
+      },
+      {
+        "case": "lhs00_058",
+        "cohort": "lhs",
+        "contacts": 73226,
+        "est_mem_mb": 479.5,
+        "est_time_s": 51.3
+      },
+      {
+        "case": "lhs00_011",
+        "cohort": "lhs",
+        "contacts": 72460,
+        "est_mem_mb": 476.1,
+        "est_time_s": 50.7
+      },
+      {
+        "case": "lhs00_068",
+        "cohort": "lhs",
+        "contacts": 70896,
+        "est_mem_mb": 469.0,
+        "est_time_s": 49.6
+      },
+      {
+        "case": "lhs00_002",
+        "cohort": "lhs",
+        "contacts": 69786,
+        "est_mem_mb": 464.0,
+        "est_time_s": 48.9
+      },
+      {
+        "case": "lhs00_043",
+        "cohort": "lhs",
+        "contacts": 69647,
+        "est_mem_mb": 463.4,
+        "est_time_s": 48.8
+      },
+      {
+        "case": "lhs00_118",
+        "cohort": "lhs",
+        "contacts": 69569,
+        "est_mem_mb": 463.1,
+        "est_time_s": 48.7
+      },
+      {
+        "case": "lhsx_026",
+        "cohort": "lhsx",
+        "contacts": 68539,
+        "est_mem_mb": 458.4,
+        "est_time_s": 48.0
+      },
+      {
+        "case": "lhs00_015",
+        "cohort": "lhs",
+        "contacts": 66921,
+        "est_mem_mb": 451.1,
+        "est_time_s": 46.8
+      },
+      {
+        "case": "lhs00_107",
+        "cohort": "lhs",
+        "contacts": 62042,
+        "est_mem_mb": 429.2,
+        "est_time_s": 43.4
+      },
+      {
+        "case": "lhs00_078",
+        "cohort": "lhs",
+        "contacts": 60333,
+        "est_mem_mb": 421.5,
+        "est_time_s": 42.2
+      },
+      {
+        "case": "lhs00_072",
+        "cohort": "lhs",
+        "contacts": 59236,
+        "est_mem_mb": 416.6,
+        "est_time_s": 41.5
+      },
+      {
+        "case": "lhs00_079",
+        "cohort": "lhs",
+        "contacts": 57163,
+        "est_mem_mb": 407.2,
+        "est_time_s": 40.0
+      },
+      {
+        "case": "lhs00_075",
+        "cohort": "lhs",
+        "contacts": 56983,
+        "est_mem_mb": 406.4,
+        "est_time_s": 39.9
+      },
+      {
+        "case": "lhs00_097",
+        "cohort": "lhs",
+        "contacts": 56716,
+        "est_mem_mb": 405.2,
+        "est_time_s": 39.7
+      },
+      {
+        "case": "lhsx_007",
+        "cohort": "lhsx",
+        "contacts": 53623,
+        "est_mem_mb": 391.3,
+        "est_time_s": 37.5
+      },
+      {
+        "case": "lhs00_049",
+        "cohort": "lhs",
+        "contacts": 52843,
+        "est_mem_mb": 387.8,
+        "est_time_s": 37.0
+      },
+      {
+        "case": "lhs00_127",
+        "cohort": "lhs",
+        "contacts": 52381,
+        "est_mem_mb": 385.7,
+        "est_time_s": 36.7
+      },
+      {
+        "case": "lhs00_090",
+        "cohort": "lhs",
+        "contacts": 50980,
+        "est_mem_mb": 379.4,
+        "est_time_s": 35.7
+      },
+      {
+        "case": "lhs00_083",
+        "cohort": "lhs",
+        "contacts": 49650,
+        "est_mem_mb": 373.4,
+        "est_time_s": 34.8
+      },
+      {
+        "case": "lhs00_026",
+        "cohort": "lhs",
+        "contacts": 47961,
+        "est_mem_mb": 365.8,
+        "est_time_s": 33.6
+      },
+      {
+        "case": "lhs00_021",
+        "cohort": "lhs",
+        "contacts": 47386,
+        "est_mem_mb": 363.2,
+        "est_time_s": 33.2
+      },
+      {
+        "case": "lhs00_082",
+        "cohort": "lhs",
+        "contacts": 47300,
+        "est_mem_mb": 362.9,
+        "est_time_s": 33.1
+      },
+      {
+        "case": "lhs00_018",
+        "cohort": "lhs",
+        "contacts": 46151,
+        "est_mem_mb": 357.7,
+        "est_time_s": 32.3
+      },
+      {
+        "case": "lhs00_062",
+        "cohort": "lhs",
+        "contacts": 40061,
+        "est_mem_mb": 330.3,
+        "est_time_s": 28.0
+      },
+      {
+        "case": "lhs00_038",
+        "cohort": "lhs",
+        "contacts": 38306,
+        "est_mem_mb": 322.4,
+        "est_time_s": 26.8
+      },
+      {
+        "case": "lhs00_099",
+        "cohort": "lhs",
+        "contacts": 36324,
+        "est_mem_mb": 313.5,
+        "est_time_s": 25.4
+      },
+      {
+        "case": "lhs00_063",
+        "cohort": "lhs",
+        "contacts": 35658,
+        "est_mem_mb": 310.5,
+        "est_time_s": 25.0
+      },
+      {
+        "case": "lhs00_116",
+        "cohort": "lhs",
+        "contacts": 34864,
+        "est_mem_mb": 306.9,
+        "est_time_s": 24.4
+      },
+      {
+        "case": "lhs00_047",
+        "cohort": "lhs",
+        "contacts": 34671,
+        "est_mem_mb": 306.0,
+        "est_time_s": 24.3
+      },
+      {
+        "case": "lhs00_060",
+        "cohort": "lhs",
+        "contacts": 34633,
+        "est_mem_mb": 305.8,
+        "est_time_s": 24.2
+      },
+      {
+        "case": "lhs00_020",
+        "cohort": "lhs",
+        "contacts": 33732,
+        "est_mem_mb": 301.8,
+        "est_time_s": 23.6
+      },
+      {
+        "case": "lhs00_123",
+        "cohort": "lhs",
+        "contacts": 32669,
+        "est_mem_mb": 297.0,
+        "est_time_s": 22.9
+      },
+      {
+        "case": "lhs00_115",
+        "cohort": "lhs",
+        "contacts": 32518,
+        "est_mem_mb": 296.3,
+        "est_time_s": 22.8
+      },
+      {
+        "case": "lhs00_008",
+        "cohort": "lhs",
+        "contacts": 31388,
+        "est_mem_mb": 291.2,
+        "est_time_s": 22.0
+      },
+      {
+        "case": "lhs00_077",
+        "cohort": "lhs",
+        "contacts": 31342,
+        "est_mem_mb": 291.0,
+        "est_time_s": 21.9
+      },
+      {
+        "case": "lhs00_124",
+        "cohort": "lhs",
+        "contacts": 29904,
+        "est_mem_mb": 284.6,
+        "est_time_s": 20.9
+      },
+      {
+        "case": "lhs00_016",
+        "cohort": "lhs",
+        "contacts": 29894,
+        "est_mem_mb": 284.5,
+        "est_time_s": 20.9
+      },
+      {
+        "case": "lhs00_108",
+        "cohort": "lhs",
+        "contacts": 29597,
+        "est_mem_mb": 283.2,
+        "est_time_s": 20.7
+      },
+      {
+        "case": "lhs00_037",
+        "cohort": "lhs",
+        "contacts": 28000,
+        "est_mem_mb": 276.0,
+        "est_time_s": 19.6
+      },
+      {
+        "case": "lhs00_122",
+        "cohort": "lhs",
+        "contacts": 26768,
+        "est_mem_mb": 270.5,
+        "est_time_s": 18.7
+      },
+      {
+        "case": "lhs00_007",
+        "cohort": "lhs",
+        "contacts": 24999,
+        "est_mem_mb": 262.5,
+        "est_time_s": 17.5
+      },
+      {
+        "case": "lhs00_045",
+        "cohort": "lhs",
+        "contacts": 24526,
+        "est_mem_mb": 260.4,
+        "est_time_s": 17.2
+      },
+      {
+        "case": "lhs00_119",
+        "cohort": "lhs",
+        "contacts": 21212,
+        "est_mem_mb": 245.5,
+        "est_time_s": 14.8
+      },
+      {
+        "case": "lhs00_087",
+        "cohort": "lhs",
+        "contacts": 21142,
+        "est_mem_mb": 245.1,
+        "est_time_s": 14.8
+      },
+      {
+        "case": "lhs00_105",
+        "cohort": "lhs",
+        "contacts": 19809,
+        "est_mem_mb": 239.1,
+        "est_time_s": 13.9
+      },
+      {
+        "case": "lhs00_091",
+        "cohort": "lhs",
+        "contacts": 15511,
+        "est_mem_mb": 219.8,
+        "est_time_s": 10.9
+      },
+      {
+        "case": "lhs00_019",
+        "cohort": "lhs",
+        "contacts": 14760,
+        "est_mem_mb": 216.4,
+        "est_time_s": 10.3
+      },
+      {
+        "case": "lhs00_126",
+        "cohort": "lhs",
+        "contacts": 13751,
+        "est_mem_mb": 211.9,
+        "est_time_s": 9.6
+      },
+      {
+        "case": "lhs00_055",
+        "cohort": "lhs",
+        "contacts": 12254,
+        "est_mem_mb": 205.1,
+        "est_time_s": 8.6
+      },
+      {
+        "case": "lhs00_111",
+        "cohort": "lhs",
+        "contacts": 8076,
+        "est_mem_mb": 186.3,
+        "est_time_s": 5.7
+      },
+      {
+        "case": "lhs00_012",
+        "cohort": "lhs",
+        "contacts": 7556,
+        "est_mem_mb": 184.0,
+        "est_time_s": 5.3
+      },
+      {
+        "case": "lhs00_041",
+        "cohort": "lhs",
+        "contacts": 6046,
+        "est_mem_mb": 177.2,
+        "est_time_s": 4.2
+      },
+      {
+        "case": "lhs00_128",
+        "cohort": "lhs",
+        "contacts": 4616,
+        "est_mem_mb": 170.8,
+        "est_time_s": 3.2
+      }
+    ],
+    "order": "cost"
+  },
+  "retries": []
+}

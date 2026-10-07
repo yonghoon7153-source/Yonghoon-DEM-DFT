@@ -1,0 +1,6 @@
+# lhs00_777: 2-type 합성 (양성 대조)
+variable r_AM equal 0.0005
+variable r_SE equal 0.0005
+fix m1 all property/global youngsModulus peratomtype 1.4e8 0.135e7
+fix pts1 all particletemplate/sphere 15485863 atom_type 1 density constant 4800 radius constant ${r_AM}
+fix pts2 all particletemplate/sphere 32452843 atom_type 2 density constant 2000 radius constant ${r_SE}

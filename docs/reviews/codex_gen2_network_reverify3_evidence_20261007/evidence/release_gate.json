@@ -1,0 +1,166 @@
+{
+  "scope": "Drive real build_v13/check_v13 with author synthetic handover fixture.\nOnly upstream tau-row re-read is a controlled stub, equally in control/mutants;\nwe do NOT claim a real 194 batch passed. Gate and release code are unmodified.\n",
+  "cases": [
+    {
+      "label": "pass_control",
+      "accepted": true,
+      "check": [],
+      "report": {
+        "out_dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\gen2_network_reverify3_20261007\\evidence\\release_gate\\pass_control\\output",
+        "dry_run": false,
+        "generation": {
+          "lhs": "g2",
+          "lhsx": "g2"
+        },
+        "missing_columns": {},
+        "warnings": [],
+        "tau_reread": "performed",
+        "n_files": 21
+      },
+      "tau_stub_calls": [
+        "lhs",
+        "lhsx"
+      ]
+    },
+    {
+      "label": "explicit_failure",
+      "accepted": false,
+      "error": "ReleaseError: ⓪b 다시 읽기 기록 C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\gen2_network_reverify3_20261007\\evidence\\release_gate\\explicit_failure\\reread.json = n_fail 1 · 기대 세대 'g2' — 세대 2 등록 §5-3 (rc 0 · g2 가 아니면 인계하지 않는다)",
+      "tau_stub_calls": []
+    },
+    {
+      "label": "absent_reread",
+      "accepted": true,
+      "check": [],
+      "report": {
+        "out_dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\gen2_network_reverify3_20261007\\evidence\\release_gate\\absent_reread\\output",
+        "dry_run": false,
+        "generation": {
+          "lhs": "g2",
+          "lhsx": "g2"
+        },
+        "missing_columns": {},
+        "warnings": [
+          "배치 뿌리에 reread.json 이 없다 — 세대 2 등록 §5 의 ⓪ 봉인 감사 · ⓪b 다시 읽기 (rc 0) 를 먼저 · 이 빌드는 그 기록을 보지 못했다"
+        ],
+        "tau_reread": "performed",
+        "n_files": 21
+      },
+      "tau_stub_calls": [
+        "lhs",
+        "lhsx"
+      ]
+    },
+    {
+      "label": "invalid_reread",
+      "accepted": true,
+      "check": [],
+      "report": {
+        "out_dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\gen2_network_reverify3_20261007\\evidence\\release_gate\\invalid_reread\\output",
+        "dry_run": false,
+        "generation": {
+          "lhs": "g2",
+          "lhsx": "g2"
+        },
+        "missing_columns": {},
+        "warnings": [
+          "⓪b 다시 읽기 기록 reread.json 의 n_fail · expected_generation 을 못 읽었다 (None · None) — 사람이 rc 0 을 확인할 것"
+        ],
+        "tau_reread": "performed",
+        "n_files": 21
+      },
+      "tau_stub_calls": [
+        "lhs",
+        "lhsx"
+      ]
+    },
+    {
+      "label": "empty_reread",
+      "accepted": true,
+      "check": [],
+      "report": {
+        "out_dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\gen2_network_reverify3_20261007\\evidence\\release_gate\\empty_reread\\output",
+        "dry_run": false,
+        "generation": {
+          "lhs": "g2",
+          "lhsx": "g2"
+        },
+        "missing_columns": {},
+        "warnings": [
+          "⓪b 다시 읽기 기록 reread.json 의 n_fail · expected_generation 을 못 읽었다 (None · None) — 사람이 rc 0 을 확인할 것"
+        ],
+        "tau_reread": "performed",
+        "n_files": 21
+      },
+      "tau_stub_calls": [
+        "lhs",
+        "lhsx"
+      ]
+    },
+    {
+      "label": "null_nfail",
+      "accepted": true,
+      "check": [],
+      "report": {
+        "out_dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\gen2_network_reverify3_20261007\\evidence\\release_gate\\null_nfail\\output",
+        "dry_run": false,
+        "generation": {
+          "lhs": "g2",
+          "lhsx": "g2"
+        },
+        "missing_columns": {},
+        "warnings": [
+          "⓪b 다시 읽기 기록 reread.json 의 n_fail · expected_generation 을 못 읽었다 (None · 'g2') — 사람이 rc 0 을 확인할 것"
+        ],
+        "tau_reread": "performed",
+        "n_files": 21
+      },
+      "tau_stub_calls": [
+        "lhs",
+        "lhsx"
+      ]
+    },
+    {
+      "label": "refused_audit",
+      "accepted": true,
+      "check": [],
+      "report": {
+        "out_dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\gen2_network_reverify3_20261007\\evidence\\release_gate\\refused_audit\\output",
+        "dry_run": false,
+        "generation": {
+          "lhs": "g2",
+          "lhsx": "g2"
+        },
+        "missing_columns": {},
+        "warnings": [],
+        "tau_reread": "performed",
+        "n_files": 21
+      },
+      "tau_stub_calls": [
+        "lhs",
+        "lhsx"
+      ]
+    },
+    {
+      "label": "unsealed_audit",
+      "accepted": true,
+      "check": [],
+      "report": {
+        "out_dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\gen2_network_reverify3_20261007\\evidence\\release_gate\\unsealed_audit\\output",
+        "dry_run": false,
+        "generation": {
+          "lhs": "g2",
+          "lhsx": "g2"
+        },
+        "missing_columns": {},
+        "warnings": [],
+        "tau_reread": "performed",
+        "n_files": 21
+      },
+      "tau_stub_calls": [
+        "lhs",
+        "lhsx"
+      ]
+    }
+  ]
+}

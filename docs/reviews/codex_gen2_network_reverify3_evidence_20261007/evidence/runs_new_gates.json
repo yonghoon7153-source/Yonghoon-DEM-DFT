@@ -1,0 +1,17 @@
+[
+  {
+    "probe": "new_gates",
+    "rc": 0,
+    "seconds": 5.702999999979511,
+    "tail": [
+      "RELEASE absent True",
+      "RELEASE invalid_json True",
+      "RELEASE null True",
+      "RELEASE empty_object True",
+      "RELEASE n_fail_null True",
+      "RELEASE failed False",
+      "RELEASE failed_audit True",
+      "RELEASE refused_audit True"
+    ]
+  }
+]

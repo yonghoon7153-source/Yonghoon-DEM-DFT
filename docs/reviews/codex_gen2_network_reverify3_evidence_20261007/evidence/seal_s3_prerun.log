@@ -1,0 +1,148 @@
+  ✓ ① raw 없음 → PENDING_BASELINE
+  ✓ ①b 망 없음 → NO_NETWORK
+  ✓ ①c 해 없음 → OLD_NONE
+  ✓ ①d σ=0 → OLD_ZERO (상대차 정의역 밖)
+  ✓ ①e 음수도 OLD_ZERO 쪽 (σ_old > 0 만 정의역)
+  ✓ ①f NaN → OLD_NONFINITE
+  ✓ ①g inf → OLD_NONFINITE
+  ✓ ①h 정상 → B_ch
+  ✓ ★①i raw 없음이 해 있음보다 **먼저** 걸린다 (섞으면 R3-01 의 혼동)
+  ✓ ② n=130 이면 65·66번째
+  ✓ ②b n=127 이면 64번째
+  ✓ ②c n=30 이면 15·16번째 (옛 분석이 쓰던 자리)
+  ✓ ②d n=0 이면 자리 없음
+  ✓ ★②e 옛 자리를 새 집합에 쓰지 않는다 (130 ≠ 30 의 자리)
+⛔ 봉인 거부 (너무 이르다) — 계약 §5-v4 D-3 의 최초 허용일은 2026-09-17 (KST 00:00) 이고 지금은 2026-09-16 12:00 UTC+09:00 다.
+   ⚠ lhs00_034·089·098 은 마감 안에 **못 들어온다** (완주 예상 09-19 12:41 KST).
+      저자 결정 2026-09-15 (계약 §D-3-c) = **(a) 마감 유지 + §D-4 addendum** —
+      127 로 봉인해 실런하고, 셋은 09-19 에 돌려 **정의역 밖 addendum** 으로 붙인다.
+   --dry-run 은 언제든 된다.  ⛔ 이 날짜를 결과가 아쉬워서 앞당기지 말 것.
+  ✓ ③ 허용일 **전** 은 rc=2 로 거부 (고정 날짜 주입)   now=2026-09-16T12:00:00+09:00
+  ✓ ③b 거부됐으면 파일을 쓰지 않았다
+⛔ 봉인 거부 (마감이 지났다) — 저자가 고정한 수신 종료는 2026-09-17 23:59 UTC+09:00 이고 지금은 2026-09-18 00:00 UTC+09:00 다.
+   ⛔ 마감 후 봉인은 "결과를 더 본 뒤 시점을 고르는 것" 이라 사전등록을 훼손한다.
+   ⇒ 마감 **전에** `--freeze-inventory` 로 수신을 동결해 뒀다면 `--inventory` 로
+      계산을 마감 뒤에 끝내도 된다 (AREA5-09).  아니면 저자가 원장에 먼저 적는다.
+  ✓ ③c ★★ 마감 **후** 도 rc=2 로 거부 (R4-07 — 양쪽으로 닫힌 창)   now=2026-09-18T00:00:00+09:00
+  ✓ ③d 마감 후에도 파일을 쓰지 않았다
+  ⓘ 등록 밖 1개는 주 코호트에서 **제외**한다: ['perc']
+
+⛔ 봉인 거부 — 코드 신원을 git 에서 재현할 수 없다: `code_bundle.git_sha` 가 비었다 — git 이 실패했거나 손으로 지운 것이다.  커밋 신원이 없으면 "이 코드에서 났다" 를 **복원할 수 없다** (fail-closed)
+   ⇒ 수치 모듈을 고쳤으면 **커밋하고** 다시 돌린다 (stash 도 된다).
+      봉인은 "이 커밋의 이 바이트로 냈다" 를 주장하므로, git 에 없는 바이트로는
+      그 주장을 **아무도 검증할 수 없다** — 그래서 통과가 아니라 거부다.
+  ✗ ③e ★★ 창 안에서는 날짜가 통과하고 **내용**이 막는다 (빈 B_ch → rc=3)   now=2026-09-17T12:00:00+09:00 rc=2
+  ✓ ③f 빈 봉인도 파일을 쓰지 않았다 (rc=3 인데 산출물이 남으면 최악)
+  ✗ ③g ★ 세 시각이 서로 다른 rc 를 낸다 (검사가 공허하지 않다)
+  ⓘ 등록 밖 1개는 주 코호트에서 **제외**한다: ['perc']
+
+⛔ 봉인 거부 — 코드 신원을 git 에서 재현할 수 없다: `code_bundle.git_sha` 가 비었다 — git 이 실패했거나 손으로 지운 것이다.  커밋 신원이 없으면 "이 코드에서 났다" 를 **복원할 수 없다** (fail-closed)
+   ⇒ 수치 모듈을 고쳤으면 **커밋하고** 다시 돌린다 (stash 도 된다).
+      봉인은 "이 커밋의 이 바이트로 냈다" 를 주장하므로, git 에 없는 바이트로는
+      그 주장을 **아무도 검증할 수 없다** — 그래서 통과가 아니라 거부다.
+  ✗ ③h --dry-run 은 창 밖에서도 돌고 **쓰지 않는다**   rc=2
+  ✓ ③i ★ 이 도구는 **발행을 막을 뿐 S3 시작을 막지 않는다** (R4-10 이 반증한 주장)   봉인을 요구하는 러너가 없다 — 기계적 차단은 별건으로 만들어야 한다
+  ✓ ⑥ ★★ `perc` 는 주 코호트 **밖**이다 (옛 판은 131개를 순회했다)
+  ✓ ⑥b ★ 설계 ID 가 다 안 오면 거부 (등록 집합 불완전)
+  ✓ ⑥c ★ 설계 CSV 가 없으면 거부 (빈 설계로 n=0 봉인이 나가던 자리)
+  ✓ ⑥d ★ 빈 설계면 거부 (0개를 등록 집합으로 받지 않는다)
+  ✓ ⑦ ★ 지문이 같으면 통과
+  ✓ ⑦b ★★ 같은 경로인데 **내용이 바뀌면** 잡는다 (봉인 지문 ≠ 실제)
+  ✓ ⑦c ★★ loader 가 **다른 step** 을 읽으면 잡는다 (step 200 을 끼워 넣던 반례)
+  ✓ ⑦d ★ TSV 에 지문이 없으면 통과가 아니다 (모르는 것은 거부)
+  ✓ ⑧ ★ 중복 ID 는 거부 (마지막 행이 덮어쓰면 대상이 조용히 바뀐다)
+  ✓ ⑨ ★★ `ERROR` 가 `NO_NETWORK` 와 별개 라벨이다 (기술 실패 ≠ 물리 상태)
+  ✓ ⑩ ★★ 채널 기본값이 정본 키와 같다 (옛 `ion`/`electron` 은 KeyError 였다)
+  ✓ ⑩b ★ 봉인 도구가 망을 **정본 경로**로 만든다 (사본을 안 쓴다)
+  Percolating component: 3 nodes, 2 edges
+  Solve: spsolve
+  Percolating component: 3 nodes, 2 edges
+  Solve: spsolve
+  Percolating component: 6 nodes, 4 edges
+  Solve: spsolve
+
+⛔ 봉인 거부 — 코드 신원을 git 에서 재현할 수 없다: `code_bundle.git_sha` 가 비었다 — git 이 실패했거나 손으로 지운 것이다.  커밋 신원이 없으면 "이 코드에서 났다" 를 **복원할 수 없다** (fail-closed)
+   ⇒ 수치 모듈을 고쳤으면 **커밋하고** 다시 돌린다 (stash 도 된다).
+      봉인은 "이 커밋의 이 바이트로 냈다" 를 주장하므로, git 에 없는 바이트로는
+      그 주장을 **아무도 검증할 수 없다** — 그래서 통과가 아니라 거부다.
+  ✗ ⑪ ★★★ 정상 raw 는 **봉인이 나간다** (rc=0) — 거부만 하는 도구가 아니다   rc=2
+  ✗ ⑪b ★★ 세 채널 전부 `B_ch` 에 그 ID 가 들어간다 (옛 판은 셋 다 0개였다)   {'ionic': None, 'electronic': None, 'thermal': None}
+  ✗ ⑪c ★ 파일 왕복 — 봉인이 디스크에 남고 다시 읽힌다
+  ✗ ⑪d ★ 무엇을 **실제로 읽었는지** 가 봉인에 남는다 (R4-02)
+  ✗ ⑪e ★ 고정 마감이 봉인 문서에 박힌다 (R4-07)
+
+⛔ 봉인 거부 — 코드 신원을 git 에서 재현할 수 없다: `code_bundle.git_sha` 가 비었다 — git 이 실패했거나 손으로 지운 것이다.  커밋 신원이 없으면 "이 코드에서 났다" 를 **복원할 수 없다** (fail-closed)
+   ⇒ 수치 모듈을 고쳤으면 **커밋하고** 다시 돌린다 (stash 도 된다).
+      봉인은 "이 커밋의 이 바이트로 냈다" 를 주장하므로, git 에 없는 바이트로는
+      그 주장을 **아무도 검증할 수 없다** — 그래서 통과가 아니라 거부다.
+  ✗ ⑪f ★★ atom 지문 한 글자만 틀려도 봉인이 **안** 나간다 (rc=3, 판별력)   rc=2
+  Percolating component: 3 nodes, 2 edges
+  Solve: spsolve
+  Percolating component: 3 nodes, 2 edges
+  Solve: spsolve
+  Percolating component: 6 nodes, 4 edges
+  Solve: spsolve
+
+⛔ 봉인 거부 — 코드 신원을 git 에서 재현할 수 없다: `code_bundle.git_sha` 가 비었다 — git 이 실패했거나 손으로 지운 것이다.  커밋 신원이 없으면 "이 코드에서 났다" 를 **복원할 수 없다** (fail-closed)
+   ⇒ 수치 모듈을 고쳤으면 **커밋하고** 다시 돌린다 (stash 도 된다).
+      봉인은 "이 커밋의 이 바이트로 냈다" 를 주장하므로, git 에 없는 바이트로는
+      그 주장을 **아무도 검증할 수 없다** — 그래서 통과가 아니라 거부다.
+  ✗ ⑪g ★ 재봉인은 기존 것을 **조용히 덮지 않고** 불변 사본을 남긴다
+  ✗ ⑫ ★★ 읽은 파일의 **실제 바이트 SHA** 가 봉인에 들어간다 (러너가 이걸로 재검증한다)   None
+  ✗ ⑫b ★★ `B_ch` 케이스의 **baseline σ 수치**가 봉인에 들어간다 — 라벨만 적으면 "positive 가 다른 positive 로 바뀐 것"을 소비 쪽이 못 잡는다 (AREA5-03 ⓓ)   None
+  ✗ ⑫c ★ 수치 모듈의 지문 묶음이 봉인에 들어간다 — "HEAD = 기록 SHA" 만으로는 dirty 를 못 잡는다   []
+  ✗ ⑫d ★★ 실제로 발행된 봉인의 `code_bundle` 이 **자기 커밋의 트리와 일치**한다   `code_bundle` 이 없다
+  ✗ ⑫e ★★ `git_sha` 만 옛 커밋으로 바꾸면 **거부** — 바이트는 그대로다 ()
+  ✓ ⑫f ★ 빈 `git_sha` 는 통과가 아니라 **거부** (git 이 죽으면 그렇게 된다)
+  ✗ ⑫g ★ dirty 봉인은 **거부** — 그 바이트는 git 에 없어 재현할 수 없다
+  ✓ ⑫h ★ porcelain 파싱이 **첫 줄 경로를 안 먹는다** (옛: cripts/network_conductivity.py)
+  ✗ ⑫i ★ `git status` 실패 표시가 들어오면 봉인이 **거부**된다 (옛 판은 깨끗으로 읽었다)
+  ✗ ⑬ ★★ `--now` 로 만든 봉인은 `test_only` 다 (러너가 생산 판정에서 거부한다)   test_only=None
+  수신 동결: RAW_OK 1 / 코호트 1 · 지문 어긋남 0  ⚠ test_only
+→ C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\gen2_network_reverify3_20261007\tmp\tmpmise8ar5\inv.json
+  ✓ ⑭ ★★ 수신 inventory 를 **σ 를 풀지 않고** 동결한다 (cutoff 기준 단계 분리)   rc=0 · n=1
+⛔ 봉인 거부 (마감이 지났다) — 저자가 고정한 수신 종료는 2026-09-17 23:59 UTC+09:00 이고 지금은 2026-09-18 09:00 UTC+09:00 다.
+   ⛔ 마감 후 봉인은 "결과를 더 본 뒤 시점을 고르는 것" 이라 사전등록을 훼손한다.
+   ⇒ 마감 **전에** `--freeze-inventory` 로 수신을 동결해 뒀다면 `--inventory` 로
+      계산을 마감 뒤에 끝내도 된다 (AREA5-09).  아니면 저자가 원장에 먼저 적는다.
+  ✓ ⑭b ★ 마감 뒤 동결은 거부 — 동결은 마감 **전에** 하는 일이다   rc=2
+  Percolating component: 3 nodes, 2 edges
+  Solve: spsolve
+  Percolating component: 3 nodes, 2 edges
+  Solve: spsolve
+  Percolating component: 6 nodes, 4 edges
+  Solve: spsolve
+
+⛔ 봉인 거부 — 코드 신원을 git 에서 재현할 수 없다: `code_bundle.git_sha` 가 비었다 — git 이 실패했거나 손으로 지운 것이다.  커밋 신원이 없으면 "이 코드에서 났다" 를 **복원할 수 없다** (fail-closed)
+   ⇒ 수치 모듈을 고쳤으면 **커밋하고** 다시 돌린다 (stash 도 된다).
+      봉인은 "이 커밋의 이 바이트로 냈다" 를 주장하므로, git 에 없는 바이트로는
+      그 주장을 **아무도 검증할 수 없다** — 그래서 통과가 아니라 거부다.
+  ✗ ⑭c ★★ 마감 **전에** 동결한 inventory 가 있으면 계산이 마감 뒤에 끝나도 발행된다 — "cutoff 이후에 계산이 끝났다는 이유만으로 cutoff 이전 원자료를 거부하지 않는다"   rc=2
+⛔ 봉인 거부 (마감이 지났다) — 저자가 고정한 수신 종료는 2026-09-17 23:59 UTC+09:00 이고 지금은 2026-09-18 09:00 UTC+09:00 다.
+   ⛔ 마감 후 봉인은 "결과를 더 본 뒤 시점을 고르는 것" 이라 사전등록을 훼손한다.
+   ⇒ 마감 **전에** `--freeze-inventory` 로 수신을 동결해 뒀다면 `--inventory` 로
+      계산을 마감 뒤에 끝내도 된다 (AREA5-09).  아니면 저자가 원장에 먼저 적는다.
+  ✓ ⑭d ★ 판별력: inventory 없이 마감 뒤면 여전히 rc=2 (창이 느슨해진 것이 아니다)   rc=2
+
+⛔ 봉인 거부 — 코드 신원을 git 에서 재현할 수 없다: `code_bundle.git_sha` 가 비었다 — git 이 실패했거나 손으로 지운 것이다.  커밋 신원이 없으면 "이 코드에서 났다" 를 **복원할 수 없다** (fail-closed)
+   ⇒ 수치 모듈을 고쳤으면 **커밋하고** 다시 돌린다 (stash 도 된다).
+      봉인은 "이 커밋의 이 바이트로 냈다" 를 주장하므로, git 에 없는 바이트로는
+      그 주장을 **아무도 검증할 수 없다** — 그래서 통과가 아니라 거부다.
+  ✗ ⑭e ★★ 동결 **뒤에** 원자료가 바뀌면 봉인이 안 나간다 (rc=3)   rc=2
+  ✓ ⑮ ★★ 소비자 수치 경로의 정적 닫힘 = 봉인 목록 (lens_geometry · se_material 포함 · 봉인 밖 0 · 분류 밖 0)   ['audit_constriction_deleted.py', 'extract_se_network_diagnostics.py', 'lens_geometry.py', 'network_conductivity.py', 'plastic_coverage.py', 'se_material.py']
+  ✓ ⑮b ★ 옛 네 모듈 목록이면 닫힘이 봉인 밖 둘 (lens_geometry · se_material) 을 낸다 (판별력 — 검사가 공허하지 않다)   ['lens_geometry.py', 'se_material.py']
+  ✓ ⑮c ★ 변이 — lens_geometry 사본에 모듈 수준 `import coating_presets` → 봉인 밖 · extract 사본 함수 안 import → 분류 밖 (둘 다 문제)   (['coating_presets.py'], [['extract_se_network_diagnostics.py', 'coating_presets.py']])
+  ✗ ⑮d ★★ 실제 import 관측 — 소비자 run_case (합성 원자료 · 세 채널 · 두 팔) 가 읽은 리포 모듈 ⊆ 봉인 목록 ∪ 봉인 · 소비 도구 · lens_geometry · se_material 이 실제로 읽혔다 · viewer3d_data 는 안 읽혔다 · 세 채널 σ_old 양수   {'밖': [], '관측': [], 'status': None, 'err': 'Traceback (most recent call last):\n  File "<string>", line 5, in <module>\n  File "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\gen2_network_reverify3_20261007\\source\\scripts\\network_conductivity.py", line 41, i
+Traceback (most recent call last):
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\gen2_network_reverify3_20261007\source\scripts\seal_s3_prerun.py", line 1206, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\gen2_network_reverify3_20261007\source\scripts\seal_s3_prerun.py", line 600, in main
+    return _selftest()
+           ^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\gen2_network_reverify3_20261007\source\scripts\seal_s3_prerun.py", line 1179, in _selftest
+    seal = build_seal(per, {'a': ('', True), 'b': ('', True), 'c': ('', False), 'd': ('', True)},
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\gen2_network_reverify3_20261007\source\scripts\seal_s3_prerun.py", line 458, in build_seal
+    raise ValueError(f'봉인 거부 — 코드 신원을 git 에서 재현할 수 없다: {_why}')
+ValueError: 봉인 거부 — 코드 신원을 git 에서 재현할 수 없다: `code_bundle.git_sha` 가 비었다 — git 이 실패했거나 손으로 지운 것이다.  커밋 신원이 없으면 "이 코드에서 났다" 를 **복원할 수 없다** (fail-closed)

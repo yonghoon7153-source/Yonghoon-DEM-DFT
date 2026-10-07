@@ -1,0 +1,28 @@
+{
+  "independent": {
+    "n": 194,
+    "ids_sha256": "a04282d7275bd8f92b0afb4ac8b045f72f3867ccebbb7813b530b3901fd7b3bf",
+    "raw_sha256_table_sha256": "da7c93f9a0887145ff171e381c8608cb79779d96aea5a595a25677dc361ef784",
+    "cohort_tsv_sha256": {
+      "lhs": "32f00daa8394188d1e72531fd7fda1a8b47a9c279be76311ae7f2afa024b2809",
+      "lhsx": "0b85e8589917c9a3936ce29e9f36326993985ddd113ef32353a4ff96d981cb45"
+    }
+  },
+  "runner": {
+    "n": 194,
+    "ids_sha256": "a04282d7275bd8f92b0afb4ac8b045f72f3867ccebbb7813b530b3901fd7b3bf",
+    "raw_sha256_table_sha256": "da7c93f9a0887145ff171e381c8608cb79779d96aea5a595a25677dc361ef784",
+    "missing_raw_sha": [],
+    "cohort_tsv_sha256": {
+      "lhs": "32f00daa8394188d1e72531fd7fda1a8b47a9c279be76311ae7f2afa024b2809",
+      "lhsx": "0b85e8589917c9a3936ce29e9f36326993985ddd113ef32353a4ff96d981cb45"
+    }
+  },
+  "equal": true,
+  "registered_values_present": true,
+  "counts": {
+    "lhs": 130,
+    "lhsx": 64
+  },
+  "scope": "Hashes of 194 pinned harvest metadata, not on-disk WSL raw byte verification"
+}
