@@ -1,0 +1,40 @@
+{
+  "kind": "S1O_V2_DOCUMENT_REREVIEW",
+  "date": "2026-10-07",
+  "decision": "ACCEPTED_FOR_EXISTING_SCOPED_OFFLINE_PREPARATION",
+  "clarification_status": {
+    "S1O-C1": "CLOSED_DOCUMENT_ONLY",
+    "S1O-C2": "CLOSED_DOCUMENT_ONLY",
+    "S1O-C3": "CLOSED_DOCUMENT_ONLY",
+    "S1O-C4": "CLOSED_DOCUMENT_ONLY"
+  },
+  "new_blockers": [],
+  "mandatory_document_revisions": [],
+  "source": {
+    "commit": "f2d6fa0a985b4f62cd44729ebea3051cccf48d97",
+    "blob": "e2c13bd12519739d34b7e8b40b6d49bb54a28afb",
+    "bytes": 14688,
+    "sha256": "16797cc16cf5b95bcef6e55d7f342b288300859c8d68df55bb7860a6a5e1b967"
+  },
+  "approval_scope_expanded": false,
+  "implementation_performed": false,
+  "implementation_accepted": false,
+  "native_ready": false,
+  "new_execution_approval": false,
+  "next": "Existing-authorized S1-O inactive offline preparation and static checks; submit and stop. Functional validation and P/M/N remain separate approvals.",
+  "reviewer_execution": {
+    "comsol": 0,
+    "jvm": 0,
+    "compile": 0,
+    "solve": 0,
+    "input_gate": 0,
+    "provided_program_execution": 0,
+    "provided_program_import": 0,
+    "synthetic_functional_tests": 0,
+    "policy_changes": 0,
+    "real_approval_creation": 0
+  },
+  "reviewer_text_check_note": "First extraction excluded a source-final LF. First record preserved; full quoted annex equality confirmed in ANNEX_BOUNDARY_CHECK.json.",
+  "recipient": null
+}
+

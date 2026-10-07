@@ -1,0 +1,13 @@
+{
+  "kind": "REVIEWER_FENCE_BOUNDARY_CORRECTION",
+  "first_result_preserved": "STATIC_COMPARISON.json",
+  "cause": "Initial extraction omitted the LF immediately before the closing fence. That LF belongs to the quoted source's final newline.",
+  "original_annex_bytes": 5669,
+  "included_span_bytes": 5669,
+  "full_original_annex_present_byte_for_byte": true,
+  "original_sha256": "6aeb870ad06c5fd9175491b938f8a61871b8e30adf48b0b69d1f31c5dfcb6389",
+  "included_span_sha256": "6aeb870ad06c5fd9175491b938f8a61871b8e30adf48b0b69d1f31c5dfcb6389",
+  "prior_other_checks_all_true": true,
+  "source_files_modified": false,
+  "candidate_tests_or_execution": 0
+}

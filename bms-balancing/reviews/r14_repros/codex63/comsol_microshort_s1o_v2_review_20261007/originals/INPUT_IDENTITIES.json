@@ -1,0 +1,27 @@
+[
+  {
+    "path": "C:\\Users\\Administrator\\Downloads\\COMSOL_MICROSHORT_S1O_SEND_TO_CODEX_v2_20261007.md",
+    "bytes": 14688,
+    "sha256": "16797cc16cf5b95bcef6e55d7f342b288300859c8d68df55bb7860a6a5e1b967"
+  },
+  {
+    "path": "C:\\Users\\Administrator\\Downloads\\COMSOL_MICROSHORT_S1O_SEND_TO_CODEX_20261007.md",
+    "bytes": 7732,
+    "sha256": "0fff3e1fffe29b7e448c5f61ea4c9464cbb59691d2a301ee2089ee9a54e47127"
+  },
+  {
+    "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\microshort_s1o_prereview_20261007\\S1O_CLARIFICATION_ADDENDUM_KO.md",
+    "bytes": 5669,
+    "sha256": "6aeb870ad06c5fd9175491b938f8a61871b8e30adf48b0b69d1f31c5dfcb6389"
+  },
+  {
+    "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\microshort_s1o_prereview_20261007\\REVIEW_KO.md",
+    "bytes": 11911,
+    "sha256": "b2fe3549693836108f76248b64054f51d12558e5f88e0b9bffb6df523ddbca87"
+  },
+  {
+    "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\microshort_s1o_prereview_20261007\\DECISION.json",
+    "bytes": 2106,
+    "sha256": "a1e28b644e062107afa45aa9fdff86fdfdd108c15c0bebd6de62c70abd6db340"
+  }
+]

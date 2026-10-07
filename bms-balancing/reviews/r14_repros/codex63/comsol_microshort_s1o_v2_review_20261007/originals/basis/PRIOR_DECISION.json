@@ -1,0 +1,77 @@
+{
+  "kind": "S1O_SEND_DOCUMENT_PREREVIEW",
+  "date": "2026-10-07",
+  "decision": "SUITABLE_FOR_SCOPED_OFFLINE_PREPARATION_WITH_CLARIFICATIONS",
+  "subject": "S1-O send document only, not implementation or execution result",
+  "source": {
+    "commit": "b54d77218d67faf3258908fb2ff5f4f5972e0cd2",
+    "blob": "4d68dca65e0868f634f61e163a846462c488b7b6",
+    "bytes": 7732,
+    "sha256": "0fff3e1fffe29b7e448c5f61ea4c9464cbb59691d2a301ee2089ee9a54e47127"
+  },
+  "clarifications": [
+    {
+      "id": "S1O-C1",
+      "lines": [
+        33
+      ],
+      "topic": "Inactive source versus structurally blocked execution"
+    },
+    {
+      "id": "S1O-C2",
+      "lines": [
+        31,
+        32
+      ],
+      "topic": "Configuration, initialization and completion readback boundaries"
+    },
+    {
+      "id": "S1O-C3",
+      "lines": [
+        36
+      ],
+      "topic": "Near-zero and initial-time sign/tolerance handling"
+    },
+    {
+      "id": "S1O-C4",
+      "lines": [
+        37
+      ],
+      "topic": "Cooperative stop versus owned Job forced termination"
+    }
+  ],
+  "implementation_performed": false,
+  "implementation_accepted": false,
+  "native_ready": false,
+  "new_native_authorization": false,
+  "prior_approval_quote_used_as_current_implementation_authority": false,
+  "new_run_requested": false,
+  "reviewer_execution": {
+    "comsol": 0,
+    "jvm": 0,
+    "compile": 0,
+    "solve": 0,
+    "input_gate": 0,
+    "supplied_program_execution": 0,
+    "supplied_module_import": 0,
+    "synthetic_functional_tests": 0,
+    "native_job_tests": 0,
+    "policy_changes": 0,
+    "actual_approval_file_creation": 0
+  },
+  "reviewer_activities": [
+    "Read local text and hashes",
+    "Read pinned repository documents",
+    "Read Microsoft official Job documentation",
+    "Author review documents",
+    "Verify and package review artifacts"
+  ],
+  "scope_limits": [
+    "No actual finite-sigma result accepted by this prereview",
+    "No empirical initialization or resource observations",
+    "No 960s or 12h extension",
+    "Normal/overall gate INCOMPLETE retained"
+  ],
+  "recipient": null
+}
+
