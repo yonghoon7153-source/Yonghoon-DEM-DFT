@@ -2391,7 +2391,7 @@ MUTANTS = [
      '    cm_bad = []  # 변이: 닫힘 · 자료형 결과를 버린다\n    if isinstance(cm, dict) and isinstance(cm.get("entries"), list):\n        ents = cm["entries"]\n',
      "test_g92_k04"),
     ("failed-envelope-is-not-rederived-g92", IO,                    # k04-env: 실패 envelope 로 재유도 · 재계산을 부르지 않는다
-     '    if ebad:\n        # ★ 92차 G92-N2 — 유효하지 않은 계획 envelope 로',
+     '    if v4_bad:\n        # ★ 92차 G92-N2 — 유효하지 않은 계획 envelope 로',          # 93차: 조건 이름 ebad → v4_bad
      '    if False:\n        # ★ 92차 G92-N2 — 유효하지 않은 계획 envelope 로',
      "test_g92_k04_env"),
     ("stage3-run-spec-is-derived-per-key-g92", IO,                  # k05: 투영 6 + env 직접 3 (한 루프 · 하나로 합침)
@@ -2414,6 +2414,11 @@ MUTANTS = [
      '    if not (eb == s3["exact_bounds_sha256"] == env["bank"]["exact_bounds_sha256"]):\n',
      '    if False:  # 변이: exact_bounds 3 자 대조를 끈다\n',
      "test_g92_k06 and exact_bounds"),
+    # ★ 93차 G93-N1 — v6 재유도 차단은 역사 reader 결과에 축 유도 실패 (schema v4 + check_envelope_v4) 를 더한다
+    ("v6-rederive-gate-includes-axis-failure-g93", IO,              # n1: 유효 v3 envelope 가 재유도로 넘어가지 않는다
+     '    v4_bad = list(ebad) + ([ax_err] if ax_err is not None else [])\n',
+     '    v4_bad = list(ebad)  # 변이: 축 유도 실패를 차단에 넣지 않는다 (92차 판본)\n',
+     "test_g93"),
 ]
 
 #: 여러 지점을 **함께** 되돌려야 관측되는 변이 (심층 방어라 하나만 지우면
@@ -7640,6 +7645,15 @@ EXPECT: dict = {
         "witness": {
             "tests/test_gate92_stage4_linkage.py::test_g92_k06_an_independently_recomputed_key_forged_alone_is_refused_by_its_own_check[exact_bounds_sha256]":
                 "AssertionError: 자기일관 위조가 후보_재유도 를 통과했다: 통과 · fail=[]",
+        }
+    },
+    "v6-rederive-gate-includes-axis-failure-g93": {
+        "fail": [
+            "tests/test_gate93_n1_v3_envelope.py::test_g93_n1_a_valid_v3_envelope_under_sig6_is_refused_without_rederivation",
+        ],
+        "witness": {
+            "tests/test_gate93_n1_v3_envelope.py::test_g93_n1_a_valid_v3_envelope_under_sig6_is_refused_without_rederivation":
+                "KeyError: 'parameter_order_sha256'",
         }
     },
 }

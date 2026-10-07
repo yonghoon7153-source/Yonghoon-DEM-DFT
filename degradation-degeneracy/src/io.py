@@ -1902,10 +1902,12 @@ def _stage3_checks(run_dir, spec0: dict) -> dict:
     #   env 직접 3. 기존 독립 재계산 키 (planned_id · pairing_design_sha256 · exact_bounds_sha256 · base_config_closure_* ·
     #   planned_envelope) 는 여기서 비교하지 않는다 — 각자의 기존 위치가 재계산으로 잰다 (§16-2 b′).
     ax_bad: list = []
+    ax_err = None
     try:
         ax = stage3_axis_from_envelope(env)
     except PreserveError as e:
-        ax_bad.append(f"planned_envelope 에서 stage3 축을 유도할 수 없다: {e}")
+        ax_err = f"planned_envelope 에서 stage3 축을 유도할 수 없다: {e}"
+        ax_bad.append(ax_err)
     else:
         st0 = env["stages"][0]
         want = {k: ax[k] for k in ("parameter_order_sha256", "roster_sha256", "provider_edges_sha256", "arm", "stage",
@@ -2018,9 +2020,13 @@ def _stage3_checks(run_dir, spec0: dict) -> dict:
             fits_df = pd.read_parquet(fp)
         except Exception:  # noqa: BLE001 — 읽기 실패는 별도 검사가 보고한다
             fits_df = None
-    if ebad:
+    # ★ 93차 G93-N1 — 역사 reader (`check_planned_envelope`) 는 유효한 planned-leg/v3 에도 `[]` 를 준다. v6 재유도는 v4 전용 키를
+    #   읽으므로 차단은 reader 결과에 **축 유도 실패** (`stage3_axis_from_envelope` = schema v4 + `check_envelope_v4`) 를 더한다.
+    #   planned_id 단독 불일치는 여기서 막지 않는다 (`stage3_planned_envelope` 가 따로 실패시킨다 · 재유도는 그대로 — 기존 의미).
+    v4_bad = list(ebad) + ([ax_err] if ax_err is not None else [])
+    if v4_bad:
         # ★ 92차 G92-N2 — 유효하지 않은 계획 envelope 로 재유도 · 재계산을 부르지 않는다 (실패로 남긴다 · 통과 아님)
-        why = "planned_envelope 가 유효하지 않아 다시 유도 · 재계산하지 않는다: " + "; ".join(ebad[:2])
+        why = "planned_envelope 가 유효한 planned-leg/v4 가 아니어서 다시 유도 · 재계산하지 않는다: " + "; ".join(v4_bad[:2])
         for k in ("후보_재유도", "실현_재계산", "restart_예산_완주", "관측_roster_재구성"):
             out[k] = (False, why)
         return out
