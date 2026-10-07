@@ -1,0 +1,22 @@
+utc 2026-10-07T00:53:22Z
+sandbox: /tmp/mutation_replay_j8wry9oa/degradation-degeneracy
+
+★ 안 물었다    v6-rederive-gate-includes-axis-failure-g93 node 3 · -k test_g93
+
+=== 관측한 EXPECT (그대로 붙여 넣어라) ===
+{
+    "v6-rederive-gate-includes-axis-failure-g93": {
+        "fail": [
+            "tests/test_gate93_n1_v3_envelope.py::test_g93_n1_a_valid_v3_envelope_under_sig6_is_refused_without_rederivation"
+        ],
+        "witness": {
+            "tests/test_gate93_n1_v3_envelope.py::test_g93_n1_a_valid_v3_envelope_under_sig6_is_refused_without_rederivation": "KeyError: 'parameter_order_sha256'"
+        }
+    }
+}
+
+scenario_total 1 · scenario_executable 1 · scenario_declared 0 · site_total 1 · site_executable 1 · site_declared 0 · ran 1
+
+=== 문제 ===
+v6-rederive-gate-includes-axis-failure-g93: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+rc=1

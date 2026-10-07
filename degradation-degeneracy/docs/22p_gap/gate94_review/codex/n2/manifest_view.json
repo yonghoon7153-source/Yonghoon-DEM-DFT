@@ -1,0 +1,220 @@
+{
+ "schema": "gate93_n2_log_supplement_v1",
+ "request_head": "0e3c244ea79db1b17f09a8f8043d808ab51ff43c",
+ "logs_commit": "e0e9f213deecabfd50254217a428bac6a85819f8",
+ "logs_commit_after_request": true,
+ "rerun": false,
+ "note": "요청 커밋 0e3c244ea 에는 README 만 있었다 (*.log 이 gitignore 라 git add 가 조용히 건너뜀). 원 로그는 당시 스크래치 파일을 바이트 그대로 e0e9f213d 에 -f 로 추가했다. 재실행 0.",
+ "files": [
+  {
+   "path": "00_red_test_gate92_138nodes_41failed_97passed.log",
+   "size": 20540,
+   "sha256": "ac96f22c6c645142b7b7829b5b05e0cfa0f1c4f5290f15f086b386c374320d94",
+   "git_blob_commit": "e0e9f213d",
+   "scratch_original": "g92_red.log",
+   "scratch_original_byte_equal": true,
+   "scratch_mtime_utc": "2026-10-06T12:30:38Z",
+   "status_lines": [
+    "FAILED tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[stage]",
+    "FAILED tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[candidate_mode]",
+    "FAILED tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[bank_version]",
+    "FAILED tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[budget_by_objective]",
+    "FAILED tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[warm_provider_map]",
+    "FAILED tests/test_gate92_stage4_linkage.py::test_g92_k07_the_run_spec_edge_sha_of_a_warm_plan_is_the_approved_axis_value",
+    "41 failed, 97 passed in 31.65s",
+    "rc=1"
+   ]
+  },
+  {
+   "path": "03_replay_g92_emit_expect_9killed.log",
+   "size": 17214,
+   "sha256": "e16e1cdaa427ec70cb5285463fb1babd0ff7f4c2228d8606c131de2a79bc36b6",
+   "git_blob_commit": "e0e9f213d",
+   "scratch_original": "g92_emit.log",
+   "scratch_original_byte_equal": true,
+   "scratch_mtime_utc": "2026-10-06T12:57:20Z",
+   "status_lines": [
+    "★ 안 물었다    failed-envelope-is-not-rederived-g92 node 1 · -k test_g92_k04_env",
+    "\"failed-envelope-is-not-rederived-g92\": {",
+    "\"tests/test_gate92_stage4_linkage.py::test_g92_k04_env_a_failed_planned_envelope_is_not_passed_to_the_rederivation\"",
+    "\"tests/test_gate92_stage4_linkage.py::test_g92_k04_env_a_failed_planned_envelope_is_not_passed_to_the_rederivation\": \"AssertionError: 유효하지 않은 계획 envelope 로 후보 재유도를 불렀다\"",
+    "scenario_total 9 · scenario_executable 9 · scenario_declared 0 · site_total 9 · site_executable 9 · site_declared 0 · ran 9",
+    "failed-envelope-is-not-rederived-g92: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)"
+   ]
+  },
+  {
+   "path": "04a_replay_g92_verify_8of9_k07_witness_nondeterministic.log",
+   "size": 1491,
+   "sha256": "e3a8f6d21079477535f01e427e993c30d3375458ab175b31de93c447ece212c1",
+   "git_blob_commit": "e0e9f213d",
+   "scratch_original": "g92_check.log",
+   "scratch_original_byte_equal": true,
+   "scratch_mtime_utc": "2026-10-06T13:03:43Z",
+   "status_lines": [
+    "물었다        failed-envelope-is-not-rederived-g92 node 1 · -k test_g92_k04_env",
+    "scenario_total 9 · scenario_executable 9 · scenario_declared 0 · site_total 9 · site_executable 9 · site_declared 0 · ran 9"
+   ]
+  },
+  {
+   "path": "04b_replay_g92_k07_after_witness_fix_rc0.log",
+   "size": 355,
+   "sha256": "6082742576fc4cc81b068ddcd02e311468c0a907c65a231ec8849cb24074e5df",
+   "git_blob_commit": "e0e9f213d",
+   "scratch_original": "g92_k07.log",
+   "scratch_original_byte_equal": true,
+   "scratch_mtime_utc": "2026-10-06T13:04:47Z",
+   "status_lines": [
+    "scenario_total 1 · scenario_executable 1 · scenario_declared 0 · site_total 1 · site_executable 1 · site_declared 0 · ran 1"
+   ]
+  },
+  {
+   "path": "05a_kext_stage3_axis_g87_plus_k08_13killed.log",
+   "size": 6817,
+   "sha256": "a86cac4cf5e571d974ad94b2f9f0b2c3964e6024c186659accca9c68f3d2b51f",
+   "git_blob_commit": "e0e9f213d",
+   "scratch_original": "kext1.log",
+   "scratch_original_byte_equal": true,
+   "scratch_mtime_utc": "2026-10-06T13:44:01Z",
+   "status_lines": [
+    "\"tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[bank.generator]\": \"Failed: DID NOT RAISE PreserveError\",",
+    "\"tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[bank.length]\": \"Failed: DID NOT RAISE PreserveError\",",
+    "\"tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[bank.n_params]\": \"Failed: DID NOT RAISE PreserveError\",",
+    "\"tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[bank.version]\": \"Failed: DID NOT RAISE PreserveError\",",
+    "\"tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[pairing_design_sha256]\": \"Failed: DID NOT RAISE PreserveError\",",
+    "\"tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[parameter_order_sha256]\": \"Failed: DID NOT RAISE PreserveError\",",
+    "\"tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[stage]\": \"Failed: DID NOT RAISE PreserveError\"",
+    "scenario_total 1 · scenario_executable 1 · scenario_declared 0 · site_total 1 · site_executable 1 · site_declared 0 · ran 1"
+   ]
+  },
+  {
+   "path": "05b_kext_claim_seals_plus_k10c8_2killed.log",
+   "size": 1368,
+   "sha256": "e5e9d420c1b22bbcd62fcb8d2e7a602c21c570e18935daf066974b75d76a1b1a",
+   "git_blob_commit": "e0e9f213d",
+   "scratch_original": "kext2.log",
+   "scratch_original_byte_equal": true,
+   "scratch_mtime_utc": "2026-10-06T13:44:35Z",
+   "status_lines": [
+    "\"tests/test_gate92_stage4_linkage.py::test_g92_k10_c8_another_self_consistent_plan_is_not_the_approved_run_spec\": \"Failed: DID NOT RAISE PreserveError\",",
+    "\"tests/test_preserve.py::test_the_claim_seals_the_exact_run_spec\": \"Failed: DID NOT RAISE PreserveError\"",
+    "scenario_total 1 · scenario_executable 1 · scenario_declared 0 · site_total 1 · site_executable 1 · site_declared 0 · ran 1"
+   ]
+  },
+  {
+   "path": "06_make_receipt_683503225_rc0.log",
+   "size": 353,
+   "sha256": "15e2be9b3ecbd6313d2ff431e513b4c26ff81d10eb3bfbd37a6e9f458ce067f4",
+   "git_blob_commit": "e0e9f213d",
+   "scratch_original": "g92ev/06_receipts.log",
+   "scratch_original_byte_equal": true,
+   "scratch_mtime_utc": "2026-10-06T13:08:26Z",
+   "status_lines": [
+    "head 68350322592f400e3ef2655972d5d35f14851b60 dirty 0"
+   ]
+  },
+  {
+   "path": "08_env_profile_json_3ec8aadb1_mismatch34.log",
+   "size": 5792,
+   "sha256": "9ae1c6027248eb3d9f2d00f076f5c1052c4554f4d81dc2d496b850b803ece898",
+   "git_blob_commit": "e0e9f213d",
+   "scratch_original": "g92ev/08_env_profile.log",
+   "scratch_original_byte_equal": true,
+   "scratch_mtime_utc": "2026-10-06T13:51:34Z",
+   "status_lines": [
+    "start head 3ec8aadb13e4ee4eb9e3434fbd28e503a7c03a34 dirty 0 utc 2026-10-06T13:51:29Z",
+    "{\"counts\": {\"dists_locked\": 170, \"dists_measured\": 174, \"files_unhashed\": 10456, \"files_verified\": 24918, \"path_origins_in_record\": 9, \"shadowed_locked\": 2, \"shadowed_measured\": 3}, \"lock_path\": \"requ",
+    "rc=0",
+    "end head 3ec8aadb13e4ee4eb9e3434fbd28e503a7c03a34 dirty 0 utc 2026-10-06T13:51:34Z"
+   ]
+  },
+  {
+   "path": "10_full_pytest_3ec8aadb1_2320passed.log",
+   "size": 3744,
+   "sha256": "2f3da06d009d0971418518f7126ba3d68b7acd5426f5aa519fcb3f405bf32a45",
+   "git_blob_commit": "e0e9f213d",
+   "scratch_original": "g92ev/10_pytest.log",
+   "scratch_original_byte_equal": true,
+   "scratch_mtime_utc": "2026-10-06T15:09:42Z",
+   "status_lines": [
+    "start head 3ec8aadb13e4ee4eb9e3434fbd28e503a7c03a34 dirty 0 utc 2026-10-06T13:51:34Z",
+    "2320 passed, 1 xfailed in 4684.37s (1:18:04)",
+    "rc=0",
+    "end head 3ec8aadb13e4ee4eb9e3434fbd28e503a7c03a34 dirty 0 utc 2026-10-06T15:09:42Z"
+   ]
+  },
+  {
+   "path": "11_smoke_3ec8aadb1_rc0.log",
+   "size": 10292,
+   "sha256": "83c3b9babb146fe5375ee0abc7403e3ff1580074d89c1fe932ddd98b590ae7a5",
+   "git_blob_commit": "e0e9f213d",
+   "scratch_original": "g92ev/11_smoke.log",
+   "scratch_original_byte_equal": true,
+   "scratch_mtime_utc": "2026-10-06T15:13:26Z",
+   "status_lines": [
+    "start head 3ec8aadb13e4ee4eb9e3434fbd28e503a7c03a34 dirty 0 utc 2026-10-06T15:09:42Z",
+    "환경 프로필 C 대조: MISMATCH · lock requirements-validation-C.lock.txt (sha256 d886f30ff675fef7…) · 배포판 lock 170 / 측정 174 · 가려진 2 / 3 · 설치 파일 일치 24918 (해시 없음 10456) · 경로 검색 origin 의 RECORD 소속 9 (로드된 module o",
+    "\"n_failed\": 2,",
+    "rc=0",
+    "end head 3ec8aadb13e4ee4eb9e3434fbd28e503a7c03a34 dirty 0 utc 2026-10-06T15:13:26Z"
+   ]
+  },
+  {
+   "path": "12_full_replay_3ec8aadb1_421_of_421_rc0.log",
+   "size": 54666,
+   "sha256": "b4cf4b6dbae68cdb41817be03c7297c69b7a3c575173c4019760d833db66f367",
+   "git_blob_commit": "e0e9f213d",
+   "scratch_original": "g92ev/12_replay.log",
+   "scratch_original_byte_equal": true,
+   "scratch_mtime_utc": "2026-10-06T18:42:28Z",
+   "status_lines": [
+    "물었다        attempted-only-names-are-not-loaded-modules-g63 node 1 · -k an_ordinary_failed_optional_import_keeps_startup_measured",
+    "물었다        customization-reads-origins-like-the-rest-g64 node 1 · -k a_zip_customization_is_measured_not_failed",
+    "물었다        failed-restarts-are-recorded-g79 node 1 · -k g79_04_a",
+    "물었다        failed-envelope-is-not-rederived-g92 node 1 · -k test_g92_k04_env",
+    "신고         release-cleanup-holds-the-attempt-path — 이 lock 순서(`LOCK_ORDER`: attempt_path → claim → ledger)는 그대로 지킬 규칙이다. 그런데 그것을 물던 회귀(`release_cleanup_cannot_delete_another_legs_token`)는 **caller 가 다",
+    "scenario_total 432 · scenario_executable 421 · scenario_declared 11 · site_total 470 · site_executable 459 · site_declared 11 · ran 421",
+    "rc=0",
+    "end head 3ec8aadb13e4ee4eb9e3434fbd28e503a7c03a34 dirty 0 utc 2026-10-06T18:42:28Z"
+   ]
+  },
+  {
+   "path": "14_docs_lint_send_0e3c244ea_360passed.log",
+   "size": 1171,
+   "sha256": "5143e92c7d62311a80ddbe555e3fc5a6d38073f629642379c67f5dccaf818cdd",
+   "git_blob_commit": "e0e9f213d",
+   "scratch_original": "g92ev/14_docs_lint_send.log",
+   "scratch_original_byte_equal": true,
+   "scratch_mtime_utc": "2026-10-06T19:17:57Z",
+   "status_lines": [
+    "start head 0e3c244ea79db1b17f09a8f8043d808ab51ff43c dirty 0 utc 2026-10-06T18:44:35Z",
+    "360 passed in 1999.26s (0:33:19)",
+    "rc=0",
+    "end head 0e3c244ea79db1b17f09a8f8043d808ab51ff43c dirty 0 utc 2026-10-06T19:17:57Z"
+   ]
+  },
+  {
+   "path": "aborted/run1_10_pytest_7fea9cdb7_F4_docs_lint_aborted.log",
+   "size": 1251,
+   "sha256": "0c9ac667f3796150b9a9c5171fc35d227465202b0452dc486f0ec8aff73fb990",
+   "git_blob_commit": "e0e9f213d",
+   "scratch_original": "g92ev/run1_aborted/10_pytest.log",
+   "scratch_original_byte_equal": true,
+   "scratch_mtime_utc": "2026-10-06T13:17:26Z",
+   "status_lines": [
+    "start head 7fea9cdb7be9d3474d4f58e2eb6fcabd13fd45ee dirty 0 utc 2026-10-06T13:09:33Z"
+   ]
+  },
+  {
+   "path": "aborted/run2_10_pytest_7ae871687_F1_contract_citation_aborted.log",
+   "size": 1017,
+   "sha256": "73230f551f4a6ea466f2a805951038fb5fb6c1dd64a8a923ae6f9dc0ac526cf8",
+   "git_blob_commit": "e0e9f213d",
+   "scratch_original": "g92ev/run2_aborted/10_pytest.log",
+   "scratch_original_byte_equal": true,
+   "scratch_mtime_utc": "2026-10-06T13:50:59Z",
+   "status_lines": [
+    "start head 7ae871687238810efab5c731b4f375cce2c7021c dirty 0 utc 2026-10-06T13:46:43Z"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,30 @@
+{
+  "repository_full_name": "yonghoon7153-source/Yonghoon-DEM-DFT",
+  "base": "168fd41a5",
+  "head": "fe72f9b81",
+  "status": "ahead",
+  "ahead_by": 1,
+  "behind_by": 0,
+  "total_commits": 1,
+  "too_large": null,
+  "base_commit": {
+    "sha": "168fd41a5158c4908cfc3ec08b05652b8f0b7629",
+    "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/commits/168fd41a5158c4908cfc3ec08b05652b8f0b7629",
+    "html_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/commit/168fd41a5158c4908cfc3ec08b05652b8f0b7629"
+  },
+  "merge_base_commit": {
+    "sha": "168fd41a5158c4908cfc3ec08b05652b8f0b7629",
+    "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/commits/168fd41a5158c4908cfc3ec08b05652b8f0b7629",
+    "html_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/commit/168fd41a5158c4908cfc3ec08b05652b8f0b7629"
+  },
+  "files": [
+    {
+      "filename": "wiki/raw/articles/2026-10-07-github-research-briefing.md",
+      "status": "modified",
+      "additions": 2,
+      "deletions": 2,
+      "changes": 4,
+      "previous_filename": null
+    }
+  ]
+}

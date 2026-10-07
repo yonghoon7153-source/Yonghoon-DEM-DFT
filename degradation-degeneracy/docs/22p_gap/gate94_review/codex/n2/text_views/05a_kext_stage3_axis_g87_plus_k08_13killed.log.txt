@@ -1,0 +1,52 @@
+sandbox: /tmp/mutation_replay_p1a5aww9/degradation-degeneracy
+
+★ 안 물었다    stage3-axis-is-derived-not-copied-g87 node 13 · -k s03_05 or test_g92_k08
+
+=== 관측한 EXPECT (그대로 붙여 넣어라) ===
+{
+    "stage3-axis-is-derived-not-copied-g87": {
+        "fail": [
+            "tests/test_gate87_round2b.py::test_s03_05_a_stage3_axis_that_is_not_derived_from_the_envelope_is_refused[arm]",
+            "tests/test_gate87_round2b.py::test_s03_05_a_stage3_axis_that_is_not_derived_from_the_envelope_is_refused[candidate_mode]",
+            "tests/test_gate87_round2b.py::test_s03_05_a_stage3_axis_that_is_not_derived_from_the_envelope_is_refused[planned_id]",
+            "tests/test_gate87_round2b.py::test_s03_05_a_stage3_axis_that_is_not_derived_from_the_envelope_is_refused[provider_edges_sha256]",
+            "tests/test_gate87_round2b.py::test_s03_05_a_stage3_axis_that_is_not_derived_from_the_envelope_is_refused[roster_sha256]",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[bank.exact_bounds_sha256]",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[bank.generator]",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[bank.length]",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[bank.n_params]",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[bank.version]",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[pairing_design_sha256]",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[parameter_order_sha256]",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[stage]"
+        ],
+        "witness": {
+            "tests/test_gate87_round2b.py::test_s03_05_a_stage3_axis_that_is_not_derived_from_the_envelope_is_refused[arm]": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate87_round2b.py::test_s03_05_a_stage3_axis_that_is_not_derived_from_the_envelope_is_refused[candidate_mode]": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate87_round2b.py::test_s03_05_a_stage3_axis_that_is_not_derived_from_the_envelope_is_refused[planned_id]": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate87_round2b.py::test_s03_05_a_stage3_axis_that_is_not_derived_from_the_envelope_is_refused[provider_edges_sha256]": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate87_round2b.py::test_s03_05_a_stage3_axis_that_is_not_derived_from_the_envelope_is_refused[roster_sha256]": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[bank.exact_bounds_sha256]": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[bank.generator]": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[bank.length]": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[bank.n_params]": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[bank.version]": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[pairing_design_sha256]": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[parameter_order_sha256]": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[stage]": "Failed: DID NOT RAISE PreserveError"
+        }
+    }
+}
+
+scenario_total 1 · scenario_executable 1 · scenario_declared 0 · site_total 1 · site_executable 1 · site_declared 0 · ran 1
+
+=== 문제 ===
+stage3-axis-is-derived-not-copied-g87: 실패 집합이 선언과 다르다 — 더 빨개짐 ['tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[bank.exact_bounds_sha256]', 'tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[bank.generator]', 'tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[bank.length]'] · 안 빨개짐 []
+stage3-axis-is-derived-not-copied-g87: tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[pairing_design_sha256] 의 증인이 선언되지 않았다
+stage3-axis-is-derived-not-copied-g87: tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[parameter_order_sha256] 의 증인이 선언되지 않았다
+stage3-axis-is-derived-not-copied-g87: tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[bank.generator] 의 증인이 선언되지 않았다
+stage3-axis-is-derived-not-copied-g87: tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[bank.version] 의 증인이 선언되지 않았다
+stage3-axis-is-derived-not-copied-g87: tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[bank.length] 의 증인이 선언되지 않았다
+stage3-axis-is-derived-not-copied-g87: tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[bank.n_params] 의 증인이 선언되지 않았다
+stage3-axis-is-derived-not-copied-g87: tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[bank.exact_bounds_sha256] 의 증인이 선언되지 않았다
+stage3-axis-is-derived-not-copied-g87: tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[stage] 의 증인이 선언되지 않았다

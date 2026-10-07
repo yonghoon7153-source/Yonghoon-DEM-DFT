@@ -1,0 +1,96 @@
+{
+  "representation_note": "One local aborted .log text view has an extra final LF from apply_patch. Exact pinned content is preserved in evidence/main/aborted/ORIGINAL_CONTENT.json. Re-encoding that content as UTF-8 gives 1555 bytes and Git blob 4b06ca14d7b6e921202b818a72b22f811bd8450b, equal to source. This is a reviewer text representation difference, not a source discrepancy.",
+  "source_checks": [
+    {
+      "file": "reference/GATE94_REQUEST.md",
+      "bytes": 9235,
+      "sha256": "5ed77d026d1111c250738510a6660e1aa3ede2f6fd0c3055baaba6a5b564cb66",
+      "git_blob": "6a3cec281a7c43e497b52f6394a7ed5ee349b896",
+      "expected_blob": "6a3cec281a7c43e497b52f6394a7ed5ee349b896",
+      "blob_match": true
+    },
+    {
+      "file": "evidence/main/10a_full_pytest_168fd41a5_1failed_wiki_raw_sha.log",
+      "bytes": 6130,
+      "sha256": "59c4dfc1a041a754f97230642944bd2e18cdad536d0f9d0b58b78f980d98d998",
+      "git_blob": "66dfb406c55ceb9b9146a35a690629f7e67b8af6",
+      "expected_blob": "66dfb406c55ceb9b9146a35a690629f7e67b8af6",
+      "blob_match": true
+    },
+    {
+      "file": "evidence/main/11_smoke_168fd41a5_rc0.log",
+      "bytes": 10291,
+      "sha256": "aac953766897d24fbb223facb3da0e18fc85b01da644b3c2ef9e8d07d2607bdc",
+      "git_blob": "504d3a17ebc674a0ebd3004bdf1e256a9fb89820",
+      "expected_blob": "504d3a17ebc674a0ebd3004bdf1e256a9fb89820",
+      "blob_match": true
+    },
+    {
+      "file": "evidence/main/10b_full_pytest_fe72f9b81_2323passed.log",
+      "bytes": 3744,
+      "sha256": "88543351ad5ed7ba158418c366a62bd0851d667ad2e5557c4580c9eb4022698f",
+      "git_blob": "4505b1c51afa3b08b6ec8f4ec2e50ce730fb0a25",
+      "expected_blob": "4505b1c51afa3b08b6ec8f4ec2e50ce730fb0a25",
+      "blob_match": true
+    },
+    {
+      "file": "evidence/main/aborted/README.txt",
+      "bytes": 201,
+      "sha256": "c65b86a141abb6ed849fbbd514bd746d6395a1abf12f3fec16f8320c56886144",
+      "git_blob": "33c149f28c8814cb8927abad9425e216324e015e",
+      "expected_blob": "33c149f28c8814cb8927abad9425e216324e015e",
+      "blob_match": true
+    },
+    {
+      "file": "evidence/main/aborted/run1_10_pytest_49c769cb5_container_restart.log",
+      "bytes": 1556,
+      "sha256": "8eee86b3c7e749eb467e8c55992852da0939cbd99bc34dd9e222e8928f8be8e9",
+      "git_blob": "1212d9dd2ebb1621d33ac505bacaeb8d5d0e9010",
+      "expected_blob": "4b06ca14d7b6e921202b818a72b22f811bd8450b",
+      "blob_match": false
+    },
+    {
+      "file": "evidence/main/aborted/run1_08_env_profile_49c769cb5.log",
+      "bytes": 5792,
+      "sha256": "601369f793388f734081747a46062358ea637b352b25efda05cfee2a504a15bc",
+      "git_blob": "83a50ae2ed924a450a110f3f1b25daae456ec7ab",
+      "expected_blob": "83a50ae2ed924a450a110f3f1b25daae456ec7ab",
+      "blob_match": true
+    },
+    {
+      "file": "evidence/main/12_full_replay_168fd41a5_422_of_422_rc0.log",
+      "bytes": 54748,
+      "sha256": "47ff73249133948889bb6712b713f1c750a42c9897d0db2eee247b983495a2fa",
+      "git_blob": "38a08595d3e2edbe3bef4914e35bf2a0a45d8066",
+      "expected_blob": "38a08595d3e2edbe3bef4914e35bf2a0a45d8066",
+      "blob_match": true
+    },
+    {
+      "file": "evidence/main/06_make_receipt_27b0917e2_rc0.log",
+      "bytes": 353,
+      "sha256": "02d706e9c80c3243d3924c7288575567dfc2080534163f577c71d089928937fb",
+      "git_blob": "dede7dcfb336f9e66cf4e5d3be2371fec97f4caa",
+      "expected_blob": "dede7dcfb336f9e66cf4e5d3be2371fec97f4caa",
+      "blob_match": true
+    },
+    {
+      "file": "evidence/main/README.md",
+      "bytes": 3055,
+      "sha256": "a63abfd20c6c69b55d3851c5a793b095f9dc6ddefdced560fb7a842551ef71d7",
+      "git_blob": "bea1a8c9cff054d3880139523a1dca01a29c35c0",
+      "expected_blob": "bea1a8c9cff054d3880139523a1dca01a29c35c0",
+      "blob_match": true
+    },
+    {
+      "file": "evidence/main/08_env_profile_168fd41a5.log",
+      "bytes": 5792,
+      "sha256": "965fd26cf3b811aa7731e57edaba61358a9fe338ba41b0468bd816d0d4470c0f",
+      "git_blob": "14651fffbaa9258edf516bfb33f92d33d7d54a2d",
+      "expected_blob": "14651fffbaa9258edf516bfb33f92d33d7d54a2d",
+      "blob_match": true
+    }
+  ],
+  "request_attachment_match": true,
+  "attachment_bytes": 9235,
+  "attachment_sha256": "5ed77d026d1111c250738510a6660e1aa3ede2f6fd0c3055baaba6a5b564cb66"
+}

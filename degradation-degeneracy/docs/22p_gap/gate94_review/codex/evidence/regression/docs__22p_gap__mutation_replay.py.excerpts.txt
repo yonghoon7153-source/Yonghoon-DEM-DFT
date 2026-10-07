@@ -1,0 +1,219 @@
+Source: https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/0ab2924f4/degradation-degeneracy/docs/22p_gap/mutation_replay.py
+Static text excerpts only. Original one-based line numbers follow.
+
+2390:      '    if not cm_bad:\n        ents = cm["entries"]\n',
+2391:      '    cm_bad = []  # 변이: 닫힘 · 자료형 결과를 버린다\n    if isinstance(cm, dict) and isinstance(cm.get("entries"), list):\n        ents = cm["entries"]\n',
+2392:      "test_g92_k04"),
+2393:     ("failed-envelope-is-not-rederived-g92", IO,                    # k04-env: 실패 envelope 로 재유도 · 재계산을 부르지 않는다
+2394:      '    if v4_bad:\n        # ★ 92차 G92-N2 — 유효하지 않은 계획 envelope 로',          # 93차: 조건 이름 ebad → v4_bad
+2395:      '    if False:\n        # ★ 92차 G92-N2 — 유효하지 않은 계획 envelope 로',
+2396:      "test_g92_k04_env"),
+2397:     ("stage3-run-spec-is-derived-per-key-g92", IO,                  # k05: 투영 6 + env 직접 3 (한 루프 · 하나로 합침)
+2398:      '                   for k, v in want.items() if s3[k] != v]\n',
+2399:      '                   for k, v in want.items() if False]  # 변이: 사본을 envelope 와 대조하지 않는다\n',
+
+2414:      '    if not (eb == s3["exact_bounds_sha256"] == env["bank"]["exact_bounds_sha256"]):\n',
+2415:      '    if False:  # 변이: exact_bounds 3 자 대조를 끈다\n',
+2416:      "test_g92_k06 and exact_bounds"),
+2417:     # ★ 93차 G93-N1 — v6 재유도 차단은 역사 reader 결과에 축 유도 실패 (schema v4 + check_envelope_v4) 를 더한다
+2418:     ("v6-rederive-gate-includes-axis-failure-g93", IO,              # n1: 유효 v3 envelope 가 재유도로 넘어가지 않는다
+2419:      '    v4_bad = list(ebad) + ([ax_err] if ax_err is not None else [])\n',
+2420:      '    v4_bad = list(ebad)  # 변이: 축 유도 실패를 차단에 넣지 않는다 (92차 판본)\n',
+2421:      "test_g93"),
+2422: ]
+2423: 
+2424: #: 여러 지점을 **함께** 되돌려야 관측되는 변이 (심층 방어라 하나만 지우면
+2425: #: 다른 하나가 가린다). 41·42·43차에 실측했다.
+
+3090: def _check(name: str, kexpr: str, before: dict, after: dict,
+3091:            nodes: list[str]) -> tuple[list[str], dict]:
+3092:     """변이가 **정확히 선언한 node 들만** · **선언한 이유로** 빨개졌는가.
+3093: 
+3094:     ★ 46차 #9 조건 9 — 45차 판정은 "call 단계에서 하나라도 빨개졌다" 였다.
+3095:       그것으로는 두 가지를 구별할 수 없다:
+3096: 
+3097:         · 기대한 시험이 물었는가, 아니면 **다른** 시험이 물었는가
+3098:         · 물었다면 **그 불변식 때문에** 물었는가, 아니면 변이가 만든 엉뚱한
+3099:           부수효과(다른 assert·다른 예외) 때문인가
+3100: 
+3101:       그래서 mutant 마다 **기대 실패 집합**과 **의미 증인**(실패 메시지에
+3102:       반드시 있어야 하는 문자열)을 선언하고 정확히 대조한다.
+3103:     """
+3104:     bad = []
+3105:     observed = {"fail": [], "witness": {}}
+3106:     base_fail = sorted(k for k, v in before["nodes"].items()
+3107:                        if v["outcome"] != "passed")
+3108:     if before["rc"] != 0:
+3109:         bad.append(f"{name}: baseline rc 가 0 이 아니다 ({before['rc']})")
+3110:     if before["collect_errors"]:
+3111:         bad.append(f"{name}: baseline 수집 오류 — {before['collect_errors'][:3]}")
+3112:     if base_fail:
+3113:         bad.append(f"{name}: baseline 이 이미 빨갛다 — {base_fail[:3]}")
+3114:     if sorted(before["nodes"]) != nodes:
+3115:         bad.append(f"{name}: baseline 이 수집 목록과 다르다")
+3116:     if bad:
+3117:         return bad, observed
+3118:     if after["collect_errors"]:
+3119:         bad.append(f"{name}: 변이가 수집을 깼다 — {after['collect_errors'][:3]}")
+3120:         return bad, observed
+3121:     if sorted(after["nodes"]) != nodes:
+3122:         bad.append(f"{name}: 변이 뒤 node 목록이 달라졌다 — "
+3123:                    f"사라짐 {sorted(set(nodes) - set(after['nodes']))[:3]}")
+3124:         return bad, observed
+3125:     # pytest rc: 0 = 전부 통과 · 1 = 시험 실패 · 2 중단 · 3 내부 오류 · 5 미수집
+3126:     if after["rc"] != 1:
+3127:         bad.append(f"{name}: 변이 rc 가 1(시험 실패)이 아니다 ({after['rc']})")
+3128:     failed, errored = [], []
+3129:     for k, v in after["nodes"].items():
+3130:         if v["outcome"] == "passed":
+3131:             continue
+3132:         if v["phases"].get("call") == "failed":
+3133:             failed.append(k)
+3134:             observed["witness"][k] = _last_line(v["longrepr"])
+3135:         else:
+3136:             errored.append(f"{k}:{v['phases']}")
+3137:     observed["fail"] = sorted(failed)
+3138:     if errored:
+3139:         bad.append(f"{name}: call 단계가 아닌 실패가 있다 — {errored[:3]}")
+3140:     exp = EXPECT.get(name)
+3141:     if exp is None:
+3142:         bad.append(f"{name}: 기대 실패 집합이 선언되지 않았다 "
+3143:                    "(`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)")
+3144:         return bad, observed
+3145:     # ★ 50차 P1 — **빈 기대 집합**은 "아무 시험도 안 물어야 한다" 는 선언이고,
+3146:     #   그것은 곧 "안 물었다" 다. 실행 가능 변이로 등록해 놓고 그렇게 적으면
+3147:     #   전수 인증이 거짓이 된다 — 관측이 안 되면 `DECLARED_MASKED` 로 신고하라.
+3148:     if not exp["fail"]:
+3149:         bad.append(f"{name}: 기대 실패 집합이 비었다 — 실행 가능 변이는 반드시 "
+3150:                    "무언가를 물어야 한다 (관측 안 되면 신고로 옮겨라)")
+3151:         return bad, observed
+3152:     if sorted(failed) != sorted(exp["fail"]):
+3153:         bad.append(
+3154:             f"{name}: 실패 집합이 선언과 다르다 — 더 빨개짐 "
+3155:             f"{sorted(set(failed) - set(exp['fail']))[:3]} · 안 빨개짐 "
+3156:             f"{sorted(set(exp['fail']) - set(failed))[:3]}")
+3157:     # ★ 46차 — 증인은 **node 마다** 다르다. 한 mutant 가 여러 시험을 빨갛게
+3158:     #   만들면 (parametrize·다중 대상) 그 메시지들은 서로 다른 문장이다.
+3159:     #   증인 하나를 전부에 요구하면, 통과시키려고 증인을 가장 약한 공통
+3160:     #   부분문자열로 깎게 된다 — 그러면 "그 이유로 물었다" 를 증명하지 못한다.
+3161:     wit = exp["witness"]
+3162:     if not isinstance(wit, dict):
+3163:         bad.append(f"{name}: 증인이 node→문자열 map 이 아니다")
+3164:         return bad, observed
+3165:     for k in failed:
+3166:         want = wit.get(k)
+3167:         if want is None:
+3168:             bad.append(f"{name}: {k} 의 증인이 선언되지 않았다")
+3169:             continue
+3170:         if not _witness_holds(after["nodes"][k]["longrepr"], want):
+3171:             bad.append(
+3172:                 f"{name}: {k} 이 빨개졌지만 **선언한 이유**가 아니다 — "
+3173:                 f"증인 {want!r} 이 실패 메시지에 없다 "
+3174:                 f"({_last_line(after['nodes'][k]['longrepr'])!r})")
+3175:     return bad, observed
+
+3233: def _witness_holds(longrepr: str, want: str) -> bool:
+3234:     """선언한 증인이 이 실패의 **의미 줄**에 있는가 (54차 자체 발견).
+3235: 
+3236:     규칙이 둘이면 그 사이가 구멍이다 — 이 라운드가 여섯 번 만난 형태다.
+3237:     실시간 재생(`_check`)은 `want in longrepr` 로 **본문 전체**를 봤고,
+3238:     영수증 검사(`_report_identity_rc`)는 `_last_line()` 만 봤다. 그래서
+3239:     `module-gate-before-side-effects` 의 증인 `KeyError: 'discharged_state'`
+3240:     가 48차에 시험이 고쳐진 뒤로도 여섯 라운드를 살아남았다 — 그 문자열이
+3241:     시험 **자신의 주석**에 남아 있고 pytest 가 실패 재현에 소스를 함께
+3242:     찍기 때문이다. 본문 매칭은 우연한 텍스트에 걸린다.
+3243: 
+3244:     그러므로 규칙은 하나이고, 그것은 더 엄격한 쪽(`_last_line`)이다.
+3245:     """
+3246:     return str(want) in _last_line(longrepr or "")
+3247: 
+3248: 
+3249: def _last_line(text: str) -> str:
+3250:     """실패의 **의미**를 담은 줄 — 위치 줄(`file.py:12: X`)이 아니다.
+3251: 
+3252:     ★ 46차 — 증인이 위치 줄이면 편집 한 번에 줄 번호가 밀려 깨진다.
+3253:       pytest 는 assert/예외 메시지를 `E ` 로 시작하는 줄에 찍는다.
+3254:     """
+3255:     lines = [l.rstrip() for l in (text or "").splitlines()]
+3256:     for line in lines:
+3257:         if line.startswith("E "):
+3258:             return line[2:].strip()[:200]
+3259:     for line in reversed(lines):
+3260:         if line.strip():
+3261:             return line.strip()[:200]
+3262:     return ""
+
+7572:     "failed-envelope-is-not-rederived-g92": {
+7573:         "fail": [
+7574:             "tests/test_gate92_stage4_linkage.py::test_g92_k04_env_a_failed_planned_envelope_is_not_passed_to_the_rederivation",
+7575:         ],
+7576:         "witness": {
+7577:             "tests/test_gate92_stage4_linkage.py::test_g92_k04_env_a_failed_planned_envelope_is_not_passed_to_the_rederivation":
+7578:                 "AssertionError: 유효하지 않은 계획 envelope 로 후보 재유도를 불렀다",
+7579:         }
+7580:     },
+
+7648:         }
+7649:     },
+7650:     "v6-rederive-gate-includes-axis-failure-g93": {
+7651:         "fail": [
+7652:             "tests/test_gate93_n1_v3_envelope.py::test_g93_n1_a_valid_v3_envelope_under_sig6_is_refused_without_rederivation",
+7653:         ],
+7654:         "witness": {
+7655:             "tests/test_gate93_n1_v3_envelope.py::test_g93_n1_a_valid_v3_envelope_under_sig6_is_refused_without_rederivation":
+7656:                 "KeyError: 'parameter_order_sha256'",
+7657:         }
+7658:     },
+7659: }
+7660: 
+
+9019:     for name, repo_path, pairs, kexpr in plan:
+9020:         path = _sandboxed(repo_path)
+9021:         # ★ 46차 — **raw bytes** 로 읽고 쓴다. text mode 는 개행·인코딩을
+9022:         #   접을 수 있어서 "원복이 바이트 동일하다" 를 증명할 수 없다.
+9023:         src = path.read_bytes()
+9024:         before_hash = hashlib.sha256(src).hexdigest()
+9025:         mutated, miss = src, None
+9026:         for old, new in pairs:
+9027:             ob, nb = old.encode("utf-8"), new.encode("utf-8")
+9028:             c = mutated.count(ob)
+9029:             if c != 1:
+9030:                 miss = f"preimage 가 {c}번 나타난다"
+9031:                 break
+9032:             mutated = mutated.replace(ob, nb, 1)
+9033:         if miss:
+9034:             print(f"{'★ 지점불량':10s} {name:30s} {miss}")
+9035:             bad.append(f"{name}: {miss}")
+9036:             continue
+9037:         try:
+9038:             nodes = _nodes(kexpr)
+9039:             if not nodes:
+9040:                 raise _ReplayError(f"`-k {kexpr}` 가 아무 시험도 안 고른다")
+9041:             # ★ 54차 P1 — 이 변이만의 표식 node 를 sandbox 에 놓는다.
+9042:             #   report 바이트가 스스로 어느 변이의 것인지 말하게 된다.
+9043:             mid = _write_marker(_sandboxed(ROOT), name, snap.tag)
+9044:             # ★ 58차 L12 — 심은 증언의 tag 를 그대로 넘긴다 (아래 `_run` 주석).
+9045:             etag = snap.tag
+9046:             before = _run(kexpr, mid, etag)
+9047:             path.write_bytes(mutated)
+9048:             after = _run(kexpr, mid, etag)
+9049:         except _ReplayError as e:
+9050:             print(f"{'★ 실행오류':10s} {name:30s} {e}")
+9051:             bad.append(f"{name}: {e}")
+9052:             continue
+9053:         finally:
+9054:             path.write_bytes(src)
+9055:         post = hashlib.sha256(path.read_bytes()).hexdigest()
+9056:         if post != before_hash:
+9057:             bad.append(f"{name}: 원복이 바이트 동일하지 않다")
+9058:         errs, observed = _check(name, kexpr, before, after, nodes)
+9059:         observed_all[name] = observed
+9060:         ran += 1
+9061:         bit[name] = not errs
+9062:         # ★ 52차 P1-2 — **실행 영수증**을 들고 간다. 판정은 나중에 checker 가
+9063:         #   이 바이트에서 다시 유도한다 (runner 의 self-claim 이 아니라).
+9064:         receipts[name] = {"kexpr": kexpr, "before": before.get("raw") or b"",
+9065:                           "after": after.get("raw") or b""}
+9066:         print(f"{'물었다' if not errs else '★ 안 물었다':10s} {name:30s} "
+9067:               f"node {len(nodes)} · -k {kexpr}")
+9068:         bad += errs

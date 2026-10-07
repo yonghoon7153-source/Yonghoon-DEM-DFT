@@ -1,0 +1,16 @@
+sandbox: /tmp/mutation_replay_3xr87gxs/degradation-degeneracy
+
+물었다        stage3-run-spec-keys-are-closed-g92 node 12 · -k test_g92_k03
+물었다        stage3-run-spec-values-are-typed-g92 node 12 · -k test_g92_k03
+물었다        candidate-map-keys-are-closed-g92 node 20 · -k test_g92_k04
+물었다        failed-envelope-is-not-rederived-g92 node 1 · -k test_g92_k04_env
+물었다        stage3-run-spec-is-derived-per-key-g92 node 9 · -k test_g92_k05
+★ 안 물었다    provider-edges-sha-has-one-definition-g92 node 1 · -k test_g92_k07
+물었다        validator-planned-id-is-the-envelope-digest-g92 node 1 · -k test_g92_k06 and planned_id
+물었다        validator-pairing-design-sha-is-recomputed-g92 node 1 · -k test_g92_k06 and pairing_design
+물었다        validator-exact-bounds-sha-is-recomputed-g92 node 1 · -k test_g92_k06 and exact_bounds
+
+scenario_total 9 · scenario_executable 9 · scenario_declared 0 · site_total 9 · site_executable 9 · site_declared 0 · ran 9
+
+=== 문제 ===
+provider-edges-sha-has-one-definition-g92: tests/test_gate92_stage4_linkage.py::test_g92_k07_the_run_spec_edge_sha_of_a_warm_plan_is_the_approved_axis_value 이 빨개졌지만 **선언한 이유**가 아니다 — 증인 'AssertionError: writer 의 edge sha d0b4e654521be839 ≠ 승인 축 (canonical digest) 35223970260b88ab' 이 실패 메시지에 없다 ('AssertionError: writer 의 edge sha 86e3d2d8948304d2 ≠ 승인 축 (canonical digest) 4f0df6df42a3147f')

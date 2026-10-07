@@ -1,0 +1,128 @@
+[
+  {
+    "path": "00_red_test_gate92_138nodes_41failed_97passed.log",
+    "zip_size": 20540,
+    "remote_size": 20540,
+    "size_equal": true,
+    "zip_git_blob_sha1": "6b35d5fc9ddc142ae057ab64e2f98df052e49ca6",
+    "remote_git_blob_sha1": "6b35d5fc9ddc142ae057ab64e2f98df052e49ca6",
+    "blob_equal": true
+  },
+  {
+    "path": "03_replay_g92_emit_expect_9killed.log",
+    "zip_size": 17214,
+    "remote_size": 17214,
+    "size_equal": true,
+    "zip_git_blob_sha1": "22deb0c31f17c133afcd7c67b615557e62bb7eef",
+    "remote_git_blob_sha1": "22deb0c31f17c133afcd7c67b615557e62bb7eef",
+    "blob_equal": true
+  },
+  {
+    "path": "04a_replay_g92_verify_8of9_k07_witness_nondeterministic.log",
+    "zip_size": 1491,
+    "remote_size": 1491,
+    "size_equal": true,
+    "zip_git_blob_sha1": "10a80ff4dd230e51b28187059a1986c73e956f90",
+    "remote_git_blob_sha1": "10a80ff4dd230e51b28187059a1986c73e956f90",
+    "blob_equal": true
+  },
+  {
+    "path": "04b_replay_g92_k07_after_witness_fix_rc0.log",
+    "zip_size": 355,
+    "remote_size": 355,
+    "size_equal": true,
+    "zip_git_blob_sha1": "399e997592e1d54bad66fe86b5dca5df8707118e",
+    "remote_git_blob_sha1": "399e997592e1d54bad66fe86b5dca5df8707118e",
+    "blob_equal": true
+  },
+  {
+    "path": "05a_kext_stage3_axis_g87_plus_k08_13killed.log",
+    "zip_size": 6817,
+    "remote_size": 6817,
+    "size_equal": true,
+    "zip_git_blob_sha1": "1d9de38a3f6e16610dbd1d88a9282175b9d2d4f6",
+    "remote_git_blob_sha1": "1d9de38a3f6e16610dbd1d88a9282175b9d2d4f6",
+    "blob_equal": true
+  },
+  {
+    "path": "05b_kext_claim_seals_plus_k10c8_2killed.log",
+    "zip_size": 1368,
+    "remote_size": 1368,
+    "size_equal": true,
+    "zip_git_blob_sha1": "720a5f5170ba3cb447ce10bfcf48100092d543b9",
+    "remote_git_blob_sha1": "720a5f5170ba3cb447ce10bfcf48100092d543b9",
+    "blob_equal": true
+  },
+  {
+    "path": "06_make_receipt_683503225_rc0.log",
+    "zip_size": 353,
+    "remote_size": 353,
+    "size_equal": true,
+    "zip_git_blob_sha1": "d8e3343472bcd6ba29b960f56d52ab2b6735e0e1",
+    "remote_git_blob_sha1": "d8e3343472bcd6ba29b960f56d52ab2b6735e0e1",
+    "blob_equal": true
+  },
+  {
+    "path": "08_env_profile_json_3ec8aadb1_mismatch34.log",
+    "zip_size": 5792,
+    "remote_size": 5792,
+    "size_equal": true,
+    "zip_git_blob_sha1": "f9c78ae983d74bf3638a36faba31fc196a8a8e0b",
+    "remote_git_blob_sha1": "f9c78ae983d74bf3638a36faba31fc196a8a8e0b",
+    "blob_equal": true
+  },
+  {
+    "path": "10_full_pytest_3ec8aadb1_2320passed.log",
+    "zip_size": 3744,
+    "remote_size": 3744,
+    "size_equal": true,
+    "zip_git_blob_sha1": "845489e091efe812e07153055fca2ef1d7ccfe9f",
+    "remote_git_blob_sha1": "845489e091efe812e07153055fca2ef1d7ccfe9f",
+    "blob_equal": true
+  },
+  {
+    "path": "11_smoke_3ec8aadb1_rc0.log",
+    "zip_size": 10292,
+    "remote_size": 10292,
+    "size_equal": true,
+    "zip_git_blob_sha1": "905f131db9c5a788b888ff6ed1ca48be48de62e7",
+    "remote_git_blob_sha1": "905f131db9c5a788b888ff6ed1ca48be48de62e7",
+    "blob_equal": true
+  },
+  {
+    "path": "12_full_replay_3ec8aadb1_421_of_421_rc0.log",
+    "zip_size": 54666,
+    "remote_size": 54666,
+    "size_equal": true,
+    "zip_git_blob_sha1": "fcd1ed4ebc387a6ba66c7b601b4a2f4a42bba039",
+    "remote_git_blob_sha1": "fcd1ed4ebc387a6ba66c7b601b4a2f4a42bba039",
+    "blob_equal": true
+  },
+  {
+    "path": "14_docs_lint_send_0e3c244ea_360passed.log",
+    "zip_size": 1171,
+    "remote_size": 1171,
+    "size_equal": true,
+    "zip_git_blob_sha1": "4b72c0e2a71e6ee18390e80080f3bfd19de1ea8d",
+    "remote_git_blob_sha1": "4b72c0e2a71e6ee18390e80080f3bfd19de1ea8d",
+    "blob_equal": true
+  },
+  {
+    "path": "aborted/run1_10_pytest_7fea9cdb7_F4_docs_lint_aborted.log",
+    "zip_size": 1251,
+    "remote_size": 1251,
+    "size_equal": true,
+    "zip_git_blob_sha1": "43fcfc4dc801bc266d82a228f3767eec3d163fcb",
+    "remote_git_blob_sha1": "43fcfc4dc801bc266d82a228f3767eec3d163fcb",
+    "blob_equal": true
+  },
+  {
+    "path": "aborted/run2_10_pytest_7ae871687_F1_contract_citation_aborted.log",
+    "zip_size": 1017,
+    "remote_size": 1017,
+    "size_equal": true,
+    "zip_git_blob_sha1": "b64c3792b27bd3ab5ec69ea8b1091bf7e7e002bc",
+    "remote_git_blob_sha1": "b64c3792b27bd3ab5ec69ea8b1091bf7e7e002bc",
+    "blob_equal": true
+  }
+]

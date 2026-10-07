@@ -1,0 +1,78 @@
+[
+  {
+    "file": "reference/GATE94_REQUEST.md",
+    "ref": "2345051aadf7c9e5f764fa76966bd4e3ad9a02eb",
+    "repository_path": "degradation-degeneracy/docs/22p_gap/GATE94_REQUEST.md",
+    "blob": "6a3cec281a7c43e497b52f6394a7ed5ee349b896"
+  },
+  {
+    "file": "evidence/main/10a_full_pytest_168fd41a5_1failed_wiki_raw_sha.log",
+    "ref": "2345051aadf7c9e5f764fa76966bd4e3ad9a02eb",
+    "repository_path": "degradation-degeneracy/docs/22p_gap/gate94_evidence/10a_full_pytest_168fd41a5_1failed_wiki_raw_sha.log",
+    "blob": "66dfb406c55ceb9b9146a35a690629f7e67b8af6",
+    "expected_bytes": 6130
+  },
+  {
+    "file": "evidence/main/11_smoke_168fd41a5_rc0.log",
+    "ref": "2345051aadf7c9e5f764fa76966bd4e3ad9a02eb",
+    "repository_path": "degradation-degeneracy/docs/22p_gap/gate94_evidence/11_smoke_168fd41a5_rc0.log",
+    "blob": "504d3a17ebc674a0ebd3004bdf1e256a9fb89820",
+    "expected_bytes": 10291
+  },
+  {
+    "file": "evidence/main/10b_full_pytest_fe72f9b81_2323passed.log",
+    "ref": "2345051aadf7c9e5f764fa76966bd4e3ad9a02eb",
+    "repository_path": "degradation-degeneracy/docs/22p_gap/gate94_evidence/10b_full_pytest_fe72f9b81_2323passed.log",
+    "blob": "4505b1c51afa3b08b6ec8f4ec2e50ce730fb0a25",
+    "expected_bytes": 3744
+  },
+  {
+    "file": "evidence/main/aborted/README.txt",
+    "ref": "2345051aadf7c9e5f764fa76966bd4e3ad9a02eb",
+    "repository_path": "degradation-degeneracy/docs/22p_gap/gate94_evidence/aborted/README.txt",
+    "blob": "33c149f28c8814cb8927abad9425e216324e015e",
+    "expected_bytes": 201
+  },
+  {
+    "file": "evidence/main/aborted/run1_10_pytest_49c769cb5_container_restart.log",
+    "ref": "2345051aadf7c9e5f764fa76966bd4e3ad9a02eb",
+    "repository_path": "degradation-degeneracy/docs/22p_gap/gate94_evidence/aborted/run1_10_pytest_49c769cb5_container_restart.log",
+    "blob": "4b06ca14d7b6e921202b818a72b22f811bd8450b",
+    "expected_bytes": 1555
+  },
+  {
+    "file": "evidence/main/aborted/run1_08_env_profile_49c769cb5.log",
+    "ref": "2345051aadf7c9e5f764fa76966bd4e3ad9a02eb",
+    "repository_path": "degradation-degeneracy/docs/22p_gap/gate94_evidence/aborted/run1_08_env_profile_49c769cb5.log",
+    "blob": "83a50ae2ed924a450a110f3f1b25daae456ec7ab",
+    "expected_bytes": 5792
+  },
+  {
+    "file": "evidence/main/12_full_replay_168fd41a5_422_of_422_rc0.log",
+    "ref": "2345051aadf7c9e5f764fa76966bd4e3ad9a02eb",
+    "repository_path": "degradation-degeneracy/docs/22p_gap/gate94_evidence/12_full_replay_168fd41a5_422_of_422_rc0.log",
+    "blob": "38a08595d3e2edbe3bef4914e35bf2a0a45d8066",
+    "expected_bytes": 54748
+  },
+  {
+    "file": "evidence/main/06_make_receipt_27b0917e2_rc0.log",
+    "ref": "2345051aadf7c9e5f764fa76966bd4e3ad9a02eb",
+    "repository_path": "degradation-degeneracy/docs/22p_gap/gate94_evidence/06_make_receipt_27b0917e2_rc0.log",
+    "blob": "dede7dcfb336f9e66cf4e5d3be2371fec97f4caa",
+    "expected_bytes": 353
+  },
+  {
+    "file": "evidence/main/README.md",
+    "ref": "2345051aadf7c9e5f764fa76966bd4e3ad9a02eb",
+    "repository_path": "degradation-degeneracy/docs/22p_gap/gate94_evidence/README.md",
+    "blob": "bea1a8c9cff054d3880139523a1dca01a29c35c0",
+    "expected_bytes": 3055
+  },
+  {
+    "file": "evidence/main/08_env_profile_168fd41a5.log",
+    "ref": "2345051aadf7c9e5f764fa76966bd4e3ad9a02eb",
+    "repository_path": "degradation-degeneracy/docs/22p_gap/gate94_evidence/08_env_profile_168fd41a5.log",
+    "blob": "14651fffbaa9258edf516bfb33f92d33d7d54a2d",
+    "expected_bytes": 5792
+  }
+]

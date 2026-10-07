@@ -1,0 +1,38 @@
+Source: https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/0ab2924f4/degradation-degeneracy/tests/test_gate82_residuals.py
+Static text excerpts only. Original one-based line numbers follow.
+
+33: def _reseal_fits(out: Path) -> None:
+34:     """fits.parquet 을 고친 뒤 manifest 의 `fits_seal` 을 실물에서 다시 계산해 맞춘다."""
+35:     mp = out / "manifest.yaml"
+36:     man = yaml.safe_load(mp.read_text(encoding="utf-8"))
+37:     now = IO.fits_seal(out / "fits.parquet", cond_ids=None, objective_order=None)
+38:     for k in ("file_sha256", "n_rows", "key_sha256", "cond_sha256", "n_conditions", "n_objectives"):
+39:         man["fits_seal"][k] = now[k]
+40:     mp.write_text(yaml.safe_dump(man, allow_unicode=True), encoding="utf-8")
+41: 
+42: 
+43: def _rewrite_record(out: Path, mutate) -> dict:
+44:     rec = json.loads((out / "execution_record.json").read_text(encoding="utf-8"))
+45:     mutate(rec)
+46:     rec["record_digest"] = PV.digest({k: v for k, v in rec.items() if k != "record_digest"})
+47:     (out / "execution_record.json").write_bytes(PV.canonical_bytes(rec))
+48:     return rec
+49: 
+50: 
+51: def _forge_stage3(out: Path, *, env_mutate=None, design_mutate=None) -> None:
+52:     """run_spec.stage3 의 계획 envelope · 설계를 바꾸고 digest 사슬 (설계 sha · planned_id · record) 을 다시 맞춘다."""
+53:     mp = out / "manifest.yaml"
+54:     man = yaml.safe_load(mp.read_text(encoding="utf-8"))
+55:     s3 = man["run_spec"]["stage3"]
+56:     if design_mutate is not None:
+57:         design_mutate(s3["pairing_design"])
+58:         d_sha = DW.pairing_design_sha256(s3["pairing_design"])
+59:         s3["pairing_design_sha256"] = d_sha
+60:         s3["planned_envelope"]["pairing_design_sha256"] = d_sha
+61:     if env_mutate is not None:
+62:         env_mutate(s3["planned_envelope"])
+63:     s3["planned_id"] = PV.digest(s3["planned_envelope"])
+64:     mp.write_text(yaml.safe_dump(man, allow_unicode=True), encoding="utf-8")
+65:     env = s3["planned_envelope"]
+66:     _rewrite_record(out, lambda r: r.update(planned_id=s3["planned_id"],
+67:                                             protocol_generation=env["protocol_generation"]))

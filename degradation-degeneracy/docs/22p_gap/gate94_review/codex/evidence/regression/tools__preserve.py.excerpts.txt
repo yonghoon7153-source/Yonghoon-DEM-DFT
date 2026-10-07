@@ -1,0 +1,85 @@
+Source: https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/0ab2924f4/degradation-degeneracy/tools/preserve.py
+Static text excerpts only. Original one-based line numbers follow.
+
+3126: def check_envelope(env) -> list[str]:
+3127:     """planned envelope 의 키 **와 값** 을 본다. 생성·복구가 같은 함수를 쓴다."""
+3128:     if not isinstance(env, dict):
+3129:         return [f"planned_envelope 가 dict 가 아니다: {type(env).__name__}"]
+3130:     bad = []
+3131:     if set(env) != _ENVELOPE_KEYS:
+3132:         return [f"planned_envelope 가 닫혀 있지 않다: "
+3133:                 f"{sorted(set(env) ^ _ENVELOPE_KEYS)}"]
+3134:     if env["schema"] != "planned-leg/v3":
+3135:         bad.append(f"planned_envelope schema: {env['schema']!r}")
+3136:     if not _nonempty_str(env["leg_id"]):
+3137:         bad.append(f"leg_id 가 비어 있지 않은 NFC 문자열이 아니다: {env['leg_id']!r}")
+3138:     if not _nonempty_str(env["protocol_generation"]) or \
+3139:             not _GENERATION_RE.match(env["protocol_generation"]):
+3140:         bad.append(f"protocol_generation 이 세대 문법이 아니다: "
+3141:                    f"{env['protocol_generation']!r}")
+3142:     if not _is_hex64(env["pairing_design_sha256"] or ""):
+3143:         bad.append("pairing_design_sha256 이 64-hex 가 아니다")
+3144:     if not _nonempty_str(env["source_digest"]) or \
+3145:             not re.fullmatch(r"[0-9a-f]{16}", env["source_digest"]):
+3146:         bad.append(f"source_digest 가 16-hex 가 아니다: {env['source_digest']!r}")
+3147:     objs = env["objectives"]
+3148:     if not isinstance(objs, list) or not objs or \
+3149:             not all(_nonempty_str(o) for o in objs) or \
+3150:             len(set(objs)) != len(objs) or objs != sorted(objs):
+3151:         bad.append(f"objectives 가 정렬된 unique 문자열 목록이 아니다: {objs!r}")
+3152:     if not _pos_int(env["total_start_budget"]):
+3153:         bad.append(f"total_start_budget 이 양의 정수가 아니다: "
+3154:                    f"{env['total_start_budget']!r}")
+3155:     if env["candidate_mode"] not in candidate_modes():
+3156:         bad.append(f"candidate_mode 가 계약 enum 이 아니다: {env['candidate_mode']!r}")
+3157:     # ★ 30차 P1-3 — 원래 요구한 하한을 envelope 에 **봉인**한다. 이것이 없으면
+3158:     #   나중 verifier 가 "무엇을 요구했었나" 를 복원할 수 없다.
+3159:     if not _pos_int(env["min_retention_days"]) or \
+3160:             env["min_retention_days"] < MIN_RETENTION_DAYS:
+3161:         bad.append(f"min_retention_days 가 정책 하한 미만이다: "
+3162:                    f"{env['min_retention_days']!r}")
+3163:     return bad
+
+3275: def check_planned_envelope(env) -> list[str]:
+3276:     """schema 로 v3/v4 를 **분기**한다 — 모르는 schema 는 거부 (G81-N2 의 version branch 원칙)."""
+3277:     if not isinstance(env, dict):
+3278:         return [f"planned_envelope 가 dict 가 아니다: {type(env).__name__}"]
+3279:     schema = env.get("schema")
+3280:     if schema == "planned-leg/v3":
+3281:         return check_envelope(env)
+3282:     if schema == "planned-leg/v4":
+3283:         return check_envelope_v4(env)
+3284:     return [f"모르는 planned envelope schema: {schema!r}"]
+
+3304:     if rec["record_digest"] != digest({k: v for k, v in rec.items() if k != "record_digest"}):
+3305:         bad.append("record_digest 가 자기 내용과 다르다")
+3306:     envbad = check_planned_envelope(planned_env)
+3307:     if envbad or planned_env.get("schema") != "planned-leg/v4":
+3308:         return bad + ["대조할 계획이 유효한 planned-leg/v4 가 아니다: " + "; ".join(envbad[:2])]
+3309:     if rec["leg_id"] != planned_env["leg_id"]:
+3310:         bad.append("leg_id 가 계획과 다르다")
+3311:     if rec["planned_id"] != digest(planned_env):
+3312:         bad.append(f"planned_id {str(rec['planned_id'])[:16]!r} 가 이 계획의 digest 가 아니다 — 다른 계획의 기록")
+3313:     if rec["source_digest"] != planned_env["source_digest"]:
+3314:         bad.append("source_digest 가 계획과 다르다 (code identity)")
+3315:     if rec["protocol_generation"] != planned_env["protocol_generation"]:
+3316:         bad.append("protocol_generation 이 계획과 다르다")
+
+6640: def stage3_axis_from_envelope(env: dict) -> dict:
+6641:     """★ 87차 §13-2 c — `planned-leg/v4` envelope → v3 spec 의 `stage3` 축 (유도 하나 · 두 벌 금지)."""
+6642:     if not isinstance(env, dict) or env.get("schema") != "planned-leg/v4":
+6643:         raise PreserveError(
+6644:             "plan", f"stage3 축은 planned-leg/v4 envelope 에서만 유도한다 — 받은 schema "
+6645:                     f"{(env.get('schema') if isinstance(env, dict) else type(env).__name__)!r}")
+6646:     bad = check_envelope_v4(env)
+6647:     if bad:
+6648:         raise PreserveError("plan", "유효하지 않은 planned-leg/v4 envelope 에서 stage3 축을 유도할 수 없다: "
+6649:                                     + "; ".join(bad[:3]))
+6650:     st = env["stages"][0]
+6651:     return {"planned_id": digest(env),
+6652:             "pairing_design_sha256": env["pairing_design_sha256"],
+6653:             "parameter_order_sha256": env["parameter_order_sha256"],
+6654:             "bank": {k: env["bank"][k] for k in sorted(_BANK_KEYS)},
+6655:             "roster_sha256": env["roster"]["roster_sha256"],
+6656:             "provider_edges_sha256": digest(env["provider_edges"]),
+6657:             "arm": st["arm"], "stage": st["stage"], "candidate_mode": st["candidate_mode"]}

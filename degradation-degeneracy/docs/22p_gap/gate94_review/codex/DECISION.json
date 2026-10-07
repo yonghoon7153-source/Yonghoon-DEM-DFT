@@ -1,0 +1,53 @@
+{
+  "status": "LIMITED_G93_N1_N2_ACCEPTED_WITH_NONBLOCKING_DOCUMENT_CORRECTION",
+  "request_head": "2345051aadf7c9e5f764fa76966bd4e3ad9a02eb",
+  "code_commit": "0ab2924f465461f1224d66c8f0a8c6013e857c6b",
+  "source_digest_reported": "044e4f5513011a9b",
+  "findings": [
+    {
+      "id": "G93-N1",
+      "status": "CLOSED",
+      "basis": "Static source trace and submitted regression/mutation logs"
+    },
+    {
+      "id": "G93-N2",
+      "status": "CLOSED",
+      "basis": "14/14 exact archive/manifest/hash/CRC/Git blob checks and raw log status reading"
+    },
+    {
+      "id": "G94-C1",
+      "priority": "P2",
+      "blocking": false,
+      "status": "DOCUMENT_CORRECTION_REQUIRED",
+      "location": "GATE94_REQUEST.md:68 and gate93_n2_supplement/README.md:18",
+      "title": "The request-HEAD docs-lint log was created after the request commit",
+      "required_action": "Correct explanatory chronology without modifying original logs/ZIP or rerunning tests"
+    }
+  ],
+  "execution_go": false,
+  "bundle6_closed": false,
+  "new_implementation_authorized": false,
+  "environment_C": "MISMATCH_34_RETAINED",
+  "reviewer_execution": {
+    "submitted_imports": 0,
+    "tests": 0,
+    "mutations": 0,
+    "analysis_programs": 0,
+    "comsol": 0
+  },
+  "original_claims_not_independently_verified": [
+    "scratch_original_byte_equal",
+    "scratch_mtime_utc",
+    "historical_rerun_count",
+    "pre-restoration bytes of edited aborted G94 log"
+  ],
+  "carry_forward": [
+    "39 position mutations",
+    "C8",
+    "C7 envelope-ledger binding",
+    "run_spec top-level",
+    "solution-map header",
+    "ledger entries"
+  ],
+  "next_action": "Record acceptance and correct chronology; no rerun requested"
+}

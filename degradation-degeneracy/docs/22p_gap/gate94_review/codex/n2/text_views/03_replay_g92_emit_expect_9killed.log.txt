@@ -1,0 +1,164 @@
+sandbox: /tmp/mutation_replay_m_p8yqoz/degradation-degeneracy
+
+★ 안 물었다    stage3-run-spec-keys-are-closed-g92 node 12 · -k test_g92_k03
+★ 안 물었다    stage3-run-spec-values-are-typed-g92 node 12 · -k test_g92_k03
+★ 안 물었다    candidate-map-keys-are-closed-g92 node 20 · -k test_g92_k04
+★ 안 물었다    failed-envelope-is-not-rederived-g92 node 1 · -k test_g92_k04_env
+★ 안 물었다    stage3-run-spec-is-derived-per-key-g92 node 9 · -k test_g92_k05
+★ 안 물었다    provider-edges-sha-has-one-definition-g92 node 1 · -k test_g92_k07
+★ 안 물었다    validator-planned-id-is-the-envelope-digest-g92 node 1 · -k test_g92_k06 and planned_id
+★ 안 물었다    validator-pairing-design-sha-is-recomputed-g92 node 1 · -k test_g92_k06 and pairing_design
+★ 안 물었다    validator-exact-bounds-sha-is-recomputed-g92 node 1 · -k test_g92_k06 and exact_bounds
+
+=== 관측한 EXPECT (그대로 붙여 넣어라) ===
+{
+    "candidate-map-keys-are-closed-g92": {
+        "fail": [
+            "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[container_list]",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[container_null]",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[container_str]",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_bank_index_bool]",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_bank_index_on_base]",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_candidate_id_int]",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_i_bool]",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_i_str]",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_missing_x0]",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_not_dict]",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_old_inference_status]",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_old_pairing_design_id]",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_third_key]",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_x0_int]",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[top_entries_not_list]",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[top_missing_schema]",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[top_old_inference_status]",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[top_old_pairing_design_id]",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[top_third_key]"
+        ],
+        "witness": {
+            "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[container_list]": "AssertionError: 이유에 'dict' 가 없다: 실패 — candidate_map.json 이 없거나 record 의 candidate_map_sha256 와 다르다",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[container_null]": "AssertionError: 이유에 'dict' 가 없다: 실패 — candidate_map.json 이 없거나 record 의 candidate_map_sha256 와 다르다",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[container_str]": "AssertionError: 이유에 'dict' 가 없다: 실패 — candidate_map.json 이 없거나 record 의 candidate_map_sha256 와 다르다",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_bank_index_bool]": "tools.design_wire.WireError: unit row 길이 (0, 8, 4) ≠ bounds 길이 (4,)",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_bank_index_on_base]": "AssertionError: candidate_map 위조가 통과했다: 통과",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_candidate_id_int]": "AssertionError: candidate_map 위조가 통과했다: 통과",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_i_bool]": "AssertionError: candidate_map 위조가 통과했다: 통과",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_i_str]": "AssertionError: candidate_map 위조가 통과했다: 통과",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_missing_x0]": "AssertionError: candidate_map 위조가 통과했다: 통과",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_not_dict]": "TypeError: 'int' object is not subscriptable",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_old_inference_status]": "AssertionError: candidate_map 위조가 통과했다: 통과",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_old_pairing_design_id]": "AssertionError: candidate_map 위조가 통과했다: 통과",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_third_key]": "AssertionError: candidate_map 위조가 통과했다: 통과",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_x0_int]": "AssertionError: candidate_map 위조가 통과했다: 통과",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[top_entries_not_list]": "AssertionError: 이유에 'entries' 가 없다: 실패 — candidate_map.json 이 없거나 record 의 candidate_map_sha256 와 다르다",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[top_missing_schema]": "AssertionError: candidate_map 위조가 통과했다: 통과",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[top_old_inference_status]": "AssertionError: candidate_map 위조가 통과했다: 통과",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[top_old_pairing_design_id]": "AssertionError: candidate_map 위조가 통과했다: 통과",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[top_third_key]": "AssertionError: candidate_map 위조가 통과했다: 통과"
+        }
+    },
+    "failed-envelope-is-not-rederived-g92": {
+        "fail": [
+            "tests/test_gate92_stage4_linkage.py::test_g92_k04_env_a_failed_planned_envelope_is_not_passed_to_the_rederivation"
+        ],
+        "witness": {
+            "tests/test_gate92_stage4_linkage.py::test_g92_k04_env_a_failed_planned_envelope_is_not_passed_to_the_rederivation": "AssertionError: 유효하지 않은 계획 envelope 로 후보 재유도를 불렀다"
+        }
+    },
+    "provider-edges-sha-has-one-definition-g92": {
+        "fail": [
+            "tests/test_gate92_stage4_linkage.py::test_g92_k07_the_run_spec_edge_sha_of_a_warm_plan_is_the_approved_axis_value"
+        ],
+        "witness": {
+            "tests/test_gate92_stage4_linkage.py::test_g92_k07_the_run_spec_edge_sha_of_a_warm_plan_is_the_approved_axis_value": "AssertionError: writer 의 edge sha d0b4e654521be839 ≠ 승인 축 (canonical digest) 35223970260b88ab"
+        }
+    },
+    "stage3-run-spec-is-derived-per-key-g92": {
+        "fail": [
+            "tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[arm]",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[bank_version]",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[budget_by_objective]",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[candidate_mode]",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[parameter_order_sha256]",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[provider_edges_sha256]",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[roster_sha256]",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[stage]",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[warm_provider_map]"
+        ],
+        "witness": {
+            "tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[arm]": "AssertionError: 자기일관 위조가 stage3_축_유도 를 통과했다: 통과 · fail=[]",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[bank_version]": "AssertionError: 자기일관 위조가 stage3_축_유도 를 통과했다: 통과 · fail=[]",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[budget_by_objective]": "AssertionError: 자기일관 위조가 stage3_축_유도 를 통과했다: 통과 · fail=[]",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[candidate_mode]": "AssertionError: 자기일관 위조가 stage3_축_유도 를 통과했다: 통과 · fail=[]",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[parameter_order_sha256]": "AssertionError: 자기일관 위조가 stage3_축_유도 를 통과했다: 통과 · fail=[]",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[provider_edges_sha256]": "AssertionError: 자기일관 위조가 stage3_축_유도 를 통과했다: 통과 · fail=[]",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[roster_sha256]": "AssertionError: 자기일관 위조가 stage3_축_유도 를 통과했다: 통과 · fail=[]",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[stage]": "AssertionError: 자기일관 위조가 stage3_축_유도 를 통과했다: 통과 · fail=[]",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[warm_provider_map]": "AssertionError: 자기일관 위조가 stage3_축_유도 를 통과했다: 통과 · fail=[]"
+        }
+    },
+    "stage3-run-spec-keys-are-closed-g92": {
+        "fail": [
+            "tests/test_gate92_stage4_linkage.py::test_g92_k03_run_spec_stage3_is_closed_and_typed[old_inference_status]",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k03_run_spec_stage3_is_closed_and_typed[old_pairing_design_id]",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k03_run_spec_stage3_is_closed_and_typed[third_key]"
+        ],
+        "witness": {
+            "tests/test_gate92_stage4_linkage.py::test_g92_k03_run_spec_stage3_is_closed_and_typed[old_inference_status]": "AssertionError: stage3 위조가 stage3_schema 를 통과했다: 통과",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k03_run_spec_stage3_is_closed_and_typed[old_pairing_design_id]": "AssertionError: stage3 위조가 stage3_schema 를 통과했다: 통과",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k03_run_spec_stage3_is_closed_and_typed[third_key]": "AssertionError: stage3 위조가 stage3_schema 를 통과했다: 통과"
+        }
+    },
+    "stage3-run-spec-values-are-typed-g92": {
+        "fail": [
+            "tests/test_gate92_stage4_linkage.py::test_g92_k03_run_spec_stage3_is_closed_and_typed[type_arm_int]",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k03_run_spec_stage3_is_closed_and_typed[type_bank_version_null]",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k03_run_spec_stage3_is_closed_and_typed[type_budget_list]",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k03_run_spec_stage3_is_closed_and_typed[type_closure_keys_str]",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k03_run_spec_stage3_is_closed_and_typed[type_pairing_sha_int]"
+        ],
+        "witness": {
+            "tests/test_gate92_stage4_linkage.py::test_g92_k03_run_spec_stage3_is_closed_and_typed[type_arm_int]": "AssertionError: stage3 위조가 stage3_schema 를 통과했다: 통과",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k03_run_spec_stage3_is_closed_and_typed[type_bank_version_null]": "AssertionError: stage3 위조가 stage3_schema 를 통과했다: 통과",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k03_run_spec_stage3_is_closed_and_typed[type_budget_list]": "AssertionError: stage3 위조가 stage3_schema 를 통과했다: 통과",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k03_run_spec_stage3_is_closed_and_typed[type_closure_keys_str]": "AssertionError: stage3 위조가 stage3_schema 를 통과했다: 통과",
+            "tests/test_gate92_stage4_linkage.py::test_g92_k03_run_spec_stage3_is_closed_and_typed[type_pairing_sha_int]": "AssertionError: stage3 위조가 stage3_schema 를 통과했다: 통과"
+        }
+    },
+    "validator-exact-bounds-sha-is-recomputed-g92": {
+        "fail": [
+            "tests/test_gate92_stage4_linkage.py::test_g92_k06_an_independently_recomputed_key_forged_alone_is_refused_by_its_own_check[exact_bounds_sha256]"
+        ],
+        "witness": {
+            "tests/test_gate92_stage4_linkage.py::test_g92_k06_an_independently_recomputed_key_forged_alone_is_refused_by_its_own_check[exact_bounds_sha256]": "AssertionError: 자기일관 위조가 후보_재유도 를 통과했다: 통과 · fail=[]"
+        }
+    },
+    "validator-pairing-design-sha-is-recomputed-g92": {
+        "fail": [
+            "tests/test_gate92_stage4_linkage.py::test_g92_k06_an_independently_recomputed_key_forged_alone_is_refused_by_its_own_check[pairing_design_sha256]"
+        ],
+        "witness": {
+            "tests/test_gate92_stage4_linkage.py::test_g92_k06_an_independently_recomputed_key_forged_alone_is_refused_by_its_own_check[pairing_design_sha256]": "AssertionError: 자기일관 위조가 후보_재유도 를 통과했다: 통과 · fail=[]"
+        }
+    },
+    "validator-planned-id-is-the-envelope-digest-g92": {
+        "fail": [
+            "tests/test_gate92_stage4_linkage.py::test_g92_k06_an_independently_recomputed_key_forged_alone_is_refused_by_its_own_check[planned_id]"
+        ],
+        "witness": {
+            "tests/test_gate92_stage4_linkage.py::test_g92_k06_an_independently_recomputed_key_forged_alone_is_refused_by_its_own_check[planned_id]": "AssertionError: 자기일관 위조가 stage3_planned_envelope 를 통과했다: 통과 · fail=[]"
+        }
+    }
+}
+
+scenario_total 9 · scenario_executable 9 · scenario_declared 0 · site_total 9 · site_executable 9 · site_declared 0 · ran 9
+
+=== 문제 ===
+stage3-run-spec-keys-are-closed-g92: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+stage3-run-spec-values-are-typed-g92: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+candidate-map-keys-are-closed-g92: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+failed-envelope-is-not-rederived-g92: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+stage3-run-spec-is-derived-per-key-g92: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+provider-edges-sha-has-one-definition-g92: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+validator-planned-id-is-the-envelope-digest-g92: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+validator-pairing-design-sha-is-recomputed-g92: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+validator-exact-bounds-sha-is-recomputed-g92: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)

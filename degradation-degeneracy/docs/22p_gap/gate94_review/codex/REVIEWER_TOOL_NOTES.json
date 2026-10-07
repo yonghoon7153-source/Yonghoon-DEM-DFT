@@ -1,0 +1,18 @@
+{
+  "date": "2026-10-07",
+  "scope": "Static review and evidence packaging only",
+  "execution": "Reviewer-owned archive/hash/text inspection utilities and ordinary shell commands only; no received programs imported or executed",
+  "reference_notes": [
+    "Exact request attachment matches fixed Git blob.",
+    "N2 text_views normalize line endings; original ZIP remains canonical.",
+    "G94 interrupted log lacked final newline. apply_patch local view adds one LF; exact source is retained and hash-verified via ORIGINAL_CONTENT.json content."
+  ],
+  "tooling_issues": [
+    "An initial reviewer N2 inspection print hit cp949 stdout encoding; rerun with UTF-8, not a submitted test rerun.",
+    "Two premature note reads found files not yet written by subagent; later completed.",
+    "One reviewer apply_patch delete/add-same-path attempt was rejected without changing file; applied a narrow update instead."
+  ],
+  "source_files_modified": false,
+  "remote_repository_writes": 0,
+  "external_messages_sent": 0
+}

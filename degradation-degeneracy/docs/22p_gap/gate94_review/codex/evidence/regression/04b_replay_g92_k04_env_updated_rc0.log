@@ -1,0 +1,8 @@
+utc 2026-10-07T00:56:02Z -k failed-envelope-is-not-rederived-g92
+sandbox: /tmp/mutation_replay_nlawjaq5/degradation-degeneracy
+
+물었다        failed-envelope-is-not-rederived-g92 node 1 · -k test_g92_k04_env
+
+scenario_total 1 · scenario_executable 1 · scenario_declared 0 · site_total 1 · site_executable 1 · site_declared 0 · ran 1
+실행한 변이 1건이 전부 기대 node 를 call 단계에서 물었다
+rc=0

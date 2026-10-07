@@ -1,0 +1,86 @@
+head 3a7d68069db3db1cee36d33e0b938e8b02c0b544 utc 2026-10-07T00:46:45Z
+
+[conftest] 시험 authority: /tmp/dd-test-authority-ggptjle8/docs/22p_gap/LEG_PRESERVATION.yaml (운영 원장의 바이트 복사본 — 70차 E6)
+
+[conftest] 이 checkout 을 처음 보았다 — 얼린 cohort 17개의 좌표를 시험 authority 에 봉인했다: ['g10_2026_09_01', 'g11_2026_09_02', 'g12_2026_09_03', 'g13_2026_09_07', 'g14_2026_09_08', 'g15_2026_09_08', 'g16_2026_09_09', 'g17_2026_09_14', 'g1_2026_08_20', 'g2_2026_08_25', 'g3_2026_08_28', 'g4_2026_08_28', 'g5_2026_08_29', 'g6_2026_09_01', 'g7_2026_09_01', 'g8_2026_09_01', 'g9_2026_09_01']
+F..                                                                      [100%]
+=================================== FAILURES ===================================
+__ test_g93_n1_a_valid_v3_envelope_under_sig6_is_refused_without_rederivation __
+
+runs = {'root': PosixPath('/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/results/_smoke/_unit/g92_mod_4a5a8e60'), 'in': ...warm': PosixPath('/home/user/Yonghoon-DEM-DFT/degradation-degeneracy/results/_smoke/_unit/g92_mod_4a5a8e60/warm'), ...}
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-7385/test_g93_n1_a_valid_v3_envelop0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f90563b34d0>
+
+    def test_g93_n1_a_valid_v3_envelope_under_sig6_is_refused_without_rederivation(runs, tmp_path, monkeypatch):
+        out = _copy(runs["base"], tmp_path)
+        G82._forge_stage3(out, env_mutate=_as_v3)
+        G85._resign(out)
+>       v, calls = _validate_no_rederive(out, monkeypatch)       # KeyError 등 예외는 여기서 그대로 올라온다 (음성 PASS 아님)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_gate93_n1_v3_envelope.py:49: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_gate92_stage4_linkage.py:115: in _validate_no_rederive
+    return IO.validate_provenance(out), calls
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/io.py:2223: in validate_provenance
+    checks.update(_stage3_checks(run_dir, spec0))
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/io.py:2033: in _stage3_checks
+    rd_bad, budget_bad = _stage3_rederive(run_dir, spec0, s3, env, ents, fits_df)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_gate92_stage4_linkage.py:113: in spy
+    return real(*a, **k)
+           ^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+run_dir = PosixPath('/tmp/pytest-of-root/pytest-7385/test_g93_n1_a_valid_v3_envelop0/o')
+spec0 = {'base_config': 'configs/base.yaml', 'base_config_sha': '26fe6c7cc2a2d719', 'bounds': {'init': [1.0, 0.0, 1.0, 0.0], 'lb': [0.5, -1.0, 0.5, -1.0], 'ub': [2.0, 1.0, 2.0, 1.0]}, 'bounds_preset': 'expanded', ...}
+s3 = {'arm': 'G_A', 'bank_version': 'v6.0', 'base_config_closure_keys': ['configs/base.yaml'], 'base_config_closure_sha256': '2885945318d396a5df928697a341dafe50f9aec82b7ad86adefedd3d77eb5976', ...}
+env = {'candidate_mode': 'legacy_slot_replace', 'leg_id': 'g22p_v6_armGA_b3', 'min_retention_days': 365, 'objectives': ['pocv_dvdq', 'pocv_dvdq_dqdv'], ...}
+ents = [{'bank_index': None, 'candidate_id': '8c1a29cd01466de16cf8bd9785e32e38c6ded515b9749947e9d63d1657f5bada', 'cond_id': '..._id': '00f930ea2966b92fc051afe5f075a03e5f9935084db7dfe7949704fc498074c0', 'cond_id': 'dc7488ef420f', 'i': 1, ...}, ...]
+fits_df =   reference  ...       run_sig
+0      grid  ...  5a9b10e0d09d
+1      grid  ...  5a9b10e0d09d
+2      grid  ...  5a9b10e0d09d
+3      grid  ...  5a9b10e0d09d
+4      grid  ...  5a9b10e0d09d
+5      grid  ...  5a9b10e0d09d
+
+[6 rows x 48 columns]
+
+    def _stage3_rederive(run_dir, spec0: dict, s3: dict, env: dict, ents: list, fits_df) -> tuple:
+        """★ 82차 전 자체 점검 F2·F12 — 후보를 **다시 유도**한다 (81차 §6 "64hex 존재만으로 통과 금지").
+    
+        run_spec 의 pairing design(digest 대조) · run_spec.bounds(exact_bounds 대조) · 행의 truth 좌표 → pair_group_id → 봉인
+        bank(generator·version·length·n_params) → bank_id · candidate_plan(mode·B·provider) → 후보 구성 · base = bounds.init ·
+        random = lb + u·(ub−lb) · warm = 봉인 provider map 사본(`_inputs/provider_maps/`) → x0 digest · candidate_id ·
+        restart 행 대조. 반환 `(재유도 문제, 예산 미완 (조건/objective))` — 예산은 objective 별 계획 길이로 본다.
+        """
+        from types import SimpleNamespace
+        import numpy as np
+        from src.fitting import PARAM_NAMES, provider_x0
+        from tools import design_wire as DW
+        bad: list = []
+        budget_bad: list = []
+        design = s3.get("pairing_design")
+        try:
+            d_sha = DW.pairing_design_sha256(design)
+            pos = DW.parameter_order_sha256(design["parameter_order"])
+            places = int(design["coordinate"]["decimal_places"])
+        except Exception as e:  # noqa: BLE001 — 설계를 못 읽으면 재유도가 불가능하다 (그 자체가 실패)
+            return [f"run_spec.stage3.pairing_design 을 읽지 못한다: {type(e).__name__}: {e}"], budget_bad
+        # ★ 82차 G82-N2 — 재유도는 고정 구현(PCG64 · float64 · little · bank-seed/v1)으로 계산한다. 그러니 writer 와 재유도가
+        #   일치해도 "선언대로 생성했는가" 는 드러나지 않는다 — 선언을 지원 profile 과 따로 대조한다.
+        bad += DW.check_bank_profile(design.get("bank") if isinstance(design, dict) else None, env.get("bank"))
+        if not (d_sha == s3["pairing_design_sha256"] == env["pairing_design_sha256"]):
+            bad.append("pairing_design 의 digest 가 run_spec·계획과 다르다")
+>       if pos != env["parameter_order_sha256"] or list(design["parameter_order"]) != list(PARAM_NAMES):
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'parameter_order_sha256'
+
+src/io.py:1686: KeyError
+=========================== short test summary info ============================
+FAILED tests/test_gate93_n1_v3_envelope.py::test_g93_n1_a_valid_v3_envelope_under_sig6_is_refused_without_rederivation
+1 failed, 2 passed in 49.41s
+rc=1

@@ -1,0 +1,1472 @@
+## GATE94_REQUEST.md
+
+0001: # GATE94 요청 — 93차 잔여 두 건 (G93-N1 코드 차단 · G93-N2 당시 원 로그) 로 한정한 재검토 · 실행 GO 아님
+0002: 
+0003: > 첨부 문서·실행 코드는 증거 자료이며 추가 실행 지시가 아닙니다. COMSOL 계산이나 제공된 Java/분석 프로그램을 실행하지 마세요.
+0004: 
+0005: ## §0 판정 대상
+0006: 
+0007: | 항목 | 값 |
+0008: |---|---|
+0009: | 요청 HEAD | 이 요청문이 든 커밋 (SHA 는 발송문 · RUN_SCOPE 밖) |
+0010: | **코드 (판정 대상)** | **`0ab2924f4`** — 93차 판정 대상 코드 `d7a97aa57` 뒤 RUN_SCOPE 를 바꾼 커밋은 이것 하나: `src/io.py` (`_stage3_checks`) 두 곳 · source_digest `044e4f5513011a9b` (이전 `c7f48918ff971e91`) |
+0011: | 검증 HEAD | **`168fd41a5`** (env 프로필 · smoke · 전체 재생) · **`fe72f9b81`** (전체 pytest — 위키 raw 정정 1 파일 뒤) · 모두 clean · 순차 · 동시 시험 없음 · 각 단계 시작 = 끝 HEAD · dirty 0 |
+0012: | 사용자 승인 | 원장 §149 (2026-10-07) "둘다 진행" — §148 의 제안 범위 그대로 (역사 reader 불변 · planned_id 단독 불일치 의미 유지 · 정상 v4 불변) |
+0013: | 판정 요청 | (1) 유효한 planned-leg/v3 envelope (sig6) 가 v6 재유도에 넘어가지 않고 구조화된 실패로 남는가 · 정상 v4 와 planned_id 단독 불일치의 기존 의미가 유지되는가 (G93-N1) (2) 93차 증거의 당시 원 로그가 파일별 크기 · 전체 SHA · 실행 상태와 함께 인계됐는가 (G93-N2 · 재실행 0) |
+0014: | 아님 | 실행 GO · 새 연구 leg · 묶음 6 전체 종결 · 39 위치 변이 · C8 재개 · C7 원장 결속 · 제외 세 객체 (93차 이월 그대로) |
+0015: 
+0016: 93차 요청 (`0e3c244ea`) 과 이 요청 사이의 RUN_SCOPE 밖 커밋: 원 로그 강제 추가 (`e0e9f213d`) · 93차 회신 보존 (`095c31ac5` 규칙 · `93e8943ac` 묶음) · 원장 §148 · N2 보충 (`217230fe2`) ·
+0017: 승인 §149 (`3a7d68069`) · 영수증 history (`27b0917e2`) · 재생성 · 앵커 (`49c769cb5`) · COMSOL §70 초안 (`168fd41a5`) · 위키 raw 정정 (`fe72f9b81`) · 증거 규칙 (`da7ab3f42`) · 증거 (`016e970f6`) · 게이트 차수 밖 논문 후속 · 위키 기록.
+0018: 
+0019: ## §1 G93-N1 — 차단 조건 (좌표 = `0ab2924f4`)
+0020: 
+0021: | 자리 | 변경 | 회귀 node |
+0022: |---|---|---|
+0023: | `src/io.py` `_stage3_checks` 축 유도 | `stage3_axis_from_envelope(env)` 의 PreserveError 문구를 `ax_err` 로도 보관 (`stage3_축_유도` 실패 이유는 그대로) | — |
+0024: | `src/io.py` `_stage3_checks` 재유도 차단 | `if ebad:` → `v4_bad = list(ebad) + ([ax_err] if ax_err is not None else [])` · `if v4_bad:` — 같은 4 키 (후보_재유도 · 실현_재계산 · restart_예산_완주 · 관측_roster_재구성) 실패 · 조기 반환. 이유 문구 "planned_envelope 가 유효한 planned-leg/v4 가 아니어서 다시 유도 · 재계산하지 않는다: …" | `test_g93_n1` |
+0025: | v4 schema + 구조 판정 | 새 판정 없음 — 기존 helper `stage3_axis_from_envelope` 가 `schema == planned-leg/v4` + `check_envelope_v4` 를 이미 본다 (중복 schema 검사를 넣었다가 GREEN 뒤 helper 재사용으로 줄임 · 증거 01 → 02) | — |
+0026: | 역사 reader | `check_planned_envelope` 불변 (v3 / v4 분기 그대로) | 기존 시험 |
+0027: | 기존 의미 | 정상 v4 → 통과 · 재유도 호출 / planned_id 단독 불일치 → `stage3_planned_envelope` 만 실패 · 재유도 그대로 (v4 경계 문구 없음) | `test_g93_c1` · `test_g93_c2` |
+0028: 
+0029: ## §2 RED → GREEN
+0030: 
+0031: - 증거 00 (`gate94_evidence/00_red_test_g93_1failed_keyerror_io1686.log`): 수정 전 `test_g93_n1` — `src/io.py:1686: KeyError: 'parameter_order_sha256'` (93차 회신이 정적으로 짚은 경로 그대로) · c1 · c2 통과 (기존 의미 고정 시험이라 수정 전에도 통과가 정상).
+0032:   fixture: base v6 실물 산출의 envelope 를 같은 이름의 값 (leg_id · 세대 · **설계 SHA** · source_digest · 정렬 objectives · 예산 합 · candidate_mode · min_retention_days) 으로 유효 v3 로 바꾸고
+0033:   (`check_planned_envelope(v3) == []` 를 fixture 안에서 단언) planned_id · record · run_signature 를 다시 맞춘다 — 실제 `validate_provenance` 경로 · `_stage3_rederive` spy.
+0034: - 증거 01 · 02: GREEN — 새 시험 3 + stage3 모듈 4 (`test_gate92_stage4_linkage` · `test_gate81_stage3_wire` · `test_gate82_residuals`) 204 passed (중복 schema 검사 제거 전 · 후 각 1 회).
+0035: 
+0036: ## §3 변이 (증거 03 · 04)
+0037: 
+0038: | 변이 | 바꾸는 것 | 기대 실패 (증인) |
+0039: |---|---|---|
+0040: | `v6-rederive-gate-includes-axis-failure-g93` (신규) | `v4_bad = list(ebad)` (92차 판본) | `test_g93_n1` — `KeyError: 'parameter_order_sha256'` (결정적) |
+0041: | `failed-envelope-is-not-rederived-g92` (원문만 갱신) | `if v4_bad:` → `if False:` (조건 이름 ebad → v4_bad) | `test_g92_k04_env` (기존 증인 그대로) |
+0042: 
+0043: ## §4 영수증 (증거 06)
+0044: 
+0045: history 먼저 (`27b0917e2` — 두 leg 현행본 · validator `c7f48918ff971e91` · 바이트 그대로) → `make_receipt.py` leg 별 1 회 (clean `27b0917e2`) → 원장 앵커 갱신 (`49c769cb5`).
+0046: paired_fixed5_v4 검사 35 · core `68a74c60…` / grid_fit_v5 검사 34 · core `16d3be25…` · `--check` 두 leg core 바이트 동일. diff 는 validator identity (`validator_source_digest` · `src_io_sha256` · commit · 시각 · 플랫폼) 뿐.
+0047: 플랫폼 문자열 `fc-v70 → fc-v77` 은 세션 컨테이너 교체이고 정본 환경 일치 주장이 아니다.
+0048: 
+0049: ## §5 전체 회귀 · smoke · 등록부 전체 재생 (clean · 순차 · 증거 `gate94_evidence/`)
+0050: 
+0051: | 단계 | HEAD | 결과 | 증거 |
+0052: |---|---|---|---|
+0053: | env 프로필 (C) | `168fd41a5` | rc 0 · MISMATCH 기록 그대로 (컨테이너 이미지 차 · 정본 환경 일치 주장 아님) | 08 |
+0054: | 전체 pytest (1 차) | `168fd41a5` | **1 failed** · 2322 passed · 1 xfailed — `test_docs_lint.py::test_wiki_tools_survive_a_cp949_console[lint.py]` (위키 raw 2026-10-07 브리핑의 sha256 선언 오류 · 코드 무관) | 10a |
+0055: | 위키 정정 | `fe72f9b81` | 선언을 위키 규칙 (frontmatter 뒤 본문 전체) 대로 · wiki lint 0 errors · 실패 node 2 / 2 통과 | 커밋 |
+0056: | **전체 pytest (2 차)** | **`fe72f9b81`** | **2323 passed · 1 xfailed · rc 0** (1:38:55) | 10b |
+0057: | strict smoke | `168fd41a5` | rc 0 | 11 |
+0058: | **등록부 전체 재생** | `168fd41a5` | **scenario 433 · executable 422 · declared 11 · ran 422 · 422 / 422 call 단계에서 물었다 · rc 0** | 12 |
+0059: 
+0060: `168fd41a5` ↔ `fe72f9b81` 차이는 `wiki/raw/articles/2026-10-07-github-research-briefing.md` 하나 — smoke · 재생은 위키를 읽지 않아 다시 돌리지 않았다.
+0061: 
+0062: - 중단 1 회 (보존): 1 차 시작 `49c769cb5` 01:02:55Z — pytest 34 % 에서 컨테이너 재시작으로 프로세스 소멸 (rc 줄 없음) → `aborted/run1_*`. 재시작 HEAD 는 COMSOL 초안 커밋 `168fd41a5` (RUN_SCOPE 밖 · `degradation-degeneracy/` 차이 0).
+0063: 
+0064: ## §6 G93-N2 — 당시 원 로그 (재실행 0)
+0065: 
+0066: - 93차 관측 그대로: 요청 커밋 `0e3c244ea` 의 `gate93_evidence/` 에는 README 만 있었다 — `*.log` gitignore 로 `2ab61069b` 의 `git add` 가 조용히 건너뜀. 원 로그 14 는 요청 뒤 `e0e9f213d` 에 `-f` 로 추가.
+0067: - 첨부: `docs/22p_gap/gate93_n2_supplement/GATE93_N2_ORIGINAL_LOGS.zip` (128,409 B · sha256 `b76e663dcf9fba7ce18a0381e01b1777ad7e594d341d42a74376669d37c3f7c6`) + `GATE93_N2_LOG_MANIFEST.json`
+0068:   (11,913 B · `b2ee0d56a10be75c16dcd81fd23d65c4f1814ef6426b3fddabb37e08ec577620`) — 14 로그 = `e0e9f213d` blob 바이트 · 당시 스크래치 원본과 14 / 14 sha256 동일 · 원본 수정 시각 12:30:38Z – 19:17:57Z (모두 요청 커밋 전) ·
+0069:   파일별 `status_lines` (로그 자체의 rc · 시작 / 끝 HEAD · dirty · 요약 줄).
+0070: - 이번 라운드 증거 (`gate94_evidence/` · 로그 15 + README) 는 `git add -f` 로 넣었고 증거 커밋 `016e970f6` tree 에 16 파일이 있다 (`git ls-tree` · 발송문에 요청 커밋 기준 출력).
+0071: 
+0072: ## §7 자체 신고
+0073: 
+0074: a. 수정 전 GREEN 판본에 schema 중복 검사가 있었다 — helper 가 이미 같은 판정을 해 GREEN 뒤 줄였다 (증거 01 → 02 · 같은 결과).
+0075: b. 이유 문구가 바뀌었다 ("유효하지 않아" → "유효한 planned-leg/v4 가 아니어서") — 저장소 안 다른 참조 0 (grep) · 변이 증인은 시험 메시지라 영향 없음.
+0076: c. 1 차 검증이 컨테이너 재시작으로 끊겼다 (§5) — 원 로그 보존 · 처음부터 다시.
+0077: d. 플랫폼 문자열 변화 (§4) — 기록만.
+0078: e. 1 차 전체 pytest 의 1 실패는 이 라운드 밖 위키 기록 (2026-10-07 브리핑 raw) 의 sha256 선언 오류였다 — 커밋 전에 wiki lint 를 돌리지 않았다. 정정 뒤 전체 pytest 를 다시 돌렸고 (§5), smoke · 재생은 다시 돌리지 않았다 (근거 §5 끝 줄).
+0079: f. 중단 로그 보존 중 원 로그 끝에 메모 한 줄을 덧붙였다가 원래 크기 (1,555 B) 로 잘라 되돌렸다 — 원 바이트는 그 앞부분 그대로이고 메모는 `aborted/README.txt` 에 따로 있다.
+0080: g. 증거 로그 16 파일이 증거 커밋 `016e970f6` 의 tree 에 있음을 `git ls-tree` 로 확인했다 (발송문에 요청 커밋 기준 확인 출력을 붙인다).
+0081: 
+
+## GATE93_N2_LOG_MANIFEST.json
+
+0001: {
+0002:  "schema": "gate93_n2_log_supplement_v1",
+0003:  "request_head": "0e3c244ea79db1b17f09a8f8043d808ab51ff43c",
+0004:  "logs_commit": "e0e9f213deecabfd50254217a428bac6a85819f8",
+0005:  "logs_commit_after_request": true,
+0006:  "rerun": false,
+0007:  "note": "요청 커밋 0e3c244ea 에는 README 만 있었다 (*.log 이 gitignore 라 git add 가 조용히 건너뜀). 원 로그는 당시 스크래치 파일을 바이트 그대로 e0e9f213d 에 -f 로 추가했다. 재실행 0.",
+0008:  "files": [
+0009:   {
+0010:    "path": "00_red_test_gate92_138nodes_41failed_97passed.log",
+0011:    "size": 20540,
+0012:    "sha256": "ac96f22c6c645142b7b7829b5b05e0cfa0f1c4f5290f15f086b386c374320d94",
+0013:    "git_blob_commit": "e0e9f213d",
+0014:    "scratch_original": "g92_red.log",
+0015:    "scratch_original_byte_equal": true,
+0016:    "scratch_mtime_utc": "2026-10-06T12:30:38Z",
+0017:    "status_lines": [
+0018:     "FAILED tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[stage]",
+0019:     "FAILED tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[candidate_mode]",
+0020:     "FAILED tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[bank_version]",
+0021:     "FAILED tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[budget_by_objective]",
+0022:     "FAILED tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[warm_provider_map]",
+0023:     "FAILED tests/test_gate92_stage4_linkage.py::test_g92_k07_the_run_spec_edge_sha_of_a_warm_plan_is_the_approved_axis_value",
+0024:     "41 failed, 97 passed in 31.65s",
+0025:     "rc=1"
+0026:    ]
+0027:   },
+0028:   {
+0029:    "path": "03_replay_g92_emit_expect_9killed.log",
+0030:    "size": 17214,
+0031:    "sha256": "e16e1cdaa427ec70cb5285463fb1babd0ff7f4c2228d8606c131de2a79bc36b6",
+0032:    "git_blob_commit": "e0e9f213d",
+0033:    "scratch_original": "g92_emit.log",
+0034:    "scratch_original_byte_equal": true,
+0035:    "scratch_mtime_utc": "2026-10-06T12:57:20Z",
+0036:    "status_lines": [
+0037:     "★ 안 물었다    failed-envelope-is-not-rederived-g92 node 1 · -k test_g92_k04_env",
+0038:     "\"failed-envelope-is-not-rederived-g92\": {",
+0039:     "\"tests/test_gate92_stage4_linkage.py::test_g92_k04_env_a_failed_planned_envelope_is_not_passed_to_the_rederivation\"",
+0040:     "\"tests/test_gate92_stage4_linkage.py::test_g92_k04_env_a_failed_planned_envelope_is_not_passed_to_the_rederivation\": \"AssertionError: 유효하지 않은 계획 envelope 로 후보 재유도를 불렀다\"",
+0041:     "scenario_total 9 · scenario_executable 9 · scenario_declared 0 · site_total 9 · site_executable 9 · site_declared 0 · ran 9",
+0042:     "failed-envelope-is-not-rederived-g92: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)"
+0043:    ]
+0044:   },
+0045:   {
+0046:    "path": "04a_replay_g92_verify_8of9_k07_witness_nondeterministic.log",
+0047:    "size": 1491,
+0048:    "sha256": "e3a8f6d21079477535f01e427e993c30d3375458ab175b31de93c447ece212c1",
+0049:    "git_blob_commit": "e0e9f213d",
+0050:    "scratch_original": "g92_check.log",
+0051:    "scratch_original_byte_equal": true,
+0052:    "scratch_mtime_utc": "2026-10-06T13:03:43Z",
+0053:    "status_lines": [
+0054:     "물었다        failed-envelope-is-not-rederived-g92 node 1 · -k test_g92_k04_env",
+0055:     "scenario_total 9 · scenario_executable 9 · scenario_declared 0 · site_total 9 · site_executable 9 · site_declared 0 · ran 9"
+0056:    ]
+0057:   },
+0058:   {
+0059:    "path": "04b_replay_g92_k07_after_witness_fix_rc0.log",
+0060:    "size": 355,
+0061:    "sha256": "6082742576fc4cc81b068ddcd02e311468c0a907c65a231ec8849cb24074e5df",
+0062:    "git_blob_commit": "e0e9f213d",
+0063:    "scratch_original": "g92_k07.log",
+0064:    "scratch_original_byte_equal": true,
+0065:    "scratch_mtime_utc": "2026-10-06T13:04:47Z",
+0066:    "status_lines": [
+0067:     "scenario_total 1 · scenario_executable 1 · scenario_declared 0 · site_total 1 · site_executable 1 · site_declared 0 · ran 1"
+0068:    ]
+0069:   },
+0070:   {
+0071:    "path": "05a_kext_stage3_axis_g87_plus_k08_13killed.log",
+0072:    "size": 6817,
+0073:    "sha256": "a86cac4cf5e571d974ad94b2f9f0b2c3964e6024c186659accca9c68f3d2b51f",
+0074:    "git_blob_commit": "e0e9f213d",
+0075:    "scratch_original": "kext1.log",
+0076:    "scratch_original_byte_equal": true,
+0077:    "scratch_mtime_utc": "2026-10-06T13:44:01Z",
+0078:    "status_lines": [
+0079:     "\"tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[bank.generator]\": \"Failed: DID NOT RAISE PreserveError\",",
+0080:     "\"tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[bank.length]\": \"Failed: DID NOT RAISE PreserveError\",",
+0081:     "\"tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[bank.n_params]\": \"Failed: DID NOT RAISE PreserveError\",",
+0082:     "\"tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[bank.version]\": \"Failed: DID NOT RAISE PreserveError\",",
+0083:     "\"tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[pairing_design_sha256]\": \"Failed: DID NOT RAISE PreserveError\",",
+0084:     "\"tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[parameter_order_sha256]\": \"Failed: DID NOT RAISE PreserveError\",",
+0085:     "\"tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[stage]\": \"Failed: DID NOT RAISE PreserveError\"",
+0086:     "scenario_total 1 · scenario_executable 1 · scenario_declared 0 · site_total 1 · site_executable 1 · site_declared 0 · ran 1"
+0087:    ]
+0088:   },
+0089:   {
+0090:    "path": "05b_kext_claim_seals_plus_k10c8_2killed.log",
+0091:    "size": 1368,
+0092:    "sha256": "e5e9d420c1b22bbcd62fcb8d2e7a602c21c570e18935daf066974b75d76a1b1a",
+0093:    "git_blob_commit": "e0e9f213d",
+0094:    "scratch_original": "kext2.log",
+0095:    "scratch_original_byte_equal": true,
+0096:    "scratch_mtime_utc": "2026-10-06T13:44:35Z",
+0097:    "status_lines": [
+0098:     "\"tests/test_gate92_stage4_linkage.py::test_g92_k10_c8_another_self_consistent_plan_is_not_the_approved_run_spec\": \"Failed: DID NOT RAISE PreserveError\",",
+0099:     "\"tests/test_preserve.py::test_the_claim_seals_the_exact_run_spec\": \"Failed: DID NOT RAISE PreserveError\"",
+0100:     "scenario_total 1 · scenario_executable 1 · scenario_declared 0 · site_total 1 · site_executable 1 · site_declared 0 · ran 1"
+0101:    ]
+0102:   },
+0103:   {
+0104:    "path": "06_make_receipt_683503225_rc0.log",
+0105:    "size": 353,
+0106:    "sha256": "15e2be9b3ecbd6313d2ff431e513b4c26ff81d10eb3bfbd37a6e9f458ce067f4",
+0107:    "git_blob_commit": "e0e9f213d",
+0108:    "scratch_original": "g92ev/06_receipts.log",
+0109:    "scratch_original_byte_equal": true,
+0110:    "scratch_mtime_utc": "2026-10-06T13:08:26Z",
+0111:    "status_lines": [
+0112:     "head 68350322592f400e3ef2655972d5d35f14851b60 dirty 0"
+0113:    ]
+0114:   },
+0115:   {
+0116:    "path": "08_env_profile_json_3ec8aadb1_mismatch34.log",
+0117:    "size": 5792,
+0118:    "sha256": "9ae1c6027248eb3d9f2d00f076f5c1052c4554f4d81dc2d496b850b803ece898",
+0119:    "git_blob_commit": "e0e9f213d",
+0120:    "scratch_original": "g92ev/08_env_profile.log",
+0121:    "scratch_original_byte_equal": true,
+0122:    "scratch_mtime_utc": "2026-10-06T13:51:34Z",
+0123:    "status_lines": [
+0124:     "start head 3ec8aadb13e4ee4eb9e3434fbd28e503a7c03a34 dirty 0 utc 2026-10-06T13:51:29Z",
+0125:     "{\"counts\": {\"dists_locked\": 170, \"dists_measured\": 174, \"files_unhashed\": 10456, \"files_verified\": 24918, \"path_origins_in_record\": 9, \"shadowed_locked\": 2, \"shadowed_measured\": 3}, \"lock_path\": \"requ",
+0126:     "rc=0",
+0127:     "end head 3ec8aadb13e4ee4eb9e3434fbd28e503a7c03a34 dirty 0 utc 2026-10-06T13:51:34Z"
+0128:    ]
+0129:   },
+0130:   {
+0131:    "path": "10_full_pytest_3ec8aadb1_2320passed.log",
+0132:    "size": 3744,
+0133:    "sha256": "2f3da06d009d0971418518f7126ba3d68b7acd5426f5aa519fcb3f405bf32a45",
+0134:    "git_blob_commit": "e0e9f213d",
+0135:    "scratch_original": "g92ev/10_pytest.log",
+0136:    "scratch_original_byte_equal": true,
+0137:    "scratch_mtime_utc": "2026-10-06T15:09:42Z",
+0138:    "status_lines": [
+0139:     "start head 3ec8aadb13e4ee4eb9e3434fbd28e503a7c03a34 dirty 0 utc 2026-10-06T13:51:34Z",
+0140:     "2320 passed, 1 xfailed in 4684.37s (1:18:04)",
+0141:     "rc=0",
+0142:     "end head 3ec8aadb13e4ee4eb9e3434fbd28e503a7c03a34 dirty 0 utc 2026-10-06T15:09:42Z"
+0143:    ]
+0144:   },
+0145:   {
+0146:    "path": "11_smoke_3ec8aadb1_rc0.log",
+0147:    "size": 10292,
+0148:    "sha256": "83c3b9babb146fe5375ee0abc7403e3ff1580074d89c1fe932ddd98b590ae7a5",
+0149:    "git_blob_commit": "e0e9f213d",
+0150:    "scratch_original": "g92ev/11_smoke.log",
+0151:    "scratch_original_byte_equal": true,
+0152:    "scratch_mtime_utc": "2026-10-06T15:13:26Z",
+0153:    "status_lines": [
+0154:     "start head 3ec8aadb13e4ee4eb9e3434fbd28e503a7c03a34 dirty 0 utc 2026-10-06T15:09:42Z",
+0155:     "환경 프로필 C 대조: MISMATCH · lock requirements-validation-C.lock.txt (sha256 d886f30ff675fef7…) · 배포판 lock 170 / 측정 174 · 가려진 2 / 3 · 설치 파일 일치 24918 (해시 없음 10456) · 경로 검색 origin 의 RECORD 소속 9 (로드된 module o",
+0156:     "\"n_failed\": 2,",
+0157:     "rc=0",
+0158:     "end head 3ec8aadb13e4ee4eb9e3434fbd28e503a7c03a34 dirty 0 utc 2026-10-06T15:13:26Z"
+0159:    ]
+0160:   },
+0161:   {
+0162:    "path": "12_full_replay_3ec8aadb1_421_of_421_rc0.log",
+0163:    "size": 54666,
+0164:    "sha256": "b4cf4b6dbae68cdb41817be03c7297c69b7a3c575173c4019760d833db66f367",
+0165:    "git_blob_commit": "e0e9f213d",
+0166:    "scratch_original": "g92ev/12_replay.log",
+0167:    "scratch_original_byte_equal": true,
+0168:    "scratch_mtime_utc": "2026-10-06T18:42:28Z",
+0169:    "status_lines": [
+0170:     "물었다        attempted-only-names-are-not-loaded-modules-g63 node 1 · -k an_ordinary_failed_optional_import_keeps_startup_measured",
+0171:     "물었다        customization-reads-origins-like-the-rest-g64 node 1 · -k a_zip_customization_is_measured_not_failed",
+0172:     "물었다        failed-restarts-are-recorded-g79 node 1 · -k g79_04_a",
+0173:     "물었다        failed-envelope-is-not-rederived-g92 node 1 · -k test_g92_k04_env",
+0174:     "신고         release-cleanup-holds-the-attempt-path — 이 lock 순서(`LOCK_ORDER`: attempt_path → claim → ledger)는 그대로 지킬 규칙이다. 그런데 그것을 물던 회귀(`release_cleanup_cannot_delete_another_legs_token`)는 **caller 가 다",
+0175:     "scenario_total 432 · scenario_executable 421 · scenario_declared 11 · site_total 470 · site_executable 459 · site_declared 11 · ran 421",
+0176:     "rc=0",
+0177:     "end head 3ec8aadb13e4ee4eb9e3434fbd28e503a7c03a34 dirty 0 utc 2026-10-06T18:42:28Z"
+0178:    ]
+0179:   },
+0180:   {
+0181:    "path": "14_docs_lint_send_0e3c244ea_360passed.log",
+0182:    "size": 1171,
+0183:    "sha256": "5143e92c7d62311a80ddbe555e3fc5a6d38073f629642379c67f5dccaf818cdd",
+0184:    "git_blob_commit": "e0e9f213d",
+0185:    "scratch_original": "g92ev/14_docs_lint_send.log",
+0186:    "scratch_original_byte_equal": true,
+0187:    "scratch_mtime_utc": "2026-10-06T19:17:57Z",
+0188:    "status_lines": [
+0189:     "start head 0e3c244ea79db1b17f09a8f8043d808ab51ff43c dirty 0 utc 2026-10-06T18:44:35Z",
+0190:     "360 passed in 1999.26s (0:33:19)",
+0191:     "rc=0",
+0192:     "end head 0e3c244ea79db1b17f09a8f8043d808ab51ff43c dirty 0 utc 2026-10-06T19:17:57Z"
+0193:    ]
+0194:   },
+0195:   {
+0196:    "path": "aborted/run1_10_pytest_7fea9cdb7_F4_docs_lint_aborted.log",
+0197:    "size": 1251,
+0198:    "sha256": "0c9ac667f3796150b9a9c5171fc35d227465202b0452dc486f0ec8aff73fb990",
+0199:    "git_blob_commit": "e0e9f213d",
+0200:    "scratch_original": "g92ev/run1_aborted/10_pytest.log",
+0201:    "scratch_original_byte_equal": true,
+0202:    "scratch_mtime_utc": "2026-10-06T13:17:26Z",
+0203:    "status_lines": [
+0204:     "start head 7fea9cdb7be9d3474d4f58e2eb6fcabd13fd45ee dirty 0 utc 2026-10-06T13:09:33Z"
+0205:    ]
+0206:   },
+0207:   {
+0208:    "path": "aborted/run2_10_pytest_7ae871687_F1_contract_citation_aborted.log",
+0209:    "size": 1017,
+0210:    "sha256": "73230f551f4a6ea466f2a805951038fb5fb6c1dd64a8a923ae6f9dc0ac526cf8",
+0211:    "git_blob_commit": "e0e9f213d",
+0212:    "scratch_original": "g92ev/run2_aborted/10_pytest.log",
+0213:    "scratch_original_byte_equal": true,
+0214:    "scratch_mtime_utc": "2026-10-06T13:50:59Z",
+0215:    "status_lines": [
+0216:     "start head 7ae871687238810efab5c731b4f375cce2c7021c dirty 0 utc 2026-10-06T13:46:43Z"
+0217:    ]
+0218:   }
+0219:  ]
+0220: }
+
+## 00_red_test_gate92_138nodes_41failed_97passed.log
+
+0001: head 4aedc78f1 dirty 1
+0002: 
+0003: [conftest] 시험 authority: /tmp/dd-test-authority-30tjzcoj/docs/22p_gap/LEG_PRESERVATION.yaml (운영 원장의 바이트 복사본 — 70차 E6)
+0004: 
+0005: [conftest] 이 checkout 을 처음 보았다 — 얼린 cohort 17개의 좌표를 시험 authority 에 봉인했다: ['g10_2026_09_01', 'g11_2026_09_02', 'g12_2026_09_03', 'g13_2026_09_07', 'g14_2026_09_08', 'g15_2026_09_08', 'g16_2026_09_09', 'g17_2026_09_14', 'g1_2026_08_20', 'g2_2026_08_25', 'g3_2026_08_28', 'g4_2026_08_28', 'g5_2026_08_29', 'g6_2026_09_01', 'g7_2026_09_01', 'g8_2026_09_01', 'g9_2026_09_01']
+0006: ..............................FFF.FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF. [ 52%]
+0007: ....F.............................................................       [100%]
+0008: =================================== FAILURES ===================================
+0009: E   AssertionError: stage3 위조가 stage3_schema 를 통과했다: 통과
+0010:     assert 'stage3_schema' in []
+0011: /home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:276: AssertionError: stage3 위조가 stage3_schema 를 통과했다: 통과
+0012: E   AssertionError: stage3 위조가 stage3_schema 를 통과했다: 통과
+0013:     assert 'stage3_schema' in []
+0014: /home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:276: AssertionError: stage3 위조가 stage3_schema 를 통과했다: 통과
+0015: E   AssertionError: stage3 위조가 stage3_schema 를 통과했다: 통과
+0016:     assert 'stage3_schema' in []
+0017: /home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:276: AssertionError: stage3 위조가 stage3_schema 를 통과했다: 통과
+0018: E   AssertionError: 이유에 'dict' 가 없다: 실패 — sig_version 6 인데 run_spec.stage3 필수 키가 없다: ['planned_id', 'planned_envelope', 'pairing_design_sha256', 'parameter_order_sha256', 'bank_version', 'exact_bounds_sha256', 'candidate_mode', 'budget_by_objective', 'warm_provider_map', 'provider_edges_sha256', 'roster_sha256', 'arm', 'stage', 'pairing_design', 'base_config_closure_sha256', 'base_config_closure_keys']
+0019:     assert 'dict' in "실패 — sig_version 6 인데 run_spec.stage3 필수 키가 없다: ['planned_id', 'planned_envelope', 'pairing_design_sha256', 'paramete..._sha256', 'roster_sha256', 'arm', 'stage', 'pairing_design', 'base_config_closure_sha256', 'base_config_closure_keys']"
+0020: /home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:277: AssertionError: 이유에 'dict' 가 없다: 실패 — sig_version 6 인데 run_spec.stage3 필수 키가 없다: ['planned_id', 'planned_envelope', 'pairing_design_sha256', 'parameter_order_sha256', 'bank_version', 'exact_bounds_sha256', 'candidate_mode', 'budget_by_objective', 'warm_provider_map', 'provider_edges_sha256', 'roster_sha256', 'arm', 'stage', 'pairing_design', 'base_config_closure_sha256', 'base_config_closure_keys']
+0021: E   AssertionError: 이유에 'dict' 가 없다: 실패 — sig_version 6 인데 run_spec.stage3 필수 키가 없다: ['planned_id', 'planned_envelope', 'pairing_design_sha256', 'parameter_order_sha256', 'bank_version', 'exact_bounds_sha256', 'candidate_mode', 'budget_by_objective', 'warm_provider_map', 'provider_edges_sha256', 'roster_sha256', 'arm', 'stage', 'pairing_design', 'base_config_closure_sha256', 'base_config_closure_keys']
+0022:     assert 'dict' in "실패 — sig_version 6 인데 run_spec.stage3 필수 키가 없다: ['planned_id', 'planned_envelope', 'pairing_design_sha256', 'paramete..._sha256', 'roster_sha256', 'arm', 'stage', 'pairing_design', 'base_config_closure_sha256', 'base_config_closure_keys']"
+0023: /home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:277: AssertionError: 이유에 'dict' 가 없다: 실패 — sig_version 6 인데 run_spec.stage3 필수 키가 없다: ['planned_id', 'planned_envelope', 'pairing_design_sha256', 'parameter_order_sha256', 'bank_version', 'exact_bounds_sha256', 'candidate_mode', 'budget_by_objective', 'warm_provider_map', 'provider_edges_sha256', 'roster_sha256', 'arm', 'stage', 'pairing_design', 'base_config_closure_sha256', 'base_config_closure_keys']
+0024: E   AssertionError: 이유에 'dict' 가 없다: 실패 — sig_version 6 인데 run_spec.stage3 필수 키가 없다: ['planned_id', 'planned_envelope', 'pairing_design_sha256', 'parameter_order_sha256', 'bank_version', 'exact_bounds_sha256', 'candidate_mode', 'budget_by_objective', 'warm_provider_map', 'provider_edges_sha256', 'roster_sha256', 'arm', 'stage', 'pairing_design', 'base_config_closure_sha256', 'base_config_closure_keys']
+0025:     assert 'dict' in "실패 — sig_version 6 인데 run_spec.stage3 필수 키가 없다: ['planned_id', 'planned_envelope', 'pairing_design_sha256', 'paramete..._sha256', 'roster_sha256', 'arm', 'stage', 'pairing_design', 'base_config_closure_sha256', 'base_config_closure_keys']"
+0026: /home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:277: AssertionError: 이유에 'dict' 가 없다: 실패 — sig_version 6 인데 run_spec.stage3 필수 키가 없다: ['planned_id', 'planned_envelope', 'pairing_design_sha256', 'parameter_order_sha256', 'bank_version', 'exact_bounds_sha256', 'candidate_mode', 'budget_by_objective', 'warm_provider_map', 'provider_edges_sha256', 'roster_sha256', 'arm', 'stage', 'pairing_design', 'base_config_closure_sha256', 'base_config_closure_keys']
+0027: E   AssertionError: stage3 위조가 stage3_schema 를 통과했다: 통과
+0028:     assert 'stage3_schema' in []
+0029: /home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:276: AssertionError: stage3 위조가 stage3_schema 를 통과했다: 통과
+0030: E   AssertionError: stage3 위조가 stage3_schema 를 통과했다: 통과
+0031:     assert 'stage3_schema' in []
+0032: /home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:276: AssertionError: stage3 위조가 stage3_schema 를 통과했다: 통과
+0033: E   AssertionError: stage3 위조가 stage3_schema 를 통과했다: 통과
+0034:     assert 'stage3_schema' in []
+0035: /home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:276: AssertionError: stage3 위조가 stage3_schema 를 통과했다: 통과
+0036: E   AssertionError: stage3 위조가 stage3_schema 를 통과했다: 통과
+0037:     assert 'stage3_schema' in ['base_config_결속']
+0038: /home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:276: AssertionError: stage3 위조가 stage3_schema 를 통과했다: 통과
+0039: E   AssertionError: stage3 위조가 stage3_schema 를 통과했다: 통과
+0040:     assert 'stage3_schema' in ['후보_재유도']
+0041: /home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:276: AssertionError: stage3 위조가 stage3_schema 를 통과했다: 통과
+0042: E   AssertionError: candidate_map 위조가 통과했다: 통과
+0043:     assert 'candidate_map' in []
+0044: /home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:343: AssertionError: candidate_map 위조가 통과했다: 통과
+0045: E   AssertionError: candidate_map 위조가 통과했다: 통과
+0046:     assert 'candidate_map' in []
+0047: /home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:343: AssertionError: candidate_map 위조가 통과했다: 통과
+0048: E   AssertionError: candidate_map 위조가 통과했다: 통과
+0049:     assert 'candidate_map' in []
+0050: /home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:343: AssertionError: candidate_map 위조가 통과했다: 통과
+0051: E   AssertionError: 이유에 'schema' 가 없다: 실패 — candidate_map.json 이 없거나 record 의 candidate_map_sha256 와 다르다
+0052:     assert 'schema' in '실패 — candidate_map.json 이 없거나 record 의 candidate_map_sha256 와 다르다'
+0053: /home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:345: AssertionError: 이유에 'schema' 가 없다: 실패 — candidate_map.json 이 없거나 record 의 candidate_map_sha256 와 다르다
+0054: E   AssertionError: 이유에 'entries' 가 없다: 실패 — candidate_map.json 이 없거나 record 의 candidate_map_sha256 와 다르다
+0055:     assert 'entries' in '실패 — candidate_map.json 이 없거나 record 의 candidate_map_sha256 와 다르다'
+0056: /home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:345: AssertionError: 이유에 'entries' 가 없다: 실패 — candidate_map.json 이 없거나 record 의 candidate_map_sha256 와 다르다
+0057: E   AttributeError: 'list' object has no attribute 'get'
+0058: /home/user/Yonghoon-DEM-DFT/degradation-degeneracy/src/io.py:1929: AttributeError: 'list' object has no attribute 'get'
+0059: E   AttributeError: 'NoneType' object has no attribute 'get'
+0060: /home/user/Yonghoon-DEM-DFT/degradation-degeneracy/src/io.py:1929: AttributeError: 'NoneType' object has no attribute 'get'
+0061: E   AttributeError: 'str' object has no attribute 'get'
+0062: /home/user/Yonghoon-DEM-DFT/degradation-degeneracy/src/io.py:1929: AttributeError: 'str' object has no attribute 'get'
+0063: E   AssertionError: candidate_map 위조가 통과했다: 통과
+0064:     assert 'candidate_map' in []
+0065: /home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:343: AssertionError: candidate_map 위조가 통과했다: 통과
+0066: E   AssertionError: candidate_map 위조가 통과했다: 통과
+0067:     assert 'candidate_map' in []
+0068: /home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:343: AssertionError: candidate_map 위조가 통과했다: 통과
+0069: E   AssertionError: candidate_map 위조가 통과했다: 통과
+0070:     assert 'candidate_map' in []
+0071: /home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:343: AssertionError: candidate_map 위조가 통과했다: 통과
+0072: E   AssertionError: candidate_map 위조가 통과했다: 통과
+0073:     assert 'candidate_map' in ['후보_재유도']
+0074: /home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:343: AssertionError: candidate_map 위조가 통과했다: 통과
+0075: E   AttributeError: 'int' object has no attribute 'get'
+0076: /home/user/Yonghoon-DEM-DFT/degradation-degeneracy/src/io.py:1715: AttributeError: 'int' object has no attribute 'get'
+0077: E   AssertionError: candidate_map 위조가 통과했다: 통과
+0078:     assert 'candidate_map' in []
+0079: /home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:343: AssertionError: candidate_map 위조가 통과했다: 통과
+0080: E   AssertionError: candidate_map 위조가 통과했다: 통과
+0081:     assert 'candidate_map' in ['후보_재유도']
+0082: /home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:343: AssertionError: candidate_map 위조가 통과했다: 통과
+0083: E   tools.design_wire.WireError: unit row 길이 (0, 8, 4) ≠ bounds 길이 (4,)
+0084: /home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tools/design_wire.py:675: tools.design_wire.WireError: unit row 길이 (0, 8, 4) ≠ bounds 길이 (4,)
+0085: E   AssertionError: candidate_map 위조가 통과했다: 통과
+0086:     assert 'candidate_map' in ['후보_재유도']
+0087: /home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:343: AssertionError: candidate_map 위조가 통과했다: 통과
+0088: E   AssertionError: candidate_map 위조가 통과했다: 통과
+0089:     assert 'candidate_map' in ['candidate_ids_결속', '후보_재유도']
+0090: /home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:343: AssertionError: candidate_map 위조가 통과했다: 통과
+0091: E   AssertionError: candidate_map 위조가 통과했다: 통과
+0092:     assert 'candidate_map' in ['후보_재유도']
+0093: /home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:343: AssertionError: candidate_map 위조가 통과했다: 통과
+0094: E   AssertionError: 유효하지 않은 계획 envelope 로 후보 재유도를 불렀다
+0095:     assert [1] == []
+0096:       
+0097:       Left contains one more item: 1
+0098:       Use -v to get more diff
+0099: /home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:356: AssertionError: 유효하지 않은 계획 envelope 로 후보 재유도를 불렀다
+0100: E   AssertionError: 자기일관 위조가 stage3_축_유도 를 통과했다: 검사 없음 · fail=[]
+0101:     assert 'stage3_축_유도' in []
+0102: /home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:99: AssertionError: 자기일관 위조가 stage3_축_유도 를 통과했다: 검사 없음 · fail=[]
+0103: E   AssertionError: 자기일관 위조가 stage3_축_유도 를 통과했다: 검사 없음 · fail=[]
+0104:     assert 'stage3_축_유도' in []
+0105: /home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:99: AssertionError: 자기일관 위조가 stage3_축_유도 를 통과했다: 검사 없음 · fail=[]
+0106: E   AssertionError: 자기일관 위조가 stage3_축_유도 를 통과했다: 검사 없음 · fail=[]
+0107:     assert 'stage3_축_유도' in []
+0108: /home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:99: AssertionError: 자기일관 위조가 stage3_축_유도 를 통과했다: 검사 없음 · fail=[]
+0109: E   AssertionError: 자기일관 위조가 stage3_축_유도 를 통과했다: 검사 없음 · fail=[]
+0110:     assert 'stage3_축_유도' in []
+0111: /home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:99: AssertionError: 자기일관 위조가 stage3_축_유도 를 통과했다: 검사 없음 · fail=[]
+0112: E   AssertionError: 자기일관 위조가 stage3_축_유도 를 통과했다: 검사 없음 · fail=[]
+0113:     assert 'stage3_축_유도' in []
+0114: /home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:99: AssertionError: 자기일관 위조가 stage3_축_유도 를 통과했다: 검사 없음 · fail=[]
+0115: E   AssertionError: 자기일관 위조가 stage3_축_유도 를 통과했다: 검사 없음 · fail=[]
+0116:     assert 'stage3_축_유도' in []
+0117: /home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:99: AssertionError: 자기일관 위조가 stage3_축_유도 를 통과했다: 검사 없음 · fail=[]
+0118: E   AssertionError: 자기일관 위조가 stage3_축_유도 를 통과했다: 검사 없음 · fail=[]
+0119:     assert 'stage3_축_유도' in []
+0120: /home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:99: AssertionError: 자기일관 위조가 stage3_축_유도 를 통과했다: 검사 없음 · fail=[]
+0121: E   AssertionError: 자기일관 위조가 stage3_축_유도 를 통과했다: 검사 없음 · fail=[]
+0122:     assert 'stage3_축_유도' in []
+0123: /home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:99: AssertionError: 자기일관 위조가 stage3_축_유도 를 통과했다: 검사 없음 · fail=[]
+0124: E   AssertionError: 자기일관 위조가 stage3_축_유도 를 통과했다: 검사 없음 · fail=[]
+0125:     assert 'stage3_축_유도' in []
+0126: /home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:99: AssertionError: 자기일관 위조가 stage3_축_유도 를 통과했다: 검사 없음 · fail=[]
+0127: E   AssertionError: writer 의 edge sha 6efe170bdab4487c ≠ 승인 축 (canonical digest) b084e85661ae634c
+0128:     assert '6efe170bdab4...a637b6f4a5633' == 'b084e85661ae...2fbfa25c253e4'
+0129:       
+0130:       - b084e85661ae634c8c0d64d0f36f7fcf63453e1c4e7b7a1e6fb2fbfa25c253e4
+0131:       + 6efe170bdab4487c42bd22ebb533c23542bbb581f461e8ac15aa637b6f4a5633
+0132: /home/user/Yonghoon-DEM-DFT/degradation-degeneracy/tests/test_gate92_stage4_linkage.py:422: AssertionError: writer 의 edge sha 6efe170bdab4487c ≠ 승인 축 (canonical digest) b084e85661ae634c
+0133: =========================== short test summary info ============================
+0134: FAILED tests/test_gate92_stage4_linkage.py::test_g92_k03_run_spec_stage3_is_closed_and_typed[old_pairing_design_id]
+0135: FAILED tests/test_gate92_stage4_linkage.py::test_g92_k03_run_spec_stage3_is_closed_and_typed[old_inference_status]
+0136: FAILED tests/test_gate92_stage4_linkage.py::test_g92_k03_run_spec_stage3_is_closed_and_typed[third_key]
+0137: FAILED tests/test_gate92_stage4_linkage.py::test_g92_k03_run_spec_stage3_is_closed_and_typed[container_list]
+0138: FAILED tests/test_gate92_stage4_linkage.py::test_g92_k03_run_spec_stage3_is_closed_and_typed[container_null]
+0139: FAILED tests/test_gate92_stage4_linkage.py::test_g92_k03_run_spec_stage3_is_closed_and_typed[container_str]
+0140: FAILED tests/test_gate92_stage4_linkage.py::test_g92_k03_run_spec_stage3_is_closed_and_typed[type_arm_int]
+0141: FAILED tests/test_gate92_stage4_linkage.py::test_g92_k03_run_spec_stage3_is_closed_and_typed[type_budget_list]
+0142: FAILED tests/test_gate92_stage4_linkage.py::test_g92_k03_run_spec_stage3_is_closed_and_typed[type_bank_version_null]
+0143: FAILED tests/test_gate92_stage4_linkage.py::test_g92_k03_run_spec_stage3_is_closed_and_typed[type_closure_keys_str]
+0144: FAILED tests/test_gate92_stage4_linkage.py::test_g92_k03_run_spec_stage3_is_closed_and_typed[type_pairing_sha_int]
+0145: FAILED tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[top_old_pairing_design_id]
+0146: FAILED tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[top_old_inference_status]
+0147: FAILED tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[top_third_key]
+0148: FAILED tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[top_missing_schema]
+0149: FAILED tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[top_entries_not_list]
+0150: FAILED tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[container_list]
+0151: FAILED tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[container_null]
+0152: FAILED tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[container_str]
+0153: FAILED tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_old_pairing_design_id]
+0154: FAILED tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_old_inference_status]
+0155: FAILED tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_third_key]
+0156: FAILED tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_missing_x0]
+0157: FAILED tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_not_dict]
+0158: FAILED tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_i_bool]
+0159: FAILED tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_i_str]
+0160: FAILED tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_bank_index_bool]
+0161: FAILED tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_bank_index_on_base]
+0162: FAILED tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_candidate_id_int]
+0163: FAILED tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_x0_int]
+0164: FAILED tests/test_gate92_stage4_linkage.py::test_g92_k04_env_a_failed_planned_envelope_is_not_passed_to_the_rederivation
+0165: FAILED tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[parameter_order_sha256]
+0166: FAILED tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[roster_sha256]
+0167: FAILED tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[provider_edges_sha256]
+0168: FAILED tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[arm]
+0169: FAILED tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[stage]
+0170: FAILED tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[candidate_mode]
+0171: FAILED tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[bank_version]
+0172: FAILED tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[budget_by_objective]
+0173: FAILED tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[warm_provider_map]
+0174: FAILED tests/test_gate92_stage4_linkage.py::test_g92_k07_the_run_spec_edge_sha_of_a_warm_plan_is_the_approved_axis_value
+0175: 41 failed, 97 passed in 31.65s
+0176: rc=1
+0177: 
+
+## 03_replay_g92_emit_expect_9killed.log
+
+0001: sandbox: /tmp/mutation_replay_m_p8yqoz/degradation-degeneracy
+0002: 
+0003: ★ 안 물었다    stage3-run-spec-keys-are-closed-g92 node 12 · -k test_g92_k03
+0004: ★ 안 물었다    stage3-run-spec-values-are-typed-g92 node 12 · -k test_g92_k03
+0005: ★ 안 물었다    candidate-map-keys-are-closed-g92 node 20 · -k test_g92_k04
+0006: ★ 안 물었다    failed-envelope-is-not-rederived-g92 node 1 · -k test_g92_k04_env
+0007: ★ 안 물었다    stage3-run-spec-is-derived-per-key-g92 node 9 · -k test_g92_k05
+0008: ★ 안 물었다    provider-edges-sha-has-one-definition-g92 node 1 · -k test_g92_k07
+0009: ★ 안 물었다    validator-planned-id-is-the-envelope-digest-g92 node 1 · -k test_g92_k06 and planned_id
+0010: ★ 안 물었다    validator-pairing-design-sha-is-recomputed-g92 node 1 · -k test_g92_k06 and pairing_design
+0011: ★ 안 물었다    validator-exact-bounds-sha-is-recomputed-g92 node 1 · -k test_g92_k06 and exact_bounds
+0012: 
+0013: === 관측한 EXPECT (그대로 붙여 넣어라) ===
+0014: {
+0015:     "candidate-map-keys-are-closed-g92": {
+0016:         "fail": [
+0017:             "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[container_list]",
+0018:             "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[container_null]",
+0019:             "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[container_str]",
+0020:             "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_bank_index_bool]",
+0021:             "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_bank_index_on_base]",
+0022:             "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_candidate_id_int]",
+0023:             "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_i_bool]",
+0024:             "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_i_str]",
+0025:             "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_missing_x0]",
+0026:             "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_not_dict]",
+0027:             "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_old_inference_status]",
+0028:             "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_old_pairing_design_id]",
+0029:             "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_third_key]",
+0030:             "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_x0_int]",
+0031:             "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[top_entries_not_list]",
+0032:             "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[top_missing_schema]",
+0033:             "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[top_old_inference_status]",
+0034:             "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[top_old_pairing_design_id]",
+0035:             "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[top_third_key]"
+0036:         ],
+0037:         "witness": {
+0038:             "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[container_list]": "AssertionError: 이유에 'dict' 가 없다: 실패 — candidate_map.json 이 없거나 record 의 candidate_map_sha256 와 다르다",
+0039:             "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[container_null]": "AssertionError: 이유에 'dict' 가 없다: 실패 — candidate_map.json 이 없거나 record 의 candidate_map_sha256 와 다르다",
+0040:             "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[container_str]": "AssertionError: 이유에 'dict' 가 없다: 실패 — candidate_map.json 이 없거나 record 의 candidate_map_sha256 와 다르다",
+0041:             "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_bank_index_bool]": "tools.design_wire.WireError: unit row 길이 (0, 8, 4) ≠ bounds 길이 (4,)",
+0042:             "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_bank_index_on_base]": "AssertionError: candidate_map 위조가 통과했다: 통과",
+0043:             "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_candidate_id_int]": "AssertionError: candidate_map 위조가 통과했다: 통과",
+0044:             "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_i_bool]": "AssertionError: candidate_map 위조가 통과했다: 통과",
+0045:             "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_i_str]": "AssertionError: candidate_map 위조가 통과했다: 통과",
+0046:             "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_missing_x0]": "AssertionError: candidate_map 위조가 통과했다: 통과",
+0047:             "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_not_dict]": "TypeError: 'int' object is not subscriptable",
+0048:             "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_old_inference_status]": "AssertionError: candidate_map 위조가 통과했다: 통과",
+0049:             "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_old_pairing_design_id]": "AssertionError: candidate_map 위조가 통과했다: 통과",
+0050:             "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_third_key]": "AssertionError: candidate_map 위조가 통과했다: 통과",
+0051:             "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[entry_x0_int]": "AssertionError: candidate_map 위조가 통과했다: 통과",
+0052:             "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[top_entries_not_list]": "AssertionError: 이유에 'entries' 가 없다: 실패 — candidate_map.json 이 없거나 record 의 candidate_map_sha256 와 다르다",
+0053:             "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[top_missing_schema]": "AssertionError: candidate_map 위조가 통과했다: 통과",
+0054:             "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[top_old_inference_status]": "AssertionError: candidate_map 위조가 통과했다: 통과",
+0055:             "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[top_old_pairing_design_id]": "AssertionError: candidate_map 위조가 통과했다: 통과",
+0056:             "tests/test_gate92_stage4_linkage.py::test_g92_k04_candidate_map_is_closed_and_typed[top_third_key]": "AssertionError: candidate_map 위조가 통과했다: 통과"
+0057:         }
+0058:     },
+0059:     "failed-envelope-is-not-rederived-g92": {
+0060:         "fail": [
+0061:             "tests/test_gate92_stage4_linkage.py::test_g92_k04_env_a_failed_planned_envelope_is_not_passed_to_the_rederivation"
+0062:         ],
+0063:         "witness": {
+0064:             "tests/test_gate92_stage4_linkage.py::test_g92_k04_env_a_failed_planned_envelope_is_not_passed_to_the_rederivation": "AssertionError: 유효하지 않은 계획 envelope 로 후보 재유도를 불렀다"
+0065:         }
+0066:     },
+0067:     "provider-edges-sha-has-one-definition-g92": {
+0068:         "fail": [
+0069:             "tests/test_gate92_stage4_linkage.py::test_g92_k07_the_run_spec_edge_sha_of_a_warm_plan_is_the_approved_axis_value"
+0070:         ],
+0071:         "witness": {
+0072:             "tests/test_gate92_stage4_linkage.py::test_g92_k07_the_run_spec_edge_sha_of_a_warm_plan_is_the_approved_axis_value": "AssertionError: writer 의 edge sha d0b4e654521be839 ≠ 승인 축 (canonical digest) 35223970260b88ab"
+0073:         }
+0074:     },
+0075:     "stage3-run-spec-is-derived-per-key-g92": {
+0076:         "fail": [
+0077:             "tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[arm]",
+0078:             "tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[bank_version]",
+0079:             "tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[budget_by_objective]",
+0080:             "tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[candidate_mode]",
+0081:             "tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[parameter_order_sha256]",
+0082:             "tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[provider_edges_sha256]",
+0083:             "tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[roster_sha256]",
+0084:             "tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[stage]",
+0085:             "tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[warm_provider_map]"
+0086:         ],
+0087:         "witness": {
+0088:             "tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[arm]": "AssertionError: 자기일관 위조가 stage3_축_유도 를 통과했다: 통과 · fail=[]",
+0089:             "tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[bank_version]": "AssertionError: 자기일관 위조가 stage3_축_유도 를 통과했다: 통과 · fail=[]",
+0090:             "tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[budget_by_objective]": "AssertionError: 자기일관 위조가 stage3_축_유도 를 통과했다: 통과 · fail=[]",
+0091:             "tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[candidate_mode]": "AssertionError: 자기일관 위조가 stage3_축_유도 를 통과했다: 통과 · fail=[]",
+0092:             "tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[parameter_order_sha256]": "AssertionError: 자기일관 위조가 stage3_축_유도 를 통과했다: 통과 · fail=[]",
+0093:             "tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[provider_edges_sha256]": "AssertionError: 자기일관 위조가 stage3_축_유도 를 통과했다: 통과 · fail=[]",
+0094:             "tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[roster_sha256]": "AssertionError: 자기일관 위조가 stage3_축_유도 를 통과했다: 통과 · fail=[]",
+0095:             "tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[stage]": "AssertionError: 자기일관 위조가 stage3_축_유도 를 통과했다: 통과 · fail=[]",
+0096:             "tests/test_gate92_stage4_linkage.py::test_g92_k05_a_copied_stage3_key_must_equal_the_envelope_value[warm_provider_map]": "AssertionError: 자기일관 위조가 stage3_축_유도 를 통과했다: 통과 · fail=[]"
+0097:         }
+0098:     },
+0099:     "stage3-run-spec-keys-are-closed-g92": {
+0100:         "fail": [
+0101:             "tests/test_gate92_stage4_linkage.py::test_g92_k03_run_spec_stage3_is_closed_and_typed[old_inference_status]",
+0102:             "tests/test_gate92_stage4_linkage.py::test_g92_k03_run_spec_stage3_is_closed_and_typed[old_pairing_design_id]",
+0103:             "tests/test_gate92_stage4_linkage.py::test_g92_k03_run_spec_stage3_is_closed_and_typed[third_key]"
+0104:         ],
+0105:         "witness": {
+0106:             "tests/test_gate92_stage4_linkage.py::test_g92_k03_run_spec_stage3_is_closed_and_typed[old_inference_status]": "AssertionError: stage3 위조가 stage3_schema 를 통과했다: 통과",
+0107:             "tests/test_gate92_stage4_linkage.py::test_g92_k03_run_spec_stage3_is_closed_and_typed[old_pairing_design_id]": "AssertionError: stage3 위조가 stage3_schema 를 통과했다: 통과",
+0108:             "tests/test_gate92_stage4_linkage.py::test_g92_k03_run_spec_stage3_is_closed_and_typed[third_key]": "AssertionError: stage3 위조가 stage3_schema 를 통과했다: 통과"
+0109:         }
+0110:     },
+0111:     "stage3-run-spec-values-are-typed-g92": {
+0112:         "fail": [
+0113:             "tests/test_gate92_stage4_linkage.py::test_g92_k03_run_spec_stage3_is_closed_and_typed[type_arm_int]",
+0114:             "tests/test_gate92_stage4_linkage.py::test_g92_k03_run_spec_stage3_is_closed_and_typed[type_bank_version_null]",
+0115:             "tests/test_gate92_stage4_linkage.py::test_g92_k03_run_spec_stage3_is_closed_and_typed[type_budget_list]",
+0116:             "tests/test_gate92_stage4_linkage.py::test_g92_k03_run_spec_stage3_is_closed_and_typed[type_closure_keys_str]",
+0117:             "tests/test_gate92_stage4_linkage.py::test_g92_k03_run_spec_stage3_is_closed_and_typed[type_pairing_sha_int]"
+0118:         ],
+0119:         "witness": {
+0120:             "tests/test_gate92_stage4_linkage.py::test_g92_k03_run_spec_stage3_is_closed_and_typed[type_arm_int]": "AssertionError: stage3 위조가 stage3_schema 를 통과했다: 통과",
+0121:             "tests/test_gate92_stage4_linkage.py::test_g92_k03_run_spec_stage3_is_closed_and_typed[type_bank_version_null]": "AssertionError: stage3 위조가 stage3_schema 를 통과했다: 통과",
+0122:             "tests/test_gate92_stage4_linkage.py::test_g92_k03_run_spec_stage3_is_closed_and_typed[type_budget_list]": "AssertionError: stage3 위조가 stage3_schema 를 통과했다: 통과",
+0123:             "tests/test_gate92_stage4_linkage.py::test_g92_k03_run_spec_stage3_is_closed_and_typed[type_closure_keys_str]": "AssertionError: stage3 위조가 stage3_schema 를 통과했다: 통과",
+0124:             "tests/test_gate92_stage4_linkage.py::test_g92_k03_run_spec_stage3_is_closed_and_typed[type_pairing_sha_int]": "AssertionError: stage3 위조가 stage3_schema 를 통과했다: 통과"
+0125:         }
+0126:     },
+0127:     "validator-exact-bounds-sha-is-recomputed-g92": {
+0128:         "fail": [
+0129:             "tests/test_gate92_stage4_linkage.py::test_g92_k06_an_independently_recomputed_key_forged_alone_is_refused_by_its_own_check[exact_bounds_sha256]"
+0130:         ],
+0131:         "witness": {
+0132:             "tests/test_gate92_stage4_linkage.py::test_g92_k06_an_independently_recomputed_key_forged_alone_is_refused_by_its_own_check[exact_bounds_sha256]": "AssertionError: 자기일관 위조가 후보_재유도 를 통과했다: 통과 · fail=[]"
+0133:         }
+0134:     },
+0135:     "validator-pairing-design-sha-is-recomputed-g92": {
+0136:         "fail": [
+0137:             "tests/test_gate92_stage4_linkage.py::test_g92_k06_an_independently_recomputed_key_forged_alone_is_refused_by_its_own_check[pairing_design_sha256]"
+0138:         ],
+0139:         "witness": {
+0140:             "tests/test_gate92_stage4_linkage.py::test_g92_k06_an_independently_recomputed_key_forged_alone_is_refused_by_its_own_check[pairing_design_sha256]": "AssertionError: 자기일관 위조가 후보_재유도 를 통과했다: 통과 · fail=[]"
+0141:         }
+0142:     },
+0143:     "validator-planned-id-is-the-envelope-digest-g92": {
+0144:         "fail": [
+0145:             "tests/test_gate92_stage4_linkage.py::test_g92_k06_an_independently_recomputed_key_forged_alone_is_refused_by_its_own_check[planned_id]"
+0146:         ],
+0147:         "witness": {
+0148:             "tests/test_gate92_stage4_linkage.py::test_g92_k06_an_independently_recomputed_key_forged_alone_is_refused_by_its_own_check[planned_id]": "AssertionError: 자기일관 위조가 stage3_planned_envelope 를 통과했다: 통과 · fail=[]"
+0149:         }
+0150:     }
+0151: }
+0152: 
+0153: scenario_total 9 · scenario_executable 9 · scenario_declared 0 · site_total 9 · site_executable 9 · site_declared 0 · ran 9
+0154: 
+0155: === 문제 ===
+0156: stage3-run-spec-keys-are-closed-g92: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+0157: stage3-run-spec-values-are-typed-g92: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+0158: candidate-map-keys-are-closed-g92: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+0159: failed-envelope-is-not-rederived-g92: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+0160: stage3-run-spec-is-derived-per-key-g92: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+0161: provider-edges-sha-has-one-definition-g92: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+0162: validator-planned-id-is-the-envelope-digest-g92: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+0163: validator-pairing-design-sha-is-recomputed-g92: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+0164: validator-exact-bounds-sha-is-recomputed-g92: 기대 실패 집합이 선언되지 않았다 (`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)
+0165: 
+
+## 04a_replay_g92_verify_8of9_k07_witness_nondeterministic.log
+
+0001: sandbox: /tmp/mutation_replay_3xr87gxs/degradation-degeneracy
+0002: 
+0003: 물었다        stage3-run-spec-keys-are-closed-g92 node 12 · -k test_g92_k03
+0004: 물었다        stage3-run-spec-values-are-typed-g92 node 12 · -k test_g92_k03
+0005: 물었다        candidate-map-keys-are-closed-g92 node 20 · -k test_g92_k04
+0006: 물었다        failed-envelope-is-not-rederived-g92 node 1 · -k test_g92_k04_env
+0007: 물었다        stage3-run-spec-is-derived-per-key-g92 node 9 · -k test_g92_k05
+0008: ★ 안 물었다    provider-edges-sha-has-one-definition-g92 node 1 · -k test_g92_k07
+0009: 물었다        validator-planned-id-is-the-envelope-digest-g92 node 1 · -k test_g92_k06 and planned_id
+0010: 물었다        validator-pairing-design-sha-is-recomputed-g92 node 1 · -k test_g92_k06 and pairing_design
+0011: 물었다        validator-exact-bounds-sha-is-recomputed-g92 node 1 · -k test_g92_k06 and exact_bounds
+0012: 
+0013: scenario_total 9 · scenario_executable 9 · scenario_declared 0 · site_total 9 · site_executable 9 · site_declared 0 · ran 9
+0014: 
+0015: === 문제 ===
+0016: provider-edges-sha-has-one-definition-g92: tests/test_gate92_stage4_linkage.py::test_g92_k07_the_run_spec_edge_sha_of_a_warm_plan_is_the_approved_axis_value 이 빨개졌지만 **선언한 이유**가 아니다 — 증인 'AssertionError: writer 의 edge sha d0b4e654521be839 ≠ 승인 축 (canonical digest) 35223970260b88ab' 이 실패 메시지에 없다 ('AssertionError: writer 의 edge sha 86e3d2d8948304d2 ≠ 승인 축 (canonical digest) 4f0df6df42a3147f')
+0017: 
+
+## 04b_replay_g92_k07_after_witness_fix_rc0.log
+
+0001: sandbox: /tmp/mutation_replay__5f5b2a2/degradation-degeneracy
+0002: 
+0003: 물었다        provider-edges-sha-has-one-definition-g92 node 1 · -k test_g92_k07
+0004: 
+0005: scenario_total 1 · scenario_executable 1 · scenario_declared 0 · site_total 1 · site_executable 1 · site_declared 0 · ran 1
+0006: 실행한 변이 1건이 전부 기대 node 를 call 단계에서 물었다
+0007: 
+
+## 05a_kext_stage3_axis_g87_plus_k08_13killed.log
+
+0001: sandbox: /tmp/mutation_replay_p1a5aww9/degradation-degeneracy
+0002: 
+0003: ★ 안 물었다    stage3-axis-is-derived-not-copied-g87 node 13 · -k s03_05 or test_g92_k08
+0004: 
+0005: === 관측한 EXPECT (그대로 붙여 넣어라) ===
+0006: {
+0007:     "stage3-axis-is-derived-not-copied-g87": {
+0008:         "fail": [
+0009:             "tests/test_gate87_round2b.py::test_s03_05_a_stage3_axis_that_is_not_derived_from_the_envelope_is_refused[arm]",
+0010:             "tests/test_gate87_round2b.py::test_s03_05_a_stage3_axis_that_is_not_derived_from_the_envelope_is_refused[candidate_mode]",
+0011:             "tests/test_gate87_round2b.py::test_s03_05_a_stage3_axis_that_is_not_derived_from_the_envelope_is_refused[planned_id]",
+0012:             "tests/test_gate87_round2b.py::test_s03_05_a_stage3_axis_that_is_not_derived_from_the_envelope_is_refused[provider_edges_sha256]",
+0013:             "tests/test_gate87_round2b.py::test_s03_05_a_stage3_axis_that_is_not_derived_from_the_envelope_is_refused[roster_sha256]",
+0014:             "tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[bank.exact_bounds_sha256]",
+0015:             "tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[bank.generator]",
+0016:             "tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[bank.length]",
+0017:             "tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[bank.n_params]",
+0018:             "tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[bank.version]",
+0019:             "tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[pairing_design_sha256]",
+0020:             "tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[parameter_order_sha256]",
+0021:             "tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[stage]"
+0022:         ],
+0023:         "witness": {
+0024:             "tests/test_gate87_round2b.py::test_s03_05_a_stage3_axis_that_is_not_derived_from_the_envelope_is_refused[arm]": "Failed: DID NOT RAISE PreserveError",
+0025:             "tests/test_gate87_round2b.py::test_s03_05_a_stage3_axis_that_is_not_derived_from_the_envelope_is_refused[candidate_mode]": "Failed: DID NOT RAISE PreserveError",
+0026:             "tests/test_gate87_round2b.py::test_s03_05_a_stage3_axis_that_is_not_derived_from_the_envelope_is_refused[planned_id]": "Failed: DID NOT RAISE PreserveError",
+0027:             "tests/test_gate87_round2b.py::test_s03_05_a_stage3_axis_that_is_not_derived_from_the_envelope_is_refused[provider_edges_sha256]": "Failed: DID NOT RAISE PreserveError",
+0028:             "tests/test_gate87_round2b.py::test_s03_05_a_stage3_axis_that_is_not_derived_from_the_envelope_is_refused[roster_sha256]": "Failed: DID NOT RAISE PreserveError",
+0029:             "tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[bank.exact_bounds_sha256]": "Failed: DID NOT RAISE PreserveError",
+0030:             "tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[bank.generator]": "Failed: DID NOT RAISE PreserveError",
+0031:             "tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[bank.length]": "Failed: DID NOT RAISE PreserveError",
+0032:             "tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[bank.n_params]": "Failed: DID NOT RAISE PreserveError",
+0033:             "tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[bank.version]": "Failed: DID NOT RAISE PreserveError",
+0034:             "tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[pairing_design_sha256]": "Failed: DID NOT RAISE PreserveError",
+0035:             "tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[parameter_order_sha256]": "Failed: DID NOT RAISE PreserveError",
+0036:             "tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[stage]": "Failed: DID NOT RAISE PreserveError"
+0037:         }
+0038:     }
+0039: }
+0040: 
+0041: scenario_total 1 · scenario_executable 1 · scenario_declared 0 · site_total 1 · site_executable 1 · site_declared 0 · ran 1
+0042: 
+0043: === 문제 ===
+0044: stage3-axis-is-derived-not-copied-g87: 실패 집합이 선언과 다르다 — 더 빨개짐 ['tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[bank.exact_bounds_sha256]', 'tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[bank.generator]', 'tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[bank.length]'] · 안 빨개짐 []
+0045: stage3-axis-is-derived-not-copied-g87: tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[pairing_design_sha256] 의 증인이 선언되지 않았다
+0046: stage3-axis-is-derived-not-copied-g87: tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[parameter_order_sha256] 의 증인이 선언되지 않았다
+0047: stage3-axis-is-derived-not-copied-g87: tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[bank.generator] 의 증인이 선언되지 않았다
+0048: stage3-axis-is-derived-not-copied-g87: tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[bank.version] 의 증인이 선언되지 않았다
+0049: stage3-axis-is-derived-not-copied-g87: tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[bank.length] 의 증인이 선언되지 않았다
+0050: stage3-axis-is-derived-not-copied-g87: tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[bank.n_params] 의 증인이 선언되지 않았다
+0051: stage3-axis-is-derived-not-copied-g87: tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[bank.exact_bounds_sha256] 의 증인이 선언되지 않았다
+0052: stage3-axis-is-derived-not-copied-g87: tests/test_gate92_stage4_linkage.py::test_g92_k08_a_plan_index_axis_key_not_derived_from_the_envelope_is_refused[stage] 의 증인이 선언되지 않았다
+0053: 
+
+## 05b_kext_claim_seals_plus_k10c8_2killed.log
+
+0001: sandbox: /tmp/mutation_replay_pg2_4e5n/degradation-degeneracy
+0002: 
+0003: ★ 안 물었다    claim-seals-the-run-spec       node 2 · -k claim_seals_the_exact_run_spec or test_g92_k10_c8_another
+0004: 
+0005: === 관측한 EXPECT (그대로 붙여 넣어라) ===
+0006: {
+0007:     "claim-seals-the-run-spec": {
+0008:         "fail": [
+0009:             "tests/test_gate92_stage4_linkage.py::test_g92_k10_c8_another_self_consistent_plan_is_not_the_approved_run_spec",
+0010:             "tests/test_preserve.py::test_the_claim_seals_the_exact_run_spec"
+0011:         ],
+0012:         "witness": {
+0013:             "tests/test_gate92_stage4_linkage.py::test_g92_k10_c8_another_self_consistent_plan_is_not_the_approved_run_spec": "Failed: DID NOT RAISE PreserveError",
+0014:             "tests/test_preserve.py::test_the_claim_seals_the_exact_run_spec": "Failed: DID NOT RAISE PreserveError"
+0015:         }
+0016:     }
+0017: }
+0018: 
+0019: scenario_total 1 · scenario_executable 1 · scenario_declared 0 · site_total 1 · site_executable 1 · site_declared 0 · ran 1
+0020: 
+0021: === 문제 ===
+0022: claim-seals-the-run-spec: 실패 집합이 선언과 다르다 — 더 빨개짐 ['tests/test_gate92_stage4_linkage.py::test_g92_k10_c8_another_self_consistent_plan_is_not_the_approved_run_spec'] · 안 빨개짐 []
+0023: claim-seals-the-run-spec: tests/test_gate92_stage4_linkage.py::test_g92_k10_c8_another_self_consistent_plan_is_not_the_approved_run_spec 의 증인이 선언되지 않았다
+0024: 
+
+## 06_make_receipt_683503225_rc0.log
+
+0001: head 68350322592f400e3ef2655972d5d35f14851b60 dirty 0
+0002: ✅ paired_fixed5_v4: docs/22p_gap/receipts/paired_fixed5_v4.validate.yaml · 검사 35건 · 산출 2건 · core_sha d527cde9fc7251a2
+0003: paired_fixed5_v4 rc=0
+0004: ✅ grid_fit_v5: docs/22p_gap/receipts/grid_fit_v5.validate.yaml · 검사 34건 · 산출 2건 · core_sha 8de4e4aff4d4550b
+0005: grid_fit_v5 rc=0
+0006: 
+
+## 08_env_profile_json_3ec8aadb1_mismatch34.log
+
+0001: start head 3ec8aadb13e4ee4eb9e3434fbd28e503a7c03a34 dirty 0 utc 2026-10-06T13:51:29Z
+0002: {"counts": {"dists_locked": 170, "dists_measured": 174, "files_unhashed": 10456, "files_verified": 24918, "path_origins_in_record": 9, "shadowed_locked": 2, "shadowed_measured": 3}, "lock_path": "requirements-validation-C.lock.txt", "lock_sha256": "d886f30ff675fef723fb9bcedd98297910fb1f8f1809370c18d8980dc5e63b39", "mismatches": [{"axis": "dist_extra", "locked": null, "measured": "3.1.3", "subject": "flask"}, {"axis": "dist_extra", "locked": null, "measured": "2.2.0", "subject": "itsdangerous"}, {"axis": "dist_extra", "locked": null, "measured": "3.10.3", "subject": "markdown"}, {"axis": "dist_extra", "locked": null, "measured": "3.1.8", "subject": "werkzeug"}, {"axis": "dist_record", "locked": "none", "measured": "dc82b32b2026557c17e24d3e48a6e379a3d5660e81983aa026998afe775a32a4", "subject": "blinker"}, {"axis": "dist_record", "locked": "93bb7a80876cc2c5b1a03a327ba26a34a51ee2ca0e65114725f0e82534f3207b", "measured": "a0018709f48a14ac29ba157023a6de58fd705aed306baa4d61b3d0821ff8d1c9", "subject": "debugpy"}, {"axis": "dist_record", "locked": "5284752e0fa2c97798d4ac3bb89d559011cfbbfdf98ae1857a38f190f8c8e5af", "measured": "a27d20f5a6f885a67af62a2a03d0787f8def85840d9bfd3b80f35ee88c3e74d7", "subject": "fonttools"}, {"axis": "dist_record", "locked": "1c069281d9330882ff1902936e44a6857db9f251e9f8725d5367fd3eaf9a6bc7", "measured": "e3c8431b4269bbbd0f24ad2c83e771bf8e56dbdfb8a9cb2007062b569ee5c6df", "subject": "jupyter-server"}, {"axis": "dist_record", "locked": "b81e81c8ebabe7774411a6486d64c692fd8bad63b619b41f4bd2d8f37d0da16c", "measured": "f3f26b1588efd1bb62fd7ad3c12a0c9851c54d3f98a28b1fb15c56a572d133d4", "subject": "jupyterlab"}, {"axis": "dist_record", "locked": "9c2e9022df5d98d52d645361ee52054c1dc3e10ea9ba4513085ec40beb97718c", "measured": "99e4a0667b0b92789c40e1e7451336d8e11b6f525414df3d0aacbc089368c6e7", "subject": "jupyterlab-server"}, {"axis": "dist_record", "locked": "896d485c5d1fb04e0352d65ba7f410095f923b0dd672adff6815b77e4905bc0d", "measured": "04847daff2aff192295361598b4b5fa068adaa168e069c3ffa0d5e57b7f10b1e", "subject": "nest-asyncio2"}, {"axis": "dist_record", "locked": "821c9ec3f1811ad7d842d384de9cd8de73284955504d3cf37e6f4a7751a6b9a4", "measured": "0ea3ce48cdae99b8fcb5c843158c8479a1abcdf924b0ab2ed9ef7d6b2e4598d3", "subject": "notebook"}, {"axis": "dist_record", "locked": "c3dd00f045ea91bf972a08daad232f99a627186b0799af0379317a9edcc9fa86", "measured": "641c07465e54880064a7ac478d33ea28ec0f3384e618f7ef734586bfabf75d5e", "subject": "numpy"}, {"axis": "dist_record", "locked": "867c96df4a8756503ffd5b673b0e886d50c6a12442d9db05e27996dc9e2f88e0", "measured": "a8297e12b158ea591f74e78b7d6094e08401a9c18a85f9e969f84f870bce0181", "subject": "platformdirs"}, {"axis": "dist_record", "locked": "b027a054757dc3d609caae2352224277a64f1752666177aa86eedc918dfcd0a5", "measured": "3df9778cf8962564afac9830714158997b0f665d1a22beee497e9155f84bb8af", "subject": "posthog"}, {"axis": "dist_record", "locked": "41a99838b974f5e6cf39a8e387a449418e6762c666427e3c24152760aa6e2f4c", "measured": "511b09ac3a4e667e2275c3316de174dbee67e859e5a1488c185a0667641221d0", "subject": "pygments"}, {"axis": "dist_record", "locked": "7a423734645a175fcbf3fecb9703a3a9fd6756bdcda1ce7438bd1968b82261c9", "measured": "b13e2dde47d82b9fec29174e309b45a0c4b093da06fcea57e89ffdb3a61b3efb", "subject": "pytest"}, {"axis": "dist_record", "locked": "0f498c090ee8e116e1132a9f61b81ce2c50ff022042c5a192d82644270ec8d18", "measured": "c7281305e942fabb7a9dfa02af2030d68b3c46e0dac6f36e66134fb41150c060", "subject": "soupsieve"}, {"axis": "dist_record", "locked": "a8fec524feae3f0d25a7d110637a7360bdec3e6256cf496b26258eb5d31b7e7d", "measured": "27cef96e0b3874c6c859d13cc45a1e69fd8ace9df8cefff33f7a9cd5db679070", "subject": "tornado"}, {"axis": "dist_record", "locked": "f8c196e49b91ee8f74db1ae1b8ba04ec64661e0de2cf94d35ac9596dfb6b8215", "measured": "cb87e4ad19184953c3eade5642dbec7df3b8641c96b2ed84115bba57a2cb8d03", "subject": "wcwidth"}, {"axis": "dist_version", "locked": "1.7.0", "measured": "1.9.0", "subject": "blinker"}, {"axis": "dist_version", "locked": "1.8.22", "measured": "1.8.21", "subject": "debugpy"}, {"axis": "dist_version", "locked": "4.66.0", "measured": "4.65.0", "subject": "fonttools"}, {"axis": "dist_version", "locked": "2.21.1", "measured": "2.21.0", "subject": "jupyter-server"}, {"axis": "dist_version", "locked": "4.6.4", "measured": "4.6.3", "subject": "jupyterlab"}, {"axis": "dist_version", "locked": "2.28.1", "measured": "2.28.0", "subject": "jupyterlab-server"}, {"axis": "dist_version", "locked": "1.7.3", "measured": "1.7.2", "subject": "nest-asyncio2"}, {"axis": "dist_version", "locked": "7.6.3", "measured": "7.6.2", "subject": "notebook"}, {"axis": "dist_version", "locked": "4.12.0", "measured": "4.11.8", "subject": "platformdirs"}, {"axis": "dist_version", "locked": "7.60.1", "measured": "7.53.0", "subject": "posthog"}, {"axis": "dist_version", "locked": "2.10", "measured": "2.9.2", "subject": "soupsieve"}, {"axis": "dist_version", "locked": "6.5.10", "measured": "6.5.8", "subject": "tornado"}, {"axis": "dist_version", "locked": "0.9.1", "measured": "0.8.3", "subject": "wcwidth"}, {"axis": "shadowed", "locked": null, "measured": "none", "subject": "blinker==1.7.0"}], "not_measured": ["loaded_module_origin"], "profile": "C", "reason": "", "status": "MISMATCH", "unverifiable": {"dists_without_record": ["argcomplete", "cryptography", "dbus-python", "distro", "launchpadlib", "lazr-restfulclient", "lazr-uri", "oauthlib", "pip", "pygobject", "pyjwt", "pyparsing", "python-apt", "pyyaml", "setuptools", "six", "toml", "wadllib", "wheel", "xmltodict", "yq"], "path_origins": ["yaml"]}}
+0003: rc=0
+0004: end head 3ec8aadb13e4ee4eb9e3434fbd28e503a7c03a34 dirty 0 utc 2026-10-06T13:51:34Z
+0005: 
+
+## 10_full_pytest_3ec8aadb1_2320passed.log
+
+0001: start head 3ec8aadb13e4ee4eb9e3434fbd28e503a7c03a34 dirty 0 utc 2026-10-06T13:51:34Z
+0002: 
+0003: [conftest] 시험 authority: /tmp/dd-test-authority-z2hofpa5/docs/22p_gap/LEG_PRESERVATION.yaml (운영 원장의 바이트 복사본 — 70차 E6)
+0004: 
+0005: [conftest] 이 checkout 을 처음 보았다 — 얼린 cohort 17개의 좌표를 시험 authority 에 봉인했다: ['g10_2026_09_01', 'g11_2026_09_02', 'g12_2026_09_03', 'g13_2026_09_07', 'g14_2026_09_08', 'g15_2026_09_08', 'g16_2026_09_09', 'g17_2026_09_14', 'g1_2026_08_20', 'g2_2026_08_25', 'g3_2026_08_28', 'g4_2026_08_28', 'g5_2026_08_29', 'g6_2026_09_01', 'g7_2026_09_01', 'g8_2026_09_01', 'g9_2026_09_01']
+0006: ........................................................................ [  3%]
+0007: ........................................................................ [  6%]
+0008: ........................................................................ [  9%]
+0009: ........................................................................ [ 12%]
+0010: ........................................................................ [ 15%]
+0011: ........................................................................ [ 18%]
+0012: ........................................................................ [ 21%]
+0013: ........................................................................ [ 24%]
+0014: ........................................................................ [ 27%]
+0015: ........................................................................ [ 31%]
+0016: ........................................................................ [ 34%]
+0017: ........................x............................................... [ 37%]
+0018: ........................................................................ [ 40%]
+0019: ........................................................................ [ 43%]
+0020: ........................................................................ [ 46%]
+0021: ........................................................................ [ 49%]
+0022: ........................................................................ [ 52%]
+0023: ........................................................................ [ 55%]
+0024: ........................................................................ [ 58%]
+0025: ........................................................................ [ 62%]
+0026: ........................................................................ [ 65%]
+0027: ........................................................................ [ 68%]
+0028: ........................................................................ [ 71%]
+0029: ........................................................................ [ 74%]
+0030: ........................................................................ [ 77%]
+0031: ........................................................................ [ 80%]
+0032: ........................................................................ [ 83%]
+0033: ........................................................................ [ 86%]
+0034: ........................................................................ [ 89%]
+0035: ........................................................................ [ 93%]
+0036: ........................................................................ [ 96%]
+0037: ........................................................................ [ 99%]
+0038: .................                                                        [100%]
+0039: =========================== short test summary info ============================
+0040: XFAIL tests/test_gate63_defensive.py::test_staging_an_input_outside_the_repo_is_still_unsupported - §0 ⑦ (62차 신고 · 63차 재확인): 저장소 밖 절대 경로 입력은 staging 이 자기 자신 위에 복사하려다 죽는다
+0041: 2320 passed, 1 xfailed in 4684.37s (1:18:04)
+0042: rc=0
+0043: end head 3ec8aadb13e4ee4eb9e3434fbd28e503a7c03a34 dirty 0 utc 2026-10-06T15:09:42Z
+0044: 
+
+## 11_smoke_3ec8aadb1_rc0.log
+
+0001: start head 3ec8aadb13e4ee4eb9e3434fbd28e503a7c03a34 dirty 0 utc 2026-10-06T15:09:42Z
+0002: 
+0003: [1m── 환경 프로필 C 대조 (기록 전용 · 원장 §135) ──[0m
+0004: 환경 프로필 C 대조: MISMATCH · lock requirements-validation-C.lock.txt (sha256 d886f30ff675fef7…) · 배포판 lock 170 / 측정 174 · 가려진 2 / 3 · 설치 파일 일치 24918 (해시 없음 10456) · 경로 검색 origin 의 RECORD 소속 9 (로드된 module origin 미측정)
+0005:   · 확인 불가 — RECORD 없는 배포판 21: argcomplete, cryptography, dbus-python, distro, launchpadlib, lazr-restfulclient, lazr-uri, oauthlib, pip, pygobject, pyjwt, pyparsing, python-apt, pyyaml, setuptools, six, toml, wadllib, wheel, xmltodict, yq
+0006:   · 확인 불가 — 경로 검색 origin: yaml
+0007:   ✗ dist_extra flask locked=None measured=3.1.3
+0008:   ✗ dist_extra itsdangerous locked=None measured=2.2.0
+0009:   ✗ dist_extra markdown locked=None measured=3.10.3
+0010:   ✗ dist_extra werkzeug locked=None measured=3.1.8
+0011:   ✗ dist_record blinker locked=none measured=dc82b32b2026557c17e24d3e48a6e379a3d5660e81983aa026998afe775a32a4
+0012:   ✗ dist_record debugpy locked=93bb7a80876cc2c5b1a03a327ba26a34a51ee2ca0e65114725f0e82534f3207b measured=a0018709f48a14ac29ba157023a6de58fd705aed306baa4d61b3d0821ff8d1c9
+0013:   ✗ dist_record fonttools locked=5284752e0fa2c97798d4ac3bb89d559011cfbbfdf98ae1857a38f190f8c8e5af measured=a27d20f5a6f885a67af62a2a03d0787f8def85840d9bfd3b80f35ee88c3e74d7
+0014:   ✗ dist_record jupyter-server locked=1c069281d9330882ff1902936e44a6857db9f251e9f8725d5367fd3eaf9a6bc7 measured=e3c8431b4269bbbd0f24ad2c83e771bf8e56dbdfb8a9cb2007062b569ee5c6df
+0015:   ✗ dist_record jupyterlab locked=b81e81c8ebabe7774411a6486d64c692fd8bad63b619b41f4bd2d8f37d0da16c measured=f3f26b1588efd1bb62fd7ad3c12a0c9851c54d3f98a28b1fb15c56a572d133d4
+0016:   ✗ dist_record jupyterlab-server locked=9c2e9022df5d98d52d645361ee52054c1dc3e10ea9ba4513085ec40beb97718c measured=99e4a0667b0b92789c40e1e7451336d8e11b6f525414df3d0aacbc089368c6e7
+0017:   ✗ dist_record nest-asyncio2 locked=896d485c5d1fb04e0352d65ba7f410095f923b0dd672adff6815b77e4905bc0d measured=04847daff2aff192295361598b4b5fa068adaa168e069c3ffa0d5e57b7f10b1e
+0018:   ✗ dist_record notebook locked=821c9ec3f1811ad7d842d384de9cd8de73284955504d3cf37e6f4a7751a6b9a4 measured=0ea3ce48cdae99b8fcb5c843158c8479a1abcdf924b0ab2ed9ef7d6b2e4598d3
+0019:   ✗ dist_record numpy locked=c3dd00f045ea91bf972a08daad232f99a627186b0799af0379317a9edcc9fa86 measured=641c07465e54880064a7ac478d33ea28ec0f3384e618f7ef734586bfabf75d5e
+0020:   ✗ dist_record platformdirs locked=867c96df4a8756503ffd5b673b0e886d50c6a12442d9db05e27996dc9e2f88e0 measured=a8297e12b158ea591f74e78b7d6094e08401a9c18a85f9e969f84f870bce0181
+0021:   ✗ dist_record posthog locked=b027a054757dc3d609caae2352224277a64f1752666177aa86eedc918dfcd0a5 measured=3df9778cf8962564afac9830714158997b0f665d1a22beee497e9155f84bb8af
+0022:   ✗ dist_record pygments locked=41a99838b974f5e6cf39a8e387a449418e6762c666427e3c24152760aa6e2f4c measured=511b09ac3a4e667e2275c3316de174dbee67e859e5a1488c185a0667641221d0
+0023:   ✗ dist_record pytest locked=7a423734645a175fcbf3fecb9703a3a9fd6756bdcda1ce7438bd1968b82261c9 measured=b13e2dde47d82b9fec29174e309b45a0c4b093da06fcea57e89ffdb3a61b3efb
+0024:   ✗ dist_record soupsieve locked=0f498c090ee8e116e1132a9f61b81ce2c50ff022042c5a192d82644270ec8d18 measured=c7281305e942fabb7a9dfa02af2030d68b3c46e0dac6f36e66134fb41150c060
+0025:   ✗ dist_record tornado locked=a8fec524feae3f0d25a7d110637a7360bdec3e6256cf496b26258eb5d31b7e7d measured=27cef96e0b3874c6c859d13cc45a1e69fd8ace9df8cefff33f7a9cd5db679070
+0026:   ✗ dist_record wcwidth locked=f8c196e49b91ee8f74db1ae1b8ba04ec64661e0de2cf94d35ac9596dfb6b8215 measured=cb87e4ad19184953c3eade5642dbec7df3b8641c96b2ed84115bba57a2cb8d03
+0027:   ✗ dist_version blinker locked=1.7.0 measured=1.9.0
+0028:   ✗ dist_version debugpy locked=1.8.22 measured=1.8.21
+0029:   ✗ dist_version fonttools locked=4.66.0 measured=4.65.0
+0030:   ✗ dist_version jupyter-server locked=2.21.1 measured=2.21.0
+0031:   ✗ dist_version jupyterlab locked=4.6.4 measured=4.6.3
+0032:   ✗ dist_version jupyterlab-server locked=2.28.1 measured=2.28.0
+0033:   ✗ dist_version nest-asyncio2 locked=1.7.3 measured=1.7.2
+0034:   ✗ dist_version notebook locked=7.6.3 measured=7.6.2
+0035:   ✗ dist_version platformdirs locked=4.12.0 measured=4.11.8
+0036:   ✗ dist_version posthog locked=7.60.1 measured=7.53.0
+0037:   ✗ dist_version soupsieve locked=2.10 measured=2.9.2
+0038:   ✗ dist_version tornado locked=6.5.10 measured=6.5.8
+0039:   ✗ dist_version wcwidth locked=0.9.1 measured=0.8.3
+0040:   ✗ shadowed blinker==1.7.0 locked=None measured=none
+0041:   (기록 전용 — 불일치여도 아무것도 막지 않는다 · 원장 §135)
+0042: 
+0043: [1m── 0. 완방상태 준비 — solver recipe 봉인·거부 (F82b) ──[0m
+0044: 2026-10-06 15:09:55,722 WARNING __main__:   vs 원본 하드코딩 ne_primary: 36.7 -> 36.6 (차이 0.1%) — 하드코딩은 사용하지 않음
+0045: 2026-10-06 15:09:55,722 WARNING __main__:   vs 원본 하드코딩 ne_secondary: 3446.3 -> 3446.1 (차이 0.0%) — 하드코딩은 사용하지 않음
+0046: 2026-10-06 15:09:55,722 WARNING __main__:   vs 원본 하드코딩 pe: 58439.9 -> 58439.9 (차이 0.0%) — 하드코딩은 사용하지 않음
+0047:    ✅ baseline --force (재계산 + baseline_hash·solver 봉인)
+0048:    ✅ 다른 solver 로 계산된 캐시 거부 (F82b)
+0049: 
+0050: [1m── 1. PyBaMM 합성 격자 (producer artifact) ──[0m
+0051: · 실행 전 gate 면제 — 모든 경로가 smoke namespace 안이다 (정규 격리)
+0052: 
+0053: grid:   0%|          | 0/6 [00:00<?, ?cond/s]
+0054: grid: 100%|██████████| 6/6 [00:11<00:00,  1.85s/cond]
+0055: grid: 100%|██████████| 6/6 [00:11<00:00,  1.85s/cond]
+0056: {
+0057:   "n_ok": 6,
+0058:   "n_failed": 2,
+0059:   "n_curves_total": 6,
+0060:   "elapsed_s": 11.148545105999801,
+0061:   "out_dir": "results/_smoke/curves"
+0062: }
+0063:    ✅ 곡선 생성
+0064:    ✅ curves_manifest.yaml (F70 producer 기록)
+0065:    ✅ producer 독립 검증 (F74): 통과 (실패라벨 재검 포함)
+0066:    ✅ 다른 config 의 resume 혼합 차단 (F74)
+0067: 
+0068: [1m── 2. half-cell 캐시 없음 → 안내하며 멈추는가 (F63) ──[0m
+0069:    ✅ 안내와 함께 중단 (조용한 캐시 생성 없음)
+0070: 
+0071: [1m── 3. half-cell 기준 준비 (봉인 가능한 별도 단계) ──[0m
+0072:    ✅ 캐시 + recipe meta 생성
+0073:    ✅ recipe meta 사이드카 (F64)
+0074:    ✅ halfcell --verify (재생성 대조)
+0075:    ✅ stale meta → validator 거부 (['runtime_identity', '코드_identity'])
+0076: 2026-10-06 15:10:42,540 WARNING __main__: half-cell 캐시가 다른 runtime 에서 계산됨 (차이 ['pybamm']) — 미스로 취급해 재계산: /home/user/Yonghoon-DEM-DFT/degradation-degeneracy/.cache/halfcell/a8e262f7d6aa4beb_ocp_b5009f515fb8.json
+0077:    ✅ stale 캐시 → 미스로 재계산되어 meta 갱신 (12차 발견 4 자기치유)
+0078:    ✅ --force --verify (운영 명령)
+0079: 
+0080: [1m── 4. 같은 곡선을 두 기준으로 fitting ──[0m
+0081:    ✅ Case 2 (grid 기준)
+0082:    ✅ Case 1 (half-cell 기준)
+0083: 
+0084: [1m── 5. provenance — 두 산출물 모두 인용 가능한가 ──[0m
+0085:    ✅ results/_smoke/grid_fit: 통과
+0086:    ✅ results/_smoke/halfcell_fit: 통과
+0087: 
+0088: [1m── 6. 공정 paired 실행 — 33p/34p 쌍 (F66/F81) ──[0m
+0089:    ✅ 6조건 × 2목적함수, 조건별 (index,source) 집합 동일, 전부 3 restart·유한
+0090:    ✅ paired 채점
+0091:    ✅ paired 목적함수 비교
+0092:    ✅ paired 보고서 생성 (n_restarts=3, pairwise 메타 키 포함)
+0093: 
+0094: [1m── 7. 채점 · 비교 · 보고서 ──[0m
+0095:    ✅ 채점
+0096:    ✅ 목적함수 비교
+0097:    ✅ 기준 곡선 비교
+0098:    ✅ weight sweep (run.sh wrapper, w∈{0,1})
+0099:    ✅ sweep 기록: tol·method·adaptive·digest 봉인, optimized 는 run 디렉터리에
+0100:    ✅ sweep 끝점 ↔ 본 실행 일치 (check_sweep_consistency)
+0101:    ✅ 인용 금지 배너 없음 — 전 구간 provenance 통과
+0102:    ✅ 파생 변조 → 재계산 렌더 + stale 배너 (F77)
+0103: 
+0104: [1m── 7b. 같은 논리 실행의 resume → 보고서 갱신 (62차 순서 e2e) ──[0m
+0105:    ✅ resume (production 진입점)
+0106:    ✅ completed journal 이 하나 — run_sig 가 resume 에서 안 바뀜 (62차 P0-5)
+0107:    ✅ resume 뒤 lock 정리 (62차 P0-3)
+0108:    ✅ resume 뒤 봉인이 2 member 를 정확히 담고 승격 판정을 지난다 (62차 P0-1)
+0109:    ✅ resume 뒤 보고서 갱신 — 배너 없음
+0110: 
+0111: [1m── 8. Hessian — 분리배치 곡선 해석 · 채점 산출물 불변 ──[0m
+0112:    ✅ 분리배치 Hessian (봉인 _inputs 곡선 자동 해석, 18차 A)
+0113:    ✅ Hessian 이 degeneracy_summary.yaml 을 건드리지 않음 (18차 B)
+0114:    ✅ Hessian sidecar 기록
+0115:    ✅ score → hessian → report 순서에 stale 없음 (18차 C)
+0116: 
+0117: [1m── 8b. 굳은 기록 scan — handle 경로 · staging 경로 · 없는 임시 경로 (62차 γ′) ──[0m
+0118:    ✅ 굳은 기록 58개: handle 경로·staging 경로·없는 경로 없음 (62차 γ′)
+0119: 
+0120: [1m── 9. 보관 → 격리 복원 → 검증 → 재채점 ──[0m
+0121:    ✅ bundle (halfcell)
+0122:    ✅ bundle (grid + nested sweep)
+0123:    ✅ check
+0124:    ✅ check (nested)
+0125:    ✅ 격리 root 복원
+0126:    ✅ 격리 복원 (grid+sweep)
+0127:    ✅ 격리 복원 검증[results/_smoke/halfcell_fit]: 통과
+0128:    ✅ 격리 복원 검증[results/_smoke/grid_fit]: 통과
+0129:    ✅ 격리 복원 검증[results/_smoke/grid_fit/wsweep]: 통과
+0130:    ✅ 복원본 재채점: 정본 확인, digest df3e90b03bca
+0131:    ✅ 없는 보관 대상 → nonzero 종료 (F89)
+0132:    ✅ 보관 음성 테스트가 tracked artifacts/ 를 건드리지 않음
+0133:    ✅ archive wrapper 정상 승격
+0134:    ✅ artifact_index: 승격분만·kind·64자리·봉인 곡선 digest 일치 (12차 발견 5)
+0135:    ✅ 실패한 재보관이 기존 묶음을 보존 (11차 발견 6)
+0136:    ✅ 계획 index 일관 · 계획 밖 다리는 거부 (46차 P0-11)
+0137:    ✅ run.sh 에 실행 전 gate 가 배선돼 있다 (46차 P0-11)
+0138:    ✅ smoke namespace 밖 · 계획에 없는 다리는 실행 전에 거부된다 (46차 P0-11)
+0139: 
+0140: [1m✅ pipeline smoke 통과[0m
+0141: [33m⚠ 실행 전 계획 gate 는 배선됐다 (46차 P0-11). 남은 것은 실물
+0142:    provider 어댑터 — 지금 보존 회귀는 hermetic fake 로만 돈다.
+0143:    새 leg 를 돌리려면 `LEG_PRESERVATION.yaml` 의 `planned:` 에 먼저
+0144:    적고, 실물 보관 경로는 사람이 따로 확인할 것.[0m
+0145: rc=0
+0146: end head 3ec8aadb13e4ee4eb9e3434fbd28e503a7c03a34 dirty 0 utc 2026-10-06T15:13:26Z
+0147: 
+
+## 12_full_replay_3ec8aadb1_421_of_421_rc0.log
+
+0001: start head 3ec8aadb13e4ee4eb9e3434fbd28e503a7c03a34 dirty 0 utc 2026-10-06T15:13:26Z
+0002: sandbox: /tmp/mutation_replay_y3zc8y6e/degradation-degeneracy
+0003: 
+0004: 물었다        producer-crossing-is-fail-closed node 1 · -k breaking_the_crossing_into_src_scoring_is_fail_closed
+0005: 물었다        producer-cut-is-sealed         node 1 · -k widening_the_producer_cut_moves_the_digest
+0006: 물었다        producer-canon-drops-empty-fields node 1 · -k producer_digest_is_the_same_on_every_python_here
+0007: 물었다        generation-root-nofollow       node 2 · -k generation_root_symlink_is_never_read_as_a_generation or symlinked_gen_ancestor_never_holds_a_generation
+0008: 물었다        producer-semantic-sealed       node 2 · -k producer_change_cannot_mix_two_producers or producer_semantic_identity_is_sealed
+0009: 물었다        producer-cut-is-declared       node 1 · -k producer_semantic_digest_excludes_the_publication_path
+0010: 물었다        policy-binds-the-roster        node 1 · -k single_leg_policy_must_match_the_roster_cardinality
+0011: 물었다        pre-write-authority            node 1 · -k frozen_cohort_publish_writes_nothing_before_it_refuses
+0012: 물었다        complete-current-supersedes-pending node 1 · -k complete_current_supersedes_a_leftover_pending
+0013: 물었다        repair-source-uses-the-snapshot node 2 · -k repair_lookups_go_through_the_validated_version_snapshot or no_version_enumeration_bypasses_the_helper
+0014: 물었다        claim-seals-the-run-spec       node 2 · -k claim_seals_the_exact_run_spec or test_g92_k10_c8_another
+0015: 물었다        claim-checks-the-whole-index   node 1 · -k whole_index_must_be_consistent_before_any_leg_is_claimed
+0016: 물었다        plan-index-exact-equality      node 1 · -k phantom_executed_plan_without_an_execution_record
+0017: 물었다        plan-parser-dir-hygiene        node 4 · -k plan_parser_requires_a_canonical_relative_dir or plan_parser_refuses_a_cohort_dir_outside_the_repository
+0018: 물었다        namespace-check-rejects-symlinks node 2 · -k symlinked_path_is_not_inside_the_smoke_namespace or namespace_check_is_fail_closed_on_a_symlinked_component
+0019: 물었다        module-gate-before-side-effects node 1 · -k run_grid_calls_the_gate_before_its_first_side_effect
+0020: 물었다        caller-stage-safe-read         node 1 · -k dangling_symlink_in_the_caller
+0021: 물었다        publisher-owns-the-merge-temp  node 1 · -k caller_stage_is_untouched
+0022: 물었다        reader-shares-the-validator    node 1 · -k generation_reader_refuses_an_aliased
+0023: 물었다        generation-namespace-guard     node 2 · -k current_generation_cannot_be_used_as_its_own_staging
+0024: 물었다        pointer-loss-is-terminal       node 1 · -k losing_the_pointer_of_a_cohort
+0025: 물었다        pin-is-publication-authority   node 1 · -k producer_pin_is_part
+0026: 물었다        ledger-status-enum             node 4 · -k status_is_an_exact_enum
+0027: 물었다        ledger-dir-contained           node 5 · -k dir_that_is_not_contained
+0028: 물었다        version-candidates-typed       node 2 · -k every_enumerated_version_candidate or falsy_version_never_reaches_lock
+0029: 물었다        planned-status-is-not-standing node 1 · -k standing_authorization
+0030: 물었다        planned-binds-the-code-identity node 1 · -k plan_to_the_code_identity
+0031: 물었다        planned-binds-the-execution-record node 1 · -k planned_index_is_bound_to_the_real
+0032: 물었다        warm-edges-are-declared        node 1 · -k warm_consumers_go_through_the_accessors
+0033: 물었다        authority-frozenset            node 1 · -k frozen_authority_holds_only_immutable
+0034: 물었다        sink-subset-of-roster          node 1 · -k complete_undeclared_leg_never_reaches_pending
+0035: 물었다        staging-nlink-one              node 3 · -k staging_aliases_never_become_an_immutable_generation
+0036: 물었다        seal-exact-types               node 1 · -k an_omap_and_a_list_of_lists_do_not_share_a_seal
+0037: 물었다        seal-finite-floats             node 3 · -k seal_domain_is_exact_not_isinstance
+0038: 물었다        pointer-binds-the-ledger       node 1 · -k expanding_a_roster_over_an_active_cohort_requires_a_new_cohort
+0039: 물었다        prelock-version-id-is-a-string node 3 · -k falsy_version_id
+0040: 물었다        trust-boundary-declared        node 1 · -k publisher_declares_its_trust_boundary
+0041: 물었다        warm-consumer-uses-accessor    node 1 · -k warm_consumers_go_through_the_accessors
+0042: 물었다        sink-validates-itself          node 1 · -k sink_refuses_an_incomplete
+0043: 물었다        authority-frozen               node 1 · -k frozen_authority_cannot_be_edited
+0044: 물었다        seal-typed-input               node 2 · -k types_differ_is_not_folded
+0045: 물었다        recheck-before-rename          node 1 · -k rechecked_immediately_before_the_rename
+0046: 물었다        proof-handoff-to-verify        node 4 · -k repaired_proof_is_handed or pre_journal_finalize or journal_seals_the_content
+0047: 물었다        prelock-digest-check           node 1 · -k wrong_bytes_are_never_locked
+0048: 물었다        prelock-readback-check         node 1 · -k returns_the_wrong_version
+0049: 물었다        authority-registry             node 1 · -k raw_publisher_takes_no
+0050: 물었다        both-pointers-checked          node 2 · -k pointer_moved_by_another
+0051: 물었다        guard-before-commit            node 2 · -k pathname_after_the_check or same_roster_ledger_change
+0052: 물었다        inner-unbound-sentinel         node 1 · -k blank_its_sentinel_check
+0053: 물었다        inner-unbound-kernel           node 1 · -k blank_its_own_inner_check
+0054: 물었다        pending-base-generation        node 2 · -k stale_bootstrap_pending
+0055: 물었다        pending-closed-schema          node 2 · -k stale_bootstrap_pending
+0056: 물었다        precheck-tells-new-from-resume node 1 · -k precheck_tells_a_new_run_from_an_owned_resume
+0057: 물었다        claim-stores-a-verifier-not-the-token node 1 · -k claim_file_never_stores_the_resume_credential
+0058: 물었다        resume-compares-the-verifier   node 3 · -k phase_cannot_be_recorded_without_the_owner_token or crash_after_grid_resumes_and_finalizes or finalize_requires_the_owner_credential
+0059: 물었다        diagnostic-hides-the-credential node 1 · -k the_diagnostic_reader_never_hands_out_the_credential
+0060: 물었다        finalize-holds-the-claim-lock  node 2 · -k canonical_lock_order_is_declared_and_finalize_holds_the_claim or finalize_recovery_branch_holds_the_claim_lock
+0061: 물었다        finalize-rechecks-in-the-ledger-lock node 1 · -k finalize_rechecks_the_whole_authority_inside_the_ledger_lock
+0062: 물었다        crash-recovery-is-idempotent   node 1 · -k finalize_is_idempotent_after_a_crash_before_cleanup
+0063: 물었다        crash-recovery-needs-the-credential node 1 · -k the_crash_recovery_needs_the_owner_credential
+0064: 물었다        preservation-status-inside-the-contract node 1 · -k the_runtime_preservation_enum_is_inside_the_contract
+0065: 물었다        finalize-writes-the-whole-tuple node 1 · -k finalize_writes_a_complete_contract_status_tuple
+0066: 물었다        fit-axis-is-the-real-policy    node 1 · -k fit_axis_seals_every_intent_that_changes_the_answer
+0067: 물었다        phase-input-binding            node 1 · -k fit_refuses_curves_that_its_grid_phase_did_not_produce
+0068: 물었다        phase-input-binding-needs-a-receipt node 1 · -k fit_refuses_when_its_grid_phase_is_missing
+0069: 물었다        release-returns-the-plan       node 1 · -k released_run_returns_the_plan_to_planned
+0070: 물었다        dry-run-releases-the-claim     node 1 · -k dry_run_does_not_strand_the_plan_in_running
+0071: 물었다        roster-is-a-set                node 1 · -k ledger_roster_is_a_set_not_a_multiset
+0072: 물었다        thaw-transition-is-unrepresentable node 1 · -k frozen_cohort_cannot_be_thawed_and_published
+0073: 물었다        lifecycle-chain-is-verified    node 1 · -k the_lifecycle_journal_is_a_hash_chain
+0074: 물었다        lifecycle-head-anchors-the-tip node 1 · -k the_lifecycle_journal_is_a_hash_chain
+0075: 물었다        closure-unresolved-attr-is-fail-closed node 1 · -k unresolved_producer_module_reference_is_fail_closed
+0076: 물었다        closure-refuses-dynamic-resolution node 6 · -k dynamic_name_resolution_inside_the_closure_is_fail_closed
+0077: 물었다        phase-write-checks-the-credential node 1 · -k forged_claim_object_cannot_write_a_phase
+0078: 물었다        phase-write-refuses-a-closed-claim node 2 · -k closed_run_cannot_be_resurrected_by_a_late_phase or released_run_cannot_be_resurrected_by_a_late_phase
+0079: 물었다        token-is-written-before-the-claim node 1 · -k crash_between_the_claim_and_the_token_leaves_nothing_stranded
+0080: 물었다        fit-axis-seals-the-input-content node 2 · -k fit_axis_seals_the_input_content_axes
+0081: 물었다        row-selection-seals-its-content node 1 · -k fit_axis_seals_the_row_selection_content
+0082: 물었다        phase-input-binding-covers-the-package node 1 · -k grid_receipt_binds_every_curve_input_not_just_the_parquet
+0083: 물었다        missing-journal-with-a-live-anchor node 1 · -k deleting_the_journal_does_not_erase_the_freeze
+0084: 물었다        module-defs-see-tuple-targets  node 2 · -k producer_closure_sees_tuple_targets or producer_closure_follows_a_tuple_defined_constant
+0085: 물었다        module-defs-enter-compound-statements node 1 · -k producer_closure_sees_every_module_binding_form
+0086: 물었다        module-defs-fail-closed-on-unknown node 1 · -k unmodelled_module_binding_form_is_fail_closed
+0087: 물었다        canon-keeps-docstrings         node 1 · -k docstring_the_computation_reads_is_inside_the_identity
+0088: 물었다        open-checks-the-live-claim-first node 1 · -k second_open_never_touches_the_live_owners_token
+0089: 물었다        token-unlink-is-generation-scoped node 1 · -k late_release_cleanup_cannot_delete_the_next_attempts_token
+0090: 물었다        abandon-rechecks-the-live-attempt node 2 · -k stale_claim_handle_cannot_cancel_the_next_attempt or readonly_claim_cannot_abandon_the_live_owner
+0091: 물었다        release-moves-the-ledger-before-the-claim node 1 · -k crash_inside_release_leaves_a_recoverable_state
+0092: 물었다        rollback-only-on-certain-non-commit node 3 · -k durability_error_after_the_ledger_commit_keeps_the_claim or uncertain_ledger_write_never_discards_the_claim or failure_while_leaving_the_ledger_lock_preserves_the_authority
+0093: 물었다        fit-axis-seals-the-objective-payload node 1 · -k objective_payload_is_inside_the_approval_digest
+0094: 물었다        fit-axis-seals-the-config-closure node 1 · -k base_config_parent_is_inside_the_approval_digest
+0095: 물었다        fit-stages-its-inputs-before-the-gate node 1 · -k run_fit_hands_the_body_the_staged_copies_not_the_originals
+0096: 물었다        external-binding-covers-the-package node 1 · -k external_input_binding_covers_the_whole_package
+0097: 물었다        grid-axis-seals-the-discharged-cache node 1 · -k grid_axis_binds_the_discharged_state_cache
+0098: 물었다        freeze-completes-a-half-written-transition node 1 · -k freeze_is_retryable_after_a_crash_between_its_two_writes
+0099: 물었다        token-cleanup-is-inside-the-claim-lock node 1 · -k token_cleanup_happens_under_the_claim_lock
+0100: 물었다        token-read-checks-the-leg      node 1 · -k an_attempt_file_from_another_leg_is_refused
+0101: 물었다        module-defs-track-mutating-bindings node 1 · -k producer_closure_tracks_mutating_and_import_bindings
+0102: 물었다        module-defs-track-import-bindings node 1 · -k producer_closure_tracks_mutating_and_import_bindings
+0103: 물었다        closure-refuses-source-reflection node 1 · -k reading_the_producers_raw_source_is_fail_closed
+0104: 물었다        freeze-refuses-a-live-execution node 1 · -k freeze_refuses_while_an_execution_holds_the_cohort
+0105: 물었다        lifecycle-completes-a-partial-append node 1 · -k freeze_crash_between_journal_and_anchor_is_recoverable
+0106: 물었다        fit-axis-seals-the-smoothing-backend node 1 · -k effective_smoothing_backend_is_inside_the_approval
+0107: 물었다        env-fingerprint-seals-the-smoothing-backend node 1 · -k effective_smoothing_backend_is_inside_the_approval
+0108: 물었다        canon-absorbs-the-pep701-empty-piece node 1 · -k canonical_form_agrees_on_every_supported_interpreter
+0109: 물었다        plan-uncertainty-covers-the-whole-critical-section node 2 · -k failure_while_leaving_the_ledger_lock_preserves_the_authority or uncertain_ledger_write_never_discards_the_claim
+0110: 물었다        claim-write-is-all-or-nothing  node 1 · -k short_write_does_not_leave_a_truncated_claim
+0111: 물었다        token-write-is-all-or-nothing  node 1 · -k short_write_does_not_leave_a_truncated_claim
+0112: 물었다        claim-bytes-are-verified-on-disk node 1 · -k lying_write_is_caught_by_reading_the_bytes_back
+0113: 물었다        freeze-authority-is-not-caller-selected node 1 · -k freeze_cannot_be_pointed_at_an_empty_claims_directory
+0114: 물었다        freeze-rereads-the-ledger-before-writing node 1 · -k freeze_does_not_erase_a_record_written_while_it_ran
+0115: 물었다        freeze-checks-live-claims-before-recovery node 1 · -k freeze_recovery_branch_also_refuses_while_an_execution_is_live
+0116: 물었다        freeze-holds-the-publish-lock  node 1 · -k publication_cannot_land_after_the_cohort_was_frozen
+0117: 물었다        lifecycle-transitions-are-checked-when-read node 1 · -k lifecycle_reader_never_anchors_a_transition_it_did_not_make
+0118: 물었다        lifecycle-reader-does-not-write node 1 · -k lifecycle_reader_never_anchors_a_transition_it_did_not_make
+0119: 물었다        producer-binds-container-mutations node 1 · -k module_scope_container_mutation_is_inside_producer_identity
+0120: 물었다        producer-fails-closed-on-rootless-targets node 1 · -k unmodelled_assignment_target_is_fail_closed
+0121: 물었다        producer-dunder-is-an-allowlist node 1 · -k producer_cannot_reach_its_own_bytes_through_the_module_loader
+0122: 물었다        receipt-is-bound-to-the-mutant node 1 · -k receipt_is_bound_to_the_exact_mutant
+0123: 물었다        freeze-linearizes-its-start    node 1 · -k issuer_refuses_while_a_freeze_is_half_committed
+0124: 물었다        claims-root-comes-from-the-ledger node 1 · -k issuer_cannot_choose_where_its_claim_lives
+0125: 물었다        freeze-ledger-write-is-atomic  node 1 · -k partial_write_during_freeze_leaves_the_ledger_readable
+0126: 물었다        dunder-as-a-string-is-still-a-dunder node 1 · -k dunder_named_by_a_string_literal_is_still_a_dunder
+0127: 물었다        receipt-carries-the-mutant-marker node 1 · -k genuine_report_from_another_mutant_is_refused
+0128: 물었다        witness-must-be-in-the-meaning-line node 1 · -k witness_found_only_in_the_traceback_body_is_not_a_witness
+0129: 물었다        ledger-is-resolved-once        node 1 · -k same_ledger_argument_always_names_the_same_claims_root
+0130: 물었다        token-path-alias-is-refused    node 1 · -k symlinked_token_path_cannot_split_the_attempt_lock
+0131: 물었다        ledger-hardlink-is-refused     node 1 · -k hardlinked_ledger_alias_cannot_fork_the_authority
+0132: 물었다        ledger-seals-the-attempt-verifier node 1 · -k crash_after_the_claim_unlink_can_still_be_finalized
+0133: 물었다        append-finishes-the-pending-anchor-first node 1 · -k two_consecutive_partial_appends_are_still_recoverable
+0134: 물었다        crossed-module-effects-are-seeded node 1 · -k module_effects_are_seeded_in_every_crossed_module
+0135: 물었다        evidence-paths-are-repo-relative node 1 · -k evidence_tree_digest_does_not_depend_on_the_checkout_path
+0136: 물었다        anchor-repair-holds-the-lifecycle-lock node 1 · -k stale_anchor_repair_cannot_rewind_the_head
+0137: 물었다        freeze-checks-the-destination-first node 1 · -k freeze_validates_the_destination_before_its_first_side_effect
+0138: 물었다        coverage-is-bound-to-the-tested-tree node 1 · -k coverage_is_bound_to_the_tree_it_actually_tested
+0139: 물었다        smoke-gate-issues-the-execution-capability-g59 node 1 · -k production_smoke_gate_records_the_execution_class
+0140: 물었다        content-id-hashes-every-manifest-g58 node 1 · -k two_fits_sharing_curves_do_not_share_a_content_id
+0141: 물었다        smoke-containment-is-a-kernel-coordinate-g58 node 2 · -k bind_mounted_outside_directory_is_not_inside_the_smoke_namespace or an_unplanned_leg_under_a_bind_alias_is_not_exempted
+0142: 물었다        phase-receipt-is-write-once-g58 node 1 · -k a_closed_phase_cannot_be_rewritten_with_a_different_receipt
+0143: 물었다        bundle-uri-must-be-repo-relative-g58 node 4 · -k an_absolute_bundle_uri_is_refused or a_bundle_uri_that_escapes_the_repository_is_refused
+0144: 물었다        issuance-fsync-is-strict-g58   node 1 · -k issuance_fails_closed_when_a_directory_cannot_be_flushed
+0145: 물었다        decorators-are-import-time-effects-g58 node 1 · -k a_name_only_decorator_changes_the_identity_when_its_body_changes
+0146: 물었다        capability-can-not-leave-the-call-site-g58 node 5 · -k a_capability_that_leaves_the_call_site_is_refused
+0147: 물었다        lifecycle-owned-evidence-is-refused-g58 node 6 · -k normal_finalize_cannot_forge_the_migration_provenance or lifecycle_owned_evidence_keys_are_refused_from_callers
+0148: 물었다        execution-receipt-binds-the-startup-g58 node 2 · -k the_execution_receipt_binds
+0149: 물었다        report-attests-the-environment-g58 node 2 · -k execution_evidence_can_not_be_laundered_without_the_reports or a_report_that_attests_another_environment_is_refused
+0150: 물었다        coverage-checks-the-execution-receipt-g58 node 1 · -k the_top_level_checker_consumes_the_execution_receipt
+0151: 물었다        replay-forces-the-declared-environment-g58 node 1 · -k the_replayed_run_itself_sees_only_a_declared_environment
+0152: 물었다        smoke-registry-is-split-by-class-g58 node 1 · -k smoke_records_do_not_land_in_the_shared_registry
+0153: 물었다        output-commit-requires-a-capability-g59 node 1 · -k committing_an_output_without_a_capability_is_refused
+0154: 물었다        exec-class-record-is-read-back-g59 node 1 · -k a_short_write_never_publishes_a_partial_record
+0155: 물었다        exec-class-retry-reseals-durability-g59 node 1 · -k a_retry_after_a_failed_parent_fsync_redoes_the_durability_step
+0156: 물었다        run-content-id-refuses-unknown-manifests-g59 node 1 · -k an_undeclared_manifest_in_a_run_dir_is_refused
+0157: 물었다        run-manifest-schema-is-production-wide-g59 node 1 · -k the_start_manifest_takes_part_in_the_content_identity
+0158: 물었다        phase-order-is-enforced-g59    node 1 · -k a_later_phase_can_not_close_before_its_predecessor
+0159: 물었다        finalize-requires-the-consumed-binding-g59 node 1 · -k finalize_refuses_a_later_phase_with_no_recorded_predecessor
+0160: 물었다        capability-carries-the-judged-handle-g59 node 1 · -k the_capability_is_bound_to_the_directory_the_gate_judged
+0161: 물었다        bundle-members-are-not-followed-g59 node 1 · -k a_bundle_member_symlink_can_not_smuggle_bytes_from_outside
+0162: 물었다        finalize-snapshots-the-evidence-g59 node 1 · -k finalize_seals_the_evidence_it_verified
+0163: 물었다        frozen-publication-needs-a-local-seal-g59 node 1 · -k publication_is_refused_while_a_frozen_cohort_has_no_local_seal
+0164: 물었다        issuance-requires-a-durable-token-g59 node 1 · -k issuing_with_a_token_that_is_not_on_disk_is_refused
+0165: 물었다        capability-target-must-be-provable-g59 node 6 · -k wrapping_the_capability_target_does_not_escape
+0166: 물었다        class-bases-are-substitution-g59 node 1 · -k a_metaclass_body_change_moves_the_identity
+0167: 물었다        future-flag-changes-the-model-g59 node 1 · -k the_future_annotations_flag_is_part_of_the_model
+0168: 물었다        startup-binds-every-loaded-module-g59 node 2 · -k the_startup_probe_binds_what_sitecustomize_pulls_in or a_module_with_no_findable_spec_is_still_bound
+0169: 물었다        env-tag-covers-the-whole-receipt-g59 node 1 · -k the_environment_tag_covers_the_whole_receipt
+0170: 물었다        run-identity-is-sealed-at-commit-g60 node 2 · -k a_later_sanctioned_manifest_does_not_erase_the_registered_class or an_execution_manifest_written_after_the_commit_keeps_the_class
+0171: 물었다        class-is-decided-by-the-place-g60 node 1 · -k the_gate_decides_the_class_and_the_caller_cannot_choose_it
+0172: 물었다        a-consumed-capability-is-retired-g60 node 1 · -k a_capability_is_spent_by_a_successful_commit
+0173: 물었다        the-gate-creates-the-judged-place-g60 node 1 · -k the_gate_creates_the_place_and_always_carries_a_handle
+0174: 물었다        grid-writes-under-the-handle-g60 node 1 · -k production_grid_writes_through_the_capability
+0175: 물었다        lifecycle-root-is-not-an-alias-g60 node 1 · -k a_symlinked_claims_root_is_refused
+0176: 물었다        journal-publish-reads-back-g60 node 1 · -k a_short_journal_write_never_becomes_a_published_transition
+0177: 물었다        bundle-members-share-the-root-mount-g60 node 1 · -k a_member_on_another_mount_is_refused
+0178: 물었다        payload-index-is-a-bundle-member-g60 node 1 · -k the_payload_index_must_be_a_member_of_the_bundle
+0179: 물었다        finalize-seals-the-bundle-bytes-g60 node 1 · -k finalize_seals_the_bundle_content_id
+0180: 물었다        phase-receipt-is-snapshotted-g60 node 1 · -k the_phase_receipt_is_snapshotted_at_entry
+0181: 물었다        a-record-has-exactly-one-name-g60 node 1 · -k a_record_with_two_names_is_refused_by_the_reader
+0182: 물었다        module-docstring-is-bound-g60  node 1 · -k the_module_docstring_is_inside_the_identity
+0183: 물었다        a-caller-supplied-callee-is-refused-g60 node 3 · -k a_caller_supplied_binding_is_not_a_proof_of_non_namespace
+0184: 물었다        compound-heads-are-import-time-g60 node 5 · -k compound_heads_and_vararg_annotations_are_import_time
+0185: 물었다        vararg-annotations-are-import-time-g60 node 5 · -k compound_heads_and_vararg_annotations_are_import_time
+0186: 물었다        derived-manifests-are-outside-the-identity-g61 node 2 · -k a_resumed_run_survives_a_report_refresh or the_derived_manifest_never_enters_the_identity
+0187: 물었다        records-keep-the-logical-input-g61 node 1 · -k the_sealed_input_path_exists_after_a_successful_fit
+0188: 물었다        records-keep-the-logical-output-g61 node 2 · -k the_sealed_output_path_exists_after_a_successful_fit or no_durable_record_mentions_a_process_local_handle
+0189: 물었다        the-run-lock-is-released-g61   node 1 · -k the_run_lock_is_gone_after_a_successful_fit
+0190: 물었다        lock-release-failure-is-not-swallowed-g61 node 1 · -k a_failed_lock_release_is_not_swallowed
+0191: 물었다        run-lock-exclusivity-is-a-kernel-op-g62 node 4 · -k two_contenders_that_both_observe_absence_do_not_both_acquire or eight_processes_racing_for_one_lock_yield_exactly_one_holder or a_live_holder_in_another_process_is_refused_by_pid or run_lock_blocks_concurrent_run
+0192: 물었다        release-consumes-a-token-not-a-path-g62 node 1 · -k the_path_based_release_is_gone
+0193: 물었다        release-refuses-a-replaced-inode-g62 node 2 · -k release_refuses_a_lock_whose_name_now_points_at_another_inode or releasing_a_missing_or_foreign_lock_is_loud_but_never_deletes
+0194: 물었다        release-refuses-a-vanished-lock-g62 node 1 · -k release_refuses_when_its_own_lock_has_vanished
+0195: 물었다        fit-commits-inside-the-lock-g62 node 1 · -k fit_releases_the_lock_only_after_commit_and_receipt
+0196: 물었다        grid-merges-inside-the-lock-g62 node 1 · -k grid_source_releases_the_lock_after_merge_manifest_commit_and_receipt
+0197: 물었다        fit-failure-discards-the-capability-g62 node 1 · -k fit_failure_before_commit_discards_the_capability
+0198: 물었다        grid-dry-run-discards-the-capability-g62 node 1 · -k grid_dry_run_discards_the_capability
+0199: 물었다        grid-manifest-locator-is-the-name-g62 node 1 · -k grid_manifest_payload_records_the_logical_curves_path
+0200: 물었다        run-sig-has-no-staging-pathname-g62 node 2 · -k the_same_logical_fit_resumed_keeps_one_run_signature or the_run_spec_does_not_carry_a_staging_pathname
+0201: 물었다        promotion-refuses-a-stale-seal-g62 node 1 · -k a_stale_seal_is_refused_even_when_a_legacy_record_matches
+0202: 물었다        promotion-refuses-a-subset-seal-g62 node 1 · -k an_in_progress_fit_in_a_committed_grid_dir_is_not_promotable
+0203: 물었다        sealed-records-need-their-seal-g62 node 1 · -k deleting_the_seal_does_not_reopen_the_prefix
+0204: 물었다        promotion-checks-derived-freshness-g62 node 2 · -k direct_bundle_refuses_a_stale_derived_artifact or the_promotion_primitive_is_one_function
+0205: 물었다        definition-head-is-the-enclosing-scope-g62 node 3 · -k the_analyzer_does_not_shadow_the_default_with_the_parameter or a_parameter_does_not_exempt_a_capability_in_the_head
+0206: 물었다        crossed-module-uses-its-own-symbol-table-g62 node 3 · -k a_namespace_alias_inside_the_scoring_module_is_refused or from_import_aliases_are_namespace_targets
+0207: 물었다        receipt-is-framed-g62          node 1 · -k an_atexit_forgery_in_sitecustomize_is_refused
+0208: 물었다        unreadable-bytes-fail-the-section-g62 node 1 · -k an_unreadable_startup_byte_makes_the_section_failed
+0209: 물었다        zip-origins-are-hashed-g62     node 1 · -k a_zip_imported_startup_module_is_hashed_not_unfiled
+0210: 물었다        packages-keep-the-first-distribution-g62 node 1 · -k duplicate_distributions_keep_the_first_and_record_the_rest
+0211: 물었다        coverage-records-the-snapshot-it-was-given-g62 node 1 · -k write_coverage_records_exactly_the_snapshot
+0212: 물었다        receipt-schema-is-exact-g62    node 7 · -k a_receipt_that_only_says_measured_is_still_refused
+0213: 물었다        capability-discarded-before-the-lock-g62 node 1 · -k fit_failure_before_the_lock_discards_the_capability
+0214: 물었다        grid-discards-before-the-lock-g62 node 3 · -k grid_failure_before_the_lock_discards_the_capability or grid_refused_by_a_live_lock_holder_discards_the_capability
+0215: 물었다        promotion-holds-the-run-locks-g62 node 1 · -k direct_bundle_holds_the_run_locks_while_copying
+0216: 물었다        class-body-bindings-are-not-shadows-g62 node 2 · -k a_class_body_binding_does_not_shadow_a_load_before_it or a_module_compound_statement_binding_does_not_exempt_a_capability
+0217: 물었다        from-imports-are-namespace-targets-g62 node 2 · -k from_import_aliases_are_namespace_targets
+0218: 물었다        parent-package-import-is-refused-g62 node 1 · -k importing_the_parent_package_is_refused
+0219: 물었다        crossed-module-self-alias-is-followed-g62 node 1 · -k the_crossed_module_own_namespace_access_enters_the_closure
+0220: 물었다        history-refuses-a-vanished-module-g62 node 1 · -k a_startup_module_removed_after_import_is_a_failed_measurement
+0221: 물었다        dist-info-bytes-are-in-the-receipt-g62 node 1 · -k dist_info_files_on_pythonpath_are_inside_the_receipt
+0222: 물었다        parent-cross-checks-customization-g62 node 1 · -k the_parent_cross_checks_the_customization_bytes
+0223: 물었다        schema-refuses-empty-receipts-g62 node 6 · -k the_schema_refuses_empty_or_inconsistent_receipts
+0224: 물었다        importable-roots-keep-the-search-order-g61 node 2 · -k same_named_modules_in_two_roots_are_both_recorded or the_receipt_says_which_root_python_would_import_from
+0225: 물었다        history_failure_is_not_a_success-g61 node 1 · -k a_nonzero_history_child_is_a_failure
+0226: 물었다        incomplete_receipt_is_refused-g61 node 2 · -k an_incomplete_receipt_is_refused_by_the_reader or a_failed_package_listing_is_also_refused
+0227: 물었다        startup-history-is-measured-g60 node 1 · -k a_dropped_submodule_is_measured_by_the_history
+0228: 물었다        importable-roots-are-measured-g60 node 1 · -k a_module_imported_after_startup_is_inside_the_receipt
+0229: 물었다        archive-releases-the-first-lock-when-the-second-fails-g63 node 2 · -k partial_archive_acquisition_releases_prior_mock_resource or archive_body_error_survives_a_cleanup_error
+0230: 물었다        archive-cleanup-tries-every-lock-g63 node 1 · -k archive_cleanup_attempts_every_mock_release
+0231: 물었다        startup-history-runs-verbose-imports-g63 node 1 · -k an_ordinary_failed_optional_import_keeps_startup_measured
+0232: 물었다        attempted-only-names-are-not-loaded-modules-g63 node 1 · -k an_ordinary_failed_optional_import_keeps_startup_measured
+0233: 물었다        attempted-list-is-inside-the-receipt-g63 node 2 · -k the_schema_carries_the_attempted_list or a_full_receipt_matches_the_schema
+0234: 물었다        parent-customization-uses-the-path-finder-g63 node 2 · -k parent_customization_lookup_supports_a_normal_package or the_real_probe_agrees_with_the_parent_view
+0235: 물었다        hex16-is-a-fullmatch-g63       node 1 · -k hex16_scalar_does_not_accept_a_trailing_newline
+0236: 물었다        type-params-bounds-are-definition-head-g63 node 2 · -k scope_walk_covers_the_bound_of_an_ordinary_generic_function or a_type_parameter_bound_is_evaluated_outside_the_parameters
+0237: 물었다        usercustomize-follows-the-startup-activation-g64 node 4 · -k a_forged_absent_namespace_is_still_rejected or a_forged_absent_is_still_rejected or a_forged_absent_namespace_is_rejected_with_user_site_off or the_same_forgery_is_rejected_with_user_site_on
+0238: 물었다        customization-reads-origins-like-the-rest-g64 node 1 · -k a_zip_customization_is_measured_not_failed
+0239: 물었다        the-probe-control-asserts-both-directions-g64 node 1 · -k the_committed_probe_control_asserts_both_directions
+0240: 물었다        explicit-import-is-an-ordinary-import-g65 node 1 · -k a_disabled_interpreter_with_an_explicit_import_is_accepted
+0241: 물었다        search-path-comes-from-the-replay-context-g65 node 2 · -k a_relative_pythonpath_is_resolved_in_the_replay_cwd or the_real_entry_point_accepts_a_relative_pythonpath_from_another_cwd
+0242: 물었다        namespace-is-loaded-code-free-not-absent-g65 node 1 · -k a_namespace_usercustomize_is_measured_and_accepted
+0243: 물었다        the-fixture-measures-its-premise-g65 node 2 · -k the_interpreter_fixture_measures_its_own_premise
+0244: 물었다        parent-compares-the-loaded-origin-g66 node 3 · -k a_cwd_file_that_startup_never_imported_is_not_expected or a_startup_that_cleans_its_own_path_is_still_accepted or a_startup_that_prepends_another_candidate_is_still_accepted
+0245: 물었다        the-premise-uses-a-controlled-env-g66 node 2 · -k the_premise_test_does_not_fail_on_an_inherited_env
+0246: 물었다        zip-bytes-come-from-the-archive-member-g67 node 1 · -k a_zip_package_that_removes_its_archive_is_accepted
+0247: 물었다        the-premise-checks-the-child-actually-ran-g67 node 2 · -k the_premise_regression_refuses_an_unrun_child
+0248: 물었다        the-premise-checks-the-call-phase-g68 node 5 · -k refuses_a_setup_only_child or three_unrun_shapes_are_all_refused or without_a_call_record
+0249: 물었다        mode-all-does-not-pass-may-open-to-the-shell-g70 node 2 · -k g70_n1_mode_all_child_argv_is_accepted_by_the_shell_parser
+0250: 물었다        exec-class-reader-is-typed-g70 node 14 · -k g70_e5
+0251: 물었다        an-unreadable-index-is-not-full-coverage-g70 node 9 · -k g70_e3_0
+0252: 물었다        attach-requires-a-passing-validation-g70 node 19 · -k g70_e3_1 and not e3_17
+0253: 물었다        receipt-pair-agreement-is-recomputed-g71 node 1 · -k g71_e3r_05 and not 05b
+0254: 물었다        receipt-restore-run-is-bound-to-the-bundle-g71 node 1 · -k g71_e3r_07 and not 07b and not 07c
+0255: 물었다        attach-binds-the-ledger-run-location-g71 node 2 · -k g71_e3r_07b or g72_a04
+0256: 물었다        ledger-run-location-is-mandatory-g72 node 7 · -k g72_a02 or g72_a05 or g72_a06
+0257: 물었다        cache-sha-must-be-fixed-hex64-g74 node 8 · -k g74_1_01 or g74_1_02 or g74_1_03 or g74_1_05
+0258: 물었다        plan-scope-required-at-entry-g74 node 2 · -k g74_3_06c
+0259: 물었다        finalize-routes-by-scope-g74   node 1 · -k g74_3_06a
+0260: 물었다        executed-legs-only-hold-no-active-claim-legs-g74 node 1 · -k g74_3_04e
+0261: 물었다        index-merge-keeps-other-entries-g74 node 2 · -k g74_4_01 or g74_4_02
+0262: 물었다        same-name-different-identity-is-refused-g74 node 1 · -k g74_4_03
+0263: 물었다        index-finalisation-failure-fails-the-archive-g75 node 3 · -k g75_n1_an_index
+0264: 물었다        duplicate-index-keys-are-refused-g75 node 5 · -k g75_n2
+0265: 물었다        merge-keys-are-refused-in-the-index-g75 node 4 · -k g75_n2_a_duplicate
+0266: 물었다        diagnostic-consumer-binds-out-to-the-receipt-run-g75 node 5 · -k g75_n3_01_a
+0267: 물었다        native-best-round-is-recorded-g79 node 3 · -k g79_01 or g79_03_native
+0268: 물었다        outer-stop-reason-is-named-g79 node 1 · -k g79_03_native
+0269: 물었다        failed-restarts-are-recorded-g79 node 1 · -k g79_04_a
+0270: 물었다        broken-parquet-is-a-finding-not-an-exception-g79 node 2 · -k g79_05
+0271: 물었다        absent-restart-fields-are-unrecorded-g79 node 1 · -k g79_06
+0272: 물었다        legacy-ok-is-the-last-finite-round-g79 node 1 · -k g79_03c
+0273: 물었다        the-replay-context-is-measured-once-g66 node 1 · -k the_replay_context_is_measured_once
+0274: 물었다        the-token-probe-negative-is-asserted-g65 node 3 · -k the_committed_control_asserts_the_token_probe_negative or a_constant_true_token_probe_is_caught_by_the_committed_control or the_committed_probe_control_asserts_both_directions
+0275: 물었다        record-must-reference-this-plan-g81 node 2 · -k g81_n1_03 or g81_n1_05
+0276: 물었다        planned-counts-are-derived-not-copied-g81 node 1 · -k g81_n1_06
+0277: 물었다        stripped-v6-row-is-not-downgraded-to-prep-g81 node 1 · -k g81_n2_02
+0278: 물었다        v6-random-row-needs-a-bank-index-g81 node 1 · -k g81_n2_05
+0279: 물었다        warm-required-slot-is-not-turned-into-no-warm-g81 node 1 · -k g81_n3_04
+0280: 물었다        provider-x0-is-not-clipped-g81 node 1 · -k g81_n3_03
+0281: 물었다        solution-map-is-consumed-only-when-sealed-g81 node 1 · -k g81_n3_02
+0282: 물었다        sig5-v6-row-keys-are-a-declaration-conflict-g81s node 1 · -k g81_s01
+0283: 물었다        validator-rederives-every-x0-g81s node 2 · -k g81_s02 or g81_s06
+0284: 물었다        validator-rederives-every-candidate-id-g81s node 1 · -k g81_s02
+0285: 물었다        validator-rederives-the-candidate-plan-g81s node 1 · -k g81_s02
+0286: 물었다        validator-recounts-realized-counts-g81s node 1 · -k g81_s03
+0287: 물었다        provider-consumed-must-be-a-planned-edge-g81s node 1 · -k g81_s04
+0288: 물었다        a-used-edge-must-be-recorded-g81s node 1 · -k g81_s04
+0289: 물었다        map-protocol-is-measured-from-the-run-spec-g81s node 4 · -k g81_s05 or g81_n3_01 or g81_n3_02 or g81_n3_03
+0290: 물었다        design-order-is-the-optimizer-vector-g81s node 1 · -k g81_s08
+0291: 물었다        warm-map-is-regenerated-and-compared-g81s node 1 · -k g81_s06
+0292: 물었다        v6-budget-is-checked-per-objective-g81s node 1 · -k g81_s09
+0293: 물었다        full-bank-identity-is-not-a-prefix-g81s node 1 · -k g81_w04
+0294: 물었다        duplicate-bank-index-is-refused-g81s node 1 · -k g81_w02
+0295: 물었다        observed-roster-compares-rows-to-the-sealed-inputs-g82 node 3 · -k g82_n1_01 or g82_n1_02 or g82_n1_05
+0296: 물었다        record-roster-is-compared-to-the-rebuilt-roster-g82 node 1 · -k g82_n1_03
+0297: 물었다        a-missing-sealed-snapshot-is-a-failure-g82 node 1 · -k g82_n1_04
+0298: 물었다        the-writer-refuses-rows-that-disagree-with-the-inputs-g82 node 1 · -k g82_n1_05
+0299: 물었다        unsupported-profile-values-are-refused-g82 node 5 · -k g82_n2_01
+0300: 물었다        the-envelope-bank-is-checked-against-the-profile-g82 node 2 · -k g82_n2_02 or g82_n2_04
+0301: 물었다        the-consumer-checks-the-profile-before-start-g82 node 1 · -k g82_n2_03
+0302: 물었다        the-validator-checks-the-profile-g82 node 1 · -k g82_n2_04
+0303: 물었다        the-validator-links-the-plan-generation-g82 node 1 · -k g82_n3_02
+0304: 물었다        the-validator-links-the-record-generation-g82 node 1 · -k g82_n3_02
+0305: 물었다        the-validator-links-the-row-generations-g82 node 1 · -k g82_n3_02
+0306: 물었다        v6-plan-closure-must-match-the-staged-closure-g84 node 2 · -k g84_n1_02 or g84_n1_03
+0307: 물었다        the-validator-rebuilds-the-closure-from-snapshots-g84 node 1 · -k g84_n1_04
+0308: 물었다        preflight-refuses-non-grid-reference-before-self-fit-g84 node 1 · -k g84_n3_04
+0309: 물었다        preflight-binds-the-plan-source-digest-g84 node 1 · -k g84_n3_00
+0310: 물었다        preflight-binds-the-plan-reference-g84 node 1 · -k g84_n3_02
+0311: 물었다        the-preflight-runs-before-the-halfcell-self-fit-g84 node 3 · -k g84_n3_01 or g84_n3_00 or g84_n1_02
+0312: 물었다        v2-finite-counts-only-finite-J-g84 node 1 · -k g84_n4_02
+0313: 물었다        v2-converged-counts-the-legacy-true-flag-g84 node 1 · -k g84_n4_02
+0314: 물었다        v2-counts-are-bounded-by-returned-g84 node 1 · -k g84_n4_03
+0315: 물었다        record-schema-dispatch-is-closed-g84 node 1 · -k g84_n4_01
+0316: 물었다        v2-missing-counts-do-not-fall-back-to-v1-g84 node 1 · -k g84_n4_01
+0317: 물었다        realized-from-fits-dispatches-on-schema-g84 node 1 · -k g84_n4_04
+0318: 물었다        closure-members-are-derived-not-trusted-g85 node 3 · -k g85_m01 or g85_m02 or g85_m03
+0319: 물었다        closure-missing-members-are-refused-g85 node 2 · -k g85_m01 or g85_m02
+0320: 물었다        closure-extra-members-are-refused-g85 node 1 · -k g85_m03
+0321: 물었다        closure-member-keys-are-unique-g85 node 1 · -k g85_m04
+0322: 물었다        closure-derivation-refuses-cycles-g85 node 1 · -k g85_m05
+0323: 물었다        closure-derivation-refuses-unsealed-parents-g85 node 1 · -k g85_m05
+0324: 물었다        closure-derivation-refuses-escaping-paths-g85 node 1 · -k g85_m05
+0325: 물었다        stage3-axis-planned-id-is-the-envelope-digest-g87 node 1 · -k s01_01
+0326: 물었다        stage3-axis-keys-are-closed-g87 node 7 · -k s01_02
+0327: 물었다        v3-plan-requires-both-v6-slots-g87 node 2 · -k s03_02
+0328: 물었다        v2-plan-refuses-v6-slots-g87   node 3 · -k s03_03
+0329: 물었다        envelope-leg-id-is-bound-to-the-entry-g87 node 1 · -k s03_04 and leg_id
+0330: 물었다        envelope-source-digest-is-bound-to-the-entry-g87 node 1 · -k s03_04 and source_digest
+0331: 물었다        envelope-generation-is-v6-g87  node 1 · -k s03_04 and generation
+0332: 물었다        stage3-axis-is-derived-not-copied-g87 node 13 · -k s03_05 or test_g92_k08
+0333: 물었다        provider-runs-match-the-warm-consumers-g87 node 1 · -k s03_06
+0334: 물었다        context-paths-are-repo-relative-g87 node 7 · -k s03_07
+0335: 물었다        v2-plan-refuses-a-stage3-context-g87 node 1 · -k s02_02
+0336: 물었다        v3-plan-refuses-legacy-fallback-g87 node 1 · -k s02_01
+0337: 물었다        unknown-spec-version-is-not-authorized-g87 node 1 · -k s02_05
+0338: 물었다        entrypoint-compares-the-design-digest-g87 node 1 · -k s04_02
+0339: 물었다        entrypoint-does-not-trust-the-index-planned-id-g87 node 1 · -k s04_04
+0340: 물었다        entrypoint-requires-provider-run-dirs-g87 node 1 · -k s04_03
+0341: 물었다        cli-stage3-plan-conflicting-leg-is-refused-g87 node 1 · -k s05_01
+0342: 물었다        cli-stage3-plan-requires-explicit-flags-g87 node 3 · -k s05_02
+0343: 물었다        cli-stage3-plan-builds-the-context-g87 node 1 · -k s05_03
+0344: 물었다        shell-stage3-plan-is-only-for-mode-fit-g87 node 2 · -k s06_04
+0345: 물었다        shell-stage3-plan-conflicting-leg-is-refused-g87 node 1 · -k s06_03
+0346: 물었다        shell-passes-stage3-plan-to-python-g87 node 1 · -k s06_02
+0347: 물었다        fit-only-claim-seals-its-phase-set-g88 node 1 · -k f01_01
+0348: 물었다        v3-plan-needs-an-external-input-digest-g88 node 1 · -k f02_02
+0349: 물었다        index-asks-the-v6-external-input-rule-g88 node 1 · -k f02_02
+0350: 물었다        fit-only-claim-refuses-other-phases-g88 node 1 · -k f03_01
+0351: 물었다        fit-only-receipt-carries-the-input-binding-g88 node 3 · -k f03_02
+0352: 물었다        input-binding-recomputes-the-package-g88 node 1 · -k f03_02 and inputs_disagree
+0353: 물었다        fit-only-consumer-names-the-external-input-g88 node 3 · -k f01_01 or f03_04 or f04_01
+0354: 물었다        phase-order-runs-over-the-claim-set-g88 node 4 · -k f01_01 or f03_03 or f03_04 or f04_01
+0355: 물었다        finalize-counts-remaining-over-the-claim-set-g88 node 4 · -k f01_01 or f03_03 or f03_04 or f04_01
+0356: 물었다        finalize-checks-consumption-over-the-claim-set-g88 node 4 · -k f01_01 or f03_03 or f03_04 or f04_01
+0357: 물었다        finalize-compares-the-external-input-with-the-plan-g88 node 1 · -k f03_03
+0358: 물었다        finalize-rederives-the-phase-set-g88 node 1 · -k f00_04
+0359: 물었다        finalize-records-only-the-claim-phases-g88 node 3 · -k f01_01 or f03_04 or f04_01
+0360: 물었다        claim-record-has-two-closed-key-sets-g88 node 4 · -k f01_01 or f03_03 or f03_04 or f04_01
+0361: 물었다        fit-carries-the-staged-input-binding-g88 node 1 · -k f01_01
+0362: 물었다        one-package-digest-function-g88 node 4 · -k f01_01 or f03_03 or f03_04 or f04_01
+0363: 물었다        claim-phase-set-value-is-exactly-fit-g88 node 4 · -k f03_05
+0364: 물었다        input-binding-keys-are-closed-g88 node 1 · -k f03_06 and inputs_extra_key
+0365: 물었다        input-binding-values-are-hex64-g88 node 1 · -k f03_06 and inputs_not_hex
+0366: 물었다        finalize-binds-the-receipt-package-to-the-consumer-g88 node 1 · -k f03_06 and receipt_package_tampered
+0367: 물었다        fit-input-binding-is-only-for-fit-only-claims-g88 node 1 · -k f00_06
+0368: 물었다        finalize-rechecks-the-durable-input-binding-g89 node 4 · -k test_gate89 and d02
+0369: 물었다        finalize-still-binds-the-receipt-package-to-the-consumer-g89 node 1 · -k test_gate89 and d03
+0370: 물었다        env-profile-compares-interpreter-and-platform-g90 node 5 · -k test_gate90 and e03 and (python or implementation or system or machine or libc)
+0371: 물었다        env-profile-reports-missing-dists-g90 node 1 · -k test_gate90 and e03 and dist_missing
+0372: 물었다        env-profile-reports-extra-dists-g90 node 1 · -k test_gate90 and e03 and dist_extra
+0373: 물었다        env-profile-reports-version-drift-g90 node 2 · -k test_gate90 and e03 and (dist_version or env_upgrade)
+0374: 물었다        env-profile-reports-record-drift-g90 node 1 · -k test_gate90 and e03 and dist_record
+0375: 물었다        env-profile-reports-shadowed-drift-g90 node 1 · -k test_gate90 and e03 and shadowed
+0376: 물었다        env-profile-verifies-installed-files-g90 node 2 · -k test_gate90 and e03 and (file_hash or file_missing)
+0377: 물었다        env-profile-checks-module-origin-g90 node 1 · -k test_gate90 and e03 and origin_stray
+0378: 물었다        env-profile-lock-grammar-is-closed-g90 node 1 · -k test_gate90 and e04 and garbage_line
+0379: 물었다        env-profile-measurement-failure-is-unmeasured-g90 node 3 · -k test_gate90 and e05
+0380: 물었다        env-profile-cli-is-record-only-g90 node 1 · -k test_gate90 and e08
+0381: 물었다        smoke-records-env-profile-g90  node 1 · -k test_gate90 and e09
+0382: 물었다        receipt-stamp-records-env-profile-g90 node 1 · -k test_gate90 and e10
+0383: 물었다        env-profile-declares-loaded-origin-unmeasured-g91 node 3 · -k test_gate91 and s01
+0384: 물었다        env-profile-summary-states-path-search-scope-g91 node 1 · -k test_gate91 and s03
+0385: 물었다        stage3-run-spec-keys-are-closed-g92 node 12 · -k test_g92_k03
+0386: 물었다        stage3-run-spec-values-are-typed-g92 node 12 · -k test_g92_k03
+0387: 물었다        candidate-map-keys-are-closed-g92 node 20 · -k test_g92_k04
+0388: 물었다        failed-envelope-is-not-rederived-g92 node 1 · -k test_g92_k04_env
+0389: 물었다        stage3-run-spec-is-derived-per-key-g92 node 9 · -k test_g92_k05
+0390: 물었다        provider-edges-sha-has-one-definition-g92 node 1 · -k test_g92_k07
+0391: 물었다        validator-planned-id-is-the-envelope-digest-g92 node 1 · -k test_g92_k06 and planned_id
+0392: 물었다        validator-pairing-design-sha-is-recomputed-g92 node 1 · -k test_g92_k06 and pairing_design
+0393: 물었다        validator-exact-bounds-sha-is-recomputed-g92 node 1 · -k test_g92_k06 and exact_bounds
+0394: 물었다        comprehensions-are-their-own-scope-g61 node 3 · -k the_analyzer_does_not_shadow_the_enclosing_scope or the_target_is_still_shadowed_inside_the_comprehension or the_outermost_iterable_is_evaluated_in_the_enclosing_scope
+0395: 물었다        destination-is-compared-in-filesystem-coordinates node 1 · -k bind_mounted_alias_of_a_frozen_child_is_not_writable
+0396: 물었다        producer-crosses-into-scoring  node 1 · -k producer_digest_crosses_into_src_scoring
+0397: 물었다        closure-follows-module-aliases node 1 · -k closure_follows_a_module_alias_attribute
+0398: 물었다        assembled-names-are-exactly-evaluated node 1 · -k assembled_dunder_name_is_refused
+0399: 물었다        receipt-verdict-is-fail-closed node 1 · -k unreadable_receipt_is_not_a_pass
+0400: 물었다        module-effects-are-an-unconditional-root node 1 · -k module_effect_through_an_alias_still_moves_the_producer_digest
+0401: 물었다        wrapped-dunder-names-are-refused node 1 · -k dunder_named_indirectly_is_still_refused
+0402: 물었다        admission-rechecks-the-cohort-at-commit node 1 · -k issuer_cannot_admit_a_run_into_a_cohort_that_froze_meanwhile
+0403: 물었다        frozen-destination-is-monotonic node 1 · -k later_active_record_cannot_thaw_a_frozen_destination
+0404: 물었다        token-bytes-are-verified-on-disk node 1 · -k lying_write_is_caught_by_reading_the_bytes_back
+0405: 물었다        source-reflection-covers-the-loader-protocol node 1 · -k producer_cannot_reach_its_own_bytes_through_the_module_loader
+0406: 물었다        ledger-seal-record             node 1 · -k same_roster_ledger_change
+0407: 물었다        claim-is-atomic                node 1 · -k exactly_one_attempt_enters_compute
+0408: 물었다        frozen-seal-is-consulted-first-g58 node 1 · -k hiding_every_name_of_a_frozen_ancestor_does_not_make_it_writable
+0409: 물었다        thaw-is-refused-before-the-first-write node 1 · -k publisher_refuses_a_thawed_cohort_before_the_first_write
+0410: 물었다        approved-cache-bytes-are-authoritative node 1 · -k approved_cache_bytes_are_authoritative
+0411: 물었다        coverage-checker-derives-from-receipts node 1 · -k coverage_receipts_are_verified_independently
+0412: 물었다        freeze-seals-the-output-directory node 1 · -k frozen_directory_cannot_be_republished_under_a_new_cohort_id
+0413: 물었다        producer-normalizes-the-node   node 1 · -k producer_digest_sees_decorators
+0414: 물었다        children-read-through-dirfd    node 1 · -k holds_a_directory_fd_for_its_children
+0415: 물었다        staging-regular-only           node 3 · -k staging_aliases_never_become_an_immutable_generation
+0416: 물었다        flock-two-publisher            node 1 · -k two_independent_publishers
+0417: 물었다        execution-class-record-is-exclusive-g58 node 1 · -k only_one_writer_can_create_an_execution_class
+0418: 물었다        frozen-target-carries-its-own-seal node 1 · -k frozen_directory_carries_its_own_seal
+0419: 물었다        mountinfo-octal-escape-is-decoded node 1 · -k frozen_alias_whose_path_has_a_space_is_not_writable
+0420: 물었다        mount-identity-comes-from-the-kernel node 1 · -k a_stacked_mount_is_identified_by_the_kernel_not_by_row_order
+0421: 물었다        mount-root-is-filesystem-relative node 1 · -k bind_from_a_separate_filesystem_is_resolved_by_the_mount_graph
+0422: 물었다        module-assert-runs-at-import-g59 node 6 · -k the_import_time_slice_contains_everything_that_runs
+0423: 물었다        evidence-binds-the-environment node 1 · -k evidence_binds_the_execution_environment
+0424: 물었다        the-v6-path-refuses-another-plan-generation-g82 node 1 · -k g82_n3_01
+0425: 신고         idempotent-shares-the-validator — 48차 P0-7 이 generation 읽기를 helper 하나(`_generation_entries_by_id`)로 모았다. 그래서 idempotent 분기에 **고유한** 검증 자리가 더 이상 없고, 그 성질은 `reader-shares-the-validator` 가 helper body 에서 이미 관측한다. 호출 지점만 되돌려도 시험이 초록인 것은 시험이 약해서가 아니라 **자리가 하나로 합쳐졌기** 때문이다. 없는 자리를 만들어 내는 대신 신고한다 — 회귀(`..._idempotent_branch_refuses_an_aliased_generation_file`)는 남긴다.
+0426: 신고         public-lifecycle-in-two-publisher-fixture — 이 mutant 는 fixture 를 내부 helper 직호출로 되돌리는 것인데, 그러면 fixture 가 문법적으로 다른 코드가 되어 '같은 시험을 다른 코드로 돌린' 것이 된다. 대신 `..._two_independent_publishers_lose_no_leg` 가 두 child 가 **public entry 를 지났다는 marker** 를 남기는지 실행 중에 확인하도록 시험을 보강했다 (45차).
+0427: 신고         proof-until-equals-lease       — horizon 의 정본은 lease record 이고 verifier 가 exact ID 로 다시 확인한다. 이 assert 는 필드가 이름만 갖지 않게 하는 계약이며, 현재 production 경로에서 둘이 갈라지는 반례가 없다.
+0428: 신고         warm-consumer-wiring           — positive wiring 회귀는 배선이 **끊길 때** 빨개진다. assert 를 지우는 변이는 그 시험 자신만 무력화하므로 다른 시험이 물지 않는다 — 이것은 회귀의 성질이지 결함이 아니다.
+0429: 신고         interpreter-set-is-pinned      — 이 변이는 **지금 도는 인터프리터에서 관측할 수 없다.** 검사를 지우면 지원 집합 밖 버전에서 identity 를 계산하게 되는데, 이 기계에는 그 버전이 없다 — 관측하려면 지원 집합 밖 인터프리터를 하나 설치해 같은 시험을 거기서 돌려야 한다. 대신 회귀(`..._supported_interpreter_set_is_pinned_with_golden_vectors`)가 (a) 지금 인터프리터가 선언 집합 안이고 (b) 대표 구문 넷의 정규형이 golden 과 같음을 매번 확인한다. 즉 '정규형이 버전에 안 묶인다' 는 주장이 깨지면 golden 이 먼저 빨개진다.
+0430: 신고         release-cleanup-holds-the-attempt-path — 이 lock 순서(`LOCK_ORDER`: attempt_path → claim → ledger)는 그대로 지킬 규칙이다. 그런데 그것을 물던 회귀(`release_cleanup_cannot_delete_another_legs_token`)는 **caller 가 다른 다리의 token 경로를 고르는** 상황을 겨눴고, 57차 P0-1 이 그 인자를 없애면서 시나리오 자체가 표현 불가가 되어 지웠다. 12조각 전수 재생이 이것을 `수집 rc 5`(고른 시험 0건)로 드러냈다 — 조각으로 나눠 돌리지 않았으면 안 보였을 자리다. 표현 불가가 된 상황을 흉내 내는 시험을 새로 지어내면 그것은 증거가 아니라 장식이므로, **회귀 없는 방어**임을 신고하고 남긴다. 같은 lock 을 쓰는 다른 자리(`finalize-holds-the-claim-lock`)는 여전히 executable 이다.
+0431: 신고         module-expr-binds-its-target   — 55차 P0-5① 이 module-level 표현식을 예약 이름 `MODULE_EFFECTS` 로 **무조건** 닫힘에 넣었다. 그래서 뿌리 이름에 결속하는 것은 더 이상 identity 를 지키는 **고유한 자리가 아니다** — 결속을 지워도 그 문은 여전히 digest 안에 있고, 그것이 54차보다 강한 상태다 (54차는 뿌리를 모르면 **멈췄고**, 지금은 **담는다**). 호출 지점만 되돌려도 시험이 초록인 것은 시험이 약해서가 아니라 자리가 하나로 합쳐졌기 때문이다 — 48차 `idempotent-shares-the-validator` 와 같은 형태다. 없는 자리를 만들어 내는 대신 신고한다. 그 성질은 `module-effects-are-an-unconditional-root` 가 관측하고, 회귀(`..._module_scope_expression_statement_is_fail_closed`)는 뿌리를 정할 수 없는 표현식도 digest 를 움직이는지 매번 확인한다.
+0432: 신고         coverage-checks-the-recorded-head — 이 변이는 **변이 sandbox 안에서 관측할 수 없다.** 검사(`git cat-file -e <head>^{commit}`)는 git 역사가 있어야 물을 수 있는데, sandbox 는 추적 파일만 복사한 사본이라 `.git` 이 없다. 그래서 sandbox 에서는 변이 전 baseline 부터 이미 빨갛고(회귀가 '이 저장소에 없는 HEAD' 를 만들 수 없다), 빨간 것은 검사가 지워져서가 아니라 **환경이 다르기** 때문이다 — 그런 빨강은 증거가 아니다. 대신 회귀(`..._the_recorded_head_must_exist_in_this_repository`)가 실저장소에서 매번 돌며, 모든 HEAD 를 40개의 `0` 으로 바꾼 조각이 `rc 1` 로 거부되는지 확인한다 (리뷰어 반례를 그대로 고정한 것이다).
+0433: 신고         shadows-are-scoped-g60         — 60차 P0-11 은 shadow 를 **scope 별**로 좁혔다 (59차는 `ast.walk` 로 중첩 함수의 매개변수까지 한 set 에 합쳤다). 의미는 그것이 맞다. 그런데 평평한 shadow 와 결과가 **갈라지는** 형태를 두 벌 지어 실측했더니 둘 다 변이 rc 0 이었다: ① 능력을 부르는 형태는 P0-10 의 둘째 층(호출자가 준 이름을 부르는 것은 거부)이 평평한 shadow 아래서 오히려 **더 넓게** 문다. ② 능력을 이름으로 들고 나오는 형태는 58차 L9-b(`능력을 값으로 옮긴다`)가 shadow 와 무관하게 문다. 평평한 shadow 는 좁힌 것보다 **더 허용적**인데, 더 허용된 자리를 전부 다른 규칙이 이미 막고 있어 관측 가능한 차이가 비어 있다 — 48차 `idempotent-shares-the-validator` 와 같은 형태다. 없는 자리를 만들어 내는 대신 신고한다. 회귀(`..._a_nested_scope_binding_does_not_exempt_the_outer_scope` 와 `..._a_binding_still_shadows_inside_its_own_scope`)는 남긴다.
+0434: 신고         class-locals-stay-in-the-class-body-g62 — 62차 자체 리뷰 F3 가 class 본문·module 문장의 결속 shadow 를 없애 (`_own_shadows` 는 함수·lambda 만) class 의 `here == inherited` 가 됐다 — `nested = here` 는 의미를 안 바꾼다. 같은 방어는 `class-body-bindings-are-not-shadows-g62` 가 잰다. 축을 남기는 이유: P0-6(a) 의 규칙(자식 scope 는 class 의 바깥 집합을 받는다)이 코드에 그대로 있고, F3 가 되돌려지면 이 변이가 다시 물어야 한다.
+0435: 신고         generation-owns-its-bytes      — 옛 exploit(스테이징 디렉터리를 통째로 rename)을 **복원할 수 없다**. 46차에 caller staging 이 sink 에 도달하지 않게 바뀌었고(병합은 메모리, 자재화는 publisher 소유 temp), 그래서 sink 가 옮길 수 있는 것은 이미 `_write_owned` 로 만든 owned 파일뿐이다. 47차에 2-site 로 충실히 되살리려 했으나 결과가 여전히 owned inode 라 관측되지 않았다 — 이것은 시험이 약한 것이 아니라 그 상태가 **표현 불가능**해진 것이다. 회귀(`..._published_generation_owns_its_bytes`)는 남긴다.
+0436: 
+0437: scenario_total 432 · scenario_executable 421 · scenario_declared 11 · site_total 470 · site_executable 459 · site_declared 11 · ran 421
+0438: 실행한 변이 421건이 전부 기대 node 를 call 단계에서 물었다
+0439: rc=0
+0440: end head 3ec8aadb13e4ee4eb9e3434fbd28e503a7c03a34 dirty 0 utc 2026-10-06T18:42:28Z
+0441: 
+
+## 14_docs_lint_send_0e3c244ea_360passed.log
+
+0001: start head 0e3c244ea79db1b17f09a8f8043d808ab51ff43c dirty 0 utc 2026-10-06T18:44:35Z
+0002: 
+0003: [conftest] 시험 authority: /tmp/dd-test-authority-h2fxdp_m/docs/22p_gap/LEG_PRESERVATION.yaml (운영 원장의 바이트 복사본 — 70차 E6)
+0004: 
+0005: [conftest] 이 checkout 을 처음 보았다 — 얼린 cohort 17개의 좌표를 시험 authority 에 봉인했다: ['g10_2026_09_01', 'g11_2026_09_02', 'g12_2026_09_03', 'g13_2026_09_07', 'g14_2026_09_08', 'g15_2026_09_08', 'g16_2026_09_09', 'g17_2026_09_14', 'g1_2026_08_20', 'g2_2026_08_25', 'g3_2026_08_28', 'g4_2026_08_28', 'g5_2026_08_29', 'g6_2026_09_01', 'g7_2026_09_01', 'g8_2026_09_01', 'g9_2026_09_01']
+0006: ........................................................................ [ 20%]
+0007: ........................................................................ [ 40%]
+0008: ........................................................................ [ 60%]
+0009: ........................................................................ [ 80%]
+0010: ........................................................................ [100%]
+0011: 360 passed in 1999.26s (0:33:19)
+0012: rc=0
+0013: end head 0e3c244ea79db1b17f09a8f8043d808ab51ff43c dirty 0 utc 2026-10-06T19:17:57Z
+0014: 
+
+## aborted/run1_10_pytest_7fea9cdb7_F4_docs_lint_aborted.log
+
+0001: start head 7fea9cdb7be9d3474d4f58e2eb6fcabd13fd45ee dirty 0 utc 2026-10-06T13:09:33Z
+0002: 
+0003: [conftest] 시험 authority: /tmp/dd-test-authority-ca5rvgae/docs/22p_gap/LEG_PRESERVATION.yaml (운영 원장의 바이트 복사본 — 70차 E6)
+0004: 
+0005: [conftest] 이 checkout 을 처음 보았다 — 얼린 cohort 17개의 좌표를 시험 authority 에 봉인했다: ['g10_2026_09_01', 'g11_2026_09_02', 'g12_2026_09_03', 'g13_2026_09_07', 'g14_2026_09_08', 'g15_2026_09_08', 'g16_2026_09_09', 'g17_2026_09_14', 'g1_2026_08_20', 'g2_2026_08_25', 'g3_2026_08_28', 'g4_2026_08_28', 'g5_2026_08_29', 'g6_2026_09_01', 'g7_2026_09_01', 'g8_2026_09_01', 'g9_2026_09_01']
+0006: ........................................................................ [  3%]
+0007: ........................................................................ [  6%]
+0008: ........................................................................ [  9%]
+0009: ........................................................................ [ 12%]
+0010: .......F...................F.F.F........................................ [ 15%]
+0011: ........................................................................ [ 18%]
+0012: ........................................................................ [ 21%]
+0013: .........................................
+
+## aborted/run2_10_pytest_7ae871687_F1_contract_citation_aborted.log
+
+0001: start head 7ae871687238810efab5c731b4f375cce2c7021c dirty 0 utc 2026-10-06T13:46:43Z
+0002: 
+0003: [conftest] 시험 authority: /tmp/dd-test-authority-o0skds1t/docs/22p_gap/LEG_PRESERVATION.yaml (운영 원장의 바이트 복사본 — 70차 E6)
+0004: 
+0005: [conftest] 이 checkout 을 처음 보았다 — 얼린 cohort 17개의 좌표를 시험 authority 에 봉인했다: ['g10_2026_09_01', 'g11_2026_09_02', 'g12_2026_09_03', 'g13_2026_09_07', 'g14_2026_09_08', 'g15_2026_09_08', 'g16_2026_09_09', 'g17_2026_09_14', 'g1_2026_08_20', 'g2_2026_08_25', 'g3_2026_08_28', 'g4_2026_08_28', 'g5_2026_08_29', 'g6_2026_09_01', 'g7_2026_09_01', 'g8_2026_09_01', 'g9_2026_09_01']
+0006: ........................................................................ [  3%]
+0007: ........................................................................ [  6%]
+0008: ........................................................................ [  9%]
+0009: ........................................................................ [ 12%]
+0010: .......F.......................................
+

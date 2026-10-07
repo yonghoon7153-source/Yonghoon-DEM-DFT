@@ -1,0 +1,104 @@
+{
+  "static_only": true,
+  "executed_repository_code": false,
+  "code_ref": "0ab2924f465461f1224d66c8f0a8c6013e857c6b",
+  "log_ref": "016e970f6",
+  "fetched_logs": [
+    {
+      "file": "00_red_test_g93_1failed_keyerror_io1686.log",
+      "git_blob_sha1": "93a4b02a80c44a4e046f8271f9afdb2ddc704cbc",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/016e970f6/degradation-degeneracy/docs/22p_gap/gate94_evidence/00_red_test_g93_1failed_keyerror_io1686.log"
+    },
+    {
+      "file": "01_green_204passed.log",
+      "git_blob_sha1": "c13e8da0b08c55d8fb092be40f43853a017a9047",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/016e970f6/degradation-degeneracy/docs/22p_gap/gate94_evidence/01_green_204passed.log"
+    },
+    {
+      "file": "02_green_after_helper_reuse_204passed.log",
+      "git_blob_sha1": "3a6874cca3b0c57f1e1a30a387f0190815f67ad0",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/016e970f6/degradation-degeneracy/docs/22p_gap/gate94_evidence/02_green_after_helper_reuse_204passed.log"
+    },
+    {
+      "file": "03_replay_g93_emit_expect.log",
+      "git_blob_sha1": "782f19611e4b18db06be9de1bac2735b232e47b4",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/016e970f6/degradation-degeneracy/docs/22p_gap/gate94_evidence/03_replay_g93_emit_expect.log"
+    },
+    {
+      "file": "04a_replay_g93_rc0.log",
+      "git_blob_sha1": "8470f5b8bc89a903378aa7d2b63c89867195ea12",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/016e970f6/degradation-degeneracy/docs/22p_gap/gate94_evidence/04a_replay_g93_rc0.log"
+    },
+    {
+      "file": "04b_replay_g92_k04_env_updated_rc0.log",
+      "git_blob_sha1": "f60172703888fe19c993ca9882ee0d0aabd06c38",
+      "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/016e970f6/degradation-degeneracy/docs/22p_gap/gate94_evidence/04b_replay_g92_k04_env_updated_rc0.log"
+    }
+  ],
+  "new_test": {
+    "git_blob_sha1": "8541165758dc0490ae578867d20b4970a234cb0c",
+    "url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/0ab2924f4/degradation-degeneracy/tests/test_gate93_n1_v3_envelope.py"
+  },
+  "files": [
+    {
+      "saved_file": "00_red_test_g93_1failed_keyerror_io1686.log",
+      "kind": "GitHub fetched UTF-8 original log"
+    },
+    {
+      "saved_file": "01_green_204passed.log",
+      "kind": "GitHub fetched UTF-8 original log"
+    },
+    {
+      "saved_file": "02_green_after_helper_reuse_204passed.log",
+      "kind": "GitHub fetched UTF-8 original log"
+    },
+    {
+      "saved_file": "03_replay_g93_emit_expect.log",
+      "kind": "GitHub fetched UTF-8 original log"
+    },
+    {
+      "saved_file": "04a_replay_g93_rc0.log",
+      "kind": "GitHub fetched UTF-8 original log"
+    },
+    {
+      "saved_file": "04b_replay_g92_k04_env_updated_rc0.log",
+      "kind": "GitHub fetched UTF-8 original log"
+    },
+    {
+      "saved_file": "README.md",
+      "kind": "static source or README text"
+    },
+    {
+      "saved_file": "test_gate93_n1_v3_envelope.py.txt",
+      "kind": "static source or README text"
+    },
+    {
+      "saved_file": "tests__test_gate92_stage4_linkage.py.excerpts.txt",
+      "kind": "static source or README text"
+    },
+    {
+      "saved_file": "tests__test_gate82_residuals.py.excerpts.txt",
+      "kind": "static source or README text"
+    },
+    {
+      "saved_file": "tests__test_gate85_closure_members.py.excerpts.txt",
+      "kind": "static source or README text"
+    },
+    {
+      "saved_file": "tests__test_gate81_stage3_wire.py.excerpts.txt",
+      "kind": "static source or README text"
+    },
+    {
+      "saved_file": "tools__preserve.py.excerpts.txt",
+      "kind": "static source or README text"
+    },
+    {
+      "saved_file": "docs__22p_gap__mutation_replay.py.excerpts.txt",
+      "kind": "static source or README text"
+    },
+    {
+      "saved_file": "src__io.py.L1840-2055.txt",
+      "kind": "static source or README text"
+    }
+  ]
+}

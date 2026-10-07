@@ -1,0 +1,90 @@
+Source: https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/0ab2924f4/degradation-degeneracy/tests/test_gate92_stage4_linkage.py
+Static text excerpts only. Original one-based line numbers follow.
+
+49:     """`run_fit` 을 부르는 자리 — smoke namespace 안 (승인 면제 · conftest 의 gated tmp_path 와 같은 뿌리)."""
+50:     d = ROOT / "results" / "_smoke" / "_unit" / f"g92_{tag}_{uuid.uuid4().hex[:8]}"
+51:     d.mkdir(parents=True)
+52:     return d
+53: 
+54: 
+55: @pytest.fixture(scope="module")
+56: def runs():
+57:     """모듈 공유 실물 산출: no-warm v6 (`base`) · warm v6 (`warm`, provider = base) · v5 legacy (`v5`).
+58:     각 시험은 사본을 고친다 (원본 불변)."""
+59:     from tests.test_fitting import _BOUNDS_MIN, _obj_cfg_min, _tiny_curves
+60:     root = _smoke_dir("mod")
+61:     in_dir = _tiny_curves(root / "in")
+62:     base = G81._run_v6(root, "base", G81._v6_context(in_dir), in_dir)
+63:     warm = G81._run_v6(root, "warm", G81._warm_context(in_dir, base, root / "plan"), in_dir)
+64:     v5 = root / "v5"
+65:     F.run_fit(in_dir, v5, _obj_cfg_min(), {"aa": {"w_pocv": 1.0}}, _BOUNDS_MIN, "expanded", 2, nproc=1, adaptive=False)
+66:     yield {"root": root, "in": in_dir, "base": base, "warm": warm, "v5": v5}
+67:     shutil.rmtree(root, ignore_errors=True)
+68: 
+
+80: def _edit_s3(out: Path, mutate) -> None:
+81:     """run_spec.stage3 만 바꾸고 (계획 사슬은 손대지 않는다) run_signature 를 다시 맞춘다 — 그 키 하나만의 자기일관 위조."""
+82:     mp = out / "manifest.yaml"
+83:     man = _man(out)
+84:     res = mutate(man["run_spec"]["stage3"])
+85:     if res is not None:
+86:         man["run_spec"]["stage3"] = res
+87:     mp.write_text(yaml.safe_dump(man, allow_unicode=True), encoding="utf-8")
+88:     G85._resign(out)
+89: 
+90: 
+91: def _flip(h: str) -> str:
+92:     return ("0" if h[0] != "0" else "1") + h[1:]
+93: 
+94: 
+95: def _only(v: dict, check: str, *needles: str, also: tuple = ()) -> None:
+96:     """실패 검사가 **정확히 이것 하나** (+ 명시한 `also`) · 이유에 needle (키 이름) — 다른 검사에 가려진 반례는 키별 증거가
+97:     아니다. `also` 는 위조한 행 값을 **다른 독립 검사도 정당하게 센다**는 실측 사실이다 (그 검사의 이름까지 고정 집합으로)."""
+98:     got = str(v["checks"].get(check, "검사 없음"))
+99:     assert check in v["fail"], f"자기일관 위조가 {check} 를 통과했다: {got} · fail={v['fail']}"
+100:     assert sorted(G81._fails(v)) == sorted([check, *also]), f"실패 검사 집합이 다르다: {v['fail']}"
+101:     for n in needles:
+102:         assert n in got, f"이유에 {n!r} 가 없다: {got}"
+103: 
+104: 
+105: def _validate_no_rederive(out: Path, monkeypatch) -> tuple[dict, list]:
+106:     """validator 를 실제 경로로 부르되 `_stage3_rederive` 호출을 기록한다 (G92-N2 — 실패한 객체를 넘기지 않는다).
+107:     임의 `AttributeError` · `TypeError` 는 음성 PASS 가 아니다 — 여기서 그대로 올라와 node 를 error/fail 로 만든다."""
+108:     calls: list = []
+109:     real = IO._stage3_rederive
+110: 
+111:     def spy(*a, **k):
+112:         calls.append(1)
+113:         return real(*a, **k)
+114:     monkeypatch.setattr(IO, "_stage3_rederive", spy)
+115:     return IO.validate_provenance(out), calls
+
+349: def test_g92_k04_env_a_failed_planned_envelope_is_not_passed_to_the_rederivation(runs, tmp_path, monkeypatch):
+350:     """`stage3_planned_envelope` 가 실패한 뒤에도 그 env 로 재유도를 계속 부르던 경로 (io.py 재유도 호출) — 차단."""
+351:     out = _copy(runs["base"], tmp_path)
+352:     G82._forge_stage3(out, env_mutate=lambda e: e["bank"].update(generator="philox"))
+353:     G85._resign(out)
+354:     v, calls = _validate_no_rederive(out, monkeypatch)
+355:     assert "stage3_planned_envelope" in v["fail"], v["fail"]
+356:     assert calls == [], "유효하지 않은 계획 envelope 로 후보 재유도를 불렀다"
+357:     assert "후보_재유도" in v["fail"], "재유도를 막았으면 그 검사는 통과가 아니라 실패로 남아야 한다"
+
+392: _K06 = {
+393:     "planned_id": (lambda s: s.update(planned_id=_flip(s["planned_id"])), "stage3_planned_envelope", "planned_id"),
+394:     "pairing_design_sha256": (lambda s: s.update(pairing_design_sha256=_flip(s["pairing_design_sha256"])),
+395:                               "후보_재유도", "pairing_design"),
+396:     "exact_bounds_sha256": (lambda s: s.update(exact_bounds_sha256=_flip(s["exact_bounds_sha256"])),
+397:                             "후보_재유도", "exact_bounds_sha256"),
+398:     "base_config_closure_sha256": (lambda s: s.update(base_config_closure_sha256=_flip(s["base_config_closure_sha256"])),
+399:                                    "base_config_결속", "base_config_closure_sha256"),
+400:     "base_config_closure_keys": (lambda s: s.update(base_config_closure_keys=[]), "base_config_결속",
+401:                                  "base_config_closure_keys"),
+402: }
+403: 
+404: 
+405: @pytest.mark.parametrize("key", list(_K06))
+406: def test_g92_k06_an_independently_recomputed_key_forged_alone_is_refused_by_its_own_check(key, runs, tmp_path):
+407:     mutate, check, needle = _K06[key]
+408:     out = _copy(runs["base"], tmp_path)
+409:     _edit_s3(out, mutate)
+410:     _only(IO.validate_provenance(out), check, needle)

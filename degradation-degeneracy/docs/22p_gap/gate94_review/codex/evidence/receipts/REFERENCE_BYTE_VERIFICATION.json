@@ -1,0 +1,93 @@
+{
+  "method": "SHA256 and Git blob SHA1 of reviewer-saved fetched UTF-8 bytes; no source imports",
+  "files": [
+    {
+      "Name": "grid_fit_v5.at_g93_code_d7a97aa57.yaml.txt",
+      "Bytes": 4661,
+      "GitBlob": "3516e71eb31a0483f3a56a7873ffebaf25e06797",
+      "Sha256": "acc206b2afe4510bd5ffff4f5ecff981255b54d15d94306821c0ad2516c49f76",
+      "expected_blob": "3516e71eb31a0483f3a56a7873ffebaf25e06797",
+      "matches": true
+    },
+    {
+      "Name": "grid_fit_v5.current.yaml.txt",
+      "Bytes": 9596,
+      "GitBlob": "be194a41dd71758c447ed69f0315040cf38f9a68",
+      "Sha256": "00452ff488011aa8f298538c065a02cd387e1ce2d5af502ec94f4a29a3860c89",
+      "expected_blob": "be194a41dd71758c447ed69f0315040cf38f9a68",
+      "matches": true
+    },
+    {
+      "Name": "grid_fit_v5.history_c7f48918ff971e91.yaml.txt",
+      "Bytes": 9596,
+      "GitBlob": "2889e80daa34a5d3d666ae214eab611ba35b0d74",
+      "Sha256": "20d4c3385e7cf85690591362a550848951c4d36a2281f16b8bce2b3f8e45a062",
+      "expected_blob": "2889e80daa34a5d3d666ae214eab611ba35b0d74",
+      "matches": true
+    },
+    {
+      "Name": "grid_fit_v5.pre_regeneration_27b0917e2.yaml.txt",
+      "Bytes": 9596,
+      "GitBlob": "2889e80daa34a5d3d666ae214eab611ba35b0d74",
+      "Sha256": "20d4c3385e7cf85690591362a550848951c4d36a2281f16b8bce2b3f8e45a062",
+      "expected_blob": "2889e80daa34a5d3d666ae214eab611ba35b0d74",
+      "matches": true
+    },
+    {
+      "Name": "LEG_PRESERVATION.pre_regeneration_27b0917e2.yaml.txt",
+      "Bytes": 65166,
+      "GitBlob": "fb62d88a3ffab8df1416485459068a06eb8b2df3",
+      "Sha256": "6ccf5b48a11772382abf68580620ea1336c3990f01eb0a19797db577bef013db",
+      "expected_blob": "fb62d88a3ffab8df1416485459068a06eb8b2df3",
+      "matches": true
+    },
+    {
+      "Name": "LEG_PRESERVATION.yaml.txt",
+      "Bytes": 65166,
+      "GitBlob": "ee4b72a030985eae2e4c337a3b10ca5b55486089",
+      "Sha256": "dd72d9c0c7df7bbdf386232ed0925b0483a5a6056be255d013d9c979905e98b8",
+      "expected_blob": "ee4b72a030985eae2e4c337a3b10ca5b55486089",
+      "matches": true
+    },
+    {
+      "Name": "paired_fixed5_v4.at_g93_code_d7a97aa57.yaml.txt",
+      "Bytes": 4726,
+      "GitBlob": "0e729cddb365a501bbc550f4a1fb45a668b4d4a4",
+      "Sha256": "83e71a40504f9a1e2e2d6718c79127ec576de215c058d8074e8d09d95407332e",
+      "expected_blob": "0e729cddb365a501bbc550f4a1fb45a668b4d4a4",
+      "matches": true
+    },
+    {
+      "Name": "paired_fixed5_v4.current.yaml.txt",
+      "Bytes": 9661,
+      "GitBlob": "b926861617279f2abd8e5a1003b0c6f9d7d12aee",
+      "Sha256": "01e977389b720f61577357033482f64b552dd11244c8687e86d9fa0cde59e269",
+      "expected_blob": "b926861617279f2abd8e5a1003b0c6f9d7d12aee",
+      "matches": true
+    },
+    {
+      "Name": "paired_fixed5_v4.history_c7f48918ff971e91.yaml.txt",
+      "Bytes": 9661,
+      "GitBlob": "656329a8f24d0e2dfed01828b2ce018d6a7ab496",
+      "Sha256": "23451e594dc7ab7e36ef0ad2636abb77837174f50971f2d473bf84a1d38f91f4",
+      "expected_blob": "656329a8f24d0e2dfed01828b2ce018d6a7ab496",
+      "matches": true
+    },
+    {
+      "Name": "paired_fixed5_v4.pre_regeneration_27b0917e2.yaml.txt",
+      "Bytes": 9661,
+      "GitBlob": "656329a8f24d0e2dfed01828b2ce018d6a7ab496",
+      "Sha256": "23451e594dc7ab7e36ef0ad2636abb77837174f50971f2d473bf84a1d38f91f4",
+      "expected_blob": "656329a8f24d0e2dfed01828b2ce018d6a7ab496",
+      "matches": true
+    },
+    {
+      "Name": "src_io.0ab2924f4.py.txt",
+      "Bytes": 147387,
+      "GitBlob": "53797cd3bce110ef9822532a000b29a564897f65",
+      "Sha256": "32506d8816b9152abb8cdb4be8a1bc68d290c9c4deda51aab2097ec52f6980fd",
+      "expected_blob": "53797cd3bce110ef9822532a000b29a564897f65",
+      "matches": true
+    }
+  ]
+}

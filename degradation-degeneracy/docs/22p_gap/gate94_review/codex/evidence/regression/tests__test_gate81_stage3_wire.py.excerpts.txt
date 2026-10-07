@@ -1,0 +1,38 @@
+Source: https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/0ab2924f4/degradation-degeneracy/tests/test_gate81_stage3_wire.py
+Static text excerpts only. Original one-based line numbers follow.
+
+51: _DIRTY_TREE_CHECKS = {"clean_worktree", "코드_identity"}
+
+601: def _v6_context(in_dir: Path, *, design=None, budget=2, arm="G_A", warm_map=None, edges=None, budgets=None,
+602:                 provider_runs=None):
+603:     """tiny curves → 조건 → roster → PlannedLegV4 (기본 no-provider · grid 기준; warm arm 은 warm_map·edges·provider_runs)."""
+604:     from src.grid import Condition
+605:     design = design or _design()
+606:     cur = pd.read_parquet(in_dir / "curves.parquet")
+607:     conds = []
+608:     for cid, g in cur.groupby("cond_id", sort=True):
+609:         r0 = g.iloc[0]
+610:         conds.append(Condition(float(r0["lli"]), float(r0["lam_pe"]), float(r0["lam_ne"]),
+611:                                str(r0["lam_pe_type"]), str(r0["lam_ne_type"]), float(r0["noise"]), int(r0["seed"])))
+612:     roster = DW.roster_from_conditions(conds, design=design, comparison_family_id="p22_grid_primary_v6",
+613:                                        treatment_id="none", replicate_id=0)
+614:     stages = _stages(budget=budget, arm=arm, warm_map=warm_map, budgets=budgets)
+615:     planned = _planned_v4(design=design, roster=roster, stages=stages, edges=edges,
+616:                           source_digest=IO.source_digest(),
+617:                           inputs={"reference": "grid",
+618:                                   "curves_sha256": hashlib.sha256((in_dir / "curves.parquet").read_bytes()).hexdigest(),
+619:                                   # ★ 84차 G84-N1 — v6 실행은 base-config closure 를 읽으므로 계획도 그 hex64 를 갖는다
+620:                                   #   (라운드 1 fixture 의 None 은 §11-2 로 거부된다)
+621:                                   "base_config_digest": F.config_closure_sha256("configs/base.yaml")})
+622:     return {"planned": planned, "design": design, "provider_runs": dict(provider_runs or {})}
+
+714: def _run_v6(tmp_path, name, ctx, in_dir, n_restarts=2):
+715:     from tests.test_fitting import _BOUNDS_MIN, _obj_cfg_min
+716:     out = tmp_path / name
+717:     F.run_fit(in_dir, out, _obj_cfg_min(), _OBJ_W, _BOUNDS_MIN, "expanded", n_restarts, nproc=1,
+718:               adaptive=False, warm_start=False, stage3=ctx)
+719:     return out
+720: 
+721: 
+722: def _fails(v) -> list:
+723:     return [k for k in v["fail"] if k not in _DIRTY_TREE_CHECKS]

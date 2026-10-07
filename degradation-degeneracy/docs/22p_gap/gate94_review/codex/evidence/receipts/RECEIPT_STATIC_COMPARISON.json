@@ -1,0 +1,511 @@
+{
+  "method": "Static text and Git blob identity comparison; no receipt generation or received source execution",
+  "request_ref": "2345051aadf7c9e5f764fa76966bd4e3ad9a02eb",
+  "pre_regeneration_ref": "27b0917e2a2cb05a629206472d6ed6f7b6be99f6",
+  "history_tree": {
+    "sha": "444b1820c50338ba84b75ed196787a2d07ce85ee",
+    "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/trees/444b1820c50338ba84b75ed196787a2d07ce85ee",
+    "tree": [
+      {
+        "path": "grid_fit_v5.validate.02a776a7a0a3f4ba.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "46a7423dd90db3abaf90ede1c9094aa9407fea88",
+        "size": 3738,
+        "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/46a7423dd90db3abaf90ede1c9094aa9407fea88"
+      },
+      {
+        "path": "grid_fit_v5.validate.1c67a748598baadb.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "d9997e0ea6156be6b4806002e537be8c898e8a0f",
+        "size": 3703,
+        "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/d9997e0ea6156be6b4806002e537be8c898e8a0f"
+      },
+      {
+        "path": "grid_fit_v5.validate.27390883eb132941.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "c9106823103fa320b9da58d79e0f61228f6b26f9",
+        "size": 3703,
+        "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/c9106823103fa320b9da58d79e0f61228f6b26f9"
+      },
+      {
+        "path": "grid_fit_v5.validate.3f84c0db52d2b9ac.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "49ccbb09bf6a32f63ea05a87199834f16313dd1e",
+        "size": 4605,
+        "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/49ccbb09bf6a32f63ea05a87199834f16313dd1e"
+      },
+      {
+        "path": "grid_fit_v5.validate.7187bd31740514d4.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "5298a7b27c84696c073974d0d97ecc75a7152eab",
+        "size": 3738,
+        "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/5298a7b27c84696c073974d0d97ecc75a7152eab"
+      },
+      {
+        "path": "grid_fit_v5.validate.7dd546baaee9e823.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "6d3bdbd696dff98b18c42af24ccee99be8a7e318",
+        "size": 3738,
+        "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/6d3bdbd696dff98b18c42af24ccee99be8a7e318"
+      },
+      {
+        "path": "grid_fit_v5.validate.803e2b7781cbc9cd.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "48da4069ef63b9d420c1069171d6538ad56ac017",
+        "size": 3738,
+        "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/48da4069ef63b9d420c1069171d6538ad56ac017"
+      },
+      {
+        "path": "grid_fit_v5.validate.864edfb73b9695a1.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "7ecaaa893173445566f08ec5e390c6a46f5ba5ae",
+        "size": 3738,
+        "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/7ecaaa893173445566f08ec5e390c6a46f5ba5ae"
+      },
+      {
+        "path": "grid_fit_v5.validate.ba51cd20caa10b7b.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "857a8317eff5d62e1f0bc291be9d57ecce51edeb",
+        "size": 3738,
+        "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/857a8317eff5d62e1f0bc291be9d57ecce51edeb"
+      },
+      {
+        "path": "grid_fit_v5.validate.c2ef1a811e70bb4c.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "1b3b37c7d9c2f41410501c89ec498d013f6dabac",
+        "size": 3706,
+        "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/1b3b37c7d9c2f41410501c89ec498d013f6dabac"
+      },
+      {
+        "path": "grid_fit_v5.validate.c78d7969ef49fd07.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "0e5a490710de45d0e10255c5ed9ec474ac2d42b3",
+        "size": 3703,
+        "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/0e5a490710de45d0e10255c5ed9ec474ac2d42b3"
+      },
+      {
+        "path": "grid_fit_v5.validate.c7f48918ff971e91.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "2889e80daa34a5d3d666ae214eab611ba35b0d74",
+        "size": 9596,
+        "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/2889e80daa34a5d3d666ae214eab611ba35b0d74"
+      },
+      {
+        "path": "grid_fit_v5.validate.cd2408354486c148.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "dde321f0b20744ac67a9ede0aa1b96217951bca3",
+        "size": 3703,
+        "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/dde321f0b20744ac67a9ede0aa1b96217951bca3"
+      },
+      {
+        "path": "grid_fit_v5.validate.eda3feb8f4536511.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "643180ba317289514fec395b851ce3edff72deeb",
+        "size": 3703,
+        "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/643180ba317289514fec395b851ce3edff72deeb"
+      },
+      {
+        "path": "grid_fit_v5.validate.eea5977f4faf9685.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "461cc893166ccc1bcbdce8c6ee851594d90d1cd4",
+        "size": 3703,
+        "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/461cc893166ccc1bcbdce8c6ee851594d90d1cd4"
+      },
+      {
+        "path": "grid_fit_v5.validate.f0175fff71132003.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "3516e71eb31a0483f3a56a7873ffebaf25e06797",
+        "size": 4661,
+        "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/3516e71eb31a0483f3a56a7873ffebaf25e06797"
+      },
+      {
+        "path": "grid_fit_v5.validate.f1f4378f46610f08.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "76fc2ca398532e212310b3c3606f1da7d646d3f0",
+        "size": 3738,
+        "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/76fc2ca398532e212310b3c3606f1da7d646d3f0"
+      },
+      {
+        "path": "paired_fixed5_v4.validate.02a776a7a0a3f4ba.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "3cb0255097d5f074207b1cbf76ad8f32f6aa6330",
+        "size": 3803,
+        "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/3cb0255097d5f074207b1cbf76ad8f32f6aa6330"
+      },
+      {
+        "path": "paired_fixed5_v4.validate.1c67a748598baadb.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "96a26b55ecb5788cb1d27a868bcb2dac47d4e255",
+        "size": 3768,
+        "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/96a26b55ecb5788cb1d27a868bcb2dac47d4e255"
+      },
+      {
+        "path": "paired_fixed5_v4.validate.27390883eb132941.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "99b21183271e05c197561adde039d686a33af104",
+        "size": 3768,
+        "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/99b21183271e05c197561adde039d686a33af104"
+      },
+      {
+        "path": "paired_fixed5_v4.validate.3f84c0db52d2b9ac.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "81553d0c7cd8abc0913256b7413683ac1240d820",
+        "size": 4670,
+        "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/81553d0c7cd8abc0913256b7413683ac1240d820"
+      },
+      {
+        "path": "paired_fixed5_v4.validate.7187bd31740514d4.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "2c424822dc296f062528192ced86fada61464f8c",
+        "size": 3803,
+        "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/2c424822dc296f062528192ced86fada61464f8c"
+      },
+      {
+        "path": "paired_fixed5_v4.validate.7dd546baaee9e823.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "12cc5c6cdac68ba14790e2721db7fc1ec3d172a2",
+        "size": 3803,
+        "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/12cc5c6cdac68ba14790e2721db7fc1ec3d172a2"
+      },
+      {
+        "path": "paired_fixed5_v4.validate.803e2b7781cbc9cd.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "33ec4f9643a0d48ff05b26199cf1e257220a9277",
+        "size": 3803,
+        "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/33ec4f9643a0d48ff05b26199cf1e257220a9277"
+      },
+      {
+        "path": "paired_fixed5_v4.validate.864edfb73b9695a1.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "2ea50cf649df2ccdb9f1a2838a497b273cce748f",
+        "size": 3803,
+        "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/2ea50cf649df2ccdb9f1a2838a497b273cce748f"
+      },
+      {
+        "path": "paired_fixed5_v4.validate.ba51cd20caa10b7b.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "bd54efda54644396843002187267383ea56fbe06",
+        "size": 3803,
+        "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/bd54efda54644396843002187267383ea56fbe06"
+      },
+      {
+        "path": "paired_fixed5_v4.validate.c2ef1a811e70bb4c.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "648b1bf1ae8c76a2678892ae7d3505d3b076b76a",
+        "size": 3768,
+        "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/648b1bf1ae8c76a2678892ae7d3505d3b076b76a"
+      },
+      {
+        "path": "paired_fixed5_v4.validate.c78d7969ef49fd07.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "2706477d63a3a52f8b8c98f07166aa0e4843c17a",
+        "size": 3768,
+        "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/2706477d63a3a52f8b8c98f07166aa0e4843c17a"
+      },
+      {
+        "path": "paired_fixed5_v4.validate.c7f48918ff971e91.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "656329a8f24d0e2dfed01828b2ce018d6a7ab496",
+        "size": 9661,
+        "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/656329a8f24d0e2dfed01828b2ce018d6a7ab496"
+      },
+      {
+        "path": "paired_fixed5_v4.validate.cd2408354486c148.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "6abd558df31927031961f3de2d80f7fe81ce5241",
+        "size": 3768,
+        "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/6abd558df31927031961f3de2d80f7fe81ce5241"
+      },
+      {
+        "path": "paired_fixed5_v4.validate.eda3feb8f4536511.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "b13455b32af0d60a4837016a2de9e35bd7c38f27",
+        "size": 3768,
+        "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/b13455b32af0d60a4837016a2de9e35bd7c38f27"
+      },
+      {
+        "path": "paired_fixed5_v4.validate.eea5977f4faf9685.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "40f458a7f49bc8ab1988e4788bfce1b3bf2074ef",
+        "size": 3768,
+        "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/40f458a7f49bc8ab1988e4788bfce1b3bf2074ef"
+      },
+      {
+        "path": "paired_fixed5_v4.validate.f0175fff71132003.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "0e729cddb365a501bbc550f4a1fb45a668b4d4a4",
+        "size": 4726,
+        "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/0e729cddb365a501bbc550f4a1fb45a668b4d4a4"
+      },
+      {
+        "path": "paired_fixed5_v4.validate.f1f4378f46610f08.yaml",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "6a88549547d15245fc84e0927946ea247916e852",
+        "size": 3803,
+        "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/6a88549547d15245fc84e0927946ea247916e852"
+      }
+    ],
+    "truncated": false
+  },
+  "receipts": [
+    {
+      "leg": "paired_fixed5_v4",
+      "current_blob": "b926861617279f2abd8e5a1003b0c6f9d7d12aee",
+      "pre_regeneration_current_blob": "656329a8f24d0e2dfed01828b2ce018d6a7ab496",
+      "history_blob": "656329a8f24d0e2dfed01828b2ce018d6a7ab496",
+      "history_entire_text_identical_to_pre_regeneration_current": true,
+      "core_equal_excluding_two_identity_fields": true,
+      "old_core_sha256": "d527cde9fc7251a285d5e753048235f1c3aff54661c7588733cc0ffcd63ad9f7",
+      "new_core_sha256": "68a74c60b219db4421f834c6b7756e9f741f611a4bf4bd8963cdb4f96d048bf9",
+      "n_checks": 35,
+      "changes": [
+        {
+          "line": 4,
+          "old": "core_sha256: d527cde9fc7251a285d5e753048235f1c3aff54661c7588733cc0ffcd63ad9f7",
+          "current": "core_sha256: 68a74c60b219db4421f834c6b7756e9f741f611a4bf4bd8963cdb4f96d048bf9"
+        },
+        {
+          "line": 65,
+          "old": "    validator_source_digest: c7f48918ff971e91",
+          "current": "    validator_source_digest: 044e4f5513011a9b"
+        },
+        {
+          "line": 66,
+          "old": "    src_io_sha256: cde0be140cabc8dc",
+          "current": "    src_io_sha256: 32506d8816b9152a"
+        },
+        {
+          "line": 97,
+          "old": "  validator_commit: 68350322592f400e3ef2655972d5d35f14851b60",
+          "current": "  validator_commit: 27b0917e2a2cb05a629206472d6ed6f7b6be99f6"
+        },
+        {
+          "line": 99,
+          "old": "  generated_at_utc: '2026-10-06T13:06:34Z'",
+          "current": "  generated_at_utc: '2026-10-07T00:58:17Z'"
+        },
+        {
+          "line": 102,
+          "old": "    platform: Linux-6.18.44-fc-v70-x86_64-with-glibc2.39",
+          "current": "    platform: Linux-6.18.44-fc-v77-x86_64-with-glibc2.39"
+        }
+      ],
+      "environment_profile_C_equal": true,
+      "ledger_core_anchor": "68a74c60b219db4421f834c6b7756e9f741f611a4bf4bd8963cdb4f96d048bf9",
+      "ledger_validator_source_digest": "044e4f5513011a9b",
+      "ledger_n_checks": 35,
+      "ledger_core_anchor_matches": true,
+      "ledger_validator_source_digest_matches": true,
+      "ledger_n_checks_matches": true,
+      "actual_check_key_count": 35,
+      "all_recorded_checks_pass": true,
+      "stamp_validator_tree_dirty": false,
+      "environment_profile_C_status": "MISMATCH",
+      "environment_mismatch_counts": {
+        "dist_extra": 4,
+        "dist_record": 16,
+        "dist_version": 13,
+        "shadowed": 1
+      },
+      "earlier_code_baseline_receipt": {
+        "ref": "d7a97aa57ea926916d56c985ee4bc2bed96fa81a",
+        "blob": "0e729cddb365a501bbc550f4a1fb45a668b4d4a4",
+        "validator_source_digest": "f0175fff71132003",
+        "role": "Older receipt generation, not the immediate pre-G94 c7f48918ff971e91 history preservation reference"
+      }
+    },
+    {
+      "leg": "grid_fit_v5",
+      "current_blob": "be194a41dd71758c447ed69f0315040cf38f9a68",
+      "pre_regeneration_current_blob": "2889e80daa34a5d3d666ae214eab611ba35b0d74",
+      "history_blob": "2889e80daa34a5d3d666ae214eab611ba35b0d74",
+      "history_entire_text_identical_to_pre_regeneration_current": true,
+      "core_equal_excluding_two_identity_fields": true,
+      "old_core_sha256": "8de4e4aff4d4550bc4e093949407cf748c540fc42b256d88bff44673cd45292d",
+      "new_core_sha256": "16d3be2555fd6a4ef745ca4ed3f651be61afcd74c3ebeb5965cdd60f4c524856",
+      "n_checks": 34,
+      "changes": [
+        {
+          "line": 4,
+          "old": "core_sha256: 8de4e4aff4d4550bc4e093949407cf748c540fc42b256d88bff44673cd45292d",
+          "current": "core_sha256: 16d3be2555fd6a4ef745ca4ed3f651be61afcd74c3ebeb5965cdd60f4c524856"
+        },
+        {
+          "line": 63,
+          "old": "    validator_source_digest: c7f48918ff971e91",
+          "current": "    validator_source_digest: 044e4f5513011a9b"
+        },
+        {
+          "line": 64,
+          "old": "    src_io_sha256: cde0be140cabc8dc",
+          "current": "    src_io_sha256: 32506d8816b9152a"
+        },
+        {
+          "line": 95,
+          "old": "  validator_commit: 68350322592f400e3ef2655972d5d35f14851b60",
+          "current": "  validator_commit: 27b0917e2a2cb05a629206472d6ed6f7b6be99f6"
+        },
+        {
+          "line": 97,
+          "old": "  generated_at_utc: '2026-10-06T13:08:21Z'",
+          "current": "  generated_at_utc: '2026-10-07T00:59:52Z'"
+        },
+        {
+          "line": 100,
+          "old": "    platform: Linux-6.18.44-fc-v70-x86_64-with-glibc2.39",
+          "current": "    platform: Linux-6.18.44-fc-v77-x86_64-with-glibc2.39"
+        }
+      ],
+      "environment_profile_C_equal": true,
+      "ledger_core_anchor": "16d3be2555fd6a4ef745ca4ed3f651be61afcd74c3ebeb5965cdd60f4c524856",
+      "ledger_validator_source_digest": "044e4f5513011a9b",
+      "ledger_n_checks": 34,
+      "ledger_core_anchor_matches": true,
+      "ledger_validator_source_digest_matches": true,
+      "ledger_n_checks_matches": true,
+      "actual_check_key_count": 34,
+      "all_recorded_checks_pass": true,
+      "stamp_validator_tree_dirty": true,
+      "environment_profile_C_status": "MISMATCH",
+      "environment_mismatch_counts": {
+        "dist_extra": 4,
+        "dist_record": 16,
+        "dist_version": 13,
+        "shadowed": 1
+      },
+      "earlier_code_baseline_receipt": {
+        "ref": "d7a97aa57ea926916d56c985ee4bc2bed96fa81a",
+        "blob": "3516e71eb31a0483f3a56a7873ffebaf25e06797",
+        "validator_source_digest": "f0175fff71132003",
+        "role": "Older receipt generation, not the immediate pre-G94 c7f48918ff971e91 history preservation reference"
+      }
+    }
+  ],
+  "path_chain": [
+    {
+      "path": "degradation-degeneracy",
+      "tree_sha": "d9110939448f1af78d0d2ba8cf922389309e2cd5",
+      "truncated": false,
+      "selected": {
+        "path": "docs",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "0dc113d1c796fa49f3d7dbb8249119ce92fdfd2c",
+        "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/trees/0dc113d1c796fa49f3d7dbb8249119ce92fdfd2c"
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs",
+      "tree_sha": "0dc113d1c796fa49f3d7dbb8249119ce92fdfd2c",
+      "truncated": false,
+      "selected": {
+        "path": "22p_gap",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "ce84c178bad9b2af9b8c3566610ca2fdd4cdad3b",
+        "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/trees/ce84c178bad9b2af9b8c3566610ca2fdd4cdad3b"
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap",
+      "tree_sha": "ce84c178bad9b2af9b8c3566610ca2fdd4cdad3b",
+      "truncated": false,
+      "selected": {
+        "path": "receipts",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "3f6f6aa597d797ca9ad8fa4c782021e6bd50158e",
+        "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/trees/3f6f6aa597d797ca9ad8fa4c782021e6bd50158e"
+      }
+    },
+    {
+      "path": "degradation-degeneracy/docs/22p_gap/receipts",
+      "tree_sha": "3f6f6aa597d797ca9ad8fa4c782021e6bd50158e",
+      "truncated": false,
+      "tree": [
+        {
+          "path": "grid_fit_v5.validate.yaml",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "be194a41dd71758c447ed69f0315040cf38f9a68",
+          "size": 9596,
+          "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/be194a41dd71758c447ed69f0315040cf38f9a68"
+        },
+        {
+          "path": "history",
+          "mode": "040000",
+          "type": "tree",
+          "sha": "444b1820c50338ba84b75ed196787a2d07ce85ee",
+          "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/trees/444b1820c50338ba84b75ed196787a2d07ce85ee"
+        },
+        {
+          "path": "paired_fixed5_v4.validate.yaml",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "b926861617279f2abd8e5a1003b0c6f9d7d12aee",
+          "size": 9661,
+          "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/git/blobs/b926861617279f2abd8e5a1003b0c6f9d7d12aee"
+        }
+      ]
+    }
+  ],
+  "ledger_blob": "ee4b72a030985eae2e4c337a3b10ca5b55486089",
+  "ledger_pre_regeneration_blob": "fb62d88a3ffab8df1416485459068a06eb8b2df3",
+  "ledger_changes": [
+    {
+      "line": 809,
+      "old": "    verification_receipt_core_sha256: d527cde9fc7251a285d5e753048235f1c3aff54661c7588733cc0ffcd63ad9f7",
+      "current": "    verification_receipt_core_sha256: 68a74c60b219db4421f834c6b7756e9f741f611a4bf4bd8963cdb4f96d048bf9"
+    },
+    {
+      "line": 814,
+      "old": "      source_digest: c7f48918ff971e91",
+      "current": "      source_digest: 044e4f5513011a9b"
+    },
+    {
+      "line": 1013,
+      "old": "    verification_receipt_core_sha256: 8de4e4aff4d4550bc4e093949407cf748c540fc42b256d88bff44673cd45292d",
+      "current": "    verification_receipt_core_sha256: 16d3be2555fd6a4ef745ca4ed3f651be61afcd74c3ebeb5965cdd60f4c524856"
+    },
+    {
+      "line": 1019,
+      "old": "      source_digest: c7f48918ff971e91",
+      "current": "      source_digest: 044e4f5513011a9b"
+    }
+  ],
+  "target_src_io_sha256": "32506d8816b9152abb8cdb4be8a1bc68d290c9c4deda51aab2097ec52f6980fd"
+}

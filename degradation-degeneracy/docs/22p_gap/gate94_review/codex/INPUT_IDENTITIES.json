@@ -1,0 +1,17 @@
+[
+  {
+    "path": "C:/Users/Administrator/Downloads/GATE93_N2_ORIGINAL_LOGS.zip",
+    "bytes": 128409,
+    "sha256": "b76e663dcf9fba7ce18a0381e01b1777ad7e594d341d42a74376669d37c3f7c6"
+  },
+  {
+    "path": "C:/Users/Administrator/Downloads/GATE93_N2_LOG_MANIFEST.json",
+    "bytes": 11913,
+    "sha256": "b2ee0d56a10be75c16dcd81fd23d65c4f1814ef6426b3fddabb37e08ec577620"
+  },
+  {
+    "path": "C:/Users/Administrator/Downloads/GATE94_REQUEST.md",
+    "bytes": 9235,
+    "sha256": "5ed77d026d1111c250738510a6660e1aa3ede2f6fd0c3055baaba6a5b564cb66"
+  }
+]
