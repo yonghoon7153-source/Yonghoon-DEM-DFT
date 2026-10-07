@@ -1,12 +1,16 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-10-06 · managed-files: 509
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-10-07 · managed-files: 512
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
-## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 304건)
+## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 307건)
+- 2026-10-07 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
+- 2026-10-07 · `kb/reviews/codex_CT_prompt_cascade_v7_main_runner_2026_10_07.md` — CT 프롬프트 — cascade D_rel v7 본 라운드 러너 (--main) 코드 리뷰: 이미 돌고 있는 40 런 · 조용히 틀린 경로 · 판정까지 이어지는가 · 확인 요청 여섯 · 발송 대기 (사용자 2026-10-07 '필요한 codex 리뷰 다 …
+- 2026-10-07 · `kb/reviews/codex_CU_prompt_wad_agc_graphite_k9_closure_2026_10_07.md` — CU 프롬프트 — P1b Ag(111)|흑연 3층 W_sep 마감 교체 (k9 넷 · 사전 규칙 REPLACE) 사후 감사: DEM 이 Ag–C 기본값으로 채택한 뒤 · 다음 DEM 편지 전 · 확인 요청 다섯 · 발송 대기 (사용자 2026-10-07 '필요한 codex 리뷰 다 …
+- 2026-10-07 · `kb/reviews/codex_CV_prompt_cei_easy_story_2026_10_07.md` — CV 프롬프트 — CEI 쉬운 스토리 4 단계 (P 가 양극 금속을 끌어가고 Nd 가 P 를 먼저 잡는다) + 그림 여섯: 계산이 받치는 범위를 넘는가 · 확인 요청 다섯 · 발송 대기 (사용자 2026-10-07 '쉬운 스토리 구상 해줘라')
 - 2026-10-06 · `kb/syntheses/cei_nd_manuscript_framing_2026_09_18.md` — Nd 원고 논지 확정안 — "고전압 안정성 개선" 대신 "고전압 계면 분해 산물의 재분배" 로 (09-30 · 외부 리뷰 회신 CM — 종전 "양극 계면 열화 억제" 철회) · 확정 — 사용자 승인 2026-09-29 "ㅇㅇ si 쪽으로 가는게 …
 - 2026-10-05 · `kb/reviews/li2s1a_CQ_reply_li2s_glass_v2_readout_2026_10_05.md` — 회신 CQ — 외부 1저자 (li2s 소셀 유리 MD v2 판독): 갈래 v2-2 확정 · 마감 문장 끝 절 좁힘 (550 K = 문턱 부근 · 미통과 0) · 늦은 창 한 줄 (10 런 0.909–1.029) · 골격 ③ 일시 변화 수도 게이트 (문턱 따로) · 다음 = 대조 계 a-Li₃PS₄ 먼저 (여기서 닫지 않는다) · p90² 따로 재서 넣기 · 수령 (2026-10-05 · 사용자 붙여넣기) — 회신 원문 · 고…
 - 2026-10-05 · `kb/reviews/li2s1a_CR_prompt_li2s_glass_control_card_2026_10_05.md` — CR 프롬프트 — li2s 소셀 유리 MD: 회신 CQ 이행 보고 · 해설 문장 검산 셋 · 대조 계 a-Li₃PS₄ 유리 카드 초안 (600 K 400 ps · 5 담금질 시드 · D 상대차) · 확인 요청 여섯 (외부 1저자에게) · 초안 (2026-10-05) — 사용자 검토 · 발송 대기 (p90²…
@@ -23,10 +27,6 @@
 - 2026-10-03 · `kb/reviews/codex_CP_prompt_cascade_v7_probe_card_2026_10_01.md` — CP 프롬프트 — cascade D_rel v7 탐침 카드 (초안): v6 방법상 무효 뒤 온도 하나만 바꾼다 · 무도핑 H0 탐침이 v6 자격을 먼저 통과한 가장 낮은 온도 T* · 확인 요청 다섯 · 발송 완료 2026-10-03 (사용자 'codex 돌아왔다 cp 보…
 - 2026-10-03 · `kb/reviews/codex_CP_reply_cascade_v7_probe_card_2026_10_03.md` — 회신 CP — cascade D_rel v7 탐침 카드: 초안 그대로 실행 NO-GO · 온도 탐침 방향은 조건부 GO · P0 3 (온도 메타 결속 · 10 % 자격 기준의 통계적 역할 · H0 통과 → 40 런 자동 착수 끊기) · P1 (framework_alarm 은 보조 지표 · Q-CP-1 · Q-CP-4) · 수령 (2026-10-03 · 사용자 붙여넣기) — 회신 원문 · 고…
 - 2026-10-02 · `kb/projects/handoff_2026_10_02_evacuation.md` — 대피 인계 — 2026-10-02 (friendly 세션 토큰 소진 → 서브 대시보드 세션 · 머지 때 충돌 0 설계) · 진행
-- 2026-10-01 · `kb/projects/wad_dem_reply_draft_2026_09_23.md` — DEM 쪽 회신 초안 — Ag–C 점착일 요청: 착수 전 질문 3개 답 · 바뀐 점 · 확인 요청 · 회신 4 발송 완료 (09-25) · DEM 4차 회신 수령 (09-…
-- 2026-09-30 · `kb/results/sdcp_ptfe_c12_eads_brief_2026_09_23.md` — SDCP vs PTFE 흡착에너지 (C-12 v41) — 숫자의 지위 · PTFE 크기 검증 · 세미나 대응 · 닫힘 (2026-09-30 · 2단계 보류) — 값은 citable:…
-- 2026-09-30 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
-- 2026-09-30 · `kb/reviews/codex_CM_prompt_cei_nd_handoff_2026_09_30.md` — 리뷰 CM 프롬프트 — CEI (Nd 계면) 외부 송부 전 리뷰: 정본 페이지 · 송부판 · 인계 카드 · 1저자 읽기 지침서 · AI 프롬프트 · 발송됨 (사용자 · 2026-09-30 · 인계 zip 첨부) · ✅…
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -212,9 +212,9 @@
 - `kb/results/vgcf_hbn_figure_plan.md` — VGCF/h-BN 원고 — 층수 연구를 어디에 둘 것인가 (2026-07-31 결정)
 - `kb/results/vgcf_hbn_gallery_mechanism_2026_07_30.md` — h-BN@VGCF — 209 meV 층수효과의 정체: confinement 확정 (2026-07-30)
 
-## reviews/ (197)
+## reviews/ (200)
 - `kb/reviews/ECERD2600097_review_notes.md` — 📝 리뷰 노트 — ECER-D-26-00097 (Fan 외, *Stability Issues in Sulfide-Based ASSB*)
-- `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)  (2026-09-30 · 자동생성)
+- `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)  (2026-10-07 · 자동생성)
 - `kb/reviews/_superseded_BN_replan_2026_09_12.md` — 회신 BN 요청 — cascade 재실행 계획의 **선(先)심사**: go / no-go
 - `kb/reviews/cascade_preflight_audit_2026_09_09.md` — cascade_preflight_audit_2026_09_09  (2026-09-09 · 진행)
 - `kb/reviews/codex_AA_prompt_stageA_v5_regate_2026_08_29.md` — Codex 재검토 요청 AA — 회신 Z 의 P0 8건 처리 후 Stage A v5 재게이트  (2026-08-29 · 발송 완료 — 회신 AA 접수, 후속은 codex_AB_prompt_…)
@@ -320,6 +320,9 @@
 - `kb/reviews/codex_CM_reply_cei_nd_handoff_2026_09_30.md` — 회신 CM — CEI (Nd 계면) 외부 인계본 리뷰: NO-GO (P0 7 · P1 6) — 수치·무결성은 대체로 맞음 · 요약·교육 문구가 계산 범위를 넘음 · Fig. 2 재현 명령이 이력 파일을 덮음  (2026-09-30 · 수령 (2026-09-30 · 사용자 붙여넣기) — 회신 원문 · 고…)
 - `kb/reviews/codex_CP_prompt_cascade_v7_probe_card_2026_10_01.md` — CP 프롬프트 — cascade D_rel v7 탐침 카드 (초안): v6 방법상 무효 뒤 온도 하나만 바꾼다 · 무도핑 H0 탐침이 v6 자격을 먼저 통과한 가장 낮은 온도 T* · 확인 요청 다섯  (2026-10-03 · 발송 완료 2026-10-03 (사용자 'codex 돌아왔다 cp 보…)
 - `kb/reviews/codex_CP_reply_cascade_v7_probe_card_2026_10_03.md` — 회신 CP — cascade D_rel v7 탐침 카드: 초안 그대로 실행 NO-GO · 온도 탐침 방향은 조건부 GO · P0 3 (온도 메타 결속 · 10 % 자격 기준의 통계적 역할 · H0 통과 → 40 런 자동 착수 끊기) · P1 (framework_alarm 은 보조 지표 · Q-CP-1 · Q-CP-4)  (2026-10-03 · 수령 (2026-10-03 · 사용자 붙여넣기) — 회신 원문 · 고…)
+- `kb/reviews/codex_CT_prompt_cascade_v7_main_runner_2026_10_07.md` — CT 프롬프트 — cascade D_rel v7 본 라운드 러너 (--main) 코드 리뷰: 이미 돌고 있는 40 런 · 조용히 틀린 경로 · 판정까지 이어지는가 · 확인 요청 여섯  (2026-10-07 · 발송 대기 (사용자 2026-10-07 '필요한 codex 리뷰 다 …)
+- `kb/reviews/codex_CU_prompt_wad_agc_graphite_k9_closure_2026_10_07.md` — CU 프롬프트 — P1b Ag(111)|흑연 3층 W_sep 마감 교체 (k9 넷 · 사전 규칙 REPLACE) 사후 감사: DEM 이 Ag–C 기본값으로 채택한 뒤 · 다음 DEM 편지 전 · 확인 요청 다섯  (2026-10-07 · 발송 대기 (사용자 2026-10-07 '필요한 codex 리뷰 다 …)
+- `kb/reviews/codex_CV_prompt_cei_easy_story_2026_10_07.md` — CV 프롬프트 — CEI 쉬운 스토리 4 단계 (P 가 양극 금속을 끌어가고 Nd 가 P 를 먼저 잡는다) + 그림 여섯: 계산이 받치는 범위를 넘는가 · 확인 요청 다섯  (2026-10-07 · 발송 대기 (사용자 2026-10-07 '쉬운 스토리 구상 해줘라'))
 - `kb/reviews/codex_C_funnel_2026_08_20.md` — 교차리뷰 C v2.1 — cascade 깔때기는 잘 작동했나 (codex 2라운드 종료)  (2026-08-20 · v2.1 — codex 2라운드 종료 (manifest 지적 철회 ·…)
 - `kb/reviews/codex_D_symposium_talk_standard_2026_08_25.md` — 교차리뷰 D — 심포지엄 세션(덱+녹취) 표준 (codex 작업지시서)  (2026-08-25 · 리뷰완료-HOLD)
 - `kb/reviews/codex_E_sdcp_wave1_gate_2026_08_25.md` — 교차리뷰 E — SDCP wave1 게이트 수정·물리 결론 (판정 수령 + 반영)  (2026-08-25 · 종결-실행승인(내부 max 리뷰))
@@ -572,4 +575,4 @@
 ## elements/ — 118개 (생성물/템플릿, 목록 생략)
 ## templates/ — 3개 (생성물/템플릿, 목록 생략)
 
-## litdb/ — digest 383개 (정본 목록: litdb/INDEX.md)
+## litdb/ — digest 384개 (정본 목록: litdb/INDEX.md)

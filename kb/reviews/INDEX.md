@@ -1,13 +1,13 @@
 ---
 title: "리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)"
-date: 2026-09-30
-updated: 2026-09-30
+date: 2026-10-07
+updated: 2026-10-07
 tags: [index, review, codex]
 status: 자동생성
 kind: index
 confidence: high
 verificationStatus: verified
-verifiedAt: 2026-09-30
+verifiedAt: 2026-10-07
 verifiedBy: tools/kb_wiki.py reviews --write (산출물에서 재구성)
 explored: false
 authoredBy: agent
@@ -112,13 +112,16 @@ evidenceScope: multi-source-primary
 | CK | 2026-09-27 | `codex_CK_prompt_wad_aprime_v5_vasp_outsourcing_v6_2026_09_27.md` | `codex_CK_reply_wad_aprime_v5_vasp_outsourcing_v6_2026_09_27.md` | 발송 완료 · 회신 수령 2026-09-27 **GO** (`codex_CK_reply_…` · 준비본 v6 기술 검토 · 새 P0/P1 없음 · P2 정리 2 → 개정 v6.1) → 1저자 비준 대기 | 같은 라벨 · 주제 토큰 일치 ['aprime', 'outsourcing', 'v5', 'v6', 'vasp', 'wad'] |
 | CH | 2026-09-27 | `li2s1a_CH_prompt_li2s_cd_reply_pilot800_2026_09_27.md` | `li2s1a_CH_reply_li2s_cd_reply_pilot800_2026_09_28.md` | 발송됨 (사용자 · 2026-09-27 · 발송판 = 다섯 시드 결과 반영판 a67b39634 의 '보내는 글' 로 본다) · ✅ 회신 수령 2026-09-28 (`li2s1a_CH_reply_…` · Q-CH-1 2σ · Q-CH-2 465·550 유지 + 600 K 사전등록 · Q-CH-3 수정안 수용 + S54 내력 요청) → 답장 CL 초안 · 550 K 겸용 선택은 발송으로 카드 저자 확정 | 같은 라벨 · 주제 토큰 일치 ['cd', 'li2s', 'pilot800', 'reply']; 판정 인용 3회 |
 | CL | 2026-09-28 | `li2s1a_CL_prompt_li2s_ch_reply_s54_census_2026_09_28.md` | `li2s1a_CL_reply_li2s_ch_reply_s54_census_2026_09_28.md` | 발송됨 (초안 판 · 빈 칸 둘 — 사용자 · 2026-09-28) · ✅ 회신 수령 2026-09-28 (부분 · `li2s1a_CL_reply_…` — Q-CL-1 확정 · Q-CL-2 확정 + 출처 단서 · Q-CL-3·4 는 결과와 같이) → 답장은 600 K · 465 K 조기확인 · 네 시드 전수와 함께 | 같은 라벨 · 주제 토큰 일치 ['census', 'ch', 'li2s', 'reply', 's54'] |
-| CM | 2026-09-30 | `codex_CM_prompt_cei_nd_handoff_2026_09_30.md` | `codex_CM_reply_cei_nd_handoff_2026_09_30.md` | 발송됨 (사용자 · 2026-09-30 · 인계 zip 첨부) · ✅ 회신 수령 2026-09-30 (`codex_CM_reply_cei_nd_handoff_2026_09_30.md` · NO-GO · P0 7 · P1 6) → ✅ 이행 완료 (a0e2c9efb · 비준 d181c35a9 · ab62caedc) · 송부판 v3 (같은 비공개 링크) · 인계 zip v2 (sha256 186ed897…d6ce · 이메일 가린 파생본) → 사용자가 실험 쪽 1저자에게 송부 | 같은 라벨 · 주제 토큰 일치 ['cei', 'handoff', 'nd']; 판정 인용 18회 |
+| CM | 2026-09-30 | `codex_CM_prompt_cei_nd_handoff_2026_09_30.md` | `codex_CM_reply_cei_nd_handoff_2026_09_30.md` | 발송됨 (사용자 · 2026-09-30 · 인계 zip 첨부) · ✅ 회신 수령 2026-09-30 (`codex_CM_reply_cei_nd_handoff_2026_09_30.md` · NO-GO · P0 7 · P1 6) → ✅ 이행 완료 (a0e2c9efb · 비준 d181c35a9 · ab62caedc) · 송부판 v3 (같은 비공개 링크) · 인계 zip v2 (sha256 186ed897…d6ce · 이메일 가린 파생본) → 사용자가 실험 쪽 1저자에게 송부 | 같은 라벨 · 주제 토큰 일치 ['cei', 'handoff', 'nd']; 판정 인용 19회 |
 | CN | 2026-09-30 | `li2s1a_CN_prompt_li2s_main_readout_2026_09_30.md` | `li2s1a_CN_reply_li2s_main_readout_2026_09_30.md` | 발송됨 (사용자 · 2026-09-30 · 초안 그대로) · ✅ 회신 CN 수령 2026-09-30 (`li2s1a_CN_reply_…` — 갈래1 확정 · 문구 좁힘 · 1/15 · Ea 질문 소멸 · Q-CL-3·4 확정) → 마감 기록 `lpscl_smallcell_glass_md_closed_2026_09_30.json` · §6-3 도구 결함은 발송 뒤 고침 (sha16 c1f8f9b467149c91) | 같은 라벨 · 주제 토큰 일치 ['li2s', 'main', 'readout']; 판정 인용 1회 |
-| CO | 2026-09-30 | `li2s1a_CO_prompt_li2s_glass_v2_card_2026_09_30.md` | `li2s1a_CO_reply_li2s_glass_v2_card_2026_10_04.md` | 초안 (2026-09-30) · 10-03 실행 상태 덧붙임 → 발송됨 (사용자) · ✅ 회신 CO 수령 2026-10-04 (결과 미열람 상태 · Q-CO-1~6 전건 · 800 ps σ 도 하한 · 공통 b 256 열 · 끝 두 b 경계 · near-miss σ 거리 · 대조 계 후보 a-Li₃PS₄ 유리 · 골격 게이트 숫자 · 보조 창 50–200 ps) → 판독 전 개정 `lpscl_smallcell_glass_md_v2_amendment_co_2026_10_04.json` (사용자 비준 대기) | — |
-| CP | 2026-10-01 | `codex_CP_prompt_cascade_v7_probe_card_2026_10_01.md` | `codex_CP_reply_cascade_v7_probe_card_2026_10_03.md` | 발송 완료 2026-10-03 (사용자 지시 · 본문 그대로) · ✅ 회신 수령 2026-10-03 (**NO-GO 초안 그대로** · 온도 탐침 방향 조건부 GO · P0 3 = 판독기 온도 메타 결속 · 10 % 자격 기준의 통계적 역할 비준 · H0 통과 → 40 런 자동 착수 끊기 · P1 = framework_alarm 보조 지표 한정 · Q-CP-1·4 문구) → 이행·v7 개정 대기 (결정 D-2026-10-01-cascade-v7-probe-card proposed 그대로) | — |
-| CQ | 2026-10-04 | `li2s1a_CQ_prompt_li2s_glass_v2_readout_2026_10_04.md` | `li2s1a_CQ_reply_li2s_glass_v2_readout_2026_10_05.md` | 초안 (2026-10-04) → 발송됨 (사용자) · ✅ 회신 CQ 수령 2026-10-05 (Q-CQ-1~5 전건 · **v2-2 확정** · 마감 문장 끝 절 좁힘 (550 K = 문턱 부근 · 미통과 0) · 늦은 창 한 줄 (10 런 0.909–1.029) · 골격 ③ 일시 변화 수도 게이트 (문턱 따로) · **다음 = 대조 계 a-Li₃PS₄ 먼저 · 캠페인은 닫지 않음** · p90² 따로 재기 · 산포 보고량) → 마감 `lpscl_smallcell_glass_md_v2_closed_2026_10_05.json` (결정 `D-2026-10-05-lpscl-smallcell-glass-md-v2-closed` **사용자 비준 10-05 · active**) · 회신 해설 검산 셋 (1/kT 간격 1.49 · 600 K seed2 늦은 창 하락 · 산포 max/min 반대 방향) | — |
-| CR | 2026-10-05 | `li2s1a_CR_prompt_li2s_glass_control_card_2026_10_05.md` | `li2s1a_CR_reply_li2s_glass_control_card_2026_10_05.md` | 초안 → 발송됨 (사용자) · ✅ 회신 CR 수령 2026-10-05 (검산 셋 수용 — 1.49 · 산포 문장 IQR 에만 · Q-CR-1~6 전건 · **R 은 두 계 모두 ≥ 4 시드** · c1b 에 결과 전 검출한계 · 골격 게이트 600 K · 일시 변화 문턱 A 실측 기반 (5) · c2 = 1차 관측 · N_eff 열 · 밀도 −15 % 단서 · T₅₀ 100 K 사전 문장 · 대조표) → 카드 개정 (결과 전 · 검출한계 모의 R₅₀ 1.20 · R₈₀ 1.25) · 결정 proposed (비준 대기) | — |
-| CS | 2026-10-05 | `li2s1a_CS_prompt_li2s_glass_control_cost_2026_10_05.md` | `li2s1a_CS_reply_li2s_glass_control_cost_2026_10_05.md` | 초안 → 발송됨 (사용자 · 2026-10-05 · 발송판 `kb/projects/li2s_glass_control_cost_letter_CS_send_2026_10_05.md`) · ✅ 회신 CS 수령 2026-10-05 (Q-CS-1 kgy 는 등분으로 상한 비교 · 과대평가 = 보수적 · 벽시계 병기 · gabia 는 nvidia-smi 표본 · Q-CS-2 140 수용 + 80 이 틀린 이유 · 다음 카드 비용 항목에 실측 장부 대조 · 여유 얇음 → 160 또는 멈춤 경로 명시 · MD 재견적 · Q-CS-3 수용 + 넷에서 멈출 때 규칙 · 덧붙임 R 은 B 실제 산포 쪽) → 개정 `lpscl_smallcell_glass_control_li3ps4_amendment_cs_2026_10_05.json` · 사용자 선택 둘 대기 (대조 계 담금질 시작 · ⚠ 비용 견적 오류 정정 — 시드당 3 h → 실측 ≈ 33–39 h · 총상한 80 을 MD 전에 넘음 · Q-CS-1 셈법 · Q-CS-2 상한 140 · Q-CS-3 그 사이 80 에서 시드 끝 멈춤) | `D-2026-10-05-lpscl-smallcell-glass-control-cost` (proposed) |
+| CO | 2026-09-30 | `li2s1a_CO_prompt_li2s_glass_v2_card_2026_09_30.md` | `li2s1a_CO_reply_li2s_glass_v2_card_2026_10_04.md` | 초안 (2026-09-30) · 10-03 실행 상태 덧붙임 (10 런 완주 · 결과 미열람) → 발송됨 (사용자) · ✅ 회신 CO 수령 2026-10-04 (`li2s1a_CO_reply_li2s_glass_v2_card_2026_10_04.md`) | 같은 라벨 · 주제 토큰 일치 ['card', 'glass', 'li2s', 'v2'] |
+| CP | 2026-10-01 | `codex_CP_prompt_cascade_v7_probe_card_2026_10_01.md` | `codex_CP_reply_cascade_v7_probe_card_2026_10_03.md` | 발송 완료 2026-10-03 (사용자 'codex 돌아왔다 cp 보내자' · 본문 그대로) · ✅ 회신 수령 2026-10-03 → `codex_CP_reply_cascade_v7_probe_card_2026_10_03.md` (NO-GO 초안 그대로 · 방향 조건부 GO · P0 3) · 이행·v7 개정 전 탐침 안 돌림 | 같은 라벨 · 주제 토큰 일치 ['card', 'cascade', 'probe', 'v7']; 판정 인용 8회 |
+| CQ | 2026-10-04 | `li2s1a_CQ_prompt_li2s_glass_v2_readout_2026_10_04.md` | `li2s1a_CQ_reply_li2s_glass_v2_readout_2026_10_05.md` | 초안 (2026-10-04) — 사용자 검토 · 발송 대기 | 같은 라벨 · 주제 토큰 일치 ['glass', 'li2s', 'readout', 'v2']; 판정 인용 1회 |
+| CR | 2026-10-05 | `li2s1a_CR_prompt_li2s_glass_control_card_2026_10_05.md` | `li2s1a_CR_reply_li2s_glass_control_card_2026_10_05.md` | 초안 (2026-10-05) — 사용자 검토 · 발송 대기 (p90² 값 §0 반영 완료) | 같은 라벨 · 주제 토큰 일치 ['card', 'control', 'glass', 'li2s'] |
+| CS | 2026-10-05 | `li2s1a_CS_prompt_li2s_glass_control_cost_2026_10_05.md` | `li2s1a_CS_reply_li2s_glass_control_cost_2026_10_05.md` | 발송됨 (사용자 · 2026-10-05 · 발송판 `kb/projects/li2s_glass_control_cost_letter_CS_send_2026_10_05.md` = 보내는 글 그대로) — 회신 CS 대기 | 같은 라벨 · 주제 토큰 일치 ['control', 'cost', 'glass', 'li2s'] |
+| CT | 2026-10-07 | `codex_CT_prompt_cascade_v7_main_runner_2026_10_07.md` | — | 발송 대기 (사용자 2026-10-07 '필요한 codex 리뷰 다 받자') | — |
+| CU | 2026-10-07 | `codex_CU_prompt_wad_agc_graphite_k9_closure_2026_10_07.md` | — | 발송 대기 (사용자 2026-10-07 '필요한 codex 리뷰 다 받자') | — |
+| CV | 2026-10-07 | `codex_CV_prompt_cei_easy_story_2026_10_07.md` | — | 발송 대기 (사용자 2026-10-07 '쉬운 스토리 구상 해줘라') | — |
 
 ## 🔴 모순 (status 는 대기인데 증거는 회신 수령)
 
@@ -138,3 +141,5 @@ evidenceScope: multi-source-primary
 - `codex_CJ_prompt_wad_aprime_v5_vasp_outsourcing_v5_2026_09_27.md` [발송 완료 · 회신 수령 2026-09-27 **NO-GO** (`codex_CJ_reply_…` · CI 경로 3 해제 · 같은 P1 의 관리 파일 목록 쓰기 경로 1) → v6 → 재리뷰 CK 발송 대기] — 회신 파일이 있다: codex_CJ_reply_wad_aprime_v5_vasp_outsourcing_v5_2026_09_27.md
 - `codex_W_prompt_polaron_S0_2026_09_02.md` [발송 대기] — 회신 파일이 있다: internal_Z2_reply_polaron_S0_2026_09_03.md
 - `codex_X_prompt_polaron_S0_2026_09_02.md` [발송 대기] — 회신 파일이 있다: internal_Z3_reply_polaron_S0_2026_09_03.md
+- `li2s1a_CQ_prompt_li2s_glass_v2_readout_2026_10_04.md` [초안 (2026-10-04) — 사용자 검토 · 발송 대기] — 회신 파일이 있다: li2s1a_CQ_reply_li2s_glass_v2_readout_2026_10_05.md
+- `li2s1a_CR_prompt_li2s_glass_control_card_2026_10_05.md` [초안 (2026-10-05) — 사용자 검토 · 발송 대기 (p90² 값 §0 반영 완료)] — 회신 파일이 있다: li2s1a_CR_reply_li2s_glass_control_card_2026_10_05.md
