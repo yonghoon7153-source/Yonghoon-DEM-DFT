@@ -9398,3 +9398,12 @@ codex/ 11 · manifest 10 / 10 일치 · 비밀 패턴 0) · 규칙 `8a010cf2f` �
     논문 후속 P2 (사본 · 4 코어) 가 끝난 뒤 CPU 독점으로 돈다.
 - 이월 (회신 그대로): 39 위치 변이 · C8 재개 · C7 envelope ↔ 원장 결속 · 제외 세 객체 (run_spec 최상위 · solution map header · 원장 항목).
   **묶음 6 전체 종결 · 실행 GO · 새 연구 leg 승인 아님.**
+
+## §149 G93-N1 수정 승인 · G93-N2 발송 승인 (2026-10-07 · 사용자 "둘다 진행" · 코드 변경 전 기록)
+
+- 사용자 원문 (2026-10-07): "1. GATE93 N1: §148 범위의 수정을 승인할지. 승인하면 GATE94 까지 진행합니다. 2. GATE93 N2: `gate93_n2_supplement/` 의 zip 을
+  검토자에게 첨부해 보낼지. 보내는 것은 직접 하셔야 합니다. / 둘다 진행".
+- N1 승인 범위 = §148 그대로: `src/io.py` `_stage3_checks` 의 v6 재유도 차단 조건만 넓힘 (역사 reader 불변 · planned_id 단독 불일치 의미 유지 · 정상 v4 불변) →
+  RED (실제 `validate_provenance` · sig6 + 유효 v3 · 구조화 실패 · 재유도 0 · KeyError 0) → GREEN → 변이 `-g93` → 영수증 history + 1 회 → 전체 회귀 → smoke →
+  등록부 재생 (깨끗한 HEAD · 순차) → GATE94 요청문 (N1 + N2 보충으로 한정). 실행 GO · 새 leg · 묶음 6 종결 아님.
+- N2: 첨부 발송은 사용자가 한다 — 이 저장소는 `docs/22p_gap/gate93_n2_supplement/` 와 발송문만 준비한다.
