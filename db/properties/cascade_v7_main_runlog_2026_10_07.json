@@ -27,5 +27,18 @@
   "탐침 시드 3·4 집계 제외",
   "상한 461.4 넘으면 다음 런 안 띄우고 보고 → 새 결정"
  ],
- "발사": null
+ "발사": null,
+ "사전점검_dry_run_2026_10_07_19_57": {
+  "출처": "사용자 붙여넣기 kgy 10-07 19:57:08",
+  "worktree": "~/wt_cv7main_1007 · d283ce52 (detached · FETCH_HEAD = origin friendly)",
+  "selftest": "PASS (kgy uma python)",
+  "T*": "1000 K · 탐침 산출물 sha16 1366bb31c7c1fbf9 = repo 사본 (cca58f1e)",
+  "상한": "461.4 GPU-h (원장 D-2026-10-07-cascade-v7-main-round-cap) · 단가 시작값 11.5341",
+  "준비": "20 구조 전부 204 원자 · 수렴 (fmax 0.0123–0.0200) · 입력 해시 = repo 구조 · P1/P2_C sha16 = 탐침과 같음 (49ae8eb5… · 25729b03…)",
+  "드라이버_sha16": "c3e2d358ee53cefa (탐침과 같음)",
+  "판독기_sha16": "1068046cb2398ea2 (탐침과 같음) · selftest PASS",
+  "GPU": "800 MiB · 39 % (시작 문턱 16000)",
+  "디스크": "286 GB 여유",
+  "첫_명령": "… --label cv7main_P1_Al2O3_A --out_root ~/work/runs/cascade_v7_main_1007/md/P1_Al2O3_A__T1000__s1 --temperatures 1000 --equilib_ps 5.0 --prod_ps 400.0 --timestep_fs 2.0 --friction 0.02 --save_fs 100.0 --fit_window_ps 2.0 50.0 --save_traj --seed 1 --uma_model uma-s-1p1 --uma_task omat --device cuda (turbo 없음)"
+ }
 }
