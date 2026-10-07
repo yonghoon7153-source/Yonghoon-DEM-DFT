@@ -9417,3 +9417,17 @@ codex/ 11 · manifest 10 / 10 일치 · 비밀 패턴 0) · 규칙 `8a010cf2f` �
   정정 `fe72f9b81` → 전체 pytest 2323 passed · 1 xfailed · rc 0. 1 차 검증 (`49c769cb5`) 은 컨테이너 재시작으로 pytest 34 % 에서 끊김 (aborted 보존).
 - G93-N2: `docs/22p_gap/gate93_n2_supplement/` (§148) 을 GATE94 와 한 묶음으로 첨부 — 검토자가 "다음 제출은 N1 + 당시 로그 보충으로 한정" 이라 했다.
 - 요청문 `docs/22p_gap/GATE94_REQUEST.md`. 이월 그대로 (39 위치 변이 · C8 · C7 · 제외 3). **묶음 6 종결 · 실행 GO · 새 leg 아님.**
+
+## §151 94차 회신 접수 — G93-N1 · G93-N2 한정 범위 종결 수용 · 비차단 정정 G94-C1 (2026-10-07)
+
+- 보존: `docs/22p_gap/gate94_review/` — zip 395,161 B · sha256 `2d24b1c4a533797a7617af305906b738311b57b3333c1a5d962503ca44c240d1` · 압축 해제 88 · manifest 87 / 87 · 비밀 0 ·
+  동봉 자료 실행 0. 규칙 `e9edaec53` → 보존 `752b3b983` (`.log` 포함이라 `-f`).
+- 판정 (회신 사본 · 고정 요청 `2345051aa` · 코드 `0ab2924f4`): **G93-N1 · G93-N2 종결 수용 (한정 범위)**.
+  - N1: 유효 v3 → 축 helper 실패가 `v4_bad` 에 결속 · 네 재유도 검사 구조화 실패 · 정상 v4 · planned_id 단독 · 역사 reader 유지 · RED / GREEN 원문이 이전 KeyError 경로에 대응.
+  - N2: zip 14 로그의 집합 · 크기 · SHA · CRC 와 `e0e9f213d` blob 확인 → 93차의 2320 passed / 1 xfailed · smoke rc 0 · 421 / 421 은 이제 제출 원문에서 확인한 결과로 구분.
+  - GATE94: 2323 passed / 1 xfailed / rc 0 · smoke rc 0 · 422 / 422 / rc 0 · 두 leg history · core · 원장 앵커 수용. 환경 C MISMATCH 34 · paired dirty=false / grid dirty=true 는 유지.
+- **G94-C1 (비차단 · 처리):** "모두 요청 커밋 전" 정정 — 14 docs-lint 는 93차 요청 커밋 뒤 · `e0e9f213d` 전 실행. `gate93_n2_supplement/README.md` · `GATE94_REQUEST.md` 에 정정 이력만 덧붙였다
+  (zip · manifest · 로그 · 본문 불변 · 재시험 없음).
+- 지킬 구분 (회신): scratch 원본 동일성 · mtime · "보충 재실행 0" 은 제출자 기록 (수신자 확인 = zip · Git blob 동일성). 초기 emit / replay 로그의 rc 부재를 파일명이나 뒤의 rc 0 으로
+  소급 채우지 않는다. 중단 로그의 메모 추가 · 길이 복원 신고와 초기 실패 · 최종 성공 기록을 유지한다. 검토자 사본의 중단 로그 1,556 B 는 검토자 도구가 붙인 끝 LF (원 blob `4b06ca14…` 1,555 B — 회신 `ORIGINAL_CONTENT.json`).
+- 남는 것: 39 위치 변이 · C8 재개 · C7 원장 결속 · 제외 세 객체 (이월). 다음 구현 범위는 별도 요청 · 사용자 승인 뒤에만. **묶음 6 종결 · 실행 GO · 새 leg · COMSOL · 복원 · class · 투영 게시 승인 아님.**

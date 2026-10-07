@@ -20,3 +20,10 @@
   요약: 00 RED `41 failed, 97 passed` rc 1 · 10 `2320 passed, 1 xfailed` rc 0 · 11 smoke rc 0 · 12 재생 `ran 421` (scenario 432 · executable 421) rc 0 ·
   10 · 11 · 12 의 끝 HEAD `3ec8aadb1` dirty 0 · 14 docs-lint `360 passed` rc 0 (끝 HEAD `0e3c244ea` dirty 0) · 중단 두 실행 (run1 F4 · run2 F1) 은 시작 줄만.
 - 재실행은 하지 않았다. 이 묶음은 당시 파일의 인계일 뿐 새 검증이 아니다.
+
+## 정정 이력
+
+- **2026-10-07 · 94차 G94-C1 (비차단):** 위 "모두 요청 커밋 이전 실행이다" 는 부정확하다. 요청 커밋 `0e3c244ea` 는 2026-10-06 18:44:27Z 이고,
+  `14_docs_lint_send_0e3c244ea_360passed.log` 는 같은 HEAD 에서 18:44:35Z – 19:17:57Z 에 실행됐다 — **요청 커밋 뒤 · `e0e9f213d` 추가 전** 의 실행이다.
+  나머지 13 로그는 요청 커밋 전 실행이다. zip · manifest · 로그 바이트는 고치지 않았다 (설명만 정정 · 재시험 없음).
+- 구분 (94차 지적): scratch 원본과의 동일성 · 수정 시각 · "재실행 0" 은 **제출자 기록**이다. 수신자가 확인한 것은 zip 14 로그의 집합 · 크기 · 전체 SHA · CRC 와 `e0e9f213d` Git blob 동일성이다.
