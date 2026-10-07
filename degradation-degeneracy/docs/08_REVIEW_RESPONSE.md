@@ -9407,3 +9407,13 @@ codex/ 11 · manifest 10 / 10 일치 · 비밀 패턴 0) · 규칙 `8a010cf2f` �
   RED (실제 `validate_provenance` · sig6 + 유효 v3 · 구조화 실패 · 재유도 0 · KeyError 0) → GREEN → 변이 `-g93` → 영수증 history + 1 회 → 전체 회귀 → smoke →
   등록부 재생 (깨끗한 HEAD · 순차) → GATE94 요청문 (N1 + N2 보충으로 한정). 실행 GO · 새 leg · 묶음 6 종결 아님.
 - N2: 첨부 발송은 사용자가 한다 — 이 저장소는 `docs/22p_gap/gate93_n2_supplement/` 와 발송문만 준비한다.
+
+## §150 G93-N1 수정 · 검증 완료 · GATE94 요청 (2026-10-07 · 93차 잔여 두 건으로 한정 · 실행 GO 아님)
+
+- 코드 `0ab2924f4` (`src/io.py` `_stage3_checks` 두 곳 · source_digest `044e4f5513011a9b`): v6 재유도 차단 = 역사 reader 결과 + 축 유도 실패
+  (`stage3_axis_from_envelope` = schema v4 + `check_envelope_v4`). RED `test_g93_n1` KeyError `parameter_order_sha256` (io.py:1686) → GREEN · 대조 c1 (정상 v4) · c2 (planned_id 단독) 기존 의미 유지.
+- 변이: 신규 `v6-rederive-gate-includes-axis-failure-g93` · `failed-envelope-is-not-rederived-g92` 원문 갱신. 영수증: history `27b0917e2` → 재생성 · 앵커 `49c769cb5` (검사 35 / 34 · `--check` 동일).
+- 검증 (증거 `docs/22p_gap/gate94_evidence/`): `168fd41a5` env 프로필 rc 0 · smoke rc 0 · 전체 재생 422 / 422 rc 0 · 전체 pytest 1 failed (위키 raw 2026-10-07 sha256 선언 오류 — 코드 무관) →
+  정정 `fe72f9b81` → 전체 pytest 2323 passed · 1 xfailed · rc 0. 1 차 검증 (`49c769cb5`) 은 컨테이너 재시작으로 pytest 34 % 에서 끊김 (aborted 보존).
+- G93-N2: `docs/22p_gap/gate93_n2_supplement/` (§148) 을 GATE94 와 한 묶음으로 첨부 — 검토자가 "다음 제출은 N1 + 당시 로그 보충으로 한정" 이라 했다.
+- 요청문 `docs/22p_gap/GATE94_REQUEST.md`. 이월 그대로 (39 위치 변이 · C8 · C7 · 제외 3). **묶음 6 종결 · 실행 GO · 새 leg 아님.**
