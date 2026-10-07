@@ -805,6 +805,30 @@ def _selftest() -> int:
             chk('★ G2RR4-01 — 생산 194 (합성) 판정 JSON 의 상세 = 상세 계약 통과 (194 케이스 × K1–K7 · meta 열 · 재계수 0 = n_fail 0)', d194 == [], d194[:3])
         else:
             chk('★ 등록 집합 양성 production194 (등록 집합 함수 없음 — 옛 코드)', False)
+        #  ★ 10-07 G2RR4-03 (Codex 세대 2 재검증 4 §6-3(b)) — 스모크 음성 대조 (case15 · 게시 차단 기대 · smoke 보고 negative_control 표지) = S0 (게시 done) 에서 빼고
+        #    S0b 로 판정: 게시 없음 (done 아님 · run id 없음) ∧ 스모크의 [음성 대조] 판정 (원인 발화 · 이온 정상 · τ 비노출) 이 넷 이상 전부 PASS.
+        #    옛 판: case15 failed = S0 실패 · rc 1 (사전 점검 단계 4).  표지 없는 failed 는 그대로 S0 실패 (이름으로 면제하지 않는다).
+        sm = tmp / 'smoke_neg'
+        (sm / 'work' / 'results').mkdir(parents=True)
+        shutil.copytree(tmp / 'case_through', sm / 'work' / 'results' / 'syn_ok')
+        negchk = [dict(group='A', name=f'case15_network: [음성 대조] {n}', verdict='PASS', detail='') for n in ('게시 차단', 'τ 숫자 비노출', '원인 발화', '이온 정상')]
+        NEG = 'case15_publication_blocked'
+
+        def _sm(c15, checks):
+            (sm / 'smoke_report.json').write_text(json.dumps(dict(reports={'syn_ok': dict(stop_after='network', status='done'), 'case15_network': c15},
+                                                                  checks=checks)), encoding='utf-8')
+            jp_ = tmp / f'sm_{len(list(tmp.glob("sm_*.json")))}.json'
+            rc_ = _main_rc(['--smoke-root', str(sm), '--json', str(jp_)])
+            j_ = _read_json(jp_) or {}
+            return rc_, {('S0b' if m_['name'].startswith('S0b') else m_['name'][:2]): m_['ok'] for m_ in j_.get('meta') or []}
+        r_ok = _sm(dict(stop_after='network', status='failed', negative_control=NEG), negchk)
+        r_pub = _sm(dict(stop_after='network', status='done', negative_control=NEG, returned_network_run_id='RUN-x'), negchk)
+        r_nochk = _sm(dict(stop_after='network', status='failed', negative_control=NEG), negchk[:1] + [dict(negchk[1], verdict='FAIL')])
+        r_old = _sm(dict(stop_after='network', status='failed'), negchk)
+        chk(f'★ G2RR4-03 스모크 음성 대조 (case15) — 게시 없음 + [음성 대조] 판정 PASS = S0 · S0b 통과 rc 0 {r_ok} · 게시됨 = S0b 실패 {r_pub} · '
+            f'[음성 대조] 판정 FAIL = S0b 실패 {r_nochk} · 표지 없는 failed = S0 실패 (이름 면제 없음) {r_old}',
+            r_ok == (0, {'S0': True, 'S0b': True}) and r_pub[0] == 1 and r_pub[1].get('S0b') is False and r_nochk[0] == 1 and r_nochk[1].get('S0b') is False
+            and r_old[0] == 1 and r_old[1].get('S0') is False)
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
         for d in made:

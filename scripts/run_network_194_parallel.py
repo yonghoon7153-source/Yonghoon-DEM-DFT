@@ -96,9 +96,9 @@
 사용 (WSL · 리포 체크아웃 · 봉인 커밋 detached — 예전 배치와 같은 `~/dem-audit`)
 ───────────────────────────────────────────────────────────────────────────────
   P=~/Yonghoon-DEM-DFT/venv/bin/python
-  $P scripts/run_network_194_parallel.py run --root ~/net194_<sha> --dry-run       # 사전 점검 · 계획만 (아무것도 안 쓴다)
+  $P scripts/run_network_194_parallel.py run --root ~/net194_<sha> --dry-run --observe-imports   # 사전 점검 · 계획만 (아무것도 안 쓴다)
   $P scripts/run_network_194_parallel.py run --root ~/net194_pilot -j 2 --case lhsx_040 --case lhs00_055   # 시범 (가장 큰 + 작은)
-  $P scripts/run_network_194_parallel.py run --root ~/net194_<sha>                 # 194 건 · 20 레인
+  $P scripts/run_network_194_parallel.py run --root ~/net194_<sha> --observe-imports   # 194 건 · 20 레인 (★ G2RR4-03 — 생산 194 = 관측 필수 · 없으면 사전 점검 ⛔)
   $P scripts/run_network_194_parallel.py status --root ~/net194_<sha>              # 진행 (다른 터미널)
   $P scripts/run_network_194_parallel.py audit --root ~/net194_<sha>               # 봉인 감사 — 케이스마다 어느 코드로 계산됐나 (읽기 전용)
   $P scripts/run_network_194_parallel.py audit --root ~/net194_11fcf91e8 --historical   # 등록된 옛 실행 (10-05 v1.2) 만 — 역사 모드 (G2RR2-01)
@@ -895,6 +895,25 @@ def registered_id_set(name) -> dict:
     return dict(name=name, pairs=frozenset(pairs), source=reg['source'])
 
 
+def production_plan(plan) -> bool:
+    """★ 10-07 G2RR4-03 — 이 계획이 등록 생산 194 인가 (계획 큐의 (케이스, 코호트) 집합 = 등록 집합 production194 · 커밋된 수확 폴더에서 열거 · 지문 대조).
+    등록 집합을 못 세우면 (수확 폴더가 등록과 다르다) 거짓 — 그런 계획은 등록 생산 194 가 아니다 (입력 지문 · 다시 읽기 M-reg · 배포 관문이 따로 막는다)."""
+    pairs = frozenset((e.get('case'), e.get('cohort')) for e in ((plan or {}).get('queue') or []) if isinstance(e, dict))
+    try:
+        return bool(pairs) and pairs == registered_id_set('production194')['pairs']
+    except LaunchError:
+        return False
+
+
+def production_observation_problem(man) -> str | None:
+    """★ 10-07 G2RR4-03 (Codex 세대 2 재검증 4 §4 Q3) — 생산 194 = import 관측 필수 (등록 §4 `run --observe-imports`).  manifest → 사유 (관측을 끈 생산 계획) | None.
+    발사 사전 점검 (preflight) · 감사 (audit) 가 같은 판정을 쓴다 — v1.3 배포 관문도 observe_imports true · 관측 객체 · 결합 기록 없는 생산 배치를 받지 않는다."""
+    if production_plan((man or {}).get('plan')) and (man or {}).get('observe_imports') is not True:
+        return ('생산 194 계획 (등록 production194) 인데 import 관측을 끈 실행 — 생산 194 는 관측 필수 (`run --observe-imports` · G2RR4-03 · 등록 §4) · '
+                '관측 없이 돈 생산 배치는 v1.3 배포 관문이 받지 않는다')
+    return None
+
+
 def _historical_match(m) -> tuple:
     """manifest → (등록 이름 | None, [어긋남]) — 등록된 옛 실행 (`HISTORICAL_LAUNCHES`) 과 형식 · 발사 출처가 정확히 같은가."""
     best = (None, ['등록된 옛 실행이 없다'])
@@ -1562,6 +1581,10 @@ def preflight(args, plan, root: Path, budget_mb) -> dict:
                     'DEP_LAZY_OFFPATH 에 사유와 함께 (Codex 세대 2 재검증 2 §4 G2RR2-03)')
     if cen['stale']:
         warn.append(f'지연 import 분류표의 낡은 항목 (지금 코드에 없음) {cen["stale"][:5]} — 표 정리')
+    #  ★ 10-07 G2RR4-03 — 생산 194 (계획 = 등록 집합 production194) 는 import 관측 필수 (감사와 같은 판정 · 시범 · 부분 계획은 선택)
+    _pob = production_observation_problem(dict(plan=plan, observe_imports=bool(getattr(args, 'observe_imports', False))))
+    if _pob:
+        stop.append(_pob)
     #  ★ 10-07 G2RR4-02 ③ — fork 뒤 import 는 관측 영수증이 없다: 봉인 경로에 fork · 프로세스 풀 API 가 있으면 발사하지 않는다
     fk = fork_census()
     if fk:
@@ -2501,6 +2524,12 @@ def cmd_audit(args) -> int:
               + (f' · 완료 아닌 시도의 끝맺지 않은 영수증 {len(import_obs["unfinalized_noncompleted"])} (정보)' if import_obs['unfinalized_noncompleted'] else ''))
         for p_ in obs_problems[:20]:
             print(f'  ✗ 관측: {p_}')
+    #  ★ 10-07 G2RR4-03 — 생산 194 인데 관측을 끈 실행 = 감사 문제 (발사 사전 점검과 같은 판정 · 관측 기록이 아예 없어도 여기서 잡는다) ·
+    #    역사 형식 (등록된 옛 실행 · --historical) 은 이 요구 전의 실행이라 대지 않는다 (역사 모드 판정 = 그대로 · 배포 관문은 역사 형식을 받지 않는다)
+    _pob = None if history else production_observation_problem(man)
+    if _pob:
+        obs_problems = list(obs_problems) + [_pob]
+        print(f'  ✗ 관측: {_pob}')
     bad = cnt.get('UNSEALED', 0) + mcnt.get('differs', 0) + mcnt.get('missing', 0) + len(gen_problems) + len(input_problems) + len(obs_problems)
     print('  ✓ 기록 전부 발사 봉인 코드에서 나왔다' + (' · merged = 케이스 폴더' if mcnt.get('same') else '')
           + (' · 레코드 세대 = 기대 세대' if declared else '') if not bad else
@@ -4164,6 +4193,29 @@ def _selftest() -> int:
                 repr((aj_k2.get('import_observation_problems'), sbk)))
 
         _scenario('㉟g G2RR4-02 실행 단계 ↔ 영수증 결합 시나리오', _s35g)
+
+        # ═══ ㉟h ★ 10-07 Codex 세대 2 재검증 4 §4 Q3 G2RR4-03 — 생산 194 발사 = import 관측 필수 (반례 먼저) ═════════════════════════════════════════════
+        #   옛 판: 본 실행 관측은 발사 때 1저자가 정한다 (등록 §3b) · 실행기는 생산 계획에도 관측 없이 띄웠다 · 감사는 관측을 끈 생산 배치를 거부하지 않았다.
+        def _s35h():
+            _pp = _G.get('production_plan')
+            _pop = _G.get('production_observation_problem')
+            p194 = build_plan(['lhs', 'lhsx'], cohort_specs(_parse(['run', '--root', str(tmp / 'p194')])))
+            chk('㉟h 생산 194 판별 — 커밋된 수확 폴더의 전체 계획 = 등록 production194 (참) · 합성 9 케이스 계획 · 한 케이스 계획 (거짓)',
+                callable(_pp) and _pp(p194) is True and _pp(p1) is False
+                and _pp(build_plan(['lhs', 'lhsx'], cohort_specs(_parse(['run', '--root', str(tmp / 'p194b')])), ['lhs00_055'])) is False,
+                repr(callable(_pp)))
+            base_ = ['run', '--root', str(tmp / 'dry194'), '--dry-run', '--allow-missing-raw', '--allow-dirty']
+            rc_n, o_n = _main_rc(base_)
+            rc_y, o_y = _main_rc(base_ + ['--observe-imports'])
+            chk('㉟h ★ G2RR4-03 생산 194 dry-run — --observe-imports 없이 = 사전 점검 ⛔ (관측 필수) rc 2 · 있으면 rc 0 (아무것도 안 쓴다)',
+                rc_n == 2 and '관측 필수' in o_n and rc_y == 0 and '관측 필수' not in o_y and not (tmp / 'dry194').exists(),
+                repr((rc_n, rc_y, [ln for ln in o_n.splitlines() if '⛔' in ln][:3], [ln for ln in o_y.splitlines() if '⛔' in ln][:3])))
+            m_off = dict(plan=p194, observe_imports=False)
+            chk('㉟h ★ G2RR4-03 감사 — 생산 194 계획인데 관측을 끈 manifest = 문제 (audit rc 1 사유) · 켠 manifest · 합성 계획 = 없음',
+                callable(_pop) and bool(_pop(m_off)) and _pop(dict(m_off, observe_imports=True)) is None
+                and _pop(dict(plan=p1, observe_imports=False)) is None, repr(callable(_pop) and _pop(m_off)))
+
+        _scenario('㉟h G2RR4-03 생산 194 관측 필수 시나리오', _s35h)
     finally:
         for k, v in env_keep.items():
             if v is None:

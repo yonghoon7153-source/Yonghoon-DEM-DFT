@@ -702,6 +702,72 @@ def _selftest() -> int:
             repr({k: (v['raw_sha_ok'], v['type_map'], v['type_map_errors']) for k, v in staged.items()}))
     finally:
         shutil.rmtree(_st_tmp, ignore_errors=True)
+    #  ★ 10-07 G2RR4-03 (Codex 세대 2 재검증 4 §6-3(b)) — case15 = 음성 대조: 지정한 실패 (게시 차단 · 전자 · Hertz 열 boundary_overlap B∩T 넷 · Physics 열 음수 원자료
+    #    면적 거부 · 음수 행 둘) 와 이온 정상 (참고 8 자리 · 증서) 이 **실제로 발화해야** PASS — whitelist · 이름 PASS 아님 (반례 먼저: 옛 판정 = done 이어야 PASS)
+    _ng = globals().get('CASE15_NEGCTL') or {}
+    _ids = [24, 40, 57, 103]
+
+    def _c15(**over):
+        ch = dict(ionic_hertzian=dict(value=[0.1704582, 0.0003263508], status='computed', reason='', conservation_rel=2e-9, residual_rel=1e-10,
+                                      intersection=[]),
+                  ionic_physics=dict(value=[0.1892075, 0.0003622472], status='computed', reason='', conservation_rel=5e-9, residual_rel=1e-10,
+                                     intersection=[]),
+                  electronic_hertzian=dict(value=[None, None], status='not_computed', reason='boundary_overlap', intersection=list(_ids)),
+                  electronic_physics=dict(value=[None, None], status='not_computed', reason='boundary_overlap', intersection=list(_ids)),
+                  thermal_hertzian=dict(value=[None, None], status='not_computed', reason='boundary_overlap', intersection=list(_ids)),
+                  thermal_physics=dict(error='ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)'))
+        ch.update(over.pop('channels', {}))
+        r = dict(id='case15_network', kind='case15', stop_after='network', negative_control=_ng.get('tag', 'case15_publication_blocked'),
+                 status='failed', failed_stages=['Network Solver (both modes)'], stage_e_ran=False, returned_network_run_id=None, raw_sha_ok=True,
+                 stages=[dict(step='Network Solver (both modes)', rc=0, ok=False, required=True, err='')],
+                 tau={f'ion_net_status_{m}': 'NOT_COMPUTED' for m in ('hertz', 'physics', 'hertz_h12')},
+                 negctl=dict(plate_um=19.1455, negative_area=[[31, 29241, -0.186036, 1.05114], [38, 29241, -0.186264, 1.0512]], channels=ch))
+        r.update(over)
+        return r
+
+    def _c15_eval(rep):
+        cs = evaluate({'case15_network': rep}, {'case15_network': dict(rc=0)})
+        return [c for c in cs if '[음성 대조]' in c['name']]
+    _neg_cases = (
+        ('기대 그대로 (게시 차단 · 원인 넷 · 이온 정상)', _c15(), True),
+        ('게시됨 (done · run id) — 음성 대조가 발화하지 않았다', _c15(status='done', failed_stages=[], returned_network_run_id='RUN-x'), False),
+        ('B∩T ID 둘뿐 (24 · 40)', _c15(channels=dict(electronic_hertzian=dict(value=[None, None], status='not_computed', reason='boundary_overlap',
+                                                                           intersection=[24, 40]))), False),
+        ('Physics 열이 풀렸다 (음수 면적 거부 없음)', _c15(channels=dict(thermal_physics=dict(value=[1.0, 0.1], status='computed', reason='',
+                                                                                  conservation_rel=1e-9, residual_rel=1e-10, intersection=[]))), False),
+        ('음수 면적 행 하나', _c15(negctl=dict(_c15()['negctl'], negative_area=[[31, 29241, -0.186036, 1.05114]])), False),
+        ('이온 증서 보존 잔차 1e-3', _c15(channels=dict(ionic_hertzian=dict(value=[0.17, 0.0003263508], status='computed', reason='',
+                                                                           conservation_rel=1e-3, residual_rel=1e-10, intersection=[]))), False),
+        ('τ 숫자 노출 (hertz OK)', _c15(tau={'ion_net_status_hertz': 'OK', 'ion_net_status_physics': 'NOT_COMPUTED',
+                                             'ion_net_status_hertz_h12': 'NOT_COMPUTED'}), False),
+        ('원인 증거 없음 (negctl 없음)', _c15(negctl=None), False),
+    )
+    _neg_res = {nm: _c15_eval(rp) for nm, rp, _w in _neg_cases}
+    chk('★ G2RR4-03 case15 음성 대조 판정 — 기대 그대로 = [음성 대조] 검사 전부 PASS (4 개 이상) · 게시됨 · B∩T 둘 · Physics 열 풀림 · 음수 행 하나 · 이온 증서 잔차 · '
+        'τ 숫자 노출 · 원인 증거 없음 = 각각 FAIL 하나 이상 (옛 판: case15 도 done 이어야 PASS)',
+        bool(_ng) and all((len(_neg_res[nm]) >= 4 and all(c['verdict'] == 'PASS' for c in _neg_res[nm])) if w
+                          else any(c['verdict'] != 'PASS' for c in _neg_res[nm]) for nm, _rp, w in _neg_cases),
+        repr({nm: [(c['name'][:40], c['verdict']) for c in v] for nm, v in _neg_res.items()})[:600])
+    _jobs15 = [j for j in build_jobs(_parse(['--root', '/x', '--skip-real14', '--skip-lhs', '--skip-controls'])) if j['id'] == 'case15_network']
+    chk('★ G2RR4-03 case15 작업 = 음성 대조 표지 (case15_publication_blocked — 게시 차단 기대) · 망 정지',
+        bool(_ng) and len(_jobs15) == 1 and _jobs15[0].get('negative_control') == 'case15_publication_blocked' == _ng.get('tag')
+        and _jobs15[0].get('stop') == 'network', repr(_jobs15))
+    #  ★ G2RR4-03 — case15 원인 증거를 커밋된 원자료에서 실제로 (실제 build_network · solve_network · 6 조합 · Codex 재검증 4 §6-1 과 같은 꼴) → 음성 대조 판정 통과
+    _st15 = Path(tempfile.mkdtemp(prefix='smoke_c15_')).resolve()
+    try:
+        tm15 = stage_refbed('case15', _st15)['type_map']
+        _probe = globals().get('case15_channel_probe')
+        t15 = time.monotonic()
+        neg15 = _probe(_st15, tm15) if _probe else {}
+        v15 = _c15_eval(dict(_c15(), negctl=neg15))
+        chk(f'★ G2RR4-03 case15 원자료 직접 6 조합 ({time.monotonic() - t15:.0f} s) — 판 {neg15.get("plate_um")} µm · 음수 면적 행 '
+            f'{len(neg15.get("negative_area") or [])} · 전자 · Hertz 열 B∩T = 24 · 40 · 57 · 103 · Physics 열 음수 면적 거부 · 이온 참고 8 자리 · 증서 → '
+            '[음성 대조] 원인 · 이온 검사 PASS',
+            bool(neg15) and bool(v15) and all(c['verdict'] == 'PASS' for c in v15),
+            repr(([(c['name'][:50], c['verdict'], c['detail'][:120]) for c in v15 if c['verdict'] != 'PASS'],
+                  {k: (v.get('reason'), v.get('intersection'), v.get('error')) for k, v in (neg15.get('channels') or {}).items()}))[:700])
+    finally:
+        shutil.rmtree(_st15, ignore_errors=True)
     vm_bad = dict(exact_vm_equal=True, actual={'status': 'computed', 'vm_cv': 100.0}, positive_control={'status': 'computed', 'vm_cv': 0.0})
     vm_ok = dict(vm_bad, actual={'status': 'computed', 'vm_cv': 0.0})
     vm_null = dict(vm_bad, actual={'status': 'invalid', 'vm_cv': None})
