@@ -1,0 +1,193 @@
+{
+ "slug": "phuthi2026_mlip_ssb_perspective",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-10-07",
+ "sources": [
+  "Phuthi2026 ChemMater Machine Learning Interatomic Potentials for Modeling Solid-State Batteries.pdf",
+  "Sup) Phuthi2026 ChemMater Machine Learning Interatomic Potentials for Modeling Solid-State Batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. (a) Characteristic length and time scales associated with different property categories relevant to battery materials. The bottom-left corner of each shaded region estimates the minimum system size and simulation time typically required to evaluate the property, while the gradient shading indicates that extending to larger cells and longer trajectories improves statistical accuracy and realism. gray overlays show the approximate upper bounds of DFT/AIMD and MLIP-MD. (b) Estimated computational cost of representative property calculations expressed in GPU-hours (left axis, log scale) and equivalent wall-clock time on a single GPU (right axis). Costs were derived by converting each property’s minimum length and time requirement into atom counts and MD steps as described in the Supporting Information. It should be noted that actual costs are dependent on chemistry, model architect",
+   "rotated_deg": 0,
+   "bbox": [
+    44.6,
+    54.4,
+    561.5,
+    237.8
+   ],
+   "w": 2155,
+   "h": 765,
+   "dpi": 300,
+   "src": "Phuthi2026 ChemMater Machine Learning Interatomic Potentials for Modeling Solid-State Batteries.pdf",
+   "blank": 0.707
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. A comparison of some different methods for modeling the potential energy surface. The darker the shading, the better the method on the corresponding feature compared to the other methods. them powerful tools for modeling battery phenomena where these advantages outweigh the added cost, as shown in Figure 2. sets such as the entire set of Materials Project relaxation trajectories33 to develop MLIPs with coverage of almost the entire periodic table. Such foundation potentials (FPs), also known as universal or general-purpose MLIPs, have experienced rapid progress, both in terms of architectural and data set developments. Popular architectures include M3GNet,32 MLIPs can be broadly categorized by their breadth of application. Initially, custom MLIPs trained on a narrow chemical space were the most common. Most custom MLIPs utilize local environment descriptors with simpler ML arch",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    521.9
+   ],
+   "w": 2151,
+   "h": 1949,
+   "dpi": 300,
+   "src": "Phuthi2026 ChemMater Machine Learning Interatomic Potentials for Modeling Solid-State Batteries.pdf",
+   "blank": 0.579
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. (a) MLIPs have been used to predict stability in sodium closo-hydridoborates at finite-temperature, which reveals a different phase diagram from 0 K with a new, highly conducting phase called o-NBH with composition Na3(B12H12)(BH4). Such a prediction would be challenging in DFT due to the dependence on temperature and a relatively large unit cell. (b) MLIPs were also used to characterize sodium ion transport, which involves non- Arrhenius behavior for Na2B12H12 below 500 K which would be challenging to predict by extrapolation from high-temperature AIMD. Images adapted with permission from Oh et al.72 Copyright 2025 Elsevier. MLIPs especially suited for systems with slower dynamics87 e.g., <0.1 mS cm−1 and/or large-scale structural complexity such as amorphous or polycrystalline materials. exemplified by the selectivity metric of McDermott et al.73,74 Current DFT-based methods ",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    190.7
+   ],
+   "w": 2151,
+   "h": 569,
+   "dpi": 300,
+   "src": "Phuthi2026 ChemMater Machine Learning Interatomic Potentials for Modeling Solid-State Batteries.pdf",
+   "blank": 0.757
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Voltage profiles for the spinel and δ phases of Lix Mn0.8Ti0.1O1.9F0.1 predicted by a custom CHGNet MLIP. The MLIP allowed sampling at many more values of x, compared to what is feasible with DFT, highlighting the large voltage drop in the spinel phase and solid solution behavior in the δ phase. Image adapted with permission from Zhong et al.46 Copyright 2025 American Physical Society.",
+   "rotated_deg": 0,
+   "bbox": [
+    309.4,
+    54.4,
+    561.5,
+    204.1
+   ],
+   "w": 1051,
+   "h": 625,
+   "dpi": 300,
+   "src": "Phuthi2026 ChemMater Machine Learning Interatomic Potentials for Modeling Solid-State Batteries.pdf",
+   "blank": 0.894
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Figure 5. (a) Schematic of a typical all-solid-state battery and various interfaces. Depiction of (b) redox processes which consist of coupled ion motion and charge transfer locally in materials, (c) ionic motion, which can be highly correlated in superionic conductors with a variety of conduction mechanisms at play. Reproduced or adapted from.14 Available under a CC-BY 4.0 license. Copyright 2025 Jun et al. (d) An interphase which can have complicated and dynamic local structure with amorphous, crystalline and disordered regions at various length scales. Plasticity is a nonequilibrium property occurring over large length scales for which material history plays a significant role. It was therefore less commonly studied in atomistic models due to limited availability of interatomic potentials before MLIPs. Methods for analyzing the atomic origin of plasticity, such as stacking faults, dis",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    388.7
+   ],
+   "w": 2151,
+   "h": 1394,
+   "dpi": 300,
+   "src": "Phuthi2026 ChemMater Machine Learning Interatomic Potentials for Modeling Solid-State Batteries.pdf",
+   "blank": 0.655
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 9,
+   "file": "fig_6.png",
+   "caption": "Figure 6. A schematic illustrating the role of MLIPs in accelerating inverse design approaches for material discovery. The “Material design” block can be trained to generate “structure representations” that are passed on to the “Property prediction” block. The MLIP-driven property prediction can then be used to “Update” and thereby “condition” the structure generation process toward materials that meet desired target ranges, for example, metal− organic frameworks (MOFs) having Na-ionic conductivities >1 mS/cm at room temperature. 2.2.4. Redox Processes and Charge Transfer. Redox processes or processes involving charge transfer between ionic species are at the heart of electrochemistry and involve a complex interplay between ionic and electronic transport, externally applied potentials, and the accompanying structural transformations. A better understanding of how redox processes affect d",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    252.7
+   ],
+   "w": 2151,
+   "h": 827,
+   "dpi": 300,
+   "src": "Phuthi2026 ChemMater Machine Learning Interatomic Potentials for Modeling Solid-State Batteries.pdf",
+   "blank": 0.931
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 3,
+   "file": "tab_S1.png",
+   "caption": "Table S1: Approximate lower practical length and time scales used in Figure 1(a). The values represent order-of-magnitude lower bounds rather than universal convergence criteria.",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    69.6,
+    598.6,
+    585.1
+   ],
+   "w": 2216,
+   "h": 2149,
+   "dpi": 300,
+   "src": "Sup) Phuthi2026 ChemMater Machine Learning Interatomic Potentials for Modeling Solid-State Batteries.pdf",
+   "blank": 0.954
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 5,
+   "file": "tab_S2.png",
+   "caption": "Table S2: Representative computational workloads used to estimate the costs shown in Figure 1(b).",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    69.5,
+    598.6,
+    728.1
+   ],
+   "w": 2216,
+   "h": 2745,
+   "dpi": 300,
+   "src": "Sup) Phuthi2026 ChemMater Machine Learning Interatomic Potentials for Modeling Solid-State Batteries.pdf",
+   "blank": 0.945
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 7,
+   "file": "tab_S3.png",
+   "caption": "Table S3: Published performance benchmarks used to estimate the computational costs in Figure 1(b).",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    93.5,
+    598.6,
+    638.6
+   ],
+   "w": 2216,
+   "h": 2272,
+   "dpi": 300,
+   "src": "Sup) Phuthi2026 ChemMater Machine Learning Interatomic Potentials for Modeling Solid-State Batteries.pdf",
+   "blank": 0.934
+  }
+ ],
+ "missing_labels": []
+}
