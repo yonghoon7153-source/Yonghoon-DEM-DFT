@@ -5937,7 +5937,12 @@ function _demPoreWireControls(state) {
  *   색) · 1.8 배 굵게.  주기 경계를 넘는 홉 = 양쪽 면에 반 토막씩 (최소상 변위의 절반 — 상자를 가로지르는 긴 관 없음).  SE · AM 흐리게 ·
  *   판 메시 · 한 경로 관 (Percolating Path) 숨김 — 모드를 떠나면 되돌린다.
  * PNG: 메인 Screenshot (화면 그대로 · 범례 빠짐) · 범례 "컬러바 ⬇" (따로 · 논문용 6×) · 그림 창 (투명 · 4× · 컬러바 넣기 = 선택 · 기본 끔 —
- *   랩 원칙: 범례 · 주석은 그림 밖에 둔다 · docs/report_making_principles.md §2).  시험 = webapp/test_tau_paths_view.py */
+ *   랩 원칙: 범례 · 주석은 그림 밖에 둔다 · docs/report_making_principles.md §2).  시험 = webapp/test_tau_paths_view.py
+ * ★ 2판 (10-07 · 1저자 "이거 여러개 갱신해서 나올 수 있게 해주고 png 다운로드 할때는 박스 안에서 모두 있게") — 그림 창만 (메인 그대로):
+ *   창 안 고르기 (범위 · 경로 수 · τ 작은 순 / 무작위 · ↻ 갱신 = 그 자리에서 다른 경로) · 주기 경계 셋 (기본 = 단위 셀을 경로에 맞춰 옮김 ·
+ *   원래 셀 = 면에서 정확히 자름 · 이어 그림 = 옛 펼침) · PNG 잘림 없게 맞춤 (찍는 동안만 시선 방향으로 뒤로).  ⚠ 저장 후보의 출발점이 적다 —
+ *   analyze_contacts (L802–852) 는 섞은 바닥 SE 를 하나씩 정해 섞은 위 SE 최대 15 개와 짝지어 30 개가 차면 멈춘다 ⇒ 위 SE 가 15 개 이상이면 바닥
+ *   SE 2 개에서만 출발 — 경로가 바닥 한두 점으로 모여 보이는 것은 표본의 성질이다 (그림 창의 고르기가 바꿀 수 없다). */
 // 색 램프 (0xRRGGBB · 밝음 → 어두움) — 한 줄 상수 (시험이 잘라 쓴다 · 줄 끝 주석 금지)
 const TAUP_RAMP = [0x86b6ef, 0x6da7ec, 0x5598e7, 0x3987e5, 0x2a78d6, 0x256abf, 0x1c5cab, 0x184f95, 0x104281, 0x0d366b];
 // τ 작은 N 고르기 (0 = 경로 전부)
@@ -5945,6 +5950,13 @@ const TAUP_TOPS = [0, 5, 10, 20];
 const TAUP_DEF_TXT = 'τ = 이 경로 하나의 기하 τ = SE 중심을 잇는 길이 ÷ 양 끝 z 거리 (x·y 주기 최소상 · 끝 = 바닥 · 판 띠의 SE) — 표의 τ_Dij 와 같은 정의 · 수송 tortuosity 아님 · LHS 인계 tortuosity_SE_wall (벽 기준) 과 다른 정의';
 const TAUP_SAMPLE_TXT = '후보 = se_clusters.json 에 저장된 표본 — 관통 클러스터마다 바닥 · 판 띠 SE 쌍의 최단 경로 최대 30 개 (낮은 τ 10 · 평균 근처 10 · 높은 τ 10) · τ 분포의 대표 표본이 아니다 (표의 τ_Dij = 무작위 짝 최대 200 쌍의 평균)';
 const TAUP_DEFAULT_OPT = { scope: 'all', top: 0, seOpacity: 0.08, amOpacity: 0.12, width: 1, ends: false };
+// 그림 창 (All Paths View) 기본 — 경로 수 고르기 (0 = 전부) · 주기 경계 셋 (값 · 이름) · 셀 맞춤 격자 수 · 면 여유 (상자 폭 비) · PNG 맞춤 NDC 여백
+const TAUP_VIEW_DEF = {
+  ns: [5, 10, 15, 20, 30, 0],
+  bounds: [['cell', '상자 안 · 단위 셀을 경로에 맞춰 옮김 (이어 그림)'], ['fold', '상자 안 · 원래 셀 (넘는 홉은 면에서 잘라 반대 면)'],
+           ['unwrap', '이어 그림 · 상자 밖 허용']],
+  grid: 360, clear: 0.05, margin: 0.04,
+};
 
 /* 저장 경로 고르기 — opt.scope = 'all' | 클러스터 번호 (clusters 배열 index · 문자열) · opt.top = 0 (전부) | N (τ 작은 N · 고른 범위 전체에서).
  * 관통 클러스터 (percolating) 의 paths (없으면 옛 형식 path 하나) 만 · id 2 개 미만 · τ 숫자 아님은 빼고 센다 (nSkipped).
@@ -6068,23 +6080,30 @@ function tauPathsTicks(lo, hi) {
   return out;
 }
 
-/* 논문용 컬러바 스펙 (그림 글자 = 영문) — 색 함수 = 관 색 (exportColorbarPNG · tauPathsCompositePNG 가 같은 사상) */
+/* 논문용 컬러바 스펙 (그림 글자 = 영문) — 색 함수 = 관 색 (exportColorbarPNG · tauPathsCompositePNG 가 같은 사상).
+ * 그림 창 고르기 (tauPathsViewCol · nScope 있음) 면 부제가 그 집합을 말한다: 무작위 = "n of N … (random subset, seed s); gold = lowest τ in this figure" ·
+ * τ 작은 순 일부 = "n lowest-τ of N" · 전부 (또는 메인 고르기) = 옛 문구 그대로 */
 function tauPathsColorbarSpec(col) {
   const n = (col && col.paths) ? col.paths.length : 0;
+  const N = (col && col.nScope != null) ? col.nScope : n;
+  const which = (col && col.mode === 'rand' && n < N)
+    ? n + ' of ' + N + ' stored candidate paths (random subset, seed ' + col.seed + '); gold = lowest τ in this figure.'
+    : (n < N ? n + ' lowest-τ of ' + N + ' stored candidate paths; gold = lowest τ.' : n + ' stored candidate paths; gold = lowest τ.');
   return {
     colorFn: tauPathColor,
     title: 'Geometric tortuosity τ of candidate SE paths (path length / Δz)',
     short: 'Geometric τ (path length / Δz)',
     ticks: tauPathsTicks(col ? col.lo : NaN, col ? col.hi : NaN),
     sub: 'Per-path value with the same definition as τ_Dij in the case table (SE centres, x·y periodic minimum image) — not the transport tortuosity.  '
-       + n + ' stored candidate paths; gold = lowest τ.',
+       + which,
   };
 }
 
-/* PNG 파일 이름 — tau_paths_n<경로 수>_tau<최소>-<최대>.png */
+/* PNG 파일 이름 — tau_paths_n<경로 수>_tau<최소>-<최대>.png · 그림 창 무작위 고르기 = …_rand<seed>.png (갱신해 이어 받아도 덮어쓰지 않게) */
 function tauPathsPngName(col) {
   const f2 = v => Number(v).toFixed(2);
-  return 'tau_paths_n' + ((col && col.paths) ? col.paths.length : 0) + '_tau' + f2(col && col.lo) + '-' + f2(col && col.hi) + '.png';
+  const rand = (col && col.mode === 'rand' && col.seed != null) ? '_rand' + col.seed : '';
+  return 'tau_paths_n' + ((col && col.paths) ? col.paths.length : 0) + '_tau' + f2(col && col.lo) + '-' + f2(col && col.hi) + rand + '.png';
 }
 
 /* 범례 — 조작 (범위 · τ 작은 N) · 수 · τ 범위 · 램프 · 금색 · 정의 · 표본 · 주기 반 토막 · 경고 · 막대 (SE · AM 불투명도 · 관 굵기) ·
@@ -6117,7 +6136,8 @@ function tauPathsLegendHtml(col, st, opt) {
     + '(밝음 → 어두움 = τ 작음 → 큼)');
   L.push('<span style="color:#9ca3af">' + TAUP_DEF_TXT + '</span>');
   L.push('<span style="color:#9ca3af">' + TAUP_SAMPLE_TXT + '</span>');
-  if (st && st.nWrap) L.push('주기 경계를 넘는 홉 ' + st.nWrap + ' 개 = 양쪽 면에 반 토막씩 (상자를 가로지르는 긴 관 없음 · 그림 창의 "주기 펼침" = 경로마다 이어 그림)');
+  if (st && st.nWrap) L.push('주기 경계를 넘는 홉 ' + st.nWrap + ' 개 = 양쪽 면에 반 토막씩 (상자를 가로지르는 긴 관 없음 · 그림 창의 "주기 경계" = '
+    + '셀을 경로에 맞춰 옮김 · 면에서 잘라 반대 면 · 이어 그림)');
   if (st && st.nMissing) L.push('<span style="color:#fbbf24">⚠ 모르는 id ' + st.nMissing + ' 개 (입자 목록에 없음) — 그 자리에서 관을 끊었다</span>');
   if (col.nSkipped) L.push('<span style="color:#fbbf24">⚠ 쓸 수 없는 저장 경로 ' + col.nSkipped + ' 개 (id 2 개 미만 · τ 없음) 는 뺐다</span>');
   const pct = v => Math.round(Math.max(0, Math.min(1, Number(v))) * 100);
@@ -6130,7 +6150,7 @@ function tauPathsLegendHtml(col, st, opt) {
     + '<label style="display:block;font-size:11.5px"><input type="checkbox" id="taup-ends"' + (opt.ends ? ' checked' : '')
     + '> 끝점 (바닥 = 청록 · 위 = 빨강)</label>');
   L.push('<button id="taup-cbar" class="data-modal-btn" title="이 그림의 τ 색 눈금을 논문용 6× PNG 로 (그림과 따로 — 슬라이드에서 편집 가능)">컬러바 ⬇</button> '
-    + '<button id="taup-modal" class="data-modal-btn" title="경로만 그린 창 — PNG 다운로드 (투명 · 4×) · 컬러바 넣기 선택">🖼 그림 창 (PNG)</button>');
+    + '<button id="taup-modal" class="data-modal-btn" title="경로만 그린 창 — 창 안에서 경로 고르기 · ↻ 갱신 · 상자 안 (주기 셀 맞춤) · PNG 다운로드 (투명 · 4× · 잘림 없게 맞춤) · 컬러바 넣기 선택">🖼 그림 창 (PNG)</button>');
   L.push('<span style="color:#9ca3af;font-size:10.5px">Screenshot = 화면 그대로 PNG (범례 · 컬러바는 안 들어간다) — 컬러바는 "컬러바 ⬇" 로 따로 · '
     + '"🖼 그림 창" = 경로를 그린 창에서 PNG (컬러바 넣기 선택) · 판 메시 · 한 경로 관 (Percolating Path) 은 이 보기에서 숨김</span>');
   return L.join('<br>');
@@ -6144,28 +6164,37 @@ function tauPathsBaseRadius(box) {
   return L > 0 ? 0.0045 * L : 0.2;
 }
 
-/* 관 묶음 짓기 (메인 · 그림 창 공용) — col = tauPathsCollect 결과 · o = {width, ends, unwrap, radius}.
+/* 관 묶음 짓기 (메인 · 그림 창 공용) — col = tauPathsCollect 결과 · o = {width, ends, unwrap, radius, cell}.
  * 원기둥 = 홉 (조각의 이웃 점) · 구 = 이음매 (조각의 점) · 금색 경로 (col.best) 는 따로 (굵게 · 빛남) · 끝점 = 청록 (바닥) · 빨강 (위).
+ * o.cell = {x0, y0, Lx, Ly} (그림 창 'cell' · 'fold') — 경로마다 이어 그린 뒤 그 셀 안으로 접는다 (넘는 홉 = 면에서 정확히 잘라 반대 면 ·
+ *   tauPathsFoldPieces) · 없으면 옛 그대로 (메인 = 반 토막 · o.unwrap = 이어 그림).
  * 각 InstancedMesh userData.kind ('seg' · 'joint' · 'segBest' · 'jointBest' · 'ends') · instPath (인스턴스 → col.paths 번호).
- * 반환 {group, st: {nSeg, nSegBest, nWrap, nMissing, r0, rBest}} */
+ * 반환 {group, pts (그린 점 data µm — 이음매 · 끝점 · PNG 맞춤이 쓴다), st: {nSeg, nSegBest, nWrap, nMissing, nCut (면에서 자른 곳), nCutPaths, r0, rBest}} */
 function buildTauPathsGroup(col, idIndex, box, o) {
   o = o || {};
   const r0 = (o.radius > 0 ? o.radius : tauPathsBaseRadius(box)) * (o.width > 0 ? o.width : 1), rBest = 1.8 * r0;
   const lists = { seg: [], joint: [], segBest: [], jointBest: [], ends: [] };
-  let nWrap = 0, nMissing = 0;
+  let nWrap = 0, nMissing = 0, nCut = 0, nCutPaths = 0;
   (col.paths || []).forEach((p, k) => {
     const isBest = p === col.best;
-    const pc = tauPathPieces(p.ids, idIndex, box, !!o.unwrap);
+    const pc = tauPathPieces(p.ids, idIndex, box, !!(o.unwrap || o.cell));
     nWrap += pc.nWrap; nMissing += pc.nMissing;
+    let pieces = pc.pieces;
+    if (o.cell) {
+      const fp = tauPathsFoldPieces(pieces, o.cell);
+      pieces = fp.pieces;
+      nCut += fp.nCut;
+      if (fp.nCut) nCutPaths++;
+    }
     const color = isBest ? COL.PATH : tauPathColor(tauPathT(p.tau, col.lo, col.hi));
     const S = isBest ? lists.segBest : lists.seg, J = isBest ? lists.jointBest : lists.joint;
-    pc.pieces.forEach(piece => {
+    pieces.forEach(piece => {
       for (let i = 0; i + 1 < piece.length; i++) S.push({ a: piece[i], b: piece[i + 1], color, k });
       piece.forEach(q => J.push({ a: q, color, k }));
     });
-    if (o.ends && pc.pieces.length) {
-      const lp = pc.pieces[pc.pieces.length - 1];
-      lists.ends.push({ a: pc.pieces[0][0], color: 0x22d3ee, k }, { a: lp[lp.length - 1], color: 0xf87171, k });
+    if (o.ends && pieces.length) {
+      const lp = pieces[pieces.length - 1];
+      lists.ends.push({ a: pieces[0][0], color: 0x22d3ee, k }, { a: lp[lp.length - 1], color: 0xf87171, k });
     }
   });
   const group = new THREE.Group();
@@ -6211,7 +6240,8 @@ function buildTauPathsGroup(col, idIndex, box, o) {
   mk('segBest', lists.segBest, true, rBest, true);
   mk('jointBest', lists.jointBest, false, rBest, true);
   mk('ends', lists.ends, false, 2.2 * r0, false);
-  return { group, st: { nSeg: lists.seg.length + lists.segBest.length, nSegBest: lists.segBest.length, nWrap, nMissing, r0, rBest } };
+  const pts = lists.joint.concat(lists.jointBest, lists.ends).map(e => e.a);
+  return { group, pts, st: { nSeg: lists.seg.length + lists.segBest.length, nSegBest: lists.segBest.length, nWrap, nMissing, nCut, nCutPaths, r0, rBest } };
 }
 
 /* 입자 흐리게 — 처음 재질 값을 한 번 적어 두고 (되돌리기용 · 그때 본래 색으로 다시 칠함) SE · AM (그 밖 이름 = AM 쪽) 불투명도.
@@ -6393,6 +6423,284 @@ function tauPathsCompositePNG(imgUrl, spec) {
     img.onerror = () => reject(new Error('PNG 를 다시 읽지 못했다'));
     img.src = imgUrl;
   });
+}
+
+/* ── 그림 창 (All Paths View) 도우미 — 2판 (10-07) · 순수 함수 (node 로 시험) ─────────────────────────────────────────── */
+
+/* 그림 창 "무작위" 고르기의 난수 — mulberry32 (seed 정수 → [0, 1) 수열 · 같은 seed = 같은 수열 · 의존성 없음) */
+function tauPathsRng(seed) {
+  let a = Math.round(Number(seed) || 0) >>> 0;
+  return () => {
+    a = (a + 0x6d2b79f5) >>> 0;
+    let t = a;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+/* 그림 창 고르기 — sorted = 범위의 저장 경로 (τ 오름차순 · tauPathsCollect top 0) · n (0 = 전부) · mode 'tau' | 'rand' · seed (정수).
+ * 'tau' = τ 작은 n 개 (지금 판 그대로) · 'rand' = 같은 seed 면 같은 n 개 (mulberry32 · 부분 Fisher–Yates) — τ 오름차순으로 돌려준다 (같은 τ 는 저장 차례 · 안정).
+ * n = 0 또는 n ≥ 고를 수 있는 수 = 경로 전부 (all · 다른 조합 없음 — 무작위를 골라도 τ 순 같은 집합 · seed 없음).
+ * 반환 {paths, all, mode (실제 · 'tau' | 'rand'), seed (무작위일 때만 · 아니면 null)} */
+function tauPathsPick(sorted, n, mode, seed) {
+  const src = sorted || [];
+  const N = src.length;
+  n = Math.max(0, Math.round(Number(n) || 0));
+  if (!n || n >= N) return { paths: src.slice(), all: true, mode: 'tau', seed: null };
+  if (mode !== 'rand') return { paths: src.slice(0, n), all: false, mode: 'tau', seed: null };
+  const sd = Math.max(0, Math.round(Number(seed) || 0));
+  const rnd = tauPathsRng(sd);
+  const idx = src.map((_, i) => i);
+  for (let i = 0; i < n; i++) {
+    const j = i + Math.floor(rnd() * (N - i));
+    const t = idx[i]; idx[i] = idx[j]; idx[j] = t;
+  }
+  return { paths: idx.slice(0, n).sort((a, b) => a - b).map(i => src[i]), all: false, mode: 'rand', seed: sd };
+}
+
+/* ↻ 갱신 — seed 를 하나씩 올려 지금 보이는 집합 (cur) 과 다른 무작위 집합이 나오는 첫 seed (최대 64 번 · 경로 정체 = 클러스터 번호 : 경로 번호).
+ * 다를 수 없으면 (경로 전부) seed + 1 · changed = false.  반환 {seed, changed} */
+function tauPathsRefreshSeed(sorted, n, seed, cur) {
+  const key = ps => (ps || []).map(p => p.ci + ':' + p.pi).join(',');
+  const k0 = key(cur);
+  const s0 = Math.max(0, Math.round(Number(seed) || 0));
+  for (let d = 1; d <= 64; d++) {
+    const pk = tauPathsPick(sorted, n, 'rand', s0 + d);
+    if (pk.all) break;
+    if (key(pk.paths) !== k0) return { seed: s0 + d, changed: true };
+  }
+  return { seed: s0 + 1, changed: false };
+}
+
+/* 그림 창 고르기 묶음 — ws = 창 상태 {scope, n, mode, seed} (메인 옵션이 아니다).  빈 범위 (없는 클러스터 번호) 면 모든 관통 클러스터 (창 안에서만).
+ * 반환 = tauPathsCollect 꼴 (paths · lo · hi · best (= paths[0]) · nAvail · nSkipped · nClusters · percClusters — buildTauPathsGroup · 컬러바 · PNG 이름이
+ *   그대로 읽는다) + {scope (실제), nScope (범위의 경로 수), scopeBest (범위 전체의 가장 작은 τ 경로), bestIsScopeMin (금색 τ = 범위 최소 τ),
+ *   mode (실제), want (고른 것), seed, all}.  금색 = paths[0] — τ 작은 순이면 범위의 가장 작은 τ · 무작위면 이 그림 안에서 가장 작은 τ */
+function tauPathsViewCol(clusters, ws) {
+  ws = ws || {};
+  let scope = ws.scope == null ? 'all' : String(ws.scope);
+  let full = tauPathsCollect(clusters, { scope, top: 0 });
+  if (!full.paths.length && scope !== 'all') {
+    scope = 'all';
+    full = tauPathsCollect(clusters, { scope, top: 0 });
+  }
+  const pk = tauPathsPick(full.paths, ws.n, ws.mode, ws.seed);
+  const ps = pk.paths;
+  return {
+    paths: ps, lo: ps.length ? ps[0].tau : null, hi: ps.length ? ps[ps.length - 1].tau : null, best: ps.length ? ps[0] : null,
+    nAvail: full.nAvail, nSkipped: full.nSkipped, nClusters: new Set(ps.map(p => p.ci)).size, percClusters: full.percClusters,
+    scope, nScope: full.paths.length, scopeBest: full.best, bestIsScopeMin: !!(ps.length && full.best && ps[0].tau === full.best.tau),
+    mode: pk.mode, want: ws.mode === 'rand' ? 'rand' : 'tau', seed: pk.seed, all: pk.all,
+  };
+}
+
+/* 접기 — 이어 그린 조각 (data µm) 을 x · y 주기 셀 [x0, x0 + Lx) × [y0, y0 + Ly) 안으로.  홉이 면 (x = x0 + m·Lx · y = y0 + n·Ly) 을 넘는 자리에서
+ * 정확히 자르고 (면 위의 점) 반대 면의 같은 자리에서 잇는다 — 한 홉이 x · y 면을 다 넘으면 (모서리) 그 자리를 차례로 모두.  토막마다 상 (image) =
+ * 그 토막 가운데 점의 floor ((v − x0) / L) — 면에 닿기만 하고 돌아가는 홉은 자르지 않는다 (반열린 셀 · 끝점 1e-9 안의 교차는 무시).  점 = 닫힌 셀
+ * [x0, x0 + L] 안 (면 위 = 그 면 · 떠도는 수 오차는 면에 붙인다).  z 그대로 (비주기) · L ≤ 0 인 축은 접지 않는다.
+ * 반환 {pieces, nCut (면에서 자른 곳 수)} — 자르기만 하므로 길이 합은 그대로 */
+function tauPathsFoldPieces(pieces, cell) {
+  cell = cell || {};
+  const x0 = Number(cell.x0) || 0, y0 = Number(cell.y0) || 0, Lx = Number(cell.Lx), Ly = Number(cell.Ly);
+  const px = Lx > 0, py = Ly > 0, EPS = 1e-9;
+  const out = [];
+  let nCut = 0;
+  const cross = (ts, va, vb, o, L) => {
+    const d = vb - va;
+    if (!(Math.abs(d) > 0)) return;
+    const ka = Math.floor((va - o) / L), kb = Math.floor((vb - o) / L);
+    for (let m = Math.min(ka, kb) + 1; m <= Math.max(ka, kb); m++) {
+      const t = (o + m * L - va) / d;
+      if (t > EPS && t < 1 - EPS) ts.push(t);
+    }
+  };
+  (pieces || []).forEach(pc => {
+    if (!Array.isArray(pc) || pc.length < 2) return;
+    let cur = null, ck = null;
+    for (let i = 0; i + 1 < pc.length; i++) {
+      const a = pc[i], b = pc[i + 1];
+      const ts = [0, 1];
+      if (px) cross(ts, a[0], b[0], x0, Lx);
+      if (py) cross(ts, a[1], b[1], y0, Ly);
+      ts.sort((u, v) => u - v);
+      const at = t => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t];
+      for (let j = 0; j + 1 < ts.length; j++) {
+        const t0 = ts[j], t1 = ts[j + 1];
+        if (!(t1 - t0 > EPS)) continue;                          // 같은 자리에서 두 면을 넘음 (모서리) — 길이 0 토막은 건너뛴다
+        const pm = at((t0 + t1) / 2);
+        const kx = px ? Math.floor((pm[0] - x0) / Lx) : 0, ky = py ? Math.floor((pm[1] - y0) / Ly) : 0;
+        const put = q => [px ? Math.min(x0 + Lx, Math.max(x0, q[0] - kx * Lx)) : q[0],
+                          py ? Math.min(y0 + Ly, Math.max(y0, q[1] - ky * Ly)) : q[1], q[2]];
+        if (!cur || kx !== ck[0] || ky !== ck[1]) {
+          if (cur) { if (cur.length >= 2) out.push(cur); nCut++; }
+          cur = [put(at(t0))];
+          ck = [kx, ky];
+        }
+        cur.push(put(at(t1)));
+      }
+    }
+    if (cur && cur.length >= 2) out.push(cur);
+  });
+  return { pieces: out, nCut };
+}
+
+/* 셀 맞춤 ('cell') — 이어 그린 경로 (pathsPieces = 경로마다 조각 배열 · data µm) 를 상자에 가장 잘 담는 x · y 주기 셀 자리.
+ * 최소화 = 셀 [x_min + s, x_min + s + Lx) 밖에 놓이는 경로 길이 (3D 홉 길이 중 x 가 셀 밖인 몫) 의 합 — 경로마다 정수 상 (Lx 만큼 옮김) 은 따로
+ *   (경로 가운데가 셀에 드는 상 · 그 상으로 다 들면 0 · 못 들면 그 상과 이웃 둘 중 최소).  y 도 같은 방식 (따로 — x 와 섞지 않는 분리 탐색).
+ * 탐색 = 격자 s ∈ {0, L/G, …, (G−1)L/G} (G = TAUP_VIEW_DEF.grid) · 동률 (밖 길이 같음) 이면 면 여유 (경로 점 ↔ 옆면 최소 거리) 가
+ *   TAUP_VIEW_DEF.clear × L 이상인 자리 중 원래 셀에 가장 가까운 것 (원 둘레 거리 · 같으면 먼저 나온 것) · 그런 자리가 없으면 여유가 가장 큰 것.
+ * 밖 길이 = 전체 − 닫힌 구간 [A, A + L] 안 길이 — 경로마다 축 좌표를 따라 누적한 길이 (홉마다 길이를 그 좌표 폭에 고르게 · 좌표가 그대로인 홉 =
+ *   한 점의 무게) 를 꺾임점 표로 한 번 만들어 이분 탐색 (평가 한 번 = O(log 홉 수) — 300 경로 × 홉 55 에서 수십 ms).
+ * 셀보다 넓은 경로 · 어느 자리에서도 다 못 담는 경로는 밖 길이가 남는다 → 그리기가 tauPathsFoldPieces 로 면에서 잘라 반대 면 (상자 안 · 길이 그대로).
+ * 반환 {sx, sy (그린 셀의 옮김 µm · (−L/2, L/2]), x0, y0, Lx, Ly, outX, outY (그 자리 밖 길이), outX0, outY0 (옮기지 않을 때), clearX, clearY, nWideX, nWideY} */
+function tauPathsCellFit(pathsPieces, box) {
+  box = box || {};
+  const xmin = Number(box.x_min) || 0, ymin = Number(box.y_min) || 0;
+  const Lx = Number(box.x_max) - xmin, Ly = Number(box.y_max) - ymin;
+  const G = Math.max(8, Math.round(Number(TAUP_VIEW_DEF.grid) || 360));
+  const last = (xs, u, strict) => {                             // xs (오름차순) 에서 u 이하 (strict = 미만) 인 마지막 번호 · 없으면 −1
+    let lo = 0, hi = xs.length - 1, r = -1;
+    while (lo <= hi) { const m = (lo + hi) >> 1; if (strict ? xs[m] < u : xs[m] <= u) { r = m; lo = m + 1; } else hi = m - 1; }
+    return r;
+  };
+  const axis = (a, lo0, L) => {
+    if (!(L > 0)) return { s: 0, out: 0, out0: 0, clear: Infinity, nWide: 0 };
+    const P = [];
+    (pathsPieces || []).forEach(pieces => {
+      const us = [], ev = [], mass = [];
+      let tot = 0;
+      (pieces || []).forEach(pc => (pc || []).forEach((q, i) => {
+        us.push(q[a] - lo0);
+        const nx = pc[i + 1];
+        if (!nx) return;
+        const ua = q[a] - lo0, ub = nx[a] - lo0, len = Math.hypot(nx[0] - q[0], nx[1] - q[1], nx[2] - q[2]);
+        tot += len;
+        if (Math.abs(ub - ua) > 1e-12) { const m = Math.min(ua, ub), M = Math.max(ua, ub); ev.push([m, len / (M - m)], [M, -len / (M - m)]); }
+        else mass.push([ua, len]);
+      }));
+      if (!us.length) return;
+      ev.sort((p, q) => p[0] - q[0]);                          // 누적 길이 C(u) — 꺾임점 · 그 자리 C · 오른쪽 기울기
+      const bx = [], bc = [], bs = [];
+      let cum = 0, slope = 0;
+      ev.forEach(([x, dd]) => {
+        if (bx.length) cum += slope * (x - bx[bx.length - 1]);
+        slope += dd;
+        if (bx.length && x === bx[bx.length - 1]) { bs[bs.length - 1] = slope; } else { bx.push(x); bc.push(cum); bs.push(slope); }
+      });
+      mass.sort((p, q) => p[0] - q[0]);                        // 점 무게 — 자리 · 누적
+      const mx = mass.map(m => m[0]), mc = [];
+      mass.reduce((s0, m) => { mc.push(s0 + m[1]); return s0 + m[1]; }, 0);
+      const C = u => { const i = last(bx, u, false); return i < 0 ? 0 : (i === bx.length - 1 ? bc[i] : bc[i] + bs[i] * (u - bx[i])); };
+      const Mle = (u, strict) => { const i = last(mx, u, strict); return i < 0 ? 0 : mc[i]; };
+      P.push({ lo: Math.min(...us), hi: Math.max(...us), tot, inside: (A, B) => C(B) - C(A) + Mle(B, false) - Mle(A, true) });
+    });
+    const one = (q, s) => {                                     // [밖 길이, 면 여유] — 상 k (가운데가 셀에 드는 상) · 그 이웃 둘
+      const k = -Math.floor(((q.lo + q.hi) / 2 - s) / L);
+      const lo = q.lo + k * L - s, hi = q.hi + k * L - s;
+      if (lo >= 0 && hi <= L) return [0, Math.min(lo, L - hi)];
+      let best = Infinity;
+      for (let kk = k - 1; kk <= k + 1; kk++) { const A = s - kk * L; best = Math.min(best, q.tot - q.inside(A, A + L)); }
+      return [Math.max(0, best), 0];
+    };
+    const cand = [];
+    for (let g = 0; g < G; g++) {
+      const s = g * L / G;
+      let out = 0, clear = Infinity;
+      P.forEach(q => { const r = one(q, s); out += r[0]; clear = Math.min(clear, r[1]); });
+      cand.push({ s, out, clear, dist: Math.min(s, L - s) });
+    }
+    const omin = Math.min(...cand.map(c => c.out));
+    const tol = 1e-9 * (1 + Math.max(...cand.map(c => c.out)));
+    const tie = cand.filter(c => c.out <= omin + tol);
+    const want = Number(TAUP_VIEW_DEF.clear) * L;
+    const ok = tie.filter(c => c.clear >= want);
+    const pick = ok.length ? ok.reduce((m, c) => (c.dist < m.dist ? c : m))
+      : tie.reduce((m, c) => ((c.clear > m.clear + 1e-12 || (Math.abs(c.clear - m.clear) <= 1e-12 && c.dist < m.dist)) ? c : m));
+    const s = pick.s > L / 2 ? pick.s - L : pick.s;
+    return { s, out: pick.out, out0: cand[0].out, clear: pick.clear, nWide: P.filter(q => q.hi - q.lo > L).length };
+  };
+  const ax = axis(0, xmin, Lx), ay = axis(1, ymin, Ly);
+  return { sx: ax.s, sy: ay.s, x0: xmin + ax.s, y0: ymin + ay.s, Lx, Ly, outX: ax.out, outY: ay.out, outX0: ax.out0, outY0: ay.out0,
+           clearX: ax.clear, clearY: ay.clear, nWideX: ax.nWide, nWideY: ay.nWide };
+}
+
+/* 맥락 입자 (SE · AM) 를 그린 셀 안으로 — x' = x0 + ((x − x0) mod Lx) (y 같음 · z 그대로 · 반열린 셀).  셀 안 입자는 그대로 (같은 객체) ·
+ * 하나도 안 바뀌면 같은 배열 (다시 짓지 않아도 된다) · 원본 입자는 고치지 않는다 (바뀐 것만 새 객체) */
+function tauPathsWrapParticles(ps, cell) {
+  ps = ps || [];
+  if (!cell) return ps;
+  const x0 = Number(cell.x0) || 0, y0 = Number(cell.y0) || 0, Lx = Number(cell.Lx), Ly = Number(cell.Ly);
+  const w = (v, o, L) => ((!(L > 0) || (v >= o && v < o + L)) ? v : o + ((((v - o) % L) + L) % L));
+  let changed = false;
+  const out = ps.map(p => {
+    const x = w(Number(p.x), x0, Lx), y = w(Number(p.y), y0, Ly);
+    if (x === Number(p.x) && y === Number(p.y)) return p;
+    changed = true;
+    return Object.assign({}, p, { x, y });
+  });
+  return changed ? out : ps;
+}
+
+/* PNG 잘림 없게 맞춤 — 시점 cam = {pos, up, fov (도), aspect, near} 에서 target 을 본 채로 pts (three 좌표) 가 모두 NDC ±(1 − margin) 안 ·
+ * 카메라 앞에 들도록 target 에서 뒤로 물러날 거리.  시선 방향으로만 움직이므로 x_c · y_c 는 그대로 · 깊이만 Δ 늘어난다 ⇒
+ * Δ = max_p (필요 깊이 − 지금 깊이) (닫힌 꼴 · 되풀이 없음 · 딱 맞게).  필요 없으면 moved = false (당기지는 않는다).
+ * 반환 {moved, pos (새 카메라 자리), dist0, dist, worst0 (지금 |NDC| 최대 · 뒤에 있으면 Infinity)} */
+function tauPathsFrustumFit(cam, target, pts, margin) {
+  const sub = (a, b) => [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
+  const dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+  const crs = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+  const nrm = a => { const l = Math.hypot(a[0], a[1], a[2]); return l > 1e-12 ? [a[0] / l, a[1] / l, a[2] / l] : null; };
+  const pos = (cam && cam.pos) || [0, 0, 1];
+  const f0 = sub(target, pos), dist0 = Math.hypot(f0[0], f0[1], f0[2]);
+  const f = nrm(f0);
+  if (!f) return { moved: false, pos: pos.slice(), dist0, dist: dist0, worst0: NaN };
+  const r = nrm(crs(f, (cam && cam.up) || [0, 1, 0])) || nrm(crs(f, [0, 0, 1])) || [1, 0, 0];   // up ∥ 시선 (똑바로 내려다봄) — 다른 축으로
+  const u = crs(r, f);
+  const T = Math.tan((Number(cam && cam.fov) || 50) * Math.PI / 360), A = Number(cam && cam.aspect) || 1;
+  const m = Math.max(0, Math.min(0.5, Number(margin) || 0)), near = Number(cam && cam.near) > 0 ? Number(cam.near) : 1e-3;
+  let need = 0, worst0 = 0;
+  (pts || []).forEach(p => {
+    const v = sub(p, pos), z = dot(v, f), x = Math.abs(dot(v, r)), y = Math.abs(dot(v, u));
+    worst0 = Math.max(worst0, z > near ? Math.max(x / (z * T * A), y / (z * T)) : Infinity);
+    need = Math.max(need, Math.max(x / (T * A * (1 - m)), y / (T * (1 - m)), near * 1.01) - z);
+  });
+  if (!(need > 1e-9 * Math.max(1, dist0))) return { moved: false, pos: pos.slice(), dist0, dist: dist0, worst0 };
+  return { moved: true, pos: [pos[0] - f[0] * need, pos[1] - f[1] * need, pos[2] - f[2] * need], dist0, dist: dist0 + need, worst0 };
+}
+
+/* 그림 창 정보 줄 — 수 · 고른 방식 · 클러스터 수 · τ 범위 · 금색 (τ 작은 순 = 범위의 가장 작은 τ / 무작위 = 이 그림 안에서 가장 작은 τ · 범위 최소와의
+ * 관계) · 램프 · 경로 전부면 "다른 조합 없음" · 셀 옮김 (0 이 아닐 때) · 면에서 자른 곳 (있을 때) · 이어 그림 안내.
+ * col = tauPathsViewCol · v = {bound, fit (tauPathsCellFit · 'cell' 때만), st (buildTauPathsGroup 의 st)} */
+function tauPathsViewInfoHtml(col, v) {
+  v = v || {};
+  const f2 = x => Number(x).toFixed(2);
+  const um = x => (Math.abs(x) < 0.005 ? '0 µm' : (x > 0 ? '+' : '−') + Math.abs(x).toFixed(2) + ' µm');
+  const b = col.best;
+  const how = col.all ? '범위의 경로 전부 · 다른 조합 없음'
+    : (col.mode === 'rand' ? '범위의 ' + col.nScope + ' 개 중 무작위 · seed ' + col.seed : '범위의 ' + col.nScope + ' 개 중 τ 작은 순');
+  const L = ['경로 ' + col.paths.length + ' 개 (' + how + ') · 관통 클러스터 ' + col.nClusters + ' 개 · τ ' + f2(col.lo) + ' – ' + f2(col.hi)];
+  // 출발 · 도착 SE 의 서로 다른 수 — 저장 후보는 바닥 SE 몇 개에서만 출발한다 (analyze_contacts) · 경로가 바닥 한두 점으로 모여 보이는 까닭 (갱신이 바꾸지 못한다)
+  const nSrc = new Set(col.paths.map(p => p.ids[0])).size, nDst = new Set(col.paths.map(p => p.ids[p.ids.length - 1])).size;
+  L.push('출발 (바닥) SE ' + nSrc + ' 개 → 도착 (위) SE ' + nDst + ' 개');
+  if (b && col.mode === 'rand') {
+    L.push('<span style="color:#b8860b">금색</span> = 이 그림 안에서 가장 작은 τ (' + f2(b.tau) + ' · 클러스터 #' + b.ci + ')'
+      + (col.bestIsScopeMin ? ' — 범위 전체의 가장 작은 τ 와 같다'
+        : ' — 범위 전체의 가장 작은 τ ' + f2(col.scopeBest ? col.scopeBest.tau : NaN) + ' 는 이 그림에 없다'));
+  } else if (b) {
+    L.push('<span style="color:#b8860b">금색</span> = 가장 작은 τ (' + f2(b.tau) + ' · 클러스터 #' + b.ci + ')');
+  }
+  L.push('나머지 = 밝음 → 어두움 = τ 작음 → 큼');
+  const f = v.fit, st = v.st || {};
+  if (v.bound === 'cell' && f && (Math.abs(f.sx) >= 0.005 || Math.abs(f.sy) >= 0.005)) {
+    L.push('x·y 주기 단위 셀을 ' + um(f.sx) + ' · ' + um(f.sy) + ' 옮겨 그림 (같은 침대 · 같은 크기 — 주기 경계라 동등)');
+  }
+  if ((v.bound === 'cell' || v.bound === 'fold') && st.nCut) {
+    L.push((v.bound === 'cell' ? '셀에 다 담기지 않는 경로 ' : '주기 경계를 넘는 경로 ') + st.nCutPaths + ' 개 = 면에서 잘라 반대 면으로 이음 ('
+      + st.nCut + ' 곳 · 상자 안)');
+  }
+  if (v.bound === 'unwrap') L.push('이어 그림 — 경로가 상자 밖으로 나갈 수 있다 (PNG 도 그대로)');
+  return L.join(' · ');
 }
 
 /* ── 반응 ↔ 기계(SE 소성변형·접촉) 공간 상관 팝업 ────────────────
@@ -8866,52 +9174,85 @@ function showPathOnlyView(renderer, scene, camera, state) {
   });
 }
 
-/* ── All Paths View — Tortuosity 후보 경로 여럿을 그린 그림 창 (2026-10-07) ─────────────────────────────────────
- * 범위 · τ 작은 N · SE / AM 불투명도 · 관 굵기 · 끝점 = 메인 View Mode "Tortuosity 후보 경로 (여럿)" 의 지금 값 (없으면 기본) ·
- * 시점 = 메인 화면의 시점 (있으면).  창 조작: SE · AM 맥락 · 상자 · 바닥 격자 · 주기 펼침 · 끝점 · 컬러바 넣기.
- * PNG 다운로드 = 투명 · 4× · 축 글자만 숨김 (상자 · 격자는 켬이면 남는다 — Path Only View 와 같다) · 컬러바 넣기 = 기본 끔
- * (랩 원칙: 범례 · 주석은 그림 밖 — docs/report_making_principles.md §2) · 컬러바 PNG = 따로 (exportColorbarPNG). */
+/* ── All Paths View — Tortuosity 후보 경로 여럿을 그린 그림 창 (2026-10-07 · 같은 날 2판) ─────────────────────────────────────
+ * 처음 값 = 메인 View Mode "Tortuosity 후보 경로 (여럿)" 의 지금 값 (범위 · τ 작은 N · SE / AM 불투명도 · 관 굵기 · 끝점 — 없으면 기본) ·
+ * 시점 = 메인 화면의 시점 (있으면).  ★ 창 상태 (ws) 는 창 안에서만 — 메인 옵션 객체를 고치지 않는다 (없는 범위여도 창 안에서만 모든 관통 클러스터).
+ * 창 조작: 범위 · 경로 수 · 고르기 (τ 작은 순 / 무작위) · ↻ 갱신 (다른 경로 — 창을 다시 열지 않고 그 자리에서) · 주기 경계 · SE · AM 맥락 ·
+ *   상자 · 바닥 격자 · 끝점 · 컬러바 넣기 · PNG 잘림 없게 맞춤.  고르기가 바뀌면 함께 바뀐다: 머리 수 · 정보 줄 · 관 · 셀 · 컬러바 스펙 · 합성 PNG ·
+ *   PNG 이름 (무작위 = _rand<seed> — 이어 받아도 덮어쓰지 않게).
+ * 주기 경계 (1저자 "png 다운로드 할때는 박스 안에서 모두"): 'cell' (기본) = 경로마다 이어 그린 뒤 단위 셀 자리를 옮겨 (tauPathsCellFit) 경로가
+ *   셀에 담기게 · 그래도 넘는 곳은 면에서 잘라 반대 면 (tauPathsFoldPieces) · 상자 · 격자 · 축 글자 · 맥락 입자 (셀 안으로 접음) = 그 셀 · 시점도
+ *   같은 만큼 옮겨 상자가 창에서 제자리 · 'fold' = 원래 셀 · 면에서 정확히 자름 (반 토막이 상자 밖으로 나오지 않는다) · 'unwrap' = 옛 "주기 펼침"
+ *   (상자 밖 허용).  길이 · τ = 저장값 (그림만 다르다).
+ * PNG 다운로드 = 투명 · 4× · 축 글자만 숨김 (상자 · 격자는 켬이면 남는다 — Path Only View 와 같다) · "PNG 잘림 없게 맞춤" (기본 켬) = 찍기 전에
+ *   상자 꼭짓점 · 경로 점 · 끝점 (바닥 격자 · 맥락 입자는 빼고) 이 화면 밖이면 시선 방향으로 뒤로 물러나 찍고 (tauPathsFrustumFit) 시점을 그대로
+ *   되돌린다 · 컬러바 넣기 = 기본 끔 (랩 원칙: 범례 · 주석은 그림 밖 — docs/report_making_principles.md §2) · 컬러바 PNG = 따로 (exportColorbarPNG). */
 function showTauPathsView(state) {
-  const opt = tauPathsOpt(state);
+  const opt = tauPathsOpt(state);                                // 읽기만 — 창은 메인 옵션을 고치지 않는다
   const data = state.data || {};
   const clusters = ((data.clusters || {}).clusters) || [];
-  let col = tauPathsCollect(clusters, opt);
-  if (!col.paths.length && opt.scope !== 'all') {
-    opt.scope = 'all';
-    col = tauPathsCollect(clusters, opt);
-  }
+  const box = data.box || {};
+  const idIndex = state.idIndex || {};
+  const VD = TAUP_VIEW_DEF;
+  const top0 = Math.max(0, Math.round(Number(opt.top) || 0));
+  const ws = { scope: opt.scope == null ? 'all' : String(opt.scope), n: top0, mode: 'tau', seed: 1, bound: 'cell', fit: true, frame: true,
+               ends: !!opt.ends, seOn: true, seOpa: Math.max(0, Math.min(1, Number(opt.seOpacity) || 0)),
+               amOn: Number(opt.amOpacity) > 0, amOpa: Math.max(0, Math.min(1, Number(opt.amOpacity) || 0)) };
+  let col = tauPathsViewCol(clusters, ws);
   if (!col.paths.length) {
     alert('저장된 후보 경로가 없습니다 — 관통 클러스터와 se_clusters.json 의 경로 (접촉 분석 단계 산출물) 가 필요합니다.');
     return;
   }
-  const box = data.box || {};
+  ws.scope = col.scope;
+  const bw = box.x_max - box.x_min, bh = box.z_max - box.z_min, bd = box.y_max - box.y_min;
+  const cell0 = { x0: Number(box.x_min) || 0, y0: Number(box.y_min) || 0, Lx: bw, Ly: bd };
+  let fit = null;
+  const cellFor = () => {                                         // 그릴 셀 — 'cell' = 고른 경로에 맞춘 셀 · 그 밖 = 원래 셀
+    if (ws.bound !== 'cell') { fit = null; return cell0; }
+    fit = tauPathsCellFit(col.paths.map(p => tauPathPieces(p.ids, idIndex, box, true).pieces), box);
+    return { x0: fit.x0, y0: fit.y0, Lx: bw, Ly: bd };
+  };
+  cellFor();
   const f2 = v => Number(v).toFixed(2);
   const pct = v => Math.round(Math.max(0, Math.min(1, Number(v))) * 100);
-  const b = col.best;
+  const sel = (id, cur, opts) => '<select id="' + id + '" style="font-size:12px">'
+    + opts.map(o => '<option value="' + o[0] + '"' + (String(o[0]) === String(cur) ? ' selected' : '') + '>' + o[1] + '</option>').join('')
+    + '</select>';
+  const scopes = [['all', '모든 관통 클러스터']].concat((col.percClusters || []).map(c =>
+    [String(c.ci), '클러스터 #' + c.ci + ' (' + c.size + ' SE · ' + c.n + ' 경로)']));
+  const ns = VD.ns.indexOf(top0) >= 0 ? VD.ns : [top0].concat(VD.ns);
+  const titleOf = c => 'Tortuosity 후보 경로 — ' + c.paths.length + ' 개 (τ 색)';
+  const lab = 'display:inline-flex;align-items:center;gap:4px';
   const overlay = document.createElement('div');
   overlay.className = 'path-modal-overlay';
   overlay.innerHTML = `
-    <div class="path-modal" style="width:780px;max-width:94vw">
+    <div class="path-modal" style="width:820px;max-width:94vw">
       <button class="path-modal-close">&times;</button>
-      <div style="font-size:14px;font-weight:bold;margin-bottom:8px;text-align:center">Tortuosity 후보 경로 — ${col.paths.length} 개 (τ 색)</div>
+      <div id="taup-m-title" style="font-size:14px;font-weight:bold;margin-bottom:8px;text-align:center">${titleOf(col)}</div>
       <div id="taup-viewer-container" style="width:100%;height:520px;border-radius:8px;overflow:hidden;background:#f5f5f5;position:relative"></div>
-      <div class="path-modal-info" style="text-align:center;margin-top:8px">
-        경로 ${col.paths.length} 개 · 관통 클러스터 ${col.nClusters} 개 · τ ${f2(col.lo)} – ${f2(col.hi)} ·
-        <span style="color:#b8860b">금색</span> = 가장 작은 τ (${f2(b.tau)} · 클러스터 #${b.ci}) · 나머지 = 밝음 → 어두움 = τ 작음 → 큼
+      <div class="path-modal-pick" style="display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px;margin-top:8px;font-size:12.5px;color:#444">
+        <label style="${lab}">범위 ${sel('taup-m-scope', ws.scope, scopes)}</label>
+        <label style="${lab}">경로 수 ${sel('taup-m-n', ws.n, ns.map(n => [n, n ? n + ' 개' : '전부']))}</label>
+        <label style="${lab}" title="τ 작은 순 = 범위에서 τ 가 작은 것부터 (금색 = 범위의 가장 작은 τ) · 무작위 = seed 로 고정한 무작위 집합 (금색 = 이 그림 안에서 가장 작은 τ)">고르기 ${sel('taup-m-pick', ws.mode, [['tau', 'τ 작은 순'], ['rand', '무작위']])}</label>
+        <button id="taup-m-refresh" title="창을 다시 열지 않고 같은 범위 · 같은 경로 수에서 다른 무작위 집합 (seed 를 올린다 · PNG 이름에 seed — 이어 받아도 덮어쓰지 않는다)">↻ 갱신 (다른 경로)</button>
       </div>
+      <div id="taup-m-info" class="path-modal-info" style="text-align:center;margin-top:6px">${tauPathsViewInfoHtml(col, { bound: ws.bound, fit })}</div>
       <div class="path-modal-tau-note" style="text-align:center;margin-top:3px;font-size:11px;color:#666">${TAUP_DEF_TXT}</div>
       <div style="text-align:center;margin-top:2px;font-size:11px;color:#666">${TAUP_SAMPLE_TXT}</div>
       <div class="path-modal-context" style="display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px;margin-top:8px;font-size:12.5px;color:#444">
-        <label style="display:inline-flex;align-items:center;gap:4px"><input type="checkbox" id="taup-m-se" checked> SE context</label>
-        <input type="range" id="taup-m-se-op" min="0" max="100" value="${pct(opt.seOpacity)}" style="width:70px">
-        <span id="taup-m-se-op-val" style="display:inline-block;width:30px">${f2(opt.seOpacity)}</span>
-        <label style="display:inline-flex;align-items:center;gap:4px"><input type="checkbox" id="taup-m-am"${opt.amOpacity > 0 ? ' checked' : ''}> AM</label>
-        <input type="range" id="taup-m-am-op" min="0" max="100" value="${pct(opt.amOpacity)}" style="width:70px">
-        <span id="taup-m-am-op-val" style="display:inline-block;width:30px">${f2(opt.amOpacity)}</span>
-        <label style="display:inline-flex;align-items:center;gap:4px"><input type="checkbox" id="taup-m-frame" checked> 상자 · 바닥 격자</label>
-        <label style="display:inline-flex;align-items:center;gap:4px" title="끔 = 주기 경계를 넘는 홉은 양쪽 면에 반 토막 (상자 안 · 메인 화면과 같다) · 켬 = 경로마다 첫 SE 자리에서 이어 그림 (상자 밖으로 나갈 수 있다)"><input type="checkbox" id="taup-m-unwrap"> 주기 펼침</label>
-        <label style="display:inline-flex;align-items:center;gap:4px"><input type="checkbox" id="taup-m-ends"${opt.ends ? ' checked' : ''}> 끝점</label>
-        <label style="display:inline-flex;align-items:center;gap:4px" title="기본 끔 — 랩 원칙 (docs/report_making_principles.md §2): 범례 · 주석은 그림 밖에 두고 편집 가능하게.  컬러바는 '컬러바 PNG' 로 따로 받아 슬라이드에서 붙인다.  켜면 그림 오른쪽에 세로 컬러바를 넣은 한 장"><input type="checkbox" id="taup-m-cbar-in"> 컬러바 넣기</label>
+        <label style="${lab}"><input type="checkbox" id="taup-m-se" checked> SE context</label>
+        <input type="range" id="taup-m-se-op" min="0" max="100" value="${pct(ws.seOpa)}" style="width:70px">
+        <span id="taup-m-se-op-val" style="display:inline-block;width:30px">${f2(ws.seOpa)}</span>
+        <label style="${lab}"><input type="checkbox" id="taup-m-am"${ws.amOn ? ' checked' : ''}> AM</label>
+        <input type="range" id="taup-m-am-op" min="0" max="100" value="${pct(ws.amOpa)}" style="width:70px">
+        <span id="taup-m-am-op-val" style="display:inline-block;width:30px">${f2(ws.amOpa)}</span>
+        <label style="${lab}"><input type="checkbox" id="taup-m-frame" checked> 상자 · 바닥 격자</label>
+        <label style="${lab}"><input type="checkbox" id="taup-m-ends"${ws.ends ? ' checked' : ''}> 끝점</label>
+      </div>
+      <div class="path-modal-context" style="display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px;margin-top:6px;font-size:12.5px;color:#444">
+        <label style="${lab}" title="셀 옮김 (기본) = 경로마다 이어 그린 뒤 x·y 주기 단위 셀 자리를 경로에 맞춰 옮겨 상자 안에 담는다 (같은 침대 · 같은 크기 — 주기 경계라 동등 · 셀보다 넓은 경로는 면에서 잘라 반대 면) · 원래 셀 = 넘는 홉을 면에서 정확히 잘라 반대 면 · 이어 그림 = 옛 주기 펼침 (상자 밖 허용)">주기 경계 ${sel('taup-m-bound', ws.bound, VD.bounds)}</label>
+        <label style="${lab}" title="켬 (기본) = PNG 를 찍는 동안만 카메라를 시선 방향으로 뒤로 물려 상자 꼭짓점 · 경로 · 끝점이 다 들어가게 (바닥 격자 · 맥락 입자는 빼고 셈 · 찍은 뒤 화면 시점 그대로) · 끔 = 화면 시점 그대로 찍는다"><input type="checkbox" id="taup-m-fit" checked> PNG 잘림 없게 맞춤</label>
+        <label style="${lab}" title="기본 끔 — 랩 원칙 (docs/report_making_principles.md §2): 범례 · 주석은 그림 밖에 두고 편집 가능하게.  컬러바는 '컬러바 PNG' 로 따로 받아 슬라이드에서 붙인다.  켜면 그림 오른쪽에 세로 컬러바를 넣은 한 장"><input type="checkbox" id="taup-m-cbar-in"> 컬러바 넣기</label>
       </div>
       <div style="text-align:center;margin-top:3px;font-size:10.5px;color:#888">범례는 그림 밖 (랩 원칙) — 기본 PNG = 경로 그림만 (투명 · 4×) · 컬러바 PNG 따로 · '컬러바 넣기' 를 켜면 한 장으로</div>
       <div class="path-modal-actions">
@@ -8919,10 +9260,12 @@ function showTauPathsView(state) {
         <button id="taup-cbar-btn">컬러바 PNG</button>
         <button class="taup-close">닫기</button>
       </div>
+      <div id="taup-m-png-note" style="text-align:center;margin-top:3px;font-size:10.5px;color:#888"></div>
     </div>`;
   document.body.appendChild(overlay);
 
-  const container = document.getElementById('taup-viewer-container');
+  const el = id => document.getElementById(id);
+  const container = el('taup-viewer-container');
   const r2 = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true, alpha: true });
   r2.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   r2.setSize(container.clientWidth, container.clientHeight);
@@ -8937,91 +9280,162 @@ function showTauPathsView(state) {
   const dl = new THREE.DirectionalLight(0xffffff, 0.8);
   dl.position.set(1, 1.5, 1);
   s2.add(dl);
-
-  // 상자 · 바닥 격자 (Path Only View 와 같다 — PNG 에 남는다 · 체크박스로 끔)
-  const bw = box.x_max - box.x_min, bh = box.z_max - box.z_min, bd = box.y_max - box.y_min;
-  const cx = (box.x_min + box.x_max) / 2, cy = (box.z_min + box.z_max) / 2, cz = (box.y_min + box.y_max) / 2;
-  const bbLine = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(bw, bh, bd)),
-                                        new THREE.LineBasicMaterial({ color: 0x999999 }));
-  bbLine.position.set(cx, cy, cz);
-  bbLine.userData.isBbox = true;
-  s2.add(bbLine);
-  const grid = new THREE.GridHelper(Math.max(bw, bd) * 1.2, 20, 0xcccccc, 0xe0e0e0);
-  grid.position.set(cx, box.z_min, cz);
-  grid.userData.isGrid = true;
-  s2.add(grid);
-
-  // 맥락 입자 — SE (본래 색 · 흐리게) · AM (상별 색 · 흐리게).  관보다 먼저 (renderOrder −1)
-  const seCtx = createInstancedSpheres(state.seParticles || [], 12, COL.SE, opt.seOpacity, true);
-  if (seCtx) { seCtx.userData.isSEContext = true; seCtx.renderOrder = -1; seCtx.visible = opt.seOpacity > 0; s2.add(seCtx); }
-  const amCtx = [];
-  [[state.amPParticles, COL.AM_P], [state.amSParticles, COL.AM_S]].forEach(([ps, c]) => {
-    const m = createInstancedSpheres(ps || [], 16, c, Math.max(0.01, opt.amOpacity), true);
-    if (!m) return;
-    m.userData.isAMContext = true;
-    m.renderOrder = -1;
-    m.visible = opt.amOpacity > 0;
-    s2.add(m);
-    amCtx.push(m);
-  });
-
-  // 관 — 메인과 같은 묶음 (주기 펼침 · 끝점을 바꾸면 다시 짓는다)
-  const el = id => document.getElementById(id);
-  let pathsGroup = null;
-  const rebuild = () => {
-    if (pathsGroup) {
-      s2.remove(pathsGroup);
-      pathsGroup.traverse(o => {
-        if (o.isInstancedMesh && o.dispose) o.dispose();
-        if (o.geometry && o.geometry.dispose) o.geometry.dispose();
-        if (o.material && o.material.dispose) o.material.dispose();
-      });
-    }
-    const uw = el('taup-m-unwrap'), en = el('taup-m-ends');
-    pathsGroup = buildTauPathsGroup(col, state.idIndex || {}, box,
-      { width: opt.width, ends: en ? !!en.checked : !!opt.ends, unwrap: !!(uw && uw.checked) }).group;
-    s2.add(pathsGroup);
-  };
-  rebuild();
-  addAxisLabels(s2, box);
-
-  // 시점 — 메인 화면의 시점 (있으면) · 없으면 Path Only View 와 같은 기본
   const maxDim = Math.max(bw, bh, bd) || 50;
-  if (state.camera && state.controls && state.camera.position && state.controls.target) {
-    c2.position.copy(state.camera.position);
-    ctrl2.target.copy(state.controls.target);
-  } else {
-    c2.position.set(cx + maxDim * 1.2, cy + maxDim * 0.8, cz + maxDim * 1.2);
-    ctrl2.target.set(cx, cy, cz);
+
+  // 시점 — 원래 셀 기준 (메인 화면의 시점 · 없으면 Path Only View 와 같은 기본) · 그린 셀을 옮기면 같은 만큼 옮긴다 (place)
+  {
+    const cx = (box.x_min + box.x_max) / 2, cy = (box.z_min + box.z_max) / 2, cz = (box.y_min + box.y_max) / 2;
+    if (state.camera && state.controls && state.camera.position && state.controls.target) {
+      c2.position.copy(state.camera.position);
+      ctrl2.target.copy(state.controls.target);
+    } else {
+      c2.position.set(cx + maxDim * 1.2, cy + maxDim * 0.8, cz + maxDim * 1.2);
+      ctrl2.target.set(cx, cy, cz);
+    }
+    ctrl2.update();
   }
-  ctrl2.update();
+
+  const dispose3 = g => {
+    if (!g) return;
+    g.traverse(o => {
+      if (o.isInstancedMesh && o.dispose) o.dispose();
+      if (o.geometry && o.geometry.dispose) o.geometry.dispose();
+      if (o.material) {
+        if (o.material.map && o.material.map.dispose) o.material.map.dispose();
+        if (o.material.dispose) o.material.dispose();
+      }
+    });
+  };
+
+  // 상자 · 바닥 격자 · 축 글자 = 그린 셀 (Path Only View 와 같은 모양 · PNG 에 남는다 · 체크박스로 끔 — 축 글자는 PNG 에서만 숨김)
+  let cell = null, frame = null, bbLine = null, grid = null;
+  const buildFrame = c => {
+    if (frame) { s2.remove(frame); dispose3(frame); }
+    frame = new THREE.Group();
+    const fx = c.x0 + bw / 2, fy = (box.z_min + box.z_max) / 2, fz = c.y0 + bd / 2;
+    bbLine = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(bw, bh, bd)), new THREE.LineBasicMaterial({ color: 0x999999 }));
+    bbLine.position.set(fx, fy, fz);
+    bbLine.userData.isBbox = true;
+    grid = new THREE.GridHelper(Math.max(bw, bd) * 1.2, 20, 0xcccccc, 0xe0e0e0);
+    grid.position.set(fx, box.z_min, fz);
+    grid.userData.isGrid = true;
+    bbLine.visible = ws.frame;
+    grid.visible = ws.frame;
+    frame.add(bbLine);
+    frame.add(grid);
+    addAxisLabels(frame, { x_min: c.x0, x_max: c.x0 + bw, y_min: c.y0, y_max: c.y0 + bd, z_min: box.z_min, z_max: box.z_max });
+    s2.add(frame);
+  };
+
+  // 맥락 입자 — SE (본래 색 · 흐리게) · AM (상별 색 · 흐리게) · 관보다 먼저 (renderOrder −1) · 'cell' · 'fold' = 그린 셀 안으로 접는다 (관이 입자를 꿴다)
+  let ctxKey = null, seCtx = null, amCtx = [];
+  const seOn = () => { if (seCtx) seCtx.visible = ws.seOn && ws.seOpa > 0; };     // 보임 = 체크박스 켬 ∧ 불투명도 > 0
+  const amOn = () => { amCtx.forEach(m => { m.visible = ws.amOn && ws.amOpa > 0; }); };
+  const buildCtx = (c, wrap) => {
+    const key = wrap ? c.x0 + ',' + c.y0 : 'raw';
+    if (key === ctxKey) return;
+    ctxKey = key;
+    if (seCtx) { s2.remove(seCtx); dispose3(seCtx); seCtx = null; }
+    amCtx.forEach(m => { s2.remove(m); dispose3(m); });
+    amCtx = [];
+    const wp = ps => (wrap ? tauPathsWrapParticles(ps || [], c) : (ps || []));
+    seCtx = createInstancedSpheres(wp(state.seParticles), 12, COL.SE, ws.seOpa, true);
+    if (seCtx) { seCtx.userData.isSEContext = true; seCtx.renderOrder = -1; s2.add(seCtx); }
+    [[state.amPParticles, COL.AM_P], [state.amSParticles, COL.AM_S]].forEach(([ps, cc]) => {
+      const m = createInstancedSpheres(wp(ps), 16, cc, Math.max(0.01, ws.amOpa), true);
+      if (!m) return;
+      m.userData.isAMContext = true;
+      m.renderOrder = -1;
+      s2.add(m);
+      amCtx.push(m);
+    });
+    seOn();
+    amOn();
+  };
+
+  // 셀 자리 · 맥락 입자 · 시점 (셀을 옮긴 만큼 — 상자가 창에서 제자리 · data (x, y) → three (x, z))
+  const place = (nc, wrap) => {
+    const prev = cell || cell0;
+    const dx = nc.x0 - prev.x0, dy = nc.y0 - prev.y0;
+    const first = !frame;
+    cell = nc;
+    if (first || dx !== 0 || dy !== 0) buildFrame(nc);
+    buildCtx(nc, wrap);
+    if (dx !== 0 || dy !== 0) {
+      c2.position.x += dx; c2.position.z += dy;
+      ctrl2.target.x += dx; ctrl2.target.z += dy;
+      ctrl2.update();
+    }
+  };
+
+  // 관 — 메인과 같은 묶음 짓기 (주기 경계 · 끝점 · 고르기가 바뀌면 다시 짓는다)
+  let built = null;
+  const buildPaths = () => {
+    if (built) { s2.remove(built.group); dispose3(built.group); }
+    built = buildTauPathsGroup(col, idIndex, box, { width: opt.width, ends: ws.ends, unwrap: ws.bound === 'unwrap',
+                                                    cell: ws.bound === 'unwrap' ? null : cell });
+    s2.add(built.group);
+  };
+  const setText = () => {
+    const t = el('taup-m-title'); if (t) t.textContent = titleOf(col);
+    const i = el('taup-m-info'); if (i) i.innerHTML = tauPathsViewInfoHtml(col, { bound: ws.bound, fit, st: built ? built.st : null });
+  };
+  const layout = () => {
+    place(cellFor(), ws.bound !== 'unwrap');
+    buildPaths();
+    setText();
+    const nt = el('taup-m-png-note'); if (nt) nt.textContent = '';  // 지난 PNG 안내는 지난 그림의 것 — 그림이 바뀌면 지운다
+  };
+  const reselect = () => {                                        // 고르기가 바뀜 — 창을 다시 열지 않고 그 자리에서 (머리 · 정보 줄 · 관 · 셀 함께)
+    const c = tauPathsViewCol(clusters, ws);
+    if (!c.paths.length) return;
+    col = c;
+    ws.scope = col.scope;
+    const sc = el('taup-m-scope'); if (sc && sc.value !== col.scope) sc.value = col.scope;
+    layout();
+  };
+  layout();
 
   // 조작
   const on = (id, ev, fn) => { const x = el(id); if (x) x.addEventListener(ev, () => fn(x)); };
-  // 보임 = 체크박스 켬 ∧ 불투명도 > 0 (막대를 0 에서 올려도 · 체크박스를 다시 켜도 같은 규칙)
-  const seOn = () => { const c = el('taup-m-se'), r = el('taup-m-se-op');
-    if (seCtx) seCtx.visible = (!c || !!c.checked) && (r ? Number(r.value) > 0 : opt.seOpacity > 0); };
-  const amOn = () => { const c = el('taup-m-am'), r = el('taup-m-am-op');
-    amCtx.forEach(m => { m.visible = (!c || !!c.checked) && (r ? Number(r.value) > 0 : opt.amOpacity > 0); }); };
-  on('taup-m-se', 'change', () => seOn());
+  on('taup-m-scope', 'change', x => { ws.scope = String(x.value || 'all'); reselect(); });
+  on('taup-m-n', 'change', x => { ws.n = Math.max(0, Math.round(Number(x.value) || 0)); reselect(); });
+  on('taup-m-pick', 'change', x => { ws.mode = x.value === 'rand' ? 'rand' : 'tau'; reselect(); });
+  on('taup-m-refresh', 'click', () => {                           // τ 작은 순에서 누르면 무작위로 · 지금 보이는 집합과 다른 첫 seed
+    const full = tauPathsCollect(clusters, { scope: col.scope, top: 0 });
+    ws.seed = tauPathsRefreshSeed(full.paths, ws.n, ws.seed, col.paths).seed;
+    ws.mode = 'rand';
+    const pk = el('taup-m-pick'); if (pk) pk.value = 'rand';
+    reselect();
+  });
+  on('taup-m-bound', 'change', x => { ws.bound = VD.bounds.some(b => b[0] === x.value) ? x.value : 'cell'; layout(); });
+  on('taup-m-se', 'change', x => { ws.seOn = !!x.checked; seOn(); });
   on('taup-m-se-op', 'input', x => {
-    const o = Math.max(0, Math.min(1, Number(x.value) / 100));
-    if (seCtx) { seCtx.material.opacity = o; seCtx.material.needsUpdate = true; }
-    const v = el('taup-m-se-op-val'); if (v) v.textContent = o.toFixed(2);
+    ws.seOpa = Math.max(0, Math.min(1, Number(x.value) / 100));
+    if (seCtx) { seCtx.material.opacity = ws.seOpa; seCtx.material.needsUpdate = true; }
+    const v = el('taup-m-se-op-val'); if (v) v.textContent = ws.seOpa.toFixed(2);
     seOn();
   });
-  on('taup-m-am', 'change', () => amOn());
+  on('taup-m-am', 'change', x => { ws.amOn = !!x.checked; amOn(); });
   on('taup-m-am-op', 'input', x => {
-    const o = Math.max(0, Math.min(1, Number(x.value) / 100));
-    amCtx.forEach(m => { m.material.opacity = Math.max(0.01, o); m.material.needsUpdate = true; });
-    const v = el('taup-m-am-op-val'); if (v) v.textContent = o.toFixed(2);
+    ws.amOpa = Math.max(0, Math.min(1, Number(x.value) / 100));
+    amCtx.forEach(m => { m.material.opacity = Math.max(0.01, ws.amOpa); m.material.needsUpdate = true; });
+    const v = el('taup-m-am-op-val'); if (v) v.textContent = ws.amOpa.toFixed(2);
     amOn();
   });
-  on('taup-m-frame', 'change', x => { bbLine.visible = !!x.checked; grid.visible = !!x.checked; });
-  on('taup-m-unwrap', 'change', () => rebuild());
-  on('taup-m-ends', 'change', () => rebuild());
+  on('taup-m-frame', 'change', x => { ws.frame = !!x.checked; if (bbLine) bbLine.visible = ws.frame; if (grid) grid.visible = ws.frame; });
+  on('taup-m-ends', 'change', x => { ws.ends = !!x.checked; buildPaths(); setText(); });
+  on('taup-m-fit', 'change', x => { ws.fit = !!x.checked; });
 
-  // PNG 다운로드 — 축 글자만 숨기고 투명 배경 4× (Path Only View 와 같은 절차) · 컬러바 넣기면 합성본
+  // PNG 다운로드 — 축 글자만 숨기고 투명 배경 4× (Path Only View 와 같은 절차) · 잘림 없게 맞춤 (찍는 동안만) · 컬러바 넣기면 합성본
+  const fitPoints = () => {                                       // three 좌표 — 상자 꼭짓점 (보일 때) · 경로 점 · 끝점 (바닥 격자 · 맥락 입자는 빼고)
+    const pts = [];
+    if (bbLine && bbLine.visible && cell) {
+      [cell.x0, cell.x0 + bw].forEach(x => [box.z_min, box.z_max].forEach(z => [cell.y0, cell.y0 + bd].forEach(y => pts.push([x, z, y]))));
+    }
+    (built ? built.pts : []).forEach(q => pts.push([q[0], q[2], q[1]]));
+    return pts;
+  };
   const pngBtn = el('taup-png-btn');
   if (pngBtn) pngBtn.addEventListener('click', async () => {
     const hidden = [];
@@ -9032,14 +9446,37 @@ function showTauPathsView(state) {
     const prevAlpha = r2.getClearAlpha();
     s2.background = null;
     r2.setClearColor(0x000000, 0);
+    const cam0 = { pos: c2.position.clone(), far: c2.far };
+    let ff = null;
+    if (ws.fit) {
+      const up = c2.up || { x: 0, y: 1, z: 0 };
+      ff = tauPathsFrustumFit({ pos: [c2.position.x, c2.position.y, c2.position.z], up: [up.x, up.y, up.z], fov: c2.fov, aspect: c2.aspect, near: c2.near },
+                              [ctrl2.target.x, ctrl2.target.y, ctrl2.target.z], fitPoints(), VD.margin);
+      if (ff.moved) {
+        c2.position.set(ff.pos[0], ff.pos[1], ff.pos[2]);
+        if (!(c2.far > ff.dist + 2 * maxDim)) { c2.far = ff.dist + 2 * maxDim; c2.updateProjectionMatrix(); }
+        c2.updateMatrixWorld();
+      }
+    }
     let url;
     try {
       url = captureHighRes(r2, s2, c2, 4);
     } finally {
+      if (ff && ff.moved) {                                       // 시점을 정확히 되돌린다 (자리 · far)
+        c2.position.copy(cam0.pos);
+        if (c2.far !== cam0.far) { c2.far = cam0.far; c2.updateProjectionMatrix(); }
+        c2.updateMatrixWorld();
+      }
       s2.background = prevBg;
       r2.setClearColor(prevClear, prevAlpha);
       hidden.forEach(o => { o.visible = true; });
       r2.render(s2, c2);
+    }
+    const note = el('taup-m-png-note');
+    if (note) {
+      note.textContent = !ws.fit ? 'PNG = 화면 시점 그대로 (잘림 없게 맞춤 끔 — 화면 밖 내용은 잘린다)'
+        : (ff && ff.moved ? 'PNG = 잘림 없게 화면 시점보다 ' + (ff.dist / Math.max(1e-9, ff.dist0)).toFixed(2) + ' 배 멀리서 찍음 (화면 시점은 그대로)'
+          : 'PNG = 화면 시점 그대로 (상자 · 경로 · 끝점이 다 화면 안)');
     }
     const cbIn = el('taup-m-cbar-in');
     if (cbIn && cbIn.checked) url = await tauPathsCompositePNG(url, tauPathsColorbarSpec(col));
@@ -9050,7 +9487,7 @@ function showTauPathsView(state) {
   let animId;
   const anim = () => { animId = requestAnimationFrame(anim); ctrl2.update(); r2.render(s2, c2); };
   anim();
-  const close = () => { cancelAnimationFrame(animId); r2.dispose(); overlay.remove(); };
+  const close = () => { cancelAnimationFrame(animId); dispose3(s2); r2.dispose(); overlay.remove(); };
   overlay.onclick = (e) => { if (e.target === overlay) close(); };
   [overlay.querySelector('.path-modal-close'), overlay.querySelector('.taup-close')].forEach(x => { if (x) x.addEventListener('click', close); });
 }
