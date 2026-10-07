@@ -7772,7 +7772,7 @@
    "title": "cascade D_rel v7 본 라운드 (T* = 1000 K · 부모 10 × P1/P2 × 시드 1·2 = 40 런) 상한 — 탐침 실측 단가 최댓값 × 40",
    "statement": "탐침이 T* = 1000 K 를 냈다 (개정 CP §7 절차). 본 라운드 40 런의 비용 상한을 탐침 실측 단가 최댓값 11.5341 GPU-h × 40 = 461.4 GPU-h 로 둔다. 넘으면 다음 런을 띄우지 않고 (도는 런은 끝낸다) 보고한다. 카드 v7 · 개정 CP 의 보고량 · 자격 · 집계 · 탐침 시드 제외는 그대로다.",
    "rationale": "개정 CP §4 '본 라운드: 탐침 실측 단가 × 40 으로 상한을 내고 첫 런 전에 비준한다' 의 이행. 탐침 7 런 실측 73.07 GPU-h (평균 10.44 · 최댓값 11.5341) — 최댓값을 써서 보수적으로 잡는다 (사전 추정 ≈ 471 과 같은 자리).",
-   "decision_state": "proposed",
+   "decision_state": "active",
    "record_kind": "amendment",
    "results_seen": true,
    "results_seen_note": "탐침 결과(T*)는 봤다 — 본 라운드 40 런은 아직 0 런 · 40 런 전 중간 집계 금지 (카드 그대로)",
@@ -7799,15 +7799,31 @@
     "견적": "탐침 실측 단가 최댓값 11.5341 × 40 (평균 10.44 × 40 = 418)"
    },
    "proposed_by": "claude-session-2026-10-07 (friendly)",
-   "status": "proposed",
+   "status": "active",
    "status_history": [
     {
      "at": "2026-10-07",
      "state": "proposed",
      "by": "agent",
      "note": "탐침 회수 (cca58f1e) 뒤 개정 CP §4 · §7 절차. 비준은 사용자 (트랙 cascade · 1저자 = 사용자)."
+    },
+    {
+     "at": "2026-10-07",
+     "state": "active",
+     "by": "사용자 (1저자 · cascade 트랙)",
+     "note": "비준 — 사용자 '비준이야' · 상한 결정을 담은 커밋 8383986 에 지문 결속. 기계·시점은 실행 승인 때 (실행 기록에 적는다)."
     }
-   ]
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-10-07T10:36:10Z",
+    "commit": "8383986f8dfa60626ac8417196e432e846c7c0b8",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "사용자 (2026-10-07 · 이 세션): '비준이야'",
+    "decision_digest": "sha256:091b815252e7c6a4f126de31c39a8c2685aef06a525aceaece51e85baa695ec6"
+   }
   }
  ]
 }
