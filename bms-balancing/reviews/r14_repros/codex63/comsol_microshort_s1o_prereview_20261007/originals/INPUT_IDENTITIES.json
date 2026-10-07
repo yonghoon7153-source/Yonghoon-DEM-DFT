@@ -1,0 +1,42 @@
+[
+  {
+    "path": "C:\\Users\\Administrator\\Downloads\\COMSOL_MICROSHORT_S1O_SEND_TO_CODEX_20261007.md",
+    "bytes": 7732,
+    "sha256": "0fff3e1fffe29b7e448c5f61ea4c9464cbb59691d2a301ee2089ee9a54e47127"
+  },
+  {
+    "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\microshort_s0_deep_20261007\\DECISION.json",
+    "bytes": 4071,
+    "sha256": "dc8b84e3d9665132bf3caf82318ec0a51328057fc5ee186cff9bf79db19638c1"
+  },
+  {
+    "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\microshort_s0_deep_20261007\\S1_SCOPE_DRAFT_KO.md",
+    "bytes": 8604,
+    "sha256": "247965ab4af76e70ca1bbf850a62856f90bb8f3f4b491ce931c83381675b51ea"
+  },
+  {
+    "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\microshort_s0_deep_20261007\\S0_REPORT_KO.md",
+    "bytes": 36325,
+    "sha256": "5736acb9e235c199055601f919e60a5a8595a9b0092369415d691b6473b16c08"
+  },
+  {
+    "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\microshort_s0_deep_20261007\\candidate\\README_INACTIVE.md",
+    "bytes": 2837,
+    "sha256": "540dc8ebcab10339483a92f009c2083de4fcfef464119df2d8134697a540275a"
+  },
+  {
+    "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\microshort_s0_deep_20261007\\candidate\\MicroshortS1RestCandidate.java.inactive.txt",
+    "bytes": 77277,
+    "sha256": "a90d1e66db796f6b8077fa1d158620d1ec548265a1508b698e35da8ef6e3492c"
+  },
+  {
+    "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\microshort_s0_deep_20261007\\candidate\\REQUESTED_TIMES_S1_3600.txt",
+    "bytes": 1802,
+    "sha256": "2a31f758d44c1a5bb51428f09f1fc7fb8f0b0ab9d9bb5df51ae6a346ce94f05c"
+  },
+  {
+    "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-14-gate-code-review-9qkx05-2\\outputs\\microshort_s0_deep_20261007\\sources\\Normal480Candidate.java.txt",
+    "bytes": 99959,
+    "sha256": "c70526cf6884eabc57b63dd43dce4b47fb0decf59af68d3f550f1b987d053797"
+  }
+]

@@ -1,0 +1,113 @@
+{
+  "kind": "NEW_REVIEW_ARTIFACT_MANIFEST",
+  "scope": "S1-O send-document prereview only; no implementation or native acceptance",
+  "payload_count": 21,
+  "files": [
+    {
+      "path": "CLAUDE_REPLY_KO.md",
+      "bytes": 4516,
+      "sha256": "1ad07d7fba1bc6276b34aff44eef487376c9611e9383ab9ee0ef0d7029728d90"
+    },
+    {
+      "path": "DECISION.json",
+      "bytes": 2106,
+      "sha256": "a1e28b644e062107afa45aa9fdff86fdfdd108c15c0bebd6de62c70abd6db340"
+    },
+    {
+      "path": "INPUT_IDENTITIES.json",
+      "bytes": 2212,
+      "sha256": "6c8897e58f221a3030a779f7a4f1c86c6d4635bc399cbdc66224370b184d39d6"
+    },
+    {
+      "path": "README_KO.md",
+      "bytes": 1471,
+      "sha256": "ac3888f17b97b833b4241cd821644c17ef0dd1b11996b30fcf6e5fe424bf3613"
+    },
+    {
+      "path": "REFERENCE_PROVENANCE.json",
+      "bytes": 596,
+      "sha256": "bb975e81c4b2ecc6c9e79a3184e23384e57a8e162b4daa648751f220c311ac9e"
+    },
+    {
+      "path": "REVIEW_KO.md",
+      "bytes": 11911,
+      "sha256": "b2fe3549693836108f76248b64054f51d12558e5f88e0b9bffb6df523ddbca87"
+    },
+    {
+      "path": "S1O_CLARIFICATION_ADDENDUM_KO.md",
+      "bytes": 5669,
+      "sha256": "6aeb870ad06c5fd9175491b938f8a61871b8e30adf48b0b69d1f31c5dfcb6389"
+    },
+    {
+      "path": "SELECTED_INPUTS_AFTER.json",
+      "bytes": 2466,
+      "sha256": "8d3ad7b49ada8419f60bbbd9ed8e98d3b7aac4dc22a300083fd11919b5e60097"
+    },
+    {
+      "path": "notes/DESIGN_REVIEW.md",
+      "bytes": 8215,
+      "sha256": "a390ce120a36da99321bbea89db9df44cbd407cd308f38c29dbd8f58e6970af2"
+    },
+    {
+      "path": "notes/EXECUTION_REVIEW.md",
+      "bytes": 14384,
+      "sha256": "1c2869317176a8ecbbb51be21c7a4337534e6783770ab1eccbedcffa7d534e5c"
+    },
+    {
+      "path": "notes/PHYSICS_REVIEW.md",
+      "bytes": 9139,
+      "sha256": "8d7e7263ac40f51321b0faafdb817c248362a4a2e40fadeae22e8fee7d84761c"
+    },
+    {
+      "path": "package_review.py",
+      "bytes": 5269,
+      "sha256": "1372b463b899fd1cac682599086857de27bd9864638c107b531a1b3bf8bae476"
+    },
+    {
+      "path": "reference/COMSOL_MICROSHORT_S1O_SEND_TO_CODEX_20261007.md",
+      "bytes": 7732,
+      "sha256": "0fff3e1fffe29b7e448c5f61ea4c9464cbb59691d2a301ee2089ee9a54e47127"
+    },
+    {
+      "path": "reference/COMSOL_REBUILD_SPEC_72_73_EXCERPT.txt",
+      "bytes": 4284,
+      "sha256": "45facb7c479c5a8e1f6481423e62931f52f81fb6f269381eeead3b4d395c4461"
+    },
+    {
+      "path": "s0_basis/DECISION.json",
+      "bytes": 4071,
+      "sha256": "dc8b84e3d9665132bf3caf82318ec0a51328057fc5ee186cff9bf79db19638c1"
+    },
+    {
+      "path": "s0_basis/S0_REPORT_KO.md",
+      "bytes": 36325,
+      "sha256": "5736acb9e235c199055601f919e60a5a8595a9b0092369415d691b6473b16c08"
+    },
+    {
+      "path": "s0_basis/S1_SCOPE_DRAFT_KO.md",
+      "bytes": 8604,
+      "sha256": "247965ab4af76e70ca1bbf850a62856f90bb8f3f4b491ce931c83381675b51ea"
+    },
+    {
+      "path": "s0_basis/candidate/MicroshortS1RestCandidate.java.inactive.txt",
+      "bytes": 77277,
+      "sha256": "a90d1e66db796f6b8077fa1d158620d1ec548265a1508b698e35da8ef6e3492c"
+    },
+    {
+      "path": "s0_basis/candidate/README_INACTIVE.md",
+      "bytes": 2837,
+      "sha256": "540dc8ebcab10339483a92f009c2083de4fcfef464119df2d8134697a540275a"
+    },
+    {
+      "path": "s0_basis/candidate/REQUESTED_TIMES_S1_3600.txt",
+      "bytes": 1802,
+      "sha256": "2a31f758d44c1a5bb51428f09f1fc7fb8f0b0ab9d9bb5df51ae6a346ce94f05c"
+    },
+    {
+      "path": "s0_basis/sources/Normal480Candidate.java.txt",
+      "bytes": 99959,
+      "sha256": "c70526cf6884eabc57b63dd43dce4b47fb0decf59af68d3f550f1b987d053797"
+    }
+  ],
+  "manifest_self_hash_excluded": true
+}
