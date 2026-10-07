@@ -1,0 +1,64 @@
+{
+  "schema": "S1O_RESOURCE_CONTRACT_V1",
+  "status": "PROPOSED_NOT_IMPLEMENTED_OR_EXECUTED",
+  "approved": false,
+  "native_ready": false,
+  "unit": "one separately approved finite-sigma pilot run; no sharing unused budget or retry",
+  "proposal_limits": {
+    "sample_interval_s": 5,
+    "maximum_sample_gap_s": 6,
+    "maximum_sampling_duration_s": 1,
+    "rss_early_stop_bytes": 8589934592,
+    "commit_early_stop_bytes": 10737418240,
+    "future_job_commit_enforced_limit_bytes": 12884901888,
+    "host_commit_reserve_bytes": 2147483648,
+    "host_ram_reserve_bytes": 2147483648,
+    "output_early_stop_bytes": 5368709120,
+    "output_declared_monitored_ceiling_bytes": 6442450944,
+    "volume_free_at_start_bytes": 17179869184,
+    "volume_free_reserve_bytes": 8589934592,
+    "native_wall_limit_s": 7200,
+    "overall_wall_limit_s": 9000,
+    "stop_reserve_s": 120,
+    "cooperative_wait_s": 15,
+    "force_verify_reserve_s": 90
+  },
+  "phase_limits_s": {"preflight_and_direct_input":300,"native_compile_plus_batch":7200,"owned_cleanup_total":120,"analysis":600,"preservation":180,"local_delivery":600},
+  "proposal_reason": "S0 single-run 9000 s / native 7200 s and 6 GiB disk-growth scenario retained as proposals. 8 GiB RSS and 10 GiB private-commit early stops, 12 GiB future Job-commit limit, 2 GiB host reserves are conservative proposed stop policies, NOT measured needs, guaranteed sufficiency, or inherited approvals. They require user acceptance and implementation validation; inability to proceed within them stops instead of relaxing them.",
+  "counter_definitions": [
+    {"name":"job_rss_bytes","unit":"byte","scope":"sum WorkingSetSize once per unique private-Job member PID+creation-time pair, including root; do not add root or Job total again","interpretation":"RSS can double-count shared pages across processes; it is an operational summed RSS, not unique resident physical memory","current_support":"OPEN sampler not implemented"},
+    {"name":"job_private_commit_bytes","unit":"byte","scope":"one Job accounting total including all members; never add process totals to Job total","interpretation":"private committed bytes, not RSS and not system pagefile occupancy","current_support":"OPEN exact Windows Job counter/API and enforcement adapter need implementation plus primary documentation and changed-branch validation"},
+    {"name":"host_commit_available_bytes","unit":"byte","scope":"host commit limit minus commit total; not available physical RAM","current_support":"OPEN current legacy availablePage field is not automatically accepted as this metric"},
+    {"name":"host_available_ram_bytes","unit":"byte","scope":"host available physical memory","current_support":"legacy start-only GlobalMemoryStatusEx observation exists; periodic sampler OPEN"},
+    {"name":"owned_output_growth_bytes","unit":"byte","scope":"sum allocated/logical size convention to be fixed before native: proposed logical bytes for all files exclusively created under run/evidence/staging, including MPH/CSV/log/base64/temp; pre-existing originals excluded","current_support":"OPEN ownership-scoped periodic walker; reparse/link/permission failure stops; originals never deleted to restore reserve"},
+    {"name":"volume_free_bytes","unit":"byte","scope":"current volume available free space; includes external use impact","current_support":"legacy start-only free-disk observation exists; periodic sampler OPEN"},
+    {"name":"native_elapsed_s","unit":"s","scope":"monotonic native phase wall time including compilation/output/monitor; not physical time or solver-only time","current_support":"legacy monotonic deadline precedent; new integration OPEN"}
+  ],
+  "observations": {
+    "sampled_max": "maximum successful in-scope samples, with timestamps and gaps; lower bound on unknown interval peak",
+    "os_peak": "separate named OS counter with definition/coverage if implemented; null when unavailable",
+    "enforced_limit": "separate verified OS limit if actually configured/read back under native approval; currently none implemented by this candidate",
+    "detection_latency": "sample schedule 5 s + maximum accepted sample duration 1 s; stale sample >6 s stops. Scheduling/OS stalls may exceed this; not a hard real-time guarantee",
+    "disk_hard_cap": false,
+    "rss_hard_cap": false,
+    "job_commit_hard_cap_currently_implemented": false,
+    "resource_compliance_currently_demonstrated": false,
+    "growth_overshoot": "5 to 6 GiB and 10 to 12 GiB margins are proposed early-stop reserves; no measured maximum write/allocation rate exists, so overshoot cannot be bounded by this plan. Native review must accept sampled-only residual risk or separately implement OS quota; no silent fallback."
+  },
+  "ownership": {
+    "identity":"private Job held handle, root PID and creation FILETIME, assigned-before-resume proof, unique current membership pairs, observed lifetime members",
+    "never":"process-name kill, global COMSOL kill, old PID reuse, parent PID alone, caller-supplied list without fresh Job confirmation",
+    "measurement_failure":"STOP_REQUIRED; missing value remains null, never zero/PASS",
+    "ownership_failure":"no unknown-process kill; preserve UNRESOLVED and prohibit later phase/retry"
+  },
+  "stop": {
+    "sequence":["supported verified cooperative request once","wait up to 15 s bounded by remaining cleanup and overall deadlines while reserving 90 s for force/verify","force remaining owned private Job once","verify Job empty AND held root signaled AND exit query succeeded; then close owned handles and record"],
+    "cooperative_method":"OPEN: legacy winjob has no cooperative COMSOL stop implementation. Do not label TerminateJobObject or kill-on-close graceful.",
+    "without_cooperative_method":"native gate blocks unless a distinct explicit force-only path is accepted in the future one-run approval and tested. Its use records cooperative unavailable, not successful.",
+    "TerminateJobObject":"forceful owned-Job termination only; never cooperative",
+    "hard_limit_event":"no wait beyond cap; stop initiation reserves cleanup, force and record time. If unavailable time, record deadline breach and remaining ownership without invented termination PASS.",
+    "implementation":"candidate/control.py.inactive.txt::advance_stop is pure transition logic only; no OS callback invoked in S1-O"
+  },
+  "record_fields":["run_id","variant_id","manifest_sha256","sample_id","monotonic_s","utc","job_identity","root_pid","root_creation_filetime","member_pid_creation_pairs","scope","counter_status","counter_errors","values_units","thresholds","sampled_max","os_peak","enforced_limits","action","ownership_proof_sha256","first_error","followup_errors"],
+  "required_before_native":["exact sampler APIs and aggregation implementation","OS Job-commit limit implementation/readback or explicit separately reviewed removal of hard-limit proposal","supported cooperative method or separately approved force-only path","identity-preserving adapter and bounded stop integration","changed-branch inert validation and independent acceptance","current resource read-only observations and explicit one-run limit/risk approval"]
+}

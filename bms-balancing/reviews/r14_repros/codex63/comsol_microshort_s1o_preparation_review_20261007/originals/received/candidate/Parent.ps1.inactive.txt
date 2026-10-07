@@ -1,0 +1,226 @@
+# S1-O INACTIVE SOURCE. No received source is executed in this stage.
+# Pure parent-consumption functions only. There is no Start-Process, invocation,
+# transcript, runtime-directory write, console challenge or native entrypoint.
+# New native adapter/entrypoint publication requires a new seal and approval.
+
+function S1Has($Object,[string]$Name) {
+    if ($null -eq $Object) { return $false }
+    if ($Object -is [System.Collections.IDictionary]) { return $Object.Contains($Name) }
+    return $null -ne $Object.PSObject.Properties[$Name]
+}
+function S1Struct($Object) {
+    if ($null -eq $Object) { return $false }
+    if ($Object -is [System.Collections.IDictionary]) { return $Object.Count -gt 0 }
+    return $Object -is [pscustomobject] -and @($Object.PSObject.Properties).Count -gt 0
+}
+function S1Number($Value,[double]$Min,[double]$Max) {
+    if ($Value -is [bool] -or $null -eq $Value) { return $false }
+    $v=0.0
+    return ([double]::TryParse([string]$Value,[Globalization.NumberStyles]::Float,
+        [Globalization.CultureInfo]::InvariantCulture,[ref]$v) -and
+        -not [double]::IsNaN($v) -and -not [double]::IsInfinity($v) -and $v -ge $Min -and $v -le $Max)
+}
+function S1Sha($Value) { return $Value -is [string] -and $Value -cmatch '^[0-9a-f]{64}$' }
+function S1Failure([string]$Reason,[string]$Stage) {
+    return @{status='INCOMPLETE';reason=$Reason;stage=$Stage;overall='INCOMPLETE';normal_gate='INCOMPLETE'}
+}
+function S1NativeAxis($Native,$Expected) {
+    if (-not (S1Struct $Native)) { return S1Failure 'NATIVE_RECORD_MISSING' 'native' }
+    foreach ($key in @('returned','invocation_succeeded','new_error','within_limits')) {
+        if (-not (S1Has $Native $key) -or $Native.$key -isnot [bool]) { return S1Failure 'NATIVE_BOOL_SCHEMA' 'native' }
+    }
+    if (-not $Native.returned -or -not $Native.invocation_succeeded -or $Native.new_error -or
+        -not $Native.within_limits -or $Native.rc -isnot [int] -or $Native.rc -ne 0 -or
+        -not (S1Has $Native 'exception') -or $Native.exception -or $Native.fatal -isnot [bool] -or $Native.fatal -or $Native.record_errors -isnot [array] -or
+        @($Native.record_errors).Count -ne 0) { return S1Failure 'NATIVE_INVOCATION_OR_FATAL' 'native' }
+    if ($Native.run_id -cne $Expected.run_id -or $Native.variant_id -cne $Expected.variant_id -or
+        $Native.manifest_sha256 -cne $Expected.manifest_sha256 -or
+        -not (S1Number $Native.elapsed_s 0 $Expected.phase_limits_s.native)) {
+        return S1Failure 'NATIVE_BINDING_OR_TIME' 'native'
+    }
+    if ($Native.termination -ceq 'NORMAL_END_MATCHED' -and
+        (S1Number $Native.final_time_s $Expected.end_s $Expected.end_s) -and
+        $Native.active_guards -is [array] -and @($Native.active_guards).Count -eq 0) {
+        return @{status='NORMAL_WINDOW_COMPLETED';reason=$null;stage='native'}
+    }
+    if ($Native.termination -ceq 'PROTECTIVE_STOP_MATCHED' -and
+        (S1Number $Native.final_time_s 0 $Expected.end_s) -and [double]$Native.final_time_s -lt $Expected.end_s -and
+        $Native.active_guards -is [array] -and @($Native.active_guards).Count -gt 0 -and
+        $Native.stop_pair_status -ceq 'MATCHED_SAME_OPERATOR_UNITS_DOMAIN' -and
+        $Native.no_post_stop_integration -is [bool] -and $Native.no_post_stop_integration) {
+        return @{status='PROTECTIVE_STOP';reason=$Native.stop_reason;stage='native'}
+    }
+    return S1Failure 'NATIVE_END_EVIDENCE' 'native'
+}
+function S1Fields($Result,$Expected) {
+    if (-not (S1Struct $Result) -or $Result.schema -cne 'S1O_CONSUMER_V1' -or
+        $Result.run_id -cne $Expected.run_id -or $Result.variant_id -cne $Expected.variant_id -or
+        $Result.manifest_sha256 -cne $Expected.manifest_sha256 -or
+        $Result.errors -isnot [array] -or @($Result.errors).Count -gt 0) {
+        return S1Failure 'RESULT_SCHEMA_BINDING_ERRORS' 'fields'
+    }
+    if ($Result.overall -cne 'INCOMPLETE' -or $Result.normal_gate -cne 'INCOMPLETE' -or
+        $Result.native_approved_by_this_result -isnot [bool] -or $Result.native_approved_by_this_result) {
+        return S1Failure 'RESULT_SCOPE_EXPANSION' 'fields'
+    }
+    foreach ($axis in @('initialization','initial_profile','invariants','effective_coefficients','charge_budget','comparison_details')) {
+        if (-not (S1Struct $Result.$axis)) { return S1Failure ('EVIDENCE_AXIS_MISSING:'+ $axis) 'fields' }
+    }
+    if ($Result.source_evidence -isnot [array] -or @($Result.source_evidence).Count -eq 0) {
+        return S1Failure 'SOURCE_EVIDENCE_MISSING' 'fields'
+    }
+    $seen=@{}
+    foreach ($ref in $Result.source_evidence) {
+        if (-not (S1Struct $ref) -or $ref.path -isnot [string] -or [string]::IsNullOrWhiteSpace($ref.path) -or
+            -not (S1Sha $ref.sha256) -or -not (S1Number $ref.bytes 1 ([double]::MaxValue))) {
+            return S1Failure 'SOURCE_EVIDENCE_IDENTITY' 'fields'
+        }
+        $key=$ref.path.Replace('\','/').ToLowerInvariant()
+        if ($seen.ContainsKey($key)) { return S1Failure 'SOURCE_EVIDENCE_DUPLICATE' 'fields' }
+        $seen[$key]=$true
+    }
+    if ($Result.evidence_validity -cne 'VALID' -or $Result.initialization.status -cne 'PASS' -or
+        $Result.effective_coefficients.status -cne 'PASS' -or
+        $Result.effective_coefficients.grade -cne 'INSTALLED_EQUATION_AND_NUMERICAL_READBACK' -or
+        -not (S1Struct $Result.effective_coefficients.raw_identity)) {
+        return S1Failure 'INITIALIZATION_OR_ACTUAL_COEFFICIENT_UNVERIFIED' 'fields'
+    }
+    if ($Result.initialization.fields -isnot [array] -or @($Result.initialization.fields).Count -eq 0 -or
+        $Result.initial_profile.status -cne 'PASS' -or
+        -not (S1Number $Result.initial_profile.N_count 241 241) -or
+        -not (S1Number $Result.initial_profile.P_count 241 241) -or
+        $Result.initial_profile.both_surface_and_particle_average -isnot [bool] -or
+        -not $Result.initial_profile.both_surface_and_particle_average -or
+        $Result.invariants.status -cne 'PASS' -or
+        -not (S1Number $Result.invariants.Li_relative_max 0 0.000001) -or
+        -not (S1Number $Result.invariants.voltage_identity_max_V 0 0.00000001)) {
+        return S1Failure 'INITIAL_PROFILE_OR_INVARIANT_EVIDENCE' 'fields'
+    }
+    $initialNames=@{}
+    foreach ($row in $Result.initialization.fields) {
+        if (-not (S1Struct $row) -or $row.name -isnot [string] -or [string]::IsNullOrWhiteSpace($row.name) -or
+            $row.unit -isnot [string] -or [string]::IsNullOrWhiteSpace($row.unit) -or
+            -not (S1Number $row.absolute_delta 0 ([double]::MaxValue)) -or
+            -not (S1Number $row.relative_delta 0 ([double]::MaxValue)) -or $initialNames.ContainsKey($row.name)) {
+            return S1Failure 'INITIAL_FIELDS_SCHEMA' 'fields'
+        }
+        $initialNames[$row.name]=$true
+    }
+    if ($Result.charge_budget.status -cnotin @('CONSISTENT','INCONCLUSIVE')) {
+        return S1Failure 'CHARGE_BUDGET_INVALID' 'fields'
+    }
+    if ($Result.charge_budget.records -isnot [array] -or @($Result.charge_budget.records).Count -lt 2) {
+        return S1Failure 'CHARGE_RECORDS_MISSING' 'fields'
+    }
+    $d=$Result.comparison_details
+    $coverage=$d.coverage
+    if (-not (S1Struct $coverage) -or $coverage.status -cne 'PASS' -or
+        -not (S1Number $coverage.common_requested_count $Expected.required_count $Expected.required_count) -or
+        -not (S1Number $coverage.comparison_count $Expected.required_count ([double]::MaxValue)) -or
+        $coverage.missing_a -isnot [array] -or @($coverage.missing_a).Count -ne 0 -or
+        $coverage.missing_b -isnot [array] -or @($coverage.missing_b).Count -ne 0 -or
+        $coverage.comparison_times -isnot [array] -or @($coverage.comparison_times).Count -ne $coverage.comparison_count -or
+        $coverage.full_intersection -isnot [array] -or @($coverage.full_intersection).Count -lt $coverage.comparison_count -or
+        -not (S1Number $d.coordinates_per_electrode 241 241) -or $d.interpolated -isnot [bool] -or $d.interpolated) {
+        return S1Failure 'COMPARISON_COVERAGE' 'fields'
+    }
+    foreach ($key in @('voltage_V','surface_x','Li_relative')) {
+        if (-not (S1Struct $d.maxima.$key) -or -not (S1Number $d.maxima.$key.value 0 ([double]::MaxValue)) -or
+            -not (S1Number $d.maxima.$key.time_s 0 $Expected.end_s)) { return S1Failure ('NUMERIC_FIELD_INVALID:'+ $key) 'fields' }
+    }
+    # Same fixed geometry as S0 Java L_el=52um, L_sep=25um, L_pos=44um.
+    $surface=$d.maxima.surface_x
+    if ($surface.electrode -cnotin @('N','P')) { return S1Failure 'SURFACE_MAXIMUM_LOCATION' 'fields' }
+    $lo=$(if ($surface.electrode -ceq 'N') {0.0} else {0.000077})
+    $hi=$(if ($surface.electrode -ceq 'N') {0.000052} else {0.000121})
+    if (-not (S1Number $surface.coordinate_m ($lo-1e-15) ($hi+1e-15))) {
+        return S1Failure 'SURFACE_MAXIMUM_LOCATION' 'fields'
+    }
+    if (-not (S1Number $d.max_decomposition_residual_V 0 0.00000001)) { return S1Failure 'DECOMPOSITION_INVALID' 'fields' }
+    $within=([double]$d.maxima.voltage_V.value -le 0.001 -and [double]$d.maxima.surface_x.value -le 0.0001 -and
+        [double]$d.maxima.Li_relative.value -le 0.000001)
+    $expectedComparison=$(if ($within) {'WITHIN_LIMITS_THIS_WINDOW'} else {'EXCEEDS_LIMITS'})
+    if ($Result.comparison -cne $expectedComparison -or $d.status -cne $expectedComparison) { return S1Failure 'COMPARISON_SUMMARY_CONTRADICTION' 'fields' }
+    return @{status='VALID_FIELDS';comparison=$expectedComparison;charge_budget=$Result.charge_budget.status;stage='fields'}
+}
+function S1Decision($Native,$Analysis,$Result,$Expected,$Completion) {
+    if (-not (S1Struct $Expected) -or -not (S1Sha $Expected.manifest_sha256)) {
+        return S1Failure 'EXPECTED_BINDING_MISSING' 'parent'
+    }
+    if ($Expected.run_id -isnot [string] -or [string]::IsNullOrWhiteSpace($Expected.run_id) -or
+        $Expected.variant_id -isnot [string] -or [string]::IsNullOrWhiteSpace($Expected.variant_id) -or
+        $Expected.required_count -isnot [int] -or $Expected.required_count -lt 2 -or
+        -not (S1Number $Expected.end_s 0.000000001 ([double]::MaxValue)) -or
+        -not (S1Struct $Expected.phase_limits_s) -or
+        -not (S1Number $Expected.phase_limits_s.native 1 ([double]::MaxValue)) -or
+        -not (S1Number $Expected.phase_limits_s.analysis 1 ([double]::MaxValue)) -or
+        -not (S1Number $Expected.overall_limit_s 1 ([double]::MaxValue))) {
+        return S1Failure 'EXPECTED_REQUIRED_FIELDS' 'parent'
+    }
+    $nativeAxis=S1NativeAxis $Native $Expected
+    if ($nativeAxis.status -ceq 'INCOMPLETE') { return $nativeAxis }
+    if (-not (S1Struct $Analysis) -or $Analysis.rc -isnot [int] -or $Analysis.rc -ne 0 -or
+        $Analysis.returned -isnot [bool] -or -not $Analysis.returned -or
+        $Analysis.record_errors -isnot [array] -or @($Analysis.record_errors).Count -ne 0 -or
+        -not (S1Number $Analysis.elapsed_s 0 $Expected.phase_limits_s.analysis)) {
+        return S1Failure 'ANALYSIS_RC_OR_TIME' 'parent'
+    }
+    $fields=S1Fields $Result $Expected
+    if ($fields.status -ceq 'INCOMPLETE') { return $fields }
+    if ($Result.native_completion -cne $nativeAxis.status) { return S1Failure 'NATIVE_CONSUMER_CONTRADICTION' 'parent' }
+    $expectedLimited=$(if ($nativeAxis.status -ceq 'NORMAL_WINDOW_COMPLETED' -and $fields.charge_budget -ceq 'CONSISTENT') {
+        'AWAITING_S1_LIMITED_EXTERNAL_REVIEW'
+    } else {'INCOMPLETE'})
+    if ($Result.limited_result -cne $expectedLimited) { return S1Failure 'LIMITED_RESULT_CONTRADICTION' 'parent' }
+    foreach ($axis in @('preservation','process_cleanup','policy_preservation','resource_recording')) {
+        if ($Completion.$axis -cne 'PASS') { return S1Failure ('COMPLETION_AXIS:'+ $axis) 'parent' }
+    }
+    if (-not (S1Number $Completion.overall_elapsed_s 0 $Expected.overall_limit_s) -or
+        $Completion.record_errors -isnot [array] -or @($Completion.record_errors).Count -ne 0) {
+        return S1Failure 'COMPLETION_BUDGET_OR_RECORD' 'parent'
+    }
+    $status='AWAITING_S1_LIMITED_EXTERNAL_REVIEW'
+    if ($nativeAxis.status -ceq 'PROTECTIVE_STOP') { $status='PROTECTIVE_STOP_INCOMPLETE' }
+    elseif ($fields.charge_budget -ceq 'INCONCLUSIVE') { $status='INCOMPLETE' }
+    return @{status=$status;native_completion=$nativeAxis.status;evidence_validity='VALID';
+        comparison=$fields.comparison;charge_budget=$fields.charge_budget;overall='INCOMPLETE';normal_gate='INCOMPLETE';
+        native_approved_by_this_result=$false;raw_host_rc=$null;host_boundary='SCRIPT_FINAL_RECORD_NOT_PROCESS_EXIT'}
+}
+function S1FinalReturn($Decision,[scriptblock]$Clock,[scriptblock]$Writer,[scriptblock]$Readback,
+        [double]$OverallLimit,[double]$DeliveryStart,[double]$DeliveryLimit) {
+    # These adapters are inert in the future separate validation. Production
+    # caller is not supplied here and must gate before the FIRST writer call.
+    $errors=@(); $boundary=$null; $pre=$null; $post=$null; $within=$false; $priorFailure=$false
+    try {
+        if (-not (S1Struct $Decision) -or
+            $Decision.status -cnotin @('AWAITING_S1_LIMITED_EXTERNAL_REVIEW','PROTECTIVE_STOP_INCOMPLETE','INCOMPLETE') -or
+            $Decision.overall -cne 'INCOMPLETE' -or $Decision.normal_gate -cne 'INCOMPLETE') { throw 'FINAL_DECISION_SCHEMA' }
+        foreach ($name in @('record_errors','errors')) {
+            if (S1Has $Decision $name) {
+                if ($Decision.$name -isnot [array]) { throw 'PRIOR_ERROR_SCHEMA' }
+                if (@($Decision.$name).Count -gt 0) { $priorFailure=$true }
+            }
+        }
+        if ((S1Has $Decision 'reason') -and $Decision.reason) { $priorFailure=$true }
+        if (-not (S1Number $OverallLimit 0 ([double]::MaxValue)) -or
+            -not (S1Number $DeliveryLimit 0 ([double]::MaxValue)) -or
+            -not (S1Number $DeliveryStart 0 $OverallLimit)) { throw 'FINAL_BUDGET_SCHEMA' }
+        $pre=& $Clock
+        if (-not (S1Number $pre $DeliveryStart $OverallLimit) -or ($pre-$DeliveryStart) -gt $DeliveryLimit) { throw 'PRE_WRITE_BUDGET' }
+        $boundary=& $Writer @{observation_phase='PRE_WRITE';elapsed_s=$pre;decision=$Decision;overall='INCOMPLETE'}
+        $observed=& $Readback $boundary
+        if (-not (S1Struct $observed) -or -not (S1Sha $observed.sha256) -or
+            $observed.byte_equal -isnot [bool] -or -not $observed.byte_equal) { throw 'FINAL_READBACK_IDENTITY' }
+        $post=& $Clock
+        $within=(S1Number $post $pre $OverallLimit) -and ($post-$DeliveryStart) -le $DeliveryLimit
+        if (-not $within) { throw 'POST_WRITE_BUDGET' }
+    } catch {
+        $errors+=@{reason=$_.ToString();stage='FINAL_POST_WRITE';order='FIRST_OR_FOLLOWUP_PRESERVE_PREVIOUS'}
+    }
+    $limited=$(if ($within -and @($errors).Count -eq 0 -and -not $priorFailure) {$Decision.status} else {'INCOMPLETE'})
+    return @{kind='S1_PARENT_FINAL_RETURN';observation_phase='POST_WRITE';limited=$limited;overall='INCOMPLETE';
+        prior_decision=$Decision;prior_failure_preserved=$priorFailure;record_errors=$errors;within_limits=$within;pre_write_seconds=$pre;snapshot_seconds=$post;
+        boundary=$boundary;raw_host_rc=$null;host_boundary='SCRIPT_FINAL_RECORD_NOT_PROCESS_EXIT'}
+}
+
+throw 'S1O_OFFLINE_ONLY_NO_EXECUTABLE_PARENT_ENTRYPOINT'

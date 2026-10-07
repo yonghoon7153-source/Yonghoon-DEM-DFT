@@ -1,0 +1,71 @@
+{
+  "source": "assistant-preserved toolresults, not independent OS audit",
+  "records": [
+    {
+      "chunk": "bafcb3",
+      "rc": 0,
+      "wall_seconds": 6.2901304,
+      "kind": "new intake script",
+      "payload": 38,
+      "entries": 39
+    },
+    {
+      "chunk": "a2f4e0",
+      "rc": 0,
+      "wall_seconds": 6.2309766,
+      "kind": "selectedoriginalread/copy",
+      "files": 10
+    },
+    {
+      "chunk": "e0be9f",
+      "rc": 0,
+      "wall_seconds": 6.216782,
+      "kind": "inactive literalvariants",
+      "reverse_equal": true
+    },
+    {
+      "chunk": "04b177",
+      "rc": 0,
+      "wall_seconds": 6.1951533,
+      "kind": "planwriter only",
+      "groups": 8,
+      "cases": 98
+    },
+    {
+      "chunk": "f8e273",
+      "rc": 0,
+      "wall_seconds": 6.721909,
+      "kind": "bundledPSparser dataread",
+      "errors": []
+    },
+    {
+      "chunk": "3a3906",
+      "rc": 1,
+      "wall_seconds": 6.2442399,
+      "kind": "newstatictoolpathkeyerror",
+      "full_error": "audit_history/FIRST_STATIC_ERROR.json"
+    },
+    {
+      "chunk": "8a8ab2",
+      "rc": 0,
+      "wall_seconds": 6.2275637,
+      "kind": "correctednewstatictool",
+      "static_checks": 156
+    },
+    {
+      "chunk": "352741",
+      "rc": 0,
+      "wall_seconds": 6.2832159,
+      "kind": "finalpost-editstatic",
+      "checks": 181
+    },
+    {
+      "chunk": "7a7caf",
+      "rc": 0,
+      "wall_seconds": 6.7014814,
+      "kind": "finalbundledPSparse",
+      "errors": []
+    }
+  ],
+  "agent_records": "physics/POLICY ownstaticscripts and outputs included underanalysis/root; snapshotsbeforefinalintegrationnotfinalcodepins"
+}

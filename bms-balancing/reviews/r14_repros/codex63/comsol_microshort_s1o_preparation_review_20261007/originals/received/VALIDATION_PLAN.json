@@ -1,0 +1,1468 @@
+{
+  "kind": "S1O_CHANGED_BRANCH_VALIDATION_PROPOSAL_NOT_EXECUTED",
+  "approved": false,
+  "native_ready": false,
+  "utc": "2026-10-07T13:59:42.722389+00:00",
+  "groups": 8,
+  "unique_cases": 98,
+  "inputs": 98,
+  "counts": {
+    "Python": 82,
+    "PowerShell5.1": 16
+  },
+  "engines": [
+    {
+      "path": "C:\\Users\\BML\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "bytes": 107312,
+      "sha256": "b7a12c3af0b4db44191eec14ea095eba731b7328917f570806183093d19ddca2"
+    },
+    {
+      "path": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+      "bytes": 495616,
+      "sha256": "8bb6fa8c283b4d92120b1ef249a9b311b0f804d4cabbe9981159976c8be76a5e"
+    }
+  ],
+  "engine_version_process_probe": false,
+  "budgets_s": {
+    "harness_seal": 600,
+    "python": 300,
+    "powershell": 180,
+    "preservation_delivery": 300,
+    "incomplete_closeout": 120,
+    "overall": 1500
+  },
+  "storage": {
+    "max_fixture_GiB": 1,
+    "max_delivery_MiB": 50,
+    "start_free_GiB": 2,
+    "profile_rows": "at least255*241*2 with derivative mutants; no originalMPH orlargeCSV copies"
+  },
+  "sessions": {
+    "Python": 1,
+    "PowerShell": 1,
+    "Java_compile": 0,
+    "JVM": 0,
+    "COMSOL": 0
+  },
+  "prospective_fixture_root": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_20261007_133011\\future_validation_fixture_001",
+  "fixture_created": false,
+  "commands": [
+    {
+      "argv": [
+        "C:\\Users\\BML\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-I",
+        "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_20261007_133011\\future_validation_fixture_001\\harness.py"
+      ],
+      "cwd": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_20261007_133011\\future_validation_fixture_001"
+    },
+    {
+      "argv": [
+        "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+        "-NoLogo",
+        "-NoProfile",
+        "-File",
+        "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_20261007_133011\\future_validation_fixture_001\\harness.ps1"
+      ],
+      "cwd": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_20261007_133011\\future_validation_fixture_001"
+    }
+  ],
+  "source_bindings": [
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_20261007_133011\\candidate\\consumer.py.inactive.txt",
+      "bytes": 21695,
+      "sha256": "710a1816d9bce518f2eb69ffff51f122655d50f36848dff0ecd70cb4ef1800d1"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_20261007_133011\\candidate\\control.py.inactive.txt",
+      "bytes": 18304,
+      "sha256": "8ec75e57336c4ffa33e61d513076fb1facd1cf90430b1e1ce1c15f9bb57ac00d"
+    },
+    {
+      "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_20261007_133011\\candidate\\Parent.ps1.inactive.txt",
+      "bytes": 15237,
+      "sha256": "7fdd3df5b50317e92309f283f91ca5acf878821ec1e5ac063a5bd64c25cee760"
+    }
+  ],
+  "source_loading": "Future approved harness loads exact content below inactive suffix; AST/extract ranges and terminalguard exclusions sealed BEFORE any import. No production/native adapters; spy inert adapters before candidate load.",
+  "powershell_extraction": "LF normalization only if recorded; exact functions from function start to final closing brace; trailing LF excluded. Bothrawfilesha and extractedspansha/line bounds sealed. Parse/extract only futureapprovedharness, notcurrentexecution.",
+  "python_ps_connection": "Python persists actual analyze results; same raw bytes and SHA consumed by PowerShell. Do not replace producer by hand-written summary.",
+  "cases": [
+    {
+      "id": "AUTH01",
+      "engine": "Python",
+      "source": "candidate/control.py.inactive.txt",
+      "target_functions": [
+        "authorize_execution"
+      ],
+      "fixture_mutation": "complete future fixture only",
+      "expected": "AUTHORIZED_ONE_RUN",
+      "required_reach": "authorize_execution",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "AUTH02",
+      "engine": "Python",
+      "source": "candidate/control.py.inactive.txt",
+      "target_functions": [
+        "authorize_execution"
+      ],
+      "fixture_mutation": "missing approval",
+      "expected": "SEPARATE_NATIVE_APPROVAL_REQUIRED",
+      "required_reach": "authorize_execution",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "AUTH03",
+      "engine": "Python",
+      "source": "candidate/control.py.inactive.txt",
+      "target_functions": [
+        "authorize_execution"
+      ],
+      "fixture_mutation": "wrong source bytes",
+      "expected": "SOURCE_IDENTITY",
+      "required_reach": "authorize_execution",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "AUTH04",
+      "engine": "Python",
+      "source": "candidate/control.py.inactive.txt",
+      "target_functions": [
+        "authorize_execution"
+      ],
+      "fixture_mutation": "wrong engine pin",
+      "expected": "ENGINE_OR_DEPENDENCY_IDENTITY",
+      "required_reach": "authorize_execution",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "AUTH05",
+      "engine": "Python",
+      "source": "candidate/control.py.inactive.txt",
+      "target_functions": [
+        "authorize_execution"
+      ],
+      "fixture_mutation": "wrong validation binding",
+      "expected": "VALIDATION_ACCEPTANCE_BINDING",
+      "required_reach": "authorize_execution",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "AUTH06",
+      "engine": "Python",
+      "source": "candidate/control.py.inactive.txt",
+      "target_functions": [
+        "authorize_execution"
+      ],
+      "fixture_mutation": "wrong sigma/run unit",
+      "expected": "APPROVED_RUN_UNIT_MISMATCH",
+      "required_reach": "authorize_execution",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "AUTH07",
+      "engine": "Python",
+      "source": "candidate/control.py.inactive.txt",
+      "target_functions": [
+        "authorize_execution"
+      ],
+      "fixture_mutation": "extra solve count",
+      "expected": "CALL_COUNTS_NOT_APPROVED",
+      "required_reach": "authorize_execution",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "AUTH08",
+      "engine": "Python",
+      "source": "candidate/control.py.inactive.txt",
+      "target_functions": [
+        "authorize_execution"
+      ],
+      "fixture_mutation": "changed cwd/argv",
+      "expected": "COMMAND_OR_CWD_MISMATCH",
+      "required_reach": "authorize_execution",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "AUTH09",
+      "engine": "Python",
+      "source": "candidate/control.py.inactive.txt",
+      "target_functions": [
+        "authorize_execution"
+      ],
+      "fixture_mutation": "existing runtime path",
+      "expected": "PATH_OR_CONCURRENT_WORK",
+      "required_reach": "authorize_execution",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "AUTH10",
+      "engine": "Python",
+      "source": "candidate/control.py.inactive.txt",
+      "target_functions": [
+        "authorize_execution"
+      ],
+      "fixture_mutation": "policy changed or elevated",
+      "expected": "POLICY_OR_PRIVILEGE_MISMATCH",
+      "required_reach": "authorize_execution",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "AUTH11",
+      "engine": "Python",
+      "source": "candidate/control.py.inactive.txt",
+      "target_functions": [
+        "authorize_execution"
+      ],
+      "fixture_mutation": "prior attempt exists",
+      "expected": "NO_RETRY_EXISTING_ATTEMPT",
+      "required_reach": "authorize_execution",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "AUTH12",
+      "engine": "Python",
+      "source": "candidate/control.py.inactive.txt",
+      "target_functions": [
+        "authorize_execution"
+      ],
+      "fixture_mutation": "current native_ready false",
+      "expected": "OFFLINE_NATIVE_NOT_READY",
+      "required_reach": "authorize_execution",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "AUTH13",
+      "engine": "Python",
+      "source": "candidate/control.py.inactive.txt",
+      "target_functions": [
+        "authorize_execution"
+      ],
+      "fixture_mutation": "native command null",
+      "expected": "NATIVE_COMMANDS_UNRESOLVED",
+      "required_reach": "authorize_execution",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "AUTH14",
+      "engine": "Python",
+      "source": "candidate/control.py.inactive.txt",
+      "target_functions": [
+        "authorize_execution"
+      ],
+      "fixture_mutation": "native paths null",
+      "expected": "NATIVE_PATHS_UNRESOLVED",
+      "required_reach": "authorize_execution",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "AUTH15",
+      "engine": "Python",
+      "source": "candidate/control.py.inactive.txt",
+      "target_functions": [
+        "authorize_execution"
+      ],
+      "fixture_mutation": "current policy pin null",
+      "expected": "CURRENT_POLICY_PIN_UNRESOLVED",
+      "required_reach": "authorize_execution",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "READ01",
+      "engine": "Python",
+      "source": "candidate/consumer.py.inactive.txt",
+      "target_functions": [
+        "read_csv_bytes"
+      ],
+      "fixture_mutation": "valid raw CSV+units then exact profile",
+      "expected": "RETURN_VALID_ROWS",
+      "required_reach": "read_csv_bytes",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "READ02",
+      "engine": "Python",
+      "source": "candidate/consumer.py.inactive.txt",
+      "target_functions": [
+        "read_csv_bytes"
+      ],
+      "fixture_mutation": "raw SHA mismatch",
+      "expected": "CSV_IDENTITY",
+      "required_reach": "read_csv_bytes",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "READ03",
+      "engine": "Python",
+      "source": "candidate/consumer.py.inactive.txt",
+      "target_functions": [
+        "read_csv_bytes"
+      ],
+      "fixture_mutation": "unit mismatch",
+      "expected": "UNIT_EVIDENCE",
+      "required_reach": "read_csv_bytes",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "READ04",
+      "engine": "Python",
+      "source": "candidate/consumer.py.inactive.txt",
+      "target_functions": [
+        "read_csv_bytes"
+      ],
+      "fixture_mutation": "wrong header",
+      "expected": "CSV_HEADER",
+      "required_reach": "read_csv_bytes",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "READ05",
+      "engine": "Python",
+      "source": "candidate/consumer.py.inactive.txt",
+      "target_functions": [
+        "read_csv_bytes"
+      ],
+      "fixture_mutation": "short row",
+      "expected": "CSV_WIDTH",
+      "required_reach": "read_csv_bytes",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "READ06",
+      "engine": "Python",
+      "source": "candidate/consumer.py.inactive.txt",
+      "target_functions": [
+        "read_csv_bytes"
+      ],
+      "fixture_mutation": "NaN numeric",
+      "expected": "NONFINITE",
+      "required_reach": "read_csv_bytes",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "READ07",
+      "engine": "Python",
+      "source": "candidate/consumer.py.inactive.txt",
+      "target_functions": [
+        "read_csv_bytes"
+      ],
+      "fixture_mutation": "empty numeric CSV",
+      "expected": "EMPTY_CSV",
+      "required_reach": "read_csv_bytes",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "READ08",
+      "engine": "Python",
+      "source": "candidate/consumer.py.inactive.txt",
+      "target_functions": [
+        "timed_rows"
+      ],
+      "fixture_mutation": "duplicate time",
+      "expected": "DUPLICATE_OR_UNORDERED_TIME",
+      "required_reach": "timed_rows",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "READ09",
+      "engine": "Python",
+      "source": "candidate/consumer.py.inactive.txt",
+      "target_functions": [
+        "coverage"
+      ],
+      "fixture_mutation": "required positive time missing",
+      "expected": "REQUIRED_TIME_MISSING",
+      "required_reach": "coverage",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "READ10",
+      "engine": "Python",
+      "source": "candidate/consumer.py.inactive.txt",
+      "target_functions": [
+        "coverage"
+      ],
+      "fixture_mutation": "empty/t0-only comparison",
+      "expected": "EMPTY_OR_ZERO_ONLY_COMPARISON",
+      "required_reach": "coverage",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "READ11",
+      "engine": "Python",
+      "source": "candidate/consumer.py.inactive.txt",
+      "target_functions": [
+        "profile_rows"
+      ],
+      "fixture_mutation": "wrong coordinate/domain",
+      "expected": "COORDINATE_DOMAIN",
+      "required_reach": "profile_rows",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "READ12",
+      "engine": "Python",
+      "source": "candidate/consumer.py.inactive.txt",
+      "target_functions": [
+        "profile_rows"
+      ],
+      "fixture_mutation": "missing profile row",
+      "expected": "PROFILE_MISSING",
+      "required_reach": "profile_rows",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "INIT01",
+      "engine": "Python",
+      "source": "candidate/consumer.py.inactive.txt",
+      "target_functions": [
+        "compare_initialization"
+      ],
+      "fixture_mutation": "all initial targets exact",
+      "expected": "PASS",
+      "required_reach": "compare_initialization",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "INIT02",
+      "engine": "Python",
+      "source": "candidate/consumer.py.inactive.txt",
+      "target_functions": [
+        "compare_initialization"
+      ],
+      "fixture_mutation": "exact absolute and relative boundaries",
+      "expected": "PASS",
+      "required_reach": "compare_initialization",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "INIT03",
+      "engine": "Python",
+      "source": "candidate/consumer.py.inactive.txt",
+      "target_functions": [
+        "compare_initialization"
+      ],
+      "fixture_mutation": "inventory boundary excess",
+      "expected": "INITIAL_INVENTORY_OR_COMPOSITION",
+      "required_reach": "compare_initialization",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "INIT04",
+      "engine": "Python",
+      "source": "candidate/consumer.py.inactive.txt",
+      "target_functions": [
+        "compare_initialization"
+      ],
+      "fixture_mutation": "first positive sample substituted for0",
+      "expected": "INITIAL_TIME_NOT_EXACT_ZERO",
+      "required_reach": "compare_initialization",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "INIT05",
+      "engine": "Python",
+      "source": "candidate/consumer.py.inactive.txt",
+      "target_functions": [
+        "compare_initialization"
+      ],
+      "fixture_mutation": "no postconsistency proof",
+      "expected": "INITIAL_PROVENANCE_OR_TARGETS",
+      "required_reach": "compare_initialization",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "INIT06",
+      "engine": "Python",
+      "source": "candidate/consumer.py.inactive.txt",
+      "target_functions": [
+        "compare_initialization"
+      ],
+      "fixture_mutation": "initial wrong unit",
+      "expected": "INITIAL_UNIT",
+      "required_reach": "compare_initialization",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "INIT07",
+      "engine": "Python",
+      "source": "candidate/consumer.py.inactive.txt",
+      "target_functions": [
+        "verify_coefficient_evidence"
+      ],
+      "fixture_mutation": "configured coefficient mismatch",
+      "expected": "COEFFICIENT_SETTINGS",
+      "required_reach": "verify_coefficient_evidence",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "INIT08",
+      "engine": "Python",
+      "source": "candidate/consumer.py.inactive.txt",
+      "target_functions": [
+        "verify_coefficient_evidence"
+      ],
+      "fixture_mutation": "settings only consumption claim",
+      "expected": "EFFECTIVE_COEFFICIENT_OPEN",
+      "required_reach": "verify_coefficient_evidence",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "INIT09",
+      "engine": "Python",
+      "source": "candidate/consumer.py.inactive.txt",
+      "target_functions": [
+        "verify_coefficient_evidence"
+      ],
+      "fixture_mutation": "matched installed mapping fixture",
+      "expected": "PASS",
+      "required_reach": "verify_coefficient_evidence",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "INIT10",
+      "engine": "Python",
+      "source": "candidate/consumer.py.inactive.txt",
+      "target_functions": [
+        "verify_coefficient_evidence"
+      ],
+      "fixture_mutation": "actual coefficient exceeds fixed tolerance",
+      "expected": "COEFFICIENT_CONSUMPTION",
+      "required_reach": "verify_coefficient_evidence",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "INIT11",
+      "engine": "Python",
+      "source": "candidate/consumer.py.inactive.txt",
+      "target_functions": [
+        "compare_initialization_pair"
+      ],
+      "fixture_mutation": "both valid individual initialstates butpairdifferenceexceeds",
+      "expected": "PAIR_INITIAL_STATE_MISMATCH",
+      "required_reach": "compare_initialization_pair",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "INIT12",
+      "engine": "Python",
+      "source": "candidate/consumer.py.inactive.txt",
+      "target_functions": [
+        "initial_profile_uniformity"
+      ],
+      "fixture_mutation": "particleaverage nonuniformatoneinitialcoordinate",
+      "expected": "INITIAL_PROFILE_NONUNIFORM",
+      "required_reach": "initial_profile_uniformity",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "POLICY01",
+      "engine": "Python",
+      "source": "candidate/consumer.py.inactive.txt",
+      "target_functions": [
+        "compare_policy"
+      ],
+      "fixture_mutation": "255 exact requests and extra common states",
+      "expected": "WITHIN_LIMITS_THIS_WINDOW",
+      "required_reach": "compare_policy",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "POLICY02",
+      "engine": "Python",
+      "source": "candidate/consumer.py.inactive.txt",
+      "target_functions": [
+        "compare_policy"
+      ],
+      "fixture_mutation": "voltage exactly1mV",
+      "expected": "WITHIN_LIMITS_THIS_WINDOW",
+      "required_reach": "compare_policy",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "POLICY03",
+      "engine": "Python",
+      "source": "candidate/consumer.py.inactive.txt",
+      "target_functions": [
+        "compare_policy"
+      ],
+      "fixture_mutation": "voltage above1mV valid native",
+      "expected": "EXCEEDS_LIMITS",
+      "required_reach": "compare_policy",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "POLICY04",
+      "engine": "Python",
+      "source": "candidate/consumer.py.inactive.txt",
+      "target_functions": [
+        "compare_policy"
+      ],
+      "fixture_mutation": "surface exactly1e-4",
+      "expected": "WITHIN_LIMITS_THIS_WINDOW",
+      "required_reach": "compare_policy",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "POLICY05",
+      "engine": "Python",
+      "source": "candidate/consumer.py.inactive.txt",
+      "target_functions": [
+        "compare_policy"
+      ],
+      "fixture_mutation": "surface above1e-4",
+      "expected": "EXCEEDS_LIMITS",
+      "required_reach": "compare_policy",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "POLICY06",
+      "engine": "Python",
+      "source": "candidate/consumer.py.inactive.txt",
+      "target_functions": [
+        "invariants"
+      ],
+      "fixture_mutation": "individual Li drift above1e-6",
+      "expected": "LI_DRIFT",
+      "required_reach": "invariants",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "POLICY07",
+      "engine": "Python",
+      "source": "candidate/consumer.py.inactive.txt",
+      "target_functions": [
+        "invariants"
+      ],
+      "fixture_mutation": "decomposition above1e-8",
+      "expected": "VOLTAGE_IDENTITY",
+      "required_reach": "invariants",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "POLICY08",
+      "engine": "Python",
+      "source": "candidate/consumer.py.inactive.txt",
+      "target_functions": [
+        "compare_policy"
+      ],
+      "fixture_mutation": "matched count but wrong coordinate",
+      "expected": "COORDINATE_DOMAIN",
+      "required_reach": "compare_policy",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "CHARGE01",
+      "engine": "Python",
+      "source": "candidate/consumer.py.inactive.txt",
+      "target_functions": [
+        "charge_balance"
+      ],
+      "fixture_mutation": "resolved balanced series with adequate bound",
+      "expected": "CONSISTENT",
+      "required_reach": "charge_balance",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "CHARGE02",
+      "engine": "Python",
+      "source": "candidate/consumer.py.inactive.txt",
+      "target_functions": [
+        "charge_balance"
+      ],
+      "fixture_mutation": "nearzero signal includingt0",
+      "expected": "INCONCLUSIVE",
+      "required_reach": "charge_balance",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "CHARGE03",
+      "engine": "Python",
+      "source": "candidate/consumer.py.inactive.txt",
+      "target_functions": [
+        "charge_balance"
+      ],
+      "fixture_mutation": "unknown quadrature bound",
+      "expected": "INCONCLUSIVE",
+      "required_reach": "charge_balance",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "CHARGE04",
+      "engine": "Python",
+      "source": "candidate/consumer.py.inactive.txt",
+      "target_functions": [
+        "charge_balance"
+      ],
+      "fixture_mutation": "bound above quarter allocation",
+      "expected": "INCONCLUSIVE",
+      "required_reach": "charge_balance",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "CHARGE05",
+      "engine": "Python",
+      "source": "candidate/consumer.py.inactive.txt",
+      "target_functions": [
+        "charge_balance"
+      ],
+      "fixture_mutation": "reverse current beyonddeadband",
+      "expected": "REVERSE_CURRENT",
+      "required_reach": "charge_balance",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "CHARGE06",
+      "engine": "Python",
+      "source": "candidate/consumer.py.inactive.txt",
+      "target_functions": [
+        "charge_balance"
+      ],
+      "fixture_mutation": "RN/RP inconsistency",
+      "expected": "REACTION_CURRENT_BALANCE",
+      "required_reach": "charge_balance",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "CHARGE07",
+      "engine": "Python",
+      "source": "candidate/consumer.py.inactive.txt",
+      "target_functions": [
+        "charge_balance"
+      ],
+      "fixture_mutation": "I vsA*j mismatch",
+      "expected": "CURRENT_AREA_CONVERSION",
+      "required_reach": "charge_balance",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "CHARGE08",
+      "engine": "Python",
+      "source": "candidate/consumer.py.inactive.txt",
+      "target_functions": [
+        "charge_balance"
+      ],
+      "fixture_mutation": "reverse Li transfer beyonddeadband",
+      "expected": "REVERSE_LI_TRANSFER",
+      "required_reach": "charge_balance",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "CHARGE09",
+      "engine": "Python",
+      "source": "candidate/consumer.py.inactive.txt",
+      "target_functions": [
+        "charge_balance"
+      ],
+      "fixture_mutation": "qN-qP exceeds",
+      "expected": "SOLID_TRANSFER_BALANCE",
+      "required_reach": "charge_balance",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "CHARGE10",
+      "engine": "Python",
+      "source": "candidate/consumer.py.inactive.txt",
+      "target_functions": [
+        "charge_balance"
+      ],
+      "fixture_mutation": "integral residual plus bound exceeds fixedlimit",
+      "expected": "INTEGRATED_CHARGE_BALANCE",
+      "required_reach": "charge_balance",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "CHARGE11",
+      "engine": "Python",
+      "source": "candidate/consumer.py.inactive.txt",
+      "target_functions": [
+        "charge_balance"
+      ],
+      "fixture_mutation": "reordered integral time",
+      "expected": "CHARGE_TIME",
+      "required_reach": "charge_balance",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "CHARGE12",
+      "engine": "Python",
+      "source": "candidate/consumer.py.inactive.txt",
+      "target_functions": [
+        "charge_balance"
+      ],
+      "fixture_mutation": "totalLi drift",
+      "expected": "LI_DRIFT",
+      "required_reach": "charge_balance",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "PAIRED01",
+      "engine": "Python",
+      "source": "candidate/consumer.py.inactive.txt",
+      "target_functions": [
+        "paired_classification"
+      ],
+      "fixture_mutation": "D,S strictly above5E andabsolute thresholds",
+      "expected": "DISTINGUISHABLE_AT_REST",
+      "required_reach": "paired_classification",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "PAIRED02",
+      "engine": "Python",
+      "source": "candidate/consumer.py.inactive.txt",
+      "target_functions": [
+        "paired_classification"
+      ],
+      "fixture_mutation": "smallD/S smallE",
+      "expected": "NOT_DISTINGUISHABLE_WITHIN_T",
+      "required_reach": "paired_classification",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "PAIRED03",
+      "engine": "Python",
+      "source": "candidate/consumer.py.inactive.txt",
+      "target_functions": [
+        "paired_classification"
+      ],
+      "fixture_mutation": "large numerical sensitivity masks signal",
+      "expected": "INCONCLUSIVE",
+      "required_reach": "paired_classification",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "PAIRED04",
+      "engine": "Python",
+      "source": "candidate/consumer.py.inactive.txt",
+      "target_functions": [
+        "paired_classification"
+      ],
+      "fixture_mutation": "D equalspositive threshold",
+      "expected": "INCONCLUSIVE",
+      "required_reach": "paired_classification",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "PAIRED05",
+      "engine": "Python",
+      "source": "candidate/consumer.py.inactive.txt",
+      "target_functions": [
+        "paired_classification"
+      ],
+      "fixture_mutation": "one Kaxis missing",
+      "expected": "K_INCOMPLETE",
+      "required_reach": "paired_classification",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "PAIRED06",
+      "engine": "Python",
+      "source": "candidate/consumer.py.inactive.txt",
+      "target_functions": [
+        "paired_classification"
+      ],
+      "fixture_mutation": "same-sigma pairing false",
+      "expected": "UNMATCHED_K_PAIR",
+      "required_reach": "paired_classification",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "PAIRED07",
+      "engine": "Python",
+      "source": "candidate/consumer.py.inactive.txt",
+      "target_functions": [
+        "paired_classification"
+      ],
+      "fixture_mutation": "2700endpoint missing",
+      "expected": "PAIRED_ENDPOINT_MISSING",
+      "required_reach": "paired_classification",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "RESOURCE01",
+      "engine": "Python",
+      "source": "candidate/control.py.inactive.txt",
+      "target_functions": [
+        "assess_resources"
+      ],
+      "fixture_mutation": "fresh measuredownedjob belowthresholds",
+      "expected": "CONTINUE_WITHIN_SAMPLED_LIMITS",
+      "required_reach": "assess_resources",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "RESOURCE02",
+      "engine": "Python",
+      "source": "candidate/control.py.inactive.txt",
+      "target_functions": [
+        "assess_resources"
+      ],
+      "fixture_mutation": "counter absent",
+      "expected": "STOP_REQUIRED",
+      "required_reach": "assess_resources",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "RESOURCE03",
+      "engine": "Python",
+      "source": "candidate/control.py.inactive.txt",
+      "target_functions": [
+        "assess_resources"
+      ],
+      "fixture_mutation": "counterNaN",
+      "expected": "STOP_REQUIRED",
+      "required_reach": "assess_resources",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "RESOURCE04",
+      "engine": "Python",
+      "source": "candidate/control.py.inactive.txt",
+      "target_functions": [
+        "assess_resources"
+      ],
+      "fixture_mutation": "ownership missing",
+      "expected": "STOP_REQUIRED",
+      "required_reach": "assess_resources",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "RESOURCE05",
+      "engine": "Python",
+      "source": "candidate/control.py.inactive.txt",
+      "target_functions": [
+        "assess_resources"
+      ],
+      "fixture_mutation": "doublecount aggregation",
+      "expected": "STOP_REQUIRED",
+      "required_reach": "assess_resources",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "RESOURCE06",
+      "engine": "Python",
+      "source": "candidate/control.py.inactive.txt",
+      "target_functions": [
+        "assess_resources"
+      ],
+      "fixture_mutation": "memory exceeds early stop",
+      "expected": "STOP_REQUIRED",
+      "required_reach": "assess_resources",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "RESOURCE07",
+      "engine": "Python",
+      "source": "candidate/control.py.inactive.txt",
+      "target_functions": [
+        "assess_resources"
+      ],
+      "fixture_mutation": "sample gap too long",
+      "expected": "STOP_REQUIRED",
+      "required_reach": "assess_resources",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "RESOURCE08",
+      "engine": "Python",
+      "source": "candidate/control.py.inactive.txt",
+      "target_functions": [
+        "assess_resources"
+      ],
+      "fixture_mutation": "wall entersstopreserve",
+      "expected": "STOP_REQUIRED",
+      "required_reach": "assess_resources",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "RESOURCE09",
+      "engine": "Python",
+      "source": "candidate/control.py.inactive.txt",
+      "target_functions": [
+        "advance_stop"
+      ],
+      "fixture_mutation": "supported cooperative request",
+      "expected": "WAITING_COOPERATIVE",
+      "required_reach": "advance_stop",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "RESOURCE10",
+      "engine": "Python",
+      "source": "candidate/control.py.inactive.txt",
+      "target_functions": [
+        "advance_stop"
+      ],
+      "fixture_mutation": "unsupportedwithoutforceapproval",
+      "expected": "UNRESOLVED",
+      "required_reach": "advance_stop",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "RESOURCE11",
+      "engine": "Python",
+      "source": "candidate/control.py.inactive.txt",
+      "target_functions": [
+        "advance_stop"
+      ],
+      "fixture_mutation": "unsupportedexplicitforceapproved",
+      "expected": "FORCE_PENDING",
+      "required_reach": "advance_stop",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "RESOURCE12",
+      "engine": "Python",
+      "source": "candidate/control.py.inactive.txt",
+      "target_functions": [
+        "advance_stop"
+      ],
+      "fixture_mutation": "cooperativewaitexpires",
+      "expected": "FORCE_PENDING",
+      "required_reach": "advance_stop",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "RESOURCE13",
+      "engine": "Python",
+      "source": "candidate/control.py.inactive.txt",
+      "target_functions": [
+        "advance_stop"
+      ],
+      "fixture_mutation": "force succeeded not yetverified",
+      "expected": "VERIFY_PENDING",
+      "required_reach": "advance_stop",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "RESOURCE14",
+      "engine": "Python",
+      "source": "candidate/control.py.inactive.txt",
+      "target_functions": [
+        "advance_stop"
+      ],
+      "fixture_mutation": "remaining member after force",
+      "expected": "UNRESOLVED",
+      "required_reach": "advance_stop",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "RESOURCE15",
+      "engine": "Python",
+      "source": "candidate/control.py.inactive.txt",
+      "target_functions": [
+        "advance_stop"
+      ],
+      "fixture_mutation": "verified emptyjob androot exit",
+      "expected": "TERMINATED_VERIFIED",
+      "required_reach": "advance_stop",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "RESOURCE16",
+      "engine": "Python",
+      "source": "candidate/control.py.inactive.txt",
+      "target_functions": [
+        "execute_once"
+      ],
+      "fixture_mutation": "authorizationdeny before spy firstsideeffect",
+      "expected": "OFFLINE_NATIVE_NOT_READY",
+      "required_reach": "execute_once",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "PARENT01",
+      "engine": "Windows PowerShell5.1",
+      "source": "candidate/Parent.ps1.inactive.txt",
+      "target_functions": [
+        "S1Decision"
+      ],
+      "fixture_mutation": "actual Python valid result +complete native evidence",
+      "expected": "AWAITING_S1_LIMITED_EXTERNAL_REVIEW",
+      "required_reach": "S1Decision",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "PARENT02",
+      "engine": "Windows PowerShell5.1",
+      "source": "candidate/Parent.ps1.inactive.txt",
+      "target_functions": [
+        "S1Decision"
+      ],
+      "fixture_mutation": "actual Python valid numericalexceedance",
+      "expected": "AWAITING_S1_LIMITED_EXTERNAL_REVIEW",
+      "required_reach": "S1Decision",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "PARENT03",
+      "engine": "Windows PowerShell5.1",
+      "source": "candidate/Parent.ps1.inactive.txt",
+      "target_functions": [
+        "S1Decision"
+      ],
+      "fixture_mutation": "actual Python protective stop",
+      "expected": "PROTECTIVE_STOP_INCOMPLETE",
+      "required_reach": "S1Decision",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "PARENT04",
+      "engine": "Windows PowerShell5.1",
+      "source": "candidate/Parent.ps1.inactive.txt",
+      "target_functions": [
+        "S1NativeAxis"
+      ],
+      "fixture_mutation": "childrc wrongtype/nonzero",
+      "expected": "NATIVE_INVOCATION_OR_FATAL",
+      "required_reach": "S1NativeAxis",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "PARENT05",
+      "engine": "Windows PowerShell5.1",
+      "source": "candidate/Parent.ps1.inactive.txt",
+      "target_functions": [
+        "S1NativeAxis"
+      ],
+      "fixture_mutation": "rc0fatal",
+      "expected": "NATIVE_INVOCATION_OR_FATAL",
+      "required_reach": "S1NativeAxis",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "PARENT06",
+      "engine": "Windows PowerShell5.1",
+      "source": "candidate/Parent.ps1.inactive.txt",
+      "target_functions": [
+        "S1Fields"
+      ],
+      "fixture_mutation": "missing nestedfield",
+      "expected": "INCOMPLETE",
+      "required_reach": "S1Fields",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "PARENT07",
+      "engine": "Windows PowerShell5.1",
+      "source": "candidate/Parent.ps1.inactive.txt",
+      "target_functions": [
+        "S1Fields"
+      ],
+      "fixture_mutation": "forgedcomparison summary",
+      "expected": "COMPARISON_SUMMARY_CONTRADICTION",
+      "required_reach": "S1Fields",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "PARENT08",
+      "engine": "Windows PowerShell5.1",
+      "source": "candidate/Parent.ps1.inactive.txt",
+      "target_functions": [
+        "S1Fields"
+      ],
+      "fixture_mutation": "init/configonly success claim",
+      "expected": "INITIALIZATION_OR_ACTUAL_COEFFICIENT_UNVERIFIED",
+      "required_reach": "S1Fields",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "PARENT09",
+      "engine": "Windows PowerShell5.1",
+      "source": "candidate/Parent.ps1.inactive.txt",
+      "target_functions": [
+        "S1FinalReturn"
+      ],
+      "fixture_mutation": "record writer throws",
+      "expected": "INCOMPLETE",
+      "required_reach": "S1FinalReturn",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "PARENT10",
+      "engine": "Windows PowerShell5.1",
+      "source": "candidate/Parent.ps1.inactive.txt",
+      "target_functions": [
+        "S1FinalReturn"
+      ],
+      "fixture_mutation": "postwrite totaloverrun",
+      "expected": "INCOMPLETE",
+      "required_reach": "S1FinalReturn",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "PARENT11",
+      "engine": "Windows PowerShell5.1",
+      "source": "candidate/Parent.ps1.inactive.txt",
+      "target_functions": [
+        "S1FinalReturn"
+      ],
+      "fixture_mutation": "postwrite deliveryoverrun",
+      "expected": "INCOMPLETE",
+      "required_reach": "S1FinalReturn",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "PARENT12",
+      "engine": "Windows PowerShell5.1",
+      "source": "candidate/Parent.ps1.inactive.txt",
+      "target_functions": [
+        "S1FinalReturn"
+      ],
+      "fixture_mutation": "postwrite exact limits andsuccess",
+      "expected": "AWAITING_S1_LIMITED_EXTERNAL_REVIEW",
+      "required_reach": "S1FinalReturn",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "PARENT13",
+      "engine": "Windows PowerShell5.1",
+      "source": "candidate/Parent.ps1.inactive.txt",
+      "target_functions": [
+        "S1Decision"
+      ],
+      "fixture_mutation": "Expected missing positiveend/requestcount",
+      "expected": "EXPECTED_REQUIRED_FIELDS",
+      "required_reach": "S1Decision",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "PARENT14",
+      "engine": "Windows PowerShell5.1",
+      "source": "candidate/Parent.ps1.inactive.txt",
+      "target_functions": [
+        "S1Decision"
+      ],
+      "fixture_mutation": "chargeINCONCLUSIVE producer cannotbe promoted",
+      "expected": "INCOMPLETE",
+      "required_reach": "S1Decision",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "PARENT15",
+      "engine": "Windows PowerShell5.1",
+      "source": "candidate/Parent.ps1.inactive.txt",
+      "target_functions": [
+        "S1Fields"
+      ],
+      "fixture_mutation": "initial_profile evidence missing",
+      "expected": "EVIDENCE_AXIS_MISSING:initial_profile",
+      "required_reach": "S1Fields",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    },
+    {
+      "id": "PARENT16",
+      "engine": "Windows PowerShell5.1",
+      "source": "candidate/Parent.ps1.inactive.txt",
+      "target_functions": [
+        "S1FinalReturn"
+      ],
+      "fixture_mutation": "negative deliveryelapsed fromfuturestart",
+      "expected": "INCOMPLETE",
+      "required_reach": "S1FinalReturn",
+      "reach_rule": "Harness must prove this exact real function was reached; exact first reason/status must match. An earlier rejection or arbitrary exception is FAIL.",
+      "positive_control": "Same valid sealed fixture with only stated mutation removed; controls shared rather than counted twice",
+      "first_unexpected_failure": "preserve source seal/rawstdout/stderr/rc/firsterror; do not retry or run following engine"
+    }
+  ],
+  "unresolved_preseal": [
+    "Fixture generator/harness bytes and exact targetfunction for compound function names are not yet authored. Required in approved600sseal BEFORE tests; if cannotfinish stop withouttest.",
+    "Current inactive manifest cannot authorize native; positive authorization fixture is fixture-only with structurallycompletechanged fields, neverstored atrealapprovalpaths.",
+    "No native API/readback orOSresourceadapter is tested. Implementing those later changesmanifest and requires specific validation."
+  ]
+}

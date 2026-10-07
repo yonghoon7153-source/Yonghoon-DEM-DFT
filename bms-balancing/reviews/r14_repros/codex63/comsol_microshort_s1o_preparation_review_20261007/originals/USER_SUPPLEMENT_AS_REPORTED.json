@@ -1,0 +1,28 @@
+{
+  "provenance": "Selected fields transcribed from the user's message for review. Not the original receipt or tool-return sidecar bytes. No claim of byte-identical reconstruction.",
+  "reported_receipt": {
+    "recipient": null,
+    "bytes": 1665,
+    "sha256": "de75c05b03d21eaeaf0920686d06c1db07f428ed0df19261814320a66a525abe",
+    "total_elapsed_snapshot_s": 2299.118492800044,
+    "delivery_elapsed_snapshot_s": 7.799025900043944,
+    "overall_limit_s": 3600,
+    "delivery_limit_s": 300,
+    "selected_originals_after_pack_unchanged": true,
+    "selected_original_count": 10,
+    "input_attachment_count": 3,
+    "scope": "After package readback and original hash checks; before receipt write and tool return. Pre-origin intake excluded."
+  },
+  "reported_tool_return": {
+    "chunk_id": "892caf",
+    "exit_code": 0,
+    "wall_time_seconds": 7.0828027,
+    "original_token_count": 245,
+    "final_snapshot_s": 2299.133349100128,
+    "delivery_snapshot_s": 7.813882200127864,
+    "scope": "After receipt write/readback, before packaging tool return. Subsequent transcript write excluded."
+  },
+  "not_added_to_snapshot": "tool wall time",
+  "directly_verified_here": "Input archive bytes/hash and archive-contained records only",
+  "original_external_sidecar_bytes_received": false
+}

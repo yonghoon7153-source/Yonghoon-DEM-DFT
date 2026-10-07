@@ -1,0 +1,8 @@
+{
+  "kind": "POWERSHELL_STATIC_PARSE_ONLY",
+  "utc": "2026-10-07T14:06:57.9680178+00:00",
+  "source_sha256": "7fdd3df5b50317e92309f283f91ca5acf878821ec1e5ac063a5bd64c25cee760",
+  "errors": [],
+  "candidate_executed": false,
+  "parser_assembly": "C:\\Users\\BML\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell\\System.Management.Automation.dll"
+}

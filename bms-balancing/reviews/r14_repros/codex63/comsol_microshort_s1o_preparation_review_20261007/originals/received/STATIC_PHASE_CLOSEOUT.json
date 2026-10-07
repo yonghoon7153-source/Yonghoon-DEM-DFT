@@ -1,0 +1,9 @@
+{
+  "utc": "2026-10-07T14:03:17.5184560+00:00",
+  "elapsed_s": 1985.953013,
+  "static_phase_s": 239.62485319999996,
+  "static_limit_s": 600,
+  "passed_static156": true,
+  "functional_tests": 0,
+  "next": "validation and binding finalization"
+}

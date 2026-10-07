@@ -1,0 +1,196 @@
+{
+  "kind": "FINAL_S0_HANDOFF_MANIFEST",
+  "self_excluded": true,
+  "files": [
+    {
+      "path": "analysis/ANALYTIC_RESULT.json",
+      "bytes": 11427,
+      "sha256": "27d595a32946cf7f022c4837d156f784b3e017ade1781681f9d17c1ee6393fc5"
+    },
+    {
+      "path": "analysis/ARITHMETIC_TOOL_RETURN.json",
+      "bytes": 13143,
+      "sha256": "409439eef0dca8005d8a786d3baaa1cc890e89150a05fa84c3f4f67f63254924"
+    },
+    {
+      "path": "analysis/s0_analytic.py",
+      "bytes": 6231,
+      "sha256": "754f944069460a56dd1f45230c699ada30ec0c637cf1a3717157b52f2020b2ed"
+    },
+    {
+      "path": "candidate/LIMITED_STATIC_REVIEW_PLAN.md",
+      "bytes": 4124,
+      "sha256": "a05757b916ea7ba18e6c23aa1713bd88cbd6b86786dfd91f99d78d2cfe62bfa8"
+    },
+    {
+      "path": "candidate/LITERAL_CHANGE_MAP.json",
+      "bytes": 38378,
+      "sha256": "0a7442b05ccf245168a503f87aa21b5bd70fc2145239be91eda6d32efcb09f56"
+    },
+    {
+      "path": "candidate/MicroshortS1RestCandidate.java.inactive.txt",
+      "bytes": 77277,
+      "sha256": "a90d1e66db796f6b8077fa1d158620d1ec548265a1508b698e35da8ef6e3492c"
+    },
+    {
+      "path": "candidate/README_INACTIVE.md",
+      "bytes": 2837,
+      "sha256": "540dc8ebcab10339483a92f009c2083de4fcfef464119df2d8134697a540275a"
+    },
+    {
+      "path": "candidate/REQUESTED_TIMES_S1_3600.txt",
+      "bytes": 1802,
+      "sha256": "2a31f758d44c1a5bb51428f09f1fc7fb8f0b0ab9d9bb5df51ae6a346ce94f05c"
+    },
+    {
+      "path": "candidate/S1_REVIEW_ONLY.diff.txt",
+      "bytes": 42205,
+      "sha256": "ae8d8246e010b8bdb310e03e34d2bfcb6bc506922c5a9ee9d1e8949b06b52791"
+    },
+    {
+      "path": "candidate/SOURCE_PROVENANCE.json",
+      "bytes": 697,
+      "sha256": "132f6f3483d175266081a56b67d61fe35c098213de8af8ea380a5f122e9f2baf"
+    },
+    {
+      "path": "CLAUDE_REPLY_KO.md",
+      "bytes": 2993,
+      "sha256": "6ed313acbc7b477e7d647a15a51b9973bfd99ae3541963af3289acb11f1124c3"
+    },
+    {
+      "path": "DECISION.json",
+      "bytes": 4071,
+      "sha256": "dc8b84e3d9665132bf3caf82318ec0a51328057fc5ee186cff9bf79db19638c1"
+    },
+    {
+      "path": "history/FIRST_DELIVERY_RECEIPT.json",
+      "bytes": 851,
+      "sha256": "92fd052c4cef785e39bfe10cade45ca3f05f9b149ed564ec26019fb61f7ea049"
+    },
+    {
+      "path": "finalize_handoff.py",
+      "bytes": 4559,
+      "sha256": "e64f1e816b9b12ed8f2cb43f5b1bb90ac07dfd2bcb76fc16ff62af67563e5512"
+    },
+    {
+      "path": "notes/COST_AND_DESIGN.md",
+      "bytes": 24632,
+      "sha256": "e4ba481edd9ba314b0dd2b78ec8c37aeeaa40f00a313bc4df4587dcb4ad4c222"
+    },
+    {
+      "path": "notes/LITERATURE_AND_ADVERSARIAL.md",
+      "bytes": 24822,
+      "sha256": "4d1105bf929aaa47b9581724bcab7ecc2ce3071d16687f3fab2bd8608684c4b2"
+    },
+    {
+      "path": "notes/PHYSICS_CANDIDATE.md",
+      "bytes": 12440,
+      "sha256": "3eaf57d58bbb26baa2afa6cb984892d6ed138e9c6bcdb0b3965a2f7551074138"
+    },
+    {
+      "path": "package_review.py",
+      "bytes": 7456,
+      "sha256": "d98da1ec921abbaedae642a0f856445aef980a0ae5458c5b5fbb975d67f984f7"
+    },
+    {
+      "path": "history/PRELIMINARY_PACKAGE_TOOL_RETURN.json",
+      "bytes": 1409,
+      "sha256": "b1db307f86e0dc1f4d42b3329865f4110008e98cca97ef699b545bcd54830db7"
+    },
+    {
+      "path": "README_KO.md",
+      "bytes": 1929,
+      "sha256": "54098c3fec1c44d1635770d77f6e292252decd5d08d3a4d2b415ae0b5f74516f"
+    },
+    {
+      "path": "REVIEW_AUDIT_KO.md",
+      "bytes": 1638,
+      "sha256": "4456373ff3f8d450d81e9d5251d7a5c899668354f1f335eb67647dec77b58a6e"
+    },
+    {
+      "path": "S0_REPORT_KO.md",
+      "bytes": 36325,
+      "sha256": "5736acb9e235c199055601f919e60a5a8595a9b0092369415d691b6473b16c08"
+    },
+    {
+      "path": "S0_SUMMARY_KO.md",
+      "bytes": 3386,
+      "sha256": "21fc9338525c3c18ef18dcf036be30c3a45556b82122891b4b2ba754fba9c61a"
+    },
+    {
+      "path": "S1_SCOPE_DRAFT_KO.md",
+      "bytes": 8604,
+      "sha256": "247965ab4af76e70ca1bbf850a62856f90bb8f3f4b491ce931c83381675b51ea"
+    },
+    {
+      "path": "SOURCE_COPY_NOTE_KO.md",
+      "bytes": 1345,
+      "sha256": "f49eba91ef9d4cebfc11be64d281c82b1ed6c2852d0100b9f93bea6d96d4f2d8"
+    },
+    {
+      "path": "SOURCE_IDENTITIES.json",
+      "bytes": 5402,
+      "sha256": "8aeffcf0993cbe3fc2f32a7f8a8866a86e8cebe1f89c586da8cbdcb48e6fdc08"
+    },
+    {
+      "path": "SOURCE_PROVENANCE_EXPECTED.json",
+      "bytes": 2797,
+      "sha256": "d69891c85202dbfab546fcc0babdfcb3d02673e638ef2ef02a8f9ffac6f6fb2a"
+    },
+    {
+      "path": "SOURCE_TEXT_EQUIVALENCE.json",
+      "bytes": 3524,
+      "sha256": "16329a1f1011bf82ed7aeb23cd8f549ab789c6f9a01dbbae798192872143218a"
+    },
+    {
+      "path": "sources/COMSOL_EXPERIMENT_CORRESPONDENCE_v2_20261004.md",
+      "bytes": 19330,
+      "sha256": "aa2380b3e3d95e0fb2af78571246c976d1e510de19da712e4aa0ec544845d305"
+    },
+    {
+      "path": "sources/COMSOL_MICROSHORT_PHYSICS_REQUEST_DRAFT_20261007.md",
+      "bytes": 8954,
+      "sha256": "9d989f5117da97145f5a8faeccd86f8f33e9fef4c341476c7df13e06d9c23c43"
+    },
+    {
+      "path": "sources/COMSOL_MICROSHORT_S0_SEND_TO_CODEX_v2_DEEP_20261007.md",
+      "bytes": 11067,
+      "sha256": "db1dc3080da8871b32a85e8d66603cc914a3e7e8d8d9af7a050be9afbfe91ad5"
+    },
+    {
+      "path": "sources/COMSOL_NEXT_PLAN_20261004.md",
+      "bytes": 19071,
+      "sha256": "a839795b500075bfe90c8d9530cf6d4b96e216702839b7eb3e864cf0586a5f97"
+    },
+    {
+      "path": "sources/COMSOL_REBUILD_SPEC.md",
+      "bytes": 480347,
+      "sha256": "fe074a939d96bc25bf8e70c963af4b9ea0e055f80e77bfa1954dadb6576cb020"
+    },
+    {
+      "path": "sources/MICROSHORT_MPH_REVIEW.md",
+      "bytes": 42699,
+      "sha256": "b0b665ff88c67c3a71e9bdb45f09d52e9b0bba48dd548b4ae95e66582ced8133"
+    },
+    {
+      "path": "sources/MSC_SEMINAR_2026-09-23_APPLICATION.md",
+      "bytes": 75085,
+      "sha256": "5c6fd2fb1b7448b682cd5045d85e4f561f2c30a68d2eb0c55216d679bb40ee20"
+    },
+    {
+      "path": "sources/NEXT_MODEL_READINESS_DECISION.md",
+      "bytes": 25397,
+      "sha256": "78fed903f442a2a54d4a97a7ab656bd99e402c9fd3d58aa51150a94749c2ad59"
+    },
+    {
+      "path": "sources/Normal480Candidate.java.txt",
+      "bytes": 99959,
+      "sha256": "c70526cf6884eabc57b63dd43dce4b47fb0decf59af68d3f550f1b987d053797"
+    },
+    {
+      "path": "STATIC_ARTIFACT_AUDIT.json",
+      "bytes": 788,
+      "sha256": "f669657c50001643aab1d9f3b5c92421b06ef40f07551caa0484e901e984fc4e"
+    }
+  ]
+}

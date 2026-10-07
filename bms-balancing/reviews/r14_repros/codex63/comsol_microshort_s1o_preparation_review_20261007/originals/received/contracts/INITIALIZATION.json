@@ -1,0 +1,337 @@
+{
+  "schema": "S1O_INITIALIZATION_V1",
+  "status": "OFFLINE_PROPOSAL_PARTIAL",
+  "native_ready": false,
+  "source_java_sha256": "a90d1e66db796f6b8077fa1d158620d1ec548265a1508b698e35da8ef6e3492c",
+  "approved": false,
+  "usable": false,
+  "purpose": "Same uniform concentration/inventory initial-value problem across sigma; finite sigma is not equilibrium.",
+  "parameters_from_source": {
+    "LAM_NE": "0.0257219788",
+    "LAM_PE": "0.0296398242",
+    "LLI": "0.0439355",
+    "T_K": "298.15",
+    "A_c_m2": "1",
+    "A_cell_m2": "0.000153938",
+    "xN": "0.445",
+    "xP": "0.58115165570098936406424386997458740786704380450096",
+    "ce_mol_m3": "1200",
+    "epss_N": "0.614983772541864",
+    "epss_P": "0.570600894175674",
+    "epss_short": ".55",
+    "epsl_N": "0.285016227458136",
+    "epsl_P": "0.329399105824326",
+    "epsl_sep": ".45"
+  },
+  "initial_stocks": {
+    "nN_mol_m2": "0.448367436714966419370720",
+    "nP_mol_m2": "0.73985824181931189572561339542262762103113306048691",
+    "nE_mol_m2": "0.048677285380912099200",
+    "solid_total_mol_m2": "1.1882256785342783150963333954226276210311330604869",
+    "all_total_mol_m2": "1.2369029639151904142963333954226276210311330604869"
+  },
+  "consumer_projection": {
+    "function": "compare_initialization",
+    "targets": [
+      {
+        "name": "Li_N_mol_m2",
+        "target": "0.448367436714966419370720",
+        "unit": "mol/m^2",
+        "abs_tol": "1e-9",
+        "rel_tol": "1e-6",
+        "expression": "comp1.intd1(comp1.liion.epss*comp1.liion.cs_average)",
+        "domain_or_selection": [
+          1
+        ],
+        "source": "reference/s0/candidate/MicroshortS1RestCandidate.java.inactive.txt:448"
+      },
+      {
+        "name": "Li_P_mol_m2",
+        "target": "0.73985824181931189572561339542262762103113306048691",
+        "unit": "mol/m^2",
+        "abs_tol": "1e-9",
+        "rel_tol": "1e-6",
+        "expression": "comp1.intd3(comp1.liion.epss*comp1.liion.cs_average)",
+        "domain_or_selection": [
+          3
+        ],
+        "source": "reference/s0/candidate/MicroshortS1RestCandidate.java.inactive.txt:448"
+      },
+      {
+        "name": "Li_electrolyte_mol_m2",
+        "target": "0.048677285380912099200",
+        "unit": "mol/m^2",
+        "abs_tol": "1e-9",
+        "rel_tol": "1e-6",
+        "expression": "comp1.intd1(comp1.liion.epsl*comp1.cl)+comp1.intd2(comp1.liion.epsl*comp1.cl)+comp1.intd3(comp1.liion.epsl*comp1.cl)",
+        "domain_or_selection": [
+          1,
+          2,
+          3
+        ],
+        "source": "reference/s0/candidate/MicroshortS1RestCandidate.java.inactive.txt:449"
+      },
+      {
+        "name": "xavg_N",
+        "target": "0.445",
+        "unit": "1",
+        "abs_tol": "1e-8",
+        "rel_tol": "1e-6",
+        "expression": "comp1.intd1(comp1.liion.cs_average)/(L_el*cs_Gr_max)",
+        "domain_or_selection": [
+          1
+        ],
+        "source": "reference/s0/candidate/MicroshortS1RestCandidate.java.inactive.txt:450"
+      },
+      {
+        "name": "xavg_P",
+        "target": "0.58115165570098936406424386997458740786704380450096",
+        "unit": "1",
+        "abs_tol": "1e-8",
+        "rel_tol": "1e-6",
+        "expression": "comp1.intd3(comp1.liion.cs_average)/(L_pos*cs_NCM_max)",
+        "domain_or_selection": [
+          3
+        ],
+        "source": "reference/s0/candidate/MicroshortS1RestCandidate.java.inactive.txt:450"
+      },
+      {
+        "name": "xsurf_N_min",
+        "target": "0.445",
+        "unit": "1",
+        "abs_tol": "1e-8",
+        "rel_tol": "1e-6",
+        "expression": "comp1.minsurf1(comp1.liion.socloc_surface)",
+        "domain_or_selection": [
+          1
+        ],
+        "source": "reference/s0/candidate/MicroshortS1RestCandidate.java.inactive.txt:397"
+      },
+      {
+        "name": "xsurf_N_max",
+        "target": "0.445",
+        "unit": "1",
+        "abs_tol": "1e-8",
+        "rel_tol": "1e-6",
+        "expression": "comp1.maxsurf1(comp1.liion.socloc_surface)",
+        "domain_or_selection": [
+          1
+        ],
+        "source": "reference/s0/candidate/MicroshortS1RestCandidate.java.inactive.txt:397"
+      },
+      {
+        "name": "xsurf_P_min",
+        "target": "0.58115165570098936406424386997458740786704380450096",
+        "unit": "1",
+        "abs_tol": "1e-8",
+        "rel_tol": "1e-6",
+        "expression": "comp1.minsurf3(comp1.liion.socloc_surface)",
+        "domain_or_selection": [
+          3
+        ],
+        "source": "reference/s0/candidate/MicroshortS1RestCandidate.java.inactive.txt:398"
+      },
+      {
+        "name": "xsurf_P_max",
+        "target": "0.58115165570098936406424386997458740786704380450096",
+        "unit": "1",
+        "abs_tol": "1e-8",
+        "rel_tol": "1e-6",
+        "expression": "comp1.maxsurf3(comp1.liion.socloc_surface)",
+        "domain_or_selection": [
+          3
+        ],
+        "source": "reference/s0/candidate/MicroshortS1RestCandidate.java.inactive.txt:398"
+      },
+      {
+        "name": "ce_min",
+        "target": "1200",
+        "unit": "mol/m^3",
+        "abs_tol": "1e-5",
+        "rel_tol": "1e-8",
+        "expression": "comp1.minguardall(comp1.cl)",
+        "domain_or_selection": [
+          1,
+          2,
+          3
+        ],
+        "source": "reference/s0/candidate/MicroshortS1RestCandidate.java.inactive.txt:374"
+      },
+      {
+        "name": "ce_max",
+        "target": "1200",
+        "unit": "mol/m^3",
+        "abs_tol": "1e-5",
+        "rel_tol": "1e-8",
+        "expression": "cl; MaxLine over domains 1,2,3",
+        "domain_or_selection": [
+          1,
+          2,
+          3
+        ],
+        "source": "reference/s0/candidate/MicroshortS1RestCandidate.java.inactive.txt:470"
+      },
+      {
+        "name": "phis_ground_V",
+        "target": "0",
+        "unit": "V",
+        "abs_tol": "1e-9",
+        "rel_tol": "1",
+        "expression": "phis at boundary 1",
+        "domain_or_selection": [
+          1
+        ],
+        "source": "reference/s0/candidate/MicroshortS1RestCandidate.java.inactive.txt:466"
+      }
+    ],
+    "comparison": "abs(observed-target)<=abs_tol AND abs(observed-target)/max(abs(target),abs_tol)<=rel_tol",
+    "all_targets_required": true
+  },
+  "paired_initial_comparison": {
+    "nearzero_sigma_S_m": "1e-20",
+    "finite_sigmas_S_m": [
+      "1.7e-8",
+      "1.7e-7",
+      "1.7e-6"
+    ],
+    "same_target_per_run": true,
+    "pairwise_li_abs_tol_mol_m2": "1e-9",
+    "pairwise_x_abs_tol": "1e-8",
+    "pairwise_ce_abs_tol_mol_m3": "1e-5",
+    "pairwise_required": true,
+    "potential_equality_required": false,
+    "why": "Each run passes target and pairwise concentration/inventory; individual target limits do not license twice the pairwise mismatch."
+  },
+  "profile_initial_uniformity": {
+    "count_per_electrode": 241,
+    "N_coordinate_m": [
+      "0",
+      "0.000052"
+    ],
+    "P_coordinate_m": [
+      "0.000077",
+      "0.000121"
+    ],
+    "domains": {
+      "N": 1,
+      "P": 3
+    },
+    "fields": [
+      "x_surface",
+      "x_particle_average"
+    ],
+    "same_target_as_electrode": true,
+    "abs_tol": "1e-8",
+    "time_interpolation": false,
+    "arbitrary_spatial_arithmetic_mean_is_not_electrode_average": true
+  },
+  "potential_current_observations": [
+    {
+      "name": "phis_sep_left_V",
+      "expression": "phis",
+      "selection_boundary": 2,
+      "coordinate_m": "0.000052",
+      "unit": "V",
+      "expected": "finite; sigma-specific algebraic result",
+      "source": "reference/s0/candidate/MicroshortS1RestCandidate.java.inactive.txt:460"
+    },
+    {
+      "name": "phis_sep_right_V",
+      "expression": "phis",
+      "selection_boundary": 3,
+      "coordinate_m": "0.000077",
+      "unit": "V",
+      "expected": "finite; sigma-specific algebraic result",
+      "source": "reference/s0/candidate/MicroshortS1RestCandidate.java.inactive.txt:460"
+    },
+    {
+      "name": "I_leak_model_A",
+      "expression": "-A_c*comp1.intd2(comp1.liion.Isx)/L_sep",
+      "unit": "A",
+      "expected": "not preset from S0 OCV; current/charge contract determines balance and resolution",
+      "source": "reference/s0/candidate/MicroshortS1RestCandidate.java.inactive.txt:457"
+    },
+    {
+      "name": "reaction_N_A_m2",
+      "expression": "comp1.intd1(comp1.liion.ivtot)",
+      "unit": "A/m^2",
+      "expected": "RN≈j within CHARGE_BALANCE current tolerance",
+      "source": "reference/s0/candidate/MicroshortS1RestCandidate.java.inactive.txt:457"
+    },
+    {
+      "name": "reaction_P_A_m2",
+      "expression": "comp1.intd3(comp1.liion.ivtot)",
+      "unit": "A/m^2",
+      "expected": "RP≈-j within CHARGE_BALANCE current tolerance",
+      "source": "reference/s0/candidate/MicroshortS1RestCandidate.java.inactive.txt:457"
+    }
+  ],
+  "readback_phases": [
+    {
+      "phase": "configured_pre_solve",
+      "required": [
+        "raw CDI feature properties and feature type",
+        "solver Time consistent property",
+        "CellSOCandInitialChargeInventory=0",
+        "pin1.csinit for N/P",
+        "init1.cl",
+        "resolved parameters+SI units",
+        "all three guard strings and domain selections",
+        "auto-generated solver tree identity"
+      ],
+      "claim": "configuration only; does not prove initialization or actual effective coefficients"
+    },
+    {
+      "phase": "consistent_initialization",
+      "time_s": "0",
+      "required": [
+        "native provenance proving consistency completed before positive integration",
+        "all consumer targets",
+        "241-point surface/particle profiles",
+        "sigma-specific potentials/currents"
+      ],
+      "substitute_first_positive_time": false,
+      "positive_time_only_status": "OPEN_INITIAL_STATE_NOT_OBSERVED"
+    },
+    {
+      "phase": "completed_result",
+      "required": [
+        "actual stored time vector",
+        "native accepted steps and start/stop reason",
+        "all guard values",
+        "final fields and external completion/budget evidence"
+      ],
+      "claim": "cannot retrospectively label input settings as observed t0"
+    }
+  ],
+  "zero_plus_policy": {
+    "record_actual_time": true,
+    "not_renamed_to_zero": true,
+    "may_report_changes": true,
+    "does_not_replace_t0_target_comparison": true,
+    "why": "Finite-sigma state may physically change before a positive-time sample; no automatic tolerance enlargement or extrapolation."
+  },
+  "call_budget": {
+    "future_native_batch_max": 1,
+    "future_runAll_max": 1,
+    "CDI_generated_inside_declared_sequence": "must list solver phases and time under that call",
+    "additional_initialization_or_solve_approved": false,
+    "if_t0_requires_extra_call": "STOP_AND_REQUEST_EXPLICIT_CALL_BUDGET_CHANGE"
+  },
+  "tolerance_status": "PROPOSED_NUMERIC_LIMITS_FOR_REVIEW_NOT_NATIVE_PASS; Li abs1e-9 and total drift1e-6 preserve prior ceilings; new init x/ce tighter limits are pre-result proposals.",
+  "open_items": [
+    {
+      "id": "INIT_CDI_TYPE",
+      "reason": "Source creates CurrentDistributionInitialization but does not set/read actual installed CDI type. Do not invent property key."
+    },
+    {
+      "id": "INIT_CONSISTENT_STAGE",
+      "reason": "Time consistent setting getter is source evidence; successful post-consistency t0 solution extraction/provenance under one runAll is unobserved."
+    },
+    {
+      "id": "INIT_ELECTROLYTE_MAX",
+      "reason": "MaxLine configured expression exists; actual initialized all-domain maximum is not observed."
+    }
+  ],
+  "failure_actions": "Keep first reason and stop next native phase; no modifying CDI, initial stock, sigma, or tolerances to pass."
+}

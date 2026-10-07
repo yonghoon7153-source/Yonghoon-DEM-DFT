@@ -1,0 +1,326 @@
+"""S1-O inactive implementation. Never imported or tested in this preparation.
+Data-only functions; native provenance/readback adapter is deliberately unresolved.
+No automatic PASS from caller summaries. Numerical exceedance != execution failure.
+"""
+from decimal import Decimal, localcontext
+import csv
+import hashlib
+import io
+
+class EvidenceError(ValueError):
+    def __init__(self, reason, stage):
+        super().__init__(reason)
+        self.reason, self.stage = reason, stage
+
+def require(ok, reason, stage):
+    if not ok:
+        raise EvidenceError(reason, stage)
+
+def number(value, stage='number'):
+    require(not isinstance(value, (bool, float)), 'NONCANONICAL_NUMBER', stage)
+    try:
+        result = Decimal(value)
+    except Exception as exc:
+        raise EvidenceError('NUMBER_SYNTAX', stage) from exc
+    require(result.is_finite(), 'NONFINITE', stage)
+    return result
+
+def decimal_context(function):
+    def wrapped(*args, **kwargs):
+        with localcontext() as context:
+            context.prec = 50
+            return function(*args, **kwargs)
+    return wrapped
+
+def read_csv_bytes(raw, expected_header, expected_identity, unit_record, expected_units):
+    """Raw bytes + unit evidence supplied after external manifest binding."""
+    stage = 'read_csv_bytes'
+    require(len(raw) == expected_identity['bytes'] and
+            hashlib.sha256(raw).hexdigest() == expected_identity['sha256'], 'CSV_IDENTITY', stage)
+    require(unit_record == expected_units, 'UNIT_EVIDENCE', stage)
+    try:
+        reader = csv.DictReader(io.StringIO(raw.decode('utf-8-sig'), newline=''))
+        require(reader.fieldnames == expected_header and len(set(expected_header)) == len(expected_header), 'CSV_HEADER', stage)
+        rows = []
+        for row in reader:
+            require(None not in row and None not in row.values(), 'CSV_WIDTH', stage)
+            rows.append({key: number(value, stage) for key, value in row.items()})
+        require(bool(rows), 'EMPTY_CSV', stage)
+        return rows
+    except (UnicodeError, csv.Error) as exc:
+        raise EvidenceError('CSV_ENCODING_OR_PARSE', stage) from exc
+
+def timed_rows(rows, end_s):
+    stage = 'timed_rows'
+    require(bool(rows), 'EMPTY_TIMES', stage)
+    result, previous = {}, None
+    for row in rows:
+        t = row['time_s']
+        require(t.is_finite() and 0 <= t <= number(end_s), 'TIME_RANGE', stage)
+        require(previous is None or t > previous, 'DUPLICATE_OR_UNORDERED_TIME', stage)
+        require(all(v.is_finite() for v in row.values()), 'NONFINITE', stage)
+        result[t], previous = row, t
+    require(next(iter(result)) == 0, 'TIME_ORIGIN', stage)
+    return result
+
+def coverage(times_a, times_b, requests_a, requests_b, common_requests, safe_end):
+    stage = 'coverage'
+    end = number(safe_end)
+    a, b = set(times_a), set(times_b)
+    ra = {number(t) for t in requests_a if number(t) <= end}
+    rb = {number(t) for t in requests_b if number(t) <= end}
+    rq = {number(t) for t in common_requests if number(t) <= end}
+    require(len(rq) >= 2 and min(rq) == 0 and max(rq) > 0, 'EMPTY_OR_ZERO_ONLY_COMPARISON', stage)
+    require(not (ra-a) and not (rb-b) and not (rq-a) and not (rq-b), 'REQUIRED_TIME_MISSING', stage)
+    full = sorted(a & b)
+    # Primary policy verdict uses registered requested grid, not all adaptive
+    # common states. Full intersection is reported separately without discarding it.
+    chosen = sorted(rq)
+    require(len(chosen) >= len(rq), 'COMMON_COVERAGE', stage)
+    return chosen, {'status':'PASS', 'common_requested_count':len(rq),
+        'full_intersection':[str(t) for t in full], 'full_intersection_count':len(full), 'comparison_times':[str(t) for t in chosen],
+        'comparison_count':len(chosen),'first':str(chosen[0]),'last':str(chosen[-1]),
+        'missing_a':[], 'missing_b':[], 'policy':'exact stored intersection; no interpolation'}
+
+def profile_rows(rows, times, coords, domain, coordinate_abs='1e-15'):
+    stage = 'profile_rows'
+    coordinates = [number(x) for x in coords]
+    require(len(coordinates) == 241 and len(set(coordinates)) == 241, 'COORDINATE_CONTRACT', stage)
+    grouped, prior_t, index = {}, None, 0
+    for row in rows:
+        t = row['time_s']
+        if t != prior_t:
+            require(prior_t is None or (t > prior_t and index == 241), 'PROFILE_TIME_OR_COUNT', stage)
+            grouped[t], index, prior_t = [], 0, t
+        require(t in times and index < 241, 'PROFILE_TIME_OR_COUNT', stage)
+        require(row['domain_id'] == domain and abs(row['coordinate_m']-coordinates[index]) <= number(coordinate_abs), 'COORDINATE_DOMAIN', stage)
+        require(all(v.is_finite() for v in row.values()), 'NONFINITE', stage)
+        lo, hi = (Decimal('0'),Decimal('.98')) if domain == 1 else (Decimal('.2228930343076256'),Decimal('.983245033354389'))
+        require(lo <= row['x_surface'] <= hi and 0 < row['x_surface'] < 1, 'SURFACE_OCP_RANGE', stage)
+        grouped[t].append(row)
+        index += 1
+    require(index == 241 and set(grouped) == set(times), 'PROFILE_MISSING', stage)
+    return grouped
+
+@decimal_context
+def compare_initialization(observed, expected_rows):
+    stage = 'compare_initialization'
+    require(observed['phase'] == 'consistent_initialization' and number(observed['time_s']) == 0, 'INITIAL_TIME_NOT_EXACT_ZERO', stage)
+    proof=observed.get('provenance',{})
+    require(proof.get('stage')=='POST_CONSISTENCY_BEFORE_POSITIVE_INTEGRATION' and
+            proof.get('one_approved_solve') is True and proof.get('raw_identity') and
+            proof.get('installed_mapping_sha256') and len(expected_rows)>0,
+            'INITIAL_PROVENANCE_OR_TARGETS',stage)
+    results = []
+    for expected in expected_rows:
+        name = expected['name']
+        require(name in observed['values'], 'INITIAL_FIELD_MISSING', stage)
+        actual = observed['values'][name]
+        require(actual['unit'] == expected['unit'], 'INITIAL_UNIT', stage)
+        value, target = number(actual['value']), number(expected['target'])
+        absolute, relative = number(expected['abs_tol']), number(expected['rel_tol'])
+        require(absolute > 0 and relative > 0, 'INITIAL_LIMIT', stage)
+        delta = abs(value-target)
+        fraction = delta / max(abs(target), absolute)
+        require(delta <= absolute and fraction <= relative, 'INITIAL_INVENTORY_OR_COMPOSITION', stage)
+        results.append({'name':name,'absolute_delta':str(delta),'relative_delta':str(fraction),'unit':expected['unit']})
+    return {'status':'PASS','fields':results,'potential_equality_required':False}
+
+@decimal_context
+def invariants(glob, negative, positive):
+    stage = 'invariants'
+    ts = list(glob)
+    require(ts == list(negative) == list(positive) and len(ts) > 1, 'TABLE_TIME_MISMATCH', stage)
+    total0 = sum(glob[ts[0]][k] for k in ('Li_N_mol_m2','Li_P_mol_m2','Li_electrolyte_mol_m2'))
+    require(total0 > 0, 'INITIAL_LI_NONPOSITIVE', stage)
+    max_drift, max_residual = Decimal(0), Decimal(0)
+    for t in ts:
+        g,n,p = glob[t],negative[t],positive[t]
+        total = sum(g[k] for k in ('Li_N_mol_m2','Li_P_mol_m2','Li_electrolyte_mol_m2'))
+        max_drift = max(max_drift,abs(total/total0-1))
+        voltage = p['phis_V']-n['phis_V']
+        parts = sum(p[k]-n[k] for k in ('Eeq_V','etamid_V','phil_V'))
+        max_residual = max(max_residual,abs(voltage-parts))
+    require(max_drift <= Decimal('1e-6'), 'LI_DRIFT', stage)
+    require(max_residual <= Decimal('1e-8'), 'VOLTAGE_IDENTITY', stage)
+    return {'status':'PASS','Li_relative_max':str(max_drift),'voltage_identity_max_V':str(max_residual)}
+
+@decimal_context
+def compare_initialization_pair(left, right, expected_rows):
+    stage='compare_initialization_pair'
+    compare_initialization(left,expected_rows);compare_initialization(right,expected_rows)
+    for expected in expected_rows:
+        name=expected['name']
+        a=number(left['values'][name]['value']);b=number(right['values'][name]['value'])
+        limit=number(expected['abs_tol'])
+        # No equal potential requirement except the common reference/ground target.
+        require(abs(a-b)<=limit and abs(a-b)/max(abs(number(expected['target'])),limit)<=number(expected['rel_tol']),
+                'PAIR_INITIAL_STATE_MISMATCH',stage)
+    return {'status':'PASS','scope':'same registered concentration/inventory targets; sigma-specific other potentials excluded'}
+
+@decimal_context
+def initial_profile_uniformity(negative, positive, xN, xP):
+    stage='initial_profile_uniformity'
+    for rows,target,domain in ((negative,number(xN),1),(positive,number(xP),3)):
+        require(len(rows)==241,'INITIAL_PROFILE_COUNT',stage)
+        require(len({r['coordinate_m'] for r in rows})==241,'INITIAL_PROFILE_COORDINATES',stage)
+        for row in rows:
+            require(row['time_s']==0 and row['domain_id']==domain,'INITIAL_PROFILE_TIME_DOMAIN',stage)
+            for key in ('x_surface','x_particle_average'):
+                value=row[key]
+                require(value.is_finite() and abs(value-target)<=Decimal('1e-8') and
+                    abs(value-target)/max(abs(target),Decimal('1e-8'))<=Decimal('1e-6'),
+                    'INITIAL_PROFILE_NONUNIFORM',stage)
+    return {'status':'PASS','N_count':241,'P_count':241,'both_surface_and_particle_average':True}
+
+@decimal_context
+def compare_policy(a, b, requests_a, requests_b, common_requests, safe_end):
+    """Inputs contain already unit/profile/native-evidence validated exact tables."""
+    stage = 'compare_policy'
+    common, covered = coverage(a['global'], b['global'],requests_a,requests_b,common_requests,safe_end)
+    residual = Decimal(0)
+    for data in (a,b):
+        require(set(data['global']) == set(data['N']) == set(data['P']) == set(data['profile_N']) == set(data['profile_P']), 'TABLE_TIME_MISMATCH', stage)
+        checks = invariants(data['global'],data['N'],data['P'])
+        residual = max(residual, number(checks['voltage_identity_max_V']))
+    maxima = {'voltage_V':{'value':'0','time_s':None},'surface_x':{'value':'0','time_s':None,'electrode':None,'coordinate_m':None},'Li_relative':{'value':'0','time_s':None}}
+    li0 = sum(a['global'][Decimal(0)][k] for k in ('Li_N_mol_m2','Li_P_mol_m2','Li_electrolyte_mol_m2'))
+    require(li0 > 0,'INITIAL_LI_NONPOSITIVE',stage)
+    for t in common:
+        av = a['P'][t]['phis_V']-a['N'][t]['phis_V']; bv = b['P'][t]['phis_V']-b['N'][t]['phis_V']
+        dv=abs(av-bv)
+        if dv >= number(maxima['voltage_V']['value']): maxima['voltage_V']={'value':str(dv),'time_s':str(t)}
+        for electrode in ('N','P'):
+            aa,bb=a['profile_'+electrode][t],b['profile_'+electrode][t]
+            require(len(aa)==len(bb)==241,'PROFILE_COUNT',stage)
+            for ar,br in zip(aa,bb):
+                require(abs(ar['coordinate_m']-br['coordinate_m'])<=Decimal('1e-15') and ar['domain_id']==br['domain_id'],'COORDINATE_DOMAIN',stage)
+                dx=abs(ar['x_surface']-br['x_surface'])
+                if dx >= number(maxima['surface_x']['value']): maxima['surface_x']={'value':str(dx),'time_s':str(t),'electrode':electrode,'coordinate_m':str(ar['coordinate_m'])}
+        dl=abs(sum(a['global'][t][k]-b['global'][t][k] for k in ('Li_N_mol_m2','Li_P_mol_m2','Li_electrolyte_mol_m2')))/li0
+        if dl >= number(maxima['Li_relative']['value']): maxima['Li_relative']={'value':str(dl),'time_s':str(t)}
+    within = number(maxima['voltage_V']['value'])<=Decimal('.001') and number(maxima['surface_x']['value'])<=Decimal('.0001') and number(maxima['Li_relative']['value'])<=Decimal('1e-6')
+    return {'status':'WITHIN_LIMITS_THIS_WINDOW' if within else 'EXCEEDS_LIMITS','coverage':covered,'maxima':maxima,'execution_failure':False,
+            'max_decomposition_residual_V':str(residual),'coordinates_per_electrode':241,'interpolated':False}
+
+def verify_coefficient_evidence(configured, consumed, expected):
+    stage = 'verify_coefficient_evidence'
+    require(configured == expected['configured'], 'COEFFICIENT_SETTINGS', stage)
+    require(consumed.get('grade') == 'INSTALLED_EQUATION_AND_NUMERICAL_READBACK' and consumed.get('raw_identity') and consumed.get('mapping_sha256'), 'EFFECTIVE_COEFFICIENT_OPEN', stage)
+    require(bool(expected['consumed']) and set(consumed['values']) == set(expected['consumed']), 'COEFFICIENT_FIELDS', stage)
+    for name, spec in expected['consumed'].items():
+        actual=consumed['values'][name]
+        require(actual['unit']==spec['unit'],'COEFFICIENT_UNIT',stage)
+        require(abs(number(actual['value'])-number(spec['value']))<=number(spec['abs_tol']),'COEFFICIENT_CONSUMPTION',stage)
+    return {'status':'PASS','grade':consumed['grade'],'raw_identity':consumed['raw_identity']}
+
+@decimal_context
+def charge_balance(rows, area_m2, quadrature_bound_C_m2=None):
+    stage='charge_balance'
+    require(len(rows)>1 and rows[0]['time_s']==0,'CHARGE_TIME',stage)
+    area=number(area_m2); require(area>0,'AREA',stage)
+    F=Decimal('96485.33212'); qI=qRN=qRP=Decimal(0)
+    j_abs=Decimal('1e-8'); q_abs=Decimal('2e-4'); rel=Decimal('1e-4')
+    initial=rows[0]; prior=None; records=[]; unresolved=False
+    for row in rows:
+        require(all(v.is_finite() for v in row.values()),'NONFINITE',stage)
+        t,j,rn,rp=row['time_s'],row['j'],row['RN'],row['RP']
+        require(abs(row['I']-area*j)<=area*j_abs+rel*max(abs(row['I']),abs(area*j)),'CURRENT_AREA_CONVERSION',stage)
+        current_limit=j_abs+rel*max(abs(rn),abs(rp),abs(j))
+        require(abs(rn-j)<=current_limit and abs(rp+j)<=current_limit and abs(rn+rp)<=current_limit,'REACTION_CURRENT_BALANCE',stage)
+        require(j>=-j_abs,'REVERSE_CURRENT',stage)
+        if prior is not None:
+            dt=t-prior['time_s'];require(dt>0,'CHARGE_TIME',stage)
+            qI+=dt*(prior['j']+j)/2
+            qRN+=dt*(prior['RN']+rn)/2
+            qRP-=dt*(prior['RP']+rp)/2
+        qN=F*(initial['LiN']-row['LiN']); qP=F*(row['LiP']-initial['LiP'])
+        require(qN>=-q_abs and qP>=-q_abs,'REVERSE_LI_TRANSFER',stage)
+        total0=initial['LiN']+initial['LiP']+initial['LiE']
+        require(total0>0 and abs((row['LiN']+row['LiP']+row['LiE'])/total0-1)<=Decimal('1e-6'),'LI_DRIFT',stage)
+        deadband=j<=j_abs or qN<=q_abs or qP<=q_abs
+        # Early unresolved charge is recorded, not made a permanent final failure.
+        # Final sign resolution is separately required for a directional claim.
+        limit=q_abs+rel*max(abs(qI),abs(qN),abs(qP),abs(qRN),abs(qRP))
+        require(abs(qN-qP)<=limit,'SOLID_TRANSFER_BALANCE',stage)
+        if quadrature_bound_C_m2 is not None:
+            bound=number(quadrature_bound_C_m2)
+            require(bound>=0,'QUADRATURE_BOUND',stage)
+            if bound>limit/4: unresolved=True
+            else: require(all(abs(a-b)+bound<=limit for a,b in ((qI,qN),(qI,qP),(qRN,qN),(qRP,qP))),'INTEGRATED_CHARGE_BALANCE',stage)
+        sign='NOT_APPLICABLE_AT_T0' if t==0 else ('RESOLUTION_LIMITED' if deadband else 'CONSISTENT')
+        records.append({'t_s':str(t),'qI_C_m2':str(qI),'qRN_C_m2':str(qRN),'qRP_C_m2':str(qRP),'qN_C_m2':str(qN),'qP_C_m2':str(qP),'sign':sign})
+        prior=row
+    unresolved = unresolved or records[-1]['sign']=='RESOLUTION_LIMITED'
+    return {'status':'INCONCLUSIVE' if unresolved or quadrature_bound_C_m2 is None else 'CONSISTENT','records':records,'quadrature':'trapezoid actual ordered stored grid','quadrature_error_bound_C_m2':None if quadrature_bound_C_m2 is None else str(number(quadrature_bound_C_m2)),'reason':'UNRESOLVED_SIGN_OR_QUADRATURE' if unresolved or quadrature_bound_C_m2 is None else None}
+
+@decimal_context
+def paired_classification(base, finite, controls, expected_control_ids, validity):
+    stage='paired_classification'
+    require(set(controls)==set(expected_control_ids) and len(controls)>0,'K_INCOMPLETE',stage)
+    require(isinstance(validity,dict) and all(validity.get(k)==v for k,v in {
+        'evidence':'VALID','initialization':'PASS','effective_coefficients':'PASS',
+        'charge_conservation':'PASS','pair_initialization':'PASS','finite_direction':'CONSISTENT'}.items()) and
+        validity.get('nearzero_direction') in ('CONSISTENT','RESOLUTION_LIMITED'), 'INVALID_PAIR',stage)
+    require(set(validity.get('expected_k_settings',{}))==set(expected_control_ids),'K_BINDING_MISSING',stage)
+    def metrics(n,z):
+        require(all(t in n and t in z for t in (Decimal(0),Decimal(2700),Decimal(3600))), 'PAIRED_ENDPOINT_MISSING',stage)
+        d={t:(n[t]-n[Decimal(0)])-(z[t]-z[Decimal(0)]) for t in (Decimal(2700),Decimal(3600))}
+        return d[Decimal(3600)],(d[Decimal(3600)]-d[Decimal(2700)])*4
+    d,s=metrics(base,finite); ed,es=Decimal(0),Decimal(0)
+    for key,c in controls.items():
+        require(c['same_setting_pair'] is True and c['validity']=='VALID','UNMATCHED_K_PAIR',stage)
+        expected=validity['expected_k_settings'][key]
+        require(isinstance(expected,str) and len(expected)==64 and all(x in '0123456789abcdef' for x in expected) and
+            c.get('nearzero_setting_without_sigma_sha256')==expected and c.get('finite_setting_without_sigma_sha256')==expected,
+            'UNMATCHED_K_PAIR',stage)
+        dk,sk=metrics(c['nearzero'],c['finite'])
+        ed,es=max(ed,abs(d-dk)),max(es,abs(s-sk))
+    td,ts=max(Decimal('.001'),5*ed),max(Decimal('.001'),5*es)
+    if d>td and s>ts: status='DISTINGUISHABLE_AT_REST'
+    elif abs(d)<=Decimal('.001') and abs(s)<=Decimal('.001') and 5*ed<=Decimal('.001') and 5*es<=Decimal('.001'): status='NOT_DISTINGUISHABLE_WITHIN_T'
+    else: status='INCONCLUSIVE'
+    return {'status':status,'D_V':str(d),'S_V_per_h':str(s),'E_D_V':str(ed),'E_S_V_per_h':str(es),'theta_D_V':str(td),'theta_S_V_per_h':str(ts),'scope':'within-model; not rigorous error bound or experiment detection limit'}
+
+def analyze(binding, native, data, readbacks, comparison_spec):
+    """Inert future orchestration; raw native/readback adapter separately required."""
+    result={'schema':'S1O_CONSUMER_V1','run_id':binding.get('run_id'),'variant_id':binding.get('variant_id'),
+        'manifest_sha256':binding.get('manifest_sha256'),'native_completion':'INCOMPLETE','evidence_validity':'INCOMPLETE',
+        'comparison':'INCONCLUSIVE','initialization':{'status':'INCOMPLETE'},'effective_coefficients':{'status':'OPEN'},
+        'charge_budget':{'status':'INCONCLUSIVE'},'source_evidence':[],'comparison_details':{},'errors':[],
+        'overall':'INCOMPLETE','normal_gate':'INCOMPLETE','native_approved_by_this_result':False,'limited_result':'INCOMPLETE'}
+    try:
+        require(native.get('raw_binding_validated') is True and native.get('child_rc') == 0 and type(native.get('child_rc')) is int,'NATIVE_BOUNDARY', 'analyze')
+        require(native.get('fatal') is False and native.get('reason') in ('NORMAL_END','GUARD_STOP'),'NATIVE_END_REASON','analyze')
+        final=number(native['last_stored_s']);end=number(binding['end_s'])
+        require(0<final<=end and (final==end if native['reason']=='NORMAL_END' else bool(native.get('guard_pair'))),'NATIVE_END_TIME','analyze')
+        safe=number(comparison_spec['safe_end_s'])
+        expected_safe=end if native['reason']=='NORMAL_END' else number(native['guard_pair']['t_minus'])
+        require(safe==expected_safe and comparison_spec['common_requests']==binding['common_requested_times_s'],
+                'COMPARISON_WINDOW_OR_REQUEST_BINDING','analyze')
+        result['native_completion']='NORMAL_WINDOW_COMPLETED' if native['reason']=='NORMAL_END' else 'PROTECTIVE_STOP'
+        require(readbacks.get('source_evidence') and readbacks.get('units_status')=='PASS' and readbacks.get('guard_status')=='PASS','READBACK_EVIDENCE','analyze')
+        result['initialization']=compare_initialization(readbacks['initial'],readbacks['initial_targets'])
+        result['initial_profile']=initial_profile_uniformity(data['profile_N'][Decimal(0)],data['profile_P'][Decimal(0)],readbacks['xN_target'],readbacks['xP_target'])
+        result['effective_coefficients']=verify_coefficient_evidence(readbacks['configured'],readbacks['consumed'],readbacks['coefficient_expected'])
+        result['invariants']=invariants(data['global'],data['N'],data['P'])
+        if readbacks.get('quadrature_bound_C_m2') is not None:
+            proof=readbacks.get('quadrature_provenance',{})
+            require(proof.get('uniform_over_all_prefixes') is True and proof.get('integrands')==['j','RN','-RP'] and
+                proof.get('bound_method_verified') is True and proof.get('raw_identity') and proof.get('grid_sha256'),
+                'QUADRATURE_BOUND_PROVENANCE','analyze')
+        result['charge_budget']=charge_balance(data['charge'],readbacks['area_m2'],readbacks.get('quadrature_bound_C_m2'))
+        result['comparison_details']=compare_policy(data,comparison_spec['reference'],comparison_spec['requests_current'],comparison_spec['requests_reference'],comparison_spec['common_requests'],comparison_spec['safe_end_s'])
+        result['comparison']=result['comparison_details']['status']
+        result['source_evidence']=readbacks['source_evidence']
+        result['evidence_validity']='VALID'
+        if result['native_completion']=='NORMAL_WINDOW_COMPLETED' and result['charge_budget']['status']=='CONSISTENT':
+            result['limited_result']='AWAITING_S1_LIMITED_EXTERNAL_REVIEW'
+    except EvidenceError as exc:
+        result['errors'].append({'reason':exc.reason,'stage':exc.stage});result['evidence_validity']='INVALID'
+    except Exception as exc:
+        result['errors'].append({'reason':'UNEXPECTED_CONSUMER_EXCEPTION','type':type(exc).__name__,'detail':str(exc)});result['evidence_validity']='INCOMPLETE'
+    return result
+
+if __name__ == '__main__':
+    raise SystemExit('S1O_INACTIVE_NO_NATIVE_ADAPTER_NO_APPROVAL')

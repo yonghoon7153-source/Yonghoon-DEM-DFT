@@ -1,0 +1,50 @@
+{
+  "candidate/consumer.py.inactive.txt": {
+    "EvidenceError": 10,
+    "require": 15,
+    "number": 19,
+    "decimal_context": 28,
+    "read_csv_bytes": 35,
+    "timed_rows": 53,
+    "coverage": 66,
+    "profile_rows": 85,
+    "compare_initialization": 106,
+    "invariants": 130,
+    "compare_initialization_pair": 149,
+    "initial_profile_uniformity": 162,
+    "compare_policy": 177,
+    "verify_coefficient_evidence": 206,
+    "charge_balance": 218,
+    "paired_classification": 258,
+    "analyze": 285,
+    "__init__": 11,
+    "wrapped": 29,
+    "metrics": 266
+  },
+  "candidate/control.py.inactive.txt": {
+    "ContractError": 14,
+    "reject": 20,
+    "canonical_hash": 24,
+    "finite_number": 29,
+    "is_sha": 33,
+    "require_refs": 37,
+    "authorize_execution": 51,
+    "assess_resources": 143,
+    "advance_stop": 205,
+    "UnavailableNativeAdapter": 270,
+    "execute_once": 276,
+    "__init__": 15,
+    "__getattr__": 272
+  },
+  "candidate/Parent.ps1.inactive.txt": {
+    "S1Has": 6,
+    "S1Struct": 11,
+    "S1Number": 16,
+    "S1Sha": 23,
+    "S1Failure": 24,
+    "S1NativeAxis": 27,
+    "S1Fields": 55,
+    "S1Decision": 146,
+    "S1FinalReturn": 189
+  }
+}

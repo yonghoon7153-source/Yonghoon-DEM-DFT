@@ -1,0 +1,25 @@
+{
+  "kind": "OFFLINE_SOURCE_TO_CONTRACT_LINK_MAP",
+  "functional_tests": 0,
+  "consumer_inputs": {
+    "read_csv_bytes": "raw bytes identity+exactheader+configured/evaluatedunit record; normalized Decimal rows",
+    "compare_initialization": "INITIALIZATION.consumer_projection.targets; postconsistency exact0 proof",
+    "initial_profile_uniformity": "validated profile_rows geometry,241each,t0; xN/xP fromINITIALIZATION",
+    "compare_initialization_pair": "run cohort same registered concentration andinventory; required beforepairedclassification",
+    "verify_coefficient_evidence": "COEFFICIENT_READBACK adapter_projection OPEN; no installedvariablemapping invented",
+    "charge_balance": "CHARGE_BALANCE time_s/j/RN/RP/I/LiN/LiP/LiE; rawboundprovenance required in analyze",
+    "compare_policy": "POLICY_VARIANTS selectedvariant requests; exactlyregistered255grid plus separate fullintersection",
+    "paired_classification": "K_DESIGN futurefrozenK hashes projectedintoexpected_k_settings; nativecohortassemblerOPEN",
+    "analyze": "normalizednativeproof/readbacks/data/safe_end from future immutable rawadapter; adapter OPEN"
+  },
+  "parent": "S1Fields/S1Decision consume actual analyze output; S1FinalReturn uses inertwriter/clock in futurevalidation",
+  "control": "authorize_execution before adapter firstsideeffect; execute_once default adapter raises; native_readyfalse",
+  "not_provided": [
+    "installed COMSOL readback mapping",
+    "native raw log/schema normalization adapter",
+    "OSresource sampler/hardJobcommit adapter",
+    "executable native commands/approval paths/currentprefs",
+    "future validation harness/fixtures"
+  ],
+  "precision": "consumer Decimal50; parent double schema/check projection is not an independent arbitraryprecisionrecalculation. Futureboundaryfixtures must examine conversion and rejectcontradictions; no claimexactdecimalprooffromPS."
+}

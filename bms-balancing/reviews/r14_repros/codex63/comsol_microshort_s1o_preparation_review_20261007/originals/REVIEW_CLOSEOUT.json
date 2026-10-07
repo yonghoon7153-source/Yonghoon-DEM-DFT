@@ -1,0 +1,14 @@
+{
+  "kind": "REVIEWER_DATA_ONLY_CLOSEOUT",
+  "original_zip_bytes": 761798,
+  "original_zip_sha256": "0cae7accaf26397d883e0d8b732357fc2dc640553c603825a6a155bf8d4aaf53",
+  "received_files_unchanged_against_zip": 113,
+  "scope": "Local review input ZIP and extracted evidence, not execution-machine original files or policies",
+  "received_programs_or_tests_executed": 0,
+  "COMSOL": 0,
+  "JVM": 0,
+  "source_edits": 0,
+  "outbound_sends": 0,
+  "native_approval_created": false,
+  "reported_external_receipt_and_return_are_user_message_data": true
+}

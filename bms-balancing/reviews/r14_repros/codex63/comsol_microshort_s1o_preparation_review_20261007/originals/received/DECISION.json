@@ -1,0 +1,97 @@
+{
+  "s1o_status": "PREPARED_WITH_EXPLICIT_OPEN_NATIVE_BLOCKERS",
+  "source_written": true,
+  "functional_validation": "NOT_EXECUTED",
+  "native_ready": false,
+  "approved": false,
+  "usable": false,
+  "code_manifest_sha256": "54c61d10b3bb11e0501e9933b220eca76d9f7cee503953a6f909185e04f965fe",
+  "items": [
+    {
+      "id": 1,
+      "status": "partial",
+      "artifact": "contracts/INITIALIZATION.json",
+      "open": "installed CDI type and postconsistency exactt0 extraction"
+    },
+    {
+      "id": 2,
+      "status": "partial",
+      "artifact": "contracts/COEFFICIENT_READBACK.json",
+      "open": "installed coefficient/equation mapping and actualconsumption"
+    },
+    {
+      "id": 3,
+      "status": "partial",
+      "artifact": "contracts/EXECUTION_BINDING.json",
+      "open": "native/readback/ownedruntime adapter, exactnativeargv/path/prefs"
+    },
+    {
+      "id": 4,
+      "status": "done",
+      "artifact": "contracts/POLICY_VARIANTS.json",
+      "meaning": "offline variants/diff/consumer; untested"
+    },
+    {
+      "id": 5,
+      "status": "done",
+      "artifact": "contracts/K_DESIGN.json",
+      "meaning": "unapproved fixeddesign/count/reduction rules"
+    },
+    {
+      "id": 6,
+      "status": "done",
+      "artifact": "contracts/CHARGE_BALANCE.json",
+      "meaning": "offline thresholds/units/deadband; actualquadratureboundOPEN"
+    },
+    {
+      "id": 7,
+      "status": "partial",
+      "artifact": "contracts/RESOURCE_CONTRACT.json",
+      "open": "OSsampler/Jobhardlimit/stopadapter andsupportedcooperative method"
+    },
+    {
+      "id": 8,
+      "status": "done",
+      "artifact": "contracts/COST_MODEL.json",
+      "meaning": "unapproved pilotmeasurement andcostformulas; nofinite-sigma observedcost"
+    }
+  ],
+  "reviewer_execution": {
+    "COMSOL": 0,
+    "JVM": 0,
+    "compile": 0,
+    "solve": 0,
+    "native_gate": 0,
+    "received_or_candidate_program_import_execution": 0,
+    "synthetic_validation_cases": 0,
+    "policy_changes": 0,
+    "MPH_access_or_change": 0,
+    "new_static_text_hash_arithmetic_and_packaging_scripts": "yes; source/outputprovided"
+  },
+  "next_validation": {
+    "groups": 8,
+    "cases": 98,
+    "counts": {
+      "Python": 82,
+      "PowerShell5.1": 16
+    },
+    "proposed_overall_limit_s": 1500,
+    "approved": false
+  },
+  "offline_time_usage": {
+    "origin": "START.json",
+    "writing": "WRITING_CLOSEOUT.json",
+    "static": "STATIC_PHASE_CLOSEOUT.json",
+    "final_phase_summaries": "TIMING.json",
+    "package_end_snapshot": "DELIVERY_RECEIPT.json outsideZIP; do notaddtoolwalltoelapsed",
+    "pre_origin_intake": "separatelydisclosed; totalendtoendbeforeoriginnotmeasured"
+  },
+  "legacy": {
+    "overall_normal_gate": "INCOMPLETE",
+    "effective_policy": "UNVERIFIED",
+    "actual_cores": "UNVERIFIED",
+    "native_acceptances_reopened": false,
+    "receipt_recipient_unchanged": true
+  },
+  "stop": "Submit offline artifacts. Do not execute proposed validation or P/M/N without separate approval; current native-ready false has unresolved implementation prerequisites."
+}

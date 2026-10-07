@@ -1,0 +1,12 @@
+{
+  "kind": "AUTHORING_AND_STATIC_EVENTS_NOT_FUNCTIONAL_TEST_FAILURES",
+  "events": [
+    {"event":"Agent design rg queried contracts directory before creation","tool_chunk":"329cd5","result":"path missing rc1","effect":"No candidate execution. Created owned output subdirectories afterward."},
+    {"event":"Two root apply_patch requests contained nonexistent second-file context","result":"patch verification rejected before edits","effect":"Corrected patch text against current file. Not a test retry or production-source change."},
+    {"event":"Static cross-reader review found consumer/contract/parent mismatches","effect":"Corrected during authorized pre-test authoring; exact255grid, pairedinitialization, both-electrode deadband, charge quadrature conservative bound, parent nested evidence and postwrite priorfailure precedence. Functional tests still0."},
+    {"event":"Initial intake read before START origin","tool_chunk":"ab5399","wall_seconds":6.7858179,"effect":"Disclosed separate intake; not claimed as measured within post-origin preparation budget."}
+  ],
+  "received_programs_executed":0,
+  "candidate_programs_executed":0,
+  "synthetic_tests_executed":0
+}

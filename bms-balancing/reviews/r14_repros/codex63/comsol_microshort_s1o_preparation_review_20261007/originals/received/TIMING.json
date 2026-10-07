@@ -1,0 +1,19 @@
+{
+  "utc": "2026-10-07T14:08:22.8844694+00:00",
+  "elapsed_before_delivery_s": 2291.3194669,
+  "writing_s": 1746.3281598,
+  "static_s": 331.3866806000001,
+  "validation_and_connection_design_s": 213.60462649999977,
+  "limits_s": {
+    "overall": 3600,
+    "writing": 1800,
+    "delivery": 300,
+    "validation_design": 900,
+    "static": 600
+  },
+  "pre_origin_intake": "Directive and S0 ZIP identification read in tool ab5399, wall 6.7858179s; separate initial intake, not a prior run budget",
+  "delivery_start_elapsed_s": 2291.3194669,
+  "parallel_agent_times_not_summed": true,
+  "snapshot_scope": "before package; final snapshot outside ZIP in DELIVERY_RECEIPT.json",
+  "within_phase_limits": true
+}

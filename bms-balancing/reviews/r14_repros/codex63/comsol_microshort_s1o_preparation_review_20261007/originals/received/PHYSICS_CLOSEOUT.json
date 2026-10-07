@@ -1,0 +1,50 @@
+{
+  "kind": "S1O_PHYSICS_SUBAGENT_STATIC_CLOSEOUT",
+  "snapshot_utc": "2026-10-07T13:47:36.0197033Z",
+  "files": [
+    {
+      "path": "contracts/INITIALIZATION.json",
+      "bytes": 11933,
+      "sha256": "56c32c57c6a7a354cb860b6f57dcd35a7280112e26c273f7ae8d2977ca997f78"
+    },
+    {
+      "path": "contracts/COEFFICIENT_READBACK.json",
+      "bytes": 7784,
+      "sha256": "6e6b3049b67bba662acaea022909ba31f1acd260c37b2c92ebd0a0bb34ba959c"
+    },
+    {
+      "path": "contracts/CHARGE_BALANCE.json",
+      "bytes": 7298,
+      "sha256": "8768ace821125d94409369df15636b962610059dff877e55056610ac3e3030a7"
+    },
+    {
+      "path": "notes/PHYSICS_CONTRACT_KO.md",
+      "bytes": 10618,
+      "sha256": "ba02dcf1499fa7b2022f054197eea5cd04704b92ee318296f2b80efd57bc1b0d"
+    },
+    {
+      "path": "physics_contract_arithmetic.py",
+      "bytes": 19424,
+      "sha256": "3a330e3e49231ab30373566c1aa0aa0389249e4e9b1115e997f6dae2a227562f"
+    },
+    {
+      "path": "PHYSICS_ARITHMETIC.json",
+      "bytes": 1429,
+      "sha256": "7eb803debdf2141a22806e906709fabc5901e0098da80df69cf771e2cc444858"
+    },
+    {
+      "path": "PHYSICS_ARITHMETIC_TOOL_RETURN.json",
+      "bytes": 589,
+      "sha256": "15812e25baac5d75c9ec368166eddfd5a88c00a4efcad58d890e3a5477e3edf5"
+    }
+  ],
+  "received_candidate_executions": 0,
+  "synthetic_tests": 0,
+  "COMSOL": 0,
+  "JVM": 0,
+  "compile": 0,
+  "solve": 0,
+  "own_static_arithmetic_calls": 1,
+  "arithmetic_tool_chunk": "f9daf3",
+  "note": "Current file hashes after manual static additions; no functional execution; snapshot before closeout write and tool return; root final manifest remains authoritative."
+}

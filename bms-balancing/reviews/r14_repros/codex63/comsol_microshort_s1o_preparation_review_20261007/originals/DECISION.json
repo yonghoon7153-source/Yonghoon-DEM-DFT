@@ -1,0 +1,28 @@
+{
+  "kind": "S1O_OFFLINE_PREPARATION_STATIC_REVIEW",
+  "date": "2026-10-07",
+  "status": "PARTIAL_OFFLINE_PREPARATION_ACCEPTED_SOURCE_CORRECTIONS_REQUIRED",
+  "input_archive_sha256": "0cae7accaf26397d883e0d8b732357fc2dc640553c603825a6a155bf8d4aaf53",
+  "input_code_manifest_sha256": "54c61d10b3bb11e0501e9933b220eca76d9f7cee503953a6f909185e04f965fe",
+  "archive_integrity": "PASS",
+  "functional_validation": "NOT_RUN",
+  "unchanged_98_case_validation_recommended": false,
+  "findings": [
+    {"id": "S1O-N1", "priority": "P1", "topic": "charge_time_grid_and_end_binding_missing", "basis": "STATIC_TRACE"},
+    {"id": "S1O-N2", "priority": "P2", "topic": "interval_inventory_reversal_not_checked", "basis": "STATIC_TRACE_AND_INDEPENDENT_SCALAR_ARITHMETIC"},
+    {"id": "S1O-N3", "priority": "P2", "topic": "parent_coverage_lists_checked_by_count_not_content", "basis": "STATIC_TRACE"},
+    {"id": "S1O-N4", "priority": "P3", "topic": "P0_storage_summary_literal_mismatch", "basis": "STATIC_TEXT"}
+  ],
+  "next_step": "SEPARATELY_APPROVED_NARROW_OFFLINE_CORRECTIONS_AND_REVISED_VALIDATION_PLAN",
+  "implementation_authorized_by_this_review": false,
+  "tests_authorized_by_this_review": false,
+  "native_approved": false,
+  "native_ready": false,
+  "received_code_executed": 0,
+  "COMSOL": 0,
+  "JVM": 0,
+  "overall_gate": "INCOMPLETE_UNCHANGED",
+  "effective_policy": "UNVERIFIED_UNCHANGED",
+  "external_sidecar_provenance": "USER_PASTED_TRANSCRIPTION_NOT_ORIGINAL_FILE_BYTES",
+  "review_is_not_remote_execution_host_observation": true
+}

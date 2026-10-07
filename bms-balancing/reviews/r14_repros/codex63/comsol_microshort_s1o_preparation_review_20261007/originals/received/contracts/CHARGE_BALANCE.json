@@ -1,0 +1,143 @@
+{
+  "schema": "S1O_CHARGE_BALANCE_V1",
+  "status": "PROPOSED_LIMITS_AND_CONSUMER_RULES",
+  "native_ready": false,
+  "approved": false,
+  "usable": false,
+  "source_java_sha256": "a90d1e66db796f6b8077fa1d158620d1ec548265a1508b698e35da8ef6e3492c",
+  "F_C_mol": "96485.33212",
+  "A_c_m2": "1",
+  "L_sep_m": "0.000025",
+  "normalized_series_schema": {
+    "required": [
+      "time_s",
+      "j",
+      "RN",
+      "RP",
+      "I",
+      "LiN",
+      "LiP",
+      "LiE"
+    ],
+    "units": {
+      "time_s": "s",
+      "j": "A/m^2",
+      "RN": "A/m^2",
+      "RP": "A/m^2",
+      "I": "A",
+      "LiN": "mol/m^2",
+      "LiP": "mol/m^2",
+      "LiE": "mol/m^2"
+    },
+    "time": "actual exact native stored times, strictly increasing, finite, initial0 and endpoint required; no interpolation, no duplicate or invented samples"
+  },
+  "source_expressions": {
+    "j": "-comp1.intd2(comp1.liion.Isx)/L_sep",
+    "I": "-A_c*comp1.intd2(comp1.liion.Isx)/L_sep",
+    "RN": "comp1.intd1(comp1.liion.ivtot)",
+    "RP": "comp1.intd3(comp1.liion.ivtot)",
+    "LiN": "comp1.intd1(comp1.liion.epss*comp1.liion.cs_average)",
+    "LiP": "comp1.intd3(comp1.liion.epss*comp1.liion.cs_average)",
+    "LiE": "sum domains1,2,3 comp1.intd*(comp1.liion.epsl*comp1.cl)"
+  },
+  "source_lines": "reference/s0/candidate/MicroshortS1RestCandidate.java.inactive.txt:448-458",
+  "sign_derivation": "reference/s0/notes/PHYSICS_CANDIDATE.md:28-35",
+  "current_balance": {
+    "identities": [
+      "RN-j=0",
+      "RP+j=0",
+      "RN+RP=0",
+      "I-A_c*j=0"
+    ],
+    "absolute_A_m2": "1e-8",
+    "relative": "1e-4",
+    "scale": "max(abs(RN),abs(RP),abs(j)); never divide by nearzero j",
+    "acceptance": "abs(residual) <= 1e-8 A/m2 + 1e-4*scale; total-current threshold multiply A_c",
+    "scope": "all exact stored times including initialized0; finite units/identity required separately"
+  },
+  "charge_definitions": {
+    "qI": "sum_i (j[i]+j[i-1])/2 * (t[i]-t[i-1])",
+    "qRN": "same actual-grid trapezoid of RN",
+    "qRP": "same actual-grid trapezoid of -RP",
+    "qN": "F_ref*(LiN[0]-LiN[t])",
+    "qP": "F_ref*(LiP[t]-LiP[0])",
+    "unit_all": "C/m^2",
+    "total_charge_conversion": "Q_model_C=A_c*q_C_m2",
+    "external_rest_charge": "0; do not compute rest coulombic efficiency from external0",
+    "experimental_current_or_capacity_conversion": "not authorized; A_cell is inventory calibration, not confirmed experimental area"
+  },
+  "charge_balance": {
+    "identities": [
+      "qN-qP=0",
+      "qI-qN=0",
+      "qI-qP=0",
+      "qRN-qN=0",
+      "qRP-qP=0"
+    ],
+    "absolute_C_m2": "2e-4",
+    "relative": "1e-4",
+    "scale": "max(abs(qI),abs(qN),abs(qP),abs(qRN),abs(qRP))",
+    "acceptance": "abs(residual)<=2e-4 C/m2 + 1e-4*scale AND independent quadrature adequacy for integral-dependent identities",
+    "absolute_basis": "2*F_ref*1e-9 mol/m2 = 0.00019297066424 C/m2; rounded upward to2e-4 before results",
+    "relative_basis": "proposed1e-4 consistency allocation; not previously validated, to be fixed by reviewer before tests/main results"
+  },
+  "total_li": {
+    "formula": "LiN+LiP+LiE",
+    "initial_targets_ref": "INITIALIZATION.json",
+    "relative_drift_limit": "1e-6",
+    "denominator": "abs(initial total Li), strictly positive, finite; no nearzero leakage denominator",
+    "failure": "LI_BALANCE_EXCEEDED distinct from quadrature uncertainty"
+  },
+  "sign_deadbands": {
+    "current_A_m2": "1e-8",
+    "charge_C_m2": "2e-4",
+    "N_inventory_mol_m2": "2.0728539313235459275942014552916273881402482340339E-9",
+    "P_inventory_mol_m2": "2.0728539313235459275942014552916273881402482340339E-9",
+    "orientation": {
+      "j": "positive leftward conventional leak",
+      "RN": "positive N oxidation/deintercalation",
+      "RP": "negative P reduction/intercalation",
+      "qN": "positive N loss",
+      "qP": "positive P gain"
+    },
+    "classification": {
+      "greater_than_deadband": "RESOLVED_EXPECTED_DIRECTION",
+      "within_inclusive_deadband": "RESOLUTION_LIMITED",
+      "less_than_negative_deadband": "REVERSED_BEYOND_DEADBAND"
+    },
+    "zero_time": "all q exactly algebraic0; sign NOT_APPLICABLE_AT_T0, not PASS of leakage",
+    "nearzero": "may be RESOLUTION_LIMITED even with good conservation; never assert absent short from unresolved current",
+    "monotonicity": "apply to signed increment over stated actual interval with same deadband; finite-time reverse beyondband preserved, no strict monotone assertion for rounding-scale increments"
+  },
+  "quadrature": {
+    "scalar_consumer_bound_semantics": "One scalar may be passed only if an upstream bound record proves it bounds the absolute trapezoid error of all three integrands j, RN and -RP at EVERY stored prefix used by the consumer. An endpoint-only bound, one-integrand bound, or empirical proxy is insufficient.",
+    "bound_provenance_required": ["source run and manifest", "actual time-grid identity", "all integrands and units", "each integration prefix covered", "independent curvature/other justified bound or precisely limited dense-reference evidence", "approved derivation and immutable evidence identities"],
+    "runtime_adapter_status": "OPEN; numeric scalar alone is not proof. Unproven bound must be passed as null and yield INCONCLUSIVE.",
+    "grid": "all actually stored times of that run, including event pre/post and exact endpoints",
+    "method": "composite trapezoid with each actual delta_t",
+    "coarsening_diagnostic": "Q_full vs every-second retained-index grid with endpoints; absolute difference is heuristic estimator only, not rigorous bound",
+    "accepted_bound_source": [
+      "independent derivative/curvature bound on every integration interval documented with units and provenance; trapezoid sum M_i*h_i^3/12",
+      "separate approved dense reference comparison with matched physics/time policy; reports empirical envelope only over checked window and no extrapolation beyond it"
+    ],
+    "bound_allocation": "quadrature_bound <= (2e-4+1e-4*charge_scale)/4",
+    "combined_acceptance": "abs(qI-qN)+quadrature_bound <= charge_limit AND same for qP; do not enlarge limit by estimated error",
+    "unavailable_bound": "INCONCLUSIVE_QUADRATURE, not zero error/PASS",
+    "large_quadrature_proxy_with_good_inventory": "INCONCLUSIVE_QUADRATURE_NOT_PROVEN_LI_FAILURE",
+    "P0_P1_scope": "can quantify storage-induced quadrature sensitivity at common checked window only after trajectory comparison; not a bound for >120s",
+    "future_source_ODE_integral": "not automatically added; new model state changes require distinct source scope/validation/approval"
+  },
+  "states_separate": [
+    "native_completion",
+    "evidence_validity",
+    "initialization_match",
+    "current_balance",
+    "inventory_balance",
+    "quadrature_adequacy",
+    "charge_balance",
+    "direction_resolution",
+    "numerical_comparison"
+  ],
+  "threshold_change_policy": "Never fitted to S0 predictions or native results; exceedances remain measured outcomes, no auto rerun.",
+  "scientific_limits": "Uniform finite-sigma conductivity model; balance not proof of true Fe filament physics, experimental cell validity or spatial/temporal convergence."
+}

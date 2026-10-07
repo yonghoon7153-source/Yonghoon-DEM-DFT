@@ -1,0 +1,736 @@
+{
+  "kind": "STATIC_TEXT_JSON_AST_HASH_NOT_FUNCTIONAL_TEST",
+  "utc": "2026-10-07T14:06:57.646894+00:00",
+  "checks": [
+    {
+      "name": "AST_PARSE:consumer.py.inactive.txt",
+      "passed": true
+    },
+    {
+      "name": "NO_NATIVE_IMPORT:consumer.py.inactive.txt",
+      "passed": true
+    },
+    {
+      "name": "INACTIVE_TERMINAL_GUARD:consumer.py.inactive.txt",
+      "passed": true
+    },
+    {
+      "name": "AST_PARSE:control.py.inactive.txt",
+      "passed": true
+    },
+    {
+      "name": "NO_NATIVE_IMPORT:control.py.inactive.txt",
+      "passed": true
+    },
+    {
+      "name": "INACTIVE_TERMINAL_GUARD:control.py.inactive.txt",
+      "passed": true
+    },
+    {
+      "name": "POWERSHELL_HAS_NO_NATIVE_START",
+      "passed": true
+    },
+    {
+      "name": "JSON_PARSE:CHARGE_BALANCE.json",
+      "passed": true
+    },
+    {
+      "name": "JSON_PARSE:COEFFICIENT_READBACK.json",
+      "passed": true
+    },
+    {
+      "name": "JSON_PARSE:COST_MODEL.json",
+      "passed": true
+    },
+    {
+      "name": "JSON_PARSE:EXECUTION_BINDING.json",
+      "passed": true
+    },
+    {
+      "name": "JSON_PARSE:INITIALIZATION.json",
+      "passed": true
+    },
+    {
+      "name": "JSON_PARSE:K_DESIGN.json",
+      "passed": true
+    },
+    {
+      "name": "JSON_PARSE:POLICY_VARIANTS.json",
+      "passed": true
+    },
+    {
+      "name": "JSON_PARSE:RESOURCE_CONTRACT.json",
+      "passed": true
+    },
+    {
+      "name": "BINDING_NATIVE_FALSE",
+      "passed": true
+    },
+    {
+      "name": "RESOURCE_CONTRACT_HASH_LINK",
+      "passed": true
+    },
+    {
+      "name": "REQUEST_VECTOR:dense_0_120",
+      "passed": true
+    },
+    {
+      "name": "REQUEST_VECTOR:sparse_0_120",
+      "passed": true
+    },
+    {
+      "name": "REQUEST_VECTOR:sparse_0_3600",
+      "passed": true
+    },
+    {
+      "name": "P_COMMON_SUBSET",
+      "passed": true
+    },
+    {
+      "name": "VARIANT_SHA:P0",
+      "passed": true
+    },
+    {
+      "name": "REVERSE_UNIQUE:P0:INACTIVE_S1_PROPOSAL=P0 uniform con",
+      "passed": true
+    },
+    {
+      "name": "REVERSE_UNIQUE:P0:.set(\"tlist\",\"0 0.0001 0.0002 0.000",
+      "passed": true
+    },
+    {
+      "name": "REVERSE_UNIQUE:P0:.set(\"tout\",\"tsteps\");",
+      "passed": true
+    },
+    {
+      "name": "REVERSE_UNIQUE:P0:static final String MAXSTEP_S1=\"if(",
+      "passed": true
+    },
+    {
+      "name": "REVERSE_UNIQUE:P0:SIGMA_S1_S_M=1.7e-6;",
+      "passed": true
+    },
+    {
+      "name": "REVERSE_UNIQUE:P0:T_END_SECONDS=120.0;",
+      "passed": true
+    },
+    {
+      "name": "FULL_JAVA_REVERSE:P0",
+      "passed": true
+    },
+    {
+      "name": "JAVA_DENY_NO_RUNALL:P0",
+      "passed": true
+    },
+    {
+      "name": "VARIANT_SHA:P1",
+      "passed": true
+    },
+    {
+      "name": "REVERSE_UNIQUE:P1:INACTIVE_S1_PROPOSAL=P1 uniform con",
+      "passed": true
+    },
+    {
+      "name": "REVERSE_UNIQUE:P1:.set(\"tlist\",\"0 0.0001 0.0002 0.000",
+      "passed": true
+    },
+    {
+      "name": "REVERSE_UNIQUE:P1:static final String MAXSTEP_S1=\"if(",
+      "passed": true
+    },
+    {
+      "name": "REVERSE_UNIQUE:P1:SIGMA_S1_S_M=1.7e-6;",
+      "passed": true
+    },
+    {
+      "name": "REVERSE_UNIQUE:P1:T_END_SECONDS=120.0;",
+      "passed": true
+    },
+    {
+      "name": "FULL_JAVA_REVERSE:P1",
+      "passed": true
+    },
+    {
+      "name": "JAVA_DENY_NO_RUNALL:P1",
+      "passed": true
+    },
+    {
+      "name": "VARIANT_SHA:P2",
+      "passed": true
+    },
+    {
+      "name": "REVERSE_UNIQUE:P2:INACTIVE_S1_PROPOSAL=P2 uniform con",
+      "passed": true
+    },
+    {
+      "name": "REVERSE_UNIQUE:P2:.set(\"tlist\",\"0 0.0001 0.0002 0.000",
+      "passed": true
+    },
+    {
+      "name": "REVERSE_UNIQUE:P2:static final String MAXSTEP_S1=\"if(",
+      "passed": true
+    },
+    {
+      "name": "REVERSE_UNIQUE:P2:SIGMA_S1_S_M=1.7e-6;",
+      "passed": true
+    },
+    {
+      "name": "REVERSE_UNIQUE:P2:T_END_SECONDS=120.0;",
+      "passed": true
+    },
+    {
+      "name": "FULL_JAVA_REVERSE:P2",
+      "passed": true
+    },
+    {
+      "name": "JAVA_DENY_NO_RUNALL:P2",
+      "passed": true
+    },
+    {
+      "name": "VARIANT_SHA:P3",
+      "passed": true
+    },
+    {
+      "name": "REVERSE_UNIQUE:P3:INACTIVE_S1_PROPOSAL=P3 uniform con",
+      "passed": true
+    },
+    {
+      "name": "REVERSE_UNIQUE:P3:.set(\"tlist\",\"0 0.0001 0.0002 0.000",
+      "passed": true
+    },
+    {
+      "name": "REVERSE_UNIQUE:P3:SIGMA_S1_S_M=1.7e-6;",
+      "passed": true
+    },
+    {
+      "name": "REVERSE_UNIQUE:P3:T_END_SECONDS=120.0;",
+      "passed": true
+    },
+    {
+      "name": "FULL_JAVA_REVERSE:P3",
+      "passed": true
+    },
+    {
+      "name": "JAVA_DENY_NO_RUNALL:P3",
+      "passed": true
+    },
+    {
+      "name": "VALIDATION_UNIQUE_IDS",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:AUTH01",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:AUTH02",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:AUTH03",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:AUTH04",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:AUTH05",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:AUTH06",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:AUTH07",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:AUTH08",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:AUTH09",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:AUTH10",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:AUTH11",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:AUTH12",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:AUTH13",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:AUTH14",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:AUTH15",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:READ01",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:READ02",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:READ03",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:READ04",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:READ05",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:READ06",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:READ07",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:READ08",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:READ09",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:READ10",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:READ11",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:READ12",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:INIT01",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:INIT02",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:INIT03",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:INIT04",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:INIT05",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:INIT06",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:INIT07",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:INIT08",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:INIT09",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:INIT10",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:INIT11",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:INIT12",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:POLICY01",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:POLICY02",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:POLICY03",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:POLICY04",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:POLICY05",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:POLICY06",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:POLICY07",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:POLICY08",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:CHARGE01",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:CHARGE02",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:CHARGE03",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:CHARGE04",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:CHARGE05",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:CHARGE06",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:CHARGE07",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:CHARGE08",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:CHARGE09",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:CHARGE10",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:CHARGE11",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:CHARGE12",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:PAIRED01",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:PAIRED02",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:PAIRED03",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:PAIRED04",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:PAIRED05",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:PAIRED06",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:PAIRED07",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:RESOURCE01",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:RESOURCE02",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:RESOURCE03",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:RESOURCE04",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:RESOURCE05",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:RESOURCE06",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:RESOURCE07",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:RESOURCE08",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:RESOURCE09",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:RESOURCE10",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:RESOURCE11",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:RESOURCE12",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:RESOURCE13",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:RESOURCE14",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:RESOURCE15",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:RESOURCE16",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:PARENT01",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:PARENT02",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:PARENT03",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:PARENT04",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:PARENT05",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:PARENT06",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:PARENT07",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:PARENT08",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:PARENT09",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:PARENT10",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:PARENT11",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:PARENT12",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:PARENT13",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:PARENT14",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:PARENT15",
+      "passed": true
+    },
+    {
+      "name": "PLANNED_ACTUAL_FUNCTION:PARENT16",
+      "passed": true
+    },
+    {
+      "name": "VALIDATION_CURRENT_SOURCE:consumer.py.inactive.txt",
+      "passed": true
+    },
+    {
+      "name": "VALIDATION_CURRENT_SOURCE:control.py.inactive.txt",
+      "passed": true
+    },
+    {
+      "name": "VALIDATION_CURRENT_SOURCE:Parent.ps1.inactive.txt",
+      "passed": true
+    },
+    {
+      "name": "SAME_SELECTED_ORIGINAL_SET_AND_BYTES",
+      "passed": true
+    },
+    {
+      "name": "ATTACHMENTS_UNCHANGED",
+      "passed": true
+    },
+    {
+      "name": "CODE_MANIFEST_INACTIVE",
+      "passed": true
+    },
+    {
+      "name": "FINAL_CODE_MANIFEST:candidate/consumer.py.inactive.txt",
+      "passed": true
+    },
+    {
+      "name": "FINAL_CODE_MANIFEST:candidate/control.py.inactive.txt",
+      "passed": true
+    },
+    {
+      "name": "FINAL_CODE_MANIFEST:candidate/Parent.ps1.inactive.txt",
+      "passed": true
+    },
+    {
+      "name": "FINAL_CODE_MANIFEST:candidate/variants/P0.diff.txt",
+      "passed": true
+    },
+    {
+      "name": "FINAL_CODE_MANIFEST:candidate/variants/P0.java.inactive.txt",
+      "passed": true
+    },
+    {
+      "name": "FINAL_CODE_MANIFEST:candidate/variants/P1.diff.txt",
+      "passed": true
+    },
+    {
+      "name": "FINAL_CODE_MANIFEST:candidate/variants/P1.java.inactive.txt",
+      "passed": true
+    },
+    {
+      "name": "FINAL_CODE_MANIFEST:candidate/variants/P2.diff.txt",
+      "passed": true
+    },
+    {
+      "name": "FINAL_CODE_MANIFEST:candidate/variants/P2.java.inactive.txt",
+      "passed": true
+    },
+    {
+      "name": "FINAL_CODE_MANIFEST:candidate/variants/P3.diff.txt",
+      "passed": true
+    },
+    {
+      "name": "FINAL_CODE_MANIFEST:candidate/variants/P3.java.inactive.txt",
+      "passed": true
+    },
+    {
+      "name": "FINAL_CODE_MANIFEST:contracts/CHARGE_BALANCE.json",
+      "passed": true
+    },
+    {
+      "name": "FINAL_CODE_MANIFEST:contracts/COEFFICIENT_READBACK.json",
+      "passed": true
+    },
+    {
+      "name": "FINAL_CODE_MANIFEST:contracts/COST_MODEL.json",
+      "passed": true
+    },
+    {
+      "name": "FINAL_CODE_MANIFEST:contracts/EXECUTION_BINDING.json",
+      "passed": true
+    },
+    {
+      "name": "FINAL_CODE_MANIFEST:contracts/INITIALIZATION.json",
+      "passed": true
+    },
+    {
+      "name": "FINAL_CODE_MANIFEST:contracts/K_DESIGN.json",
+      "passed": true
+    },
+    {
+      "name": "FINAL_CODE_MANIFEST:contracts/POLICY_VARIANTS.json",
+      "passed": true
+    },
+    {
+      "name": "FINAL_CODE_MANIFEST:contracts/RESOURCE_CONTRACT.json",
+      "passed": true
+    },
+    {
+      "name": "FINAL_CODE_MANIFEST:SOURCE_CONTRACT_LINKS.json",
+      "passed": true
+    },
+    {
+      "name": "FINAL_CODE_MANIFEST:VALIDATION_PLAN.json",
+      "passed": true
+    },
+    {
+      "name": "CODE_MANIFEST_NO_SELF_HASH",
+      "passed": true
+    },
+    {
+      "name": "DECISION_CODE_HASH",
+      "passed": true
+    }
+  ],
+  "all_static_checks_passed": true,
+  "candidate_import": 0,
+  "synthetic_tests": 0,
+  "COMSOL": 0,
+  "JVM": 0,
+  "compile": 0
+}

@@ -1,0 +1,25 @@
+{
+  "kind": "READ_ONLY_INTAKE_AND_RAW_REFERENCE_COPY",
+  "utc": "2026-10-07T13:33:46.467939+00:00",
+  "inputs": [
+    {
+      "path": "C:\\Users\\BML\\Desktop\\COMSOL_MICROSHORT_S0_DEEP_HANDOFF_20261007.zip",
+      "bytes": 417467,
+      "sha256": "e8c386913338198c9b1535a9131667f23c8a144232ae8fbf548acfd3748ea12e"
+    },
+    {
+      "path": "C:\\Users\\BML\\Desktop\\COMSOL_MICROSHORT_S1O_EXEC_COVER_20261007 (1).md",
+      "bytes": 1777,
+      "sha256": "1fe931f4ca8f2c2c575b3a0b1631076e7ebd223474db96c0d56b59f5fc01d309"
+    },
+    {
+      "path": "C:\\Users\\BML\\Desktop\\COMSOL_MICROSHORT_S1O_SEND_TO_CODEX_v2_20261007 (1).md",
+      "bytes": 14688,
+      "sha256": "16797cc16cf5b95bcef6e55d7f342b288300859c8d68df55bb7860a6a5e1b967"
+    }
+  ],
+  "payload_count": 38,
+  "entry_count": 39,
+  "sha_crc_path_exact_set": true,
+  "received_code_executed": false
+}

@@ -1,0 +1,25 @@
+{
+  "kind": "OWN_TEXT_ARITHMETIC_ARTIFACT_CHECKS_NOT_CANDIDATE_FUNCTIONAL_TESTS",
+  "checks": {
+    "source_java_sha": true,
+    "candidate_sha": true,
+    "twenty_literal_changes_reconstruct_candidate": true,
+    "reverse_reconstructs_original_bytes": true,
+    "unified_diff_exact": true,
+    "entry_guard_text_and_no_runall": true,
+    "times401_monotonic_endpoints": true,
+    "pilot_common255_times": true,
+    "arithmetic_output_matches_return": true,
+    "arithmetic_checks_all_true": true,
+    "arithmetic_source_bound": true,
+    "native_flags_false": true,
+    "report_no_japanese": true,
+    "all_A_to_F_present": true
+  },
+  "checks_count": 14,
+  "status": "PASS",
+  "COMSOL_calls": 0,
+  "provided_program_execution": 0,
+  "source_blob_matches": 1,
+  "source_blob_count": 7
+}

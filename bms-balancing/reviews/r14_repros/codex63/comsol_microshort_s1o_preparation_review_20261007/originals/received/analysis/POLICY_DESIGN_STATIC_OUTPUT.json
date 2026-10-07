@@ -1,0 +1,41 @@
+{
+  "kind": "OWN_STATIC_ARITHMETIC_AND_SOURCE_TOKEN_EXTRACTION_ONLY",
+  "candidate_sha256": "a90d1e66db796f6b8077fa1d158620d1ec548265a1508b698e35da8ef6e3492c",
+  "normal480_source_sha256": "c70526cf6884eabc57b63dd43dce4b47fb0decf59af68d3f550f1b987d053797",
+  "request_counts": {
+    "dense120": 1337,
+    "sparse120": 255,
+    "sparse3600": 401
+  },
+  "prefix_is_subset": true,
+  "request_monotonic_unique": true,
+  "proposed_unique_runs": {
+    "P": 4,
+    "M": 4,
+    "N": 16,
+    "total": 24
+  },
+  "proposed_max_wall_9000_each_s": 216000,
+  "candidate_import_execution": 0,
+  "synthetic_tests": 0,
+  "COMSOL": 0,
+  "JVM": 0,
+  "created": [
+    {
+      "path": "contracts/POLICY_VARIANTS.json",
+      "bytes": 42373,
+      "sha256": "227e043c70742a0128d77363f639cdcb6f8e182281fed89db5696f19648f97e6"
+    },
+    {
+      "path": "contracts/K_DESIGN.json",
+      "bytes": 25471,
+      "sha256": "db7a81c61d0770b1750389a2ee00838120d3c90b796954b010b673ed49d8552b"
+    },
+    {
+      "path": "contracts/COST_MODEL.json",
+      "bytes": 6985,
+      "sha256": "101776d1212f41808865a5c4a9bb5465b11d025afb8f35e9aa1beafbbbffb7d9"
+    }
+  ],
+  "prior_static_read_diagnostic": "tool329cd5 rg exited1 because contracts directory didnotyetexist; read-only discovery, no candidate/test/native execution"
+}

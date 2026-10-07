@@ -1,0 +1,14 @@
+{
+ "kind":"NEW_STATIC_AUDITOR_ERROR_NOT_CANDIDATE_TEST_FAILURE",
+ "tool_chunk":"3a3906",
+ "exit_code":1,
+ "wall_time_seconds":6.2442399,
+ "error":"KeyError: 'candidate/control.py.inactive.txt'",
+ "stage":"plan-function lookup in static_audit.py line42",
+ "reason":"Windows str(relative_path) had backslash while plan used slash",
+ "preserved_source":"static_audit_v1_failed.py",
+ "correction":"Change static source-index keys to Path.as_posix(); no candidate/contract modifications",
+ "candidate_execution":0,
+ "synthetic_test_execution":0,
+ "raw_traceback":"Traceback (most recent call last):\n  File \"C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_20261007_133011\\static_audit.py\", line 42, in <module>\n    check('PLANNED_ACTUAL_FUNCTION:'+c['id'],all(n in index[c['source']] for n in c['target_functions']))\n                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\microshort_s1o_20261007_133011\\static_audit.py\", line 42, in <genexpr>\n    check('PLANNED_ACTUAL_FUNCTION:'+c['id'],all(n in index[c['source']] for n in c['target_functions']))\n                                                      ~~~~~^^^^^^^^^^^^^\nKeyError: 'candidate/control.py.inactive.txt'\n"
+}

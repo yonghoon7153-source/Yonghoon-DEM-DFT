@@ -1,0 +1,9 @@
+{
+  "provenance": "Serialized tool return observed by S1-O physics subagent; not an independently observed OS audit",
+  "chunk_id": "f9daf3",
+  "exit_code": 0,
+  "tool_wall_time_seconds": 6.1772242,
+  "command": "C:/Users/BML/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe outputs/microshort_s1o_20261007_133011/physics_contract_arithmetic.py",
+  "output_record": "PHYSICS_ARITHMETIC.json",
+  "output_meaning": "50-digit static parameter arithmetic and authoring JSON contracts only; no candidate function imported or executed, no synthetic functional cases"
+}

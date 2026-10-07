@@ -1,0 +1,16 @@
+{
+  "utc": "2026-10-07T13:30:11.5548368+00:00",
+  "kst": "2026-10-07T22:30:11.5548368+09:00",
+  "monotonic_ticks": 18788143219762,
+  "frequency": 10000000,
+  "limits_s": {
+    "overall": 3600,
+    "writing": 1800,
+    "delivery": 300,
+    "validation_design": 900,
+    "static": 600
+  },
+  "pre_origin_read": "Directive and S0 ZIP identification read in tool ab5399, wall 6.7858179s; separate initial intake, not a prior run budget",
+  "scope": "S1-O offline implementation/contracts/static checks only; all candidates inactive; tests/native/approval activation prohibited",
+  "output": "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/microshort_s1o_20261007_133011"
+}

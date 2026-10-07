@@ -1,0 +1,53 @@
+{
+  "scope": "Data/byte inspection and hand-trace scalar arithmetic only, not functional reproduction",
+  "code_manifest_entries": 21,
+  "code_manifest_all_match": true,
+  "s0_payload_entries": 38,
+  "s0_payload_all_match": true,
+  "validation_unique_ids": 98,
+  "validation_cases": 98,
+  "engine_counts": {
+    "Python": 82,
+    "Windows PowerShell5.1": 16
+  },
+  "interval_reversal_arithmetic": {
+    "assumptions": "I=j=RN=0.25 A/m2 for A=1; RP=-0.25; qN=qP; LiE constant; exact bound=0",
+    "points": [
+      {
+        "time": "0",
+        "qN_qP_C_m2": "0",
+        "qI_qRN_qRP_C_m2": "0",
+        "cumulative_residual": "0",
+        "existing_limit": "0.0002",
+        "residual_with_zero_bound_within": true
+      },
+      {
+        "time": "100",
+        "qN_qP_C_m2": "25.001",
+        "qI_qRN_qRP_C_m2": "25",
+        "cumulative_residual": "0.001",
+        "existing_limit": "0.0027001",
+        "residual_with_zero_bound_within": true
+      },
+      {
+        "time": "100.001",
+        "qN_qP_C_m2": "25.00025",
+        "qI_qRN_qRP_C_m2": "25.00025",
+        "cumulative_residual": "0.00000",
+        "existing_limit": "0.002700025",
+        "residual_with_zero_bound_within": true
+      }
+    ],
+    "last_inventory_transfer_increment_C_m2": "-0.00075",
+    "negative_deadband_C_m2": "-0.0002",
+    "violates_interval_deadband": true
+  },
+  "precision_projection": {
+    "value": "0.00100000000000000001",
+    "decimal_exceeds_0_001": true,
+    "binary64_value": "0.001",
+    "binary64_threshold": "0.001",
+    "binary64_exceeds_0_001": false,
+    "scope": "Independent scalar conversion arithmetic, not execution of the PowerShell or Python candidate."
+  }
+}

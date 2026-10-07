@@ -1,0 +1,12 @@
+{
+  "kind": "RECIPIENT_ARCHIVE_DATA_CHECK",
+  "archive_bytes": 761798,
+  "archive_sha256": "0cae7accaf26397d883e0d8b732357fc2dc640553c603825a6a155bf8d4aaf53",
+  "payload_count": 112,
+  "entries": 113,
+  "exact_set": true,
+  "all_member_bytes_sha256": true,
+  "CRC": true,
+  "safe_paths_case_links": true,
+  "received_programs_executed": 0
+}
