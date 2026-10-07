@@ -1,11 +1,13 @@
 {
  "tool": "plane_load_share",
+ "definition": "수평 단면을 지나는 수직 하중 (전체 접촉력 z 성분 · 중심 기준 분할) 의 접촉 종류별 몫 · 슬라이드 = Contribution to σ_zz (21 단면 평균 Σ_k F_X ÷ Σ_k F) · α = Love–Weber 상별 ⟨σ_zz⟩ 비 (부피 가중 · 단면 창 안)",
  "tolerances": {
   "conservation": 0.02,
-  "balance": 0.01
+  "balance": 0.01,
+  "alpha_closure_identity": 1e-09
  },
  "n_cuts": 21,
- "code_sha256": "4297f669606d30f3f3f6ff9fdde79f85e94a88364c6259f27e1fff6139dac89d",
+ "code_sha256": "a1d95cb9c2f800028d67c44d79330362f9ffee568fc9cccebb943cce064a61ee",
  "order": [
   "real14"
  ],
@@ -581,6 +583,22 @@
      4.364174972386761
     ]
    },
+   "contribution_sigma_zz_pct": {
+    "AM–AM": 74.60148373649157,
+    "AM–SE": 21.941689763592215,
+    "SE–SE": 3.4568264999162066
+   },
+   "sigma_zz_planes_mean_mpa": 263.14109899944367,
+   "sigma_zz_window_integral_mpa": 263.14146863262243,
+   "contribution_sigma_zz_integral_pct": {
+    "AM–AM": 74.58059794676144,
+    "AM–SE": 21.95674291829808,
+    "SE–SE": 3.462659134940487
+   },
+   "window_deck": [
+    0.012,
+    0.018284499999999995
+   ],
    "magnitude_share_group_pct": {
     "AM–AM": 33.035970654957964,
     "AM–SE": 34.64621266811772,
@@ -594,8 +612,91 @@
    "n_other_group": 0,
    "status": "OK",
    "why": [],
-   "results_dir": "real14_res — scripts/parse_liggghts.py 로 docs/data/real14_reference_20260928/ 의 atom · contact · mesh 덤프를 바꾼 CSV + input_params.json {box 0.05 × 0.05}",
-   "meta": "real14_meta.json — {\"type_map_resolved\": \"1:AM_P,2:AM_S,3:SE\", \"scale\": 1000}",
+   "alpha": {
+    "status": "OK",
+    "definition": "α_X = ⟨σ_zz⟩_X ÷ ⟨σ_zz⟩_all — ⟨·⟩ = 부피 가중 평균 (중심이 단면 창 안인 입자) · σ_p = Love–Weber (1/V_p) Σ_c (x_c − x_p) ⊗ f_c (봉인 dem_analysis_core.calc_love_weber_stress · return_arrays) · α_p = 평균 응력 p = tr σ / 3 의 같은 비",
+    "qualifier": "모델 내부 비교 — 입자 응력 기준틀 미인증 (Codex 10-05 Q5)",
+    "alpha_zz": {
+     "AM_P": 1.536348577337561,
+     "AM_S": 0.6416521109115987,
+     "AM": 1.2650535197761412,
+     "SE": 0.20056828331428422
+    },
+    "alpha_p": {
+     "AM_P": 1.4399868892005252,
+     "AM_S": 0.7837779166659571,
+     "AM": 1.2410073943029478,
+     "SE": 0.27309414670561355
+    },
+    "lw": {
+     "status": "OK",
+     "definition": "love_weber_branch_full_tensor_v1",
+     "contract": "love_weber_checks_v2",
+     "checks": {
+      "force_decomp_rel": 1.4498405900237476e-06,
+      "force_decomp_abs": 9.999999999976694e-05,
+      "force_decomp_zero_scale": false,
+      "branch_over_r_max": 1.0001395302656626,
+      "virial_total_rel": 5.0172876127695946e-05,
+      "virial_total_abs": 0.0017433036013230208,
+      "virial_zero_scale": false,
+      "virial_status": "checked",
+      "virial_scope": "global_diagonal_sum — 전역 부호 · 척도 검사 (Σ_i V_i σ_LW,aa ↔ Σ_i c_strs,aa · 대각 셋) · 프레임 · 입자 · 상 배분의 대응 증명 아님 (같은 기하 두 dimer 의 접촉 힘을 맞바꿔도 통과)"
+     }
+    },
+    "closure_zz": 0.9999999999999999,
+    "closure_p": 1.0,
+    "mean_compressive_sigma_zz_mpa": {
+     "all": 346.2871568906394,
+     "AM_P": 532.0177808392026,
+     "AM_S": 222.1958852004547,
+     "AM": 438.07178667777623,
+     "SE": 69.45422059133975
+    },
+    "mean_compressive_pressure_mpa": {
+     "all": 235.93464010202877,
+     "AM_P": 339.74278845516585,
+     "AM_S": 184.9203606885005,
+     "AM": 292.7966329388225,
+     "SE": 64.43236921695957
+    },
+    "n_window": {
+     "AM_P": 8,
+     "AM_S": 94,
+     "SE": 6578
+    },
+    "volume_frac_window": {
+     "AM_P": 0.5232795821031118,
+     "AM_S": 0.22772352184116912,
+     "SE": 0.2489968960557198
+    },
+    "window_um": [
+     12.0,
+     18.284499999999994
+    ],
+    "cross_check": {
+     "definition": "LW 창 합 = −Σ_창 V_p σ_zz,p ÷ (A · H) (압축 양수) ↔ 21 단면 평균 하중 · 차 = 가장자리 항 — 창 안 두 입자 접촉은 둘이 같다 · 한 입자만 창 안 = LW 는 그 입자 → 접촉점 가지 · 적분은 창과 겹친 길이 · 창 전체를 걸친 접촉 = 적분에만",
+     "lw_window_sigma_zz_mpa": 304.8766780041644,
+     "planes_mean_sigma_zz_mpa": 263.14109899944367,
+     "window_integral_sigma_zz_mpa": 263.14146863262243,
+     "ratio_lw_over_planes": 1.158605323012689,
+     "ratio_planes_over_integral": 0.9999985953062408,
+     "both_in_mpa": 42.855566988880454,
+     "edge_lw_mpa": 262.02111101528385,
+     "edge_integral_mpa": 209.486821643742,
+     "span_integral_mpa": 10.799079999999998,
+     "n_contacts": {
+      "both_in": 18509,
+      "edge": 6691,
+      "span": 2
+     },
+     "lw_identity_rel": 1.8542371326038363e-16,
+     "integral_identity_rel": 2.160184753706317e-16,
+     "n_window_touching_wall": 0
+    }
+   },
+   "results_dir": "real14_res",
+   "meta": "real14_meta.json",
    "inputs_sha256": {
     "atoms.csv": "782c8b64b61d341f5c50bc33904cbc9e04d04d005bfa2de73c35d55906cd7ba2",
     "contacts.csv": "cbf916b6bcd0f4c0ab771f2658d8895ca25aa42d297bf1e46cadc57c40c621f0",

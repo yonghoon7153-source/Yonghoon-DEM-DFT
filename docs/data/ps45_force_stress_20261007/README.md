@@ -45,3 +45,10 @@
 ## 발표 5 쪽 판 (`slide/` · `make_slide_figs.py` — 값 = 위 CSV 그대로)
 
 - `particle_stress_ratio` (PC · SC 두 선 · SE ≈ 1 점선) · `force_contribution` (y 축 이름 = 1저자 10-07 *"Force contribution (%) 이게 더 나은듯 직관적이고"* · 범례 AM–AM · AM–SE · SE–SE · 각주 "접촉 유형별 법선력 합 ÷ 전체 (판 하중 분담 아님)").  다시 만들기: `python3 make_slide_figs.py <위 CSV 폴더> <출력>`.
+- ★ **10-07 (1저자 Q1 · *"Q1, Q2 reference 논문이 있음 이걸로 진행을 하자"*) — 5 쪽 힘 그래프의 양이 바뀐다**: y 축 = **Contribution to σ_zz (%)** · 범례 AM–AM contacts · AM–SE contacts · SE–SE contacts ·
+  캡션 *Contribution of each contact type to the vertical stress, σ_zz = (1/V) Σ_c f_z l_z, evaluated as the mean over 21 horizontal planes* ·
+  값 = `../ps45_plane_load_20261007/ps45/plane_load_share_slide.csv` (21 단면 평균 Σ_k F_X ÷ Σ_k F · 정의 · 문헌 틀 [원문 미확인 — litdb 카드 전] = 그 폴더 README §0).
+  이 폴더의 `slide/force_contribution.csv` (크기 합 몫) 는 **비교용** — 보존량이 아니다.
+  ⛔ 앞서 (10-07 대화) 제안한 축 이름 *"Load-bearing fraction"* 은 지어낸 이름 — 철회 (원장 기록 = 본 세션 `SELF-96`).
+- ⚠ ① `particle_stress_ratio` (입자 von Mises 의 상 평균 ÷ 전 입자 평균 · 단순 평균 · 모든 입자) 와 10-07 Q2 의 α (σ_zz 의 부피 가중 상 평균 ÷ 전체 · 단면 창 안 입자 ·
+  `../ps45_plane_load_20261007/` README §3) 는 **다른 양**이다 — 한 그림에 섞지 않는다.  ps45 α 는 그 폴더 README §4 WSL 다시 실행 뒤.
