@@ -1,0 +1,10 @@
+{
+ "rev": "87f0906a2674e7d4e8ec31ca98aed5b14babc293",
+ "is_pin": true,
+ "n_paths": 446,
+ "n_kept": 446,
+ "missing_at_rev": [],
+ "derived": [
+  "observation_cli_staged"
+ ]
+}

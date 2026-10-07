@@ -1,0 +1,46 @@
+{
+  "scope": "Synthetic bound gate fixtures; real build/check; tau-only upstream is a stub.\nThis does not certify any real 194 batch or its values.\n",
+  "artifact_root": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\gen2_network_reverify4_20261007\\evidence\\release_gate\\run_2yz1esm0",
+  "cases": [
+    {
+      "label": "control",
+      "accepted": true,
+      "check": []
+    },
+    {
+      "label": "absent_reread",
+      "accepted": false,
+      "error": "ReleaseError: 배치 관문 증거 문제 1 (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — reread.json — 없다 — 등록 §5-3 ⓪b 다시 읽기 (`g2_network_reread.py --launcher-root <ROOT> --expect-set production194 --json <ROOT>/reread.json`) 를 먼저 · 실제 배포는 이 기록이 필수 — 실제 배포는 두 기록이 이 배치 뿌리 · manifest · 발사 봉인 지문에 대해 통과여야 한다 (옛 · 부분 기록을 들여다볼 때만 --diagnostic-batch-gate · NOT FOR RELEASE)"
+    },
+    {
+      "label": "null_nfail",
+      "accepted": false,
+      "error": "ReleaseError: 배치 관문 증거 문제 1 (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — reread.json — n_fail None — 정수가 아니다 (null · bool · 문자열 · 결손 = 판정을 모른다) — 실제 배포는 두 기록이 이 배치 뿌리 · manifest · 발사 봉인 지문에 대해 통과여야 한다 (옛 · 부분 기록을 들여다볼 때만 --diagnostic-batch-gate · NOT FOR RELEASE)"
+    },
+    {
+      "label": "failed_audit",
+      "accepted": false,
+      "error": "ReleaseError: 배치 관문 증거 문제 1 (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — seal_audit.json — input_problems 1 — ['raw bytes mismatch'] (빈 목록이어야) — 실제 배포는 두 기록이 이 배치 뿌리 · manifest · 발사 봉인 지문에 대해 통과여야 한다 (옛 · 부분 기록을 들여다볼 때만 --diagnostic-batch-gate · NOT FOR RELEASE)"
+    },
+    {
+      "label": "wrong_manifest",
+      "accepted": false,
+      "error": "ReleaseError: 배치 관문 증거 문제 1 (G2RR3-01 — 등록 §5-2 ⓪ 감사 · §5-3 ⓪b 다시 읽기) — reread.json — manifest_sha256 '0000000000000000' ≠ 이 배치 'ecea559da6f258d1'… — 기록 뒤 manifest 가 바뀌었거나 다른 배치 — 실제 배포는 두 기록이 이 배치 뿌리 · manifest · 발사 봉인 지문에 대해 통과여야 한다 (옛 · 부분 기록을 들여다볼 때만 --diagnostic-batch-gate · NOT FOR RELEASE)"
+    },
+    {
+      "label": "reread_checks_false",
+      "accepted": true,
+      "check": []
+    },
+    {
+      "label": "reread_cases_missing",
+      "accepted": true,
+      "check": []
+    },
+    {
+      "label": "audit_observation_failed",
+      "accepted": true,
+      "check": []
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+[Storage] NOT configured - SUPABASE_URL=False SUPABASE_KEY=False
+[Security] WARNING: auth OFF - local/private only. For public deploy set WEBAPP_REQUIRE_AUTH=1 + WEBAPP_AUTH_TOKEN.
+  ✓ 게시 셋 done (실 생산자 CLI → 정지 계약 → 게시)
+  ✓ 양성 — 관통 · 비관통 · GEN2-01 폴더 K1–K7 · H1 전부 통과 {'through': True, 'nonthrough': True, 'clamp': True}
+  ✓ 비관통 — τ 세 모드 NOT_PERCOLATING · 가지 셋 valid_zero (숫자 없음)
+  ✓ GEN2-01 — physics · H12 협착-only = not_computed zero_resistance_requires_contraction · FULL · CF computed (숫자 · 증서)
+  ✓ 음성 — 증서 자리 바꿔치기 (CF → FULL · 네 사본 · 도장 그대로) → K2 · H1 실패 ['H1', 'K2', 'K3', 'K4', 'K5', 'K6']
+  ✓ 음성 — 도장 네 세대 값 null (Codex all_null) → K3 · H1 실패 ['H1', 'K3']
+  ✓ 음성 — 기대 세대 inferred_legacy 로 g2 폴더를 읽으면 K2 · K5 · H1 실패 ['H1', 'K2', 'K5']
+  ✓ launcher-root 양성 — manifest 선언 g2 · 두 케이스 K1–K7 · 코호트 H1 통과 (exp 'g2')
+  ✓ launcher-root 음성 — manifest 기대 세대 선언 없음 (194 v1.2 런처 모양) → M0 · H1 실패 ['H1', 'M0']
+  ✓ ★ 등록 집합 양성 pilot3 (lhs00_055 · lhs00_128 · lhsx_007) — 두 코호트 · 세 케이스 K1–K7 · H1 통과 · 기대 3 = 읽음 3 (M3 집합 대조) 빠진 [] · 남는 []
+  ✓ ★ G2RR2-02 반례 — plan 삭제 · cohorts=[] · cohorts 삭제 · queue 삭제 · 코호트 하나 누락 · 중복 ID · 등록 밖 코호트 · 등록 밖 케이스 → 전부 FAIL (옛: plan · cohorts 셋 · 누락 = 0 케이스 · n_fail 0 · rc 0) 
+  ✓ ★ launcher-root 는 등록 모드가 필수 — --expect-set · --expect-case 없이 부르면 사용 오류 rc 2 (mutable 큐를 자기 기대 집합으로 쓰지 않는다)
+  ✓ ★ 판정 JSON 이 기대 수 · 읽은 수 · 집합 대조를 싣는다 (n_fail 만이 아니다) — 기대 3 · 읽음 3 · 같음 · CLI rc 0
+  ✓ ★ G2RR3-01 — 판정 JSON 스키마 v3 · launcher_root = 읽은 ROOT (resolve) · manifest_sha256 = 읽은 manifest 바이트 · seal_fp = seal.code_fp · launch_sha = git.sha (옛 v2: 어느 ROOT · 봉인의 기록인지 없다)
+  ✓ ★ G2RR3-01 — 실 생산자 JSON 을 v1.3 배포 관문의 다시 읽기 판정 (lhs_release_build.v13_reread_problems · 등록 집합 pilot3) 에 이 ROOT 로 넣으면 문제 0 · 다른 ROOT 로 대조하면 결합 문제 (배치 뿌리 · manifest sha256)
+  ✓ ★ G2RR4-01 — 실 생산자 JSON (pilot3) 의 상세 = 상세 계약 통과 (meta 열 ID · 코호트마다 M1 · M2 · H1 · 케이스마다 K1–K7 · 상세 실패 재계수 = n_fail · (케이스, 코호트) = 등록 집합 · M3 = 최상위) · M2 ok=false · cases=[] · 빈 checks · K4 빠짐 = 전부 문제
+  ✓ symlink 거부 환경 — 폴더 링크가 hardlink 로 대체되고 그 폴더가 K1–K7 · H1 통과
+  ✓ ★ 등록 집합 양성 production194 (합성 — 등록 ID 지문 194 · lhs 130 · lhsx 64) — 194 케이스 K1–K7 · 코호트 H1 둘 통과 · M3 기대 194 = 읽음 194
+  ✓ ★ G2RR4-01 — 생산 194 (합성) 판정 JSON 의 상세 = 상세 계약 통과 (194 케이스 × K1–K7 · meta 열 · 재계수 0 = n_fail 0)
+  ✓ ★ G2RR4-03 스모크 음성 대조 (case15) — 게시 없음 + [음성 대조] 판정 PASS = S0 · S0b 통과 rc 0 (0, {'S0': True, 'S0b': True}) · 게시됨 = S0b 실패 (1, {'S0': True, 'S0b': False}) · [음성 대조] 판정 FAIL = S0b 실패 (1, {'S0': True, 'S0b': False}) · 표지 없는 failed = S0 실패 (이름 면제 없음) (1, {'S0': False})
+
+✓ 전부 통과

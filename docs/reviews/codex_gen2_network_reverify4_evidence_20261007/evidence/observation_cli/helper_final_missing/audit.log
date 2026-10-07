@@ -1,0 +1,11 @@
+══ 봉인 감사 — C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\gen2_network_reverify4_20261007\evidence\observation_cli\helper_final_missing
+  실행 형식 자격 current (새 실행 형식 — 필수 선언 전부 · G2RR2-01)
+  발사 git 0801d4ceb · 지문 e8b2496b9c2ecf6e · 워커 체크아웃 C:\Users\Administrator\Documents\Codex\2026-08-24\claude-stoic-knuth-nobvq-x20\gen2_network_reverify4_20261007\source (지금 그 체크아웃 = 봉인 ✓ — 정보 · 판정과 무관)
+  case	cohort	status	verdict	attempt(run)	merged	why
+  lhs00_000	lhs	done	SEALED	1(1)	same	시작 · 끝 지문 = 발사 봉인 · git sha = 발사 · dirty 아님
+  판정 {'SEALED': 1} · merged {'same': 1}
+  기대 망 세대 (expected_network_generation) 'g2' · 봉인 사본 'g2' · 케이스 레코드 세대 {'g2': 1}
+  입력 지문 (ID · 코호트 · 원자료 sha256) = 발사 기록 ✓
+  실제 import 관측 (run --observe-imports · G2RR2-03 · G2RR3-02) — 프로세스 5 (시작 5 · 끝맺음 4) · 완료 시도 1 (역할 worker/network_solver) · 리포 모듈 30 ⊆ 봉인 CODE_FILES 32 ✗
+  ✗ 관측: lhs00_000 (run 1 · 시도 1): 완료 시도의 프로세스 1 가 시작만 하고 끝맺지 않았다 ['1518000-eafaac15'] — 그 프로세스의 import 를 모른다
+  ✗ 봉인 밖 0 건 · merged 와 다름 0 건 · 세대 문제 0 건 — 봉인 밖은 retry (발사 코드 그대로 둔 워커 체크아웃) 가 --force 로 다시 · merged 다름은 merge 를 다시 · 세대 문제는 그 기록을 인계하지 않는다

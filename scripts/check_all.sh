@@ -211,7 +211,7 @@ run 'webapp: tau_grade_unify'     python3 webapp/test_tau_grade_unify.py   # 10-
 run 'webapp: network_handover_chain' python3 webapp/test_network_handover_chain.py  # 10-05 RGL · SELF-86 — 실 생산자 → 정지 helper → τ → 배치 기록 (stop_after=network) → build_handover 끝-끝 (옛 코드 5/8 = RGL-02 · 03 · 04)
 run 'webapp: psi_generation_stamp' python3 webapp/test_psi_generation_stamp.py  # 10-06 L2-01 세대 2 — full_metrics · 도장 psi_placement_physics (솔버 출력) · 망 소유 키 · 정지 계약 ⑥b · 옛 세대 재투영 · τ 협착 라벨
 run 'webapp: gen2_publication_handover' python3 webapp/test_gen2_publication_handover.py  # 10-06 밤 G2R-01 · 02 — Codex 게시 · 인계 반례 (H12 주 자리 · ψ/전극 오타 · 부분 결손 · 표지 없는 후보) 를 실 생산자 사슬로: 정지 · 일반 경로 게시 전 거부 · 강제 폴더 인계 거부 · 같은 결함 코호트 · 옛 세대 추론 자격 (도장) · build_handover (옛 코드 2/11)
-run 'g2_network_reread --selftest' python3 scripts/g2_network_reread.py --selftest  # 10-07 Codex 세대 2 재검증 §7-4 — 게시 다시 읽기 (읽기 전용): 실 생산자 게시 (관통 · 비관통 · GEN2-01) 양성 · 증서 CF → FULL · 도장 null · 기대 세대 다름 · manifest 선언 없음 반례
+run 'g2_network_reread --selftest' python3 scripts/g2_network_reread.py --selftest  # 10-07 Codex 세대 2 재검증 §7-4 — 게시 다시 읽기 (읽기 전용): 실 생산자 게시 (관통 · 비관통 · GEN2-01) 양성 · 증서 CF → FULL · 도장 null · 기대 세대 다름 · manifest 선언 없음 반례 · ★ G2RR4-01 실 생산자 JSON = 상세 계약 (17/19 → 19/19)
 run 'webapp: gen2_stamp_record' python3 webapp/test_gen2_stamp_record.py  # 10-06 밤 G2RR-01 — 도장 ↔ 레코드 세대 대조 (실 생산자 → 게시 → 인계): Codex 도장 변이 (unknown · null · legacy · one_null_legacy_shape) · 키 하나씩 결손 · null · unknown · legacy · 타입 → τ P4 거부 · 역사 경로 = 확인된 역사 도장 스키마 (194 v1.2 실측 194/194) · 배치 manifest 기대 세대 · 웹앱 망 세대 행 (옛 코드 6/23)
 run 'webapp: hetero_transcript'   python3 webapp/test_hetero_transcript_page.py   # 10-05 이종기술 회의록 — 회의 둘 (09-18 · 10-02) 고르기 · 회의 종합 · 등록부 밖 키 404 · /hetero 논지 정본 비준 블록 (docs/hetero_thesis.md 에서 읽음 · fail-closed)
 #  ★ 2026-10-03 (Codex r_int 1단계 RINT-02 · 13 · 14 · 20) — ① 계면 요청 ↔ 네 솔브 적용 영수증을 **실물 producer** 로.
@@ -230,7 +230,7 @@ run 'tau_flux (이온 인계 열 · 게이트 G1–G6)' python3 scripts/test_tau
 #  ★ 2026-10-06 (Codex 5차 RGLR4-01 · 02) — 194 인계 v1.2 다시 읽기 검산기 (검산 도구 · 자동 배포 관문 아님): 복사본 변조 (공통 칸 한 칸 · 열 탈락 ·
 #    감사표 누락 + 중복 · record sha · 상태 · 코호트 · 출처 부록 중복) 가 비영 종료 · 원본 PASS 유지 · 세대별 허용 목록.
 run 'reread_v12 (RGLR4-01 · 02 반례 · 원본 PASS)' python3 scripts/test_reread_v12.py
-run 'lhs_release v1.3 (빈칸 뜻 · ML 표 · 재적합 · 세대 g2 · τ 다시 읽기 · 발사 봉인 대조 · DRY RUN)' python3 scripts/test_lhs_release_v13.py   # 10-07 생성기 미리 준비 (옛 코드 1/77 · G2RR3-01 배포 관문 = 새 시험이 옛 코드에서 81/135 → 135/135)
+run 'lhs_release v1.3 (빈칸 뜻 · ML 표 · 재적합 · 세대 g2 · τ 다시 읽기 · 발사 봉인 대조 · DRY RUN)' python3 scripts/test_lhs_release_v13.py   # 10-07 생성기 미리 준비 (옛 코드 1/77 · G2RR3-01 배포 관문 = 새 시험이 옛 코드에서 81/135 → 135/135 · ★ G2RR4-01 다시 읽기 상세 ↔ 요약 · 감사 관측 = 137/167 → 167/167 · ★ G2RR4-02 감사 단계 결합 기록 = 168/173 → 173/173)
 #  ★ 2026-10-06 (DESC-06 잔여) — 완료 압력 기록 (LIGGGHTS 로그 압밀 루프 판정 줄) + 인계 생성기 관문 · CLI 명시 승인 (--pressure-record | --pressure-unverified)
 run 'lhs_pressure_record (DESC-06 완료 압력 · 생성기 관문)' python3 scripts/test_lhs_pressure_record.py
 #  ★ 2026-10-06 밤 (이종기술 2-1 장 7:3 압축 곡선 · x = step) — 로그 thermo + 판 메시 → step 별 압력 · 판 높이.  재시작 잇기

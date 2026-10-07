@@ -1,0 +1,11 @@
+{
+ "rev": "a51e61b05dda841bf4d34b24e005ecff0c1ee53d",
+ "is_pin": false,
+ "n_paths": 446,
+ "n_kept": 446,
+ "missing_at_rev": [],
+ "derived": [
+  "release_gate_detailed",
+  "observation_cli_staged"
+ ]
+}

@@ -1,0 +1,6 @@
+source a51e61b05dda841bf4d34b24e005ecff0c1ee53d fixed 446 missing []
+first ['submitted_evidence', 'scope194', 'case15_channels', 'release_gate'] rc 1 22s
+observation ['observation_cli'] rc 0 3s
+derived ['release_gate_detailed', 'observation_cli_staged'] rc 0 4s
+regression ['reread', 'publication', 'role', 'release'] rc 1 70s
+기대 {'first': 1, 'observation': 0, 'derived': 0, 'regression': 1} = True

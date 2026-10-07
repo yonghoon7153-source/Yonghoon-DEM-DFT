@@ -1,0 +1,226 @@
+[
+  {
+    "name": "g2pre_c3117438a_1007_1415.tar.gz",
+    "sha256": "ba840f7e1cf3488686c3da27e8bcbad282c7d6234727c964c385e1bc7cfb58d7",
+    "members": [
+      {
+        "name": "g2pre_smoke_c3117438a_1007_1415/smoke_report.json",
+        "size": 65152
+      },
+      {
+        "name": "g2pre_smoke_c3117438a_1007_1415/smoke_summary.txt",
+        "size": 2977
+      },
+      {
+        "name": "g2pre_smoke_c3117438a_1007_1415/reread.json",
+        "size": 29954
+      },
+      {
+        "name": "g2pre_pilot_c3117438a_1007_1415/manifest.json",
+        "size": 9175
+      },
+      {
+        "name": "g2pre_pilot_c3117438a_1007_1415/seal_audit.tsv",
+        "size": 634
+      },
+      {
+        "name": "g2pre_pilot_c3117438a_1007_1415/seal_audit.json",
+        "size": 15179
+      },
+      {
+        "name": "g2pre_pilot_c3117438a_1007_1415/reread.json",
+        "size": 23440
+      },
+      {
+        "name": "g2pre_pilot_c3117438a_1007_1415/merged/merge_report.json",
+        "size": 1632
+      },
+      {
+        "name": "g2pre_pilot_c3117438a_1007_1415/progress.tsv",
+        "size": 402
+      }
+    ]
+  },
+  {
+    "name": "g2pre_extra_c3117438a_1007_1415.tar.gz",
+    "sha256": "7161a2351d1425750d7ac32543f11694a898321ad6a2da2da586f9a3a3c037dd",
+    "members": [
+      {
+        "name": "g2pre_selftest_reread_c3117438a_1007_1415.log",
+        "size": 2839
+      },
+      {
+        "name": "g2pre_selftest_runner_c3117438a_1007_1415.log",
+        "size": 67818
+      },
+      {
+        "name": "g2pre_pilot_c3117438a_1007_1415/import_obs",
+        "size": 0
+      },
+      {
+        "name": "g2pre_pilot_c3117438a_1007_1415/import_obs/log",
+        "size": 0
+      },
+      {
+        "name": "g2pre_pilot_c3117438a_1007_1415/import_obs/log/1518005-ee51e33f.txt",
+        "size": 681
+      },
+      {
+        "name": "g2pre_pilot_c3117438a_1007_1415/import_obs/log/1518581-574f54ab.txt",
+        "size": 579
+      },
+      {
+        "name": "g2pre_pilot_c3117438a_1007_1415/import_obs/log/1518945-5dfad2ab.txt",
+        "size": 722
+      },
+      {
+        "name": "g2pre_pilot_c3117438a_1007_1415/import_obs/log/1518003-cd683725.start.json",
+        "size": 1148
+      },
+      {
+        "name": "g2pre_pilot_c3117438a_1007_1415/import_obs/log/1518000-eafaac15.txt",
+        "size": 337
+      },
+      {
+        "name": "g2pre_pilot_c3117438a_1007_1415/import_obs/log/1518004-355ee753.txt",
+        "size": 682
+      },
+      {
+        "name": "g2pre_pilot_c3117438a_1007_1415/import_obs/log/1517930-f636b27b.txt",
+        "size": 1556
+      },
+      {
+        "name": "g2pre_pilot_c3117438a_1007_1415/import_obs/log/1518002-670d5991.start.json",
+        "size": 1545
+      },
+      {
+        "name": "g2pre_pilot_c3117438a_1007_1415/import_obs/log/1517912-38d3026e.start.json",
+        "size": 1259
+      },
+      {
+        "name": "g2pre_pilot_c3117438a_1007_1415/import_obs/log/1518903-e6cd76a0.txt",
+        "size": 723
+      },
+      {
+        "name": "g2pre_pilot_c3117438a_1007_1415/import_obs/log/1518004-355ee753.start.json",
+        "size": 1186
+      },
+      {
+        "name": "g2pre_pilot_c3117438a_1007_1415/import_obs/log/1518003-cd683725.txt",
+        "size": 611
+      },
+      {
+        "name": "g2pre_pilot_c3117438a_1007_1415/import_obs/log/1517912-38d3026e.txt",
+        "size": 1555
+      },
+      {
+        "name": "g2pre_pilot_c3117438a_1007_1415/import_obs/log/1518005-ee51e33f.start.json",
+        "size": 1173
+      },
+      {
+        "name": "g2pre_pilot_c3117438a_1007_1415/import_obs/log/1518945-5dfad2ab.start.json",
+        "size": 1213
+      },
+      {
+        "name": "g2pre_pilot_c3117438a_1007_1415/import_obs/log/1518907-3dba3a66.start.json",
+        "size": 1226
+      },
+      {
+        "name": "g2pre_pilot_c3117438a_1007_1415/import_obs/log/1517948-5528320a.txt",
+        "size": 1556
+      },
+      {
+        "name": "g2pre_pilot_c3117438a_1007_1415/import_obs/log/1518907-3dba3a66.txt",
+        "size": 723
+      },
+      {
+        "name": "g2pre_pilot_c3117438a_1007_1415/import_obs/log/1518904-b2b6d923.start.json",
+        "size": 536
+      },
+      {
+        "name": "g2pre_pilot_c3117438a_1007_1415/import_obs/log/1517948-5528320a.start.json",
+        "size": 1226
+      },
+      {
+        "name": "g2pre_pilot_c3117438a_1007_1415/import_obs/log/1517930-f636b27b.start.json",
+        "size": 1226
+      },
+      {
+        "name": "g2pre_pilot_c3117438a_1007_1415/import_obs/log/1518002-670d5991.txt",
+        "size": 336
+      },
+      {
+        "name": "g2pre_pilot_c3117438a_1007_1415/import_obs/log/1518944-c9d89592.start.json",
+        "size": 533
+      },
+      {
+        "name": "g2pre_pilot_c3117438a_1007_1415/import_obs/log/1518903-e6cd76a0.start.json",
+        "size": 1212
+      },
+      {
+        "name": "g2pre_pilot_c3117438a_1007_1415/import_obs/log/1518581-574f54ab.start.json",
+        "size": 536
+      },
+      {
+        "name": "g2pre_pilot_c3117438a_1007_1415/import_obs/log/1518001-c3a6bf58.start.json",
+        "size": 1568
+      },
+      {
+        "name": "g2pre_pilot_c3117438a_1007_1415/import_obs/log/1518944-c9d89592.txt",
+        "size": 578
+      },
+      {
+        "name": "g2pre_pilot_c3117438a_1007_1415/import_obs/log/1518904-b2b6d923.txt",
+        "size": 579
+      },
+      {
+        "name": "g2pre_pilot_c3117438a_1007_1415/import_obs/log/1518000-eafaac15.start.json",
+        "size": 1568
+      },
+      {
+        "name": "g2pre_pilot_c3117438a_1007_1415/import_obs/log/1518001-c3a6bf58.txt",
+        "size": 337
+      },
+      {
+        "name": "g2pre_pilot_c3117438a_1007_1415/import_obs/hook",
+        "size": 0
+      },
+      {
+        "name": "g2pre_pilot_c3117438a_1007_1415/import_obs/hook/sitecustomize.py",
+        "size": 2519
+      },
+      {
+        "name": "g2pre_pilot_c3117438a_1007_1415/runs",
+        "size": 0
+      },
+      {
+        "name": "g2pre_pilot_c3117438a_1007_1415/runs/run_001.json",
+        "size": 848
+      },
+      {
+        "name": "g2pre_pilot_c3117438a_1007_1415/cases/lhs00_055/worker.json",
+        "size": 2873
+      },
+      {
+        "name": "g2pre_pilot_c3117438a_1007_1415/cases/lhs00_128/worker.json",
+        "size": 2872
+      },
+      {
+        "name": "g2pre_pilot_c3117438a_1007_1415/cases/lhsx_007/worker.json",
+        "size": 2891
+      },
+      {
+        "name": "g2pre_pilot_c3117438a_1007_1415/cases/lhs00_055/log.txt",
+        "size": 1085
+      },
+      {
+        "name": "g2pre_pilot_c3117438a_1007_1415/cases/lhs00_128/log.txt",
+        "size": 1085
+      },
+      {
+        "name": "g2pre_pilot_c3117438a_1007_1415/cases/lhsx_007/log.txt",
+        "size": 1103
+      }
+    ]
+  }
+]

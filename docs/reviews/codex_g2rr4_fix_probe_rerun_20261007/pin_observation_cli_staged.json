@@ -1,0 +1,80 @@
+[
+  {
+    "label": "all5",
+    "rc": 0,
+    "verdicts": {
+      "SEALED": 1
+    },
+    "merged": {
+      "same": 1
+    },
+    "input_problems": [],
+    "generation_problems": [],
+    "import_problems": [],
+    "n_start": 5,
+    "n_final": 5,
+    "removed": [],
+    "stage_binding": null
+  },
+  {
+    "label": "helper_final_missing",
+    "rc": 1,
+    "verdicts": {
+      "SEALED": 1
+    },
+    "merged": {
+      "same": 1
+    },
+    "input_problems": [],
+    "generation_problems": [],
+    "import_problems": [
+      "lhs00_000 (run 1 · 시도 1): 완료 시도의 프로세스 1 가 시작만 하고 끝맺지 않았다 ['1518000-eafaac15'] — 그 프로세스의 import 를 모른다"
+    ],
+    "n_start": 5,
+    "n_final": 4,
+    "removed": [
+      "parse_liggghts.py (끝만)"
+    ],
+    "stage_binding": null
+  },
+  {
+    "label": "helper_pair_missing",
+    "rc": 0,
+    "verdicts": {
+      "SEALED": 1
+    },
+    "merged": {
+      "same": 1
+    },
+    "input_problems": [],
+    "generation_problems": [],
+    "import_problems": [],
+    "n_start": 4,
+    "n_final": 4,
+    "removed": [
+      "parse_liggghts.py (시작 · 끝)"
+    ],
+    "stage_binding": null
+  },
+  {
+    "label": "only_worker_and_solver",
+    "rc": 0,
+    "verdicts": {
+      "SEALED": 1
+    },
+    "merged": {
+      "same": 1
+    },
+    "input_problems": [],
+    "generation_problems": [],
+    "import_problems": [],
+    "n_start": 2,
+    "n_final": 2,
+    "removed": [
+      "parse_liggghts.py (시작 · 끝)",
+      "analyze_contacts_bimodal.py (시작 · 끝)",
+      "coverage_physics_vs_hertzian.py (시작 · 끝)"
+    ],
+    "stage_binding": null
+  }
+]

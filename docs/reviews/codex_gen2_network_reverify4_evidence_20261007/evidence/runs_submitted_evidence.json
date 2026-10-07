@@ -1,0 +1,16 @@
+[
+  {
+    "name": "submitted_evidence",
+    "argv": [
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\gen2_network_reverify4_20261007\\probes\\submitted_evidence.py"
+    ],
+    "rc": 1,
+    "seconds": 0.4059999999590218,
+    "tail": [
+      "  File \"C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\gen2_network_reverify4_20261007\\probes\\submitted_evidence.py\", line 34, in <module>",
+      "    assert not problems",
+      "           ^^^^^^^^^^^^",
+      "AssertionError"
+    ]
+  }
+]

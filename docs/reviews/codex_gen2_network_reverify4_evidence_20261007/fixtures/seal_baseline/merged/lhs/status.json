@@ -1,0 +1,21 @@
+{
+ "schema": "lhs_webapp_batch/v1",
+ "stop_after": "network",
+ "harvest_dir": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\gen2_network_reverify3_20261007\\evidence\\seal_paths\\baseline\\harvest",
+ "cohort": "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\gen2_network_reverify3_20261007\\evidence\\seal_paths\\baseline\\cohort.tsv",
+ "runs": [
+  {
+   "git_sha": "0801d4ceb540f5a5813761b20a5e0f304ed80a03",
+   "dirty": false
+  }
+ ],
+ "cases": {
+  "lhs00_000": {
+   "case": "lhs00_000",
+   "status": "done",
+   "stop_after": "network",
+   "failed_stages": [],
+   "network_run_id": "20261007T100115-9eb8cbd8"
+  }
+ }
+}

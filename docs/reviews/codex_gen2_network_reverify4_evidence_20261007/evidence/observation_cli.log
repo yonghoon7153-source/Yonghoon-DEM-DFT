@@ -1,0 +1,4 @@
+{"label": "all5", "rc": 0, "verdicts": {"SEALED": 1}, "input_problems": [], "generation_problems": [], "import_problems": [], "n_start": 5, "n_final": 5}
+{"label": "helper_final_missing", "rc": 1, "verdicts": {"SEALED": 1}, "input_problems": [], "generation_problems": [], "import_problems": ["lhs00_000 (run 1 · 시도 1): 완료 시도의 프로세스 1 가 시작만 하고 끝맺지 않았다 ['1518000-eafaac15'] — 그 프로세스의 import 를 모른다"], "n_start": 5, "n_final": 4}
+{"label": "helper_pair_missing", "rc": 0, "verdicts": {"SEALED": 1}, "input_problems": [], "generation_problems": [], "import_problems": [], "n_start": 4, "n_final": 4}
+{"label": "only_worker_and_solver", "rc": 0, "verdicts": {"SEALED": 1}, "input_problems": [], "generation_problems": [], "import_problems": [], "n_start": 2, "n_final": 2}

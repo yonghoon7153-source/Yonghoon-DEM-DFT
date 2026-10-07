@@ -1,0 +1,188 @@
+[
+  {
+    "label": "all5",
+    "rc": 0,
+    "verdicts": {
+      "SEALED": 1
+    },
+    "merged": {
+      "same": 1
+    },
+    "input_problems": [],
+    "generation_problems": [],
+    "import_problems": [],
+    "n_start": 5,
+    "n_final": 5,
+    "removed": [],
+    "stage_binding": {
+      "lhs00_000|1|1": {
+        "plan_source": "out/status.json 케이스 기록 stages (지금 기록을 쓴 시도 — 봉인 판정 record_sha)",
+        "mode": "bimodal",
+        "executed": [
+          "parser",
+          "contact_bimodal",
+          "coverage",
+          "network_cli"
+        ],
+        "skipped": [],
+        "in_process": 4,
+        "expected": {
+          "worker": 1,
+          "scripts/parse_liggghts.py": 1,
+          "scripts/analyze_contacts_bimodal.py": 1,
+          "scripts/coverage_physics_vs_hertzian.py": 1,
+          "scripts/network_conductivity.py": 1
+        },
+        "observed": {
+          "worker": 1,
+          "scripts/parse_liggghts.py": 1,
+          "scripts/analyze_contacts_bimodal.py": 1,
+          "scripts/coverage_physics_vs_hertzian.py": 1,
+          "scripts/network_conductivity.py": 1
+        }
+      }
+    }
+  },
+  {
+    "label": "helper_final_missing",
+    "rc": 1,
+    "verdicts": {
+      "SEALED": 1
+    },
+    "merged": {
+      "same": 1
+    },
+    "input_problems": [],
+    "generation_problems": [],
+    "import_problems": [
+      "lhs00_000 (run 1 · 시도 1): 완료 시도의 프로세스 1 가 시작만 하고 끝맺지 않았다 ['1518000-eafaac15'] — 그 프로세스의 import 를 모른다",
+      "lhs00_000 (run 1 · 시도 1): 실행된 단계의 끝맺은 프로세스 영수증 (시작 · 끝) 이 모자란다 {'scripts/parse_liggghts.py': '0/1'} (관측/계획) — 두 영수증이 함께 사라졌거나 그 단계가 훅 없이 돌았다 (G2RR4-02)"
+    ],
+    "n_start": 5,
+    "n_final": 4,
+    "removed": [
+      "parse_liggghts.py (끝만)"
+    ],
+    "stage_binding": {
+      "lhs00_000|1|1": {
+        "plan_source": "out/status.json 케이스 기록 stages (지금 기록을 쓴 시도 — 봉인 판정 record_sha)",
+        "mode": "bimodal",
+        "executed": [
+          "parser",
+          "contact_bimodal",
+          "coverage",
+          "network_cli"
+        ],
+        "skipped": [],
+        "in_process": 4,
+        "expected": {
+          "worker": 1,
+          "scripts/parse_liggghts.py": 1,
+          "scripts/analyze_contacts_bimodal.py": 1,
+          "scripts/coverage_physics_vs_hertzian.py": 1,
+          "scripts/network_conductivity.py": 1
+        },
+        "observed": {
+          "worker": 1,
+          "scripts/analyze_contacts_bimodal.py": 1,
+          "scripts/coverage_physics_vs_hertzian.py": 1,
+          "scripts/network_conductivity.py": 1
+        }
+      }
+    }
+  },
+  {
+    "label": "helper_pair_missing",
+    "rc": 1,
+    "verdicts": {
+      "SEALED": 1
+    },
+    "merged": {
+      "same": 1
+    },
+    "input_problems": [],
+    "generation_problems": [],
+    "import_problems": [
+      "lhs00_000 (run 1 · 시도 1): 실행된 단계의 끝맺은 프로세스 영수증 (시작 · 끝) 이 모자란다 {'scripts/parse_liggghts.py': '0/1'} (관측/계획) — 두 영수증이 함께 사라졌거나 그 단계가 훅 없이 돌았다 (G2RR4-02)"
+    ],
+    "n_start": 4,
+    "n_final": 4,
+    "removed": [
+      "parse_liggghts.py (시작 · 끝)"
+    ],
+    "stage_binding": {
+      "lhs00_000|1|1": {
+        "plan_source": "out/status.json 케이스 기록 stages (지금 기록을 쓴 시도 — 봉인 판정 record_sha)",
+        "mode": "bimodal",
+        "executed": [
+          "parser",
+          "contact_bimodal",
+          "coverage",
+          "network_cli"
+        ],
+        "skipped": [],
+        "in_process": 4,
+        "expected": {
+          "worker": 1,
+          "scripts/parse_liggghts.py": 1,
+          "scripts/analyze_contacts_bimodal.py": 1,
+          "scripts/coverage_physics_vs_hertzian.py": 1,
+          "scripts/network_conductivity.py": 1
+        },
+        "observed": {
+          "worker": 1,
+          "scripts/analyze_contacts_bimodal.py": 1,
+          "scripts/coverage_physics_vs_hertzian.py": 1,
+          "scripts/network_conductivity.py": 1
+        }
+      }
+    }
+  },
+  {
+    "label": "only_worker_and_solver",
+    "rc": 1,
+    "verdicts": {
+      "SEALED": 1
+    },
+    "merged": {
+      "same": 1
+    },
+    "input_problems": [],
+    "generation_problems": [],
+    "import_problems": [
+      "lhs00_000 (run 1 · 시도 1): 실행된 단계의 끝맺은 프로세스 영수증 (시작 · 끝) 이 모자란다 {'scripts/parse_liggghts.py': '0/1', 'scripts/analyze_contacts_bimodal.py': '0/1', 'scripts/coverage_physics_vs_hertzian.py': '0/1'} (관측/계획) — 두 영수증이 함께 사라졌거나 그 단계가 훅 없이 돌았다 (G2RR4-02)"
+    ],
+    "n_start": 2,
+    "n_final": 2,
+    "removed": [
+      "parse_liggghts.py (시작 · 끝)",
+      "analyze_contacts_bimodal.py (시작 · 끝)",
+      "coverage_physics_vs_hertzian.py (시작 · 끝)"
+    ],
+    "stage_binding": {
+      "lhs00_000|1|1": {
+        "plan_source": "out/status.json 케이스 기록 stages (지금 기록을 쓴 시도 — 봉인 판정 record_sha)",
+        "mode": "bimodal",
+        "executed": [
+          "parser",
+          "contact_bimodal",
+          "coverage",
+          "network_cli"
+        ],
+        "skipped": [],
+        "in_process": 4,
+        "expected": {
+          "worker": 1,
+          "scripts/parse_liggghts.py": 1,
+          "scripts/analyze_contacts_bimodal.py": 1,
+          "scripts/coverage_physics_vs_hertzian.py": 1,
+          "scripts/network_conductivity.py": 1
+        },
+        "observed": {
+          "worker": 1,
+          "scripts/network_conductivity.py": 1
+        }
+      }
+    }
+  }
+]

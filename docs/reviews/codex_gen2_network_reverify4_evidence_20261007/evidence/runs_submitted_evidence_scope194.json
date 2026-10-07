@@ -1,0 +1,30 @@
+[
+  {
+    "name": "submitted_evidence",
+    "argv": [
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\gen2_network_reverify4_20261007\\probes\\submitted_evidence.py"
+    ],
+    "rc": 1,
+    "seconds": 0.5779999999795109,
+    "tail": [
+      "  File \"C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\gen2_network_reverify4_20261007\\probes\\submitted_evidence.py\", line 33, in <module>",
+      "    assert not problems",
+      "           ^^^^^^^^^^^^",
+      "AssertionError"
+    ]
+  },
+  {
+    "name": "scope194",
+    "argv": [
+      "C:\\Users\\Administrator\\Documents\\Codex\\2026-08-24\\claude-stoic-knuth-nobvq-x20\\gen2_network_reverify4_20261007\\probes\\scope194.py"
+    ],
+    "rc": 0,
+    "seconds": 0.4690000000409782,
+    "tail": [
+      "    ],",
+      "    \"audit_has_atom_contact_hashes\": false",
+      "  }",
+      "}"
+    ]
+  }
+]

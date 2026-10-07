@@ -67,6 +67,10 @@
        import_obs_run_id) · run · 케이스 · 시도 — 실행기가 워커 환경에 넣고 단계 하위 프로세스가 물려받는다).  audit 가 영수증 완전성 (빈 · 머리 없는 · 잘린 ·
        짝 없는 · 뿌리 밖 줄) · 이 실행의 신원 · 완료 시도마다 끝맺음 · 필수 역할 (워커 · 망 풀이 = network_conductivity.py 가 __main__) 을 본다 (옛: 로그 파일
        개수만 — 빈 로그 하나 = 관측 0 · rc 0 · 둘째 프로세스 로그 소실 = rc 0).  관측은 기록만 (값에 닿지 않는다).
+    ⓛ ★ 10-07 G2RR4-02 (Codex 세대 2 재검증 4 §3) — **실행 단계 ↔ 관측 영수증 결합** (옛: 필수 역할 둘뿐 → 보조 단계 영수증 쌍이 함께 사라지면 rc 0): 완료 시도마다
+       훅 밖 단계 계획 (worker.json attempts[].stage_plan = 워커 케이스 기록 stages 의 사본 · 옛 ROOT = 지금 기록을 쓴 시도의 기록) 의 실행 단계마다 그 스크립트가
+       __main__ 인 끝맺은 프로세스 정확히 그 수 (+ 워커 하나 — 모자람 · 중복 · 계획 밖 = 문제) · 정당한 생략 (`Parse (CSV fallback)`) 은 표지 · 분류 밖 단계 이름 = 거부 ·
+       결합 기록 = audit JSON import_observation.stage_binding (v1.3 배포 관문이 생산 194 에 요구) · 완료 아닌 시도 (Q2) 는 결합하지 않는다 · fork API = 발사 사전 점검이 막는다.
 
 설정 (전부 `manifest.json` 에 남는다)
 ───────────────────────────────────────────────────────────────────────────────
@@ -92,9 +96,9 @@
 사용 (WSL · 리포 체크아웃 · 봉인 커밋 detached — 예전 배치와 같은 `~/dem-audit`)
 ───────────────────────────────────────────────────────────────────────────────
   P=~/Yonghoon-DEM-DFT/venv/bin/python
-  $P scripts/run_network_194_parallel.py run --root ~/net194_<sha> --dry-run       # 사전 점검 · 계획만 (아무것도 안 쓴다)
+  $P scripts/run_network_194_parallel.py run --root ~/net194_<sha> --dry-run --observe-imports   # 사전 점검 · 계획만 (아무것도 안 쓴다)
   $P scripts/run_network_194_parallel.py run --root ~/net194_pilot -j 2 --case lhsx_040 --case lhs00_055   # 시범 (가장 큰 + 작은)
-  $P scripts/run_network_194_parallel.py run --root ~/net194_<sha>                 # 194 건 · 20 레인
+  $P scripts/run_network_194_parallel.py run --root ~/net194_<sha> --observe-imports   # 194 건 · 20 레인 (★ G2RR4-03 — 생산 194 = 관측 필수 · 없으면 사전 점검 ⛔)
   $P scripts/run_network_194_parallel.py status --root ~/net194_<sha>              # 진행 (다른 터미널)
   $P scripts/run_network_194_parallel.py audit --root ~/net194_<sha>               # 봉인 감사 — 케이스마다 어느 코드로 계산됐나 (읽기 전용)
   $P scripts/run_network_194_parallel.py audit --root ~/net194_11fcf91e8 --historical   # 등록된 옛 실행 (10-05 v1.2) 만 — 역사 모드 (G2RR2-01)
@@ -309,6 +313,99 @@ if _L and _R:
 '''
 #: 관측에서 빼는 시험 도구 (생산 경로가 아니다) — selftest 의 합성 침대 자식 (wsl_network_smoke --_child) 과 침대 도구.
 IMPORT_OBS_HARNESS = ('scripts/wsl_network_smoke.py', 'webapp/test_pipeline_provenance.py')
+#: ★ 10-07 G2RR4-02 (Codex 세대 2 재검증 4 §3) — **실행 단계 ↔ 관측 영수증 결합**.  옛 판의 기대 집합 = 로그 폴더에 남은 파일 + 필수 역할 둘 (워커 · 망 솔버) 이라
+#:   보조 단계 (파서 · 접촉 분석 · 피복) 의 시작 · 끝 영수증이 **함께** 사라지면 완료 시도 audit rc 0 (Codex: 파서 쌍 없음 4/4 · 워커 + 솔버만 2/2).
+#:   이제 완료 시도마다 **훅 밖** 기록 = 워커 케이스 기록 (out/status.json cases[<c>].stages — lhs_webapp_batch 가 app.run_pipeline 의 단계 기록 [step · rc · ok] 을
+#:   싣는다 · mode) 의 단계 계획을 실행기가 시도마다 worker.json attempts[].stage_plan 에 사본으로 둔다 (뒤 시도가 케이스 기록을 덮어도 그 시도의 계획이 남는다 ·
+#:   옛 실행기 ROOT = 지금 케이스 기록을 쓴 시도만 그 기록의 stages 로) → 단계 이름 표로 실행된 단계 · 정당한 생략 · 실행 프로세스 안 단계를 가르고, 실행된 단계마다
+#:   그 스크립트가 __main__ 인 **끝맺은** 프로세스가 정확히 그 수만큼 (+ 워커 하나) 있어야 한다 (모자라면 결손 · 남으면 중복 — "프로세스 5 개" 로 세지 않는다 ·
+#:   계획에 없는 프로세스 = 문제).  표 밖 단계 이름 = 분류 밖 (거부 — 파이프라인에 새 단계가 생기면 이 표를 먼저 고친다 · selftest 가 app.py 문자열과 대조).
+#:   ⚠ 남는 한정: fork 뒤 import 는 영수증이 없다 — 봉인 경로에 fork API 가 없음을 발사 사전 점검이 정적으로 확인한다 (`OBS_FORK_PATTERNS`) · -I · -E · -S 로 뜬 단계는
+#:   영수증이 없어 위 결합이 결손으로 잡는다.
+IMPORT_OBS_STAGE_SCHEMA = 'np194_import_obs/stage_binding/v1'       # audit JSON import_observation.stage_binding (v1.3 배포 관문이 생산 194 에 요구한다)
+IMPORT_OBS_STAGE_PLAN_SCHEMA = 'np194_stage_plan/v1'                # worker.json attempts[].stage_plan
+#: 단계 이름 (app.run_pipeline 의 step) → (단계 열쇠, 그 단계 하위 프로세스의 __main__ 스크립트)
+IMPORT_OBS_STAGE_MAIN = {
+    'Parse': ('parser', 'scripts/parse_liggghts.py'),
+    'Parse (hybrid: atoms.csv + contact LIGGGHTS)': ('parser', 'scripts/parse_liggghts.py'),
+    'Bimodal Contact Analysis': ('contact_bimodal', 'scripts/analyze_contacts_bimodal.py'),
+    'Contact Analysis': ('contact_mono', 'scripts/analyze_contacts.py'),
+    'Coverage Physics vs Hertzian': ('coverage', 'scripts/coverage_physics_vs_hertzian.py'),
+    'Network Solver (both modes)': ('network_cli', 'scripts/network_conductivity.py'),
+}
+#: 하위 프로세스를 띄우지 않은 단계 이름 → (생략된 단계 열쇠, 사유) = 그 단계의 **정당한 생략** (영수증을 요구하지 않는다 · 결합 기록에 남긴다)
+IMPORT_OBS_STAGE_SKIP = {
+    'Parse (CSV fallback)': ('parser', '미리 파싱된 CSV 복사 — 파서 하위 프로세스 없음'),
+    'Network Solver (LOCK 미획득 — 미실행)': ('network_cli', '망 lock 미획득 — 망 CLI 미실행 (그 시도는 failed)'),
+}
+#: 실행 (워커) 프로세스 안에서 도는 단계 이름 (하위 프로세스 없음 · 영수증 대상 아님) — app.py · pipeline_service.py 의 step 문자열 그대로
+IMPORT_OBS_INPROC_STEPS = (
+    'Network recovery (중단된 게시 흔적 격리 · RGLR2-02)', 'Network channel verdict (ionic/electronic/thermal)',
+    'Network projection (승격 전 투영)', 'Network σ₀ · 온도 짝 (승격 전 · RGL-07)', 'Network stop contract (stop_after=network)',
+    'Network ionic record check (승격 전 공용 기술 검사 · RGLR2-01)', 'Network publication (승격 · 실패 시 되돌림)',
+    'Network Merge', 'Network Merge / Stage E')
+
+
+def stage_plan_of(rec):
+    """★ G2RR4-02 — 워커 케이스 기록 (out/status.json cases[<c>] · lhs_webapp_batch 가 app.run_pipeline 의 단계 기록을 stages 로 싣는다) → 시도 단계 계획 dict | None
+    (stages 가 목록이 아니면 None — 계획을 모른다)."""
+    if not isinstance(rec, dict) or not isinstance(rec.get('stages'), list):
+        return None
+    return dict(schema=IMPORT_OBS_STAGE_PLAN_SCHEMA, mode=rec.get('mode'), stop_after=rec.get('stop_after'), status=rec.get('status'),
+                stages=[dict(step=s.get('step'), rc=s.get('rc'), ok=s.get('ok')) for s in rec['stages'] if isinstance(s, dict)])
+
+
+def stage_expectations(plan) -> dict:
+    """시도 단계 계획 → dict(executed=[단계 열쇠] (하위 프로세스를 띄운 단계 · 계획 순서) · expect=Counter(__main__ 스크립트 → 프로세스 수) ·
+    skipped=[정당한 생략 '열쇠 — 단계: 사유'] · in_process=실행 프로세스 안 단계 수 · unknown=[분류 밖 단계 이름])."""
+    ex, want, sk, unk, inproc = [], collections.Counter(), [], [], 0
+    for s in (plan or {}).get('stages') or []:
+        step = s.get('step') if isinstance(s, dict) else s
+        if step in IMPORT_OBS_STAGE_MAIN:
+            key, script = IMPORT_OBS_STAGE_MAIN[step]
+            ex.append(key)
+            want[script] += 1
+        elif step in IMPORT_OBS_STAGE_SKIP:
+            key, why = IMPORT_OBS_STAGE_SKIP[step]
+            sk.append(f'{key} — {step}: {why}')
+        elif step in IMPORT_OBS_INPROC_STEPS:
+            inproc += 1
+        else:
+            unk.append(step)
+    return dict(executed=ex, expect=want, skipped=sk, in_process=inproc, unknown=unk)
+
+
+def _obs_proc_key(p: dict, code_root) -> str:
+    """끝맺은 프로세스 → 결합 열쇠: 워커 = 'worker' · 그 밖 = __main__ 의 리포 상대 경로 (뿌리 밖이면 'outside:<경로>' · 모르면 'main:None')."""
+    if p.get('role') == 'worker':
+        return 'worker'
+    m = p.get('main')
+    if not m:
+        return 'main:None'
+    try:
+        return Path(m).resolve().relative_to(Path(code_root).resolve()).as_posix()
+    except (ValueError, OSError):
+        return f'outside:{m}'
+
+
+#: ★ 10-07 G2RR4-02 ③ (Codex 세대 2 재검증 4 §3 "훅을 건너뛰는 … fork 는 등록 경로에서 금지 또는 다른 계측 경로로") — fork 된 자식의 import 는 영수증이 없다 ⇒
+#:   봉인 경로 (CODE_FILES) 에 fork · 프로세스 풀 API 가 **없어야** 발사한다 (발사 사전 점검 `fork_census` · 있으면 ⛔ — 쓰려면 관측 경로부터 설계).  10-07 grep = 0 건.
+OBS_FORK_PATTERNS = (r'\bmultiprocessing\b', r'\bos\.fork(?:pty)?\s*\(', r'\bProcessPoolExecutor\b', r'\bos\.posix_spawnp?\s*\(',
+                     r'\bos\.spawn[lv]p?e?\s*\(', r'\bpty\.fork\s*\(')
+
+
+def fork_census(root=None) -> list:
+    """봉인 파일 (CODE_FILES) 의 fork · 프로세스 풀 API 줄 → [(파일, 줄 번호, 줄)] (빈 목록 = 없음 · 주석 줄도 센다 = fail-closed)."""
+    r = Path(root or ROOT)
+    rx = re.compile('|'.join(OBS_FORK_PATTERNS))
+    out = []
+    for rel in CODE_FILES:
+        try:
+            text = (r / rel).read_text(encoding='utf-8')
+        except (OSError, UnicodeDecodeError):
+            continue                                       # 없는 파일 = 사전 점검의 '봉인 대상 코드 파일이 없다' 가 잡는다
+        out += [(rel, i, ln.strip()[:120]) for i, ln in enumerate(text.splitlines(), 1) if rx.search(ln)]
+    return out
 
 
 def import_obs_env(obs_dir: Path, code_root) -> dict:
@@ -454,6 +551,7 @@ def import_observation_problems(root: Path, man: dict, obs: dict, rows=()) -> li
     if man.get('observe_imports') and not rid:
         probs.append('manifest 에 관측 실행 신원 (import_obs_run_id) 이 없다 — 어느 기록이 이 실행의 것인지 가를 수 없다 (이 판 전 실행기의 시범이면 다시)')
     known, completed = set(), set()
+    plans = {}                      # ★ G2RR4-02 — (케이스, run, 시도) → (단계 계획, 출처) · 훅 밖 호출부 기록
     for e in (man.get('plan') or {}).get('queue') or []:
         for a in (read_json(case_dir(Path(root), e['case']) / 'worker.json') or {}).get('attempts') or []:
             if isinstance(a, dict):
@@ -461,11 +559,20 @@ def import_observation_problems(root: Path, man: dict, obs: dict, rows=()) -> li
                 known.add(k)
                 if a.get('outcome') in KEEP:
                     completed.add(k)
+                if isinstance(a.get('stage_plan'), dict):
+                    plans[k] = (a['stage_plan'], 'worker.json attempts[].stage_plan (그 시도가 쓴 케이스 기록의 단계)')
     for r_ in rows or ():
         if r_.get('record_status') in KEEP and r_.get('attempt') is not None and r_.get('run') is not None:
             k = (r_['case'], str(r_['run']), str(r_['attempt']))
             known.add(k)
             completed.add(k)
+            #  지금 케이스 기록 (out/status.json) 을 쓴 시도 (봉인 판정 행 = record_sha 결합) — 그 기록의 단계 = 그 시도의 계획.  시도 사본이 있으면 같아야 한다.
+            rp = stage_plan_of(_status_view(case_dir(Path(root), r_['case']), r_['case'])[0])
+            if rp is not None and k in plans and (plans[k][0] or {}).get('stages') != rp['stages']:
+                probs.append(f'{r_["case"]} (run {k[1]} · 시도 {k[2]}): 시도 단계 계획 (worker.json stage_plan) ≠ 지금 케이스 기록 (out/status.json stages) — '
+                             '그 시도가 쓴 기록의 단계와 어긋난다 (G2RR4-02)')
+            if rp is not None and k not in plans:
+                plans[k] = (rp, 'out/status.json 케이스 기록 stages (지금 기록을 쓴 시도 — 봉인 판정 record_sha)')
     by = collections.defaultdict(list)
     for p in obs['processes']:
         idn = p['identity']
@@ -490,8 +597,38 @@ def import_observation_problems(root: Path, man: dict, obs: dict, rows=()) -> li
             if not any(p['final'] and p['role'] == role and core in p['files'] for p in ps_):
                 probs.append(f'{tag}: 완료 시도에 {role} 프로세스 관측 ({core} 이 __main__ 또는 그 안에서 읽힌 끝맺음 로그) 이 없다 — 로그가 빠졌거나 '
                              '그 단계가 훅 없이 돌았다')
+    #  ★ 10-07 G2RR4-02 — 완료 시도마다 실행 단계 계획 (훅 밖) ↔ 끝맺은 프로세스: 실행된 단계마다 그 스크립트가 __main__ 인 프로세스가 정확히 그 수 (+ 워커 하나) ·
+    #    결손 · 중복 · 계획 밖 프로세스 · 계획 없음 · 분류 밖 단계 = 문제.  완료 아닌 시도 (Q2) 는 결합하지 않는다 (위 정보 그대로).
+    croot = code_root(man)
+    binding = {}
+    for k in sorted(completed):
+        tag = f'{k[0]} (run {k[1]} · 시도 {k[2]})'
+        pl = plans.get(k)
+        if pl is None:
+            probs.append(f'{tag}: 완료 시도의 실행 단계 기록이 없다 (worker.json 시도 stage_plan · out/status.json 케이스 기록 stages) — 관측 영수증을 단계와 맞출 수 '
+                         '없다 (G2RR4-02)')
+            continue
+        se = stage_expectations(pl[0])
+        if se['unknown']:
+            probs.append(f'{tag}: 분류 밖 단계 {se["unknown"][:3]} — 실행 단계 ↔ 영수증 표 (IMPORT_OBS_STAGE_MAIN · IMPORT_OBS_STAGE_SKIP · IMPORT_OBS_INPROC_STEPS) '
+                         '를 먼저 고칠 것 (G2RR4-02)')
+        want = collections.Counter({'worker': 1}) + se['expect']
+        seen = collections.Counter(_obs_proc_key(p, croot) for p in by.get(k, []) if p['final'])
+        miss = {s: f'{seen.get(s, 0)}/{n}' for s, n in want.items() if seen.get(s, 0) < n}
+        dup = {s: f'{seen[s]}/{n}' for s, n in want.items() if seen.get(s, 0) > n}
+        extra = {s: n for s, n in seen.items() if s not in want}
+        if miss:
+            probs.append(f'{tag}: 실행된 단계의 끝맺은 프로세스 영수증 (시작 · 끝) 이 모자란다 {miss} (관측/계획) — 두 영수증이 함께 사라졌거나 그 단계가 훅 없이 '
+                         '돌았다 (G2RR4-02)')
+        if dup:
+            probs.append(f'{tag}: 단계 프로세스가 계획보다 많다 {dup} (관측/계획) — 같은 단계의 중복 영수증은 다른 단계의 결손을 메우지 못한다 (G2RR4-02)')
+        if extra:
+            probs.append(f'{tag}: 실행 단계 계획에 없는 프로세스 {extra} — 어느 단계의 기록인지 모른다 (G2RR4-02)')
+        binding[f'{k[0]}|{k[1]}|{k[2]}'] = dict(plan_source=pl[1], mode=(pl[0] or {}).get('mode'), executed=se['executed'], skipped=se['skipped'],
+                                                in_process=se['in_process'], expected=dict(want), observed=dict(seen))
     obs['completed_attempts'] = [list(k) for k in sorted(completed)]
     obs['unfinalized_noncompleted'] = info
+    obs['stage_binding'] = dict(schema=IMPORT_OBS_STAGE_SCHEMA, attempts=binding)
     probs += [f'봉인 밖 모듈을 실제로 읽었다: {f}' for f in obs['outside']]
     return probs
 
@@ -756,6 +893,25 @@ def registered_id_set(name) -> dict:
         raise LaunchError(f'등록 집합 {name} — 수확 폴더에서 열거한 집합 (n {len(pairs)} · {dict(cn)} · {ids_digest(pairs)[:12]}) ≠ 등록 '
                           f'(n {reg["n"]} · {reg["cohort_n"]} · {reg["ids_sha256"][:12]})')
     return dict(name=name, pairs=frozenset(pairs), source=reg['source'])
+
+
+def production_plan(plan) -> bool:
+    """★ 10-07 G2RR4-03 — 이 계획이 등록 생산 194 인가 (계획 큐의 (케이스, 코호트) 집합 = 등록 집합 production194 · 커밋된 수확 폴더에서 열거 · 지문 대조).
+    등록 집합을 못 세우면 (수확 폴더가 등록과 다르다) 거짓 — 그런 계획은 등록 생산 194 가 아니다 (입력 지문 · 다시 읽기 M-reg · 배포 관문이 따로 막는다)."""
+    pairs = frozenset((e.get('case'), e.get('cohort')) for e in ((plan or {}).get('queue') or []) if isinstance(e, dict))
+    try:
+        return bool(pairs) and pairs == registered_id_set('production194')['pairs']
+    except LaunchError:
+        return False
+
+
+def production_observation_problem(man) -> str | None:
+    """★ 10-07 G2RR4-03 (Codex 세대 2 재검증 4 §4 Q3) — 생산 194 = import 관측 필수 (등록 §4 `run --observe-imports`).  manifest → 사유 (관측을 끈 생산 계획) | None.
+    발사 사전 점검 (preflight) · 감사 (audit) 가 같은 판정을 쓴다 — v1.3 배포 관문도 observe_imports true · 관측 객체 · 결합 기록 없는 생산 배치를 받지 않는다."""
+    if production_plan((man or {}).get('plan')) and (man or {}).get('observe_imports') is not True:
+        return ('생산 194 계획 (등록 production194) 인데 import 관측을 끈 실행 — 생산 194 는 관측 필수 (`run --observe-imports` · G2RR4-03 · 등록 §4) · '
+                '관측 없이 돈 생산 배치는 v1.3 배포 관문이 받지 않는다')
+    return None
 
 
 def _historical_match(m) -> tuple:
@@ -1425,6 +1581,15 @@ def preflight(args, plan, root: Path, budget_mb) -> dict:
                     'DEP_LAZY_OFFPATH 에 사유와 함께 (Codex 세대 2 재검증 2 §4 G2RR2-03)')
     if cen['stale']:
         warn.append(f'지연 import 분류표의 낡은 항목 (지금 코드에 없음) {cen["stale"][:5]} — 표 정리')
+    #  ★ 10-07 G2RR4-03 — 생산 194 (계획 = 등록 집합 production194) 는 import 관측 필수 (감사와 같은 판정 · 시범 · 부분 계획은 선택)
+    _pob = production_observation_problem(dict(plan=plan, observe_imports=bool(getattr(args, 'observe_imports', False))))
+    if _pob:
+        stop.append(_pob)
+    #  ★ 10-07 G2RR4-02 ③ — fork 뒤 import 는 관측 영수증이 없다: 봉인 경로에 fork · 프로세스 풀 API 가 있으면 발사하지 않는다
+    fk = fork_census()
+    if fk:
+        stop.append(f'봉인 경로 (CODE_FILES) 에 fork · 프로세스 풀 API {len(fk)} 줄 {fk[:3]} — fork 된 자식의 import 는 관측 영수증이 없다 (Codex 세대 2 재검증 4 §3 · '
+                    'G2RR4-02) — 관측 경로를 먼저 설계할 것')
     #  ★ 10-07 G2RR-01 — 기대 망 세대 = 이 체크아웃 (워커 체크아웃) 의 봉인 코드에서 유도 (손으로 적지 않는다)
     gp = derive_generation(ROOT, args.python)
     _gwhy = generation_probe_problem(gp)
@@ -1486,7 +1651,8 @@ def preflight(args, plan, root: Path, budget_mb) -> dict:
                 est_mem_largest_mb=max(e['est_mem_mb'] for e in q), disk_free_GB=gib(free), disk_need_GB=gib(disk_need),
                 est_serial_h=round(tot_s / 3600, 2), est_makespan_h=round(max(tot_s / eff, max(e['est_time_s'] for e in q)) / 3600, 2),
                 git=git, raw_problems=probs[:50], n_raw_problems=len(probs), warn=warn, stop=stop, generation=gp, dependency_closure=clo,
-                input_digest=idg, lazy_census=dict(n_lazy=len(cen['lazy']), unclassified=cen['unclassified'], stale=cen['stale']))
+                input_digest=idg, lazy_census=dict(n_lazy=len(cen['lazy']), unclassified=cen['unclassified'], stale=cen['stale']),
+                fork_census=[list(x) for x in fk])
 
 
 def print_preflight(pf, plan, args, root):
@@ -1519,6 +1685,8 @@ def print_preflight(pf, plan, args, root):
     lc = pf.get('lazy_census') or {}
     p(f'  지연 import 분류 — 봉인 파일의 함수 안 리포 import {lc.get("n_lazy")} · 분류 밖 {len(lc.get("unclassified") or [])} — '
       + ('✓' if not lc.get('unclassified') else f'✗ {[(a, q) for a, _f, q, _n in lc.get("unclassified")][:5]}'))
+    fk = pf.get('fork_census') or []
+    p(f'  fork · 프로세스 풀 API (봉인 경로 — 관측 영수증 밖 · G2RR4-02) {len(fk)} 줄 — ' + ('✓' if not fk else f'✗ {fk[:3]}'))
     idg = pf.get('input_digest') or {}
     p(f'  입력 지문 (ID · 코호트 · 원자료 sha256 = 수확 JSON raw) — 케이스 {idg.get("n")} · ids_sha256 {idg.get("ids_sha256")} · '
       f'raw_sha256_table_sha256 {idg.get("raw_sha256_table_sha256")} · 원자료 sha 결손 {len(idg.get("missing_raw_sha") or [])}')
@@ -1667,7 +1835,9 @@ def run_queue(root: Path, manifest: dict, todo: list, lanes: int, run_no: int, *
                    est_mem_mb=ln.entry['est_mem_mb'], contacts=ln.entry['contacts'],
                    user_s=round(ru.ru_utime, 2), sys_s=round(ru.ru_stime, 2), outcome=outcome_s,
                    batch_elapsed_s=(rec or {}).get('elapsed_s'), why=(rec or {}).get('why'),
-                   failed_stages=(rec or {}).get('failed_stages'), network_run_id=(rec or {}).get('network_run_id'), seal=ev)
+                   failed_stages=(rec or {}).get('failed_stages'), network_run_id=(rec or {}).get('network_run_id'), seal=ev,
+                   #  ★ G2RR4-02 — 이 시도가 쓴 케이스 기록의 단계 계획 사본 (훅 밖 기록 · 뒤 시도가 기록을 덮어도 남는다 · audit 가 영수증과 결합)
+                   stage_plan=stage_plan_of(rec))
         w = read_json(ln.cdir / 'worker.json') or dict(schema=WORKER_SCHEMA, case=ln.case, cohort=ln.entry['cohort'], attempts=[])
         w.setdefault('attempts', []).append(att)
         write_json(ln.cdir / 'worker.json', w)
@@ -2354,6 +2524,12 @@ def cmd_audit(args) -> int:
               + (f' · 완료 아닌 시도의 끝맺지 않은 영수증 {len(import_obs["unfinalized_noncompleted"])} (정보)' if import_obs['unfinalized_noncompleted'] else ''))
         for p_ in obs_problems[:20]:
             print(f'  ✗ 관측: {p_}')
+    #  ★ 10-07 G2RR4-03 — 생산 194 인데 관측을 끈 실행 = 감사 문제 (발사 사전 점검과 같은 판정 · 관측 기록이 아예 없어도 여기서 잡는다) ·
+    #    역사 형식 (등록된 옛 실행 · --historical) 은 이 요구 전의 실행이라 대지 않는다 (역사 모드 판정 = 그대로 · 배포 관문은 역사 형식을 받지 않는다)
+    _pob = None if history else production_observation_problem(man)
+    if _pob:
+        obs_problems = list(obs_problems) + [_pob]
+        print(f'  ✗ 관측: {_pob}')
     bad = cnt.get('UNSEALED', 0) + mcnt.get('differs', 0) + mcnt.get('missing', 0) + len(gen_problems) + len(input_problems) + len(obs_problems)
     print('  ✓ 기록 전부 발사 봉인 코드에서 나왔다' + (' · merged = 케이스 폴더' if mcnt.get('same') else '')
           + (' · 레코드 세대 = 기대 세대' if declared else '') if not bad else
@@ -2547,9 +2723,20 @@ class FakeA:
             os.kill(os.getpid(), signal.SIGKILL)
         if b.get('mode') == 'hang':
             time.sleep(3600)
+        log = [{'step': 'Parse', 'rc': 0, 'ok': True}]
         if os.environ.get('NP194_FAKE_NET_PROC') == '1':     # ★ 10-07 G2RR3-02 관측 시험 — 망 풀이 하위 프로세스 대역 (network_conductivity.py 가 __main__ · --help)
-            subprocess.run([sys.executable, os.path.join(os.environ['NP194_REPO'], 'scripts', 'network_conductivity.py'), '--help'],
-                           check=True, capture_output=True)
+            #  ★ 10-07 G2RR4-02 — 생산 워커 트리와 같은 단계 하위 프로세스 넷 (파서 · bimodal 접촉 분석 · 피복 · 망 CLI — 실제 단계 스크립트가 __main__ · --help) ·
+            #    단계 기록 (log) = app.run_pipeline 과 같은 단계 이름 · 순서 · NP194_FAKE_PARSE_SKIP=1 = 파서 정당한 생략 ('Parse (CSV fallback)' · 하위 프로세스 없음)
+            _skip = os.environ.get('NP194_FAKE_PARSE_SKIP') == '1'
+            log = [{'step': 'Parse (CSV fallback)', 'stdout': 'CSVs copied from case_dir', 'stderr': '', 'rc': 0}] if _skip else []
+            for _step, _scr in ((() if _skip else (('Parse', 'parse_liggghts.py'),)) + (('Bimodal Contact Analysis', 'analyze_contacts_bimodal.py'),
+                                ('Coverage Physics vs Hertzian', 'coverage_physics_vs_hertzian.py'), ('Network Solver (both modes)', 'network_conductivity.py'))):
+                _rc = subprocess.run([sys.executable, os.path.join(os.environ['NP194_REPO'], 'scripts', _scr), '--help'], capture_output=True).returncode
+                log.append({'step': _step, 'rc': _rc, 'ok': _rc == 0})
+            log += [{'step': 'Network channel verdict (ionic/electronic/thermal)', 'rc': 0, 'ok': True},
+                    {'step': 'Network stop contract (stop_after=network)', 'rc': 0, 'ok': True},
+                    {'step': 'Network ionic record check (승격 전 공용 기술 검사 · RGLR2-01)', 'rc': 0, 'ok': True},
+                    {'step': 'Network Merge', 'rc': 0, 'stdout': '', 'stderr': ''}]
         fm = {'se_se_cn': b.get('cn', 4.25), 'percolation_pct': b.get('perc', 97.0), 'porosity': 12.5}
         fm.update(b.get('extra') or {})
         if b.get('none_key'):
@@ -2569,7 +2756,7 @@ class FakeA:
         st = 'failed' if b.get('mode') == 'fail' else 'done'
         return {'status': st, 'success': st != 'failed',
                 'failed_stages': (['Network stop contract (stop_after=network)'] if st == 'failed' else []),
-                'network_run_id': (None if st == 'failed' else 'RUN-' + case), 'log': [{'step': 'Parse', 'rc': 0, 'ok': True}]}
+                'network_run_id': (None if st == 'failed' else 'RUN-' + case), 'log': log}
 class FakeTMR:
     @staticmethod
     def resolve_from_files(deck_p, atom_p):
@@ -3865,6 +4052,170 @@ def _selftest() -> int:
             os.environ.pop('NP194_FAKE_NET_PROC', None)
 
         _scenario('㉟f G2RR3-02 관측 완전성 시나리오', _s35f)
+
+        # ═══ ㉟g ★ 10-07 Codex 세대 2 재검증 4 §3 G2RR4-02 — 실행 단계 ↔ 관측 영수증 결합 (반례 먼저 · 실제 audit CLI) ═══════════════════════════════════
+        #   옛 판: 필수 역할 = 워커 · 망 솔버 둘뿐 · 기대 집합 = 로그 폴더에 남은 파일 → 보조 단계 (파서 · 접촉 분석 · 피복) 의 시작 · 끝 영수증이 **함께** 사라지면 rc 0
+        #   (Codex observation_cli: 파서 쌍 없음 4/4 rc 0 · 워커 + 솔버만 2/2 rc 0).  [Codex] = 그 변이 그대로 (㉟e 정상 ROOT — 가짜 워커가 생산과 같은 단계 하위
+        #   프로세스 넷 · 같은 단계 이름) · 나머지 = 같은 부류 (중복으로 메우기 · 분석 · 피복 쌍 · 단계 기록 결손 · 분류 밖 단계 · 계획 ↔ 지금 기록 다름) · 정당한 생략 양성.
+        def _s35g():
+            #  ㉟g0 (고치며 더한 검사) — 단계 이름 표 ↔ webapp/app.py · pipeline_service.py 의 문자열 (표 = 실제 파이프라인 단계 이름 · 단계 스크립트 이름) ·
+            #    fork 검사 (봉인 경로 0 줄 · 대역 뿌리의 봉인 파일에 넣으면 잡는다)
+            _src = (ROOT / 'webapp' / 'app.py').read_text(encoding='utf-8') + (ROOT / 'webapp' / 'pipeline_service.py').read_text(encoding='utf-8')
+            _names = list(_G['IMPORT_OBS_STAGE_MAIN']) + list(_G['IMPORT_OBS_STAGE_SKIP']) + list(_G['IMPORT_OBS_INPROC_STEPS'])
+            _nmiss = [n_ for n_ in _names if f"'{n_}'" not in _src and f'"{n_}"' not in _src]
+            _smiss = [s_ for _k, s_ in _G['IMPORT_OBS_STAGE_MAIN'].values() if f"'{Path(s_).name}'" not in _src]
+            chk(f'㉟g0 단계 이름 표 {len(_names)} (하위 프로세스 단계 · 정당한 생략 · 실행 프로세스 안) = app.py · pipeline_service.py 의 단계 문자열 · 단계 스크립트 이름도',
+                not _nmiss and not _smiss, repr((_nmiss, _smiss)))
+            _fr = tmp / 'fork_root'
+            (_fr / 'scripts').mkdir(parents=True, exist_ok=True)
+            (_fr / 'scripts' / 'tau_flux.py').write_text('import multiprocessing\n', encoding='utf-8')
+            fk0_, fk1_ = _G['fork_census'](), _G['fork_census'](_fr)
+            chk('㉟g0 fork 검사 — 봉인 경로 (CODE_FILES) 의 fork · 프로세스 풀 API 0 줄 · 대역 뿌리의 봉인 파일에 `import multiprocessing` = 1 줄 (발사 사전 점검이 막는다)',
+                fk0_ == [] and len(fk1_) == 1 and fk1_[0][0] == 'scripts/tau_flux.py', repr((fk0_[:3], fk1_)))
+            Ro = tmp / 'run_obs'
+            logs0 = Ro / IMPORT_OBS_DIR / 'log'
+
+            def _toks(suffix):
+                out_ = []
+                for p_ in sorted(logs0.glob('*.txt')):
+                    try:
+                        h_ = json.loads((p_.read_text(encoding='utf-8').splitlines() or [''])[0])
+                    except ValueError:
+                        continue
+                    if isinstance(h_, dict) and str(h_.get('main') or '').endswith(suffix):
+                        out_.append(p_.name[:-4])
+                return out_
+
+            def _variant(i_, edit):
+                r_ = tmp / f'obs35g_{i_:02d}'
+                shutil.copytree(Ro, r_, symlinks=True)
+                edit(r_)
+                with _patch(git_info=_git_fake()):
+                    rc_, aj_, _o = _audit_json(r_)
+                return rc_, aj_.get('import_observation_problems') or [], aj_
+
+            def _rm_pair(*suffixes, final=True, start=True):
+                def f(r_):
+                    for sfx in suffixes:
+                        for t_ in _toks(sfx):
+                            if final:
+                                (r_ / IMPORT_OBS_DIR / 'log' / f'{t_}.txt').unlink()
+                            if start:
+                                (r_ / IMPORT_OBS_DIR / 'log' / f'{t_}.start.json').unlink()
+                return f
+
+            def _dup_fill(r_):
+                """파서 쌍을 지우고 피복 영수증 쌍을 새 proc 이름으로 하나 더 — 프로세스 수 5 는 그대로 (중복으로 메우기)."""
+                _rm_pair('scripts/parse_liggghts.py')(r_)
+                t_ = _toks('scripts/coverage_physics_vs_hertzian.py')[0]
+                ld_ = r_ / IMPORT_OBS_DIR / 'log'
+                new_ = t_.split('-')[0] + '-' + 'deadbeef'
+                st_ = json.loads((ld_ / f'{t_}.start.json').read_text(encoding='utf-8'))
+                st_['proc'] = new_
+                (ld_ / f'{new_}.start.json').write_text(json.dumps(st_, sort_keys=True), encoding='utf-8')
+                ls_ = (ld_ / f'{t_}.txt').read_text(encoding='utf-8').splitlines()
+                h_ = json.loads(ls_[0])
+                h_['proc'] = new_
+                (ld_ / f'{new_}.txt').write_text('\n'.join([json.dumps(h_, sort_keys=True)] + ls_[1:]) + '\n', encoding='utf-8')
+
+            def _plan_edit(fn):
+                """worker.json 의 시도 단계 계획만 고친다 (케이스 기록 out/status.json 은 그대로 — 봉인 판정 무변경)."""
+                def f(r_):
+                    wp_ = case_dir(r_, 'lhsx_900') / 'worker.json'
+                    w_ = read_json(wp_)
+                    fn(w_['attempts'][-1])
+                    write_json(wp_, w_)
+                return f
+            cases_ = (
+                ('[Codex] 파서 끝만 없음 (5/4)', _rm_pair('scripts/parse_liggghts.py', start=False), 1, ''),
+                ('[Codex] 파서 시작 · 끝 모두 없음 (4/4)', _rm_pair('scripts/parse_liggghts.py'), 1, 'parse_liggghts.py'),
+                ('[Codex] 파서 · 접촉 분석 · 피복 쌍 모두 없음 — 워커 · 솔버만 (2/2)',
+                 _rm_pair('scripts/parse_liggghts.py', 'scripts/analyze_contacts_bimodal.py', 'scripts/coverage_physics_vs_hertzian.py'), 1, 'analyze_contacts_bimodal.py'),
+                ('접촉 분석 (bimodal) 쌍 없음', _rm_pair('scripts/analyze_contacts_bimodal.py'), 1, 'analyze_contacts_bimodal.py'),
+                ('피복 쌍 없음', _rm_pair('scripts/coverage_physics_vs_hertzian.py'), 1, 'coverage_physics_vs_hertzian.py'),
+                ('중복으로 메우기 — 파서 쌍 없음 + 피복 쌍 하나 더 (프로세스 수 5 그대로)', _dup_fill, 1, 'parse_liggghts.py'),
+                ('분류 밖 단계 (시도 단계 계획에 모르는 단계 이름)',
+                 _plan_edit(lambda a_: a_['stage_plan']['stages'].append(dict(step='Mystery Stage', rc=0, ok=True))), 1, 'Mystery Stage'),
+                ('시도 단계 계획 ≠ 지금 케이스 기록 (worker.json 에서 피복 단계를 지움)',
+                 _plan_edit(lambda a_: a_['stage_plan'].update(stages=[s_ for s_ in a_['stage_plan']['stages'] if s_['step'] != 'Coverage Physics vs Hertzian'])),
+                 1, '케이스 기록'),
+                ('옛 실행기 ROOT 꼴 (worker.json 시도에 단계 계획 없음) → 지금 케이스 기록 (그 시도가 쓴 기록 · record_sha) 의 단계로 결합 → 통과',
+                 _plan_edit(lambda a_: a_.pop('stage_plan', None)), 0, ''),
+            )
+            res_ = []
+            for i_, (nm_, ed_, want_, tag_) in enumerate(cases_):
+                try:
+                    rc_, pr_, _aj = _variant(i_, ed_)
+                except Exception as e:                       # noqa: BLE001 — 변이를 못 만들면 (옛 실행기 — 단계 계획 없음) ✗ 로 남긴다
+                    rc_, pr_ = 'ERR', [f'{type(e).__name__}: {e}']
+                res_.append((nm_, rc_, pr_, want_, tag_))
+            for nm_, rc_, pr_, want_, tag_ in res_:
+                if want_:
+                    chk(f'㉟g ★ G2RR4-02 {nm_} → 실제 audit CLI rc 1 · 관측 문제' + (f' (사유에 {tag_!r})' if tag_ else ''),
+                        rc_ == 1 and bool(pr_) and (not tag_ or any(tag_ in p_ for p_ in pr_)), repr((rc_, pr_[:3])))
+                else:
+                    chk(f'㉟g ★ G2RR4-02 {nm_}', rc_ == 0 and not pr_, repr((rc_, pr_[:3])))
+            #  양성 — 같은 ROOT 그대로 (5/5) · 단계 결합 기록 (stage_binding) = 시도 하나 · 실행 단계 넷 · 프로세스 다섯
+            rc_g, pr_g, aj_g = _variant(len(res_), lambda r_: None)
+            sb_ = ((aj_g.get('import_observation') or {}).get('stage_binding') or {})
+            at_ = (sb_.get('attempts') or {}).get('lhsx_900|1|1') or {}
+            chk('㉟g [Codex] 다섯 단계 전부 (5/5) → audit rc 0 · 관측 문제 0 · 단계 결합 기록 (stage_binding · 스키마) — 시도 lhsx_900 (run 1 · 시도 1) 실행 단계 '
+                '파서 · 접촉 분석 · 피복 · 망 CLI + 워커 = 프로세스 다섯 · 계획 출처 = worker.json 시도 단계 계획',
+                rc_g == 0 and not pr_g and sb_.get('schema') == _G.get('IMPORT_OBS_STAGE_SCHEMA')
+                and sorted(at_.get('executed') or []) == sorted(['parser', 'contact_bimodal', 'coverage', 'network_cli'])
+                and sum((at_.get('observed') or {}).values()) == 5 and 'worker.json' in str(at_.get('plan_source')),
+                repr((rc_g, pr_g[:3], sb_.get('schema'), at_)))
+            #  정당한 생략 — 파서 단계가 'Parse (CSV fallback)' (하위 프로세스 없음) 인 실행 → 파서 영수증 없이 rc 0 · 결합 기록에 생략 표지
+            Rs = tmp / 'run_obs_skip'
+            os.environ['NP194_FAKE_DIRTY'] = '0'
+            os.environ['NP194_FAKE_NET_PROC'] = '1'
+            os.environ['NP194_FAKE_PARSE_SKIP'] = '1'
+            set_plan({})
+            try:
+                with _patch(git_info=_git_fake()):
+                    rc_s, _o = _main_rc(args_for(Rs, '--cohorts', 'lhsx', '--case', 'lhsx_900', *L20, '--observe-imports', allow_dirty=False))
+                    rc_sa, aj_s, _o = _audit_json(Rs)
+            finally:
+                os.environ.pop('NP194_FAKE_PARSE_SKIP', None)
+                os.environ.pop('NP194_FAKE_NET_PROC', None)
+            at_s = ((((aj_s.get('import_observation') or {}).get('stage_binding') or {}).get('attempts') or {}).get('lhsx_900|1|1') or {})
+            chk('㉟g ★ G2RR4-02 파서 정당한 생략 (Parse (CSV fallback) · 하위 프로세스 없음) → 파서 영수증 없이 audit rc 0 · 결합 기록 = 실행 셋 · 생략 parser',
+                rc_s == 0 and rc_sa == 0 and not aj_s.get('import_observation_problems') and 'parser' not in (at_s.get('executed') or [])
+                and any('parser' in str(x) for x in at_s.get('skipped') or []),
+                repr((rc_s, rc_sa, (aj_s.get('import_observation_problems') or [])[:3], at_s)))
+            #  Q2 — 죽은 시도 (SIGKILL · 미최종) + 정상 재시도 (㉟f run_obs_crash) = rc 0 · 그 재시도 (run 2 · 시도 2) 의 결합 = 실행 단계 넷
+            with _patch(git_info=_git_fake()):
+                aj_k2 = _audit_json(tmp / 'run_obs_crash')[1] if (tmp / 'run_obs_crash').exists() else {}
+            sbk = (((aj_k2.get('import_observation') or {}).get('stage_binding') or {}).get('attempts') or {})
+            chk('㉟g Q2 — 실패한 시도의 미최종 영수증 (정보) + 정상 재시도 = audit 관측 문제 0 · 재시도만 결합 (완료 시도) · 실패 시도는 결합 대상 아님',
+                (tmp / 'run_obs_crash').exists() and not aj_k2.get('import_observation_problems') and list(sbk) == ['lhsx_900|2|2']
+                and len(sbk['lhsx_900|2|2'].get('executed') or []) == 4,
+                repr((aj_k2.get('import_observation_problems'), sbk)))
+
+        _scenario('㉟g G2RR4-02 실행 단계 ↔ 영수증 결합 시나리오', _s35g)
+
+        # ═══ ㉟h ★ 10-07 Codex 세대 2 재검증 4 §4 Q3 G2RR4-03 — 생산 194 발사 = import 관측 필수 (반례 먼저) ═════════════════════════════════════════════
+        #   옛 판: 본 실행 관측은 발사 때 1저자가 정한다 (등록 §3b) · 실행기는 생산 계획에도 관측 없이 띄웠다 · 감사는 관측을 끈 생산 배치를 거부하지 않았다.
+        def _s35h():
+            _pp = _G.get('production_plan')
+            _pop = _G.get('production_observation_problem')
+            p194 = build_plan(['lhs', 'lhsx'], cohort_specs(_parse(['run', '--root', str(tmp / 'p194')])))
+            chk('㉟h 생산 194 판별 — 커밋된 수확 폴더의 전체 계획 = 등록 production194 (참) · 합성 9 케이스 계획 · 한 케이스 계획 (거짓)',
+                callable(_pp) and _pp(p194) is True and _pp(p1) is False
+                and _pp(build_plan(['lhs', 'lhsx'], cohort_specs(_parse(['run', '--root', str(tmp / 'p194b')])), ['lhs00_055'])) is False,
+                repr(callable(_pp)))
+            base_ = ['run', '--root', str(tmp / 'dry194'), '--dry-run', '--allow-missing-raw', '--allow-dirty']
+            rc_n, o_n = _main_rc(base_)
+            rc_y, o_y = _main_rc(base_ + ['--observe-imports'])
+            chk('㉟h ★ G2RR4-03 생산 194 dry-run — --observe-imports 없이 = 사전 점검 ⛔ (관측 필수) rc 2 · 있으면 rc 0 (아무것도 안 쓴다)',
+                rc_n == 2 and '관측 필수' in o_n and rc_y == 0 and '관측 필수' not in o_y and not (tmp / 'dry194').exists(),
+                repr((rc_n, rc_y, [ln for ln in o_n.splitlines() if '⛔' in ln][:3], [ln for ln in o_y.splitlines() if '⛔' in ln][:3])))
+            m_off = dict(plan=p194, observe_imports=False)
+            chk('㉟h ★ G2RR4-03 감사 — 생산 194 계획인데 관측을 끈 manifest = 문제 (audit rc 1 사유) · 켠 manifest · 합성 계획 = 없음',
+                callable(_pop) and bool(_pop(m_off)) and _pop(dict(m_off, observe_imports=True)) is None
+                and _pop(dict(plan=p1, observe_imports=False)) is None, repr(callable(_pop) and _pop(m_off)))
+
+        _scenario('㉟h G2RR4-03 생산 194 관측 필수 시나리오', _s35h)
     finally:
         for k, v in env_keep.items():
             if v is None:

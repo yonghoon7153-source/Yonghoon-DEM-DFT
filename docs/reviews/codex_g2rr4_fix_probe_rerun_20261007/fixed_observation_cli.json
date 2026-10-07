@@ -1,0 +1,59 @@
+[
+  {
+    "label": "all5",
+    "rc": 1,
+    "verdicts": {
+      "SEALED": 1
+    },
+    "input_problems": [],
+    "generation_problems": [],
+    "import_problems": [
+      "lhs00_000 (run 1 · 시도 1): 완료 시도의 실행 단계 기록이 없다 (worker.json 시도 stage_plan · out/status.json 케이스 기록 stages) — 관측 영수증을 단계와 맞출 수 없다 (G2RR4-02)"
+    ],
+    "n_start": 5,
+    "n_final": 5
+  },
+  {
+    "label": "helper_final_missing",
+    "rc": 1,
+    "verdicts": {
+      "SEALED": 1
+    },
+    "input_problems": [],
+    "generation_problems": [],
+    "import_problems": [
+      "lhs00_000 (run 1 · 시도 1): 완료 시도의 프로세스 1 가 시작만 하고 끝맺지 않았다 ['1518000-eafaac15'] — 그 프로세스의 import 를 모른다",
+      "lhs00_000 (run 1 · 시도 1): 완료 시도의 실행 단계 기록이 없다 (worker.json 시도 stage_plan · out/status.json 케이스 기록 stages) — 관측 영수증을 단계와 맞출 수 없다 (G2RR4-02)"
+    ],
+    "n_start": 5,
+    "n_final": 4
+  },
+  {
+    "label": "helper_pair_missing",
+    "rc": 1,
+    "verdicts": {
+      "SEALED": 1
+    },
+    "input_problems": [],
+    "generation_problems": [],
+    "import_problems": [
+      "lhs00_000 (run 1 · 시도 1): 완료 시도의 실행 단계 기록이 없다 (worker.json 시도 stage_plan · out/status.json 케이스 기록 stages) — 관측 영수증을 단계와 맞출 수 없다 (G2RR4-02)"
+    ],
+    "n_start": 4,
+    "n_final": 4
+  },
+  {
+    "label": "only_worker_and_solver",
+    "rc": 1,
+    "verdicts": {
+      "SEALED": 1
+    },
+    "input_problems": [],
+    "generation_problems": [],
+    "import_problems": [
+      "lhs00_000 (run 1 · 시도 1): 완료 시도의 실행 단계 기록이 없다 (worker.json 시도 stage_plan · out/status.json 케이스 기록 stages) — 관측 영수증을 단계와 맞출 수 없다 (G2RR4-02)"
+    ],
+    "n_start": 2,
+    "n_final": 2
+  }
+]
