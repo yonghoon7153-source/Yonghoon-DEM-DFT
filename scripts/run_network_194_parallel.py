@@ -63,6 +63,10 @@
        `_restricted()` 안 — app 을 읽을 때마다 돈다)) · `DEP_LAZY` = 경로 위 지연 import 전부 · 봉인 파일의 함수 안 import 중 봉인 밖 모듈은
        `DEP_LAZY_OFFPATH` 에 사유와 함께 분류 (`lazy_import_census` — 분류 밖이 있으면 발사하지 않는다) · 정적 검사는 보조 — selftest ㉟d 가 실제 생산 경로를
        돌려 모든 프로세스의 import 를 관측한다 (봉인 ⊇ 관측).
+    ⓚ ★ 10-07 G2RR3-02 (Codex 세대 2 재검증 3 §4) — 관측 = 프로세스마다 시작 영수증 + 원자적 끝맺음 로그 (JSON 머리 · 신원 = 이 실행 (manifest
+       import_obs_run_id) · run · 케이스 · 시도 — 실행기가 워커 환경에 넣고 단계 하위 프로세스가 물려받는다).  audit 가 영수증 완전성 (빈 · 머리 없는 · 잘린 ·
+       짝 없는 · 뿌리 밖 줄) · 이 실행의 신원 · 완료 시도마다 끝맺음 · 필수 역할 (워커 · 망 풀이 = network_conductivity.py 가 __main__) 을 본다 (옛: 로그 파일
+       개수만 — 빈 로그 하나 = 관측 0 · rc 0 · 둘째 프로세스 로그 소실 = rc 0).  관측은 기록만 (값에 닿지 않는다).
 
 설정 (전부 `manifest.json` 에 남는다)
 ───────────────────────────────────────────────────────────────────────────────
@@ -221,31 +225,88 @@ DEP_LAZY_OFFPATH = {
 #: 인계 단계 코드 (워커가 돌리지 않는다 — 봉인 판정 밖) — 발사 때 지문을 기록해 후속 명령이 "인계는 발사 때 생성기 · 다시 읽기 도구로" 를 대조한다.
 HANDOVER_FILES = ('scripts/lhs_design_dataset.py', 'scripts/g2_network_reread.py')
 
-#: ★ 10-07 G2RR2-03 — 실제 import 관측 훅 (sitecustomize · PYTHONPATH — 워커와 단계 하위 프로세스가 환경을 물려받는다).  끝날 때 sys.modules 의 파일 +
-#:   경로로 읽은 모듈 (spec_from_file_location) 중 NP194_IMPORT_ROOT 아래 것을 프로세스마다 한 줄씩 적는다 — selftest ㉟d (합성 침대) 와
+#: ★ 10-07 G2RR2-03 — 실제 import 관측 훅 (sitecustomize · PYTHONPATH — 워커와 단계 하위 프로세스가 환경을 물려받는다).  sys.modules 의 파일 +
+#:   경로로 읽은 모듈 (spec_from_file_location) 중 NP194_IMPORT_ROOT 아래 것을 프로세스마다 적는다 — selftest ㉟d (합성 침대) 와
 #:   `run --observe-imports` (시범 — 진짜 LHS 침대 · 워커 · parse · bimodal) 가 같은 훅을 쓴다.  값에 닿지 않는다 (기록만) · 시범 전용 (manifest 에 남는다).
+#: ★ 10-07 G2RR3-02 (Codex 세대 2 재검증 3 §4) — 옛 훅은 끝날 때 `<pid>.txt` 에 줄만 적었고 (예외는 삼킴) audit 는 파일 개수를 프로세스 수로 셌다 — 빈 파일
+#:   하나 = 관측 0 · rc 0 · 둘째 프로세스 로그가 빠져도 rc 0.  이제 영수증이 프로세스 · 시도에 묶인다 (생산 프로세스 안에서는 여전히 예외를 내지 않는다):
+#:   ① 시작 영수증 `<proc>.start.json` (proc = '<pid>-<8 hex>' · 원자적 쓰기 tmp + os.replace) = dict(schema IMPORT_OBS_START_SCHEMA · proc · pid · ppid ·
+#:      main · argv · orig_argv · identity) — identity = 실행기가 워커 환경에 넣고 하위 프로세스가 물려받는 신원 (IMPORT_OBS_ID_ENV: run_id = manifest
+#:      import_obs_run_id · run_no · case · attempt — `import_obs_identity_env`).
+#:   ② 끝맺음 로그 `<proc>.txt` (atexit · 원자적 쓰기) = 첫 줄 JSON 머리 dict(schema IMPORT_OBS_LOG_SCHEMA · proc · pid · identity · complete true · n ·
+#:      main (역할 판정 — 시작 때 sys.argv[0] 의 realpath (시작 cwd 기준) · -m 실행이면 끝날 때 __main__.__file__)) + 모듈 realpath n 줄 (정렬 · 줄마다 끝 개행).
+#:      ⚠ 끝날 때의 __main__.__file__ 만으로는 안 된다 — CPython 은 끝까지 돈 스크립트 (sys.exit 없이) 의 __main__ 에서 __file__ 을 지운 뒤 atexit 를 부른다
+#:      (10-07 ㉟d 실측: 망 CLI · 피복 단계 = None · sys.exit 로 끝나는 접촉 분석 = 경로) — 그래서 옛 훅은 그 프로세스의 **자기 스크립트**를 모듈 목록에서 빠뜨렸다.
+#:      main 은 모듈 줄에도 넣는다 · 시작 영수증에도 main 을 적는다.
+#:   fork 된 자식 (pid ≠ 시작 pid) 은 부모 영수증을 덮지 않는다 (아무것도 안 쓴다 — 관측 밖 · 생산 경로에 multiprocessing 없음 10-07 grep) ·
+#:   os._exit · SIGKILL · SIGTERM 으로 끝난 프로세스 = 시작 영수증만 (끝맺음 없음).  python -I · -E 로 띄운 프로세스는 훅을 읽지 않는다 (영수증 없음 —
+#:   완료 시도의 필수 역할 (IMPORT_OBS_ROLES) 이면 audit 가 결손으로 잡는다).
+#:   audit (`import_observation` + `import_observation_problems`) 가 거부: 깨진 · 빈 · 머리 없는 · 잘린 (n ≠ 줄) 로그 · 이름 꼴 밖 · 짝 없는 끝 로그 · 코드 뿌리 밖 줄 ·
+#:   이 실행이 아닌 신원 (run_id · 이 ROOT 의 시도 기록에 없는 (케이스, run, 시도)) · 완료 시도 (done · partial) 의 끝맺지 않은 프로세스 · 완료 시도에 필수 역할
+#:   (워커 · 망 풀이) 관측이 없음 · 봉인 밖 모듈.  완료가 아닌 시도 (죽음 · 중단 · 실패) 의 끝맺지 않은 영수증 = 정보 (그 시도는 지금 기록을 쓰지 않았다).
 IMPORT_OBS_DIR = 'import_obs'
-IMPORT_OBS_HOOK = (
-    'import atexit, os, sys\n'
-    '_L, _R = os.environ.get("NP194_IMPORT_LOG"), os.environ.get("NP194_IMPORT_ROOT")\n'
-    '_P = set()\n'
-    'def _dump():\n'
-    '    try:\n'
-    '        fs = {os.path.realpath(getattr(m, "__file__", None) or "") for m in list(sys.modules.values())} | _P\n'
-    '        fs.discard(os.path.realpath(""))\n'
-    '        with open(os.path.join(_L, "%d.txt" % os.getpid()), "w", encoding="utf-8") as fh:\n'
-    '            fh.write("\\n".join(sorted(f for f in fs if f.startswith(_R + os.sep))))\n'
-    '    except Exception:\n'
-    '        pass\n'
-    'if _L and _R:\n'
-    '    import importlib.util as _u\n'
-    '    _sf = _u.spec_from_file_location\n'
-    '    def _spec(name, location=None, *a, **k):\n'
-    '        if location is not None:\n'
-    '            _P.add(os.path.realpath(str(location)))\n'
-    '        return _sf(name, location, *a, **k)\n'
-    '    _u.spec_from_file_location = _spec\n'
-    '    atexit.register(_dump)\n')
+IMPORT_OBS_START_SCHEMA = 'np194_import_obs/start/v1'
+IMPORT_OBS_LOG_SCHEMA = 'np194_import_obs/log/v1'
+IMPORT_OBS_ID_ENV = (('run_id', 'NP194_OBS_RUN_ID'), ('run_no', 'NP194_OBS_RUN_NO'), ('case', 'NP194_OBS_CASE'), ('attempt', 'NP194_OBS_ATTEMPT'))
+#: 완료 시도마다 있어야 하는 프로세스 역할 → 그 프로세스에서 관측돼야 할 핵심 모듈.  worker = manifest worker_script 가 __main__ (생산 = lhs_webapp_batch.py) ·
+#:   network_solver = scripts/network_conductivity.py 가 __main__ (app.run_pipeline 의 망 CLI 단계 — stop_after=network 이면 늘 돈다).
+IMPORT_OBS_ROLES = {'worker': 'scripts/lhs_webapp_batch.py', 'network_solver': 'scripts/network_conductivity.py'}
+_OBS_PROC = re.compile(r'^\d+-[0-9a-f]{8}$')
+IMPORT_OBS_HOOK = r'''# np194 import 관측 훅 (sitecustomize) — run_network_194_parallel.IMPORT_OBS_HOOK 이 쓴다 · 값에 닿지 않는다 · 예외를 밖으로 내지 않는다
+import atexit, json, os, sys
+_L, _R = os.environ.get("NP194_IMPORT_LOG"), os.environ.get("NP194_IMPORT_ROOT")
+_P = set()
+_PID = os.getpid()
+_TOK = None
+_ID = None
+_MAIN0 = None
+
+
+def _np194_write(path, text):
+    tmp = path + ".tmp"
+    with open(tmp, "w", encoding="utf-8") as fh:
+        fh.write(text)
+    os.replace(tmp, path)
+
+
+def _np194_dump():
+    try:
+        if _TOK is None or os.getpid() != _PID:
+            return
+        mf = getattr(sys.modules.get("__main__"), "__file__", None)
+        main = _MAIN0 or (os.path.realpath(mf) if mf else None)
+        fs = {os.path.realpath(getattr(m, "__file__", None) or "") for m in list(sys.modules.values())} | _P | ({main} if main else set())
+        fs.discard(os.path.realpath(""))
+        mods = sorted(f for f in fs if f.startswith(_R + os.sep))
+        head = dict(schema="np194_import_obs/log/v1", proc=_TOK, pid=_PID, identity=_ID, complete=True, n=len(mods), main=main)
+        _np194_write(os.path.join(_L, _TOK + ".txt"), json.dumps(head, sort_keys=True) + "\n" + "".join(f + "\n" for f in mods))
+    except Exception:
+        pass
+
+
+if _L and _R:
+    try:
+        import importlib.util as _u
+        _sf = _u.spec_from_file_location
+
+        def _spec(name, location=None, *a, **k):
+            if location is not None:
+                _P.add(os.path.realpath(str(location)))
+            return _sf(name, location, *a, **k)
+        _u.spec_from_file_location = _spec
+        _ID = {k: os.environ.get(e) for k, e in (("run_id", "NP194_OBS_RUN_ID"), ("run_no", "NP194_OBS_RUN_NO"),
+                                                  ("case", "NP194_OBS_CASE"), ("attempt", "NP194_OBS_ATTEMPT"))}
+        _a0 = (list(getattr(sys, "argv", None) or []) or [""])[0]
+        _MAIN0 = os.path.realpath(_a0) if _a0 and _a0 not in ("-c", "-m") and os.path.isfile(_a0) else None
+        _TOK = "%d-%s" % (_PID, os.urandom(4).hex())
+        _np194_write(os.path.join(_L, _TOK + ".start.json"),
+                     json.dumps(dict(schema="np194_import_obs/start/v1", proc=_TOK, pid=_PID, ppid=os.getppid(), identity=_ID, main=_MAIN0,
+                                     argv=list(getattr(sys, "argv", None) or []), orig_argv=list(getattr(sys, "orig_argv", None) or [])),
+                                sort_keys=True))
+        atexit.register(_np194_dump)
+    except Exception:
+        _TOK = None
+'''
 #: 관측에서 빼는 시험 도구 (생산 경로가 아니다) — selftest 의 합성 침대 자식 (wsl_network_smoke --_child) 과 침대 도구.
 IMPORT_OBS_HARNESS = ('scripts/wsl_network_smoke.py', 'webapp/test_pipeline_provenance.py')
 
@@ -260,20 +321,179 @@ def import_obs_env(obs_dir: Path, code_root) -> dict:
                 PYTHONPATH=os.pathsep.join([str(hook)] + [p for p in (os.environ.get('PYTHONPATH') or '').split(os.pathsep) if p]))
 
 
-def import_observation(obs_dir: Path, code_root) -> dict:
-    """관측 기록 → dict(n_processes, files (리포 상대 · 정렬), observed (scripts · webapp 의 .py · 시험 도구 제외), outside (그중 CODE_FILES 밖))."""
+def import_obs_identity_env(run_id, run_no, case, attempt) -> dict:
+    """★ 10-07 G2RR3-02 — 관측 신원 환경 (IMPORT_OBS_ID_ENV · 값 = 문자열 · None = '') — 실행기가 시도마다 워커 환경에 넣고 단계 하위 프로세스가 물려받는다."""
+    vals = dict(run_id=run_id, run_no=run_no, case=case, attempt=attempt)
+    return {e: ('' if vals[k] is None else str(vals[k])) for k, e in IMPORT_OBS_ID_ENV}
+
+
+def _obs_identity(d) -> dict:
+    d = d if isinstance(d, dict) else {}
+    return {k: d.get(k) for k, _e in IMPORT_OBS_ID_ENV}
+
+
+def import_observation(obs_dir: Path, code_root, worker_script=None) -> dict:
+    """관측 기록 (영수증 — IMPORT_OBS_HOOK ①②) → dict(
+      n_processes (영수증의 서로 다른 proc 수) · n_started · n_finalized · processes [dict(proc, pid, ppid, identity, final, main, role, n, files)] (짝이 맞고
+      꼴이 맞는 것만) · problems (로그 수준 — 이름 꼴 밖 · 모르는 파일 · 깨진 시작 영수증 · 빈 · 끝 개행 없는 · 머리 없는 · 꼴 밖 머리 · n ≠ 줄 · 빈 줄 · 코드 뿌리 밖 줄 ·
+      짝 없는 끝 로그 · 시작 ↔ 끝 신원 · pid 다름) · tmp_leftover (쓰다 만 *.tmp — 정보) · files (끝맺은 로그의 리포 상대 · 정렬) · observed (scripts · webapp 의 .py ·
+      시험 도구 제외) · outside (그중 CODE_FILES 밖)).
+    역할 = 끝맺음 머리의 main: code_root/scripts/network_conductivity.py → network_solver · worker_script (없으면 code_root/scripts/lhs_webapp_batch.py) → worker ·
+    그 밖 other.  시도 · 실행 신원 대조는 `import_observation_problems` (audit)."""
     r = Path(code_root).resolve()
-    logs = sorted((Path(obs_dir) / 'log').glob('*.txt'))
-    seen = set()
-    for lf in logs:
-        for ln in lf.read_text(encoding='utf-8').splitlines():
-            if ln.strip():
-                try:
-                    seen.add(Path(ln.strip()).resolve().relative_to(r).as_posix())
-                except ValueError:
-                    continue
+    ld = Path(obs_dir) / 'log'
+    wmain = os.path.realpath(str(worker_script)) if worker_script else str(r / 'scripts' / 'lhs_webapp_batch.py')
+    solver = os.path.realpath(str(r / 'scripts' / 'network_conductivity.py'))
+    procs, problems, tmp_left = {}, [], []
+    for p in (sorted(ld.iterdir()) if ld.is_dir() else []):
+        nm = p.name
+        if nm.endswith('.tmp'):
+            tmp_left.append(nm)
+            continue
+        if nm.endswith('.start.json'):
+            tok, kind = nm[:-len('.start.json')], 'start'
+        elif nm.endswith('.txt'):
+            tok, kind = nm[:-len('.txt')], 'final'
+        else:
+            problems.append(f'{nm}: 관측 폴더에 모르는 파일 (시작 영수증 *.start.json · 끝맺음 로그 *.txt 가 아니다)')
+            continue
+        d = procs.setdefault(tok, dict(start=None, final=None, bad=False))
+        if not _OBS_PROC.match(tok):
+            problems.append(f'{nm}: 이름이 프로세스 영수증 꼴 (<pid>-<8 hex>) 이 아니다 — 이 훅의 기록이 아니다 (옛 형식 · 손으로 만든 파일)')
+            d['bad'] = True
+            continue
+        if kind == 'start':
+            j = read_json(p)
+            if not (isinstance(j, dict) and j.get('schema') == IMPORT_OBS_START_SCHEMA and j.get('proc') == tok and isinstance(j.get('identity'), dict)
+                    and isinstance(j.get('pid'), int)):
+                problems.append(f'{nm}: 시작 영수증이 깨졌다 (스키마 · proc · pid · 신원)')
+                d['bad'] = True
+                continue
+            d['start'] = j
+            continue
+        try:
+            text = p.read_text(encoding='utf-8')
+        except (OSError, UnicodeDecodeError) as e:
+            problems.append(f'{nm}: 끝맺음 로그를 못 읽었다 ({type(e).__name__})')
+            d['bad'] = True
+            continue
+        if not text:
+            problems.append(f'{nm}: 빈 로그 (머리 줄 · 모듈 없음) — 끝맺음 기록이 아니다')
+            d['bad'] = True
+            continue
+        if not text.endswith('\n'):
+            problems.append(f'{nm}: 끝 개행이 없다 — 잘린 기록')
+            d['bad'] = True
+            continue
+        lines = text[:-1].split('\n')
+        try:
+            head = json.loads(lines[0])
+        except ValueError:
+            problems.append(f'{nm}: 머리 줄이 JSON 이 아니다 — 머리 없는 로그 (옛 형식 · 손상)')
+            d['bad'] = True
+            continue
+        if not (isinstance(head, dict) and head.get('schema') == IMPORT_OBS_LOG_SCHEMA and head.get('proc') == tok and head.get('complete') is True
+                and isinstance(head.get('identity'), dict)):
+            problems.append(f'{nm}: 머리 줄 꼴 (스키마 · proc · complete true · 신원) 이 아니다')
+            d['bad'] = True
+            continue
+        mods = lines[1:]
+        n = head.get('n')
+        if not (isinstance(n, int) and not isinstance(n, bool)) or n != len(mods) or any(not m for m in mods):
+            problems.append(f'{nm}: 모듈 줄 {len(mods)} ≠ 머리 n {n!r} 또는 빈 줄 — 잘린 · 덧붙은 로그')
+            d['bad'] = True
+            continue
+        rel, out_root = [], []
+        for m in mods:
+            try:
+                rel.append(Path(m).resolve().relative_to(r).as_posix())
+            except (ValueError, OSError):
+                out_root.append(m)
+        if out_root:
+            problems.append(f'{nm}: 코드 뿌리 ({r}) 밖 줄 {out_root[:3]} — 훅은 뿌리 아래 파일만 적는다 (손상 · 다른 뿌리의 기록)')
+            d['bad'] = True
+            continue
+        d['final'] = dict(head=head, files=sorted(set(rel)))
+    out = []
+    for tok, d in sorted(procs.items()):
+        st, fi = d['start'], d['final']
+        if d['bad']:
+            continue
+        if st is None:
+            problems.append(f'{tok}: 끝맺음 로그만 있고 시작 영수증이 없다 — 짝이 맞지 않는 기록')
+            continue
+        idn = _obs_identity(st.get('identity'))
+        if fi is not None and (_obs_identity(fi['head'].get('identity')) != idn or fi['head'].get('pid') != st.get('pid')):
+            problems.append(f'{tok}: 시작 영수증 ↔ 끝맺음 로그의 신원 · pid 가 다르다')
+            continue
+        main = (fi['head'].get('main') if fi else None)
+        role = ('network_solver' if main and os.path.realpath(main) == solver else
+                'worker' if main and os.path.realpath(main) == wmain else 'other')
+        out.append(dict(proc=tok, pid=st.get('pid'), ppid=st.get('ppid'), identity=idn, final=fi is not None, main=main, role=role,
+                        n=(fi['head'].get('n') if fi else None), files=(fi['files'] if fi else [])))
+    seen = sorted({f for p in out for f in p['files']})
     obs = sorted(f for f in seen if f.endswith('.py') and f.startswith(('scripts/', 'webapp/')) and f not in IMPORT_OBS_HARNESS)
-    return dict(n_processes=len(logs), files=sorted(seen), observed=obs, outside=[f for f in obs if f not in CODE_FILES])
+    return dict(n_processes=len(procs), n_started=sum(1 for d in procs.values() if d['start']), n_finalized=sum(1 for d in procs.values() if d['final']),
+                processes=out, problems=problems, tmp_leftover=tmp_left, files=seen, observed=obs, outside=[f for f in obs if f not in CODE_FILES])
+
+
+def import_observation_problems(root: Path, man: dict, obs: dict, rows=()) -> list:
+    """★ 10-07 G2RR3-02 — 관측 기록 (`import_observation`) ↔ 이 실행 · 이 ROOT 의 시도 → audit 문제 목록 (+ obs 에 completed_attempts · unfinalized_noncompleted 정보).
+    · 로그 수준 문제 (obs problems) 전부 · manifest 관측 표지 ↔ 기록 유무 · 관측 실행 신원 (manifest import_obs_run_id) 이 있어야
+    · 프로세스 신원: run_id = 이 실행 · (케이스, run, 시도) = 이 ROOT 의 시도 기록 (worker.json attempts[] · 지금 기록을 쓴 시도 = 봉인 판정 행) 에 있어야
+    · 완료 시도 (attempts[] outcome done · partial ∪ 지금 기록 done · partial 을 쓴 시도) = 그 신원의 프로세스 전부 끝맺음 · 필수 역할 (IMPORT_OBS_ROLES) 마다
+      끝맺은 프로세스가 그 핵심 모듈과 함께 (단순 `관측 > 0` 이 아니다 — 둘째 프로세스 로그 소실을 잡는다)
+    · 완료가 아닌 시도의 끝맺지 않은 프로세스 = 정보 (unfinalized_noncompleted) · 봉인 밖 모듈 (outside) = 문제."""
+    probs = []
+    if man.get('observe_imports') and not obs['n_processes']:
+        probs.append('manifest 는 import 관측을 켰는데 관측 기록이 하나도 없다 (훅이 돌지 않았다)')
+    elif obs['n_processes'] and not man.get('observe_imports'):
+        probs.append('관측 기록이 있는데 manifest 는 import 관측을 켜지 않았다 — 이 실행의 기록이 아니다')
+    probs += list(obs['problems'])
+    rid = man.get('import_obs_run_id')
+    if man.get('observe_imports') and not rid:
+        probs.append('manifest 에 관측 실행 신원 (import_obs_run_id) 이 없다 — 어느 기록이 이 실행의 것인지 가를 수 없다 (이 판 전 실행기의 시범이면 다시)')
+    known, completed = set(), set()
+    for e in (man.get('plan') or {}).get('queue') or []:
+        for a in (read_json(case_dir(Path(root), e['case']) / 'worker.json') or {}).get('attempts') or []:
+            if isinstance(a, dict):
+                k = (e['case'], str(a.get('run')), str(a.get('attempt')))
+                known.add(k)
+                if a.get('outcome') in KEEP:
+                    completed.add(k)
+    for r_ in rows or ():
+        if r_.get('record_status') in KEEP and r_.get('attempt') is not None and r_.get('run') is not None:
+            k = (r_['case'], str(r_['run']), str(r_['attempt']))
+            known.add(k)
+            completed.add(k)
+    by = collections.defaultdict(list)
+    for p in obs['processes']:
+        idn = p['identity']
+        k = (idn.get('case'), idn.get('run_no'), idn.get('attempt'))
+        if not rid or idn.get('run_id') != rid:
+            probs.append(f'{p["proc"]}: 관측 신원 run_id {idn.get("run_id")!r} ≠ 이 실행 {rid!r} — 이 실행의 기록이 아니다')
+        elif k not in known:
+            probs.append(f'{p["proc"]}: 관측 신원 (케이스 · run · 시도) {k} 가 이 ROOT 의 시도 기록에 없다 — 이 실행의 기록이 아니다')
+        else:
+            by[k].append(p)
+    info = []
+    for k in sorted(known):
+        ps_ = by.get(k, [])
+        unf = [p['proc'] for p in ps_ if not p['final']]
+        if k not in completed:
+            info += [dict(proc=x, case=k[0], run=k[1], attempt=k[2]) for x in unf]
+            continue
+        tag = f'{k[0]} (run {k[1]} · 시도 {k[2]})'
+        if unf:
+            probs.append(f'{tag}: 완료 시도의 프로세스 {len(unf)} 가 시작만 하고 끝맺지 않았다 {unf[:3]} — 그 프로세스의 import 를 모른다')
+        for role, core in IMPORT_OBS_ROLES.items():
+            if not any(p['final'] and p['role'] == role and core in p['files'] for p in ps_):
+                probs.append(f'{tag}: 완료 시도에 {role} 프로세스 관측 ({core} 이 __main__ 또는 그 안에서 읽힌 끝맺음 로그) 이 없다 — 로그가 빠졌거나 '
+                             '그 단계가 훅 없이 돌았다')
+    obs['completed_attempts'] = [list(k) for k in sorted(completed)]
+    obs['unfinalized_noncompleted'] = info
+    probs += [f'봉인 밖 모듈을 실제로 읽었다: {f}' for f in obs['outside']]
+    return probs
 
 #: ★ 10-07 G2RR-01 · §7-3 — 발사 봉인의 기대 망 세대.  키 = 인계 생성기 `lhs_design_dataset.TAU_MANIFEST_GENERATION_KEY` (`tau_manifest_expected_generation` ·
 #:   CLI `--tau-batch-manifest` 가 읽는다 · 없으면 거부) · 같은 값을 manifest.seal 안에도 둔다 (retry · audit 가 둘을 대조).  값은 손으로 적지 않는다 —
@@ -1393,7 +1613,10 @@ def run_queue(root: Path, manifest: dict, todo: list, lanes: int, run_no: int, *
         ln.cmd = case_cmd(python, wscript, cspec[e['cohort']], e['case'], ln.cdir, rf, rt, force=bool(e.get('force')))
         env = worker_env(ln.cdir, lock_mode)
         env.update(obs_env)
-        ln.env_note = {k: env.get(k) for k in (*THREAD_ENV, 'TMPDIR', 'PYTHONDONTWRITEBYTECODE', *(('NP194_IMPORT_LOG',) if obs_env else ()))}
+        if obs_env:     # ★ G2RR3-02 — 관측 신원 (이 실행 · run · 케이스 · 시도) — 워커와 단계 하위 프로세스가 물려받아 영수증에 적는다
+            env.update(import_obs_identity_env(manifest.get('import_obs_run_id'), run_no, ln.case, ln.attempt))
+        ln.env_note = {k: env.get(k) for k in (*THREAD_ENV, 'TMPDIR', 'PYTHONDONTWRITEBYTECODE',
+                                               *(('NP194_IMPORT_LOG',) + tuple(e for _k, e in IMPORT_OBS_ID_ENV) if obs_env else ()))}
         ln.log = open(ln.cdir / 'log.txt', 'ab')
         ln.start_iso = now_iso()
         ln.log.write((f'===== attempt {ln.attempt} (run {run_no}) start {ln.start_iso} · cwd {ln.cdir} · lock {lock_mode}\n'
@@ -1885,6 +2108,8 @@ def cmd_run(args) -> int:
                    mem_model=dict(base_mb=MEM_BASE_MB, per_kcontact_mb=MEM_PER_KCONTACT_MB, time_per_kcontact_s=TIME_PER_KCONTACT_S),
                    root_from=args.root_from, root_to=args.root_to, allow_dirty=args.allow_dirty,
                    observe_imports=bool(args.observe_imports),
+                   #  ★ G2RR3-02 — 관측 실행 신원 (영수증의 run_id · audit 가 이 실행의 기록인지 가른다) — 관측을 켤 때만
+                   **({'import_obs_run_id': os.urandom(16).hex()} if args.observe_imports else {}),
                    allow_missing_raw=args.allow_missing_raw, pyc_purged=n_pyc, git=pf['git'], code_hashes=hashes,
                    **{GEN_KEY: gen}, generation_probe=pf['generation'], code_dependency_closure=pf['dependency_closure']['files'],
                    handover_code_hashes={rel: sha256_file(ROOT / rel) for rel in HANDOVER_FILES}, input_digest=pf['input_digest'],
@@ -2117,14 +2342,16 @@ def cmd_audit(args) -> int:
         for p_ in input_problems:
             print(f'  ✗ {p_}')
     #  ★ 10-07 G2RR2-03 — 시범의 실제 import 관측 (`run --observe-imports`) — 워커 · 단계 하위 프로세스가 읽은 리포 모듈 ⊆ 봉인 CODE_FILES
+    #  ★ 10-07 G2RR3-02 — 관측 영수증의 완전성 (시작 · 끝맺음 · 머리 · 신원) · 완료 시도마다 필수 역할 (워커 · 망 풀이) · 이 실행의 신원 (옛: 파일 개수만 —
+    #    빈 로그 하나 = rc 0 · 둘째 프로세스 로그 소실 = rc 0)
     import_obs, obs_problems = None, []
     if man.get('observe_imports') or (root / IMPORT_OBS_DIR / 'log').is_dir():
-        import_obs = import_observation(root / IMPORT_OBS_DIR, code_root(man))
-        if man.get('observe_imports') and not import_obs['n_processes']:
-            obs_problems.append('manifest 는 import 관측을 켰는데 관측 기록이 하나도 없다 (훅이 돌지 않았다)')
-        obs_problems += [f'봉인 밖 모듈을 실제로 읽었다: {f}' for f in import_obs['outside']]
-        print(f'  실제 import 관측 (run --observe-imports · G2RR2-03) — 프로세스 {import_obs["n_processes"]} · 리포 모듈 {len(import_obs["observed"])} ⊆ 봉인 '
-              f'CODE_FILES {len(CODE_FILES)} ' + ('✓' if not obs_problems else '✗'))
+        import_obs = import_observation(root / IMPORT_OBS_DIR, code_root(man), worker_script=man.get('worker_script'))
+        obs_problems = import_observation_problems(root, man, import_obs, rows)
+        print(f'  실제 import 관측 (run --observe-imports · G2RR2-03 · G2RR3-02) — 프로세스 {import_obs["n_processes"]} (시작 {import_obs["n_started"]} · '
+              f'끝맺음 {import_obs["n_finalized"]}) · 완료 시도 {len(import_obs["completed_attempts"])} (역할 {"/".join(IMPORT_OBS_ROLES)}) · 리포 모듈 '
+              f'{len(import_obs["observed"])} ⊆ 봉인 CODE_FILES {len(CODE_FILES)} ' + ('✓' if not obs_problems else '✗')
+              + (f' · 완료 아닌 시도의 끝맺지 않은 영수증 {len(import_obs["unfinalized_noncompleted"])} (정보)' if import_obs['unfinalized_noncompleted'] else ''))
         for p_ in obs_problems[:20]:
             print(f'  ✗ 관측: {p_}')
     bad = cnt.get('UNSEALED', 0) + mcnt.get('differs', 0) + mcnt.get('missing', 0) + len(gen_problems) + len(input_problems) + len(obs_problems)
@@ -2215,8 +2442,9 @@ def _parse(argv=None):
     r.add_argument('--allow-missing-raw', action='store_true', help='원자료 · 메시가 없는 케이스가 있어도 돈다 (REFUSED 로 남는다)')
     r.add_argument('--skip-batch-selftest', action='store_true', help='발사 전 lhs_webapp_batch --selftest 를 건너뛴다')
     r.add_argument('--observe-imports', action='store_true',
-                   help='시범 전용 — 워커 · 단계 하위 프로세스의 실제 import 를 <ROOT>/import_obs 에 적는다 (sitecustomize 훅 · 값에 닿지 않는다 · audit 가 봉인 ⊇ 관측을 '
-                        '본다 · G2RR2-03 · manifest 에 남는다)')
+                   help='시범 (권고: 194 본 실행도) — 워커 · 단계 하위 프로세스의 실제 import 를 <ROOT>/import_obs 에 적는다 (sitecustomize 훅 · 시작 영수증 + '
+                        '원자적 끝맺음 로그 · 시도 신원 · 값에 닿지 않는다 · audit 가 영수증 완전성 · 완료 시도의 워커 · 망 풀이 역할 · 봉인 ⊇ 관측을 본다 · '
+                        'G2RR2-03 · G2RR3-02 · manifest 에 관측 실행 신원이 남는다)')
     r.add_argument('--worker-script', default='', help=argparse.SUPPRESS)        # selftest 전용 (manifest 에 남는다)
 
     t = sub.add_parser('retry', help='done · partial 아닌 케이스 + 봉인 밖 (UNSEALED) 기록만 같은 ROOT 에서 다시 (시작 전 발사 봉인 대조 · 기록 보존)')
@@ -2319,6 +2547,9 @@ class FakeA:
             os.kill(os.getpid(), signal.SIGKILL)
         if b.get('mode') == 'hang':
             time.sleep(3600)
+        if os.environ.get('NP194_FAKE_NET_PROC') == '1':     # ★ 10-07 G2RR3-02 관측 시험 — 망 풀이 하위 프로세스 대역 (network_conductivity.py 가 __main__ · --help)
+            subprocess.run([sys.executable, os.path.join(os.environ['NP194_REPO'], 'scripts', 'network_conductivity.py'), '--help'],
+                           check=True, capture_output=True)
         fm = {'se_se_cn': b.get('cn', 4.25), 'percolation_pct': b.get('perc', 97.0), 'porosity': 12.5}
         fm.update(b.get('extra') or {})
         if b.get('none_key'):
@@ -2357,14 +2588,17 @@ sys.exit(LWB.run_batch(LWB._parse(sys.argv[1:]), (FakeA, FakeTMR, FakeEM)))
 
 def _selftest() -> int:
     fails = []
+    n_chk = [0]
 
     def chk(name, ok, why=''):
+        n_chk[0] += 1
         print(('  ✓ ' if ok else '  ✗ ') + name + ('' if ok or not why else f'  — {why}'))
         if not ok:
             fails.append(name)
 
     tmp = Path(tempfile.mkdtemp(prefix='np194_')).resolve()
-    env_keep = {k: os.environ.get(k) for k in ('NP194_REPO', 'NP194_FAKE_PLAN', 'TMPDIR', 'NP194_FAKE_DIRTY', 'NP194_FAKE_DUAL', 'NP194_FAKE_EXTRA_IMPORT')}
+    env_keep = {k: os.environ.get(k) for k in ('NP194_REPO', 'NP194_FAKE_PLAN', 'TMPDIR', 'NP194_FAKE_DIRTY', 'NP194_FAKE_DUAL', 'NP194_FAKE_EXTRA_IMPORT',
+                                               'NP194_FAKE_NET_PROC')}
     os.environ.pop('NP194_FAKE_DIRTY', None)
     os.environ.pop('NP194_FAKE_DUAL', None)
     try:
@@ -3433,11 +3667,13 @@ def _selftest() -> int:
             #   끝날 때 sys.modules 의 리포 파일을 적는다 (sitecustomize · PYTHONPATH — 하위 프로세스도 환경을 물려받는다)
             obs = tmp / 'import_obs'
             _ioe, _ioo = _G.get('import_obs_env'), _G.get('import_observation')
+            _ide = _G.get('import_obs_identity_env')               # ★ G2RR3-02 — 관측 신원 (실행 · run · 케이스 · 시도) 이 하위 프로세스까지 물려지는가
             spec_c = dict(id='obs_network', kind='synthetic', bed='se_am', type_map='1:SE,2:AM_P', scale=1, stop='network', root=str(obs / 'root'))
             (obs / 'root' / 'cases' / 'obs_network').mkdir(parents=True)
             spec_p = obs / 'spec.json'
             write_json(spec_p, spec_c)
-            env_ = dict(os.environ, **THREAD_ENV, PYTHONDONTWRITEBYTECODE='1', TMPDIR=str(obs), MPLBACKEND='Agg', **(_ioe(obs, ROOT) if _ioe else {}))
+            env_ = dict(os.environ, **THREAD_ENV, PYTHONDONTWRITEBYTECODE='1', TMPDIR=str(obs), MPLBACKEND='Agg', **(_ioe(obs, ROOT) if _ioe else {}),
+                        **(_ide('selftest-35d', 1, 'obs_network', 1) if _ide else {}))
             rp_ = subprocess.run([sys.executable, str(ROOT / 'scripts' / 'wsl_network_smoke.py'), '--_child', str(spec_p)], cwd=str(obs / 'root'),
                                  env=env_, capture_output=True, text=True, timeout=900)
             rep_ = read_json(obs / 'root' / 'cases' / 'obs_network' / 'report.json') or {}
@@ -3450,13 +3686,26 @@ def _selftest() -> int:
                 rp_.returncode == 0 and rep_.get('status') == 'done' and not outside and FM in seen and LU in seen
                 and 'scripts/network_conductivity.py' in seen and 'scripts/lens_geometry.py' in seen,
                 repr((rp_.returncode, rep_.get('status'), outside, sorted(seen)[:40], (rp_.stderr or '')[-300:])))
+            #  ★ 10-07 G2RR3-02 (Codex 세대 2 재검증 3 §4) — 같은 실제 실행의 영수증: 시작한 프로세스 전부 끝맺음 (원자적 최종화 · 머리 줄) · 로그 문제 0 ·
+            #    신원이 하위 프로세스 (parse · 접촉 분석 · 피복 · 망 CLI) 까지 물려졌다 · 망 풀이 (network_conductivity.py 가 __main__) 프로세스가 그 모듈과 함께 관측
+            procs_ = io_.get('processes')
+            idn_ = {tuple((p_.get('identity') or {}).get(k_) for k_ in ('run_id', 'run_no', 'case', 'attempt')) for p_ in (procs_ or [])}
+            chk(f'㉟d2 ★ G2RR3-02 — 실제 생산 경로의 관측 영수증: 시작 {io_.get("n_started")} = 끝맺음 {io_.get("n_finalized")} · 로그 문제 0 · 신원 (selftest-35d · '
+                f'obs_network · 시도 1) 이 프로세스 전부에 · 망 풀이 프로세스 (network_conductivity.py __main__) 관측 (옛: 끝날 때 줄만 · 시작 영수증 · 신원 · 역할 없음)',
+                isinstance(procs_, list) and len(procs_) >= 3 and all(p_.get('final') for p_ in procs_) and not io_.get('problems')
+                and io_.get('n_started') == io_.get('n_finalized') == len(procs_) and idn_ == {('selftest-35d', '1', 'obs_network', '1')}
+                and any(p_.get('role') == 'network_solver' and 'scripts/network_conductivity.py' in (p_.get('files') or []) for p_ in procs_),
+                repr(({k_: io_.get(k_) for k_ in ('n_started', 'n_finalized', 'problems')},
+                      [(p_.get('role'), p_.get('final'), p_.get('identity')) for p_ in (procs_ or [])][:8])))
 
         _scenario('㉟ G2RR2-03 전이 의존 시나리오', _s35)
 
         def _s35e():
             # 시범의 실제 import 관측 (`run --observe-imports`) — 진짜 실행기 · 진짜 lhs_webapp_batch (가짜 웹앱 의존) 의 모든 프로세스 · audit 가 봉인 ⊇ 관측을 본다
+            #   ★ G2RR3-02 — 가짜 워커가 망 풀이 하위 프로세스 대역 (network_conductivity.py --help) 을 띄운다 (생산 워커 트리와 같은 역할 둘 — 워커 · 망 풀이)
             set_plan({})
             os.environ['NP194_FAKE_DIRTY'] = '0'
+            os.environ['NP194_FAKE_NET_PROC'] = '1'
             Ro, Rx = tmp / 'run_obs', tmp / 'run_obs_extra'
             with _patch(git_info=_git_fake()):
                 rc_o, o_o = _main_rc(args_for(Ro, '--cohorts', 'lhsx', '--case', 'lhsx_900', *L20, '--observe-imports', allow_dirty=False))
@@ -3477,6 +3726,145 @@ def _selftest() -> int:
                 repr((rc_o, rc_a, io_.get('n_processes'), io_.get('outside'), rc_x, rc_ax, iox_.get('outside'), o_o[-200:])))
 
         _scenario('㉟e 시범 import 관측 시나리오', _s35e)
+
+        # ═══ ㉟f ★ 10-07 Codex 세대 2 재검증 3 §4 G2RR3-02 — 관측 기록의 완전성 · 실행 신원 · 필수 역할 (반례 먼저 · 실제 audit CLI) ═══════════════════
+        #   옛 판: 로그 파일 개수를 프로세스 수로 셌다 — 빈 1000.txt 하나 = 관측 0 · rc 0 · 무효 / 리포 밖 줄 한 줄 = rc 0 · 둘째 프로세스 로그 소실 = rc 0.
+        #   [Codex] = new_gates.py 의 다섯 로그 그대로 (㉟e 의 정상 ROOT 사본에서 관측 폴더만 바꾼다) · 나머지 = 새 영수증 형식에서 같은 부류 (시작만 · 소실 · 다른 신원 ·
+        #   리포 밖 줄 · 잘린 로그 · 머리 없음 · 끝만) · 망 풀이 없는 완료 시도 · 죽은 시도 (정보) → retry 완료.
+        def _s35f():
+            Ro = tmp / 'run_obs'
+            logs0 = Ro / IMPORT_OBS_DIR / 'log'
+
+            def _heads(ld):
+                out_ = {}
+                for p_ in sorted(Path(ld).glob('*.txt')):
+                    try:
+                        h_ = json.loads((p_.read_text(encoding='utf-8').splitlines() or [''])[0])
+                    except ValueError:
+                        continue
+                    if isinstance(h_, dict):
+                        out_[p_.name[:-4]] = h_
+                return out_
+
+            def _tok(suffix):
+                t_ = [t for t, h_ in _heads(logs0).items() if str(h_.get('main') or '').endswith(suffix)]
+                if not t_:
+                    raise RuntimeError(f'새 형식 관측 로그 (머리 줄 · main {suffix}) 가 없다 — 옛 훅')
+                return t_[0]
+
+            def _variant(i_, edit):
+                r_ = tmp / f'obs35f_{i_:02d}'
+                shutil.copytree(Ro, r_, symlinks=True)
+                edit(r_ / IMPORT_OBS_DIR / 'log')
+                with _patch(git_info=_git_fake()):
+                    rc_, aj_, _o = _audit_json(r_)
+                return rc_, aj_.get('import_observation_problems') or [], aj_
+
+            def _clear(ld):
+                for p_ in list(ld.iterdir()):
+                    p_.unlink()
+
+            def _rm(tok, final=True, start=True):
+                def f(ld):
+                    if final:
+                        (ld / f'{tok}.txt').unlink()
+                    if start:
+                        (ld / f'{tok}.start.json').unlink()
+                return f
+
+            def _ident(tok, **kv):
+                def f(ld):
+                    ls_ = (ld / f'{tok}.txt').read_text(encoding='utf-8').splitlines()
+                    h_ = json.loads(ls_[0])
+                    h_['identity'].update(kv)
+                    (ld / f'{tok}.txt').write_text('\n'.join([json.dumps(h_, sort_keys=True)] + ls_[1:]) + '\n', encoding='utf-8')
+                    j_ = json.loads((ld / f'{tok}.start.json').read_text(encoding='utf-8'))
+                    j_['identity'].update(kv)
+                    (ld / f'{tok}.start.json').write_text(json.dumps(j_, sort_keys=True), encoding='utf-8')
+                return f
+
+            def _lines(tok, fn):
+                def f(ld):
+                    ls_ = (ld / f'{tok}.txt').read_text(encoding='utf-8').splitlines()
+                    (ld / f'{tok}.txt').write_text('\n'.join(fn(ls_)) + '\n', encoding='utf-8')
+                return f
+
+            def _plus_outside(ls):
+                h_ = json.loads(ls[0])
+                h_['n'] = h_['n'] + 1
+                return [json.dumps(h_, sort_keys=True)] + ls[1:] + ['/etc/hostname']
+            NC_, CP_ = str(ROOT / 'scripts' / 'network_conductivity.py'), str(ROOT / 'scripts' / 'coating_presets.py')
+            cx_ = {'none': lambda ld: _clear(ld),
+                   'empty_file': lambda ld: (_clear(ld), (ld / '1000.txt').write_text('', encoding='utf-8')),
+                   'only_nonrepo_line': lambda ld: (_clear(ld), (ld / '1000.txt').write_text('not-a-valid-module-path\n', encoding='utf-8')),
+                   'unsealed_log': lambda ld: (_clear(ld), (ld / '1000.txt').write_text(NC_ + '\n', encoding='utf-8'),
+                                               (ld / '1001.txt').write_text(CP_ + '\n', encoding='utf-8')),
+                   'unsealed_log_lost': lambda ld: (_clear(ld), (ld / '1000.txt').write_text(NC_ + '\n', encoding='utf-8'))}
+            res = {}
+            for nm_, ed_ in cx_.items():
+                try:
+                    res['[Codex] ' + nm_] = _variant(len(res), ed_)
+                except Exception as e:                       # noqa: BLE001 — 변이를 못 만들면 (옛 형식) ✗ 로 남긴다
+                    res['[Codex] ' + nm_] = ('ERR', [f'{type(e).__name__}: {e}'], {})
+            nf_ = (('시작만 · 끝맺음 없음 (망 풀이 프로세스 — 시작 영수증만 남음)', lambda: _rm(_tok('scripts/network_conductivity.py'), final=True, start=False)),
+                   ('둘째 프로세스 로그 소실 (망 풀이 — 시작 · 끝 둘 다 없음)', lambda: _rm(_tok('scripts/network_conductivity.py'))),
+                   ('워커 프로세스 로그 소실', lambda: _rm(_tok('fake_worker.py'))),
+                   ('끝 로그만 (시작 영수증 없음 · 워커)', lambda: _rm(_tok('fake_worker.py'), final=False, start=True)),
+                   ('다른 실행의 신원 (run_id · 망 풀이)', lambda: _ident(_tok('scripts/network_conductivity.py'), run_id='f' * 32)),
+                   ('이 ROOT 에 없는 시도 (attempt 9 · 망 풀이)', lambda: _ident(_tok('scripts/network_conductivity.py'), attempt='9')),
+                   ('코드 뿌리 밖 줄 (워커 로그 · 머리 n 맞춤)', lambda: _lines(_tok('fake_worker.py'), _plus_outside)),
+                   ('잘린 로그 (줄 수 ≠ 머리 n · 워커)', lambda: _lines(_tok('fake_worker.py'), lambda ls: ls[:-1])),
+                   ('머리 줄 없음 (새 로그에서 머리만 지움 · 워커)', lambda: _lines(_tok('fake_worker.py'), lambda ls: ls[1:])))
+            for nm_, mk_ in nf_:
+                try:
+                    res[nm_] = _variant(len(res), mk_())
+                except Exception as e:                       # noqa: BLE001
+                    res[nm_] = ('ERR', [f'{type(e).__name__}: {e}'], {})
+            for nm_, (rc_, pr_, _aj) in res.items():
+                chk(f'㉟f ★ G2RR3-02 {nm_} → 실제 audit CLI rc 1 · 관측 문제', rc_ == 1 and bool(pr_), repr((rc_, pr_[:3])))
+            #  양성 대조 — 같은 ROOT 의 그대로 사본
+            try:
+                rc_g, pr_g, aj_g = _variant(len(res), lambda ld: None)
+            except Exception as e:                           # noqa: BLE001
+                rc_g, pr_g, aj_g = 'ERR', [f'{type(e).__name__}: {e}'], {}
+            io_g = aj_g.get('import_observation') or {}
+            rid_ = (read_json(Ro / 'manifest.json') or {}).get('import_obs_run_id')
+            procs_g = io_g.get('processes') or []
+            chk('㉟f 양성 대조 — 정상 ROOT 사본 (관측 영수증 그대로) → audit rc 0 · 관측 문제 0 · 완료 시도 lhsx_900 (run 1 · 시도 1) 에 워커 · 망 풀이 프로세스 · '
+                '신원 = 이 실행 (manifest import_obs_run_id)',
+                rc_g == 0 and not pr_g and bool(rid_) and {p_.get('role') for p_ in procs_g} >= {'worker', 'network_solver'}
+                and all(p_.get('final') and (p_.get('identity') or {}) == dict(run_id=rid_, run_no='1', case='lhsx_900', attempt='1') for p_ in procs_g),
+                repr((rc_g, pr_g[:3], rid_, [(p_.get('role'), p_.get('identity')) for p_ in procs_g])))
+            #  망 풀이 하위 프로세스 없이 끝난 완료 시도 (워커 로그 하나뿐 · 형식은 정상) — 옛 판은 rc 0
+            Rm = tmp / 'run_obs_nosolver'
+            os.environ.pop('NP194_FAKE_NET_PROC', None)
+            set_plan({})
+            with _patch(git_info=_git_fake()):
+                rc_m, _o = _main_rc(args_for(Rm, '--cohorts', 'lhsx', '--case', 'lhsx_900', *L20, '--observe-imports', allow_dirty=False))
+                rc_ma, aj_m, _o = _audit_json(Rm)
+            chk('㉟f ★ 망 풀이 하위 프로세스 관측이 없는 완료 시도 (워커 로그만 · 형식 정상) → audit rc 1 · 사유 network_solver (옛: rc 0)',
+                rc_m == 0 and rc_ma == 1 and any('network_solver' in p_ for p_ in aj_m.get('import_observation_problems') or []),
+                repr((rc_m, rc_ma, (aj_m.get('import_observation_problems') or [])[:3])))
+            #  죽은 시도 (SIGKILL · 레코드 없음) 의 끝맺지 않은 영수증 = 정보 (완료 시도가 아니다) · retry 로 완료되면 audit rc 0
+            Rk = tmp / 'run_obs_crash'
+            os.environ['NP194_FAKE_NET_PROC'] = '1'
+            set_plan({'lhsx_900': dict(mode='crash')})
+            with _patch(git_info=_git_fake()):
+                rc_k, _o = _main_rc(args_for(Rk, '--cohorts', 'lhsx', '--case', 'lhsx_900', *L20, '--observe-imports', allow_dirty=False))
+                rc_ka, aj_k, _o = _audit_json(Rk)
+                set_plan({})
+                rc_r, _o = _main_rc(['retry', '--root', str(Rk), *L20])
+                rc_ra, aj_r, _o = _audit_json(Rk)
+            io_k = aj_k.get('import_observation') or {}
+            chk('㉟f 죽은 시도 (SIGKILL — 레코드 없음) 의 끝맺지 않은 영수증 = 정보 (unfinalized_noncompleted · 그 시도는 레코드를 쓰지 않았다) · audit 관측 문제 0 · '
+                'retry 로 완료 (시도 2) 되면 audit rc 0 (시도 2 = 워커 · 망 풀이 관측)',
+                rc_k == 1 and rc_ka == 0 and not aj_k.get('import_observation_problems') and bool(io_k.get('unfinalized_noncompleted'))
+                and rc_r == 0 and rc_ra == 0 and not aj_r.get('import_observation_problems'),
+                repr((rc_k, rc_ka, aj_k.get('import_observation_problems'), io_k.get('unfinalized_noncompleted'), rc_r, rc_ra,
+                      (aj_r.get('import_observation_problems') or [])[:3])))
+            os.environ.pop('NP194_FAKE_NET_PROC', None)
+
+        _scenario('㉟f G2RR3-02 관측 완전성 시나리오', _s35f)
     finally:
         for k, v in env_keep.items():
             if v is None:
@@ -3484,7 +3872,7 @@ def _selftest() -> int:
             else:
                 os.environ[k] = v
         shutil.rmtree(tmp, ignore_errors=True)
-    print(f'\n{"✓ 전부 통과" if not fails else f"✗ {len(fails)} 건 실패"}')
+    print(f'\n{"✓ 전부 통과" if not fails else f"✗ {len(fails)} 건 실패"} ({n_chk[0] - len(fails)}/{n_chk[0]})')
     return 0 if not fails else 1
 
 
