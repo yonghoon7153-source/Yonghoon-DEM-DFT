@@ -4215,3 +4215,12 @@ gate INCOMPLETE · 실효 정책 UNVERIFIED · native 미승인 · 게이트 리
   (4) 협조적 중지 → 한정 대기 → 소유 Job 강제 종료 → 종료 확인 · sampled_max ≠ OS peak · 감시 실패 ≠ 0. S0 물리 설계 재개방 · 지금 계산 불필요.
 - 반영: v1 은 그대로 두고 `docs/COMSOL_MICROSHORT_S1O_SEND_TO_CODEX_v2_20261007.md` 에 v1 본문 + 부속안 원문 (§6 · 다르면 §6 우선). 승인 범위는 §73 그대로.
 - 다음 순서 (회신): 비활성 S1-O 산출물 제출 → 변경부 검증 별도 승인 → 검증 결과 · native 미결 수용 → S1-P 별도 승인. 이 절은 어떤 실행의 승인도 아니다.
+
+## 75. S1-O 발송문 v2 수용 (2026-10-07 · 추가 정정 0 · 실행 0)
+
+- 보존: `reviews/r14_repros/codex63/comsol_microshort_s1o_v2_review_20261007/` — zip 54,310 B · sha256 `c50fbf1c10f41e2d52c54549d84a68a0262814603cebdf8eb2645364589ee07b` · 압축 해제 22 ·
+  manifest 21 / 21 · 비밀 0 · 동봉 `check_annex_boundary.py` · `compare_documents.py` · `package_review.py` 실행 0. 규칙 `4999f652f` → 보존. 검토자가 본 v2 = 저장소 v2 (cmp 동일).
+- 판정 (`DECISION.json` 사본): `ACCEPTED_FOR_EXISTING_SCOPED_OFFLINE_PREPARATION` · S1O-C1–C4 `CLOSED_DOCUMENT_ONLY` · 새 차단 0 · 필수 정정 0 · 승인 범위 확대 없음 ·
+  `implementation_accepted / native_ready / new_execution_approval: false`.
+- 다음 (회신): v2 + S0 근거를 **실행 담당 Codex** 에 고정 식별 (커밋 `f2d6fa0a9` · v2 sha256 `16797cc1…`) 과 함께 전달 → §73 범위의 비활성 S1-O 준비 · 정적 점검 → 제출 · 멈춤.
+  머리말 `docs/COMSOL_MICROSHORT_S1O_EXEC_COVER_20261007.md`. 같은 발송문을 다시 정정하는 라운드는 없다.
