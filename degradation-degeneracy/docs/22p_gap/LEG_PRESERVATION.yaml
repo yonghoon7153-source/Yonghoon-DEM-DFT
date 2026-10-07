@@ -806,12 +806,12 @@ legs:
     payload_index_sha256: eeb8ae8911083c992710ace2c8f255682b64930a03929f12ae72796ade174716
     member_rehash_by: tools.archive_bundle.check
     verification_receipt: docs/22p_gap/receipts/paired_fixed5_v4.validate.yaml
-    verification_receipt_core_sha256: d527cde9fc7251a285d5e753048235f1c3aff54661c7588733cc0ffcd63ad9f7
+    verification_receipt_core_sha256: 68a74c60b219db4421f834c6b7756e9f741f611a4bf4bd8963cdb4f96d048bf9
     verification_receipt_generator: docs/22p_gap/make_receipt.py
     empty_root_restore: true
     rescored_from_restored_fits: true
     validator_identity:
-      source_digest: c7f48918ff971e91
+      source_digest: 044e4f5513011a9b
       n_checks: 35
       ok: true
     leg_source_digest: d50295f980ccaa81
@@ -1010,13 +1010,13 @@ legs:
     member_rehash_by: tools.archive_bundle.check
     fits_sha256: 378ffde80b2a44d99efa3bff3e712b7cd44b41e0073d712fdf63d4efca864042
     verification_receipt: docs/22p_gap/receipts/grid_fit_v5.validate.yaml
-    verification_receipt_core_sha256: 8de4e4aff4d4550bc4e093949407cf748c540fc42b256d88bff44673cd45292d
+    verification_receipt_core_sha256: 16d3be2555fd6a4ef745ca4ed3f651be61afcd74c3ebeb5965cdd60f4c524856
     verification_receipt_generator: docs/22p_gap/make_receipt.py
     empty_root_restore: true
     regeneration_capability: available_raw_present
     rescored_from_restored_fits: true
     validator_identity:
-      source_digest: c7f48918ff971e91
+      source_digest: 044e4f5513011a9b
       n_checks: 34
       ok: true
     bundle_content_id: d59744657f3a2086a8069c720bea4468a89c3e36e2221475d0db441c62baf8ae
