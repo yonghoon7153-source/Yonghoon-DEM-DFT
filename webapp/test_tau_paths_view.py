@@ -90,7 +90,8 @@ def line_consts(src, pattern):
 
 # 2판 그림 창 도우미 — 옛 절 (F · R · M · C) 은 있으면 함께 싣고 (없으면 옛 판 그대로 돈다) · 새 절 (P · W · X) 은 반드시 있어야 한다
 VIEW_FNS = ('tauPathsRng', 'tauPathsPick', 'tauPathsRefreshSeed', 'tauPathsViewCol', 'tauPathsCellFit', 'tauPathsFoldPieces',
-            'tauPathsWrapParticles', 'tauPathsFrustumFit', 'tauPathsViewInfoHtml')
+            'tauPathsWrapParticles', 'tauPathsFrustumFit', 'tauPathsViewInfoHtml',
+            'figFrameGroup', 'figContextMeshes', 'figCapturePNG', 'figPngNote')      # 그림 창 공용 (Force Chain View 와 같은 상자 · 맥락 · PNG 맞춤)
 VIEW_CONSTS = ('TAUP_VIEW_DEF',)
 
 
@@ -1821,7 +1822,7 @@ MUTANTS = [
     ('X1 셀 옮김 끔 (셀 맞춤이 늘 0 을 돌려줌)', [('const s = pick.s > L / 2 ? pick.s - L : pick.s;', 'const s = 0;')], ('W2 ', 'W2b ')),
     ('X2 접기 = 옛 반 토막 (면에서 자르지 않고 최소상 변위의 절반)', [('!!(o.unwrap || o.cell)', '!!o.unwrap'), ('if (o.cell) {', 'if (false) {')], ('W7 ',)),
     ('X3 무작위가 seed 를 무시 (늘 같은 수열)', [('const rnd = tauPathsRng(sd);', 'const rnd = tauPathsRng(1);')], ('W5b ',)),
-    ('X4 PNG 맞춤 끔 (화면 시점 그대로 찍음)', [('if (ws.fit) {', 'if (false) {')], ('W3b ',)),
+    ('X4 PNG 맞춤 끔 (화면 시점 그대로 찍음 — 공용 figCapturePNG)', [('if (wantFit) {', 'if (false) {')], ('W3b ',)),
     ('X5 셀 맞춤 뒤 접기 생략 (이어 그린 조각 그대로)', [('pieces = fp.pieces;', '')], ('W11 ', 'W2 ')),
 ]
 

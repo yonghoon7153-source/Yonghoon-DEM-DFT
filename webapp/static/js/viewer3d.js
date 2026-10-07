@@ -1159,9 +1159,11 @@ function buildControls(container, isMPM) {
     </div>
     <hr>
     <label><input type="checkbox" id="force-chain-toggle"> <span style="font-size:12px">Force Chain</span></label>
+    <div id="fc-panel" style="display:none;font-size:11px;color:#e4e6f0;line-height:1.45;margin-top:3px"></div>
     <hr>
     <button data-action="pathOnly">Path Only View</button>
-    <button data-action="tauPathsView" title="저장된 후보 경로 여럿을 τ 색으로 그린 창 — PNG 다운로드 (투명 · 4×) · 컬러바 PNG (따로) · 컬러바 넣기 선택.  범위 · τ 작은 N 은 View Mode 'Tortuosity 후보 경로 (여럿)' 범례에서 고른다">All Paths View</button>
+    <button data-action="tauPathsView" title="저장된 후보 경로 여럿을 τ 색으로 그린 창 — 창 안에서 경로 고르기 · ↻ 갱신 · 상자 안 (주기 셀 맞춤) · PNG 다운로드 (투명 · 4× · 잘림 없게 맞춤) · 컬러바 PNG (따로) · 컬러바 넣기 선택">All Paths View</button>
+    <button data-action="forceChainView" title="Force chain 만 그린 창 — 접촉 쌍 색 (AM–AM · AM–SE · SE–SE) · 굵기 = 상대 힘 (5–95 백분위) · 맥락 SE · AM · 상자 안 · PNG (투명 · 4× · 잘림 없게 맞춤) · 범례 PNG 따로 · 범례 넣기 선택">Force Chain View</button>
     <button data-action="amCloseup">AM Close-up</button>
     <button data-action="amContactCloseup" title="AM 하나 + 닿은 SE · AM 과 표면 접촉 cap (노랑 = SE · 회색 = AM–AM) — PC (AM_P) · SC (AM_S) 고르기 · 상대 입자 끄면 cap 만 (Coverage 확대) · 4× 투명 PNG">AM 접촉 · Coverage 확대</button>
     <button data-action="resetView">Reset</button>
@@ -6703,6 +6705,441 @@ function tauPathsViewInfoHtml(col, v) {
   return L.join(' · ');
 }
 
+/* ── Force Chain — 접촉 쌍 색 · 상대 힘 굵기 · 상자 안 (2026-10-07 · 1저자 보고 그림) ───────────────────────────────────────────────
+ * 옛 판: 가장 센 5000 개를 노랑 → 빨강 · 굵기 · 불투명도 = (fn − 최소)/(최대 − 최소) → 극단 접촉 하나가 축을 다 차지해 나머지가 전부 옅은 노랑
+ *   (PNG = 거의 다 옅은 노랑 · 빨간 토막 하나) · 접촉마다 TubeGeometry 하나 · 주기 경계를 넘는 접촉 = 상자를 가로지르는 긴 관.
+ * 입력 = force_chains.json (scripts/analyze_contacts.py L938–961) — 법선력 fn 상위 10 % 접촉 · {p1, p2 (three 좌표 x · z · y · µm · 입자 중심), fn, type ('AM_P-SE' …)}.
+ * ⚠ fn 표기는 같은 리포 힘 분포와 scale 배 다르다 — analyze_contacts L956 = fn × 1e6/scale² ("µN" 이라 적음) ↔ dem_analysis_core L1102 = F/scale [N]
+ *   (= F × 1e6/scale µN · backfill_am_metrics L96) — 원장 WEB-04.  ⇒ 이 보기는 fn 을 **상대 크기로만** 쓴다 (고르기 · 굵기 · 몫) — 화면 · PNG 어디에도
+ *   fn 절대값 · 힘 단위를 적지 않는다 (webapp/test_force_chain_view.py 가 강제).
+ * 그림: 가장 센 N 개 (기본 5000 = 옛 판) · 색 = 접촉 쌍 묶음 (AM–AM · AM–SE · SE–SE · 기타) — dataviz 기준 팔레트 1–3 칸 (#2a78d6 · #eb6834 · #1baf7a ·
+ *   validate_palette --pairs all: 색각 이상 ΔE 9.2 · 정상 24.0 · 흰 바탕 대비 3:1 아래 (청록 · 주황) 는 범례 글자 (이름 · 수 · 몫) 가 덜어 준다 — 색만으로
+ *   가르지 않는다) · 기타 = 회색 · 색은 묶음을 따른다 (끄기 · 수가 바뀌어도 그대로) · "힘" 모드 = 옛 노랑 → 빨강 (HSL) — 단 축은 아래 상대 힘.
+ *   굵기 = 상대 힘 t = (fn − p5)/(p95 − p5) 를 [0, 1] 로 자름 (고른 집합의 5 · 95 백분위 — 극단 하나가 나머지를 지우지 않는다) · 반지름 = r0 × (0.35 + 1.65 t) ·
+ *   불투명도 = 1 (힘으로 흐리지 않는다).  주기 경계 (x · y) 를 넘는 접촉 = 최소상 변위로 이어 면에서 잘라 반대 면 (tauPathsFoldPieces · 상자 안).
+ * 범례 = 묶음마다 수 · 고른 집합 fn 합의 몫 (%) · 고르기 규칙 — 메인 = 체크박스 아래 칸 (fc-panel) · 그림 창 "Force Chain View" = 맥락 SE · AM · 상자 ·
+ *   PNG (투명 · 4× · 잘림 없게 맞춤) · 범례 PNG 따로 (랩 원칙: 범례는 그림 밖 — 넣기 = 선택 · 기본 끔). */
+const FC_DEF = {
+  groups: [['amam', 'AM–AM', 0x2a78d6, 'AM–AM'], ['amse', 'AM–SE', 0xeb6834, 'AM–SE'], ['sese', 'SE–SE', 0x1baf7a, 'SE–SE'], ['other', '기타', 0x898781, 'Other']],
+  ns: [500, 1000, 2000, 5000, 0], nDefault: 5000, pLo: 5, pHi: 95,
+  rule: '상위 10 % 접촉 (analyze_contacts) 중 가장 센 N 개 · 굵기 = 상대 힘 (5–95 백분위)',
+};
+
+/* 접촉 쌍 → 묶음 ('amam' · 'amse' · 'sese' · 'other') — type = 정렬된 두 상 이름 ('AM_P-SE') · AM_P · AM_S = AM · 모르는 이름 · 둘이 아니면 기타 */
+function fcGroupOf(type) {
+  const ph = String(type == null ? '' : type).split('-').map(s => ((s === 'AM_P' || s === 'AM_S') ? 'AM' : (s === 'SE' ? 'SE' : '')));
+  if (ph.length !== 2 || !ph[0] || !ph[1]) return 'other';
+  if (ph[0] === 'AM' && ph[1] === 'AM') return 'amam';
+  if (ph[0] === 'SE' && ph[1] === 'SE') return 'sese';
+  return 'amse';
+}
+
+/* 가장 센 n 개 (0 = 전부) — fn 내림차순 · 같으면 먼저 나온 것 (안정) · p1 · p2 (유한한 수 셋) · fn (유한 · ≥ 0) 이 아닌 행은 세고 뺀다.
+ * 반환 {drawn, nAll (저장 행 수), nBad (뺀 행 수)} */
+function fcSelect(chains, n) {
+  const all = Array.isArray(chains) ? chains : [];
+  const ok3 = p => Array.isArray(p) && p.length === 3 && p.every(v => typeof v === 'number' && Number.isFinite(v));
+  const v = [];
+  all.forEach((c, i) => { if (c && ok3(c.p1) && ok3(c.p2) && typeof c.fn === 'number' && Number.isFinite(c.fn) && c.fn >= 0) v.push([c, i]); });
+  v.sort((a, b) => (b[0].fn - a[0].fn) || (a[1] - b[1]));
+  n = Math.max(0, Math.round(Number(n) || 0));
+  return { drawn: (n && n < v.length ? v.slice(0, n) : v).map(x => x[0]), nAll: all.length, nBad: all.length - v.length };
+}
+
+/* 백분위 (numpy linear 와 같은 식) — sorted = 오름차순 · q ∈ [0, 100] · 비면 NaN */
+function fcPercentile(sorted, q) {
+  const a = sorted || [], n = a.length;
+  if (!n) return NaN;
+  const pos = (n - 1) * Math.max(0, Math.min(100, Number(q))) / 100, lo = Math.floor(pos), hi = Math.ceil(pos);
+  return a[lo] + (a[hi] - a[lo]) * (pos - lo);
+}
+
+/* 굵기 축 — 고른 집합 fn 의 5 · 95 백분위 (FC_DEF.pLo · pHi) */
+function fcScale(drawn) {
+  const v = (drawn || []).map(c => c.fn).sort((a, b) => a - b);
+  const lo = fcPercentile(v, FC_DEF.pLo), hi = fcPercentile(v, FC_DEF.pHi);
+  return { lo, hi };
+}
+
+/* 상대 힘 t = (fn − lo)/(hi − lo) 를 [0, 1] 로 자름 · 축이 한 점이면 0.5 */
+function fcThickT(fn, lo, hi) {
+  if (!(hi - lo > 1e-12)) return 0.5;
+  return Math.max(0, Math.min(1, (fn - lo) / (hi - lo)));
+}
+
+/* 묶음별 수 · fn 합 · 몫 — 몫 = 묶음 fn 합 / 고른 집합 fn 합 × 100 (상대 · 단위 없음 · 합 100) · 표시 shareTxt = 소수 한 자리 (큰 나머지 반올림 — 합도 100.0).
+ * topShare · topKey = 가장 센 접촉 하나의 몫 (%) · 그 묶음 — 몫은 fn 합이라 극단 하나에 끌린다 (굵기 축과 달리) → 범례가 쏠림을 말한다 (≥ 25 %).
+ * 반환 {n, groups: [{key, label, color, labelEn, n, sum, share, shareTxt}] (FC_DEF 차례), lo, hi (굵기 축), topShare, topKey} */
+function fcStats(drawn) {
+  const d = drawn || [];
+  const G = FC_DEF.groups.map(g => ({ key: g[0], label: g[1], color: g[2], labelEn: g[3], n: 0, sum: 0 }));
+  const at = {};
+  G.forEach((g, i) => { at[g.key] = i; });
+  d.forEach(c => { const g = G[at[fcGroupOf(c.type)]]; g.n++; g.sum += c.fn; });
+  const tot = G.reduce((s, g) => s + g.sum, 0);
+  const groups = G.map(g => Object.assign(g, { share: tot > 0 ? 100 * g.sum / tot : 0 }));
+  const tenths = groups.map(g => Math.floor(g.share * 10 + 1e-9));
+  let left = tot > 0 ? 1000 - tenths.reduce((s, x) => s + x, 0) : 0;
+  groups.map((g, i) => [g.share * 10 - tenths[i], i]).sort((a, b) => (b[0] - a[0]) || (a[1] - b[1]))
+    .forEach(([_r, i]) => { if (left > 0) { tenths[i]++; left--; } });
+  groups.forEach((g, i) => { g.shareTxt = (tenths[i] / 10).toFixed(1); });
+  const sc = fcScale(d);
+  const top = d.reduce((m, c) => (!m || c.fn > m.fn ? c : m), null);
+  return { n: d.length, groups, lo: sc.lo, hi: sc.hi, topShare: (top && tot > 0) ? 100 * top.fn / tot : 0, topKey: top ? fcGroupOf(top.type) : null };
+}
+
+/* 접촉 → 그릴 토막 (data µm) — p1 · p2 (three 좌표 x · z · y) 를 data (x, y, z) 로 · 최소상 변위 (x · y 주기 · z 비주기) 로 이어 상자 셀에 접는다
+ * (tauPathsFoldPieces — 주기 경계를 넘는 접촉 = 면에서 잘라 반대 면 · 상자를 가로지르는 관 없음 · 그린 길이 = 최소상 거리).
+ * 반환 {segs: [{k (drawn 번호), pieces, nCut}], nWrap (최소상 ≠ 단순 차인 접촉 수), nCut (자른 곳 수)} */
+function fcSegments(drawn, box) {
+  box = box || {};
+  const x0 = Number(box.x_min) || 0, y0 = Number(box.y_min) || 0;
+  const Lx = Number(box.x_max) - x0, Ly = Number(box.y_max) - y0;
+  const cell = { x0, y0, Lx, Ly };
+  const mi = (d, L) => (L > 0 ? d - L * Math.round(d / L) : d);
+  let nWrap = 0, nCut = 0;
+  const segs = (drawn || []).map((c, k) => {
+    const a = [Number(c.p1[0]), Number(c.p1[2]), Number(c.p1[1])];
+    const b0 = [Number(c.p2[0]), Number(c.p2[2]), Number(c.p2[1])];
+    const dx = b0[0] - a[0], dy = b0[1] - a[1], ex = mi(dx, Lx), ey = mi(dy, Ly);
+    if (Math.abs(ex - dx) > 1e-9 || Math.abs(ey - dy) > 1e-9) nWrap++;
+    const b = [a[0] + ex, a[1] + ey, b0[2]];
+    const fp = tauPathsFoldPieces([[a, b]], cell);
+    nCut += fp.nCut;
+    return { k, pieces: fp.pieces, nCut: fp.nCut };
+  });
+  return { segs, nWrap, nCut };
+}
+
+/* "힘" 색 모드 — 옛 판 색 그대로 (HSL 0.15 → 0 · 채도 1 · 밝기 0.85 → 0.40 = 옅은 노랑 → 진한 빨강 · three.js setHSL 과 같은 hue2rgb) · t = 상대 힘 · 0xRRGGBB */
+function fcForceHex(t) {
+  t = Math.max(0, Math.min(1, Number(t) || 0));
+  const h = 0.15 - t * 0.15, s = 1, l = 0.85 - t * 0.45;
+  const q = l <= 0.5 ? l * (1 + s) : l + s - l * s, p = 2 * l - q;
+  const f = x => {
+    if (x < 0) x += 1;
+    if (x > 1) x -= 1;
+    return x < 1 / 6 ? p + (q - p) * 6 * x : (x < 1 / 2 ? q : (x < 2 / 3 ? p + (q - p) * 6 * (2 / 3 - x) : p));
+  };
+  const ch = v => Math.round(Math.max(0, Math.min(1, v)) * 255);
+  return (ch(f(h + 1 / 3)) << 16) | (ch(f(h)) << 8) | ch(f(h - 1 / 3));
+}
+
+/* 관 색 — 'group' = 묶음 색 (t 와 무관) · 'force' = fcForceHex(t) */
+function fcColorHex(mode, key, t) {
+  if (mode === 'force') return fcForceHex(t);
+  const g = FC_DEF.groups.find(x => x[0] === key) || FC_DEF.groups[FC_DEF.groups.length - 1];
+  return g[2];
+}
+
+/* 관 굵기 기준 r0 — 상자 x · y 중 긴 쪽 × 0.004 (50 µm → 0.2 µm) · 상자 없으면 0.2 */
+function fcBaseRadius(box) {
+  box = box || {};
+  const Lx = Number(box.x_max) - (Number(box.x_min) || 0), Ly = Number(box.y_max) - (Number(box.y_min) || 0);
+  const L = Math.max(Lx > 0 ? Lx : 0, Ly > 0 ? Ly : 0);
+  return L > 0 ? 0.004 * L : 0.2;
+}
+
+/* 범례 (메인 칸 = 어두운 바탕 · 조작 포함 / 그림 창 정보 줄 = 밝은 바탕 · 글만) — 머리 (가장 센 N · 저장 수 · 뺀 행) · 고르기 규칙 · (힘 모드) 띠 ·
+ * 묶음마다 견본 · 이름 · 수 · 힘 합 몫 · 몫의 뜻 (상대 · 단위 없음) · 주기 경계 접기 · (메인) 범례 PNG · 그림 창.  글자 = 잉크 색 (견본만 묶음 색).
+ * ⚠ fn 절대값 · 단위를 적지 않는다 (위 머리 주석) */
+function fcLegendHtml(stats, sel, opt, st, light) {
+  opt = opt || {};
+  st = st || {};
+  if (!stats || !stats.n) {
+    return '<i style="color:' + (light ? '#b45309' : '#fbbf24') + '">Force chain 자료 없음 — force_chains.json (접촉 분석 단계 산출물) 이 없거나 비었다</i>';
+  }
+  const muted = light ? '#666' : '#9ca3af';
+  const css = 'background:#16192e;color:#e4e6f0;border:1px solid #2a2d3e;border-radius:4px;padding:1px 2px;font-size:11px';
+  const selHtml = (id, cur, opts) => '<select id="' + id + '" style="' + css + '">'
+    + opts.map(o => '<option value="' + o[0] + '"' + (String(o[0]) === String(cur) ? ' selected' : '') + '>' + o[1] + '</option>').join('') + '</select>';
+  const force = opt.color === 'force';
+  const head = '가장 센 ' + sel.drawn.length + ' 개';
+  const L = ['<b>Force Chain</b> — ' + head + ' (저장 ' + sel.nAll + ' 개 중' + (sel.nBad ? ' · 쓸 수 없는 행 ' + sel.nBad + ' 개는 뺐다' : '') + ')'];
+  L.push('<span style="color:' + muted + '">' + FC_DEF.rule + '</span>');
+  if (!light) {
+    L.push('<div style="display:flex;flex-wrap:wrap;gap:3px;align-items:center;margin:3px 0">'
+      + selHtml('fc-color', force ? 'force' : 'group', [['group', '접촉 쌍'], ['force', '힘 (상대 · 옛 색)']])
+      + selHtml('fc-n', opt.n, FC_DEF.ns.map(n => [n, n ? n + ' 개' : '전부'])) + '</div>');
+  }
+  if (force) {
+    const grad = [0, 0.25, 0.5, 0.75, 1].map(t => '#' + fcForceHex(t).toString(16).padStart(6, '0')).join(', ');
+    L.push('<span style="display:flex;align-items:center;gap:4px;margin:2px 0"><span>약함</span><span style="flex:1;height:9px;border-radius:2px;'
+      + 'background:linear-gradient(to right, ' + grad + ')"></span><span>셈</span></span><span style="color:' + muted + '">(색 = 상대 힘 · 5–95 백분위)</span>');
+  }
+  stats.groups.filter(g => g.n > 0 || g.key !== 'other').forEach(g => {
+    const sw = force ? '' : '<span style="display:inline-block;width:16px;height:4px;border-radius:2px;background:#'
+      + g.color.toString(16).padStart(6, '0') + ';vertical-align:middle"></span> ';
+    const txt = g.label + ' ' + g.n + ' 개 · 힘 합 ' + g.shareTxt + ' %';
+    L.push(light ? sw + txt : '<label style="display:flex;align-items:center;gap:4px;font-size:11.5px"><input type="checkbox" id="fc-show-' + g.key + '"'
+      + (opt.show && opt.show[g.key] === false ? '' : ' checked') + '> ' + sw + txt + '</label>');
+  });
+  L.push('<span style="color:' + muted + '">힘 합 = 고른 접촉의 fn 합에서 그 묶음 몫 (상대 · 단위 없음 — force_chains.json 의 fn 표기가 같은 리포 힘 분포와 scale 배 다르다)</span>');
+  if (stats.topShare >= 25) {                                    // 몫은 fn 합 — 극단 하나에 끌린다 (굵기 축은 백분위라 그대로)
+    const tg = stats.groups.find(g => g.key === stats.topKey);
+    L.push('<span style="color:' + (light ? '#b45309' : '#fbbf24') + '">⚠ 가장 센 접촉 하나가 힘 합의 ' + stats.topShare.toFixed(0) + ' % ('
+      + (tg ? tg.label : '?') + ') — 몫이 그 하나에 크게 끌린다 (굵기 축은 5–95 백분위라 영향 없음)</span>');
+  }
+  if (st.nWrap) L.push('<span style="color:' + muted + '">주기 경계를 넘는 접촉 ' + st.nWrap + ' 개 = 면에서 잘라 반대 면 (상자를 가로지르는 관 없음)</span>');
+  if (!light) {
+    L.push('<button id="fc-legend-png" class="data-modal-btn" title="범례 (묶음 색 · 수 · 몫 · 규칙) 를 논문용 6× PNG 로 — 그림과 따로 (슬라이드에서 편집)">범례 PNG</button> '
+      + '<button id="fc-view" class="data-modal-btn" title="Force chain 만 그린 창 — 맥락 SE · AM · 상자 · PNG (투명 · 4× · 잘림 없게 맞춤) · 범례 넣기 선택">🖼 그림 창 (PNG)</button>');
+  }
+  return L.join(light ? ' · ' : '<br>');
+}
+
+/* 범례 PNG 스펙 (그림 글자 = 영문) — 제목 · 줄 (견본 색 · 이름 · 수 · 몫) · 힘 모드 띠 · 뜻 (relative only) — fn 값 · 단위 없음 */
+function fcLegendSpec(stats, sel, opt) {
+  opt = opt || {};
+  const force = opt.color === 'force';
+  return {
+    title: 'Force chains — strongest ' + sel.drawn.length + ' of the top-10 % contacts',
+    mode: force ? 'force' : 'group',
+    ramp: force ? [fcForceHex(0), fcForceHex(0.5), fcForceHex(1)] : null,
+    rows: stats.groups.filter(g => g.n > 0 || g.key !== 'other').map(g => ({ color: force ? null : g.color, label: g.labelEn, n: g.n, share: g.shareTxt })),
+    note: 'Line width = relative normal force (clipped to the 5th–95th percentile of the drawn set); share = fraction of the summed force of the drawn contacts.  '
+      + 'Relative values only.'
+      + (stats.topShare >= 25 ? '  Note: the single strongest contact carries ' + stats.topShare.toFixed(0) + ' % of the summed force ('
+        + ((stats.groups.find(g => g.key === stats.topKey) || {}).labelEn || '?') + ').' : ''),
+  };
+}
+
+/* PNG 파일 이름 — force_chains_top<N>_<pair|force>[_<보인 묶음>].png (수가 있는 묶음을 하나라도 끄면 보인 묶음을 붙인다) */
+function fcPngName(stats, sel, opt) {
+  opt = opt || {};
+  const show = opt.show || {};
+  const has = ((stats && stats.groups) || []).filter(g => g.n > 0);
+  const tag = { amam: 'AMAM', amse: 'AMSE', sese: 'SESE', other: 'OTHER' };
+  const hidden = has.some(g => show[g.key] === false);
+  return 'force_chains_top' + (sel ? sel.drawn.length : 0) + '_' + (opt.color === 'force' ? 'force' : 'pair')
+    + (hidden ? '_' + has.filter(g => show[g.key] !== false).map(g => tag[g.key]).join('-') : '') + '.png';
+}
+
+/* 메인 옵션 객체 — 객체 하나를 계속 쓴다 (범례 듣개 · 그리기 · 그림 창의 처음 값) · 빠진 키만 기본값으로 */
+function fcOpt(state) {
+  const o = state._fcOpt || (state._fcOpt = {});
+  const def = { color: 'group', n: FC_DEF.nDefault, show: { amam: true, amse: true, sese: true, other: true }, width: 1 };
+  Object.keys(def).forEach(k => { if (o[k] === undefined) o[k] = def[k]; });
+  return o;
+}
+
+/* 관 묶음 짓기 (메인 · 그림 창 공용) — 묶음마다 InstancedMesh 원기둥 (색 = 관 색 · 반지름 = r0 × width × (0.35 + 1.65 t) · 불투명도 1) ·
+ * userData.kind 'fcSeg' · group (묶음) · instChain (인스턴스 → drawn 번호) · 보임 = o.show[묶음] (끄기 = 숨김 · 다시 짓지 않는다).
+ * 반환 {group, pts: {묶음: [data 점 …]} (PNG 맞춤), st: {nSeg, r0}} */
+function buildForceChainGroup(sg, drawn, stats, box, o) {
+  o = o || {};
+  const r0 = fcBaseRadius(box) * (o.width > 0 ? o.width : 1);
+  const lists = {};
+  FC_DEF.groups.forEach(g => { lists[g[0]] = []; });
+  ((sg && sg.segs) || []).forEach(s => {
+    const c = drawn[s.k];
+    if (!c) return;
+    const g = fcGroupOf(c.type), t = fcThickT(c.fn, stats.lo, stats.hi);
+    const color = fcColorHex(o.color, g, t), r = r0 * (0.35 + 1.65 * t);
+    s.pieces.forEach(pc => { for (let i = 0; i + 1 < pc.length; i++) lists[g].push({ a: pc[i], b: pc[i + 1], color, r, k: s.k }); });
+  });
+  const group = new THREE.Group();
+  group.userData.isForceChains = true;
+  const up = new THREE.Vector3(0, 1, 0), A = new THREE.Vector3(), B = new THREE.Vector3(), d = new THREE.Vector3();
+  const mid = new THREE.Vector3(), sc = new THREE.Vector3(), m4 = new THREE.Matrix4(), col3 = new THREE.Color(), q = new THREE.Quaternion();
+  const pts = {};
+  let nSeg = 0;
+  Object.keys(lists).forEach(g => {
+    const list = lists[g];
+    pts[g] = [];
+    if (!list.length) return;
+    const im = new THREE.InstancedMesh(new THREE.CylinderGeometry(1, 1, 1, 8, 1, false),
+      new THREE.MeshPhongMaterial({ color: 0xffffff, shininess: 30, transparent: false, opacity: 1 }), list.length);
+    list.forEach((e, i) => {
+      A.set(e.a[0], e.a[2], e.a[1]);                            // data (x, y, z) → THREE (x, z, y)
+      B.set(e.b[0], e.b[2], e.b[1]);
+      d.subVectors(B, A);
+      const len = d.length();
+      if (len > 0) d.divideScalar(len); else d.copy(up);
+      q.setFromUnitVectors(up, d);
+      mid.addVectors(A, B).multiplyScalar(0.5);
+      sc.set(e.r, Math.max(len, 1e-6), e.r);
+      m4.compose(mid, q, sc);
+      im.setMatrixAt(i, m4);
+      im.setColorAt(i, col3.setHex(e.color));
+      pts[g].push(e.a, e.b);
+    });
+    im.instanceMatrix.needsUpdate = true;
+    if (im.instanceColor) im.instanceColor.needsUpdate = true;
+    im.frustumCulled = false;
+    im.renderOrder = 3;
+    im.userData.kind = 'fcSeg';
+    im.userData.group = g;
+    im.userData.instChain = list.map(e => e.k);
+    im.visible = !(o.show && o.show[g] === false);
+    group.add(im);
+    nSeg += list.length;
+  });
+  return { group, pts, st: { nSeg, r0 } };
+}
+
+/* 걷기 — 관 묶음 제거 (GPU 자원 해제) */
+function _teardownForceChains(state) {
+  const g = state.forceChainGroup;
+  if (!g) return;
+  if (state.scene) state.scene.remove(g);
+  g.traverse(o => {
+    if (o.isInstancedMesh && o.dispose) o.dispose();
+    if (o.geometry && o.geometry.dispose) o.geometry.dispose();
+    if (o.material && o.material.dispose) o.material.dispose();
+  });
+  state.forceChainGroup = null;
+}
+
+/* 메인 그리기 — 고르기 · 묶음 · 굵기 축 · 상자 안 토막 · 관 · 범례 칸 (fc-panel) · 조작 */
+function renderForceChains(state) {
+  const opt = fcOpt(state);
+  _teardownForceChains(state);
+  const box = (state.data || {}).box || {};
+  const sel = fcSelect(state._fcData || [], opt.n);
+  const stats = fcStats(sel.drawn);
+  const sg = fcSegments(sel.drawn, box);
+  const built = buildForceChainGroup(sg, sel.drawn, stats, box, { color: opt.color, width: opt.width, show: opt.show });
+  state.forceChainGroup = built.group;
+  if (state.scene) state.scene.add(built.group);
+  state._fcLast = { sel, stats, sg, built };
+  if (state.applyClip) state.applyClip();                        // 단면 뷰 (Y-슬라이스) — 새 관 재질에도
+  const panel = document.getElementById('fc-panel');
+  if (panel) {
+    panel.innerHTML = fcLegendHtml(stats, sel, opt, { nWrap: sg.nWrap, nCut: sg.nCut }, false);
+    panel.style.display = 'block';
+    _fcWire(state);
+  }
+}
+
+/* 범례 칸 조작 — 색 · 수 = 다시 그림 · 묶음 끄기 = 숨김만 · 범례 PNG · 그림 창.  요소마다 한 번만 단다 (범례를 다시 쓰면 새 요소 = 다시 단다) */
+function _fcWire(state) {
+  const opt = fcOpt(state);
+  const on = (id, ev, fn) => {
+    const x = document.getElementById(id);
+    if (!x || x['_fcWired_' + ev]) return;
+    x['_fcWired_' + ev] = true;
+    x.addEventListener(ev, () => fn(x));
+  };
+  on('fc-color', 'change', x => { opt.color = x.value === 'force' ? 'force' : 'group'; renderForceChains(state); });
+  on('fc-n', 'change', x => { opt.n = Math.max(0, Math.round(Number(x.value) || 0)); renderForceChains(state); });
+  FC_DEF.groups.forEach(g => on('fc-show-' + g[0], 'change', x => {
+    opt.show[g[0]] = !!x.checked;
+    if (state.forceChainGroup) state.forceChainGroup.traverse(m => { if (m.isInstancedMesh && m.userData.group === g[0]) m.visible = !!x.checked; });
+  }));
+  on('fc-legend-png', 'click', () => { const l = state._fcLast; if (l && l.sel.drawn.length) fcLegendPNG(fcLegendSpec(l.stats, l.sel, opt), 'legend_force_chains.png'); });
+  on('fc-view', 'click', () => showForceChainView(state));
+}
+
+/* force_chains.json 불러오기 (3d-data → force-chains · live · archive 같은 꼴) — 배열이 아니면 빈 배열 */
+function fcLoad(state) {
+  const url = String(state.dataUrl || '').replace('/3d-data', '/force-chains');
+  return fetch(url).then(r => r.json()).then(j => (Array.isArray(j) ? j : []));
+}
+
+/* Force Chain 체크박스 — 켬 = (처음 한 번) 불러와 그림 · 범례 칸 보임 / 끔 = 숨김.  stillOn = 불러오는 사이 껐는지 (껐으면 그리지 않는다) */
+async function forceChainToggle(state, on, stillOn) {
+  const panel = document.getElementById('fc-panel');
+  if (!on) {
+    if (state.forceChainGroup) state.forceChainGroup.visible = false;
+    if (panel) panel.style.display = 'none';
+    return;
+  }
+  if (!state._fcData) {
+    try { state._fcData = await fcLoad(state); } catch (e) { console.warn('Force chain data not available:', e); state._fcData = []; }
+  }
+  if (stillOn && !stillOn()) return;
+  if (state.forceChainGroup) {
+    state.forceChainGroup.visible = true;
+    if (panel) panel.style.display = 'block';
+    return;
+  }
+  renderForceChains(state);
+}
+
+/* 범례 그리기 (범례 PNG · 범례 넣은 합성 공용) — cx (2D 문맥) 의 (x, y) 에서 폭 w · S = 배율 · spec = fcLegendSpec · 글자 = 잉크 색 (#111111 · #444444) ·
+ * 견본 = 묶음 색 굵은 선 · 힘 모드 = 띠 (weak → strong) · draw = false 면 높이만 잰다.  반환 = 쓴 높이 */
+function fcDrawLegend(cx, spec, x, y, w, S, draw) {
+  const measure = (wt) => (txt, px) => { cx.font = wt + px + 'px Arial'; return cx.measureText(txt).width; };
+  const tFit = fitTextLines(measure('600 '), spec.title, w, 13 * S, 9 * S, 2);
+  const nFit = fitTextLines(measure(''), spec.note, w, 9.5 * S, 7 * S, 4);
+  let yy = y;
+  if (draw) { cx.fillStyle = '#111111'; cx.textAlign = 'left'; cx.textBaseline = 'alphabetic'; cx.font = '600 ' + tFit.px + 'px Arial'; }
+  tFit.lines.forEach(ln => { yy += tFit.px * 1.2; if (draw) cx.fillText(ln, x, yy); });
+  yy += 6 * S;
+  if (spec.mode === 'force') {
+    const bw = Math.round(w * 0.7), bh = 10 * S;
+    if (draw) {
+      for (let i = 0; i < bw; i++) { cx.fillStyle = '#' + fcForceHex(i / Math.max(1, bw - 1)).toString(16).padStart(6, '0'); cx.fillRect(x + i, yy, 1.5, bh); }
+      cx.fillStyle = '#444444'; cx.font = 10.5 * S + 'px Arial';
+      cx.textAlign = 'left'; cx.fillText('weak', x, yy + bh + 12 * S);
+      cx.textAlign = 'right'; cx.fillText('strong', x + bw, yy + bh + 12 * S);
+      cx.textAlign = 'left';
+    }
+    yy += bh + 18 * S;
+  }
+  (spec.rows || []).forEach(r => {
+    const cy = yy + 11 * S;
+    if (draw) {
+      if (r.color != null) {
+        cx.strokeStyle = '#' + r.color.toString(16).padStart(6, '0'); cx.lineWidth = 4 * S; cx.lineCap = 'round';
+        cx.beginPath(); cx.moveTo(x + 3 * S, cy - 4 * S); cx.lineTo(x + 25 * S, cy - 4 * S); cx.stroke();
+      }
+      cx.fillStyle = '#111111'; cx.font = '600 ' + 11.5 * S + 'px Arial'; cx.fillText(r.label, x + 32 * S, cy);
+      cx.fillStyle = '#444444'; cx.font = 10.5 * S + 'px Arial';
+      cx.fillText('n = ' + r.n + ' · ' + r.share + ' % of summed force', x + 85 * S, cy);
+    }
+    yy += 18 * S;
+  });
+  yy += 4 * S;
+  if (draw) { cx.fillStyle = '#444444'; cx.font = nFit.px + 'px Arial'; }
+  nFit.lines.forEach(ln => { yy += nFit.px * 1.25; if (draw) cx.fillText(ln, x, yy); });
+  return yy - y + 6 * S;
+}
+
+/* 범례 PNG (따로 · 6× · 흰 바탕 · exportColorbarPNG 와 같은 내려받기) */
+function fcLegendPNG(spec, fname) {
+  const S = 6, W = 380 * S, pad = 12 * S;
+  const mcv = document.createElement('canvas');
+  const mh = fcDrawLegend(mcv.getContext('2d'), spec, pad, pad, W - 2 * pad, S, false);
+  const cv = document.createElement('canvas');
+  cv.width = W;
+  cv.height = Math.round(mh + 2 * pad);
+  const cx = cv.getContext('2d');
+  cx.fillStyle = '#ffffff';
+  cx.fillRect(0, 0, cv.width, cv.height);
+  fcDrawLegend(cx, spec, pad, pad, W - 2 * pad, S, true);
+  const a2 = document.createElement('a');
+  a2.href = cv.toDataURL('image/png');
+  a2.download = fname || 'legend_force_chains.png';
+  document.body.appendChild(a2);
+  a2.click();
+  a2.remove();
+}
+
+/* 범례 넣은 PNG — 찍은 그림 (투명) 을 그대로 두고 오른쪽에 범례 (세로 가운데 · 배율 = 그림 높이 / 520 · tauPathsCompositePNG 와 같은 짜임).  반환 Promise<dataURL> */
+function fcCompositePNG(imgUrl, spec) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      try {
+        const W = img.width, H = img.height, S = Math.max(1, H / 520);
+        const gap = 26 * S, lw = 300 * S, padR = 14 * S;
+        const cv = document.createElement('canvas');
+        cv.width = Math.round(W + gap + lw + padR);
+        cv.height = H;
+        const cx = cv.getContext('2d');
+        cx.drawImage(img, 0, 0);
+        const lh = fcDrawLegend(cx, spec, 0, 0, lw, S, false);
+        fcDrawLegend(cx, spec, Math.round(W + gap), Math.max(0, Math.round((H - lh) / 2)), lw, S, true);
+        resolve(cv.toDataURL('image/png'));
+      } catch (e) { reject(e); }
+    };
+    img.onerror = () => reject(new Error('PNG 를 다시 읽지 못했다'));
+    img.src = imgUrl;
+  });
+}
+
 /* ── 반응 ↔ 기계(SE 소성변형·접촉) 공간 상관 팝업 ────────────────
  * Server-rendered figure (scripts/mech_reaction_correlation.py via
  * /mpm-lab/mech-reaction/<pid>.png).  OBSERVATIONAL: the model has NO
@@ -8806,55 +9243,10 @@ function wireControls(ctrlDiv, renderer, camera, controls, scene, state) {
     });
   });
 
-  // Force chain toggle
+  // Force chain — 체크박스 = 메인 겹쳐 그리기 (forceChainToggle · 접촉 쌍 색 · 상대 힘 굵기 · 범례 칸 fc-panel) · 그림 창 = "Force Chain View" 단추.
+  // 옛 판 (10-07 까지): 노랑 → 빨강 · 굵기 · 불투명도 = (fn − 최소)/(최대 − 최소) · TubeGeometry 하나씩 — 극단 하나가 축을 다 차지했다 (Force Chain 머리 주석)
   const fcToggle = ctrlDiv.querySelector('#force-chain-toggle');
-  if (fcToggle) {
-    fcToggle.addEventListener('change', async () => {
-      if (fcToggle.checked) {
-        if (!state.forceChainGroup) {
-          // Load and build force chain lines
-          const url = state.dataUrl.replace('/3d-data', '/force-chains');
-          try {
-            const res = await fetch(url);
-            const chains = await res.json();
-            // Limit to top N chains by force for performance
-            let display = chains;
-            if (chains.length > 5000) {
-              display = chains.sort((a, b) => b.fn - a.fn).slice(0, 5000);
-            }
-            console.log('Force chains loaded:', chains.length, ', displaying:', display.length);
-            const group = new THREE.Group();
-            if (display.length > 0) {
-              const fnValues = display.map(c => c.fn);
-              const fnMax = Math.max(...fnValues);
-              const fnMin = Math.min(...fnValues);
-              display.forEach(c => {
-                const p1 = new THREE.Vector3(...c.p1);
-                const p2 = new THREE.Vector3(...c.p2);
-                const t = fnMax > fnMin ? (c.fn - fnMin) / (fnMax - fnMin) : 0.5;
-                // Color: blue(low) → yellow → red(high)
-                const color = new THREE.Color();
-                color.setHSL(0.15 - t * 0.15, 1, 0.85 - t * 0.45);  // light yellow(low) → dark red(high)
-                const radius = 0.5 + t * 2.0;  // thicker = stronger
-                const curve = new THREE.LineCurve3(p1, p2);
-                const geo = new THREE.TubeGeometry(curve, 1, radius, 4, false);
-                const mat = new THREE.MeshBasicMaterial({color, transparent: true, opacity: 0.15 + t * 0.85});
-                group.add(new THREE.Mesh(geo, mat));
-              });
-            }
-            state.forceChainGroup = group;
-            scene.add(group);
-          } catch(e) {
-            console.warn('Force chain data not available:', e);
-          }
-        } else {
-          state.forceChainGroup.visible = true;
-        }
-      } else if (state.forceChainGroup) {
-        state.forceChainGroup.visible = false;
-      }
-    });
-  }
+  if (fcToggle) fcToggle.addEventListener('change', () => forceChainToggle(state, fcToggle.checked, () => fcToggle.checked));
 
   ctrlDiv.querySelectorAll('button').forEach(btn => {
     const action = btn.dataset.action;
@@ -8890,6 +9282,8 @@ function wireControls(ctrlDiv, renderer, camera, controls, scene, state) {
         showPathOnlyView(renderer, scene, camera, state);
       } else if (action === 'tauPathsView') {
         showTauPathsView(state);
+      } else if (action === 'forceChainView') {
+        showForceChainView(state);
       } else if (action === 'amCloseup') {
         showAMCloseupView(state);
       } else if (action === 'amContactCloseup') {
@@ -9174,6 +9568,96 @@ function showPathOnlyView(renderer, scene, camera, state) {
   });
 }
 
+/* ── 그림 창 공용 (All Paths View · Force Chain View · 10-07) — 상자 · 맥락 입자 · PNG (투명 · 잘림 없게 맞춤) 를 한 곳에서 ────────────── */
+
+/* 상자 (테두리) · 바닥 격자 · 축 글자를 셀 c ({x0, y0} · 크기 = 상자) 자리에 짓는다 — show = 상자 · 격자 보임 (축 글자는 PNG 에서만 숨김).
+ * 반환 {group (장면에 붙이는 것은 부르는 쪽), bbLine, grid} */
+function figFrameGroup(box, c, show) {
+  const bw = box.x_max - box.x_min, bh = box.z_max - box.z_min, bd = box.y_max - box.y_min;
+  const group = new THREE.Group();
+  const fx = c.x0 + bw / 2, fy = (box.z_min + box.z_max) / 2, fz = c.y0 + bd / 2;
+  const bbLine = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(bw, bh, bd)), new THREE.LineBasicMaterial({ color: 0x999999 }));
+  bbLine.position.set(fx, fy, fz);
+  bbLine.userData.isBbox = true;
+  const grid = new THREE.GridHelper(Math.max(bw, bd) * 1.2, 20, 0xcccccc, 0xe0e0e0);
+  grid.position.set(fx, box.z_min, fz);
+  grid.userData.isGrid = true;
+  bbLine.visible = !!show;
+  grid.visible = !!show;
+  group.add(bbLine);
+  group.add(grid);
+  addAxisLabels(group, { x_min: c.x0, x_max: c.x0 + bw, y_min: c.y0, y_max: c.y0 + bd, z_min: box.z_min, z_max: box.z_max });
+  return { group, bbLine, grid };
+}
+
+/* 맥락 입자 — SE (본래 색 · 흐리게) · AM (상별 색 · 흐리게) · 관보다 먼저 (renderOrder −1) · wrap = 셀 c 안으로 접는다 (관이 입자를 꿴다).
+ * 반환 {se (없으면 null), am []} — 장면에 붙이기 · 보임 (켬 ∧ 불투명도 > 0) 은 부르는 쪽 */
+function figContextMeshes(state, c, wrap, seOpa, amOpa) {
+  const wp = ps => (wrap ? tauPathsWrapParticles(ps || [], c) : (ps || []));
+  const se = createInstancedSpheres(wp(state.seParticles), 12, COL.SE, seOpa, true);
+  if (se) { se.userData.isSEContext = true; se.renderOrder = -1; }
+  const am = [];
+  [[state.amPParticles, COL.AM_P], [state.amSParticles, COL.AM_S]].forEach(([ps, cc]) => {
+    const m = createInstancedSpheres(wp(ps), 16, cc, Math.max(0.01, amOpa), true);
+    if (!m) return;
+    m.userData.isAMContext = true;
+    m.renderOrder = -1;
+    am.push(m);
+  });
+  return { se, am };
+}
+
+/* PNG — 축 글자만 숨기고 투명 배경 · o.scale× (captureHighRes) · o.fit = 찍는 동안만 o.pts (three 좌표 — 상자 꼭짓점 · 그린 점 · 바닥 격자 · 맥락 입자
+ * 빼고) 가 NDC ±(1 − o.margin) 안 · 카메라 앞에 들도록 시선 방향으로만 뒤로 (tauPathsFrustumFit) · 찍은 뒤 시점 · far · 배경 · 축 글자를 그대로 되돌린다.
+ * 반환 {url, ff (맞춤 결과 · 끄면 null)} */
+function figCapturePNG(r2, s2, c2, ctrl2, o) {
+  o = o || {};
+  const wantFit = !!o.fit;
+  const hidden = [];
+  s2.traverse(x => { if (x.userData && x.userData.isAxisLabel && x.visible) { x.visible = false; hidden.push(x); } });
+  const prevBg = s2.background;
+  const prevClear = new THREE.Color();
+  r2.getClearColor(prevClear);
+  const prevAlpha = r2.getClearAlpha();
+  s2.background = null;
+  r2.setClearColor(0x000000, 0);
+  const cam0 = { pos: c2.position.clone(), far: c2.far };
+  let ff = null;
+  if (wantFit) {
+    const up = c2.up || { x: 0, y: 1, z: 0 };
+    ff = tauPathsFrustumFit({ pos: [c2.position.x, c2.position.y, c2.position.z], up: [up.x, up.y, up.z], fov: c2.fov, aspect: c2.aspect, near: c2.near },
+                            [ctrl2.target.x, ctrl2.target.y, ctrl2.target.z], o.pts || [], o.margin);
+    if (ff.moved) {
+      c2.position.set(ff.pos[0], ff.pos[1], ff.pos[2]);
+      const farNeed = ff.dist + 2 * (Number(o.maxDim) || 50);
+      if (!(c2.far > farNeed)) { c2.far = farNeed; c2.updateProjectionMatrix(); }
+      c2.updateMatrixWorld();
+    }
+  }
+  let url;
+  try {
+    url = captureHighRes(r2, s2, c2, o.scale || 4);
+  } finally {
+    if (ff && ff.moved) {                                         // 시점을 정확히 되돌린다 (자리 · far)
+      c2.position.copy(cam0.pos);
+      if (c2.far !== cam0.far) { c2.far = cam0.far; c2.updateProjectionMatrix(); }
+      c2.updateMatrixWorld();
+    }
+    s2.background = prevBg;
+    r2.setClearColor(prevClear, prevAlpha);
+    hidden.forEach(x => { x.visible = true; });
+    r2.render(s2, c2);
+  }
+  return { url, ff };
+}
+
+/* PNG 안내 줄 — 맞춤 끔 · 물러나 찍음 (몇 배) · 그대로 */
+function figPngNote(fitOn, ff) {
+  if (!fitOn) return 'PNG = 화면 시점 그대로 (잘림 없게 맞춤 끔 — 화면 밖 내용은 잘린다)';
+  if (ff && ff.moved) return 'PNG = 잘림 없게 화면 시점보다 ' + (ff.dist / Math.max(1e-9, ff.dist0)).toFixed(2) + ' 배 멀리서 찍음 (화면 시점은 그대로)';
+  return 'PNG = 화면 시점 그대로 (상자 · 그린 내용이 다 화면 안)';
+}
+
 /* ── All Paths View — Tortuosity 후보 경로 여럿을 그린 그림 창 (2026-10-07 · 같은 날 2판) ─────────────────────────────────────
  * 처음 값 = 메인 View Mode "Tortuosity 후보 경로 (여럿)" 의 지금 값 (범위 · τ 작은 N · SE / AM 불투명도 · 관 굵기 · 끝점 — 없으면 기본) ·
  * 시점 = 메인 화면의 시점 (있으면).  ★ 창 상태 (ws) 는 창 안에서만 — 메인 옵션 객체를 고치지 않는다 (없는 범위여도 창 안에서만 모든 관통 클러스터).
@@ -9307,27 +9791,18 @@ function showTauPathsView(state) {
     });
   };
 
-  // 상자 · 바닥 격자 · 축 글자 = 그린 셀 (Path Only View 와 같은 모양 · PNG 에 남는다 · 체크박스로 끔 — 축 글자는 PNG 에서만 숨김)
+  // 상자 · 바닥 격자 · 축 글자 = 그린 셀 (Path Only View 와 같은 모양 · PNG 에 남는다 · 체크박스로 끔 — 축 글자는 PNG 에서만 숨김 · figFrameGroup)
   let cell = null, frame = null, bbLine = null, grid = null;
   const buildFrame = c => {
     if (frame) { s2.remove(frame); dispose3(frame); }
-    frame = new THREE.Group();
-    const fx = c.x0 + bw / 2, fy = (box.z_min + box.z_max) / 2, fz = c.y0 + bd / 2;
-    bbLine = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(bw, bh, bd)), new THREE.LineBasicMaterial({ color: 0x999999 }));
-    bbLine.position.set(fx, fy, fz);
-    bbLine.userData.isBbox = true;
-    grid = new THREE.GridHelper(Math.max(bw, bd) * 1.2, 20, 0xcccccc, 0xe0e0e0);
-    grid.position.set(fx, box.z_min, fz);
-    grid.userData.isGrid = true;
-    bbLine.visible = ws.frame;
-    grid.visible = ws.frame;
-    frame.add(bbLine);
-    frame.add(grid);
-    addAxisLabels(frame, { x_min: c.x0, x_max: c.x0 + bw, y_min: c.y0, y_max: c.y0 + bd, z_min: box.z_min, z_max: box.z_max });
+    const f = figFrameGroup(box, c, ws.frame);
+    frame = f.group;
+    bbLine = f.bbLine;
+    grid = f.grid;
     s2.add(frame);
   };
 
-  // 맥락 입자 — SE (본래 색 · 흐리게) · AM (상별 색 · 흐리게) · 관보다 먼저 (renderOrder −1) · 'cell' · 'fold' = 그린 셀 안으로 접는다 (관이 입자를 꿴다)
+  // 맥락 입자 — 'cell' · 'fold' = 그린 셀 안으로 접는다 (관이 입자를 꿴다 · figContextMeshes)
   let ctxKey = null, seCtx = null, amCtx = [];
   const seOn = () => { if (seCtx) seCtx.visible = ws.seOn && ws.seOpa > 0; };     // 보임 = 체크박스 켬 ∧ 불투명도 > 0
   const amOn = () => { amCtx.forEach(m => { m.visible = ws.amOn && ws.amOpa > 0; }); };
@@ -9337,18 +9812,11 @@ function showTauPathsView(state) {
     ctxKey = key;
     if (seCtx) { s2.remove(seCtx); dispose3(seCtx); seCtx = null; }
     amCtx.forEach(m => { s2.remove(m); dispose3(m); });
-    amCtx = [];
-    const wp = ps => (wrap ? tauPathsWrapParticles(ps || [], c) : (ps || []));
-    seCtx = createInstancedSpheres(wp(state.seParticles), 12, COL.SE, ws.seOpa, true);
-    if (seCtx) { seCtx.userData.isSEContext = true; seCtx.renderOrder = -1; s2.add(seCtx); }
-    [[state.amPParticles, COL.AM_P], [state.amSParticles, COL.AM_S]].forEach(([ps, cc]) => {
-      const m = createInstancedSpheres(wp(ps), 16, cc, Math.max(0.01, ws.amOpa), true);
-      if (!m) return;
-      m.userData.isAMContext = true;
-      m.renderOrder = -1;
-      s2.add(m);
-      amCtx.push(m);
-    });
+    const cm = figContextMeshes(state, c, wrap, ws.seOpa, ws.amOpa);
+    seCtx = cm.se;
+    amCtx = cm.am;
+    if (seCtx) s2.add(seCtx);
+    amCtx.forEach(m => s2.add(m));
     seOn();
     amOn();
   };
@@ -9438,46 +9906,10 @@ function showTauPathsView(state) {
   };
   const pngBtn = el('taup-png-btn');
   if (pngBtn) pngBtn.addEventListener('click', async () => {
-    const hidden = [];
-    s2.traverse(o => { if (o.userData && o.userData.isAxisLabel && o.visible) { o.visible = false; hidden.push(o); } });
-    const prevBg = s2.background;
-    const prevClear = new THREE.Color();
-    r2.getClearColor(prevClear);
-    const prevAlpha = r2.getClearAlpha();
-    s2.background = null;
-    r2.setClearColor(0x000000, 0);
-    const cam0 = { pos: c2.position.clone(), far: c2.far };
-    let ff = null;
-    if (ws.fit) {
-      const up = c2.up || { x: 0, y: 1, z: 0 };
-      ff = tauPathsFrustumFit({ pos: [c2.position.x, c2.position.y, c2.position.z], up: [up.x, up.y, up.z], fov: c2.fov, aspect: c2.aspect, near: c2.near },
-                              [ctrl2.target.x, ctrl2.target.y, ctrl2.target.z], fitPoints(), VD.margin);
-      if (ff.moved) {
-        c2.position.set(ff.pos[0], ff.pos[1], ff.pos[2]);
-        if (!(c2.far > ff.dist + 2 * maxDim)) { c2.far = ff.dist + 2 * maxDim; c2.updateProjectionMatrix(); }
-        c2.updateMatrixWorld();
-      }
-    }
-    let url;
-    try {
-      url = captureHighRes(r2, s2, c2, 4);
-    } finally {
-      if (ff && ff.moved) {                                       // 시점을 정확히 되돌린다 (자리 · far)
-        c2.position.copy(cam0.pos);
-        if (c2.far !== cam0.far) { c2.far = cam0.far; c2.updateProjectionMatrix(); }
-        c2.updateMatrixWorld();
-      }
-      s2.background = prevBg;
-      r2.setClearColor(prevClear, prevAlpha);
-      hidden.forEach(o => { o.visible = true; });
-      r2.render(s2, c2);
-    }
+    const cap = figCapturePNG(r2, s2, c2, ctrl2, { fit: ws.fit, pts: fitPoints(), margin: VD.margin, maxDim, scale: 4 });
+    let url = cap.url;
     const note = el('taup-m-png-note');
-    if (note) {
-      note.textContent = !ws.fit ? 'PNG = 화면 시점 그대로 (잘림 없게 맞춤 끔 — 화면 밖 내용은 잘린다)'
-        : (ff && ff.moved ? 'PNG = 잘림 없게 화면 시점보다 ' + (ff.dist / Math.max(1e-9, ff.dist0)).toFixed(2) + ' 배 멀리서 찍음 (화면 시점은 그대로)'
-          : 'PNG = 화면 시점 그대로 (상자 · 경로 · 끝점이 다 화면 안)');
-    }
+    if (note) note.textContent = figPngNote(ws.fit, cap.ff);
     const cbIn = el('taup-m-cbar-in');
     if (cbIn && cbIn.checked) url = await tauPathsCompositePNG(url, tauPathsColorbarSpec(col));
     await saveWithDialog(url, tauPathsPngName(col), pngBtn, 'PNG 다운로드');
@@ -9490,6 +9922,199 @@ function showTauPathsView(state) {
   const close = () => { cancelAnimationFrame(animId); dispose3(s2); r2.dispose(); overlay.remove(); };
   overlay.onclick = (e) => { if (e.target === overlay) close(); };
   [overlay.querySelector('.path-modal-close'), overlay.querySelector('.taup-close')].forEach(x => { if (x) x.addEventListener('click', close); });
+}
+
+/* ── Force Chain View — force chain 만 그린 그림 창 (2026-10-07) ──────────────────────────────────────────────────────
+ * 처음 값 = 메인 Force Chain 옵션 (색 · 수 · 묶음 · 굵기 — 없으면 기본) · 시점 = 메인 화면 시점 (있으면).  ★ 창 상태 (ws) 는 창 안에서만 — 메인 옵션을 고치지 않는다.
+ * 창 조작: 색 (접촉 쌍 · 힘) · 수 · 묶음 끄기 · SE · AM 맥락 (불투명도) · 상자 · 바닥 격자 · PNG 잘림 없게 맞춤 (기본 켬) · 범례 넣기 (기본 끔).
+ * 관 = 원래 셀 안 (주기 경계를 넘는 접촉 = 면에서 잘라 반대 면 · fcSegments) · 맥락 입자도 셀 안으로 접는다 (figContextMeshes) · PNG = 투명 · 4× · 축 글자 숨김 ·
+ * 잘림 없게 맞춤 (figCapturePNG — 상자 꼭짓점 · 보이는 관 양 끝) · 범례 PNG = 따로 (fcLegendPNG) · 범례 넣기 = 합성 (fcCompositePNG — 랩 원칙: 기본은 범례 밖).
+ * ⚠ fn 은 상대 크기로만 (Force Chain 머리 주석 — 화면 · PNG 에 절대값 · 단위 없음). */
+async function showForceChainView(state) {
+  if (!state._fcData) {
+    try { state._fcData = await fcLoad(state); } catch (e) { console.warn('Force chain data not available:', e); state._fcData = []; }
+  }
+  const mopt = fcOpt(state);                                     // 읽기만 — 창은 메인 옵션을 고치지 않는다
+  const box = (state.data || {}).box || {};
+  const ws = { color: mopt.color === 'force' ? 'force' : 'group', n: mopt.n, show: Object.assign({}, mopt.show), width: mopt.width,
+               fit: true, frame: true, legendIn: false, seOn: true, seOpa: 0.08, amOn: true, amOpa: 0.12 };
+  let sel = fcSelect(state._fcData, ws.n);
+  if (!sel.drawn.length) {
+    alert('Force chain 자료가 없습니다 — force_chains.json (접촉 분석 단계 산출물) 이 필요합니다.');
+    return;
+  }
+  let stats = fcStats(sel.drawn), sg = fcSegments(sel.drawn, box);
+  const bw = box.x_max - box.x_min, bh = box.z_max - box.z_min, bd = box.y_max - box.y_min;
+  const cell0 = { x0: Number(box.x_min) || 0, y0: Number(box.y_min) || 0, Lx: bw, Ly: bd };
+  const f2 = v => Number(v).toFixed(2);
+  const pct = v => Math.round(Math.max(0, Math.min(1, Number(v))) * 100);
+  const lab = 'display:inline-flex;align-items:center;gap:4px';
+  const selHtml = (id, cur, opts) => '<select id="' + id + '" style="font-size:12px">'
+    + opts.map(o => '<option value="' + o[0] + '"' + (String(o[0]) === String(cur) ? ' selected' : '') + '>' + o[1] + '</option>').join('') + '</select>';
+  const titleOf = () => 'Force Chain — ' + sel.drawn.length + ' 개 (상위 10 % 접촉 중 가장 센 순 · 색 = ' + (ws.color === 'force' ? '상대 힘' : '접촉 쌍') + ')';
+  const gChecks = FC_DEF.groups.filter(g => g[0] !== 'other' || stats.groups[3].n > 0).map(g => '<label style="' + lab + '"><input type="checkbox" id="fcv-show-'
+    + g[0] + '"' + (ws.show[g[0]] !== false ? ' checked' : '') + '> <span style="display:inline-block;width:14px;height:4px;border-radius:2px;background:#'
+    + g[2].toString(16).padStart(6, '0') + '"></span> ' + g[1] + '</label>').join('');
+  const overlay = document.createElement('div');
+  overlay.className = 'path-modal-overlay';
+  overlay.innerHTML = `
+    <div class="path-modal" style="width:820px;max-width:94vw">
+      <button class="path-modal-close">&times;</button>
+      <div id="fcv-title" style="font-size:14px;font-weight:bold;margin-bottom:8px;text-align:center">${titleOf()}</div>
+      <div id="fcv-container" style="width:100%;height:520px;border-radius:8px;overflow:hidden;background:#f5f5f5;position:relative"></div>
+      <div class="path-modal-pick" style="display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px;margin-top:8px;font-size:12.5px;color:#444">
+        <label style="${lab}">색 ${selHtml('fcv-color', ws.color, [['group', '접촉 쌍'], ['force', '힘 (상대)']])}</label>
+        <label style="${lab}">수 ${selHtml('fcv-n', ws.n, FC_DEF.ns.map(n => [n, n ? n + ' 개' : '전부']))}</label>
+        ${gChecks}
+      </div>
+      <div id="fcv-info" class="path-modal-info" style="text-align:center;margin-top:6px">${fcLegendHtml(stats, sel, ws, { nWrap: sg.nWrap, nCut: sg.nCut }, true)}</div>
+      <div class="path-modal-context" style="display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px;margin-top:8px;font-size:12.5px;color:#444">
+        <label style="${lab}"><input type="checkbox" id="fcv-se" checked> SE context</label>
+        <input type="range" id="fcv-se-op" min="0" max="100" value="${pct(ws.seOpa)}" style="width:70px">
+        <span id="fcv-se-op-val" style="display:inline-block;width:30px">${f2(ws.seOpa)}</span>
+        <label style="${lab}"><input type="checkbox" id="fcv-am" checked> AM</label>
+        <input type="range" id="fcv-am-op" min="0" max="100" value="${pct(ws.amOpa)}" style="width:70px">
+        <span id="fcv-am-op-val" style="display:inline-block;width:30px">${f2(ws.amOpa)}</span>
+        <label style="${lab}"><input type="checkbox" id="fcv-frame" checked> 상자 · 바닥 격자</label>
+      </div>
+      <div class="path-modal-context" style="display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px;margin-top:6px;font-size:12.5px;color:#444">
+        <label style="${lab}" title="모든 관의 반지름에 곱한다 (0.5–3×) — 상대 힘 축 (5–95 백분위) 은 그대로">관 굵기</label>
+        <input type="range" id="fcv-width" min="50" max="300" step="10" value="${Math.round(Number(ws.width) * 100)}" style="width:80px">
+        <span id="fcv-width-val" style="display:inline-block;width:34px">${Number(ws.width).toFixed(1)}×</span>
+        <label style="${lab}" title="켬 (기본) = PNG 를 찍는 동안만 카메라를 시선 방향으로 뒤로 물려 상자 꼭짓점 · 보이는 관이 다 들어가게 (바닥 격자 · 맥락 입자는 빼고 셈 · 찍은 뒤 화면 시점 그대로) · 끔 = 화면 시점 그대로 찍는다"><input type="checkbox" id="fcv-fit" checked> PNG 잘림 없게 맞춤</label>
+        <label style="${lab}" title="기본 끔 — 랩 원칙 (docs/report_making_principles.md §2): 범례 · 주석은 그림 밖에 두고 편집 가능하게.  범례는 '범례 PNG' 로 따로 받아 슬라이드에서 붙인다.  켜면 그림 오른쪽에 범례를 넣은 한 장"><input type="checkbox" id="fcv-legend-in"> 범례 넣기</label>
+      </div>
+      <div style="text-align:center;margin-top:3px;font-size:10.5px;color:#888">범례는 그림 밖 (랩 원칙) — 기본 PNG = force chain 그림만 (투명 · 4×) · 범례 PNG 따로 · '범례 넣기' 를 켜면 한 장으로</div>
+      <div class="path-modal-actions">
+        <button id="fcv-png-btn">PNG 다운로드</button>
+        <button id="fcv-legend-btn">범례 PNG</button>
+        <button class="fcv-close">닫기</button>
+      </div>
+      <div id="fcv-png-note" style="text-align:center;margin-top:3px;font-size:10.5px;color:#888"></div>
+    </div>`;
+  document.body.appendChild(overlay);
+
+  const el = id => document.getElementById(id);
+  const container = el('fcv-container');
+  const r2 = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true, alpha: true });
+  r2.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  r2.setSize(container.clientWidth, container.clientHeight);
+  r2.setClearColor(0xf5f5f5, 1);
+  container.appendChild(r2.domElement);
+  const s2 = new THREE.Scene();
+  const c2 = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.1, 10000);
+  const ctrl2 = new OrbitControls(c2, r2.domElement);
+  ctrl2.enableDamping = true;
+  ctrl2.dampingFactor = 0.12;
+  s2.add(new THREE.AmbientLight(0xffffff, 0.55));
+  const dl = new THREE.DirectionalLight(0xffffff, 0.8);
+  dl.position.set(1, 1.5, 1);
+  s2.add(dl);
+  const maxDim = Math.max(bw, bh, bd) || 50;
+  {                                                               // 시점 — 메인 화면의 시점 (있으면) · 없으면 Path Only View 와 같은 기본
+    const cx = (box.x_min + box.x_max) / 2, cy = (box.z_min + box.z_max) / 2, cz = (box.y_min + box.y_max) / 2;
+    if (state.camera && state.controls && state.camera.position && state.controls.target) {
+      c2.position.copy(state.camera.position);
+      ctrl2.target.copy(state.controls.target);
+    } else {
+      c2.position.set(cx + maxDim * 1.2, cy + maxDim * 0.8, cz + maxDim * 1.2);
+      ctrl2.target.set(cx, cy, cz);
+    }
+    ctrl2.update();
+  }
+  const dispose3 = g => {
+    if (!g) return;
+    g.traverse(o => {
+      if (o.isInstancedMesh && o.dispose) o.dispose();
+      if (o.geometry && o.geometry.dispose) o.geometry.dispose();
+      if (o.material) {
+        if (o.material.map && o.material.map.dispose) o.material.map.dispose();
+        if (o.material.dispose) o.material.dispose();
+      }
+    });
+  };
+
+  // 상자 · 바닥 격자 · 축 글자 (원래 셀) · 맥락 입자 (셀 안으로 접음) · 관
+  const fr = figFrameGroup(box, cell0, ws.frame);
+  s2.add(fr.group);
+  const cm = figContextMeshes(state, cell0, true, ws.seOpa, ws.amOpa);
+  if (cm.se) s2.add(cm.se);
+  cm.am.forEach(m => s2.add(m));
+  const seOn = () => { if (cm.se) cm.se.visible = ws.seOn && ws.seOpa > 0; };      // 보임 = 체크박스 켬 ∧ 불투명도 > 0
+  const amOn = () => { cm.am.forEach(m => { m.visible = ws.amOn && ws.amOpa > 0; }); };
+  seOn();
+  amOn();
+  let built = null;
+  const buildChains = () => {
+    if (built) { s2.remove(built.group); dispose3(built.group); }
+    built = buildForceChainGroup(sg, sel.drawn, stats, box, { color: ws.color, width: ws.width, show: ws.show });
+    s2.add(built.group);
+  };
+  const setText = () => {
+    const t = el('fcv-title'); if (t) t.textContent = titleOf();
+    const i = el('fcv-info'); if (i) i.innerHTML = fcLegendHtml(stats, sel, ws, { nWrap: sg.nWrap, nCut: sg.nCut }, true);
+    const nt = el('fcv-png-note'); if (nt) nt.textContent = '';    // 지난 PNG 안내는 지난 그림의 것
+  };
+  const reselect = () => { sel = fcSelect(state._fcData, ws.n); stats = fcStats(sel.drawn); sg = fcSegments(sel.drawn, box); buildChains(); setText(); };
+  buildChains();
+  setText();
+
+  // 조작
+  const on = (id, ev, fn) => { const x = el(id); if (x) x.addEventListener(ev, () => fn(x)); };
+  on('fcv-color', 'change', x => { ws.color = x.value === 'force' ? 'force' : 'group'; buildChains(); setText(); });
+  on('fcv-n', 'change', x => { ws.n = Math.max(0, Math.round(Number(x.value) || 0)); reselect(); });
+  FC_DEF.groups.forEach(g => on('fcv-show-' + g[0], 'change', x => {
+    ws.show[g[0]] = !!x.checked;
+    if (built) built.group.traverse(m => { if (m.isInstancedMesh && m.userData.group === g[0]) m.visible = !!x.checked; });
+  }));
+  on('fcv-se', 'change', x => { ws.seOn = !!x.checked; seOn(); });
+  on('fcv-se-op', 'input', x => {
+    ws.seOpa = Math.max(0, Math.min(1, Number(x.value) / 100));
+    if (cm.se) { cm.se.material.opacity = ws.seOpa; cm.se.material.needsUpdate = true; }
+    const v = el('fcv-se-op-val'); if (v) v.textContent = ws.seOpa.toFixed(2);
+    seOn();
+  });
+  on('fcv-am', 'change', x => { ws.amOn = !!x.checked; amOn(); });
+  on('fcv-am-op', 'input', x => {
+    ws.amOpa = Math.max(0, Math.min(1, Number(x.value) / 100));
+    cm.am.forEach(m => { m.material.opacity = Math.max(0.01, ws.amOpa); m.material.needsUpdate = true; });
+    const v = el('fcv-am-op-val'); if (v) v.textContent = ws.amOpa.toFixed(2);
+    amOn();
+  });
+  on('fcv-frame', 'change', x => { ws.frame = !!x.checked; fr.bbLine.visible = ws.frame; fr.grid.visible = ws.frame; });
+  on('fcv-width', 'input', x => {
+    ws.width = Math.max(0.5, Math.min(3, Number(x.value) / 100));
+    const v = el('fcv-width-val'); if (v) v.textContent = ws.width.toFixed(1) + '×';
+    buildChains();
+  });
+  on('fcv-fit', 'change', x => { ws.fit = !!x.checked; });
+  on('fcv-legend-in', 'change', x => { ws.legendIn = !!x.checked; });
+
+  // PNG 다운로드 — 투명 4× · 축 글자 숨김 · 잘림 없게 맞춤 (상자 꼭짓점 · 보이는 관 양 끝 — 바닥 격자 · 맥락 입자 빼고) · 범례 넣기면 합성본
+  const fitPoints = () => {
+    const pts = [];
+    if (fr.bbLine.visible) {
+      [cell0.x0, cell0.x0 + bw].forEach(x => [box.z_min, box.z_max].forEach(z => [cell0.y0, cell0.y0 + bd].forEach(y => pts.push([x, z, y]))));
+    }
+    FC_DEF.groups.forEach(g => { if (ws.show[g[0]] !== false) ((built && built.pts[g[0]]) || []).forEach(q => pts.push([q[0], q[2], q[1]])); });
+    return pts;
+  };
+  const pngBtn = el('fcv-png-btn');
+  if (pngBtn) pngBtn.addEventListener('click', async () => {
+    const cap = figCapturePNG(r2, s2, c2, ctrl2, { fit: ws.fit, pts: fitPoints(), margin: TAUP_VIEW_DEF.margin, maxDim, scale: 4 });
+    let url = cap.url;
+    const note = el('fcv-png-note'); if (note) note.textContent = figPngNote(ws.fit, cap.ff);
+    if (ws.legendIn) url = await fcCompositePNG(url, fcLegendSpec(stats, sel, ws));
+    await saveWithDialog(url, fcPngName(stats, sel, ws), pngBtn, 'PNG 다운로드');
+  });
+  on('fcv-legend-btn', 'click', () => fcLegendPNG(fcLegendSpec(stats, sel, ws), 'legend_force_chains.png'));
+
+  let animId;
+  const anim = () => { animId = requestAnimationFrame(anim); ctrl2.update(); r2.render(s2, c2); };
+  anim();
+  const close = () => { cancelAnimationFrame(animId); dispose3(s2); r2.dispose(); overlay.remove(); };
+  overlay.onclick = (e) => { if (e.target === overlay) close(); };
+  [overlay.querySelector('.path-modal-close'), overlay.querySelector('.fcv-close')].forEach(x => { if (x) x.addEventListener('click', close); });
 }
 
 /* ── AM Close-up View ───────────────────────────────────────

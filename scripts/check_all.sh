@@ -196,6 +196,7 @@ run 'webapp: atoms_only_viewer'   python3 webapp/test_atoms_only_viewer.py  # 10
 run 'webapp: atoms_only_porosity' python3 webapp/test_atoms_only_porosity.py  # 10-07 atom + 판 메시만 — 공극률 · 두께 (접촉 분석과 같은 함수 · real_14 비트 같음) · 입자 윗면 기준 (덜 다져진 프레임) · 덤프 상자 · 기공 보기 영역 윗면
 run 'webapp: dem_pore_path_view'  python3 webapp/test_dem_pore_path_view.py  # 10-07 DEM 3D — 기공 (빈 공간 · 격자 추정) 보기 · Path Only View 가 화면의 경로를 연다 (옛 판: 늘 0 번 클러스터)
 run 'webapp: tau_paths_view'      python3 webapp/test_tau_paths_view.py     # 10-07 DEM 3D — Tortuosity 후보 경로 여럿 (τ 색 · 금색 = 가장 작은 τ · 주기 반 토막) · All Paths View PNG (투명 4× · 컬러바 따로 / 넣기)
+run 'webapp: force_chain_view'    python3 webapp/test_force_chain_view.py   # 10-07 DEM 3D — Force Chain (접촉 쌍 색 · 굵기 = 5–95 백분위 상대 힘 · 묶음 수 · 힘 합 몫 · fn 절대값 없음 · 상자 안) · Force Chain View PNG (투명 4× · 잘림 없게 맞춤 · 범례 따로 / 넣기)
 run 'webapp: viewer_coordination' python3 webapp/test_viewer_coordination.py  # 10-06 3D 뷰어 배위수 보기 — 입자별 CN 평균 = core 함수 = 보고값 (real_14 정확히) · 캐시 스키마 12 (live · archive) · 범례 PC/SC
 run 'webapp: viewer_am_contacts'  python3 webapp/test_viewer_am_contacts.py   # 10-06 AM 접촉 확대 — /am-contacts (live · archive) · 최소영상 · 합집합 = 생산 함수 (real_14) · cap 각 · 4× 투명 PNG
 run 'webapp: network_current_view' python3 webapp/test_network_current_view.py  # 10-07 ⚡ 전류 흐름 (DEM 뷰어) — --dump-raw-dir 비트 동일 · 한 번 덤프 도구 (게시 파일 무변경 · 세대 glob) · /network-current (상위 N · 단면 보존 · Tellegen) · 뷰어 함수 (node)
