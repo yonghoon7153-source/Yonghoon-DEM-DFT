@@ -39,6 +39,8 @@
   그 밖 = null): launcher_root (읽은 ROOT · resolve) · manifest_sha256 (판정에 쓴 manifest **바이트** 의 sha256 — 같은 바이트를 해석했다) · seal_fp
   (그 manifest 의 seal.code_fp) · launch_sha (git.sha).  v1.3 배포 관문 (`lhs_release_build.v13_reread_problems`) 이 배치 뿌리 · 지금 manifest · 발사 봉인과
   맞댄다 — 다른 ROOT · 봉인 · 읽은 뒤 바뀐 manifest 의 기록 = 거부 (옛 v2 기록 = 실행 신원 없음 = 진단 모드에서만).
+  ★ 10-07 G2RR4-01 (Codex 세대 2 재검증 4 §2) — 상세 계약 (`CASE_CHECK_IDS` · `LAUNCHER_META_IDS` · `LAUNCHER_COHORT_META_IDS` · `launcher_detail_problems`):
+  배포 관문이 같은 함수로 상세 (meta · cases · checks) ↔ 요약 (n_fail · read_n · M3) 을 다시 센다 (스키마 v3 그대로 — 기록 꼴은 바뀌지 않았다 · 검사가 늘었다).
 ⚠ 한계 — 도장 · 레코드 · 모든 사본 · 증서를 한 실행 안에서 일관되게 함께 바꾼 전면 위조는 재계산 없이 못 잡는다 (TAU_SAME_GEN_BASIS · Codex §3 의 "보증 아님" 그대로).
    이 도구의 PASS 는 게시 · 인계가 쓰는 계약을 **지금 파일에** 다시 부른 결과다 — 숫자의 물리적 정확성 · 실험 대조가 아니다.
 
@@ -52,6 +54,7 @@
 from __future__ import annotations
 
 import argparse
+import collections
 import contextlib
 import hashlib
 import io
@@ -74,6 +77,15 @@ IDENTITY_KEYS = ('launcher_root', 'manifest_sha256', 'seal_fp', 'launch_sha')
 BRANCHES = (('full', 'sigma_full', 'sigma_full_status', 'sigma_full_reason', 'solve_certificate_full'),
             ('bulk_only', 'sigma_bulk_net', 'sigma_bulk_net_status', 'sigma_bulk_net_reason', 'solve_certificate_bulk_net'),
             ('constriction_only', 'sigma_constr_net', 'sigma_constr_net_status', 'sigma_constr_net_reason', 'solve_certificate_constr_net'))
+#: ★ 10-07 G2RR4-01 (Codex 세대 2 재검증 4 §2) — launcher-root 판정 JSON 의 **상세 계약** — 생산자 (`run_launcher` · `reread_case`) 가 내는 검사 ID (이름의 첫 낱말) 를
+#:   한곳에 둔다.  v1.3 배포 관문 (`lhs_release_build.v13_reread_problems`) 이 `launcher_detail_problems` (같은 함수) 로 상세를 다시 센다 — 옛 배포 관문은 요약
+#:   (n_fail · 집합 칸 · 신원) 만 읽어 meta[].ok=false (n_fail 0 유지) · cases=[] · meta=[] (read_n 194 유지) 를 받았다.  생산자가 검사를 더하거나 이름을 바꾸면
+#:   이 표를 같이 고친다 (selftest 가 실 생산자 JSON 을 이 계약에 넣는다).
+CASE_CHECK_IDS = ('K1', 'K2', 'K3', 'K4', 'K5', 'K6', 'K7')       # reread_case — 케이스마다 한 번씩
+CASE_CHECK_EXTRA = ('K1b',)                                       # run_launcher — 배치 기록 run id ≠ 폴더 run id 일 때만 붙는다 (붙으면 그 케이스는 실패)
+LAUNCHER_META_IDS = ('M0', 'M-plan', 'M-reg', 'M3')               # run_launcher — 코호트 무관 · 한 번씩
+LAUNCHER_COHORT_META_IDS = ('M1', 'M2', 'H1')                     # run_launcher — 코호트마다 한 번씩 ('<ID> <코호트> …')
+M3_SUMMARY_KEYS = ('expected_n', 'read_n', 'set_equal', 'missing', 'extra')   # main 이 M3 항목에서 판정 JSON 최상위로 옮겨 적는 칸
 
 
 def _read_json(p):
@@ -368,6 +380,113 @@ def run_launcher(root: Path, *, expected=None, out=print, identity=None):
     return reports, meta, exp
 
 
+def check_id(name):
+    """검사 이름 → ID (첫 낱말) — 'K1 게시 — …' → 'K1' · 'M1 lhs 케이스 집합 …' → 'M1'.  비지 않은 문자열이 아니면 None."""
+    return name.split(' ', 1)[0] if isinstance(name, str) and name.strip() else None
+
+
+def _entry_ok_shape(e):
+    """검사 항목 꼴 — dict · name 비지 않은 문자열 · ok **bool** (정수 1 · 문자열 'True' 를 통과로 읽지 않는다)."""
+    return isinstance(e, dict) and isinstance(e.get('name'), str) and bool(e['name'].strip()) and isinstance(e.get('ok'), bool)
+
+
+def launcher_detail_problems(rec, expected_pairs) -> list:
+    """★ 10-07 G2RR4-01 (Codex 세대 2 재검증 4 §2 최소 해결 ① ②) — launcher-root 판정 JSON 의 상세 (meta · cases · checks) ↔ 요약 (n_fail · read_n · M3 칸) 대조
+    → 문제 목록 ([] = 통과).  expected_pairs = 등록 집합 {(케이스, 코호트)} (`registered_expected(name)['pairs']`).  v1.3 배포 관문이 이 함수를 부른다 (사본 금지).
+      ① meta = 목록 · 항목마다 name 문자열 · ok bool · LAUNCHER_META_IDS 각 한 번 · 등록 코호트마다 LAUNCHER_COHORT_META_IDS 각 한 번 · 그 밖 ID · 코호트 = 모르는 검사
+      ② cases = 목록 · 항목마다 case · cohort 문자열 · checks 목록 · 검사마다 name 문자열 · ok bool · CASE_CHECK_IDS 각 한 번 (빈 checks 의 공집합 PASS 금지) ·
+         CASE_CHECK_EXTRA 는 한 번까지 · 그 밖 ID = 모르는 검사
+      ③ 상세 실패 (ok 가 True 가 아닌 meta · 케이스 검사 — 꼴이 깨진 것 포함) 재계수 = n_fail · 상세 실패가 있으면 문제 (전부 통과여야)
+      ④ 상세 (케이스, 코호트) 중복 없음 · 고유 집합 = 등록 집합 · 상세 케이스 수 = read_n · M3 항목의 기대 · 읽은 수 · 같음 · 빠진 · 남는 = 최상위 칸
+    한정: 같은 JSON 안의 상세 ↔ 요약 대조다 — 상세 · 요약 · 사본을 함께 바꾼 전면 위조는 재계산 없이 못 잡는다 (모듈 docstring '한계' 그대로)."""
+    if not isinstance(rec, dict):
+        return [f'판정 JSON 이 객체가 아니다 ({type(rec).__name__})']
+    exp = {(str(c), str(h)) for c, h in (expected_pairs or ())}
+    if not exp:
+        return ['등록 집합이 비었다 — 상세를 대조할 기준이 없다']
+    cohorts = sorted({h for _c, h in exp})
+    p, fails = [], []
+    meta = rec.get('meta')
+    if not isinstance(meta, list):
+        p.append(f'meta {type(meta).__name__} — 목록이 아니다 (상세 결손)')
+        meta = []
+    cnt, bad_shape, unknown = collections.Counter(), [], []
+    for i, m in enumerate(meta):
+        if not (isinstance(m, dict) and m.get('ok') is True):
+            fails.append(str((m or {}).get('name') if isinstance(m, dict) else m)[:80])
+        if not _entry_ok_shape(m):
+            bad_shape.append(f'meta[{i}] {str(m)[:100]}')
+            continue
+        mid = check_id(m['name'])
+        if mid in LAUNCHER_META_IDS:
+            cnt[(mid, None)] += 1
+        elif mid in LAUNCHER_COHORT_META_IDS:
+            parts = m['name'].split(' ', 2)
+            coh = parts[1] if len(parts) > 1 else None
+            if coh not in cohorts:
+                unknown.append(f'{mid} 코호트 {coh!r} (등록 코호트 {cohorts} 밖)')
+            cnt[(mid, coh)] += 1
+        else:
+            unknown.append(f'{mid!r} ({m["name"][:50]!r})')
+    want = [(mid, None) for mid in LAUNCHER_META_IDS] + [(mid, coh) for coh in cohorts for mid in LAUNCHER_COHORT_META_IDS]
+    off = {(f'{mid} {coh}' if coh else mid): cnt[(mid, coh)] for mid, coh in want if cnt[(mid, coh)] != 1}
+    if off:
+        p.append(f'meta 검사 ID 가 한 번씩이 아니다 {off} — 상세 계약: {" · ".join(LAUNCHER_META_IDS)} 한 번 + 코호트 {cohorts} 마다 '
+                 f'{" · ".join(LAUNCHER_COHORT_META_IDS)} 한 번')
+    cases = rec.get('cases')
+    if not isinstance(cases, list):
+        p.append(f'cases {type(cases).__name__} — 목록이 아니다 (상세 결손)')
+        cases = []
+    pairs, bad_ids, extra_ids = [], [], []
+    for i, c in enumerate(cases):
+        if not (isinstance(c, dict) and isinstance(c.get('case'), str) and isinstance(c.get('cohort'), str) and isinstance(c.get('checks'), list)):
+            bad_shape.append(f'cases[{i}] {str(c)[:100]}')
+            fails.append(f'cases[{i}] (꼴)')
+            continue
+        pairs.append((c['case'], c['cohort']))
+        cc = collections.Counter()
+        for j, k in enumerate(c['checks']):
+            if not (isinstance(k, dict) and k.get('ok') is True):
+                fails.append(f'{c["case"]}: {str(k.get("name") if isinstance(k, dict) else k)[:60]}')
+            if not _entry_ok_shape(k):
+                bad_shape.append(f'{c["case"]} checks[{j}] {str(k)[:80]}')
+                continue
+            kid = check_id(k['name'])
+            if kid not in CASE_CHECK_IDS + CASE_CHECK_EXTRA:
+                unknown.append(f'{c["case"]} {kid!r}')
+            cc[kid] += 1
+        miss = {x: cc[x] for x in CASE_CHECK_IDS if cc[x] != 1}
+        miss.update({x: cc[x] for x in CASE_CHECK_EXTRA if cc[x] > 1})
+        if miss:
+            bad_ids.append((c['case'], miss))
+    if bad_shape:
+        p.append(f'검사 항목 꼴 {len(bad_shape)} — name 문자열 · ok bool (정수 · 문자열 ok 를 통과로 읽지 않는다) · cases 는 case · cohort · checks 목록 · 첫 {bad_shape[:3]}')
+    if unknown:
+        p.append(f'모르는 검사 {len(unknown)} — 상세 계약 (LAUNCHER_META_IDS · LAUNCHER_COHORT_META_IDS · CASE_CHECK_IDS) 밖 · 첫 {unknown[:3]}')
+    if bad_ids:
+        p.append(f'케이스 {len(bad_ids)} 에서 검사 ID 가 한 번씩이 아니다 — 케이스마다 {"·".join(CASE_CHECK_IDS)} 한 번씩 (빈 checks = 공집합 PASS 금지) · 첫 {bad_ids[:3]}')
+    nf = rec.get('n_fail')
+    if isinstance(nf, int) and not isinstance(nf, bool) and nf != len(fails):
+        p.append(f'상세 실패 재계수 {len(fails)} ≠ n_fail {nf} — 요약이 상세를 덮는다 (또는 상세가 요약을 뒷받침하지 않는다)')
+    if fails:
+        p.append(f'상세 실패 {len(fails)} — 첫 {fails[:4]} (전부 통과여야)')
+    pc = collections.Counter(pairs)
+    dup = sorted(x for x, n in pc.items() if n > 1)
+    if dup:
+        p.append(f'상세 (케이스, 코호트) 중복 {len(dup)} — 첫 {dup[:3]} (한 번씩이어야)')
+    got = set(pc)
+    if got != exp:
+        p.append(f'상세 (케이스, 코호트) 고유 {len(got)} ≠ 등록 집합 {rec.get("expected_set")!r} ({len(exp)}) — 빠진 {sorted(exp - got)[:3]} · 남는 {sorted(got - exp)[:3]}')
+    if len(cases) != rec.get('read_n'):
+        p.append(f'상세 케이스 {len(cases)} ≠ read_n {rec.get("read_n")!r} — 읽었다는 수를 상세가 뒷받침하지 않는다')
+    m3 = [m for m in meta if _entry_ok_shape(m) and check_id(m['name']) == 'M3']
+    if len(m3) == 1:
+        d3 = {k: (m3[0].get(k), rec.get(k)) for k in M3_SUMMARY_KEYS if m3[0].get(k) != rec.get(k)}
+        if d3:
+            p.append(f'M3 항목 ↔ 최상위 요약 다름 {str(d3)[:200]} — 요약이 M3 상세와 어긋난다')
+    return p
+
+
 def summarize(reports, meta, *, out=print):
     n_bad = 0
     for m_ in meta:
@@ -628,6 +747,26 @@ def _selftest() -> int:
         chk('★ G2RR3-01 — 실 생산자 JSON 을 v1.3 배포 관문의 다시 읽기 판정 (lhs_release_build.v13_reread_problems · 등록 집합 pilot3) 에 이 ROOT 로 넣으면 '
             '문제 0 · 다른 ROOT 로 대조하면 결합 문제 (배치 뿌리 · manifest sha256)',
             p_same == [] and any('launcher_root' in p_ for p_ in p_other) and any('manifest_sha256' in p_ for p_ in p_other), (p_same, p_other))
+        #  ★ 10-07 G2RR4-01 (Codex 세대 2 재검증 4 §2) — 실 생산자 JSON 의 상세 (meta · cases · checks) = 상세 계약 (`launcher_detail_problems` — v1.3 배포 관문이
+        #    부르는 같은 함수) 통과 · 상세 명시 실패 (n_fail 0 유지) · cases=[] · meta=[] · 빈 checks 변이 = 문제 (옛: 배포 관문이 상세를 읽지 않았다)
+        _ldp = globals().get('launcher_detail_problems')
+
+        def _mut(fn):
+            j_ = json.loads(json.dumps(jj))
+            fn(j_)
+            return j_
+        if _ldp is None or exp_p3 is None:
+            d_ok, d_bad = ['(상세 계약 함수 없음 — 옛 코드)'], {}
+        else:
+            d_ok = _ldp(jj, exp_p3['pairs'])
+            d_bad = {nm_: _ldp(_mut(fn_), exp_p3['pairs']) for nm_, fn_ in (
+                ('M2 lhs ok=false', lambda j_: next(m_ for m_ in j_['meta'] if m_['name'].startswith('M2 lhs')).update(ok=False)),
+                ('cases=[] · meta=[]', lambda j_: j_.update(cases=[], meta=[])),
+                ('빈 checks', lambda j_: [c_.update(checks=[]) for c_ in j_['cases']]),
+                ('K4 빠짐', lambda j_: j_['cases'][0].update(checks=[c_ for c_ in j_['cases'][0]['checks'] if not c_['name'].startswith('K4 ')])))}
+        chk('★ G2RR4-01 — 실 생산자 JSON (pilot3) 의 상세 = 상세 계약 통과 (meta 열 ID · 코호트마다 M1 · M2 · H1 · 케이스마다 K1–K7 · 상세 실패 재계수 = n_fail · '
+            '(케이스, 코호트) = 등록 집합 · M3 = 최상위) · M2 ok=false · cases=[] · 빈 checks · K4 빠짐 = 전부 문제',
+            d_ok == [] and len(d_bad) == 4 and all(d_bad.values()), (d_ok[:3], {k: v[:2] for k, v in d_bad.items()}))
         #  폴더 링크 — symlink 가 막힌 환경 (Windows WinError 1314 · Codex 재검증 2 §11) 에서도 fixture 가 선다 (하드링크 · 사본)
         _sym = os.symlink
 
@@ -656,6 +795,14 @@ def _selftest() -> int:
             m3 = next((m_ for m_ in meta if m_['name'].startswith('M3')), {})
             chk('★ 등록 집합 양성 production194 (합성 — 등록 ID 지문 194 · lhs 130 · lhsx 64) — 194 케이스 K1–K7 · 코호트 H1 둘 통과 · M3 기대 194 = 읽음 194',
                 _ok_all(reps, meta) and len(reps) == 194 and m3.get('ok') is True, [m_ for m_ in meta if not m_['ok']][:3])
+            #  ★ G2RR4-01 — 같은 실행의 판정 JSON 꼴 (main 이 쓰는 키 그대로 · JSON 왕복) 이 production194 상세 계약을 통과 (생산자 ↔ 배포 관문의 같은 표)
+            _ldp2 = globals().get('launcher_detail_problems')
+            rec194 = json.loads(json.dumps(dict(schema=SCHEMA, expected_generation=exp, meta=meta, cases=reps,
+                                                n_fail=summarize(reps, meta, out=lambda *a, **k: None), expected_set=exp_194['name'],
+                                                expected_n=m3.get('expected_n'), read_n=m3.get('read_n'), set_equal=m3.get('set_equal'),
+                                                missing=m3.get('missing'), extra=m3.get('extra')), default=str))
+            d194 = _ldp2(rec194, exp_194['pairs']) if _ldp2 else ['(상세 계약 함수 없음 — 옛 코드)']
+            chk('★ G2RR4-01 — 생산 194 (합성) 판정 JSON 의 상세 = 상세 계약 통과 (194 케이스 × K1–K7 · meta 열 · 재계수 0 = n_fail 0)', d194 == [], d194[:3])
         else:
             chk('★ 등록 집합 양성 production194 (등록 집합 함수 없음 — 옛 코드)', False)
     finally:

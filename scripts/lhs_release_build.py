@@ -1040,6 +1040,9 @@ V13_REREAD_N = 194                         #   그 집합의 고정 크기 (run_
 #:   배포는 좁다: SEALED_DIRTY_ALLOWED (추적 파일이 바뀐 트리에서 --allow-dirty 로 돈 시도 — 봉인 코드 해시는 같아도 등록 §1 "봉인 커밋 · dirty 0" 밖) ·
 #:   SEALED_LEGACY (역사 형식 = 이 배포가 아니다) 는 받지 않는다 — 그런 배치를 싣는 판단이 필요하면 진단 모드로 기록만 하고 1저자 결정 (새 등록) 으로.
 V13_AUDIT_SEALED = ('SEALED',)
+#: ★ 10-07 G2RR4-01 ③ · G2RR4-03 (Codex 세대 2 재검증 4 §2 · §4 Q3) — 이 등록 집합의 배포 = **import 관측을 켠 실행만** (등록 §4 본 실행 `run --observe-imports` ·
+#:   실행기 run 이 생산 계획에 강제).  배치 manifest observe_imports true · 감사 기록에 관측 객체 · 관측된 완료 시도가 등록 케이스 전부 — 관측 결손을 정상으로 받지 않는다.
+V13_IMPORT_OBS_REQUIRED = ('production194',)
 V13_GATE_SCHEMA = 'lhs_release_v13_batch_gate/v1'        # 빌드 manifest batch_gate (모드 · 배치 뿌리 · manifest sha256 · 문제)
 V13_DIAG_BANNER = 'NOT FOR RELEASE — diagnostic build (batch gate evidence not accepted)'
 _V13_HEX64 = re.compile(r'[0-9a-f]{64}')
@@ -1183,9 +1186,10 @@ def v13_batch_identity(batch_root):
     해시 지도와 어긋난다) · launch_sha = manifest git.sha.  못 정한 값은 None (그 결합 대조는 건너뛰고 문제는 여기서 낸다)."""
     mp = os.path.join(batch_root, 'manifest.json')
     sha, man, why = _v13_gate_load(mp)
-    ident = {'root': os.path.realpath(str(batch_root)), 'manifest_sha256': sha, 'seal_fp': None, 'launch_sha': None}
+    ident = {'root': os.path.realpath(str(batch_root)), 'manifest_sha256': sha, 'seal_fp': None, 'launch_sha': None, 'observe_imports': None}
     if why or not isinstance(man, dict):
         return ident, [f'배치 manifest {mp} 를 못 읽었다 ({why or type(man).__name__}) — 실행 신원 (봉인 지문 · 발사 sha) 을 모른다']
+    ident['observe_imports'] = man.get('observe_imports')        # ★ G2RR4-03 — 관측을 켠 실행인가 (감사 관측 판정 `v13_audit_observation_problems` 이 본다)
     probs = []
     s = man.get('seal') if isinstance(man.get('seal'), dict) else {}
     fp = s.get('code_fp')
@@ -1277,13 +1281,68 @@ def v13_audit_problems(a, batch_root, why='', ident=None, expect_set=V13_REREAD_
             p.append(f'{k} {x!r:.120} — 목록이 없다 (지금 실행기의 감사 기록이 아니다)')
         elif x:
             p.append(f'{k} {len(x)} — {x[:3]!r:.300} (빈 목록이어야)')
+    p += v13_audit_observation_problems(a, ident, expect_set)
+    return p
+
+
+def v13_audit_observation_problems(a, ident, expect_set=V13_REREAD_SET):
+    """★ 10-07 G2RR4-01 ③ · G2RR4-03 (Codex 세대 2 재검증 4 §2 · §4 Q3) — 감사 기록의 import 관측 객체 (`import_observation`) ↔ 최상위 요약
+    (`import_observation_problems`) · 관측 필수 배치 (등록 집합 ∈ V13_IMPORT_OBS_REQUIRED) 의 관측 결손 → 문제 목록.
+    옛 관문은 최상위 요약 목록만 봤다 — 관측 객체 안의 problems · outside 가 있어도 최상위 [] 면 통과 · 관측 객체가 없어도 · observe_imports false 여도 통과.
+      · 객체가 있으면: dict · problems · outside = 목록 · 둘 다 빈 목록 · 그 내용이 최상위 요약에 다 실렸다 (요약이 상세를 덮지 않는다) · 프로세스 수 셋 = 정수
+      · 관측 필수 배치: 배치 manifest observe_imports true · 객체 있음 · 프로세스 > 0 · 관측된 완료 시도 (케이스) ⊇ 등록 케이스 전부"""
+    p = []
+    req = expect_set in V13_IMPORT_OBS_REQUIRED
+    oi = (ident or {}).get('observe_imports')
+    if req and oi is not True:
+        p.append(f'배치 manifest observe_imports {oi!r} — 등록 집합 {expect_set} 의 배포는 import 관측을 켠 실행만 (G2RR4-03 · 등록 §4 `run --observe-imports`)')
+    io_ = a.get('import_observation')
+    top = a.get('import_observation_problems')
+    if io_ is None:
+        if req:
+            p.append('import_observation 없음 — 관측 필수 배치 (G2RR4-03) 의 감사에 관측 객체가 없다 · 관측 결손을 정상으로 받지 않는다 (G2RR4-01)')
+        return p
+    if not isinstance(io_, dict):
+        return p + [f'import_observation {type(io_).__name__} — 관측 객체가 아니다 (G2RR4-01)']
+    inner, outside = io_.get('problems'), io_.get('outside')
+    if not isinstance(inner, list) or not isinstance(outside, list):
+        p.append(f'import_observation.problems · outside 가 목록이 아니다 ({type(inner).__name__} · {type(outside).__name__}) — 관측 상세를 모른다 (G2RR4-01)')
+    else:
+        if inner:
+            p.append(f'import_observation.problems {len(inner)} — {inner[:3]!r:.300} (빈 목록이어야 · G2RR4-01)')
+        if outside:
+            p.append(f'import_observation.outside {outside[:4]} — 봉인 밖 모듈을 실제로 읽었다 (빈 목록이어야 · G2RR4-01)')
+        tl = top if isinstance(top, list) else []
+        lost = [x for x in inner if x not in tl] + [f for f in outside if not any(isinstance(t, str) and str(f) in t for t in tl)]
+        if lost:
+            p.append(f'관측 내부 문제 · 봉인 밖 모듈 {len(lost)} 이 최상위 import_observation_problems 에 없다 {lost[:3]!r:.200} — 요약이 상세를 덮는다 (G2RR4-01)')
+    for k in ('n_processes', 'n_started', 'n_finalized'):
+        if not _v13_int(io_.get(k)):
+            p.append(f'import_observation.{k} {io_.get(k)!r} — 정수가 아니다 (G2RR4-01)')
+    if req:
+        if _v13_int(io_.get('n_processes')) and io_['n_processes'] <= 0:
+            p.append('import_observation.n_processes 0 — 관측 필수 배치인데 관측 기록이 없다 (G2RR4-01 · G2RR4-03)')
+        ca = io_.get('completed_attempts')
+        if not isinstance(ca, list) or not all(isinstance(x, (list, tuple)) and len(x) == 3 for x in ca):
+            p.append(f'import_observation.completed_attempts {str(ca)[:80]} — [케이스, run, 시도] 목록이 아니다 (G2RR4-01)')
+        else:
+            try:
+                need = {c for c, _h in _np194().registered_id_set(expect_set)['pairs']}
+            except Exception as e:                                       # noqa: BLE001 — 기준을 못 세우면 통과로 치지 않는다
+                p.append(f'등록 집합 {expect_set} 을 못 세웠다 ({type(e).__name__}: {e}) — 관측 완료 시도를 대조할 기준이 없다 (G2RR4-01)')
+            else:
+                gap = sorted(need - {str(x[0]) for x in ca})
+                if gap:
+                    p.append(f'import_observation.completed_attempts 가 등록 케이스 {len(gap)} 를 안 덮는다 (첫 {gap[:3]}) — 관측된 완료 시도 = 등록 {len(need)} '
+                             '전부여야 (G2RR4-01)')
     return p
 
 
 def v13_reread_problems(r, batch_root, why='', ident=None, expect_set=V13_REREAD_SET):
     """⓪b 다시 읽기 기록 (`g2_network_reread.py --launcher-root <ROOT> --expect-set production194 --json <ROOT>/reread.json` 의 dict) 판정 → 문제 목록.
     스키마 = 도구 정본 (v3 — 실행 신원) · n_fail = 정수 (bool 아님) 0 · 기대 세대 g2 · 등록 집합 (이름 · 기대 = 읽음 = 등록 수 · 같음 True · 빠진 · 남는 = 빈 목록) ·
-    이 배치 (launcher_root = 배치 뿌리 · manifest_sha256 = 지금 manifest · seal_fp · launch_sha)."""
+    이 배치 (launcher_root = 배치 뿌리 · manifest_sha256 = 지금 manifest · seal_fp · launch_sha) · ★ G2RR4-01 상세 (meta · cases · checks — 필수 검사 ID ·
+    bool · 상세 실패 재계수 = n_fail · 상세 (케이스, 코호트) = 등록 집합 · 케이스 수 = read_n · M3 = 최상위 — 생산자 `launcher_detail_problems`)."""
     if why == 'absent':
         return ['없다 — 등록 §5-3 ⓪b 다시 읽기 (`g2_network_reread.py --launcher-root <ROOT> --expect-set production194 --json <ROOT>/reread.json`) 를 먼저 · '
                 '실제 배포는 이 기록이 필수']
@@ -1312,6 +1371,14 @@ def v13_reread_problems(r, batch_root, why='', ident=None, expect_set=V13_REREAD
     if r.get('missing') != [] or r.get('extra') != []:
         p.append(f'missing {r.get("missing")!r:.120} · extra {r.get("extra")!r:.120} — 빈 목록이어야')
     p += _v13_bind_problems(r, ident, 'launcher_root')
+    #  ★ 10-07 G2RR4-01 (Codex 세대 2 재검증 4 §2) — 상세 (meta · cases · checks) ↔ 요약 · 상세 실패 재계수 = n_fail · 상세 (케이스, 코호트) = 등록 집합 · 필수 검사 ID —
+    #    생산자 쪽 상세 계약 한 함수 (`g2_network_reread.launcher_detail_problems` · 사본 금지).  옛 판은 요약만 읽어 meta M2 ok=false (n_fail 0) · cases=[] 를 받았다.
+    try:
+        pairs = _np194().registered_id_set(expect_set)['pairs']
+    except Exception as e:                                               # noqa: BLE001 — 기준을 못 세우면 통과로 치지 않는다
+        p.append(f'등록 집합 {expect_set} 을 못 세웠다 ({type(e).__name__}: {e}) — 상세를 대조할 기준이 없다 (G2RR4-01)')
+    else:
+        p += [f'상세 (G2RR4-01) — {x}' for x in _g2rr().launcher_detail_problems(r, pairs)]
     return p
 
 

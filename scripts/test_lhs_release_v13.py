@@ -29,6 +29,9 @@ v1.3 = 세대 2 망 값 + #1 ML 표 (빈칸 뜻대로) · #2 f 타깃 · 관통 
       없음 · 깨짐 · 타입 결손 · 실패 판정 (감사 refused · invalid · UNSEALED · NO_RECORD · merged 다름 · 세대 · 입력 · import 문제 · SEALED_DIRTY_ALLOWED) ·
       다른 배치 뿌리 · 다른 봉인 지문 · manifest 바뀜 = 거부 (build_v13 · 단계 A) · 좋은 묶음의 배치 증거를 바꾸면 check_v13 이 같은 관문으로 다시 판정해 문제 ·
       진단 모드 (--diagnostic-batch-gate) = 옛 · 부분 기록도 만들되 NOT FOR RELEASE 표지 · 배포 대조 거부
+  V18 ★ 10-07 G2RR4-01 (Codex 세대 2 재검증 4 §2) — 다시 읽기 상세 (meta · cases · checks) ↔ 요약: 상세 명시 실패를 n_fail 0 이 덮는 기록 · cases=[] · meta=[] ·
+      빈 checks (공집합 PASS) · 검사 ID 결손 · 타입 · 중복 · 코호트 · 케이스 수 ≠ read_n · M3 ≠ 최상위 = 거부 / 감사 import 관측 내부 problems · outside 를 최상위 []
+      가 덮는 기록 · 관측 객체 없음 · observe_imports false · 완료 시도가 등록 194 를 안 덮음 = 거부 (생산 194 = 관측 필수 · G2RR4-03) · build · check 둘 다
 
   python3 scripts/test_lhs_release_v13.py
 """
@@ -196,16 +199,60 @@ def _man_of(td):
     return json.load(open(os.path.join(td, 'manifest.json'), encoding='utf-8'))
 
 
+#: ★ 10-07 G2RR4-01 (Codex 세대 2 재검증 4 §2 최소 해결 4 — "상세 없는 옛 정상 픽스처를 계속 정상으로 두면 수정이 약해진다") — 통과 기록 = **상세 꼴 그대로**:
+#:   meta = 생산자 `g2_network_reread.run_launcher` 가 내는 열 항목 (M0 · M-plan · M-reg · 코호트마다 M1 · M2 · H1 · M3) · cases = 등록 194 케이스마다
+#:   K1–K7 (`reread_case`).  이름 = 생산자 문구의 손 사본 (도구 상수를 베끼지 않는다 — 계약의 ID 는 첫 낱말).  옛 요약 · 신원만인 통과 모양은 이제 정상이 아니다.
+RR_CASE_CHECK_NAMES = (
+    'K1 게시 — solver success · 도장 valid/success · run id (도장 = full_metrics = active)',
+    "K2 세대 계약 + 증서 결합 — 세대 'g2' · 문제 0 (모드 셋 × 가지 셋 증서 · G2R-01 · 02 · G2RR-02)",
+    'K3 도장 ↔ 레코드 — 네 세대 값 = 레코드에서 유도한 기대값 (G2RR-01)',
+    'K4 망 정지 계약 다시 (①–⑨ · legacy_ok False)',
+    "K5 열 역할 — ion_net_generation 'g2' · 행 세대 계약 문제 0 (모드별 협착 · ψ · 면적 · 전극 · bulk 칸)",
+    'K6 관통 일치 — 생산자 FULL 상태 ↔ τ 상태 (세 모드)',
+    'K7 가지 표 — 공용 계약 (tau_flux.branch_table_problems) 그대로: 숫자 ⇔ 게시 상태 / 숫자 없음 ⇒ 비게시 상태 + 사유 / 상태 기록 결손 = 거부')
+
+
+def rr_detail(pairs=None, expected_set='production194'):
+    """다시 읽기 상세 (meta · cases) — 생산자 꼴 (모두 ok True · 등록 집합 pairs (기본 PROD194) · 코호트 순서 lhs → lhsx)."""
+    pairs = sorted(pairs if pairs is not None else PROD194, key=lambda x: (x[1], x[0]))
+    cohorts = [h for h in ('lhs', 'lhsx') if any(h == hh for _c, hh in pairs)]
+    meta = [dict(name='M0 manifest 기대 세대 선언 (expected_network_generation)', ok=True, detail='g2'),
+            dict(name='M-plan manifest plan · cohorts · queue 꼴 (비지 않음 · 중복 · 코호트 소속 — 루프 전)', ok=True, detail=''),
+            dict(name=f'M-reg 계획 큐 = 등록 집합 {expected_set} ({len(pairs)})', ok=True, detail='등록에만 [] · 계획에만 [] · 등록 밖 코호트 []')]
+    cases = []
+    for h in cohorts:
+        cl = [c for c, hh in pairs if hh == h]
+        meta.append(dict(name=f'M1 {h} 케이스 집합 — 계획 큐 = 배치 기록 ({len(cl)})', ok=True, detail='계획에만 [] · 기록에만 []'))
+        meta.append(dict(name=f'M2 {h} 전 케이스 done · partial', ok=True, detail={}))
+        cases += [dict(case=c, folder=f'/x/merged/{h}/results/{c}', run_id=f'RUN-{c}', generation='g2', cohort=h, batch='launcher',
+                       checks=[dict(name=n, ok=True, detail='') for n in RR_CASE_CHECK_NAMES]) for c in cl]
+        meta.append(dict(name=f"H1 {h} 인계 출처 관문 (load_tau_results · P0–P4 · manifest 기대 세대 'g2') · 칸 = case_row", ok=True,
+                         detail=f'{len(cl)} 케이스 · 기대 세대 g2 · 칸 다름 []'))
+    meta.append(dict(name=f'M3 읽은 고유 (케이스, 코호트) = 등록 집합 {expected_set} — 기대 {len(pairs)} · 읽음 {len(pairs)}', ok=True,
+                     detail='빠진 [] · 남는 []', expected_n=len(pairs), read_n=len(pairs), set_equal=True, missing=[], extra=[]))
+    return meta, cases
+
+
 def rr_bound(td):
-    """⓪b 다시 읽기 통과 기록 — 이 배치 뿌리 (realpath) · manifest sha256 · 발사 봉인 지문 · 발사 sha 에 결합 (도구 v3 의 실행 신원 필드)."""
+    """⓪b 다시 읽기 통과 기록 — 이 배치 뿌리 (realpath) · manifest sha256 · 발사 봉인 지문 · 발사 sha 에 결합 (도구 v3 의 실행 신원 필드) ·
+    ★ G2RR4-01 상세 (meta · cases — 생산자 꼴)."""
     man = _man_of(td)
-    return dict(RR_OK, launcher_root=os.path.realpath(td), manifest_sha256=_sha_path(os.path.join(td, 'manifest.json')),
+    meta, cases = rr_detail()
+    return dict(RR_OK, meta=meta, cases=cases, launcher_root=os.path.realpath(td), manifest_sha256=_sha_path(os.path.join(td, 'manifest.json')),
                 seal_fp=(man.get('seal') or {}).get('code_fp'), launch_sha=(man.get('git') or {}).get('sha'))
+
+
+def obs_bound(pairs=None):
+    """★ G2RR4-01 ③ — 감사 기록의 import 관측 객체 (`run_network_194_parallel.import_observation` + `import_observation_problems` 가 채우는 키) 의 통과 꼴:
+    등록 케이스마다 완료 시도 (run 1 · 시도 1) · 케이스당 다섯 프로세스 (워커 · 파서 · 접촉 분석 · 피복 · 망 솔버) · 문제 0 · 봉인 밖 0."""
+    pairs = pairs if pairs is not None else PROD194
+    return dict(n_processes=5 * len(pairs), n_started=5 * len(pairs), n_finalized=5 * len(pairs), processes=[], problems=[], tmp_leftover=[], files=[],
+                observed=[], outside=[], completed_attempts=[[c, '1', '1'] for c, _h in sorted(pairs)], unfinalized_noncompleted=[])
 
 
 def audit_bound(td):
     """⓪ 봉인 감사 통과 기록 (`run_network_194_parallel.py audit --json` 의 키 그대로) — 이 배치 뿌리 · 봉인 지문 · 발사 sha · 등록 194 ID 가 전부
-    SEALED · merged same · 레코드 세대 g2 · 실행 형식 자격 current · 문제 목록 전부 빈 목록."""
+    SEALED · merged same · 레코드 세대 g2 · 실행 형식 자격 current · 문제 목록 전부 빈 목록 · ★ G2RR4-01 import 관측 객체 (생산 194 = 관측 필수 · G2RR4-03)."""
     man = _man_of(td)
     rows = [dict(case=c, cohort=h, record_status='done', n_attempts=1, attempt=1, run=1, form='attempt_seal', verdict='SEALED',
                  why='시작 · 끝 지문 = 발사 봉인 · git sha = 발사 · dirty 아님', record_sha='0' * 64, generation='g2', merged='same') for c, h in PROD194]
@@ -213,7 +260,7 @@ def audit_bound(td):
                 launch_sha=(man.get('git') or {}).get('sha'), seal_fp=(man.get('seal') or {}).get('code_fp'), code_root=ROOT, code_root_changed_now=[],
                 verdicts={'SEALED': len(rows)}, merged={'same': len(rows)}, cases=rows, expected_network_generation='g2', generation_declared=True,
                 generation_problems=[], input_problems=[], eligibility=dict(kind='current', historical=None, problems=[], note=''),
-                import_observation=None, import_observation_problems=[])
+                import_observation=obs_bound(), import_observation_problems=[])
 
 
 def _write_gate(td, name, spec, good):
@@ -259,6 +306,9 @@ def make_batch_root(td, gen='g2', code=True, handover=True, alter=None, reread=G
     if code:                                    # 발사 봉인 지문 = code_hashes 의 지문 (실행기 manifest.seal.code_fp · alter 뒤의 지도)
         man['seal'] = {'schema': NP194.LAUNCH_SEAL_SCHEMA, 'code_fp': NP194.code_fp(man['code_hashes'])}
     man['git'] = {'sha': LAUNCH_SHA}
+    #  ★ G2RR4-03 — 생산 194 = import 관측을 켠 실행 (실행기 manifest observe_imports · 관측 실행 신원)
+    man['observe_imports'] = True
+    man['import_obs_run_id'] = 'cd' * 16
     if man_edit:
         man_edit(man)
     with open(os.path.join(td, 'manifest.json'), 'w', encoding='utf-8') as f:
@@ -1217,6 +1267,156 @@ chk('V17j 단계 A — reread 없음 · {} · 감사 없음 · 감사 refused �
 chk('V17k 생산 배포 정책 — 받는 봉인 판정 = SEALED 만 (SEALED_DIRTY_ALLOWED · SEALED_LEGACY 는 실행기 audit rc 0 이어도 배포 아님) · 실행기 SEAL_OK 의 부분집합',
     tuple(getattr(LRB, 'V13_AUDIT_SEALED', ())) == ('SEALED',) and set(getattr(LRB, 'V13_AUDIT_SEALED', ('x',))) <= set(NP194.SEAL_OK),
     getattr(LRB, 'V13_AUDIT_SEALED', None))
+
+# ═══ V18 ★ 10-07 G2RR4-01 — 다시 읽기 상세 ↔ 요약 · 감사 관측 내부 ↔ 최상위 · 관측 필수 (build · check) ═══════════════════════════════════════════
+#   Codex 세대 2 재검증 4 §2 (`docs/reviews/codex_review_gen2_network_reverify4_20261007.md` · 탐침 release_gate.py) — 옛 관문은 다시 읽기의 요약 (n_fail ·
+#   집합 칸 · 신원) 만 읽고 meta · cases 를 읽지 않았다: meta M2 ok=false (n_fail 0 유지) · cases=[] · meta=[] (read_n 194 유지) · 감사 내부 관측 실패 (최상위 [])
+#   에서 실제 build_v13 이 묶음을 만들고 check_v13 문제 0.  [C] = Codex 변이 그대로 · 나머지 = 같은 부류 (반례 먼저 — 옛 코드에서 이 시험들이 FAIL).
+print('V18 다시 읽기 상세 ↔ 요약 · 감사 관측 (G2RR4-01)')
+
+
+def _rr_mut(fn):
+    """다시 읽기 통과 기록 (상세 포함) 을 깊은 사본으로 바꾸는 변이 — fn(rec) 가 그 자리를 고친다."""
+    def f(r):
+        r = json.loads(json.dumps(r))
+        fn(r)
+        return r
+    return f
+
+
+def _meta_ok(prefix, ok):
+    return lambda r: next(m for m in r['meta'] if m['name'].startswith(prefix)).update(ok=ok)
+
+
+def _case_check(i, cid, **kv):
+    return lambda r: next(c for c in r['cases'][i]['checks'] if c['name'].startswith(cid + ' ')).update(**kv)
+
+
+def _codex_shape(r):
+    """Codex 탐침의 정상 대조 모양 (release_gate.py) — meta 한 줄 · 케이스마다 K1 하나 (생산자 계약의 검사 ID 결손)."""
+    r['meta'] = [dict(name='M2 all completed', ok=True, detail='synthetic gate-only fixture')]
+    r['cases'] = [dict(case=c, cohort=h, checks=[dict(name='K1', ok=True, detail='synthetic gate-only fixture')]) for c, h in PROD194]
+
+
+def _dup_case(r):
+    r['cases'][1] = json.loads(json.dumps(r['cases'][0]))
+
+
+def _wrong_cohort(r):
+    r['cases'][0]['cohort'] = 'lhsx'
+
+
+def _drop_meta(prefix):
+    return lambda r: r.__setitem__('meta', [m for m in r['meta'] if not m['name'].startswith(prefix)])
+
+
+def _obs_mut(**over):
+    return lambda a: dict(a, import_observation=dict(a['import_observation'], **over))
+
+
+V18_VARIANTS = (
+    #  (이름, make_batch_root 인자, 거부 메시지에 있어야 할 꼬리표, Codex 변이 표지)
+    ('reread meta M2 lhs ok=false · n_fail 0 유지 (상세 명시 실패 ↔ 성공 요약)', dict(reread=_rr_mut(_meta_ok('M2 lhs', False))), 'G2RR4-01', 'C'),
+    ('reread cases=[] · meta=[] · read_n 194 · set_equal 유지 (상세 결손)', dict(reread=_rr_mut(lambda r: r.update(cases=[], meta=[]))), 'G2RR4-01', 'C'),
+    ('감사 import_observation = {problems: [log truncated] · outside: [scripts/unsealed.py]} (Codex 모양 그대로 · 최상위 import_observation_problems [] 유지)',
+     dict(audit=lambda a: dict(a, import_observation={'problems': ['log truncated'], 'outside': ['scripts/unsealed.py']})), 'G2RR4-01', 'C'),
+    ('감사 import_observation 내부 problems · outside 만 (다른 칸 정상 · 최상위 [] 유지)',
+     dict(audit=_obs_mut(problems=['log truncated'], outside=['scripts/unsealed.py'])), 'G2RR4-01', ''),
+    ('reread Codex 탐침 정상 대조 모양 (meta 한 줄 · 케이스마다 K1 하나 — 검사 ID 결손)', dict(reread=_rr_mut(_codex_shape)), 'G2RR4-01', 'C'),
+    ('reread 케이스 checks 전부 [] (빈 checks 공집합 PASS)', dict(reread=_rr_mut(lambda r: [c.update(checks=[]) for c in r['cases']])), 'K1', ''),
+    ('reread 케이스 하나 K4 빠짐', dict(reread=_rr_mut(lambda r: r['cases'][5].update(checks=[c for c in r['cases'][5]['checks'] if not c['name'].startswith('K4 ')]))),
+     'K4', ''),
+    ('reread 케이스 검사 ok "True" (문자열)', dict(reread=_rr_mut(_case_check(3, 'K2', ok='True'))), 'bool', ''),
+    ('reread 케이스 검사 ok false · n_fail 0 유지', dict(reread=_rr_mut(_case_check(7, 'K6', ok=False))), 'G2RR4-01', ''),
+    ('reread 케이스 중복 (한 케이스 두 번 · 다른 하나 빠짐 · 194 행)', dict(reread=_rr_mut(_dup_case)), '중복', ''),
+    ('reread 케이스 193 (read_n 194 유지)', dict(reread=_rr_mut(lambda r: r['cases'].pop())), 'read_n', ''),
+    ('reread 케이스 코호트 틀림 (lhs 케이스를 lhsx 로)', dict(reread=_rr_mut(_wrong_cohort)), 'production194', ''),
+    ('reread meta H1 lhsx 빠짐', dict(reread=_rr_mut(_drop_meta('H1 lhsx'))), 'H1', ''),
+    ('reread meta 모르는 검사 Z9', dict(reread=_rr_mut(lambda r: r['meta'].insert(0, dict(name='Z9 합성 검사', ok=True, detail='')))), 'Z9', ''),
+    ('reread meta M3 read_n 193 (최상위 194)', dict(reread=_rr_mut(lambda r: r['meta'][-1].update(read_n=193))), 'M3', ''),
+    ('reread meta 항목 ok 1 (정수)', dict(reread=_rr_mut(_meta_ok('M0', 1))), 'bool', ''),
+    ('reread meta 가 목록이 아님 ({})', dict(reread=_rr_mut(lambda r: r.update(meta={}))), 'meta', ''),
+    ('reread n_fail 1 인데 상세 실패 0 (재계수 ≠ n_fail)', dict(reread=_rr_mut(lambda r: r.update(n_fail=1))), '재계수', ''),
+    ('manifest observe_imports false (관측 끈 생산 배치)', dict(man_edit=lambda m: m.update(observe_imports=False)), 'observe_imports', ''),
+    ('감사 import_observation null (관측 객체 없음)', dict(audit=lambda a: dict(a, import_observation=None)), 'import_observation', ''),
+    ('감사 관측 완료 시도 193 케이스 (하나 빠짐)', dict(audit=_obs_mut(completed_attempts=obs_bound()['completed_attempts'][1:])), 'completed_attempts', ''),
+    ('감사 관측 n_processes 0 (기록 없음)', dict(audit=_obs_mut(n_processes=0, n_started=0, n_finalized=0)), 'n_processes', ''),
+    ('감사 관측 problems 가 목록이 아님 (null)', dict(audit=_obs_mut(problems=None)), 'problems', ''),
+)
+#: check_v13 재판정 — Codex 변이 넷 + 같은 부류 둘
+V18_CHECK = tuple(v for v in V18_VARIANTS if v[3] == 'C') + tuple(v for v in V18_VARIANTS if v[0] in (
+    'reread 케이스 checks 전부 [] (빈 checks 공집합 PASS)', 'manifest observe_imports false (관측 끈 생산 배치)'))
+
+r18 = {}
+with tempfile.TemporaryDirectory() as td:
+    hd18 = safe(lambda: make_g2_handover_dir(os.path.join(td, 'handover')))
+    ver18 = os.path.join(td, 'go.md')
+    open(ver18, 'w', encoding='utf-8').write('# GO (합성)\n')
+    if _orig_rr is not None and not is_err(hd18):
+        LRB.v13_reread_tau = lambda *a: []
+        try:
+            #  (a) 양성 대조 — 상세 꼴 그대로의 통과 기록 둘 → 만들기 · check_v13 문제 0
+            b_ok = make_batch_root(os.path.join(td, 'b18_ok'))
+            o_ok = os.path.join(td, 'o18_ok')
+            r18['good'] = safe(lambda: LRB.build_v13(out_dir=o_ok, handover_dir=hd18, batch_root=b_ok, date=DATE, codex_verdict=ver18))
+            if isinstance(r18['good'], dict):
+                r18['good_check'] = safe(lambda: LRB.check_v13(o_ok, hd18))
+            r18['good_rr_probs'] = safe(lambda: LRB.v13_reread_problems(json.load(open(os.path.join(b_ok, 'reread.json'), encoding='utf-8')), b_ok))
+            r18['good_au_probs'] = safe(lambda: LRB.v13_audit_problems(json.load(open(os.path.join(b_ok, 'seal_audit.json'), encoding='utf-8')), b_ok))
+            #  (b) 변이마다 build_v13 거부 · 산출 폴더 없음
+            r18['build'] = []
+            for i, (nm, kw, tag, cx) in enumerate(V18_VARIANTS):
+                b_ = make_batch_root(os.path.join(td, f'b18_{i:02d}'), **kw)
+                o_ = os.path.join(td, f'o18_{i:02d}')
+                m_ = refusal_msg(lambda: LRB.build_v13(out_dir=o_, handover_dir=hd18, batch_root=b_, date=DATE, codex_verdict=ver18))
+                r18['build'].append((i, nm, tag, cx, m_, os.path.exists(o_)))
+            #  (c) check_v13 — 좋은 묶음의 배치 증거를 변이로 바꾸면 문제 · 빌드 manifest 기록을 지금 파일에 맞춰 위조해도 문제
+            r18['check'] = []
+            if isinstance(r18['good'], dict):
+                keep = {n_: open(os.path.join(b_ok, n_), 'rb').read() for n_ in ('reread.json', 'seal_audit.json', 'manifest.json')}
+                mp18 = os.path.join(o_ok, 'v13_build_manifest.json')
+                bak18 = open(mp18, encoding='utf-8').read()
+                for i, (nm, kw, tag, cx) in enumerate(V18_CHECK):
+                    if kw.get('man_edit'):
+                        mj_ = json.loads(keep['manifest.json'])
+                        kw['man_edit'](mj_)
+                        open(os.path.join(b_ok, 'manifest.json'), 'w', encoding='utf-8').write(json.dumps(mj_))
+                    _put_gate(b_ok, kw.get('reread', GOOD), kw.get('audit', GOOD))
+                    pc = safe(lambda: LRB.check_v13(o_ok, hd18))
+                    mj = json.loads(bak18)
+                    mj['batch_gate_files'] = safe(lambda: LRB.v13_batch_gate_files(b_ok), {})
+                    open(mp18, 'w', encoding='utf-8').write(json.dumps(mj, ensure_ascii=False, indent=1, sort_keys=True) + '\n')
+                    forged = safe(lambda: LRB.check_v13(o_ok, hd18))
+                    open(mp18, 'w', encoding='utf-8', newline='').write(bak18)
+                    for n_, b in keep.items():
+                        open(os.path.join(b_ok, n_), 'wb').write(b)
+                    r18['check'].append((i, nm, tag, cx, pc, forged))
+                r18['check_restored'] = safe(lambda: LRB.check_v13(o_ok, hd18))
+        finally:
+            LRB.v13_reread_tau = _orig_rr
+
+chk('V18a 양성 대조 — 상세 꼴 그대로의 통과 기록 (meta 열 · 194 케이스 K1–K7 · 감사 관측 객체 · observe_imports) → 만들기 · check_v13 문제 0 · '
+    '다시 읽기 · 감사 판정 함수 문제 0',
+    isinstance(r18.get('good'), dict) and r18.get('good_check') == [] and r18.get('good_rr_probs') == [] and r18.get('good_au_probs') == [],
+    (r18.get('good') if not isinstance(r18.get('good'), dict) else (r18.get('good_check'), r18.get('good_rr_probs'), r18.get('good_au_probs'))))
+for i, nm, tag, cx, m_, made in r18.get('build', []):
+    chk(f'V18b{i:02d} {"[Codex] " if cx else ""}{nm} → build_v13 거부 (메시지에 {tag!r}) · 산출 폴더 없음',
+        m_ is not None and not m_.startswith('OTHER') and tag in m_ and not made, (m_ or 'BUILT (거부 없음)')[:400])
+if not r18.get('build'):
+    chk('V18b (변이 만들기 시험 못 함)', False, r18)
+for i, nm, tag, cx, pc, forged in r18.get('check', []):
+    chk(f'V18c{i:02d} {"[Codex] " if cx else ""}{nm} — 좋은 묶음의 배치 증거를 이것으로 바꾸면 check_v13 문제 · 빌드 manifest 기록을 지금 파일에 맞춰 '
+        f'위조해도 문제 (같은 관문을 배치 뿌리에서 다시 판정 · 문제에 {tag!r})',
+        isinstance(pc, list) and bool(pc) and isinstance(forged, list) and any(tag in p_ for p_ in forged), (pc, forged))
+if not r18.get('check'):
+    chk('V18c (재판정 시험 못 함 — 좋은 묶음 없음)', False, r18.get('good'))
+chk('V18d 되돌린 뒤 check_v13 문제 0', r18.get('check_restored') == [], r18.get('check_restored'))
+_dp = getattr(G2RR, 'launcher_detail_problems', None)
+chk('V18e 다시 읽기 상세 계약은 생산자 쪽 한 함수 (g2_network_reread.launcher_detail_problems) — 생산자 꼴 = 문제 0 · cases=[] = 문제 · 배포 관문 생산 194 = 관측 필수 표',
+    callable(_dp) and _dp(dict(RR_OK, meta=rr_detail()[0], cases=rr_detail()[1]), frozenset(PROD194)) == []
+    and bool(_dp(dict(RR_OK, meta=rr_detail()[0], cases=[]), frozenset(PROD194)))
+    and 'production194' in (getattr(LRB, 'V13_IMPORT_OBS_REQUIRED', None) or ()),
+    (callable(_dp), getattr(LRB, 'V13_IMPORT_OBS_REQUIRED', None)))
 
 print(f'\n{_ok} PASS · {len(_fail)} FAIL')
 if _fail:
