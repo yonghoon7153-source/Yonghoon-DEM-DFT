@@ -1,0 +1,8 @@
+PC:SC,Ionic conductivity (Tabor),Electronic conductivity (Tabor)
+wt%,mS/cm,mS/cm
+조성,sigma_full_mScm_physics · 망 FULL · SE σ₀ 3.0 mS/cm (펠릿값),electronic_sigma_full_mScm_physics · 망 FULL (Stage E 파괴 보정 전) · AM 입자 σ 입력 50 mS/cm (CL-92: 측정 NCM811 의 약 10 배) · 탄소 첨가제 없음
+0:10,0.206431,6.191108
+3:7,0.260718,3.899533
+5:5,0.290814,2.689311
+7:3,0.323585,1.878101
+10:0,0.283182,1.674402
