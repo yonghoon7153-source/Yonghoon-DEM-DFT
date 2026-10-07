@@ -8791,6 +8791,16 @@
       "opened_in": "docs/reviews/codex_review_gen2_network_reverify3_20261007.md",
       "title": "빈 import 관측 로그 하나 = 관측 모듈 0 개로 audit rc 0 — 리포 밖 · 해석 안 되는 줄만 있어도 rc 0 · 둘째 프로세스 로그만 없어도 rc 0 (로그 파일 존재 ≠ 관측 완결)",
       "note": "판정문 §4.  무너지는 결론: \"관측 기록 파일이 있으므로 워커 · 단계 하위 프로세스의 실제 의존성 조사가 완결됐다\".  자리 (핀 0801d4ceb): scripts/run_network_194_parallel.py:228 (종료 훅이 로그를 쓰며 예외를 삼킨다) · :263 (로그 파일 개수 = n_processes · 빈 파일도 1 · 리포 밖 · 해석 안 되는 줄은 관측 집합에 기여 없음) · :2121 (\"관측 켰는데 파일 0 개\" · \"실제로 보인 봉인 밖 모듈\" 만 거부).  반례 (실 audit CLI): 파일 없음 rc 1 · 빈 1000.txt 하나 rc 0 (관측 0) · 무효/리포 밖 줄 rc 0 · network_conductivity + 별도 로그의 봉인 밖 coating_presets rc 1 · 같은 구성에서 둘째 로그만 없음 rc 0 (관측 1) — 마지막 둘 = 부분 소실 합성 대조 (실제 WSL 로그 소실 주장 아님).  한정: 새 누락 생산 모듈 · 틀린 σ 발견 아님 · 32 파일 수치 교정 유지 · 실행 관측을 안전장치로 내세우는 부분만 부분 판정.  최소 해결 증거 (판정문 §4): ① 완료 케이스/시도/단계와 관측 프로세스 시작 · 종료 영수증 결합 (기대 로그 누락 판단 근거) ② 로그 완결성 검사 — 원자적 최종화 · 실행 신원 · 필수 핵심 모듈 관측 명시 (`len(observed)>0` 만으로는 마지막 반례가 남는다) ③ 완료된 망 경로에서 빈/무효 로그 · 필수 단계 로그 누락을 실제 audit 호출로 거부하는 회귀 ④ WSL pilot3 (비관통 · 관통) 관측 영수증 + audit 제출 · 미관측 lazy 경로 = \"분류됨/미관측\" 구분 ⑤ 194 본 실행도 관측 권고. · 우리 트리 재현 (10-07 · 432 경로 git archive · 탐침 무변경) = 판정값 차이 0 (docs/reviews/codex_gen2_network_reverify3_evidence_20261007/_README_import.md §2) (new_gates import 5 행 같음 — 픽스처는 우리 쪽에서 탐침으로 다시 만든 것)."
+    },
+    {
+      "id": "WEB-04",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "claude 10-07 (ps45 힘 · 응력 발표 그림 · 1저자 Force Chain PNG 질문 때 코드 대조)",
+      "opened_in": "docs/data/ps45_force_stress_20261007/README.md",
+      "title": "force_chains.json 의 fn 이 \"µN\" 이라 적히지만 환산이 fn × 1e6/scale² — 접촉 힘 분포 (calc_contact_force_distribution) 의 fn × 1e6/scale 보다 scale (= 1000) 배 작다",
+      "note": "자리: scripts/analyze_contacts.py 의 force_chains 내보내기 (`round(fn * 1e6 / scale**2, 3)  # μN`) ↔ scripts/dem_analysis_core.py calc_contact_force_distribution (`force_conv = 1e6 / scale` — 덱 축척 F_deck = F_real × scale 의 유도가 주석에 있다).  영향: 3D 뷰어 Force Chain 은 fn 을 최솟값–최댓값 상대 색 · 굵기로만 쓴다 (webapp/static/js/viewer3d.js Force Chain 묶음) ⇒ 지금 그림 · 수치 보고 무영향 · 값이 화면 · 범례에 나가면 1000 배 틀린다.  고침 = analyze_contacts.py 가 194 봉인 CODE_FILES 안이라 194 발사 뒤 (반례 먼저: 같은 접촉의 force_chains fn = fn_<쌍>_mean 단위와 일치) · 그 전 새 뷰어 모드는 fn 절대값을 표시하지 않는다."
     }
   ]
 }
