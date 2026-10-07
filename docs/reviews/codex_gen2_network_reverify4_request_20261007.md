@@ -7,7 +7,7 @@
 - **봉인**: 32 파일 · `code_fp e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71` **그대로** — 고친 파일 = 실행기 (`scripts/run_network_194_parallel.py`) ·
   다시 읽기 (`scripts/g2_network_reread.py` · 인계 도구 지문 = 발사 때 기록) · 배포 생성기 (`scripts/lhs_release_build.py`) · 시험.
 - **이 요청에 붙일 것 (1저자 · WSL)**: 등록 `docs/reviews/lhs_network_batch_registration_20261007_g2.md` §1 사전 점검 전체 로그 — 각 단계 **원 프로세스 rc 와 전체 출력**
-  (tail · grep 만이 아니라 · 판정문 §8-4) · 시범 3 케이스 `--observe-imports` 의 영수증 폴더 · audit JSON · 다시 읽기 JSON v3.
+  (tail · grep 만이 아니라 · 판정문 §8-4) · 시범 3 케이스 `--observe-imports` 의 영수증 폴더 · audit JSON · 다시 읽기 JSON v3.  → ✅ 10-07 14:15 받음 = §4 (보충 묶음은 받는 대로).
 
 ## 1. G2RR3-01 — v1.3 배포 관문 (`3f9f86f59`)
 
@@ -41,3 +41,17 @@
 - **Q3.** 남는 틈: `-I` · `-E` 로 뜬 프로세스는 훅을 건너뛴다 (필수 역할 누락은 잡힌다) · fork 뒤 import 는 못 본다 (생산 경로에 multiprocessing 없음).  194 본 실행도 관측을 켜는 것 (판정문 §4-5 권고) 을 등록에 넣는다 — 충분한가?
 - **Q4.** 빌드 manifest 가 배치 뿌리 **절대 경로** 하나를 적는다 (check 가 그 자리에서 재평가 · 옮긴 뿌리는 관문 실패 = 설계).  이 결합 방식에 이의가 있나?
 - **Q5.** 붙인 WSL 사전 점검 로그 (등록 §1) 로 판정문 §8-4 를 닫을 수 있나 — 남는 것이 있으면 발사 전 최소 목록.
+- **Q6.** 사전 점검의 case15 실패 (§4) — 코드는 WEB-03 Q1 게시 계약대로 움직였고 **등록 기대가 틀렸다** (`SELF-92`) · 두 실패 경로 (띠 겹침 · 음수 덤프 면적) 는 기록상 194 에 0 건이다.
+  (a) 이 결과가 194 발사를 막는가 (우리 판단: 막지 않는다 — 도달 0/194 · 시범 셋 기대대로) · (b) case15 를 스모크에서 어떻게 둘지 — 한계 사례 (failed · `boundary_overlap`) 로 다음 등록에 적기 /
+  얇은 침대 띠 규칙 · 채널별 게시 (모델 · 계약 변경 = 194 뒤 별도) · (c) `GEN2-04` (Hertz 면적 ≤ 0 → 표지 없이 끊긴 간선 ↔ Physics 거부) · `WEB-05` (시도 사유 끝 300 자) 를 194 전에
+  고칠 필요가 있나 (둘 다 봉인 파일 · 194 값 무관).
+
+## 4. WSL 사전 점검 결과 (등록 §1 · 10-07 14:15 KST · 1저자 · 코드 `c3117438a`)
+
+- 증거 `docs/reviews/codex_gen2_network_reverify4_precheck_20261007/` — 1저자 묶음 (sha256 `ba840f7e…`) · 화면 전체 · 우리 재현 로그 · README (기대 ↔ 결과 표 · case15 원인 · 194 도달 범위).
+- 단계 0 · 1 · 2 · 5 = 기대대로: 다시 읽기 · 실행기 자체 시험 통과 (100/100) · 봉인 `e8b2496b…` (32) · 'g2' · 입력 지문 194 · 시범 pilot · audit · reread rc 0 · SEALED 3 ·
+  **관측 영수증 = 프로세스 15 (시작 15 = 끝맺음 15) · 완료 시도 3 (역할 worker / network_solver) · 리포 모듈 30 ⊆ 32** · 다시 읽기 JSON v3.
+- 단계 3 · 4 = 기대와 다름: `case15_network` failed (smoke rc 1 · reread rc 1 = S0) · real14 σ_ratio = 참고값과 8 자리 같음 · LHS 셋 · 음성 대조 넷 = 기대대로.
+  case15 = 전자 두 모드 · Hertz 열 띠 겹침 4 노드 (판 간격 19.1455 µm < 4 r_AM) · Physics 열 음수 덤프 면적 간선 거부 → 게시 차단 (이온 채널은 계산됨 = Codex 직접 풀이와 같음) → Q6.
+- 전체 출력 (판정문 §8-4): 등록 §1 명령은 tail · grep 이고 rc 는 원 프로세스 (`PIPESTATUS`) — 보충 묶음 (자체 시험 전체 출력 · 시범 `import_obs/` 영수증 · `runs/` · worker.json · log.txt) 은
+  1저자가 받는 대로 같은 폴더에 넣는다 → Q5.

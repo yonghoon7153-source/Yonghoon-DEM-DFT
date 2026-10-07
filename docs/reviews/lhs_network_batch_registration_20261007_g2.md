@@ -247,5 +247,11 @@ $PY scripts/run_network_194_parallel.py run --root "$R" 2>&1 | tee ~/net194_run_
   파이프라인 · 음성 대조 C1 · C1b · C2 · C3 = PASS · 참조 침대 두기 real14 · case15 sha256 = README) · 194 dry-run (이 컨테이너 · 원자료 없음 = `--allow-missing-raw`) 의 기대 세대 `'g2'` ·
   닫힘 27 ⊆ 29 ✓ 줄 확인 · 입력 지문 · code_fp = 같은 함수 (`plan_input_digest` · `code_fp`) 를 실제 194 계획에 불러 §2 · §3 값과 같음 확인.
 - 9-1b 컨테이너 (10-07 재등록 · 코드 커밋 `5dde71dcc` · `3b2d1b91e` · `17ba65f4e` · `2d247a66f`): 실행기 selftest 82/82 · `g2_network_reread --selftest` 15/15 · `wsl_network_smoke --selftest` 11/11 (커밋 뒤 깨끗한 트리) · `test_lhs_release_v13` 80/80 · 194 dry-run (이 컨테이너 · `--allow-missing-raw` — 원자료 · 메시 문제 582 건 = 원덤프 없음 · WSL 기대 0) = `code_fp e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71` (CODE_FILES 32) · 기대 세대 `'g2'` · 계약 문제 0 · 모드 `['hertz', 'physics', 'hertz_h12']` · 닫힘 30 ⊆ 32 ✓ · 지연 import 90 · 분류 밖 0 ✓ · 입력 지문 194 · `a04282d7…` · `da7c93f9…` (§2 같음).  ⚠ WSL 원형 실행 아님.
-- 9-2 사전 점검 (§1 · WSL): ⬜
+- 9-2 사전 점검 (§1 · WSL · 10-07 14:15 KST · 1저자 · 코드 `c3117438a` · 증거 `docs/reviews/codex_gen2_network_reverify4_precheck_20261007/`): 단계 0 · 1 · 2 · 5 = **기대대로**
+  (자체 시험 ✓ · 100/100 · `code_fp e8b2496b…` (32) · 'g2' · 입력 지문 194 · 시범 pilot · audit · reread rc 0 · SEALED 3 · 관측 영수증 시작 15 = 끝맺음 15 · 완료 시도 3 · 다시 읽기 JSON v3) ·
+  **단계 3 · 4 = 기대와 다름 — `case15_network` failed** (smoke rc 1 · reread rc 1 = S0 · real14 σ_ratio = 참고값 8 자리 같음 · LHS 셋 · 음성 대조 넷 기대대로).  원인 (우리 컨테이너 재현 같음):
+  전자 두 모드 · Hertz 열 = 띠 겹침 B∩T 4 노드 (`boundary_overlap` — 판 간격 19.1455 µm < 4 r_AM 24 µm) · Physics 열 = 덤프 면적 −0.186036 µm² 간선 거부 → WEB-03 Q1 게시 차단 ·
+  이온 채널은 계산됨 (Codex 직접 풀이와 같음 · Physics 협착-only 312 간선 not_computed = 기대 그대로).  ⇒ **코드는 등록 계약대로 · 등록 기대 (case15 done) 가 틀렸다** (`SELF-92`).
+  이 결과를 본 뒤 §1 기대 · 스모크 기대를 **고치지 않는다**.  194 도달 = 띠 겹침 0/194 · 음수 · 0 덤프 면적 0/194 (기록 · 증거 README §3) · 처리 = 재검증 4 요청서 §4 · Q6 (Codex) ·
+  같이 등재 `GEN2-04` (면적 ≤ 0 처리 모드 비대칭) · `WEB-05` (시도 사유 끝 300 자) · ⬜ 전체 출력 보충 묶음 (판정문 §8-4 · 1저자).
 - 9-3 발사: 커밋 ⬜ · manifest `seal.code_fp` ⬜ · `expected_network_generation` ⬜ · `input_digest.raw_sha256_table_sha256` ⬜

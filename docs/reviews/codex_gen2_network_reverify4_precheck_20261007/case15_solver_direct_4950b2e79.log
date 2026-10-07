@@ -1,0 +1,177 @@
+  Loaded 182995 contacts from contacts.csv
+Loaded 65970 atoms, 182995 contacts
+box=0.1×0.1, plate_z=0.019145, scale=1000
+
+============================================================
+IONIC CONDUCTIVITY (SE-SE network) — contact_mode=hertzian
+============================================================
+  Building resistor network (1 target types, contact_mode=hertzian)...
+  Network: 65866 nodes, 154610 edges, 9296 bottom, 45 top
+  접촉별 R_bulk 비율의 비가중 평균: 16.5% (협착 쪽 83.5%)  ⚠ 전력(I²R) 기여도가 아니다 — L2-08
+  Solving FULL network (bulk + constriction)...
+  Percolating component: 64650 nodes, 154370 edges
+  Large network: 55912 free nodes — CG (rtol 1e-10) first...
+  Solve: cg
+  협착 저항 전력 몫 Σ I²R_c / Σ I²R_total (FULL 해 · 관통 간선): 91.5%  [constriction_power_share_ion_hertz] ↔ 접촉별 비가중 평균 83.5%
+  Solving CONTACT_FREE network (R_constriction=0)...
+  Percolating component: 64650 nodes, 154370 edges
+  Large network: 55912 free nodes — CG (rtol 1e-10) first...
+  Solve: cg
+  Solving CONSTRICTION_ONLY network (R_bulk=0)...
+  Percolating component: 64650 nodes, 154370 edges
+  Large network: 55912 free nodes — CG (rtol 1e-10) first...
+  Solve: cg
+
+  ═══ Decomposition Results ═══
+  φ = 0.1801
+  접촉별 R_bulk 비율(비가중 평균): 16.5% | 협착 83.5%   ⚠ I²R 전력 몫 아님 (L2-08)
+
+  Mode                     σ/σ_bulk  σ (mS/cm)
+  ────────────────────────────────────────────
+  FULL (explicit-contact)   0.000326     0.0010
+  CONTACT_FREE (R_c=0)     0.003922     0.0118
+  CONSTRICTION_ONLY        0.000357     0.0011
+  Bruggeman (φ^1.5)        0.076452     0.2294
+
+  CF/FULL (모형 내부 협착비 · 상한 비 아님): 12.02×
+  Bruggeman EMT overestimation: 234.26×
+
+============================================================
+ELECTRONIC CONDUCTIVITY (AM-AM network) — contact_mode=hertzian
+============================================================
+  Building resistor network (1 target types, contact_mode=hertzian)...
+  Network: 104 nodes, 119 edges, 56 bottom, 52 top
+  접촉별 R_bulk 비율의 비가중 평균: 17.4% (협착 쪽 82.6%)  ⚠ 전력(I²R) 기여도가 아니다 — L2-08
+  Solving FULL network (bulk + constriction)...
+  ⚠ 경계 겹침 B ∩ T = 4 노드 — 정확 Dirichlet 이 풀 수 없다 (boundary_overlap · 풀지 않는다)
+  Solving CONTACT_FREE network (R_constriction=0)...
+  ⚠ 경계 겹침 B ∩ T = 4 노드 — 정확 Dirichlet 이 풀 수 없다 (boundary_overlap · 풀지 않는다)
+  Solving CONSTRICTION_ONLY network (R_bulk=0)...
+  ⚠ 경계 겹침 B ∩ T = 4 노드 — 정확 Dirichlet 이 풀 수 없다 (boundary_overlap · 풀지 않는다)
+
+  ═══ Decomposition Results ═══
+  φ = 0.4915
+  접촉별 R_bulk 비율(비가중 평균): 17.4% | 협착 82.6%   ⚠ I²R 전력 몫 아님 (L2-08)
+
+  Mode                     σ/σ_bulk  σ (mS/cm)
+  ────────────────────────────────────────────
+  Bruggeman (φ^1.5)        0.344559    17.2279
+
+
+============================================================
+THERMAL CONDUCTIVITY (ALL contacts) — contact_mode=hertzian
+============================================================
+  Building resistor network (2 target types, contact_mode=hertzian)...
+  Network: 65970 nodes, 182995 edges, 9352 bottom, 97 top
+  접촉별 R_bulk 비율의 비가중 평균: 22.2% (협착 쪽 77.8%)  ⚠ 전력(I²R) 기여도가 아니다 — L2-08
+  Solving FULL network (bulk + constriction)...
+  ⚠ 경계 겹침 B ∩ T = 4 노드 — 정확 Dirichlet 이 풀 수 없다 (boundary_overlap · 풀지 않는다)
+  Solving CONTACT_FREE network (R_constriction=0)...
+  ⚠ 경계 겹침 B ∩ T = 4 노드 — 정확 Dirichlet 이 풀 수 없다 (boundary_overlap · 풀지 않는다)
+  Solving CONSTRICTION_ONLY network (R_bulk=0)...
+  ⚠ 경계 겹침 B ∩ T = 4 노드 — 정확 Dirichlet 이 풀 수 없다 (boundary_overlap · 풀지 않는다)
+
+  ═══ Decomposition Results ═══
+  φ = 0.6716
+  접촉별 R_bulk 비율(비가중 평균): 22.2% | 협착 77.8%   ⚠ I²R 전력 몫 아님 (L2-08)
+
+  Mode                     σ/σ_bulk  σ (mS/cm)
+  ────────────────────────────────────────────
+  Bruggeman (φ^1.5)        0.550405     3.8528
+
+  Building resistor network (1 target types, contact_mode=hertzian)...
+  Network: 65866 nodes, 154610 edges, 9296 bottom, 45 top
+  접촉별 R_bulk 비율의 비가중 평균: 28.1% (협착 쪽 71.9%)  ⚠ 전력(I²R) 기여도가 아니다 — L2-08
+  Solving FULL network (bulk + constriction)...
+  Percolating component: 64650 nodes, 154370 edges
+  Large network: 55912 free nodes — CG (rtol 1e-10) first...
+  Solve: cg
+  협착 저항 전력 몫 Σ I²R_c / Σ I²R_total (FULL 해 · 관통 간선): 86.5%  [constriction_power_share_ion_hertz] ↔ 접촉별 비가중 평균 71.9%
+  Solving CONTACT_FREE network (R_constriction=0)...
+  Percolating component: 64650 nodes, 154370 edges
+  Large network: 55912 free nodes — CG (rtol 1e-10) first...
+  Solve: cg
+  Solving CONSTRICTION_ONLY network (R_bulk=0)...
+  Percolating component: 64650 nodes, 154370 edges
+  Large network: 55912 free nodes — CG (rtol 1e-10) first...
+  Solve: cg
+
+  ═══ Decomposition Results ═══
+  φ = 0.1801
+  접촉별 R_bulk 비율(비가중 평균): 28.1% | 협착 71.9%   ⚠ I²R 전력 몫 아님 (L2-08)
+
+  Mode                     σ/σ_bulk  σ (mS/cm)
+  ────────────────────────────────────────────
+  FULL (explicit-contact)   0.000346     0.0010
+  CONTACT_FREE (R_c=0)     0.002623     0.0079
+  CONSTRICTION_ONLY        0.000400     0.0012
+  Bruggeman (φ^1.5)        0.076452     0.2294
+
+  CF/FULL (모형 내부 협착비 · 상한 비 아님): 7.58×
+  Bruggeman EMT overestimation: 221.04×
+
+Results saved: <scratch>/case15_solver_direct2/network_conductivity_hertzian.json
+
+============================================================
+IONIC CONDUCTIVITY (SE-SE network) — contact_mode=physics
+============================================================
+  Building resistor network (1 target types, contact_mode=physics)...
+  Network: 65866 nodes, 154610 edges, 9296 bottom, 45 top
+  접촉별 R_bulk 비율의 비가중 평균: 24.5% (협착 쪽 75.5%)  ⚠ 전력(I²R) 기여도가 아니다 — L2-08
+  Solving FULL network (bulk + constriction)...
+  Percolating component: 64650 nodes, 154370 edges
+  Large network: 55912 free nodes — CG (rtol 1e-10) first...
+  Solve: cg
+  협착 저항 전력 몫 Σ I²R_c / Σ I²R_total (FULL 해 · 관통 간선): 90.5%  [constriction_power_share_ion_physics] ↔ 접촉별 비가중 평균 75.5%
+  Solving CONTACT_FREE network (R_constriction=0)...
+  Percolating component: 64650 nodes, 154370 edges
+  Large network: 55912 free nodes — CG (rtol 1e-10) first...
+  Solve: cg
+  Solving CONSTRICTION_ONLY network (R_bulk=0)...
+  Percolating component: 64650 nodes, 154370 edges
+  ⚠ 협착-only: 관통 간선 312 개가 R_c = 0 (ψ floor · clamp) — 빼면 단락이 개방이 된다 · 수축 전에는 값 없음 (zero_resistance_requires_contraction)
+
+  ═══ Decomposition Results ═══
+  φ = 0.1801
+  접촉별 R_bulk 비율(비가중 평균): 24.5% | 협착 75.5%   ⚠ I²R 전력 몫 아님 (L2-08)
+
+  Mode                     σ/σ_bulk  σ (mS/cm)
+  ────────────────────────────────────────────
+  FULL (explicit-contact)   0.000362     0.0011
+  CONTACT_FREE (R_c=0)     0.003922     0.0118
+  Bruggeman (φ^1.5)        0.076452     0.2294
+
+  CF/FULL (모형 내부 협착비 · 상한 비 아님): 10.83×
+  Bruggeman EMT overestimation: 211.05×
+
+============================================================
+ELECTRONIC CONDUCTIVITY (AM-AM network) — contact_mode=physics
+============================================================
+  Building resistor network (1 target types, contact_mode=physics)...
+  Network: 104 nodes, 119 edges, 56 bottom, 52 top
+  접촉별 R_bulk 비율의 비가중 평균: 23.5% (협착 쪽 76.5%)  ⚠ 전력(I²R) 기여도가 아니다 — L2-08
+  Solving FULL network (bulk + constriction)...
+  ⚠ 경계 겹침 B ∩ T = 4 노드 — 정확 Dirichlet 이 풀 수 없다 (boundary_overlap · 풀지 않는다)
+  Solving CONTACT_FREE network (R_constriction=0)...
+  ⚠ 경계 겹침 B ∩ T = 4 노드 — 정확 Dirichlet 이 풀 수 없다 (boundary_overlap · 풀지 않는다)
+  Solving CONSTRICTION_ONLY network (R_bulk=0)...
+  ⚠ 경계 겹침 B ∩ T = 4 노드 — 정확 Dirichlet 이 풀 수 없다 (boundary_overlap · 풀지 않는다)
+
+  ═══ Decomposition Results ═══
+  φ = 0.4915
+  접촉별 R_bulk 비율(비가중 평균): 23.5% | 협착 76.5%   ⚠ I²R 전력 몫 아님 (L2-08)
+
+  Mode                     σ/σ_bulk  σ (mS/cm)
+  ────────────────────────────────────────────
+  Bruggeman (φ^1.5)        0.344559    17.2279
+
+
+============================================================
+THERMAL CONDUCTIVITY (ALL contacts) — contact_mode=physics
+============================================================
+  Building resistor network (2 target types, contact_mode=physics)...
+  Thermal solver failed: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)
+
+Results saved: <scratch>/case15_solver_direct2/network_conductivity_physics.json
+Dual-view saved:  <scratch>/case15_solver_direct2/network_conductivity_dual.json
+Legacy-compat:    <scratch>/case15_solver_direct2/network_conductivity.json

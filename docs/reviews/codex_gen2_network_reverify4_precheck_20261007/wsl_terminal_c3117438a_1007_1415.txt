@@ -1,0 +1,146 @@
+yonghoon71@DESKTOP-IK8J81H:~/ps45_network_g2_0801d4ceb$ # ── 0. 체크아웃 (detached · 깨끗한 트리) · 파이썬 = 배치 venv ──
+cd ~/dem-audit
+git fetch origin claude/stoic-knuth-NObVQ
+git checkout --detach origin/claude/stoic-knuth-NObVQ
+git log -1 --oneline
+echo "dirty 줄 수 = $(git status --porcelain --untracked-files=no | wc -l) (0 이어야)"
+PY=$(ls ~/Yonghoon-DEM-DFT/venv/bin/python ~/Yonghoon-DEM-DFT/.venv/bin/python3 2>/dev/null | head -1)
+$PY -c "import numpy, scipy, networkx; print(numpy.__version__, scipy.__version__, networkx.__version__)"
+S=$(git rev-parse --short HEAD); T=$(date +%m%d_%H%M)
+DL=/mnt/c/Users/Administrator/Downloads        # 다른 PC 면 /mnt/c/Users/안용훈/Downloads
+
+# ── 1. 도구 자체 시험 (기대 17/17 · 100/100) ──
+$PY scripts/g2_network_reread.py --selftest 2>&1 | tail -3
+$PY scripts/run_network_194_parallel.py --selftest 2>&1 | tail -2
+
+# ── 2. 봉인 대조 (194 전체 · --dry-run = 아무것도 안 쓴다) ──
+$PY scripts/run_network_194_parallel.py run --root ~/net194_g2_drycheck_$T --dry-run 2>&1 | grep -E "코드 |기대 망 세대|전이 의존|지연 import|입력 지문|원자료 · 메시 문제|⛔"
+
+# ── 3. 실덤프 — 생산 → 후보 검사 → 게시 (real14 · case15 · LHS 셋 · 격리 ROOT) ──
+SM=~/g2pre_smoke_${S}_$T
+$PY scripts/wsl_network_smoke.py --root "$SM" --skip-real14-general --lhs-case lhs00_055 --lhs-case lhs00_128 --lhs-case lhsx_007 2>&1 | tail -40; echo "smoke rc=${PIPESTATUS[0]}"
+
+# ── 4. 게시 다시 읽기 ──
+$PY scripts/g2_network_reread.py --smoke-root "$SM" --json "$SM/reread.json" 2>&1 | tail -25; echo "reread rc=${PIPESTATUS[0]}"
+
+# ── 5. 194 실행기 시범 (LHS 셋 · import 관측 영수증) ──
+PL=~/g2pre_pilot_${S}_$T
+$PY scripts/run_network_194_parallel.py run --root "$PL" -j 3 --observe-imports --case lhs00_055 --case lhs00_128 --casls -la ~/g2pre_${S}_$T.tar.gzerge_report.json" "$(basename "$PL")/progress.tsv" && cp ~/g2pre_${S}_$T.tar.gz "$DL/" &&
+From https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT
+ * branch                claude/stoic-knuth-NObVQ -> FETCH_HEAD
+Previous HEAD position was 0801d4ceb Codex 세대 2 재검증 2 반입 (10-07 · HOLD · P2 넷 + P3 하나) · 194 실행 등록 재등록 (32 파일 · code_fp e8b2496b…) · 원장 · 재검증 3 요청서 · CLAUDE.md · 진행 기록
+HEAD is now at c3117438a ps45 힘 · 응력 발표 5 쪽 판 그림 (Particle stress ratio · Force contribution (%) — 1저자 10-07 축 이름) · 스크립트 · CSV
+c3117438a (HEAD, origin/claude/stoic-knuth-NObVQ, claude/stoic-knuth-NObVQ) ps45 힘 · 응력 발표 5 쪽 판 그림 (Particle stress ratio · Force contribution (%) — 1저자 10-07 축 이름) · 스크립트 · CSV
+dirty 줄 수 = 0 (0 이어야)
+2.5.2 1.18.1 3.7
+  ✓ ★ 등록 집합 양성 production194 (합성 — 등록 ID 지문 194 · lhs 130 · lhsx 64) — 194 케이스 K1–K7 · 코호트 H1 둘 통과 · M3 기대 194 = 읽음 194
+
+✓ 전부 통과
+
+✓ 전부 통과 (100/100)
+  코드 c3117438a (HEAD) dirty=False · 봉인 지문 code_fp e8b2496b9c2ecf6edad8c6b52d32a2514c96dd54c9a20823c300639249ecae71 (CODE_FILES 32)
+  원자료 · 메시 문제 0 건
+  기대 망 세대 (expected_network_generation — 이 체크아웃의 봉인 코드에서 유도): 'g2' · 세대 계약 문제 0 · 모드 ['hertz', 'physics', 'hertz_h12']
+  전이 의존 닫힘 30 모듈 ⊆ 봉인 CODE_FILES 32 — ✓
+  지연 import 분류 — 봉인 파일의 함수 안 리포 import 90 · 분류 밖 0 — ✓
+  입력 지문 (ID · 코호트 · 원자료 sha256 = 수확 JSON raw) — 케이스 194 · ids_sha256 a04282d7275bd8f92b0afb4ac8b045f72f3867ccebbb7813b530b3901fd7b3bf · raw_sha256_table_sha256 da7c93f9a0887145ff171e381c8608cb79779d96aea5a595a25677dc361ef784 · 원자료 sha 결손 0
+  ⚠ Codex 세대 2 재검증 2 (10-07) = HOLD — 새 194 생산 · v1.3 인계는 Codex GO · 1저자 발사 승인 뒤 (등록 docs/reviews/lhs_network_batch_registration_20261007_g2.md).  이 실행기는 그 판정을 대신하지 않는다 — 어느 코드 · 세대로 돌았는지는 manifest.json 이 증명한다.
+    lhs00_128: status done · 경과 2.36 s (파이프라인 2.09 s) · 최대 RSS 210.7 MB · rc 0 · σ_ion H/P None / None · run_id 20261007T141806-c58055e5 · Stage E False
+  ▶ lhsx_007 (lhs, stop_after=network) …
+    lhsx_007: status done · 경과 14.65 s (파이프라인 14.27 s) · 최대 RSS 416.9 MB · rc 0 · σ_ion H/P 0.620685 / 1.401522 · run_id 20261007T141814-c5226d16 · Stage E False
+  ▶ controls (controls) …
+    controls: status — · 경과 0.74 s (파이프라인 — s) · 최대 RSS 127.0 MB · rc 0 · σ_ion H/P None / None · run_id None · Stage E None
+WSL 소형 통합 시험 2026-10-07T14:18:22 · 코드 c3117438a · ROOT /home/yonghoon71/g2pre_smoke_c3117438a_1007_1415
+
+case    status  wall_s  pipeline_s      peak_rss_MB     rc      sigma_ion_H     sigma_ion_P     network_run_id  stage_E
+real14_network  done    36.98   36.57   713.2   0       0.063063        0.09492 20261007T141658-ed42410b        False
+case15_network  failed  40.39   39.87   773.4   0       None    None    None    False
+lhs00_055       done    4.1     3.82    217.8   0       0.01428 0.017136        20261007T141803-0846da55        False
+lhs00_128       done    2.36    2.09    210.7   0       None    None    20261007T141806-c58055e5        False
+lhsx_007        done    14.65   14.27   416.9   0       0.620685        1.401522        20261007T141814-c5226d16      False
+controls        —       0.74    —       127.0   0       None    None    None    None
+
+검사 23 · PASS 22 · 실데이터 FAIL 1 · 음성 대조 FAIL 0 (수정 전이면 정상) · rc 1
+  ✓ [A] real14_network: 자식 프로세스 정상 종료 · 보고서 있음
+  ✓ [A] real14_network: 원자료 sha256 = README 표 (압축 푼 바이트)
+  ✓ [A] real14_network: stop_after=network → done · Stage E 안 돌았다 · 망 정지 계약 통과
+  ✓ [A] real14_network: 세대 일치 — 반환 run_id = full_metrics = provenance (이번 실행)
+  ✓ [A] case15_network: 자식 프로세스 정상 종료 · 보고서 있음
+  ✓ [A] case15_network: 원자료 sha256 = README 표 (압축 푼 바이트)
+  ✗ [A] case15_network: stop_after=network → done · Stage E 안 돌았다 · 망 정지 계약 통과  — status failed · 실패 단계 ['Network Solver (both modes)'] · 필수 실패 ['Network Solver (both modes)'] · Stage E False
+  ✓ [B] lhs00_055: 자식 프로세스 정상 종료 · 보고서 있음
+  ✓ [B] lhs00_055: stop_after=network → done · Stage E 안 돌았다 · 망 정지 계약 통과
+  ✓ [B] lhs00_055: 세대 일치 — 반환 run_id = full_metrics = provenance (이번 실행)
+  ✓ [B] lhs00_055: 관통 (인계표 percolation_pct > 0) → 두 모드 σ computed · τ 상태 ≠ NOT_COMPUTED
+  ✓ [B] lhs00_128: 자식 프로세스 정상 종료 · 보고서 있음
+  ✓ [B] lhs00_128: stop_after=network → done · Stage E 안 돌았다 · 망 정지 계약 통과
+  ✓ [B] lhs00_128: 세대 일치 — 반환 run_id = full_metrics = provenance (이번 실행)
+  ✓ [B] lhs00_128: 비관통 (percolation_pct 0) → 두 모드 valid_zero · τ NOT_PERCOLATING
+  ✓ [B] lhsx_007: 자식 프로세스 정상 종료 · 보고서 있음
+  ✓ [B] lhsx_007: stop_after=network → done · Stage E 안 돌았다 · 망 정지 계약 통과
+  ✓ [B] lhsx_007: 세대 일치 — 반환 run_id = full_metrics = provenance (이번 실행)
+  ✓ [B] lhsx_007: 관통 (인계표 percolation_pct > 0) → 두 모드 σ computed · τ 상태 ≠ NOT_COMPUTED
+  ✓ [C] C1 일반 경로 σ_ratio ×4 → failed (RGLR2-01)
+  ✓ [C] C1b 일반 경로 L1 + σ_ratio None → failed (RGLR2-01)
+  ✓ [C] C2 게시 중 I/O 실패 둘 → 되돌림 실패 상태 · "이전 세대 그대로" 아님 (RGLR2-02)
+  ✓ [C] C3 거의 정수압 VM 쌍 → CV 0 (RGLR2-03)
+══ 보고 /home/yonghoon71/g2pre_smoke_c3117438a_1007_1415/smoke_report.json · 요약 /home/yonghoon71/g2pre_smoke_c3117438a_1007_1415/smoke_summary.txt
+smoke rc=1
+══ 세대 2 망 게시 다시 읽기 — 기대 세대 'g2' · 케이스 4
+  ✗ S0 스모크 망 정지 케이스 전부 done (5)  — {'case15_network': 'failed'}
+  ✓  real14_network — 세대 'g2' · τ {'hertz': 'OK', 'physics': 'OK', 'hertz_h12': 'OK'} · σ_ratio {'hertz': 0.02102106, 'physics': 0.03164009, 'hertz_h12': 0.02494138} · CF/협착 {'hertz': {'bulk_only': 'computed', 'constriction_only': 'computed'}, 'physics': {'bulk_only': 'computed', 'constriction_only': 'not_computed'}, 'hertz_h12': {'bulk_only': 'computed', 'constriction_only': 'computed'}}
+  ✓  lhs00_055 — 세대 'g2' · τ {'hertz': 'OK', 'physics': 'OK', 'hertz_h12': 'OK'} · σ_ratio {'hertz': 0.00475996, 'physics': 0.00571205, 'hertz_h12': 0.00521292} · CF/협착 {'hertz': {'bulk_only': 'computed', 'constriction_only': 'computed'}, 'physics': {'bulk_only': 'computed', 'constriction_only': 'not_computed'}, 'hertz_h12': {'bulk_only': 'computed', 'constriction_only': 'computed'}}
+  ✓  lhs00_128 — 세대 'g2' · τ {'hertz': 'NOT_PERCOLATING', 'physics': 'NOT_PERCOLATING', 'hertz_h12': 'NOT_PERCOLATING'} · σ_ratio {'hertz': None, 'physics': None, 'hertz_h12': None} · CF/협착 {'hertz': {'bulk_only': 'valid_zero', 'constriction_only': 'valid_zero'}, 'physics': {'bulk_only': 'valid_zero', 'constriction_only': 'valid_zero'}, 'hertz_h12': {'bulk_only': 'valid_zero', 'constriction_only': 'valid_zero'}}
+  ✓  lhsx_007 — 세대 'g2' · τ {'hertz': 'OK', 'physics': 'OK', 'hertz_h12': 'OK'} · σ_ratio {'hertz': 0.20689496, 'physics': 0.4671739, 'hertz_h12': 0.28614233} · CF/협착 {'hertz': {'bulk_only': 'computed', 'constriction_only': 'computed'}, 'physics': {'bulk_only': 'computed', 'constriction_only': 'not_computed'}, 'hertz_h12': {'bulk_only': 'computed', 'constriction_only': 'computed'}}
+  ✗ 1 건 실패
+reread rc=1
+# ⓪ 봉인 감사 (RGLR3-01 · 기대 망 세대 G2RR-01) — 케이스마다 어느 코드 · 세대로 계산됐나 (시도별 지문 · 옛 형식은 첫 run 규칙).  UNSEALED · 세대 문제가 있으면 인계하지 않는다 (retry)
+python3 scripts/run_network_194_parallel.py audit --root /home/yonghoon71/g2pre_pilot_c3117438a_1007_1415 --tsv /home/yonghoon71/g2pre_pilot_c3117438a_1007_1415/seal_audit.tsv --json /home/yonghoon71/g2pre_pilot_c3117438a_1007_1415/seal_audit.json
+# ⓪b 게시 다시 읽기 (Codex 세대 2 재검증 §7 끝 · 재검증 2 §3 — 등록 집합 · 전체 상태 · ID · 증서 · 도장 · 열 역할 · 인계 출처 관문 · 읽기 전용) — rc 0 이 아니면 인계하지 않는다
+python3 scripts/g2_network_reread.py --launcher-root /home/yonghoon71/g2pre_pilot_c3117438a_1007_1415 --expect-set pilot3 --json /home/yonghoon71/g2pre_pilot_c3117438a_1007_1415/reread.json
+# ① τ 관문 진단 표 — 모든 케이스 폴더 (실패 케이스도 NOT_COMPUTED 행).  진단 전용: 인계표에 손으로 잇지 않는다 (인계 τ = ② 의 --tau-results 경로)
+python3 scripts/tau_flux.py /home/yonghoon71/g2pre_pilot_c3117438a_1007_1415/merged/lhs/results/* --tsv /home/yonghoon71/g2pre_pilot_c3117438a_1007_1415/tau/lhs_tau_flux.tsv --json /home/yonghoon71/g2pre_pilot_c3117438a_1007_1415/tau/lhs_tau_flux.json
+python3 scripts/tau_flux.py /home/yonghoon71/g2pre_pilot_c3117438a_1007_1415/merged/lhsx/results/* --tsv /home/yonghoon71/g2pre_pilot_c3117438a_1007_1415/tau/lhsx_tau_flux.tsv --json /home/yonghoon71/g2pre_pilot_c3117438a_1007_1415/tau/lhsx_tau_flux.json
+# ②a 완료 압력 기록 (DESC-06 · 10-06) — 침대마다 LIGGGHTS 로그의 압밀 루프 판정 줄 (마지막 줄 current ≥ 목표) · 덱 sha = 수확 raw.deck.
+#    로그가 덱 폴더의 log* 가 아니면 --log-glob 으로 (rc 1 = OK 아닌 침대가 있다 — 그 침대가 있으면 ② 생성기가 거부한다)
+python3 scripts/lhs_pressure_record.py --cohort /home/yonghoon71/dem-audit/docs/data/area_s2_cohort.tsv --harvest-dir /home/yonghoon71/dem-audit/docs/data/lhs_descriptors_cov_1e09f661d --out /home/yonghoon71/g2pre_pilot_c3117438a_1007_1415/pressure/lhs_pressure_record.tsv
+python3 scripts/lhs_pressure_record.py --cohort /home/yonghoon71/dem-audit/docs/data/lhsx_descriptors_20260925/_cohort.tsv --harvest-dir /home/yonghoon71/dem-audit/docs/data/lhsx_descriptors_cov_1e09f661d --out /home/yonghoon71/g2pre_pilot_c3117438a_1007_1415/pressure/lhsx_pressure_record.tsv
+# ② 인계 v1.3 — 생성기 한 번 (망 배치 묶음 contact,percolation,f1,fracture,area,tau · RGL-03 · RGLR3-03).  τ 열 (f · f_gap · tau2 · tau · 상태 · 사유 · 메타) 은
+#    --tau-results 의 출처 관문 P0–P4 (배치 status.json run id · 입력 digest · metrics_flat 세대 · 정지 계약 재검사 · 도장 ↔ 레코드) 를 지난 값만 표 끝에 싣는다 · --tau-batch-manifest = manifest 기대 망 세대와 케이스마다 교차 대조 (G2RR-01) ·
+#    열 사전 <표>_columns.tsv · τ 출처 부록 <표>_tau_provenance.tsv · 제외 노트 <표>_excluded.tsv (LW ④b = frame_unverified 명시 제외).
+python3 scripts/lhs_design_dataset.py --export-handover /home/yonghoon71/g2pre_pilot_c3117438a_1007_1415/handover/lhs_handover_v13_20261007.csv --harvest /home/yonghoon71/dem-audit/docs/data/lhs_descriptors_cov_1e09f661d --union docs/data/lhs_union_20260927/lhs130_union.tsv --webapp /home/yonghoon71/g2pre_pilot_c3117438a_1007_1415/merged/lhs --webapp-groups contact,percolation,f1,fracture,area,tau --tau-results /home/yonghoon71/g2pre_pilot_c3117438a_1007_1415/merged/lhs/results --tau-batch-manifest /home/yonghoon71/g2pre_pilot_c3117438a_1007_1415/manifest.json --pressure-record /home/yonghoon71/g2pre_pilot_c3117438a_1007_1415/pressure/lhs_pressure_record.tsv
+python3 scripts/lhs_design_dataset.py --export-handover /home/yonghoon71/g2pre_pilot_c3117438a_1007_1415/handover/lhsx_handover_v13_20261007.csv --design docs/data/lhsx_design_adapted_20260929.csv --harvest /home/yonghoon71/dem-audit/docs/data/lhsx_descriptors_cov_1e09f661d --union docs/data/lhs_union_20260927/lhsx64_union.tsv --webapp /home/yonghoon71/g2pre_pilot_c3117438a_1007_1415/merged/lhsx --webapp-groups contact,percolation,f1,fracture,area,tau --tau-results /home/yonghoon71/g2pre_pilot_c3117438a_1007_1415/merged/lhsx/results --tau-batch-manifest /home/yonghoon71/g2pre_pilot_c3117438a_1007_1415/manifest.json --pressure-record /home/yonghoon71/g2pre_pilot_c3117438a_1007_1415/pressure/lhsx_pressure_record.tsv
+# ③ 보낼 묶음 — 인계표 · 열 사전 · τ 출처 부록 · 제외 노트 · 봉인 감사 · manifest · 실행 · 시도 기록 (케이스 결과 원본 · 작업 폴더는 빼고)
+(cd /home/yonghoon71/g2pre_pilot_c3117438a_1007_1415 && tar czf ~/net194_c3117438a_20261007.tar.gz manifest.json runs progress.tsv seal_audit.tsv merged/merge_report.json seal_audit.json reread.json merged/*/status.json merged/*/metrics_flat.csv merged/*/parallel_cases.tsv tau pressure handover/lhs_handover_v13_20261007.csv handover/lhs_handover_v13_20261007_columns.tsv handover/lhs_handover_v13_20261007_tau_provenance.tsv handover/lhs_handover_v13_20261007_excluded.tsv handover/lhsx_handover_v13_20261007.csv handover/lhsx_handover_v13_20261007_columns.tsv handover/lhsx_handover_v13_20261007_tau_provenance.tsv handover/lhsx_handover_v13_20261007_excluded.tsv cases/*/worker.json cases/*/log.txt)
+# ③b (선택 · 받는 쪽 독립 재검증용) τ 원천 canonical 파일 — 출처 부록의 sha256 을 다시 잴 수 있게 (dual · full_metrics · 망 도장)
+(cd /home/yonghoon71/g2pre_pilot_c3117438a_1007_1415 && tar czf ~/net194_c3117438a_20261007_tau_sources.tar.gz cases/*/work/results/*/network_conductivity_dual.json cases/*/work/results/*/full_metrics.json cases/*/work/results/*/network_provenance.json)
+pilot rc=0
+══ 봉인 감사 — /home/yonghoon71/g2pre_pilot_c3117438a_1007_1415
+  실행 형식 자격 current (새 실행 형식 — 필수 선언 전부 · G2RR2-01)
+  발사 git c3117438a · 지문 e8b2496b9c2ecf6e · 워커 체크아웃 /home/yonghoon71/dem-audit (지금 그 체크아웃 = 봉인 ✓ — 정보 · 판정과 무관)
+  case  cohort  status  verdict attempt(run)    merged  why
+  판정 {'SEALED': 3} · merged {'same': 3}
+  기대 망 세대 (expected_network_generation) 'g2' · 봉인 사본 'g2' · 케이스 레코드 세대 {'g2': 3}
+  입력 지문 (ID · 코호트 · 원자료 sha256) = 발사 기록 ✓
+  실제 import 관측 (run --observe-imports · G2RR2-03 · G2RR3-02) — 프로세스 15 (시작 15 · 끝맺음 15) · 완료 시도 3 (역할 worker/network_solver) · 리포 모듈 30 ⊆ 봉인 CODE_FILES 32 ✓
+  ✓ 기록 전부 발사 봉인 코드에서 나왔다 · merged = 케이스 폴더 · 레코드 세대 = 기대 세대
+audit rc=0
+  ✓ M0 manifest 기대 세대 선언 (expected_network_generation)
+  ✓ M-plan manifest plan · cohorts · queue 꼴 (비지 않음 · 중복 · 코호트 소속 — 루프 전)
+  ✓ M-reg 계획 큐 = 등록 집합 pilot3 (3)
+  ✓ M1 lhs 케이스 집합 — 계획 큐 = 배치 기록 (2)
+  ✓ M2 lhs 전 케이스 done · partial
+  ✓ H1 lhs 인계 출처 관문 (load_tau_results · P0–P4 · manifest 기대 세대 'g2') · 칸 = case_row
+  ✓ M1 lhsx 케이스 집합 — 계획 큐 = 배치 기록 (1)
+  ✓ M2 lhsx 전 케이스 done · partial
+  ✓ H1 lhsx 인계 출처 관문 (load_tau_results · P0–P4 · manifest 기대 세대 'g2') · 칸 = case_row
+  ✓ M3 읽은 고유 (케이스, 코호트) = 등록 집합 pilot3 — 기대 3 · 읽음 3
+  ✓ lhs lhs00_055 — 세대 'g2' · τ {'hertz': 'OK', 'physics': 'OK', 'hertz_h12': 'OK'} · σ_ratio {'hertz': 0.00475996, 'physics': 0.00571205, 'hertz_h12': 0.00521292} · CF/협착 {'hertz': {'bulk_only': 'computed', 'constriction_only': 'computed'}, 'physics': {'bulk_only': 'computed', 'constriction_only': 'not_computed'}, 'hertz_h12': {'bulk_only': 'computed', 'constriction_only': 'computed'}}
+  ✓ lhs lhs00_128 — 세대 'g2' · τ {'hertz': 'NOT_PERCOLATING', 'physics': 'NOT_PERCOLATING', 'hertz_h12': 'NOT_PERCOLATING'} · σ_ratio {'hertz': None, 'physics': None, 'hertz_h12': None} · CF/협착 {'hertz': {'bulk_only': 'valid_zero', 'constriction_only': 'valid_zero'}, 'physics': {'bulk_only': 'valid_zero', 'constriction_only': 'valid_zero'}, 'hertz_h12': {'bulk_only': 'valid_zero', 'constriction_only': 'valid_zero'}}
+  ✓ lhsx lhsx_007 — 세대 'g2' · τ {'hertz': 'OK', 'physics': 'OK', 'hertz_h12': 'OK'} · σ_ratio {'hertz': 0.20689496, 'physics': 0.4671739, 'hertz_h12': 0.28614233} · CF/협착 {'hertz': {'bulk_only': 'computed', 'constriction_only': 'computed'}, 'physics': {'bulk_only': 'computed', 'constriction_only': 'not_computed'}, 'hertz_h12': {'bulk_only': 'computed', 'constriction_only': 'computed'}}
+  ✓ 전부 통과
+reread rc=0
+      2 "expected_network_generation": "g2"
+      2 "launch_format": "network_parallel_launch/v3"
+-rw-r--r-- 1 yonghoon71 yonghoon71 21825 Oct  7 14:18 /home/yonghoon71/g2pre_c3117438a_1007_1415.tar.gz
+yonghoon71@DESKTOP-IK8J81H:~$
