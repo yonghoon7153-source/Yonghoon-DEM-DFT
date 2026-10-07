@@ -5324,9 +5324,10 @@ function netCurrentFrame(pay, frame) {
 function netCurrentColorbarSpec(pay, opt, lo, hi, frame) {
   const ch = { ionic: 'ionic (SE–SE contacts)', electronic: 'electronic (AM–AM contacts)' }[pay.channel] || String(pay.channel);
   const md = pay.mode === 'physics' ? 'Physics FULL (sensitivity)' : 'Hertz FULL';
-  const c1 = frame === '1C';
-  const fr = netCurrentFrame(pay, c1 ? '1C' : '1V');
-  const f = fr.ok ? fr.factor : 1;
+  const want1C = frame === '1C';
+  const fr = netCurrentFrame(pay, want1C ? '1C' : '1V');
+  const c1 = want1C && fr.ok;                                  // @1C 를 못 하면 @1V 눈금 그대로 (제목 · 부제가 그렇게 말한다 — 단추는 꺼져 있다)
+  const f = c1 ? fr.factor : 1;
   const sh = Math.log10(f);
   const d = pay.density || {};
   const q = (d.c1 || {}).Q_areal_mAh_cm2;
@@ -5341,7 +5342,7 @@ function netCurrentColorbarSpec(pay, opt, lo, hi, frame) {
       ? ('@1C = linear scaling of the 1 V probe solve: j(1C) = j(1V) × I_1C / I_1V (× ' + netCurrentFmtJ(f) + ') · I_1C = Q_areal × 1 h⁻¹'
          + (q > 0 ? ' = ' + (q >= 0.01 && q < 1000 ? String(Number((+q).toPrecision(3))) : netCurrentFmtJ(q)) + ' mA cm⁻²' : '')
          + ' (current-conservation assumption — no reaction distribution).  ' + base)
-      : ('1 V probe across the electrode (bottom band 1 V → top band 0 V).  ' + base),
+      : ((want1C ? '@1C unavailable — @1V values shown.  ' : '') + '1 V probe across the electrode (bottom band 1 V → top band 0 V).  ' + base),
   };
 }
 

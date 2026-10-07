@@ -717,15 +717,19 @@ def _cmd_show(a):
     print(f"게시 σ 대조 {body['sigma_check']} · 세대 {body['generation']}")
     dn = body.get('density') or {}
     c1 = dn.get('c1') or {}
+
+    def _g(v, f=1.0):
+        return f'{float(v) * f:.4g}' if isinstance(v, (int, float)) and not isinstance(v, bool) and math.isfinite(float(v)) else '—'
     if dn.get('reason'):
         print(f"전류 밀도: 계산 불가 — {dn['reason']}")
     else:
-        print(f"전류 밀도 (A cm⁻² @1V · A_c = {dn.get('area_column')}) — 그린 접촉 {dn.get('j_min_1V'):.4g} … {dn.get('j_max_1V'):.4g} · "
-              f"단면 평균 ⟨J⟩ {dn.get('j_mean_1V'):.4g} · σ₀ {dn.get('sigma0_S_cm')} S/cm ({dn.get('sigma0_source')})")
+        print(f"전류 밀도 (A cm⁻² @1V · A_c = {dn.get('area_column')}) — 그린 접촉 {_g(dn.get('j_min_1V'))} … {_g(dn.get('j_max_1V'))} · "
+              f"단면 평균 ⟨J⟩ {_g(dn.get('j_mean_1V'))} · σ₀ {dn.get('sigma0_S_cm')} S/cm ({dn.get('sigma0_source')})"
+              + (f" · 면적 없는 접촉 {dn['n_no_area']}" if dn.get('n_no_area') else ''))
         if c1.get('status') == 'ok':
-            f = c1['factor']
-            print(f"@1C (× {f:.4g} = I_1C / I_1V · Q_areal {c1['Q_areal_mAh_cm2']:.4g} mAh/cm²) — "
-                  f"{dn['j_min_1V'] * f:.4g} … {dn['j_max_1V'] * f:.4g} A cm⁻²"
+            f = float(c1['factor'])
+            print(f"@1C (× {f:.4g} = I_1C / I_1V · Q_areal {_g(c1.get('Q_areal_mAh_cm2'))} mAh/cm²) — "
+                  f"{_g(dn.get('j_min_1V'), f)} … {_g(dn.get('j_max_1V'), f)} A cm⁻²"
                   + (f" · ⚠ 기본값 {c1['defaults_used']}" if c1.get('defaults_used') else ''))
         else:
             print(f"@1C 환산 불가 — {c1.get('reason')}")

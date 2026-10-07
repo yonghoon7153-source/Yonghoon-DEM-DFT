@@ -358,6 +358,8 @@ out.ticks = netCurrentTicks(-3, 1, netCurrentFmtJ);
 out.ticksNarrow = netCurrentTicks(Math.log10(0.31), Math.log10(1.4), netCurrentFmtJ);
 out.spec1v = netCurrentColorbarSpec(PAY5, {channel: 'ionic', mode: 'hertzian', top: 5}, r5[0], r5[1], '1V');
 out.spec1c = netCurrentColorbarSpec(PAY5, {channel: 'ionic', mode: 'hertzian', top: 5}, r5[0], r5[1], '1C');
+out.spec1cNo = netCurrentColorbarSpec(NC1, {channel: 'ionic', mode: 'hertzian', top: 5}, r5[0], r5[1], '1C');
+out.spec1vTicks = (out.spec1v.ticks || []).map(t => t.label);
 out.r5 = r5;
 const st = {nDrawn: 4, nWrapSkipped: 1, lo: r5[0], hi: r5[1]};
 out.leg = netCurrentLegendHtml(PAY5, {channel: 'ionic', mode: 'hertzian', top: 5, arrows: false}, st);
@@ -406,6 +408,10 @@ console.log(JSON.stringify(out));
                       f'netCurrentFmtJ(Math.pow(10, {r5[1]}) * {f})]));')
         end_ok = sc is not None and lab1c[0] == sc[0] and lab1c[-1] == sc[1]
     chk('D5k @1C 눈금 끝 = netCurrentFmtJ(10^lo × f) · netCurrentFmtJ(10^hi × f) (같은 색 · 다른 숫자)', end_ok)
+    sn = res.get('spec1cNo') or {}
+    chk('D5k2 @1C 를 못 하는데 @1C 스펙을 부르면 — 제목 = @1V probe · 눈금 = @1V 그대로 · 부제 "@1C unavailable" (@1C 라고 거짓 표기하지 않는다)',
+        '@1V probe' in sn.get('title', '') and '@1C (operating)' not in sn.get('title', '') and '@1C unavailable' in sn.get('sub', '')
+        and [t['label'] for t in (sn.get('ticks') or [])] == res.get('spec1vTicks'), repr(sn)[:300])
     leg = res['leg']
     chk('D5l 범례 — 접촉 전류 밀도 · A cm⁻² · @1V (탐침) · @1C (운전 환산) 두 줄 · 그릴 접촉 = |I| 큰 순 상위 5',
         all(x in leg for x in ('접촉 전류 밀도', 'A cm⁻²', '@1V', '@1C', '상위 5')) and '|I|' in leg, leg[:500])
