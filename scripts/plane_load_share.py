@@ -355,12 +355,57 @@ def _build(cols):
     return atoms, contacts
 
 
+def _vcol(id0, typ, x, y, zs, r, F):
+    """세로 기둥 (같은 반경 · 닿음) — parts [(id, 형, x, y, z, r)] · cons [(id1 = 아래, id2, 아래 입자가 받는 힘 (0, 0, −F), 접촉점 = 중점)]."""
+    parts = [(id0 + k, typ, x, y, z, r) for k, z in enumerate(zs)]
+    cons = [(id0 + k, id0 + k + 1, (0.0, 0.0, -F), (x, y, 0.5 * (zs[k] + zs[k + 1]))) for k in range(len(zs) - 1)]
+    return parts, cons
+
+
+def _lw_case(parts, cons):
+    """parts [(id, 형, x, y, z, r)] · cons [(id1, id2, id1 이 받는 힘 (3), 접촉점 (3))] (법선 = 힘 · 접선 0) →
+    (compute 용 배열 둘, 봉인 Love–Weber 용 atoms_raw · contacts_raw — analyze_contacts 로더와 같은 키)."""
+    atoms = {'id': np.array([p[0] for p in parts]), 'type': np.array([p[1] for p in parts]),
+             'z': np.array([p[4] for p in parts], dtype=float), 'radius': np.array([p[5] for p in parts], dtype=float)}
+    f = np.array([c[2] for c in cons], dtype=float)
+    contacts = {'id1': np.array([c[0] for c in cons]), 'id2': np.array([c[1] for c in cons]), 'f': f, 'fn': f.copy()}
+    atoms_raw = {int(p[0]): {'type': int(p[1]), 'x': float(p[2]), 'y': float(p[3]), 'z': float(p[4]), 'radius': float(p[5])}
+                 for p in parts}
+    contacts_raw = []
+    for c in cons:
+        (fx, fy, fz), (cx, cy, cz) = c[2], c[3]
+        contacts_raw.append({'id1': int(c[0]), 'id2': int(c[1]), 'fx': float(fx), 'fy': float(fy), 'fz': float(fz),
+                             'fn_x': float(fx), 'fn_y': float(fy), 'fn_z': float(fz), 'ft_x': 0.0, 'ft_y': 0.0, 'ft_z': 0.0,
+                             'cp_x': float(cx), 'cp_y': float(cy), 'cp_z': float(cz)})
+    return atoms, contacts, atoms_raw, contacts_raw
+
+
 def selftest():
     res = []
 
     def chk(name, cond):
+        """cond = 참거짓 또는 인자 없는 함수 (함수면 여기서 부른다 — 예외 = 실패로 세고 이유를 적는다 · 시험 먼저 단계에서
+        새 API 가 없을 때도 시험 전체가 끝까지 돈다)."""
+        why = ''
+        if callable(cond):
+            try:
+                cond = cond()
+            except Exception as e:                            # noqa: BLE001 — 시험 실패로 센다
+                cond, why = False, f'  — {type(e).__name__}: {str(e)[:120]}'
         res.append((name, bool(cond)))
-        print(('  ✓ ' if cond else '  ✗ ') + name)
+        print(('  ✓ ' if cond else '  ✗ ') + name + why)
+
+    def _try(fn):
+        """공유 준비 계산 — 예외면 그 예외를 값으로 (그 값을 쓰는 시험이 실패로 센다)."""
+        try:
+            return fn()
+        except Exception as e:                                # noqa: BLE001
+            return e
+
+    def _ok(x):
+        if isinstance(x, Exception):
+            raise x
+        return x
 
     TM = {1: 'AM_P', 2: 'AM_S', 3: 'SE'}
     box = (1.0, 1.0, 'input_params.json')
@@ -451,6 +496,222 @@ def selftest():
         lines = (out / 'plane_load_share_slide.csv').read_text(encoding='utf-8').splitlines()
         chk('T10 슬라이드 CSV 머리 세 줄 + 값 한 줄 (FAILED 제외)', len(lines) == 4 and lines[0].startswith('PC:SC') and lines[3].startswith('7:3,75.0000'))
         chk('T10 입력 sha256 기록', set(R['cases']['7:3']['inputs_sha256']) >= {'atoms.csv', 'contacts.csv', 'mesh_info.json', 'meta.json'})
+        chk('T10 fx · 접촉점 열 없는 CSV → α NOT_COMPUTED (Love–Weber 사유) · 단면 하중 값은 그대로',
+            lambda: R['cases']['7:3']['alpha']['status'].startswith('NOT_COMPUTED') and 'cp_x' in R['cases']['7:3']['alpha']['status']
+            and R['cases']['7:3']['status'] == 'OK')
+
+    # ══ Q1 (1저자 10-07) — 슬라이드 양 = Contribution to σ_zz = 21 단면 평균 Σ_k F_X ÷ Σ_k F (하중 가중) ═══════════════
+    #  혼합 기둥 (AM_P r 0.1 셋 → SE r 0.05 넷 · 아래가 무겁다: AM–AM 4 · AM–SE 3 · SE–SE 2) · 판 1.0 · 창 [0.2, 0.8] ·
+    #  21 단면 = 0.2 + 0.03 k → AM–AM 11 장 · AM–SE 5 · SE–SE 5 (중심 · 단면이 0.01 이상 떨어지게 골랐다 — 동률 없음).
+    G3 = GROUPS
+    M_parts = [(1, 1, 0.5, 0.5, 0.11, 0.1), (2, 1, 0.5, 0.5, 0.31, 0.1), (3, 1, 0.5, 0.5, 0.51, 0.1),
+               (4, 3, 0.5, 0.5, 0.66, 0.05), (5, 3, 0.5, 0.5, 0.76, 0.05), (6, 3, 0.5, 0.5, 0.86, 0.05), (7, 3, 0.5, 0.5, 0.96, 0.05)]
+    M_cons = [(1, 2, (0.0, 0.0, -4.0), (0.5, 0.5, 0.21)), (2, 3, (0.0, 0.0, -4.0), (0.5, 0.5, 0.41)),
+              (3, 4, (0.0, 0.0, -3.0), (0.5, 0.5, 0.61)), (4, 5, (0.0, 0.0, -2.0), (0.5, 0.5, 0.71)),
+              (5, 6, (0.0, 0.0, -2.0), (0.5, 0.5, 0.81)), (6, 7, (0.0, 0.0, -2.0), (0.5, 0.5, 0.91))]
+    aM, cM, arM, crM = _lw_case(M_parts, M_cons)
+    oM = compute(aM, cM, TM, 1.0, box, 1.0)
+    exp_mean = {'AM–AM': 100 * 44 / 69, 'AM–SE': 100 * 15 / 69, 'SE–SE': 100 * 10 / 69}          # Σ_k F_X ÷ Σ_k F
+    exp_int = {'AM–AM': 100 * 1.24 / 1.97, 'AM–SE': 100 * 0.45 / 1.97, 'SE–SE': 100 * 0.28 / 1.97}   # 창 잘린 적분 (연속 극한)
+    chk('T11 혼합 기둥: 단면 분류 11 · 5 · 5 장 · 가운데 단면 = AM–AM 100 %',
+        lambda: [sum(1 for q in oM['cuts'] if math.isclose(q['share_group_pct'][g], 100.0)) for g in G3] == [11, 5, 5]
+        and math.isclose(oM['mid']['share_group_pct']['AM–AM'], 100.0))
+    chk('T11 Contribution to σ_zz = Σ_k F_X ÷ Σ_k F = 44/69 · 15/69 · 10/69 (단면 몫 단순 평균 11/21 · 5/21 · 5/21 과 다르다)',
+        lambda: all(math.isclose(oM['contribution_sigma_zz_pct'][g], exp_mean[g], rel_tol=1e-12) for g in G3)
+        and not math.isclose(oM['contribution_sigma_zz_pct']['AM–AM'], 100 * 11 / 21, rel_tol=1e-3))
+    chk('T11 σ_zz (21 단면 하중 평균) = 69/21 × 1e-6 MPa', lambda: math.isclose(oM['sigma_zz_planes_mean_mpa'], 69 / 21 * 1e-6, rel_tol=1e-12))
+    chk('T11 연속 극한 (창 잘린 적분 Σ f_z^up × 창과 겹친 길이) = 1.24 · 0.45 · 0.28 ÷ 1.97 · σ_zz = 1.97 ÷ 0.6 × 1e-6',
+        lambda: all(math.isclose(oM['contribution_sigma_zz_integral_pct'][g], exp_int[g], rel_tol=1e-12) for g in G3)
+        and math.isclose(oM['sigma_zz_window_integral_mpa'], 1.97 / 0.6 * 1e-6, rel_tol=1e-12))
+    exp_comment = 'Contribution to σ_zz — 21 수평 단면 평균 (= (1/V)Σ f_z l_z 의 접촉 유형별 몫 · 벽 근처 2 r_max 제외)'
+    new_keys = ('contribution_sigma_zz_pct', 'sigma_zz_planes_mean_mpa', 'sigma_zz_window_integral_mpa',
+                'contribution_sigma_zz_integral_pct', 'window_deck', 'alpha')
+
+    def _write_m(d):
+        o = dict(oM)
+        o['alpha'] = stress_alpha(arM, crM, TM, oM, box, 1.0)
+        R = {'tool': 'plane_load_share', 'n_cuts': N_CUTS, 'order': ['7:3'], 'cases': {'7:3': o}}
+        write_outputs(R, d)
+        return R
+    with tempfile.TemporaryDirectory() as td:
+        td = Path(td)
+        _try(lambda: _write_m(td / 'A'))
+        sl = _try(lambda: list(csv.reader(open(td / 'A' / 'plane_load_share_slide.csv', encoding='utf-8'))))
+        sm = _try(lambda: list(csv.reader(open(td / 'A' / 'plane_load_summary.csv', encoding='utf-8'))))
+        chk('T11 슬라이드 머리: Long Name AM–AM · AM–SE · SE–SE contacts · 단위 % · 주석 = Contribution to σ_zz (21 수평 단면 평균)',
+            lambda: _ok(sl)[0] == ['PC:SC', 'AM–AM contacts', 'AM–SE contacts', 'SE–SE contacts'] and _ok(sl)[1] == ['wt%', '%', '%', '%']
+            and _ok(sl)[2] == ['조성'] + [exp_comment] * 3)
+        chk('T11 슬라이드 값 = 21 단면 평균 63.7681 · 21.7391 · 14.4928 (가운데 단면 100 · 0 · 0 이 아니다)',
+            lambda: _ok(sl)[3:] == [['7:3', '63.7681', '21.7391', '14.4928']])
+        chk('T11 요약 (mean) 열 = 슬라이드 값 · (mid) 열 = 가운데 단면 그대로',
+            lambda: (lambda h, row: [row[h.index(f'{g} (mean)')] for g in G3] == ['63.7681', '21.7391', '14.4928']
+                     and [row[h.index(f'{g} (mid)')] for g in G3] == ['100.0000', '0.0000', '0.0000'])(_ok(sm)[0], _ok(sm)[3]))
+
+        def _rw():
+            rewrite_from_json(td / 'A' / 'plane_load.json', td / 'B')
+            return {n: (td / 'A' / n).read_bytes() == (td / 'B' / n).read_bytes()
+                    for n in ('plane_load_share_slide.csv', 'plane_load_summary.csv', 'plane_load_cuts_7_3.csv', 'stress_reduction_slide.csv')}
+        same = _try(_rw)
+        chk('T11 --rewrite (plane_load.json → CSV) = 처음 쓴 CSV 넷과 바이트 같다 (슬라이드 · 요약 · 단면 · α)',
+            lambda: len(_ok(same)) == 4 and all(_ok(same).values()))
+
+        def _old():
+            d = json.loads((td / 'A' / 'plane_load.json').read_text(encoding='utf-8'))
+            for k in new_keys:
+                d['cases']['7:3'].pop(k)
+            (td / 'C').mkdir()
+            src = td / 'C' / 'plane_load.json'
+            src.write_text(json.dumps(d, ensure_ascii=False, indent=1) + '\n', encoding='utf-8')
+            h0 = _sha(src)
+            rewrite_from_json(src, td / 'C')
+            prov = json.loads((td / 'C' / 'plane_load_rewrite.json').read_text(encoding='utf-8'))
+            return {'slide': (td / 'C' / 'plane_load_share_slide.csv').read_bytes() == (td / 'A' / 'plane_load_share_slide.csv').read_bytes(),
+                    'kept': _sha(src) == h0, 'no_alpha': not (td / 'C' / 'stress_reduction_slide.csv').exists(),
+                    'prov': prov.get('source_json_sha256') == h0 and prov.get('code_sha256') == _sha(Path(__file__))
+                    and set(prov.get('written', {})) >= {'plane_load_share_slide.csv', 'plane_load_summary.csv', 'plane_load_cuts_7_3.csv'}}
+        old = _try(_old)
+        chk('T11 옛 형식 JSON (기여 키 · α 없음) 재작성 → 같은 슬라이드 (단면 기록에서 다시 계산)', lambda: _ok(old)['slide'])
+        chk('T11 재작성은 원 JSON 을 안 건드린다 · α 없는 옛 JSON 이면 α 슬라이드를 안 쓴다', lambda: _ok(old)['kept'] and _ok(old)['no_alpha'])
+        chk('T11 재작성 출처 기록 plane_load_rewrite.json (원 JSON sha256 · 코드 sha256 · 쓴 파일)', lambda: _ok(old)['prov'])
+
+        def _refuse():
+            base = json.loads((td / 'A' / 'plane_load.json').read_text(encoding='utf-8'))
+            bad = []
+            for mut in ('tamper', 'tool'):
+                d = json.loads(json.dumps(base))
+                if mut == 'tamper':
+                    d['cases']['7:3']['contribution_sigma_zz_pct']['AM–AM'] += 1.0
+                else:
+                    d['tool'] = 'other'
+                p = td / f'{mut}.json'
+                p.write_text(json.dumps(d, ensure_ascii=False), encoding='utf-8')
+                try:
+                    rewrite_from_json(p, td / mut)
+                    bad.append(mut)
+                except ValueError:
+                    pass
+            return not bad
+        chk('T11 재작성 거부: 저장된 기여 ≠ 단면에서 다시 계산 · 다른 도구의 JSON', _refuse)
+
+    # ══ Q2 (1저자 10-07) — α = ⟨σ_zz⟩_상 ÷ ⟨σ_zz⟩_전체 (부피 가중 · 봉인 Love–Weber 입자 텐서 · 중심이 단면 창 안) ══════════
+    #  평행 기둥 (T2 기하): AM_P r 0.1 (F 3) · SE r 0.05 (F 1) · 창 [0.2, 0.8] — 창 안 입자 = 접촉 둘 · |σ_zz| = 3F/(2πr²) (해석).
+    pA, kA = _vcol(1, 1, 0.2, 0.5, [0.1, 0.3, 0.5, 0.7, 0.9], 0.1, 3.0)
+    pB, kB = _vcol(100, 3, 0.7, 0.5, [0.05 + 0.1 * k for k in range(10)], 0.05, 1.0)
+    aP, cP, arP, crP = _lw_case(pA + pB, kA + kB)
+    oP = compute(aP, cP, TM, 1.0, box, 1.0)
+    alP = _try(lambda: stress_alpha(arP, crP, TM, oP, box, 1.0))
+    sA, sB = 3 * 3.0 / (2 * math.pi * 0.1 ** 2), 3 * 1.0 / (2 * math.pi * 0.05 ** 2)
+    VA, VB = 4 / 3 * math.pi * 0.1 ** 3, 4 / 3 * math.pi * 0.05 ** 3
+    s_all = (3 * VA * sA + 6 * VB * sB) / (3 * VA + 6 * VB)
+    chk('T12 평행 기둥: α 상태 OK · 창 안 AM_P 3 · SE 6 (벽에 닿는 끝 입자 빠짐) · 창 안 벽 닿는 입자 0',
+        lambda: _ok(alP)['status'] == 'OK' and _ok(alP)['n_window'] == {'AM_P': 3, 'SE': 6}
+        and _ok(alP)['cross_check']['n_window_touching_wall'] == 0)
+    chk('T12 봉인 Love–Weber 입자 σ_zz = −3F/(2πr²) (상 평균 · 압축 양수 · AM_P · SE)',
+        lambda: math.isclose(_ok(alP)['mean_compressive_sigma_zz_mpa']['AM_P'], sA * 1e-6, rel_tol=1e-12)
+        and math.isclose(_ok(alP)['mean_compressive_sigma_zz_mpa']['SE'], sB * 1e-6, rel_tol=1e-12))
+    chk('T12 α AM_P = 0.9375 · α SE = 1.25 · α AM = α AM_P · α AM_S = null (상 없음 — 0 아님)',
+        lambda: math.isclose(sA / s_all, 0.9375, rel_tol=1e-12) and math.isclose(_ok(alP)['alpha_zz']['AM_P'], 0.9375, rel_tol=1e-12)
+        and math.isclose(_ok(alP)['alpha_zz']['SE'], 1.25, rel_tol=1e-12) and math.isclose(_ok(alP)['alpha_zz']['AM'], 0.9375, rel_tol=1e-12)
+        and _ok(alP)['alpha_zz']['AM_S'] is None)
+    chk('T12 닫힘 Σ (V_X/V_all) α_X = 1 · 수직 하중뿐 → α_p (평균 응력 tr σ/3) = α_zz',
+        lambda: abs(_ok(alP)['closure_zz'] - 1) < 1e-12 and abs(_ok(alP)['closure_p'] - 1) < 1e-12
+        and all(math.isclose(_ok(alP)['alpha_p'][k], _ok(alP)['alpha_zz'][k], rel_tol=1e-12) for k in ('AM_P', 'SE', 'AM')))
+    chk('T12 교차 대조: LW 창 합 ÷ 21 단면 평균 = 1 (기둥이 창을 꼭 채운다) · 창 안 두 입자 1.7 · 가장자리 LW 0.7 = 적분 0.7 · 걸침 0',
+        lambda: (lambda x: math.isclose(x['ratio_lw_over_planes'], 1.0, rel_tol=1e-12) and math.isclose(x['both_in_mpa'], 1.7 / 0.6 * 1e-6, rel_tol=1e-12)
+                 and math.isclose(x['edge_lw_mpa'], 0.7 / 0.6 * 1e-6, rel_tol=1e-12)
+                 and math.isclose(x['edge_integral_mpa'], 0.7 / 0.6 * 1e-6, rel_tol=1e-12) and x['span_integral_mpa'] == 0.0)(_ok(alP)['cross_check']))
+    #  혼합 기둥 (창 경계가 가지를 자른다) — 손 계산 −T_zz: id 2 = 0.8 · id 3 = 0.7 (AM_P) · id 4 = 0.25 · id 5 = 0.2 (SE)
+    alM = _try(lambda: stress_alpha(arM, crM, TM, oM, box, 1.0))
+    m_all = (1.5 + 0.45) / (2 * VA + 2 * VB)
+    chk('T12 혼합 기둥: α AM_P = (1.5 ÷ 2V_A) ÷ ⟨σ⟩ · α SE = (0.45 ÷ 2V_S) ÷ ⟨σ⟩ · 닫힘 1',
+        lambda: math.isclose(_ok(alM)['alpha_zz']['AM_P'], 1.5 / (2 * VA) / m_all, rel_tol=1e-12)
+        and math.isclose(_ok(alM)['alpha_zz']['SE'], 0.45 / (2 * VB) / m_all, rel_tol=1e-12) and abs(_ok(alM)['closure_zz'] - 1) < 1e-12)
+    chk('T12 가장자리 분해: LW = 창 안 두 입자 1.45 + 가장자리 LW 0.5 · 적분 = 1.45 + 가장자리 0.52 + 걸침 0 · LW ÷ 21 단면 = 3.25 ÷ (69/21)',
+        lambda: (lambda x: math.isclose(x['both_in_mpa'], 1.45 / 0.6 * 1e-6, rel_tol=1e-12) and math.isclose(x['edge_lw_mpa'], 0.5 / 0.6 * 1e-6, rel_tol=1e-12)
+                 and math.isclose(x['edge_integral_mpa'], 0.52 / 0.6 * 1e-6, rel_tol=1e-12) and x['span_integral_mpa'] == 0.0
+                 and math.isclose(x['lw_window_sigma_zz_mpa'], 1.95 / 0.6 * 1e-6, rel_tol=1e-12)
+                 and math.isclose(x['ratio_lw_over_planes'], (1.95 / 0.6) / (69 / 21), rel_tol=1e-12)
+                 and x['n_contacts'] == {'both_in': 3, 'edge': 2, 'span': 0}
+                 and x['lw_identity_rel'] < 1e-12 and x['integral_identity_rel'] < 1e-12)(_ok(alM)['cross_check']))
+    #  얇은 창 (판 0.5 · r_max 0.1 → 창 [0.2, 0.3] · H < 2 r_max = real14 꼴): AM_P 둘 (중심 0.15 · 0.33) 이 창 전체를 걸친다
+    pT, kT = _vcol(10, 3, 0.7, 0.5, [0.1775, 0.2275, 0.2775, 0.3275], 0.025, 1.0)
+    aT, cT, arT, crT = _lw_case([(1, 1, 0.2, 0.5, 0.15, 0.1), (2, 1, 0.2, 0.5, 0.33, 0.1)] + pT,
+                                [(1, 2, (0.0, 0.0, -2.0), (0.2, 0.5, 0.24))] + kT)
+    oT = compute(aT, cT, TM, 0.5, box, 1.0)
+    alT = _try(lambda: stress_alpha(arT, crT, TM, oT, box, 1.0))
+    chk('T12 얇은 창: AM_P 두 입자 모두 창 밖 → α AM_P · α AM = null (상은 있다) · α SE = 1 · 단면 기여 AM–AM 2/3',
+        lambda: _ok(alT)['status'] == 'OK' and _ok(alT)['n_window'] == {'SE': 2} and _ok(alT)['alpha_zz']['AM_P'] is None
+        and _ok(alT)['alpha_zz']['AM'] is None and math.isclose(_ok(alT)['alpha_zz']['SE'], 1.0, rel_tol=1e-12)
+        and math.isclose(oT['contribution_sigma_zz_pct']['AM–AM'], 200 / 3, rel_tol=1e-12))
+    chk('T12 창 전체를 걸친 접촉 (두 입자 모두 창 밖) = 적분에만 0.2 · LW 0.1 ↔ 적분 0.3 · LW ÷ 21 단면 = 1/3',
+        lambda: (lambda x: math.isclose(x['span_integral_mpa'], 0.2 / 0.1 * 1e-6, rel_tol=1e-9) and x['n_contacts']['span'] == 1
+                 and math.isclose(x['lw_window_sigma_zz_mpa'], 0.1 / 0.1 * 1e-6, rel_tol=1e-9)
+                 and math.isclose(x['window_integral_sigma_zz_mpa'], 0.3 / 0.1 * 1e-6, rel_tol=1e-9)
+                 and math.isclose(x['ratio_lw_over_planes'], 1 / 3, rel_tol=1e-9))(_ok(alT)['cross_check']))
+    #  가로 쌍 (SE r 0.025 둘 · z 0.5 · 가로 압축 0.5 · 수직 하중 0) 을 평행 기둥에 더한다 — α_zz ≠ α_p
+    hP = [(200, 3, 0.40, 0.2, 0.5, 0.025), (201, 3, 0.45, 0.2, 0.5, 0.025)]
+    hK = [(200, 201, (-0.5, 0.0, 0.0), (0.425, 0.2, 0.5))]
+    aH, cH, arH, crH = _lw_case(pA + pB + hP, kA + kB + hK)
+    oH = compute(aH, cH, TM, 1.0, box, 1.0)
+    alH = _try(lambda: stress_alpha(arH, crH, TM, oH, box, 1.0))
+    VC = 4 / 3 * math.pi * 0.025 ** 3
+    zz_all, zz_se = (1.8 + 0.6) / (3 * VA + 6 * VB + 2 * VC), 0.6 / (6 * VB + 2 * VC)            # −Σ T_zz ÷ Σ V
+    p_all, p_se = (1.8 + 0.6 + 0.025) / (3 * VA + 6 * VB + 2 * VC), (0.6 + 0.025) / (6 * VB + 2 * VC)  # −Σ tr T ÷ Σ V
+    chk('T12 가로 쌍: α_zz SE = ⟨σ_zz⟩ 비 · α_p SE = ⟨p⟩ 비 (서로 다르다) · 단면 기여는 그대로 75 %',
+        lambda: math.isclose(_ok(alH)['alpha_zz']['SE'], zz_se / zz_all, rel_tol=1e-12) and math.isclose(_ok(alH)['alpha_p']['SE'], p_se / p_all, rel_tol=1e-12)
+        and not math.isclose(_ok(alH)['alpha_zz']['SE'], _ok(alH)['alpha_p']['SE'], rel_tol=1e-3)
+        and math.isclose(oH['contribution_sigma_zz_pct']['AM–AM'], 75.0, rel_tol=1e-12))
+    aZ, cZ, arZ, crZ = _lw_case(hP, hK)
+    oZ = compute(aZ, cZ, TM, 1.0, box, 1.0)
+    alZ = _try(lambda: stress_alpha(arZ, crZ, TM, oZ, box, 1.0))
+    chk('T12 수직 하중 0 → α_zz UNDEFINED (값 null · 0 으로 채우지 않음) · α_p SE = 1 · 단면 기여 null',
+        lambda: _ok(alZ)['status'].startswith('UNDEFINED') and all(v is None for v in _ok(alZ)['alpha_zz'].values())
+        and math.isclose(_ok(alZ)['alpha_p']['SE'], 1.0, rel_tol=1e-12) and oZ['contribution_sigma_zz_pct'] is None)
+    alF = _try(lambda: stress_alpha(arP, [{k: v for k, v in q.items() if not k.startswith('cp_')} for q in crP], TM, oP, box, 1.0))
+    chk('T12 접촉점 열 없음 → α NOT_COMPUTED (봉인 함수 사유 그대로) · α 값 없음',
+        lambda: _ok(alF)['status'].startswith('NOT_COMPUTED') and 'cp_x' in _ok(alF)['status'] and _ok(alF).get('alpha_zz') is None)
+    alA = _try(lambda: stress_alpha(arP, crP, {1: 'AM', 3: 'SE'}, compute(aP, cP, {1: 'AM', 3: 'SE'}, 1.0, box, 1.0), box, 1.0))
+    chk('T12 mono 이름 (1:AM · 3:SE) → α AM = 0.9375 · α AM_P · AM_S = null · 닫힘 1',
+        lambda: math.isclose(_ok(alA)['alpha_zz']['AM'], 0.9375, rel_tol=1e-12) and _ok(alA)['alpha_zz']['AM_P'] is None
+        and _ok(alA)['alpha_zz']['AM_S'] is None and abs(_ok(alA)['closure_zz'] - 1) < 1e-12)
+
+    # ══ T13 배치 파일 끝까지 (fx · 접촉점 열 → 봉인 로더 analyze_contacts → 봉인 Love–Weber → α 슬라이드) ═══════════════
+    exp_al_comment = 'α = ⟨σ_zz⟩_phase / ⟨σ_zz⟩_all (부피 가중 · Love–Weber 입자 응력 · 단면 창 안 입자) — α < 1 = 평균보다 덜 눌림'
+    pS, kS = _vcol(1, 3, 0.5, 0.5, [0.05 + 0.1 * k for k in range(10)], 0.05, 2.0)
+    with tempfile.TemporaryDirectory() as td:
+        td = Path(td)
+        (td / 'network_cases.tsv').write_text('case_id\tP_S\nP1\t7:3\nS1\t0:10\n', encoding='utf-8')
+        for cid, parts, cons in (('P1', pA + pB, kA + kB), ('S1', pS, kS)):
+            rd = td / 'work' / 'results' / cid
+            up = td / 'work' / 'uploads' / cid
+            rd.mkdir(parents=True)
+            up.mkdir(parents=True)
+            with open(rd / 'atoms.csv', 'w', newline='') as fh:
+                w = csv.writer(fh)
+                w.writerow(['id', 'type', 'x', 'y', 'z', 'radius'])
+                w.writerows([list(p) for p in parts])
+            with open(rd / 'contacts.csv', 'w', newline='') as fh:
+                w = csv.writer(fh)
+                w.writerow(['id1', 'id2', 'fx', 'fy', 'fz', 'fn_x', 'fn_y', 'fn_z', 'ft_x', 'ft_y', 'ft_z', 'contact_area', 'delta',
+                            'cp_x', 'cp_y', 'cp_z'])
+                w.writerows([[q[0], q[1], *q[2], *q[2], 0.0, 0.0, 0.0, 1e-3, 1e-3, *q[3]] for q in cons])
+            (rd / 'mesh_info.json').write_text(json.dumps({'plate_z': 1.0}), encoding='utf-8')
+            (rd / 'input_params.json').write_text(json.dumps({'box_x': 1.0, 'box_y': 1.0}), encoding='utf-8')
+            (up / 'meta.json').write_text(json.dumps({'type_map_resolved': '1:AM_P,2:AM_S,3:SE', 'scale': 1}), encoding='utf-8')
+        out = td / 'out'
+        RB = _try(lambda: run_batch(td, out))
+        al_lines = _try(lambda: (out / 'stress_reduction_slide.csv').read_text(encoding='utf-8').splitlines())
+        smB = _try(lambda: list(csv.reader(open(out / 'plane_load_summary.csv', encoding='utf-8'))))
+        chk('T13 배치 (fx · 접촉점 열 · 봉인 로더): 두 케이스 α 상태 OK', lambda: [_ok(RB)['cases'][l]['alpha']['status'] for l in ('0:10', '7:3')] == ['OK', 'OK'])
+        chk('T13 stress_reduction_slide.csv 머리 세 줄 (PC:SC · α AM_P · α AM_S · α SE · α AM · 단위 - · 주석)',
+            lambda: _ok(al_lines)[0] == 'PC:SC,α AM_P,α AM_S,α SE,α AM' and _ok(al_lines)[1] == 'wt%,-,-,-,-'
+            and _ok(al_lines)[2] == '조성,' + ','.join([exp_al_comment] * 4))
+        chk('T13 α 값 행: 0:10 = 없는 상 빈칸 · SE 1 / 7:3 = 0.9375 · 빈칸 · 1.25 · 0.9375',
+            lambda: _ok(al_lines)[3:] == ['0:10,,,1.0000,', '7:3,0.9375,,1.2500,0.9375'])
+        chk('T13 요약 α 열 · 닫힘 · LW ÷ 단면 · α 상태',
+            lambda: (lambda h, r7: r7[h.index('α AM_P')] == '0.9375' and r7[h.index('α closure')] == '1.0000'
+                     and r7[h.index('LW σzz / planes')] == '1.0000' and r7[h.index('α status')] == 'OK')(
+                _ok(smB)[0], [q for q in _ok(smB) if q and q[0] == '7:3'][0]))
     n_ok = sum(1 for _, v in res if v)
     print(f'plane_load_share selftest {n_ok}/{len(res)}')
     return n_ok == len(res)
