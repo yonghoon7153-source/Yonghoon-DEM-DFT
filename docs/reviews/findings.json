@@ -8985,7 +8985,7 @@
     {
       "id": "SELF-96",
       "severity": "P3",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "1저자 질문 (10-07 밤 \"load bear sharing 이라는 표현을 진짜 논문에서 사용했는지 확인해줘\") → litdb 정본 카드 383 장 전수 grep + 웹 검색",
       "opened_in": "docs/session_20260923_progress.md",
@@ -8993,7 +8993,9 @@
       "note": "자리: docs/session_20260923_progress.md 10-07 '발표 5 쪽' 줄 (철회 표지 · 원문 유지) · 1저자 대화.  같은 양의 표준 꼴 = 접촉 유형별 응력 기여 (응력 텐서 σ = (1/V) Σ f⊗l 의 접촉 유형별 몫 — Minh · Cheng · Thornton 2014 Granular Matter · 간극 입도 흙 DEM) · stress ratio 의 표준 꼴 = stress reduction factor α (Shire 외 2014 JGGE) — 검색 결과 제목 · 초록 기준 · 원문 PDF 미확인 (이 환경 접속 막힘) → 인용 전 litdb 카드 (규율 ⑥).  1저자 10-07 밤 결정 = Q1 'Contribution to σ_zz (%)' · 21 단면 평균 · Q2 α (상별 부피 가중 σ_zz ÷ 전체) → scripts/plane_load_share.py 고침 (진행 중) 뒤 그림 · 문서.",
       "evidence_tests": [
         "docs/session_20260923_progress.md (10-07 발표 5 쪽 줄 · 10-07 밤 정정 줄)"
-      ]
+      ],
+      "claimed_fixed_sha": "21eecbea1",
+      "verification_note": "21eecbea1 (병합 4c08511d0): docs/data/ps45_plane_load_20261007/README.md — 축 이름 'Contribution to σ_zz (%)' · 캡션 정의 · 문헌 포인터 [원문 미확인 — litdb 카드 전] · 'Load-bearing fraction' 철회 표지 · 슬라이드 CSV = 21 단면 하중 가중 몫 (Long Name 'AM–AM contacts' …) · stress_reduction_slide.csv (α) · scripts/plane_load_share.py --selftest 54/54.  남은 것: 문헌 두 편 PDF → litdb 카드 (인용 전 · 규율 ⑥)."
     },
     {
       "id": "SELF-97",
