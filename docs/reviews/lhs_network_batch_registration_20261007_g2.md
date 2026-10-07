@@ -15,6 +15,8 @@
   ⛔ 이 재등록은 발사 GO 가 아니다 (판정문 §10-4 *"이번 회신을 자동 또는 조건부 발사 GO 로 읽지 않는다"*) — 재검증 3 · WSL 사전 점검 증거 · 1저자 발사 승인 뒤.
   ⚠ v1.3 화면 패치 (`docs/reviews/lhs_release_v13_display_deferred_20261007.patch` — `webapp/app.py` 를 바꾼다 = 봉인 파일) 는 **발사 뒤에만** 적용한다
   (발사 전에 적용하면 봉인 지문이 바뀌어 이 등록의 배치가 아니다 · 10-07 이 커밋 트리에서 `git apply --check` 통과).
+  ⚠ 웹앱 3D 자료 패치 (`docs/reviews/webapp_load_view_deferred_20261007.patch` — #11 AM 만 칠하기 · WEB-06 압축 접촉만 범위 · 같은 봉인 파일 `webapp/app.py`) 도 **발사 뒤** ·
+  v1.3 화면 패치와 같은 때 넣는다 (1저자 10-07 Q3 *"권고대로"*) · 두 패치는 순서 무관 (10-07 HEAD `afda0d7ab` 에서 `git apply --check` 양쪽 순서 통과) · 넣은 뒤 `bash scripts/check_all.sh`.
 
 ## 0. 순서
 
