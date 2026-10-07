@@ -8856,7 +8856,7 @@
     {
       "id": "SELF-93",
       "severity": "P3",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "claude (10-07 · 1저자 질문 \"Force contribution 이 contact dump 에서 어떻게 나오나\" 에 답하려고 접촉 수를 다시 세다 자기 발견)",
       "opened_in": "docs/data/ps45_force_stress_20261007/README.md",
@@ -8864,7 +8864,9 @@
       "note": "자리: docs/data/ps45_force_stress_20261007/README.md ② 절 (원 문장은 정정 표지와 함께 남김).  원인 = 7:3 강조 그림을 만들며 범위의 끝을 확인하지 않았다 (값은 full_metrics area_<쌍>_n · A_binding_total_n_contacts 그대로 — 계산 결함 아님 · 문장 결함).  고침 = 같은 커밋에서 README 를 다섯 값 + 전체 접촉 수 + 힘 몫 분해 (= 접촉 수 몫 × 평균 법선력 ÷ 전체 평균) 로 고침 · 1저자에게 정정 보고 (발표 자료에 이 범위를 썼으면 고칠 것).  claimed_fixed 는 커밋 SHA 와 함께 다음 커밋.",
       "evidence_tests": [
         "docs/data/ps45_force_stress_20261007/raw/ps45_force_metrics.tgz (full_metrics area_<쌍>_n · A_binding_total_n_contacts — 다섯 케이스 개수 합 = 전체 접촉 수 확인)"
-      ]
+      ],
+      "claimed_fixed_sha": "a183b37c6",
+      "verification_note": "a183b37c6: docs/data/ps45_force_stress_20261007/README.md ② 절 — 다섯 값 1.62 · 1.04 · 0.69 · 0.39 · 0.14 % + 전체 접촉 수 + 힘 몫 분해 · 원 문장은 정정 표지와 함께 남김 · 1저자에게 정정 보고 (10-07)."
     },
     {
       "id": "WEB-06",
@@ -8878,6 +8880,20 @@
       "evidence_tests": [
         "docs/data/contact_pressure_check_20261007/contact_pressure_check.py → docs/data/contact_pressure_check_20261007/real14_contact_pressure.txt (real14 커밋 덤프 · 결정적)",
         "docs/data/contact_pressure_check_20261007/stress_z_260925_000559_082983.csv (1저자 웹앱 Z-profile CSV · ps45 7:3)"
+      ]
+    },
+    {
+      "id": "SELF-95",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "claude (10-07 · 1저자 질문 \"힘은 보존이 되나?\" 에 답하려고 real14 단면 하중을 재다 자기 발견)",
+      "opened_in": "docs/data/ps45_plane_load_20261007/README.md",
+      "title": "ps45 힘 기록 README · 1저자 보고의 해석 *\"PC 가 많을수록 활물질 접촉이 줄어 SE 망이 힘 경로의 중심\"* 을 접촉 법선력 **크기 합**의 몫에서 끌어냈다 — 크기 합은 보존량이 아니고 (같은 하중을 직렬 접촉 수만큼 센다 · real14 = 단면 하중의 12.19 배), 하중 기준 (단면 하중 몫) 으로는 반대일 수 있다 (real14 SE–SE 하중 몫 3.2 % ↔ 크기 합 몫 32.3 % · AM–AM 74.0 % ↔ 33.0 %)",
+      "note": "자리: docs/data/ps45_force_stress_20261007/README.md ② 절 해석 줄 (⚠ 표지 달고 원문 유지) · 발표 5 쪽 문장 후보.  README 각주 \"접촉 힘 합의 몫 — 판 하중 분담 아님\" 은 있었지만 해석 문장이 그 한정을 넘어 '힘 경로의 중심' 이라는 하중 경로 주장을 했다.  처방: ps45 다섯 조성의 단면 하중 몫을 scripts/plane_load_share.py 로 잰 뒤 (⬜ 1저자 WSL) 문장을 다시 쓴다 — 그 전에는 그 문장을 쓰지 않는다 (1저자에게 10-07 보고).  real14 는 다른 침대 (얇은 30 µm · AM 많음) 라 ps45 의 답을 대신하지 않는다.",
+      "evidence_tests": [
+        "docs/data/ps45_plane_load_20261007/real14_validation/plane_load.json (scripts/plane_load_share.py · real14 커밋 덤프 · 가운데 단면 263.17 MPa · AM–AM 74.0 % · 크기 합 ÷ 하중 12.19)",
+        "scripts/plane_load_share.py --selftest (T2 평행 기둥: 단면 몫 75/25 ↔ 크기 합 몫 12/21)"
       ]
     }
   ]
