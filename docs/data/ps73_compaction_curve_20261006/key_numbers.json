@@ -1,9 +1,23 @@
 {
+ "x_axis": {
+  "label": "Simulation time (s)",
+  "time_s": "step × dt_s",
+  "dt_s": 1e-06,
+  "decks_checked": 9,
+  "log_timestep_numeric": 1,
+  "note": "scaled deck time (r×1000 · E×0.001) — not the real pressing time (README §5)"
+ },
  "phase_bounds": {
   "1": 1,
   "2": 200002,
   "3": 400002,
   "4": 3125000
+ },
+ "phase_bounds_s": {
+  "1": 1e-06,
+  "2": 0.200002,
+  "3": 0.400002,
+  "4": 3.125
  },
  "thickness_first_um": 138.30200000000002,
  "thickness_last_um": 111.05199999999999,

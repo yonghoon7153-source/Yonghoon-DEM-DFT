@@ -1,5 +1,5 @@
-// ps73_step_thickness.ogs — ps_7_3_r45 압밀 곡선 (step–두께)
-// 사용: ps73_step_thickness.csv 를 가져온 워크북을 활성으로 두고 Script Window 에 붙여 넣기 → Enter.
+// ps73_time_thickness.ogs — ps_7_3_r45 압밀 곡선 (시뮬레이션 시간–두께)
+// 사용: ps73_time_thickness.csv 를 가져온 워크북을 활성으로 두고 Script Window 에 붙여 넣기 → Enter.
 // 결과: 새 그래프 + BML 서식 · 단계 경계 점선 둘 (압축 시작 · 이완 시작).  축 제목 글꼴 · 단계 이름 글은 GUIDE.md 의 GUI 단계.
 string bk$ = %H;
 plotxy iy:=[%(bk$)]1!(1,2) plot:=200 ogl:=<new>;
@@ -15,7 +15,7 @@ layer.x2.showAxes = 3; layer.x2.color = color(64,64,64); layer.x2.thickness = 1;
 layer.y2.showAxes = 3; layer.y2.color = color(64,64,64); layer.y2.thickness = 1; layer.y2.ticks = 0; layer.y2.showLabels = 0;
 layer.x.from = 0.2; layer.x.to = 3.25; layer.x.inc = 1; layer.x.minor = 1;
 page.margincontrol = 1;
-label -xb Step (\x(00D7)10\+(6));
+label -xb Simulation time (s);
 layer.y.from = 108; layer.y.to = 142; layer.y.inc = 10; layer.y.minor = 1;
 label -yl Thickness (\g(m)m);
 draw -n b3 -l -v 0.400002; b3.linetype = 3; b3.color = color(154,160,168);

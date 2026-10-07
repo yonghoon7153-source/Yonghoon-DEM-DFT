@@ -8852,6 +8852,33 @@
       "evidence_tests": [
         "docs/reviews/codex_gen2_network_reverify4_precheck_20261007/g2pre_c3117438a_1007_1415.tar.gz (g2pre_smoke_*/smoke_report.json reports.case15_network.attempt.reason — 300 자 · 앞이 잘림)"
       ]
+    },
+    {
+      "id": "SELF-93",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "claude (10-07 · 1저자 질문 \"Force contribution 이 contact dump 에서 어떻게 나오나\" 에 답하려고 접촉 수를 다시 세다 자기 발견)",
+      "opened_in": "docs/data/ps45_force_stress_20261007/README.md",
+      "title": "ps45 힘 기록 README · 1저자 보고에 \"AM–AM 접촉 = 전체 접촉의 0.39 % (7:3) – 1.6 % (0:10)\" 라고 적었다 — 최소는 7:3 이 아니라 10:0 (733 / 535,427 = 0.14 %) 이다 (다섯 조성 1.62 · 1.04 · 0.69 · 0.39 · 0.14 %)",
+      "note": "자리: docs/data/ps45_force_stress_20261007/README.md ② 절 (원 문장은 정정 표지와 함께 남김).  원인 = 7:3 강조 그림을 만들며 범위의 끝을 확인하지 않았다 (값은 full_metrics area_<쌍>_n · A_binding_total_n_contacts 그대로 — 계산 결함 아님 · 문장 결함).  고침 = 같은 커밋에서 README 를 다섯 값 + 전체 접촉 수 + 힘 몫 분해 (= 접촉 수 몫 × 평균 법선력 ÷ 전체 평균) 로 고침 · 1저자에게 정정 보고 (발표 자료에 이 범위를 썼으면 고칠 것).  claimed_fixed 는 커밋 SHA 와 함께 다음 커밋.",
+      "evidence_tests": [
+        "docs/data/ps45_force_stress_20261007/raw/ps45_force_metrics.tgz (full_metrics area_<쌍>_n · A_binding_total_n_contacts — 다섯 케이스 개수 합 = 전체 접촉 수 확인)"
+      ]
+    },
+    {
+      "id": "WEB-06",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "1저자 10-07 질문 (ps45 7:3 Stress Concentration 보기 · \"z별로 좀더 차이가 나게 범례값을 좀 조절 가능한가?\") → real14 커밋 원자료 점검",
+      "opened_in": "docs/data/contact_pressure_check_20261007/README.md",
+      "title": "웹앱 3D 'Stress Concentration' · 응력 z 분포 그림 · CSV 의 양 (입자별 최대 접촉 압력 = |Fn| / 덤프 접촉 면적) 은 hooke/hysteresis 덱에서 하중을 따라가지 않는다 — 압축 접촉은 쌍 유형별 천장 (real14 PC–PC 4,151–4,294 MPa · 힘 12.9 배 차이에 1.03 배) 이라 색은 접촉 유형 (AM 거의 전부 p95 위) 을 보이고, 가장 큰 값 (10⁴–10⁶ MPa) 은 전부 당김 (접착) 접촉의 δ ≈ 0 면적 — 이름 'Stress Concentration' 과 z 그림의 튀는 칸이 하중 집중으로 읽힌다",
+      "note": "자리: scripts/viewer3d_data.py (stress_max = 접촉마다 |Fn| / contact_area 의 입자별 최대 · 부호 없음) · webapp/static/js/viewer3d.js (mode 'stress' · 'stress_brittle' — 전체 입자 log p5–p95 색) · scripts/plot_stress_z_distribution.py · scripts/plot_combined_z_distribution.py · full_metrics contact_pressure_mean · _max (dem_analysis_core.calc_contact_pressure — 같은 양 · 인계 · 배포 열 아님).  real14 실측 (contact_pressure_check.py): 압축 접촉 p 기울기 d log p / d log |Fn| = +0.005 (PC–PC) · +0.088 (SC–SC) · +0.42–0.62 (SE 낀 쌍 — 천장 아래 꼬리 = 덜어 낸 접촉) · 입자별 최대가 p95 위 = AM_P 100 % · AM_S 93.6 % · SE 3.8 % · 상위 8 개 접촉 전부 당김 · 입자별 최대 ≥ 1e4 MPa 104 개 = 압축만 세면 0.  ps45 7:3 (1저자 CSV): z 칸 중앙값 446.3–456.8 MPa (±1.2 %) · 평균 · 최대의 튀는 칸 (z ≈ 25–34 · 92 µm · 최대 1.18e6 MPa) = 같은 크기 (ps45 덤프로 미확인 — 추정).  해석 (추정): 하중 단계 F = kδ · 덤프 면적 ≈ 2πR*δ ⇒ p ≈ k/(2πR*) (δ 약분).  처방 후보 (1저자 비준 전 · 웹앱 = 194 봉인 밖 확인 필요): ① 당김 접촉을 최대에서 빼거나 따로 표지 ② 이름 · 범례를 '최대 접촉 압력 (접촉 유형 표지에 가깝다 · 하중 아님)' 으로 ③ 하중을 따라가는 입자 응력 (Love–Weber) 3D 보기 (대기 ①) 로 z 차이를 본다.  범례 범위만 좁히는 것은 처방이 아니다 (보이는 차이 = 접촉 유형 · 하중 이력 잡음).",
+      "evidence_tests": [
+        "docs/data/contact_pressure_check_20261007/contact_pressure_check.py → docs/data/contact_pressure_check_20261007/real14_contact_pressure.txt (real14 커밋 덤프 · 결정적)",
+        "docs/data/contact_pressure_check_20261007/stress_z_260925_000559_082983.csv (1저자 웹앱 Z-profile CSV · ps45 7:3)"
+      ]
     }
   ]
 }
