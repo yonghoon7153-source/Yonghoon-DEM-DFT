@@ -1,0 +1,8 @@
+utc 2026-10-07T00:55:19Z -k g93
+sandbox: /tmp/mutation_replay_n04nz0z8/degradation-degeneracy
+
+물었다        v6-rederive-gate-includes-axis-failure-g93 node 3 · -k test_g93
+
+scenario_total 1 · scenario_executable 1 · scenario_declared 0 · site_total 1 · site_executable 1 · site_declared 0 · ran 1
+실행한 변이 1건이 전부 기대 node 를 call 단계에서 물었다
+rc=0

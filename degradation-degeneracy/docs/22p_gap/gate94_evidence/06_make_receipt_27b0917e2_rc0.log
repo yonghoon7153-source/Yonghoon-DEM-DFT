@@ -1,0 +1,5 @@
+head 27b0917e2a2cb05a629206472d6ed6f7b6be99f6 dirty 0
+✅ paired_fixed5_v4: docs/22p_gap/receipts/paired_fixed5_v4.validate.yaml · 검사 35건 · 산출 2건 · core_sha 68a74c60b219db44
+paired_fixed5_v4 rc=0
+✅ grid_fit_v5: docs/22p_gap/receipts/grid_fit_v5.validate.yaml · 검사 34건 · 산출 2건 · core_sha 16d3be2555fd6a4e
+grid_fit_v5 rc=0
