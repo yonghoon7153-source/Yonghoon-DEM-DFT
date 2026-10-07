@@ -1138,7 +1138,7 @@ function buildControls(container, isMPM) {
         <option value="dem_pore">기공 (빈 공간 · 격자 추정)</option>
       </optgroup>
       <optgroup label="전류 (접촉망 해)">
-        <option value="net_current">⚡ 전류 흐름 (망 해 · 상위 간선)</option>
+        <option value="net_current">⚡ 전류 흐름 (접촉 전류 밀도 A cm⁻² · 상위 접촉)</option>
       </optgroup>
     </select>
     <div id="view-mode-legend" style="font-size:11px;color:#9ca3af;line-height:1.4;margin-top:3px;max-height:340px;overflow-y:auto;overflow-x:hidden;padding-right:2px"></div>
@@ -5201,9 +5201,12 @@ function renderSeStatsCardPNG(state, corpusRows) {
 /* ── ⚡ 전류 흐름 — 망 해의 간선 전류 (DEM view mode 'net_current') ────────────────────────────────
  * 1저자 요청 *"전류가 보이게"* (보고 슬라이드 그림).  자료 = `/network-current` (scripts/network_current.py 가 읽는 케이스 폴더
  * network_raw_dump/ — 같은 망 풀이의 1 V 프로브 FULL 해.  웹앱 망 단계는 간선 전류를 남기지 않아 케이스마다 한 번 `dump` 로 만든다).
- * 간선 = 접촉 하나 (SE–SE = 이온 · AM–AM = 전자).  상위 N 개 (|I| 내림차순) 를 굵기 · 색 = log₁₀(|I_간선| / I_전체) 원기둥으로 그린다
+ * 간선 = 접촉 하나 (SE–SE = 이온 · AM–AM = 전자).  상위 N 개 (|I| 내림차순) 를 굵기 · 색 = log₁₀ j 원기둥으로 그린다
  * (InstancedMesh 하나 — 20000 간선도 한 번에).  주기 경계를 넘는 간선은 상자를 가로지르는 직선이 되므로 그리지 않고 센다 (Stress Chain 과
  * 같은 반폭 규칙 · 서버 표지 w 와 같은 답).  색 사상 = jetColor(t) (감마 없음) = 컬러바 ⬇ 의 사상.
+ * ★ 10-07 (1저자 결정 · 웹앱 묶음 #17) — 색 · 굵기 = 접촉 전류 밀도 j = |I_c| / A_c (A cm⁻² · A_c = 같은 풀이의 접촉 면적 · 서버
+ *   density 묶음) · 컬러바 둘 = @1V (탐침 · 원고 S16 · S17 규약) · @1C (운전 환산 = × I_1C / I_1V · 선형 — 같은 색 · 다른 숫자).
+ *   옛 몫 (|I_간선| / I_전체 %) 으로 칠하던 것은 없앴다 (몫 s 는 자료에만).
  * 모델의 접촉망 풀이 (Kirchhoff · 접촉마다 Holm 협착) — 측정 전류도 충방전 방향도 아니다. */
 const NETCUR_TOPS = [500, 1000, 2000, 5000, 10000, 20000];
 const NETCUR_CHANNELS = {
@@ -5227,21 +5230,40 @@ function netCurrentWrap(a, b, halfX, halfY) {
   return Math.abs(a[0] - b[0]) > halfX || Math.abs(a[1] - b[1]) > halfY;
 }
 
-/* log10(|I|/I_전체) 의 [최소, 최대] — 0 전류는 버린다 · 하나도 없으면 null */
+/* log10 j (접촉 전류 밀도 · A cm⁻² @1V) 의 [최소, 최대] — j 없음 · 0 은 버린다 · 하나도 없으면 null */
 function netCurrentLogRange(edges) {
   let lo = Infinity, hi = -Infinity;
   (edges || []).forEach(e => {
-    if (e && e.s > 0) { const l = Math.log10(e.s); if (l < lo) lo = l; if (l > hi) hi = l; }
+    if (e && e.j > 0) { const l = Math.log10(e.j); if (l < lo) lo = l; if (l > hi) hi = l; }
   });
   return isFinite(lo) ? [lo, hi] : null;
 }
 
-/* 색 · 굵기 축 t ∈ [0, 1] = (log10 s − lo) / (hi − lo) — 범위 밖은 자른다 · 범위가 한 점이면 1 */
+/* 색 · 굵기 축 t ∈ [0, 1] = (log10 v − lo) / (hi − lo) — 범위 밖은 자른다 · 범위가 한 점이면 1 (AM 만 보기도 같은 함수) */
 function netCurrentT(s, lo, hi) {
   if (!(s > 0)) return 0;
   const span = hi - lo;
   if (!(span > 1e-9)) return 1;
   return Math.max(0, Math.min(1, (Math.log10(s) - lo) / span));
+}
+
+/* 눈금 · 범례 숫자 (A cm⁻² · µN · 비) — 0.01 ≤ v < 1000 은 유효 2 자리 (꼬리 0 없음) · 그 밖 = m×10ⁿ (지수 · 천 단위 콤마 없음 —
+ * 보고자료 원칙).  0 → '0' · 비유한 → '—'. */
+function netCurrentFmtJ(v) {
+  v = +v;
+  if (!isFinite(v)) return '—';
+  if (v === 0) return '0';
+  const sup = s => String(s).replace(/[-0-9]/g, ch => ({ '-': '⁻', '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴', '5': '⁵',
+                                                        '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹' })[ch]);
+  const a = Math.abs(v), sign = v < 0 ? '-' : '';
+  if (a >= 0.01 && a < 1000) {
+    const r = Number(a.toPrecision(2));
+    if (r < 1000) return sign + String(r);
+  }
+  let e = Math.floor(Math.log10(a));
+  let m = Number((a / Math.pow(10, e)).toPrecision(2));
+  if (m >= 10) { m = Number((m / 10).toPrecision(2)); e += 1; }
+  return sign + (m === 1 ? '' : String(m) + '×') + '10' + sup(e);
 }
 
 /* 몫 → 'x %' (≥ 10 % 소수 1 자리 · 1–10 % 소수 1 자리 · < 1 % 유효 2 자리 · 꼬리 0 없음) */
@@ -5256,12 +5278,13 @@ function netCurrentPct(v) {
   return s + ' %';
 }
 
-/* 컬러바 눈금 (exportColorbarPNG 의 ticks) — 양 끝 (실제 최소 · 최대) + 안쪽 1 · 2 · 5 × 10^k (많으면 10^k 만).
+/* 컬러바 눈금 (exportColorbarPNG 의 ticks) — 양 끝 (실제 최소 · 최대) + 안쪽 1 · 2 · 5 × 10^k (많으면 10^k 만) · log₁₀ 축.
  * 라벨이 겹치지 않게: 안쪽 눈금은 끝에서 0.14 이상 · 서로 0.12 이상 (막대 폭 비) — real14 상위 10000 (0.16–1.4 %) 에서
- * 0.2 % 가 0.16 % 끝 라벨에 붙었다 (미리보기 실측). */
-function netCurrentTicks(lo, hi) {
+ * 0.2 % 가 0.16 % 끝 라벨에 붙었다 (미리보기 실측).  fmt = 라벨 함수 (기본 netCurrentFmtJ — A cm⁻² · µN · 비). */
+function netCurrentTicks(lo, hi, fmt) {
+  const lab = (typeof fmt === 'function') ? fmt : netCurrentFmtJ;
   if (!(isFinite(lo) && isFinite(hi))) return [];
-  if (!(hi - lo > 1e-9)) return [{ p: 0.5, label: netCurrentPct(Math.pow(10, hi)) }];
+  if (!(hi - lo > 1e-9)) return [{ p: 0.5, label: lab(Math.pow(10, hi)) }];
   const span = hi - lo;
   let cand = [];
   for (let k = Math.floor(lo) - 1; k <= Math.ceil(hi) + 1; k++) {
@@ -5271,28 +5294,54 @@ function netCurrentTicks(lo, hi) {
     });
   }
   if (cand.length > 6) cand = cand.filter(c => c.m === 1);
-  const out = [{ p: 0, label: netCurrentPct(Math.pow(10, lo)) }];
+  const out = [{ p: 0, label: lab(Math.pow(10, lo)) }];
   let last = 0;
   cand.forEach(c => {
     const p = (c.l - lo) / span;
     if (p >= 0.14 && p <= 0.86 && p - last >= 0.12) {
-      out.push({ p: p, label: netCurrentPct(Math.pow(10, c.l)) });
+      out.push({ p: p, label: lab(Math.pow(10, c.l)) });
       last = p;
     }
   });
-  out.push({ p: 1, label: netCurrentPct(Math.pow(10, hi)) });
+  out.push({ p: 1, label: lab(Math.pow(10, hi)) });
   return out;
 }
 
-/* 논문용 컬러바 스펙 (그림 글자 = 영문) — 튜브 색과 같은 jet · 감마 없음 */
-function netCurrentColorbarSpec(pay, opt, lo, hi) {
+/* 두 틀 — '1V' = 해 그대로 (탐침 · 원고 S16 · S17 규약) · '1C' = × I_1C / I_1V (서버 density.c1.factor · 선형).
+ * → {ok, factor, reason} — @1V 가 안 되면 (σ₀ · 면적 없음) @1C 도 안 된다. */
+function netCurrentFrame(pay, frame) {
+  const d = (pay && pay.density) || {};
+  const has1V = !d.reason && ((pay && pay.edges) || []).some(e => e && e.j > 0);
+  if (frame !== '1C') return has1V ? { ok: true, factor: 1, reason: '' } : { ok: false, factor: null, reason: d.reason || '전류 밀도 없음' };
+  if (!has1V) return { ok: false, factor: null, reason: d.reason || '전류 밀도 없음' };
+  const c1 = d.c1 || {};
+  const f = +c1.factor;
+  if (c1.status === 'ok' && f > 0 && isFinite(f)) return { ok: true, factor: f, reason: '' };
+  return { ok: false, factor: null, reason: c1.reason || '@1C 환산 자료 없음' };
+}
+
+/* 논문용 컬러바 스펙 (그림 글자 = 영문) — 튜브 색과 같은 jet · 감마 없음 · lo · hi = log₁₀ j (@1V) · frame '1V' | '1C'
+ * (@1C 눈금 = @1V 값 × 배율 — 같은 색 막대 · 다른 숫자). */
+function netCurrentColorbarSpec(pay, opt, lo, hi, frame) {
   const ch = { ionic: 'ionic (SE–SE contacts)', electronic: 'electronic (AM–AM contacts)' }[pay.channel] || String(pay.channel);
   const md = pay.mode === 'physics' ? 'Physics FULL (sensitivity)' : 'Hertz FULL';
+  const c1 = frame === '1C';
+  const fr = netCurrentFrame(pay, c1 ? '1C' : '1V');
+  const f = fr.ok ? fr.factor : 1;
+  const sh = Math.log10(f);
+  const d = pay.density || {};
+  const q = (d.c1 || {}).Q_areal_mAh_cm2;
+  const base = 'j = |I_c| / A_c (A_c = contact area of the same solve · ' + (pay.mode === 'physics' ? 'Physics gen-2 area' : 'c_cpl[22] disc')
+    + ').  Model contact-network solve (Kirchhoff · Holm constriction per contact) — not a measured current.  Log colour scale.';
   return {
     map: 'jet',
-    title: 'Contact current |I| / I_total — ' + ch + ' · ' + md + ' · 1 V probe · top ' + (pay.n_returned || 0) + ' contacts',
-    ticks: netCurrentTicks(lo, hi),
-    sub: 'Model contact-network solve (Kirchhoff · Holm constriction per contact) — not a measured current.  Log colour scale.',
+    title: 'Contact current density (A cm⁻²) ' + (c1 ? '@1C (operating)' : '@1V probe') + ' — ' + ch + ' · ' + md
+      + ' · top ' + (pay.n_returned || 0) + ' contacts',
+    ticks: netCurrentTicks(lo + sh, hi + sh, netCurrentFmtJ),
+    sub: c1
+      ? ('@1C = linear scaling of the 1 V probe solve: j(1C) = j(1V) × I_1C / I_1V (× ' + netCurrentFmtJ(f) + ') · I_1C = Q_areal × 1 h⁻¹'
+         + (q > 0 ? ' = ' + netCurrentFmtJ(q) + ' mA cm⁻²' : '') + ' (current-conservation assumption — no reaction distribution).  ' + base)
+      : ('1 V probe across the electrode (bottom band 1 V → top band 0 V).  ' + base),
   };
 }
 
@@ -5309,35 +5358,51 @@ function netCurrentControlsHtml(opt) {
     + '</div>';
 }
 
-/* 범례 — 채널 · 모드 · 몫 · 생략 · 검산 · 게시 σ · 세대 · 한정어.  서버 문자열은 이스케이프 (jeEscH). */
+/* 범례 — 채널 · 모드 · 접촉 전류 밀도 (A cm⁻²) 두 틀 (@1V · @1C) · 생략 · 검산 · 게시 σ · 세대 · 한정어.  서버 문자열은 이스케이프 (jeEscH).
+ * ★ 10-07 (#17) — 옛 몫 (|I_간선| / I_전체) 으로 칠하던 범례 · 머리 줄을 없앴다.  표본 줄 (그린 접촉이 나르는 단면 전류) 은 상위 N 이
+ *   흐름을 얼마나 담는지 보는 검산이라 검산 줄에 남긴다. */
 function netCurrentLegendHtml(pay, opt, st) {
   const z = pay.zcut || null;
   const n = pay.n_returned || 0;
   const pct = netCurrentPct;
+  const fj = netCurrentFmtJ;
   const esc = jeEscH;
+  const d = pay.density || {};
+  const c1 = d.c1 || {};
+  const f1 = netCurrentFrame(pay, '1V'), fc = netCurrentFrame(pay, '1C');
   const L = [];
-  L.push('<b>⚡ 전류 흐름 — 접촉망 해 (상위 간선)</b>');
+  L.push('<b>⚡ 전류 흐름 — 접촉 전류 밀도 (A cm⁻²) · 접촉망 해</b>');
   L.push(netCurrentControlsHtml(opt));
   L.push('채널: ' + (NETCUR_CHANNELS[pay.channel] || esc(pay.channel)) + ' · ' + (NETCUR_MODES[pay.mode] || esc(pay.mode)));
-  if (z && isFinite(z.share_mean)) {
-    L.push('<b>1 V 프로브 해 · 상위 ' + n + ' 간선 = 전체 전류의 ' + pct(z.share_mean) + '</b> '
-      + '<span style="color:#9ca3af">(z-단면 ' + z.planes + ' 개 평균 · 최소 ' + pct(z.share_min) + ' · 최대 ' + pct(z.share_max) + ')</span>');
+  L.push('<b>색 · 굵기 = 접촉 전류 밀도 j = |I| / A_c (log₁₀) · 상위 ' + n + ' 접촉 (|I| 큰 순)</b>');
+  if (f1.ok) {
+    const stops = [0, 0.25, 0.5, 0.75, 1].map(v => '#' + jetColor(v).toString(16).padStart(6, '0'));
+    L.push('<div style="margin:3px 0 1px 0;height:9px;border-radius:3px;background:linear-gradient(90deg,' + stops.join(',') + ')"></div>');
+    L.push('@1V (탐침 · 원고 S16 · S17 규약): <b>' + fj(Math.pow(10, st.lo)) + ' … ' + fj(Math.pow(10, st.hi)) + ' A cm⁻²</b>'
+      + (d.j_mean_1V > 0 ? ' <span style="color:#9ca3af">(단면 평균 ⟨J⟩ ' + fj(d.j_mean_1V) + ')</span>' : ''));
+    if (fc.ok) {
+      L.push('@1C (운전 환산 × ' + fj(fc.factor) + ' = I_1C / I_1V): <b>' + fj(Math.pow(10, st.lo) * fc.factor) + ' … '
+        + fj(Math.pow(10, st.hi) * fc.factor) + ' A cm⁻²</b> <span style="color:#9ca3af">(Q_areal ' + fj(c1.Q_areal_mAh_cm2)
+        + ' mAh/cm² → j_1C ' + fj(c1.Q_areal_mAh_cm2) + ' mA cm⁻² · 케이스 표 등급 값)</span>'
+        + ((c1.defaults_used || []).length ? ' <span style="color:#fbbf24">⚠ ' + esc((c1.defaults_used || []).join(' · ')) + '</span>' : ''));
+    } else {
+      L.push('<span style="color:#fbbf24">⚠ @1C 환산 불가 — ' + esc(fc.reason) + '</span>');
+    }
+    L.push('<span style="color:#9ca3af">A_c = 같은 풀이의 접촉 면적 (' + (pay.mode === 'physics' ? 'Physics = 세대 2 면적' : 'Hertz = c_cpl[22] 원판')
+      + ') · σ₀ = ' + esc(d.sigma0_S_cm) + ' S/cm (' + esc(d.sigma0_source) + ')'
+      + (d.n_no_area ? ' · 면적 없는 접촉 ' + d.n_no_area + ' 개 = 회색' : '') + '</span>');
   } else {
-    L.push('<b>1 V 프로브 해 · 상위 ' + n + ' 간선</b> <span style="color:#9ca3af">(z-단면 몫 계산 불가 — 간선 |I| 합의 '
-      + pct(pay.sum_abs_share) + ')</span>');
+    L.push('<span style="color:#f87171">⚠ 전류 밀도 계산 불가 — ' + esc(f1.reason) + ' (회색으로 그림 · 몫으로 칠하지 않는다)</span>');
   }
-  L.push('색 · 굵기 = log₁₀(|I_간선| / I_전체) — ' + pct(Math.pow(10, st.lo)) + ' … ' + pct(Math.pow(10, st.hi)) + ' (jet · 접촉 하나가 나르는 몫)');
-  let drawn = '그린 간선 ' + st.nDrawn + ' / 관통 간선 ' + pay.n_perc_edges;
-  if (st.nWrapSkipped) {
-    drawn += ' · 주기 경계를 넘는 ' + st.nWrapSkipped + ' 간선은 그리지 않음';
-    if (z && isFinite(z.drawn_share_mean)) drawn += ' (그 몫 ' + pct(Math.max(0, z.share_mean - z.drawn_share_mean)) + 'p)';
-  }
+  let drawn = '그린 접촉 ' + st.nDrawn + ' / 관통 접촉 ' + pay.n_perc_edges;
+  if (st.nWrapSkipped) drawn += ' · 주기 경계를 넘는 ' + st.nWrapSkipped + ' 접촉은 그리지 않음';
   L.push(drawn);
-  L.push('소산 (Σ I²R) 몫 ' + pct(pay.power_share) + ' · 0 전류 간선 ' + (pay.n_zero_current || 0) + ' 개 (띠 안 등) 제외');
+  L.push('소산 (Σ I²R) 몫 ' + pct(pay.power_share) + ' · 0 전류 접촉 ' + (pay.n_zero_current || 0) + ' 개 (띠 안 등) 제외');
   const dev = z ? z.identity_max_dev : NaN, tel = pay.power_identity_rel;
   const okChk = isFinite(dev) && dev < 1e-6 && isFinite(tel) && tel < 1e-6;
   L.push('검산 — 단면 전류 보존 ' + (isFinite(dev) ? dev.toExponential(1) : '—') + ' · Tellegen Σ I²R = I_전체 '
-    + (isFinite(tel) ? tel.toExponential(1) : '—') + (okChk ? ' ✓' : ' <span style="color:#f87171">⚠</span>'));
+    + (isFinite(tel) ? tel.toExponential(1) : '—') + (okChk ? ' ✓' : ' <span style="color:#f87171">⚠</span>')
+    + (z && isFinite(z.drawn_share_mean) ? ' · 표본: 그린 접촉이 나르는 단면 전류 ' + pct(z.drawn_share_mean) + ' (z-단면 ' + z.planes + ' 개 평균)' : ''));
   const sc = pay.sigma_check || {};
   if (sc.match === true) L.push('게시 σ 와 같은 해 ✓ <span style="color:#9ca3af">(σ/σ₀ ' + esc(sc.published) + ')</span>');
   else if (sc.match === false) L.push('<span style="color:#f87171">⚠ 게시 σ 와 다른 해 — 게시 ' + esc(sc.published) + ' · 덤프 '
@@ -5357,8 +5422,13 @@ function netCurrentLegendHtml(pay, opt, st) {
     L.push('<span style="color:#fbbf24">⚠ 덤프를 만들 때 게시 JSON 과 값이 달랐다 (코드 세대 차이) — manifest.json 참조</span>');
   }
   L.push('<i style="color:#9ca3af">모델의 접촉망 풀이 (Kirchhoff · 접촉마다 Holm 협착 · R_total = R_bulk + R_c) — 측정 전류도 충방전 방향도 아니다.  '
-    + '바닥 띠 1 V → 위 띠 0 V (정확 Dirichlet) 프로브 해.</i>');
-  L.push('<button id="netcur-cbar" class="data-modal-btn" title="이 그림의 색 눈금 (|I|/I_전체 · log) 을 논문용 6× PNG 로">컬러바 ⬇</button>'
+    + '바닥 띠 1 V → 위 띠 0 V (정확 Dirichlet) 프로브 해.  @1C = 선형 환산 (전류 보존 가정 — 망 전체가 1C 전류를 끝에서 끝까지 나른다고 볼 때 · '
+    + '반응 분포 없음).</i>');
+  const dis = (ok, why) => (ok ? '' : ' disabled title="' + esc(why) + '"');
+  L.push('<button id="netcur-cbar-1v" class="data-modal-btn"' + (f1.ok ? ' title="@1V 컬러바 (접촉 전류 밀도 A cm⁻² · log) 를 논문용 6× PNG 로"'
+      : dis(false, f1.reason)) + '>컬러바 @1V ⬇</button>'
+    + '<button id="netcur-cbar-1c" class="data-modal-btn"' + (fc.ok ? ' title="@1C 컬러바 (× I_1C / I_1V · 같은 색 · 다른 숫자) 를 논문용 6× PNG 로"'
+      : dis(false, fc.reason)) + '>컬러바 @1C ⬇</button>'
     + '<label style="font-size:11px"><input type="checkbox" id="netcur-arrows"' + (opt.arrows ? ' checked' : '')
     + '> 방향 화살표 (전위 강하 · a → b)</label>');
   return L.join('<br>');
@@ -5406,10 +5476,16 @@ function netCurrentWireLegend(state, pay) {
   on('netcur-mode', 'change', ev => { opt.mode = ev.target.value; applyNetCurrentMode(state); });
   on('netcur-arrows', 'change', ev => { opt.arrows = ev.target.checked; if (pay) renderNetCurrent(state, pay); });
   on('netcur-retry', 'click', () => applyNetCurrentMode(state));          // 오류는 캐시하지 않는다 — 다시 fetch
-  on('netcur-cbar', 'click', () => {
+  //  컬러바 둘 — @1V (탐침) · @1C (운전 환산) · 같은 색 막대 · 다른 숫자 (A cm⁻²)
+  on('netcur-cbar-1v', 'click', () => {
     const l = state._netCurLast;
-    if (l) exportColorbarPNG(netCurrentColorbarSpec(l.pay, opt, l.st.lo, l.st.hi),
-                             'colorbar_net_current_' + l.pay.channel + '_' + l.pay.mode + '.png');
+    if (l) exportColorbarPNG(netCurrentColorbarSpec(l.pay, opt, l.st.lo, l.st.hi, '1V'),
+                             'colorbar_net_current_' + l.pay.channel + '_' + l.pay.mode + '_1V.png');
+  });
+  on('netcur-cbar-1c', 'click', () => {
+    const l = state._netCurLast;
+    if (l) exportColorbarPNG(netCurrentColorbarSpec(l.pay, opt, l.st.lo, l.st.hi, '1C'),
+                             'colorbar_net_current_' + l.pay.channel + '_' + l.pay.mode + '_1C.png');
   });
 }
 
@@ -5453,7 +5529,8 @@ function renderNetCurrent(state, pay) {
   const edges = pay.edges || [];
   const box = pay.box || {};
   const hx = (+box.x > 0 ? +box.x : Infinity) / 2, hy = (+box.y > 0 ? +box.y : Infinity) / 2;
-  const rng = netCurrentLogRange(edges) || [-1, 0];
+  const rngJ = netCurrentLogRange(edges);                     // log₁₀ j (A cm⁻² @1V) — 없으면 (σ₀ · 면적 미확인) 회색 · 중간 굵기
+  const rng = rngJ || [-1, 0];
   const lo = rng[0], hi = rng[1];
   const draw = edges.filter(e => !netCurrentWrap(e.a, e.b, hx, hy));
   const radii = [];
@@ -5475,14 +5552,15 @@ function renderNetCurrent(state, pay) {
       B.set(e.b[0], e.b[2], e.b[1]);
       d.subVectors(B, A);
       const len = d.length();
-      const t = netCurrentT(e.s, lo, hi), r = rMin + (rMax - rMin) * t;
+      const hasJ = !!(rngJ && e.j > 0);
+      const t = hasJ ? netCurrentT(e.j, lo, hi) : 0.5, r = rMin + (rMax - rMin) * t;
       if (len > 0) d.divideScalar(len); else d.copy(up);
       q.setFromUnitVectors(up, d);
       mid.addVectors(A, B).multiplyScalar(0.5);
       sc.set(r, Math.max(len, 1e-6), r);
       m4.compose(mid, q, sc);
       tubes.setMatrixAt(i, m4);
-      col.setHex(jetColor(t));
+      col.setHex(hasJ ? jetColor(t) : 0x9ca3af);               // j 없음 (면적 · σ₀ 미확인) = 회색 — 몫으로 칠하지 않는다
       tubes.setColorAt(i, col);
       if (cones) {                                             // 화살표 = 흐름 방향 a → b (높은 전위 → 낮은 전위)
         const h = Math.min(4.5 * r, 0.45 * len), w = 2.2 * r;
