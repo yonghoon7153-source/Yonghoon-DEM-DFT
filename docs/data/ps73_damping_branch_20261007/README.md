@@ -122,6 +122,20 @@ bash docs/data/ps73_damping_branch_20261007/run_branch.sh --t0-only
 
 # 2) t0 PASS 를 본 뒤 본 실행 = t0 + (B) (반나절 ~ 하루) — 창을 닫아도 돈다
 nohup bash docs/data/ps73_damping_branch_20261007/run_branch.sh > ~/ps73_branch_20261007/run_B_$(date +%m%d_%H%M).log 2>&1 &
+
+# 1′ · 2′) ★ 1저자 WSL (DESKTOP-IK8J81H) 은 위 1) · 2) 대신 이것 (10-07 밤 · `SELF-97`) — 이 기계는 MPI 경로가 멈춘다
+#     (lmp_auto 직접 실행 · mpirun -np 1 둘 다 CPU 0 · 로그 0 바이트 — dem_scripts/mixer_20260921/run_all.sh 머리 주석 · 09-21 실측 · 10-07 밤 재현).
+#     run_branch.sh 는 고치지 않는다 (kit SHA256SUMS = 이 실험의 신원 — 바꾸면 통과한 t0 와 덱 묶음 지문이 갈린다) → mpirun 자리에
+#     인자 (--oversubscribe · --bind-to X · -np N) 를 버리고 stdbuf 로 lmp_serial 을 바로 실행하는 대리 스크립트를 준다.  t0 PASS 면 B 로 자동.
+mkdir -p ~/bin && cat > ~/bin/nompi <<'EOF'
+#!/bin/bash
+a=(); while [ $# -gt 0 ]; do case "$1" in --oversubscribe) shift;; --bind-to|-np) shift 2;; *) a+=("$1"); shift;; esac; done
+exec stdbuf -oL -eL "${a[@]}"
+EOF
+chmod +x ~/bin/nompi
+MPIRUN=~/bin/nompi NP=1 LMP=~/src/LIGGGHTS-PUBLIC/src/lmp_serial nohup bash docs/data/ps73_damping_branch_20261007/run_branch.sh > ~/ps73_branch_20261007/run_tB_$(date +%m%d_%H%M).log 2>&1 &
+#     정지는 PID 로만 (pkill -f 금지 · mixer run_all.sh 규약) · 1 코어라 t0 (6,200 step) ≈ 1 h · B (≈ 0.77 M step) ≈ 4–6 일 (ibb 코어당 1.0–1.7 step/s 로 어림 —
+#     실측 = screen.out thermo 1,000 step 간격 · run_branch.sh 의 "속도:" 줄은 t0 가 끝난 뒤에 찍힌다)
 # 진행 보기 (B_<시각>/ 폴더만 — 끝에 / 를 붙여 .tgz 를 빼고, 마지막 / 는 지운다)
 R=$(ls -d ~/ps73_branch_20261007/B_*/ | tail -1); R=${R%/}; tail -3 $R/branch_trace.csv; grep -E "BRANCH_|Hold [0-9]+:" $R/screen.out | tail -4
 

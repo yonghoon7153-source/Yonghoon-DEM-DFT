@@ -8993,6 +8993,20 @@
       "evidence_tests": [
         "docs/session_20260923_progress.md (10-07 발표 5 쪽 줄 · 10-07 밤 정정 줄)"
       ]
+    },
+    {
+      "id": "SELF-97",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "1저자 WSL (10-07 23:3x) — t0 첫 시도 둘이 mpirun 멈춤 (lmp_serial 프로세스 0 · screen.out 0 바이트) · 1저자 *\"lmp serial로 해야돼 얘는 np 이거 안돼\"* · *\"history 좀 쳐보고 예전에 어떻게 돌렸는지\"*",
+      "opened_in": "docs/data/ps73_damping_branch_20261007/README.md",
+      "title": "가지 실험 러너 run_branch.sh 가 늘 mpirun 으로 띄운다 — 1저자 WSL 에서 MPI 경로 (lmp_auto 직접 · mpirun -np 1) 가 멈춘다는 것이 리포에 이미 적혀 있었는데 (dem_scripts/mixer_20260921/run_all.sh 머리 주석 · 09-21 실측) 러너와 내 안내 (lmp_auto · NP 15 · mpirun) 가 반영하지 못했다 · 내 안내에 pkill -f (규약 위반) 도 있었다",
+      "note": "손실: 첫 시도 둘 (23:25 · 23:31) = 계산 0 · ≈ 10 분 (mpirun CPU 0 · 9 MB · lmp_serial 미기동 — 기록 그대로의 증상).  처방: 이 실험 동안 러너는 고치지 않는다 (kit SHA256SUMS = 실험 신원 — 바꾸면 통과한 t0 와 덱 묶음 지문이 갈린다) · README §6 1′ · 2′ = mpirun 자리 대리 스크립트 ~/bin/nompi (인자 버림 · stdbuf -oL -eL · lmp_serial 직접) · 정지 = PID 로만.  10-07 23:36:49 t0 재발사 = lmp_serial CPU 103 % · 출발 KE 1.695918e-05 = r8 로그 같음.  다음 실험 러너: 직접 실행 경로 (serial 빌드 자동) + t0 의 'Loop time … on N procs' N = NP 검사 (serial 빌드를 mpirun -np >1 로 띄우는 경우를 막는다) · 시험 먼저.",
+      "evidence_tests": [
+        "dem_scripts/mixer_20260921/run_all.sh (머리 주석 — WSL MPI 경로 멈춤 · lmp_serial · stdbuf · PID 정지 규약)",
+        "docs/data/ps73_damping_branch_20261007/README.md (§6 1′ · 2′ — WSL 대리 스크립트 실행)"
+      ]
     }
   ]
 }
