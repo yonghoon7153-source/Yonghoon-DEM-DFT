@@ -246,8 +246,18 @@ def obs_bound(pairs=None):
     """★ G2RR4-01 ③ — 감사 기록의 import 관측 객체 (`run_network_194_parallel.import_observation` + `import_observation_problems` 가 채우는 키) 의 통과 꼴:
     등록 케이스마다 완료 시도 (run 1 · 시도 1) · 케이스당 다섯 프로세스 (워커 · 파서 · 접촉 분석 · 피복 · 망 솔버) · 문제 0 · 봉인 밖 0."""
     pairs = pairs if pairs is not None else PROD194
+    #  ★ G2RR4-02 — 완료 시도마다 실행 단계 ↔ 영수증 결합 기록 (실행기 audit 의 import_observation.stage_binding · 스키마 = 실행기 정본 상수 (옛 실행기면 손 값) ·
+    #    열쇠 꼴 '케이스|run|시도')
+    sb = dict(schema=getattr(NP194, 'IMPORT_OBS_STAGE_SCHEMA', 'np194_import_obs/stage_binding/v1'),
+              attempts={f'{c}|1|1': dict(plan_source='worker.json attempts[].stage_plan', mode='bimodal',
+                                         executed=['parser', 'contact_bimodal', 'coverage', 'network_cli'], skipped=[], in_process=4,
+                                         expected={'worker': 1, 'scripts/parse_liggghts.py': 1, 'scripts/analyze_contacts_bimodal.py': 1,
+                                                   'scripts/coverage_physics_vs_hertzian.py': 1, 'scripts/network_conductivity.py': 1},
+                                         observed={'worker': 1, 'scripts/parse_liggghts.py': 1, 'scripts/analyze_contacts_bimodal.py': 1,
+                                                   'scripts/coverage_physics_vs_hertzian.py': 1, 'scripts/network_conductivity.py': 1})
+                        for c, _h in sorted(pairs)})
     return dict(n_processes=5 * len(pairs), n_started=5 * len(pairs), n_finalized=5 * len(pairs), processes=[], problems=[], tmp_leftover=[], files=[],
-                observed=[], outside=[], completed_attempts=[[c, '1', '1'] for c, _h in sorted(pairs)], unfinalized_noncompleted=[])
+                observed=[], outside=[], completed_attempts=[[c, '1', '1'] for c, _h in sorted(pairs)], unfinalized_noncompleted=[], stage_binding=sb)
 
 
 def audit_bound(td):
@@ -1417,6 +1427,64 @@ chk('V18e 다시 읽기 상세 계약은 생산자 쪽 한 함수 (g2_network_re
     and bool(_dp(dict(RR_OK, meta=rr_detail()[0], cases=[]), frozenset(PROD194)))
     and 'production194' in (getattr(LRB, 'V13_IMPORT_OBS_REQUIRED', None) or ()),
     (callable(_dp), getattr(LRB, 'V13_IMPORT_OBS_REQUIRED', None)))
+
+# ═══ V19 ★ 10-07 G2RR4-02 — 생산 194 배포 = 실행 단계 ↔ 관측 영수증 결합을 한 감사만 (import_observation.stage_binding) ═══════════════════════════════
+#   Codex 세대 2 재검증 4 §3 — 보조 단계 영수증 쌍 결손을 실행기 audit 가 못 봤다.  실행기가 완료 시도마다 단계 계획 ↔ 끝맺은 프로세스를 결합하고 그 기록을 감사에
+#   싣는다 → 배포 관문은 그 결합 기록 (스키마 · 시도 = 관측된 완료 시도 · 등록 케이스 전부) 이 없는 감사를 받지 않는다 (결합 전 실행기의 감사 = 거부).
+print('V19 감사의 실행 단계 ↔ 영수증 결합 기록 (G2RR4-02)')
+
+
+def _sb_mut(fn):
+    def f(a):
+        a = json.loads(json.dumps(a))
+        fn(a['import_observation'])
+        return a
+    return f
+
+
+def _sb_drop_one(io_):
+    k_ = sorted(io_['stage_binding']['attempts'])[0]
+    io_['stage_binding']['attempts'].pop(k_)
+
+
+def _sb_rekey(io_):
+    k_ = sorted(io_['stage_binding']['attempts'])[0]
+    c_ = k_.split('|')[0]
+    io_['stage_binding']['attempts'][f'{c_}|2|2'] = io_['stage_binding']['attempts'].pop(k_)
+
+
+V19_VARIANTS = (
+    ('감사 관측에 stage_binding 없음 (결합 전 실행기의 감사)', dict(audit=_sb_mut(lambda io_: io_.pop('stage_binding'))), 'stage_binding'),
+    ('stage_binding 스키마 다름', dict(audit=_sb_mut(lambda io_: io_['stage_binding'].update(schema='np194_import_obs/stage_binding/v0'))), 'stage_binding'),
+    ('stage_binding 시도 하나 빠짐 (193 · completed_attempts 194 그대로)', dict(audit=_sb_mut(_sb_drop_one)), 'stage_binding'),
+    ('stage_binding 시도 열쇠 ≠ completed_attempts (한 케이스를 run 2 · 시도 2 로)', dict(audit=_sb_mut(_sb_rekey)), 'stage_binding'),
+    ('stage_binding attempts 가 dict 가 아님 ([])', dict(audit=_sb_mut(lambda io_: io_['stage_binding'].update(attempts=[]))), 'stage_binding'),
+)
+r19 = {}
+with tempfile.TemporaryDirectory() as td:
+    hd19 = safe(lambda: make_g2_handover_dir(os.path.join(td, 'handover')))
+    ver19 = os.path.join(td, 'go.md')
+    open(ver19, 'w', encoding='utf-8').write('# GO (합성)\n')
+    if _orig_rr is not None and not is_err(hd19):
+        LRB.v13_reread_tau = lambda *a: []
+        try:
+            r19['build'] = []
+            for i, (nm, kw, tag) in enumerate(V19_VARIANTS):
+                b_ = make_batch_root(os.path.join(td, f'b19_{i:02d}'), **kw)
+                o_ = os.path.join(td, f'o19_{i:02d}')
+                m_ = refusal_msg(lambda: LRB.build_v13(out_dir=o_, handover_dir=hd19, batch_root=b_, date=DATE, codex_verdict=ver19))
+                r19['build'].append((i, nm, tag, m_, os.path.exists(o_)))
+            b_g = make_batch_root(os.path.join(td, 'b19_good'))
+            r19['good_au'] = safe(lambda: LRB.v13_audit_problems(json.load(open(os.path.join(b_g, 'seal_audit.json'), encoding='utf-8')), b_g))
+        finally:
+            LRB.v13_reread_tau = _orig_rr
+for i, nm, tag, m_, made in r19.get('build', []):
+    chk(f'V19a{i:02d} {nm} → build_v13 거부 (메시지에 {tag!r}) · 산출 폴더 없음',
+        m_ is not None and not m_.startswith('OTHER') and tag in m_ and not made, (m_ or 'BUILT (거부 없음)')[:400])
+if not r19.get('build'):
+    chk('V19a (변이 만들기 시험 못 함)', False, r19)
+chk('V19b 결합 기록이 있는 감사 (스키마 = 실행기 IMPORT_OBS_STAGE_SCHEMA · 시도 = 완료 시도 194) → 감사 판정 문제 0',
+    r19.get('good_au') == [] and getattr(NP194, 'IMPORT_OBS_STAGE_SCHEMA', None) == 'np194_import_obs/stage_binding/v1', r19.get('good_au'))
 
 print(f'\n{_ok} PASS · {len(_fail)} FAIL')
 if _fail:

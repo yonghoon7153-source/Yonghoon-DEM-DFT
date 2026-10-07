@@ -437,7 +437,7 @@ def launcher_detail_problems(rec, expected_pairs) -> list:
     if not isinstance(cases, list):
         p.append(f'cases {type(cases).__name__} — 목록이 아니다 (상세 결손)')
         cases = []
-    pairs, bad_ids, extra_ids = [], [], []
+    pairs, bad_ids = [], []
     for i, c in enumerate(cases):
         if not (isinstance(c, dict) and isinstance(c.get('case'), str) and isinstance(c.get('cohort'), str) and isinstance(c.get('checks'), list)):
             bad_shape.append(f'cases[{i}] {str(c)[:100]}')

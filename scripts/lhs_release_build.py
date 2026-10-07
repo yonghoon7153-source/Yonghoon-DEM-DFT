@@ -1335,6 +1335,19 @@ def v13_audit_observation_problems(a, ident, expect_set=V13_REREAD_SET):
                 if gap:
                     p.append(f'import_observation.completed_attempts 가 등록 케이스 {len(gap)} 를 안 덮는다 (첫 {gap[:3]}) — 관측된 완료 시도 = 등록 {len(need)} '
                              '전부여야 (G2RR4-01)')
+            #  ★ 10-07 G2RR4-02 (Codex 세대 2 재검증 4 §3) — 실행 단계 ↔ 관측 영수증 결합을 한 감사만 (실행기 import_observation.stage_binding · 스키마 = 실행기
+            #    정본) · 결합된 시도 = 관측된 완료 시도 (요약 ↔ 상세) — 결합 전 실행기의 감사 (보조 단계 영수증 쌍 결손을 못 보던 판) 를 받지 않는다
+            sb = io_.get('stage_binding')
+            sch = _np194().IMPORT_OBS_STAGE_SCHEMA
+            if not (isinstance(sb, dict) and sb.get('schema') == sch and isinstance(sb.get('attempts'), dict)):
+                p.append(f'import_observation.stage_binding {str(sb)[:80]} — 실행 단계 ↔ 영수증 결합 ({sch}) 을 한 감사가 아니다 (G2RR4-02 · 결합 전 실행기의 감사는 '
+                         '보조 단계 영수증 쌍 결손을 못 본다)')
+            else:
+                bound = set(sb['attempts'])
+                comp = {'|'.join(str(v) for v in x) for x in ca}
+                if bound != comp:
+                    p.append(f'import_observation.stage_binding 시도 {len(bound)} ≠ 관측된 완료 시도 {len(comp)} (결합만 {sorted(bound - comp)[:3]} · 완료만 '
+                             f'{sorted(comp - bound)[:3]}) — 완료 시도마다 결합 기록이 있어야 (G2RR4-02)')
     return p
 
 
