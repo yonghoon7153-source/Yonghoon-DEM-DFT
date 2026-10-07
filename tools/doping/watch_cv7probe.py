@@ -5,6 +5,9 @@
     python3 ~/bin/cv7_watch.py --loop 300                   # 5 분마다 화면을 지우고 다시 그린다 (Ctrl-C 로 끝)
       ⚠ `watch -n …` 는 화면 폭보다 긴 줄을 **잘라 버린다** (줄바꿈 안 함) — 그래서 --loop 를 따로 둔다.
     python3 tools/doping/watch_cv7probe.py --selftest
+    python3 ~/bin/cv7_watch.py --out_root ~/work/runs/cascade_v7_main_1007 --loop 300   # 본 라운드 (`--main` · 10-07)
+      manifest schema 가 본 라운드면 알아서 바꾼다: 제목 · tmux cv7main · 명단 진행 n/40 · 남은 런 × 평균 단가 어림 끝 ·
+      ⛔ 판독 줄 없음 (40 런 전 중간 집계 금지 — 판독 산출물이 있어도 안 읽는다).
 
 배포 — 러너가 도는 worktree(~/wt_cv7probe_1003)를 **건드리지 않고** repo 에서 이 파일만 꺼낸다.
   stdlib 만 쓰므로 어느 python3 로도 어디서든 돈다:
@@ -44,6 +47,7 @@ from pathlib import Path
 
 DEFAULT_OUT = "~/work/runs/cascade_v7_probe_1003"
 SESSION = "cv7probe"
+MAIN_SESSION, MAIN_SCHEMA = "cv7main", "cascade_v7_main_round/v1"
 OTHER_SESSIONS = {"agc": "P1b"}             # 같은 GPU 를 나눠 쓰는 잡 — 있는지만 보인다
 RUNNER_NAME = "run_cascade_v7_probe"
 SUBDIR = "d0.00_cfg0"
@@ -129,23 +133,26 @@ def report(out_root, log=None, now=None, nvsmi="nvidia-smi", tmux="tmux") -> tup
     out_root = Path(out_root).expanduser()
     log = Path(log).expanduser() if log else Path(str(out_root) + ".log")
     now = time.time() if now is None else now
-    L = [f"════ cascade v7 탐침 · {time.strftime('%F %T', time.localtime(now))} · {out_root} ════"]
+    m = (_json(out_root / "manifest.json") or {}) if out_root.is_dir() else {}
+    main = m.get("schema") == MAIN_SCHEMA
+    session, others = (MAIN_SESSION, {}) if main else (SESSION, OTHER_SESSIONS)
+    L = [f"════ cascade v7 {'본 라운드' if main else '탐침'} · {time.strftime('%F %T', time.localtime(now))} · {out_root} ════"]
     if not out_root.is_dir():
-        return 2, L + ["⛔ out_root 가 없다 — 탐침이 아직 안 떴거나 경로가 다르다 (--out_root)"]
+        return 2, L + ["⛔ out_root 가 없다 — 러너가 아직 안 떴거나 경로가 다르다 (--out_root)"]
     state, _ = runner_state(out_root)
     sess = _sh([tmux, "ls", "-F", "#S"])
     names = sess.split() if sess else []
-    shown = [f"{SESSION} {'✓' if SESSION in names else '⚠ 없음'}"] + \
-            [f"{k}({v}) {'✓' if k in names else '없음'}" for k, v in OTHER_SESSIONS.items()]
-    rest = len([n for n in names if n != SESSION and n not in OTHER_SESSIONS])
+    shown = [f"{session} {'✓' if session in names else '⚠ 없음'}"] + \
+            [f"{k}({v}) {'✓' if k in names else '없음'}" for k, v in others.items()]
+    rest = len([n for n in names if n != session and n not in others])
     L.append(f"① {state} · tmux " + (" · ".join(shown) + (f" · 그 밖 {rest} 개" if rest else "") if sess is not None
-                                     else f"못 읽음 (⚠ {SESSION} 없음)"))
+                                     else f"못 읽음 (⚠ {session} 없음)"))
     try:
         age = (now - log.stat().st_mtime) / 60.0
         L.append(f"   러너 로그 {log.name} · 마지막 갱신 {age:.0f} 분 전 (러너는 30 분마다 진행 줄을 쓴다)")
     except OSError:
         L.append(f"   러너 로그 {log} 없음")
-    m, b = _json(out_root / "manifest.json") or {}, _json(out_root / "budget.json")
+    b = _json(out_root / "budget.json")
     if b is None:
         return 2, L + ["⛔ budget.json 을 못 읽는다 — 러너가 사전점검에서 멈췄을 수 있다 (로그 끝 확인)"]
     fr = m.get("frozen") or {}
@@ -158,6 +165,14 @@ def report(out_root, log=None, now=None, nvsmi="nvidia-smi", tmux="tmux") -> tup
     more = affordable(used, cap, unit)
     L.append(f"② 누적 {used:.2f} / 상한 {cap} GPU-h · 끝난 런 {len(done)} · 단가 실측 {[round(x, 2) for x in meas] or '없음'} · "
              f"단가 {unit} ({'실측 최댓값' if meas else '추정'}) 기준 상한 안에서 더 돌 수 있는 런 ≈ {more}")
+    if main:
+        n_all = int(m.get("max_runs") or len(m.get("roster") or []) or 0)
+        left = max(n_all - len(done), 0)
+        avg = (sum(meas) / len(meas)) if meas else (float(unit) if unit else None)
+        L.append(f"   명단 끝 {len(done)} / {n_all} · 남은 {left} 런" + (
+            f" × 평균 {avg:.2f} h ≈ {left * avg / 24:.1f} 일 → 어림 끝 "
+            f"{time.strftime('%m-%d', time.localtime(now + left * avg * 3600))} (직렬 · 도는 런 포함 · 공유가 바뀌면 빗나간다)"
+            if avg else ""))
     running = [s for s in steps if "rc" not in s and "stopped" not in s and s.get("T_K") is not None]
     for s in running:
         md = out_root / "md" / str(s.get("tag")) / SUBDIR / f"T{int(s['T_K'])}" / "md.log"
@@ -174,7 +189,7 @@ def report(out_root, log=None, now=None, nvsmi="nvidia-smi", tmux="tmux") -> tup
                                             " (이 런 지금 속도 외삽)" if e is not None else " · 남은 시간 모름 (진행 0)"))
     if not running:
         L.append("③ 지금 도는 런 없음")
-    jd = _json(out_root / "cascade_v7_probe.json") or {}
+    jd = {} if main else (_json(out_root / "cascade_v7_probe.json") or {})   # 본 라운드: 중간 판독을 안 읽는다
     jr = {(r.get("T_K"), r.get("structure"), r.get("seed")): {k: r.get(k) for k in JUDGE_KEYS if k in r}
           for r in jd.get("runs") or [] if isinstance(r, dict)}
     for s in steps:
@@ -183,13 +198,14 @@ def report(out_root, log=None, now=None, nvsmi="nvidia-smi", tmux="tmux") -> tup
         r = jr.get((s.get("T_K"), s.get("structure"), s.get("seed")), {})
         verdict = ("자격 " + ("통과" if r.get("eligible") else "미달") + f" · 골격 {r.get('framework_alarm', '—')} · "
                    f"부창비 {[round(float(x), 2) for x in (r.get('sub_window_ratios') or []) if isinstance(x, (int, float))]} · "
-                   f"사건 {r.get('events', '—')}" + (f" · ⛔ {r['error']}" if r.get("error") else "")) if r else "판독 전"
+                   f"사건 {r.get('events', '—')}" + (f" · ⛔ {r['error']}" if r.get("error") else "")) if r else (
+            "판독 없음 (40 런 뒤 · 중간 집계 금지)" if main else "판독 전")
         head = "✔" if s.get("ok") else "⛔ " + str(s.get("stopped") or s.get("failed") or f"rc {s.get('rc')}")[:120]
         L.append(f"④ {head} {s.get('tag')} · {s.get('gpu_h', '—')} GPU-h · 생산 T {s.get('mdlog_T_production') or '—'} · {verdict}")
     if jd:
         L.append(f"⑤ 마지막 판독: T* {jd.get('T_star_K')} · next {jd.get('next')} · {jd.get('why')}")
     g = _sh([nvsmi, "--query-gpu=memory.used,memory.total,utilization.gpu", "--format=csv,noheader"])
-    L.append(f"⑥ GPU {g or '못 읽음'} (P1b pw.x 와 공유 · 프로세스별은 못 본다)")
+    L.append(f"⑥ GPU {g or '못 읽음'} ({'단독 예정' if main else 'P1b pw.x 와 공유'} · 프로세스별은 못 본다)")
     try:
         tail = Path(log).read_text(encoding="utf-8", errors="ignore").splitlines()[-3:]
         L += ["⑦ 러너 로그 끝:"] + [f"   {x[:200]}" for x in tail]
@@ -291,6 +307,26 @@ def _selftest() -> int:
         (out / "budget.json").write_text("{")
         rc, L = report(out, now=now, nvsmi="/bin/false", tmux="/bin/false")
         ck("⛔음성 budget.json 깨짐 → rc 2", rc == 2)
+
+        mo = tmp / "main"
+        (mo / "md" / "P1_Al2O3_B__T1000__s1" / SUBDIR / "T1000").mkdir(parents=True)
+        (mo / "manifest.json").write_text(json.dumps({"schema": MAIN_SCHEMA, "max_runs": 40,
+                                                      "frozen": {"equilib_ps": 5.0, "prod_ps": 400.0}}))
+        (mo / "budget.json").write_text(json.dumps({"cap_gpu_h": 461.4, "est_gpu_h_per_run": 11.5341, "used_gpu_h": 21.0, "steps": [
+            {"tag": "P1_Al2O3_A__T1000__s1", "T_K": 1000, "structure": "P1_Al2O3_A", "seed": 1, "rc": 0, "ok": True, "gpu_h": 10.0},
+            {"tag": "P2_Al2S3_A__T1000__s1", "T_K": 1000, "structure": "P2_Al2S3_A", "seed": 1, "rc": 0, "ok": True, "gpu_h": 11.0},
+            {"tag": "P1_Al2O3_B__T1000__s1", "T_K": 1000, "structure": "P1_Al2O3_B", "seed": 1, "start_utc": start}]}))
+        (mo / "md" / "P1_Al2O3_B__T1000__s1" / SUBDIR / "T1000" / "md.log").write_text("Time[ps] T\n0.0 1000\n100.0 1001\n")
+        (mo / "cascade_v7_probe.json").write_text(json.dumps({"T_star_K": 1000, "why": "SHOULD_NOT_SHOW", "runs": [
+            {"T_K": 1000, "structure": "P1_Al2O3_A", "seed": 1, "eligible": True, "events": 777}]}))
+        ft.write_text("#!/bin/sh\nprintf 'cv7main\\nagc\\n'\n")
+        rc, L = report(mo, now=now, nvsmi="/bin/false", tmux=str(ft))
+        txt = "\n".join(L)
+        ck("본 라운드: 제목 · tmux cv7main ✓ · 명단 끝 2 / 40 · 남은 38 × 평균 10.50 h",
+           rc == 0 and "cascade v7 본 라운드" in txt and "cv7main ✓" in txt and "명단 끝 2 / 40 · 남은 38 런 × 평균 10.50 h" in txt)
+        ck("⛔음성 본 라운드: 판독 산출물이 있어도 안 읽는다 (자격·사건·사유가 화면에 없다)",
+           "SHOULD_NOT_SHOW" not in txt and "사건 777" not in txt and "판독 없음 (40 런 뒤" in txt and "⑤" not in txt)
+        ck("본 라운드: 도는 런 100.0 / 405 ps", "▶ P1_Al2O3_B__T1000__s1 · md.log 100.0 / 405 ps" in txt)
     finally:
         import shutil
         shutil.rmtree(tmp, ignore_errors=True)
