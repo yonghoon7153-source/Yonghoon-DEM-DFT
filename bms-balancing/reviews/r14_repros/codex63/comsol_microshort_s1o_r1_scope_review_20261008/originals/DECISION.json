@@ -1,0 +1,25 @@
+{
+  "kind": "S1O_R1_SCOPE_DOCUMENT_REVIEW",
+  "review_date": "2026-10-08",
+  "status": "R1_NARROW_OFFLINE_CORRECTION_SCOPE_ACCEPTED",
+  "request_sha256": "6e3a9ca3b3c91bd17b0a9ba56b8135a3711ddda61903468d67cfc41698ce6d19",
+  "prior_review_archive_sha256": "dee50be8d7dd1bcfd14323878deaeda1d31729f4f850cda5d6158bf64dfda46f",
+  "new_blocking_findings": [],
+  "scope_mapping": {"N1": "MATCH", "N2": "MATCH", "N3": "MATCH", "N4": "MATCH"},
+  "nonblocking_clarifications": [
+    "Absolute new output folder fixed with user adoption; new timing origin and boundaries recorded",
+    "Use revised validation case count with mapping to existing 98 IDs",
+    "Explicit range check wording for full intersection",
+    "Distinguish target-code execution zero from static inspection and packaging tools"
+  ],
+  "implementation_closed": false,
+  "functional_validation": "NOT_RUN",
+  "implementation_authorized_by_this_review": false,
+  "native_approved": false,
+  "native_ready": false,
+  "received_code_executed": 0,
+  "COMSOL": 0,
+  "JVM": 0,
+  "original_documents_modified": false,
+  "outbound_send_performed": false
+}

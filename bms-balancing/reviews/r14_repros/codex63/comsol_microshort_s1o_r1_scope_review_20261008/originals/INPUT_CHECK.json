@@ -1,0 +1,19 @@
+{
+  "request": {
+    "file": "COMSOL_MICROSHORT_S1O_R1_SEND_TO_CODEX_20261007.md",
+    "bytes": 5827,
+    "sha256": "6e3a9ca3b3c91bd17b0a9ba56b8135a3711ddda61903468d67cfc41698ce6d19"
+  },
+  "prior_review": {
+    "file": "COMSOL_MICROSHORT_S1O_PREPARATION_REVIEW_20261007.zip",
+    "bytes": 805653,
+    "sha256": "dee50be8d7dd1bcfd14323878deaeda1d31729f4f850cda5d6158bf64dfda46f",
+    "payload": 128,
+    "entries": 129,
+    "exact_set_size_sha_crc": true
+  },
+  "prior_review_documents_match_local_issued_copy": true,
+  "original_input_bytes_unchanged": true,
+  "received_programs_executed": 0,
+  "scope": "Input bytes and document comparison only, not R1 implementation verification"
+}

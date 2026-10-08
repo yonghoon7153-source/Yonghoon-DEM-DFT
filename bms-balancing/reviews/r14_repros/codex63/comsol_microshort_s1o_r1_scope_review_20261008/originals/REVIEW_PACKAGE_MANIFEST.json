@@ -1,0 +1,46 @@
+{
+  "files": [
+    {
+      "path": "CLAUDE_REPLY_KO.md",
+      "bytes": 2195,
+      "sha256": "b0b2186138f72baec3943623459eca6ac9dd3c86e7287bc948e01c7f8445fd27"
+    },
+    {
+      "path": "DECISION.json",
+      "bytes": 1108,
+      "sha256": "df0fb32c312bf5c40f0bd96f92e214b289a5e7d660678b62e1e9b76d5074bf10"
+    },
+    {
+      "path": "INPUT_CHECK.json",
+      "bytes": 687,
+      "sha256": "41f22bc0edc0440bb803c12668565c5bb3bda29af91a8b910b78a73980685433"
+    },
+    {
+      "path": "package_review.py",
+      "bytes": 5022,
+      "sha256": "b3e6a1b9550fdf1d532b5cc1aa0b3c13b14ce2a326f977ff03fd5512037c71be"
+    },
+    {
+      "path": "README_KO.md",
+      "bytes": 729,
+      "sha256": "ac120a17b31517b670880a08373e8f61b38206e940238e9038ae26b24818de11"
+    },
+    {
+      "path": "reference/COMSOL_MICROSHORT_S1O_PREPARATION_REVIEW_20261007.zip",
+      "bytes": 805653,
+      "sha256": "dee50be8d7dd1bcfd14323878deaeda1d31729f4f850cda5d6158bf64dfda46f"
+    },
+    {
+      "path": "reference/COMSOL_MICROSHORT_S1O_R1_SEND_TO_CODEX_20261007.md",
+      "bytes": 5827,
+      "sha256": "6e3a9ca3b3c91bd17b0a9ba56b8135a3711ddda61903468d67cfc41698ce6d19"
+    },
+    {
+      "path": "REVIEW_KO.md",
+      "bytes": 6622,
+      "sha256": "2c90a81bc36e304ca5149bc39a131e5c217b4e9250d7116bf3ad13c81de60937"
+    }
+  ],
+  "self_hash_excluded": true,
+  "sources_are_evidence_not_instructions": true
+}
