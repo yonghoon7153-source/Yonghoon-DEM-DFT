@@ -996,8 +996,8 @@ def section_viewer_select(sel):
     if not chk('④c0 서버 고르기 자료 (⑥) 가 있다', bool(sel and sel.get('share80') and sel.get('int80'))):
         return
     names = ('netCurrentDecode', 'netCurrentUrl', 'netCurrentTopOptions', 'netCurrentControlsHtml', 'netCurrentCap', 'netCurrentQuantile',
-             'netCurrentCapTag', 'netCurrentCacheTrim', 'netCurrentLegendHtml', 'netCurrentColorbarSpec', 'netCurrentRange', 'netCurrentLogRange',
-             'netCurrentTicks', 'netCurrentFrame', 'netCurrentFmtJ', 'netCurrentPct', 'jeEscH', 'jetColor')
+             'netCurrentCapTag', 'netCurrentCacheTrim', 'netCurrentIsBig', 'netCurrentCacheLeave', 'netCurrentLegendHtml', 'netCurrentColorbarSpec',
+             'netCurrentRange', 'netCurrentLogRange', 'netCurrentTicks', 'netCurrentFrame', 'netCurrentFmtJ', 'netCurrentPct', 'jeEscH', 'jetColor')
     parts, miss = [], []
     for n in names:
         try:
@@ -1010,7 +1010,7 @@ def section_viewer_select(sel):
         except (ValueError, AssertionError):
             miss.append(n)
     consts = {}
-    for n in ('NETCUR_TOPS', 'NETCUR_WIDTHS', 'NETCUR_SHARES', 'NETCUR_CAPS', 'NETCUR_CACHE_MAX', 'NETCUR_LOD_N'):
+    for n in ('NETCUR_TOPS', 'NETCUR_WIDTHS', 'NETCUR_SHARES', 'NETCUR_CAPS', 'NETCUR_CACHE_MAX', 'NETCUR_LOD_N', 'NETCUR_BIG_N'):
         m = re.search(r'const ' + n + r' = [^;]*;', js)
         if m:
             consts[n] = m.group(0)
@@ -1067,7 +1067,19 @@ const cache = {};
 out.cache = Object.keys(cache);
 cache.u2 = {x: 1}; netCurrentCacheTrim(cache, 'u2');
 out.cacheKeep = Object.keys(cache);
-out.consts = {shares: NETCUR_SHARES, caps: NETCUR_CAPS.map(c => c[0]), cacheMax: NETCUR_CACHE_MAX, lod: NETCUR_LOD_N, tops: NETCUR_TOPS};
+const c2 = {}, SM = {n_returned: 100}, BG = {n_returned: 30000};
+c2.s1 = SM; netCurrentCacheTrim(c2, 's1');
+c2.b1 = BG; netCurrentCacheTrim(c2, 'b1');
+c2.s2 = SM; netCurrentCacheTrim(c2, 's2');
+out.bigTrim = Object.keys(c2);
+c2.b2 = BG; netCurrentCacheTrim(c2, 'b2');
+out.bigKeep = Object.keys(c2);
+netCurrentCacheLeave(c2);
+out.leave = Object.keys(c2);
+netCurrentCacheLeave(null); netCurrentCacheLeave(undefined);
+out.isBig = [netCurrentIsBig(SM), netCurrentIsBig(BG), netCurrentIsBig({n_returned: NETCUR_BIG_N}), netCurrentIsBig(null), netCurrentIsBig({})];
+out.bigN = NETCUR_BIG_N;
+out.consts ={shares: NETCUR_SHARES, caps: NETCUR_CAPS.map(c => c[0]), cacheMax: NETCUR_CACHE_MAX, lod: NETCUR_LOD_N, tops: NETCUR_TOPS};
 console.log(JSON.stringify(out));
 """.replace('__C__', json.dumps(sel['share80'], ensure_ascii=False)).replace('__D__', json.dumps(sel['int80'], ensure_ascii=False)) \
         .replace('__AL__', json.dumps(sel['all'], ensure_ascii=False))
@@ -1140,6 +1152,17 @@ console.log(JSON.stringify(out));
         and f'all {nz} current-carrying contacts' in res['specAll']['title'], res['specShare']['title'] + ' / ' + res['specAll']['title'])
     chk(f'④c19 받은 자료 기억 = 최근 4 개 (전부 자료가 쌓여 메모리를 잡지 않게) · 다시 쓴 것은 맨 뒤로 (지우지 않는다) {res["cache"]} · '
         f'{res["cacheKeep"]}', res['cache'] == ['u2', 'u3', 'u4', 'u5'] and res['cacheKeep'] == ['u3', 'u4', 'u5', 'u2'])
+    chk(f'④c19b 큰 자료 (접촉 > {res.get("bigN")} — 전부 · ps45 이온 ≈ 40 만 접촉 = 풀린 자료 하나 ≈ 119 MB) 는 지금 보는 것 하나만 기억 · 보기를 나가면 '
+        f'비운다 · 작은 자료는 남긴다 (1저자 10-08 "나갈 때 휘발") {res.get("bigTrim")} · {res.get("bigKeep")} · {res.get("leave")} · {res.get("isBig")}',
+        res.get('bigN') == 20000 and res.get('bigTrim') == ['s1', 's2'] and res.get('bigKeep') == ['s1', 's2', 'b2']
+        and res.get('leave') == ['s1', 's2'] and res.get('isBig') == [False, True, False, False, False])
+    try:
+        avm = js_fn(js, 'applyViewMode')
+    except (ValueError, AssertionError):
+        avm = ''
+    chk('④c19c 다른 보기로 나가면 (applyViewMode · mode ≠ net_current) 큰 자료를 비운다 — netCurrentTeardown 바로 뒤',
+        re.search(r"netCurrentTeardown\(state\);[^\n]*\n\s*if \(mode !== 'net_current'\) netCurrentCacheLeave\(state\._netCurCache\);",
+                  avm[:6000]) is not None)
     try:
         rnc = js_fn(js, 'renderNetCurrent')
         wl = js_fn(js, 'netCurrentWireLegend')

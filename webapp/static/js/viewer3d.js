@@ -2221,7 +2221,8 @@ function applyViewMode(state, mode) {
    * Cluster Coloring split-mesh) before reapplying any mode — stale
    * geometry left around confuses every other mode. */
   netCurrentTeardown(state);                       // ⚡ 전류 흐름 원기둥 · 늦게 오는 응답 무효 (mode 'net_current')
-  _amOnlyTeardown(state);                          // AM 만 보기가 숨긴 SE 를 체크박스대로 되돌림 (mode 'am_only')
+  if (mode !== 'net_current') netCurrentCacheLeave(state._netCurCache);   // 전류 흐름을 떠나면 큰 자료 (> NETCUR_BIG_N 접촉) 를 비운다 (1저자 10-08)
+  _amOnlyTeardown(state);                         // AM 만 보기가 숨긴 SE 를 체크박스대로 되돌림 (mode 'am_only')
   if (state.brittleGlowGroup && state.scene) {
     state.scene.remove(state.brittleGlowGroup);
     state.brittleGlowGroup.traverse(obj => {
@@ -5214,6 +5215,7 @@ const NETCUR_SHARES = [50, 80, 95];                     // 전류 몫 고르기 
 const NETCUR_CAPS = [['max', '위쪽 최대'], ['p99', '위쪽 p99'], ['p95', '위쪽 p95']];   // 색 위쪽 — 범례 · 컬러바 = 숫자 셋 그대로 ('≥' · ▲ 없음)
 const NETCUR_CACHE_MAX = 4;                             // 받은 자료 기억 — 전부 (수십만 접촉) 자료가 쌓여 메모리를 잡지 않게 최근 넷만
 const NETCUR_LOD_N = 20000;                             // 이보다 많이 그리면 관 6 각 · 뚜껑 없음 (삼각형 4 배 적게) — 이하 = 옛 12 각 그대로
+const NETCUR_BIG_N = 20000;                             // 큰 자료 (접촉 > 이 수) = 보는 동안만 기억 · 나가면 비움 — 1저자 10-08 "나갈 때 휘발" (40 만 접촉 ≈ 119 MB)
 const NETCUR_CHANNELS = {
   ionic: '이온 (SE–SE 접촉망)',
   electronic: '전자 (AM–AM 접촉망)',
@@ -5265,12 +5267,26 @@ function netCurrentTopOptions(opt, pay) {
   return o;
 }
 
-/* 받은 자료 기억 (url → 자료) 을 최근 NETCUR_CACHE_MAX 개로 — 방금 쓴 url 은 맨 뒤로 옮기고 지우지 않는다 · 오래된 것부터 지운다. */
+/* 큰 자료 — 돌려받은 접촉이 NETCUR_BIG_N 보다 많다 (전부 · 큰 몫 · ps45 이온 전부 ≈ 40 만 접촉 = 풀린 자료 하나 ≈ 119 MB) */
+function netCurrentIsBig(b) {
+  return !!b && (+b.n_returned || 0) > NETCUR_BIG_N;
+}
+
+/* 받은 자료 기억 (url → 자료) 을 최근 NETCUR_CACHE_MAX 개로 — 방금 쓴 url 은 맨 뒤로 옮기고 지우지 않는다 · 오래된 것부터 지운다.
+ * 큰 자료는 지금 보는 것 (url) 하나만 남긴다 (1저자 10-08 "용량이 크다면 … 나갈 때 휘발") — 작은 자료는 다시 고를 때 바로 그리게 남긴다. */
 function netCurrentCacheTrim(cache, url) {
   if (!cache) return cache;
   if (Object.prototype.hasOwnProperty.call(cache, url)) { const v = cache[url]; delete cache[url]; cache[url] = v; }
+  Object.keys(cache).forEach(k => { if (k !== url && netCurrentIsBig(cache[k])) delete cache[k]; });
   const keys = Object.keys(cache);
   for (let i = 0; i < keys.length - NETCUR_CACHE_MAX; i++) if (keys[i] !== url) delete cache[keys[i]];
+  return cache;
+}
+
+/* 전류 흐름 보기를 떠날 때 (applyViewMode · 다른 보기) — 큰 자료는 비운다 (그림은 netCurrentTeardown 이 이미 치운다) · 작은 자료는 남긴다. */
+function netCurrentCacheLeave(cache) {
+  if (!cache) return cache;
+  Object.keys(cache).forEach(k => { if (netCurrentIsBig(cache[k])) delete cache[k]; });
   return cache;
 }
 
