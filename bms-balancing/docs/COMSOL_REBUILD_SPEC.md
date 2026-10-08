@@ -4300,3 +4300,23 @@ gate INCOMPLETE · 실효 정책 UNVERIFIED · native 미승인 · 게이트 리
   보존 · 전달 300 · 미완 정리 120) · 130 고유 입력 · 생산 코드 불변 · 첫 실패에서 중지 (수정 · 재시험 · fallback 없음) · COMSOL / JVM / compile / native 0. 채택 문구 · 발송 프롬프트
   `docs/COMSOL_MICROSHORT_S1O_R1_VALIDATION_SEND_20261008.md` (세부 = 회신 `VALIDATION_APPROVAL_DRAFT_KO.md` sha256 `4b32d38a…3910`). **이 검증은 실행 PC 에서 후보 Python / PowerShell 함수를
   합성 fixture 로 실제로 부르는 첫 단계다** (COMSOL 아님). 이 절은 승인이 아니다.
+
+## 81. S1O-R1 기능 검증 R1_003 — 127 PASS · PARENT_R113 하네스 전제에서 첫 실패 중지 · INCOMPLETE · 중지 검토 회신 (2026-10-08)
+
+- 보존: `reviews/r14_repros/codex63/comsol_microshort_s1o_r1_003_stop_review_20261008/` — zip 879,346 B · sha256 `56c52add014684850a533136d1add01e1a937db1cebcbc0236d40413cc5eaffe` · 압축 해제 171 ·
+  manifest 170 / 170 · 그 안의 `received/` = 실행 Codex R1_003 결과 (zip sha256 `11a27f3034fed763442ccce9730f7e008058b819bfbffd9d58a5d2994b875d4b` · 876,456 B 의 펼친 사본 · PACKAGE_MANIFEST 153 / 153) · 비밀 0 ·
+  받은 코드 · 하네스 · 동봉 스크립트 실행 0. 규칙 `8eb04b93e` → 보존 `01a6468b0`. R1_003 의 원 zip 바이트 · 포장 영수증 원파일은 이 저장소에 없다 (회신 `USER_SUPPLIED_DELIVERY_RECORDS.json` = 사용자 메시지 전사).
+- 승인 경위 (기록의 출처를 구분): §80 의 검증 프롬프트가 실행 담당 Codex 에 전달됐다 — 사용자의 발송 통지는 이 저장소에 없고 R1_003 실행 기록이 근거다. 승인 문서는 fixture `…_R1_001` 을 지정했으나 실행은
+  `…_R1_003` 에서 했다 — `ORIGIN.json` "User explicitly approved R1_003 same conditions via request_user_input_async" · `PRESEAL_READINESS.json` "prior harness reuse: R1_002 artifacts; no prior functional engine calls;
+  prior stops preserved" (001 · 002 = 기능 엔진 호출 없는 중지 · 003 위치 승인 원응답 미동봉 → 모두 **제출자 기록**).
+- 결과 (`received/RESULT_KO.md` · `FIRST_FAILURE.json` 사본): Python 99 / 99 PASS (169.3 s / 420 · rc 0) · PowerShell 28 PASS 뒤 PARENT_R113 에서 `HARNESS_FIXTURE_OR_ASSERTION:R113_DOUBLE_AFTER_JSON_PARSE`
+  (30.3 s / 300 · rc 1 · 시간 초과 아님) · R114 · R115 미실행 → **127 PASS · 하네스 실패 1 · 미실행 2 · INCOMPLETE** · 사전 봉인 390.1 / 720 s · 누적 862.17 / 1,860 s · 전달 165.73 / 300 s (반환 전 snapshot) ·
+  첫 실패 뒤 수정 · 재시험 · probe 0 · 생산 소스 불변.
+- 판정 (회신 `DECISION.json`): `STOP_RESULT_ACCEPTED_LIMITED_VALIDATION_INCOMPLETE` · 생산 코드 결함 확인 아님 (목표 함수 미도달) · 실제 parse 타입 UNRECORDED · 127 PASS 기록은 출처 · 입력 · 엔진 계보와 함께 재사용 가능
+  (READ02–12 종결은 같은 기본 입력 양성 조건부) · 보완 둘: S1O003-N1 (R113 — parse 직후 타입 · 값 기록을 assertion 앞으로 · fixture 한정 명시 Double 변환) · S1O003-N2 (READ02–12 와 같은 기본 입력의 양성 4).
+- **이 저장소의 정적 확인 (실행 0):** `received/harness/ps_harness.ps1` 126–137 — R113 은 따옴표만 지운 JSON 을 `ConvertFrom-Json` 한 뒤 133 행 `HRequire (… -is [double]) 'R113_DOUBLE_AFTER_JSON_PARSE'` 에서 멈추고,
+  생산 호출은 그 뒤 (`$global:S1ValidationReached.Clear()` 이후) 라 도달하지 않았다. 참고 (관측 아님 · 우리 지식): Windows PowerShell 5.1 의 `ConvertFrom-Json` 은 JSON 소수를 System.Decimal 로 읽는 것으로 알려져
+  있다 (PowerShell 7 은 Double) — 하네스가 7 의 동작을 가정했을 가능성. 실제 타입은 기록되지 않았다.
+- 다음 (사용자 결정): R1_004 한정 보완 — Python 보조 양성 4 (1 세션) + PowerShell 미완 3 (1 세션) · 새 원점 1,200 s · 새 폴더 `…/future_validation_fixture_R1_004/` · 생산 코드 불변 · 첫 실패에서 중지.
+  채택 문구 · 발송 프롬프트 `docs/COMSOL_MICROSHORT_S1O_R1_004_SEND_20261008.md` (세부 = 회신 `NEXT_LIMITED_APPROVAL_DRAFT_KO.md` sha256 `8bd02f0f…2015`). 성공해도 "원 127 재사용 + 원 미완 3 충족 · 보조 4 별도" ·
+  native_ready false · OPEN 유지. 이 절은 승인이 아니다.
