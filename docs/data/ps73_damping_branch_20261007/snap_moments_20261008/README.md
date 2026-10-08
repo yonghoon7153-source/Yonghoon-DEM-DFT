@@ -125,6 +125,9 @@ compress_2200000 · atom_2200000 = 9-23 = r6).  (d) 입력 sha256 (atoms `fd394a
   sRGB 왕복 · z-버퍼 (앞 구가 이김 · 바깥 투명 · 순서 무관).
 - **선형판** (1저자 10-08 *"이 von Mises 도 그냥 이등분"*): `--scale linear` → 색 = 0 … 413 MPa (아래 0 · 위 = 모은 p95) · 범례 눈금 셋 = 0 · 206 · 413
   (이등분) · `results_20261008/render3d_linear/` (넷 · 범례 · 숫자 없는 막대 · 미리보기).  log 판 범례 셋 = 5.94 · 49.5 (기하평균) · 413.
+- **공통 위쪽 576 판** (1저자 10-08 *"0 576 을 공통 범례로 잡고 다 새로 그려줘"*): `--scale linear --top maxown` → 위쪽 = 시점마다 p95 중 최대 ((c) 576 MPa) · 범례 0 · 288 · 576 ·
+  `results_20261008/render3d_linear576/`.  까닭: 모은 p95 (413) 는 낮은 시점 (a · b) 이 끌어내려 (c) 10.7 % · (d) 8.1 % 가 맨 위 색으로 잘렸다 → 576 에서 5.0 · 3.8 %.
+  범위 밖 값 = 막대 끝 색 (진한 빨강 · 그늘에서 고동색) — 검은색 아님.
 - 보고 한정어 (1저자 10-08 대화): 같은 모델 안 비교 (시점 · 높이) 는 그대로 · MPa 절대값 · AM ↔ SE 크기는 "DEM (연화 SE) 모델 안 값" ·
   (a) 의 값은 축척 중력이 지배.  캡션 권고: *"Love–Weber particle von Mises stress (MPa) from the DEM contact forces (softened SE) — same colour
   scale; model-internal comparison."*

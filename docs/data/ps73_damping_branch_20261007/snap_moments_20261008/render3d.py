@@ -201,10 +201,18 @@ def colorbar_png(path, lo, hi, scale='log', labels=True):
     return mid
 
 
-def run(src, out, px=1400, scale='log'):
+def own_p95(src, step):
+    xyz, rad, vm, wall = read_moment(src, step)
+    ok = (~wall) & (vm > 0)
+    return float(np.percentile(vm[ok], 95))
+
+
+def run(src, out, px=1400, scale='log', top='pooled'):
     meta = json.load(open(os.path.join(src, 'vm_moments.json'), encoding='utf-8'))
     cr = meta['colour_range_MPa']
     lo, hi = float(cr['vmin']), float(cr['vmax'])
+    if top == 'maxown':                                        # 위쪽 = 시점마다 p95 중 가장 큰 값 (모은 p95 는 낮은 시점이 끌어내려 센 시점이 10 % 넘게 잘렸다)
+        hi = max(own_p95(src, m['step']) for m in meta['moments'])
     if scale == 'linear':
         lo = 0.0                                               # 선형 = 0 … 모은 p95 (1저자 10-08 "그냥 이등분")
     os.makedirs(out, exist_ok=True)
@@ -300,15 +308,16 @@ def main(argv=None):
     ap.add_argument('src', nargs='?', help='vm_moments.py 출력 폴더')
     ap.add_argument('out', nargs='?', help='그림 폴더')
     ap.add_argument('--px', type=int, default=1400)
-    ap.add_argument('--scale', choices=('log', 'linear'), default='log', help='색 눈금 — linear = 0 … p95 · 범례 이등분')
+    ap.add_argument('--scale', choices=('log', 'linear'), default='log', help='색 눈금 — linear = 0 … 위쪽 · 범례 이등분')
+    ap.add_argument('--top', choices=('pooled', 'maxown'), default='pooled', help='위쪽 끝 — pooled = 네 시점 모은 p95 · maxown = 시점마다 p95 중 최대')
     ap.add_argument('--selftest', action='store_true')
     a = ap.parse_args(argv)
     if a.selftest:
         return selftest()
     if not (a.src and a.out):
         ap.error('src · out 이 필요하다 (또는 --selftest)')
-    lo, hi = run(a.src, a.out, a.px, a.scale)
-    print(f'색 범위 {lo:.3g} … {hi:.3g} MPa ({a.scale} · 위 = vm_moments.json 공동 p95) → {a.out}')
+    lo, hi = run(a.src, a.out, a.px, a.scale, a.top)
+    print(f'색 범위 {lo:.3g} … {hi:.3g} MPa ({a.scale} · 위 = {a.top}) → {a.out}')
     return 0
 
 
