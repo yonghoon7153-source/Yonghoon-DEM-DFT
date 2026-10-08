@@ -80,21 +80,24 @@ REFBEDS = {
 #:   Hertz 열 = 띠 겹침 (boundary_overlap · B∩T 입자 ID 24 · 40 · 57 · 103) · Physics 열 = 음수 원자료 접촉 면적 거부 (두 행 31–29241 · 38–29241) → 망 게시 차단 (WEB-03 Q1).
 #:   그 지정한 실패가 **실제로 발화해야** PASS — whitelist · 이름으로 PASS 하지 않는다 · 스모크 전체를 소급 "기대대로" 로 바꾸지 않는다 (원 실패 기록 = 등록 §9-2 · 10-07 14:15 ·
 #:   이 기대 = 등록 §9-4 제안 · ⬜ 1저자 비준).  이온 참고값 = Codex 재검증 4 §6-1 직접 풀이 (σ_ratio 8 자리 · 우리 재현 같음) · 증서 문턱 = network_conductivity 1e-6.
-CASE15_NEGCTL = dict(tag='case15_publication_blocked', b_and_t_ids=(24, 40, 57, 103), negative_rows=((31, 29241), (38, 29241)),
-                     ionic_ref8={'hertzian': 0.00032635, 'physics': 0.00036225}, cert_max=1e-6,
-                     overlap_channels=('electronic_hertzian', 'electronic_physics', 'thermal_hertzian'), refuse_channel='thermal_physics',
-                     refuse_text='ligg_area < 0', solver_step='Network Solver (both modes)',
-                     #  ★ 10-08 G2RR5-02 (Codex 세대 2 재검증 5 §2) — 실제 망 시도 (⑤): 이번 시도의 망 CLI = 정확히 1 회 · 예외 없음 · rc 0 · per-mode 둘 → 그 산출물의
-                     #    채널 상태 · 사유 (`{채널}_status` · `{채널}_status_reason`) 가 아래 표 그대로.  값 = 10-08 이 컨테이너 실제 case15 (커밋된 원자료 · 통과 기록기로
-                     #    엿본 첫 실행 · WSL 10-07 제출 기록의 시도 사유와 같다): 실패 상태 = 'failed' (`pipeline_service._CHANNEL_FAIL_STATES`) · 겹침 사유 = 생산자
-                     #    `_channel_solve_failure` 가 `network_conductivity.BOUNDARY_OVERLAP_REASON` 을 괄호로 싣는 꼴 · Physics 열 = 솔버 ValueError 그대로
-                     #    (원자료 탐침의 오류 문자열과 같은 바이트) · 이온 두 모드 = 'computed' (사유 칸 없음)
-                     attempt_modes=('hertzian', 'physics'), attempt_channels=('ionic', 'electronic', 'thermal'),
-                     attempt_ok_status='computed', attempt_fail_status='failed', overlap_token='(boundary_overlap)', overlap_reason='boundary_overlap',
-                     refuse_prefix='ValueError: ',
-                     attempt_table={'hertzian.ionic': 'computed', 'physics.ionic': 'computed',
-                                    'hertzian.electronic': 'boundary_overlap', 'physics.electronic': 'boundary_overlap',
-                                    'hertzian.thermal': 'boundary_overlap', 'physics.thermal': 'ligg_area_negative'})
+#: ★ 10-08 G2RR5-03 (Codex 세대 2 재검증 5 §3) — 등록 표지 · 케이스 신원 · 필수 검사 안정 ID · 판정 술어 (`CASE15_NEGCTL` · `case15_negctl_verdicts` ·
+#:   ⑤ 실제 망 시도 `case15_attempt_verdict` 와 그 고정 토큰) 의 정본 = **인계 도구 `scripts/g2_network_reread.py` 한 곳** — S0b 소비자가 같은 함수로 보고 상세를
+#:   다시 판정해 기록과 맞댄다.  이 하네스는 부모 쪽 (평가 · 작업 목록) 에서만 늦게 import 해 쓴다 (`_rr()`) · 옛 이름 `wsl_network_smoke.CASE15_NEGCTL` 은 그
+#:   객체를 가리킨다 (모듈 `__getattr__` — 사본 없음).  자식 (`child_case`) 은 인계 도구를 읽지 않는다 (194 실행기 selftest ㉟d 관측 = 자식의 리포 import ⊆ 봉인 32 +
+#:   시험 도구 둘 · 인계 도구는 봉인 밖 HANDOVER_FILES).
+
+
+def _rr():
+    """인계 도구 모듈 — case15 음성 대조의 한 곳 (G2RR5-03).  부모 (`evaluate` · `build_jobs` · selftest) 에서만 부른다."""
+    import g2_network_reread
+    return g2_network_reread
+
+
+def __getattr__(name):
+    """PEP 562 — 옛 이름 `wsl_network_smoke.CASE15_NEGCTL` (Codex 탐침 · 시험이 읽는다) = 인계 도구의 한 곳 (사본을 두지 않는다)."""
+    if name == 'CASE15_NEGCTL':
+        return _rr().CASE15_NEGCTL
+    raise AttributeError(f'module {__name__!r} has no attribute {name!r}')
 
 #: ★ 10-08 G2RR5-02 (Codex 세대 2 재검증 5 §2 · Q2 (가) 봉인 밖) — 실제 망 시도 기록기 (`network_cli_recorder` · 음성 대조 표지가 있을 때만 `child_case`).
 #:   `pipeline_service._RUNNER` (봉인 쪽이 주입용으로 둔 모듈 훅 · 봉인 파일 무변경) 를 **그대로 통과시키며** 망 CLI (cmd[1] = network_conductivity.py) 호출마다
@@ -655,142 +658,8 @@ def judge_c3(vm, expect='zero'):
     return ('PASS' if ok else 'FAIL'), f'거의 정수압 쌍 → {a} (기대 null · 계산 안 함)'
 
 
-def _hex64(s):
-    return isinstance(s, str) and len(s) == 64 and all(c in '0123456789abcdef' for c in s)
-
-
-def _int0(v):
-    """정수 0 (bool 아님)."""
-    return isinstance(v, int) and not isinstance(v, bool) and v == 0
-
-
-def _attempt_class(st, ng):
-    """기록기가 읽은 per-mode 채널 기록 dict(status, reason) → 등록 표의 분류 (computed · boundary_overlap · ligg_area_negative) · 그 밖 = 그대로 적은 문자열."""
-    if not isinstance(st, dict):
-        return 'missing'
-    s, rs = st.get('status'), ('' if st.get('reason') is None else str(st.get('reason')))
-    if s == ng['attempt_ok_status']:
-        return 'computed'
-    if s == ng['attempt_fail_status'] and ng['overlap_token'] in rs:
-        return 'boundary_overlap'
-    if s == ng['attempt_fail_status'] and rs.startswith(ng['refuse_prefix']) and ng['refuse_text'] in rs:
-        return 'ligg_area_negative'
-    return f'{s}: {rs[:80]}'
-
-
-def _raw_class(d, ng):
-    """원자료 탐침 (`case15_channel_probe`) 의 채널 결과 → 같은 분류."""
-    if not isinstance(d, dict):
-        return 'missing'
-    if d.get('error') is not None:
-        e = str(d['error'])
-        return 'ligg_area_negative' if (e.startswith(ng['refuse_prefix']) and ng['refuse_text'] in e) else f'error: {e[:80]}'
-    if d.get('status') == 'computed':
-        return 'computed'
-    if d.get('reason') == ng['overlap_reason']:
-        return 'boundary_overlap'
-    return f'{d.get("status")}/{d.get("reason")}'
-
-
-def case15_attempt_verdict(r, ng=None):
-    """★ 10-08 G2RR5-02 (Codex 세대 2 재검증 5 §2) — case15 음성 대조 ⑤ 실제 망 시도 → (판정, 세부).  판정 = PASS · TECH · FAIL.
-      TECH (실행 실패 — 지정한 내용 거부가 아니다): 망 CLI 호출 0 회 · 예외 (PermissionError · FileNotFoundError · TimeoutExpired …) · rc ≠ 0 · per-mode 산출물 없음 · 못 읽음 ·
-           망 솔버 단계 rc ≠ 0 · 산출 결손 (missing_outputs) · stale
-      FAIL: 실제 시도 증거 없음 (기록기 없는 옛 기록) · 호출 2 회 이상 · 단계 기록 결손 · 내용 검증 거부가 아님 · 실패 채널 집합 ≠ 등록 넷 (+ 이온 computed 둘) ·
-           Physics 열 거부 문자열 ≠ 원자료 탐침 오류 · 시도 기록 (단계 · 상태 · input_digests) ↔ 기록기 어긋남 · 원자료 탐침과 다른 원인
-    300 자 err · 시도 사유 문자열은 보지 않는다 — 기록기의 구조 증거와 단계 구조 필드로만 판정한다."""
-    ng = ng or CASE15_NEGCTL
-    ev = r.get('attempt_evidence')
-    if not isinstance(ev, dict) or not isinstance(ev.get('calls'), list):
-        return 'FAIL', '실제 시도 증거 없음 (attempt_evidence) — 이번 망 CLI 시도를 확인할 수 없다 (G2RR5-02 이전 기록 · 기록기 없음)'
-    calls = ev['calls']
-    if not calls:
-        return 'TECH', '망 CLI 호출 0 회 — 솔버가 실행되지 않았다 (lock · 흔적 격리 · 실행 경계) — 지정한 내용 거부가 아니다'
-    if len(calls) != 1 or not isinstance(calls[0], dict):
-        return 'FAIL', f'망 CLI 호출 {len(calls)} 회 — 정확히 1 회여야'
-    c = calls[0]
-    if c.get('exception') is not None:
-        return 'TECH', f'망 CLI 실행 예외 {c.get("exception")} ({str(c.get("exception_text"))[:120]}) — 실행 실패 (지정한 내용 거부 아님)'
-    if not _int0(c.get('returncode')):
-        return 'TECH', f'망 CLI rc {c.get("returncode")!r} — 실행 실패 (지정한 내용 거부 아님)'
-    pm = c.get('per_mode') if isinstance(c.get('per_mode'), dict) else {}
-    miss = [m for m in ng['attempt_modes'] if not (isinstance(pm.get(m), dict) and _hex64(pm[m].get('sha256')) and isinstance(pm[m].get('channels'), dict))]
-    if miss:
-        return 'TECH', f'per-mode 산출물 없음 · 못 읽음 {miss} — 실행 실패 (지정한 내용 거부 아님)'
-    sv = [s for s in (r.get('stages') or []) if isinstance(s, dict) and s.get('step') == ng['solver_step']]
-    if len(sv) != 1:
-        return 'FAIL', f'망 솔버 단계 기록 {len(sv)} 개 — 하나여야'
-    s = sv[0]
-    if not _int0(s.get('rc')) or s.get('missing_outputs') != [] or s.get('stale_outputs') != []:
-        return 'TECH', (f'망 솔버 단계 rc {s.get("rc")!r} · 산출 결손 {s.get("missing_outputs")!r} · stale {s.get("stale_outputs")!r} — 실행 실패 '
-                        '(지정한 내용 거부 아님)')
-    if s.get('verify_failed') is not True or s.get('ok') is not False:
-        return 'FAIL', f'망 솔버 단계가 내용 검증 거부가 아니다 (verify_failed {s.get("verify_failed")!r} · ok {s.get("ok")!r})'
-    got = {f'{m}.{ch}': _attempt_class((pm[m].get('channels') or {}).get(ch), ng) for m in ng['attempt_modes'] for ch in ng['attempt_channels']}
-    if got != ng['attempt_table']:
-        return 'FAIL', f'실패 채널 집합 ≠ 등록 — 다름 {({k: (v, ng["attempt_table"].get(k)) for k, v in got.items() if v != ng["attempt_table"].get(k)})}'
-    raw = (r.get('negctl') or {}).get('channels') if isinstance(r.get('negctl'), dict) else None
-    raw = raw if isinstance(raw, dict) else {}
-    for k, cls in ng['attempt_table'].items():
-        m, ch = k.split('.')
-        if cls == 'ligg_area_negative' and ((pm[m].get('channels') or {}).get(ch) or {}).get('reason') != (raw.get(f'{ch}_{m}') or {}).get('error'):
-            return 'FAIL', (f'{k} 거부 문자열 ≠ 원자료 탐침 오류 — {((pm[m].get("channels") or {}).get(ch) or {}).get("reason")!r} ↔ '
-                            f'{(raw.get(f"{ch}_{m}") or {}).get("error")!r}')
-    att = r.get('attempt') if isinstance(r.get('attempt'), dict) else {}
-    dg = c.get('input_digests')
-    if not (isinstance(dg, dict) and len(dg) == 2 and all(isinstance(v, str) and v for v in dg.values())) or att.get('input_digests') != dg:
-        return 'FAIL', f'시도 기록 input_digests {att.get("input_digests")!r} ≠ 기록기 {dg!r} — 이 시도의 입력이 아니다'
-    if att.get('stage') != ng['solver_step'] or att.get('latest_attempt_status') != 'failed':
-        return 'FAIL', f'시도 기록 단계 {att.get("stage")!r} · 상태 {att.get("latest_attempt_status")!r} — 망 솔버 단계 · failed 여야'
-    rawc = {k: _raw_class(raw.get(f'{k.split(".")[1]}_{k.split(".")[0]}'), ng) for k in ng['attempt_table']}
-    if rawc != got:
-        return 'FAIL', f'원자료 탐침의 원인 ≠ 이번 시도 — 다름 {({k: (got.get(k), v) for k, v in rawc.items() if v != got.get(k)})}'
-    return 'PASS', (f'망 CLI 1 회 · rc 0 · per-mode 둘 (sha256 {pm["hertzian"]["sha256"][:12]} · {pm["physics"]["sha256"][:12]}) · 실패 = 등록 넷 · 이온 computed 둘 · '
-                    f'단계 rc 0 · 결손 0 · 내용 검증 거부 · 시도 기록 = 망 솔버 단계 · digest {dg} · 원자료 탐침과 같은 원인')
-
-
-def negative_control_checks(add, ok, cid, r):
-    """★ 10-07 G2RR4-03 — case15 음성 대조 판정 (A 묶음 · 이름 앞 '[음성 대조]') — 지정한 실패가 실제로 발화하고 이온 채널은 정상이어야 PASS.
-      ① 게시 차단 — status failed · 실패 단계 = 망 솔버 (both modes) · Stage E 안 돌았다 · 반환 run id 없음 (첫 실행 · 활성 세대 없음 = 옛 성공 산출물 재사용 없음)
-      ② 인계 숫자 비노출 — τ 세 모드 상태 NOT_COMPUTED (숫자 칸 없음)
-      ③ 원인 발화 (원덤프 직접 6 조합) — 전자 두 모드 · Hertz 열 = boundary_overlap · B∩T = 입자 ID 24 · 40 · 57 · 103 · Physics 열 = 음수 원자료 면적 거부 · 음수 행 = 둘
-      ④ 이온 정상 — 두 모드 computed · σ_ratio 참고 8 자리 · 증서 보존 · 잔차 < 1e-6
-      ⑤ ★ 10-08 G2RR5-02 실제 망 시도 — 이번 시도의 망 CLI 가 실제로 돌아 등록한 내용 사유로 거부됐다 (`case15_attempt_verdict` · 실행 실패 = TECH)
-    ③ · ④ (원자료 탐침 · 파이프라인 뒤 별도 계산) 는 보조 증거 — 이번 시도의 원인 증서는 ⑤ 다."""
-    ng = CASE15_NEGCTL
-    tag = f'{cid}: [음성 대조]'
-    add('A', f'{tag} 게시 차단 — failed · 실패 단계 {ng["solver_step"]} · Stage E 안 돌았다 · 반환 run id 없음 (옛 성공 산출물 재사용 없음)',
-        ok(r.get('status') == 'failed' and ng['solver_step'] in (r.get('failed_stages') or []) and r.get('stage_e_ran') is False
-           and not r.get('returned_network_run_id')),
-        f'status {r.get("status")} · 실패 단계 {r.get("failed_stages")} · Stage E {r.get("stage_e_ran")} · run id {r.get("returned_network_run_id")}')
-    tau = r.get('tau') or {}
-    sts = {m: tau.get(f'ion_net_status_{m}') for m in ('hertz', 'physics', 'hertz_h12')}
-    nums = {k: v for k, v in tau.items() if k.startswith(('f_ion_', 'tau2_ion_', 'tau_ion_')) and v not in (None, '')}
-    add('A', f'{tag} 인계 숫자 비노출 — τ 세 모드 NOT_COMPUTED · 숫자 칸 없음', ok(set(sts.values()) == {'NOT_COMPUTED'} and not nums), f'{sts} · 숫자 {nums}')
-    neg = r.get('negctl') if isinstance(r.get('negctl'), dict) else {}
-    ch = neg.get('channels') if isinstance(neg.get('channels'), dict) else {}
-    ids = list(ng['b_and_t_ids'])
-    ov = {k: ((ch.get(k) or {}).get('reason'), (ch.get(k) or {}).get('intersection')) for k in ng['overlap_channels']}
-    refuse = str((ch.get(ng['refuse_channel']) or {}).get('error') or '')
-    rows_ = sorted(tuple(int(v) for v in x[:2]) for x in (neg.get('negative_area') or []) if isinstance(x, (list, tuple)) and len(x) >= 2)
-    add('A', f'{tag} 원인 발화 (원덤프 직접 6 조합) — 전자 두 모드 · Hertz 열 boundary_overlap · B∩T = 입자 ID {ids} · Physics 열 음수 원자료 면적 거부 · '
-             f'음수 행 {len(ng["negative_rows"])}',
-        ok(bool(ch) and all(v == ('boundary_overlap', ids) for v in ov.values()) and ng['refuse_text'] in refuse
-           and rows_ == sorted(ng['negative_rows'])),
-        f'겹침 {ov} · Physics 열 {refuse[:120]!r} · 음수 행 {rows_} · 증거 오류 {neg.get("error")}')
-    ion = {}
-    for m, ref in ng['ionic_ref8'].items():
-        d = ch.get(f'ionic_{m}') or {}
-        v = (d.get('value') or [None, None])
-        q = v[1] if isinstance(v, (list, tuple)) and len(v) > 1 else None
-        ion[m] = (d.get('status'), None if not isinstance(q, (int, float)) else round(q, 8), d.get('conservation_rel'), d.get('residual_rel'))
-    add('A', f'{tag} 이온 정상 — 두 모드 computed · σ_ratio 참고 8 자리 {ng["ionic_ref8"]} · 증서 보존 · 잔차 < {ng["cert_max"]}',
-        ok(all(s == 'computed' and q == ng['ionic_ref8'][m] and isinstance(c, (int, float)) and isinstance(e, (int, float))
-               and c < ng['cert_max'] and e < ng['cert_max'] for m, (s, q, c, e) in ion.items())), ion)
-    v5, d5 = case15_attempt_verdict(r, ng)
-    add('A', f'{tag} 실제 망 시도 — 이번 시도의 망 CLI 1 회 · 예외 없음 · rc 0 · per-mode 둘 · 실패 채널 = 등록 넷 (전자 두 모드 · Hertz 열 boundary_overlap · '
-             f'Physics 열 음수 면적 거부) · 이온 computed · 단계 rc 0 · 결손 0 · 내용 검증 거부 · 시도 기록 = 기록기 digest · 원자료 탐침과 같은 원인 (실행 실패 = TECH)',
-        v5, d5)
+#: ★ 10-07 G2RR4-03 · 10-08 G2RR5-02 — case15 음성 대조 판정 ①–⑤ (게시 차단 · τ 비노출 · 원인 발화 · 이온 정상 · 실제 망 시도) 와 자식 프로세스 · 원자료 sha256 =
+#:   인계 도구 `g2_network_reread.case15_negctl_verdicts` (★ 10-08 G2RR5-03 — 한 곳으로 옮김 · 안정 ID · S0b 소비자가 같은 함수로 다시 판정) — `evaluate` 가 부른다.
 
 
 def evaluate(reports: dict, timings: dict, expect_vm='zero', lhs_expect=None) -> list:
@@ -806,15 +675,23 @@ def evaluate(reports: dict, timings: dict, expect_vm='zero', lhs_expect=None) ->
             continue
         t = timings.get(cid) or {}
         grp = 'A' if r.get('kind') in (*REFBEDS, 'synthetic') else 'B'
+        if r.get('negative_control'):
+            RR = _rr()
+            if RR.case15_negctl_registered(cid, r):
+                #  ★ 10-08 G2RR5-03 — 등록 음성 대조 (case15): 검사 일곱 (자식 프로세스 · 원자료 sha256 · ①–⑤) = 인계 도구의 공용 판정 · 검사 dict 에 안정 id —
+                #    소비자 S0b 가 보고 상세 · timings 에 같은 함수를 다시 돌려 이 기록과 맞댄다
+                checks.extend(dict(group='A', id=i, name=nm, verdict=v, detail=str(d)[:600])
+                              for i, nm, v, d in RR.case15_negctl_verdicts(r, timings.get(cid), cid))
+                continue
+            add(grp, f'{cid}: 미등록 음성 대조 표지 {r.get("negative_control")!r} — 음성 대조로 판정하지 않는다 (등록 = 표지 {RR.CASE15_NEGCTL["tag"]!r} · '
+                     f'{RR.CASE15_NEGCTL["case_id"]} · kind {RR.CASE15_NEGCTL["kind"]} · 망 정지)', 'FAIL',
+                f'kind {r.get("kind")!r} · stop_after {r.get("stop_after")!r}')
         add(grp, f'{cid}: 자식 프로세스 정상 종료 · 보고서 있음', ok(t.get('rc') == 0 and r.get('id') == cid),
             f'rc {t.get("rc")} {t.get("signal") or ""}')
         if r.get('kind') in REFBEDS:
             add(grp, f'{cid}: 원자료 sha256 = README 표 (압축 푼 바이트)', ok(r.get('raw_sha_ok')), r.get('raw_sha'))
         st, stop = r.get('status'), r.get('stop_after')
         req_bad = [s['step'] for s in r.get('stages') or [] if s.get('required') and not s.get('ok')]
-        if r.get('negative_control') == CASE15_NEGCTL['tag']:
-            negative_control_checks(add, ok, cid, r)
-            continue
         if stop == 'network':
             add(grp, f'{cid}: stop_after=network → done · Stage E 안 돌았다 · 망 정지 계약 통과',
                 ok(st == 'done' and r.get('stage_e_ran') is False
@@ -970,7 +847,7 @@ def build_jobs(args) -> list:
         jobs.append(dict(id='real14_network', kind='real14', stop='network'))
     if not args.skip_case15:                                # ★ 10-07 §7-4 — case15 (corner · 182,995 접촉) 망 정지
         #  ★ G2RR4-03 (Codex 세대 2 재검증 4 §6-3(b)) — 음성 대조: 게시 차단 + 지정한 원인 발화가 기대 (등록 §9-4 제안 · ⬜ 1저자 비준 · 원 실패 기록 §9-2)
-        jobs.append(dict(id='case15_network', kind='case15', stop='network', negative_control=CASE15_NEGCTL['tag']))
+        jobs.append(dict(id='case15_network', kind='case15', stop='network', negative_control=_rr().CASE15_NEGCTL['tag']))
     if not args.skip_lhs:
         picks = ([(c, *lhs_expected_perc(c)) for c in args.lhs_case] if args.lhs_case
                  else [(c, f, e) for c, f, e in pick_lhs_cases()])
@@ -1025,7 +902,7 @@ def _rc15_launch(base: Path) -> dict:
     (a) `_RC15_FAULT_BOOT` (망 CLI 만 PermissionError) · (b) 주입 없음 = 실제 `run_smoke` (case15 + 합성 망 정지 한 건 — 인계 도구 다시 읽기의 S0 짝).
     둘 다 자기 ROOT (리포 밖 · cwd · TMPDIR) — 실제 판 ≈ 120 s (이 컨테이너 · WSL 46 s) 라 다른 묶음과 겹쳐 돌린다 (--run-fast 의 180 s 예산)."""
     import threading
-    tag = CASE15_NEGCTL['tag']
+    tag = _rr().CASE15_NEGCTL['tag']
     ra, rb = base / 'fault', base / 'positive'
     (ra / 'tmp').mkdir(parents=True)
     env = dict(os.environ, **THREAD_ENV, PYTHONDONTWRITEBYTECODE='1', PYTHONUNBUFFERED='1', TMPDIR=str(ra / 'tmp'))
@@ -1058,12 +935,13 @@ def _rc15_judge(st: dict, chk) -> None:
         rc_a = None
     st['log_a'].close()
     wall = round(time.monotonic() - st['t0'], 1)
-    ng = CASE15_NEGCTL
+    ng = _rr().CASE15_NEGCTL
+    reg_ids = list(_rr().CASE15_NEGCTL_IDS)
     out_a = read_json(st['ra'] / 'out.json') or {}
     rep_a = out_a.get('report') if isinstance(out_a.get('report'), dict) else {}
     cs_a = evaluate({'case15_network': rep_a}, {'case15_network': dict(rc=rc_a)}) if rep_a else []
     c15a = [c for c in cs_a if c['name'].startswith('case15_network:')]
-    att_a = next((c for c in c15a if '실제 망 시도' in c['name']), None)
+    att_a = next((c for c in c15a if c.get('id') == 'case15.nc5_attempt'), None)
     ev_a = rep_a.get('attempt_evidence') if isinstance(rep_a.get('attempt_evidence'), dict) else {}
     calls_a = ev_a.get('calls') if isinstance(ev_a.get('calls'), list) else []
     sv_a = next((s for s in rep_a.get('stages') or [] if isinstance(s, dict) and s.get('step') == ng['solver_step']), {})
@@ -1079,7 +957,7 @@ def _rc15_judge(st: dict, chk) -> None:
     rep_b = read_json(st['rb'] / 'smoke_report.json') or {}
     r15 = ((rep_b.get('reports') or {}).get('case15_network')) or {}
     c15b = [c for c in rep_b.get('checks') or [] if str(c.get('name', '')).startswith('case15_network:')]
-    att_b = next((c for c in c15b if '실제 망 시도' in c['name']), None)
+    att_b = next((c for c in c15b if c.get('id') == 'case15.nc5_attempt'), None)
     ev_b = r15.get('attempt_evidence') if isinstance(r15.get('attempt_evidence'), dict) else {}
     calls_b = ev_b.get('calls') if isinstance(ev_b.get('calls'), list) else []
     pm_b = ((calls_b[0] if calls_b else {}).get('per_mode')) or {}
@@ -1095,6 +973,7 @@ def _rc15_judge(st: dict, chk) -> None:
         f'고정 토큰 (failed + "(boundary_overlap)" 셋 · failed + ValueError "ligg_area < 0" = 원자료 탐침 오류 · 이온 computed 둘) · 단계 rc 0 · 결손 0 · 내용 검증 거부 '
         f'— 판정 {[(c["name"][16:34], c["verdict"]) for c in c15b]}',
         st['res'].get('rc') == 0 and len(c15b) == 7 and all(c.get('verdict') == 'PASS' for c in c15b) and att_b is not None
+        and [c.get('id') for c in c15b] == reg_ids
         and len(calls_b) == 1 and calls_b[0].get('exception') is None and calls_b[0].get('returncode') == 0 and pinned
         and sv_b.get('rc') == 0 and sv_b.get('missing_outputs') == [] and sv_b.get('stale_outputs') == [] and sv_b.get('verify_failed') is True,
         repr((st['res'], [(c['name'][16:40], c['verdict'], c['detail'][:80]) for c in c15b if c.get('verdict') != 'PASS'], tok, sv_b))[:900])
@@ -1174,7 +1053,7 @@ def _selftest_body(chk) -> None:
         shutil.rmtree(_st_tmp, ignore_errors=True)
     #  ★ 10-07 G2RR4-03 (Codex 세대 2 재검증 4 §6-3(b)) — case15 = 음성 대조: 지정한 실패 (게시 차단 · 전자 · Hertz 열 boundary_overlap B∩T 넷 · Physics 열 음수 원자료
     #    면적 거부 · 음수 행 둘) 와 이온 정상 (참고 8 자리 · 증서) 이 **실제로 발화해야** PASS — whitelist · 이름 PASS 아님 (반례 먼저: 옛 판정 = done 이어야 PASS)
-    _ng = globals().get('CASE15_NEGCTL') or {}
+    _ng = _rr().CASE15_NEGCTL
     _ids = [24, 40, 57, 103]
     #  ★ 10-08 G2RR5-02 — 양성 픽스처의 실제 시도 값 = 이 컨테이너 실제 case15 (커밋된 원자료) 첫 실행: 망 CLI 1 회 · rc 0 · per-mode 둘 · 이온 computed (사유 없음) ·
     #    전자 두 모드 · Hertz 열 failed + '(boundary_overlap)' · Physics 열 failed + 솔버 ValueError (원자료 탐침 오류와 같은 문자열) · 단계 rc 0 · 결손 0 · 내용 검증 거부 ·
@@ -1290,7 +1169,7 @@ def _selftest_body(chk) -> None:
         return [c for c in cs if c['name'].startswith('case15_network:')]
 
     def _att(cs):
-        return next((c for c in cs if '실제 망 시도' in c['name']), None)
+        return next((c for c in cs if c.get('id') == 'case15.nc5_attempt'), None)
     _pos = _c15_all(_c15())
     _att_res = {}
     for nm, rp, want in _att_vs:
@@ -1302,6 +1181,20 @@ def _selftest_body(chk) -> None:
         len(_pos) == 7 and all(c['verdict'] == 'PASS' for c in _pos) and (_att(_pos) or {}).get('verdict') == 'PASS'
         and all(v == want and not allp for v, allp, want in _att_res.values()),
         repr(([(c['name'][16:40], c['verdict']) for c in _pos], {k[:24]: v for k, v in _att_res.items()}))[:700])
+    #  ★ 10-08 G2RR5-03 — 한 곳 (Codex 재검증 5 §3 최소 해결 · 계획 §3-1): 스모크의 CASE15_NEGCTL = 인계 도구의 것 (같은 객체 · 사본 없음) · 생산자 case15 검사 =
+    #    등록 안정 ID 일곱 (차례 · 검사 dict 의 id) · 미등록 표지 (등록 표지가 아닌 truthy · 등록 표지 + kind 다름) = '미등록 음성 대조 표지' FAIL 행 · 음성 대조 id 없음
+    try:
+        import g2_network_reread as _RR
+        _one = (getattr(sys.modules[__name__], 'CASE15_NEGCTL', None) is _RR.CASE15_NEGCTL, list(_RR.CASE15_NEGCTL_IDS))
+    except Exception as e_:                                 # noqa: BLE001 — 옛 코드: 인계 도구에 한 곳이 없다
+        _one = (False, f'{type(e_).__name__}: {e_}')
+    _un = {nm: _c15_all(rp) for nm, rp in (('미등록 표지', _c15(negative_control='unregistered_future_control')),
+                                          ('등록 표지 + kind real14', _c15(kind='real14')))}
+    chk('★ G2RR5-03 한 곳 — 스모크의 CASE15_NEGCTL 은 인계 도구 (g2_network_reread) 의 것 (같은 객체) · 생산자 case15 검사 = 등록 안정 ID 일곱 (차례 · id 키) · '
+        '미등록 표지 · 등록 표지 + kind 다름 = "미등록 음성 대조 표지" FAIL 행 (음성 대조 id 없음)',
+        _one[0] is True and [c.get('id') for c in _pos] == _one[1]
+        and all(any(c['verdict'] == 'FAIL' and '미등록 음성 대조 표지' in c['name'] for c in cs) and not any(c.get('id') for c in cs) for cs in _un.values()),
+        repr((_one, [c.get('id') for c in _pos], {k: [(c['name'][16:40], c['verdict']) for c in v] for k, v in _un.items()}))[:700])
     #  ★ 10-08 G2RR5-02 — 기록기는 **그대로 통과**시킨다: 인자 · 결과 객체 · 예외를 바꾸지 않는다 · 망 CLI (cmd[1] = network_conductivity.py) 호출만 적는다 ·
     #    반환 직후 per-mode 두 파일의 sha256 · 채널 상태 · 사유를 읽기만 · 끝나면 (예외로 끝나도) 원래 훅으로
     _rec = globals().get('network_cli_recorder')

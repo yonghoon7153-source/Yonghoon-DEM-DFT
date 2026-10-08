@@ -8,7 +8,10 @@
 
 입력 (셋 중 하나):
   --smoke-root S     `scripts/wsl_network_smoke.py` ROOT — smoke_report.json 의 망 정지 (stop_after=network) 케이스 · 폴더 S/work/results/<id>
-                     (★ 10-07 G2RR4-03 — 음성 대조 표지 (negative_control · case15) 케이스는 S0 에서 빼고 S0b = 게시 없음 ∧ 스모크 [음성 대조] 판정 PASS)
+                     (★ 10-07 G2RR4-03 → ★ 10-08 G2RR5-03 — **등록** 음성 대조 (표지 · case15_network · kind case15 · 망 정지 = `case15_negctl_registered`)
+                     만 S0 에서 빼고 S0b = 게시 없음 ∧ 기록된 검사 = 등록 안정 ID 일곱 (각 1 회 · 전부 PASS) ∧ 공용 판정 `case15_negctl_verdicts` 를 보고 상세 ·
+                     timings 에 다시 돌린 판정 = 기록.  미등록 truthy 표지 = S0 실패 + S0b 문제.  그 판정 술어 · 등록 표 (`CASE15_NEGCTL`) 의 정본 = 이 파일 —
+                     스모크 생산자가 import 해 검사를 만든다 (이 파일은 하네스를 import 하지 않는다))
   --launcher-root R  `scripts/run_network_194_parallel.py` ROOT — manifest 의 기대 세대 (expected_network_generation · 없으면 FAIL) · merged/<코호트>
                      (진짜 배치 기록 status.json · metrics_flat.csv) · merged/<코호트>/results/<case>
                      ★ 10-07 G2RR2-02 — **등록 모드 필수**: --expect-set production194 (등록 ID 지문 194) | pilot3 (시범 세 케이스) · 또는 --expect-case 코호트:케이스
@@ -87,6 +90,256 @@ CASE_CHECK_EXTRA = ('K1b',)                                       # run_launcher
 LAUNCHER_META_IDS = ('M0', 'M-plan', 'M-reg', 'M3')               # run_launcher — 코호트 무관 · 한 번씩
 LAUNCHER_COHORT_META_IDS = ('M1', 'M2', 'H1')                     # run_launcher — 코호트마다 한 번씩 ('<ID> <코호트> …')
 M3_SUMMARY_KEYS = ('expected_n', 'read_n', 'set_equal', 'missing', 'extra')   # main 이 M3 항목에서 판정 JSON 최상위로 옮겨 적는 칸
+
+
+# ─────────────────── ★ 10-08 G2RR5-02 · 03 — case15 음성 대조의 한 곳 (생산자 = 스모크 evaluate · 소비자 = S0b) ───────────────────
+#: ★ 10-08 G2RR5-03 (Codex 세대 2 재검증 5 §3 최소 해결) — 등록 표지 · 케이스 신원 · 필수 검사 안정 ID 표 · 판정 술어를 **인계 도구 한 곳**에 둔다.
+#:   생산자 (`scripts/wsl_network_smoke.py` evaluate) 가 이 함수로 case15 검사 일곱을 만들고 (검사 dict 에 id) · 소비자 (이 파일 `--smoke-root` S0b) 는 보고
+#:   상세에 **같은 함수를 다시 돌려** 기록된 판정과 맞댄다 (상세 결손 · 수치 모순 = 실패).  방향은 하네스 → 인계 도구 하나뿐 — 인계 도구 (발사 때 지문을 기록하는
+#:   HANDOVER_FILES) 는 하네스 (스모크 — 관측 · 지문 밖) 를 import 하지 않는다.
+#:   값 = 10-07 G2RR4-03 의 스모크 CASE15_NEGCTL 그대로 옮김 (원인 · 이온 참고값) + 10-08 케이스 신원 (case_id · kind · stop_after) + ⑤ 실제 망 시도 표 (G2RR5-02 —
+#:   10-08 이 컨테이너 실제 case15 (커밋된 원자료) 첫 실행으로 고정: 실패 상태 'failed' = `pipeline_service._CHANNEL_FAIL_STATES` · 겹침 사유 = 생산자
+#:   `_channel_solve_failure` 가 `network_conductivity.BOUNDARY_OVERLAP_REASON` 을 괄호로 싣는 꼴 · Physics 열 = 솔버 ValueError 그대로 (원자료 탐침 오류와 같은
+#:   바이트 · WSL 10-07 기록도 같다) · 이온 두 모드 = 'computed' (사유 칸 없음)).
+CASE15_NEGCTL = dict(
+    tag='case15_publication_blocked', case_id='case15_network', kind='case15', stop_after='network',
+    b_and_t_ids=(24, 40, 57, 103), negative_rows=((31, 29241), (38, 29241)),
+    ionic_ref8={'hertzian': 0.00032635, 'physics': 0.00036225}, cert_max=1e-6,
+    overlap_channels=('electronic_hertzian', 'electronic_physics', 'thermal_hertzian'), refuse_channel='thermal_physics',
+    refuse_text='ligg_area < 0', solver_step='Network Solver (both modes)',
+    attempt_modes=('hertzian', 'physics'), attempt_channels=('ionic', 'electronic', 'thermal'),
+    attempt_ok_status='computed', attempt_fail_status='failed', overlap_token='(boundary_overlap)', overlap_reason='boundary_overlap',
+    refuse_prefix='ValueError: ',
+    attempt_table={'hertzian.ionic': 'computed', 'physics.ionic': 'computed',
+                   'hertzian.electronic': 'boundary_overlap', 'physics.electronic': 'boundary_overlap',
+                   'hertzian.thermal': 'boundary_overlap', 'physics.thermal': 'ligg_area_negative'})
+#: 필수 검사 = (안정 ID, 이름 꼬리) — 차례 그대로.  생산자 검사 dict 의 id · 소비자 S0b 는 그 케이스의 기록이 이 집합과 **정확히** 같기를 (각 1 회 · 모르는 ID ·
+#:   id 없는 행 거부) 요구한다 — 접두어 '[음성 대조]' PASS 행 수 (옛 '넷 이상') 를 세지 않는다.
+CASE15_NEGCTL_CHECKS = (
+    ('case15.proc', '자식 프로세스 정상 종료 · 보고서 있음'),
+    ('case15.raw_sha', '원자료 sha256 = README 표 (압축 푼 바이트)'),
+    ('case15.nc1_blocked', f'[음성 대조] 게시 차단 — failed · 실패 단계 {CASE15_NEGCTL["solver_step"]} · Stage E 안 돌았다 · 반환 run id 없음 '
+                           '(옛 성공 산출물 재사용 없음)'),
+    ('case15.nc2_tau', '[음성 대조] 인계 숫자 비노출 — τ 세 모드 NOT_COMPUTED · 숫자 칸 없음'),
+    ('case15.nc3_cause', f'[음성 대조] 원인 발화 (원덤프 직접 6 조합) — 전자 두 모드 · Hertz 열 boundary_overlap · B∩T = 입자 ID '
+                         f'{list(CASE15_NEGCTL["b_and_t_ids"])} · Physics 열 음수 원자료 면적 거부 · 음수 행 {len(CASE15_NEGCTL["negative_rows"])}'),
+    ('case15.nc4_ionic', f'[음성 대조] 이온 정상 — 두 모드 computed · σ_ratio 참고 8 자리 {CASE15_NEGCTL["ionic_ref8"]} · 증서 보존 · 잔차 '
+                         f'0 이상 {CASE15_NEGCTL["cert_max"]} 미만'),
+    ('case15.nc5_attempt', '[음성 대조] 실제 망 시도 — 이번 시도의 망 CLI 1 회 · 예외 없음 · rc 0 · per-mode 둘 · 실패 채널 = 등록 넷 (전자 두 모드 · Hertz 열 '
+                           'boundary_overlap · Physics 열 음수 면적 거부) · 이온 computed · 단계 rc 0 · 결손 0 · 내용 검증 거부 · 시도 기록 = 기록기 digest · '
+                           '원자료 탐침과 같은 원인 (실행 실패 = TECH)'),
+)
+CASE15_NEGCTL_IDS = tuple(i for i, _n in CASE15_NEGCTL_CHECKS)
+CASE15_NEGCTL_ID_PREFIX = 'case15.'
+
+
+def _c15_d(x):
+    return x if isinstance(x, dict) else {}
+
+
+def _c15_int0(v):
+    """정수 0 (bool 아님)."""
+    return isinstance(v, int) and not isinstance(v, bool) and v == 0
+
+
+def _c15_cert(x, cap):
+    """증서 수치 — 실수 (bool 아님) · 유한 · 0 이상 · cap 미만 (Codex 재검증 5 §5 "유한 · 비음수 잔차 / 보존 오차를 엄격히")."""
+    return isinstance(x, (int, float)) and not isinstance(x, bool) and 0 <= x < cap
+
+
+def _c15_hex64(s):
+    return isinstance(s, str) and len(s) == 64 and all(c in '0123456789abcdef' for c in s)
+
+
+def _c15_attempt_class(st, ng):
+    """기록기가 읽은 per-mode 채널 기록 dict(status, reason) → 등록 표의 분류 (computed · boundary_overlap · ligg_area_negative) · 그 밖 = 그대로 적은 문자열."""
+    if not isinstance(st, dict):
+        return 'missing'
+    s, rs = st.get('status'), ('' if st.get('reason') is None else str(st.get('reason')))
+    if s == ng['attempt_ok_status']:
+        return 'computed'
+    if s == ng['attempt_fail_status'] and ng['overlap_token'] in rs:
+        return 'boundary_overlap'
+    if s == ng['attempt_fail_status'] and rs.startswith(ng['refuse_prefix']) and ng['refuse_text'] in rs:
+        return 'ligg_area_negative'
+    return f'{s}: {rs[:80]}'
+
+
+def _c15_raw_class(d, ng):
+    """원자료 탐침 (스모크 `case15_channel_probe`) 의 채널 결과 → 같은 분류."""
+    if not isinstance(d, dict):
+        return 'missing'
+    if d.get('error') is not None:
+        e = str(d['error'])
+        return 'ligg_area_negative' if (e.startswith(ng['refuse_prefix']) and ng['refuse_text'] in e) else f'error: {e[:80]}'
+    if d.get('status') == 'computed':
+        return 'computed'
+    if d.get('reason') == ng['overlap_reason']:
+        return 'boundary_overlap'
+    return f'{d.get("status")}/{d.get("reason")}'
+
+
+def case15_attempt_verdict(r, ng=None):
+    """★ 10-08 G2RR5-02 (Codex 세대 2 재검증 5 §2) — case15 음성 대조 ⑤ 실제 망 시도 → (판정, 세부).  판정 = PASS · TECH · FAIL.
+      TECH (실행 실패 — 지정한 내용 거부가 아니다): 망 CLI 호출 0 회 · 예외 (PermissionError · FileNotFoundError · TimeoutExpired …) · rc ≠ 0 · per-mode 산출물 없음 · 못 읽음 ·
+           망 솔버 단계 rc ≠ 0 · 산출 결손 (missing_outputs) · stale
+      FAIL: 실제 시도 증거 없음 (기록기 없는 옛 기록) · 호출 2 회 이상 · 단계 기록 결손 · 내용 검증 거부가 아님 · 실패 채널 집합 ≠ 등록 넷 (+ 이온 computed 둘) ·
+           Physics 열 거부 문자열 ≠ 원자료 탐침 오류 · 시도 기록 (단계 · 상태 · input_digests) ↔ 기록기 어긋남 · 원자료 탐침과 다른 원인
+    300 자 err · 시도 사유 문자열은 보지 않는다 — 기록기 (스모크 `network_cli_recorder`) 의 구조 증거와 단계 구조 필드로만 판정한다."""
+    ng = ng or CASE15_NEGCTL
+    ev = r.get('attempt_evidence')
+    if not isinstance(ev, dict) or not isinstance(ev.get('calls'), list):
+        return 'FAIL', '실제 시도 증거 없음 (attempt_evidence) — 이번 망 CLI 시도를 확인할 수 없다 (G2RR5-02 이전 기록 · 기록기 없음)'
+    calls = ev['calls']
+    if not calls:
+        return 'TECH', '망 CLI 호출 0 회 — 솔버가 실행되지 않았다 (lock · 흔적 격리 · 실행 경계) — 지정한 내용 거부가 아니다'
+    if len(calls) != 1 or not isinstance(calls[0], dict):
+        return 'FAIL', f'망 CLI 호출 {len(calls)} 회 — 정확히 1 회여야'
+    c = calls[0]
+    if c.get('exception') is not None:
+        return 'TECH', f'망 CLI 실행 예외 {c.get("exception")} ({str(c.get("exception_text"))[:120]}) — 실행 실패 (지정한 내용 거부 아님)'
+    if not _c15_int0(c.get('returncode')):
+        return 'TECH', f'망 CLI rc {c.get("returncode")!r} — 실행 실패 (지정한 내용 거부 아님)'
+    pm = c.get('per_mode') if isinstance(c.get('per_mode'), dict) else {}
+    miss = [m for m in ng['attempt_modes']
+            if not (isinstance(pm.get(m), dict) and _c15_hex64(pm[m].get('sha256')) and isinstance(pm[m].get('channels'), dict))]
+    if miss:
+        return 'TECH', f'per-mode 산출물 없음 · 못 읽음 {miss} — 실행 실패 (지정한 내용 거부 아님)'
+    sv = [s for s in (r.get('stages') or []) if isinstance(s, dict) and s.get('step') == ng['solver_step']]
+    if len(sv) != 1:
+        return 'FAIL', f'망 솔버 단계 기록 {len(sv)} 개 — 하나여야'
+    s = sv[0]
+    if not _c15_int0(s.get('rc')) or s.get('missing_outputs') != [] or s.get('stale_outputs') != []:
+        return 'TECH', (f'망 솔버 단계 rc {s.get("rc")!r} · 산출 결손 {s.get("missing_outputs")!r} · stale {s.get("stale_outputs")!r} — 실행 실패 '
+                        '(지정한 내용 거부 아님)')
+    if s.get('verify_failed') is not True or s.get('ok') is not False:
+        return 'FAIL', f'망 솔버 단계가 내용 검증 거부가 아니다 (verify_failed {s.get("verify_failed")!r} · ok {s.get("ok")!r})'
+    got = {f'{m}.{ch}': _c15_attempt_class(_c15_d(pm[m].get('channels')).get(ch), ng) for m in ng['attempt_modes'] for ch in ng['attempt_channels']}
+    if got != ng['attempt_table']:
+        return 'FAIL', f'실패 채널 집합 ≠ 등록 — 다름 {({k: (v, ng["attempt_table"].get(k)) for k, v in got.items() if v != ng["attempt_table"].get(k)})}'
+    raw = _c15_d(_c15_d(r.get('negctl')).get('channels'))
+    for k, cls in ng['attempt_table'].items():
+        m, ch = k.split('.')
+        mine, theirs = _c15_d(_c15_d(pm[m].get('channels')).get(ch)).get('reason'), _c15_d(raw.get(f'{ch}_{m}')).get('error')
+        if cls == 'ligg_area_negative' and mine != theirs:
+            return 'FAIL', f'{k} 거부 문자열 ≠ 원자료 탐침 오류 — {mine!r} ↔ {theirs!r}'
+    att = _c15_d(r.get('attempt'))
+    dg = c.get('input_digests')
+    if not (isinstance(dg, dict) and len(dg) == 2 and all(isinstance(v, str) and v for v in dg.values())) or att.get('input_digests') != dg:
+        return 'FAIL', f'시도 기록 input_digests {att.get("input_digests")!r} ≠ 기록기 {dg!r} — 이 시도의 입력이 아니다'
+    if att.get('stage') != ng['solver_step'] or att.get('latest_attempt_status') != 'failed':
+        return 'FAIL', f'시도 기록 단계 {att.get("stage")!r} · 상태 {att.get("latest_attempt_status")!r} — 망 솔버 단계 · failed 여야'
+    rawc = {k: _c15_raw_class(raw.get(f'{k.split(".")[1]}_{k.split(".")[0]}'), ng) for k in ng['attempt_table']}
+    if rawc != got:
+        return 'FAIL', f'원자료 탐침의 원인 ≠ 이번 시도 — 다름 {({k: (got.get(k), v) for k, v in rawc.items() if v != got.get(k)})}'
+    return 'PASS', (f'망 CLI 1 회 · rc 0 · per-mode 둘 (sha256 {pm["hertzian"]["sha256"][:12]} · {pm["physics"]["sha256"][:12]}) · 실패 = 등록 넷 · '
+                    f'이온 computed 둘 · 단계 rc 0 · 결손 0 · 내용 검증 거부 · 시도 기록 = 망 솔버 단계 · digest {dg} · 원자료 탐침과 같은 원인')
+
+
+def case15_negctl_registered(cid, r) -> bool:
+    """등록된 음성 대조인가 — 표지 = 등록 표지 ∧ 케이스 id = case15_network ∧ kind = case15 ∧ stop_after = network.  그 밖 truthy 표지 = **미등록**
+    (생산자: FAIL 행 · 소비자: S0 에서 빼지 않는다 + S0b 문제)."""
+    ng = CASE15_NEGCTL
+    return (isinstance(r, dict) and r.get('negative_control') == ng['tag'] and cid == ng['case_id'] and r.get('kind') == ng['kind']
+            and r.get('stop_after') == ng['stop_after'])
+
+
+def case15_negctl_verdicts(r, timing, cid=None) -> list:
+    """★ 10-08 G2RR5-03 — case15 음성 대조 보고 (스모크 `reports[cid]`) + 자식 프로세스 기록 (스모크 `timings[cid]`) → [(id, 이름, 판정, 세부)]
+    (`CASE15_NEGCTL_CHECKS` 차례 그대로 · 일곱).  순수 함수 — 파일 · 환경을 읽지 않는다 (생산자 · 소비자가 같은 입력에 같은 판정) · 꼴이 깨진 상세 = FAIL
+    (예외로 새지 않는다).
+      proc      자식 프로세스 정상 종료 (rc = 정수 0) · 보고서 id = 케이스 id
+      raw_sha   원자료 sha256 = README 표 (raw_sha_ok is True)
+      nc1 ~ nc4 게시 차단 · τ 비노출 · 원인 발화 (원자료 탐침 — 보조 증거) · 이온 정상  (10-07 G2RR4-03 판정을 옮김 · 증서 수치 = 0 이상 · 유한 · bool 아님)
+      nc5       실제 망 시도 (10-08 G2RR5-02 — `case15_attempt_verdict` · 실행 실패 = TECH)"""
+    ng = CASE15_NEGCTL
+    cid = cid or ng['case_id']
+    r, t = _c15_d(r), _c15_d(timing)
+    names = dict(CASE15_NEGCTL_CHECKS)
+    out = []
+
+    def ok(b):
+        return 'PASS' if b else 'FAIL'
+
+    def put(i, fn):
+        try:
+            v, d = fn()
+        except Exception as e:                                   # noqa: BLE001 — 꼴이 깨진 상세 = 판정 FAIL
+            v, d = 'FAIL', f'판정 예외 {type(e).__name__}: {e}'
+        out.append((i, f'{cid}: {names[i]}', v, d))
+
+    put('case15.proc', lambda: (ok(_c15_int0(t.get('rc')) and r.get('id') == cid),
+                                f'rc {t.get("rc")!r} {t.get("signal") or ""} · 보고서 id {r.get("id")!r}'))
+    put('case15.raw_sha', lambda: (ok(r.get('raw_sha_ok') is True), r.get('raw_sha')))
+
+    def nc1():
+        fs = r.get('failed_stages')
+        return (ok(r.get('status') == 'failed' and isinstance(fs, list) and ng['solver_step'] in fs and r.get('stage_e_ran') is False
+                   and not r.get('returned_network_run_id')),
+                f'status {r.get("status")} · 실패 단계 {fs} · Stage E {r.get("stage_e_ran")} · run id {r.get("returned_network_run_id")}')
+
+    def nc2():
+        tau = _c15_d(r.get('tau'))
+        sts = {m: tau.get(f'ion_net_status_{m}') for m in ('hertz', 'physics', 'hertz_h12')}
+        nums = {k: v for k, v in tau.items() if str(k).startswith(('f_ion_', 'tau2_ion_', 'tau_ion_')) and v not in (None, '')}
+        return ok(set(sts.values()) == {'NOT_COMPUTED'} and not nums), f'{sts} · 숫자 {nums}'
+
+    def nc3():
+        neg = _c15_d(r.get('negctl'))
+        ch = _c15_d(neg.get('channels'))
+        ids = list(ng['b_and_t_ids'])
+        ov = {k: (_c15_d(ch.get(k)).get('reason'), _c15_d(ch.get(k)).get('intersection')) for k in ng['overlap_channels']}
+        refuse = str(_c15_d(ch.get(ng['refuse_channel'])).get('error') or '')
+        rows = sorted(tuple(int(v) for v in x[:2]) for x in (neg.get('negative_area') or []) if isinstance(x, (list, tuple)) and len(x) >= 2)
+        return (ok(bool(ch) and all(v == (ng['overlap_reason'], ids) for v in ov.values()) and ng['refuse_text'] in refuse
+                   and rows == sorted(ng['negative_rows'])),
+                f'겹침 {ov} · Physics 열 {refuse[:120]!r} · 음수 행 {rows} · 증거 오류 {neg.get("error")}')
+
+    def nc4():
+        ch = _c15_d(_c15_d(r.get('negctl')).get('channels'))
+        ion = {}
+        for m in ng['ionic_ref8']:
+            d = _c15_d(ch.get(f'ionic_{m}'))
+            v = d.get('value') or [None, None]
+            q = v[1] if isinstance(v, (list, tuple)) and len(v) > 1 else None
+            ion[m] = (d.get('status'), round(q, 8) if isinstance(q, (int, float)) and not isinstance(q, bool) else None,
+                      d.get('conservation_rel'), d.get('residual_rel'))
+        return (ok(all(s == 'computed' and q == ng['ionic_ref8'][m] and _c15_cert(c, ng['cert_max']) and _c15_cert(e, ng['cert_max'])
+                       for m, (s, q, c, e) in ion.items())), ion)
+
+    put('case15.nc1_blocked', nc1)
+    put('case15.nc2_tau', nc2)
+    put('case15.nc3_cause', nc3)
+    put('case15.nc4_ionic', nc4)
+    put('case15.nc5_attempt', lambda: case15_attempt_verdict(r, ng))
+    return out
+
+
+def case15_negctl_s0b_problems(cid, r, checks, timing) -> list:
+    """★ 10-08 G2RR5-03 — 등록된 음성 대조 케이스 하나의 S0b 문제 목록 ([] = 통과).  (등록 여부 = `case15_negctl_registered` — 부르는 쪽이 먼저 가른다.)
+      ① 게시 없음 (status done 아님 · 반환 run id 없음)
+      ② 그 케이스의 기록된 검사 (이름 '<cid>:' 또는 id 'case15.') = 등록 안정 ID 집합 정확히 — 각 1 회 · id 없는 행 · 모르는 ID = 거부 · 전부 PASS
+      ③ 공용 판정 `case15_negctl_verdicts` 를 보고 상세 (reports[cid]) · 자식 프로세스 기록 (timings[cid]) 에 **다시** 돌린 판정 = 기록된 판정 (상세 결손 · 수치 모순 = 다름)
+    '[음성 대조] PASS 넷 이상' 같은 접두어 계수를 하지 않는다 (Codex 재검증 5 §3 — 한 행 네 번 · 미등록 표지 · 상세 결손 · 실제 SHA FAIL 이 통과했다)."""
+    r = _c15_d(r)
+    why = []
+    if r.get('status') == 'done' or r.get('returned_network_run_id'):
+        why.append(f'게시됨 (status {r.get("status")!r} · run id {r.get("returned_network_run_id")!r}) — 음성 대조가 발화하지 않았다')
+    rows = [c for c in (checks if isinstance(checks, list) else []) if isinstance(c, dict)
+            and (str(c.get('name', '')).startswith(f'{cid}:') or str(c.get('id', '')).startswith(CASE15_NEGCTL_ID_PREFIX))]
+    cnt = collections.Counter(c.get('id') for c in rows)
+    unknown = sorted(repr(i) for i in cnt if i not in CASE15_NEGCTL_IDS)
+    off = {i: cnt[i] for i in CASE15_NEGCTL_IDS if cnt[i] != 1}
+    if unknown or off:
+        why.append(f'기록된 {cid} 검사 ≠ 등록 안정 ID 집합 — id 없음 · 모르는 {unknown} · 한 번이 아님 {off} (등록 {list(CASE15_NEGCTL_IDS)} · 각 1 회)')
+    notpass = [(c.get('id'), c.get('verdict')) for c in rows if c.get('verdict') != 'PASS']
+    if notpass:
+        why.append(f'기록된 판정이 PASS 아님 {notpass}')
+    rec = {c.get('id'): c.get('verdict') for c in rows if c.get('id') in CASE15_NEGCTL_IDS}
+    diff = {i: (rec.get(i), v, str(d)[:160]) for i, _n, v, d in case15_negctl_verdicts(r, timing, cid) if rec.get(i) != v}
+    if diff:
+        why.append(f'공용 판정 재계산 ≠ 기록 {diff} — 보고 상세가 기록된 판정을 뒷받침하지 않는다 (상세 결손 · 수치 모순 · 실행 실패)')
+    return why
 
 
 def _read_json(p):
@@ -545,27 +798,35 @@ def main(argv=None) -> int:
     if a.smoke_root:
         sr = Path(a.smoke_root).expanduser().resolve()
         rep = _read_json(sr / 'smoke_report.json') or {}
-        ids_all = [cid for cid, r in (rep.get('reports') or {}).items() if (r or {}).get('stop_after') == 'network']
-        #  ★ 10-07 G2RR4-03 (Codex 세대 2 재검증 4 §6-3(b)) — 스모크 음성 대조 (보고의 negative_control 표지 · case15 게시 차단 기대) 는 S0 (게시 done) 에서 빼고 S0b 로:
-        #    게시 없음 (done 아님 · 반환 run id 없음) ∧ 스모크의 '<id>: [음성 대조]' 판정 (원인 발화 · 이온 정상 · τ 비노출) 넷 이상이 전부 PASS.  표지 없는 failed 는
-        #    S0 실패 그대로 (이름으로 면제하지 않는다) · 음성 대조 폴더는 K1–K7 로 다시 읽지 않는다 (게시가 없다).
-        neg = sorted(cid for cid in ids_all if (rep['reports'][cid] or {}).get('negative_control'))
+        reps = rep.get('reports') if isinstance(rep.get('reports'), dict) else {}
+        ids_all = [cid for cid, r in reps.items() if isinstance(r, dict) and r.get('stop_after') == 'network']
+        #  ★ 10-07 G2RR4-03 (Codex 세대 2 재검증 4 §6-3(b)) — 스모크 음성 대조 (case15 게시 차단 기대) 는 S0 (게시 done) 에서 빼고 S0b 로 · 음성 대조 폴더는 K1–K7 로
+        #    다시 읽지 않는다 (게시가 없다) · 표지 없는 failed 는 S0 실패 그대로 (이름으로 면제하지 않는다).
+        #  ★ 10-08 G2RR5-03 (Codex 세대 2 재검증 5 §3) — 옛 판은 truthy 표지면 종류를 가리지 않고 빼고 '<id>: [음성 대조]' 접두어 PASS 행 넷 이상만 셌다 (한 행 네 번 ·
+        #    미등록 표지 · 상세 결손 · 실제 원자료 SHA FAIL 이 통과).  이제 ① **등록** 표지 ∧ 케이스 신원 (`case15_negctl_registered` — case15_network · kind
+        #    case15 · 망 정지) 일 때만 뺀다 — 그 밖 truthy 표지 = 미등록 → S0 실패 + S0b 문제 ② 기록된 그 케이스 검사 = 등록 안정 ID 집합 정확히 (각 1 회 · 모르는 ·
+        #    id 없는 행 거부) · 전부 PASS ③ 공용 판정 (`case15_negctl_verdicts`) 을 보고 상세 · 자식 프로세스 기록 (timings) 에 다시 돌린 판정 = 기록 ④ 필수 ID 에
+        #    자식 프로세스 · 원자료 sha256 · 실제 망 시도 (G2RR5-02) ⑤ 게시 없음 — `case15_negctl_s0b_problems`.  숫자 넷을 바꾸거나 실패 케이스를 면제하지 않는다.
+        marked = sorted(cid for cid, r in reps.items() if isinstance(r, dict) and r.get('negative_control'))
+        neg = [cid for cid in marked if case15_negctl_registered(cid, reps[cid])]
+        unreg = [cid for cid in marked if cid not in neg]
         ids = [cid for cid in ids_all if cid not in neg]
-        notdone = {cid: (rep['reports'][cid] or {}).get('status') for cid in ids if (rep['reports'][cid] or {}).get('status') != 'done'}
-        meta.append(dict(name=f'S0 스모크 망 정지 케이스 전부 done ({len(ids)} · 음성 대조 {len(neg)} 제외)', ok=bool(ids) and not notdone, detail=notdone or ids))
-        if neg:
-            nbad = {}
+        notdone = {cid: reps[cid].get('status') for cid in ids if reps[cid].get('status') != 'done'}
+        meta.append(dict(name=f'S0 스모크 망 정지 케이스 전부 done ({len(ids)} · 등록 음성 대조 {len(neg)} 제외 · 미등록 음성 대조 표지 {len(unreg)})',
+                         ok=bool(ids) and not notdone and not unreg,
+                         detail=(dict(notdone, **({'미등록 음성 대조 표지': unreg} if unreg else {})) or ids)))
+        if marked:
+            ng = CASE15_NEGCTL
+            tm = rep.get('timings') if isinstance(rep.get('timings'), dict) else {}
+            nbad = {cid: [f'미등록 음성 대조 표지 {reps[cid].get("negative_control")!r} (kind {reps[cid].get("kind")!r} · stop_after {reps[cid].get("stop_after")!r}) — '
+                          f'S0 에서 빼지 않는다 (등록 = 표지 {ng["tag"]!r} · {ng["case_id"]} · kind {ng["kind"]} · stop_after {ng["stop_after"]})']
+                    for cid in unreg}
             for cid in neg:
-                r_ = rep['reports'][cid] or {}
-                nck = [c for c in rep.get('checks') or [] if isinstance(c, dict) and str(c.get('name', '')).startswith(f'{cid}: [음성 대조]')]
-                why = []
-                if r_.get('status') == 'done' or r_.get('returned_network_run_id'):
-                    why.append(f'게시됨 (status {r_.get("status")} · run id {r_.get("returned_network_run_id")}) — 음성 대조가 발화하지 않았다')
-                if len(nck) < 4 or any(c.get('verdict') != 'PASS' for c in nck):
-                    why.append(f'스모크 [음성 대조] 판정 {[(c.get("name", "")[len(cid) + 2:][:24], c.get("verdict")) for c in nck]} — 넷 이상 전부 PASS 여야')
+                why = case15_negctl_s0b_problems(cid, reps[cid], rep.get('checks'), tm.get(cid))
                 if why:
                     nbad[cid] = why
-            meta.append(dict(name=f'S0b 스모크 음성 대조 ({len(neg)}) = 게시 없음 · 지정한 원인 발화 · 이온 정상 (스모크 [음성 대조] 판정 · G2RR4-03 · 등록 §9-4 제안)',
+            meta.append(dict(name=f'S0b 스모크 음성 대조 (등록 {len(neg)} · 미등록 {len(unreg)}) = 게시 없음 · 기록된 검사 = 등록 안정 ID {len(CASE15_NEGCTL_IDS)} 개 '
+                                  '(각 1 회 · 전부 PASS) · 공용 판정 재계산 = 기록 (자식 프로세스 · 원자료 sha256 · 원인 · 이온 · 실제 망 시도 — G2RR5-02 · 03)',
                              ok=not nbad, detail=nbad or neg))
         folders = [sr / 'work' / 'results' / cid for cid in ids if cid not in notdone]
         reports = run_smoke_or_dirs(folders, exp)
@@ -825,30 +1086,159 @@ def _selftest() -> int:
             chk('★ G2RR4-01 — 생산 194 (합성) 판정 JSON 의 상세 = 상세 계약 통과 (194 케이스 × K1–K7 · meta 열 · 재계수 0 = n_fail 0)', d194 == [], d194[:3])
         else:
             chk('★ 등록 집합 양성 production194 (등록 집합 함수 없음 — 옛 코드)', False)
-        #  ★ 10-07 G2RR4-03 (Codex 세대 2 재검증 4 §6-3(b)) — 스모크 음성 대조 (case15 · 게시 차단 기대 · smoke 보고 negative_control 표지) = S0 (게시 done) 에서 빼고
-        #    S0b 로 판정: 게시 없음 (done 아님 · run id 없음) ∧ 스모크의 [음성 대조] 판정 (원인 발화 · 이온 정상 · τ 비노출) 이 넷 이상 전부 PASS.
-        #    옛 판: case15 failed = S0 실패 · rc 1 (사전 점검 단계 4).  표지 없는 failed 는 그대로 S0 실패 (이름으로 면제하지 않는다).
+        #  ★ 10-07 G2RR4-03 → ★ 10-08 G2RR5-03 (Codex 세대 2 재검증 5 §3) — 스모크 음성 대조 (case15) S0b 반례 먼저 (Codex r5_case15 변이 그대로) ·
+        #    정상 관통 · 비관통 · clamp 게시 폴더 = 위 실 생산자 게시 (K1–K7 · H1 통과가 계속 보여야).  S0b = 등록 표지 ∧ 케이스 신원 (case15_network · kind case15 ·
+        #    망 정지) 일 때만 S0 에서 뺀다 (그 밖 truthy 표지 = S0 실패 + "미등록 음성 대조 표지") · 그 케이스의 기록된 검사 = 등록 안정 ID 집합 정확히 (각 1 회 ·
+        #    id 없음 · 모르는 ID 거부) · 전부 PASS · 공용 판정 (`case15_negctl_verdicts`) 을 보고 상세에 다시 돌린 판정 = 기록 (상세 결손 · 수치 모순 = 실패) ·
+        #    필수 ID 에 자식 프로세스 · 원자료 sha256 · 실제 망 시도 · 게시 없음.  옛 판 (S0b = '<id>: [음성 대조]' 접두어 PASS ≥ 4 · truthy 표지 면제):
+        #    marker_unknown · one_check_repeated_four · negctl_missing · tau_numeric · ionic_residual_bad · raw_sha_fail · unexpected_failure_record = rc 0 (Codex 핀).
+        #    양성 case15 = 실제 case15 값 (10-08 컨테이너 첫 실행 · 고정 토큰 · WSL 10-07 기록과 같은 digest) 상세 + **고친 스모크 생산자 evaluate** (하위 프로세스 —
+        #    이 도구는 하네스를 import 하지 않는다) 가 낸 검사 일곱 · timings rc 0.  실제 파이프라인 판 (≈ 120 s) 은 스모크 selftest 마지막 묶음 (b) 이 이 도구의
+        #    --smoke-root 에 넣는다 (이 selftest 는 게이트의 fast 예산 안).
+        import subprocess
+        _vfn = globals().get('case15_negctl_verdicts')
+        _ng = globals().get('CASE15_NEGCTL') or {}
+        _ids_reg = globals().get('CASE15_NEGCTL_IDS') or ()
         sm = tmp / 'smoke_neg'
         (sm / 'work' / 'results').mkdir(parents=True)
-        shutil.copytree(tmp / 'case_through', sm / 'work' / 'results' / 'syn_ok')
-        negchk = [dict(group='A', name=f'case15_network: [음성 대조] {n}', verdict='PASS', detail='') for n in ('게시 차단', 'τ 숫자 비노출', '원인 발화', '이온 정상')]
-        NEG = 'case15_publication_blocked'
+        normal = {}
+        for bed in ('through', 'nonthrough', 'clamp'):
+            shutil.copytree(tmp / f'case_{bed}', sm / 'work' / 'results' / f'syn_{bed}')
+            normal[f'syn_{bed}'] = dict(stop_after='network', status='done')
+        solver = 'Network Solver (both modes)'
+        dig = {'atoms.csv': 'e140e28d3daf3ad7', 'contacts.csv': 'bcb53e13d2cc69be'}
+        ovr = '관통 성분은 있는데 {s} 을 풀지 못했다 (boundary_overlap) — 미퍼콜이 아니다 · 수치 실패 = 게시 차단 (WEB-03 Q1 — 일반 · 정지 경로 모두)'
+        ref = 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)'
+        b_t = [24, 40, 57, 103]
 
-        def _sm(c15, checks):
-            (sm / 'smoke_report.json').write_text(json.dumps(dict(reports={'syn_ok': dict(stop_after='network', status='done'), 'case15_network': c15},
-                                                                  checks=checks)), encoding='utf-8')
-            jp_ = tmp / f'sm_{len(list(tmp.glob("sm_*.json")))}.json'
+        def _chs(m):
+            return dict(ionic=dict(status='computed', reason=None), electronic=dict(status='failed', reason=ovr.format(s='σ_e')),
+                        thermal=dict(status='failed', reason=(ovr.format(s='κ') if m == 'hertzian' else ref)))
+        c15 = dict(
+            id='case15_network', kind='case15', stop_after='network', negative_control='case15_publication_blocked', status='failed', success=False,
+            failed_stages=[solver], stage_e_ran=False, returned_network_run_id=None, raw_sha_ok=True,
+            raw_sha={k: ('ab' * 6, 'ab' * 6) for k in ('atom_v4_1710000.liggghts', 'contact_v4_1710000.liggghts', 'mesh_v4_1710000.stl', 'input_case15.liggghts')},
+            stages=[dict(step=s, rc=0, ok=True, required=s != 'Coverage Physics vs Hertzian', missing_outputs=[], stale_outputs=[], verify_failed=False, err='')
+                    for s in ('Parse', 'Contact Analysis', 'Coverage Physics vs Hertzian')]
+            + [dict(step=solver, rc=0, ok=False, required=True, missing_outputs=[], stale_outputs=[], verify_failed=True, err=f'… physics.thermal=fail ({ref})'),
+               dict(step='Network Merge / Stage E', rc=1, ok=None, required=None, missing_outputs=None, stale_outputs=None, verify_failed=None, err='…')],
+            attempt=dict(schema='network_attempt/v2', solver_status='failed', latest_attempt_status='failed', failure_kind='solver', stage=solver,
+                         input_digests=dict(dig), reason=f'… physics.thermal=fail ({ref})'),
+            attempt_evidence=dict(schema='wsl_network_smoke/attempt_evidence/v1', hook='pipeline_service._RUNNER',
+                                  calls=[dict(n=1, script='network_conductivity.py', input_digests=dict(dig), exception=None, exception_text=None, returncode=0,
+                                              per_mode={m: dict(sha256=h * 64, bytes=1000, channels=_chs(m), read_error=None)
+                                                        for m, h in (('hertzian', '1'), ('physics', '2'))})]),
+            tau=dict({f'ion_net_status_{m}': 'NOT_COMPUTED' for m in ('hertz', 'physics', 'hertz_h12')},
+                     **{f'{p}_ion_{m}': None for p in ('f', 'tau2', 'tau') for m in ('hertz', 'physics', 'hertz_h12')}),
+            negctl=dict(atoms=65970, contacts=182995, plate_um=19.1455, box_um=[100.0, 100.0],
+                        negative_area=[[31, 29241, -0.186036, 1.05114], [38, 29241, -0.186264, 1.0512]],
+                        channels=dict(ionic_hertzian=dict(value=[0.1704582411149847, 0.00032635082552669387], status='computed', reason=None,
+                                                          conservation_rel=1.899983684231436e-09, residual_rel=9.825340313851229e-11, intersection=[]),
+                                      ionic_physics=dict(value=[0.1892075130340654, 0.00036224724407936984], status='computed', reason=None,
+                                                         conservation_rel=5.087356705432166e-09, residual_rel=9.411786725961204e-11, intersection=[]),
+                                      **{k: dict(value=[None, None], status='not_computed', reason='boundary_overlap', conservation_rel=None, residual_rel=None,
+                                                 intersection=list(b_t)) for k in ('electronic_hertzian', 'electronic_physics', 'thermal_hertzian')},
+                                      thermal_physics=dict(error=ref))))
+
+        def _smoke_eval(reps):
+            """고친 스모크 생산자의 evaluate (하위 프로세스) → {이름: 검사 목록} — 인계 도구는 하네스를 import 하지 않는다."""
+            k_ = len(list(tmp.glob('eval_in_*.json')))
+            src, dst = tmp / f'eval_in_{k_}.json', tmp / f'eval_out_{k_}.json'
+            src.write_text(json.dumps(reps, ensure_ascii=False), encoding='utf-8')
+            boot = ('import json, sys\n'
+                    'sys.path[:0] = [sys.argv[1]]\n'
+                    'import wsl_network_smoke as S\n'
+                    'd = json.load(open(sys.argv[2], encoding="utf-8"))\n'
+                    'o = {k: S.evaluate({v["report"]["id"]: v["report"]}, {v["report"]["id"]: v["timing"]}) for k, v in d.items()}\n'
+                    'open(sys.argv[3], "w", encoding="utf-8").write(json.dumps(o, ensure_ascii=False))\n')
+            p_ = subprocess.run([sys.executable, '-c', boot, str(ROOT / 'scripts'), str(src), str(dst)], capture_output=True, text=True, timeout=300,
+                                env=dict(os.environ, PYTHONDONTWRITEBYTECODE='1'))
+            return (_read_json(dst) or {}), (p_.returncode, (p_.stdout + p_.stderr)[-300:])
+        r_sha = json.loads(json.dumps(c15))
+        r_sha['raw_sha_ok'] = False
+        r_uf = json.loads(json.dumps(c15))
+        r_uf['attempt']['reason'] = 'PermissionError: solver executable denied'
+        for s_ in r_uf['stages']:
+            if s_['step'] == solver:
+                s_.update(rc=1, err='PermissionError: solver executable denied')
+        ev_, why_ev = _smoke_eval({'positive': dict(report=c15, timing=dict(rc=0)), 'raw_sha_fail': dict(report=r_sha, timing=dict(rc=0)),
+                                   'unexpected_failure_record': dict(report=r_uf, timing=dict(rc=0))})
+        chk15 = [c for c in ev_.get('positive') or [] if str(c.get('name', '')).startswith('case15_network:')]
+        base = dict(reports=dict(normal, case15_network=c15), checks=chk15, timings={'case15_network': dict(rc=0)}, rc=0)
+
+        def _sm(doc, label):
+            (sm / 'smoke_report.json').write_text(json.dumps(doc, ensure_ascii=False), encoding='utf-8')
+            jp_ = tmp / f'sm_{label}.json'
             rc_ = _main_rc(['--smoke-root', str(sm), '--json', str(jp_)])
             j_ = _read_json(jp_) or {}
-            return rc_, {('S0b' if m_['name'].startswith('S0b') else m_['name'][:2]): m_['ok'] for m_ in j_.get('meta') or []}
-        r_ok = _sm(dict(stop_after='network', status='failed', negative_control=NEG), negchk)
-        r_pub = _sm(dict(stop_after='network', status='done', negative_control=NEG, returned_network_run_id='RUN-x'), negchk)
-        r_nochk = _sm(dict(stop_after='network', status='failed', negative_control=NEG), negchk[:1] + [dict(negchk[1], verdict='FAIL')])
-        r_old = _sm(dict(stop_after='network', status='failed'), negchk)
-        chk(f'★ G2RR4-03 스모크 음성 대조 (case15) — 게시 없음 + [음성 대조] 판정 PASS = S0 · S0b 통과 rc 0 {r_ok} · 게시됨 = S0b 실패 {r_pub} · '
-            f'[음성 대조] 판정 FAIL = S0b 실패 {r_nochk} · 표지 없는 failed = S0 실패 (이름 면제 없음) {r_old}',
-            r_ok == (0, {'S0': True, 'S0b': True}) and r_pub[0] == 1 and r_pub[1].get('S0b') is False and r_nochk[0] == 1 and r_nochk[1].get('S0b') is False
-            and r_old[0] == 1 and r_old[1].get('S0') is False)
+            return rc_, {('S0b' if m_['name'].startswith('S0b') else m_['name'][:2]): m_['ok'] for m_ in j_.get('meta') or []}, j_
+
+        def _mut(fn):
+            d_ = json.loads(json.dumps(base))
+            fn(d_)
+            return d_
+
+        def _r(d_):
+            return d_['reports']['case15_network']
+
+        def _negs(d_):
+            return [c for c in d_['checks'] if '[음성 대조]' in str(c.get('name', ''))]
+
+        def _legacy(d_):
+            r_ = _r(d_)
+            r_.pop('attempt_evidence', None)
+            for s_ in r_['stages']:
+                for k_ in ('missing_outputs', 'stale_outputs', 'verify_failed'):
+                    s_.pop(k_, None)
+            d_['checks'] = [{k_: v_ for k_, v_ in c.items() if k_ != 'id'} for c in d_['checks'] if '실제 망 시도' not in str(c.get('name', ''))]
+        V = {'marker_missing': _mut(lambda d_: _r(d_).pop('negative_control')),
+             'marker_unknown': _mut(lambda d_: _r(d_).update(negative_control='unregistered_future_control')),
+             'checks_missing': _mut(lambda d_: d_.update(checks=[])),
+             'checks_three': _mut(lambda d_: d_.update(checks=_negs(d_)[:3])),
+             'check_fail': _mut(lambda d_: _negs(d_)[-1].update(verdict='FAIL')),
+             'one_check_repeated_four': _mut(lambda d_: d_.update(checks=[dict(_negs(d_)[0]) for _ in range(4)])),
+             'negctl_missing': _mut(lambda d_: _r(d_).pop('negctl')),
+             'tau_numeric': _mut(lambda d_: _r(d_)['tau'].update(tau_ion_hertz=1.0)),
+             'ionic_residual_bad': _mut(lambda d_: _r(d_)['negctl']['channels']['ionic_physics'].update(residual_rel=0.1)),
+             'raw_sha_fail': _mut(lambda d_: (d_['reports'].update(case15_network=r_sha), d_.update(rc=1, checks=[
+                 c for c in ev_.get('raw_sha_fail') or [] if str(c.get('name', '')).startswith('case15_network:')]))),
+             'unexpected_failure_record': _mut(lambda d_: (d_['reports'].update(case15_network=r_uf), d_.update(checks=[
+                 c for c in ev_.get('unexpected_failure_record') or [] if str(c.get('name', '')).startswith('case15_network:')]))),
+             'published': _mut(lambda d_: _r(d_).update(status='done', returned_network_run_id='RUN-x')),
+             'identity_kind': _mut(lambda d_: _r(d_).update(kind='real14')),
+             'unknown_id': _mut(lambda d_: d_['checks'].append(dict(group='A', id='case15.extra', name='case15_network: [음성 대조] 등록 밖 검사',
+                                                                     verdict='PASS', detail=''))),
+             'timing_missing': _mut(lambda d_: d_.pop('timings')),
+             'legacy_record': _mut(_legacy)}
+        rc_p, meta_p, j_p = _sm(base, 'positive')
+        res = {nm: _sm(doc, nm)[:2] for nm, doc in V.items()}
+        WANT = {'marker_missing': {'S0': False}, 'marker_unknown': {'S0': False, 'S0b': False}, 'identity_kind': {'S0': False, 'S0b': False}}
+
+        def _bad(names):
+            return {nm: res[nm] for nm in names if res[nm] != (1, WANT.get(nm, {'S0': True, 'S0b': False}))}
+        try:
+            _fs = ps._CHANNEL_FAIL_STATES == frozenset({_ng.get('attempt_fail_status')})
+        except Exception:                                        # noqa: BLE001
+            _fs = False
+        again = _vfn(c15, dict(rc=0)) if _vfn else []
+        chk(f'★ G2RR5-03 양성 — 실제 case15 값의 기록 + 고친 스모크 생산자 evaluate (하위 프로세스) 의 검사 일곱 = 등록 안정 ID (차례 · id 키) 전부 PASS · '
+            f'공용 판정 (case15_negctl_verdicts) 재계산 일곱 PASS · S0 · S0b 통과 rc 0 · 정상 관통 · 비관통 · clamp 게시 폴더 K1–K7 · H1 통과 · '
+            f'실패 상태 토큰 = pipeline_service._CHANNEL_FAIL_STATES {meta_p} rc {rc_p}',
+            rc_p == 0 and meta_p == {'S0': True, 'S0b': True} and j_p.get('n_fail') == 0 and len(j_p.get('cases') or []) == 3
+            and all(c['ok'] for r_ in j_p.get('cases') or [] for c in r_['checks'])
+            and bool(_ids_reg) and [c.get('id') for c in chk15] == list(_ids_reg) and all(c.get('verdict') == 'PASS' for c in chk15)
+            and [(i, v) for i, _n, v, _d in again] == [(i, 'PASS') for i in _ids_reg] and _fs,
+            repr((why_ev, [(c.get('id'), c.get('verdict'), str(c.get('detail'))[:80]) for c in chk15], again[:2], meta_p, _fs))[:900])
+        codex7 = ('marker_unknown', 'one_check_repeated_four', 'negctl_missing', 'tau_numeric', 'ionic_residual_bad', 'raw_sha_fail', 'unexpected_failure_record')
+        chk(f'★ G2RR5-03 반례 (Codex r5_case15 변이 일곱 — 옛 판 rc 0) → 전부 rc 1 (미등록 표지 = S0 · S0b 실패 · 그 밖 = S0b 실패) {_bad(codex7) or ""}',
+            not _bad(codex7), repr({nm: res[nm] for nm in codex7}))
+        reg5 = ('marker_missing', 'checks_missing', 'checks_three', 'check_fail', 'published')
+        chk(f'회귀 — 표지 없음 (이름 면제 없음 = S0 실패) · 검사 없음 · 셋만 · 하나 FAIL · 게시됨 → rc 1 (옛 판도 rc 1 · 과잉차단 아님 = 위 양성) {_bad(reg5) or ""}',
+            not _bad(reg5), repr({nm: res[nm] for nm in reg5}))
+        ext4 = ('identity_kind', 'unknown_id', 'timing_missing', 'legacy_record')
+        chk(f'★ G2RR5-03 신원 · ID 계약 — 등록 표지 + kind 다름 (= 미등록) · 모르는 ID 하나 더 · 자식 프로세스 기록 (timings) 없음 · 옛 형식 기록 (실제 시도 증거 · 검사 '
+            f'id 없음 = G2RR5-02 이전 생산자 · 제출 WSL 10-07 기록과 같은 꼴 — 그 기록은 고친 스모크로 다시 만들어야) → rc 1 {_bad(ext4) or ""}',
+            not _bad(ext4), repr({nm: res[nm] for nm in ext4}))
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
         for d in made:
