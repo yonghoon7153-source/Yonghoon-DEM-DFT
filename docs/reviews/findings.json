@@ -9015,7 +9015,7 @@
     {
       "id": "SELF-98",
       "severity": "P3",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "1저자 WSL t0 1 회 (10-07 23:36:49 → 23:49:39 KST · lmp_serial 1 코어) — 화면 끝 ERROR \"Compute used in variable thermo keyword between runs is not current (../thermo.cpp:978)\" · 조정자 진단 (10-08) → 덱 · LIGGGHTS 소스 대조",
       "opened_in": "docs/data/ps73_damping_branch_20261007/README.md",
@@ -9025,7 +9025,9 @@
         "docs/data/ps73_damping_branch_20261007/make_branch_decks.py --selftest (⑭a · ⑭b · ⑭0 · ⑭c · ⑭d · ⑮)",
         "docs/data/ps73_damping_branch_20261007/t0_run1_20261007/in.branch_t0_syntax.liggghts (10-07 t0 1 회 덱 그대로 · sha256 c0130fd0…)",
         "docs/data/ps73_damping_branch_20261007/README.md (§12 실행 기록 · §8 run 사이 읽기)"
-      ]
+      ],
+      "claimed_fixed_sha": "7ff7997ab",
+      "verification_note": "7ff7997ab: 덱 다섯 재생성 (run 뒤 읽는 값을 정의 바로 다음 줄에서 얼림 · T0_SERVO = br_Fz_E) · selftest ⑭a 고치기 전 t0 6 곳 → 0 · arm 0 → 0 · ⑭b 다섯 덱 위반 → 0 · ⑭c 10-07 덱에서 g_ke · t0_Fs 재검출 · 러너 모의 9/9.  닫힘 조건 = ibb t0 2 회 PASS (가드 정지 경로 끝 BRANCH_SCRIPT_END · T0_SERVO PASS)."
     }
   ]
 }
