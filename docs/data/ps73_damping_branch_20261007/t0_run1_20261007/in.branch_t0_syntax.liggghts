@@ -140,8 +140,8 @@ variable ke_abs_comp_win equal 0.1
 variable comp_n equal 0
 variable comp_max equal 40
 variable g_reason string none
-variable g_step equal ${br_step0}
-variable g_atoms equal ${br_n0v}
+variable g_step equal step
+variable g_atoms equal atoms
 variable g_pz equal ${pz_branch}
 variable g_F equal 0.0
 variable g_ke equal ${ke_ref}
@@ -154,9 +154,7 @@ print "step,phase,plate_z_deck,press_deckMPa,force_N,ke_J,atoms,leak_delta" file
 # >>> block t0_g1 — G1: 재개 첫 setup (step · 원자 수 정확 · KE 1e-6 · docs/resume_ckpt_procedure_20260927.md §3)
 run 0
 variable t0_n equal atoms
-variable t0_n equal ${t0_n}
 variable t0_ke0 equal ke
-variable t0_ke0 equal ${t0_ke0}
 variable t0_g1 equal abs(${t0_ke0}/${ke_ref}-1.0)
 print "T0_G1 step=${br_step0} atoms=${t0_n} ke=${t0_ke0} rel=${t0_g1} (기준 r8 로그 3100000 KE 1.695918e-05 · 원자 160420)"
 if "(${t0_g1} <= 1.0e-6) && (${t0_n} == 160420)" then "print 'T0_G1 PASS'" else "print 'T0_G1 FAIL'"
@@ -165,22 +163,15 @@ variable target_press equal 0.0
 # <<< block t0_g1
 
 # >>> block comp_loop — r8 압축 고리 그대로 (run 5000 · 압력 판정 0.30) + 덩어리마다 가드 · 기록 (run 사이 · 역학 불변)
-#   run 뒤에 읽는 값은 정의 바로 다음 줄에서 같은 이름의 즉시 치환으로 얼린다 (같은 step 의 값을 숫자로 박는다) — 뒤의 write_restart 는
-#   ke 를 '현재 아님' 으로 (ERROR) · run 0 은 판 힘을 '직전 합 + rank 몫' 으로 바꾼다 (README §8 · §12 · make_branch_decks.py ⑭)
 label loop_press
     run 5000
     variable current_press equal "abs(f_top_mesh[3]) / 0.0025 / 1000000"
-    variable current_press equal ${current_press}
     print "Current Pressure: ${current_press} MPa (Target: ${target_press})"
     variable comp_n equal ${comp_n}+1
     variable g_step equal step
-    variable g_step equal ${g_step}
     variable g_atoms equal atoms
-    variable g_atoms equal ${g_atoms}
     variable g_ke equal ke
-    variable g_ke equal ${g_ke}
     variable g_F equal abs(f_top_mesh[3])
-    variable g_F equal ${g_F}
     variable g_pz equal ${pz_branch}-${press_speed}*${dt}*(${g_step}-${br_step0})
     region rg_above delete
     region rg_above block INF INF INF INF ${g_pz} INF units box
@@ -249,21 +240,12 @@ run 200
 # <<< block relax
 
 # >>> block end_snap_top_mesh — 끝 상태 (원자 · 접촉 · 판) · run 0 · restart
-#   값은 run 0 전에 읽어 얼린다 — run 0 뒤 f_top_mesh[3] 는 직전 step 합 + 이 rank 의 setup 몫 (직렬 2 배) · write_restart 뒤 ke 는 ERROR (README §12)
 variable g_step equal step
-variable g_step equal ${g_step}
 variable g_atoms equal atoms
-variable g_atoms equal ${g_atoms}
 variable g_ke equal ke
-variable g_ke equal ${g_ke}
-variable g_Fz equal f_top_mesh[3]
-variable g_Fz equal ${g_Fz}
 variable g_F equal abs(f_top_mesh[3])
-variable g_F equal ${g_F}
 variable current_press equal "abs(f_top_mesh[3]) / 0.0025 / 1000000"
-variable current_press equal ${current_press}
 variable g_pz equal ${br_pz_S}
-variable g_pz equal ${g_pz}
 region rg_above delete
 region rg_above block INF INF INF INF ${g_pz} INF units box
 variable g_leakd equal ${g_leak}-${br_leak0}
@@ -272,7 +254,6 @@ variable br_pz_E equal ${g_pz}
 variable br_h_E equal ${br_pz_E}*1000
 variable br_P_E equal ${current_press}
 variable br_F_E equal ${g_F}
-variable br_Fz_E equal ${g_Fz}
 print "BRANCH_END_STATE arm=${br_arm} dir=end_relax step=${br_E} plate_z_deck=${br_pz_E} thickness_um=${br_h_E} press_deckMPa=${br_P_E} force_N=${br_F_E} atoms=${g_atoms} leak_delta=${g_leakd}"
 print "${br_E},end_relax,${br_pz_E},${br_P_E},${br_F_E},${g_ke},${g_atoms},${g_leakd}" append ${out}/branch_trace.csv screen no
 dump dmp_atom_end all custom 5000 ${out}/end_relax/atom_*.liggghts id type x y z radius vx vy vz c_strs[1] c_strs[2] c_strs[3] c_ke
@@ -359,17 +340,11 @@ label loop_hold
     run ${hold_chunk}
     variable hold_n equal ${hold_n}+1
     variable g_step equal step
-    variable g_step equal ${g_step}
     variable g_atoms equal atoms
-    variable g_atoms equal ${g_atoms}
     variable g_ke equal ke
-    variable g_ke equal ${g_ke}
     variable g_F equal f_plate_servo[3]
-    variable g_F equal ${g_F}
     variable g_pz equal f_plate_servo[12]
-    variable g_pz equal ${g_pz}
     variable current_press equal "abs(f_plate_servo[3]) / 0.0025 / 1000000"
-    variable current_press equal ${current_press}
     region rg_above delete
     region rg_above block INF INF INF INF ${g_pz} INF units box
     variable g_leakd equal ${g_leak}-${br_leak0}
@@ -395,21 +370,12 @@ print "BRANCH_HOLD_DONE arm=${br_arm} status=${hold_status} chunks=${hold_n} ste
 # <<< block hold
 
 # >>> block end_snap_plate_servo — 끝 상태 (원자 · 접촉 · 판) · run 0 · restart
-#   값은 run 0 전에 읽어 얼린다 — run 0 뒤 f_plate_servo[3] 는 직전 step 합 + 이 rank 의 setup 몫 (직렬 2 배) · write_restart 뒤 ke 는 ERROR (README §12)
 variable g_step equal step
-variable g_step equal ${g_step}
 variable g_atoms equal atoms
-variable g_atoms equal ${g_atoms}
 variable g_ke equal ke
-variable g_ke equal ${g_ke}
-variable g_Fz equal f_plate_servo[3]
-variable g_Fz equal ${g_Fz}
 variable g_F equal abs(f_plate_servo[3])
-variable g_F equal ${g_F}
 variable current_press equal "abs(f_plate_servo[3]) / 0.0025 / 1000000"
-variable current_press equal ${current_press}
 variable g_pz equal f_plate_servo[12]
-variable g_pz equal ${g_pz}
 region rg_above delete
 region rg_above block INF INF INF INF ${g_pz} INF units box
 variable g_leakd equal ${g_leak}-${br_leak0}
@@ -418,7 +384,6 @@ variable br_pz_E equal ${g_pz}
 variable br_h_E equal ${br_pz_E}*1000
 variable br_P_E equal ${current_press}
 variable br_F_E equal ${g_F}
-variable br_Fz_E equal ${g_Fz}
 print "BRANCH_END_STATE arm=${br_arm} dir=end step=${br_E} plate_z_deck=${br_pz_E} thickness_um=${br_h_E} press_deckMPa=${br_P_E} force_N=${br_F_E} atoms=${g_atoms} leak_delta=${g_leakd}"
 print "${br_E},end,${br_pz_E},${br_P_E},${br_F_E},${g_ke},${g_atoms},${g_leakd}" append ${out}/branch_trace.csv screen no
 dump dmp_atom_end all custom 5000 ${out}/end/atom_*.liggghts id type x y z radius vx vy vz c_strs[1] c_strs[2] c_strs[3] c_ke
@@ -469,10 +434,9 @@ print "BRANCH_DONE arm=${br_arm} stop_step=${br_S} stop_thickness_um=${br_h_S} e
 # >>> block t0_servo — 서보 점검: 판이 내려갔고 (vel_max 를 넘지 않았고) 힘 부호가 위 (+) 인가 · 그 뒤 가드 정지 경로를 일부러 탄다
 variable t0_dz equal ${br_pz_S}-${br_pz_E}
 variable t0_dzmax equal ${servo_vmax}*${dt}*${hold_n}*${hold_chunk}*1.000001
-# 판 힘 = 끝 스냅숏이 run 0 전에 얼린 값 (br_Fz_E · 부호 그대로 · 위 = +).  10-07 t0 1 회 덱은 여기서 f_plate_servo[3] 를 새로 읽었다 —
-#   run 0 뒤라 직전 step 합 + 이 rank 의 setup 몫 (직렬 ≈ 2 배 — 'F < 750' 판정이 틀어진다) · README §12 · make_branch_decks.py ⑭
-print "T0_SERVO dz=${t0_dz} dzmax=${t0_dzmax} F_signed=${br_Fz_E} target=${F_target} status=${hold_status}"
-if "(${t0_dz} > 0.0) && (${t0_dz} <= ${t0_dzmax}) && (${br_Fz_E} > 0.0) && (${br_Fz_E} < ${F_target})" then "print 'T0_SERVO PASS'" else "print 'T0_SERVO FAIL'"
+variable t0_Fs equal f_plate_servo[3]
+print "T0_SERVO dz=${t0_dz} dzmax=${t0_dzmax} F_signed=${t0_Fs} target=${F_target} status=${hold_status}"
+if "(${t0_dz} > 0.0) && (${t0_dz} <= ${t0_dzmax}) && (${t0_Fs} > 0.0) && (${t0_Fs} < ${F_target})" then "print 'T0_SERVO PASS'" else "print 'T0_SERVO FAIL'"
 print "T0_DONE"
 variable g_reason string t0_forced
 variable summary_file string ${out}/branch_summary_forced_trip.txt

@@ -25,6 +25,9 @@ docs/data/liggghts_add_pair_pin.json) — README §8 에 줄 번호와 함께 �
   · dump_modify ID first yes = 만든 뒤 첫 run 의 setup 에서 한 장 쓴다 (src/output.cpp) · run 0 = setup 만 (적분 없음).
   · 각 run 의 init 에서 모든 시간 의존 compute 에 현재 step 을 건다 (src/modify.cpp addstep_compute_all) → setup 덤프의 c_strs 유효.
   · thermo_modify lost 기본 = ignore (src/thermo.cpp) → 원자를 잃어도 런이 멈추지 않는다 → 원자 수 가드가 필요하다.
+  · write_restart = lmp->init() → compute 의 invoked 를 지운다 → 그 뒤 run 전까지 thermo ke 를 읽으면 ERROR
+    (10-07 WSL t0 1 회 FAIL · README §12) · run 0 은 메시 응력 합을 지우지 않고 wall/gran setup 몫을 더한다 → run 0 뒤 판 힘 =
+    직전 합 + rank 몫 (직렬 2 배).  ⇒ run 뒤 읽는 값은 정의 바로 다음 줄에서 얼린다 · selftest ⑭ 가 모든 경로를 본다.
 """
 from __future__ import annotations
 
@@ -34,6 +37,7 @@ import hashlib
 import io
 import os
 import re
+import subprocess
 import sys
 import tarfile
 
@@ -71,7 +75,12 @@ DECKS = {
 PLATE_STL = 'plate_branch3100000.stl'
 DIFF_TXT = 'deck_diffs.txt'
 SUMS = 'SHA256SUMS'
-SUMMED = list(DECKS.values()) + [PLATE_STL, 'run_branch.sh', 'make_branch_decks.py', 'analyze_branch.py']
+SBATCH = 'run_branch_ibb.sbatch'   # ibb 제출 래퍼 (1저자 10-08 "10 코어로") — 손으로 쓴 파일 · 생성하지 않는다 (⑮ 가 짝을 본다)
+SUMMED = list(DECKS.values()) + [PLATE_STL, 'run_branch.sh', 'make_branch_decks.py', 'analyze_branch.py', SBATCH]
+SBATCH_NP = 10
+# 10-07 WSL t0 1 회에 돈 덱 그대로 (FAIL · README §12) — ⑭c 가 검사기로 다시 잡는다 (덱 묶음 SHA256SUMS 에는 넣지 않는다)
+RUN1_DECK = os.path.join('t0_run1_20261007', 'in.branch_t0_syntax.liggghts')
+RUN1_SHA = 'c0130fd0a5019ca916f6135bb18f97b1e37ef292bc3b681985af43c0beafdf42'
 
 # arm 별 등록값 (README §2 · §3) — 여기 말고 덱을 고치지 말 것
 #   comp_win = 감쇠를 바꾼 뒤 KE 10 배 규칙을 쉬는 덩어리 수 (그동안은 0.1 J 상한만) — C 만 8 (README §7:
@@ -254,8 +263,8 @@ variable ke_abs_comp_win equal 0.1
 variable comp_n equal 0
 variable comp_max equal @COMP_MAX@
 variable g_reason string none
-variable g_step equal step
-variable g_atoms equal atoms
+variable g_step equal ${br_step0}
+variable g_atoms equal ${br_n0v}
 variable g_pz equal ${pz_branch}
 variable g_F equal 0.0
 variable g_ke equal ${ke_ref}
@@ -269,9 +278,13 @@ print "step,phase,plate_z_deck,press_deckMPa,force_N,ke_J,atoms,leak_delta" file
 
 T_COMP_GUARD = """\
     variable g_step equal step
+    variable g_step equal ${g_step}
     variable g_atoms equal atoms
+    variable g_atoms equal ${g_atoms}
     variable g_ke equal ke
+    variable g_ke equal ${g_ke}
     variable g_F equal abs(f_top_mesh[3])
+    variable g_F equal ${g_F}
     variable g_pz equal ${pz_branch}-${press_speed}*${dt}*(${g_step}-${br_step0})
     region rg_above delete
     region rg_above block INF INF INF INF ${g_pz} INF units box
@@ -289,9 +302,12 @@ T_COMP_GUARD = """\
 
 T_COMP_LOOP = """\
 # >>> block comp_loop — r8 압축 고리 그대로 (run 5000 · 압력 판정 0.30) + 덩어리마다 가드 · 기록 (run 사이 · 역학 불변)
+#   run 뒤에 읽는 값은 정의 바로 다음 줄에서 같은 이름의 즉시 치환으로 얼린다 (같은 step 의 값을 숫자로 박는다) — 뒤의 write_restart 는
+#   ke 를 '현재 아님' 으로 (ERROR) · run 0 은 판 힘을 '직전 합 + rank 몫' 으로 바꾼다 (README §8 · §12 · make_branch_decks.py ⑭)
 label loop_press
     run 5000
     variable current_press equal "abs(f_top_mesh[3]) / 0.0025 / 1000000"
+    variable current_press equal ${current_press}
     print "Current Pressure: ${current_press} MPa (Target: ${target_press})"
     variable comp_n equal ${comp_n}+1
 @COMP_GUARD@\
@@ -341,12 +357,21 @@ run @RELAX_STEPS@
 
 T_END = """\
 # >>> block end_snap_@MESH_FIX@ — 끝 상태 (원자 · 접촉 · 판) · run 0 · restart
+#   값은 run 0 전에 읽어 얼린다 — run 0 뒤 f_@MESH_FIX@[3] 는 직전 step 합 + 이 rank 의 setup 몫 (직렬 2 배) · write_restart 뒤 ke 는 ERROR (README §12)
 variable g_step equal step
+variable g_step equal ${g_step}
 variable g_atoms equal atoms
+variable g_atoms equal ${g_atoms}
 variable g_ke equal ke
+variable g_ke equal ${g_ke}
+variable g_Fz equal f_@MESH_FIX@[3]
+variable g_Fz equal ${g_Fz}
 variable g_F equal abs(f_@MESH_FIX@[3])
+variable g_F equal ${g_F}
 variable current_press equal "abs(f_@MESH_FIX@[3]) / 0.0025 / 1000000"
+variable current_press equal ${current_press}
 variable g_pz equal @PZ_EXPR@
+variable g_pz equal ${g_pz}
 region rg_above delete
 region rg_above block INF INF INF INF ${g_pz} INF units box
 variable g_leakd equal ${g_leak}-${br_leak0}
@@ -355,6 +380,7 @@ variable br_pz_E equal ${g_pz}
 variable br_h_E equal ${br_pz_E}*1000
 variable br_P_E equal ${current_press}
 variable br_F_E equal ${g_F}
+variable br_Fz_E equal ${g_Fz}
 print "BRANCH_END_STATE arm=${br_arm} dir=@DIR@ step=${br_E} plate_z_deck=${br_pz_E} thickness_um=${br_h_E} press_deckMPa=${br_P_E} force_N=${br_F_E} atoms=${g_atoms} leak_delta=${g_leakd}"
 print "${br_E},@DIR@,${br_pz_E},${br_P_E},${br_F_E},${g_ke},${g_atoms},${g_leakd}" append ${out}/branch_trace.csv screen no
 dump dmp_atom_end all custom 5000 ${out}/@DIR@/atom_*.liggghts @ATOM_COLS@
@@ -439,11 +465,17 @@ label loop_hold
     run ${hold_chunk}
     variable hold_n equal ${hold_n}+1
     variable g_step equal step
+    variable g_step equal ${g_step}
     variable g_atoms equal atoms
+    variable g_atoms equal ${g_atoms}
     variable g_ke equal ke
+    variable g_ke equal ${g_ke}
     variable g_F equal f_plate_servo[3]
+    variable g_F equal ${g_F}
     variable g_pz equal f_plate_servo[12]
+    variable g_pz equal ${g_pz}
     variable current_press equal "abs(f_plate_servo[3]) / 0.0025 / 1000000"
+    variable current_press equal ${current_press}
     region rg_above delete
     region rg_above block INF INF INF INF ${g_pz} INF units box
     variable g_leakd equal ${g_leak}-${br_leak0}
@@ -532,7 +564,9 @@ T_T0_G1 = """\
 # >>> block t0_g1 — G1: 재개 첫 setup (step · 원자 수 정확 · KE 1e-6 · docs/resume_ckpt_procedure_20260927.md §3)
 run 0
 variable t0_n equal atoms
+variable t0_n equal ${t0_n}
 variable t0_ke0 equal ke
+variable t0_ke0 equal ${t0_ke0}
 variable t0_g1 equal abs(${t0_ke0}/${ke_ref}-1.0)
 print "T0_G1 step=${br_step0} atoms=${t0_n} ke=${t0_ke0} rel=${t0_g1} (기준 r8 로그 3100000 KE @KE_REF@ · 원자 @N_ATOMS@)"
 if "(${t0_g1} <= 1.0e-6) && (${t0_n} == @N_ATOMS@)" then "print 'T0_G1 PASS'" else "print 'T0_G1 FAIL'"
@@ -569,9 +603,10 @@ T_T0_SERVO = """\
 # >>> block t0_servo — 서보 점검: 판이 내려갔고 (vel_max 를 넘지 않았고) 힘 부호가 위 (+) 인가 · 그 뒤 가드 정지 경로를 일부러 탄다
 variable t0_dz equal ${br_pz_S}-${br_pz_E}
 variable t0_dzmax equal ${servo_vmax}*${dt}*${hold_n}*${hold_chunk}*1.000001
-variable t0_Fs equal f_plate_servo[3]
-print "T0_SERVO dz=${t0_dz} dzmax=${t0_dzmax} F_signed=${t0_Fs} target=${F_target} status=${hold_status}"
-if "(${t0_dz} > 0.0) && (${t0_dz} <= ${t0_dzmax}) && (${t0_Fs} > 0.0) && (${t0_Fs} < ${F_target})" then "print 'T0_SERVO PASS'" else "print 'T0_SERVO FAIL'"
+# 판 힘 = 끝 스냅숏이 run 0 전에 얼린 값 (br_Fz_E · 부호 그대로 · 위 = +).  10-07 t0 1 회 덱은 여기서 f_plate_servo[3] 를 새로 읽었다 —
+#   run 0 뒤라 직전 step 합 + 이 rank 의 setup 몫 (직렬 ≈ 2 배 — 'F < 750' 판정이 틀어진다) · README §12 · make_branch_decks.py ⑭
+print "T0_SERVO dz=${t0_dz} dzmax=${t0_dzmax} F_signed=${br_Fz_E} target=${F_target} status=${hold_status}"
+if "(${t0_dz} > 0.0) && (${t0_dz} <= ${t0_dzmax}) && (${br_Fz_E} > 0.0) && (${br_Fz_E} < ${F_target})" then "print 'T0_SERVO PASS'" else "print 'T0_SERVO FAIL'"
 print "T0_DONE"
 variable g_reason string t0_forced
 variable summary_file string ${out}/branch_summary_forced_trip.txt
@@ -729,7 +764,7 @@ def check() -> int:
     for b in bad:
         print('✗', b)
     if not bad:
-        print('✓ check: 덱 다섯 · 판 STL · deck_diffs.txt = 생성 결과 · SHA256SUMS 일치')
+        print(f'✓ check: 덱 다섯 · 판 STL · deck_diffs.txt = 생성 결과 · SHA256SUMS 일치 ({len(SUMMED)} 파일 · ibb 래퍼 포함)')
     return 1 if bad else 0
 
 
@@ -861,6 +896,217 @@ def is_subsequence(needle, hay):
     return miss
 
 
+# ── ⑭ run 사이에 읽는 값 (10-08 · WSL t0 1 회 FAIL 의 부류 · README §8 · §12) ─────────────────────
+#  LIGGGHTS-PUBLIC 3d5c00f 소스:
+#   ㉮ write_restart = lmp->init() (src/write_restart.cpp 171) → Modify::init 이 모든 compute 의 invoked 를 −1 로 (src/modify.cpp 271–277)
+#      → 다음 run 전까지 thermo 키워드 ke 를 읽으면 ERROR "Compute used in variable thermo keyword between runs is not current"
+#      (src/thermo.cpp 972–985 · t0 1 회의 ERROR 줄 978).  run (0 포함) 은 thermo 줄을 찍으며 ke 를 다시 현재로 만든다.
+#   ㉯ run 0 (setup 만) 은 메시 응력 합을 지우지 않는다 — 지우는 곳은 step 안의 pre_force 뿐 (src/mesh_module_stress.cpp 249–258) —
+#      그 위에 fix wall/gran 의 setup 이 이 rank 의 접촉 힘을 더하고 (src/fix_wall_gran.cpp 681–687 · src/verlet.cpp Verlet::setup)
+#      compute_vector 는 그 합을 돌려준다 (mesh_module_stress.cpp 432–437) ⇒ run 0 뒤 f_<메시>[1–6] = 직전 step 의 MPI 합 + 이 rank 의 몫
+#      (직렬 = 2 배 — t0 1 회 끝 스냅숏 setup 줄 0.37551816 = 정규 줄 0.1877583 × 2.0000083 · r8 (24 rank) 이완 setup 줄 × 1.0265).
+#      run 사이의 f_ 읽기에는 시점 검사가 없다 (src/variable.cpp 1184 = run 중일 때만) → 오류 없이 틀린 값.
+#      [7–9] 기준점 · 서보 [10–12] 질량중심은 setup 이 바꾸지 않는다.  새로 만든 메시 fix 도 첫 step 전에는 0 (같은 부류로 본다).
+#   ㉰ unfix 한 fix · 아직 없는 fix 를 읽으면 ERROR.
+#  ⇒ 덩어리마다 읽는 값 (g_* · current_press · t0_*) 은 정의 바로 다음 줄에서 `variable X equal ${X}` 로 얼린다 (⑭b) ·
+#     덱의 모든 경로 (jump · if 포함) 에서 위 ㉮ ㉯ ㉰ 상태로 읽는 곳이 없어야 한다 (⑭a).
+THERMO_COMPUTE = frozenset({'ke', 'pe', 'etotal', 'enthalpy', 'temp', 'press', 'evdwl', 'ecoul', 'epair', 'ebond', 'eangle',
+                            'edihed', 'eimp', 'emol', 'elong', 'etail', 'erotate', 'pxx', 'pyy', 'pzz', 'pxy', 'pxz', 'pyz'})
+THERMO_NOT_BETWEEN = frozenset({'elapsed', 'elaplong', 'cpu', 'cu', 'tpcpu', 'spcpu', 'cpuremain'})   # thermo.cpp 914–961
+THERMO_PLAIN = frozenset({'step', 'atoms', 'dt', 'time', 'part', 'vol', 'lx', 'ly', 'lz', 'xlo', 'xhi', 'ylo', 'yhi', 'zlo', 'zhi',
+                          'xy', 'xz', 'yz', 'xlat', 'ylat', 'zlat', 'nbuild', 'ndanger'})
+GROUP_FUNCS = frozenset({'count', 'mass', 'charge', 'xcm', 'vcm', 'fcm', 'bound', 'gyration', 'ke', 'angmom', 'torque',
+                         'inertia', 'omega'})
+# 일부러 살아 있게 두는 equal 변수 (⑭b 면제) — 이유를 함께 적는다
+LAZY_OK = {
+    'pressMPa': 'thermo_style 의 v_pressMPa — run 동안 thermo 가 읽는다 (살아 있어야 한다)',
+    'g_leak': 'count(group,region) 공식 — 덩어리마다 영역을 다시 만들고 ${g_leak} 로 바로 읽는다 (compute 아님 · run 사이에도 맞다)',
+    'br_step_now': '다음 줄 br_step0 가 즉시 치환으로 얼린다 (step · compute 없음)',
+    'br_atoms_now': '다음 줄 br_n0v 가 즉시 치환으로 얼린다 (atoms · compute 없음)',
+}
+
+
+def expr_deps(expr: str) -> frozenset:
+    """equal 공식이 run 사이에 무엇에 기대나 — ${…} 는 정의 때 숫자로 바뀌므로 빼고 본다.
+    원소 = (종류, 이름, 첨자): k = compute 를 쓰는 thermo 키워드 · x = run 사이 금지 키워드 · t = compute 없는 thermo 키워드 ·
+    g = 그룹 함수 · c / f / v = compute · fix · 변수 참조."""
+    e = re.sub(r'\$\{\w+\}', '0', expr)
+    deps = set()
+    for kind in 'cfv':
+        for m in re.finditer(r'\b' + kind + r'_(\w+)(?:\[(\d+)\])?', e):
+            deps.add((kind, m.group(1), int(m.group(2) or 0)))
+    e = re.sub(r'\b[cfv]_\w+(?:\[\d+\])?', '0', e)
+    for m in re.finditer(r'(?<![\w.])([A-Za-z_]\w*)(\s*\()?', e):
+        name, call = m.group(1), m.group(2)
+        if call:
+            if name in GROUP_FUNCS:
+                deps.add(('g', name, 0))
+        elif name in THERMO_COMPUTE:
+            deps.add(('k', name, 0))
+        elif name in THERMO_NOT_BETWEEN:
+            deps.add(('x', name, 0))
+        elif name in THERMO_PLAIN:
+            deps.add(('t', name, 0))
+    return frozenset(deps)
+
+
+def _st_new():
+    """run 사이 상태 하나 (경로마다 따로 — 서로 다른 경로를 섞지 않는다):
+    ke = compute 가 현재가 아니다 (시작 · read_restart · write_restart 뒤 run 전) · fix ID → ok | polluted | gone ·
+    env = 변수 → 공식 의존 (expr_deps) · thermo = thermo_style 의 v_ 이름."""
+    return {'ke': True, 'fix': {}, 'env': {}, 'thermo': frozenset()}
+
+
+def _st_copy(s):
+    return {'ke': s['ke'], 'fix': dict(s['fix']), 'env': dict(s['env']), 'thermo': s['thermo']}
+
+
+def _st_key(s):
+    return (s['ke'], tuple(sorted(s['fix'].items())), tuple(sorted(s['env'].items(), key=lambda kv: kv[0])), s['thermo'])
+
+
+def _resolve(name, env, seen=frozenset()):
+    leaves = set()
+    for d in env.get(name, frozenset()):
+        if d[0] == 'v':
+            if d[1] not in seen:
+                leaves |= _resolve(d[1], env, seen | {name})
+        else:
+            leaves.add(d)
+    return leaves
+
+
+def _read_hazards(name, s, mesh_ids):
+    out = []
+    for kind, ident, idx in sorted(_resolve(name, s['env'])):
+        if kind in ('k', 'c') and s['ke']:
+            out.append(('stale', f'{ident if kind == "k" else "c_" + ident} 가 현재가 아니다 (write_restart · read_restart 뒤 · run 전 — ㉮)'))
+        elif kind == 'x':
+            out.append(('between', f'{ident} 는 run 사이에 못 읽는다 (thermo.cpp 914–961)'))
+        elif kind == 'f':
+            st = s['fix'].get(ident, 'absent')
+            if st in ('gone', 'absent'):
+                out.append(('nofix', f'f_{ident} 가 없다 (unfix 뒤 · 만들기 전 — ㉰)'))
+            elif st == 'polluted' and ident in mesh_ids and (idx == 0 or 1 <= idx <= 6):
+                out.append(('setup', f'f_{ident}[{idx}] 가 run 0 · 새 fix 뒤라 직전 합 + rank 몫이다 (㉯)'))
+    return out
+
+
+def _apply_cmd(w, s, mesh_ids):
+    """명령 하나 (낱말 목록) 가 run 사이 상태를 바꾸는 몫 — s 를 고친다."""
+    if not w:
+        return
+    c = w[0]
+    if c == 'variable' and len(w) >= 3:
+        s['env'][w[1]] = expr_deps(w[3]) if (w[2] == 'equal' and len(w) == 4) else frozenset()
+    elif c == 'run' and len(w) >= 2:
+        s['ke'] = False
+        for fid, st in list(s['fix'].items()):
+            if fid in mesh_ids and st != 'gone':
+                s['fix'][fid] = 'polluted' if w[1] == '0' else 'ok'
+    elif c in ('write_restart', 'read_restart'):
+        s['ke'] = True
+    elif c == 'fix' and len(w) >= 4:
+        s['fix'][w[1]] = 'polluted' if w[1] in mesh_ids else 'ok'
+    elif c == 'unfix' and len(w) >= 2:
+        s['fix'][w[1]] = 'gone'
+    elif c == 'thermo_style':
+        s['thermo'] = frozenset(re.findall(r'\bv_(\w+)', ' '.join(w)))
+
+
+def _if_branches(w):
+    """if 낱말 → [가지 명령 목록] · else 가 있나 (LAMMPS 꼴: if b then t… elif b f… else e…)."""
+    branches, cur, has_else, k = [], [], False, 3
+    while k < len(w):
+        t = w[k]
+        if t == 'elif':
+            branches.append(cur)
+            cur, k = [], k + 2          # elif 다음 낱말 = 조건
+            continue
+        if t == 'else':
+            branches.append(cur)
+            cur, has_else = [], True
+        else:
+            cur.append(' '.join(t.split()))
+        k += 1
+    branches.append(cur)
+    return branches, has_else
+
+
+def scan_between_runs(text: str):
+    """덱의 모든 경로에서 run 사이에 위험한 읽기 (㉮ ㉯ ㉰) → [(줄 번호, 변수, 종류, 설명, 명령)].
+    경로마다 상태를 따로 들고 간다 (줄마다 상태 집합 — 덱의 고리는 같은 상태로 돌아오므로 유한하다).
+    줄 번호 = logical_lines 의 순번 (주석 · 빈 줄 · & 이음 처리 뒤)."""
+    lines = logical_lines(text)
+    n = len(lines)
+    W = [words(ln) for ln in lines]
+    labels = {w[1]: i for i, w in enumerate(W) if len(w) >= 2 and w[0] == 'label'}
+    mesh_ids = {w[1] for w in W if len(w) >= 4 and w[0] == 'fix' and 'mesh/surface/stress' in w[3]}
+    found = {}
+    seen = [set() for _ in range(n)]
+    work = [(0, _st_new())]
+    while work:
+        i, s = work.pop()
+        k = _st_key(s)
+        if k in seen[i]:
+            continue
+        seen[i].add(k)
+        w = W[i]
+        for name in re.findall(r'\$\{(\w+)\}', lines[i]):
+            for kind, why in _read_hazards(name, s, mesh_ids):
+                found[(i, name, kind)] = (i, name, kind, why, lines[i])
+        succ = []
+        if w[0] == 'run':
+            for name in sorted(s['thermo']):
+                for kind, why in _read_hazards(name, s, mesh_ids):
+                    if kind == 'nofix':
+                        found[(i, 'v_' + name, kind)] = (i, 'v_' + name, kind, 'thermo_style 의 ' + why, lines[i])
+        if w[0] == 'jump' and len(w) >= 3 and w[1] == 'SELF':
+            succ.append((labels[w[2]], s))
+        elif w[0] == 'quit':
+            pass
+        elif w[0] == 'if':
+            branches, has_else = _if_branches(w)
+            if not has_else:
+                succ.append((i + 1, s))
+            for br in branches:
+                b = _st_copy(s)
+                ended = False
+                for cmd in br:
+                    cw = words(cmd)
+                    if cw[:2] == ['jump', 'SELF']:
+                        succ.append((labels[cw[2]], b))
+                        ended = True
+                        break
+                    if cw[:1] == ['quit']:
+                        ended = True
+                        break
+                    _apply_cmd(cw, b, mesh_ids)
+                if not ended:
+                    succ.append((i + 1, b))
+        else:
+            t = _st_copy(s)
+            _apply_cmd(w, t, mesh_ids)
+            succ.append((i + 1, t))
+        for j, s2 in succ:
+            if j < n:
+                work.append((j, s2))
+    return sorted(found.values())
+
+
+def unfrozen_lazy(text: str):
+    """⑭b — 살아 있는 (run 사이에 값이 바뀌는) equal 정의 바로 다음 줄이 `variable X equal ${X}` 가 아닌 곳 (LAZY_OK 빼고)."""
+    lines = logical_lines(text)
+    bad = []
+    for i, ln in enumerate(lines):
+        w = words(ln)
+        if len(w) == 4 and w[0] == 'variable' and w[2] == 'equal' and w[1] not in LAZY_OK and expr_deps(w[3]):
+            nxt = lines[i + 1] if i + 1 < len(lines) else ''
+            if nxt != f'variable {w[1]} equal ${{{w[1]}}}':
+                bad.append(ln)
+    return bad
+
+
 def selftest() -> int:
     fails = []
 
@@ -922,7 +1168,8 @@ def selftest() -> int:
         # ⑦b 얼려야 하는 값 (가지 시작 · 멈춤 · 끝 · 앞 덩어리) 은 상수나 즉시 치환으로만 정의한다 — equal 은 쓸 때마다 다시 계산된다
         #     (실사고 10-07 초판: `variable br_step0 equal step` → 판 높이 공식이 늘 0.111302 를 냈다)
         frozen = {'br_step0', 'br_n0v', 'br_leak0', 'br_S', 'br_pz_S', 'br_P_S', 'br_F_S', 'br_h_S', 'br_E', 'br_pz_E',
-                  'br_P_E', 'br_F_E', 'br_h_E', 'pz_prev', 'ke_prev', 'g_amin', 'pz_branch', 'F_target', 't0_p1', 't0_dz'}
+                  'br_P_E', 'br_F_E', 'br_Fz_E', 'br_h_E', 'pz_prev', 'ke_prev', 'g_amin', 'pz_branch', 'F_target', 't0_p1',
+                  't0_dz'}
         bad_f = []
         for ln in cmds:
             w = words(ln)
@@ -944,6 +1191,73 @@ def selftest() -> int:
                 chk(f'{arm}: 서보 axis 0 0 −1 · target_val = ${{F_target}} (750)',
                     w[w.index('axis') + 1:w.index('axis') + 4] == ['0.0', '0.0', '-1.0']
                     and w[w.index('target_val') + 1] == '${F_target}')
+        # ⑭a run 사이 위험한 읽기 — 덱의 모든 경로 (jump · if 포함): ㉮ write_restart 뒤 ke · ㉯ run 0 뒤 메시 힘 · ㉰ 없는 fix
+        #     (10-07 WSL t0 1 회: 가드 정지 print 의 ${g_ke} 가 write_restart 뒤라 ERROR — README §12)
+        try:
+            hz = scan_between_runs(text)
+        except Exception as e:  # noqa: BLE001 — 검사기가 덱을 못 읽는 것도 실패다
+            hz = [('-', '-', 'scan', repr(e), '')]
+        chk(f'{arm}: run 사이 위험한 읽기 없음 (⑭a · write_restart 뒤 ke · run 0 뒤 메시 힘 · 없는 fix)', not hz,
+            [f'L{h[0]} {h[1]} {h[2]}: {h[4][:90]}' for h in hz[:4]])
+        # ⑭b 덩어리마다 읽는 값 (살아 있는 equal) 은 정의 바로 다음 줄에서 `variable X equal ${X}` 로 얼린다 (면제 = LAZY_OK)
+        uf = unfrozen_lazy(text)
+        chk(f'{arm}: 살아 있는 equal 정의 다음 줄 = 얼림 (⑭b · 면제 {len(LAZY_OK)} 개)', not uf, uf[:3])
+        # ⑭d `$` 는 늘 ${…} 꼴 (한 글자 $x 치환을 쓰지 않는다 — ⑭a 가 보는 꼴과 같게)
+        chk(f'{arm}: $ 뒤는 늘 {{', not re.search(r'\$(?!\{)', text), re.findall(r'.{0,20}\$(?!\{).{0,10}', text)[:2])
+
+    # ⑭0 검사기 자신 — 합성 덱으로 ㉮ ㉯ ㉰ 를 잡고 (반례) · 얼리면 놓아 준다 (양성)
+    syn = ('read_restart ${ckpt}\nthermo_style custom step atoms ke\n'
+           'fix top_mesh all mesh/surface/stress file x type 1\n')
+    cases = [
+        ('㉮ write_restart 뒤 살아 있는 ke (10-07 t0 의 꼴)',
+         syn + 'run 5000\nvariable g_ke equal ke\nwrite_restart a.bin\nprint "ke=${g_ke}"\n', {'stale'}),
+        ('㉮ 정의 다음 줄에서 얼리면 통과',
+         syn + 'run 5000\nvariable g_ke equal ke\nvariable g_ke equal ${g_ke}\nwrite_restart a.bin\nprint "ke=${g_ke}"\n', set()),
+        ('㉮ jump 로 간 가드 경로도 본다',
+         syn + 'run 5000\nvariable g_ke equal ke\nwrite_restart a.bin\njump SELF gs\nprint "x"\nlabel gs\nprint "${g_ke}"\n', {'stale'}),
+        ('㉮ if 의 jump 가지도 본다',
+         syn + 'run 5000\nvariable g_ke equal ke\nwrite_restart a.bin\nif "1 > 0" then "jump SELF gs"\nquit\n'
+               'label gs\nprint "${g_ke}"\n', {'stale'}),
+        ('㉮ if 의 quit 가지는 끝나고 거짓 경로는 이어진다 (run 직후라 통과)',
+         syn + 'run 5000\nvariable g_ke equal ke\nif "1 > 0" then "quit"\nprint "${g_ke}"\n', set()),
+        ('㉮ run 0 은 ke 를 현재로 만든다 (T0_G1 꼴 통과)', syn + 'run 0\nvariable k0 equal ke\nprint "${k0}"\n', set()),
+        ('㉮ read_restart 뒤 run 전 ke', syn + 'variable k0 equal ke\nprint "${k0}"\n', {'stale'}),
+        ('㉮ v_ 를 거쳐도 본다',
+         syn + 'run 5000\nvariable a equal ke\nvariable b equal v_a*2\nwrite_restart a.bin\nprint "${b}"\n', {'stale'}),
+        ('㉯ run 0 뒤 메시 힘 (10-07 T0_SERVO 의 꼴)', syn + 'run 5000\nrun 0\nvariable F equal f_top_mesh[3]\nprint "${F}"\n',
+         {'setup'}),
+        ('㉯ run 0 전에 얼린 힘은 통과',
+         syn + 'run 5000\nvariable F equal f_top_mesh[3]\nvariable F equal ${F}\nrun 0\nprint "${F}"\n', set()),
+        ('㉯ run N>0 뒤 힘은 통과', syn + 'run 0\nrun 500\nvariable F equal abs(f_top_mesh[3])\nprint "${F}"\n', set()),
+        ('㉯ 서보 질량중심 [12] 는 run 0 이 안 바꾼다', syn + 'run 5000\nrun 0\nvariable z equal f_top_mesh[12]\nprint "${z}"\n', set()),
+        ('㉯ 새 메시 fix 는 첫 step 전',
+         syn + 'run 5000\nfix s2 all mesh/surface/stress/servo file y type 1\nvariable F equal f_s2[3]\nprint "${F}"\n', {'setup'}),
+        ('㉰ unfix 뒤 읽기', syn + 'run 5000\nvariable F equal f_top_mesh[3]\nunfix top_mesh\nprint "${F}"\n', {'nofix'}),
+        ('㉰ thermo_style 의 v_ 가 지운 fix 를 가리킨 채 run',
+         syn + 'variable p equal f_top_mesh[3]\nthermo_style custom step v_p\nunfix top_mesh\nrun 10\n', {'nofix'}),
+        ('run 사이 금지 키워드 (cpu)', syn + 'run 10\nvariable c equal cpu\nprint "${c}"\n', {'between'}),
+        ('그룹 함수 count 는 run 사이에도 맞다', syn + 'write_restart a.bin\nvariable n equal count(all)\nprint "${n}"\n', set()),
+    ]
+    for name, deck, want in cases:
+        got = {h[2] for h in scan_between_runs(deck)}
+        chk(f'⑭0 검사기: {name}', got == want, f'잡음 {sorted(got)} · 기대 {sorted(want)}')
+    chk('⑭0 검사기: ⑭b 가 얼리지 않은 정의를 잡는다',
+        unfrozen_lazy('run 5\nvariable g_ke equal ke\nprint "${g_ke}"\n') == ['variable g_ke equal ke'])
+    chk('⑭0 검사기: ⑭b 가 얼린 정의 · 면제 · 즉시 치환 상수는 놓아 준다',
+        unfrozen_lazy('variable g_ke equal ke\nvariable g_ke equal ${g_ke}\n'
+                      'variable pressMPa equal abs(f_top_mesh[3])/0.0025/1000000\nvariable c equal 2*${g_ke}\n') == [])
+    # ⑭c 10-07 WSL t0 1 회 덱 (그때 kit · sha256 c0130fd0…) 을 검사기가 다시 잡는다 — ERROR 가 난 자리와 T0_SERVO 의 판 힘
+    run1 = os.path.join(HERE, RUN1_DECK)
+    if os.path.exists(run1):
+        t1 = open(run1, encoding='utf-8').read()
+        chk('⑭c t0 1 회 덱 사본 = 그때 sha256', sha256_file(run1) == RUN1_SHA, sha256_file(run1))
+        keys = {(h[1], h[2]) for h in scan_between_runs(t1)}
+        chk('⑭c 1 회 ERROR 자리를 잡는다 — 가드 정지 print 의 ${g_ke} (write_restart 뒤 ke · thermo.cpp 978)',
+            ('g_ke', 'stale') in keys, sorted(keys))
+        chk('⑭c T0_SERVO 의 판 힘도 잡는다 — run 0 뒤 f_plate_servo[3] (직렬 2 배)', ('t0_Fs', 'setup') in keys, sorted(keys))
+        chk('⑭c 그 덱은 ⑭b 도 어긴다', bool(unfrozen_lazy(t1)))
+    else:
+        chk('⑭c t0 1 회 덱 사본이 있다', False, RUN1_DECK)
 
     # ⑩ r8 부분열 — 등록된 바꿈 말고는 r8 명령 줄이 arm 덱에 같은 순서로 다 있다
     try:
@@ -993,6 +1307,37 @@ def selftest() -> int:
     chk('B 서보 vel_max = press_speed 0.01 (1저자 10-07)', 'variable servo_vmax index 0.01' in decks['B']
         and 'variable press_speed equal 0.01' in decks['B'])
     chk('B 서보 유지 감쇠 = 1e-5 (이완과 같다)', 'fix damp all viscous 1.0e-5' in dict(blocks_for('B'))['servo_switch'])
+    # ⑮ ibb 래퍼 · 러너 짝 (1저자 10-08 "10 코어로" · CLAUDE.md 재개 체크리스트 ④: #SBATCH -n N ↔ mpirun --oversubscribe --bind-to none -np N)
+    sb_path, rb_path = os.path.join(HERE, SBATCH), os.path.join(HERE, 'run_branch.sh')
+    sb = open(sb_path, encoding='utf-8').read() if os.path.exists(sb_path) else ''
+    rb = open(rb_path, encoding='utf-8').read() if os.path.exists(rb_path) else ''
+    sbl = sb.splitlines()
+    chk('⑮ ibb 래퍼가 있다', bool(sb), SBATCH)
+    for want in ('#SBATCH --job-name=ps73B', '#SBATCH --output=logs/%x_%j.out', '#SBATCH --qos=cpu-60', '#SBATCH --partition=cpu',
+                 f'#SBATCH -n {SBATCH_NP}', '#SBATCH --time=3-00:00:00', 'source ~/.bashrc', 'conda activate myenv',
+                 f'NP={SBATCH_NP}', 'LMP=${LMP:-/lustre/home/yonghoon/LIGGGHTS-PUBLIC/src/lmp_mpi}',
+                 'WORK_ROOT=${WORK_ROOT:-$HOME/ps73_branch_20261007_ibb}'):
+        chk(f'⑮ 래퍼 줄: {want}', want in sbl)
+    chk('⑮ #SBATCH -n 은 하나 · NP 와 같다', [ln for ln in sbl if ln.startswith('#SBATCH -n ')] == [f'#SBATCH -n {SBATCH_NP}'])
+    chk('⑮ 래퍼가 SLURM_NTASKS = NP 를 대조하고 run_branch.sh 에 NP · LMP · WORK_ROOT 를 넘긴다',
+        '"${SLURM_NTASKS:-}" != "$NP"' in sb and sb.count('WORK_ROOT="$WORK_ROOT" NP="$NP" LMP="$LMP" ALLOW_CONCURRENT=1') == 2)
+    chk('⑮ 래퍼: SLURM 밖이면 사전 점검만 (--preflight-only)', 'run_branch.sh" --preflight-only' in sb)
+    chk('⑮ 래퍼: 주소 · 포트 · 접속 명령 없음', not re.search(r'\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b|-P\s*\d{2,5}\b|\bssh\b|\bscp\b', sb))
+    chk('⑮ 러너 mpirun 줄 = "$MPIRUN" $MPIRUN_FLAGS -np "$NP" · 기본 플래그 --oversubscribe --bind-to none',
+        '"$MPIRUN" $MPIRUN_FLAGS -np "$NP" "$LMP"' in rb and 'MPIRUN_FLAGS=${MPIRUN_FLAGS:---oversubscribe --bind-to none}' in rb)
+    m = re.search(r'for f in (in\.branch_t0_syntax\.liggghts.*?); do', rb, re.S)
+    kit_list = set(m.group(1).replace('\\\n', ' ').split()) if m else set()
+    chk('⑮ 러너의 kit 사본 목록 = SHA256SUMS 대상 + SHA256SUMS (빠지면 kit 의 sha256sum -c 가 런 직전에 멈춘다)',
+        kit_list == set(SUMMED) | {SUMS}, sorted(kit_list ^ (set(SUMMED) | {SUMS})))
+    chk("⑮ 러너 t0 점검이 MPI 프로세스 수 (Loop time … on N procs 의 N = NP) 를 본다", "awk -v np=\"$NP\" '$6 != np'" in rb)
+    chk('⑮ 러너: --preflight-only 는 사전 점검 뒤 런 없이 끝난다', 'if [ "$PREFLIGHT_ONLY" = 1 ]; then' in rb
+        and re.search(r'^preflight\nif \[ "\$PREFLIGHT_ONLY" = 1 \]; then\n.*\n  exit 0\nfi', rb, re.M) is not None)
+    for p in (sb_path, rb_path):
+        try:
+            rc = subprocess.run(['bash', '-n', p], capture_output=True, text=True)
+            chk(f'⑮ bash -n {os.path.basename(p)}', rc.returncode == 0, rc.stderr[:200])
+        except FileNotFoundError:
+            chk(f'⑮ bash -n {os.path.basename(p)} (bash 없음 — 건너뜀)', True)
     print(f'selftest: {"PASS" if not fails else "FAIL"} ({len(fails)} 실패)')
     return 1 if fails else 0
 

@@ -11,7 +11,7 @@
 -variable br_arm string A
 +variable br_arm string B
  variable gamma_comp string 0.5
-@@ -197,16 +197,88 @@
+@@ -202,16 +202,94 @@
  
 -# >>> block relax — r8 PHASE 4 그대로 (판 고정 · viscous 1e-5) · 경로 · 접촉 간격만 표지
 -print "====== PHASE 4: RELAXATION ======"
@@ -81,11 +81,17 @@
 +    run ${hold_chunk}
 +    variable hold_n equal ${hold_n}+1
 +    variable g_step equal step
++    variable g_step equal ${g_step}
 +    variable g_atoms equal atoms
++    variable g_atoms equal ${g_atoms}
 +    variable g_ke equal ke
++    variable g_ke equal ${g_ke}
 +    variable g_F equal f_plate_servo[3]
++    variable g_F equal ${g_F}
 +    variable g_pz equal f_plate_servo[12]
++    variable g_pz equal ${g_pz}
 +    variable current_press equal "abs(f_plate_servo[3]) / 0.0025 / 1000000"
++    variable current_press equal ${current_press}
 +    region rg_above delete
 +    region rg_above block INF INF INF INF ${g_pz} INF units box
 +    variable g_leakd equal ${g_leak}-${br_leak0}
@@ -112,21 +118,26 @@
 +
 +# >>> block end_snap_plate_servo — 끝 상태 (원자 · 접촉 · 판) · run 0 · restart
  variable g_step equal step
-@@ -214,5 +286,5 @@
- variable g_ke equal ke
+@@ -222,9 +300,9 @@
+ variable g_ke equal ${g_ke}
+-variable g_Fz equal f_top_mesh[3]
++variable g_Fz equal f_plate_servo[3]
+ variable g_Fz equal ${g_Fz}
 -variable g_F equal abs(f_top_mesh[3])
--variable current_press equal "abs(f_top_mesh[3]) / 0.0025 / 1000000"
--variable g_pz equal ${br_pz_S}
 +variable g_F equal abs(f_plate_servo[3])
+ variable g_F equal ${g_F}
+-variable current_press equal "abs(f_top_mesh[3]) / 0.0025 / 1000000"
 +variable current_press equal "abs(f_plate_servo[3]) / 0.0025 / 1000000"
+ variable current_press equal ${current_press}
+-variable g_pz equal ${br_pz_S}
 +variable g_pz equal f_plate_servo[12]
- region rg_above delete
-@@ -235,3 +307,3 @@
+ variable g_pz equal ${g_pz}
+@@ -249,3 +327,3 @@
  dump_modify dmp_contact_end first yes
 -dump dmp_mesh_end all mesh/stl 5000 ${out}/end/mesh_*.stl top_mesh
 +dump dmp_mesh_end all mesh/stl 5000 ${out}/end/mesh_*.stl plate_servo
  dump_modify dmp_mesh_end first yes
-@@ -242,5 +314,5 @@
+@@ -256,5 +334,5 @@
  write_restart ${out}/restart/restart_end_${br_E}.bin
 -# <<< block end_snap_top_mesh
 -
@@ -135,7 +146,7 @@
 +
 +# >>> block summary_servo — 요약 (key=value · run_branch.sh · analyze_branch.py 가 읽는다)
  print "arm=${br_arm}" file ${summary_file} screen no
-@@ -255,3 +327,7 @@
+@@ -269,3 +347,7 @@
  print "stop_force_N=${br_F_S}" append ${summary_file} screen no
 -print "relax_steps=100000" append ${summary_file} screen no
 +print "hold_status=${hold_status}" append ${summary_file} screen no
@@ -144,7 +155,7 @@
 +print "servo_kp=${servo_kp}" append ${summary_file} screen no
 +print "servo_vmax=${servo_vmax}" append ${summary_file} screen no
  print "end_step=${br_E}" append ${summary_file} screen no
-@@ -266,3 +342,3 @@
+@@ -280,3 +362,3 @@
  print "BRANCH_DONE arm=${br_arm} stop_step=${br_S} stop_thickness_um=${br_h_S} end_step=${br_E} end_thickness_um=${br_h_E} end_press_deckMPa=${br_P_E}"
 -# <<< block summary_relax
 +# <<< block summary_servo
@@ -186,7 +197,7 @@
 -variable comp_max equal 40
 +variable comp_max equal 400
  variable g_reason string none
-@@ -201,3 +201,3 @@
+@@ -206,3 +206,3 @@
  fix damp all viscous 1.0e-5
 -dump dmp_contact all local 10000 ${out}/post/contact_*.liggghts &
 +dump dmp_contact all local 50000 ${out}/post/contact_*.liggghts &
@@ -228,7 +239,7 @@
 -variable comp_max equal 40
 +variable comp_max equal 400
  variable g_reason string none
-@@ -201,3 +201,3 @@
+@@ -206,3 +206,3 @@
  fix damp all viscous 1.0e-5
 -dump dmp_contact all local 10000 ${out}/post/contact_*.liggghts &
 +dump dmp_contact all local 50000 ${out}/post/contact_*.liggghts &

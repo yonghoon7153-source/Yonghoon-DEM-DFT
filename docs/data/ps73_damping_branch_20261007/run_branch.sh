@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
-# ps73 감쇠 가지 실험 (DEMP-01) — WSL 러너.  정본 설명 = 같은 폴더 README.md (§6 명령 · §7 가드 · §10 확인 안 된 점).
+# ps73 감쇠 가지 실험 (DEMP-01) — 러너 (WSL · ibb).  정본 설명 = 같은 폴더 README.md (§6 명령 · §6-ibb · §7 가드 · §10 · §12 실행 기록).
+#   ibb 는 run_branch_ibb.sbatch 가 이 파일을 NP 10 · lmp_mpi 로 부른다 (1저자 10-08).
 #
 #   bash run_branch.sh                       # 기본 = 0 단계 문법 시험 (t0) + arm B (서보 · 주 측정)
+#   bash run_branch.sh --preflight-only      # 사전 점검만 (런 · kit 사본 없음) — ibb 제출 전 로그인 노드에서
 #   bash run_branch.sh --t0-only             # t0 만 (수 분)
 #   bash run_branch.sh --arm A               # t0 + A (원 프로토콜 재현 · 선택)
 #   bash run_branch.sh --arm C1 --arm C2     # t0 + C1 → C2 (선택 · WORK_ROOT 에 A 와 B 가 끝까지 돈 기록이 있어야 한다)
@@ -15,7 +17,8 @@
 #   ALLOW_CONCURRENT=1 (다른 LIGGGHTS 가 돌아도 진행) · FORCE_DISK=1 (빈 칸 20 GB 미만이어도) · FORCE_C=1 (A · B 완주 기록 없이 C)
 #
 # 지키는 것: 체크포인트 크기 · sha256 · 덱 묶음 SHA256SUMS 를 먼저 본다 · 리포 체크아웃이 런 도중 바뀌어도 되게 kit 사본으로 다시 실행한다 ·
-#   mpirun --oversubscribe --bind-to none -np N 짝 · 런마다 새 폴더 · 덱은 그 폴더 사본을 읽는다 (jump SELF 가 덱을 다시 읽기 때문).
+#   mpirun --oversubscribe --bind-to none -np N 짝 · 런마다 새 폴더 · 덱은 그 폴더 사본을 읽는다 (jump SELF 가 덱을 다시 읽기 때문) ·
+#   t0 는 'Loop time … on N procs' 의 N 이 모두 NP 인지 본다 (MPI 빌드 · mpirun 짝이 틀려 한 코어짜리가 NP 개 따로 도는 경우 — SELF-97).
 set -uo pipefail
 
 EXPECT_SHA=82234bea543ae369043f54d4379c6451cdab5a404213c0ecf0a698638bf4b3ee
@@ -32,13 +35,16 @@ die() { echo "⛔ $*" >&2; exit 1; }
 say() { echo "[$(date +%H:%M:%S)] $*"; }
 
 # ── 0. kit 사본으로 다시 실행 (리포 체크아웃이 런 도중 바뀌어도 이 사본으로 돈다) ─────────────────────
-if [ "${BRANCH_KIT:-0}" != 1 ]; then
+PREFLIGHT_ONLY=0; NO_KIT=0   # 사전 점검만 · 도움말은 kit 사본을 만들지 않는다
+for a in "$@"; do case "$a" in --preflight-only) PREFLIGHT_ONLY=1; NO_KIT=1;; -h|--help) NO_KIT=1;; esac; done
+if [ "${BRANCH_KIT:-0}" != 1 ] && [ "$NO_KIT" = 0 ]; then
   [ -d "$WORK_ROOT" ] || die "WORK_ROOT 가 없다: $WORK_ROOT"
   case "$WORK_ROOT" in *' '*) die "WORK_ROOT 에 공백이 있다 — LIGGGHTS 변수로 넘길 수 없다";; esac
   KIT="$WORK_ROOT/kit_$STAMP"
   mkdir "$KIT" || die "kit 폴더를 만들 수 없다 (이미 있다?): $KIT"
   for f in in.branch_t0_syntax.liggghts in.branch_A.liggghts in.branch_B.liggghts in.branch_C1.liggghts \
-           in.branch_C2.liggghts plate_branch3100000.stl run_branch.sh make_branch_decks.py analyze_branch.py SHA256SUMS; do
+           in.branch_C2.liggghts plate_branch3100000.stl run_branch.sh make_branch_decks.py analyze_branch.py \
+           run_branch_ibb.sbatch SHA256SUMS; do
     cp -p "$SELF_DIR/$f" "$KIT/" || die "kit 복사 실패: $f"
   done
   REF_TGZ="$SELF_DIR/../ps73_compaction_curve_20261006/raw/ps73_curve_1.tgz"
@@ -51,7 +57,7 @@ if [ "${BRANCH_KIT:-0}" != 1 ]; then
   say "kit = $KIT"
   BRANCH_KIT=1 BRANCH_STAMP="$STAMP" KIT="$KIT" exec bash "$KIT/run_branch.sh" "$@"
 fi
-KIT=${KIT:-$SELF_DIR}
+if [ "$NO_KIT" = 1 ]; then KIT=$SELF_DIR; else KIT=${KIT:-$SELF_DIR}; fi
 
 # ── 인자 ─────────────────────────────────────────────────────────────────────
 ARMS=(); DO_T0=1; T0_ONLY=0
@@ -61,7 +67,8 @@ while [ $# -gt 0 ]; do
            case "$1" in A|B|C1|C2) ARMS+=("$1");; *) die "모르는 arm: $1";; esac;;
     --t0-only) T0_ONLY=1;;
     --skip-t0) DO_T0=0;;
-    -h|--help) sed -n '2,22p' "$KIT/run_branch.sh"; exit 0;;
+    --preflight-only) ;;
+    -h|--help) sed -n '2,/^set -uo pipefail/{/^#/p}' "$KIT/run_branch.sh"; exit 0;;
     *) die "모르는 인자: $1 (--help)";;
   esac
   shift
@@ -92,6 +99,7 @@ resolve_lmp() {
 
 preflight() {
   say "사전 점검"
+  [ -d "$WORK_ROOT" ] || die "WORK_ROOT 가 없다: $WORK_ROOT"
   ( cd "$KIT" && sha256sum -c --quiet SHA256SUMS ) || die "kit 파일이 SHA256SUMS 와 다르다 — 덱을 손으로 고쳤나? (make_branch_decks.py 로 다시 만든다)"
   echo "  ✓ 덱 묶음 SHA256SUMS"
   [ -f "$CKPT" ] || die "체크포인트가 없다: $CKPT"
@@ -137,6 +145,7 @@ run_stage() {   # $1 = 이름 (t0 · A · B · C1 · C2)   $2 = 덱 파일   그
     echo "lmp_sha256=$(sha256sum "$LMP" | cut -d' ' -f1)"
     echo "np=$NP"
     echo "mpirun=$MPIRUN $MPIRUN_FLAGS"
+    echo "slurm_job=${SLURM_JOB_ID:-none} slurm_ntasks=${SLURM_NTASKS:-none} slurm_nodes=${SLURM_JOB_NODELIST:-none}"
     echo "kit=$KIT"
     sed 's/^/repo_/' "$KIT/repo_commit.txt" 2>/dev/null
     echo "extra_vars=${*:-none}"
@@ -198,6 +207,13 @@ check_t0() {
     if grep -q "$m" "$r/screen.out"; then echo "  ✓ $m"; else echo "  ✗ '$m' 없음"; bad=1; fi
   done
   if grep -n -E "ERROR|Segmentation|Abort" "$r/screen.out" | head -5; then bad=1; fi
+  # MPI 프로세스 수 — run 마다 'Loop time of X on N procs' · N 이 모두 NP 여야 한다 (한 코어짜리 빌드를 mpirun -np >1 로 띄우면
+  #   N = 1 인 줄이 NP 배로 나온다 · SELF-97 의 다음 실험 러너 항목)
+  local nloop nwrong
+  nloop=$(grep -cE 'Loop time of [0-9.eE+-]+ on [0-9]+ procs' "$r/screen.out")
+  nwrong=$(grep -oE 'Loop time of [0-9.eE+-]+ on [0-9]+ procs' "$r/screen.out" | awk -v np="$NP" '$6 != np' | wc -l)
+  if [ "$nloop" -gt 0 ] && [ "$nwrong" = 0 ]; then echo "  ✓ MPI 프로세스 수 = NP $NP (Loop time 줄 $nloop 개 모두)"
+  else echo "  ✗ MPI 프로세스 수: Loop time 줄 $nloop 개 중 NP $NP 가 아닌 것 $nwrong 개 — lmp 빌드 · mpirun 짝을 볼 것"; bad=1; fi
   # G3 — setup 뒤 첫 정규 줄 3101000: 원자 수 같음 · 압력 5 % (원 로그 r8 0.29635467) · resume 절차 §3
   local g3; g3=$(awk '$1=="3101000" && NF==5 && $4+0>0 {print $2, $5; exit}' "$r/screen.out")
   if [ -n "$g3" ] && awk -v a="${g3% *}" -v p="${g3#* }" 'BEGIN{d=p/0.29635467-1; if(d<0)d=-d; exit !(a==160420 && d<=0.05)}'; then
@@ -273,6 +289,10 @@ check_arm() {
 
 # ── 4. 차례대로 ──────────────────────────────────────────────────────────────
 preflight
+if [ "$PREFLIGHT_ONLY" = 1 ]; then
+  say "✓ 사전 점검만 — 통과 (런 없음 · kit 사본 없음 · NP $NP · WORK_ROOT $WORK_ROOT)"
+  exit 0
+fi
 say "작업 = t0:$([ "$DO_T0" = 1 ] && echo 예 || echo 아니오) · arm: ${ARMS[*]:-없음} · NP $NP · WORK_ROOT $WORK_ROOT"
 
 if [ "$DO_T0" = 1 ]; then

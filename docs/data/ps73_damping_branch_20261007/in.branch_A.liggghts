@@ -139,8 +139,8 @@ variable ke_abs_comp_win equal 0.1
 variable comp_n equal 0
 variable comp_max equal 40
 variable g_reason string none
-variable g_step equal step
-variable g_atoms equal atoms
+variable g_step equal ${br_step0}
+variable g_atoms equal ${br_n0v}
 variable g_pz equal ${pz_branch}
 variable g_F equal 0.0
 variable g_ke equal ${ke_ref}
@@ -151,15 +151,22 @@ print "step,phase,plate_z_deck,press_deckMPa,force_N,ke_J,atoms,leak_delta" file
 # <<< block guard_init
 
 # >>> block comp_loop — r8 압축 고리 그대로 (run 5000 · 압력 판정 0.30) + 덩어리마다 가드 · 기록 (run 사이 · 역학 불변)
+#   run 뒤에 읽는 값은 정의 바로 다음 줄에서 같은 이름의 즉시 치환으로 얼린다 (같은 step 의 값을 숫자로 박는다) — 뒤의 write_restart 는
+#   ke 를 '현재 아님' 으로 (ERROR) · run 0 은 판 힘을 '직전 합 + rank 몫' 으로 바꾼다 (README §8 · §12 · make_branch_decks.py ⑭)
 label loop_press
     run 5000
     variable current_press equal "abs(f_top_mesh[3]) / 0.0025 / 1000000"
+    variable current_press equal ${current_press}
     print "Current Pressure: ${current_press} MPa (Target: ${target_press})"
     variable comp_n equal ${comp_n}+1
     variable g_step equal step
+    variable g_step equal ${g_step}
     variable g_atoms equal atoms
+    variable g_atoms equal ${g_atoms}
     variable g_ke equal ke
+    variable g_ke equal ${g_ke}
     variable g_F equal abs(f_top_mesh[3])
+    variable g_F equal ${g_F}
     variable g_pz equal ${pz_branch}-${press_speed}*${dt}*(${g_step}-${br_step0})
     region rg_above delete
     region rg_above block INF INF INF INF ${g_pz} INF units box
@@ -216,12 +223,21 @@ run 100000
 # <<< block relax
 
 # >>> block end_snap_top_mesh — 끝 상태 (원자 · 접촉 · 판) · run 0 · restart
+#   값은 run 0 전에 읽어 얼린다 — run 0 뒤 f_top_mesh[3] 는 직전 step 합 + 이 rank 의 setup 몫 (직렬 2 배) · write_restart 뒤 ke 는 ERROR (README §12)
 variable g_step equal step
+variable g_step equal ${g_step}
 variable g_atoms equal atoms
+variable g_atoms equal ${g_atoms}
 variable g_ke equal ke
+variable g_ke equal ${g_ke}
+variable g_Fz equal f_top_mesh[3]
+variable g_Fz equal ${g_Fz}
 variable g_F equal abs(f_top_mesh[3])
+variable g_F equal ${g_F}
 variable current_press equal "abs(f_top_mesh[3]) / 0.0025 / 1000000"
+variable current_press equal ${current_press}
 variable g_pz equal ${br_pz_S}
+variable g_pz equal ${g_pz}
 region rg_above delete
 region rg_above block INF INF INF INF ${g_pz} INF units box
 variable g_leakd equal ${g_leak}-${br_leak0}
@@ -230,6 +246,7 @@ variable br_pz_E equal ${g_pz}
 variable br_h_E equal ${br_pz_E}*1000
 variable br_P_E equal ${current_press}
 variable br_F_E equal ${g_F}
+variable br_Fz_E equal ${g_Fz}
 print "BRANCH_END_STATE arm=${br_arm} dir=end step=${br_E} plate_z_deck=${br_pz_E} thickness_um=${br_h_E} press_deckMPa=${br_P_E} force_N=${br_F_E} atoms=${g_atoms} leak_delta=${g_leakd}"
 print "${br_E},end,${br_pz_E},${br_P_E},${br_F_E},${g_ke},${g_atoms},${g_leakd}" append ${out}/branch_trace.csv screen no
 dump dmp_atom_end all custom 5000 ${out}/end/atom_*.liggghts id type x y z radius vx vy vz c_strs[1] c_strs[2] c_strs[3] c_ke

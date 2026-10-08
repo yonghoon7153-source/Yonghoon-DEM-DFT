@@ -1,4 +1,4 @@
-# ps73 감쇠 가지 실험 — DEMP-01 (준비 10-07 · **미실행** · 예측은 런 전에 적었다)
+# ps73 감쇠 가지 실험 — DEMP-01 (준비 10-07 · WSL t0 1 회 FAIL = 우리 덱 결함 (§12) · 10-08 고침 · B = ibb 10 코어 제출 대기 · **B 미실행** · 예측은 런 전에 적었다)
 
 - **무엇**: ps45 7:3 침대 (`dem_scripts/ps_sweep_6mah_20260914/in.ps_7_3_r45.liggghts` · 압밀 곡선 `docs/data/ps73_compaction_curve_20261006/README.md`) 를
   압축 중 마지막 체크포인트 (step 3,100,000) 에서 갈라, 압축 단계 전역 감쇠 (`fix damp all viscous 0.5`) 가 "300 MPa 도달" 의 정적 의미를 얼마나 바꾸는지 잰다.
@@ -8,8 +8,9 @@
 - **답하는 갈래 = (B) 서보 유지** (1저자 10-07: B 를 먼저 · A · C 는 플래그 뒤).  (B) 는 압축을 원 프로토콜 그대로 해서 멈춘 step 의 상태를 찍고
   (= A 의 판 고정 상태와 **같은 두께 · 공극률**), 그 다음 판 힘을 750 N 에 붙든 채 감쇠를 이완 값 (1e-5) 으로 내려 망이 300 MPa 를 혼자 질 때까지 둔다
   ⇒ **(B) 하나로 두 숫자가 나온다**: 원 프로토콜 공극률 (멈춘 step) 과 정적 300 MPa 공극률 (서보 유지 끝).
-- 실행: 1저자 WSL (LIGGGHTS 3.8.0 · 체크포인트는 이미 `~/ps73_branch_20261007/in/` 에 복사 · sha256 확인됨).  이 컨테이너에는 LIGGGHTS 가 없어 **돌려 보지 못했다** —
-  문법은 LIGGGHTS-PUBLIC 3d5c00f 소스로 확인했고 (§8), WSL 0 단계 시험 (t0) 이 덱의 모든 블록을 한 번씩 지나간다.
+- 실행: **1저자 10-08 결정 = ibb 10 코어 (lmp_mpi · §6-ibb)**.  WSL 은 t0 1 회 (10-07 · lmp_serial 1 코어) 까지 — FAIL, 원인 = 우리 덱 (§12).
+  이 컨테이너에는 LIGGGHTS 가 없어 **돌려 보지 못했다** — 문법은 LIGGGHTS-PUBLIC 3d5c00f 소스로 확인했고 (§8), WSL t0 1 회가 가드 정지 경로의 첫 print 전까지
+  덱을 실제로 다 지나갔다 (§12).  고친 덱은 **새 SHA256SUMS 로 t0 를 다시** 통과해야 B 가 돈다 (run_branch.sh 기본 = t0 → B).
 
 ## 1. 출발점 (숫자마다 근거)
 
@@ -51,6 +52,7 @@
 | 멈춘 뒤 | 판 고정 · 1e-5 · run 100000 · 접촉 10,000 | 같음 | **판 → 서보 (fix wall/gran 다시 만듦)** · 1e-5 · 서보 유지 고리 · 원자 50,000 · restart 100,000 | 같음 (접촉 50,000) |
 | 끝 스냅숏 | 없음 (원 런 마지막 짝 = 3,220,000) | 원자 · 접촉 · 판 (`end/` · run 0) + restart + 요약 | 같음 | 같음 |
 | 가드 정지 | 없음 | 원자 · 새어 나감 · KE · 덩어리 예산 → restart + 요약 · 멈춤 | 같음 + 서보 과도 | 같음 + 감쇠 전환 KE 창 (첫 8 덩어리 · §7) |
+| run 뒤 읽는 값 (10-08) | — | 정의 바로 다음 줄에서 얼린다 (같은 step 의 값 · write_restart · run 0 뒤에도 그대로 · §12) | 같음 | 같음 |
 
 - 역학이 바뀌는 줄은 **B 의 판 · 감쇠 전환**과 **C 의 압축 감쇠 값** 뿐이다.  나머지 표지 줄은 run 사이에서 읽고 적기만 한다.
 - `run 0` (스냅숏) 은 setup 만 한다 — 같은 위치에서 이웃 목록 · 힘을 다시 계산할 뿐 적분하지 않는다 (덩어리 경계의 run 마다 원래도 setup 이 있다).
@@ -95,7 +97,9 @@
 - 대조: B 멈춘 step ↔ 원 런 (두께 111.052 · 판 압력 300.95) · B 끝 ↔ B 멈춘 step (Δh · Δε · 단면 하중 고르기) · A 끝 ↔ 원 런 이완 (165.3 MPa) · C ↔ A · B (순서).
 - ⚠ 공극률 관례: ε_sphere (구 부피 합) 만 쓴다 — union 과 섞지 않는다 (DEMP-01 질문은 같은 관례 안의 차이다).
 
-**시간 어림** — ibb 실측 (원 로그 Loop time): 24 코어 24.6 step/s (r8) · 9 코어 14.9 (r7) · 4 코어 5.9 (r6).  **WSL 속도는 모른다** — t0 가 5,000 step 덩어리로 재고 run_branch.sh 가 아래를 다시 계산해 보여 준다.
+**시간 어림** — ibb 실측 (원 로그 Loop time): 24 코어 24.6 step/s (r8) · 9 코어 14.9 (r7) · 4 코어 5.9 (r6) →
+**ibb 10 코어 ≈ 16 step/s (어림 · r7 · r8 사이 로그 보간 15.7)** → t0 ≈ 10 분 · B ≈ 13 h (예산 끝 ≈ 27 h).
+**WSL 직렬 실측 (10-07 t0 1 회 · lmp_serial 1 코어) ≈ 8.7 step/s** (run_branch.sh 속도 줄 — B 0.75 M ≈ 23.9 h).  어느 기계든 t0 가 5,000 step 덩어리로 재고 run_branch.sh 가 아래를 다시 계산해 보여 준다.
 
 | arm | step | 15 step/s | 20 step/s | 25 step/s | 디스크 |
 |---|---|---|---|---|---|
@@ -104,7 +108,10 @@
 | A | 125,000 | 2.3 h | 1.7 h | 1.4 h | ≈ 4.5 GB (원 런 출력 간격) |
 | C1 · C2 | ≈ 0.56 M · 0.69 M | 10 · 13 h | 8 · 10 h | 6 · 8 h | 각 ≈ 2 GB |
 
-## 6. WSL 실행 (1저자)
+- ⚠ thermo 줄에서 같은 step 이 두 번 나오면 (run 경계 · 스냅숏의 run 0) **앞 줄 (정규 줄)** 만 쓴다 — setup 줄의 판 압력은 직전 step 합 + rank 0 의 setup 몫이다
+  (직렬 2 배 · 10 rank 면 어림 1.1 배 · §8 · §12).  덱의 기록 값 (요약 · branch_trace.csv) 은 run 0 전에 얼린 값이라 이 영향이 없다.
+
+## 6. WSL 실행 (1저자 · 10-07 t0 1 회까지 — 10-08 부터 B 는 §6-ibb)
 
 ```bash
 # 0) 체크포인트 복사는 끝났다 (10-07 · sha256 82234bea… 양쪽 확인).  다시 할 때의 꼴만 남긴다 (주소 · 포트는 적지 않는다):
@@ -136,6 +143,8 @@ chmod +x ~/bin/nompi
 MPIRUN=~/bin/nompi NP=1 LMP=~/src/LIGGGHTS-PUBLIC/src/lmp_serial nohup bash docs/data/ps73_damping_branch_20261007/run_branch.sh > ~/ps73_branch_20261007/run_tB_$(date +%m%d_%H%M).log 2>&1 &
 #     정지는 PID 로만 (pkill -f 금지 · mixer run_all.sh 규약) · 1 코어라 t0 (6,200 step) ≈ 1 h · B (≈ 0.77 M step) ≈ 4–6 일 (ibb 코어당 1.0–1.7 step/s 로 어림 —
 #     실측 = screen.out thermo 1,000 step 간격 · run_branch.sh 의 "속도:" 줄은 t0 가 끝난 뒤에 찍힌다)
+#     ⚠ 정정 10-08: 실측 = t0 12 분 50 초 · 직렬 ≈ 8.7 step/s (속도 줄) → B ≈ 24 h — 위 "t0 ≈ 1 h · B 4–6 일" 어림은 틀렸다 (ibb 코어당 속도로 어림했는데
+#     WSL 한 코어가 더 빨랐다 · §12).  이 기계의 t0 1 회는 덱 결함으로 FAIL 했고 (§12) · B 는 1저자 10-08 결정으로 ibb (§6-ibb).
 # 진행 보기 (B_<시각>/ 폴더만 — 끝에 / 를 붙여 .tgz 를 빼고, 마지막 / 는 지운다)
 R=$(ls -d ~/ps73_branch_20261007/B_*/ | tail -1); R=${R%/}; tail -3 $R/branch_trace.csv; grep -E "BRANCH_|Hold [0-9]+:" $R/screen.out | tail -4
 
@@ -156,6 +165,54 @@ tar -czf $R.plane.tgz -C $(dirname $R) $(basename $R)/plane_stop $(basename $R)/
 
 **보낼 것**: run_branch.sh 가 런마다 만드는 `<arm>_<시각>.report.tgz` (요약 · 궤적 · manifest · 화면 · 로그 · 판 메시 · analysis_branch.json — 덤프 · restart 는 WSL 에 둔다) 와
 sha256 · (B) 는 `B_<시각>.plane.tgz` 도.  t0 가 FAIL 이면 t0 의 report.tgz 만 보내고 멈춘다 (arm 을 돌리지 않는다 · 덱을 손으로 고치지 않는다).
+
+## 6-ibb. ibb 실행 (1저자 10-08 — *"10 코어로"* · WSL 대신 · Q1 (가) *"아 이게 낫겠다"* = 제출하고 기다린다)
+
+- 러너 = `run_branch_ibb.sbatch` (이 폴더 · 덱 묶음 SHA256SUMS 안) → run_branch.sh 기본 (**t0 → PASS 면 B**) 을 **NP 10 · lmp_mpi**
+  (`/lustre/home/yonghoon/LIGGGHTS-PUBLIC/src/lmp_mpi`) · conda myenv (ibb 원 런 러너 · 믹서 러너와 같은 꼴) 로 부른다.
+  `#SBATCH -n 10` ↔ run_branch.sh 의 `mpirun --oversubscribe --bind-to none -np 10` 짝 — 래퍼가 SLURM_NTASKS = 10 을 대조하고, t0 가 'Loop time … on 10 procs' 를 본다.
+- 작업 폴더 = `~/ps73_branch_20261007_ibb` (새 폴더 · WSL 런과 섞지 않는다) · 체크포인트 = 원본을 **cp 로 사본** (옮기거나 고치지 않는다 · `cp -n` = 있으면 덮지 않는다).
+- ⚠ **QOS cpu-60 이 지금 LHS 보충 런으로 60/60** 이다 — 제출하면 **PD 로 기다리다 10 코어가 비면 저절로 시작**한다 (정상 · squeue 이유 칸 QOSMaxCpuPerUserLimit 류).
+  **아무 job 도 끄지 않는다** (1저자 10-08 Q1 (가)).  우리 job 을 꺼야 할 때만 그 번호 하나만 끈다 (⑥).
+- 시간 어림 (§5): 시작 뒤 t0 ≈ 10 분 → B ≈ 13 h (예산 끝 ≈ 27 h) · 한도 3 일.  등록 예측 (§4) 은 그대로다 — 기계 (WSL → ibb · 1 → 10 rank) 만 바뀌었고 띠는 옮기지 않는다.
+
+```bash
+# ibb 에 로그인한 셸에서 (접속 · 포트는 적지 않는다).  ⚠ 아래 줄에는 꺾쇠 자리표시가 없다 — 그대로 붙여 넣는다 (10-02 dev-bo 첫 발사 줄이 꺾쇠를 리다이렉트로 읽어 발사 0)
+# ① 리포 사본 (믹서 때와 같은 ~/Yonghoon-DEM-DFT · 경로가 다르면 그 경로) → 이 커밋의 새 작업 트리 (커밋마다 새 폴더 · 이미 있으면 다시 체크아웃하지 않는다)
+cd ~/Yonghoon-DEM-DFT && git fetch -q origin claude/stoic-knuth-NObVQ && W=$HOME/ps73_branch_src_$(git rev-parse --short FETCH_HEAD) && { [ -d "$W" ] || git worktree add -q --detach "$W" FETCH_HEAD; } && cd "$W" && git log --oneline -1
+K=$W/docs/data/ps73_damping_branch_20261007
+conda activate myenv && python3 -I $K/make_branch_decks.py --check      # "✓ check: … SHA256SUMS 일치 (10 파일 · ibb 래퍼 포함)" 가 아니면 멈춘다
+# ② 작업 폴더 · 체크포인트 사본 (원본은 읽기만)
+R=$HOME/ps73_branch_20261007_ibb && mkdir -p $R/in $R/logs
+cp -n ~/dem_test/ps45/ps_7_3_r45/restart_ps_7_3_r45/restart_compress_3100000.bin $R/in/
+cp -n ~/dem_test/ps45/ps_7_3_r45/post_ps_7_3_r45/atom_3100000.liggghts $R/in/ || echo "atom_3100000 없음 — t0 의 G2 원자 대조만 빠진다"
+sha256sum $R/in/restart_compress_3100000.bin        # 82234bea543ae369043f54d4379c6451cdab5a404213c0ecf0a698638bf4b3ee
+# ③ 제출 전 사전 점검 (로그인 노드 · 런 없음 · job 과 같은 환경 · 같은 경로) — 끝 줄 "✓ 사전 점검만 — 통과" 를 본 뒤 ④
+bash $K/run_branch_ibb.sbatch $K
+# ④ 제출 — 작업 폴더에서 (출력 logs/ 는 제출 폴더 기준) · 기본 = t0 → PASS 면 B
+cd $R && JOB=$(sbatch --parsable $K/run_branch_ibb.sbatch $K) && echo "job $JOB"
+# ⑤ 기다림 · 진행 — 처음엔 PD 가 정상 (cpu-60 이 차 있다) · 10 코어가 비면 R 로 바뀐다 · 다른 job 은 그대로 둔다
+squeue -u $USER
+R=$HOME/ps73_branch_20261007_ibb; L=$(ls -t $R/logs/ps73B_*.out 2>/dev/null | head -1); if [ -n "$L" ]; then tail -5 "$L"; else echo "아직 시작 전 (PD)"; fi
+B=$(ls -d $R/B_*/ 2>/dev/null | tail -1); B=${B%/}; [ -n "$B" ] && tail -3 $B/branch_trace.csv && grep -E "BRANCH_|Hold [0-9]+:" $B/screen.out | tail -4
+# ⑥ 우리 job 만 끌 때 (필요할 때만): scancel $JOB — 새 창이면 squeue -u $USER -n ps73B 로 JOBID 를 보고 그 번호 하나만
+```
+
+```bash
+# ⑦ B 끝나면 단면 하중 (멈춘 step · 서보 끝) — ibb 에서 (작업 트리의 scripts/ · myenv · 새 창이어도 되게 R · W 를 다시 잡는다)
+R=$HOME/ps73_branch_20261007_ibb; W=$(ls -dt $HOME/ps73_branch_src_* | head -1); cd $W && conda activate myenv
+B=$(ls -d $R/B_*/ | tail -1); B=${B%/}
+for st in stop end; do S=$(grep "^${st}_step=" $B/branch_summary.txt | tail -1 | cut -d= -f2); \
+  python3 scripts/parse_liggghts.py $B/$st/atom_$S.liggghts $B/$st/contact_$S.liggghts $B/$st/mesh_$S.stl -o $B/ana_$st && \
+  echo '{"box_x": 0.05, "box_y": 0.05}' > $B/ana_$st/input_params.json; done
+echo '{"type_map_resolved": "1:AM_P,2:AM_S,3:SE", "scale": 1000}' > $B/ana_meta.json
+for st in stop end; do python3 scripts/plane_load_share.py --case $B/ana_$st --meta $B/ana_meta.json --label B_$st --out $B/plane_$st; done
+tar -czf $B.plane.tgz -C $R $(basename $B)/plane_stop $(basename $B)/plane_end && sha256sum $B.plane.tgz
+# 보낼 것 = $R 의 t0_<시각>.report.tgz · B_<시각>.report.tgz · B_<시각>.plane.tgz + sha256 (WSL 로 가져오는 꼴 · 주소 · 포트는 적지 않는다):
+#   mkdir -p ~/ps73_branch_20261007/from_ibb && scp -P <포트> <ibb 접속>:~/ps73_branch_20261007_ibb/*.tgz ~/ps73_branch_20261007/from_ibb/
+```
+
+- t0 가 FAIL 이면 job 은 B 를 돌리지 않고 끝난다 (rc 2) — t0 의 report.tgz 와 `logs/ps73B_<JOBID>.out` 만 보낸다 (덱을 손으로 고치지 않는다).
 
 ## 7. 가드 (덩어리마다 · run 사이에서만 읽는다 · 걸리면 restart + 요약을 남기고 멈춘다 — 이어 돌리지 않는다)
 
@@ -186,6 +243,15 @@ sha256 · (B) 는 `B_<시각>.plane.tgz` 도.  t0 가 FAIL 이면 t0 의 report.
   equal · string 다시 정의 가능 (variable.cpp 305 · 382) · `region ID delete` (domain.cpp 1351) · `count(group,region)` (variable.cpp 2905) · `quit` (input.cpp 1110) ·
   `dump_modify first yes` = 만든 뒤 첫 setup 에서 쓴다 (dump.cpp 526 · output.cpp 229–235) · run 마다 init 에서 모든 시간 의존 compute 에 현재 step 을 건다 (modify.cpp 277 → setup 덤프의 c_strs 유효) ·
   thermo `ke` 를 run 사이에 읽으려면 그 step 에 thermo 가 나와야 한다 (thermo.cpp 972–985 — run 의 마지막 step 은 늘 나온다) · lost 기본 ignore (thermo.cpp 123) · shell mkdir 는 -p 를 폴더로 만든다 (input.cpp 1126–1131).
+- ★ **run 사이 읽기 (10-08 · t0 1 회 FAIL 뒤 소스로 확인 · 그때 놓친 것)**: `write_restart` = lmp->init() (write_restart.cpp 171) → Modify::init 이 모든 compute 의 invoked 를 −1 로
+  (modify.cpp 271–277) → 다음 run 전까지 thermo `ke` 를 읽으면 ERROR (thermo.cpp 972–985 — 978 = t0 1 회의 ERROR 줄).  위 줄 ("run 의 마지막 step 은 늘 나온다") 은
+  run 바로 뒤에만 맞다.  `run 0` 은 메시 응력 합을 지우지 않는다 (지우는 곳 = step 안 pre_force · mesh_module_stress.cpp 249–258) — 그 위에 fix wall/gran setup 이
+  이 rank 의 접촉 힘을 더하고 (fix_wall_gran.cpp 681–687 · verlet.cpp Verlet::setup) compute_vector 는 그 합을 돌려준다 (432–437) · run 사이 f_ 읽기에는 시점 검사가 없다
+  (variable.cpp 1184 — run 중일 때만) ⇒ **run 0 뒤 f_판[3] = 직전 step 의 MPI 합 + 이 rank 의 몫** (직렬 2 배 — t0 1 회 끝 스냅숏 setup 줄 0.37551816 = 정규 줄 0.1877583 × 2.0000083 ·
+  r8 24 rank 이완 setup 줄 0.30893332 = 정규 0.30095234 × 1.0265).  재개 절차 (`docs/resume_ckpt_procedure_20260927.md`) 의 *"setup 줄의 메시 압력은 기준이 못 된다"* 의
+  소스 쪽 설명으로 본다 (추정 — 여러 rank 의 몫은 덤프로 재지 않았다 · read_restart 직후 0 은 새 fix 의 f_total_old_ = 0 과 맞는다).
+  ⇒ 덱은 run 뒤 읽는 값을 정의 바로 다음 줄에서 얼리고 (생성기 selftest ⑭b) · 기록 값은 run 0 전에 얻는다 · ⑭a 가 덱의 모든 경로 (jump · if) 에서 이 셋 (write_restart 뒤 ke ·
+  run 0 뒤 판 힘 · 없는 fix) 을 읽는 곳을 찾는다.
 
 ## 9. 왜 0.5 였나 (기록 없음 · 1저자 기억: 낮추면 터짐) · 저항 규모 · 시간 척도 (어림)
 
@@ -208,7 +274,9 @@ sha256 · (B) 는 `B_<시각>.plane.tgz` 도.  t0 가 FAIL 이면 t0 의 report.
 
 ## 10. 확인 안 된 점 (t0 · B 런이 닫을 것)
 
-1. **이 컨테이너에서 한 번도 돌지 않았다** — 덱 문법은 소스 대조 · 생성기 selftest (따옴표 · 변수 · label · if 꼴 · r8 부분열) 까지.  WSL 바이너리가 3d5c00f 와 다르면 (배너로 본다) 서보 동작이 다를 수 있다.
+1. **이 컨테이너에서 한 번도 돌지 않았다** — 덱 문법은 소스 대조 · 생성기 selftest (따옴표 · 변수 · label · if 꼴 · r8 부분열 · ⑭ run 사이 읽기) 까지.  WSL 바이너리가 3d5c00f 와 다르면 (배너로 본다) 서보 동작이 다를 수 있다.
+   ✅ 10-07 WSL t0 1 회 (§12) 가 가드 정지 경로의 첫 print 전까지 덱을 실제로 다 지나갔다 (서보 줄 · 판 바꾸기 · 스냅숏 덤프 · restart · jump 포함) — 그 결함 (run 사이 읽기) 은
+   소스로 확인 · 고쳤고, 고친 줄 (같은 이름 즉시 치환 — 이미 지나간 `comp_n` · `hold_n` 줄과 같은 꼴 · 부호 있는 판 힘 br_Fz_E) 은 t0 2 회가 확인한다.
 2. 서보 전환 때 **판–입자 접촉 이력이 새로 시작**한다 (fix wall/gran 을 다시 만들므로 · 접선 · hysteresis) — 판에 닿은 첫 층의 접선 힘이 0 에서 다시 쌓인다.  하중 방향 (법선 · 적재 중) 은 같은 값이다.
 3. kp 30 (τ ≈ 53,000 step) 은 어림 — 판 하중 기울기 4.7e4 N/m (끝 압축) · 원 런 링잉 감쇠 ζ_eff ≈ 0.08 로 안정 한계 τ > 5,800 step 을 셈.  재하 강성이 3 배면 τ ≈ 18,000 step (여유 3 배).
 4. 서보 수렴 판정의 5e-6 m (5,000 step 당) 은 남은 두께 오차 ≈ 0.05 µm 에 해당한다 (B2 띠 4 µm 의 1/80).
@@ -219,8 +287,45 @@ sha256 · (B) 는 `B_<시각>.plane.tgz` 도.  t0 가 FAIL 이면 t0 의 report.
    생성기 selftest ⑦b (얼려야 하는 변수 lint) 와 위 메시 대조가 같은 부류를 막는다.
 7. 서보 유지가 끝나면 그 상태에서 판을 고정한 이완은 하지 않는다 (등록 밖) — 필요하면 restart_end 에서 따로 등록한다.
 8. 서보 유지 중간에 멈추면 이어 돌리는 덱은 아직 없다 — restart_hold_* (100,000 step 마다) 를 남기니, 필요하면 재개 절차 (`docs/resume_ckpt_procedure_20260927.md`) 에 맞춰 따로 만든다.
+9. **ibb (lmp_mpi · 10 rank) 은 이 덱의 첫 실행이다** (10-08) — 배너 3.8.0 · 3d5c00f · 'Loop time … on 10 procs' 를 t0 가 본다.  MPI 분할이 원 런 (r8 24 rank) 과 달라 압축 궤적이
+   갈라질 수 있다 — B1 의 멈춤 재현 띠 (r7 9 rank ↔ r8 24 rank 같은 체크포인트 20,000 step 뒤 판 압력 차 0.0056 MPa ≪ 여유 0.042) 가 받친다 · 띠는 옮기지 않는다.
 
 ## 11. 파일
 
 `make_branch_decks.py` (생성기 · `--check` · `--selftest`) · in.branch_t0_syntax · in.branch_A · in.branch_B · in.branch_C1 · in.branch_C2 (.liggghts) · `plate_branch3100000.stl` (판 STL · 자료는 restart 에서) ·
-`run_branch.sh` (WSL 러너) · `analyze_branch.py` (읽기 전용 분석 · `--selftest`) · `deck_diffs.txt` · `SHA256SUMS`.
+`run_branch.sh` (러너 · WSL · ibb · `--preflight-only`) · `run_branch_ibb.sbatch` (ibb 제출 래퍼 · 10-08) · `analyze_branch.py` (읽기 전용 분석 · `--selftest`) · `deck_diffs.txt` · `SHA256SUMS` (위 열 개) ·
+`t0_run1_20261007/in.branch_t0_syntax.liggghts` (10-07 WSL t0 1 회에 돈 덱 그대로 · sha256 `c0130fd0…` · selftest ⑭c 가 그 결함 자리를 다시 잡는다 · 묶음 SHA256SUMS 밖).
+
+## 12. 실행 기록
+
+### 12-1. t0 1 회 — WSL · 10-07 23:36:49 → 23:49:39 KST · **FAIL (원인 = 우리 덱 · 서보는 설계대로 움직였다)**
+
+| 항목 | 값 | 근거 |
+|---|---|---|
+| 실행 | 1저자 WSL · lmp_serial 1 코어 · mpirun 자리 대리 `~/bin/nompi` (§6 1′ · 2′ · `SELF-97`) · 작업 트리 ~/ps73_branch_src_aa7ec7fe9 · 덱 묶음 = 커밋 928a40caa 의 SHA256SUMS (t0 덱 sha256 `c0130fd0a5019ca9…` — 사본 `t0_run1_20261007/`) | 1저자 화면 (조정자 전달 10-08) · `docs/session_20260923_progress.md` 10-07 밤 줄 |
+| 지나간 곳 | G1 (출발 KE 1.695918e-05 = r8) → 압축 한 덩어리 → 멈춤 스냅숏 → 이완 200 → 끝 스냅숏 (top_mesh) → 서보 전환 → 서보 500 × 2 (BUDGET_EXHAUSTED) → 끝 스냅숏 (서보) → 요약 (`BRANCH_DONE` 찍힘) → … → 가드 정지 경로 첫 print 에서 ERROR | 화면 끝 줄 |
+| ERROR | `Compute used in variable thermo keyword between runs is not current (../thermo.cpp:978)` — 가드 정지 print 의 g_ke (살아 있는 `equal ke`) 를 **write_restart 뒤** 읽었다 · write_restart = lmp->init() → compute invoked 초기화 (§8) | 화면 · 소스 · selftest ⑭c 가 그 덱에서 이 자리를 다시 잡는다 |
+| 같은 부류 둘째 (오류 없이 지나갔을 자리 · 추정) | T0_SERVO 가 판 힘을 **run 0 뒤** f_plate_servo[3] 로 새로 읽었다 → 직전 합 + setup 몫 (직렬 ≈ 2 × 469 ≈ 939 N) → 'F < 750' 판정이 틀어져 FAIL 로 찍혔을 것 (report 확인 전) | 끝 스냅숏 setup 줄 판 압력 0.37551816 = 정규 줄 0.1877583 × 2.0000083 (화면) · §8 · ⑭c |
+| 서보 | **설계대로**: 서보 1,000 step 동안 판 0.111252 → 0.11124201 (Δ 9.99e-6 덱 m = 0.00999 µm ≈ vel_max 0.01 µm / 1,000 step · 포화) · F 469.4 N < 750 N → 아직 내려가는 중 · 힘 부호 + (위) | 화면 `BRANCH_HOLD_DONE` · `BRANCH_END_STATE` · branch_trace.csv 줄 |
+| 관찰 (판정 아님 · t0 는 문법 시험) | 3,105,000 에서 판을 멈추고 감쇠를 1e-5 로 내린 뒤 1,200 step (이완 200 + 서보 1,000) 의 3,106,200 판 압력 **187.8 MPa** (469.4 N) ↔ r8 원 로그 3,105,000 (감쇠 0.5 · 판 이동 중) **297.1 MPa** · KE 0.0717 J · 원자 160,420 (잃음 0) · 새어 나감 0.  원 런 이완 (3,125,000 에서 멈춤) 의 1,000 · 2,000 step 뒤 판 압력 204.6 · 151.5 MPa · KE 0.061 · 0.076 J 와 같은 빠른 낙하 (출발 step · 판이 달라 비교는 아니다) | 화면 · r8 로그 (`docs/data/ps73_compaction_curve_20261006/raw/ps73_logs.tgz` · output_ps_7_3_r45_r8_220537.out 3015 · 3042–3044 행) |
+| 속도 | 직렬 ≈ **8.7 step/s** (run_branch.sh 속도 줄: B 0.75 M ≈ 23.9 h · 예산 끝 48.5 h · A 4.0 h · C1 17.8 h · C2 21.9 h) — §6 1′ · 2′ 의 "B 4–6 일" 어림은 틀렸다 | 화면 (조정자 전달) |
+| 보고 묶음 | t0_20261007_233649.report.tgz · sha256 `9e3a24fc47014efc39f7843974728a45493b2c71c877334cc6d1cc61207c59d0` — 1저자 업로드 예정 (**아직 받지 않음** · 받으면 T0_SERVO 줄 · run_manifest 의 deck_sha256 = `c0130fd0…` 를 대조한다) | — |
+
+### 12-2. 고친 것 (10-08 · 이 README 와 같은 커밋 · 시험 먼저 — 규율 ②)
+
+- **덱**: 덩어리마다 읽는 값 (g_step · g_atoms · g_ke · g_F · g_pz · current_press · t0_n · t0_ke0 · 새 g_Fz) 을 정의 바로 다음 줄에서 같은 이름의 즉시 치환으로 얼린다 ·
+  T0_SERVO 는 끝 스냅숏이 run 0 전에 얼린 부호 있는 판 힘 (br_Fz_E) 을 쓴다 · 가지 시작의 g_step · g_atoms 는 얼린 br_step0 · br_n0v 에서.
+- **검사** (생성기 selftest — 고치기 전 덱에서 먼저 실패를 봤다): ⑭a 덱의 모든 경로 (jump · if 포함 · 경로마다 상태를 따로) 에서 write_restart 뒤 ke · run 0 뒤 판 힘 · 없는 fix 를
+  읽는 곳 — **고치기 전 t0 6 곳 (4 줄: T0_SERVO print · if · 가드 정지 print 둘) · A · B · C1 · C2 0 곳** · ⑭b 살아 있는 equal 정의 다음 줄 = 얼림 (고치기 전 다섯 덱 모두 위반) ·
+  ⑭0 합성 덱 17 + ⑭b 2 (검사기 자신) · ⑭c t0 1 회 덱 사본에서 ERROR 자리 (g_ke) 와 T0_SERVO 자리 (t0_Fs) 를 다시 잡는다 · ⑭d `$` 꼴 · ⑮ ibb 래퍼 ↔ 러너 짝 → 고친 뒤 selftest 전부 통과.
+- ⇒ **arm 덱 (A · B · C1 · C2) 은 1 회 키트에서도 이 결함에 걸리지 않았다** (⑭a 0 곳 — arm 의 가드 정지는 늘 run 바로 뒤에서 온다).  고친 arm 덱의 차이 = run 사이 variable 줄 · 주석뿐
+  (fix · run · dump · restart · 서보 줄 0 줄) → 역학 · 기록 값 같음 (같은 step 의 값을 15 자리로 박는다 · `deck_diffs.txt`).
+- **러너**: kit 사본에 래퍼 · t0 가 MPI 프로세스 수를 본다 ('Loop time … on N procs' 의 N = NP — `SELF-97` 의 둘째 항목) · `--preflight-only` · run_manifest 에 SLURM job ·
+  모의 시험 9/9 (정상 · 'on 1 procs' 반례 → t0 FAIL · 래퍼 SLURM 밖 = 사전 점검만 · 안 = t0 → B · NTASKS 반례 · 인자 없음 · kit 목록 반례 ·
+  `--help` 는 kit 사본을 만들지 않는다 — LIGGGHTS 대신 출력만 흉내 내는 가짜 실행 파일 · 컨테이너).
+- ⚠ **덱 묶음 SHA256SUMS 가 바뀌었다** → t0 를 새 묶음으로 **다시** 통과해야 B 가 돈다 (`--skip-t0` 는 같은 묶음의 PASS 만 받는다 · 1 회는 FAIL 이라 어차피 없다).
+
+### 12-3. 1저자 결정 (10-08)
+
+- B 는 **ibb 10 코어** (lmp_mpi) — WSL 아님 (*"10 코어로"*).  t0 도 같은 job 에서 먼저 (§6-ibb).
+- Q1 (가) *"아 이게 낫겠다"* = **제출하고 기다린다** — QOS cpu-60 이 LHS 보충 런으로 60/60 이어도 그 job 들을 끄지 않는다 · PD 로 대기 · 시작은 저절로.
