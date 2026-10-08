@@ -190,7 +190,7 @@ cd ~ && tar czf ~/g2pre_${S}_$T.tar.gz "$(basename "$SM")/smoke_report.json" "$(
   `expected_n` · `read_n` · `set_equal` · `missing` · `extra`).  v1.3 생성기는 production194 전부 (기대 = 읽음 = 194 · 같음) 인 기록만 받는다 (G2RR2-02).
 - 시범 import 관측 (`run --observe-imports`) — 워커 · 단계 하위 프로세스가 읽은 리포 모듈을 남기고 audit 가 봉인 ⊇ 관측을 본다 (값에 닿지 않는다).
   §1 시범에서 켠다 — 194 본 실행에서 켤지는 발사 승인 때 1저자가 정한다.
-  > ⬜ **제안 (10-07 · Codex 재검증 4 `G2RR4-03` · 1저자 비준 대기 — 등록 기대를 바꾼다 · 위 줄은 원문으로 둔다)**: 194 본 실행도 `--observe-imports` **필수**.
+  > ✅ **10-09 1저자 비준 (§9-6)** · ⬜ **제안 (10-07 · Codex 재검증 4 `G2RR4-03` · 1저자 비준 대기 — 등록 기대를 바꾼다 · 위 줄은 원문으로 둔다)**: 194 본 실행도 `--observe-imports` **필수**.
   > 실행기 (`36ba39070`) 가 생산 계획 (계획 큐 = 등록 production194) 을 관측 없이 띄우지 않는다 (사전 점검 ⛔ · `--dry-run` 에도 보인다) · 감사 = 관측을 끈 생산 manifest 를
   > 문제로 (rc 1) · v1.3 배포 관문 = 배치 manifest `observe_imports` true · 감사의 관측 객체 · 관측 내부 문제 0 · 실행 단계 ↔ 영수증 결합 기록 (`stage_binding` — G2RR4-01 ·
   > 02) 이 없으면 받지 않는다.  변경 이력 = §9-4.
@@ -208,7 +208,7 @@ $PY scripts/run_network_194_parallel.py run --root "$R" --dry-run 2>&1 | grep -E
 $PY scripts/run_network_194_parallel.py run --root "$R" 2>&1 | tee ~/net194_run_$(date +%m%d_%H%M).log | tail -40
 ```
 
-> ⬜ **제안 — 본 실행 명령 · manifest 확인 (10-07 · `G2RR4-03` · Codex 재검증 4 §4 Q3 · §7-3 · 1저자 비준 대기 · 위 블록은 원문으로 둔다)**.  고친 실행기는 위 둘째 줄
+> ✅ **10-09 1저자 비준 (§9-6)** · ⬜ **제안 — 본 실행 명령 · manifest 확인 (10-07 · `G2RR4-03` · Codex 재검증 4 §4 Q3 · §7-3 · 1저자 비준 대기 · 위 블록은 원문으로 둔다)**.  고친 실행기는 위 둘째 줄
 > (관측 플래그 없음) 을 생산 194 에서 사전 점검 ⛔ 로 거부한다.
 >
 > ```bash
@@ -220,6 +220,28 @@ $PY scripts/run_network_194_parallel.py run --root "$R" 2>&1 | tee ~/net194_run_
 > $PY scripts/run_network_194_parallel.py audit --root "$R" --tsv "$R/seal_audit.tsv" --json "$R/seal_audit.json" 2>&1 | grep -v '^  lhs' | tail -12; echo "audit rc=${PIPESTATUS[0]}"
 > $PY -c "import json,sys; a=json.load(open(sys.argv[1])); o=a['import_observation']; print(o['n_started'], o['n_finalized'], len(o['completed_attempts']), o['stage_binding']['schema'], len(o['stage_binding']['attempts']), a['import_observation_problems'])" "$R/seal_audit.json"
 > ```
+>
+> ✅ **덧붙임 — 완료 뒤 기대의 재시도 예외 (10-09 1저자 비준 · `G2RR5-04` · Codex 재검증 5 §4 · 위 주석 · 명령은 원문으로 둔다)**.
+> 위 주석의 *"시작 = 끝맺음 · 완료 시도 194 · stage_binding 194"* 는 **재시도 없는 1 회 실행**의 기대다.  합격선 = 판정문 §4 권고 문안 그대로:
+> *"최종 등록 케이스 집합은 194이고 모두 요구 봉인을 만족한다. 완료 시도 전체의 키 집합과 단계 결합 키 집합이 같고, 각 시도의 expected=observed이다.
+> 완료 시도의 미최종 영수증은 없어야 한다. 비완료 시도의 미최종 영수증은 Q2 규칙으로 따로 보고한다. 재시도 없는 경우에 한하여 전체 시작=끝맺음, 완료·결합 시도194를 기대한다."*
+> 확인 명령 (합계 대신 — 기대는 줄 끝 주석):
+>
+> ```bash
+> $PY - "$R/seal_audit.json" <<'PY'
+> import json, sys
+> a = json.load(open(sys.argv[1])); o = a['import_observation']; sb = o['stage_binding']['attempts']
+> comp = {'|'.join(map(str, k)) for k in o['completed_attempts']}
+> print('케이스', len(a['cases']), '판정', a['verdicts'])                                      # 케이스 194 · {'SEALED': 194}
+> print('결합 = 완료 시도', set(sb) == comp, len(sb), len(comp))                               # True (재시도가 있으면 194 보다 클 수 있다)
+> print('expected ≠ observed', [k for k, r in sb.items() if r.get('expected') != r.get('observed')][:5])   # []
+> print('감사 문제', a['import_observation_problems'][:5])                                      # [] (완료 시도의 미최종 영수증도 여기 문제로 나온다)
+> print('완료 아닌 시도의 미최종 영수증 (정보 · Q2)', len(o['unfinalized_noncompleted']))
+> print('시작 · 끝맺음 (재시도 없으면 같다)', o['n_started'], o['n_finalized'])
+> PY
+> ```
+>
+> v1.3 배포 관문은 같은 내용을 시도마다 실행기 계약 함수로 다시 판정한다 (`G2RR5-01` · `scripts/lhs_release_build.py` `v13_audit_observation_problems`).
 
 ## 5. 판정 · 관문 (결과 전 등록)
 
@@ -277,7 +299,7 @@ $PY scripts/run_network_194_parallel.py run --root "$R" 2>&1 | tee ~/net194_run_
   게시된 dual/full_metrics 원파일은 아니다 ("전체 출력" 으로 일반화하지 않는다 · 로그 포장만으로 수치 재실행은 요구되지 않았다) · ⚠ case15 음수 면적은 한 행이 아니라 **두 행**
   (31–29241 −0.186036 · 38–29241 −0.186264 µm² — Physics 는 첫 행에서 멈춘다 · 판정문 §6-1).
 - 9-3 발사: 커밋 ⬜ · manifest `seal.code_fp` ⬜ · `expected_network_generation` ⬜ · `input_digest.raw_sha256_table_sha256` ⬜
-- 9-4 **변경 이력 (10-07 · Codex 재검증 4 `docs/reviews/codex_review_gen2_network_reverify4_20261007.md` 뒤 · 결과 0 건 — 194 미실행)** — ⬜ **제안 · 1저자 비준 대기** (등록 기대를 바꾸는 항목):
+- 9-4 **변경 이력 (10-07 · Codex 재검증 4 `docs/reviews/codex_review_gen2_network_reverify4_20261007.md` 뒤 · 결과 0 건 — 194 미실행)** — ✅ **10-09 1저자 비준 (§9-6)** · ⬜ **제안 · 1저자 비준 대기** (등록 기대를 바꾸는 항목):
   ① **본 실행 관측 필수** (`G2RR4-03` · 판정문 §4 Q3 · §7-3) — §3b · §4 제안 표지 그대로 (실행기 `36ba39070` 사전 점검 ⛔ · 감사 문제 · v1.3 배포 관문 필수 조건).
   ② **case15 = 음성 대조** (판정문 §6-3(b)) — 원 실패 기록 = §9-2 (10-07 14:15 · 고치지 않는다) · 변경 사유 = *"이온 단독 성공을 전체 채널 성공으로 잘못 예상했다"* (`SELF-92`).
      새 기대 (제안 · `scripts/wsl_network_smoke.py` `CASE15_NEGCTL` · 스모크 `case15_network` 의 `[음성 대조]` 검사 넷 — 지정한 실패가 **실제로 발화해야** PASS · whitelist · 이름 PASS 아님):
@@ -294,4 +316,20 @@ $PY scripts/run_network_194_parallel.py run --root "$R" 2>&1 | tee ~/net194_run_
 - 9-5 사전 점검 2 (10-07 22:24 KST · 1저자 WSL · 코드 `839dbac6b` · 재검증 5 첨부 · 증거 `docs/reviews/codex_gen2_network_reverify5_precheck_20261007/`): §9-4 ③ **제안** 기대와 **전부 같음** —
   §1 단계 3 smoke rc 0 (26/26 · case15 `[음성 대조]` 넷 PASS · 나머지 10-07 14:15 와 같은 값) · 단계 4 reread rc 0 (S0 · S0b) · 옛 실행기 시범 ROOT (`c3117438a`) 재감사 = 지금 케이스 기록 stages 로 결합 3 ·
   관측 문제 `[]` · SEALED 3 · 새 시범 (`839dbac6b` · `--observe-imports`) = 시도 사본 (`worker.json attempts[].stage_plan`) 으로 결합 3 · SEALED 3 · 봉인 `code_fp e8b2496b…` (32) 그대로.
-  ⚠ §3b · §4 · §9-4 는 아직 ⬜ 1저자 비준 전 — 이 줄은 결과 기록이지 비준이 아니다.  194 발사 = Codex GO 뒤 (§0).
+  ⚠ §3b · §4 · §9-4 는 아직 ⬜ 1저자 비준 전 [→ 10-09 비준 · §9-6] — 이 줄은 결과 기록이지 비준이 아니다.  194 발사 = Codex GO 뒤 (§0).
+- 9-6 **비준 · 변경 이력 (10-09 · Codex 재검증 5 `docs/reviews/codex_review_gen2_network_reverify5_20261007.md` 뒤 · 결과 0 건 — 194 미실행)** — ✅ **1저자 비준 10-09** (대화 *"비준이야"* · 수정 계획 `docs/reviews/g2rr5_fix_plan_20261008.md` Q3 — §3b · §4 · §9-4 제안 + 아래를 한 번에 · 원문은 각 자리에 그대로 · 비준 표지만 더함):
+  ① §4 완료 뒤 기대에 재시도 예외 (`G2RR5-04` · §4 덧붙임).
+  ② 다음 사전 점검 기대 (§9-4 ③ 갱신 · 고친 도구): 단계 3 smoke = case15 검사 **일곱** (`case15.proc` · `raw_sha` · `nc1_blocked` · `nc2_tau` · `nc3_cause` · `nc4_ionic` · **`nc5_attempt`** = 이번 망 CLI 시도 1 회 · 예외 없음 · rc 0 · per-mode 둘 · 실패 채널 정확히 등록 넷 — `G2RR5-02`) 전부 PASS · smoke rc 0 ·
+     단계 4 reread = S0b 가 등록 표지 · 필수 ID 정확히 · 공용 판정 재계산 (`G2RR5-03`) — **10-07 WSL case15 기록은 이제 거부된다** (시도 증거 · 검사 ID 없음 — 의도 · 고친 스모크로 다시 만든다) ·
+     단계 5 audit · 배포 관문 = 시도별 결합 값 검사 (`G2RR5-01`).
+  ③ 인계 도구 지문 바뀜: `scripts/g2_network_reread.py` (실행기 HANDOVER_FILES) — 발사 manifest 에 기록 · 봉인 32 · `code_fp e8b2496b…` 그대로.
+  ④ 같은 비준 (수정 계획 밖 덧붙임 · 1저자 10-09): Q6 = 감사 결합 기록에 분류 밖 단계 칸 (요약만 비운 실패 감사를 배포 관문이 거부 · 기존 pilot 감사는 고친 실행기로 audit 다시 — 읽기 전용) · Q7 = 스모크 실제 case15 두 판을 `--selftest-real` (slow) 로 나눈다 (§1 단계 1 도구 자체 시험에 함께 돌린다) — 둘 다 반영 = 별도 커밋 (⬜ 반영 전).
+
+  | 자리 | 원문 (보존) | 비준 뒤 활성 |
+  |---|---|---|
+  | §3b 본 실행 관측 | 발사 승인 때 결정 | `--observe-imports` 필수 (§3b 제안) |
+  | §4 실행 명령 | `run --root "$R"` (플래그 없음) | §4 제안 블록의 `run --root "$R" --observe-imports` |
+  | §4 완료 뒤 기대 | 시작 = 끝맺음 · 194 · 194 | §4 덧붙임 합격선 · 확인 명령 (재시도 예외) |
+  | §9-4 사전 점검 기대 | case15 음성 대조 넷 | 위 ② (검사 일곱 · S0b 재판정 · 결합 값) |
+
+  ⚠ 비준은 등록 기대 · 명령의 비준이다 — 194 발사 = Codex GO 뒤 (§0 · 재검증 6) · S3 별개.
