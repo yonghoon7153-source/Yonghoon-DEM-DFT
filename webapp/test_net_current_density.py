@@ -171,6 +171,9 @@ def section_analytic(tmp):
         all(s in str(c1.get('rule')) for s in ('I_1C', 'I_1V', '선형', '전류 보존', '반응 분포')) and 'Q_areal' in str(c1.get('source')))
     chk('D1k 전류 밀도 규약 문구 = |I_c| / A_c · 같은 풀이의 접촉 면적 (A_used) · 1 V 프로브',
         all(s in str(den.get('rule')) for s in ('|I_c|', 'A_c', 'A_used', '1 V')))
+    import grade_engine as _G
+    chk(f'D1l @1C 의 비용량 기준 = 등급 엔진 C_AM_MAHG ({c1.get("capacity_mAh_g")} · {_G.C_AM_MAHG} mAh/g) — 뷰어가 고른 비용량 (175 · 200) 으로 '
+        f'Q_areal · 배율을 선형 환산하는 기준 (1저자 10-08 Q3 · 랩 표준 200)', c1.get('capacity_mAh_g') == _G.C_AM_MAHG)
     return rd
 
 
@@ -336,7 +339,8 @@ def section_viewer(pay):
             miss.append(n)
     m_tops = re.search(r'const NETCUR_TOPS = \[[^\]]*\];', js)
     # 10-08 조작판이 쓰는 한 줄 상수 — 굵기 (NETCUR_WIDTHS) · 전류 몫 고르기 (NETCUR_SHARES) · 색 위쪽 (NETCUR_CAPS) (옛 코드엔 없음)
-    more = [m.group(0) for m in (re.search(r'const ' + n + r' = [^;]*;', js) for n in ('NETCUR_WIDTHS', 'NETCUR_SHARES', 'NETCUR_CAPS')) if m]
+    more = [m.group(0) for m in (re.search(r'const ' + n + r' = [^;]*;', js)
+                                 for n in ('NETCUR_WIDTHS', 'NETCUR_SHARES', 'NETCUR_CAPS', 'NETCUR_CAPACITIES')) if m]
     if not chk(f'D5a viewer3d.js 에서 함수 · 상수를 잘라 냈다 (없음 {miss})', not miss and m_tops is not None):
         return
     if not chk('D5b 경로 자료 (전류 밀도) 가 있다', bool(pay and pay.get('edges') and pay.get('density'))):
@@ -441,7 +445,9 @@ console.log(JSON.stringify(out));
         and any(f in wl for f in ("'_1V.png'", "'_1V' + (opt.scale === 'linear' ? '_linear' : '') + '.png'",
                                   "'_1V' + (opt.scale === 'linear' ? '_linear' : '') + netCurrentCapTag(opt) + '.png'"))
         and any(f in wl for f in ("'_1C.png'", "'_1C' + (opt.scale === 'linear' ? '_linear' : '') + '.png'",
-                                  "'_1C' + (opt.scale === 'linear' ? '_linear' : '') + netCurrentCapTag(opt) + '.png'")), wl[:400])
+                                  "'_1C' + (opt.scale === 'linear' ? '_linear' : '') + netCurrentCapTag(opt) + '.png'",
+                                  "'_1C' + (opt.scale === 'linear' ? '_linear' : '') + netCurrentCapTag(opt) + netCurrentCapacityTag(opt) + '.png'")),
+        wl[:400])
     # ↑ 10-08 선형 눈금이면 _linear 꼬리 · 색 위쪽 p99 · p95 면 _p99 · _p95 꼬리 (netCurrentCapTag)
     try:
         rnc = js_fn(js, 'renderNetCurrent')

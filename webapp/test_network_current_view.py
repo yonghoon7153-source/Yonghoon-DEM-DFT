@@ -501,7 +501,8 @@ def section_routes(tmp, pub_rd, rid):
 JS_NAMES = ('netCurrentUrl', 'netCurrentWrap', 'netCurrentLogRange', 'netCurrentT', 'netCurrentPct', 'netCurrentFmtJ', 'netCurrentTicks',
             'netCurrentFrame', 'netCurrentColorbarSpec', 'netCurrentControlsHtml', 'netCurrentTopOptions', 'netCurrentLegendHtml',
             'netCurrentErrorHtml', 'jeEscH', 'jetColor')
-NETCUR_CONST_NAMES = ('NETCUR_TOPS', 'NETCUR_WIDTHS', 'NETCUR_SHARES', 'NETCUR_CAPS')   # 조작판이 쓰는 한 줄 상수 (10-08 고르기 · 위쪽 더함)
+NETCUR_CONST_NAMES = ('NETCUR_TOPS', 'NETCUR_WIDTHS', 'NETCUR_SHARES', 'NETCUR_CAPS',
+                      'NETCUR_CAPACITIES')   # 조작판이 쓰는 한 줄 상수 (10-08 고르기 · 위쪽 · 비용량 더함)
 
 
 def netcur_consts(js, names=NETCUR_CONST_NAMES):
@@ -1010,7 +1011,8 @@ def section_viewer_select(sel):
         except (ValueError, AssertionError):
             miss.append(n)
     consts = {}
-    for n in ('NETCUR_TOPS', 'NETCUR_WIDTHS', 'NETCUR_SHARES', 'NETCUR_CAPS', 'NETCUR_CACHE_MAX', 'NETCUR_LOD_N', 'NETCUR_BIG_N'):
+    for n in ('NETCUR_TOPS', 'NETCUR_WIDTHS', 'NETCUR_SHARES', 'NETCUR_CAPS', 'NETCUR_CACHE_MAX', 'NETCUR_LOD_N', 'NETCUR_BIG_N',
+              'NETCUR_CAPACITIES'):
         m = re.search(r'const ' + n + r' = [^;]*;', js)
         if m:
             consts[n] = m.group(0)
@@ -1182,11 +1184,96 @@ console.log(JSON.stringify(out));
                   r"applyNetCurrentMode\(state\); \}\)", wl) is not None
         and re.search(r"on\('netcur-cap', 'change', ev => \{ opt\.cap = ev\.target\.value; if \(pay\) renderNetCurrent\(state, pay\); \}\)", wl)
         is not None)
-    chk("④c23 컬러바 단추 둘의 파일 이름 = … + netCurrentCapTag(opt) + '.png' (위쪽을 고른 그림이 최대 그림을 덮어쓰지 않게)",
-        wl.count("netCurrentCapTag(opt) + '.png'") == 2)
+    chk("④c23 컬러바 단추 둘의 파일 이름 = … + netCurrentCapTag(opt) … '.png' (위쪽을 고른 그림이 최대 그림을 덮어쓰지 않게 · @1C 는 10-08 비용량 꼬리까지)",
+        wl.count("netCurrentCapTag(opt)") == 2 and wl.count("'.png'") >= 2)
     chk("④c24 기본 옵션 = 전류 50 % (1저자 Q2) · 위쪽 최대 — { channel: 'ionic', mode: 'hertzian', top: 'share50', arrows: false, width: 1, "
         "scale: 'log', cap: 'max' }",
         "_netCurOpt = { channel: 'ionic', mode: 'hertzian', top: 'share50', arrows: false, width: 1, scale: 'log', cap: 'max' }" in anm)
+
+
+def section_viewer_capacity():
+    """④k 비용량 고르기 — 1저자 10-08 Q3 *"비용량 선택 관련해서 있음 좋겠네"* (랩 표준 200 mAh/g ↔ 등급 엔진 175).  서버 @1C 배율 · Q_areal 은
+    c1.capacity_mAh_g (등급 엔진 C_AM_MAHG) 기준 — Q_areal ∝ C_AM 이라 뷰어가 고른 비용량으로 선형 환산한다 (webapp/app.py 194 봉인 — 서버에 넘기지
+    않는다).  @1V 는 비용량과 무관 · 색 분포도 무관 (같은 배율).  범례 · 컬러바 글 = 고른 비용량 · 전극 평균 전류 밀도 이름 · 케이스 표 (175) 와 다르면 그 사실."""
+    print('[④k] 뷰어 — 비용량 고르기 (175 · 200 mAh/g · node)')
+    js = open(VIEWER_JS, encoding='utf-8').read()
+    names = ('netCurrentFrame', 'netCurrentCapacityTag', 'netCurrentLegendHtml', 'netCurrentColorbarSpec', 'netCurrentControlsHtml',
+             'netCurrentTopOptions', 'netCurrentTicks', 'netCurrentFmtJ', 'netCurrentPct', 'jeEscH', 'jetColor')
+    parts, miss = [], []
+    for n in names:
+        try:
+            parts.append(js_fn(js, n))
+        except (ValueError, AssertionError):
+            miss.append(n)
+    for n in ('NETCUR_CHANNELS', 'NETCUR_MODES'):
+        try:
+            parts.append(js_const(js, n))
+        except (ValueError, AssertionError):
+            miss.append(n)
+    consts = netcur_consts(js)
+    if not chk(f'④k1 viewer3d.js 에서 함수 · 상수를 잘라 냈다 (없음 {miss} · 비용량 상수 {any("NETCUR_CAPACITIES" in c for c in consts)})',
+               not miss and any('NETCUR_CAPACITIES' in c for c in consts)):
+        return
+    script = '\n'.join(parts + consts) + '\n' + r"""
+const E = [{j: 1}, {j: 2}, {j: 5}];
+const PAY = {channel: 'ionic', mode: 'physics', n_returned: 3, n_perc_edges: 3, edges: E, power_share: 0.5, power_identity_rel: 0,
+             density: {sigma0_S_cm: 0.003, j_mean_1V: 0.2, c1: {status: 'ok', factor: 0.026, Q_areal_mAh_cm2: 5.2, j_1C_A_cm2: 0.0052,
+                       capacity_mAh_g: 175}}, zcut: null, sigma_check: {}, generation: {match: true}};
+const NOB = JSON.parse(JSON.stringify(PAY)); delete NOB.density.c1.capacity_mAh_g;
+const out = {};
+out.fr = [netCurrentFrame(PAY, '1C'), netCurrentFrame(PAY, '1C', 200), netCurrentFrame(PAY, '1C', 175), netCurrentFrame(PAY, '1V', 200),
+          netCurrentFrame(NOB, '1C', 200), netCurrentFrame(PAY, '1C', 'x'), netCurrentFrame(PAY, '1C', 0)];
+const lin = {channel: 'ionic', mode: 'physics', top: 3, scale: 'linear'};
+out.leg200 = netCurrentLegendHtml(PAY, Object.assign({}, lin, {capacity: 200}), {nDrawn: 3, nWrapSkipped: 0, lo: 1, hi: 5, scale: 'linear'});
+out.leg175 = netCurrentLegendHtml(PAY, lin, {nDrawn: 3, nWrapSkipped: 0, lo: 1, hi: 5, scale: 'linear'});
+out.s1C200 = netCurrentColorbarSpec(PAY, Object.assign({}, lin, {capacity: 200}), 1, 5, '1C');
+out.s1C175 = netCurrentColorbarSpec(PAY, lin, 1, 5, '1C');
+out.s1V200 = netCurrentColorbarSpec(PAY, Object.assign({}, lin, {capacity: 200}), 1, 5, '1V');
+out.s1V175 = netCurrentColorbarSpec(PAY, lin, 1, 5, '1V');
+out.ctlDef = netCurrentControlsHtml(lin); out.ctl200 = netCurrentControlsHtml(Object.assign({}, lin, {capacity: 200}));
+out.tag = [netCurrentCapacityTag({capacity: 200}), netCurrentCapacityTag({capacity: 175}), netCurrentCapacityTag({}), netCurrentCapacityTag(null)];
+out.caps = NETCUR_CAPACITIES.map(c => c[0]);
+out.fj = [netCurrentFmtJ(1 * 0.026 * 200 / 175), netCurrentFmtJ(3 * 0.026 * 200 / 175), netCurrentFmtJ(5 * 0.026 * 200 / 175)];
+console.log(JSON.stringify(out));
+"""
+    res = run_node(script)
+    if not chk('④k2 node 실행', res is not None):
+        return
+    fr = res['fr']
+    k = 200 / 175
+    chk(f'④k3 @1C 배율 = 서버 배율 × 고른 비용량 / 서버 기준 (175) · 안 고르거나 같으면 그대로 · @1V 는 무관 · 서버 기준이 없거나 잘못된 값 = 그대로 '
+        f'{[x.get("factor") for x in fr]}',
+        abs(fr[0]['factor'] - 0.026) < 1e-15 and abs(fr[1]['factor'] - 0.026 * k) < 1e-15 and abs(fr[2]['factor'] - 0.026) < 1e-15
+        and fr[3]['factor'] == 1 and abs(fr[4]['factor'] - 0.026) < 1e-15 and abs(fr[5]['factor'] - 0.026) < 1e-15
+        and abs(fr[6]['factor'] - 0.026) < 1e-15 and fr[1].get('capacity') == 200 and fr[0].get('capacity') == 175)
+    q200 = f'{5.2 * k:.3g}'
+    l2, l1 = res['leg200'], res['leg175']
+    chk(f'④k4 범례 — 비용량 200 mAh/g → Q_areal {q200} mAh/cm² → 전극 평균 전류 밀도 {q200} mA cm⁻² · 케이스 표 (175 기준 5.2) 와 다르다는 표지 · '
+        f'175 면 케이스 표 등급 값',
+        '비용량 200 mAh/g' in l2 and f'Q_areal {q200} mAh/cm²' in l2 and f'전극 평균 전류 밀도 {q200} mA cm⁻²' in l2
+        and '케이스 표 Q_areal 은 175 mAh/g 기준 5.2' in l2 and '비용량 175 mAh/g' in l1 and '케이스 표 등급 값' in l1
+        and '전극 평균 전류 밀도 5.2 mA cm⁻²' in l1, (l2[l2.find('@1C'):][:400]))
+    s2, s1 = res['s1C200'], res['s1C175']
+    chk(f'④k5 컬러바 @1C — 눈금 = @1V 값 × 배율 × 200/175 ({[t["label"] for t in s2["ticks"]]} = {res["fj"]}) · 아래 글 = 전극 평균 전류 밀도 이름 · '
+        f'비용량 (C_AM 200 mAh/g) · 175 면 175',
+        [t['label'] for t in s2['ticks']] == res['fj'] and 'electrode-average current density' in s2['sub'] and 'C_AM 200 mAh/g' in s2['sub']
+        and f'= {q200} mA cm⁻²' in s2['sub'] and 'C_AM 175 mAh/g' in s1['sub'] and 'electrode-average current density' in s1['sub'],
+        s2['sub'][:300])
+    chk('④k6 @1V 컬러바는 비용량과 무관 (눈금 · 글 같음)', res['s1V200'] == res['s1V175'])
+    chk(f'④k7 조작판 비용량 고르기 (id netcur-capacity) — 175 mAh/g (모델) · 200 mAh/g (랩 표준) · 기본 = 175 (케이스 표와 같은 기준) {res["caps"]}',
+        res['caps'] == [175, 200] and 'id="netcur-capacity"' in res['ctlDef']
+        and re.search(r'<option value="175" selected>175 mAh/g \(모델\)</option>', res['ctlDef']) is not None
+        and re.search(r'<option value="200" selected>200 mAh/g \(랩 표준\)</option>', res['ctl200']) is not None)
+    chk(f'④k8 컬러바 @1C 파일 이름 꼬리 — 200 → _C200 · 175 · 없음 → 꼬리 없음 {res["tag"]}', res['tag'] == ['_C200', '', '', ''])
+    try:
+        wl = js_fn(js, 'netCurrentWireLegend')
+    except (ValueError, AssertionError):
+        wl = ''
+    chk('④k9 비용량을 바꾸면 다시 받지 않고 다시 그린다 · @1C 컬러바 파일 이름에 비용량 꼬리 (@1V 는 없음)',
+        re.search(r"on\('netcur-capacity', 'change', ev => \{ opt\.capacity = \+ev\.target\.value; if \(pay\) renderNetCurrent\(state, pay\); \}\)",
+                  wl) is not None
+        and "'_1C' + (opt.scale === 'linear' ? '_linear' : '') + netCurrentCapTag(opt) + netCurrentCapacityTag(opt) + '.png'" in wl
+        and "'_1V' + (opt.scale === 'linear' ? '_linear' : '') + netCurrentCapTag(opt) + '.png'" in wl)
 
 
 def section_registration():
@@ -1228,6 +1315,7 @@ def main():
         except Exception as e:                                   # noqa: BLE001 — 옛 코드 (고르기 없음) 에서도 나머지를 돈다
             chk('⑥ 고르기 절 실행', False, f'{type(e).__name__}: {e}')
         section_viewer_select(sel)
+        section_viewer_capacity()
         section_registration()
     finally:
         shutil.rmtree(tmp, ignore_errors=True)

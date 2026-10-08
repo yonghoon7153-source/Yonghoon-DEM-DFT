@@ -5216,6 +5216,7 @@ const NETCUR_CAPS = [['max', '위쪽 최대'], ['p99', '위쪽 p99'], ['p95', '�
 const NETCUR_CACHE_MAX = 4;                             // 받은 자료 기억 — 전부 (수십만 접촉) 자료가 쌓여 메모리를 잡지 않게 최근 넷만
 const NETCUR_LOD_N = 20000;                             // 이보다 많이 그리면 관 6 각 · 뚜껑 없음 (삼각형 4 배 적게) — 이하 = 옛 12 각 그대로
 const NETCUR_BIG_N = 20000;                             // 큰 자료 (접촉 > 이 수) = 보는 동안만 기억 · 나가면 비움 — 1저자 10-08 "나갈 때 휘발" (40 만 접촉 ≈ 119 MB)
+const NETCUR_CAPACITIES = [[175, '175 mAh/g (모델)'], [200, '200 mAh/g (랩 표준)']];   // @1C 비용량 — 1저자 10-08 Q3 (첫 값 = 케이스 표 · 등급 엔진 기준)
 const NETCUR_CHANNELS = {
   ionic: '이온 (SE–SE 접촉망)',
   electronic: '전자 (AM–AM 접촉망)',
@@ -5430,16 +5431,29 @@ function netCurrentTicks(lo, hi, fmt) {
 }
 
 /* 두 틀 — '1V' = 해 그대로 (탐침 · 원고 S16 · S17 규약) · '1C' = × I_1C / I_1V (서버 density.c1.factor · 선형).
- * → {ok, factor, reason} — @1V 가 안 되면 (σ₀ · 면적 없음) @1C 도 안 된다. */
-function netCurrentFrame(pay, frame) {
+ * → {ok, factor, reason, capScale, capacity, base} — @1V 가 안 되면 (σ₀ · 면적 없음) @1C 도 안 된다.
+ * cap = 고른 비용량 (mAh/g · 1저자 10-08 Q3) — 서버 배율 · Q_areal 은 c1.capacity_mAh_g (등급 엔진 C_AM · 175) 기준이고 Q_areal ∝ C_AM 이라
+ * 배율 × cap / 기준 (선형).  안 고르거나 기준이 없거나 잘못된 값이면 배율 그대로.  @1V 는 비용량과 무관. */
+function netCurrentFrame(pay, frame, cap) {
   const d = (pay && pay.density) || {};
   const has1V = !d.reason && ((pay && pay.edges) || []).some(e => e && e.j > 0);
   if (frame !== '1C') return has1V ? { ok: true, factor: 1, reason: '' } : { ok: false, factor: null, reason: d.reason || '전류 밀도 없음' };
   if (!has1V) return { ok: false, factor: null, reason: d.reason || '전류 밀도 없음' };
   const c1 = d.c1 || {};
   const f = +c1.factor;
-  if (c1.status === 'ok' && f > 0 && isFinite(f)) return { ok: true, factor: f, reason: '' };
+  if (c1.status === 'ok' && f > 0 && isFinite(f)) {
+    const base = +c1.capacity_mAh_g, c = +cap;
+    const okBase = base > 0 && isFinite(base);
+    const s = (okBase && c > 0 && isFinite(c)) ? c / base : 1;
+    return { ok: true, factor: f * s, reason: '', capScale: s, capacity: s !== 1 ? c : (okBase ? base : null), base: okBase ? base : null };
+  }
   return { ok: false, factor: null, reason: c1.reason || '@1C 환산 자료 없음' };
+}
+
+/* @1C 컬러바 파일 이름 꼬리 — 첫 비용량 (케이스 표 기준) 이 아니면 '_C<값>' (같은 그림의 175 · 200 판이 서로 덮어쓰지 않게) */
+function netCurrentCapacityTag(opt) {
+  const c = +(opt && opt.capacity);
+  return (c > 0 && isFinite(c) && c !== NETCUR_CAPACITIES[0][0]) ? '_C' + c : '';
 }
 
 /* 논문용 컬러바 스펙 (그림 글자 = 영문) — 튜브 색과 같은 jet · 감마 없음 · lo · hi = log₁₀ j (@1V) · frame '1V' | '1C'
@@ -5449,12 +5463,12 @@ function netCurrentColorbarSpec(pay, opt, lo, hi, frame) {
   const md = pay.mode === 'physics' ? 'Physics FULL (sensitivity)' : 'Hertz FULL';
   const want1C = frame === '1C';
   const lin = !!(opt && opt.scale === 'linear');                // 선형 눈금 — lo · hi = j (A cm⁻² @1V) · 눈금 = 최소 · 가운데 · 최대 (이등분)
-  const fr = netCurrentFrame(pay, want1C ? '1C' : '1V');
+  const fr = netCurrentFrame(pay, want1C ? '1C' : '1V', opt && opt.capacity);
   const c1 = want1C && fr.ok;                                  // @1C 를 못 하면 @1V 눈금 그대로 (제목 · 부제가 그렇게 말한다 — 단추는 꺼져 있다)
   const f = c1 ? fr.factor : 1;
   const sh = Math.log10(f);
   const d = pay.density || {};
-  const q = (d.c1 || {}).Q_areal_mAh_cm2;
+  const q = (+(d.c1 || {}).Q_areal_mAh_cm2) * (c1 ? (fr.capScale || 1) : 1);   // 고른 비용량으로 환산한 Q_areal (= 전극 평균 j_1C mA cm⁻²)
   const capP = opt && opt.cap === 'p99' ? 99 : (opt && opt.cap === 'p95' ? 95 : 0);   // 색 위쪽 — 눈금은 숫자 그대로 · 방법은 아래 작은 글에만
   const base = 'j = |I_c| / A_c (A_c = contact area of the same solve · ' + (pay.mode === 'physics' ? 'Physics gen-2 area' : 'c_cpl[22] disc')
     + ').  Model contact-network solve (Kirchhoff · Holm constriction per contact) — not a measured current.  '
@@ -5472,7 +5486,8 @@ function netCurrentColorbarSpec(pay, opt, lo, hi, frame) {
     sub: c1
       ? ('@1C = linear scaling of the 1 V probe solve: j(1C) = j(1V) × I_1C / I_1V (× ' + netCurrentFmtJ(f) + ') · I_1C = Q_areal × 1 h⁻¹'
          + (q > 0 ? ' = ' + (q >= 0.01 && q < 1000 ? String(Number((+q).toPrecision(3))) : netCurrentFmtJ(q)) + ' mA cm⁻²' : '')
-         + ' (current-conservation assumption — no reaction distribution).  ' + base)
+         + ' (electrode-average current density at 1C' + (fr.capacity ? ' · C_AM ' + fr.capacity + ' mAh/g' : '')
+         + '; current-conservation assumption — no reaction distribution).  ' + base)
       : ((want1C ? '@1C unavailable — @1V values shown.  ' : '') + '1 V probe across the electrode (bottom band 1 V → top band 0 V).  ' + base),
   };
 }
@@ -5491,6 +5506,7 @@ function netCurrentControlsHtml(opt, pay) {
     + sel('netcur-width', w, NETCUR_WIDTHS.map(x => [x, '굵기 ×' + x]))
     + sel('netcur-scale', opt.scale === 'linear' ? 'linear' : 'log', [['log', 'log 눈금'], ['linear', '선형 눈금 (이등분)']])
     + sel('netcur-cap', NETCUR_CAPS.some(c => c[0] === opt.cap) ? opt.cap : 'max', NETCUR_CAPS)
+    + sel('netcur-capacity', NETCUR_CAPACITIES.some(c => c[0] === +opt.capacity) ? +opt.capacity : NETCUR_CAPACITIES[0][0], NETCUR_CAPACITIES)
     + '</div>';
 }
 
@@ -5506,7 +5522,7 @@ function netCurrentLegendHtml(pay, opt, st) {
   const esc = jeEscH;
   const d = pay.density || {};
   const c1 = d.c1 || {};
-  const f1 = netCurrentFrame(pay, '1V'), fc = netCurrentFrame(pay, '1C');
+  const f1 = netCurrentFrame(pay, '1V'), fc = netCurrentFrame(pay, '1C', opt && opt.capacity);   // @1C = 고른 비용량 (10-08 Q3)
   const lin = st.scale === 'linear';                          // 선형 눈금 — st.lo · st.hi 가 j 값 (log 면 log₁₀ j)
   const val = v => (lin ? v : Math.pow(10, v));
   const L = [];
@@ -5529,8 +5545,10 @@ function netCurrentLegendHtml(pay, opt, st) {
     if (fc.ok) {
       L.push('@1C (운전 환산 × ' + fj(fc.factor) + ' = I_1C / I_1V): <b>' + fj(val(st.lo) * fc.factor) + ' … '
         + fj(val(st.hi) * fc.factor) + ' A cm⁻²</b>' + (lin ? ' <span style="color:#9ca3af">(가운데 ' + fj(0.5 * (val(st.lo) + val(st.hi)) * fc.factor) + ')</span>' : '')
-        + ' <span style="color:#9ca3af">(Q_areal ' + f3(c1.Q_areal_mAh_cm2)
-        + ' mAh/cm² → j_1C ' + f3(c1.Q_areal_mAh_cm2) + ' mA cm⁻² · 케이스 표 등급 값)</span>'
+        + ' <span style="color:#9ca3af">(' + (fc.capacity ? '비용량 ' + fc.capacity + ' mAh/g → ' : '')
+        + 'Q_areal ' + f3(c1.Q_areal_mAh_cm2 * (fc.capScale || 1)) + ' mAh/cm² → 전극 평균 전류 밀도 '
+        + f3(c1.Q_areal_mAh_cm2 * (fc.capScale || 1)) + ' mA cm⁻²'
+        + ((fc.capScale || 1) !== 1 ? ' · 케이스 표 Q_areal 은 ' + fc.base + ' mAh/g 기준 ' + f3(c1.Q_areal_mAh_cm2) : ' · 케이스 표 등급 값') + ')</span>'
         + ((c1.defaults_used || []).length ? ' <span style="color:#fbbf24">⚠ ' + esc((c1.defaults_used || []).join(' · ')) + '</span>' : ''));
     } else {
       L.push('<span style="color:#fbbf24">⚠ @1C 환산 불가 — ' + esc(fc.reason) + '</span>');
@@ -5627,6 +5645,7 @@ function netCurrentWireLegend(state, pay) {
   on('netcur-width', 'change', ev => { opt.width = +ev.target.value; if (pay) renderNetCurrent(state, pay); });
   on('netcur-scale', 'change', ev => { opt.scale = ev.target.value; if (pay) renderNetCurrent(state, pay); });
   on('netcur-cap', 'change', ev => { opt.cap = ev.target.value; if (pay) renderNetCurrent(state, pay); });
+  on('netcur-capacity', 'change', ev => { opt.capacity = +ev.target.value; if (pay) renderNetCurrent(state, pay); });
   on('netcur-retry', 'click', () => applyNetCurrentMode(state));          // 오류는 캐시하지 않는다 — 다시 fetch
   //  컬러바 둘 — @1V (탐침) · @1C (운전 환산) · 같은 색 막대 · 다른 숫자 (A cm⁻²)
   on('netcur-cbar-1v', 'click', () => {
@@ -5637,7 +5656,7 @@ function netCurrentWireLegend(state, pay) {
   on('netcur-cbar-1c', 'click', () => {
     const l = state._netCurLast;
     if (l) exportColorbarPNG(netCurrentColorbarSpec(l.pay, opt, l.st.lo, l.st.hi, '1C'),
-                             'colorbar_net_current_' + l.pay.channel + '_' + l.pay.mode + '_1C' + (opt.scale === 'linear' ? '_linear' : '') + netCurrentCapTag(opt) + '.png');
+                             'colorbar_net_current_' + l.pay.channel + '_' + l.pay.mode + '_1C' + (opt.scale === 'linear' ? '_linear' : '') + netCurrentCapTag(opt) + netCurrentCapacityTag(opt) + '.png');
   });
 }
 

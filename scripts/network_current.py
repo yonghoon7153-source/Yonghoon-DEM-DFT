@@ -493,7 +493,7 @@ def c1_scaling(results_dir, j_mean_1V):
     두께 (full_metrics thickness_um) 가 없으면 환산하지 않는다 · AM:SE 비 · 공극률이 없으면 등급 엔진이 쓰는 기본값 (wt_AM 0.80 · 고체 0.85)
     으로 낸 값을 표지한다 (케이스 표의 Q_areal 과 같은 값 — 숨기지 않는다)."""
     out = {'status': 'unavailable', 'reason': None, 'Q_areal_mAh_cm2': None, 'j_1C_A_cm2': None, 'factor': None,
-           'defaults_used': [], 'source': C1_SOURCE, 'rule': C1_RULE}
+           'capacity_mAh_g': None, 'defaults_used': [], 'source': C1_SOURCE, 'rule': C1_RULE}
     fm = _read_json(os.path.join(results_dir, 'full_metrics.json'))
     if fm is None:
         out['reason'] = 'full_metrics.json 없음 (접촉 분석 산출이 없다) — Q_areal 미확인'
@@ -525,6 +525,9 @@ def c1_scaling(results_dir, j_mean_1V):
         return out
     out['Q_areal_mAh_cm2'] = q
     out['j_1C_A_cm2'] = q * 1e-3
+    # ★ 10-08 (1저자 Q3 · 랩 표준 200 mAh/g) — 이 Q_areal 의 비용량 기준 (등급 엔진 C_AM_MAHG).  Q_areal ∝ C_AM 이라 뷰어가 고른 비용량으로
+    #   Q_areal · 배율을 선형 환산한다 (webapp/app.py = 194 봉인 — 비용량을 경로 인자로 받지 않는다).
+    out['capacity_mAh_g'] = getattr(_G, 'C_AM_MAHG', None)
     if _pos_finite(j_mean_1V) is None:
         out['reason'] = '⟨J⟩_1V 미확인 (σ₀ · 상자 단면) — 배율 I_1C / I_1V 를 정할 수 없다'
         return out
