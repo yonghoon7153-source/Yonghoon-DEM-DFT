@@ -257,6 +257,16 @@ def thickness_series(early_rows, scan_rows, drop=None, interp=True):
     return out
 
 
+def envelope(series):
+    """단조 포락선 — 두께 = 그 시점까지의 최솟값 (1저자 10-08 밤 *"약간 올라가는 부분은 없게 보정"* · *"500~1000 사이"* → 단조 포락선 (권고) 선택).
+    한 규칙으로 오르는 곳을 모두 평평하게 한다 (정착 뒤 탄성 회복 · 판을 뚫고 나간 입자 턱 · 이완 끝 회복).  [(t, 포락선, 원값, 출처)] — 포락선 ≤ 원값."""
+    out, lo = [], math.inf
+    for t, y, s in series:
+        lo = min(lo, y)
+        out.append((t, lo, y, s))
+    return out
+
+
 def pressure_series(prow):
     """make_fig.py 와 같은 원값 (phase ≥ 2 · 압력 있는 줄) 앞에 (0 ms, 0 MPa, 판 없음) 한 점."""
     px = [(int(r['step']), float(r['pressure_mpa'])) for r in prow if r['pressure_mpa'] != '' and int(r['phase']) >= 2]
@@ -411,13 +421,24 @@ def main():
                      '79,189,255', 100, 320, 50, 'Thickness (\\g(m)m)', bounds_ms), encoding='utf-8')
         draw_preview(tser, '#4FBDFF', 'Thickness (µm)', (100, 320), 50, 'ps73_ms_thickness_atomtop', bounds_ms,
                      settle_label_at='top', marker_sources=(SRC_REPLAY, SRC_CKPT))
+        env = envelope(tser)
+        write_origin_csv(ORIGIN / 'ps73_ms_thickness_atomtop_envelope.csv',
+                         ['Simulation time', 'Thickness (envelope)', 'Thickness (raw)', 'Source'], ['ms', 'µm', 'µm', ''],
+                         [(f'{t:.3f}', f'{e:.3f}', f'{y:.3f}', s) for t, e, y, s in env])
+        draw_preview([(t, e, s) for t, e, _, s in env], '#4FBDFF', 'Thickness (µm)', (100, 320), 50,
+                     'ps73_ms_thickness_atomtop_envelope', bounds_ms, settle_label_at='top', marker_sources=(SRC_REPLAY, SRC_CKPT))
+        diff = [(round(y - e, 4), t) for t, e, y, _ in env]
+        flat = [t for t, e, y, _ in env if y - e > 1e-9]
         key['thickness'] = {'status': 'OK', 'definition': 'max over ALL atoms of (z + r) − floor (z = 0) · µm (atom criterion only)',
                             'n_points': len(tser), 'insertion_line': ins,
                             'early_um': [[r['step'], round(r['ztop_max_deck_m'] * UM, 4)] for r in erows],
                             'last_um': round(tser[-1][1], 4),
                             'dropped_points': [{'step': r['step'], 'ms': r['step'] * STEP_MS, 'max_um': round(r['ztop_max_deck_m'] * UM, 4),
                                                 'p999_um': round(r['ztop_p999_deck_m'] * UM, 4), 'top_id': r['ztop_id'], 'why': DROP_STEPS[r['step']]}
-                                               for r in erows + rows if r['step'] in DROP_STEPS]}
+                                               for r in erows + rows if r['step'] in DROP_STEPS],
+                            'envelope': {'rule': 'running minimum (thickness = min so far)', 'max_raw_minus_envelope_um': max(diff),
+                                         'n_points_changed': len(flat), 'first_changed_ms': flat[0] if flat else None,
+                                         'last_um': round(env[-1][1], 4)}}
     (HERE / 'key_numbers_ms.json').write_text(json.dumps(key, ensure_ascii=False, indent=1) + '\n', encoding='utf-8')
     print(json.dumps(key, ensure_ascii=False))
 
@@ -551,6 +572,12 @@ def selftest():
         ser is not None and meas == safe(lambda: thickness_series(fly, good_scan(), drop={100000: 'x'}, interp=False))
         and all(0.001 < t < 405.0 for t, _, s in ser if s == SRC_INTERP) and sum(1 for p in ser if p[2] == SRC_INTERP) == 404 - 8
         and all(b[0] > a[0] for a, b in zip(ser, ser[1:])))
+    raw = [(0.0, 300.0, 'a'), (50.0, 175.0, 'a'), (200.0, 131.8, 'a'), (600.0, 132.2, 'a'), (975.0, 132.5, 'a'),
+           (1050.0, 131.7, 'a'), (1820.0, 124.6, 'a'), (1825.0, 125.07, 'a'), (1900.0, 124.3, 'a')]
+    env = safe(lambda: envelope(raw), [])
+    chk('V1 포락선 = 그때까지 최솟값 · 늘지 않는다 · 원값 이하', env != [] and all(b[1] <= a[1] for a, b in zip(env, env[1:]))
+        and all(e <= y for _, e, y, _ in env) and [round(e, 3) for _, e, _, _ in env] == [300.0, 175.0, 131.8, 131.8, 131.8, 131.7, 124.6, 124.6, 124.3])
+    chk('V2 줄기만 하는 자료는 그대로', [e for _, e, _, _ in safe(lambda: envelope(raw[:3]), [])] == [300.0, 175.0, 131.8])
     prow = ([{'step': '1', 'phase': '0', 'pressure_mpa': ''}, {'step': '200002', 'phase': '1', 'pressure_mpa': ''}]
             + [{'step': str(s), 'phase': '2', 'pressure_mpa': '0.0'} for s in (201000, 202000)]
             + [{'step': '3125000', 'phase': '3', 'pressure_mpa': '300.95'}, {'step': '3126000', 'phase': '4', 'pressure_mpa': '204.6'},

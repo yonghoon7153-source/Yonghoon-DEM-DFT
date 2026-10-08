@@ -112,6 +112,16 @@
     "top_id": "134331",
     "why": "bounced single particle (1st author: interpolate)"
    }
-  ]
+  ],
+  "envelope": {
+   "rule": "running minimum (thickness = min so far)",
+   "max_raw_minus_envelope_um": [
+    0.756,
+    975.0
+   ],
+   "n_points_changed": 363,
+   "first_changed_ms": 201.0,
+   "last_um": 112.349
+  }
  }
 }

@@ -31,3 +31,4 @@
 | 시간 (ms)–압력 | A Simulation time (ms) · B Pressure (MPa) · C Source (출처 표시 — 그리지 않는다) | X 0–3250 · Y 0–330 | `ps73_ms_pressure.ogs` · 0 ms = 판 없음 0 MPa · 단계 점선 둘 (400.002 · 3125 — 정착 + 안정화 = 한 구간 Settling) · 구간 이름 Settling 은 **아래쪽** (300 MPa 점선과 겹침 방지) |
 | 슬라이드판 | `ps73_ms_pressure_slide.csv` (같은 열) | 같음 | 같은 `ps73_ms_pressure.ogs` · 이완 구간 = 모식 (§5) |
 | 시간 (ms)–두께 (원자 기준) | `ps73_ms_thickness_atomtop.csv` — A ms · B Thickness (µm) · C Source (replay · checkpoint · atom dump) | X 0–3250 · Y 100–320 | `ps73_ms_thickness_atomtop.ogs` · 0–405 ms = 측정점 10 개 사이를 단조 곡선 (PCHIP · 1 ms) 으로 채운 396 점 (C 열 `interpolated …` · 측정 아님 · 1저자 "곡선 형식으로") · 100 ms 의 튀어 오른 입자 하나 점은 뺌 ("보간" · §7-1) · 1,825 ms 부터 판을 뚫고 나간 입자 포함 (한정어) |
+| 시간 (ms)–두께 · 단조 포락선판 (보고용) | `ps73_ms_thickness_atomtop_envelope.csv` — A ms · B 포락선 (그 시점까지 최솟값) · C 원값 · D Source | X 0–3250 · Y 100–320 | 같은 `ps73_ms_thickness_atomtop.ogs` (B 열을 그린다) · 오르는 곳 없음 (§7) |
