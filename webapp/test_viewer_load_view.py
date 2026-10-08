@@ -685,7 +685,7 @@ def section_real14(tmp):
 JS_NAMES = ('netCurrentFmtJ', 'netCurrentT', 'netCurrentTicks', 'netCurrentPct', 'jeEscH', 'jetColor', 'coolwarmColor', 'loadViewAmMetric',
             'amOnlyRange', 'amOnlyLegendHtml', 'amOnlyMissingHtml', 'amOnlyColorbarSpec', 'pressureViewTip', 'pressureViewInfo',
             'pressureLegendHtml', 'loadViewAmContacts', 'amOnlyContactRange', 'amOnlyContactLegendHtml', 'amOnlyContactColorbarSpec',
-            '_amOnlyControlsHtml')
+            '_amOnlyControlsHtml', '_amOnlyBasis')
 JS_CONSTS = ('AMONLY_CONTACT_OPT',)
 
 
