@@ -1,0 +1,742 @@
+{
+ "schema": "g2rr5_case15_probe_rerun/v1",
+ "commits": {
+  "g2rr5_02": "72879744e",
+  "probed": "b34a52f52",
+  "pin": "aa7ec7fe98e8684f1a2138665f9eba978366c229",
+  "probed_blobs": {
+   "scripts/wsl_network_smoke.py": "20d61d1ddbeb810530f8c98dcf9d58db54e10ba2",
+   "scripts/g2_network_reread.py": "07d2830da8dd3be6a764f127ba82cd56eb37dde8"
+  },
+  "note": "탐침을 돌린 커밋 = probed (G2RR5-03) · 이 요약은 그다음 커밋 (문서만) · 두 스크립트 blob = probed_blobs · source/ 469 경로 중 핀과 같은 460 · 다른 9 = 재현 기록 §3 의 7 (탐침 경로 밖) + 이번 두 스크립트"
+ },
+ "probes_unchanged": "docs/reviews/codex_gen2_network_reverify5_evidence_20261007/probes/{r5_case15,r5_case15_pipeline_fault,r5_case15_fault_reread}.py",
+ "canonical": {
+  "r5_case15": {
+   "rc": 1,
+   "seconds": 0.6,
+   "tail": [
+    "  File \"<path> line 42, in <module>",
+    "    assert not summary['producer']['submitted_positive']['failures']",
+    "           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+    "AssertionError"
+   ]
+  },
+  "r5_case15_pipeline_fault": {
+   "rc": 0,
+   "seconds": 72.3,
+   "tail": [
+    "{\"root\": \"<path> \"denied\": 1, \"status\": \"failed\", \"failed_stages\": [\"Network Solver (both modes)\"], \"checks\": 7, \"fail\": 1, \"failures\": [{\"group\": \"A\", \"id\": \"case15.nc5_attempt\", \"name\": \"case15_network: [음성 대조] 실제 망 시도 — 이번 시도의 망 CLI 1 회 · 예외 없음 · rc 0 · per-mode 둘 · 실패 채널 = 등록 넷 (전자 두 모드 · Hertz 열 boundary_overlap · Physics 열 음수 면적 거부) · 이온 computed · 단계 rc 0 · 결손 0 · 내용 검증 거부 · 시도 기록 = 기록기 digest · 원자료 탐침과 같은 원인 (실행 실패 = TECH)\", \"verdict\": \"TECH\", \"detail\": \"망 CLI 실행 예외 PermissionError (r5_case15 injected solver executable denied) — 실행 실패 (지정한 내용 거부 아님)\"}]}"
+   ]
+  },
+  "r5_case15_fault_reread": {
+   "rc": 1,
+   "seconds": 0.1,
+   "tail": [
+    "  File \"/usr/lib/python3.11/pathlib.py\", line 1044, in open",
+    "    return io.open(self, mode, buffering, encoding, errors, newline)",
+    "           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+    "FileNotFoundError: [Errno 2] No such file or directory: '<path>"
+   ]
+  },
+  "pipeline_fault": {
+   "denied_calls": 1,
+   "status": "failed",
+   "n_checks": 7,
+   "verdicts": [
+    [
+     "case15.proc",
+     "PASS"
+    ],
+    [
+     "case15.raw_sha",
+     "PASS"
+    ],
+    [
+     "case15.nc1_blocked",
+     "PASS"
+    ],
+    [
+     "case15.nc2_tau",
+     "PASS"
+    ],
+    [
+     "case15.nc3_cause",
+     "PASS"
+    ],
+    [
+     "case15.nc4_ionic",
+     "PASS"
+    ],
+    [
+     "case15.nc5_attempt",
+     "TECH"
+    ]
+   ],
+   "failures": [
+    [
+     "case15.nc5_attempt",
+     "TECH"
+    ]
+   ],
+   "smoke_rc_rule": 1,
+   "attempt_calls": [
+    {
+     "exception": "PermissionError",
+     "returncode": null,
+     "per_mode": null
+    }
+   ],
+   "solver_stage": {
+    "rc": 1,
+    "ok": false,
+    "missing_outputs": [
+     "network_conductivity.json",
+     "network_conductivity_hertzian.json",
+     "network_conductivity_physics.json",
+     "network_conductivity_dual.json"
+    ],
+    "stale_outputs": [],
+    "verify_failed": true
+   }
+  }
+ },
+ "supplementary": {
+  "note": "B = 같은 커밋의 두 번째 재현 뿌리.  r5_case15 만 -O (assert 문 제거 · 탐침 바이트 · 입력 그대로) — 42 · 62 · 91 줄 assert 를 지나 변이 12 행을 기록한다 (91 줄 positive 다시 읽기 호출은 assert 안이라 -O 에서 실행되지 않는다 → positive 행 · s0b_positive.json 없음).  B2 = r5_case15_fault_reread 를 한 번 더: 입력 s0b_positive.json 자리에 같은 실행의 marker_missing 다시 읽기 JSON (정상 게시 폴더 셋 · K1–K7 · H1 통과 — 그 탐침이 쓰는 것은 cases 의 폴더뿐) 을 복사 (입력 대체 · 표지).",
+  "r5_case15_O": {
+   "rc": 0,
+   "seconds": 23.5,
+   "tail": [
+    "raw_sha_fail 1 1",
+    "unexpected_failure_record 1 1",
+    "real_failure_path_synthetic_input 1 1",
+    "Evidence saved: <path>"
+   ]
+  },
+  "r5_case15_pipeline_fault": {
+   "rc": 0,
+   "seconds": 69.6,
+   "tail": [
+    "{\"root\": \"<path> \"denied\": 1, \"status\": \"failed\", \"failed_stages\": [\"Network Solver (both modes)\"], \"checks\": 7, \"fail\": 1, \"failures\": [{\"group\": \"A\", \"id\": \"case15.nc5_attempt\", \"name\": \"case15_network: [음성 대조] 실제 망 시도 — 이번 시도의 망 CLI 1 회 · 예외 없음 · rc 0 · per-mode 둘 · 실패 채널 = 등록 넷 (전자 두 모드 · Hertz 열 boundary_overlap · Physics 열 음수 면적 거부) · 이온 computed · 단계 rc 0 · 결손 0 · 내용 검증 거부 · 시도 기록 = 기록기 digest · 원자료 탐침과 같은 원인 (실행 실패 = TECH)\", \"verdict\": \"TECH\", \"detail\": \"망 CLI 실행 예외 PermissionError (r5_case15 injected solver executable denied) — 실행 실패 (지정한 내용 거부 아님)\"}]}"
+   ]
+  },
+  "r5_case15_fault_reread_first": {
+   "rc": 1,
+   "seconds": 0.1,
+   "tail": [
+    "  File \"/usr/lib/python3.11/pathlib.py\", line 1044, in open",
+    "    return io.open(self, mode, buffering, encoding, errors, newline)",
+    "           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+    "FileNotFoundError: [Errno 2] No such file or directory: '<path>"
+   ]
+  },
+  "r5_case15_fault_reread_B2": {
+   "rc": 0,
+   "seconds": 0.8,
+   "tail": [
+    "Actual child-case PermissionError reread rc 1"
+   ]
+  },
+  "fault_reread_B2": {
+   "n_fail": 1,
+   "meta": [
+    {
+     "name": "S0 스모크 망 정지 케이스 전부 done (3 · 등록 음성 대조 1 ",
+     "ok": true,
+     "detail": null
+    },
+    {
+     "name": "S0b 스모크 음성 대조 (등록 1 · 미등록 0) = 게시 없음 · 기",
+     "ok": false,
+     "detail": "{\"case15_network\": [\"기록된 판정이 PASS 아님 [('case15.nc5_attempt', 'TECH')]\", \"공용 판정 재계산 ≠ 기록 {'case15.proc': ('PASS', 'FAIL', \\\"rc None  · 보고서 id 'case15_network'\\\")} — 보고 상세가 기록된 판정을 뒷받침하지 않는다 (상세 결손 · 수치 모순 · 실행 실패)\"]}"
+    }
+   ]
+  }
+ },
+ "s0b": {
+  "pin": {
+   "positive": {
+    "rc": 0,
+    "n_fail": 0,
+    "meta": {
+     "S0": true,
+     "S0b": true
+    }
+   },
+   "marker_missing": {
+    "rc": 1,
+    "n_fail": 1,
+    "meta": {
+     "S0": false
+    }
+   },
+   "marker_unknown": {
+    "rc": 0,
+    "n_fail": 0,
+    "meta": {
+     "S0": true,
+     "S0b": true
+    }
+   },
+   "checks_missing": {
+    "rc": 1,
+    "n_fail": 1,
+    "meta": {
+     "S0": true,
+     "S0b": false
+    }
+   },
+   "checks_three": {
+    "rc": 1,
+    "n_fail": 1,
+    "meta": {
+     "S0": true,
+     "S0b": false
+    }
+   },
+   "check_fail": {
+    "rc": 1,
+    "n_fail": 1,
+    "meta": {
+     "S0": true,
+     "S0b": false
+    }
+   },
+   "one_check_repeated_four": {
+    "rc": 0,
+    "n_fail": 0,
+    "meta": {
+     "S0": true,
+     "S0b": true
+    }
+   },
+   "negctl_missing": {
+    "rc": 0,
+    "n_fail": 0,
+    "meta": {
+     "S0": true,
+     "S0b": true
+    }
+   },
+   "tau_numeric": {
+    "rc": 0,
+    "n_fail": 0,
+    "meta": {
+     "S0": true,
+     "S0b": true
+    }
+   },
+   "ionic_residual_bad": {
+    "rc": 0,
+    "n_fail": 0,
+    "meta": {
+     "S0": true,
+     "S0b": true
+    }
+   },
+   "raw_sha_fail": {
+    "rc": 0,
+    "n_fail": 0,
+    "meta": {
+     "S0": true,
+     "S0b": true
+    }
+   },
+   "unexpected_failure_record": {
+    "rc": 0,
+    "n_fail": 0,
+    "meta": {
+     "S0": true,
+     "S0b": true
+    }
+   },
+   "real_failure_path_synthetic_input": {
+    "rc": 0,
+    "n_fail": 0,
+    "meta": {
+     "S0": true,
+     "S0b": true
+    }
+   }
+  },
+  "fixed_O": {
+   "marker_missing": {
+    "rc": 1,
+    "n_fail": 1,
+    "meta": {
+     "S0": false
+    }
+   },
+   "marker_unknown": {
+    "rc": 1,
+    "n_fail": 2,
+    "meta": {
+     "S0": false,
+     "S0b": false
+    }
+   },
+   "checks_missing": {
+    "rc": 1,
+    "n_fail": 1,
+    "meta": {
+     "S0": true,
+     "S0b": false
+    }
+   },
+   "checks_three": {
+    "rc": 1,
+    "n_fail": 1,
+    "meta": {
+     "S0": true,
+     "S0b": false
+    }
+   },
+   "check_fail": {
+    "rc": 1,
+    "n_fail": 1,
+    "meta": {
+     "S0": true,
+     "S0b": false
+    }
+   },
+   "one_check_repeated_four": {
+    "rc": 1,
+    "n_fail": 1,
+    "meta": {
+     "S0": true,
+     "S0b": false
+    }
+   },
+   "negctl_missing": {
+    "rc": 1,
+    "n_fail": 1,
+    "meta": {
+     "S0": true,
+     "S0b": false
+    }
+   },
+   "tau_numeric": {
+    "rc": 1,
+    "n_fail": 1,
+    "meta": {
+     "S0": true,
+     "S0b": false
+    }
+   },
+   "ionic_residual_bad": {
+    "rc": 1,
+    "n_fail": 1,
+    "meta": {
+     "S0": true,
+     "S0b": false
+    }
+   },
+   "raw_sha_fail": {
+    "rc": 1,
+    "n_fail": 1,
+    "meta": {
+     "S0": true,
+     "S0b": false
+    }
+   },
+   "unexpected_failure_record": {
+    "rc": 1,
+    "n_fail": 1,
+    "meta": {
+     "S0": true,
+     "S0b": false
+    }
+   },
+   "real_failure_path_synthetic_input": {
+    "rc": 1,
+    "n_fail": 1,
+    "meta": {
+     "S0": true,
+     "S0b": false
+    }
+   }
+  }
+ },
+ "producer": {
+  "pin": {
+   "submitted_positive": {
+    "n": 6,
+    "fail": []
+   },
+   "independent_raw_positive": {
+    "n": 6,
+    "fail": []
+   },
+   "marker_missing": {
+    "n": 3,
+    "fail": [
+     [
+      null,
+      "FAIL"
+     ]
+    ]
+   },
+   "marker_unknown": {
+    "n": 3,
+    "fail": [
+     [
+      null,
+      "FAIL"
+     ]
+    ]
+   },
+   "checks_missing": {
+    "n": 6,
+    "fail": []
+   },
+   "checks_three": {
+    "n": 6,
+    "fail": []
+   },
+   "check_fail": {
+    "n": 6,
+    "fail": []
+   },
+   "one_check_repeated_four": {
+    "n": 6,
+    "fail": []
+   },
+   "negctl_missing": {
+    "n": 6,
+    "fail": [
+     [
+      null,
+      "FAIL"
+     ],
+     [
+      null,
+      "FAIL"
+     ]
+    ]
+   },
+   "tau_numeric": {
+    "n": 6,
+    "fail": [
+     [
+      null,
+      "FAIL"
+     ]
+    ]
+   },
+   "ionic_residual_bad": {
+    "n": 6,
+    "fail": [
+     [
+      null,
+      "FAIL"
+     ]
+    ]
+   },
+   "raw_sha_fail": {
+    "n": 6,
+    "fail": [
+     [
+      null,
+      "FAIL"
+     ]
+    ]
+   },
+   "unexpected_failure_record": {
+    "n": 6,
+    "fail": []
+   },
+   "real_failure_path_synthetic_input": {
+    "n": 6,
+    "fail": []
+   }
+  },
+  "fixed_O": {
+   "submitted_positive": {
+    "n": 7,
+    "fail": [
+     [
+      "case15.nc5_attempt",
+      "FAIL"
+     ]
+    ]
+   },
+   "independent_raw_positive": {
+    "n": 7,
+    "fail": [
+     [
+      "case15.nc5_attempt",
+      "FAIL"
+     ]
+    ]
+   },
+   "marker_missing": {
+    "n": 3,
+    "fail": [
+     [
+      null,
+      "FAIL"
+     ]
+    ]
+   },
+   "marker_unknown": {
+    "n": 4,
+    "fail": [
+     [
+      null,
+      "FAIL"
+     ],
+     [
+      null,
+      "FAIL"
+     ]
+    ]
+   },
+   "checks_missing": {
+    "n": 7,
+    "fail": [
+     [
+      "case15.nc5_attempt",
+      "FAIL"
+     ]
+    ]
+   },
+   "checks_three": {
+    "n": 7,
+    "fail": [
+     [
+      "case15.nc5_attempt",
+      "FAIL"
+     ]
+    ]
+   },
+   "check_fail": {
+    "n": 7,
+    "fail": [
+     [
+      "case15.nc5_attempt",
+      "FAIL"
+     ]
+    ]
+   },
+   "one_check_repeated_four": {
+    "n": 7,
+    "fail": [
+     [
+      "case15.nc5_attempt",
+      "FAIL"
+     ]
+    ]
+   },
+   "negctl_missing": {
+    "n": 7,
+    "fail": [
+     [
+      "case15.nc3_cause",
+      "FAIL"
+     ],
+     [
+      "case15.nc4_ionic",
+      "FAIL"
+     ],
+     [
+      "case15.nc5_attempt",
+      "FAIL"
+     ]
+    ]
+   },
+   "tau_numeric": {
+    "n": 7,
+    "fail": [
+     [
+      "case15.nc2_tau",
+      "FAIL"
+     ],
+     [
+      "case15.nc5_attempt",
+      "FAIL"
+     ]
+    ]
+   },
+   "ionic_residual_bad": {
+    "n": 7,
+    "fail": [
+     [
+      "case15.nc4_ionic",
+      "FAIL"
+     ],
+     [
+      "case15.nc5_attempt",
+      "FAIL"
+     ]
+    ]
+   },
+   "raw_sha_fail": {
+    "n": 7,
+    "fail": [
+     [
+      "case15.raw_sha",
+      "FAIL"
+     ],
+     [
+      "case15.nc5_attempt",
+      "FAIL"
+     ]
+    ]
+   },
+   "unexpected_failure_record": {
+    "n": 7,
+    "fail": [
+     [
+      "case15.nc5_attempt",
+      "FAIL"
+     ]
+    ]
+   },
+   "real_failure_path_synthetic_input": {
+    "n": 7,
+    "fail": [
+     [
+      "case15.nc5_attempt",
+      "FAIL"
+     ]
+    ]
+   }
+  }
+ },
+ "pipeline_fault": {
+  "pin": {
+   "denied_calls": 1,
+   "status": "failed",
+   "n_checks": 6,
+   "verdicts": [
+    [
+     null,
+     "PASS"
+    ],
+    [
+     null,
+     "PASS"
+    ],
+    [
+     null,
+     "PASS"
+    ],
+    [
+     null,
+     "PASS"
+    ],
+    [
+     null,
+     "PASS"
+    ],
+    [
+     null,
+     "PASS"
+    ]
+   ],
+   "failures": [],
+   "smoke_rc_rule": 0,
+   "attempt_calls": [],
+   "solver_stage": {
+    "rc": 1,
+    "ok": false,
+    "missing_outputs": null,
+    "stale_outputs": null,
+    "verify_failed": null
+   }
+  },
+  "fixed": {
+   "denied_calls": 1,
+   "status": "failed",
+   "n_checks": 7,
+   "verdicts": [
+    [
+     "case15.proc",
+     "PASS"
+    ],
+    [
+     "case15.raw_sha",
+     "PASS"
+    ],
+    [
+     "case15.nc1_blocked",
+     "PASS"
+    ],
+    [
+     "case15.nc2_tau",
+     "PASS"
+    ],
+    [
+     "case15.nc3_cause",
+     "PASS"
+    ],
+    [
+     "case15.nc4_ionic",
+     "PASS"
+    ],
+    [
+     "case15.nc5_attempt",
+     "TECH"
+    ]
+   ],
+   "failures": [
+    [
+     "case15.nc5_attempt",
+     "TECH"
+    ]
+   ],
+   "smoke_rc_rule": 1,
+   "attempt_calls": [
+    {
+     "exception": "PermissionError",
+     "returncode": null,
+     "per_mode": null
+    }
+   ],
+   "solver_stage": {
+    "rc": 1,
+    "ok": false,
+    "missing_outputs": [
+     "network_conductivity.json",
+     "network_conductivity_hertzian.json",
+     "network_conductivity_physics.json",
+     "network_conductivity_dual.json"
+    ],
+    "stale_outputs": [],
+    "verify_failed": true
+   }
+  }
+ },
+ "fault_reread": {
+  "pin": {
+   "n_fail": 0,
+   "meta": [
+    {
+     "name": "S0 스모크 망 정지 케이스 전부 done (3 · 음성 대조 1 제외)",
+     "ok": true,
+     "detail": null
+    },
+    {
+     "name": "S0b 스모크 음성 대조 (1) = 게시 없음 · 지정한 원인 발화 · ",
+     "ok": true,
+     "detail": null
+    }
+   ]
+  },
+  "fixed_B2": {
+   "n_fail": 1,
+   "meta": [
+    {
+     "name": "S0 스모크 망 정지 케이스 전부 done (3 · 등록 음성 대조 1 ",
+     "ok": true,
+     "detail": null
+    },
+    {
+     "name": "S0b 스모크 음성 대조 (등록 1 · 미등록 0) = 게시 없음 · 기",
+     "ok": false,
+     "detail": "{\"case15_network\": [\"기록된 판정이 PASS 아님 [('case15.nc5_attempt', 'TECH')]\", \"공용 판정 재계산 ≠ 기록 {'case15.proc': ('PASS', 'FAIL', \\\"rc None  · 보고서 id 'case15_network'\\\")} — 보고 상세가 기록된 판정을 뒷받침하지 않는다 (상세 결손 · 수치 모순 · 실행 실패)\"]}"
+    }
+   ]
+  }
+ }
+}
