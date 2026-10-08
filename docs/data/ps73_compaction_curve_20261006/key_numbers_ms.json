@@ -1,0 +1,117 @@
+{
+ "x_axis": {
+  "label": "Simulation time (ms)",
+  "time_ms": "step × 1e-3",
+  "dt_s": 1e-06,
+  "note": "scaled deck time (r×1000 · E×0.001) — not the real pressing time (README §5)"
+ },
+ "phase_bounds_ms": {
+  "settling_incl_stabilization": 0.0,
+  "compression": 400.002,
+  "relaxation": 3125.0,
+  "plate_placed_not_drawn": 200.002
+ },
+ "pressure": {
+  "n_points": 3275,
+  "prepended": [
+   0.0,
+   0.0,
+   "no plate (0 by definition)"
+  ],
+  "slide_relax_tau_step": 15000,
+  "slide_end_value_mpa": 165.34203
+ },
+ "deck": {
+  "z_top_deck": 0.3,
+  "radii_deck": {
+   "AM_P": 0.0045,
+   "AM_S": 0.002,
+   "SE": 0.0005
+  }
+ },
+ "scan": {
+  "n": 565,
+  "first_step": 405000,
+  "last_step": 3225000,
+  "atom_count_changes": [
+   [
+    405000,
+    160420
+   ],
+   [
+    3130000,
+    160417
+   ]
+  ],
+  "first_step_top_reaches_plate": 980000,
+  "first_step_top_center_above_plate": 1825000,
+  "n_steps_top_center_above_plate": 281,
+  "max_top_minus_plate_um": [
+   1.491,
+   3125000
+  ]
+ },
+ "thickness": {
+  "status": "OK",
+  "definition": "max over ALL atoms of (z + r) − floor (z = 0) · µm (atom criterion only)",
+  "n_points": 971,
+  "insertion_line": "INFO: Particle insertion ins_mix: inserted 160421 particle templates (mass 9.005968e-01) at step 1",
+  "early_um": [
+   [
+    1,
+    304.28
+   ],
+   [
+    1000,
+    303.731
+   ],
+   [
+    50000,
+    175.392
+   ],
+   [
+    100000,
+    201.63
+   ],
+   [
+    150000,
+    132.342
+   ],
+   [
+    200000,
+    131.793
+   ],
+   [
+    200001,
+    131.793
+   ],
+   [
+    250000,
+    131.889
+   ],
+   [
+    300000,
+    131.944
+   ],
+   [
+    350000,
+    131.995
+   ],
+   [
+    400000,
+    132.043
+   ]
+  ],
+  "last_um": 112.418,
+  "dropped_points": [
+   {
+    "step": 100000,
+    "ms": 100.0,
+    "max_um": 201.63,
+    "p999_um": 130.822,
+    "top_id": "134331",
+    "why": "bounced single particle (1st author: interpolate)"
+   }
+  ]
+ }
+}

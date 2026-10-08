@@ -1,0 +1,973 @@
+﻿Simulation time,Thickness,Source
+ms,µm,
+0.001,304.280,replay (insertion · 2 cores)
+1.000,303.731,replay (insertion · 2 cores)
+2.000,302.868,interpolated (PCHIP between measured points)
+3.000,301.787,interpolated (PCHIP between measured points)
+4.000,300.499,interpolated (PCHIP between measured points)
+5.000,299.011,interpolated (PCHIP between measured points)
+6.000,297.334,interpolated (PCHIP between measured points)
+7.000,295.477,interpolated (PCHIP between measured points)
+8.000,293.448,interpolated (PCHIP between measured points)
+9.000,291.257,interpolated (PCHIP between measured points)
+10.000,288.913,interpolated (PCHIP between measured points)
+11.000,286.425,interpolated (PCHIP between measured points)
+12.000,283.803,interpolated (PCHIP between measured points)
+13.000,281.056,interpolated (PCHIP between measured points)
+14.000,278.192,interpolated (PCHIP between measured points)
+15.000,275.222,interpolated (PCHIP between measured points)
+16.000,272.153,interpolated (PCHIP between measured points)
+17.000,268.997,interpolated (PCHIP between measured points)
+18.000,265.761,interpolated (PCHIP between measured points)
+19.000,262.455,interpolated (PCHIP between measured points)
+20.000,259.088,interpolated (PCHIP between measured points)
+21.000,255.669,interpolated (PCHIP between measured points)
+22.000,252.208,interpolated (PCHIP between measured points)
+23.000,248.714,interpolated (PCHIP between measured points)
+24.000,245.195,interpolated (PCHIP between measured points)
+25.000,241.662,interpolated (PCHIP between measured points)
+26.000,238.122,interpolated (PCHIP between measured points)
+27.000,234.587,interpolated (PCHIP between measured points)
+28.000,231.064,interpolated (PCHIP between measured points)
+29.000,227.563,interpolated (PCHIP between measured points)
+30.000,224.093,interpolated (PCHIP between measured points)
+31.000,220.663,interpolated (PCHIP between measured points)
+32.000,217.283,interpolated (PCHIP between measured points)
+33.000,213.961,interpolated (PCHIP between measured points)
+34.000,210.708,interpolated (PCHIP between measured points)
+35.000,207.531,interpolated (PCHIP between measured points)
+36.000,204.441,interpolated (PCHIP between measured points)
+37.000,201.447,interpolated (PCHIP between measured points)
+38.000,198.557,interpolated (PCHIP between measured points)
+39.000,195.781,interpolated (PCHIP between measured points)
+40.000,193.128,interpolated (PCHIP between measured points)
+41.000,190.607,interpolated (PCHIP between measured points)
+42.000,188.228,interpolated (PCHIP between measured points)
+43.000,185.999,interpolated (PCHIP between measured points)
+44.000,183.931,interpolated (PCHIP between measured points)
+45.000,182.031,interpolated (PCHIP between measured points)
+46.000,180.310,interpolated (PCHIP between measured points)
+47.000,178.776,interpolated (PCHIP between measured points)
+48.000,177.439,interpolated (PCHIP between measured points)
+49.000,176.308,interpolated (PCHIP between measured points)
+50.000,175.392,checkpoint (run 0)
+51.000,174.590,interpolated (PCHIP between measured points)
+52.000,173.795,interpolated (PCHIP between measured points)
+53.000,173.006,interpolated (PCHIP between measured points)
+54.000,172.225,interpolated (PCHIP between measured points)
+55.000,171.450,interpolated (PCHIP between measured points)
+56.000,170.682,interpolated (PCHIP between measured points)
+57.000,169.921,interpolated (PCHIP between measured points)
+58.000,169.167,interpolated (PCHIP between measured points)
+59.000,168.420,interpolated (PCHIP between measured points)
+60.000,167.680,interpolated (PCHIP between measured points)
+61.000,166.947,interpolated (PCHIP between measured points)
+62.000,166.221,interpolated (PCHIP between measured points)
+63.000,165.502,interpolated (PCHIP between measured points)
+64.000,164.790,interpolated (PCHIP between measured points)
+65.000,164.085,interpolated (PCHIP between measured points)
+66.000,163.387,interpolated (PCHIP between measured points)
+67.000,162.697,interpolated (PCHIP between measured points)
+68.000,162.013,interpolated (PCHIP between measured points)
+69.000,161.337,interpolated (PCHIP between measured points)
+70.000,160.668,interpolated (PCHIP between measured points)
+71.000,160.006,interpolated (PCHIP between measured points)
+72.000,159.351,interpolated (PCHIP between measured points)
+73.000,158.703,interpolated (PCHIP between measured points)
+74.000,158.063,interpolated (PCHIP between measured points)
+75.000,157.430,interpolated (PCHIP between measured points)
+76.000,156.805,interpolated (PCHIP between measured points)
+77.000,156.186,interpolated (PCHIP between measured points)
+78.000,155.575,interpolated (PCHIP between measured points)
+79.000,154.972,interpolated (PCHIP between measured points)
+80.000,154.376,interpolated (PCHIP between measured points)
+81.000,153.787,interpolated (PCHIP between measured points)
+82.000,153.206,interpolated (PCHIP between measured points)
+83.000,152.632,interpolated (PCHIP between measured points)
+84.000,152.066,interpolated (PCHIP between measured points)
+85.000,151.507,interpolated (PCHIP between measured points)
+86.000,150.956,interpolated (PCHIP between measured points)
+87.000,150.412,interpolated (PCHIP between measured points)
+88.000,149.876,interpolated (PCHIP between measured points)
+89.000,149.347,interpolated (PCHIP between measured points)
+90.000,148.826,interpolated (PCHIP between measured points)
+91.000,148.313,interpolated (PCHIP between measured points)
+92.000,147.808,interpolated (PCHIP between measured points)
+93.000,147.310,interpolated (PCHIP between measured points)
+94.000,146.820,interpolated (PCHIP between measured points)
+95.000,146.337,interpolated (PCHIP between measured points)
+96.000,145.862,interpolated (PCHIP between measured points)
+97.000,145.395,interpolated (PCHIP between measured points)
+98.000,144.936,interpolated (PCHIP between measured points)
+99.000,144.485,interpolated (PCHIP between measured points)
+100.000,144.042,interpolated (PCHIP between measured points)
+101.000,143.606,interpolated (PCHIP between measured points)
+102.000,143.178,interpolated (PCHIP between measured points)
+103.000,142.758,interpolated (PCHIP between measured points)
+104.000,142.346,interpolated (PCHIP between measured points)
+105.000,141.942,interpolated (PCHIP between measured points)
+106.000,141.546,interpolated (PCHIP between measured points)
+107.000,141.158,interpolated (PCHIP between measured points)
+108.000,140.778,interpolated (PCHIP between measured points)
+109.000,140.407,interpolated (PCHIP between measured points)
+110.000,140.043,interpolated (PCHIP between measured points)
+111.000,139.687,interpolated (PCHIP between measured points)
+112.000,139.339,interpolated (PCHIP between measured points)
+113.000,138.999,interpolated (PCHIP between measured points)
+114.000,138.668,interpolated (PCHIP between measured points)
+115.000,138.345,interpolated (PCHIP between measured points)
+116.000,138.030,interpolated (PCHIP between measured points)
+117.000,137.723,interpolated (PCHIP between measured points)
+118.000,137.424,interpolated (PCHIP between measured points)
+119.000,137.134,interpolated (PCHIP between measured points)
+120.000,136.851,interpolated (PCHIP between measured points)
+121.000,136.578,interpolated (PCHIP between measured points)
+122.000,136.312,interpolated (PCHIP between measured points)
+123.000,136.055,interpolated (PCHIP between measured points)
+124.000,135.806,interpolated (PCHIP between measured points)
+125.000,135.566,interpolated (PCHIP between measured points)
+126.000,135.334,interpolated (PCHIP between measured points)
+127.000,135.110,interpolated (PCHIP between measured points)
+128.000,134.895,interpolated (PCHIP between measured points)
+129.000,134.688,interpolated (PCHIP between measured points)
+130.000,134.490,interpolated (PCHIP between measured points)
+131.000,134.300,interpolated (PCHIP between measured points)
+132.000,134.119,interpolated (PCHIP between measured points)
+133.000,133.946,interpolated (PCHIP between measured points)
+134.000,133.782,interpolated (PCHIP between measured points)
+135.000,133.627,interpolated (PCHIP between measured points)
+136.000,133.480,interpolated (PCHIP between measured points)
+137.000,133.342,interpolated (PCHIP between measured points)
+138.000,133.212,interpolated (PCHIP between measured points)
+139.000,133.092,interpolated (PCHIP between measured points)
+140.000,132.979,interpolated (PCHIP between measured points)
+141.000,132.876,interpolated (PCHIP between measured points)
+142.000,132.781,interpolated (PCHIP between measured points)
+143.000,132.696,interpolated (PCHIP between measured points)
+144.000,132.618,interpolated (PCHIP between measured points)
+145.000,132.550,interpolated (PCHIP between measured points)
+146.000,132.491,interpolated (PCHIP between measured points)
+147.000,132.440,interpolated (PCHIP between measured points)
+148.000,132.399,interpolated (PCHIP between measured points)
+149.000,132.366,interpolated (PCHIP between measured points)
+150.000,132.342,checkpoint (run 0)
+151.000,132.323,interpolated (PCHIP between measured points)
+152.000,132.304,interpolated (PCHIP between measured points)
+153.000,132.285,interpolated (PCHIP between measured points)
+154.000,132.266,interpolated (PCHIP between measured points)
+155.000,132.248,interpolated (PCHIP between measured points)
+156.000,132.230,interpolated (PCHIP between measured points)
+157.000,132.212,interpolated (PCHIP between measured points)
+158.000,132.195,interpolated (PCHIP between measured points)
+159.000,132.178,interpolated (PCHIP between measured points)
+160.000,132.161,interpolated (PCHIP between measured points)
+161.000,132.144,interpolated (PCHIP between measured points)
+162.000,132.128,interpolated (PCHIP between measured points)
+163.000,132.112,interpolated (PCHIP between measured points)
+164.000,132.096,interpolated (PCHIP between measured points)
+165.000,132.081,interpolated (PCHIP between measured points)
+166.000,132.066,interpolated (PCHIP between measured points)
+167.000,132.051,interpolated (PCHIP between measured points)
+168.000,132.037,interpolated (PCHIP between measured points)
+169.000,132.023,interpolated (PCHIP between measured points)
+170.000,132.009,interpolated (PCHIP between measured points)
+171.000,131.996,interpolated (PCHIP between measured points)
+172.000,131.983,interpolated (PCHIP between measured points)
+173.000,131.970,interpolated (PCHIP between measured points)
+174.000,131.958,interpolated (PCHIP between measured points)
+175.000,131.946,interpolated (PCHIP between measured points)
+176.000,131.935,interpolated (PCHIP between measured points)
+177.000,131.924,interpolated (PCHIP between measured points)
+178.000,131.913,interpolated (PCHIP between measured points)
+179.000,131.903,interpolated (PCHIP between measured points)
+180.000,131.893,interpolated (PCHIP between measured points)
+181.000,131.884,interpolated (PCHIP between measured points)
+182.000,131.875,interpolated (PCHIP between measured points)
+183.000,131.866,interpolated (PCHIP between measured points)
+184.000,131.858,interpolated (PCHIP between measured points)
+185.000,131.851,interpolated (PCHIP between measured points)
+186.000,131.843,interpolated (PCHIP between measured points)
+187.000,131.837,interpolated (PCHIP between measured points)
+188.000,131.830,interpolated (PCHIP between measured points)
+189.000,131.824,interpolated (PCHIP between measured points)
+190.000,131.819,interpolated (PCHIP between measured points)
+191.000,131.814,interpolated (PCHIP between measured points)
+192.000,131.810,interpolated (PCHIP between measured points)
+193.000,131.806,interpolated (PCHIP between measured points)
+194.000,131.803,interpolated (PCHIP between measured points)
+195.000,131.800,interpolated (PCHIP between measured points)
+196.000,131.797,interpolated (PCHIP between measured points)
+197.000,131.795,interpolated (PCHIP between measured points)
+198.000,131.794,interpolated (PCHIP between measured points)
+199.000,131.793,interpolated (PCHIP between measured points)
+200.000,131.793,checkpoint (run 0)
+200.001,131.793,checkpoint (run 0)
+201.000,131.793,interpolated (PCHIP between measured points)
+202.000,131.793,interpolated (PCHIP between measured points)
+203.000,131.794,interpolated (PCHIP between measured points)
+204.000,131.794,interpolated (PCHIP between measured points)
+205.000,131.795,interpolated (PCHIP between measured points)
+206.000,131.796,interpolated (PCHIP between measured points)
+207.000,131.797,interpolated (PCHIP between measured points)
+208.000,131.798,interpolated (PCHIP between measured points)
+209.000,131.799,interpolated (PCHIP between measured points)
+210.000,131.801,interpolated (PCHIP between measured points)
+211.000,131.802,interpolated (PCHIP between measured points)
+212.000,131.804,interpolated (PCHIP between measured points)
+213.000,131.806,interpolated (PCHIP between measured points)
+214.000,131.807,interpolated (PCHIP between measured points)
+215.000,131.809,interpolated (PCHIP between measured points)
+216.000,131.811,interpolated (PCHIP between measured points)
+217.000,131.813,interpolated (PCHIP between measured points)
+218.000,131.816,interpolated (PCHIP between measured points)
+219.000,131.818,interpolated (PCHIP between measured points)
+220.000,131.820,interpolated (PCHIP between measured points)
+221.000,131.822,interpolated (PCHIP between measured points)
+222.000,131.825,interpolated (PCHIP between measured points)
+223.000,131.827,interpolated (PCHIP between measured points)
+224.000,131.830,interpolated (PCHIP between measured points)
+225.000,131.832,interpolated (PCHIP between measured points)
+226.000,131.835,interpolated (PCHIP between measured points)
+227.000,131.837,interpolated (PCHIP between measured points)
+228.000,131.840,interpolated (PCHIP between measured points)
+229.000,131.843,interpolated (PCHIP between measured points)
+230.000,131.845,interpolated (PCHIP between measured points)
+231.000,131.848,interpolated (PCHIP between measured points)
+232.000,131.850,interpolated (PCHIP between measured points)
+233.000,131.853,interpolated (PCHIP between measured points)
+234.000,131.855,interpolated (PCHIP between measured points)
+235.000,131.858,interpolated (PCHIP between measured points)
+236.000,131.860,interpolated (PCHIP between measured points)
+237.000,131.863,interpolated (PCHIP between measured points)
+238.000,131.865,interpolated (PCHIP between measured points)
+239.000,131.868,interpolated (PCHIP between measured points)
+240.000,131.870,interpolated (PCHIP between measured points)
+241.000,131.872,interpolated (PCHIP between measured points)
+242.000,131.875,interpolated (PCHIP between measured points)
+243.000,131.877,interpolated (PCHIP between measured points)
+244.000,131.879,interpolated (PCHIP between measured points)
+245.000,131.881,interpolated (PCHIP between measured points)
+246.000,131.883,interpolated (PCHIP between measured points)
+247.000,131.884,interpolated (PCHIP between measured points)
+248.000,131.886,interpolated (PCHIP between measured points)
+249.000,131.888,interpolated (PCHIP between measured points)
+250.000,131.889,checkpoint (run 0)
+251.000,131.890,interpolated (PCHIP between measured points)
+252.000,131.892,interpolated (PCHIP between measured points)
+253.000,131.893,interpolated (PCHIP between measured points)
+254.000,131.894,interpolated (PCHIP between measured points)
+255.000,131.896,interpolated (PCHIP between measured points)
+256.000,131.897,interpolated (PCHIP between measured points)
+257.000,131.898,interpolated (PCHIP between measured points)
+258.000,131.900,interpolated (PCHIP between measured points)
+259.000,131.901,interpolated (PCHIP between measured points)
+260.000,131.902,interpolated (PCHIP between measured points)
+261.000,131.903,interpolated (PCHIP between measured points)
+262.000,131.904,interpolated (PCHIP between measured points)
+263.000,131.906,interpolated (PCHIP between measured points)
+264.000,131.907,interpolated (PCHIP between measured points)
+265.000,131.908,interpolated (PCHIP between measured points)
+266.000,131.909,interpolated (PCHIP between measured points)
+267.000,131.910,interpolated (PCHIP between measured points)
+268.000,131.911,interpolated (PCHIP between measured points)
+269.000,131.912,interpolated (PCHIP between measured points)
+270.000,131.913,interpolated (PCHIP between measured points)
+271.000,131.914,interpolated (PCHIP between measured points)
+272.000,131.915,interpolated (PCHIP between measured points)
+273.000,131.917,interpolated (PCHIP between measured points)
+274.000,131.918,interpolated (PCHIP between measured points)
+275.000,131.919,interpolated (PCHIP between measured points)
+276.000,131.920,interpolated (PCHIP between measured points)
+277.000,131.921,interpolated (PCHIP between measured points)
+278.000,131.922,interpolated (PCHIP between measured points)
+279.000,131.923,interpolated (PCHIP between measured points)
+280.000,131.924,interpolated (PCHIP between measured points)
+281.000,131.925,interpolated (PCHIP between measured points)
+282.000,131.926,interpolated (PCHIP between measured points)
+283.000,131.927,interpolated (PCHIP between measured points)
+284.000,131.928,interpolated (PCHIP between measured points)
+285.000,131.929,interpolated (PCHIP between measured points)
+286.000,131.930,interpolated (PCHIP between measured points)
+287.000,131.931,interpolated (PCHIP between measured points)
+288.000,131.932,interpolated (PCHIP between measured points)
+289.000,131.933,interpolated (PCHIP between measured points)
+290.000,131.934,interpolated (PCHIP between measured points)
+291.000,131.935,interpolated (PCHIP between measured points)
+292.000,131.936,interpolated (PCHIP between measured points)
+293.000,131.937,interpolated (PCHIP between measured points)
+294.000,131.938,interpolated (PCHIP between measured points)
+295.000,131.939,interpolated (PCHIP between measured points)
+296.000,131.940,interpolated (PCHIP between measured points)
+297.000,131.941,interpolated (PCHIP between measured points)
+298.000,131.942,interpolated (PCHIP between measured points)
+299.000,131.943,interpolated (PCHIP between measured points)
+300.000,131.944,checkpoint (run 0)
+301.000,131.945,interpolated (PCHIP between measured points)
+302.000,131.946,interpolated (PCHIP between measured points)
+303.000,131.947,interpolated (PCHIP between measured points)
+304.000,131.948,interpolated (PCHIP between measured points)
+305.000,131.949,interpolated (PCHIP between measured points)
+306.000,131.950,interpolated (PCHIP between measured points)
+307.000,131.951,interpolated (PCHIP between measured points)
+308.000,131.952,interpolated (PCHIP between measured points)
+309.000,131.953,interpolated (PCHIP between measured points)
+310.000,131.954,interpolated (PCHIP between measured points)
+311.000,131.956,interpolated (PCHIP between measured points)
+312.000,131.957,interpolated (PCHIP between measured points)
+313.000,131.958,interpolated (PCHIP between measured points)
+314.000,131.959,interpolated (PCHIP between measured points)
+315.000,131.960,interpolated (PCHIP between measured points)
+316.000,131.961,interpolated (PCHIP between measured points)
+317.000,131.962,interpolated (PCHIP between measured points)
+318.000,131.963,interpolated (PCHIP between measured points)
+319.000,131.964,interpolated (PCHIP between measured points)
+320.000,131.965,interpolated (PCHIP between measured points)
+321.000,131.966,interpolated (PCHIP between measured points)
+322.000,131.967,interpolated (PCHIP between measured points)
+323.000,131.968,interpolated (PCHIP between measured points)
+324.000,131.969,interpolated (PCHIP between measured points)
+325.000,131.970,interpolated (PCHIP between measured points)
+326.000,131.971,interpolated (PCHIP between measured points)
+327.000,131.972,interpolated (PCHIP between measured points)
+328.000,131.973,interpolated (PCHIP between measured points)
+329.000,131.974,interpolated (PCHIP between measured points)
+330.000,131.975,interpolated (PCHIP between measured points)
+331.000,131.976,interpolated (PCHIP between measured points)
+332.000,131.977,interpolated (PCHIP between measured points)
+333.000,131.978,interpolated (PCHIP between measured points)
+334.000,131.979,interpolated (PCHIP between measured points)
+335.000,131.980,interpolated (PCHIP between measured points)
+336.000,131.981,interpolated (PCHIP between measured points)
+337.000,131.982,interpolated (PCHIP between measured points)
+338.000,131.983,interpolated (PCHIP between measured points)
+339.000,131.984,interpolated (PCHIP between measured points)
+340.000,131.985,interpolated (PCHIP between measured points)
+341.000,131.986,interpolated (PCHIP between measured points)
+342.000,131.987,interpolated (PCHIP between measured points)
+343.000,131.988,interpolated (PCHIP between measured points)
+344.000,131.989,interpolated (PCHIP between measured points)
+345.000,131.990,interpolated (PCHIP between measured points)
+346.000,131.991,interpolated (PCHIP between measured points)
+347.000,131.992,interpolated (PCHIP between measured points)
+348.000,131.993,interpolated (PCHIP between measured points)
+349.000,131.994,interpolated (PCHIP between measured points)
+350.000,131.995,checkpoint (run 0)
+351.000,131.996,interpolated (PCHIP between measured points)
+352.000,131.997,interpolated (PCHIP between measured points)
+353.000,131.998,interpolated (PCHIP between measured points)
+354.000,131.999,interpolated (PCHIP between measured points)
+355.000,132.000,interpolated (PCHIP between measured points)
+356.000,132.001,interpolated (PCHIP between measured points)
+357.000,132.002,interpolated (PCHIP between measured points)
+358.000,132.003,interpolated (PCHIP between measured points)
+359.000,132.004,interpolated (PCHIP between measured points)
+360.000,132.005,interpolated (PCHIP between measured points)
+361.000,132.006,interpolated (PCHIP between measured points)
+362.000,132.007,interpolated (PCHIP between measured points)
+363.000,132.008,interpolated (PCHIP between measured points)
+364.000,132.009,interpolated (PCHIP between measured points)
+365.000,132.010,interpolated (PCHIP between measured points)
+366.000,132.010,interpolated (PCHIP between measured points)
+367.000,132.011,interpolated (PCHIP between measured points)
+368.000,132.012,interpolated (PCHIP between measured points)
+369.000,132.013,interpolated (PCHIP between measured points)
+370.000,132.014,interpolated (PCHIP between measured points)
+371.000,132.015,interpolated (PCHIP between measured points)
+372.000,132.016,interpolated (PCHIP between measured points)
+373.000,132.017,interpolated (PCHIP between measured points)
+374.000,132.018,interpolated (PCHIP between measured points)
+375.000,132.019,interpolated (PCHIP between measured points)
+376.000,132.020,interpolated (PCHIP between measured points)
+377.000,132.021,interpolated (PCHIP between measured points)
+378.000,132.022,interpolated (PCHIP between measured points)
+379.000,132.023,interpolated (PCHIP between measured points)
+380.000,132.024,interpolated (PCHIP between measured points)
+381.000,132.025,interpolated (PCHIP between measured points)
+382.000,132.026,interpolated (PCHIP between measured points)
+383.000,132.027,interpolated (PCHIP between measured points)
+384.000,132.028,interpolated (PCHIP between measured points)
+385.000,132.029,interpolated (PCHIP between measured points)
+386.000,132.029,interpolated (PCHIP between measured points)
+387.000,132.030,interpolated (PCHIP between measured points)
+388.000,132.031,interpolated (PCHIP between measured points)
+389.000,132.032,interpolated (PCHIP between measured points)
+390.000,132.033,interpolated (PCHIP between measured points)
+391.000,132.034,interpolated (PCHIP between measured points)
+392.000,132.035,interpolated (PCHIP between measured points)
+393.000,132.036,interpolated (PCHIP between measured points)
+394.000,132.037,interpolated (PCHIP between measured points)
+395.000,132.038,interpolated (PCHIP between measured points)
+396.000,132.039,interpolated (PCHIP between measured points)
+397.000,132.040,interpolated (PCHIP between measured points)
+398.000,132.041,interpolated (PCHIP between measured points)
+399.000,132.042,interpolated (PCHIP between measured points)
+400.000,132.043,checkpoint (run 0)
+401.000,132.044,interpolated (PCHIP between measured points)
+402.000,132.045,interpolated (PCHIP between measured points)
+403.000,132.046,interpolated (PCHIP between measured points)
+404.000,132.047,interpolated (PCHIP between measured points)
+405.000,132.048,atom dump
+410.000,132.052,atom dump
+415.000,132.057,atom dump
+420.000,132.062,atom dump
+425.000,132.067,atom dump
+430.000,132.071,atom dump
+435.000,132.076,atom dump
+440.000,132.081,atom dump
+445.000,132.086,atom dump
+450.000,132.090,atom dump
+455.000,132.095,atom dump
+460.000,132.100,atom dump
+465.000,132.104,atom dump
+470.000,132.109,atom dump
+475.000,132.114,atom dump
+480.000,132.118,atom dump
+485.000,132.123,atom dump
+490.000,132.128,atom dump
+495.000,132.133,atom dump
+500.000,132.137,atom dump
+505.000,132.142,atom dump
+510.000,132.147,atom dump
+515.000,132.151,atom dump
+520.000,132.156,atom dump
+525.000,132.161,atom dump
+530.000,132.165,atom dump
+535.000,132.170,atom dump
+540.000,132.175,atom dump
+545.000,132.179,atom dump
+550.000,132.184,atom dump
+555.000,132.189,atom dump
+560.000,132.193,atom dump
+565.000,132.198,atom dump
+570.000,132.202,atom dump
+575.000,132.207,atom dump
+580.000,132.212,atom dump
+585.000,132.216,atom dump
+590.000,132.221,atom dump
+595.000,132.225,atom dump
+600.000,132.230,atom dump
+605.000,132.234,atom dump
+610.000,132.239,atom dump
+615.000,132.243,atom dump
+620.000,132.248,atom dump
+625.000,132.252,atom dump
+630.000,132.257,atom dump
+635.000,132.261,atom dump
+640.000,132.266,atom dump
+645.000,132.270,atom dump
+650.000,132.275,atom dump
+655.000,132.279,atom dump
+660.000,132.284,atom dump
+665.000,132.288,atom dump
+670.000,132.293,atom dump
+675.000,132.297,atom dump
+680.000,132.301,atom dump
+685.000,132.306,atom dump
+690.000,132.310,atom dump
+695.000,132.315,atom dump
+700.000,132.319,atom dump
+705.000,132.324,atom dump
+710.000,132.328,atom dump
+715.000,132.332,atom dump
+720.000,132.337,atom dump
+725.000,132.341,atom dump
+730.000,132.345,atom dump
+735.000,132.350,atom dump
+740.000,132.354,atom dump
+745.000,132.358,atom dump
+750.000,132.363,atom dump
+755.000,132.367,atom dump
+760.000,132.371,atom dump
+765.000,132.376,atom dump
+770.000,132.380,atom dump
+775.000,132.384,atom dump
+780.000,132.388,atom dump
+785.000,132.393,atom dump
+790.000,132.397,atom dump
+795.000,132.401,atom dump
+800.000,132.405,atom dump
+805.000,132.410,atom dump
+810.000,132.414,atom dump
+815.000,132.418,atom dump
+820.000,132.422,atom dump
+825.000,132.427,atom dump
+830.000,132.431,atom dump
+835.000,132.435,atom dump
+840.000,132.439,atom dump
+845.000,132.443,atom dump
+850.000,132.448,atom dump
+855.000,132.452,atom dump
+860.000,132.456,atom dump
+865.000,132.460,atom dump
+870.000,132.464,atom dump
+875.000,132.469,atom dump
+880.000,132.473,atom dump
+885.000,132.477,atom dump
+890.000,132.481,atom dump
+895.000,132.485,atom dump
+900.000,132.489,atom dump
+905.000,132.493,atom dump
+910.000,132.497,atom dump
+915.000,132.501,atom dump
+920.000,132.505,atom dump
+925.000,132.510,atom dump
+930.000,132.514,atom dump
+935.000,132.518,atom dump
+940.000,132.522,atom dump
+945.000,132.526,atom dump
+950.000,132.530,atom dump
+955.000,132.534,atom dump
+960.000,132.537,atom dump
+965.000,132.541,atom dump
+970.000,132.545,atom dump
+975.000,132.549,atom dump
+980.000,132.508,atom dump
+985.000,132.460,atom dump
+990.000,132.412,atom dump
+995.000,132.363,atom dump
+1000.000,132.314,atom dump
+1005.000,132.266,atom dump
+1010.000,132.217,atom dump
+1015.000,132.168,atom dump
+1020.000,132.119,atom dump
+1025.000,132.070,atom dump
+1030.000,132.021,atom dump
+1035.000,131.972,atom dump
+1040.000,131.923,atom dump
+1045.000,131.874,atom dump
+1050.000,131.825,atom dump
+1055.000,131.776,atom dump
+1060.000,131.727,atom dump
+1065.000,131.678,atom dump
+1070.000,131.629,atom dump
+1075.000,131.579,atom dump
+1080.000,131.530,atom dump
+1085.000,131.480,atom dump
+1090.000,131.431,atom dump
+1095.000,131.381,atom dump
+1100.000,131.331,atom dump
+1105.000,131.282,atom dump
+1110.000,131.232,atom dump
+1115.000,131.183,atom dump
+1120.000,131.133,atom dump
+1125.000,131.084,atom dump
+1130.000,131.035,atom dump
+1135.000,130.985,atom dump
+1140.000,130.937,atom dump
+1145.000,130.889,atom dump
+1150.000,130.841,atom dump
+1155.000,130.792,atom dump
+1160.000,130.742,atom dump
+1165.000,130.693,atom dump
+1170.000,130.639,atom dump
+1175.000,130.589,atom dump
+1180.000,130.540,atom dump
+1185.000,130.491,atom dump
+1190.000,130.441,atom dump
+1195.000,130.392,atom dump
+1200.000,130.343,atom dump
+1205.000,130.295,atom dump
+1210.000,130.247,atom dump
+1215.000,130.199,atom dump
+1220.000,130.150,atom dump
+1225.000,130.101,atom dump
+1230.000,130.052,atom dump
+1235.000,130.002,atom dump
+1240.000,129.953,atom dump
+1245.000,129.905,atom dump
+1250.000,129.856,atom dump
+1255.000,129.807,atom dump
+1260.000,129.757,atom dump
+1265.000,129.708,atom dump
+1270.000,129.659,atom dump
+1275.000,129.610,atom dump
+1280.000,129.561,atom dump
+1285.000,129.512,atom dump
+1290.000,129.462,atom dump
+1295.000,129.413,atom dump
+1300.000,129.364,atom dump
+1305.000,129.315,atom dump
+1310.000,129.266,atom dump
+1315.000,129.217,atom dump
+1320.000,129.167,atom dump
+1325.000,129.118,atom dump
+1330.000,129.069,atom dump
+1335.000,129.019,atom dump
+1340.000,128.970,atom dump
+1345.000,128.921,atom dump
+1350.000,128.871,atom dump
+1355.000,128.822,atom dump
+1360.000,128.773,atom dump
+1365.000,128.728,atom dump
+1370.000,128.689,atom dump
+1375.000,128.641,atom dump
+1380.000,128.593,atom dump
+1385.000,128.544,atom dump
+1390.000,128.494,atom dump
+1395.000,128.442,atom dump
+1400.000,128.390,atom dump
+1405.000,128.339,atom dump
+1410.000,128.289,atom dump
+1415.000,128.242,atom dump
+1420.000,128.199,atom dump
+1425.000,128.157,atom dump
+1430.000,128.123,atom dump
+1435.000,128.088,atom dump
+1440.000,128.053,atom dump
+1445.000,128.015,atom dump
+1450.000,127.985,atom dump
+1455.000,127.953,atom dump
+1460.000,127.921,atom dump
+1465.000,127.889,atom dump
+1470.000,127.857,atom dump
+1475.000,127.825,atom dump
+1480.000,127.791,atom dump
+1485.000,127.757,atom dump
+1490.000,127.722,atom dump
+1495.000,127.685,atom dump
+1500.000,127.649,atom dump
+1505.000,127.611,atom dump
+1510.000,127.573,atom dump
+1515.000,127.535,atom dump
+1520.000,127.496,atom dump
+1525.000,127.456,atom dump
+1530.000,127.417,atom dump
+1535.000,127.372,atom dump
+1540.000,127.323,atom dump
+1545.000,127.274,atom dump
+1550.000,127.224,atom dump
+1555.000,127.175,atom dump
+1560.000,127.125,atom dump
+1565.000,127.076,atom dump
+1570.000,127.027,atom dump
+1575.000,126.978,atom dump
+1580.000,126.928,atom dump
+1585.000,126.887,atom dump
+1590.000,126.841,atom dump
+1595.000,126.794,atom dump
+1600.000,126.747,atom dump
+1605.000,126.699,atom dump
+1610.000,126.652,atom dump
+1615.000,126.604,atom dump
+1620.000,126.556,atom dump
+1625.000,126.508,atom dump
+1630.000,126.460,atom dump
+1635.000,126.411,atom dump
+1640.000,126.363,atom dump
+1645.000,126.315,atom dump
+1650.000,126.266,atom dump
+1655.000,126.217,atom dump
+1660.000,126.169,atom dump
+1665.000,126.120,atom dump
+1670.000,126.071,atom dump
+1675.000,126.023,atom dump
+1680.000,125.974,atom dump
+1685.000,125.925,atom dump
+1690.000,125.876,atom dump
+1695.000,125.828,atom dump
+1700.000,125.779,atom dump
+1705.000,125.730,atom dump
+1710.000,125.681,atom dump
+1715.000,125.632,atom dump
+1720.000,125.583,atom dump
+1725.000,125.534,atom dump
+1730.000,125.485,atom dump
+1735.000,125.436,atom dump
+1740.000,125.387,atom dump
+1745.000,125.338,atom dump
+1750.000,125.289,atom dump
+1755.000,125.240,atom dump
+1760.000,125.191,atom dump
+1765.000,125.142,atom dump
+1770.000,125.093,atom dump
+1775.000,125.044,atom dump
+1780.000,124.995,atom dump
+1785.000,124.945,atom dump
+1790.000,124.896,atom dump
+1795.000,124.847,atom dump
+1800.000,124.798,atom dump
+1805.000,124.749,atom dump
+1810.000,124.700,atom dump
+1815.000,124.651,atom dump
+1820.000,124.602,atom dump
+1825.000,125.073,atom dump
+1830.000,125.028,atom dump
+1835.000,124.983,atom dump
+1840.000,124.937,atom dump
+1845.000,124.892,atom dump
+1850.000,124.846,atom dump
+1855.000,124.800,atom dump
+1860.000,124.754,atom dump
+1865.000,124.708,atom dump
+1870.000,124.662,atom dump
+1875.000,124.616,atom dump
+1880.000,124.570,atom dump
+1885.000,124.527,atom dump
+1890.000,124.482,atom dump
+1895.000,124.436,atom dump
+1900.000,124.390,atom dump
+1905.000,124.343,atom dump
+1910.000,124.297,atom dump
+1915.000,124.251,atom dump
+1920.000,124.204,atom dump
+1925.000,124.158,atom dump
+1930.000,124.114,atom dump
+1935.000,124.069,atom dump
+1940.000,124.023,atom dump
+1945.000,123.976,atom dump
+1950.000,123.930,atom dump
+1955.000,123.883,atom dump
+1960.000,123.837,atom dump
+1965.000,123.790,atom dump
+1970.000,123.743,atom dump
+1975.000,123.696,atom dump
+1980.000,123.649,atom dump
+1985.000,123.602,atom dump
+1990.000,123.555,atom dump
+1995.000,123.508,atom dump
+2000.000,123.461,atom dump
+2005.000,123.414,atom dump
+2010.000,123.367,atom dump
+2015.000,123.320,atom dump
+2020.000,123.272,atom dump
+2025.000,123.225,atom dump
+2030.000,123.178,atom dump
+2035.000,123.131,atom dump
+2040.000,123.083,atom dump
+2045.000,123.036,atom dump
+2050.000,122.989,atom dump
+2055.000,122.941,atom dump
+2060.000,122.894,atom dump
+2065.000,122.846,atom dump
+2070.000,122.799,atom dump
+2075.000,122.751,atom dump
+2080.000,122.704,atom dump
+2085.000,122.656,atom dump
+2090.000,122.608,atom dump
+2095.000,122.561,atom dump
+2100.000,122.513,atom dump
+2105.000,122.465,atom dump
+2110.000,122.417,atom dump
+2115.000,122.369,atom dump
+2120.000,122.321,atom dump
+2125.000,122.274,atom dump
+2130.000,122.226,atom dump
+2135.000,122.178,atom dump
+2140.000,122.130,atom dump
+2145.000,122.082,atom dump
+2150.000,122.034,atom dump
+2155.000,121.986,atom dump
+2160.000,121.938,atom dump
+2165.000,121.891,atom dump
+2170.000,121.843,atom dump
+2175.000,121.796,atom dump
+2180.000,121.748,atom dump
+2185.000,121.701,atom dump
+2190.000,121.653,atom dump
+2195.000,121.606,atom dump
+2200.000,121.558,atom dump
+2205.000,121.511,atom dump
+2210.000,121.463,atom dump
+2215.000,121.415,atom dump
+2220.000,121.367,atom dump
+2225.000,121.319,atom dump
+2230.000,121.272,atom dump
+2235.000,121.224,atom dump
+2240.000,121.176,atom dump
+2245.000,121.128,atom dump
+2250.000,121.081,atom dump
+2255.000,121.033,atom dump
+2260.000,120.985,atom dump
+2265.000,120.937,atom dump
+2270.000,120.890,atom dump
+2275.000,120.842,atom dump
+2280.000,120.794,atom dump
+2285.000,120.746,atom dump
+2290.000,120.698,atom dump
+2295.000,120.650,atom dump
+2300.000,120.602,atom dump
+2305.000,120.554,atom dump
+2310.000,120.506,atom dump
+2315.000,120.458,atom dump
+2320.000,120.410,atom dump
+2325.000,120.362,atom dump
+2330.000,120.314,atom dump
+2335.000,120.266,atom dump
+2340.000,120.218,atom dump
+2345.000,120.170,atom dump
+2350.000,120.122,atom dump
+2355.000,120.074,atom dump
+2360.000,120.026,atom dump
+2365.000,119.978,atom dump
+2370.000,119.930,atom dump
+2375.000,119.882,atom dump
+2380.000,119.833,atom dump
+2385.000,119.785,atom dump
+2390.000,119.737,atom dump
+2395.000,119.689,atom dump
+2400.000,119.640,atom dump
+2405.000,119.592,atom dump
+2410.000,119.543,atom dump
+2415.000,119.495,atom dump
+2420.000,119.446,atom dump
+2425.000,119.401,atom dump
+2430.000,119.353,atom dump
+2435.000,119.304,atom dump
+2440.000,119.255,atom dump
+2445.000,119.207,atom dump
+2450.000,119.158,atom dump
+2455.000,119.109,atom dump
+2460.000,119.061,atom dump
+2465.000,119.012,atom dump
+2470.000,118.963,atom dump
+2475.000,118.914,atom dump
+2480.000,118.866,atom dump
+2485.000,118.817,atom dump
+2490.000,118.768,atom dump
+2495.000,118.719,atom dump
+2500.000,118.670,atom dump
+2505.000,118.622,atom dump
+2510.000,118.573,atom dump
+2515.000,118.524,atom dump
+2520.000,118.475,atom dump
+2525.000,118.426,atom dump
+2530.000,118.377,atom dump
+2535.000,118.328,atom dump
+2540.000,118.279,atom dump
+2545.000,118.230,atom dump
+2550.000,118.182,atom dump
+2555.000,118.133,atom dump
+2560.000,118.084,atom dump
+2565.000,118.035,atom dump
+2570.000,117.986,atom dump
+2575.000,117.937,atom dump
+2580.000,117.888,atom dump
+2585.000,117.839,atom dump
+2590.000,117.790,atom dump
+2595.000,117.741,atom dump
+2600.000,117.692,atom dump
+2605.000,117.643,atom dump
+2610.000,117.594,atom dump
+2615.000,117.545,atom dump
+2620.000,117.496,atom dump
+2625.000,117.447,atom dump
+2630.000,117.398,atom dump
+2635.000,117.349,atom dump
+2640.000,117.300,atom dump
+2645.000,117.251,atom dump
+2650.000,117.201,atom dump
+2655.000,117.152,atom dump
+2660.000,117.103,atom dump
+2665.000,117.054,atom dump
+2670.000,117.005,atom dump
+2675.000,116.956,atom dump
+2680.000,116.907,atom dump
+2685.000,116.858,atom dump
+2690.000,116.809,atom dump
+2695.000,116.760,atom dump
+2700.000,116.710,atom dump
+2705.000,116.661,atom dump
+2710.000,116.612,atom dump
+2715.000,116.563,atom dump
+2720.000,116.514,atom dump
+2725.000,116.465,atom dump
+2730.000,116.416,atom dump
+2735.000,116.367,atom dump
+2740.000,116.318,atom dump
+2745.000,116.269,atom dump
+2750.000,116.220,atom dump
+2755.000,116.171,atom dump
+2760.000,116.122,atom dump
+2765.000,116.073,atom dump
+2770.000,116.024,atom dump
+2775.000,115.975,atom dump
+2780.000,115.926,atom dump
+2785.000,115.876,atom dump
+2790.000,115.827,atom dump
+2795.000,115.778,atom dump
+2800.000,115.729,atom dump
+2805.000,115.680,atom dump
+2810.000,115.631,atom dump
+2815.000,115.582,atom dump
+2820.000,115.533,atom dump
+2825.000,115.484,atom dump
+2830.000,115.435,atom dump
+2835.000,115.386,atom dump
+2840.000,115.337,atom dump
+2845.000,115.288,atom dump
+2850.000,115.239,atom dump
+2855.000,115.190,atom dump
+2860.000,115.141,atom dump
+2865.000,115.092,atom dump
+2870.000,115.043,atom dump
+2875.000,114.994,atom dump
+2880.000,114.944,atom dump
+2885.000,114.895,atom dump
+2890.000,114.846,atom dump
+2895.000,114.797,atom dump
+2900.000,114.748,atom dump
+2905.000,114.699,atom dump
+2910.000,114.650,atom dump
+2915.000,114.601,atom dump
+2920.000,114.551,atom dump
+2925.000,114.502,atom dump
+2930.000,114.453,atom dump
+2935.000,114.404,atom dump
+2940.000,114.355,atom dump
+2945.000,114.306,atom dump
+2950.000,114.257,atom dump
+2955.000,114.208,atom dump
+2960.000,114.159,atom dump
+2965.000,114.109,atom dump
+2970.000,114.060,atom dump
+2975.000,114.011,atom dump
+2980.000,113.961,atom dump
+2985.000,113.912,atom dump
+2990.000,113.863,atom dump
+2995.000,113.814,atom dump
+3000.000,113.765,atom dump
+3005.000,113.716,atom dump
+3010.000,113.666,atom dump
+3015.000,113.618,atom dump
+3020.000,113.568,atom dump
+3025.000,113.519,atom dump
+3030.000,113.470,atom dump
+3035.000,113.421,atom dump
+3040.000,113.372,atom dump
+3045.000,113.323,atom dump
+3050.000,113.273,atom dump
+3055.000,113.224,atom dump
+3060.000,113.175,atom dump
+3065.000,113.126,atom dump
+3070.000,113.077,atom dump
+3075.000,113.028,atom dump
+3080.000,112.979,atom dump
+3085.000,112.930,atom dump
+3090.000,112.881,atom dump
+3095.000,112.832,atom dump
+3100.000,112.783,atom dump
+3105.000,112.734,atom dump
+3110.000,112.685,atom dump
+3115.000,112.639,atom dump
+3120.000,112.591,atom dump
+3125.000,112.543,atom dump
+3130.000,112.368,atom dump
+3135.000,112.349,atom dump
+3140.000,112.377,atom dump
+3145.000,112.401,atom dump
+3150.000,112.410,atom dump
+3155.000,112.405,atom dump
+3160.000,112.399,atom dump
+3165.000,112.400,atom dump
+3170.000,112.406,atom dump
+3175.000,112.411,atom dump
+3180.000,112.412,atom dump
+3185.000,112.413,atom dump
+3190.000,112.413,atom dump
+3195.000,112.415,atom dump
+3200.000,112.417,atom dump
+3205.000,112.417,atom dump
+3210.000,112.418,atom dump
+3215.000,112.418,atom dump
+3220.000,112.418,atom dump
+3225.000,112.418,atom dump

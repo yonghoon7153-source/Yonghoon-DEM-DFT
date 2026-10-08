@@ -23,3 +23,11 @@
   옛 step 그래프가 이미 있으면 X 축 제목만 바꿔도 된다.
 - 단계 경계 점선이 안 보이면: Graph > Add Straight Line → X = 0.400002 · 3.125 (점선 · 회색).
 - **슬라이드판** `ps73_time_pressure_slide.csv` (3,274 점) — 같은 `ps73_time_pressure.ogs` 로 그린다 (이 CSV 를 가져온 워크북을 앞에 두고 붙여넣기).  압축 끝 (3.125) 까지 원값 · 그 뒤 이완 구간 = **모식 감쇠** (τ 15,000 step = 0.015 s · 끝 값 165.3 MPa 만 계산값 · 1저자 10-06 밤 실선) — `../README.md` §5.
+
+## ms 판 (10-08 밤 · `../make_fig_ms.py` · `../README.md` §7)
+
+| 그래프 | 열 | 축 | 메모 |
+|---|---|---|---|
+| 시간 (ms)–압력 | A Simulation time (ms) · B Pressure (MPa) · C Source (출처 표시 — 그리지 않는다) | X 0–3250 · Y 0–330 | `ps73_ms_pressure.ogs` · 0 ms = 판 없음 0 MPa · 단계 점선 둘 (400.002 · 3125 — 정착 + 안정화 = 한 구간 Settling) · 구간 이름 Settling 은 **아래쪽** (300 MPa 점선과 겹침 방지) |
+| 슬라이드판 | `ps73_ms_pressure_slide.csv` (같은 열) | 같음 | 같은 `ps73_ms_pressure.ogs` · 이완 구간 = 모식 (§5) |
+| 시간 (ms)–두께 (원자 기준) | `ps73_ms_thickness_atomtop.csv` — A ms · B Thickness (µm) · C Source (replay · checkpoint · atom dump) | X 0–3250 · Y 100–320 | `ps73_ms_thickness_atomtop.ogs` · 0–405 ms = 측정점 10 개 사이를 단조 곡선 (PCHIP · 1 ms) 으로 채운 396 점 (C 열 `interpolated …` · 측정 아님 · 1저자 "곡선 형식으로") · 100 ms 의 튀어 오른 입자 하나 점은 뺌 ("보간" · §7-1) · 1,825 ms 부터 판을 뚫고 나간 입자 포함 (한정어) |
