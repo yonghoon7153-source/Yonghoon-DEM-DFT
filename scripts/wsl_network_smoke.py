@@ -31,7 +31,11 @@
   $P scripts/wsl_network_smoke.py --root ~/net_smoke_$(git rev-parse --short HEAD)_$(date +%H%M)
   $P scripts/wsl_network_smoke.py --root … --lhs-case lhs00_055 --lhs-case lhs00_128      # 고르기 바꾸기
   $P scripts/wsl_network_smoke.py --root … --skip-real14-general                        # Stage E 일반 경로 빼기 (빠르게)
-  $P scripts/wsl_network_smoke.py --selftest                                             # 이 컨테이너 — 합성 침대 · 실제 파이프라인
+  $P scripts/wsl_network_smoke.py --selftest                                             # 이 컨테이너 — 합성 침대 · 실제 파이프라인 (빠름 · 게이트 fast 레인)
+  $P scripts/wsl_network_smoke.py --selftest-real                                        # ★ 10-08 커밋된 case15 원자료의 실제 묶음 — 원자료 6 조합 · 실제
+                                                                                         #   파이프라인 두 판 ((a) 망 CLI 만 PermissionError → TECH · rc 1 /
+                                                                                         #   (b) 주입 없음 → 7/7) · (b) ROOT → 인계 도구 --smoke-root
+                                                                                         #   (느림 ≈ 2–3 분 · 등재 slow · WSL 사전 점검)
 """
 from __future__ import annotations
 
@@ -862,6 +866,72 @@ def build_jobs(args) -> list:
     return jobs
 
 
+#: ★ 10-08 selftest 픽스처 (case15 음성 대조 보고 · 합성) — `--selftest` (`_selftest_body`) 와 `--selftest-real` (`_rc15_raw_probe`) 이 같이 쓴다 (나눔 때
+#:   `_selftest_body` 안의 같은 정의를 그대로 옮김).  양성 픽스처의 실제 시도 값 = 이 컨테이너 실제 case15 (커밋된 원자료) 첫 실행: 망 CLI 1 회 · rc 0 ·
+#:   per-mode 둘 · 이온 computed (사유 없음) · 전자 두 모드 · Hertz 열 failed + '(boundary_overlap)' · Physics 열 failed + 솔버 ValueError (원자료 탐침 오류와
+#:   같은 문자열) · 단계 rc 0 · 결손 0 · 내용 검증 거부 · 시도 기록 = 망 솔버 단계 · input_digests (WSL 제출 기록과 같은 값)
+_C15_IDS = [24, 40, 57, 103]
+_C15_DIG = {'atoms.csv': 'e140e28d3daf3ad7', 'contacts.csv': 'bcb53e13d2cc69be'}
+_C15_OVR = '관통 성분은 있는데 {s} 을 풀지 못했다 (boundary_overlap) — 미퍼콜이 아니다 · 수치 실패 = 게시 차단 (WEB-03 Q1 — 일반 · 정지 경로 모두)'
+_C15_REF = 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)'
+_C15_NC4 = ['network_conductivity.json', 'network_conductivity_hertzian.json', 'network_conductivity_physics.json', 'network_conductivity_dual.json']
+
+
+def _c15_pm(over=None):
+    pm = {'hertzian': dict(sha256='1' * 64, channels=dict(ionic=dict(status='computed', reason=None),
+                                                       electronic=dict(status='failed', reason=_C15_OVR.format(s='σ_e')),
+                                                       thermal=dict(status='failed', reason=_C15_OVR.format(s='κ')))),
+          'physics': dict(sha256='2' * 64, channels=dict(ionic=dict(status='computed', reason=None),
+                                                      electronic=dict(status='failed', reason=_C15_OVR.format(s='σ_e')),
+                                                      thermal=dict(status='failed', reason=_C15_REF)))}
+    for k, v in (over or {}).items():
+        m, c = k.split('.')
+        pm[m]['channels'][c] = v
+    return pm
+
+
+def _c15_ev(n_calls=1, **call):
+    c = dict(n=1, script='network_conductivity.py', input_digests=dict(_C15_DIG), exception=None, exception_text=None, returncode=0, per_mode=_c15_pm())
+    c.update(call)
+    return dict(schema='wsl_network_smoke/attempt_evidence/v1', hook='pipeline_service._RUNNER',
+                calls=[dict(c, n=i + 1) for i in range(n_calls)])
+
+
+def _c15_solver(**kw):
+    d = dict(step='Network Solver (both modes)', rc=0, ok=False, required=True, missing_outputs=[], stale_outputs=[], verify_failed=True, err='')
+    d.update(kw)
+    return [dict(step=s, rc=0, ok=True, required=s != 'Coverage Physics vs Hertzian', missing_outputs=[], stale_outputs=[], verify_failed=False, err='')
+            for s in ('Parse', 'Contact Analysis', 'Coverage Physics vs Hertzian')] + [d]
+
+
+def _c15_fixture(**over):
+    ch = dict(ionic_hertzian=dict(value=[0.1704582, 0.0003263508], status='computed', reason='', conservation_rel=2e-9, residual_rel=1e-10,
+                                  intersection=[]),
+              ionic_physics=dict(value=[0.1892075, 0.0003622472], status='computed', reason='', conservation_rel=5e-9, residual_rel=1e-10,
+                                 intersection=[]),
+              electronic_hertzian=dict(value=[None, None], status='not_computed', reason='boundary_overlap', intersection=list(_C15_IDS)),
+              electronic_physics=dict(value=[None, None], status='not_computed', reason='boundary_overlap', intersection=list(_C15_IDS)),
+              thermal_hertzian=dict(value=[None, None], status='not_computed', reason='boundary_overlap', intersection=list(_C15_IDS)),
+              thermal_physics=dict(error=_C15_REF))
+    ch.update(over.pop('channels', {}))
+    r = dict(id='case15_network', kind='case15', stop_after='network', negative_control=_rr().CASE15_NEGCTL.get('tag', 'case15_publication_blocked'),
+             status='failed', failed_stages=['Network Solver (both modes)'], stage_e_ran=False, returned_network_run_id=None, raw_sha_ok=True,
+             stages=_c15_solver(),
+             attempt=dict(schema='network_attempt/v2', latest_attempt_status='failed', solver_status='failed', failure_kind='solver',
+                          stage='Network Solver (both modes)', input_digests=dict(_C15_DIG),
+                          reason=f'… physics.thermal=fail ({_C15_REF})'),
+             attempt_evidence=_c15_ev(),
+             tau={f'ion_net_status_{m}': 'NOT_COMPUTED' for m in ('hertz', 'physics', 'hertz_h12')},
+             negctl=dict(plate_um=19.1455, negative_area=[[31, 29241, -0.186036, 1.05114], [38, 29241, -0.186264, 1.0512]], channels=ch))
+    r.update(over)
+    return r
+
+
+def _c15_negctl_rows(rep):
+    cs = evaluate({'case15_network': rep}, {'case15_network': dict(rc=0)})
+    return [c for c in cs if '[음성 대조]' in c['name']]
+
+
 #: ★ 10-08 G2RR5-02 selftest (a) — Codex `r5_case15_pipeline_fault` 꼴: 커밋된 case15 원자료로 실제 child_case 를 **같은 프로세스**에서 돌리되
 #:   `pipeline_service._RUNNER` 가 망 CLI (cmd[1] = network_conductivity.py) 호출 **하나만** PermissionError 로 거부한다 (소스 무변경 · 다른 단계는 원래 실행기).
 #:   자식 프로세스 (부트 = 이 문자열) 로 띄워 env · cwd · import 를 selftest 와 떼어 둔다.  argv = scripts 폴더 · ROOT · 출력 JSON.
@@ -898,9 +968,9 @@ outp.write_text(json.dumps(dict(report=rep, denied=len(denied), recorder_restore
 
 
 def _rc15_launch(base: Path) -> dict:
-    """★ 10-08 G2RR5-02 selftest — 실제 case15 두 판을 띄운다 (판정 = `_rc15_judge` · selftest 의 마지막 묶음).
+    """★ 10-08 G2RR5-02 selftest — 실제 case15 두 판을 띄운다 (판정 = `_rc15_judge` · `--selftest-real`).
     (a) `_RC15_FAULT_BOOT` (망 CLI 만 PermissionError) · (b) 주입 없음 = 실제 `run_smoke` (case15 + 합성 망 정지 한 건 — 인계 도구 다시 읽기의 S0 짝).
-    둘 다 자기 ROOT (리포 밖 · cwd · TMPDIR) — 실제 판 ≈ 120 s (이 컨테이너 · WSL 46 s) 라 다른 묶음과 겹쳐 돌린다 (--run-fast 의 180 s 예산)."""
+    둘 다 자기 ROOT (리포 밖 · cwd · TMPDIR) — 실제 판 ≈ 120 s (이 컨테이너 · WSL 46 s) 라 둘을 동시에 · 원자료 6 조합과 겹쳐 돌린다."""
     import threading
     tag = _rr().CASE15_NEGCTL['tag']
     ra, rb = base / 'fault', base / 'positive'
@@ -922,6 +992,26 @@ def _rc15_launch(base: Path) -> dict:
     th = threading.Thread(target=run_b, name='smoke-selftest-case15-positive', daemon=True)
     th.start()
     return dict(base=base, t0=time.monotonic(), pa=pa, log_a=log_a, ra=ra, rb=rb, th=th, res=res)
+
+
+def _rc15_raw_probe(chk) -> None:
+    """★ G2RR4-03 — case15 원인 증거를 커밋된 원자료에서 실제로 (실제 build_network · solve_network · 6 조합 · Codex 재검증 4 §6-1 과 같은 꼴) → 음성 대조 판정 통과.
+    ★ 10-08 나눔 — 실제 원자료 망 풀이 (≈ 20 s) 라 `--selftest` 에서 `--selftest-real` 로 옮겼다 (판정 · 문구 그대로)."""
+    _st15 = Path(tempfile.mkdtemp(prefix='smoke_c15_')).resolve()
+    try:
+        tm15 = stage_refbed('case15', _st15)['type_map']
+        _probe = globals().get('case15_channel_probe')
+        t15 = time.monotonic()
+        neg15 = _probe(_st15, tm15) if _probe else {}
+        v15 = _c15_negctl_rows(dict(_c15_fixture(), negctl=neg15))
+        chk(f'★ G2RR4-03 case15 원자료 직접 6 조합 ({time.monotonic() - t15:.0f} s) — 판 {neg15.get("plate_um")} µm · 음수 면적 행 '
+            f'{len(neg15.get("negative_area") or [])} · 전자 · Hertz 열 B∩T = 24 · 40 · 57 · 103 · Physics 열 음수 면적 거부 · 이온 참고 8 자리 · 증서 → '
+            '[음성 대조] 원인 · 이온 검사 PASS',
+            bool(neg15) and bool(v15) and all(c['verdict'] == 'PASS' for c in v15),
+            repr(([(c['name'][:50], c['verdict'], c['detail'][:120]) for c in v15 if c['verdict'] != 'PASS'],
+                  {k: (v.get('reason'), v.get('intersection'), v.get('error')) for k, v in (neg15.get('channels') or {}).items()}))[:700])
+    finally:
+        shutil.rmtree(_st15, ignore_errors=True)
 
 
 def _rc15_judge(st: dict, chk) -> None:
@@ -992,38 +1082,57 @@ def _rc15_judge(st: dict, chk) -> None:
         prc == 0 and mm == {'S0': True, 'S0b': True} and jj.get('n_fail') == 0 and len(jj.get('cases') or []) == 1, repr((prc, mm, ptail))[:700])
 
 
-def _selftest() -> int:
-    """이 컨테이너 — 합성 침대 (CSV 입력) 로 **실제 파이프라인**을 돌려 시험 도구 (자식 · 측정 · 수집 · 판정 · 보고) 를 본다.
-    음성 대조 판정 함수는 합성 결과로 변별력을 본다 (수정 전 · 뒤 모양 둘 다).  실 음성 대조도 돌려 '판정이 나온다' 만 본다 (값은 코드 세대에 따른다).
-    ★ 10-08 G2RR5-02 — 마지막 묶음 = 커밋된 case15 원자료의 실제 두 판 ((a) 망 CLI 만 PermissionError · (b) 주입 없음 + 인계 도구 다시 읽기) — 맨 처음에 띄워
-    다른 묶음과 겹쳐 돌리고 맨 끝에 판정한다."""
-    fails = []
+def _selftest_chk():
+    """selftest 검사 기록기 → (chk, 실패 목록, 셈) — 두 모드가 같은 꼴로 센다."""
+    fails, n = [], [0]
 
     def chk(name, okv, why=''):
+        n[0] += 1
         print(('  ✓ ' if okv else '  ✗ ') + name + ('' if okv or not why else f'  — {why}'))
         if not okv:
             fails.append(name)
-    _rc15_base = Path(tempfile.mkdtemp(prefix='smoke_rc15_')).resolve()
-    _rc15 = None
+    return chk, fails, n
+
+
+def _selftest() -> int:
+    """`--selftest` (빠름 · 등재 fast — 게이트의 fast 레인이 돌린다) — 이 컨테이너 · 합성 침대 (CSV 입력) 로 **실제 파이프라인**을 돌려 시험 도구 (자식 · 측정 ·
+    수집 · 판정 · 보고) 를 본다.  음성 대조 판정 함수 · 실제 망 시도 판정 · 기록기 · 한 곳 (인계 도구) 은 합성 결과로 변별력을 본다 (수정 전 · 뒤 모양 둘 다).
+    ★ 10-08 나눔 — 커밋된 case15 원자료의 실제 묶음 (원자료 6 조합 · 실제 파이프라인 두 판 · 인계 도구 다시 읽기 · ≈ 2–3 분) = `--selftest-real` (`_selftest_real`)."""
+    chk, fails, n = _selftest_chk()
+    _selftest_body(chk)
+    print(f'\n{"✓ 전부 통과" if not fails else f"✗ {len(fails)} 건 실패"} ({n[0] - len(fails)}/{n[0]})')
+    return 0 if not fails else 1
+
+
+def _selftest_real() -> int:
+    """`--selftest-real` (느림 · 등재 slow · fast 레인 밖 — WSL 사전 점검에서 돌린다) — 커밋된 case15 원자료의 실제 묶음:
+      ① G2RR4-03 원자료 직접 6 조합 → [음성 대조] 원인 · 이온 PASS (`_rc15_raw_probe`)
+      ② G2RR5-02 실제 case15 (a) child_case + `pipeline_service._RUNNER` 가 망 CLI 만 PermissionError → 실제 시도 검사 TECH · case15 PASS 아님 · 스모크 rc 1
+      ③ (b) 주입 없음 (실제 `run_smoke`) → rc 0 · case15 검사 일곱 전부 PASS (실제 시도 포함) · 고정 토큰
+      ④ (b) 스모크 ROOT → 인계 도구 다시 읽기 (`g2_network_reread --smoke-root`) rc 0 · S0 · S0b 통과
+    (a) · (b) 를 먼저 띄우고 ① 을 그 사이에 돈다 (실제 판 = 이 컨테이너 ≈ 120 s · WSL ≈ 46 s) · 판정은 `_rc15_judge` (나눔 전 `--selftest` 마지막 묶음 그대로)."""
+    chk, fails, n = _selftest_chk()
+    base = Path(tempfile.mkdtemp(prefix='smoke_rc15_')).resolve()
+    st = None
     try:
-        _rc15 = _rc15_launch(_rc15_base)
-        _selftest_body(chk)
-        _rc15_judge(_rc15, chk)
+        st = _rc15_launch(base)
+        _rc15_raw_probe(chk)
+        _rc15_judge(st, chk)
     finally:
-        if _rc15 is not None:
-            if _rc15['pa'].poll() is None:
-                _rc15['pa'].kill()
-                _rc15['pa'].wait()
-            _rc15['th'].join(timeout=1500)
+        if st is not None:
+            if st['pa'].poll() is None:
+                st['pa'].kill()
+                st['pa'].wait()
+            st['th'].join(timeout=1500)
             with contextlib.suppress(Exception):
-                _rc15['log_a'].close()
-        shutil.rmtree(_rc15_base, ignore_errors=True)
-    print(f'\n{"✓ 전부 통과" if not fails else f"✗ {len(fails)} 건 실패"}')
+                st['log_a'].close()
+        shutil.rmtree(base, ignore_errors=True)
+    print(f'\n{"✓ 전부 통과" if not fails else f"✗ {len(fails)} 건 실패"} ({n[0] - len(fails)}/{n[0]})')
     return 0 if not fails else 1
 
 
 def _selftest_body(chk) -> None:
-    """`_selftest` 의 합성 · 판정 함수 · 참조 침대 묶음 (실제 case15 두 판과 겹쳐 돈다)."""
+    """`--selftest` 의 합성 · 판정 함수 · 참조 침대 · 합성 파이프라인 묶음."""
     # 판정 함수 변별력 (합성)
     pos = dict(status='done')
     chk('판정 C1 — ×4 가 done 이면 FAIL · failed 면 PASS · 양성 대조가 done 이 아니면 FAIL',
@@ -1054,64 +1163,9 @@ def _selftest_body(chk) -> None:
     #  ★ 10-07 G2RR4-03 (Codex 세대 2 재검증 4 §6-3(b)) — case15 = 음성 대조: 지정한 실패 (게시 차단 · 전자 · Hertz 열 boundary_overlap B∩T 넷 · Physics 열 음수 원자료
     #    면적 거부 · 음수 행 둘) 와 이온 정상 (참고 8 자리 · 증서) 이 **실제로 발화해야** PASS — whitelist · 이름 PASS 아님 (반례 먼저: 옛 판정 = done 이어야 PASS)
     _ng = _rr().CASE15_NEGCTL
-    _ids = [24, 40, 57, 103]
-    #  ★ 10-08 G2RR5-02 — 양성 픽스처의 실제 시도 값 = 이 컨테이너 실제 case15 (커밋된 원자료) 첫 실행: 망 CLI 1 회 · rc 0 · per-mode 둘 · 이온 computed (사유 없음) ·
-    #    전자 두 모드 · Hertz 열 failed + '(boundary_overlap)' · Physics 열 failed + 솔버 ValueError (원자료 탐침 오류와 같은 문자열) · 단계 rc 0 · 결손 0 · 내용 검증 거부 ·
-    #    시도 기록 = 망 솔버 단계 · input_digests (WSL 제출 기록과 같은 값)
-    _DIG = {'atoms.csv': 'e140e28d3daf3ad7', 'contacts.csv': 'bcb53e13d2cc69be'}
-    _OVR = '관통 성분은 있는데 {s} 을 풀지 못했다 (boundary_overlap) — 미퍼콜이 아니다 · 수치 실패 = 게시 차단 (WEB-03 Q1 — 일반 · 정지 경로 모두)'
-    _REF = 'ValueError: physics_g2: 간선 (31, 29241) — ligg_area < 0 (-0.186036)'
-    _NC4 = ['network_conductivity.json', 'network_conductivity_hertzian.json', 'network_conductivity_physics.json', 'network_conductivity_dual.json']
-
-    def _pm(over=None):
-        pm = {'hertzian': dict(sha256='1' * 64, channels=dict(ionic=dict(status='computed', reason=None),
-                                                           electronic=dict(status='failed', reason=_OVR.format(s='σ_e')),
-                                                           thermal=dict(status='failed', reason=_OVR.format(s='κ')))),
-              'physics': dict(sha256='2' * 64, channels=dict(ionic=dict(status='computed', reason=None),
-                                                          electronic=dict(status='failed', reason=_OVR.format(s='σ_e')),
-                                                          thermal=dict(status='failed', reason=_REF)))}
-        for k, v in (over or {}).items():
-            m, c = k.split('.')
-            pm[m]['channels'][c] = v
-        return pm
-
-    def _ev(n_calls=1, **call):
-        c = dict(n=1, script='network_conductivity.py', input_digests=dict(_DIG), exception=None, exception_text=None, returncode=0, per_mode=_pm())
-        c.update(call)
-        return dict(schema='wsl_network_smoke/attempt_evidence/v1', hook='pipeline_service._RUNNER',
-                    calls=[dict(c, n=i + 1) for i in range(n_calls)])
-
-    def _solver(**kw):
-        d = dict(step='Network Solver (both modes)', rc=0, ok=False, required=True, missing_outputs=[], stale_outputs=[], verify_failed=True, err='')
-        d.update(kw)
-        return [dict(step=s, rc=0, ok=True, required=s != 'Coverage Physics vs Hertzian', missing_outputs=[], stale_outputs=[], verify_failed=False, err='')
-                for s in ('Parse', 'Contact Analysis', 'Coverage Physics vs Hertzian')] + [d]
-
-    def _c15(**over):
-        ch = dict(ionic_hertzian=dict(value=[0.1704582, 0.0003263508], status='computed', reason='', conservation_rel=2e-9, residual_rel=1e-10,
-                                      intersection=[]),
-                  ionic_physics=dict(value=[0.1892075, 0.0003622472], status='computed', reason='', conservation_rel=5e-9, residual_rel=1e-10,
-                                     intersection=[]),
-                  electronic_hertzian=dict(value=[None, None], status='not_computed', reason='boundary_overlap', intersection=list(_ids)),
-                  electronic_physics=dict(value=[None, None], status='not_computed', reason='boundary_overlap', intersection=list(_ids)),
-                  thermal_hertzian=dict(value=[None, None], status='not_computed', reason='boundary_overlap', intersection=list(_ids)),
-                  thermal_physics=dict(error=_REF))
-        ch.update(over.pop('channels', {}))
-        r = dict(id='case15_network', kind='case15', stop_after='network', negative_control=_ng.get('tag', 'case15_publication_blocked'),
-                 status='failed', failed_stages=['Network Solver (both modes)'], stage_e_ran=False, returned_network_run_id=None, raw_sha_ok=True,
-                 stages=_solver(),
-                 attempt=dict(schema='network_attempt/v2', latest_attempt_status='failed', solver_status='failed', failure_kind='solver',
-                              stage='Network Solver (both modes)', input_digests=dict(_DIG),
-                              reason=f'… physics.thermal=fail ({_REF})'),
-                 attempt_evidence=_ev(),
-                 tau={f'ion_net_status_{m}': 'NOT_COMPUTED' for m in ('hertz', 'physics', 'hertz_h12')},
-                 negctl=dict(plate_um=19.1455, negative_area=[[31, 29241, -0.186036, 1.05114], [38, 29241, -0.186264, 1.0512]], channels=ch))
-        r.update(over)
-        return r
-
-    def _c15_eval(rep):
-        cs = evaluate({'case15_network': rep}, {'case15_network': dict(rc=0)})
-        return [c for c in cs if '[음성 대조]' in c['name']]
+    #  ★ 10-08 — case15 픽스처 = 모듈 수준 `_c15_*` (`--selftest-real` 의 원자료 6 조합과 같이 쓴다 · 정의 그대로 옮김)
+    _DIG, _OVR, _NC4 = _C15_DIG, _C15_OVR, _C15_NC4
+    _pm, _ev, _solver, _c15, _c15_eval = _c15_pm, _c15_ev, _c15_solver, _c15_fixture, _c15_negctl_rows
     _neg_cases = (
         ('기대 그대로 (게시 차단 · 원인 넷 · 이온 정상)', _c15(), True),
         ('게시됨 (done · run id) — 음성 대조가 발화하지 않았다', _c15(status='done', failed_stages=[], returned_network_run_id='RUN-x'), False),
@@ -1253,22 +1307,7 @@ def _selftest_body(chk) -> None:
             shutil.rmtree(_rt, ignore_errors=True)
     chk('★ G2RR5-02 기록기 = 그대로 통과 — 망 CLI 아닌 호출 · 망 CLI 호출 모두 같은 결과 객체 · 인자 그대로 · 예외 그대로 다시 올림 (종류 기록) · 망 CLI 만 기록 (입력 digest · rc · '
         'per-mode sha256 · 채널 상태 · 사유) · 끝나면 원래 훅 (몸통이 예외여도)', _rec_ok, _rec_why)
-    #  ★ G2RR4-03 — case15 원인 증거를 커밋된 원자료에서 실제로 (실제 build_network · solve_network · 6 조합 · Codex 재검증 4 §6-1 과 같은 꼴) → 음성 대조 판정 통과
-    _st15 = Path(tempfile.mkdtemp(prefix='smoke_c15_')).resolve()
-    try:
-        tm15 = stage_refbed('case15', _st15)['type_map']
-        _probe = globals().get('case15_channel_probe')
-        t15 = time.monotonic()
-        neg15 = _probe(_st15, tm15) if _probe else {}
-        v15 = _c15_eval(dict(_c15(), negctl=neg15))
-        chk(f'★ G2RR4-03 case15 원자료 직접 6 조합 ({time.monotonic() - t15:.0f} s) — 판 {neg15.get("plate_um")} µm · 음수 면적 행 '
-            f'{len(neg15.get("negative_area") or [])} · 전자 · Hertz 열 B∩T = 24 · 40 · 57 · 103 · Physics 열 음수 면적 거부 · 이온 참고 8 자리 · 증서 → '
-            '[음성 대조] 원인 · 이온 검사 PASS',
-            bool(neg15) and bool(v15) and all(c['verdict'] == 'PASS' for c in v15),
-            repr(([(c['name'][:50], c['verdict'], c['detail'][:120]) for c in v15 if c['verdict'] != 'PASS'],
-                  {k: (v.get('reason'), v.get('intersection'), v.get('error')) for k, v in (neg15.get('channels') or {}).items()}))[:700])
-    finally:
-        shutil.rmtree(_st15, ignore_errors=True)
+    #  (★ 10-08 나눔 — G2RR4-03 의 case15 원자료 직접 6 조합 (실제 망 풀이 ≈ 20 s) 은 `--selftest-real` 로 옮겼다 = `_rc15_raw_probe` · 판정 그대로)
     vm_bad = dict(exact_vm_equal=True, actual={'status': 'computed', 'vm_cv': 100.0}, positive_control={'status': 'computed', 'vm_cv': 0.0})
     vm_ok = dict(vm_bad, actual={'status': 'computed', 'vm_cv': 0.0})
     vm_null = dict(vm_bad, actual={'status': 'invalid', 'vm_cv': None})
@@ -1326,7 +1365,10 @@ def _parse(argv=None):
     ap.add_argument('--root-from', default='', help='코호트 경로 접두사 (lhs_webapp_batch 와 같은 뜻)')
     ap.add_argument('--root-to', default='')
     ap.add_argument('--python', default='', help='자식 인터프리터 (기본 = 이것)')
-    ap.add_argument('--selftest', action='store_true')
+    ap.add_argument('--selftest', action='store_true', help='합성 · 판정 함수 · 기록기 · 합성 파이프라인 (빠름 — 게이트 fast 레인)')
+    ap.add_argument('--selftest-real', action='store_true',
+                    help='커밋된 case15 원자료의 실제 묶음 — 원자료 6 조합 · 실제 파이프라인 두 판 (망 CLI 만 PermissionError · 주입 없음) · '
+                         '인계 도구 다시 읽기 (느림 ≈ 2–3 분 · WSL 사전 점검)')
     ap.add_argument('--_child', default='', help=argparse.SUPPRESS)
     return ap.parse_args(argv)
 
@@ -1344,8 +1386,8 @@ def main(argv=None) -> int:
                        traceback=traceback.format_exc()[-3000:])
         write_json(root / 'cases' / spec['id'] / 'report.json', rep)
         return 0 if rep.get('status') != 'HARNESS_ERROR' else 1
-    if a.selftest:
-        return _selftest()
+    if a.selftest or a.selftest_real:                       # 둘 다 주면 차례로 (rc = 큰 쪽)
+        return max(_selftest() if a.selftest else 0, _selftest_real() if a.selftest_real else 0)
     if not a.root:
         print('⛔ --root 가 필요하다 (새 출력 폴더)', file=sys.stderr)
         return 3
